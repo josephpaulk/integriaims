@@ -20,20 +20,23 @@
 // Load global vars
 require("include/config.php");
 
-if (comprueba_login() == 0) {
+if (comprueba_login() != 0) {
+	audit_db("Noauth",$REMOTE_ADDR, "No authenticated acces","Trying to access incident viewer");
+	require ("general/noaccess.php");
+	exit;
+}
 
-?>
+$id_user =$_SESSION["id_usuario"];
 
-<h2><?php echo $lang_label["users_"] ?></h2>
+echo "<h2>".$lang_label["users_"]."</h2>";
 
-<table cellpadding="3" cellspacing="3" width="700">
-<th class="w80"><?php echo $lang_label["user_ID"]?>
-<th class="w155"><?php echo $lang_label["last_contact"]?>
-<th class="w45"><?php echo $lang_label["profile"]?>
-<th class="w120"><?php echo $lang_label["name"]?>
-<th><?php echo $lang_label["description"]?>
+echo '<table cellpadding="3" cellspacing="3" width="700" class="databox_color">';
+echo "<th>".$lang_label["user_ID"];
+echo "<th>".$lang_label["last_contact"];
+echo "<th>".$lang_label["profile"];
+echo "<th>".$lang_label["name"];
+echo "<th>".$lang_label["description"];
 
-<?php
 $color = 1;
 
 $sql_1="SELECT * FROM tusuario_perfil WHERE id_usuario = '$id_user'";
@@ -61,7 +64,7 @@ while ($row_1=mysql_fetch_array($result_1)){
 					$color = 1;
 					$tip = "tip2";
 				}
-				echo "<tr><td class='$tdcolor'><a href='index.php?sec=usuarios&sec2=operation/users/user_edit&ver=".$nombre."'><b>".$nombre."</b></a>";
+				echo "<tr><td class='$tdcolor'><a href='index.php?sec=users&sec2=operation/users/user_edit&ver=".$nombre."'><b>".$nombre."</b></a>";
 				echo "<td class='$tdcolor'><font size=1>".$fecha_registro."</font>";
 				echo "<td class='$tdcolor'>";
 				if ($nivel == 1)
@@ -85,15 +88,13 @@ while ($row_1=mysql_fetch_array($result_1)){
 		}
 	}
 }
-
-echo "<tr><td colspan='5'><div class='raya'></div></td></tr></table><br>";
-
+echo "</table>";
 ?>
 
 
 <h3><?php echo $lang_label["definedprofiles"] ?><a href='help/<?php echo $help_code ?>/chap2.php#21' target='_help' class='help'>&nbsp;<span><?php echo $lang_label["help"] ?></span></a></h3>
 
-<table cellpadding=3 cellspacing=3 border=0>
+<table cellpadding=3 cellspacing=3 border=0 class='databox_color'>
 <?php
 
 	$query_del1="SELECT * FROM tperfil";
@@ -149,6 +150,5 @@ echo "<tr><td colspan='5'><div class='raya'></div></td></tr></table><br>";
 		if ($pandora_management == 1) echo "<img src='images/ok.png' border=0>";
 
 	}
-} //end of page
+echo "</div></table>";
 ?>
-<tr><td colspan='11'><div class='raya'></div></td></tr></table>

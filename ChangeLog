@@ -1,0 +1,12 @@
+2007-04-16  slerena  <slerena@artica.es>
+
+	* Added many graphic files.
+
+	* Now adapting new style from old code coming from Pandora FMS
+	project.
+
+	* All PHP changes are related for style, no new features added.
+
+	* Menu is now divided on sidemenu.php and main_menu.php (at the
+	top), god mode menu not used anymore (will be a special top menu).
+

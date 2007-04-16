@@ -228,10 +228,10 @@ if (isset($_POST['operacion']))
 	echo " -&gt; ".$lang_label["incident_view_filter"]." - ".$_POST['operacion']."</h2>";
 else
 	echo "</h2>";
-
+echo "<div class=databox style='width: 500px'>";
 echo "<form name='visualizacion' method='POST' action='index.php?sec=incidencias&sec2=operation/incidents/incident'>";
 
-echo '<table border="0" cellpadding=3 cellspacing=3>';
+echo '<table border=0 width=400>';
 echo "<tr>";
 echo "<td>".$lang_label["f_state"];
 echo "<td>".$lang_label["f_prio"];
@@ -332,6 +332,7 @@ if (isset($_GET["texto"]))
 
 echo "</table>";
 echo "</form>";
+echo "</div>";
 
 $offset_counter=0;
 // Prepare index for pagination
@@ -368,7 +369,7 @@ if ($row2_count[0] <= 0 ) {
 	// -------------
 	// Show headers
 	// -------------
-	echo "<table cellpadding='3' cellspacing='3' width='780'>";
+	echo "<table width='810' class='databox'>";
 	echo "<tr>";
 	echo "<th>Id";
 	echo "<th>St.";
@@ -400,7 +401,7 @@ if ($row2_count[0] <= 0 ) {
 			}
 			
 			echo "<tr>";
-			echo "<td class='$tdcolor' align='left'>";
+			echo "<td class='$tdcolor' align='left' >";
 			echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'><b>#".$row2["id_incidencia"]."</b></a></td>";
 
 
@@ -458,19 +459,15 @@ if ($row2_count[0] <= 0 ) {
 				echo "<td class='$tdcolor' align='center'>";
 		}
 	}
-	echo "<tr><td colspan='12'><div class='raya'></div>";
+	echo "</table>";
 }
 
 if (give_acl($_SESSION["id_usuario"], 0, "IW")==1) {
-	echo "<tr><td align='left' colspan='5'>";
 	echo "<form name='boton' method='POST'  action='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&insert_form'>";
 	echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_incident"]."'>";
 	echo "</form>";
 }
 
-echo "</td></tr></table>";
-
-echo "<br><br>";
 
 echo "<table cellpadding=3 cellspacing=3>";
 echo "<tr><td valign='top'>";

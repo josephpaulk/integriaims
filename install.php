@@ -210,7 +210,7 @@ function install_step2() {
 			$res += check_extension("session","PHP session extension");
 			$res += check_include("PEAR.php","PEAR PHP Library");
 			//$res += check_exists ("/usr/bin/pdflatex","PDF Latex in /usr/bin/pdflatex");
-			$res += check_writable("./config","./config writable by HTTP server");
+			$res += check_writable("./include","./include writable by HTTP server");
 			echo "</table>
 		</div>
 		<div class='box'>
@@ -243,7 +243,7 @@ function install_step3() {
 	echo "
 	<div align='center' class='mt35'>
 	<h1>FRITS console instalation wizard. Step #3 of 4 </h1>
-	<div id='wizard' style='height: 620px;'>
+	<div id='wizard' style='height: 660px;'>
 		<div id='install_box'>
 			<h1>Environment and database setup</h1>
 			<p>
@@ -267,11 +267,13 @@ function install_step3() {
 				<div>DB Name (frits by default)</div>
 				<input class='login' type='text' name='dbname' value='frits'>
 				
-				<div>Create Database</div>
-				<input class='login' type='checkbox' name='createdb'  value='1'>
-
-				<div>Create Database user 'frits' and give privileges</div>
-				<input class='login' type='checkbox' name='createuser'  value='1'>
+		
+				<div><input type='checkbox' name='createdb'  value='1'>  
+				Create Database <br>
+				</div>
+		
+				<div><input type='checkbox' name='createuser'  value='1'> Create Database user 'frits' and give privileges <br>
+				</div>		
 			
 				<div>Full path to HTTP publication directory.<br>
 				<span class='f9b'>For example /var/www/frits_console/</span>

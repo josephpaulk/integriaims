@@ -19,12 +19,11 @@
 <p align='center'>
 
 <?PHP
-echo '
-<a target="_new" href="general/license/frits_info_'.$language_code.'.html">
-FRiTS '.$frits_version.' Build '.$build_version.' '.
-$lang_label["gpl_notice"].'</a><br>';
-if (isset($_SESSION['id_usuario'])) {
+echo 'FRiTS '.$frits_version.' Build '.$build_version.'<br>';
 
+if (isset($_SESSION['id_usuario'])) {
+	echo '<a target="_new" href="general/license/frits_info_'.$language_code.'.html">'.
+	$lang_label["gpl_notice"].'</a><br>';
 	if (isset($_SERVER['REQUEST_TIME'])) {
 		$time = $_SERVER['REQUEST_TIME'];
 	} else {
@@ -33,7 +32,4 @@ if (isset($_SESSION['id_usuario'])) {
 	echo $lang_label["gen_date"]." ".date("D F d, Y H:i:s", $time)."<br>";
 }
 ?>
-
-<i>FRiTS is a <a target="_new" href="http://frits.sourceforge.net">
-SourceForge registered project</a></i>
 </p>

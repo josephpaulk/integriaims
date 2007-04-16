@@ -4,8 +4,8 @@ $dbname="frits";			// MySQL DataBase name
 $dbuser="root";
 $dbpassword="none";	// DB Password
 $dbhost="localhost"; // DB Host
-$config_homedir="/var/www/frits_console/";		// Config homedir
-$BASE_URL="http://localhost/frits_console";			// Base URL
+$config_homedir="/var/www/frits/";		// Config homedir
+$BASE_URL="http://localhost/frits";			// Base URL
 // End of automatic config file
 ?><?php
 // FRITS - the FRee Incident Tracking System

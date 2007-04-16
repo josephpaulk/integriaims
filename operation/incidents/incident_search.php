@@ -24,15 +24,13 @@ require("include/config.php");
 if (comprueba_login() == 0) {
 
 $id_user=$_SESSION['id_usuario'];
-echo "<h2>".$lang_label["incident_manag"]." -&gt; ";
-echo $lang_label["find_crit"]." </h2>";
+echo "<h2>".$lang_label["incident_manag"]."</h2>";
 echo "<div style='width:645'>";
 echo "<div style='float:right;'><img src='images/zoom.png' width=32 height=32 class='bot' align='left'></div>";
 ?>
-<div style='float:left;'>
-<table width="500" cellpadding="3" cellspacing="3">
+
+<table width="500" class='databox_color'>
 <form name="busqueda" method="post" action="index.php?sec=incidencias&sec2=operation/incidents/incident">
-<td class='lb' rowspan="5" width="5">
 <tr>
 <td class="datos"><?php echo $lang_label["user"] ?>
 <td class="datos">
@@ -59,10 +57,10 @@ echo "<div style='float:right;'><img src='images/zoom.png' width=32 height=32 cl
 <tr><td class="datos"><?php echo $lang_label["free_text_search"] ?>
 <td class="datos"><input type="text" size="45" name="texto"></tr>
 
-<tr><td class="datos" colspan="2"><i><?php echo $lang_label["free_text_search_msg"] ?></i></td></tr>
-<tr><td colspan='3'><div class='raya'></div></td></tr>
-<tr><td align="right" colspan="3">
-<?php echo "<input name='uptbutton' type='submit' class='sub' value='".$lang_label["search"]."'>"; ?>
+<tr><td class="datos2" colspan="2"><i><?php echo $lang_label["free_text_search_msg"] ?></i></td></tr>
+</table>
+
+<?php echo "<p><input name='uptbutton' type='submit' class='sub' value='".$lang_label["search"]."'></p>"; ?>
 
 </form>
 </table>

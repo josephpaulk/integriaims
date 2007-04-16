@@ -12,17 +12,12 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 // FRITS 1.x uses icons from famfamfam, licensed under CC Atr. 2.5
 // Silk icon set 1.3 (cc) Mark James, http://www.famfamfam.com/lab/icons/silk/
-
 // FRITS 1.x uses Pear Image::Graph code
-
-// FRITS shares much of it's code with project Babel Enterprise, also a
-// FreeSoftware Project coded by some of the people who makes FRITS
+// FRITS shares much of it's code with project Babel Enterprise and Pandora FMS,
+// also a Free Software Project coded by some of the people who makes FRITS.
 
 $develop_bypass = 1;
 if ($develop_bypass != 1){
@@ -80,9 +75,8 @@ if (isset ($_GET["refr"])){
 <meta name="copyright" content="This is GPL software. Created by Sancho Lerena and others">
 <meta name="keywords" content="pandora, monitoring, system, GPL, software">
 <meta name="robots" content="index, follow">
-<!-- <link rel="icon" href="images/pandora.ico" type="image/ico">
--->
-<link rel="stylesheet" href="include/styles/main.css" type="text/css">
+<link rel="icon" href="images/frits.ico" type="image/ico">
+<link rel="stylesheet" href="include/styles/frits.css" type="text/css">
 </head>
 
 <?php
@@ -177,28 +171,46 @@ if (isset ($_GET["refr"])){
 	// Session locking concurrency speedup!
 	session_write_close(); 
 ?>
-<div id="page">
-	<div id="menu"><?php require ("general/main_menu.php"); ?></div>
-	<div id="main">	
-	<div id='head'><?php require("general/header.php"); ?></div>
-	<!-- <div style='height: 10px'> </div> -->
-	<div class='data_box'>
 
-	<?php
-		// Page loader / selector		
-		if ($pagina != ""){
-			if (file_exists ($pagina . ".php")) {
-				require ($pagina . ".php");
-			} else {
-				echo "<br><b class='error'>Sorry! I can't find the page!</b>";
-			}	
-		} else
-			require ("general/logon_ok.php");  //default
-		
-	?>
-		
+
+<div id="wrap"> 
+	<div id="header">	
+		<?php require("general/header.php"); ?>	
+	</div>	
+
+	<div id="menu">
+		<?php require("operation/main_menu.php"); ?>	
 	</div>
-</div>
-<div id="foot"><?php require("general/footer.php") ?></div>
+
+	<div id="content-wrap">  
+		<div id="sidebar">
+		<?php require("operation/side_menu.php"); ?>	
+		</div>
+
+		<div id="main"> 
+		<?php
+			// Page loader / selector		
+			if ($pagina != ""){
+				if (file_exists ($pagina . ".php")) {
+					require ($pagina . ".php");
+				} else {
+					echo "<br><b class='error'>Sorry! I can't find the page!</b>";
+				}	
+			} else
+				require ("general/logon_ok.php");  //default
+		?>		
+		</div>
+	<!-- content-wrap ends here -->	
+	</div>
+<!-- wrap ends here -->
+</div>		
+
+<!-- footer starts here -->		
+<div id="footer">
+	<?php require("general/footer.php") ?></div>
+</div>	
+<!-- footer ends here -->	
+
 </body>
 </html>
+

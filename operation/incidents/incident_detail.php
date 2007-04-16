@@ -223,11 +223,11 @@ if (isset($id_inc)) {
 
 echo $result_msg;
 
-echo '<table cellpadding=3 cellspacing=3 border=0 width=700>';
+echo '<table width=700 class="databox_color">';
 if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp))
-	echo '<tr><td class="lb" rowspan="6" width="5"><td class="datos"><b>'.$lang_label["incident"].'</b><td colspan=2 class="datos"><input type="text" name="titulo" size=50 value="'.$titulo.'">';
+	echo '<tr><td class="datos"><b>'.$lang_label["incident"].'</b><td colspan=2 class="datos"><input type="text" name="titulo" size=50 value="'.$titulo.'">';
 else
-	echo '<tr><td class="lb" rowspan="6" width="5"><td class="datos"><b>'.$lang_label["incident"].'</b><td colspan=2 class="datos"><input type="text" name="titulo" size=50 value="'.$titulo.'" readonly>';
+	echo '<tr><td class="datos"><b>'.$lang_label["incident"].'</b><td colspan=2 class="datos"><input type="text" name="titulo" size=50 value="'.$titulo.'" readonly>';
 
 if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp))
 	$emdis="";
@@ -238,7 +238,8 @@ if ($email_notify == 1)
 	echo "<input $emdis type=checkbox value=1 name='email_notify' CHECKED>";
 else
 	echo "<input $emdis type=checkbox value=1 name='email_notify'>";
-echo $lang_label["email_notify"];
+
+echo " ".$lang_label["email_notify"];
 
 echo '<tr><td class="datos2"><b>'.$lang_label["in_openedwhen"].'</b>';
 echo "<td class='datos2' <i>".$inicio."</i>";
@@ -361,19 +362,17 @@ else
 if (isset($texto)) {echo $texto;}
 echo "</textarea>";
 
-echo '<tr><td colspan="5"><div class="raya"></div></td></tr>';
-echo "<tr><td colspan='5' align='left'>";
+echo "</table>";
 // Only if user is the used who opened incident or (s)he is admin
 
 $iduser_temp=$_SESSION['id_usuario'];
-
 if ($creacion_incidente == 0){
 	if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)){
 		echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["in_modinc"].'" border="0">';
 	}
 } else {
 	if (give_acl($iduser_temp, $id_grupo, "IW")) {
-		echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["create"].'" border="0">';
+		echo '<input type="submit" class="sub create" name="accion" value="'.$lang_label["create"].'" border="0">';
 	}
 }
 echo "</form>";
@@ -393,7 +392,7 @@ if ($creacion_incidente == 0){
 	echo "<td class='datos'>".$ahora;
 	echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
 	echo "<input type='hidden' name='id_inc' value='".$id_inc."'>";
-	echo '<tr><td colspan="4" class="datos2"><textarea name="nota" rows="6" cols="85">';
+	echo '<tr><td colspan="4" class="datos2"><textarea name="nota" rows="7" cols="85">';
 	echo '</textarea>';
 	echo '<tr><td colspan="4"><div class="raya"></div></td></tr>';
 	echo '<tr><td colspan="4" align="left"><input name="addnote" type="submit" class="sub next" value="'.$lang_label["add"].'">';

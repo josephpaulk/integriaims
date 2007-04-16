@@ -3,7 +3,7 @@
 // Pandora - the Free monitoring system
 // ====================================
 // Copyright (c) 2004-2006 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2005-2006 Artica Soluciones Tecnológicas S.L, info@artica.es
+// Copyright (c) 2005-2006 Artica Soluciones Tecnolï¿½icas S.L, info@artica.es
 // Copyright (c) 2004-2006 Raul Mateos Martin, raulofpandora@gmail.com
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -26,14 +26,14 @@ if (comprueba_login() == 0) {
 	$id_usuario = $_SESSION["id_usuario"];
 	
 	if (isset ($_GET["ver"])){ // Only view mode, 
-		$id = $_GET["ver"]; // ID given as parameter
-		if ($id_usuario == $id)
+		$id_ver = $_GET["ver"]; // ID given as parameter
+		if ($id_usuario == $id_ver)
 			$view_mode = 0;
 		else
 			$view_mode = 1;
 	}
 
-	$query1="SELECT * FROM tusuario WHERE id_usuario = '".$id."'";
+	$query1="SELECT * FROM tusuario WHERE id_usuario = '".$id_ver."'";
 	$resq1=mysql_query($query1);
 	$rowdup=mysql_fetch_array($resq1);
 	$nombre=$rowdup["id_usuario"];
@@ -41,7 +41,7 @@ if (comprueba_login() == 0) {
 	// Get user ID to modify data of current user.
 
 	if (isset ($_GET["modificado"])){
-		// Se realiza la modificación
+		// Se realiza la modificaciï¿½
 		if (isset ($_POST["pass1"])){
 			if ( isset($_POST["nombre"]) && ($_POST["nombre"] != $_SESSION["id_usuario"])) {
 				audit_db($_SESSION["id_usuario"],$REMOTE_ADDR,"Security Alert. Trying to modify another user: (".$_POST['nombre'].") ","Security Alert");
@@ -57,7 +57,9 @@ if (comprueba_login() == 0) {
 			if ($pass1 != $pass2) {
 				echo "<h3 class='error'>".$lang_label["pass_nomatch"]."</h3>";
 			}
-			else {echo "<h3 class='suc'>".$lang_label["update_user_ok"]."</h3>";}
+			else {
+				echo "<h3 class='suc'>".$lang_label["update_user_ok"]."</h3>";
+			}
 			//echo "<br>DEBUG para ".$nombre;
 			//echo "<br>Comentarios:".$comentarios;	
 			$comentarios = entrada_limpia($_POST["comentarios"]);
@@ -81,8 +83,7 @@ if (comprueba_login() == 0) {
 			echo "<h3 class='error'>".$lang_label["pass_nomatch"]."</h3>";
 		}
 	} 
-		echo "<h2>".$lang_label["users_"]."</h2>";
-		echo "<h3>".$lang_label["user_edit_title"]."<a href='help/".$help_code."/chap2.php#22' target='_help' class='help'>&nbsp;<span>".$lang_label["help"]."</span></a></h3>";
+		echo "<h2>".$lang_label["user_edit_title"]."<a href='help/".$help_code."/chap2.php#22' target='_help' class='help'>&nbsp;<span>".$lang_label["help"]."</span></a></h3>";
 
 	// Si no se obtiene la variable "modificado" es que se esta visualizando la informacion y
 	// preparandola para su modificacion, no se almacenan los datos
@@ -99,14 +100,14 @@ if (comprueba_login() == 0) {
 	$nombre_real=$rowdup["nombre_real"];
 
 	?>
-	<table cellpadding="3" cellspacing="3" class="fon" width="500px">
+	<table cellpadding="3" cellspacing="3" width="500" class="databox_color";>
 	<?php 
 	if ($view_mode == 0) 
 		echo '<form name="user_mod" method="post" action="index.php?sec=usuarios&sec2=operation/users/user_edit&ver='.$id_usuario.'&modificado=1">';
 	else 	
 		echo '<form name="user_mod" method="post" action="">';
 	?>
-	<tr><td class="lb" rowspan="8" width="5"><td class="datos"><?php echo $lang_label["id_user"] ?>
+	<tr><td class="datos"><?php echo $lang_label["id_user"] ?>
 	<td class="datos"><input class=input type="text" name="nombre" value="<?php echo $nombre ?>" disabled>
 	<tr><td class="datos2"><?php echo $lang_label["real_name"] ?>
 	<td class="dato2s"><input class=input type="text" name="nombre_real" value="<?php echo $nombre_real ?>">
@@ -120,21 +121,18 @@ if (comprueba_login() == 0) {
 	<td class="datos2"><input class=input type="text" name="telefono" value="<?php echo $telefono ?>">
 	<tr><td class="datos" colspan="2"><?php echo $lang_label["comments"] ?>
 	<tr><td class="datos2" colspan="2"><textarea name="comentarios" cols="55" rows="4"><?php echo $comentarios ?></textarea>
-	<tr><td colspan='3'><div class='raya'></div></td></tr>
-	
+	</table>
 <?php
-		// Don't delete this!!
+	// Don't delete this!!
 	if ($view_mode ==0){
-		echo '<tr><td colspan="3" align="right">';
-		echo "<input name='uptbutton' type='submit' class='sub' value='".$lang_label["update"]."'></td></tr>";
+		echo "<input name='uptbutton' type='submit' class='sub upd' value='".$lang_label["update"]."'>";
 	}
-	echo '</table><br>';
+	
 	echo '<h3>'.$lang_label["listGroupUser"].'<a href="help/'.$help_code.'/chap2.php#22" target="_help" class="help">&nbsp;<span>'.$lang_label["help"].'</span></a></h3>';
-	echo "<table width='500' cellpadding='3' cellspacing='3' class='fon'>";
+	echo "<table width='500' cellpadding='3' cellspacing='3' class='databox_color'>";
 	$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
 	$result=mysql_query($sql1);
 	if (mysql_num_rows($result)){
-		echo '<tr><td class="lb" rowspan="'.mysql_num_rows($result).'" width="5">';
 		$color=1;
 		while ($row=mysql_fetch_array($result)){
 			if ($color == 1){
@@ -149,9 +147,10 @@ if (comprueba_login() == 0) {
 			echo "<b>".dame_perfil($row["id_perfil"])."</b> / ";
 			echo "<b>".dame_grupo($row["id_grupo"])."</b><tr>";	
 		}
-			echo "<tr><td colspan='3'><div class='raya'></div></td></tr>";
 	}
-	else { echo '<tr><td class="red" colspan="3">'.$lang_label["no_profile"]; }
+	else { 
+		echo '<tr><td class="red" colspan="3">'.$lang_label["no_profile"]; 
+	}
 
 	echo '</form></td></tr></table> ';
 

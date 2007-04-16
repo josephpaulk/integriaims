@@ -41,7 +41,7 @@ if (give_acl($_SESSION["id_usuario"], 0, "IR")==1) {
 	} else {
 		echo '<div id="op3">';
 	}
-	echo '<ul class="mn"><li><a href="index.php?sec=incidencias&amp;sec2=operation/incidents/incident" class="mn">'.$lang_label["manage_incidents"].'</a></li></ul></div>';
+	echo '<ul class="mn"><li><a href="index.php?sec=incidencias&sec2=operation/incidents/incident" class="mn">'.$lang_label["manage_incidents"].'</a></li></ul></div>';
 
 	if (isset($_GET["sec"]) && $_GET["sec"] == "incidencias"){
 		if(isset($_GET["sec2"]) && $_GET["sec2"] == "operation/incidents/incident_search") {

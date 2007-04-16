@@ -19,24 +19,31 @@
 
 ?>
 
-<div align='center'>
-	<h1 id="log"><?php echo $lang_label['welcome_title']; ?></h1>
-	<div id='login'>
-		<div id="login_box">
+<div align='center' style='margin-top: 150px;' >
+	<h1><?php echo $lang_label['welcome_title']; ?></h1>
+	<div style='width: 350px;'>
+		<div style="float: right;padding-right: 10px;margin-top: 8px;width: 140px;">
 			<form method="post" action="index.php?login=1">
-				<div class="f9b">Login</div>
+				<div>Login</div>
 				<input class="login" type="text" name="nick" value="">
-				<div class="f9b">Password</div>
+				<div>Password</div>
 				<input class="login" type="password" name="pass" value="">
-				<div><input type="submit" class="sub" value="Login"></div>
+				<br>
+				<input type="submit" class="sub next" value="Login now">
+				
 			</form>
 		</div>
-		<div id="logo_box">
+		<div style="margin-top: 25px;padding-left: 5px; height: 170px;" class='databox_color'>
 			<a href="index.php">
-			<img src="images/frits_logo.gif" border="0" alt="logo"></a><br>
+			<img style='margin-top: 30px;' src="images/frits_logo.gif" border="0" alt="logo"></a><br>
 			<?php echo $frits_version; ?>
 		</div>
-		<div id="ip"><?php echo 'IP: <b class="f10">'.$REMOTE_ADDR.'</b>'; ?></div>
 	</div>
-	<div id="foot"><?php require("general/footer.php") ?></div>
+	
+	<div id="foot" align='center'>
+		<center>
+		<?php require("general/footer.php") ?>
+		</center>
+	</div>
+
 </div>
