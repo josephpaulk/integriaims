@@ -7,22 +7,18 @@ else
 
 echo "<ul>";
 
+// Project
 if ($sec == "projects" )
-	echo "<li id='current'><a href='index.php?sec=projects'>Project</a></li>";
+	echo "<li id='current'><a href='index.php?sec=projects&sec2=operation/projects/project'>Project</a></li>";
 else
-	echo "<li><a href='index.php?sec=projects'>Project</a></li>";
+	echo "<li><a href='index.php?sec=projects&sec2=operation/projects/project'>Project</a></li>";
 
+// Incident
 if ($sec == "incidents" )
 	echo "<li id='current'>";
 else
 	echo "<li>";
 echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>Incidents</a></li>";
-
-if ($sec == "assets" )
-	echo "<li id='current'>";
-else
-	echo "<li>";
-echo "<a href='index.php?sec=assets'>Assets</a></li>";
 
 // Users
 if ($sec == "users" )

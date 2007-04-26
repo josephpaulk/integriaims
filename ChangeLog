@@ -1,3 +1,29 @@
+2007-04-26  slerena  <slerena@artica.es>
+
+	* operation/projects/task.php: Task manager (Added).
+
+	* operation/projects/project.php: Proyect main view (updated).
+
+	* operation/projects/project_detail.php: Project editor, tabs
+	added.
+
+	* operation/main_menu.php: Removed assets.
+
+	* include/functions_form.php: Added functions for forms.
+	
+	* include/styles/frits.css: Added tabs.
+
+	* include/calendar.js: Added calendar javascript code for calendar
+	controls.
+	
+	* include/languages/language_en.php: More strings.
+
+	* fritsdb.sql: Several updates on structural scheme. Added id_task
+	FKEY to tincidencia. Added tables for task, project, and some
+	other important tables.
+	
+	* index.php: Added calendar code to be available in all pages.
+
 2007-04-16  slerena  <slerena@artica.es>
 
 	* Added many graphic files.

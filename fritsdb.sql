@@ -51,7 +51,6 @@ CREATE TABLE `tgrupo` (
 -- Table structure for table `tincidencia`
 --
 
-DROP TABLE IF EXISTS `tincidencia`;
 CREATE TABLE `tincidencia` (
   `id_incidencia` bigint(20) unsigned NOT NULL auto_increment,
   `inicio` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -66,6 +65,7 @@ CREATE TABLE `tincidencia` (
   `actualizacion` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_creator` varchar(60) default NULL,
   `notify_email` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `id_task` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_index_1` (`id_usuario`,`id_incidencia`)
 );
@@ -229,4 +229,103 @@ CREATE TABLE `tincident_track` (
   PRIMARY KEY  (`id_it`)
 );
 
+-- New tables created 23/04/07 for project management
+
+CREATE TABLE `tproject` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(240) NOT NULL default '',
+  `description` mediumtext NOT NULL,
+  `id_group` int(10) NOT NULL default '0',
+  `private` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `start` date NOT NULL default '0000-00-00',
+  `end` date NOT NULL default '0000-00-00',
+  `id_owner` int(10) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tproject_user` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_role` int(10) unsigned NOT NULL default '0',
+  `id_project` int(10) unsigned NOT NULL default '0',
+  `id_user` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+);
+
+
+CREATE TABLE `ttask_user` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_task` int(10) unsigned NOT NULL default '0',
+  `id_user` int(10) unsigned NOT NULL default '0',
+  `weight` tinyint unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+);
+
+
+CREATE TABLE `tproject_role` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(240) NOT NULL default '',
+  `description` mediumtext NOT NULL,
+  `id_group` int(10) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+);
+
+
+CREATE TABLE `ttask_track` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_task` int(10) unsigned NOT NULL default '0',
+  `id_user` int(10) unsigned NOT NULL default '0',
+  `id_external` int(10) unsigned NOT NULL default '0',
+  `state` tinyint unsigned NOT NULL default '0',
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`)
+);
+
+
+CREATE TABLE `ttask` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_project` int(10) unsigned NOT NULL default '0',
+  `id_parent_task` int(10) unsigned NOT NULL default '0',
+  `name` varchar(240) NOT NULL default '',
+  `description` mediumtext NOT NULL,
+  `completion` tinyint unsigned NOT NULL default '0',
+  `priority` tinyint unsigned NOT NULL default '0',
+  `dep_type` tinyint unsigned NOT NULL DEFAULT 0,
+  `start` datetime NOT NULL default '0000-00-00 00:00:00',
+  `end` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`)
+);
+
+
+CREATE TABLE `tworkunit` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  `duration` int(10) unsigned NOT NULL default '0',
+  `id_user` int(10) unsigned NOT NULL default '0',
+  `description` mediumtext NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+
+CREATE TABLE `tworkunit_task` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_task` int(10) unsigned NOT NULL default '0',
+  `id_workunit` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+);
+
+
+CREATE TABLE `tworkunit_incident` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_incident` int(10) unsigned NOT NULL default '0',
+  `id_workunit` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+);
+
+
+CREATE TABLE `tnote_task` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_note` int(10) unsigned NOT NULL default '0',
+  `id_task` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+);
 

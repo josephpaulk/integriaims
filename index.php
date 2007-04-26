@@ -77,6 +77,7 @@ if (isset ($_GET["refr"])){
 <meta name="robots" content="index, follow">
 <link rel="icon" href="images/frits.ico" type="image/ico">
 <link rel="stylesheet" href="include/styles/frits.css" type="text/css">
+<script type='text/JavaScript' src='include/calendar.js'></script>
 </head>
 
 <?php

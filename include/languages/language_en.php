@@ -768,7 +768,25 @@ $lang_label["incident_change_status_to_active"]="Incident state changed to activ
 $lang_label["email_notify"]="Notify changes by email";
 $lang_label["file_added"]="File added";
 $lang_label["new_inc"]="New incident";
- $lang_label["incident_id"]="Incident ID#";
+$lang_label["incident_id"]="Incident ID#";
+
+$lang_label["create_project_ok"]="Project created successfully";
+$lang_label["create_project_bad"]="Project cannot be created, problem found.";
+$lang_label["project_management"]="Project management";
+$lang_label["create_project"]="Create project";
+$lang_label["completion"]="Completion";
+$lang_label["people"]="People";
+$lang_label["tasks"]="Tasks";
+$lang_label["task_management"]="Task management";
+
+$lang_label["start"]="Start";
+$lang_label["end"]="End";
+$lang_label["create_project"]="Create project";
+$lang_label["rev_project"]="Project review / update";
+$lang_label["private"]="Private";
+$lang_label["owner"]="Owner";
+$lang_label["project"]="Project";
+
 global $lang_label; 
 global $help_label;
 ?>
