@@ -5,6 +5,7 @@
 CREATE TABLE `tattachment` (
   `id_attachment` bigint(20) unsigned NOT NULL auto_increment,
   `id_incidencia` bigint(20) NOT NULL default '0',
+  `id_task` bigint(20) NOT NULL default '0',
   `id_usuario` varchar(60) NOT NULL default '',
   `filename` varchar(255) NOT NULL default '',
   `description` varchar(150) default '',
@@ -239,7 +240,7 @@ CREATE TABLE `tproject` (
   `private` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `start` date NOT NULL default '0000-00-00',
   `end` date NOT NULL default '0000-00-00',
-  `id_owner` int(10) NOT NULL default '0',
+  `id_owner` VARCHAR(125), 
   PRIMARY KEY  (`id`)
 );
 
@@ -290,8 +291,8 @@ CREATE TABLE `ttask` (
   `completion` tinyint unsigned NOT NULL default '0',
   `priority` tinyint unsigned NOT NULL default '0',
   `dep_type` tinyint unsigned NOT NULL DEFAULT 0,
-  `start` datetime NOT NULL default '0000-00-00 00:00:00',
-  `end` datetime NOT NULL default '0000-00-00 00:00:00',
+  `start` date NOT NULL default '0000-00-00',
+  `end` date NOT NULL default '0000-00-00',
   PRIMARY KEY  (`id`)
 );
 
@@ -299,8 +300,8 @@ CREATE TABLE `ttask` (
 CREATE TABLE `tworkunit` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
-  `duration` int(10) unsigned NOT NULL default '0',
-  `id_user` int(10) unsigned NOT NULL default '0',
+  `duration` float (10,2) unsigned NOT NULL default '0',
+  `id_user` VARCHAR(125) DEFAULT NULL;
   `description` mediumtext NOT NULL,
   PRIMARY KEY  (`id`)
 );
@@ -318,14 +319,6 @@ CREATE TABLE `tworkunit_incident` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_incident` int(10) unsigned NOT NULL default '0',
   `id_workunit` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-);
-
-
-CREATE TABLE `tnote_task` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `id_note` int(10) unsigned NOT NULL default '0',
-  `id_task` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );
 

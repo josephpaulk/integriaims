@@ -549,12 +549,12 @@ div.data_box {
 
 /* Styles for Page TAB taken from Pandora FMS*/
 
-
 #menu_tab .mn, #menu_tab ul, #menu_tab .mn ul
 {
-    padding: 0px;
+    padding-right: 0px;
     list-style: none;
-    margin: 0px;
+    margin-top: -14px;
+    margin-right: -15px;
 }
 #menu_tab .mn li
 {

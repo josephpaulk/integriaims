@@ -19,10 +19,13 @@
 <p align='center'>
 
 <?PHP
-echo 'FRiTS '.$frits_version.' Build '.$build_version.'<br>';
+global $config;
+global $lang_label;
+
+echo 'FRiTS '.$config["version"].' Build '.$config["build_version"].'<br>';
 
 if (isset($_SESSION['id_usuario'])) {
-	echo '<a target="_new" href="general/license/frits_info_'.$language_code.'.html">'.
+	echo '<a target="_new" href="general/license/frits_info_'.$config["language_code"].'.html">'.
 	$lang_label["gpl_notice"].'</a><br>';
 	if (isset($_SERVER['REQUEST_TIME'])) {
 		$time = $_SERVER['REQUEST_TIME'];

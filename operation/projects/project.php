@@ -19,11 +19,12 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // Load global vars
-$accion = "";
-require "include/config.php";
+
+global $REMOTE_ADDR;
+global $config;
 require "include/functions_form.php";
 
-if (comprueba_login() != 0) {
+if (check_login() != 0) {
 	audit_db("Noauth",$REMOTE_ADDR, "No authenticated acces","Trying to access incident viewer");
 	require ("general/noaccess.php");
 	exit;
@@ -36,8 +37,8 @@ if (give_acl($id_usuario, 0, "IR")!=1) {
 	exit;
 }
 
-global $REMOTE_ADDR;
 
+$accion = "";
 // Delete project
 if (isset($_GET["quick_delete"])){
 	$id_project = $_GET["quick_delete"];
@@ -58,68 +59,20 @@ if (isset($_GET["quick_delete"])){
 	}
 }
 
-// Update project
-if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
-	$id_inc = $_POST["id_inc"];
- 	$grupo = entrada_limpia($_POST['grupo_form']);
-	$usuario= entrada_limpia($_POST["usuario_form"]);
-	if ((give_acl($id_usuario, $grupo, "IM")==1) OR ($usuario == $id_usuario)) { // Only admins (manage incident) or owners can modify incidents
-		$id_author_inc = give_incident_author($id_inc);
-		$titulo = entrada_limpia($_POST["titulo"]);
-		$descripcion = entrada_limpia($_POST['descripcion']);
-		$origen = entrada_limpia($_POST['origen_form']);
-		$prioridad = entrada_limpia($_POST['prioridad_form']);
-		$estado = entrada_limpia($_POST["estado_form"]);
-		$ahora=date("Y/m/d H:i:s");
-		if (isset($_POST["email_notify"]))
-			$email_notify=entrada_limpia($_POST["email_notify"]);
-		else
-			$email_notify = 0;
-		
-		incident_tracking ( $id_inc, $id_usuario, 1);
-		$old_prio = give_inc_priority ($id_inc);
-		// 0 - Abierta / Sin notas (Open without notes)
-		// 2 - Descartada (Not valid)
-		// 3 - Caducada (out of date)
-		// 13 - Cerrada (closed)
-		if ($old_prio != $prioridad)
-			incident_tracking ( $id_inc, $id_usuario, 8);		
-		if ($estado == 2)
-			incident_tracking ( $id_inc, $id_usuario, 4);	
-		if ($estado == 3)
-			incident_tracking ( $id_inc, $id_usuario, 5);
-		if ($estado == 13)
-			incident_tracking ( $id_inc, $id_usuario, 10);
-			
-		$sql = "UPDATE tincidencia SET actualizacion = '".$ahora."', titulo = '".$titulo."', origen= '".$origen."', estado = '".$estado."', id_grupo = '".$grupo."', id_usuario = '".$usuario."', notify_email = $email_notify, prioridad = '".$prioridad."', descripcion = '".$descripcion."' WHERE id_incidencia = ".$id_inc;
-		$result=mysql_query($sql);
-		audit_db($id_author_inc,$REMOTE_ADDR,"Incident updated","User ".$id_usuario." deleted updated #".$id_inc);
-		if ($result)
-			echo "<h3 class='suc'>".$lang_label["upd_incid_ok"]."</h3>";
-		else
-			echo "<h3 class='suc'>".$lang_label["upd_incid_no"]."</h3>";
-	} else {
-		audit_db($id_usuario,$REMOTE_ADDR,"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
-		echo "<h3 class='error'>".$lang_label["upd_incid_no"]."</h3>";
-		no_permission();
-	}
-}
 
 // INSERT PROJECT
 if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 
-	$grupo = entrada_limpia($_POST['group']);
-	$usuario = entrada_limpia($_POST["user"]);
+	$grupo = give_parameter_get ('group');
+	$usuario = give_parameter_get ("user");
 	if ((give_acl($id_usuario, $grupo, "IM") == 1) OR ($usuario == $id_usuario)) { // Only admins (manage
 		// Read input variables
-		$name = entrada_limpia($_POST['name']);
-		$description = entrada_limpia($_POST['description']);
-		$start_date = entrada_limpia($_POST['start_date']);
-		$end_date = entrada_limpia($_POST['end_date']);
-        if (isset($_POST['private']))
-		    $private = entrada_limpia($_POST['private']);
-        else
-            $private = 0;      
+		$name = give_parameter_post ("name");
+		$description = give_parameter_post ('description');
+		$start_date = give_parameter_post ('start_date');
+		$end_date = give_parameter_post ('end_date');
+		$private = give_parameter_post ("private",0);
+	
 		$id_owner = $usuario;
 		$sql = " INSERT INTO tproject
 			(name, description, id_group, private, start, end, id_owner) VALUES
@@ -129,14 +82,13 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 			echo "<h3 class='suc'>".$lang_label["create_project_ok"]." ( id #$id_inc )</h3>";
 			audit_db ($usuario, $REMOTE_ADDR, "Project created", "User ".$id_usuario." created project '$name'");
 		} else {
-            echo "<h3 class='err'>".$lang_label["create_project_bad"]." ( id #$id_inc )</h3>";
-        }      
+			echo "<h3 class='err'>".$lang_label["create_project_bad"]." ( id #$id_inc )</h3>";
+		}
 	} else {
 		audit_db($id_usuario, $REMOTE_ADDR, "ACL Forbidden", "User ".$_SESSION["id_usuario"]. " try to create project");
 		no_permission();
 	}
 }
-
 
 
 // MAIN LIST OF PROJECTS
@@ -154,6 +106,7 @@ echo "<th>".$lang_label["completion"];
 echo "<th>".$lang_label["group"];
 echo "<th>".$lang_label["people"];
 echo "<th>".$lang_label["tasks"];
+echo "<th>".$lang_label["time_used"];
 echo "<th>".$lang_label["start"];
 echo "<th>".$lang_label["end"];
 echo "<th>".$lang_label["delete"];
@@ -182,11 +135,12 @@ while ($row2=mysql_fetch_array($result2)){
 
 		// Project name
 		echo "<td class='$tdcolor' align='left' >";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id=".$row2["id"]."'>".$row2["name"]."</a></td>";
+		echo "<b><a href='index.php?sec=projects&sec2=operation/projects/project_detail&id=".$row2["id"]."'>".$row2["name"]."</a></b></td>";
 
 		// Completion
 		echo "<td class='$tdcolor' align='center'>";
-		echo "50%";
+		$completion =  format_numeric(calculate_project_progress ($row2["id"]));
+		echo "<img src='include/functions_graph.php?type=progress&width=90&height=20&percent=$completion'>";
 		
 		// Group
 		echo "<td class='$tdcolor'>".dame_nombre_grupo($row2["id_group"]);
@@ -197,6 +151,11 @@ while ($row2=mysql_fetch_array($result2)){
 
 		// Tasks
 		echo "<td class='$tdcolor'>";
+		echo give_number_tasks ($row2["id"]);
+		
+		// Time wasted
+		echo "<td class='$tdcolor'>";
+		echo format_numeric(give_hours_project ($row2["id"])). " hr";
 
 		// Start
 		echo "<td class='".$tdcolor."f9'>";

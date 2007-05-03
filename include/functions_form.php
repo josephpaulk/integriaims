@@ -14,9 +14,12 @@ function combo_users_project ($id_project){
 
 // Returns a combo with the users available 
 // ----------------------------------------------------------------------
-function combo_users ($actual = -1) {
+function combo_users ($actual = "") {
 	echo "<select name='user'>";
-	$sql='SELECT * FROM tusuario';
+	if ($actual != ""){ // Show current option
+		echo "<option>".$actual;
+	}
+	$sql = "SELECT * FROM tusuario WHERE id_usuario != '$actual'";
 	$result=mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
 		echo "<option>".$row["id_usuario"];
@@ -29,7 +32,14 @@ function combo_users ($actual = -1) {
 // ----------------------------------------------------------------------
 function combo_groups ($actual = -1) {
 	echo "<select name='group'>";
-	$sql='SELECT * FROM tgrupo';
+	if ($actual != -1){
+		$sql = "SELECT * FROM tgrupo WHERE id_grupo = $actual";
+		$result = mysql_query($sql);
+		if ($row=mysql_fetch_array($result)){
+			echo "<option value='".$row["id_grupo"]."'>".$row["nombre"];
+		}
+	}
+	$sql="SELECT * FROM tgrupo WHERE id_grupo != $actual";
 	$result=mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
 		echo "<option value='".$row["id_grupo"]."'>".$row["nombre"];

@@ -19,17 +19,20 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // Load global vars
+
 $accion = "";
-require("include/config.php");
-if (comprueba_login() != 0) {
-	audit_db("Noauth",$REMOTE_ADDR, "No authenticated acces","Trying to access incident viewer");
+global $config;
+global $lang_label;
+
+if (check_login() != 0) {
+	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access incident viewer");
 	require ("general/noaccess.php");
 	exit;
 }
 
 $id_usuario =$_SESSION["id_usuario"];
 if (give_acl($id_usuario, 0, "IR")!=1) {
-	audit_db($id_usuario,$REMOTE_ADDR, "ACL Violation","Trying to access incident viewer");
+	audit_db($id_usuario, $config["REMOTE_ADDR"], "ACL Violation","Trying to access incident viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -65,18 +68,18 @@ if (isset($_GET["quick_delete"])){
 // UPDATE incident
 if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 	$id_inc = $_POST["id_inc"];
- 	$grupo = entrada_limpia($_POST['grupo_form']);
-	$usuario= entrada_limpia($_POST["usuario_form"]);
+ 	$grupo = clean_input ($_POST['grupo_form']);
+	$usuario= clean_input ($_POST["usuario_form"]);
 	if ((give_acl($id_usuario, $grupo, "IM")==1) OR ($usuario == $id_usuario)) { // Only admins (manage incident) or owners can modify incidents
 		$id_author_inc = give_incident_author($id_inc);
-		$titulo = entrada_limpia($_POST["titulo"]);
-		$descripcion = entrada_limpia($_POST['descripcion']);
-		$origen = entrada_limpia($_POST['origen_form']);
-		$prioridad = entrada_limpia($_POST['prioridad_form']);
-		$estado = entrada_limpia($_POST["estado_form"]);
+		$titulo = clean_input ($_POST["titulo"]);
+		$descripcion = clean_input ($_POST['descripcion']);
+		$origen = clean_input ($_POST['origen_form']);
+		$prioridad = clean_input ($_POST['prioridad_form']);
+		$estado = clean_input ($_POST["estado_form"]);
 		$ahora=date("Y/m/d H:i:s");
 		if (isset($_POST["email_notify"]))
-			$email_notify=entrada_limpia($_POST["email_notify"]);
+			$email_notify=clean_input ($_POST["email_notify"]);
 		else
 			$email_notify = 0;
 		
@@ -110,21 +113,21 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 }
 // INSERT incident
 if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
-	$grupo = entrada_limpia($_POST['grupo_form']);
-	$usuario= entrada_limpia($_POST["usuario_form"]);
+	$grupo = clean_input ($_POST['grupo_form']);
+	$usuario= clean_input ($_POST["usuario_form"]);
 	if ((give_acl($id_usuario, $grupo, "IM") == 1) OR ($usuario == $id_usuario)) { // Only admins (manage
 		// Read input variables
-		$titulo = entrada_limpia($_POST['titulo']);
+		$titulo = clean_input ($_POST['titulo']);
 		$inicio = date("Y/m/d H:i:s");
-		$descripcion = entrada_limpia($_POST['descripcion']);
+		$descripcion = clean_input ($_POST['descripcion']);
 		$texto = $descripcion; // to view in textarea after insert
-		$origen = entrada_limpia($_POST['origen_form']);
-		$prioridad = entrada_limpia($_POST['prioridad_form']);
+		$origen = clean_input ($_POST['origen_form']);
+		$prioridad = clean_input ($_POST['prioridad_form']);
 		$actualizacion = $inicio;
 		$id_creator = $id_usuario;
-		$estado = entrada_limpia($_POST["estado_form"]);
+		$estado = clean_input ($_POST["estado_form"]);
 		if (isset($_POST["email_notify"]))
-			$email_notify=entrada_limpia($_POST["email_notify"]);
+			$email_notify=clean_input ($_POST["email_notify"]);
 		else
 			$email_notify = 0;
 		
@@ -148,20 +151,20 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 $busqueda="";
 if (isset($_POST["texto"]) OR (isset($_GET["texto"]))){
 	if (isset($_POST["texto"])){
-		$texto_form = $_POST["texto"];
+		$texto_form = clean_input ($_POST["texto"]);
 		$_GET["texto"]=$texto_form; // Update GET vars if data comes from POST
 	} else	// GET
-		$texto_form = $_GET["texto"];
+		$texto_form = clean_input ($_GET["texto"]);
 
 	$busqueda = "( titulo LIKE '%".$texto_form."%' OR descripcion LIKE '%".$texto_form."%' )";
 }
 
 if (isset($_POST["usuario"]) OR (isset($_GET["usuario"]))){
 	if (isset($_POST["usuario"])){
-		$usuario_form = $_POST["usuario"];
+		$usuario_form = clean_input ($_POST["usuario"]);
 		$_GET["usuario"]=$usuario_form;
 	} else // GET
-		$usuario_form=$_GET["usuario"];
+		$usuario_form= clean_input ($_GET["usuario"]);
 
 	if ($usuario_form != "--"){
 		if (isset($_GET["texto"]))
@@ -221,7 +224,7 @@ if (isset($_POST['estado']) OR (isset($_POST['grupo'])) OR (isset($_POST['priori
 $sql0="SELECT * FROM tincidencia ".$sql1." ORDER BY actualizacion DESC";
 $sql1_count="SELECT COUNT(id_incidencia) FROM tincidencia ".$sql1;
 $sql1=$sql0;
-$sql1=$sql1." LIMIT $offset, $block_size";
+$sql1=$sql1." LIMIT $offset, ". $config["block_size"];
 
 echo "<h2>".$lang_label["incident_manag"];
 if (isset($_POST['operacion']))
@@ -432,14 +435,14 @@ if ($row2_count[0] <= 0 ) {
 				case 4: echo "<img src='images/dot_red.gif'>"."<img src='images/dot_red.gif'>"."<img src='images/dot_red.gif'>"; break;
 				case 10: echo "<img src='images/dot_green.gif'>"."<img src='images/dot_green.gif'>"."<img src='images/dot_green.gif'>"; break;
 			}
-			echo "<td class='$tdcolor'><a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr(salida_limpia($row2["titulo"]),0,60);
+			echo "<td class='$tdcolor'><a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr(clean_output ($row2["titulo"]),0,60);
 			echo "<td class='$tdcolor'>".dame_nombre_grupo($row2["id_grupo"]);
 			echo "<td class='".$tdcolor."f9'>".human_time_comparation ( $row2["actualizacion"]);
 			echo "<td class='".$tdcolor."f9'>".$row2["origen"];
 			echo "<td class='$tdcolor'>";
 			
 			// Check for attachments in this incident
-			$file_number = give_number_files($row2["id_incidencia"]);
+			$file_number = give_number_files_incident ($row2["id_incidencia"]);
 			if ($file_number > 0)
 				echo '<img src="images/disk.png" valign="bottom">  '.$file_number;
 			echo "<td class='$tdcolor'>";

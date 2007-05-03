@@ -1,11 +1,11 @@
 <?PHP
 // Begin of automatic config file
-$dbname="frits";			// MySQL DataBase name
-$dbuser="root";
-$dbpassword="none";	// DB Password
-$dbhost="localhost"; // DB Host
-$config_homedir="/var/www/frits/";		// Config homedir
-$BASE_URL="http://localhost/frits";			// Base URL
+$config["dbname"] = "frits";			// MySQL DataBase name
+$config["dbuser"] = "root";
+$config["dbpassword"] = "none";	// DB Password
+$config["dbhost"] = "localhost"; // DB Host
+$config["homedir"] = "/var/www/frits/";		// Config homedir
+$config["base_url"] = "http://localhost/frits";			// Base URL
 // End of automatic config file
 ?><?php
 // FRITS - the FRee Incident Tracking System
@@ -25,10 +25,9 @@ $BASE_URL="http://localhost/frits";			// Base URL
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // This is the base config file
 
-$build_version="PC070412"; //PCyymmdd
-$frits_version="v0.9dev";
-// This is used for reporting, please add "/" character at the end
-//$config_homedir = "/var/www/frits/";
+$config["build_version"]="PC070501"; //PCyymmdd
+$config["version"]="v0.9dev";
+$config["REMOTE_ADDR"] = getenv ("REMOTE_ADDR");
 
 // Do not display any ERROR
 //error_reporting(0);
@@ -36,16 +35,11 @@ $frits_version="v0.9dev";
 // Display ALL errors
 error_reporting(E_ALL);
 
-//This is directory where placed "attachment" directory, to upload files stores. 
-// This MUST be writtable by http server user, and should be in pandora root. 
-// Please append "/" to the end.
-$attachment_store=$config_homedir;
-
 // Default font used for graphics (a Free TrueType font included with Pandora FMS)
-$config_fontpath = $config_homedir."reporting/FreeSans.ttf";
+$config["fontpath"] = $config["homedir"]."/reporting/FreeSans.ttf";
 
 // Read remaining config tokens from DB
-if (! mysql_connect($dbhost,$dbuser,$dbpassword)){ 
+if (! mysql_connect($config["dbhost"],$config["dbuser"],$config["dbpassword"])){ 
 
 //Non-persistent connection. If you want persistent conn change it to mysql_pconnect()
 	exit ('<html><head><title>FRITS Error</title>
@@ -66,32 +60,23 @@ if (! mysql_connect($dbhost,$dbuser,$dbpassword)){
 	</div>
 	</div></body></html>');
 }
-mysql_select_db($dbname);
-$result2=mysql_query("SELECT * FROM tconfig");
-while ($row2=mysql_fetch_array($result2)){
+mysql_select_db($config["dbname"]);
+$result2 = mysql_query("SELECT * FROM tconfig");
+while ($row2 = mysql_fetch_array($result2)){
 	switch ($row2["token"]) {
-		case "language_code": $language_code=$row2["value"];
+		case "language_code": $config["language_code"] = $row2["value"];
 						break;
-		case "block_size": $block_size=$row2["value"];
+		case "block_size": $config["block_size"] = $row2["value"];
 						break;
-		case "days_purge": $days_purge=$row2["value"];
+		case "days_purge": $config["days_purge"] = $row2["value"];
 						break;
-		case "days_compact": $days_compact=$row2["value"];
-						break;
-		case "graph_res": $config_graph_res=$row2["value"];
-						break;
-		case "step_compact": $config_step_compact=$row2["value"];
-						break;
-		case "truetype": $config_truetype=$row2["value"];
-						break;
-		case "graph_order": $config_graph_order=$row2["value"];
-						break;
-		case "bgimage": $config_bgimage=$row2["value"];
+		case "bgimage": $config["bgimage"] = $row2["value"];
 						break;
 	}
 }
-if ($language_code == 'ast_es') {
-	$help_code='ast';
-	}
-else $help_code = substr($language_code,0,2);
+if ($config["language_code"] == 'ast_es') {
+	$config["help_code"]='ast';
+} else 
+	$config["help_code"] = substr($config["language_code"],0,2);
+
 ?>

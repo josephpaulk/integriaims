@@ -245,37 +245,6 @@ function gime_idgroup_from_idevent($id_event){
 
 
 // --------------------------------------------------------------- 
-// Return module id given name of module type
-// --------------------------------------------------------------- 
-
-function dame_module_id($nombre){
-	require("config.php"); 
-	$query1="SELECT * FROM ttipo_modulo WHERE nombre = '".$nombre."'"; 
-	$resq1=mysql_query($query1);  
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["id_tipo"]; 
-	else
-		$pro = "";
-	return $pro; 
-}
-
-
-// --------------------------------------------------------------- 
-// Returns agent name when given its ID
-// --------------------------------------------------------------- 
-
-function dame_nombre_agente ($id){
-	require("config.php"); 
-	$query1="SELECT * FROM tagente WHERE id_agente = ".$id; 
-	$resq1=mysql_query($query1);  
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["nombre"]; 
-	else
-		$pro = "";
-	return $pro;
-}
-
-// --------------------------------------------------------------- 
 // Returns password (HASH) given user_id
 // --------------------------------------------------------------- 
 
@@ -288,83 +257,6 @@ function dame_password($id_usuario){
 	else
 		$pro = "";
 	return $pro; 
-}
-
-
-// --------------------------------------------------------------- 
-// Returns name of an alert given ID
-// --------------------------------------------------------------- 
-
-function dame_nombre_alerta($id){
-	require("config.php");
-	$query1="SELECT * FROM talerta WHERE id_alerta = ".$id;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["nombre"]; 
-	else
-		$pro = "";
-	return $pro;
-}
-
-// --------------------------------------------------------------- 
-// Returns name of a modules group
-// --------------------------------------------------------------- 
-
-function dame_nombre_grupomodulo($id){
-	require("config.php");
-	$query1="SELECT * FROM tmodule_group WHERE id_mg = ".$id; 
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["name"]; 
-	else
-		$pro = "";
-	return $pro;
-}
-
-// --------------------------------------------------------------- 
-// Returns agent name, given a ID of agente_module table
-// --------------------------------------------------------------- 
-
-function dame_nombre_agente_agentemodulo($id_agente_modulo){
-	require("config.php");
-	$query1="SELECT * FROM tagente_modulo WHERE id_agente_modulo = ".$id_agente_modulo;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro = dame_nombre_agente($rowdup["id_agente"]);
-	else
-		$pro = "";
-	return $pro;
-}
-
-// --------------------------------------------------------------- 
-// Return agent module name, given a ID of agente_module table
-// --------------------------------------------------------------- 
-
-function dame_nombre_modulo_agentemodulo($id_agente_modulo){
-	require("config.php"); 
-	$query1="SELECT * FROM tagente_modulo WHERE id_agente_modulo = ".$id_agente_modulo; 
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro = $rowdup["nombre"];
-	else
-		$pro = "";
-	return $pro;
-}
-
-
-// --------------------------------------------------------------- 
-// Return agent module, given a ID of agente_module table
-// --------------------------------------------------------------- 
-
-function dame_id_tipo_modulo_agentemodulo($id_agente_modulo){
-	require("config.php"); 
-	$query1="SELECT * FROM tagente_modulo WHERE id_agente_modulo = ".$id_agente_modulo; 
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro = $rowdup["id_tipo_modulo"];
-	else
-		$pro = "";
-	return $pro;
 }
 
 // --------------------------------------------------------------- 
@@ -398,35 +290,6 @@ function give_incident_author($id){
 	return $pro;
 }
 
-// --------------------------------------------------------------- 
-// This function returns name of server
-// --------------------------------------------------------------- 
-
-function give_server_name($id_server){
-	require("include/config.php");
-	$query1="SELECT * FROM tserver WHERE id_server  = '".$id_server."'";
-	$resq1=mysql_query($query1);  
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["name"];
-	else
-		$pro = "";
-	return $pro;
-}
-
-// --------------------------------------------------------------- 
-// Return name of a module type when given ID
-// --------------------------------------------------------------- 
-
-function dame_nombre_tipo_modulo ($id){
-	require("config.php");
-	$query1="SELECT * FROM ttipo_modulo WHERE id_tipo =".$id;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$pro=$rowdup["nombre"];
-	}
-	else $pro = "";
-	return $pro;
-} 
 
 // --------------------------------------------------------------- 
 // Return name of a group when given ID
@@ -468,9 +331,9 @@ function dame_numero_notas($id){
 	$query1="select COUNT(*) from tnota_inc WHERE id_incidencia =".$id;
 	$resq1=mysql_query($query1);
 	if ($rowdup=mysql_fetch_array($resq1)){
-		$pro=$rowdup["COUNT(*)"]; 
-	}
-	else $pro = "0";
+		$pro=$rowdup[0]; 
+	} else 
+		$pro = "0";
 	return $pro;
 }
 
@@ -478,15 +341,115 @@ function dame_numero_notas($id){
 // Returns number of files from a given incident
 // --------------------------------------------------------------- 
 
-function give_number_files($id){
+function give_number_files_incident ($id){
 	require("config.php"); 
 	$query1="select COUNT(*) from tattachment WHERE id_incidencia =".$id;
 	$resq1=mysql_query($query1);
 	if ($rowdup=mysql_fetch_array($resq1)){
-		$pro=$rowdup["COUNT(*)"]; 
-	}
-	else $pro = "0";
+		$pro=$rowdup[0]; 
+	} else 
+		$pro = 0;
 	return $pro;
+}
+
+
+// --------------------------------------------------------------- 
+// Returns number of files from a given incident
+// --------------------------------------------------------------- 
+
+function give_number_files_task ($id){
+	require("config.php"); 
+	$query1="select COUNT(*) from tattachment WHERE id_task =".$id;
+	$resq1=mysql_query($query1);
+	if ($rowdup=mysql_fetch_array($resq1)){
+		$pro=$rowdup[0]; 
+	} else 
+		$pro = 0;
+	return $pro;
+}
+/**
+* Return number of tasks associated to an incident
+*
+* $item		integer 	ID of project
+**/
+
+function give_number_tasks ($id_project){
+	global $config;
+	$query1="SELECT COUNT(*) FROM ttask WHERE id_project =".$id_project;
+	$resq1=mysql_query($query1);
+	if ($rowdup=mysql_fetch_array($resq1)){
+		$pro=$rowdup[0]; 
+	} else 
+		$pro = 0;
+	return $pro;
+}
+
+
+/**
+* Return total hours assigned to project
+*
+* $id_project	integer 	ID of project
+**/
+
+function give_hours_project ($id_project){
+	global $config;
+	$query1="SELECT SUM(tworkunit.duration) 
+			FROM tworkunit, tworkunit_task, ttask 
+			WHERE 	tworkunit_task.id_task = ttask.id AND 
+					ttask.id_project = $id_project AND 
+					tworkunit_task.id_workunit = tworkunit.id";
+	$resq1=mysql_query($query1);
+	if ($rowdup=mysql_fetch_array($resq1))
+		$pro=$rowdup[0]; 
+	else 
+		$pro = 0;
+	return $pro;
+}
+
+/**
+* Return total hours assigned to task
+*
+* $id_task	integer 	ID of task
+**/
+
+function give_hours_task ($id_task){
+	global $config;
+	$query1="SELECT SUM(tworkunit.duration) 
+			FROM tworkunit, tworkunit_task
+			WHERE 	tworkunit_task.id_task = $id_task AND 
+					tworkunit_task.id_workunit = tworkunit.id";
+	$resq1=mysql_query($query1);
+	if ($rowdup=mysql_fetch_array($resq1))
+		$pro=$rowdup[0]; 
+	else 
+		$pro = 0;
+	return $pro;
+}
+
+
+/**
+* Calculate project completion
+*
+* Uses each task completion and priority and uses second
+* to ponderate progress of this task. A average value of 
+* ponderated values is made to give final result.
+* $id_project 	integer 	ID of project
+**/
+
+function calculate_project_progress ($id_project){
+	global $config;
+	$query1="SELECT * FROM ttask 
+			WHERE id_project = $id_project";
+	$resq1=mysql_query($query1);
+	$sum = 0;
+	$tot = 0;
+	while ($row=mysql_fetch_array($resq1)){
+		if ($row["priority"] > 0)
+			$sum = $sum + $row["completion"] * ($row["priority"] / 10);
+		$tot++;
+	}
+		
+	return $sum / $tot;
 }
 
 
@@ -505,21 +468,6 @@ function dame_numero_datos(){
 	return $pro; 
 }
 
-
-// --------------------------------------------------------------- 
-// Returns string packet type given ID
-// --------------------------------------------------------------- 
-
-function dame_generic_string_data($id){ 
-	// Conexion con la base Datos 
-	require("config.php");
-	$query1="SELECT * FROM tagente_datos_string WHERE id_tagente_datos_string = ".$id;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$pro=$rowdup["datos"];
-	}
-	return $pro;
-}
 
 // --------------------------------------------------------------- 
 // Delete incident given its id and all its notes
@@ -552,44 +500,16 @@ function borrar_incidencia($id_inc){
 	$result=mysql_query($sql1);
 }
 
-// --------------------------------------------------------------- 
-// Return SO name given its ID
-// --------------------------------------------------------------- 
 
-function dame_so_name($id){
-	require("config.php");
-	$query1="SELECT * FROM tconfig_os WHERE id_os = ".$id;
-	$resq1=mysql_query($query1);  
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["name"];
-	else
-		$pro = "";
-	return $pro;
-}
 // --------------------------------------------------------------- 
 //  Update "contact" field in User table for username $nick
 // --------------------------------------------------------------- 
 
-function update_user_contact($nick){	// Sophus simply insist too much in this function... ;)
+function update_user_contact($nick){	
 	require("config.php");
 	$today=date("Y-m-d H:i:s",time());
 	$query1="UPDATE tusuario set fecha_registro ='".$today."' WHERE id_usuario = '".$nick."'";
 	$resq1=mysql_query($query1);
-}
-
-// --------------------------------------------------------------- 
-// Return SO iconname given its ID
-// --------------------------------------------------------------- 
-
-function dame_so_icon($id){ 
-	require("config.php");
-	$query1="SELECT * FROM tconfig_os WHERE id_os = ".$id;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["icon_name"];
-	else
-		$pro = "";
-	return $pro;
 }
 
 
@@ -625,10 +545,10 @@ function dame_admin($id){
 //doesn't have an open session and this session is from an valid user
 // --------------------------------------------------------------- 
 
-function comprueba_login() { 
+function check_login () { 
 	if (isset($_SESSION["id_usuario"])){
 		$id = $_SESSION["id_usuario"];
-		require("config.php");
+		require ("config.php");
 		$query1="SELECT * FROM tusuario WHERE id_usuario = '".$id."'";
 		$resq1=mysql_query($query1);
 		$rowdup=mysql_fetch_array($resq1);
@@ -1076,6 +996,39 @@ This is a automated FRITS message on incident update');
 		}
 	}
 	
+}
+
+function task_tracking ( $id_user, $id_task, $state, $id_note = 0, $id_file = 0) {
+	global $config;
+	global $lang_label;
+	global $REMOTE_ADDR;
+
+	/* 
+		11 - Task added
+		12 - Task updated
+		13 - Task. Note added
+		14 - Task. Workunit added.
+		15 - Task. File added
+		16 - Task completion changed
+		17 - Task finished.
+		18 - Task member added
+	*/		
+	
+	audit_db ($id_user, $REMOTE_ADDR, "Task #$id_task tracking updated", "State #$state");
+	$id_external = $id_note + $id_file; // one or two of them must be 0, so sum is a good option to calculate who is usable
+	$sql = "INSERT INTO ttask_track (id_user, id_task, timestamp, state, id_external) values ('$id_user', $id_task, NOW(), $state, $id_external)";
+	$resq1=mysql_query($sql);
+}
+
+function give_db_value ($field, $table, $field_search, $condition_value){
+	global $config;
+	$query = "SELECT $field FROM $table WHERE $field_search = '$condition_value' ";
+	$resq1 = mysql_query($query);
+	if ($rowdup = mysql_fetch_array($resq1))
+		$pro = $rowdup[0];
+	else
+		$pro = "";
+	return $pro;
 }
 
 ?>

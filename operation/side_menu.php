@@ -60,7 +60,7 @@ if ($sec == "assets"){
 	echo "</ul>";
 }
 
-// LINKS
+// Sponsors
 
 echo "<h1>".$lang_label["links_header"]."</h1>";
 echo "<ul class='sidemenu'>";
@@ -78,7 +78,7 @@ echo "</ul>";
 
 // Banners
 
-echo "<h1>Banners</h1>";
+echo "<h1>Our sponsors</h1>";
 echo "<p>";
 echo "<img src='images/minilogoartica.jpg'>";
 echo "<br><br>";

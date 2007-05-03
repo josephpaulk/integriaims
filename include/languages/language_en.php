@@ -777,8 +777,11 @@ $lang_label["create_project"]="Create project";
 $lang_label["completion"]="Completion";
 $lang_label["people"]="People";
 $lang_label["tasks"]="Tasks";
+$lang_label["task"]="Task";
+$lang_label["tasklist"]="Task list";
 $lang_label["task_management"]="Task management";
-
+$lang_label["workunits"]="Workunits";
+$lang_label["prio"]="PRIO";
 $lang_label["start"]="Start";
 $lang_label["end"]="End";
 $lang_label["create_project"]="Create project";
@@ -786,7 +789,16 @@ $lang_label["rev_project"]="Project review / update";
 $lang_label["private"]="Private";
 $lang_label["owner"]="Owner";
 $lang_label["project"]="Project";
-
+$lang_label["create_task"]="New task";
+$lang_label["update_ok"]="Successfully updated";
+$lang_label["update_no"]="Error while updating. Aborted";
+$lang_label["rev_task"] = "Task review";
+$lang_label["add_workunit"] = "Add workunit to task";
+$lang_label["add_file"] = "Add file to task";
+$lang_label["time_used"]="Time used";
+$lang_label["workunit_resume"]="Workunit resume";
+$lang_label["workunit_ok"]="Workunit added";
+$lang_label["workunit_no"]="Problemd adding workunit.";
 global $lang_label; 
 global $help_label;
 ?>

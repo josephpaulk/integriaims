@@ -16,27 +16,27 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // Load global vars
-require "include/config.php";
+
+global $config;
+global $REMOTE_ADDR;
+
 require "include/functions_form.php";
 
-if (comprueba_login() != 0) {
+if (check_login() != 0) {
  	audit_db("Noauth",$REMOTE_ADDR, "No authenticated access","Trying to access event viewer");
 	require ("general/noaccess.php");
 	exit;
 }
 
-if (isset($_GET["id_grupo"]))
-	$id_grupo = $_GET["id_grupo"];
-else
-	$id_grupo = 0;
-
+	
 $id_user = $_SESSION['id_usuario'];
-if (give_acl($id_user, $id_grupo, "IR") != 1){
+if (give_acl($id_user, 0, "IR") != 1){
  	// Doesn't have access to this page
-	audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to project detail page");
+	audit_db ($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to project detail page");
 	include ("general/noaccess.php");
 	exit;
 }
+
 
 $create_mode = 0;
 $name = "";
@@ -45,30 +45,65 @@ $end_date = "";
 $start_date = "";
 $private = 0;
 $id_project = -1; // Create mode by default
+$result_output = "";
 
+// ---------------
+// Update project
+// ---------------
+
+if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
+	$id_project = $_POST["id_project"];
+ 	$id_group = give_parameter_post ('group');
+	$user = give_parameter_post ("user");
+	$name = give_parameter_post ("name");
+	$description = give_parameter_post ('description');
+	$start_date = give_parameter_post ('start_date');
+	$end_date = give_parameter_post ('end_date');
+	$private = give_parameter_post ("private",0);			
+	$sql = "UPDATE tproject SET 
+			name = '$name',
+			description = '$description',
+			start = '$start_date',
+			end = '$end_date',
+			private = '$private',  
+			id_owner = '$user', 
+			id_group = '$id_group'
+			WHERE id = $id_project";
+	$result = mysql_query($sql);
+	audit_db($user, $REMOTE_ADDR, "Project updated", "Project $name");
+	if ($result)
+		$result_output = "<h3 class='suc'>".$lang_label["update_ok"]."</h3>";
+	else
+		$result_output = "<h3 class='error'>".$lang_label["update_error"]."</h3>";
+	$_GET["id"] = $id_project;
+}
+
+// ---------------------
 // Edition / View mode
+// ---------------------
+$id_project = give_parameter_get ("id", 0);
 
-if (isset($_GET["id"])){
-	$creacion_incidente = 0;
-	$id_project = $_GET["id"];
-	$iduser_temp=$_SESSION['id_usuario'];
+if ( $id_project != 0){	
 	// Obtain group of this incident
 	$sql1='SELECT * FROM tproject WHERE id = '.$id_project;
 	if (!$result=mysql_query($sql1)){
-        audit_db($id_user_temp,$REMOTE_ADDR, "ACL Violation","Trying to access to other project hacking with URL");
-        include ("general/noaccess.php");
-        exit;  
-    }   
+		audit_db($_SESSION['id_usuario'],$REMOTE_ADDR, "ACL Violation","Trying to access to other project hacking with URL");
+		include ("general/noaccess.php");
+		exit;  
+	}
 	$row=mysql_fetch_array($result);
+
 	// Get values
+
 	$name = $row["name"];
 	$description = $row["description"];
 	$start_date = $row["start"];
-    $end_date = $row["end"];
-    $group = $row["id_group"];
-    $owner = $row["id_owner"];
-    $private = $row["private"];
- 
+	$end_date = $row["end"];
+	$group = $row["id_group"];
+	$owner = $row["id_owner"];
+	$private = $row["private"];
+
+	$task_number =  give_number_tasks ($id_project);
 	// SHOW TABS
 	echo "<div id='menu_tab'><ul class='mn'>";
 
@@ -79,7 +114,16 @@ if (isset($_GET["id"])){
 
 	// Tasks
 	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["tasks"]." () </a>";
+	if ($task_number > 0)
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["tasks"]." ( $task_number ) </a>";		
+	else 
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["tasks"]."</a>";		
+	echo "</li>";
+	
+	// Workunits
+	$totalhours =  give_hours_project ($id_project);
+	echo "<li class='nomn'>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=-1'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($totalhours hr)</a>";
 	echo "</li>";
 
 	// Tracking
@@ -97,36 +141,37 @@ if (isset($_GET["id"])){
 	echo "<div style='height: 25px'> </div>";
 } 
 
+
+// Show result of previous operations (before tabs)
+if ($result_output != "")
+	echo $result_output;
+
 // Create project form
 
-elseif (isset($_GET["insert_form"])){
-		$email_notify=0;
-		$iduser_temp=$_SESSION['id_usuario'];
-		$titulo = "";
-		$prioridad = 0;
-		$id_grupo = 0;
-		$grupo = dame_nombre_grupo(1);
+if (isset($_GET["insert_form"])){
+	$email_notify=0;
+	$iduser_temp=$_SESSION['id_usuario'];
+	$titulo = "";
+	$prioridad = 0;
+	$id_grupo = 0;
+	$grupo = dame_nombre_grupo(1);
 
-		$usuario= $_SESSION["id_usuario"];
-		$estado = 0;
-		$actualizacion=date("Y/m/d H:i:s");
-		$inicio = $actualizacion;
-		$id_creator = $iduser_temp;
-		$create_mode = 1;
-} else {
-	audit_db ($id_user, $REMOTE_ADDR, "HACK", "Trying to create/access project in a unusual way");
-	no_permission();
-
-}
+	$usuario= $_SESSION["id_usuario"];
+	$estado = 0;
+	$actualizacion=date("Y/m/d H:i:s");
+	$inicio = $actualizacion;
+	$id_creator = $iduser_temp;
+	$create_mode = 1;
+} 
 
 // ********************************************************************************************************
 // Show the form
 // ********************************************************************************************************
 
-if ($create_mode = 1)
+if ($create_mode == 1)
 	echo "<form name='projectf' method='POST' action='index.php?sec=projects&sec2=operation/projects/project&action=insert'>";
 else
-	echo "<form name='projectf' method='POST' action='index.php?sec=projects&sec2=operation/projects/project&action=update'>";
+	echo "<form name='projectf' method='POST' action='index.php?sec=projects&sec2=operation/projects/project_detail&action=update'>";
 
 if (isset($id_project)) {
 	echo "<input type='hidden' name='id_project' value='".$id_project."'>";
@@ -171,11 +216,11 @@ echo "<input type='text' id='end_date' name='end_date' size=10 value='$end_date'
 
 echo '<tr><td class="datos"><b>'.$lang_label["group"].'</b>';
 echo "<td class='datos'>";
-combo_groups ();
+combo_groups ($group);
 
 echo '<td class="datos"><b>'.$lang_label["owner"].'</b>';
 echo "<td class='datos'>";
-combo_users ();
+combo_users ($owner);
 
 // Description
 
@@ -187,7 +232,6 @@ echo "</table>";
 
 if ($create_mode == 0){
 	echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["in_modinc"].'" border="0">';
-	
 } else {
 	echo '<input type="submit" class="sub create" name="accion" value="'.$lang_label["create"].'" border="0">';
 }

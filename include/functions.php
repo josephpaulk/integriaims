@@ -22,37 +22,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-// ---------------------------------------------------------------
-// input: var, string. 
-//          mesg, mesage to show, var content. 
-// --------------------------------------------------------------- 
-
-function midebug($var, $mesg){ 
-	echo "[DEBUG (".$var."]: (".$mesg.")"; 
-	echo "<br>";
-} 
-
-// --------------------------------------------------------------- 
-// array_in
-// Search "item" in a given array, return 1 if exists, 0 if not
-// ---------------------------------------------------------------
-
-function array_in($exampleArray, $item){
-	$result = 0;
-	foreach ($exampleArray as $key => $value){
-  		if ($value == $item){
-   			$result = 1;
-		}
-  	}
-	return $result;
-}
 
 
-// ---------------------------------------------------------------
-// parse and clear string
-// --------------------------------------------------------------- 
+/**
+* Clean output string
+*
+* This function clean a user string to be rendered in HTML output.
+* This replace all conflictive characters.
+*
+* $string	string	Output string to be cleaned
+*/
 
-function salida_limpia ($string){
+function clean_output  ($string){
 	$quote_style=ENT_QUOTES;
 	static $trans;
 	if (!isset($trans)) {
@@ -66,36 +47,67 @@ function salida_limpia ($string){
 	return preg_replace("/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/","&#38;" , strtr($string, $trans));
 }
 /*
-{
-	$texto_ok = htmlspecialchars($texto, ENT_QUOTES, "ISO8859-15"); // Quitamos 
-	// Reemplazamos retornos de carro por "<br>"
-	$texto_html = str_replace(chr(13),"<br>",$texto_ok);
-	return $texto_html;
-}
-*/
-
 function salida_ascii ($string){
 	$texto_ok = htmlspecialchars($string, ENT_QUOTES, "ISO8859-15");
 	return $texto_ok;
 }
+*/
+/**
+* Clean input text
+*
+* This function clean a user string to be used of SQL operations or 
+* other kind of sensible string operations (like XSS)
+* This replace all conflictive characters.
+*
+* $text	string	Inputstring to be cleaned*/
 
-// ---------------------------------------------------------------
-// This function reads a string and returns it "clean"
-// for use in DB, againts string XSS and so on
-// ---------------------------------------------------------------
 
-function entrada_limpia ($texto){
+function clean_input ($text){
 	// OJO: MagicQuotes en la configuracion de php.ini deberia estar activado y esta funcion solo deberiamos 
 	// llamarla al entrar datos para escribir datos en la base MYSQL no al reves.
-	//	$str = "A 'quote' is <b>bold</b>";
+	// Example $str = "A 'quote' is <b>bold</b>";
 	// Outputs: A 'quote' is &lt;b&gt;bold&lt;/b&gt;
-	// $filtro0 = utf8_decode($texto);
-	$filtro1 =  htmlentities($texto, ENT_QUOTES); // Primero evitamos el problema de las dobles comillas, comillas sueltas, etc.
+	$filtro1 =  htmlentities($text, ENT_QUOTES); 
+	// Primero evitamos el problema de las dobles comillas, comillas sueltas, etc.
 	$filtro2 = $filtro1;
-	// Sustituimos los caracteres siguientes ( ) : &
+	// Optional: Replace characters ( ) : &
 	// $filtro2 = strtr($filtro1, array('&' => '&#38',':' => '58', '(' => '&#40;', ')' => '&#41;')); 
 	return $filtro2;							
 }
+
+/**
+* Search item in a given array.
+*
+* @exampleArray	array 	Source of items to search in
+* $item		varchar	Data to search
+*/
+
+function array_in($exampleArray, $item){
+	$result = 0;
+	foreach ($exampleArray as $key => $value){
+  		if ($value == $item){
+   			$result = 1;
+		}
+  	}
+	return $result;
+}
+
+function give_parameter_get ( $name, $default = "" ){
+	$output = $default;
+	if (isset ($_GET[$name])){
+		$output = $_GET[$name];
+	}
+	return $output;
+}
+
+function give_parameter_post ( $name, $default = "" ){
+	$output = $default;
+	if (isset ($_POST[$name])){
+		$output = $_POST[$name];
+	}
+	return $output;
+}
+
 
 // ---------------------------------------------------------------
 // Esta funcion lee una cadena y la da "limpia", para su uso con 
@@ -114,56 +126,6 @@ function parametro_limpio($texto){
 	$safe = preg_replace('/[^a-z0-9_\/]/i','',$texto);
 	return $safe;
 }
-
-// ---------------------------------------------------------------
-// Esta funcion se supone que cierra todos los tags HTML abiertos y no cerrados
-// ---------------------------------------------------------------
-
-// string closeOpenTags(string string [, string beginChar [, stringEndChar [, string CloseChar]]]);
-
-function closeOpenTags($str, $open = "<", $close = ">", $end = "/", $tokens = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-{ $chars = array();
-	for ($i = 0; $i < strlen($tokens); $i++)
-	{ $chars[] = substr($tokens, $i, 1); }
-
-	$openedTags = array();
-	$closedTags = array();
-	$tag = FALSE;
-	$closeTag = FALSE;
-	$tagName = "";
-
-	for ($i = 0; $i < strlen($str); $i++)
-	{ $char = substr($str, $i, 1);
-	if ($char == $open)
-	{ $tag = TRUE; continue; }
-	if ($char == $end)
-	{ $closeTag = TRUE; continue; }
-	if ($tag && in_array($char, $chars))
-	{ $tagName .= $char; }
-	else
-	{if ($closeTag)
-		{if (isset($closedTags[$tagName]))
-			{ $closedTags[$tagName]++; }
-		else
-			{ $closedTags[$tagName] = 1; } }
-		elseif ($tag)
-			{if (isset($openedTags[$tagName]))
-			{ $openedTags[$tagName]++; }
-			else
-			{ $openedTags[$tagName] = 1; } }
-		$tag = FALSE; $closeTag = FALSE; $tagName = ""; } 
-	 }
-
-	while(list($tag, $count) = each($openedTags))
-	{
-	$closedTags[$tag] = isset($closedTags[$tag]) ? $closedTags[$tag] : 0;
-	$count -= $closedTags[$tag];
-	if ($count < 1) continue;
-	$str .= str_repeat($open.$end.$tag.$close, $count);
-	}
-	return $str;
-
-	}
 
 // ---------------------------------------------------------------
 // Return string with time-threshold in secs, mins, days or weeks
@@ -220,8 +182,9 @@ function popup_help ($help_id){
 // ---------------------------------------------------------------
 
 function no_permission () {
-	require("config.php");
-	require ("include/languages/language_".$language_code.".php");
+	global $config;
+	global $lang_label;
+	require ("include/languages/language_".$config["language_code"].".php");
 	echo "<h3 class='error'>".$lang_label["no_permission_title"]."</h3>";
 	echo "<img src='images/noaccess.gif' width='120'><br><br>";
 	echo "<table width=550>";
@@ -270,9 +233,10 @@ function list_files($directory, $stringSearch, $searchHandler, $outputHandler) {
 
 
 function pagination ($count, $url, $offset ) {
-	require ("config.php");
-	require ("include/languages/language_".$language_code.".php");
-	
+	global $config;
+	require ("include/languages/language_".$config["language_code"].".php");
+	$block_size = $config["block_size"];
+
 	/* 	URL passed render links with some parameter
 			&offset - Offset records passed to next page
 	  		&counter - Number of items to be blocked 
@@ -382,8 +346,8 @@ function format_numeric ( $number, $decimals=2, $dec_point=".", $thousands_sep="
 }
 
 function human_time_comparation ( $timestamp ){
-	require("config.php");
-	require ("include/languages/language_".$language_code.".php");
+	global $config;
+	require ("include/languages/language_".$config["language_code"].".php");
 	$ahora=date("Y/m/d H:i:s");
 	$seconds = strtotime($ahora) - strtotime($timestamp);
 	if ($seconds < 3600)
@@ -396,7 +360,7 @@ function human_time_comparation ( $timestamp ){
 }
 
 function clean_output_breaks ($string){
-	$myoutput = salida_limpia($string);
+	$myoutput = clean_output ($string);
 	return preg_replace ('/\n/',"<br>", $myoutput);
 }
 

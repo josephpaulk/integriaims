@@ -1,4 +1,25 @@
-2007-04-26  slerena  <slerena@artica.es>
+2007-05-03 Sancho Lerena  <slerena@artica.es>
+
+	* Added files: operation/projects/task_files.php
+	operation/projects/task_detail.php
+	operation/projects/task_workunit.php include/functions_graph.php
+
+	* Massive changes in $config and global variables. Some main
+	functions changed to english, some estructural (and temporal)
+	changes.
+
+	* Now is functional the basic project / task management with
+	workunit assigment, many bugs, many features not implemented
+	(human resource allocation).
+
+	* Old code from messages, user and incident management is
+	temporaly brokwn because function renames.
+
+	* BEWARE: There is no ACL checks yet!.
+	
+	* include/functions_graph.php now contains all graphical functions.
+
+2007-04-26  Sancho Lerena <slerena@artica.es>
 
 	* operation/projects/task.php: Task manager (Added).
 

@@ -44,8 +44,10 @@ if ($develop_bypass != 1){
 
 // Real start
 session_start(); 
+
 include "include/config.php";
-include "include/languages/language_".$language_code.".php";
+global $config;
+include "include/languages/language_".$config["language_code"].".php";
 require "include/functions.php"; // Including funcions.
 require "include/functions_db.php";
 ?>
@@ -55,24 +57,22 @@ require "include/functions_db.php";
 <head>
 <?php
 // Refresh page
-if (isset ($_GET["refr"])){
-	$intervalo = entrada_limpia ($_GET["refr"]);
+if ($intervalo = give_parameter_get ("refr") != "") {
 	// Agent selection filters and refresh
- 	if (isset ($_POST["ag_group"])) {
-		$ag_group = $_POST["ag_group"];
+ 	if ($ag_group = give_parameter_post ("ag_group" != "")) {
 		$query = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] . '&ag_group_refresh=' . $ag_group;
 		echo '<meta http-equiv="refresh" content="' . $intervalo . '; URL=' . $query . '">';
 	} else 
 		echo '<meta http-equiv="refresh" content="' . $intervalo . '">';	
 }
 ?>
-<title>FRITS - FRee Incident Tracking System</title>
+<title>FRITS - the Free distRibuted enterprIse project Tracking System</title>
 <meta http-equiv="expires" content="0">
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-15">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
-<meta name="author" content="Sancho Lerena, Raul Mateos">
-<meta name="copyright" content="This is GPL software. Created by Sancho Lerena and others">
+<meta name="author" content="Sancho Lerena">
+<meta name="copyright" content="This is GPL software. Created by Sancho Lerena">
 <meta name="keywords" content="pandora, monitoring, system, GPL, software">
 <meta name="robots" content="index, follow">
 <link rel="icon" href="images/frits.ico" type="image/ico">
@@ -82,14 +82,12 @@ if (isset ($_GET["refr"])){
 
 <?php
 	// Show custom background
-	echo '<body background="images/backgrounds/' . $config_bgimage . '">';
-	$REMOTE_ADDR = getenv ("REMOTE_ADDR");
-   	global $REMOTE_ADDR;
-
+	echo '<body background="images/backgrounds/' . $config["bgimage"] . '">';
+	
         // Login process 
    	if ( (! isset ($_SESSION['id_usuario'])) AND (isset ($_GET["login"]))) {
-		$nick = entrada_limpia ($_POST["nick"]);
-		$pass = entrada_limpia ($_POST["pass"]);
+		$nick = give_parameter_post ("nick");
+		$pass = give_parameter_post ("pass");
 		
 		// Connect to Database
 		$sql1 = 'SELECT * FROM tusuario WHERE id_usuario = "'.$nick.'"';
@@ -108,7 +106,7 @@ if (isset ($_GET["refr"])){
 				unset ($_GET["sec2"]);
 				$_GET["sec"] = "general/logon_ok";
 				update_user_contact ($nick);
-				logon_db ($nick, $REMOTE_ADDR);
+				logon_db ($nick, $config["REMOTE_ADDR"]);
 				$_SESSION['id_usuario'] = $nick;
 				
 			} else {
@@ -126,8 +124,7 @@ if (isset ($_GET["refr"])){
 				echo '</div>';
 				exit;
 			}
-		}
-		else {
+		} else {
 			// User not known
 			unset ($_GET["sec2"]);
 			include "general/logon_failed.php";
@@ -140,7 +137,7 @@ if (isset ($_GET["refr"])){
 			include "general/footer.php";
 			echo '</div>';
 			exit;
-		}
+		} 
 	} elseif (! isset ($_SESSION['id_usuario'])) {
 		// There is no user connected
 		include "general/login_page.php";
