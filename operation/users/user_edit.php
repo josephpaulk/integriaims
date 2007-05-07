@@ -18,9 +18,9 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 // Load global vars
-require("include/config.php");
+global $config;
 
-if (comprueba_login() == 0) {
+if (check_login() == 0) {
 	
 	$view_mode = 0;
 	$id_usuario = $_SESSION["id_usuario"];
@@ -49,11 +49,11 @@ if (comprueba_login() == 0) {
 			}
 				
 			// $nombre = $_POST["nombre"]; // Don't allow change name !!
-			$pass1 = entrada_limpia($_POST["pass1"]);
-			$pass2 = entrada_limpia($_POST["pass2"]);
-			$direccion = entrada_limpia($_POST["direccion"]);
-			$telefono = entrada_limpia($_POST["telefono"]);
-			$nombre_real = entrada_limpia($_POST["nombre_real"]);
+			$pass1 = clean_input ($_POST["pass1"]);
+			$pass2 = clean_input($_POST["pass2"]);
+			$direccion = clean_input($_POST["direccion"]);
+			$telefono = clean_input($_POST["telefono"]);
+			$nombre_real = clean_input($_POST["nombre_real"]);
 			if ($pass1 != $pass2) {
 				echo "<h3 class='error'>".$lang_label["pass_nomatch"]."</h3>";
 			}
@@ -62,7 +62,7 @@ if (comprueba_login() == 0) {
 			}
 			//echo "<br>DEBUG para ".$nombre;
 			//echo "<br>Comentarios:".$comentarios;	
-			$comentarios = entrada_limpia($_POST["comentarios"]);
+			$comentarios = clean_input($_POST["comentarios"]);
 			if (dame_password($nombre)!=$pass1){
 				// Only when change password
 				$pass1=md5($pass1);
@@ -74,7 +74,7 @@ if (comprueba_login() == 0) {
 			
 			// Ahora volvemos a leer el registro para mostrar la info modificada
 			// $id is well known yet
-			$query1="SELECT * FROM tusuario WHERE id_usuario = '".$id."'";
+			$query1="SELECT * FROM tusuario WHERE id_usuario = '".$id_ver."'";
 			$resq1=mysql_query($query1);
 			$rowdup=mysql_fetch_array($resq1);
 			$nombre=$rowdup["id_usuario"];			
@@ -83,7 +83,7 @@ if (comprueba_login() == 0) {
 			echo "<h3 class='error'>".$lang_label["pass_nomatch"]."</h3>";
 		}
 	} 
-		echo "<h2>".$lang_label["user_edit_title"]."<a href='help/".$help_code."/chap2.php#22' target='_help' class='help'>&nbsp;<span>".$lang_label["help"]."</span></a></h3>";
+		echo "<h2>".$lang_label["user_edit_title"]."</h3>";
 
 	// Si no se obtiene la variable "modificado" es que se esta visualizando la informacion y
 	// preparandola para su modificacion, no se almacenan los datos
@@ -128,7 +128,7 @@ if (comprueba_login() == 0) {
 		echo "<input name='uptbutton' type='submit' class='sub upd' value='".$lang_label["update"]."'>";
 	}
 	
-	echo '<h3>'.$lang_label["listGroupUser"].'<a href="help/'.$help_code.'/chap2.php#22" target="_help" class="help">&nbsp;<span>'.$lang_label["help"].'</span></a></h3>';
+	echo '<h3>'.$lang_label["listGroupUser"].'</h3>';
 	echo "<table width='500' cellpadding='3' cellspacing='3' class='databox_color'>";
 	$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
 	$result=mysql_query($sql1);

@@ -16,10 +16,27 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // Load global vars
-require("include/config.php");
 
-if (comprueba_login() != 0) {
- 	audit_db("Noauth",$REMOTE_ADDR, "No authenticated access","Trying to access event viewer");
+?>
+
+<script language="javascript">
+
+	/* Function to hide/unhide a specific Div id */
+	function toggleDiv (divid){
+		if (document.getElementById(divid).style.display == 'none'){
+			document.getElementById(divid).style.display = 'block';
+		} else {
+			document.getElementById(divid).style.display = 'none';
+		}
+	}
+</script>
+
+<?PHP
+
+global $config;
+
+if (check_login() != 0) {
+ 	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -32,7 +49,7 @@ else
 $id_user=$_SESSION['id_usuario'];
 if (give_acl($id_user, $id_grupo, "IR") != 1){
  	// Doesn't have access to this page
-	audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
+	audit_db($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
 	include ("general/noaccess.php");
 	exit;
 }
@@ -69,27 +86,35 @@ if (isset($_GET["id"])){
 	// Note add
 	// --------
 	if (isset($_GET["insertar_nota"])){
-		$id_inc = entrada_limpia($_POST["id_inc"]);
-		$timestamp = entrada_limpia($_POST["timestamp"]);
-		$nota = entrada_limpia($_POST["nota"]);
+		$id_inc = give_parameter_post ("id_inc");
+		$timestamp = give_parameter_post ("timestamp");
+		$nota = give_parameter_post ("nota");
+		$workunit = give_parameter_post ("workunit",0);
+		$timeused = give_parameter_post ("timeused",0);
 		$id_usuario=$_SESSION["id_usuario"];
 
 		$sql1 = "INSERT INTO tnota (id_usuario,timestamp,nota) VALUES ('".$id_usuario."','".$timestamp."','".$nota."')";
 		$res1=mysql_query($sql1);
 		if ($res1) 
 			$result_msg = "<h3 class='suc'>".$lang_label["create_note_ok"]."</h3>";
-
-		$sql2 = "SELECT * FROM tnota WHERE id_usuario = '".$id_usuario."' AND timestamp = '".$timestamp."'";
-		$res2=mysql_query($sql2);
-		$row2=mysql_fetch_array($res2);
-		$id_nota = $row2["id_nota"];
-
+		// get inserted note_number
+		$id_nota = mysql_insert_id();
+		
 		$sql3 = "INSERT INTO tnota_inc (id_incidencia, id_nota) VALUES (".$id_inc.",".$id_nota.")";
 		$res3=mysql_query($sql3);
 
 		$sql4 = "UPDATE tincidencia SET actualizacion = '".$timestamp."' WHERE id_incidencia = ".$id_inc;
 		$res4 = mysql_query($sql4);
 		incident_tracking ( $id_inc, $id_usuario, 2);
+
+		// Add work unit if enabled
+		if ($workunit == 1){
+			$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description) VALUES ('$timestamp', '$timeused', '$id_usuario', '$nota')";
+			$res5 = mysql_query($sql);
+			$id_workunit = mysql_insert_id();
+			$sql1 = "INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES ($id_inc, $id_workunit)";
+			$res6 = mysql_query($sql1);
+		}
 	}
 	
 	// -----------
@@ -113,12 +138,10 @@ if (isset($_GET["id"])){
 			incident_tracking ( $id_inc, $id_usuario, 3);
 			$result_msg="<h3 class='suc'>".$lang_label["file_added"]."</h3>";
 			// Copy file to directory and change name
-			$nombre_archivo = $attachment_store."attachment/pand".$id_attachment."_".$filename;
-echo "Source file ".$_FILES['userfile']['tmp_name'];
-echo "<br>";
-echo "Destination file $nombre_archivo<br>";
+			$nombre_archivo = $config["homedir"]."attachment/pand".$id_attachment."_".$filename;
+
 			if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo ))){
-					echo "<h3 class=error>".$lang_label["attach_error"]."</h3>";
+					$result_msg = "<h3 class=error>".$lang_label["attach_error"]."</h3>";
 				$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
 				mysql_query($sql);
 			} else {
@@ -140,9 +163,19 @@ echo "Destination file $nombre_archivo<br>";
 	echo "<li class='nomn'>";
 	echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
 	echo "</li>";
+
+	// Workunits
+	$timeused = give_hours_incident ( $id_inc);
+	echo "<li class='nomn'>";
+	if ($timeused > 0)
+		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
+	else
+		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
+	echo "</li>";
+
 	
 	// Attach
-	$file_number = give_number_files($id_inc);
+	$file_number = give_number_files_incident($id_inc);
 	if ($file_number > 0){
 		echo "<li class='nomn'>";
 		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".$lang_label["Attachment"]." ($file_number) </a>";
@@ -356,7 +389,7 @@ echo '<option value="10">'.$lang_label["maintenance"];
 echo "<td class='datos'><b>Creator</b><td class='datos'>".$id_creator." ( <i>".dame_nombre_real($id_creator)." </i>)";
 
 if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp))
-	echo '</select><tr><td class="datos2" colspan="4"><textarea name="descripcion" rows="15" cols="85">';
+	echo '</select><tr><td class="datos2" colspan="4"><textarea name="descripcion" rows="20" cols="85">';
 else
 	echo '</select><tr><td class="datos2" colspan="4"><textarea readonly name="descripcion" rows="15" cols="85">';
 if (isset($texto)) {echo $texto;}
@@ -383,43 +416,60 @@ echo "</table>";
 // ----------------
 if ($creacion_incidente == 0){
  
+	?>
+		<h3><img src='images/note.png'>&nbsp;&nbsp;
+		<a href="javascript:;" onmousedown="toggleDiv('note_control');">
+	<?PHP
+	echo $lang_label["add_note"]."</A></h3>";
+
 	$ahora=date("Y/m/d H:i:s");
-	echo "<h3>".$lang_label["note_title"]."</h3>";
-	echo "<table cellpadding=3 cellspacing=3 border=0 width='700'>";
+	echo "<div id='note_control' style='display:none'>";
+	echo "<table cellpadding=3 cellspacing=3 border=0 width='700' class='databox_color' >";
 	echo "<form name='nota' method='post' action='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&insertar_nota=1&id=".$id_inc."'>";
-	echo "<tr><td class='lb' rowspan='2' width='5'>";
-	echo "<td class='datos'><b>".$lang_label["date"]."</b>";
-	echo "<td class='datos'>".$ahora;
+
+	echo "<td class='datos'>".$lang_label["date"];
+	echo "<td class='datos' colspan=3>".$ahora;
 	echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
 	echo "<input type='hidden' name='id_inc' value='".$id_inc."'>";
+	
+	echo "<tr><td class='datos2'>".$lang_label["add_workunit_inc"];
+	echo "<td class='datos2'><input type='checkbox' value='1' name='workunit'>";
+	echo "<td class='datos2'>".$lang_label["time_used"];
+	echo "<td class='datos2'><input type='text' value='1' name='timeused'>";
+
+
 	echo '<tr><td colspan="4" class="datos2"><textarea name="nota" rows="7" cols="85">';
 	echo '</textarea>';
-	echo '<tr><td colspan="4"><div class="raya"></div></td></tr>';
-	echo '<tr><td colspan="4" align="left"><input name="addnote" type="submit" class="sub next" value="'.$lang_label["add"].'">';
+	echo "</tr></table>";
+	echo '<input name="addnote" type="submit" class="sub next" value="'.$lang_label["add"].'">';
+	echo "</form>";
+	echo "<br></div>";
 }
-echo "</tr></table><br>";
-echo "</form>";
+
+
 
 if ($creacion_incidente == 0){
 // Upload control
 	if (give_acl($iduser_temp, $id_grupo, "IW")==1){
 
-		echo "<table cellpadding=3 cellspacing=3 border=0 width='700'>";
-		echo "<tr><td colspan='3'><b>".$lang_label["attachfile"]."</b>";
-		echo "<tr><td class='lb' rowspan='2' width='5'>";
+		?>
+			<h3><img src='images/disk.png'>&nbsp;&nbsp;
+			<a href="javascript:;" onmousedown="toggleDiv('upload_control');">
+		<?PHP
+		echo $lang_label["upload_file"]."</A></h3>";
+
+		echo "<div id='upload_control' style='display:none'>";
+		echo "<table cellpadding=4 cellspacing=4 border=0 width='700' class='databox_color'>";
+		echo "<tr>";
 		echo '<td class="datos">'.$lang_label["filename"].'</td><td class="datos">';
 		echo '<form method="post" action="index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id='.$id_inc.'&upload_file=1" enctype="multipart/form-data">';
 		echo '<input type="file" name="userfile" value="userfile" class="sub" size="40">';
 		echo '<tr><td class="datos2">'.$lang_label["description"].'</td><td class="datos2" colspan=3><input type="text" name="file_description" size=47>';
-		echo '<tr><td colspan="4"><div class="raya"></div></td></tr>';
-		echo '<tr><td colspan="4" align="left"><input type="submit" name="upload" value="'.$lang_label["upload"].'" class="sub next">';
+		echo "</td></tr></table>";
+		echo '<input type="submit" name="upload" value="'.$lang_label["upload"].'" class="sub next">';
 		echo "</form>";
-		echo '</td></tr></table><br>';
+		echo '</div><br>';
 	}
-
-	
-
-
 	echo "</table>";
 } // create mode
 

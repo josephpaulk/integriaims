@@ -33,8 +33,8 @@ $id_grupo = "";
 $creacion_incidente = "";
 
 
-if (isset($_GET["id"])){
-	$id_inc = $_GET["id"];
+if (isset($_GET["id_inc"])){
+	$id_inc = $_GET["id_inc"];
 	$iduser_temp=$_SESSION['id_usuario'];
 	// Obtain group of this incident
 	$sql1 = 'SELECT * FROM tincidencia WHERE id_incidencia = '.$id_inc;
@@ -108,20 +108,15 @@ if (isset($_GET["id"])){
 // Notes
 // ********************************************************************
 $cabecera=0;
-$sql4='SELECT * FROM tincident_track WHERE id_incident= '.$id_inc;
-
+$sql4 = "SELECT tworkunit.timestamp, tworkunit.duration, tworkunit.id_user, tworkunit.description FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident= $id_inc AND tworkunit.id = tworkunit_incident.id_workunit";
 
 $color = 0;
-echo "<h3>".$lang_label["incident_tracking"]."</h3>";
-echo "<table cellpadding='3' cellspacing='3' border='0' width=600>";
+echo "<h3>".$lang_label["incident_workunit_tracking"]."</h3>";
+echo "<table cellpadding='3' cellspacing='3' border='0' width=740 class='databox'>";
 
 if ($res4=mysql_query($sql4)){
-	echo "<tr><th>".$lang_label["state"]."<th>".$lang_label["user"]."<th  width='80'>".$lang_label["timestamp"];
-	while ($row2=mysql_fetch_array($res4)){
-		$timestamp = $row2["timestamp"];
-		$state = $row2["state"];
-		$user = $row2["id_user"];
-
+	echo "<tr><th>".$lang_label["date"]."<th>".$lang_label["user"]."<th  width='80'>".$lang_label["time_used"]."<th  width='80'>".$lang_label["description"];
+	while ($row=mysql_fetch_array($res4)){
 		if ($color == 1){
 			$tdcolor = "datos";
 			$color = 0;
@@ -130,35 +125,15 @@ if ($res4=mysql_query($sql4)){
 			$color = 1;
 		}
 		
-		echo '<tr><td class="' . $tdcolor . '">';
-		switch($state){
-		case 0: echo $lang_label["incident_creation"];
-			break;
-		case 1: echo $lang_label["incident_updated"];
-			break;
-		case 2: echo $lang_label["incident_note_added"];
-			break;
-		case 3: echo $lang_label["incident_file_added"];
-			break;
-		case 4: echo $lang_label["incident_change_status_to_not_valid"];
-			break;
-		case 5: echo $lang_label["incident_change_status_to_outofdate"];
-			break;
-		case 6: echo $lang_label["incident_note_deleted"];
-			break;
-		case 7: echo $lang_label["incident_file_deleted"];
-			break;
-		case 8: echo $lang_label["incident_change_priority"];
-			break;
-		case 10: echo $lang_label["incident_closed"];
-			break;
-		}
-		echo '<td class="' . $tdcolor . '">';
-		echo $user;
-		$nombre_real = dame_nombre_real($user);
-		echo " <i>( $nombre_real )</i>";
-		echo '<td class="' . $tdcolor . '">';
-		echo $timestamp;
+		echo '<tr><td class="' . $tdcolor . '" valign=top>';
+		echo $row[0];
+		echo '<td class="' . $tdcolor . '" valign=top >';
+		echo $row[2];
+		echo '<td class="' . $tdcolor . '" valign=top>';
+		echo $row[1];
+		echo '<td class="' . $tdcolor . '" valign=top>';
+		echo $row[3];
+
 	}
 echo "</table>"; 
 } else

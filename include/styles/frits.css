@@ -64,9 +64,8 @@ h6 { font-size: 0.5em; }
 
 p, h1, h2, h3, table {
 	margin: 10px 15px;
-	
- 	
 }
+
 ul, ol {
 	margin: 10px 30px;
 	padding: 0 15px;	
@@ -129,7 +128,6 @@ textarea {
 	padding:4px;
 	font: normal 1em/1.5em Verdana, sans-serif;
 	border:1px solid #eee;
-	height:100px;
 	color:#777;
 }
 input.button { 
@@ -142,7 +140,7 @@ input.button {
 	margin: 10px 15px;
 }
 select {
-	padding: 2px;
+	padding: 0px;
 	border:1px solid #eee;
 	font: normal 1em/1.5em Verdana, sans-serif;
 	color:#777;
@@ -422,20 +420,21 @@ div#login {
 	background: url(../../images/backgrounds/background10.jpg);
 }
 div#login_f {
-	text-align: left;
+	text-align: center;
 	margin: auto;
 	padding: 0.5em;
-	width: 48em;
+	width: 400px;
 	margin-top: 5em;
 }
 div#db_f {
-	text-align: justify;
+	text-align: center;
 	margin: auto;
 	padding: 0.5em;
 	width: 55em;
 	margin-top: 3em;
 }
 div#noaccess {
+	text-align: center;
 	width: 350px;
 	padding-left: 40px;
 }

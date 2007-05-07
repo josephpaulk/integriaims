@@ -18,12 +18,13 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 // Load global vars
-require("include/config.php");
+global $config;
+
 
 function create_message($usuario_origen, $usuario_destino, $subject, $mensaje){
+	global $config;
 	$ahora=date("Y/m/d H:i:s");
-	require ("include/config.php");
-	require ("include/languages/language_".$language_code.".php");
+	require ("include/languages/language_".$config["language_code"].".php");
 	$sql='INSERT INTO tmensajes (id_usuario_origen, id_usuario_destino, subject, mensaje, timestamp) VALUES ("'.$usuario_origen.'", "'.$usuario_destino.'", "'.$subject.'", "'.$mensaje.'","'.$ahora.'")';
 	$result=mysql_query($sql);
 	if ($result) echo "<h3 class='suc'>".$lang_label["message_ok"]."</h3>";
@@ -31,9 +32,9 @@ function create_message($usuario_origen, $usuario_destino, $subject, $mensaje){
 	}
 
 function create_message_g($usuario_origen, $usuario_destino, $subject, $mensaje){
+	global $config;
 	$ahora=date("Y/m/d H:i:s");
-	require ("include/config.php");
-	require ("include/languages/language_".$language_code.".php");
+	require ("include/languages/language_".$config["language_code"].".php");
 	$sql='INSERT INTO tmensajes (id_usuario_origen, id_usuario_destino, subject, mensaje, timestamp) VALUES ("'.$usuario_origen.'", "'.$usuario_destino.'", "'.$subject.'", "'.$mensaje.'","'.$ahora.'")';
 	$result=mysql_query($sql);
 	if ($result) $error=0;
@@ -52,17 +53,17 @@ $resultado3=mysql_query($sql3);
 	
 if (isset($_GET["nuevo_mensaje"])){
 	// Create message
-	$usuario_destino = entrada_limpia($_POST["u_destino"]);
-	$subject = entrada_limpia($_POST["subject"]);
-	$mensaje = entrada_limpia($_POST["mensaje"]);
+	$usuario_destino = give_parameter_post ("u_destino");
+	$subject = give_parameter_post ("subject");
+	$mensaje = give_parameter_post ("mensaje");
 	create_message($iduser, $usuario_destino, $subject, $mensaje);
 }
 
 if (isset($_GET["nuevo_mensaje_g"])){
 	// Create message to groups
-	$grupo_destino = entrada_limpia($_POST["g_destino"]);
-	$subject = entrada_limpia($_POST["subject"]);
-	$mensaje = entrada_limpia($_POST["mensaje"]);
+	$grupo_destino = give_parameter_post ("g_destino");
+	$subject = give_parameter_post ("subject");
+	$mensaje = give_parameter_post ("mensaje");
 	$sql= 'SELECT id_usuario FROM tusuario_perfil WHERE id_grupo ='. $grupo_destino;
 	$result = mysql_query($sql);
 
@@ -77,7 +78,7 @@ if (isset($_GET["nuevo_mensaje_g"])){
 }
 if (isset($_GET["nuevo"]) || isset($_GET["nuevo_g"])){
 	if (isset($_GET["nuevo"])){ //create message
-		echo '<h2>'.$lang_label["new_message"].'<a href="help/'.$help_code.'/chap2.php#25" target="_help" class="help">&nbsp;<span>'.$lang_label["help"].'</span></a></h2>';
+		echo '<h2>'.$lang_label["new_message"].'</h2>';
 		echo '
 		<form name="new_mes" method="POST" action="index.php?sec=messages&sec2=operation/messages/message&nuevo_mensaje=1">
 		<table width=500 class="databox_color">
@@ -153,7 +154,7 @@ else {
 		else {echo "<h3 class='suc'>".$lang_label["del_message_no"]."</h3>";}
 	}
 	
-	echo "<h2>".$lang_label["read_mes"]."<a href='help/".$help_code."/chap2.php#25' target='_help' class='help'>&nbsp;<span>".$lang_label["help"]."</span></a></h2>";
+	echo "<h2>".$lang_label["read_mes"]."</h2>";
 	if ($row2["COUNT(*)"]!=0){
 		echo "<p>";
 		echo $lang_label["new_message_bra"]."<b> ".$row2["COUNT(*)"]."</b> <img src='images/mail.gif'>".$lang_label["new_message_ket"]."</p>";

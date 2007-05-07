@@ -799,6 +799,16 @@ $lang_label["time_used"]="Time used";
 $lang_label["workunit_resume"]="Workunit resume";
 $lang_label["workunit_ok"]="Workunit added";
 $lang_label["workunit_no"]="Problemd adding workunit.";
+$lang_label["upload_file"]="Upload file";
+$lang_label["agenda_view"]="Agenda view";
+$lang_label["add_agenda_entry"]="Add agenda entry";
+$lang_label["alarm"]="Alarm";
+$lang_label["time"]="Time";
+$lang_label["public"]="Public";
+$lang_label["legend"]="Legend";
+$lang_label["agenda"]="Agenda";
+$lang_label["add_workunit_inc"] = "Add workunit to incident";
+$lang_label["incident_workunit_tracking"]="Incident workunits tracking";
 global $lang_label; 
 global $help_label;
 ?>

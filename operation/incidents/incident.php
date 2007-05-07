@@ -100,13 +100,13 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 			
 		$sql = "UPDATE tincidencia SET actualizacion = '".$ahora."', titulo = '".$titulo."', origen= '".$origen."', estado = '".$estado."', id_grupo = '".$grupo."', id_usuario = '".$usuario."', notify_email = $email_notify, prioridad = '".$prioridad."', descripcion = '".$descripcion."' WHERE id_incidencia = ".$id_inc;
 		$result=mysql_query($sql);
-		audit_db($id_author_inc,$REMOTE_ADDR,"Incident updated","User ".$id_usuario." deleted updated #".$id_inc);
+		audit_db($id_author_inc,$config["REMOTE_ADDR"],"Incident updated","User ".$id_usuario." deleted updated #".$id_inc);
 		if ($result)
 			echo "<h3 class='suc'>".$lang_label["upd_incid_ok"]."</h3>";
 		else
 			echo "<h3 class='suc'>".$lang_label["upd_incid_no"]."</h3>";
 	} else {
-		audit_db($id_usuario,$REMOTE_ADDR,"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
+		audit_db($id_usuario,$config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
 		echo "<h3 class='error'>".$lang_label["upd_incid_no"]."</h3>";
 		no_permission();
 	}

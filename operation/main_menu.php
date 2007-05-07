@@ -9,9 +9,10 @@ echo "<ul>";
 
 // Project
 if ($sec == "projects" )
-	echo "<li id='current'><a href='index.php?sec=projects&sec2=operation/projects/project'>Project</a></li>";
+	echo "<li id='current'>";
 else
-	echo "<li><a href='index.php?sec=projects&sec2=operation/projects/project'>Project</a></li>";
+	echo "<li>";
+echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>Project</a></li>";
 
 // Incident
 if ($sec == "incidents" )
@@ -32,8 +33,15 @@ if ($sec == "messages" )
 	echo "<li id='current'>";
 else
 	echo "<li>";
-echo "<a href='http://localhost/frits/index.php?sec=messages&sec2=operation/messages/message'>Messages</a></li>";
+echo "<a href='index.php?sec=messages&sec2=operation/messages/message'>".$lang_label["messages"]."</a></li>";
 
+
+// Agenda
+if ($sec == "agenda" )
+	echo "<li id='current'>";
+else
+	echo "<li>";
+echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>".$lang_label["agenda"]."</a></li>";
 echo "</ul>";
 
 ?>

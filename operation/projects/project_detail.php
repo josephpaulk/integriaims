@@ -18,12 +18,11 @@
 // Load global vars
 
 global $config;
-global $REMOTE_ADDR;
 
 require "include/functions_form.php";
 
 if (check_login() != 0) {
- 	audit_db("Noauth",$REMOTE_ADDR, "No authenticated access","Trying to access event viewer");
+ 	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -32,7 +31,7 @@ if (check_login() != 0) {
 $id_user = $_SESSION['id_usuario'];
 if (give_acl($id_user, 0, "IR") != 1){
  	// Doesn't have access to this page
-	audit_db ($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to project detail page");
+	audit_db ($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
 	include ("general/noaccess.php");
 	exit;
 }
@@ -206,7 +205,7 @@ echo " <b>".$lang_label["private"]."</b>";
 // start and end date
 echo '<tr><td class="datos2"><b>'.$lang_label["start"].'</b>';
 echo "<td class='datos2'>";
-//echo "<input type='text' id='start_date' onclick='scwShow(this,this);' name='start_date' size=10 value='$start_date'> 
+
 echo "<input type='text' id='start_date' name='start_date' size=10 value='$start_date'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"start_date\"),this);'> ";
 echo '<td class="datos2"><b>'.$lang_label["end"].'</b>';
 echo "<td class='datos2'>";

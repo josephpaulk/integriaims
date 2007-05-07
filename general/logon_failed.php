@@ -16,16 +16,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-?>
 
-<div align='center'>
-<div id='login_f'>
-	<h1 id="log_f" class="error"><?php echo $lang_label['err_auth']; ?></h1>
-	<div id='noa'><img src='images/noaccess.gif'></div>
-	<div>
-		<a href="index.php"><img src="images/frits_logo.gif" border="0"></a><br>
-		<?php echo $frits_version; ?>
-	</div>
-	<div class="msg"><?php echo $lang_label["err_auth_msg"]; ?></div>
-</div>
-</div>
+
+global $config;
+
+
+echo "<div id='login_f'>";
+echo '<a href="index.php"><img src="images/frits_logo.gif" border="0"></a><br><br>';
+echo "<div align='center' class='databox' >";
+echo "<h1>".$lang_label['err_auth']."</h1>";
+echo "<div id='noa'><img src='images/noaccess.gif'></div>";
+echo "<div align='center' >";
+
+echo "</div><br><br>";
+echo '<div class="databox"><br>'.$lang_label["err_auth_msg"]."<br><br></div>";
+echo "</div></div>";

@@ -19,18 +19,18 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // Load global vars
-require("include/config.php");
 
-if (comprueba_login() != 0) {
+global $config;
+$REMOTE_ADDR = $config["REMOTE_ADDR"];
+
+if (check_login() != 0) {
  	audit_db("Noauth",$REMOTE_ADDR, "No authenticated access","Trying to access event viewer");
 	require ("general/noaccess.php");
 	exit;
 }
 
-
 $id_grupo = "";
 $creacion_incidente = "";
-
 
 if (isset($_GET["id"])){
 	$id_inc = $_GET["id"];
@@ -93,8 +93,17 @@ if (isset($_GET["id"])){
 	echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
 	echo "</li>";
 	
+	// Workunits
+	$timeused = give_hours_incident ( $id_inc);
+	echo "<li class='nomn'>";
+	if ($timeused > 0)
+		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
+	else
+		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
+	echo "</li>";
+
 	// Attach
-	$file_number = give_number_files($id_inc);
+	$file_number = give_number_files_incident($id_inc);
 	if ($file_number > 0){
 		echo "<li class='nomn'>";
 		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".$lang_label["Attachment"]." ($file_number) </a>";
@@ -128,35 +137,49 @@ $cabecera=0;
 $sql4='SELECT * FROM tnota_inc WHERE id_incidencia = '.$id_inc;
 
 echo "<h3>".$lang_label["in_notas_t1"]." #$id_inc '".give_inc_title($id_inc)."'</h3>";
-		echo $result_msg;
+echo $result_msg;
+$color = 1;
+
 if ($res4=mysql_query($sql4)){
-	echo "<table cellpadding='3' cellspacing='3' border='0'>";
-	echo "<tr><td>";
+	echo "<table cellpadding='4' cellspacing='4' border='0' width='740' class='databox'>";
+	echo "<tr><th>".$lang_label["author"];
+	echo "<th>".$lang_label["date"];
+	echo "<th>".$lang_label["description"];
+	echo "<th>".$lang_label["delete"];
+
 	while ($row2=mysql_fetch_array($res4)){
 		$sql3='SELECT * FROM tnota WHERE id_nota = '.$row2["id_nota"].' ORDER BY timestamp DESC';
 		$res3=mysql_query($sql3);
 		while ($row3=mysql_fetch_array($res3)){
+			if ($color == 1){
+				$tdcolor = "datos";
+				$color = 0;
+			}
+			else {
+				$tdcolor = "datos2";
+				$color = 1;
+			}
+		
 			$timestamp = $row3["timestamp"];
 			$nota = $row3["nota"];
 			$id_usuario_nota = $row3["id_usuario"];
 			// Show data
-			echo "<tr><td class='datos2' colspan=3>";
-			echo '<tr><td rowspan="3"  class="top"><img src="images/note.png"></td><td class="datos" width=40><b>'.$lang_label["author"].': </b><td class="datos">';
-			$usuario = $id_usuario_nota;
-			$nombre_real = dame_nombre_real($usuario);
-			echo $usuario." - (<i><a href='index.php?sec=usuario&sec2=operation/users/user_edit&ver=".$usuario."'>".$nombre_real."</a></i>)";
+			echo "<tr>";
+			echo "<td class='$tdcolor' valign=top>";
+			echo $id_usuario_nota;
+		
+			echo "<td class='$tdcolor'f9 valign=top>";			
+			echo $timestamp;
 
+			echo "<td class='$tdcolor'f9 valign=top>";			
+			echo  clean_output_breaks($nota);
+			
+			echo "<td class='$tdcolor' valign=top>";
 			// Delete comment, only for admins
 			if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)) {
 				$myurl="index.php?sec=incidencias&sec2=operation/incidents/incident_notes&id=".$id_inc."&id_nota=".$row2["id_nota"]."&id_nota_inc=".$row2["id_nota_inc"];
-				echo '<td rowspan="3" class="top" width="60" align="center"><a href="'.$myurl.'"><img src="images/cross.png" align="bottom" border="0"><br> '.$lang_label["delete"].'</a>';
+				echo '<a href="'.$myurl.'"><img src="images/cross.png" align="bottom" border="0"></a>';
 			}
-			echo '<tr><td class="datos2"><b>'.$lang_label["date"].': </b><td class="datos2"><i>'.$timestamp.'</i></td></tr>';
-			echo '<tr><td class="datos" valign="top"><b>'.$lang_label["description"]."</b>";
-			echo '<td class="datos">';
-			echo '<table border="0" cellpadding="5" cellspacing="5" style="width: 450px"><tr><td class="f9" align="justify">';
-			echo  clean_output_breaks($nota);
-			echo '</table>';
 		}
 	}
 	echo "</table>";

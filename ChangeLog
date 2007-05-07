@@ -1,3 +1,28 @@
+2007-05-07 Sancho Lerena  <slerena@artica.es>
+
+	* operation/agenda.php: Added new main feature: agenda. At this
+	time is very basic and without ACL, but works fine.
+
+	* incident.php: Fixes many function name changes and more.
+	
+	* incident_work.php: Added workunit view for incident.
+	
+	* incident_notes.php: Now is possible to create a workunit
+	automatically from a note insertion.
+
+	* incident_detail.php: Some changes in edition.
+	
+	* operation/users/*:  Fixes many function name changes and more.
+	
+	* operation/messages: Fixes many functions names.
+	
+	* include/calendar.php: Code changed from original.
+	
+	* fritsdb.sql: Added table for tagenda
+
+	* general/logon_failed.php: Better layout and general stetic.
+
+
 2007-05-03 Sancho Lerena  <slerena@artica.es>
 
 	* Added files: operation/projects/task_files.php

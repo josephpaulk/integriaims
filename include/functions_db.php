@@ -384,6 +384,26 @@ function give_number_tasks ($id_project){
 	return $pro;
 }
 
+/**
+* Return total hours assigned to incident
+*
+* $id_inc	integer 	ID of incident
+**/
+
+function give_hours_incident ($id_inc){
+	global $config;
+	$query1="SELECT SUM(tworkunit.duration) 
+			FROM tworkunit, tworkunit_incident, tincidencia 
+			WHERE 	tworkunit_incident.id_incident = tincidencia.id_incidencia AND 
+					tworkunit_incident.id_workunit = tworkunit.id";
+	$resq1=mysql_query($query1);
+	if ($rowdup=mysql_fetch_array($resq1))
+		$pro=$rowdup[0]; 
+	else 
+		$pro = 0;
+	return $pro;
+}
+
 
 /**
 * Return total hours assigned to project
@@ -943,8 +963,8 @@ function return_user_email ($id_user){
 }
 
 function incident_tracking ( $id_incident, $id_user, $state) {
-	require("config.php");
-	require ("include/languages/language_".$language_code.".php");
+	global $config;
+	require ("include/languages/language_".$config["language_code"].".php");
 	switch($state){
 		case 0: $descripcion = $lang_label["incident_creation"];
 			break;

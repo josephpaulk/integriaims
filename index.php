@@ -117,7 +117,7 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 				$primera = substr ($pass,0,1);
 				$ultima = substr ($pass, strlen ($pass) - 1, 1);
 				$pass = $primera . "****" . $ultima;
-				audit_db ($nick, $REMOTE_ADDR, "Logon Failed",
+				audit_db ($nick, $config["REMOTE_ADDR"], "Logon Failed",
 					  "Incorrect password: " . $nick . " / " . $pass);
 				echo '<div id="foot">';
 				include "general/footer.php";

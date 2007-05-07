@@ -322,3 +322,12 @@ CREATE TABLE `tworkunit_incident` (
   PRIMARY KEY  (`id`)
 );
 
+CREATE TABLE `tagenda` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `timestamp` datetime NOT NULL default '2007-01-01 00:00:00',
+  `id_user` varchar(125) NOT NULL default '',
+  `public` tinyint unsigned NOT NULL DEFAULT 0,
+  `alarm` int(10) unsigned NOT NULL DEFAULT 0,
+  `content` VARCHAR(255) DEFAULT '', 
+  PRIMARY KEY  (`id`)
+);

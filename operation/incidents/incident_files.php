@@ -19,26 +19,25 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // Load global vars
-require("include/config.php");
 
-if (comprueba_login() != 0) {
+global $config;
+
+if (check_login() != 0) {
  	audit_db("Noauth",$REMOTE_ADDR, "No authenticated access","Trying to access event viewer");
 	require ("general/noaccess.php");
 	exit;
 }
 
-
 $id_grupo = "";
 $creacion_incidente = "";
-
 
 if (isset($_GET["id"])){
 	$id_inc = $_GET["id"];
 	$iduser_temp=$_SESSION['id_usuario'];
 	// Obtain group of this incident
-	$sql1='SELECT * FROM tincidencia WHERE id_incidencia = '.$id_inc;
-	$result=mysql_query($sql1);
-	$row=mysql_fetch_array($result);
+	$sql1 = 'SELECT * FROM tincidencia WHERE id_incidencia = '.$id_inc;
+	$result = mysql_query($sql1);
+	$row = mysql_fetch_array($result);
 	// Get values
 	$titulo = $row["titulo"];
 	$texto = $row["descripcion"];
@@ -87,13 +86,24 @@ if (isset($_GET["id"])){
 	echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
 	echo "</li>";
 
+	// Workunits
+	$timeused = give_hours_incident ( $id_inc);
+	echo "<li class='nomn'>";
+	if ($timeused > 0)
+		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
+	else
+		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
+	echo "</li>";
+
 	// Attach
-	$file_number = give_number_files($id_inc);
+	$file_number = give_number_files_incident($id_inc);
 	if ($file_number > 0){
 		echo "<li class='nomn'>";
 		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".$lang_label["Attachment"]." ($file_number) </a>";
 		echo "</li>";
 	}
+
+
 
 	// Notes
 	$note_number = dame_numero_notas($id_inc);

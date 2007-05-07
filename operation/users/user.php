@@ -18,10 +18,10 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 // Load global vars
-require("include/config.php");
+global $config;
 
-if (comprueba_login() != 0) {
-	audit_db("Noauth",$REMOTE_ADDR, "No authenticated acces","Trying to access incident viewer");
+if (check_login() != 0) {
+	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated acces","Trying to access incident viewer");
 	require ("general/noaccess.php");
 	exit;
 }
