@@ -16,18 +16,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+global $config;
+global $lang_label;
+
 ?>
+<div style='height: 200px'> </div>
 <div align='center'>
 	<h1 id="log"><?php echo $lang_label["logged_out"] ; ?></h1>
 	<div id='login'>	
 		<div id="login_box">
-			<?PHP echo $lang_label["logout_msg"]; ?>
+			<center><?PHP echo $lang_label["logout_msg"]; ?></center>
 		</div>
-		<div id="logo_box">
+		<div id="logo_box"><center>
 			<a href="index.php"><img src="images/frits_logo.gif" border="0" alt="logo"></a><br>
-			<?php echo $frits_version; ?>
+			<?php echo $config["version"]; ?>
+			</center>
 		</div>
-		<div id="ip"><?php echo 'IP: <b class="f10">'.$REMOTE_ADDR.'</b>'; ?></div>
+		<div id="ip"><center><?php echo 'IP: <b class="f10">'.$config["REMOTE_ADDR"].'</b>'; ?></center></div>
 	</div>
-	<div id="foot"><?php require("general/footer.php") ?></div>
+	<div id="foot"><br><br><br><?php require("general/footer.php") ?></div>
 </div>

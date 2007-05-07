@@ -148,7 +148,7 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 	if (isset ($_GET["bye"])) {
 		include "general/logoff.php";
 		$iduser = $_SESSION["id_usuario"];
-		logoff_db ($iduser, $REMOTE_ADDR);
+		logoff_db ($iduser, $config["REMOTE_ADDR"]);
 		session_unregister ("id_usuario");
 		exit;
 	}

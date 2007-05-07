@@ -1,3 +1,9 @@
+2007-05-07  slerena  <slerena@artica.es>
+
+	* general/logoff.php: Fixed some erros. Better layout.
+	
+	* index.php: Fixed some warnings.
+
 2007-05-07 Sancho Lerena  <slerena@artica.es>
 
 	* operation/agenda.php: Added new main feature: agenda. At this
