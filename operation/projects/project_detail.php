@@ -26,7 +26,6 @@ if (check_login() != 0) {
 	require ("general/noaccess.php");
 	exit;
 }
-
 	
 $id_user = $_SESSION['id_usuario'];
 if (give_acl($id_user, 0, "IR") != 1){
@@ -45,6 +44,7 @@ $start_date = "";
 $private = 0;
 $id_project = -1; // Create mode by default
 $result_output = "";
+$id_group = 0;
 
 // ---------------
 // Update project
@@ -76,6 +76,8 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 		$result_output = "<h3 class='error'>".$lang_label["update_error"]."</h3>";
 	$_GET["id"] = $id_project;
 }
+
+$owner = $id_user;
 
 // ---------------------
 // Edition / View mode
@@ -215,7 +217,7 @@ echo "<input type='text' id='end_date' name='end_date' size=10 value='$end_date'
 
 echo '<tr><td class="datos"><b>'.$lang_label["group"].'</b>';
 echo "<td class='datos'>";
-combo_groups ($group);
+combo_groups ($id_group);
 
 echo '<td class="datos"><b>'.$lang_label["owner"].'</b>';
 echo "<td class='datos'>";

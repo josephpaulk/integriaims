@@ -63,8 +63,8 @@ if (isset($_GET["quick_delete"])){
 // INSERT PROJECT
 if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 
-	$grupo = give_parameter_get ('group');
-	$usuario = give_parameter_get ("user");
+	$grupo = give_parameter_post ('group');
+	$usuario = give_parameter_post ("user");
 	if ((give_acl($id_usuario, $grupo, "IM") == 1) OR ($usuario == $id_usuario)) { // Only admins (manage
 		// Read input variables
 		$name = give_parameter_post ("name");

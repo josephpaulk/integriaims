@@ -303,6 +303,8 @@ CREATE TABLE `tworkunit` (
   `duration` float (10,2) unsigned NOT NULL default '0',
   `id_user` VARCHAR(125) DEFAULT NULL;
   `description` mediumtext NOT NULL,
+  `have_cost` tinyint unsigned NOT NULL DEFAULT 0,
+  `id_profile` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );
 

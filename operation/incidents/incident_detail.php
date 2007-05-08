@@ -92,7 +92,8 @@ if (isset($_GET["id"])){
 		$workunit = give_parameter_post ("workunit",0);
 		$timeused = give_parameter_post ("timeused",0);
 		$id_usuario=$_SESSION["id_usuario"];
-
+		$have_cost = give_parameter_post ("have_cost",0);
+		$profile = give_parameter_post ("work_profile",0);
 		$sql1 = "INSERT INTO tnota (id_usuario,timestamp,nota) VALUES ('".$id_usuario."','".$timestamp."','".$nota."')";
 		$res1=mysql_query($sql1);
 		if ($res1) 
@@ -109,7 +110,7 @@ if (isset($_GET["id"])){
 
 		// Add work unit if enabled
 		if ($workunit == 1){
-			$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description) VALUES ('$timestamp', '$timeused', '$id_usuario', '$nota')";
+			$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description, have_cost, id_profile) VALUES ('$timestamp', '$timeused', '$id_usuario', '$nota', $have_cost, '$id_profile')";
 			$res5 = mysql_query($sql);
 			$id_workunit = mysql_insert_id();
 			$sql1 = "INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES ($id_inc, $id_workunit)";
@@ -426,19 +427,34 @@ if ($creacion_incidente == 0){
 	echo "<div id='note_control' style='display:none'>";
 	echo "<table cellpadding=3 cellspacing=3 border=0 width='700' class='databox_color' >";
 	echo "<form name='nota' method='post' action='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&insertar_nota=1&id=".$id_inc."'>";
-
-	echo "<td class='datos'>".$lang_label["date"];
-	echo "<td class='datos' colspan=3>".$ahora;
 	echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
 	echo "<input type='hidden' name='id_inc' value='".$id_inc."'>";
+	echo "<tr><td class='datos' width='140'><b>".$lang_label["date"]."</b></td>";
+	echo "<td class='datos'>".$ahora;
+
+
+	echo "<tr><td class='datos2'  width='140'>";
+	echo "<b>".$lang_label["profile"]."</b>";
+	echo "<td class='datos2'>";
+	echo "<select name='work_profile'>";
+	echo "<option value=0>N/A";
+	echo "</select>";
 	
-	echo "<tr><td class='datos2'>".$lang_label["add_workunit_inc"];
-	echo "<td class='datos2'><input type='checkbox' value='1' name='workunit'>";
-	echo "<td class='datos2'>".$lang_label["time_used"];
-	echo "<td class='datos2'><input type='text' value='1' name='timeused'>";
+	echo "&nbsp;&nbsp;";
+	echo "<input type='checkbox' name='have_cost' value=1>";
+	echo "&nbsp;&nbsp;";
+	echo "<b>".$lang_label["have_cost"]."</b>";
 
+	echo "<tr><td class='datos'>";
+	echo "<b>".$lang_label["time_used"]."</b>";
+	echo "<td class='datos'>";
+	echo "<input type='text' name='duration' value='0' size='7'>";
+	
+	echo "<tr><td class='datos'><b>".$lang_label["add_workunit_inc"]."</b>";
+	echo "<td class='datos'><input type='checkbox' value='1' name='workunit'>";
+	
 
-	echo '<tr><td colspan="4" class="datos2"><textarea name="nota" rows="7" cols="85">';
+	echo '<tr><td colspan="2" class="datos2"><textarea name="nota" rows="6" cols="85">';
 	echo '</textarea>';
 	echo "</tr></table>";
 	echo '<input name="addnote" type="submit" class="sub next" value="'.$lang_label["add"].'">';

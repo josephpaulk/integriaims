@@ -1,4 +1,22 @@
-2007-05-07  slerena  <slerena@artica.es>
+2007-05-08 Sancho Lerena <slerena@artica.es>
+
+	* operation/incidents/incident_detail.php: Added workunit details
+	(havecost and profile).
+	
+	* operation/projects/task_detail.php: Fixed some bugs, now boxes
+	are collapsable.
+	
+	* operation/projects/project.php: Fixed minor bugs.
+	
+	* operation/projects/project_detail.php: Fixed minor bugs.
+	
+	* include/functions_db.php: Fixed minor bugs.
+	
+	* include/languages/language_en.php: More strings.
+	
+	* fritsdb.sql: Added have_cost and id_profile to tworkunit.
+
+2007-05-07  Sancho Lerena  <slerena@artica.es>
 
 	* general/logoff.php: Fixed some erros. Better layout.
 	

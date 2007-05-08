@@ -468,8 +468,10 @@ function calculate_project_progress ($id_project){
 			$sum = $sum + $row["completion"] * ($row["priority"] / 10);
 		$tot++;
 	}
-		
-	return $sum / $tot;
+	if ($tot > 0)
+		return $sum / $tot;
+	else
+		return 0;
 }
 
 

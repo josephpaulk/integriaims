@@ -809,6 +809,8 @@ $lang_label["legend"]="Legend";
 $lang_label["agenda"]="Agenda";
 $lang_label["add_workunit_inc"] = "Add workunit to incident";
 $lang_label["incident_workunit_tracking"]="Incident workunits tracking";
+$lang_label["have_cost"]="Have cost";
+
 global $lang_label; 
 global $help_label;
 ?>

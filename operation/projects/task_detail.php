@@ -17,6 +17,22 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // Load global vars
 
+?>
+
+<script language="javascript">
+
+	/* Function to hide/unhide a specific Div id */
+	function toggleDiv (divid){
+		if (document.getElementById(divid).style.display == 'none'){
+			document.getElementById(divid).style.display = 'block';
+		} else {
+			document.getElementById(divid).style.display = 'none';
+		}
+	}
+</script>
+
+<?PHP
+
 global $config;
 require "include/functions_form.php";
 
@@ -202,7 +218,7 @@ if ($operation == "view"){
 	$dep_type = clean_input ($row["dep_type"]);
 	$start = clean_input ($row["start"]);
 	$end = clean_input ($row["end"]);
-
+	$parent = clean_input ($row["id_parent_task"]);
 	// SHOW TABS
 	echo "<div id='menu_tab'><ul class='mn'>";
 
@@ -283,15 +299,17 @@ echo '<td class="datos"><input type="text" name="name" size=40 value="'.$name.'"
 echo '<td class="datos">';
 echo "<b>".$lang_label["parent"]."</b> ";
 echo '<td class="datos">';
-echo '<select name=parent>';
+echo '<select name="parent">';
+
+if ($parent > 0)
+	echo "<option value='$parent'>".give_db_value ("name", "ttask", "id", $parent);
+
 echo "<option value=0>".$lang_label["none"];
-$query1="SELECT * FROM ttask WHERE id_project = $id_project and id != $id_task";
+$query1="SELECT * FROM ttask WHERE id_project = $id_project and id != $id_task and id != $parent";
 $resq1=mysql_query($query1);
 while ($row=mysql_fetch_array($resq1)){
 	echo "<option value='".$row["id"]."'>".substr($row["name"],0,20);
-}
-echo "</select>";
-
+}echo "</select>";
 
 // start and end date
 echo '<tr><td class="datos2"><b>'.$lang_label["start"].'</b>';
@@ -361,18 +379,37 @@ echo "</table>";
 // Workunit / Note  form
 // --------------------
 if ($operation != "create"){
-	echo "<br>";
+
 	$ahora = date("Y-m-d H:i:s");
-	echo "<h3>".$lang_label["add_workunit"]."</h3>";
+
+	?>
+		<h3><img src='images/award_star_silver_1.png'>&nbsp;&nbsp;
+		<a href="javascript:;" onmousedown="toggleDiv('workunit_control');">
+	<?PHP
+
+	echo $lang_label["add_workunit"]."</a></h3>";
+	echo "<div id='workunit_control' style='display:none'>";
 	echo "<table cellpadding=3 cellspacing=3 border=0 width='700' class='databox_color'>";
 	echo "<form name='nota' method='post' action='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=workunit'>";
-	echo "<td class='datos'><b>".$lang_label["date"]."</b>";
+	echo "<td class='datos' width=140><b>".$lang_label["date"]."</b>";
 	echo "<td class='datos'><i>$ahora</i>";
 
 	echo "<tr><td class='datos2'>";
-	echo "<b>".$lang_label["time_used"]."</b>";
+	echo "<b>".$lang_label["profile"]."</b>";
 	echo "<td class='datos2'>";
-	echo "<input type='text' name='duration' value='0' size='6'>";
+	echo "<select name='work_profile'>";
+	echo "<option>N/A";
+	echo "</select>";
+	
+	echo "&nbsp;&nbsp;";
+	echo "<input type='checkbox' name='have_cost' value=1>";
+	echo "&nbsp;&nbsp;";
+	echo "<b>".$lang_label["have_cost"]."</b>";
+
+	echo "<tr><td class='datos'>";
+	echo "<b>".$lang_label["time_used"]."</b>";
+	echo "<td class='datos'>";
+	echo "<input type='text' name='duration' value='0' size='7'>";
 
 	echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
 	echo '<tr><td colspan="4" class="datos2"><textarea name="description" rows="5" cols="85">';
@@ -380,14 +417,21 @@ if ($operation != "create"){
 	echo "</table>";
 	echo '<input name="addnote" type="submit" class="sub next" value="'.$lang_label["add"].'">';
 	echo "</form>";
+	echo "</div>";
 }
 
 // --------------------
 // File attach form
 // --------------------
 if ($operation != "create"){
-	echo "<br>";
-	echo "<h3>".$lang_label["add_file"]."</h3>";
+
+	?>
+		<h3><img src='images/disk.png'>&nbsp;&nbsp;
+		<a href="javascript:;" onmousedown="toggleDiv('upload_control');">
+	<?PHP
+
+	echo $lang_label["add_file"]."</a></h3>";
+	echo "<div id='upload_control' style='display:none'>";
 	echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=upload_file' enctype='multipart/form-data'>";
 	echo "<table cellpadding=3 cellspacing=3 border=0 width='700' class='databox_color'>";
 	echo '<tr><td class="datos">'.$lang_label["filename"];
@@ -397,6 +441,7 @@ if ($operation != "create"){
 	echo "<td class='datos2'>";
 	echo '<input type="submit" name="upload" value="'.$lang_label["upload"].'" class="sub next">';
 	echo '</td></tr></table>';
+	echo "</div>";
 	
 	echo "</form>";
 	echo "<br>";
