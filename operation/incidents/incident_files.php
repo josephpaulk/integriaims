@@ -52,10 +52,9 @@ if (isset($_GET["id"])){
 	$id_creator = $row["id_creator"];
 	$grupo = dame_nombre_grupo($id_grupo);
 
-	$id_user=$_SESSION['id_usuario'];
-	if (give_acl($iduser_temp, $id_grupo, "IR") != 1){
+	if (give_acl($config["id_user"], $id_grupo, "IR") != 1){
 	 	// Doesn't have access to this page
-		audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -71,7 +70,7 @@ if (isset($_GET["id"])){
 		$filename = $row2["filename"];
 		$sql2 = "DELETE FROM tattachment WHERE id_attachment = ".$file_id;
 		$res2=mysql_query($sql2);
-		unlink ($attachment_store."attachment/pand".$file_id."_".$filename);
+		unlink ($config["homedir"]."/attachment/pand".$file_id."_".$filename);
 		incident_tracking ( $id_inc, $id_usuario, 7);
 	}
 
@@ -134,7 +133,7 @@ if (isset($_GET["id"])){
 $att_fil=mysql_query("SELECT * FROM tattachment WHERE id_incidencia = ".$id_inc);
 echo "<h3>".$lang_label["attached_files"]."</h3>";
 if (mysql_num_rows($att_fil)){
-	echo "<table width='650'><tr><th class=datos>".$lang_label["filename"];
+	echo "<table width='750' cellspacing=4 cellpadding=4 class='databox'><tr><th class=datos>".$lang_label["filename"];
 	echo "<th class=datos>".$lang_label["description"];
 	echo "<th class=datos>".$lang_label["size"];
 	echo "<th class=datos>".$lang_label["delete"];
@@ -149,7 +148,7 @@ if (mysql_num_rows($att_fil)){
 		}
 
 	}
-	echo "<tr><td colspan='4'><div class='raya'></div></td></tr></table><br>";
+	echo "</table><br>";
 } else {
 	echo $lang_label["no_data"];
 }

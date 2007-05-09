@@ -56,91 +56,12 @@ if (isset($_GET["quick_delete"])){
 		if ((give_acl($id_usuario, $row2["id_grupo"], "IM") ==1) OR ($_SESSION["id_usuario"] == $id_author_inc) ){
 			borrar_incidencia($id_inc);
 			echo "<h3 class='suc'>".$lang_label["del_incid_ok"]."</h3>";
-			audit_db($id_author_inc,$REMOTE_ADDR,"Incident deleted","User ".$id_usuario." deleted incident #".$id_inc);
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Incident deleted","User ".$id_usuario." deleted incident #".$id_inc);
 		} else {
-			audit_db($id_author_inc,$REMOTE_ADDR,"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to delete incident");
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$_SESSION["id_usuario"]." try to delete incident");
 			echo "<h3 class='error'>".$lang_label["del_incid_no"]."</h3>";
 			no_permission();
 		}
-	}
-}
-
-// UPDATE incident
-if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
-	$id_inc = $_POST["id_inc"];
- 	$grupo = clean_input ($_POST['grupo_form']);
-	$usuario= clean_input ($_POST["usuario_form"]);
-	if ((give_acl($id_usuario, $grupo, "IM")==1) OR ($usuario == $id_usuario)) { // Only admins (manage incident) or owners can modify incidents
-		$id_author_inc = give_incident_author($id_inc);
-		$titulo = clean_input ($_POST["titulo"]);
-		$descripcion = clean_input ($_POST['descripcion']);
-		$origen = clean_input ($_POST['origen_form']);
-		$prioridad = clean_input ($_POST['prioridad_form']);
-		$estado = clean_input ($_POST["estado_form"]);
-		$ahora=date("Y/m/d H:i:s");
-		if (isset($_POST["email_notify"]))
-			$email_notify=clean_input ($_POST["email_notify"]);
-		else
-			$email_notify = 0;
-		
-		incident_tracking ( $id_inc, $id_usuario, 1);
-		$old_prio = give_inc_priority ($id_inc);
-		// 0 - Abierta / Sin notas (Open without notes)
-		// 2 - Descartada (Not valid)
-		// 3 - Caducada (out of date)
-		// 13 - Cerrada (closed)
-		if ($old_prio != $prioridad)
-			incident_tracking ( $id_inc, $id_usuario, 8);		
-		if ($estado == 2)
-			incident_tracking ( $id_inc, $id_usuario, 4);	
-		if ($estado == 3)
-			incident_tracking ( $id_inc, $id_usuario, 5);
-		if ($estado == 13)
-			incident_tracking ( $id_inc, $id_usuario, 10);
-			
-		$sql = "UPDATE tincidencia SET actualizacion = '".$ahora."', titulo = '".$titulo."', origen= '".$origen."', estado = '".$estado."', id_grupo = '".$grupo."', id_usuario = '".$usuario."', notify_email = $email_notify, prioridad = '".$prioridad."', descripcion = '".$descripcion."' WHERE id_incidencia = ".$id_inc;
-		$result=mysql_query($sql);
-		audit_db($id_author_inc,$config["REMOTE_ADDR"],"Incident updated","User ".$id_usuario." deleted updated #".$id_inc);
-		if ($result)
-			echo "<h3 class='suc'>".$lang_label["upd_incid_ok"]."</h3>";
-		else
-			echo "<h3 class='suc'>".$lang_label["upd_incid_no"]."</h3>";
-	} else {
-		audit_db($id_usuario,$config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
-		echo "<h3 class='error'>".$lang_label["upd_incid_no"]."</h3>";
-		no_permission();
-	}
-}
-// INSERT incident
-if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
-	$grupo = clean_input ($_POST['grupo_form']);
-	$usuario= clean_input ($_POST["usuario_form"]);
-	if ((give_acl($id_usuario, $grupo, "IM") == 1) OR ($usuario == $id_usuario)) { // Only admins (manage
-		// Read input variables
-		$titulo = clean_input ($_POST['titulo']);
-		$inicio = date("Y/m/d H:i:s");
-		$descripcion = clean_input ($_POST['descripcion']);
-		$texto = $descripcion; // to view in textarea after insert
-		$origen = clean_input ($_POST['origen_form']);
-		$prioridad = clean_input ($_POST['prioridad_form']);
-		$actualizacion = $inicio;
-		$id_creator = $id_usuario;
-		$estado = clean_input ($_POST["estado_form"]);
-		if (isset($_POST["email_notify"]))
-			$email_notify=clean_input ($_POST["email_notify"]);
-		else
-			$email_notify = 0;
-		
-		$sql = " INSERT INTO tincidencia (inicio,actualizacion,titulo,descripcion,id_usuario,origen,estado,prioridad,id_grupo, id_creator, notify_email) VALUES ('".$inicio."','".$actualizacion."','".$titulo."','".$descripcion."','".$usuario."','".$origen."','".$estado."','".$prioridad."','".$grupo."','".$id_creator."', $email_notify) ";
-		if (mysql_query($sql)){
-			$id_inc=mysql_insert_id();
-			echo "<h3 class='suc'>".$lang_label["create_incid_ok"]." ( id #$id_inc )</h3>";
-			audit_db($usuario,$REMOTE_ADDR,"Incident created","User ".$id_usuario." created incident #".$id_inc);
-			incident_tracking ( $id_inc, $id_usuario, 0);
-		}
-	} else {
-		audit_db($id_usuario,$REMOTE_ADDR,"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to create incident");
-		no_permission();
 	}
 }
 

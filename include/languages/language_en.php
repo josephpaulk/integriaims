@@ -252,7 +252,7 @@ The database size will increase in a linear way. We use a method to reduce the n
 
 $lang_label["begin_date"]="Begin date (*)";
 $lang_label["end_date"]="End date (*)";
-$lang_label["resolution"]="Resolution (%)";
+$lang_label["resolution"]="Resolution";
 $lang_label["date_format"]="(*) Please enter date with format yyyy/mm/dd hh:mm:ss";
 $lang_label["please_wait"]="Please be patient. This operation can be very long in time (5-10 minutes)";
 
@@ -757,8 +757,8 @@ $lang_label["incident_creation"]="Incident created";
 $lang_label["incident_updated"]="Incident updated";
 $lang_label["incident_note_added"]="Note added to incident";
 $lang_label["incident_file_added"]="File added to incident";
-$lang_label["incident_change_status_to_not_valid"]="Incident state changed to not valid";
-$lang_label["incident_change_status_to_outofdate"]="Incident state changed to out of date";
+$lang_label["incident_change_resolution"]="Incident resolution has changed";
+$lang_label["incident_change_status"]="Incident status has changed";
 $lang_label["incident_note_deleted"]="Incident note deleted";
 $lang_label["incident_file_deleted"]="Incident file removed";
 $lang_label["incident_change_priority"]="Incident change priority";
@@ -810,7 +810,10 @@ $lang_label["agenda"]="Agenda";
 $lang_label["add_workunit_inc"] = "Add workunit to incident";
 $lang_label["incident_workunit_tracking"]="Incident workunits tracking";
 $lang_label["have_cost"]="Have cost";
-
+$lang_label["resolution_epilog"]="Resolution epilog";
+$lang_label["email_notify_help"]="Active to send email to all people involved in this incident on each change";
+$lang_label["assigned_user"]="Assigned user";
+$lang_label["incident_workunit_added"]="Workunit added to incident";
 global $lang_label; 
 global $help_label;
 ?>

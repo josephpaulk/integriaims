@@ -22,7 +22,7 @@
 
 global $REMOTE_ADDR;
 global $config;
-require "include/functions_form.php";
+
 
 if (check_login() != 0) {
 	audit_db("Noauth",$REMOTE_ADDR, "No authenticated acces","Trying to access incident viewer");

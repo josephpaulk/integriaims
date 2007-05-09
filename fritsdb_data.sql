@@ -43,19 +43,22 @@ LOCK TABLES `tlink` WRITE;
 INSERT INTO `tlink` VALUES (0000000001,'GeekTools','www.geektools.com'),(0000000002,'CentralOPS','http://www.centralops.net/'),(0000000003,'Pandora Project','http://pandora.sourceforge.net'),(0000000004,'Babel Project','http://babel.sourceforge.net'),(0000000005,'Google','http://www.google.com');
 UNLOCK TABLES;
 
-LOCK TABLES `torigen` WRITE;
-INSERT INTO `torigen` VALUES ('Operating System event'),('IDS events'),('Firewall records'),('Database event'),('Application data'),('Logfiles'),('Other data source'),('Pandora FMS Event'),('User report'),('Unknown source');
-UNLOCK TABLES;
 
-LOCK TABLES `tusuario` WRITE;
 INSERT INTO `tusuario` VALUES ('admin','Default Admin','fe705027892dc1b806629706b6a445fe','Default FRITS Admin superuser. Please change password ASAP','2007-03-27 18:59:39','admin@frits.sf.net','555-555-555',1),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2006-04-20 13:00:05','demo@nowhere.net','+4555435435',0);
-UNLOCK TABLES;
 
-LOCK TABLES `tusuario_perfil` WRITE;
+
+
 INSERT INTO `tusuario_perfil` VALUES (1,'demo',1,1,'admin'),(2,'admin',5,1,'admin');
-UNLOCK TABLES;
 
-LOCK TABLES `tperfil` WRITE;
+
+
 INSERT INTO `tperfil` VALUES (1,'Operator (Read)',0,1,0,1,0,0,0,0,0,0),(2,'Operator (Write)',1,1,0,1,0,0,0,0,0,0),(3,'Chief Operator',1,1,1,1,0,0,0,0,0,0),(4,'Group coordinator',1,1,1,1,1,1,1,0,0,0),(5,'Pandora Administrator',1,1,1,1,1,1,1,1,1,1);
-UNLOCK TABLES;
+
+
+INSERT INTO tincident_resolution (name) VALUES ('Fixed'), ('Invalid'), ('Wont fix'), ('Duplicate'), ('Works for me'), ('Incomplete'), ('Expired'), ('Moved'), ('In process');
+
+INSERT INTO tincident_state (name) VALUES ('New'), ('Unconfirmed'), ('Assigned'), ('Re-opened'), ('Verified'), ('Resolved'), ('Closed');
+
+INSERT INTO tincident_origin (name) VALUES ('User report'), ('Customer'), ('Internal department'), ('External department'), ('Application data'), ('Bug report'), ('Problem detected'), ('Other source' );
+
 

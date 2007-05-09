@@ -46,12 +46,12 @@ function clean_output  ($string){
 	// after the initial translation, _do_ map standalone '&' into '&#38;'
 	return preg_replace("/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/","&#38;" , strtr($string, $trans));
 }
-/*
+
 function salida_ascii ($string){
 	$texto_ok = htmlspecialchars($string, ENT_QUOTES, "ISO8859-15");
 	return $texto_ok;
 }
-*/
+
 /**
 * Clean input text
 *

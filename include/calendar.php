@@ -70,7 +70,7 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 		if (($day == $today) && ($today_m == $month))
 			$calendar .= "<td valign='top' style='background: #eeb; width: 110px; height: 90px;' >";				
 		else 
-			$calendar .= "<td valign='top' style='height: 90px; width: 110px;' >";
+			$calendar .= "<td valign='top' style='background: #f9f9f5; height: 90px; width: 110px;' >";
 		$calendar .=  "<b>$day</b><br><br>";
 
 		$mysql_time= "";

@@ -1,3 +1,8 @@
+2007-05-09 Sancho Lerena <slerena@artica.es>
+
+	* Several fixes, created a lot of new fields and changes in
+	sql files. Please diff to see changes.
+
 2007-05-08 Sancho Lerena <slerena@artica.es>
 
 	* operation/incidents/incident_detail.php: Added workunit details

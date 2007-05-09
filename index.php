@@ -50,6 +50,7 @@ global $config;
 include "include/languages/language_".$config["language_code"].".php";
 require "include/functions.php"; // Including funcions.
 require "include/functions_db.php";
+require "include/functions_form.php";
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -101,7 +102,6 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 				// is not case sensitive)
 				// We get DB nick to put in PHP Session variable,
 				// to avoid problems with case-sensitive usernames.
-				// Thanks to David Muñiz for Bug discovery :)
 				$nick = $row["id_usuario"];
 				unset ($_GET["sec2"]);
 				$_GET["sec"] = "general/logon_ok";
@@ -142,8 +142,9 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 		// There is no user connected
 		include "general/login_page.php";
 		exit;
+	} else {
+		$config["id_user"] = $_SESSION['id_usuario'];
 	}
-
 	// Log off
 	if (isset ($_GET["bye"])) {
 		include "general/logoff.php";

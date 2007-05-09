@@ -75,7 +75,7 @@ if (isset($_GET["id"])){
 			mysql_query($query);
 			mysql_query($query2);
 			if (mysql_query($query))
-				$result_msg = "<h3 class='suc'>".$lang_label["del_note_ok"];
+				$result_msg = "<h3 class='suc'>".$lang_label["del_note_ok"]."</h3>";
 			incident_tracking ( $id_inc, $id_usuario, 6);
 		}
 	}
@@ -136,12 +136,14 @@ if (isset($_GET["id"])){
 $cabecera=0;
 $sql4='SELECT * FROM tnota_inc WHERE id_incidencia = '.$id_inc;
 
+echo "<br>";
 echo "<h3>".$lang_label["in_notas_t1"]." #$id_inc '".give_inc_title($id_inc)."'</h3>";
 echo $result_msg;
+
 $color = 1;
 
 if ($res4=mysql_query($sql4)){
-	echo "<table cellpadding='4' cellspacing='4' border='0' width='740' class='databox'>";
+	echo "<table cellpadding='4' cellspacing='4' border='0' width='750' class='databox'>";
 	echo "<tr><th>".$lang_label["author"];
 	echo "<th>".$lang_label["date"];
 	echo "<th>".$lang_label["description"];

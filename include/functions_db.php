@@ -32,23 +32,30 @@
 
 function give_acl($id_user, $id_group, $access){	
 	// IF user is level = 1 then always return 1
-	// Access can be:
+	// Access codes could be
 	/*	
 		IR - Incident Read
 		IW - Incident Write
 		IM - Incident Management
-		AR - Agent Read
-		AW - Agent Write
-		LW - Alert Write
+
 		UM - User Management
 		DM - DB Management
-		LM - Alert Management
-		PM - Pandora Management
+		FM - Frits management
+
+		AR - Agenda read
+		AW - Agenda write
+		AM - Agenda management
+
+		PR - Project read
+		PW - Project write
+
+		TW - Task write
+		TM - Task management
+		
 	*/
-	
-	// Conexion con la base Datos 
-	require("config.php");
-	$query1="SELECT * FROM tusuario WHERE id_usuario = '".$id_user."'";
+
+	global $config;
+	$query1 = "SELECT * FROM tusuario WHERE id_usuario = '".$id_user."'";
 	$res=mysql_query($query1);
 	$row=mysql_fetch_array($res);
 	if ($row["nivel"] == 1)
@@ -63,27 +70,30 @@ function give_acl($id_user, $id_group, $access){
 		while ($rowdup=mysql_fetch_array($resq1)){
 			$id_perfil=$rowdup["id_perfil"];
 			// For each profile for this pair of group and user do...
-			$query2="SELECT * FROM tperfil WHERE id_perfil = ".$id_perfil;    
+			$query2="SELECT * FROM tprofile WHERE id = ".$id_perfil;    
 			$resq2=mysql_query($query2);  
 			if ($rowq2=mysql_fetch_array($resq2)){
 				switch ($access) {
-					case "IR": $result = $result + $rowq2["incident_view"]; break;
-					case "IW": $result = $result + $rowq2["incident_edit"]; break;
-					case "IM": $result = $result + $rowq2["incident_management"]; break;
-					case "AR": $result = $result + $rowq2["agent_view"]; break;
-					case "AW": $result = $result + $rowq2["agent_edit"]; break;
-					case "LW": $result = $result + $rowq2["alert_edit"]; break;
-					case "LM": $result = $result + $rowq2["alert_management"]; break;
-					case "PM": $result = $result + $rowq2["pandora_management"]; break;
-					case "DM": $result = $result + $rowq2["db_management"]; break;
-					case "UM": $result = $result + $rowq2["user_management"]; break;
+					case "IR": $result = $result + $rowq2["ir"]; break;
+					case "IW": $result = $result + $rowq2["iw"]; break;
+					case "IM": $result = $result + $rowq2["im"]; break;
+					case "AR": $result = $result + $rowq2["ar"]; break;
+					case "AW": $result = $result + $rowq2["aw"]; break;
+					case "AM": $result = $result + $rowq2["am"]; break;
+					case "FM": $result = $result + $rowq2["fm"]; break;
+					case "DM": $result = $result + $rowq2["dm"]; break;
+					case "UM": $result = $result + $rowq2["um"]; break;
+					case "PR": $result = $result + $rowq2["pr"]; break;
+					case "PW": $result = $result + $rowq2["pw"]; break;
+					case "TW": $result = $result + $rowq2["tw"]; break;
+					case "TM": $result = $result + $rowq2["tm"]; break;
 				}
 			} 
 		}
 	} // else
 	if ($result > 1)
 		$result = 1;
-        return $result; 
+    return $result; 
 } 
 
 // --------------------------------------------------------------- 
@@ -126,7 +136,7 @@ function logoff_db($id,$ip){
 
 function dame_perfil($id){ 
 	require("config.php");
-	$query1="SELECT * FROM tperfil WHERE id_perfil =".$id;
+	$query1="SELECT * FROM tprofile WHERE id =".$id;
 	$resq1=mysql_query($query1);  
 	if ($rowdup=mysql_fetch_array($resq1)){
 		$cat=$rowdup["name"]; 
@@ -395,7 +405,8 @@ function give_hours_incident ($id_inc){
 	$query1="SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_incident, tincidencia 
 			WHERE 	tworkunit_incident.id_incident = tincidencia.id_incidencia AND 
-					tworkunit_incident.id_workunit = tworkunit.id";
+					tworkunit_incident.id_workunit = tworkunit.id AND
+					 tincidencia.id_incidencia = $id_inc";
 	$resq1=mysql_query($query1);
 	if ($rowdup=mysql_fetch_array($resq1))
 		$pro=$rowdup[0]; 
@@ -519,6 +530,8 @@ function borrar_incidencia($id_inc){
 		unlink ($attachment_store."attachment/pand".$file_id."_".$filename);
 	}
 	$sql1="DELETE FROM tattachment WHERE id_incidencia = ".$id_inc;
+	$result=mysql_query($sql1);
+	$sql1="DELETE FROM tincident_track WHERE id_incident = ".$id_inc;
 	$result=mysql_query($sql1);
 }
 
@@ -964,7 +977,7 @@ function return_user_email ($id_user){
 	return $pro;
 }
 
-function incident_tracking ( $id_incident, $id_user, $state) {
+function incident_tracking ( $id_incident, $id_user, $state, $aditional_data = 0) {
 	global $config;
 	require ("include/languages/language_".$config["language_code"].".php");
 	switch($state){
@@ -974,26 +987,34 @@ function incident_tracking ( $id_incident, $id_user, $state) {
 			break;
 		case 2: $descripcion = $lang_label["incident_note_added"];
 			break;
-		case 3: $descripcion =$lang_label["incident_file_added"];
+		case 3: $descripcion = $lang_label["incident_file_added"];
 			break;
-		case 4: $descripcion = $lang_label["incident_change_status_to_not_valid"];
+		case 4: $descripcion = $lang_label["incident_note_deleted"];
 			break;
-		case 5: $descripcion = $lang_label["incident_change_status_to_outofdate"];
+		case 5: $descripcion = $lang_label["incident_file_deleted"];
 			break;
-		case 6: $descripcion = $lang_label["incident_note_deleted"];
+		case 6: $descripcion = $lang_label["incident_change_priority"];
 			break;
-		case 7: $descripcion = $lang_label["incident_file_deleted"];
+		case 7: $descripcion = $lang_label["incident_change_status"];
 			break;
-		case 8: $descripcion = $lang_label["incident_change_priority"];
+		case 8: $descripcion = $lang_label["incident_change_resolution"];
 			break;
-		case 9: $descripcion = $lang_label["incident_change_status_to_active"];
-			break;
-		case 10: $descripcion = $lang_label["incident_closed"];
+		case 9: $descripcion = $lang_label["incident_workunit_added"];
 			break;
 	}
-	$REMOTE_ADDR = getenv ("REMOTE_ADDR");
-	audit_db ($id_user, $REMOTE_ADDR, "Incident updated", $descripcion);
-	$sql = "INSERT INTO tincident_track (id_user, id_incident, timestamp, state) values ('$id_user', $id_incident, NOW(), $state)";
+
+	if ($state == 6)
+		$descripcion .= " -> ".$aditional_data;
+
+	if ($state == 7)
+		$descripcion .= " -> ".give_db_value ("name", "tincident_status", "id", $aditional_data);
+
+	if ($state == 8)
+		$descripcion .= " -> ".give_db_value ("name", "tincident_resolution", "id", $aditional_data);
+	
+
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident updated", $descripcion);
+	$sql = "INSERT INTO tincident_track (id_user, id_incident, timestamp, state, id_aditional) values ('$id_user', $id_incident, NOW(), $state, $aditional_data)";
 	$resq1=mysql_query($sql);
 
 	if (give_inc_email ($id_incident) == 1){ // notify by email on changes ?
@@ -1003,7 +1024,9 @@ function incident_tracking ( $id_incident, $id_user, $state) {
 		$actual_user = $id_user;
 		$msg_text = salida_ascii ('Hello FRITS user
 
-Incident #'.$id_incident.' ('.$titulo.') has been updated by user '.$actual_user.', you can review it loggin on FRITS console. All changes over this incident has been marked to mail original author of incident ('.$orig_user.') and currently associated user for this incident ('.$actual_user.').
+Incident #'.$id_incident.' ('.$titulo.') has been updated by user '.$actual_user.', you can review it loggin on FRITS console. All changes over this incident has been marked to mail original author of incident ('.$orig_user.') and currently associated user for this incident ('.$actual_user.'), and for every user that actually has entered any note attached to this incident.
+
+Changes on this incident are: '.$descripcion.'
 
 Have a nice day.
 This is a automated FRITS message on incident update');
@@ -1016,6 +1039,7 @@ This is a automated FRITS message on incident update');
 			mail(return_user_email($orig_user), $msg_subject, $msg_text);
 			mail(return_user_email($actual_user), $msg_subject, $msg_text);
 		}
+		// TODO: Send mail to all users that have posted a note in this incident
 	}
 	
 }

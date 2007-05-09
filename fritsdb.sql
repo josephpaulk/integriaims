@@ -17,7 +17,6 @@ CREATE TABLE `tattachment` (
 -- Table structure for table `tconfig`
 --
 
-DROP TABLE IF EXISTS `tconfig`;
 CREATE TABLE `tconfig` (
   `id_config` int(10) unsigned NOT NULL auto_increment,
   `token` varchar(100) NOT NULL default '',
@@ -29,7 +28,6 @@ CREATE TABLE `tconfig` (
 -- Table structure for table `tconfig_os`
 --
 
-DROP TABLE IF EXISTS `tconfig_os`;
 CREATE TABLE `tconfig_os` (
   `id_os` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
@@ -39,7 +37,6 @@ CREATE TABLE `tconfig_os` (
 );
 
 
-DROP TABLE IF EXISTS `tgrupo`;
 CREATE TABLE `tgrupo` (
   `id_grupo` mediumint(8) unsigned NOT NULL auto_increment,
   `nombre` varchar(100) NOT NULL default '',
@@ -59,14 +56,17 @@ CREATE TABLE `tincidencia` (
   `titulo` varchar(100) NOT NULL default '',
   `descripcion` mediumtext NOT NULL,
   `id_usuario` varchar(100) NOT NULL default '',
-  `origen` varchar(100) NOT NULL default '',
-  `estado` int(11) NOT NULL default '0',
-  `prioridad` int(11) NOT NULL default '0',
+  `origen` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `estado` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `prioridad` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `id_grupo` mediumint(9) NOT NULL default '0',
   `actualizacion` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_creator` varchar(60) default NULL,
   `notify_email` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `id_task` int(10) NOT NULL default '0',
+  `resolution` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `epilog` mediumtext NOT NULL,
+  `id_incident_linked` bigint(20) unsigned NOT NULL default 0,
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_index_1` (`id_usuario`,`id_incidencia`)
 );
@@ -135,41 +135,27 @@ CREATE TABLE `tnota_inc` (
   PRIMARY KEY  (`id_nota_inc`)
 );
 
---
--- Table structure for table `torigen`
---
 
-DROP TABLE IF EXISTS `torigen`;
-CREATE TABLE `torigen` (
-  `origen` varchar(100) NOT NULL default ''
-);
-
---
--- Table structure for table `tperfil`
---
-
-DROP TABLE IF EXISTS `tperfil`;
-CREATE TABLE `tperfil` (
-  `id_perfil` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(60) NOT NULL default '',
-  `incident_edit` int(11) NOT NULL default '0',
-  `incident_view` int(11) NOT NULL default '0',
-  `incident_management` int(11) NOT NULL default '0',
-  `agent_view` int(11) NOT NULL default '0',
-  `agent_edit` int(11) NOT NULL default '0',
-  `alert_edit` int(11) NOT NULL default '0',
-  `user_management` int(11) NOT NULL default '0',
-  `db_management` int(11) NOT NULL default '0',
-  `alert_management` int(11) NOT NULL default '0',
-  `pandora_management` int(11) NOT NULL default '0',
+CREATE TABLE  `tprofile` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(150) NOT NULL default '',
+  `ir` tinyint(1) NOT NULL default '0',
+  `iw` tinyint(1) NOT NULL default '0',
+  `im` tinyint(1) NOT NULL default '0',
+  `um` tinyint(1) NOT NULL default '0',
+  `dm` tinyint(1) NOT NULL default '0',
+  `fm` tinyint(1) NOT NULL default '0',
+  `ar` tinyint(1) NOT NULL default '0',
+  `aw` tinyint(1) NOT NULL default '0',
+  `am` tinyint(1) NOT NULL default '0',
+  `pr` tinyint(1) NOT NULL default '0',
+  `pw` tinyint(1) NOT NULL default '0',
+  `tw` tinyint(1) NOT NULL default '0',
+  `tm` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id_perfil`)
-);
+) 
 
---
--- Table structure for table `tsesion`
---
 
-DROP TABLE IF EXISTS `tsesion`;
 CREATE TABLE `tsesion` (
   `ID_sesion` bigint(4) unsigned NOT NULL auto_increment,
   `ID_usuario` varchar(60) NOT NULL default '0',
@@ -186,7 +172,6 @@ CREATE TABLE `tsesion` (
 -- Table structure for table `tusuario`
 --
 
-DROP TABLE IF EXISTS `tusuario`;
 CREATE TABLE `tusuario` (
   `id_usuario` varchar(60) NOT NULL default '0',
   `nombre_real` varchar(125) NOT NULL default '',
@@ -202,7 +187,6 @@ CREATE TABLE `tusuario` (
 -- Table structure for table `tusuario_perfil`
 --
 
-DROP TABLE IF EXISTS `tusuario_perfil`;
 CREATE TABLE `tusuario_perfil` (
   `id_up` bigint(20) unsigned NOT NULL auto_increment,
   `id_usuario` varchar(100) NOT NULL default '',
@@ -227,6 +211,7 @@ CREATE TABLE `tincident_track` (
   `state` int(10) unsigned NOT NULL default '0',
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_user` varchar(250) NOT NULL default '',
+  `id_aditional` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_it`)
 );
 
@@ -331,5 +316,23 @@ CREATE TABLE `tagenda` (
   `public` tinyint unsigned NOT NULL DEFAULT 0,
   `alarm` int(10) unsigned NOT NULL DEFAULT 0,
   `content` VARCHAR(255) DEFAULT '', 
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tincident_resolution` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tincident_status` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tincident_origin` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
 );

@@ -121,7 +121,8 @@ if ($res4=mysql_query($sql4)){
 		$timestamp = $row2["timestamp"];
 		$state = $row2["state"];
 		$user = $row2["id_user"];
-
+		$aditional_data = $row2["id_aditional"];
+		
 		if ($color == 1){
 			$tdcolor = "datos";
 			$color = 0;
@@ -131,32 +132,43 @@ if ($res4=mysql_query($sql4)){
 		}
 		
 		echo '<tr><td class="' . $tdcolor . '">';
+
 		switch($state){
-		case 0: echo $lang_label["incident_creation"];
-			break;
-		case 1: echo $lang_label["incident_updated"];
-			break;
-		case 2: echo $lang_label["incident_note_added"];
-			break;
-		case 3: echo $lang_label["incident_file_added"];
-			break;
-		case 4: echo $lang_label["incident_change_status_to_not_valid"];
-			break;
-		case 5: echo $lang_label["incident_change_status_to_outofdate"];
-			break;
-		case 6: echo $lang_label["incident_note_deleted"];
-			break;
-		case 7: echo $lang_label["incident_file_deleted"];
-			break;
-		case 8: echo $lang_label["incident_change_priority"];
-			break;
-		case 10: echo $lang_label["incident_closed"];
-			break;
+			case 0: $descripcion = $lang_label["incident_creation"];
+				break;
+			case 1: $descripcion = $lang_label["incident_updated"];
+				break;
+			case 2: $descripcion = $lang_label["incident_note_added"];
+				break;
+			case 3: $descripcion = $lang_label["incident_file_added"];
+				break;
+			case 4: $descripcion = $lang_label["incident_note_deleted"];
+				break;
+			case 5: $descripcion = $lang_label["incident_file_deleted"];
+				break;
+			case 6: $descripcion = $lang_label["incident_change_priority"];
+				break;
+			case 7: $descripcion = $lang_label["incident_change_status"];
+				break;
+			case 8: $descripcion = $lang_label["incident_change_resolution"];
+				break;
+			case 9: $descripcion = $lang_label["incident_workunit_added"];
+				break;
+ 			default: $descripcion = $lang_label["unknown"];
 		}
+		if ($state == 6)
+			$descripcion .= " -> ".$aditional_data;
+	
+		if ($state == 7)
+			$descripcion .= " -> ". give_db_value ("name", "tincident_status", "id", $aditional_data);
+	
+		if ($state == 8)
+			$descripcion .= " -> ".give_db_value ("name", "tincident_resolution", "id", $aditional_data);
+
+		echo $descripcion;
 		echo '<td class="' . $tdcolor . '">';
-		echo $user;
 		$nombre_real = dame_nombre_real($user);
-		echo " <i>( $nombre_real )</i>";
+		echo " $nombre_real";
 		echo '<td class="' . $tdcolor . '">';
 		echo $timestamp;
 	}

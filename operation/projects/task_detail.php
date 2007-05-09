@@ -34,7 +34,6 @@
 <?PHP
 
 global $config;
-require "include/functions_form.php";
 
 if (check_login() != 0) {
     audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");

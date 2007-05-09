@@ -19,8 +19,6 @@
 
 global $config;
 
-require "include/functions_form.php";
-
 if (check_login() != 0) {
  	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
 	require ("general/noaccess.php");
@@ -69,7 +67,7 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 			id_group = '$id_group'
 			WHERE id = $id_project";
 	$result = mysql_query($sql);
-	audit_db($user, $REMOTE_ADDR, "Project updated", "Project $name");
+	audit_db($config["id_user"], $config["REMOTE_ADDR"], "Project updated", "Project $name");
 	if ($result)
 		$result_output = "<h3 class='suc'>".$lang_label["update_ok"]."</h3>";
 	else
