@@ -50,8 +50,6 @@ INSERT INTO `tusuario` VALUES ('admin','Default Admin','fe705027892dc1b806629706
 
 INSERT INTO `tusuario_perfil` VALUES (1,'demo',1,1,'admin'),(2,'admin',5,1,'admin');
 
-
-
 INSERT INTO `tperfil` VALUES (1,'Operator (Read)',0,1,0,1,0,0,0,0,0,0),(2,'Operator (Write)',1,1,0,1,0,0,0,0,0,0),(3,'Chief Operator',1,1,1,1,0,0,0,0,0,0),(4,'Group coordinator',1,1,1,1,1,1,1,0,0,0),(5,'Pandora Administrator',1,1,1,1,1,1,1,1,1,1);
 
 
@@ -61,4 +59,5 @@ INSERT INTO tincident_state (name) VALUES ('New'), ('Unconfirmed'), ('Assigned')
 
 INSERT INTO tincident_origin (name) VALUES ('User report'), ('Customer'), ('Internal department'), ('External department'), ('Application data'), ('Bug report'), ('Problem detected'), ('Other source' );
 
+INSERT INTO `trole` VALUES (1,'Support engineer','',30),(2,'Systems engineer','',40),(3,'Junior consultant','',50),(4,'Junior programmer','',45),(5,'Senior programmer','',65),(6,'Analist','',75),(7,'Senior consultant','',75),(8,'Project manager','',125);
 

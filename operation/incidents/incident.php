@@ -297,7 +297,7 @@ if ($row2_count[0] <= 0 ) {
 	echo "<tr>";
 	echo "<th>Id";
 	echo "<th>St.";
-	echo "<th>".$lang_label["priority"];
+	echo "<th>".$lang_label["prioty_short"];
 	echo "<th>".$lang_label["incident"];
 	echo "<th>".$lang_label["group"];
 	echo "<th>".$lang_label["updated_at"];
@@ -325,8 +325,8 @@ if ($row2_count[0] <= 0 ) {
 			}
 			
 			echo "<tr>";
-			echo "<td class='$tdcolor' align='left' >";
-			echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'><b>#".$row2["id_incidencia"]."</b></a></td>";
+			echo "<td class='$tdcolor' align='left'>";
+			echo "<font size=1pt><a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'><b>#".$row2["id_incidencia"]."</b></a></td>";
 
 
 			// Tipo de estado  (Type)
@@ -347,14 +347,15 @@ if ($row2_count[0] <= 0 ) {
 				case 13: echo "<img src='images/dot_green.gif'>";
 							break;
 			}
-			echo "<td class='$tdcolor'>";
+			echo "<td class='$tdcolor' align='center'>";
 			switch ( $row2["prioridad"] ){
-				case 0: echo "<img src='images/dot_green.gif'>"."<img src='images/dot_green.gif'>"."<img src='images/dot_yellow.gif'>"; break;
-				case 1: echo "<img src='images/dot_green.gif'>"."<img src='images/dot_yellow.gif'>"."<img src='images/dot_yellow.gif'>"; break;
-				case 2: echo "<img src='images/dot_yellow.gif'>"."<img src='images/dot_yellow.gif'>"."<img src='images/dot_red.gif'>"; break;
-				case 3: echo "<img src='images/dot_yellow.gif'>"."<img src='images/dot_red.gif'>"."<img src='images/dot_red.gif'>"; break;
-				case 4: echo "<img src='images/dot_red.gif'>"."<img src='images/dot_red.gif'>"."<img src='images/dot_red.gif'>"; break;
-				case 10: echo "<img src='images/dot_green.gif'>"."<img src='images/dot_green.gif'>"."<img src='images/dot_green.gif'>"; break;
+			
+				case 0: echo "<img src='images/flag_white.png'>"; break; // Informative
+				case 1: echo "<img src='images/flag_green.png'>"; break; // Low
+				case 2: echo "<img src='images/flag_yellow.png'>"; break; // Medium
+				case 3: echo "<img src='images/flag_orange.png'>"; break; // Serious
+				case 4: echo "<img src='images/flag_red.png'>"; break; // Very serious
+				case 10: echo "<img src='images/flag_blue.png'>"; break; // Maintance
 			}
 			echo "<td class='$tdcolor'><a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr(clean_output ($row2["titulo"]),0,60);
 			echo "<td class='$tdcolor'>".dame_nombre_grupo($row2["id_grupo"]);

@@ -1,6 +1,6 @@
 <?php
 
-// FRITS - the FRee Incident Tracking System
+// TOPI
 // =========================================
 // Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
 // Copyright (c) 2007 Artica Soluciones Tecnologicas
@@ -67,14 +67,14 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 		echo '<meta http-equiv="refresh" content="' . $intervalo . '">';	
 }
 ?>
-<title>FRITS - the Free distRibuted enterprIse project Tracking System</title>
+<title>TOPI - Open Project Management System</title>
 <meta http-equiv="expires" content="0">
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-15">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="author" content="Sancho Lerena">
 <meta name="copyright" content="This is GPL software. Created by Sancho Lerena">
-<meta name="keywords" content="pandora, monitoring, system, GPL, software">
+<meta name="keywords" content="management, project, incident, asset, GPL, software">
 <meta name="robots" content="index, follow">
 <link rel="icon" href="images/frits.ico" type="image/ico">
 <link rel="stylesheet" href="include/styles/frits.css" type="text/css">

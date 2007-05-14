@@ -814,6 +814,8 @@ $lang_label["resolution_epilog"]="Resolution epilog";
 $lang_label["email_notify_help"]="Active to send email to all people involved in this incident on each change";
 $lang_label["assigned_user"]="Assigned user";
 $lang_label["incident_workunit_added"]="Workunit added to incident";
+$lang_label["prioty_short"]="Prio";
+
 global $lang_label; 
 global $help_label;
 ?>

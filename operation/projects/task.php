@@ -45,10 +45,6 @@ echo "<li class='nomn'>";
 echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id=$id_project'><img src='images/application_edit.png' class='top' border=0> ".$lang_label["project"]."</a>";
 echo "</li>";
 
-// Tasks
-echo "<li class='nomn'>";
-echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["tasklist"]."</a>";
-echo "</li>";
 
 // Workunits
 echo "<li class='nomn'>";

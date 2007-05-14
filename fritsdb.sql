@@ -229,32 +229,6 @@ CREATE TABLE `tproject` (
   PRIMARY KEY  (`id`)
 );
 
-CREATE TABLE `tproject_user` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `id_role` int(10) unsigned NOT NULL default '0',
-  `id_project` int(10) unsigned NOT NULL default '0',
-  `id_user` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-);
-
-
-CREATE TABLE `ttask_user` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `id_task` int(10) unsigned NOT NULL default '0',
-  `id_user` int(10) unsigned NOT NULL default '0',
-  `weight` tinyint unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-);
-
-
-CREATE TABLE `tproject_role` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(240) NOT NULL default '',
-  `description` mediumtext NOT NULL,
-  `id_group` int(10) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-);
-
 
 CREATE TABLE `ttask_track` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -334,5 +308,21 @@ CREATE TABLE `tincident_status` (
 CREATE TABLE `tincident_origin` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `trole` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(125) NOT NULL default '',
+  `description` VARCHAR(255) DEFAULT '', 
+  `cost` int(8) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `trole_people_task` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_user` varchar(125) NOT NULL default '',
+  `id_role` int(10) unsigned NOT NULL default '0',
+  `id_task` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );

@@ -476,7 +476,7 @@ function calculate_project_progress ($id_project){
 	$tot = 0;
 	while ($row=mysql_fetch_array($resq1)){
 		if ($row["priority"] > 0)
-			$sum = $sum + $row["completion"] * ($row["priority"] / 10);
+			$sum = $sum + $row["completion"];
 		$tot++;
 	}
 	if ($tot > 0)

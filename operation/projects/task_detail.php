@@ -257,7 +257,7 @@ if ($operation == "view"){
 
 	// People
 	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id=$id_project'><img src='images/user_suit.png' class='top' border=0> ".$lang_label["people"]." </a>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id=$id_task'><img src='images/user_suit.png' class='top' border=0> ".$lang_label["people"]." </a>";
 	echo "</li>";
 	
 	echo "</ul>";
@@ -391,7 +391,11 @@ if ($operation != "create"){
 	echo "<table cellpadding=3 cellspacing=3 border=0 width='700' class='databox_color'>";
 	echo "<form name='nota' method='post' action='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=workunit'>";
 	echo "<td class='datos' width=140><b>".$lang_label["date"]."</b>";
-	echo "<td class='datos'><i>$ahora</i>";
+	echo "<td class='datos'>";
+
+	echo "<input type='text' id='workunit_date' name='workunit_date' size=10 value='".substr($ahora,0,10)."'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"workunit_date\"),this);'> ";
+
+
 
 	echo "<tr><td class='datos2'>";
 	echo "<b>".$lang_label["profile"]."</b>";
