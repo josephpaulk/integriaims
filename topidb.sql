@@ -24,18 +24,6 @@ CREATE TABLE `tconfig` (
   PRIMARY KEY  (`id_config`)
 );
 
---
--- Table structure for table `tconfig_os`
---
-
-CREATE TABLE `tconfig_os` (
-  `id_os` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) default '',
-  `icon_name` varchar(100) default '',
-  PRIMARY KEY  (`id_os`)
-);
-
 
 CREATE TABLE `tgrupo` (
   `id_grupo` mediumint(8) unsigned NOT NULL auto_increment,
@@ -152,8 +140,8 @@ CREATE TABLE  `tprofile` (
   `pw` tinyint(1) NOT NULL default '0',
   `tw` tinyint(1) NOT NULL default '0',
   `tm` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id_perfil`)
-) 
+  PRIMARY KEY  (`id`)
+);
 
 
 CREATE TABLE `tsesion` (
@@ -260,7 +248,7 @@ CREATE TABLE `tworkunit` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `duration` float (10,2) unsigned NOT NULL default '0',
-  `id_user` VARCHAR(125) DEFAULT NULL;
+  `id_user` VARCHAR(125) DEFAULT NULL,
   `description` mediumtext NOT NULL,
   `have_cost` tinyint unsigned NOT NULL DEFAULT 0,
   `id_profile` int(10) unsigned NOT NULL default '0',

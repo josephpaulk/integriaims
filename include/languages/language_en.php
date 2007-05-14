@@ -815,7 +815,7 @@ $lang_label["email_notify_help"]="Active to send email to all people involved in
 $lang_label["assigned_user"]="Assigned user";
 $lang_label["incident_workunit_added"]="Workunit added to incident";
 $lang_label["prioty_short"]="Prio";
+$lang_label["cannot_find_page"]="Sorry! I can't find the page!";
 
 global $lang_label; 
 global $help_label;
-?>

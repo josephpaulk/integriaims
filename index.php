@@ -1,7 +1,7 @@
 <?php
 
-// TOPI
-// =========================================
+// TOPI - the Open Tracking System for the Enterprise
+// ==================================================
 // Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
 // Copyright (c) 2007 Artica Soluciones Tecnologicas
 
@@ -13,11 +13,11 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// FRITS 1.x uses icons from famfamfam, licensed under CC Atr. 2.5
+// TOPI uses icons from famfamfam, licensed under CC Atr. 2.5
 // Silk icon set 1.3 (cc) Mark James, http://www.famfamfam.com/lab/icons/silk/
-// FRITS 1.x uses Pear Image::Graph code
-// FRITS shares much of it's code with project Babel Enterprise and Pandora FMS,
-// also a Free Software Project coded by some of the people who makes FRITS.
+// TOPI uses Pear Image::Graph code
+// TOPI shares much of it's code with project Babel Enterprise and Pandora FMS,
+// also a Free Software Project coded by some of the people who makes ToPI.
 
 $develop_bypass = 1;
 if ($develop_bypass != 1){
@@ -67,7 +67,7 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 		echo '<meta http-equiv="refresh" content="' . $intervalo . '">';	
 }
 ?>
-<title>TOPI - Open Project Management System</title>
+<title>TOPI - the Open Tracking System for the Enterprise</title>
 <meta http-equiv="expires" content="0">
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-15">
 <meta name="resource-type" content="document">
@@ -76,8 +76,8 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 <meta name="copyright" content="This is GPL software. Created by Sancho Lerena">
 <meta name="keywords" content="management, project, incident, asset, GPL, software">
 <meta name="robots" content="index, follow">
-<link rel="icon" href="images/frits.ico" type="image/ico">
-<link rel="stylesheet" href="include/styles/frits.css" type="text/css">
+<link rel="icon" href="images/topi.ico" type="image/ico">
+<link rel="stylesheet" href="include/styles/topi.css" type="text/css">
 <script type='text/JavaScript' src='include/calendar.js'></script>
 </head>
 
@@ -193,7 +193,7 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 				if (file_exists ($pagina . ".php")) {
 					require ($pagina . ".php");
 				} else {
-					echo "<br><b class='error'>Sorry! I can't find the page!</b>";
+					echo "<br><b class='error'>".$lang_label["cannot_find_page"]."</b>";
 				}	
 			} else
 				require ("general/logon_ok.php");  //default
