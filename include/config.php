@@ -1,6 +1,6 @@
 <?PHP
 // Begin of automatic config file
-$config["dbname"] = "frits";			// MySQL DataBase name
+$config["dbname"] = "topi";			// MySQL DataBase name
 $config["dbuser"] = "root";
 $config["dbpassword"] = "none";	// DB Password
 $config["dbhost"] = "localhost"; // DB Host
@@ -8,7 +8,7 @@ $config["homedir"] = "/var/www/topi/";		// Config homedir
 $config["base_url"] = "http://localhost/topi";			// Base URL
 // End of automatic config file
 ?><?php
-// FRITS - the FRee Incident Tracking System
+// TOPI 
 // =========================================
 // Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
 // Copyright (c) 2007 Artica Soluciones Tecnologicas
@@ -42,15 +42,15 @@ $config["fontpath"] = $config["homedir"]."/reporting/FreeSans.ttf";
 if (! mysql_connect($config["dbhost"],$config["dbuser"],$config["dbpassword"])){ 
 
 //Non-persistent connection. If you want persistent conn change it to mysql_pconnect()
-	exit ('<html><head><title>FRITS Error</title>
+	exit ('<html><head><title>Error</title>
 	<link rel="stylesheet" href="./include/styles/main.css" type="text/css">
 	</head><body><div align="center">
 	<div id="db_f">
 		<div>
-		<a href="index.php"><img src="images/logo_frits.gif" border="0"></a>
+		<a href="index.php"><img src="images/logo.gif" border="0"></a>
 		</div>
 	<div id="db_ftxt">
-		<h1 id="db_fh1" class="error">FRITS Error DB-001</h1>
+		<h1 id="db_fh1" class="error">Error DB-001</h1>
 		Cannot connect with Database, please check your database setup in the 
 		<b>./include/config.php</b> file and read documentation.<i><br><br>
 		Probably any of your user/database/hostname values are incorrect or 
