@@ -1,7 +1,7 @@
 <?PHP
-// FRITS - the FRee Incident Tracking System
-// =========================================
-// Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
+// TOPI - the Open Tracking System for the Enterprise
+// ==================================================
+// Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
@@ -22,10 +22,10 @@
 global $config;
 global $lang_label;
 
-echo 'FRiTS '.$config["version"].' Build '.$config["build_version"].'<br>';
+echo 'TOPI '.$config["version"].' Build '.$config["build_version"].'<br>';
 
 if (isset($_SESSION['id_usuario'])) {
-	echo '<a target="_new" href="general/license/frits_info_'.$config["language_code"].'.html">'.
+	echo '<a target="_new" href="general/license/topi_info_'.$config["language_code"].'.html">'.
 	$lang_label["gpl_notice"].'</a><br>';
 	if (isset($_SERVER['REQUEST_TIME'])) {
 		$time = $_SERVER['REQUEST_TIME'];

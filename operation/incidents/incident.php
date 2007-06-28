@@ -22,7 +22,6 @@
 
 $accion = "";
 global $config;
-global $lang_label;
 
 if (check_login() != 0) {
 	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access incident viewer");
@@ -293,7 +292,7 @@ if ($row2_count[0] <= 0 ) {
 	// -------------
 	// Show headers
 	// -------------
-	echo "<table width='810' class='databox'>";
+	echo "<table width='820' cellpadding=3 cellspacing=3 class='databox'>";
 	echo "<tr>";
 	echo "<th>Id";
 	echo "<th>St.";
@@ -301,9 +300,8 @@ if ($row2_count[0] <= 0 ) {
 	echo "<th>".$lang_label["incident"];
 	echo "<th>".$lang_label["group"];
 	echo "<th>".$lang_label["updated_at"];
-	echo "<th>".$lang_label["source"];
-	echo "<th>".$lang_label["files"];
-	echo "<th>".$lang_label["notes"];
+	echo "<th>".$lang_label["resolution"];
+	echo "<th width=70>".$lang_label["flags"];
 	echo "<th>".$lang_label["in_openedby"];
 	echo "<th>".$lang_label["delete"];
 	
@@ -328,23 +326,25 @@ if ($row2_count[0] <= 0 ) {
 			echo "<td class='$tdcolor' align='left'>";
 			echo "<font size=1pt><a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'><b>#".$row2["id_incidencia"]."</b></a></td>";
 
-
 			// Tipo de estado  (Type)
-			// 0 - Abierta / Sin notas (Open, no notes)
-			// 2 - Descartada (not valid)
-			// 3 - Caducada (out of date)
-			// 13 - Cerrada (closed)
+			// (1,'New'), (2,'Unconfirmed'), (3,'Assigned'),
+			// (4,'Re-opened'), (5,'Verified'), (6,'Resolved')
+			// (7,'Closed');
 			echo "<td class='$tdcolor' align='center'>";
 			switch ($row2["estado"]) {
-				case 0: echo "<img src='images/dot_red.gif'>";
+				case 1: echo "<img src='images/dot_blue.gif'>";
 							break;
-				case 1: echo "<img src='images/dot_yellow.gif'>";
+				case 2: echo "<img src='images/dot_white.gif'>";
 							break;
-				case 2: echo "<img src='images/dot_blue.gif'>";
+				case 3: echo "<img src='images/dot_red.gif'>";
 							break;
-				case 3: echo "<img src='images/dot_white.gif'>";
+				case 4: echo "<img src='images/dot_orange.gif'>";
 							break;
-				case 13: echo "<img src='images/dot_green.gif'>";
+				case 5: echo "<img src='images/dot_yellow.gif'>";
+							break;
+				case 7: echo "<img src='images/dot_lightgreen.gif'>";
+							break;
+				case 6: echo "<img src='images/dot_green.gif'>";
 							break;
 			}
 			echo "<td class='$tdcolor' align='center'>";
@@ -357,29 +357,47 @@ if ($row2_count[0] <= 0 ) {
 				case 4: echo "<img src='images/flag_red.png'>"; break; // Very serious
 				case 10: echo "<img src='images/flag_blue.png'>"; break; // Maintance
 			}
-			echo "<td class='$tdcolor'><a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr(clean_output ($row2["titulo"]),0,60);
-			echo "<td class='$tdcolor'>".dame_nombre_grupo($row2["id_grupo"]);
+			// Title
+			echo "<td class='$tdcolor'><a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr(clean_output ($row2["titulo"]),0,200);
+
+			// Grupo
+			echo "<td class='$tdcolor' align='center'><img src='images/".dame_grupo_icono($row2["id_grupo"])."'>";
+
+			// Update time
 			echo "<td class='".$tdcolor."f9'>".human_time_comparation ( $row2["actualizacion"]);
-			echo "<td class='".$tdcolor."f9'>".$row2["origen"];
-			echo "<td class='$tdcolor'>";
-			
+
+			// Resolution
+			echo "<td class='".$tdcolor."f9'>".give_db_value('name', 'tincident_resolution', 'id', $row2["resolution"]);
+
 			// Check for attachments in this incident
+			echo "<td class='".$tdcolor."f9' align='center'>";
 			$file_number = give_number_files_incident ($row2["id_incidencia"]);
 			if ($file_number > 0)
-				echo '<img src="images/disk.png" valign="bottom">  '.$file_number;
-			echo "<td class='$tdcolor'>";
+				echo '<img src="images/disk.png" valign="bottom"  alt="'.$file_number.'">';
 
 			// Check for notes
 			$note_number = dame_numero_notas($row2["id_incidencia"]);
 			if ($note_number > 0)
-				echo '<img src="images/note.png" valign="bottom"> '.$note_number;
-				
-			echo "<td class='$tdcolor'><a href='index.php?sec=usuario&sec2=operation/users/user_edit&ver=".$row2["id_usuario"]."'>".$row2["id_usuario"]."</a></td>";
+				echo '&nbsp;&nbsp;<img src="images/note.png" valign="bottom" alt="'.$note_number.'">';
+
+			// Has mail notice activated ?
+			$mail_check = give_db_value('notify_email', 'tincidencia', 'id_incidencia', $row2["id_incidencia"]);
+			if ($mail_check> 0)
+				echo '&nbsp;&nbsp;<img src="images/email_go.png" valign="bottom">';
+
+			// Check for workunits
+			$timeused = give_hours_incident ($row2["id_incidencia"]);
+			if ($timeused > 0)
+				echo '&nbsp;&nbsp;<img src="images/award_star_silver_1.png" valign="bottom">'.$timeused;
+			
+			// User who manage this incident
+			echo "<td class='$tdcolor'>";
+			echo "<a href='index.php?sec=usuario&sec2=operation/users/user_edit&ver=".$row2["id_usuario"]."'>".$row2["id_usuario"]."</a></td>";
 			$id_author_inc = $row2["id_usuario"];
 			if ((give_acl($id_usuario, $id_group, "IM") ==1) OR ($_SESSION["id_usuario"] == $id_author_inc) ){
 			// Only incident owners or incident manager
 			// from this group can delete incidents
-				echo "<td class='$tdcolor' align='center'><a href='index.php?sec=incidencias&sec2=operation/incidents/incident&quick_delete=".$row2["id_incidencia"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
+				echo "<td class='$tdcolor' align='center'><a href='index.php?sec=incidentes&sec2=operation/incidents/incident&quick_delete=".$row2["id_incidencia"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
 			} else
 				echo "<td class='$tdcolor' align='center'>";
 		}
@@ -398,16 +416,20 @@ echo "<table cellpadding=3 cellspacing=3>";
 echo "<tr><td valign='top'>";
 echo "<b>".$lang_label["status"]."</b>";
 ?>
-<table cellspacing=3 cellpadding=3><tr><td>
-<img src='images/dot_red.gif'> - <?php echo $lang_label["new_inc"] ?>
+<table cellspacing=10 cellpadding=10 width=250 class='databox'><tr><td>
+<img src='images/dot_yellow.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',5) ?>
 <td>
-<img src='images/dot_blue.gif'> - <?php echo $lang_label["rej_inc"] ?>
+<img src='images/dot_orange.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',4) ?>
 <tr><td>
-<img src='images/dot_green.gif'> - <?php echo $lang_label["closed_inc"] ?>
+<img src='images/dot_green.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',6) ?>
 <td>
-<img src='images/dot_white.gif'> - <?php echo $lang_label["exp_inc"] ?></td>
+<img src='images/dot_lightgreen.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',7) ?>
 <tr><td>
-<img src='images/dot_yellow.gif'> - <?php echo $lang_label["opened_inc"] ?></td>
+<img src='images/dot_blue.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',1) ?>
+<td>
+<img src='images/dot_red.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',3) ?>
+<tr><td colspan=2>
+<img src='images/dot_white.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',2) ?>
 </table>
 
 <?PHP
@@ -415,18 +437,34 @@ echo "<td valign='top' width='50'>";
 echo "<td valign='top'>";
 echo "<b>".$lang_label["priority"]."</b>";
 ?>
-<table cellspacing=3 cellpadding=3><tr><td>
-	<img src='images/dot_red.gif'><img src='images/dot_red.gif'><img src='images/dot_red.gif'> - <?php echo $lang_label["very_serious"] ?>
-	<td>
-	<img src='images/dot_yellow.gif'><img src='images/dot_red.gif'><img src='images/dot_red.gif'> - <?php echo $lang_label["serious"] ?>
-	<td>
-	<img src='images/dot_yellow.gif'><img src='images/dot_yellow.gif'><img src='images/dot_red.gif'> - <?php echo $lang_label["medium"] ?>
-	<tr><td>
-	<img src='images/dot_green.gif'><img src='images/dot_yellow.gif'><img src='images/dot_yellow.gif'> - <?php echo $lang_label["low"] ?>
-	<td>
-	<img src='images/dot_green.gif'><img src='images/dot_green.gif'><img src='images/dot_yellow.gif'> - <?php echo $lang_label["informative"] ?>
-	<td>
-	<img src='images/dot_green.gif'><img src='images/dot_green.gif'><img src='images/dot_green.gif'> - <?php echo $lang_label["maintenance"] ?>
-	</table>
+
+<table cellspacing=10 cellpadding=10 width=450 class='databox'>
 <tr><td>
+	<img src='images/flag_white.png'> - <?php echo $lang_label["informative"] ?>
+	<td>
+	<img src='images/flag_green.png'> - <?php echo $lang_label["low"] ?>
+	<td>
+	<img src='images/flag_yellow.png'> - <?php echo $lang_label["medium"] ?>
+	<tr><td>
+	<img src='images/flag_orange.png'> - <?php echo $lang_label["serious"] ?>
+	<td>
+	<img src='images/flag_red.png'> - <?php echo $lang_label["very_serious"] ?>
+	<td>
+	<img src='images/flag_blue.png'> - <?php echo $lang_label["maintenance"] ?>
+</table>
+
+ <?php echo "<b>".$lang_label["flags"]."</b>" ?>
+
+<table cellspacing=10 cellpadding=10 width=450 class='databox'>
+<tr>
+		<td>
+		<img src='images/disk.png'> <?php echo $lang_label["files"] ?>
+		<td>
+		<img src='images/note.png'> <?php echo $lang_label["notes"] ?>
+		<td>
+		<img src='images/email_go.png'> <?php echo $lang_label["email_notify"] ?>
+		<td>
+		<img src="images/award_star_silver_1.png" valign="bottom"> <?php echo $lang_label["workunits"] ?>
+</table>
+
 </table>

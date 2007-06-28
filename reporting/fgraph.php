@@ -1492,8 +1492,7 @@ function progress_bar($progress,$width,$height) {
    // Get from official documentation PHP.net website. Thanks guys :-)
    // Code ripped from Babel Project :-)
 	function drawRating($rating,$width,$height) {
-		include ("../include/config.php");
-		require ("../include/languages/language_".$language_code.".php");
+		global $config;
 		if ($width == 0) {
 			$width = 150;
 		}

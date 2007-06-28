@@ -35,7 +35,7 @@
 		</div>
 		<div style="margin-top: 25px;padding-left: 5px; height: 170px;" class='databox_color'>
 			<a href="index.php">
-			<img style='margin-top: 30px;' src="images/frits_logo.gif" border="0" alt="logo"></a><br>
+			<img style='margin-top: 30px;' src="images/topi.gif" border="0" alt="logo"></a><br>
 			<?php echo $config["version"]; ?>
 		</div>
 	</div>

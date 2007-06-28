@@ -21,19 +21,23 @@
 // Load global vars
 require("include/config.php");
 
-if (comprueba_login() == 0) {
+if (check_login() != 0) {
+ 	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
+	require ("general/noaccess.php");
+	exit;
+}
 
 $id_user=$_SESSION['id_usuario'];
-echo "<h2>".$lang_label["incident_manag"]."</h2>";
+echo "<h2>".$lang_label["incident_search"]."</h2>";
 echo "<div style='width:645'>";
 echo "<div style='float:right;'><img src='images/zoom.png' width=32 height=32 class='bot' align='left'></div>";
 ?>
 
 <table width="500" class='databox_color'>
-<form name="busqueda" method="post" action="index.php?sec=incidencias&sec2=operation/incidents/incident">
+<form name="busqueda" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident">
 <tr>
-<td class="datos"><?php echo $lang_label["user"] ?>
-<td class="datos">
+<td class="datos2"><?php echo $lang_label["user"] ?>
+<td class="datos2">
 <select name="usuario" class="w120">
 <option>--
 <?php
@@ -51,22 +55,21 @@ echo "<div style='float:right;'><img src='images/zoom.png' width=32 height=32 cl
 	echo "</select>";
 
 ?>
-<tr><td class="datos2"><?php echo $lang_label["incident_id"] ?>
-<td class="datos2"><input type="text" size="10" name="incident_id"></tr>
+<tr><td class="datos"><?php echo $lang_label["incident_id"] ?>
+<td class="datos"><input type="text" size="10" name="incident_id"></tr>
 
-<tr><td class="datos"><?php echo $lang_label["free_text_search"] ?>
-<td class="datos"><input type="text" size="45" name="texto"></tr>
+<tr><td class="datos2"><?php echo $lang_label["free_text_search"] ?>
+<td class="datos2"><input type="text" size="45" name="texto"></tr>
 
-<tr><td class="datos2" colspan="2"><i><?php echo $lang_label["free_text_search_msg"] ?></i></td></tr>
+<tr><td class="datos" colspan="2"><i><?php echo $lang_label["free_text_search_msg"] ?></i></td></tr>
 </table>
 
-<?php echo "<p><input name='uptbutton' type='submit' class='sub' value='".$lang_label["search"]."'></p>"; ?>
+<?php
 
-</form>
-</table>
+echo '<table width="500"><tr><td align=right>';
+echo "<input name='uptbutton' type='submit' class='sub next' value='".$lang_label["search"]."'></p>";
+echo "</form></table>
 </div>
-</div>
-<?php 
+</div>";
 
-} // end page
 ?>

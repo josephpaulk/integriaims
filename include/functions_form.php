@@ -2,17 +2,32 @@
 
 // Returns a combo with the users that belongs to a project
 // ----------------------------------------------------------------------
-function combo_users_project ($id_project){
-	echo "<select name='user_project'>";
-	$sql='SELECT tproject_user.id_user FROM tproject_user, tusuario WHERE tusuario.id_usuario =  tproject_user.id_user AND tproject_user.id_project = $id_project';
-	$result=mysql_query($sql);
+function combo_users_task ($id_task){
+	// Show only users assigned to this project
+	$sql = "SELECT * FROM trole_people_task WHERE id_task = $id_task";
+	$result = mysql_query($sql);
+	echo "<select name='user' style='width: 100px;'>";
 	while ($row=mysql_fetch_array($result)){
-		echo "<option>".$row[0];
+		echo "<option value='".$row["id"]."'>".$row["id_user"]." / ".give_db_value ("name","trole","id",$row["id_role"]);
 	}
 	echo "</select>";
 }
 
-// Returns a combo with the users available 
+// Returns a combo with the users that belongs to a project
+// ----------------------------------------------------------------------
+function combo_users_project ($id_project){
+	// Show only users assigned to this project
+	$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project";
+	$result = mysql_query($sql);
+	echo "<select name='user' style='width: 100px;'>";
+	while ($row=mysql_fetch_array($result)){
+		echo "<option value='".$row["id"]."'>".$row["id_user"]." / ".give_db_value ("name","trole","id",$row["id_role"]);
+	}
+	echo "</select>";
+}
+
+
+// Returns a combo with the users available
 // ----------------------------------------------------------------------
 function combo_users ($actual = "") {
 	echo "<select name='user'>";
@@ -28,9 +43,11 @@ function combo_users ($actual = "") {
 }
 
 
-// Returns a combo with the groups available 
+// Returns a combo with the groups available
+// $mode is one ACL for access, like "IR", "AR", or "TW"
 // ----------------------------------------------------------------------
-function combo_groups ($actual = -1) {
+function combo_groups ($actual = -1, $mode = "IR") {
+	global $config;
 	echo "<select name='group'>";
 	if ($actual != -1){
 		$sql = "SELECT * FROM tgrupo WHERE id_grupo = $actual";
@@ -42,7 +59,8 @@ function combo_groups ($actual = -1) {
 	$sql="SELECT * FROM tgrupo WHERE id_grupo != $actual";
 	$result=mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
-		echo "<option value='".$row["id_grupo"]."'>".$row["nombre"];
+		if (give_acl ($config["id_user"], $row["id_grupo"], $mode) == 1)
+			echo "<option value='".$row["id_grupo"]."'>".$row["nombre"];
 	}
 	echo "</select>";
 }
@@ -149,6 +167,19 @@ if ($disabled == 0)
 	}
 	echo "</select>";
 
+}
+
+
+// Returns a combo with the available roles
+// ----------------------------------------------------------------------
+function combo_roles () {
+	echo "<select name='role'>";
+	$sql = "SELECT * FROM trole";
+	$result=mysql_query($sql);
+	while ($row=mysql_fetch_array($result)){
+		echo "<option value='".$row["id"]."'>".$row["name"];
+	}
+	echo "</select>";
 }
 
 

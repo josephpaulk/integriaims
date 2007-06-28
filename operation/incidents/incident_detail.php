@@ -136,13 +136,14 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 		$actualizacion = $inicio;
 		$id_creator = $id_usuario;
 		$estado = clean_input ($_POST["incident_status"]);
+		$resolution = clean_input ($_POST["incident_resolution"]);
 		$id_task =  give_parameter_post ("task_user");
 		if (isset($_POST["email_notify"]))
 			$email_notify=clean_input ($_POST["email_notify"]);
 		else
 			$email_notify = 0;
 		
-		$sql = " INSERT INTO tincidencia (inicio, actualizacion, titulo , descripcion, id_usuario, origen, estado, prioridad, id_grupo, id_creator, notify_email, id_task) VALUES ('$inicio','$actualizacion', '$titulo', '$descripcion', '$usuario', '$origen', '$estado', '$prioridad', '$grupo', '$id_creator', $email_notify, $id_task)";
+		$sql = " INSERT INTO tincidencia (inicio, actualizacion, titulo , descripcion, id_usuario, origen, estado, prioridad, id_grupo, id_creator, notify_email, id_task, resolution) VALUES ('$inicio','$actualizacion', '$titulo', '$descripcion', '$usuario', '$origen', '$estado', '$prioridad', '$grupo', '$id_creator', $email_notify, $id_task, $resolution)";
 		if (mysql_query($sql)){
 			$id_inc=mysql_insert_id();
 			$_GET["id"] = $id_inc; // HACK
@@ -266,21 +267,21 @@ if (isset($_GET["id"])){
 
 	// This view
 	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["Incident"]." </a>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["Incident"]." </a>";
 	echo "</li>";
 
 	// Tracking
 	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
 	echo "</li>";
 
 	// Workunits
 	$timeused = give_hours_incident ( $id_inc);
 	echo "<li class='nomn'>";
 	if ($timeused > 0)
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
 	else
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
 	echo "</li>";
 
 	
@@ -288,7 +289,7 @@ if (isset($_GET["id"])){
 	$file_number = give_number_files_incident($id_inc);
 	if ($file_number > 0){
 		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".$lang_label["Attachment"]." ($file_number) </a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".$lang_label["Attachment"]." ($file_number) </a>";
 		echo "</li>";
 	}
 
@@ -296,7 +297,7 @@ if (isset($_GET["id"])){
 	$note_number = dame_numero_notas($id_inc);
 	if ($note_number > 0){
 		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_notes&id=$id_inc'><img src='images/note.png' class='top' border=0> ".$lang_label["Notes"]." ($note_number) </a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_notes&id=$id_inc'><img src='images/note.png' class='top' border=0> ".$lang_label["Notes"]." ($note_number) </a>";
 		echo "</li>";
 	}
 	
@@ -339,9 +340,9 @@ if (isset($_GET["id"])){
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 if ($creacion_incidente == 0)
-	echo "<form name='accion_form' method='POST' action='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&action=update'>";
+	echo "<form name='accion_form' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident_detail&action=update'>";
 else
-	echo "<form name='accion_form' method='POST' action='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&action=insert'>";
+	echo "<form name='accion_form' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident_detail&action=insert'>";
 
 if (isset($id_inc)) {
 	echo "<input type='hidden' name='id_inc' value='".$id_inc."'>";
@@ -391,7 +392,7 @@ if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)){
 	echo '<tr><td class="datos2"><b>'.$lang_label["priority"].'</b>';
 	echo '<td class="datos2"><select name="prioridad_form">';
 } else {
-	echo '<td class="datos2"><b>'.$lang_label["priority"].'</b>';
+	echo '<tr><td class="datos2"><b>'.$lang_label["priority"].'</b>';
 	echo '<td class="datos2"><select disabled name="prioridad_form">';
 }
 
@@ -553,7 +554,7 @@ if ($creacion_incidente == 0){
 		$ahora=date("Y/m/d H:i:s");
 		echo "<div id='note_control' style='display:none'>";
 		echo "<table cellpadding=3 cellspacing=3 border=0 width='700' class='databox_color' >";
-		echo "<form name='nota' method='post' action='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&insertar_nota=1&id=".$id_inc."'>";
+		echo "<form name='nota' method='post' action='index.php?sec=incidentss&sec2=operation/incidents/incident_detail&insertar_nota=1&id=".$id_inc."'>";
 		echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
 		echo "<input type='hidden' name='id_inc' value='".$id_inc."'>";
 		echo "<tr><td class='datos' width='140'><b>".$lang_label["date"]."</b></td>";
@@ -606,7 +607,7 @@ if ($creacion_incidente == 0){
 		echo "<table cellpadding=4 cellspacing=4 border=0 width='700' class='databox_color'>";
 		echo "<tr>";
 		echo '<td class="datos">'.$lang_label["filename"].'</td><td class="datos">';
-		echo '<form method="post" action="index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id='.$id_inc.'&upload_file=1" enctype="multipart/form-data">';
+		echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id_inc.'&upload_file=1" enctype="multipart/form-data">';
 		echo '<input type="file" name="userfile" value="userfile" class="sub" size="40">';
 		echo '<tr><td class="datos2">'.$lang_label["description"].'</td><td class="datos2" colspan=3><input type="text" name="file_description" size=47>';
 		echo "</td></tr></table>";

@@ -29,7 +29,7 @@ global $lang_label;
 			<center><?PHP echo $lang_label["logout_msg"]; ?></center>
 		</div>
 		<div id="logo_box"><center>
-			<a href="index.php"><img src="images/frits_logo.gif" border="0" alt="logo"></a><br>
+			<a href="index.php"><img src="images/topi.gif" border="0" alt="logo"></a><br>
 			<?php echo $config["version"]; ?>
 			</center>
 		</div>

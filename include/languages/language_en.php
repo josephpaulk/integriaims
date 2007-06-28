@@ -87,7 +87,7 @@ $lang_label["no_access_title"]="You don't have access to this page";
 $lang_label["no_access_text"]="Access to this page is restricted to authorized users only, please contact system administrator if you need assistance. <br><br>Please know that all attempts to access this page are recorded in security logs of FRITS System Database";
 $lang_label["header_title"]="Free Monitoring System";
 
-$lang_label["gpl_notice"]="is a <b>Free Software Project, licensed under GPL terms</b>";
+$lang_label["gpl_notice"]="TOPI is a <b>Free Software Project, licensed under GPL terms</b>";
 $lang_label["gpl_used"]="Designed using GPL software and tools"; 
 $lang_label["gen_date"]="Page generated at";
 
@@ -375,17 +375,19 @@ $lang_label["error_profile"]="ERROR: At this moment only Global Admin can manage
 $lang_label["never"]="Never";
 $lang_label["graph_res"]="Graphic resolution (1-low, 5-high)";
 
-$help_label["AR"]="Agents Reading rights";
-$help_label["AW"]="Agents Writing rights";
-$help_label["AM"]="Agents Management rights";
-$help_label["IR"]="System Incidents Reading rights";
-$help_label["IW"]="System Incidents Writing rights";
-$help_label["IM"]="System Incidents Management rights";
-$help_label["LW"]="Alerts Edition rights";
-$help_label["LM"]="Alerts Management rights";
+$help_label["AR"]="Agenda Reading rights";
+$help_label["AW"]="Agenda Writing rights";
+$help_label["AM"]="Agenda Management rights";
+$help_label["TW"]="Task Writing rights";
+$help_label["TM"]="Task Management rights";
+$help_label["IR"]="Incidents Reading rights";
+$help_label["IW"]="Incidents Writing rights";
+$help_label["IM"]="Incidents Management rights";
+$help_label["PW"]="Project Edition rights";
+$help_label["PR"]="Project Read rights";
 $help_label["UM"]="Users Management rights";
 $help_label["DM"]="Database Management rights";
-$help_label["PM"]="FRITS System Management rights";
+$help_label["FM"]="Topi System Management rights";
 
 $lang_label["copy_conf"]="Copy Configuration";
 $lang_label["fromagent"]="From Agent";
@@ -816,6 +818,20 @@ $lang_label["assigned_user"]="Assigned user";
 $lang_label["incident_workunit_added"]="Workunit added to incident";
 $lang_label["prioty_short"]="Prio";
 $lang_label["cannot_find_page"]="Sorry! I can't find the page!";
+$lang_label["manage_user"]="Manage users";
+$lang_label["role_management"]="Role management";
+$lang_label["manage_roles"]="Manage roles";
+$lang_label["cost"]="Cost";
+$lang_label["role"]="Role";
+$lang_label["flags"]="Flags";
+$lang_label["project_manager"]="Project manager";
+$lang_label["task_people_management"]="Task human resources management";
+$lang_label["available_roles"]="Available roles";
+$lang_label["assigned_roles"]="Assigned roles";
+$lang_label["roletask_assignment"]="Role/Group assignment";
+$lang_label["incident_search"]="Incident search";
+$lang_label["project_people_management"]="Project people management";
+$lang_label["role_project_assignment"]="Project role assignment";
 
 global $lang_label; 
 global $help_label;

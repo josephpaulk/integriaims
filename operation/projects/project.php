@@ -42,41 +42,32 @@ $accion = "";
 // Delete project
 if (isset($_GET["quick_delete"])){
 	$id_project = $_GET["quick_delete"];
-	$sql2="SELECT * FROM tproject WHERE id_project=".$id_project;
-	$result2=mysql_query($sql2);
-	$row2=mysql_fetch_array($result2);
-	if ($row2) {
-		$id_author_inc = $row2["id_usuario"];
-		if ((give_acl($id_usuario, $row2["id_grupo"], "IM") ==1) OR ($_SESSION["id_usuario"] == $id_author_inc) ){
-			delete_project ($id_project);
-			echo "<h3 class='suc'>".$lang_label["del_incid_ok"]."</h3>";
-			audit_db($id_author_inc,$REMOTE_ADDR,"Project deleted","User ".$id_usuario." deleted project #".$id_project);
-		} else {
-			audit_db ($id_author_inc,$REMOTE_ADDR,"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to delete project #$id_project");
-			echo "<h3 class='error'>".$lang_label["del_incid_no"]."</h3>";
-			no_permission();
-		}
+	$id_owner = give_db_value ("id_owner", "tproject", "id", $id_project);
+	if ($id_owner == $id_usuario){
+	echo "DEBUG: Borrado temporalmente desactivado hasta que no se implemente une medida de seguridad adicional... me dais un miedo tremendo ! :-) <br>";
+		// delete_project ($id_project);
+		echo "<h3 class='suc'>".$lang_label["del_incid_ok"]."</h3>";
+		audit_db($id_usuario,$REMOTE_ADDR,"Project deleted","User ".$id_usuario." deleted project #".$id_project);
+	} else {
+		audit_db ($id_usuario,$REMOTE_ADDR,"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to delete project #$id_project");
+		echo "<h3 class='error'>".$lang_label["del_incid_no"]."</h3>";
+		no_permission();
 	}
 }
 
-
 // INSERT PROJECT
 if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
-
-	$grupo = give_parameter_post ('group');
-	$usuario = give_parameter_post ("user");
-	if ((give_acl($id_usuario, $grupo, "IM") == 1) OR ($usuario == $id_usuario)) { // Only admins (manage
+	if (give_acl($config["id_user"], 0, "PW") == 1){
 		// Read input variables
+		$usuario = give_parameter_post ("user");
 		$name = give_parameter_post ("name");
 		$description = give_parameter_post ('description');
 		$start_date = give_parameter_post ('start_date');
 		$end_date = give_parameter_post ('end_date');
-		$private = give_parameter_post ("private",0);
-	
 		$id_owner = $usuario;
 		$sql = " INSERT INTO tproject
-			(name, description, id_group, private, start, end, id_owner) VALUES
-			('$name', '$description', $grupo, $private, '$start_date', '$end_date', '$id_owner') ";
+			(name, description, start, end, id_owner) VALUES
+			('$name', '$description', '$start_date', '$end_date', '$id_owner') ";
 		if (mysql_query($sql)){
 			$id_inc = mysql_insert_id();
 			echo "<h3 class='suc'>".$lang_label["create_project_ok"]." ( id #$id_inc )</h3>";
@@ -103,7 +94,6 @@ echo "<table width='810' class='databox'>";
 echo "<tr>";
 echo "<th>".$lang_label["name"];
 echo "<th>".$lang_label["completion"];
-echo "<th>".$lang_label["group"];
 echo "<th>".$lang_label["people"];
 echo "<th>".$lang_label["tasks"];
 echo "<th>".$lang_label["time_used"];
@@ -120,8 +110,7 @@ $color = 1;
 $sql2="SELECT * FROM tproject"; 
 if ($result2=mysql_query($sql2))	
 while ($row2=mysql_fetch_array($result2)){
-	$id_group = $row2["id_group"];
-	if (give_acl($id_usuario, $id_group, "IR") ==1){
+	if (give_acl($config["id_user"], 0, "PR") ==1){
 		if ($color == 1){
 			$tdcolor = "datos";
 			$color = 0;
@@ -141,9 +130,6 @@ while ($row2=mysql_fetch_array($result2)){
 		echo "<td class='$tdcolor' align='center'>";
 		$completion =  format_numeric(calculate_project_progress ($row2["id"]));
 		echo "<img src='include/functions_graph.php?type=progress&width=90&height=20&percent=$completion'>";
-		
-		// Group
-		echo "<td class='$tdcolor'>".dame_nombre_grupo($row2["id_group"]);
 		
 		// People
 		echo "<td class='$tdcolor'>";
@@ -165,21 +151,16 @@ while ($row2=mysql_fetch_array($result2)){
 		echo "<td class='".$tdcolor."f9'>";
 		echo substr($row2["end"],0,10);
 		
-		if ((give_acl($id_usuario, $id_group, "IM") ==1) OR ($_SESSION["id_usuario"] == $id_author_inc) ){
-		// Only incident owners or incident manager
-		// from this group can delete incidents
+		if ((give_acl($config["id_user"], 0, "PW") ==1) AND ($config["id_user"] == $row2["id_owner"] )) {
 			echo "<td class='$tdcolor' align='center'><a href='index.php?sec=projects&sec2=operation/projects/project&quick_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
 		} else
 			echo "<td class='$tdcolor' align='center'>";
-	} else {
-    echo "  sin acceso";
-    } 
+	}
 }
 echo "</table>";
 
 
-
-if (give_acl($_SESSION["id_usuario"], 0, "IW")==1) {
+if (give_acl($config["id_user"], 0, "PW")==1) {
 	echo "<form name='boton' method='POST'  action='index.php?sec=projects&sec2=operation/projects/project_detail&insert_form'>";
 	echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_project"]."'>";
 	echo "</form>";

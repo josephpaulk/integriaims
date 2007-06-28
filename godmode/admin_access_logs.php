@@ -92,7 +92,7 @@
 	pagination ($counter, $url, $offset);
 	echo '<br>';
 	// table header
-	echo '<table cellpadding="3" cellspacing="3" width=700>';
+	echo '<table cellpadding="3" cellspacing="3" width=700 class="databox">';
 	echo '<tr>';
 	echo '<th class="w70">'.$lang_label["user"].'</th>';
 	echo '<th>'.$lang_label["action"].'</th>';

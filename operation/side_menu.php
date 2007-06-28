@@ -41,6 +41,15 @@ if ($sec == "users"){
 		echo "<li><a href='index.php?sec=users&amp;sec2=operation/users/user'>View users</a></li>";
 		echo "<li><a href='index.php?sec=users&sec2=operation/users/user_edit&amp;ver=".$_SESSION["id_usuario"]."'>Edit my user</a></li>";
 	echo "</ul>";
+
+	if (give_acl($config["id_user"], 0, "UM")){
+		echo "<h1>".$lang_label["user_management"]."</h1>";
+		echo "<ul class='sidemenu'>";
+		echo "<li><a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".$lang_label["manage_user"]."</a></li>";
+		echo "<li><a href='index.php?sec=users&sec2=godmode/usuarios/role_manager'>".$lang_label["manage_roles"]."</a></li>";
+		echo "</ul>";
+	}
+	
 }
 
 

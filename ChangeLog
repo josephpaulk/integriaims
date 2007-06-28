@@ -1,3 +1,27 @@
+2007-06-28 Sancho Lerena  <slerena@artica.es>
+
+	* Mixed import from unversioned development. Many fixes:
+
+	* topidb.sql: Added trole_people_project.
+	
+	* operation/incidents/incident.php,
+	operation/incidents/incident_detail.php,
+	operation/incidents/incident_search.php, operation/users/user.php,
+	operation/projects/people_manager.php,
+	operation/projects/task.php, operation/projects/task_detail.php,
+	operation/projects/project.php,
+	operation/projects/project_detail.php, operation/side_menu.php,
+	include/functions_graph.php.
+	
+	* include/functions_form.php
+	* include/styles/topi.css
+	* include/functions_db.php
+	* include/functions.php
+	* topidb_data.sql
+	* godmode/usuarios/configurar_usuarios.php
+	* godmode/usuarios/role_manager.php
+	* godmode/usuarios/lista_usuarios.php
+
 2007-05-14 Sancho Lerena <slerena@artica.es>
 
 	* Several updates for project rename.

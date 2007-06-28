@@ -40,7 +40,7 @@ if ( $id_project == -1 ){
 // SHOW TABS
 echo "<div id='menu_tab'><ul class='mn'>";
 
-// Main
+// Project details
 echo "<li class='nomn'>";
 echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id=$id_project'><img src='images/application_edit.png' class='top' border=0> ".$lang_label["project"]."</a>";
 echo "</li>";
@@ -63,7 +63,7 @@ echo "</li>";
 
 // People
 echo "<li class='nomn'>";
-echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id=$id_project'><img src='images/user_suit.png' class='top' border=0> ".$lang_label["people"]." </a>";
+echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=-1'><img src='images/user_suit.png' class='top' border=0> ".$lang_label["people"]." </a>";
 echo "</li>";
 
 echo "</ul>";
@@ -83,6 +83,7 @@ echo "<th>".$lang_label["name"];
 echo "<th>".$lang_label["prio"];
 echo "<th>".$lang_label["completion"];
 echo "<th>".$lang_label["time_used"];
+echo "<th>".$lang_label["group"];
 echo "<th>".$lang_label["people"];
 echo "<th>".$lang_label["start"];
 echo "<th>".$lang_label["end"];
@@ -131,10 +132,17 @@ while ($row2=mysql_fetch_array($result2)){
 	// Time used
 	echo "<td class='$tdcolor' align='center'>";
 	echo give_hours_task ( $row2["id"]);
+
+	// group
+	echo "<td class='$tdcolor' align='center'>";
+	
+	echo "<img src='images/".dame_grupo_icono ( give_db_value ( 'id_group', 'ttask', 'id', $row2["id"]))."'> ";
+	echo dame_grupo ( give_db_value ( 'id_group', 'ttask', 'id', $row2["id"]) );
 	
 	// People
 	echo "<td class='$tdcolor'>";
-	combo_users_project ($row2["id"]);
+	echo combo_users_task ($row2["id"]);
+	
 
 	// Start
 	echo "<td class='".$tdcolor."f9'>";

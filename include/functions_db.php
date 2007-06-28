@@ -1077,4 +1077,14 @@ function give_db_value ($field, $table, $field_search, $condition_value){
 	return $pro;
 }
 
+function delete_project ($id_project){
+	$query = "DELETE FROM trole_people_project WHERE id_project = $id_project";
+	mysql_query($query);
+	$query = "DELETE FROM trole_people_task, ttask WHERE ttask.id_project = $id_project AND trole_people_task.id_task = ttask.id";
+	mysql_query($query);
+	$query = "DELETE FROM ttask WHERE id_project = $id_project";
+	mysql_query($query);
+	$query = "DELETE FROM tproject WHERE id = $id_project";
+	mysql_query($query);
+}
 ?>

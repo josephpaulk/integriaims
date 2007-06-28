@@ -2,7 +2,7 @@
 
 // TOPI - the Open Tracking System for the Enterprise
 // ==================================================
-// Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
+// Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or

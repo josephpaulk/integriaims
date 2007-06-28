@@ -65,7 +65,9 @@ $end = date("Y-m-d");
 $start = date("Y-m-d");
 $completion = 0;
 $priority = 1;
+$id_group = 1;
 $result_output = "";
+$parent=-1;
 
 if ($operation == ""){
 	// Doesn't have access to this page
@@ -148,9 +150,10 @@ if ($operation == "insert"){
 	$parent = give_parameter_post ("parent");
 	$start = give_parameter_post ("start_date");
 	$end = give_parameter_post ("end_date");
+	$id_group = give_parameter_post ("group",1);
 	$sql = "INSERT INTO ttask
-			(id_project, name, description, priority, completion, start, end, id_parent_task) VALUES
-			($id_project, '$name', '$description', '$priority', '$completion', '$start', '$end', '$parent')";
+			(id_project, name, description, priority, completion, start, end, id_parent_task, id_group) VALUES
+			($id_project, '$name', '$description', '$priority', '$completion', '$start', '$end', '$parent', $id_group)";
 	if (mysql_query($sql)){
 		$id_task = mysql_insert_id();
 		$result_output = "<h3 class='suc'>".$lang_label["create_ok"]."</h3>";
@@ -179,6 +182,7 @@ if ($operation == "update"){
 	$parent = give_parameter_post ("parent");
 	$start = give_parameter_post ("start_date");
 	$end = give_parameter_post ("end_date");
+	$id_group = give_parameter_post ("group",1);
 	$sql = "UPDATE ttask SET 
 			name = '$name',
 			description = '$description',
@@ -186,7 +190,8 @@ if ($operation == "update"){
 			completion = '$completion',
 			start = '$start',
 			end = '$end',
-			id_parent_task = '$parent'
+			id_parent_task = '$parent',
+			id_group = '$id_group'
 			WHERE id = $id_task";
 	if (mysql_query($sql)){
 		$result_output = "<h3 class='suc'>".$lang_label["update_ok"]."</h3>";
@@ -218,6 +223,7 @@ if ($operation == "view"){
 	$start = clean_input ($row["start"]);
 	$end = clean_input ($row["end"]);
 	$parent = clean_input ($row["id_parent_task"]);
+	$id_group = clean_input ($row["id_group"]);
 	// SHOW TABS
 	echo "<div id='menu_tab'><ul class='mn'>";
 
@@ -257,7 +263,7 @@ if ($operation == "view"){
 
 	// People
 	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id=$id_task'><img src='images/user_suit.png' class='top' border=0> ".$lang_label["people"]." </a>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task'><img src='images/user_suit.png' class='top' border=0> ".$lang_label["people"]." </a>";
 	echo "</li>";
 	
 	echo "</ul>";
@@ -319,10 +325,16 @@ echo '<td class="datos2"><b>'.$lang_label["end"].'</b>';
 echo "<td class='datos2'>";
 echo "<input type='text' id='end_date' name='end_date' size=10 value='$end'> <img src='images/calendar_view_day.png' title='Click Here' alt='Click Here' onclick='scwShow(scwID(\"end_date\"),this);'>";
 
+// group
+echo '<tr><td class="datos"><b>'.$lang_label["group"].'</b>';
+echo '<td class="datos">';
+echo combo_groups($id_group, "TW");
 
 // Priority
-echo '<tr><td class="datos"><b>'.$lang_label["priority"].'</b>';
-echo '<td class="datos">';
+echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+echo '<b>'.$lang_label["priority"].'</b>';
+echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 echo "<select name='priority'>";
 if ($priority != "")
 	echo '<option>'.$priority;

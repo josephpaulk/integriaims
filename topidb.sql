@@ -209,8 +209,6 @@ CREATE TABLE `tproject` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(240) NOT NULL default '',
   `description` mediumtext NOT NULL,
-  `id_group` int(10) NOT NULL default '0',
-  `private` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `start` date NOT NULL default '0000-00-00',
   `end` date NOT NULL default '0000-00-00',
   `id_owner` VARCHAR(125), 
@@ -240,6 +238,7 @@ CREATE TABLE `ttask` (
   `dep_type` tinyint unsigned NOT NULL DEFAULT 0,
   `start` date NOT NULL default '0000-00-00',
   `end` date NOT NULL default '0000-00-00',
+  `id_group` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );
 
@@ -312,5 +311,13 @@ CREATE TABLE `trole_people_task` (
   `id_user` varchar(125) NOT NULL default '',
   `id_role` int(10) unsigned NOT NULL default '0',
   `id_task` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `trole_people_project` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_user` varchar(125) NOT NULL default '',
+  `id_role` int(10) unsigned NOT NULL default '0',
+  `id_project` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );

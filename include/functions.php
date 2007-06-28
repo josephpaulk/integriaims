@@ -108,7 +108,6 @@ function give_parameter_post ( $name, $default = "" ){
 	return $output;
 }
 
-
 // ---------------------------------------------------------------
 // Esta funcion lee una cadena y la da "limpia", para su uso con 
 // parametros pasados a funcion de abrir fichero. Usados en sec y sec2

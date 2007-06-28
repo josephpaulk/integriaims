@@ -1,7 +1,7 @@
 <?php
 check_login();
 
-echo "<img src='images/frits_logo.gif' class='logoimage' border=0>";
+echo "<img src='images/topi.gif' class='logoimage' border=0>";
 echo "<div width=100%>";
 echo "<span>";
 
