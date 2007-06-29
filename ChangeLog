@@ -1,5 +1,7 @@
 2007-06-29  Sancho Lerena  <slerena@artica.es>
 
+	* operation/users/user.php: Fixed userlist.
+
 	* operation/users/user_spare_workunit.php: Tool to add spare
 	workunits from user menu. Also the key to add "vacation" entries
 	and in the future, entries for "orphaned" tasks (no task at all).
