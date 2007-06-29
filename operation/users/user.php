@@ -34,14 +34,7 @@ echo "<th>".$lang_label["description"];
 
 $color = 1;
 
-$sql_1="SELECT * FROM tusuario_perfil WHERE id_usuario = '$id_user'";
-$result_1=mysql_query($sql_1);
-
-while ($row_1=mysql_fetch_array($result_1)){
-	$sql_2="SELECT * FROM tusuario_perfil WHERE id_grupo = ".$row_1["id_grupo"];
-	$result_2=mysql_query($sql_2);
-	while ($row_2=mysql_fetch_array($result_2)){
-		$resq1=mysql_query($query1);
+		$resq1=mysql_query("SELECT * FROM tusuario");
 		while ($rowdup=mysql_fetch_array($resq1)){
 			$nombre=$rowdup["id_usuario"];
 			$nivel =$rowdup["nivel"];
@@ -78,8 +71,8 @@ while ($row_1=mysql_fetch_array($result_1)){
 			echo "<td class='$tdcolor' width='100'>".substr($rowdup["nombre_real"],0,16);
 			echo "<td class='$tdcolor'>".$comentarios;
 		}
-	}
-}
+	
+
 
 echo "</table>";
 ?>
