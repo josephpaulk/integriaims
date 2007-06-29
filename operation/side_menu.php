@@ -39,7 +39,9 @@ if ($sec == "users"){
 	echo "<h1>Users</h1>";
 	echo "<ul class='sidemenu'>";
 		echo "<li><a href='index.php?sec=users&amp;sec2=operation/users/user'>View users</a></li>";
-		echo "<li><a href='index.php?sec=users&sec2=operation/users/user_edit&amp;ver=".$_SESSION["id_usuario"]."'>Edit my user</a></li>";
+		echo "<li><a href='index.php?sec=users&sec2=operation/users/user_edit&ver=".$_SESSION["id_usuario"]."'>Edit my user</a></li>";
+		echo "<li><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit'>Spare Workunit</a></li>";
+		echo "<li><a href='index.php?sec=users&sec2=operation/users/user_workunit_report'>".$lang_label["work_unit_report"]."</a></li>";
 	echo "</ul>";
 
 	if (give_acl($config["id_user"], 0, "UM")){

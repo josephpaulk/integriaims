@@ -61,6 +61,13 @@ echo "<li class='nomn'>";
 echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["tasklist"]."</a>";
 echo "</li>";
 
+if ($id_task != -1){
+		// Tasks
+		echo "<li class='nomn'>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'><img src='images/asterisk_yellow.png' class='top' border=0> ".$lang_label["task"]."</a>";
+		echo "</li>";
+	}
+
 // Tracking
 echo "<li class='nomn'>";
 echo "<a href='index.php?sec=projects&sec2=operation/projects/tracking&id=$id_project'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";

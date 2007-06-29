@@ -62,17 +62,11 @@ function salida_ascii ($string){
 * $text	string	Inputstring to be cleaned*/
 
 
-function clean_input ($text){
-	// OJO: MagicQuotes en la configuracion de php.ini deberia estar activado y esta funcion solo deberiamos 
-	// llamarla al entrar datos para escribir datos en la base MYSQL no al reves.
-	// Example $str = "A 'quote' is <b>bold</b>";
-	// Outputs: A 'quote' is &lt;b&gt;bold&lt;/b&gt;
-	$filtro1 =  htmlentities($text, ENT_QUOTES); 
-	// Primero evitamos el problema de las dobles comillas, comillas sueltas, etc.
-	$filtro2 = $filtro1;
-	// Optional: Replace characters ( ) : &
-	// $filtro2 = strtr($filtro1, array('&' => '&#38',':' => '58', '(' => '&#40;', ')' => '&#41;')); 
-	return $filtro2;							
+function clean_input ($texto){
+return $texto;
+	$filtro0 = utf8_decode($texto);
+	$filtro1 =  htmlentities($filtro0, ENT_QUOTES); 
+	return $filtro1;							
 }
 
 /**

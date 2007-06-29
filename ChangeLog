@@ -1,3 +1,30 @@
+2007-06-29  Sancho Lerena  <slerena@artica.es>
+
+	* operation/users/user_spare_workunit.php: Tool to add spare
+	workunits from user menu. Also the key to add "vacation" entries
+	and in the future, entries for "orphaned" tasks (no task at all).
+
+	* operation/users/user_workunit_report.php: Very primitive tool to
+	report workunits. Need to be improved a lot.
+
+	* operation/projects/task_detail.php: Now uses profiles and cost
+	data in workunit assignment tool.
+
+	* operation/projects/task_workunit.php: Much better render for
+	workuings (project or task), and workunit deletion. Some tabs
+	improvement.
+
+	* operation/projects/task_files.php: Add tab for task detail.
+
+	* operation/side_menu.php: Added workunit spare assigment and
+	workunit report under user menu.
+
+	* include/functions_form.php: Added functions
+	combo_user_task_profile(), combo_task_user_participant() and fixed
+	some old functions.
+
+	* include/functions.php: clean_input() better implementation.
+	
 2007-06-28 Sancho Lerena  <slerena@artica.es>
 
 	* Mixed import from unversioned development. Many fixes:

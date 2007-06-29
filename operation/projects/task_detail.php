@@ -118,14 +118,18 @@ if ($operation == "upload_file"){
 // -----------
 if ($operation == "workunit"){
 	
-	$duration = give_parameter_post ("duration");
+	$duration = give_parameter_post ("duration",0);
 	if (!is_numeric( $duration))
 		$duration = 0;
 	$timestamp = give_parameter_post ("timestamp");
 	$description = give_parameter_post ("description");
-	$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description) VALUES 
-			('$timestamp', $duration, '$id_user', '$description')";
+	$have_cost = give_parameter_post ("have_cost",0);
+	$user_role = give_parameter_post ("work_profile",0);
+		
+	$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description, have_cost, id_profile) VALUES
+			('$timestamp', $duration, '$id_user', '$description', $have_cost, $user_role)";
 	if (mysql_query($sql)){
+	
 		$id_workunit = mysql_insert_id();
 		$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($id_task, $id_workunit)";
 		if (mysql_query($sql2)){
@@ -412,9 +416,7 @@ if ($operation != "create"){
 	echo "<tr><td class='datos2'>";
 	echo "<b>".$lang_label["profile"]."</b>";
 	echo "<td class='datos2'>";
-	echo "<select name='work_profile'>";
-	echo "<option>N/A";
-	echo "</select>";
+	echo combo_user_task_profile ($id_task);
 	
 	echo "&nbsp;&nbsp;";
 	echo "<input type='checkbox' name='have_cost' value=1>";

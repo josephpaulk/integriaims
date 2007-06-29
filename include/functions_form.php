@@ -1,5 +1,20 @@
 <?PHP
 
+// Returns a combo with valid profiles for CURRENT user in this task
+// ----------------------------------------------------------------------
+function combo_user_task_profile ($id_task){
+	$current_user = $_SESSION["id_usuario"];
+	// Show only users assigned to this project
+	$sql = "SELECT * FROM trole_people_task  WHERE id_task = $id_task AND id_user = '$current_user'";
+	$result = mysql_query($sql);
+	echo "<select name='work_profile'>";
+	while ($row=mysql_fetch_array($result)){
+		echo "<option value='".$row["id_role"]."'>".give_db_value ("name","trole","id",$row["id_role"]);
+	}
+	echo "</select>";
+}
+
+
 // Returns a combo with the users that belongs to a project
 // ----------------------------------------------------------------------
 function combo_users_task ($id_task){
@@ -139,15 +154,18 @@ function combo_incident_resolution ($actual = -1) {
 
 // Returns a combo with the tasks that current user could see
 // ----------------------------------------------------------------------
-function combo_task_user ($actual = 0, $id_user, $disabled = 0) {
+function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations = 0) {
 	global $config;
 	global $lang_label;
 
-if ($disabled == 0)
+	if ($disabled == 0)
 		echo "<select name='task_user'>";
 	else 
 		echo "<select name='task_user' disabled>";
 
+	if ($show_vacations == 1)
+		echo "<option value=-1>".$lang_label["vacations"];
+	
 	if ($actual != 0){
 		$sql = "SELECT * FROM ttask WHERE id = $actual";
 		$result = mysql_query($sql);
@@ -169,11 +187,34 @@ if ($disabled == 0)
 
 }
 
+// Returns a combo with the tasks that current user is working on
+// ----------------------------------------------------------------------
+function combo_task_user_participant ($id_user, $show_vacations = 0) {
+	global $config;
+	global $lang_label;
+	
+	echo "<select name='task'>";
+	if ($show_vacations == 1)
+		echo "<option value=-1>".$lang_label["vacations"];
+	$sql = "SELECT DISTINCT (ttask.id) FROM ttask, trole_people_task WHERE ttask.id = trole_people_task.id_task AND trole_people_task.id_user = '$id_user'";
+	$result = mysql_query($sql);
+	while ($row=mysql_fetch_array($result)){
+		$id = $row[0];
+		$task_name = give_db_value ("name", "ttask", "id", $id);
+		echo "<option value='$id'>$task_name";
+	}
+	echo "</select>";
+}
 
 // Returns a combo with the available roles
 // ----------------------------------------------------------------------
-function combo_roles () {
+function combo_roles ($include_na = 0) {
+	global $config;
+	global $lang_label;
+	
 	echo "<select name='role'>";
+	if ($include_na == 1)
+		echo "<option value=0>".$lang_label["N/A"];
 	$sql = "SELECT * FROM trole";
 	$result=mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
