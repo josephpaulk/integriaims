@@ -79,7 +79,7 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 // ---------------------
 // Edition / View mode
 // ---------------------
-$id_project = give_parameter_get ("id", 0);
+$id_project = give_parameter_get ("id_project", 0);
 
 if ( $id_project != 0){	
 	$sql1='SELECT * FROM tproject WHERE id = '.$id_project;

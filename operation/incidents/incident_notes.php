@@ -1,12 +1,8 @@
 <?php
 
-// Pandora FMS - the Free monitoring system
-// ========================================
-// Copyright (c) 2004-2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2005-2007 Artica Soluciones Tecnologicas
-// Copyright (c) 2004-2007 Raul Mateos Martin, raulofpandora@gmail.com
-// Copyright (c) 2006-2007 Jose Navarro jose@jnavarro.net
-// Copyright (c) 2006-2007 Jonathan Barajas, jonathan.barajas[AT]gmail[DOT]com
+// TOPI 
+// ========================================================
+// Copyright (c) 2004-2007 Sancho Lerena, slerena@gmail.com
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,10 +17,9 @@
 // Load global vars
 
 global $config;
-$REMOTE_ADDR = $config["REMOTE_ADDR"];
 
 if (check_login() != 0) {
- 	audit_db("Noauth",$REMOTE_ADDR, "No authenticated access","Trying to access event viewer");
+	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access incident viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -83,23 +78,23 @@ if (isset($_GET["id"])){
 
 	echo "<div id='menu_tab'><ul class='mn'>";
 	
-	// Indicent main
+	// Incident main
 	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["Incident"]." </a>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["Incident"]." </a>";
 	echo "</li>";
 
 	// Tracking
 	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
 	echo "</li>";
 	
 	// Workunits
 	$timeused = give_hours_incident ( $id_inc);
 	echo "<li class='nomn'>";
 	if ($timeused > 0)
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
 	else
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
 	echo "</li>";
 
 	// Attach
@@ -133,58 +128,22 @@ if (isset($_GET["id"])){
 // ********************************************************************
 // Notes
 // ********************************************************************
-$cabecera=0;
-$sql4='SELECT * FROM tnota_inc WHERE id_incidencia = '.$id_inc;
 
-echo "<br>";
-echo "<h3>".$lang_label["in_notas_t1"]." #$id_inc '".give_inc_title($id_inc)."'</h3>";
 echo $result_msg;
+echo "<br>";
+$title = $lang_label["in_notas_t1"]." #$id_inc '".give_inc_title($id_inc)."'";
+echo "<h3>$title</h3>";
 
-$color = 1;
-
+$sql4='SELECT * FROM tworkunit_incident WHERE id_incident = '.$id_inc.' ORDER BY id_workunit ASC';
 if ($res4=mysql_query($sql4)){
-	echo "<table cellpadding='4' cellspacing='4' border='0' width='750' class='databox'>";
-	echo "<tr><th>".$lang_label["author"];
-	echo "<th>".$lang_label["date"];
-	echo "<th>".$lang_label["description"];
-	echo "<th>".$lang_label["delete"];
-
-	while ($row2=mysql_fetch_array($res4)){
-		$sql3='SELECT * FROM tnota WHERE id_nota = '.$row2["id_nota"].' ORDER BY timestamp DESC';
+	while ($row4=mysql_fetch_array($res4)){
+		$sql3='SELECT * FROM tworkunit WHERE id = '.$row4["id_workunit"];
+echo "DEBUG $sql3";
 		$res3=mysql_query($sql3);
 		while ($row3=mysql_fetch_array($res3)){
-			if ($color == 1){
-				$tdcolor = "datos";
-				$color = 0;
-			}
-			else {
-				$tdcolor = "datos2";
-				$color = 1;
-			}
-		
-			$timestamp = $row3["timestamp"];
-			$nota = $row3["nota"];
-			$id_usuario_nota = $row3["id_usuario"];
-			// Show data
-			echo "<tr>";
-			echo "<td class='$tdcolor' valign=top>";
-			echo $id_usuario_nota;
-		
-			echo "<td class='$tdcolor'f9 valign=top>";			
-			echo $timestamp;
-
-			echo "<td class='$tdcolor'f9 valign=top>";			
-			echo  clean_output_breaks($nota);
-			
-			echo "<td class='$tdcolor' valign=top>";
-			// Delete comment, only for admins
-			if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)) {
-				$myurl="index.php?sec=incidencias&sec2=operation/incidents/incident_notes&id=".$id_inc."&id_nota=".$row2["id_nota"]."&id_nota_inc=".$row2["id_nota_inc"];
-				echo '<a href="'.$myurl.'"><img src="images/cross.png" align="bottom" border="0"></a>';
-			}
+			show_workunit_data ($row3, $title);
 		}
 	}
-	echo "</table>";
 } else 
 	echo $lang_label["no_data"];
 

@@ -79,6 +79,7 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 <link rel="icon" href="images/topi.ico" type="image/ico">
 <link rel="stylesheet" href="include/styles/topi.css" type="text/css">
 <script type='text/JavaScript' src='include/calendar.js'></script>
+<script type='text/JavaScript' src='include/topi.js'></script>
 </head>
 
 <?php
@@ -143,6 +144,7 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 		include "general/login_page.php";
 		exit;
 	} else {
+		// Create id_user variable in $config hash, of ALL pages.
 		$config["id_user"] = $_SESSION['id_usuario'];
 	}
 	// Log off
@@ -177,6 +179,10 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 		<?php require("general/header.php"); ?>	
 	</div>	
 
+	<div id="header-nav">	
+		<?php require("general/header-nav.php"); ?>	
+	</div>	
+
 	<div id="menu">
 		<?php require("operation/main_menu.php"); ?>	
 	</div>
@@ -196,7 +202,7 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 					echo "<br><b class='error'>".$lang_label["cannot_find_page"]."</b>";
 				}	
 			} else
-				require ("general/logon_ok.php");  //default
+				require ("general/home.php");  //default
 		?>		
 		</div>
 	<!-- content-wrap ends here -->	

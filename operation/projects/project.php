@@ -84,22 +84,18 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 
 // MAIN LIST OF PROJECTS
 
-echo "<h2>".$lang_label["project_management"];
+echo "<h2>".$lang_label["project_management"]."</h2>";
 
 
 // -------------
 // Show headers
 // -------------
-echo "<table width='810' class='databox'>";
+echo "<table width='680' class='databox'>";
 echo "<tr>";
 echo "<th>".$lang_label["name"];
 echo "<th>".$lang_label["completion"];
-echo "<th>".$lang_label["people"];
-echo "<th>".$lang_label["tasks"];
 echo "<th>".$lang_label["time_used"];
-echo "<th>".$lang_label["start"];
-echo "<th>".$lang_label["end"];
-echo "<th>".$lang_label["delete"];
+echo "<th width=82>".$lang_label["updated_at"];
 $color = 1;
 
 // -------------
@@ -124,37 +120,29 @@ while ($row2=mysql_fetch_array($result2)){
 
 		// Project name
 		echo "<td class='$tdcolor' align='left' >";
-		echo "<b><a href='index.php?sec=projects&sec2=operation/projects/project_detail&id=".$row2["id"]."'>".$row2["name"]."</a></b></td>";
+		echo "<b><a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=".$row2["id"]."'>".$row2["name"]."</a></b></td>";
 
 		// Completion
 		echo "<td class='$tdcolor' align='center'>";
 		$completion =  format_numeric(calculate_project_progress ($row2["id"]));
 		echo "<img src='include/functions_graph.php?type=progress&width=90&height=20&percent=$completion'>";
-		
-		// People
-		echo "<td class='$tdcolor'>";
-		combo_users_project ($row2["id"]);
-
-		// Tasks
-		echo "<td class='$tdcolor'>";
-		echo give_number_tasks ($row2["id"]);
-		
+				
 		// Time wasted
-		echo "<td class='$tdcolor'>";
+		echo "<td class='$tdcolor' align='center'>";
 		echo format_numeric(give_hours_project ($row2["id"])). " hr";
 
-		// Start
-		echo "<td class='".$tdcolor."f9'>";
-		echo substr($row2["start"],0,10);
+		// Last update time
+		echo "<td class='$tdcolor'_f9 align='center'>";
+		echo "Some time ago";
 
-		// End
-		echo "<td class='".$tdcolor."f9'>";
-		echo substr($row2["end"],0,10);
-		
+		/*
+		// Delete	
 		if ((give_acl($config["id_user"], 0, "PW") ==1) AND ($config["id_user"] == $row2["id_owner"] )) {
 			echo "<td class='$tdcolor' align='center'><a href='index.php?sec=projects&sec2=operation/projects/project&quick_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
 		} else
 			echo "<td class='$tdcolor' align='center'>";
+		*/
+
 	}
 }
 echo "</table>";

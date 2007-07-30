@@ -53,49 +53,6 @@ if (isset($_GET["id"])){
 		exit;
 	}
 
-	echo "<div id='menu_tab'><ul class='mn'>";
-
-	// Incident main
-	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["Incident"]." </a>";
-	echo "</li>";
-
-	// Tracking
-	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
-	echo "</li>";
-
-	// Workunits
-	$timeused = give_hours_incident ( $id_inc);
-	echo "<li class='nomn'>";
-	if ($timeused > 0)
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
-	else
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
-	echo "</li>";	
-
-
-	// Attach
-	$file_number = give_number_files_incident ($id_inc);
-	if ($file_number > 0){
-		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".$lang_label["Attachment"]." ($file_number) </a>";
-		echo "</li>";
-	}
-
-
-	// Notes
-	$note_number = dame_numero_notas ($id_inc);
-	if ($note_number > 0){
-		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_notes&id=$id_inc'><img src='images/note.png' class='top' border=0> ".$lang_label["Notes"]." ($note_number) </a>";
-		echo "</li>";
-	}
-
-
-	echo "</ul>";
-	echo "</div>";
-	echo "<div style='height: 25px'> </div>";
 
 } else {
 	audit_db($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
@@ -112,7 +69,11 @@ $sql4='SELECT * FROM tincident_track WHERE id_incident= '.$id_inc;
 
 
 $color = 0;
-echo "<h3>".$lang_label["incident_tracking"]."</h3>";
+echo "<h1>".$lang_label["incident_tracking"]."</h1>";
+echo "<h3>";
+echo give_inc_title($id_inc);
+echo "</h3>";
+
 echo "<table cellpadding='3' cellspacing='3' border='0' width=600>";
 
 if ($res4=mysql_query($sql4)){

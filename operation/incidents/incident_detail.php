@@ -1,6 +1,6 @@
 <?php
 
-// FRITS - the FRee Incident Tracking System
+// TOPI - the FRee Incident Tracking System
 // =========================================
 // Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
 // Copyright (c) 2007 Artica Soluciones Tecnologicas
@@ -16,22 +16,6 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // Load global vars
-
-?>
-
-<script language="javascript">
-
-	/* Function to hide/unhide a specific Div id */
-	function toggleDiv (divid){
-		if (document.getElementById(divid).style.display == 'none'){
-			document.getElementById(divid).style.display = 'block';
-		} else {
-			document.getElementById(divid).style.display = 'none';
-		}
-	}
-</script>
-
-<?PHP
 
 global $config;
 
@@ -189,9 +173,9 @@ if (isset($_GET["id"])){
 	$grupo = dame_nombre_grupo($id_grupo);
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// Note add
+	// Workunit ADD
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	if (isset($_GET["insertar_nota"])){
+	if (isset($_GET["insert_workunit"])){
 		$id_inc = give_parameter_post ("id_inc");
 		$timestamp = give_parameter_post ("timestamp");
 		$nota = give_parameter_post ("nota");
@@ -200,30 +184,21 @@ if (isset($_GET["id"])){
 		$id_usuario=$_SESSION["id_usuario"];
 		$have_cost = give_parameter_post ("have_cost",0);
 		$profile = give_parameter_post ("work_profile",0);
-		$sql1 = "INSERT INTO tnota (id_usuario,timestamp,nota) VALUES ('".$id_usuario."','".$timestamp."','".$nota."')";
-		$res1=mysql_query($sql1);
-		if ($res1) 
-			$result_msg = "<h3 class='suc'>".$lang_label["create_note_ok"]."</h3>";
-		// get inserted note_number
-		$id_nota = mysql_insert_id();
 		
-		$sql3 = "INSERT INTO tnota_inc (id_incidencia, id_nota) VALUES (".$id_inc.",".$id_nota.")";
-		$res3=mysql_query($sql3);
-
 		$sql4 = "UPDATE tincidencia SET actualizacion = '".$timestamp."' WHERE id_incidencia = ".$id_inc;
 		$res4 = mysql_query($sql4);
+		
 		incident_tracking ( $id_inc, $id_usuario, 2);
 
 		// Add work unit if enabled
-		if ($workunit == 1){
-			$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description) VALUES ('$timestamp', '$timeused', '$id_usuario', '$nota')";
-			$res5 = mysql_query($sql);
+		$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description) VALUES ('$timestamp', '$timeused', '$id_usuario', '$nota')";
+		$res5 = mysql_query($sql);
 
-			$id_workunit = mysql_insert_id();
-			$sql1 = "INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES ($id_inc, $id_workunit)";
-			$res6 = mysql_query($sql1);
-
-		}
+		$id_workunit = mysql_insert_id();
+		$sql1 = "INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES ($id_inc, $id_workunit)";
+		$res6 = mysql_query($sql1);
+		if ($res6) 
+			$result_msg = "<h3 class='suc'>".$lang_label["create_work_ok"]."</h3>";
 	}
 	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -259,51 +234,6 @@ if (isset($_GET["id"])){
 			}
 		}
 	}
-
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// SHOW TABS
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	echo "<div id='menu_tab'><ul class='mn'>";
-
-	// This view
-	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["Incident"]." </a>";
-	echo "</li>";
-
-	// Tracking
-	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
-	echo "</li>";
-
-	// Workunits
-	$timeused = give_hours_incident ( $id_inc);
-	echo "<li class='nomn'>";
-	if ($timeused > 0)
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
-	else
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
-	echo "</li>";
-
-	
-	// Attach
-	$file_number = give_number_files_incident($id_inc);
-	if ($file_number > 0){
-		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".$lang_label["Attachment"]." ($file_number) </a>";
-		echo "</li>";
-	}
-
-	// Notes
-	$note_number = dame_numero_notas($id_inc);
-	if ($note_number > 0){
-		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_notes&id=$id_inc'><img src='images/note.png' class='top' border=0> ".$lang_label["Notes"]." ($note_number) </a>";
-		echo "</li>";
-	}
-	
-	echo "</ul>";
-	echo "</div>";
-	echo "<div style='height: 25px'> </div>";
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Prepare the insertion data
@@ -495,9 +425,9 @@ if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)){
 // Incident linked to a task
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo '<td class="datos"><b>'.$lang_label["task"].'</b><td class="datos">';
-if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp))
+if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)){
 	echo combo_task_user ($id_task, $config["id_user"], 0);
-else 
+} else 
 	echo combo_task_user ($id_task, $config["id_user"], 1);
 
 

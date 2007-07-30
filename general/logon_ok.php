@@ -67,22 +67,8 @@
 		$contador--;
 	}
 
-	echo "<tr><td colspan='5'><div class='raya'></div>";
-	echo "</td></tr></table>";
+	echo "</table>";
 	echo "</div>"; // activity
-
-	// Private messages pending to read !
-
-	$sql='SELECT COUNT(*) FROM tmensajes WHERE id_usuario_destino="' . $nick . '" AND estado="FALSE";';
-	$resultado = mysql_query ($sql);
-	$row = mysql_fetch_array ($resultado);
-	if ($row["COUNT(*)"] != 0){
-		
-		echo '<p><a href="index.php?sec=messages&sec2=operation/messages/message">'. $lang_label["new_message_bra"];
-		echo '<b>';
-		echo $row["COUNT(*)"] . '</b> <img src="images/mail.gif" border="0">';
-		echo $lang_label["new_message_ket"] . '</a></p>';
-	}
 
 	// Site news !
 	

@@ -74,50 +74,6 @@ if (isset($_GET["id"])){
 		incident_tracking ( $id_inc, $id_usuario, 7);
 	}
 
-	echo "<div id='menu_tab'><ul class='mn'>";
-	// Indicent main
-	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["Incident"]." </a>";
-	echo "</li>";
-
-	// Tracking
-	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
-	echo "</li>";
-
-	// Workunits
-	$timeused = give_hours_incident ( $id_inc);
-	echo "<li class='nomn'>";
-	if ($timeused > 0)
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
-	else
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
-	echo "</li>";
-
-	// Attach
-	$file_number = give_number_files_incident($id_inc);
-	if ($file_number > 0){
-		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".$lang_label["Attachment"]." ($file_number) </a>";
-		echo "</li>";
-	}
-
-
-
-	// Notes
-	$note_number = dame_numero_notas($id_inc);
-	if ($note_number > 0){
-		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_notes&id=$id_inc'><img src='images/note.png' class='top' border=0> ".$lang_label["Notes"]." ($note_number) </a>";
-		echo "</li>";
-	}
-
-	
-	echo "</ul>";
-	echo "</div>";
-	echo "<div style='height: 25px'> </div>";
-
-
 
 } else {
 	audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
@@ -131,7 +87,12 @@ if (isset($_GET["id"])){
 
 // Attach head if there's attach for this incident
 $att_fil=mysql_query("SELECT * FROM tattachment WHERE id_incidencia = ".$id_inc);
-echo "<h3>".$lang_label["attached_files"]."</h3>";
+
+echo "<h1>".$lang_label["attached_files"]."</h1>";
+echo "<h3>";
+echo give_inc_title($id_inc);
+echo "</h3>";
+
 if (mysql_num_rows($att_fil)){
 	echo "<table width='750' cellspacing=4 cellpadding=4 class='databox'><tr><th class=datos>".$lang_label["filename"];
 	echo "<th class=datos>".$lang_label["description"];

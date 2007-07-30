@@ -92,7 +92,7 @@ CREATE TABLE `tmensajes` (
   `id_usuario_origen` varchar(100) NOT NULL default '',
   `id_usuario_destino` varchar(100) NOT NULL default '',
   `mensaje` tinytext NOT NULL,
-  `timestamp` datetime NOT NULL default '2004-01-01 00:00:00',
+  `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
   `subject` varchar(255) NOT NULL default '',
   `estado` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id_mensaje`)
@@ -106,7 +106,7 @@ DROP TABLE IF EXISTS `tnota`;
 CREATE TABLE `tnota` (
   `id_nota` mediumint(8) unsigned NOT NULL auto_increment,
   `id_usuario` varchar(100) NOT NULL default '0',
-  `timestamp` tinyblob NOT NULL,
+  `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
   `nota` mediumtext NOT NULL,
   PRIMARY KEY  (`id_nota`)
 );
@@ -168,7 +168,8 @@ CREATE TABLE `tusuario` (
   `fecha_registro` datetime NOT NULL default '0000-00-00 00:00:00',
   `direccion` varchar(100) default '',
   `telefono` varchar(100) default '',
-  `nivel` tinyint(1) NOT NULL default '0'
+  `nivel` tinyint(1) NOT NULL default '0',
+  `avatar` varchar(100) default 'people_2',
 );
 
 --
@@ -272,7 +273,7 @@ CREATE TABLE `tworkunit_incident` (
 
 CREATE TABLE `tagenda` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `timestamp` datetime NOT NULL default '2007-01-01 00:00:00',
+  `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
   `id_user` varchar(125) NOT NULL default '',
   `public` tinyint unsigned NOT NULL DEFAULT 0,
   `alarm` int(10) unsigned NOT NULL DEFAULT 0,
@@ -321,3 +322,13 @@ CREATE TABLE `trole_people_project` (
   `id_project` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );
+
+CREATE TABLE `ttodo` (
+`id` INT NOT NULL ,
+`name` VARCHAR( 2048 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL ,
+`task` INT NOT NULL ,
+`assigned_user` VARCHAR( 250 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+`created_by_user` VARCHAR( 250 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+`priority` INT NOT NULL,
+`timestamp` DATETIME NOT NULL
+) ENGINE = MYISAM ;

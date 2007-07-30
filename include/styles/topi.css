@@ -30,6 +30,7 @@ a {
 	color: #EC981F; 
 }
 a:hover {
+	text-decoration: none;
 	background: inherit;
 	color: #806B4D;
 }
@@ -210,7 +211,7 @@ form.searchform input.button {
 #header {
 	position: relative;
 	background: url(../../images/headerbg-orange.gif) repeat-x 0 0;
-	height: 105px;	
+	height: 50px;	
 }
 
 #header h1#logo {
@@ -230,7 +231,7 @@ form.searchform input.button {
 	text-transform: none;
 	color: #FFF;
 	/* change the values of top and Left to adjust the position of the slogan*/
-	top: 48px; left:65px;		
+	top: 4px; left:65px;		
 }
 #header img {
 	border: 0;
@@ -249,7 +250,7 @@ form.searchform input.button {
 }
 #header div {
 	position: absolute;
-	top: 65px; right:15px;		
+	top: 20px; right:10px;		
 }
 #header span {
 	letter-spacing: 2px;
@@ -258,13 +259,31 @@ form.searchform input.button {
 	padding-right: 25px;	
 }
 
+#header-nav div {
+	position: absolute;
+	top: 26px; left:125px;		
+}
+#header-nav span {
+	letter-spacing: 2px;
+	padding-left: 25px;	
+	font: bolder 0.91em 'Trebuchet MS', Arial, Sans-serif;
+	color: #dddddd;
+}
+
+#header-nav a {
+	font: bolder 0.91em 'Trebuchet MS', Arial, Sans-serif;
+	color: #fff;
+}
+
+
+
 
 /* main column */
 #main {
 	float: left;
 	margin-left: 7px;
 	padding: 0;
-	width: 85%;	
+	width: 700px;	
 	border-left: 1px solid #f2f2f2;
 }
 
@@ -289,7 +308,7 @@ form.searchform input.button {
 /* sideabar */
 #sidebar {
 	float: left;
-	width: 125px;
+	width: 200px;
 	margin: 0;
 	padding: 0; 
 	display: inline;	
@@ -297,8 +316,7 @@ form.searchform input.button {
 #sidebar ul.sidemenu {
 	list-style: none;
 	text-align: left;
-	margin: 0 0 0px 0;	
-			
+	margin: 0 0 0px 0;		
 	text-decoration: none;
 	padding: 0px 0px 0px 0px;	
 }
@@ -311,6 +329,7 @@ form.searchform input.button {
 
 #sidebar li#sidesel a {
 	color: #eea237;
+	text-decoration: none;
 }
 
 * html body #sidebar ul.sidemenu li { height: 1%; }
@@ -638,4 +657,90 @@ span.users, span.agents, span.data, span.alerts, span.time {
     margin-top: 10px;
     padding: 4px 8px 12px 30px;
     display: block;
+}
+
+/* Styles for side boxes */
+
+.portlet {
+	clear:both;
+	float:left;
+	padding: 10px 0 0 0;
+	margin: 0 0 0.5em 0;
+}
+
+.portlet h2 {
+	display:block;
+	width:180px;
+	height:17px;
+	background-color:#027DCE;
+	background-image:url(../../images/leftnav_bg.gif);
+	background-repeat:no-repeat;
+	background-position:left top;
+	overflow:hidden;padding:3px 10px 0px 10px;
+	margin:0px 0px 1px 0px;
+	color:#FFF;
+	font: bold 1.2em 'Trebuchet MS', Tahoma, Sans-serif;
+	text-transform: none;
+	text-decoration: none;
+}
+
+.portlet h2:hover {
+	background-color:#039AFF;
+	text-decoration: none;
+}
+
+.portlet a:hover {
+	text-decoration: none;
+}
+
+.portletBody{
+	border-left:4px solid #ebebeb;
+	border-right:4px solid #ebebeb;
+	background-color:#eeeeee;
+	padding:10px 10px 10px 8px !important;color:#717171;
+	margin-top: -5px;
+}
+
+.portlet {
+	overflow:hidden;
+	margin:0 0 0.5em 0;
+	list-style:none;
+	font-size:11px;
+}
+
+.portlet h3 {
+	display:block;
+	width:180px;
+	height:17px;
+	background-color:#E19A34;
+	background-repeat:no-repeat;
+	background-position:left top;
+	overflow:hidden;padding:3px 10px 0px 10px;
+	margin:0px 0px 1px 0px;
+	color:#FFF;
+	font: bold 1.2em 'Trebuchet MS', Tahoma, Sans-serif;
+    text-transform: none;
+	text-decoration: none;
+	background-image:url(../../images/leftnav_bg_uncollapsible.gif);
+}
+
+.notetitle {
+	border:1px solid #aaaaaa;
+	padding: 7px 10px 7px 10px;
+	margin: 15px 10px 0px 10px;
+	background-color:#eeeeee;
+	color:#000;
+	width:720px;
+}
+
+.notebody {
+	margin: 0px 15px 5px 10px;
+	padding: 15px 10px 15px 10px;
+	border-bottom:1px solid #aaaaaa;
+	border-right:1px solid #aaaaaa;
+	border-left:1px solid #aaaaaa;
+	background-color:#ffffff;
+	color:#666666;
+	width:720px;
+	font: 1em;
 }

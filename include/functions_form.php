@@ -175,16 +175,13 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 	} 
 
 	echo "<option value=0>".$lang_label["N/A"];
-	$sql = "SELECT ttask.id, ttask.name, tproject.id_group FROM ttask, tproject WHERE ttask.id != $actual AND ttask.id_project = tproject.id";
+	$sql = "SELECT ttask.id, ttask.name FROM ttask, tproject WHERE ttask.id != $actual AND ttask.id_project = tproject.id";
+
 	$result = mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
-		$id_group = $row[2];
-		//if (give_acl($config["id_user"], $id_group, "TR")==1){
-			echo "<option value='".$row[0]."'>".substr($row[1],0,35);
-		//}
+		echo "<option value='".$row[0]."'>".substr($row[1],0,35);
 	}
 	echo "</select>";
-
 }
 
 // Returns a combo with the tasks that current user is working on
@@ -223,5 +220,45 @@ function combo_roles ($include_na = 0) {
 	echo "</select>";
 }
 
+function show_workunit_data ($row3, $title) {
+	global $config;
+	global $lang_label;
+
+	$timestamp = $row3["timestamp"];
+	$duration = $row3["duration"];
+	$id_user = $row3["id_user"];
+	$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_user);
+	$nota = $row3["description"];
+	$id_workunit = $row3["id"];
+
+	// Show data
+	echo "<div class='notetitle'>"; // titulo
+	echo "<span>";
+	echo "<img src='images/avatars/".$avatar."_small.png'>&nbsp;";
+	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
+	echo $id_user;
+	echo "</a>";
+	echo "&nbsp;".$lang_label["said_on"]."&nbsp;";
+	echo $timestamp;
+	echo "</span>";
+	echo "<span style='float:right; margin-top: -15px; margin-bottom:0px; padding-right:10px;'>";
+	echo $duration;
+	echo "&nbsp; ".$lang_label["hr"];
+	echo "</span>";
+	echo "</div>";
+
+	// Body
+	echo "<div class='notebody'>";
+	if (strlen($nota) > 1024){
+		echo clean_output_breaks(substr($nota,0,1024));
+		echo "<br><br>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/common/workunit_detail&id=".$id_workunit."&title=$title'>";
+		echo $lang_label["read_more"];
+		echo "</a>";
+	} else {
+		echo clean_output_breaks($nota);
+	}
+	echo "</div>";
+}
 
 ?>

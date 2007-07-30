@@ -20,6 +20,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // Load global vars
 
+
 $accion = "";
 global $config;
 
@@ -292,18 +293,18 @@ if ($row2_count[0] <= 0 ) {
 	// -------------
 	// Show headers
 	// -------------
-	echo "<table width='820' cellpadding=3 cellspacing=3 class='databox'>";
+	echo "<table width='680' cellpadding=3 cellspacing=3 class='databox'>";
 	echo "<tr>";
 	echo "<th>Id";
-	echo "<th>St.";
-	echo "<th>".$lang_label["prioty_short"];
 	echo "<th>".$lang_label["incident"];
-	echo "<th>".$lang_label["group"];
-	echo "<th>".$lang_label["updated_at"];
+	//echo "<th>".$lang_label["group"];
+	echo "<th>".$lang_label["status"];
+	echo "<th>".$lang_label["priority"];
 	echo "<th>".$lang_label["resolution"];
+	echo "<th width=82>".$lang_label["updated_at"];
 	echo "<th width=70>".$lang_label["flags"];
-	echo "<th>".$lang_label["in_openedby"];
-	echo "<th>".$lang_label["delete"];
+	//echo "<th>".$lang_label["in_openedby"];
+	//echo "<th>".$lang_label["delete"];
 	
 	$color = 1;
 
@@ -324,7 +325,10 @@ if ($row2_count[0] <= 0 ) {
 			
 			echo "<tr>";
 			echo "<td class='$tdcolor' align='left'>";
-			echo "<font size=1pt><a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'><b>#".$row2["id_incidencia"]."</b></a></td>";
+			echo "<font size=1pt><a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'><b>#".$row2["id_incidencia"]."</b></a></td>";
+
+			// Title
+			echo "<td class='$tdcolor'><a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr(clean_output ($row2["titulo"]),0,200);
 
 			// Tipo de estado  (Type)
 			// (1,'New'), (2,'Unconfirmed'), (3,'Assigned'),
@@ -332,19 +336,19 @@ if ($row2_count[0] <= 0 ) {
 			// (7,'Closed');
 			echo "<td class='$tdcolor' align='center'>";
 			switch ($row2["estado"]) {
-				case 1: echo "<img src='images/dot_blue.gif'>";
+				case 1: echo $lang_label["status_new"];
 							break;
-				case 2: echo "<img src='images/dot_white.gif'>";
+				case 2: echo $lang_label["status_unconfirmed"];
 							break;
-				case 3: echo "<img src='images/dot_red.gif'>";
+				case 3: echo $lang_label["status_assigned"];
 							break;
-				case 4: echo "<img src='images/dot_orange.gif'>";
+				case 4: echo $lang_label["status_reopened"];
 							break;
-				case 5: echo "<img src='images/dot_yellow.gif'>";
+				case 5: echo $lang_label["status_verified"];
 							break;
-				case 7: echo "<img src='images/dot_lightgreen.gif'>";
+				case 7: echo $lang_label["status_closed"];
 							break;
-				case 6: echo "<img src='images/dot_green.gif'>";
+				case 6: echo $lang_label["status_resolved"];
 							break;
 			}
 			echo "<td class='$tdcolor' align='center'>";
@@ -357,18 +361,14 @@ if ($row2_count[0] <= 0 ) {
 				case 4: echo "<img src='images/flag_red.png'>"; break; // Very serious
 				case 10: echo "<img src='images/flag_blue.png'>"; break; // Maintance
 			}
-			// Title
-			echo "<td class='$tdcolor'><a href='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr(clean_output ($row2["titulo"]),0,200);
 
-			// Grupo
-			echo "<td class='$tdcolor' align='center'><img src='images/".dame_grupo_icono($row2["id_grupo"])."'>";
+			// Resolution
+			echo "<td class='$tdcolor'>".give_db_value('name', 'tincident_resolution', 'id', $row2["resolution"]);
 
 			// Update time
 			echo "<td class='".$tdcolor."f9'>".human_time_comparation ( $row2["actualizacion"]);
 
-			// Resolution
-			echo "<td class='".$tdcolor."f9'>".give_db_value('name', 'tincident_resolution', 'id', $row2["resolution"]);
-
+			// Flags
 			// Check for attachments in this incident
 			echo "<td class='".$tdcolor."f9' align='center'>";
 			$file_number = give_number_files_incident ($row2["id_incidencia"]);
@@ -389,7 +389,8 @@ if ($row2_count[0] <= 0 ) {
 			$timeused = give_hours_incident ($row2["id_incidencia"]);
 			if ($timeused > 0)
 				echo '&nbsp;&nbsp;<img src="images/award_star_silver_1.png" valign="bottom">'.$timeused;
-			
+
+/*			
 			// User who manage this incident
 			echo "<td class='$tdcolor'>";
 			echo "<a href='index.php?sec=usuario&sec2=operation/users/user_edit&ver=".$row2["id_usuario"]."'>".$row2["id_usuario"]."</a></td>";
@@ -400,18 +401,13 @@ if ($row2_count[0] <= 0 ) {
 				echo "<td class='$tdcolor' align='center'><a href='index.php?sec=incidentes&sec2=operation/incidents/incident&quick_delete=".$row2["id_incidencia"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
 			} else
 				echo "<td class='$tdcolor' align='center'>";
+*/
 		}
 	}
 	echo "</table>";
 }
 
-if (give_acl($_SESSION["id_usuario"], 0, "IW")==1) {
-	echo "<form name='boton' method='POST'  action='index.php?sec=incidencias&sec2=operation/incidents/incident_detail&insert_form'>";
-	echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_incident"]."'>";
-	echo "</form>";
-}
-
-
+/*
 echo "<table cellpadding=3 cellspacing=3>";
 echo "<tr><td valign='top'>";
 echo "<b>".$lang_label["status"]."</b>";
@@ -468,3 +464,7 @@ echo "<b>".$lang_label["priority"]."</b>";
 </table>
 
 </table>
+
+*/
+
+?>

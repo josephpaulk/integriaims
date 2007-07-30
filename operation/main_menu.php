@@ -28,14 +28,6 @@ else
 	echo "<li>";
 echo "<a href='index.php?sec=users&sec2=operation/users/user'>Users</a></li>";
 
-// Messages
-if ($sec == "messages" )
-	echo "<li id='current'>";
-else
-	echo "<li>";
-echo "<a href='index.php?sec=messages&sec2=operation/messages/message'>".$lang_label["messages"]."</a></li>";
-
-
 // Agenda
 if ($sec == "agenda" )
 	echo "<li id='current'>";
