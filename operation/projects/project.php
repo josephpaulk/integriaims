@@ -120,8 +120,7 @@ while ($row2=mysql_fetch_array($result2)){
 
 		// Project name
 		echo "<td class='$tdcolor' align='left' >";
-		echo "<b><a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=".$row2["id"]."'>".$row2["name"]."</a></b></td>";
-
+		echo "<b><a href='index.php?sec=projects&sec2=operation/projects/task&id_project=".$row2["id"]."'>".$row2["name"]."</a></b></td>";
 		// Completion
 		echo "<td class='$tdcolor' align='center'>";
 		$completion =  format_numeric(calculate_project_progress ($row2["id"]));

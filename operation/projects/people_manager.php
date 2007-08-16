@@ -109,65 +109,6 @@ if ($operation == "delete"){
 // Edition / View mode
 // ---------------------
 
-	// SHOW TABS
-	echo "<div id='menu_tab'><ul class='mn'>";
-
-	// Main
-	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id=$id_project'><img src='images/application_edit.png' class='top' border=0> ".$lang_label["project"]."</a>";
-	echo "</li>";
-
-	// Task list
-	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["tasklist"]."</a>";
-	echo "</li>";
-
-	if ($id_task != -1){
-		// Tasks
-		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'><img src='images/asterisk_yellow.png' class='top' border=0> ".$lang_label["task"]."</a>";
-		echo "</li>";
-	}
-
-	// Workunits
-	if ($id_task != -1){
-		$timeused = give_hours_task ( $id_task);
-		echo "<li class='nomn'>";
-		if ($timeused > 0) {
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
-		} else {
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
-		}
-		echo "</li>";
-	} else {
-		$timeused = give_hours_project ( $id_project);
-		echo "<li class='nomn'>";
-		if ($timeused > 0)
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
-		else
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
-	}
-	// Tracking
-	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/tracking&id=$id_project'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
-	echo "</li>";
-	
-	$numberfiles = give_number_files_task ($id_task);
-	// Files
-
-	if ($id_task != -1){
-		echo "<li class='nomn'>";
-		if ($numberfiles > 0)
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_files&id_project=$id_project&id_task=$id_task'><img src='images/disk.png' class='top' border=0> ".$lang_label["files"]." ($numberfiles) </a>";
-		else
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_files&id_project=$id_project&id_task=$id_task'><img src='images/disk.png' class='top' border=0> ".$lang_label["files"]." </a>";
-		echo "</li>";
-	}
-	
-	echo "</ul>";
-	echo "</div>";
-	echo "<div style='height: 25px'> </div>";
-
 
 echo $result_output;
  

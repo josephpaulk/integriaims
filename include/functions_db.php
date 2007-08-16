@@ -977,6 +977,19 @@ function return_user_email ($id_user){
 	return $pro;
 }
 
+function project_manager_check ($id_project) {
+	global $config;
+	global $lang_label;
+
+	$manager = give_db_value ("id_owner", "tproject", "id", $id_project);
+	$id = $_SESSION["id_usuario"];
+	if ($manager == $id)
+		return 1;
+	else
+		return 0;
+		
+}
+
 function incident_tracking ( $id_incident, $id_user, $state, $aditional_data = 0) {
 	global $config;
 	require ("include/languages/language_".$config["language_code"].".php");
@@ -1022,26 +1035,28 @@ function incident_tracking ( $id_incident, $id_user, $state, $aditional_data = 0
 		$today=date('Y-m-d H:i:s');
 		$orig_user = give_inc_creator ($id_incident);
 		$actual_user = $id_user;
-		$msg_text = salida_ascii ('Hello FRITS user
-
-Incident #'.$id_incident.' ('.$titulo.') has been updated by user '.$actual_user.', you can review it loggin on FRITS console. All changes over this incident has been marked to mail original author of incident ('.$orig_user.') and currently associated user for this incident ('.$actual_user.'), and for every user that actually has entered any note attached to this incident.
-
-Changes on this incident are: '.$descripcion.'
-
-Have a nice day.
-This is a automated FRITS message on incident update');
+		$msg_text = salida_ascii ('Incident #'.$id_incident.' ('.$titulo.') has been updated by user '.$actual_user.', you can review it loggin on TOPI console. All changes over this incident has been marked to mail original author of incident ('.$orig_user.') and currently associated user for this incident ('.$actual_user.'), and for every user that actually has entered any note attached to this incident.'."\n\n".'Changes on this incident are: '.$descripcion);
 		
 		$msg_subject = salida_ascii ("[FRITS] Incident #$id_incident [ $titulo ] - $descripcion");
 		
 		if ($actual_user == $orig_user)
-			mail(return_user_email($orig_user), $msg_subject, $msg_text);
+			topi_sendmail (return_user_email($orig_user), $msg_subject, $msg_text);
 		else {
-			mail(return_user_email($orig_user), $msg_subject, $msg_text);
-			mail(return_user_email($actual_user), $msg_subject, $msg_text);
+			topi_sendmail (return_user_email($orig_user), $msg_subject, $msg_text);
+			topi_sendmail (return_user_email($actual_user), $msg_subject, $msg_text);
 		}
 		// TODO: Send mail to all users that have posted a note in this incident
 	}
 	
+}
+
+function topi_sendmail ( $destination, $msg_subject = "[TOPI] Automatic email notification", $msg_text) {
+	global $config;
+	
+	$real_text = "Hello, this is an automated message coming from TOPI\n\n";
+	$real_text .= $msg_text;
+	$real_text = "\n\nHave a nice day\nTOPI ".$config["version"];
+	mail ($destination, $msg_subject, $real_text );
 }
 
 function task_tracking ( $id_user, $id_task, $state, $id_note = 0, $id_file = 0) {
@@ -1076,6 +1091,18 @@ function give_db_value ($field, $table, $field_search, $condition_value){
 		$pro = "";
 	return $pro;
 }
+
+function give_db_row ($table, $field_search, $condition_value){
+	global $config;
+	$query = "SELECT * FROM $table WHERE $field_search = '$condition_value' ";
+	$resq1 = mysql_query($query);
+	if ($rowdup = mysql_fetch_array($resq1))
+		return $rowdup;
+	else
+		return -1;
+	
+}
+
 
 function delete_project ($id_project){
 	$query = "DELETE FROM trole_people_project WHERE id_project = $id_project";

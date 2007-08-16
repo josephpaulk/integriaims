@@ -28,7 +28,7 @@ if (check_login() != 0) {
 $id_user = $_SESSION['id_usuario'];
 $id_project = give_parameter_get ("id_project", -1);
 $id_task = give_parameter_get ("id_task", -1);
-
+$operation = give_parameter_get ("operation", "");
 // Get names
 if ($id_project != 1)
 	$project_name = give_db_value ("name", "tproject", "id", $id_project);
@@ -47,42 +47,43 @@ if ( $id_project == -1 ){
     exit;
 }
 
+// -----------
+// Upload file
+// -----------
+if ($operation == "attachfile"){
+	if ( $_FILES['userfile']['name'] != "" ){ //if file
+		$tipo = $_FILES['userfile']['type'];
+		if (isset($_POST["file_description"]))
+			$description = $_POST["file_description"];
+		else
+			$description = "No description available";
+		// Insert into database
+		$filename= $_FILES['userfile']['name'];
+		$filesize = $_FILES['userfile']['size'];
 
-// SHOW TABS
-echo "<div id='menu_tab'><ul class='mn'>";
-
-// Main
-echo "<li class='nomn'>";
-echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id=$id_project'><img src='images/application_edit.png' class='top' border=0> ".$lang_label["project"]."</a>";
-echo "</li>";
-
-// Tasks
-echo "<li class='nomn'>";
-echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["tasklist"]."</a>";
-echo "</li>";
-
-if ($id_task != -1){
-		// Tasks
-		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'><img src='images/asterisk_yellow.png' class='top' border=0> ".$lang_label["task"]."</a>";
-		echo "</li>";
+		$sql = " INSERT INTO tattachment (id_task, id_usuario, filename, description, size ) VALUES (".$id_task.", '".$id_user." ','".$filename."','".$description."',".$filesize.") ";
+		mysql_query($sql);
+		$id_attachment=mysql_insert_id();
+		//project_tracking ( $id_inc, $id_usuario, 3);
+		$result_output = "<h3 class='suc'>".$lang_label["file_added"]."</h3>";
+		// Copy file to directory and change name
+		$nombre_archivo = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
+/*
+	echo "Source file ".$_FILES['userfile']['tmp_name'];
+	echo "<br>";
+	echo "Destination file $nombre_archivo<br>";
+*/
+	
+		if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo ))){
+				$result_output = "<h3 class=error>".$lang_label["attach_error"]."</h3>";
+			$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
+			mysql_query($sql);
+		} else {
+			// Delete temporal file
+			unlink ($_FILES['userfile']['tmp_name']);
+		}
 	}
-
-// Tracking
-echo "<li class='nomn'>";
-echo "<a href='index.php?sec=projects&sec2=operation/projects/tracking&id=$id_project'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
-echo "</li>";
-
-// People
-echo "<li class='nomn'>";
-echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id=$id_project'><img src='images/user_suit.png' class='top' border=0> ".$lang_label["people"]." </a>";
-echo "</li>";
-
-echo "</ul>";
-echo "</div>";
-echo "<div style='height: 25px'> </div>";
- 
-
+}
 
 // Specific task
 if ($id_task != -1){ 
@@ -102,7 +103,7 @@ if ($id_task != -1){
 
 // Whole project
 if ($id_task == -1){
-	$sql= "SELECT tattachment.size, tattachment.description, tattachment.filename, tattachment.id_usuario, ttask.name FROM tattachment, ttask 
+	$sql= "SELECT tattachment.id_attachment, tattachment.size, tattachment.description, tattachment.filename, tattachment.id_usuario, ttask.name FROM tattachment, ttask
 			WHERE ttask.id_project = $id_project AND ttask.id = tattachment.id_task";
 
 	echo "<h3>".$lang_label["attached_files"];
@@ -130,7 +131,7 @@ if ($res = mysql_query($sql)) {
 			$tdcolor = "datos2";
 			$color = 1;
 		}
-		$filename=$config["base_url"]."/attachment/".$row["filename"];
+		$filename=$config["base_url"]."/attachment/".$row["id_attachment"]."_".$row["filename"];
 		// Show data
 		if ($id_task == -1){
 			echo "<tr><td class='$tdcolor' valign='top'>";

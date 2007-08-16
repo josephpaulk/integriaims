@@ -38,23 +38,26 @@ if ($sec == "projects"){
 		echo "<br>";
 
 		echo "<div class='portlet'>";
-		echo "<h3>".$lang_label["project"]." # $id_project</h3>";
+		$project_title = substr(give_db_value ("name", "tproject", "id", $id_project), 0, 18);
+		echo "<h3>".$lang_label["project"]." - $project_title ..</h3>";
 		echo "<ul class='sidemenu'>";
 
+		// Tasks
+		$task_number =  give_number_tasks ($id_project);
+		if ($task_number > 0){
+			if ($sec2 == "operation/projects/task")
+				echo "<li id='sidesel'>";
+			else	
+				echo "<li>";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>".$lang_label["task_list"]." ($task_number)</a></li>";
+		}
+		
 		// Create task
 		if ($sec2 == "operation/projects/task_detail")
 			echo "<li id='sidesel'>";
 		else	
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>".$lang_label["create_task"]."</a></li>";
-
-		// Tasks
-		if ($sec2 == "operation/projects/task")
-			echo "<li id='sidesel'>";
-		else	
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>".$lang_label["task_list"]."</a></li>";
-
 
 		// Project detail
 		if ($sec2 == "operation/projects/project_detail")
@@ -87,14 +90,14 @@ if ($sec == "projects"){
 	}
 
 	
-
 	// Dynamic incident sub options menu (TASKS)
 	$id_task = give_parameter_get("id_task",-1);
 	if ($id_task != -1){
 		echo "<br>";
 
 		echo "<div class='portlet'>";
-		echo "<h3>".$lang_label["task"]." # $id_task</h3>";
+		$task_title = substr(give_db_value ("name", "ttask", "id", $id_task), 0, 18);
+		echo "<h3>".$lang_label["task"]." - $task_title ..</h3>";
 		echo "<ul class='sidemenu'>";
 		
 		// Task detail
@@ -103,6 +106,20 @@ if ($sec == "projects"){
 		else	
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>".$lang_label["task_detail"]."</a></li>";
+
+		// Add task workunit
+		if ($sec2 == "operation/projects/task_create_work")
+			echo "<li id='sidesel'>";
+		else	
+			echo "<li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_create_work&id_task=$id_task&id_project=$id_project'>".$lang_label["add_workunit"]."</a></li>";
+
+		// Add task workunit
+		if ($sec2 == "operation/projects/task_attach_file")
+			echo "<li id='sidesel'>";
+		else	
+			echo "<li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_attach_file&id_task=$id_task&id_project=$id_project'>".$lang_label["add_file"]."</a></li>";
 
 		// Task people_manager
 		if ($sec2 == "operation/projects/operation/projects/people_manager")
@@ -123,6 +140,16 @@ if ($sec == "projects"){
 			echo "</a></li>";
 		}
 
+		// Files
+		$numberfiles = give_number_files_task ($id_task);
+		if ($numberfiles > 0){
+			if ($sec2 == "operation/projects/task_files")
+				echo "<li id='sidesel'>";
+			else	
+				echo "<li>";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_files&id_project=$id_project&id_task=$id_task'>".$lang_label["files"]." ($numberfiles)";
+			echo "</a></li>";
+		}
 		echo "</ul>";
 		echo "</div>";
 	}
@@ -235,38 +262,100 @@ if ($sec == "todo"){
 	echo "<ul class='sidemenu'>";
 
 	// Todo overview
-	if ($sec2 == "operation/todo/todo")
+	if (($sec2 == "operation/todo/todo") && (!isset($_GET["operation"]))) 
 		echo "<li id='sidesel'>";
 	else	
 		echo "<li>";
 	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>".$lang_label["todo"]."</a></li>";
-	
-	// Todo create
-	if ($sec2 == "operation/todo/todo&form_add=1")
+
+	// Todo overview of another users
+	if (($sec2 == "operation/todo/todo") && (isset($_GET["operation"])) && ($_GET["operation"] == "notme"))
 		echo "<li id='sidesel'>";
 	else	
 		echo "<li>";
-	echo "<a href='index.php?sec=incidents&sec2=operation/todo/todo&form_add=1'>".$lang_label["add_todo"]."</a></li>";
+	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo&operation=notme'>".lang_string ("todo_notme")."</a></li>";
+	
+	// Todo create
+	if (($sec2 == "operation/todo/todo") && (isset($_GET["operation"])) && ($_GET["operation"] == "create"))
+		echo "<li id='sidesel'>";
+	else	
+		echo "<li>";
+	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo&operation=create'>".$lang_label["add_todo"]."</a></li>";
 	echo "</ul>";
 	echo "</div>";
 }
 
 
 if ($sec == "users"){
-	echo "<h1>Users</h1>";
+
+echo "<div class='portlet'>";
+	echo "<h3>".$lang_label["users"]."</h3>";
 	echo "<ul class='sidemenu'>";
-		echo "<li><a href='index.php?sec=users&amp;sec2=operation/users/user'>View users</a></li>";
-		echo "<li><a href='index.php?sec=users&sec2=operation/users/user_edit&ver=".$_SESSION["id_usuario"]."'>Edit my user</a></li>";
-		echo "<li><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit'>Spare Workunit</a></li>";
-		echo "<li><a href='index.php?sec=users&sec2=operation/users/user_workunit_report'>".$lang_label["work_unit_report"]."</a></li>";
+
+		// View users
+		if ($sec2 == "operation/users/user")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&amp;sec2=operation/users/user'>".lang_string ("view_users")."</a></li>";
+		
+		// Edit my user
+		if ($sec2 == "operation/users/user_edit")
+		echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&ver=".$_SESSION["id_usuario"]."'>".lang_string("Edit my user")."</a></li>";
+
+		// Add spare workunit
+		if ($sec2 == "operation/users/user_spare_workunit")
+		echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&sec2=operation/users/user_spare_workunit'>".lang_string("Spare Workunit")."</a></li>";
+
+
+		// My workunit report
+		if ($sec2 == "operation/users/user_workunit_report")
+		echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report'>".$lang_label["work_unit_report"]."</a></li>";
 	echo "</ul>";
+	echo "</div>";
+
+	echo "<div class='portlet'>";
+	echo "<h3>".lang_string ("user_reporting")."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	// Basic report
+	if ($sec2 == "operation/user_report/report_monthly")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".lang_string ("montly_report")."</a></li>";
+
+	echo "</ul></div>";
 
 	if (give_acl($config["id_user"], 0, "UM")){
-		echo "<h1>".$lang_label["user_management"]."</h1>";
+		echo "<div class='portlet'>";
+		echo "<h3>".$lang_label["user_management"]."</h3>";
 		echo "<ul class='sidemenu'>";
-		echo "<li><a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".$lang_label["manage_user"]."</a></li>";
-		echo "<li><a href='index.php?sec=users&sec2=godmode/usuarios/role_manager'>".$lang_label["manage_roles"]."</a></li>";
+
+		// Usermanager
+		if ($sec2 == "godmode/usuarios/lista_usuarios")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".$lang_label["manage_user"]."</a></li>";
+
+		// Rolemanager
+		if ($sec2 == "godmode/usuarios/role_manager")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/role_manager'>".$lang_label["manage_roles"]."</a></li>";
 		echo "</ul>";
+		echo "</div>";
 	}
 	
 }
@@ -302,21 +391,28 @@ echo "</p>";
 */
 
 // Testing boxes for side menus
+$id_user = $_SESSION['id_usuario'];
+$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_user);
+$realname = give_db_value ("nombre_real", "tusuario", "id_usuario", $id_user);
+$email = give_db_value ("direccion", "tusuario", "id_usuario", $id_user);
+$description = give_db_value ("comentarios", "tusuario", "id_usuario", $id_user);
+
 echo '
  <div class="portlet">
-  <a href="javascript:;" onmousedown="toggleDiv(\'userdiv\');"><h2>Info de prueba</h2></a>
-  <div class="portletBody" id="userdiv">  
-      <b>nil</b>
-      (<a href="/~slerena">slerena</a>)<br />
-            <b>Preferred address:</b><br />
-            &nbsp;&nbsp;&nbsp;
-              slerena@gmail.com
+  <a href="javascript:;" onmousedown="toggleDiv(\'userdiv\');"><h2>'.lang_string("user_info").'</h2></a>
+  <div class="portletBody" id="userdiv">';
+
+echo "<img src='images/avatars/".$avatar."_small.png' align='left'>";
+echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&ver='.$id_user.'">'.$id_user.'</a><br>';
+echo "<b>".$realname."</b><br>";
+echo '<b>E-mail:</b>&nbsp;
+              '.$email.'
             <br />
         <b>Timezone:</b>
         Europe/Madrid
         <br />
-        <b>Nosequé:</b>
-        <span>10</span><br />
+        <i>'.$description.'</i>
+        <br />
   </div>
 </div>
 

@@ -1,3 +1,33 @@
+2007-08-16  Sancho Lerena  <slerena@artica.es>
+
+	* topidb.sql: ttask now admits negative values for special
+	tasks. This change also affects to tworkunit_task. Several
+	structural changes to ttodo table.
+
+	* images/avatars: Added some custom icons for avatar.
+	
+	* operation/users: Improvements for user management, view and
+	basic user workunit report.
+
+	* operation/todo/todo.php: Todo management (all in this file).
+	
+	* operation/projects: Several changes in structure and new files
+	to split tasks before in the same files.
+	
+	* operation/user_report: Base for reporting.
+	
+	* operation/user_report/report_monthly.php: Basic report tool
+	(montly).
+	
+	* operation/main_menu.php: Added todo.
+	
+	* operation/side_menu.php: Added todo, users and several options
+	for project/task management.
+	
+	* topidb_data.sql: Added new values for ttask (vacation, disease
+	and not justified as -1, -2 and -3 id)
+	
+
 2007-07-30  Sancho Lerena <slerena@artica.es>
 
 	* Massive update. Cannot describe with detail, intensive work.

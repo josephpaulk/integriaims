@@ -1,5 +1,5 @@
 <?php
-// FRITS - the FRee Incident Tracking System
+// TOPI - the FRee Incident Tracking System
 // =========================================
 // Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
 // Copyright (c) 2007 Artica Soluciones Tecnologicas
@@ -28,7 +28,7 @@ $lang_label["manage_users"]="Manage Users";
 $lang_label["manage_groups"]="Manage Groups";
 $lang_label["system_audit"]="System Audit Log";
 
-$lang_label["ag_title"]="FRITS Agents";
+$lang_label["ag_title"]="TOPI Agents";
 $lang_label["agent"]="Agent";
 $lang_label["os"]="OS";
 $lang_label["alert"]="Alert";
@@ -58,7 +58,7 @@ $lang_label["in_openedby"]="Owner";
 $lang_label["in_openedwhen"]="Opened at";
 $lang_label["updated_at"]="Updated at";
 
-$lang_label["main_text"]="This is the Web Management System for FRITS. From here you can manage its agents, alerts and incidents. Session will be open while activity exists.";
+$lang_label["main_text"]="This is the Web Management System for TOPI. From here you can manage its agents, alerts and incidents. Session will be open while activity exists.";
 
 $lang_label["id_user"]="User ID";
 $lang_label["real_name"]="Real name";
@@ -84,7 +84,7 @@ $lang_label["field1"]="Field #1 (Alias, name)";
 $lang_label["field2"]="Field #2 (Single Line)";
 $lang_label["field3"]="Field #3 (Full Text)";
 $lang_label["no_access_title"]="You don't have access to this page";
-$lang_label["no_access_text"]="Access to this page is restricted to authorized users only, please contact system administrator if you need assistance. <br><br>Please know that all attempts to access this page are recorded in security logs of FRITS System Database";
+$lang_label["no_access_text"]="Access to this page is restricted to authorized users only, please contact system administrator if you need assistance. <br><br>Please know that all attempts to access this page are recorded in security logs of TOPI System Database";
 $lang_label["header_title"]="Free Monitoring System";
 
 $lang_label["gpl_notice"]="TOPI is a <b>Free Software Project, licensed under GPL terms</b>";
@@ -108,7 +108,7 @@ $lang_label["rej_inc"]="Rejected incidents";
 $lang_label["exp_inc"]="Expired incidents";
 $lang_label["rev_incident"]="Review of incident";
 $lang_label["note_title"]="Add note to incident";
-$lang_label["audit_title"]="Review of FRITS audit logs";
+$lang_label["audit_title"]="Review of TOPI audit logs";
 $lang_label["user"]="User"; 
 $lang_label["action"]="Action";
 $lang_label["src_address"]="Source IP";
@@ -142,11 +142,11 @@ $lang_label["alert_detail"]="Alert detail";
 $lang_label["detailed_alert_view"]="Detailed alert view";
 $lang_label["detailed_monitor_view"]="Detailed monitor view";
 $lang_label["detailed_full_view"]="Detailed full view";
-$lang_label["setup_screen"]="FRITS Setup";
+$lang_label["setup_screen"]="TOPI Setup";
 $lang_label["block_size"]="Block size for pagination";
 $lang_label["agent_alert"]="Agent down default alert";
-$lang_label["language_code"]="Language Code for FRITS";
-$lang_label["setup_title"]="FRITS Main setup ";
+$lang_label["language_code"]="Language Code for TOPI";
+$lang_label["setup_title"]="TOPI Main setup ";
 $lang_label["db_maintenance"]="DB Maintenance";
 $lang_label["aclog_pagination"]="Internal Audit Pages";
 $lang_label["log_filter"]="Log type filter";
@@ -155,17 +155,17 @@ $lang_label["administrator"]="Administrator";
 $lang_label["normal_user"]="Standard user";
 $lang_label["has_connected"]="You are connected as";
 $lang_label["logged_out"]="Logged Out";
-$lang_label["logout_msg"]="Your session is over. Please close your browser window to close session on FRITS.<br><br>";
-$lang_label["user_last_activity"]="This is your last activity in FRITS console";
+$lang_label["logout_msg"]="Your session is over. Please close your browser window to close session on TOPI.<br><br>";
+$lang_label["user_last_activity"]="This is your last activity in TOPI console";
 $lang_label["err_auth"]="Authentication Error";
-$lang_label["err_auth_msg"]="Either, your password or your login are incorrect. Please check your CAPS LOCK key, username and password are case SeNSiTiVe.<br><br>All actions, included failed login attempts are logged in FRITS System logs, and these can be reviewed by each user, please report to admin any incident or malfunction.";
+$lang_label["err_auth_msg"]="Either, your password or your login are incorrect. Please check your CAPS LOCK key, username and password are case SeNSiTiVe.<br><br>All actions, included failed login attempts are logged in TOPI System logs, and these can be reviewed by each user, please report to admin any incident or malfunction.";
 $lang_label["find_crit"]="Please select a search criterion";
 $lang_label["all"]="All";
 $lang_label["free_text_search"]="Free text for search (*)";
 $lang_label["free_text_search_msg"] ="(*) The text search will look for all words entered as substring, in index title or description of each incident";
 $lang_label["confirmation"]="confirmation";
 $lang_label["password"]="Password";
-$lang_label["users"]="Users defined in FRITS";
+$lang_label["users"]="Users defined in TOPI";
 
 $lang_label["user_ID"]="UserID";
 $lang_label["profile"]="Profile";
@@ -244,11 +244,11 @@ $lang_label["checked_by"]="Checked by";
 
 $lang_label["disabled"]="Disabled";
 $lang_label["active"]="Active";
-$lang_label["db_description"]="Database is the core of FRITS. In this database resides all the information of the enterprise, for example, all data gathered by agents, all configuration defined by administrator, all events, incidents, audit info...
+$lang_label["db_description"]="Database is the core of TOPI. In this database resides all the information of the enterprise, for example, all data gathered by agents, all configuration defined by administrator, all events, incidents, audit info...
 <br><br>
-The performance and reliability of the core is vital for the correct use of FRITS. It's necessary to maintain correctly this Database using the MySQL standard commands.
+The performance and reliability of the core is vital for the correct use of TOPI. It's necessary to maintain correctly this Database using the MySQL standard commands.
 <br><br>
-The database size will increase in a linear way. We use a method to reduce the number of event stored in the database without losing the information we need, compacting data when every time configured in FRITS Setup.";
+The database size will increase in a linear way. We use a method to reduce the number of event stored in the database without losing the information we need, compacting data when every time configured in TOPI Setup.";
 
 $lang_label["begin_date"]="Begin date (*)";
 $lang_label["end_date"]="End date (*)";
@@ -256,17 +256,17 @@ $lang_label["resolution"]="Resolution";
 $lang_label["date_format"]="(*) Please enter date with format yyyy/mm/dd hh:mm:ss";
 $lang_label["please_wait"]="Please be patient. This operation can be very long in time (5-10 minutes)";
 
-$lang_label["welcome_title"]="Welcome to FRITS Web Console";
+$lang_label["welcome_title"]="Welcome to TOPI Web Console";
 $lang_label["incident_view_filter"]="Viewing incidents";
 $lang_label["there_are"]="There are ";
-$lang_label["user_defined"]="users defined in FRITS";
-$lang_label["agent_defined"]="agents defined in FRITS";
-$lang_label["agent_defined2"]="Agents defined in FRITS";
-$lang_label["alert_defined"]="alerts defined in FRITS";
-$lang_label["alert_defined2"]="Alerts defined in FRITS";
-$lang_label["data_harvested"]="data modules stored in FRITS Database";
+$lang_label["user_defined"]="users defined in TOPI";
+$lang_label["agent_defined"]="agents defined in TOPI";
+$lang_label["agent_defined2"]="Agents defined in TOPI";
+$lang_label["alert_defined"]="alerts defined in TOPI";
+$lang_label["alert_defined2"]="Alerts defined in TOPI";
+$lang_label["data_harvested"]="data modules stored in TOPI Database";
 $lang_label["data_timestamp"]="Last data received at ";
-$lang_label["stat_title"]="FRITS general statistics";
+$lang_label["stat_title"]="TOPI general statistics";
 $lang_label["no_permission_text"]="You don't have enough permission to access this resource";
 $lang_label["no_permission_title"]="You don't have access";
 
@@ -345,7 +345,7 @@ $lang_label["config_manage"]="Configuration Management";
 $lang_label["get_info"]="Get Info";
 
 $lang_label["are_you_sure"]="Are you sure?";
-$lang_label["users_msg"]="User profiles in FRITS define which users can access FRITS as well as what each user can do. Groups define elements in common among various users. Each user could be in one or more groups at any one time. Each group has user profiles which are defined and attached to it. A profile is a list of things a user can do, such as view incidents, manage database or other. A list of available profiles is defined below by the local FRITS administrators ";
+$lang_label["users_msg"]="User profiles in TOPI define which users can access TOPI as well as what each user can do. Groups define elements in common among various users. Each user could be in one or more groups at any one time. Each group has user profiles which are defined and attached to it. A profile is a list of things a user can do, such as view incidents, manage database or other. A list of available profiles is defined below by the local TOPI administrators ";
 
 $help_label["users_msg1"]="This user has permissions to manage all. This is admin user and overwrites all permissions given in profiles/groups.";
 $help_label["users_msg2"]="This user has separated permissions to view data in his group agents, create incidents belong to his groups, add notes in another incidents, create personal assignments or reviews and other tasks, on different profiles";
@@ -355,13 +355,13 @@ $help_label["db_purge0"]="Use this combo to select agent for operation. You need
 
 $lang_label["profiles"] ="Profiles";
 $lang_label["current_dbsetup"]="This is your current database maintenance setup";
-$lang_label["dbsetup_info"]="Please check your FRITS Server setup and be sure that database maintenance daemon is running. It's very important to keep up-to-date database to get the best performance and results in FRITS";
+$lang_label["dbsetup_info"]="Please check your TOPI Server setup and be sure that database maintenance daemon is running. It's very important to keep up-to-date database to get the best performance and results in TOPI";
 
 $lang_label["profile_title"]="Profile management";
 $lang_label["create_profile"]="Create profile";
 $lang_label["profile_name"]="Profile name";
 
-$lang_label["FRITS_management"]="FRITS management";
+$lang_label["TOPI_management"]="TOPI management";
 $lang_label["manage_db"]="Manage Database";
 $lang_label["incident_view"]="View incidents";
 $lang_label["incident_edit"]="Edit incidents";
@@ -415,7 +415,7 @@ $lang_label["csv"]="CSV Format";
 $lang_label["export_title"]="Database export results";
 $lang_label["source_agent"]="Source agent";
 
-$lang_label["definedprofiles"]="Profiles defined in FRITS";
+$lang_label["definedprofiles"]="Profiles defined in TOPI";
 $lang_label["attachfile"]="Attach file";
 $lang_label["filename"]="Filename";
 $lang_label["size"]="Size";
@@ -469,14 +469,14 @@ $lang_label["mod_alert"]="Modify alert";
 $lang_label["filter"]="Filter";
 
 $lang_label["summary"]="Summary";
-$lang_label["users_"]="FRITS users";
+$lang_label["users_"]="TOPI users";
 $lang_label["incidents"]="Incidents";
 $lang_label["events"]="Events";
-$lang_label["definedgroups"]="Groups defined in FRITS";
+$lang_label["definedgroups"]="Groups defined in TOPI";
 $lang_label["update_profile"]="Update profile";
 $lang_label["update_group"]="Update group";
 $lang_label["create_incident"]="Create incident";
-$lang_label["attach_error"]="File cannot be saved. Please contact FRITS administrator about this error <br>";
+$lang_label["attach_error"]="File cannot be saved. Please contact TOPI administrator about this error <br>";
 $lang_label["db_info2"]="Database Information";
 $lang_label["db_agent_bra"]="Data from agent ";
 $lang_label["db_agent_ket"]=" in the Database";
@@ -491,7 +491,7 @@ $lang_label["agents"]="Agents";
 $lang_label["down"]="Down"; 
 $lang_label["ok"]="Ok"; 
 $lang_label["fail"]="Fail";
-$lang_label["FRITS_db"]="FRITS Database";
+$lang_label["TOPI_db"]="TOPI Database";
 $lang_label["create_profile_ok"]="Profile successfully created";
 $lang_label["profile_upd"]="Profile successfully updated";
 $lang_label["update_agent_ok"]="Agent successfully updated";
@@ -604,7 +604,7 @@ $lang_label["no_snmp_agent"]="There are no SNMP traps in database";
 $lang_label["no_snmp_alert"]="There are no SNMP alerts";
 $lang_label["no_agent_def"]="There are no defined agents";
 
-$lang_label["view_servers"]="FRITS Servers";
+$lang_label["view_servers"]="TOPI Servers";
 $lang_label["no_server"]="There are no servers configured into the database";
 $lang_label["master"]="Master";
 $lang_label["checksum"]="Check";
@@ -711,7 +711,7 @@ $lang_label["day"]="day";
 $lang_label["week"]="week";
 $lang_label["weeks"]="weeks";
 $lang_label["month"]="month";
-$lang_label["months"]="monts";
+$lang_label["months"]="months";
 $lang_label["hours"]="hours";
 $lang_label["minutes"]="mins";
 $lang_label["hour"]="hours";
@@ -834,7 +834,7 @@ $lang_label["project_people_management"]="Project people management";
 $lang_label["role_project_assignment"]="Project role assignment";
 $lang_label["attributes"]="Attributes";
 $lang_label["worktime"]="Worktime";
-$lang_label["vacations"]="(*) Vacations";
+$lang_label["vacations"]="Vacations";
 $lang_label["add_spare_workunit"]="Add spare workunit";
 $lang_label["workunit_personal_report"]="Workunit personal report";
 $lang_label["work_unit_report"]="Workunit report";
@@ -865,5 +865,29 @@ $lang_label["incident_detail"]="Incident detail";
 $lang_label["incidents_overview"]="Incidents overview";
 $lang_label["task_detail"]="Task detail";
 $lang_label["task_list"]="Task list";
+$lang_label["duration"]="Duration";
+$lang_label["pri"]="Pri";
+$lang_label["user_info"]="User information";
+$lang_label["avatar"]="Avatar";
+
+$lang_label["not_working_by_disease"]="Not working for disease";
+$lang_label["not_justified"]="Not justified";
+$lang_label["montly_report"]="Montly report";
+$lang_label["user_reporting"]="User reporting";
+$lang_label["Spare Workunit"]="Spare workunit";
+$lang_label["Edit my user"]="Edit my user";
+$lang_label["created"]="Created";
+$lang_label["updated"]="Updated";
+$lang_label["very high"]="Very high";
+$lang_label["very low"]="Very low";
+$lang_label["todo_notme"]="To-Do another people";
+$lang_label["assigned_to_user"]="Assigned to user";
+$lang_label["todo_creation"]="To-Do creation";
+$lang_label["assigned_to"]="Assigned to";
+$lang_label["assigned_to_other_users"]="Assigned to other users";
+$lang_label["high"]="High";
+$lang_label["Totals for this month"] ="Totals for this month";
+$lang_label["total_hours_for_this_month"] = "Total hours for this month";
+
 global $lang_label; 
 global $help_label;

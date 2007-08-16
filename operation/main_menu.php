@@ -28,6 +28,14 @@ else
 	echo "<li>";
 echo "<a href='index.php?sec=users&sec2=operation/users/user'>Users</a></li>";
 
+// TODO
+if ($sec == "todo" )
+	echo "<li id='current'>";
+else
+	echo "<li>";
+echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>".lang_string("todo")."</a></li>";
+
+
 // Agenda
 if ($sec == "agenda" )
 	echo "<li id='current'>";

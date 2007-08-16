@@ -76,7 +76,7 @@ if ($res4=mysql_query($sql4)){
 		$sql3='SELECT * FROM tworkunit WHERE id = '.$row4["id_workunit"];
 		$res3=mysql_query($sql3);
 		while ($row3=mysql_fetch_array($res3)){
-			show_workunit_data ($row3, $title);
+			show_workunit_data ($row3,give_inc_title($id_inc));
 		}
 	}
 } else 

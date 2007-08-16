@@ -1,11 +1,11 @@
 <?PHP
 // Begin of automatic config file
 $config["dbname"] = "topi";			// MySQL DataBase name
-$config["dbuser"] = "topi";
-$config["dbpassword"] = "topiweb";	// DB Password
+$config["dbuser"] = "root";
+$config["dbpassword"] = "none";	// DB Password
 $config["dbhost"] = "localhost"; // DB Host
 $config["homedir"] = "/var/www/topi/";		// Config homedir
-$config["base_url"] = "http://192.168.50.2/topi";			// Base URL
+$config["base_url"] = "http://localhost/topi";			// Base URL
 // End of automatic config file
 ?><?php
 // TOPI 
@@ -25,8 +25,6 @@ $config["base_url"] = "http://192.168.50.2/topi";			// Base URL
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // This is the base config file
 
-$config["build_version"]="PC070501"; //PCyymmdd
-$config["version"]="v0.9dev";
 $config["REMOTE_ADDR"] = getenv ("REMOTE_ADDR");
 
 // Do not display any ERROR

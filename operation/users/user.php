@@ -25,7 +25,7 @@ $id_user =$_SESSION["id_usuario"];
 
 echo "<h2>".$lang_label["users_"]."</h2>";
 
-echo '<table cellpadding="4" cellspacing="4" class="databox_color">';
+echo '<table cellpadding="4" cellspacing="4" width="100%" class="databox_color">';
 echo "<th>".$lang_label["user_ID"];
 echo "<th>".$lang_label["last_contact"];
 echo "<th>".$lang_label["profile"];
@@ -40,6 +40,8 @@ $color = 1;
 			$nivel =$rowdup["nivel"];
 			$comentarios =$rowdup["comentarios"];
 			$fecha_registro =$rowdup["fecha_registro"];
+			$avatar = $rowdup["avatar"];
+			
 			if ($color == 1){
 				$tdcolor = "datos";
 				$color = 0;
@@ -51,12 +53,10 @@ $color = 1;
 				$tip = "tip2";
 			}
 			echo "<tr><td class='$tdcolor'><a href='index.php?sec=users&sec2=operation/users/user_edit&ver=".$nombre."'><b>".$nombre."</b></a>";
-			echo "<td class='$tdcolor'><font size=1>".$fecha_registro."</font>";
-			echo "<td class='$tdcolor'>";
-			if ($nivel == 1)
-				echo "<img src='images/user_suit.png'>";
-			else
-				echo "<img src='images/user_green.png'>";
+			echo "<td class='".$tdcolor."f9' width=150>".$fecha_registro;
+			echo "<td class='$tdcolor' width=60>";
+			echo "<img src='images/avatars/".$avatar."_small.png'>";
+
 			$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
 			$result=mysql_query($sql1);
 			echo "<a href='#' class='$tip'>&nbsp;<span>";

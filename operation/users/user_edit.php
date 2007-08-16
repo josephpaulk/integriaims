@@ -54,6 +54,8 @@ if (check_login() == 0) {
 			$direccion = clean_input($_POST["direccion"]);
 			$telefono = clean_input($_POST["telefono"]);
 			$nombre_real = clean_input($_POST["nombre_real"]);
+			$avatar = give_parameter_post ("avatar");
+			
 			if ($pass1 != $pass2) {
 				echo "<h3 class='error'>".$lang_label["pass_nomatch"]."</h3>";
 			}
@@ -98,9 +100,10 @@ if (check_login() == 0) {
 	$direccion=$rowdup["direccion"];
 	$telefono=$rowdup["telefono"];
 	$nombre_real=$rowdup["nombre_real"];
+	$avatar = $rowdup ["avatar"];
 
 	?>
-	<table cellpadding="3" cellspacing="3" width="500" class="databox_color";>
+	<table border=0 cellpadding="3" cellspacing="3" width="500" class="databox_color";>
 	<?php 
 	if ($view_mode == 0) 
 		echo '<form name="user_mod" method="post" action="index.php?sec=usuarios&sec2=operation/users/user_edit&ver='.$id_usuario.'&modificado=1">';
@@ -109,18 +112,42 @@ if (check_login() == 0) {
 	?>
 	<tr><td class="datos"><?php echo $lang_label["id_user"] ?>
 	<td class="datos"><input class=input type="text" name="nombre" value="<?php echo $nombre ?>" disabled>
+	<?PHP
+	if (isset($avatar)){
+		echo "<td class='datos' rowspan=3>";
+		echo "<img src='images/avatars/".$avatar.".png'>";
+	}
+ 	?>
 	<tr><td class="datos2"><?php echo $lang_label["real_name"] ?>
 	<td class="dato2s"><input class=input type="text" name="nombre_real" value="<?php echo $nombre_real ?>">
 	<tr><td class="datos"><?php echo $lang_label["password"] ?>
 	<td class="datos"><input class=input type="password" name="pass1" value="<?php echo $password ?>">
 	<tr><td class="datos2"><?php echo $lang_label["password"]; echo " ".$lang_label["confirmation"]?>
-	<td class="datos2"><input class=input type="password" name="pass2" value="<?php echo $password ?>">
+	<td class="datos2" colspan=2><input class=input type="password" name="pass2" value="<?php echo $password ?>">
 	<tr><td class="datos">E-Mail
-	<td class="datos"><input class=input type="text" name="direccion" size="40" value="<?php echo $direccion ?>">
-	<tr><td class="datos2"><?php echo $lang_label["telefono"] ?>
-	<td class="datos2"><input class=input type="text" name="telefono" value="<?php echo $telefono ?>">
-	<tr><td class="datos" colspan="2"><?php echo $lang_label["comments"] ?>
-	<tr><td class="datos2" colspan="2"><textarea name="comentarios" cols="55" rows="4"><?php echo $comentarios ?></textarea>
+	<td class="datos" colspan=2><input class=input type="text" name="direccion" size="40" value="<?php echo $direccion ?>">
+
+	<?PHP
+	// Avatar
+	echo "<tr><td class='datos2'>".lang_string("avatar");
+	echo "<td class='datos2' colspan=2><select name='avatar'>";
+	if ($avatar!=""){
+		echo '<option>'.$avatar;
+	}
+	$ficheros = list_files('images/avatars/', "",0, 0);
+	$a=0;
+	while (isset($ficheros[$a])){
+		if ((strpos($ficheros[$a],"small") == 0) && (strlen($ficheros[$a])>4))
+			echo "<option>".substr($ficheros[$a],0,strlen($ficheros[$a])-4);
+		$a++;
+	}
+	echo '</select>';
+	?>
+	
+	<tr><td class="datos"><?php echo $lang_label["telefono"] ?>
+	<td class="datos" colspan=2><input class=input type="text" name="telefono" value="<?php echo $telefono ?>">
+	<tr><td class="datos2" colspan="3"><?php echo $lang_label["comments"] ?>
+	<tr><td class="datos" colspan="3"><textarea name="comentarios" cols="55" rows="4"><?php echo $comentarios ?></textarea>
 	</table>
 <?php
 	// Don't delete this!!

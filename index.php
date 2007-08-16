@@ -19,6 +19,10 @@
 // TOPI shares much of it's code with project Babel Enterprise and Pandora FMS,
 // also a Free Software Project coded by some of the people who makes ToPI.
 
+$config["build_version"]="PC070815"; //PCyymmdd
+$config["version"]="v1.0dev";
+global $config;
+
 $develop_bypass = 1;
 if ($develop_bypass != 1){
 	// If no config file, automatically try to install
@@ -69,7 +73,7 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 ?>
 <title>TOPI - the Open Tracking System for the Enterprise</title>
 <meta http-equiv="expires" content="0">
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-15">
+<meta http-equiv="content-type" content="text/html; charset='utf-8'">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="author" content="Sancho Lerena">

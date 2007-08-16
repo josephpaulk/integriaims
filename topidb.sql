@@ -169,7 +169,7 @@ CREATE TABLE `tusuario` (
   `direccion` varchar(100) default '',
   `telefono` varchar(100) default '',
   `nivel` tinyint(1) NOT NULL default '0',
-  `avatar` varchar(100) default 'people_2',
+  `avatar` varchar(100) default 'people_1',
 );
 
 --
@@ -229,7 +229,7 @@ CREATE TABLE `ttask_track` (
 
 
 CREATE TABLE `ttask` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+  `id` int(10) NOT NULL auto_increment,
   `id_project` int(10) unsigned NOT NULL default '0',
   `id_parent_task` int(10) unsigned NOT NULL default '0',
   `name` varchar(240) NOT NULL default '',
@@ -258,7 +258,7 @@ CREATE TABLE `tworkunit` (
 
 CREATE TABLE `tworkunit_task` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `id_task` int(10) unsigned NOT NULL default '0',
+  `id_task` int(10) NOT NULL default '0',
   `id_workunit` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );
@@ -324,11 +324,14 @@ CREATE TABLE `trole_people_project` (
 );
 
 CREATE TABLE `ttodo` (
-`id` INT NOT NULL ,
-`name` VARCHAR( 2048 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL ,
-`task` INT NOT NULL ,
-`assigned_user` VARCHAR( 250 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-`created_by_user` VARCHAR( 250 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-`priority` INT NOT NULL,
-`timestamp` DATETIME NOT NULL
-) ENGINE = MYISAM ;
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `name` varchar(250) character set utf8 collate utf8_unicode_ci default NULL,
+  `progress` int(11) NOT NULL,
+  `assigned_user` varchar(250) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `created_by_user` varchar(250) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `priority` int(11) NOT NULL,
+  `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
+  `description` mediumtext,
+  `last_update` datetime NOT NULL default '2000-01-01 00:00:00',
+  PRIMARY KEY  (`id`)
+);

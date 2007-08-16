@@ -17,11 +17,11 @@ INSERT INTO `tlanguage` VALUES ('en','English');
 INSERT INTO `tlink` VALUES  (0000000001,'TOPI Project','http://topi.sourceforge.net'), (0000000002,'Artica ST','http://www.artica.es'),(0000000003,'Pandora Project','http://pandora.sourceforge.net'),(0000000004,'Babel Project','http://babel.sourceforge.net'),(0000000005,'Google','http://www.google.com');
 
 
-INSERT INTO `tusuario` VALUES ('admin','Default Admin','7fa0a7a9c6e15ca051b1c94e932769f6','Default TOPI Admin superuser. Please change password ASAP','2007-03-27 18:59:39','admin@topi.sf.net','555-555-555',1),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2006-04-20 13:00:05','demo@nowhere.net','+4555435435',0);
-
+INSERT INTO `tusuario` VALUES ('admin','Default Admin','7fa0a7a9c6e15ca051b1c94e932769f6','Default TOPI Admin superuser. Please change password ASAP','2007-03-27 18:59:39','admin@topi.sf.net','555-555-555',1,'people_1'),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2006-04-20 13:00:05','demo@nowhere.net','+4555435435',0,'people_3');
 
 INSERT INTO `tusuario_perfil` VALUES (1,'demo',1,1,'admin'),(2,'admin',5,1,'admin');
 
+INSERT INTO `ttask` (`id`, `id_project`, `id_parent_task`, `name`, `description`, `completion`, `priority`, `dep_type`, `start`, `end`, `id_group`) VALUES (-1,0,0,'Vacations','',0,0,0,'0000-00-00','0000-00-00',0),(-2,0,0,'Disease','',0,0,0,'0000-00-00','0000-00-00',0),(-3,0,0,'Not justified','',0,0,0,'0000-00-00','0000-00-00',0);
 
 INSERT INTO tincident_resolution (name) VALUES ('Fixed'), ('Invalid'), ('Wont fix'), ('Duplicate'), ('Works for me'), ('Incomplete'), ('Expired'), ('Moved'), ('In process');
 

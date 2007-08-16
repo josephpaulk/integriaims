@@ -191,8 +191,12 @@ function combo_task_user_participant ($id_user, $show_vacations = 0) {
 	global $lang_label;
 	
 	echo "<select name='task'>";
-	if ($show_vacations == 1)
-		echo "<option value=-1>".$lang_label["vacations"];
+	if ($show_vacations == 1){
+		echo "<option value=-1>(*) ".lang_string ("vacations");
+		echo "<option value=-2>(*) ".lang_string ("not_working_by_disease");
+		echo "<option value=-3>(*) ".lang_string ("not_justified");
+	}
+	
 	$sql = "SELECT DISTINCT (ttask.id) FROM ttask, trole_people_task WHERE ttask.id = trole_people_task.id_task AND trole_people_task.id_user = '$id_user'";
 	$result = mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
@@ -253,6 +257,182 @@ function show_workunit_data ($row3, $title) {
 		echo clean_output_breaks(substr($nota,0,1024));
 		echo "<br><br>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/common/workunit_detail&id=".$id_workunit."&title=$title'>";
+		echo $lang_label["read_more"];
+		echo "</a>";
+	} else {
+		echo clean_output_breaks($nota);
+	}
+	echo "</div>";
+}
+
+function show_workunit_task_data ($id_workunit, $mode) {
+	global $config;
+	global $lang_label;
+
+	$sql = "SELECT * FROM tworkunit WHERE id = $id_workunit";
+	if ($res = mysql_query($sql)) 
+		$row=mysql_fetch_array($res);
+	else
+		return;
+		
+	$timestamp = $row["timestamp"];
+	$duration = $row["duration"];	
+	$id_user = $row["id_user"];
+	$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_user);
+	$nota = $row["description"];
+	$have_cost = $row["have_cost"];
+	$profile = $row["id_profile"];
+	$id_task = give_db_value ("id_task", "tworkunit_task", "id_workunit", $row["id"]);
+	$id_project = give_db_value ("id_project", "ttask", "id", $id_task);
+	$task_title = substr(give_db_value ("name", "ttask", "id", $id_task), 0, 50);
+	
+	// Show data
+	echo "<div class='notetitle' style='height: 50px;'>"; // titulo
+	echo "<table border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px;'>";
+	echo "<tr><td rowspan=3 width='7%'>";
+	echo "<img src='images/avatars/".$avatar."_small.png'>";
+	
+	echo "<td width='60%'><b>";
+	echo lang_string ("task")." </b> : ";
+	echo $task_title;
+
+	echo "<td width='13%'><b>";
+	echo lang_string ("duration")."</b>";
+
+	echo "<td width='20%'>";
+	echo " : ".format_numeric($duration);
+
+
+	echo "<tr>";
+	echo "<td>";
+	echo "<td><b>";
+	
+	if ($have_cost != 0){
+		$profile_cost = give_db_value ("cost", "trole", "id", $profile);
+		$cost = format_numeric ($duration * $profile_cost);
+		$cost = $cost ." &euro;";
+	} else
+		$cost = $lang_label["N/A"];
+	echo lang_string ("cost");
+	echo "</b>";
+	echo "<td>";
+	echo " : ".$cost;
+
+	
+	echo "<tr>";
+	echo "<td>";
+	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
+	echo "<b>".$id_user."</b>";
+	echo "</a>";
+	echo "&nbsp;".$lang_label["said_on"]."&nbsp;";
+	echo $timestamp;
+	echo "<td><b>";
+	echo lang_string ("profile");
+	echo "</b></td><td>";
+	echo " : ".give_db_value ("name", "trole", "id", $profile);
+	echo "</table>";
+	echo "</div>";
+
+	// Body
+	echo "<div class='notebody'>";
+	if (strlen($nota) > 1024){
+		echo clean_output_breaks(substr($nota,0,1024));
+		echo "<br><br>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_task=$task_id&id=".$id_workunit."&title=$task_title'>";
+		echo $lang_label["read_more"];
+		echo "</a>";
+	} else {
+		echo clean_output_breaks($nota);
+	}
+	if (project_manager_check($id_project) == 1){
+		echo "<table width=98%>";
+		echo "<tr><td align='right'>";
+		if ($mode != -1) // Task view
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&operation=delete'><img border=0 src='images/cross.png'></a>";
+		else // project view
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_workunit=$id_workunit&operation=delete'><img border=0 src='images/cross.png'></a>";
+		echo "</td></tr></table>";
+	}
+	echo "</div>";
+}
+
+function show_workunit_user ($id_workunit) {
+	global $config;
+	global $lang_label;
+
+	$sql = "SELECT * FROM tworkunit WHERE id = $id_workunit";
+	if ($res = mysql_query($sql)) 
+		$row=mysql_fetch_array($res);
+	else
+		return;
+		
+	$timestamp = $row["timestamp"];
+	$duration = $row["duration"];	
+	$id_user = $row["id_user"];
+	$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_user);
+	$nota = $row["description"];
+	$have_cost = $row["have_cost"];
+	$profile = $row["id_profile"];
+	$id_task = give_db_value ("id_task", "tworkunit_task", "id_workunit", $row["id"]);
+	$id_project = give_db_value ("id_project", "ttask", "id", $id_task);
+	$task_title = substr(give_db_value ("name", "ttask", "id", $id_task), 0, 50);
+	$project_title = substr(give_db_value ("name", "tproject", "id", $id_project), 0, 50);
+	// Show data
+	echo "<div class='notetitle' style='height: 50px;'>"; // titulo
+	echo "<table border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px;'>";
+	echo "<tr><td rowspan=3 width='7%'>";
+	echo "<img src='images/avatars/".$avatar."_small.png'>";
+	
+	echo "<td width='60%'><b>";
+	echo lang_string ("task")." </b> : ";
+	echo $task_title;
+
+	echo "<td width='13%'><b>";
+	echo lang_string ("duration")."</b>";
+
+	echo "<td width='20%'>";
+	echo " : ".format_numeric($duration);
+
+
+	echo "<tr>";
+	echo "<td><b>";
+	echo lang_string ("project")." </b> : ";
+	echo $project_title;
+
+	echo "<td><b>";
+	
+	if ($have_cost != 0){
+		$profile_cost = give_db_value ("cost", "trole", "id", $profile);
+		$cost = format_numeric ($duration * $profile_cost);
+		$cost = $cost ." &euro;";
+	} else
+		$cost = $lang_label["N/A"];
+	echo lang_string ("cost");
+	echo "</b>";
+	echo "<td>";
+	echo " : ".$cost;
+
+	
+	echo "<tr>";
+	echo "<td>";
+	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
+	echo "<b>".$id_user."</b>";
+	echo "</a>";
+	echo "&nbsp;".$lang_label["said_on"]."&nbsp;";
+	echo $timestamp;
+	echo "<td><b>";
+	echo lang_string ("profile");
+	echo "</b></td><td>";
+	echo " : ".give_db_value ("name", "trole", "id", $profile);
+	echo "</table>";
+	echo "</div>";
+
+	// Body
+	echo "<div class='notebody'>";
+	if (strlen($nota) > 1024){
+		echo clean_output_breaks(substr($nota,0,1024));
+		echo "<br><br>";
+		echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_workunit."&title=$task_title'>";
 		echo $lang_label["read_more"];
 		echo "</a>";
 	} else {

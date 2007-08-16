@@ -13,14 +13,14 @@
 } 
 body {
 	margin: 0px 15px;
-	font: 0.75em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
+	font: 0.70em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
 	background: url(../../headerbg-orange.gif) repeat-x;
 	color: #666666;	
 	text-align: center;		
 }
 
 td {
-	font: 0.75em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
+	font: 0.70em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
 	color: #666666;	
 }
 
@@ -118,22 +118,23 @@ label {
 	display:block;
 	font-weight:bold;
 	margin:5px 0;
+	font: normal 0.9em Verdana, sans-serif;
 }
 input {
 	padding: 4px;
 	border:1px solid #eee;
-	font: normal 1em/1.5em Verdana, sans-serif;
+	font: normal 0.9em Verdana, sans-serif;
 	color:#777;
 }
 textarea {
 	padding:4px;
-	font: normal 1em/1.5em Verdana, sans-serif;
+	font: normal 0.9em Verdana, sans-serif;
 	border:1px solid #eee;
 	color:#777;
 }
 input.button { 
 	margin: 0; 
-	font: bold 1em Arial, Sans-serif; 
+	font: normal 1em Verdana, sans-serif;
 	border: 1px solid #CCC;
 	background: #FFF; 
 	padding: 2px 3px; 
@@ -143,13 +144,14 @@ input.button {
 select {
 	padding: 0px;
 	border:1px solid #eee;
-	font: normal 1em/1.5em Verdana, sans-serif;
+	font: normal 0.9em Verdana, sans-serif;
+	/*font: 0.70em/1em  Verdana, 'Trebuchet MS', Arial, Sans-serif;*/
 	color:#777;
 }
 checkbox {
 	padding: 4px;
 	border:1px solid #eee;
-	font: normal 1em/1.5em Verdana, sans-serif;
+	font: normal 0.9em Verdana, sans-serif;
 	color:#777;
 }
 
@@ -178,7 +180,7 @@ form.searchform input.button {
 .databox_color {
 	margin: 10px 15px;
 	border: 1px solid #f2f2f2; 
-	border-left: 3px solid #EC981F;  
+	/* border-left: 3px solid #EC981F;   */
 }
 
 .databox {
@@ -276,15 +278,14 @@ form.searchform input.button {
 }
 
 
-
-
 /* main column */
 #main {
 	float: left;
 	margin-left: 7px;
 	padding: 0;
-	width: 700px;	
+	width: 758px;
 	border-left: 1px solid #f2f2f2;
+	min-height: 500px;
 }
 
 .post-footer {
@@ -731,6 +732,7 @@ span.users, span.agents, span.data, span.alerts, span.time {
 	background-color:#eeeeee;
 	color:#000;
 	width:720px;
+	font: 0.75em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
 }
 
 .notebody {

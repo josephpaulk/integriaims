@@ -48,7 +48,7 @@ function clean_output  ($string){
 }
 
 function salida_ascii ($string){
-	$texto_ok = htmlspecialchars($string, ENT_QUOTES, "ISO8859-15");
+	$texto_ok = htmlspecialchars($string, ENT_QUOTES, "UTF-8");
 	return $texto_ok;
 }
 
@@ -89,7 +89,7 @@ function array_in($exampleArray, $item){
 function give_parameter_get ( $name, $default = "" ){
 	$output = $default;
 	if (isset ($_GET[$name])){
-		$output = $_GET[$name];
+		$output = clean_input ($_GET[$name]);
 	}
 	return $output;
 }
@@ -97,7 +97,7 @@ function give_parameter_get ( $name, $default = "" ){
 function give_parameter_post ( $name, $default = "" ){
 	$output = $default;
 	if (isset ($_POST[$name])){
-		$output = $_POST[$name];
+		$output = clean_input ($_POST[$name]);
 	}
 	return $output;
 }
@@ -328,28 +328,42 @@ function pagination ($count, $url, $offset ) {
 }
 
 // Render data in a fashion way :-)
-function format_numeric ( $number, $decimals=2, $dec_point=".", $thousands_sep=",") {
-	if ($number == 0)
-		return 0;
-	// If has decimals
-	if (fmod($number , 1)> 0)
-		return number_format ($number, 2, $dec_point, $thousands_sep);
-	else
-		return number_format ($number, 0, $dec_point, $thousands_sep);
+function format_numeric ( $number, $decimals=1, $dec_point=".", $thousands_sep=",") {
+	if (is_numeric($number)){
+		if ($number == 0)
+			return 0;
+		// If has decimals
+		if (fmod($number , 1)> 0)
+			return number_format ($number, $decimals, $dec_point, $thousands_sep);
+		else
+			return number_format ($number, 0, $dec_point, $thousands_sep);
+	} else
+ 	return 0;
 }
 
 function human_time_comparation ( $timestamp ){
 	global $config;
 	require ("include/languages/language_".$config["language_code"].".php");
 	$ahora=date("Y/m/d H:i:s");
-	$seconds = strtotime($ahora) - strtotime($timestamp);
+	if (strtotime($ahora) < strtotime($timestamp)){
+		$seconds = strtotime($timestamp) - strtotime($ahora) ;
+		$direction = "> ";
+	}
+	else {
+		$seconds = strtotime($ahora) - strtotime($timestamp);
+		$direction = "< ";
+	}
 	if ($seconds < 3600)
-		$render = format_numeric($seconds/60,2)." ".$lang_label["minutes"];
+		$render = format_numeric($seconds/60,1)." ".$lang_label["minutes"];
 	elseif (($seconds >= 3600) and ($seconds < 86400))
-		$render = format_numeric ($seconds/3600,2)." ".$lang_label["hours"];
-	elseif ($seconds >= 86400)
-		$render = format_numeric ($seconds/86400,2)." ".$lang_label["days"];
-	return $render;
+		$render = format_numeric ($seconds/3600,1)." ".$lang_label["hours"];
+	elseif (($seconds >= 86400) and ($seconds < 604800))
+		$render = format_numeric ($seconds/86400,1)." ".$lang_label["days"];
+	elseif (($seconds >= 604800) and ($seconds <2592000))
+		$render = format_numeric ($seconds/604800,1)." ".$lang_label["weeks"];
+	elseif ($seconds >= 2592000)
+		$render = format_numeric ($seconds/2592000,1)." ".$lang_label["months"];
+	return $direction.$render;
 }
 
 function clean_output_breaks ($string){
@@ -357,4 +371,25 @@ function clean_output_breaks ($string){
 	return preg_replace ('/\n/',"<br>", $myoutput);
 }
 
+function lang_string ($string){
+	global $config;
+	require ("include/languages/language_".$config["language_code"].".php");
+	if (isset ($lang_label[$string]))
+		return $lang_label[$string];
+	else
+		return "[".$string."]";
+}
+
+function render_priority ($pri){
+	global $config;
+	require ("include/languages/language_".$config["language_code"].".php");
+	switch ($pri){
+		case 0: return lang_string ("very low");
+		case 1: return lang_string ("low");
+		case 2: return lang_string ("medium");
+		case 3: return lang_string ("high");
+		case 4: return lang_string ("very high");
+		default: return lang_string ("other");
+	}
+}
 ?>

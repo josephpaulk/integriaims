@@ -97,38 +97,6 @@ if ( $id_project != 0){
 	$start_date = $row["start"];
 	$end_date = $row["end"];
 	$owner = $row["id_owner"];
-	
-	$task_number =  give_number_tasks ($id_project);
-	// SHOW TABS
-	echo "<div id='menu_tab'><ul class='mn'>";
-
-	// Tasks
-	echo "<li class='nomn'>";
-	if ($task_number > 0)
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["tasks"]." ( $task_number ) </a>";		
-	else 
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["tasks"]."</a>";		
-	echo "</li>";
-	
-	// Workunits
-	$totalhours =  give_hours_project ($id_project);
-	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=-1'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($totalhours hr)</a>";
-	echo "</li>";
-
-	// Tracking
-	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/tracking&id=$id_project'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
-	echo "</li>";
-	
-	// People
-	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_task=-1&id_project=$id_project'><img src='images/user_suit.png' class='top' border=0> ".$lang_label["people"]." </a>";
-	echo "</li>";
-	
-	echo "</ul>";
-	echo "</div>";
-	echo "<div style='height: 25px'> </div>";
 } 
 
 
@@ -160,7 +128,7 @@ if (isset($_GET["insert_form"])){
 if ($create_mode == 1)
 	echo "<form name='projectf' method='POST' action='index.php?sec=projects&sec2=operation/projects/project&action=insert'>";
 else
-	echo "<form name='projectf' method='POST' action='index.php?sec=projects&sec2=operation/projects/project_detail&action=update'>";
+	echo "<form name='projectf' method='POST' action='index.php?sec=projects&sec2=operation/projects/project_detail&action=update&id_project=$id_project'>";
 
 if (isset($id_project)) {
 	echo "<input type='hidden' name='id_project' value='".$id_project."'>";
@@ -171,8 +139,8 @@ if (isset($id_project)) {
 // --------------------
 
 echo "<h2>".$lang_label["project_management"]." -&gt;";
-if ($create_mode = 0){
-	echo $lang_label["rev_project"]." # ".$id_inc."</h2>";
+if ($create_mode == 0){
+	echo $lang_label["rev_project"]." </h2><h3>".give_db_value ("name", "tproject", "id", $id_project)."</h3>";
 } else {
 	echo $lang_label["create_project"]."</h2>";
 }
@@ -213,7 +181,7 @@ echo "</textarea>";
 echo "</table>";
 
 if ($create_mode == 0){
-	echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["in_modinc"].'" border="0">';
+	echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["update"].'" border="0">';
 } else {
 	echo '<input type="submit" class="sub create" name="accion" value="'.$lang_label["create"].'" border="0">';
 }

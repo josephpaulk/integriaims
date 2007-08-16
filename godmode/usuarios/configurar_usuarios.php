@@ -77,13 +77,14 @@ if (check_login() == 0)
 			$direccion = give_parameter_post ("direccion");
 			$telefono = give_parameter_post ("telefono");
 			$comentarios = give_parameter_post ("comentarios");
+			$avatar = give_parameter_post ("avatar");
 			
 			if (dame_password($nombre_viejo)!=$password){
 				$password=md5($password);
-				$sql = "UPDATE tusuario SET nombre_real ='".$nombre_real."', id_usuario ='".$nombre."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '".$nivel."', comentarios = '".$comentarios."' WHERE id_usuario = '".$nombre_viejo."'";
+				$sql = "UPDATE tusuario SET nombre_real ='".$nombre_real."', id_usuario ='".$nombre."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar' WHERE id_usuario = '$nombre_viejo'";
 			}
 			else 	
-				$sql = "UPDATE tusuario SET nombre_real ='".$nombre_real."', id_usuario ='".$nombre."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '".$nivel."', comentarios = '".$comentarios."' WHERE id_usuario = '".$nombre_viejo."'";
+				$sql = "UPDATE tusuario SET nombre_real ='".$nombre_real."', id_usuario ='".$nombre."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar' WHERE id_usuario = '".$nombre_viejo."'";
 			$resq2=mysql_query($sql);
 
 			// Add group / to profile
@@ -108,6 +109,7 @@ if (check_login() == 0)
 			$telefono = $rowdup["telefono"]; 
 			$nivel = $rowdup["nivel"];
 			$nombre_real = $rowdup["nombre_real"];
+			$avatar = $rowdup ["avatar"];
 			$modo = "edicion";
 			echo "<h3 class='suc'>".$lang_label["update_user_ok"]."</h3>";
 		}
@@ -134,8 +136,10 @@ if (check_login() == 0)
 		if (isset($_POST["nivel"]))
 			$nivel = give_parameter_post ("nivel");
 		$password = md5($password);
+		$avatar = give_parameter_postg ("avatar");
+		
 		$ahora = date("Y/m/d H:i:s");
-		$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."')";
+		$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real,avatar) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','$avatar')";
 		$resq1 = mysql_query($sql_insert);
 			if (! $resq1)
 				echo "<h3 class='error'>".$lang_label["create_user_no"]."</h3>";
@@ -165,8 +169,15 @@ if (check_login() == 0)
 		// Update URL
 		echo '<form name="user_mod" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio='.$id_usuario_mio.'">';
 	?>
+ <tr>
 	<td class="datos"><?php echo $lang_label["id_user"] ?>
-	<td class="datos"><input type="text" size=20 name="nombre" value="<?php echo $id_usuario_mio ?>">
+	<td class="datos"><input type="text" size=15 name="nombre" value="<?php echo $id_usuario_mio ?>">
+	<?PHP
+	if (isset($avatar)){
+		echo "<td class='datos' rowspan=5>";
+		echo "<img src='images/avatars/".$avatar.".png'>";
+	}
+ ?>
 	<tr><td class="datos2"><?php echo $lang_label["real_name"] ?>
 	<td class="datos2"><input type="text" size=45 name="nombre_real" value="<?php echo $nombre_real ?>">
 	<tr><td class="datos"><?php echo $lang_label["password"] ?>
@@ -175,11 +186,30 @@ if (check_login() == 0)
 	<td class="datos2"><input type="password" name="pass2" value="<?php echo $password ?>">
 	<tr><td class="datos">E-Mail
 	<td class="datos"><input type="text" name="direccion" size="40" value="<?php echo $direccion ?>">
-	<tr><td class="datos2"><?php echo $lang_label["telefono"] ?>
-	<td class="datos2"><input type="text" name="telefono" value="<?php echo $telefono ?>">
-	<tr><td class="datos"><?php echo $lang_label["global_profile"] ?>
+
+
+	<?PHP
+	// Avatar
+	echo "<tr><td class='datos2'>".lang_string("avatar");
+	echo "<td class='datos2'><select name='avatar'>";
+	if ($avatar!=""){
+		echo '<option>'.$avatar;
+	}
+	$ficheros = list_files('images/avatars/', "",0, 0);
+	$a=0;
+	while (isset($ficheros[$a])){
+		if ((strpos($ficheros[$a],"small") == 0) && (strlen($ficheros[$a])>4))
+			echo "<option>".substr($ficheros[$a],0,strlen($ficheros[$a])-4);
+		$a++;
+	}
+	echo '</select>';
+	?>
 	
-	<td class="datos">
+	<tr><td class="datos"><?php echo $lang_label["telefono"] ?>
+	<td class="datos" colspan=2><input type="text" name="telefono" value="<?php echo $telefono ?>">
+	<tr><td class="datos2"><?php echo $lang_label["global_profile"] ?>
+	
+	<td class="datos2" colspan=2>
 	<?php if ($nivel == "1"){
 		echo $lang_label["administrator"].'&nbsp;<input type="radio" class="chk" name="nivel" value="1" checked><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg1"].'</span></a>&nbsp;';
 		echo "&nbsp;&nbsp;";
@@ -190,8 +220,8 @@ if (check_login() == 0)
 		echo $lang_label["normal_user"].'&nbsp;<input type="radio" class="chk" name="nivel" value="0" checked><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg2"].'</span></a>';
 	}
 	?>		
-	<tr><td class="datos2" colspan="2"><?php echo $lang_label["comments"] ?>
-	<tr><td class="datos" colspan="2"><textarea name="comentarios" cols="75" rows="3"><?php echo $comentarios ?></textarea>
+	<tr><td class="datos" colspan="3"><?php echo $lang_label["comments"] ?>
+	<tr><td class="datos2" colspan="3"><textarea name="comentarios" cols="75" rows="3"><?php echo $comentarios ?></textarea>
 	
 	<?php
 	if ($modo == "edicion") { // Only show groups for existing users
