@@ -2,10 +2,10 @@
 // Begin of automatic config file
 $config["dbname"] = "topi";			// MySQL DataBase name
 $config["dbuser"] = "root";
-$config["dbpassword"] = "none";	// DB Password
+$config["dbpassword"] = "4rt1c406";	// DB Password
 $config["dbhost"] = "localhost"; // DB Host
 $config["homedir"] = "/var/www/topi/";		// Config homedir
-$config["base_url"] = "http://localhost/topi";			// Base URL
+$config["base_url"] = "http://192.168.50.2/topi";			// Base URL
 // End of automatic config file
 ?><?php
 // TOPI 

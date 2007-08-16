@@ -83,22 +83,6 @@ CREATE TABLE `tlink` (
 );
 
 --
--- Table structure for table `tmensajes`
---
-
-DROP TABLE IF EXISTS `tmensajes`;
-CREATE TABLE `tmensajes` (
-  `id_mensaje` bigint(20) unsigned NOT NULL auto_increment,
-  `id_usuario_origen` varchar(100) NOT NULL default '',
-  `id_usuario_destino` varchar(100) NOT NULL default '',
-  `mensaje` tinytext NOT NULL,
-  `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
-  `subject` varchar(255) NOT NULL default '',
-  `estado` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id_mensaje`)
-);
-
---
 -- Table structure for table `tnota`
 --
 
@@ -219,7 +203,7 @@ CREATE TABLE `tproject` (
 
 CREATE TABLE `ttask_track` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `id_task` int(10) unsigned NOT NULL default '0',
+  `id_task` int(10) NOT NULL default '0',
   `id_user` int(10) unsigned NOT NULL default '0',
   `id_external` int(10) unsigned NOT NULL default '0',
   `state` tinyint unsigned NOT NULL default '0',

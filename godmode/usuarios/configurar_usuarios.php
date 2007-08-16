@@ -136,7 +136,7 @@ if (check_login() == 0)
 		if (isset($_POST["nivel"]))
 			$nivel = give_parameter_post ("nivel");
 		$password = md5($password);
-		$avatar = give_parameter_postg ("avatar");
+		$avatar = give_parameter_post ("avatar");
 		
 		$ahora = date("Y/m/d H:i:s");
 		$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real,avatar) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','$avatar')";

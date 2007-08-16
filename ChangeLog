@@ -1,5 +1,13 @@
 2007-08-16  Sancho Lerena  <slerena@artica.es>
 
+	* topidb.sql: Aditional fixes for id_task signed var.
+
+	* include/config.php.inc: Added
+
+	* include/config.php: Deleted from trunk,
+
+	* godmode/usuarios/configurar_usuarios.php: Fixed stupid bug creating users.
+
 	* topidb.sql: ttask now admits negative values for special
 	tasks. This change also affects to tworkunit_task. Several
 	structural changes to ttodo table.
