@@ -65,7 +65,8 @@
 				$color = 1;
 				$tip = "tip2";
 			}
-			echo "<tr><td class='$tdcolor'><a href='index.php?sec=users&sec2=operation/users/user_edit&ver=".$nombre."'><b>".$nombre."</b></a>";
+			echo "<tr><td class='$tdcolor'>";
+			echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=$nombre'><b>".$nombre."</b></a>";
 			echo "<td class='$tdcolor' width=60>";
 			echo "<img src='images/avatars/".$avatar."_small.png'>";
 			$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';

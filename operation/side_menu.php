@@ -323,18 +323,21 @@ echo "<div class='portlet'>";
 	echo "</ul>";
 	echo "</div>";
 
-	echo "<div class='portlet'>";
-	echo "<h3>".lang_string ("user_reporting")."</h3>";
-	echo "<ul class='sidemenu'>";
+	if (give_acl($config["id_user"], 0, "PW")) {
 
-	// Basic report
-	if ($sec2 == "operation/user_report/report_monthly")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".lang_string ("montly_report")."</a></li>";
+		echo "<div class='portlet'>";
+	        echo "<h3>".lang_string ("user_reporting")."</h3>";
+	        echo "<ul class='sidemenu'>";
 
-	echo "</ul></div>";
+		// Basic report
+		if ($sec2 == "operation/user_report/report_monthly")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".lang_string ("montly_report")."</a></li>";
+		echo "</ul></div>";
+	}
+
 
 	if (give_acl($config["id_user"], 0, "UM")){
 		echo "<div class='portlet'>";
@@ -414,8 +417,7 @@ echo '<b>E-mail:</b>&nbsp;
         <i>'.$description.'</i>
         <br />
   </div>
-</div>
+</div>';
 
-';
 
 ?>

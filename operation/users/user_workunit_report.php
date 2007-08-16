@@ -24,6 +24,18 @@
 		require ("general/noaccess.php");
 		exit;
 	}
+	$id = give_parameter_get ("id");
+	
+	if ($id != ""){
+		if (give_acl($id_user, 0, "PW"))
+			$id_user = $id;
+		else {
+			audit_db("Noauth", $config["REMOTE_ADDR"], "No permission access", "Trying to access user workunit report");
+	                require ("general/noaccess.php");
+        	        exit;
+		}
+		
+	}
 
 	// --------------------
 	// Workunit report
@@ -34,7 +46,7 @@
 	echo $lang_label["workunit_personal_report"] ." ( ".$id_user. " )";
 	echo "</h3>";
 	$sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user'";
-
+	// TODO: Add granularity check to show only data from projects where ACL is active for current user
 	if ($res = mysql_query($sql)) {
 		while ($row=mysql_fetch_array($res))
 			show_workunit_user ($row[0]);
