@@ -66,6 +66,7 @@ while ($rowdup=mysql_fetch_array($resq1)){
 	$nivel =$rowdup["nivel"];
 	$comentarios =$rowdup["nombre_real"];
 	$fecha_registro =$rowdup["fecha_registro"];
+	$avatar = $rowdup["avatar"];
 	if ($color == 1){
 		$tdcolor = "datos";
 		$color = 0;
@@ -78,11 +79,7 @@ while ($rowdup=mysql_fetch_array($resq1)){
 	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=".$nombre."'><b>".$nombre."</b></a>";
 	echo "<td class='$tdcolor'>".$fecha_registro;
 	echo "<td class='$tdcolor'>";
-	if ($nivel == 1) 
-		echo "<img src='images/user_suit.png'>";
-	else
-		echo "<img src='images/user_green.png'>";
-	
+	echo "<img src='images/avatars/".$avatar."_small.png'>";
 	$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
 	$result=mysql_query($sql1);
 	echo "<a href='#' class='tip'>&nbsp;<span>";

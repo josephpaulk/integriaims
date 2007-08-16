@@ -400,4 +400,52 @@ function topi_sendmail ( $destination, $msg_subject = "[TOPI] Automatic email no
 	$real_text = $real_text. "\n\nHave a nice day\nTOPI ".$config["version"];
 	mail ($destination, $msg_subject, $real_text );
 }
+
+function working_days (){
+        $date = date('Y-m-d');
+        $year = substr($date, 0,4);
+        $month = substr($date, 5, 2);
+        $day = substr($date, 8, 2);
+
+        $d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
+        $full_weeks = ceil ($d_daysinmonth / 7);
+        $festive_days = floor(($d_daysinmonth / 7) * 2);
+        $total_working_days = $d_daysinmonth - $festive_days;
+        $total_working_hours = $total_working_days * 8;
+        return $total_working_days;
+}
+
+function working_weeks_combo () {
+        $date = date('Y-m-d');
+        $year = substr($date, 0,4);
+        $month = substr($date, 5, 2);
+        $day = substr($date, 8, 2);
+
+        $d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
+        $full_weeks = ceil ($d_daysinmonth / 7);
+        $d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));     // FIRST falls on what day of week (0-6)
+        $ajuste = $d_firstdow -1;
+        $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
+        echo '<select name="working_week">';
+        for ($ax=0; $ax < $full_weeks; $ax++){
+                echo "<option>".date('Y-m-d', strtotime($new_date. "+ $ax week"));
+        }
+        echo "</select>";
+}
+
+
+function first_working_week (){
+	$date = date('Y-m-d');
+        $year = substr($date, 0,4);
+        $month = substr($date, 5, 2);
+        $day = substr($date, 8, 2);
+
+        $d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
+        $full_weeks = ceil ($d_daysinmonth / 7);
+        $d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));     // FIRST falls on what day of week (0-6)
+        $ajuste = $d_firstdow -1;
+        $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
+	return $new_date;
+}
+
 ?>

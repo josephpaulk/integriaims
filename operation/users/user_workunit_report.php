@@ -37,6 +37,9 @@
 		
 	}
 
+	$timestamp_l = give_parameter_get ("timestamp_l");
+	$timestamp_h = give_parameter_get ("timestamp_h");
+
 	// --------------------
 	// Workunit report
 	// --------------------
@@ -44,8 +47,13 @@
 
 	echo "<h3>";
 	echo $lang_label["workunit_personal_report"] ." ( ".$id_user. " )";
+	if ($timestamp_l != "" AND $timestamp_h != "")
+		echo " : ".$timestamp_l. " -&gt;".$timestamp_h;
 	echo "</h3>";
-	$sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user'";
+	if ($timestamp_l != "" AND $timestamp_h != "")
+		$sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' AND timestamp >= '$timestamp_l' AND timestamp < '$timestamp_h' ORDER BY timestamp DESC";
+	else 
+		$sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' ORDER BY timestamp DESC";
 	// TODO: Add granularity check to show only data from projects where ACL is active for current user
 	if ($res = mysql_query($sql)) {
 		while ($row=mysql_fetch_array($res))

@@ -1,4 +1,5 @@
 <?PHP
+$id_user = $config["id_user"];
 
 if (isset($_GET["sec"]))
 	$sec = $_GET["sec"];
@@ -23,14 +24,16 @@ if ($sec == "projects"){
 	echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".$lang_label["project_overview"]."</a></li>";
 	
 	// Project create
-	if ($sec2 == "operation/projects/project_detail&insert_form")
-		echo "<li id='sidesel'>";
-	else	
-		echo "<li>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&insert_form'>".$lang_label["create_project"]."</a></li>";
-
+	if (give_acl($id_user, 0, "PW")){
+		if ($sec2 == "operation/projects/project_detail&insert_form")
+			echo "<li id='sidesel'>";
+		else	
+			echo "<li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&insert_form'>".$lang_label["create_project"]."</a></li>";
+	}	
+	// end of main Project options block
 	echo "</ul>";
-	echo "</div>";
+	echo "</div>";	
 
 	// Dynamic incident sub options menu (PROJECT)
 	$id_project = give_parameter_get("id_project",-1);
@@ -329,12 +332,22 @@ echo "<div class='portlet'>";
 	        echo "<h3>".lang_string ("user_reporting")."</h3>";
 	        echo "<ul class='sidemenu'>";
 
-		// Basic report
+		// Basic report (monthly)
 		if ($sec2 == "operation/user_report/report_monthly")
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".lang_string ("montly_report")."</a></li>";
+
+		// Basic report (weekly)
+                if ($sec2 == "operation/user_report/report_weekly")
+                        echo "<li id='sidesel'>";
+                else
+                        echo "<li>";
+                echo "<a href='index.php?sec=users&sec2=operation/user_report/report_weekly'>".lang_string ("weekly_report")."</a></li>";
+
+
+
 		echo "</ul></div>";
 	}
 

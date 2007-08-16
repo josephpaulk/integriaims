@@ -1,5 +1,8 @@
 2007-08-16  Sancho Lerena  <slerena@artica.es>
 
+	* Several fixes in project ACL. Added weekly report. Added useful
+	datetime functions and a lot of small fixes and improvements.
+
 	* todo.php: Fixed problem with email.
 
 	* function, function_db: Removed sendmail function and placed in function.

@@ -67,6 +67,10 @@ if ($operation == "workunit"){
 	$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description, have_cost, id_profile) VALUES
 			('$timestamp', $duration, '$id_user', '$description', $have_cost, $user_role)";
 	if (mysql_query($sql)){
+		$msgtext = "A new workunit has been created by user [$id_user]. Workunit information is: \n\n$description ";
+		$id_project2 = give_db_value ("id_project", "ttask", "id", $id_task);
+		$id_manager = give_db_value ("id_owner", "tproject", "id", $id_project2);
+		topi_sendmail (return_user_email($id_manager), "[TOPI] New workunit added to task '$task_name'", $msgtext);
 		//echo "<h1>DEBUG $sql</h1>";
 		$id_workunit = mysql_insert_id();
 		$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($id_task, $id_workunit)";

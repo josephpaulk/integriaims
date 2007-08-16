@@ -30,9 +30,10 @@ if (check_login() != 0) {
 	exit;
 }
 
-$id_usuario =$_SESSION["id_usuario"];
-if (give_acl($id_usuario, 0, "IR")!=1) {
-	audit_db($id_usuario,$REMOTE_ADDR, "ACL Violation","Trying to access incident viewer");
+$id_user = $config["id_user"];
+
+if (give_acl($id_user, 0, "IR")!=1) {
+	audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access incident viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -43,13 +44,13 @@ $accion = "";
 if (isset($_GET["quick_delete"])){
 	$id_project = $_GET["quick_delete"];
 	$id_owner = give_db_value ("id_owner", "tproject", "id", $id_project);
-	if ($id_owner == $id_usuario){
+	if ($id_owner == $id_user){
 	echo "DEBUG: Borrado temporalmente desactivado hasta que no se implemente une medida de seguridad adicional... me dais un miedo tremendo ! :-) <br>";
 		// delete_project ($id_project);
 		echo "<h3 class='suc'>".$lang_label["del_incid_ok"]."</h3>";
-		audit_db($id_usuario,$REMOTE_ADDR,"Project deleted","User ".$id_usuario." deleted project #".$id_project);
+		audit_db($id_user,$REMOTE_ADDR,"Project deleted","User ".$id_user." deleted project #".$id_project);
 	} else {
-		audit_db ($id_usuario,$REMOTE_ADDR,"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to delete project #$id_project");
+		audit_db ($id_user,$REMOTE_ADDR,"ACL Forbidden","User ".$id_user." try to delete project #$id_project");
 		echo "<h3 class='error'>".$lang_label["del_incid_no"]."</h3>";
 		no_permission();
 	}
@@ -71,12 +72,12 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 		if (mysql_query($sql)){
 			$id_inc = mysql_insert_id();
 			echo "<h3 class='suc'>".$lang_label["create_project_ok"]." ( id #$id_inc )</h3>";
-			audit_db ($usuario, $REMOTE_ADDR, "Project created", "User ".$id_usuario." created project '$name'");
+			audit_db ($usuario, $REMOTE_ADDR, "Project created", "User ".$id_user." created project '$name'");
 		} else {
 			echo "<h3 class='err'>".$lang_label["create_project_bad"]." ( id #$id_inc )</h3>";
 		}
 	} else {
-		audit_db($id_usuario, $REMOTE_ADDR, "ACL Forbidden", "User ".$_SESSION["id_usuario"]. " try to create project");
+		audit_db($id_user, $REMOTE_ADDR, "ACL Forbidden", "User ".$id_user. " try to create project");
 		no_permission();
 	}
 }
@@ -115,24 +116,25 @@ while ($row2=mysql_fetch_array($result2)){
 			$tdcolor = "datos2";
 			$color = 1;
 		}
-		
-		echo "<tr>";
+			
+		if (user_belong_project ($id_user, $row2["id"]) != 0){	
+			echo "<tr>";
 
-		// Project name
-		echo "<td class='$tdcolor' align='left' >";
-		echo "<b><a href='index.php?sec=projects&sec2=operation/projects/task&id_project=".$row2["id"]."'>".$row2["name"]."</a></b></td>";
-		// Completion
-		echo "<td class='$tdcolor' align='center'>";
-		$completion =  format_numeric(calculate_project_progress ($row2["id"]));
-		echo "<img src='include/functions_graph.php?type=progress&width=90&height=20&percent=$completion'>";
+			// Project name
+			echo "<td class='$tdcolor' align='left' >";
+			echo "<b><a href='index.php?sec=projects&sec2=operation/projects/task&id_project=".$row2["id"]."'>".$row2["name"]."</a></b></td>";
+			// Completion
+			echo "<td class='$tdcolor' align='center'>";
+			$completion =  format_numeric(calculate_project_progress ($row2["id"]));
+			echo "<img src='include/functions_graph.php?type=progress&width=90&height=20&percent=$completion'>";
 				
-		// Time wasted
-		echo "<td class='$tdcolor' align='center'>";
-		echo format_numeric(give_hours_project ($row2["id"])). " hr";
+			// Time wasted
+			echo "<td class='$tdcolor' align='center'>";
+			echo format_numeric(give_hours_project ($row2["id"])). " hr";
 
-		// Last update time
-		echo "<td class='$tdcolor'_f9 align='center'>";
-		echo "Some time ago";
+			// Last update time
+			echo "<td class='$tdcolor'_f9 align='center'>";
+			echo "Some time ago";
 
 		/*
 		// Delete	
@@ -141,7 +143,7 @@ while ($row2=mysql_fetch_array($result2)){
 		} else
 			echo "<td class='$tdcolor' align='center'>";
 		*/
-
+		}
 	}
 }
 echo "</table>";

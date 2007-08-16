@@ -40,6 +40,12 @@ if ( $id_project == -1 ){
     include ("general/noaccess.php");
     exit;
 }
+
+if (user_belong_project ($id_user, $id_project)==0){
+	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
+	include ("general/noaccess.php");
+	exit;
+}
  
 // MAIN LIST OF TASKS
 

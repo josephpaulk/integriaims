@@ -801,20 +801,23 @@ function give_groupchild($id_group, &$child){
 }
 
 // ---------------------------------------------------------------
-// Return true (1) if agent belongs to given group or one of this childs
+// Return true (1) if userid belongs to given project as any role
 // ---------------------------------------------------------------
 
-function agent_belong_group($id_agent, $id_group){ 
-        // Conexion con la base Datos 
-	$child[] = "";
-	$child[] = $id_group;
-	give_groupchild($id_group,$child);
-	$id_agent_group = give_group_id($id_agent);
-	if (array_in($child,$id_agent_group)==1){
-		return 1; 
-	} else {
+function user_belong_project ($id_user, $id_project){ 
+	global $config;
+        global $lang_label;
+
+	if (dame_admin ($id_user) != 0)
+		return 1;
+
+	$query1="SELECT COUNT(*) from trole_people_project WHERE id_project = $id_project AND id_user = '$id_user'";
+        $resq1=mysql_query($query1);
+        $rowdup=mysql_fetch_array($resq1);
+	if ($rowdup[0] == 0)
 		return 0;
-	}
+	else
+		return 1; // There is at least one role for this person in that project
 }
 
 // ---------------------------------------------------------------
