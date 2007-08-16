@@ -1037,8 +1037,8 @@ function incident_tracking ( $id_incident, $id_user, $state, $aditional_data = 0
 		$actual_user = $id_user;
 		$msg_text = salida_ascii ('Incident #'.$id_incident.' ('.$titulo.') has been updated by user '.$actual_user.', you can review it loggin on TOPI console. All changes over this incident has been marked to mail original author of incident ('.$orig_user.') and currently associated user for this incident ('.$actual_user.'), and for every user that actually has entered any note attached to this incident.'."\n\n".'Changes on this incident are: '.$descripcion);
 		
-		$msg_subject = salida_ascii ("[FRITS] Incident #$id_incident [ $titulo ] - $descripcion");
-		
+		$msg_subject = salida_ascii ("[TOPI] Incident #$id_incident [ $titulo ] - $descripcion");
+
 		if ($actual_user == $orig_user)
 			topi_sendmail (return_user_email($orig_user), $msg_subject, $msg_text);
 		else {
@@ -1048,15 +1048,6 @@ function incident_tracking ( $id_incident, $id_user, $state, $aditional_data = 0
 		// TODO: Send mail to all users that have posted a note in this incident
 	}
 	
-}
-
-function topi_sendmail ( $destination, $msg_subject = "[TOPI] Automatic email notification", $msg_text) {
-	global $config;
-	
-	$real_text = "Hello, this is an automated message coming from TOPI\n\n";
-	$real_text .= $msg_text;
-	$real_text = "\n\nHave a nice day\nTOPI ".$config["version"];
-	mail ($destination, $msg_subject, $real_text );
 }
 
 function task_tracking ( $id_user, $id_task, $state, $id_note = 0, $id_file = 0) {

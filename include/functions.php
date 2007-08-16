@@ -392,4 +392,13 @@ function render_priority ($pri){
 		default: return lang_string ("other");
 	}
 }
+
+function topi_sendmail ( $destination, $msg_subject = "[TOPI] Automatic email notification", $msg_text) {
+	global $config;
+	
+	$real_text = "Hello, this is an automated message coming from TOPI\n\n";
+	$real_text .= $msg_text;
+	$real_text = "\n\nHave a nice day\nTOPI ".$config["version"];
+	mail ($destination, $msg_subject, $real_text );
+}
 ?>

@@ -34,8 +34,11 @@ Description: $description
 
 For more information please visit ".$config["base_url"]."index.php?sec=todo&sec2=operation/todo/todo";
 
-		topi_sendmail ($id_user, "[TOPI] New ToDo item has been created", $msgtext);
-		topi_sendmail ($assigned_user, "[TOPI] New ToDo item has been created", $msgtext);
+		if ($id_user != $assigned_user){
+			topi_sendmail (return_user_email($id_user), "[TOPI] New ToDo item has been created", $msgtext);
+			topi_sendmail (return_user_email($assigned_user), "[TOPI] New ToDo item has been created", $msgtext);
+		} else
+			topi_sendmail (return_user_email($assigned_user), "[TOPI] New ToDo item has been created", $msgtext);
 
 		$operation = "";
 	}
