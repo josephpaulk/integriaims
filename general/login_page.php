@@ -1,6 +1,6 @@
 <?php
 
-// FRITS - the FRee Incident Tracking System
+// TOPI
 // =========================================
 // Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
 // Copyright (c) 2007 Artica Soluciones Tecnologicas
@@ -18,7 +18,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 ?>
-
+<!--
 <div align='center' style='margin-top: 150px;' >
 	<h1><?php echo $lang_label['welcome_title']; ?></h1>
 	<div style='width: 350px;'>
@@ -35,7 +35,7 @@
 		</div>
 		<div style="margin-top: 25px;padding-left: 5px; height: 170px;" class='databox_color'>
 			<a href="index.php">
-			<img style='margin-top: 30px;' src="images/topi.gif" border="0" alt="logo"></a><br>
+			<img style='margin-top: 30px;' src="images/topi_logo_small.jpg" border="0" alt="logo"></a><br>
 			<?php echo $config["version"]; ?>
 		</div>
 	</div>
@@ -47,3 +47,34 @@
 	</div>
 
 </div>
+-->
+<div class='databox' id='login'>
+	<h1 id='log'><?php echo $lang_label['welcome_title']; ?></h1>
+	<div class='databox' id='login_in'>
+		<form method="post" action="index.php?login=1">
+		<table cellpadding='4' cellspacing='1' width='400'>
+		<tr><td rowspan='3' align='left' style="border-right: solid 1px #678;">
+			<a href="index.php">
+			<img src="images/topi_logo_small.jpg" border="0" alt="logo"></a>
+			<?php echo $config["version"]; ?>
+		<td rowspan='3' width='5'>
+		<td class='f9b'>
+			Login <br>
+			<input class="login" type="text" name="nick" id="nick" value="">
+		</td></tr>
+		<tr><td class='f9b'>
+			Password <br>
+			<input class="login" type="password" name="pass" value="">
+		</td></tr>
+		<tr><td align='center'>
+			<input type="submit" class="sub next" value="Login">
+		</td></tr>
+		</table>
+		</form>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	document.getElementById('nick').focus();
+</script>

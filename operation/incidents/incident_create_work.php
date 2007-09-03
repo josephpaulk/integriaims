@@ -13,6 +13,7 @@ if (check_login() != 0) {
 
 $id_inc = give_parameter_get("id",-1);
 $title = give_db_value ("titulo", "tincidencia", "id_incidencia", $id_inc);
+$id_task = give_db_value ("id_task", "tincidencia", "id_incidencia", $id_inc);
 
 if (give_acl($config["id_user"], 0, "IR")==1){
 	
@@ -31,9 +32,7 @@ if (give_acl($config["id_user"], 0, "IR")==1){
 	echo "<tr><td class='datos2'  width='140'>";
 	echo "<b>".$lang_label["profile"]."</b>";
 	echo "<td class='datos2'>";
-	echo "<select name='work_profile'>";
-	echo "<option value=0>N/A";
-	echo "</select>";
+ 	combo_user_task_profile ($id_task, "work_profile");
 	
 	echo "&nbsp;&nbsp;";
 	echo "<input type='checkbox' name='have_cost' value=1>";

@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 $lang_label["view_agents"]="View Agents";
 $lang_label["manage_incidents"]="Manage Incidents";
 $lang_label["view_users"]= "View Users";
@@ -256,7 +257,7 @@ $lang_label["resolution"]="Resolution";
 $lang_label["date_format"]="(*) Please enter date with format yyyy/mm/dd hh:mm:ss";
 $lang_label["please_wait"]="Please be patient. This operation can be very long in time (5-10 minutes)";
 
-$lang_label["welcome_title"]="Welcome to TOPI Web Console";
+$lang_label["welcome_title"]="Welcome to TOPI";
 $lang_label["incident_view_filter"]="Viewing incidents";
 $lang_label["there_are"]="There are ";
 $lang_label["user_defined"]="users defined in TOPI";

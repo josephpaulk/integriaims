@@ -270,7 +270,7 @@ if (isset($_GET["id"])){
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 if ($creacion_incidente == 0)
-	echo "<form name='accion_form' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident_detail&action=update'>";
+	echo "<form name='accion_form' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident_detail&action=update&id=$id_inc'>";
 else
 	echo "<form name='accion_form' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident_detail&action=insert'>";
 
@@ -469,83 +469,5 @@ if ($creacion_incidente == 0){
 }
 echo "</form>";
 echo "</table>";
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ADD NOTE CONTROL
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if ($creacion_incidente == 0){
- 	if (give_acl($config["id_user"], $id_grupo, "IR")==1){
-		?>
-			<h3><img src='images/note.png'>&nbsp;&nbsp;
-			<a href="javascript:;" onmousedown="toggleDiv('note_control');">
-		<?PHP
-		echo $lang_label["add_note"]."</A></h3>";
-	
-		$ahora=date("Y/m/d H:i:s");
-		echo "<div id='note_control' style='display:none'>";
-		echo "<table cellpadding=3 cellspacing=3 border=0 width='700' class='databox_color' >";
-		echo "<form name='nota' method='post' action='index.php?sec=incidentss&sec2=operation/incidents/incident_detail&insertar_nota=1&id=".$id_inc."'>";
-		echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
-		echo "<input type='hidden' name='id_inc' value='".$id_inc."'>";
-		echo "<tr><td class='datos' width='140'><b>".$lang_label["date"]."</b></td>";
-		echo "<td class='datos'>".$ahora;
-	
-	
-		echo "<tr><td class='datos2'  width='140'>";
-		echo "<b>".$lang_label["profile"]."</b>";
-		echo "<td class='datos2'>";
-		echo "<select name='work_profile'>";
-		echo "<option value=0>N/A";
-		echo "</select>";
-		
-		echo "&nbsp;&nbsp;";
-		echo "<input type='checkbox' name='have_cost' value=1>";
-		echo "&nbsp;&nbsp;";
-		echo "<b>".$lang_label["have_cost"]."</b>";
-	
-		echo "<tr><td class='datos'>";
-		echo "<b>".$lang_label["time_used"]."</b>";
-		echo "<td class='datos'>";
-		echo "<input type='text' name='duration' value='0' size='7'>";
-		
-		echo "<tr><td class='datos'><b>".$lang_label["add_workunit_inc"]."</b>";
-		echo "<td class='datos'><input type='checkbox' value='1' name='workunit'>";
-		
-	
-		echo '<tr><td colspan="2" class="datos2"><textarea name="nota" rows="6" cols="90">';
-		echo '</textarea>';
-		echo "</tr></table>";
-		echo '<input name="addnote" type="submit" class="sub next" value="'.$lang_label["add"].'">';
-		echo "</form>";
-		echo "<br></div>";
-	}
-}
-
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Upload control
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if ($creacion_incidente == 0){
-	if (give_acl($config["id_user"], $id_grupo, "IW")==1){
-		?>
-			<h3><img src='images/disk.png'>&nbsp;&nbsp;
-			<a href="javascript:;" onmousedown="toggleDiv('upload_control');">
-		<?PHP
-		echo $lang_label["upload_file"]."</A></h3>";
-
-		echo "<div id='upload_control' style='display:none'>";
-		echo "<table cellpadding=4 cellspacing=4 border=0 width='700' class='databox_color'>";
-		echo "<tr>";
-		echo '<td class="datos">'.$lang_label["filename"].'</td><td class="datos">';
-		echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id_inc.'&upload_file=1" enctype="multipart/form-data">';
-		echo '<input type="file" name="userfile" value="userfile" class="sub" size="40">';
-		echo '<tr><td class="datos2">'.$lang_label["description"].'</td><td class="datos2" colspan=3><input type="text" name="file_description" size=47>';
-		echo "</td></tr></table>";
-		echo '<input type="submit" name="upload" value="'.$lang_label["upload"].'" class="sub next">';
-		echo "</form>";
-		echo '</div><br>';
-	}
-	echo "</table>";
-} // create mode
 
 ?>

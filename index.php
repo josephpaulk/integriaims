@@ -3,7 +3,6 @@
 // TOPI - the Open Tracking System for the Enterprise
 // ==================================================
 // Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -18,8 +17,11 @@
 // TOPI uses Pear Image::Graph code
 // TOPI shares much of it's code with project Babel Enterprise and Pandora FMS,
 // also a Free Software Project coded by some of the people who makes ToPI.
+// Gantt php class example and configuration file
+// Copyright (C) 2005 Alexandre Miguel de Andrade Souza
 
-$config["build_version"]="PC070815"; //PCyymmdd
+
+$config["build_version"]="PC070817"; //PCyymmdd
 $config["version"]="v1.0dev";
 global $config;
 
@@ -70,10 +72,14 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 	} else 
 		echo '<meta http-equiv="refresh" content="' . $intervalo . '">';	
 }
+
+// This is a clean output ?
+$clean_output = give_parameter_get ("clean_output",0);
+
 ?>
 <title>TOPI - the Open Tracking System for the Enterprise</title>
 <meta http-equiv="expires" content="0">
-<meta http-equiv="content-type" content="text/html; charset='utf-8'">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="author" content="Sancho Lerena">
@@ -88,7 +94,8 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 
 <?php
 	// Show custom background
-	echo '<body background="images/backgrounds/' . $config["bgimage"] . '">';
+	echo '<body bgcolor="#ffffff">';
+	// echo '<body background="images/backgrounds/' . $config["bgimage"] . '">';
 	
         // Login process 
    	if ( (! isset ($_SESSION['id_usuario'])) AND (isset ($_GET["login"]))) {
@@ -177,49 +184,60 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 	session_write_close(); 
 ?>
 
-
-<div id="wrap"> 
-	<div id="header">	
-		<?php require("general/header.php"); ?>	
-	</div>	
-
-	<div id="header-nav">	
-		<?php require("general/header-nav.php"); ?>	
-	</div>	
-
-	<div id="menu">
-		<?php require("operation/main_menu.php"); ?>	
-	</div>
-
-	<div id="content-wrap">  
-		<div id="sidebar">
-		<?php require("operation/side_menu.php"); ?>	
-		</div>
-
-		<div id="main"> 
-		<?php
-			// Page loader / selector		
-			if ($pagina != ""){
-				if (file_exists ($pagina . ".php")) {
-					require ($pagina . ".php");
-				} else {
-					echo "<br><b class='error'>".$lang_label["cannot_find_page"]."</b>";
-				}	
-			} else
-				require ("general/home.php");  //default
-		?>		
-		</div>
-	<!-- content-wrap ends here -->	
-	</div>
-<!-- wrap ends here -->
-</div>		
-
-<!-- footer starts here -->		
-<div id="footer">
-	<?php require("general/footer.php") ?></div>
-</div>	
-<!-- footer ends here -->	
-
+<?PHP
+	if ($clean_output == 0){
+	?>
+		<div id="wrap"> 
+			<div id="header">	
+				<?php require("general/header.php"); ?>	
+			</div>	
+		
+			<div id="menu">
+				<?php require("operation/main_menu.php"); ?>	
+			</div>
+		
+			<div id="content-wrap">  
+				<div id="sidebar">
+				<?php require("operation/side_menu.php"); ?>	
+				</div>
+		
+				<div id="main"> 
+				<?php
+					// Page loader / selector		
+					if ($pagina != ""){
+						if (file_exists ($pagina . ".php")) {
+							require ($pagina . ".php");
+						} else {
+							echo "<br><b class='error'>".$lang_label["cannot_find_page"]."</b>";
+						}	
+					} else
+						require ("general/home.php");  //default
+				?>		
+				</div>
+			<!-- content-wrap ends here -->	
+			</div>
+		<!-- wrap ends here -->
+		</div>		
+		
+		<!-- footer starts here -->		
+		<div id="footer">
+			<?php require("general/footer.php") ?></div>
+		</div>	
+		<!-- footer ends here -->	
+	
+	<?PHP // end of clean output
+	} else {
+		// clean output
+		if ($pagina != ""){
+			if (file_exists ($pagina . ".php")) {
+				require ($pagina . ".php");
+			} else {
+				echo "<br><b class='error'>".$lang_label["cannot_find_page"]."</b>";
+			}	
+		} else
+			require ("general/home.php");  //default
+	}
+	?>
 </body>
 </html>
 

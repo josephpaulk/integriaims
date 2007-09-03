@@ -82,31 +82,6 @@ CREATE TABLE `tlink` (
   PRIMARY KEY  (`id_link`)
 );
 
---
--- Table structure for table `tnota`
---
-
-DROP TABLE IF EXISTS `tnota`;
-CREATE TABLE `tnota` (
-  `id_nota` mediumint(8) unsigned NOT NULL auto_increment,
-  `id_usuario` varchar(100) NOT NULL default '0',
-  `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
-  `nota` mediumtext NOT NULL,
-  PRIMARY KEY  (`id_nota`)
-);
-
---
--- Table structure for table `tnota_inc`
---
-
-DROP TABLE IF EXISTS `tnota_inc`;
-CREATE TABLE `tnota_inc` (
-  `id_nota_inc` mediumint(8) unsigned NOT NULL auto_increment,
-  `id_incidencia` mediumint(9) NOT NULL default '0',
-  `id_nota` mediumint(9) NOT NULL default '0',
-  PRIMARY KEY  (`id_nota_inc`)
-);
-
 
 CREATE TABLE  `tprofile` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -317,5 +292,15 @@ CREATE TABLE `ttodo` (
   `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
   `description` mediumtext,
   `last_update` datetime NOT NULL default '2000-01-01 00:00:00',
+  PRIMARY KEY  (`id`)
+);
+
+
+CREATE TABLE `tmilestone` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_project` int(10) unsigned NOT NULL default '0',
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  `name` varchar(250) NOT NULL default '',
+  `description` mediumtext NOT NULL,
   PRIMARY KEY  (`id`)
 );

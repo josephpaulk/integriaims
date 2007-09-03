@@ -297,7 +297,7 @@ if ($row2_count[0] <= 0 ) {
 	echo "<tr>";
 	echo "<th>Id";
 	echo "<th>".$lang_label["incident"];
-	//echo "<th>".$lang_label["group"];
+	echo "<th>".$lang_label["project"];
 	echo "<th>".$lang_label["status"];
 	echo "<th>".$lang_label["priority"];
 	echo "<th>".$lang_label["resolution"];
@@ -313,7 +313,10 @@ if ($row2_count[0] <= 0 ) {
 	// -------------
 	while ($row2=mysql_fetch_array($result2)){ 
 		$id_group = $row2["id_grupo"];
-		if (give_acl($id_usuario, $id_group, "IR") ==1){
+		$id_task = give_db_value ("id_task", "tincidencia", "id_incidencia", $row2["id_incidencia"]);
+		$id_project = give_db_value ("id_project", "ttask", "id", $id_task);
+		$project_name = give_db_value ("name", "tproject", "id", $id_project);
+		if ((give_acl($id_usuario, $id_group, "IR") ==1) OR (user_belong_project ($id_user, $id_project)==1)) {
 			if ($color == 1){
 				$tdcolor = "datos";
 				$color = 0;
@@ -330,6 +333,12 @@ if ($row2_count[0] <= 0 ) {
 			// Title
 			echo "<td class='$tdcolor'><a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr(clean_output ($row2["titulo"]),0,200);
 
+			// Project
+			
+			echo "<td class='$tdcolor'>";
+			echo substr($project_name,0,15);
+			if (strlen($project_name) > 15)
+				echo "...";
 			// Tipo de estado  (Type)
 			// (1,'New'), (2,'Unconfirmed'), (3,'Assigned'),
 			// (4,'Re-opened'), (5,'Verified'), (6,'Resolved')

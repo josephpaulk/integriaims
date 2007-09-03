@@ -21,19 +21,16 @@ global $config;
 global $lang_label;
 
 ?>
-<div style='height: 200px'> </div>
 <div align='center'>
-	<h1 id="log"><?php echo $lang_label["logged_out"] ; ?></h1>
 	<div id='login'>	
-		<div id="login_box">
+		<div id="login_box" style='width:75%;padding-left: 40px;'>
 			<center><?PHP echo $lang_label["logout_msg"]; ?></center>
 		</div>
-		<div id="logo_box"><center>
-			<a href="index.php"><img src="images/topi.gif" border="0" alt="logo"></a><br>
-			<?php echo $config["version"]; ?>
+		<div id="logo_box">
+			<center>
+			<a href="index.php"><img src="images/topi_logo_small.jpg" border="0" alt="logo"></a>
 			</center>
 		</div>
-		<div id="ip"><center><?php echo 'IP: <b class="f10">'.$config["REMOTE_ADDR"].'</b>'; ?></center></div>
+		<div id="foot"><br><br><br><?php require("general/footer.php") ?></div>
 	</div>
-	<div id="foot"><br><br><br><?php require("general/footer.php") ?></div>
 </div>

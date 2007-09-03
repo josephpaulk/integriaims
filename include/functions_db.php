@@ -821,6 +821,27 @@ function user_belong_project ($id_user, $id_project){
 }
 
 // ---------------------------------------------------------------
+// Return true (1) if userid belongs to given task as any role
+// ---------------------------------------------------------------
+
+function user_belong_task ($id_user, $id_task){ 
+	global $config;
+        global $lang_label;
+
+	if (dame_admin ($id_user) != 0)
+		return 1;
+
+	$query1="SELECT COUNT(*) from trole_people_task WHERE id_task = $id_task AND id_user = '$id_user'";
+        $resq1=mysql_query($query1);
+        $rowdup=mysql_fetch_array($resq1);
+	if ($rowdup[0] == 0)
+		return 0;
+	else
+		return 1; // There is at least one role for this person in that project
+}
+
+
+// ---------------------------------------------------------------
 // Return true (1) if given group (a) belongs to given groupset
 // ---------------------------------------------------------------
 
@@ -1086,6 +1107,17 @@ function give_db_value ($field, $table, $field_search, $condition_value){
 	return $pro;
 }
 
+function give_db_sqlfree_field ($sql){
+	global $config;
+	$query = $sql;
+	$resq1 = mysql_query($query);
+	if ($rowdup = mysql_fetch_array($resq1))
+		$pro = $rowdup[0];
+	else
+		$pro = "";
+	return $pro;
+}
+
 function give_db_row ($table, $field_search, $condition_value){
 	global $config;
 	$query = "SELECT * FROM $table WHERE $field_search = '$condition_value' ";
@@ -1094,7 +1126,6 @@ function give_db_row ($table, $field_search, $condition_value){
 		return $rowdup;
 	else
 		return -1;
-	
 }
 
 
@@ -1108,4 +1139,18 @@ function delete_project ($id_project){
 	$query = "DELETE FROM tproject WHERE id = $id_project";
 	mysql_query($query);
 }
+
+function delete_task ($id_task){
+	$query = "DELETE FROM trole_people_task WHERE ttask.id_task = $id_task";
+	mysql_query($query);
+	$query = "DELETE FROM ttask_track WHERE id_task = $id_task";
+	mysql_query($query);
+	$query = "DELETE FROM tworkunit_task, tworkunit WHERE tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id";
+	mysql_query($query);
+	$query = "DELETE FROM ttask WHERE id = $id_task";
+	mysql_query($query);
+}
+
+
+
 ?>

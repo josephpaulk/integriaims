@@ -34,17 +34,7 @@
 */
 
 function clean_output  ($string){
-	$quote_style=ENT_QUOTES;
-	static $trans;
-	if (!isset($trans)) {
-		$trans = get_html_translation_table(HTML_ENTITIES, $quote_style);
-		foreach ($trans as $key => $value)
-			$trans[$key] = '&#'.ord($key).';';
-		// dont translate the '&' in case it is part of &xxx;
-		$trans[chr(38)] = '&';
-	}
-	// after the initial translation, _do_ map standalone '&' into '&#38;'
-	return preg_replace("/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/","&#38;" , strtr($string, $trans));
+	return clean_input($string);
 }
 
 function salida_ascii ($string){
@@ -177,15 +167,15 @@ function popup_help ($help_id){
 function no_permission () {
 	global $config;
 	global $lang_label;
-	require ("include/languages/language_".$config["language_code"].".php");
+	require ($config["base_url"]."/include/languages/language_".$config["language_code"].".php");
 	echo "<h3 class='error'>".$lang_label["no_permission_title"]."</h3>";
-	echo "<img src='images/noaccess.gif' width='120'><br><br>";
+	echo "<img src='".$config["base_url"]."/images/noaccess.gif' width='120'><br><br>";
 	echo "<table width=550>";
 	echo "<tr><td>";
 	echo $lang_label["no_permission_text"];
 	echo "</table>";
 	echo "<tr><td><td><td><td>";
-	include "general/footer.php";
+	include $config["base_url"]."/general/footer.php";
 	exit;
 }
 
@@ -227,7 +217,7 @@ function list_files($directory, $stringSearch, $searchHandler, $outputHandler) {
 
 function pagination ($count, $url, $offset ) {
 	global $config;
-	require ("include/languages/language_".$config["language_code"].".php");
+	require ($config["base_url"]."/include/languages/language_".$config["language_code"].".php");
 	$block_size = $config["block_size"];
 
 	/* 	URL passed render links with some parameter
@@ -269,7 +259,7 @@ function pagination ($count, $url, $offset ) {
 		echo "<div>";
 		// Show GOTO FIRST button
 		echo '<a href="'.$url.'&offset=0">';
-		echo "<img src='images/control_start_blue.png' class='bot'>";
+		echo "<img src='".$config["base_url"]."/images/control_start_blue.png' class='bot'>";
 		echo "</a>";
 		echo "&nbsp;";
 		// Show PREVIOUS button
@@ -277,7 +267,7 @@ function pagination ($count, $url, $offset ) {
 			$index_page_prev= ($index_page-(floor($block_limit/2)))*$block_size;
 			if ($index_page_prev < 0)
 				$index_page_prev = 0;
-			echo '<a href="'.$url.'&offset='.$index_page_prev.'"><img src="images/control_rewind_blue.png" class="bot"></a>';
+			echo '<a href="'.$url.'&offset='.$index_page_prev.'"><img src="'.$config["base_url"].'/images/control_rewind_blue.png" class="bot"></a>';
 		}
 		echo "&nbsp;";echo "&nbsp;";
 		// Draw blocks markers
@@ -343,7 +333,7 @@ function format_numeric ( $number, $decimals=1, $dec_point=".", $thousands_sep="
 
 function human_time_comparation ( $timestamp ){
 	global $config;
-	require ("include/languages/language_".$config["language_code"].".php");
+	require ($config["base_url"]."/include/languages/language_".$config["language_code"].".php");
 	$ahora=date("Y/m/d H:i:s");
 	if (strtotime($ahora) < strtotime($timestamp)){
 		$seconds = strtotime($timestamp) - strtotime($ahora) ;
@@ -367,13 +357,14 @@ function human_time_comparation ( $timestamp ){
 }
 
 function clean_output_breaks ($string){
-	$myoutput = clean_output ($string);
+	//$myoutput = clean_output ($string);
+	$myoutput = clean_input($string);
 	return preg_replace ('/\n/',"<br>", $myoutput);
 }
 
 function lang_string ($string){
 	global $config;
-	require ("include/languages/language_".$config["language_code"].".php");
+	require ($config["base_url"]."/include/languages/language_".$config["language_code"].".php");
 	if (isset ($lang_label[$string]))
 		return $lang_label[$string];
 	else
@@ -382,7 +373,7 @@ function lang_string ($string){
 
 function render_priority ($pri){
 	global $config;
-	require ("include/languages/language_".$config["language_code"].".php");
+	require ($config["base_url"]."/include/languages/language_".$config["language_code"].".php");
 	switch ($pri){
 		case 0: return lang_string ("very low");
 		case 1: return lang_string ("low");
@@ -446,6 +437,17 @@ function first_working_week (){
         $ajuste = $d_firstdow -1;
         $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
 	return $new_date;
+}
+
+function return_unixtime () {
+	return strtotime("now");
+}
+
+function return_value ($var){
+	if (isset($var))
+		return $var;
+	else	
+		return "";
 }
 
 ?>

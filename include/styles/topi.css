@@ -13,14 +13,14 @@
 } 
 body {
 	margin: 0px 15px;
-	font: 0.70em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
+	font: 0.80em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
 	background: url(../../headerbg-orange.gif) repeat-x;
 	color: #666666;	
 	text-align: center;		
 }
 
 td {
-	font: 0.70em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
+	font: 0.80em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
 	color: #666666;	
 }
 
@@ -123,7 +123,7 @@ label {
 input {
 	padding: 4px;
 	border:1px solid #eee;
-	font: normal 0.9em Verdana, sans-serif;
+	font: normal 10px Verdana, sans-serif;
 	color:#777;
 }
 textarea {
@@ -134,7 +134,7 @@ textarea {
 }
 input.button { 
 	margin: 0; 
-	font: normal 1em Verdana, sans-serif;
+	font: normal 0.9em Verdana, sans-serif;
 	border: 1px solid #CCC;
 	background: #FFF; 
 	padding: 2px 3px; 
@@ -467,13 +467,14 @@ input.login {
 	background-color: #f5f5f5;
 	margin: 2px 0 8px;
 	width: 90px;
+	font-size: 11px;
 }
 input.sub {
-	font-weight: bold;
+	
 	border-bottom-color: #708090;
 	border-right-color: #708090;
 	-moz-border-radius: 5%;
-	font-size: 11px;
+	font-size: 0.85em;
 	margin: 10px 15px;
 }
 input.next {
@@ -745,4 +746,22 @@ span.users, span.agents, span.data, span.alerts, span.time {
 	color:#666666;
 	width:720px;
 	font: 1em;
+}
+
+div#login {
+	margin: 0 auto;
+	margin-top: 200px;
+	width: 460px;
+	border-left: solid 1px #000;
+	border-top: solid 1px #000;
+	border-bottom: solid 2px #000;
+	border-right: solid 2px #000
+}
+div#login_in, #login_f {
+	margin: 0 auto;
+	width: 400px;
+}
+div#login_f {
+	margin-top: 10px;
+	margin-bottom: 25px;
 }

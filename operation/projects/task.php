@@ -26,10 +26,10 @@ if (check_login() != 0) {
     exit;
 }
 
-$id_user = $_SESSION['id_usuario'];
+$id_user = $config["id_user"];
 
 $id_project = give_parameter_get ("id_project", -1);
-if ($id_project != 1)
+if ($id_project != -1)
 	$project_name = give_db_value ("name", "tproject", "id", $id_project);
 else
 	$project_name = "";
@@ -46,7 +46,20 @@ if (user_belong_project ($id_user, $id_project)==0){
 	include ("general/noaccess.php");
 	exit;
 }
- 
+
+$operation = give_parameter_get ("operation", -1);
+if ($operation == "delete") {
+	$id_task = give_parameter_get ("id");
+	
+	if ((dame_admin($id_user)==1) OR (project_manager_check ($id_project) == 1)){
+		delete_task ($id_task);
+		echo "<h3 class='suc'>".$lang_label["delete_ok"]."</h3>";
+		$operation = "";
+	} else {
+		no_permission();
+	}
+}
+
 // MAIN LIST OF TASKS
 
 echo "<h2>".$project_name." - ".$lang_label["task_management"]."</h2>";
@@ -64,16 +77,22 @@ echo "<th>".$lang_label["people"];
 echo "<th>".$lang_label["start"];
 echo "<th>".$lang_label["end"];
 echo "<th>".lang_string ("files");
-
+echo "<th>".lang_string ("delete");
 $color = 1;
+show_task_tree ($id_project);
+echo "</table>";
 
-// -------------
-// Show DATA TABLE
-// -------------
+
+
+if (give_acl($_SESSION["id_usuario"], 0, "IW")==1) {
+    echo "<form name='boton' method='POST'  action='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>";
+    echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_task"]."'>";
+    echo "</form>";
+}
+
 
 function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 	echo "<tr>";
-
 	// Task  name
 	echo "<td class='$tdcolor' align='left' >";
 	for ($ax=0; $ax < $level; $ax++)
@@ -121,18 +140,20 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 	echo human_time_comparation ($row2["end"]);
 	echo "</font>";
 	
-	// Delete
-	/*
-	echo "<td class='$tdcolor' align='center'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/task&quick_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a>";
-	*/
 	echo "<td class='$tdcolor'>";
 	if (give_number_files_task ($row2["id"]) > 0)
 		echo " <img src='images/disk.png'>";
 
+	// Delete
+	echo "<td class='$tdcolor' align='center'>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project=$id_project&id=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a>";
+	
+	
 }
 
 function show_task_tree ( $id_project, $level = 0, $parent_task = 0, $color = 0){
+	global $config;
+	$id_user = $config["id_user"];
 	// Simple query, needs to implement group control and ACL checking
 	$sql2="SELECT * FROM ttask WHERE id_project = $id_project and id_parent_task = $parent_task"; 
 	if ($result2=mysql_query($sql2))    
@@ -145,19 +166,10 @@ function show_task_tree ( $id_project, $level = 0, $parent_task = 0, $color = 0)
 			$tdcolor = "datos2";
 			$color = 1;
 		}
-		show_task_row ( $id_project, $row2, $tdcolor, $level );
-		show_task_tree ( $id_project, $level+1, $row2["id"], $color);
+		if ((user_belong_task ($id_user, $row2["id"]) == 1)) {
+			show_task_row ( $id_project, $row2, $tdcolor, $level );
+			show_task_tree ( $id_project, $level+1, $row2["id"], $color);
+		}
 	}
 }
-
-show_task_tree ($id_project);
-echo "</table>";
-
-if (give_acl($_SESSION["id_usuario"], 0, "IW")==1) {
-    echo "<form name='boton' method='POST'  action='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>";
-    echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_task"]."'>";
-    echo "</form>";
-}
-
-
 ?>

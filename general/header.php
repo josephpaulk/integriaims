@@ -1,7 +1,13 @@
 <?php
 check_login();
 
-echo "<img src='images/bunnyicon_small.gif' class='logoimage' border=0>";
+// Put here your logo
+echo "<img src='images/sitelogo.png' class='logoimage' border=0>";
+
+// Adjust width with &nbsp; to fit your logo
+echo "<br>";
+echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+echo "<b>TOPI </b>".$config["version"];
 echo "<div width=100%>";
 echo "<span>";
 $id_usuario = clean_input ($_SESSION["id_usuario"]);

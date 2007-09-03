@@ -1,3 +1,19 @@
+2007-09-03  Sancho Lerena  <slerena@artica.es>
+
+	As usual too many changes to describe it :-)
+
+	* Added gantt graphic.
+
+	* Added support to milestones.
+
+	* Fixed A LOT of bugs
+	
+	* Workunits are now editable and erasable
+
+	* Many improvements...
+
+	* Added avatar images of Artica team.
+
 2007-08-16  Sancho Lerena  <slerena@artica.es>
 
 	* Several fixes in project ACL. Added weekly report. Added useful

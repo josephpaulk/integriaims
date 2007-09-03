@@ -20,14 +20,25 @@
 
 global $config;
 
+?>
 
-echo "<div id='login_f'>";
-echo '<a href="index.php"><img src="images/frits_logo.gif" border="0"></a><br><br>';
-echo "<div align='center' class='databox' >";
-echo "<h1>".$lang_label['err_auth']."</h1>";
-echo "<div id='noa'><img src='images/noaccess.gif'></div>";
-echo "<div align='center' >";
+<div class='databox' id='login'>
+	<h1 id='log'><?php echo $lang_label['err_auth']; ?></h1>
+	<div class='databox' id='login_in'>
+		<table cellpadding='4' cellspacing='1' width='400'>
+		<tr><td rowspan='3' align='left' style="border-right: solid 1px #678;">
+			<a href="index.php">
+			<img src="images/topi_logo_small.jpg" border="0" alt="logo"></a>
+			<?php echo $config["version"]; ?>
+		<td rowspan='3' width='5'>
+		<td class='f9b'>
+		<?PHP
+			echo "<center><img src='images/noaccess.gif'></center>";	
+			echo '<div class="databox"><br>'.$lang_label["err_auth_msg"]."<br><br></div>";
+		?>
+		</td></tr>
+		</table>
+		</form>
+	</div>
 
-echo "</div><br><br>";
-echo '<div class="databox"><br>'.$lang_label["err_auth_msg"]."<br><br></div>";
-echo "</div></div>";
+</div>

@@ -18,7 +18,6 @@ if (check_login() == 0){
 		$last_updated = $timestamp;
 
 		$sql_insert="INSERT INTO ttodo (name, priority, assigned_user, created_by_user, progress, timestamp, last_update, description ) VALUES ('$name',$priority, '$assigned_user', '$id_user', '$progress', '$timestamp', '$last_updated', '$description') ";
-		//echo "<h1>$sql_insert</h1>";
 		$result=mysql_query($sql_insert);	
 		if (! $result)
 			echo "<h3 class='error'>".$lang_label["create_no"]."</h3>";
@@ -26,13 +25,7 @@ if (check_login() == 0){
 			echo "<h3 class='suc'>".$lang_label["create_ok"]."</h3>"; 
 			$id_todo = mysql_insert_id();
 		}
-		$msgtext = "A new To-Do has been created by user [$id_user] for user [$assigned_user]. Todo information is:
-
-Title   : $name
-Priority: $priority
-Description: $description
-
-For more information please visit ".$config["base_url"]."/index.php?sec=todo&sec2=operation/todo/todo";
+		$msgtext = "A new To-Do has been created by user [$id_user] for user [$assigned_user]. Todo information is:\n\nTitle   : $name\nPriority: $priority\nDescription: $description\n\nFor more information please visit ".$config["base_url"]."/index.php?sec=todo&sec2=operation/todo/todo";
 		if ($id_user != $assigned_user){
 			topi_sendmail (return_user_email($id_user), "[TOPI] New ToDo item has been created", $msgtext);
 			topi_sendmail (return_user_email($assigned_user), "[TOPI] New ToDo item has been created", $msgtext);
@@ -190,7 +183,7 @@ For more information please visit ".$config["base_url"]."/index.php?sec=todo&sec
 
 		echo "<tr><td class='datos2'>".lang_string ("assigned_to_user");
 		echo "<td class='datos2'>";
-		echo combo_users();
+		echo combo_users($id_user);
 		
 		echo "<tr><td class='datos' valign='top'>".lang_string ("description");
 		echo "<td class='datos'><textarea name='description' style='width:100%; height:100px'>";

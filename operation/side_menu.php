@@ -1,5 +1,5 @@
 <?PHP
-$id_user = $config["id_user"];
+$id_user = $_SESSION["id_usuario"];
 
 if (isset($_GET["sec"]))
 	$sec = $_GET["sec"];
@@ -69,6 +69,20 @@ if ($sec == "projects"){
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>".$lang_label["project_overview"]."</a></li>";
 
+		// Gantt graph
+		if ($sec2 == "operation/projects/gantt")
+			echo "<li id='sidesel'>";
+		else	
+			echo "<li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/gantt&id_project=$id_project'>".lang_string("Gantt graph")."</a></li>";
+
+		// Milestones
+		if ($sec2 == "operation/projects/milestones")
+			echo "<li id='sidesel'>";
+		else	
+			echo "<li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/milestones&id_project=$id_project'>".lang_string("milestones")."</a></li>";
+
 		// People management
 		if ($sec2 == "operation/projects/people_manager")
 			echo "<li id='sidesel'>";
@@ -99,7 +113,7 @@ if ($sec == "projects"){
 		echo "<br>";
 
 		echo "<div class='portlet'>";
-		$task_title = substr(give_db_value ("name", "ttask", "id", $id_task), 0, 18);
+		$task_title = substr(give_db_value ("name", "ttask", "id", $id_task), 0, 19);
 		echo "<h3>".$lang_label["task"]." - $task_title ..</h3>";
 		echo "<ul class='sidemenu'>";
 		
