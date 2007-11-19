@@ -24,9 +24,11 @@
 		require ("general/noaccess.php");
 		exit;
 	}
+
+	$id_workunit = give_parameter_get ("id_workunit", -1);
 	$id = give_parameter_get ("id");
 	
-	if ($id != ""){
+	if (($id != "") && ($id != $id_user)) {
 		if (give_acl($id_user, 0, "PW"))
 			$id_user = $id;
 		else {
@@ -46,18 +48,25 @@
 	$ahora = date("Y-m-d H:i:s");
 
 	echo "<h3>";
-	echo $lang_label["workunit_personal_report"] ." ( ".$id_user. " )";
+	echo $lang_label["workunit_personal_report"];
 	if ($timestamp_l != "" AND $timestamp_h != "")
 		echo " : ".$timestamp_l. " -&gt;".$timestamp_h;
 	echo "</h3>";
-	if ($timestamp_l != "" AND $timestamp_h != "")
-		$sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' AND timestamp >= '$timestamp_l' AND timestamp < '$timestamp_h' ORDER BY timestamp DESC";
-	else 
-		$sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' ORDER BY timestamp DESC";
+	if ($id_workunit != -1){
+		$sql= "SELECT * FROM tworkunit WHERE tworkunit.id = $id_workunit";
+	} else {
+		if ($timestamp_l != "" AND $timestamp_h != "")
+			$sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' AND timestamp >= '$timestamp_l' AND timestamp < '$timestamp_h' ORDER BY timestamp DESC";
+		else 
+			$sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' ORDER BY timestamp DESC";
+	}
 	// TODO: Add granularity check to show only data from projects where ACL is active for current user
 	if ($res = mysql_query($sql)) {
-		while ($row=mysql_fetch_array($res))
-			show_workunit_user ($row[0]);
+		while ($row=mysql_fetch_array($res)) 
+			if ($id_workunit != -1)
+					show_workunit_user ($row[0], 1);
+			else
+				show_workunit_user ($row[0]);
 	}	
 
 ?>

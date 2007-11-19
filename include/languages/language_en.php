@@ -889,6 +889,13 @@ $lang_label["assigned_to_other_users"]="Assigned to other users";
 $lang_label["high"]="High";
 $lang_label["Totals for this month"] ="Totals for this month";
 $lang_label["total_hours_for_this_month"] = "Total hours for this month";
+$lang_label["todo"]="To-Do";
+$lang_label["user_info"]="User info";
+$lang_label["N/A"]="N/A";
+$lang_label["Monthly report for"]="Monthly report for";
+$lang_label["weekly_report"]="Weekly report";
+$lang_label["Gantt graph"]="Gantt graph";
+$lang_label["milestones"]="Milestones";
 
 global $lang_label; 
 global $help_label;

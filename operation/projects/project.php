@@ -45,8 +45,9 @@ if (isset($_GET["quick_delete"])){
 	$id_project = $_GET["quick_delete"];
 	$id_owner = give_db_value ("id_owner", "tproject", "id", $id_project);
 	if ($id_owner == $id_user){
-	echo "DEBUG: Borrado temporalmente desactivado hasta que no se implemente une medida de seguridad adicional... me dais un miedo tremendo ! :-) <br>";
 		// delete_project ($id_project);
+		$sql =" UPDATE tproject SET disabled=1 WHERE id = $id_project";
+		mysql_query($sql);
 		echo "<h3 class='suc'>".$lang_label["del_incid_ok"]."</h3>";
 		audit_db($id_user,$REMOTE_ADDR,"Project deleted","User ".$id_user." deleted project #".$id_project);
 	} else {
@@ -97,6 +98,7 @@ echo "<th>".$lang_label["name"];
 echo "<th>".$lang_label["completion"];
 echo "<th>".$lang_label["time_used"];
 echo "<th width=82>".$lang_label["updated_at"];
+echo "<th>".$lang_label["delete"];
 $color = 1;
 
 // -------------
@@ -104,7 +106,7 @@ $color = 1;
 // -------------
 
 // Simple query, needs to implement group control and ACL checking
-$sql2="SELECT * FROM tproject"; 
+$sql2="SELECT * FROM tproject WHERE disabled = 0"; 
 if ($result2=mysql_query($sql2))	
 while ($row2=mysql_fetch_array($result2)){
 	if (give_acl($config["id_user"], 0, "PR") ==1){
@@ -136,13 +138,13 @@ while ($row2=mysql_fetch_array($result2)){
 			echo "<td class='$tdcolor'_f9 align='center'>";
 			echo "Some time ago";
 
-		/*
+		
 		// Delete	
 		if ((give_acl($config["id_user"], 0, "PW") ==1) AND ($config["id_user"] == $row2["id_owner"] )) {
 			echo "<td class='$tdcolor' align='center'><a href='index.php?sec=projects&sec2=operation/projects/project&quick_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
 		} else
 			echo "<td class='$tdcolor' align='center'>";
-		*/
+		
 		}
 	}
 }

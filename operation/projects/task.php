@@ -166,10 +166,9 @@ function show_task_tree ( $id_project, $level = 0, $parent_task = 0, $color = 0)
 			$tdcolor = "datos2";
 			$color = 1;
 		}
-		if ((user_belong_task ($id_user, $row2["id"]) == 1)) {
+		if ((user_belong_task ($id_user, $row2["id"]) == 1)) 
 			show_task_row ( $id_project, $row2, $tdcolor, $level );
-			show_task_tree ( $id_project, $level+1, $row2["id"], $color);
-		}
+		show_task_tree ( $id_project, $level+1, $row2["id"], $color);
 	}
 }
 ?>

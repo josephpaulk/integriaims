@@ -171,7 +171,8 @@ CREATE TABLE `tproject` (
   `description` mediumtext NOT NULL,
   `start` date NOT NULL default '0000-00-00',
   `end` date NOT NULL default '0000-00-00',
-  `id_owner` VARCHAR(125), 
+  `id_owner` VARCHAR(125),
+  `disabled` int(2) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );
 

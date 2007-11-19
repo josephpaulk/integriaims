@@ -1,3 +1,29 @@
+2007-11-16 Sancho Lerena <slerena@gmail.com>
+
+        * topidb.sql: Added disabled field to projects. No real delete,
+        this is used to mark for "non visible". Real delete should imply
+        delete associated tasks and workunits, I think should not been
+        implemented
+
+        * user_workunit_report.php: Implemented full content view for
+        single workunits marked to see full lenght.
+
+        * projects.php: Now it's possible to mark for disabled projects.
+        Projects disabled are not seen in that view.
+
+        * monthly.php: New detailed view for workunits mapped over
+        a month graph. Multiuser, multidates, with some ACL check.
+
+        * report_*: Fixed to work with ACL and multi dates.
+
+        * side_menu.php: Updated to work new reporting options for all.
+
+        * language_en.php: Updated strings.
+
+        * avatars/*: Some new added :)
+
+        * task.php: Fixed bug (forget to commit) to view nested tasks
+
 2007-09-03  Sancho Lerena  <slerena@artica.es>
 
 	As usual too many changes to describe it :-)

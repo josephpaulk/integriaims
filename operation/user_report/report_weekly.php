@@ -60,7 +60,12 @@
 	echo "<th>".$lang_label["profile"];
 	echo "<th>".lang_string ("total_hours_for_this_week");
 
-	$sql0= "SELECT * FROM tusuario";
+	if (give_acl($id_user, 0, "PW") == 1){
+		$sql0= "SELECT * FROM tusuario";
+	} else {
+		$sql0= "SELECT * FROM tusuario WHERE id_usuario = '$id_user'";
+	}
+ 
 	if ($res0 = mysql_query($sql0)) {
 		while ($row0=mysql_fetch_array($res0)){
 			$nombre = $row0["id_usuario"];

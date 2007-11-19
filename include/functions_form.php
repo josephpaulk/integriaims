@@ -286,7 +286,7 @@ function topi_richtext ( $string ){
 }
  
 
-function show_workunit_user ($id_workunit) {
+function show_workunit_user ($id_workunit, $full = 0) {
 	global $config;
 	global $lang_label;
 
@@ -361,10 +361,11 @@ function show_workunit_user ($id_workunit) {
 	echo "<div class='notebody'>";
 	echo "<table width='100%'  border=0 cellpadding=0 cellspacing=0>";
 	echo "<tr><td valign='top'>";
-	if (strlen($nota) > 1024){
+	
+	if ((strlen($nota) > 1024) AND ($full == 0)){
 		echo topi_richtext ( clean_output_breaks(substr($nota,0,1024)) );
 		echo "<br><br>";
-		echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_workunit."&title=$task_title'>";
+		echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id_workunit=".$id_workunit."&title=$task_title'>";
 		echo $lang_label["read_more"];
 		echo "</a>";
 	} else {

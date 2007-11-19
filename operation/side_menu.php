@@ -340,7 +340,7 @@ echo "<div class='portlet'>";
 	echo "</ul>";
 	echo "</div>";
 
-	if (give_acl($config["id_user"], 0, "PW")) {
+	if (give_acl($config["id_user"], 0, "PR")) {
 
 		echo "<div class='portlet'>";
 	        echo "<h3>".lang_string ("user_reporting")."</h3>";

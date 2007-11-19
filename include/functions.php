@@ -167,15 +167,15 @@ function popup_help ($help_id){
 function no_permission () {
 	global $config;
 	global $lang_label;
-	require ($config["base_url"]."/include/languages/language_".$config["language_code"].".php");
+	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
 	echo "<h3 class='error'>".$lang_label["no_permission_title"]."</h3>";
-	echo "<img src='".$config["base_url"]."/images/noaccess.gif' width='120'><br><br>";
+	echo "<img src='".$config["homedir"]."/images/noaccess.gif' width='120'><br><br>";
 	echo "<table width=550>";
 	echo "<tr><td>";
 	echo $lang_label["no_permission_text"];
 	echo "</table>";
 	echo "<tr><td><td><td><td>";
-	include $config["base_url"]."/general/footer.php";
+	include $config["homedir"]."/general/footer.php";
 	exit;
 }
 
@@ -217,7 +217,7 @@ function list_files($directory, $stringSearch, $searchHandler, $outputHandler) {
 
 function pagination ($count, $url, $offset ) {
 	global $config;
-	require ($config["base_url"]."/include/languages/language_".$config["language_code"].".php");
+	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
 	$block_size = $config["block_size"];
 
 	/* 	URL passed render links with some parameter
@@ -333,7 +333,7 @@ function format_numeric ( $number, $decimals=1, $dec_point=".", $thousands_sep="
 
 function human_time_comparation ( $timestamp ){
 	global $config;
-	require ($config["base_url"]."/include/languages/language_".$config["language_code"].".php");
+	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
 	$ahora=date("Y/m/d H:i:s");
 	if (strtotime($ahora) < strtotime($timestamp)){
 		$seconds = strtotime($timestamp) - strtotime($ahora) ;
@@ -364,7 +364,7 @@ function clean_output_breaks ($string){
 
 function lang_string ($string){
 	global $config;
-	require ($config["base_url"]."/include/languages/language_".$config["language_code"].".php");
+	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
 	if (isset ($lang_label[$string]))
 		return $lang_label[$string];
 	else
@@ -373,7 +373,7 @@ function lang_string ($string){
 
 function render_priority ($pri){
 	global $config;
-	require ($config["base_url"]."/include/languages/language_".$config["language_code"].".php");
+	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
 	switch ($pri){
 		case 0: return lang_string ("very low");
 		case 1: return lang_string ("low");
@@ -392,11 +392,12 @@ function topi_sendmail ( $destination, $msg_subject = "[TOPI] Automatic email no
 	mail ($destination, $msg_subject, $real_text );
 }
 
-function working_days (){
-        $date = date('Y-m-d');
-        $year = substr($date, 0,4);
-        $month = substr($date, 5, 2);
-        $day = substr($date, 8, 2);
+function working_days ($month = "", $year = "" ){
+	if (($month == "") OR ($year == "")){
+        	$date = date('Y-m-d');
+        	$year = substr($date, 0,4);
+        	$month = substr($date, 5, 2);
+	}
 
         $d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
         $full_weeks = ceil ($d_daysinmonth / 7);
@@ -449,5 +450,9 @@ function return_value ($var){
 	else	
 		return "";
 }
+
+function getmonth($m=0) {
+	return (($m==0 ) ? date("F") : date("F", mktime(0,0,0,$m)));
+} 
 
 ?>
