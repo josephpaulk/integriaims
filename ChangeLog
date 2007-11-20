@@ -1,3 +1,15 @@
+2007-11-19 Sancho Lerena <slerena@gmail.com>
+
+	* user_spare_workunit.php: Fixed problems in spare wu.
+
+	* task_workunit.php, task_create_work.php: Several fixes.
+
+	* calendar.php, sidemenu.php, monthly.php: Now can navigate to 
+	next/prev month and it's linked from side menu as default 
+	reporting option. Fixed calculation for first day of week.
+
+	* include/functions_form.php: List of tasks includes project name.
+
 2007-11-16 Sancho Lerena <slerena@gmail.com>
 
         * topidb.sql: Added disabled field to projects. No real delete,

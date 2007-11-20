@@ -203,7 +203,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 			$this_week = date('Y-m-d H:i:s',strtotime("$year-$month-$day"));
 
 			// Show SUM for that week
-			$sqlquery = "SELECT SUM(duration) FROM tworkunit WHERE id_user = '$id_user' AND timestamp < '$this_week' AND timestamp > '$before_week'";
+			$sqlquery = "SELECT SUM(duration) FROM tworkunit WHERE id_user = '$id_user' AND timestamp < '$this_week' AND timestamp >= '$before_week'";
  			$res=mysql_query($sqlquery);
 			if ($row=mysql_fetch_array($res)){
 				$workhours = $row[0];

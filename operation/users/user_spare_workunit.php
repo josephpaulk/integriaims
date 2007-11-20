@@ -34,15 +34,15 @@ if ($operation == "addworkunit"){
 	$duration = give_parameter_post ("duration",0);
 	if (!is_numeric( $duration))
 		$duration = 0;
-	$timestamp = give_parameter_post ("timestamp");
+	$timestamp = give_parameter_post ("workunit_date");
 	$description = give_parameter_post ("description");
 	$have_cost = give_parameter_post ("have_cost",0);
 	$user_role = give_parameter_post ("role",0);
 	$task = give_parameter_post ("task",-1);
 	$role = give_parameter_post ("role",-1);
 		
-	$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description, have_cost, id_profile) VALUES
-			('$timestamp', $duration, '$id_user', '$description', $have_cost, $role)";
+	$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description, have_cost, id_profile) VALUES	('$timestamp', $duration, '$id_user', '$description', $have_cost, $role)";
+echo "DEBUG $sql <br>";
 	if (mysql_query($sql)){
 		$id_workunit = mysql_insert_id();
 		$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($task, $id_workunit)";

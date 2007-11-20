@@ -32,7 +32,7 @@ if (($id_project != -1) && ($id_workunit != -1)){
 	$id_user = $config["id_user"];
 	$duration = 1; 
 	$description = "";
-	$have_cost = 1;
+	$have_cost = 0;
 	$id_profile = "";
 	$ahora_date = date("Y-m-d");
 	$ahora_time = date("H:i:s");
@@ -70,7 +70,7 @@ if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])
 	if ($have_cost == 1)
 		echo "<input type='checkbox' name='have_cost' value=1 checked>";
 	else
-		echo "<input type='checkbox' name='have_cost' value=1>";
+		echo "<input type='checkbox' name='have_cost' value=0>";
 	echo "&nbsp;&nbsp;";
 	echo "<b>".$lang_label["have_cost"]."</b>";
 

@@ -41,7 +41,30 @@ $first_of_month = gmmktime(0,0,0,$month,1,$year);
 $days_in_month=gmdate('t',$first_of_month);
 $locale = $config["language_code"];
 
+$prev_month = $month -1;
+$prev_year = $year;
+if ($prev_month == 0){
+	$prev_month = 12;
+	$prev_year = $prev_year -1;
+}
+
+$next_month = $month + 1;
+$next_year = $year;
+if ($next_month == 13){
+	$next_month = 1;
+	$next_year = $next_year +1;
+}
+
+
 echo "<h1>".lang_string("Monthly report for")." $id_user</h1>";
+echo "<table width=95%>";
+echo "<tr><td>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$prev_month&year=$prev_year&id=$id_user'> Prev</A>";
+echo "<td width=85%>";
+echo "&nbsp;";
+echo "<td>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$next_month&year=$next_year&id=$id_user'> Next</A>";
+echo "</table>";
 
 // Generate calendar
 echo "<div style='float: left;'>";

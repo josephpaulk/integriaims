@@ -331,12 +331,16 @@ echo "<div class='portlet'>";
 		echo "<a href='index.php?sec=users&sec2=operation/users/user_spare_workunit'>".lang_string("Spare Workunit")."</a></li>";
 
 
+		$now = date("Y-m-d H:i:s");
+		$now_year = date("Y");
+		$now_month = date("m");
+
 		// My workunit report
 		if ($sec2 == "operation/users/user_workunit_report")
 		echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report'>".$lang_label["work_unit_report"]."</a></li>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=$id_user'>".$lang_label["work_unit_report"]."</a></li>";
 	echo "</ul>";
 	echo "</div>";
 
