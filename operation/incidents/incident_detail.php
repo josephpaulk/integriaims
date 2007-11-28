@@ -96,6 +96,12 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 		else
 			$result_msg = "<h3 class='suc'>".$lang_label["upd_incid_no"]."</h3>";
 		$_GET["id"] = $id_inc; // HACK
+
+		// Email notify to all people involved in this incident
+		if ($email_notify == 1){ 
+			mail_incident ($id_inc);
+		}
+
 	} else {
 		audit_db($id_usuario,$config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
 		echo "<h3 class='error'>".$lang_label["upd_incid_no"]."</h3>";
@@ -134,6 +140,11 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 			$result_msg  = "<h3 class='suc'>".$lang_label["create_incid_ok"]." ( id #$id_inc )</h3>";
 			audit_db($config["id_user"],$config["REMOTE_ADDR"],"Incident created","User ".$id_usuario." created incident #".$id_inc);
 			incident_tracking ( $id_inc, $config["id_user"], 0);
+
+			// Email notify to all people involved in this incident
+			if ($email_notify == 1){ 
+				mail_incident ($id_inc, 1);
+			}
 		}
 		
 	} else {
@@ -193,14 +204,16 @@ if (isset($_GET["id"])){
 		// Add work unit if enabled
 		$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description) VALUES ('$timestamp', '$timeused', '$id_usuario', '$nota')";
 		$res5 = mysql_query($sql);
-echo "DEBUG $sql <br>";
-
 		$id_workunit = mysql_insert_id();
 		$sql1 = "INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES ($id_inc, $id_workunit)";
 		$res6 = mysql_query($sql1);
-echo "DEBUG $sql1 <br>";
-		if ($res6) 
+		if ($res6) {
 			$result_msg = "<h3 class='suc'>".$lang_label["create_work_ok"]."</h3>";
+			// Email notify to all people involved in this incident
+			if ($email_notify == 1){ 
+				mail_incident_workunit ($id_inc, $id_usuario, $nota, $timeused);
+			}
+		}
 	}
 	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -223,6 +236,10 @@ echo "DEBUG $sql1 <br>";
 			$id_attachment=mysql_insert_id();
 			incident_tracking ( $id_inc, $id_usuario, 3);
 			$result_msg="<h3 class='suc'>".$lang_label["file_added"]."</h3>";
+			// Email notify to all people involved in this incident
+			if ($email_notify == 1){ 
+				mail_incident ($id_inc, 2);
+			}
 			// Copy file to directory and change name
 			$nombre_archivo = $config["homedir"]."attachment/pand".$id_attachment."_".$filename;
 

@@ -48,6 +48,12 @@ else
 // Delete incident
 if (isset($_GET["quick_delete"])){
 	$id_inc = $_GET["quick_delete"];
+	$email_notify = give_db_value ("notify_email", "tincidencia", "id_incidencia", $id_inc);
+	// Email notify to all people involved in this incident
+	if ($email_notify == 1){ 
+		mail_incident ($id_inc, 3);
+	}
+
 	$sql2="SELECT * FROM tincidencia WHERE id_incidencia=".$id_inc;
 	$result2=mysql_query($sql2);
 	$row2=mysql_fetch_array($result2);

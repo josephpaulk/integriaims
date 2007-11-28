@@ -104,9 +104,6 @@ if (isset($_GET["id_inc"])){
 }
 
 
-// ********************************************************************
-// Notes
-// ********************************************************************
 $cabecera=0;
 $sql4 = "SELECT tworkunit.timestamp, tworkunit.duration, tworkunit.id_user, tworkunit.description FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident= $id_inc AND tworkunit.id = tworkunit_incident.id_workunit";
 

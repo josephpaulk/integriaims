@@ -386,10 +386,11 @@ function render_priority ($pri){
 
 function topi_sendmail ( $destination, $msg_subject = "[TOPI] Automatic email notification", $msg_text) {
 	global $config;
-	$real_text = "Hello, this is an automated message coming from TOPI\n\n";
-	$real_text = $real_text. $msg_text;
-	$real_text = $real_text. "\n\nHave a nice day\nTOPI ".$config["version"];
-	mail ($destination, $msg_subject, $real_text );
+	if ($destination != ""){
+		$real_text = $config["HEADER_EMAIL"];
+		$real_text = $config["HEADER_EMAIL"]."\n\n".$msg_text."\n\n".$config["FOOTER_EMAIL"];
+		mail ($destination, $msg_subject, $real_text );
+	}
 }
 
 function working_days ($month = "", $year = "" ){

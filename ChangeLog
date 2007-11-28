@@ -1,3 +1,8 @@
+2007-11-29 Sancho Lerena <slerena@gmail.com>
+
+	* Added support to notify by mail (only incidentes at this tiem)
+
+
 2007-11-28 Sancho Lerena <slerena@gmail.com>
 
 	* operation/incidents/incident.php, incident_detail.php,

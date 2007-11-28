@@ -1071,6 +1071,81 @@ function delete_task ($id_task){
 	mysql_query($query);
 }
 
+function mail_incident_workunit ($id_inc, $id_usuario, $nota, $timeused){
+	global $config;
+	$row = give_db_row ("tincidencia", "id_incidencia", $id_inc);
+	$titulo =$row["titulo"];
+	$descripcion = $row["descripcion"];
+	$prioridad = $row["prioridad"];
+	$estado = $row["estado"];
+	$usuario = $row["id_usuario"];
+	$creator = $row["id_creator"];
 
+	$subject = "[TOPI] Incident #$id_inc ($titulo) has a new workunit from $id_usuario ";
+
+	$text = "Incident #$id_inc ($titulo) has been updated and a new workunit has been added to history. \n\nPriority: $prioridad\n\nStatus: $estado\n\nAssigned to:$usuario\n\n";
+	$text .= "\n\nDescription: $descripcion";
+	$text .= "\n\nTimeused on new workunit: $timeused";
+	$text .= "\n\nNew workunit: $nota";
+	
+	// Send email for owner and creator of this incident
+	$email_creator = give_db_value ("direccion", "tusuario", "id_usuario", $creator);
+	$email_owner = give_db_value ("direccion", "tusuario", "id_usuario", $usuario);
+	topi_sendmail ( $email_owner, $subject, $text);
+	if ($email_owner != $email_creator){	
+		topi_sendmail (  $email_creator, $subject, $text);
+	} 
+	// Send email for all users with workunits for this incident
+	$sql1 = "SELECT DISTINCT(tusuario.direccion) FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
+	if ($result=mysql_query($sql1)) {
+		while ($row=mysql_fetch_array($result)){
+			if (($row[0] != $email_owner) AND ($row[0] != $email_creator))
+				// echo "ENVIANDO EMAIL a ".$row[0];
+				topi_sendmail ( $row[0], $subject, $text);
+		}
+	}	
+}
+			
+
+function mail_incident ($id_inc, $modo = 0){
+	global $config;
+	$row = give_db_row ("tincidencia", "id_incidencia", $id_inc);
+	$titulo =$row["titulo"];
+	$descripcion = $row["descripcion"];
+	$prioridad = $row["prioridad"];
+	$estado = $row["estado"];
+	$usuario = $row["id_usuario"];
+	$creator = $row["id_creator"];
+
+	if ($modo == 0){
+		$subject = "[TOPI] Incident #$id_inc ($titulo) has been updated.";
+	} else if ($modo == 1){
+		$subject = "[TOPI] Incident #$id_inc ($titulo) has been created.";
+	} else if ($modo == 2){
+		$subject = "[TOPI] Incident #$id_inc ($titulo) has a new file attached.";
+	} else if ($modo == 3){
+		$subject = "[TOPI] Incident #$id_inc ($titulo) has been deleted.";
+	}
+	
+	$text = "Incident #$id_inc ($titulo) has been updated. \n\nPriority: $prioridad\n\nStatus: $estado\n\nAssigned to:$usuario\n\n";
+	$text .= "\n\nDescription: $descripcion";
+	
+	// Send email for owner and creator of this incident
+	$email_creator = give_db_value ("direccion", "tusuario", "id_usuario", $creator);
+	$email_owner = give_db_value ("direccion", "tusuario", "id_usuario", $usuario);
+	topi_sendmail ( $email_owner, $subject, $text);
+	if ($email_owner != $email_creator){	
+		topi_sendmail (  $email_creator, $subject, $text);
+	} 
+	// Send email for all users with workunits for this incident
+	$sql1 = "SELECT DISTINCT(tusuario.direccion) FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
+	if ($result=mysql_query($sql1)) {
+		while ($row=mysql_fetch_array($result)){
+			if (($row[0] != $email_owner) AND ($row[0] != $email_creator))
+				// echo "ENVIANDO EMAIL a ".$row[0];
+				topi_sendmail ( $row[0], $subject, $text);
+		}
+	}		
+}
 
 ?>

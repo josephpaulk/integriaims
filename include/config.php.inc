@@ -26,7 +26,8 @@ $config["base_url"] = "http://192.168.50.2/topi";			// Base URL
 // This is the base config file
 
 $config["REMOTE_ADDR"] = getenv ("REMOTE_ADDR");
-
+$config["FOOTER_EMAIL"] = "Please do not respond directly this email, has been automatically created by TOPI (http://topi.sf.net).\n\nThanks for your time and have a nice day\n\n";
+$config["HEADER_EMAIL"] = "Hello, \n\nThis is an automated message coming from TOPI\n\n";
 // Do not display any ERROR
 //error_reporting(0);
 
