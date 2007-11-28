@@ -377,12 +377,12 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<td valign='top'>";
 	echo "<table width='100%'  border=0 cellpadding=0 cellspacing=0>";
 	
-	if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])){	
+	if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"])){	
 		echo "<tr><td align='right'>";
 		echo "<br>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&operation=delete'><img src='images/cross.png' border='0'></a>";
 	}
-	if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])) {
+	if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"])) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_create_work&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&operation=edit'><img border=0 src='images/page_white_text.png'></a>";

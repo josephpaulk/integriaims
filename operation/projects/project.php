@@ -44,7 +44,7 @@ $accion = "";
 if (isset($_GET["quick_delete"])){
 	$id_project = $_GET["quick_delete"];
 	$id_owner = give_db_value ("id_owner", "tproject", "id", $id_project);
-	if ($id_owner == $id_user){
+	if (($id_owner == $id_user) OR (dame_admin ($id_user))) {
 		// delete_project ($id_project);
 		$sql =" UPDATE tproject SET disabled=1 WHERE id = $id_project";
 		mysql_query($sql);
@@ -140,7 +140,7 @@ while ($row2=mysql_fetch_array($result2)){
 
 		
 		// Delete	
-		if ((give_acl($config["id_user"], 0, "PW") ==1) AND ($config["id_user"] == $row2["id_owner"] )) {
+		if ((give_acl($config["id_user"], 0, "PW") ==1) OR ($config["id_user"] == $row2["id_owner"] )) {
 			echo "<td class='$tdcolor' align='center'><a href='index.php?sec=projects&sec2=operation/projects/project&quick_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
 		} else
 			echo "<td class='$tdcolor' align='center'>";

@@ -1,3 +1,14 @@
+2007-11-28 Sancho Lerena <slerena@gmail.com>
+
+	* operation/incidents/incident.php, incident_detail.php,
+	 incident_create_work.php: Fixed some issues with incidents.
+
+	* operation/projects/task_workunit.php, project.php: Fixed
+	ACL issues with workunits.
+
+	* include/functions_form.php, functions_db.php, functions.php:
+	Code cleanup and other.
+
 2007-11-19 Sancho Lerena <slerena@gmail.com>
 
 	* user_spare_workunit.php: Fixed problems in spare wu.

@@ -23,7 +23,7 @@ if (give_acl($config["id_user"], 0, "IR")==1){
 	$ahora=date("Y/m/d H:i:s");
 
 	echo "<table cellpadding=3 cellspacing=3 border=0 width='700' class='databox_color' >";
-	echo "<form name='nota' method='post' action='index.php?sec=incidentss&sec2=operation/incidents/incident_detail&insert_workunit=1&id=".$id_inc."'>";
+	echo "<form name='nota' method='post' action='index.php?sec=incidents&sec2=operation/incidents/incident_detail&insert_workunit=1&id=".$id_inc."'>";
 	echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
 	echo "<input type='hidden' name='id_inc' value='".$id_inc."'>";
 	echo "<tr><td class='datos' width='140'><b>".$lang_label["date"]."</b></td>";

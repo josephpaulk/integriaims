@@ -124,7 +124,7 @@ if (isset($result_output))
 
 // Specific task
 if ($id_task != -1){ 
-	$sql= "SELECT tworkunit.id
+	$sql= "SELECT tworkunit.id, tworkunit.id_user 
 			FROM tworkunit, tworkunit_task 
 			WHERE tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id
 			ORDER BY tworkunit.timestamp DESC";
@@ -134,7 +134,7 @@ if ($id_task != -1){
 
 // Whole project
 if ($id_task == -1){
-	$sql= "SELECT tworkunit.id
+	$sql= "SELECT tworkunit.id, tworkunit.id_user 
 			FROM tworkunit, tworkunit_task, ttask 
 			WHERE tworkunit_task.id_task = ttask.id AND
 					ttask.id_project = $id_project AND 
@@ -144,10 +144,17 @@ if ($id_task == -1){
 	echo " - ".$project_name." - ". lang_string ("all_tasks")."</h3>";
 }
 
+// Get project for this 
+//if ($id_task != -1){
+//	$id_project = give_db_value ("id_project", "ttask", "id", $id_task);
+//}
 
 if ($res = mysql_query($sql)) {
-	while ($row=mysql_fetch_array($res))
-		show_workunit_user ($row[0]);
+	while ($row=mysql_fetch_array($res)){
+		//if (($row[1] == $id_user) OR (project_manager_check($id_project) == 1)){
+			show_workunit_user ($row[0]);
+		//}
+	}
 }
 
 ?>

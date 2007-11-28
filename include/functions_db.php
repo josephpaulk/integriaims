@@ -622,24 +622,6 @@ function comprueba_admin() {
 
 
 // ---------------------------------------------------------------
-// Returns number of alerts fired by this agent
-// ---------------------------------------------------------------
-
-function check_alert_fired($id_agente){
-	require("config.php");
-	$query1="SELECT * FROM tagente_modulo WHERE id_agente ='".$id_agente."'";   
-	$rowdup=mysql_query($query1);
-	while ($data=mysql_fetch_array($rowdup)){
-		$query2="SELECT COUNT(*) FROM talerta_agente_modulo WHERE times_fired > 0 AND id_agente_modulo =".$data["id_agente_modulo"];
-		$rowdup2=mysql_query($query2);
-		$data2=mysql_fetch_array($rowdup2);
-		if ($data2[0] > 0)
-			return 1;
-	}
-	return 0;
-}
-
-// ---------------------------------------------------------------
 // 0 if it doesn't exist, 1 if it does, when given email
 // ---------------------------------------------------------------
 
@@ -657,68 +639,6 @@ function existe($id){
 	} else { return 0 ; }
 }
 
-// --------------------------------------------------------------- 
-// event_insert - Insert event in eventable, using Id_grupo, Id_agente and Evento
-// --------------------------------------------------------------- 
-
-function event_insert($evento, $id_grupo, $id_agente){
-	require("config.php");
-	$today=date('Y-m-d H:i:s');
-	$utimestamp = time();
-	
-	$sql1='INSERT INTO tevento (id_agente, id_grupo, evento, timestamp, estado, utimestamp) VALUES ('.$id_agente.','.$id_grupo.',"'.$evento.'","'.$today.'",0, $utimestamp)';
-	$result=mysql_query($sql1);
-}
-
-// --------------------------------------------------------------- 
-// Return module interval or agent interval if first not defined
-// ---------------------------------------------------------------
-
-function give_moduleinterval($id_agentmodule){ 
-	require("config.php");
-	$query1="SELECT * FROM tagente_modulo WHERE id_agente_modulo = ".$id_agentmodule;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		if ($rowdup["module_interval"] == 0){ // no module interval defined
-			$query2="SELECT * FROM tagente WHERE id_agente = ".$rowdup["id_agente"];
-			$resq2=mysql_query($query2);
-			if ($rowdup2=mysql_fetch_array($resq2)){
-				$interval=$rowdup2["intervalo"];
-			}
-		} else {
-			$interval=$rowdup["module_interval"];
-		}
-	}
-	return $interval;
-}
-
-// --------------------------------------------------------------- 
-// Return agent interval 
-// ---------------------------------------------------------------
-
-function give_agentinterval($id_agent){ 
-	require("config.php");
-	$query1="SELECT * FROM tagente WHERE id_agente = ".$id_agent;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$interval=$rowdup["intervalo"];
-	}
-	return $interval;
-}
-
-// --------------------------------------------------------------- 
-// Return agent_module flag (for network push modules)
-// ---------------------------------------------------------------
-
-function give_agentmodule_flag($id_agent_module){ 
-	require("config.php");
-	$query1="SELECT * FROM tagente_modulo WHERE id_agente_modulo = ".$id_agent_module;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$interval=$rowdup["flag"];
-	}
-	return $interval;
-}
 
 // ---------------------------------------------------------------------- 
 // Returns a combo with the groups and defines an array 

@@ -193,10 +193,12 @@ if (isset($_GET["id"])){
 		// Add work unit if enabled
 		$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description) VALUES ('$timestamp', '$timeused', '$id_usuario', '$nota')";
 		$res5 = mysql_query($sql);
+echo "DEBUG $sql <br>";
 
 		$id_workunit = mysql_insert_id();
 		$sql1 = "INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES ($id_inc, $id_workunit)";
 		$res6 = mysql_query($sql1);
+echo "DEBUG $sql1 <br>";
 		if ($res6) 
 			$result_msg = "<h3 class='suc'>".$lang_label["create_work_ok"]."</h3>";
 	}
@@ -401,12 +403,10 @@ if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp))
 	echo '<td class="datos2"><b>'.$lang_label["group"].'</b><td class="datos2"><select name="grupo_form" class="w135">';
 else
 	echo '<td class="datos2"><b>'.$lang_label["group"].'</b><td class="datos2"><select disabled name="grupo_form" class="w135">';
-if ($id_grupo != 0)
-	echo "<option value='".$id_grupo."'>".$grupo;
 $sql1='SELECT * FROM tgrupo ORDER BY nombre';
 $result=mysql_query($sql1);
 while ($row=mysql_fetch_array($result)){
-	if (give_acl($iduser_temp, $row["id_grupo"], "IR")==1)
+	if (give_acl($iduser_temp, $row["id_grupo"], "IM")==1)
 		echo "<option value='".$row["id_grupo"]."'>".$row["nombre"];
 }
 echo '</select>';
@@ -463,7 +463,7 @@ if ($creacion_incidente == 0){
 		echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["in_modinc"].'" border="0">';
 	}
 } else {
-	if (give_acl($config["id_user"], $id_grupo, "IW")) {
+	if (give_acl($config["id_user"], 0, "IW")) {
 		echo '<input type="submit" class="sub create" name="accion" value="'.$lang_label["create"].'" border="0">';
 	}
 }

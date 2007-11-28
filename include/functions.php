@@ -169,7 +169,7 @@ function no_permission () {
 	global $lang_label;
 	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
 	echo "<h3 class='error'>".$lang_label["no_permission_title"]."</h3>";
-	echo "<img src='".$config["homedir"]."/images/noaccess.gif' width='120'><br><br>";
+	echo "<img src='".$config["base_url"]."/images/noaccess.gif' width='120'><br><br>";
 	echo "<table width=550>";
 	echo "<tr><td>";
 	echo $lang_label["no_permission_text"];

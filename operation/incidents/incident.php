@@ -293,18 +293,18 @@ if ($row2_count[0] <= 0 ) {
 	// -------------
 	// Show headers
 	// -------------
-	echo "<table width='680' cellpadding=3 cellspacing=3 class='databox'>";
+	echo "<table width='750' cellpadding=3 cellspacing=3 class='databox'>";
 	echo "<tr>";
 	echo "<th>Id";
 	echo "<th>".$lang_label["incident"];
-	echo "<th>".$lang_label["project"];
+	// echo "<th>".$lang_label["project"];
 	echo "<th>".$lang_label["status"];
 	echo "<th>".$lang_label["priority"];
 	echo "<th>".$lang_label["resolution"];
 	echo "<th width=82>".$lang_label["updated_at"];
 	echo "<th width=70>".$lang_label["flags"];
-	//echo "<th>".$lang_label["in_openedby"];
-	//echo "<th>".$lang_label["delete"];
+	// echo "<th>".$lang_label["assigned_to"];
+	echo "<th>".$lang_label["delete"];
 	
 	$color = 1;
 
@@ -334,11 +334,12 @@ if ($row2_count[0] <= 0 ) {
 			echo "<td class='$tdcolor'><a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr(clean_output ($row2["titulo"]),0,200);
 
 			// Project
-			
+			/*
 			echo "<td class='$tdcolor'>";
 			echo substr($project_name,0,15);
 			if (strlen($project_name) > 15)
 				echo "...";
+			*/
 			// Tipo de estado  (Type)
 			// (1,'New'), (2,'Unconfirmed'), (3,'Assigned'),
 			// (4,'Re-opened'), (5,'Verified'), (6,'Resolved')
@@ -384,11 +385,6 @@ if ($row2_count[0] <= 0 ) {
 			if ($file_number > 0)
 				echo '<img src="images/disk.png" valign="bottom"  alt="'.$file_number.'">';
 
-			// Check for notes
-			$note_number = dame_numero_notas($row2["id_incidencia"]);
-			if ($note_number > 0)
-				echo '&nbsp;&nbsp;<img src="images/note.png" valign="bottom" alt="'.$note_number.'">';
-
 			// Has mail notice activated ?
 			$mail_check = give_db_value('notify_email', 'tincidencia', 'id_incidencia', $row2["id_incidencia"]);
 			if ($mail_check> 0)
@@ -399,18 +395,18 @@ if ($row2_count[0] <= 0 ) {
 			if ($timeused > 0)
 				echo '&nbsp;&nbsp;<img src="images/award_star_silver_1.png" valign="bottom">'.$timeused;
 
-/*			
 			// User who manage this incident
+			/*
 			echo "<td class='$tdcolor'>";
 			echo "<a href='index.php?sec=usuario&sec2=operation/users/user_edit&ver=".$row2["id_usuario"]."'>".$row2["id_usuario"]."</a></td>";
-			$id_author_inc = $row2["id_usuario"];
-			if ((give_acl($id_usuario, $id_group, "IM") ==1) OR ($_SESSION["id_usuario"] == $id_author_inc) ){
+			*/
+			if ((give_acl($id_usuario, $id_group, "IM") ==1) OR ($_SESSION["id_usuario"] ==  $row2["id_usuario"]) ){
 			// Only incident owners or incident manager
 			// from this group can delete incidents
 				echo "<td class='$tdcolor' align='center'><a href='index.php?sec=incidentes&sec2=operation/incidents/incident&quick_delete=".$row2["id_incidencia"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
 			} else
 				echo "<td class='$tdcolor' align='center'>";
-*/
+
 		}
 	}
 	echo "</table>";
