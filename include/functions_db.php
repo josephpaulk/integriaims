@@ -733,11 +733,14 @@ function user_belong_project ($id_user, $id_project){
 
 	$query1="SELECT COUNT(*) from trole_people_project WHERE id_project = $id_project AND id_user = '$id_user'";
         $resq1=mysql_query($query1);
-        $rowdup=mysql_fetch_array($resq1);
-	if ($rowdup[0] == 0)
+	if ($resq1){
+	        $rowdup=mysql_fetch_array($resq1);
+		if ($rowdup[0] == 0)
+			return 0;
+		else
+			return 1; // There is at least one role for this person in that project
+	} else 
 		return 0;
-	else
-		return 1; // There is at least one role for this person in that project
 }
 
 // ---------------------------------------------------------------
