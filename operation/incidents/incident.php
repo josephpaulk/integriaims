@@ -304,9 +304,8 @@ if ($row2_count[0] <= 0 ) {
 	echo "<th>Id";
 	echo "<th>".$lang_label["incident"];
 	// echo "<th>".$lang_label["project"];
-	echo "<th>".$lang_label["status"];
+	echo "<th>".lang_string ("status")."<br>".lang_string("resolution");
 	echo "<th>".$lang_label["priority"];
-	echo "<th>".$lang_label["resolution"];
 	echo "<th width=82>".$lang_label["updated_at"];
 	echo "<th width=70>".$lang_label["flags"];
 	// echo "<th>".$lang_label["assigned_to"];
@@ -350,7 +349,7 @@ if ($row2_count[0] <= 0 ) {
 			// (1,'New'), (2,'Unconfirmed'), (3,'Assigned'),
 			// (4,'Re-opened'), (5,'Verified'), (6,'Resolved')
 			// (7,'Closed');
-			echo "<td class='$tdcolor' align='center'>";
+			echo "<td class='".$tdcolor."f9' align='center'>";
 			switch ($row2["estado"]) {
 				case 1: echo $lang_label["status_new"];
 							break;
@@ -367,6 +366,11 @@ if ($row2_count[0] <= 0 ) {
 				case 6: echo $lang_label["status_resolved"];
 							break;
 			}
+			// Resolution
+			// echo "<td class='$tdcolor'>";
+			echo "<br>";
+			echo give_db_value('name', 'tincident_resolution', 'id', $row2["resolution"]);
+
 			echo "<td class='$tdcolor' align='center'>";
 			switch ( $row2["prioridad"] ){
 			
@@ -378,8 +382,7 @@ if ($row2_count[0] <= 0 ) {
 				case 10: echo "<img src='images/flag_blue.png'>"; break; // Maintance
 			}
 
-			// Resolution
-			echo "<td class='$tdcolor'>".give_db_value('name', 'tincident_resolution', 'id', $row2["resolution"]);
+			
 
 			// Update time
 			echo "<td class='".$tdcolor."f9'>".human_time_comparation ( $row2["actualizacion"]);
@@ -402,10 +405,10 @@ if ($row2_count[0] <= 0 ) {
 				echo '&nbsp;&nbsp;<img src="images/award_star_silver_1.png" valign="bottom">'.$timeused;
 
 			// User who manage this incident
-			/*
-			echo "<td class='$tdcolor'>";
-			echo "<a href='index.php?sec=usuario&sec2=operation/users/user_edit&ver=".$row2["id_usuario"]."'>".$row2["id_usuario"]."</a></td>";
-			*/
+			
+			// echo "<td class='$tdcolor'>";
+			// echo "<a href='index.php?sec=usuario&sec2=operation/users/user_edit&ver=".$row2["id_usuario"]."'>".$row2["id_usuario"]."</a></td>";
+			
 			if ((give_acl($id_usuario, $id_group, "IM") ==1) OR ($_SESSION["id_usuario"] ==  $row2["id_usuario"]) ){
 			// Only incident owners or incident manager
 			// from this group can delete incidents

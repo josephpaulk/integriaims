@@ -973,24 +973,6 @@ function incident_tracking ( $id_incident, $id_user, $state, $aditional_data = 0
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident updated", $descripcion);
 	$sql = "INSERT INTO tincident_track (id_user, id_incident, timestamp, state, id_aditional) values ('$id_user', $id_incident, NOW(), $state, $aditional_data)";
 	$resq1=mysql_query($sql);
-
-	if (give_inc_email ($id_incident) == 1){ // notify by email on changes ?
-		$titulo = give_inc_title ($id_incident);
-		$today=date('Y-m-d H:i:s');
-		$orig_user = give_inc_creator ($id_incident);
-		$actual_user = $id_user;
-		$msg_text = salida_ascii ('Incident #'.$id_incident.' ('.$titulo.') has been updated by user '.$actual_user.', you can review it loggin on TOPI console. All changes over this incident has been marked to mail original author of incident ('.$orig_user.') and currently associated user for this incident ('.$actual_user.'), and for every user that actually has entered any note attached to this incident.'."\n\n".'Changes on this incident are: '.$descripcion);
-		
-		$msg_subject = salida_ascii ("[TOPI] Incident #$id_incident [ $titulo ] - $descripcion");
-
-		if ($actual_user == $orig_user)
-			topi_sendmail (return_user_email($orig_user), $msg_subject, $msg_text);
-		else {
-			topi_sendmail (return_user_email($orig_user), $msg_subject, $msg_text);
-			topi_sendmail (return_user_email($actual_user), $msg_subject, $msg_text);
-		}
-		// TODO: Send mail to all users that have posted a note in this incident
-	}
 	
 }
 

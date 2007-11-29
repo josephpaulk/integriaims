@@ -48,8 +48,6 @@ if (isset($_GET["id"])){
 		include ("general/noaccess.php");
 		exit;
 	}
-
-
 } else {
 	audit_db($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
 	include ("general/noaccess.php");

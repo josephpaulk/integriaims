@@ -379,9 +379,10 @@ if ((give_acl($config["id_user"], $id_grupo, "IM")==1) OR ($usuario == $config["
 // User and owner
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo '<tr><td class="datos"><b>'.$lang_label["assigned_user"].'</b><td class="datos">';
-if (give_acl($config["id_user"], $id_grupo, "IM")==1) {
+if ((give_acl($config["id_user"], $id_grupo, "IM")==1) OR ($creacion_incidente == 1)) {
 	echo "<select name='usuario_form' class='w200'>";
-	echo "<option value='".$usuario."'>".dame_nombre_real($usuario);
+	if ($usuario != "")
+		echo "<option value='".$usuario."'>" . dame_nombre_real ($usuario);
 	
 	// Show users from my groups
 	$sql_1="SELECT * FROM tusuario_perfil WHERE id_usuario = '$id_usuario'";
@@ -391,8 +392,9 @@ if (give_acl($config["id_user"], $id_grupo, "IM")==1) {
 		$result_2=mysql_query($sql_2);
 		while ($row_2=mysql_fetch_array($result_2)){
 			if (give_acl($row_2["id_usuario"], $row_2["id_grupo"], "IR")==1)
-				if ($row_2["id_usuario"] != $usuario)
-					echo "<option value='".$row_2["id_usuario"]."'>".dame_nombre_real($row_2["id_usuario"]);
+				if ((dame_nombre_real($row_2["id_usuario"]) != "") AND ($row_2["id_usuario"] != $usuario))
+					echo "<option value='".$row_2["id_usuario"]."'>" . 
+						dame_nombre_real($row_2["id_usuario"]);
 		}
 	}
 	echo "</select>";

@@ -2,6 +2,8 @@
 
 	* Added support to notify by mail (only incidentes at this tiem)
 
+	* Fixed problem with incident creation. now it's possible to 
+	anyone to assign incident to other people authorized.
 
 2007-11-28 Sancho Lerena <slerena@gmail.com>
 
