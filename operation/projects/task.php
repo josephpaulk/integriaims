@@ -74,7 +74,7 @@ echo "<th>".lang_string ("pri");
 echo "<th>".lang_string ("progress");
 echo "<th>".$lang_label["time_used"];
 echo "<th>".$lang_label["people"];
-echo "<th>".$lang_label["start"];
+//echo "<th>".$lang_label["start"];
 echo "<th>".$lang_label["end"];
 echo "<th>".lang_string ("files");
 echo "<th>".lang_string ("delete");
@@ -125,9 +125,11 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 	*/ 	
 
 	// Start
+	/*
 	echo "<td class='".$tdcolor."f9'>";
 	//echo substr($row2["start"],0,10);
 	echo human_time_comparation ($row2["start"]);
+	*/
 
 	// End
 	echo "<td class='".$tdcolor."f9'>";
@@ -146,7 +148,7 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 
 	// Delete
 	echo "<td class='$tdcolor' align='center'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project=$id_project&id=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project=$id_project&id=".$row2["id"]."' onClick='if (!confirm(\' ".lang_string ("are_you_sure")."\')) return false;'><img src='images/cross.png' border='0'></a>";
 	
 	
 }

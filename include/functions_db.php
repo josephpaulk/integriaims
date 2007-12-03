@@ -1067,12 +1067,12 @@ function mail_incident_workunit ($id_inc, $id_usuario, $nota, $timeused){
 	$creator = $row["id_creator"];
 
 	$subject = "[TOPI] Incident #$id_inc ($titulo) has a new workunit from $id_usuario ";
-
-	$text = "Incident #$id_inc ($titulo) has been updated and a new workunit has been added to history. \n\nPriority: $prioridad\n\nStatus: $estado\n\nAssigned to:$usuario\n\n";
-	$text .= "\n\nDescription: $descripcion";
-	$text .= "\n\nTimeused on new workunit: $timeused";
-	$text .= "\n\nNew workunit: $nota";
-	
+	$myurl = topi_quicksession ("index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc");
+	$text = "Incident #$id_inc ($titulo) has been updated and a new workunit has been added to history. \nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario";
+	$text .= "\nDescription: $descripcion";
+	$text .= "\nTimeused on new workunit: $timeused";
+	$text .= "\nNew workunit: $nota";
+	$text .="\nDirect URL access: $myurl";
 	// Send email for owner and creator of this incident
 	$email_creator = give_db_value ("direccion", "tusuario", "id_usuario", $creator);
 	$email_owner = give_db_value ("direccion", "tusuario", "id_usuario", $usuario);
@@ -1112,8 +1112,10 @@ function mail_incident ($id_inc, $modo = 0){
 		$subject = "[TOPI] Incident #$id_inc ($titulo) has been deleted.";
 	}
 	
-	$text = "Incident #$id_inc ($titulo) has been updated. \n\nPriority: $prioridad\n\nStatus: $estado\n\nAssigned to:$usuario\n\n";
-	$text .= "\n\nDescription: $descripcion";
+	$text = "Incident #$id_inc ($titulo) has been updated. \nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario\n";
+	$myurl = topi_quicksession ("index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc");
+	$text .= "Direct URL Access: $myurl\n";
+	$text .= "Description: $descripcion";
 	
 	// Send email for owner and creator of this incident
 	$email_creator = give_db_value ("direccion", "tusuario", "id_usuario", $creator);

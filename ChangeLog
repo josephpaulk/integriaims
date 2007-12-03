@@ -1,3 +1,31 @@
+2007-12-02 Sancho lerena <slerena@gmail.com>
+
+	* topidb.sql: Added tquicksession, and added id_task field
+	to ttodo table.
+
+	* operation/incidents/incident.php: Incidents send a link in 
+	emails for quick login on topi.
+
+	* operation/todo/todo.php: On todo it's possible associate a 
+	todo with a task, and add workunits from a todo. Also it's 
+	added a link on email notifies to quick login on topi.
+
+	* operation/user_report/monthly.php: Fixed bad message string
+
+	* include/functions_graph.php: Added the first graph: Statis
+	tical info about incidents.
+
+	* include/functions_form.php, include/functions_db.php: Some
+	improvements on small functions.
+
+	* include/functions.php: Quick login function and others.
+
+
+	* index.php: Implemeted quick login links
+
+	* include/Image: Added here Image:Graph library. Moved from 
+	reporting/ directectory.
+
 2007-11-29 Sancho Lerena <slerena@gmail.com>
 
 	* Added support to notify by mail (only incidentes at this tiem)

@@ -193,7 +193,7 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 
 // Returns a combo with the tasks that current user is working on
 // ----------------------------------------------------------------------
-function combo_task_user_participant ($id_user, $show_vacations = 0) {
+function combo_task_user_participant ($id_user, $show_vacations = 0, $actual = 0) {
 	global $config;
 	global $lang_label;
 	
@@ -204,14 +204,25 @@ function combo_task_user_participant ($id_user, $show_vacations = 0) {
 		echo "<option value=-3>(*) ".lang_string ("not_justified");
 	}
 	
-	$sql = "SELECT DISTINCT (ttask.id) FROM ttask, trole_people_task WHERE ttask.id = trole_people_task.id_task AND trole_people_task.id_user = '$id_user'";
+	if ($actual != 0){
+		$sql = "SELECT id, id_project,name FROM ttask WHERE id = $actual";
+		$result = mysql_query($sql);
+		if ($row=mysql_fetch_array($result)){
+			$id = $row[0];
+			$id_project = $row[1];
+			$name = $row[2];
+			$project_name = give_db_value ("name", "tproject", "id", $id_project);
+			echo "<option value='$id'>$project_name / $name";
+		}
+	} 
+	echo "<option value=''>".$lang_label["N/A"];
+	$sql = "SELECT DISTINCT (ttask.id) FROM ttask, trole_people_task WHERE ttask.id = trole_people_task.id_task AND trole_people_task.id_user = '$id_user' ORDER BY ttask.id_project";
 	$result = mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
 		$id = $row[0];
 		$task_name = give_db_value ("name", "ttask", "id", $id);
 		$id_project = give_db_value ("id_project", "ttask", "id", $id);
 		$project_name = give_db_value ("name", "tproject", "id", $id_project);
-
 		echo "<option value='$id'>$project_name / $task_name";
 	}
 	echo "</select>";

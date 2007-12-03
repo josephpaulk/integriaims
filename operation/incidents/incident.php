@@ -160,7 +160,8 @@ else
 	echo "</h2>";
 echo "<div class=databox style='width: 500px'>";
 echo "<form name='visualizacion' method='POST' action='index.php?sec=incidencias&sec2=operation/incidents/incident'>";
-
+echo '<table border=0 width=100%>';
+echo "<tr><td>";
 echo '<table border=0 width=400>';
 echo "<tr>";
 echo "<td>".$lang_label["f_state"];
@@ -262,6 +263,9 @@ if (isset($_GET["texto"]))
 
 echo "</table>";
 echo "</form>";
+echo "<td>";
+echo "<img src='include/functions_graph.php?type=incident_a&width=300&height=100'>";
+echo "</table>";
 echo "</div>";
 
 $offset_counter=0;

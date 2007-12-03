@@ -46,7 +46,7 @@ if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])
 	else
 		echo $lang_label["add_workunit"]." - $task_name</h3>";
 
-	echo "<table cellpadding=3 cellspacing=3 border=0 width='100%' class='databox_color' >";
+	echo "<table cellpadding=4 cellspacing=4 border=0 width='100%' class='databox_color' >";
 	// Insert or edit mode ?
 	if ($id_workunit != -1){
 		// Update

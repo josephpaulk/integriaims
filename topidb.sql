@@ -293,6 +293,7 @@ CREATE TABLE `ttodo` (
   `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
   `description` mediumtext,
   `last_update` datetime NOT NULL default '2000-01-01 00:00:00',
+  `id_task` int(11) unsigned NULL default NULL,
   PRIMARY KEY  (`id`)
 );
 
@@ -303,5 +304,13 @@ CREATE TABLE `tmilestone` (
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `name` varchar(250) NOT NULL default '',
   `description` mediumtext NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tquicksession` (
+  `id` int(20) unsigned NOT NULL auto_increment,
+  `id_user` varchar(250) NOT NULL default '',
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  `pwdhash` varchar(250) NOT NULL default '',
   PRIMARY KEY  (`id`)
 );

@@ -387,10 +387,39 @@ function render_priority ($pri){
 function topi_sendmail ( $destination, $msg_subject = "[TOPI] Automatic email notification", $msg_text) {
 	global $config;
 	if ($destination != ""){
-		$real_text = $config["HEADER_EMAIL"];
-		$real_text = $config["HEADER_EMAIL"]."\n\n".$msg_text."\n\n".$config["FOOTER_EMAIL"];
-		mail ($destination, $msg_subject, $real_text );
+		$real_text = $config["HEADER_EMAIL"].$msg_text."\n\n".$config["FOOTER_EMAIL"];
+		mail ($destination, $msg_subject, $real_text);
 	}
+}
+
+function topi_rndcode ($length=6) {
+        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPRQSTUVWXYZ0123456789";
+        $code = "";
+        $clen = strlen($chars) - 1;  //a variable with the fixed length of chars correct for the fence post issue
+        while (strlen($code) < $length) {
+            $code .= $chars[mt_rand(0,$clen)];  //mt_rand's range is inclusive - this is why we need 0 to n-1
+        }
+        return $code;
+    }
+
+/* Given a local URL, compose a internet valid URL
+   with quicklogin HASH data, and enter it on DB
+*/
+
+function topi_quicksession ($url){
+	global $config;
+	$today=date('Y-m-d H:i:s');
+
+	// Build quicksession data and URL
+	$id_user = $config["id_user"];
+	$cadena = topi_rndcode(16).$id_user.$today;
+	$cadena_md5 = md5($cadena);
+	$param = "&quicksession=$cadena_md5&quickuser=$id_user";
+	$myurl = $config["base_url"].$url.$param;
+	//Insert quicksession data in DB
+	$sql = "INSERT INTO tquicksession (id_user, timestamp, pwdhash) VALUES ('$id_user', '$today', '$cadena_md5')";
+	mysql_query($sql);
+	return $myurl;
 }
 
 function working_days ($month = "", $year = "" ){

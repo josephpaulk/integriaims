@@ -97,6 +97,48 @@ $clean_output = give_parameter_get ("clean_output",0);
 	echo '<body bgcolor="#ffffff">';
 	// echo '<body background="images/backgrounds/' . $config["bgimage"] . '">';
 	
+	// Quick sessions
+	if ((isset ($_GET["quicksession"])) AND (isset ($_GET["quickuser"]))) {
+		// Delete old data from quicksession
+		$sql = "DELETE FROM tquicksession WHERE timestamp < '$new_date'";
+		mysql_query($sql);
+
+		$nick = clean_input ($_GET["quickuser"]);
+		$pwdhash = clean_input ($_GET["quicksession"]);
+
+		$today = date('Y-m-d H:i:s');
+		$new_date = date('Y-m-d', strtotime("$today - 7 days"));
+		$sql = "SELECT id_user FROM tquicksession 
+			WHERE timestamp > '$new_date' AND
+			pwdhash = '$pwdhash' AND
+			id_user = '$nick' ORDER BY id DESC LIMIT 1";
+		$nick2 = give_db_sqlfree_field ($sql);
+		// validate
+		if ($nick2 == $nick){
+			if ( (isset ($_SESSION['id_usuario']))){
+			// Drop current session
+				session_unregister ("id_usuario");
+			} else {
+			// Login
+				logon_db ($nick, $config["REMOTE_ADDR"]);
+				$_SESSION['id_usuario'] = $nick;
+			}
+		} else {
+		// Bad access detected !
+			include "general/logon_failed.php";
+			// change password to do not show all string
+			$primera = substr ($pass,0,1);
+			$ultima = substr ($pass, strlen ($pass) - 1, 1);
+			$pass = $primera . "****" . $ultima;
+			audit_db ($nick, $config["REMOTE_ADDR"], "Logon Failed / Quicksession",
+					"Incorrect password: " . $nick . " / " . $pass);
+			echo '<div id="foot">';
+			include "general/footer.php";
+			echo '</div>';
+			exit;
+		}
+	}
+
         // Login process 
    	if ( (! isset ($_SESSION['id_usuario'])) AND (isset ($_GET["login"]))) {
 		$nick = give_parameter_post ("nick");
