@@ -413,7 +413,7 @@ function topi_quicksession ($url){
 	// Build quicksession data and URL
 	$id_user = $config["id_user"];
 	$cadena = topi_rndcode(16).$id_user.$today;
-	$cadena_md5 = md5($cadena);
+	$cadena_md5 = substr(md5($cadena),1,8);
 	$param = "&quicksession=$cadena_md5&quickuser=$id_user";
 	$myurl = $config["base_url"].$url.$param;
 	//Insert quicksession data in DB

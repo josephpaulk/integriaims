@@ -1,3 +1,9 @@
+2007-01-03 Sancho Lerena <slerena@gmail.com>
+
+	* Fixed bug in quickaccess. Randomstring is now shorter.
+
+	* Fixed bug in todo creation with taskid = ""
+
 2007-12-02 Sancho lerena <slerena@gmail.com>
 
 	* topidb.sql: Added tquicksession, and added id_task field

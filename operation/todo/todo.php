@@ -17,6 +17,8 @@ if (check_login() == 0){
 		$id_task = give_parameter_post ("task",0);
 		$timestamp = date('Y-m-d H:i:s');
 		$last_updated = $timestamp;
+		if ($id_task == "")
+			$id_task = 0;
 		$sql_insert="INSERT INTO ttodo (name, priority, assigned_user, created_by_user, progress, timestamp, last_update, description, id_task ) VALUES ('$name',$priority, '$assigned_user', '$id_user', '$progress', '$timestamp', '$last_updated', '$description', $id_task)";
 
 		$result=mysql_query($sql_insert);	

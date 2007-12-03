@@ -100,14 +100,13 @@ $clean_output = give_parameter_get ("clean_output",0);
 	// Quick sessions
 	if ((isset ($_GET["quicksession"])) AND (isset ($_GET["quickuser"]))) {
 		// Delete old data from quicksession
+		$today = date('Y-m-d H:i:s');
+                $new_date = date('Y-m-d', strtotime("$today - 7 days"));
 		$sql = "DELETE FROM tquicksession WHERE timestamp < '$new_date'";
 		mysql_query($sql);
 
 		$nick = clean_input ($_GET["quickuser"]);
 		$pwdhash = clean_input ($_GET["quicksession"]);
-
-		$today = date('Y-m-d H:i:s');
-		$new_date = date('Y-m-d', strtotime("$today - 7 days"));
 		$sql = "SELECT id_user FROM tquicksession 
 			WHERE timestamp > '$new_date' AND
 			pwdhash = '$pwdhash' AND
