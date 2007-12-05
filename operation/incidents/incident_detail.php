@@ -57,6 +57,8 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 		$prioridad = clean_input ($_POST['prioridad_form']);
 		$estado = clean_input ($_POST["incident_status"]);
 		$ahora=date("Y/m/d H:i:s");
+		$group = clean_input ($_POST["grupo_form"]);
+
 		if (isset($_POST["email_notify"]))
 			$email_notify= give_parameter_post ("email_notify");
 		else
@@ -86,9 +88,8 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 				origen= '$origen', estado = '$estado', id_grupo = '$grupo', 
 				id_usuario = '$usuario', notify_email = $email_notify, 
 				prioridad = '$prioridad', descripcion = '$descripcion', 
-				epilog = '$epilog', id_task = $id_task, resolution = '$resolution' 
+				epilog = '$epilog', id_task = $id_task, resolution = '$resolution' , id_grupo = $group
 				WHERE id_incidencia = ".$id_inc;
-
 		$result=mysql_query($sql);
 		audit_db($id_author_inc,$config["REMOTE_ADDR"],"Incident updated","User ".$id_usuario." deleted updated #".$id_inc);
 		if ($result)
@@ -423,6 +424,9 @@ if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp))
 	echo '<td class="datos2"><b>'.$lang_label["group"].'</b><td class="datos2"><select name="grupo_form" class="w135">';
 else
 	echo '<td class="datos2"><b>'.$lang_label["group"].'</b><td class="datos2"><select disabled name="grupo_form" class="w135">';
+if ($creacion_incidente == 0)
+	echo "<option value='$id_grupo'>";
+	echo give_db_value ("nombre", "tgrupo", "id_grupo", $id_grupo);
 $sql1='SELECT * FROM tgrupo ORDER BY nombre';
 $result=mysql_query($sql1);
 while ($row=mysql_fetch_array($result)){
