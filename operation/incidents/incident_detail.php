@@ -192,6 +192,7 @@ if (isset($_GET["id"])){
 		$nota = give_parameter_post ("nota");
 		$workunit = give_parameter_post ("workunit",0);
 		$timeused = give_parameter_post ("duration",0);
+		$timeused = number_format($timeused, 2);
 		$id_usuario=$_SESSION["id_usuario"];
 		$have_cost = give_parameter_post ("have_cost",0);
 		$profile = give_parameter_post ("work_profile",0);

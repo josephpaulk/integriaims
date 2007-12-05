@@ -404,9 +404,11 @@ if ($row2_count[0] <= 0 ) {
 				echo '&nbsp;&nbsp;<img src="images/email_go.png" valign="bottom">';
 
 			// Check for workunits
-			$timeused = give_hours_incident ($row2["id_incidencia"]);
-			if ($timeused > 0)
+			$timeused = give_workunits_incident ($row2["id_incidencia"]);
+			if ($timeused > 0){
+				$timeused = give_hours_incident ($row2["id_incidencia"]);
 				echo '&nbsp;&nbsp;<img src="images/award_star_silver_1.png" valign="bottom">'.$timeused;
+			}
 
 			// User who manage this incident
 			

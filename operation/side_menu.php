@@ -235,8 +235,9 @@ if ($sec == "incidents"){
 		echo "</a></li>";
 	
 		// Incident workunits
-		$timeused = give_hours_incident ($id_incident);
-		if ($timeused > 0) {
+                $timeused = give_workunits_incident ($id_incident);
+                if ($timeused > 0){
+                        $timeused = give_hours_incident ($id_incident);
 			if ($sec2 == "operation/incidents/incident_workunits")
 				echo "<li id='sidesel'>";
 			else	
