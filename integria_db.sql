@@ -129,6 +129,7 @@ CREATE TABLE `tusuario` (
   `telefono` varchar(100) default '',
   `nivel` tinyint(1) NOT NULL default '0',
   `avatar` varchar(100) default 'people_1',
+   PRIMARY KEY  (`id_usuario`)
 );
 
 --

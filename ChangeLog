@@ -1,4 +1,9 @@
-2007-01-03 Sancho Lerena <slerena@gmail.com>
+2008-01-14 Sancho Lerena <slerena@gmail.com>
+
+	* Renamed and added images for project name change from
+	topi to integria. Also fixed installer and other issues.
+
+2007-12-03 Sancho Lerena <slerena@gmail.com>
 
 	* Fixed bug in quickaccess. Randomstring is now shorter.
 

@@ -1,6 +1,7 @@
 <?php
 
-// TOPI - the Open Tracking System for the Enterprise
+// INTEGRIA - OpenSource Management for the Enterprise
+// http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
 
@@ -12,31 +13,35 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// TOPI uses icons from famfamfam, licensed under CC Atr. 2.5
+// Integria uses icons from famfamfam, licensed under CC Atr. 2.5
 // Silk icon set 1.3 (cc) Mark James, http://www.famfamfam.com/lab/icons/silk/
-// TOPI uses Pear Image::Graph code
-// TOPI shares much of it's code with project Babel Enterprise and Pandora FMS,
+// Integria uses Pear Image::Graph code
+// Integria shares much of it's code with project Babel Enterprise and Pandora FMS,
 // also a Free Software Project coded by some of the people who makes ToPI.
 // Gantt php class example and configuration file
 // Copyright (C) 2005 Alexandre Miguel de Andrade Souza
 
-
-$config["build_version"]="PC070817"; //PCyymmdd
+$config["build_version"]="PC080114"; //PCyymmdd
 $config["version"]="v1.0dev";
 global $config;
 
 $develop_bypass = 1;
 if ($develop_bypass != 1){
+
 	// If no config file, automatically try to install
-	if (! file_exists("include/config.php")){
+	if (! file_exists("include/config.php")) {
 		include ("install.php");
 		exit;
 	}
 	// Check for installer presence
-	if (file_exists("install.php")){
+	if (file_exists("install.php")) {
 		include "general/error_install.php";
 		exit;
 	}
+        if (!is_readable("include/config.php")){
+                include "general/error_perms.php";
+                exit;
+        }
 	// Check perms for config.php
 	if ((substr(sprintf('%o', fileperms('include/config.php')), -4) != "0600") &&
 	    (substr(sprintf('%o', fileperms('include/config.php')), -4) != "0660") &&
@@ -77,7 +82,7 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 $clean_output = give_parameter_get ("clean_output",0);
 
 ?>
-<title>TOPI - the Open Tracking System for the Enterprise</title>
+<title>I N T E G R I A - OpenSource Management for the Enterprise</title>
 <meta http-equiv="expires" content="0">
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="resource-type" content="document">
@@ -86,10 +91,10 @@ $clean_output = give_parameter_get ("clean_output",0);
 <meta name="copyright" content="This is GPL software. Created by Sancho Lerena">
 <meta name="keywords" content="management, project, incident, asset, GPL, software">
 <meta name="robots" content="index, follow">
-<link rel="icon" href="images/topi.ico" type="image/ico">
-<link rel="stylesheet" href="include/styles/topi.css" type="text/css">
+<link rel="icon" href="images/integria.ico" type="image/ico">
+<link rel="stylesheet" href="include/styles/integria.css" type="text/css">
 <script type='text/JavaScript' src='include/calendar.js'></script>
-<script type='text/JavaScript' src='include/topi.js'></script>
+<script type='text/JavaScript' src='include/integria.js'></script>
 </head>
 
 <?php
@@ -131,9 +136,6 @@ $clean_output = give_parameter_get ("clean_output",0);
 			$pass = $primera . "****" . $ultima;
 			audit_db ($nick, $config["REMOTE_ADDR"], "Logon Failed / Quicksession",
 					"Incorrect password: " . $nick . " / " . $pass);
-			echo '<div id="foot">';
-			include "general/footer.php";
-			echo '</div>';
 			exit;
 		}
 	}
@@ -172,9 +174,6 @@ $clean_output = give_parameter_get ("clean_output",0);
 				$pass = $primera . "****" . $ultima;
 				audit_db ($nick, $config["REMOTE_ADDR"], "Logon Failed",
 					  "Incorrect password: " . $nick . " / " . $pass);
-				echo '<div id="foot">';
-				include "general/footer.php";
-				echo '</div>';
 				exit;
 			}
 		} else {

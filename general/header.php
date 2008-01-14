@@ -1,13 +1,24 @@
 <?php
+
+// INTEGRIA - OpenSource Management for the Enterprise
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
 check_login();
 
 // Put here your logo
-echo "<img src='images/sitelogo.png' class='logoimage' border=0>";
+echo "<img src='images/integria_logo.png' border=0>";
 
 // Adjust width with &nbsp; to fit your logo
-echo "<br>";
-echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-echo "<b>TOPI </b>".$config["version"];
 echo "<div width=100%>";
 echo "<span>";
 $id_usuario = clean_input ($_SESSION["id_usuario"]);

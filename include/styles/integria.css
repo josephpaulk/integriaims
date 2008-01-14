@@ -765,3 +765,28 @@ div#login_f {
 	margin-top: 10px;
 	margin-bottom: 25px;
 }
+
+div#foot {
+        font-size: 7pt;
+        margin-top: solid 2px #000;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        text-align: center;
+        background: #505253;
+        width: 100%;
+        width: 642px;
+        color:#FFF;
+        clear: both;
+}
+
+div#foot a{
+        color: #EAA036;
+        font-weight: bold; 
+        text-decoration: none;
+}
+
+div#foot a:hover{
+        color: #FAF036;
+        font-weight: bold; 
+        text-decoration: none;
+}

@@ -1,22 +1,16 @@
 <?php
-// Pandora FMS - the Free monitoring system
-// ========================================
-// Copyright (c) 2004-2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2005-2007 Artica Soluciones Tecnologicas
-// Copyright (c) 2004-2007 Raul Mateos Martin, raulofpandora@gmail.com
-// Copyright (c) 2006-2007 Jose Navarro jose@jnavarro.net
-// Copyright (c) 2006-2007 Jonathan Barajas, jonathan.barajas[AT]gmail[DOT]com
+// INTEGRIA - OpenSource Management for the Enterprise
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation version 2
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 include "include/config.php";
 if (file_exists("include/languages/language_".$language_code.".php")) {
@@ -28,25 +22,24 @@ if (file_exists("include/languages/language_".$language_code.".php")) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>Pandora FMS - <?php echo $lang_label["header_title"]; ?></title>
+<title>I N T E G R I A - Install error<?php echo $lang_label["header_title"]; ?></title>
 <meta http-equiv="expires" content="0">
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-15">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
-<meta name="author" content="Sancho Lerena, Raul Mateos">
+<meta name="author" content="Sancho Lerena">
 <meta name="copyright" content="This is GPL software. Created by Sancho Lerena and others">
-<meta name="keywords" content="pandora, monitoring, system, GPL, software">
 <meta name="robots" content="index, follow">
-<link rel="icon" href="images/pandora.ico" type="image/ico">
-<link rel="stylesheet" href="include/styles/pandora.css" type="text/css">
+<link rel="icon" href="images/integria.ico" type="image/ico">
+<link rel="stylesheet" href="include/styles/integria.css" type="text/css">
 </head>
 <body background='images/backgrounds/<?php echo $config_bgimage; ?>'>
 <div align='center'>
 <div id='login_f'>
 	<h1 id="log_f" class="error">Bad permission for include/config.php</h1>
 	<div>
-		<img src="images/logo_login.gif" border="0"></a><br><font size="1">
-		<?php echo $pandora_version; ?>
+		<img src="images/logo_integria.png" border="0"></a><br><font size="1">
+		<?php echo 'Integria '.$config["version"].' Build '.$config["build_version"]; ?>
 		</font>
 	</div>
 	<div class="msg"><br><br>For security reasons, <i>config.php</i> must have restrictive permissions, and "other" users cannot read or write to it. It could be writed only for owner (usually www-data or http daemon user), normal operation is not possible until you change permissions for <i>include/config.php</i>file. Please do it, it's for your security.</div>

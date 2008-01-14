@@ -26,8 +26,7 @@ $config["homedir"] = "/var/www/topi/";		// Config homedir
 $config["base_url"] = "http://localhost/topi";			// Base URL
 */
 
-$config["build_version"]="PC070501"; //PCyymmdd
-$config["version"]="v0.9dev";
+
 $config["REMOTE_ADDR"] = getenv ("REMOTE_ADDR");
 
 // Do not display any ERROR
