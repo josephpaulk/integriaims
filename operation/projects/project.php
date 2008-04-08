@@ -1,24 +1,17 @@
 <?php
 
-// Pandora FMS - the Free monitoring system
-// ========================================
-// Copyright (c) 2004-2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2005-2007 Artica Soluciones Tecnologicas
-// Copyright (c) 2004-2007 Raul Mateos Martin, raulofpandora@gmail.com
-// Copyright (c) 2006-2007 Jose Navarro jose@jnavarro.net
-// Copyright (c) 2006-2007 Jonathan Barajas, jonathan.barajas[AT]gmail[DOT]com
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation version 2
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-// Load global vars
 
 global $REMOTE_ADDR;
 global $config;
@@ -74,6 +67,21 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 			$id_inc = mysql_insert_id();
 			echo "<h3 class='suc'>".$lang_label["create_project_ok"]." ( id #$id_inc )</h3>";
 			audit_db ($usuario, $REMOTE_ADDR, "Project created", "User ".$id_user." created project '$name'");
+            
+            // Add this user as profile 1 (project manager) automatically
+            $sql = "INSERT INTO trole_people_project
+            (id_project, id_user, id_role) VALUES
+            ($id_inc, '$id_owner', 1)";
+            mysql_query($sql);
+
+            // If current user is different than owner, add also current user
+            if ($config["id_user"] != $id_owner){
+                $sql = "INSERT INTO trole_people_project
+                (id_project, id_user, id_role) VALUES
+                ($id_inc, '".$config["id_user"]."', 1)";
+                mysql_query($sql);
+            }
+
 		} else {
 			echo "<h3 class='err'>".$lang_label["create_project_bad"]." ( id #$id_inc )</h3>";
 		}
@@ -96,6 +104,7 @@ echo "<table width='680' class='databox'>";
 echo "<tr>";
 echo "<th>".$lang_label["name"];
 echo "<th>".$lang_label["completion"];
+echo "<th>".lang_string ("Task / People");
 echo "<th>".$lang_label["time_used"];
 echo "<th width=82>".$lang_label["updated_at"];
 echo "<th>".$lang_label["delete"];
@@ -130,13 +139,26 @@ while ($row2=mysql_fetch_array($result2)){
 			$completion =  format_numeric(calculate_project_progress ($row2["id"]));
 			echo "<img src='include/functions_graph.php?type=progress&width=90&height=20&percent=$completion'>";
 				
+            // Total task / People
+            echo "<td class='$tdcolor' align='center'>";
+            echo give_db_sqlfree_field ("SELECT COUNT(*) FROM ttask WHERE id_project = ".$row2["id"]);
+            echo " / ";
+            echo give_db_sqlfree_field ("SELECT COUNT(*) FROM trole_people_project WHERE id_project = ".$row2["id"]);
+
 			// Time wasted
 			echo "<td class='$tdcolor' align='center'>";
 			echo format_numeric(give_hours_project ($row2["id"])). " hr";
 
 			// Last update time
 			echo "<td class='$tdcolor'_f9 align='center'>";
-			echo "Some time ago";
+            $timestamp = give_db_sqlfree_field ( "SELECT tworkunit.timestamp FROM ttask, tworkunit_task, tworkunit WHERE ttask.id_project =  ".$row2["id"]." AND ttask.id = tworkunit_task.id_task AND tworkunit_task.id_workunit = tworkunit.id ORDER BY tworkunit.timestamp DESC LIMIT 1");
+            if ($timestamp != "")
+                echo human_time_comparation ( $timestamp );
+            else
+                echo lang_string("N/A");
+               
+            
+
 
 		
 		// Delete	
@@ -151,7 +173,7 @@ while ($row2=mysql_fetch_array($result2)){
 echo "</table>";
 
 
-if (give_acl($config["id_user"], 0, "PW")==1) {
+if (give_acl($config["id_user"], 0, "PM")==1) {
 	echo "<form name='boton' method='POST'  action='index.php?sec=projects&sec2=operation/projects/project_detail&insert_form'>";
 	echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_project"]."'>";
 	echo "</form>";

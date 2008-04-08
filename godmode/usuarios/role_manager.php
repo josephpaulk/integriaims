@@ -1,9 +1,9 @@
 <?php
 
-// TOPI - the Open Tracking System for the Enterprise
+// Integria 1.0 - http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007 Artica Soluciones Tecnologicas
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -62,12 +62,16 @@ if (give_acl($config["id_user"], 0, "UM")==0) {
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	if (isset($_GET["borrar"])){ // if delete
 		$id = entrada_limpia($_GET["borrar"]);
-		$sql_delete= "DELETE FROM tprofile WHERE id = ".$id;
-		$result=mysql_query($sql_delete);
-		if (! $result)
-			echo "<h3 class='error'>".$lang_label["delete_no"]."</h3>";
-		else
-			echo "<h3 class='suc'>".$lang_label["delete_ok"]."</h3>";
+        // Role 1 cannot be deleted (project manager)
+        if ($id > 1) { 
+		    $sql_delete= "DELETE FROM tprofile WHERE id = ".$id;
+		    $result=mysql_query($sql_delete);
+		    if (! $result)
+    			echo "<h3 class='error'>".$lang_label["delete_no"]."</h3>";
+		    else
+    			echo "<h3 class='suc'>".$lang_label["delete_ok"]."</h3>";
+        } else 
+            echo "<h3 class='error'>".$lang_label["delete_no"]."</h3>";
 
 	}
 
@@ -125,7 +129,7 @@ if (give_acl($config["id_user"], 0, "UM")==0) {
 		echo "<th>".$lang_label["description"];
 		echo "<th>".$lang_label["cost"];
 		echo "<th>".$lang_label["delete"];
-		$sql1='SELECT * FROM trole ORDER BY name';
+		$sql1='SELECT * FROM trole ORDER BY id';
 		$result=mysql_query($sql1);
 		$color=1;
 		while ($row=mysql_fetch_array($result)){
@@ -140,7 +144,10 @@ if (give_acl($config["id_user"], 0, "UM")==0) {
 			echo "<tr><td valign='top' class='$tdcolor'><b><a href='index.php?sec=users&sec2=godmode/usuarios/role_manager&form_edit=1&id=".$row["id"]."'>".$row["name"]."</a></b>";
 			echo '<td valign="top" class="'.$tdcolor.'">'.$row["description"];
 			echo '<td valign="top" class="'.$tdcolor.'" align="center">'.$row["cost"];
-			echo '<td valign="top" class="'.$tdcolor.'" align="center"><a href="index.php?sec=users&sec2=godmode/usuarios/role_manager&id='.$row["id"].'&delete='.$row["id"].'" onClick="if (!confirm(\' '.$lang_label["are_you_sure"].'\')) return false;"><img border=0 src="images/cross.png"></a>';
+			echo '<td valign="top" class="'.$tdcolor.'" align="center">';
+            if ($row["id"] >1){
+                echo '<a href="index.php?sec=users&sec2=godmode/usuarios/role_manager&id='.$row["id"].'&delete='.$row["id"].'" onClick="if (!confirm(\' '.$lang_label["are_you_sure"].'\')) return false;"><img border=0 src="images/cross.png"></a>';
+            }
 		}
 		echo "</table>";
 		echo "<table cellpadding=4 cellspacing=4 width=700>";

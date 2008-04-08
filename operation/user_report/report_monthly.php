@@ -1,19 +1,17 @@
 <?php
-// FRITS - the FRee Incident Tracking System
-// =========================================
-// Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2007 Artica Soluciones Tecnologicas
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation version 2
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 // Load global vars
 
 	global $config;
@@ -68,48 +66,57 @@
 	echo "<th>".lang_string ("Detail");
 	echo "<th>".lang_string ("total_hours_for_this_month");
 
-	if (give_acl($id_user, 0, "PW") == 1){
-		$sql0= "SELECT * FROM tusuario";
-	} else {
-		$sql0= "SELECT * FROM tusuario WHERE id_usuario = '$id_user'";
-	}
+	$sql0= "SELECT * FROM tusuario";
 	if ($res0 = mysql_query($sql0)) {
 		while ($row0=mysql_fetch_array($res0)){
-			$nombre = $row0["id_usuario"];
-			$avatar = $row0["avatar"];
-			$sql= "SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_month' AND timestamp < '$end_month' AND id_user = '$nombre'";
-			if ($res = mysql_query($sql)) {	
-				$row=mysql_fetch_array($res);
-			}
-			if ($color == 1){
-				$tdcolor = "datos";
-				$color = 0;
-				$tip = "tip";
-			}
-			else {
-				$tdcolor = "datos2";
-				$color = 1;
-				$tip = "tip2";
-			}
-			echo "<tr><td class='$tdcolor'>";
-			echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=$nombre'><b>".$nombre."</b></a>";
-			echo "<td class='$tdcolor' width=60>";
-			echo "<img src='images/avatars/".$avatar."_small.png'>";
-			$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
-			$result1=mysql_query($sql1);
-			echo "<a href='#' class='$tip'>&nbsp;<span>";
-			if (mysql_num_rows($result1)){
-				while ($row1=mysql_fetch_array($result1)){
-					echo dame_perfil($row1["id_perfil"])."/ ";
-					echo dame_grupo($row1["id_grupo"])."<br>";
-				}
-			}
-			else { echo $lang_label["no_profile"]; }
-			echo "</span></a>";
-			echo "<td class='$tdcolor' width=60><center>";
-			echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$working_month&year=$working_year&id=$nombre'><img src='images/clock.png' border=0></a></center></td>";
-			echo "<td class='$tdcolor' width=60>";
-			echo $row[0];
+
+            // Can current user have access to this user ?
+            if ((user_visible_for_me ($config["id_user"], $row0["id_usuario"], "IM") == 1) OR 
+                (user_visible_for_me ($config["id_user"], $row0["id_usuario"], "PM") == 1)) {
+			    $nombre = $row0["id_usuario"];
+			    $avatar = $row0["avatar"];
+
+                // Get total hours for this month
+			    $sql= "SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_month' AND timestamp < '$end_month' AND id_user = '$nombre'";
+			    if ($res = mysql_query($sql)) {	
+				    $row=mysql_fetch_array($res);
+			    }
+			    if ($color == 1){
+				    $tdcolor = "datos";
+				    $color = 0;
+				    $tip = "tip";
+			    }
+			    else {
+				    $tdcolor = "datos2";
+				    $color = 1;
+				    $tip = "tip2";
+			    }
+			    echo "<tr><td class='$tdcolor'>";
+			    echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=$nombre'><b>".$nombre."</b></a>";
+			    echo "<td class='$tdcolor' width=60>";
+			    echo "<img src='images/avatars/".$avatar."_small.png'>";
+			    $sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
+			    $result1=mysql_query($sql1);
+			    echo "<a href='#' class='$tip'>&nbsp;<span>";
+			    if (mysql_num_rows($result1)){
+				    while ($row1=mysql_fetch_array($result1)){
+					    echo dame_perfil($row1["id_perfil"])."/ ";
+					    echo dame_grupo($row1["id_grupo"])."<br>";
+				    }
+			    }
+			    else { 
+                    echo $lang_label["no_profile"]; 
+                }
+			    echo "</span></a>";
+
+                // Clock to montly report for X user
+			    echo "<td class='$tdcolor' width=60><center>";
+			    echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$working_month&year=$working_year&id=$nombre'><img src='images/clock.png' border=0></a></center></td>";
+    
+                // Total hours this month
+			    echo "<td class='$tdcolor' width=60>";
+			    echo $row[0];
+            }
 		}
 	}
 	echo "</table>";

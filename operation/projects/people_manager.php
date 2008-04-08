@@ -1,20 +1,18 @@
 <?php
 
-// FRITS - the FRee Incident Tracking System
-// =========================================
-// Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2007 Artica Soluciones Tecnologicas
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation version 2
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 // Load global vars
 
 ?>
@@ -63,6 +61,7 @@ if ($operation == "insert"){
 		$sql = "INSERT INTO trole_people_task
 			(id_task, id_user, id_role) VALUES
 			($id_task, '$temp_id_user', '$temp_id_role')";
+        task_tracking ( $config["id_user"], $id_task, 18);
 	// People add for whole PROJECT
 	} else {
 		$sql = "INSERT INTO trole_people_project
@@ -94,6 +93,7 @@ if ($operation == "delete"){
 	// People delete for TASK
 	if ($id_task != -1){
 		$sql = "DELETE FROM trole_people_task WHERE id = $id";
+        task_tracking ( $config["id_user"], $id_task, 18);
 	// People delete for whole PROJECT
 	} else {
 		$sql = "DELETE FROM trole_people_project WHERE id = $id";
@@ -204,6 +204,8 @@ if ($id_task != -1){
 	if ($config["id_user"] == give_db_value('id_owner','tproject','id', $id_project) OR
 		give_acl ($config["id_user"], give_db_value('id_group','ttask','id', $id_task), "TM")){
 		
+        // Task people manager editor
+        // ===============================
 		echo "<h3>".$lang_label["roletask_assignment"]."</h3>";
 		echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
 		echo "<table cellpadding=4 cellspacing=4 width=500 class='databox_color'>";
@@ -220,6 +222,8 @@ if ($id_task != -1){
 		echo "</table>";
 	}
 } else {
+    // PROYECT PEOPLE MANAGER editor
+    // ===============================
 	if ($config["id_user"] != give_db_value('id_owner','tproject','id', $id_project) AND
 		give_acl ($config["id_user"], give_db_value('id_group','ttask','id', $id_task), "PM")!=1){
 		audit_db("Project People Management", $config["REMOTE_ADDR"], "Unauthorized access", "Try to access people project management");
@@ -239,7 +243,7 @@ if ($id_task != -1){
 	echo "<td valign='top' class='datos2'>";
 	echo $lang_label["user"];
 	echo "<td valign='top' class='datos2'>";
-	echo combo_users($config["id_user"]);
+    combo_user_visible_for_me ($config["id_user"], "user", 0, "PR");
 	echo "</table>";
 		
 	echo "<table cellpadding=4 cellspacing=4 width=510>";

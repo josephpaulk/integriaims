@@ -76,6 +76,7 @@ echo "<h2>".lang_string ("milestone_creation")."</h2>";
 	
 	echo "<tr><td class='datos2'>".lang_string ("timestamp");
 	echo "<td class='datos2'>";
+    $ahora_date = date("Y-m-d");
 	echo "<input type='text' id='timestamp' name='timestamp' size=10 value='$ahora_date'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"timestamp\"),this);'> ";
 
 	echo "<tr><td class='datos' valign='top'>".lang_string ("description");
@@ -83,9 +84,15 @@ echo "<h2>".lang_string ("milestone_creation")."</h2>";
 	echo "</textarea>";
 	echo "</table>";
 	echo '<table cellpadding="4" cellspacing="4" width="80%">';
-	echo "<tr><td align='right'>";
-	echo "<input type=hidden name='id_project' value='$id_project'>";
-	echo "<input name='crtbutton' type='submit' class='sub' value='".lang_string ("create")."'>";
+    
+    $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
+    // milestone creation
+    if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
+	    echo "<tr><td align='right'>";
+
+	    echo "<input type=hidden name='id_project' value='$id_project'>";
+	    echo "<input name='crtbutton' type='submit' class='sub' value='".lang_string ("create")."'>";
+    }
 	echo '</form></table>';
 }
 
@@ -128,13 +135,18 @@ if ($operation == ""){
 			
 		}
 	echo "</table>";
-	echo "<table cellpadding=4 cellspacing=4 width=100%>";
-	echo "<tr><td align=right>";
 
-	echo "<form name='ms' method='POST'  action='index.php?sec=projects&sec2=operation/projects/milestones&operation=create&id_project=$id_project'>";
-	echo "<input type='submit' class='sub next' name='crt' value='".lang_string("create_milestone")."'>";
-	echo "</form>";
-	echo "</table>";
+    $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
+    // milestone creation
+    if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
+	    echo "<table cellpadding=4 cellspacing=4 width=100%>";
+	    echo "<tr><td align=right>";
+    
+	    echo "<form name='ms' method='POST'  action='index.php?sec=projects&sec2=operation/projects/milestones&operation=create&id_project=$id_project'>";
+	    echo "<input type='submit' class='sub next' name='crt' value='".lang_string("create_milestone")."'>";
+	    echo "</form>";
+	    echo "</table>";
+    }
 } // Fin bloque else
 
 

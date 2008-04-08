@@ -36,5 +36,4 @@ global $config;
 		</table>
 		</form>
 	</div>
-
 </div>

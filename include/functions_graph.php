@@ -1,6 +1,31 @@
 <?PHP
+
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
 	include "config.php";
 	include "functions.php";
+
+function graphic_error () {
+    global $config;
+
+    Header('Content-type: image/png');
+    $imgPng = imageCreateFromPng($config["homedir"].'/images/error.png');
+    imageAlphaBlending($imgPng, true);
+    imageSaveAlpha($imgPng, true);
+    imagePng($imgPng);
+}
+
 // ***************************************************************************
 // Draw a dynamic progress bar using GDlib directly
 // ***************************************************************************
@@ -137,10 +162,12 @@ function incident_peruser ($width, $height){
 		if ($datos > 0){
 			$data[] = $datos;
 			$legend[] = $id_user;
-		}
-		
+		} 
 	} 
-	generic_pie_graph ($width, $height, $data, $legend);
+    if (isset($data))
+	    generic_pie_graph ($width, $height, $data, $legend);
+    else 
+        graphic_error();
 }
 
 // ===============================================================================

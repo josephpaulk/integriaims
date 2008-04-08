@@ -71,6 +71,7 @@ if ($operation == "workunit"){
 				$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
 				audit_db ($id_user, $config["REMOTE_ADDR"], "Work unit added", "Workunit for $id_user added to Task '$task_name'");
 			}
+            task_tracking ( $config["id_user"], $id_task, 14);
 		} else {
 			$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
 			audit_db ($id_user, $config["REMOTE_ADDR"], "Work unit updated", "Workunit for $id_user updated for Task '$task_name'");

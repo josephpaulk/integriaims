@@ -1,25 +1,20 @@
 <?php
 
-// Pandora FMS - the Free monitoring system
-// ========================================
-// Copyright (c) 2004-2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2005-2007 Artica Soluciones Tecnologicas
-// Copyright (c) 2004-2007 Raul Mateos Martin, raulofpandora@gmail.com
-// Copyright (c) 2006-2007 Jose Navarro jose@jnavarro.net
-// Copyright (c) 2006-2007 Jonathan Barajas, jonathan.barajas[AT]gmail[DOT]com
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation version 2
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 // Load global vars
-require("include/config.php");
+global $config;
 
 if (check_login() != 0) {
  	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
@@ -27,7 +22,8 @@ if (check_login() != 0) {
 	exit;
 }
 
-$id_user=$_SESSION['id_usuario'];
+$id_user=$config['id_user'];
+
 echo "<h2>".$lang_label["incident_search"]."</h2>";
 echo "<div style='width:645'>";
 echo "<div style='float:right;'><img src='images/zoom.png' width=32 height=32 class='bot' align='left'></div>";
@@ -38,21 +34,9 @@ echo "<div style='float:right;'><img src='images/zoom.png' width=32 height=32 cl
 <tr>
 <td class="datos2"><?php echo $lang_label["user"] ?>
 <td class="datos2">
-<select name="usuario" class="w120">
-<option>--
-<?php
-	$sql_1="SELECT * FROM tusuario_perfil WHERE id_usuario = '$id_user'";
-	$result_1=mysql_query($sql_1);
-	
-	while ($row_1=mysql_fetch_array($result_1)){
-		$sql_2="SELECT * FROM tusuario_perfil WHERE id_grupo = ".$row_1["id_grupo"];
-		$result_2=mysql_query($sql_2);
-		while ($row_2=mysql_fetch_array($result_2)){
-			if (give_acl($row_2["id_usuario"], $row_2["id_grupo"], "IR")==1)
-				echo "<option>".$row_2["id_usuario"];
-		}
-	}
-	echo "</select>";
+<?PHP
+
+echo combo_user_visible_for_me ($id_user, 'usuario', 1, "");
 
 ?>
 <tr><td class="datos"><?php echo $lang_label["incident_id"] ?>

@@ -26,6 +26,9 @@ $config["homedir"] = "/var/www/topi/";		// Config homedir
 $config["base_url"] = "http://localhost/topi";			// Base URL
 */
 
+$config["HEADER_EMAIL"]="Hello,\n\nThis is an automated message coming from INTEGRIA.\n\n";
+
+$config["FOOTER_EMAIL"]="Please do not respond directly this email, has been automatically created by INTEGRIA (http://integria.sf.net).\n\nThanks for your time.";
 
 $config["REMOTE_ADDR"] = getenv ("REMOTE_ADDR");
 

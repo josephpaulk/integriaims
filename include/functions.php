@@ -1,17 +1,10 @@
 <?php
 
-// Pandora FMS - the Free monitoring system
-// ========================================
-// Copyright (c) 2004-2007 Sancho Lerena, slerena@gmail.com
-// Main PHP/SQL code development and project architecture and management
-// Copyright (c) 2004-2007 Raul Mateos Martin, raulofpandora@gmail.com
-// CSS and some PHP additions
-// Copyright (c) 2006-2007 Jonathan Barajas, jonathan.barajas[AT]gmail[DOT]com
-// Javascript Active Console code.
-// Copyright (c) 2006 Jose Navarro <contacto@indiseg.net>
-// Additions to Pandora FMS 1.2 graph code and new XML reporting template management
-// Copyright (c) 2005-2007 Artica Soluciones Tecnologicas, info@artica.es
-//
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2
@@ -19,10 +12,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
 
 /**
 * Clean output string
@@ -74,6 +63,14 @@ function array_in($exampleArray, $item){
 		}
   	}
 	return $result;
+}
+
+function get_parameter ($name, $default = ""){
+    $temp = give_parameter_get ($name, $default);
+    if ($temp == $default){
+        $temp = give_parameter_post ($name, $default);
+    }
+    return $temp;
 }
 
 function give_parameter_get ( $name, $default = "" ){
@@ -150,14 +147,6 @@ function give_human_time ($int_seconds){
 
    // return output, if !empty, implode into string, else output $if_reached
    return ( !empty($build)?implode(', ', $build):$if_reached );
-}
-
-// ---------------------------------------------------------------
-// This function show a popup window using a help_id (unused)
-// ---------------------------------------------------------------
-
-function popup_help ($help_id){
-	echo "<a href='javascript:help_popup(".$help_id.")'>[H]</a>";
 }
 
 // ---------------------------------------------------------------
@@ -384,7 +373,7 @@ function render_priority ($pri){
 	}
 }
 
-function topi_sendmail ( $destination, $msg_subject = "[TOPI] Automatic email notification", $msg_text) {
+function topi_sendmail ( $destination, $msg_subject = "[INTEGRIA] Automatic email notification", $msg_text) {
 	global $config;
 	if ($destination != ""){
 		$real_text = $config["HEADER_EMAIL"].$msg_text."\n\n".$config["FOOTER_EMAIL"];

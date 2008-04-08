@@ -1,9 +1,9 @@
 <?php
 
-// TOPI - the Open Tracking System for the Enterprise
+// Integria 1.0 - http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007 Artica Soluciones Tecnologicas
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -13,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+
 // Load globar vars
 global $config;
-
 check_login();
 
 if (give_acl($config["id_user"], 0, "UM")==0) {

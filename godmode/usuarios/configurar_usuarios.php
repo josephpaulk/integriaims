@@ -1,9 +1,9 @@
 <?php
 
-// TOPI - the Open Tracking System for the Enterprise
+// Integria 1.0 - http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007 Artica Soluciones Tecnologicas
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -12,6 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 // Load global vars
 
 global $config;
@@ -56,6 +57,7 @@ if (check_login() == 0)
 		$telefono=$rowdup["telefono"]; 
 		$nivel =$rowdup["nivel"]; 
 		$nombre_real=$rowdup["nombre_real"];
+        $avatar = $rowdup["avatar"];
 	}
 	
 	// Edit user
@@ -229,7 +231,7 @@ if (check_login() == 0)
 		echo '<input type="hidden" name="edicion" value="1">';
 		echo '<input type="hidden" name="id_usuario_antiguo" value="'.$id_usuario_mio.'">';
 		
-		echo '<tr><td class="datos2">'.$lang_label["group_avail"].'<td class="datos2"><select name="grupo" class="w155">';
+		echo '<tr><td class="datos">'.$lang_label["group_avail"].'<td class="datos" colspan=2><select name="grupo" class="w155">';
 		echo "<option value=''>".$lang_label["none"];
 		$sql1='SELECT * FROM tgrupo ORDER BY nombre';
 		$result=mysql_query($sql1);
@@ -238,8 +240,8 @@ if (check_login() == 0)
 		}
 		echo '</select>';
 		
-		echo "<tr><td class='datos'>".$lang_label["profiles"];
-		echo "<td class='datos'><select name='perfil' class='w155'>";
+		echo "<tr><td class='datos2'>".$lang_label["profiles"];
+		echo "<td class='datos2' colspan=2><select name='perfil' class='w155'>";
 		$sql1='SELECT * FROM tprofile ORDER BY name';
 		$result=mysql_query($sql1);
 		while ($row=mysql_fetch_array($result)){

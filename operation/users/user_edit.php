@@ -38,6 +38,12 @@ if (check_login() == 0) {
 	$rowdup=mysql_fetch_array($resq1);
 	$nombre=$rowdup["id_usuario"];
 	
+
+    if (user_visible_for_me ($config["id_user"], $nombre) == 0){
+        audit_db($config["id_user"],$config["REMOTE_ADDR"],"ACL Forbidden","User ".$config["id_user"]." try to access to user detail of '$nombre' without access");
+        no_permission();
+    }
+
 	// Get user ID to modify data of current user.
 
 	if (isset ($_GET["modificado"])){
@@ -54,7 +60,7 @@ if (check_login() == 0) {
 			$direccion = clean_input($_POST["direccion"]);
 			$telefono = clean_input($_POST["telefono"]);
 			$nombre_real = clean_input($_POST["nombre_real"]);
-			$avatar = give_parameter_post ("avatar");
+			$avatar = get_parameter ("avatar");
 			
 			if ($pass1 != $pass2) {
 				echo "<h3 class='error'>".$lang_label["pass_nomatch"]."</h3>";
@@ -62,16 +68,15 @@ if (check_login() == 0) {
 			else {
 				echo "<h3 class='suc'>".$lang_label["update_user_ok"]."</h3>";
 			}
-			//echo "<br>DEBUG para ".$nombre;
-			//echo "<br>Comentarios:".$comentarios;	
 			$comentarios = clean_input($_POST["comentarios"]);
 			if (dame_password($nombre)!=$pass1){
 				// Only when change password
 				$pass1=md5($pass1);
-				$sql = "UPDATE tusuario SET nombre_real = '".$nombre_real."', password = '".$pass1."', telefono ='".$telefono."', direccion ='".$direccion." ', comentarios = '".$comentarios."' WHERE id_usuario = '".$nombre."'";
+				$sql = "UPDATE tusuario SET nombre_real = '$nombre_real', password = '$pass1', telefono ='$telefono', direccion ='$direccion', avatar = '$avatar', comentarios = '$comentarios' WHERE id_usuario = '".$nombre."'";
 			}
 			else 
-				$sql = "UPDATE tusuario SET nombre_real = '".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion." ', comentarios = '".$comentarios."' WHERE id_usuario = '".$nombre."'";
+                $sql = "UPDATE tusuario SET nombre_real = '$nombre_real', telefono ='$telefono', direccion ='$direccion', avatar = '$avatar', comentarios = '$comentarios' WHERE id_usuario = '".$nombre."'";
+				
 			$resq2=mysql_query($sql);
 			
 			// Ahora volvemos a leer el registro para mostrar la info modificada

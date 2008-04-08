@@ -1,7 +1,20 @@
 <?PHP
 
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ADD NOTE CONTROL
+// ADD WORKUNIT CONTROL
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 global $config;
@@ -32,8 +45,8 @@ if (give_acl($config["id_user"], 0, "IR")==1){
 	echo "<tr><td class='datos2'  width='140'>";
 	echo "<b>".$lang_label["profile"]."</b>";
 	echo "<td class='datos2'>";
- 	combo_user_task_profile ($id_task, "work_profile");
-	
+	echo combo_roles (1, 'work_profile');
+
 	echo "&nbsp;&nbsp;";
 	echo "<input type='checkbox' name='have_cost' value=1>";
 	echo "&nbsp;&nbsp;";

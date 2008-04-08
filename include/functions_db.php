@@ -1,17 +1,10 @@
 <?php
 
-// Pandora FMS - the Free monitoring system
-// ========================================
-// Copyright (c) 2004-2007 Sancho Lerena, slerena@gmail.com
-// Main PHP/SQL code development and project architecture and management
-// Copyright (c) 2004-2007 Raul Mateos Martin, raulofpandora@gmail.com
-// CSS and some PHP additions
-// Copyright (c) 2006-2007 Jonathan Barajas, jonathan.barajas[AT]gmail[DOT]com
-// Javascript Active Console code.
-// Copyright (c) 2006 Jose Navarro <contacto@indiseg.net>
-// Additions to Pandora FMS 1.2 graph code and new XML reporting template management
-// Copyright (c) 2005-2007 Artica Soluciones Tecnologicas, info@artica.es
-//
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2
@@ -19,10 +12,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-// Database functions
 
 // --------------------------------------------------------------- 
 // give_acl ()
@@ -48,10 +37,10 @@ function give_acl($id_user, $id_group, $access){
 
 		PR - Project read
 		PW - Project write
+        PM - Project management
 
-		TW - Task write
+		TR - Task read
 		TM - Task management
-		
 	*/
 
 	global $config;
@@ -84,9 +73,11 @@ function give_acl($id_user, $id_group, $access){
 					case "DM": $result = $result + $rowq2["dm"]; break;
 					case "UM": $result = $result + $rowq2["um"]; break;
 					case "PR": $result = $result + $rowq2["pr"]; break;
+                    case "PM": $result = $result + $rowq2["pm"]; break;
 					case "PW": $result = $result + $rowq2["pw"]; break;
 					case "TW": $result = $result + $rowq2["tw"]; break;
 					case "TM": $result = $result + $rowq2["tm"]; break;
+                    default : $result = $rowq2["tm"] + $rowq2["tw"] + $rowq2["pw"] + $rowq2["pm"] + $rowq2["pr"]+ $rowq2["um"]+ $rowq2["dm"] + $rowq2["fm"] + $rowq2["am"] + $rowq2["aw"] + $rowq2["ar"] + $rowq2["im"] +$rowq2["iw"] + $rowq2["ir"];
 				}
 			} 
 		}
@@ -333,21 +324,6 @@ function dame_id_grupo($id_agente){
 
 
 // --------------------------------------------------------------- 
-// Returns number of notes from a given incident
-// --------------------------------------------------------------- 
-
-function dame_numero_notas($id){
-	require("config.php"); 
-	$query1="select COUNT(*) from tnota_inc WHERE id_incidencia =".$id;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$pro=$rowdup[0]; 
-	} else 
-		$pro = "0";
-	return $pro;
-}
-
-// --------------------------------------------------------------- 
 // Returns number of files from a given incident
 // --------------------------------------------------------------- 
 
@@ -487,22 +463,6 @@ function calculate_project_progress ($id_project){
 
 
 // --------------------------------------------------------------- 
-// Returns number of registries from table of data agents
-// --------------------------------------------------------------- 
-
-function dame_numero_datos(){
-	require("config.php");
-	$query1="select COUNT(*) from tagente_datos";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$pro=$rowdup["COUNT(*)"];
-	}
-	else $pro = "0";
-	return $pro; 
-}
-
-
-// --------------------------------------------------------------- 
 // Delete incident given its id and all its notes
 // --------------------------------------------------------------- 
 
@@ -548,20 +508,6 @@ function update_user_contact($nick){
 }
 
 
-// --------------------------------------------------------------- 
-// Return email of a user given ID 
-// --------------------------------------------------------------- 
-
-function dame_email($id){ 
-	require("config.php");
-	$query1="SELECT * FROM tusuario WHERE id_usuario =".$id;
-	$resq1=mysql_query($query1);
-	$rowdup=mysql_fetch_array($resq1);
-	$nombre=$rowdup["direccion"];
-	return $nombre;
-} 
-
-
 // ---------------------------------------------------------------
 // Returns Admin value (0 no admin, 1 admin)
 // ---------------------------------------------------------------
@@ -596,30 +542,6 @@ function check_login () {
 	return 1;	
 }
 
-// --------------------------------------------------------------- 
-// Gives error message and stops execution if user 
-//doesn't have an open session and this session is from an administrator
-// --------------------------------------------------------------- 
-
-function comprueba_admin() {
-	if (isset($_SESSION["id_usuario"])){
-		$iduser=$_SESSION['id_usuario'];
-		if (dame_admin($iduser)==1){
-			$id = $_SESSION["id_usuario"];
-			require("config.php");
-			$query1="SELECT * FROM tusuario WHERE id_usuario = '".$id."'";
-			$resq1=mysql_query($query1);
-			$rowdup=mysql_fetch_array($resq1);
-			$nombre=$rowdup["id_usuario"];
-			$nivel=$rowdup["nivel"];
-			if (( $id == $nombre) and ($nivel ==1))
-				return 0;
-		}
-	}
-	require("../general/no_access.php");
-	return 1;
-}
-
 
 // ---------------------------------------------------------------
 // 0 if it doesn't exist, 1 if it does, when given email
@@ -639,73 +561,6 @@ function existe($id){
 	} else { return 0 ; }
 }
 
-
-// ---------------------------------------------------------------------- 
-// Returns a combo with the groups and defines an array 
-// to put all groups with Agent Read permission
-// ----------------------------------------------------------------------
-function list_group ($id_user){
-	$mis_grupos=array (); // Define array mis_grupos to put here all groups with Agent Read permission
-	$sql='SELECT id_grupo FROM tgrupo';
-	$result=mysql_query($sql);
-	while ($row=mysql_fetch_array($result)){
-		if ($row["id_grupo"] != 1){
-			if (give_acl($id_user,$row["id_grupo"], "AR") == 1){
-				array_push ($mis_grupos, $row["id_grupo"]); //Put in  an array all the groups the user belongs
-				echo "<option value='".$row["id_grupo"]."'>".
-				dame_nombre_grupo($row["id_grupo"])."</option>";
-			}
-		}
-	}
-	return ($mis_grupos);
-}
-
-// ---------------------------------------------------------------------- 
-// Defines an array 
-// to put all groups with Agent Read permission
-// ----------------------------------------------------------------------
-
-function list_group2 ($id_user){
-	$mis_grupos[]=""; // Define array mis_grupos to put here all groups with Agent Read permission
-	$sql='SELECT id_grupo FROM tgrupo';
-	$result=mysql_query($sql);
-	while ($row=mysql_fetch_array($result)){
-		if ($row["id_grupo"] != 1){
-			if (give_acl($id_user,$row["id_grupo"], "AR") == 1){
-				$mis_grupos[]=$row["id_grupo"]; //Put in  an array all the groups the user belongs
-			}
-		}
-	}
-	return ($mis_grupos);
-}
-
-// --------------------------------------------------------------- 
-// Return Group iconname given its name
-// --------------------------------------------------------------- 
-
-function show_icon_group($id_group){ 
-	$sql="SELECT icon FROM tgrupo WHERE id_grupo='$id_group'";
-	$result=mysql_query($sql);
-	if ($row=mysql_fetch_array($result))
-		$pro=$row["icon"];
-	else
-		$pro = "";
-	return $pro;
-}
-
-// --------------------------------------------------------------- 
-// Return Type iconname given its name
-// --------------------------------------------------------------- 
-
-function show_icon_type($id_tipo){ 
-	$sql="SELECT id_tipo, icon FROM ttipo_modulo WHERE id_tipo='$id_tipo'";
-	$result=mysql_query($sql);
-	if ($row=mysql_fetch_array($result))
-		$pro=$row["icon"];
-	else
-		$pro = "";
-	return $pro;
-}
 
 // ---------------------------------------------------------------
 // Return all childs groups of a given id_group inside array $child
@@ -754,6 +609,12 @@ function user_belong_task ($id_user, $id_task){
 	if (dame_admin ($id_user) != 0)
 		return 1;
 
+
+    $id_project = give_db_sqlfree_field ("SELECT id_project FROM ttask WHERE id = $id_task");
+    // Project manager always has access to all tasks of his project
+    if (project_manager_check ($id_project) == 1 )
+        return 1;
+
 	$query1="SELECT COUNT(*) from trole_people_task WHERE id_task = $id_task AND id_user = '$id_user'";
         $resq1=mysql_query($query1);
         $rowdup=mysql_fetch_array($resq1);
@@ -785,54 +646,6 @@ function group_belong_group($id_group_a, $id_groupset){
 		return 0;
 }
 
-// ---------------------------------------------------------------
-// Return category name
-// ---------------------------------------------------------------
-function give_modulecategory_name ($value) {
-	require("config.php");
-	require ("include/languages/language_".$language_code.".php");
-	switch ($value) {
-	   case 0: return $lang_label["cat_0"];
-	   	break;
-	   case 1: return $lang_label["cat_1"];
-	   	break;
-	   case 2: return $lang_label["cat_2"];
-	   	break;
-	   case 3: return $lang_label["cat_3"];
-	   	break;
-	}
-	return $lang_label["unknown"]; 
-}
-
-// --------------------------------------------------------------- 
-// Return network component group name given its ID
-// --------------------------------------------------------------- 
-
-function give_network_component_group_name ($id){
-	require("config.php");
-	$query1="SELECT * FROM tnetwork_component_group WHERE id_sg= ".$id;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["name"];
-	else
-		$pro = "";
-	return $pro;
-}
-
-// --------------------------------------------------------------- 
-// Return network profile name name given its ID
-// --------------------------------------------------------------- 
-
-function give_network_profile_name ($id_np){
-	require("config.php");
-	$query1="SELECT * FROM tnetwork_profile WHERE id_np= ".$id_np;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["name"];
-	else
-		$pro = "";
-	return $pro;
-}
 
 // --------------------------------------------------------------- 
 // Return incident priority
@@ -993,6 +806,8 @@ function task_tracking ( $id_user, $id_task, $state, $id_note = 0, $id_file = 0)
 		16 - Task completion changed
 		17 - Task finished.
 		18 - Task member added
+        19 - Task moved 
+        20 - Task deleted
 	*/		
 	
 	audit_db ($id_user, $REMOTE_ADDR, "Task #$id_task tracking updated", "State #$state");
@@ -1066,13 +881,19 @@ function mail_incident_workunit ($id_inc, $id_usuario, $nota, $timeused){
 	$usuario = $row["id_usuario"];
 	$creator = $row["id_creator"];
 
-	$subject = "[TOPI] Incident #$id_inc ($titulo) has a new workunit from $id_usuario ";
-	$myurl = topi_quicksession ("index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc");
-	$text = "Incident #$id_inc ($titulo) has been updated and a new workunit has been added to history. \nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario";
-	$text .= "\nDescription: $descripcion";
-	$text .= "\nTimeused on new workunit: $timeused";
-	$text .= "\nNew workunit: $nota";
-	$text .="\nDirect URL access: $myurl";
+    // Resolve code for its name
+    $estado = give_db_sqlfree_field ("SELECT name FROM tincident_status WHERE id = $estado");
+
+	$subject = "[INTEGRIA] Incident #$id_inc ($titulo) has a new workunit from $id_usuario ";
+	$myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc");
+	
+    $text = "Incident #$id_inc ($titulo) has been updated and a new workunit has been added to history.\n"; 
+    $text .= "\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario";
+    $text .= "\nTimeused on new workunit: $timeused";
+    $text .= "\nDirect URL access: $myurl";
+	$text .= "\nDescription: \n\n$descripcion\n";
+	$text .= "\nNew workunit added to incident by $id_usuario: \n\n $nota \n\n";
+	
 	// Send email for owner and creator of this incident
 	$email_creator = give_db_value ("direccion", "tusuario", "id_usuario", $creator);
 	$email_owner = give_db_value ("direccion", "tusuario", "id_usuario", $usuario);
@@ -1101,21 +922,24 @@ function mail_incident ($id_inc, $modo = 0){
 	$estado = $row["estado"];
 	$usuario = $row["id_usuario"];
 	$creator = $row["id_creator"];
+    
+    // Resolve code for its name
+    $estado = give_db_sqlfree_field ("SELECT name FROM tincident_status WHERE id = $estado");
 
 	if ($modo == 0){
-		$subject = "[TOPI] Incident #$id_inc ($titulo) has been updated.";
+		$subject = "[INTEGRIA] Incident #$id_inc ($titulo) has been updated.";
 	} else if ($modo == 1){
-		$subject = "[TOPI] Incident #$id_inc ($titulo) has been created.";
+		$subject = "[INTEGRIA] Incident #$id_inc ($titulo) has been created.";
 	} else if ($modo == 2){
-		$subject = "[TOPI] Incident #$id_inc ($titulo) has a new file attached.";
+		$subject = "[INTEGRIA] Incident #$id_inc ($titulo) has a new file attached.";
 	} else if ($modo == 3){
-		$subject = "[TOPI] Incident #$id_inc ($titulo) has been deleted.";
+		$subject = "[INTEGRIA] Incident #$id_inc ($titulo) has been deleted.";
 	}
 	
-	$text = "Incident #$id_inc ($titulo) has been updated. \nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario\n";
-	$myurl = topi_quicksession ("index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc");
+	$text = "Incident #$id_inc ($titulo) has been updated. \n\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario\n";
+	$myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc");
 	$text .= "Direct URL Access: $myurl\n";
-	$text .= "Description: $descripcion";
+	$text .= "Description: \n\n$descripcion";
 	
 	// Send email for owner and creator of this incident
 	$email_creator = give_db_value ("direccion", "tusuario", "id_usuario", $creator);
@@ -1133,6 +957,90 @@ function mail_incident ($id_inc, $modo = 0){
 				topi_sendmail ( $row[0], $subject, $text);
 		}
 	}		
+}
+
+function people_involved_incident ($id_inc){
+    global $config;
+    $row0 = give_db_row ("tincidencia", "id_incidencia", $id_inc);
+    $people = array();
+
+    array_push ($people, $row0["id_creator"]);
+     if (!in_array($row0["id_usuario"], $people)) {    
+        array_push ($people, $row0["id_usuario"]);
+    }
+ 
+    // Take all users with workunits for this incident
+    $sql1 = "SELECT DISTINCT(tusuario.id_usuario) FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
+    if ($result=mysql_query($sql1)) {
+        while ($row=mysql_fetch_array($result)){
+            if (!in_array($row[0], $people))
+                array_push ($people, $row[0]);
+        }
+    }
+    return $people;
+}
+
+/*
+ This function return 1 if target_user is visible for a user (id_user)
+ with a permission oc $access (PM, IM, IW...) on any of its profiles 
+ For each comparation uses profile (access bit) and group that id_user
+ have.
+*/
+
+function user_visible_for_me ($id_user, $target_user, $access = ""){
+    global $config; 
+    $access = strtolower($access);
+
+    if (dame_admin ($id_user) == 1){
+        return 1;
+    }
+
+    if ($id_user == $target_user){
+        return 1;
+    }
+
+    // I have access to group ANY ?
+
+    if ($access == "")
+        $sql_0 = "SELECT COUNT(*) FROM tusuario_perfil WHERE id_usuario = '$id_user' AND id_grupo = 1 ";
+    else
+        $sql_0 = "SELECT COUNT(*) FROM tusuario_perfil, tprofile WHERE tusuario_perfil.id_usuario = '$id_user' AND id_grupo = 1 AND tprofile.$access = 1 AND tprofile.id = tusuario_perfil.id_perfil";
+    $result_0 = mysql_query($sql_0);
+    $row_0 = mysql_fetch_array($result_0);
+    if ($row_0[0] > 0) 
+        return 1;
+
+    // Show users from my groups
+    if ($access == "")
+        $sql_1="SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$id_user'";
+    else
+        $sql_1="SELECT tusuario_perfil.id_grupo FROM tusuario_perfil, tprofile WHERE tusuario_perfil.id_usuario = '$id_user' AND tprofile.$access = 1 AND tprofile.id = tusuario_perfil.id_perfil";
+    $result_1=mysql_query($sql_1);
+    while ($row_1=mysql_fetch_array($result_1)){
+        $sql_2="SELECT * FROM tusuario_perfil WHERE id_grupo = ".$row_1["id_grupo"];
+        $result_2=mysql_query($sql_2);
+        while ($row_2=mysql_fetch_array($result_2)){
+            if ($row_2["id_usuario"] == $target_user){
+                return 1;
+            }
+        }
+    }
+
+    // Show users for group 1 (ANY)
+    $sql_2 = "SELECT * FROM tusuario_perfil WHERE id_grupo = 1";
+    $result_2 = mysql_query($sql_2);
+    while ($row_2 = mysql_fetch_array($result_2)){
+        if ($row_2["id_usuario"] == $target_user){
+            if ($access == "")
+                return 1; 
+            else {
+                if (give_acl ($config["id_user"], 1, $access) == 1)
+                    return 1;
+            }
+        }
+    }
+    
+    return 0;
 }
 
 ?>

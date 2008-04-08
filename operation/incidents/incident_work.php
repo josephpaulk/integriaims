@@ -83,16 +83,6 @@ if (isset($_GET["id_inc"])){
 		echo "</li>";
 	}
 
-
-	// Notes
-	$note_number = dame_numero_notas ($id_inc);
-	if ($note_number > 0){
-		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_notes&id=$id_inc'><img src='images/note.png' class='top' border=0> ".$lang_label["Notes"]." ($note_number) </a>";
-		echo "</li>";
-	}
-
-
 	echo "</ul>";
 	echo "</div>";
 	echo "<div style='height: 25px'> </div>";

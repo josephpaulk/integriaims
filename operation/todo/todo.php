@@ -183,8 +183,8 @@ if (check_login() == 0){
 		echo "</select>";
 
 		echo "<tr><td class='datos2'>".lang_string ("assigned_to_user");
-		echo "<td class='datos2'>";
-		echo combo_users($id_user);
+		echo "<td class='datos2'>";	
+        combo_user_visible_for_me ($config["id_user"],"user",0, "");
 
 		// Task
 		echo "<tr><td class='datos'>".lang_string ("task");

@@ -1,5 +1,123 @@
 <?PHP
 
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0, $access = "IR"){
+    global $config; 
+    $userlist = array();
+
+    echo "<select name='$form_name' style='width: 200px'>";
+    if ($any == 1)
+        echo "<option value=''>" . lang_string ("Any");
+    if ($id_user != "")
+        echo "<option value='".$id_user."'>" . dame_nombre_real ($id_user);
+
+    // If this user has present in group "any" with any permission, show all users 
+    if (give_acl($id_user, 1, "")==1) {
+        $result_2=mysql_query("SELECT * FROM tusuario WHERE id_usuario != '$id_user'");
+        while ($row_2=mysql_fetch_array($result_2)) {
+            echo "<option value='".$row_2["id_usuario"]."'>". $row_2["nombre_real"];
+        }
+        echo "</select>";
+        return;
+    }
+
+    // Show users from my groups
+    $sql_1="SELECT * FROM tusuario_perfil WHERE id_usuario = '$id_user'";
+    $result_1=mysql_query($sql_1);
+    while ($row_1=mysql_fetch_array($result_1)){
+        $sql_2="SELECT * FROM tusuario_perfil WHERE id_grupo = ".$row_1["id_grupo"];
+        $result_2=mysql_query($sql_2);
+        while ($row_2=mysql_fetch_array($result_2)){
+            if (give_acl($row_2["id_usuario"], $row_2["id_grupo"], $access)==1) {
+                if ($row_2["id_usuario"] != $id_user){
+                    if (!in_array($row_2["id_usuario"], $userlist)) {
+                        array_push($userlist, $row_2["id_usuario"]);
+                    }
+                }
+            }
+        }
+    }
+
+    // Show users for group 1 (ANY)
+    $sql_2="SELECT * FROM tusuario_perfil WHERE id_grupo = 1";
+    $result_2=mysql_query($sql_2);
+    while ($row_2=mysql_fetch_array($result_2)){
+        if (give_acl($row_2["id_usuario"], $row_2["id_grupo"], $access )==1) {
+            if ($row_2["id_usuario"] != $id_user){
+                if (!in_array($row_2["id_usuario"], $userlist)) {
+                    array_push($userlist, $row_2["id_usuario"]);
+                }
+            }
+        }
+    }
+
+    while (sizeof($userlist) >0){
+            $tempuser_id = array_pop ($userlist);
+            echo "<option value='".$tempuser_id."'>". give_db_sqlfree_field ("SELECT nombre_real FROM tusuario WHERE id_usuario= '".$tempuser_id."'");
+        }
+    echo "</select>";
+}
+
+
+
+function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any = 0, $perm = ''){
+    global $config; 
+    $grouplist = array();
+
+    echo "<select name='$form_name' style='width: 200px'>";
+
+    // Have group "ANY" attached to any of its profiles ?
+    $sql_0 = "SELECT COUNT(*) FROM tusuario_perfil WHERE id_usuario = '$id_user' AND id_grupo = 1";
+    $result_0 = mysql_query($sql_0);
+    $row_0 = mysql_fetch_array($result_0);
+    if ($row_0[0] > 0) {
+        $result_1 = mysql_query("SELECT * FROM tgrupo WHERE id_grupo > 1 ORDER BY nombre");
+        while ($row_1 = mysql_fetch_array($result_1)){
+            echo "<option value='".$row_1["id_grupo"]."'>".$row_1["nombre"];
+        }
+    }
+    // Not ANY...
+    else {
+        if ($any == 1)
+            echo "<option value='1'>". lang_string ("Any");
+    
+        // Show my groups
+        $sql_1="SELECT * FROM tusuario_perfil WHERE id_usuario = '$id_user'";
+        $result_1=mysql_query($sql_1);
+        while ($row_1=mysql_fetch_array($result_1)){
+            if ($row_1["id_grupo"] != 1){
+                if (!in_array($row_1["id_grupo"], $grouplist)) {
+                    if ($perm != ""){
+                        if (give_acl($id_user, $row_1["id_grupo"], $perm )==1){
+                            array_push($grouplist, $row_1["id_grupo"]);
+                        }
+                    } else {
+                        array_push($grouplist, $row_1["id_grupo"]);
+                    }
+                }
+            }
+        }
+    
+        while (sizeof($grouplist) >0){
+            $tempgroup_id = array_pop ($grouplist);
+            echo "<option value='".$tempgroup_id."'>". give_db_sqlfree_field ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$tempgroup_id);
+        }
+    }
+    echo "</select>";
+}
+
 // Returns a combo with valid profiles for CURRENT user in this task
 // ----------------------------------------------------------------------
 function combo_user_task_profile ($id_task, $form_name="work_profile", $id="", $id_user = ""){
@@ -49,7 +167,7 @@ function combo_users_project ($id_project){
 }
 
 
-// Returns a combo with the users available
+// Returns a combo with ALL the users available
 // ----------------------------------------------------------------------
 function combo_users ($actual = "") {
 	echo "<select name='user'>";
@@ -166,9 +284,9 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 	global $lang_label;
 
 	if ($disabled == 0)
-		echo "<select name='task_user'>";
+		echo "<select name='task_user' style='width: 120px'>";
 	else 
-		echo "<select name='task_user' disabled>";
+		echo "<select name='task_user' disabled style='width: 120px'>";
 
 	if ($show_vacations == 1)
 		echo "<option value=-1>".$lang_label["vacations"];
@@ -182,12 +300,12 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 	} 
 
 	echo "<option value=0>".$lang_label["N/A"];
-	$sql = "SELECT ttask.id, ttask.name FROM ttask, tproject WHERE ttask.id != $actual AND ttask.id_project = tproject.id";
-
+	$sql = "SELECT ttask.id, ttask.name FROM ttask, trole_people_task WHERE ttask.id != $actual AND ttask.id = trole_people_task.id_task AND trole_people_task.id_user = '$id_user'";
 	$result = mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
 		echo "<option value='".$row[0]."'>".substr($row[1],0,35);
 	}
+    
 	echo "</select>";
 }
 
@@ -230,11 +348,11 @@ function combo_task_user_participant ($id_user, $show_vacations = 0, $actual = 0
 
 // Returns a combo with the available roles
 // ----------------------------------------------------------------------
-function combo_roles ($include_na = 0) {
+function combo_roles ($include_na = 0, $name = 'role') {
 	global $config;
 	global $lang_label;
 	
-	echo "<select name='role'>";
+	echo "<select name='$name'>";
 	if ($include_na == 1)
 		echo "<option value=0>".$lang_label["N/A"];
 	$sql = "SELECT * FROM trole";
@@ -244,6 +362,22 @@ function combo_roles ($include_na = 0) {
 	}
 	echo "</select>";
 }
+
+// Returns a combo with projects with id_user inside participants
+// ----------------------------------------------------------------------
+function combo_projects_user ($id_user, $name = 'project') {
+    global $config;
+    
+    echo "<select name='$name' style='width:200px'>";
+    $sql = "SELECT * FROM trole_people_project WHERE id_user = '$id_user'";
+    $result=mysql_query($sql);
+    while ($row=mysql_fetch_array($result)){
+        echo "<option value='".$row["id_project"]."'>".give_db_sqlfree_field("SELECT name FROM tproject WHERE id = ".$row["id_project"]);
+    }
+    echo "</select>";
+}
+
+
 
 function show_workunit_data ($row3, $title) {
 	global $config;

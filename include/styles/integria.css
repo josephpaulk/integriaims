@@ -199,14 +199,14 @@ form.searchform input.button {
 /*****************/
 #wrap {
 	margin: 0 auto;
-   	width: 980px;  	
+   	width: 1080px;
 	text-align: left;		
 	background: #FFF;	
 }
 #content-wrap {
 	clear:both;
    	margin: 0; padding:0;
-	width: 980px;	
+	width: 1080px;
 }
 
 /* header */
@@ -283,7 +283,7 @@ form.searchform input.button {
 	float: left;
 	margin-left: 7px;
 	padding: 0;
-	width: 758px;
+	width: 858px;
 	border-left: 1px solid #f2f2f2;
 	min-height: 500px;
 }
@@ -375,7 +375,8 @@ form.searchform input.button {
 	float: left;
 	text-transform: uppercase;
 	font: bold 1.2em Arial, Sans-serif;
-	width: 980px;
+	/* width: 980px; */
+    width: 100%;
 	border: 1px solid #808080;
 	border-width: 0 0 4px 0;	
 	list-style: none;

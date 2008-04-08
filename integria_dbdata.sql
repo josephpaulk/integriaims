@@ -1,3 +1,16 @@
+-- Integria 1.0 - http://integria.sourceforge.net
+-- ==================================================
+-- Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+-- Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+
+-- This program is free software; you can redistribute it and/or
+-- modify it under the terms of the GNU General Public License
+-- as published by the Free Software Foundation; version 2
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+
 
 INSERT INTO `tconfig` (token, value) VALUES  ('language_code','en'),('block_size','20'),('db_scheme_version','1.0'),('db_scheme_build','ID80114'),('bgimage','background4.jpg');
 
@@ -18,7 +31,7 @@ INSERT INTO `tlink` VALUES  (0000000001,'Integria Project','http://integria.sour
 
 -- Default password is 'integria2008'
 
-INSERT INTO `tusuario` VALUES ('admin','Default Admin','746cd5f958ce97c0dd9b93fd6ebc5294','Default Integria Admin superuser. Please change password ASAP','2007-03-27 18:59:39','admin@integria.sf.net','555-555-555',1,'people_1'),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2006-04-20 13:00:05','demo@nowhere.net','+4555435435',0,'people_3');
+INSERT INTO `tusuario` VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2007-03-27 18:59:39','admin@integria.sf.net','555-555-555',1,'people_1'),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2006-04-20 13:00:05','demo@nowhere.net','+4555435435',0,'people_3');
 
 INSERT INTO `tusuario_perfil` VALUES (1,'demo',1,1,'admin'),(2,'admin',5,1,'admin');
 
@@ -30,8 +43,8 @@ INSERT INTO tincident_status (id,name) VALUES (1,'New'), (2,'Unconfirmed'), (3,'
 
 INSERT INTO tincident_origin (name) VALUES ('User report'), ('Customer'), ('Internal department'), ('External department'), ('Application data'), ('Bug report'), ('Problem detected'), ('Other source' );
 
-INSERT INTO `trole` VALUES (1,'Support engineer','',30),(2,'Systems engineer','',40),(3,'Junior consultant','',50),(4,'Junior programmer','',45),(5,'Senior programmer','',65),(6,'Analist','',75),(7,'Senior consultant','',75),(8,'Project manager','',125);
+INSERT INTO `trole` VALUES (1,'Project manager','',125),(2,'Systems engineer','',40),(3,'Junior consultant','',50),(4,'Junior programmer','',45),(5,'Senior programmer','',65),(6,'Analist','',75),(7,'Senior consultant','',75),(8,'Support engineer','',30);
 
-INSERT INTO `tprofile` VALUES (1,'Project Participant',1,1,0,0,0,0,1,1,0,1,0,1,0),(2,'Project Manager',1,1,1,0,0,0,1,1,1,1,1,1,1),(3,'Incident Manager',1,1,1,0,0,0,1,1,0,0,0,0,0),(4,'Incident Operator',1,1,0,0,0,0,1,1,0,0,0,0,0),(5,'Global Manager',1,1,1,1,1,1,1,1,1,1,1,1,1);
+INSERT INTO `tprofile` VALUES (1,'Project Participant',1,1,0,0,0,0,1,1,0,1,0,1,0,0),(2,'Project Manager',1,1,1,0,0,0,1,1,1,1,1,1,1,1),(3,'Incident Manager',1,1,1,0,0,0,1,1,0,0,0,0,0,0),(4,'Incident Operator',1,1,0,0,0,0,1,1,0,0,0,0,0,0),(5,'Global Manager',1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 

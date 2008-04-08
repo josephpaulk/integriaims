@@ -52,24 +52,26 @@ $color = 1;
 				$color = 1;
 				$tip = "tip2";
 			}
-			echo "<tr><td class='$tdcolor'><a href='index.php?sec=users&sec2=operation/users/user_edit&ver=".$nombre."'><b>".$nombre."</b></a>";
-			echo "<td class='".$tdcolor."f9' width=150>".$fecha_registro;
-			echo "<td class='$tdcolor' width=60>";
-			echo "<img src='images/avatars/".$avatar."_small.png'>";
-
-			$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
-			$result=mysql_query($sql1);
-			echo "<a href='#' class='$tip'>&nbsp;<span>";
-			if (mysql_num_rows($result)){
-				while ($row=mysql_fetch_array($result)){
-					echo dame_perfil($row["id_perfil"])."/ ";
-					echo dame_grupo($row["id_grupo"])."<br>";
-				}
-			}
-			else { echo $lang_label["no_profile"]; }
-			echo "</span></a>";
-			echo "<td class='$tdcolor' width='100'>".substr($rowdup["nombre_real"],0,16);
-			echo "<td class='$tdcolor'>".$comentarios;
+            if (user_visible_for_me ($config["id_user"], $rowdup["id_usuario"]) == 1){
+			    echo "<tr><td class='$tdcolor'><a href='index.php?sec=users&sec2=operation/users/user_edit&ver=".$nombre."'><b>".$nombre."</b></a>";
+			    echo "<td class='".$tdcolor."f9' width=150>".$fecha_registro;
+			    echo "<td class='$tdcolor' width=60>";
+			    echo "<img src='images/avatars/".$avatar."_small.png'>";
+    
+			    $sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
+			    $result=mysql_query($sql1);
+			    echo "<a href='#' class='$tip'>&nbsp;<span>";
+			    if (mysql_num_rows($result)){
+				    while ($row=mysql_fetch_array($result)){
+					    echo dame_perfil($row["id_perfil"])."/ ";
+					    echo dame_grupo($row["id_grupo"])."<br>";
+				    }
+			    }
+			    else { echo $lang_label["no_profile"]; }
+			    echo "</span></a>";
+			    echo "<td class='$tdcolor' width='100'>".substr($rowdup["nombre_real"],0,16);
+			    echo "<td class='$tdcolor'>".$comentarios;
+            }
 		}
 	
 
@@ -86,22 +88,6 @@ echo "</table>";
 	$query_del1="SELECT * FROM tprofile";
 	$resq1=mysql_query($query_del1);
 	echo "<tr>";
-/*
-  `name`
-  `ir` tinyint(1) NOT NULL default '0',
-  `iw` tinyint(1) NOT NULL default '0',
-  `im` tinyint(1) NOT NULL default '0',
-  `um` tinyint(1) NOT NULL default '0',
-  `dm` tinyint(1) NOT NULL default '0',
-  `fm` tinyint(1) NOT NULL default '0',
-  `ar` tinyint(1) NOT NULL default '0',
-  `aw` tinyint(1) NOT NULL default '0',
-  `am` tinyint(1) NOT NULL default '0',
-  `pr` tinyint(1) NOT NULL default '0',
-  `pw` tinyint(1) NOT NULL default '0',
-  `tw` tinyint(1) NOT NULL default '0',
-  `tm` tinyint(1) NOT NULL default '0',
-*/
   
 	echo "<th width='180px'><font size=1>".$lang_label["profiles"];
 	echo "<th width='40px'><font size=1>IR<a href='#' class='tipp'>&nbsp;<span>".$help_label["IR"]."</span></a>";
@@ -118,6 +104,7 @@ echo "</table>";
 
 	echo "<th width='40px'><font size=1>PR<a href='#' class='tipp'>&nbsp;<span>".$help_label["PR"]."</span></a>";
 	echo "<th width='40px'><font size=1>PW<a href='#' class='tipp'>&nbsp;<span>".$help_label["PW"]."</span></a>";
+    echo "<th width='40px'><font size=1>PM<a href='#' class='tipp'>&nbsp;<span>".$help_label["PM"]."</span></a>";
 
 	echo "<th width='40px'><font size=1>TW<a href='#' class='tipp'>&nbsp;<span>".$help_label["TW"]."</span></a>";
 	echo "<th width='40px'><font size=1>TM<a href='#' class='tipp'>&nbsp;<span>".$help_label["TM"]."</span></a>";
@@ -150,7 +137,7 @@ echo "</table>";
 		$pw = $rowdup["pw"];
 		$tw = $rowdup["tw"];
 		$tm = $rowdup["tm"];
-
+        $pm = $rowdup["pm"];
 		echo "<tr><td class='$tdcolor"."_id'>".$nombre;
 		
 		echo "<td class='$tdcolor'>";
@@ -185,7 +172,10 @@ echo "</table>";
 			
 		echo "<td class='$tdcolor'>";
 		if ($pw == 1) echo "<img src='images/ok.png' border=0>";
-			
+
+        echo "<td class='$tdcolor'>";
+        if ($pm == 1) echo "<img src='images/ok.png' border=0>";			
+
 		echo "<td class='$tdcolor'>";
 		if ($tw== 1) echo "<img src='images/ok.png' border=0>";
 

@@ -1,3 +1,15 @@
+-- Integria 1.0 - http://integria.sourceforge.net
+-- ==================================================
+-- Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+-- Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+
+-- This program is free software; you can redistribute it and/or
+-- modify it under the terms of the GNU General Public License
+-- as published by the Free Software Foundation; version 2
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
 
 -- Table structure for table `tattachment`
 --
@@ -97,6 +109,7 @@ CREATE TABLE  `tprofile` (
   `am` tinyint(1) NOT NULL default '0',
   `pr` tinyint(1) NOT NULL default '0',
   `pw` tinyint(1) NOT NULL default '0',
+  `pm` tinyint(1) NOT NULL default '0',
   `tw` tinyint(1) NOT NULL default '0',
   `tm` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
@@ -181,7 +194,7 @@ CREATE TABLE `tproject` (
 CREATE TABLE `ttask_track` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_task` int(10) NOT NULL default '0',
-  `id_user` int(10) unsigned NOT NULL default '0',
+  `id_user` varchar(240) NOT NULL default '',
   `id_external` int(10) unsigned NOT NULL default '0',
   `state` tinyint unsigned NOT NULL default '0',
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -213,6 +226,7 @@ CREATE TABLE `tworkunit` (
   `description` mediumtext NOT NULL,
   `have_cost` tinyint unsigned NOT NULL DEFAULT 0,
   `id_profile` int(10) unsigned NOT NULL default '0',
+  `locked` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY  (`id`)
 );
 
@@ -315,3 +329,27 @@ CREATE TABLE `tquicksession` (
   `pwdhash` varchar(250) NOT NULL default '',
   PRIMARY KEY  (`id`)
 );
+
+-- Table for special days, non working or corporate vacations --
+
+CREATE TABLE `tvacationday` (
+  `id` int(6) unsigned NOT NULL auto_increment,
+  `day` int(4) unsigned NOT NULL default '0',
+  `month` int(4) unsigned NOT NULL default '0',
+  `name` varchar(250) NOT NULL default '',
+  PRIMARY KEY  (`ID_sesion`)
+);
+
+-- Table for bills, and externals expenses imputable to a task / project
+
+CREATE TABLE `texpense`
+  `id` int(6) unsigned NOT NULL auto_increment,
+  `id_user` varchar(250) default NULL,
+  `id_task` int(11) unsigned NULL default NULL,
+  `bill_id` varchar(50) NOT NULL default '',
+  `ammount` float(9,2) NOT NULL DEFAULT '0.0',
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  `description` mediumtext NOT NULL,
+  PRIMARY KEY  (`ID_sesion`)
+);
+

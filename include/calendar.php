@@ -1,9 +1,9 @@
 <?php
 
-// FRITS - the FRee Incident Tracking System
-// =========================================
-// Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2007 Artica Soluciones Tecnologicas
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,6 +20,8 @@
 // Modified by Sancho Lerena  <slerena@gmail.com>, 2007 (created generate_calendar_agenda modified function).
 
 function generate_calendar_agenda ($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array(), $id_user = "" ){
+    global $config;
+
 	$first_of_month = gmmktime(0,0,0,$month,1,$year);
 	#remember that mktime will automatically correct if invalid dates are entered
 	# for instance, mktime(0,0,0,12,32,1997) will be the date for Jan 1, 1998
@@ -81,24 +83,24 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 		if ($day < 10)
 			$day = "0".$day;
 		$mysql_date = "$year-$month-$day";
-		$sqlquery = "SELECT * FROM tagenda WHERE id_user = '$id_user' AND timestamp LIKE '$mysql_date%' ORDER BY timestamp ASC";
+		$sqlquery = "SELECT * FROM tagenda WHERE timestamp LIKE '$mysql_date%' ORDER BY timestamp ASC";
  		$res=mysql_query($sqlquery);
 		while ($row=mysql_fetch_array($res)){
 			$mysql_time = substr($row["timestamp"],11);
 			$event_string = substr($row["content"],0,150);
-			$event_privacy = $row["public"];
+			$event_public = $row["public"];
 			$event_alarm = $row["alarm"];
 			$event_user = $row["id_user"];
-			$calendar .= $mysql_time."&nbsp;";
-			if ($event_alarm > 0)
-				$calendar .= "<img src='images/bell.png'>";
-			if ($event_privacy > 0)
-				$calendar .= "<img src='images/user_comment.png'>";
-			$calendar .= "<img src='images/cancel.gif'>";
-			$calendar .= "<br><hr width=110><font size='1pt'>[$event_user] ".$event_string."</font><br><br>";
+            if (($event_user == $config["id_user"]) OR ($event_public == 1)){
+			    $calendar .= $mysql_time."&nbsp;";
+			    if ($event_alarm > 0)
+				    $calendar .= "<img src='images/bell.png'>";
+			    if ($event_public > 0)
+				    $calendar .= "<img src='images/user_comment.png'>";
+			    $calendar .= "<img src='images/cancel.gif'>";
+			    $calendar .= "<br><hr width=110><font size='1pt'>[$event_user] ".$event_string."</font><br><br>";
+            }
 		}
-		
-
 	}
 	if($weekday != 7) $calendar .= '<td colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
 	return $calendar."</tr>\n</table>\n";

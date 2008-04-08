@@ -1,9 +1,9 @@
 <?php
 
-// INTEGRIA - OpenSource Management for the Enterprise
-// http://integria.sourceforge.net
+// Integria 1.0 - http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
 // Gantt php class example and configuration file
 // Copyright (C) 2005 Alexandre Miguel de Andrade Souza
 
-$config["build_version"]="PC080114"; //PCyymmdd
+$config["build_version"]="PC080409"; //PCyymmdd
 $config["version"]="v1.0dev";
 global $config;
 
@@ -93,6 +93,7 @@ $clean_output = give_parameter_get ("clean_output",0);
 <meta name="robots" content="index, follow">
 <link rel="icon" href="images/integria.ico" type="image/ico">
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css">
+<link rel="stylesheet" href="include/styles/integria_tip.css" type="text/css">
 <script type='text/JavaScript' src='include/calendar.js'></script>
 <script type='text/JavaScript' src='include/integria.js'></script>
 </head>
@@ -183,11 +184,8 @@ $clean_output = give_parameter_get ("clean_output",0);
 			$primera = substr ($pass, 0, 1);
 			$ultima = substr ($pass, strlen ($pass) - 1, 1);
 			$pass = $primera . "****" . $ultima;
-			audit_db ($nick, $REMOTE_ADDR, "Logon Failed",
+			audit_db ($nick, $config["REMOTE_ADDR"], "Logon Failed",
 				  "Invalid username: " . $nick . " / " . $pass);
-			echo '<div id="foot">';
-			include "general/footer.php";
-			echo '</div>';
 			exit;
 		} 
 	} elseif (! isset ($_SESSION['id_usuario'])) {

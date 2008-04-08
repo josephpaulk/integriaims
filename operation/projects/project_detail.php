@@ -1,20 +1,18 @@
 <?php
 
-// FRITS - the FRee Incident Tracking System
-// =========================================
-// Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2007 Artica Soluciones Tecnologicas
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation version 2
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 // Load global vars
 
 global $config;
@@ -167,8 +165,8 @@ echo '<tr>';
 echo '<td class="datos"><b>'.$lang_label["project_manager"].'</b>';
 echo "<td class='datos'>";
 $id_owner = give_db_value ( 'id_owner', 'tproject', 'id', $id_project);
-if ((give_acl($config["id_user"], 0, "PW") ==1) OR ($config["id_user"] == $id_owner )) {
-	combo_users ($owner);
+if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_owner )) {
+	combo_user_visible_for_me ($config["id_user"],"user", 0, "PR");
 } else {
 	echo $id_owner;
 }

@@ -384,6 +384,7 @@ $help_label["IW"]="Incidents Writing rights";
 $help_label["IM"]="Incidents Management rights";
 $help_label["PW"]="Project Edition rights";
 $help_label["PR"]="Project Read rights";
+$help_label["PM"]="Project Management";
 $help_label["UM"]="Users Management rights";
 $help_label["DM"]="Database Management rights";
 $help_label["FM"]="Integria Management rights";
@@ -756,7 +757,7 @@ $lang_label["incident_tracking"]="Incident tracking";
 $lang_label["state"]="State";
 $lang_label["incident_creation"]="Incident created";
 $lang_label["incident_updated"]="Incident updated";
-$lang_label["incident_note_added"]="Note added to incident";
+$lang_label["incident_note_added"]="Workunit added to incident";
 $lang_label["incident_file_added"]="File added to incident";
 $lang_label["incident_change_resolution"]="Incident resolution has changed";
 $lang_label["incident_change_status"]="Incident status has changed";
@@ -894,6 +895,11 @@ $lang_label["Monthly report for"]="Monthly report for";
 $lang_label["weekly_report"]="Weekly report";
 $lang_label["Gantt graph"]="Gantt graph";
 $lang_label["milestones"]="Milestones";
+
+
+// Abril 2008
+
+$lang_label["incident_user_help"]="User assigned here is user that will be responsible to manage incident. If you're opening an incident and want to be resolved by someone different than yourself, please assign to other user";
 
 global $lang_label; 
 global $help_label;

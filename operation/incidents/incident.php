@@ -158,9 +158,9 @@ if (isset($_POST['operacion']))
 	echo " -&gt; ".$lang_label["incident_view_filter"]." - ".$_POST['operacion']."</h2>";
 else
 	echo "</h2>";
-echo "<div class=databox style='width: 500px'>";
-echo "<form name='visualizacion' method='POST' action='index.php?sec=incidencias&sec2=operation/incidents/incident'>";
-echo '<table border=0 width=100%>';
+echo "<div class=databox style='width: 400px'>";
+echo "<form name='visualizacion' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident'>";
+echo '<table border=0 width=90%>';
 echo "<tr><td>";
 echo '<table border=0 width=400>';
 echo "<tr>";
@@ -280,7 +280,7 @@ if ($row2_count[0] <= 0 ) {
 } else {
 	// TOTAL incidents
 	$total_incidentes = $row2_count[0];
-	$url = "index.php?sec=incidencias&sec2=operation/incidents/incident";
+	$url = "index.php?sec=incidents&sec2=operation/incidents/incident";
 
 	// add form filter values for group, priority, state, and search fields: user and text
 	if (isset($_GET["grupo"]))
@@ -303,11 +303,11 @@ if ($row2_count[0] <= 0 ) {
 	// -------------
 	// Show headers
 	// -------------
-	echo "<table width='750' cellpadding=3 cellspacing=3 class='databox'>";
+	echo "<table cellpadding=4 cellspacing=4 class='databox' width=850>";
 	echo "<tr>";
 	echo "<th>Id";
 	echo "<th>".$lang_label["incident"];
-	// echo "<th>".$lang_label["project"];
+	echo "<th>".$lang_label["group"];
 	echo "<th>".lang_string ("status")."<br>".lang_string("resolution");
 	echo "<th>".$lang_label["priority"];
 	echo "<th width=82>".$lang_label["updated_at"];
@@ -322,6 +322,7 @@ if ($row2_count[0] <= 0 ) {
 	// -------------
 	while ($row2=mysql_fetch_array($result2)){ 
 		$id_group = $row2["id_grupo"];
+        $group_name = give_db_value ("nombre", "tgrupo", "id_grupo", $id_group);
 		$id_task = give_db_value ("id_task", "tincidencia", "id_incidencia", $row2["id_incidencia"]);
 		$id_project = give_db_value ("id_project", "ttask", "id", $id_task);
 		$project_name = give_db_value ("name", "tproject", "id", $id_project);
@@ -341,6 +342,12 @@ if ($row2_count[0] <= 0 ) {
 
 			// Title
 			echo "<td class='$tdcolor'><a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr(clean_output ($row2["titulo"]),0,200);
+
+            // group
+            echo "<td class='$tdcolor'>";
+            echo $group_name;
+
+            
 
 			// Project
 			/*
@@ -377,23 +384,29 @@ if ($row2_count[0] <= 0 ) {
 
 			echo "<td class='$tdcolor' align='center'>";
 			switch ( $row2["prioridad"] ){
-			
-				case 0: echo "<img src='images/flag_white.png'>"; break; // Informative
-				case 1: echo "<img src='images/flag_green.png'>"; break; // Low
-				case 2: echo "<img src='images/flag_yellow.png'>"; break; // Medium
-				case 3: echo "<img src='images/flag_orange.png'>"; break; // Serious
-				case 4: echo "<img src='images/flag_red.png'>"; break; // Very serious
-				case 10: echo "<img src='images/flag_blue.png'>"; break; // Maintance
+				case 0: echo "<img src='images/flag_white.png' title='Informative'>"; break; // Informative
+				case 1: echo "<img src='images/flag_green.png' title='Low'>"; break; // Low
+				case 2: echo "<img src='images/flag_yellow.png' title='Medium'>"; break; // Medium
+				case 3: echo "<img src='images/flag_orange.png' title='Serious'>"; break; // Serious
+				case 4: echo "<img src='images/flag_red.png' title='Very serious'>"; break; // Very serious
+				case 10: echo "<img src='images/flag_blue.png' title='Maintance'>"; break; // Maintance
 			}
-
-			
 
 			// Update time
 			echo "<td class='".$tdcolor."f9'>".human_time_comparation ( $row2["actualizacion"]);
 
 			// Flags
+
+            echo "<td class='$tdcolor' align='center'>";
+            // People participant
+            echo "<a href='#' class='tip'><span>";
+            $people_involved = people_involved_incident ($row2["id_incidencia"]);
+            while (sizeof($people_involved)>0){
+                echo array_pop ($people_involved). " <br>";
+            }
+            echo "</span></a>";
+
 			// Check for attachments in this incident
-			echo "<td class='".$tdcolor."f9' align='center'>";
 			$file_number = give_number_files_incident ($row2["id_incidencia"]);
 			if ($file_number > 0)
 				echo '<img src="images/disk.png" valign="bottom"  alt="'.$file_number.'">';
@@ -404,21 +417,17 @@ if ($row2_count[0] <= 0 ) {
 				echo '&nbsp;&nbsp;<img src="images/email_go.png" valign="bottom">';
 
 			// Check for workunits
-			$timeused = give_workunits_incident ($row2["id_incidencia"]);
+			$timeused = give_hours_incident ($row2["id_incidencia"]);;
 			if ($timeused > 0){
-				$timeused = give_hours_incident ($row2["id_incidencia"]);
 				echo '&nbsp;&nbsp;<img src="images/award_star_silver_1.png" valign="bottom">'.$timeused;
 			}
 
-			// User who manage this incident
-			
-			// echo "<td class='$tdcolor'>";
 			// echo "<a href='index.php?sec=usuario&sec2=operation/users/user_edit&ver=".$row2["id_usuario"]."'>".$row2["id_usuario"]."</a></td>";
 			
 			if ((give_acl($id_usuario, $id_group, "IM") ==1) OR ($_SESSION["id_usuario"] ==  $row2["id_usuario"]) ){
 			// Only incident owners or incident manager
 			// from this group can delete incidents
-				echo "<td class='$tdcolor' align='center'><a href='index.php?sec=incidentes&sec2=operation/incidents/incident&quick_delete=".$row2["id_incidencia"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
+				echo "<td class='$tdcolor' align='center'><a href='index.php?sec=incidents&sec2=operation/incidents/incident&quick_delete=".$row2["id_incidencia"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
 			} else
 				echo "<td class='$tdcolor' align='center'>";
 

@@ -1,20 +1,18 @@
 <?php
 
-// TOPI - the FRee Incident Tracking System
-// =========================================
-// Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2007 Artica Soluciones Tecnologicas
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation version 2
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 // Load global vars
 
 global $config;
@@ -116,7 +114,7 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 	$grupo = clean_input ($_POST['grupo_form']);
 	$usuario= clean_input ($_POST["usuario_form"]);
-	if ((give_acl($id_usuario, $grupo, "IM") == 1) OR ($usuario == $id_usuario)) { // Only admins (manage
+	if ((give_acl($id_usuario, $grupo, "IW") == 1) OR ($usuario == $id_usuario)) { // Only admins (manage
 		// Read input variables
 		$titulo = clean_input ($_POST['titulo']);
 		$inicio = date("Y/m/d H:i:s");
@@ -149,7 +147,7 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 		}
 		
 	} else {
-		audit_db($id_usuario,$REMOTE_ADDR,"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to create incident");
+		audit_db($id_usuario,$config["REMOTE_ADDR"],"ACL Forbidden","User ".$config["id_user"]." try to create incident");
 		no_permission();
 	}
 }
@@ -183,6 +181,12 @@ if (isset($_GET["id"])){
 	$id_task = $row["id_task"];
 	$id_incident_linked = $row["id_incident_linked"]; 
 	$grupo = dame_nombre_grupo($id_grupo);
+
+    // Aditional ACL check on read incident
+    if (give_acl($config["id_user"], $id_grupo, "IR") == 0) { // Only admins
+        audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config["id_user"]." try to access to an unauthorized incident ID #id_inc");
+        no_permission();
+    }
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// Workunit ADD
@@ -382,24 +386,10 @@ if ((give_acl($config["id_user"], $id_grupo, "IM")==1) OR ($usuario == $config["
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo '<tr><td class="datos"><b>'.$lang_label["assigned_user"].'</b><td class="datos">';
 if ((give_acl($config["id_user"], $id_grupo, "IM")==1) OR ($creacion_incidente == 1)) {
-	echo "<select name='usuario_form' class='w200'>";
-	if ($usuario != "")
-		echo "<option value='".$usuario."'>" . dame_nombre_real ($usuario);
-	
-	// Show users from my groups
-	$sql_1="SELECT * FROM tusuario_perfil WHERE id_usuario = '$id_usuario'";
-	$result_1=mysql_query($sql_1);
-	while ($row_1=mysql_fetch_array($result_1)){
-		$sql_2="SELECT * FROM tusuario_perfil WHERE id_grupo = ".$row_1["id_grupo"];
-		$result_2=mysql_query($sql_2);
-		while ($row_2=mysql_fetch_array($result_2)){
-			if (give_acl($row_2["id_usuario"], $row_2["id_grupo"], "IR")==1)
-				if ((dame_nombre_real($row_2["id_usuario"]) != "") AND ($row_2["id_usuario"] != $usuario))
-					echo "<option value='".$row_2["id_usuario"]."'>" . 
-						dame_nombre_real($row_2["id_usuario"]);
-		}
-	}
-	echo "</select>";
+	combo_user_visible_for_me ($config["id_user"],"usuario_form", 0, "IR");
+echo "<a href='#' class='tip'>&nbsp;<span>";
+echo $lang_label["incident_user_help"];
+echo "</span></a>";
 }
 else {
 	echo "<input type=hidden name='usuario_form' value='".$usuario."'>";
@@ -420,21 +410,13 @@ else
 
 // Group combo
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp))
-	echo '<td class="datos2"><b>'.$lang_label["group"].'</b><td class="datos2"><select name="grupo_form" class="w135">';
-else
-	echo '<td class="datos2"><b>'.$lang_label["group"].'</b><td class="datos2"><select disabled name="grupo_form" class="w135">';
-if ($creacion_incidente == 0)
-	echo "<option value='$id_grupo'>";
-	echo give_db_value ("nombre", "tgrupo", "id_grupo", $id_grupo);
-$sql1='SELECT * FROM tgrupo ORDER BY nombre';
-$result=mysql_query($sql1);
-while ($row=mysql_fetch_array($result)){
-	if (give_acl($iduser_temp, $row["id_grupo"], "IM")==1)
-		echo "<option value='".$row["id_grupo"]."'>".$row["nombre"];
-}
-echo '</select>';
 
+echo '<td class="datos2"><b>'.$lang_label["group"].'</b><td class="datos2">';
+if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)){
+    combo_groups_visible_for_me ($iduser_temp, "grupo_form", 0, "IW");
+} else { // Only show current group
+    echo give_db_sqlfree_field ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$id_grupo);
+}
 
 // Incident Resolution combo
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -476,7 +458,14 @@ if (((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp))
 		echo $epilog;
 	}
 	echo "</textarea>";
-} 
+} elseif ($estado > 5) {
+    echo "<tr><td class='datos' colspan='4'><b>".$lang_label["resolution_epilog"]."</b>";
+    echo '<tr><td class="datos2" colspan="4"><textarea readonly name="epilog" rows="3" cols="100">';
+    if (isset($epilog)) {
+        echo $epilog;
+    }
+    echo "</textarea>";
+}
 
 echo "</table>";
 

@@ -1,4 +1,17 @@
 <?PHP
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
 $id_user = $_SESSION["id_usuario"];
 
 if (isset($_GET["sec"]))
@@ -10,6 +23,11 @@ if (isset($_GET["sec2"]))
 	$sec2 = $_GET["sec2"];
 else
 	$sec2 = "";
+
+// ===============
+// PROJECTS
+// ===============
+
 
 if ($sec == "projects"){
 	echo "<div class='portlet'>";
@@ -24,7 +42,7 @@ if ($sec == "projects"){
 	echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".$lang_label["project_overview"]."</a></li>";
 	
 	// Project create
-	if (give_acl($id_user, 0, "PW")){
+	if (give_acl($id_user, 0, "PM")){
 		if ($sec2 == "operation/projects/project_detail&insert_form")
 			echo "<li id='sidesel'>";
 		else	
@@ -83,12 +101,15 @@ if ($sec == "projects"){
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/milestones&id_project=$id_project'>".lang_string("milestones")."</a></li>";
 
-		// People management
-		if ($sec2 == "operation/projects/people_manager")
-			echo "<li id='sidesel'>";
-		else	
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_task=-1&id_project=$id_project'>".$lang_label["people"]."</a></li>";
+        // PROJECT - People management
+        $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
+        if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
+		    if ($sec2 == "operation/projects/people_manager")
+			    echo "<li id='sidesel'>";
+		    else	
+			    echo "<li>";
+		    echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_task=-1&id_project=$id_project'>".$lang_label["people"]."</a></li>";
+        }
 
 		// Workunits 
 		$totalhours =  give_hours_project ($id_project);
@@ -124,6 +145,13 @@ if ($sec == "projects"){
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>".$lang_label["task_detail"]."</a></li>";
 
+        // Task tracking
+        if ($sec2 == "operation/projects/task_trackin g")
+            echo "<li id='sidesel'>";
+        else    
+            echo "<li>";
+        echo "<a href='index.php?sec=projects&sec2=operation/projects/task_tracking&id_project=$id_project&id_task=$id_task&operation=view'>".lang_string("Task tracking")."</a></li>";
+
 		// Add task workunit
 		if ($sec2 == "operation/projects/task_create_work")
 			echo "<li id='sidesel'>";
@@ -131,7 +159,7 @@ if ($sec == "projects"){
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_create_work&id_task=$id_task&id_project=$id_project'>".$lang_label["add_workunit"]."</a></li>";
 
-		// Add task workunit
+		// Add task file
 		if ($sec2 == "operation/projects/task_attach_file")
 			echo "<li id='sidesel'>";
 		else	
@@ -139,11 +167,21 @@ if ($sec == "projects"){
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_attach_file&id_task=$id_task&id_project=$id_project'>".$lang_label["add_file"]."</a></li>";
 
 		// Task people_manager
-		if ($sec2 == "operation/projects/operation/projects/people_manager")
-			echo "<li id='sidesel'>";
-		else	
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task'>".$lang_label["people"]."</a></li>";
+        $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
+        if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
+		    if ($sec2 == "operation/projects/operation/projects/people_manager")
+			    echo "<li id='sidesel'>";
+		    else	
+			    echo "<li>";
+		    echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task'>".$lang_label["people"]."</a></li>";
+
+            // Move this task
+            if ($sec2 == "operation/projects/task_move")
+                echo "<li id='sidesel'>";
+            else    
+                echo "<li>";
+            echo "<a href='index.php?sec=projects&sec2=operation/projects/task_move&id_task=$id_task&id_project=$id_project'>".lang_string("Move task")."</a></li>";
+        }
 
 		// Workunits 
 		$totalhours =  give_hours_task ($id_task);
@@ -174,6 +212,10 @@ if ($sec == "projects"){
 
 }		
 
+// ===============
+// INCIDENTS
+// ===============
+
 if ($sec == "incidents"){
 	echo "<div class='portlet'>";
 	echo "<h3>".$lang_label["incidents"]."</h3>";
@@ -187,7 +229,7 @@ if ($sec == "incidents"){
 
 	if (give_acl($_SESSION["id_usuario"], 0, "IW")==1) {
 		// Incident creation
-		if ($sec2 == "sec2=operation/incidents/incident_detail&insert_form")
+		if (isset($_GET["insert_form"]))
 			echo "<li id='sidesel'>";
 		else	
 			echo "<li>";
@@ -235,9 +277,8 @@ if ($sec == "incidents"){
 		echo "</a></li>";
 	
 		// Incident workunits
-                $timeused = give_workunits_incident ($id_incident);
+                $timeused = give_hours_incident ($id_incident);
                 if ($timeused > 0){
-                        $timeused = give_hours_incident ($id_incident);
 			if ($sec2 == "operation/incidents/incident_workunits")
 				echo "<li id='sidesel'>";
 			else	
@@ -345,11 +386,10 @@ echo "<div class='portlet'>";
 	echo "</ul>";
 	echo "</div>";
 
-	if (give_acl($config["id_user"], 0, "PR")) {
-
+	if  ((give_acl($config["id_user"], 0, "PR")) OR  (give_acl($config["id_user"], 0, "IR"))) {
 		echo "<div class='portlet'>";
-	        echo "<h3>".lang_string ("user_reporting")."</h3>";
-	        echo "<ul class='sidemenu'>";
+	    echo "<h3>".lang_string ("user_reporting")."</h3>";
+	    echo "<ul class='sidemenu'>";
 
 		// Basic report (monthly)
 		if ($sec2 == "operation/user_report/report_monthly")
@@ -359,17 +399,13 @@ echo "<div class='portlet'>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".lang_string ("montly_report")."</a></li>";
 
 		// Basic report (weekly)
-                if ($sec2 == "operation/user_report/report_weekly")
-                        echo "<li id='sidesel'>";
-                else
-                        echo "<li>";
-                echo "<a href='index.php?sec=users&sec2=operation/user_report/report_weekly'>".lang_string ("weekly_report")."</a></li>";
-
-
-
+        if ($sec2 == "operation/user_report/report_weekly")
+            echo "<li id='sidesel'>";
+        else
+            echo "<li>";
+        echo "<a href='index.php?sec=users&sec2=operation/user_report/report_weekly'>".lang_string ("weekly_report")."</a></li>";
 		echo "</ul></div>";
 	}
-
 
 	if (give_acl($config["id_user"], 0, "UM")){
 		echo "<div class='portlet'>";
@@ -389,8 +425,23 @@ echo "<div class='portlet'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/role_manager'>".$lang_label["manage_roles"]."</a></li>";
-		echo "</ul>";
-		echo "</div>";
+
+        // Group manager
+        if ($sec2 == "godmode/grupos/lista_grupos")
+            echo "<li id='sidesel'>";
+        else
+            echo "<li>";
+        echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".lang_string ("manage_groups")."</a></li>";
+
+        // Profile manager
+        if ($sec2 == "godmode/perfiles/lista_perfiles")
+            echo "<li id='sidesel'>";
+        else
+            echo "<li>";
+        echo "<a href='index.php?sec=users&sec2=godmode/perfiles/lista_perfiles'>".lang_string ("manage_profiles")."</a></li>";
+
+        echo "</ul>";
+        echo "</div>";
 	}
 	
 }
