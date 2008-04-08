@@ -178,10 +178,12 @@ echo "</textarea>";
 
 echo "</table>";
 
-if ($create_mode == 0){
-	echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["update"].'" border="0">';
-} else {
-	echo '<input type="submit" class="sub create" name="accion" value="'.$lang_label["create"].'" border="0">';
+if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_owner )) {
+    if ($create_mode == 0){
+    	echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["update"].'" border="0">';
+    } else {
+    	echo '<input type="submit" class="sub create" name="accion" value="'.$lang_label["create"].'" border="0">';
+    }
 }
 echo "</form>";
 echo "</table>";

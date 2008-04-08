@@ -30,6 +30,19 @@ if ( $id_project == -1 ){
     exit;
 }
 
+
+// ---------------------
+// Lock Workunit
+// ---------------------
+
+if ($operation == "lock"){
+    $id_workunit = give_parameter_get ("id_workunit",0);
+    $id_task = give_db_value ("id_task", "tworkunit_task", "id_workunit", $id_workunit);
+    $id_group = give_db_value ("id_group", "ttask", "id", $id_task);
+    $sql = "UPDATE tworkunit SET locked = 1 WHERE id = $id_workunit";
+    mysql_query($sql);
+}
+
 // ---------------------
 // ADD / UPDATE Workunit
 // ---------------------
@@ -63,7 +76,7 @@ if ($operation == "workunit"){
 			$msgtext = "A new workunit has been updated by user [$id_user]. Workunit information is: \n\n$description\nHours: $duration (hr)\nTimestamp: $timestamp\nHave cost: $have_cost\n\n";
 		$id_project2 = give_db_value ("id_project", "ttask", "id", $id_task);
 		$id_manager = give_db_value ("id_owner", "tproject", "id", $id_project2);
-		topi_sendmail (return_user_email($id_manager), "[TOPI] New workunit added to task '$task_name'", $msgtext);
+		topi_sendmail (return_user_email($id_manager), "[INTEGRIA] New workunit added to task '$task_name'", $msgtext);
 		if ($id_workunit == 0) {
 			$id_workunit = mysql_insert_id();
 			$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($id_task, $id_workunit)";

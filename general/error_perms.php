@@ -1,4 +1,5 @@
 <?php
+
 // INTEGRIA - OpenSource Management for the Enterprise
 // http://integria.sourceforge.net
 // ==================================================

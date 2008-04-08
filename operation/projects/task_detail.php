@@ -25,6 +25,7 @@ if (check_login() != 0) {
 $id_user = $_SESSION['id_usuario'];
 $id_project = give_parameter_get ("id_project", -1);
 $id_task = give_parameter_get ("id_task", -1);
+$project_manager = give_db_sqlfree_field("SELECT id_owner FROM tproject WHERE id = $id_project");
 $operation =  give_parameter_get ("operation", "");
 
 // Get names
@@ -261,16 +262,17 @@ echo '<tr><td class="datos" colspan="4"><textarea name="description" style="heig
 echo "</textarea>";
 
 echo "</table>";
-echo "<table width=100%>";
-echo "<tr><td align=right>";
-if ($operation != "create")
-	echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["update"].'" border="0">';
-else 
-	echo '<input type="submit" class="sub create" name="accion" value="'.$lang_label["create"].'" border="0">';
 
-echo "</form>";
-echo "</table>";
-
-
+if ((give_acl($config["id_user"], $id_group, "PM") ==1) OR ($config["id_user"] == $project_manager )) {
+    echo "<table width=100%>";
+    echo "<tr><td align=right>";
+    if ($operation != "create")
+	    echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["update"].'" border="0">';
+    else 
+	    echo '<input type="submit" class="sub create" name="accion" value="'.$lang_label["create"].'" border="0">';
+    
+    echo "</form>";
+    echo "</table>";
+}
 
 ?>

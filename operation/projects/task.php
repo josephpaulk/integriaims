@@ -62,7 +62,9 @@ elseif ($operation == "move") {
     $target_project = get_parameter ("target_project");
     $id_task = give_parameter_get ("id_task");
     if ((dame_admin($id_user)==1) OR (project_manager_check ($id_project) == 1)){
-        mysql_query("UPDATE ttask SET id_parent_task = 0 AND id_project = $target_project WHERE id = $id_task");
+        $sql = "UPDATE ttask SET id_project = $target_project, id_parent_task = 0 WHERE id = $id_task";
+    echo "DEBUG $sql";
+        mysql_query($sql);
         task_tracking ($id_user, $id_task, 19, 0, 0);
     } else {
         no_permission();
