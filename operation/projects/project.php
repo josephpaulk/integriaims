@@ -185,8 +185,8 @@ while ($row2=mysql_fetch_array($result2)){
             //echo " / ";
             //echo format_numeric (project_workunit_cost ($row2["id"], 0));
 
-			// Last update time
-			echo "<td class='$tdcolor'_f9 align='center'>";
+	    // Last update time
+	    echo "<td class='".$tdcolor."f9' align='center'>";
             $timestamp = give_db_sqlfree_field ( "SELECT tworkunit.timestamp FROM ttask, tworkunit_task, tworkunit WHERE ttask.id_project =  ".$row2["id"]." AND ttask.id = tworkunit_task.id_task AND tworkunit_task.id_workunit = tworkunit.id ORDER BY tworkunit.timestamp DESC LIMIT 1");
             if ($timestamp != "")
                 echo human_time_comparation ( $timestamp );

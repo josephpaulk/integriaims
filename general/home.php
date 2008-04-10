@@ -15,6 +15,9 @@
 
 global $config;
 
+if (!isset($config["id_user"]))
+    $config["id_user"] = $_SESSION['id_usuario'];
+
 	echo "<table width=100% border=0>";
 	
 	// Show Agenda items

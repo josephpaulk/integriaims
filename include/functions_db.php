@@ -20,6 +20,7 @@
 // --------------------------------------------------------------- 
 
 function give_acl($id_user, $id_group, $access){	
+	$access = strtoupper ($access);
 	// IF user is level = 1 then always return 1
 	// Access codes could be
 	/*	
@@ -73,7 +74,7 @@ function give_acl($id_user, $id_group, $access){
 					case "DM": $result = $result + $rowq2["dm"]; break;
 					case "UM": $result = $result + $rowq2["um"]; break;
 					case "PR": $result = $result + $rowq2["pr"]; break;
-                    case "PM": $result = $result + $rowq2["pm"]; break;
+                    			case "PM": $result = $result + $rowq2["pm"]; break;
 					case "PW": $result = $result + $rowq2["pw"]; break;
 					case "TW": $result = $result + $rowq2["tw"]; break;
 					case "TM": $result = $result + $rowq2["tm"]; break;
@@ -1124,7 +1125,7 @@ function user_visible_for_me ($id_user, $target_user, $access = ""){
     }
 
     if ($id_user == $target_user){
-        return 1;
+	return 1;
     }
 
     // I have access to group ANY ?
@@ -1135,8 +1136,9 @@ function user_visible_for_me ($id_user, $target_user, $access = ""){
         $sql_0 = "SELECT COUNT(*) FROM tusuario_perfil, tprofile WHERE tusuario_perfil.id_usuario = '$id_user' AND id_grupo = 1 AND tprofile.$access = 1 AND tprofile.id = tusuario_perfil.id_perfil";
     $result_0 = mysql_query($sql_0);
     $row_0 = mysql_fetch_array($result_0);
-    if ($row_0[0] > 0) 
+    if ($row_0[0] > 0){
         return 1;
+    }
 
     // Show users from my groups
     if ($access == "")
@@ -1153,14 +1155,15 @@ function user_visible_for_me ($id_user, $target_user, $access = ""){
             }
         }
     }
-
+   
     // Show users for group 1 (ANY)
     $sql_2 = "SELECT * FROM tusuario_perfil WHERE id_grupo = 1";
     $result_2 = mysql_query($sql_2);
     while ($row_2 = mysql_fetch_array($result_2)){
         if ($row_2["id_usuario"] == $target_user){
-            if ($access == "")
+            if ($access == ""){
                 return 1; 
+	    }
             else {
                 if (give_acl ($config["id_user"], 1, $access) == 1)
                     return 1;

@@ -165,12 +165,16 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
     $daystemp = $row2["hours"] / $config["hours_perday"];
     $endtime = calcdate_business ($row2["start"], $daystemp );
 
-	if (strtotime($ahora) > strtotime($endtime))
-		echo "<font color='red'>";
-	else
+	if ($row2["completion"] == 100){
+		echo "<font color='green'>";
+	} else {
+	    if (strtotime($ahora) > strtotime($endtime))
+	        echo "<font color='red'>";
+	    else
 		echo "<font>";
+	}
 	// echo human_time_comparation ($endtime);
-    echo $endtime;
+        echo $endtime;
 	echo "</font>";
 	
 	// Delete
