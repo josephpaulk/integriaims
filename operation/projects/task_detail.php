@@ -63,16 +63,16 @@ if ($operation == ""){
 if ($operation == "insert"){
 	$name = give_parameter_post ("name");
 	$description = give_parameter_post ("description");
-	$priority = give_parameter_post ("priority");
-	$completion = give_parameter_post ("completion");
-	$parent = give_parameter_post ("parent");
-	$start = give_parameter_post ("start_date");
-	$hours = give_parameter_post ("hours");
-    $estimated_cost = give_parameter_post ("estimated_cost");
+	$priority = give_parameter_post ("priority", 0);
+	$completion = give_parameter_post ("completion", 0);
+	$parent = give_parameter_post ("parent", 0);
+	$start = give_parameter_post ("start_date", date());
+	$hours = give_parameter_post ("hours", 0);
+        $estimated_cost = give_parameter_post ("estimated_cost", 0);
 	$id_group = give_parameter_post ("group",1);
 	$sql = "INSERT INTO ttask
 			(id_project, name, description, priority, completion, start,  id_parent_task, id_group, hours, estimated_cost) VALUES
-			($id_project, '$name', '$description', '$priority', '$completion', '$start',  '$parent', $id_group, $hours, $estimated_cost)";
+			($id_project, '$name', '$description', '$priority', '$completion', '$start',  '$parent', $id_group, '$hours', '$estimated_cost')";
 	if (mysql_query($sql)){
 		$id_task = mysql_insert_id();
 		$result_output = "<h3 class='suc'>".$lang_label["create_ok"]."</h3>";
@@ -116,8 +116,8 @@ if ($operation == "update"){
 	$completion = give_parameter_post ("completion");
 	$parent = give_parameter_post ("parent");
 	$start = give_parameter_post ("start_date");
-	$hours = give_parameter_post ("hours");
-    $estimated_cost = give_parameter_post ("estimated_cost");
+	$hours = give_parameter_post ("hours",0);
+        $estimated_cost = give_parameter_post ("estimated_cost",0);
 	$id_group = give_parameter_post ("group",1);
 	$sql = "UPDATE ttask SET 
 			name = '$name',
@@ -125,8 +125,8 @@ if ($operation == "update"){
 			priority = '$priority',
 			completion = '$completion',
 			start = '$start',
-			hours = $hours,
-            estimated_cost = $estimated_cost,
+			hours = '$hours',
+            estimated_cost = '$estimated_cost',
 			id_parent_task = '$parent',
 			id_group = '$id_group'
 			WHERE id = $id_task";
