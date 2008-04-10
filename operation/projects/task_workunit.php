@@ -78,8 +78,8 @@ if ($operation == "workunit"){
 		else
 			$msg_text = "A new workunit has been updated by user [$id_user]. Workunit information is: \n\nHours: $duration (hr)\nTimestamp: $timestamp\nHave cost: $have_cost\nDescription:\n\n$description\n";
 
-        $myurl = topi_quicksession ("/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project2&id_task=$id_task", $id_manager);
-        $msg_text .= "\n\nDirect URL Access: $myurl\n";
+        // $myurl = topi_quicksession ("/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project2&id_task=$id_task", $id_manager);
+        // $msg_text .= "\n\nDirect URL Access: $myurl\n";
 		
         // Send an email to project manager
         $msg_subject = "[".$config["sitename"]."] New workunit added to task '$task_name'";
