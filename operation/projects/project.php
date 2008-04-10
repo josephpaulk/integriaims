@@ -144,7 +144,7 @@ $color = 1;
 
 $view_disabled = get_parameter ("view_disabled",0);
 // Simple query, needs to implement group control and ACL checking
-$sql2="SELECT * FROM tproject WHERE disabled = $view_disabled"; 
+$sql2="SELECT * FROM tproject WHERE disabled = $view_disabled ORDER by name"; 
 if ($result2=mysql_query($sql2))	
 while ($row2=mysql_fetch_array($result2)){
 	if (give_acl($config["id_user"], 0, "PR") ==1){
