@@ -54,11 +54,11 @@
 	echo lang_string("Totals for week $begin_week - $end_week "). " - ( $total_hours ".lang_string("hr").")";
 	echo "</h3>";
 
-	echo '<table cellpadding="4" cellspacing="4" width="100%" class="databox_color">';
-	echo "<th>".$lang_label["user_ID"];
-	echo "<th>".$lang_label["profile"];
-	echo "<th>".lang_string ("total_hours_for_this_week");
-
+	echo '<table cellpadding="4" cellspacing="4" width="600" class="databox_color">';
+    echo "<th>".$lang_label["user_ID"];
+    echo "<th>".lang_string ("Workunit report");
+    echo "<th>".lang_string ("Graph overview");
+    echo "<th>".lang_string ("total_hours_for_this_week");
 	
 	$sql0= "SELECT * FROM tusuario";
 	if ($res0 = mysql_query($sql0)) {
@@ -83,21 +83,29 @@
 				    $tip = "tip2";
 			    }
 			    echo "<tr><td class='$tdcolor'>";
-			    echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_week&timestamp_h=$end_week&id=$nombre'><b>".$nombre."</b></a>";
-			    echo "<td class='$tdcolor' width=60>";
-			    echo "<img src='images/avatars/".$avatar."_small.png'>";
-			    $sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
-			    $result1=mysql_query($sql1);
-			    echo "<a href='#' class='$tip'>&nbsp;<span>";
-			    if (mysql_num_rows($result1)){
-				    while ($row1=mysql_fetch_array($result1)){
-					    echo dame_perfil($row1["id_perfil"])."/ ";
-					    echo dame_grupo($row1["id_grupo"])."<br>";
-				    }
-			    }
-			    else { echo $lang_label["no_profile"]; }
-			    echo "</span></a>";
-			    echo "<td class='$tdcolor' width=60>";
+                echo "<img src='images/avatars/".$avatar."_small.png'>";
+                $sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
+                $result1=mysql_query($sql1);
+                echo "<a href='#' class='$tip'>&nbsp;<span>";
+                if (mysql_num_rows($result1)){
+                    while ($row1=mysql_fetch_array($result1)){
+                        echo dame_perfil($row1["id_perfil"])."/ ";
+                        echo dame_grupo($row1["id_grupo"])."<br>";
+                    }
+                }
+                else { echo $lang_label["no_profile"]; }
+                echo "</span></a> $nombre";
+
+                // Text wu report 
+                echo "<td class='$tdcolor' width=60><center>";
+			    echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_week&timestamp_h=$end_week&id=$nombre'>";
+                echo "<img border=0 src='images/page_white_text.png'></A>";
+
+                // Graph stats montly report for X user
+                echo "<td class='$tdcolor'><center>";
+                echo "<a href='index.php?sec=users&sec2=operation/user_report/weekly_graph&timestamp_l=$begin_week&timestamp_h=$end_week&id=$nombre'><img src='images/chart_bar.png' border=0></a></center></td>";
+			    
+			    echo "<td class='$tdcolor' width=60><center>";
 			    echo $row[0];
             }
 		}

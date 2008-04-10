@@ -107,7 +107,7 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 }
 
 // Original function
-function generate_calendar($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array()){
+function generate_calendar ($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array()){
 	$first_of_month = gmmktime(0,0,0,$month,1,$year);
 	#remember that mktime will automatically correct if invalid dates are entered
 	# for instance, mktime(0,0,0,12,32,1997) will be the date for Jan 1, 1998
@@ -184,8 +184,8 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
 		foreach($day_names as $d)
-			$calendar .= '<th width=110 abbr="'.htmlentities($d).'">'.htmlentities($day_name_length < 4 ? substr($d,0,$day_name_length) : $d).'</th>';
-		$calendar .= '<th width=110>'.lang_string("Week Total").'</th>';
+			$calendar .= '<th width=70 abbr="'.htmlentities($d).'">'.htmlentities($day_name_length < 4 ? substr($d,0,$day_name_length) : $d).'</th>';
+		$calendar .= '<th width=70>'.lang_string("Week Total").'</th>';
 		$calendar .= "</tr>\n<tr>";
 	}
 	$time = time();
@@ -210,9 +210,9 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 			if ($row=mysql_fetch_array($res)){
 				$workhours = $row[0];
 				if ($workhours > 0){
-					$calendar .= "<td><b><center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$before_week."&timestamp_h=".$this_week."'>".$workhours." ".lang_string("hr")."</a></center></b></td>";
+					$calendar .= "<td style='background-color: #e3e9e9;'><b><center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$before_week."&timestamp_h=".$this_week."'>".$workhours." ".lang_string("hr")."</a></center></b></td>";
 				} else {
-					$calendar .= "<td> -- </td>";
+					$calendar .= "<td style='background-color: #e3e9e9;'><center> -- </center></td>";
 				}
 			}		
 			$calendar .= "</tr>\n<tr>";
@@ -226,9 +226,14 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 		}
 
 		if (($day == $today) && ($today_m == $month))
-			$calendar .= "<td valign='top' style='background: #eeb; width: 110px; height: 90px;' >";				
-		else 
-			$calendar .= "<td valign='top' style='background: #f9f9f5; height: 90px; width: 110px;' >";
+			$calendar .= "<td valign='top' style='background: #eeb; width: 70px; height: 70px;' >";				
+		else { // standard day
+        if (is_working_day("$year-$month-$day") == 1)
+    		$calendar .= "<td valign='top' style='background: #f9f9f5; height: 70px; width: 70px;' >";
+        else
+            $calendar .= "<td valign='top' style='background: #e9e9e5; height: 70px; width: 70px;' >";
+            
+        }
 		$calendar .=  "<b>$day</b><br><br>";
 
 		$mysql_time= "";
@@ -269,7 +274,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 			if ($workhours > 0){
 				$calendar .= "<td><b><center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$before_week."&timestamp_h=".$this_week."'>".$workhours." ".lang_string("hr")."</a></center></b></td>";
 			} else {
-				$calendar .= "<td><center> -- </center></td>";
+				$calendar .= "<td style='background-color: #e3e9e9;'><center> -- </center></td>";
 			}
 		}
 		$calendar .= "</tr>\n<tr>";
@@ -278,5 +283,158 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 }
 
 
-?>
+// This functions calculates the next date only using business days
+// First parameter is entered in YYYY-MM-DD, and second is hours
 
+function calcdate_business ($datecalc, $duedays) {
+    $datecalc = strtotime ($datecalc);
+    $i = 1;
+    while ($i <= $duedays) {
+        $datecalc += 86400; // Add a day.
+        $date_info  = getdate( $datecalc );
+        if (($date_info["wday"] == 0) or ($date_info["wday"] == 6) )  {
+            $datecalc += 86400; // Add a day.
+            continue;
+        }
+        $i++;
+    }
+    return date ("Y-m-d", $datecalc);
+}
+
+function is_working_day ($datecalc) {
+    $datecalc = strtotime ($datecalc);
+    $date1 = getdate($datecalc);
+    if (($date1["wday"] == 0) OR ($date1["wday"] == 6))
+        return 0;
+    else
+        return 1;
+
+    // TODO: Add check for returning special days that are non-working
+}
+
+// ---------------------------------------------------------------
+// Return string with time-threshold in secs, mins, days or weeks
+// ---------------------------------------------------------------
+
+function give_human_time ($int_seconds){
+   $key_suffix = 's';
+   $periods = array(
+                   'year'        => 31556926,
+                   'month'        => 2629743,
+                   'day'        => 86400,
+                   'hour'        => 3600,
+                   'minute'    => 60,
+                   'second'    => 1
+                   );
+
+   // used to hide 0's in higher periods
+   $flag_hide_zero = true;
+
+   // do the loop thang
+   foreach( $periods as $key => $length )
+   {
+       // calculate
+       $temp = floor( $int_seconds / $length );
+
+       // determine if temp qualifies to be passed to output
+       if( !$flag_hide_zero || $temp > 0 )
+       {
+           // store in an array
+           $build[] = $temp.' '.$key.($temp!=1?'s':null);
+
+           // set flag to false, to allow 0's in lower periods
+           $flag_hide_zero = false;
+       }
+
+       // get the remainder of seconds
+       $int_seconds = fmod($int_seconds, $length);
+   }
+
+   // return output, if !empty, implode into string, else output $if_reached
+   return ( !empty($build)?implode(', ', $build):$if_reached );
+}
+
+function human_time_comparation ( $timestamp ){
+    global $config;
+    require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
+    $ahora=date("Y/m/d H:i:s");
+    if (strtotime($ahora) < strtotime($timestamp)){
+        $seconds = strtotime($timestamp) - strtotime($ahora) ;
+        $direction = "> ";
+    }
+    else {
+        $seconds = strtotime($ahora) - strtotime($timestamp);
+        $direction = "< ";
+    }
+    if ($seconds < 3600)
+        $render = format_numeric($seconds/60,1)." ".$lang_label["minutes"];
+    elseif (($seconds >= 3600) and ($seconds < 86400))
+        $render = format_numeric ($seconds/3600,1)." ".$lang_label["hours"];
+    elseif (($seconds >= 86400) and ($seconds < 604800))
+        $render = format_numeric ($seconds/86400,1)." ".$lang_label["days"];
+    elseif (($seconds >= 604800) and ($seconds <2592000))
+        $render = format_numeric ($seconds/604800,1)." ".$lang_label["weeks"];
+    elseif ($seconds >= 2592000)
+        $render = format_numeric ($seconds/2592000,1)." ".$lang_label["months"];
+    return $direction.$render;
+}
+
+
+function working_days ($month = "", $year = "" ){
+    if (($month == "") OR ($year == "")){
+            $date = date('Y-m-d');
+            $year = substr($date, 0,4);
+            $month = substr($date, 5, 2);
+    }
+
+        $d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
+        $full_weeks = ceil ($d_daysinmonth / 7);
+        $festive_days = floor(($d_daysinmonth / 7) * 2);
+        $total_working_days = $d_daysinmonth - $festive_days;
+        $total_working_hours = $total_working_days * 8;
+        return $total_working_days;
+}
+
+function working_weeks_combo () {
+        $date = date('Y-m-d');
+        $year = substr($date, 0,4);
+        $month = substr($date, 5, 2);
+        $day = substr($date, 8, 2);
+
+        $d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
+        $full_weeks = ceil ($d_daysinmonth / 7);
+        $d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));     // FIRST falls on what day of week (0-6)
+        $ajuste = $d_firstdow -1;
+        $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
+        echo '<select name="working_week">';
+        for ($ax=0; $ax < $full_weeks; $ax++){
+                echo "<option>".date('Y-m-d', strtotime($new_date. "+ $ax week"));
+        }
+        echo "</select>";
+}
+
+
+function first_working_week (){
+    $date = date('Y-m-d');
+        $year = substr($date, 0,4);
+        $month = substr($date, 5, 2);
+        $day = substr($date, 8, 2);
+
+        $d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
+        $full_weeks = ceil ($d_daysinmonth / 7);
+        $d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));     // FIRST falls on what day of week (0-6)
+        $ajuste = $d_firstdow -1;
+        $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
+    return $new_date;
+}
+
+function return_unixtime () {
+    return strtotime("now");
+}
+
+function getmonth($m=0) {
+    return (($m==0 ) ? date("F") : date("F", mktime(0,0,0,$m)));
+} 
+
+
+?>

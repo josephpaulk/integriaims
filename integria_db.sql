@@ -180,7 +180,7 @@ CREATE TABLE `tincident_track` (
 -- New tables created 23/04/07 for project management
 
 CREATE TABLE `tproject` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+  `id` int(10) NOT NULL auto_increment,
   `name` varchar(240) NOT NULL default '',
   `description` mediumtext NOT NULL,
   `start` date NOT NULL default '0000-00-00',
@@ -204,7 +204,7 @@ CREATE TABLE `ttask_track` (
 
 CREATE TABLE `ttask` (
   `id` int(10) NOT NULL auto_increment,
-  `id_project` int(10) unsigned NOT NULL default '0',
+  `id_project` int(10) NOT NULL default '0',
   `id_parent_task` int(10) unsigned NOT NULL default '0',
   `name` varchar(240) NOT NULL default '',
   `description` mediumtext NOT NULL,
@@ -212,7 +212,8 @@ CREATE TABLE `ttask` (
   `priority` tinyint unsigned NOT NULL default '0',
   `dep_type` tinyint unsigned NOT NULL DEFAULT 0,
   `start` date NOT NULL default '0000-00-00',
-  `end` date NOT NULL default '0000-00-00',
+  `hours` int unsigned NOT NULL DEFAULT 0,
+  `estimated_cost` float (9,2) UNSIGNED NOT NULL DEFAULT 0.0,
   `id_group` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );
@@ -229,7 +230,6 @@ CREATE TABLE `tworkunit` (
   `locked` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY  (`id`)
 );
-
 
 CREATE TABLE `tworkunit_task` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -342,7 +342,7 @@ CREATE TABLE `tvacationday` (
 
 -- Table for bills, and externals expenses imputable to a task / project
 
-CREATE TABLE `texpense`
+CREATE TABLE `tcost` (
   `id` int(6) unsigned NOT NULL auto_increment,
   `id_user` varchar(250) default NULL,
   `id_task` int(11) unsigned NULL default NULL,
@@ -350,6 +350,7 @@ CREATE TABLE `texpense`
   `ammount` float(9,2) NOT NULL DEFAULT '0.0',
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `description` mediumtext NOT NULL,
-  PRIMARY KEY  (`ID_sesion`)
+  `id_attachment` int(11) unsigned NULL default NULL,
+  `locked` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY  (`id`)
 );
-

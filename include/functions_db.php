@@ -393,6 +393,28 @@ function give_hours_incident ($id_inc){
 
 
 /**
+* Return total wu assigned to incident
+*
+* $id_inc   integer     ID of incident
+**/
+
+function give_wu_incident ($id_inc){
+    global $config;
+    $query1="SELECT COUNT(tworkunit.duration) 
+            FROM tworkunit, tworkunit_incident, tincidencia 
+            WHERE   tworkunit_incident.id_incident = tincidencia.id_incidencia AND 
+                    tworkunit_incident.id_workunit = tworkunit.id AND
+                     tincidencia.id_incidencia = $id_inc";
+    $resq1=mysql_query($query1);
+    if ($rowdup=mysql_fetch_array($resq1))
+        $pro=$rowdup[0]; 
+    else 
+        $pro = 0;
+    return $pro;
+}
+
+
+/**
 * Return total hours assigned to project
 *
 * $id_project	integer 	ID of project
@@ -414,6 +436,28 @@ function give_hours_project ($id_project){
 }
 
 /**
+* Return total wu assigned to project
+*
+* $id_project   integer     ID of project
+**/
+
+function give_wu_project ($id_project){
+    global $config;
+    $query1="SELECT COUNT(tworkunit.duration) 
+            FROM tworkunit, tworkunit_task, ttask 
+            WHERE   tworkunit_task.id_task = ttask.id AND 
+                    ttask.id_project = $id_project AND 
+                    tworkunit_task.id_workunit = tworkunit.id";
+    $resq1=mysql_query($query1);
+    if ($rowdup=mysql_fetch_array($resq1))
+        $pro=$rowdup[0]; 
+    else 
+        $pro = 0;
+    return $pro;
+}
+
+
+/**
 * Return total hours assigned to task
 *
 * $id_task	integer 	ID of task
@@ -431,6 +475,27 @@ function give_hours_task ($id_task){
 	else 
 		$pro = 0;
 	return $pro;
+}
+
+
+/**
+* Return total workunits assigned to task
+*
+* $id_task  integer     ID of task
+**/
+
+function give_wu_task ($id_task){
+    global $config;
+    $query1="SELECT COUNT(tworkunit.duration) 
+            FROM tworkunit, tworkunit_task
+            WHERE   tworkunit_task.id_task = $id_task AND 
+                    tworkunit_task.id_workunit = tworkunit.id";
+    $resq1=mysql_query($query1);
+    if ($rowdup=mysql_fetch_array($resq1))
+        $pro=$rowdup[0]; 
+    else 
+        $pro = 0;
+    return $pro;
 }
 
 
@@ -980,6 +1045,41 @@ function people_involved_incident ($id_inc){
     return $people;
 }
 
+/* Returns cost for a given task */
+
+function task_workunit_cost ($id_task, $only_marked = 1){
+    global $config;
+    $total = 0;
+    if ($only_marked == 1)
+        $res = mysql_query("SELECT id_profile, SUM(duration) FROM tworkunit, tworkunit_task
+                WHERE tworkunit_task.id_task = $id_task AND 
+                tworkunit_task.id_workunit = tworkunit.id AND 
+                have_cost = 1 GROUP BY id_profile");
+    else 
+        $res = mysql_query("SELECT id_profile, SUM(duration) FROM tworkunit, tworkunit_task
+                WHERE tworkunit_task.id_task = $id_task AND 
+                tworkunit_task.id_workunit = tworkunit.id 
+                GROUP BY id_profile");
+    while ($row=mysql_fetch_array($res)){
+        $cost_per_hour = give_db_sqlfree_field ("SELECT cost FROM trole WHERE id = ".$row[0]);
+        $total = $total + $cost_per_hour * $row[1];
+    }
+    return $total;
+}
+
+/* Returns cost for a given project */
+
+function project_workunit_cost ($id_project, $only_marked = 1){
+    global $config;
+    $total = 0;
+    $res = mysql_query("SELECT * FROM ttask WHERE id_project = $id_project");
+    while ($row=mysql_fetch_array($res)){
+        $total += task_workunit_cost ($row[0], $only_marked);
+    }
+    return $total;
+}
+
+
 /*
  This function return 1 if target_user is visible for a user (id_user)
  with a permission oc $access (PM, IM, IW...) on any of its profiles 
@@ -1041,6 +1141,21 @@ function user_visible_for_me ($id_user, $target_user, $access = ""){
     }
     
     return 0;
+}
+
+function projects_active_user ($id_user) {
+    $sql = "SELECT COUNT(DISTINCT(id_project)) FROM tproject, trole_people_project WHERE trole_people_project.id_user ='$id_user' AND trole_people_project.id_project = tproject.id AND tproject.disabled = 0";
+    return give_db_sqlfree_field ($sql);
+}
+
+function incidents_active_user ($id_user) {
+    $sql = "SELECT COUNT(*) FROM tincidencia WHERE id_usuario = '$id_user' AND estado IN (1,2,3,4,5)";
+    return give_db_sqlfree_field ($sql);
+}
+
+function todos_active_user ($id_user) {
+    $sql = "SELECT COUNT(*) FROM ttodo WHERE assigned_user = '$id_user'";
+    return give_db_sqlfree_field ($sql);
 }
 
 ?>

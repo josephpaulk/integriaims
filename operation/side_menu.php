@@ -49,20 +49,47 @@ if ($sec == "projects"){
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&insert_form'>".$lang_label["create_project"]."</a></li>";
 	}	
+
+    // View disabled projects
+    if ($sec2 == "operation/projects/project")
+        echo "<li id='sidesel'>";
+    else    
+        echo "<li>";
+    echo "<a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1'>".lang_string("Disabled projects")."</a></li>";
+
+
 	// end of main Project options block
 	echo "</ul>";
 	echo "</div>";	
 
-	// Dynamic incident sub options menu (PROJECT)
+	// Dynamic project sub options menu (PROJECT)
 	$id_project = give_parameter_get("id_project",-1);
 	if ($id_project != -1){
 		echo "<br>";
+        
+        $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
 
 		echo "<div class='portlet'>";
 		$project_title = substr(give_db_value ("name", "tproject", "id", $id_project), 0, 18);
 		echo "<h3>".$lang_label["project"]." - $project_title ..</h3>";
 		echo "<ul class='sidemenu'>";
 
+        // Project detail
+        if ($sec2 == "operation/projects/project_detail")
+            echo "<li id='sidesel'>";
+        else    
+            echo "<li>";
+        echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>".$lang_label["project_overview"]."</a></li>";
+
+
+        if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $project_manager )) {
+            // Create task
+            if ($sec2 == "operation/projects/task_detail")
+                echo "<li id='sidesel'>";
+            else    
+                echo "<li>";
+            echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>".$lang_label["create_task"]."</a></li>";
+        }
 		// Tasks
 		$task_number =  give_number_tasks ($id_project);
 		if ($task_number > 0){
@@ -72,20 +99,6 @@ if ($sec == "projects"){
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>".$lang_label["task_list"]." ($task_number)</a></li>";
 		}
-		
-		// Create task
-		if ($sec2 == "operation/projects/task_detail")
-			echo "<li id='sidesel'>";
-		else	
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>".$lang_label["create_task"]."</a></li>";
-
-		// Project detail
-		if ($sec2 == "operation/projects/project_detail")
-			echo "<li id='sidesel'>";
-		else	
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>".$lang_label["project_overview"]."</a></li>";
 
 		// Gantt graph
 		if ($sec2 == "operation/projects/gantt")
@@ -102,7 +115,6 @@ if ($sec == "projects"){
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/milestones&id_project=$id_project'>".lang_string("milestones")."</a></li>";
 
         // PROJECT - People management
-        $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
         if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
 		    if ($sec2 == "operation/projects/people_manager")
 			    echo "<li id='sidesel'>";
@@ -113,7 +125,8 @@ if ($sec == "projects"){
 
 		// Workunits 
 		$totalhours =  give_hours_project ($id_project);
-		if ($totalhours > 0){
+        $totalwu =  give_wu_project ($id_project);
+		if ($totalwu > 0){
 			if ($sec2 == "operation/projects/task_workunit")
 				echo "<li id='sidesel'>";
 			else	
@@ -128,7 +141,7 @@ if ($sec == "projects"){
 	}
 
 	
-	// Dynamic incident sub options menu (TASKS)
+	// Dynamic sub options menu (TASKS)
 	$id_task = give_parameter_get("id_task",-1);
 	if ($id_task != -1){
 		echo "<br>";
@@ -185,7 +198,8 @@ if ($sec == "projects"){
 
 		// Workunits 
 		$totalhours =  give_hours_task ($id_task);
-		if ($totalhours > 0){
+        $totalwu =  give_wu_task ($id_project);
+        if ($totalwu > 0){
 			if ($sec2 == "operation/projects/task_workunit")
 				echo "<li id='sidesel'>";
 			else	
@@ -277,8 +291,9 @@ if ($sec == "incidents"){
 		echo "</a></li>";
 	
 		// Incident workunits
-                $timeused = give_hours_incident ($id_incident);
-                if ($timeused > 0){
+        $timeused = give_hours_incident ($id_incident);
+        $in_wu = give_wu_incident ($id_incident);
+        if ($in_wu > 0){
 			if ($sec2 == "operation/incidents/incident_workunits")
 				echo "<li id='sidesel'>";
 			else	
@@ -447,10 +462,10 @@ echo "<div class='portlet'>";
 }
 
 
-/*
-// Sponsors
 
-echo "<h1>".$lang_label["links_header"]."</h1>";
+// Sponsors
+echo "<div class='portlet'>";
+echo "<h3>".$lang_label["links_header"]."</h3>";
 echo "<ul class='sidemenu'>";
 
 $sql1='SELECT * FROM tlink ORDER BY name';
@@ -462,19 +477,8 @@ if ($row=mysql_fetch_array($result)){
 		echo "<li><a href='".$row2["link"]."' target='_new' class='mn'>".$row2["name"]."</a></li>";
 	}
 }
-echo "</ul>";
+echo "</ul></div>";
 
-// Banners
-
-echo "<h1>Our sponsors</h1>";
-echo "<p>";
-echo "<img src='images/minilogoartica.jpg'>";
-echo "<br><br>";
-echo "<img src='images/sflogo.png'>";
-echo "<br><br>";
-echo "</p>";
-
-*/
 
 // Testing boxes for side menus
 $id_user = $_SESSION['id_usuario'];
@@ -501,6 +505,18 @@ echo '<b>E-mail:</b>&nbsp;
         <br />
   </div>
 </div>';
+
+// Banners
+echo '<div class="portlet">';
+echo "<h3>Our sponsors</h3>";
+echo "<p>";
+echo "<img src='images/minilogoartica.jpg'>";
+echo "<br><br>";
+echo "<img src='images/sflogo.png'>";
+echo "<br><br>";
+echo "</p>";
+echo "</div>";
+
 
 
 ?>

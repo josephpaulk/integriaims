@@ -78,16 +78,18 @@ echo "<h2>".$project_name." - ".$lang_label["task_management"]."</h2>";
 // -------------
 // Show headers
 // -------------
-echo "<table width='100%' class='databox'>";
+echo "<table width='800' class='databox'>";
 echo "<tr>";
-echo "<th>".$lang_label["name"];
-echo "<th>".lang_string ("pri");
-echo "<th>".lang_string ("progress");
-echo "<th>".$lang_label["time_used"];
-echo "<th>".$lang_label["people"];
+echo "<th class='f9'>".$lang_label["name"];
+echo "<th class='f9'>".lang_string ("pri");
+echo "<th class='f9'>".lang_string ("progress");
+echo "<th class='f9'>".lang_string ("Estimation");
+echo "<th class='f9'>".$lang_label["time_used"];
+echo "<th class='f9'>".lang_string ("Cost");
+echo "<th class='f9'>".$lang_label["people"];
+
 //echo "<th>".$lang_label["start"];
 echo "<th>".$lang_label["end"];
-echo "<th>".lang_string ("files");
 echo "<th>".lang_string ("delete");
 $color = 1;
 show_task_tree ($id_project);
@@ -103,6 +105,8 @@ if (give_acl($_SESSION["id_usuario"], 0, "IW")==1) {
 
 
 function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
+    global $config;
+
 	echo "<tr>";
 	// Task  name
 	echo "<td class='$tdcolor' align='left' >";
@@ -127,43 +131,48 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 	echo "<td class='$tdcolor' align='center'>";
 	//echo clean_input ($row2["completion"]."%");
 	echo "<img src='include/functions_graph.php?type=progress&width=70&height=20&percent=".$row2["completion"]."'>";
+
+    // Estimation
+    echo "<td class='$tdcolor' align='center'>";
+    $imghelp = "Estimated hours = ".$row2["hours"];
+    $taskhours = give_hours_task ($row2["id"]);
+    $imghelp .= "\nWorked hours = $taskhours";
+    $a = round ($row2["hours"]);
+    $b = round ($taskhours);
+    $max = maxof($a, $b);
+    echo "<img src='include/functions_graph.php?type=histogram&width=60&mode=2&height=18&a=$a&b=$b&&max=$max' title='$imghelp'>";
 	
 	// Time used
 	echo "<td class='$tdcolor' align='center'>";
 	echo give_hours_task ( $row2["id"]);
 
+    // Costs (client / total)
+    echo "<td class='".$tdcolor."f9' align='center'>";
+    echo format_numeric (task_workunit_cost ($row2["id"], 1));
+    echo $config["currency"];
+
 	// People
 	echo "<td class='$tdcolor'>";
-	echo combo_users_task ($row2["id"]);
-	// group
-	/*
-	echo "<td class='$tdcolor' align='center'>";
-	echo "<img src='images/".dame_grupo_icono ( give_db_value ( 'id_group', 'ttask', 'id', $row2["id"]))."'> ";
-	echo dame_grupo ( give_db_value ( 'id_group', 'ttask', 'id', $row2["id"]) );
-	*/ 	
-
-	// Start
-	/*
-	echo "<td class='".$tdcolor."f9'>";
-	//echo substr($row2["start"],0,10);
-	echo human_time_comparation ($row2["start"]);
-	*/
+	echo combo_users_task ($row2["id"],1);
+    echo "&nbsp;";
+    echo give_db_sqlfree_field ("SELECT COUNT(DISTINCT (id_user)) FROM trole_people_task WHERE id_task =".$row2["id"]);
 
 	// End
 	echo "<td class='".$tdcolor."f9'>";
 	// echo substr($row2["end"],0,10);
 	$ahora=date("Y/m/d H:i:s");
-	if (strtotime($ahora) > strtotime($row2["end"]))
+
+    $daystemp = $row2["hours"] / $config["hours_perday"];
+    $endtime = calcdate_business ($row2["start"], $daystemp );
+
+	if (strtotime($ahora) > strtotime($endtime))
 		echo "<font color='red'>";
 	else
 		echo "<font>";
-	echo human_time_comparation ($row2["end"]);
+	// echo human_time_comparation ($endtime);
+    echo $endtime;
 	echo "</font>";
 	
-	echo "<td class='$tdcolor'>";
-	if (give_number_files_task ($row2["id"]) > 0)
-		echo " <img src='images/disk.png'>";
-
 	// Delete
 	echo "<td class='$tdcolor' align='center'>";
 	echo "<a href='index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project=$id_project&id=".$row2["id"]."' onClick='if (!confirm(\' ".lang_string ("are_you_sure")."\')) return false;'><img src='images/cross.png' border='0'></a>";

@@ -67,11 +67,12 @@ if ($operation == "insert"){
 	$completion = give_parameter_post ("completion");
 	$parent = give_parameter_post ("parent");
 	$start = give_parameter_post ("start_date");
-	$end = give_parameter_post ("end_date");
+	$hours = give_parameter_post ("hours");
+    $estimated_cost = give_parameter_post ("estimated_cost");
 	$id_group = give_parameter_post ("group",1);
 	$sql = "INSERT INTO ttask
-			(id_project, name, description, priority, completion, start, end, id_parent_task, id_group) VALUES
-			($id_project, '$name', '$description', '$priority', '$completion', '$start', '$end', '$parent', $id_group)";
+			(id_project, name, description, priority, completion, start,  id_parent_task, id_group, hours, estimated_cost) VALUES
+			($id_project, '$name', '$description', '$priority', '$completion', '$start',  '$parent', $id_group, $hours, $estimated_cost)";
 	if (mysql_query($sql)){
 		$id_task = mysql_insert_id();
 		$result_output = "<h3 class='suc'>".$lang_label["create_ok"]."</h3>";
@@ -115,7 +116,8 @@ if ($operation == "update"){
 	$completion = give_parameter_post ("completion");
 	$parent = give_parameter_post ("parent");
 	$start = give_parameter_post ("start_date");
-	$end = give_parameter_post ("end_date");
+	$hours = give_parameter_post ("hours");
+    $estimated_cost = give_parameter_post ("estimated_cost");
 	$id_group = give_parameter_post ("group",1);
 	$sql = "UPDATE ttask SET 
 			name = '$name',
@@ -123,7 +125,8 @@ if ($operation == "update"){
 			priority = '$priority',
 			completion = '$completion',
 			start = '$start',
-			end = '$end',
+			hours = $hours,
+            estimated_cost = $estimated_cost,
 			id_parent_task = '$parent',
 			id_group = '$id_group'
 			WHERE id = $id_task";
@@ -156,9 +159,11 @@ if ($operation == "view"){
 	$priority = clean_input ($row["priority"]);
 	$dep_type = clean_input ($row["dep_type"]);
 	$start = clean_input ($row["start"]);
-	$end = clean_input ($row["end"]);
+	$estimated_cost = clean_input ($row["estimated_cost"]);
+    $hours = clean_input ($row["hours"]);
 	$parent = clean_input ($row["id_parent_task"]);
 	$id_group = clean_input ($row["id_group"]);
+        
 } 
 
 echo $result_output;
@@ -184,17 +189,24 @@ if ($operation != "create"){
 	echo $lang_label["create_task"]." ( $project_name )</h2>";
 }
 
-echo '<table width=100% class="databox_color" cellpadding=3 cellspacing=3>';
+echo '<table border=0 width=750 class="databox_color" cellpadding=4 cellspacing=4>';
 
 // Name
 echo '<tr><td class="datos"><b>'.$lang_label["name"].'</b>';
-echo '<td class="datos" colspan=6><input type="text" name="name" size=70 value="'.$name.'">';
+echo '<td class="datos"><input type="text" name="name" size=30 value="'.$name.'">';
 
+// Workunit distribution graph
+echo "<td rowspan=6>";
+echo '<table border=0 class="databox_color" cellpadding=3 cellspacing=3>';
+echo "<tr><td>";
+echo "<i>Workunit distribution</i><br>";
+echo "<img src='include/functions_graph.php?type=workunit_task&width=200&height=170&id_task=$id_task'>";
+echo "</table>";
 
 // Parent task
 echo "<tr>";
 echo '<td class="datos2">';
-echo "<b>".$lang_label["parent"]."</b> ";
+echo "<b>".lang_string ("Parent task")."</b> ";
 echo '<td class="datos2">';
 echo '<select name="parent">';
 
@@ -209,9 +221,10 @@ while ($row=mysql_fetch_array($resq1)){
 }echo "</select>";
 
 // Priority
-echo '<td class="datos2">';
+echo "<tr>";
+echo '<td class="datos">';
 echo '<b>'.$lang_label["priority"].'</b>';
-echo '<td class="datos2">';
+echo '<td class="datos">';
 echo "<select name='priority'>";
 if ($priority != "")
 	echo "<option value='$priority'>".render_priority ($priority);
@@ -221,24 +234,89 @@ for ($ax=0; $ax < 5; $ax++){
 echo "</select>";
 
 
-// start and end date
-echo '<tr><td class="datos"><b>'.$lang_label["start"].'</b>';
-echo "<td class='datos'>";
-//echo "<input type='text' id='start_date' onclick='scwShow(this,this);' name='start_date' size=10 value='$start_date'> 
+// start date
+echo '<tr><td class="datos2"><b>'.$lang_label["start"].'</b>';
+echo "<td class='datos2'>";
 echo "<input type='text' id='start_date' name='start_date' size=10 value='$start'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"start_date\"),this);'> ";
-echo '<td class="datos"><b>'.$lang_label["end"].'</b>';
-echo "<td class='datos'>";
-echo "<input type='text' id='end_date' name='end_date' size=10 value='$end'> <img src='images/calendar_view_day.png' title='Click Here' alt='Click Here' onclick='scwShow(scwID(\"end_date\"),this);'>";
 
-// group
+// Estimated hours
+echo '<tr><td class="datos"><b>'.lang_string ("Estimated hours").'</b>';
+echo "<td class='datos'>";
+echo "<input type='text' name='hours' size=5 value='$hours'>";
+
+// Real hours 
+echo '<tr><td class="datos2">';
+echo "<b>".lang_string("Worked hours").": </b> ";
+echo "<td class='datos2'><i>";
+echo give_hours_task ($id_task);
+echo " </i>".lang_string ("hr");
+
+// Estimated cost
+echo '<tr><td class="datos"><b>'.lang_string ("Estimated cost").'</b>';
+echo "<td class='datos'>";
+echo "<input type='text' name='estimated_cost' size=7 value='$estimated_cost'>";
+echo " ".$config["currency"];
+
+// Cost estimation graph
+echo "<td rowspan=5>";
+echo '<table border=0 class="databox_color" cellpadding=1 cellspacing=4>';
+echo "<tr><td>";
+echo "<i>".lang_string("Cost estimation")."</i>";
+echo "<tr><td>";
+$labela=lang_string("Est.");
+$labelb=lang_string("Real");
+$a = $estimated_cost;
+$b = round (task_workunit_cost ($id_task, 1));
+$max = maxof($a, $b);
+echo "<img src='include/functions_graph.php?type=histogram&width=200&height=30&a=$a&b=$b&labela=$labela&labelb=$labelb&max=$max'>";
+
+// Imputable cost graph
+echo "<tr><td>";
+echo "<i>".lang_string("Imputable costs")."</i>";
+echo "<tr><td>";
+$labela=lang_string("Tot");
+$labelb=lang_string("Imp");
+$a = round (task_workunit_cost ($id_task, 0));
+$b = round (task_workunit_cost ($id_task, 1));
+$max = maxof($a, $b);
+echo "<img src='include/functions_graph.php?type=histogram&width=200&height=30&a=$a&b=$b&labela=$labela&labelb=$labelb&max=$max'>";
+
+// Task hours graph
+echo "<tr><td>";
+echo "<i>".lang_string("Estimated hours")."</i>";
+echo "<tr><td>";
+$labela=lang_string("Est.");
+$labelb=lang_string("Real");
+$a = round ($hours);
+$b = round (give_hours_task ($id_task));
+$max = maxof($a, $b);
+echo "<img src='include/functions_graph.php?type=histogram&width=200&height=30&a=$a&b=$b&labela=$labela&labelb=$labelb&max=$max'>";
+echo "</table>";
+
+
+// Real costs (imputable)
+echo '<tr><td class="datos2">';
+echo "<b>".lang_string ("Imputable costs")."</b>";
+echo "<td class='datos2'><i>";
+echo task_workunit_cost ($id_task, 1);
+echo " </i>".$config["currency"];
+
+// Real costs (total)
+echo '<tr><td class="datos">';
+echo "<b>".lang_string ("Total costs")."</b>";
+echo "<td class='datos'><i>";
+echo task_workunit_cost ($id_task, 0);
+echo " </i>".$config["currency"];
+
+// Group for this task
 echo '<tr><td class="datos2"><b>'.$lang_label["group"].'</b>';
 echo '<td class="datos2">';
 echo combo_groups($id_group, "TW");
 
 
 // Completion
-echo '<td class="datos2"><b>'.$lang_label["completion"].'</b>';
-echo '<td class="datos2">';
+echo '<tr><td class="datos"><b>'.$lang_label["completion"].'</b>';
+echo '<td class="datos">';
 echo "<select name='completion'>";
 if ($completion != "")
 	echo '<option value='.$completion.'>'.$completion."%";
@@ -257,10 +335,13 @@ echo "</select>";
 
 // Description
 
-echo '<tr><td class="datos" colspan="4"><textarea name="description" style="height: 250px; width: 100%;">';
+echo '<tr><td class="datos2" colspan="3">';
+echo '<b>'.lang_string("Description").'</b>';
+echo '<tr><td class="datos2" colspan="3">
+<textarea name="description" style="height: 200px; width: 100%;">';
 	echo $description;
 echo "</textarea>";
-
+echo "</td></tr>";
 echo "</table>";
 
 if ((give_acl($config["id_user"], $id_group, "PM") ==1) OR ($config["id_user"] == $project_manager )) {

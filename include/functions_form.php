@@ -72,11 +72,13 @@ function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0,
 
 
 
-function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any = 0, $perm = ''){
+function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any = 0, $perm = '', $showgroup = 0){
     global $config; 
     $grouplist = array();
 
     echo "<select name='$form_name' style='width: 200px'>";
+    if ($showgroup > 0)
+        echo "<option value=$showgroup>".give_db_sqlfree_field ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$showgroup);
 
     // Have group "ANY" attached to any of its profiles ?
     $sql_0 = "SELECT COUNT(*) FROM tusuario_perfil WHERE id_usuario = '$id_user' AND id_grupo = 1";
@@ -140,17 +142,27 @@ function combo_user_task_profile ($id_task, $form_name="work_profile", $id="", $
 }
 
 
-// Returns a combo with the users that belongs to a project
+// Returns a combo with the users that belongs to a task
 // ----------------------------------------------------------------------
-function combo_users_task ($id_task){
+function combo_users_task ($id_task, $iconic = 0){
 	// Show only users assigned to this project
 	$sql = "SELECT * FROM trole_people_task WHERE id_task = $id_task";
 	$result = mysql_query($sql);
-	echo "<select name='user' style='width: 100px;'>";
-	while ($row=mysql_fetch_array($result)){
-		echo "<option value='".$row["id"]."'>".$row["id_user"]." / ".give_db_value ("name","trole","id",$row["id_role"]);
-	}
-	echo "</select>";
+
+    if ($iconic == 0){
+	    echo "<select name='user' style='width: 100px;'>";
+	    while ($row=mysql_fetch_array($result)){
+		    echo "<option value='".$row["id"]."'>".$row["id_user"]." / ".give_db_value ("name","trole","id",$row["id_role"]);
+	    }
+	    echo "</select>";
+    } else {
+        echo "<a href='#' class='tip_people'><span><font size=1>";
+        while ($row=mysql_fetch_array($result)){
+            echo $row["id_user"]." / ".give_db_value ("name","trole","id",$row["id_role"]);
+            echo "<br>";
+        }
+        echo "</font></span></a>";
+    }
 }
 
 // Returns a combo with the users that belongs to a project
@@ -333,7 +345,7 @@ function combo_task_user_participant ($id_user, $show_vacations = 0, $actual = 0
 			echo "<option value='$id'>$project_name / $name";
 		}
 	} 
-	echo "<option value=''>".$lang_label["N/A"];
+	echo "<option value='0'>".$lang_label["N/A"];
 	$sql = "SELECT DISTINCT (ttask.id) FROM ttask, trole_people_task WHERE ttask.id = trole_people_task.id_task AND trole_people_task.id_user = '$id_user' ORDER BY ttask.id_project";
 	$result = mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
@@ -369,10 +381,10 @@ function combo_projects_user ($id_user, $name = 'project') {
     global $config;
     
     echo "<select name='$name' style='width:200px'>";
-    $sql = "SELECT * FROM trole_people_project WHERE id_user = '$id_user'";
+    $sql = "SELECT DISTINCT(id_project) FROM trole_people_project WHERE id_user = '$id_user'";
     $result=mysql_query($sql);
     while ($row=mysql_fetch_array($result)){
-        echo "<option value='".$row["id_project"]."'>".give_db_sqlfree_field("SELECT name FROM tproject WHERE id = ".$row["id_project"]);
+        echo "<option value='".$row[0]."'>".give_db_sqlfree_field("SELECT name FROM tproject WHERE id = ".$row[0]);
     }
     echo "</select>";
 }

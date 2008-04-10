@@ -5,7 +5,7 @@ $config["dbuser"] = "root";
 $config["dbpassword"] = "4rt1c406";	// DB Password
 $config["dbhost"] = "localhost"; // DB Host
 $config["homedir"] = "/var/www/topi/";		// Config homedir
-$config["base_url"] = "http://192.168.50.2/topi";			// Base URL
+$config["base_url"] = "http://192.168.50.2/topi/";			// Base URL
 // End of automatic config file
 ?><?php
 // TOPI 
@@ -73,6 +73,11 @@ while ($row2 = mysql_fetch_array($result2)){
 						break;
 	}
 }
+
+// TODO: NEED TO IMPLEMENT IN SETUP THIS TOKENS:
+$config["currency"]="€";
+$config["hours_perday"] = 8;
+
 if ($config["language_code"] == 'ast_es') {
 	$config["help_code"]='ast';
 } else 

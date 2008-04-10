@@ -46,7 +46,7 @@ if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])
 	else
 		echo $lang_label["add_workunit"]." - $task_name</h3>";
 
-	echo "<table cellpadding=4 cellspacing=4 border=0 width='100%' class='databox_color' >";
+	echo "<table cellpadding=4 cellspacing=4 border=0 width='700' class='databox_color' >";
 	// Insert or edit mode ?
 	if ($id_workunit != -1){
 		// Update
@@ -70,7 +70,7 @@ if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])
 	if ($have_cost == 1)
 		echo "<input type='checkbox' name='have_cost' value=1 checked>";
 	else
-		echo "<input type='checkbox' name='have_cost' value=0>";
+		echo "<input type='checkbox' name='have_cost' value=1>";
 	echo "&nbsp;&nbsp;";
 	echo "<b>".$lang_label["have_cost"]."</b>";
 

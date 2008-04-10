@@ -29,8 +29,13 @@ require "functions.php"; // Including funcions.
 require "functions_db.php";
 session_start(); 
 global $config;
-
+//error_reporting(0);
 $config["ISO_encoding"]="iso-8859-1";
+
+define("END_TO_START", "END_TO_START");
+define("START_TO_START", "START_TO_START");
+define("END_TO_END", "END_TO_END");
+define("START_TO_END", "START_TO_END");
 
 // Security checks for this project
 
@@ -71,7 +76,7 @@ class gantt {
 	 * @var array
 	 */
 	var $definitions = array();
-	var $img_width= 800;
+	var $img_width= 600;
 	var $img_height = 300;
 	var $img_bg_color = array();
 	var $grid_color = array();
@@ -121,10 +126,9 @@ class gantt {
 		if ($this->definitions['today']['data']) {
 			$this->today();
 		}
-
-		if ($this->definitions['status_report']['data']) {
+        if (isset($this->definitions['status_report']['data']))
 			$this->last_status_report();
-		}
+
 
 		$this->legend();
 
@@ -425,18 +429,21 @@ class gantt {
 			}
 		}
 		// planned_adjusted
-		$planned_adjusted = count($this->planned_adjusted['phase']);
+        if (isset($this->planned_adjusted['phase']))
+            if (isset($planned_adjusted))
+		      $planned_adjusted = count($this->planned_adjusted['phase']);
 		//$planned_adjusted = 0;
-		if ($planned_adjusted > 0) {
-			$this->rectangule($x,$y+5,$x2,$y+10,$this->planned_adjusted['color'],$this->planned_adjusted['alpha']);
-			$this->text($this->definitions['planned_adjusted']['legend'],$x2+$xdiff,$y,$this->definitions["legend"]['text_color']);
-			$y +=$ydiff;
-			if ($this->img_height-$y < $y_) {
-				$y = $y = $this->img_height - $this->definitions['legend']['y'];
-				$x += $this->definitions['legend']['x'];
-				$x2 += $this->definitions['legend']['x'];
-			}
-		}
+        if (isset($planned_adjusted))
+		    if ($planned_adjusted > 0) {
+			    $this->rectangule($x,$y+5,$x2,$y+10,$this->planned_adjusted['color'],$this->planned_adjusted['alpha']);
+			    $this->text($this->definitions['planned_adjusted']['legend'],$x2+$xdiff,$y,$this->definitions["legend"]['text_color']);
+			    $y +=$ydiff;
+			    if ($this->img_height-$y < $y_) {
+				    $y = $y = $this->img_height - $this->definitions['legend']['y'];
+				    $x += $this->definitions['legend']['x'];
+				    $x2 += $this->definitions['legend']['x'];
+			    }
+		    }
 
 
 
@@ -777,23 +784,25 @@ class gantt {
 	function draw($image_type= 'png')	{
 
 		//echo  "ok, chegou até aqui";
-		if ($this->definitions['image']['type']) {
-			$image_type = $this->definitions['image']['type'];
-		}
-		if (isset($this->definitions['image']['filename']))
-			if ($this->definitions['image']['filename']) {
-				$filename = $this->definitions['image']['filename'];
-			}
-		if ($this->definitions['image']['jpg_quality']) {
-			$jpg_quality = $this->definitions['image']['jpg_quality'];
-		} else {
-			$jpg_quality = 100;
-		}
-		if (isset($this->definitions['image']['wbmp_foreground'])) {
-			$foreground = $this->color_alocate($this->definitions['image']['wbmp_foreground']);
-		} else {
-			$foreground = null;
-		}
+        if (isset($this->definitions['image'])){
+		    if ($this->definitions['image']['type']) {
+			    $image_type = $this->definitions['image']['type'];
+		    }
+		    if (isset($this->definitions['image']['filename']))
+			    if ($this->definitions['image']['filename']) {
+				    $filename = $this->definitions['image']['filename'];
+			    }
+		    if ($this->definitions['image']['jpg_quality']) {
+			    $jpg_quality = $this->definitions['image']['jpg_quality'];
+		    } else {
+			    $jpg_quality = 100;
+		    }
+		    if (isset($this->definitions['image']['wbmp_foreground'])) {
+			    $foreground = $this->color_alocate($this->definitions['image']['wbmp_foreground']);
+		    } else {
+			    $foreground = null;
+		    }
+        }
 
 		switch ($image_type) {
 			case 'png':

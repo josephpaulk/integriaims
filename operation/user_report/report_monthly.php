@@ -60,10 +60,11 @@
 	echo getmonth($working_month). " - ".lang_string("Totals for this month"). " - ( $total_hours )";
 	echo "</h3>";
 
-	echo '<table cellpadding="4" cellspacing="4" width="100%" class="databox_color">';
+	echo '<table cellpadding="4" cellspacing="4" width="700" class="databox_color">';
 	echo "<th>".$lang_label["user_ID"];
-	echo "<th>".$lang_label["profile"];
-	echo "<th>".lang_string ("Detail");
+	echo "<th>".lang_string ("Workunit report");
+	echo "<th>".lang_string ("Calendar view");
+    echo "<th>".lang_string ("Graph overview");
 	echo "<th>".lang_string ("total_hours_for_this_month");
 
 	$sql0= "SELECT * FROM tusuario";
@@ -92,29 +93,37 @@
 				    $tip = "tip2";
 			    }
 			    echo "<tr><td class='$tdcolor'>";
-			    echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=$nombre'><b>".$nombre."</b></a>";
-			    echo "<td class='$tdcolor' width=60>";
-			    echo "<img src='images/avatars/".$avatar."_small.png'>";
-			    $sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
-			    $result1=mysql_query($sql1);
-			    echo "<a href='#' class='$tip'>&nbsp;<span>";
-			    if (mysql_num_rows($result1)){
-				    while ($row1=mysql_fetch_array($result1)){
-					    echo dame_perfil($row1["id_perfil"])."/ ";
-					    echo dame_grupo($row1["id_grupo"])."<br>";
-				    }
-			    }
-			    else { 
+                echo "<img src='images/avatars/".$avatar."_small.png'>";
+                $sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
+                $result1=mysql_query($sql1);
+                echo "<a href='#' class='$tip'>&nbsp;<span>";
+                if (mysql_num_rows($result1)){
+                    while ($row1=mysql_fetch_array($result1)){
+                        echo dame_perfil($row1["id_perfil"])."/ ";
+                        echo dame_grupo($row1["id_grupo"])."<br>";
+                    }
+                }
+                else { 
                     echo $lang_label["no_profile"]; 
                 }
-			    echo "</span></a>";
+                echo "</span></a>";
+                echo "<b>".$nombre."</b>";
 
-                // Clock to montly report for X user
-			    echo "<td class='$tdcolor' width=60><center>";
+                // Workunit report (detailed)
+			    echo "<td class='$tdcolor'><center>";
+                echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$nombre'>";
+                echo "<img border=0 src='images/page_white_text.png'></A></center></td>";
+
+                // Clock to calendar montly report for X user
+			    echo "<td class='$tdcolor' ><center>";
 			    echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$working_month&year=$working_year&id=$nombre'><img src='images/clock.png' border=0></a></center></td>";
     
+                // Graph stats montly report for X user
+                echo "<td class='$tdcolor'><center>";
+                echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$nombre'><img src='images/chart_bar.png' border=0></a></center></td>";
+    
                 // Total hours this month
-			    echo "<td class='$tdcolor' width=60>";
+			    echo "<td class='$tdcolor' >";
 			    echo $row[0];
             }
 		}

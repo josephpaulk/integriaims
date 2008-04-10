@@ -33,7 +33,10 @@ if (give_acl($id_user, 0, "IR")!=1) {
 
 
 $accion = "";
-// Delete project
+
+// Disable project
+// ======================
+
 if (isset($_GET["quick_delete"])){
 	$id_project = $_GET["quick_delete"];
 	$id_owner = give_db_value ("id_owner", "tproject", "id", $id_project);
@@ -42,12 +45,36 @@ if (isset($_GET["quick_delete"])){
 		$sql =" UPDATE tproject SET disabled=1 WHERE id = $id_project";
 		mysql_query($sql);
 		echo "<h3 class='suc'>".$lang_label["del_incid_ok"]."</h3>";
-		audit_db($id_user,$REMOTE_ADDR,"Project deleted","User ".$id_user." deleted project #".$id_project);
+		audit_db($id_user,$REMOTE_ADDR,"Project deleted","User ".$id_user." disabled project #".$id_project);
 	} else {
-		audit_db ($id_user,$REMOTE_ADDR,"ACL Forbidden","User ".$id_user." try to delete project #$id_project");
+		audit_db ($id_user,$REMOTE_ADDR,"ACL Forbidden","User ".$id_user." try to disable project #$id_project");
 		echo "<h3 class='error'>".$lang_label["del_incid_no"]."</h3>";
 		no_permission();
 	}
+}
+
+// REAL PROJECT DELETE
+// ======================
+if (isset($_GET["real_delete"])){
+    $id_project = $_GET["real_delete"];
+    $id_owner = give_db_value ("id_owner", "tproject", "id", $id_project);
+    if (($id_owner == $id_user) OR (dame_admin ($id_user))) {
+        // delete_project ($id_project);
+        $sql ="DELETE FROM tproject WHERE disabled=1 AND id = $id_project";
+        mysql_query($sql);
+        $sql ="DELETE FROM ttask WHERE id_project = $id_project";
+        mysql_query($sql);
+
+        echo "<h3 class='suc'>".$lang_label["del_incid_ok"]."</h3>";
+        audit_db($id_user,$REMOTE_ADDR,"Project deleted","User ".$id_user." deleted project #".$id_project);
+
+
+        // Workunits ARE NOT DELETED -NEVER-
+    } else {
+        audit_db ($id_user,$REMOTE_ADDR,"ACL Forbidden","User ".$id_user." try to delete project #$id_project");
+        echo "<h3 class='error'>".$lang_label["del_incid_no"]."</h3>";
+        no_permission();
+    }
 }
 
 // INSERT PROJECT
@@ -100,12 +127,13 @@ echo "<h2>".$lang_label["project_management"]."</h2>";
 // -------------
 // Show headers
 // -------------
-echo "<table width='680' class='databox'>";
+echo "<table width='750' class='databox' cellpadding=4 cellspacing=4>";
 echo "<tr>";
 echo "<th>".$lang_label["name"];
 echo "<th>".$lang_label["completion"];
 echo "<th>".lang_string ("Task / People");
 echo "<th>".$lang_label["time_used"];
+echo "<th>".lang_string ("Cost");
 echo "<th width=82>".$lang_label["updated_at"];
 echo "<th>".$lang_label["delete"];
 $color = 1;
@@ -114,8 +142,9 @@ $color = 1;
 // Show DATA TABLE
 // -------------
 
+$view_disabled = get_parameter ("view_disabled",0);
 // Simple query, needs to implement group control and ACL checking
-$sql2="SELECT * FROM tproject WHERE disabled = 0"; 
+$sql2="SELECT * FROM tproject WHERE disabled = $view_disabled"; 
 if ($result2=mysql_query($sql2))	
 while ($row2=mysql_fetch_array($result2)){
 	if (give_acl($config["id_user"], 0, "PR") ==1){
@@ -146,8 +175,15 @@ while ($row2=mysql_fetch_array($result2)){
             echo give_db_sqlfree_field ("SELECT COUNT(*) FROM trole_people_project WHERE id_project = ".$row2["id"]);
 
 			// Time wasted
-			echo "<td class='$tdcolor' align='center'>";
+			echo "<td class='".$tdcolor."f9' align='center'>";
 			echo format_numeric(give_hours_project ($row2["id"])). " hr";
+            
+            // Costs (client / total)
+            echo "<td class='".$tdcolor."f9' align='center'>";
+            echo format_numeric (project_workunit_cost ($row2["id"], 1));
+            echo $config["currency"];
+            //echo " / ";
+            //echo format_numeric (project_workunit_cost ($row2["id"], 0));
 
 			// Last update time
 			echo "<td class='$tdcolor'_f9 align='center'>";
@@ -156,14 +192,13 @@ while ($row2=mysql_fetch_array($result2)){
                 echo human_time_comparation ( $timestamp );
             else
                 echo lang_string("N/A");
-               
-            
-
-
 		
 		// Delete	
 		if ((give_acl($config["id_user"], 0, "PW") ==1) OR ($config["id_user"] == $row2["id_owner"] )) {
-			echo "<td class='$tdcolor' align='center'><a href='index.php?sec=projects&sec2=operation/projects/project&quick_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
+            if ($view_disabled == 0)
+			     echo "<td class='$tdcolor' align='center'><a href='index.php?sec=projects&sec2=operation/projects/project&quick_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
+            else 
+                echo "<td class='$tdcolor' align='center'><a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&real_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
 		} else
 			echo "<td class='$tdcolor' align='center'>";
 		

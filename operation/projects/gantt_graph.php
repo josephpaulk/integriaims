@@ -18,6 +18,7 @@
 
 // Real start
 require '../../include/gantt.php';
+require '../../include/functions_calendar.php';
 
 // Get data about this project
 $id_user = $_SESSION['id_usuario'];
@@ -82,7 +83,7 @@ $definitions['progress']['legend'] = lang_string ("Progress");
 $definitions['milestone']['legend'] = lang_string ("Milestone");
 $definitions['today']['legend'] = lang_string ("Today");
 $definitions['today']['pixels'] = 10; //set the number of pixels to line interval
-$definitions['limit']['cell']['m'] = $project_scale_month; // size of cells (each day)
+$definitions['limit']['cell']['m'] = $project_scale_month / 1.2; // size of cells (each day)
 $definitions['limit']['cell']['w'] = '8'; // size of cells (each day)
 $definitions['limit']['cell']['d'] = '20';// size of cells (each day)
 $definitions['grid']['x'] = 120; // initial position of the grix (x)
@@ -130,7 +131,7 @@ while ($row=mysql_fetch_array($result)){
 	$task_id = $row["id"];
 	$task_array[$task_id]=$task_counter;
 	$task_name = $row["name"];
-	$task_parent = $row["parent"];
+	$task_parent = $row["id_parent_task"];
 	if ($task_parent != 0){
 		$parent_counter_id = $task_array[$task_parent];
 		$definitions['dependency_planned'][$dependency_counter]['type']= 'END_TO_START';
@@ -140,7 +141,8 @@ while ($row=mysql_fetch_array($result)){
 	}
 	$task_progress = $row["completion"];
 	$task_begin =  strtotime ($row["start"]);
-	$task_end =  strtotime($row["end"]);
+	$task_end =  strtotime (calcdate_business ($row["start"], $row["hours"] * $config["hours_perday"]));
+
 	$task_work_end =  strtotime (give_db_sqlfree_field ("SELECT MAX(tworkunit.timestamp) FROM tworkunit_task, tworkunit WHERE tworkunit.id = tworkunit_task.id_workunit AND tworkunit_task.id_task = $task_id"));
 	$task_work_begin =  strtotime (give_db_sqlfree_field ("SELECT MIN(tworkunit.timestamp) FROM tworkunit_task, tworkunit WHERE tworkunit.id = tworkunit_task.id_workunit AND tworkunit_task.id_task = $task_id"));
 	if ($task_work_begin == "")
@@ -194,4 +196,3 @@ new gantt($definitions);
 
 
 ?>
-

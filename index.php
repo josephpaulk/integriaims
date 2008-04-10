@@ -62,6 +62,7 @@ include "include/languages/language_".$config["language_code"].".php";
 require "include/functions.php"; // Including funcions.
 require "include/functions_db.php";
 require "include/functions_form.php";
+require "include/functions_calendar.php";
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">

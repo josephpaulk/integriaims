@@ -76,77 +76,54 @@ if (isset($_GET["quick_delete"])){
 // ---------
 
 $busqueda="";
-if (isset($_POST["texto"]) OR (isset($_GET["texto"]))){
-	if (isset($_POST["texto"])){
-		$texto_form = clean_input ($_POST["texto"]);
-		$_GET["texto"]=$texto_form; // Update GET vars if data comes from POST
-	} else	// GET
-		$texto_form = clean_input ($_GET["texto"]);
 
+$texto_form = get_parameter ("texto","");
+$incident_form = get_parameter ("incident_id", "");
+$usuario_form = get_parameter("usuario","");
+
+// Search tokens for search filter
+if ($texto_form != "")
 	$busqueda = "( titulo LIKE '%".$texto_form."%' OR descripcion LIKE '%".$texto_form."%' )";
+
+if ($usuario_form != ""){
+	if ($texto_form != "")
+		$busqueda = $busqueda." and ";
+	$busqueda= $busqueda." id_usuario = '".$usuario_form."' ";
 }
-
-if (isset($_POST["usuario"]) OR (isset($_GET["usuario"]))){
-	if (isset($_POST["usuario"])){
-		$usuario_form = clean_input ($_POST["usuario"]);
-		$_GET["usuario"]=$usuario_form;
-	} else // GET
-		$usuario_form= clean_input ($_GET["usuario"]);
-
-	if ($usuario_form != "--"){
-		if (isset($_GET["texto"]))
-			$busqueda = $busqueda." and ";
-		$busqueda= $busqueda." id_usuario = '".$_GET["usuario"]."' ";
-	}
-}
-
-if (isset($_POST["incident_id"])){
-	$incident_id = $_POST["incident_id"];
-	if ($incident_id != "")
-		$busqueda = "id_incidencia = $incident_id";
+if ($incident_form != ""){
+	$busqueda = "id_incidencia = $incident_form";
 }
 	
-
-// Filter
+// Filter tokens add to search
 if ($busqueda != "")
 	$sql1= "WHERE ".$busqueda;
 else
 	$sql1="";
 
+$filter_estado = get_parameter("estado", -1);
+$filter_grupo = get_parameter("grupo", -1);
+$filter_prioridad = get_parameter("prioridad", -1);
 
-if (isset($_GET["estado"]) and (!isset($_POST["estado"])))
-	$_POST["estado"]=$_GET["estado"];
-if (isset($_GET["grupo"]) and (!isset($_POST["grupo"])))
-		$_POST["grupo"]=$_GET["grupo"];
-if (isset($_GET["prioridad"]) and (!isset($_POST["prioridad"])))
-		$_POST["prioridad"]=$_GET["prioridad"];
-
-
-if (isset($_POST['estado']) OR (isset($_POST['grupo'])) OR (isset($_POST['prioridad']) ) ) {
-		if ((isset($_POST["estado"])) AND ($_POST["estado"] != -1)){
-	$_GET["estado"] = $_POST["estado"];
-			if ($sql1 == "")
-					$sql1='WHERE estado='.$_POST["estado"];
-			else
-					$sql1 =$sql1.' AND estado='.$_POST["estado"];
-		}
-
-		if ((isset($_POST["prioridad"])) AND ($_POST["prioridad"] != -1)) {
-	$_GET["prioridad"]=$_POST["prioridad"];
-				if ($sql1 == "")
-						$sql1='WHERE prioridad='.$_POST["prioridad"];
-				else
-						$sql1 =$sql1.' and prioridad='.$_POST["prioridad"];
-		}
-
-		if ((isset($_POST["grupo"])) AND ($_POST["grupo"] != -1)) {
-	$_GET["grupo"] = $_POST["grupo"];
-				if ($sql1 == "")
-						$sql1='WHERE id_grupo='.$_POST["grupo"];
-				else
-						$sql1 =$sql1.' AND id_grupo='.$_POST["grupo"];
-		}
+if (($filter_estado != -1) OR ($filter_grupo != -1) OR ($filter_prioridad != -1)){
+    if ($filter_estado != -1){
+		if ($sql1 == "")
+			$sql1='WHERE estado='.$filter_estado;
+		else
+			$sql1 =$sql1.' AND estado='.$filter_estado;
 	}
+    if ($filter_prioridad != -1){
+		if ($sql1 == "")
+			$sql1='WHERE prioridad='.$filter_prioridad;
+		else
+			$sql1 =$sql1.' and prioridad='.$filter_prioridad;
+	}
+    if ($filter_grupo > 1){
+		if ($sql1 == "")
+			$sql1='WHERE id_grupo='.$filter_grupo ;
+		else
+			$sql1 =$sql1.' AND id_grupo='.$filter_grupo;
+	}
+}
 
 $sql0="SELECT * FROM tincidencia ".$sql1." ORDER BY actualizacion DESC";
 $sql1_count="SELECT COUNT(id_incidencia) FROM tincidencia ".$sql1;
@@ -158,59 +135,61 @@ if (isset($_POST['operacion']))
 	echo " -&gt; ".$lang_label["incident_view_filter"]." - ".$_POST['operacion']."</h2>";
 else
 	echo "</h2>";
-echo "<div class=databox style='width: 400px'>";
+echo "<div class=databox style='width: 800px'>";
 echo "<form name='visualizacion' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident'>";
-echo '<table border=0 width=90%>';
-echo "<tr><td>";
-echo '<table border=0 width=400>';
+
+if ($usuario_form != "")
+    echo "<input type='hidden' name='usuario' value='$usuario_form'>";
+if ($texto_form != "")
+    echo "<input type='hidden' name='texto' value='$texto_form'>";
+
+
+echo '<table border=0 cellpadding=0 cellspacing=8>';
 echo "<tr>";
 echo "<td>".$lang_label["f_state"];
-echo "<td>".$lang_label["f_prio"];
-echo "<td>".$lang_label["f_group"];
-echo "<tr><td>";
+echo "<td>";
 echo '<select name="estado" onChange="javascript:this.form.submit();" class="w155">';
-	// Tipo de estado (Type)
-	// 0 - Abierta / Sin notas (Open without notes)
-	// 1 - Abierta / Notas aniadidas  (Open with notes)
-	// 2 - Descartada (Not valid)
-	// 3 - Caducada (out of date)
-	// 13 - Cerrada (closed)
 
-if ((isset($_GET["estado"])) OR (isset($_GET["estado"]))){
-	if (isset($_GET["estado"]))
-		$estado = $_GET["estado"];
-	if (isset($_POST["estado"]))
-		$estado = $_POST["estado"];
-	echo "<option value='".$estado."'>";
-	switch ($estado){
-		case -1: echo $lang_label["all_inc"]; break;
-		case 1: echo $lang_label["opened_inc"]; break;
-		case 13: echo $lang_label["closed_inc"]; break;
-		case 2: echo $lang_label["rej_inc"]; break;
-		case 0: echo $lang_label["new_inc"]; break;
-		case 3: echo $lang_label["exp_inc"]; break;
+if ($filter_estado > 0){
+	echo "<option value='".$filter_estado."'>";
+    switch ($filter_estado){
+        case 0: echo $lang_label["all_inc"]; 
+                break;
+        case 1: echo $lang_label["status_new"];
+                break;
+        case 2: echo $lang_label["status_unconfirmed"];
+                break;
+        case 3: echo $lang_label["status_assigned"];
+                break;
+        case 4: echo $lang_label["status_reopened"];
+                break;
+        case 5: echo $lang_label["status_verified"];
+                break;
+        case 7: echo $lang_label["status_closed"];
+                break;
+        case 6: echo $lang_label["status_resolved"];		
 	}
 }
 
 echo "<option value='-1'>".$lang_label["all_inc"];
-echo "<option value='0'>".$lang_label["new_inc"];
-echo "<option value='1'>".$lang_label["opened_inc"];
-echo "<option value='13'>".$lang_label["closed_inc"];
-echo "<option value='2'>".$lang_label["rej_inc"];
-echo "<option value='3'>".$lang_label["exp_inc"];
+echo "<option value='1'>".$lang_label["status_new"];
+echo "<option value='2'>".$lang_label["status_unconfirmed"];
+echo "<option value='3'>".$lang_label["status_assigned"];
+echo "<option value='4'>".$lang_label["status_assigned"];
+echo "<option value='5'>".$lang_label["status_verified"];
+echo "<option value='7'>".$lang_label["status_closed"];
+echo "<option value='6'>".$lang_label["status_resolved"];
 
 echo "</select> ";
 echo '<noscript><input type="submit" class="sub" value="'.$lang_label["show"].'" border="0"></noscript>	</td>';
+
+echo "<td>".$lang_label["f_prio"];
 echo '<td>';
 echo '<select name="prioridad" onChange="javascript:this.form.submit();" class="w155">';
 
-if ((isset($_GET["prioridad"])) OR (isset($_GET["prioridad"]))){ 
-	if (isset($_GET["prioridad"]))
-		$prioridad = $_GET["prioridad"];
-	if (isset($_POST["prioridad"]))
-		$prioridad = $_POST["prioridad"];
-	echo "<option value=".$prioridad.">";
-	switch ($prioridad){
+if ($filter_prioridad > 0){ 
+	echo "<option value=".$filter_prioridad.">";
+	switch ($filter_prioridad){
 		case -1: echo $lang_label["all"]." ".$lang_label["priority"]; break;
 		case 0: echo $lang_label["informative"]; break;
 		case 1: echo $lang_label["low"]; break;
@@ -231,20 +210,16 @@ echo "</select> <noscript>";
 echo "<input type='submit' class='sub' value='".$lang_label["show"]."' border='0'></noscript>";
 echo "</td>";
 
-
+echo "<td>".$lang_label["f_group"];
 // Group combo
 echo '<td><select name="grupo" onChange="javascript:this.form.submit();" class="w155">';
-if ((isset($_GET["grupo"])) OR (isset($_GET["grupo"]))){ 
-	if (isset($_GET["grupo"]))
-		$grupo = $_GET["grupo"];
-	if (isset($_POST["grupo"]))
-		$grupo = $_POST["grupo"];
-	echo "<option value=".$grupo.">";
+if ($filter_grupo > 0){
+	echo "<option value=".$filter_grupo.">";
 
-	if ($grupo == -1)
+	if ($filter_grupo == 1)
 		echo $lang_label["all"]." ".$lang_label["groups"]; // all groups (default)
 	else
-		echo dame_nombre_grupo($grupo);
+		echo dame_nombre_grupo($filter_grupo);
 }
 $sqlcombo='SELECT * FROM tgrupo ORDER BY nombre';
 $resultc=mysql_query($sqlcombo);
@@ -263,9 +238,6 @@ if (isset($_GET["texto"]))
 
 echo "</table>";
 echo "</form>";
-echo "<td>";
-echo "<img src='include/functions_graph.php?type=incident_a&width=300&height=100'>";
-echo "</table>";
 echo "</div>";
 
 $offset_counter=0;
@@ -298,7 +270,6 @@ if ($row2_count[0] <= 0 ) {
 
 	// Show pagination
 	pagination ($total_incidentes, $url, $offset);
-	echo '<br>';
 
 	// -------------
 	// Show headers
@@ -335,7 +306,24 @@ if ($row2_count[0] <= 0 ) {
 				$tdcolor = "datos2";
 				$color = 1;
 			}
-			
+
+            switch ($row2["estado"]) {
+                case 1: $tdcolor = "datos_red";
+                            break;
+                case 2: $tdcolor = "datos_red";
+                            break;
+                case 3: $tdcolor = "datos_yellow";
+                            break;
+                case 4: $tdcolor = "datos_yellow";
+                            break;
+                case 5: $tdcolor = "datos_yellow";
+                            break;
+                case 7: $tdcolor = "datos_green";
+                            break;
+                case 6: $tdcolor = "datos_green";
+                            break;
+            }
+
 			echo "<tr>";
 			echo "<td class='$tdcolor' align='left'>";
 			echo "<font size=1pt><a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'><b>#".$row2["id_incidencia"]."</b></a></td>";
@@ -344,23 +332,14 @@ if ($row2_count[0] <= 0 ) {
 			echo "<td class='$tdcolor'><a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr(clean_output ($row2["titulo"]),0,200);
 
             // group
-            echo "<td class='$tdcolor'>";
+            echo "<td class='".$tdcolor."f9'>";
             echo $group_name;
 
-            
-
-			// Project
-			/*
-			echo "<td class='$tdcolor'>";
-			echo substr($project_name,0,15);
-			if (strlen($project_name) > 15)
-				echo "...";
-			*/
 			// Tipo de estado  (Type)
 			// (1,'New'), (2,'Unconfirmed'), (3,'Assigned'),
 			// (4,'Re-opened'), (5,'Verified'), (6,'Resolved')
 			// (7,'Closed');
-			echo "<td class='".$tdcolor."f9' align='center'>";
+			echo "<td class='".$tdcolor."f9' align='center'><b>";
 			switch ($row2["estado"]) {
 				case 1: echo $lang_label["status_new"];
 							break;
@@ -377,9 +356,10 @@ if ($row2_count[0] <= 0 ) {
 				case 6: echo $lang_label["status_resolved"];
 							break;
 			}
+
 			// Resolution
 			// echo "<td class='$tdcolor'>";
-			echo "<br>";
+			echo "</b><br>";
 			echo give_db_value('name', 'tincident_resolution', 'id', $row2["resolution"]);
 
 			echo "<td class='$tdcolor' align='center'>";
@@ -399,7 +379,7 @@ if ($row2_count[0] <= 0 ) {
 
             echo "<td class='$tdcolor' align='center'>";
             // People participant
-            echo "<a href='#' class='tip'><span>";
+            echo "<a href='#' class='tip_people'><span>";
             $people_involved = people_involved_incident ($row2["id_incidencia"]);
             while (sizeof($people_involved)>0){
                 echo array_pop ($people_involved). " <br>";

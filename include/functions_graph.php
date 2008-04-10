@@ -16,6 +16,112 @@
 	include "config.php";
 	include "functions.php";
 
+
+// ===============================================================================
+// Draw a simple pie graph with incidents, by assigned user
+// ===============================================================================
+
+function incident_peruser ($width, $height){
+    require ("../include/config.php");
+    require ("../include/functions_db.php");
+    $res = mysql_query("SELECT * FROM tusuario");
+    while ($row=mysql_fetch_array($res)){
+        $id_user = $row["id_usuario"];
+        $datos = give_db_sqlfree_field ("SELECT COUNT(id_usuario) FROM tincidencia WHERE id_usuario = '$id_user'");
+        if ($datos > 0){
+            $data[] = $datos;
+            $legend[] = $id_user;
+        } 
+    } 
+    if (isset($data))
+        generic_pie_graph ($width, $height, $data, $legend);
+    else 
+        graphic_error();
+}
+
+// ===============================================================================
+// Draw a simple pie graph with reported workunits for a specific TASK
+// ===============================================================================
+
+function graph_workunit_task ($width, $height, $id_task){
+    require ("../include/config.php");
+    require ("../include/functions_db.php");
+    $res = mysql_query("SELECT SUM(duration), id_user FROM tworkunit, tworkunit_task
+                    WHERE tworkunit_task.id_task = $id_task AND 
+                    tworkunit_task.id_workunit = tworkunit.id 
+                    GROUP BY id_user");
+    while ($row=mysql_fetch_array($res)){
+        $data[] = $row[0];
+        $legend[] = $row[1];
+    } 
+     
+    if (isset($data))
+        generic_pie_graph ($width, $height, $data, $legend);
+    else 
+        graphic_error();
+}
+
+
+// ===============================================================================
+// Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
+// ===============================================================================
+
+function graph_workunit_user ($width, $height, $id_user, $date_from){
+    require ("../include/config.php");
+    require ("../include/functions_db.php");
+    $res = mysql_query("SELECT SUM(duration), id_task, timestamp, ttask.name, tproject.name 
+                    FROM tworkunit, tworkunit_task, ttask, tproject  
+                    WHERE tworkunit.id_user = '$id_user' AND 
+                    tworkunit.id = tworkunit_task.id_workunit AND 
+                    tworkunit.timestamp > '$date_from' AND 
+                    tworkunit_task.id_task = ttask.id AND
+                    tproject.id = ttask.id_project 
+                    GROUP BY id_task ORDER BY SUM(duration) DESC");
+
+    while ($row=mysql_fetch_array($res)){
+        $data[] = $row[0];
+        $legend[] = $row[4]." / ".$row[3] . " (".$row[0].")";
+    } 
+     
+    if (isset($data))
+        generic_pie_graph ($width, $height, $data, $legend);
+    else 
+        graphic_error();
+}
+
+
+// ===============================================================================
+// Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
+// ===============================================================================
+
+function graph_workunit_project_user ($width, $height, $id_user, $date_from){
+    require ("../include/config.php");
+    require ("../include/functions_db.php");
+    $res = mysql_query("SELECT SUM(duration), tproject.name 
+                    FROM tworkunit, tworkunit_task, ttask, tproject  
+                    WHERE tworkunit.id_user = '$id_user' AND 
+                    tworkunit.id = tworkunit_task.id_workunit AND 
+                    tworkunit.timestamp > '$date_from' AND 
+                    tworkunit_task.id_task = ttask.id AND
+                    tproject.id = ttask.id_project 
+                    GROUP BY tproject.name ORDER BY SUM(duration) DESC");
+
+    while ($row=mysql_fetch_array($res)){
+        $data[] = $row[0];
+        $legend[] = $row[1] ." (".$row[0].")";
+    } 
+     
+    if (isset($data))
+        generic_pie_graph ($width, $height, $data, $legend);
+    else 
+        graphic_error();
+}
+
+// ===============================================================================
+// ===============================================================================
+// ===============================================================================
+
+
 function graphic_error () {
     global $config;
 
@@ -91,9 +197,9 @@ function progress_bar ($progress, $width, $height) {
    		drawRating($progress,$width,$height);
 }
 
-function generic_histogram ($id_agent, $width, $height, $mode, $valuea, $valueb, $maxvalue, $labela, $labelb){
+function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue, $labela, $labelb){
 	include ("../include/config.php");
-	require ("../include/languages/language_".$language_code.".php");
+	require ("../include/languages/language_".$config["language_code"].".php");
 	// $ratingA, $ratingB, $ratingA_leg, $ratingB_leg;
 	$ratingA=$valuea;
 	$ratingB=$valueb;
@@ -123,12 +229,12 @@ function generic_histogram ($id_agent, $width, $height, $mode, $valuea, $valueb,
 	if ($mode != 2){
 		ImageFilledRectangle($image, 40, $margin_up, ($ratingA/$size_per)+40, $margin_up+$rectangle_height -1 , $blue);
 		$legend = $ratingA;
-		ImageTTFText($image, 7, 0, 0, $margin_up+8, $black, $config_fontpath, $labela);
+		ImageTTFText($image, 7, 0, 0, $margin_up+8, $black, $config["fontpath"], $labela);
 		// Second rectangle
 		ImageFilledRectangle($image, 40, $margin_up+$rectangle_height + 1 , ($ratingB/$size_per)+40, ($rectangle_height*2)+$margin_up , $red);
 		$legend = $ratingA;
 		// ImageTTFText($image, 8, 0, ($width-10), ($height/2)+10, $black, $config_fontpath, $ratingB);
-		ImageTTFText($image, 7, 0, 0,  $margin_up+$rectangle_height+8, $black, $config_fontpath, $labelb);
+		ImageTTFText($image, 7, 0, 0,  $margin_up+$rectangle_height+8, $black, $config["fontpath"], $labelb);
 	} else { // mode 2, without labels
 		ImageFilledRectangle($image, 1, $margin_up, ($ratingA/$size_per)+1, $margin_up+$rectangle_height -1 , $blue);
 		$legend = $ratingA;
@@ -144,30 +250,12 @@ function generic_histogram ($id_agent, $width, $height, $mode, $valuea, $valueb,
 		imageline($image, $risk_low, 0, $risk_low , $height, $grey);
 		imageline($image, $risk_med , 0, $risk_med  , $height, $grey);
 		imageline($image, $risk_high, 0, $risk_high , $height, $grey);
-		ImageTTFText($image, 7, 0, $risk_low-20, $height, $grey, $config_fontpath, "Low");
-		ImageTTFText($image, 7, 0, $risk_med-20, $height, $grey, $config_fontpath, "Med.");
-		ImageTTFText($image, 7, 0, $risk_high-25, $height, $grey, $config_fontpath, "High");
+		ImageTTFText($image, 7, 0, $risk_low-20, $height, $grey, $config["fontpath"], "Low");
+		ImageTTFText($image, 7, 0, $risk_med-20, $height, $grey, $config["fontpath"], "Med.");
+		ImageTTFText($image, 7, 0, $risk_high-25, $height, $grey, $config["fontpath"], "High");
 	}
 	imagePNG($image);
 	imagedestroy($image);
-}
-
-function incident_peruser ($width, $height){
-	require ("../include/config.php");
-	require ("../include/functions_db.php");
-	$res = mysql_query("SELECT * FROM tusuario");
-	while ($row=mysql_fetch_array($res)){
-		$id_user = $row["id_usuario"];
-		$datos = give_db_sqlfree_field ("SELECT COUNT(id_usuario) FROM tincidencia WHERE id_usuario = '$id_user'");
-		if ($datos > 0){
-			$data[] = $datos;
-			$legend[] = $id_user;
-		} 
-	} 
-    if (isset($data))
-	    generic_pie_graph ($width, $height, $data, $legend);
-    else 
-        graphic_error();
 }
 
 // ===============================================================================
@@ -252,7 +340,7 @@ function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max
 	$driver=& Image_Canvas::factory('png',array('width'=>$width,'height'=>$height,'antialias' => 'native'));
 	$Graph = & Image_Graph::factory('graph', $driver);
 	// add a TrueType font
-	$Font =& $Graph->addNew('font', $config_fontpath);
+	$Font =& $Graph->addNew('font', $config["fontpath"]);
 	// set the font size to 11 pixels
 	$Font->setSize(7);
 	$Graph->setFont($Font);
@@ -370,7 +458,7 @@ function generic_bar_graph ( $width =380, $height = 200, $data, $legend) {
 	// create the graph
 	$Graph =& Image_Graph::factory('graph', array($width, $height));
 	// add a TrueType font
-	$Font =& $Graph->addNew('font', $config_fontpath);
+	$Font =& $Graph->addNew('font', $config["fontpath"]);
 	$Font->setSize(9);
 	$Graph->setFont($Font);
 	$Graph->add(
@@ -417,7 +505,7 @@ function generic_area_graph ($data, $data_label, $width, $height){
 		// create the graph
 		$Graph =& Image_Graph::factory('graph', array($width, $height));
 		// add a TrueType font
-		$Font =& $Graph->addNew('font', $config_fontpath);
+		$Font =& $Graph->addNew('font', $config["fontpath"]);
 		$Font->setSize(6);
 		$Graph->setFont($Font);
 		$Graph->add(
@@ -486,7 +574,7 @@ function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $wi
 		// create the graph
 		$Graph =& Image_Graph::factory('graph', array($width, $height));
 		// add a TrueType font
-		$Font =& $Graph->addNew('font', $config_fontpath);
+		$Font =& $Graph->addNew('font',$config["fontpath"]);
 		$Font->setSize(7);
 		$Graph->setFont($Font);
 		$Graph->add( Image_Graph::vertical(
@@ -532,10 +620,7 @@ function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $wi
 //   parse get parameters
 // ****************************************************************************
 
-if (isset($_GET["id_agent"]))
-	$id_agent = $_GET["id_agent"];
-else
-	$id_agent =0;
+
 if (isset($_GET["id_audit"]))
 	$id_audit = $_GET["id_audit"];
 else
@@ -556,11 +641,10 @@ if (isset($_GET["height"]))
 	$height= $_GET["height"];
 else
 	$height= 50;
-if (isset($_GET["graphtype"]))
-	$graphtype = $_GET["graphtype"];
-else
-	$graphtype = 0;
 
+$id_user = give_parameter_get ("id_user",0);
+$graphtype = get_parameter ("graphtype",0);
+$id_task = get_parameter ("id_task",0);
 $max = give_parameter_get ("max" , 0);
 $min = give_parameter_get ("min" , 0);
 $labela = give_parameter_get ("labela" , "");
@@ -576,10 +660,16 @@ $percent = give_parameter_get ( "percent", 0);
 $days = give_parameter_get ( "days", 0);
 
 
-if ( $_GET["type"] == "progress"){
-		progress_bar ($percent, $width, $height);
-} elseif ($_GET["type"] == "incident_a"){
-		incident_peruser ($width, $height);
-}
-
+if ( $_GET["type"] == "progress")
+	progress_bar ($percent, $width, $height);
+elseif ($_GET["type"] == "incident_a")
+	incident_peruser ($width, $height);
+elseif ($_GET["type"] == "workunit_task")
+    graph_workunit_task($width, $height, $id_task);
+elseif ($_GET["type"] == "histogram")
+    generic_histogram ($width, $height, $mode, $valuea, $valueb, $max, $labela, $labelb);
+elseif ($_GET["type"] == "workunit_user")
+    graph_workunit_user ($width, $height, $id_user, $date_from);
+elseif ($_GET["type"] == "workunit_project_user")
+    graph_workunit_project_user ($width, $height, $id_user, $date_from);
 ?>

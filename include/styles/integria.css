@@ -507,7 +507,20 @@ td.datos2f9i, td.datos2_jus, td.w90datos2, td.w135datos2 {
 	padding: 5px 5px 5px 5px;
 }
 
+td.datos_green, td.datos_greenf9 {
+    background-color: #C7EAD5;
+    padding: 5px 5px 5px 5px;
+}
 
+td.datos_red, td.datos_redf9 {
+    background-color: #FFD8D0;
+    padding: 5px 5px 5px 5px;
+}
+
+td.datos_yellow, td.datos_yellowf9 {
+    background-color: #F4FFBF;
+    padding: 5px 5px 5px 5px;
+}
 th, td.lb, td.datos3  {
 	background-color: #646668;
 	font: 0.75em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
@@ -516,7 +529,7 @@ th, td.lb, td.datos3  {
 	padding: 5px 5px 5px 5px; 
 }
 .f9, .f9i, .f9b, td.f9, td.f9i, td.datosf9, td.datos2f9, 
-td.datosf9i, td.datos2f9i {
+td.datosf9i, td.datos2f9i, td.datos_yellowf9, td.datos_greenf9, td.datos_redf9   {
 	font-size: 9px;
 }
 

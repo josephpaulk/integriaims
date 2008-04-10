@@ -30,8 +30,6 @@
 <?PHP
 
 global $config;
-include ("include/calendar.php");
-
 $result_msg = "";
 
 if (check_login() != 0) {
@@ -63,7 +61,6 @@ if (isset($_GET["create_item"])){
 	$alarm = give_parameter_post ("alarm",0);
 	$sql1 = "INSERT INTO tagenda (public, alarm, timestamp, id_user, content) VALUES 
 			($public, '$alarm', '$date $time', '$id_user', '$description')";
-	echo $sql1;
 	$res1=mysql_query($sql1);
 }
 

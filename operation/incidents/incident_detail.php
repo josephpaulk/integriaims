@@ -413,7 +413,7 @@ else
 
 echo '<td class="datos2"><b>'.$lang_label["group"].'</b><td class="datos2">';
 if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)){
-    combo_groups_visible_for_me ($iduser_temp, "grupo_form", 0, "IW");
+    combo_groups_visible_for_me ($iduser_temp, "grupo_form", 0, "IW", $id_grupo);
 } else { // Only show current group
     echo give_db_sqlfree_field ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$id_grupo);
 }

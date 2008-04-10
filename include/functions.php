@@ -107,47 +107,7 @@ function parametro_limpio($texto){
 	return $safe;
 }
 
-// ---------------------------------------------------------------
-// Return string with time-threshold in secs, mins, days or weeks
-// ---------------------------------------------------------------
 
-function give_human_time ($int_seconds){
-   $key_suffix = 's';
-   $periods = array(
-                   'year'        => 31556926,
-                   'month'        => 2629743,
-                   'day'        => 86400,
-                   'hour'        => 3600,
-                   'minute'    => 60,
-                   'second'    => 1
-                   );
-
-   // used to hide 0's in higher periods
-   $flag_hide_zero = true;
-
-   // do the loop thang
-   foreach( $periods as $key => $length )
-   {
-       // calculate
-       $temp = floor( $int_seconds / $length );
-
-       // determine if temp qualifies to be passed to output
-       if( !$flag_hide_zero || $temp > 0 )
-       {
-           // store in an array
-           $build[] = $temp.' '.$key.($temp!=1?'s':null);
-
-           // set flag to false, to allow 0's in lower periods
-           $flag_hide_zero = false;
-       }
-
-       // get the remainder of seconds
-       $int_seconds = fmod($int_seconds, $length);
-   }
-
-   // return output, if !empty, implode into string, else output $if_reached
-   return ( !empty($build)?implode(', ', $build):$if_reached );
-}
 
 // ---------------------------------------------------------------
 // no_permission () - Display no perm. access
@@ -320,30 +280,6 @@ function format_numeric ( $number, $decimals=1, $dec_point=".", $thousands_sep="
  	return 0;
 }
 
-function human_time_comparation ( $timestamp ){
-	global $config;
-	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
-	$ahora=date("Y/m/d H:i:s");
-	if (strtotime($ahora) < strtotime($timestamp)){
-		$seconds = strtotime($timestamp) - strtotime($ahora) ;
-		$direction = "> ";
-	}
-	else {
-		$seconds = strtotime($ahora) - strtotime($timestamp);
-		$direction = "< ";
-	}
-	if ($seconds < 3600)
-		$render = format_numeric($seconds/60,1)." ".$lang_label["minutes"];
-	elseif (($seconds >= 3600) and ($seconds < 86400))
-		$render = format_numeric ($seconds/3600,1)." ".$lang_label["hours"];
-	elseif (($seconds >= 86400) and ($seconds < 604800))
-		$render = format_numeric ($seconds/86400,1)." ".$lang_label["days"];
-	elseif (($seconds >= 604800) and ($seconds <2592000))
-		$render = format_numeric ($seconds/604800,1)." ".$lang_label["weeks"];
-	elseif ($seconds >= 2592000)
-		$render = format_numeric ($seconds/2592000,1)." ".$lang_label["months"];
-	return $direction.$render;
-}
 
 function clean_output_breaks ($string){
 	//$myoutput = clean_output ($string);
@@ -357,7 +293,8 @@ function lang_string ($string){
 	if (isset ($lang_label[$string]))
 		return $lang_label[$string];
 	else
-		return "[".$string."]";
+		// return "[".$string."]";
+        return $string;
 }
 
 function render_priority ($pri){
@@ -411,57 +348,6 @@ function topi_quicksession ($url){
 	return $myurl;
 }
 
-function working_days ($month = "", $year = "" ){
-	if (($month == "") OR ($year == "")){
-        	$date = date('Y-m-d');
-        	$year = substr($date, 0,4);
-        	$month = substr($date, 5, 2);
-	}
-
-        $d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
-        $full_weeks = ceil ($d_daysinmonth / 7);
-        $festive_days = floor(($d_daysinmonth / 7) * 2);
-        $total_working_days = $d_daysinmonth - $festive_days;
-        $total_working_hours = $total_working_days * 8;
-        return $total_working_days;
-}
-
-function working_weeks_combo () {
-        $date = date('Y-m-d');
-        $year = substr($date, 0,4);
-        $month = substr($date, 5, 2);
-        $day = substr($date, 8, 2);
-
-        $d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
-        $full_weeks = ceil ($d_daysinmonth / 7);
-        $d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));     // FIRST falls on what day of week (0-6)
-        $ajuste = $d_firstdow -1;
-        $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
-        echo '<select name="working_week">';
-        for ($ax=0; $ax < $full_weeks; $ax++){
-                echo "<option>".date('Y-m-d', strtotime($new_date. "+ $ax week"));
-        }
-        echo "</select>";
-}
-
-
-function first_working_week (){
-	$date = date('Y-m-d');
-        $year = substr($date, 0,4);
-        $month = substr($date, 5, 2);
-        $day = substr($date, 8, 2);
-
-        $d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
-        $full_weeks = ceil ($d_daysinmonth / 7);
-        $d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));     // FIRST falls on what day of week (0-6)
-        $ajuste = $d_firstdow -1;
-        $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
-	return $new_date;
-}
-
-function return_unixtime () {
-	return strtotime("now");
-}
 
 function return_value ($var){
 	if (isset($var))
@@ -470,8 +356,10 @@ function return_value ($var){
 		return "";
 }
 
-function getmonth($m=0) {
-	return (($m==0 ) ? date("F") : date("F", mktime(0,0,0,$m)));
-} 
+function maxof ($a, $b){
+    if ($a > $b)
+        return $a;
+    return $b;
+}
 
 ?>
