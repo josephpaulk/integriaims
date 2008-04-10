@@ -121,7 +121,7 @@ if (check_login() == 0){
 		$id_task = $row["id_task"];
 
         	echo "<h2>".lang_string ("todo_update")." - $name </h2>";
-		echo '<table class="databox_color" cellpadding="4" cellspacing="4" width="90%">';
+		echo '<table class="databox_color" cellpadding="4" cellspacing="4" width="700">';
 		echo "<form name='todou' method='post' action='index.php?sec=todo&sec2=operation/todo/todo&operation=update2&id=$id_todo'>";
 		
 		// Priority
@@ -153,7 +153,7 @@ if (check_login() == 0){
 		echo "</table>";
 
 		// Submit
-		echo '<table cellpadding="0" cellspacing="0" width="80%">';
+		echo '<table cellpadding="0" cellspacing="0" width="710">';
 		echo "<tr><td align='right'>";
 		echo "<input name='crtbutton' type='submit' class='sub' value='".lang_string ("update")."'>";
 		echo '</form></table>';

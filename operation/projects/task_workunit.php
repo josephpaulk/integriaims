@@ -70,13 +70,22 @@ if ($operation == "workunit"){
 		$sql = "UPDATE tworkunit set timestamp = '$timestamp', duration = '$duration', description = '$description', have_cost = '$have_cost', id_profile = '$user_role' WHERE id = $id_workunit";
 	}
 	if (mysql_query($sql)){
+        $id_project2 = give_db_value ("id_project", "ttask", "id", $id_task);
+        $id_manager = give_db_value ("id_owner", "tproject", "id", $id_project2);
+
 		if ($id_workunit == 0)
-			$msgtext = "A new workunit has been created by user [$id_user]. Workunit information is: \n\n$description\nHours: $duration (hr)\nTimestamp: $timestamp\nHave cost: $have_cost\n\n";
+			$msg_text = "A new workunit has been created by user [$id_user]. Workunit information is: \n\nHours: $duration (hr)\nTimestamp: $timestamp\nHave cost: $have_cost\nDescription:\n\n$description\n";
 		else
-			$msgtext = "A new workunit has been updated by user [$id_user]. Workunit information is: \n\n$description\nHours: $duration (hr)\nTimestamp: $timestamp\nHave cost: $have_cost\n\n";
-		$id_project2 = give_db_value ("id_project", "ttask", "id", $id_task);
-		$id_manager = give_db_value ("id_owner", "tproject", "id", $id_project2);
-		topi_sendmail (return_user_email($id_manager), "[INTEGRIA] New workunit added to task '$task_name'", $msgtext);
+			$msg_text = "A new workunit has been updated by user [$id_user]. Workunit information is: \n\nHours: $duration (hr)\nTimestamp: $timestamp\nHave cost: $have_cost\nDescription:\n\n$description\n";
+
+        $myurl = topi_quicksession ("/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project2&id_task=$id_task", $id_manager);
+        $msg_text .= "\n\nDirect URL Access: $myurl\n";
+		
+        // Send an email to project manager
+        $msg_subject = "[".$config["sitename"]."] New workunit added to task '$task_name'";
+		topi_sendmail (return_user_email($id_manager), $msg_subject, $msg_text);
+
+
 		if ($id_workunit == 0) {
 			$id_workunit = mysql_insert_id();
 			$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($id_task, $id_workunit)";

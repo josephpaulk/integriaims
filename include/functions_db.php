@@ -938,6 +938,7 @@ function delete_task ($id_task){
 
 function mail_incident_workunit ($id_inc, $id_usuario, $nota, $timeused){
 	global $config;
+
 	$row = give_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$titulo =$row["titulo"];
 	$descripcion = $row["descripcion"];
@@ -949,37 +950,54 @@ function mail_incident_workunit ($id_inc, $id_usuario, $nota, $timeused){
     // Resolve code for its name
     $estado = give_db_sqlfree_field ("SELECT name FROM tincident_status WHERE id = $estado");
 
-	$subject = "[INTEGRIA] Incident #$id_inc ($titulo) has a new workunit from $id_usuario ";
-	$myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc");
-	
+	$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new workunit from $id_usuario ";
+		
+	// Send email for owner and creator of this incident
+	$email_creator = give_db_value ("direccion", "tusuario", "id_usuario", $creator);
+	$email_owner = give_db_value ("direccion", "tusuario", "id_usuario", $usuario);
+
+    // Incident owner
+    $myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc", $usuario);
     $text = "Incident #$id_inc ($titulo) has been updated and a new workunit has been added to history.\n"; 
     $text .= "\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario";
     $text .= "\nTimeused on new workunit: $timeused";
     $text .= "\nDirect URL access: $myurl";
-	$text .= "\nDescription: \n\n$descripcion\n";
-	$text .= "\nNew workunit added to incident by $id_usuario: \n\n $nota \n\n";
-	
-	// Send email for owner and creator of this incident
-	$email_creator = give_db_value ("direccion", "tusuario", "id_usuario", $creator);
-	$email_owner = give_db_value ("direccion", "tusuario", "id_usuario", $usuario);
-	topi_sendmail ( $email_owner, $subject, $text);
-	if ($email_owner != $email_creator){	
-		topi_sendmail (  $email_creator, $subject, $text);
+    $text .= "\n\nDescription: \n\n$descripcion\n";
+    $text .= "\nNew workunit added to incident by $id_usuario: \n\n $nota \n\n";
+    topi_sendmail ($email_owner, $subject, $text);
+
+    // Incident owner
+    if ($email_owner != $email_creator){    
+        $myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc", $creator);
+        $text = "Incident #$id_inc ($titulo) has been updated and a new workunit has been added to history.\n"; 
+        $text .= "\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario";
+        $text .= "\nTimeused on new workunit: $timeused";
+        $text .= "\nDirect URL access: $myurl";
+        $text .= "\n\nDescription: \n\n$descripcion\n";
+        $text .= "\nNew workunit added to incident by $id_usuario: \n\n $nota \n\n";
+		topi_sendmail ($email_creator, $subject, $text);
 	} 
 	// Send email for all users with workunits for this incident
-	$sql1 = "SELECT DISTINCT(tusuario.direccion) FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
+	$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
 	if ($result=mysql_query($sql1)) {
 		while ($row=mysql_fetch_array($result)){
 			if (($row[0] != $email_owner) AND ($row[0] != $email_creator))
-				// echo "ENVIANDO EMAIL a ".$row[0];
-				topi_sendmail ( $row[0], $subject, $text);
+                $myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc", $row[1]);
+                $text = "Incident #$id_inc ($titulo) has been updated and a new workunit has been added to history.\n"; 
+                $text .= "\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario";
+                $text .= "\nTimeused on new workunit: $timeused";
+                $text .= "\nDirect URL access: $myurl";
+                $text .= "\n\nDescription: \n\n$descripcion\n";
+                $text .= "\nNew workunit added to incident by $id_usuario: \n\n $nota \n\n";
+                topi_sendmail ( $row[0], $subject, $text);
 		}
-	}	
+	}
 }
 			
 
 function mail_incident ($id_inc, $modo = 0){
 	global $config;
+
 	$row = give_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$titulo =$row["titulo"];
 	$descripcion = $row["descripcion"];
@@ -992,33 +1010,43 @@ function mail_incident ($id_inc, $modo = 0){
     $estado = give_db_sqlfree_field ("SELECT name FROM tincident_status WHERE id = $estado");
 
 	if ($modo == 0){
-		$subject = "[INTEGRIA] Incident #$id_inc ($titulo) has been updated.";
+		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been updated.";
 	} else if ($modo == 1){
-		$subject = "[INTEGRIA] Incident #$id_inc ($titulo) has been created.";
+		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been created.";
 	} else if ($modo == 2){
-		$subject = "[INTEGRIA] Incident #$id_inc ($titulo) has a new file attached.";
+		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new file attached.";
 	} else if ($modo == 3){
-		$subject = "[INTEGRIA] Incident #$id_inc ($titulo) has been deleted.";
+		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been deleted.";
 	}
 	
+    // Send email for owner of this incident
 	$text = "Incident #$id_inc ($titulo) has been updated. \n\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario\n";
-	$myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc");
+	$myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc", $usuario);
 	$text .= "Direct URL Access: $myurl\n";
-	$text .= "Description: \n\n$descripcion";
-	
-	// Send email for owner and creator of this incident
-	$email_creator = give_db_value ("direccion", "tusuario", "id_usuario", $creator);
-	$email_owner = give_db_value ("direccion", "tusuario", "id_usuario", $usuario);
-	topi_sendmail ( $email_owner, $subject, $text);
+	$text .= "\nDescription: \n\n$descripcion";
+    $email_owner = give_db_value ("direccion", "tusuario", "id_usuario", $usuario);
+    topi_sendmail ( $email_owner, $subject, $text);
+
+    // Send email for creator of this incident
+    $text = "Incident #$id_inc ($titulo) has been updated. \n\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario\n";
+    $myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc", $creator);
+    $text .= "Direct URL Access: $myurl\n";
+    $text .= "\nDescription: \n\n$descripcion";
+    $email_creator = give_db_value ("direccion", "tusuario", "id_usuario", $creator);
 	if ($email_owner != $email_creator){	
 		topi_sendmail (  $email_creator, $subject, $text);
 	} 
+
 	// Send email for all users with workunits for this incident
-	$sql1 = "SELECT DISTINCT(tusuario.direccion) FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
+	$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
 	if ($result=mysql_query($sql1)) {
 		while ($row=mysql_fetch_array($result)){
 			if (($row[0] != $email_owner) AND ($row[0] != $email_creator))
 				// echo "ENVIANDO EMAIL a ".$row[0];
+                $text = "Incident #$id_inc ($titulo) has been updated. \n\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario\n";
+                $myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$", $row[1]);
+                $text .= "Direct URL Access: $myurl\n";
+                $text .= "\nDescription: \n\n$descripcion";
 				topi_sendmail ( $row[0], $subject, $text);
 		}
 	}		

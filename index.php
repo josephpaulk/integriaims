@@ -21,10 +21,6 @@
 // Gantt php class example and configuration file
 // Copyright (C) 2005 Alexandre Miguel de Andrade Souza
 
-$config["build_version"]="PC080409"; //PCyymmdd
-$config["version"]="v1.0dev";
-global $config;
-
 $develop_bypass = 1;
 if ($develop_bypass != 1){
 

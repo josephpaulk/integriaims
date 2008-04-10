@@ -13,6 +13,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+global $config;
 
 	echo "<table width=100% border=0>";
 	

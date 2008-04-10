@@ -8,26 +8,28 @@ $config["homedir"] = "/var/www/topi/";		// Config homedir
 $config["base_url"] = "http://192.168.50.2/topi/";			// Base URL
 // End of automatic config file
 ?><?php
-// TOPI 
-// =========================================
-// Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2007 Artica Soluciones Tecnologicas
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation version 2
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-// This is the base config file
 
 $config["REMOTE_ADDR"] = getenv ("REMOTE_ADDR");
 $config["FOOTER_EMAIL"] = "Please do not respond directly this email, has been automatically created by TOPI (http://topi.sf.net).\n\nThanks for your time and have a nice day\n\n";
 $config["HEADER_EMAIL"] = "Hello, \n\nThis is an automated message coming from TOPI\n\n";
+
+// TODO: NEED TO IMPLEMENT IN SETUP THIS TOKENS:
+$config["currency"]="€";
+$config["hours_perday"] = 8;
+$config["sitename"] = "INTEGRIA";
+
 // Do not display any ERROR
 //error_reporting(0);
 
@@ -37,50 +39,5 @@ error_reporting(E_ALL);
 // Default font used for graphics (a Free TrueType font included with Pandora FMS)
 $config["fontpath"] = $config["homedir"]."/reporting/FreeSans.ttf";
 
-// Read remaining config tokens from DB
-if (! mysql_connect($config["dbhost"],$config["dbuser"],$config["dbpassword"])){ 
-
-//Non-persistent connection. If you want persistent conn change it to mysql_pconnect()
-	exit ('<html><head><title>Error</title>
-	<link rel="stylesheet" href="./include/styles/main.css" type="text/css">
-	</head><body><div align="center">
-	<div id="db_f">
-		<div>
-		<a href="index.php"><img src="images/logo.gif" border="0"></a>
-		</div>
-	<div id="db_ftxt">
-		<h1 id="db_fh1" class="error">Error DB-001</h1>
-		Cannot connect with Database, please check your database setup in the 
-		<b>./include/config.php</b> file and read documentation.<i><br><br>
-		Probably any of your user/database/hostname values are incorrect or 
-		database is not running.</i><br><br><font class="error">
-		<b>MySQL ERROR:</b> '. mysql_error().'</font>
-		<br>&nbsp;
-	</div>
-	</div></body></html>');
-}
-mysql_select_db($config["dbname"]);
-$result2 = mysql_query("SELECT * FROM tconfig");
-while ($row2 = mysql_fetch_array($result2)){
-	switch ($row2["token"]) {
-		case "language_code": $config["language_code"] = $row2["value"];
-						break;
-		case "block_size": $config["block_size"] = $row2["value"];
-						break;
-		case "days_purge": $config["days_purge"] = $row2["value"];
-						break;
-		case "bgimage": $config["bgimage"] = $row2["value"];
-						break;
-	}
-}
-
-// TODO: NEED TO IMPLEMENT IN SETUP THIS TOKENS:
-$config["currency"]="€";
-$config["hours_perday"] = 8;
-
-if ($config["language_code"] == 'ast_es') {
-	$config["help_code"]='ast';
-} else 
-	$config["help_code"] = substr($config["language_code"],0,2);
-
+include ("config_process.php");
 ?>

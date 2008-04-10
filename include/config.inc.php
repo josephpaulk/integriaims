@@ -20,7 +20,7 @@
 
 $config["dbname"] = "topi";			// MySQL DataBase name
 $config["dbuser"] = "root";
-$config["dbpassword"] = "none";	// DB Password
+$config["dbpass"] = "none";	// DB Password
 $config["dbhost"] = "localhost"; // DB Host
 $config["homedir"] = "/var/www/topi/";		// Config homedir
 $config["base_url"] = "http://localhost/topi";			// Base URL

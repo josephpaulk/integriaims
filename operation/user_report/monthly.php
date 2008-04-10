@@ -80,6 +80,7 @@ echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$nex
 echo "</table>";
 
 // Generate calendar
+
 echo "<div >";
 echo generate_work_calendar ($year, $month, $days_f, 3, NULL, 1, "", $id_user);
 echo "</div>";

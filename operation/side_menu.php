@@ -264,10 +264,17 @@ if ($sec == "incidents"){
 	$id_incident = give_parameter_get("id",-1);
 	if ($id_incident != -1){
 		echo "<br>";
-
 		echo "<div class='portlet'>";
 		echo "<h3>".$lang_label["incident"]." # $id_incident</h3>";
 		echo "<ul class='sidemenu'>";
+
+        // Incident detail
+        if ($sec2 == "operation/incidents/incident_detail")
+            echo "<li id='sidesel'>";
+        else    
+            echo "<li>";
+        echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_incident'>".$lang_label["incident_detail"]."</a></li>";
+
 		// Add workunit to incident
 		if ($sec2 == "operation/incidents/incident_create_work")
 			echo "<li id='sidesel'>";
@@ -316,16 +323,9 @@ if ($sec == "incidents"){
 			echo " ( $file_number )";
 			echo "</a></li>";
 		}
-
-		// Incident detail
-		if ($sec2 == "operation/incidents/incident_detail")
-			echo "<li id='sidesel'>";
-		else	
-			echo "<li>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_incident'>".$lang_label["incident_detail"]."</a></li>";
-
-		echo "</ul>";
-		echo "</div>";
+        // Blockend
+        echo "</ul>";
+        echo "</div>";
 	}
 
 }

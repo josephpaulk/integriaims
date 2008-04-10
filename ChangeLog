@@ -1,4 +1,9 @@
 2008-04-10 Sancho Lerena <slerena@gmail.com>
+	
+	* Some addional fixes for problems with direct link sended
+	to different users and minor fixes.
+
+	* config_process: Separated DB operations from simple config.
 
 	* Massive commit. Many many changes and fixes from yesterday
 

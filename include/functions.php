@@ -332,8 +332,10 @@ function topi_rndcode ($length=6) {
    with quicklogin HASH data, and enter it on DB
 */
 
-function topi_quicksession ($url){
+function topi_quicksession ($url, $id_user = ""){
 	global $config;
+    if ($id_user == "")
+        $id_user = $config["id_user"];
 	$today=date('Y-m-d H:i:s');
 
 	// Build quicksession data and URL
