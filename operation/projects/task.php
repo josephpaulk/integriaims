@@ -174,8 +174,6 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 	// echo substr($row2["end"],0,10);
 	$ahora=date("Y/m/d H:i:s");
     
-    $startime = task_start_date($row2["id"]);
-    
     $endtime = task_child_enddate ($row2["id"]);
 	if ($row2["completion"] == 100){
 		echo "<font color='green'>";
@@ -186,8 +184,6 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 		echo "<font>";
 	}
 	// echo human_time_comparation ($endtime);
-        echo $startime;
-        echo "<br>";
         echo $endtime;
 	echo "</font>";
 	

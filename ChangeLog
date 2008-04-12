@@ -1,5 +1,9 @@
 2008-04-12 Sancho Lerena <slerena@gmail.com>
 
+        * task.php: Removed debug start date in task info
+
+2008-04-12 Sancho Lerena <slerena@gmail.com>
+
 	* main.php: Show blocks only if have data.
 
 	* sidemenu.php: Fixed .png missing extension.
