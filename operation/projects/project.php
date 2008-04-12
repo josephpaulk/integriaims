@@ -45,13 +45,32 @@ if (isset($_GET["quick_delete"])){
 		$sql =" UPDATE tproject SET disabled=1 WHERE id = $id_project";
 		mysql_query($sql);
 		echo "<h3 class='suc'>".$lang_label["del_incid_ok"]."</h3>";
-		audit_db($id_user,$REMOTE_ADDR,"Project deleted","User ".$id_user." disabled project #".$id_project);
+		audit_db($id_user,$REMOTE_ADDR,"Project disabled","User ".$id_user." disabled project #".$id_project);
 	} else {
 		audit_db ($id_user,$REMOTE_ADDR,"ACL Forbidden","User ".$id_user." try to disable project #$id_project");
 		echo "<h3 class='error'>".$lang_label["del_incid_no"]."</h3>";
 		no_permission();
 	}
 }
+
+// Reactivate project
+// ======================
+
+if (isset($_GET["activate"])){
+	$id_project = $_GET["activate"];
+	$id_owner = give_db_value ("id_owner", "tproject", "id", $id_project);
+	if (($id_owner == $id_user) OR (dame_admin ($id_user))) {
+		$sql =" UPDATE tproject SET disabled=0 WHERE id = $id_project";
+		mysql_query($sql);
+		echo "<h3 class='suc'>".$lang_label["del_incid_ok"]."</h3>";
+		audit_db($id_user,$REMOTE_ADDR,"Project activated","User ".$id_user." activated project #".$id_project);
+	} else {
+		audit_db ($id_user,$REMOTE_ADDR,"ACL Forbidden","User ".$id_user." try to activate project #$id_project");
+		echo "<h3 class='error'>".$lang_label["del_incid_no"]."</h3>";
+		no_permission();
+	}
+}
+
 
 // REAL PROJECT DELETE
 // ======================
@@ -165,8 +184,13 @@ while ($row2=mysql_fetch_array($result2)){
 			echo "<b><a href='index.php?sec=projects&sec2=operation/projects/task&id_project=".$row2["id"]."'>".$row2["name"]."</a></b></td>";
 			// Completion
 			echo "<td class='$tdcolor' align='center'>";
-			$completion =  format_numeric(calculate_project_progress ($row2["id"]));
-			echo "<img src='include/functions_graph.php?type=progress&width=90&height=20&percent=$completion'>";
+			if ($row2["start"] == $row2["end"]){
+				echo "<img src='images/comments.png'> ";
+				echo lang_string ("Unlimited");
+			} else {
+				$completion =  format_numeric(calculate_project_progress ($row2["id"]));
+				echo "<img src='include/functions_graph.php?type=progress&width=90&height=20&percent=$completion'>";
+			}
 				
             // Total task / People
             echo "<td class='$tdcolor' align='center'>";
@@ -197,8 +221,10 @@ while ($row2=mysql_fetch_array($result2)){
 		if ((give_acl($config["id_user"], 0, "PW") ==1) OR ($config["id_user"] == $row2["id_owner"] )) {
             if ($view_disabled == 0)
 			     echo "<td class='$tdcolor' align='center'><a href='index.php?sec=projects&sec2=operation/projects/project&quick_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
-            else 
-                echo "<td class='$tdcolor' align='center'><a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&real_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
+            else {
+                echo "<td class='$tdcolor' align='center'><a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&real_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a> &nbsp;";
+                echo "<a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate=".$row2["id"]."' ><img src='images/play.gif' border='0'></a></td>";
+           } 
 		} else
 			echo "<td class='$tdcolor' align='center'>";
 		

@@ -344,7 +344,7 @@ echo "</textarea>";
 echo "</td></tr>";
 echo "</table>";
 
-if ((give_acl($config["id_user"], $id_group, "PM") ==1) OR ($config["id_user"] == $project_manager )) {
+if ((give_acl($config["id_user"], $id_group, "TM") ==1) OR ($config["id_user"] == $project_manager )) {
     echo "<table width=760>";
     echo "<tr><td align=right>";
     if ($operation != "create")

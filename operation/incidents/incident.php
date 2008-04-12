@@ -1,23 +1,18 @@
 <?php
 
-// Pandora FMS - the Free monitoring system
-// ========================================
-// Copyright (c) 2004-2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2005-2007 Artica Soluciones Tecnologicas
-// Copyright (c) 2004-2007 Raul Mateos Martin, raulofpandora@gmail.com
-// Copyright (c) 2006-2007 Jose Navarro jose@jnavarro.net
-// Copyright (c) 2006-2007 Jonathan Barajas, jonathan.barajas[AT]gmail[DOT]com
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation version 2
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 // Load global vars
 
 
@@ -46,20 +41,19 @@ else
 	$offset=0;
 
 // Delete incident
-if (isset($_GET["quick_delete"])){
+if (isset($_GET["quick_delete"])) {
 	$id_inc = $_GET["quick_delete"];
-	$email_notify = give_db_value ("notify_email", "tincidencia", "id_incidencia", $id_inc);
-	// Email notify to all people involved in this incident
-	if ($email_notify == 1){ 
-		mail_incident ($id_inc, 3);
-	}
-
 	$sql2="SELECT * FROM tincidencia WHERE id_incidencia=".$id_inc;
 	$result2=mysql_query($sql2);
 	$row2=mysql_fetch_array($result2);
 	if ($row2) {
 		$id_author_inc = $row2["id_usuario"];
-		if ((give_acl($id_usuario, $row2["id_grupo"], "IM") ==1) OR ($_SESSION["id_usuario"] == $id_author_inc) ){
+        $email_notify = $row2["notify_email"];
+		if ((give_acl($id_usuario, $row2["id_grupo"], "IM") ==1) OR ($_SESSION["id_usuario"] == $id_author_inc) ) {
+        	if ($email_notify == 1){ 
+            	// Email notify to all people involved in this incident
+        		mail_incident ($id_inc, $id_usuario, "", 0, 3);
+    	    }
 			borrar_incidencia($id_inc);
 			echo "<h3 class='suc'>".$lang_label["del_incid_ok"]."</h3>";
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Incident deleted","User ".$id_usuario." deleted incident #".$id_inc);
@@ -415,65 +409,5 @@ if ($row2_count[0] <= 0 ) {
 	}
 	echo "</table>";
 }
-
-/*
-echo "<table cellpadding=3 cellspacing=3>";
-echo "<tr><td valign='top'>";
-echo "<b>".$lang_label["status"]."</b>";
-?>
-<table cellspacing=10 cellpadding=10 width=250 class='databox'><tr><td>
-<img src='images/dot_yellow.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',5) ?>
-<td>
-<img src='images/dot_orange.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',4) ?>
-<tr><td>
-<img src='images/dot_green.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',6) ?>
-<td>
-<img src='images/dot_lightgreen.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',7) ?>
-<tr><td>
-<img src='images/dot_blue.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',1) ?>
-<td>
-<img src='images/dot_red.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',3) ?>
-<tr><td colspan=2>
-<img src='images/dot_white.gif'> - <?php echo give_db_value ('name', 'tincident_status', 'id',2) ?>
-</table>
-
-<?PHP
-echo "<td valign='top' width='50'>";
-echo "<td valign='top'>";
-echo "<b>".$lang_label["priority"]."</b>";
-?>
-
-<table cellspacing=10 cellpadding=10 width=450 class='databox'>
-<tr><td>
-	<img src='images/flag_white.png'> - <?php echo $lang_label["informative"] ?>
-	<td>
-	<img src='images/flag_green.png'> - <?php echo $lang_label["low"] ?>
-	<td>
-	<img src='images/flag_yellow.png'> - <?php echo $lang_label["medium"] ?>
-	<tr><td>
-	<img src='images/flag_orange.png'> - <?php echo $lang_label["serious"] ?>
-	<td>
-	<img src='images/flag_red.png'> - <?php echo $lang_label["very_serious"] ?>
-	<td>
-	<img src='images/flag_blue.png'> - <?php echo $lang_label["maintenance"] ?>
-</table>
-
- <?php echo "<b>".$lang_label["flags"]."</b>" ?>
-
-<table cellspacing=10 cellpadding=10 width=450 class='databox'>
-<tr>
-		<td>
-		<img src='images/disk.png'> <?php echo $lang_label["files"] ?>
-		<td>
-		<img src='images/note.png'> <?php echo $lang_label["notes"] ?>
-		<td>
-		<img src='images/email_go.png'> <?php echo $lang_label["email_notify"] ?>
-		<td>
-		<img src="images/award_star_silver_1.png" valign="bottom"> <?php echo $lang_label["workunits"] ?>
-</table>
-
-</table>
-
-*/
 
 ?>

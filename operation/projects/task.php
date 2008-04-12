@@ -63,7 +63,6 @@ elseif ($operation == "move") {
     $id_task = give_parameter_get ("id_task");
     if ((dame_admin($id_user)==1) OR (project_manager_check ($id_project) == 1)){
         $sql = "UPDATE ttask SET id_project = $target_project, id_parent_task = 0 WHERE id = $id_task";
-    echo "DEBUG $sql";
         mysql_query($sql);
         task_tracking ($id_user, $id_task, 19, 0, 0);
     } else {
@@ -140,20 +139,33 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
     $a = round ($row2["hours"]);
     $b = round ($taskhours);
     $max = maxof($a, $b);
-    echo "<img src='include/functions_graph.php?type=histogram&width=60&mode=2&height=18&a=$a&b=$b&&max=$max' title='$imghelp'>";
-	
-	// Time used
-	echo "<td class='$tdcolor' align='center'>";
-	echo give_hours_task ( $row2["id"]);
+    if ($a > 0)
+        echo "<img src='include/functions_graph.php?type=histogram&width=60&mode=2&height=18&a=$a&b=$b&&max=$max' title='$imghelp'>";
+    else
+        echo "--";
+
+    // Time used
+    echo "<td class='$tdcolor' align='center'>";
+    $timeuser = give_hours_task ( $row2["id"]);
+    if ($timeuser > 0)
+        echo $timeuser;
+    else
+        echo "--";
 
     // Costs (client / total)
     echo "<td class='".$tdcolor."f9' align='center'>";
-    echo format_numeric (task_workunit_cost ($row2["id"], 1));
-    echo $config["currency"];
+    $costdata = format_numeric (task_workunit_cost ($row2["id"], 1));
+    if ($costdata > 0){
+    	echo $costdata;
+	    echo $config["currency"];
+    } else {
+    	echo "--";
+    }
+   
 
-	// People
-	echo "<td class='$tdcolor'>";
-	echo combo_users_task ($row2["id"],1);
+    // People
+    echo "<td class='$tdcolor'>";
+    echo combo_users_task ($row2["id"],1);
     echo "&nbsp;";
     echo give_db_sqlfree_field ("SELECT COUNT(DISTINCT (id_user)) FROM trole_people_task WHERE id_task =".$row2["id"]);
 
@@ -161,10 +173,10 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 	echo "<td class='".$tdcolor."f9'>";
 	// echo substr($row2["end"],0,10);
 	$ahora=date("Y/m/d H:i:s");
-
-    $daystemp = $row2["hours"] / $config["hours_perday"];
-    $endtime = calcdate_business ($row2["start"], $daystemp );
-
+    
+    $startime = task_start_date($row2["id"]);
+    
+    $endtime = task_child_enddate ($row2["id"]);
 	if ($row2["completion"] == 100){
 		echo "<font color='green'>";
 	} else {
@@ -174,6 +186,8 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 		echo "<font>";
 	}
 	// echo human_time_comparation ($endtime);
+        echo $startime;
+        echo "<br>";
         echo $endtime;
 	echo "</font>";
 	

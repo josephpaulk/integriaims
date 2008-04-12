@@ -1,3 +1,11 @@
+2008-04-12 Sancho Lerena <slerena@gmail.com>
+
+	* A lot of fixes and improvementes. Implemented email links
+	using auth and redirectiong to passed URL. Removed quicklink
+	Also a lot of fixes on email management. Added user menu
+	quick links, and fixed gant. Created methods to deduce
+	start / end date on nested tasks.
+	
 2008-04-10 Sancho Lerena <slerena@gmail.com>
 	
 	* Some addional fixes for problems with direct link sended

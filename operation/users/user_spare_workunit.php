@@ -1,19 +1,17 @@
 <?php
-// FRITS - the FRee Incident Tracking System
-// =========================================
-// Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2007 Artica Soluciones Tecnologicas
+// Integria 1.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation version 2
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 // Load global vars
 
 global $config;
@@ -42,13 +40,13 @@ if ($operation == "addworkunit"){
 	$role = give_parameter_post ("role",-1);
 		
 	$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description, have_cost, id_profile) VALUES	('$timestamp', $duration, '$id_user', '$description', $have_cost, $role)";
-echo "DEBUG $sql <br>";
 	if (mysql_query($sql)){
 		$id_workunit = mysql_insert_id();
 		$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($task, $id_workunit)";
 		if (mysql_query($sql2)){
 			$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
 			audit_db ($id_user, $config["REMOTE_ADDR"], "Spare work unit added", "Workunit for $id_user added to Task ID #$task");
+            mail_project (0, $id_user, $id_workunit, $task);
 		}
 	} else 
 		$result_output = "<h3 class='error'>".$lang_label["workunit_no"]."</h3>";

@@ -97,8 +97,8 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 		$_GET["id"] = $id_inc; // HACK
 
 		// Email notify to all people involved in this incident
-		if ($email_notify == 1){ 
-			mail_incident ($id_inc);
+		if ($email_notify == 1){
+            mail_incident ($id_inc, $usuario, "", 0, 0);
 		}
 
 	} else {
@@ -132,7 +132,7 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 		else
 			$email_notify = 0;
 		
-		$sql = " INSERT INTO tincidencia (inicio, actualizacion, titulo , descripcion, id_usuario, origen, estado, prioridad, id_grupo, id_creator, notify_email, id_task, resolution) VALUES ('$inicio','$actualizacion', '$titulo', '$descripcion', '$usuario', '$origen', '$estado', '$prioridad', '$grupo', '$id_creator', $email_notify, $id_task, $resolution)";
+		$sql = "INSERT INTO tincidencia (inicio, actualizacion, titulo , descripcion, id_usuario, origen, estado, prioridad, id_grupo, id_creator, notify_email, id_task, resolution) VALUES ('$inicio','$actualizacion', '$titulo', '$descripcion', '$usuario', '$origen', '$estado', '$prioridad', '$grupo', '$id_creator', $email_notify, $id_task, $resolution)";
 		if (mysql_query($sql)){
 			$id_inc=mysql_insert_id();
 			$_GET["id"] = $id_inc; // HACK
@@ -141,8 +141,8 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 			incident_tracking ( $id_inc, $config["id_user"], 0);
 
 			// Email notify to all people involved in this incident
-			if ($email_notify == 1){ 
-				mail_incident ($id_inc, 1);
+			if ($email_notify == 1){
+                mail_incident ($id_inc, $usuario, "", 0, 1);
 			}
 		}
 		
@@ -217,7 +217,7 @@ if (isset($_GET["id"])){
 			$result_msg = "<h3 class='suc'>".$lang_label["create_work_ok"]."</h3>";
 			// Email notify to all people involved in this incident
 			if ($email_notify == 1){ 
-				mail_incident_workunit ($id_inc, $id_usuario, $nota, $timeused);
+                mail_incident ($id_inc, $id_usuario, $nota, $timeused, 10);
 			}
 		}
 	}
@@ -244,7 +244,7 @@ if (isset($_GET["id"])){
 			$result_msg="<h3 class='suc'>".$lang_label["file_added"]."</h3>";
 			// Email notify to all people involved in this incident
 			if ($email_notify == 1){ 
-				mail_incident ($id_inc, 2);
+				mail_incident ($id_inc, $iduser_temp, 0, 0, 2);
 			}
 			// Copy file to directory and change name
 			$nombre_archivo = $config["homedir"]."attachment/pand".$id_attachment."_".$filename;

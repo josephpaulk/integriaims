@@ -322,14 +322,6 @@ CREATE TABLE `tmilestone` (
   PRIMARY KEY  (`id`)
 );
 
-CREATE TABLE `tquicksession` (
-  `id` int(20) unsigned NOT NULL auto_increment,
-  `id_user` varchar(250) NOT NULL default '',
-  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
-  `pwdhash` varchar(250) NOT NULL default '',
-  PRIMARY KEY  (`id`)
-);
-
 -- Table for special days, non working or corporate vacations --
 
 CREATE TABLE `tvacationday` (

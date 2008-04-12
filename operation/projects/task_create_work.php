@@ -83,7 +83,7 @@ if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])
 	echo $description;
 	echo '</textarea>';
 	echo "</tr></table>";
-	echo "<table width=100%>";
+	echo "<table width=710>";
 	echo "<tr><td align=right>";
 	if ($id_workunit != -1)
 		echo '<input name="addnote" type="submit" class="sub upd" value="'.$lang_label["update"].'">';

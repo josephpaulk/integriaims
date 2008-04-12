@@ -416,15 +416,14 @@ function working_weeks_combo () {
 
 function first_working_week (){
     $date = date('Y-m-d');
-        $year = substr($date, 0,4);
-        $month = substr($date, 5, 2);
-        $day = substr($date, 8, 2);
-
-        $d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
-        $full_weeks = ceil ($d_daysinmonth / 7);
-        $d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));     // FIRST falls on what day of week (0-6)
-        $ajuste = $d_firstdow -1;
-        $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
+    $year = substr($date, 0,4);
+    $month = substr($date, 5, 2);
+    $day = substr($date, 8, 2);
+    $d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
+    $full_weeks = ceil ($d_daysinmonth / 7);
+    $d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));     // FIRST falls on what day of week (0-6)
+    $ajuste = $d_firstdow -1;
+    $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
     return $new_date;
 }
 

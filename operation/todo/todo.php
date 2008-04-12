@@ -28,15 +28,7 @@ if (check_login() == 0){
 			echo "<h3 class='suc'>".$lang_label["create_ok"]."</h3>"; 
 			$id_todo = mysql_insert_id();
 		}
-		//$myurl = topi_quicksession ("/index.php?sec=todo&sec2=operation/todo/todo");
-		$myurl = "";
-		$msgtext = "A new To-Do has been created by user [$id_user] for user [$assigned_user]. Todo information is:\n\nTitle   : $name\nPriority: $priority\nDescription: $description\n\nFor more information please visit ".$myurl;
-		if ($id_user != $assigned_user){
-			topi_sendmail (return_user_email($id_user), "[INTEGRIA] New ToDo item has been created", $msgtext);
-			topi_sendmail (return_user_email($assigned_user), "[INTEGRIA] New ToDo item has been created", $msgtext);
-		} else
-			topi_sendmail (return_user_email($assigned_user), "[INTEGRIA] New ToDo item has been created", $msgtext);
-
+        mail_todo (0, $id_todo);
 		$operation = "";
 	}
 
@@ -62,14 +54,7 @@ if (check_login() == 0){
 			echo "<h3 class='error'>".$lang_label["modify_no"]."</h3>";
 		else
 			echo "<h3 class='suc'>".$lang_label["modify_ok"]."</h3>";
-		// $myurl = topi_quicksession ("/index.php?sec=todo&sec2=operation/todo/todo");
-		$myurl = "";
-		$msgtext = "A To-Do has been modified by user [$id_user]. Todo information is:\n\nTitle   : $name\nPriority: $priority\nProgress: $progress\nDescription: $description\n\nFor more information please visit ".$myurl;
-		if ($id_user != $created_by_user){
-			topi_sendmail (return_user_email($id_user), "[INTEGRIA] ToDo '$name' has been updated", $msgtext);
-			topi_sendmail (return_user_email($created_by_user), "[INTEGRIA] ToDo '$name' has been updated", $msgtext);
-		} else 
-			topi_sendmail (return_user_email($created_by_user), "[INTEGRIA] ToDo '$name' has been updated", $msgtext);
+        mail_todo (1, $id_todo);
 		$operation = "";
 	}
 
@@ -89,14 +74,7 @@ if (check_login() == 0){
 		$description = $row["description"];
 		$priority = $row["priority"];
 		$sql_delete= "DELETE FROM ttodo WHERE id = $id_todo";
-		$myurl = topi_quicksession ("/index.php?sec=todo&sec2=operation/todo/todo");
-		$msgtext = "A To-Do has been deleted by user [$id_user]. Todo information was:\n\nTitle   : $name\nPriority: $priority\nProgress: $progress\nDescription: $description\n\nFor more information please visit ".$myurl;
-		if ($id_user != $created_by_user){
-                        topi_sendmail (return_user_email($id_user), "[INTEGRIA] ToDo '$name' has been deleted", $msgtext);
-                        topi_sendmail (return_user_email($created_by_user), "[INTEGRIA] ToDo '$name' has been deleted", $msgtext);
-                } else
-                        topi_sendmail (return_user_email($created_by_user), "[INTEGRIA] ToDo '$name' has been deleted", $msgtext);
-
+        mail_todo (2, $id_todo);
 		$result=mysql_query($sql_delete);
 		if (! $result)
 			echo "<h3 class='error'>".$lang_label["delete_no"]."</h3>";

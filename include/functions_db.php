@@ -487,6 +487,8 @@ function give_hours_task ($id_task){
 
 function give_wu_task ($id_task){
     global $config;
+
+    $pro = 0;
     $query1="SELECT COUNT(tworkunit.duration) 
             FROM tworkunit, tworkunit_task
             WHERE   tworkunit_task.id_task = $id_task AND 
@@ -494,8 +496,6 @@ function give_wu_task ($id_task){
     $resq1=mysql_query($query1);
     if ($rowdup=mysql_fetch_array($resq1))
         $pro=$rowdup[0]; 
-    else 
-        $pro = 0;
     return $pro;
 }
 
@@ -537,14 +537,14 @@ function borrar_incidencia($id_inc){
 	require("config.php");
 	$sql1="DELETE FROM tincidencia WHERE id_incidencia = ".$id_inc;
 	$result=mysql_query($sql1);
-	$sql3="SELECT * FROM tnota_inc WHERE id_incidencia = ".$id_inc;
+	$sql3="SELECT * FROM tworkunit_incident WHERE id_incident = ".$id_inc;
 	$res2=mysql_query($sql3);
 	while ($row2=mysql_fetch_array($res2)){
 		// Delete all note ID related in table
-		$sql4 = "DELETE FROM tnota WHERE id_nota = ".$row2["id_nota"];
+		$sql4 = "DELETE FROM tworkunit WHERE id = ".$row2["id_workunit"];
 		$result4 = mysql_query($sql4);
 	}
-	$sql6="DELETE FROM tnota_inc WHERE id_incidencia = ".$id_inc;
+	$sql6="DELETE FROM tworkunit_incident WHERE id_incident = ".$id_inc;
 	$result6=mysql_query($sql6);
 	// Delete attachments
 	$sql1="SELECT * FROM tattachment WHERE id_incidencia = ".$id_inc;
@@ -639,6 +639,61 @@ function give_groupchild($id_group, &$child){
         while ($resq1 != NULL && $rowdup=mysql_fetch_array($resq1)){
         	$child[]=$rowdup["id_grupo"];
         }
+}
+
+
+// ---------------------------------------------------------------
+// Return if a task have childs
+// Return date of end of this task of last of it's childs
+// ---------------------------------------------------------------
+
+function task_child_enddate ($id_task){
+    global $config;
+   
+    $start_date =  task_start_date($id_task);
+    $tasktime = give_db_sqlfree_field ("SELECT hours FROM ttask WHERE id= $id_task");
+    $tasktime = $tasktime / $config["hours_perday"];
+    $end_date = calcdate_business ($start_date, $tasktime);
+    
+    $max = '1980-01-01';
+    $query1="SELECT * FROM ttask WHERE id_parent_task = $id_task";
+    $resq1=mysql_query($query1);  
+    while ($row=mysql_fetch_array($resq1)){
+        $thisvalue = $row["hours"];
+        $thisstart = $row["start"];
+        $childtime = $thisvalue / $config["hours_perday"];
+        $childdate = calcdate_business ($thisstart, $childtime);
+
+        $grandchilddate = task_child_enddate ($row["id"]);
+        if ($grandchilddate != $childdate)
+            $childdate = $grandchilddate;
+
+        if (strtotime($childdate) > strtotime($max)){
+            $max = $childdate;
+        }
+    }
+
+    if (strtotime($max) > strtotime($end_date))
+        return $max;
+    else
+        return $end_date;
+}
+
+// ---------------------------------------------------------------
+// Return start date of a task
+// If is a nested task, return parent task + assigned time for parent
+// ---------------------------------------------------------------
+
+function task_start_date ($id_task){
+    global $config;
+    
+    $taskrow =  give_db_row ("ttask", "id", $id_task);
+    $parent_row =  give_db_row ("ttask", "id", $taskrow["id_parent_task"]);
+
+    if (strtotime($parent_row["start"]) > strtotime($taskrow["start"]))
+        return $parent_row["start"];
+    else
+        return $taskrow["start"];
 }
 
 // ---------------------------------------------------------------
@@ -937,122 +992,181 @@ function delete_task ($id_task){
 	mysql_query($query);
 }
 
-function mail_incident_workunit ($id_inc, $id_usuario, $nota, $timeused){
+function mail_project ($mode, $id_user, $id_workunit, $id_task) {
+    global $config;
+
+    $workunit = give_db_row ("tworkunit", "id", $id_workunit);
+    $task     = give_db_row ("ttask", "id", $id_task);
+    $project  = give_db_row ("tproject", "id", $task["id_project"]);
+    $id_manager = $project["id_owner"];
+    $task_name = $task["name"];
+
+    // WU data
+    $create_timestamp = $workunit["timestamp"];
+    $duration = $workunit["duration"];
+    $have_cost = $workunit["have_cost"];
+    if ($have_cost == 1)
+        $have_cost = lang_string("YES");
+    else
+        $have_cost = lang_string("NO");
+    $description = $workunit["description"];
+    $url = $config["base_url"]."/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task";
+
+    switch ($mode){
+    case 0: // Workunit add
+        $text = "
+Task ".$task["name"]." of project ".$project["name"]." has been updated by user $id_user and a new workunit has been added to history. You could track this workunit in the following URL (need to use your credentials): $url\n\n";
+        $subject = "[".$config["sitename"]."] New workunit added to task '$task_name'";
+        break;
+    case 1: // Workunit updated
+        $text = "
+Task ".$task["name"]." of project ".$project["name"]." has been updated by user $id_user, a workunit has been updated. You could track this workunit in the following URL (need to use your credentials): $url\n\n";
+        $subject = "[".$config["sitename"]."] A workunit has been updated in task '$task_name'";
+        break;
+    }    
+$text .= "
+---------------------------------------------------[INFORMATION]-----
+DATE / TIME : $current_timestamp
+ASSIGNED BY : $id_user
+HAVE COST   : $have_cost
+TIME USED   : $duration
+---------------------------------------------------[DESCRIPTION]-----
+$description\n\n";
+
+        // Send an email to project manager
+		topi_sendmail (return_user_email($id_manager), $subject, $text);
+}
+
+function mail_todo ($mode, $id_todo) {
+    global $config;
+
+    $todo = give_db_row ("ttodo", "id", $id_todo);
+    $tcreated = $todo["created_by_user"];
+    $tassigned = $todo["assigned_user"];
+
+    // Only send mails when creator is different than owner
+    if ($tassigned == $tcreated)
+        return;
+
+    $tlastupdate = $todo["last_update"];
+    $tdescription = wordwrap($todo["description"], 70, "\n");
+    $tprogress = $todo["progress"];
+    $tpriority = $todo["priority"];
+    $tname = $todo["name"];
+    $url = $config["base_url"]."/index.php?sec=todo&sec2=operation/todo/todo&operation=update&id=$id_todo";
+
+    switch ($mode){
+    case 0: // Add
+        $text = "TO-DO '$tname' has been CREATED by user $tcreated. You could track this todo in the following URL (need to use your credentials): $url\n\n";
+        $subject = "[".$config["sitename"]."] New TO-DO from '$tcreated' : $tname";
+        break;
+    case 1: // Update
+$text = "TO-DO '$tname' has been UPDATED by user $tassigned. This TO-DO was created by user $tcreated. You could track this todo in the following URL (need to use your credentials): $url\n\n";
+        $subject = "[".$config["sitename"]."] Updated TO-DO from '$tcreated' : $tname";
+        break;
+    case 2: // Delete
+        $text = "TO-DO '$tname' has been DELETED by user $tassigned. This TO-DO was created by user $tcreated. You could track this todo in the following URL (need to use your credentials): $url\n\n";
+        $subject = "[".$config["sitename"]."] Deleted TO-DO from '$tcreated' : $tname";
+    }    
+$text .= "
+---------------------------------------------------------------------
+TO-DO NAME  : $tname
+DATE / TIME : $tlastupdate
+CREATED BY  : $tcreated
+ASSIGNED TO : $tassigned
+PROGRESS    : $tprogress%
+PRIORITY    : $tpriority
+DESCRIPTION
+---------------------------------------------------------------------
+$tdescription\n\n";
+
+        // Send an email to both
+		topi_sendmail (return_user_email($tcreated), $subject, $text);
+		topi_sendmail (return_user_email($tassigned), $subject, $text);
+}
+
+function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode){
 	global $config;
 
 	$row = give_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$titulo =$row["titulo"];
-	$descripcion = $row["descripcion"];
+	$descripcion = wordwrap($row["descripcion"], 70, "\n");
 	$prioridad = $row["prioridad"];
-	$estado = $row["estado"];
+    $nota = wordwrap($nota, 70, "\n");
+
+    $estado = give_db_sqlfree_field ("SELECT name FROM tincident_status WHERE id = ".$row["estado"]);
+    $resolution = give_db_sqlfree_field ("SELECT name FROM tincident_resolution WHERE id = ".$row["resolution"]);
+    $create_timestamp = $row["inicio"];
+    $update_timestamp = $row["actualizacion"];
 	$usuario = $row["id_usuario"];
 	$creator = $row["id_creator"];
 
     // Resolve code for its name
-    $estado = give_db_sqlfree_field ("SELECT name FROM tincident_status WHERE id = $estado");
-
-	$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new workunit from $id_usuario ";
+    switch ($mode){
+    case 10: // Add Workunit
+        $subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new workunit from $id_usuario ";
+        $url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc";
+        break;
+    case 0: // Incident update
+		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been updated.";
+        $url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc";
+        break;
+    case 1: // Incident creation
+		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been created.";
+        $url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc";
+        break;
+    case 2: // New attach
+		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new file attached.";
+        $url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc";
+        break;
+    case 3: // Incident deleted 
+		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been deleted.";
+        $url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc";
+        break;
+    }
 		
 	// Send email for owner and creator of this incident
 	$email_creator = give_db_value ("direccion", "tusuario", "id_usuario", $creator);
 	$email_owner = give_db_value ("direccion", "tusuario", "id_usuario", $usuario);
-
+  
     // Incident owner
-    $myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc", $usuario);
-    $text = "Incident #$id_inc ($titulo) has been updated and a new workunit has been added to history.\n"; 
-    $text .= "\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario";
-    $text .= "\nTimeused on new workunit: $timeused";
-    $text .= "\nDirect URL access: $myurl";
-    $text .= "\n\nDescription: \n\n$descripcion\n";
-    $text .= "\nNew workunit added to incident by $id_usuario: \n\n $nota \n\n";
+    $text = "
+Incident #$id_inc ($titulo) has been updated. You could track this incident in the following URL (need to use your credentials): $url\n
+-----------------------------------------------[INFORMATION]--------
+ID          : # $id_inc - $titulo
+CREATED ON  : $create_timestamp
+LAST UPDATE : $update_timestamp
+PRIORITY    : $prioridad
+STATUS      : $estado
+RESOLUTION  : $resolution
+ASSIGNED TO : $usuario
+TIME USED   : $timeused
+----------------------------------------------[DESCRIPTION]---------
+$descripcion\n\n";
+
+if ($mode == 10){
+$text .= "
+----------------------------------------------[WORK UNIT ADDED]-----
+WORKUNIT ADDED BY $id_usuario
+---------------------------------------------------------------------
+$nota \n\n";
+}
+
     topi_sendmail ($email_owner, $subject, $text);
-
     // Incident owner
-    if ($email_owner != $email_creator){    
-        $myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc", $creator);
-        $text = "Incident #$id_inc ($titulo) has been updated and a new workunit has been added to history.\n"; 
-        $text .= "\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario";
-        $text .= "\nTimeused on new workunit: $timeused";
-        $text .= "\nDirect URL access: $myurl";
-        $text .= "\n\nDescription: \n\n$descripcion\n";
-        $text .= "\nNew workunit added to incident by $id_usuario: \n\n $nota \n\n";
+    if ($email_owner != $email_creator)
 		topi_sendmail ($email_creator, $subject, $text);
-	} 
+	
 	// Send email for all users with workunits for this incident
 	$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
 	if ($result=mysql_query($sql1)) {
 		while ($row=mysql_fetch_array($result)){
 			if (($row[0] != $email_owner) AND ($row[0] != $email_creator))
-                $myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc", $row[1]);
-                $text = "Incident #$id_inc ($titulo) has been updated and a new workunit has been added to history.\n"; 
-                $text .= "\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario";
-                $text .= "\nTimeused on new workunit: $timeused";
-                $text .= "\nDirect URL access: $myurl";
-                $text .= "\n\nDescription: \n\n$descripcion\n";
-                $text .= "\nNew workunit added to incident by $id_usuario: \n\n $nota \n\n";
                 topi_sendmail ( $row[0], $subject, $text);
 		}
 	}
 }
 			
-
-function mail_incident ($id_inc, $modo = 0){
-	global $config;
-
-	$row = give_db_row ("tincidencia", "id_incidencia", $id_inc);
-	$titulo =$row["titulo"];
-	$descripcion = $row["descripcion"];
-	$prioridad = $row["prioridad"];
-	$estado = $row["estado"];
-	$usuario = $row["id_usuario"];
-	$creator = $row["id_creator"];
-    
-    // Resolve code for its name
-    $estado = give_db_sqlfree_field ("SELECT name FROM tincident_status WHERE id = $estado");
-
-	if ($modo == 0){
-		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been updated.";
-	} else if ($modo == 1){
-		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been created.";
-	} else if ($modo == 2){
-		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new file attached.";
-	} else if ($modo == 3){
-		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been deleted.";
-	}
-	
-    // Send email for owner of this incident
-	$text = "Incident #$id_inc ($titulo) has been updated. \n\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario\n";
-	$myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc", $usuario);
-	$text .= "Direct URL Access: $myurl\n";
-	$text .= "\nDescription: \n\n$descripcion";
-    $email_owner = give_db_value ("direccion", "tusuario", "id_usuario", $usuario);
-    topi_sendmail ( $email_owner, $subject, $text);
-
-    // Send email for creator of this incident
-    $text = "Incident #$id_inc ($titulo) has been updated. \n\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario\n";
-    $myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc", $creator);
-    $text .= "Direct URL Access: $myurl\n";
-    $text .= "\nDescription: \n\n$descripcion";
-    $email_creator = give_db_value ("direccion", "tusuario", "id_usuario", $creator);
-	if ($email_owner != $email_creator){	
-		topi_sendmail (  $email_creator, $subject, $text);
-	} 
-
-	// Send email for all users with workunits for this incident
-	$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
-	if ($result=mysql_query($sql1)) {
-		while ($row=mysql_fetch_array($result)){
-			if (($row[0] != $email_owner) AND ($row[0] != $email_creator))
-				// echo "ENVIANDO EMAIL a ".$row[0];
-                $text = "Incident #$id_inc ($titulo) has been updated. \n\nPriority: $prioridad\nStatus: $estado\nAssigned to:$usuario\n";
-                $myurl = topi_quicksession ("/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$", $row[1]);
-                $text .= "Direct URL Access: $myurl\n";
-                $text .= "\nDescription: \n\n$descripcion";
-				topi_sendmail ( $row[0], $subject, $text);
-		}
-	}		
-}
-
 function people_involved_incident ($id_inc){
     global $config;
     $row0 = give_db_row ("tincidencia", "id_incidencia", $id_inc);

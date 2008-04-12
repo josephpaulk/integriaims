@@ -86,59 +86,17 @@ $clean_output = give_parameter_get ("clean_output",0);
 <meta name="distribution" content="global">
 <meta name="author" content="Sancho Lerena">
 <meta name="copyright" content="This is GPL software. Created by Sancho Lerena">
-<meta name="keywords" content="management, project, incident, asset, GPL, software">
+<meta name="keywords" content="management, project, incident, tracking, GPL, software">
 <meta name="robots" content="index, follow">
 <link rel="icon" href="images/integria.ico" type="image/ico">
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css">
 <link rel="stylesheet" href="include/styles/integria_tip.css" type="text/css">
 <script type='text/JavaScript' src='include/calendar.js'></script>
 <script type='text/JavaScript' src='include/integria.js'></script>
-</head>
 
 <?php
-	// Show custom background
-	echo '<body bgcolor="#ffffff">';
-	// echo '<body background="images/backgrounds/' . $config["bgimage"] . '">';
-	
-	// Quick sessions
-	if ((isset ($_GET["quicksession"])) AND (isset ($_GET["quickuser"]))) {
-		// Delete old data from quicksession
-		$today = date('Y-m-d H:i:s');
-                $new_date = date('Y-m-d', strtotime("$today - 7 days"));
-		$sql = "DELETE FROM tquicksession WHERE timestamp < '$new_date'";
-		mysql_query($sql);
 
-		$nick = clean_input ($_GET["quickuser"]);
-		$pwdhash = clean_input ($_GET["quicksession"]);
-		$sql = "SELECT id_user FROM tquicksession 
-			WHERE timestamp > '$new_date' AND
-			pwdhash = '$pwdhash' AND
-			id_user = '$nick' ORDER BY id DESC LIMIT 1";
-		$nick2 = give_db_sqlfree_field ($sql);
-		// validate
-		if ($nick2 == $nick){
-			if ( (isset ($_SESSION['id_usuario']))){
-			// Drop current session
-				session_unregister ("id_usuario");
-			} else {
-			// Login
-				logon_db ($nick, $config["REMOTE_ADDR"]);
-				$_SESSION['id_usuario'] = $nick;
-			}
-		} else {
-		// Bad access detected !
-			include "general/logon_failed.php";
-			// change password to do not show all string
-			$primera = substr ($pass,0,1);
-			$ultima = substr ($pass, strlen ($pass) - 1, 1);
-			$pass = $primera . "****" . $ultima;
-			audit_db ($nick, $config["REMOTE_ADDR"], "Logon Failed / Quicksession",
-					"Incorrect password: " . $nick . " / " . $pass);
-			exit;
-		}
-	}
-
-        // Login process 
+    // Login process 
    	if ( (! isset ($_SESSION['id_usuario'])) AND (isset ($_GET["login"]))) {
 		$nick = give_parameter_post ("nick");
 		$pass = give_parameter_post ("pass");
@@ -160,11 +118,22 @@ $clean_output = give_parameter_get ("clean_output",0);
 				$_GET["sec"] = "general/logon_ok";
 				update_user_contact ($nick);
 				logon_db ($nick, $config["REMOTE_ADDR"]);
-				$_SESSION['id_usuario'] = $nick;
-				
+				$_SESSION['id_usuario'] = $nick;				
+                $prelogin_url = get_parameter ("prelogin_url", "");
+                // REDIRECT ON Different LOGIN URL
+                // Simple login URL is something like xxxxxx/index.php or simply index.php
+                $url_a = explode("/", $prelogin_url);
+                if (isset($url_a)){
+                    if (array_pop($url_a) != "index.php"){
+                        $new_url = "http://" . $_SERVER['SERVER_NAME'] . $prelogin_url; 
+                        echo "<meta http-equiv='refresh' content='0;$new_url'>";
+                    }
+                }
 			} else {
 				// Login failed (bad password)
 				unset ($_GET["sec2"]);
+                echo '</head>';
+            	echo '<body bgcolor="#ffffff">';
 				include "general/logon_failed.php";
 				// change password to do not show all string
 				$primera = substr ($pass,0,1);
@@ -177,6 +146,8 @@ $clean_output = give_parameter_get ("clean_output",0);
 		} else {
 			// User not known
 			unset ($_GET["sec2"]);
+            echo '</head>';
+        	echo '<body bgcolor="#ffffff">';
 			include "general/logon_failed.php";
 			$primera = substr ($pass, 0, 1);
 			$ultima = substr ($pass, strlen ($pass) - 1, 1);
@@ -187,21 +158,31 @@ $clean_output = give_parameter_get ("clean_output",0);
 		} 
 	} elseif (! isset ($_SESSION['id_usuario'])) {
 		// There is no user connected
+        echo '</head>';
+    	echo '<body bgcolor="#ffffff">';
 		include "general/login_page.php";
 		exit;
 	} else {
 		// Create id_user variable in $config hash, of ALL pages.
 		$config["id_user"] = $_SESSION['id_usuario'];
 	}
+
 	// Log off
 	if (isset ($_GET["bye"])) {
+        echo '</head>';
+    	echo '<body bgcolor="#ffffff">';
 		include "general/logoff.php";
 		$iduser = $_SESSION["id_usuario"];
 		logoff_db ($iduser, $config["REMOTE_ADDR"]);
 		session_unregister ("id_usuario");
 		exit;
 	}
+
+    // Common code for all operations
+    echo '</head>';
+	echo '<body bgcolor="#ffffff">';
 	$pagina = "";
+
 	if (isset ($_GET["sec2"])){
 		$sec2 = parametro_limpio ($_GET["sec2"]);
 		$pagina = $sec2;

@@ -47,7 +47,7 @@
 		$begin_week = $week_begin;
 
 	$end_week = date('Y-m-d H:i:s',strtotime("$begin_week + 1 week"));
-	$total_hours = 7 * 8; // TODO: subroutine to minus festive days (defined on DB by month)
+	$total_hours = 5 * $config["hours_perday"]; // TODO: subroutine to minus festive days (defined on DB by month)
 	$color = 0;
 	
 	echo "<h3>";

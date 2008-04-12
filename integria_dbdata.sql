@@ -38,7 +38,7 @@ INSERT INTO `tproject` VALUES  (-1,'Non imputable hours (Special)','','0000-00-0
 
 INSERT INTO `ttask` (`id`, `id_project`, `id_parent_task`, `name`, `description`, `completion`, `priority`, `dep_type`, `start`, `end`, `id_group`) VALUES (-1,-1,0,'Vacations','',0,0,0,'0000-00-00','0000-00-00',0),(-2,-1,0,'Disease','',0,0,0,'0000-00-00','0000-00-00',0),(-3,-1,0,'Not justified','',0,0,0,'0000-00-00','0000-00-00',0);
 
-INSERT INTO tincident_resolution (name) VALUES ('Fixed'), ('Invalid'), ('Wont fix'), ('Duplicate'), ('Works for me'), ('Incomplete'), ('Expired'), ('Moved'), ('In process');
+INSERT INTO tincident_resolution (id, name) VALUES (1,'Fixed'), (2,'Invalid'), (3,'Wont fix'), (4,'Duplicate'), (5,'Works for me'), (6,'Incomplete'), (7,'Expired'), (8,'Moved'), (9,'In process');
 
 INSERT INTO tincident_status (id,name) VALUES (1,'New'), (2,'Unconfirmed'), (3,'Assigned'), (4,'Re-opened'), (5,'Verified'), (6,'Resolved'), (7,'Closed');
 

@@ -72,22 +72,9 @@ if ($operation == "workunit"){
 	if (mysql_query($sql)){
         $id_project2 = give_db_value ("id_project", "ttask", "id", $id_task);
         $id_manager = give_db_value ("id_owner", "tproject", "id", $id_project2);
-
-		if ($id_workunit == 0)
-			$msg_text = "A new workunit has been created by user [$id_user]. Workunit information is: \n\nHours: $duration (hr)\nTimestamp: $timestamp\nHave cost: $have_cost\nDescription:\n\n$description\n";
-		else
-			$msg_text = "A new workunit has been updated by user [$id_user]. Workunit information is: \n\nHours: $duration (hr)\nTimestamp: $timestamp\nHave cost: $have_cost\nDescription:\n\n$description\n";
-
-        // $myurl = topi_quicksession ("/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project2&id_task=$id_task", $id_manager);
-        // $msg_text .= "\n\nDirect URL Access: $myurl\n";
-		
-        // Send an email to project manager
-        $msg_subject = "[".$config["sitename"]."] New workunit added to task '$task_name'";
-		topi_sendmail (return_user_email($id_manager), $msg_subject, $msg_text);
-
-
-		if ($id_workunit == 0) {
+		if ($id_workunit == 0) {           
 			$id_workunit = mysql_insert_id();
+            mail_project (0, $id_user, $id_workunit, $id_task);
 			$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($id_task, $id_workunit)";
 			if (mysql_query($sql2)){
 				$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
@@ -95,10 +82,10 @@ if ($operation == "workunit"){
 			}
             task_tracking ( $config["id_user"], $id_task, 14);
 		} else {
+            mail_project (1, $id_user, $id_workunit, $id_task);
 			$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
 			audit_db ($id_user, $config["REMOTE_ADDR"], "Work unit updated", "Workunit for $id_user updated for Task '$task_name'");
 		}
-	
 	} else 
 		$result_output = "<h3 class='error'>".$lang_label["workunit_no"]."</h3>";
 	$operation = "view";

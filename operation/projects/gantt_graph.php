@@ -1,8 +1,9 @@
 <?php
 
-// TOPI - the Open Tracking System for the Enterprise
+// Integria 1.0 - http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,6 +21,67 @@
 require '../../include/gantt.php';
 require '../../include/functions_calendar.php';
 
+
+// I like recursion :)
+
+function add_task_child (&$definitions, $id_task, &$task_counter, &$task_array, $id_project, $project_begin, $project_end, $dependency_counter, $parent_counter){
+
+    $sql="SELECT * FROM ttask WHERE id_parent_task = $id_task AND id_project = $id_project";
+    if ($result=mysql_query($sql))    
+    while ($row=mysql_fetch_array($result)){
+        $task_counter++;
+    	$task_id = $row["id"];
+        $task_array[$task_id]=$task_counter;
+        $task_name = $row["name"];
+    	$task_parent = $id_task;
+        $parent_counter_id = $task_array[$id_task];
+        if ($id_task != 0){
+            $definitions['dependency_planned'][$dependency_counter]['type']= 'END_TO_START';
+//		    $definitions['dependency_planned'][$dependency_counter]['phase_from']=$parent_counter_id;
+//		    $definitions['dependency_planned'][$dependency_counter]['phase_to']=$task_id;
+
+		    $definitions['dependency_planned'][$dependency_counter]['phase_from']= $parent_counter;
+		    $definitions['dependency_planned'][$dependency_counter]['phase_to'] = $task_counter;
+        }
+	
+	    $task_progress = $row["completion"];
+    	$task_begin =  strtotime (task_start_date($row["id"]));
+    	$task_end = strtotime (task_child_enddate ($row["id"]));
+
+    	$task_work_end =  strtotime (give_db_sqlfree_field ("SELECT MAX(tworkunit.timestamp) FROM tworkunit_task, tworkunit WHERE tworkunit.id = tworkunit_task.id_workunit AND tworkunit_task.id_task = $task_id"));
+    	$task_work_begin =  strtotime (give_db_sqlfree_field ("SELECT MIN(tworkunit.timestamp) FROM tworkunit_task, tworkunit WHERE tworkunit.id = tworkunit_task.id_workunit AND tworkunit_task.id_task = $task_id"));
+    	if ($task_work_begin == "")
+    		$task_work_begin = $project_begin;
+    	if ($task_work_end == "")
+    		$task_work_end = $project_begin;
+	    // Sanity checks for dates of projects and max/min of work units
+	    if ($task_begin < $project_begin)
+		    $task_begin = $project_begin;
+	    if ($task_end > $project_end)
+		    $task_end = $project_end;
+	    if ($task_work_begin < $project_begin)
+		    $task_work_begin = $project_begin;
+	    if ($task_work_end > $project_end)
+		    $task_work_end = $project_end;
+
+	    $definitions['groups']['group'][0]['phase'][$task_counter] = $task_counter;
+	    $definitions['planned']['phase'][$task_counter]['name'] = $task_name;
+	
+	    $definitions['planned']['phase'][$task_counter]['start'] = $task_begin;
+	    $definitions['planned']['phase'][$task_counter]['end'] = $task_end;
+	
+	
+	    $definitions['progress']['phase'][$task_counter]['progress']=$task_progress;
+	    $definitions['real']['phase'][$task_counter]['start'] = $task_work_begin;
+	    $definitions['real']['phase'][$task_counter]['end'] = $task_work_end;
+    
+        add_task_child (&$definitions, $row["id"], &$task_counter, &$task_array, $id_project, $project_begin, $project_end, $dependency_counter, $task_counter);
+        if ($id_task != 0)
+            $dependency_counter++;    }
+
+}
+
+$dependency_counter=0;
 // Get data about this project
 $id_user = $_SESSION['id_usuario'];
 $id_project = give_parameter_get ("id_project", -1);
@@ -123,8 +185,12 @@ $task_counter = -1;
 $dependency_counter = 0;
 $project_begin = strtotime($project_begin);
 $project_end = strtotime($project_end);
+
+add_task_child (&$definitions, 0, &$task_counter, &$task_array, $id_project, $project_begin, $project_end, $dependency_counter);
+
+/*
 // process each task
-$sql="SELECT * FROM ttask WHERE id_project = $id_project ORDER BY id_parent_task ASC "; 
+$sql="SELECT * FROM ttask WHERE id_project = $id_project AND id_parent_task = 0 ORDER BY start DESC "; 
 if ($result=mysql_query($sql))    
 while ($row=mysql_fetch_array($result)){
 	$task_counter++;
@@ -140,8 +206,8 @@ while ($row=mysql_fetch_array($result)){
 		$dependency_counter++;
 	}
 	$task_progress = $row["completion"];
-	$task_begin =  strtotime ($row["start"]);
-	$task_end =  strtotime (calcdate_business ($row["start"], $row["hours"] * $config["hours_perday"]));
+	$task_begin =  strtotime (task_start_date($row["id"]));
+	$task_end = strtotime (task_child_enddate ($row["id"]));
 
 	$task_work_end =  strtotime (give_db_sqlfree_field ("SELECT MAX(tworkunit.timestamp) FROM tworkunit_task, tworkunit WHERE tworkunit.id = tworkunit_task.id_workunit AND tworkunit_task.id_task = $task_id"));
 	$task_work_begin =  strtotime (give_db_sqlfree_field ("SELECT MIN(tworkunit.timestamp) FROM tworkunit_task, tworkunit WHERE tworkunit.id = tworkunit_task.id_workunit AND tworkunit_task.id_task = $task_id"));
@@ -179,6 +245,7 @@ while ($row=mysql_fetch_array($result)){
 	//$definitions['dependency'][0]['phase_to']=1;
 }
 
+*/
 // milestones
 $milestone_counter = 0;
 $sql="SELECT * FROM tmilestone WHERE id_project = $id_project"; 

@@ -157,6 +157,9 @@ function combo_users_task ($id_task, $iconic = 0){
 	    echo "</select>";
     } else {
         echo "<a href='#' class='tip_people'><span><font size=1>";
+        // Show also groupname
+        $groupname = give_db_sqlfree_field ("SELECT nombre FROM tgrupo, ttask WHERE ttask.id = $id_task AND ttask.id_group = tgrupo.id_grupo");
+        echo lang_string("Group")." <b>$groupname</b><br>";
         while ($row=mysql_fetch_array($result)){
             echo $row["id_user"]." / ".give_db_value ("name","trole","id",$row["id_role"]);
             echo "<br>";
@@ -384,7 +387,9 @@ function combo_projects_user ($id_user, $name = 'project') {
     $sql = "SELECT DISTINCT(id_project) FROM trole_people_project WHERE id_user = '$id_user'";
     $result=mysql_query($sql);
     while ($row=mysql_fetch_array($result)){
-        echo "<option value='".$row[0]."'>".give_db_sqlfree_field("SELECT name FROM tproject WHERE id = ".$row[0]);
+    	$nombre = give_db_sqlfree_field("SELECT name FROM tproject WHERE disabled=0 AND id = ".$row[0]);
+    	if ($nombre != "")
+        echo "<option value='".$row[0]."'>".$nombre;
     }
     echo "</select>";
 }
