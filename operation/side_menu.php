@@ -494,7 +494,7 @@ echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now
 
 // Link to project graph
 echo "&nbsp;&nbsp;";
-echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$config["id_usar"]."'>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$id_user."'>";
 echo "<img border=0 src='images/chart_bar.png' title='Project distribution'></a>";
 
 // Link to Work user spare inster
@@ -507,7 +507,7 @@ echo "&nbsp;&nbsp;";
 $begin_week = first_working_week() . " 00:00:00";
 $end_week = date('Y-m-d H:i:s',strtotime("$begin_week + 1 week"));
 $total_hours = 5 * $config["hours_perday"];
-$week_hours = give_db_sqlfree_field ("SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_week' AND timestamp < '$end_week' AND id_user = '".$config["id_user"]."'");
+$week_hours = give_db_sqlfree_field ("SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_week' AND timestamp < '$end_week' AND id_user = '".$id_user."'");
 $ratio = "$week_hours / $total_hours";
 if ($week_hours < $total_hours)
     echo "<img src='images/exclamation.png' title='".lang_string ("Week workunit time not fully justified")." - $ratio'>";

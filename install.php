@@ -24,12 +24,13 @@
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="author" content="Sancho Lerena">
-<meta name="copyright" content="This is GPL software. Created by Sancho Lerena and others">
+<meta name="copyright" content="This is GPL software. Created by Sancho Lerena">
 <meta name="keywords" content="network, system, GPL, software">
 <meta name="robots" content="index, follow">
 <link rel="icon" href="images/integria.ico" type="image/ico">
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css">
-</head><body background='images/backgrounds/background11.jpg'>
+</head>
+<body background='images/backgrounds/background11.jpg'>
 <div style='height: 50px'>
 </div>
 <?PHP
@@ -41,7 +42,6 @@ $integria_footertext = "<div id='foot'>
                         <i>Integria is a Free Software project registered at
                         <a target='_new' href='http://integria.sourceforge.net'>SourceForge</a></i><br>
                         (c) Sancho Lerena &lt;slerena@gmail.com&gt;<br>
-                        (c) Ártica ST http://www.artica.es<br>
                         </div>";
 
 function check_extension ( $ext, $label ){
@@ -76,6 +76,7 @@ function check_writable ($file, $label ){
 	echo "<tr><td>";
 	echo "<img src='images/arrow.gif'> $label";
 	echo "</td><td>";
+    clearstatcache;
 	if (!is_writable($file)) {
 		echo "<img src='images/dot_red.gif'>";
 		return 1;
@@ -344,7 +345,7 @@ function install_step4() {
 	echo "
 	<div align='center' class='mt35'>
 	<h1>Integria instalation wizard. Step #4 of 4 </h1>
-	<div id='wizard' style='height: 350px;'>
+	<div id='wizard' style='height: 410px;'>
 		<div id='install_box'>
 			<h1>Creating database and default configuration file</h1>
 			<table>";
@@ -387,21 +388,21 @@ function install_step4() {
 	
 					$config_new = '<?PHP
 // Begin of automatic config file
-$config["dbname"]="'.$dbname.'";			// MySQL DataBase name
 $config["dbuser"]=';
 if ($createuser==1){
 	$config_new = $config_new . '"integria";
-        $config["dbpassword"]="'.$random_password.'";	// DB Password
+$config["dbpass"]="'.$random_password.'";	// DB Password
 ';
 } else { 
 	$config_new = $config_new . '"'.$dbuser.'";
-        $config["dbpassword"]="'.$dbpassword.'";	// DB Password
+$config["dbpass"]="'.$dbpassword.'";	// DB Password
 ';
 }
-
-$config_new = $config_new . '$config["dbhost"]="'.$dbhost.'"; // DB Host
+$config_new = $config_new . '
+$config["dbname"]="'.$dbname.'";    // MySQL DataBase name
+$config["dbhost"]="'.$dbhost.'";    // DB Host
 $config["homedir"]="'.$path.'";		// Config homedir
-$config["base_url"]="'.$url.'";			// Base URL
+$config["base_url"]="'.$url.'";		// Base URL
 // End of automatic config file
 ?>';
 					$step7 = fputs ($cfgout, $config_new);

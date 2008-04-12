@@ -1,5 +1,7 @@
 2008-04-12 Sancho Lerena <slerena@gmail.com>
 
+	* Final fixes for next 1.0 version. Installer fully works.
+
 	* A lot of fixes and improvementes. Implemented email links
 	using auth and redirectiong to passed URL. Removed quicklink
 	Also a lot of fixes on email management. Added user menu

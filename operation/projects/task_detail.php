@@ -28,6 +28,9 @@ $id_task = give_parameter_get ("id_task", -1);
 $project_manager = give_db_sqlfree_field("SELECT id_owner FROM tproject WHERE id = $id_project");
 $operation =  give_parameter_get ("operation", "");
 
+$hours = 0;
+$estimated_cost = 0;
+
 // Get names
 if ($id_project != 1)
 	$project_name = give_db_value ("name", "tproject", "id", $id_project);
@@ -66,7 +69,7 @@ if ($operation == "insert"){
 	$priority = give_parameter_post ("priority", 0);
 	$completion = give_parameter_post ("completion", 0);
 	$parent = give_parameter_post ("parent", 0);
-	$start = give_parameter_post ("start_date", date());
+	$start = give_parameter_post ("start_date", date("Y-m-d"));
 	$hours = give_parameter_post ("hours", 0);
         $estimated_cost = give_parameter_post ("estimated_cost", 0);
 	$id_group = give_parameter_post ("group",1);

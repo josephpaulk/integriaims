@@ -329,7 +329,7 @@ CREATE TABLE `tvacationday` (
   `day` int(4) unsigned NOT NULL default '0',
   `month` int(4) unsigned NOT NULL default '0',
   `name` varchar(250) NOT NULL default '',
-  PRIMARY KEY  (`ID_sesion`)
+  PRIMARY KEY  (`id`)
 );
 
 -- Table for bills, and externals expenses imputable to a task / project

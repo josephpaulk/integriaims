@@ -14,36 +14,7 @@
 // GNU General Public License for more details.
 
 ?>
-<!--
-<div align='center' style='margin-top: 150px;' >
-	<h1><?php echo $lang_label['welcome_title']; ?></h1>
-	<div style='width: 350px;'>
-		<div style="float: right;padding-right: 10px;margin-top: 8px;width: 140px;">
-			<form method="post" action="index.php?login=1">
-				<div>Login</div>
-				<input class="login" type="text" name="nick" value="">
-				<div>Password</div>
-				<input class="login" type="password" name="pass" value="">
-				<br>
-				<input type="submit" class="sub next" value="Login now">
-				
-			</form>
-		</div>
-		<div style="margin-top: 25px;padding-left: 5px; height: 170px;" class='databox_color'>
-			<a href="index.php">
-			<img style='margin-top: 30px;' src="images/topi_logo_small.jpg" border="0" alt="logo"></a><br>
-			<?php echo $config["version"]; ?>
-		</div>
-	</div>
-	
-	<div id="foot" align='center'>
-		<center>
-		<?php require("general/footer.php") ?>
-		</center>
-	</div>
 
-</div>
--->
 <div class='databox' id='login'>
 	<h1 id='log'><?php echo $lang_label['welcome_title']; ?></h1>
 	<div class='databox' id='login_in'>
