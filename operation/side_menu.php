@@ -500,7 +500,7 @@ echo "<img border=0 src='images/chart_bar.png' title='Project distribution'></a>
 // Link to Work user spare inster
 echo "&nbsp;&nbsp;";
 echo "<a href='index.php?sec=users&sec2=operation/users/user_spare_workunit'>";
-echo "<img border=0 src='images/award_star_silver_1' title='Workunit'></a>";
+echo "<img border=0 src='images/award_star_silver_1.png' title='Workunit'></a>";
 
 // Week Workunit meter :)
 echo "&nbsp;&nbsp;";

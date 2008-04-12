@@ -21,6 +21,8 @@ if (!isset($config["id_user"]))
 	echo "<table width=100% border=0>";
 	
 	// Show Agenda items
+	$agenda = give_db_sqlfree_field ("SELECT COUNT(*) FROM tagenda WHERE  (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3'");
+	if ($agenda > 0){
 	echo "<tr><td>";
 	echo "<h1>".$lang_label["agenda"]."</h1>";
 	echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
@@ -37,10 +39,12 @@ if (!isset($config["id_user"]))
         echo $row_2["timestamp"]." - ".$row_2["content"];
         echo "<br>";
     }
-    
+    }
 
 
 	// Show Todo items
+	$todo = give_db_sqlfree_field ("SELECT COUNT(*) FROM ttodo WHERE assigned_user = '".$config["id_user"]."'");
+	if ($todo > 0){
 	echo "<tr><td>";
 	echo "<h1>".$lang_label["todo"]."</h1>";
 	echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
@@ -54,22 +58,28 @@ if (!isset($config["id_user"]))
         echo $row_2["timestamp"]." - ".substr($row_2["name"],0,55);
         echo "<br>";
     }
-    echo "...";
+    }
 
-	// Show Projects items
-	echo "<tr><td>";
-	echo "<h1>".$lang_label["projects"]."</h1>";
-	echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project'><img src='images/project.png' border=0></a></div>";
-	
+    // Show Projects items
+    $projects = projects_active_user ($config["id_user"]);
+    if ($projects > 0){
+    echo "<tr><td>";
+    echo "<h1>".$lang_label["projects"]."</h1>";
+    echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
+    echo "<a href='index.php?sec=projects&sec2=operation/projects/project'><img src='images/project.png' border=0></a></div>";
+
+
     echo "<td valign='top'><br><b>";
     echo lang_string("Projects active you have")." : ".projects_active_user ($config["id_user"]);
     echo "<hr width=500 size=1>";
     echo "<br>";
     $from_one_month = date('Y-m-d', strtotime("now - 1 month"));
     echo "<img src='include/functions_graph.php?type=workunit_project_user&width=350&height=210&id_user=".$config["id_user"]."&date_from=$from_one_month'>";
+}
 
 	// Show Incident items
+	$incidents = incidents_active_user ($config["id_user"]);
+	if ($incidents > 0){
 	echo "<tr><td>";
 	echo "<h1>".$lang_label["incidents"]."</h1>";
 	echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
@@ -84,7 +94,7 @@ if (!isset($config["id_user"]))
         echo $row_2["actualizacion"]." - ".substr($row_2["titulo"],0,55);
         echo "<br>";
     }
-    echo "...";
+    }
 
 	echo "</table>";
 
