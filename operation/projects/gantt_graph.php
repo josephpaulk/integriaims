@@ -34,7 +34,10 @@ function add_task_child (&$definitions, $id_task, &$task_counter, &$task_array, 
         $task_array[$task_id]=$task_counter;
         $task_name = $row["name"];
     	$task_parent = $id_task;
-        $parent_counter_id = $task_array[$id_task];
+	if (isset($task_array[$id_task]))
+	        $parent_counter_id = $task_array[$id_task];
+	else
+		$parent_counter_id= 0;
         if ($id_task != 0){
             $definitions['dependency_planned'][$dependency_counter]['type']= 'END_TO_START';
 //		    $definitions['dependency_planned'][$dependency_counter]['phase_from']=$parent_counter_id;
@@ -185,8 +188,8 @@ $task_counter = -1;
 $dependency_counter = 0;
 $project_begin = strtotime($project_begin);
 $project_end = strtotime($project_end);
-
-add_task_child (&$definitions, 0, &$task_counter, &$task_array, $id_project, $project_begin, $project_end, $dependency_counter);
+$parent_counter = 0;
+add_task_child (&$definitions, 0, &$task_counter, &$task_array, $id_project, $project_begin, $project_end, $dependency_counter, $parent_counter);
 
 /*
 // process each task

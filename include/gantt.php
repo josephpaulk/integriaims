@@ -480,8 +480,10 @@ class gantt {
 
 
 		//milestone
-		$milestone = count($this->milestones['milestone']);
-		//$milestone = 0;
+		if (isset($this->milestones['milestone']))
+			$milestone = count($this->milestones['milestone']);
+		else
+			$milestone = 0;
 		if ($milestone > 0) {
 			$this->polygon(array($x,$y+15,$x+12,$y+15,$x+6,$y),3,$this->milestones['color'],$this->milestones['alpha']);
 			$this->text($this->definitions['milestone']['legend'],$x2+$xdiff,$y,$this->definitions["legend"]['text_color']);
@@ -519,7 +521,8 @@ class gantt {
 			if ($this->definitions["not_show_groups"] != true) {
 				$rows += count($this->groups['group'])/2;
 			}
-		$rows += count($this->milestones['milestone'])/2;
+		if (isset($this->milestones['milestone']))
+			$rows += count($this->milestones['milestone'])/2;
 		return $rows;
 	}
 	function grid()	{
