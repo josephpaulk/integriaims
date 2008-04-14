@@ -998,6 +998,7 @@ function mail_project ($mode, $id_user, $id_workunit, $id_task) {
     $workunit = give_db_row ("tworkunit", "id", $id_workunit);
     $task     = give_db_row ("ttask", "id", $id_task);
     $project  = give_db_row ("tproject", "id", $task["id_project"]);
+    $id_project = $task["id_project"];
     $id_manager = $project["id_owner"];
     $task_name = $task["name"];
 

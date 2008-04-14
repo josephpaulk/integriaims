@@ -1,5 +1,7 @@
 2008-04-14 Sancho Lerena <slerena@gmail.com>
 
+	* functions_db: Missing id_project field on call to make URL
+
 	* home.php: Missing datetimecheck in agenda block.
 
 	* functions_db: Bad datatime field used to include WU date
