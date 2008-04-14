@@ -21,6 +21,8 @@ if (!isset($config["id_user"]))
 	echo "<table width=100% border=0>";
 	
 	// Show Agenda items
+	$now = date('Y-m-d', strtotime("now"));
+        $now3 = date('Y-m-d', strtotime("now + 3 days"));
 	$agenda = give_db_sqlfree_field ("SELECT COUNT(*) FROM tagenda WHERE  (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3'");
 	if ($agenda > 0){
 	echo "<tr><td>";

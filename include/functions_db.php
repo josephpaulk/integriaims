@@ -1002,7 +1002,7 @@ function mail_project ($mode, $id_user, $id_workunit, $id_task) {
     $task_name = $task["name"];
 
     // WU data
-    $create_timestamp = $workunit["timestamp"];
+    $current_timestamp = $workunit["timestamp"];
     $duration = $workunit["duration"];
     $have_cost = $workunit["have_cost"];
     if ($have_cost == 1)

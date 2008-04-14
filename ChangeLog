@@ -1,3 +1,9 @@
+2008-04-14 Sancho Lerena <slerena@gmail.com>
+
+	* home.php: Missing datetimecheck in agenda block.
+
+	* functions_db: Bad datatime field used to include WU date
+
 2008-04-12 Sancho Lerena <slerena@gmail.com>
 
         * task.php: Removed debug start date in task info
