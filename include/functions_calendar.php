@@ -476,7 +476,7 @@ function getWorkingDays($startDate, $endDate, $holidays){
 
 
 function week_start_day (){
-    date('Y-m-d', date('U')-(date('w')+6)%7*86400);
+    return date('Y-m-d', date('U')-(date('w')+6)%7*86400);
 }
 
 
