@@ -97,7 +97,7 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 				    $calendar .= "<img src='images/bell.png'>";
 			    if ($event_public > 0)
 				    $calendar .= "<img src='images/user_comment.png'>";
-			    $calendar .= "<img src='images/cancel.gif'>";
+			    $calendar .= "<A href='index.php?sec=agenda&sec2=operation/agenda/agenda&delete_event=".$row[0]."'><img src='images/cancel.gif' border=0></A>";
 			    $calendar .= "<br><hr width=110><font size='1pt'>[$event_user] ".$event_string."</font><br><br>";
             }
 		}
@@ -426,6 +426,59 @@ function first_working_week (){
     $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
     return $new_date;
 }
+
+// Gets the floating point difference in working days between two dates.
+function getWorkingDays($startDate, $endDate, $holidays){
+
+    // Calculate weekday number. Monday is 1, Sunday is 7
+    $firstWeekdayNumber = date("N", strtotime($startDate));
+    $lastWeekdayNumber  = date("N", strtotime($endDate));
+
+    // Normalize the dates if they're weekends or holidays as they count for full days (24 hours)
+    if ($firstWeekdayNumber == 6 || $firstWeekdayNumber == 7 || in_array( date("Y-m-d", strtotime($startDate)), $holidays ))
+        $startDate = date("Y-m-d 00:00:00", strtotime($startDate));
+    if ($lastWeekdayNumber == 6  || $lastWeekdayNumber == 7  || in_array( date("Y-m-d", strtotime($endDate)), $holidays ))
+        $endDate   = date("Y-m-d 00:00:00", strtotime("+1 days", strtotime( $endDate )));
+
+    // Compute the floating-point differences in the dates
+    $daysDifference          = (strtotime($endDate) - strtotime($startDate)) / 86400;
+    $fullWeeksDifference     = floor($daysDifference / 7);
+    $remainingDaysDifference = fmod($daysDifference, 7);
+
+    // Subtract the weekends; In the first case the whole interval is within a week, in the second case the interval falls in two weeks.
+    if ($firstWeekdayNumber <= $lastWeekdayNumber){
+        if ($firstWeekdayNumber <= 6 && 6 <= $lastWeekdayNumber && $remainingDaysDifference >= 1) $remainingDaysDifference--;
+        if ($firstWeekdayNumber <= 7 && 7 <= $lastWeekdayNumber && $remainingDaysDifference >= 1) $remainingDaysDifference--;
+    }
+    else{
+        if ($firstWeekdayNumber <= 6  && $remainingDaysDifference >= 1) $remainingDaysDifference--;
+        // In the case when the interval falls in two weeks, there will be a Sunday for sure
+        $remainingDaysDifference--;
+    }
+
+    // Compute the working days based on full weeks +
+    $workingDays = $fullWeeksDifference * 5;
+    if ($remainingDaysDifference > 0 )
+        $workingDays += $remainingDaysDifference;
+
+    // Subtract the holidays
+    foreach($holidays as $holiday)
+    {
+        $holidayTimeStamp=strtotime($holiday);
+        // If the holiday doesn't fall in weekend
+        if (strtotime($startDate) <= $holidayTimeStamp && $holidayTimeStamp <= strtotime($endDate) && date("N",$holidayTimeStamp) != 6 && date("N",$holidayTimeStamp) != 7 && $workingDays >= 1)
+            $workingDays--;
+    }
+   
+    // End of calculation, return the result now
+    return $workingDays;
+}
+
+
+function week_start_day (){
+    date('Y-m-d', date('U')-(date('w')+6)%7*86400);
+}
+
 
 function return_unixtime () {
     return strtotime("now");

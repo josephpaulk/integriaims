@@ -504,7 +504,7 @@ echo "<img border=0 src='images/award_star_silver_1.png' title='Workunit'></a>";
 
 // Week Workunit meter :)
 echo "&nbsp;&nbsp;";
-$begin_week = first_working_week() . " 00:00:00";
+$begin_week = week_start_day() . " 00:00:00";
 $end_week = date('Y-m-d H:i:s',strtotime("$begin_week + 1 week"));
 $total_hours = 5 * $config["hours_perday"];
 $week_hours = give_db_sqlfree_field ("SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_week' AND timestamp < '$end_week' AND id_user = '".$id_user."'");
