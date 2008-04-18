@@ -386,7 +386,7 @@ if ((give_acl($config["id_user"], $id_grupo, "IM")==1) OR ($usuario == $config["
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo '<tr><td class="datos"><b>'.$lang_label["assigned_user"].'</b><td class="datos">';
 if ((give_acl($config["id_user"], $id_grupo, "IM")==1) OR ($creacion_incidente == 1)) {
-	combo_user_visible_for_me ($config["id_user"],"usuario_form", 0, "IR");
+	combo_user_visible_for_me ($usuario,"usuario_form", 0, "IR");
 echo "<a href='#' class='tip'>&nbsp;<span>";
 echo $lang_label["incident_user_help"];
 echo "</span></a>";

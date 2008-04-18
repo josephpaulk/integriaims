@@ -1,6 +1,7 @@
 2008-04-18 Sancho Lerena <slerena@gmail.com>
 
-	* /project_detail.php: Small bug fixed in project manager
+	* /incident_detail.php, 
+	/project_detail.php: Small bug fixed in project manager
 	view (assigment works but not correctly visualized).
 
 2008-04-17 Sancho Lerena <slerena@gmail.com>
