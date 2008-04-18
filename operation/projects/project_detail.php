@@ -166,7 +166,7 @@ echo '<td class="datos"><b>'.$lang_label["project_manager"].'</b>';
 echo "<td class='datos'>";
 $id_owner = give_db_value ( 'id_owner', 'tproject', 'id', $id_project);
 if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_owner )) {
-	combo_user_visible_for_me ($config["id_user"],"user", 0, "PR");
+	combo_user_visible_for_me ($id_owner,"user", 0, "PR");
 } else {
 	echo $id_owner;
 }
