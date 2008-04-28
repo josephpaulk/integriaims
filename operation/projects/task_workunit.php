@@ -9,21 +9,21 @@ if (check_login() != 0) {
 }
 
 $id_user = $_SESSION['id_usuario'];
-$id_project = give_parameter_get ("id_project", -1);
-$id_task = give_parameter_get ("id_task", -1);
+$id_project = give_parameter_get ("id_project", 0);
+$id_task = give_parameter_get ("id_task", 0);
 $operation = give_parameter_get ("operation", "");
 // Get names
-if ($id_project != -1)
+if ($id_project != 0)
 	$project_name = give_db_value ("name", "tproject", "id", $id_project);
 else
 	$project_name = "";
 
-if ($id_task != -1)
+if ($id_task != 0)
 	$task_name = give_db_value ("name", "ttask", "id", $id_task);
 else
 	$task_name = "";
 
-if ( $id_project == -1 ){
+if ( $id_project == 0 ){
     // Doesn't have access to this page
     audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager withour project");
     include ("general/noaccess.php");
@@ -109,7 +109,7 @@ if ($operation == "delete"){
 	$id_user_wu = $row["id_user"];
 	$id_task_wu = give_db_value ("id_task", "tworkunit_task", "id_workunit", $row["id"]);
 	$id_project_wu = give_db_value ("id_project", "ttask", "id", $id_task_wu);
-	if (($id_user_wu == $id_user) OR (project_manager_check($id_project) == 1)){
+	if (($id_user_wu == $config["id_user"]) OR (give_acl($config["id_user"], 0,"PM") ==1 ) OR (project_manager_check($id_project) == 1)){
 		mysql_query ("DELETE FROM tworkunit where id = '$id_workunit'");
 		if (mysql_query ("DELETE FROM tworkunit_task where id_workunit = '$id_workunit'")){
 				$result_output = "<h3 class='suc'>".$lang_label["delete_ok"]."</h3>";
