@@ -501,6 +501,29 @@ function give_wu_task ($id_task){
 
 
 /**
+* Return total workunits assigned to task for a specific user
+*
+* $id_task  integer     ID of task
+* $id_user  string      ID of user
+**/
+
+function give_wu_task_user ($id_task, $id_user){
+    global $config;
+
+    $pro = 0;
+    $query1="SELECT COUNT(tworkunit.duration) 
+            FROM tworkunit, tworkunit_task 
+            WHERE   tworkunit_task.id_task = $id_task AND 
+                    tworkunit.id_user = '$id_user' AND 
+                    tworkunit_task.id_workunit = tworkunit.id";
+    $resq1=mysql_query($query1);
+    if ($rowdup=mysql_fetch_array($resq1))
+        $pro=$rowdup[0]; 
+    return $pro;
+}
+
+
+/**
 * Calculate project completion
 *
 * Uses each task completion and priority and uses second
@@ -700,12 +723,14 @@ function task_start_date ($id_task){
 // Return true (1) if userid belongs to given project as any role
 // ---------------------------------------------------------------
 
-function user_belong_project ($id_user, $id_project){ 
+function user_belong_project ($id_user, $id_project, $real = 0){ 
 	global $config;
         global $lang_label;
 
-	if (dame_admin ($id_user) != 0)
-		return 1;
+    if ($real == 0){
+	    if (dame_admin ($id_user) != 0)
+		    return 1;
+    }
 
 	$query1="SELECT COUNT(*) from trole_people_project WHERE id_project = $id_project AND id_user = '$id_user'";
         $resq1=mysql_query($query1);
@@ -723,13 +748,14 @@ function user_belong_project ($id_user, $id_project){
 // Return true (1) if userid belongs to given task as any role
 // ---------------------------------------------------------------
 
-function user_belong_task ($id_user, $id_task){ 
+function user_belong_task ($id_user, $id_task, $real=0){ 
 	global $config;
         global $lang_label;
 
-	if (dame_admin ($id_user) != 0)
-		return 1;
-
+    if ($real == 0){
+	   if (dame_admin ($id_user) != 0)
+    		return 1;
+    }
 
     $id_project = give_db_sqlfree_field ("SELECT id_project FROM ttask WHERE id = $id_task");
     // Project manager always has access to all tasks of his project
@@ -863,11 +889,15 @@ function project_manager_check ($id_project) {
 	global $lang_label;
 
 	$manager = give_db_value ("id_owner", "tproject", "id", $id_project);
-	$id = $_SESSION["id_usuario"];
-	if ($manager == $id)
-		return 1;
-	else
-		return 0;
+    if (isset($_SESSION["id_usuario"])){
+	   $id = $_SESSION["id_usuario"];
+	   if ($manager == $id)
+    		return 1;
+    	else
+		  return 0;
+    }
+    else
+        return 0;
 		
 }
 

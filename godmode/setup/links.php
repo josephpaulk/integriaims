@@ -1,18 +1,37 @@
-<?php
-// Pandora - The Free Monitoring System
-// This code is protected by GPL license.
-// Este codigo esta protegido por la licencia GPL.
-// Sancho Lerena <slerena@gmail.com>, 2003-2007
-// Raul Mateos <raulofpandora@gmail.com>, 2005-2007
+<?php 
+
+// Integria 1.1 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
 // Load global vars
-if (comprueba_login() == 0)
-   $id_user = $_SESSION["id_usuario"];
-   if (give_acl($id_user, 0, "PM")==1) {
+
+global $config;
+
+if (check_login() != 0) {
+    audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access setup ");
+    require ("general/noaccess.php");
+    exit;
+}
+    
+if (dame_admin($config["id_user"]) == 0){
+    audit_db("ACL Violation",$config["REMOTE_ADDR"], "No administrator access","Trying to access setup");
+    require ("general/noaccess.php");
+    exit;
+}
 
 	if (isset($_POST["create"])){ // If create
-		$name = entrada_limpia($_POST["name"]);
-		$link = entrada_limpia($_POST["link"]);
+		$name = clean_input ($_POST["name"]);
+		$link = clean_input ($_POST["link"]);
 		$sql_insert="INSERT INTO tlink (name,link) VALUES ('$name','$link') ";
 		$result=mysql_query($sql_insert);	
 		if (! $result)
@@ -36,7 +55,7 @@ if (comprueba_login() == 0)
 	}
 	
 	if (isset($_GET["borrar"])){ // if delete
-		$id_link = entrada_limpia($_GET["borrar"]);
+		$id_link = clean_input($_GET["borrar"]);
 		$sql_delete= "DELETE FROM tlink WHERE id_link = ".$id_link;
 		$result=mysql_query($sql_delete);
 		if (! $result)
@@ -66,30 +85,32 @@ if (comprueba_login() == 0)
 
 		// Create link
         echo "<h2>".$lang_label["setup_screen"]."</h2>";
-		echo "<h3>".$lang_label["link_management"]."<a href='help/".$help_code."/chap9.php#91' target='_help' class='help'>&nbsp;<span>".$lang_label["help"]."</span></a></h3>";
-		echo '<table class="fon" cellpadding="3" cellspacing="3" width="500">';   
-		echo '<form name="ilink" method="post" action="index.php?sec=gsetup&sec2=godmode/setup/links">';
+		echo "<h3>".$lang_label["link_management"]."</h3>";
+		echo '<table class="fon" cellpadding="4" cellspacing="4" width="500" class="databox_color">';   
+		echo '<form name="ilink" method="post" action="index.php?sec=godmode&sec2=godmode/setup/links">';
         	if ($creation_mode == 1)
 				echo "<input type='hidden' name='create' value='1'>";
 			else
 				echo "<input type='hidden' name='update' value='1'>";
-		echo "<input type='hidden' name='id_link' value='"; ?> 
-		<?php if (isset($id_link)) {echo $id_link;} ?>
-		<?php
+		echo "<input type='hidden' name='id_link' value='"; 
+		if (isset($id_link)) {
+            echo $id_link;
+        }
+		
 		echo "'>";
-		echo '<tr><td class="lb" rowspan="2" width="5"><td class="datos">'.$lang_label["link_name"].'<td class="datos"><input type="text" name="name" size="35" value="'.$nombre.'">';
-		echo '<tr><td class="datos2">'.$lang_label["link"].'<td class="datos2"><input type="text" name="link" size="35" value="'.$link.'">';
-		echo '<tr><td colspan="5"><div class="raya"></div></td></tr>';
+		echo '<tr><td class="datos">'.$lang_label["link_name"].'<td class="datos"><input type="text" name="name"  value="'.$nombre.'">';
+		echo '<tr><td class="datos2">'.$lang_label["link"].'<td class="datos2"><input type="text" name="link"  value="'.$link.'">';
 		echo "<tr><td colspan='3' align='right'><input name='crtbutton' type='submit' class='sub' value='".$lang_label["update"]."'>";
 		echo '</form></table>';
 	}
 
 	else {  // Main list view for Links editor
 		echo "<h2>".$lang_label["setup_screen"]."</h2>";
-		echo "<h3>".$lang_label["link_management"]."<a href='help/".$help_code."/chap9.php#9' target='_help' class='help'>&nbsp;<span>".$lang_label["help"]."</span></a></h3>";
-		echo "<table cellpadding=3 cellspacing=3>";
-		echo "<th class='w180'>".$lang_label["link_name"];
-		echo "<th class='w80'>".$lang_label["delete"];
+		echo "<h3>".$lang_label["link_management"]."</h3>";
+		echo "<table cellpadding=4 cellspacing=4 class=databox_color width=500>";
+		echo "<th>".$lang_label["link_name"];
+        echo "<th>URL";
+		echo "<th>".$lang_label["delete"];
 		$sql1='SELECT * FROM tlink ORDER BY name';
 		$result=mysql_query($sql1);
 		$color=1;
@@ -102,18 +123,13 @@ if (comprueba_login() == 0)
 				$tdcolor = "datos2";
 				$color = 1;
 			}
-			echo "<tr><td class='$tdcolor'><b><a href='index.php?sec=gsetup&sec2=godmode/setup/links&form_edit=1&id_link=".$row["id_link"]."'>".$row["name"]."</a></b>";
-			echo '<td class="'.$tdcolor.'" align="center"><a href="index.php?sec=gsetup&sec2=godmode/setup/links&id_link='.$row["id_link"].'&borrar='.$row["id_link"].'" onClick="if (!confirm(\' '.$lang_label["are_you_sure"].'\')) return false;"><img border=0 src="images/cross.png"></a>';
+			echo "<tr><td class='$tdcolor'><b><a href='index.php?sec=godmode&sec2=godmode/setup/links&form_edit=1&id_link=".$row["id_link"]."'>".$row["name"]."</a></b>";
+            echo '<td class="'.$tdcolor.'" align="center">'.$row["link"];
+			echo '<td class="'.$tdcolor.'" align="center"><a href="index.php?sec=godmode&sec2=godmode/setup/links&id_link='.$row["id_link"].'&borrar='.$row["id_link"].'" onClick="if (!confirm(\' '.$lang_label["are_you_sure"].'\')) return false;"><img border=0 src="images/cross.png"></a>';
 		}
-			echo "<tr><td colspan='2'><div class='raya'></div></td>";
-			echo "<tr><td colspan='2' align='right'>";
-			echo "<form method='post' action='index.php?sec=gsetup&sec2=godmode/setup/links&form_add=1'>";
+		
+			echo "<tr><td colspan='3' align='right'>";
+			echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/links&form_add=1'>";
 			echo "<input type='submit' class='sub next' name='form_add' value='".$lang_label["add"]."'>";
 			echo "</form></table>";
-} // Fin bloque else
-} else  {
-			audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access Link Management");
-			require ("general/noaccess.php");
-	}
-
-?>
+    }

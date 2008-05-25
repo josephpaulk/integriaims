@@ -188,5 +188,5 @@ if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_ow
 echo "</form>";
 echo "</table>";
 
-
+echo "<img src=include/functions_graph.php?type=project_tree&id_project=$id_project&id_user=$id_user>";
 ?>

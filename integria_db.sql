@@ -1,4 +1,4 @@
--- Integria 1.0 - http://integria.sourceforge.net
+-- Integria 1.1 - http://integria.sourceforge.net
 -- ==================================================
 -- Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 -- Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
@@ -344,5 +344,34 @@ CREATE TABLE `tcost` (
   `description` mediumtext NOT NULL,
   `id_attachment` int(11) unsigned NULL default NULL,
   `locked` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY  (`id`)
+);
+
+-- 1.1 new table
+-- Assign a manager for each group (to automatically 
+-- assign a user to an incident
+
+CREATE TABLE `tgroup_manager` (
+  `id_group` int(10) unsigned NOT NULL default '0',
+  `id_user` varchar(250) NOT NULL default '',
+  `forced_email` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `max_response_hr` int(10) unsigned NOT NULL default '0',
+  `max_resolution_hr` int(10) unsigned NOT NULL default '0',
+  `max_active` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id_group`)
+);
+
+-- 1.1 new table
+-- Used to track notificacion (emails) for agenda,
+-- incident SLA notifications, system events and more
+-- in the future.
+
+CREATE TABLE `tnotification_track` (
+  `id` int(6) unsigned NOT NULL auto_increment,
+  `type` varchar(250) default NULL,
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  `id_item` int(11) unsigned NULL default NULL,
+  `id_item2` int(11) unsigned NULL default NULL,
+  `id_item2` varchar(250) default NULL,
   PRIMARY KEY  (`id`)
 );

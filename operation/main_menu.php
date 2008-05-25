@@ -54,6 +54,15 @@ if ($sec == "agenda" )
 else
 	echo "<li>";
 echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>".$lang_label["agenda"]."</a></li>";
-echo "</ul>";
 
+if (dame_admin($config["id_user"]) == 1){
+    // Setup
+    if ($sec == "setup" )
+        echo "<li id='current'>";
+    else
+        echo "<li>";
+    echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".lang_string ("setup")."</a></li>";
+}
+
+    echo "</ul>";
 ?>

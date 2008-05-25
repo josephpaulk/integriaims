@@ -1,6 +1,6 @@
 <?PHP
 
-// Integria 1.0 - http://integria.sourceforge.net
+// Integria 1.1 - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
@@ -16,8 +16,8 @@
 global $config;
 
 // Integria version
-$config["build"]="80411";
-$config["version"]="v1.0-dev";
+$config["build"]="80525";
+$config["version"]="v1.1";
 $config["build_version"] = $config["build"];
 
 // Read remaining config tokens from DB
@@ -29,7 +29,7 @@ if (! mysql_connect($config["dbhost"],$config["dbuser"],$config["dbpass"])){
     </head><body><div align="center">
     <div id="db_f">
         <div>
-        <a href="index.php"><img src="images/integria_logo.png" border="0"></a>
+        <a href="index.php"><img src="images/integria_white.png" border="0"></a>
         </div>
     <div id="db_ftxt">
         <h1 id="log_f" class="error">Integria Error DB-001</h1>
@@ -62,7 +62,7 @@ if($result2=mysql_query("SELECT * FROM tconfig")){
              </head><body><div align="center">
              <div id="db_f">
                  <div>
-                 <a href="index.php"><img src="images/integria_logo.png" border="0"></a>
+                 <a href="index.php"><img src="images/integria_white.png" border="0"></a>
                  </div>
              <div id="db_ftxt">
                  <h1 id="log_f" class="error">Integria Error DB-002</h1>

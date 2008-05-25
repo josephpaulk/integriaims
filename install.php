@@ -216,7 +216,7 @@ function install_step2() {
 			//$res += check_extension("snmp","PHP smmp extension");
 			$res += check_extension("session","PHP session extension");
 			$res += check_include("PEAR.php","PEAR PHP Library");
-			//$res += check_exists ("/usr/bin/pdflatex","PDF Latex in /usr/bin/pdflatex");
+			$res += check_exists ("/usr/bin/twopi","Graphviz Twopi in /usr/bin/twopi");
 			$res += check_writable("./include","./include writable by HTTP server");
 			echo "</table>
 		</div>

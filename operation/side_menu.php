@@ -35,15 +35,22 @@ if ($sec == "projects"){
 	echo "<ul class='sidemenu'>";
 
 	// Project overview
-	if ($sec2 == "operation/projects/project")
-		echo "<li id='sidesel'>";
-	else	
-		echo "<li>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".$lang_label["project_overview"]."</a></li>";
+    if ($sec2 == "operation/projects/project")
+        echo "<li id='sidesel'>";
+    else    
+        echo "<li>";
+    echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".$lang_label["project_overview"]."</a></li>";
+
+    // Project tree
+    if ($sec2 == "operation/projects/project_tree")
+        echo "<li id='sidesel'>";
+    else    
+        echo "<li>";
+    echo "<a href='index.php?sec=projects&sec2=operation/projects/project_tree'>".lang_string("Project tree")."</a></li>";
 	
 	// Project create
 	if (give_acl($id_user, 0, "PM")){
-		if ($sec2 == "operation/projects/project_detail&insert_form")
+		if (($sec2 == "operation/projects/project_detail&insert_form") AND (isset($_GET["insert_form"])) )
 			echo "<li id='sidesel'>";
 		else	
 			echo "<li>";
@@ -51,7 +58,7 @@ if ($sec == "projects"){
 	}	
 
     // View disabled projects
-    if ($sec2 == "operation/projects/project")
+    if (($sec2 == "operation/projects/project") AND (isset($_GET["view_disabled"])) )
         echo "<li id='sidesel'>";
     else    
         echo "<li>";
@@ -359,6 +366,37 @@ if ($sec == "todo"){
 	echo "</div>";
 }
 
+if ($sec == "godmode"){
+    echo "<div class='portlet'>";
+    echo "<h3>".lang_string ("Setup")."</h3>";
+    echo "<ul class='sidemenu'>";
+
+    // Main Seetup
+    if ($sec2 == "godmode/setup/setup")
+        echo "<li id='sidesel'>";
+    else    
+        echo "<li>";
+    echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".lang_string ("Setup")."</a></li>";
+
+    // Incident management per task
+    if ($sec2 == "godmode/setup/incident")
+        echo "<li id='sidesel'>";
+    else    
+        echo "<li>";
+    echo "<a href='index.php?sec=godmode&sec2=godmode/setup/incident'>".lang_string ("Incident SLA")."</a></li>";
+
+    // Link management
+    if ($sec2 == "godmode/setup/links")
+        echo "<li id='sidesel'>";
+    else    
+        echo "<li>";
+    echo "<a href='index.php?sec=godmode&sec2=godmode/setup/links'>".lang_string ("Links")."</a></li>";
+
+    echo "</ul>";
+    echo "</div>";
+}
+
+
 
 if ($sec == "users"){
 
@@ -398,6 +436,15 @@ echo "<div class='portlet'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=$id_user'>".$lang_label["work_unit_report"]."</a></li>";
+
+        // My tasks
+        if ($sec2 == "operation/users/user_task_assigment")
+        echo "<li id='sidesel'>";
+        else
+            echo "<li>";
+        echo "<a href='index.php?sec=users&sec2=operation/users/user_task_assigment'>".lang_string ( "My task assigments")."</a></li>";
+        
+
 	echo "</ul>";
 	echo "</div>";
 
@@ -454,6 +501,14 @@ echo "<div class='portlet'>";
         else
             echo "<li>";
         echo "<a href='index.php?sec=users&sec2=godmode/perfiles/lista_perfiles'>".lang_string ("manage_profiles")."</a></li>";
+
+        // Global user/role/task assigment
+        if ($sec2 == "godmode/usuarios/role_user_global")
+            echo "<li id='sidesel'>";
+        else
+            echo "<li>";
+        echo "<a href='index.php?sec=users&sec2=godmode/usuarios/role_user_global'>".lang_string ("Global task assigment")."</a></li>";
+
 
         echo "</ul>";
         echo "</div>";

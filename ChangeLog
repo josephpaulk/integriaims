@@ -1,3 +1,41 @@
+2008-05-25 Sancho Lerena  <slerena@gmail.com>
+
+    * functions_graph.php: Added two funtions (graphviz dep) to
+    show a project tree and user tasks in a fancy tree :-)
+
+    * projects/project_detail.php: Added a project tree graph under 
+    the data controls.
+
+    * projects/project_tree.php: Added a new option: Project tree
+    graph, using graphviz, and using a imagemap to navigate. Has
+    a menu to select different options/views.
+
+    * users/user_task_assigment.php: Shows all tasks assigned to 
+    current user, with WU data and last entered wu.
+
+    * main_menu.php, side_menu.php: Updated options.
+
+    * setup/incident.php: Added options to future implementations 
+    of SLA in reporting.
+
+    * integria_db.sql: New tables (incident SLA and notification 
+    (via cron job) management.
+
+    * usuarios/role_user_global.php: Allows to do a global, per user
+    management of assigned taks to each user. Easy and fast to keep
+    updated a realistic project planification.
+
+    * install.php: Added graphviz to dependency checks.
+
+    * attachment/tmp: Added to be used with graphviz
+
+    * include/integria_cron.php: Added to future crontab periodic 
+    task management.
+
+    * functions_db.php: user_belong_task() fixed small bug. 
+    user_belong_project() added switch to be used ignoring admin
+    mode. Added give_wu_task_user()
+
 2008-04-29 Sancho Lerena <slerena@gmail.com>
 
 	* operation/projects/task_workunit.php: Fixed problem deleting
