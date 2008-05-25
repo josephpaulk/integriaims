@@ -168,10 +168,10 @@ function install_step1() {
         global $integria_footertext;
 	echo "
 	<div align='center' class='mt35'>
-	<h1>Integria instalation wizard. Step #1 of 4</h1>
+	<h1>Integria 1.1 instalation wizard. Step #1 of 4</h1>
 	<div id='wizard' style='height: 310px;'>
 		<div id='install_box'>
-			<h1>Welcome to Integria installation Wizard</h1>
+			<h1>Welcome to Integria 1.1 installation Wizard</h1>
 			<p>This wizard helps you to quick install Integria in your system.</p>
 			<p>In four steps checks all dependencies and make your configuration for a quick installation.</p> 
 			<p>For more information, please refer to documentation.</p>
@@ -203,7 +203,7 @@ function install_step1() {
 function install_step2() {
 	echo "
 	<div align='center' class='mt35'>
-	<h1>Integria instalation wizard. Step #2 of 4</h1>
+	<h1>Integria v1.1 instalation wizard. Step #2 of 4</h1>
 	<div id='wizard' style='height: 280px;'>
 		<div id='install_box'>";
 		echo "<h1>Checking software dependencies</h1>";
@@ -218,6 +218,7 @@ function install_step2() {
 			$res += check_include("PEAR.php","PEAR PHP Library");
 			$res += check_exists ("/usr/bin/twopi","Graphviz Twopi in /usr/bin/twopi");
 			$res += check_writable("./include","./include writable by HTTP server");
+            $res += check_writable("./attachment/tmp","./attachment/tmp writable by HTTP server");
 			echo "</table>
 		</div>
 		<div class='box'>
@@ -246,7 +247,7 @@ function install_step2() {
 function install_step3() {
 	echo "
 	<div align='center' class='mt35'>
-	<h1>Integria instalation wizard. Step #3 of 4 </h1>
+	<h1>Integria v1.1 instalation wizard. Step #3 of 4 </h1>
 	<div id='wizard' style='height: 660px;'>
 		<div id='install_box'>
 			<h1>Environment and database setup</h1>

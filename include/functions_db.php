@@ -421,9 +421,17 @@ function give_wu_incident ($id_inc){
 * $id_project	integer 	ID of project
 **/
 
-function give_hours_project ($id_project){
+function give_hours_project ($id_project, $with_cost =0){
 	global $config;
-	$query1="SELECT SUM(tworkunit.duration) 
+    if ($with_cost != 0)
+        $query1="SELECT SUM(tworkunit.duration) 
+            FROM tworkunit, tworkunit_task, ttask 
+            WHERE   tworkunit_task.id_task = ttask.id AND 
+                    ttask.id_project = $id_project AND 
+                    tworkunit_task.id_workunit = tworkunit.id AND
+                    tworkunit.have_cost = 1";
+    else
+	   $query1="SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task, ttask 
 			WHERE 	tworkunit_task.id_task = ttask.id AND 
 					ttask.id_project = $id_project AND 

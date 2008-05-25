@@ -1,6 +1,6 @@
 <?php
 
-// Integria 1.0 - http://integria.sourceforge.net
+// Integria 1.1 - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
@@ -143,7 +143,7 @@ if ($create_mode == 0){
 	echo $lang_label["create_project"]."</h2>";
 }
 
-echo '<table width=700 class="databox_color" cellpadding=3 cellspacing=3>';
+echo '<table width=740 class="databox_color" cellpadding=4 cellspacing=4>';
 
 // Name
 
@@ -170,6 +170,60 @@ if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_ow
 } else {
 	echo $id_owner;
 }
+
+if ($create_mode == 0){
+
+echo '<td class="datos"><b>'.lang_string ("Current progress").'</b>';
+echo "<td class='datos'>";
+$completion =  format_numeric(calculate_project_progress ($id_project));
+echo "<img src='include/functions_graph.php?type=progress&width=90&height=20&percent=$completion'>";
+
+echo '<tr>';
+echo '<td class="datos2"><b>'.lang_string("Total workunit (hr)").'</b>';
+echo "<td class='datos2'>";
+$total_hr = give_hours_project ($id_project);
+echo $total_hr;
+echo '<td class="datos2"><b>'.lang_string("Total people involved").'</b>';
+echo "<td class='datos2'>";
+$people_inv = give_db_sqlfree_field ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
+echo $people_inv;
+
+
+echo '<tr>';
+echo '<td class="datos"><b>'.lang_string("Total payable workunit (hr)").'</b>';
+echo '<td class="datos">';
+$pr_hour = give_hours_project ($id_project, 1);
+echo $pr_hour;
+
+echo '<td class="datos"><b>'.lang_string("Project profitability").'</b>';
+echo '<td class="datos">';
+$total = project_workunit_cost ($id_project, 1);
+$real = project_workunit_cost ($id_project, 0);
+if ($real > 0){
+    echo format_numeric(($total/$real)*100);
+    echo  " %" ;
+}
+
+echo '<tr>';
+echo '<td class="datos2"><b>'.lang_string("Project costs").'</b>';
+echo "<td class='datos2'>";
+echo $real. " ". $config["currency"];
+echo '<td class="datos2"><b>'.lang_string("Charged to customer").'</b>';
+echo "<td class='datos2'>";
+echo $total." ". $config["currency"];
+
+
+echo '<tr>';
+echo '<td class="datos"><b>'.lang_string("Charged cost per hour").'</b>';
+echo '<td class="datos">';
+echo format_numeric ($total/($total_hr/$people_inv)). " ". $config["currency"];
+echo '<td class="datos"><b>'.lang_string("Proyect length deviation (days)").'</b>';
+echo '<td class="datos">';
+$expected_length = give_db_sqlfree_field ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
+$deviation = format_numeric(($pr_hour-$expected_length)/$config["hours_perday"]);
+echo $deviation. " ".lang_string("days");
+}
+
 // Description
 
 echo '<tr><td class="datos2" colspan="4"><textarea name="description" rows="15" cols="90" style="height: 200px">';
@@ -177,6 +231,8 @@ echo '<tr><td class="datos2" colspan="4"><textarea name="description" rows="15" 
 echo "</textarea>";
 
 echo "</table>";
+echo '<table width=740 class="databox_color" cellpadding=3 cellspacing=3>';
+echo "<tr><td align=right>";
 
 if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_owner )) {
     if ($create_mode == 0){
@@ -188,5 +244,6 @@ if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_ow
 echo "</form>";
 echo "</table>";
 
+echo "<h3>".lang_string("Project schema")."</h3>";
 echo "<img src=include/functions_graph.php?type=project_tree&id_project=$id_project&id_user=$id_user>";
 ?>

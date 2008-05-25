@@ -43,9 +43,9 @@ if (dame_admin($config["id_user"]) == 0){
 	}
 
 	if (isset($_POST["update"])){ // if update
-		$id_link = entrada_limpia($_POST["id_link"]);
-		$name = entrada_limpia($_POST["name"]);
-		$link = entrada_limpia($_POST["link"]);
+		$id_link = get_parameter ("id_link","");
+		$name = get_parameter ("name", "");
+		$link = get_parameter ("link", "");
     	$sql_update ="UPDATE tlink SET name = '".$name."', link ='".$link."'  WHERE id_link = '".$id_link."'";
 		$result=mysql_query($sql_update);
 		if (! $result)
@@ -69,7 +69,7 @@ if (dame_admin($config["id_user"]) == 0){
 	if ((isset($_GET["form_add"])) or (isset($_GET["form_edit"]))){
 		if (isset($_GET["form_edit"])){
 			$creation_mode = 0;
-				$id_link = entrada_limpia($_GET["id_link"]);
+				$id_link = get_parameter ("id_link","");
 				$sql1='SELECT * FROM tlink WHERE id_link = '.$id_link;
 				$result=mysql_query($sql1);
 				if ($row=mysql_fetch_array($result)){

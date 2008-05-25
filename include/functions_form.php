@@ -17,7 +17,7 @@ function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0,
     global $config; 
     $userlist = array();
 
-    echo "<select name='$form_name' style='width: 200px'>";
+    echo "<select name='$form_name' style='width: 130px'>";
     if ($any == 1)
         echo "<option value=''>" . lang_string ("Any");
     if ($id_user != "")

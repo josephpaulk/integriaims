@@ -66,6 +66,7 @@
 	echo "<th>".lang_string ("Calendar view");
     echo "<th>".lang_string ("Graph overview");
 	echo "<th>".lang_string ("total_hours_for_this_month");
+    echo "<th>".lang_string ("Charged this month");
 
 	$sql0= "SELECT * FROM tusuario";
 	if ($res0 = mysql_query($sql0)) {
@@ -125,6 +126,16 @@
                 // Total hours this month
 			    echo "<td class='$tdcolor' >";
 			    echo $row[0];
+                
+                // Total charged hours this month
+                echo "<td class='$tdcolor' >";
+                $tempsum = give_db_sqlfree_field ("SELECT SUM(duration) FROM tworkunit WHERE have_cost = 1 AND id_user = '$nombre' AND timestamp > '$begin_month' AND timestamp <= '$end_month'");
+                if ($tempsum != "")
+                    echo $tempsum. " hr";
+                else
+                    echo "--";
+
+
             }
 		}
 	}
