@@ -1,5 +1,11 @@
 2008-05-25 Sancho Lerena  <slerena@gmail.com>
 
+    * project_detail.php: Added more information (statistica, financial)
+    to project detailed view. Some of that information could be used
+    in the future for specific automated PDF reports.
+
+    * report_monthly.php: Added charged work hours per user / month.
+
     * functions_graph.php: Added two funtions (graphviz dep) to
     show a project tree and user tasks in a fancy tree :-)
 
