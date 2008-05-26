@@ -1,5 +1,5 @@
 <?php
-// Integria 1.0 - http://integria.sourceforge.net
+// Integria 1.1 - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
@@ -38,19 +38,42 @@ if ($operation == "addworkunit"){
 	$user_role = give_parameter_post ("role",0);
 	$task = give_parameter_post ("task",-1);
 	$role = give_parameter_post ("role",-1);
-		
-	$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description, have_cost, id_profile) VALUES	('$timestamp', $duration, '$id_user', '$description', $have_cost, $role)";
-	if (mysql_query($sql)){
-		$id_workunit = mysql_insert_id();
-		$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($task, $id_workunit)";
-		if (mysql_query($sql2)){
-			$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
-			audit_db ($id_user, $config["REMOTE_ADDR"], "Spare work unit added", "Workunit for $id_user added to Task ID #$task");
-            mail_project (0, $id_user, $id_workunit, $task);
-		}
-	} else 
-		$result_output = "<h3 class='error'>".$lang_label["workunit_no"]."</h3>";
-		echo $result_output;
+	
+	// Multi-day assigment
+	if ($duration > $config["hours_perday"]){
+	    $total_days = ceil($duration / $config["hours_perday"]);
+	    $total_days_sum = 0; $hours_day = 0;
+	    for ($ax=0;$ax < $total_days; $ax++){
+    	    $current_timestamp = calcdate_business_prev ($timestamp, $ax);
+            if (($total_days_sum + 8) > $duration)
+                $hours_day = $duration - $total_days_sum;
+            else 
+                $hours_day = $config["hours_perday"];
+            $total_days_sum += $hours_day;
+
+        	$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description, have_cost, id_profile) VALUES	('$current_timestamp', $hours_day, '$id_user', '$description', $have_cost, $role)";
+    	    if (mysql_query($sql)){
+        	    $id_workunit = mysql_insert_id();
+        		$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($task,   $id_workunit)";
+            }
+        }
+        audit_db ($id_user, $config["REMOTE_ADDR"], "(Multiple) Spare work unit added", "Workunit for $id_user added to Task ID #$task");
+        mail_project (0, $id_user, $id_workunit, $task);
+	} else {
+    	$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description, have_cost, id_profile) VALUES	('$timestamp', $duration, '$id_user', '$description', $have_cost, $role)";
+    	if (mysql_query($sql)){
+    		$id_workunit = mysql_insert_id();
+    		$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($task,   $id_workunit)";
+    		if (mysql_query($sql2)){
+    			$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
+			    audit_db ($id_user, $config["REMOTE_ADDR"], "Spare work unit added", "Workunit for $id_user added to Task ID #$task");
+                mail_project (0, $id_user, $id_workunit, $task);
+	    	}    
+    	} else 
+    		$result_output = "<h3 class='error'>".$lang_label["workunit_no"]."</h3>";
+    	echo $result_output;
+	}
+    		
 }
 
 // --------------------

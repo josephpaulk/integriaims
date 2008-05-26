@@ -51,7 +51,7 @@ echo "</form>";
 
 if ($id_user != ""){
 
-    $sql = "SELECT ttask.id, ttask.name, tproject.name, trole_people_task.id_role FROM trole_people_task, ttask, tproject WHERE trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tproject.disabled = 0";
+    $sql = "SELECT ttask.id, ttask.name, tproject.name, trole_people_task.id_role, tproject.id FROM trole_people_task, ttask, tproject WHERE trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tproject.disabled = 0 ORDER BY tproject.name";
 
     echo "<h2>".lang_string ("Global task assignment")."</h2>";
     echo "<h3>".lang_string ("For user"). " ".$id_user."</h3>";
@@ -74,7 +74,7 @@ if ($id_user != ""){
         }
         echo "<tr>";
         echo "<td class=$tdcolor>".$row[2];
-        echo "<td class=$tdcolor>".$row[1];
+        echo "<td class=$tdcolor><b><a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=".$row[4]."&id_task=".$row[0]."&operation=view'>".$row[1]."</a></b>";
         echo "<td class=$tdcolor>".give_db_sqlfree_field ("SELECT name FROM trole WHERE id = ".$row[3]);
         echo "<td class=$tdcolor>".give_wu_task_user ($row[0], $id_user);
         echo '<td class="'.$tdcolor.'" align="center"><a href="index.php?sec=users&sec2=godmode/usuarios/role_user_global&id_user='.$id_user.'&delete='.$row[0].'" onClick="if (!confirm(\' '.$lang_label["are_you_sure"].'\')) return false;"><img border=0 src="images/cross.png"></a>';

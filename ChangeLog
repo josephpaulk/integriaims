@@ -1,3 +1,23 @@
+2008-05-26 Sancho Lerena  <slerena@gmail.com>
+
+	* functions_calendar.php: Added calendar for year view
+	and functions to return work days backwards.
+
+	* FreeSans.ttf: Moved from reporting (now deleted) to
+	include.
+	
+	* attachment/tmp: Added to repo.
+
+	* /user_spare_workunit.php: Now can enter units > 8hr
+	and make automatically a split from back in time, using
+	8 hr (or user defined)for each day. Very useful to enter
+	vacations.
+
+	* report_annual.php: Added year view, show in colors
+	worked days and vacation days. Also show a summary.
+
+	* Minor fixes in other files.
+
 2008-05-25 Sancho Lerena  <slerena@gmail.com>
 
     * project_detail.php: Added more information (statistica, financial)

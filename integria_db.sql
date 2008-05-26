@@ -372,6 +372,6 @@ CREATE TABLE `tnotification_track` (
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_item` int(11) unsigned NULL default NULL,
   `id_item2` int(11) unsigned NULL default NULL,
-  `id_item2` varchar(250) default NULL,
+  `id_item3` varchar(250) default NULL,
   PRIMARY KEY  (`id`)
 );

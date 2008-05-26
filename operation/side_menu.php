@@ -466,7 +466,24 @@ echo "<div class='portlet'>";
         else
             echo "<li>";
         echo "<a href='index.php?sec=users&sec2=operation/user_report/report_weekly'>".lang_string ("weekly_report")."</a></li>";
+        
+    	// Basic report (annual)
+		if ($sec2 == "operation/user_report/report_annual")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual'>".lang_string ("Annual report")."</a></li>";
+        
+        // View vacations
+		if ($sec2 == "operation/projects/task_workunit") 
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=-1&id_task=-1'>".lang_string ("View vacations")."</a></li>";
+
 		echo "</ul></div>";
+		
+		
 	}
 
 	if (give_acl($config["id_user"], 0, "UM")){
