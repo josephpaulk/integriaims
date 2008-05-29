@@ -1,6 +1,6 @@
 <?php
 
-// Integria 1.0 - http://integria.sourceforge.net
+// Integria 1.1 - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
@@ -270,7 +270,7 @@ if (isset($_GET["id"])){
 		$descripcion = "";
 		$origen = 0;
 		$prioridad = 2;
-		$id_grupo = 1;
+		$id_grupo =0;
 		$grupo = dame_nombre_grupo(1);
 
 		$usuario= $config["id_user"];
@@ -317,6 +317,19 @@ echo $result_msg;
 
 echo '<table width=740 class="databox_color" cellpadding=2 cellspacing=2 >';
 
+// CREATE
+$default_responsable  = "";
+if (!isset($id_inc)){
+    // How many groups has this user ?
+    $number_group = give_db_sqlfree_field ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
+    // Take first group defined for this user
+    $default_id_group = give_db_sqlfree_field ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
+    // if have only one group, select default user and email for this group 
+    if ($number_group == 1){
+        $default_responsable = give_db_sqlfree_field ("SELECT id_user FROM tgroup_manager WHERE id_group = $default_id_group");
+        $email_notify = give_db_sqlfree_field ("SELECT forced_email FROM tgroup_manager WHERE id_group = $default_id_group");
+    } 
+}
 
 // Title and email notify
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -386,7 +399,14 @@ if ((give_acl($config["id_user"], $id_grupo, "IM")==1) OR ($usuario == $config["
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo '<tr><td class="datos"><b>'.$lang_label["assigned_user"].'</b><td class="datos">';
 if ((give_acl($config["id_user"], $id_grupo, "IM")==1) OR ($creacion_incidente == 1)) {
-	combo_user_visible_for_me ($usuario,"usuario_form", 0, "IR");
+    if ($default_responsable != ""){
+        echo "<input type=hidden name='usuario_form' value='$default_responsable'>";
+        echo dame_nombre_real($default_responsable);
+    }
+//	    combo_user_visible_for_me ($default_responsable,"usuario_form", 0, "IR");
+	else
+    	combo_user_visible_for_me ($usuario,"usuario_form", 0, "IR");
+	
 echo "<a href='#' class='tip'>&nbsp;<span>";
 echo $lang_label["incident_user_help"];
 echo "</span></a>";

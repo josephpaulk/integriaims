@@ -383,7 +383,7 @@ if ($row2_count[0] <= 0 ) {
 			// Check for attachments in this incident
 			$file_number = give_number_files_incident ($row2["id_incidencia"]);
 			if ($file_number > 0)
-				echo '<img src="images/disk.png" valign="bottom"  alt="'.$file_number.'">';
+				echo '&nbsp;&nbsp<img src="images/disk.png" valign="bottom"  alt="'.$file_number.'">';
 
 			// Has mail notice activated ?
 			$mail_check = give_db_value('notify_email', 'tincidencia', 'id_incidencia', $row2["id_incidencia"]);
@@ -392,7 +392,8 @@ if ($row2_count[0] <= 0 ) {
 
 			// Check for workunits
 			$timeused = give_hours_incident ($row2["id_incidencia"]);;
-			if ($timeused > 0){
+			$incident_wu = $in_wu = give_wu_incident ($row2["id_incidencia"]);
+			if ($incident_wu > 0){
 				echo '&nbsp;&nbsp;<img src="images/award_star_silver_1.png" valign="bottom">'.$timeused;
 			}
 

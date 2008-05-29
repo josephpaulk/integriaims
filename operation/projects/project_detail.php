@@ -216,7 +216,10 @@ echo $total." ". $config["currency"];
 echo '<tr>';
 echo '<td class="datos"><b>'.lang_string("Charged cost per hour").'</b>';
 echo '<td class="datos">';
-echo format_numeric ($total/($total_hr/$people_inv)). " ". $config["currency"];
+if (($people_inv > 0) AND ($total_hr >0))
+    echo format_numeric ($total/($total_hr/$people_inv)). " ". $config["currency"];
+else
+    echo "N/A";
 echo '<td class="datos"><b>'.lang_string("Proyect length deviation (days)").'</b>';
 echo '<td class="datos">';
 $expected_length = give_db_sqlfree_field ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");

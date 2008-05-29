@@ -1,5 +1,5 @@
 <?PHP
-// Integria 1.0 - http://integria.sourceforge.net
+// Integria 1.1 - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
@@ -27,7 +27,6 @@ else
 // ===============
 // PROJECTS
 // ===============
-
 
 if ($sec == "projects"){
 	echo "<div class='portlet'>";
@@ -71,7 +70,7 @@ if ($sec == "projects"){
 
 	// Dynamic project sub options menu (PROJECT)
 	$id_project = give_parameter_get("id_project",-1);
-	if ($id_project != -1){
+	if (($id_project != -1) AND ($id_project != "")){
 		echo "<br>";
         
         $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
@@ -150,7 +149,7 @@ if ($sec == "projects"){
 	
 	// Dynamic sub options menu (TASKS)
 	$id_task = give_parameter_get("id_task",-1);
-	if ($id_task != -1){
+	if (($id_task != -1) and ($id_task != "")){
 		echo "<br>";
 
 		echo "<div class='portlet'>";
@@ -479,7 +478,7 @@ echo "<div class='portlet'>";
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=-1&id_task=-1'>".lang_string ("View vacations")."</a></li>";
+		echo "<a href='index.php?sec=users&sec2=operation/projects/task_workunit&id_project=-1&id_task=-1'>".lang_string ("View vacations")."</a></li>";
 
 		echo "</ul></div>";
 		
@@ -564,29 +563,31 @@ echo '<b>E-mail:</b>&nbsp;
 // Link to workunit calendar (month)
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=$id_user'><img border=0 hspace=5 src='images/clock.png' title='".$lang_label["work_unit_report"]."'></a>";
 
-// Link to project graph
-echo "&nbsp;&nbsp;";
-echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$id_user."'>";
-echo "<img border=0 src='images/chart_bar.png' title='Project distribution'></a>";
+if (give_acl($config["id_user"], 0, "PR") == 1){
+    // Link to project graph
+    echo "&nbsp;&nbsp;";
+    echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$id_user."'>";
+    echo "<img border=0 src='images/chart_bar.png' title='Project distribution'></a>";
 
-// Link to Work user spare inster
-echo "&nbsp;&nbsp;";
-echo "<a href='index.php?sec=users&sec2=operation/users/user_spare_workunit'>";
-echo "<img border=0 src='images/award_star_silver_1.png' title='Workunit'></a>";
 
-// Week Workunit meter :)
-echo "&nbsp;&nbsp;";
-$begin_week = week_start_day();
-$begin_week .= " 00:00:00";
-$end_week = date('Y-m-d H:i:s',strtotime("$begin_week + 1 week"));
-$total_hours = 5 * $config["hours_perday"];
-$week_hours = give_db_sqlfree_field ("SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_week' AND timestamp < '$end_week' AND id_user = '".$id_user."'");
-$ratio = "$week_hours / $total_hours";
-if ($week_hours < $total_hours)
-    echo "<img src='images/exclamation.png' title='".lang_string ("Week workunit time not fully justified")." - $ratio'>";
-else
-    echo "<img src='images/heart.png' title='".lang_string ("Week workunit are fine")." - $ratio'>";
+    // Link to Work user spare inster
+    echo "&nbsp;&nbsp;";
+    echo "<a href='index.php?sec=users&sec2=operation/users/user_spare_workunit'>";
+    echo "<img border=0 src='images/award_star_silver_1.png' title='Workunit'></a>";
 
+    // Week Workunit meter :)
+    echo "&nbsp;&nbsp;";
+    $begin_week = week_start_day();
+    $begin_week .= " 00:00:00";
+    $end_week = date('Y-m-d H:i:s',strtotime("$begin_week + 1 week"));
+    $total_hours = 5 * $config["hours_perday"];
+    $week_hours = give_db_sqlfree_field ("SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_week' AND timestamp <   '$end_week' AND id_user = '".$id_user."'");
+    $ratio = "$week_hours / $total_hours";
+    if ($week_hours < $total_hours)
+        echo "<img src='images/exclamation.png' title='".lang_string ("Week workunit time not fully justified")." - $ratio'>";
+    else
+        echo "<img src='images/heart.png' title='".lang_string ("Week workunit are fine")." - $ratio'>";
+}
 
 echo '
   </div>

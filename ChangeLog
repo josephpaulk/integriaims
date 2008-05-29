@@ -1,3 +1,12 @@
+2008-05-28 Sancho Lerena  <slerena@gmail.com>
+
+	* A lot of fixes in incident, used user/email assigment
+	for each group defined. Better management of WU in incidents
+	and solved several bugs with delete, update and visualization
+	of projects and incidents. Better managment of multi-day
+	spare workunit, added two checkboxes to split WU and do 
+	an optional fordward propagation.
+
 2008-05-26 Sancho Lerena  <slerena@gmail.com>
 
 	* functions_calendar.php: Added calendar for year view

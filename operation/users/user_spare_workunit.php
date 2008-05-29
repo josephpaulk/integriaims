@@ -35,44 +35,65 @@ if ($operation == "addworkunit"){
 	$timestamp = give_parameter_post ("workunit_date");
 	$description = give_parameter_post ("description");
 	$have_cost = give_parameter_post ("have_cost",0);
-	$user_role = give_parameter_post ("role",0);
 	$task = give_parameter_post ("task",-1);
-	$role = give_parameter_post ("role",-1);
+	$role = give_parameter_post ("role",0);
+    $split = get_parameter ("split",0);
+	
 	
 	// Multi-day assigment
-	if ($duration > $config["hours_perday"]){
+	if (($split == 1) AND ($duration > $config["hours_perday"])){
+	    $forward = get_parameter ("forward",0);
 	    $total_days = ceil($duration / $config["hours_perday"]);
 	    $total_days_sum = 0; $hours_day = 0;
 	    for ($ax=0;$ax < $total_days; $ax++){
-    	    $current_timestamp = calcdate_business_prev ($timestamp, $ax);
+	        if ($forward == 0)
+        	    $current_timestamp = calcdate_business_prev ($timestamp, $ax);
+	        else
+                $current_timestamp = calcdate_business ($timestamp, $ax);
             if (($total_days_sum + 8) > $duration)
                 $hours_day = $duration - $total_days_sum;
             else 
                 $hours_day = $config["hours_perday"];
             $total_days_sum += $hours_day;
 
-        	$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description, have_cost, id_profile) VALUES	('$current_timestamp', $hours_day, '$id_user', '$description', $have_cost, $role)";
+        	$sql = "INSERT INTO tworkunit 
+        	        (timestamp, duration, id_user, description, have_cost, id_profile) 
+	                VALUES	('$current_timestamp', $hours_day, '$id_user', '$description',
+	                         $have_cost, $role)";
     	    if (mysql_query($sql)){
         	    $id_workunit = mysql_insert_id();
-        		$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($task,   $id_workunit)";
+        		$sql2 = "INSERT INTO tworkunit_task 
+        		                (id_task, id_workunit) VALUES ($task,   $id_workunit)";
+        	    if (mysql_query($sql2))
+        	        $result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
+	            else
+	                $result_output = "<h3 class='error'>".$lang_label["workunit_no"]."</h3>";
             }
         }
-        audit_db ($id_user, $config["REMOTE_ADDR"], "(Multiple) Spare work unit added", "Workunit for $id_user added to Task ID #$task");
-        mail_project (0, $id_user, $id_workunit, $task);
+        audit_db ($id_user, $config["REMOTE_ADDR"], "(Multiple) Spare work unit added", 
+                                    "Workunit for $id_user added to Task ID #$task");
+        mail_project (0, $id_user, $id_workunit, $task, "This is part of a multi-workunit assigment of $duration hours");
+    
+    // Single day workunit
 	} else {
-    	$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description, have_cost, id_profile) VALUES	('$timestamp', $duration, '$id_user', '$description', $have_cost, $role)";
+    	$sql = "INSERT INTO tworkunit 
+    	        (timestamp, duration, id_user, description, have_cost, id_profile) 
+	             VALUES	('$timestamp', $duration, '$id_user', '$description', $have_cost, $role)";
+
     	if (mysql_query($sql)){
     		$id_workunit = mysql_insert_id();
-    		$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($task,   $id_workunit)";
+    		$sql2 = "INSERT INTO tworkunit_task 
+    		        (id_task, id_workunit) VALUES ($task,   $id_workunit)";
     		if (mysql_query($sql2)){
     			$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
-			    audit_db ($id_user, $config["REMOTE_ADDR"], "Spare work unit added", "Workunit for $id_user added to Task ID #$task");
+			    audit_db ($id_user, $config["REMOTE_ADDR"], "Spare work unit added", 
+			            "Workunit for $id_user added to Task ID #$task");
                 mail_project (0, $id_user, $id_workunit, $task);
 	    	}    
     	} else 
     		$result_output = "<h3 class='error'>".$lang_label["workunit_no"]."</h3>";
-    	echo $result_output;
 	}
+	echo $result_output;
     		
 }
 
@@ -114,6 +135,23 @@ if ($operation != "create"){
 	echo "<b>".$lang_label["time_used"]."</b>";
 	echo "<td class='datos'>";
 	echo "<input type='text' name='duration' value='0' size='7'>";
+    
+
+    echo "&nbsp;";
+    echo "<input type=checkbox name='split' value=1>&nbsp;";
+    echo lang_string("Split on more than one day");
+    echo "&nbsp;<a href='#' class='tip'>&nbsp;<span>";
+    echo lang_string("If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned");
+    echo "</span></a>";
+    
+    
+    echo "&nbsp;";
+    echo "<input type=checkbox name='forward' value=1>&nbsp;";
+    echo lang_string("Forward propagation");
+    echo "<a href='#' class='tip'>&nbsp;<span>";
+    echo lang_string("If this checkbox is activated, propagation will be forward instead backward");
+    echo "</span></a>";
+    
 
 	echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
 	echo '<tr><td colspan="4" class="datos2"><textarea name="description" rows="10" cols="85">';

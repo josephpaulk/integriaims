@@ -1,5 +1,5 @@
 <?php
-// Integria 1.0 - http://integria.sourceforge.net
+// Integria 1.1 - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
@@ -18,7 +18,7 @@
 	$id_user = $config["id_user"];
 	
 	if (check_login() != 0) {
-		audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
+		audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access monthly report");
 		require ("general/noaccess.php");
 		exit;
 	}

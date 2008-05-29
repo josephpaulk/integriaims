@@ -157,7 +157,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 
 
 // Original function
-function generate_small_work_calendar ($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array(), $id_user = ""){
+function generate_small_work_calendar ($year, $month, $days = array(), $day_name_length = 3, $first_day = 0, $pn = array(), $id_user = ""){
 	$first_of_month = gmmktime(0,0,0,$month,1,$year);
 	#remember that mktime will automatically correct if invalid dates are entered
 	# for instance, mktime(0,0,0,12,32,1997) will be the date for Jan 1, 1998
@@ -176,7 +176,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 	if($p) $p = '<span class="calendar-prev">'.($pl ? '<a href="'.htmlspecialchars($pl).'">'.$p.'</a>' : $p).'</span>&nbsp;';
 	if($n) $n = '&nbsp;<span class="calendar-next">'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n).'</span>';
 	$calendar = '<table class="calendar">'."\n".
-		'<caption class="calendar-month">'.$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</caption>\n<tr>";
+		'<caption class="calendar-month">'.$p.'<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$month.'&year='.$year.'&id='.$id_user.'">'.$title.'</a>'.$n."</caption>\n<tr>";
 
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
@@ -191,21 +191,14 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 			$weekday   = 0; #start a new week
 			$calendar .= "</tr>\n<tr>";
 		}
-		/*if(isset($days[$day]) and is_array($days[$day])){
-			@list($link, $classes, $content) = $days[$day];
-			if(is_null($content))  $content  = $day;
-			$calendar .= '<td'.($classes ? ' class="'.htmlspecialchars($classes).'">' : '>').
-				($link ? '<a href="'.htmlspecialchars($link).'">'.$content.'</a>' : $content).'</td>';
-		}
-		*/
-		
+
 		// Show SUM workunits for that day (GREEN) - standard wu
 		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
 		$normal = 0;
 		$res=mysql_query($sqlquery);
 		if ($row=mysql_fetch_array($res)){
-			$workhours = $row[0];
-			if ($workhours > 0){
+			$workhours_a = $row[0];
+			if ($workhours_a > 0){
 				$normal = 1;
             }
 		}
@@ -215,19 +208,35 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 
 		$res=mysql_query($sqlquery);
 		if ($row=mysql_fetch_array($res)){
-			$workhours = $row[0];
-			if ($workhours > 0){
+			$workhours_b = $row[0];
+			if ($workhours_b > 0){
 				$normal = 2;
             }
 		}
-			
+
+		// Show SUM workunits for that day (MAGENDA) - task wu
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident != -1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+
+		$res=mysql_query($sqlquery);
+		if ($row=mysql_fetch_array($res)){
+			$workhours_c = $row[0];
+			if ($workhours_c > 0){
+				$normal = 3;
+            }
+		}
+		
+		$mylink = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user&timestamp_l=$year-$month-$day 00:00:00&timestamp_h=$year-$month-$day 23:59:59";
+
 	    if ($normal == 0)
     		$calendar .= "<td>$day</td>";
         elseif ($normal == 1)
-            $calendar .= "<td style='background-color: #98FF8B;'><a href='#' title='$workhours'>$day</A></td>";
+            $calendar .= "<td style='background-color: #98FF8B;'><a href='$mylink' title='$workhours_a'>$day</A></td>";
         elseif ($normal == 2)
-            $calendar .= "<td style='background-color: #FFFF80;'><a href='#' title='$workhours'>$day</td>";
-        
+            $calendar .= "<td style='background-color: #FFFF80;'><a href='$mylink' title='$workhours_b'>$day</a></td>";
+        elseif ($normal == 3) {
+            $total_wu = $workhours_a + $workhours_c;
+            $calendar .= "<td style='background-color: #FF7BFE;'><a href='$mylink' title='$total_wu'>$day</a></td>";
+        }
 	}
 	if($weekday != 7) $calendar .= '<td colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
 

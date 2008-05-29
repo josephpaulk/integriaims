@@ -43,7 +43,10 @@
     echo return_vacations_user ($id_user_show, $year). "</td><td>".lang_string("Vacations days");
     
     echo "<td style='background-color: #98FF8B;'>";
-    echo return_daysworked_user ($id_user_show, $year). "</td><td>".lang_string("Days worked");
+    echo return_daysworked_user ($id_user_show, $year). "</td><td>".lang_string("Days worked (projects)");
+
+    echo "<td style='background-color: #FF7BFE;'>";
+    echo return_daysworked_incident_user ($id_user_show, $year). "</td><td>".lang_string("Days worked (incidents)");
 
     echo "</table>";
     
@@ -53,7 +56,7 @@
         if (fmod($ax-1,3) == 0)
             echo "<tr>";
         echo "<td valign=top>";
-        echo generate_small_work_calendar ($year, $ax, $days_f, 3, NULL, 0, "en", $id_user_show);
+        echo generate_small_work_calendar ($year, $ax, $days_f, 3, 0, "en", $id_user_show);
          
     }
     echo "</table>";

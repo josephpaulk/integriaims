@@ -1,6 +1,6 @@
 <?PHP
 
-// Integria 1.0 - http://integria.sourceforge.net
+// Integria 1.1 - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
@@ -470,9 +470,13 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	$profile = $row["id_profile"];
     $locked = $row["locked"];
 	$id_task = give_db_value ("id_task", "tworkunit_task", "id_workunit", $row["id"]);
+	if ($id_task == "")
+	    $id_incident = give_db_value ("id_incident", "tworkunit_incident", "id_workunit", $row["id"]);
     $id_group = give_db_value ("id_group", "ttask", "id", $id_task);
 	$id_project = give_db_value ("id_project", "ttask", "id", $id_task);
 	$task_title = substr(give_db_value ("name", "ttask", "id", $id_task), 0, 50);
+	if ($id_task == "")
+	    $incident_title = substr(give_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident), 0, 50);
 	$project_title = substr(give_db_value ("name", "tproject", "id", $id_project), 0, 50);
 	// Show data
 	echo "<div class='notetitle' style='height: 50px;'>"; // titulo
@@ -481,9 +485,13 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<img src='images/avatars/".$avatar."_small.png'>";
 	
 	echo "<td width='60%'><b>";
-	echo lang_string ("task")." </b> : ";
-	echo $task_title;
-
+	if ($id_task != ""){
+    	echo lang_string ("task")." </b> : ";
+    	echo $task_title;
+    } else  {
+    	echo lang_string ("incident")." </b> : ";
+        echo $incident_title;
+    }
 	echo "<td width='13%'><b>";
 	echo lang_string ("duration")."</b>";
 
@@ -492,10 +500,15 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 
 	echo "<tr>";
-	echo "<td><b>";
-	echo lang_string ("project")." </b> : ";
-	echo $project_title;
-
+    echo "<td><b>";
+	if ($id_task != ""){	
+	    echo lang_string ("project")." </b> : ";
+	    echo $project_title;
+    } else {
+        echo lang_string ("group")."</b> : ";
+        echo dame_nombre_grupo (give_db_sqlfree_field ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident"));
+    }
+    
 	echo "<td><b>";
 	
 	if ($have_cost != 0){
@@ -541,10 +554,16 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<td valign='top'>";
 	echo "<table width='100%'  border=0 cellpadding=0 cellspacing=0>";
 	
+	
+	if ($id_project > 0)
+	    $myurl = "index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task";
+    else
+        $myurl = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user";
+	
 	if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"]) OR  (give_acl($config["id_user"], $id_group, "TM")) ) {	
 		echo "<tr><td align='right'>";
 		echo "<br>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&operation=delete'><img src='images/cross.png' border='0'></a>";
+		echo "<a href='$myurl&id_workunit=$id_workunit&operation=delete'><img src='images/cross.png' border='0'></a>";
 	}
 
     // Edit workunit
@@ -559,7 +578,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == 0) ) { 
 		echo "<tr><td align='right'>";
 		echo "<br>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&operation=lock'><img border=0 src='images/lock.png'></a>";
+		echo "<a href='$myurl&id_workunit=$id_workunit&operation=lock'><img border=0 src='images/lock.png'></a>";
 		echo "</td>";
 	} 
   	echo "</tr></table>";

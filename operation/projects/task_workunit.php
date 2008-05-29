@@ -140,7 +140,7 @@ if ($id_task != -1){
 			ORDER BY tworkunit.timestamp DESC";
 	echo "<h3>".$lang_label["workunit_resume"];
 	echo " - ".$project_name." - ".$task_name."</h3>";
-}
+} 
 
 // Whole project
 if ($id_task == -1){
@@ -152,6 +152,14 @@ if ($id_task == -1){
 			ORDER BY tworkunit.timestamp DESC";
 	echo "<h3>".$lang_label["workunit_resume"];
 	echo " - ".$project_name." - ". lang_string ("all_tasks")."</h3>";
+}
+
+if ($id_project = -1){
+	$sql= "SELECT tworkunit.id, tworkunit.id_user 
+			FROM tworkunit, tworkunit_task 
+			WHERE tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id AND 
+			      tworkunit.id_user = '".$config["id_user"]."' ORDER BY tworkunit.timestamp DESC";
+
 }
 
 // Get project for this 

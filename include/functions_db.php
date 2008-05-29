@@ -1,6 +1,6 @@
 <?php
 
-// Integria 1.0 - http://integria.sourceforge.net
+// Integria 1.1 - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
@@ -30,7 +30,7 @@ function give_acl($id_user, $id_group, $access){
 
 		UM - User Management
 		DM - DB Management
-		FM - Frits management
+		FM - Integria management
 
 		AR - Agenda read
 		AW - Agenda write
@@ -308,20 +308,6 @@ function dame_nombre_grupo ($id){
 	return $pro;
 } 
 
-// --------------------------------------------------------------- 
-// This function return group_id given an agent_id
-// --------------------------------------------------------------- 
-
-function dame_id_grupo($id_agente){
-	require("config.php");
-	$query1="SELECT * FROM tagente WHERE id_agente =".$id_agente;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$pro=$rowdup["id_grupo"];
-	}
-	else $pro = "";
-	return $pro;
-} 
 
 
 // --------------------------------------------------------------- 
@@ -1030,7 +1016,7 @@ function delete_task ($id_task){
 	mysql_query($query);
 }
 
-function mail_project ($mode, $id_user, $id_workunit, $id_task) {
+function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg = "") {
     global $config;
 
     $workunit = give_db_row ("tworkunit", "id", $id_workunit);
@@ -1062,7 +1048,11 @@ Task ".$task["name"]." of project ".$project["name"]." has been updated by user 
 Task ".$task["name"]." of project ".$project["name"]." has been updated by user $id_user, a workunit has been updated. You could track this workunit in the following URL (need to use your credentials): $url\n\n";
         $subject = "[".$config["sitename"]."] A workunit has been updated in task '$task_name'";
         break;
-    }    
+    }
+    
+if ($additional_msg != "")
+    $text .= "\n\n$additional_msg\n\n";
+    
 $text .= "
 ---------------------------------------------------[INFORMATION]-----
 DATE / TIME : $current_timestamp
@@ -1351,6 +1341,12 @@ function return_vacations_user ($id_user, $year){
 function return_daysworked_user ($id_user, $year) {
     global $config;
     $hours = give_db_sqlfree_field ("SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59'");
+    return format_numeric ($hours/$config["hours_perday"]);
+}
+
+function return_daysworked_incident_user ($id_user, $year) {
+    global $config;
+    $hours = give_db_sqlfree_field ("SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident > 0 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59'");
     return format_numeric ($hours/$config["hours_perday"]);
 }
 

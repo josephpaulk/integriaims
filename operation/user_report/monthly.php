@@ -1,5 +1,5 @@
 <?PHP
-// Integria 1.0 - http://integria.sourceforge.net
+// Integria 1.1 - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
@@ -22,7 +22,8 @@ if (check_login() != 0) {
 
 $id_grupo = give_parameter_get ("id_grupo",0);
 $id_user=$config['id_user'];
-if (give_acl($id_user, $id_grupo, "PR") != 1){
+
+if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo, "IR") != 1)){
  	// Doesn't have access to this page
 	audit_db($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to user report without projects rights");
 	include ("general/noaccess.php");

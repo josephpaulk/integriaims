@@ -25,7 +25,7 @@
 
 	$id_workunit = give_parameter_get ("id_workunit", -1);
 	$id = give_parameter_get ("id");
-	
+	$operation = give_parameter_get ("operation");
 	if (($id != "") && ($id != $id_user)) {
 		if (give_acl($id_user, 0, "PW"))
 			$id_user = $id;
@@ -39,6 +39,35 @@
 
 	$timestamp_l = give_parameter_get ("timestamp_l");
 	$timestamp_h = give_parameter_get ("timestamp_h");
+
+    // ---------------
+    // DELETE Workunit
+    // ---------------
+
+    if ($operation == "delete"){
+	    // Delete workunit with ACL / Project manager check
+	    $id_workunit = give_parameter_get ("id_workunit");
+	    $sql = "SELECT * FROM tworkunit WHERE id = $id_workunit";
+	    if ($res = mysql_query($sql)) 
+		    $row=mysql_fetch_array($res);
+	    else
+		    return;
+		
+	    $id_user_wu = $row["id_user"];
+	    if (($id_user_wu == $config["id_user"]) OR (give_acl($config["id_user"], 0,"PM") ==1 ) OR (project_manager_check($id_project) == 1)){
+		    mysql_query ("DELETE FROM tworkunit where id = '$id_workunit'");
+		    if (mysql_query ("DELETE FROM tworkunit_task where id_workunit = '$id_workunit'")){
+				    $result_output = "<h3 class='suc'>".$lang_label["delete_ok"]."</h3>";
+				    audit_db ($id_user, $config["REMOTE_ADDR"], "Work unit deleted", "Workunit for $id_user");
+		    } else {
+			    $result_output = "<h3 class='error'>".$lang_label["delete_no"]."</h3>";
+		    }
+	    } else {
+		    audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to delete WU $id_workunit without rigths");
+		    include ("general/noaccess.php");
+		    exit;
+	    }
+    }
 
 	// --------------------
 	// Workunit report

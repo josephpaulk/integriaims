@@ -19,19 +19,23 @@ else
 
 echo "<ul>";
 
-// Project
-if ($sec == "projects" )
-	echo "<li id='current'>";
-else
-	echo "<li>";
-echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>Project</a></li>";
+if (give_acl($config["id_user"], 0, "PR") == 1){
+    // Project
+    if ($sec == "projects" )
+	    echo "<li id='current'>";
+    else
+	    echo "<li>";
+    echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>Project</a></li>";
+}
 
-// Incident
-if ($sec == "incidents" )
-	echo "<li id='current'>";
-else
-	echo "<li>";
-echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>Incidents</a></li>";
+if (give_acl($config["id_user"], 0, "IR") == 1){
+    // Incident
+    if ($sec == "incidents" )
+	    echo "<li id='current'>";
+    else
+	    echo "<li>";
+    echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>Incidents</a></li>";
+}
 
 // Users
 if ($sec == "users" )
@@ -47,22 +51,26 @@ else
 	echo "<li>";
 echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>".lang_string("todo")."</a></li>";
 
-
 // Agenda
-if ($sec == "agenda" )
-	echo "<li id='current'>";
-else
-	echo "<li>";
-echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>".$lang_label["agenda"]."</a></li>";
-
-if (dame_admin($config["id_user"]) == 1){
-    // Setup
-    if ($sec == "setup" )
-        echo "<li id='current'>";
+if (give_acl($config["id_user"], 0, "AR") == 1){
+    // Agenda
+    if ($sec == "agenda" )
+	    echo "<li id='current'>";
     else
-        echo "<li>";
-    echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".lang_string ("setup")."</a></li>";
+	    echo "<li>";
+    echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>".$lang_label["agenda"]."</a></li>";
 }
+
+// Setup
+if (isset($config["id_user"]))
+	if (dame_admin($config["id_user"]) == 1){
+	    // Setup
+	    if ($sec == "setup" )
+	        echo "<li id='current'>";
+	    else
+	        echo "<li>";
+	    echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".lang_string ("setup")."</a></li>";
+	}
 
     echo "</ul>";
 ?>
