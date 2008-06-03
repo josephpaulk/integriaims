@@ -1,3 +1,12 @@
+2009-06-03 Sancho Lerena <slerena@gmail.com>
+
+	* Fixed problems editing vacations workunits. Added
+	link in montly workunit report to add spare workunit with
+	date from calendar. Fixed several problems in autologin
+	and splitted toolbox in side menu to a different file.
+	Available tasks for a given user don't show tasks from
+	disabled projects.
+
 2008-05-28 Sancho Lerena  <slerena@gmail.com>
 
 	* A lot of fixes in incident, used user/email assigment

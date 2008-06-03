@@ -24,6 +24,7 @@ if (check_login() != 0) {
 
 $id_user = $_SESSION["id_usuario"];
 $operation = give_parameter_get ("operation");
+$ahora = give_parameter_get ("givendate", date("Y-m-d H:i:s"));
 
 // -----------
 // Workunit
@@ -102,7 +103,6 @@ if ($operation == "addworkunit"){
 // --------------------
 if ($operation != "create"){
 
-	$ahora = date("Y-m-d H:i:s");
 	echo "<h3><img src='images/award_star_silver_1.png'> ";
 	echo $lang_label["add_spare_workunit"]."</h3>";
 	

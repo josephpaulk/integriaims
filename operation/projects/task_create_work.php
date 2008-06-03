@@ -16,7 +16,8 @@ $id_workunit = give_parameter_get ("id_workunit", -1);
 $id_task = give_parameter_get ("id_task", -1);
 $task_name = give_db_value ("name", "ttask", "id", $id_task);
 
-if (($id_project != -1) && ($id_workunit != -1)){
+//if (($id_project != -1) && ($id_workunit != -1)) OR ($id_workunit {
+if ($id_workunit != -1){
 	$row = give_db_row ("tworkunit", "id", $id_workunit);
 	$id_user = $row["id_user"];
 	$duration =$row["duration"]; 

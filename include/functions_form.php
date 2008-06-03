@@ -349,7 +349,7 @@ function combo_task_user_participant ($id_user, $show_vacations = 0, $actual = 0
 		}
 	} 
 	echo "<option value='0'>".$lang_label["N/A"];
-	$sql = "SELECT DISTINCT (ttask.id) FROM ttask, trole_people_task WHERE ttask.id = trole_people_task.id_task AND trole_people_task.id_user = '$id_user' ORDER BY ttask.id_project";
+	$sql = "SELECT DISTINCT (ttask.id) FROM ttask, trole_people_task, tproject WHERE ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.id = trole_people_task.id_task AND trole_people_task.id_user = '$id_user' ORDER BY ttask.id_project";
 	$result = mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
 		$id = $row[0];

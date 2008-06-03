@@ -214,7 +214,8 @@ $clean_output = give_parameter_get ("clean_output",0);
 		
 			<div id="content-wrap">  
 				<div id="sidebar">
-				<?php require("operation/side_menu.php"); ?>	
+				<?php require("operation/side_menu.php"); ?>
+				<?php require("operation/tool_menu.php"); ?>
 				</div>
 		
 				<div id="main"> 

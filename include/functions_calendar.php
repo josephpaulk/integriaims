@@ -322,7 +322,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
             $calendar .= "<td valign='top' style='background: #e9e9e5; height: 70px; width: 70px;' >";
             
         }
-		$calendar .=  "<b>$day</b><br><br>";
+		$calendar .=  "<b><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit&givendate=$year-$month-$day'>$day</A</b><br><br>";
 
 		$mysql_time= "";
 		$event_string = "";

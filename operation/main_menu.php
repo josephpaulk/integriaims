@@ -17,6 +17,9 @@ if (isset($_GET["sec"]))
 else
 	$sec = "";
 
+if (!isset($config["id_user"]))
+	return;
+
 echo "<ul>";
 
 if (give_acl($config["id_user"], 0, "PR") == 1){
