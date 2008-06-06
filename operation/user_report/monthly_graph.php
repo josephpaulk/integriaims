@@ -68,6 +68,7 @@ if ($next_month == 13){
 $day = date('d', strtotime("now"));
 
 $from_one_month = "$prev_year-$prev_month-$day";
+$next_one_month = "$next_year-$next_month-$day";
 
 echo "<h1>".lang_string("Monthly report for")." $id_user</h1>";
 echo "<h3>".$year."/".$month."</h3>";

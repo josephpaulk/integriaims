@@ -133,7 +133,7 @@ if (isset($result_output))
 
 
 // Specific task
-if ($id_task != -1){ 
+if ($id_task != 0){ 
 	$sql= "SELECT tworkunit.id, tworkunit.id_user 
 			FROM tworkunit, tworkunit_task 
 			WHERE tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id
@@ -143,7 +143,7 @@ if ($id_task != -1){
 } 
 
 // Whole project
-if ($id_task == -1){
+elseif ($id_project != 0){
 	$sql= "SELECT tworkunit.id, tworkunit.id_user 
 			FROM tworkunit, tworkunit_task, ttask 
 			WHERE tworkunit_task.id_task = ttask.id AND
@@ -153,7 +153,7 @@ if ($id_task == -1){
 	echo "<h3>".$lang_label["workunit_resume"];
 	echo " - ".$project_name." - ". lang_string ("all_tasks")."</h3>";
 }
-
+/*
 if ($id_project = -1){
 	$sql= "SELECT tworkunit.id, tworkunit.id_user 
 			FROM tworkunit, tworkunit_task 
@@ -161,7 +161,7 @@ if ($id_project = -1){
 			      tworkunit.id_user = '".$config["id_user"]."' ORDER BY tworkunit.timestamp DESC";
 
 }
-
+*/
 // Get project for this 
 //if ($id_task != -1){
 //	$id_project = give_db_value ("id_project", "ttask", "id", $id_task);

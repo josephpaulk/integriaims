@@ -511,7 +511,13 @@ function working_weeks_combo () {
         $full_weeks = ceil ($d_daysinmonth / 7);
         $d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));     // FIRST falls on what day of week (0-6)
         $ajuste = $d_firstdow -1;
-        $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
+	if ($ajuste >= 0)
+	        $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
+	else {
+        	$ajuste = $ajuste * -1;
+        	$new_date = date('Y-m-d', strtotime("$year-$month-01 + $ajuste days"));
+    	}
+
         echo '<select name="working_week">';
         for ($ax=0; $ax < $full_weeks; $ax++){
                 echo "<option>".date('Y-m-d', strtotime($new_date. "+ $ax week"));
@@ -529,7 +535,12 @@ function first_working_week (){
     $full_weeks = ceil ($d_daysinmonth / 7);
     $d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));     // FIRST falls on what day of week (0-6)
     $ajuste = $d_firstdow -1;
-    $new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
+    if ($ajuste >= 0)
+	$new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
+    else {
+	$ajuste = $ajuste * -1;
+	$new_date = date('Y-m-d', strtotime("$year-$month-01 + $ajuste days"));
+    }
     return $new_date;
 }
 

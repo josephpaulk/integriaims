@@ -66,14 +66,16 @@ function graph_workunit_task ($width, $height, $id_task){
 // Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
 // ===============================================================================
 
-function graph_workunit_user ($width, $height, $id_user, $date_from){
+function graph_workunit_user ($width, $height, $id_user, $date_from ){
     require ("../include/config.php");
     require ("../include/functions_db.php");
+    $date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
     $res = mysql_query("SELECT SUM(duration), id_task, timestamp, ttask.name, tproject.name 
                     FROM tworkunit, tworkunit_task, ttask, tproject  
                     WHERE tworkunit.id_user = '$id_user' AND 
                     tworkunit.id = tworkunit_task.id_workunit AND 
                     tworkunit.timestamp > '$date_from' AND 
+		    tworkunit.timestamp < '$date_to' AND
                     tworkunit_task.id_task = ttask.id AND
                     tproject.id = ttask.id_project 
                     GROUP BY id_task ORDER BY SUM(duration) DESC");
@@ -97,15 +99,16 @@ function graph_workunit_user ($width, $height, $id_user, $date_from){
 function graph_workunit_project_user ($width, $height, $id_user, $date_from){
     require ("../include/config.php");
     require ("../include/functions_db.php");
+    $date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
     $res = mysql_query("SELECT SUM(duration), tproject.name 
                     FROM tworkunit, tworkunit_task, ttask, tproject  
                     WHERE tworkunit.id_user = '$id_user' AND 
                     tworkunit.id = tworkunit_task.id_workunit AND 
                     tworkunit.timestamp > '$date_from' AND 
+		    tworkunit.timestamp < '$date_to' AND
                     tworkunit_task.id_task = ttask.id AND
                     tproject.id = ttask.id_project 
                     GROUP BY tproject.name ORDER BY SUM(duration) DESC");
-
     while ($row=mysql_fetch_array($res)){
         $data[] = $row[0];
         $legend[] = $row[1] ." (".$row[0].")";

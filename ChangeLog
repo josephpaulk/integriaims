@@ -1,3 +1,19 @@
+2009-06-06 Sancho Lerena <slerena@gmail.com>
+
+	* user_task_assigment.php: Better layout, links to task
+	also show ONLY unfinished tasks and show progress.
+
+	* task_workunit.php: Fixed problem viewing specific task
+	or project WU in list mode.
+
+	* include/functions_graph.php,
+	* user_report/monthly_graph.php: Graph was not working fine
+	now shows only current - 30 days (one month) and do not show
+	data from the future.
+
+	* include/functions_calendar.php: Fixed problem calculating
+	weeks (Julia detected this bug some time ago).
+
 2009-06-03 Sancho Lerena <slerena@gmail.com>
 
 	* Fixed problems editing vacations workunits. Added
