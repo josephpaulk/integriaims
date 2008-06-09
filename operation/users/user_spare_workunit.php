@@ -71,8 +71,6 @@ if ($operation == "addworkunit"){
 	                $result_output = "<h3 class='error'>".$lang_label["workunit_no"]."</h3>";
             }
         }
-        audit_db ($id_user, $config["REMOTE_ADDR"], "(Multiple) Spare work unit added", 
-                                    "Workunit for $id_user added to Task ID #$task");
         mail_project (0, $id_user, $id_workunit, $task, "This is part of a multi-workunit assigment of $duration hours");
     
     // Single day workunit
@@ -94,6 +92,7 @@ if ($operation == "addworkunit"){
     	} else 
     		$result_output = "<h3 class='error'>".$lang_label["workunit_no"]."</h3>";
 	}
+    insert_event ("PWU INSERT", $task, 0, $description);
 	echo $result_output;
     		
 }

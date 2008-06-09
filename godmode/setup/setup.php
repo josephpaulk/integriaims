@@ -1,6 +1,6 @@
 <?php 
 
-// Integria 1.0 - http://integria.sourceforge.net
+// Integria 1.1 - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
@@ -14,7 +14,6 @@
 // GNU General Public License for more details.
 
 // Load global vars
-
 global $config;
 
 if (check_login() != 0) {
@@ -29,12 +28,13 @@ if (dame_admin($config["id_user"]) == 0){
     exit;
 }
 
-if (isset($_GET["update"])){
-	$block_size=$_POST["block_size"];
-	$language_code=$_POST["language_code"];
-	
-	$result2=mysql_query("UPDATE tconfig SET VALUE='".$config["block_size"]."' WHERE TOKEN='block_size'");
-	$result2=mysql_query("UPDATE tconfig SET VALUE='".$config["language_code"]."' WHERE TOKEN='language_code'");
+$update = get_parameter ("update",0);
+
+if ($update == 1){
+	$config["block_size"] = get_parameter ("block_size",20);
+	$config["language_code"] = get_parameter ("language_code", "en");
+	$result2 = mysql_query("UPDATE tconfig SET VALUE='".$config["block_size"]."' WHERE TOKEN='block_size'");
+	$result2 = mysql_query("UPDATE tconfig SET VALUE='".$config["language_code"]."' WHERE TOKEN='language_code'");
 }	
 
 echo "<h2>".$lang_label["setup_screen"]."</h2>";

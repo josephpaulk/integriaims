@@ -42,6 +42,10 @@ function give_acl($id_user, $id_group, $access){
 
 		TR - Task read
 		TM - Task management
+
+        KR - Knowledge Base READ
+        KW - Knowledge Base WRITE
+        KM - Knowledge Base Manage
 	*/
 
 	global $config;
@@ -78,7 +82,12 @@ function give_acl($id_user, $id_group, $access){
 					case "PW": $result = $result + $rowq2["pw"]; break;
 					case "TW": $result = $result + $rowq2["tw"]; break;
 					case "TM": $result = $result + $rowq2["tm"]; break;
-                    default : $result = $rowq2["tm"] + $rowq2["tw"] + $rowq2["pw"] + $rowq2["pm"] + $rowq2["pr"]+ $rowq2["um"]+ $rowq2["dm"] + $rowq2["fm"] + $rowq2["am"] + $rowq2["aw"] + $rowq2["ar"] + $rowq2["im"] +$rowq2["iw"] + $rowq2["ir"];
+					case "KR": $result = $result + $rowq2["kr"]; break;
+					case "KW": $result = $result + $rowq2["kw"]; break;
+					case "KM": $result = $result + $rowq2["km"]; break;
+
+
+                    default : $result = $rowq2["tm"] + $rowq2["tw"] + $rowq2["pw"] + $rowq2["pm"] + $rowq2["pr"]+ $rowq2["um"]+ $rowq2["dm"] + $rowq2["fm"] + $rowq2["am"] + $rowq2["aw"] + $rowq2["ar"] + $rowq2["im"] +$rowq2["iw"] + $rowq2["ir"] + $rowq2["kr"] + $rowq2["kw"] + $rowq2["km"] ;
 				}
 			} 
 		}
@@ -1348,6 +1357,82 @@ function return_daysworked_incident_user ($id_user, $year) {
     global $config;
     $hours = give_db_sqlfree_field ("SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident > 0 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59'");
     return format_numeric ($hours/$config["hours_perday"]);
+}
+
+function create_ical ( $date_from, $duration, $id_user, $title, $description ){
+	require("config.php");
+
+    $date_from_date = date('Ymd', strtotime("$date_from"));
+    $date_from_time = date('His', strtotime("$date_from"));
+    $date_to_date = date('Ymd', strtotime("$date_from + $duration hours"));
+    $date_to_time = date('His', strtotime("$date_from + $duration hours"));
+    
+    // Define the file as an iCalendar file
+    $output = "Content-Type: text/Calendar\n";
+    // Give the file a name and force download
+    $output .= "Content-Disposition: inline; filename=$id_user.ics\n";
+
+    // Header of ics file
+    $output .= "BEGIN:VCALENDAR\n";
+    $output .= "VERSION:2.0\n";
+    $output .= "PRODID:Integria\n";
+    $output .= "METHOD:REQUEST\n";
+    $output .= "BEGIN:VEVENT\n";
+    $output .= "DTSTART:".$date_from_date."T".$date_from_time."\n";
+    $output .= "DTEND:".$date_to_date."T".$date_to_time."\n";
+    $output .= "DESCRIPTION:";
+    $description = str_replace(chr(13).chr(10),"  ", $description);
+    $output .= $description."\n";
+    $output .=  "SUMMARY:$title\n";
+    $output .=  "UID:$id_user\n";
+    $output .=  "SEQUENCE:0\n";
+    $output .=  "DTSTAMP:".date('Ymd').'T'.date('His')."\n";
+    $output .=  "END:VEVENT\n";
+    $output .=  "END:VCALENDAR\n";
+
+    return $output;
+}
+
+function email_attach ( $name, $email, $from, $subject, $fileatt, $fileatttype, $texto ){
+    $to = "$name <$email>";
+    $fileattname = "$fileatt";
+    $headers = "From: $from";
+    $file = fopen( $fileatt, 'rb' ); 
+    $data = fread( $file, filesize( $fileatt ) ); 
+    fclose( $file );
+    $semi_rand = md5( time() ); 
+    $mime_boundary = "==Multipart_Boundary_x{$semi_rand}x"; 
+
+    $headers .= "\nMIME-Version: 1.0\n" . 
+                "Content-Type: multipart/mixed;\n" . 
+                " boundary=\"{$mime_boundary}\"";
+
+    $message = "This is a multi-part message in MIME format.\n\n" . 
+            "--{$mime_boundary}\n" . 
+            "Content-Type: text/plain; charset=\"iso-8859-1\"\n" . 
+            "Content-Transfer-Encoding: 7bit\n\n" . 
+            $texto . "\n\n";
+
+    $data = chunk_split( base64_encode( $data ) );
+    $message .= "--{$mime_boundary}\n" . 
+             "Content-Type: {$fileatttype};\n" . 
+             " name=\"{$fileattname}\"\n" . 
+             "Content-Disposition: attachment;\n" . 
+             " filename=\"{$fileattname}\"\n" . 
+             "Content-Transfer-Encoding: base64\n\n" . 
+             $data . "\n\n" . 
+             "--{$mime_boundary}--\n"; 
+    $message .= "\n".$texto;
+    mail( $to, $subject, $message, $headers );
+}
+
+function insert_event ($type, $id1 = 0, $id2 = 0, $id3 = 0){
+   	require("config.php");
+    $timestamp = date('Y-m-d H:i:s');
+
+    $sql = "INSERT INTO tevent (type, id_user, timestamp, id_item, id_item2, id_item3) VALUES 
+            ('$type', '".$config["id_user"]."', '$timestamp', $id1, $id2, '$id3')";
+    mysql_query($sql);
 }
 
 ?>

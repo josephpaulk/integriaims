@@ -78,13 +78,13 @@ if ($operation == "workunit"){
 			$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($id_task, $id_workunit)";
 			if (mysql_query($sql2)){
 				$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
-				audit_db ($id_user, $config["REMOTE_ADDR"], "Work unit added", "Workunit for $id_user added to Task '$task_name'");
+                insert_event ("PWU INSERT", 0, 0, $description);
 			}
             task_tracking ( $config["id_user"], $id_task, 14);
 		} else {
             mail_project (1, $id_user, $id_workunit, $id_task);
 			$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
-			audit_db ($id_user, $config["REMOTE_ADDR"], "Work unit updated", "Workunit for $id_user updated for Task '$task_name'");
+            insert_event ("PWU UPDATED", 0, 0, $description);
 		}
 	} else 
 		$result_output = "<h3 class='error'>".$lang_label["workunit_no"]."</h3>";

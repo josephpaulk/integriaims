@@ -22,22 +22,33 @@ if (!isset($config["id_user"]))
 
 echo "<ul>";
 
+// Projects
 if (give_acl($config["id_user"], 0, "PR") == 1){
     // Project
     if ($sec == "projects" )
 	    echo "<li id='current'>";
     else
 	    echo "<li>";
-    echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>Project</a></li>";
+    echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".lang_string("Projects")."</a></li>";
 }
 
+// Incidents
 if (give_acl($config["id_user"], 0, "IR") == 1){
     // Incident
     if ($sec == "incidents" )
 	    echo "<li id='current'>";
     else
 	    echo "<li>";
-    echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>Incidents</a></li>";
+    echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".lang_string("Incidents")."</a></li>";
+}
+
+// KB
+if (give_acl($config["id_user"], 0, "KR") == 1){
+    if ($sec == "kb" )
+	    echo "<li id='current'>";
+    else
+	    echo "<li>";
+    echo "<a href='index.php?sec=kb&sec2=operation/kb/browse'>".lang_string("kb")."</a></li>";
 }
 
 // Users
@@ -45,14 +56,14 @@ if ($sec == "users" )
 	echo "<li id='current'>";
 else
 	echo "<li>";
-echo "<a href='index.php?sec=users&sec2=operation/users/user'>Users</a></li>";
+echo "<a href='index.php?sec=users&sec2=operation/users/user'>".lang_string("Users")."</a></li>";
 
 // TODO
 if ($sec == "todo" )
 	echo "<li id='current'>";
 else
 	echo "<li>";
-echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>".lang_string("todo")."</a></li>";
+echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>".lang_string("Todo")."</a></li>";
 
 // Agenda
 if (give_acl($config["id_user"], 0, "AR") == 1){
@@ -61,7 +72,7 @@ if (give_acl($config["id_user"], 0, "AR") == 1){
 	    echo "<li id='current'>";
     else
 	    echo "<li>";
-    echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>".$lang_label["agenda"]."</a></li>";
+    echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>".lang_string("Agenda")."</a></li>";
 }
 
 // Setup

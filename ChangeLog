@@ -1,3 +1,30 @@
+
+2008-06-08  Sancho Lerena <slerena@gmail.com>
+
+    * agenda.php. Implemented autonotification by email with a ical attach.
+    added duration of event and group.
+
+    * integria_dbdata.sql: Added default profiles with KB access.
+
+    * operation/users/user_spare_workunit.php: Added event tracking.
+
+    * operation/projects/task_workunit.php: Added event tracking.
+
+    * operation/kb: Knowledgue base section. Not finished. Need many work.
+
+    * include/functions.php: Better layout for pagination.
+
+    * functions_db.php: Added function to create ical, to send email 
+    attachment and to insert generic events into event tracking system.
+
+    * godmode/setup/event.php: Event tracking view (need pagination and 
+    search filters)
+
+    * integria_db.sql: Several changes: tprofile, tagenda, added tevent, and
+    knowledge tables (tkb*). 
+
+    * Updated menus.
+
 2009-06-06 Sancho Lerena <slerena@gmail.com>
 
 	* user_task_assigment.php: Better layout, links to task

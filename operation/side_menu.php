@@ -340,6 +340,60 @@ if ($sec == "incidents"){
 
 }
 
+// KNOWLEDGE BASE (KB)
+// -=================-
+
+
+if (($sec == "kb") AND (give_acl($config["id_user"], 0, "KR"))){
+    echo "<div class='portlet'>";
+    echo "<h3>".lang_string ("Knowledge Base")."</h3>";
+    echo "<ul class='sidemenu'>";
+
+    // KB Browser
+    if ($sec2 == "operation/kb/browse") 
+	    echo "<li id='sidesel'>";
+    else	
+	    echo "<li>";
+    echo "<a href='index.php?sec=kb&sec2=operation/kb/browse'>".lang_string ("Browse")."</a></li>";
+
+    // KB Search
+    if ($sec2 == "operation/kb/search") 
+	    echo "<li id='sidesel'>";
+    else	
+	    echo "<li>";
+    echo "<a href='index.php?sec=kb&sec2=operation/kb/search'>".lang_string ("Search")."</a></li>";
+
+    if  (give_acl($config["id_user"], 0, "KW")) {
+        // KB Add
+        if ($sec2 == "operation/kb/manage_data") 
+	        echo "<li id='sidesel'>";
+        else	
+	        echo "<li>";
+        echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data'>".lang_string ("Manage KB item")."</a></li>";
+        
+        // KB Manage Cat.
+        if ($sec2 == "operation/kb/manage_cat") 
+	        echo "<li id='sidesel'>";
+        else	
+	        echo "<li>";
+        echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_cat'>".lang_string ("Manage Categories")."</a></li>";
+
+        // KB Manage Prod.
+        if ($sec2 == "operation/kb/manage_prod") 
+	        echo "<li id='sidesel'>";
+        else	
+	        echo "<li>";
+        echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_prod'>".lang_string ("Manage Products")."</a></li>";
+
+    }
+
+
+    echo "</ul>";
+    echo "</div>";
+}
+
+// TODO
+// =======
 if ($sec == "todo"){
 	echo "<div class='portlet'>";
 	echo "<h3>".$lang_label["todo"]."</h3>";
@@ -394,6 +448,13 @@ if ($sec == "godmode"){
     else    
         echo "<li>";
     echo "<a href='index.php?sec=godmode&sec2=godmode/setup/links'>".lang_string ("Links")."</a></li>";
+
+    // Event management
+    if ($sec2 == "godmode/setup/event")
+        echo "<li id='sidesel'>";
+    else    
+        echo "<li>";
+    echo "<a href='index.php?sec=godmode&sec2=godmode/setup/event'>".lang_string ("System events")."</a></li>";
 
     echo "</ul>";
     echo "</div>";

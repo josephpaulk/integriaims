@@ -172,11 +172,66 @@ function combo_users_task ($id_task, $iconic = 0){
 // ----------------------------------------------------------------------
 function combo_users_project ($id_project){
 	// Show only users assigned to this project
-	$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project";
+	$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project ORDER by parent, name";
 	$result = mysql_query($sql);
 	echo "<select name='user' style='width: 100px;'>";
 	while ($row=mysql_fetch_array($result)){
 		echo "<option value='".$row["id"]."'>".$row["id_user"]." / ".give_db_value ("name","trole","id",$row["id_role"]);
+	}
+	echo "</select>";
+}
+
+// Returns a combo with categories
+// ----------------------------------------------------------------------
+function combo_kb_categories ($id_category){
+
+	$sql = "SELECT * FROM tkb_category WHERE id != $id_category ORDER by parent, name";
+	$result = mysql_query($sql);
+	echo "<select name='category' style='width: 180px;'>";
+	if ($id_category > 0){
+        $parent = give_db_value ("parent","tkb_category","id",$id_category);
+        $parent_name = give_db_value ("name","tkb_category","id",$parent);
+        $name = give_db_value ("name","tkb_category","id",$id_category);
+        if ($parent != 0)
+            echo "<option value='".$id_category."'>".$parent_name."/".$name;
+        else        
+            echo "<option value='".$id_category."'>".$name;
+    }
+    echo "<option value=0>".lang_string("None");
+	while ($row=mysql_fetch_array($result)){
+        $parent = give_db_value ("name","tkb_category","id",$row["parent"]);
+        if ($parent != "")
+    		echo "<option value='".$row["id"]."'>".$parent . "/".$row["name"];
+        else
+    		echo "<option value='".$row["id"]."'>".$row["name"];
+	}
+	echo "</select>";
+}
+
+
+// Returns a combo with products
+// ----------------------------------------------------------------------
+function combo_kb_products ($id_product){
+
+	$sql = "SELECT * FROM tkb_product WHERE id != $id_product";
+	$result = mysql_query($sql);
+	echo "<select name='product' style='width: 180px;'>";
+	if ($id_product > 0){
+        $parent = give_db_value ("parent","tkb_product","id",$id_product);
+        $parent_name = give_db_value ("name","tkb_product","id",$parent);
+        $name = give_db_value ("name","tkb_product","id",$id_product);
+        if ($parent != 0)
+            echo "<option value='".$id_product."'>".$parent_name."/".$name;
+        else        
+            echo "<option value='".$id_product."'>".$name;
+    }
+    echo "<option value=0>".lang_string("None");
+	while ($row=mysql_fetch_array($result)){
+        $parent = give_db_value ("name","tkb_product","id",$row["parent"]);
+        if ($parent != "")
+    		echo "<option value='".$row["id"]."'>".$parent . "/".$row["name"];
+        else
+    		echo "<option value='".$row["id"]."'>".$row["name"];
 	}
 	echo "</select>";
 }

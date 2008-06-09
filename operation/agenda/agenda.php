@@ -52,19 +52,59 @@ if (give_acl($id_user, $id_grupo, "IR") != 1){
 }
 
 
-// Add item
+// Add calendar item
+// ==================
+
 if (isset($_GET["create_item"])){
 	$description = give_parameter_post ("description");
 	$time = give_parameter_post ("time");
 	$date = give_parameter_post ("date");
+	$duration = give_parameter_post ("duration",0);
+	$id_group_f = give_parameter_post ("id_group",0);
 	$public = give_parameter_post ("public",0);
 	$alarm = give_parameter_post ("alarm",0);
-	$sql1 = "INSERT INTO tagenda (public, alarm, timestamp, id_user, content) VALUES 
-			($public, '$alarm', '$date $time', '$id_user', '$description')";
+	$sql1 = "INSERT INTO tagenda (public, alarm, timestamp, id_user, content, duration, id_group) VALUES 
+			($public, '$alarm', '$date $time', '$id_user', '$description', $duration, $id_group_f)";
 	$res1=mysql_query($sql1);
+
+    $full_path = $config["homedir"]."/attachment/tmp/";
+    $ical_text = create_ical ($date." ".$time, $duration, $config["id_user"], $description, "Integria imported event: $description");
+    $full_filename_h = fopen ($full_path.$id_user.".ics", "a");
+    $full_filename = $full_path.$id_user.".ics";
+    fwrite( $full_filename_h, $ical_text);
+    fclose ($full_filename_h);
+
+    $nombre = give_db_sqlfree_field ( " SELECT nombre_real 
+        FROM tusuario WHERE id_usuario = '". $config["id_user"]."'");
+    $email = give_db_sqlfree_field ( " SELECT direccion 
+        FROM tusuario WHERE id_usuario = '". $config["id_user"]."'");
+
+    $mail_description = $config["HEADER_EMAIL"].
+    "A new entry in calendar has been created by user $id_user ($nombre)\n\n
+    Date and time: $date $time\n
+    Description  : $description\n\n".$config["FOOTER_EMAIL"];
+
+    if ($public == 1){        
+        $sql_1="SELECT nombre_real, direccion FROM tusuario, tusuario_perfil WHERE tusuario_perfil.id_grupo = $id_group_f AND tusuario_perfil.id_usuario = tusuario.id_usuario";
+        $result_1=mysql_query($sql_1);
+        while ($row_1=mysql_fetch_array($result_1)){
+            $nombre = $row[0];
+            $email = $row[1];
+            email_attach ( $nombre, $email, "integria@localhost", 
+                    "[".$config["sitename"]."] New calendar event", 
+                   $full_filename, "text/Calendar", $mail_description );
+        }
+    } else {
+        email_attach ( $nombre, $email, "integria@localhost", "[".$config["sitename"]."] New calendar event", 
+                   $full_filename, "text/Calendar", $mail_description );
+    }
+    unlink ($full_filename);
+    echo "<h3 class='suc'>".lang_string("Added event to calendar")."</h3>";
+    insert_event ("INSERT CALENDAR EVENT", 0, 0, '$description');
+
 }
 
-// Delete note
+// Delete event
 if (isset($_GET["delete_event"])){
 	$id = give_parameter_get ("delete_event",0);
 	$event_user = give_db_value ("id_user", "tagenda", "id", $id);
@@ -74,6 +114,7 @@ if (isset($_GET["delete_event"])){
 		$query = "DELETE FROM tagenda WHERE id = ".$id;
 		mysql_query($query);
 	}
+    insert_event ("DELETE CALENDAR EVENT", 0, 0, $event_user);
 }
 
 // Get parameters for actual Calendar show
@@ -159,6 +200,16 @@ echo generate_calendar_agenda ($year, $month, $days_f, 3, NULL, $locale, $pn, $i
 	echo '<td class="datos">'.$lang_label["description"].'</td>';
 	echo '<td class="datos" colspan=3><input type="text" name="description" size=45>';
 	
+
+    
+	echo '<tr><td class="datos2">'.lang_string ("Lenght (hr)").'</td>';
+	echo '<td class="datos2" colspan=3><input type="text" name="duration" size=6>';
+
+	echo '<tr><td class="datos">'.lang_string ("Group").'</td>';
+	echo '<td class="datos" colspan=3>';
+
+    echo combo_groups_visible_for_me ($id_user, "id_group", 0, 'AR', 0);
+
 	echo '<tr><td class="datos2">'.$lang_label["public"].'</td>';
 	echo '<td class="datos2"><input type="checkbox" name="public" value=1>';
 

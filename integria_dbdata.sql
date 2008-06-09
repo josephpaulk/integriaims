@@ -46,6 +46,6 @@ INSERT INTO tincident_origin (name) VALUES ('User report'), ('Customer'), ('Inte
 
 INSERT INTO `trole` VALUES (1,'Project manager','',125),(2,'Systems engineer','',40),(3,'Junior consultant','',50),(4,'Junior programmer','',45),(5,'Senior programmer','',65),(6,'Analist','',75),(7,'Senior consultant','',75),(8,'Support engineer','',30);
 
-INSERT INTO `tprofile` VALUES (1,'Project Participant',1,1,0,0,0,0,1,1,0,1,0,1,0,0),(2,'Project Manager',1,1,1,0,0,0,1,1,1,1,1,1,1,1),(3,'Incident Manager',1,1,1,0,0,0,1,1,0,0,0,0,0,0),(4,'Incident Operator',1,1,0,0,0,0,1,1,0,0,0,0,0,0),(5,'Global Manager',1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+INSERT INTO `tprofile` VALUES (1,'Project Participant',1,1,0,0,0,0,1,1,0,1,0,1,0,0,1,0,0),(2,'Project Manager',1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0),(3,'Incident Manager',1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0),(4,'Incident Operator',1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0),(5,'Global Manager',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 

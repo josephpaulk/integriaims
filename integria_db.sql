@@ -18,6 +18,7 @@ CREATE TABLE `tattachment` (
   `id_attachment` bigint(20) unsigned NOT NULL auto_increment,
   `id_incidencia` bigint(20) NOT NULL default '0',
   `id_task` bigint(20) NOT NULL default '0',
+  `id_kb` bigint(20) NOT NULL default '0',
   `id_usuario` varchar(60) NOT NULL default '',
   `filename` varchar(255) NOT NULL default '',
   `description` varchar(150) default '',
@@ -112,6 +113,9 @@ CREATE TABLE  `tprofile` (
   `pm` tinyint(1) NOT NULL default '0',
   `tw` tinyint(1) NOT NULL default '0',
   `tm` tinyint(1) NOT NULL default '0',
+  `kr` tinyint(1) NOT NULL default '0',
+  `kw` tinyint(1) NOT NULL default '0',
+  `km` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );
 
@@ -156,15 +160,6 @@ CREATE TABLE `tusuario_perfil` (
   `id_grupo` int(11) NOT NULL default '0',
   `assigned_by` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id_up`)
-);
-
-CREATE TABLE `tnews` (
-  `id_news` INTEGER UNSIGNED NOT NULL  AUTO_INCREMENT,
-  `author` varchar(255)  NOT NULL DEFAULT '',
-  `subject` varchar(255)  NOT NULL DEFAULT '',
-  `text` TEXT  NOT NULL DEFAULT '',
-  `timestamp` DATETIME  NOT NULL DEFAULT 0,
-  PRIMARY KEY(`id_news`)
 );
 
 CREATE TABLE `tincident_track` (
@@ -252,6 +247,8 @@ CREATE TABLE `tagenda` (
   `id_user` varchar(125) NOT NULL default '',
   `public` tinyint unsigned NOT NULL DEFAULT 0,
   `alarm` int(10) unsigned NOT NULL DEFAULT 0,
+  `duration` int(10) unsigned NOT NULL DEFAULT 0,
+  `id_group` int(10) NOT NULL default '0',
   `content` VARCHAR(255) DEFAULT '', 
   PRIMARY KEY  (`id`)
 );
@@ -366,12 +363,48 @@ CREATE TABLE `tgroup_manager` (
 -- incident SLA notifications, system events and more
 -- in the future.
 
-CREATE TABLE `tnotification_track` (
+CREATE TABLE `tevent` (
   `id` int(6) unsigned NOT NULL auto_increment,
   `type` varchar(250) default NULL,
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  `id_user` varchar(150) NOT NULL default '',
   `id_item` int(11) unsigned NULL default NULL,
   `id_item2` int(11) unsigned NULL default NULL,
   `id_item3` varchar(250) default NULL,
   PRIMARY KEY  (`id`)
 );
+
+
+CREATE TABLE `tkb_data` (
+  `id` int(6) unsigned NOT NULL auto_increment,
+  `title` varchar(250) default NULL,
+  `data` mediumtext NOT NULL,
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  `id_user` varchar(150) NOT NULL default '',
+  `id_product` mediumint(8) unsigned default 0,
+  `id_category` mediumint(8) unsigned default 0,
+  PRIMARY KEY  (`id`)
+);
+
+-- Product: OS, OS/Windows, OS/Windows/IE
+-- Category: Module, Plugin, Article, Howto, Workaround, Download, Patch, etc
+
+CREATE TABLE `tkb_category` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(250) default NULL,
+  `icon` varchar(75) default NULL,
+  `parent` tinyint(4) NOT NULL default '-1',
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tkb_product` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(250) default NULL,
+  `icon` varchar(75) default NULL,
+  `parent` tinyint(4) NOT NULL default '-1',
+  PRIMARY KEY  (`id`)
+);
+
+

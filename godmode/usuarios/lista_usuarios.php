@@ -29,7 +29,7 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 	// Delete user
 	// Delete cols from table tgrupo_usuario
 
-	$query_del1="DELETE FROM tgrupo_usuario WHERE usuario = '".$nombre."'";
+	$query_del1="DELETE FROM tusuario_perfil WHERE id_usuario = '".$nombre."'";
 	$query_del2="DELETE FROM tusuario WHERE id_usuario = '".$nombre."'";
 	$resq1=mysql_query($query_del1);
 	$resq1=mysql_query($query_del2);
