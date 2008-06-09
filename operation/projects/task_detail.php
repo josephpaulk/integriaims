@@ -341,7 +341,7 @@ echo "</select>";
 echo '<tr><td class="datos2" colspan="3">';
 echo '<b>'.lang_string("Description").'</b>';
 echo '<tr><td class="datos2" colspan="3">
-<textarea name="description" style="height: 200px; width: 100%;">';
+<textarea name="description" style="height: 350px; width: 100%;">';
 	echo $description;
 echo "</textarea>";
 echo "</td></tr>";

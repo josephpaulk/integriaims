@@ -118,7 +118,8 @@ $clean_output = give_parameter_get ("clean_output",0);
 				$_GET["sec"] = "general/logon_ok";
 				update_user_contact ($nick);
 				logon_db ($nick, $config["REMOTE_ADDR"]);
-				$_SESSION['id_usuario'] = $nick;				
+				$_SESSION['id_usuario'] = $nick;
+				$config["id_user"]= $nick;				
                 $prelogin_url = get_parameter ("prelogin_url", "");
                 // REDIRECT ON Different LOGIN URL
                 // Simple login URL is something like xxxxxx/index.php or simply index.php

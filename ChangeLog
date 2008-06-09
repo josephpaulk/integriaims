@@ -1,3 +1,11 @@
+2008-06-10  Sancho Lerena <slerena@gmail.com>
+
+	* index.php: Fixed problem with login, that don't fill 
+	$config["id_user"] variable at first login page.
+
+	* user_task_assigment.php: Fixed bad ACL check
+
+	* task_detail.php: Text area is now bigger
 
 2008-06-08  Sancho Lerena <slerena@gmail.com>
 
@@ -25,7 +33,7 @@
 
     * Updated menus.
 
-2009-06-06 Sancho Lerena <slerena@gmail.com>
+2008-06-06 Sancho Lerena <slerena@gmail.com>
 
 	* user_task_assigment.php: Better layout, links to task
 	also show ONLY unfinished tasks and show progress.

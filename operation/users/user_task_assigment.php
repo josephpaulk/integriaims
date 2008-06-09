@@ -18,12 +18,12 @@
 global $config;
 
 if (check_login() != 0) {
-    audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
+    audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access user task assigment view");
     require ("general/noaccess.php");
     exit;
 }
     
-if (give_acl($config["id_user"], 0, "PM") != 1){
+if (give_acl($config["id_user"], 0, "PR") != 1){
     // Doesn't have access to this page
     audit_db ($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
     include ("general/noaccess.php");
