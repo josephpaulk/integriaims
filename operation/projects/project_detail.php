@@ -229,7 +229,7 @@ echo $deviation. " ".lang_string("days");
 
 // Description
 
-echo '<tr><td class="datos2" colspan="4"><textarea name="description" rows="15" cols="90" style="height: 200px">';
+echo '<tr><td class="datos2" colspan="4"><textarea name="description" style="height: 300px; width: 720px">';
 	echo $description;
 echo "</textarea>";
 
