@@ -1015,14 +1015,26 @@ function delete_project ($id_project){
 }
 
 function delete_task ($id_task){
-	$query = "DELETE FROM trole_people_task WHERE ttask.id_task = $id_task";
-	mysql_query($query);
-	$query = "DELETE FROM ttask_track WHERE id_task = $id_task";
-	mysql_query($query);
-	$query = "DELETE FROM tworkunit_task, tworkunit WHERE tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id";
-	mysql_query($query);
-	$query = "DELETE FROM ttask WHERE id = $id_task";
-	mysql_query($query);
+
+	// Have a parent ?
+	$task = give_db_row ("ttask", "id", $id_task);
+	if ($task["id_parent_task"] > 0){
+		$query = "UPDATE tworkunit_task SET id_task = ".$task["id_parent_task"]." WHERE id_task = $id_task";
+		mysql_query($query);
+		$query = "DELETE FROM trole_people_task WHERE ttask.id_task = $id_task";
+                mysql_query($query);
+		$query = "DELETE FROM ttask WHERE id = $id_task";
+                mysql_query($query);
+	} else {
+		$query = "DELETE FROM trole_people_task WHERE ttask.id_task = $id_task";
+		mysql_query($query);
+		$query = "DELETE FROM ttask_track WHERE id_task = $id_task";
+		mysql_query($query);
+		$query = "DELETE FROM tworkunit_task, tworkunit WHERE tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id";
+		mysql_query($query);
+		$query = "DELETE FROM ttask WHERE id = $id_task";
+		mysql_query($query);
+	}
 }
 
 function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg = "") {

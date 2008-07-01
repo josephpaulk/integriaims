@@ -198,7 +198,7 @@ function show_task_tree ( $id_project, $level = 0, $parent_task = 0, $color = 0)
 	global $config;
 	$id_user = $config["id_user"];
 	// Simple query, needs to implement group control and ACL checking
-	$sql2="SELECT * FROM ttask WHERE id_project = $id_project and id_parent_task = $parent_task"; 
+	$sql2="SELECT * FROM ttask WHERE id_project = $id_project and id_parent_task = $parent_task ORDER BY name"; 
 	if ($result2=mysql_query($sql2))    
 	while ($row2=mysql_fetch_array($result2)){
 		if ($color == 1){

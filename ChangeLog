@@ -1,3 +1,10 @@
+2008-07-01  Sancho Lerena <slerena@gmail.com>
+
+	* operation/projects/task.php: Task order by name,
+
+	* include/functions_db.php: Deletion of a task: assign wu to 
+	parent task. If don't have one, delete it all.
+
 2008-06-10  Sancho Lerena <slerena@gmail.com>
 
 	* index.php: Fixed problem with login, that don't fill 
