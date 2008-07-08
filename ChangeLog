@@ -1,3 +1,23 @@
+
+2008-07-08  Sancho Lerena <slerena@gmail.com>
+
+    * setup.php, config_process.php,
+    integria_dbdata.sql: Added notification_period config token 
+
+    * event.php: Better aliment for columns.
+    
+    * integria.ico. New icon.
+
+    * functions.php: Clean input now converts all data on html
+    equivalente. function ascii_output() makes the inverse operation.
+    topi_sendmail uses ascii_output by default.
+
+    * incident.php: also shows incident creation timestamp.
+
+    * integria_cron.php: SLA enforment system. Running under a 
+    cron tasks, check that all SLA conditions are right. If not
+    send emails to each incident responsible and generate an event.
+
 2008-07-01  Sancho Lerena <slerena@gmail.com>
 
 	* operation/projects/task.php: Task order by name,

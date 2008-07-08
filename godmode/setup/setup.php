@@ -31,10 +31,12 @@ if (dame_admin($config["id_user"]) == 0){
 $update = get_parameter ("update",0);
 
 if ($update == 1){
-	$config["block_size"] = get_parameter ("block_size",20);
+	$config["block_size"] = get_parameter ("block_size", 20);
 	$config["language_code"] = get_parameter ("language_code", "en");
+	$config["notification_period"] = get_parameter ("notification_period", 86400);
 	$result2 = mysql_query("UPDATE tconfig SET VALUE='".$config["block_size"]."' WHERE TOKEN='block_size'");
 	$result2 = mysql_query("UPDATE tconfig SET VALUE='".$config["language_code"]."' WHERE TOKEN='language_code'");
+    $result2 = mysql_query("UPDATE tconfig SET VALUE='".$config["notification_period"]."' WHERE TOKEN='notification_period'");
 }	
 
 echo "<h2>".$lang_label["setup_screen"]."</h2>";
@@ -57,7 +59,11 @@ echo '</select>';
 		
 echo '<tr><td class="datos2">'.$lang_label["block_size"];
 echo '<td class="datos2"><input type="text" name="block_size" size=5 value="'.$config["block_size"].'">';
-// 
+
+echo '<tr><td class="datos">'.lang_string ("Notification period");
+echo '<td class="datos"><input type="text" name="notification_period" size=7 value="'.$config["notification_period"].'">';
+
+ 
 echo "<tr><td colspan='3' align='right'>";
 echo '<input type="submit" class="sub upd" value="'.$lang_label["update"].'">';
 echo "</table>";

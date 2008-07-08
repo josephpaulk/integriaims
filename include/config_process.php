@@ -19,6 +19,7 @@ global $config;
 $config["build"]="80603";
 $config["version"]="v1.1";
 $config["build_version"] = $config["build"];
+$config["notification_period"] = "86400";
 
 // Read remaining config tokens from DB
 if (! mysql_connect($config["dbhost"],$config["dbuser"],$config["dbpass"])){ 
@@ -46,14 +47,18 @@ mysql_select_db($config["dbname"]);
 if($result2=mysql_query("SELECT * FROM tconfig")){
     while ($row2=mysql_fetch_array($result2)){
         switch ($row2["token"]) {
-        case "language_code": $config["language_code"]=$row2["value"];
-                        break;
-        case "block_size": $config["block_size"]=$row2["value"];
-                        break;
-        case "graph_res": $config["graph_res"]=$row2["value"];
-                        break;
-        case "style": $config["style"]=$row2["value"];
-                        break;
+        case "language_code": 
+            $config["language_code"] = $row2["value"];
+			break;
+        case "block_size": 
+            $config["block_size"] = $row2["value"];
+			break;
+        case "notification_period": 
+            $config["notification_period"] = $row2["value"];
+			break;
+        case "style": 
+            $config["style"] = $row2["value"];
+			break;
         }
     }
 } else {

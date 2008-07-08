@@ -271,13 +271,12 @@ if ($row2_count[0] <= 0 ) {
 	echo "<table cellpadding=4 cellspacing=4 class='databox' width=850>";
 	echo "<tr>";
 	echo "<th>Id";
-	echo "<th>".$lang_label["incident"];
-	echo "<th>".$lang_label["group"];
-	echo "<th>".lang_string ("status")."<br>".lang_string("resolution");
-	echo "<th>".$lang_label["priority"];
-	echo "<th width=82>".$lang_label["updated_at"];
-	echo "<th width=70>".$lang_label["flags"];
-	// echo "<th>".$lang_label["assigned_to"];
+	echo "<th>". lang_string ("incident");
+	echo "<th>". lang_string ("group");
+	echo "<th>". lang_string ("status")."<br>" . lang_string("resolution");
+	echo "<th>". lang_string ("priority");
+	echo "<th width=82>".lang_string ("Updated"). "<br>". lang_string ("Started");
+	echo "<th width=70>".lang_string ("flags");
 	echo "<th>".$lang_label["delete"];
 	
 	$color = 1;
@@ -323,7 +322,7 @@ if ($row2_count[0] <= 0 ) {
 			echo "<font size=1pt><a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'><b>#".$row2["id_incidencia"]."</b></a></td>";
 
 			// Title
-			echo "<td class='$tdcolor'><a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr(clean_output ($row2["titulo"]),0,200);
+			echo "<td class='$tdcolor'><a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=".$row2["id_incidencia"]."'>".substr($row2["titulo"],0,200);
 
             // group
             echo "<td class='".$tdcolor."f9'>";
@@ -367,7 +366,10 @@ if ($row2_count[0] <= 0 ) {
 			}
 
 			// Update time
-			echo "<td class='".$tdcolor."f9'>".human_time_comparation ( $row2["actualizacion"]);
+			echo "<td class='".$tdcolor."f9'>";
+            echo human_time_comparation ( $row2["actualizacion"]);
+            echo "<br>";
+            echo human_time_comparation ( $row2["inicio"]);
 
 			// Flags
 

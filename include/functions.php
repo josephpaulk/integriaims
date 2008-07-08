@@ -14,20 +14,13 @@
 // GNU General Public License for more details.
 
 /**
-* Clean output string
+* Returns a single string with HTML characters decoded
 *
-* This function clean a user string to be rendered in HTML output.
-* This replace all conflictive characters.
-*
-* $string	string	Output string to be cleaned
+* $input    string  Input string
 */
 
-function clean_output  ($string){
-	return clean_input($string);
-}
-
-function salida_ascii ($string){
-	$texto_ok = htmlspecialchars($string, ENT_QUOTES, "UTF-8");
+function ascii_output ($string){
+	$texto_ok = htmlspecialchars_decode($string);
 	return $texto_ok;
 }
 
@@ -40,12 +33,21 @@ function salida_ascii ($string){
 *
 * $text	string	Inputstring to be cleaned*/
 
-
 function clean_input ($texto){
-return $texto;
 	$filtro0 = utf8_decode($texto);
 	$filtro1 =  htmlentities($filtro0, ENT_QUOTES); 
 	return $filtro1;							
+}
+
+/**
+* Returns a single string replacing new lines for <br> HTML tag
+*
+* $input    string  Input string
+*/
+
+function clean_output_breaks ($string){
+	$myoutput = clean_input($string);
+	return preg_replace ('/\n/',"<br>", $myoutput);
 }
 
 /**
@@ -281,11 +283,7 @@ function format_numeric ( $number, $decimals=1, $dec_point=".", $thousands_sep="
 }
 
 
-function clean_output_breaks ($string){
-	//$myoutput = clean_output ($string);
-	$myoutput = clean_input($string);
-	return preg_replace ('/\n/',"<br>", $myoutput);
-}
+
 
 function lang_string ($string){
 	global $config;
@@ -293,7 +291,6 @@ function lang_string ($string){
 	if (isset ($lang_label[$string]))
 		return $lang_label[$string];
 	else
-		// return "[".$string."]";
         return $string;
 }
 
@@ -313,6 +310,8 @@ function render_priority ($pri){
 function topi_sendmail ( $destination, $msg_subject = "[INTEGRIA] Automatic email notification", $msg_text) {
 	global $config;
 	if ($destination != ""){
+        $msg_text = ascii_output ($msg_text);
+        $msg_subject = ascii_output ($msg_subject);
 		$real_text = $config["HEADER_EMAIL"].$msg_text."\n\n".$config["FOOTER_EMAIL"];
 		mail ($destination, $msg_subject, $real_text);
 	}
