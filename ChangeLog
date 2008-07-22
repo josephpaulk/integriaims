@@ -1,3 +1,7 @@
+2008-07-22  Sancho Lerena <slerena@gmail.com>
+
+	* include/functions_form.php: Fixed problem adding
+	people to tasks.
 
 2008-07-08  Sancho Lerena <slerena@gmail.com>
 

@@ -172,7 +172,7 @@ function combo_users_task ($id_task, $iconic = 0){
 // ----------------------------------------------------------------------
 function combo_users_project ($id_project){
 	// Show only users assigned to this project
-	$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project ORDER by parent, name";
+	$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project ORDER by id_user";
 	$result = mysql_query($sql);
 	echo "<select name='user' style='width: 100px;'>";
 	while ($row=mysql_fetch_array($result)){
