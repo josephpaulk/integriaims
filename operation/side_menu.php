@@ -356,13 +356,6 @@ if (($sec == "kb") AND (give_acl($config["id_user"], 0, "KR"))){
 	    echo "<li>";
     echo "<a href='index.php?sec=kb&sec2=operation/kb/browse'>".lang_string ("Browse")."</a></li>";
 
-    // KB Search
-    if ($sec2 == "operation/kb/search") 
-	    echo "<li id='sidesel'>";
-    else	
-	    echo "<li>";
-    echo "<a href='index.php?sec=kb&sec2=operation/kb/search'>".lang_string ("Search")."</a></li>";
-
     if  (give_acl($config["id_user"], 0, "KW")) {
         // KB Add
         if ($sec2 == "operation/kb/manage_data") 

@@ -12,31 +12,18 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-global $config;
+	global $config;
+	
+	check_login();
+	
+	if (give_acl($config["id_user"], 0, "KM")==0) {
+		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access KB Management");
+		require ("general/noaccess.php");
+		exit;
+	}
+	
+	$id_user = $config["id_user"];
 
-check_login();
-
-if (give_acl($config["id_user"], 0, "KM")==0) {
-    audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access KB Management");
-    require ("general/noaccess.php");
-    exit;
-}
-
-$id_user = $config["id_user"];
-
-/*
-
-CREATE TABLE `tkb_data` (
-  `id` int(6) unsigned NOT NULL auto_increment,
-  `title` varchar(250) default NULL,
-  `data` mediumtext NOT NULL,
-  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
-  `id_user` varchar(150) NOT NULL default '',
-  `id_attachment` bigint(20) unsigned default 0,  
-  `id_product` mediumint(8) unsigned default 0,
-  `id_category` mediumint(8) unsigned default 0,
-
-*/
 
     // Database Creation
     // ==================
@@ -59,12 +46,26 @@ CREATE TABLE `tkb_data` (
         
 	}
 
+	// Attach DELETE
+	// ==============
+	if (isset($_GET["delete_attach"])){
+		$id_attachment = get_parameter ("delete_attach", 0);
+		$id_kb = get_parameter ("update", 0);
+		$attach_row = give_db_row ("tattachment", "id_attachment", $id_attachment);
+		$nombre_archivo = $config["homedir"]."attachment/".$id_attachment."_".$attach_row["filename"];	
+		$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
+		mysql_query($sql);
+		unlink ($nombre_archivo);
+		insert_event ("KB ITEM UPDATED", $id_kb, 0, "File ".$attach_row["filename"]." deleted");
+		echo "<h3 class='suc'>".lang_string ("Attach deleted ok")."</h3>";
+		unset ($id_kb);
+	}
 
     // Database UPDATE
     // ==================
 	if (isset($_GET["update2"])){ // if modified any parameter
         $id = get_parameter ("id","");
-		        $timestamp = date('Y-m-d H:i:s');
+        $timestamp = date('Y-m-d H:i:s');
 		$title = get_parameter ("title","");
         $data = get_parameter ("data",0);
         $id_product = get_parameter ("product","");
@@ -82,24 +83,61 @@ CREATE TABLE `tkb_data` (
 			echo "<h3 class='suc'>".lang_string ("KB data item updated ok")."</h3>";
             insert_event ("KB ITEM UPDATED", $id, 0, $title);
         }
-	}
 
+		if ( $_FILES['userfile']['name'] != "" ){ //if file
+			$tipo = $_FILES['userfile']['type'];
+			// Insert into database
+			$filename = $_FILES['userfile']['name'];
+			$filesize = $_FILES['userfile']['size'];
+
+			$attach_description = get_parameter ("attach_description");
+
+			$sql = "INSERT INTO tattachment (id_kb, id_usuario, filename, description, size ) VALUES (".$id.", '".$config["id_user"]. "','".$filename."','$attach_description', $filesize )";
+
+			mysql_query($sql);
+			$id_attachment=mysql_insert_id();
+			$result_msg = "<h3 class='suc'>".$lang_label["file_added"]."</h3>";
+			// Copy file to directory and change name
+			$nombre_archivo = $config["homedir"]."attachment/".$id_attachment."_".$filename;
+
+			if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo ))){
+				$result_msg = "<h3 class=error>".$lang_label["attach_error"]."</h3>";
+				$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
+				mysql_query($sql);
+				unlink ($_FILES['userfile']['tmp_name']);
+			} else {
+				// Delete temporal file
+				insert_event ("KB ITEM UPDATED", $id, 0, "File $filename added");
+			}
+			echo $result_msg;
+
+		}	
+	}
 
     // Database DELETE
     // ==================
 	if (isset($_GET["delete_data"])){ // if delete
         $id = get_parameter ("delete_data",0);
-		
-		// First delete from tagente_modulo
-		$sql_delete= "DELETE FROM tkb_data WHERE id = $id";
+		$kb_title = give_db_sqlfree_field  ("SELECT title FROM tkb_data WHERE id = $id ");
+
+		$sql_delete= "DELETE FROM tkb_data WHERE id = $id";		
 		$result=mysql_query($sql_delete);
-		if (! $result)
-			echo "<h3 class='error'>".lang_string("Deleted successfully")."</h3>"; 
-		else
-			echo "<h3 class='suc'>".lang_string("Cannot be deteled")."</h3>";
+		
+		if ($result=mysql_query("SELECT * FROM tattachment WHERE id_kb = $id")) {
+			while ($row=mysql_fetch_array($result)){
+					$nombre_archivo = $config["homedir"]."attachment/".$row["id_attachment"]."_".$row["filename"];	
+					unlink ($nombre_archivo);
+			}
+			$sql = " DELETE FROM tattachment WHERE id_kb = ".$id;
+			mysql_query($sql);
+		}
+		insert_event ("KB ITEM DELETED", $id, 0, "Deleted KB $kb_title");
+		echo "<h3 class='error'>".lang_string("Deleted successfully")."</h3>"; 
 	}
 	
-
+	if (isset($_GET["update2"])){
+		$_GET["update"]= $id;
+	}
 
     // CREATE form
     if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
@@ -126,30 +164,37 @@ CREATE TABLE `tkb_data` (
         }
         else {
             echo "<h3>".lang_string ("Update existing KB item")."</a></h3>";
-            echo "<form name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/manage_data&update2'>";
+            echo "<form enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/manage_data&update2'>";
             echo "<input type=hidden name=id value='$id'>";
         }
         
-        echo "<table cellpadding=4 cellspacing=4 width=500 class='databox'>";
+        echo "<table cellpadding=4 cellspacing=4 width=700 class='databox'>";
         echo "<tr>";
         echo "<td class=datos>";
         echo lang_string ("Title");
         echo "<td class=datos>";
-        echo "<input type=text size=20 name='title' value='$title'>";
+        echo "<input type=text size=60 name='title' value='$title'>";
 
         echo "<tr>";
         echo "<td class=datos2>";
         echo lang_string ("Data");
         echo "<td class=datos2>";
-        echo "<textarea cols=60 rows=10 name=data>$data</textarea>";
+        echo "<textarea cols=60 rows=15 name=data>$data</textarea>";
 
         echo "<tr>";
         echo "<td class=datos>";
         echo lang_string ("Attach");
         echo "<td class=datos>";
-        if ($id = -1)
+        if ($id == -1)
             echo "<i>".lang_string ("Need to create first")."</i>";
-
+		else {
+			echo "<input type=file size=60 value='userfile' name='userfile'>";
+	        echo "<tr>";
+        	echo "<td class=datos>";
+	        echo lang_string ("Attach description");
+	        echo "<td class=datos>";
+	        echo "<input type=text size=60 name='attach_description' value=''>";
+		}
 
         echo "<tr>";
         echo "<td class=datos2>";
@@ -164,15 +209,49 @@ CREATE TABLE `tkb_data` (
         combo_kb_categories ($id_category);
 
         echo "</table>";
-        echo "<table cellpadding=4 cellspacing=4 width=500>";
+        echo "<table cellpadding=4 cellspacing=4 width=720>";
         echo "<tr>";
         echo "<td align=right>";
         if ($id == -1)
             echo "<input type=submit class='sub next' value='Create'>";
         else
             echo "<input type=submit class='sub upd' value='Update'>";
-        echo "</table></form>";
+        echo "</table>";
+		echo "</form>";
 
+		// Show list of attachments
+		$sql1 = "SELECT * FROM tattachment WHERE id_kb = $id ORDER BY description";
+    	$result = mysql_query($sql1);
+		if (mysql_num_rows($result) > 0){
+			echo "<h3>".lang_string("Attachment list")."</h3>";
+			echo "<table cellpadding=4 cellspacing=4 class=databox width=500>";		
+			$color=0;
+	     	while ($row=mysql_fetch_array($result)){
+				if ($color == 1){
+			        $tdcolor = "datos";
+			        $color = 0;
+			        }
+		        else {
+			        $tdcolor = "datos2";
+			        $color = 1;
+		        }
+				echo "<tr>";
+				echo "<td class=$tdcolor>";
+				echo "<img src='images/disk.png'>&nbsp;";
+				$attach_id = $row["id_attachment"];
+				$filelink= $config["homedir"]."attachment/".$row["id_attachment"]."_".$row["filename"];
+				echo "<a href='$filelink'>";
+				echo $row["filename"];
+				echo "</A>";
+				echo "<td class=$tdcolor>";
+				echo $row["description"];
+				echo "<td class=$tdcolor>";
+				echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=$id&delete_attach=$attach_id'><img border=0 src='images/cross.png'></A>";
+			}
+			echo "</table>";
+		}
+		// Get some space here
+		echo "<div style='min-height:50px'></div>";
     }
 
 
@@ -184,7 +263,7 @@ CREATE TABLE `tkb_data` (
 	    $sql1='SELECT * FROM tkb_data ORDER BY title, id_category, id_product';
         $color =0;
 	    if ($result=mysql_query($sql1)){
-            echo "<table cellpadding=4 cellspacing=4 width=750 class='databox'>";
+            echo "<table cellpadding=4 cellspacing=4 width=800 class='databox'>";
 
 	        echo "<th>".lang_string ("Title")."</th>";
 	        echo "<th>".lang_string ("Timestamp")."</th>";
@@ -220,7 +299,7 @@ CREATE TABLE `tkb_data` (
     
                 // Attach ?
                 echo "<td class='".$tdcolor."' align='center'>";
-                if (give_db_sqlfree_field ("SELECT count(*) FROM tattachment WHERE id_kb = ".$row["id_product"]) != 0)
+                if (give_db_sqlfree_field ("SELECT count(*) FROM tattachment WHERE id_kb = ".$row["id"]) != 0)
                     echo "<img src='images/disk.png'>";
 
                 // User
@@ -238,7 +317,7 @@ CREATE TABLE `tkb_data` (
             }
             echo "</table>";
         }			
-        echo "<table cellpadding=4 cellspacing=4 width=750>";
+        echo "<table cellpadding=4 cellspacing=4 width=820>";
 	    echo "<tr><td align='right'>";
 	    echo "<form method=post action='index.php?sec=kb&
 	    sec2=operation/kb/manage_data&create=1'>";

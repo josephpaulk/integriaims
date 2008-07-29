@@ -94,7 +94,7 @@ $id_user = $config["id_user"];
             $id = -1;
             $parent = -1;
         } else {
-            $id = get_parameter ("update",-1);
+            $id = get_parameter ("update", -1);
             $row = give_db_row ("tkb_product", "id", $id);
             $description = $row["description"];
             $name = $row["name"];
@@ -118,7 +118,7 @@ $id_user = $config["id_user"];
         echo "<td class=datos>";
         echo lang_string ("Name");
         echo "<td class=datos>";
-        echo "<input type=text size=20 name=name value='$name'>";
+        echo "<input type=text size=45 name=name value='$name'>";
 
         echo "<tr>";
         echo "<td class=datos2>";
@@ -214,11 +214,11 @@ $id_user = $config["id_user"];
             }
             echo "</table>";
         }			
-        echo "<table cellpadding=4 cellspacing=4 width=700>";
-	    echo "<tr><td align='right'>";
-	    echo "<form method=post action='index.php?sec=kb&
+	echo "<table cellpadding=4 cellspacing=4 width=700>";
+    	echo "<tr><td align='right'>";
+	echo "<form method=post action='index.php?sec=kb&
 	    sec2=operation/kb/manage_prod&create=1'>";
-	    echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create product")."'>";
+	echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create product")."'>";
 	    echo "</form></td></tr></table>";
     } // end of list
 

@@ -46,8 +46,7 @@ function clean_input ($texto){
 */
 
 function clean_output_breaks ($string){
-	$myoutput = clean_input($string);
-	return preg_replace ('/\n/',"<br>", $myoutput);
+	return preg_replace ('/\n/',"<br>", $string);
 }
 
 /**

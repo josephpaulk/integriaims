@@ -1,3 +1,18 @@
+2008-07-29  Sancho Lerena <slerena@gmail.com>
+	
+	* operation/kb/browse_data.php: New page to vide KB items.
+
+	* operation/kb/manage_prod.php: Solved some minor bugs.
+
+	* operation/kb/manage_data.php: Solved some minor bugs.
+
+	* operation/kb/browse.php: New page to browse/search
+	KB items.
+
+	* operation/side_menu.php: Delete KB Search (nosense)
+
+	* include/functions.php: Updated some functions (minor).
+
 2008-07-22  Sancho Lerena <slerena@gmail.com>
 
 	* include/functions_form.php: Fixed problem adding
