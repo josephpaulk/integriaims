@@ -13,6 +13,20 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+/* 
+
+Note about clean_input, clean_output and other string functions
+----------------------------------------------------------------
+
+ALL Data stored in database SHOULD have been parsed with clean_input() 
+to encode all conflictive characters, like <, >, & or ' and ".
+
+ALL Data used to output in a different way than HTML render, (in PDF, 
+Graphs or HTML input controls ) SHOULD parse before with clean_output() 
+to decode HTML characters.
+
+*/
+
 /**
 * Returns a single string with HTML characters decoded
 *
@@ -23,6 +37,22 @@ function ascii_output ($string){
 	$texto_ok = htmlspecialchars_decode($string);
 	return $texto_ok;
 }
+
+function clean_output ($string){
+	$texto_ok = htmlspecialchars_decode($string);
+	return $texto_ok;
+}
+
+function remove_locale_chars ($string){
+	$filtro0 = utf8_decode($string);
+	$filtro1 = str_replace ('&aacute;',"a", $filtro0);
+	$filtro2 = str_replace ('&eacute;',"e", $filtro1);
+	$filtro3 = str_replace ('&iacute;',"i", $filtro2);
+	$filtro4 = str_replace ('&oacute;',"o", $filtro3);
+	$filtro5 = str_replace ('&uacute;',"u", $filtro4);
+	$filtro6 = str_replace ('&ntilde;',"n", $filtro5);
+	return $filtro6;
+}	
 
 /**
 * Clean input text

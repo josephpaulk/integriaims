@@ -77,7 +77,7 @@ echo "<h2>".$project_name." - ".$lang_label["task_management"]."</h2>";
 // -------------
 // Show headers
 // -------------
-echo "<table width='800' class='databox'>";
+echo "<table width='90%' class='databox'>";
 echo "<tr>";
 echo "<th class='f9'>".$lang_label["name"];
 echo "<th class='f9'>".lang_string ("pri");
@@ -87,7 +87,7 @@ echo "<th class='f9'>".$lang_label["time_used"];
 echo "<th class='f9'>".lang_string ("Cost");
 echo "<th class='f9'>".$lang_label["people"];
 
-//echo "<th>".$lang_label["start"];
+echo "<th>".$lang_label["start"];
 echo "<th>".$lang_label["end"];
 echo "<th>".lang_string ("delete");
 $color = 1;
@@ -96,7 +96,7 @@ echo "</table>";
 
 
 
-if (give_acl($_SESSION["id_usuario"], 0, "IW")==1) {
+if (give_acl($config["id_user"], 0, "IW")==1) {
     echo "<form name='boton' method='POST'  action='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>";
     echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_task"]."'>";
     echo "</form>";
@@ -169,12 +169,17 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
     echo "&nbsp;";
     echo give_db_sqlfree_field ("SELECT COUNT(DISTINCT (id_user)) FROM trole_people_task WHERE id_task =".$row2["id"]);
 
+
+	// Start
+	echo "<td class='".$tdcolor."f9'>";
+	echo substr($row2["start"],0,10);
+
 	// End
 	echo "<td class='".$tdcolor."f9'>";
 	// echo substr($row2["end"],0,10);
 	$ahora=date("Y/m/d H:i:s");
     
-    $endtime = task_child_enddate ($row2["id"]);
+    $endtime = $row2["end"];
 	if ($row2["completion"] == 100){
 		echo "<font color='green'>";
 	} else {

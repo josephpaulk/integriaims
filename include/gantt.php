@@ -687,18 +687,16 @@ class gantt {
 
 		if ($this->limit['detail']=='m') {
 			$this->cell = $this->limit['cell']['m'];
-			$this->limit['start']= mktime(0,0,0,date('m',$this->limit['start']),1,date('Y',$this->limit['start']));
+//			$this->limit['start']= mktime(0,0,0,date('m',$this->limit['start']),1,date('Y',$this->limit['start']));
 
-			$this->limit['end']= mktime(0,0,0,date('m',$this->limit['end'])+1,1,date('Y',$this->limit['end']));
+			//$this->limit['end']= mktime(0,0,0,date('m',$this->limit['end'])+1,1,date('Y',$this->limit['end']));
 
 		} elseif ($this->limit['detail']=='w') {
 			$this->cell = $this->limit['cell']['w'];
 			//echo date('w',$this->limit['start']);
-			$this->limit['start']= mktime(0,0,0,date('m',$this->limit['start']),date('d',$this->limit['start'])-date('w',$this->limit['start']),date('Y',$this->limit['start']));
+			//$this->limit['start']= mktime(0,0,0,date('m',$this->limit['start']),date('d',$this->limit['start'])-date('w',$this->limit['start']),date('Y',$this->limit['start']));
 			//echo date('w',$this->limit['start']);
-			$this->limit['end']= mktime(0,0,0,date('m',$this->limit['end']),date('d',$this->limit['end'])+(6-date('w',$this->limit['end'])),date('Y',$this->limit['end']));
-
-
+			//$this->limit['end']= mktime(0,0,0,date('m',$this->limit['end']),date('d',$this->limit['end'])+(6-date('w',$this->limit['end'])),date('Y',$this->limit['end']));
 
 		}elseif ($this->limit['detail']=='d') {
 			$this->cell = $this->limit['cell']['d'];
@@ -713,15 +711,16 @@ class gantt {
 	function months($start,$end){
 		setlocale(LC_TIME,$this->definitions['locale']);
 		while( $start <= $end )	{
-			$month = strftime("%b %Y",$start);
+			$month = strftime("%b %Y", $start);
 			$months[$month] = $start;
 			$m = date("m",$start);
 			$y = date("Y",$start);
+
 			if ($m == '12') {
 				$n_m = '1';
 				$y = $y +1;
 			}else {
-				$n_m = $m +1;
+				$n_m = $m + 1;
 			}
 			//echo "$n_m / $y <br>";
 			$start = mktime(0,0,0,$n_m,1,$y);

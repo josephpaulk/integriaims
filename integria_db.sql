@@ -207,6 +207,7 @@ CREATE TABLE `ttask` (
   `priority` tinyint unsigned NOT NULL default '0',
   `dep_type` tinyint unsigned NOT NULL DEFAULT 0,
   `start` date NOT NULL default '0000-00-00',
+  `end` date NOT NULL default '0000-00-00',
   `hours` int unsigned NOT NULL DEFAULT 0,
   `estimated_cost` float (9,2) UNSIGNED NOT NULL DEFAULT 0.0,
   `id_group` int(10) NOT NULL default '0',

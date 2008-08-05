@@ -70,12 +70,13 @@ if ($operation == "insert"){
 	$completion = give_parameter_post ("completion", 0);
 	$parent = give_parameter_post ("parent", 0);
 	$start = give_parameter_post ("start_date", date("Y-m-d"));
+	$end = give_parameter_post ("end_date", date("Y-m-d"));
 	$hours = give_parameter_post ("hours", 0);
         $estimated_cost = give_parameter_post ("estimated_cost", 0);
-	$id_group = give_parameter_post ("group",1);
+	$id_group = give_parameter_post ("group", 1);
 	$sql = "INSERT INTO ttask
-			(id_project, name, description, priority, completion, start,  id_parent_task, id_group, hours, estimated_cost) VALUES
-			($id_project, '$name', '$description', '$priority', '$completion', '$start',  '$parent', $id_group, '$hours', '$estimated_cost')";
+			(id_project, name, description, priority, completion, start, end, id_parent_task, id_group, hours, estimated_cost) VALUES
+			($id_project, '$name', '$description', '$priority', '$completion', '$start',  '$end', '$parent', $id_group, '$hours', '$estimated_cost')";
 	if (mysql_query($sql)){
 		$id_task = mysql_insert_id();
 		$result_output = "<h3 class='suc'>".$lang_label["create_ok"]."</h3>";
@@ -119,6 +120,7 @@ if ($operation == "update"){
 	$completion = give_parameter_post ("completion");
 	$parent = give_parameter_post ("parent");
 	$start = give_parameter_post ("start_date");
+	$end = give_parameter_post ("end_date");
 	$hours = give_parameter_post ("hours",0);
         $estimated_cost = give_parameter_post ("estimated_cost",0);
 	$id_group = give_parameter_post ("group",1);
@@ -128,6 +130,7 @@ if ($operation == "update"){
 			priority = '$priority',
 			completion = '$completion',
 			start = '$start',
+			end = '$end',
 			hours = '$hours',
             estimated_cost = '$estimated_cost',
 			id_parent_task = '$parent',
@@ -156,16 +159,17 @@ if ($operation == "view"){
     }
 	$row=mysql_fetch_array($result);
 	// Get values
-	$name = clean_input ($row["name"]);
-	$description = $row["description"];
-	$completion = clean_input ($row["completion"]);
-	$priority = clean_input ($row["priority"]);
-	$dep_type = clean_input ($row["dep_type"]);
-	$start = clean_input ($row["start"]);
-	$estimated_cost = clean_input ($row["estimated_cost"]);
-    $hours = clean_input ($row["hours"]);
-	$parent = clean_input ($row["id_parent_task"]);
-	$id_group = clean_input ($row["id_group"]);
+	$name = clean_output ($row["name"]);
+	$description = clean_output  ($row["description"]);
+	$completion = clean_output ($row["completion"]);
+	$priority = clean_output  ($row["priority"]);
+	$dep_type = clean_output  ($row["dep_type"]);
+	$start = clean_output  ($row["start"]);
+	$end = clean_output  ($row["end"]);
+	$estimated_cost = clean_output  ($row["estimated_cost"]);
+    $hours = clean_output  ($row["hours"]);
+	$parent = clean_output  ($row["id_parent_task"]);
+	$id_group = clean_output  ($row["id_group"]);
         
 } 
 
@@ -175,8 +179,15 @@ echo $result_output;
 // Show forms
 // ********************************************************************************************************
 
-if ($operation == "create")
+if ($operation == "create"){
 	echo "<form name='projectf' method='POST' action='index.php?sec=projects&sec2=operation/projects/task_detail&operation=insert&id_project=$id_project'>";
+	$estimated_cost = 0;
+	$priority = 0;
+	$parent = 0;
+	$hours = 0;
+	$start = date("Y-m-d");
+	$end = date("Y-m-d");
+}
 else
 	echo "<form name='projectf' method='POST' action='index.php?sec=projects&sec2=operation/projects/task_detail&operation=update&id_project=$id_project&id_task=$id_task'>";
  
@@ -195,8 +206,8 @@ if ($operation != "create"){
 echo '<table border=0 width=750 class="databox_color" cellpadding=4 cellspacing=4>';
 
 // Name
-echo '<tr><td class="datos"><b>'.$lang_label["name"].'</b>';
-echo '<td class="datos"><input type="text" name="name" size=30 value="'.$name.'">';
+echo '<tr><td class="datos2"><b>'.$lang_label["name"].'</b>';
+echo '<td class="datos2"><input type="text" name="name" size=30 value="'.$name.'">';
 
 // Workunit distribution graph
 echo "<td rowspan=6>";
@@ -208,9 +219,9 @@ echo "</table>";
 
 // Parent task
 echo "<tr>";
-echo '<td class="datos2">';
+echo '<td class="datos">';
 echo "<b>".lang_string ("Parent task")."</b> ";
-echo '<td class="datos2">';
+echo '<td class="datos">';
 echo '<select name="parent">';
 
 if ($parent > 0)
@@ -225,9 +236,9 @@ while ($row=mysql_fetch_array($resq1)){
 
 // Priority
 echo "<tr>";
-echo '<td class="datos">';
+echo '<td class="datos2">';
 echo '<b>'.$lang_label["priority"].'</b>';
-echo '<td class="datos">';
+echo '<td class="datos2">';
 echo "<select name='priority'>";
 if ($priority != "")
 	echo "<option value='$priority'>".render_priority ($priority);
@@ -238,9 +249,14 @@ echo "</select>";
 
 
 // start date
-echo '<tr><td class="datos2"><b>'.$lang_label["start"].'</b>';
-echo "<td class='datos2'>";
+echo '<tr><td class="datos"><b>'.$lang_label["start"].'</b>';
+echo "<td class='datos'>";
 echo "<input type='text' id='start_date' name='start_date' size=10 value='$start'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"start_date\"),this);'> ";
+
+// end date
+echo '<tr><td class="datos2"><b>'.lang_string ("end").'</b>';
+echo "<td class='datos2'>";
+echo "<input type='text' id='end_date' name='end_date' size=10 value='$end'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"end_date\"),this);'> ";
 
 // Estimated hours
 echo '<tr><td class="datos"><b>'.lang_string ("Estimated hours").'</b>';

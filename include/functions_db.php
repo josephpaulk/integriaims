@@ -714,11 +714,10 @@ function task_start_date ($id_task){
     global $config;
     
     $taskrow =  give_db_row ("ttask", "id", $id_task);
-    $parent_row =  give_db_row ("ttask", "id", $taskrow["id_parent_task"]);
-
-    if (strtotime($parent_row["start"]) > strtotime($taskrow["start"]))
-        return $parent_row["start"];
-    else
+    //$parent_row =  give_db_row ("ttask", "id", $taskrow["id_parent_task"]);
+    //if (strtotime($parent_row["start"]) > strtotime($taskrow["start"]))
+        //return $parent_row["start"];
+    //else
         return $taskrow["start"];
 }
 

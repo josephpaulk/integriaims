@@ -1,3 +1,16 @@
+2008-08-05  Sancho Lerena <slerena@gmail.com>
+
+	* integria_db.sql: Added end field to task.
+
+	* operation/projects/task_detail.php: Added end field.
+
+	* operation/projects/gantt_graph.php: Added end field on task
+	and removed previous code to recalculate using hours assigned.
+
+	* operation/projects/task.php: Added end field.
+
+	* include/functions.php: Added functions clean_output and remove_locale_chars.
+
 2008-07-29  Sancho Lerena <slerena@gmail.com>
 	
 	* operation/kb/browse_data.php: New page to vide KB items.
