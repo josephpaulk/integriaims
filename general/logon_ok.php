@@ -20,16 +20,15 @@
 	echo $lang_label["main_text"];
 	echo "</p>";
 
-	echo "<div id='activity'>";
 	// Show last activity from this user
 	echo "<h2>" . $lang_label["user_last_activity"] . "</h2>";
 	// Show table header
-	echo '<table cellpadding="3" cellspacing="3" width="700"><tr>'; 
+	echo '<table cellpadding="3" cellspacing="3" width="740"><tr>'; 
 	echo '<th>' . $lang_label["user"] . '</th>';
 	echo '<th>' . $lang_label["action"] . '</th>';
-	echo '<th class="w130">' . $lang_label["date"] . '</th>';
+	echo '<th>' . $lang_label["date"] . '</th>';
 	echo '<th>' . $lang_label["src_address"] . '</th>';
-	echo '<th class="w200">' . $lang_label["comments"] . '</th></tr>';
+	echo '<th>' . $lang_label["comments"] . '</th></tr>';
 
 	// Skip offset records
 	$query1="SELECT * FROM tsesion WHERE (TO_DAYS(fecha) > TO_DAYS(NOW()) - 7) AND ID_usuario = '" . $nick . "' ORDER BY fecha DESC limit 15";
@@ -64,7 +63,6 @@
 	}
 
 	echo "</table>";
-	echo "</div>"; // activity
 
 	// Site news !
 	
@@ -72,7 +70,7 @@
 	$news = 0;
 	if ($result_news = mysql_query ($sql_news)){
 		echo '<h2>' . $lang_label["site_news"] . '</h2>';
-		echo '<table width="720"><tr>'; 
+		echo '<table width="700"><tr>'; 
 		while ($row = mysql_fetch_array ($result_news)) {
 			$news = 1;
 			echo '<tr><th align="left">';

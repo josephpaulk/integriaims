@@ -257,7 +257,7 @@ if ($sec == "incidents"){
 			echo "<li id='sidesel'>";
 		else	
 			echo "<li>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&insert_form'>".$lang_label["create_incident"]."</a></li";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&insert_form'>".$lang_label["create_incident"]."</a></li>";
 	}
 
 	// Incident search
@@ -502,8 +502,8 @@ echo "<div class='portlet'>";
         echo "<a href='index.php?sec=users&sec2=operation/users/user_task_assigment'>".lang_string ( "My task assigments")."</a></li>";
         
 
-	echo "</ul>";
-	echo "</div>";
+		echo "</ul>";
+		echo "</div>";
 
 	if  ((give_acl($config["id_user"], 0, "PR")) OR  (give_acl($config["id_user"], 0, "IR"))) {
 		echo "<div class='portlet'>";
@@ -607,21 +607,19 @@ $working_year = give_parameter_post ("working_year", $now_year);
 echo '
  <div class="portlet">
   <a href="javascript:;" onmousedown="toggleDiv(\'userdiv\');"><h2>'.lang_string("user_info").'</h2></a>
-  <div class="portletBody" id="userdiv">';
 
-echo "<img src='images/avatars/".$avatar."_small.png' hspace=5 align='left'>";
+  <div class="portletBody">';
+
+echo "<img src='images/avatars/".$avatar."_small.png' align='left'>";
 echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&ver='.$id_user.'">'.$id_user.'</a><br>';
 echo "<b>".$realname."</b><br>";
-echo '<b>E-mail:</b>&nbsp;
-              '.$email.'
-            <br />
-        <b>Timezone:</b>
-        Europe/Madrid<br>';
+echo '<b>E-mail:</b>&nbsp;'.$email.'<br><b>Timezone:</b>Europe/Madrid<br>';
 
 // Link to workunit calendar (month)
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=$id_user'><img border=0 hspace=5 src='images/clock.png' title='".$lang_label["work_unit_report"]."'></a>";
 
 if (give_acl($config["id_user"], 0, "PR") == 1){
+
     // Link to project graph
     echo "&nbsp;&nbsp;";
     echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$id_user."'>";

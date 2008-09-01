@@ -138,7 +138,7 @@ if ($texto_form != "")
     echo "<input type='hidden' name='texto' value='$texto_form'>";
 
 
-echo '<table border=0 cellpadding=0 cellspacing=8>';
+echo '<table width=600 border=0 cellpadding=4 cellspacing=4>';
 echo "<tr>";
 echo "<td>".$lang_label["f_state"];
 echo "<td>";
@@ -268,7 +268,7 @@ if ($row2_count[0] <= 0 ) {
 	// -------------
 	// Show headers
 	// -------------
-	echo "<table cellpadding=4 cellspacing=4 class='databox' width=850>";
+	echo "<table cellpadding=4 cellspacing=4 class='databox' width=840>";
 	echo "<tr>";
 	echo "<th>Id";
 	echo "<th>". lang_string ("incident");

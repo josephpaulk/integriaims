@@ -21,23 +21,30 @@
 // Gantt php class example and configuration file
 // Copyright (C) 2005 Alexandre Miguel de Andrade Souza
 
-$develop_bypass = 1;
+$develop_bypass = 0;
 if ($develop_bypass != 1){
 
 	// If no config file, automatically try to install
 	if (! file_exists("include/config.php")) {
+		// Check for installer presence
+		if (! file_exists("install.php")) {
+			include "general/error_noconfig.php";
+			exit;
+		}
 		include ("install.php");
 		exit;
 	}
+
 	// Check for installer presence
 	if (file_exists("install.php")) {
 		include "general/error_install.php";
 		exit;
 	}
-        if (!is_readable("include/config.php")){
-                include "general/error_perms.php";
-                exit;
-        }
+
+	if (!is_readable("include/config.php")){
+			include "general/error_perms.php";
+			exit;
+	}
 	// Check perms for config.php
 	if ((substr(sprintf('%o', fileperms('include/config.php')), -4) != "0600") &&
 	    (substr(sprintf('%o', fileperms('include/config.php')), -4) != "0660") &&

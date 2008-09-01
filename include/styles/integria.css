@@ -419,7 +419,7 @@ form.searchform input.button {
 .hide   { display: none; }	
 .orange { color: #FFA600; }
 
-
+/*  */
 /* Old styles */
 
 a {
@@ -431,13 +431,6 @@ a:hover {
 	text-decoration: underline;
 }
 
-div#login_f {
-	text-align: center;
-	margin: auto;
-	padding: 0.5em;
-	width: 400px;
-	margin-top: 5em;
-}
 div#db_f {
 	text-align: center;
 	margin: auto;
@@ -672,23 +665,28 @@ span.users, span.agents, span.data, span.alerts, span.time {
 	clear:both;
 	float:left;
 	padding: 10px 0 0 0;
-	margin: 0 0 0.5em 0;
+	width: 200px;
+	overflow:hidden;
+	margin:0 0 0.5em 0;
+	list-style:none;
+	font-size:11px;
 }
 
 .portlet h2 {
 	display:block;
-	width:180px;
-	height:17px;
+	width:200px;
 	background-color:#027DCE;
 	background-image:url(../../images/leftnav_bg.gif);
 	background-repeat:no-repeat;
 	background-position:left top;
-	overflow:hidden;padding:3px 10px 0px 10px;
+	overflow:hidden;
+	padding:3px 10px 0px 10px;
 	margin:0px 0px 1px 0px;
 	color:#FFF;
 	font: bold 1.2em 'Trebuchet MS', Tahoma, Sans-serif;
 	text-transform: none;
 	text-decoration: none;
+	height: 20px;
 }
 
 .portlet h2:hover {
@@ -705,25 +703,25 @@ span.users, span.agents, span.data, span.alerts, span.time {
 	border-right:4px solid #ebebeb;
 	background-color:#eeeeee;
 	padding:10px 10px 10px 8px !important;color:#717171;
-	margin-top: -5px;
+	margin-top: 0px;
+
+width:200px;padding:3px 10px 0px 10px;
 }
 
-.portlet {
-	overflow:hidden;
-	margin:0 0 0.5em 0;
-	list-style:none;
-	font-size:11px;
-}
 
 .portlet h3 {
+	height: 20px;
 	display:block;
-	width:180px;
-	height:17px;
+	width:200px;
 	background-color:#E19A34;
 	background-repeat:no-repeat;
 	background-position:left top;
-	overflow:hidden;padding:3px 10px 0px 10px;
-	margin:0px 0px 1px 0px;
+	overflow:hidden;
+
+	padding-top: 0px;
+	padding-left: 7px;
+	margin:0px 0px 0px 0px;
+
 	color:#FFF;
 	font: bold 1.2em 'Trebuchet MS', Tahoma, Sans-serif;
     text-transform: none;
@@ -754,7 +752,7 @@ span.users, span.agents, span.data, span.alerts, span.time {
 }
 
 div#login {
-	margin-top: 200px;
+	margin-top: 120px;
 	width: 460px;
 	border-left: solid 1px #000;
 	border-top: solid 1px #000;

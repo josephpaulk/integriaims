@@ -15,6 +15,7 @@
 
 ?>
 
+<center>
 <div class='databox' id='login'>
 	<h1 id='log'><?php echo $lang_label['welcome_title']; ?></h1>
 	<div class='databox' id='login_in'>
@@ -45,6 +46,7 @@
 	</div>
 
 </div>
+</center>
 
 <script type="text/javascript">
 	document.getElementById('nick').focus();

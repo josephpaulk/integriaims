@@ -26,7 +26,7 @@ $id_user =$_SESSION["id_usuario"];
 
 echo "<h2>".$lang_label["users_"]."</h2>";
 
-echo '<table cellpadding="4" cellspacing="4" width="100%" class="databox_color">';
+echo '<table cellpadding="4" cellspacing="4" width="780" class="databox_color">';
 echo "<th>".$lang_label["user_ID"];
 echo "<th>".$lang_label["last_contact"];
 echo "<th>".$lang_label["profile"];

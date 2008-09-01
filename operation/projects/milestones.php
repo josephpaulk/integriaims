@@ -68,7 +68,7 @@ if ($operation == "delete") {
 // ---------------
 if ($operation == "create") {
 echo "<h2>".lang_string ("milestone_creation")."</h2>";
-	echo '<table class="databox_color" cellpadding="4" cellspacing="4" width="80%">';
+	echo '<table class="databox_color" cellpadding="4" cellspacing="4" width="720">';
 	echo '<form name="ilink" method="post" action="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=create2">';
 
 	echo "<tr><td class='datos'>".lang_string ("name");
@@ -83,7 +83,7 @@ echo "<h2>".lang_string ("milestone_creation")."</h2>";
 	echo "<td class='datos'><textarea name='description' style='width:100%; height:100px'>";
 	echo "</textarea>";
 	echo "</table>";
-	echo '<table cellpadding="4" cellspacing="4" width="80%">';
+	echo '<table cellpadding="4" cellspacing="4" width="720">';
     
     $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
@@ -101,7 +101,8 @@ echo "<h2>".lang_string ("milestone_creation")."</h2>";
 // -------------------------
 if ($operation == ""){
 	echo "<h1>".lang_string("milestones management");
-	echo "<table cellpadding=4 cellspacing=4 width=100%>";
+	echo "</h1>";
+	echo "<table cellpadding=4 cellspacing=4 width=720>";
 	echo "<th>".lang_string ("milestone");
 	echo "<th>".lang_string ("description");
 	echo "<th>".lang_string ("timestamp");
@@ -139,7 +140,7 @@ if ($operation == ""){
     $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
     if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
-	    echo "<table cellpadding=4 cellspacing=4 width=100%>";
+	    echo "<table cellpadding=4 cellspacing=4 width=720>";
 	    echo "<tr><td align=right>";
     
 	    echo "<form name='ms' method='POST'  action='index.php?sec=projects&sec2=operation/projects/milestones&operation=create&id_project=$id_project'>";

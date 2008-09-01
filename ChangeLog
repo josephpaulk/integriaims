@@ -1,6 +1,8 @@
 
 2008-09-01  Sancho Lerena <slerena@gmail.com>
 
+	* (Several files)  Several changes to make it render properly in IEa
+
 	* functions_db.php,
 	* functions.php: Output ascii was not using proper function
 	to decode html entities. FIxed and passed siubject for the

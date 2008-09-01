@@ -17,8 +17,9 @@
 global $config;
 
 ?>
-
-<div class='databox' id='login'>
+<center>
+<br>
+<div class='databox' id='login' >
 	<h1 id='log'><?php echo $lang_label['err_auth']; ?></h1>
 	<div class='databox' id='login_in'>
 		<table cellpadding='4' cellspacing='1' width='400'>
@@ -37,3 +38,4 @@ global $config;
 		</form>
 	</div>
 </div>
+</center>

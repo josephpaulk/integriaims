@@ -175,7 +175,7 @@ if (check_login() == 0){
 		echo "<td class='datos2'><textarea name='description' style='width:100%; height:230px'>";
 		echo "</textarea>";
 		echo "</table>";
-		echo '<table cellpadding="0" cellspacing="0" width="80%">';
+		echo '<table cellpadding="0" cellspacing="0" width="760">';
 		echo "<tr><td align='right'>";
 		echo "<input name='crtbutton' type='submit' class='sub next' value='".lang_string ("create")."'>";
 		echo '</form></table>';
@@ -189,7 +189,7 @@ if (check_login() == 0){
 			echo "<h1>".$lang_label["todo_management"]. " - ". lang_string("assigned_to_other_users")."</h1>";
 		else
 			echo "<h1>".$lang_label["todo_management"]."</h1>";
-		echo "<table cellpadding=4 cellspacing=4 class='databox_color' width=100%>";
+		echo "<table cellpadding=4 cellspacing=4 class='databox_color' width=760>";
 		echo "<th>".lang_string ("todo");
 		echo "<th>".$lang_label["priority"];
 		echo "<th>".$lang_label["progress"];

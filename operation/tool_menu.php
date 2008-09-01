@@ -1,7 +1,7 @@
 <?PHP
 
 // Sponsors
-echo "<div class='portlet'>";
+echo "<div class='portlet' >";
 echo "<h3>".$lang_label["links_header"]."</h3>";
 echo "<ul class='sidemenu'>";
 
