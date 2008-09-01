@@ -1082,6 +1082,7 @@ TIME USED   : $duration
 ---------------------------------------------------[DESCRIPTION]-----
 $description\n\n";
 
+		$text = ascii_output ($text);
         // Send an email to project manager
 		topi_sendmail (return_user_email($id_manager), $subject, $text);
 }
@@ -1129,6 +1130,7 @@ DESCRIPTION
 ---------------------------------------------------------------------
 $tdescription\n\n";
 
+		$text = ascii_output ($text);
         // Send an email to both
 		topi_sendmail (return_user_email($tcreated), $subject, $text);
 		topi_sendmail (return_user_email($tassigned), $subject, $text);
@@ -1201,6 +1203,7 @@ WORKUNIT ADDED BY $id_usuario
 $nota \n\n";
 }
 
+	$text = ascii_output ($text);
     topi_sendmail ($email_owner, $subject, $text);
     // Incident owner
     if ($email_owner != $email_creator)

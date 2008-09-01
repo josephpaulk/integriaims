@@ -431,15 +431,6 @@ a:hover {
 	text-decoration: underline;
 }
 
-div#login {
-	text-align: left;
-	border: 1px solid #999999;
-	margin-top: 2em;
-	margin-bottom: -1em;
-	padding: 0.5em;
-	width: 40em;
-	background: url(../../images/backgrounds/background10.jpg);
-}
 div#login_f {
 	text-align: center;
 	margin: auto;
@@ -763,7 +754,6 @@ span.users, span.agents, span.data, span.alerts, span.time {
 }
 
 div#login {
-	margin: 0 auto;
 	margin-top: 200px;
 	width: 460px;
 	border-left: solid 1px #000;
