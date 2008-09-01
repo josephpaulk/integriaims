@@ -1,6 +1,11 @@
 
 2008-09-01  Sancho Lerena <slerena@gmail.com>
 
+	* functions_db.php,
+	* functions.php: Output ascii was not using proper function
+	to decode html entities. FIxed and passed siubject for the
+	filter too.
+	
 	* integria.css: Starting to do things to render
 	properly in IE.
 	

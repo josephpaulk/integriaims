@@ -34,13 +34,11 @@ to decode HTML characters.
 */
 
 function ascii_output ($string){
-	$texto_ok = htmlspecialchars_decode($string);
-	return $texto_ok;
+	return clean_output ($string);
 }
 
-function clean_output ($string){
-	$texto_ok = htmlspecialchars_decode($string);
-	return $texto_ok;
+function clean_output ($string) {
+	return html_entity_decode ($string, ENT_QUOTES, "UTF-8");
 }
 
 function remove_locale_chars ($string){
@@ -65,7 +63,7 @@ function remove_locale_chars ($string){
 
 function clean_input ($texto){
 	$filtro0 = utf8_decode($texto);
-	$filtro1 =  htmlentities($filtro0, ENT_QUOTES); 
+	$filtro1 = htmlentities($filtro0, ENT_QUOTES); 
 	return $filtro1;							
 }
 

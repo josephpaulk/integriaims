@@ -1083,6 +1083,7 @@ TIME USED   : $duration
 $description\n\n";
 
 		$text = ascii_output ($text);
+		$subject = ascii_output ($subject);
         // Send an email to project manager
 		topi_sendmail (return_user_email($id_manager), $subject, $text);
 }
@@ -1131,6 +1132,7 @@ DESCRIPTION
 $tdescription\n\n";
 
 		$text = ascii_output ($text);
+		$subject = ascii_output ($subject);
         // Send an email to both
 		topi_sendmail (return_user_email($tcreated), $subject, $text);
 		topi_sendmail (return_user_email($tassigned), $subject, $text);
@@ -1141,7 +1143,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode){
 
 	$row = give_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$titulo =$row["titulo"];
-	$descripcion = wordwrap($row["descripcion"], 70, "\n");
+	$descripcion = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
 	$prioridad = $row["prioridad"];
     $nota = wordwrap($nota, 70, "\n");
 
@@ -1204,6 +1206,7 @@ $nota \n\n";
 }
 
 	$text = ascii_output ($text);
+	$subject = ascii_output ( $subject ) ;
     topi_sendmail ($email_owner, $subject, $text);
     // Incident owner
     if ($email_owner != $email_creator)
