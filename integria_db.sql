@@ -46,6 +46,14 @@ CREATE TABLE `tgrupo` (
   PRIMARY KEY  (`id_grupo`)
 );
 
+CREATE TABLE `tincidencia` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` mediumtext NULL default NULL,
+  `id_wizard` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+);
+
 --
 -- Table structure for table `tincidencia`
 --
@@ -68,6 +76,9 @@ CREATE TABLE `tincidencia` (
   `resolution` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `epilog` mediumtext NOT NULL,
   `id_incident_linked` bigint(20) unsigned NOT NULL default 0,
+  `sla_disabled` tinyint UNSIGNED NOT NULL DEFAULT 0,
+  `affected_sla_id` tinyint UNSIGNED NOT NULL DEFAULT 0,
+  `id_incident_type` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_index_1` (`id_usuario`,`id_incidencia`)
 );
@@ -408,4 +419,139 @@ CREATE TABLE `tkb_product` (
   PRIMARY KEY  (`id`)
 );
 
+CREATE TABLE `tbuilding` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(250) NULL default NULL,
+  PRIMARY KEY  (`id`)
+);
 
+CREATE TABLE `tincident_inventory` (
+  `id_incident` bigint(20) unsigned NOT NULL auto_increment,
+  `id_inventory` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id_incident`, `id_inventory`),
+  FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE `tcompany_role` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(250) NULL default NULL,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tcompany` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(250) NULL default NULL,
+  `fiscal_information` varchar(250) NULL default NULL,
+  `comments` varchar(1024) NULL default NULL,
+  `id_company_role` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_company_role`) REFERENCES tcompany_role(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE `tcompany_contact` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `id_company` mediumint(8) unsigned NOT NULL,
+  `fullname` varchar(150) NOT NULL default '',
+  `email` varchar(100) NULL default NULL,
+  `phone` varchar(20) NULL default NULL,
+  `mobile_phone` varchar(20) NULL default NULL,
+  `position` varchar(100) NULL default NULL,
+  `disabled` tinyint NULL default 0,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE `tcontract` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(250) NULL default NULL,
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `id_company` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE `tsla_base` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(250) NULL default NULL,
+  `min_response` int(11) NULL default NULL,
+  `max_response` int(11) NULL default NULL,
+  `max_incidents` int(11) NULL default NULL,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tsla_specific` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(250) NULL default NULL,
+  `min_response` int(11) NULL default NULL,
+  `max_response` int(11) NULL default NULL,
+  `max_incidents` int(11) NULL default NULL,
+  `enforced` tinyint NULL default 0,
+  `id_sla_base` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tmanufacturer` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `address` varchar(250) NULL default NULL,
+  `fiscal_information` varchar(250) NULL default NULL,
+  `id_company` mediumint(8) unsigned NOT NULL,
+  `comments` varchar(250) NULL default NULL,
+  `id_company_role` mediumint(8) unsigned NOT NULL,
+  `id_sla` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_company_role`) REFERENCES tcompany_role(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE `tproduct` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(250) NULL default NULL,
+  `icon` varchar(50) default NULL,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tinventory` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(250) NULL default NULL,
+  `serial_number` varchar(250) NULL default NULL,
+  `part_number` varchar(250) NULL default NULL,
+  `comments` varchar(250) NULL default NULL,
+  `confirmed` tinyint(4) NULL default '0',
+  `ip_address` varchar(60) NULL default NULL,
+  `id_contract` mediumint(8) unsigned default NULL,
+  `id_product` mediumint(8) unsigned default NULL,
+  `id_sla` mediumint(8) unsigned default NULL,
+  `id_manufacturer` mediumint(8) unsigned default NULL,
+  `id_building` mediumint(8) unsigned default NULL,
+  `id_parent` mediumint(8) unsigned default NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_contract`) REFERENCES tcontract(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_product`) REFERENCES tproduct(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_sla`) REFERENCES tsla_specific(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_manufacturer`) REFERENCES tmanufacturer(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_building`) REFERENCES tbuilding(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+ALTER TABLE `tinventory` ADD
+ FOREIGN KEY (`id_parent`) REFERENCES tinventory(`id`)
+   ON UPDATE CASCADE ON DELETE SET NULL; 

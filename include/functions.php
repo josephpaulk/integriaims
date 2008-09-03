@@ -147,11 +147,11 @@ function no_permission () {
 	global $config;
 	global $lang_label;
 	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
-	echo "<h3 class='error'>".$lang_label["no_permission_title"]."</h3>";
+	echo "<h3 class='error'>".lang_string ('no_permission_title')."</h3>";
 	echo "<img src='".$config["base_url"]."/images/noaccess.gif' width='120'><br><br>";
 	echo "<table width=550>";
 	echo "<tr><td>";
-	echo $lang_label["no_permission_text"];
+	echo lang_string ('no_permission_text');
 	echo "</table>";
 	echo "<tr><td><td><td><td>";
 	include $config["homedir"]."/general/footer.php";
@@ -313,7 +313,7 @@ function format_numeric ( $number, $decimals=1, $dec_point=".", $thousands_sep="
 
 
 
-function lang_string ($string){
+function lang_string ($string) {
 	global $config;
 	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
 	if (isset ($lang_label[$string]))
@@ -338,31 +338,31 @@ function render_priority ($pri){
 function topi_sendmail ( $destination, $msg_subject = "[INTEGRIA] Automatic email notification", $msg_text) {
 	global $config;
 	if ($destination != ""){
-        $msg_text = ascii_output ($msg_text);
-        $msg_subject = ascii_output ($msg_subject);
+	$msg_text = ascii_output ($msg_text);
+	$msg_subject = ascii_output ($msg_subject);
 		$real_text = $config["HEADER_EMAIL"].$msg_text."\n\n".$config["FOOTER_EMAIL"];
 		mail ($destination, $msg_subject, $real_text);
 	}
 }
 
 function topi_rndcode ($length=6) {
-        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPRQSTUVWXYZ0123456789";
-        $code = "";
-        $clen = strlen($chars) - 1;  //a variable with the fixed length of chars correct for the fence post issue
-        while (strlen($code) < $length) {
-            $code .= $chars[mt_rand(0,$clen)];  //mt_rand's range is inclusive - this is why we need 0 to n-1
-        }
-        return $code;
-    }
+	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPRQSTUVWXYZ0123456789";
+	$code = "";
+	$clen = strlen($chars) - 1;  //a variable with the fixed length of chars correct for the fence post issue
+	while (strlen($code) < $length) {
+		$code .= $chars[mt_rand(0,$clen)];  //mt_rand's range is inclusive - this is why we need 0 to n-1
+	}
+	return $code;
+}
 
 /* Given a local URL, compose a internet valid URL
    with quicklogin HASH data, and enter it on DB
 */
 
-function topi_quicksession ($url, $id_user = ""){
+function topi_quicksession ($url, $id_user = "") {
 	global $config;
-    if ($id_user == "")
-        $id_user = $config["id_user"];
+	if ($id_user == "")
+		$id_user = $config["id_user"];
 	$today=date('Y-m-d H:i:s');
 
 	// Build quicksession data and URL
@@ -378,17 +378,27 @@ function topi_quicksession ($url, $id_user = ""){
 }
 
 
-function return_value ($var){
+function return_value ($var) {
 	if (isset($var))
 		return $var;
-	else	
-		return "";
+	return "";
 }
 
-function maxof ($a, $b){
-    if ($a > $b)
-        return $a;
-    return $b;
+function maxof ($a, $b) {
+	return max ($a, $b);
+}
+
+function get_indicent_priorities () {
+	$incidents = array ();
+	
+	$incidents[0] = lang_string ('informative');
+	$incidents[1] = lang_string ('low');
+	$incidents[2] = lang_string ('medium');
+	$incidents[3] = lang_string ('serious');
+	$incidents[4] = lang_string ('very_serious');
+	$incidents[10] = lang_string ('maintenance');
+	
+	return $incidents;
 }
 
 ?>

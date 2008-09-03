@@ -14,8 +14,8 @@
 // GNU General Public License for more details.
 
 include "include/config.php";
-if (file_exists("include/languages/language_".$config["language_code"].".php")) {
-	 include "include/languages/language_".$config["language_code"].".php";
+if (file_exists ("include/languages/language_".$config["language_code"].".php")) {
+	include "include/languages/language_".$config["language_code"].".php";
 } else {
 	include "include/languages/language_en.php";
 }

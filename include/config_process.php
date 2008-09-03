@@ -22,69 +22,53 @@ $config["build_version"] = $config["build"];
 $config["notification_period"] = "86400";
 
 // Read remaining config tokens from DB
-if (! mysql_connect($config["dbhost"],$config["dbuser"],$config["dbpass"])){ 
-
-//Non-persistent connection. If you want persistent conn change it to mysql_pconnect()
-    exit ('<html><head><title>Integria Error</title>
-    <link rel="stylesheet" href="./include/styles/integria.css" type="text/css">
-    </head><body><div align="center">
-    <div id="db_f">
-        <div>
-        <a href="index.php"><img src="images/integria_white.png" border="0"></a>
-        </div>
-    <div id="db_ftxt">
-        <h1 id="log_f" class="error">Integria Error DB-001</h1>
-        Cannot connect with Database, please check your database setup in the 
-        <b>./include/config.php</b> file and read documentation.<i><br><br>
-        Probably any of your user/database/hostname values are incorrect or 
-        database is not running.</i><br><br><font class="error">
-        <b>MySQL ERROR:</b> '. mysql_error().'</font>
-        <br>&nbsp;
-    </div>
-    </div></body></html>');
+if (! mysql_connect ($config["dbhost"], $config["dbuser"], $config["dbpass"])) {
+	//Non-persistent connection. If you want persistent conn change it to mysql_pconnect()
+	exit ('<html><head><title>Integria Error</title>
+		<link rel="stylesheet" href="./include/styles/integria.css" type="text/css">
+		</head><body><div align="center">
+		<div id="db_f">
+		<div>
+		<a href="index.php"><img src="images/integria_white.png" border="0"></a>
+		</div>
+		<div id="db_ftxt">
+		<h1 id="log_f" class="error">Integria Error DB-001</h1>
+		Cannot connect with Database, please check your database setup in the 
+		<b>./include/config.php</b> file and read documentation.<i><br><br>
+		Probably any of your user/database/hostname values are incorrect or 
+		database is not running.</i><br><br><font class="error">
+		<b>MySQL ERROR:</b> '. mysql_error().'</font>
+		<br>&nbsp;
+		</div>
+		</div></body></html>');
 }
-mysql_select_db($config["dbname"]);
-if($result2=mysql_query("SELECT * FROM tconfig")){
-    while ($row2=mysql_fetch_array($result2)){
-        switch ($row2["token"]) {
-        case "language_code": 
-            $config["language_code"] = $row2["value"];
-			break;
-        case "block_size": 
-            $config["block_size"] = $row2["value"];
-			break;
-        case "notification_period": 
-            $config["notification_period"] = $row2["value"];
-			break;
-        case "style": 
-            $config["style"] = $row2["value"];
-			break;
-        }
-    }
-} else {
-     exit ('<html><head><title>Integria Error</title>
-             <link rel="stylesheet" href="./include/styles/integria.css" type="text/css">
-             </head><body><div align="center">
-             <div id="db_f">
-                 <div>
-                 <a href="index.php"><img src="images/integria_white.png" border="0"></a>
-                 </div>
-             <div id="db_ftxt">
-                 <h1 id="log_f" class="error">Integria Error DB-002</h1>
-                 Cannot load configuration variables. Please check your database setup in the
-                 <b>./include/config.php</b> file and read documentation.<i><br><br>
-                  Probably database schema is created but there are no data inside it or you have a problem with DB access credentials.
-                 </i><br>
-             </div>
-             </div></body></html>');
-}   
 
-if (!isset($config["language_code"]))
-    $config["language_code"] = "en";
+mysql_select_db ($config["dbname"]);
+require_once ("include/functions_db.php");
+$configs = get_db_all_rows_in_table ('tconfig');
+if ($configs === false) {
+	exit ('<html><head><title>Integria Error</title>
+		<link rel="stylesheet" href="./include/styles/integria.css" type="text/css">
+		</head><body><div align="center">
+		<div id="db_f">
+		<div>
+		<a href="index.php"><img src="images/integria_white.png" border="0"></a>
+		</div>
+		<div id="db_ftxt">
+		<h1 id="log_f" class="error">Integria Error DB-002</h1>
+		Cannot load configuration variables. Please check your database setup in the
+		<b>./include/config.php</b> file and read documentation.<i><br><br>
+		Probably database schema is created but there are no data inside it or you have a problem with DB access credentials.
+		</i><br>
+		</div>
+		</div></body></html>');
+}
 
-if ($config["language_code"] == 'ast_es') {
-    $help_code='ast';
-    }
-else $help_code = substr($config["language_code"],0,2);
+foreach ($configs as $c) {
+	$config[$c["token"]] = $c["value"];
+}
+
+if (!isset ($config["language_code"]))
+	$config["language_code"] = "en";
 
 ?>

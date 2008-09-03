@@ -1,3 +1,19 @@
+2008-09-02  Esteban Sanchez  <estebans@artica.es>
+
+	* integria_db.sql: New tables added relatives to inventory.
+
+	* include/functions_html.php: Added to repository.
+
+	* general/error_perms.php: Style correction.
+
+	* include/config_process.php: Style correction. Use database
+	functions. Removed useless code.
+
+	* include/functions.php: Avoid using $lang_label. Style correction.
+	Added get_indicent_priorities().
+
+	* include/functions_db.php: Added new functions. Renamed give_db_* to
+	get_db_*. Style correction.
 
 2008-09-01  Sancho Lerena <slerena@gmail.com>
 
