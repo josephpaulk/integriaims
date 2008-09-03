@@ -1,4 +1,8 @@
 2008-09-02  Esteban Sanchez  <estebans@artica.es>
+	
+	* install.php: Delete install file on step 5.
+
+2008-09-02  Esteban Sanchez  <estebans@artica.es>
 
 	* install.php: Set config file permissions on step 5 so it doesn't
 	warn about it once installed.

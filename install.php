@@ -470,6 +470,7 @@ function install_step5() {
 	$integria_footertext
 </div>";
 	chmod ('include/config.php', 0600);
+	unlink ('install.php');
 }
 
 
