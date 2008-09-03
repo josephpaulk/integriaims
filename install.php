@@ -469,6 +469,7 @@ function install_step5() {
 	</div>
 	$integria_footertext
 </div>";
+	chmod ('include/config.php', 0600);
 }
 
 
@@ -476,18 +477,22 @@ function install_step5() {
 // Main page code
 // ---------------
 
-if (! isset($_GET["step"])){
-	install_step1();
+if (! isset ($_GET["step"])){
+	install_step1 ();
 } else {
-	$step = $_GET["step"];
+	$step = (int) $_GET["step"];
 	switch ($step) {
-	case 2: install_step2();
+	case 2:
+		install_step2();
 		break;
-	case 3: install_step3();
+	case 3:
+		install_step3();
 		break;
-	case 4: install_step4();
+	case 4:
+		install_step4();
 		break;
-	case 5: install_step5();
+	case 5:
+		install_step5();
 		break;
 	}
 }

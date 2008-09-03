@@ -1,5 +1,10 @@
 2008-09-02  Esteban Sanchez  <estebans@artica.es>
 
+	* install.php: Set config file permissions on step 5 so it doesn't
+	warn about it once installed.
+
+2008-09-02  Esteban Sanchez  <estebans@artica.es>
+
 	* integria_db.sql: New tables added relatives to inventory.
 
 	* include/functions_html.php: Added to repository.
