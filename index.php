@@ -127,15 +127,22 @@ $clean_output = give_parameter_get ("clean_output",0);
 				logon_db ($nick, $config["REMOTE_ADDR"]);
 				$_SESSION['id_usuario'] = $nick;
 				$config["id_user"]= $nick;				
-                $prelogin_url = get_parameter ("prelogin_url", "");
-                // REDIRECT ON Different LOGIN URL
-                // Simple login URL is something like xxxxxx/index.php or simply index.php
-                $url_a = explode("/", $prelogin_url);
-                if (isset($url_a)){
-                    if (array_pop($url_a) != "index.php"){
-                        $new_url = "http://" . $_SERVER['SERVER_NAME'] . $prelogin_url; 
-                        echo "<meta http-equiv='refresh' content='0;$new_url'>";
-                    }
+				$prelogin_url = get_parameter ("prelogin_url", "");
+				
+                if ($prelogin_url == ""){
+					$prelogin_url = "http://". $_SERVER["SERVER_NAME"]. $_SERVER['REQUEST_URI'];
+					echo "<meta http-equiv='refresh' content='0;$new_url'>";
+                }
+				else {
+					// REDIRECT ON Different LOGIN URL
+					// Simple login URL is something like xxxxxx/index.php or simply index.php
+					$url_a = explode("/", $prelogin_url);
+					if (isset($url_a)){
+						if (array_pop($url_a) != "index.php"){
+							$new_url = "http://" . $_SERVER['SERVER_NAME'] . $prelogin_url;
+							echo "<meta http-equiv='refresh' content='0;$new_url'>";
+						}
+					}
                 }
 			} else {
 				// Login failed (bad password)

@@ -1,3 +1,10 @@
+2008-09-14  Sancho Lerena <slerena@gmail.com>
+
+	* include/functions_db.php: Added support for enterprise functions.
+
+	* index.php: Fixed autoURL login redirection to work if using login
+	with other URL (from a different website, pe.)
+
 2008-09-02  Esteban Sanchez  <estebans@artica.es>
 	
 	* install.php: Delete install file on step 5.

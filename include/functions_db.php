@@ -14,41 +14,25 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+// Load enterprise version functions
+
+if (file_exists("include/functions_extra.php"))
+	include ("include/functions_extra.php");
+
 // --------------------------------------------------------------- 
 // give_acl ()
 // Main Function to get access to resources
 // Return 0 if no access, > 0  if access
 // --------------------------------------------------------------- 
 
-function give_acl($id_user, $id_group, $access){	
-	$access = strtoupper ($access);
-	// IF user is level = 1 then always return 1
-	// Access codes could be
-	/*	
-		IR - Incident Read
-		IW - Incident Write
-		IM - Incident Management
+function give_acl ($id_user, $id_group, $access){
+	if (function_exists(give_acl_extra))
+		return  give_acl_extra ($id_user, $id_group, $access);
+	else
+		return  give_acl_free ($id_user, $id_group);
+}
 
-		UM - User Management
-		DM - DB Management
-		FM - Integria management
-
-		AR - Agenda read
-		AW - Agenda write
-		AM - Agenda management
-
-		PR - Project read
-		PW - Project write
-		PM - Project management
-
-		TR - Task read
-		TM - Task management
-
-		KR - Knowledge Base READ
-		KW - Knowledge Base WRITE
-		KM - Knowledge Base Manage
-	*/
-
+function give_acl_free ($id_user, $id_group){	
 	global $config;
 	$query1 = "SELECT * FROM tusuario WHERE id_usuario = '".$id_user."'";
 	$res=mysql_query($query1);
@@ -59,74 +43,11 @@ function give_acl($id_user, $id_group, $access){
 	if ($id_group == 0) // Group doesnt matter, any group, for check permission to do at least an action in a group
 		$query1="SELECT * FROM tusuario_perfil WHERE id_usuario = '".$id_user."'";	// GroupID = 0, group doesnt matter (use with caution!)
 	else
-		$query1="SELECT * FROM tusuario_perfil WHERE id_usuario = '".$id_user."' and ( id_grupo =".$id_group." OR id_grupo = 1)";	// GroupID = 1 ALL groups	  
+		$query1="SELECT * FROM tusuario_perfil WHERE id_usuario = '".$id_user."' and ( id_grupo =".$id_group." OR id_grupo = 1)";	// GroupID = 1 ALL groups
+
 	$resq1=mysql_query($query1);  
 	$result = 0; 
-	while ($rowdup=mysql_fetch_array($resq1)){
-		$id_perfil=$rowdup["id_perfil"];
-		// For each profile for this pair of group and user do...
-		$query2 = "SELECT * FROM tprofile WHERE id = ".$id_perfil;
-		$resq2 = mysql_query ($query2);
-		if ($rowq2 = mysql_fetch_array ($resq2)) {
-			switch ($access) {
-			case "IR":
-				$result += $rowq2["ir"];
-				break;
-			case "IW":
-				$result += $rowq2["iw"];
-				break;
-			case "IM":
-				$result += $rowq2["im"];
-				break;
-			case "AR":
-				$result += $rowq2["ar"];
-				break;
-			case "AW":
-				$result += $rowq2["aw"];
-				break;
-			case "AM":
-				$result += $rowq2["am"];
-				break;
-			case "FM":
-				$result += $rowq2["fm"];
-				break;
-			case "DM":
-				$result += $rowq2["dm"];
-				break;
-			case "UM":
-				$result += $rowq2["um"];
-				break;
-			case "PR":
-				$result += $rowq2["pr"];
-				break;
-			case "PM":
-				$result += $rowq2["pm"];
-				break;
-			case "PW":
-				$result += $rowq2["pw"];
-				break;
-			case "TW":
-				$result += $rowq2["tw"];
-				break;
-			case "TM":
-				$result += $rowq2["tm"];
-				break;
-			case "KR":
-				$result += $rowq2["kr"];
-				break;
-			case "KW":
-				$result += $rowq2["kw"];
-				break;
-			case "KM": 
-				$result += $rowq2["km"];
-				break;
-			default:
-				$result = $rowq2["tm"] + $rowq2["tw"] + $rowq2["pw"] + $rowq2["pm"] + $rowq2["pr"]+ $rowq2["um"]+ $rowq2["dm"] + $rowq2["fm"] + $rowq2["am"] + $rowq2["aw"] + $rowq2["ar"] + $rowq2["im"] +$rowq2["iw"] + $rowq2["ir"] + $rowq2["kr"] + $rowq2["kw"] + $rowq2["km"] ;
-			}
-		} 
-	}
-	
-	if ($result > 1)
+	if (mysql_num_rows($resq1) > 0)
 		$result = 1;
 	return $result; 
 } 
@@ -221,22 +142,6 @@ function dame_agente_id($nombre){
 	$resq1=mysql_query($query1);
 	if ($rowdup=mysql_fetch_array($resq1))
 		$pro=$rowdup["id_agente"];
-	else
-		$pro = "";
-	return $pro;
-}
-
-
-// --------------------------------------------------------------- 
-// Returns userid given name an note id
-// --------------------------------------------------------------- 
-
-function give_note_author ($id_note){ 
-	require("config.php");
-	$query1="SELECT * FROM tnota WHERE id_nota = ".$id_note;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["id_usuario"];
 	else
 		$pro = "";
 	return $pro;
