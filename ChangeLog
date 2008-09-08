@@ -1,4 +1,14 @@
-2008-09-14  Sancho Lerena <slerena@gmail.com>
+2008-09-08  Sancho Lerena <slerena@gmail.com>
+
+	* install.php: Updated code, many fixes and some new checks. Tested.
+
+	* error*: Updated header and strings.
+
+	* functions*: Updated header and LGPL licence.
+
+	* integria_db.sql: Fixed a minor problems.
+
+2008-09-07  Sancho Lerena <slerena@gmail.com>
 
 	* include/functions_db.php: Added support for enterprise functions.
 

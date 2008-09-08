@@ -1,9 +1,10 @@
 <?php
 
-// Integria 1.1 - http://integria.sourceforge.net
-// ==================================================
+// INTEGRIA IMS v1.2
+// http://www.integriaims.com
+// ===========================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2007-2008 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,7 +22,7 @@
 // Gantt php class example and configuration file
 // Copyright (C) 2005 Alexandre Miguel de Andrade Souza
 
-$develop_bypass = 0;
+$develop_bypass = 1;
 if ($develop_bypass != 1){
 
 	// If no config file, automatically try to install
@@ -40,20 +41,20 @@ if ($develop_bypass != 1){
 		include "general/error_install.php";
 		exit;
 	}
+}
 
-	if (!is_readable("include/config.php")){
-			include "general/error_perms.php";
-			exit;
-	}
-	// Check perms for config.php
-	if ((substr(sprintf('%o', fileperms('include/config.php')), -4) != "0600") &&
-	    (substr(sprintf('%o', fileperms('include/config.php')), -4) != "0660") &&
-	    (substr(sprintf('%o', fileperms('include/config.php')), -4) != "0640") &&
-	    (substr(sprintf('%o', fileperms('include/config.php')), -4) != "0600"))
-	{
+if (!is_readable("include/config.php")){
 		include "general/error_perms.php";
 		exit;
-	}
+}
+// Check perms for config.php
+if ((substr(sprintf('%o', fileperms('include/config.php')), -4) != "0600") &&
+	(substr(sprintf('%o', fileperms('include/config.php')), -4) != "0660") &&
+	(substr(sprintf('%o', fileperms('include/config.php')), -4) != "0640") &&
+	(substr(sprintf('%o', fileperms('include/config.php')), -4) != "0600"))
+{
+	include "general/error_perms.php";
+	exit;
 }
 
 // Real start
@@ -61,11 +62,11 @@ session_start();
 
 include "include/config.php";
 global $config;
-include "include/languages/language_".$config["language_code"].".php";
-require "include/functions.php"; // Including funcions.
-require "include/functions_db.php";
-require "include/functions_form.php";
-require "include/functions_calendar.php";
+require_once "include/languages/language_".$config["language_code"].".php";
+require_once "include/functions.php"; // Including funcions.
+require_once "include/functions_db.php";
+require_once "include/functions_form.php";
+require_once "include/functions_calendar.php";
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">

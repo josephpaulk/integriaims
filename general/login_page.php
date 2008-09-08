@@ -14,11 +14,12 @@
 // GNU General Public License for more details.
 
 ?>
-
+<div style='height: 120px'>
+</div>
 <center>
-<div class='databox' id='login'>
-	<h1 id='log'><?php echo $lang_label['welcome_title']; ?></h1>
-	<div class='databox' id='login_in'>
+<div class='databox' id='login' style='height: 240px;'>
+	<h1><?php echo $lang_label['welcome_title']; ?></h1>
+	<div class='databox' id='login_in' style='height: 100px;'>
 		<form method="post" action="index.php?login=1">
 
 <?PHP

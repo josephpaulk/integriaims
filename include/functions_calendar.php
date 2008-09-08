@@ -1,14 +1,14 @@
 <?php
 
-// Integria 2.0 - http://integria.sourceforge.net
-// ==================================================
+// INTEGRIA IMS v1.2
+// http://www.integriaims.com
+// ===========================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2007-2008 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
-// modify it under the terms of the  GNU Lesser General Public License
+// modify it under the terms of the GNU Lesser General Public License (LGPL)
 // as published by the Free Software Foundation; version 2
-
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -16,9 +16,7 @@
 
 // PHP Calendar (version 2.3), written by Keith Devens
 // http://keithdevens.com/software/php_calendar
-//  see example at http://keithdevens.com/weblog
-// License: http://keithdevens.com/software/license
-// Modified by Sancho Lerena  <slerena@gmail.com>, 2007 (created generate_calendar_agenda modified function).
+// License: Artistic Licence
 
 function generate_calendar_agenda ($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array(), $id_user = "" ){
     global $config;

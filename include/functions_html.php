@@ -1,25 +1,18 @@
 <?php
 
-// Integria 1.1 - http://integria.sourceforge.net
-// This library is taken from Pandora FMS.
-// The original copyright is added below
-
-// Pandora FMS - the Flexible Monitoring System
-// ============================================
-// Copyright (c) 2008 Artica Soluciones Tecnologicas, http://www.artica.es
-// Please see http://pandora.sourceforge.net for full contribution list
+// INTEGRIA IMS v1.2
+// http://www.integriaims.com
+// ===========================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License (LGPL)
-// as published by the Free Software Foundation for version 2.
-// 
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 /**

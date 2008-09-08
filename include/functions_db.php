@@ -1,14 +1,14 @@
 <?php
 
-// Integria 2.0 - http://integria.sourceforge.net
-// ==================================================
+// INTEGRIA IMS v1.2
+// http://www.integriaims.com
+// ===========================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2007-2008 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
-// modify it under the terms of the  GNU Lesser General Public License
+// modify it under the terms of the GNU Lesser General Public License (LGPL)
 // as published by the Free Software Foundation; version 2
-
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -26,7 +26,7 @@ if (file_exists("include/functions_extra.php"))
 // --------------------------------------------------------------- 
 
 function give_acl ($id_user, $id_group, $access){
-	if (function_exists(give_acl_extra))
+	if (function_exists("give_acl_extra"))
 		return  give_acl_extra ($id_user, $id_group, $access);
 	else
 		return  give_acl_free ($id_user, $id_group);

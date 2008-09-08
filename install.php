@@ -1,9 +1,10 @@
 <?php
 
-// INTEGRIA - OpenSource Management for the Enterprise
-// http://integria.sourceforge.net
-// ==================================================
-// Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
+// INTEGRIA IMS 
+// http://www.integriaims.com
+// ===========================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2008 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -31,17 +32,19 @@
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css">
 </head>
 <body background='images/backgrounds/background11.jpg'>
-<div style='height: 50px'>
+<div style='height: 10px'>
 </div>
 <?PHP
 
 
 error_reporting(0);
 
+$integria_version = "1.2-dev";
+
 $integria_footertext = "<div id='foot'>
-                        <i>Integria is a Free Software project registered at
-                        <a target='_new' href='http://integria.sourceforge.net'>SourceForge</a></i><br>
-                        (c) Sancho Lerena &lt;slerena@gmail.com&gt;<br>
+                        <i>Integria is an OpenSource Software project 
+                        <a target='_new' href='http://integriaims.com'>integriaims.com</a></i><br>
+                        <a href='http://www.artica.es'>(c) Ártica Soluciones Tecnológicas</a><br>
                         </div>";
 
 function check_extension ( $ext, $label ){
@@ -165,18 +168,27 @@ function random_name ($size){
 }
 
 function install_step1() {
-        global $integria_footertext;
+    global $integria_footertext;
+	global $integria_version;
+
 	echo "
-	<div align='center' class='mt35'>
-	<h1>Integria 1.1 instalation wizard. Step #1 of 4</h1>
-	<div id='wizard' style='height: 310px;'>
+	<div align='center' '>
+	<h1>Integria IMS $integria_version instalation wizard. Step #1 of 4</h1>
+	<div id='wizard' style='height: 430px;'>
 		<div id='install_box'>
-			<h1>Welcome to Integria 1.1 installation Wizard</h1>
+			<h1>Welcome to Integria $integria_version installation Wizard</h1>
 			<p>This wizard helps you to quick install Integria in your system.</p>
-			<p>In four steps checks all dependencies and make your configuration for a quick installation.</p> 
-			<p>For more information, please refer to documentation.</p>
-			<i>Integria Development team</i>
-		";
+			<p>In four steps checks all dependencies and make your configuration for a quick installation.</p>";
+
+		echo "<table width=100%>";
+		$writable = check_writable ( "include", "Checking if ./include is writable");
+		if (file_exists("include/config.php"))
+			$writable += check_writable ( "include/config.php", "Checking if include/config.php is writable");
+		echo "</table>";
+
+		echo "<p>For more information, please refer to documentation.</p>
+			<i>Integria Development team</i>";
+
 		if (file_exists("include/config.php")){
 			echo "<p><img src='images/info.png' valign='bottom'><b> Warning: You already have a config.php file. Configuracion and database would be overwritten if you continue.</b></p>";
 		}
@@ -189,8 +201,15 @@ function install_step1() {
 		<div class='box'>
 			<img src='images/step0.png' border='0'>
 		</div>
-		<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'>
-			<a href='install.php?step=2'><img align='right' src='images/arrow_next.png' border=0></a>
+		<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'>";
+		if ($writable == 0)
+			echo "
+			<a href='install.php?step=2'><img align='right' src='images/arrow_next.png' border='0'></a>";
+		else
+			echo "<div class='warn'><b>ERROR:</b>You need to setup permissions to be able to write in ./include directory</div>";
+
+
+		echo "
 			</div>
 		</div>
 
@@ -201,22 +220,27 @@ function install_step1() {
 
 
 function install_step2() {
+    global $integria_footertext;
+	global $integria_version;
+
 	echo "
-	<div align='center' class='mt35'>
-	<h1>Integria v1.1 instalation wizard. Step #2 of 4</h1>
-	<div id='wizard' style='height: 280px;'>
+	<div align='center'>
+	<h1>Integria IMS $integria_version instalation wizard. Step #2 of 4</h1>
+	<div id='wizard' style='height: 380px;'>
 		<div id='install_box'>";
 		echo "<h1>Checking software dependencies</h1>";
-			echo "<table border=0 width=230>";
+			echo "<table border=0 width=330 cellpadding=5 cellspacing=5>";
 			$res = 0;
 			$res += check_variable(phpversion(),"4.3","PHP version >= 4.3.x",1);
 			$res += check_extension("mysql","PHP MySQL extension");
-			//$res += check_extension("curl","PHP Curl extension");
-			$res += check_extension("gd","PHP gd extension");
-			//$res += check_extension("snmp","PHP smmp extension");
+			$res += check_extension("gd","PHP gd extension");	
 			$res += check_extension("session","PHP session extension");
 			$res += check_include("PEAR.php","PEAR PHP Library");
 			$res += check_exists ("/usr/bin/twopi","Graphviz Twopi in /usr/bin/twopi");
+			$res += check_extension("gettext","PHP gettext extension");
+		//$res += check_include("PEAR.php","PEAR PHP Library");
+			$res += check_include("DB.php","PEAR:DB PHP Library");
+			$res += check_include("XML/RPC.php","PEAR XML/RPC.php PHP Library");
 			$res += check_writable("./include","./include writable by HTTP server");
             $res += check_writable("./attachment/tmp","./attachment/tmp writable by HTTP server");
 			echo "</table>
@@ -228,7 +252,7 @@ function install_step2() {
 		<div class='box'>
 			<img src='images/step1.png' border='0' alt=''>
 		</div>
-		<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'>";
+		<div id='install_box' style='margin-bottom: 0px;margin-left: 25px; '>";
 			if ($res > 0) {
 				echo "<p><img src='images/info.png'> You have some uncomplete 
 				dependencies. Please correct it or this installer 
@@ -240,25 +264,30 @@ function install_step2() {
 			}
 			echo "
 		</div>
+		</div>
 		$integria_footertext
         </div>";
 }
 
 function install_step3() {
+	global $integria_footertext;
+	global $integria_version;
+
 	echo "
-	<div align='center' class='mt35'>
-	<h1>Integria v1.1 instalation wizard. Step #3 of 4 </h1>
-	<div id='wizard' style='height: 660px;'>
+	<div align='center''>
+	<h1>Integria $integria_version instalation wizard. Step #3 of 4 </h1>
+	<div id='wizard' style='height: 670px;'>
 		<div id='install_box'>
 			<h1>Environment and database setup</h1>
 			<p>
 			This wizard will create your Integria database, and populate it with data needed to run for first time.
 			You need a privileged user to create database schema, this is usually root user. 
-			Information about <i>root</i> user will not be used or stored for anymore.
+			Information about <i>root</i> user will not be used or stored in anywhere. 
 			</p>
 			<p>
-			Now, please, complete all details to configure your database and enviroment setup. <b>NOTICE</b> that database will be destroyed if already exists!.
+			<b>NOTICE</b> that database will be destroyed if already exists!.
 			</p>
+			<div style='padding-left: 30px'>
 			<form method='post' action='install.php?step=4'>
 				<div>DB User with privileges on MySQL</div>
 				<input class='login' type='text' name='user' value='root'>
@@ -273,25 +302,26 @@ function install_step3() {
 				<input class='login' type='text' name='dbname' value='integria'>
 				
 		
-				<div><input type='checkbox' name='createdb'  value='1'>  
+				<div><input type='checkbox' name='createdb' checked value='1'>  
 				Create Database <br>
 				</div>
 		
-				<div><input type='checkbox' name='createuser'  value='1'> Create Database user 'integria' and give privileges <br>
+				<div><input type='checkbox' name='createuser' checked value='1'> Create Database user 'integria' and give privileges <br>
 				</div>		
 			
 				<div>Full path to HTTP publication directory.<br>
 				<span class='f9b'>For example /var/www/integria</span>
 				</div>
-				<input class='login' type='text' name='path' style='width: 190px;' value='/var/www/integria/'>
+				<input class='login' type='text' name='path' style='width: 190px;' value='".dirname (__FILE__)."'>
 
 				<div>Full local URL to Integria<br>
-				<span class='f9b'>For example http://localhost/integria</span>
+				<span class='f9b'>For example /integria</span>
 				</div>
-				<input class='login' type='text' name='url' style='width: 250px;'  value='http://localhost/integria'>
+				<input class='login' type='text' name='url' style='width: 250px;'  value='".dirname ($_SERVER['PHP_SELF'])."'>
 				
 				<div><input align='right' style='align: right; width:70px; height: 16px;' type='image' src='images/arrow_next.png'  value='Step #4'></div>
 			</form>
+			</div>
 			</div>
 			<div class='box'>
 				<img src='images/integria_white.png' border='0' alt=''>
@@ -309,6 +339,8 @@ function install_step3() {
 
 function install_step4() {
 	$INTEGRIA_config = "include/config.php";
+    global $integria_footertext;
+	global $integria_version;
 
 	if ( (! isset($_POST["user"])) || (! isset($_POST["dbname"])) || (! isset($_POST["host"])) || (! isset($_POST["pass"])) ) {
 		$dbpassword = "";
@@ -345,7 +377,7 @@ function install_step4() {
 	$step4=0; $step5=0; $step6=0; $step7=0;
 	echo "
 	<div align='center' class='mt35'>
-	<h1>Integria instalation wizard. Step #4 of 4 </h1>
+	<h1>Integria IMS $integria_version instalation wizard. Step #4 of 4 </h1>
 	<div id='wizard' style='height: 410px;'>
 		<div id='install_box'>
 			<h1>Creating database and default configuration file</h1>
@@ -428,7 +460,7 @@ $config["base_url"]="'.$url.'";		// Base URL
 			<img src='images/step3.png' border='0' alt=''>
 		</div>
 		
-		<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'>";
+		<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'><p>";
 			if ($everything_ok == 1) {
 				echo "<a href='install.php?step=5'><img align='right' src='images/arrow_next.png' border=0 class=''></a>";
 			} else {
@@ -449,14 +481,17 @@ $config["base_url"]="'.$url.'";		// Base URL
 }
 
 function install_step5() {
+    global $integria_footertext;
+	global $integria_version;
+
 	echo "
 	<div align='center' class='mt35'>
-	<h1>Integria instalation wizard. Finished</h1>
+	<h1>Integria IMS $integria_version instalation wizard. Finished</h1>
 	<div id='wizard' style='height: 300px;'>
 		<div id='install_box'>
 			<h1>Installation complete</h1>
 			<p>You now must delete manually this installer for security, ('install.php') before trying to access to your Integria installation.
-			<p>Don't forget to check <a href='http://integria.sourceforge.net'>http://integria.sourceforge.net</a> for updates.
+			<p>Don't forget to check <a href='http://integriaims.com'>http://integriaims.com</a> for updates.
 			<p><a href='index.php'>Click here to access Integria</A></p>
 		</div>
 		<div class='box'>
@@ -470,7 +505,7 @@ function install_step5() {
 	$integria_footertext
 </div>";
 	chmod ('include/config.php', 0600);
-	unlink ('install.php');
+	// unlink ('install.php');
 }
 
 

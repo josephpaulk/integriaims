@@ -46,12 +46,12 @@ CREATE TABLE `tgrupo` (
   PRIMARY KEY  (`id_grupo`)
 );
 
-CREATE TABLE `tincidencia` (
+CREATE TABLE `tincident_type` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   `description` mediumtext NULL default NULL,
   `id_wizard` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id`),
+  PRIMARY KEY  (`id`)
 );
 
 --

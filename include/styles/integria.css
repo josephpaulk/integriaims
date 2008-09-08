@@ -752,7 +752,7 @@ width:200px;padding:3px 10px 0px 10px;
 }
 
 div#login {
-	margin-top: 120px;
+	padding: 0px;
 	width: 460px;
 	border-left: solid 1px #000;
 	border-top: solid 1px #000;
@@ -760,8 +760,9 @@ div#login {
 	border-right: solid 2px #000
 }
 div#login_in, #login_f {
-	margin: 0 auto;
+	margin: 0px;
 	width: 400px;
+	padding-top: 10px;
 }
 div#login_f {
 	margin-top: 10px;
