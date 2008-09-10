@@ -235,7 +235,7 @@ function print_button ($label = 'OK', $name = '', $disabled = false, $script = '
 }
 
 function print_textarea ($name, $rows, $columns, $value = '', $attributes = '', $return = false) {
-	$output = '<textarea name="'.$name.'" cols="'.$columns.'" rows="'.$rows.'" '.$attributes.' />';
+	$output = '<textarea id="textarea-'.$name.'" name="'.$name.'" cols="'.$columns.'" rows="'.$rows.'" '.$attributes.' >';
 	$output .= $value;
 	$output .= '</textarea>';
 	
@@ -355,6 +355,7 @@ function print_table (&$table, $return = false) {
 	$output .= " border=\"$table->border\" class=\"$table->class\" id=\"$tableid\" >\n";
 	$countcols = 0;
 
+	$output .= '<thead>';
 	if (!empty ($table->head)) {
 		$countcols = count ($table->head);
 		$output .= '<tr>';
@@ -370,6 +371,7 @@ function print_table (&$table, $return = false) {
 		}
 		$output .= '</tr>'."\n";
 	}
+	$output .= "</thead>\n<tbody>\n";
 	if (!empty ($table->data)) {
 		$oddeven = 1;
 		foreach ($table->data as $keyrow => $row) {
@@ -414,6 +416,7 @@ function print_table (&$table, $return = false) {
 			$output .= '</tr>'."\n";
 		}
 	}
+	$output .= '</tbody>'."\n";
 	$output .= '</table>'."\n";
 
 	if ($return) 
@@ -496,9 +499,7 @@ function print_radio_button ($name, $value, $label = '', $checkedvalue = '', $re
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
  */
 function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $attributes, $return = false) {
-	static $idcounter = 0;
-
-	$htmlid = 'checkbox'.sprintf ('%04d', ++$idcounter);
+	$htmlid = 'checkbox-'.$name;
 	$output = '<input name="'.$name.'" type="checkbox" value="'.$value.'" '. ($checked ? 'checked': '');
 	$output .= ' id="'.$htmlid.'"';
 	
@@ -541,8 +542,8 @@ function print_checkbox ($name, $value, $checked = false, $return = false) {
  * 
  * @return 
  */
-function print_help_tip ($text, $return = false) {
-	$output = '<a href="#" class="tip">&nbsp;<span>'.$text.'</span></a>';
+function print_help_tip ($text, $return = false, $tip_class = 'tip') {
+	$output = '<a href="#" class="'.$tip_class.'">&nbsp;<span>'.$text.'</span></a>';
 	
 	if ($return)
 		return $output;

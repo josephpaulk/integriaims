@@ -11,11 +11,23 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-	/* Function to hide/unhide a specific Div id */
-	function toggleDiv (divid){
-		if (document.getElementById(divid).style.display == 'none'){
-			document.getElementById(divid).style.display = 'block';
-		} else {
-			document.getElementById(divid).style.display = 'none';
-		}
-	}
+/* Function to hide/unhide a specific Div id */
+function toggleDiv (id_div) {
+	$("#" + id_div).toggle ();
+}
+
+function refresh_table (table_id) {
+	$("#" + table_id + " > tbody > tr:odd td").removeClass("datos").addClass("datos2");
+	$("#" + table_id + " > tbody > tr:even td").removeClass("datos2").addClass("datos");
+}
+
+function get_form_input_values (form_id) {
+	values = Object ();
+	$("#" + form_id + " :input").each (function () {
+		if (this.type != 'checkbox')
+			values[this.name] = this.value;
+		else if (this.selected)
+			values[this.name] = this.value;
+	});
+	return values;
+}

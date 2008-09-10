@@ -23,139 +23,149 @@ if (check_login() != 0) {
 	exit;
 }
 
-if (isset($_GET["id_grupo"]))
-	$id_grupo = $_GET["id_grupo"];
-else
-	$id_grupo = 0;
+$id_grupo = (int) get_parameter ('id_grupo');
 
-$id_user=$_SESSION['id_usuario'];
-if (give_acl($id_user, $id_grupo, "IR") != 1){
+if (give_acl ($config['id_user'], $id_grupo, "IR") != 1){
  	// Doesn't have access to this page
-	audit_db($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id_inc." '".$titulo."'");
 	include ("general/noaccess.php");
 	exit;
 }
 
-$id_grupo = "";
+$id_grupo = 0;
+$texto = "";
 $creacion_incidente = "";
 $result_msg = "";
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// UPDATE incident - Get data from form
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
-	$id_inc = $_POST["id_inc"];
- 	$grupo = clean_input ($_POST['grupo_form']);
-	$usuario= clean_input ($_POST["usuario_form"]);
-	if ((give_acl($config["id_user"], $grupo, "IM")==1) OR ($usuario == $config["id_user"])) { // Only admins (manage incident) or owners can modify incidents
-		$id_author_inc = give_incident_author($id_inc);
-		$titulo = clean_input ($_POST["titulo"]);
-		$descripcion = clean_input ($_POST['descripcion']);
-		$origen = give_parameter_post ("incident_origin",1);
-		$prioridad = clean_input ($_POST['prioridad_form']);
-		$estado = clean_input ($_POST["incident_status"]);
-		$ahora=date("Y/m/d H:i:s");
-		$group = clean_input ($_POST["grupo_form"]);
+$id = get_parameter ('id');
+$action = get_parameter ('action');
 
-		if (isset($_POST["email_notify"]))
-			$email_notify= give_parameter_post ("email_notify");
-		else
-			$email_notify = 0;
-		$epilog = give_parameter_post ("epilog","");
-		$descripcion =  give_parameter_post ('descripcion');
-		$resolution =  give_parameter_post ("incident_resolution");
-		$id_task =  give_parameter_post ("task_user");
-		
-		incident_tracking ( $id_inc, $config["id_user"], 1);
-		$old_prio = give_inc_priority ($id_inc);
-		// 0 - Abierta / Sin notas (Open without notes)
-		// 2 - Descartada (Not valid)
-		// 3 - Caducada (out of date)
-		// 13 - Cerrada (closed)
-		if ($old_prio != $prioridad)
-			incident_tracking ( $id_inc, $id_usuario, 8);		
-		if ($estado == 2)
-			incident_tracking ( $id_inc, $id_usuario, 4);	
-		if ($estado == 3)
-			incident_tracking ( $id_inc, $id_usuario, 5);
-		if ($estado == 13)
-			incident_tracking ( $id_inc, $id_usuario, 10);
-			
-		$sql = "UPDATE tincidencia 
-				SET actualizacion = '$ahora', titulo = '$titulo', 
-				origen= '$origen', estado = '$estado', id_grupo = '$grupo', 
-				id_usuario = '$usuario', notify_email = $email_notify, 
-				prioridad = '$prioridad', descripcion = '$descripcion', 
-				epilog = '$epilog', id_task = $id_task, resolution = '$resolution' , id_grupo = $group
-				WHERE id_incidencia = ".$id_inc;
-		$result=mysql_query($sql);
-		audit_db($id_author_inc,$config["REMOTE_ADDR"],"Incident updated","User ".$id_usuario." deleted updated #".$id_inc);
-		if ($result)
-			$result_msg = "<h3 class='suc'>".$lang_label["upd_incid_ok"]."</h3>";
-		else
-			$result_msg = "<h3 class='suc'>".$lang_label["upd_incid_no"]."</h3>";
+if ($action == 'update') {
+	$id_inc = get_parameter ('id_inc');
+ 	$grupo = get_parameter ('grupo_form');
+	$usuario = get_parameter ('usuario_form');
+	
+	// Only admins (manage incident) or owners can modify incidents
+	if (! give_acl ($config["id_user"], $grupo, "IM") || $usuario != $config["id_user"]) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
+		echo "<h3 class='error'>".lang_string ('upd_incid_no')."</h3>";
+		no_permission ();
+		exit ();
+	}
+	$id_author_inc = give_incident_author ($id_inc);
+	$titulo = get_parameter ('titulo');
+	$descripcion = get_parameter ('descripcion');
+	$origen = get_parameter ("incident_origin", 1);
+	$prioridad = get_parameter ('prioridad_form');
+	$estado = get_parameter ('incident_status');
+	$group = get_parameter ('grupo_form');
+	$email_notify = (bool) get_parameter ("email_notify");
+	$epilog = get_parameter ('epilog');
+	$descripcion = get_parameter ('descripcion');
+	$resolution = get_parameter ('incident_resolution');
+	$id_task = get_parameter ('task_user');
+	
+	incident_tracking ( $id_inc, $config["id_user"], 1);
+	$old_prio = give_inc_priority ($id_inc);
+	// 0 - Abierta / Sin notas (Open without notes)
+	// 2 - Descartada (Not valid)
+	// 3 - Caducada (out of date)
+	// 13 - Cerrada (closed)
+	if ($old_prio != $prioridad)
+		incident_tracking ($id_inc, $config['id_user'], 8);
+	if ($estado == 2)
+		incident_tracking ($id_inc, $config['id_user'], 4);
+	if ($estado == 3)
+		incident_tracking ($id_inc, $config['id_user'], 5);
+	if ($estado == 13)
+		incident_tracking ($id_inc, $config['id_user'], 10);
+	
+	$sql = sprintf ('UPDATE tincidencia SET actualizacion = NOW(),
+			titulo = "%s", origen = %d, estado = %d,
+			id_grupo = %d, id_usuario = "%s",
+			notify_email = %d, prioridad = %d, descripcion = "%s",
+			epilog = "%s", id_task = %d, resolution = %d
+			WHERE id_incidencia = %d', 
+			$titulo, $origen, $estado, $grupo, $usuario,
+			$email_notify, $prioridad, $descripcion,
+			$epilog, $id_task, $resolution, $id_inc);
+	$result = process_sql ($sql, 'insert_id');
+	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." deleted updated #".$id_inc);
+	if ($result === false)
+		$result_msg = "<h3 class='suc'>".lang_string ('upd_incid_no')."</h3>";
+	else
+		$result_msg = "<h3 class='suc'>".lang_string ('upd_incid_ok')."</h3>";
+	$_GET["id"] = $id_inc; // HACK
+
+	// Email notify to all people involved in this incident
+	if ($email_notify == 1) {
+		mail_incident ($id_inc, $usuario, "", 0, 0);
+	}
+	
+	if (defined ('AJAX')) {
+		echo $result_msg;
+		return;
+	}
+}
+
+if ($action == "insert") {
+	$grupo = get_parameter ('grupo_form');
+	$usuario = get_parameter ('usuario_form');
+	
+	if (! give_acl ($config['id_user'], $grupo, "IW") && $usuario != $config['id_user']) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"],
+			"ACL Forbidden",
+			"User ".$config["id_user"]." try to create incident");
+		no_permission ();
+		exit;
+	}
+	
+	// Read input variables
+	$titulo = get_parameter ('titulo');
+	$descripcion =  get_parameter ('descripcion');
+	$texto = $descripcion; // to view in textarea after insert
+	$origen = get_parameter ('incident_origin', 1);
+	$prioridad = get_parameter ('prioridad_form');
+	$id_creator = $config['id_user'];
+	$estado = get_parameter ("incident_status");
+	$resolution = get_parameter ("incident_resolution");
+	$id_task = get_parameter ("task_user");
+	$email_notify = (bool) get_parameter ('email_notify');
+	
+	$sql = sprintf ('INSERT INTO tincidencia 
+			(inicio, actualizacion, titulo, descripcion,
+			id_usuario, origen, estado, prioridad,
+			id_grupo, id_creator, notify_email, id_task,
+			resolution)
+			VALUES (NOW(), NOW(), "%s", "%s", "%s", %d, %d, %d, %d,
+			"%s", %d, %d, %d)',
+			$titulo, $descripcion, $usuario,
+			$origen, $estado, $prioridad, $grupo, $id_creator,
+			$email_notify, $id_task, $resolution);
+	$id_inc = process_sql ($sql, 'insert_id');
+	if ($id_inc !== false) {
 		$_GET["id"] = $id_inc; // HACK
-
+		$result_msg  = "<h3 class='suc'>".lang_string ('create_incid_ok')." (id #$id_inc)</h3>";
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"],
+			"Incident created",
+			"User ".$config['id_user']." created incident #".$id_inc);
+		incident_tracking ( $id_inc, $config["id_user"], 0);
+		
 		// Email notify to all people involved in this incident
-		if ($email_notify == 1){
-            mail_incident ($id_inc, $usuario, "", 0, 0);
+		if ($email_notify) {
+			mail_incident ($id_inc, $usuario, "", 0, 1);
 		}
-
 	} else {
-		audit_db($id_usuario,$config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
-		echo "<h3 class='error'>".$lang_label["upd_incid_no"]."</h3>";
-		no_permission();
+		$result_msg  = '<h3 class="err">'.lang_string ('create_incid_no').'</h3>';
+	}
+	if (defined ('AJAX')) {
+		echo $result_msg;
+		return;
 	}
 }
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// INSERT incident - Get data from form
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
-	$grupo = clean_input ($_POST['grupo_form']);
-	$usuario= clean_input ($_POST["usuario_form"]);
-	if ((give_acl($id_usuario, $grupo, "IW") == 1) OR ($usuario == $id_usuario)) { // Only admins (manage
-		// Read input variables
-		$titulo = clean_input ($_POST['titulo']);
-		$inicio = date("Y/m/d H:i:s");
-		$descripcion = clean_input ($_POST['descripcion']);
-		$texto = $descripcion; // to view in textarea after insert
-		$origen = give_parameter_post ("incident_origin",1);
-		$prioridad = clean_input ($_POST['prioridad_form']);
-		$actualizacion = $inicio;
-		$id_creator = $id_usuario;
-		$estado = clean_input ($_POST["incident_status"]);
-		$resolution = clean_input ($_POST["incident_resolution"]);
-		$id_task =  give_parameter_post ("task_user");
-		if (isset($_POST["email_notify"]))
-			$email_notify=clean_input ($_POST["email_notify"]);
-		else
-			$email_notify = 0;
-		
-		$sql = "INSERT INTO tincidencia (inicio, actualizacion, titulo , descripcion, id_usuario, origen, estado, prioridad, id_grupo, id_creator, notify_email, id_task, resolution) VALUES ('$inicio','$actualizacion', '$titulo', '$descripcion', '$usuario', '$origen', '$estado', '$prioridad', '$grupo', '$id_creator', $email_notify, $id_task, $resolution)";
-		if (mysql_query($sql)){
-			$id_inc=mysql_insert_id();
-			$_GET["id"] = $id_inc; // HACK
-			$result_msg  = "<h3 class='suc'>".$lang_label["create_incid_ok"]." ( id #$id_inc )</h3>";
-			audit_db($config["id_user"],$config["REMOTE_ADDR"],"Incident created","User ".$id_usuario." created incident #".$id_inc);
-			incident_tracking ( $id_inc, $config["id_user"], 0);
-
-			// Email notify to all people involved in this incident
-			if ($email_notify == 1){
-                mail_incident ($id_inc, $usuario, "", 0, 1);
-			}
-		}
-		
-	} else {
-		audit_db($id_usuario,$config["REMOTE_ADDR"],"ACL Forbidden","User ".$config["id_user"]." try to create incident");
-		no_permission();
-	}
-}
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Edit / Visualization MODE - Get data from database
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if (isset($_GET["id"])){
+if ($id) {
 	$creacion_incidente = 0;
 	$id_inc = $_GET["id"];
 	$iduser_temp=$_SESSION['id_usuario'];
@@ -182,42 +192,41 @@ if (isset($_GET["id"])){
 	$id_incident_linked = $row["id_incident_linked"]; 
 	$grupo = dame_nombre_grupo($id_grupo);
 
-    // Aditional ACL check on read incident
-    if (give_acl($config["id_user"], $id_grupo, "IR") == 0) { // Only admins
-        audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config["id_user"]." try to access to an unauthorized incident ID #id_inc");
-        no_permission();
-    }
+	// Aditional ACL check on read incident
+	if (give_acl ($config["id_user"], $id_grupo, "IR") == 0) { // Only admins
+		audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config["id_user"]." try to access to an unauthorized incident ID #id_inc");
+		no_permission();
+	}
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// Workunit ADD
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	if (isset($_GET["insert_workunit"])){
-		$id_inc = give_parameter_post ("id_inc");
-		$timestamp = give_parameter_post ("timestamp");
-		$nota = give_parameter_post ("nota");
-		$workunit = give_parameter_post ("workunit",0);
-		$timeused = give_parameter_post ("duration",0);
+		$id_inc = get_parameter ("id_inc");
+		$timestamp = get_parameter ("timestamp");
+		$nota = get_parameter ("nota");
+		$workunit = get_parameter ("workunit",0);
+		$timeused = get_parameter ("duration",0);
 		$timeused = number_format($timeused, 2);
-		$id_usuario=$_SESSION["id_usuario"];
-		$have_cost = give_parameter_post ("have_cost",0);
-		$profile = give_parameter_post ("work_profile",0);
+		$have_cost = get_parameter ("have_cost",0);
+		$profile = get_parameter ("work_profile",0);
 		
 		$sql4 = "UPDATE tincidencia SET actualizacion = '".$timestamp."' WHERE id_incidencia = ".$id_inc;
 		$res4 = mysql_query($sql4);
 		
-		incident_tracking ( $id_inc, $id_usuario, 2);
+		incident_tracking ( $id_inc, $config['id_user'], 2);
 
 		// Add work unit if enabled
-		$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description) VALUES ('$timestamp', '$timeused', '$id_usuario', '$nota')";
+		$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description) VALUES ('$timestamp', '$timeused', '".$config['id_user']."', '$nota')";
 		$res5 = mysql_query($sql);
 		$id_workunit = mysql_insert_id();
 		$sql1 = "INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES ($id_inc, $id_workunit)";
 		$res6 = mysql_query($sql1);
 		if ($res6) {
-			$result_msg = "<h3 class='suc'>".$lang_label["create_work_ok"]."</h3>";
+			$result_msg = "<h3 class='suc'>".lang_string ('create_work_ok')."</h3>";
 			// Email notify to all people involved in this incident
 			if ($email_notify == 1){ 
-                mail_incident ($id_inc, $id_usuario, $nota, $timeused, 10);
+				mail_incident ($id_inc, $config['id_user'], $nota, $timeused, 10);
 			}
 		}
 	}
@@ -225,7 +234,7 @@ if (isset($_GET["id"])){
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// Upload file
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	if ((give_acl($iduser_temp, $id_grupo, "IW")==1) AND isset($_GET["upload_file"])) {
+	if ((give_acl ($iduser_temp, $id_grupo, "IW")==1) AND isset($_GET["upload_file"])) {
 		if ( $_FILES['userfile']['name'] != "" ){ //if file
 			$tipo = $_FILES['userfile']['type'];
 			if (isset($_POST["file_description"]))
@@ -240,8 +249,8 @@ if (isset($_GET["id"])){
 
 			mysql_query($sql);
 			$id_attachment=mysql_insert_id();
-			incident_tracking ( $id_inc, $id_usuario, 3);
-			$result_msg="<h3 class='suc'>".$lang_label["file_added"]."</h3>";
+			incident_tracking ( $id_inc, $config['id_user'], 3);
+			$result_msg="<h3 class='suc'>".lang_string ('file_added')."</h3>";
 			// Email notify to all people involved in this incident
 			if ($email_notify == 1){ 
 				mail_incident ($id_inc, $iduser_temp, 0, 0, 2);
@@ -250,7 +259,7 @@ if (isset($_GET["id"])){
 			$nombre_archivo = $config["homedir"]."attachment/pand".$id_attachment."_".$filename;
 
 			if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo ))){
-					$result_msg = "<h3 class=error>".$lang_label["attach_error"]."</h3>";
+					$result_msg = "<h3 class=error>".lang_string ('attach_error')."</h3>";
 				$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
 				mysql_query($sql);
 			} else {
@@ -259,248 +268,161 @@ if (isset($_GET["id"])){
 			}
 		}
 	}
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Prepare the insertion data
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-} elseif (isset($_GET["insert_form"])){
-		$iduser_temp=$_SESSION['id_usuario'];
-		$titulo = "";
-		$titulo = "";
-		$descripcion = "";
-		$origen = 0;
-		$prioridad = 2;
-		$id_grupo =0;
-		$grupo = dame_nombre_grupo(1);
-
-		$usuario= $config["id_user"];
-		$estado = 1;
-		$resolution = 9;
-		$id_task = 0;
-		$epilog = "";
-		$actualizacion=date("Y/m/d H:i:s");
-		$inicio = $actualizacion;
-		$id_creator = $iduser_temp;
-		$creacion_incidente = 1;
-		$email_notify = 0;
-
 } else {
-	audit_db($id_user,$config["REMOTE_ADDR"], "HACK","Trying to create incident in a unusual way");
-	no_permission();
-	exit;
-}
+	$iduser_temp = $config['id_user'];
+	$titulo = "";
+	$titulo = "";
+	$descripcion = "";
+	$origen = 0;
+	$prioridad = 2;
+	$id_grupo =0;
+	$grupo = dame_nombre_grupo (1);
 
+	$usuario= $config["id_user"];
+	$estado = 1;
+	$resolution = 9;
+	$id_task = 0;
+	$epilog = "";
+	$id_creator = $iduser_temp;
+	$creacion_incidente = 1;
+	$email_notify = 0;
+}
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Show the form
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-if ($creacion_incidente == 0)
-	echo "<form name='accion_form' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident_detail&action=update&id=$id_inc'>";
-else
-	echo "<form name='accion_form' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident_detail&action=insert'>";
-
-if (isset($id_inc)) {
-	echo "<input type='hidden' name='id_inc' value='".$id_inc."'>";
+$default_responsable = "";
+if (! isset ($id_inc)) {
+	// How many groups has this user ?
+	$number_group = give_db_sqlfree_field ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
+	// Take first group defined for this user
+	$default_id_group = give_db_sqlfree_field ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
+	// if have only one group, select default user and email for this group 
+	if ($number_group == 1){
+		$default_responsable = give_db_sqlfree_field ("SELECT id_user FROM tgroup_manager WHERE id_group = $default_id_group");
+		$email_notify = give_db_sqlfree_field ("SELECT forced_email FROM tgroup_manager WHERE id_group = $default_id_group");
+	} 
 }
+$has_permission = (give_acl ($iduser_temp, $id_grupo, "IM")  || ($usuario == $iduser_temp));
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Main incident table
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-if (isset($id_inc)) {
-	echo "<h1>".$lang_label["incident"]." # $id_inc</h1>";
+if (isset ($id_inc)) {
+	echo "<h1>".lang_string ('incident')." #$id_inc</h1>";
 } else {
-	echo "<h2>".$lang_label["create_incident"]."</h2>";
+	echo "<h2>".lang_string ('create_incident')."</h2>";
 }
 
-echo $result_msg;
+echo '<div id="result">'.$result_msg.'</div>';
 
-echo '<table width=740 class="databox_color" cellpadding=2 cellspacing=2 >';
+$table->width = "90%";
+$table->class = "databox_color";
+$table->style = array ();
+$table->style[0] = 'font-weight: bold';
+$table->style[2] = 'font-weight: bold';
+$table->data = array ();
+$table->cellspacing = 2;
+$table->cellpadding = 2;
+$table->colspan = array ();
+$table->colspan[0][2] = 2;
+$table->colspan[5][0] = 4;
+$table->colspan[6][0] = 4;
+$table->colspan[7][0] = 4;
 
-// CREATE
-$default_responsable  = "";
-if (!isset($id_inc)){
-    // How many groups has this user ?
-    $number_group = give_db_sqlfree_field ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
-    // Take first group defined for this user
-    $default_id_group = give_db_sqlfree_field ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
-    // if have only one group, select default user and email for this group 
-    if ($number_group == 1){
-        $default_responsable = give_db_sqlfree_field ("SELECT id_user FROM tgroup_manager WHERE id_group = $default_id_group");
-        $email_notify = give_db_sqlfree_field ("SELECT forced_email FROM tgroup_manager WHERE id_group = $default_id_group");
-    } 
-}
+$table->data[0][0] = lang_string ('incident');
+$table->data[0][1] = print_input_text ('titulo', $titulo, '', 50, 200, true);
 
-// Title and email notify
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp))
-	echo '<tr><td class="datos"><b>'.$lang_label["incident"].'</b><td colspan=2 class="datos"><input type="text" name="titulo" size=50 value="'.$titulo.'">';
+if ($has_permission)
+	$disabled = false;
 else
-	echo '<tr><td class="datos"><b>'.$lang_label["incident"].'</b><td colspan=2 class="datos"><input type="text" name="titulo" size=50 value="'.$titulo.'" readonly>';
+	$disabled = true;
 
-if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp))
-	$emdis="";
-else
-	$emdis="DISABLED";
+$table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
+						$disabled, '', '', true);
+$table->data[0][2] .= lang_string ('email_notify');
+$table->data[0][2] .= print_help_tip (lang_string ('email_notify_help'), true);
 
-echo '<td class="datos"> ';
-if ($email_notify == 1)
-	echo "<input $emdis type=checkbox value=1 name='email_notify' CHECKED>";
-else
-	echo "<input $emdis type=checkbox value=1 name='email_notify'>";
-
-echo "&nbsp;&nbsp;<b>".$lang_label["email_notify"];
-echo "</b> <a href='#' class='tip'>&nbsp;<span>";
-echo $lang_label["email_notify_help"];
-echo "</span></a>";
-
-// Priority combo
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)){
-	echo '<tr><td class="datos2"><b>'.$lang_label["priority"].'</b>';
-	echo '<td class="datos2"><select name="prioridad_form">';
+$table->data[1][0] = lang_string ('priority');
+if ($disabled) {
+	$table->data[1][1] = $prioridad;
 } else {
-	echo '<tr><td class="datos2"><b>'.$lang_label["priority"].'</b>';
-	echo '<td class="datos2"><select disabled name="prioridad_form">';
+	$table->data[1][1] = print_select (get_indicent_priorities (),
+					'prioridad_form', $prioridad, '', '',
+					'', true, false, false);
 }
 
-switch ( $prioridad ){
-	case 0: echo '<option value="0">'.$lang_label["informative"]; break;
-	case 1: echo '<option value="1">'.$lang_label["low"]; break;
-	case 2: echo '<option value="2">'.$lang_label["medium"]; break;
-	case 3: echo '<option value="3">'.$lang_label["serious"]; break;
-	case 4: echo '<option value="4">'.$lang_label["very_serious"]; break;
-	case 10: echo '<option value="10">'.$lang_label["maintenance"]; break;
+$table->data[1][2] = lang_string ('status');
+
+$actual_only = false;
+$disabled = false;
+if (! $has_permission)
+	$disabled = true;
+
+if ($has_permission)
+	$actual_only = true;
+
+$table->data[1][3] = combo_incident_status ($estado, $disabled, $actual_only, true);
+
+$table->data[2][0] = lang_string ('assigned_user');
+if ($has_permission) {
+	if ($default_responsable != "") {
+		$table->data[2][1] = print_input_hidden ('usuario_form', $default_responsable, true);
+		$table->data[2][1] .= dame_nombre_real ($default_responsable);
+	} else{
+		$table->data[2][1] = combo_user_visible_for_me ($usuario, "usuario_form", 0, "IR", true);
+	}
+	$table->data[2][1] .= print_help_tip (lang_string ('incident_user_help'), true);
+} else {
+	$table->data[2][1] = print_input_hidden ('usuario_form', $usuario, true);
+	$table->data[2][1] .= $usuario;
 }
 
-echo '<option value="0">'.$lang_label["informative"];
-echo '<option value="1">'.$lang_label["low"];
-echo '<option value="2">'.$lang_label["medium"];
-echo '<option value="3">'.$lang_label["serious"];
-echo '<option value="4">'.$lang_label["very_serious"];
-echo '<option value="10">'.$lang_label["maintenance"];
+$table->data[2][2] = lang_string ('Creator');
+$table->data[2][3] = $id_creator." (<em>".dame_nombre_real ($id_creator)."</em>)";
 
+$table->data[3][0] = lang_string ('Source');
+$table->data[3][1] = combo_incident_origin ($origen, $disabled, true);
 
-// Incident STATUS combo
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo '<td class="datos2"><b>'.$lang_label["status"].'</b><td class="datos2">';
-// Status combo
-if ((give_acl($config["id_user"], $id_grupo, "IM")==1) OR ($usuario == $config["id_user"]) ){
-	if ($creacion_incidente == 0){
-		echo combo_incident_status ($estado, 0, 0);
-	} else {
-		echo combo_incident_status ($estado, 0, 1);
+$table->data[3][2] = lang_string ('group');
+if ($has_permission) {
+	$table->data[3][3] = combo_groups_visible_for_me ($iduser_temp, "grupo_form", 0, "IW", $id_grupo, true);
+} else {
+	$table->data[3][3] = dame_nombre_grupo ($id_grupo);
+}
+
+$table->data[4][0] = lang_string ('resolution');
+$table->data[4][1] = combo_incident_resolution ($resolution, $disabled, true);
+$table->data[4][2] = lang_string ('task');
+$table->data[4][3] = combo_task_user ($id_task, $config["id_user"], 0, $disabled, true);
+
+$disabled_str = $disabled ? 'readonly' : '';
+$table->data[5][0] = print_textarea ('descripcion', 15, 80, $texto, $disabled_str, true);
+
+if ($estado == 5) {
+	$table->data[6][0] = lang_string ('resolution_epilog');
+	$table->data[7][0] = print_textarea ('epilog', 15, 100, $epilog, $disabled_str, true);
+}
+
+echo "<form id='incident_status_form' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident_detail'>";
+
+print_table ($table);
+
+echo '<div class="action-buttons" style="width: '.$table->width.'">';
+if ($creacion_incidente == 0) {
+	print_input_hidden ('id', $id_inc);
+	print_input_hidden ('action', 'update');
+	if ($has_permission) {
+		print_submit_button (lang_string ('update'), 'accion', false, 'class="sub next"');
 	}
 } else {
-	echo combo_incident_status ($estado, 1, 0);
-}
-
-// User and owner
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo '<tr><td class="datos"><b>'.$lang_label["assigned_user"].'</b><td class="datos">';
-if ((give_acl($config["id_user"], $id_grupo, "IM")==1) OR ($creacion_incidente == 1)) {
-    if ($default_responsable != ""){
-        echo "<input type=hidden name='usuario_form' value='$default_responsable'>";
-        echo dame_nombre_real($default_responsable);
-    }
-//	    combo_user_visible_for_me ($default_responsable,"usuario_form", 0, "IR");
-	else
-    	combo_user_visible_for_me ($usuario,"usuario_form", 0, "IR");
-	
-echo "<a href='#' class='tip'>&nbsp;<span>";
-echo $lang_label["incident_user_help"];
-echo "</span></a>";
-}
-else {
-	echo "<input type=hidden name='usuario_form' value='".$usuario."'>";
-	echo $usuario;
-}
-echo "<td class='datos'><b>Creator</b><td class='datos'>".$id_creator." ( <i>".dame_nombre_real($id_creator)." </i>)";
-
-
-// Origin combo
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo '<tr><td class="datos2"><b>'.$lang_label["source"].'</b><td class="datos2">';
-// Only owner could change source or user with Incident management privileges
-if ((give_acl($config["id_user"], $id_grupo, "IM")==1) OR ($usuario == $config["id_user"]))
-	echo combo_incident_origin ($origen, 0);
-else
-	echo combo_incident_origin ($origen, 1);
-	
-
-// Group combo
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-echo '<td class="datos2"><b>'.$lang_label["group"].'</b><td class="datos2">';
-if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)){
-    combo_groups_visible_for_me ($iduser_temp, "grupo_form", 0, "IW", $id_grupo);
-} else { // Only show current group
-    echo give_db_sqlfree_field ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$id_grupo);
-}
-
-// Incident Resolution combo
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo '<tr><td class="datos"><b>'.$lang_label["resolution"].'</b><td class="datos">';
-// Status combo
-if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)){
-	echo combo_incident_resolution ($resolution, 0);
-} else {
-	echo combo_incident_resolution ($resolution, 1);
-}
-
-// Incident linked to a task
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-echo '<td class="datos"><b>'.$lang_label["task"].'</b><td class="datos">';
-if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)){
-	echo combo_task_user ($id_task, $config["id_user"], 0);
-} else 
-	echo combo_task_user ($id_task, $config["id_user"], 1);
-
-
-
-// Description Textarea
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if ((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp))
-	echo '<tr><td class="datos2" colspan="4"><textarea name="descripcion" rows="15" cols="100">';
-else
-	echo '<tr><td class="datos2" colspan="4"><textarea readonly name="descripcion" rows="15" cols="100">';
-if (isset($texto)) {
-	echo $texto;
-}
-echo "</textarea>";
-
-// Epilog
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if (((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)) AND ($estado > 5)){
-	echo "<tr><td class='datos' colspan='4'><b>".$lang_label["resolution_epilog"]."</b>";
-	echo '<tr><td class="datos2" colspan="4"><textarea name="epilog" rows="3" cols="100">';
-	if (isset($epilog)) {
-		echo $epilog;
-	}
-	echo "</textarea>";
-} elseif ($estado > 5) {
-    echo "<tr><td class='datos' colspan='4'><b>".$lang_label["resolution_epilog"]."</b>";
-    echo '<tr><td class="datos2" colspan="4"><textarea readonly name="epilog" rows="3" cols="100">';
-    if (isset($epilog)) {
-        echo $epilog;
-    }
-    echo "</textarea>";
-}
-
-echo "</table>";
-
-// UPDATE / INSERT BUTTON
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if ($creacion_incidente == 0){
-	if ((give_acl($config["id_user"], $id_grupo, "IM")==1) OR ($usuario == $config["id_user"])){
-		echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["in_modinc"].'" border="0">';
-	}
-} else {
-	if (give_acl($config["id_user"], 0, "IW")) {
-		echo '<input type="submit" class="sub create" name="accion" value="'.$lang_label["create"].'" border="0">';
+	print_input_hidden ('action', 'insert');
+	if (give_acl ($config["id_user"], 0, "IW")) {
+		print_submit_button (lang_string ('create'), 'accion', false, 'class="sub create"');
 	}
 }
+
+if (isset ($id_inc)) {
+	print_input_hidden ('id_inc', $id_inc);
+}
+echo '</div>';
 echo "</form>";
-echo "</table>";
 
 ?>

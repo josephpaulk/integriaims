@@ -400,4 +400,53 @@ function get_indicent_priorities () {
 	return $incidents;
 }
 
+function get_indicent_status () {
+	$status = array ();
+	
+	$status[1] = lang_string ('status_new');
+	$status[2] = lang_string ('status_unconfirmed');
+	$status[3] = lang_string ('status_assigned');
+	$status[4] = lang_string ('status_reopened');
+	$status[5] = lang_string ('status_verified');
+	$status[6] = lang_string ('status_resolved');
+	$status[7] = lang_string ('status_closed');
+	
+	return $status;
+}
+
+function print_priority_flag_image ($priority, $return = false) {
+	$output = '';
+	
+	switch ($priority) {
+	case 0:
+		// Informative
+		$output .= '<img src="images/flag_white.png" title="'.lang_string ('Informative').'" />';
+		break;
+	case 1:
+		// Low
+		$output .= '<img src="images/flag_green.png" title="'.lang_string ('Low').'" />';
+		break;
+	case 2:
+		// Medium
+		$output .= '<img src="images/flag_yellow.png" title="'.lang_string ('Medium').'" />';
+		break;
+	case 3:
+		// Serious
+		$output .= '<img src="images/flag_orange.png" title="'.lang_string ('Serious').'" />';
+		break;
+	case 4:
+		// Very serious
+		$output .= '<img src="images/flag_red.png" title="'.lang_string ('Very serious').'" />';
+		break;
+	case 10:
+		// Maintance
+		$output .= '<img src="images/flag_blue.png" title="'.lang_string ('Maintance').'" />';
+		break;
+	}
+	
+	if ($return)
+		return $output;
+	echo $output;
+}
+
 ?>

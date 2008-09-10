@@ -16,7 +16,7 @@
 
 // Load enterprise version functions
 
-if (file_exists("include/functions_extra.php"))
+if (file_exists ("include/functions_extra.php"))
 	include ("include/functions_extra.php");
 
 // --------------------------------------------------------------- 
@@ -25,38 +25,39 @@ if (file_exists("include/functions_extra.php"))
 // Return 0 if no access, > 0  if access
 // --------------------------------------------------------------- 
 
-function give_acl ($id_user, $id_group, $access){
-	if (function_exists("give_acl_extra"))
-		return  give_acl_extra ($id_user, $id_group, $access);
-	else
-		return  give_acl_free ($id_user, $id_group);
+function give_acl ($id_user, $id_group, $access) {
+	if (function_exists ('give_acl_extra'))
+		return give_acl_extra ($id_user, $id_group, $access);
+	return give_acl_free ($id_user, $id_group);
 }
 
-function give_acl_free ($id_user, $id_group){	
+function give_acl_free ($id_user, $id_group) {
 	global $config;
-	$query1 = "SELECT * FROM tusuario WHERE id_usuario = '".$id_user."'";
-	$res=mysql_query($query1);
-	$row=mysql_fetch_array($res);
-	if ($row["nivel"] == 1)
-		return 1;
 	
-	if ($id_group == 0) // Group doesnt matter, any group, for check permission to do at least an action in a group
-		$query1="SELECT * FROM tusuario_perfil WHERE id_usuario = '".$id_user."'";	// GroupID = 0, group doesnt matter (use with caution!)
+	$is_admin = (bool) get_db_value ('nivel', 'tusuario', 'id_usuario', $id_user);
+	if ($is_admin)
+		return true;
+	
+	if ($id_group == 0)
+		// Group doesnt matter, any group, for check permission to do at least an action in a group
+		$sql = sprintf ('SELECT COUNT(*) FROM tusuario_perfil
+				WHERE id_usuario = "%s"', $id_user);
 	else
-		$query1="SELECT * FROM tusuario_perfil WHERE id_usuario = '".$id_user."' and ( id_grupo =".$id_group." OR id_grupo = 1)";	// GroupID = 1 ALL groups
-
-	$resq1=mysql_query($query1);  
-	$result = 0; 
-	if (mysql_num_rows($resq1) > 0)
-		$result = 1;
-	return $result; 
+		// GroupID = 1 ALL groups
+		$sql = sprintf ('SELECT COUNT(*) FROM tusuario_perfil
+				WHERE id_usuario = "%s"
+				AND (id_grupo = %d OR id_grupo = 1)',
+				$id_user, $id_group);
+	
+	$result = get_db_sql ($sql);
+	return $result > 0 ? true : false;
 } 
 
 // --------------------------------------------------------------- 
 // audit_db, update audit log
 // --------------------------------------------------------------- 
 
-function audit_db ($id, $ip, $accion, $descripcion){
+function audit_db ($id, $ip, $accion, $descripcion) {
 	require("config.php");
 	$today=date('Y-m-d H:i:s');
 	$utimestamp = time();
@@ -229,15 +230,8 @@ function dame_nombre_real($id){
 // This function returns ID of user who has created incident
 // --------------------------------------------------------------- 
 
-function give_incident_author($id){
-	require("include/config.php");
-	$query1="SELECT * FROM tincidencia WHERE id_incidencia = '".$id."'";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["id_usuario"];
-	else
-		$pro = "";
-	return $pro;
+function give_incident_author ($id) {
+	return get_db_value ('id_usuario', 'tincidencia', 'id_incidencia', $id);
 }
 
 
@@ -249,21 +243,12 @@ function dame_nombre_grupo ($id) {
 	return get_db_value ('nombre', 'tgrupo', 'id_grupo', $id);
 } 
 
-
-
 // --------------------------------------------------------------- 
 // Returns number of files from a given incident
 // --------------------------------------------------------------- 
 
-function give_number_files_incident ($id){
-	require("config.php"); 
-	$query1="select COUNT(*) from tattachment WHERE id_incidencia =".$id;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$pro=$rowdup[0]; 
-	} else 
-		$pro = 0;
-	return $pro;
+function give_number_files_incident ($id) {
+	return (int) get_db_value ('COUNT(*)', 'tattachment', 'id_incidencia', $id);
 }
 
 
@@ -271,31 +256,17 @@ function give_number_files_incident ($id){
 // Returns number of files from a given incident
 // --------------------------------------------------------------- 
 
-function give_number_files_task ($id){
-	require("config.php"); 
-	$query1="select COUNT(*) from tattachment WHERE id_task =".$id;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$pro=$rowdup[0]; 
-	} else 
-		$pro = 0;
-	return $pro;
+function give_number_files_task ($id) {
+	return (int) get_db_value ('COUNT(*)', 'tattachment', 'id_task', $id);
 }
+
 /**
 * Return number of tasks associated to an incident
 *
-* $item		integer 	ID of project
+* $id		integer 	ID of project
 **/
-
-function give_number_tasks ($id_project){
-	global $config;
-	$query1="SELECT COUNT(*) FROM ttask WHERE id_project =".$id_project;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$pro=$rowdup[0]; 
-	} else 
-		$pro = 0;
-	return $pro;
+function give_number_tasks ($id) {
+	return (int) get_db_value ('COUNT(*)', 'ttask', 'id_project', $id);
 }
 
 /**
@@ -304,19 +275,14 @@ function give_number_tasks ($id_project){
 * $id_inc	integer 	ID of incident
 **/
 
-function give_hours_incident ($id_inc){
+function give_hours_incident ($id) {
 	global $config;
-	$query1="SELECT SUM(tworkunit.duration) 
+	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_incident, tincidencia 
 			WHERE 	tworkunit_incident.id_incident = tincidencia.id_incidencia AND 
 					tworkunit_incident.id_workunit = tworkunit.id AND
-					 tincidencia.id_incidencia = $id_inc";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup[0]; 
-	else 
-		$pro = 0;
-	return $pro;
+					 tincidencia.id_incidencia = %d', $id);
+	return get_db_sql ($sql);
 }
 
 
@@ -711,7 +677,7 @@ function user_belong_task ($id_user, $id_task, $real=0){
 // ---------------------------------------------------------------
 
 function group_belong_group($id_group_a, $id_groupset){
-		// Conexion con la base Datos 
+	// Conexion con la base Datos 
 	$childgroup[] = "";
 	if ($id_group_a == $id_groupset)
 		return 1;
@@ -1577,4 +1543,34 @@ function insert_event ($type, $id1 = 0, $id2 = 0, $id3 = 0){
 	mysql_query($sql);
 }
 
+function get_groups ($order = 'nombre') {
+	return get_db_all_rows_in_table ('tgrupo', $order);
+}
+
+/** 
+ * Get all the groups a user has reading privileges.
+ * 
+ * @param id_user User id
+ * 
+ * @return A list of the groups the user has reading privileges.
+ */
+function get_user_groups ($id_user = 0) {
+	if ($id_user == 0) {
+		global $config;
+		$id_user = $config['id_user'];
+	}
+	$user_groups = array ();
+	$groups = get_groups ();
+
+	if (!$groups)
+		return $user_groups;
+
+	foreach ($groups as $group) {
+		if (! give_acl ($id_user, $group["id_grupo"], "IR"))
+			continue;
+		$user_groups[$group['id_grupo']] = $group['nombre'];
+	}
+	
+	return $user_groups;
+}
 ?>

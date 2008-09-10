@@ -1,3 +1,67 @@
+2008-09-10  Esteban Sanchez  <estebans@artica.es>
+
+	* ajax.php: Added to repository. AJAX page interface.
+
+	* index.php: Style correction, use require_once. Added jQuery
+	javascript to header and a temporal stylesheet for jQuery UI elements.
+
+	* godmode/usuarios/configurar_usuarios.php: Removed one indentation
+	level. Added javascript code to preview the avatar on change.
+
+	* include/functions.php: Added get_indicent_status () and
+	print_priority_flag_image().
+
+	* include/functions_calendar.php: Blankspace correction. Removed
+	unused function getWorkingDays().
+
+	* include/functions_db.php: Style correction on give_acl_free(). Added
+	quotes to parameter in function_exists, since it's mandatory. Some
+	functions were rewritten to use get_db_* functions. Adde get_groups()
+	and get_user_groups().
+	
+	* include/functions_form.php: Use HTML functions instead of echo.
+	Style correction and rewritten to a better code. Added $return flag to
+	some functions, so the output is returned or printed. Blankspace
+	correction. Added form_search_incident().
+
+	* include/functions_html.php: Added id property to print_textarea.
+	Added tbody and thead to print_table(). Added a better id to checkbox
+	input element. Added class parameter to print_help_tip().
+
+	* include/integria.js: Added refresh_table() and
+	get_form_input_values(). Use jQuery functions in toggleDiv().
+
+	* include/js/integria_incident_search.js, include/js/jquery.js,
+	include/js/jquery.ui.core.js, include/js/jquery.ui.draggable.js,
+	include/js/jquery.ui.tabs.js, include/js/jquery.tablesorter.js,
+	include/js/jquery.tablesorter.pager.js,
+	include/js/jquery.ui.dialog.js, include/js/jquery.ui.resizable.js,
+	include/js/jquery.metadata.js: Added to repository. Javascript jQuery
+	stuff and a new file with functions using that framework.
+
+	* include/styles/integria.css: Blankspaces correction. New styles
+	added.
+
+	* integria/operation/side_menu.php: Removed incident search option
+	since it's the default option now. Replaced $lang_label with
+	lang_string.
+
+	* images/go-first.png, images/go-previous.png, images/go-last.png,
+	images/go-next.png: Added to repository.
+
+	* operation/incidents/incident.php: It now uses AJAX.
+
+	* incidents/incident_detail.php: Code uncrappy.
+
+	* operation/incidents/incident_search.php: Use integria functions.
+	It only works with AJAX.
+
+	* operation/incidents/incident_tracking.php: Blankspace correction.
+	Use lang_string.
+
+	* operation/users/user.php: Removed an useless indentation. Use
+	lang_string. Blankspace correction.
+
 2008-09-08  Sancho Lerena <slerena@gmail.com>
 
 	* install.php: Updated code, many fixes and some new checks. Tested.

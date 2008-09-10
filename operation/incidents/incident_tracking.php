@@ -62,15 +62,15 @@ $sql4='SELECT * FROM tincident_track WHERE id_incident= '.$id_inc;
 
 
 $color = 0;
-echo "<h1>".$lang_label["incident_tracking"]."</h1>";
+echo "<h1>".lang_string ('Incident tracking')."</h1>";
 echo "<h3>";
-echo give_inc_title($id_inc);
+echo give_inc_title ($id_inc);
 echo "</h3>";
 
 echo "<table cellpadding='3' cellspacing='3' border='0' width=600>";
 
 if ($res4=mysql_query($sql4)){
-	echo "<tr><th>".$lang_label["state"]."<th>".$lang_label["user"]."<th  width='80'>".$lang_label["timestamp"];
+	echo "<tr><th>".lang_string ('state')."<th>".lang_string ('user')."<th  width='80'>".lang_string ('timestamp');
 	while ($row2=mysql_fetch_array($res4)){
 		$timestamp = $row2["timestamp"];
 		$state = $row2["state"];
@@ -88,27 +88,38 @@ if ($res4=mysql_query($sql4)){
 		echo '<tr><td class="' . $tdcolor . '">';
 
 		switch($state){
-			case 0: $descripcion = $lang_label["incident_creation"];
-				break;
-			case 1: $descripcion = $lang_label["incident_updated"];
-				break;
-			case 2: $descripcion = $lang_label["incident_note_added"];
-				break;
-			case 3: $descripcion = $lang_label["incident_file_added"];
-				break;
-			case 4: $descripcion = $lang_label["incident_note_deleted"];
-				break;
-			case 5: $descripcion = $lang_label["incident_file_deleted"];
-				break;
-			case 6: $descripcion = $lang_label["incident_change_priority"];
-				break;
-			case 7: $descripcion = $lang_label["incident_change_status"];
-				break;
-			case 8: $descripcion = $lang_label["incident_change_resolution"];
-				break;
-			case 9: $descripcion = $lang_label["incident_workunit_added"];
-				break;
- 			default: $descripcion = $lang_label["unknown"];
+		case 0:
+			$descripcion = lang_string ('incident_creation');
+			break;
+		case 1:
+			$descripcion = lang_string ('incident_updated');
+			break;
+		case 2:
+			$descripcion = lang_string ('incident_note_added');
+			break;
+		case 3:
+			$descripcion = lang_string ('incident_file_added');
+			break;
+		case 4:
+			$descripcion = lang_string ('incident_note_deleted');
+			break;
+		case 5:
+			$descripcion = lang_string ('incident_file_deleted');
+			break;
+		case 6:
+			$descripcion = lang_string ('incident_change_priority');
+			break;
+		case 7:
+			$descripcion = lang_string ('incident_change_status');
+			break;
+		case 8:
+			$descripcion = lang_string ('incident_change_resolution');
+			break;
+		case 9:
+			$descripcion = lang_string ('incident_workunit_added');
+			break;
+		default:
+			$descripcion = lang_string ('unknown');
 		}
 		if ($state == 6)
 			$descripcion .= " -> ".$aditional_data;
@@ -121,13 +132,12 @@ if ($res4=mysql_query($sql4)){
 
 		echo $descripcion;
 		echo '<td class="' . $tdcolor . '">';
-		$nombre_real = dame_nombre_real($user);
-		echo " $nombre_real";
+		echo ' '.dame_nombre_real ($user);
 		echo '<td class="' . $tdcolor . '">';
 		echo $timestamp;
 	}
 echo "</table>"; 
 } else
-	echo $lang_label["no_data"];
+	echo lang_string ('no_data');
 
 ?>
