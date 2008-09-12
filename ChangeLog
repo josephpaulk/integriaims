@@ -1,3 +1,43 @@
+2008-09-14  Sancho Lerena <slerena@gmail.com>
+
+	* General: Cosmetic changes on project names and header (now is 
+	Integria IMS, from ITIL Management System).
+
+	* index.php: Updated links to javascript includes now on ./js dir
+
+	* integria_db.php: Added table tcontact that was missing.
+
+	* integria_dbdata.php: Added 'date_format' to tconfig and updated
+	versions. This will be 1.2.
+
+	* setup.php: Added context help (first use of contextual help).
+
+	* config_process.php: Use $config["homedir"] to get correct paths.
+
+	* functions.php: Added __ as wrapper to lang_string (need migration
+	to use gettext, this is pending by now).
+
+	* functions_html.php: Added integria_help().
+
+	* integria.js: Moved to ./js
+
+	* topi.js: Removed.
+
+	* integria.css: Minimal changes, some weird happen with endlines but
+	there is a few changes only.
+
+	* main_menu.php: Added inventory.
+
+	* side_menu.php: Added inventory submenu (minimal, probably needs 
+	more subsections) and added contacts.
+
+	* general/integria_help.php: Added new contextual help system.
+
+	* operation/contacts/contact_detail.php: Contact management, done.
+
+	* include/help/en/help_notification_period.php: First sample of 
+	contextual help.
+
 2008-09-10  Esteban Sanchez  <estebans@artica.es>
 
 	* ajax.php: Added to repository. AJAX page interface.

@@ -261,7 +261,7 @@ CREATE TABLE `tagenda` (
   `alarm` int(10) unsigned NOT NULL DEFAULT 0,
   `duration` int(10) unsigned NOT NULL DEFAULT 0,
   `id_group` int(10) NOT NULL default '0',
-  `content` VARCHAR(255) DEFAULT '', 
+  `content` VARCHAR(255) DEFAULT '',
   PRIMARY KEY  (`id`)
 );
 
@@ -286,7 +286,7 @@ CREATE TABLE `tincident_origin` (
 CREATE TABLE `trole` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(125) NOT NULL default '',
-  `description` VARCHAR(255) DEFAULT '', 
+  `description` VARCHAR(255) DEFAULT '',
   `cost` int(8) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY  (`id`)
 );
@@ -357,7 +357,7 @@ CREATE TABLE `tcost` (
 );
 
 -- 1.1 new table
--- Assign a manager for each group (to automatically 
+-- Assign a manager for each group (to automatically
 -- assign a user to an incident
 
 CREATE TABLE `tgroup_manager` (
@@ -554,4 +554,16 @@ CREATE TABLE `tinventory` (
 
 ALTER TABLE `tinventory` ADD
  FOREIGN KEY (`id_parent`) REFERENCES tinventory(`id`)
-   ON UPDATE CASCADE ON DELETE SET NULL; 
+   ON UPDATE CASCADE ON DELETE SET NULL;
+
+CREATE TABLE `tcontact` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `fullname` varchar(255) NOT NULL default '',
+  `phone` varchar(55) NOT NULL default '',
+  `mobile` varchar(55) NOT NULL default '',
+  `email` varchar(200) NOT NULL default '',
+  `position` varchar(200) NOT NULL default '',
+  `id_company` mediumint(9) NOT NULL default '0',
+  `disabled` tinyint(3) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+);

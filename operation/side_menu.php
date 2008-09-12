@@ -40,43 +40,43 @@ if ($sec == "projects"){
 	// Project overview
 	if ($sec2 == "operation/projects/project")
 		echo "<li id='sidesel'>";
-	else	
+	else
 		echo "<li>";
 	echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".lang_string ('project_overview')."</a></li>";
 
 	// Project tree
 	if ($sec2 == "operation/projects/project_tree")
 		echo "<li id='sidesel'>";
-	else	
+	else
 		echo "<li>";
 	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_tree'>".lang_string("Project tree")."</a></li>";
-	
+
 	// Project create
 	if (give_acl($id_user, 0, "PM")){
 		if (($sec2 == "operation/projects/project_detail&insert_form") AND (isset($_GET["insert_form"])) )
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&insert_form'>".lang_string ('create_project')."</a></li>";
-	}	
+	}
 
 	// View disabled projects
 	if (($sec2 == "operation/projects/project") AND (isset($_GET["view_disabled"])) )
 		echo "<li id='sidesel'>";
-	else	
+	else
 		echo "<li>";
 	echo "<a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1'>".lang_string("Disabled projects")."</a></li>";
 
 
 	// end of main Project options block
 	echo "</ul>";
-	echo "</div>";	
+	echo "</div>";
 
 	// Dynamic project sub options menu (PROJECT)
 	$id_project = give_parameter_get("id_project",-1);
 	if (($id_project != -1) AND ($id_project != "")){
 		echo "<br>";
-		
+
 		$project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
 
 		echo "<div class='portlet'>";
@@ -87,7 +87,7 @@ if ($sec == "projects"){
 		// Project detail
 		if ($sec2 == "operation/projects/project_detail")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>".lang_string ('project_overview')."</a></li>";
 
@@ -96,7 +96,7 @@ if ($sec == "projects"){
 			// Create task
 			if ($sec2 == "operation/projects/task_detail")
 				echo "<li id='sidesel'>";
-			else	
+			else
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>".lang_string ('create_task')."</a></li>";
 		}
@@ -105,7 +105,7 @@ if ($sec == "projects"){
 		if ($task_number > 0){
 			if ($sec2 == "operation/projects/task")
 				echo "<li id='sidesel'>";
-			else	
+			else
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>".lang_string ('task_list')." ($task_number)</a></li>";
 		}
@@ -113,14 +113,14 @@ if ($sec == "projects"){
 		// Gantt graph
 		if ($sec2 == "operation/projects/gantt")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/gantt&id_project=$id_project'>".lang_string("Gantt graph")."</a></li>";
 
 		// Milestones
 		if ($sec2 == "operation/projects/milestones")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/milestones&id_project=$id_project'>".lang_string("milestones")."</a></li>";
 
@@ -128,18 +128,18 @@ if ($sec == "projects"){
 		if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
 			if ($sec2 == "operation/projects/people_manager")
 				echo "<li id='sidesel'>";
-			else	
+			else
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_task=-1&id_project=$id_project'>".lang_string ('people')."</a></li>";
 		}
 
-		// Workunits 
+		// Workunits
 		$totalhours =  give_hours_project ($id_project);
 		$totalwu =  give_wu_project ($id_project);
 		if ($totalwu > 0){
 			if ($sec2 == "operation/projects/task_workunit")
 				echo "<li id='sidesel'>";
-			else	
+			else
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project'>".lang_string ('workunits');
 			echo " ( $totalhours ".lang_string ('hr')." )";
@@ -150,7 +150,7 @@ if ($sec == "projects"){
 		echo "</div>";
 	}
 
-	
+
 	// Dynamic sub options menu (TASKS)
 	$id_task = give_parameter_get("id_task",-1);
 	if (($id_task != -1) and ($id_task != "")){
@@ -160,32 +160,32 @@ if ($sec == "projects"){
 		$task_title = substr(give_db_value ("name", "ttask", "id", $id_task), 0, 19);
 		echo "<h3>".lang_string ('task')." - $task_title ..</h3>";
 		echo "<ul class='sidemenu'>";
-		
+
 		// Task detail
 		if ($sec2 == "operation/projects/task_detail")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>".lang_string ('task_detail')."</a></li>";
 
 		// Task tracking
 		if ($sec2 == "operation/projects/task_trackin g")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_tracking&id_project=$id_project&id_task=$id_task&operation=view'>".lang_string("Task tracking")."</a></li>";
 
 		// Add task workunit
 		if ($sec2 == "operation/projects/task_create_work")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_create_work&id_task=$id_task&id_project=$id_project'>".lang_string ('add_workunit')."</a></li>";
 
 		// Add task file
 		if ($sec2 == "operation/projects/task_attach_file")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_attach_file&id_task=$id_task&id_project=$id_project'>".lang_string ('add_file')."</a></li>";
 
@@ -194,25 +194,25 @@ if ($sec == "projects"){
 		if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
 			if ($sec2 == "operation/projects/operation/projects/people_manager")
 				echo "<li id='sidesel'>";
-			else	
+			else
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task'>".lang_string ('people')."</a></li>";
 
 			// Move this task
 			if ($sec2 == "operation/projects/task_move")
 				echo "<li id='sidesel'>";
-			else	
+			else
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_move&id_task=$id_task&id_project=$id_project'>".lang_string("Move task")."</a></li>";
 		}
 
-		// Workunits 
+		// Workunits
 		$totalhours =  give_hours_task ($id_task);
 		$totalwu =  give_wu_task ($id_task);
 		if ($totalwu > 0){
 			if ($sec2 == "operation/projects/task_workunit")
 				echo "<li id='sidesel'>";
-			else	
+			else
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task'>".lang_string ('workunits');
 			echo " ( $totalhours ".lang_string ('hr')." )";
@@ -224,7 +224,7 @@ if ($sec == "projects"){
 		if ($numberfiles > 0){
 			if ($sec2 == "operation/projects/task_files")
 				echo "<li id='sidesel'>";
-			else	
+			else
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_files&id_project=$id_project&id_task=$id_task'>".lang_string ('files')." ($numberfiles)";
 			echo "</a></li>";
@@ -234,7 +234,7 @@ if ($sec == "projects"){
 	}
 
 
-}		
+}
 
 // ===============
 // INCIDENTS
@@ -247,7 +247,7 @@ if ($sec == "incidents"){
 	// Incident overview
 	if ($sec2 == "operation/incidents/incident")
 		echo "<li id='sidesel'>";
-	else	
+	else
 		echo "<li>";
 	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".lang_string ('incidents_overview')."</a></li>";
 
@@ -255,11 +255,11 @@ if ($sec == "incidents"){
 		// Incident creation
 		if (isset($_GET["insert_form"]))
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail' id='link_create_incident'>".lang_string ('create_incident')."</a></li>";
 	}
-	
+
 	echo "</ul>";
 	echo "</div>";
 
@@ -274,41 +274,41 @@ if ($sec == "incidents"){
 		// Incident detail
 		if ($sec2 == "operation/incidents/incident_detail")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_incident'>".lang_string ('incident_detail')."</a></li>";
 
 		// Add workunit to incident
 		if ($sec2 == "operation/incidents/incident_create_work")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_create_work&id=$id_incident'>".lang_string ('add_workunit')."</a></li>";
-		
+
 		// Add file to incident
 		if ($sec2 == "operation/incidents/incident_attach_file")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_attach_file&id=$id_incident'>".lang_string ('add_file')."</a></li>";
 
 		// Incident tracking
 		if ($sec2 == "operation/incidents/incident_tracking")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_tracking&id=$id_incident'>".lang_string ('tracking');
 		echo "</a></li>";
-	
+
 		// Incident workunits
 		$timeused = give_hours_incident ($id_incident);
 		$in_wu = give_wu_incident ($id_incident);
 		if ($in_wu > 0){
 			if ($sec2 == "operation/incidents/incident_workunits")
 				echo "<li id='sidesel'>";
-			else	
+			else
 				echo "<li>";
-			
+
 			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_incident'>".lang_string ('workunits_view');
 			echo " ( $timeused ".lang_string ('hr')." )";
 			echo "</a></li>";
@@ -319,9 +319,9 @@ if ($sec == "incidents"){
 		if ($file_number > 0){
 			if ($sec2 == "operation/incidents/incident_files")
 				echo "<li id='sidesel'>";
-			else	
+			else
 				echo "<li>";
-			
+
 			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_files&id=$id_incident'>".lang_string ('incident_files');
 			echo " ( $file_number )";
 			echo "</a></li>";
@@ -333,8 +333,67 @@ if ($sec == "incidents"){
 
 }
 
+
+// ===============
+// INVENTORY
+// ===============
+
+if ($sec == "inventory"){
+	echo "<div class='portlet'>";
+	echo "<h3>".lang_string ('Inventory')."</h3>";
+	echo "<ul class='sidemenu'>";
+	// Incident overview
+	if ($sec2 == "operation/inventory/inventory")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/inventory/inventory'>".lang_string ('Inventory overview')."</a></li>";
+
+	if (give_acl($config["id_user"], 0, "IW")==1) {
+		// Incident creation
+		if ($sec2=="operation/inventory/inventory_detail")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=inventory&sec2=operation/inventory/inventory_detail'>".lang_string ('Create inventory object')."</a></li>";
+	}
+	echo "</ul>";
+	echo "</div>";
+}
+
+// ===============
+// CONTACTS
+// ===============
+
+if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
+	echo "<div class='portlet'>";
+
+	// Contact search
+	echo "<h3>".lang_string ('Contacts')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	// Contact overview
+	if ($sec2 == "operation/contacts/contacts_overview")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail'>".lang_string ('Contact overview')."</a></li>";
+
+	// Create new conect
+	if (give_acl($config["id_user"], 0, "IW")==1) {
+		if ($sec2=="operation/contacts/contacts_detail")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail&create=1'>".lang_string ('Create contact')."</a></li>";
+		echo "</ul>";
+		echo "</div>";
+	}
+}
+
+// ===================
 // KNOWLEDGE BASE (KB)
-// -=================-
+// ===================
 
 
 if (($sec == "kb") AND (give_acl($config["id_user"], 0, "KR"))) {
@@ -343,31 +402,31 @@ if (($sec == "kb") AND (give_acl($config["id_user"], 0, "KR"))) {
 	echo "<ul class='sidemenu'>";
 
 	// KB Browser
-	if ($sec2 == "operation/kb/browse") 
+	if ($sec2 == "operation/kb/browse")
 		echo "<li id='sidesel'>";
-	else	
+	else
 		echo "<li>";
 	echo "<a href='index.php?sec=kb&sec2=operation/kb/browse'>".lang_string ("Browse")."</a></li>";
 
 	if  (give_acl($config["id_user"], 0, "KW")) {
 		// KB Add
-		if ($sec2 == "operation/kb/manage_data") 
+		if ($sec2 == "operation/kb/manage_data")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data'>".lang_string ("Manage KB item")."</a></li>";
-		
+
 		// KB Manage Cat.
-		if ($sec2 == "operation/kb/manage_cat") 
+		if ($sec2 == "operation/kb/manage_cat")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_cat'>".lang_string ("Manage Categories")."</a></li>";
 
 		// KB Manage Prod.
-		if ($sec2 == "operation/kb/manage_prod") 
+		if ($sec2 == "operation/kb/manage_prod")
 			echo "<li id='sidesel'>";
-		else	
+		else
 			echo "<li>";
 		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_prod'>".lang_string ("Manage Products")."</a></li>";
 
@@ -386,23 +445,23 @@ if ($sec == "todo")  {
 	echo "<ul class='sidemenu'>";
 
 	// Todo overview
-	if (($sec2 == "operation/todo/todo") && (!isset($_GET["operation"]))) 
+	if (($sec2 == "operation/todo/todo") && (!isset($_GET["operation"])))
 		echo "<li id='sidesel'>";
-	else	
+	else
 		echo "<li>";
 	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>".lang_string ('todo')."</a></li>";
 
 	// Todo overview of another users
 	if (($sec2 == "operation/todo/todo") && (isset($_GET["operation"])) && ($_GET["operation"] == "notme"))
 		echo "<li id='sidesel'>";
-	else	
+	else
 		echo "<li>";
 	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo&operation=notme'>".lang_string ("todo_notme")."</a></li>";
-	
+
 	// Todo create
 	if (($sec2 == "operation/todo/todo") && (isset($_GET["operation"])) && ($_GET["operation"] == "create"))
 		echo "<li id='sidesel'>";
-	else	
+	else
 		echo "<li>";
 	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo&operation=create'>".lang_string ('add_todo')."</a></li>";
 	echo "</ul>";
@@ -417,28 +476,28 @@ if ($sec == "godmode") {
 	// Main Seetup
 	if ($sec2 == "godmode/setup/setup")
 		echo "<li id='sidesel'>";
-	else	
+	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".lang_string ("Setup")."</a></li>";
 
 	// Incident management per task
 	if ($sec2 == "godmode/setup/incident")
 		echo "<li id='sidesel'>";
-	else	
+	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/incident'>".lang_string ("Incident SLA")."</a></li>";
 
 	// Link management
 	if ($sec2 == "godmode/setup/links")
 		echo "<li id='sidesel'>";
-	else	
+	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/links'>".lang_string ("Links")."</a></li>";
 
 	// Event management
 	if ($sec2 == "godmode/setup/event")
 		echo "<li id='sidesel'>";
-	else	
+	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/event'>".lang_string ("System events")."</a></li>";
 
@@ -460,7 +519,7 @@ echo "<div class='portlet'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&amp;sec2=operation/users/user'>".lang_string ("view_users")."</a></li>";
-		
+
 		// Edit my user
 		if ($sec2 == "operation/users/user_edit")
 		echo "<li id='sidesel'>";
@@ -493,7 +552,7 @@ echo "<div class='portlet'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/users/user_task_assigment'>".lang_string ( "My task assigments")."</a></li>";
-		
+
 
 		echo "</ul>";
 		echo "</div>";
@@ -516,24 +575,24 @@ echo "<div class='portlet'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_weekly'>".lang_string ("weekly_report")."</a></li>";
-		
+
 		// Basic report (annual)
 		if ($sec2 == "operation/user_report/report_annual")
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual'>".lang_string ("Annual report")."</a></li>";
-		
+
 		// View vacations
-		if ($sec2 == "operation/projects/task_workunit") 
+		if ($sec2 == "operation/projects/task_workunit")
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/projects/task_workunit&id_project=-1&id_task=-1'>".lang_string ("View vacations")."</a></li>";
 
 		echo "</ul></div>";
-		
-		
+
+
 	}
 
 	if (give_acl($config["id_user"], 0, "UM")){
@@ -580,7 +639,7 @@ echo "<div class='portlet'>";
 		echo "</ul>";
 		echo "</div>";
 	}
-	
+
 }
 
 // Testing boxes for side menus
@@ -640,7 +699,7 @@ if (give_acl($config["id_user"], 0, "PR") == 1){
 
 echo '
   </div>
-</div>'; 
+</div>';
 // End of user box
 
 

@@ -1,4 +1,4 @@
-/* 
+/*
 
 (c) Original author: Erwin Aligam, http://www.styleshout.com/
 (c) Modified for project Integria by Sancho Lerena, 2007.
@@ -10,25 +10,25 @@
 /* top elements */
 * {
 	margin: 0; padding: 0;
-} 
+}
 
 body {
 	margin: 0px 15px;
 	font: 0.80em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
-	background: url(../../headerbg-orange.gif) repeat-x;
-	color: #666666;	
+	background: #ffffff;
+	color: #666666;
 	text-align: center;
 }
 
 td {
 	font: 0.80em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
-	color: #666666;	
+	color: #666666;
 }
 
 /* links */
 a {
 	background: inherit;
-	color: #EC981F; 
+	color: #EC981F;
 }
 a:hover {
 	text-decoration: none;
@@ -53,14 +53,14 @@ h6 { font-size: 0.5em; }
 	padding: 10px 0 5px 5px;
 	margin: 0 0 0 10px;
 	text-transform: uppercase;
-	border-bottom: 1px solid #f2f2f2; 	
-}	
+	border-bottom: 1px solid #f2f2f2;
+}
 #sidebar h1 {
 	padding: 10px 0px 5px 00px;
 	/* background: url(../../images/square_arrow.gif) no-repeat 2px 12px; */
 	margin: 0;
 	font: bold 1.1em 'Arial', Sans-serif;
-	text-transform: none;	
+	text-transform: none;
 }
 
 
@@ -70,8 +70,8 @@ p, h1, h2, h3, table {
 
 ul, ol {
 	margin: 10px 30px;
-	padding: 0 15px;	
-	color: #EC981F;	
+	padding: 0 15px;
+	color: #EC981F;
 }
 ul span, ol span {
 	color: #666666;
@@ -80,7 +80,7 @@ ul span, ol span {
 /* images */
 
 img.float-right {
-  margin: 5px 0px 5px 15px;  
+  margin: 5px 0px 5px 15px;
 }
 img.float-left {
   margin: 5px 15px 5px 0px;
@@ -92,11 +92,11 @@ code {
   padding: 10px;
   text-align: left;
   display: block;
-  overflow: auto;  
+  overflow: auto;
   font: 500 1em/1.5em 'Lucida Console', 'courier new', monospace;
   /* white-space: pre; */
   background: #FAFAFA;
-  border: 1px solid #f2f2f2;  
+  border: 1px solid #f2f2f2;
   border-left: 3px solid #EC981F;
 }
 acronym {
@@ -105,12 +105,12 @@ acronym {
 }
 blockquote {
 	margin: 15px;
- 	padding: 0 0 0 32px;  	
-  	background: #FAFAFA url(../../images/quote.gif) no-repeat 5px 10px !important; 
+ 	padding: 0 0 0 32px;
+  	background: #FAFAFA url(../../images/quote.gif) no-repeat 5px 10px !important;
 	background-position: 8px 10px;
-	border: 1px solid #f2f2f2; 
-	border-left: 3px solid #EC981F;  
-	font-weight: bold; 
+	border: 1px solid #f2f2f2;
+	border-left: 3px solid #EC981F;
+	font-weight: bold;
 }
 
 /* form elements */
@@ -133,13 +133,13 @@ textarea {
 	border:1px solid #eee;
 	color:#777;
 }
-input.button { 
-	margin: 0; 
+input.button {
+	margin: 0;
 	font: normal 0.9em Verdana, sans-serif;
 	border: 1px solid #CCC;
-	background: #FFF; 
-	padding: 2px 3px; 
-	color: #333;	
+	background: #FFF;
+	padding: 2px 3px;
+	color: #333;
 	margin: 10px 15px;
 }
 select {
@@ -160,14 +160,14 @@ checkbox {
 form.searchform {
 	background: transparent;
 	border: none;
-	margin: 0; padding: 0;	
+	margin: 0; padding: 0;
 }
-form.searchform input.textbox { 
-	margin: 0; 
+form.searchform input.textbox {
+	margin: 0;
 	width: 120px;
-	border: 1px solid #CCC; 
+	border: 1px solid #CCC;
 	background: #FFF;
-	color: #333; 
+	color: #333;
 	vertical-align: top;
 }
 form.searchform input.button {
@@ -180,19 +180,19 @@ form.searchform input.button {
 
 .databox_color {
 	margin: 10px 15px;
-	border: 1px solid #f2f2f2; 
+	border: 1px solid #f2f2f2;
 	/* border-left: 3px solid #EC981F;   */
 }
 
 .databox {
 	margin: 10px 15px;
-	border: 1px solid #f2f2f2; 
-	background-color: #FAFAFA; 
+	border: 1px solid #f2f2f2;
+	background-color: #FAFAFA;
 }
 
 .databox_frame {
 	margin: 10px 15px;
-	border: 1px solid #f2f2f2; 
+	border: 1px solid #f2f2f2;
 }
 
 /*****************/
@@ -201,8 +201,8 @@ form.searchform input.button {
 #wrap {
 	margin: 0 auto;
    	width: 1080px;
-	text-align: left;		
-	background: #FFF;	
+	text-align: left;
+	background: #FFF;
 }
 #content-wrap {
 	clear:both;
@@ -214,7 +214,7 @@ form.searchform input.button {
 #header {
 	position: relative;
 	background: url(../../images/headerbg-orange.gif) repeat-x 0 0;
-	height: 50px;	
+	height: 50px;
 }
 
 #header h1#logo {
@@ -225,7 +225,7 @@ form.searchform input.button {
 	color: #CCC;
 	text-transform: lowercase;
 	/* change the values of top and Left to adjust the position of the logo*/
-	top: 0; left: 5px;	
+	top: 0; left: 5px;
 }
 #header h2#slogan {
 	position: absolute;
@@ -234,18 +234,18 @@ form.searchform input.button {
 	text-transform: none;
 	color: #FFF;
 	/* change the values of top and Left to adjust the position of the slogan*/
-	top: 4px; left:65px;		
+	top: 4px; left:65px;
 }
 #header img {
 	border: 0;
-	margin: 0px 0px 0px 0px;  
+	margin: 0px 0px 0px 0px;
 	position: relative;
 	top: 4px;
 }
 
 #header img.logoimage {
 	position: absolute;
-	top: 5px; left: 5px;	
+	top: 5px; left: 5px;
 }
 #header a {
 	text-decoration: none;
@@ -253,22 +253,22 @@ form.searchform input.button {
 }
 #header div {
 	position: absolute;
-	top: 20px; right:10px;		
+	top: 20px; right:10px;
 }
 #header span {
 	letter-spacing: 2px;
 	font: bolder 0.8em 'Trebuchet MS', Arial, Sans-serif;
 	color: #AAA;
-	padding-right: 25px;	
+	padding-right: 25px;
 }
 
 #header-nav div {
 	position: absolute;
-	top: 26px; left:125px;		
+	top: 26px; left:125px;
 }
 #header-nav span {
 	letter-spacing: 2px;
-	padding-left: 25px;	
+	padding-left: 25px;
 	font: bolder 0.91em 'Trebuchet MS', Arial, Sans-serif;
 	color: #dddddd;
 }
@@ -312,21 +312,21 @@ form.searchform input.button {
 	float: left;
 	width: 200px;
 	margin: 0;
-	padding: 0; 
-	display: inline;	
+	padding: 0;
+	display: inline;
 }
 #sidebar ul.sidemenu {
 	list-style: none;
 	text-align: left;
-	margin: 0 0 0px 0;		
+	margin: 0 0 0px 0;
 	text-decoration: none;
-	padding: 0px 0px 0px 0px;	
+	padding: 0px 0px 0px 0px;
 }
 #sidebar ul.sidemenu li {
 	font: 1.0em 'Arial', Sans-serif;
 	border-bottom: 1px solid #EFF0F1;
 	background: url(../../images/arrow.gif) no-repeat 2px 5px;
-	padding: 2px 5px 2px 20px;	
+	padding: 2px 5px 2px 20px;
 }
 
 #sidebar li#sidesel a {
@@ -339,14 +339,14 @@ form.searchform input.button {
 #sidebar ul.sidemenu a {
 	font-weight: bold;
 	background-image: none;
-	text-decoration: none;	
+	text-decoration: none;
 }
 
 /* rightbar */
 #rightbar {
 	float: right;
 	width: 21%;
-	padding: 0;	margin: 0;		
+	padding: 0;	margin: 0;
 }
 
 /* footer */
@@ -354,8 +354,8 @@ form.searchform input.button {
 	clear: both;
 	background: #FFF url(../../images/footerbg.gif) repeat-x left top;
 	border-top: 1px solid #F2F2F2;
-	text-align: center;	
-	height: 50px;	
+	text-align: center;
+	height: 50px;
 }
 #footer a {
 	text-decoration: none;
@@ -365,44 +365,44 @@ form.searchform input.button {
 /* menu */
 #menu {
 	clear: both;
-	margin: 0; 
-	padding: 0;	
+	margin: 0;
+	padding: 0;
 
 }
-#menu ul {	
-	position: relative; 
+#menu ul {
+	position: relative;
 	bottom: 4px;
-	margin: 1px 0 0 1px; padding: 0; 
+	margin: 1px 0 0 1px; padding: 0;
 	float: left;
 	text-transform: uppercase;
 	font: bold 1.2em Arial, Sans-serif;
 	/* width: 980px; */
 	width: 100%;
 	border: 1px solid #808080;
-	border-width: 0 0 4px 0;	
+	border-width: 0 0 4px 0;
 	list-style: none;
 }
 #menu ul li{
-	display: inline;	
+	display: inline;
 
 }
-#menu ul li a {	
+#menu ul li a {
 	position: relative; bottom: -4px;
 	float: left;
 	color: #808080;
 	padding: 0px 10px;
 	text-decoration: none;
-	background: white url(../../images/menudivide.gif) repeat-y right top; 
-	border-bottom: 4px solid #808080; 	
+	background: white url(../../images/menudivide.gif) repeat-y right top;
+	border-bottom: 4px solid #808080;
 }
 #menu ul li a:hover{
 	color: black;
-	background-color: #F3F3F3; 
+	background-color: #F3F3F3;
 	border-bottom: 4px solid #FFA600;
 }
 #menu ul li#current a{
 	color: #333;
-	background-color: #F3F3F3; 
+	background-color: #F3F3F3;
 	border-bottom: 4px solid #FFA600;
 }
 
@@ -417,7 +417,7 @@ form.searchform input.button {
 /* display classes */
 .clear  { clear: both; }
 .block  { display: block; }
-.hide   { display: none; }	
+.hide   { display: none; }
 .orange { color: #FFA600; }
 
 /*  */
@@ -456,7 +456,7 @@ input.login {
 	font-size: 11px;
 }
 input.sub {
-	
+
 	border-bottom-color: #708090;
 	border-right-color: #708090;
 	-moz-border-radius: 5%;
@@ -478,14 +478,14 @@ input.create {
 	background: #e5e5e5 url(../../images/wand.png) no-repeat right 3px;
 }
 
-td.datos, td.datost, td.datosb, td.datos_id, td.datosf9, 
+td.datos, td.datost, td.datosb, td.datos_id, td.datosf9,
 td.datosf9i, td.datos_jus, td.w90datos, td.w135datos {
 	/* background-color: #f5f5f5; */
 	background-color: #f9f9f9;
 	padding: 5px 5px 5px 5px;
 }
- 
-td.datos2, td.datos2t, td.datos2b, td.datos2_id, td.datos2f9, 
+
+td.datos2, td.datos2t, td.datos2b, td.datos2_id, td.datos2f9,
 td.datos2f9i, td.datos2_jus, td.w90datos2, td.w135datos2 {
 	/* background-color: #fafbfc; */
 	background-color: #e3e9e9;
@@ -511,9 +511,9 @@ th, td.lb, td.datos3  {
 	font: 0.75em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
 	color: #FFFFFF;
 	font-weight: bold;
-	padding: 5px 5px 5px 5px; 
+	padding: 5px 5px 5px 5px;
 }
-.f9, .f9i, .f9b, td.f9, td.f9i, td.datosf9, td.datos2f9, 
+.f9, .f9i, .f9b, td.f9, td.f9i, td.datosf9, td.datos2f9,
 td.datosf9i, td.datos2f9i, .datos_yellowf9, .datos_greenf9, .datos_redf9   {
 	font-size: 9px;
 }
@@ -595,7 +595,7 @@ div.data_box {
 	text-decoration: none;
 }
 
-#menu_tab li.nomn:hover a, 
+#menu_tab li.nomn:hover a,
 #menu_tab li:hover ul a:hover
 {
 	background: #cde0ad;
@@ -783,13 +783,13 @@ div#foot {
 
 div#foot a{
 	color: #EAA036;
-	font-weight: bold; 
+	font-weight: bold;
 	text-decoration: none;
 }
 
 div#foot a:hover{
 	color: #FAF036;
-	font-weight: bold; 
+	font-weight: bold;
 	text-decoration: none;
 }
 .action-buttons {

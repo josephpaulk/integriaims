@@ -62,7 +62,7 @@ echo '<td class="datos2"><input type="text" name="block_size" size=5 value="'.$c
 
 echo '<tr><td class="datos">'.lang_string ("Notification period");
 echo '<td class="datos"><input type="text" name="notification_period" size=7 value="'.$config["notification_period"].'">';
-
+echo integria_help("notification_period");
  
 echo "<tr><td colspan='3' align='right'>";
 echo '<input type="submit" class="sub upd" value="'.$lang_label["update"].'">';

@@ -1,8 +1,9 @@
 <?PHP
-// Integria 1.0 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -11,6 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 if (isset($_GET["sec"]))
 	$sec = $_GET["sec"];
@@ -40,6 +42,16 @@ if (give_acl($config["id_user"], 0, "IR") == 1){
     else
 	    echo "<li>";
     echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".lang_string("Incidents")."</a></li>";
+}
+
+// Inventory
+if (give_acl($config["id_user"], 0, "IR") == 1){
+    // Incident
+    if ($sec == "Inventory" )
+	    echo "<li id='current'>";
+    else
+	    echo "<li>";
+    echo "<a href='index.php?sec=inventory&sec2=operation/inventory'>".lang_string("Inventory")."</a></li>";
 }
 
 // KB

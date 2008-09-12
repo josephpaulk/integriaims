@@ -312,6 +312,10 @@ function format_numeric ( $number, $decimals=1, $dec_point=".", $thousands_sep="
 
 
 
+function __ ($string){
+		return lang_string ($string);
+}
+
 function lang_string ($string) {
 	global $config;
 	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");

@@ -15,8 +15,9 @@
 INSERT INTO `tconfig` (token, value) VALUES  
 ('language_code','en'),
 ('block_size','20'),
-('db_scheme_version','1.1'),
-('db_scheme_build','ID80708'),
+('db_scheme_version','1.2'),
+('db_scheme_build','ID80911'),
+('date_format', 'F j, Y, g:i a'),
 ('notification_period','86400');
 
 INSERT INTO `tgrupo` VALUES (1,'All','world',0);

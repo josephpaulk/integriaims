@@ -1,9 +1,9 @@
-<?php
-
-// INTEGRIA - OpenSource Management for the Enterprise
+<?PHP
+// INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,7 +14,7 @@
 // GNU General Public License for more details.
 
 ?>
-<div style='height: 120px'>
+<div style='height: 60px'>
 </div>
 <center>
 <div class='databox' id='login' style='height: 240px;'>

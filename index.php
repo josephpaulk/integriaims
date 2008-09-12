@@ -1,10 +1,9 @@
-<?php
-
-// INTEGRIA IMS v1.2
-// http://www.integriaims.com
-// ===========================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica, info@artica.es
+<?PHP
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -13,6 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 // Integria uses icons from famfamfam, licensed under CC Atr. 2.5
 // Silk icon set 1.3 (cc) Mark James, http://www.famfamfam.com/lab/icons/silk/
@@ -87,20 +87,20 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 $clean_output = give_parameter_get ("clean_output", 0);
 
 ?>
-<title>I N T E G R I A - OpenSource Management for the Enterprise</title>
+<title>I N T E G R I A   I M S  - ITIL Management System</title>
 <meta http-equiv="expires" content="0" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="resource-type" content="document" />
 <meta name="distribution" content="global" />
 <meta name="author" content="Sancho Lerena" />
-<meta name="copyright" content="This is GPL software. Created by Sancho Lerena" />
-<meta name="keywords" content="management, project, incident, tracking, GPL, software" />
+<meta name="copyright" content="Artica" />
+<meta name="keywords" content="management, project, incident, tracking, ITIL" />
 <meta name="robots" content="index, follow" />
 <link rel="icon" href="images/integria.ico" type="image/ico" />
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/integria_tip.css" type="text/css" />
-<script type='text/JavaScript' src='include/calendar.js'></script>
-<script type='text/JavaScript' src='include/integria.js'></script>
+<script type='text/JavaScript' src='include/js/calendar.js'></script>
+<script type='text/JavaScript' src='include/js/integria.js'></script>
 <script type="text/javascript" src="include/js/jquery.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.core.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.tabs.js"></script>
@@ -199,7 +199,7 @@ if (isset ($_GET["bye"])) {
 
 // Common code for all operations
 echo '</head>';
-echo '<body bgcolor="#ffffff">';
+echo '<body>';
 $pagina = "";
 
 if (isset ($_GET["sec2"])){

@@ -550,4 +550,20 @@ function print_help_tip ($text, $return = false, $tip_class = 'tip') {
 	echo $output;
 }
 
+/** 
+ * Prints a help tip icon.
+ * 
+ * @param id Help id
+ * @param return Flag to return or output the result
+ * 
+ * @return The help tip if return flag was active.
+ */
+function integria_help ($help_id, $return = false) {
+	global $config;
+	$output = '&nbsp;<img class="img_help" src="images/help.png" onClick="integria_help(\''.$help_id.'\')">';
+	if ($return)
+		return $output;
+	echo $output;
+}
+
 ?>
