@@ -104,6 +104,10 @@ $clean_output = give_parameter_get ("clean_output", 0);
 <script type="text/javascript" src="include/js/jquery.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.core.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.tabs.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.draggable.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.resizable.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.dialog.js"></script>
+<script type="text/javascript" src="include/js/jquery.form.js"></script>
 <link rel="stylesheet" href="http://dev.jquery.com/view/tags/ui/latest/themes/flora/flora.all.css" type="text/css" media="screen" title="Flora (Default)">
 
 <?php
@@ -274,6 +278,8 @@ if ($clean_output == 0){
 		require ("general/home.php");  //default
 }
 ?>
+<!-- Dialog helper div -->
+<div id="dialog" class="dialog"></div>
 </body>
 </html>
 

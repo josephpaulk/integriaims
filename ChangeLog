@@ -1,3 +1,60 @@
+2008-09-15  Esteban Sanchez  <estebans@artica.es>
+
+	* integria_db.sql: Table tincident_inventory moved to the bottom, so
+	creation does not fail.
+
+	* index.php: Added dialog javascript and div by default.
+
+	* operation/side_menu.php: Show hidden incident menu option so it can
+	be shown using Javascript. Style correction.
+
+	* operation/users/user_search.php: Search only into users the logged
+	user. Added class to pager, so it's styled now.
+
+	* incidents/incident_search.php: Added missing search parameters.
+
+	* incidents/incident.php: Removed redundant header. Added clasess to
+	the table and the pager. Removed duplicated javascript inclusion. Some
+	javascript functions moved to include/js/integria_incident_search.js.
+	The right menu is now updated if an incident is clicked. Added an
+	option to search incidents which affects.
+
+	* operation/incidents/incident_detail.php: Added get_info to possible
+	actions, to get information in AJAX. Style correction. Fixed a bug
+	which makes impossible to change the incident owner. Insert and update
+	inventory objects is now possible. Style correction.
+
+	* include/js/integria.js: Use jQuery functions when possible. Added
+	refresh_table() and get_form_input_values() which were removed in
+	previous commit.
+
+	* include/js/integria_incident_search.js: Added inventory support to
+	configure_incident_form(), which also has an ajax flag support. Added
+	configure_inventory_search_form() to configure the form of the search
+	incident dialog. Added show_inventory_search_dialog() to show the
+	incident search dialog. Added configure_incident_side_menu() to set up
+	the side menu when an incident is clicked.
+
+	* include/styles/integria.css: Added style for classes pager and
+	image-button. Added style to text inputs.
+
+	* include/functions.php: Fixed lang_string() so it works with AJAX
+	dialogs.
+	
+	* include/functions_db.php: Added get_user_visible_users(),
+	get_inventory_name(), get_inventories_in_incident(),
+	get_inventory_contracts(), get_company() and get_company_contacts()
+	which are self explanatory.
+
+	* include/functions_form.php: Use print_select in
+	combo_user_visible_for_me, which also uses get_user_visible_users() to
+	get the users. Added inventory search support in
+	form_search_incident().
+
+	* include/functions_html.php: Changed print_select() so $multiple
+	parameter now sets the size of multiple instead of a fixed value.
+	Added class parameter to print_input_hidden().
+
 2008-09-14  Sancho Lerena <slerena@gmail.com>
 
 	* General: Cosmetic changes on project names and header (now is 

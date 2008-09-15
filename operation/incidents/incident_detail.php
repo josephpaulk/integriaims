@@ -34,11 +34,21 @@ if (give_acl ($config['id_user'], $id_grupo, "IR") != 1){
 
 $id_grupo = 0;
 $texto = "";
-$creacion_incidente = "";
+$create_incident = true;
 $result_msg = "";
 
 $id = get_parameter ('id');
 $action = get_parameter ('action');
+
+if ($action == 'get-info') {
+	$incident = get_db_row ('tincidencia', 'id_incidencia', $id);
+	
+	$incident['hours'] = (int) give_hours_incident ($id);
+	
+	echo json_encode ($incident);
+	if (defined ('AJAX'))
+		return;
+}
 
 if ($action == 'update') {
 	$id_inc = get_parameter ('id_inc');
@@ -46,7 +56,7 @@ if ($action == 'update') {
 	$usuario = get_parameter ('usuario_form');
 	
 	// Only admins (manage incident) or owners can modify incidents
-	if (! give_acl ($config["id_user"], $grupo, "IM") || $usuario != $config["id_user"]) {
+	if (! give_acl ($config["id_user"], $grupo, "IM")) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
 		echo "<h3 class='error'>".lang_string ('upd_incid_no')."</h3>";
 		no_permission ();
@@ -90,7 +100,19 @@ if ($action == 'update') {
 			$email_notify, $prioridad, $descripcion,
 			$epilog, $id_task, $resolution, $id_inc);
 	$result = process_sql ($sql, 'insert_id');
-	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." deleted updated #".$id_inc);
+	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id_inc);
+	
+	/* Update inventory objects in incident */
+	$sql = sprintf ('DELETE FROM tincident_inventory WHERE id_incident = %d', $id_inc);
+	process_sql ($sql);
+	$inventories = get_parameter ('inventories');
+	foreach ($inventories as $id_inventory) {
+		$sql = sprintf ('INSERT INTO tincident_inventory
+				VALUES (%d, %d)',
+				$id_inc, $id_inventory);
+		process_sql ($sql);
+	}
+	
 	if ($result === false)
 		$result_msg = "<h3 class='suc'>".lang_string ('upd_incid_no')."</h3>";
 	else
@@ -144,6 +166,14 @@ if ($action == "insert") {
 			$email_notify, $id_task, $resolution);
 	$id_inc = process_sql ($sql, 'insert_id');
 	if ($id_inc !== false) {
+		$inventories = (array) get_parameter ('inventories');
+		
+		foreach ($inventories as $id_inventory) {
+			$sql = sprintf ('INSERT INTO tincident_inventory
+					VALUES (%d, %d)',
+					$id_inc, $id_inventory);
+			process_sql ($sql);
+		}
 		$_GET["id"] = $id_inc; // HACK
 		$result_msg  = "<h3 class='suc'>".lang_string ('create_incid_ok')." (id #$id_inc)</h3>";
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"],
@@ -166,13 +196,14 @@ if ($action == "insert") {
 
 // Edit / Visualization MODE - Get data from database
 if ($id) {
-	$creacion_incidente = 0;
+	$create_incident = false;
 	$id_inc = $_GET["id"];
 	$iduser_temp=$_SESSION['id_usuario'];
 	// Obtain group of this incident
-	$sql1='SELECT * FROM tincidencia WHERE id_incidencia = '.$id_inc;
-	$result=mysql_query($sql1);
-	$row=mysql_fetch_array($result);
+	$sql = sprintf ('SELECT * FROM tincidencia 
+			WHERE id_incidencia = %d', $id_inc);
+	$result = mysql_query ($sql);
+	$row = mysql_fetch_array ($result);
 	// Get values
 	$titulo = $row["titulo"];
 	$texto = $row["descripcion"];
@@ -247,7 +278,7 @@ if ($id) {
 
 			$sql = " INSERT INTO tattachment (id_incidencia, id_usuario, filename, description, size ) VALUES (".$id_inc.", '".$iduser_temp." ','".$filename."','".$description."',".$filesize.") ";
 
-			mysql_query($sql);
+			mysql_query ($sql);
 			$id_attachment=mysql_insert_id();
 			incident_tracking ( $id_inc, $config['id_user'], 3);
 			$result_msg="<h3 class='suc'>".lang_string ('file_added')."</h3>";
@@ -277,14 +308,13 @@ if ($id) {
 	$prioridad = 2;
 	$id_grupo =0;
 	$grupo = dame_nombre_grupo (1);
-
+	
 	$usuario= $config["id_user"];
 	$estado = 1;
 	$resolution = 9;
 	$id_task = 0;
 	$epilog = "";
 	$id_creator = $iduser_temp;
-	$creacion_incidente = 1;
 	$email_notify = 0;
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -315,6 +345,11 @@ echo '<div id="result">'.$result_msg.'</div>';
 
 $table->width = "90%";
 $table->class = "databox_color";
+$table->size = array ();
+$table->size[0] = '20%';
+$table->size[1] = '40%';
+$table->size[2] = '20%';
+$table->size[3] = '20%';
 $table->style = array ();
 $table->style[0] = 'font-weight: bold';
 $table->style[2] = 'font-weight: bold';
@@ -323,12 +358,13 @@ $table->cellspacing = 2;
 $table->cellpadding = 2;
 $table->colspan = array ();
 $table->colspan[0][2] = 2;
-$table->colspan[5][0] = 4;
+$table->colspan[5][1] = 3;
 $table->colspan[6][0] = 4;
 $table->colspan[7][0] = 4;
+$table->colspan[8][0] = 4;
 
 $table->data[0][0] = lang_string ('incident');
-$table->data[0][1] = print_input_text ('titulo', $titulo, '', 50, 200, true);
+$table->data[0][1] = print_input_text ('titulo', $titulo, '', 40, 100, true);
 
 if ($has_permission)
 	$disabled = false;
@@ -340,7 +376,7 @@ $table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
 $table->data[0][2] .= lang_string ('email_notify');
 $table->data[0][2] .= print_help_tip (lang_string ('email_notify_help'), true);
 
-$table->data[1][0] = lang_string ('priority');
+$table->data[1][0] = lang_string ('Priority');
 if ($disabled) {
 	$table->data[1][1] = $prioridad;
 } else {
@@ -349,7 +385,7 @@ if ($disabled) {
 					'', true, false, false);
 }
 
-$table->data[1][2] = lang_string ('status');
+$table->data[1][2] = lang_string ('Status');
 
 $actual_only = false;
 $disabled = false;
@@ -363,12 +399,13 @@ $table->data[1][3] = combo_incident_status ($estado, $disabled, $actual_only, tr
 
 $table->data[2][0] = lang_string ('assigned_user');
 if ($has_permission) {
+	$disabled = false;
 	if ($default_responsable != "") {
-		$table->data[2][1] = print_input_hidden ('usuario_form', $default_responsable, true);
-		$table->data[2][1] .= dame_nombre_real ($default_responsable);
-	} else{
-		$table->data[2][1] = combo_user_visible_for_me ($usuario, "usuario_form", 0, "IR", true);
+		$disabled = true;
 	}
+	$table->data[2][1] = print_button (dame_nombre_real ($usuario), 'usuario_name',
+					$disabled, '', '', true);
+	$table->data[2][1] .= print_input_hidden ('usuario_form', $usuario, true);
 	$table->data[2][1] .= print_help_tip (lang_string ('incident_user_help'), true);
 } else {
 	$table->data[2][1] = print_input_hidden ('usuario_form', $usuario, true);
@@ -393,12 +430,40 @@ $table->data[4][1] = combo_incident_resolution ($resolution, $disabled, true);
 $table->data[4][2] = lang_string ('task');
 $table->data[4][3] = combo_task_user ($id_task, $config["id_user"], 0, $disabled, true);
 
+$table->data[5][0] = lang_string ('Affected inventory');
+
+if ($create_incident) {
+	$table->data[5][1] = print_select (array (), 'incident_inventories', NULL,
+					'', '', '', true, 5);
+	$table->data[5][1] .= print_button (lang_string ("Add inventory object"),
+					'search_inventory', false, '', '', true);
+	$table->data[5][1] .= print_button (lang_string ("Remove selected object"),
+					'delete_inventory', false, '', '', true);
+} else {
+	$inventories = get_inventories_in_incident ($id_inc);
+	$table->data[5][1] = print_select ($inventories, 'incident_inventories',
+						NULL, '', '', '',
+						true, 5, false);
+	
+	if ($has_permission) {
+		$table->data[5][1] .= print_button (lang_string ("Add inventory object"),
+					'search_inventory', false, '', '', true);
+		$table->data[5][1] .= print_button (lang_string ("Remove inventory object"),
+					'delete_inventory', false, '', '', true);
+		$inventories = (array) get_db_all_rows_sql ($sql);
+		foreach ($inventories as $inventory_id => $inventory_name) {
+			$table->data[5][1] .= print_input_hidden ("inventories[]", 
+								$inventory_id, true, 'selected-inventories');
+		}
+	}
+}
 $disabled_str = $disabled ? 'readonly' : '';
-$table->data[5][0] = print_textarea ('descripcion', 15, 80, $texto, $disabled_str, true);
+$table->data[6][0] = lang_string ('Description').'<br />';
+$table->data[6][0] .= print_textarea ('descripcion', 15, 80, $texto, $disabled_str, true);
 
 if ($estado == 5) {
-	$table->data[6][0] = lang_string ('resolution_epilog');
-	$table->data[7][0] = print_textarea ('epilog', 15, 100, $epilog, $disabled_str, true);
+	$table->data[7][0] = lang_string ('resolution_epilog');
+	$table->data[8][0] = print_textarea ('epilog', 15, 100, $epilog, $disabled_str, true);
 }
 
 echo "<form id='incident_status_form' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident_detail'>";
@@ -406,16 +471,16 @@ echo "<form id='incident_status_form' method='POST' action='index.php?sec=incide
 print_table ($table);
 
 echo '<div class="action-buttons" style="width: '.$table->width.'">';
-if ($creacion_incidente == 0) {
+if ($create_incident) {
+	print_input_hidden ('action', 'insert');
+	if (give_acl ($config["id_user"], 0, "IW")) {
+		print_submit_button (lang_string ('create'), 'accion', false, 'class="sub create"');
+	}
+} else {
 	print_input_hidden ('id', $id_inc);
 	print_input_hidden ('action', 'update');
 	if ($has_permission) {
 		print_submit_button (lang_string ('update'), 'accion', false, 'class="sub next"');
-	}
-} else {
-	print_input_hidden ('action', 'insert');
-	if (give_acl ($config["id_user"], 0, "IW")) {
-		print_submit_button (lang_string ('create'), 'accion', false, 'class="sub create"');
 	}
 }
 
@@ -425,4 +490,19 @@ if (isset ($id_inc)) {
 echo '</div>';
 echo "</form>";
 
+/* Javascript is only shown in normal mode */
+if (! defined ('AJAX')) :
 ?>
+
+<script type="text/javascript" src="include/js/jquery.metadata.js"></script>
+<script type="text/javascript" src="include/js/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
+<script type="text/javascript" src="include/js/integria_incident_search.js"></script>
+<script  type="text/javascript">
+$(document).ready (function () {
+	/* First parameter indicates to add AJAX support to the form */
+	configure_incident_form (false);
+});
+</script>
+
+<?php endif; ?>

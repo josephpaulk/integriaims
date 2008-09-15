@@ -1,11 +1,7 @@
 
 /* Function to hide/unhide a specific Div id */
-function toggleDiv (divid){
-	if (document.getElementById(divid).style.display == 'none') {
-		document.getElementById(divid).style.display = 'block';
-	} else {
-		document.getElementById(divid).style.display = 'none';
-	}
+function toggleDiv (id_div) {
+	$("#" + id_div).toggle ();
 }
 
 function winopeng (url, wid) {
@@ -31,4 +27,25 @@ function html_entity_decode (str) {
 	var ta = document.createElement ("textarea");
 	ta.innerHTML = str.replace (/</g, "&lt;").replace (/>/g,"&gt;");
 	return ta.value;
+}
+
+/**
+ * Refresh odd an even rows in a table.
+ *
+ * @param table_id If of the table to refresh.
+ */
+function refresh_table (table_id) {
+	$("#" + table_id + " > tbody > tr:odd td").removeClass("datos").addClass("datos2");
+	$("#" + table_id + " > tbody > tr:even td").removeClass("datos2").addClass("datos");
+}
+
+/**
+ * Get all values of an form into an array.
+ *
+ * @param form_id Id of the form to get the values.
+ *
+ * @retval The input values of the form into an array.
+ */
+function get_form_input_values (form_id) {
+	return $("#" + form_id).formToArray ();
 }

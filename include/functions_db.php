@@ -1573,4 +1573,115 @@ function get_user_groups ($id_user = 0) {
 	
 	return $user_groups;
 }
+
+function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true) {
+	if ($id_user == 0) {
+		global $config;
+		$id_user = $config['id_user'];
+	}
+	
+	$values = array ();
+	
+	if (give_acl ($id_user, 1, "")) {
+		$sql = sprintf ('SELECT * FROM tusuario
+				WHERE id_usuario != "%s"',
+				$id_user);
+		$users = get_db_all_rows_sql ($sql);
+		if ($users === false)
+			$users = array ();
+		foreach ($users as $user) {
+			if ($only_name)
+				$values[$user['id_usuario']] = $user['nombre_real'];
+			else
+				$values[$user['id_usuario']] = $user;
+		}
+	} else {
+		$sql = sprintf ('SELECT id_grupo FROM tusuario_perfil
+				WHERE id_usuario = "%s"', $id_user);
+		$groups = get_db_all_rows_sql ($sql);
+		if ($groups === false)
+			$groups = array ();
+		foreach ($groups as $group) {
+			$sql = sprintf ('SELECT *
+					FROM tusuario_perfil p, tusuario u
+					WHERE p.id_usuario = u.id_usuario
+					AND id_grupo = %d', $group['id_grupo']);
+			$users = get_db_all_rows_sql ($sql);
+			if ($users === false)
+				continue;
+			foreach ($users as $user) {
+				if (! give_acl ($user["id_usuario"], $group['id_grupo'], $access))
+					continue;
+				if ($only_name)
+					$values[$user['id_usuario']] = $user['nombre_real'];
+				else
+					$values[$user['id_usuario']] = $user;
+			}
+		}
+	}
+	
+	return $values;
+}
+
+function get_inventory_name ($id) {
+	return (string) get_db_value ('name', 'tinventory', 'id', $id);
+}
+
+function get_inventories_in_incident ($id_incident, $only_names = true) {
+	$sql = sprintf ('SELECT tinventory.* FROM tincidencia, tincident_inventory, tinventory
+			WHERE tincidencia.id_incidencia = tincident_inventory.id_incident
+			AND tinventory.id = tincident_inventory.id_inventory
+			AND tincidencia.id_incidencia = %d', $id_incident);
+	$inventories = get_db_all_rows_sql ($sql);
+	if ($inventories == false)
+		return array ();
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($inventories as $inventory) {
+			$result[$inventory['id']] = $inventory['name'];
+		}
+		return $result;
+	}
+	return $inventories;
+}
+
+function get_inventory_contracts ($id_inventory, $only_names = true) {
+	$sql = sprintf ('SELECT tcontract.* FROM tinventory, tcontract
+			WHERE tinventory.id_contract = tcontract.id
+			AND tinventory.id = %d', $id_inventory);
+	$contracts = get_db_all_rows_sql ($sql);
+	if ($contracts == false)
+		return array ();
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($contracts as $contract) {
+			$result[$contract['id']] = $contract['name'];
+		}
+		return $result;
+	}
+	return $contracts;
+}
+
+function get_company ($id_company) {
+	return get_db_row ('tcompany', 'id', $id_company);
+}
+
+function get_company_contacts ($id_company, $only_names = true) {
+	$sql = sprintf ('SELECT * FROM tcompany_contact
+			WHERE id_company = %d', $id_company);
+	$contacts = get_db_all_rows_sql ($sql);
+	if ($contacts == false)
+		return array ();
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($contacts as $contact) {
+			$result[$contact['id']] = $contact['name'];
+		}
+		return $result;
+	}
+	return $contacts;
+}
 ?>

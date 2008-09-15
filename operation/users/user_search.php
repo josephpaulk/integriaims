@@ -24,12 +24,8 @@ $id_group = (int) get_parameter ('user_group_search');
 $search = (bool) get_parameter ('search');
 
 if ($search) {
-	$sql = sprintf ('SELECT id_usuario, nombre_real, comentarios
-			FROM tusuario');
-	$users = get_db_all_rows_sql ($sql);
-	if ($users === false) {
-		$users = array ();
-	}
+	$users = get_user_visible_users ($config['id_user'], "IR", false);
+	
 	$total_users = 0;
 	foreach ($users as $user) {
 		if ($id_profile) {
@@ -94,7 +90,7 @@ echo '</div>';
 echo '</form>';
 
 unset ($table);
-$table->class = 'hide';
+$table->class = 'hide result_table';
 $table->width = '90%';
 $table->id = 'user_search_result_table';
 $table->head = array ();
@@ -104,7 +100,7 @@ $table->head[2] = lang_string ("Comments");
 
 print_table ($table);
 
-echo '<div id="users-pager" class="hide">';
+echo '<div id="users-pager" class="hide pager">';
 echo '<form>';
 echo '<img src="images/go-first.png" class="first" />';
 echo '<img src="images/go-previous.png" class="prev" />';

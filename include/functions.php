@@ -59,12 +59,16 @@ function remove_locale_chars ($string){
 * other kind of sensible string operations (like XSS)
 * This replace all conflictive characters.
 *
-* $text	string	Inputstring to be cleaned*/
+* $value	string	Input string to be cleaned*/
 
-function clean_input ($texto){
-	$filtro0 = utf8_decode($texto);
-	$filtro1 = htmlentities($filtro0, ENT_QUOTES); 
-	return $filtro1;							
+function clean_input ($value) {
+	if (is_numeric ($value))
+		return $value;
+	if (is_array ($value)) {
+		array_walk ($value, 'clean_input');
+		return $value;
+	}
+	return htmlentities (utf8_decode ($value), ENT_QUOTES); 						
 }
 
 /**
@@ -318,11 +322,12 @@ function __ ($string){
 
 function lang_string ($string) {
 	global $config;
-	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
+	global $lang_label;
+	require (realpath ($config["homedir"]."/include/languages/language_".$config["language_code"].".php"));
+	
 	if (isset ($lang_label[$string]))
 		return $lang_label[$string];
-	else
-        return $string;
+	return $string;
 }
 
 function render_priority ($pri){

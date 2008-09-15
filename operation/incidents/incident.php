@@ -64,10 +64,6 @@ if (isset($_GET["quick_delete"])) {
 	}
 }
 
-// ---------
-// Search
-// ---------
-
 $busqueda="";
 
 $texto_form = get_parameter ("texto");
@@ -139,12 +135,11 @@ echo '</ul>';
 
 /* Tabs first container is manually set, so it loads immediately */
 echo '<div id="ui-tabs-3" class="ui-tabs-panel" style="display: block;">';
-echo "<h1>".lang_string ('incident_search')."</h1>";
 
 form_search_incident ();
 
 unset ($table);
-$table->class = 'hide ';
+$table->class = 'hide result_table';
 $table->width = '90%';
 $table->id = 'incident_search_result_table';
 $table->head = array ();
@@ -158,7 +153,7 @@ $table->head[6] = lang_string ("flags");
 
 print_table ($table);
 
-echo '<div id="pager" class="hide">';
+echo '<div id="pager" class="hide pager">';
 echo '<form>';
 echo '<img src="images/go-first.png" class="first" />';
 echo '<img src="images/go-previous.png" class="prev" />';
@@ -174,21 +169,16 @@ echo '</select>';
 echo '</form>';
 echo '</div>';
 
-/* End of first tabl container */
+/* End of first tab container */
 echo '</div>';
 
 
 echo '</div>';
 /* End of tabs code */
 
-/* Create incident dialog */
-echo '<div id="dialog" class="dialog"></div>';
 ?>
 
 <link rel="stylesheet" href="include/styles/style.css" type="text/css">
-<script type="text/javascript" src="include/js/jquery.ui.draggable.js"></script>
-<script type="text/javascript" src="include/js/jquery.ui.resizable.js"></script>
-<script type="text/javascript" src="include/js/jquery.ui.dialog.js"></script>
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
 <script type="text/javascript" src="include/js/jquery.tablesorter.js"></script>
 <script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
@@ -196,30 +186,21 @@ echo '<div id="dialog" class="dialog"></div>';
 
 <script type="text/javascript">
 
-function create_incident_clicked (event, data) {
-	$("#dialog").empty ();
-	values = Object ();
-	values.page = "operation/incidents/incident_detail";
-	jQuery.get ("ajax.php",
-			values,
-			function (data, status) {
-				$("#dialog").append (data);
-				configure_incident_form ();
-				$("#dialog").fadeIn ();
-			},
-			"html"
-			);
-}
-
-function search_user_clicked (event, data) {
-	/* In integria_incident_search.js */
-	show_user_search_dialog ("dialog", "<?php echo lang_string ("User search")?>");
-}
+var id_incident;
 
 function tab_loaded (event, tab) {
 	if (tab.index == 1) {
 		/* In integria_incident_search.js */
-		configure_incident_form ();
+		configure_incident_form (true);
+		if ($("#incident-menu").css ('display') != 'none') {
+			$("#incident-menu").slideUp ('normal', function () {
+				configure_incident_side_menu (id_incident);
+				$(this).slideDown ();
+			});
+		} else {
+			configure_incident_side_menu (id_incident);
+			$("#incident-menu").slideDown ();
+		}
 	}
 }
 
@@ -228,8 +209,8 @@ function set_rows_click () {
 		id_incident = this.id.split ("-").pop ();
 		$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_detail&id=" + id_incident);
 		$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_tracking&id=" + id_incident);
-		$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_detail&id=" + id_incident);
-		$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_tracking&id=" + id_incident);
+		$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + id_incident);
+		$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + id_incident);
 		$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3).tabs ("enable", 4);
 		$("#tabs > ul").tabs ("select", 1);
 	});
@@ -239,17 +220,18 @@ $(document).ready (function () {
 	$("#tabs > ul").tabs ({"load" : tab_loaded}).tabs ("disable", 1).tabs ("disable", 2);
 	$("#search_incident_form").submit (function () {
 		$("#incident_search_result_table").removeClass ("hide");
+		values = get_form_input_values (this.id);
+		values.push ({name: "page",
+				value: "operation/incidents/incident_search"});
+		
 		$("table#incident_search_result_table tbody").fadeOut ('normal', function () {
 			$(this).empty ();
 			jQuery.post ("ajax.php",
-				{"page" : "operation/incidents/incident_search",
-				"search_string" : $(":input#text-search_string").val (),
-				"status" : $(":input#search_status").val ()
-				},
+				values,
 				function (data, status) {
 					$("table#incident_search_result_table tbody").empty ().append (data);
-					$("table#incident_search_result_table").trigger ("update").tablesorterPager ({container: $("#pager")});
 					set_rows_click ();
+					$("table#incident_search_result_table").trigger ("update").tablesorterPager ({container: $("#pager")});
 					$("table#incident_search_result_table tbody").fadeIn ();
 					$("#pager").removeClass ("hide").fadeIn ();
 				},
@@ -259,18 +241,16 @@ $(document).ready (function () {
 		return false;
 	});
 	$("#incident_search_result_table tr th :eq(0)").addClass ("{sorter: 'text'}");
-	$("#link_create_incident").click (function () {
-		$("#dialog").dialog ({"title" : "Incident creator",
-				"open" : create_incident_clicked,
-				minHeight: 400,
-				minWidth: 600,
-				height: 600,
-				width: 800,
-				modal: true
-				});
-		return false;
-	});
 	$("#incident_search_result_table").tablesorter ({ cancelSelection : true});
+	$("#button-inventory_name").click (function () {
+		show_inventory_search_dialog ("<?php lang_string ("Search inventory") ?>",
+					function (id, name) {
+						$("#hidden-search_id_inventory").attr ("value", id);
+						$("#button-inventory_name").attr ("value", name);
+						$("#dialog").dialog ("close");
+					}
+		);
+	});
 });
 </script>
 

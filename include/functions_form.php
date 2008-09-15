@@ -21,41 +21,9 @@ function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0,
 	$userlist = array();
 	$output = '';
 	
-	$values = array ();
+	$values = get_user_visible_users ($id_user, $access, true);
 	if ($any)
 		$values[''] = lang_string ('Any');
-	
-	if (give_acl ($id_user, 1, "")) {
-		$sql = sprintf ('SELECT id_usuario, nombre_real FROM tusuario
-				WHERE id_usuario != "%s"',
-				$id_user);
-		$users = get_db_all_rows_sql ($sql);
-		if ($users === false)
-			$users = array ();
-		foreach ($users as $user) {
-			$values[$user['id_usuario']] = $user['nombre_real'];
-		}
-	} else {
-		$sql = sprintf ('SELECT id_grupo FROM tusuario_perfil
-				WHERE id_usuario = "%s"', $id_user);
-		$groups = get_db_all_rows_sql ($sql);
-		if ($groups === false)
-			$groups = array ();
-		foreach ($groups as $group) {
-			$sql = sprintf ('SELECT id_usuario, nombre_real
-					FROM tusuario_perfil p, tusuario u
-					WHERE p.id_usuario = u.id_usuario
-					AND id_grupo = %d', $group['id_grupo']);
-			$users = get_db_all_rows_sql ($sql);;
-			if ($users === false)
-				continue;
-			foreach ($users as $user) {
-				if (! give_acl ($user["id_usuario"], $group['id_grupo'], $access))
-					continue;
-				$values[$user['id_usuario']] = $user['nombre_real'];
-			}
-		}
-	}
 	
 	$output = print_select ($values, $form_name, $id_user, '', '', 0, true, false, false);
 	
@@ -650,6 +618,7 @@ function form_search_incident ($return = false) {
 	$status = (int) get_parameter ('search_status');
 	$priority = (int) get_parameter ('search_priority', -1);
 	$id_group = (int) get_parameter ('search_id_group');
+	$id_inventory = (int) get_parameter ('search_id_inventory');
 	
 	/* No action is set, so the form will be sent to the current page*/
 	$table->width = "90%";
@@ -678,9 +647,12 @@ function form_search_incident ($return = false) {
 					'search_id_group', $id_group,
 					'', '', '', true);
 	$table->data[1][2] = lang_string ('Inventory object');
-	$table->data[1][3] = print_select (array (),
-					'search_id_inventory', $priority,
-					'', lang_string ('**TODO**'), -1, true);
+	$table->data[1][3] = print_input_hidden ('search_id_inventory', $id_inventory, true);
+	$name = lang_string ("Any");
+	if ($id_inventory)
+		$name = get_inventory_name ($id_inventory);
+	$table->data[1][3] .= print_button ($name, 'inventory_name', false, '',
+					'', true);
 	
 	$table->data[3][0] = lang_string ('Search string');
 	$table->data[3][1] = print_input_text ('search_string', $search_string,

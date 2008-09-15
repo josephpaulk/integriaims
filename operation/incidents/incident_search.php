@@ -23,14 +23,26 @@ if (! defined ('AJAX'))
 
 $search_string = (string) get_parameter ('search_string');
 $status = (int) get_parameter ('status');
+$search_priority = (int) get_parameter ('search_priority', -1);
+$search_id_group = (int) get_parameter ('search_id_group', 1);
+$search_status = (int) get_parameter ('search_status', 0);
 
 if ($status == 0)
 	$status = implode (',', array_keys (get_indicent_status ()));
 
+$sql_clause = '';
+if ($search_priority != -1)
+	$sql_clause .= sprintf (' AND prioridad = %d', $search_priority);
+if ($search_id_group != 1)
+	$sql_clause .= sprintf (' AND id_grupo = %d', $search_id_group);
+if ($search_status)
+	$sql_clause .= sprintf (' AND estado = %d', $search_status);
+
 $sql = sprintf ('SELECT * FROM tincidencia
 		WHERE estado IN (%s)
+		%s
 		AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%")',
-		$status, $search_string, $search_string);
+		$status, $sql_clause, $search_string, $search_string);
 
 $incidents = get_db_all_rows_sql ($sql);
 if ($incidents === false) {

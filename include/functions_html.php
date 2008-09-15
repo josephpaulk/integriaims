@@ -27,12 +27,12 @@
  * $nothing Label when nothing is selected.
  * $nothing_value Value when nothing is selected
  */
-function print_select ($fields, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = false, $sort = true) {
+function print_select ($fields, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = 0, $sort = true) {
 	$output = "\n";
 	
 	$attributes = ($script) ? 'onchange="'. $script .'"' : '';
-	if ($multiple){
-		$attributes .= ' multiple="yes" size=10 ';
+	if ($multiple) {
+		$attributes .= ' multiple="yes" size="'.$multiple.'" ';
 	}
 
 	$output .= '<select id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
@@ -199,9 +199,13 @@ function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0,
  * @param string $name Input name.
  * @param string $value Input value.
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ * @param string $class HTML class to be added. Useful in javascript code.
  */
-function print_input_hidden ($name, $value, $return = false) {
-	$output = '<input id="hidden-'.$name.'" name="'.$name.'" type="hidden" value="'.$value.'" />';
+function print_input_hidden ($name, $value, $return = false, $class = '') {
+	$output = '<input id="hidden-'.$name.'" name="'.$name.'" type="hidden"';
+	if ($class != '')
+		$output .= ' class="'.$class.'"';
+	$output .=' value="'.$value.'" />';
 	
 	if ($return)
 		return $output;

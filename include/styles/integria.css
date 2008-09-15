@@ -796,7 +796,7 @@ div#foot a:hover{
 	text-align: right;
 }
 
-#incident_search_result_table tr, #user_search_result_table tr {
+.image-button, .result_table tr, .pager img {
 	cursor: pointer;
 }
 
@@ -827,4 +827,8 @@ div#foot a:hover{
 	right: 10px;
 	top: 6px;
 	width: 16px;
+}
+
+#incident_inventories, #textarea-descripcion, #text-search_string {
+	width: 100%;
 }

@@ -426,16 +426,6 @@ CREATE TABLE `tbuilding` (
   PRIMARY KEY  (`id`)
 );
 
-CREATE TABLE `tincident_inventory` (
-  `id_incident` bigint(20) unsigned NOT NULL auto_increment,
-  `id_inventory` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id_incident`, `id_inventory`),
-  FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
-);
-
 CREATE TABLE `tcompany_role` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
@@ -555,6 +545,16 @@ CREATE TABLE `tinventory` (
 ALTER TABLE `tinventory` ADD
  FOREIGN KEY (`id_parent`) REFERENCES tinventory(`id`)
    ON UPDATE CASCADE ON DELETE SET NULL;
+
+CREATE TABLE `tincident_inventory` (
+  `id_incident` bigint(20) unsigned NOT NULL auto_increment,
+  `id_inventory` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id_incident`, `id_inventory`),
+  FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
+);
 
 CREATE TABLE `tcontact` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
