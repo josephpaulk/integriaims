@@ -1,3 +1,41 @@
+2008-09-16  Sancho Lerena <slerena@gmail.com>
+
+	* index.php: Added static flora.all.css CSS reference instead http.
+
+	* integria_db.sql: Minimal changes in tcompany_contact.
+
+	* functions.php: Updated render of priority, function 
+	print_priority_flag_image().
+
+	* functions_form.php: Style changes in form_search_incident().
+
+	* integria.css: A lot of changes in styles, new appearance.
+
+	* main_menu.php: Fixed typo in Inventory
+
+	* side_menu.php: Added companies and contracts sub options.
+
+	* contact_detail.php: Rewritten using our HTML functions.
+
+	* incident.php: Added more fields on freetext search.
+
+	* incident_detail.php: Removed some tabs (geany!).
+
+	* incident_search.php: Removed some styles.
+
+	* include/styles/flora: Added new CSS.
+
+	* operation/contracts/contract_detail.php: Contracts management.
+
+	* operation/companies/company_role.php: Company roles management.
+
+	* operation/companies/company_detail.php: Company management.
+
+	* images/pixel_*: New graphs.
+
+	* images/headerbg-grey.gif, headerbg-red.gif: New header background.
+
+
 2008-09-15  Esteban Sanchez  <estebans@artica.es>
 
 	* integria_db.sql: Table tincident_inventory moved to the bottom, so

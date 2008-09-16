@@ -450,9 +450,10 @@ CREATE TABLE `tcompany_contact` (
   `id_company` mediumint(8) unsigned NOT NULL,
   `fullname` varchar(150) NOT NULL default '',
   `email` varchar(100) NULL default NULL,
-  `phone` varchar(20) NULL default NULL,
-  `mobile_phone` varchar(20) NULL default NULL,
-  `position` varchar(100) NULL default NULL,
+  `phone` varchar(55) NULL default NULL,
+  `mobile` varchar(55) NULL default NULL,
+  `position` varchar(150) NULL default NULL,
+  `description` text NULL DEFAULT NULL,
   `disabled` tinyint NULL default 0,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
@@ -546,6 +547,7 @@ ALTER TABLE `tinventory` ADD
  FOREIGN KEY (`id_parent`) REFERENCES tinventory(`id`)
    ON UPDATE CASCADE ON DELETE SET NULL;
 
+
 CREATE TABLE `tincident_inventory` (
   `id_incident` bigint(20) unsigned NOT NULL auto_increment,
   `id_inventory` mediumint(8) unsigned NOT NULL,
@@ -556,14 +558,3 @@ CREATE TABLE `tincident_inventory` (
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE `tcontact` (
-  `id` bigint(20) unsigned NOT NULL auto_increment,
-  `fullname` varchar(255) NOT NULL default '',
-  `phone` varchar(55) NOT NULL default '',
-  `mobile` varchar(55) NOT NULL default '',
-  `email` varchar(200) NOT NULL default '',
-  `position` varchar(200) NOT NULL default '',
-  `id_company` mediumint(9) NOT NULL default '0',
-  `disabled` tinyint(3) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-);

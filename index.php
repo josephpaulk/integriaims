@@ -23,7 +23,7 @@
 // Copyright (C) 2005 Alexandre Miguel de Andrade Souza
 
 // Real start
-session_start(); 
+session_start();
 
 $develop_bypass = 1;
 
@@ -79,8 +79,8 @@ if ($intervalo = give_parameter_get ("refr") != "") {
  	if ($ag_group = give_parameter_post ("ag_group" != "")) {
 		$query = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] . '&ag_group_refresh=' . $ag_group;
 		echo '<meta http-equiv="refresh" content="' . $intervalo . '; URL=' . $query . '">';
-	} else 
-		echo '<meta http-equiv="refresh" content="' . $intervalo . '">';	
+	} else
+		echo '<meta http-equiv="refresh" content="' . $intervalo . '">';
 }
 
 // This is a clean output ?
@@ -99,6 +99,7 @@ $clean_output = give_parameter_get ("clean_output", 0);
 <link rel="icon" href="images/integria.ico" type="image/ico" />
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/integria_tip.css" type="text/css" />
+<link rel="stylesheet" href="include/styles/flora/flora.all.css" type="text/css" media="screen" title="Flora (Default)">
 <script type='text/JavaScript' src='include/js/calendar.js'></script>
 <script type='text/JavaScript' src='include/js/integria.js'></script>
 <script type="text/javascript" src="include/js/jquery.js"></script>
@@ -108,18 +109,17 @@ $clean_output = give_parameter_get ("clean_output", 0);
 <script type="text/javascript" src="include/js/jquery.ui.resizable.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.dialog.js"></script>
 <script type="text/javascript" src="include/js/jquery.form.js"></script>
-<link rel="stylesheet" href="http://dev.jquery.com/view/tags/ui/latest/themes/flora/flora.all.css" type="text/css" media="screen" title="Flora (Default)">
 
 <?php
-// Login process 
+// Login process
 if ( (! isset ($_SESSION['id_usuario'])) AND (isset ($_GET["login"]))) {
 	$nick = give_parameter_post ("nick");
 	$pass = give_parameter_post ("pass");
-	
+
 	// Connect to Database
 	$sql1 = 'SELECT * FROM tusuario WHERE id_usuario = "'.$nick.'"';
 	$result = mysql_query ($sql1);
-	
+
 	// For every registry
 	if ($row = mysql_fetch_array ($result)){
 		if ($row["password"] == md5 ($pass)){
@@ -134,9 +134,9 @@ if ( (! isset ($_SESSION['id_usuario'])) AND (isset ($_GET["login"]))) {
 			update_user_contact ($nick);
 			logon_db ($nick, $config["REMOTE_ADDR"]);
 			$_SESSION['id_usuario'] = $nick;
-			$config["id_user"]= $nick;				
+			$config["id_user"]= $nick;
 			$prelogin_url = get_parameter ("prelogin_url", "");
-			
+
 			if ($prelogin_url == "") {
 				$prelogin_url = "http://". $_SERVER["SERVER_NAME"]. $_SERVER['REQUEST_URI'];
 				echo "<meta http-equiv='refresh' content='0;$new_url'>";
@@ -178,7 +178,7 @@ if ( (! isset ($_SESSION['id_usuario'])) AND (isset ($_GET["login"]))) {
 		audit_db ($nick, $config["REMOTE_ADDR"], "Logon Failed",
 			  "Invalid username: " . $nick . " / " . $pass);
 		exit;
-	} 
+	}
 } elseif (! isset ($_SESSION['id_usuario'])) {
 	// There is no user connected
 	echo '</head>';
@@ -211,7 +211,7 @@ if (isset ($_GET["sec2"])){
 	$pagina = $sec2;
 } else
 	$sec2 = "";
-	
+
 if (isset ($_GET["sec"])){
 	$sec = parametro_limpio ($_GET["sec"]);
 	$pagina = $sec2;
@@ -220,50 +220,50 @@ else
 	$sec = "";
 // http://es2.php.net/manual/en/ref.session.php#64525
 // Session locking concurrency speedup!
-session_write_close(); 
+session_write_close();
 ?>
 
 <?php
 if ($clean_output == 0){
 ?>
-	<div id="wrap"> 
-		<div id="header">	
-			<?php require("general/header.php"); ?>	
-		</div>	
-	
-		<div id="menu">
-			<?php require("operation/main_menu.php"); ?>	
+	<div id="wrap">
+		<div id="header">
+			<?php require("general/header.php"); ?>
 		</div>
-	
-		<div id="content-wrap">  
+
+		<div id="menu">
+			<?php require("operation/main_menu.php"); ?>
+		</div>
+
+		<div id="content-wrap">
 			<div id="sidebar">
 			<?php require("operation/side_menu.php"); ?>
 			<?php require("operation/tool_menu.php"); ?>
 			</div>
-	
-			<div id="main"> 
+
+			<div id="main">
 			<?php
-				// Page loader / selector		
+				// Page loader / selector
 				if ($pagina != ""){
 					if (file_exists ($pagina . ".php")) {
 						require ($pagina . ".php");
 					} else {
 						echo "<br><b class='error'>".lang_string ('cannot_find_page')."</b>";
-					}	
+					}
 				} else
 					require ("general/home.php");  //default
-			?>		
+			?>
 			</div>
-		<!-- content-wrap ends here -->	
+		<!-- content-wrap ends here -->
 		</div>
 	<!-- wrap ends here -->
-	</div>		
-	
-	<!-- footer starts here -->		
+	</div>
+
+	<!-- footer starts here -->
 	<div id="footer">
 		<?php require("general/footer.php") ?></div>
-	</div>	
-	<!-- footer ends here -->	
+	</div>
+	<!-- footer ends here -->
 
 <?php // end of clean output
 } else {
@@ -273,7 +273,7 @@ if ($clean_output == 0){
 			require ($pagina . ".php");
 		} else {
 			echo "<br><b class='error'>".lang_string ('cannot_find_page')."</b>";
-		}	
+		}
 	} else
 		require ("general/home.php");  //default
 }

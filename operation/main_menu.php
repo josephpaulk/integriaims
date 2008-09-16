@@ -47,7 +47,7 @@ if (give_acl($config["id_user"], 0, "IR") == 1){
 // Inventory
 if (give_acl($config["id_user"], 0, "IR") == 1){
     // Incident
-    if ($sec == "Inventory" )
+    if ($sec == "inventory" )
 	    echo "<li id='current'>";
     else
 	    echo "<li>";

@@ -42,9 +42,9 @@ $action = get_parameter ('action');
 
 if ($action == 'get-info') {
 	$incident = get_db_row ('tincidencia', 'id_incidencia', $id);
-	
+
 	$incident['hours'] = (int) give_hours_incident ($id);
-	
+
 	echo json_encode ($incident);
 	if (defined ('AJAX'))
 		return;
@@ -54,7 +54,7 @@ if ($action == 'update') {
 	$id_inc = get_parameter ('id_inc');
  	$grupo = get_parameter ('grupo_form');
 	$usuario = get_parameter ('usuario_form');
-	
+
 	// Only admins (manage incident) or owners can modify incidents
 	if (! give_acl ($config["id_user"], $grupo, "IM")) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
@@ -74,7 +74,7 @@ if ($action == 'update') {
 	$descripcion = get_parameter ('descripcion');
 	$resolution = get_parameter ('incident_resolution');
 	$id_task = get_parameter ('task_user');
-	
+
 	incident_tracking ( $id_inc, $config["id_user"], 1);
 	$old_prio = give_inc_priority ($id_inc);
 	// 0 - Abierta / Sin notas (Open without notes)
@@ -89,19 +89,19 @@ if ($action == 'update') {
 		incident_tracking ($id_inc, $config['id_user'], 5);
 	if ($estado == 13)
 		incident_tracking ($id_inc, $config['id_user'], 10);
-	
+
 	$sql = sprintf ('UPDATE tincidencia SET actualizacion = NOW(),
 			titulo = "%s", origen = %d, estado = %d,
 			id_grupo = %d, id_usuario = "%s",
 			notify_email = %d, prioridad = %d, descripcion = "%s",
 			epilog = "%s", id_task = %d, resolution = %d
-			WHERE id_incidencia = %d', 
+			WHERE id_incidencia = %d',
 			$titulo, $origen, $estado, $grupo, $usuario,
 			$email_notify, $prioridad, $descripcion,
 			$epilog, $id_task, $resolution, $id_inc);
 	$result = process_sql ($sql, 'insert_id');
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id_inc);
-	
+
 	/* Update inventory objects in incident */
 	$sql = sprintf ('DELETE FROM tincident_inventory WHERE id_incident = %d', $id_inc);
 	process_sql ($sql);
@@ -112,7 +112,7 @@ if ($action == 'update') {
 				$id_inc, $id_inventory);
 		process_sql ($sql);
 	}
-	
+
 	if ($result === false)
 		$result_msg = "<h3 class='suc'>".lang_string ('upd_incid_no')."</h3>";
 	else
@@ -123,7 +123,7 @@ if ($action == 'update') {
 	if ($email_notify == 1) {
 		mail_incident ($id_inc, $usuario, "", 0, 0);
 	}
-	
+
 	if (defined ('AJAX')) {
 		echo $result_msg;
 		return;
@@ -133,7 +133,7 @@ if ($action == 'update') {
 if ($action == "insert") {
 	$grupo = get_parameter ('grupo_form');
 	$usuario = get_parameter ('usuario_form');
-	
+
 	if (! give_acl ($config['id_user'], $grupo, "IW") && $usuario != $config['id_user']) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],
 			"ACL Forbidden",
@@ -141,7 +141,7 @@ if ($action == "insert") {
 		no_permission ();
 		exit;
 	}
-	
+
 	// Read input variables
 	$titulo = get_parameter ('titulo');
 	$descripcion =  get_parameter ('descripcion');
@@ -153,8 +153,8 @@ if ($action == "insert") {
 	$resolution = get_parameter ("incident_resolution");
 	$id_task = get_parameter ("task_user");
 	$email_notify = (bool) get_parameter ('email_notify');
-	
-	$sql = sprintf ('INSERT INTO tincidencia 
+
+	$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, origen, estado, prioridad,
 			id_grupo, id_creator, notify_email, id_task,
@@ -167,7 +167,7 @@ if ($action == "insert") {
 	$id_inc = process_sql ($sql, 'insert_id');
 	if ($id_inc !== false) {
 		$inventories = (array) get_parameter ('inventories');
-		
+
 		foreach ($inventories as $id_inventory) {
 			$sql = sprintf ('INSERT INTO tincident_inventory
 					VALUES (%d, %d)',
@@ -180,7 +180,7 @@ if ($action == "insert") {
 			"Incident created",
 			"User ".$config['id_user']." created incident #".$id_inc);
 		incident_tracking ( $id_inc, $config["id_user"], 0);
-		
+
 		// Email notify to all people involved in this incident
 		if ($email_notify) {
 			mail_incident ($id_inc, $usuario, "", 0, 1);
@@ -200,7 +200,7 @@ if ($id) {
 	$id_inc = $_GET["id"];
 	$iduser_temp=$_SESSION['id_usuario'];
 	// Obtain group of this incident
-	$sql = sprintf ('SELECT * FROM tincidencia 
+	$sql = sprintf ('SELECT * FROM tincidencia
 			WHERE id_incidencia = %d', $id_inc);
 	$result = mysql_query ($sql);
 	$row = mysql_fetch_array ($result);
@@ -220,7 +220,7 @@ if ($id) {
 	$resolution = $row["resolution"];
 	$epilog = $row["epilog"];
 	$id_task = $row["id_task"];
-	$id_incident_linked = $row["id_incident_linked"]; 
+	$id_incident_linked = $row["id_incident_linked"];
 	$grupo = dame_nombre_grupo($id_grupo);
 
 	// Aditional ACL check on read incident
@@ -241,10 +241,10 @@ if ($id) {
 		$timeused = number_format($timeused, 2);
 		$have_cost = get_parameter ("have_cost",0);
 		$profile = get_parameter ("work_profile",0);
-		
+
 		$sql4 = "UPDATE tincidencia SET actualizacion = '".$timestamp."' WHERE id_incidencia = ".$id_inc;
 		$res4 = mysql_query($sql4);
-		
+
 		incident_tracking ( $id_inc, $config['id_user'], 2);
 
 		// Add work unit if enabled
@@ -256,12 +256,12 @@ if ($id) {
 		if ($res6) {
 			$result_msg = "<h3 class='suc'>".lang_string ('create_work_ok')."</h3>";
 			// Email notify to all people involved in this incident
-			if ($email_notify == 1){ 
+			if ($email_notify == 1){
 				mail_incident ($id_inc, $config['id_user'], $nota, $timeused, 10);
 			}
 		}
 	}
-	
+
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// Upload file
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -283,7 +283,7 @@ if ($id) {
 			incident_tracking ( $id_inc, $config['id_user'], 3);
 			$result_msg="<h3 class='suc'>".lang_string ('file_added')."</h3>";
 			// Email notify to all people involved in this incident
-			if ($email_notify == 1){ 
+			if ($email_notify == 1){
 				mail_incident ($id_inc, $iduser_temp, 0, 0, 2);
 			}
 			// Copy file to directory and change name
@@ -308,7 +308,7 @@ if ($id) {
 	$prioridad = 2;
 	$id_grupo =0;
 	$grupo = dame_nombre_grupo (1);
-	
+
 	$usuario= $config["id_user"];
 	$estado = 1;
 	$resolution = 9;
@@ -327,11 +327,11 @@ if (! isset ($id_inc)) {
 	$number_group = give_db_sqlfree_field ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
 	// Take first group defined for this user
 	$default_id_group = give_db_sqlfree_field ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
-	// if have only one group, select default user and email for this group 
+	// if have only one group, select default user and email for this group
 	if ($number_group == 1){
 		$default_responsable = give_db_sqlfree_field ("SELECT id_user FROM tgroup_manager WHERE id_group = $default_id_group");
 		$email_notify = give_db_sqlfree_field ("SELECT forced_email FROM tgroup_manager WHERE id_group = $default_id_group");
-	} 
+	}
 }
 $has_permission = (give_acl ($iduser_temp, $id_grupo, "IM")  || ($usuario == $iduser_temp));
 
@@ -444,7 +444,7 @@ if ($create_incident) {
 	$table->data[5][1] = print_select ($inventories, 'incident_inventories',
 						NULL, '', '', '',
 						true, 5, false);
-	
+
 	if ($has_permission) {
 		$table->data[5][1] .= print_button (lang_string ("Add inventory object"),
 					'search_inventory', false, '', '', true);
@@ -452,7 +452,7 @@ if ($create_incident) {
 					'delete_inventory', false, '', '', true);
 		$inventories = (array) get_db_all_rows_sql ($sql);
 		foreach ($inventories as $inventory_id => $inventory_name) {
-			$table->data[5][1] .= print_input_hidden ("inventories[]", 
+			$table->data[5][1] .= print_input_hidden ("inventories[]",
 								$inventory_id, true, 'selected-inventories');
 		}
 	}

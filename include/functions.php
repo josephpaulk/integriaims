@@ -13,16 +13,16 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-/* 
+/*
 
 Note about clean_input, clean_output and other string functions
 ----------------------------------------------------------------
 
-ALL Data stored in database SHOULD have been parsed with clean_input() 
+ALL Data stored in database SHOULD have been parsed with clean_input()
 to encode all conflictive characters, like <, >, & or ' and ".
 
-ALL Data used to output in a different way than HTML render, (in PDF, 
-Graphs or HTML input controls ) SHOULD parse before with clean_output() 
+ALL Data used to output in a different way than HTML render, (in PDF,
+Graphs or HTML input controls ) SHOULD parse before with clean_output()
 to decode HTML characters.
 
 */
@@ -50,12 +50,12 @@ function remove_locale_chars ($string){
 	$filtro5 = str_replace ('&uacute;',"u", $filtro4);
 	$filtro6 = str_replace ('&ntilde;',"n", $filtro5);
 	return $filtro6;
-}	
+}
 
 /**
 * Clean input text
 *
-* This function clean a user string to be used of SQL operations or 
+* This function clean a user string to be used of SQL operations or
 * other kind of sensible string operations (like XSS)
 * This replace all conflictive characters.
 *
@@ -123,7 +123,7 @@ function give_parameter_post ( $name, $default = "" ){
 }
 
 // ---------------------------------------------------------------
-// Esta funcion lee una cadena y la da "limpia", para su uso con 
+// Esta funcion lee una cadena y la da "limpia", para su uso con
 // parametros pasados a funcion de abrir fichero. Usados en sec y sec2
 // ---------------------------------------------------------------
 
@@ -133,7 +133,7 @@ function parametro_limpio($texto){
 	// Consiste en purgar los http:// de las cadenas
 	$pos = strpos($texto,"://");	// quitamos la parte "fea" de http:// o ftp:// o telnet:// :-)))
 	if ($pos <> 0)
-	$texto = substr_replace($texto,"",$pos,+3);   
+	$texto = substr_replace($texto,"",$pos,+3);
 	// limitamos la entrada de datos por parametros a 125 caracteres
 	$texto = substr_replace($texto,"",125);
 	$safe = preg_replace('/[^a-z0-9_\/]/i','',$texto);
@@ -204,10 +204,10 @@ function pagination ($count, $url, $offset ) {
 
 	/* 	URL passed render links with some parameter
 			&offset - Offset records passed to next page
-	  		&counter - Number of items to be blocked 
-	   	Pagination needs $url to build the base URL to render links, its a base url, like 
+	  		&counter - Number of items to be blocked
+	   	Pagination needs $url to build the base URL to render links, its a base url, like
 	   " http://pandora/index.php?sec=godmode&sec2=godmode/admin_access_logs "
-	   
+
 	*/
 	$block_limit = 15; // Visualize only $block_limit blocks
 	if ($count > $block_size){
@@ -261,7 +261,7 @@ function pagination ($count, $url, $offset ) {
 				$final_bloque = ($i-1)*$block_size + $count-(($i-1) * $block_size);
 			}
 			echo "<span>";
-			
+
 			$inicio_bloque_fake = $inicio_bloque + 1;
 			// To Calculate last block (doesnt end with round data,
 			// it must be shown if not round to block limit)
@@ -270,7 +270,7 @@ function pagination ($count, $url, $offset ) {
 				echo "<b>[ $i ]</b>";
 			else
 				echo "[ $i ]";
-			echo '</a> ';	
+			echo '</a> ';
 			echo "</span>";
 		}
 		echo "&nbsp;";echo "&nbsp;";
@@ -287,7 +287,7 @@ function pagination ($count, $url, $offset ) {
 		// if exists more registers than i can put in a page (defined by $block_size config parameter)
 		// get offset for index calculation
 		// Draw "last" block link, ajust for last block will be the same
-		// as painted in last block (last integer block).	
+		// as painted in last block (last integer block).
 		if (($count - $block_size) > 0){
 			$myoffset = floor(($count-1)/ $block_size)* $block_size;
 			echo '<a href="'.$url.'&offset='.$myoffset.'">';
@@ -398,20 +398,20 @@ function maxof ($a, $b) {
 
 function get_indicent_priorities () {
 	$incidents = array ();
-	
+
 	$incidents[0] = lang_string ('informative');
 	$incidents[1] = lang_string ('low');
 	$incidents[2] = lang_string ('medium');
 	$incidents[3] = lang_string ('serious');
 	$incidents[4] = lang_string ('very_serious');
 	$incidents[10] = lang_string ('maintenance');
-	
+
 	return $incidents;
 }
 
 function get_indicent_status () {
 	$status = array ();
-	
+
 	$status[1] = lang_string ('status_new');
 	$status[2] = lang_string ('status_unconfirmed');
 	$status[3] = lang_string ('status_assigned');
@@ -419,40 +419,40 @@ function get_indicent_status () {
 	$status[5] = lang_string ('status_verified');
 	$status[6] = lang_string ('status_resolved');
 	$status[7] = lang_string ('status_closed');
-	
+
 	return $status;
 }
 
 function print_priority_flag_image ($priority, $return = false) {
 	$output = '';
-	
+
 	switch ($priority) {
 	case 0:
 		// Informative
-		$output .= '<img src="images/flag_white.png" title="'.lang_string ('Informative').'" />';
+		$output .= '<img src="images/pixel_gray.png" height=15 width=30 title="'.lang_string ('Informative').'" />';
 		break;
 	case 1:
 		// Low
-		$output .= '<img src="images/flag_green.png" title="'.lang_string ('Low').'" />';
+		$output .= '<img src="images/pixel_green.png" height=15 width=30 title="'.lang_string ('Low').'" />';
 		break;
 	case 2:
 		// Medium
-		$output .= '<img src="images/flag_yellow.png" title="'.lang_string ('Medium').'" />';
+		$output .= '<img src="images/pixel_yellow.png" height=15 width=30 title="'.lang_string ('Medium').'" />';
 		break;
 	case 3:
 		// Serious
-		$output .= '<img src="images/flag_orange.png" title="'.lang_string ('Serious').'" />';
+		$output .= '<img src="images/pixel_orange.png" height=15 width=30 title="'.lang_string ('Serious').'" />';
 		break;
 	case 4:
 		// Very serious
-		$output .= '<img src="images/flag_red.png" title="'.lang_string ('Very serious').'" />';
+		$output .= '<img src="images/pixel_red.png" height=15 width=30 title="'.lang_string ('Very serious').'" />';
 		break;
 	case 10:
 		// Maintance
-		$output .= '<img src="images/flag_blue.png" title="'.lang_string ('Maintance').'" />';
+		$output .= '<img src="images/pixel_blue.png" height=15 width=30 title="'.lang_string ('Maintance').'" />';
 		break;
 	}
-	
+
 	if ($return)
 		return $output;
 	echo $output;

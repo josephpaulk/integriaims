@@ -17,16 +17,16 @@
 require_once ('functions_html.php');
 
 function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0, $access = "IR", $return = false) {
-	global $config; 
+	global $config;
 	$userlist = array();
 	$output = '';
-	
+
 	$values = get_user_visible_users ($id_user, $access, true);
 	if ($any)
 		$values[''] = lang_string ('Any');
-	
+
 	$output = print_select ($values, $form_name, $id_user, '', '', 0, true, false, false);
-	
+
 	if ($return)
 		return $output;
 	echo $output;
@@ -34,9 +34,9 @@ function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0,
 
 function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any = 0, $perm = '', $id_group = 0, $return = false) {
 	$output = '';
-	
+
 	$values = array ();
-	
+
 	$sql = sprintf ("SELECT COUNT(*) FROM tusuario_perfil
 			WHERE id_usuario = '%s' AND id_grupo = 1",
 			$id_user);
@@ -56,18 +56,18 @@ function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any =
 				$id_user);
 		$groups = get_db_all_rows_sql ($sql);
 	}
-	
+
 	if ($groups === false)
 		$groups = array ();
 	foreach ($groups as $group) {
 		if ($perm != "" && ! give_acl ($id_user, $group['id_grupo'], $perm))
 			continue;
-		
+
 		$values[$group['id_grupo']] = $group['nombre'];
 	}
 	$output .= print_select ($values, $form_name, $id_group, '', '', 0,
 				true, false, false);
-	
+
 	if ($return)
 		return $output;
 	echo $output;
@@ -148,7 +148,7 @@ function combo_kb_categories ($id_category){
 		$name = give_db_value ("name","tkb_category","id",$id_category);
 		if ($parent != 0)
 			echo "<option value='".$id_category."'>".$parent_name."/".$name;
-		else		
+		else
 			echo "<option value='".$id_category."'>".$name;
 	}
 	echo "<option value=0>".lang_string("None");
@@ -176,7 +176,7 @@ function combo_kb_products ($id_product){
 		$name = give_db_value ("name","tkb_product","id",$id_product);
 		if ($parent != 0)
 			echo "<option value='".$id_product."'>".$parent_name."/".$name;
-		else		
+		else
 			echo "<option value='".$id_product."'>".$name;
 	}
 	echo "<option value=0>".lang_string("None");
@@ -229,11 +229,11 @@ function combo_groups ($actual = -1, $mode = "IR") {
 	echo "</select>";
 }
 
-// Returns a combo with the incident status available 
+// Returns a combo with the incident status available
 // ----------------------------------------------------------------------
 function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $return = false) {
 	$output = '';
-	
+
 	if ($disabled) {
 		$output .= get_db_value ('name', 'tincident_status', 'id', $actual);
 		if ($return)
@@ -241,12 +241,12 @@ function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $
 		echo $output;
 	}
 	if ($actual_only)
-		$sql = sprintf ('SELECT id, name FROM tincident_status WHERE id = %d', $actual); 
+		$sql = sprintf ('SELECT id, name FROM tincident_status WHERE id = %d', $actual);
 	else
 		$sql = 'SELECT id, name FROM tincident_status';
-	
+
 	$output .= print_select_from_sql ($sql, 'incident_status', $actual, '', '', 0, true, false, false);
-	
+
 	if ($return)
 		return $output;
 	echo $output;
@@ -256,14 +256,14 @@ function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $
 // ----------------------------------------------------------------------
 function combo_incident_origin ($actual = -1, $disabled = 0, $return = false) {
 	$output = '';
-	
+
 	if ($disabled) {
 		$output .= get_db_value ('name', 'tincident_origin', 'id', $actual);
 		if ($return)
 			return $output;
 		echo $output;
 	}
-	
+
 	$output .= print_select_from_sql ('SELECT id,name FROM tincident_origin', 'incident_origin',
 					$actual, '', '', 0, true, false, false);
 	if ($return)
@@ -286,7 +286,7 @@ function combo_incident_resolution ($actual = -1, $disabled = false, $return = f
 // ----------------------------------------------------------------------
 function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations = 0, $return = false) {
 	$output = '';
-	
+
 	if ($disabled) {
 		$output .= '';
 		if ($return)
@@ -294,12 +294,12 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 		echo $output;
 		return;
 	}
-	
+
 	$values = array ();
 	$values[0] = lang_string ('N/A');
 	if ($show_vacations == 1)
 		$values[-1] = lang_string ('vacations');
-	
+
 	$sql = sprintf ('SELECT ttask.id, ttask.name
 			FROM ttask, trole_people_task
 			WHERE ttask.id != %d
@@ -324,19 +324,19 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 
 	if ($disabled == 0)
 		echo "<select name='task_user' style='width: 120px'>";
-	else 
+	else
 		echo "<select name='task_user' disabled style='width: 120px'>";
 
 	if ($show_vacations == 1)
 		echo "<option value=-1>".lang_string ('vacations');
-	
+
 	if ($actual != 0){
 		$sql = "SELECT * FROM ttask WHERE id = $actual";
 		$result = mysql_query($sql);
 		if ($row=mysql_fetch_array($result)){
 			echo "<option value='".$row["id"]."'>".substr($row["name"],0,35);
 		}
-	} 
+	}
 
 	echo "<option value=0>".lang_string ('N/A');
 	$sql = "SELECT ttask.id, ttask.name FROM ttask, trole_people_task WHERE ttask.id != $actual AND ttask.id = trole_people_task.id_task AND trole_people_task.id_user = '$id_user'";
@@ -344,7 +344,7 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 	while ($row=mysql_fetch_array($result)){
 		echo "<option value='".$row[0]."'>".substr($row[1],0,35);
 	}
-	
+
 	echo "</select>";
 }
 
@@ -353,14 +353,14 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 function combo_task_user_participant ($id_user, $show_vacations = 0, $actual = 0) {
 	global $config;
 	global $lang_label;
-	
+
 	echo "<select name='task'>";
 	if ($show_vacations == 1){
 		echo "<option value=-1>(*) ".lang_string ("vacations");
 		echo "<option value=-2>(*) ".lang_string ("not_working_by_disease");
 		echo "<option value=-3>(*) ".lang_string ("not_justified");
 	}
-	
+
 	if ($actual != 0){
 		$sql = "SELECT id, id_project,name FROM ttask WHERE id = $actual";
 		$result = mysql_query($sql);
@@ -371,7 +371,7 @@ function combo_task_user_participant ($id_user, $show_vacations = 0, $actual = 0
 			$project_name = give_db_value ("name", "tproject", "id", $id_project);
 			echo "<option value='$id'>$project_name / $name";
 		}
-	} 
+	}
 	echo "<option value='0'>".lang_string ('N/A');
 	$sql = "SELECT DISTINCT (ttask.id) FROM ttask, trole_people_task, tproject WHERE ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.id = trole_people_task.id_task AND trole_people_task.id_user = '$id_user' ORDER BY ttask.id_project";
 	$result = mysql_query($sql);
@@ -390,7 +390,7 @@ function combo_task_user_participant ($id_user, $show_vacations = 0, $actual = 0
 function combo_roles ($include_na = 0, $name = 'role') {
 	global $config;
 	global $lang_label;
-	
+
 	echo "<select name='$name'>";
 	if ($include_na == 1)
 		echo "<option value=0>".lang_string ('N/A');
@@ -406,7 +406,7 @@ function combo_roles ($include_na = 0, $name = 'role') {
 // ----------------------------------------------------------------------
 function combo_projects_user ($id_user, $name = 'project') {
 	global $config;
-	
+
 	echo "<select name='$name' style='width:200px'>";
 	$sql = "SELECT DISTINCT(id_project) FROM trole_people_project WHERE id_user = '$id_user'";
 	$result=mysql_query($sql);
@@ -473,20 +473,20 @@ function topi_richtext ( $string ){
 	$string = str_replace ( "[/i]", "</i>",  $string);
 	return $string;
 }
- 
+
 
 function show_workunit_user ($id_workunit, $full = 0) {
 	global $config;
 	global $lang_label;
 
 	$sql = "SELECT * FROM tworkunit WHERE id = $id_workunit";
-	if ($res = mysql_query($sql)) 
+	if ($res = mysql_query($sql))
 		$row=mysql_fetch_array($res);
 	else
 		return;
-		
+
 	$timestamp = $row["timestamp"];
-	$duration = $row["duration"];	
+	$duration = $row["duration"];
 	$id_user = $row["id_user"];
 	$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_user);
 	$nota = $row["description"];
@@ -507,7 +507,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<table border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px;'>";
 	echo "<tr><td rowspan=3 width='7%'>";
 	echo "<img src='images/avatars/".$avatar."_small.png'>";
-	
+
 	echo "<td width='60%'><b>";
 	if ($id_task != ""){
 		echo lang_string ("task")." </b> : ";
@@ -525,16 +525,16 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 	echo "<tr>";
 	echo "<td><b>";
-	if ($id_task != ""){	
+	if ($id_task != ""){
 		echo lang_string ("project")." </b> : ";
 		echo $project_title;
 	} else {
 		echo lang_string ("group")."</b> : ";
 		echo dame_nombre_grupo (give_db_sqlfree_field ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident"));
 	}
-	
+
 	echo "<td><b>";
-	
+
 	if ($have_cost != 0){
 		$profile_cost = give_db_value ("cost", "trole", "id", $profile);
 		$cost = format_numeric ($duration * $profile_cost);
@@ -546,7 +546,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<td>";
 	echo " : ".$cost;
 
-	
+
 	echo "<tr>";
 	echo "<td>";
 	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
@@ -565,7 +565,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<div class='notebody'>";
 	echo "<table width='100%'  border=0 cellpadding=0 cellspacing=0>";
 	echo "<tr><td valign='top'>";
-	
+
 	if ((strlen($nota) > 1024) AND ($full == 0)){
 		echo topi_richtext ( clean_output_breaks(substr($nota,0,1024)) );
 		echo "<br><br>";
@@ -577,34 +577,34 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	}
 	echo "<td valign='top'>";
 	echo "<table width='100%'  border=0 cellpadding=0 cellspacing=0>";
-	
-	
+
+
 	if ($id_project > 0)
 		$myurl = "index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task";
 	else
 		$myurl = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user";
-	
-	if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"]) OR  (give_acl($config["id_user"], $id_group, "TM")) ) {	
+
+	if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"]) OR  (give_acl($config["id_user"], $id_group, "TM")) ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
 		echo "<a href='$myurl&id_workunit=$id_workunit&operation=delete'><img src='images/cross.png' border='0'></a>";
 	}
 
 	// Edit workunit
-	if ((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR (($id_user == $config["id_user"]) AND ($locked == 0)) ) { 
+	if ((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR (($id_user == $config["id_user"]) AND ($locked == 0)) ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_create_work&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&operation=edit'><img border=0 src='images/page_white_text.png'></a>";
 		echo "</td>";
 	}
-	
+
 // Lock workunit
-	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == 0) ) { 
+	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == 0) ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
 		echo "<a href='$myurl&id_workunit=$id_workunit&operation=lock'><img border=0 src='images/lock.png'></a>";
 		echo "</td>";
-	} 
+	}
   	echo "</tr></table>";
 	echo "</tr></table>";
 	echo "</div>";
@@ -613,26 +613,27 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 function form_search_incident ($return = false) {
 	$output = '';
-	
+
 	$search_string = (string) get_parameter ('search_string');
 	$status = (int) get_parameter ('search_status');
 	$priority = (int) get_parameter ('search_priority', -1);
 	$id_group = (int) get_parameter ('search_id_group');
 	$id_inventory = (int) get_parameter ('search_id_inventory');
-	
+
 	/* No action is set, so the form will be sent to the current page*/
-	$table->width = "90%";
+	$table->width = "100%";
+	$table->class = " ";
 	$table->cellspacing = 2;
 	$table->cellpadding = 2;
 	$table->data = array ();
 	$table->size = array ();
 	$table->style = array ();
 	$table->colspan = array ();
-	$table->colspan[3][1]= 3;
+
 	$table->style[0] = 'font-weight: bold';
 	$table->style[2] = 'font-weight: bold';
 	$table->size[0] = '20%';
-	
+
 	$table->data[0][0] = lang_string ('Status');
 	$table->data[0][1] = print_select (get_indicent_status (),
 					'search_status', $status,
@@ -641,7 +642,7 @@ function form_search_incident ($return = false) {
 	$table->data[0][3] = print_select (get_indicent_priorities (),
 					'search_priority', $priority,
 					'', lang_string ('Any'), -1, true);
-	
+
 	$table->data[1][0] = lang_string ('Group');
 	$table->data[1][1] = print_select (get_user_groups (),
 					'search_id_group', $id_group,
@@ -653,18 +654,18 @@ function form_search_incident ($return = false) {
 		$name = get_inventory_name ($id_inventory);
 	$table->data[1][3] .= print_button ($name, 'inventory_name', false, '',
 					'', true);
-	
-	$table->data[3][0] = lang_string ('Search string');
-	$table->data[3][1] = print_input_text ('search_string', $search_string,
-						'', 40, 50, true);
-	
+
+	$table->data[2][0] = lang_string ('Search string');
+	$table->colspan[2][1]= 3;
+	$table->data[2][1] = print_input_text ('search_string', $search_string, '', 20, 30, true);
+
+
+	$table->data[2][2] = print_submit_button (lang_string ('Search'), 'search', false, 'class="sub search"', true);
+
 	$output .= '<form id="search_incident_form" method="post">';
 	$output .= print_table ($table, true);
-	$output .= '<div class="action-buttons" style="width: '.$table->width.'">';
-	$output .= print_submit_button (lang_string ('Search'), 'search', false, '', true);
-	$output .= '</div>';
 	$output .= '</form>';
-	
+
 	if ($return)
 		return $output;
 	echo $output;

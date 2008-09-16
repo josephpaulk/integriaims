@@ -14,15 +14,17 @@
 
 body {
 	margin: 0px 15px;
-	font: 0.80em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
+	font: 0.80em  Arial, 'Trebuchet MS', Arial, Sans-serif;
 	background: #ffffff;
 	color: #666666;
 	text-align: center;
 }
 
-td {
-	font: 0.80em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
-	color: #666666;
+td, th {
+	font: 0.80em  Arial, 'Trebuchet MS', Arial, Sans-serif;
+	color: #555;
+	padding: 1px;
+	line-height: 22px;
 }
 
 /* links */
@@ -64,8 +66,45 @@ h6 { font-size: 0.5em; }
 }
 
 
-p, h1, h2, h3, table {
+p, h1, h2, h3, h4, h5, table {
 	margin: 10px 15px;
+}
+
+table {
+	border-top: 2px solid #2179B1;
+	border-bottom: 1px solid #2179B1;
+	padding-left: 5px;
+	padding-right: 5px;
+	background: #fff;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+table.databox,table.databox_color {
+	padding-top: 5px;
+	padding-left: 5px;
+	background: #eee;
+	border-bottom: none;
+}
+
+table.listing {
+	padding-top: 5px;
+	padding-left: 5px;
+	background: #fff;
+	border-top: 2px solid #2179B1;
+	border-bottom: 1px solid #2179B1;
+	border-collapse: collapse;
+}
+
+table.button {
+	padding: 0px;
+	margin: 0px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin: 10px 15px;
+	border-top: 2px solid #2179B1;
+	border-bottom: 2px solid #2179B1;
+	background: #eee;
 }
 
 ul, ol {
@@ -118,42 +157,42 @@ blockquote {
 label {
 	display:block;
 	font-weight:bold;
-	margin:5px 0;
-	font: normal 0.9em Verdana, sans-serif;
+	margin:2px 0;
+	font: normal 0.9em Arial, sans-serif;
 }
 input {
-	padding: 4px;
-	border:1px solid #eee;
-	font: normal 10px Verdana, sans-serif;
-	color:#777;
+	padding: 2px;
+	border:1px solid #A9C4D6;
+	height: 20px;
+	font: normal 0.9em Arial, sans-serif;
+	color:#666;
 }
 textarea {
-	padding:4px;
-	font: normal 0.9em Verdana, sans-serif;
-	border:1px solid #eee;
-	color:#777;
+	padding:2px;
+	font: normal 0.9em Arial, sans-serif;
+	border:1px solid #A9C4D6;
+	color:#666;
 }
+
 input.button {
 	margin: 0;
-	font: normal 0.9em Verdana, sans-serif;
-	border: 1px solid #CCC;
+	font: normal 0.9em Arial, sans-serif;
 	background: #FFF;
 	padding: 2px 3px;
 	color: #333;
-	margin: 10px 15px;
+	margin: 5px 10px;
 }
 select {
 	padding: 0px;
-	border:1px solid #eee;
-	font: normal 0.9em Verdana, sans-serif;
-	/*font: 0.70em/1em  Verdana, 'Trebuchet MS', Arial, Sans-serif;*/
-	color:#777;
+	border:1px solid #A9C4D6;
+	font: normal 0.9em Arial, sans-serif;
+	color:#666;
 }
 checkbox {
 	padding: 4px;
-	border:1px solid #eee;
-	font: normal 0.9em Verdana, sans-serif;
-	color:#777;
+	border:1px solid #A9C4D6;
+	font: normal 0.9em Arial, sans-serif;
+	color:#666;
 }
 
 /* search form */
@@ -175,24 +214,24 @@ form.searchform input.button {
 	vertical-align: top;
 }
 
-
 /* New styles for data box */
 
 .databox_color {
-	margin: 10px 15px;
-	border: 1px solid #f2f2f2;
-	/* border-left: 3px solid #EC981F;   */
+	border-top: 2px solid #2179B1;
+	margin-left: 10px;
+	padding-top: 5px;
 }
 
 .databox {
-	margin: 10px 15px;
-	border: 1px solid #f2f2f2;
-	background-color: #FAFAFA;
+	border-top: 2px solid #2179B1;
+	margin-left: 10px;
+	padding-top: 5px;
 }
 
 .databox_frame {
-	margin: 10px 15px;
-	border: 1px solid #f2f2f2;
+	margin-left: 10px;
+	border-top: 2px solid #2179B1;
+	padding-top: 5px;
 }
 
 /*****************/
@@ -213,7 +252,7 @@ form.searchform input.button {
 /* header */
 #header {
 	position: relative;
-	background: url(../../images/headerbg-orange.gif) repeat-x 0 0;
+	background: url(../../images/headerbg-grey.gif) repeat-x 0 0;
 	height: 50px;
 }
 
@@ -330,7 +369,7 @@ form.searchform input.button {
 }
 
 #sidebar li#sidesel a {
-	color: #eea237;
+	color: #2179B1;
 	text-decoration: none;
 }
 
@@ -372,11 +411,10 @@ form.searchform input.button {
 #menu ul {
 	position: relative;
 	bottom: 4px;
-	margin: 1px 0 0 1px; padding: 0;
+	margin: 0px 0 0 1px; padding: 0;
 	float: left;
 	text-transform: uppercase;
-	font: bold 1.2em Arial, Sans-serif;
-	/* width: 980px; */
+	font: bold 1.1em Arial, Sans-serif;
 	width: 100%;
 	border: 1px solid #808080;
 	border-width: 0 0 4px 0;
@@ -389,21 +427,23 @@ form.searchform input.button {
 #menu ul li a {
 	position: relative; bottom: -4px;
 	float: left;
-	color: #808080;
+	color: #000;
 	padding: 0px 10px;
+	margin-top: 0px;
 	text-decoration: none;
-	background: white url(../../images/menudivide.gif) repeat-y right top;
-	border-bottom: 4px solid #808080;
+/*	background: white url(../../images/menudivide.gif) repeat-y right top;*/
+	background-color: #eee;
+	border-bottom: 4px solid #2179B1;
 }
 #menu ul li a:hover{
 	color: black;
-	background-color: #F3F3F3;
-	border-bottom: 4px solid #FFA600;
+	background-color: #eee;
+	border-bottom: 4px solid #4D9FD4;
 }
 #menu ul li#current a{
-	color: #333;
-	background-color: #F3F3F3;
-	border-bottom: 4px solid #FFA600;
+	color: #fff;
+	background-color: #2179B1;
+	border-bottom: 4px solid  #2179B1;
 }
 
 /* Alignment classes */
@@ -424,11 +464,11 @@ form.searchform input.button {
 /* Old styles */
 
 a {
-	color: #486787;
+	color: #444;
 	text-decoration: none;
 }
 a:hover {
-	color: #003a3a;
+	color: #2179B1;
 	text-decoration: underline;
 }
 
@@ -456,13 +496,15 @@ input.login {
 	font-size: 11px;
 }
 input.sub {
-
 	border-bottom-color: #708090;
 	border-right-color: #708090;
 	-moz-border-radius: 5%;
 	font-size: 0.85em;
+	font-weight: bold;
 	margin: 10px 15px;
+	height: 22px;
 }
+
 input.next {
 	margin: 10px 15px;
 	padding-right: 15px;
@@ -478,41 +520,34 @@ input.create {
 	background: #e5e5e5 url(../../images/wand.png) no-repeat right 3px;
 }
 
-td.datos, td.datost, td.datosb, td.datos_id, td.datosf9,
-td.datosf9i, td.datos_jus, td.w90datos, td.w135datos {
-	/* background-color: #f5f5f5; */
-	background-color: #f9f9f9;
-	padding: 5px 5px 5px 5px;
+input.search {
+	padding-right: 20px;
+	background: #e5e5e5 url(../../images/zoom.png) no-repeat right 3px;
 }
 
-td.datos2, td.datos2t, td.datos2b, td.datos2_id, td.datos2f9,
-td.datos2f9i, td.datos2_jus, td.w90datos2, td.w135datos2 {
-	/* background-color: #fafbfc; */
-	background-color: #e3e9e9;
-	padding: 5px 5px 5px 5px;
+td {
+	padding: 1px 1px 1px 1px;
 }
 
-.datos_green, .datos_greenf9 {
-	background-color: #C7EAD5;
-	padding: 5px 5px 5px 5px;
+td.datos3 {
+	background-color: #eee;
+
 }
 
-.datos_red, .datos_redf9 {
-	background-color: #FFD8D0;
-	padding: 5px 5px 5px 5px;
+td a.hover {
+	background-color: #ff0000;
 }
 
-.datos_yellow, .datos_yellowf9 {
-	background-color: #F4FFBF;
-	padding: 5px 5px 5px 5px;
+th {
+	background-color: #EBEBED;
+	color: #000;
+	border-bottom: 1px solid #ccc;
+	padding: 0px;
+	margin: 0px;
+	font: 0.80em  Arial, 'Trebuchet MS', Arial, Sans-serif;
+	line-height: 22px;
 }
-th, td.lb, td.datos3  {
-	background-color: #646668;
-	font: 0.75em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
-	color: #FFFFFF;
-	font-weight: bold;
-	padding: 5px 5px 5px 5px;
-}
+
 .f9, .f9i, .f9b, td.f9, td.f9i, td.datosf9, td.datos2f9,
 td.datosf9i, td.datos2f9i, .datos_yellowf9, .datos_greenf9, .datos_redf9   {
 	font-size: 9px;
@@ -676,7 +711,7 @@ span.users, span.agents, span.data, span.alerts, span.time {
 .portlet h2 {
 	display:block;
 	width:200px;
-	background-color:#027DCE;
+	background-color:#A0A0A0;
 	background-image:url(../../images/leftnav_bg.gif);
 	background-repeat:no-repeat;
 	background-position:left top;
@@ -691,7 +726,7 @@ span.users, span.agents, span.data, span.alerts, span.time {
 }
 
 .portlet h2:hover {
-	background-color:#039AFF;
+	background-color:#000;
 	text-decoration: none;
 }
 
@@ -713,7 +748,7 @@ span.users, span.agents, span.data, span.alerts, span.time {
 	height: 20px;
 	display:block;
 	width:200px;
-	background-color:#E19A34;
+	background-color:#2179B1;
 	background-repeat:no-repeat;
 	background-position:left top;
 	overflow:hidden;
@@ -736,7 +771,7 @@ span.users, span.agents, span.data, span.alerts, span.time {
 	background-color:#eeeeee;
 	color:#000;
 	width:720px;
-	font: 0.75em  Verdana, 'Trebuchet MS', Arial, Sans-serif;
+	font: 0.75em  Arial, 'Trebuchet MS', Arial, Sans-serif;
 }
 
 .notebody {
@@ -829,6 +864,3 @@ div#foot a:hover{
 	width: 16px;
 }
 
-#incident_inventories, #textarea-descripcion, #text-search_string {
-	width: 100%;
-}

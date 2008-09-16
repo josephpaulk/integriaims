@@ -17,9 +17,9 @@
 
 /**
  * Prints an array of fields in a popup menu of a form.
- * 
- * Based on choose_from_menu() from Moodle 
- * 
+ *
+ * Based on choose_from_menu() from Moodle
+ *
  * $fields Array with dropdown values. Example: $fields["value"] = "label"
  * $name Select form name
  * $selected Current selected value.
@@ -29,7 +29,7 @@
  */
 function print_select ($fields, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = 0, $sort = true) {
 	$output = "\n";
-	
+
 	$attributes = ($script) ? 'onchange="'. $script .'"' : '';
 	if ($multiple) {
 		$attributes .= ' multiple="yes" size="'.$multiple.'" ';
@@ -72,10 +72,10 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 /**
  * Prints an array of fields in a popup menu of a form based on a SQL query.
  * The first and second columns of the query will be used.
- * 
- * Based on choose_from_menu() from Moodle 
- * 
- * $sql SQL sentence, the first field will be the identifier of the option. 
+ *
+ * Based on choose_from_menu() from Moodle
+ *
+ * $sql SQL sentence, the first field will be the identifier of the option.
  *      The second field will be the shown value in the dropdown.
  * $name Select form name
  * $selected Current selected value.
@@ -84,20 +84,20 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
  * $nothing_value Value when nothing is selected
  */
 function print_select_from_sql ($sql, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = false, $sort = true) {
-	
+
 	$fields = array ();
 	$result = mysql_query ($sql);
 	if (! $result) {
 		echo mysql_error ();
 		return "";
 	}
-	
+
 	while ($row = mysql_fetch_array ($result)) {
 		$fields[$row[0]] = $row[1];
 	}
-	
+
 	$output = print_select ($fields, $name, $selected, $script, $nothing, $nothing_value, true, $multiple, $sort);
-	
+
 	if ($return)
 		return $output;
 
@@ -106,7 +106,7 @@ function print_select_from_sql ($sql, $name, $selected = '', $script = '', $noth
 
 /**
  * Render an input text element. Extended version, use print_input_text() to simplify.
- * 
+ *
  * @param string $name Input name.
  * @param string $value Input value.
  * @param string $alt Alternative HTML string.
@@ -118,23 +118,23 @@ function print_select_from_sql ($sql, $name, $selected = '', $script = '', $noth
  */
 function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength, $disabled, $script, $attributes, $return = false, $password = false) {
 	static $idcounter = 0;
-	
+
 	++$idcounter;
-	
+
 	$type = $password ? 'password' : 'text';
 
 	if (empty ($name)) {
 		$name = 'unnamed';
 	}
-	
+
 	if (empty ($alt)) {
 		$alt = 'textfield';
 	}
-	
+
 	if (! empty ($maxlength)) {
 		$maxlength = ' maxlength="'.$maxlength.'" ';
 	}
-	
+
 	$output = '<input name="'.$name.'" type="'.$type.'" value="'.$value.'" size="'.$size.'" '.$maxlength.' alt="'.$alt.'" ';
 
 	if ($id != '') {
@@ -145,11 +145,11 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
 	}
 	if ($disabled)
 		$output .= ' disabled';
-	
+
 	if ($attributes != '')
 		$output .= ' '.$attributes;
 	$output .= ' />';
-	
+
 	if ($return)
 		return $output;
 	echo $output;
@@ -157,7 +157,7 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
 
 /**
  * Render an input password element.
- * 
+ *
  * @param string $name Input name.
  * @param string $value Input value.
  * @param string $alt Alternative HTML string (optional).
@@ -175,8 +175,8 @@ function print_input_password ($name, $value, $alt = '', $size = 50, $maxlength 
 }
 
 /**
- * Render an input text element. 
- * 
+ * Render an input text element.
+ *
  * @param string $name Input name.
  * @param string $value Input value.
  * @param string $alt Alternative HTML string (optional).
@@ -195,7 +195,7 @@ function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0,
 
 /**
  * Render an input hidden element.
- * 
+ *
  * @param string $name Input name.
  * @param string $value Input value.
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
@@ -206,7 +206,7 @@ function print_input_hidden ($name, $value, $return = false, $class = '') {
 	if ($class != '')
 		$output .= ' class="'.$class.'"';
 	$output .=' value="'.$value.'" />';
-	
+
 	if ($return)
 		return $output;
 	echo $output;
@@ -242,7 +242,7 @@ function print_textarea ($name, $rows, $columns, $value = '', $attributes = '', 
 	$output = '<textarea id="textarea-'.$name.'" name="'.$name.'" cols="'.$columns.'" rows="'.$rows.'" '.$attributes.' >';
 	$output .= $value;
 	$output .= '</textarea>';
-	
+
 	if ($return)
 		return $output;
 	echo $output;
@@ -331,11 +331,12 @@ function print_table (&$table, $return = false) {
 	if (empty ($table->width)) {
 		$table->width = '80%';
 	}
-	
+
 	if (empty ($table->border)) {
 		$table->border = '0px';
 	}
-	
+
+
 	if (empty ($table->tablealign)) {
 		$table->tablealign = 'center';
 	}
@@ -351,7 +352,7 @@ function print_table (&$table, $return = false) {
 	if (empty ($table->class)) {
 		$table->class = 'databox';
 	}
-	
+
 	$tableid = empty ($table->id) ? 'table'.$table_count : $table->id;
 
 	$output .= '<table width="'.$table->width.'" ';
@@ -370,8 +371,8 @@ function print_table (&$table, $return = false) {
 			if (!isset ($align[$key])) {
 				$align[$key] = '';
 			}
-	
-			$output .= '<th class="header c'.$key.'" scope="col">'. $heading .'</th>';
+
+			$output .= '<th align=left class="header c'.$key.'" scope="col">'. $heading .'</th>';
 		}
 		$output .= '</tr>'."\n";
 	}
@@ -379,7 +380,7 @@ function print_table (&$table, $return = false) {
 	if (!empty ($table->data)) {
 		$oddeven = 1;
 		foreach ($table->data as $keyrow => $row) {
-			
+
 			if (!isset ($rowstyle[$keyrow])) {
 				$rowstyle[$keyrow] = '';
 			}
@@ -414,7 +415,7 @@ function print_table (&$table, $return = false) {
 				if (!isset ($style[$key])) {
 					$style[$key] = '';
 				}
-				
+
 				$output .= '<td id="'.$tableid.'-'.$keyrow.'-'.$key.'" style="'. $style[$key].$valign[$key].$align[$key].$size[$key].$wrap[$key] .'" '.$colspan[$keyrow][$key].' class="'.$class.'">'. $item .'</td>'."\n";
 			}
 			$output .= '</tr>'."\n";
@@ -423,9 +424,9 @@ function print_table (&$table, $return = false) {
 	$output .= '</tbody>'."\n";
 	$output .= '</table>'."\n";
 
-	if ($return) 
+	if ($return)
 		return $output;
-	
+
 	echo $output;
 }
 
@@ -437,7 +438,7 @@ function print_table (&$table, $return = false) {
  * @param string $checked Set the button to be marked (optional, unmarked by default).
  * @param bool $disabled Disable the button (optional, button enabled by default).
  * @param string $script Script to execute when onClick event is triggered (optional).
- * @param string $attributes Optional HTML attributes. It's a free string which will be 
+ * @param string $attributes Optional HTML attributes. It's a free string which will be
 	inserted into the HTML tag, use it carefully (optional).
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
  */
@@ -445,7 +446,7 @@ function print_radio_button_extended ($name, $value, $label, $checkedvalue, $dis
 	static $idcounter = 0;
 
 	$output = '';
-	
+
 	$output = '<input type="radio" name="'.$name.'" value="'.$value.'"';
 	$htmlid = 'radiobtn'.sprintf ('%04d', ++$idcounter);
 	$output .= ' id="'.$htmlid.'"';
@@ -461,11 +462,11 @@ function print_radio_button_extended ($name, $value, $label, $checkedvalue, $dis
 	}
 	$output .= ' ' . $attributes ;
 	$output .= ' />';
-	
+
 	if ($label != '') {
 		$output .= '<label for="'.$htmlid.'">'.  $label .'</label>' .  "\n";
 	}
-	
+
 	if ($return)
 		return $output;
 
@@ -483,7 +484,7 @@ function print_radio_button_extended ($name, $value, $label, $checkedvalue, $dis
  */
 function print_radio_button ($name, $value, $label = '', $checkedvalue = '', $return = false) {
 	$output = print_radio_button_extended ($name, $value, $label, $checkedvalue, false, '', '', true);
-	
+
 	if ($return)
 		return $output;
 
@@ -498,7 +499,7 @@ function print_radio_button ($name, $value, $label = '', $checkedvalue = '', $re
  * @param string $checked Set the button to be marked (optional, unmarked by default).
  * @param bool $disabled Disable the button  (optional, button enabled by default).
  * @param string $script Script to execute when onClick event is triggered (optional).
- * @param string $attributes Optional HTML attributes. It's a free string which will be 
+ * @param string $attributes Optional HTML attributes. It's a free string which will be
 	inserted into the HTML tag, use it carefully (optional).
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
  */
@@ -506,15 +507,15 @@ function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $
 	$htmlid = 'checkbox-'.$name;
 	$output = '<input name="'.$name.'" type="checkbox" value="'.$value.'" '. ($checked ? 'checked': '');
 	$output .= ' id="'.$htmlid.'"';
-	
+
 	if ($script != '') {
 		 $output .= ' onClick="'. $script . '"';
 	}
-	
+
 	if ($disabled) {
 		 $output .= ' disabled';
 	}
-	
+
 	$output .= ' />';
 	$output .= "\n";
 	if ($return)
@@ -538,28 +539,28 @@ function print_checkbox ($name, $value, $checked = false, $return = false) {
 	echo $output;
 }
 
-/** 
+/**
  * Prints only a tip button which shows a text when the user puts the mouse over it.
- * 
+ *
  * @param  string $text Complete text to show in the tip
  * @param  bool $return whether to return an output string or echo now
- * 
- * @return 
+ *
+ * @return
  */
 function print_help_tip ($text, $return = false, $tip_class = 'tip') {
 	$output = '<a href="#" class="'.$tip_class.'">&nbsp;<span>'.$text.'</span></a>';
-	
+
 	if ($return)
 		return $output;
 	echo $output;
 }
 
-/** 
+/**
  * Prints a help tip icon.
- * 
+ *
  * @param id Help id
  * @param return Flag to return or output the result
- * 
+ *
  * @return The help tip if return flag was active.
  */
 function integria_help ($help_id, $return = false) {

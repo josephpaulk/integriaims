@@ -49,7 +49,7 @@ if (isset($_GET["quick_delete"])) {
 		$id_author_inc = $row2["id_usuario"];
 		$email_notify = $row2["notify_email"];
 		if ((give_acl($id_usuario, $row2["id_grupo"], "IM") ==1) OR ($_SESSION["id_usuario"] == $id_author_inc) ) {
-			if ($email_notify == 1){ 
+			if ($email_notify == 1){
 				// Email notify to all people involved in this incident
 				mail_incident ($id_inc, $id_usuario, "", 0, 3);
 			}
@@ -72,7 +72,7 @@ $usuario_form = get_parameter("usuario");
 
 // Search tokens for search filter
 if ($texto_form != "")
-	$busqueda = sprintf ('(titulo LIKE "%%%s" OR descripcion LIKE "%%%s"',
+	$busqueda = sprintf ('(titulo LIKE "%%%s" OR epilog LIKE "%%%s" OR descripcion LIKE "%%%s"',
 			$texto_form, $texto_form);
 
 if ($usuario_form != ""){
@@ -84,7 +84,7 @@ if ($usuario_form != ""){
 if ($incident_form != "") {
 	$busqueda = "id_incidencia = $incident_form";
 }
-	
+
 // Filter tokens add to search
 if ($busqueda != "")
 	$sql1= "WHERE ".$busqueda;
@@ -139,8 +139,8 @@ echo '<div id="ui-tabs-3" class="ui-tabs-panel" style="display: block;">';
 form_search_incident ();
 
 unset ($table);
-$table->class = 'hide result_table';
-$table->width = '90%';
+$table->class = 'hide result_table listing';
+$table->width = '100%';
 $table->id = 'incident_search_result_table';
 $table->head = array ();
 $table->head[0] = "Id";
@@ -223,7 +223,7 @@ $(document).ready (function () {
 		values = get_form_input_values (this.id);
 		values.push ({name: "page",
 				value: "operation/incidents/incident_search"});
-		
+
 		$("table#incident_search_result_table tbody").fadeOut ('normal', function () {
 			$(this).empty ();
 			jQuery.post ("ajax.php",
