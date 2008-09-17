@@ -28,6 +28,9 @@ if ($search) {
 	$sql = sprintf ('SELECT id, name, description, comments
 			FROM tinventory');
 	$inventories = get_db_all_rows_sql ($sql);
+	if ($inventories === false) {
+		$inventories = array ();
+	}
 	
 	$total_inventories = 0;
 	foreach ($inventories as $inventory) {

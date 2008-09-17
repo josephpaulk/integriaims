@@ -1,5 +1,10 @@
 2008-09-17  Esteban Sanchez  <estebans@artica.es>
 
+	* operation/inventories/inventory_search.php: Fixed possible warning
+	if there are no inventory objects.
+
+2008-09-17  Esteban Sanchez  <estebans@artica.es>
+
 	* include/js/integria.js: Changes in get_form_input_values() so it can
 	get a HTML object or a HTML element id.
 
