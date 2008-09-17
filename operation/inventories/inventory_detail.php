@@ -72,7 +72,7 @@ if ($update) {
 if ($create) {
 	$sql = sprintf ('INSERT INTO tinventory (name, description, id_product,
 			id_contract, ip_address, id_parent, id_building, serial_number, part_number)
-			VALUES ("%s", "%s", %d, "%s", %d, %d, "%s", "%s")',
+			VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s")',
 			$name, $description, $id_product, $id_contract, $ip_address,
 			$id_parent, $id_building, $serial_number, $part_number);
 	$id = process_sql ($sql, 'insert_id');
@@ -82,7 +82,7 @@ if ($create) {
 		$result_msg = '<h3 class="err">'.lang_string ('There was an error creating inventory object').'</h3>';
 	}
 	
-	if (deined ('AJAX')) {
+	if (defined ('AJAX')) {
 		echo $result_msg;
 		return;
 	}

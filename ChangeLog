@@ -1,5 +1,10 @@
 2008-09-17  Esteban Sanchez  <estebans@artica.es>
 
+	* operation/inventories/inventory_detail.php: Fixed insertion
+	warnings and typo.
+
+2008-09-17  Esteban Sanchez  <estebans@artica.es>
+
 	* include/functions_form.php: Incident search form is a bit more
 	little now and it has three columns.
 
