@@ -82,7 +82,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 if (isset($_GET["delete"])){ // if delete
 	$id = get_parameter ("delete",0);
 	$fullname = give_db_sqlfree_field  ("SELECT fullname FROM tcompany_contact WHERE id = $id ");
-	$sql_delete= "DELETE FROM tcontact WHERE id = $id";
+	$sql_delete= "DELETE FROM tcompany_contact WHERE id = $id";
 	$result=mysql_query($sql_delete);
 	insert_event ("CONTACT DELETED", $id, 0, "$fullname");
 	echo "<h3 class='suc'>".lang_string("Deleted successfully")."</h3>";
@@ -239,16 +239,6 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			$table->head[3] = lang_string ("Delete");
 			$counter = 0;
 	        while ($row=mysql_fetch_array($result)){
-		        if ($color == 1){
-			        $tdcolor = "datos";
-			        $color = 0;
-			        }
-		        else {
-			        $tdcolor = "datos2";
-			        $color = 1;
-		        }
-		        echo "</thead><tbody><tr>";
-
                 // Name
                 $table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail&update=".$row["id"]."'>".$row["fullname"]."</a></b>";
 
@@ -259,12 +249,12 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
                 $table->data[$counter][2] = $row["email"];
 
                 // Delete
-                $table->data[$counter][3] = "<center><a href='index.php?sec=inventory&
+                $table->data[$counter][3] = "<a href='index.php?sec=inventory&
 				            sec2=operation/contacts/contact_detail&
 				            delete=".$row["id"]."'
 				            onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
 				            return false;'>
-				            <img border='0' src='images/cross.png'></a></center>";
+				            <img border='0' src='images/cross.png'></a>";
 				$counter++;
             }
             print_table ($table);

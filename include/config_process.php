@@ -1,9 +1,10 @@
 <?PHP
 
-// Integria 1.1 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -13,13 +14,13 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+
 global $config;
 
 // Integria version
-$config["build"]="80603";
-$config["version"]="v1.1";
+$config["build"]="80916";
+$config["version"]="v1.2";
 $config["build_version"] = $config["build"];
-$config["notification_period"] = "86400";
 
 // Read remaining config tokens from DB
 if (! mysql_connect ($config["dbhost"], $config["dbuser"], $config["dbpass"])) {
@@ -68,7 +69,25 @@ foreach ($configs as $c) {
 	$config[$c["token"]] = $c["value"];
 }
 
+if (!isset($config["notification_period"]))
+	$config["notification_period"] = "86400";
+
 if (!isset ($config["language_code"]))
 	$config["language_code"] = "en";
+
+if (!isset ($config["FOOTER_EMAIL"]))
+	$config["FOOTER_EMAIL"] = "Please do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n";
+
+if (!isset ($config["HEADER_EMAIL"]))
+	$config["HEADER_EMAIL"] = "Hello, \n\nThis is an automated message coming from Integria\n\n";
+
+if (!isset ($config["currency"]))
+	$config["currency"]="€";
+
+if (!isset ($config["hours_perday"]))
+	$config["hours_perday"] = 8;
+
+if (!isset ($config["sitename"]))
+	$config["sitename"] = "INTEGRIA";
 
 ?>

@@ -15,6 +15,7 @@
 // GNU General Public License for more details.
 
 
+
 global $config;
 
 check_login();
@@ -39,7 +40,6 @@ if (isset($_GET["create2"])){ //
 
 	$sql_insert="INSERT INTO tcompany (`name`, `address`, `comments`, fiscal_id, id_company_role ) VALUE ('$name','$address', '$comments', '$fiscal_id', '$id_company_role') ";
 
-echo $sql_insert;
 	$result=mysql_query($sql_insert);
 	if (! $result)
 		echo "<h3 class='error'>".lang_string ("Company cannot be created")."</h3>";
@@ -199,7 +199,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
         $color =0;
 	    if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
 
-            $table->width = "720";
+            $table->width = "90%";
 			$table->class = "listing";
 			$table->cellspacing = 0;
 			$table->cellpadding = 0;
@@ -208,37 +208,31 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			$table->style = array ();
 			$table->colspan = array ();
 			$table->head[0] = lang_string ("Company");
-			$table->head[1] = lang_string ("Contracts");
-			$table->head[2] = lang_string ("Contacts");
-			$table->head[3] = lang_string ("Delete");
+			$table->head[1] = lang_string ("Role");
+			$table->head[2] = lang_string ("Contracts");
+			$table->head[3] = lang_string ("Contacts");
+			$table->head[4] = lang_string ("Delete");
 			$counter = 0;
 	        while ($row=mysql_fetch_array($result)){
-		        if ($color == 1){
-			        $tdcolor = "datos";
-			        $color = 0;
-			        }
-		        else {
-			        $tdcolor = "datos2";
-			        $color = 1;
-		        }
-		        echo "</thead><tbody><tr>";
-
                 // Name
                 $table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/companies/company_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
+				
+				// Role
+				$table->data[$counter][1] = get_db_sql("SELECT name FROM tcompany_role WHERE id = ".$row["id_company_role"]);
 
 				// Contracts (link to new window)
-               	$table->data[$counter][1] = "<img src='images/maintab.gif'>";
+               	$table->data[$counter][2] = "<img src='images/maintab.gif'>";
 
 				// Contacts (link to new window)
-               	$table->data[$counter][2] = "<img src='images/group.png'>";
+               	$table->data[$counter][3] = "<img src='images/group.png'>";
 
                 // Delete
-                $table->data[$counter][3] = "<center><a href='index.php?sec=inventory&
+                $table->data[$counter][4] = "<a href='index.php?sec=inventory&
 				            sec2=operation/companies/company_detail&
 				            delete=".$row["id"]."'
 				            onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
 				            return false;'>
-				            <img border='0' src='images/cross.png'></a></center>";
+				            <img border='0' src='images/cross.png'></a>";
 				$counter++;
             }
             print_table ($table);

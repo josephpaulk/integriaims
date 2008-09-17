@@ -1,8 +1,9 @@
 <?PHP
-// Integria 1.1 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -11,6 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 
 if (!isset($config["id_user"]))
@@ -351,9 +353,42 @@ if ($sec == "inventory"){
 			echo "<li>";
 		echo "<a href='index.php?sec=inventory&sec2=operation/inventory/inventory_detail'>".lang_string ('Create inventory object')."</a></li>";
 	}
+
 	echo "</ul>";
 	echo "</div>";
 }
+
+
+// =======================
+// CONTRACTS
+// =======================
+
+if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
+	echo "<div class='portlet'>";
+
+	// Contract
+	echo "<h3>".lang_string ('Contracts')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	// Contact overview
+	if (($sec2=="operation/contracts/contract_detail") AND (!isset($_GET["create"])))
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail'>".lang_string ('Contract overview')."</a></li>";
+
+	// Create new contract
+	if (give_acl($config["id_user"], 0, "IW")==1) {
+		if (($sec2=="operation/contracts/contract_detail") AND (isset($_GET["create"])))
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&create=1'>".lang_string ('Create contract')."</a></li>";
+		echo "</ul>";
+		echo "</div>";
+	}
+}
+
 
 // ===============
 // CONTACTS
@@ -384,6 +419,7 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 		echo "</div>";
 	}
 }
+
 
 // =======================
 // COMPANIES
@@ -433,35 +469,34 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 
 }
 
-// =======================
-// CONTRACTS
-// =======================
+// ===============
+// Building
+// ===============
 
-if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
+if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
 	echo "<div class='portlet'>";
-
-	// Contract
-	echo "<h3>".lang_string ('Contracts')."</h3>";
+	echo "<h3>".lang_string ('Buildings')."</h3>";
 	echo "<ul class='sidemenu'>";
 
-	// Contact overview
-	if (($sec2=="operation/contracts/contract_detail") AND (!isset($_GET["create"])))
+	// Building overview
+	if ($sec2=="operation/inventory/building_detail")
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail'>".lang_string ('Contract overview')."</a></li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/inventory/building_detail'>".lang_string ('Building overview')."</a></li>";
+	
+	// Building creation
+	if (($sec2=="operation/inventory/building_detail") AND (isset($_GET["create"])) )
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/inventory/building_detail&create=1'>".lang_string ('Create building')."</a></li>";
 
-	// Create new contract
-	if (give_acl($config["id_user"], 0, "IW")==1) {
-		if (($sec2=="operation/contracts/contract_detail") AND (isset($_GET["create"])))
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&create=1'>".lang_string ('Create contract')."</a></li>";
-		echo "</ul>";
-		echo "</div>";
-	}
+
+	echo "</ul>";
+	echo "</div>";
 }
+
 
 // ===================
 // KNOWLEDGE BASE (KB)

@@ -464,9 +464,13 @@ CREATE TABLE `tcontract` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   `description` varchar(250) NULL default NULL,
-  `date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `id_company` mediumint(8) unsigned NOT NULL,
+  `date_begin` date NOT NULL default '0000-00-00',
+  `date_end` date NOT NULL default '0000-00-00',
+  `id_company` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `id_sla` mediumint(8) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_sla`) REFERENCES tsla_specific(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE
 );

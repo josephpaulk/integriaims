@@ -1,3 +1,27 @@
+2008-09-17  Sancho Lerena <slerena@gmail.com>
+
+	* integria_db.sql: tcontract some field modifications.
+
+	* login_page.php: Some style modificacions.
+
+	* logon_failed.php: Some style modificacions.
+
+	* config_process.php: notification_process is now processed using 
+	tconfig table and also other variables.
+
+	* integria.css: More style work. Adjusted to be full-width. Only
+	firefox, IE needs a fix or something to get working fine :(
+
+	* side_menu.php: Added builings and reordering inventory blocks.
+
+	* company_detail.php: Added some fields to table.
+
+	* company_role.php: Finished.
+
+	* contact_detail.php: Code cleanup.
+
+	* contract_detail.php: Finished.
+ 
 2008-09-16  Sancho Lerena <slerena@gmail.com>
 
 	* index.php: Added static flora.all.css CSS reference instead http.

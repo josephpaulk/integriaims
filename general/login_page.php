@@ -17,15 +17,14 @@
 <div style='height: 60px'>
 </div>
 <center>
-<div class='databox' id='login' style='height: 240px;'>
-	<h1><?php echo $lang_label['welcome_title']; ?></h1>
-	<div class='databox' id='login_in' style='height: 100px;'>
+<div class='databox' id='login' style='height: 200px; padding-top: 20px;'>
+	<div style='padding-top: 5px;' id='login_in' style='height: 100px;'>
 		<form method="post" action="index.php?login=1">
 
 <?PHP
         echo "<input type='hidden' name='prelogin_url' value='".$_SERVER['REQUEST_URI']."'>";
 ?>
-		<table cellpadding='4' cellspacing='1' width='400'>
+		<table cellpadding='4' cellspacing='1' width='400' class='blank'>
 		<tr><td rowspan='3' align='left' style="border-right: solid 1px #678;">
 			<a href="index.php">
 			<img src="images/integria_white.png" border="0" alt="logo"></a>
