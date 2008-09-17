@@ -1587,6 +1587,27 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 	return $values;
 }
 
+function get_inventories ($only_names = true, $exclude_id = false) {
+	if ($exclude_id) {
+		$sql = sprintf ('SELECT * FROM tinventory WHERE id != %d', $exclude_id);
+		$inventories = get_db_all_rows_sql ($sql);
+	} else {
+		$inventories = get_db_all_rows_in_table ('tinventory');
+	}
+	if ($inventories == false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($inventories as $inventory) {
+			$retval[$inventory['id']] = $inventory['name'];
+		}
+		return $retval;
+	}
+	
+	return $inventories;
+}
+
 function get_inventory_name ($id) {
 	return (string) get_db_value ('name', 'tinventory', 'id', $id);
 }
@@ -1667,8 +1688,28 @@ function get_companies ($only_names = true) {
 	return $companies;
 }
 
+function get_contract ($id_contract) {
+	return get_db_row ('tcontract', 'id', $id_contract);
+}
+
+function get_contracts ($only_names = true) {
+	$contracts = get_db_all_rows_in_table ('tcontract');
+	if ($contracts === false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($contracts as $contract) {
+			$retval[$contract['id']] = $contract['name'];
+		}
+		return $retval;
+	}
+	
+	return $contracts;
+}
+
 function get_products ($only_names = true) {
-	$products = get_db_all_rows_in_table ('tproduct');
+	$products = get_db_all_rows_in_table ('tkb_product');
 	if ($products === false)
 		return array ();
 	
@@ -1707,6 +1748,22 @@ function get_incident_workunits ($id_incident) {
 
 function get_workunit_data ($id_workunit) {
 	return get_db_row ('tworkunit', 'id', $id_workunit);
+}
+
+function get_buildings ($only_names = true) {
+	$buildings = get_db_all_rows_in_table ('tbuilding');
+	if ($buildings === false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($buildings as $building) {
+			$retval[$building['id']] = $building['name'];
+		}
+		return $retval;
+	}
+	
+	return $buildings;
 }
 
 ?>

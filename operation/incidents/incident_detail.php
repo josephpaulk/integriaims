@@ -28,7 +28,7 @@ $id = (int) get_parameter ('id');
 
 if (give_acl ($config['id_user'], $id_grupo, "IR") != 1){
  	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id." '".$titulo."'");
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
 	include ("general/noaccess.php");
 	exit;
 }

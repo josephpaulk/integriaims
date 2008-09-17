@@ -56,17 +56,16 @@ $table->width = '97%';
 $table->style = array ();
 $table->style[0] = 'font-weight: bold';
 
-$table->data[0][0] = print_label (lang_string ('Name'), 'search_string', 'text', true);
-$table->data[0][0] .= print_input_text ('search_string', '', '', 20, 255, true);
+$table->data[0][0] = print_input_text ('search_string', '', '', 20, 255,
+						true, lang_string ('Name'));
+$table->data[0][1] = print_submit_button (lang_string ('Search'), 'search_button',
+						false, 'class="sub search"', true);
 
 echo '<div id="inventory_search_result"></div>';
 
 echo '<form id="inventory_search_form" method="post">';
 print_table ($table);
-echo '<div class="action-buttons" style="width: '.$table->width.'">';
 print_input_hidden ('search', 1);
-print_submit_button (lang_string ('Search'), 'search_button');
-echo '</div>';
 echo '</form>';
 
 unset ($table);

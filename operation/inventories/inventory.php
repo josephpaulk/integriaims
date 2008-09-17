@@ -45,7 +45,7 @@ var old_inventory;
 
 function tab_loaded (event, tab) {
 	if (tab.index == 1) {
-		
+		configure_inventory_form (true);
 	}
 }
 

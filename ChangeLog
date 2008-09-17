@@ -1,5 +1,29 @@
 2008-09-17  Esteban Sanchez  <estebans@artica.es>
 
+	* integria/integria_db.sql: Table tproduct already existed before, and
+	it was tkb_product. Foreign key in tinventory changed to it.
+
+	* include/functions_db.php: Added get_inventories(), get_contract(),
+	get_buildings() and get_contracts(). Replaced references to tproduct
+	with tkb_product.
+
+	* include/js/integria_incident_search.js: Added
+	configure_inventory_form().
+
+	* operation/incidents/incident_detail.php: Removed incident title
+	reference on audit_db() call.
+
+	* operation/inventories/inventory.php: Configure the incident form if
+	first tab is loaded.
+
+	* inventories/inventory_detail.php: Added functionality for create and
+	edit.
+
+	* inventories/inventory_search.php: Show search button in other
+	preffered place.
+
+2008-09-17  Esteban Sanchez  <estebans@artica.es>
+
 	* operation/inventories/inventory_search.php: Fixed possible warning
 	if there are no inventory objects.
 

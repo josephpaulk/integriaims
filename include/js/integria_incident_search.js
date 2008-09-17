@@ -308,3 +308,24 @@ function configure_incident_side_menu (id_incident) {
 		return false;
 	});
 }
+
+function configure_inventory_form (enable_ajax_form) {
+	if (enable_ajax_form) {
+		$(dialog+"#inventory_status_form").submit (function () {
+			values = get_form_input_values (this);
+			values.push ({name: "page",
+				value: "operation/inventories/inventory_detail"});
+			jQuery.post ("ajax.php",
+				values,
+				function (data, status) {
+					$("#result").slideUp ('fast', function () {
+						$("#result").empty ().append (data).slideDown ();
+					});
+				},
+				"html"
+			);
+			return false;
+		});
+	}
+}
+

@@ -419,6 +419,9 @@ CREATE TABLE `tkb_product` (
   PRIMARY KEY  (`id`)
 );
 
+ALTER TABLE `tkb_product` ADD FOREIGN KEY (`parent`) REFERENCES tkb_product(`id`)
+     ON UPDATE CASCADE ON DELETE RESTRICT;
+
 CREATE TABLE `tbuilding` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
@@ -511,14 +514,6 @@ CREATE TABLE `tmanufacturer` (
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE `tproduct` (
-  `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) NULL default NULL,
-  `icon` varchar(50) default NULL,
-  PRIMARY KEY  (`id`)
-);
-
 CREATE TABLE `tinventory` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
@@ -537,7 +532,7 @@ CREATE TABLE `tinventory` (
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_contract`) REFERENCES tcontract(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_product`) REFERENCES tproduct(`id`)
+  FOREIGN KEY (`id_product`) REFERENCES tkb_product(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_sla`) REFERENCES tsla_specific(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE,
