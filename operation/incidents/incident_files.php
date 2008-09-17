@@ -88,21 +88,18 @@ if (isset($_GET["id"])){
 // Attach head if there's attach for this incident
 $att_fil=mysql_query("SELECT * FROM tattachment WHERE id_incidencia = ".$id_inc);
 
-echo "<h1>".$lang_label["attached_files"]."</h1>";
-echo "<h3>";
-echo give_inc_title($id_inc);
-echo "</h3>";
+echo "<h3>".give_inc_title($id_inc)."</h3>";
 
 if (mysql_num_rows($att_fil)){
-	echo "<table width='750' cellspacing=4 cellpadding=4 class='databox'><tr><th class=datos>".$lang_label["filename"];
-	echo "<th class=datos>".$lang_label["description"];
-	echo "<th class=datos>".$lang_label["size"];
-	echo "<th class=datos>".$lang_label["delete"];
+	echo "<table width='750' cellspacing=4 cellpadding=4 class='databox'><tr><th class=datos>".lang_string ('filename');
+	echo "<th class=datos>".lang_string ('description');
+	echo "<th class=datos>".lang_string ('size');
+	echo "<th class=datos>".lang_string ('delete');
 
-	while ($row=mysql_fetch_array($att_fil)){
+	while ($row=mysql_fetch_array ($att_fil)){
 		echo "<tr><td class=datos><img src='images/disk.png' border=0 align='top'>  <a target='_new' href='attachment/pand".$row["id_attachment"]."_".$row["filename"]."'>".$row["filename"]."</a>";
 		echo "<td class=datos>".$row["description"];
-		echo "<td class=datos>".$row["size"];
+		echo "<td class=datos>".byte_convert ($row["size"]);
 
 		if (give_acl($iduser_temp, $id_grupo, "IM")==1){ // Delete attachment
 			echo '<td class=datos align="center"><a href="index.php?sec=incidencias&sec2=operation/incidents/incident_files&id='.$id_inc.'&delete_file='.$row["id_attachment"].'"><img src="images/delete.png" border=0>';
@@ -111,6 +108,6 @@ if (mysql_num_rows($att_fil)){
 	}
 	echo "</table><br>";
 } else {
-	echo $lang_label["no_data"];
+	echo '<h4>'.lang_string ('no_data').'</h4>';
 }
 ?>

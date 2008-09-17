@@ -42,10 +42,14 @@ function refresh_table (table_id) {
 /**
  * Get all values of an form into an array.
  *
- * @param form_id Id of the form to get the values.
+ * @param form Form to get the values. It can be an object or an HTML id
  *
  * @retval The input values of the form into an array.
  */
-function get_form_input_values (form_id) {
-	return $("#" + form_id).formToArray ();
+function get_form_input_values (form) {
+	if (typeof form == "string") {
+		return $("#" + form).formToArray ();
+	} else {
+		return $(form).formToArray ();
+	}
 }

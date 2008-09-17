@@ -1,4 +1,4 @@
-<?PHP
+<?php
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
@@ -12,8 +12,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-
-
 
 if (!isset($config["id_user"]))
 		return;
@@ -30,10 +28,8 @@ if (isset($_GET["sec2"]))
 else
 	$sec2 = "";
 
-// ===============
-// PROJECTS
-// ===============
 
+// PROJECTS
 if ($sec == "projects"){
 	echo "<div class='portlet'>";
 	echo "<h3>".lang_string ('projects')."</h3>";
@@ -236,10 +232,7 @@ if ($sec == "projects"){
 
 }
 
-// ===============
 // INCIDENTS
-// ===============
-
 if ($sec == "incidents") {
 	echo "<div class='portlet'>";
 	echo "<h3>".lang_string ('incidents')."</h3>";
@@ -330,39 +323,32 @@ if ($sec == "incidents") {
 
 }
 
-// ===============
 // INVENTORY
-// ===============
-
-if ($sec == "inventory"){
+if ($sec == "inventory") {
 	echo "<div class='portlet'>";
 	echo "<h3>".lang_string ('Inventory')."</h3>";
 	echo "<ul class='sidemenu'>";
 	// Incident overview
-	if ($sec2 == "operation/inventory/inventory")
+	if ($sec2 == "operation/inventories/inventory")
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/inventory/inventory'>".lang_string ('Inventory overview')."</a></li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory'>".lang_string ('Inventory overview')."</a></li>";
 
-	if (give_acl($config["id_user"], 0, "IW")==1) {
+	if (give_acl ($config["id_user"], 0, "IW")) {
 		// Incident creation
-		if ($sec2=="operation/inventory/inventory_detail")
+		if ($sec2 == "operation/inventories/inventory_detail")
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=inventory&sec2=operation/inventory/inventory_detail'>".lang_string ('Create inventory object')."</a></li>";
+		echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_detail'>".lang_string ('Create inventory object')."</a></li>";
 	}
 
 	echo "</ul>";
 	echo "</div>";
 }
 
-
-// =======================
 // CONTRACTS
-// =======================
-
 if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 	echo "<div class='portlet'>";
 
@@ -389,12 +375,8 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 	}
 }
 
-
-// ===============
 // CONTACTS
-// ===============
-
-if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
+if (give_acl ($config["id_user"], 0, "IM") && $sec == "inventory") {
 	echo "<div class='portlet'>";
 
 	// Contact search
@@ -420,11 +402,7 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 	}
 }
 
-
-// =======================
 // COMPANIES
-// =======================
-
 if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 	echo "<div class='portlet'>";
 
@@ -469,10 +447,7 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 
 }
 
-// ===============
-// Building
-// ===============
-
+// BUILDINGS
 if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
 	echo "<div class='portlet'>";
 	echo "<h3>".lang_string ('Buildings')."</h3>";
@@ -497,12 +472,7 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
 	echo "</div>";
 }
 
-
-// ===================
 // KNOWLEDGE BASE (KB)
-// ===================
-
-
 if (($sec == "kb") AND (give_acl($config["id_user"], 0, "KR"))) {
 	echo "<div class='portlet'>";
 	echo "<h3>".lang_string ("Knowledge Base")."</h3>";
@@ -545,7 +515,6 @@ if (($sec == "kb") AND (give_acl($config["id_user"], 0, "KR"))) {
 }
 
 // TODO
-// =======
 if ($sec == "todo")  {
 	echo "<div class='portlet'>";
 	echo "<h3>".lang_string ('todo')."</h3>";

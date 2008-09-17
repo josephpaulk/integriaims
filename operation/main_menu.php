@@ -51,7 +51,7 @@ if (give_acl($config["id_user"], 0, "IR") == 1){
 	    echo "<li id='current'>";
     else
 	    echo "<li>";
-    echo "<a href='index.php?sec=inventory&sec2=operation/inventory'>".lang_string("Inventory")."</a></li>";
+    echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory'>".lang_string("Inventory")."</a></li>";
 }
 
 // KB

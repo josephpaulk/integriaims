@@ -104,6 +104,14 @@ table.listing {
 	border-collapse: collapse;
 }
 
+table.listing tr:hover {
+	background: #E8E8E8;
+}
+
+table.listing td:hover {
+	background: #DCDCDC;
+}
+
 table.button {
 	padding-top: 5px;
 	padding-left: 5px;
@@ -323,6 +331,9 @@ form.searchform input.button {
 	color: #fff;
 }
 
+.header {
+	text-align: left;
+}
 
 /* main column */
 #main {
@@ -850,12 +861,13 @@ div#foot a:hover{
 }
 
 .dialog .ui-dialog-titlebar {
-	background-color: #E19A34;
+	background-color: #2179B1;
 	padding-top: 10px;
 	height: 20px;
 	color: #FFFFFF;
 	font-weight: bold;
 	cursor: move;
+	font-variant: small-caps;
 }
 
 .dialog .ui-dialog-titlebar-title {
@@ -874,3 +886,10 @@ div#foot a:hover{
 	width: 16px;
 }
 
+#incident_inventories, #text-search_string, textarea {
+	width: 100%;
+}
+
+label {
+	font-weight: bold;
+}

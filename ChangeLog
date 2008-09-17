@@ -1,3 +1,91 @@
+2008-09-17  Esteban Sanchez  <estebans@artica.es>
+
+	* include/js/integria.js: Changes in get_form_input_values() so it can
+	get a HTML object or a HTML element id.
+
+	* include/js/integria_incident_search.js: Improved support and fixed
+	bugs when nested dialogs are used. Now you can open "Create incident"
+	dialog and use incident or search dialogs. Added
+	show_add_incident_dialog(), configure_workunit_form(),
+	show_add_file_dialog() and show_add_workunit_dialog(). Open add
+	workunit and add file dialogs when clicking on the side menu option.
+
+	* include/styles/integria.css: Added hover effects to listing tables.
+	Added header style to tables. Fixed dialog title background color and
+	added style to the text. Added style to label elements and to input
+	text.
+
+	* include/functions.php: Added byte_convert() function to show bytes
+	magnitude. Style correction.
+	
+	* include/functions_db.php: Rewritten some query functions to use
+	generic databse functions. Style correction. Order by in
+	get_db_all_rows_field_filter() allow now a string with the order
+	direction (asc or desc). Added get_inventory_affected_companies(),
+	get_companies(), get_products(), get_incident_workunits() and
+	get_workunit_data().
+
+	* include/functions_form.php: Added support to filter by company
+	and/or product to form_search_incident(). Added labels to the form so
+	the search style is now smoother.
+
+	* include/functions_html.php: Added print_label() to add a label to an
+	input. Added optional $label parameter to print_select(),
+	print_select_from_sql(), print_input_text_extended(),
+	print_input_password(), print_input_text(), print_submit_button(),
+	print_button(), print_textarea().
+
+	* operation/incidents/incident.php: Added new tabs (Workunits and
+	files). Changed navigation icons to control_* images. Create incident
+	action is now shown in a new dialog.
+
+	* incidents/incident_attach_file.php,
+	incidents/incident_create_work.php: Avoid one indentation level by
+	returning on time. Use generic functions and added AJAX support.
+
+	* incidents/incident_detail.php: Style correction. Renamed variable
+	$id_inc with $id. Added AJAX support to add workunit and add file
+	operations. Use generic functions. Fixed error that was causing to
+	show only one option in combos although the user has write
+	permissions. Show the result area always (hidden in some cases so it
+	can be shown). Changes in javascript functions reflected.
+
+	* incidents/incident_files.php: Added AJAX support. Use lang_string()
+	instead of $lang_label. Show file size with the unit instead of using
+	bytes.
+
+	* operation/incidents/incident_inventory_contacts.php: Added to
+	repository. Show the contacts relative to the inventory objects
+	affected by the incident.
+
+	* operation/incidents/incident_inventory_detail.php: Added to
+	repository. Show the details of the inventory objects affected by an
+	incident.
+
+	* operation/incidents/incident_search.php: Added support to filter by
+	company and products.
+
+	* operation/incidents/incident_tracking.php: Style correction. Use
+	lang_string() instead of $lang_label. Fixed table width and class.
+
+	* operation/incidents/incident_workunits.php: Style correction. Use
+	databse and generic functions. Use lang_string().
+
+	* operation/inventories/inventory.php: Added to repository. Interface
+	to inventory operations.
+
+	* operation/inventories/inventory_detail.php: Added to repository.
+	Inventory editor (skeleton).
+
+	* operation/inventories/inventory_search.php: Added to repository.
+	Search into inventory objects.
+
+	* operation/main_menu.php: Directory "inventory" is "inventories" now.
+
+	* operation/side_menu.php: <?PHP must be lowercase. Style corrections
+	and replaced ugly comments. Replaced "inventory" directory with
+	"inventories".
+
 2008-09-17  Sancho Lerena <slerena@gmail.com>
 
 	* integria_db.sql: tcontract some field modifications.

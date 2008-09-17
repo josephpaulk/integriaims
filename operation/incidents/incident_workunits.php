@@ -23,16 +23,17 @@ if (check_login() != 0) {
 
 $id_grupo = "";
 $creacion_incidente = "";
+$id_incident = get_parameter ('id');
+$title = '';
 
-if (isset($_GET["id"])){
-	$id_inc = $_GET["id"];
+if ($id_incident) {
 	$iduser_temp=$_SESSION['id_usuario'];
 	// Obtain group of this incident
-	$sql1='SELECT * FROM tincidencia WHERE id_incidencia = '.$id_inc;
+	$sql1='SELECT * FROM tincidencia WHERE id_incidencia = '.$id_incident;
 	$result=mysql_query($sql1);
 	$row=mysql_fetch_array($result);
 	// Get values
-	$titulo = $row["titulo"];
+	$title = $row["titulo"];
 	$texto = $row["descripcion"];
 	$inicio = $row["inicio"];
 	$actualizacion = $row["actualizacion"];
@@ -49,7 +50,7 @@ if (isset($_GET["id"])){
 	$id_user=$_SESSION['id_usuario'];
 	if (give_acl($iduser_temp, $id_grupo, "IR") != 1){
 	 	// Doesn't have access to this page
-		audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
+		audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to incident ".$id_incident." '".$title."'");
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -61,22 +62,17 @@ if (isset($_GET["id"])){
 
 echo $result_msg;
 
-echo "<h1>".$lang_label["workunit_resume"]."</h1>";
-echo "<h3>";
-echo "#".$id_inc." ".give_inc_title($id_inc);
-echo "</h3>";
+echo "<h3>".give_inc_title ($id_incident)."</h3>";
 
+$workunits = get_incident_workunits ($id_incident);
 
-$sql4='SELECT * FROM tworkunit_incident WHERE id_incident = '.$id_inc.' ORDER BY id_workunit ASC';
-if ($res4=mysql_query($sql4)){
-	while ($row4=mysql_fetch_array($res4)){
-		$sql3='SELECT * FROM tworkunit WHERE id = '.$row4["id_workunit"];
-		$res3=mysql_query($sql3);
-		while ($row3=mysql_fetch_array($res3)){
-			show_workunit_data ($row3,give_inc_title($id_inc));
-		}
-	}
-} else 
-	echo $lang_label["no_data"];
+if ($workunits === false) {
+	echo '<h4>'.lang_string ('No workunit was done in this incident').'</h4>';
+	return;
+}
 
+foreach ($workunits as $workunit) {
+	$workunit_data = get_workunit_data ($workunit['id_workunit']);
+	show_workunit_data ($workunit_data, $title);
+}
 ?>

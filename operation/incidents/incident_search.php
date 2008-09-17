@@ -26,6 +26,8 @@ $status = (int) get_parameter ('status');
 $search_priority = (int) get_parameter ('search_priority', -1);
 $search_id_group = (int) get_parameter ('search_id_group', 1);
 $search_status = (int) get_parameter ('search_status', 0);
+$search_id_product = (int) get_parameter ('search_id_product', 0);
+$search_id_company = (int) get_parameter ('search_id_company', 0);
 
 if ($status == 0)
 	$status = implode (',', array_keys (get_indicent_status ()));
@@ -51,19 +53,46 @@ if ($incidents === false) {
 }
 
 $status = get_indicent_status ();
-$colors = array ("datos_red",
-		"datos_red",
-		"datos_yellow",
-		"datos_yellow",
-		"datos_yellow",
-		"datos_green",
-		"datos_green");
 
 foreach ($incidents as $incident) {
+	/* Check aditional searching clauses */
+	if ($search_id_product) {
+		$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
+		$found = false;
+		foreach ($inventories as $inventory) {
+			if ($inventory['id_product'] == $search_id_product) {
+				$found = true;
+				break;
+			}
+		}
+		
+		if (! $found)
+			continue;
+	}
+	
+	if ($search_id_company) {
+		$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
+		
+		$found = false;
+		foreach ($inventories as $inventory) {
+			$companies = get_inventory_affected_companies ($inventory['id'], false);
+			foreach ($companies as $company) {
+				if ($company['id'] == $search_id_company) {
+					$found = true;
+					break;
+				}
+			}
+			if ($found)
+				break;
+		}
+		
+		if (! $found)
+			continue;
+	}
+	
 	/* We print the rows directly, because it will be used in a sortable
 	   jQuery table and it only needs the rows */
-
-
+	
 	echo '<tr id="indicent-'.$incident['id_incidencia'].'">';
 	echo '<td><strong>#'.$incident['id_incidencia'].'</strong></td>';
 	echo '<td>'.$incident['titulo'].'</td>';
@@ -82,7 +111,7 @@ foreach ($incidents as $incident) {
 	$files = give_number_files_incident ($incident["id_incidencia"]);
 	if ($files)
 		echo '<br /><img src="images/disk.png"
-			title="'.$file_number.' '.lang_string ('Files').'" />';
+			title="'.$files.' '.lang_string ('Files').'" />';
 
 	/* Mail notification */
 	$mail_check = get_db_value ('notify_email', 'tincidencia',

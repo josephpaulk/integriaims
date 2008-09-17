@@ -713,75 +713,33 @@ function give_inc_priority ($id_inc){
 // Return incident title
 // --------------------------------------------------------------- 
 
-function give_inc_title ($id_inc){
-	require("config.php");
-	$query1="SELECT * FROM tincidencia WHERE id_incidencia= ".$id_inc;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["titulo"];
-	else
-		$pro = "";
-	return $pro;
+function give_inc_title ($id_incident) {
+	return (string) get_db_value ('titulo', 'tincidencia', 'id_incidencia', $id_incident);
 }
 
 // --------------------------------------------------------------- 
 // Return incident notify by email feature
 // --------------------------------------------------------------- 
 
-function give_inc_email ($id_inc){
-	require("config.php");
-	$query1="SELECT * FROM tincidencia WHERE id_incidencia= ".$id_inc;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["notify_email"];
-	else
-		$pro = "";
-	return $pro;
+function give_inc_email ($id_incident) {
+	return (bool) get_db_value ('notify_email', 'tincidencia', 'id_incidencia', $id_incident);
 }
 
 // --------------------------------------------------------------- 
 // Return incident original author
 // --------------------------------------------------------------- 
 
-function give_inc_creator ($id_inc){
-	require("config.php");
-	$query1="SELECT * FROM tincidencia WHERE id_incidencia= ".$id_inc;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["id_creator"];
-	else
-		$pro = "";
-	return $pro;
+function give_inc_creator ($id_incident) {
+	return (int) get_db_value ('id_creator', 'tincidencia', 'id_incidencia', $id_incident);
 }
 
-// --------------------------------------------------------------- 
-// Returns agent id given name of agent
-// --------------------------------------------------------------- 
-
-function give_agent_id_from_module_id ($id_module){
-	require("config.php");
-	$query1="SELECT * FROM tagente_modulo WHERE id_agente_modulo = $id_module";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["id_agente"];
-	else
-		$pro = "";
-	return $pro;
-}
 
 // --------------------------------------------------------------- 
 // Returns user email fiven its id
 // --------------------------------------------------------------- 
 
-function return_user_email ($id_user){
-	require("config.php");
-	$query1="SELECT * FROM tusuario WHERE id_usuario = '$id_user'";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["direccion"];
-	else
-		$pro = "";
-	return $pro;
+function return_user_email ($id_user) {
+	return (string) get_db_value ('direccion', 'tusuario', 'id_usuario', $id_user);
 }
 
 function project_manager_check ($id_project) {
@@ -793,38 +751,44 @@ function project_manager_check ($id_project) {
 	   $id = $_SESSION["id_usuario"];
 	   if ($manager == $id)
 			return 1;
-		else
-		  return 0;
 	}
-	else
-		return 0;
-		
+	return 0;
 }
 
 function incident_tracking ( $id_incident, $id_user, $state, $aditional_data = 0) {
 	global $config;
 	require ("include/languages/language_".$config["language_code"].".php");
 	switch($state){
-		case 0: $descripcion = $lang_label["incident_creation"];
-			break;
-		case 1: $descripcion = $lang_label["incident_updated"];
-			break;
-		case 2: $descripcion = $lang_label["incident_note_added"];
-			break;
-		case 3: $descripcion = $lang_label["incident_file_added"];
-			break;
-		case 4: $descripcion = $lang_label["incident_note_deleted"];
-			break;
-		case 5: $descripcion = $lang_label["incident_file_deleted"];
-			break;
-		case 6: $descripcion = $lang_label["incident_change_priority"];
-			break;
-		case 7: $descripcion = $lang_label["incident_change_status"];
-			break;
-		case 8: $descripcion = $lang_label["incident_change_resolution"];
-			break;
-		case 9: $descripcion = $lang_label["incident_workunit_added"];
-			break;
+	case 0:
+		$descripcion = lang_string ('incident_creation');
+		break;
+	case 1:
+		$descripcion = lang_string ('incident_updated');
+		break;
+	case 2:
+		$descripcion = lang_string ('incident_note_added');
+		break;
+	case 3:
+		$descripcion = lang_string ('incident_file_added');
+		break;
+	case 4:
+		$descripcion = lang_string ('incident_note_deleted');
+		break;
+	case 5:
+		$descripcion = lang_string ('incident_file_deleted');
+		break;
+	case 6:
+		$descripcion = lang_string ('incident_change_priority');
+		break;
+	case 7:
+		$descripcion = lang_string ('incident_change_status');
+		break;
+	case 8:
+		$descripcion = lang_string ('incident_change_resolution');
+		break;
+	case 9:
+		$descripcion = lang_string ('incident_workunit_added');
+		break;
 	}
 
 	if ($state == 6)
@@ -1045,7 +1009,7 @@ function process_sql ($sql, $rettype = "affected_rows") {
  */
 function get_db_all_rows_in_table ($table, $order_field = "") {
 	if ($order_field != "") {
-		return get_db_all_rows_sql ("SELECT * FROM `".$table."` ORDER BY `".$order_field."` ");
+		return get_db_all_rows_sql ("SELECT * FROM `".$table."` ORDER BY ".$order_field);
 	} else {	
 		return get_db_all_rows_sql ("SELECT * FROM `".$table."`");
 	}
@@ -1070,7 +1034,7 @@ function get_db_all_rows_field_filter ($table, $field, $condition, $order_field 
 	}
 
 	if ($order_field != "")
-		$sql .= sprintf(" ORDER BY `%s`",$order_field);	
+		$sql .= sprintf(" ORDER BY %s",$order_field);	
 	return get_db_all_rows_sql ($sql);
 }
 
@@ -1664,8 +1628,59 @@ function get_inventory_contracts ($id_inventory, $only_names = true) {
 	return $contracts;
 }
 
+function get_inventory_affected_companies ($id_inventory, $only_names = true) {
+	$sql = sprintf ('SELECT tcompany.* FROM tinventory, tcontract, tcompany
+			WHERE tinventory.id_contract = tcontract.id
+			AND tcontract.id_company = tcompany.id
+			AND tinventory.id = %d', $id_inventory);
+	$companies = get_db_all_rows_sql ($sql);
+	if ($companies == false)
+		return array ();
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($companies as $company) {
+			$result[$company['id']] = $company['name'];
+		}
+		return $result;
+	}
+	return $companies;
+}
+
 function get_company ($id_company) {
 	return get_db_row ('tcompany', 'id', $id_company);
+}
+
+function get_companies ($only_names = true) {
+	$companies = get_db_all_rows_in_table ('tcompany');
+	if ($companies === false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($companies as $company) {
+			$retval[$company['id']] = $company['name'];
+		}
+		return $retval;
+	}
+	
+	return $companies;
+}
+
+function get_products ($only_names = true) {
+	$products = get_db_all_rows_in_table ('tproduct');
+	if ($products === false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($products as $product) {
+			$retval[$product['id']] = $product['name'];
+		}
+		return $retval;
+	}
+	
+	return $products;
 }
 
 function get_company_contacts ($id_company, $only_names = true) {
@@ -1684,4 +1699,14 @@ function get_company_contacts ($id_company, $only_names = true) {
 	}
 	return $contacts;
 }
+
+function get_incident_workunits ($id_incident) {
+	return get_db_all_rows_field_filter ('tworkunit_incident', 'id_incident',
+					$id_incident, 'id_workunit ASC');
+}
+
+function get_workunit_data ($id_workunit) {
+	return get_db_row ('tworkunit', 'id', $id_workunit);
+}
+
 ?>

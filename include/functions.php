@@ -127,7 +127,7 @@ function give_parameter_post ( $name, $default = "" ){
 // parametros pasados a funcion de abrir fichero. Usados en sec y sec2
 // ---------------------------------------------------------------
 
-function parametro_limpio($texto){
+function parametro_limpio ($texto){
 	// Metemos comprobaciones de seguridad para los includes de paginas pasados por parametro
 	// Gracias Raul (http://seclists.org/lists/incidents/2004/Jul/0034.html)
 	// Consiste en purgar los http:// de las cadenas
@@ -196,6 +196,26 @@ function list_files($directory, $stringSearch, $searchHandler, $outputHandler) {
  	}
 }
 
+/**
+ * Add magnitude to a byte quantity.
+ *
+ * @param int $bytes Bytes to add magnitude
+ *
+ * @retval Bytes amount in KiB, MiB, GiB, etc.
+ */
+function byte_convert ($bytes) {
+	$symbol = array ('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');
+	if ($bytes < 0)
+		return '0 B';
+	$exp = 0;
+	$converted_value = 0;
+	if ($bytes > 0) {
+		$exp = floor (log ($bytes) / log (1024));
+		$converted_value = ($bytes / pow(1024, floor ($exp)));
+	}
+
+	return sprintf ('%.2f '.$symbol[$exp], $converted_value );
+}
 
 function pagination ($count, $url, $offset ) {
 	global $config;

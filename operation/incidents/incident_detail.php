@@ -17,17 +17,18 @@
 
 global $config;
 
-if (check_login() != 0) {
+if (check_login () != 0) {
  	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
 	require ("general/noaccess.php");
 	exit;
 }
 
 $id_grupo = (int) get_parameter ('id_grupo');
+$id = (int) get_parameter ('id');
 
 if (give_acl ($config['id_user'], $id_grupo, "IR") != 1){
  	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id_inc." '".$titulo."'");
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id." '".$titulo."'");
 	include ("general/noaccess.php");
 	exit;
 }
@@ -37,7 +38,6 @@ $texto = "";
 $create_incident = true;
 $result_msg = "";
 
-$id = get_parameter ('id');
 $action = get_parameter ('action');
 
 if ($action == 'get-info') {
@@ -51,7 +51,6 @@ if ($action == 'get-info') {
 }
 
 if ($action == 'update') {
-	$id_inc = get_parameter ('id_inc');
  	$grupo = get_parameter ('grupo_form');
 	$usuario = get_parameter ('usuario_form');
 
@@ -62,7 +61,7 @@ if ($action == 'update') {
 		no_permission ();
 		exit ();
 	}
-	$id_author_inc = give_incident_author ($id_inc);
+	$id_author_inc = give_incident_author ($id);
 	$titulo = get_parameter ('titulo');
 	$descripcion = get_parameter ('descripcion');
 	$origen = get_parameter ("incident_origin", 1);
@@ -75,20 +74,20 @@ if ($action == 'update') {
 	$resolution = get_parameter ('incident_resolution');
 	$id_task = get_parameter ('task_user');
 
-	incident_tracking ( $id_inc, $config["id_user"], 1);
-	$old_prio = give_inc_priority ($id_inc);
+	incident_tracking ($id, $config["id_user"], 1);
+	$old_prio = give_inc_priority ($id);
 	// 0 - Abierta / Sin notas (Open without notes)
 	// 2 - Descartada (Not valid)
 	// 3 - Caducada (out of date)
 	// 13 - Cerrada (closed)
 	if ($old_prio != $prioridad)
-		incident_tracking ($id_inc, $config['id_user'], 8);
+		incident_tracking ($id, $config['id_user'], 8);
 	if ($estado == 2)
-		incident_tracking ($id_inc, $config['id_user'], 4);
+		incident_tracking ($id, $config['id_user'], 4);
 	if ($estado == 3)
-		incident_tracking ($id_inc, $config['id_user'], 5);
+		incident_tracking ($id, $config['id_user'], 5);
 	if ($estado == 13)
-		incident_tracking ($id_inc, $config['id_user'], 10);
+		incident_tracking ($id, $config['id_user'], 10);
 
 	$sql = sprintf ('UPDATE tincidencia SET actualizacion = NOW(),
 			titulo = "%s", origen = %d, estado = %d,
@@ -98,30 +97,29 @@ if ($action == 'update') {
 			WHERE id_incidencia = %d',
 			$titulo, $origen, $estado, $grupo, $usuario,
 			$email_notify, $prioridad, $descripcion,
-			$epilog, $id_task, $resolution, $id_inc);
-	$result = process_sql ($sql, 'insert_id');
-	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id_inc);
+			$epilog, $id_task, $resolution, $id);
+	process_sql ($sql);
+	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
 
 	/* Update inventory objects in incident */
-	$sql = sprintf ('DELETE FROM tincident_inventory WHERE id_incident = %d', $id_inc);
+	$sql = sprintf ('DELETE FROM tincident_inventory WHERE id_incident = %d', $id);
 	process_sql ($sql);
 	$inventories = get_parameter ('inventories');
 	foreach ($inventories as $id_inventory) {
 		$sql = sprintf ('INSERT INTO tincident_inventory
 				VALUES (%d, %d)',
-				$id_inc, $id_inventory);
-		process_sql ($sql);
+				$id, $id_inventory);
+		$result = process_sql ($sql);
 	}
 
 	if ($result === false)
 		$result_msg = "<h3 class='suc'>".lang_string ('upd_incid_no')."</h3>";
 	else
 		$result_msg = "<h3 class='suc'>".lang_string ('upd_incid_ok')."</h3>";
-	$_GET["id"] = $id_inc; // HACK
 
 	// Email notify to all people involved in this incident
 	if ($email_notify == 1) {
-		mail_incident ($id_inc, $usuario, "", 0, 0);
+		mail_incident ($id, $usuario, "", 0, 0);
 	}
 
 	if (defined ('AJAX')) {
@@ -164,26 +162,25 @@ if ($action == "insert") {
 			$titulo, $descripcion, $usuario,
 			$origen, $estado, $prioridad, $grupo, $id_creator,
 			$email_notify, $id_task, $resolution);
-	$id_inc = process_sql ($sql, 'insert_id');
-	if ($id_inc !== false) {
+	$id = process_sql ($sql, 'insert_id');
+	if ($id !== false) {
 		$inventories = (array) get_parameter ('inventories');
 
 		foreach ($inventories as $id_inventory) {
 			$sql = sprintf ('INSERT INTO tincident_inventory
 					VALUES (%d, %d)',
-					$id_inc, $id_inventory);
+					$id, $id_inventory);
 			process_sql ($sql);
 		}
-		$_GET["id"] = $id_inc; // HACK
-		$result_msg  = "<h3 class='suc'>".lang_string ('create_incid_ok')." (id #$id_inc)</h3>";
+		$result_msg  = "<h3 class='suc'>".lang_string ('create_incid_ok')." (id #$id)</h3>";
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 			"Incident created",
-			"User ".$config['id_user']." created incident #".$id_inc);
-		incident_tracking ( $id_inc, $config["id_user"], 0);
+			"User ".$config['id_user']." created incident #".$id);
+		incident_tracking ($id, $config["id_user"], 0);
 
 		// Email notify to all people involved in this incident
 		if ($email_notify) {
-			mail_incident ($id_inc, $usuario, "", 0, 1);
+			mail_incident ($id, $usuario, "", 0, 1);
 		}
 	} else {
 		$result_msg  = '<h3 class="err">'.lang_string ('create_incid_no').'</h3>';
@@ -192,16 +189,16 @@ if ($action == "insert") {
 		echo $result_msg;
 		return;
 	}
+	$id = 0; /* Do this to create another one */
 }
 
 // Edit / Visualization MODE - Get data from database
 if ($id) {
 	$create_incident = false;
-	$id_inc = $_GET["id"];
 	$iduser_temp=$_SESSION['id_usuario'];
 	// Obtain group of this incident
 	$sql = sprintf ('SELECT * FROM tincidencia
-			WHERE id_incidencia = %d', $id_inc);
+			WHERE id_incidencia = %d', $id);
 	$result = mysql_query ($sql);
 	$row = mysql_fetch_array ($result);
 	// Get values
@@ -225,78 +222,97 @@ if ($id) {
 
 	// Aditional ACL check on read incident
 	if (give_acl ($config["id_user"], $id_grupo, "IR") == 0) { // Only admins
-		audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config["id_user"]." try to access to an unauthorized incident ID #id_inc");
-		no_permission();
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config["id_user"]." try to access to an unauthorized incident ID #id_inc");
+		no_permission ();
 	}
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// Workunit ADD
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	if (isset($_GET["insert_workunit"])){
-		$id_inc = get_parameter ("id_inc");
+	$insert_workunit = (bool) get_parameter ('insert_workunit');
+	if ($insert_workunit) {
 		$timestamp = get_parameter ("timestamp");
 		$nota = get_parameter ("nota");
 		$workunit = get_parameter ("workunit",0);
 		$timeused = get_parameter ("duration",0);
-		$timeused = number_format($timeused, 2);
+		$timeused = number_format ($timeused, 2);
 		$have_cost = get_parameter ("have_cost",0);
 		$profile = get_parameter ("work_profile",0);
 
-		$sql4 = "UPDATE tincidencia SET actualizacion = '".$timestamp."' WHERE id_incidencia = ".$id_inc;
-		$res4 = mysql_query($sql4);
+		$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s"
+				WHERE id_incidencia = %d', $timestamp, $id);
+		process_sql ($sql);
 
-		incident_tracking ( $id_inc, $config['id_user'], 2);
+		incident_tracking ($id, $config['id_user'], 2);
 
 		// Add work unit if enabled
-		$sql = "INSERT INTO tworkunit (timestamp, duration, id_user, description) VALUES ('$timestamp', '$timeused', '".$config['id_user']."', '$nota')";
-		$res5 = mysql_query($sql);
-		$id_workunit = mysql_insert_id();
-		$sql1 = "INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES ($id_inc, $id_workunit)";
-		$res6 = mysql_query($sql1);
-		if ($res6) {
+		$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description)
+				VALUES ("%s", "%s", "%s", "%s")',
+				$timestamp, $timeused, $config['id_user'], $nota);
+		$id_workunit = process_sql ($sql, "insert_id");
+		$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit)
+				VALUES (%d, %d)',
+				$id, $id_workunit);
+		$res = process_sql ($sql);
+		if ($res !== false) {
 			$result_msg = "<h3 class='suc'>".lang_string ('create_work_ok')."</h3>";
 			// Email notify to all people involved in this incident
-			if ($email_notify == 1){
-				mail_incident ($id_inc, $config['id_user'], $nota, $timeused, 10);
+			if ($email_notify == 1) {
+				mail_incident ($id, $config['id_user'], $nota, $timeused, 10);
 			}
+		}
+		
+		if (defined ('AJAX')) {
+			echo $result_msg;
+			return;
 		}
 	}
 
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// Upload file
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	if ((give_acl ($iduser_temp, $id_grupo, "IW")==1) AND isset($_GET["upload_file"])) {
-		if ( $_FILES['userfile']['name'] != "" ){ //if file
+	$upload_file = (bool) get_parameter ('upload_file');
+	if ((give_acl ($iduser_temp, $id_grupo, "IW") == 1) && $upload_file) {
+		$result_msg = '<h3 class="err">'.lang_string ('No file was attached').'</h3>';
+		print_r ($_FILES);
+		/* if file */
+		if ($_FILES['userfile']['name'] != "") {
 			$tipo = $_FILES['userfile']['type'];
-			if (isset($_POST["file_description"]))
-				$description = $_POST["file_description"];
-			else
-				$description = "No description available";
+			$description = get_parameter ("file_description",
+					lang_string ('No description available'));
+			
 			// Insert into database
 			$filename= $_FILES['userfile']['name'];
 			$filesize = $_FILES['userfile']['size'];
 
-			$sql = " INSERT INTO tattachment (id_incidencia, id_usuario, filename, description, size ) VALUES (".$id_inc.", '".$iduser_temp." ','".$filename."','".$description."',".$filesize.") ";
+			$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
+					filename, description, size)
+					VALUES (%d, "%s", "%s", "%s", %d)',
+					$id, $iduser_temp, $filename, $description, $filesize);
 
-			mysql_query ($sql);
-			$id_attachment=mysql_insert_id();
-			incident_tracking ( $id_inc, $config['id_user'], 3);
-			$result_msg="<h3 class='suc'>".lang_string ('file_added')."</h3>";
+			$id_attachment = process_sql ($sql, 'insert_id');
+			incident_tracking ($id, $config['id_user'], 3);
+			$result_msg = "<h3 class='suc'>".lang_string ('File added')."</h3>";
 			// Email notify to all people involved in this incident
-			if ($email_notify == 1){
-				mail_incident ($id_inc, $iduser_temp, 0, 0, 2);
+			if ($email_notify == 1) {
+				mail_incident ($id, $iduser_temp, 0, 0, 2);
 			}
+			
 			// Copy file to directory and change name
-			$nombre_archivo = $config["homedir"]."attachment/pand".$id_attachment."_".$filename;
+			$filename = $config["homedir"]."attachment/pand".$id_attachment."_".$filename;
 
-			if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo ))){
-					$result_msg = "<h3 class=error>".lang_string ('attach_error')."</h3>";
-				$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
-				mysql_query($sql);
+			if (! copy ($_FILES['userfile']['tmp_name'], $filename)) {
+				$result_msg = '<h3 class="error">'.lang_string ('attach_error').'</h3>';
+				$sql = sprintf ('DELETE FROM tattachment
+						WHERE id_attachment = %d', $id_attachment);
+				process_sql ($sql);
 			} else {
 				// Delete temporal file
 				unlink ($_FILES['userfile']['tmp_name']);
 			}
+		}
+		
+		if ($defined ('AJAX')) {
+			echo $result_msg;
+			return;
 		}
 	}
 } else {
@@ -322,7 +338,7 @@ if ($id) {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 $default_responsable = "";
-if (! isset ($id_inc)) {
+if (! $id) {
 	// How many groups has this user ?
 	$number_group = give_db_sqlfree_field ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
 	// Take first group defined for this user
@@ -335,16 +351,18 @@ if (! isset ($id_inc)) {
 }
 $has_permission = (give_acl ($iduser_temp, $id_grupo, "IM")  || ($usuario == $iduser_temp));
 
-if (isset ($id_inc)) {
-	echo "<h1>".lang_string ('incident')." #$id_inc</h1>";
+if ($id) {
+	echo "<h1>".lang_string ('incident')." #$id</h1>";
 } else {
-	echo "<h2>".lang_string ('create_incident')."</h2>";
+	if (! defined ('AJAX'))
+		echo "<h2>".lang_string ('create_incident')."</h2>";
 }
 
 echo '<div id="result">'.$result_msg.'</div>';
 
-$table->width = "90%";
+$table->width = "97%";
 $table->class = "databox_color";
+$table->id = "incident-editor";
 $table->size = array ();
 $table->size[0] = '20%';
 $table->size[1] = '40%';
@@ -360,8 +378,7 @@ $table->colspan = array ();
 $table->colspan[0][2] = 2;
 $table->colspan[5][1] = 3;
 $table->colspan[6][0] = 4;
-$table->colspan[7][0] = 4;
-$table->colspan[8][0] = 4;
+$table->colspan[7][0] = 4; 
 
 $table->data[0][0] = lang_string ('incident');
 $table->data[0][1] = print_input_text ('titulo', $titulo, '', 40, 100, true);
@@ -387,13 +404,13 @@ if ($disabled) {
 
 $table->data[1][2] = lang_string ('Status');
 
-$actual_only = false;
+$actual_only = true;
 $disabled = false;
 if (! $has_permission)
 	$disabled = true;
 
 if ($has_permission)
-	$actual_only = true;
+	$actual_only = false;
 
 $table->data[1][3] = combo_incident_status ($estado, $disabled, $actual_only, true);
 
@@ -440,7 +457,7 @@ if ($create_incident) {
 	$table->data[5][1] .= print_button (lang_string ("Remove selected object"),
 					'delete_inventory', false, '', '', true);
 } else {
-	$inventories = get_inventories_in_incident ($id_inc);
+	$inventories = get_inventories_in_incident ($id);
 	$table->data[5][1] = print_select ($inventories, 'incident_inventories',
 						NULL, '', '', '',
 						true, 5, false);
@@ -459,12 +476,14 @@ if ($create_incident) {
 }
 $disabled_str = $disabled ? 'readonly' : '';
 $table->data[6][0] = lang_string ('Description').'<br />';
-$table->data[6][0] .= print_textarea ('descripcion', 15, 80, $texto, $disabled_str, true);
+$table->data[6][0] .= print_textarea ('descripcion', 10, 80, $texto, $disabled_str, true);
 
-if ($estado == 5) {
-	$table->data[7][0] = lang_string ('resolution_epilog');
-	$table->data[8][0] = print_textarea ('epilog', 15, 100, $epilog, $disabled_str, true);
-}
+$table->data[7][0] = lang_string ('resolution_epilog').'<br />';
+$table->data[7][0] .= print_textarea ('epilog', 15, 100, $epilog, $disabled_str, true);
+
+if ($estado != 5) {
+	$table->rowstyle[7] = 'display: none';
+} 
 
 echo "<form id='incident_status_form' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident_detail'>";
 
@@ -477,16 +496,13 @@ if ($create_incident) {
 		print_submit_button (lang_string ('create'), 'accion', false, 'class="sub create"');
 	}
 } else {
-	print_input_hidden ('id', $id_inc);
+	print_input_hidden ('id', $id);
 	print_input_hidden ('action', 'update');
 	if ($has_permission) {
 		print_submit_button (lang_string ('update'), 'accion', false, 'class="sub next"');
 	}
 }
 
-if (isset ($id_inc)) {
-	print_input_hidden ('id_inc', $id_inc);
-}
 echo '</div>';
 echo "</form>";
 
@@ -501,7 +517,7 @@ if (! defined ('AJAX')) :
 <script  type="text/javascript">
 $(document).ready (function () {
 	/* First parameter indicates to add AJAX support to the form */
-	configure_incident_form (false);
+	configure_incident_form (false, false);
 });
 </script>
 

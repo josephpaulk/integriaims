@@ -27,9 +27,13 @@
  * $nothing Label when nothing is selected.
  * $nothing_value Value when nothing is selected
  */
-function print_select ($fields, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = 0, $sort = true) {
+function print_select ($fields, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = 0, $sort = true, $label = false) {
 	$output = "\n";
-
+	
+	if ($label) {
+		$output .= print_label ($label, $name, 'select', true);
+	}
+	
 	$attributes = ($script) ? 'onchange="'. $script .'"' : '';
 	if ($multiple) {
 		$attributes .= ' multiple="yes" size="'.$multiple.'" ';
@@ -83,7 +87,7 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
  * $nothing Label when nothing is selected.
  * $nothing_value Value when nothing is selected
  */
-function print_select_from_sql ($sql, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = false, $sort = true) {
+function print_select_from_sql ($sql, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = false, $sort = true, $label = false) {
 
 	$fields = array ();
 	$result = mysql_query ($sql);
@@ -96,7 +100,7 @@ function print_select_from_sql ($sql, $name, $selected = '', $script = '', $noth
 		$fields[$row[0]] = $row[1];
 	}
 
-	$output = print_select ($fields, $name, $selected, $script, $nothing, $nothing_value, true, $multiple, $sort);
+	$output = print_select ($fields, $name, $selected, $script, $nothing, $nothing_value, true, $multiple, $sort, $label);
 
 	if ($return)
 		return $output;
@@ -116,13 +120,15 @@ function print_select_from_sql ($sql, $name, $selected = '', $script = '', $noth
  * @param string $alt Alternative HTML string.
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
  */
-function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength, $disabled, $script, $attributes, $return = false, $password = false) {
-	static $idcounter = 0;
-
-	++$idcounter;
-
+function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength, $disabled, $script, $attributes, $return = false, $password = false, $label = false) {
 	$type = $password ? 'password' : 'text';
-
+	
+	$output = '';
+	
+	if ($label) {
+		$output .= print_label ($label, $id, $type, true);
+	}
+	
 	if (empty ($name)) {
 		$name = 'unnamed';
 	}
@@ -135,14 +141,9 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
 		$maxlength = ' maxlength="'.$maxlength.'" ';
 	}
 
-	$output = '<input name="'.$name.'" type="'.$type.'" value="'.$value.'" size="'.$size.'" '.$maxlength.' alt="'.$alt.'" ';
-
-	if ($id != '') {
-		$output .= ' id="'.$id.'"';
-	} else {
-		$htmlid = 'text-'.sprintf ('%04d', $idcounter);
-		$output .= ' id="'.$htmlid.'"';
-	}
+	$output .= '<input name="'.$name.'" type="'.$type.'" value="'.$value.'" size="'.$size.'" '.$maxlength.' alt="'.$alt.'" ';
+	$output .= ' id="'.$id.'"';
+	
 	if ($disabled)
 		$output .= ' disabled';
 
@@ -166,8 +167,8 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
  */
 
-function print_input_password ($name, $value, $alt = '', $size = 50, $maxlength = 0, $return = false) {
-	$output = print_input_text_extended ($name, $value, 'password-'.$name, $alt, $size, $maxlength, false, '', '', true, true);
+function print_input_password ($name, $value, $alt = '', $size = 50, $maxlength = 0, $return = false, $label = false) {
+	$output = print_input_text_extended ($name, $value, 'password-'.$name, $alt, $size, $maxlength, false, '', '', true, true, $label);
 
 	if ($return)
 		return $output;
@@ -184,8 +185,8 @@ function print_input_password ($name, $value, $alt = '', $size = 50, $maxlength 
  * @param int $maxlength Maximum length allowed (optional).
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
  */
-function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0, $return = false) {
-	$output = print_input_text_extended ($name, $value, 'text-'.$name, $alt, $size, $maxlength, false, '', '', true);
+function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0, $return = false, $label = false) {
+	$output = print_input_text_extended ($name, $value, 'text-'.$name, $alt, $size, $maxlength, false, '', '', true, false, $label);
 
 	if ($return)
 		return $output;
@@ -212,10 +213,14 @@ function print_input_hidden ($name, $value, $return = false, $class = '') {
 	echo $output;
 }
 
-function print_submit_button ($label = 'OK', $name = '', $disabled = false, $attributes = '', $return = false) {
+function print_submit_button ($value = 'OK', $name = '', $disabled = false, $attributes = '', $return = false, $label = false) {
 	$output = '';
-
-	$output .= '<input type="submit" id="submit-'.$name.'" name="'.$name.'" value="'. $label .'" '. $attributes;
+	
+	if ($label) {
+		$output .= print_label ($label, $name, 'submit', true);
+	}
+	
+	$output .= '<input type="submit" id="submit-'.$name.'" name="'.$name.'" value="'. $value .'" '. $attributes;
 	if ($disabled)
 		$output .= ' disabled';
 	$output .= ' />';
@@ -225,10 +230,14 @@ function print_submit_button ($label = 'OK', $name = '', $disabled = false, $att
 	echo $output;
 }
 
-function print_button ($label = 'OK', $name = '', $disabled = false, $script = '', $attributes = '', $return = false) {
+function print_button ($value = 'OK', $name = '', $disabled = false, $script = '', $attributes = '', $return = false, $label = false) {
 	$output = '';
-
-	$output .= '<input type="button" id="button-'.$name.'" name="'.$name.'" value="'. $label .'" onClick="'. $script.'" '.$attributes;
+	
+	if ($label) {
+		$output .= print_label ($label, $name, 'button', true);
+	}
+	
+	$output .= '<input type="button" id="button-'.$name.'" name="'.$name.'" value="'. $value .'" onClick="'. $script.'" '.$attributes;
 	if ($disabled)
 		$output .= ' disabled';
 	$output .= ' />';
@@ -238,8 +247,14 @@ function print_button ($label = 'OK', $name = '', $disabled = false, $script = '
 	echo $output;
 }
 
-function print_textarea ($name, $rows, $columns, $value = '', $attributes = '', $return = false) {
-	$output = '<textarea id="textarea-'.$name.'" name="'.$name.'" cols="'.$columns.'" rows="'.$rows.'" '.$attributes.' >';
+function print_textarea ($name, $rows, $columns, $value = '', $attributes = '', $return = false, $label = false) {
+	$output = '';
+	
+	if ($label) {
+		$output .= print_label ($label, $name, 'textarea', true);
+	}
+	
+	$output .= '<textarea id="textarea-'.$name.'" name="'.$name.'" cols="'.$columns.'" rows="'.$rows.'" '.$attributes.' >';
 	$output .= $value;
 	$output .= '</textarea>';
 
@@ -372,7 +387,7 @@ function print_table (&$table, $return = false) {
 				$align[$key] = '';
 			}
 
-			$output .= '<th align=left class="header c'.$key.'" scope="col">'. $heading .'</th>';
+			$output .= '<th class="header c'.$key.'" scope="col">'. $heading .'</th>';
 		}
 		$output .= '</tr>'."\n";
 	}
@@ -464,12 +479,12 @@ function print_radio_button_extended ($name, $value, $label, $checkedvalue, $dis
 	$output .= ' />';
 
 	if ($label != '') {
-		$output .= '<label for="'.$htmlid.'">'.  $label .'</label>' .  "\n";
+		$output .= '<label for="'.$htmlid.'">'.  $label .'</label>' . "\n";
 	}
-
+	
 	if ($return)
 		return $output;
-
+	
 	echo $output;
 }
 
@@ -488,6 +503,52 @@ function print_radio_button ($name, $value, $label = '', $checkedvalue = '', $re
 	if ($return)
 		return $output;
 
+	echo $output;
+}
+
+/**
+ * Render a label for a input elemennt.
+ *
+ * @param string $label Label to add.
+ * @param string $id Input id to refer.
+ * @param string $input_type Input type of the element. The id of the elements using print_* functions add a prefix, this
+ *               variable helps with that. Values: text, password, textarea, button, submit, hidden, select. Default: text.
+ * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ */
+function print_label ($label, $id, $input_type = 'text', $return = false) {
+	$output = '';
+	
+	switch ($input_type) {
+	case 'text':
+		$id = 'text-'.$id;
+		break;
+	case 'password':
+		$id = 'password-'.$id;
+		break;
+	case 'textarea':
+		$id = 'textarea-'.$id;
+		break;
+	case 'button':
+		$id = 'button-'.$id;
+		break;
+	case 'submit':
+		$id = 'submit-'.$id;
+		break;
+	case 'hidden':
+		$id = 'hidden-'.$id;
+		break;
+	case 'select':
+	default:
+		break;
+	}
+	
+	$output .= '<label id="label-'.$id.'" for="'.$id.'">';
+	$output .= $label;
+	$output .= '</label>';
+	
+	if ($return)
+		return $output;
+	
 	echo $output;
 }
 

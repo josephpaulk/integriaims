@@ -62,12 +62,9 @@ $sql4='SELECT * FROM tincident_track WHERE id_incident= '.$id_inc;
 
 
 $color = 0;
-echo "<h1>".lang_string ('Incident tracking')."</h1>";
-echo "<h3>";
-echo give_inc_title ($id_inc);
-echo "</h3>";
+echo "<h3>".give_inc_title ($id_inc)."</h3>";
 
-echo "<table cellpadding='3' cellspacing='3' border='0' width=600>";
+echo '<table cellpadding="3" cellspacing="3" border="0" width="90%" class="listing">';
 
 if ($res4=mysql_query($sql4)){
 	echo "<tr><th>".lang_string ('state')."<th>".lang_string ('user')."<th  width='80'>".lang_string ('timestamp');
@@ -87,7 +84,7 @@ if ($res4=mysql_query($sql4)){
 		
 		echo '<tr><td class="' . $tdcolor . '">';
 
-		switch($state){
+		switch ($state) {
 		case 0:
 			$descripcion = lang_string ('incident_creation');
 			break;
@@ -136,7 +133,7 @@ if ($res4=mysql_query($sql4)){
 		echo '<td class="' . $tdcolor . '">';
 		echo $timestamp;
 	}
-echo "</table>"; 
+	echo "</table>"; 
 } else
 	echo lang_string ('no_data');
 

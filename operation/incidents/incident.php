@@ -131,6 +131,8 @@ echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Det
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Tracking').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Inventory').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Contact').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Workunits').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Files').'</span></a></li>';
 echo '</ul>';
 
 /* Tabs first container is manually set, so it loads immediately */
@@ -150,16 +152,18 @@ $table->head[3] = lang_string ("status")."<br />".lang_string("resolution");
 $table->head[4] = lang_string ("priority");
 $table->head[5] = lang_string ("Updated")."<br />".lang_string ("Started");
 $table->head[6] = lang_string ("flags");
+$table->style = array ();
+$table->style[0] = '';
 
 print_table ($table);
 
 echo '<div id="pager" class="hide pager">';
 echo '<form>';
-echo '<img src="images/go-first.png" class="first" />';
-echo '<img src="images/go-previous.png" class="prev" />';
+echo '<img src="images/control_start_blue.png" class="first" />';
+echo '<img src="images/control_rewind_blue.png" class="prev" />';
 echo '<input type="text" class="pagedisplay" />';
-echo '<img src="images/go-next.png" class="next" />';
-echo '<img src="images/go-last.png" class="last" />';
+echo '<img src="images/control_fastforward_blue.png" class="next" />';
+echo '<img src="images/control_end_blue.png" class="last" />';
 echo '<select class="pagesize">';
 echo '<option selected="selected" value="10">10</option>';
 echo '<option value="20">20</option>';
@@ -178,7 +182,6 @@ echo '</div>';
 
 ?>
 
-<link rel="stylesheet" href="include/styles/style.css" type="text/css">
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
 <script type="text/javascript" src="include/js/jquery.tablesorter.js"></script>
 <script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
@@ -187,11 +190,15 @@ echo '</div>';
 <script type="text/javascript">
 
 var id_incident;
+var old_incident = 0;
 
 function tab_loaded (event, tab) {
 	if (tab.index == 1) {
+		if (id_incident == old_incident) {
+			return;
+		}
 		/* In integria_incident_search.js */
-		configure_incident_form (true);
+		configure_incident_form (true, false);
 		if ($("#incident-menu").css ('display') != 'none') {
 			$("#incident-menu").slideUp ('normal', function () {
 				configure_incident_side_menu (id_incident);
@@ -201,6 +208,7 @@ function tab_loaded (event, tab) {
 			configure_incident_side_menu (id_incident);
 			$("#incident-menu").slideDown ();
 		}
+		old_incident = id_incident;
 	}
 }
 
@@ -211,7 +219,10 @@ function set_rows_click () {
 		$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_tracking&id=" + id_incident);
 		$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + id_incident);
 		$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + id_incident);
-		$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3).tabs ("enable", 4);
+		$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/incidents/incident_workunits&id=" + id_incident);
+		$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_files&id=" + id_incident);
+		$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
+			.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
 		$("#tabs > ul").tabs ("select", 1);
 	});
 }
@@ -251,6 +262,11 @@ $(document).ready (function () {
 					}
 		);
 	});
+	$("#link_create_incident").click (function () {
+		show_add_incident_dialog ();
+		return false;
+	});
+	
 });
 </script>
 

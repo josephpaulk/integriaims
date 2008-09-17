@@ -619,10 +619,12 @@ function form_search_incident ($return = false) {
 	$priority = (int) get_parameter ('search_priority', -1);
 	$id_group = (int) get_parameter ('search_id_group');
 	$id_inventory = (int) get_parameter ('search_id_inventory');
-
-	/* No action is set, so the form will be sent to the current page*/
+	$id_company = (int) get_parameter ('search_id_company');
+	$id_product = (int) get_parameter ('search_id_product');
+	
+	/* No action is set, so the form will be sent to the current page */
 	$table->width = "100%";
-	$table->class = " ";
+	$table->class = "databox_color";
 	$table->cellspacing = 2;
 	$table->cellpadding = 2;
 	$table->data = array ();
@@ -631,37 +633,47 @@ function form_search_incident ($return = false) {
 	$table->colspan = array ();
 
 	$table->style[0] = 'font-weight: bold';
+	$table->style[1] = 'font-weight: bold';
 	$table->style[2] = 'font-weight: bold';
-	$table->size[0] = '20%';
+	$table->colspan[3][0] = 2;
 
-	$table->data[0][0] = lang_string ('Status');
-	$table->data[0][1] = print_select (get_indicent_status (),
+	$table->data[0][0] = print_select (get_indicent_status (),
 					'search_status', $status,
-					'', lang_string ('Any'), 0, true);
-	$table->data[0][2] = lang_string ('Priority');
-	$table->data[0][3] = print_select (get_indicent_priorities (),
+					'', lang_string ('Any'), 0, true, false, false,
+					lang_string ('Status'));
+	
+	$table->data[0][1] = print_select (get_indicent_priorities (),
 					'search_priority', $priority,
-					'', lang_string ('Any'), -1, true);
+					'', lang_string ('Any'), -1, true, false, false,
+					lang_string ('Priority'));
 
-	$table->data[1][0] = lang_string ('Group');
-	$table->data[1][1] = print_select (get_user_groups (),
+	$table->data[1][0] = print_select (get_user_groups (),
 					'search_id_group', $id_group,
-					'', '', '', true);
-	$table->data[1][2] = lang_string ('Inventory object');
-	$table->data[1][3] = print_input_hidden ('search_id_inventory', $id_inventory, true);
+					'', '', '', true, false, false, lang_string ('Group'));
+	
+	$table->data[1][1] = print_input_hidden ('search_id_inventory', $id_inventory, true);
 	$name = lang_string ("Any");
 	if ($id_inventory)
 		$name = get_inventory_name ($id_inventory);
-	$table->data[1][3] .= print_button ($name, 'inventory_name', false, '',
-					'', true);
+	$table->data[1][1] .= print_button ($name, 'inventory_name', false, '',
+					'', true, lang_string ('Inventory'));
+	
+	$table->data[2][0] = print_select (get_companies (),
+					'search_id_company', $id_company,
+					'', lang_string ('All'), 0, true, false, false,
+					lang_string ('Company'));
+	
+	$table->data[2][1] = print_select (get_products (),
+					'search_id_product', $id_product,
+					'', lang_string ('All'), 0, true, false, false,
+					lang_string ('Product type'));
+	
+	$table->data[3][0] = print_input_text ('search_string', $search_string,
+						'', 40, 50, true, lang_string ('Search string'));
+	
 
-	$table->data[2][0] = lang_string ('Search string');
-	$table->colspan[2][1]= 3;
-	$table->data[2][1] = print_input_text ('search_string', $search_string, '', 20, 30, true);
-
-
-	$table->data[2][2] = print_submit_button (lang_string ('Search'), 'search', false, 'class="sub search"', true);
-
+	$table->data[3][1] = print_submit_button (lang_string ('Search'), 'search', false, 'class="sub search"', true);
+	
 	$output .= '<form id="search_incident_form" method="post">';
 	$output .= print_table ($table, true);
 	$output .= '</form>';
