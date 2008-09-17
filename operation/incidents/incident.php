@@ -254,7 +254,7 @@ $(document).ready (function () {
 	$("#incident_search_result_table tr th :eq(0)").addClass ("{sorter: 'text'}");
 	$("#incident_search_result_table").tablesorter ({ cancelSelection : true});
 	$("#button-inventory_name").click (function () {
-		show_inventory_search_dialog ("<?php lang_string ("Search inventory") ?>",
+		show_inventory_search_dialog ("<?php echo lang_string ("Search inventory") ?>",
 					function (id, name) {
 						$("#hidden-search_id_inventory").attr ("value", id);
 						$("#button-inventory_name").attr ("value", name);

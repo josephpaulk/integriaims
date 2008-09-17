@@ -87,6 +87,15 @@ if ($create) {
 		return;
 	}
 	$id = 0;
+	$name = "";
+	$description = "";
+	$id_product = "";
+	$id_contract = "";
+	$ip_address = "";
+	$id_parent = "";
+	$id_building = "";
+	$serial_number = "";
+	$part_number = "";
 }
 
 if ($id) {
@@ -126,10 +135,13 @@ $table->data[0][2] = print_select (get_contracts (),
 			lang_string ('Contract'));
 
 /* Second row */
-$table->data[1][0] = print_select (get_inventories (true, $id ? $id : false),
-			'id_parent', $id_parent,
-			'', lang_string ('None'), 0, true, false, false,
-			lang_string ('Parent object'));
+$parent_name = $id_parent ? get_inventory_name ($id_parent) : lang_string ('Search parent');
+
+$table->data[1][0] = print_button ($parent_name,
+			'parent_search', false, '', '',
+			true, lang_string ('Parent object'));
+$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
+
 $table->data[1][1] = print_select (get_buildings (),
 			'id_building', $id_building,
 			'', lang_string ('None'), 0, true, false, false,
@@ -161,4 +173,27 @@ if ($id) {
 }
 echo '</div>';
 echo '</form>';
+
+if (! defined ('AJAX')):
 ?>
+
+<script type="text/javascript" src="include/js/jquery.metadata.js"></script>
+<script type="text/javascript" src="include/js/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
+<script type="text/javascript" src="include/js/integria_incident_search.js"></script>
+
+<script type="text/javascript">
+$(document).ready (function () {
+	$("#button-parent_search").click (function () {
+		show_inventory_search_dialog ("<?php echo lang_string ("Search parent inventory") ?>",
+					function (id, name) {
+						$("#button-parent_search").attr ("value", name);
+						$("#hidden-id_parent").attr ("value", id);
+						$("#dialog").dialog ("close");
+					}
+		);
+	});
+});
+
+</script>
+<?php endif; ?>

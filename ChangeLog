@@ -1,5 +1,13 @@
 2008-09-17  Esteban Sanchez  <estebans@artica.es>
 
+	* operation/incidents/incident.php: Fixed title when showing search
+	inventory dialog.
+
+	* operation/inventories/inventory_detail.php: Replaced dropdown menu
+	to select parent with a button to show a dialog to look inventories.
+
+2008-09-17  Esteban Sanchez  <estebans@artica.es>
+
 	* operation/inventories/inventory_detail.php: Fixed insertion
 	warnings and typo.
 
