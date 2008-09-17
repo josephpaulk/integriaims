@@ -68,25 +68,21 @@ if ($search) {
 $table->data = array ();
 $table->width = '90%';
 
-$table->data[0][0] = lang_string ("Role");
-$table->data[0][1] = print_select_from_sql ('SELECT id,name FROM tprofile ORDER BY 2',
+$table->data[0][0] = print_select_from_sql ('SELECT id,name FROM tprofile ORDER BY 2',
 					'user_profile_search', $id_profile, '',
-					lang_string ('Any'), 0, true, false, false);
+					lang_string ('Any'), 0, true, false, false, lang_string ("Role"));
 
-$table->data[1][0] = lang_string ("Group");
-$table->data[1][1] = print_select (get_user_groups (), 'user_group_search',
-				$id_group, '', lang_string ('Any'), -1,
-				true);
+$table->data[0][1] = print_select (get_user_groups (), 'user_group_search',
+			$id_group, '', lang_string ('Any'), -1,
+			true, false, false, lang_string ("Group"));
 
-$table->data[2][0] = lang_string ("Name");
-$table->data[2][1] = print_input_text ('search_string', '', '', 20, 255, true);
+$table->data[2][0] = print_input_text ('search_string', '', '', 20, 255, true,
+			lang_string ('Name'));
+$table->data[2][1] = print_submit_button (lang_string ('Search'), 'search_button', false, 'class="sub search"', true);
 
 echo '<form id="user_search_form" method="post">';
 print_table ($table);
-echo '<div class="action-buttons" style="width: '.$table->width.'">';
 print_input_hidden ('search', 1);
-print_submit_button (lang_string ('Search'), 'search_button');
-echo '</div>';
 echo '</form>';
 
 unset ($table);
@@ -102,11 +98,11 @@ print_table ($table);
 
 echo '<div id="users-pager" class="hide pager">';
 echo '<form>';
-echo '<img src="images/go-first.png" class="first" />';
-echo '<img src="images/go-previous.png" class="prev" />';
+echo '<img src="images/control_start_blue.png" class="first" />';
+echo '<img src="images/control_rewind_blue.png" class="prev" />';
 echo '<input type="text" class="pagedisplay" />';
-echo '<img src="images/go-next.png" class="next" />';
-echo '<img src="images/go-last.png" class="last" />';
+echo '<img src="images/control_fastforward_blue.png" class="next" />';
+echo '<img src="images/control_end_blue.png" class="last" />';
 echo '<select class="pagesize" style="display: none">';
 echo '<option selected="selected" value="3">3</option>';
 echo '</select>';

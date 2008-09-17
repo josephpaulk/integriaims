@@ -1,5 +1,20 @@
 2008-09-17  Esteban Sanchez  <estebans@artica.es>
 
+	* include/functions_form.php: Incident search form is a bit more
+	little now and it has three columns.
+
+	* include/js/integria_incident_search.js: Changed width and height
+	values of incident search dialog.
+
+	* operation/inventories/inventory_search.php: Added a lot search
+	parameters (serial number, building, contracts...). Changed navigation
+	icons.
+
+	* operation/users/user_search.php: Changed form layout, use labels.
+	Changed navigation icons.
+
+2008-09-17  Esteban Sanchez  <estebans@artica.es>
+
 	* integria/integria_db.sql: Table tproduct already existed before, and
 	it was tkb_product. Foreign key in tinventory changed to it.
 

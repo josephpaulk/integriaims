@@ -635,7 +635,7 @@ function form_search_incident ($return = false) {
 	$table->style[0] = 'font-weight: bold';
 	$table->style[1] = 'font-weight: bold';
 	$table->style[2] = 'font-weight: bold';
-	$table->colspan[3][0] = 2;
+	$table->colspan[2][0] = 2;
 
 	$table->data[0][0] = print_select (get_indicent_status (),
 					'search_status', $status,
@@ -647,32 +647,32 @@ function form_search_incident ($return = false) {
 					'', lang_string ('Any'), -1, true, false, false,
 					lang_string ('Priority'));
 
-	$table->data[1][0] = print_select (get_user_groups (),
+	$table->data[0][2] = print_select (get_user_groups (),
 					'search_id_group', $id_group,
 					'', '', '', true, false, false, lang_string ('Group'));
 	
-	$table->data[1][1] = print_input_hidden ('search_id_inventory', $id_inventory, true);
+	$table->data[1][0] = print_input_hidden ('search_id_inventory', $id_inventory, true);
 	$name = lang_string ("Any");
 	if ($id_inventory)
 		$name = get_inventory_name ($id_inventory);
-	$table->data[1][1] .= print_button ($name, 'inventory_name', false, '',
+	$table->data[1][0] .= print_button ($name, 'inventory_name', false, '',
 					'', true, lang_string ('Inventory'));
 	
-	$table->data[2][0] = print_select (get_companies (),
+	$table->data[1][1] = print_select (get_companies (),
 					'search_id_company', $id_company,
 					'', lang_string ('All'), 0, true, false, false,
 					lang_string ('Company'));
 	
-	$table->data[2][1] = print_select (get_products (),
+	$table->data[1][2] = print_select (get_products (),
 					'search_id_product', $id_product,
 					'', lang_string ('All'), 0, true, false, false,
 					lang_string ('Product type'));
 	
-	$table->data[3][0] = print_input_text ('search_string', $search_string,
+	$table->data[2][0] = print_input_text ('search_string', $search_string,
 						'', 40, 50, true, lang_string ('Search string'));
 	
 
-	$table->data[3][1] = print_submit_button (lang_string ('Search'), 'search', false, 'class="sub search"', true);
+	$table->data[2][1] = print_submit_button (lang_string ('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= '<form id="search_incident_form" method="post">';
 	$output .= print_table ($table, true);

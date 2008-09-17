@@ -190,10 +190,10 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 		function (data, status) {
 			$("#dialog").empty ().append (data);
 			$("#dialog").dialog ({"title" : title,
-					minHeight: 300,
-					minWidth: 300,
+					minHeight: 500,
+					minWidth: 600,
 					height: 500,
-					width: 450,
+					width: 600,
 					modal: true
 					});
 			configure_inventory_search_form (5, callback_incident_click);
