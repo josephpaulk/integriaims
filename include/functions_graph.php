@@ -1,21 +1,28 @@
 <?PHP
 
-// INTEGRIA IMS v1.2
-// http://www.integriaims.com
-// ===========================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica, info@artica.es
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public License (LGPL)
+// modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-	include "config.php";
-	include "functions.php";
+include_once ("functions.php");
+include_once ("functions_db.php");
+include_once ("functions_html.php");
+include_once ("config.php");
+global $config;
+include_once ("languages/language_".$config["language_code"].".php");
+include_once ("functions_form.php");
+include_once ("functions_calendar.php");
+
 
 // ===============================================================================
 // Draw a simple pie graph with incidents, by assigned user
@@ -27,7 +34,7 @@ function incident_peruser ($width, $height){
     $res = mysql_query("SELECT * FROM tusuario");
     while ($row=mysql_fetch_array($res)){
         $id_user = $row["id_usuario"];
-        $datos = give_db_sqlfree_field ("SELECT COUNT(id_usuario) FROM tincidencia WHERE id_usuario = '$id_user'");
+        $datos = get_db_sqlf ("SELECT COUNT(id_usuario) FROM tincidencia WHERE id_usuario = '$id_user'");
         if ($datos > 0){
             $data[] = $datos;
             $legend[] = $id_user;
@@ -630,7 +637,7 @@ function project_tree ($id_project, $id_user){
     }
 
     if ($id_project != -1)
-        $project_name = give_db_value ("name", "tproject", "id", $id_project);
+        $project_name = get_db_value ("name", "tproject", "id", $id_project);
     else
         $project_name = "";
 
@@ -833,25 +840,25 @@ if (isset($_GET["height"]))
 else
 	$height= 50;
 
-$id_user = give_parameter_get ("id_user",0);
-$id_project = give_parameter_get ("id_project",0);
+$id_user = get_parameter ("id_user",0);
+$id_project = get_parameter ("id_project",0);
 $graphtype = get_parameter ("graphtype",0);
 $completion = get_parameter ("completion",0);
 $project_kind = get_parameter ("project_kind","");
 $id_task = get_parameter ("id_task",0);
-$max = give_parameter_get ("max" , 0);
-$min = give_parameter_get ("min" , 0);
-$labela = give_parameter_get ("labela" , "");
-$labelb = give_parameter_get ("labelb" , "");
-$valuea = give_parameter_get ("a" , 0);
-$valueb = give_parameter_get ("b" , 0);
-$valuec = give_parameter_get ("c" , 0);
-$lite = give_parameter_get ("lite" , 0);
-$date_from = give_parameter_get ( "date_from", 0);
-$date_to   = give_parameter_get ( "date_to", 0);
-$mode = give_parameter_get ( "mode", 1);
-$percent = give_parameter_get ( "percent", 0);
-$days = give_parameter_get ( "days", 0);
+$max = get_parameter ("max" , 0);
+$min = get_parameter ("min" , 0);
+$labela = get_parameter("labela" , "");
+$labelb = get_parameter ("labelb" , "");
+$valuea = get_parameter ("a" , 0);
+$valueb = get_parameter ("b" , 0);
+$valuec = get_parameter ("c" , 0);
+$lite = get_parameter ("lite" , 0);
+$date_from = get_parameter ( "date_from", 0);
+$date_to   = get_parameter ( "date_to", 0);
+$mode = get_parameter ( "mode", 1);
+$percent = get_parameter ( "percent", 0);
+$days = get_parameter ( "days", 0);
 
 
 if ( $_GET["type"] == "progress")

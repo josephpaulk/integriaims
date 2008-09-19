@@ -1,5 +1,20 @@
 <?PHP
 
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ADD WORK UNIT CONTROL ( TASK )
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -11,14 +26,14 @@ if (check_login() != 0) {
 	exit;
 }
 
-$id_project = give_parameter_get ("id_project", -1);
-$id_workunit = give_parameter_get ("id_workunit", -1);
-$id_task = give_parameter_get ("id_task", -1);
-$task_name = give_db_value ("name", "ttask", "id", $id_task);
+$id_project = get_parameter_get ("id_project", -1);
+$id_workunit = get_parameter_get ("id_workunit", -1);
+$id_task = get_parameter_get ("id_task", -1);
+$task_name = get_db_value ("name", "ttask", "id", $id_task);
 
 //if (($id_project != -1) && ($id_workunit != -1)) OR ($id_workunit {
 if ($id_workunit != -1){
-	$row = give_db_row ("tworkunit", "id", $id_workunit);
+	$row = get_db_row ("tworkunit", "id", $id_workunit);
 	$id_user = $row["id_user"];
 	$duration =$row["duration"]; 
 	$description = $row["description"];

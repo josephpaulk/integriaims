@@ -1,9 +1,10 @@
 <?php
 
-// Integria 1.0 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -60,29 +61,18 @@ if (isset($_GET["id"])){
 $cabecera=0;
 $sql4='SELECT * FROM tincident_track WHERE id_incident= '.$id_inc;
 
+echo "<h3>".lang_string ("Incident"). " #$id_inc. ".give_inc_title ($id_inc)."</h3>";
 
-$color = 0;
-echo "<h3>".give_inc_title ($id_inc)."</h3>";
-
-echo '<table cellpadding="3" cellspacing="3" border="0" width="90%" class="listing">';
+echo '<table width="80%" class="listing">';
 
 if ($res4=mysql_query($sql4)){
-	echo "<tr><th>".lang_string ('state')."<th>".lang_string ('user')."<th  width='80'>".lang_string ('timestamp');
+	echo "<tr><th>".lang_string ('state')."<th>".lang_string ('user')."<th>".lang_string ('timestamp');
 	while ($row2=mysql_fetch_array($res4)){
 		$timestamp = $row2["timestamp"];
 		$state = $row2["state"];
 		$user = $row2["id_user"];
-		$aditional_data = $row2["id_aditional"];
-		
-		if ($color == 1){
-			$tdcolor = "datos";
-			$color = 0;
-		} else {
-			$tdcolor = "datos2";
-			$color = 1;
-		}
-		
-		echo '<tr><td class="' . $tdcolor . '">';
+		$aditional_data = $row2["id_aditional"];		
+		echo '<tr><td>';
 
 		switch ($state) {
 		case 0:
@@ -128,9 +118,8 @@ if ($res4=mysql_query($sql4)){
 			$descripcion .= " -> ".give_db_value ("name", "tincident_resolution", "id", $aditional_data);
 
 		echo $descripcion;
-		echo '<td class="' . $tdcolor . '">';
-		echo ' '.dame_nombre_real ($user);
-		echo '<td class="' . $tdcolor . '">';
+		echo '<td>'.dame_nombre_real ($user);
+		echo '<td class="f9">';
 		echo $timestamp;
 	}
 	echo "</table>"; 

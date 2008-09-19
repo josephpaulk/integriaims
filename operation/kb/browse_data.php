@@ -1,8 +1,9 @@
 <?php
-// Integria 1.1 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -11,6 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 global $config;
 check_login();
@@ -28,48 +30,44 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
 	}
 
 	$id = get_parameter ("view",-1);
-	$row = give_db_row ("tkb_data", "id", $id);
+	$row = get_db_row ("tkb_data", "id", $id);
 	$data = $row["data"];
 	$title = $row["title"];
 	$id_product = $row["id_product"];
 	$id_category = $row["id_category"];
 	$timestamp = $row["timestamp"];
 	if ($id_product > 0)
-		$product = give_db_value ("name", "tkb_product", "id", $id_product);
+		$product = get_db_value ("name", "tkb_product", "id", $id_product);
 	else 
 		$product = "";
 	if ($id_category > 0)
-		$category = give_db_value ("name", "tkb_category", "id", $id_category);
+		$category = get_db_value ("name", "tkb_category", "id", $id_category);
 	else
 		$category = "";
 	
 	echo "<h2>".lang_string ("KB article review")."</h2>";	
     echo "<h3>$product </h3>";
 
-	$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_user);
+	$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $id_user);
 
 	// Show data
 
 	// Title header
-	echo "<div class='notetitle' style='height: 50px;'>"; // titulo
-	echo "<table border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px;'>";
+	echo "<div class='notetitle' style='height: 50px;'>"; 
+	echo "<table class='blank' border=0 width='100%' cellspacing=0 cellpadding=0 style='background: transparent; line-height: 12px; border: 0px; margin-left: 0px;margin-top: 0px;'>";
 	echo "<tr><td rowspan=3 width='7%'>";
 	echo "<img src='images/avatars/".$avatar."_small.png'>";
 	
-	echo "<td width='60%'><b>";
-	if ($category == ""){
-    	echo lang_string ("Product")." </b> : ";
-    	echo $product;
-    } else  {
-    	echo lang_string ("Category")." </b> : ";
-        echo $category;
-    }
-	
-	echo "<tr>";
-    echo "<td><b>";
+	echo "<td width='50%'><b>";
 	echo lang_string ("Title")." </b> : ";
 	echo $title;
-  
+
+	echo "<td> <b>";
+    echo lang_string ("Product")." </b> : ";
+    echo $product;
+    
+    	
+
 	echo "<tr>";
 	echo "<td>";
 	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
@@ -77,12 +75,17 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
 	echo "</a>";
 	echo "&nbsp;".lang_string ("write on")."&nbsp;";
 	echo $timestamp;
+	echo "<td>";
+	echo "<b>";
+	echo lang_string ("Category")." </b> : ";
+	echo $category;
+
 	echo "</table>";
 	echo "</div>";
 
 	// Body
 	echo "<div class='notebody'>";
-	echo "<table width='90%'  border=0 cellpadding=0 cellspacing=0>";
+	echo "<table class='blank' width='100%' cellpadding=0 cellspacing=0>";
 	echo "<tr><td valign='top'>";
 	echo clean_output_breaks($data);
 	echo "</table>";

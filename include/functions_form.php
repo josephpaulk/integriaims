@@ -138,20 +138,20 @@ function combo_users_project ($id_project){
 // Returns a combo with categories
 // ----------------------------------------------------------------------
 function combo_kb_categories ($id_category){
-
+	if ($id_category == 0)
+		$id_category =1;
 	$sql = "SELECT * FROM tkb_category WHERE id != $id_category ORDER by parent, name";
 	$result = mysql_query($sql);
 	echo "<select name='category' style='width: 180px;'>";
-	if ($id_category > 0){
-		$parent = give_db_value ("parent","tkb_category","id",$id_category);
-		$parent_name = give_db_value ("name","tkb_category","id",$parent);
-		$name = give_db_value ("name","tkb_category","id",$id_category);
-		if ($parent != 0)
-			echo "<option value='".$id_category."'>".$parent_name."/".$name;
-		else
-			echo "<option value='".$id_category."'>".$name;
-	}
-	echo "<option value=0>".lang_string("None");
+	
+	$parent = give_db_value ("parent","tkb_category","id",$id_category);
+	$parent_name = give_db_value ("name","tkb_category","id",$parent);
+	$name = give_db_value ("name","tkb_category","id",$id_category);
+	if ($parent != 0)
+		echo "<option value='".$id_category."'>".$parent_name."/".$name;
+	else
+		echo "<option value='".$id_category."'>".$name;
+
 	while ($row=mysql_fetch_array($result)){
 		$parent = give_db_value ("name","tkb_category","id",$row["parent"]);
 		if ($parent != "")
@@ -167,6 +167,8 @@ function combo_kb_categories ($id_category){
 // ----------------------------------------------------------------------
 function combo_kb_products ($id_product){
 
+	if ($id_product == 0)
+		$id_product = 1;
 	$sql = "SELECT * FROM tkb_product WHERE id != $id_product";
 	$result = mysql_query($sql);
 	echo "<select name='product' style='width: 180px;'>";
@@ -179,7 +181,6 @@ function combo_kb_products ($id_product){
 		else
 			echo "<option value='".$id_product."'>".$name;
 	}
-	echo "<option value=0>".lang_string("None");
 	while ($row=mysql_fetch_array($result)){
 		$parent = give_db_value ("name","tkb_product","id",$row["parent"]);
 		if ($parent != "")
@@ -669,7 +670,7 @@ function form_search_incident ($return = false) {
 					lang_string ('Product type'));
 	
 	$table->data[2][0] = print_input_text ('search_string', $search_string,
-						'', 40, 50, true, lang_string ('Search string'));
+						'', 25, 50, true, lang_string ('Search string'));
 	
 
 	$table->data[2][1] = print_submit_button (lang_string ('Search'), 'search', false, 'class="sub search"', true);

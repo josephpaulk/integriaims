@@ -58,11 +58,11 @@ function give_acl_free ($id_user, $id_group) {
 // --------------------------------------------------------------- 
 
 function audit_db ($id, $ip, $accion, $descripcion) {
-	require("config.php");
-	$today=date('Y-m-d H:i:s');
+	require ("config.php");
+	$today = date('Y-m-d H:i:s');
 	$utimestamp = time();
-	$sql1='INSERT INTO tsesion (ID_usuario, accion, fecha, IP_origen,descripcion, utimestamp) VALUES ("'.$id.'","'.$accion.'","'.$today.'","'.$ip.'","'.$descripcion.'", '.$utimestamp.')';
-	$result=mysql_query($sql1);
+	$sql1 = 'INSERT INTO tsesion (ID_usuario, accion, fecha, IP_origen,descripcion, utimestamp) VALUES ("'.$id.'","'.$accion.'","'.$today.'","'.$ip.'","'.$descripcion.'", '.$utimestamp.')';
+	$result = mysql_query($sql1);
 }
 
 
@@ -70,12 +70,12 @@ function audit_db ($id, $ip, $accion, $descripcion) {
 // logon_db, update entry in logon audit
 // --------------------------------------------------------------- 
 
-function logon_db($id,$ip){
-	require("config.php");
-	audit_db($id,$ip,"Logon","Logged in");
+function logon_db ($id,$ip){
+	require ("config.php");
+	audit_db ($id,$ip, "Logon", "Logged in");
 	// Update last registry of user to get last logon
-	$sql2='UPDATE tusuario fecha_registro = $today WHERE id_usuario = "$id"';
-	$result=mysql_query($sql2);
+	$sql2 = 'UPDATE tusuario fecha_registro = $today WHERE id_usuario = "$id"';
+	$result = mysql_query ($sql2);
 }
 
 // --------------------------------------------------------------- 

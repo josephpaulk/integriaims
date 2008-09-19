@@ -32,6 +32,8 @@ $search_id_company = (int) get_parameter ('search_id_company', 0);
 if ($status == 0)
 	$status = implode (',', array_keys (get_indicent_status ()));
 
+$resolution = get_incident_resolution();
+
 $sql_clause = '';
 if ($search_priority != -1)
 	$sql_clause .= sprintf (' AND prioridad = %d', $search_priority);
@@ -92,39 +94,57 @@ foreach ($incidents as $incident) {
 	
 	/* We print the rows directly, because it will be used in a sortable
 	   jQuery table and it only needs the rows */
-	
-	echo '<tr id="indicent-'.$incident['id_incidencia'].'">';
+
+	if ($incident["estado"] < 3 )
+		$tr_status = 'class="red"';
+	elseif ($incident["estado"] < 6 )
+		$tr_status = 'class="yellow"';
+	else
+		$tr_status = 'class="green"';
+
+	echo '<tr '.$tr_status.' id="indicent-'.$incident['id_incidencia'].'">';
+
 	echo '<td><strong>#'.$incident['id_incidencia'].'</strong></td>';
+
+	// SLA Fired ?? 
+	$sla = rand  ( 0 , 1 ); // Not real check, only to render something
+	if ($sla == 0)
+		echo '<td><img src="images/exclamation.png" border=0></td>';
+	else
+		echo '<td></td>';
+
 	echo '<td>'.$incident['titulo'].'</td>';
 	echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']).'</td>';
-	echo '<td><strong>'.$status[$incident['estado']].'</strong></td>';
-	echo '<td style="text-align: center">'.print_priority_flag_image ($incident['prioridad'], true).'</td>';
-	echo '<td>'.human_time_comparation ($incident["actualizacion"]).'<br>';
-	echo human_time_comparation ($incident["inicio"]).'</td>';
+	echo '<td><strong>'.$status[$incident['estado']].'</strong> - <i>'. $resolution[$incident['resolution']].'</i></td>';
+
+
+	echo '<td>'.print_priority_flag_image ($incident['prioridad'], true).'</td>';
+	echo '<td class="f9">'.human_time_comparation ($incident["actualizacion"]).' / <i>';
+	echo human_time_comparation ($incident["inicio"]).'</i></td>';
 
 	/* Get special details about the incident */
-	echo '<td style="text-align: center">';
+	echo '<td class="f9">';
 	$people = people_involved_incident ($incident["id_incidencia"]);
-	print_help_tip (implode ('<br />', $people), false, 'tip_people');
+	print_help_tip (implode ('&nbsp;', $people), false, 'tip_people');
 
 	/* Files */
 	$files = give_number_files_incident ($incident["id_incidencia"]);
 	if ($files)
-		echo '<br /><img src="images/disk.png"
+		echo '&nbsp;<img src="images/disk.png"
 			title="'.$files.' '.lang_string ('Files').'" />';
 
 	/* Mail notification */
 	$mail_check = get_db_value ('notify_email', 'tincidencia',
 				'id_incidencia', $incident["id_incidencia"]);
 	if ($mail_check > 0)
-		echo '<br /><img src="images/email_go.png"
+		echo '&nbsp;<img src="images/email_go.png"
 			title="'.lang_string ('Mail notification').'" />';
 
 	/* Workunits */
 	$timeused = give_hours_incident ($incident["id_incidencia"]);;
 	$incident_wu = $in_wu = give_wu_incident ($incident["id_incidencia"]);
 	if ($incident_wu > 0) {
-		echo '<br /><img src="images/award_star_silver_1.png" valign="bottom">'.$timeused;
+		echo '&nbsp;<img src="images/award_star_silver_1.png" valign="bottom">'.$timeused;
 	}
 	echo '</td>';
 

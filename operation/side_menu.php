@@ -323,6 +323,23 @@ if ($sec == "incidents") {
 
 }
 
+// Indicent type editor
+if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "incidents")) {
+	echo "<div class='portlet'>";
+	echo "<h3 class='admin'>".lang_string ('Incident types')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	// Building overview
+	if ($sec2=="operation/incidents/types_detail")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>".lang_string ('Incident types')."</a></li>";
+
+	echo "</ul>";
+	echo "</div>";
+}
+
 // INVENTORY
 if ($sec == "inventory") {
 	echo "<div class='portlet'>";
@@ -364,23 +381,27 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 	echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail'>".lang_string ('Contract overview')."</a></li>";
 
 	// Create new contract
+/*
 	if (give_acl($config["id_user"], 0, "IW")==1) {
 		if (($sec2=="operation/contracts/contract_detail") AND (isset($_GET["create"])))
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&create=1'>".lang_string ('Create contract')."</a></li>";
-		echo "</ul>";
-		echo "</div>";
+		
 	}
+*/
+
+	echo "</ul>";
+	echo "</div>";
 }
 
 // CONTACTS
 if (give_acl ($config["id_user"], 0, "IM") && $sec == "inventory") {
 	echo "<div class='portlet'>";
 
-	// Contact search
-	echo "<h3>".lang_string ('Contacts')."</h3>";
+
+	echo "<h3 class='admin'>".lang_string ('Contacts')."</h3>";
 	echo "<ul class='sidemenu'>";
 
 	// Contact overview
@@ -390,16 +411,8 @@ if (give_acl ($config["id_user"], 0, "IM") && $sec == "inventory") {
 		echo "<li>";
 	echo "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail'>".lang_string ('Contact overview')."</a></li>";
 
-	// Create new conect
-	if (give_acl($config["id_user"], 0, "IW")==1) {
-		if (($sec2=="operation/contacts/contact_detail") AND (isset($_GET["create"])))
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail&create=1'>".lang_string ('Create contact')."</a></li>";
-		echo "</ul>";
-		echo "</div>";
-	}
+	echo "</ul>";
+	echo "</div>";
 }
 
 // COMPANIES
@@ -407,7 +420,7 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 	echo "<div class='portlet'>";
 
 	// Contract
-	echo "<h3>".lang_string ('Companies')."</h3>";
+	echo "<h3 class='admin'>".lang_string ('Companies')."</h3>";
 	echo "<ul class='sidemenu'>";
 
 	// Company
@@ -424,33 +437,49 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 		echo "<li>";
 	echo "<a href='index.php?sec=inventory&sec2=operation/companies/company_role'>".lang_string ('Company roles')."</a></li>";
 
+	echo "</ul>";
+	echo "</div>";
 
-	// Create new contract
-	if (give_acl($config["id_user"], 0, "IW")==1) {
-		if (($sec2=="operation/companies/company_detail") AND (isset($_GET["create"])))
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&create=1'>".lang_string ('Create company')."</a></li>";
-	}
+}
 
-	// Company role creation
-	if (give_acl($config["id_user"], 0, "IW")==1) {
-		if (($sec2=="operation/companies/company_role") AND (isset($_GET["create"])))
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=inventory&sec2=operation/companies/company_role&create=1'>".lang_string ('Create company role')."</a></li>";
-		echo "</ul>";
-		echo "</div>";
-	}
+// SLA's
+if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
+	echo "<div class='portlet'>";
+	echo "<h3 class='admin'>".lang_string ('SLA')."</h3>";
+	echo "<ul class='sidemenu'>";
 
+	// Building overview
+	if ($sec2=="operation/inventory/sla_detail")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/inventory/sla_detail'>".lang_string ('SLA Management')."</a></li>";
+
+	echo "</ul>";
+	echo "</div>";
+}
+
+// MANUFACTURER
+if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
+	echo "<div class='portlet'>";
+	echo "<h3 class='admin'>".lang_string ('Manufacturers')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	// Building overview
+	if ($sec2=="operation/inventory/manufacturer_detail")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/inventory/manufacturer_detail'>".lang_string ('Manufacturer overview')."</a></li>";
+
+	echo "</ul>";
+	echo "</div>";
 }
 
 // BUILDINGS
 if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
 	echo "<div class='portlet'>";
-	echo "<h3>".lang_string ('Buildings')."</h3>";
+	echo "<h3 class='admin'>".lang_string ('Buildings')."</h3>";
 	echo "<ul class='sidemenu'>";
 
 	// Building overview
@@ -459,14 +488,6 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=inventory&sec2=operation/inventory/building_detail'>".lang_string ('Building overview')."</a></li>";
-	
-	// Building creation
-	if (($sec2=="operation/inventory/building_detail") AND (isset($_GET["create"])) )
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/inventory/building_detail&create=1'>".lang_string ('Create building')."</a></li>";
-
 
 	echo "</ul>";
 	echo "</div>";

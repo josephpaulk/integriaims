@@ -1,8 +1,9 @@
 <?php
-// Integria 1.1 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -11,6 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 global $config;
 check_login();
@@ -54,7 +56,7 @@ if ($free_text != "")
 $sql1 = "SELECT * FROM tkb_data $sql_filter ORDER BY title, id_category, id_product";
 $color =0;
 if ($result=mysql_query($sql1)){
-	echo "<table cellpadding=4 cellspacing=4 width=800 class='databox'>";
+	echo "<table width=800 class='listing'>";
 
 	echo "<th>".lang_string ("Title")."</th>";
 	echo "<th>".lang_string ("Timestamp")."</th>";
@@ -63,37 +65,29 @@ if ($result=mysql_query($sql1)){
 	echo "<th>".lang_string ("File")."</th>";
 	echo "<th>".lang_string ("User")."</th>";
 	while ($row=mysql_fetch_array($result)){
-		if ($color == 1){
-			$tdcolor = "datos";
-			$color = 0;
-			}
-		else {
-			$tdcolor = "datos2";
-			$color = 1;
-		}
 		echo "<tr>";
 		// Name
-		echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$row["id"]."'>".$row["title"]."</a></b></td>";
+		echo "<td valign='top'><b><a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$row["id"]."'>".$row["title"]."</a></b></td>";
 
 		// Timestamp
-		echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
+		echo "<td class='f9' valign='top'>";
 		echo $row["timestamp"];
 
 		// Category
-		echo "<td class='".$tdcolor."' align='center'>";
+		echo "<td>";
 		echo give_db_sqlfree_field ("SELECT name FROM tkb_category WHERE id = ".$row["id_category"]);
 
 		// Product
-		echo "<td class='".$tdcolor."' align='center'>";
+		echo "<td>";
 		echo give_db_sqlfree_field ("SELECT name FROM tkb_product WHERE id = ".$row["id_product"]);
 
 		// Attach ?
-		echo "<td class='".$tdcolor."' align='center'>";
+		echo "<td>";
 		if (give_db_sqlfree_field ("SELECT count(*) FROM tattachment WHERE id_kb = ".$row["id"]) != 0)
 			echo "<img src='images/disk.png'>";
 
 		// User
-		echo "<td class='".$tdcolor."f9' align='center'>";
+		echo "<td class='f9' >";
 		echo $row["id_user"];
 
 	}

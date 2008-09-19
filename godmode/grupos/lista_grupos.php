@@ -1,8 +1,9 @@
 <?php
-// Integria 1.0 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -69,7 +70,7 @@ $id_user = $config["id_user"];
 	echo "
 		<h3>".$lang_label["definedgroups"]."</a></h3>";
 
-	echo "<table cellpadding=3 cellspacing=3 width=400 class='databox'>";
+	echo "<table width=450 class='listing'>";
 	echo "<th>".$lang_label["icon"]."</th>";
 	echo "<th>".$lang_label["group_name"]."</th>";
 	echo "<th>".$lang_label["parent"]."</th>";
@@ -114,7 +115,8 @@ $id_user = $config["id_user"];
 				echo "</td></tr>";
 		}
 	}
-	echo "<tr><td colspan='4' align='right'>";
+	echo "</table><table class='button' width=450>";
+	echo "<tr><td align='right'>";
 	echo "<form method=post action='index.php?sec=users&
 	sec2=godmode/grupos/configurar_grupo&creacion_grupo=1'>";
 	echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_group"]."'>";

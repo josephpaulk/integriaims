@@ -38,16 +38,21 @@ if (isset($_GET["create2"])){
 	$date_begin = get_parameter ("date_begin", "");
 	$date_end = get_parameter ("date_end", "");
 	$id_sla = get_parameter ("id_sla", "");
+	$id_group = get_parameter ("id_group", "");
 
-	$sql_insert="INSERT INTO tcontract (name, description, date_begin, date_end, id_company, id_sla) VALUE ('$name','$description', '$date_begin', '$date_end', '$id_company', '$id_sla' ) ";
-
-	$result=mysql_query($sql_insert);
-	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Contract cannot be created")."</h3>";
-	else {
-		echo "<h3 class='suc'>".lang_string ("Contract has been created successfully")."</h3>";
-		$id_data = mysql_insert_id();
-		insert_event ("CONTRACT CREATED", $id_data, 0, $name);
+	if ($id_group < 2){
+		echo "<h3 class='error'>".lang_string ("You must specify a valid group")."</h3>";
+	} else {
+		$sql_insert="INSERT INTO tcontract (name, description, date_begin, date_end, id_company, id_sla, id_group) VALUE ('$name','$description', '$date_begin', '$date_end', '$id_company', '$id_sla' , '$id_group') ";
+	
+		$result=mysql_query($sql_insert);
+		if (! $result)
+			echo "<h3 class='error'>".lang_string ("Contract cannot be created")."</h3>";
+		else {
+			echo "<h3 class='suc'>".lang_string ("Contract has been created successfully")."</h3>";
+			$id_data = mysql_insert_id();
+			insert_event ("CONTRACT CREATED", $id_data, 0, $name);
+		}
 	}
 }
 
@@ -63,16 +68,21 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	$date_begin = get_parameter ("date_begin", "");
 	$date_end = get_parameter ("date_end", "");
 	$id_sla = get_parameter ("id_sla", "");
+	$id_group = get_parameter ("id_group", "");
 
-	$sql_update ="UPDATE tcontract
-	SET id_sla = $id_sla, description = '$description', name = '$name', date_begin= '$date_begin', date_end = '$date_end', id_company = '$id_company' WHERE id = $id";
-
-	$result=mysql_query($sql_update);
-	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Contract cannot be updated")."</h3>";
-	else {
-		echo "<h3 class='suc'>".lang_string ("Contract updated ok")."</h3>";
-		insert_event ("CONTRACT", $id, 0, $name);
+	if ($id_group < 2){
+		echo "<h3 class='error'>".lang_string ("You must specify a valid group")."</h3>";
+	} else {
+		$sql_update ="UPDATE tcontract
+		SET id_sla = $id_sla, id_group = $id_group, description = '$description', name = '$name', date_begin= '$date_begin', date_end = '$date_end', id_company = '$id_company' WHERE id = $id";
+	
+		$result=mysql_query($sql_update);
+		if (! $result)
+			echo "<h3 class='error'>".lang_string ("Contract cannot be updated")."</h3>";
+		else {
+			echo "<h3 class='suc'>".lang_string ("Contract updated ok")."</h3>";
+			insert_event ("CONTRACT UPDATED", $id, 0, $name);
+		}
 	}
 }
 
@@ -102,9 +112,10 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	if (isset($_GET["create"])){
 		$id = -1;
 		$name = "";
-		$date_begin = "";
-		$date_end = "";
+		$date_begin = date('Y-m-d');
+		$date_end = $date_begin;
 		$id_company = "";
+		$id_group = "2";
 		$id_sla = "";
 		$description = "";
 	} else {
@@ -113,6 +124,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$name = $row["name"];
 		$id_company = $row["id_company"];
 		$date_begin = $row["date_begin"];
+		$id_group = $row["id_group"];
 		$date_end   = $row["date_end"];
 		$description = $row["description"];
 		$id_sla = $row["id_sla"];
@@ -131,52 +143,57 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	echo "<table width=620 class='databox'>";
 	echo "<tr>";
-	echo "<td class=datos>";
+	echo "<td>";
 	echo lang_string ("Contract name");
-	echo "<tr>";
-	echo "<td class=datos colspan=4>";
-	print_input_text ("name", $name, "", 60, 100, false);
+	echo "<td>";
+	echo lang_string ("Group");
 
 	echo "<tr>";
-	echo "<td class=datos2>";
+	echo "<td>";
+	print_input_text ("name", $name, "", 40, 100, false);
+	echo "<td>";
+	print_select_from_sql ("SELECT id_grupo, nombre FROM tgrupo WHERE id_grupo > 1", "id_group", $id_group, '', '', '', false, false, true);
+
+	echo "<tr>";
+	echo "<td>";
 	echo lang_string ("Begin date");
 
-	echo "<td class=datos2>";
+	echo "<td>";
 	echo lang_string ("End date");
 
 	echo "<tr>";
-	echo "<td class=datos2>";
+	echo "<td>";
 	print_input_text ("date_begin", $date_begin, "", 15, 40, false);
 
-	echo "<td class=datos2>";
+	echo "<td>";
 	print_input_text ("date_end", $date_end, "", 15, 40, false);
 
 	echo "<tr>";
 
-	echo "<td class=datos>";
+	echo "<td>";
 	echo lang_string ("Company");
 
-	echo "<td class=datos>";
+	echo "<td>";
 	echo lang_string ("SLA");
 
 	echo "<tr>";
-	echo "<td class=datos>";
-	print_select_from_sql ("SELECT id, name FROM tcompany", "id_company", $id_company, '', 'Select', 0, false, false, true);
+	echo "<td>";
+	print_select_from_sql ("SELECT id, name FROM tcompany", "id_company", $id_company, '', '', '', false, false, true);
 
-	echo "<td class=datos>";
-	print_select_from_sql ("SELECT id, name FROM tsla_specific", "id_sla", $id_sla, '', 'Select', 0, false, false, true);
+	echo "<td>";
+	print_select_from_sql ("SELECT id, name FROM tsla", "id_sla", $id_sla, '', '', '', false, false, true);
 
 	echo "<tr>";
-	echo "<td class=datos>";
+	echo "<td>";
 	echo lang_string ("Description");
 	echo "<tr>";
-	echo "<td class=datos colspan=4>";
+	echo "<td colspan=4>";
 	print_textarea ("description", 1, 1, $description, "style='width: 600px; height: 120px;'", false);
 	echo "</table>";
 
 	echo "<table width=620 class='button'>";
 	echo "<tr>";
-	echo "<td class='datos3' align=right>";
+	echo "<td align=right>";
 	if ($id == -1)
 		print_submit_button (lang_string("Create"), "enviar", false, "class='sub next'", false);
 	else
@@ -231,36 +248,48 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		$table->head[0] = lang_string ("Name");
 		$table->head[1] = lang_string ("Company");
 		$table->head[2] = lang_string ("SLA");
-		$table->head[3] = lang_string ("Begin");
-		$table->head[4] = lang_string ("End");
-		$table->head[5] = lang_string ("Delete");
+		$table->head[3] = lang_string ("Group");
+		$table->head[4] = lang_string ("Begin");
+		$table->head[5] = lang_string ("End");
+		$table->head[6] = lang_string ("Delete");
 		$counter = 0;
 		while ($row=mysql_fetch_array($result)){
-			// Name
-			$table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
+			if (give_acl($config["id_user"], $row["id_group"], "IR")==1) {
+				// Name
+				$table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
+	
+				// Company
+				$table->data[$counter][1] = give_db_sqlfree_field ("SELECT name FROM tcompany WHERE id = ".$row["id_company"]);
+	
+				// SLA
+				$table->data[$counter][2] = give_db_sqlfree_field ("SELECT name FROM tsla WHERE id = ".$row["id_sla"]);
 
-			// Company
-			$table->data[$counter][1] = give_db_sqlfree_field ("SELECT name FROM tcompany WHERE id = ".$row["id_company"]);
-
-			// SLA
-			$table->data[$counter][2] = give_db_sqlfree_field ("SELECT name FROM tsla_specific WHERE id = ".$row["id_sla"]);
-
-			// Begin
-			$table->data[$counter][3] = $row["date_begin"];
-
-			// End
-			$table->data[$counter][4] = $row["date_end"];
-
-			// Delete
-			$table->data[$counter][5] = "<a href='index.php?sec=inventory&
-						sec2=operation/contracts/contract_detail&
-						delete=".$row["id"]."'
-						onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
-						return false;'>
-						<img border='0' src='images/cross.png'></a>";
-			$counter++;
+				// Group
+				$table->data[$counter][3] = give_db_sqlfree_field ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_group"]);
+	
+				// Begin
+				$table->data[$counter][4] = $row["date_begin"];
+	
+				// End
+				$table->data[$counter][5] = $row["date_end"];
+	
+				// Delete
+				$table->data[$counter][6] = "<a href='index.php?sec=inventory&
+							sec2=operation/contracts/contract_detail&
+							delete=".$row["id"]."'
+							onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
+							return false;'>
+							<img border='0' src='images/cross.png'></a>";
+				$counter++;
+			}
 		}
 		print_table ($table);
+		echo "<table width=720 class='button'>";
+    	echo "<tr><td align='right'>";
+		echo "<form method=post action='index.php?sec=inventory&
+	    sec2=operation/contracts/contract_detail&create=1'>";
+		echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create contract")."'>";
+	    echo "</form></td></tr></table>";
 	}
 } // end of list
 

@@ -1,3 +1,34 @@
+2008-09-19  Sancho Lerena <slerena@gmail.com>
+
+	* integria.css: Several updates on styles.
+
+	* integria_db.sql: Some changes in sql. SLA tables merged in only
+	one table, added some fields in tgrupo and other minor changes.
+
+	* functions.php: added get_incident_resolution().
+
+	* functions_calendar.php: Style changes.
+
+	* side_menu.php: new options and style changes.
+
+	* project.php: Updated for new style.
+
+	* user.php: updated for new style.
+
+	* user_edit.php: Added new field (lang) for user, updated style.
+
+	* index.php: Now load user language if defined, if not system default.
+
+	* inventory/manufacturer_detail.php: new page for manufacturer mgmt.
+	
+	* inventory/building_detail.php: New page for building mgmt.
+
+	* inventory/sla_detail.php: new page for SLA mgmt.
+
+	* incidents/type_detail.php: New page for incident type mgmt.
+
+	Rest of files are mostly stetic / style changes.
+
 2008-09-17  Esteban Sanchez  <estebans@artica.es>
 
 	* operation/incidents/incident.php: Fixed title when showing search

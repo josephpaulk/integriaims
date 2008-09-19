@@ -1,8 +1,8 @@
 <?PHP
 
-// Sponsors
+// Sponsors / Banner
 echo "<div class='portlet' >";
-echo "<h3>".$lang_label["links_header"]."</h3>";
+echo "<h3 class='system'>".$lang_label["links_header"]."</h3>";
 echo "<ul class='sidemenu'>";
 
 $sql1='SELECT * FROM tlink ORDER BY name';
@@ -19,7 +19,7 @@ echo "</ul></div>";
 
 // Banners
 echo '<div class="portlet">';
-echo "<h3>Our sponsors</h3>";
+echo "<h3 class='system'>Our sponsors</h3>";
 echo "<p>";
 echo "<img src='images/minilogoartica.jpg'>";
 echo "<br><br>";

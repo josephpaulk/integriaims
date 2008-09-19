@@ -157,7 +157,7 @@ echo "</div>";
 
 
 // Space to skip blocks
-echo "<div style='height: 170px'> </div>";
+echo "<div style='height: 180px'> </div>";
 
 
 $start_date = $mydate_sql = date("Y-m-d", time());
@@ -196,7 +196,7 @@ echo generate_calendar_agenda ($year, $month, $days_f, 3, NULL, $locale, $pn, $i
 
 	echo "<div id='calendar_control' style='display:none'>";
 	echo "<form method='post' action='index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month&year=$year&create_item=1' enctype='multipart/form-data'>";
-	echo "<table cellpadding=3 cellspacing=3 border=0 width='400' class='databox_color'>";
+	echo "<table cellpadding=3 cellspacing=3 border=0 width='400' class='databox'>";
 	echo '<td class="datos">'.$lang_label["description"].'</td>';
 	echo '<td class="datos" colspan=3><input type="text" name="description" size=45>';
 	

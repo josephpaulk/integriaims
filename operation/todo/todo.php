@@ -37,7 +37,7 @@ if (check_login() == 0){
 	// ---------------
 	if ($operation == "update2") {
 		$id_todo = give_parameter_get ("id");
-		$row = give_db_row ("ttodo", "id", $id_todo);
+		$row = get_db_row ("ttodo", "id", $id_todo);
 		if (($row["assigned_user"] != $id_user) AND ($row["created_by_user"] != $id_user)){
 			no_permission();
 		}
@@ -63,7 +63,7 @@ if (check_login() == 0){
 	// ---------------
 	if ($operation == "delete") {
 		$id_todo = give_parameter_get ("id");
-		$row = give_db_row ("ttodo", "id", $id_todo);
+		$row = get_db_row ("ttodo", "id", $id_todo);
 		if (($row["assigned_user"] != $id_user) AND ($row["created_by_user"] != $id_user)){
 			no_permission();
 		}
@@ -88,7 +88,7 @@ if (check_login() == 0){
 	// ---------------
 	if ($operation == "update") {
 		$id_todo = give_parameter_get ("id");
-		$row = give_db_row ("ttodo", "id", $id_todo);
+		$row = get_db_row ("ttodo", "id", $id_todo);
 		if (($row["assigned_user"] != $id_user) AND ($row["created_by_user"] != $id_user)){
 			no_permission();
 		}
@@ -236,9 +236,9 @@ if (check_login() == 0){
 			echo "<img src='include/functions_graph.php?type=progress&width=80&height=20&percent=$completion'>";
 			echo '<td class="'.$tdcolor.'" valign="middle">';
 			if ($operation == "notme") 
-				$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $row["assigned_user"]);
+				$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $row["assigned_user"]);
 			else
-				$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $row["created_by_user"]);
+				$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $row["created_by_user"]);
 			echo "<img align='middle' src='images/avatars/".$avatar."_small.png'> ";
 			echo "<a href='#' class='tip'><span>";
 			if ($operation == "notme")
@@ -253,7 +253,7 @@ if (check_login() == 0){
 			// Close and assign WU to associate task
 			echo '<td class="'.$tdcolor.'" align="center">';
 			if ($row["id_task"] > 0){
-				$id_project = give_db_value ("id_project", "ttask", "id", $row["id_task"]);
+				$id_project = get_db_value ("id_project", "ttask", "id", $row["id_task"]);
 				$myurl = "index.php?sec=projects&sec2=operation/projects/task_create_work&id_project=$id_project&id_task=".$row["id_task"];
 				echo '<a href="'.$myurl.'"><img border=0 src="images/award_star_silver_1.png"></a>';			
 			}

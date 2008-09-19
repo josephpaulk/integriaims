@@ -149,9 +149,9 @@ $table->data[1][1] = print_select (get_buildings (),
 
 $table->data[2][0] = print_input_text ('ip_address', $ip_address, '', 20, 60,
 			true, lang_string ('IP address'));
-$table->data[2][1] = print_input_text ('serial_number', $serial_number, '', 40, 250,
+$table->data[2][1] = print_input_text ('serial_number', $serial_number, '', 30, 250,
 			true, lang_string ('Serial number'));
-$table->data[2][2] = print_input_text ('part_number', $part_number, '', 40, 250,
+$table->data[2][2] = print_input_text ('part_number', $part_number, '', 30, 250,
 			true, lang_string ('Part number'));
 
 $table->colspan[4][0] = 3;
@@ -162,7 +162,8 @@ echo '<div id="result">'.$result_msg.'</div>';
 echo '<form method="post" id="inventory_status_form">';
 print_table ($table);
 
-echo '<div class="action-buttons" style="width: '.$table->width.'">';
+echo "<table width=90% class='button'>";
+echo "<tr><td align=right>";
 if ($id) {
 	print_input_hidden ('update_inventory', 1);
 	print_input_hidden ('id', $id);
@@ -171,7 +172,7 @@ if ($id) {
 	print_input_hidden ('create_inventory', 1);
 	print_submit_button (lang_string ('Create'), 'create', false, 'class="sub wand"');
 }
-echo '</div>';
+echo '</td></tr></table>';
 echo '</form>';
 
 if (! defined ('AJAX')):

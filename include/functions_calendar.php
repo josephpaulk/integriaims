@@ -44,7 +44,7 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 	$calendar = '<center><h2>'."\n".
 	$calendar = $calendar .$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</center>";
 	
-	$calendar = $calendar . '</h2><table border=1 cellpadding=10 cellspacing=0>'."\n";
+	$calendar = $calendar . '</h2><table class="blank" border=1 cellpadding=10 cellspacing=0>'."\n";
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
 		foreach($day_names as $d)
@@ -124,7 +124,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 	@list($p, $pl) = each($pn); @list($n, $nl) = each($pn); #previous and next links, if applicable
 	if($p) $p = '<span class="calendar-prev">'.($pl ? '<a href="'.htmlspecialchars($pl).'">'.$p.'</a>' : $p).'</span>&nbsp;';
 	if($n) $n = '&nbsp;<span class="calendar-next">'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n).'</span>';
-	$calendar = '<table class="calendar">'."\n".
+	$calendar = '<table class="blank calendar">'."\n".
 		'<caption class="calendar-month">'.$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</caption>\n<tr>";
 
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
@@ -174,7 +174,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 	@list($p, $pl) = each($pn); @list($n, $nl) = each($pn); #previous and next links, if applicable
 	if($p) $p = '<span class="calendar-prev">'.($pl ? '<a href="'.htmlspecialchars($pl).'">'.$p.'</a>' : $p).'</span>&nbsp;';
 	if($n) $n = '&nbsp;<span class="calendar-next">'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n).'</span>';
-	$calendar = '<table class="calendar">'."\n".
+	$calendar = '<table class="blank calendar">'."\n".
 		'<caption class="calendar-month">'.$p.'<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$month.'&year='.$year.'&id='.$id_user.'">'.$title.'</a>'.$n."</caption>\n<tr>";
 
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
@@ -267,7 +267,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 	$calendar = '<center><h2>'."\n".
 	$calendar = $calendar .$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</center>";
 	
-	$calendar = $calendar . '</h2><table border=1 cellpadding=10 cellspacing=0>'."\n";
+	$calendar = $calendar . '</h2><table class="blank" border=1 cellpadding=10 cellspacing=0>'."\n";
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
 		foreach($day_names as $d)

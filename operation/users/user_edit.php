@@ -1,21 +1,18 @@
 <?php
 
-// Pandora - the Free monitoring system
-// ====================================
-// Copyright (c) 2004-2006 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2005-2006 Artica Soluciones Tecnol�icas S.L, info@artica.es
-// Copyright (c) 2004-2006 Raul Mateos Martin, raulofpandora@gmail.com
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 // Load global vars
 global $config;
@@ -106,9 +103,10 @@ if (check_login() == 0) {
 	$telefono=$rowdup["telefono"];
 	$nombre_real=$rowdup["nombre_real"];
 	$avatar = $rowdup ["avatar"];
+	$lang = $rowdup ["lang"];
 
 	?>
-	<table border=0 cellpadding="3" cellspacing="3" width="500" class="databox_color";>
+	<table width="550" class="databox";>
 	<?php 
 	if ($view_mode == 0) 
 		echo '<form name="user_mod" method="post" action="index.php?sec=usuarios&sec2=operation/users/user_edit&ver='.$id_usuario.'&modificado=1">';
@@ -147,17 +145,29 @@ if (check_login() == 0) {
 		$a++;
 	}
 	echo '</select>';
-	?>
 	
+	echo "&nbsp;";
+	echo "&nbsp;";
+	echo lang_string ("Language");
+	echo "&nbsp;";
+	print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', '', false, false, true, false);
+	?>
+
+		
+
 	<tr><td class="datos"><?php echo $lang_label["telefono"] ?>
-	<td class="datos" colspan=2><input class=input type="text" name="telefono" value="<?php echo $telefono ?>">
+	<td class="datos" colspan=2><input class=input type="text" name="telefono" size=15 value="<?php echo $telefono ?>">
 	<tr><td class="datos2" colspan="3"><?php echo $lang_label["comments"] ?>
 	<tr><td class="datos" colspan="3"><textarea name="comentarios" cols="55" rows="4"><?php echo $comentarios ?></textarea>
 	</table>
 <?php
 	// Don't delete this!!
 	if ($view_mode ==0){
+		echo '<table width="550" class="button">';
+		echo "<tr><td align='right'>";
 		echo "<input name='uptbutton' type='submit' class='sub upd' value='".$lang_label["update"]."'>";
+		echo "</tr></td>";
+		echo "</table>";
 	}
 	
 	echo '<h3>'.$lang_label["listGroupUser"].'</h3>';

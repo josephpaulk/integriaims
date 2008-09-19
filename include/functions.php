@@ -429,6 +429,8 @@ function get_indicent_priorities () {
 	return $incidents;
 }
 
+// This both functions need to be updated to use values FROM datatabase, not fixed ones
+
 function get_indicent_status () {
 	$status = array ();
 
@@ -443,6 +445,21 @@ function get_indicent_status () {
 	return $status;
 }
 
+function get_incident_resolution () {
+	$status = array ();
+
+	$status[1] = lang_string ('Fixed');
+	$status[2] = lang_string ('Invalid');
+	$status[3] = lang_string ('Wont fix');
+	$status[4] = lang_string ('Duplicate');
+	$status[5] = lang_string ('Works for me');
+	$status[6] = lang_string ('Incomplete');
+	$status[7] = lang_string ('Expired');
+    $status[8] = lang_string ('Moved');
+	$status[9] = lang_string ('In process');
+
+	return $status;
+}
 function print_priority_flag_image ($priority, $return = false) {
 	$output = '';
 

@@ -79,16 +79,17 @@ table {
 	padding-bottom: 5px;
 	margin-left: 15px;
 }
-
 table.blank {
 	border: none;
 	background: #fff;
 	padding: 0px;
 	margin: 0px;
 	padding-left: 5px;
+    border: none;
 }
 
-table.databox,   table.databox_color {
+table.databox, table.databox_color {
+	margin-left: 15px;
 	padding-top: 5px;
 	padding-left: 5px;
 	background: #eee;
@@ -96,28 +97,40 @@ table.databox,   table.databox_color {
 }
 
 table.listing {
+	margin-left: 15px;
 	padding-top: 5px;
 	padding-left: 5px;
 	background: #fff;
 	border-top: 2px solid #2179B1;
 	border-bottom: 1px solid #2179B1;
 	border-collapse: collapse;
+	text-align: left;
+}
+
+table.button {
+	margin-left: 15px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 5px;
+	border-top: 2px solid #2179B1;
+	border-bottom: 2px solid #2179B1;
+	background: #eee;
 }
 
 table.listing tr:hover {
 	background: #E8E8E8;
 }
 
-table.listing td:hover {
-	background: #DCDCDC;
+tr.yellow {
+	background: #FFFCA0;
 }
 
-table.button {
-	padding-top: 5px;
-	padding-left: 5px;
-	border-top: 2px solid #2179B1;
-	border-bottom: 2px solid #2179B1;
-	background: #eee;
+tr.red {
+	background: #FFDAD3;
+}
+
+tr.green {
+	background: #DAFFCC;
 }
 
 ul, ol {
@@ -193,7 +206,8 @@ input.button {
 	background: #FFF;
 	padding: 2px 3px;
 	color: #333;
-	margin: 5px 10px;
+	margin-left: 0px;
+	padding-left: 0px;
 }
 select {
 	padding: 0px;
@@ -522,17 +536,15 @@ input.sub {
 	-moz-border-radius: 5%;
 	font-size: 0.85em;
 	font-weight: bold;
-	margin: 10px 15px;
+	margin: 5px 5px;
 	height: 22px;
 }
 
 input.next {
-	margin: 10px 15px;
 	padding-right: 15px;
 	background: #e5e5e5 url(../../images/go.png) no-repeat right 2px;
 }
 input.upd {
-	margin: 10px 15px;
 	padding-right: 20px;
 	background: #e5e5e5 url(../../images/upd.png) no-repeat right 5px;
 }
@@ -544,6 +556,16 @@ input.create {
 input.search {
 	padding-right: 20px;
 	background: #e5e5e5 url(../../images/zoom.png) no-repeat right 3px;
+}
+
+input.inventory {
+	padding-right: 20px;
+	background: #e5e5e5 url(../../images/bricks.png) no-repeat right 3px;
+}
+
+input.people {
+	padding-right: 20px;
+	background: #e5e5e5 url(../../images/group.png) no-repeat right 3px;
 }
 
 td {
@@ -570,7 +592,7 @@ th {
 }
 
 .f9, .f9i, .f9b, td.f9, td.f9i, td.datosf9, td.datos2f9,
-td.datosf9i, td.datos2f9i, .datos_yellowf9, .datos_greenf9, .datos_redf9   {
+td.datosf9i, td.datos2f9i {
 	font-size: 9px;
 }
 
@@ -785,6 +807,18 @@ span.users, span.agents, span.data, span.alerts, span.time {
 	background-image:url(../../images/leftnav_bg_uncollapsible.gif);
 }
 
+h3.admin {
+	background-color: #12496B;
+}
+
+h3.info {
+	background-color: #80BEE6;
+}
+
+h3.system {
+	background-color: #606060;
+}
+
 .notetitle {
 	border:1px solid #aaaaaa;
 	padding: 7px 10px 7px 10px;
@@ -852,6 +886,19 @@ div#foot a:hover{
 	text-align: right;
 }
 
+div.pager {
+	margin-left: 10px;
+	margin-top: 5px;
+}
+
+div.pager img{
+	padding-left: 5px;
+}
+
+div.pager input {
+    padding-left: 5px;
+}
+
 .image-button, .result_table tr, .pager img {
 	cursor: pointer;
 }
@@ -886,7 +933,13 @@ div#foot a:hover{
 	width: 16px;
 }
 
+/*
 #incident_inventories, #text-search_string, textarea {
+	width: 100%;
+}
+*/
+
+#incident_inventories, textarea {
 	width: 100%;
 }
 

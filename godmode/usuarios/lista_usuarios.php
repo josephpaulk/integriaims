@@ -44,7 +44,7 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 <h2><?php echo $lang_label["user_management"] ?></h2>
 <h3><?php echo $lang_label["users"] ?></h3>
  
-<table cellpadding=3 cellspacing=3 width=550 class='databox'>
+<table width=550 class='listing'>
 <th class="w80"><?php echo $lang_label["user_ID"]?>
 <th><?php echo $lang_label["last_contact"]?>
 <th><?php echo $lang_label["profile"]?>
@@ -97,8 +97,11 @@ while ($rowdup=mysql_fetch_array($resq1)){
 }
 echo "</table>";
 
+echo "<table width=550 class='button'>";
+echo "<tr><td align=right>";
 echo "<form method=post action='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>";
 echo "<input type='submit' class='sub create' name='crt' value='".$lang_label["create_user"]."'>";
 echo "</form>";
+echo "</table>";
 
 ?>

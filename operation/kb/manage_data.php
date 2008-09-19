@@ -1,8 +1,9 @@
 <?php
-// Integria 1.1 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -11,6 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 	global $config;
 	
@@ -51,7 +53,7 @@
 	if (isset($_GET["delete_attach"])){
 		$id_attachment = get_parameter ("delete_attach", 0);
 		$id_kb = get_parameter ("update", 0);
-		$attach_row = give_db_row ("tattachment", "id_attachment", $id_attachment);
+		$attach_row = get_db_row ("tattachment", "id_attachment", $id_attachment);
 		$nombre_archivo = $config["homedir"]."attachment/".$id_attachment."_".$attach_row["filename"];	
 		$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
 		mysql_query($sql);
@@ -118,7 +120,7 @@
     // ==================
 	if (isset($_GET["delete_data"])){ // if delete
         $id = get_parameter ("delete_data",0);
-		$kb_title = give_db_sqlfree_field  ("SELECT title FROM tkb_data WHERE id = $id ");
+		$kb_title = get_db_sqlfree_field  ("SELECT title FROM tkb_data WHERE id = $id ");
 
 		$sql_delete= "DELETE FROM tkb_data WHERE id = $id";		
 		$result=mysql_query($sql_delete);
@@ -150,7 +152,7 @@
             $id_category = 0;    
         } else {
             $id = get_parameter ("update",-1);
-            $row = give_db_row ("tkb_data", "id", $id);
+            $row = get_db_row ("tkb_data", "id", $id);
             $data = $row["data"];
             $title = $row["title"];
             $id_product = $row["id_product"];
@@ -168,7 +170,7 @@
             echo "<input type=hidden name=id value='$id'>";
         }
         
-        echo "<table cellpadding=4 cellspacing=4 width=700 class='databox'>";
+        echo "<table width=700 class='databox'>";
         echo "<tr>";
         echo "<td class=datos>";
         echo lang_string ("Title");
@@ -209,7 +211,7 @@
         combo_kb_categories ($id_category);
 
         echo "</table>";
-        echo "<table cellpadding=4 cellspacing=4 width=720>";
+        echo "<table width=700 class='button'>";
         echo "<tr>";
         echo "<td align=right>";
         if ($id == -1)
@@ -224,28 +226,19 @@
     	$result = mysql_query($sql1);
 		if (mysql_num_rows($result) > 0){
 			echo "<h3>".lang_string("Attachment list")."</h3>";
-			echo "<table cellpadding=4 cellspacing=4 class=databox width=500>";		
-			$color=0;
+			echo "<table class=databox width=500>";		
 	     	while ($row=mysql_fetch_array($result)){
-				if ($color == 1){
-			        $tdcolor = "datos";
-			        $color = 0;
-			        }
-		        else {
-			        $tdcolor = "datos2";
-			        $color = 1;
-		        }
 				echo "<tr>";
-				echo "<td class=$tdcolor>";
+				echo "<td>";
 				echo "<img src='images/disk.png'>&nbsp;";
 				$attach_id = $row["id_attachment"];
 				$filelink= $config["homedir"]."attachment/".$row["id_attachment"]."_".$row["filename"];
 				echo "<a href='$filelink'>";
 				echo $row["filename"];
 				echo "</A>";
-				echo "<td class=$tdcolor>";
+				echo "<td>";
 				echo $row["description"];
-				echo "<td class=$tdcolor>";
+				echo "<td>";
 				echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=$id&delete_attach=$attach_id'><img border=0 src='images/cross.png'></A>";
 			}
 			echo "</table>";
@@ -261,9 +254,8 @@
         echo "<h2>".lang_string ("KB Data management")."</h2>";	
     	echo "<h3>".lang_string ("Defined data")."</a></h3>";
 	    $sql1='SELECT * FROM tkb_data ORDER BY title, id_category, id_product';
-        $color =0;
 	    if ($result=mysql_query($sql1)){
-            echo "<table cellpadding=4 cellspacing=4 width=800 class='databox'>";
+            echo "<table cellpadding=4 cellspacing=4 width=820 class='listing'>";
 
 	        echo "<th>".lang_string ("Title")."</th>";
 	        echo "<th>".lang_string ("Timestamp")."</th>";
@@ -273,41 +265,33 @@
 	        echo "<th>".lang_string ("User")."</th>";
 	        echo "<th>".lang_string ("Delete")."</th>";
 	        while ($row=mysql_fetch_array($result)){
-		        if ($color == 1){
-			        $tdcolor = "datos";
-			        $color = 0;
-			        }
-		        else {
-			        $tdcolor = "datos2";
-			        $color = 1;
-		        }
 		        echo "<tr>";
                 // Name
-                echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$row["id"]."'>".$row["title"]."</a></b></td>";
+                echo "<td valign='top'><b><a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$row["id"]."'>".$row["title"]."</a></b></td>";
 
                 // Timestamp
-                echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
+                echo "<td class='f9'  valign='top'>";
                 echo $row["timestamp"];
 
                 // Category
-                echo "<td class='".$tdcolor."' align='center'>";
-                echo give_db_sqlfree_field ("SELECT name FROM tkb_category WHERE id = ".$row["id_category"]);
+                echo "<td>";
+                echo get_db_sql ("SELECT name FROM tkb_category WHERE id = ".$row["id_category"]);
     
                 // Product
-                echo "<td class='".$tdcolor."' align='center'>";
-                echo give_db_sqlfree_field ("SELECT name FROM tkb_product WHERE id = ".$row["id_product"]);
+                echo "<td>";
+                echo get_db_sql ("SELECT name FROM tkb_product WHERE id = ".$row["id_product"]);
     
                 // Attach ?
-                echo "<td class='".$tdcolor."' align='center'>";
-                if (give_db_sqlfree_field ("SELECT count(*) FROM tattachment WHERE id_kb = ".$row["id"]) != 0)
+                echo "<td>";
+                if (get_db_sql ("SELECT count(*) FROM tattachment WHERE id_kb = ".$row["id"]) != 0)
                     echo "<img src='images/disk.png'>";
 
                 // User
-                echo "<td class='".$tdcolor."f9' align='center'>";
+                echo "<td class='f9' align='center'>";
                 echo $row["id_user"];
 
                 // Delete
-                echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
+                echo "<td class='f9' align='center' valign='top'>";
                 echo "<a href='index.php?sec=kb&
 				            sec2=operation/kb/manage_data&
 				            delete_data=".$row["id"]."' 
@@ -317,7 +301,7 @@
             }
             echo "</table>";
         }			
-        echo "<table cellpadding=4 cellspacing=4 width=820>";
+        echo "<table width=820 class='button'>";
 	    echo "<tr><td align='right'>";
 	    echo "<form method=post action='index.php?sec=kb&
 	    sec2=operation/kb/manage_data&create=1'>";

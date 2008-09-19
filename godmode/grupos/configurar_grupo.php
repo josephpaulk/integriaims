@@ -42,7 +42,7 @@
         echo "<h3>".$lang_label["update_group"]."</h3>";
     }
 	
-    echo '<table width="450" cellpadding=4 cellspacing=4 class="databox"><form name="grupo" method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
+    echo '<table width="450" class="databox"><form name="grupo" method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 
 	if ($creacion_grupo == 1)
 		echo "<input type='hidden' name='crear_grupo' value='1'>";
@@ -69,7 +69,10 @@
 		echo "<option>".substr($ficheros[$i],0,strlen($ficheros[$i])-4);
 	}
 	echo '</select>';
-    echo '<tr><td colspan="3" align="right">';
+	echo "</table>";
+
+	echo "<table class='button' width='450'>";
+    echo '<tr><td align="right">';
     if (isset($_GET["creacion_grupo"])){
 	    echo "<input name='crtbutton' type='submit' class='sub' 
 	    value='".$lang_label["create"]."'>";

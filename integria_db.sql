@@ -1,7 +1,8 @@
--- Integria 1.1 - http://integria.sourceforge.net
+-- INTEGRIA - the ITIL Management System
+-- http://integria.sourceforge.net
 -- ==================================================
--- Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
--- Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+-- Copyright (c) 2008 Ártica Soluciones Tecnológicas
+-- http://www.artica.es  <info@artica.es>
 
 -- This program is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU General Public License
@@ -42,6 +43,9 @@ CREATE TABLE `tgrupo` (
   `id_grupo` mediumint(8) unsigned NOT NULL auto_increment,
   `nombre` varchar(100) NOT NULL default '',
   `icon` varchar(50) default NULL,
+  `banner` varchar(150) default NULL,
+  `url` varchar(150) default NULL,
+  `lang` varchar(10) default NULL,
   `parent` tinyint(4) NOT NULL default '-1',
   PRIMARY KEY  (`id_grupo`)
 );
@@ -142,7 +146,6 @@ CREATE TABLE `tsesion` (
   PRIMARY KEY  (`ID_sesion`)
 );
 
-
 --
 -- Table structure for table `tusuario`
 --
@@ -157,6 +160,7 @@ CREATE TABLE `tusuario` (
   `telefono` varchar(100) default '',
   `nivel` tinyint(1) NOT NULL default '0',
   `avatar` varchar(100) default 'people_1',
+  `lang` varchar(10) default '',
    PRIMARY KEY  (`id_usuario`)
 );
 
@@ -471,24 +475,17 @@ CREATE TABLE `tcontract` (
   `date_end` date NOT NULL default '0000-00-00',
   `id_company` mediumint(8) unsigned NOT NULL DEFAULT 0,
   `id_sla` mediumint(8) unsigned NOT NULL DEFAULT 0,
+  `id_group` mediumint(8) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_sla`) REFERENCES tsla_specific(`id`)
+  FOREIGN KEY (`id_sla`) REFERENCES tsla(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
      ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE `tsla_base` (
-  `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) NULL default NULL,
-  `min_response` int(11) NULL default NULL,
-  `max_response` int(11) NULL default NULL,
-  `max_incidents` int(11) NULL default NULL,
-  PRIMARY KEY  (`id`)
-);
-
-CREATE TABLE `tsla_specific` (
+CREATE TABLE `tsla` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   `description` varchar(250) NULL default NULL,
@@ -504,8 +501,6 @@ CREATE TABLE `tmanufacturer` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   `address` varchar(250) NULL default NULL,
-  `fiscal_information` varchar(250) NULL default NULL,
-  `id_company` mediumint(8) unsigned NOT NULL,
   `comments` varchar(250) NULL default NULL,
   `id_company_role` mediumint(8) unsigned NOT NULL,
   `id_sla` mediumint(8) unsigned NOT NULL,
@@ -534,7 +529,7 @@ CREATE TABLE `tinventory` (
      ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_product`) REFERENCES tkb_product(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_sla`) REFERENCES tsla_specific(`id`)
+  FOREIGN KEY (`id_sla`) REFERENCES tsla (`id`)
      ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_manufacturer`) REFERENCES tmanufacturer(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE,
@@ -557,3 +552,8 @@ CREATE TABLE `tincident_inventory` (
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE `twizard` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+);

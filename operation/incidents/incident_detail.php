@@ -360,8 +360,8 @@ if ($id) {
 
 echo '<div id="result">'.$result_msg.'</div>';
 
-$table->width = "97%";
-$table->class = "databox_color";
+$table->width = "95%";
+$table->class = "databox";
 $table->id = "incident-editor";
 $table->size = array ();
 $table->size[0] = '20%';
@@ -420,8 +420,7 @@ if ($has_permission) {
 	if ($default_responsable != "") {
 		$disabled = true;
 	}
-	$table->data[2][1] = print_button (dame_nombre_real ($usuario), 'usuario_name',
-					$disabled, '', '', true);
+	$table->data[2][1] = print_button (dame_nombre_real ($usuario), 'usuario_name', $disabled, '', '', true);
 	$table->data[2][1] .= print_input_hidden ('usuario_form', $usuario, true);
 	$table->data[2][1] .= print_help_tip (lang_string ('incident_user_help'), true);
 } else {
@@ -489,7 +488,8 @@ echo "<form id='incident_status_form' method='POST' action='index.php?sec=incide
 
 print_table ($table);
 
-echo '<div class="action-buttons" style="width: '.$table->width.'">';
+echo "<table width=95% class='button'>";
+echo '<tr><td align=right>';
 if ($create_incident) {
 	print_input_hidden ('action', 'insert');
 	if (give_acl ($config["id_user"], 0, "IW")) {
@@ -503,7 +503,7 @@ if ($create_incident) {
 	}
 }
 
-echo '</div>';
+echo '</td></tr></table>';
 echo "</form>";
 
 /* Javascript is only shown in normal mode */

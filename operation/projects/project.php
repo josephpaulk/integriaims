@@ -1,9 +1,9 @@
 <?php
-
-// Integria 1.1 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -12,6 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 global $REMOTE_ADDR;
 global $config;
@@ -146,16 +147,15 @@ echo "<h2>".$lang_label["project_management"]."</h2>";
 // -------------
 // Show headers
 // -------------
-echo "<table width='750' class='databox' cellpadding=4 cellspacing=4>";
+echo "<table width='750' class='listing'>";
 echo "<tr>";
 echo "<th>".$lang_label["name"];
 echo "<th>".$lang_label["completion"];
 echo "<th>".lang_string ("Task / People");
 echo "<th>".$lang_label["time_used"];
 echo "<th>".lang_string ("Cost");
-echo "<th width=82>".$lang_label["updated_at"];
+echo "<th>".$lang_label["updated_at"];
 echo "<th>".$lang_label["delete"];
-$color = 1;
 
 // -------------
 // Show DATA TABLE
@@ -167,23 +167,15 @@ $sql2="SELECT * FROM tproject WHERE disabled = $view_disabled ORDER by name";
 if ($result2=mysql_query($sql2))	
 while ($row2=mysql_fetch_array($result2)){
 	if (give_acl($config["id_user"], 0, "PR") ==1){
-		if ($color == 1){
-			$tdcolor = "datos";
-			$color = 0;
-		}
-		else {
-			$tdcolor = "datos2";
-			$color = 1;
-		}
-			
 		if (user_belong_project ($id_user, $row2["id"]) != 0){	
 			echo "<tr>";
 
 			// Project name
-			echo "<td class='$tdcolor' align='left' >";
+			echo "<td align='left' >";
 			echo "<b><a href='index.php?sec=projects&sec2=operation/projects/task&id_project=".$row2["id"]."'>".$row2["name"]."</a></b></td>";
-			// Completion
-			echo "<td class='$tdcolor' align='center'>";
+
+			// Progress
+			echo "<td >";
 			if ($row2["start"] == $row2["end"]){
 				echo "<img src='images/comments.png'> ";
 				echo lang_string ("Unlimited");
@@ -193,24 +185,24 @@ while ($row2=mysql_fetch_array($result2)){
 			}
 				
             // Total task / People
-            echo "<td class='$tdcolor' align='center'>";
+            echo "<td >";
             echo give_db_sqlfree_field ("SELECT COUNT(*) FROM ttask WHERE id_project = ".$row2["id"]);
             echo " / ";
             echo give_db_sqlfree_field ("SELECT COUNT(*) FROM trole_people_project WHERE id_project = ".$row2["id"]);
 
 			// Time wasted
-			echo "<td class='".$tdcolor."f9' align='center'>";
+			echo "<td class='f9' >";
 			echo format_numeric(give_hours_project ($row2["id"])). " hr";
             
             // Costs (client / total)
-            echo "<td class='".$tdcolor."f9' align='center'>";
+            echo "<td class='f9' >";
             echo format_numeric (project_workunit_cost ($row2["id"], 1));
             echo $config["currency"];
             //echo " / ";
             //echo format_numeric (project_workunit_cost ($row2["id"], 0));
 
-	    // Last update time
-	    echo "<td class='".$tdcolor."f9' align='center'>";
+	    	// Last update time
+	    	echo "<td class='f9' >";
             $timestamp = give_db_sqlfree_field ( "SELECT tworkunit.timestamp FROM ttask, tworkunit_task, tworkunit WHERE ttask.id_project =  ".$row2["id"]." AND ttask.id = tworkunit_task.id_task AND tworkunit_task.id_workunit = tworkunit.id ORDER BY tworkunit.timestamp DESC LIMIT 1");
             if ($timestamp != "")
                 echo human_time_comparation ( $timestamp );
@@ -220,14 +212,13 @@ while ($row2=mysql_fetch_array($result2)){
 		// Delete	
 		if ((give_acl($config["id_user"], 0, "PW") ==1) OR ($config["id_user"] == $row2["id_owner"] )) {
             if ($view_disabled == 0)
-			     echo "<td class='$tdcolor' align='center'><a href='index.php?sec=projects&sec2=operation/projects/project&quick_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
+			     echo "<td><a href='index.php?sec=projects&sec2=operation/projects/project&quick_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
             else {
-                echo "<td class='$tdcolor' align='center'><a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&real_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a> &nbsp;";
+                echo "<td '><a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&real_delete=".$row2["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a> &nbsp;";
                 echo "<a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate=".$row2["id"]."' ><img src='images/play.gif' border='0'></a></td>";
            } 
 		} else
-			echo "<td class='$tdcolor' align='center'>";
-		
+			echo "<td></td>";
 		}
 	}
 }
@@ -235,9 +226,12 @@ echo "</table>";
 
 
 if (give_acl($config["id_user"], 0, "PM")==1) {
+	echo "<table width=750 class='button'>";
+	echo "<tr><td align=right>";
 	echo "<form name='boton' method='POST'  action='index.php?sec=projects&sec2=operation/projects/project_detail&insert_form'>";
 	echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_project"]."'>";
 	echo "</form>";
+	echo "</td></tr></table>";
 }
 
 

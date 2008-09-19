@@ -1,9 +1,10 @@
 <?php
 
-// Integria 1.0 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -12,7 +13,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-
 // Load global vars
 
 global $config;
@@ -30,6 +30,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 	$telefono = "";
 	$password = "";
 	$id_usuario_mio = "";
+	$lang = "";
 	$nombre_real = "";
 	$nivel = 0;
 	// Default is create mode (creacion)
@@ -62,6 +63,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 			$nivel =$rowdup["nivel"]; 
 			$nombre_real=$rowdup["nombre_real"];
 			$avatar = $rowdup["avatar"];
+			$lang = $rowdup["lang"];
 		}
 	}
 	}
@@ -76,51 +78,54 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 			$nombre_viejo = give_parameter_post ("id_usuario_antiguo");
 			$password = give_parameter_post ("pass1");
 			$password2 = give_parameter_post ("pass2");
+			$lang = give_parameter_post ("lang");
+
 			if ($password <> $password2){
 				echo "<h3 class='error'>".lang_string ('pass_nomatch')."</h3>";
 			}
 			else {
-			if (isset($_POST["nivel"]))
-			$nivel = give_parameter_post ("nivel");
-			$direccion = give_parameter_post ("direccion");
-			$telefono = give_parameter_post ("telefono");
-			$comentarios = give_parameter_post ("comentarios");
-			$avatar = give_parameter_post ("avatar");
-			
-			if (dame_password($nombre_viejo)!=$password){
-				$password=md5($password);
-				$sql = "UPDATE tusuario SET nombre_real ='".$nombre_real."', id_usuario ='".$nombre."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar' WHERE id_usuario = '$nombre_viejo'";
-			}
-			else 	
-				$sql = "UPDATE tusuario SET nombre_real ='".$nombre_real."', id_usuario ='".$nombre."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar' WHERE id_usuario = '".$nombre_viejo."'";
-			$resq2=mysql_query($sql);
-
-			// Add group / to profile
-			// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-			if (isset($_POST["grupo"]))
-				if ($_POST["grupo"] <> ""){
-					$grupo = $_POST["grupo"];
-					$perfil = $_POST["perfil"];
-					$id_usuario_edit = $_SESSION["id_usuario"];
-					$sql = "INSERT INTO tusuario_perfil (id_usuario,id_perfil,id_grupo,assigned_by) VALUES ('".$nombre."',$perfil,$grupo,'".$id_usuario_edit."')";
-					// echo "DEBUG:".$sql;
-					$resq2=mysql_query($sql);
+				if (isset($_POST["nivel"]))
+				$nivel = give_parameter_post ("nivel");
+				$direccion = give_parameter_post ("direccion");
+				$telefono = give_parameter_post ("telefono");
+				$comentarios = give_parameter_post ("comentarios");
+				$avatar = give_parameter_post ("avatar");
+				
+				if (dame_password($nombre_viejo)!=$password){
+					$password=md5($password);
+					$sql = "UPDATE tusuario SET `lang` = '$lang', nombre_real ='".$nombre_real."', id_usuario ='".$nombre."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar' WHERE id_usuario = '$nombre_viejo'";
 				}
-			
-			$query1="SELECT * FROM tusuario WHERE id_usuario = '".$nombre."'";
-			$id_usuario_mio = $nombre;
-			$resq1 = mysql_query($query1);
-			$rowdup = mysql_fetch_array($resq1);
-			$password = $rowdup["password"];
-			$comentarios = $rowdup["comentarios"];
-			$direccion = $rowdup["direccion"];
-			$telefono = $rowdup["telefono"]; 
-			$nivel = $rowdup["nivel"];
-			$nombre_real = $rowdup["nombre_real"];
-			$avatar = $rowdup ["avatar"];
-			$modo = "edicion";
-			echo "<h3 class='suc'>".lang_string ('update_user_ok')."</h3>";
-		}
+				else 	
+					$sql = "UPDATE tusuario SET lang = '$lang', nombre_real ='".$nombre_real."', id_usuario ='".$nombre."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar' WHERE id_usuario = '".$nombre_viejo."'";
+				$resq2=mysql_query($sql);
+	
+				// Add group / to profile
+				// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+				if (isset($_POST["grupo"]))
+					if ($_POST["grupo"] <> ""){
+						$grupo = $_POST["grupo"];
+						$perfil = $_POST["perfil"];
+						$id_usuario_edit = $_SESSION["id_usuario"];
+						$sql = "INSERT INTO tusuario_perfil (id_usuario,id_perfil,id_grupo,assigned_by) VALUES ('".$nombre."',$perfil,$grupo,'".$id_usuario_edit."')";
+						// echo "DEBUG:".$sql;
+						$resq2=mysql_query($sql);
+					}
+				
+				$query1="SELECT * FROM tusuario WHERE id_usuario = '".$nombre."'";
+				$id_usuario_mio = $nombre;
+				$resq1 = mysql_query($query1);
+				$rowdup = mysql_fetch_array($resq1);
+				$password = $rowdup["password"];
+				$comentarios = $rowdup["comentarios"];
+				$direccion = $rowdup["direccion"];
+				$telefono = $rowdup["telefono"]; 
+				$nivel = $rowdup["nivel"];
+				$nombre_real = $rowdup["nombre_real"];
+				$avatar = $rowdup ["avatar"];
+				$lang = $rowdup ["lang"];
+				$modo = "edicion";
+				echo "<h3 class='suc'>".lang_string ('update_user_ok')."</h3>";
+			}
 		}
 		else {
 			echo "<h3 class='error'>".lang_string ('update_user_no')."</h3>";
@@ -135,6 +140,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 		$password = give_parameter_post ("pass1");
 		$password2 = give_parameter_post ("pass2");
 		$nombre_real = give_parameter_post ("nombre_real");
+		$lang = give_parameter_post ("lang");
 		if ($password <> $password2){
 			echo "<h3 class='error'>".lang_string ('pass_nomatch')."</h3>";
 		}
@@ -147,7 +153,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 		$avatar = give_parameter_post ("avatar");
 		
 		$ahora = date("Y/m/d H:i:s");
-		$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real,avatar) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','$avatar')";
+		$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real,avatar, lang) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','$avatar','$lang')";
 		$resq1 = mysql_query($sql_insert);
 			if (! $resq1)
 				echo "<h3 class='error'>".lang_string ('create_user_no')."</h3>";
@@ -168,7 +174,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 	}
 
 ?> 
-<table width='600' cellpadding='3' cellspacing='3' class='databox_color'>
+<table width='620'  class='databox'>
 <?php 
 if (isset($_GET["alta"]))
 	// Create URL
@@ -211,6 +217,7 @@ while (isset($ficheros[$a])){
 	$a++;
 }
 echo '</select>';
+
 ?>
 
 <tr><td class="datos"><?php echo lang_string ('telefono') ?>
@@ -227,7 +234,17 @@ echo '</select>';
 	echo "&nbsp;&nbsp;";
 	echo lang_string ('normal_user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0" checked><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg2"].'</span></a>';
 }
-?>		
+
+echo "&nbsp;";
+echo lang_string("Language");
+echo "&nbsp;";
+print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', '', false, false, true, false);
+
+?>
+
+
+
+
 <tr><td class="datos" colspan="3"><?php echo lang_string ('comments') ?>
 <tr><td class="datos2" colspan="3"><textarea name="comentarios" cols="75" rows="3"><?php echo $comentarios ?></textarea>
 

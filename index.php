@@ -190,6 +190,14 @@ if ( (! isset ($_SESSION['id_usuario'])) AND (isset ($_GET["login"]))) {
 	$config["id_user"] = $_SESSION['id_usuario'];
 }
 
+// User language load
+if (isset($config["id_user"])){
+	$user_lang = get_db_sql ("SELECT lang FROM tusuario WHERE id_usuario = '".$config["id_user"]."'");
+	$config["language_code"] = $user_lang;
+}
+	
+
+
 // Log off
 if (isset ($_GET["bye"])) {
 	echo '</head>';

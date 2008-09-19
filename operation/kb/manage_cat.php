@@ -1,8 +1,9 @@
 <?php
-// Integria 1.1 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -11,6 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 global $config;
 
@@ -94,7 +96,7 @@ $id_user = $config["id_user"];
             $parent = -1;
         } else {
             $id = get_parameter ("update",-1);
-            $row = give_db_row ("tkb_category", "id", $id);
+            $row = get_db_row ("tkb_category", "id", $id);
             $description = $row["description"];
             $name = $row["name"];
             $icon = $row["icon"];
@@ -169,9 +171,9 @@ $id_user = $config["id_user"];
 	    $sql1='SELECT * FROM tkb_category ORDER BY parent, name';
         $color =0;
 	    if ($result=mysql_query($sql1)){
-            echo "<table cellpadding=4 cellspacing=4 width=850 class='databox'>";
+            echo "<table width=740 class='listing'>";
 	        echo "<th>".lang_string ("icon")."</th>";
-	        echo "<th>".lang_string ("Name")."</th>";
+			echo "<th>".lang_string ("Name")."</th>";
 	        echo "<th>".lang_string ("parent")."</th>";
 	        echo "<th>".lang_string ("Description")."</th>";
 	        echo "<th>".lang_string ("Items")."</th>";
@@ -194,7 +196,7 @@ $id_user = $config["id_user"];
                 echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=kb&
 				        sec2=operation/kb/manage_cat&update=".$row["id"]."'>".$row["name"]."</a></b></td>";
                 // Parent
-                echo "<td class='".$tdcolor."f9' align='center' valign='top'>".give_db_sqlfree_field ("SELECT name FROM tkb_category WHERE id = ".$row["parent"]);
+                echo "<td class='".$tdcolor."f9' align='center' valign='top'>".get_db_sql ("SELECT name FROM tkb_category WHERE id = ".$row["parent"]);
 
                 // Descripcion
                 echo "<td class='".$tdcolor."f9' align='left' valign='top'>";
@@ -205,7 +207,7 @@ $id_user = $config["id_user"];
 
                 // Items
                 echo "<td class='".$tdcolor."f9' align='center'>";
-                echo give_db_sqlfree_field ("SELECT COUNT(id) FROM tkb_data WHERE id_category = ".$row["id"]);
+                echo get_db_sql ("SELECT COUNT(id) FROM tkb_data WHERE id_category = ".$row["id"]);
 
                 // Delete
                 echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
@@ -218,7 +220,7 @@ $id_user = $config["id_user"];
             }
             echo "</table>";
         }			
-        echo "<table cellpadding=4 cellspacing=4 width=850>";
+        echo "<table width=740 class='button'>";
 	    echo "<tr><td align='right'>";
 	    echo "<form method=post action='index.php?sec=kb&
 	    sec2=operation/kb/manage_cat&create=1'>";

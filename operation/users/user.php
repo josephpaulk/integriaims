@@ -1,9 +1,10 @@
 <?php
 
-// Integria 1.1 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -26,7 +27,7 @@ $id_user =$_SESSION["id_usuario"];
 
 echo "<h2>".lang_string ('users_')."</h2>";
 
-echo '<table cellpadding="4" cellspacing="4" width="780" class="databox_color">';
+echo '<table width="90%" class="listing">';
 echo "<th>".lang_string ('user_ID');
 echo "<th>".lang_string ('last_contact');
 echo "<th>".lang_string ('profile');
@@ -76,111 +77,99 @@ while ($rowdup=mysql_fetch_array($resq1)){
 }
 
 echo "</table>";
-?>
 
+echo "<h3>".lang_string ('definedprofiles')."</h3>";
+echo '<table width="90%" class="listing">';
 
-<h3><?php echo lang_string ('definedprofiles') ?><a href='help/<?php echo $help_code ?>/chap2.php#21' target='_help' class='help'>&nbsp;<span><?php echo lang_string ('help') ?></span></a></h3>
+$query_del1="SELECT * FROM tprofile";
+$resq1=mysql_query($query_del1);
+echo "<tr>";
 
-<table cellpadding=3 cellspacing=3 border=0 class='databox_color'>
-<?php
+echo "<th width='180px'><font size=1>".lang_string ('profiles');
+echo "<th width='40px'><font size=1>IR<a href='#' class='tipp'>&nbsp;<span>".$help_label["IR"]."</span></a>";
+echo "<th width='40px'><font size=1>IW<a href='#' class='tipp'>&nbsp;<span>".$help_label["IW"]."</span></a>";
+echo "<th width='40px'><font size=1>IM<a href='#' class='tipp'>&nbsp;<span>".$help_label["IM"]."</span></a>";
 
-	$query_del1="SELECT * FROM tprofile";
-	$resq1=mysql_query($query_del1);
-	echo "<tr>";
-  
-	echo "<th width='180px'><font size=1>".lang_string ('profiles');
-	echo "<th width='40px'><font size=1>IR<a href='#' class='tipp'>&nbsp;<span>".$help_label["IR"]."</span></a>";
-	echo "<th width='40px'><font size=1>IW<a href='#' class='tipp'>&nbsp;<span>".$help_label["IW"]."</span></a>";
-	echo "<th width='40px'><font size=1>IM<a href='#' class='tipp'>&nbsp;<span>".$help_label["IM"]."</span></a>";
+echo "<th width='40px'><font size=1>UM<a href='#' class='tipp'>&nbsp;<span>".$help_label["UM"]."</span></a>";
+echo "<th width='40px'><font size=1>DM<a href='#' class='tipp'>&nbsp;<span>".$help_label["DM"]."</span></a>";
+echo "<th width='40px'><font size=1>FM<a href='#' class='tipp'>&nbsp;<span>".$help_label["FM"]."</span></a>";
+
+echo "<th width='40px'><font size=1>AR<a href='#' class='tipp'>&nbsp;<span>".$help_label["AR"]."</span></a>";
+echo "<th width='40px'><font size=1>AW<a href='#' class='tipp'>&nbsp;<span>".$help_label["AW"]."</span></a>";
+echo "<th width='40px'><font size=1>AM<a href='#' class='tipp'>&nbsp;<span>".$help_label["AM"]."</span></a>";
+
+echo "<th width='40px'><font size=1>PR<a href='#' class='tipp'>&nbsp;<span>".$help_label["PR"]."</span></a>";
+echo "<th width='40px'><font size=1>PW<a href='#' class='tipp'>&nbsp;<span>".$help_label["PW"]."</span></a>";
+echo "<th width='40px'><font size=1>PM<a href='#' class='tipp'>&nbsp;<span>".$help_label["PM"]."</span></a>";
+
+echo "<th width='40px'><font size=1>TW<a href='#' class='tipp'>&nbsp;<span>".$help_label["TW"]."</span></a>";
+echo "<th width='40px'><font size=1>TM<a href='#' class='tipp'>&nbsp;<span>".$help_label["TM"]."</span></a>";
+
+while ($rowdup=mysql_fetch_array($resq1)){
+	$id_perfil = $rowdup["id"];
+	$nombre=$rowdup["name"];
 	
-	echo "<th width='40px'><font size=1>UM<a href='#' class='tipp'>&nbsp;<span>".$help_label["UM"]."</span></a>";
-	echo "<th width='40px'><font size=1>DM<a href='#' class='tipp'>&nbsp;<span>".$help_label["DM"]."</span></a>";
-	echo "<th width='40px'><font size=1>FM<a href='#' class='tipp'>&nbsp;<span>".$help_label["FM"]."</span></a>";
+	$ir = $rowdup["ir"];
+	$iw = $rowdup["iw"];
+	$im = $rowdup["im"];
 
-	echo "<th width='40px'><font size=1>AR<a href='#' class='tipp'>&nbsp;<span>".$help_label["AR"]."</span></a>";
-	echo "<th width='40px'><font size=1>AW<a href='#' class='tipp'>&nbsp;<span>".$help_label["AW"]."</span></a>";
-	echo "<th width='40px'><font size=1>AM<a href='#' class='tipp'>&nbsp;<span>".$help_label["AM"]."</span></a>";
+	$um = $rowdup["um"];
+	$dm = $rowdup["dm"];
+	$fm = $rowdup["fm"];
 
-	echo "<th width='40px'><font size=1>PR<a href='#' class='tipp'>&nbsp;<span>".$help_label["PR"]."</span></a>";
-	echo "<th width='40px'><font size=1>PW<a href='#' class='tipp'>&nbsp;<span>".$help_label["PW"]."</span></a>";
-	echo "<th width='40px'><font size=1>PM<a href='#' class='tipp'>&nbsp;<span>".$help_label["PM"]."</span></a>";
+	$ar = $rowdup["ar"];
+	$aw = $rowdup["aw"];
+	$am = $rowdup["am"];
 
-	echo "<th width='40px'><font size=1>TW<a href='#' class='tipp'>&nbsp;<span>".$help_label["TW"]."</span></a>";
-	echo "<th width='40px'><font size=1>TM<a href='#' class='tipp'>&nbsp;<span>".$help_label["TM"]."</span></a>";
-	$color = 1;
-	while ($rowdup=mysql_fetch_array($resq1)){
-		if ($color == 1){
-			$tdcolor = "datos";
-			$color = 0;
-		}
-		else {
-			$tdcolor = "datos2";
-			$color = 1;
-		}
-		$id_perfil = $rowdup["id"];
-		$nombre=$rowdup["name"];
+	$pr = $rowdup["pr"];
+	$pw = $rowdup["pw"];
+	$tw = $rowdup["tw"];
+	$tm = $rowdup["tm"];
+	$pm = $rowdup["pm"];
+	echo "<tr><td class='$tdcolor"."_id'>".$nombre;
+	
+	echo "<td class='$tdcolor'>";
+	if ($ir == 1) echo "<img src='images/ok.png' border=0>";
 		
-		$ir = $rowdup["ir"];
-		$iw = $rowdup["iw"];
-		$im = $rowdup["im"];
-
-		$um = $rowdup["um"];
-		$dm = $rowdup["dm"];
-		$fm = $rowdup["fm"];
-
-		$ar = $rowdup["ar"];
-		$aw = $rowdup["aw"];
-		$am = $rowdup["am"];
-
-		$pr = $rowdup["pr"];
-		$pw = $rowdup["pw"];
-		$tw = $rowdup["tw"];
-		$tm = $rowdup["tm"];
-		$pm = $rowdup["pm"];
-		echo "<tr><td class='$tdcolor"."_id'>".$nombre;
+	echo "<td class='$tdcolor'>";
+	if ($iw == 1) echo "<img src='images/ok.png' border=0>";
 		
-		echo "<td class='$tdcolor'>";
-		if ($ir == 1) echo "<img src='images/ok.png' border=0>";
-			
-		echo "<td class='$tdcolor'>";
-		if ($iw == 1) echo "<img src='images/ok.png' border=0>";
-			
-		echo "<td class='$tdcolor'>";
-		if ($im == 1) echo "<img src='images/ok.png' border=0>";
+	echo "<td class='$tdcolor'>";
+	if ($im == 1) echo "<img src='images/ok.png' border=0>";
 
-		echo "<td class='$tdcolor'>";
-		if ($um == 1) echo "<img src='images/ok.png' border=0>";
-			
-		echo "<td class='$tdcolor'>";
-		if ($dm == 1) echo "<img src='images/ok.png' border=0>";
-			
-		echo "<td class='$tdcolor'>";
-		if ($fm == 1) echo "<img src='images/ok.png' border=0>";
-	// agenda
-		echo "<td class='$tdcolor'>";
-		if ($ar == 1) echo "<img src='images/ok.png' border=0>";
-			
-		echo "<td class='$tdcolor'>";
-		if ($aw == 1) echo "<img src='images/ok.png' border=0>";
-			
-		echo "<td class='$tdcolor'>";
-		if ($am == 1) echo "<img src='images/ok.png' border=0>";
-	// Project
-		echo "<td class='$tdcolor'>";
-		if ($pr == 1) echo "<img src='images/ok.png' border=0>";
-			
-		echo "<td class='$tdcolor'>";
-		if ($pw == 1) echo "<img src='images/ok.png' border=0>";
+	echo "<td class='$tdcolor'>";
+	if ($um == 1) echo "<img src='images/ok.png' border=0>";
+		
+	echo "<td class='$tdcolor'>";
+	if ($dm == 1) echo "<img src='images/ok.png' border=0>";
+		
+	echo "<td class='$tdcolor'>";
+	if ($fm == 1) echo "<img src='images/ok.png' border=0>";
+// agenda
+	echo "<td class='$tdcolor'>";
+	if ($ar == 1) echo "<img src='images/ok.png' border=0>";
+		
+	echo "<td class='$tdcolor'>";
+	if ($aw == 1) echo "<img src='images/ok.png' border=0>";
+		
+	echo "<td class='$tdcolor'>";
+	if ($am == 1) echo "<img src='images/ok.png' border=0>";
+// Project
+	echo "<td class='$tdcolor'>";
+	if ($pr == 1) echo "<img src='images/ok.png' border=0>";
+		
+	echo "<td class='$tdcolor'>";
+	if ($pw == 1) echo "<img src='images/ok.png' border=0>";
 
-		echo "<td class='$tdcolor'>";
-		if ($pm == 1) echo "<img src='images/ok.png' border=0>";			
+	echo "<td class='$tdcolor'>";
+	if ($pm == 1) echo "<img src='images/ok.png' border=0>";			
 
-		echo "<td class='$tdcolor'>";
-		if ($tw== 1) echo "<img src='images/ok.png' border=0>";
+	echo "<td class='$tdcolor'>";
+	if ($tw== 1) echo "<img src='images/ok.png' border=0>";
 
-		echo "<td class='$tdcolor'>";
-		if ($tm== 1) echo "<img src='images/ok.png' border=0>";
+	echo "<td class='$tdcolor'>";
+	if ($tm== 1) echo "<img src='images/ok.png' border=0>";
 
-	}
+}
 echo "</div></table>";
 ?>

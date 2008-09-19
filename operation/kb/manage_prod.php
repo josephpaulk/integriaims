@@ -1,8 +1,9 @@
 <?php
-// Integria 1.1 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -11,6 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 global $config;
 
@@ -95,7 +97,7 @@ $id_user = $config["id_user"];
             $parent = -1;
         } else {
             $id = get_parameter ("update", -1);
-            $row = give_db_row ("tkb_product", "id", $id);
+            $row = get_db_row ("tkb_product", "id", $id);
             $description = $row["description"];
             $name = $row["name"];
             $icon = $row["icon"];
@@ -113,7 +115,7 @@ $id_user = $config["id_user"];
             echo "<input type=hidden name=id value='$id'>";
         }
         
-        echo "<table cellpadding=4 cellspacing=4 width=500 class='databox'>";
+        echo "<table width=500 class='databox'>";
         echo "<tr>";
         echo "<td class=datos>";
         echo lang_string ("Name");
@@ -148,7 +150,7 @@ $id_user = $config["id_user"];
         combo_kb_products ($parent);
 
         echo "</table>";
-        echo "<table cellpadding=4 cellspacing=4 width=500>";
+        echo "<table class='button' width=500>";
         echo "<tr>";
         echo "<td align=right>";
         if ($id == -1)
@@ -166,9 +168,8 @@ $id_user = $config["id_user"];
         echo "<h2>".lang_string ("KB Product management")."</h2>";	
     	echo "<h3>".lang_string ("Defined products")."</a></h3>";
 	    $sql1='SELECT * FROM tkb_product ORDER BY parent, name';
-        $color =0;
 	    if ($result=mysql_query($sql1)){
-            echo "<table cellpadding=4 cellspacing=4 width=700 class='databox'>";
+            echo "<table width=700 class='listing'>";
 	        echo "<th>".lang_string ("icon")."</th>";
 	        echo "<th>".lang_string ("Name")."</th>";
 	        echo "<th>".lang_string ("parent")."</th>";
@@ -176,35 +177,27 @@ $id_user = $config["id_user"];
 	        echo "<th>".lang_string ("Items")."</th>";
 	        echo "<th>".lang_string ("delete")."</th>";
 	        while ($row=mysql_fetch_array($result)){
-		        if ($color == 1){
-			        $tdcolor = "datos";
-			        $color = 0;
-			        }
-		        else {
-			        $tdcolor = "datos2";
-			        $color = 1;
-		        }
 		        echo "<tr>";
                 // Icon
-                echo "<td class='$tdcolor' valign='top' align='center'>";
+                echo "<td valign='top' align='center'>";
 		        echo "<img src='images/groups_small/".$row["icon"].".png'border='0'>";
                 echo "</td>";
                 // Name
-                echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=kb&
+                echo "<td valign='top'><b><a href='index.php?sec=kb&
 				        sec2=operation/kb/manage_prod&update=".$row["id"]."'>".$row["name"]."</a></b></td>";
                 // Parent
-                echo "<td class='$tdcolor' valign='top'>".give_db_sqlfree_field ("SELECT name FROM tkb_product WHERE id = ".$row["parent"]);
+                echo "<td valign='top'>".give_db_sqlfree_field ("SELECT name FROM tkb_product WHERE id = ".$row["parent"]);
 
                 // Descripcion
-                echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
+                echo "<td class='f9' valign='top'>";
                 echo $row["description"];
 
                 // Items
-                echo "<td class='".$tdcolor."f9' align='center'>";
+                echo "<td class='f9'>";
                 echo give_db_sqlfree_field ("SELECT COUNT(id) FROM tkb_data WHERE id_product = ".$row["id"]);
 
                 // Delete
-                echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
+                echo "<td class='f9' align='center' valign='top'>";
                 echo "<a href='index.php?sec=kb&
 				            sec2=operation/kb/manage_prod&
 				            delete_prod=".$row["id"]."' 
@@ -214,7 +207,7 @@ $id_user = $config["id_user"];
             }
             echo "</table>";
         }			
-	echo "<table cellpadding=4 cellspacing=4 width=700>";
+	echo "<table width=700 class='button'>";
     	echo "<tr><td align='right'>";
 	echo "<form method=post action='index.php?sec=kb&
 	    sec2=operation/kb/manage_prod&create=1'>";
