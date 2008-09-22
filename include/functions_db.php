@@ -1673,22 +1673,35 @@ function get_manufacturers ($only_names = true) {
 	return $manufacturers;
 }
 
-function get_contract_slas ($id_contract, $only_names = true) {
-	$sql = sprintf ('SELECT tsla.* FROM tcontract, tsla
-			WHERE tcontract.id_sla = tsla.id
-			AND tcontract.id = %d', $id_contract);
-	$contacts = get_db_all_rows_sql ($sql);
-	if ($contacts == false)
+function get_slas ($only_names = true) {
+	$slas = get_db_all_rows_in_table ('tsla');
+	if ($slas == false)
 		return array ();
 	
 	if ($only_names) {
 		$result = array ();
-		foreach ($contacts as $contact) {
-			$result[$contact['id']] = $contact['name'];
+		foreach ($slas as $sla) {
+			$result[$sla['id']] = $sla['name'];
 		}
 		return $result;
 	}
-	return $contacts;
+	return $slas;
+}
+
+function get_contract_sla ($id_contract, $only_name = true) {
+	$sql = sprintf ('SELECT tsla.* FROM tcontract, tsla
+			WHERE tcontract.id_sla = tsla.id
+			AND tcontract.id = %d', $id_contract);
+	$sla = get_db_row_sql ($sql);
+	if ($sla == false)
+		return array ();
+	
+	if ($only_name) {
+		$result = array ();
+		$result[$sla['id']] = $sla['name'];
+		return $result;
+	}
+	return $sla;
 }
 
 ?>

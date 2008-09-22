@@ -1,5 +1,22 @@
 2008-09-22  Esteban Sanchez  <estebans@artica.es>
 
+	* include/functions_db.php: Added get_slas(). Renamed
+	get_contract_slas() to get_contract_sla(), since there's a SLA by
+	default in the contract.
+
+	* operation/contracts/contract_detail.php: Applied changes in
+	functions_db.php.
+
+	* operation/inventories/inventory_detail.php: Add all SLAs in the
+	combo, so a SLA can be changed, ignoring the default SLA of the
+	contract.
+
+	* include/js/integria_incident_search.js: Change the behaviour of the
+	event of changing the contract, so the default SLA of the contract is
+	now selected.
+
+2008-09-22  Esteban Sanchez  <estebans@artica.es>
+
 	* include/functions_form.php: Something went wrong in previous commit
 	and the function name was removed.
 

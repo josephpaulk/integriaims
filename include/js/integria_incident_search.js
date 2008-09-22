@@ -375,20 +375,29 @@ function configure_inventory_form (enable_ajax_form) {
 	
 	$(dialog+"#id_contract").change (function () {
 		id_contract = this.value;
+		
+		if (id_contract == 0) {
+			$(dialog+"#id_sla").fadeOut ('normal', function () {
+				$(this).children (":eq(0)").attr ("selected", "selected");
+				$(this).fadeIn ();
+			});
+			return;
+		}
 		values = Array ();
 		values.push ({name: "page",
 					value: "operation/contracts/contract_detail"});
 		values.push ({name: "id",
 			value: id_contract});
-		values.push ({name: "get_slas",
+		values.push ({name: "get_sla",
 			value: 1});
 		jQuery.get ("ajax.php",
 			values,
 			function (data, status) {
 				$(dialog+"#id_sla").fadeOut ('normal', function () {
-					$(this).empty ()
-						.append ($('<option></option>').attr ("value", data[0]['id'])
-							.html (data[0]['name']));
+					$(this).children ().each (function () {
+						if (this.value == data.id)
+							$(this).attr ("selected", "selected");
+					});
 					$(this).fadeIn ();
 				});
 			},

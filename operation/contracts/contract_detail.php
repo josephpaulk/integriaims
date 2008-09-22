@@ -26,12 +26,12 @@ if (give_acl($config["id_user"], 0, "IM")==0) {
 }
 
 $id_user = $config["id_user"];
-$get_slas = (bool) get_parameter ('get_slas');
+$get_sla = (bool) get_parameter ('get_sla');
 
-if ($get_slas) {
+if ($get_sla) {
 	$id = (int) get_parameter ('id');
-	$slas = get_contract_slas ($id, false);
-	echo json_encode ($slas);
+	$sla = get_contract_sla ($id, false);
+	echo json_encode ($sla);
 	
 	if (defined ('AJAX'))
 		return;

@@ -151,7 +151,7 @@ $table->data[1][0] = print_select (get_contracts (),
 			'id_contract', $id_contract,
 			'', __('None'), 0, true, false, false,
 			__('Contract'));
-$table->data[1][1] = print_select (array (),
+$table->data[1][1] = print_select (get_slas (),
 			'id_sla', $id_sla,
 			'', __('None'), 0, true, false, false,
 			__('SLA'));
@@ -173,6 +173,7 @@ $table->data[2][1] = print_select (get_buildings (),
 			'', __('None'), 0, true, false, false,
 			__('Building'));
 
+/* Fourth row */
 $table->data[3][0] = print_input_text ('serial_number', $serial_number, '', 40, 250,
 			true, __('Serial number'));
 $table->data[3][1] = print_input_text ('part_number', $part_number, '', 40, 250,
