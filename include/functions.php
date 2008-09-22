@@ -150,50 +150,57 @@ function no_permission () {
 	global $config;
 	global $lang_label;
 	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
-	echo "<h3 class='error'>".lang_string ('no_permission_title')."</h3>";
+	echo "<h3 class='error'>".__('no_permission_title')."</h3>";
 	echo "<img src='".$config["base_url"]."/images/noaccess.gif' width='120'><br><br>";
 	echo "<table width=550>";
 	echo "<tr><td>";
-	echo lang_string ('no_permission_text');
+	echo __('no_permission_text');
 	echo "</table>";
 	echo "<tr><td><td><td><td>";
 	include $config["homedir"]."/general/footer.php";
 	exit;
 }
 
-function list_files($directory, $stringSearch, $searchHandler, $outputHandler) {
- 	$errorHandler = false;
- 	$result = array();
- 	if (! $directoryHandler = @opendir ($directory)) {
-  		echo ("<pre>\nerror: directory \"$directory\" doesn't exist!\n</pre>\n");
- 		return $errorHandler = true;
- 	}
- 	if ($searchHandler == 0) {
+/** 
+ * List files in a directory in the local path.
+ * 
+ * @param directory Local path.
+ * @param stringSearch String to match the values.
+ * @param searchHandler Pattern of files to match.
+ * @param return Flag to print or return the list.
+ * 
+ * @return The list if $return parameter is true.
+ */
+function list_files ($directory, $stringSearch, $searchHandler, $return) {
+	$errorHandler = false;
+	$result = array ();
+	if (! $directoryHandler = @opendir ($directory)) {
+		echo ("<pre>\nerror: directory \"$directory\" doesn't exist!\n</pre>\n");
+		return $errorHandler = true;
+	}
+	if ($searchHandler == 0) {
 		while (false !== ($fileName = @readdir ($directoryHandler))) {
-			@array_push ($result, $fileName);
+			$result[$fileName] = $fileName;
 		}
- 	}
- 	if ($searchHandler == 1) {
-  		while(false !== ($fileName = @readdir ($directoryHandler))) {
-   			if(@substr_count ($fileName, $stringSearch) > 0) {
-   				@array_push ($result, $fileName);
-   			}
-  		}
- 	}
- 	if (($errorHandler == true) &&  (@count ($result) === 0)) {
-  		echo ("<pre>\nerror: no filetype \"$fileExtension\" found!\n</pre>\n");
- 	}
- 	else {
-  		sort ($result);
-  		if ($outputHandler == 0) {
-   			return $result;
-  		}
-  		if ($outputHandler == 1) {
-  	 		echo ("<pre>\n");
-   			print_r ($result);
-   			echo ("</pre>\n");
-  		}
- 	}
+	}
+	if ($searchHandler == 1) {
+		while(false !== ($fileName = @readdir ($directoryHandler))) {
+			if(@substr_count ($fileName, $stringSearch) > 0) {
+				$result[$fileName] = $fileName;
+			}
+		}
+	}
+	if (($errorHandler == true) &&  (@count ($result) === 0)) {
+		echo ("<pre>\nerror: no filetype \"$fileExtension\" found!\n</pre>\n");
+	} else {
+		asort ($result);
+		if ($return == 0) {
+			return $result;
+		}
+		echo ("<pre>\n");
+		print_r ($result);
+		echo ("</pre>\n");
+	}
 }
 
 /**
@@ -333,9 +340,6 @@ function format_numeric ( $number, $decimals=1, $dec_point=".", $thousands_sep="
  	return 0;
 }
 
-
-
-
 function __ ($string){
 		return lang_string ($string);
 }
@@ -354,12 +358,12 @@ function render_priority ($pri){
 	global $config;
 	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
 	switch ($pri){
-		case 0: return lang_string ("very low");
-		case 1: return lang_string ("low");
-		case 2: return lang_string ("medium");
-		case 3: return lang_string ("high");
-		case 4: return lang_string ("very high");
-		default: return lang_string ("other");
+		case 0: return __("very low");
+		case 1: return __("low");
+		case 2: return __("medium");
+		case 3: return __("high");
+		case 4: return __("very high");
+		default: return __("other");
 	}
 }
 
@@ -419,12 +423,12 @@ function maxof ($a, $b) {
 function get_indicent_priorities () {
 	$incidents = array ();
 
-	$incidents[0] = lang_string ('informative');
-	$incidents[1] = lang_string ('low');
-	$incidents[2] = lang_string ('medium');
-	$incidents[3] = lang_string ('serious');
-	$incidents[4] = lang_string ('very_serious');
-	$incidents[10] = lang_string ('maintenance');
+	$incidents[0] = __('informative');
+	$incidents[1] = __('low');
+	$incidents[2] = __('medium');
+	$incidents[3] = __('serious');
+	$incidents[4] = __('very_serious');
+	$incidents[10] = __('maintenance');
 
 	return $incidents;
 }
@@ -434,13 +438,13 @@ function get_indicent_priorities () {
 function get_indicent_status () {
 	$status = array ();
 
-	$status[1] = lang_string ('status_new');
-	$status[2] = lang_string ('status_unconfirmed');
-	$status[3] = lang_string ('status_assigned');
-	$status[4] = lang_string ('status_reopened');
-	$status[5] = lang_string ('status_verified');
-	$status[6] = lang_string ('status_resolved');
-	$status[7] = lang_string ('status_closed');
+	$status[1] = __('status_new');
+	$status[2] = __('status_unconfirmed');
+	$status[3] = __('status_assigned');
+	$status[4] = __('status_reopened');
+	$status[5] = __('status_verified');
+	$status[6] = __('status_resolved');
+	$status[7] = __('status_closed');
 
 	return $status;
 }
@@ -462,34 +466,39 @@ function get_incident_resolution () {
 }
 function print_priority_flag_image ($priority, $return = false) {
 	$output = '';
-
+	
+	$output .= '<img class="priority-color" height="15" width="30" ';
 	switch ($priority) {
 	case 0:
 		// Informative
-		$output .= '<img src="images/pixel_gray.png" height=15 width=30 title="'.lang_string ('Informative').'" />';
+		$output .= 'src="images/pixel_gray.png" title="'.__('Informative').'" ';
 		break;
 	case 1:
 		// Low
-		$output .= '<img src="images/pixel_green.png" height=15 width=30 title="'.lang_string ('Low').'" />';
+		$output .= 'src="images/pixel_green.png" title="'.__('Low').'" ';
 		break;
 	case 2:
 		// Medium
-		$output .= '<img src="images/pixel_yellow.png" height=15 width=30 title="'.lang_string ('Medium').'" />';
+		$output .= 'src="images/pixel_yellow.png" title="'.__('Medium').'" ';
 		break;
 	case 3:
 		// Serious
-		$output .= '<img src="images/pixel_orange.png" height=15 width=30 title="'.lang_string ('Serious').'" />';
+		$output .= 'src="images/pixel_orange.png" title="'.__('Serious').'" ';
 		break;
 	case 4:
 		// Very serious
-		$output .= '<img src="images/pixel_red.png" height=15 width=30 title="'.lang_string ('Very serious').'" />';
+		$output .= 'src="images/pixel_red.png" title="'.__('Very serious').'" ';
 		break;
 	case 10:
 		// Maintance
-		$output .= '<img src="images/pixel_blue.png" height=15 width=30 title="'.lang_string ('Maintance').'" />';
+		$output .= 'src="images/pixel_blue.png" title="'.__('Maintance').'" ';
 		break;
+	default:
+		// Default
+		$output .= 'src="images/pixel_gray.png" title="'.__('Unknown').'" ';
 	}
 
+	$output .= ' />';
 	if ($return)
 		return $output;
 	echo $output;

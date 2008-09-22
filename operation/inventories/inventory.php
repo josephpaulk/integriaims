@@ -51,7 +51,7 @@ function tab_loaded (event, tab) {
 
 function incident_row_clicked (id, name) {
 	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/inventories/inventory_detail&id=" + id);
-	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/inventories/incident_tracking&id=" + id);
+	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/inventories/inventory_incidents&id=" + id);
 	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/inventories/incident_inventory_detail&id=" + id);
 	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/inventories/incident_inventory_contacts&id=" + id);
 	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/inventories/incident_workunits&id=" + id);

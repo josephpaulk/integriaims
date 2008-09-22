@@ -57,7 +57,7 @@ if ($action == 'update') {
 	// Only admins (manage incident) or owners can modify incidents
 	if (! give_acl ($config["id_user"], $grupo, "IM")) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
-		echo "<h3 class='error'>".lang_string ('upd_incid_no')."</h3>";
+		echo "<h3 class='error'>".__('upd_incid_no')."</h3>";
 		no_permission ();
 		exit ();
 	}
@@ -65,7 +65,7 @@ if ($action == 'update') {
 	$titulo = get_parameter ('titulo');
 	$descripcion = get_parameter ('descripcion');
 	$origen = get_parameter ("incident_origin", 1);
-	$prioridad = get_parameter ('prioridad_form');
+	$priority = get_parameter ('priority_form');
 	$estado = get_parameter ('incident_status');
 	$group = get_parameter ('grupo_form');
 	$email_notify = (bool) get_parameter ("email_notify");
@@ -80,7 +80,7 @@ if ($action == 'update') {
 	// 2 - Descartada (Not valid)
 	// 3 - Caducada (out of date)
 	// 13 - Cerrada (closed)
-	if ($old_prio != $prioridad)
+	if ($old_prio != $priority)
 		incident_tracking ($id, $config['id_user'], 8);
 	if ($estado == 2)
 		incident_tracking ($id, $config['id_user'], 4);
@@ -96,7 +96,7 @@ if ($action == 'update') {
 			epilog = "%s", id_task = %d, resolution = %d
 			WHERE id_incidencia = %d',
 			$titulo, $origen, $estado, $grupo, $usuario,
-			$email_notify, $prioridad, $descripcion,
+			$email_notify, $priority, $descripcion,
 			$epilog, $id_task, $resolution, $id);
 	process_sql ($sql);
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
@@ -113,9 +113,9 @@ if ($action == 'update') {
 	}
 
 	if ($result === false)
-		$result_msg = "<h3 class='suc'>".lang_string ('upd_incid_no')."</h3>";
+		$result_msg = "<h3 class='suc'>".__('upd_incid_no')."</h3>";
 	else
-		$result_msg = "<h3 class='suc'>".lang_string ('upd_incid_ok')."</h3>";
+		$result_msg = "<h3 class='suc'>".__('upd_incid_ok')."</h3>";
 
 	// Email notify to all people involved in this incident
 	if ($email_notify == 1) {
@@ -145,7 +145,7 @@ if ($action == "insert") {
 	$descripcion =  get_parameter ('descripcion');
 	$texto = $descripcion; // to view in textarea after insert
 	$origen = get_parameter ('incident_origin', 1);
-	$prioridad = get_parameter ('prioridad_form');
+	$priority = get_parameter ('priority_form');
 	$id_creator = $config['id_user'];
 	$estado = get_parameter ("incident_status");
 	$resolution = get_parameter ("incident_resolution");
@@ -160,7 +160,7 @@ if ($action == "insert") {
 			VALUES (NOW(), NOW(), "%s", "%s", "%s", %d, %d, %d, %d,
 			"%s", %d, %d, %d)',
 			$titulo, $descripcion, $usuario,
-			$origen, $estado, $prioridad, $grupo, $id_creator,
+			$origen, $estado, $priority, $grupo, $id_creator,
 			$email_notify, $id_task, $resolution);
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
@@ -172,7 +172,7 @@ if ($action == "insert") {
 					$id, $id_inventory);
 			process_sql ($sql);
 		}
-		$result_msg  = "<h3 class='suc'>".lang_string ('create_incid_ok')." (id #$id)</h3>";
+		$result_msg  = "<h3 class='suc'>".__('create_incid_ok')." (id #$id)</h3>";
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 			"Incident created",
 			"User ".$config['id_user']." created incident #".$id);
@@ -183,7 +183,7 @@ if ($action == "insert") {
 			mail_incident ($id, $usuario, "", 0, 1);
 		}
 	} else {
-		$result_msg  = '<h3 class="err">'.lang_string ('create_incid_no').'</h3>';
+		$result_msg  = '<h3 class="err">'.__('create_incid_no').'</h3>';
 	}
 	if (defined ('AJAX')) {
 		echo $result_msg;
@@ -207,7 +207,7 @@ if ($id) {
 	$inicio = $row["inicio"];
 	$actualizacion = $row["actualizacion"];
 	$estado = $row["estado"];
-	$prioridad = $row["prioridad"];
+	$priority = $row["prioridad"];
 	$origen = $row["origen"];
 	$usuario = $row["id_usuario"];
 	$nombre_real = dame_nombre_real($usuario);
@@ -217,7 +217,8 @@ if ($id) {
 	$resolution = $row["resolution"];
 	$epilog = $row["epilog"];
 	$id_task = $row["id_task"];
-	$id_incident_linked = $row["id_incident_linked"];
+	$id_parent = $row["id_parent"];
+	$sla_disabled = false; /* TODO */
 	$grupo = dame_nombre_grupo($id_grupo);
 
 	// Aditional ACL check on read incident
@@ -255,7 +256,7 @@ if ($id) {
 				$id, $id_workunit);
 		$res = process_sql ($sql);
 		if ($res !== false) {
-			$result_msg = "<h3 class='suc'>".lang_string ('create_work_ok')."</h3>";
+			$result_msg = "<h3 class='suc'>".__('create_work_ok')."</h3>";
 			// Email notify to all people involved in this incident
 			if ($email_notify == 1) {
 				mail_incident ($id, $config['id_user'], $nota, $timeused, 10);
@@ -271,13 +272,13 @@ if ($id) {
 	// Upload file
 	$upload_file = (bool) get_parameter ('upload_file');
 	if ((give_acl ($iduser_temp, $id_grupo, "IW") == 1) && $upload_file) {
-		$result_msg = '<h3 class="err">'.lang_string ('No file was attached').'</h3>';
+		$result_msg = '<h3 class="err">'.__('No file was attached').'</h3>';
 		print_r ($_FILES);
 		/* if file */
 		if ($_FILES['userfile']['name'] != "") {
 			$tipo = $_FILES['userfile']['type'];
 			$description = get_parameter ("file_description",
-					lang_string ('No description available'));
+					__('No description available'));
 			
 			// Insert into database
 			$filename= $_FILES['userfile']['name'];
@@ -290,7 +291,7 @@ if ($id) {
 
 			$id_attachment = process_sql ($sql, 'insert_id');
 			incident_tracking ($id, $config['id_user'], 3);
-			$result_msg = "<h3 class='suc'>".lang_string ('File added')."</h3>";
+			$result_msg = "<h3 class='suc'>".__('File added')."</h3>";
 			// Email notify to all people involved in this incident
 			if ($email_notify == 1) {
 				mail_incident ($id, $iduser_temp, 0, 0, 2);
@@ -300,7 +301,7 @@ if ($id) {
 			$filename = $config["homedir"]."attachment/pand".$id_attachment."_".$filename;
 
 			if (! copy ($_FILES['userfile']['tmp_name'], $filename)) {
-				$result_msg = '<h3 class="error">'.lang_string ('attach_error').'</h3>';
+				$result_msg = '<h3 class="error">'.__('attach_error').'</h3>';
 				$sql = sprintf ('DELETE FROM tattachment
 						WHERE id_attachment = %d', $id_attachment);
 				process_sql ($sql);
@@ -321,10 +322,10 @@ if ($id) {
 	$titulo = "";
 	$descripcion = "";
 	$origen = 0;
-	$prioridad = 2;
+	$priority = 2;
 	$id_grupo =0;
 	$grupo = dame_nombre_grupo (1);
-
+	$id_parent = 0;
 	$usuario= $config["id_user"];
 	$estado = 1;
 	$resolution = 9;
@@ -332,6 +333,7 @@ if ($id) {
 	$epilog = "";
 	$id_creator = $iduser_temp;
 	$email_notify = 0;
+	$sla_disabled = false;
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Show the form
@@ -352,136 +354,130 @@ if (! $id) {
 $has_permission = (give_acl ($iduser_temp, $id_grupo, "IM")  || ($usuario == $iduser_temp));
 
 if ($id) {
-	echo "<h1>".lang_string ('incident')." #$id</h1>";
+	echo "<h1>".__('incident')." #$id</h1>";
 } else {
 	if (! defined ('AJAX'))
-		echo "<h2>".lang_string ('create_incident')."</h2>";
+		echo "<h2>".__('create_incident')."</h2>";
 }
 
 echo '<div id="result">'.$result_msg.'</div>';
 
-$table->width = "95%";
-$table->class = "databox";
+echo "TODO: [ ] SLA disabled. <br /> Forzar objeto de incidencia<br />";
+
+$table->width = "700px";
+$table->class = "databox_color";
 $table->id = "incident-editor";
 $table->size = array ();
-$table->size[0] = '20%';
-$table->size[1] = '40%';
-$table->size[2] = '20%';
-$table->size[3] = '20%';
+$table->size[0] = '25%';
+$table->size[1] = '25%';
+$table->size[2] = '25%';
+$table->size[3] = '25%';
 $table->style = array ();
-$table->style[0] = 'font-weight: bold';
-$table->style[2] = 'font-weight: bold';
 $table->data = array ();
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 $table->colspan = array ();
-$table->colspan[0][2] = 2;
-$table->colspan[5][1] = 3;
+$table->colspan[0][0] = 2;
+$table->colspan[4][2] = 2; 
+$table->colspan[5][0] = 4;
 $table->colspan[6][0] = 4;
-$table->colspan[7][0] = 4; 
 
-$table->data[0][0] = lang_string ('incident');
-$table->data[0][1] = print_input_text ('titulo', $titulo, '', 40, 100, true);
+$disabled = !$has_permission;
+$actual_only = !$has_permission;
 
-if ($has_permission)
-	$disabled = false;
-else
-	$disabled = true;
-
+$table->data[0][0] = print_input_text ('titulo', $titulo, '', 40, 100, true, __('incident'));
+if ($create_incident) {
+	$table->data[0][1] = '';
+} else {
+	$table->data[0][1] = 'SLA BIEN/MAL';
+}
+$table->data[0][1] .= print_checkbox_extended ('sla_disabled', 0, $sla_disabled,
+						$disabled, '', '', true, __('SLA disabled'));
 $table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
-						$disabled, '', '', true);
-$table->data[0][2] .= lang_string ('email_notify');
-$table->data[0][2] .= print_help_tip (lang_string ('email_notify_help'), true);
+						$disabled, '', '', true, __('email_notify'));
+//$table->data[1][2] .= print_help_tip (__('email_notify_help'), true);
 
-$table->data[1][0] = lang_string ('Priority');
+$table->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
+
 if ($disabled) {
-	$table->data[1][1] = $prioridad;
+	$table->data[1][1] = $priority;
 } else {
 	$table->data[1][1] = print_select (get_indicent_priorities (),
-					'prioridad_form', $prioridad, '', '',
-					'', true, false, false);
+					'priority_form', $priority, '', '',
+					'', true, false, false, __('Priority'));
 }
 
-$table->data[1][2] = lang_string ('Status');
+$table->data[1][1] .= print_priority_flag_image ($priority, true);
 
-$actual_only = true;
-$disabled = false;
-if (! $has_permission)
-	$disabled = true;
 
-if ($has_permission)
-	$actual_only = false;
+$table->data[1][2] = combo_incident_resolution ($resolution, $disabled, true);
+$parent_name = $id_parent ? get_inventory_name ($id_parent) : __('Search parent');
+$table->data[1][3] = print_button ($parent_name, 'id_parent', $disabled, '',
+			'class="dialogbtn"', true, __('Parent incident'));
 
-$table->data[1][3] = combo_incident_status ($estado, $disabled, $actual_only, true);
+$table->data[2][0] = combo_incident_origin ($origen, $disabled, true);
+$table->data[2][1] = print_label (__('Type'), '', '', true);
+$table->data[2][2] = combo_task_user ($id_task, $config["id_user"], 0, $disabled, true);
 
-$table->data[2][0] = lang_string ('assigned_user');
+$table->data[2][3] = print_label (__('Creator'), '', '', true);
+$table->data[2][3] .= $id_creator." (<em>".dame_nombre_real ($id_creator)."</em>)";
+
+if ($has_permission) {
+	$table->data[4][0] = combo_groups_visible_for_me ($iduser_temp, "grupo_form", 0, "IW", $id_grupo, true);
+} else {
+	$table->data[4][0] = print_label (__('Group'), '', '', true);
+	$table->data[4][0] = dame_nombre_grupo ($id_grupo);
+}
+
 if ($has_permission) {
 	$disabled = false;
 	if ($default_responsable != "") {
 		$disabled = true;
 	}
-	$table->data[2][1] = print_button (dame_nombre_real ($usuario), 'usuario_name', $disabled, '', '', true);
-	$table->data[2][1] .= print_input_hidden ('usuario_form', $usuario, true);
-	$table->data[2][1] .= print_help_tip (lang_string ('incident_user_help'), true);
+	$table->data[4][1] = print_button (dame_nombre_real ($usuario), 'usuario_name',
+					$disabled, '', 'class="dialogbtn"', true, __('assigned_user'));
+	$table->data[4][1] .= print_input_hidden ('usuario_form', $usuario, true);
+	$table->data[4][1] .= print_help_tip (__('incident_user_help'), true);
 } else {
-	$table->data[2][1] = print_input_hidden ('usuario_form', $usuario, true);
-	$table->data[2][1] .= $usuario;
+	$table->data[4][1] = print_input_hidden ('usuario_form', $usuario, true, __('assigned_user'));
+	$table->data[4][1] .= $usuario;
 }
-
-$table->data[2][2] = lang_string ('Creator');
-$table->data[2][3] = $id_creator." (<em>".dame_nombre_real ($id_creator)."</em>)";
-
-$table->data[3][0] = lang_string ('Source');
-$table->data[3][1] = combo_incident_origin ($origen, $disabled, true);
-
-$table->data[3][2] = lang_string ('group');
-if ($has_permission) {
-	$table->data[3][3] = combo_groups_visible_for_me ($iduser_temp, "grupo_form", 0, "IW", $id_grupo, true);
-} else {
-	$table->data[3][3] = dame_nombre_grupo ($id_grupo);
-}
-
-$table->data[4][0] = lang_string ('resolution');
-$table->data[4][1] = combo_incident_resolution ($resolution, $disabled, true);
-$table->data[4][2] = lang_string ('task');
-$table->data[4][3] = combo_task_user ($id_task, $config["id_user"], 0, $disabled, true);
-
-$table->data[5][0] = lang_string ('Affected inventory');
 
 if ($create_incident) {
-	$table->data[5][1] = print_select (array (), 'incident_inventories', NULL,
-					'', '', '', true, 5);
-	$table->data[5][1] .= print_button (lang_string ("Add inventory object"),
-					'search_inventory', false, '', '', true);
-	$table->data[5][1] .= print_button (lang_string ("Remove selected object"),
-					'delete_inventory', false, '', '', true);
+	$table->data[4][2] = print_select (array (), 'incident_inventories', NULL,
+					'', '', '', true, false, false, __('Objects affected'));
+	$table->data[4][2] .= print_button (__("Add"),
+					'search_inventory', false, '', 'class="dialogbtn"', true);
+	$table->data[4][2] .= print_button (__("Remove"),
+					'delete_inventory', false, '', 'class="dialogbtn"', true);
 } else {
 	$inventories = get_inventories_in_incident ($id);
-	$table->data[5][1] = print_select ($inventories, 'incident_inventories',
+	$table->data[4][2] = print_select ($inventories, 'incident_inventories',
 						NULL, '', '', '',
-						true, 5, false);
+						true, false, false, __('Objects affected'));
 
 	if ($has_permission) {
-		$table->data[5][1] .= print_button (lang_string ("Add inventory object"),
-					'search_inventory', false, '', '', true);
-		$table->data[5][1] .= print_button (lang_string ("Remove inventory object"),
-					'delete_inventory', false, '', '', true);
+		$table->data[4][2] .= print_button (__('Add'),
+					'search_inventory', false, '', 'class="dialogbtn"', true);
+		$table->data[4][2] .= print_button (__('Remove'),
+					'delete_inventory', false, '', 'class="dialogbtn"', true);
 		$inventories = (array) get_db_all_rows_sql ($sql);
 		foreach ($inventories as $inventory_id => $inventory_name) {
-			$table->data[5][1] .= print_input_hidden ("inventories[]",
+			$table->data[4][2] .= print_input_hidden ("inventories[]",
 								$inventory_id, true, 'selected-inventories');
 		}
 	}
 }
+
 $disabled_str = $disabled ? 'readonly' : '';
-$table->data[6][0] = lang_string ('Description').'<br />';
-$table->data[6][0] .= print_textarea ('descripcion', 10, 80, $texto, $disabled_str, true);
+$table->data[5][0] = print_textarea ('descripcion', 10, 80, $texto, $disabled_str,
+		true, __('Description'));
 
-$table->data[7][0] = lang_string ('resolution_epilog').'<br />';
-$table->data[7][0] .= print_textarea ('epilog', 15, 100, $epilog, $disabled_str, true);
+$table->data[6][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,
+		true, __('resolution_epilog'));
 
-if ($estado != 5) {
-	$table->rowstyle[7] = 'display: none';
+if ($estado != 6 && $estado != 7) {
+	$table->rowstyle[6] = 'display: none';
 } 
 
 echo "<form id='incident_status_form' method='POST' action='index.php?sec=incidents&sec2=operation/incidents/incident_detail'>";
@@ -493,13 +489,13 @@ echo '<tr><td align=right>';
 if ($create_incident) {
 	print_input_hidden ('action', 'insert');
 	if (give_acl ($config["id_user"], 0, "IW")) {
-		print_submit_button (lang_string ('create'), 'accion', false, 'class="sub create"');
+		print_submit_button (__('create'), 'accion', false, 'class="sub create"');
 	}
 } else {
 	print_input_hidden ('id', $id);
 	print_input_hidden ('action', 'update');
 	if ($has_permission) {
-		print_submit_button (lang_string ('update'), 'accion', false, 'class="sub next"');
+		print_submit_button (__('update'), 'accion', false, 'class="sub next"');
 	}
 }
 

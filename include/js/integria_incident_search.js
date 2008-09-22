@@ -20,7 +20,7 @@ function configure_user_search_form () {
 						user_realname = $(this).children (":eq(1)").text ();
 						$(dialog+"#button-usuario_name").attr ("value", user_realname);
 						$(dialog+"#hidden-usuario_form").attr ("value", user_id);
-						$("#dialog").dialog ("close").empty ();
+						$("#dialog-user-search").dialog ("close").empty ();
 					});
 					$("#user_search_result_table tbody").fadeIn ();
 					$("#users-pager").removeClass ("hide").fadeIn ();
@@ -33,14 +33,16 @@ function configure_user_search_form () {
 }
 
 function show_user_search_dialog (title) {
+	$("#dialog-user-search").remove ();
+	$("body").append ($("<div></div>").attr ("id", "dialog-user-search").addClass ("dialog"));
 	values = [];
 	values.push ({name: "page",
 				value: "operation/users/user_search"});
 	jQuery.get ("ajax.php",
 		values,
 		function (data, status) {
-			$("#dialog").empty ().append (data);
-			$("#dialog").dialog ({"title" : title,
+			$("#dialog-user-search").empty ().append (data);
+			$("#dialog-user-search").dialog ({"title" : title,
 					minHeight: 300,
 					minWidth: 300,
 					height: 500,
@@ -60,14 +62,50 @@ function configure_incident_form (enable_ajax_form) {
 	
 	$(dialog+"#incident_status").change (function () {
 		/* Verified, see tincident_status table id */
-		if (this.value == 5) {
+		if (this.value == 6 || this.value == 7) {
 			$(dialog+"#incident-editor-7").css ('display', '');
 		} else {
 			$(dialog+"#incident-editor-7").css ('display', 'none');
 		}
 	});
 	
-	$(dialog+"#button-search_inventory"). click (function () {
+	$(dialog+"#incident_status").children ().each (function () {
+		console.log (this.value);
+		switch (this.value) {
+		case 1:
+			console.log (this.value);
+		}
+	});
+	
+	$(dialog+"#priority_form").change (function () {
+		console.log (this.value);
+		switch (this.value) {
+		case "0":
+			img = "images/pixel_gray.png";
+			break;
+		case "1":
+			img = "images/pixel_green.png";
+			break;
+		case "2":
+			img = "images/pixel_yellow.png";
+			break;
+		case "3":
+			img = "images/pixel_orange.png";
+			break;
+		case "4":
+			img = "images/pixel_red.png";
+			break;
+		case "10":
+			img = "images/pixel_blue.png";
+			break;
+		default:
+			img = "images/pixel_gray.png";
+		}
+		console.log (img);
+		$(dialog+".priority-color").attr ("src", img);
+	});
+	
+	$(dialog+"#button-search_inventory").click (function () {
 		show_inventory_search_dialog ("Search inventory object",
 			function (id, name) {
 				var exists = false
@@ -91,6 +129,7 @@ function configure_incident_form (enable_ajax_form) {
 			}
 		);
 	});
+	
 	$(dialog+"#button-delete_inventory").click (function () {
 		$($(dialog+"#incident_inventories")[0].options).each (function () {
 			if (! this.selected)
@@ -121,12 +160,12 @@ function configure_incident_form (enable_ajax_form) {
 }
 
 function show_add_incident_dialog () {
+	$("#dialog-incident").remove ();
+	$("body").append ($("<div></div>").attr ("id", "dialog-incident").addClass ("dialog"));
+	
 	values = Array ();
 	values.push ({name: "page",
 				value: "operation/incidents/incident_detail"});
-	/* It need a new dialog div, because it can have nested dialogs */
-	$("#dialog-incident").remove ();
-	$("body").append ($("<div></div>").attr ("id", "dialog-incident").addClass ("dialog"));
 	
 	jQuery.get ("ajax.php",
 		values,
@@ -152,27 +191,28 @@ function show_add_incident_dialog () {
 }
 
 function configure_inventory_search_form (page_size, callback_incident_click) {
-	$("#inventory_search_result_table").tablesorter ();
-	$("#inventory_search_form").submit (function () {
-		$("#inventory_search_result_table tbody").fadeOut ('normal', function (){
+	$(dialog+"#inventory_search_result_table").tablesorter ();
+	$(dialog+"#inventory_search_form").submit (function () {
+		$(dialog+"#inventory_search_result_table tbody").fadeOut ('normal',
+			function () {
 			values = get_form_input_values ("inventory_search_form");
 			values.push ({name: "page",
 				value: "operation/inventories/inventory_search"});
 			jQuery.post ("ajax.php",
 				values,
 				function (data, status) {
-					$("#inventory_search_result_table").removeClass ("hide");
-					$("#inventory_search_result_table tbody").empty ().append (data);
-					refresh_table ("inventory_search_result_table");
-					$("#inventory_search_result_table").trigger ("update")
-						.tablesorterPager ({container: $("#inventory-pager"), size: page_size});
-					$("#inventory_search_result_table tbody tr").click (function () {
+					$(dialog+"#inventory_search_result_table").removeClass ("hide");
+					$(dialog+"#inventory_search_result_table tbody").empty ().append (data);
+					refresh_table ($(dialog+"#inventory_search_result_table"));
+					$(dialog+"#inventory_search_result_table").trigger ("update")
+						.tablesorterPager ({container: $(dialog+"#inventory-pager"), size: page_size});
+					$(dialog+"#inventory_search_result_table tbody tr").click (function () {
 						id = this.id.split ("-").pop ();
 						name = $(this).children (":eq(0)").text ();
 						callback_incident_click (id, name);
 					});
-					$("#inventory_search_result_table tbody").fadeIn ();
-					$("#inventory-pager").removeClass ("hide").fadeIn ();
+					$(dialog+"#inventory_search_result_table tbody").fadeIn ();
+					$(dialog+"#inventory-pager").removeClass ("hide").fadeIn ();
 				},
 				"html"
 			);
@@ -182,19 +222,27 @@ function configure_inventory_search_form (page_size, callback_incident_click) {
 }
 
 function show_inventory_search_dialog (title, callback_incident_click) {
+	$("#dialog-search-inventory").remove ();
+	$("body").append ($("<div></div>").attr ("id", "dialog-search-inventory").addClass ("dialog"));
 	values = Array ();
 	values.push ({name: "page",
 				value: "operation/inventories/inventory_search"});
 	jQuery.get ("ajax.php",
 		values,
 		function (data, status) {
-			$("#dialog").empty ().append (data);
-			$("#dialog").dialog ({"title" : title,
+			$("#dialog-search-inventory").empty ().append (data);
+			$("#dialog-search-inventory").dialog ({"title" : title,
 					minHeight: 500,
 					minWidth: 600,
 					height: 500,
 					width: 600,
-					modal: true
+					modal: true,
+					open: function () {
+						dialog = "#dialog-search-inventory ";
+					},
+					close: function () {
+						dialog = "";
+					}
 					});
 			configure_inventory_search_form (5, callback_incident_click);
 		},
@@ -213,7 +261,7 @@ function configure_workunit_form () {
 				$("#result").slideUp ('fast', function () {
 					$("#result").empty ().append (data).slideDown ();
 				});
-				$("#dialog").dialog ("close");
+				$("#dialog-add-workunit").dialog ("close");
 			},
 			"html"
 		);
@@ -222,6 +270,8 @@ function configure_workunit_form () {
 }
 
 function show_add_workunit_dialog (id_incident) {
+	$("#dialog-add-workunit").remove ();
+	$("body").append ($("<div></div>").attr ("id", "dialog-add-workunit").addClass ("dialog"));
 	values = Array ();
 	values.push ({name: "page",
 				value: "operation/incidents/incident_create_work"});
@@ -230,8 +280,8 @@ function show_add_workunit_dialog (id_incident) {
 	jQuery.get ("ajax.php",
 		values,
 		function (data, status) {
-			$("#dialog").empty ().append (data);
-			$("#dialog").dialog ({"title" : "Add workunit",
+			$("#dialog-add-workunit").empty ().append (data);
+			$("#dialog-add-workunit").dialog ({"title" : "Add workunit",
 					minHeight: 300,
 					minWidth: 300,
 					height: 400,
@@ -255,7 +305,7 @@ function configure_file_form () {
 				$("#result").slideUp ('fast', function () {
 					$("#result").empty ().append (data).slideDown ();
 				});
-				$("#dialog").dialog ("close");
+				$("#dialog-add-file").dialog ("close");
 			},
 			"html"
 		);
@@ -264,6 +314,9 @@ function configure_file_form () {
 }
 
 function show_add_file_dialog (id_incident) {
+	$("#dialog-add-file").remove ();
+	$("body").append ($("<div></div>").attr ("id", "dialog-add-file").addClass ("dialog"));
+	
 	values = Array ();
 	values.push ({name: "page",
 				value: "operation/incidents/incident_attach_file"});
@@ -272,8 +325,8 @@ function show_add_file_dialog (id_incident) {
 	jQuery.get ("ajax.php",
 		values,
 		function (data, status) {
-			$("#dialog").empty ().append (data);
-			$("#dialog").dialog ({"title" : "Upload file",
+			$("#dialog-add-file").empty ().append (data);
+			$("#dialog-add-file").dialog ({"title" : "Upload file",
 					minHeight: 500,
 					minWidth: 200,
 					height: 200,
@@ -310,6 +363,65 @@ function configure_incident_side_menu (id_incident) {
 }
 
 function configure_inventory_form (enable_ajax_form) {
+	$("#button-parent_search").click (function () {
+		show_inventory_search_dialog ("Search parent inventory",
+					function (id, name) {
+						$("#button-parent_search").attr ("value", name);
+						$("#hidden-id_parent").attr ("value", id);
+						$("#dialog-search-inventory").dialog ("close");
+					}
+		);
+	});
+	
+	$(dialog+"#id_contract").change (function () {
+		id_contract = this.value;
+		values = Array ();
+		values.push ({name: "page",
+					value: "operation/contracts/contract_detail"});
+		values.push ({name: "id",
+			value: id_contract});
+		values.push ({name: "get_slas",
+			value: 1});
+		jQuery.get ("ajax.php",
+			values,
+			function (data, status) {
+				$(dialog+"#id_sla").fadeOut ('normal', function () {
+					$(this).empty ()
+						.append ($('<option></option>').attr ("value", data[0]['id'])
+							.html (data[0]['name']));
+					$(this).fadeIn ();
+				});
+			},
+			"json"
+		);
+		
+	});
+	
+	$("#id_product").change (function () {
+		id_product = this.value;
+		
+		$("#product-icon").fadeOut ('normal', function () {
+			if (id_product == 0) {
+				return;
+			}
+			values = Array ();
+			values.push ({name: "page",
+						value: "operation/kb/manage_prod"});
+			values.push ({name: "id",
+						value: id_product});
+			values.push ({name: "get_icon",
+						value: 1});
+			jQuery.get ("ajax.php",
+				values,
+				function (data, status) {
+					$("#product-icon").attr ("src", "images/products/"+data).fadeIn ();
+				},
+				"html"
+			);
+		});
+		
+	});
+	
 	if (enable_ajax_form) {
 		$(dialog+"#inventory_status_form").submit (function () {
 			values = get_form_input_values (this);

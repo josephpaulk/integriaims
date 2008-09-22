@@ -49,6 +49,7 @@ foreach ($inventories as $incident) {
 	array_push ($table->data, $data);
 }
 
+echo 'TODO: Mostrar SLA specific';
 print_table ($table);
 
 ?>

@@ -70,36 +70,29 @@ function audit_db ($id, $ip, $accion, $descripcion) {
 // logon_db, update entry in logon audit
 // --------------------------------------------------------------- 
 
-function logon_db ($id,$ip){
-	require ("config.php");
-	audit_db ($id,$ip, "Logon", "Logged in");
+function logon_db ($id, $ip) {
+	global $config;
+	audit_db ($id, $ip, "Logon", "Logged in");
+	$today = date ('Y-m-d H:i:s');
 	// Update last registry of user to get last logon
-	$sql2 = 'UPDATE tusuario fecha_registro = $today WHERE id_usuario = "$id"';
-	$result = mysql_query ($sql2);
+	$sql = sprintf ('UPDATE tusuario SET fecha_registro = "%s" WHERE id_usuario = "%s"', $today, $id);
+	process_sql ($sql);
 }
 
 // --------------------------------------------------------------- 
 // logoff_db, also adds audit log
 // --------------------------------------------------------------- 
 
-function logoff_db($id,$ip){
-	require("config.php");
-	audit_db($id,$ip,"Logoff","Logged out");
+function logoff_db ($id, $ip) {
+	audit_db ($id, $ip, "Logoff", "Logged out");
 }
 
 // --------------------------------------------------------------- 
 // Returns profile given ID
 // --------------------------------------------------------------- 
 
-function dame_perfil($id){ 
-	require("config.php");
-	$query1="SELECT * FROM tprofile WHERE id =".$id;
-	$resq1=mysql_query($query1);  
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$cat=$rowdup["name"]; 
-	}
-		else $cat = "";
-	return $cat; 
+function dame_perfil ($id) {
+	return get_db_value ('name', 'tprofile', 'id', $id);
 }
 
 
@@ -107,122 +100,32 @@ function dame_perfil($id){
 // Returns group given ID
 // --------------------------------------------------------------- 
 
-function dame_grupo($id){ 
-	require("config.php");
-	$query1="SELECT * FROM tgrupo WHERE id_grupo =".$id;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$cat=$rowdup["nombre"];
-	}
-		else $cat = "";
-	return $cat; 
+function dame_grupo ($id_group) {
+	return get_db_value ('nombre', 'tgrupo', 'id_grupo', $id_group);
 }
 
 // --------------------------------------------------------------- 
 // Returns icon name given group ID
 // --------------------------------------------------------------- 
 
-function dame_grupo_icono($id){
-	require("config.php");
-	$query1="SELECT * FROM tgrupo WHERE id_grupo =".$id;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1)){
-		$cat=$rowdup["icon"];
-	}
-		else $cat = "";
-	return $cat;
+function dame_grupo_icono ($id_group) {
+	return get_db_value ('icon', 'tgrupo', 'id_grupo', $id_group);
 }
-
-// --------------------------------------------------------------- 
-// Return agent id given name of agent
-// --------------------------------------------------------------- 
-
-function dame_agente_id($nombre){
-	require("config.php");
-	$query1="SELECT * FROM tagente WHERE nombre = '".$nombre."'";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["id_agente"];
-	else
-		$pro = "";
-	return $pro;
-}
-
-
-// --------------------------------------------------------------- 
-// Returns agent id given name of agent
-// --------------------------------------------------------------- 
-
-function dame_agente_modulo_id($id_agente, $id_tipomodulo, $nombre){
-	require("config.php");
-	$query1="SELECT * FROM tagente_modulo WHERE id_agente = ".$id_agente." and id_tipo_modulo = ".$id_tipomodulo." and nombre = '".$nombre."'";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["id_agente_modulo"];
-	else
-		$pro = "";
-	return $pro;
-}
-
-
-// --------------------------------------------------------------- 
-// Returns event description given it's id
-// --------------------------------------------------------------- 
-
-function return_event_description ($id_event){
-	require("config.php");
-	$query1="SELECT evento FROM tevento WHERE id_evento = $id_event";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup[0];
-	else
-		$pro = "";
-	return $pro;
-}
-
-// --------------------------------------------------------------- 
-// Return ID_Group from an event given as id_event
-// --------------------------------------------------------------- 
-
-function gime_idgroup_from_idevent($id_event){
-	require("config.php");
-	$query1="SELECT * FROM tevento WHERE id_evento = ".$id_event;
-	$pro = -1;
-	if ($resq1=mysql_query($query1))
-		if ($rowdup=mysql_fetch_array($resq1))
-			$pro=$rowdup["id_grupo"]; 
-	return $pro;
-}
-
 
 // --------------------------------------------------------------- 
 // Returns password (HASH) given user_id
 // --------------------------------------------------------------- 
 
-function dame_password($id_usuario){
-	require("config.php"); 
-	$query1="SELECT * FROM tusuario WHERE id_usuario= '".$id_usuario."'"; 
-	$resq1=mysql_query($query1);  
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["password"]; 
-	else
-		$pro = "";
-	return $pro; 
+function dame_password ($id_user) {
+	return get_db_value ('password', 'tusuario', 'id_usuario', $id_user);
 }
 
 // --------------------------------------------------------------- 
 // Returns name of the user when given ID
 // --------------------------------------------------------------- 
 
-function dame_nombre_real($id){
-	require("config.php");
-	$query1="SELECT * FROM tusuario WHERE id_usuario = '".$id."'";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["nombre_real"];
-	else
-		$pro = "";
-	return $pro;
+function dame_nombre_real ($id_user) {
+	return get_db_value ('nombre_real', 'tusuario', 'id_usuario', $id_user);
 }
 
 
@@ -282,29 +185,23 @@ function give_hours_incident ($id) {
 			WHERE 	tworkunit_incident.id_incident = tincidencia.id_incidencia AND 
 					tworkunit_incident.id_workunit = tworkunit.id AND
 					 tincidencia.id_incidencia = %d', $id);
-	return get_db_sql ($sql);
+	return (int) get_db_sql ($sql);
 }
 
 
 /**
 * Return total wu assigned to incident
 *
-* $id_inc   integer	 ID of incident
+* $id_incident   integer	 ID of incident
 **/
-
-function give_wu_incident ($id_inc){
+function give_wu_incident ($id_incident) {
 	global $config;
-	$query1="SELECT COUNT(tworkunit.duration) 
+	$sql = sprintf ('SELECT COUNT(tworkunit.duration) 
 			FROM tworkunit, tworkunit_incident, tincidencia 
 			WHERE   tworkunit_incident.id_incident = tincidencia.id_incidencia AND 
 					tworkunit_incident.id_workunit = tworkunit.id AND
-					 tincidencia.id_incidencia = $id_inc";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup[0]; 
-	else 
-		$pro = 0;
-	return $pro;
+					 tincidencia.id_incidencia = %d', $id_incident);
+	return (int) get_db_sql ($sql);
 }
 
 
@@ -314,27 +211,24 @@ function give_wu_incident ($id_inc){
 * $id_project	integer 	ID of project
 **/
 
-function give_hours_project ($id_project, $with_cost =0){
+function give_hours_project ($id_project, $with_cost =0){ 
 	global $config;
-	if ($with_cost != 0)
-		$query1="SELECT SUM(tworkunit.duration) 
+	if ($with_cost != 0) {
+		$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task, ttask 
-			WHERE   tworkunit_task.id_task = ttask.id AND 
-					ttask.id_project = $id_project AND 
-					tworkunit_task.id_workunit = tworkunit.id AND
-					tworkunit.have_cost = 1";
-	else
-	   $query1="SELECT SUM(tworkunit.duration) 
+			WHERE tworkunit_task.id_task = ttask.id
+			AND ttask.id_project = %d
+			AND tworkunit_task.id_workunit = tworkunit.id
+			AND tworkunit.have_cost = 1', $id_project);
+	} else {
+		$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task, ttask 
-			WHERE 	tworkunit_task.id_task = ttask.id AND 
-					ttask.id_project = $id_project AND 
-					tworkunit_task.id_workunit = tworkunit.id";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup[0]; 
-	else 
-		$pro = 0;
-	return $pro;
+			WHERE tworkunit_task.id_task = ttask.id
+			AND ttask.id_project = %d
+			AND tworkunit_task.id_workunit = tworkunit.id',
+			$id_project);
+	}
+	return (int) get_db_sql ($sql);
 }
 
 /**
@@ -343,19 +237,14 @@ function give_hours_project ($id_project, $with_cost =0){
 * $id_project   integer	 ID of project
 **/
 
-function give_wu_project ($id_project){
-	global $config;
-	$query1="SELECT COUNT(tworkunit.duration) 
+function give_wu_project ($id_project) {
+	$sql = sprintf ('SELECT COUNT(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task, ttask 
-			WHERE   tworkunit_task.id_task = ttask.id AND 
-					ttask.id_project = $id_project AND 
-					tworkunit_task.id_workunit = tworkunit.id";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup[0]; 
-	else 
-		$pro = 0;
-	return $pro;
+			WHERE tworkunit_task.id_task = ttask.id
+			AND ttask.id_project = %d
+			AND tworkunit_task.id_workunit = tworkunit.id',
+			$id_project);
+	return (int) get_db_sql ($sql);
 }
 
 
@@ -367,16 +256,12 @@ function give_wu_project ($id_project){
 
 function give_hours_task ($id_task){
 	global $config;
-	$query1="SELECT SUM(tworkunit.duration) 
+	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task
-			WHERE 	tworkunit_task.id_task = $id_task AND 
-					tworkunit_task.id_workunit = tworkunit.id";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup[0]; 
-	else 
-		$pro = 0;
-	return $pro;
+			WHERE tworkunit_task.id_task = %d
+			AND tworkunit_task.id_workunit = tworkunit.id',
+			$id_task);
+	return (int) get_db_sql ($sql);
 }
 
 
@@ -387,17 +272,12 @@ function give_hours_task ($id_task){
 **/
 
 function give_wu_task ($id_task){
-	global $config;
-
-	$pro = 0;
-	$query1="SELECT COUNT(tworkunit.duration) 
+	$sql = sprintf ('SELECT COUNT(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task
-			WHERE   tworkunit_task.id_task = $id_task AND 
-					tworkunit_task.id_workunit = tworkunit.id";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup[0]; 
-	return $pro;
+			WHERE tworkunit_task.id_task = %d
+			AND tworkunit_task.id_workunit = tworkunit.id',
+			$id_task);
+	return (int) get_db_sql ($sql);
 }
 
 
@@ -408,19 +288,14 @@ function give_wu_task ($id_task){
 * $id_user  string	  ID of user
 **/
 
-function give_wu_task_user ($id_task, $id_user){
-	global $config;
-
-	$pro = 0;
-	$query1="SELECT COUNT(tworkunit.duration) 
+function give_wu_task_user ($id_task, $id_user) {
+	$sql = sprintf ('SELECT COUNT(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task 
-			WHERE   tworkunit_task.id_task = $id_task AND 
-					tworkunit.id_user = '$id_user' AND 
-					tworkunit_task.id_workunit = tworkunit.id";
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup[0]; 
-	return $pro;
+			WHERE tworkunit_task.id_task = %d
+			AND tworkunit.id_user = "%s"
+			AND tworkunit_task.id_workunit = tworkunit.id',
+			$id_task, $id_user);
+	return (int) get_db_sql ($sql);
 }
 
 
@@ -435,54 +310,60 @@ function give_wu_task_user ($id_task, $id_user){
 
 function calculate_project_progress ($id_project){
 	global $config;
-	$query1="SELECT * FROM ttask 
-			WHERE id_project = $id_project";
-	$resq1=mysql_query($query1);
-	$sum = 0;
-	$tot = 0;
-	while ($row=mysql_fetch_array($resq1)){
-		if ($row["priority"] > 0)
-			$sum = $sum + $row["completion"];
-		$tot++;
-	}
-	if ($tot > 0)
-		return $sum / $tot;
-	else
-		return 0;
+	$sql = sprintf ('SELECT AVG(completion)
+			FROM ttask
+			WHERE id_project = %d
+			AND priority > 0',
+			$id_project);
+	return get_db_sql ($sql);
 }
 
 
 // --------------------------------------------------------------- 
 // Delete incident given its id and all its notes
 // --------------------------------------------------------------- 
-
-
-function borrar_incidencia($id_inc){
+function borrar_incidencia ($id_incident) {
 	require("config.php");
-	$sql1="DELETE FROM tincidencia WHERE id_incidencia = ".$id_inc;
-	$result=mysql_query($sql1);
-	$sql3="SELECT * FROM tworkunit_incident WHERE id_incident = ".$id_inc;
-	$res2=mysql_query($sql3);
-	while ($row2=mysql_fetch_array($res2)){
+	$sql = sprintf ('DELETE FROM tincidencia
+			WHERE id_incidencia = %d', $id_incident);
+	process_sql ($sql);
+	$sql = sprintf ('SELECT id_workunit FROM tworkunit_incident
+			WHERE id_incident = %d',$id_incident);
+	$workunits = get_db_all_rows_sql ($sql);
+	if ($workunits === false) {
+		$workunits = array ();
+	}
+	foreach ($workunits as $workunit) {
 		// Delete all note ID related in table
-		$sql4 = "DELETE FROM tworkunit WHERE id = ".$row2["id_workunit"];
-		$result4 = mysql_query($sql4);
+		$sql = sprintf ('DELETE FROM tworkunit WHERE id = %d',
+				$workunit['id_workunit']);
+		process_sql ($sql);
 	}
-	$sql6="DELETE FROM tworkunit_incident WHERE id_incident = ".$id_inc;
-	$result6=mysql_query($sql6);
+	$sql = sprintf ('DELETE FROM tworkunit_incident
+			WHERE id_incident = %d', $id_incident);
+	process_sql ($sql);
+	
 	// Delete attachments
-	$sql1="SELECT * FROM tattachment WHERE id_incidencia = ".$id_inc;
-	$result=mysql_query($sql1);
-	while ($row=mysql_fetch_array($result)){
-		// Unlink all attached files for this incident
-		$file_id = $row["id_attachment"];
-		$filename = $row["filename"];
-		unlink ($attachment_store."attachment/pand".$file_id."_".$filename);
+	$sql = sprintf ('SELECT id_attachment, filename
+			FROM tattachment
+			WHERE id_incidencia = %d', $id_incident);
+	$attachments = get_db_all_rows_sql ($sql);
+	if ($attachments === false) {
+		$attachments = array ();
 	}
-	$sql1="DELETE FROM tattachment WHERE id_incidencia = ".$id_inc;
-	$result=mysql_query($sql1);
-	$sql1="DELETE FROM tincident_track WHERE id_incident = ".$id_inc;
-	$result=mysql_query($sql1);
+	foreach ($attachments as $attachment) {
+		// Unlink all attached files for this incident
+		$id = $attachment["id_attachment"];
+		$name = $attachment["filename"];
+		unlink ($attachment_store."attachment/pand".$id."_".$name);
+	}
+	
+	$sql = sprintf ('DELETE FROM tattachment
+			WHERE id_incidencia = %d', $id_incident);
+	process_sql ($sql);
+	$sql = sprintf ('DELETE FROM tincident_track
+			WHERE id_incident = %d', $id_incident);
+	process_sql ($sql);
 }
 
 
@@ -490,11 +371,12 @@ function borrar_incidencia($id_inc){
 //  Update "contact" field in User table for username $nick
 // --------------------------------------------------------------- 
 
-function update_user_contact($nick){	
-	require("config.php");
-	$today=date("Y-m-d H:i:s",time());
-	$query1="UPDATE tusuario set fecha_registro ='".$today."' WHERE id_usuario = '".$nick."'";
-	$resq1=mysql_query($query1);
+function update_user_contact ($id_user) {
+	$today = date ("Y-m-d H:i:s", time ());
+	$sql = sprintf ('UPDATE tusuario set fecha_registro ="%s"
+			WHERE id_usuario = "%s"',
+			$today, $id_user);
+	process_sql ($sql);
 }
 
 
@@ -502,13 +384,8 @@ function update_user_contact($nick){
 // Returns Admin value (0 no admin, 1 admin)
 // ---------------------------------------------------------------
 
-function dame_admin($id){
-	require("config.php");
-	$query1="SELECT * FROM tusuario WHERE id_usuario ='".$id."'";   
-	$rowdup=mysql_query($query1);
-	$rowdup2=mysql_fetch_array($rowdup);
-	$admin=$rowdup2["nivel"];
-	return $admin;
+function dame_admin ($id) {
+	return (bool) get_db_value ('nivel', 'tusuario', 'id_usuario', $id);
 }
 
 // --------------------------------------------------------------- 
@@ -517,19 +394,15 @@ function dame_admin($id){
 // --------------------------------------------------------------- 
 
 function check_login () { 
-	if (isset($_SESSION["id_usuario"])){
+	if (isset ($_SESSION["id_usuario"])) {
 		$id = $_SESSION["id_usuario"];
-		require ("config.php");
-		$query1="SELECT * FROM tusuario WHERE id_usuario = '".$id."'";
-		$resq1=mysql_query($query1);
-		$rowdup=mysql_fetch_array($resq1);
-		$nombre=$rowdup["id_usuario"];
-		if ( $id == $nombre ){
-			return 0 ;	
+		$id_user = get_db_value ('id_usuario', 'tusuario', 'id_usuario', $id);
+		if ($id == $id_user) {
+			return false;	
 		}
 	}
 	require("general/noaccess.php");
-	return 1;	
+	return true;	
 }
 
 
@@ -1764,6 +1637,58 @@ function get_buildings ($only_names = true) {
 	}
 	
 	return $buildings;
+}
+
+function print_product_icon ($id_product, $return = false) {
+	$output = '';
+	
+	$icon = (string) get_db_value ('icon', 'tproduct', 'id', $id_product);
+	
+	$output .= '<img id="product-icon" width="16" height="16" ';
+	if ($icon != '') {
+		$output .= 'src="images/products/'.$icon.'"';
+	} else {
+		$output .= 'src="images/pixel_gray.png" style="display:none"';
+	}
+	$output .= ' />';
+	
+	if ($return)
+		return $output;
+	echo $output;
+}
+
+function get_manufacturers ($only_names = true) {
+	$manufacturers = get_db_all_rows_in_table ('tmanufacturer');
+	if ($manufacturers === false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($manufacturers as $manufacturer) {
+			$retval[$manufacturer['id']] = $manufacturer['name'];
+		}
+		return $retval;
+	}
+	
+	return $manufacturers;
+}
+
+function get_contract_slas ($id_contract, $only_names = true) {
+	$sql = sprintf ('SELECT tsla.* FROM tcontract, tsla
+			WHERE tcontract.id_sla = tsla.id
+			AND tcontract.id = %d', $id_contract);
+	$contacts = get_db_all_rows_sql ($sql);
+	if ($contacts == false)
+		return array ();
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($contacts as $contact) {
+			$result[$contact['id']] = $contact['name'];
+		}
+		return $result;
+	}
+	return $contacts;
 }
 
 ?>

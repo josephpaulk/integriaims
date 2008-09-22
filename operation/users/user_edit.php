@@ -115,10 +115,10 @@ if (check_login() == 0) {
 	?>
 	<tr><td class="datos"><?php echo $lang_label["id_user"] ?>
 	<td class="datos"><input class=input type="text" name="nombre" value="<?php echo $nombre ?>" disabled>
-	<?PHP
-	if (isset($avatar)){
+	<?php
+	if (isset($avatar)) {
 		echo "<td class='datos' rowspan=3>";
-		echo "<img src='images/avatars/".$avatar.".png'>";
+		echo '<img id="avatar-preview" src="images/avatars/'.$avatar.'.png">';
 	}
  	?>
 	<tr><td class="datos2"><?php echo $lang_label["real_name"] ?>
@@ -130,16 +130,16 @@ if (check_login() == 0) {
 	<tr><td class="datos">E-Mail
 	<td class="datos" colspan=2><input class=input type="text" name="direccion" size="40" value="<?php echo $direccion ?>">
 
-	<?PHP
+	<?php
 	// Avatar
 	echo "<tr><td class='datos2'>".lang_string("avatar");
-	echo "<td class='datos2' colspan=2><select name='avatar'>";
+	echo '<td class="datos2" colspan="2"><select name="avatar" id="avatar">';
 	if ($avatar!=""){
 		echo '<option>'.$avatar;
 	}
 	$ficheros = list_files('images/avatars/', "",0, 0);
 	$a=0;
-	while (isset($ficheros[$a])){
+	while (isset($ficheros[$a])) {
 		if ((strpos($ficheros[$a],"small") == 0) && (strlen($ficheros[$a])>4))
 			echo "<option>".substr($ficheros[$a],0,strlen($ficheros[$a])-4);
 		$a++;
@@ -161,8 +161,7 @@ if (check_login() == 0) {
 	<tr><td class="datos" colspan="3"><textarea name="comentarios" cols="55" rows="4"><?php echo $comentarios ?></textarea>
 	</table>
 <?php
-	// Don't delete this!!
-	if ($view_mode ==0){
+	if ($view_mode ==0) {
 		echo '<table width="550" class="button">';
 		echo "<tr><td align='right'>";
 		echo "<input name='uptbutton' type='submit' class='sub upd' value='".$lang_label["update"]."'>";
@@ -176,7 +175,7 @@ if (check_login() == 0) {
 	$result=mysql_query($sql1);
 	if (mysql_num_rows($result)){
 		$color=1;
-		while ($row=mysql_fetch_array($result)){
+		while ($row=mysql_fetch_array($result)) {
 			if ($color == 1){
 				$tdcolor = "datos";
 				$color = 0;
@@ -199,3 +198,14 @@ if (check_login() == 0) {
 } // fin pagina
 
 ?>
+
+<script  type="text/javascript">
+$(document).ready (function () {
+	$("#avatar").change (function () {
+		icon = this.value;
+		$("#avatar-preview").fadeOut ('normal', function () {
+			$(this).attr ("src", "images/avatars/"+icon+".png").fadeIn ();
+		});
+	});
+});
+</script>

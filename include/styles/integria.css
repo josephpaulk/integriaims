@@ -107,7 +107,7 @@ table.listing {
 	text-align: left;
 }
 
-table.button {
+.button {
 	margin-left: 15px;
 	padding-top: 0px;
 	padding-bottom: 0px;
@@ -115,6 +115,7 @@ table.button {
 	border-top: 2px solid #2179B1;
 	border-bottom: 2px solid #2179B1;
 	background: #eee;
+	text-align: right;
 }
 
 table.listing tr:hover {
@@ -215,11 +216,14 @@ select {
 	font: normal 0.9em Arial, sans-serif;
 	color:#666;
 }
-checkbox {
+
+input[type="checkbox"] {
 	padding: 4px;
 	border:1px solid #A9C4D6;
 	font: normal 0.9em Arial, sans-serif;
 	color:#666;
+	float: left;
+	margin-right: 3px;
 }
 
 /* search form */
@@ -530,14 +534,17 @@ input.login {
 	width: 90px;
 	font-size: 11px;
 }
-input.sub {
+input.sub, input.dialogbtn {
 	border-bottom-color: #708090;
 	border-right-color: #708090;
 	-moz-border-radius: 5%;
 	font-size: 0.85em;
 	font-weight: bold;
-	margin: 5px 5px;
 	height: 22px;
+}
+
+input.sub {
+	margin: 10px 15px;
 }
 
 input.next {
@@ -882,9 +889,6 @@ div#foot a:hover{
 	font-weight: bold;
 	text-decoration: none;
 }
-.action-buttons {
-	text-align: right;
-}
 
 div.pager {
 	margin-left: 10px;
@@ -933,11 +937,9 @@ div.pager input {
 	width: 16px;
 }
 
-/*
-#incident_inventories, #text-search_string, textarea {
-	width: 100%;
+#incident_inventories {
+	width: 200px;
 }
-*/
 
 #incident_inventories, textarea {
 	width: 100%;
@@ -946,3 +948,4 @@ div.pager input {
 label {
 	font-weight: bold;
 }
+

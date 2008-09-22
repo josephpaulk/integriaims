@@ -1,3 +1,64 @@
+2008-09-22  Esteban Sanchez  <estebans@artica.es>
+
+	* integria/integria_db.sql: Removed id_incident_linked field to
+	id_parent and added foreign key in tincidencia. Moved tsla over
+	tcontract, since it has a reference to tsla. Confirmed field is a
+	tinyint(1) now.
+
+	* include/js/integria.js: Added result_msg_error() and
+	result_msg_success() to show result messages.
+
+	* include/js/integria_incident_search.js: Added more compatibility to
+	nested dialogs (each search form is now showed in its own dialog.
+	Added code to dependent fields in incident and inventory forms.
+
+	* include/styles/integria.css: Fixes in CSS selectors. Added style
+	fixes also.
+
+	* include/functions.php: Replaced lang_string() with __(). Please: Use
+	__() from now on. Function list_files() taken from Pandora code. Style
+	corrections.
+
+	* include/functions_db.php: Replaced many query functions code with
+	get_db_* equivalents. Added print_product_icon(), get_manufacturers()
+	and get_contract_slas(). Style corrections.
+
+	* include/functions_form.php: Replaced lang_string() with __().
+	Removed unused code in combo_task_user(). Rewritten
+	combo_task_user_participant() to use generic functions. Added class to
+	search button in form_search_incident().
+
+	* include/functions_html.php: Fixed an error with label support in
+	print_input_text_extended(). Added label support to
+	print_input_hidden(), print_checkbox() and print_radio_button(). Fixed
+	XHTML code to print_submit_button() and print_button().
+
+	* operation/companies/company_detail.php: Style correction. Replaced
+	lang_string() with __().
+
+	* operation/contracts/contract_detail.php: Added get_slas
+	functionallity to AJAX support. Style correction. Replaced
+	lang_string() with __().
+
+	* operation/incidents/incident_detail.php: Replaced lang_string().
+	Renamed some functions to english. The dialog for editing was
+	rewritten.
+
+	* operation/inventories/inventory.php: Second tab url set to the right
+	one.
+
+	* operation/inventories/inventory_detail.php: Allow edition of sla,
+	confirmed flag and manufacturer. Fixed dialog layout. Use javascript
+	already existed function.
+
+	* operation/kb/manage_prod.php: Style correction. Add support to
+	preview the product icon.
+
+	* operation/users/user_edit.php: PHP tags must be lowercase. Added
+	code to preview user avatar.
+
+	* images/products/*: Added product images from tango.
+
 2008-09-19  Sancho Lerena <slerena@gmail.com>
 
 	* integria.css: Several updates on styles.

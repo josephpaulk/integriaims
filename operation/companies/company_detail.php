@@ -20,8 +20,8 @@ global $config;
 
 check_login();
 
-if (give_acl($config["id_user"], 0, "IM")==0) {
-	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access company section");
+if (! give_acl($config["id_user"], 0, "IM")) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -29,61 +29,61 @@ if (give_acl($config["id_user"], 0, "IM")==0) {
 $id_user = $config["id_user"];
 
 // CREATE
-// ==================
-if (isset($_GET["create2"])){ //
+if (isset($_GET["create2"])) {
+	$name = (string) get_parameter ("name");
+	$address = (string) get_parameter ("address");
+	$fiscal_id = (string) get_parameter ("fiscal_id");
+	$comments = (string) get_parameter ("comments");
+	$id_company_role = (int) get_parameter ("id_company_role");
 
-	$name = get_parameter ("name","");
-	$address = get_parameter ("address", "");
-	$fiscal_id = get_parameter ("fiscal_id","");
-	$comments = get_parameter ("comments","");
-	$id_company_role = get_parameter ("id_company_role",0);
+	$sql = sprintf ('INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role)
+			 VALUES ("%s", "%s", "%s", "%s", %d)',
+			 $name, $address, $comments, $fiscal_id, $id_company_role);
 
-	$sql_insert="INSERT INTO tcompany (`name`, `address`, `comments`, fiscal_id, id_company_role ) VALUE ('$name','$address', '$comments', '$fiscal_id', '$id_company_role') ";
-
-	$result=mysql_query($sql_insert);
-	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Company cannot be created")."</h3>";
+	$id_data = process_sql ($sql, 'insert_id');
+	if ($id_data === false)
+		echo "<h3 class='error'>".__("Company cannot be created")."</h3>";
 	else {
-		echo "<h3 class='suc'>".lang_string ("Company has been created successfully")."</h3>";
-		$id_data = mysql_insert_id();
+		echo "<h3 class='suc'>".__("Company has been created successfully")."</h3>";
 		insert_event ("COMPANY CREATED", $id_data, 0, $name);
 	}
 }
 
 // UPDATE
-// ==================
 if (isset($_GET["update2"])){ // if modified any parameter
-	$id = get_parameter ("id","");
-	$name = get_parameter ("name","");
-	$address = get_parameter ("address", "");
-	$fiscal_id = get_parameter ("fiscal_id","");
-	$comments = get_parameter ("comments","");
-	$id_company_role = get_parameter ("id_company_role",0);
+	$id = (int) get_parameter ("id");
+	$name = (string) get_parameter ("name");
+	$address = (string) get_parameter ("address");
+	$fiscal_id = (string) get_parameter ("fiscal_id");
+	$comments = (string) get_parameter ("comments");
+	$id_company_role = (int) get_parameter ("id_company_role");
 
-	$sql_update ="UPDATE tcompany
-	SET comments = '$comments', name = '$name', address = '$address', fiscal_id = '$fiscal_id',  id_company_role = '$id_company_role' WHERE id = $id";
+	$sql = sprintf ('UPDATE tcompany SET comments = "%s", name = "%s",
+		address = "%s", fiscal_id = "%s", id_company_role = %d WHERE id = %d',
+		$comments, $name, $address,
+		$fiscal_id, $id_company_role, $id);
 
-	$result=mysql_query($sql_update);
-	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Company cannot be updated")."</h3>";
+	$result = mysql_query ($sql);
+	if ($result === false)
+		echo "<h3 class='error'>".__("Company cannot be updated")."</h3>";
 	else {
-		echo "<h3 class='suc'>".lang_string ("Company updated ok")."</h3>";
+		echo "<h3 class='suc'>".__("Company updated ok")."</h3>";
 		insert_event ("COMPANY", $id, 0, $name);
 	}
 }
 
 // DELETE
 // ==================
-if (isset($_GET["delete"])){ // if delete
-	$id = get_parameter ("delete",0);
-	$name = give_db_sqlfree_field  ("SELECT name FROM tcompany WHERE id = $id ");
-	$sql_delete= "DELETE FROM tcompany WHERE id = $id";
-	$result=mysql_query($sql_delete);
+if (isset($_GET["delete"])) { // if delete
+	$id = (int) get_parameter ("delete");
+	$name = get_db_value ('name', 'tcompany', 'id', $id);
+	$sql= sprintf ('DELETE FROM tcompany WHERE id = %d', $id);
+	process_sql ($sql);
 	insert_event ("COMPANY DELETED", $id, 0, "$name");
-	echo "<h3 class='suc'>".lang_string("Deleted successfully")."</h3>";
+	echo "<h3 class='suc'>".__("Deleted successfully")."</h3>";
 }
 
-if (isset($_GET["update2"])){
+if (isset($_GET["update2"])) {
 	// After apply update, let's redirecto to UPDATE form again.
 	$_GET["update"]= $id;
 }
@@ -98,22 +98,22 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id_company_role = "";
 		$fiscal_id = "";
 	} else {
-		$id = get_parameter ("update", -1);
-		$row = get_db_row ("tcompany", "id", $id);
-		$name = $row["name"];
-		$address = $row["address"];
-		$comments = $row["comments"];
-		$id_company_role = $row["id_company_role"];
-		$fiscal_id = $row["fiscal_id"];
+		$id = (int) get_parameter ("update", -1);
+		$company = get_db_row ("tcompany", "id", $id);
+		$name = $company["name"];
+		$address = $company["address"];
+		$comments = $company["comments"];
+		$id_company_role = $company["id_company_role"];
+		$fiscal_id = $company["fiscal_id"];
 	}
 
-	echo "<h2>".lang_string ("Company management")."</h2>";
+	echo "<h2>".__("Company management")."</h2>";
 	if ($id == -1){
-		echo "<h3>".lang_string ("Create a new company")."</a></h3>";
+		echo "<h3>".__("Create a new company")."</a></h3>";
 		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/companies/company_detail&create2=1'>";
 	}
 	else {
-		echo "<h3>".lang_string ("Update existing company")."</a></h3>";
+		echo "<h3>".__("Update existing company")."</a></h3>";
 		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/companies/company_detail&update2=1'>";
 		print_input_hidden ("id", "$id", false, '');
 	}
@@ -121,17 +121,17 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<table width=620 class='databox'>";
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo lang_string ("Company name");
+	echo __("Company name");
 	echo "<tr>";
 	echo "<td class=datos colspan=4>";
 	print_input_text ("name", $name, "", 60, 100, false);
 
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo lang_string ("Fiscal ID");
+	echo __("Fiscal ID");
 
 	echo "<td class=datos>";
-	echo lang_string ("Company Role");
+	echo __("Company Role");
 
 
 	echo "<tr>";
@@ -144,14 +144,14 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo lang_string ("Address");
+	echo __("Address");
 	echo "<tr>";
 	echo "<td class=datos colspan=4>";
 	print_textarea ("address", 1, 1, $address, "style='width: 600px; height: 60px;'", false);
 
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo lang_string ("Comments");
+	echo __("Comments");
 	echo "<tr>";
 	echo "<td class=datos colspan=4>";
 	print_textarea ("comments", 1, 1, $comments, "style='width: 600px; height: 110px;'", false);
@@ -161,9 +161,9 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<tr>";
 	echo "<td class='datos3' align=right>";
 	if ($id == -1)
-		print_submit_button (lang_string("Create"), "enviar", false, "class='sub next'", false);
+		print_submit_button (__("Create"), "enviar", false, "class='sub next'", false);
 	else
-		print_submit_button (lang_string("Update"), "enviar", false, "class='sub upd'", false);
+		print_submit_button (__("Update"), "enviar", false, "class='sub upd'", false);
 	echo "</table>";
 	echo "</form>";
 
@@ -172,34 +172,33 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 }
 
 
-    // Show list of items
-    // =======================
-    if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-        echo "<h2>".lang_string ("Company management")."</h2>";
+	// Show list of items
+	if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
+		echo "<h2>".__("Company management")."</h2>";
 
-    	$text = get_parameter ("freetext", "");
-    	if ($text != ""){
-    		$sql_search = "WHERE name LIKE '%$text%' OR address LIKE '%$text%' OR comments LIKE '%$text%' ";
-    		echo "<h4>".__("Searching for")." ".$text."</h4>";
-    	}
-    	else
-    		$sql_search = "";
+		$text = get_parameter ("freetext", "");
+		if ($text != ""){
+			$sql_search = "WHERE name LIKE '%$text%' OR address LIKE '%$text%' OR comments LIKE '%$text%' ";
+			echo "<h4>".__("Searching for")." ".$text."</h4>";
+		}
+		else
+			$sql_search = "";
 
 		echo "<table width=400>";
-    	echo "<form method=post action='index.php?sec=inventory&sec2=operation/companies/company_detail'>";
-    	echo "<tr><td>";
-    	echo lang_string ("Free text search");
-    	echo "<td>";
-    	print_input_text ("freetext", $text, "", 15, 100, false);
-    	echo "<td>";
-    	print_submit_button (lang_string("Search"), "enviar", false, "class='sub search'", false);
-    	echo "</form></td></tr></table>";
+		echo "<form method=post action='index.php?sec=inventory&sec2=operation/companies/company_detail'>";
+		echo "<tr><td>";
+		echo __("Free text search");
+		echo "<td>";
+		print_input_text ("freetext", $text, "", 15, 100, false);
+		echo "<td>";
+		print_submit_button (__("Search"), "enviar", false, "class='sub search'", false);
+		echo "</form></td></tr></table>";
 
 	   	$sql1 = "SELECT * FROM tcompany $sql_search ORDER BY name";
-        $color =0;
-	    if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
+		$color =0;
+		if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
 
-            $table->width = "720";
+			$table->width = "720";
 			$table->class = "listing";
 			$table->cellspacing = 0;
 			$table->cellpadding = 0;
@@ -207,44 +206,44 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			$table->size = array ();
 			$table->style = array ();
 			$table->colspan = array ();
-			$table->head[0] = lang_string ("Company");
-			$table->head[1] = lang_string ("Role");
-			$table->head[2] = lang_string ("Contracts");
-			$table->head[3] = lang_string ("Contacts");
-			$table->head[4] = lang_string ("Delete");
+			$table->head[0] = __("Company");
+			$table->head[1] = __("Role");
+			$table->head[2] = __("Contracts");
+			$table->head[3] = __("Contacts");
+			$table->head[4] = __("Delete");
 			$counter = 0;
-	        while ($row=mysql_fetch_array($result)){
-                // Name
-                $table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/companies/company_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
+			while ($row=mysql_fetch_array($result)){
+				// Name
+				$table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/companies/company_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
 				
 				// Role
 				$table->data[$counter][1] = get_db_sql("SELECT name FROM tcompany_role WHERE id = ".$row["id_company_role"]);
 
 				// Contracts (link to new window)
-               	$table->data[$counter][2] = "<img src='images/maintab.gif'>";
+			   	$table->data[$counter][2] = "<img src='images/maintab.gif'>";
 
 				// Contacts (link to new window)
-               	$table->data[$counter][3] = "<img src='images/group.png'>";
+			   	$table->data[$counter][3] = "<img src='images/group.png'>";
 
-                // Delete
-                $table->data[$counter][4] = "<a href='index.php?sec=inventory&
-				            sec2=operation/companies/company_detail&
-				            delete=".$row["id"]."'
-				            onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
-				            return false;'>
-				            <img border='0' src='images/cross.png'></a>";
+				// Delete
+				$table->data[$counter][4] = "<a href='index.php?sec=inventory&
+							sec2=operation/companies/company_detail&
+							delete=".$row["id"]."'
+							onClick='if (!confirm(\' ".__('are_you_sure')."\'))
+							return false;'>
+							<img border='0' src='images/cross.png'></a>";
 				$counter++;
-            }
-            print_table ($table);
+			}
+			print_table ($table);
 			echo "<table width=720 class='button'>";
 			echo "<tr><td align='right'>";
 			echo "<form method=post action='index.php?sec=inventory&
 			sec2=operation/companies/company_detail&create=1'>";
-			echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create company")."'>";
+			echo "<input type='submit' class='sub next' name='crt' value='".__("Create company")."'>";
 			echo "</form></td></tr></table>";
-        }
+		}
 
 
-    } // end of list
+	} // end of list
 
 ?>

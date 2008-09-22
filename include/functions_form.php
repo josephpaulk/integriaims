@@ -23,7 +23,7 @@ function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0,
 
 	$values = get_user_visible_users ($id_user, $access, true);
 	if ($any)
-		$values[''] = lang_string ('Any');
+		$values[''] = __('Any');
 
 	$output = print_select ($values, $form_name, $id_user, '', '', 0, true, false, false);
 
@@ -47,7 +47,7 @@ function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any =
 						WHERE id_grupo != 1
 						ORDER BY nombre');
 	} else {
-		$values[1] = lang_string ('Any');
+		$values[1] = __('Any');
 		$sql = sprintf ('SELECT g.id_grupo, nombre
 				FROM tusuario_perfil u, tgrupo g
 				WHERE u.id_grupo = g.id_grupo
@@ -66,7 +66,7 @@ function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any =
 		$values[$group['id_grupo']] = $group['nombre'];
 	}
 	$output .= print_select ($values, $form_name, $id_group, '', '', 0,
-				true, false, false);
+				true, false, false, __('Group'));
 
 	if ($return)
 		return $output;
@@ -246,7 +246,7 @@ function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $
 	else
 		$sql = 'SELECT id, name FROM tincident_status';
 
-	$output .= print_select_from_sql ($sql, 'incident_status', $actual, '', '', 0, true, false, false);
+	$output .= print_select_from_sql ($sql, 'incident_status', $actual, '', '', 0, true, false, false, __('Status'));
 
 	if ($return)
 		return $output;
@@ -266,7 +266,7 @@ function combo_incident_origin ($actual = -1, $disabled = 0, $return = false) {
 	}
 
 	$output .= print_select_from_sql ('SELECT id,name FROM tincident_origin', 'incident_origin',
-					$actual, '', '', 0, true, false, false);
+					$actual, '', '', 0, true, false, false, __('Source'));
 	if ($return)
 		return $output;
 	echo $output;
@@ -277,7 +277,7 @@ function combo_incident_origin ($actual = -1, $disabled = 0, $return = false) {
 function combo_incident_resolution ($actual = -1, $disabled = false, $return = false) {
 	$output = print_select_from_sql ('SELECT id, name FROM tincident_resolution ORDER BY 2',
 					'incident_resolution', $actual, '', '',
-					0, true, false, false);
+					0, true, false, false, __('resolution'));
 	if ($return)
 		return $output;
 	echo $output;
@@ -297,9 +297,9 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 	}
 
 	$values = array ();
-	$values[0] = lang_string ('N/A');
+	$values[0] = __('N/A');
 	if ($show_vacations == 1)
-		$values[-1] = lang_string ('vacations');
+		$values[-1] = __('vacations');
 
 	$sql = sprintf ('SELECT ttask.id, ttask.name
 			FROM ttask, trole_people_task
@@ -315,75 +315,39 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 		$values[$task['id']] = $task['name'];
 	}
 	$output = print_select ($values,'task_user', $actual, '', '',
-				0, true, false, false);
+				0, true, false, false, __('Task'));
 	if ($return)
 		return $output;
 	echo $output;
 	return;
-	global $config;
-	global $lang_label;
-
-	if ($disabled == 0)
-		echo "<select name='task_user' style='width: 120px'>";
-	else
-		echo "<select name='task_user' disabled style='width: 120px'>";
-
-	if ($show_vacations == 1)
-		echo "<option value=-1>".lang_string ('vacations');
-
-	if ($actual != 0){
-		$sql = "SELECT * FROM ttask WHERE id = $actual";
-		$result = mysql_query($sql);
-		if ($row=mysql_fetch_array($result)){
-			echo "<option value='".$row["id"]."'>".substr($row["name"],0,35);
-		}
-	}
-
-	echo "<option value=0>".lang_string ('N/A');
-	$sql = "SELECT ttask.id, ttask.name FROM ttask, trole_people_task WHERE ttask.id != $actual AND ttask.id = trole_people_task.id_task AND trole_people_task.id_user = '$id_user'";
-	$result = mysql_query($sql);
-	while ($row=mysql_fetch_array($result)){
-		echo "<option value='".$row[0]."'>".substr($row[1],0,35);
-	}
-
-	echo "</select>";
 }
 
 // Returns a combo with the tasks that current user is working on
 // ----------------------------------------------------------------------
-function combo_task_user_participant ($id_user, $show_vacations = 0, $actual = 0) {
-	global $config;
-	global $lang_label;
-
-	echo "<select name='task'>";
-	if ($show_vacations == 1){
-		echo "<option value=-1>(*) ".lang_string ("vacations");
-		echo "<option value=-2>(*) ".lang_string ("not_working_by_disease");
-		echo "<option value=-3>(*) ".lang_string ("not_justified");
+function   ($id_user, $show_vacations = false, $actual = 0, $return = false) {
+	$output = '';
+	$values = array ();
+	
+	if ($show_vacations) {
+		$values[-1] = __("vacations");
+		$values[-2] = __("not_working_by_disease");
+		$values[-3] = __("not_justified");
 	}
-
-	if ($actual != 0){
-		$sql = "SELECT id, id_project,name FROM ttask WHERE id = $actual";
-		$result = mysql_query($sql);
-		if ($row=mysql_fetch_array($result)){
-			$id = $row[0];
-			$id_project = $row[1];
-			$name = $row[2];
-			$project_name = give_db_value ("name", "tproject", "id", $id_project);
-			echo "<option value='$id'>$project_name / $name";
-		}
-	}
-	echo "<option value='0'>".lang_string ('N/A');
-	$sql = "SELECT DISTINCT (ttask.id) FROM ttask, trole_people_task, tproject WHERE ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.id = trole_people_task.id_task AND trole_people_task.id_user = '$id_user' ORDER BY ttask.id_project";
-	$result = mysql_query($sql);
-	while ($row=mysql_fetch_array($result)){
-		$id = $row[0];
-		$task_name = give_db_value ("name", "ttask", "id", $id);
-		$id_project = give_db_value ("id_project", "ttask", "id", $id);
-		$project_name = give_db_value ("name", "tproject", "id", $id_project);
-		echo "<option value='$id'>$project_name / $task_name";
-	}
-	echo "</select>";
+	
+	$sql = sprintf ('SELECT DISTINCT (ttask.id), CONCAT(tproject.name," / ",ttask.name)
+			FROM ttask, trole_people_task, tproject
+			WHERE ttask.id_project = tproject.id
+			AND tproject.disabled = 0
+			AND ttask.id = trole_people_task.id_task
+			AND trole_people_task.id_user = "%s"
+			ORDER BY ttask.id_project', $id_user);
+	
+	$output .= print_select_from_sql ($sql, 'task', $actual, '', '', __('N/A'), '0', true,
+				false, false, __('Task'));
+	
+	if ($return)
+		return $output;
+	echo $output;
 }
 
 // Returns a combo with the available roles
@@ -394,7 +358,7 @@ function combo_roles ($include_na = 0, $name = 'role') {
 
 	echo "<select name='$name'>";
 	if ($include_na == 1)
-		echo "<option value=0>".lang_string ('N/A');
+		echo "<option value=0>".__('N/A');
 	$sql = "SELECT * FROM trole";
 	$result=mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
@@ -439,12 +403,12 @@ function show_workunit_data ($row3, $title) {
 	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
 	echo $id_user;
 	echo "</a>";
-	echo "&nbsp;".lang_string ('said_on')."&nbsp;";
+	echo "&nbsp;".__('said_on')."&nbsp;";
 	echo $timestamp;
 	echo "</span>";
 	echo "<span style='float:right; margin-top: -15px; margin-bottom:0px; padding-right:10px;'>";
 	echo $duration;
-	echo "&nbsp; ".lang_string ('hr');
+	echo "&nbsp; ".__('hr');
 	echo "</span>";
 	echo "</div>";
 
@@ -454,7 +418,7 @@ function show_workunit_data ($row3, $title) {
 		echo clean_output_breaks(substr($nota,0,1024));
 		echo "<br><br>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/common/workunit_detail&id=".$id_workunit."&title=$title'>";
-		echo lang_string ('read_more');
+		echo __('read_more');
 		echo "</a>";
 	} else {
 		echo clean_output_breaks($nota);
@@ -511,14 +475,14 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 	echo "<td width='60%'><b>";
 	if ($id_task != ""){
-		echo lang_string ("task")." </b> : ";
+		echo __("task")." </b> : ";
 		echo $task_title;
 	} else  {
-		echo lang_string ("incident")." </b> : ";
+		echo __("incident")." </b> : ";
 		echo $incident_title;
 	}
 	echo "<td width='13%'><b>";
-	echo lang_string ("duration")."</b>";
+	echo __("duration")."</b>";
 
 	echo "<td width='20%'>";
 	echo " : ".format_numeric($duration);
@@ -527,10 +491,10 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<tr>";
 	echo "<td><b>";
 	if ($id_task != ""){
-		echo lang_string ("project")." </b> : ";
+		echo __("project")." </b> : ";
 		echo $project_title;
 	} else {
-		echo lang_string ("group")."</b> : ";
+		echo __("group")."</b> : ";
 		echo dame_nombre_grupo (give_db_sqlfree_field ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident"));
 	}
 
@@ -541,8 +505,8 @@ function show_workunit_user ($id_workunit, $full = 0) {
 		$cost = format_numeric ($duration * $profile_cost);
 		$cost = $cost ." &euro;";
 	} else
-		$cost = lang_string ('N/A');
-	echo lang_string ("cost");
+		$cost = __('N/A');
+	echo __("cost");
 	echo "</b>";
 	echo "<td>";
 	echo " : ".$cost;
@@ -553,10 +517,10 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
 	echo "<b>".$id_user."</b>";
 	echo "</a>";
-	echo "&nbsp;".lang_string ('said_on')."&nbsp;";
+	echo "&nbsp;".__('said_on')."&nbsp;";
 	echo $timestamp;
 	echo "<td><b>";
-	echo lang_string ("profile");
+	echo __("profile");
 	echo "</b></td><td>";
 	echo " : ".give_db_value ("name", "trole", "id", $profile);
 	echo "</table>";
@@ -571,7 +535,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 		echo topi_richtext ( clean_output_breaks(substr($nota,0,1024)) );
 		echo "<br><br>";
 		echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id_workunit=".$id_workunit."&title=$task_title'>";
-		echo lang_string ('read_more');
+		echo __('read_more');
 		echo "</a>";
 	} else {
 		echo topi_richtext(clean_output_breaks($nota));
@@ -640,40 +604,40 @@ function form_search_incident ($return = false) {
 
 	$table->data[0][0] = print_select (get_indicent_status (),
 					'search_status', $status,
-					'', lang_string ('Any'), 0, true, false, false,
-					lang_string ('Status'));
+					'', __('Any'), 0, true, false, false,
+					__('Status'));
 	
 	$table->data[0][1] = print_select (get_indicent_priorities (),
 					'search_priority', $priority,
-					'', lang_string ('Any'), -1, true, false, false,
-					lang_string ('Priority'));
+					'', __('Any'), -1, true, false, false,
+					__('Priority'));
 
 	$table->data[0][2] = print_select (get_user_groups (),
 					'search_id_group', $id_group,
-					'', '', '', true, false, false, lang_string ('Group'));
+					'', '', '', true, false, false, __('Group'));
 	
 	$table->data[1][0] = print_input_hidden ('search_id_inventory', $id_inventory, true);
-	$name = lang_string ("Any");
+	$name = __("Any");
 	if ($id_inventory)
 		$name = get_inventory_name ($id_inventory);
 	$table->data[1][0] .= print_button ($name, 'inventory_name', false, '',
-					'', true, lang_string ('Inventory'));
+					'class="dialogbtn"', true, __('Inventory'));
 	
 	$table->data[1][1] = print_select (get_companies (),
 					'search_id_company', $id_company,
-					'', lang_string ('All'), 0, true, false, false,
-					lang_string ('Company'));
+					'', __('All'), 0, true, false, false,
+					__('Company'));
 	
 	$table->data[1][2] = print_select (get_products (),
 					'search_id_product', $id_product,
-					'', lang_string ('All'), 0, true, false, false,
-					lang_string ('Product type'));
+					'', __('All'), 0, true, false, false,
+					__('Product type'));
 	
 	$table->data[2][0] = print_input_text ('search_string', $search_string,
-						'', 25, 50, true, lang_string ('Search string'));
+						'', 40, 50, true, __('Search string'));
 	
 
-	$table->data[2][1] = print_submit_button (lang_string ('Search'), 'search', false, 'class="sub search"', true);
+	$table->data[2][1] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= '<form id="search_incident_form" method="post">';
 	$output .= print_table ($table, true);

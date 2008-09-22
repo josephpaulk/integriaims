@@ -53,3 +53,21 @@ function get_form_input_values (form) {
 		return $(form).formToArray ();
 	}
 }
+
+/**
+ * Show an error message in result div.
+ * 
+ * @param string message Message to show
+ */
+function result_msg_error (message) {
+	$("#result").empty ().append ($("<h3></h3>").addClass ("error").append (message)).fadeIn ();
+}
+
+/**
+ * Show an success message in result div.
+ * 
+ * @param string message Message to show
+ */
+function result_msg_success (message) {
+	$("#result").empty ().append ($("<h3></h3>").addClass ("suc").append (message)).fadeIn ();
+}

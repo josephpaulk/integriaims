@@ -79,13 +79,16 @@ CREATE TABLE `tincidencia` (
   `id_task` int(10) NOT NULL default '0',
   `resolution` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `epilog` mediumtext NOT NULL,
-  `id_incident_linked` bigint(20) unsigned NOT NULL default 0,
+  `id_parent` bigint(20) unsigned NULL,
   `sla_disabled` tinyint UNSIGNED NOT NULL DEFAULT 0,
   `affected_sla_id` tinyint UNSIGNED NOT NULL DEFAULT 0,
   `id_incident_type` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_index_1` (`id_usuario`,`id_incidencia`)
 );
+
+ALTER TABLE `tincidencia` ADD FOREIGN KEY (`id_parent`) REFERENCES tincidencia(`id_incidencia`)
+  ON UPDATE CASCADE ON DELETE SET NULL;
 
 --
 -- Table structure for table `tlanguage`
@@ -467,24 +470,6 @@ CREATE TABLE `tcompany_contact` (
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE `tcontract` (
-  `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) NULL default NULL,
-  `date_begin` date NOT NULL default '0000-00-00',
-  `date_end` date NOT NULL default '0000-00-00',
-  `id_company` mediumint(8) unsigned NOT NULL DEFAULT 0,
-  `id_sla` mediumint(8) unsigned NOT NULL DEFAULT 0,
-  `id_group` mediumint(8) unsigned NOT NULL DEFAULT 0,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_sla`) REFERENCES tsla(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
-);
-
 CREATE TABLE `tsla` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
@@ -495,6 +480,24 @@ CREATE TABLE `tsla` (
   `enforced` tinyint NULL default 0,
   `id_sla_base` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tcontract` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(250) NULL default NULL,
+  `date_begin` date NOT NULL default '0000-00-00',
+  `date_end` date NOT NULL default '0000-00-00',
+  `id_company` mediumint(8) unsigned NULL default NULL,
+  `id_sla` mediumint(8) unsigned NULL default NULL,
+  `id_group` mediumint(8) unsigned NULL default NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_sla`) REFERENCES tsla(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `tmanufacturer` (
@@ -516,7 +519,7 @@ CREATE TABLE `tinventory` (
   `serial_number` varchar(250) NULL default NULL,
   `part_number` varchar(250) NULL default NULL,
   `comments` varchar(250) NULL default NULL,
-  `confirmed` tinyint(4) NULL default '0',
+  `confirmed` tinyint(1) NULL default '0',
   `ip_address` varchar(60) NULL default NULL,
   `id_contract` mediumint(8) unsigned default NULL,
   `id_product` mediumint(8) unsigned default NULL,

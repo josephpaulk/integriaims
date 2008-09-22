@@ -126,7 +126,7 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
 	$output = '';
 	
 	if ($label) {
-		$output .= print_label ($label, $id, $type, true);
+		$output .= print_label ($label, $id, '', true);
 	}
 	
 	if (empty ($name)) {
@@ -202,7 +202,11 @@ function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0,
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
  * @param string $class HTML class to be added. Useful in javascript code.
  */
-function print_input_hidden ($name, $value, $return = false, $class = '') {
+function print_input_hidden ($name, $value, $return = false, $class = '', $label = false) {
+	if ($label) {
+		$output .= print_label ($label, $name, 'hidden', true);
+	}
+	
 	$output = '<input id="hidden-'.$name.'" name="'.$name.'" type="hidden"';
 	if ($class != '')
 		$output .= ' class="'.$class.'"';
@@ -222,7 +226,7 @@ function print_submit_button ($value = 'OK', $name = '', $disabled = false, $att
 	
 	$output .= '<input type="submit" id="submit-'.$name.'" name="'.$name.'" value="'. $value .'" '. $attributes;
 	if ($disabled)
-		$output .= ' disabled';
+		$output .= ' disabled="disabled"';
 	$output .= ' />';
 	if ($return)
 		return $output;
@@ -239,7 +243,7 @@ function print_button ($value = 'OK', $name = '', $disabled = false, $script = '
 	
 	$output .= '<input type="button" id="button-'.$name.'" name="'.$name.'" value="'. $value .'" onClick="'. $script.'" '.$attributes;
 	if ($disabled)
-		$output .= ' disabled';
+		$output .= ' disabled="disabled"';
 	$output .= ' />';
 	if ($return)
 		return $output;
@@ -497,8 +501,8 @@ function print_radio_button_extended ($name, $value, $label, $checkedvalue, $dis
  * @param string $checkedvalue Checked and selected value, the button will be selected if it matches $value (optional).
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
  */
-function print_radio_button ($name, $value, $label = '', $checkedvalue = '', $return = false) {
-	$output = print_radio_button_extended ($name, $value, $label, $checkedvalue, false, '', '', true);
+function print_radio_button ($name, $value, $label = '', $checkedvalue = '', $return = false, $label = false) {
+	$output = print_radio_button_extended ($name, $value, $label, $checkedvalue, false, '', '', true, $label);
 
 	if ($return)
 		return $output;
@@ -537,6 +541,9 @@ function print_label ($label, $id, $input_type = 'text', $return = false) {
 	case 'hidden':
 		$id = 'hidden-'.$id;
 		break;
+	case 'checkbox':
+		$id = 'checkbox-'.$id;
+		break;
 	case 'select':
 	default:
 		break;
@@ -564,10 +571,9 @@ function print_label ($label, $id, $input_type = 'text', $return = false) {
 	inserted into the HTML tag, use it carefully (optional).
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
  */
-function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $attributes, $return = false) {
-	$htmlid = 'checkbox-'.$name;
+function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $attributes, $return = false, $label = false) {
 	$output = '<input name="'.$name.'" type="checkbox" value="'.$value.'" '. ($checked ? 'checked': '');
-	$output .= ' id="'.$htmlid.'"';
+	$output .= ' id="checkbox-'.$name.'"';
 
 	if ($script != '') {
 		 $output .= ' onClick="'. $script . '"';
@@ -579,6 +585,10 @@ function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $
 
 	$output .= ' />';
 	$output .= "\n";
+	if ($label) {
+		$output .= ' ';
+		$output .= print_label ($label, $name, 'checkbox', true);
+	}
 	if ($return)
 		return $output;
 	echo $output;
@@ -592,8 +602,8 @@ function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $
  * @param string $checked Set the button to be marked (optional, unmarked by default).
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
  */
-function print_checkbox ($name, $value, $checked = false, $return = false) {
-	$output = print_checkbox_extended ($name, $value, (bool) $checked, false, '', '', true);
+function print_checkbox ($name, $value, $checked = false, $return = false, $label = false) {
+	$output = print_checkbox_extended ($name, $value, (bool) $checked, false, '', '', true, $label);
 
 	if ($return)
 		return $output;

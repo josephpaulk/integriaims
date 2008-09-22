@@ -16,7 +16,8 @@
 global $config;
 
 if (check_login () != 0) {
- 	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
+ 	audit_db ("Noauth", $config["REMOTE_ADDR"], "No authenticated access",
+ 		"Trying to access inventory viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -33,6 +34,8 @@ if (give_acl ($config['id_user'], $id_grupo, "IR") != 1) {
 	exit;
 }
 
+$has_permission = give_acl ($config['id_user'], $id_grupo, "IW");
+
 $result_msg = '';
 
 $update = (bool) get_parameter ('update_inventory');
@@ -46,21 +49,24 @@ $id_parent = (int) get_parameter ('id_parent');
 $id_building = (int) get_parameter ('id_building');
 $serial_number = (string) get_parameter ('serial_number');
 $part_number = (string) get_parameter ('part_number');
+$confirmed = (bool) get_parameter ('confirmed');
+$id_sla = (int) get_parameter ('id_sla');
+$id_manufacturer = (int) get_parameter ('id_manufacturer');
 
 if ($update) {
 	$sql = sprintf ('UPDATE tinventory SET name = "%s", description = "%s",
 			id_product = %d, id_contract = %d, ip_address = "%s",
 			id_parent = %d, id_building = %d, serial_number = "%s",
-			part_number = "%s"
+			part_number = "%s", id_manufacturer = %d
 			WHERE id = %d',
 			$name, $description, $id_product, $id_contract, $ip_address,
 			$id_parent, $id_building, $serial_number, $part_number,
-			$id);
+			$id_manufacturer, $id);
 	$id = process_sql ($sql);
 	if ($id !== false) {
-		$result_msg = '<h3 class="suc">'.lang_string ('Inventory object updated successfuly').'</h3>';
+		$result_msg = '<h3 class="suc">'.__('Inventory object updated successfuly').'</h3>';
 	} else {
-		$result_msg = '<h3 class="err">'.lang_string ('There was an error updating inventory object').'</h3>';
+		$result_msg = '<h3 class="err">'.__('There was an error updating inventory object').'</h3>';
 	}
 	
 	if (defined ('AJAX')) {
@@ -71,15 +77,17 @@ if ($update) {
 
 if ($create) {
 	$sql = sprintf ('INSERT INTO tinventory (name, description, id_product,
-			id_contract, ip_address, id_parent, id_building, serial_number, part_number)
-			VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s")',
+			id_contract, ip_address, id_parent, id_building, serial_number,
+			part_number, id_manufacturer)
+			VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s", %d)',
 			$name, $description, $id_product, $id_contract, $ip_address,
-			$id_parent, $id_building, $serial_number, $part_number);
+			$id_parent, $id_building, $serial_number, $part_number,
+			$id_manufacturer);
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
-		$result_msg = '<h3 class="suc">'.lang_string ('Inventory object created successfuly').'</h3>';
+		$result_msg = '<h3 class="suc">'.__('Inventory object created successfuly').'</h3>';
 	} else {
-		$result_msg = '<h3 class="err">'.lang_string ('There was an error creating inventory object').'</h3>';
+		$result_msg = '<h3 class="err">'.__('There was an error creating inventory object').'</h3>';
 	}
 	
 	if (defined ('AJAX')) {
@@ -96,6 +104,9 @@ if ($create) {
 	$id_building = "";
 	$serial_number = "";
 	$part_number = "";
+	$confirmed = false;
+	$id_sla = 0;
+	$id_manufacturer = 0;
 }
 
 if ($id) {
@@ -109,70 +120,86 @@ if ($id) {
 	$id_building = $inventory['id_building'];
 	$serial_number = $inventory['serial_number'];
 	$part_number = $inventory['part_number'];
+	$confirmed = false;
+	$id_sla = 0;
+	$id_manufacturer = $inventory['id_manufacturer'];
 }
 
 if (! $id) {
 	if (! defined ('AJAX'))
-		echo "<h2>".lang_string ('Create inventory object')."</h2>";
+		echo "<h2>".__('Create inventory object')."</h2>";
 }
 
 $table->class = "databox";
-$table->width = "90%";
+$table->width = "740px";
 $table->data = array ();
 $table->colspan = array ();
 
 /* First row */
-$table->data[0][0] = print_input_text ('name', $name, '', 20, 128, true,
-			lang_string ('Name'));
-$table->data[0][1] = print_select (get_products (),
-					'id_product', $id_product,
-					'', lang_string ('None'), 0, true, false, false,
-					lang_string ('Product type'));
+$table->data[0][0] = print_input_text ('name', $name, '', 40, 128, true,
+			__('Name'));
+$table->data[0][1] = print_checkbox ('confirmed', $confirmed, $has_permission, true, __('Confirmed'));
 
-$table->data[0][2] = print_select (get_contracts (),
-			'id_contract', $id_contract,
-			'', lang_string ('None'), 0, true, false, false,
-			lang_string ('Contract'));
+$table->data[0][2] = print_select (get_products (),
+					'id_product', $id_product,
+					'', __('None'), 0, true, false, false,
+					__('Product type'));
+$table->data[0][2] .= print_product_icon ($id_product, true);
 
 /* Second row */
-$parent_name = $id_parent ? get_inventory_name ($id_parent) : lang_string ('Search parent');
+$table->data[1][0] = print_select (get_contracts (),
+			'id_contract', $id_contract,
+			'', __('None'), 0, true, false, false,
+			__('Contract'));
+$table->data[1][1] = print_select (array (),
+			'id_sla', $id_sla,
+			'', __('None'), 0, true, false, false,
+			__('SLA'));
+$table->data[1][2] = print_select (get_manufacturers (),
+			'id_manufacturer', $id_manufacturer,
+			'', __('None'), 0, true, false, false,
+			__('Manufacturer'));
 
-$table->data[1][0] = print_button ($parent_name,
-			'parent_search', false, '', '',
-			true, lang_string ('Parent object'));
-$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
+/* Third row */
+$parent_name = $id_parent ? get_inventory_name ($id_parent) : __('Search parent');
 
-$table->data[1][1] = print_select (get_buildings (),
+$table->data[2][0] = print_button ($parent_name,
+			'parent_search', false, '', 'class="dialogbtn"',
+			true, __('Parent object'));
+$table->data[2][0] .= print_input_hidden ('id_parent', $id_parent, true);
+
+$table->data[2][1] = print_select (get_buildings (),
 			'id_building', $id_building,
-			'', lang_string ('None'), 0, true, false, false,
-			lang_string ('Building'));
+			'', __('None'), 0, true, false, false,
+			__('Building'));
 
-$table->data[2][0] = print_input_text ('ip_address', $ip_address, '', 20, 60,
-			true, lang_string ('IP address'));
-$table->data[2][1] = print_input_text ('serial_number', $serial_number, '', 30, 250,
-			true, lang_string ('Serial number'));
-$table->data[2][2] = print_input_text ('part_number', $part_number, '', 30, 250,
-			true, lang_string ('Part number'));
+$table->data[3][0] = print_input_text ('serial_number', $serial_number, '', 40, 250,
+			true, __('Serial number'));
+$table->data[3][1] = print_input_text ('part_number', $part_number, '', 40, 250,
+			true, __('Part number'));
+$table->data[3][2] = print_input_text ('ip_address', $ip_address, '', 20, 60,
+			true, __('IP address'));
 
 $table->colspan[4][0] = 3;
 $table->data[4][0] = print_textarea ('description', 15, 100, $description, '',
-			true, lang_string ('Description'));
+			true, __('Description'));
+
+echo "TODO: SLA debajo de contract (rellenar automaticamente en base al contrato, pero permitir cambiarla)";
 
 echo '<div id="result">'.$result_msg.'</div>';
 echo '<form method="post" id="inventory_status_form">';
 print_table ($table);
 
-echo "<table width=90% class='button'>";
-echo "<tr><td align=right>";
+echo '<div style="width: '.$table->width .'" class="action-buttons button">';
 if ($id) {
 	print_input_hidden ('update_inventory', 1);
 	print_input_hidden ('id', $id);
-	print_submit_button (lang_string ('Update'), 'update', false, 'class="sub upd"');
+	print_submit_button (__('Update'), 'update', false, 'class="sub upd"');
 } else {
 	print_input_hidden ('create_inventory', 1);
-	print_submit_button (lang_string ('Create'), 'create', false, 'class="sub wand"');
+	print_submit_button (__('Create'), 'create', false, 'class="sub next"');
 }
-echo '</td></tr></table>';
+echo '</div>';
 echo '</form>';
 
 if (! defined ('AJAX')):
@@ -185,15 +212,7 @@ if (! defined ('AJAX')):
 
 <script type="text/javascript">
 $(document).ready (function () {
-	$("#button-parent_search").click (function () {
-		show_inventory_search_dialog ("<?php echo lang_string ("Search parent inventory") ?>",
-					function (id, name) {
-						$("#button-parent_search").attr ("value", name);
-						$("#hidden-id_parent").attr ("value", id);
-						$("#dialog").dialog ("close");
-					}
-		);
-	});
+	configure_inventory_form (false);
 });
 
 </script>
