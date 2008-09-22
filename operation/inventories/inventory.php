@@ -18,12 +18,13 @@ echo '<div id="tabs">';
 
 /* Tabs list */
 echo '<ul style="height: 30px;" class="ui-tabs-nav">';
-echo '<li class="ui-tabs-selected"><a href="#ui-tabs-3"><span>'.lang_string ('Search').'</span></a></li>';
+echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.lang_string ('Search').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Details').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Incidents').'</span></a></li>';
 echo '</ul>';
 
 /* Tabs first container is manually set, so it loads immediately */
-echo '<div id="ui-tabs-3" class="ui-tabs-panel" style="display: block;">';
+echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: block;">';
 
 require_once ('inventory_search.php');
 

@@ -19,7 +19,7 @@ global $config;
 
 check_login();
 
-if (give_acl($config["id_user"], 0, "IM")==0) {
+if (! give_acl ($config["id_user"], 0, "IM")) {
 		audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a contract");
 		require ("general/noaccess.php");
 		exit;
@@ -31,10 +31,11 @@ $get_sla = (bool) get_parameter ('get_sla');
 if ($get_sla) {
 	$id = (int) get_parameter ('id');
 	$sla = get_contract_sla ($id, false);
-	echo json_encode ($sla);
 	
-	if (defined ('AJAX'))
+	if (defined ('AJAX')) {
+		echo json_encode ($sla);
 		return;
+	}
 }
 
 // CREATE

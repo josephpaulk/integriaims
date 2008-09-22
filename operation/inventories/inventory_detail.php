@@ -185,7 +185,7 @@ $table->colspan[4][0] = 3;
 $table->data[4][0] = print_textarea ('description', 15, 100, $description, '',
 			true, __('Description'));
 
-echo '<div id="result">'.$result_msg.'</div>';
+echo '<div class="result">'.$result_msg.'</div>';
 echo '<form method="post" id="inventory_status_form">';
 print_table ($table);
 

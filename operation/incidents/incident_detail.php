@@ -360,7 +360,7 @@ if ($id) {
 		echo "<h2>".__('create_incident')."</h2>";
 }
 
-echo '<div id="result">'.$result_msg.'</div>';
+echo '<div class="result">'.$result_msg.'</div>';
 
 $table->width = "700px";
 $table->class = "databox_color";
@@ -459,7 +459,6 @@ if ($create_incident) {
 					'search_inventory', false, '', 'class="dialogbtn"', true);
 		$table->data[4][2] .= print_button (__('Remove'),
 					'delete_inventory', false, '', 'class="dialogbtn"', true);
-		$inventories = (array) get_db_all_rows_sql ($sql);
 		foreach ($inventories as $inventory_id => $inventory_name) {
 			$table->data[4][2] .= print_input_hidden ("inventories[]",
 								$inventory_id, true, 'selected-inventories');
@@ -482,8 +481,7 @@ echo "<form id='incident_status_form' method='POST' action='index.php?sec=incide
 
 print_table ($table);
 
-echo "<table width=95% class='button'>";
-echo '<tr><td align=right>';
+echo '<div style="width:'.$table->width.'" class="button">';
 if ($create_incident) {
 	print_input_hidden ('action', 'insert');
 	if (give_acl ($config["id_user"], 0, "IW")) {
@@ -496,8 +494,7 @@ if ($create_incident) {
 		print_submit_button (__('update'), 'accion', false, 'class="sub next"');
 	}
 }
-
-echo '</td></tr></table>';
+echo '</div>';
 echo "</form>";
 
 /* Javascript is only shown in normal mode */

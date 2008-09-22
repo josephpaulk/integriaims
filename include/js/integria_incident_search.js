@@ -63,22 +63,20 @@ function configure_incident_form (enable_ajax_form) {
 	$(dialog+"#incident_status").change (function () {
 		/* Verified, see tincident_status table id */
 		if (this.value == 6 || this.value == 7) {
-			$(dialog+"#incident-editor-7").css ('display', '');
+			$(dialog+"#incident-editor-6").css ('display', '');
 		} else {
-			$(dialog+"#incident-editor-7").css ('display', 'none');
+			$(dialog+"#incident-editor-6").css ('display', 'none');
 		}
 	});
 	
 	$(dialog+"#incident_status").children ().each (function () {
-		console.log (this.value);
 		switch (this.value) {
 		case 1:
-			console.log (this.value);
+			break;
 		}
 	});
 	
 	$(dialog+"#priority_form").change (function () {
-		console.log (this.value);
 		switch (this.value) {
 		case "0":
 			img = "images/pixel_gray.png";
@@ -101,7 +99,6 @@ function configure_incident_form (enable_ajax_form) {
 		default:
 			img = "images/pixel_gray.png";
 		}
-		console.log (img);
 		$(dialog+".priority-color").attr ("src", img);
 	});
 	
@@ -112,31 +109,31 @@ function configure_incident_form (enable_ajax_form) {
 				$(dialog+".selected-inventories").each (function () {
 					if (this.value == id) {
 						exists = true;
-						return
+						return;
 					}
 				});
+				
 				if (exists) {
-					$("#inventory_search_result").fadeOut ('normal', function () {
+					$("#dialog-search-inventory #inventory_search_result").fadeOut ('normal',
+						function () {
 						$(this).empty ().append ('<h3 class="error">Already added</h3>').fadeIn ();
 					});
 					return;
 				}
 				$(dialog+"#incident_inventories").append ($('<option value="'+id+'">'+name+'</option>'));
 				$(dialog+"#incident_status_form").append ($('<input type="hidden" value="'+id+'" class="selected-inventories" name="inventories[]" />'));
-				$("#inventory_search_result").fadeOut ('normal', function () {
-					$(this).empty ().append ('<h3 class="suc">Added</h3>').fadeIn ();
+				$("#dialog-search-inventory #inventory_search_result").fadeOut ('normal',
+					function () {
+						$(this).empty ().append ('<h3 class="suc">Added</h3>').fadeIn ();
 				});
 			}
 		);
 	});
 	
 	$(dialog+"#button-delete_inventory").click (function () {
-		$($(dialog+"#incident_inventories")[0].options).each (function () {
-			if (! this.selected)
-				return;
-			$(dialog+".selected-inventories[value="+this.value+"]").remove ();
-			$(this).remove ();
-		});
+		selected = $(dialog+"#incident_inventories").attr ("selectedIndex");
+		
+		$(dialog+"#incident_inventories").children (":eq("+selected+")").remove ();
 	});
 	
 	if (enable_ajax_form) {
@@ -147,8 +144,8 @@ function configure_incident_form (enable_ajax_form) {
 			jQuery.post ("ajax.php",
 				values,
 				function (data, status) {
-					$("#result").slideUp ('fast', function () {
-						$("#result").empty ().append (data).slideDown ();
+					$(".result").slideUp ('fast', function () {
+						$(".result").empty ().append (data).slideDown ();
 						$("#dialog-incident").dialog ("close");
 					});
 				},
@@ -174,7 +171,7 @@ function show_add_incident_dialog () {
 			$("#dialog-incident").dialog ({"title" : "Create incident",
 					minHeight: 300,
 					minWidth: 500,
-					height: 600,
+					height: 750,
 					width: 800,
 					modal: true,
 					open: function () {
@@ -183,7 +180,7 @@ function show_add_incident_dialog () {
 					close: function () {
 						dialog = "";
 					}
-					});
+				});
 			configure_incident_form (true);
 		},
 		"html"
@@ -236,13 +233,7 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 					minWidth: 600,
 					height: 500,
 					width: 600,
-					modal: true,
-					open: function () {
-						dialog = "#dialog-search-inventory ";
-					},
-					close: function () {
-						dialog = "";
-					}
+					modal: true
 					});
 			configure_inventory_search_form (5, callback_incident_click);
 		},
@@ -258,8 +249,8 @@ function configure_workunit_form () {
 		jQuery.post ("ajax.php",
 			values,
 			function (data, status) {
-				$("#result").slideUp ('fast', function () {
-					$("#result").empty ().append (data).slideDown ();
+				$(".result").slideUp ('fast', function () {
+					$(".result").empty ().append (data).slideDown ();
 				});
 				$("#dialog-add-workunit").dialog ("close");
 			},
@@ -302,8 +293,8 @@ function configure_file_form () {
 		jQuery.post ("ajax.php",
 			values,
 			function (data, status) {
-				$("#result").slideUp ('fast', function () {
-					$("#result").empty ().append (data).slideDown ();
+				$(".result").slideUp ('fast', function () {
+					$(".result").empty ().append (data).slideDown ();
 				});
 				$("#dialog-add-file").dialog ("close");
 			},
@@ -439,8 +430,8 @@ function configure_inventory_form (enable_ajax_form) {
 			jQuery.post ("ajax.php",
 				values,
 				function (data, status) {
-					$("#result").slideUp ('fast', function () {
-						$("#result").empty ().append (data).slideDown ();
+					$(".result").slideUp ('fast', function () {
+						$(".result").empty ().append (data).slideDown ();
 					});
 				},
 				"html"

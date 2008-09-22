@@ -1,3 +1,32 @@
+2008-09-22  Esteban Sanchez  <estebans@artica.es>
+
+	* include/js/integria.js: Result messages are now in a class instead
+	of a div, so there could be more than one result div in the page.
+
+	* include/js/integria_incident_search.js: Fixed showing resolution
+	textfield when the status was set to close. Fixed errors when adding
+	or removing an inventory in a incident. A message is now shown when an
+	incident is created. Create incident dialog is a bit bigger now.
+
+	* include/functions_db.php: Added get_incidents_on_inventory().
+
+	* operation/contracts/contract_detail.php: Show only slas in JSON
+	format where it's in AJAX mode. Style correction.
+
+	* operation/incidents/incident.php,
+	operation/inventories/inventory_detail.php: Added a result div
+	element.
+
+	* operation/incidents/incident_detail.php: Added a result div element.
+	Changed form button container from a table to a div. Removed a line
+	that was causing failures on inventory editing.
+	
+	* operation/inventories/inventory.php: Fixed tab numbers. Added a tab
+	to show incidents of an inventory object.
+
+	* operation/inventories/inventory_incidents.php: Added to repository.
+	First version to show incidents affecting an inventory object.
+
 2008-09-22  Sancho Lerena <slerena@gmail.com>
 
 	* images/project_groups_small: Added new icons for new

@@ -138,6 +138,8 @@ echo '</ul>';
 /* Tabs first container is manually set, so it loads immediately */
 echo '<div id="ui-tabs-3" class="ui-tabs-panel" style="display: block;">';
 
+echo '<div class="result"></div>';
+
 form_search_incident ();
 
 unset ($table);
@@ -211,6 +213,7 @@ function tab_loaded (event, tab) {
 		}
 		old_incident = id_incident;
 	}
+	$(".result").empty ();
 }
 
 function set_rows_click () {

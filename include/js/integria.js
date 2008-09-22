@@ -60,7 +60,7 @@ function get_form_input_values (form) {
  * @param string message Message to show
  */
 function result_msg_error (message) {
-	$("#result").empty ().append ($("<h3></h3>").addClass ("error").append (message)).fadeIn ();
+	$(".result").empty ().append ($("<h3></h3>").addClass ("error").append (message)).fadeIn ();
 }
 
 /**
@@ -69,5 +69,5 @@ function result_msg_error (message) {
  * @param string message Message to show
  */
 function result_msg_success (message) {
-	$("#result").empty ().append ($("<h3></h3>").addClass ("suc").append (message)).fadeIn ();
+	$(".result").empty ().append ($("<h3></h3>").addClass ("suc").append (message)).fadeIn ();
 }
