@@ -165,7 +165,7 @@ function combo_kb_categories ($id_category){
 
 // Returns a combo with products
 // ----------------------------------------------------------------------
-function combo_kb_products ($id_product){
+function combo_kb_products ($id_product, $show_none = 0){
 
 	if ($id_product == 0)
 		$id_product = 1;
@@ -181,6 +181,8 @@ function combo_kb_products ($id_product){
 		else
 			echo "<option value='".$id_product."'>".$name;
 	}
+	if ($show_none == 1)
+		echo "<option value=0>".lang_string ("none");
 	while ($row=mysql_fetch_array($result)){
 		$parent = give_db_value ("name","tkb_product","id",$row["parent"]);
 		if ($parent != "")

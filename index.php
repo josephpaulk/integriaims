@@ -193,6 +193,7 @@ if ( (! isset ($_SESSION['id_usuario'])) AND (isset ($_GET["login"]))) {
 // User language load
 if (isset($config["id_user"])){
 	$user_lang = get_db_sql ("SELECT lang FROM tusuario WHERE id_usuario = '".$config["id_user"]."'");
+	if ($user_lang != "")
 	$config["language_code"] = $user_lang;
 }
 	

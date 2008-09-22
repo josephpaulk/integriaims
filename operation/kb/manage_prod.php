@@ -110,7 +110,7 @@ if ($create || $update) {
 		$parent = -1;
 	} else {
 		$id = get_parameter ("update", -1);
-		$row = give_db_row ("tkb_product", "id", $id);
+		$row = get_db_row ("tkb_product", "id", $id);
 		$description = $row["description"];
 		$name = $row["name"];
 		$icon = $row["icon"];
@@ -121,7 +121,7 @@ if ($create || $update) {
 	if ($id == -1){
 		echo "<h3>".__("Create a new product")."</a></h3>";
 		echo "<form name=prodman method='post' action='index.php?sec=kb&sec2=operation/kb/manage_prod'>";
-		print_input_hidden ('create2', 1);
+		print_input_hidden ('insert_product', 1);
 	} else {
 		echo "<h3>".__("Update existing product")."</a></h3>";
 		echo "<form name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/manage_prod&update2'>";
@@ -154,7 +154,7 @@ if ($create || $update) {
 	echo "<td class=datos2>";
 	echo __("Parent");
 	echo "<td class=datos2>";
-	combo_kb_products ($parent);
+	combo_kb_products ($parent, 1);
 
 	echo "</table>";
 	echo "<table cellpadding=4 cellspacing=4 width=500>";
@@ -175,7 +175,7 @@ if (! $update && ! $create) {
 	$sql1='SELECT * FROM tkb_product ORDER BY parent, name';
 	$color =0;
 	if ($result=mysql_query($sql1)){
-		echo "<table cellpadding=4 cellspacing=4 width=700 class='databox'>";
+		echo "<table width=700 class='listing'>";
 		echo "<th>".__("icon")."</th>";
 		echo "<th>".__("Name")."</th>";
 		echo "<th>".__("parent")."</th>";
@@ -194,7 +194,7 @@ if (! $update && ! $create) {
 			echo "<tr>";
 			// Icon
 			echo "<td class='$tdcolor' valign='top' align='center'>";
-			echo "<img src='images/groups_small/".$row["icon"].".png'border='0'>";
+			echo "<img src='images/products/".$row["icon"]."' border='0'>";
 			echo "</td>";
 			// Name
 			echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=kb&

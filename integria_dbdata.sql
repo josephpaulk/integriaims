@@ -20,14 +20,14 @@ INSERT INTO `tconfig` (token, value) VALUES
 ('date_format', 'F j, Y, g:i a'),
 ('notification_period','86400');
 
-INSERT INTO `tgrupo` VALUES (1,'All','world',0);
-INSERT INTO `tgrupo` VALUES (2,'Customer #A','eye',0);
-INSERT INTO `tgrupo` VALUES (3,'Customer #B','eye',0);
-INSERT INTO `tgrupo` VALUES (8,'Development Dpt.','database_gear',0);
-INSERT INTO `tgrupo` VALUES (9,'Comunication Dpt.','transmit',0);
-INSERT INTO `tgrupo` VALUES (10,'Sales Dpt.','house',0);
-INSERT INTO `tgrupo` VALUES (11,'Engineering','computer',0);
-INSERT INTO `tgrupo` VALUES (12,'Helpdesk & Support','bricks',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (1,'All','world',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (2,'Customer #A','eye',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (3,'Customer #B','eye',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (8,'Development Dpt.','database_gear',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (9,'Comunication Dpt.','transmit',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (10,'Sales Dpt.','house',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (11,'Engineering','computer',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (12,'Helpdesk & Support','bricks',0);
 
 
 INSERT INTO `tlanguage` VALUES ('en','English');
@@ -36,10 +36,10 @@ INSERT INTO `tlink` VALUES  (0000000001,'Integria Project','http://integria.sour
 
 -- Default password is 'integria2008'
 
-INSERT INTO `tusuario` VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2007-03-27 18:59:39','admin@integria.sf.net','555-555-555',1,'people_1'),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2006-04-20 13:00:05','demo@nowhere.net','+4555435435',0,'people_3');
+INSERT INTO `tusuario` (id_usuario, nombre_real, password, comentarios, fecha_registro, direccion, telefono, nivel, avatar, lang) VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2007-03-27 18:59:39','admin@integria.sf.net','555-555-555',1,'people_1',''),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2006-04-20 13:00:05','demo@nowhere.net','+4555435435',0,'people_3','');
 
 INSERT INTO `tusuario_perfil` VALUES (1,'demo',1,1,'admin'),(2,'admin',5,1,'admin');
-INSERT INTO `tproject` VALUES  (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1);
+INSERT INTO `tproject` VALUES  (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0);
 
 INSERT INTO `ttask` (`id`, `id_project`, `id_parent_task`, `name`, `description`, `completion`, `priority`, `dep_type`, `start`, `id_group`) VALUES (-1,-1,0,'Vacations','',0,0,0,'0000-00-00',0),(-2,-1,0,'Disease','',0,0,0,'0000-00-00',0),(-3,-1,0,'Not justified','',0,0,0,'0000-00-00',0), (-4,-1,0,'Workunits lost (without project/task)','',0,0,0,'0000-00-00',0);
 

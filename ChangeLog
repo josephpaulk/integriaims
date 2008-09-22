@@ -29,6 +29,10 @@
 
 2008-09-22  Sancho Lerena <slerena@gmail.com>
 
+        * integria_*.sql: Fixed several problems.
+
+        * *.php: Fixes.
+
 	* images/project_groups_small: Added new icons for new
 	projects groups.
 

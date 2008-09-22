@@ -449,8 +449,8 @@ CREATE TABLE `tcompany_role` (
 CREATE TABLE `tcompany` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) NULL default NULL,
-  `fiscal_information` varchar(250) NULL default NULL,
+  `address` varchar(300) NOT NULL default '', 
+  `fiscal_id` varchar(250) NULL default NULL,
   `comments` varchar(1024) NULL default NULL,
   `id_company_role` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
@@ -580,5 +580,5 @@ CREATE TABLE `ttask_inventory` (
 CREATE TABLE `tworkunit_inventory` (
   `id_wu` bigint(20) unsigned NOT NULL,
   `id_inventory` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id_task`, `id_inventory`)
+  PRIMARY KEY  (`id_wu`, `id_inventory`)
 );

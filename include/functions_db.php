@@ -1645,7 +1645,7 @@ function get_buildings ($only_names = true) {
 function print_product_icon ($id_product, $return = false) {
 	$output = '';
 	
-	$icon = (string) get_db_value ('icon', 'tproduct', 'id', $id_product);
+	$icon = (string) get_db_value ('icon', 'tkb_product', 'id', $id_product);
 	
 	$output .= '<img id="product-icon" width="16" height="16" ';
 	if ($icon != '') {

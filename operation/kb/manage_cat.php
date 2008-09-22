@@ -133,16 +133,8 @@ $id_user = $config["id_user"];
         echo "<td class=datos>";
         echo lang_string ("Icon");
         echo "<td class=datos>";
-        echo '<select name="icon">';
-    	if ($icon != ""){
-		    echo '<option>' . $icon;
-    	}
-        $ficheros = list_files ('images/groups_small/', "png", 1, 0);
-    	$size = count ($ficheros);
-	    for ($i = 0; $i < $size; $i++) {
-    		echo "<option>".substr($ficheros[$i],0,strlen($ficheros[$i])-4);
-    	}
-    	echo '</select>';
+        $files = list_files ('images/groups_small/', "png", 1, 0);
+	print_select ($files, 'icon', $icon, '', __("None"), "");
 
         echo "<tr>";
         echo "<td class=datos2>";
@@ -151,7 +143,7 @@ $id_user = $config["id_user"];
         combo_kb_categories ( $parent);
 
         echo "</table>";
-        echo "<table cellpadding=4 cellspacing=4 width=500>";
+        echo "<table class='button' width=500>";
         echo "<tr>";
         echo "<td align=right>";
         if ($id == -1)
@@ -190,7 +182,7 @@ $id_user = $config["id_user"];
 		        echo "<tr>";
                 // Icon
                 echo "<td class='$tdcolor' valign='top' align='center'>";
-		        echo "<img src='images/groups_small/".$row["icon"].".png'border='0'>";
+		        echo "<img src='images/groups_small/".$row["icon"]."' border='0'>";
                 echo "</td>";
                 // Name
                 echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=kb&

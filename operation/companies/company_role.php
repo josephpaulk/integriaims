@@ -204,12 +204,12 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			$counter++;
 		}
 		print_table ($table);
-		echo "<table width=720 class='button'>";
-		echo "<tr><td align='right'>";
-		echo "<form method=post action='index.php?sec=inventory&
-		sec2=operation/companies/company_role&create=1'>";
-		echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create role")."'>";
-		echo "</form></td></tr></table>";
 	}
+	 echo "<table width=720 class='button'>";
+                echo "<tr><td align='right'>";
+                echo "<form method=post action='index.php?sec=inventory&
+                sec2=operation/companies/company_role&create=1'>";
+                echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create role")."'>";
+                echo "</form></td></tr></table>";
 } // end of list
 ?>
