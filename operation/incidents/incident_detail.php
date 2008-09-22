@@ -362,8 +362,6 @@ if ($id) {
 
 echo '<div id="result">'.$result_msg.'</div>';
 
-echo "TODO: [ ] SLA disabled. <br /> Forzar objeto de incidencia<br />";
-
 $table->width = "700px";
 $table->class = "databox_color";
 $table->id = "incident-editor";

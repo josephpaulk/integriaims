@@ -1,5 +1,13 @@
 2008-09-22  Esteban Sanchez  <estebans@artica.es>
 
+	* include/functions_form.php: Something went wrong in previous commit
+	and the function name was removed.
+
+	* operation/incidents/incident_detail.php,
+	operation/inventories/inventory_detail.php: Removed debug output.
+
+2008-09-22  Esteban Sanchez  <estebans@artica.es>
+
 	* integria/integria_db.sql: Removed id_incident_linked field to
 	id_parent and added foreign key in tincidencia. Moved tsla over
 	tcontract, since it has a reference to tsla. Confirmed field is a

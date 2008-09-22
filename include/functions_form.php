@@ -324,7 +324,7 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 
 // Returns a combo with the tasks that current user is working on
 // ----------------------------------------------------------------------
-function   ($id_user, $show_vacations = false, $actual = 0, $return = false) {
+function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false) {
 	$output = '';
 	$values = array ();
 	
