@@ -13,15 +13,16 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-
-
+global $config;
+echo "<center>";
+echo '<div style="margin-top: 50px; width: 400px;">';
+echo "<div align='center'>";
+echo '<h2>'.lang_string ("no_access_title").'</h2>';
+echo '<div>&nbsp;</div>';
+echo "<img src='".$config["base_url"]."/images/noaccess.gif'>";
+echo "<div>&nbsp;</div>";
+echo "<div class='msg'>". lang_string ("no_access_text"). "</div>";
+echo "</div>";
+echo "</div>";
+echo "</center>";
 ?>
-<div id="noaccess">
-	<div align='center'>
-		<h2><?php echo $lang_label["no_access_title"] ?></h2>
-		<div>&nbsp;</div>
-		<img src='images/noaccess.gif'>
-		<div>&nbsp;</div>
-		<div class="msg"><?php echo $lang_label["no_access_text"];?></div>
-	</div>
-</div>

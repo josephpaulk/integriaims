@@ -90,7 +90,7 @@ if ($id_task != -1){
 	$sql= "SELECT * FROM tattachment WHERE id_task = $id_task";
 	echo "<h3>".$lang_label["attached_files"];
 	echo " - ".$lang_label["task"]." - ".$task_name."</h3>";
-	echo "<table cellpadding='3' cellspacing='3' border='0' width=600 class='databox_color'>";
+	echo "<table border='0' width=600 class='listing'>";
 	echo "<tr><th width=120>"; 
 	echo $lang_label["filename"];
 	echo "<th width=170>"; 
@@ -108,7 +108,7 @@ if ($id_task == -1){
 
 	echo "<h3>".$lang_label["attached_files"];
 	echo " - ".$lang_label["project"]." - ".$project_name."</h3>";
-	echo "<table cellpadding='3' cellspacing='3' border='0' width=600 class='databox_color'>";
+	echo "<table  width=600 class='listing'>";
 	echo "<tr><th>"; 
 	echo $lang_label["task"];
 	echo "<th width=120>"; 

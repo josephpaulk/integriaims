@@ -1,3 +1,33 @@
+2008-09-22  Sancho Lerena <slerena@gmail.com>
+
+	* images/project_groups_small: Added new icons for new
+	projects groups.
+
+	* operation/projects/*: Applied new styles.
+
+	* operation/projects/project_group_detail.php: New project group
+	management.
+
+	* projects/tasks.php, projects.php: Added some columns, better
+	visualization, added primitive filtering and other minor stuff.
+
+	* operation/kb/search.php: Added search function for KB (missing).
+
+	* images/integria.ico: new icon.
+
+	* integria_db.sql: Some tables updated (tcost, ttask, tproject, 
+	tworkunit) and new tables: tproject_group, ttask_inventory, 
+	and tworkunit_inventory.
+
+	* config_process.php: All includes now hang here.
+
+	* functions*: Deleted includes from each file, all hooks are from
+	config_process now, this solves problems with redeclaration.
+
+	* side_menu: Addedd new group manager for projects.
+
+	Others: Style changes for the new CSS
+
 2008-09-22  Esteban Sanchez  <estebans@artica.es>
 
 	* include/functions_db.php: Added get_slas(). Renamed

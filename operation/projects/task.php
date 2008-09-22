@@ -1,9 +1,10 @@
 <?php
 
-// Integria 1.0 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -74,10 +75,40 @@ elseif ($operation == "move") {
 
 echo "<h2>".$project_name." - ".$lang_label["task_management"]."</h2>";
 
+$filter_id_group = get_parameter ("filter_id_group", 0);
+$filter_freetext = get_parameter ("filter_freetext", "");
+
+$FILTER = " 1=1 ";
+
+if ( $filter_freetext != "")
+	$FILTER .= " AND name LIKE '%$filter_freetext%' OR description LIKE '%$filter_freetext%' ";
+
+if ($filter_id_group != 0)
+	$FILTER .= " AND id_group = $filter_id_group";
+
+
+
+echo "<table width=610>";
+	echo "<form method=post action='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>";
+	echo "<tr><td>";
+	echo lang_string ("Free text search");
+	echo "<td>";
+	echo print_input_text ("filter_freetext", $filter_freetext, "", 15, 100, false);
+
+	echo "<td>";
+	echo lang_string ("Group");
+	echo "<td>";
+	echo print_select_from_sql ("SELECT * from tgrupo WHERE id_grupo > 1 ORDER BY nombre", "filter_id_group", $filter_id_group, "", lang_string("None"), '0', false, false, true, false); 
+
+	echo "<td>";
+	print_submit_button (lang_string("Search"), "enviar", false, "class='sub search'", false);
+	echo "</form></td></tr></table>";
+
+
 // -------------
 // Show headers
 // -------------
-echo "<table width='90%' class='databox'>";
+echo "<table width='100%' class='listing'>";
 echo "<tr>";
 echo "<th class='f9'>".$lang_label["name"];
 echo "<th class='f9'>".lang_string ("pri");
@@ -91,15 +122,17 @@ echo "<th>".$lang_label["start"];
 echo "<th>".$lang_label["end"];
 echo "<th>".lang_string ("delete");
 $color = 1;
-show_task_tree ($id_project);
+show_task_tree ($id_project, 0, 0, 0, $FILTER);
 echo "</table>";
 
 
-
 if (give_acl($config["id_user"], 0, "IW")==1) {
+	echo "<table width=100% class='button'>";
+	echo "<tr><td align=right>";
     echo "<form name='boton' method='POST'  action='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>";
     echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_task"]."'>";
     echo "</form>";
+	echo "</td></tr></table>";
 }
 
 
@@ -170,28 +203,33 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
     echo give_db_sqlfree_field ("SELECT COUNT(DISTINCT (id_user)) FROM trole_people_task WHERE id_task =".$row2["id"]);
 
 
-	// Start
-	echo "<td class='".$tdcolor."f9'>";
-	echo substr($row2["start"],0,10);
-
-	// End
-	echo "<td class='".$tdcolor."f9'>";
-	// echo substr($row2["end"],0,10);
-	$ahora=date("Y/m/d H:i:s");
-    
-    $endtime = $row2["end"];
-	if ($row2["completion"] == 100){
-		echo "<font color='green'>";
+	if ($row2["start"] == $row2["end"]){
+		echo "<td colspan=2>";
+		echo __("Periodicity");
+		echo "&nbsp;";
+		echo $row2["periodicity"];
 	} else {
-	    if (strtotime($ahora) > strtotime($endtime))
-	        echo "<font color='red'>";
-	    else
-		echo "<font>";
-	}
-	// echo human_time_comparation ($endtime);
-        echo $endtime;
-	echo "</font>";
+		// Start
+		echo "<td class='".$tdcolor."f9'>";
+		echo substr($row2["start"],0,10);
+		// End
+		echo "<td class='".$tdcolor."f9'>";
+		$ahora=date("Y/m/d H:i:s");
+		$endtime = $row2["end"];
 	
+		if ($row2["completion"] == 100){
+			echo "<font color='green'>";
+		} else {
+			if (strtotime($ahora) > strtotime($endtime))
+				echo "<font color='red'>";
+			else
+			echo "<font>";
+		}
+		// echo human_time_comparation ($endtime);
+			echo $endtime;
+		echo "</font>";
+	}
+
 	// Delete
 	echo "<td class='$tdcolor' align='center'>";
 	echo "<a href='index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project=$id_project&id=".$row2["id"]."' onClick='if (!confirm(\' ".lang_string ("are_you_sure")."\')) return false;'><img src='images/cross.png' border='0'></a>";
@@ -199,11 +237,11 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 	
 }
 
-function show_task_tree ( $id_project, $level = 0, $parent_task = 0, $color = 0){
+function show_task_tree ( $id_project, $level = 0, $parent_task = 0, $color = 0, $FILTER = ""){
 	global $config;
 	$id_user = $config["id_user"];
 	// Simple query, needs to implement group control and ACL checking
-	$sql2="SELECT * FROM ttask WHERE id_project = $id_project and id_parent_task = $parent_task ORDER BY name"; 
+	$sql2 = "SELECT * FROM ttask WHERE $FILTER AND id_project = $id_project and id_parent_task = $parent_task ORDER BY name"; 
 	if ($result2=mysql_query($sql2))    
 	while ($row2=mysql_fetch_array($result2)){
 		if ($color == 1){

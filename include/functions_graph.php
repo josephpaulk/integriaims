@@ -14,15 +14,8 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-include_once ("functions.php");
-include_once ("functions_db.php");
-include_once ("functions_html.php");
 include_once ("config.php");
 global $config;
-include_once ("languages/language_".$config["language_code"].".php");
-include_once ("functions_form.php");
-include_once ("functions_calendar.php");
-
 
 // ===============================================================================
 // Draw a simple pie graph with incidents, by assigned user
@@ -30,7 +23,7 @@ include_once ("functions_calendar.php");
 
 function incident_peruser ($width, $height){
     require ("../include/config.php");
-    require ("../include/functions_db.php");
+    
     $res = mysql_query("SELECT * FROM tusuario");
     while ($row=mysql_fetch_array($res)){
         $id_user = $row["id_usuario"];
@@ -52,7 +45,7 @@ function incident_peruser ($width, $height){
 
 function graph_workunit_task ($width, $height, $id_task){
     require ("../include/config.php");
-    require ("../include/functions_db.php");
+    
     $res = mysql_query("SELECT SUM(duration), id_user FROM tworkunit, tworkunit_task
                     WHERE tworkunit_task.id_task = $id_task AND 
                     tworkunit_task.id_workunit = tworkunit.id 
@@ -75,7 +68,8 @@ function graph_workunit_task ($width, $height, $id_task){
 
 function graph_workunit_user ($width, $height, $id_user, $date_from ){
     require ("../include/config.php");
-    require ("../include/functions_db.php");
+    
+
     $date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
     $res = mysql_query("SELECT SUM(duration), id_task, timestamp, ttask.name, tproject.name 
                     FROM tworkunit, tworkunit_task, ttask, tproject  
@@ -105,7 +99,7 @@ function graph_workunit_user ($width, $height, $id_user, $date_from ){
 
 function graph_workunit_project_user ($width, $height, $id_user, $date_from){
     require ("../include/config.php");
-    require ("../include/functions_db.php");
+    
     $date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
     $res = mysql_query("SELECT SUM(duration), tproject.name 
                     FROM tworkunit, tworkunit_task, ttask, tproject  
@@ -628,7 +622,6 @@ function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $wi
 
 function project_tree ($id_project, $id_user){
     include ("../include/config.php");
-    require ("../include/functions_db.php");
 
     if (user_belong_project ($id_user, $id_project)==0){
         audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
@@ -701,7 +694,6 @@ function project_tree ($id_project, $id_user){
 
 function all_project_tree ($id_user, $completion, $project_kind){
     include ("../include/config.php");
-    require ("../include/functions_db.php");
 
     $dotfilename = $config["homedir"]. "attachment/tmp/$id_user.all.dot";
     $pngfilename = $config["homedir"]. "attachment/tmp/$id_user.projectall.png";

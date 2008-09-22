@@ -1,9 +1,10 @@
 <?php
 
-// Integria 1.0 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -12,6 +13,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 global $config;
 
@@ -72,11 +74,12 @@ if ($operation == "insert"){
 	$start = give_parameter_post ("start_date", date("Y-m-d"));
 	$end = give_parameter_post ("end_date", date("Y-m-d"));
 	$hours = give_parameter_post ("hours", 0);
-        $estimated_cost = give_parameter_post ("estimated_cost", 0);
+	$periodicity = get_parameter ("periodicity", "none");
+	$estimated_cost = give_parameter_post ("estimated_cost", 0);
 	$id_group = give_parameter_post ("group", 1);
 	$sql = "INSERT INTO ttask
-			(id_project, name, description, priority, completion, start, end, id_parent_task, id_group, hours, estimated_cost) VALUES
-			($id_project, '$name', '$description', '$priority', '$completion', '$start',  '$end', '$parent', $id_group, '$hours', '$estimated_cost')";
+			(id_project, name, description, priority, completion, start, end, id_parent_task, id_group, hours, estimated_cost, periodicity) VALUES
+			($id_project, '$name', '$description', '$priority', '$completion', '$start',  '$end', '$parent', $id_group, '$hours', '$estimated_cost', '$periodicity')";
 	if (mysql_query($sql)){
 		$id_task = mysql_insert_id();
 		$result_output = "<h3 class='suc'>".$lang_label["create_ok"]."</h3>";
@@ -124,6 +127,8 @@ if ($operation == "update"){
 	$hours = give_parameter_post ("hours",0);
         $estimated_cost = give_parameter_post ("estimated_cost",0);
 	$id_group = give_parameter_post ("group",1);
+	$periodicity = get_parameter ("periodicity", "none");
+
 	$sql = "UPDATE ttask SET 
 			name = '$name',
 			description = '$description',
@@ -132,6 +137,7 @@ if ($operation == "update"){
 			start = '$start',
 			end = '$end',
 			hours = '$hours',
+			periodicity = '$periodicity',
             estimated_cost = '$estimated_cost',
 			id_parent_task = '$parent',
 			id_group = '$id_group'
@@ -170,6 +176,7 @@ if ($operation == "view"){
     $hours = clean_output  ($row["hours"]);
 	$parent = clean_output  ($row["id_parent_task"]);
 	$id_group = clean_output  ($row["id_group"]);
+	$periodicity = $row["periodicity"];
         
 } 
 
@@ -187,6 +194,8 @@ if ($operation == "create"){
 	$hours = 0;
 	$start = date("Y-m-d");
 	$end = date("Y-m-d");
+	$periodicity = "none";
+
 }
 else
 	echo "<form name='projectf' method='POST' action='index.php?sec=projects&sec2=operation/projects/task_detail&operation=update&id_project=$id_project&id_task=$id_task'>";
@@ -203,7 +212,7 @@ if ($operation != "create"){
 	echo $lang_label["create_task"]." ( $project_name )</h2>";
 }
 
-echo '<table border=0 width=750 class="databox_color" cellpadding=4 cellspacing=4>';
+echo '<table width=750 class="databox" >';
 
 // Name
 echo '<tr><td class="datos2"><b>'.$lang_label["name"].'</b>';
@@ -211,7 +220,7 @@ echo '<td class="datos2"><input type="text" name="name" size=30 value="'.$name.'
 
 // Workunit distribution graph
 echo "<td rowspan=6>";
-echo '<table border=0 class="databox_color" cellpadding=3 cellspacing=3>';
+echo '<table class="blank">';
 echo "<tr><td>";
 echo "<i>Workunit distribution</i><br>";
 echo "<img src='include/functions_graph.php?type=workunit_task&width=200&height=170&id_task=$id_task'>";
@@ -258,6 +267,21 @@ echo '<tr><td class="datos2"><b>'.lang_string ("end").'</b>';
 echo "<td class='datos2'>";
 echo "<input type='text' id='end_date' name='end_date' size=10 value='$end'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"end_date\"),this);'> ";
 
+// Periodicity
+echo '<tr><td class="datos2"><b>'.lang_string ("Periodicity").'</b>';
+echo "<td class='datos2'>";
+$periodicityc[$periodicity] = $periodicity;
+$periodicityc['none'] = lang_string ('None');
+$periodicityc['weekly'] = lang_string ("Weekly");
+$periodicityc['monthly'] = lang_string ("Monthly");
+$periodicityc['year'] = lang_string ("Annual");
+$periodicityc['15days'] = lang_string ("15 days");
+$periodicityc['60days'] = lang_string ("60 days");
+$periodicityc['90days'] = lang_string ("90 days");
+
+echo print_select ($periodicityc, "periodicity", $periodicity, 'None', "none", false, false, false, false);
+
+
 // Estimated hours
 echo '<tr><td class="datos"><b>'.lang_string ("Estimated hours").'</b>';
 echo "<td class='datos'>";
@@ -278,7 +302,7 @@ echo " ".$config["currency"];
 
 // Cost estimation graph
 echo "<td rowspan=5>";
-echo '<table border=0 class="databox_color" cellpadding=1 cellspacing=4>';
+echo '<table class="blank">';
 echo "<tr><td>";
 echo "<i>".lang_string("Cost estimation")."</i>";
 echo "<tr><td>";
@@ -364,7 +388,7 @@ echo "</td></tr>";
 echo "</table>";
 
 if ((give_acl($config["id_user"], $id_group, "TM") ==1) OR ($config["id_user"] == $project_manager )) {
-    echo "<table width=760>";
+    echo "<table width=750 class=button>";
     echo "<tr><td align=right>";
     if ($operation != "create")
 	    echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["update"].'" border="0">';

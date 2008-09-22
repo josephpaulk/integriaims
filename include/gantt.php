@@ -23,10 +23,9 @@
 // Copyright (C) 2005 Alexandre Miguel de Andrade Souza <alexandremasbr@gmail.com>
 
 
-require "config.php";
-require "languages/language_".$config["language_code"].".php";
-require "functions.php"; // Including funcions.
-require "functions_db.php";
+include_once ("config.php");
+global $config;
+
 session_start(); 
 global $config;
 //error_reporting(0);

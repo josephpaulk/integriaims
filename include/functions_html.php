@@ -14,6 +14,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+global $config;
 
 /**
  * Prints an array of fields in a popup menu of a form.
@@ -27,6 +28,7 @@
  * $nothing Label when nothing is selected.
  * $nothing_value Value when nothing is selected
  */
+
 function print_select ($fields, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = 0, $sort = true, $label = false) {
 	$output = "\n";
 	

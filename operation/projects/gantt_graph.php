@@ -18,8 +18,11 @@
 
 
 // Real start
+
+include_once ("../../include/config.php");
+global $config;
+
 require '../../include/gantt.php';
-require '../../include/functions_calendar.php';
 
 
 // I like recursion :)

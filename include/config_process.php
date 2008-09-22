@@ -46,6 +46,7 @@ if (! mysql_connect ($config["dbhost"], $config["dbuser"], $config["dbpass"])) {
 
 mysql_select_db ($config["dbname"]);
 require_once ($config["homedir"]."/include/functions_db.php");
+
 $configs = get_db_all_rows_in_table ('tconfig');
 if ($configs === false) {
 	exit ('<html><head><title>Integria Error</title>
@@ -89,5 +90,12 @@ if (!isset ($config["hours_perday"]))
 
 if (!isset ($config["sitename"]))
 	$config["sitename"] = "INTEGRIA";
+
+
+include_once ($config["homedir"]."/include/functions.php");
+include_once ($config["homedir"]."/include/functions_html.php");
+include_once ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
+include_once ($config["homedir"]."/include/functions_form.php");
+include_once ($config["homedir"]."/include/functions_calendar.php");
 
 ?>

@@ -1,4 +1,17 @@
 <?php
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
 if (check_login() != 0) {
 	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
@@ -68,7 +81,7 @@ if ($operation == "delete") {
 // ---------------
 if ($operation == "create") {
 echo "<h2>".lang_string ("milestone_creation")."</h2>";
-	echo '<table class="databox_color" cellpadding="4" cellspacing="4" width="720">';
+	echo '<table class="databox"  width="720">';
 	echo '<form name="ilink" method="post" action="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=create2">';
 
 	echo "<tr><td class='datos'>".lang_string ("name");
@@ -83,7 +96,7 @@ echo "<h2>".lang_string ("milestone_creation")."</h2>";
 	echo "<td class='datos'><textarea name='description' style='width:100%; height:100px'>";
 	echo "</textarea>";
 	echo "</table>";
-	echo '<table cellpadding="4" cellspacing="4" width="720">';
+	echo '<table class="button" width="720">';
     
     $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
@@ -91,7 +104,7 @@ echo "<h2>".lang_string ("milestone_creation")."</h2>";
 	    echo "<tr><td align='right'>";
 
 	    echo "<input type=hidden name='id_project' value='$id_project'>";
-	    echo "<input name='crtbutton' type='submit' class='sub' value='".lang_string ("create")."'>";
+	    echo "<input name='crtbutton' type='submit' class='sub wizard' value='".lang_string ("create")."'>";
     }
 	echo '</form></table>';
 }
@@ -102,7 +115,7 @@ echo "<h2>".lang_string ("milestone_creation")."</h2>";
 if ($operation == ""){
 	echo "<h1>".lang_string("milestones management");
 	echo "</h1>";
-	echo "<table cellpadding=4 cellspacing=4 width=720>";
+	echo "<table class='listing' width=720>";
 	echo "<th>".lang_string ("milestone");
 	echo "<th>".lang_string ("description");
 	echo "<th>".lang_string ("timestamp");
@@ -140,11 +153,11 @@ if ($operation == ""){
     $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
     if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
-	    echo "<table cellpadding=4 cellspacing=4 width=720>";
+	    echo "<table class='button' width=720>";
 	    echo "<tr><td align=right>";
     
 	    echo "<form name='ms' method='POST'  action='index.php?sec=projects&sec2=operation/projects/milestones&operation=create&id_project=$id_project'>";
-	    echo "<input type='submit' class='sub next' name='crt' value='".lang_string("create_milestone")."'>";
+	    echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create")."'>";
 	    echo "</form>";
 	    echo "</table>";
     }

@@ -14,7 +14,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-require_once ('functions_html.php');
+global $config;
 
 function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0, $access = "IR", $return = false) {
 	global $config;
@@ -468,8 +468,8 @@ function show_workunit_user ($id_workunit, $full = 0) {
 		$incident_title = substr(give_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident), 0, 50);
 	$project_title = substr(give_db_value ("name", "tproject", "id", $id_project), 0, 50);
 	// Show data
-	echo "<div class='notetitle' style='height: 50px;'>"; // titulo
-	echo "<table border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px;'>";
+	echo "<div class='notetitle' style='height: 75px;'>"; // titulo
+	echo "<table class='blank' border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px; background: transparent;'>";
 	echo "<tr><td rowspan=3 width='7%'>";
 	echo "<img src='images/avatars/".$avatar."_small.png'>";
 
@@ -528,7 +528,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 	// Body
 	echo "<div class='notebody'>";
-	echo "<table width='100%'  border=0 cellpadding=0 cellspacing=0>";
+	echo "<table width='100%'  class='blank'>";
 	echo "<tr><td valign='top'>";
 
 	if ((strlen($nota) > 1024) AND ($full == 0)){
@@ -541,7 +541,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 		echo topi_richtext(clean_output_breaks($nota));
 	}
 	echo "<td valign='top'>";
-	echo "<table width='100%'  border=0 cellpadding=0 cellspacing=0>";
+	echo "<table width='100%'  class='blank'>";
 
 
 	if ($id_project > 0)

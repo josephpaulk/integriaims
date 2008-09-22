@@ -1,9 +1,10 @@
 <?php
 
-// Integria 1.0 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -12,6 +13,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 // Load global vars
 
@@ -127,7 +129,7 @@ if ($id_task != -1){
 		echo "<h3>".$lang_label["assigned_roles"]."</h3>";
 		$sql = "SELECT * FROM trole_people_task where id_task = $id_task";
 		$result = mysql_query($sql);
-		echo "<table cellpadding=4 cellspacing=4 width=500 class='databox'>";
+		echo "<table width=500 class='listing'>";
 		echo "<th>".$lang_label["user"];
 		echo "<th>".$lang_label["role"];
 		if ($config["id_user"] == give_db_value('id_owner','tproject','id', $id_project) OR
@@ -174,7 +176,7 @@ if ($id_task != -1){
 		echo "<h3>".$lang_label["assigned_roles"]."</h3>";
 		$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project";
 		$result = mysql_query($sql);
-		echo "<table cellpadding=4 cellspacing=4 width=500 class='databox'>";
+		echo "<table width=500 class='listing'>";
 		echo "<th>".$lang_label["user"];
 		echo "<th>".$lang_label["role"];
 		echo "<th>".$lang_label["delete"];
@@ -216,7 +218,7 @@ if ($id_task != -1){
 		echo "<td valign='top' class='datos2'>";
 		echo combo_users_project($id_project);
 		echo "</table>";
-		echo "<table cellpadding=4 cellspacing=4 width=510>";
+		echo "<table class='button' width=510>";
 		echo "<tr><td align='right'>";
 		echo "<input type=submit class='sub next' value='".$lang_label["update"]."'>";
 		echo "</table>";
@@ -233,7 +235,7 @@ if ($id_task != -1){
 
 	echo "<h3>".$lang_label["role_project_assignment"]."</h3>";
 	echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
-	echo "<table cellpadding=4 cellspacing=4 width=500 class='databox_color'>";
+	echo "<table width=500 class='databox_color'>";
 
 	echo "<tr><td valign='top' class='datos2'>";
 	echo $lang_label["role"];
@@ -246,7 +248,7 @@ if ($id_task != -1){
     combo_user_visible_for_me ($config["id_user"], "user", 0, "PR");
 	echo "</table>";
 		
-	echo "<table cellpadding=4 cellspacing=4 width=510>";
+	echo "<table class='button' width=500>";
 	echo "<tr><td align='right'>";
 	echo "<input type=submit class='sub next' value='".$lang_label["update"]."'>";
 	echo "</table>";

@@ -16,8 +16,10 @@
 
 // Load enterprise version functions
 
-if (file_exists ("include/functions_extra.php"))
-	include ("include/functions_extra.php");
+global $config;
+
+if (file_exists ($config["homedir"]."/include/functions_extra.php"))
+	include ($config["homedir"]."/include/functions_extra.php");
 
 // --------------------------------------------------------------- 
 // give_acl ()
@@ -30,6 +32,7 @@ function give_acl ($id_user, $id_group, $access) {
 		return give_acl_extra ($id_user, $id_group, $access);
 	return give_acl_free ($id_user, $id_group);
 }
+
 
 function give_acl_free ($id_user, $id_group) {
 	global $config;

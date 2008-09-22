@@ -13,6 +13,9 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
+global $config;
+
 /*
 
 Note about clean_input, clean_output and other string functions

@@ -26,9 +26,9 @@ if (check_login() != 0) {
 	exit;
 }
 
-$id_project = get_parameter_get ("id_project", -1);
-$id_workunit = get_parameter_get ("id_workunit", -1);
-$id_task = get_parameter_get ("id_task", -1);
+$id_project = get_parameter ("id_project", -1);
+$id_workunit = get_parameter ("id_workunit", -1);
+$id_task = get_parameter ("id_task", -1);
 $task_name = get_db_value ("name", "ttask", "id", $id_task);
 
 //if (($id_project != -1) && ($id_workunit != -1)) OR ($id_workunit {
@@ -42,12 +42,14 @@ if ($id_workunit != -1){
 	$ahora = $row["timestamp"];
 	$ahora_date = substr($ahora,0,10);
 	$ahora_time = substr($ahora,10,8);
+	$id_inventory = get_db_row ("tworkunit_inventory", "id_wu", $id_workunit);
 	
 	
 } else {
 	$id_user = $config["id_user"];
 	$duration = 1; 
 	$description = "";
+	$id_inventory = array();
 	$have_cost = 0;
 	$id_profile = "";
 	$ahora_date = date("Y-m-d");
@@ -78,28 +80,36 @@ if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])
 	echo "&nbsp;&nbsp;";
 	echo "<input type='text' name='time' size=10 value='$ahora_time'>";
 
+	echo "<td><b>";
+	echo lang_string ("Inventory")."</b></td>";
+	echo "<td>";
+	echo print_select_from_sql ("SELECT * FROM ttask_inventory WHERE id_task = $id_task", "id_inventory", $id_inventory, '', lang_string ("Nothing"), '0',  false, true, true, false);
+
+//print_select_from_sql ($sql, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = false, $sort = true, $label = false) {
+
+
 	echo "<tr><td class='datos2'  width='140'>";
 	echo "<b>".$lang_label["profile"]."</b>";
 	echo "<td class='datos2'>";
 	echo combo_user_task_profile ($id_task,"work_profile",$id_profile, $id_user);
-	echo "&nbsp;&nbsp;";
-	if ($have_cost == 1)
-		echo "<input type='checkbox' name='have_cost' value=1 checked>";
-	else
-		echo "<input type='checkbox' name='have_cost' value=1>";
-	echo "&nbsp;&nbsp;";
+
+	echo "<td>";
 	echo "<b>".$lang_label["have_cost"]."</b>";
+	echo "<td>";
+	echo print_checkbox ("have_cost", 1, $have_cost, false);
+
 
 	echo "<tr><td class='datos'>";
 	echo "<b>".$lang_label["time_used"]."</b>";
 	echo "<td class='datos'>";
 	echo "<input type='text' name='duration' value='$duration' size='7'>"." ".lang_string("hr");
 	
-	echo '<tr><td colspan="2" class="datos2"><textarea name="description" style="height: 250px; width: 100%;">';
+	echo '<tr><td colspan="4" class="datos2"><textarea name="description" style="height: 250px; width: 100%;">';
 	echo $description;
 	echo '</textarea>';
+
 	echo "</tr></table>";
-	echo "<table width=710>";
+	echo "<table class='button' width=700>";
 	echo "<tr><td align=right>";
 	if ($id_workunit != -1)
 		echo '<input name="addnote" type="submit" class="sub upd" value="'.$lang_label["update"].'">';

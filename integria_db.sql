@@ -200,6 +200,7 @@ CREATE TABLE `tproject` (
   `end` date NOT NULL default '0000-00-00',
   `id_owner` VARCHAR(125),
   `disabled` int(2) unsigned NOT NULL default '0',
+  `id_project_group` int(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );
 
@@ -229,6 +230,7 @@ CREATE TABLE `ttask` (
   `hours` int unsigned NOT NULL DEFAULT 0,
   `estimated_cost` float (9,2) UNSIGNED NOT NULL DEFAULT 0.0,
   `id_group` int(10) NOT NULL default '0',
+  `periodicity` enum ('none', 'weekly', 'monthly', 'year', '15days', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none',
   PRIMARY KEY  (`id`)
 );
 
@@ -242,6 +244,7 @@ CREATE TABLE `tworkunit` (
   `have_cost` tinyint unsigned NOT NULL DEFAULT 0,
   `id_profile` int(10) unsigned NOT NULL default '0',
   `locked` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
+  `locked_id_user` VARCHAR(125) DEFAULT NULL,
   PRIMARY KEY  (`id`)
 );
 
@@ -353,13 +356,13 @@ CREATE TABLE `tvacationday` (
 CREATE TABLE `tcost` (
   `id` int(6) unsigned NOT NULL auto_increment,
   `id_user` varchar(250) default NULL,
-  `id_task` int(11) unsigned NULL default NULL,
+  `id_wu` int(11) unsigned NULL default NULL,
   `bill_id` varchar(50) NOT NULL default '',
   `ammount` float(9,2) NOT NULL DEFAULT '0.0',
-  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `description` mediumtext NOT NULL,
   `id_attachment` int(11) unsigned NULL default NULL,
   `locked` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
+  `locked_id_user` VARCHAR(125) DEFAULT NULL,
   PRIMARY KEY  (`id`)
 );
 
@@ -559,4 +562,23 @@ CREATE TABLE `twizard` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tproject_group` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `icon` varchar(50) default NULL,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `ttask_inventory` (
+  `id_task` bigint(20) unsigned NOT NULL,
+  `id_inventory` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id_task`, `id_inventory`)
+);
+
+CREATE TABLE `tworkunit_inventory` (
+  `id_wu` bigint(20) unsigned NOT NULL,
+  `id_inventory` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id_task`, `id_inventory`)
 );

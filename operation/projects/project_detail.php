@@ -1,9 +1,10 @@
 <?php
 
-// Integria 1.1 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -38,7 +39,7 @@ $end_date = "";
 $start_date = "";
 $id_project = -1; // Create mode by default
 $result_output = "";
-
+$id_project_group = 0;
 
 // ---------------
 // Update project
@@ -53,9 +54,11 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 		$description = give_parameter_post ('description');
 		$start_date = give_parameter_post ('start_date');
 		$end_date = give_parameter_post ('end_date');
+		$id_project_group = get_parameter ("id_project_group");
 		$sql = "UPDATE tproject SET 
 				name = '$name',
 				description = '$description',
+				id_project_group = '$id_project_group', 
 				start = '$start_date',
 				end = '$end_date',
 				id_owner = '$user' 
@@ -77,6 +80,8 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 // ---------------------
 // Edition / View mode
 // ---------------------
+
+
 $id_project = give_parameter_get ("id_project", 0);
 
 if ( $id_project != 0){	
@@ -95,6 +100,7 @@ if ( $id_project != 0){
 	$start_date = $row["start"];
 	$end_date = $row["end"];
 	$owner = $row["id_owner"];
+	$id_project_group = $row["id_project_group"];
 } 
 
 
@@ -117,6 +123,7 @@ if (isset($_GET["insert_form"])){
 	$inicio = $actualizacion;
 	$id_creator = $iduser_temp;
 	$create_mode = 1;
+	$id_project_group = 0;
 } 
 
 // ********************************************************************************************************
@@ -143,12 +150,12 @@ if ($create_mode == 0){
 	echo $lang_label["create_project"]."</h2>";
 }
 
-echo '<table width=740 class="databox_color" cellpadding=4 cellspacing=4>';
+echo '<table width=740 class="databox" >';
 
 // Name
 
 echo '<tr><td class="datos"><b>'.$lang_label["name"].'</b>';
-echo '<td colspan=2 class="datos"><input type="text" name="name" size=40 value="'.$name.'">';
+echo '<td colspan=3><input type="text" name="name" size=70 value="'.$name.'">';
 
 // start and end date
 echo '<tr><td class="datos2"><b>'.$lang_label["start"].'</b>';
@@ -166,17 +173,24 @@ echo '<td class="datos"><b>'.$lang_label["project_manager"].'</b>';
 echo "<td class='datos'>";
 $id_owner = give_db_value ( 'id_owner', 'tproject', 'id', $id_project);
 if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_owner )) {
-	combo_user_visible_for_me ($id_owner,"user", 0, "PR");
+	combo_user_visible_for_me ($id_owner, "user", 0, "PR");
 } else {
 	echo $id_owner;
 }
 
+echo "<td><b>";
+echo lang_string ("Project group") . "</b>";
+echo "<td>";
+echo print_select_from_sql ("SELECT * from tproject_group ORDER BY name", "id_project_group", $id_project_group, "", lang_string("None"), '0', false, false, true, false);
+
+
 if ($create_mode == 0){
 
-echo '<td class="datos"><b>'.lang_string ("Current progress").'</b>';
+echo '<tr><td class="datos"><b>'.lang_string ("Current progress").'</b>';
 echo "<td class='datos'>";
 $completion =  format_numeric(calculate_project_progress ($id_project));
 echo "<img src='include/functions_graph.php?type=progress&width=90&height=20&percent=$completion'>";
+
 
 echo '<tr>';
 echo '<td class="datos2"><b>'.lang_string("Total workunit (hr)").'</b>';
@@ -234,7 +248,7 @@ echo '<tr><td class="datos2" colspan="4"><textarea name="description" style="hei
 echo "</textarea>";
 
 echo "</table>";
-echo '<table width=740 class="databox_color" cellpadding=3 cellspacing=3>';
+echo '<table width=740 class="button">';
 echo "<tr><td align=right>";
 
 if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_owner )) {
@@ -247,6 +261,8 @@ if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_ow
 echo "</form>";
 echo "</table>";
 
-echo "<h3>".lang_string("Project schema")."</h3>";
-echo "<img src=include/functions_graph.php?type=project_tree&id_project=$id_project&id_user=$id_user>";
+if ($id_project > 0){
+	echo "<h3>".lang_string("Project schema")."</h3>";
+	echo "<img src=include/functions_graph.php?type=project_tree&id_project=$id_project&id_user=$id_user>";
+}
 ?>

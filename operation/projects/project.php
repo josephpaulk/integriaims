@@ -106,10 +106,12 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 		$description = give_parameter_post ('description');
 		$start_date = give_parameter_post ('start_date');
 		$end_date = give_parameter_post ('end_date');
+		$id_project_group = get_parameter ("id_project_group",0);
+
 		$id_owner = $usuario;
 		$sql = " INSERT INTO tproject
-			(name, description, start, end, id_owner) VALUES
-			('$name', '$description', '$start_date', '$end_date', '$id_owner') ";
+			(name, description, start, end, id_owner, id_project_group) VALUES
+			('$name', '$description', '$start_date', '$end_date', '$id_owner', '$id_project_group') ";
 		if (mysql_query($sql)){
 			$id_inc = mysql_insert_id();
 			echo "<h3 class='suc'>".$lang_label["create_project_ok"]." ( id #$id_inc )</h3>";
@@ -128,7 +130,6 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
                 ($id_inc, '".$config["id_user"]."', 1)";
                 mysql_query($sql);
             }
-
 		} else {
 			echo "<h3 class='err'>".$lang_label["create_project_bad"]." ( id #$id_inc )</h3>";
 		}
@@ -143,13 +144,46 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
 
 echo "<h2>".$lang_label["project_management"]."</h2>";
 
+$filter_id_project_group = get_parameter ("filter_id_project_group", 0);
+$filter_id_group = get_parameter ("filter_id_group", 0);
+$filter_freetext = get_parameter ("filter_freetext", "");
+
+$FILTER = " 1=1 ";
+
+if ( $filter_freetext != "")
+	$FILTER .= " AND name LIKE '%$filter_freetext%' OR description LIKE '%$filter_freetext%' ";
+
+if ($filter_id_project_group != 0)
+	$FILTER .= " AND id_project_group = $filter_id_project_group";
+
+if ($filter_id_group != 0)
+	$FILTER .= " AND id_group = $filter_id_group";
+
+
+
+echo "<table width=710>";
+	echo "<form method=post action='index.php?sec=projects&sec2=operation/projects/project'>";
+	echo "<tr><td>";
+	echo lang_string ("Free text search");
+	echo "<td>";
+	echo print_input_text ("filter_freetext", $filter_freetext, "", 15, 100, false);
+	echo "<td>";
+	echo lang_string ("Project group");
+	echo "<td>";
+	echo print_select_from_sql ("SELECT * from tproject_group ORDER BY name", "filter_id_project_group", $filter_id_project_group, "", lang_string("None"), '0', false, false, true, false);
+
+	echo "<td>";
+	print_submit_button (lang_string("Search"), "enviar", false, "class='sub search'", false);
+	echo "</form></td></tr></table>";
+
 
 // -------------
 // Show headers
 // -------------
-echo "<table width='750' class='listing'>";
+echo "<table width='100%' class='listing'>";
 echo "<tr>";
 echo "<th>".$lang_label["name"];
+echo "<th>".__ ("PG");
 echo "<th>".$lang_label["completion"];
 echo "<th>".lang_string ("Task / People");
 echo "<th>".$lang_label["time_used"];
@@ -161,18 +195,27 @@ echo "<th>".$lang_label["delete"];
 // Show DATA TABLE
 // -------------
 
-$view_disabled = get_parameter ("view_disabled",0);
+$view_disabled = get_parameter ("view_disabled", 0);
 // Simple query, needs to implement group control and ACL checking
-$sql2="SELECT * FROM tproject WHERE disabled = $view_disabled ORDER by name"; 
+$sql2="SELECT * FROM tproject WHERE $FILTER AND disabled = $view_disabled ORDER by name"; 
 if ($result2=mysql_query($sql2))	
 while ($row2=mysql_fetch_array($result2)){
 	if (give_acl($config["id_user"], 0, "PR") ==1){
 		if (user_belong_project ($id_user, $row2["id"]) != 0){	
 			echo "<tr>";
-
+		
 			// Project name
 			echo "<td align='left' >";
 			echo "<b><a href='index.php?sec=projects&sec2=operation/projects/task&id_project=".$row2["id"]."'>".$row2["name"]."</a></b></td>";
+
+			// Project group
+			echo "<td>";
+			if ($row2["id_project_group"] > 0){
+				$icon = get_db_sql ("SELECT icon FROM tproject_group WHERE id = ". $row2["id_project_group"]);
+				$name = get_db_sql ("SELECT name FROM tproject_group WHERE id = ". $row2["id_project_group"]);
+
+				echo "<a href='index.php?sec=projects&sec2=operation/projects/project&filter_id_project_group=".$row2["id_project_group"]."'><img src='images/project_groups_small/".$icon.".png' border=0 title='$name'></a>";
+			}
 
 			// Progress
 			echo "<td >";
@@ -226,7 +269,7 @@ echo "</table>";
 
 
 if (give_acl($config["id_user"], 0, "PM")==1) {
-	echo "<table width=750 class='button'>";
+	echo "<table width=100% class='button'>";
 	echo "<tr><td align=right>";
 	echo "<form name='boton' method='POST'  action='index.php?sec=projects&sec2=operation/projects/project_detail&insert_form'>";
 	echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_project"]."'>";

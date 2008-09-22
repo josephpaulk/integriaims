@@ -232,11 +232,30 @@ if ($sec == "projects"){
 
 }
 
+// Project group manager
+if ((give_acl($config["id_user"], 0, "PM")==1) AND ($sec == "projects")) {
+	echo "<div class='portlet'>";
+	echo "<h3 class='admin'>".lang_string ('Project groups')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	// Building overview
+	if ($sec2=="operation/projects/project_group_detail")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_group_detail'>".lang_string ('Project groups')."</a></li>";
+
+	echo "</ul>";
+	echo "</div>";
+}
+
+
 // INCIDENTS
 if ($sec == "incidents") {
 	echo "<div class='portlet'>";
 	echo "<h3>".lang_string ('incidents')."</h3>";
 	echo "<ul class='sidemenu'>";
+
 	// Incident overview
 	if ($sec2 == "operation/incidents/incident")
 		echo "<li id='sidesel'>";
