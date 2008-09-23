@@ -1,5 +1,17 @@
 2008-09-23  Esteban Sanchez  <estebans@artica.es>
 
+	* operation/inventories/inventory.php: Added support to view or edit
+	an inventory directly.
+
+	* operation/incidents/incident_inventory_detail.php: Changed link to
+	view an inventory object.
+
+	* operation/incidents/incident.php: Avoid ugly tab refreshing when an
+	incident id was given. Replaced lang_string() with __(). Fixed a
+	Javascript rare bug when setting up the editor form.
+
+2008-09-23  Esteban Sanchez  <estebans@artica.es>
+
 	* integria_db.sql: Added a foreign key constraint in tincident_type.
 	Moved twizard on top of tincident_type.
 

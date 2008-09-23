@@ -43,7 +43,7 @@ foreach ($inventories as $incident) {
 	
 	$data[0] = $incident['name'];
 	$data[1] = $incident['description'];
-	$data[2] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$incident['id'].'">'.
+	$data[2] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$incident['id'].'">'.
 			'<img border="0" src="images/zoom.png" /></a>';
 	
 	array_push ($table->data, $data);

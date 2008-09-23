@@ -55,11 +55,11 @@ if (isset ($_GET["quick_delete"])) {
 				mail_incident ($id_inc, $id_usuario, "", 0, 3);
 			}
 			borrar_incidencia($id_inc);
-			echo "<h3 class='suc'>".lang_string ('del_incid_ok')."</h3>";
+			echo "<h3 class='suc'>".__('del_incid_ok')."</h3>";
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Incident deleted","User ".$id_usuario." deleted incident #".$id_inc);
 		} else {
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$_SESSION["id_usuario"]." try to delete incident");
-			echo "<h3 class='error'>".lang_string ('del_incid_no')."</h3>";
+			echo "<h3 class='error'>".__('del_incid_no')."</h3>";
 			no_permission();
 		}
 	}
@@ -127,17 +127,22 @@ echo '<div id="tabs">';
 
 /* Tabs list */
 echo '<ul style="height: 30px;" class="ui-tabs-nav">';
-echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.lang_string ('Search').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Details').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Tracking').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Inventory').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Contact').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Workunits').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Files').'</span></a></li>';
+if ($id) {
+	echo '<li class="ui-tabs"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
+	echo '<li class="ui-tabs-selected"><a href="ajax.php?page=operation/incidents/incident_detail&id='.$id.'"><span>'.__('Details').'</span></a></li>';
+} else {
+	echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
+	echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Details').'</span></a></li>';
+}
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Tracking').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Inventory').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Contact').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Workunits').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Files').'</span></a></li>';
 echo '</ul>';
 
 /* Tabs first container is manually set, so it loads immediately */
-echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: block;">';
+echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: '.($id ? 'none' : 'block').';">';
 
 echo '<div class="result"></div>';
 
@@ -149,13 +154,13 @@ $table->width = '100%';
 $table->id = 'incident_search_result_table';
 $table->head = array ();
 $table->head[0] = "Id";
-$table->head[1] = lang_string ("SLA");
-$table->head[2] = lang_string ("incident");
-$table->head[3] = lang_string ("group");
-$table->head[4] = lang_string ("status")." - <i>".lang_string("resolution")."</i>";
-$table->head[5] = lang_string ("priority");
-$table->head[6] = lang_string ("Updated")." - <i>".lang_string ("Started")."</i>";
-$table->head[7] = lang_string ("flags");
+$table->head[1] = __("SLA");
+$table->head[2] = __("incident");
+$table->head[3] = __("group");
+$table->head[4] = __("status")." - <i>".__("resolution")."</i>";
+$table->head[5] = __("priority");
+$table->head[6] = __("Updated")." - <i>".__("Started")."</i>";
+$table->head[7] = __("flags");
 $table->style = array ();
 $table->style[0] = '';
 
@@ -198,11 +203,12 @@ var old_incident = 0;
 
 function tab_loaded (event, tab) {
 	if (tab.index == 1) {
+		/* In integria_incident_search.js */
+		configure_incident_form (true, false);
+		
 		if (id_incident == old_incident) {
 			return;
 		}
-		/* In integria_incident_search.js */
-		configure_incident_form (true, false);
 		if ($("#incident-menu").css ('display') != 'none') {
 			$("#incident-menu").slideUp ('normal', function () {
 				configure_incident_side_menu (id_incident);

@@ -13,18 +13,26 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+$id = (int) get_parameter ('id');
+
 /* Tabs code */
 echo '<div id="tabs">';
 
 /* Tabs list */
 echo '<ul style="height: 30px;" class="ui-tabs-nav">';
-echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.lang_string ('Search').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Details').'</span></a></li>';
+if ($id) {
+	echo '<li class="ui-tabs"><a href="#ui-tabs-1"><span>'.lang_string ('Search').'</span></a></li>';
+	echo '<li class="ui-tabs-selected"><a href="ajax.php?page=operation/inventories/inventory_detail&id='.$id.'"><span>'.lang_string ('Details').'</span></a></li>';
+} else {
+	echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.lang_string ('Search').'</span></a></li>';
+	echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Details').'</span></a></li>';
+}
+
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Incidents').'</span></a></li>';
 echo '</ul>';
 
 /* Tabs first container is manually set, so it loads immediately */
-echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: block;">';
+echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: '.($id ? 'none' : 'block').';">';
 
 require_once ('inventory_search.php');
 
@@ -63,7 +71,19 @@ function incident_row_clicked (id, name) {
 }
 
 $(document).ready (function () {
-	$("#tabs > ul").tabs ({"load" : tab_loaded}).tabs ("disable", 1).tabs ("disable", 2);
+	$("#tabs > ul").tabs ({"load" : tab_loaded});
+
+<?php if ($id) : ?>
+	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/inventories/inventory_detail&id=" + <?php echo $id; ?>);
+	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/inventories/inventory_incidents&id=" + <?php echo $id; ?>);
+	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/inventories/incident_inventory_detail&id=" + <?php echo $id; ?>);
+	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/inventories/incident_inventory_contacts&id=" + <?php echo $id; ?>);
+	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/inventories/incident_workunits&id=" + <?php echo $id; ?>);
+	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/inventories/incident_files&id=" + <?php echo $id; ?>);
+	$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
+		.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
+	$("#tabs > ul").tabs ("select", 1);
+<?php endif; ?>
 	configure_inventory_search_form (10, incident_row_clicked);
 });
 </script>
