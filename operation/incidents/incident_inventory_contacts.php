@@ -32,7 +32,7 @@ $table->head[3] = lang_string ('View');
 $table->align[3] = 'center';
 $table->data = array ();
 
-echo "<h3>".give_inc_title ($id_incident)."</h3>";
+echo "<h3>".lang_string ("Incident"). " #$id_incident - ".give_inc_title ($id_incident)."</h3>";
 
 if (count ($inventories) == 0) {
 	echo '<h4>'.lang_string ('There are no contacts associated to this incident').'</h4>';

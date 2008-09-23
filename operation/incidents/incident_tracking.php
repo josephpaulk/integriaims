@@ -24,10 +24,8 @@ if (check_login() != 0) {
 	exit;
 }
 
-
 $id_grupo = "";
 $creacion_incidente = "";
-
 
 if (isset($_GET["id"])){
 	$id_inc = $_GET["id"];
@@ -61,7 +59,7 @@ if (isset($_GET["id"])){
 $cabecera=0;
 $sql4='SELECT * FROM tincident_track WHERE id_incident= '.$id_inc;
 
-echo "<h3>".lang_string ("Incident"). " #$id_inc. ".give_inc_title ($id_inc)."</h3>";
+echo "<h3>".lang_string ("Incident"). " #$id_inc - ".give_inc_title ($id_inc)."</h3>";
 
 echo '<table width="80%" class="listing">';
 

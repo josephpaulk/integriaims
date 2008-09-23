@@ -149,6 +149,14 @@ function configure_incident_form (enable_ajax_form) {
 	
 	if (enable_ajax_form) {
 		$(dialog+"#incident_status_form").submit (function () {
+			if ($(this).children (".selected-inventories").length == 0) {
+				$(dialog+"#incident_inventories").fadeOut ('normal',function () {
+					pulsate (this);
+				});
+				result_msg_error ("There's no affected object");
+				
+				return false;
+			}
 			values = get_form_input_values (this);
 			values.push ({name: "page",
 				value: "operation/incidents/incident_detail"});
@@ -165,6 +173,17 @@ function configure_incident_form (enable_ajax_form) {
 			return false;
 		});
 	}
+	
+	$(dialog+"#incident_status_form").submit (function () {
+		if ($(this).children (".selected-inventories").length == 0) {
+			$(dialog+"#incident_inventories").fadeOut ('normal',function () {
+				pulsate (this);
+			});
+			result_msg_error ("There's no affected object");
+			
+			return false;
+		}
+	});
 }
 
 function configure_incident_search_form (page_size, row_click_callback) {
@@ -199,9 +218,9 @@ function configure_incident_search_form (page_size, row_click_callback) {
 	$(dialog+"#button-inventory_name").click (function () {
 		show_inventory_search_dialog ("Search inventory",
 					function (id, name) {
-						$(dialog+"#hidden-search_id_inventory").attr ("value", id);
-						$(dialog+"#button-inventory_name").attr ("value", name);
-						$("#dialog").dialog ("close");
+						$(parent_dialog+"#hidden-search_id_inventory").attr ("value", id);
+						$(parent_dialog+"#button-inventory_name").attr ("value", name);
+						$("#dialog-search-inventory").dialog ("close");
 					}
 		);
 	});

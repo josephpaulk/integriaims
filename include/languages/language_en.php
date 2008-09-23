@@ -737,7 +737,7 @@ $lang_label["Main"]="Main";
 $lang_label["version"]="Version";
 $lang_label["Attachment"]="Files";
 $lang_label["Notes"]="Notes";
-$lang_label["Incident"]="Incident data";
+$lang_label["Incident"]="Incident";
 //2 Apr 2007
 $lang_label["no_rtask"]="There are no recon task configured";
 

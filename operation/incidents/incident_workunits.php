@@ -62,7 +62,7 @@ if ($id_incident) {
 
 echo $result_msg;
 
-echo "<h3>".give_inc_title ($id_incident)."</h3>";
+echo "<h3>".lang_string ("Incident"). " #$id_incident - ".give_inc_title ($id_incident)."</h3>";
 
 $workunits = get_incident_workunits ($id_incident);
 

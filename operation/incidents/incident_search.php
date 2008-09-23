@@ -65,6 +65,7 @@ $search_id_group = (int) get_parameter ('search_id_group', 1);
 $search_status = (int) get_parameter ('search_status', 0);
 $search_id_product = (int) get_parameter ('search_id_product', 0);
 $search_id_company = (int) get_parameter ('search_id_company', 0);
+$search_id_inventory = (int) get_parameter ('search_id_inventory');
 
 if ($status == 0)
 	$status = implode (',', array_keys (get_indicent_status ()));
@@ -94,9 +95,23 @@ if ($incidents === false) {
 $status = get_indicent_status ();
 
 foreach ($incidents as $incident) {
+	$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
+	
+	if ($search_id_inventory) {
+		$found = false;
+		foreach ($inventories as $inventory) {
+			if ($inventory['id'] == $search_id_inventory) {
+				$found = true;
+				break;
+			}
+		}
+		
+		if (! $found)
+			continue;
+	}
+	
 	/* Check aditional searching clauses */
 	if ($search_id_product) {
-		$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
 		$found = false;
 		foreach ($inventories as $inventory) {
 			if ($inventory['id_product'] == $search_id_product) {
@@ -110,8 +125,6 @@ foreach ($incidents as $incident) {
 	}
 	
 	if ($search_id_company) {
-		$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
-		
 		$found = false;
 		foreach ($inventories as $inventory) {
 			$companies = get_inventory_affected_companies ($inventory['id'], false);

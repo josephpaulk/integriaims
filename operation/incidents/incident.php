@@ -248,11 +248,6 @@ $(document).ready (function () {
 			.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
 		$("#tabs > ul").tabs ("select", 1);
 	});
-	$("#link_create_incident").click (function () {
-		show_add_incident_dialog ();
-		return false;
-	});
-	
 });
 </script>
 

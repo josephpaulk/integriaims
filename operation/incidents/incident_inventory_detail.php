@@ -31,7 +31,7 @@ $table->head[2] = lang_string ('View');
 $table->align[2] = 'center';
 $table->data = array ();
 
-echo "<h3>".give_inc_title ($id_incident)."</h3>";
+echo "<h3>".lang_string ("Incident"). " #$id_incident - ".give_inc_title ($id_incident)."</h3>";
 
 if (count ($inventories) == 0) {
 	echo '<h4>'.lang_string ('There\'s no inventory objects associated to this incident').'</h4>';

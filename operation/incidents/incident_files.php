@@ -88,7 +88,7 @@ if (isset($_GET["id"])){
 // Attach head if there's attach for this incident
 $att_fil=mysql_query("SELECT * FROM tattachment WHERE id_incidencia = ".$id_inc);
 
-echo "<h3>".give_inc_title($id_inc)."</h3>";
+echo "<h3>".lang_string ("Incident"). " #$id_inc - ".give_inc_title ($id_inc)."</h3>";
 
 if (mysql_num_rows($att_fil)){
 	echo "<table width='750' cellspacing=4 cellpadding=4 class='databox'><tr><th class=datos>".lang_string ('filename');

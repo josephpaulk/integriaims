@@ -63,14 +63,13 @@ if ($action == 'update') {
 	}
 	$id_author_inc = give_incident_author ($id);
 	$titulo = get_parameter ('titulo');
-	$descripcion = get_parameter ('descripcion');
+	$description = get_parameter ('description');
 	$origen = get_parameter ("incident_origin", 1);
 	$priority = get_parameter ('priority_form');
 	$estado = get_parameter ('incident_status');
 	$group = get_parameter ('grupo_form');
 	$email_notify = (bool) get_parameter ("email_notify");
 	$epilog = get_parameter ('epilog');
-	$descripcion = get_parameter ('descripcion');
 	$resolution = get_parameter ('incident_resolution');
 	$id_task = get_parameter ('task_user');
 	$id_incident_type = get_parameter ('id_incident_type');
@@ -98,7 +97,7 @@ if ($action == 'update') {
 			id_incident_type = %d
 			WHERE id_incidencia = %d',
 			$titulo, $origen, $estado, $grupo, $usuario,
-			$email_notify, $priority, $descripcion,
+			$email_notify, $priority, $description,
 			$epilog, $id_task, $resolution, $id_incident_type,
 			$id);
 	process_sql ($sql);
@@ -145,8 +144,7 @@ if ($action == "insert") {
 
 	// Read input variables
 	$titulo = get_parameter ('titulo');
-	$descripcion =  get_parameter ('descripcion');
-	$texto = $descripcion; // to view in textarea after insert
+	$description =  get_parameter ('description');
 	$origen = get_parameter ('incident_origin', 1);
 	$priority = get_parameter ('priority_form');
 	$id_creator = $config['id_user'];
@@ -163,7 +161,7 @@ if ($action == "insert") {
 			resolution, id_incident_type)
 			VALUES (NOW(), NOW(), "%s", "%s", "%s", %d, %d, %d, %d,
 			"%s", %d, %d, %d, %d)',
-			$titulo, $descripcion, $usuario,
+			$titulo, $description, $usuario,
 			$origen, $estado, $priority, $grupo, $id_creator,
 			$email_notify, $id_task, $resolution, $id_incident_type);
 	$id = process_sql ($sql, 'insert_id');
@@ -207,7 +205,7 @@ if ($id) {
 	$row = mysql_fetch_array ($result);
 	// Get values
 	$titulo = $row["titulo"];
-	$texto = $row["descripcion"];
+	$description = $row["descripcion"];
 	$inicio = $row["inicio"];
 	$actualizacion = $row["actualizacion"];
 	$estado = $row["estado"];
@@ -282,7 +280,7 @@ if ($id) {
 		/* if file */
 		if ($_FILES['userfile']['name'] != "") {
 			$tipo = $_FILES['userfile']['type'];
-			$description = get_parameter ("file_description",
+			$file_description = get_parameter ("file_description",
 					__('No description available'));
 			
 			// Insert into database
@@ -292,7 +290,7 @@ if ($id) {
 			$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
 					filename, description, size)
 					VALUES (%d, "%s", "%s", "%s", %d)',
-					$id, $iduser_temp, $filename, $description, $filesize);
+					$id, $iduser_temp, $filename, $file_description, $filesize);
 
 			$id_attachment = process_sql ($sql, 'insert_id');
 			incident_tracking ($id, $config['id_user'], 3);
@@ -325,7 +323,7 @@ if ($id) {
 	$iduser_temp = $config['id_user'];
 	$titulo = "";
 	$titulo = "";
-	$descripcion = "";
+	$description = "";
 	$origen = 0;
 	$priority = 2;
 	$id_grupo =0;
@@ -475,7 +473,7 @@ if ($create_incident) {
 }
 
 $disabled_str = $disabled ? 'readonly' : '';
-$table->data[5][0] = print_textarea ('descripcion', 10, 80, $texto, $disabled_str,
+$table->data[5][0] = print_textarea ('description', 14, 80, $description, $disabled_str,
 		true, __('Description'));
 
 $table->data[6][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,
@@ -516,7 +514,7 @@ if (! defined ('AJAX')) :
 <script  type="text/javascript">
 $(document).ready (function () {
 	/* First parameter indicates to add AJAX support to the form */
-	configure_incident_form (false, false);
+	configure_incident_form (false);
 });
 </script>
 

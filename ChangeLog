@@ -1,5 +1,29 @@
 2008-09-23  Esteban Sanchez  <estebans@artica.es>
 
+	* include/js/integria.js: Added a new function: pulsate() to flash an
+	HTML element. result_msg_error() and result_msg_success() code
+	rewritten.
+
+	* include/js/integria_incident_search.js: Added some check in incident
+	form to ensure the user has added an inventory object.
+
+	* operation/incidents/incident.php: Create incident dialog is no
+	longer shown in a dialog.
+
+	* operation/incidents/incident_detail.php: Variable renamed to
+	english.
+
+	* operation/incidents/incident_files.php,
+	operation/incidents/incident_tracking.php,
+	operation/incidents/incident_workunits.php,
+	operation/incidents/incident_inventory_contacts.php,
+	operation/incidents/incident_inventory_detail.php: Merge titles style.
+
+	* operation/incidents/incident_search.php: Now it can filter for
+	inventory objects.
+
+2008-09-23  Esteban Sanchez  <estebans@artica.es>
+
 	* operation/inventories/inventory.php: Added support to view or edit
 	an inventory directly.
 
