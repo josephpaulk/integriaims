@@ -1,4 +1,5 @@
 var dialog = "";
+var parent_dialog = "";
 
 function configure_user_search_form () {
 	$("#user_search_result_table").tablesorter ();
@@ -56,6 +57,16 @@ function show_user_search_dialog (title) {
 }
 
 function configure_incident_form (enable_ajax_form) {
+	$(dialog+"#button-search_parent").click (function () {
+		show_incident_search_dialog ("Search parent incident",
+			function (id, name) {
+				$("#dialog-search-incident").dialog ("close");
+				$(dialog+"#button-search_parent").attr ("value", "Incident #"+id);
+				$(dialog+"#hidden-id_parent").attr ("value", id);
+			}
+		);
+	});
+	
 	$(dialog+"#button-usuario_name").click (function () {
 		show_user_search_dialog ("User search");
 	});
@@ -106,7 +117,7 @@ function configure_incident_form (enable_ajax_form) {
 		show_inventory_search_dialog ("Search inventory object",
 			function (id, name) {
 				var exists = false
-				$(dialog+".selected-inventories").each (function () {
+				$(parent_dialog+".selected-inventories").each (function () {
 					if (this.value == id) {
 						exists = true;
 						return;
@@ -120,8 +131,8 @@ function configure_incident_form (enable_ajax_form) {
 					});
 					return;
 				}
-				$(dialog+"#incident_inventories").append ($('<option value="'+id+'">'+name+'</option>'));
-				$(dialog+"#incident_status_form").append ($('<input type="hidden" value="'+id+'" class="selected-inventories" name="inventories[]" />'));
+				$(parent_dialog+"#incident_inventories").append ($('<option value="'+id+'">'+name+'</option>'));
+				$(parent_dialog+"#incident_status_form").append ($('<input type="hidden" value="'+id+'" class="selected-inventories" name="inventories[]" />'));
 				$("#dialog-search-inventory #inventory_search_result").fadeOut ('normal',
 					function () {
 						$(this).empty ().append ('<h3 class="suc">Added</h3>').fadeIn ();
@@ -156,6 +167,46 @@ function configure_incident_form (enable_ajax_form) {
 	}
 }
 
+function configure_incident_search_form (page_size, row_click_callback) {
+	$(dialog+"#search_incident_form").submit (function () {
+		$(dialog+"#incident_search_result_table").removeClass ("hide");
+		values = get_form_input_values (this);
+		values.push ({name: "page",
+				value: "operation/incidents/incident_search"});
+		$(dialog+"table#incident_search_result_table tbody").fadeOut ('normal', function () {
+			$(this).empty ();
+			jQuery.post ("ajax.php",
+				values,
+				function (data, status) {
+					$(dialog+"table#incident_search_result_table tbody").empty ().append (data);
+					$(dialog+"#incident_search_result_table tbody tr").click (function () {
+						id = this.id.split ("-").pop ();
+						name = $(this).children (":eq(2)").html ();
+						row_click_callback (id, name);
+					});
+					$(dialog+"table#incident_search_result_table").trigger ("update")
+						.tablesorterPager ({container: $(dialog+"#pager"), size: page_size});
+					$(dialog+"table#incident_search_result_table tbody").fadeIn ();
+					$(dialog+"#pager").removeClass ("hide").fadeIn ();
+				},
+				"html"
+				);
+		});
+		return false;
+	});
+	$(dialog+"#incident_search_result_table tr th :eq(0)").addClass ("{sorter: 'text'}");
+	$(dialog+"#incident_search_result_table").tablesorter ({ cancelSelection : true});
+	$(dialog+"#button-inventory_name").click (function () {
+		show_inventory_search_dialog ("Search inventory",
+					function (id, name) {
+						$(dialog+"#hidden-search_id_inventory").attr ("value", id);
+						$(dialog+"#button-inventory_name").attr ("value", name);
+						$("#dialog").dialog ("close");
+					}
+		);
+	});
+}
+
 function show_add_incident_dialog () {
 	$("#dialog-incident").remove ();
 	$("body").append ($("<div></div>").attr ("id", "dialog-incident").addClass ("dialog"));
@@ -175,10 +226,12 @@ function show_add_incident_dialog () {
 					width: 800,
 					modal: true,
 					open: function () {
+						parent_dialog = dialog;
 						dialog = "#dialog-incident ";
 					},
 					close: function () {
-						dialog = "";
+						dialog = parent_dialog;
+						parent_dialog = "";
 					}
 				});
 			configure_incident_form (true);
@@ -187,7 +240,7 @@ function show_add_incident_dialog () {
 	);
 }
 
-function configure_inventory_search_form (page_size, callback_incident_click) {
+function configure_inventory_search_form (page_size, incident_click_callback) {
 	$(dialog+"#inventory_search_result_table").tablesorter ();
 	$(dialog+"#inventory_search_form").submit (function () {
 		$(dialog+"#inventory_search_result_table tbody").fadeOut ('normal',
@@ -206,7 +259,7 @@ function configure_inventory_search_form (page_size, callback_incident_click) {
 					$(dialog+"#inventory_search_result_table tbody tr").click (function () {
 						id = this.id.split ("-").pop ();
 						name = $(this).children (":eq(0)").text ();
-						callback_incident_click (id, name);
+						incident_click_callback (id, name);
 					});
 					$(dialog+"#inventory_search_result_table tbody").fadeIn ();
 					$(dialog+"#inventory-pager").removeClass ("hide").fadeIn ();
@@ -216,6 +269,39 @@ function configure_inventory_search_form (page_size, callback_incident_click) {
 		});
 		return false;
 	});
+}
+
+function show_incident_search_dialog (title, callback_incident_click) {
+	$("#dialog-search-incident").remove ();
+	$("body").append ($("<div></div>").attr ("id", "dialog-search-incident").addClass ("dialog"));
+	values = Array ();
+	values.push ({name: "page",
+				value: "operation/incidents/incident_search"});
+	values.push ({name: "search_form",
+				value: 1});
+	jQuery.get ("ajax.php",
+		values,
+		function (data, status) {
+			$("#dialog-search-incident").empty ().append (data);
+			$("#dialog-search-incident").dialog ({"title" : title,
+					minHeight: 500,
+					minWidth: 600,
+					height: 600,
+					width: 750,
+					modal: true,
+					open: function () {
+						parent_dialog = dialog;
+						dialog = "#dialog-search-incident ";
+					},
+					close: function () {
+						dialog = parent_dialog;
+						parent_dialog = "";
+					}
+					});
+			configure_incident_search_form (5, callback_incident_click);
+		},
+		"html"
+	);
 }
 
 function show_inventory_search_dialog (title, callback_incident_click) {
@@ -231,14 +317,16 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 			$("#dialog-search-inventory").dialog ({"title" : title,
 					minHeight: 500,
 					minWidth: 600,
-					height: 500,
-					width: 600,
+					height: 700,
+					width: 700,
 					modal: true,
 					open: function () {
+						parent_dialog = dialog;
 						dialog = "#dialog-search-inventory ";
 					},
 					close: function () {
-						dialog = "";
+						dialog = parent_dialog;
+						parent_dialog = "";
 					}
 					});
 			configure_inventory_search_form (5, callback_incident_click);
@@ -360,7 +448,7 @@ function configure_incident_side_menu (id_incident) {
 }
 
 function configure_inventory_form (enable_ajax_form) {
-	$("#button-parent_search").click (function () {
+	$(dialog+"#button-parent_search").click (function () {
 		show_inventory_search_dialog ("Search parent inventory",
 					function (id, name) {
 						$("#button-parent_search").attr ("value", name);

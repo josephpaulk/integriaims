@@ -121,7 +121,7 @@ if ($id) {
 	$serial_number = $inventory['serial_number'];
 	$part_number = $inventory['part_number'];
 	$confirmed = false;
-	$id_sla = 0;
+	$id_sla = $inventory['id_sla'];
 	$id_manufacturer = $inventory['id_manufacturer'];
 }
 

@@ -33,7 +33,7 @@ $update = (bool) get_parameter ('update');
 $get_icon = (bool) get_parameter ('get_icon');
 
 if ($get_icon) {
-	$icon = (string) get_db_value ('icon', 'tproduct', 'id', $id);
+	$icon = (string) get_db_value ('icon', 'tkb_product', 'id', $id);
 	
 	if (defined ('AJAX')) {
 		echo $icon;

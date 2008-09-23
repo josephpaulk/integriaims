@@ -73,6 +73,7 @@ if ($action == 'update') {
 	$descripcion = get_parameter ('descripcion');
 	$resolution = get_parameter ('incident_resolution');
 	$id_task = get_parameter ('task_user');
+	$id_incident_type = get_parameter ('id_incident_type');
 
 	incident_tracking ($id, $config["id_user"], 1);
 	$old_prio = give_inc_priority ($id);
@@ -93,11 +94,13 @@ if ($action == 'update') {
 			titulo = "%s", origen = %d, estado = %d,
 			id_grupo = %d, id_usuario = "%s",
 			notify_email = %d, prioridad = %d, descripcion = "%s",
-			epilog = "%s", id_task = %d, resolution = %d
+			epilog = "%s", id_task = %d, resolution = %d,
+			id_incident_type = %d
 			WHERE id_incidencia = %d',
 			$titulo, $origen, $estado, $grupo, $usuario,
 			$email_notify, $priority, $descripcion,
-			$epilog, $id_task, $resolution, $id);
+			$epilog, $id_task, $resolution, $id_incident_type,
+			$id);
 	process_sql ($sql);
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
 
@@ -151,17 +154,18 @@ if ($action == "insert") {
 	$resolution = get_parameter ("incident_resolution");
 	$id_task = get_parameter ("task_user");
 	$email_notify = (bool) get_parameter ('email_notify');
-
+	$id_incident_type = get_parameter ('id_incident_type');
+	
 	$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, origen, estado, prioridad,
 			id_grupo, id_creator, notify_email, id_task,
-			resolution)
+			resolution, id_incident_type)
 			VALUES (NOW(), NOW(), "%s", "%s", "%s", %d, %d, %d, %d,
-			"%s", %d, %d, %d)',
+			"%s", %d, %d, %d, %d)',
 			$titulo, $descripcion, $usuario,
 			$origen, $estado, $priority, $grupo, $id_creator,
-			$email_notify, $id_task, $resolution);
+			$email_notify, $id_task, $resolution, $id_incident_type);
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
 		$inventories = (array) get_parameter ('inventories');
@@ -219,6 +223,7 @@ if ($id) {
 	$id_task = $row["id_task"];
 	$id_parent = $row["id_parent"];
 	$sla_disabled = false; /* TODO */
+	$id_incident_type = $row['id_incident_type'];
 	$grupo = dame_nombre_grupo($id_grupo);
 
 	// Aditional ACL check on read incident
@@ -334,6 +339,7 @@ if ($id) {
 	$id_creator = $iduser_temp;
 	$email_notify = 0;
 	$sla_disabled = false;
+	$id_incident_type = 0;
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Show the form
@@ -410,11 +416,13 @@ $table->data[1][1] .= print_priority_flag_image ($priority, true);
 
 $table->data[1][2] = combo_incident_resolution ($resolution, $disabled, true);
 $parent_name = $id_parent ? get_inventory_name ($id_parent) : __('Search parent');
-$table->data[1][3] = print_button ($parent_name, 'id_parent', $disabled, '',
+$table->data[1][3] = print_button ($parent_name, 'search_parent', $disabled, '',
 			'class="dialogbtn"', true, __('Parent incident'));
+$table->data[1][3] .= print_input_hidden ('id_parent', $id_parent, true);
 
 $table->data[2][0] = combo_incident_origin ($origen, $disabled, true);
-$table->data[2][1] = print_label (__('Type'), '', '', true);
+$table->data[2][1] = print_select (get_incident_types (), 'id_incident_type',
+			$id_incident_type, '', __('None'), 0, true, false, true, __('Type'));
 $table->data[2][2] = combo_task_user ($id_task, $config["id_user"], 0, $disabled, true);
 
 $table->data[2][3] = print_label (__('Creator'), '', '', true);

@@ -1,5 +1,38 @@
 2008-09-23  Esteban Sanchez  <estebans@artica.es>
 
+	* integria_db.sql: Added a foreign key constraint in tincident_type.
+	Moved twizard on top of tincident_type.
+
+	* include/functions_db.php: Added get_incident_types().
+
+	* include/js/integria_incident_search.js: More fixes to nested
+	dialogs. Now the parent_dialog is hold in a variable. Added an action
+	to incidents form to search parent incident. Added
+	show_incident_search_dialog() and configure_incident_search_form() to
+	open a incident search dialog and configure the form of searching an
+	incident. Fixed bug on inventory form when it was open in a dialog.
+
+	* operation/incidents/incident.php: Now it opens details tab if an
+	incident id was given. Use configure_incident_search_form() new
+	function to setup the searching form. Style correction.
+
+	* operation/incidents/incident_detail.php: Added incident type
+	configuration.
+
+	* operation/incidents/incident_search.php: Show incident search form
+	if it was asked via AJAX.
+
+	* operation/inventories/inventory_detail.php: Get id_sla from database
+	when editing.
+
+	* operation/inventories/inventory_incidents.php: Added a link to view
+	and edit all the details of an incident.
+
+	* operation/kb/manage_prod.php: Fixed fetching product icon (it was
+	querying the wrong deprecated table).
+
+2008-09-23  Esteban Sanchez  <estebans@artica.es>
+
 	* include/functions_db.php: Fixes in SQL sentence on
 	get_incidents_on_inventory().
 
@@ -161,7 +194,7 @@
 	* operation/users/user_edit.php: PHP tags must be lowercase. Added
 	code to preview user avatar.
 
-	* images/products/*: Added product images from tango.
+	* images/products/*: Added product images from Tango.
 
 2008-09-19  Sancho Lerena <slerena@gmail.com>
 

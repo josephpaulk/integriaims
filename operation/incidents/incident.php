@@ -32,6 +32,7 @@ if (! give_acl ($id_usuario, 0, "IR")) {
 }
 
 // Take input parameters
+$id = (int) get_parameter ('id');
 
 // Offset adjustment
 if (isset($_GET["offset"]))
@@ -40,7 +41,7 @@ else
 	$offset=0;
 
 // Delete incident
-if (isset($_GET["quick_delete"])) {
+if (isset ($_GET["quick_delete"])) {
 	$id_inc = $_GET["quick_delete"];
 	$sql2="SELECT * FROM tincidencia WHERE id_incidencia=".$id_inc;
 	$result2=mysql_query($sql2);
@@ -126,7 +127,7 @@ echo '<div id="tabs">';
 
 /* Tabs list */
 echo '<ul style="height: 30px;" class="ui-tabs-nav">';
-echo '<li class="ui-tabs-selected"><a href="#ui-tabs-3"><span>'.lang_string ('Search').'</span></a></li>';
+echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.lang_string ('Search').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Details').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Tracking').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Inventory').'</span></a></li>';
@@ -136,7 +137,7 @@ echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Fil
 echo '</ul>';
 
 /* Tabs first container is manually set, so it loads immediately */
-echo '<div id="ui-tabs-3" class="ui-tabs-panel" style="display: block;">';
+echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: block;">';
 
 echo '<div class="result"></div>';
 
@@ -216,55 +217,30 @@ function tab_loaded (event, tab) {
 	$(".result").empty ();
 }
 
-function set_rows_click () {
-	$("#incident_search_result_table tbody tr").click (function () {
-		id_incident = this.id.split ("-").pop ();
-		$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_detail&id=" + id_incident);
-		$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_tracking&id=" + id_incident);
-		$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + id_incident);
-		$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + id_incident);
-		$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/incidents/incident_workunits&id=" + id_incident);
-		$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_files&id=" + id_incident);
+$(document).ready (function () {
+	$("#tabs > ul").tabs ({"load" : tab_loaded});
+<?php if ($id) : ?>
+	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_detail&id=" + <?php echo $id; ?>);
+	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_tracking&id=" + <?php echo $id; ?>);
+	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + <?php echo $id; ?>);
+	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + <?php echo $id; ?>);
+	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/incidents/incident_workunits&id=" + <?php echo $id; ?>);
+	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_files&id=" + <?php echo $id; ?>);
+	$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
+		.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
+	$("#tabs > ul").tabs ("select", 1);
+<?php endif; ?>
+	
+	configure_incident_search_form (10, function (id, name) {
+		$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_detail&id=" + id);
+		$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_tracking&id=" + id);
+		$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + id);
+		$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + id);
+		$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/incidents/incident_workunits&id=" + id);
+		$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_files&id=" + id);
 		$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
 			.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
 		$("#tabs > ul").tabs ("select", 1);
-	});
-}
-
-$(document).ready (function () {
-	$("#tabs > ul").tabs ({"load" : tab_loaded}).tabs ("disable", 1).tabs ("disable", 2);
-	$("#search_incident_form").submit (function () {
-		$("#incident_search_result_table").removeClass ("hide");
-		values = get_form_input_values (this.id);
-		values.push ({name: "page",
-				value: "operation/incidents/incident_search"});
-
-		$("table#incident_search_result_table tbody").fadeOut ('normal', function () {
-			$(this).empty ();
-			jQuery.post ("ajax.php",
-				values,
-				function (data, status) {
-					$("table#incident_search_result_table tbody").empty ().append (data);
-					set_rows_click ();
-					$("table#incident_search_result_table").trigger ("update").tablesorterPager ({container: $("#pager")});
-					$("table#incident_search_result_table tbody").fadeIn ();
-					$("#pager").removeClass ("hide").fadeIn ();
-				},
-				"html"
-				);
-		});
-		return false;
-	});
-	$("#incident_search_result_table tr th :eq(0)").addClass ("{sorter: 'text'}");
-	$("#incident_search_result_table").tablesorter ({ cancelSelection : true});
-	$("#button-inventory_name").click (function () {
-		show_inventory_search_dialog ("<?php echo lang_string ("Search inventory") ?>",
-					function (id, name) {
-						$("#hidden-search_id_inventory").attr ("value", id);
-						$("#button-inventory_name").attr ("value", name);
-						$("#dialog").dialog ("close");
-					}
-		);
 	});
 	$("#link_create_incident").click (function () {
 		show_add_incident_dialog ();

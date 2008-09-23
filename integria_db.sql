@@ -50,12 +50,20 @@ CREATE TABLE `tgrupo` (
   PRIMARY KEY  (`id_grupo`)
 );
 
+CREATE TABLE `twizard` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+);
+
 CREATE TABLE `tincident_type` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   `description` mediumtext NULL default NULL,
-  `id_wizard` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id`)
+  `id_wizard` mediumint(8) unsigned NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_wizard`) REFERENCES twizard(`id`)
+      ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 --
@@ -82,9 +90,11 @@ CREATE TABLE `tincidencia` (
   `id_parent` bigint(20) unsigned NULL,
   `sla_disabled` tinyint UNSIGNED NOT NULL DEFAULT 0,
   `affected_sla_id` tinyint UNSIGNED NOT NULL DEFAULT 0,
-  `id_incident_type` mediumint(8) unsigned NOT NULL,
+  `id_incident_type` mediumint(8) unsigned NULL,
   PRIMARY KEY  (`id_incidencia`),
-  KEY `incident_index_1` (`id_usuario`,`id_incidencia`)
+  KEY `incident_index_1` (`id_usuario`,`id_incidencia`),
+  FOREIGN KEY (`id_incident_type`) REFERENCES tincident_type(`id`)
+      ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 ALTER TABLE `tincidencia` ADD FOREIGN KEY (`id_parent`) REFERENCES tincidencia(`id_incidencia`)
@@ -556,12 +566,6 @@ CREATE TABLE `tincident_inventory` (
      ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE TABLE `twizard` (
-  `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tproject_group` (

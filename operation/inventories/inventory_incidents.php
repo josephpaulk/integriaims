@@ -50,7 +50,8 @@ foreach ($incidents as $incident) {
 	$data[2] = $incident['prioridad'];
 	$data[3] = $incident['estado'];
 	$data[4] = $incident['id_usuario'];
-	$data[5] = '<a href=""><img src="images/zoom.png" /></a>';
+	$data[5] = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.
+		$incident['id_incidencia'].'"><img src="images/zoom.png" /></a>';
 	
 	array_push ($table->data, $data);
 }

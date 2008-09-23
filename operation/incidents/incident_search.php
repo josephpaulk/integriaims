@@ -21,6 +21,43 @@ check_login ();
 if (! defined ('AJAX'))
 	return;
 
+$search_form = (bool) get_parameter ('search_form');
+
+if ($search_form) {
+	form_search_incident ();
+	$table->class = 'hide result_table listing';
+	$table->width = '100%';
+	$table->id = 'incident_search_result_table';
+	$table->head = array ();
+	$table->head[0] = "Id";
+	$table->head[1] = lang_string ("SLA");
+	$table->head[2] = lang_string ("incident");
+	$table->head[3] = lang_string ("group");
+	$table->head[4] = lang_string ("status")." - <i>".lang_string("resolution")."</i>";
+	$table->head[5] = lang_string ("priority");
+	$table->head[6] = lang_string ("Updated")." - <i>".lang_string ("Started")."</i>";
+	$table->head[7] = lang_string ("flags");
+	$table->style = array ();
+	$table->style[0] = '';
+
+	print_table ($table);
+
+	echo '<div id="pager" class="hide pager">';
+	echo '<form>';
+	echo '<img src="images/control_start_blue.png" class="first" />';
+	echo '<img src="images/control_rewind_blue.png" class="prev" />';
+	echo '<input type="text" class="pager pagedisplay" size=5 />';
+	echo '<img src="images/control_fastforward_blue.png" class="next" />';
+	echo '<img src="images/control_end_blue.png" class="last" />';
+	echo '<select class="pager pagesize" style="display:none">';
+	echo '<option selected="selected" value="5">5</option>';
+	echo '</select>';
+	echo '</form>';
+	echo '</div>';
+	
+	return;
+}
+
 $search_string = (string) get_parameter ('search_string');
 $status = (int) get_parameter ('status');
 $search_priority = (int) get_parameter ('search_priority', -1);
