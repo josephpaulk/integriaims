@@ -233,7 +233,13 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 					minWidth: 600,
 					height: 500,
 					width: 600,
-					modal: true
+					modal: true,
+					open: function () {
+						dialog = "#dialog-search-inventory ";
+					},
+					close: function () {
+						dialog = "";
+					}
 					});
 			configure_inventory_search_form (5, callback_incident_click);
 		},

@@ -1710,11 +1710,11 @@ function get_contract_sla ($id_contract, $only_name = true) {
 function get_incidents_on_inventory ($id_inventory, $only_names = true) {
 	$sql = sprintf ('SELECT tincidencia.*
 			FROM tincidencia, tincident_inventory
-			WHERE tincidencia.id = tincident_inventory.id_incident
+			WHERE tincidencia.id_incidencia = tincident_inventory.id_incident
 			AND tincident_inventory.id_inventory = %d
 			ORDER BY tincidencia.inicio DESC',
 			$id_inventory);
-	$incidents = get_db_row_sql ($sql);
+	$incidents = get_db_all_rows_sql ($sql);
 	if ($incidents == false)
 		return array ();
 	

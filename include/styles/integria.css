@@ -145,6 +145,10 @@ ul span, ol span {
 
 /* images */
 
+img {
+	border: 0;
+}
+
 img.float-right {
   margin: 5px 0px 5px 15px;
 }

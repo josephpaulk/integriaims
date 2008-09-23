@@ -27,10 +27,10 @@ if (give_acl ($config['id_user'], 0, "IR") != 1) {
 	exit;
 }
 
-echo '<h3>'.__('Incidents affecting inventories').'</h3>'
+echo '<h3>'.__('Incidents affecting inventories').'</h3>';
 
 $table->width = '90%';
-$table->class = 'listing'
+$table->class = 'listing';
 $table->data = array ();
 $table->head = array ();
 $table->head[0] = __('Title');
@@ -45,16 +45,16 @@ $incidents = get_incidents_on_inventory ($id, false);
 foreach ($incidents as $incident) {
 	$data = array ();
 	
-	$data[0] = $incident['title'];
+	$data[0] = $incident['titulo'];
 	$data[1] = $incident['inicio'];
 	$data[2] = $incident['prioridad'];
-	$data[3] = $incident['status'];
+	$data[3] = $incident['estado'];
 	$data[4] = $incident['id_usuario'];
-	$data[5] = '<a href=""><img src="images/zoom.png" /></a>'$incident['prioridad'];
-	
-	
+	$data[5] = '<a href=""><img src="images/zoom.png" /></a>';
 	
 	array_push ($table->data, $data);
 }
+
+print_table ($table);
 
 ?>
