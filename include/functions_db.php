@@ -1567,7 +1567,6 @@ function get_companies ($only_names = true) {
 function get_contract ($id_contract) {
 	return get_db_row ('tcontract', 'id', $id_contract);
 }
-
 function get_contracts ($only_names = true) {
 	$contracts = get_db_all_rows_in_table ('tcontract');
 	if ($contracts === false)
@@ -1626,6 +1625,10 @@ function get_workunit_data ($id_workunit) {
 	return get_db_row ('tworkunit', 'id', $id_workunit);
 }
 
+function get_building ($id_building) {
+	return get_db_row ('tbuilding', 'id', $id_building);
+}
+
 function get_buildings ($only_names = true) {
 	$buildings = get_db_all_rows_in_table ('tbuilding');
 	if ($buildings === false)
@@ -1674,6 +1677,10 @@ function get_manufacturers ($only_names = true) {
 	}
 	
 	return $manufacturers;
+}
+
+function get_sla ($id_sla) {
+	return get_db_row ('tsla', 'id', $id_sla);
 }
 
 function get_slas ($only_names = true) {

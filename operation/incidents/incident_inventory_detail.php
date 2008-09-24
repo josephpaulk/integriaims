@@ -26,9 +26,16 @@ $table->class = 'listing';
 $table->width = '90%';
 $table->head = array ();
 $table->head[0] = lang_string ('Name');
-$table->head[1] = lang_string ('Description');
-$table->head[2] = lang_string ('View');
-$table->align[2] = 'center';
+$table->head[1] = lang_string ('Company');
+$table->head[2] = lang_string ('Contract');
+$table->head[3] = lang_string ('SLA');
+$table->head[4] = lang_string ('Details');
+$table->head[5] = lang_string ('Edit');
+$table->align[4] = 'center';
+$table->align[5] = 'center';
+$table->size = array ();
+$table->size[4] = '40px';
+$table->size[5] = '40px';
 $table->data = array ();
 
 echo "<h3>".lang_string ("Incident"). " #$id_incident - ".give_inc_title ($id_incident)."</h3>";
@@ -38,18 +45,45 @@ if (count ($inventories) == 0) {
 	return;
 }
 
-foreach ($inventories as $incident) {
+foreach ($inventories as $inventory) {
 	$data = array ();
 	
-	$data[0] = $incident['name'];
-	$data[1] = $incident['description'];
-	$data[2] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$incident['id'].'">'.
-			'<img border="0" src="images/zoom.png" /></a>';
+	$contract = get_contract ($inventory['id_contract']);
+	$company = get_company ($contract['id_company']);
+	$sla = get_sla ($inventory['id_sla']);
+	
+	$data[0] = $inventory['name'];
+	if ($inventory['description'])
+		$data[0] .= ' '.print_help_tip ($inventory['description'], true, 'tip_info');
+	$data[1] = $company['name'];
+	$data[2] = $contract['name'];
+	$data[3] = $sla['name'];
+	$sla_description = __('Minimun response').': '.$sla['min_response'].'<br />'.
+		__('Maximum response').': '.$sla['max_response'].'<br />'.
+		__('Maximum incidents').': '.$sla['max_incidents'].'<br />';
+	$data[3] .= print_help_tip ($sla_description, true);
+	
+	$details = '';
+	if ($inventory['ip_address'] != '')
+		$details .= '<strong>'.__('IP address').'</strong>: '.$inventory['ip_address'].'<br />';
+	if ($inventory['serial_number'] != '')
+		$details .= '<strong>'.__('Serial number').'</strong>: '.$inventory['serial_number'].'<br />';
+	if ($inventory['part_number'] != '')
+		$details .= '<strong>'.__('Part number').'</strong>: '.$inventory['part_number'].'<br />';
+	if ($inventory['comments'] != '')
+		$details .= '<strong>'.__('Comments').'</strong>: '.$inventory['Comments'].'<br />';
+	if ($inventory['id_building'] != 0) {
+		$building = get_building ($inventory['id_building']);
+		$details .= '<strong>'.__('Building').'</strong>: '.$building['name'].'<br />';
+	}
+	$data[4] = print_help_tip ($details, true, 'tip_view');
+	
+	$data[5] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$inventory['id'].'">'.
+			'<img src="images/setup.gif" /></a>';
 	
 	array_push ($table->data, $data);
 }
 
-echo 'TODO: Mostrar SLA specific';
 print_table ($table);
 
 ?>

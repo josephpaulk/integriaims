@@ -1,5 +1,20 @@
 2008-09-23  Esteban Sanchez  <estebans@artica.es>
 
+	* include/functions_db.php: Added get_building() and get_sla().
+
+	* include/js/integria_incident_search.js: Added a close button at the
+	bottom of search inventory dialog (it need styling).
+
+	* include/styles/integria_tip.css: Added new tip classes.
+
+	* include/styles/flora/flora.dialog.css: Added style to bottom pane of
+	dialogs (applies when there are buttons).
+
+	* operation/incidents/incident_inventory_detail.php: Added new fields
+	and tooltips to show inventory details.
+
+2008-09-23  Esteban Sanchez  <estebans@artica.es>
+
 	* include/js/integria.js: Added a new function: pulsate() to flash an
 	HTML element. result_msg_error() and result_msg_success() code
 	rewritten.

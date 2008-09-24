@@ -339,6 +339,11 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 					height: 700,
 					width: 700,
 					modal: true,
+					buttons: {
+						"X": function() { 
+							$(this).dialog("close"); 
+						} 
+					},
 					open: function () {
 						parent_dialog = dialog;
 						dialog = "#dialog-search-inventory ";
