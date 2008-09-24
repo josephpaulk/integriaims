@@ -66,6 +66,9 @@ $search_status = (int) get_parameter ('search_status', 0);
 $search_id_product = (int) get_parameter ('search_id_product', 0);
 $search_id_company = (int) get_parameter ('search_id_company', 0);
 $search_id_inventory = (int) get_parameter ('search_id_inventory');
+$search_serial_number = (string) get_parameter ('search_serial_number');
+$search_id_building = (int) get_parameter ('search_id_building');
+$search_sla_fired = (bool) get_parameter ('search_sla_fired');
 
 if ($status == 0)
 	$status = implode (',', array_keys (get_indicent_status ()));
@@ -97,6 +100,11 @@ $status = get_indicent_status ();
 foreach ($incidents as $incident) {
 	$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
 	
+	/* Check aditional searching clauses */
+	if ($search_sla_fired && $incident['affected_sla_id'] == 0) {
+		continue;
+	}
+	
 	if ($search_id_inventory) {
 		$found = false;
 		foreach ($inventories as $inventory) {
@@ -110,7 +118,32 @@ foreach ($incidents as $incident) {
 			continue;
 	}
 	
-	/* Check aditional searching clauses */
+	if ($search_serial_number != '') {
+		$found = false;
+		foreach ($inventories as $inventory) {
+			if (strcasecmp ($inventory['serial_number'], $search_serial_number)) {
+				$found = true;
+				break;
+			}
+		}
+		
+		if (! $found)
+			continue;
+	}
+	
+	if ($search_id_building) {
+		$found = false;
+		foreach ($inventories as $inventory) {
+			if ($inventory['id_building'] == $search_id_building) {
+				$found = true;
+				break;
+			}
+		}
+		
+		if (! $found)
+			continue;
+	}
+	
 	if ($search_id_product) {
 		$found = false;
 		foreach ($inventories as $inventory) {

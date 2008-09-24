@@ -79,7 +79,7 @@ if ($create) {
 	$sql = sprintf ('INSERT INTO tinventory (name, description, id_product,
 			id_contract, ip_address, id_parent, id_building, serial_number,
 			part_number, id_manufacturer, id_sla)
-			VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s", %d)',
+			VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s", %d, %d)',
 			$name, $description, $id_product, $id_contract, $ip_address,
 			$id_parent, $id_building, $serial_number, $part_number,
 			$id_manufacturer, $id_sla);

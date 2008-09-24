@@ -401,7 +401,7 @@ function show_workunit_data ($row3, $title) {
 	// Show data
 	echo "<div class='notetitle'>"; // titulo
 	echo "<span>";
-	echo "<img src='images/avatars/".$avatar."_small.png'>&nbsp;";
+	print_user_avatar ($id_user, true);
 	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
 	echo $id_user;
 	echo "</a>";
@@ -473,7 +473,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<div class='notetitle' style='height: 75px;'>"; // titulo
 	echo "<table class='blank' border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px; background: transparent;'>";
 	echo "<tr><td rowspan=3 width='7%'>";
-	echo "<img src='images/avatars/".$avatar."_small.png'>";
+	print_user_avatar ($id_user, true);
 
 	echo "<td width='60%'><b>";
 	if ($id_task != ""){
@@ -589,7 +589,8 @@ function form_search_incident ($return = false) {
 	$id_company = (int) get_parameter ('search_id_company');
 	$id_product = (int) get_parameter ('search_id_product');
 	$search_serial_number = (string) get_parameter ('search_serial_number');
-	$search_part_number = (string) get_parameter ('search_part_number');
+	$search_id_building = (int) get_parameter ('search_id_building');
+	$search_sla_fired = (bool) get_parameter ('search_sla_fired');
 	
 	/* No action is set, so the form will be sent to the current page */
 	$table->width = "100%";
@@ -607,45 +608,47 @@ function form_search_incident ($return = false) {
 	$table->colspan[3][0] = 2;
 
 	$table->data[0][0] = print_select (get_indicent_status (),
-					'search_status', $status,
-					'', __('Any'), 0, true, false, false,
-					__('Status'));
+			'search_status', $status,
+			'', __('Any'), 0, true, false, false,
+			__('Status'));
 	
 	$table->data[0][1] = print_select (get_indicent_priorities (),
-					'search_priority', $priority,
-					'', __('Any'), -1, true, false, false,
-					__('Priority'));
+			'search_priority', $priority,
+			'', __('Any'), -1, true, false, false,
+			__('Priority'));
 
 	$table->data[0][2] = print_select (get_user_groups (),
-					'search_id_group', $id_group,
-					'', '', '', true, false, false, __('Group'));
+			'search_id_group', $id_group,
+			'', '', '', true, false, false, __('Group'));
 	
 	$table->data[1][0] = print_input_hidden ('search_id_inventory', $id_inventory, true);
 	$name = __("Any");
 	if ($id_inventory)
 		$name = get_inventory_name ($id_inventory);
 	$table->data[1][0] .= print_button ($name, 'inventory_name', false, '',
-					'class="dialogbtn"', true, __('Inventory'));
+			'class="dialogbtn"', true, __('Inventory'));
 	
 	$table->data[1][1] = print_select (get_companies (),
-					'search_id_company', $id_company,
-					'', __('All'), 0, true, false, false,
-					__('Company'));
+			'search_id_company', $id_company,
+			'', __('All'), 0, true, false, false,
+			__('Company'));
 	
 	$table->data[1][2] = print_select (get_products (),
-					'search_id_product', $id_product,
-					'', __('All'), 0, true, false, false,
-					__('Product type'));
-	
+			'search_id_product', $id_product,
+			'', __('All'), 0, true, false, false,
+			__('Product type'));
+
 	$table->data[2][0] = print_input_text ('search_serial_number', $search_serial_number,
-						'', 30, 100, true, __('Serial number'));
-	$table->data[2][2] = print_input_text ('search_part_number', $search_part_number,
-						'', 30, 100, true, __('Part number'));
+				'', 30, 100, true, __('Serial number'));
+	$table->data[2][1] = print_select (get_buildings (),
+			'search_id_building', $search_id_building,
+			'', __('All'), 0, true, false, false,
+			__('Building'));
+	$table->data[2][2] = print_checkbox ('search_sla_fired', 1, $search_sla_fired, true, __('SLA fired'));
 	
 	$table->data[3][0] = print_input_text ('search_string', $search_string,
-						'', 40, 100, true, __('Search string'));
+			'', 40, 100, true, __('Search string'));
 	
-
 	$table->data[3][1] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= '<form id="search_incident_form" method="post">';
@@ -666,20 +669,17 @@ function incident_users_list ($id_incident, $return = false) {
 	
 	$output .= '<ul id="incident-users-list" class="sidemenu">';
 	$output .= '<li>';
-	if ($assigned['avatar'] != '')
-		$output .= '<img src="images/avatars/'.$assigned['avatar'].'_small.png" />';
+	$output .= print_user_avatar ($incident['id_usuario'], true, true);
 	$output .= '<strong>'.$incident['id_usuario'].'</strong> <em>'.__('Responsible').'</em><li>';
 		
 	$output .= '<li>';
-	if ($creator['avatar'] != '')
-		$output .= '<img src="images/avatars/'.$creator['avatar'].'_small.png" />';
+	$output .= print_user_avatar ($incident['id_creator'], true, true);
 	$output .= '<strong>'.$incident['id_creator'].'</strong> <em>'.__('Creator').'</em><li>';
 	
 	$users = get_users_in_group ($incident['id_grupo'], false);
 	foreach ($users as $user) {
 		$output .= '<li>';
-		if ($user['avatar'] != '')
-			$output .= '<img src="images/avatars/'.$user['avatar'].'_small.png" />';
+		$output .= print_user_avatar ($user['id_usuario'], true, true);
 		$output .= '<strong>'.$user['id_usuario'].'</strong><li>';
 	}
 	

@@ -1,4 +1,25 @@
-2008-09-23  Esteban Sanchez  <estebans@artica.es>
+2008-09-24  Esteban Sanchez  <estebans@artica.es>
+
+	* include/functions_db.php: Added print_user_avatar() to show the
+	avatar of an user.
+
+	* godmode/usuarios/lista_usuarios.php: Use print_user_avatar().
+
+	* include/functions_form.php: Use print_user_avatar(). Added building
+	and sla fired to incident search form.
+
+	* operation/incidents/incident_search.php: Do the search by building,
+	serial number and sla fired.
+
+	* operation/inventories/inventory_detail.php: Added missing field on
+	SQL sentence when inserting.
+
+	* operation/inventories/inventory_incidents.php: Show priority flag,
+	status name and user avatar.
+
+	* include/styles/integria.css: Fixed pager select style.
+
+2008-09-24  Esteban Sanchez  <estebans@artica.es>
 
 	* include/functions_db.php: Added get_users_in_group().
 

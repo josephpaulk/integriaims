@@ -221,6 +221,10 @@ select {
 	float: left;
 }
 
+select.pagesize {
+	float: none;
+}
+
 input[type="checkbox"] {
 	padding: 4px;
 	border:1px solid #A9C4D6;

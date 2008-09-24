@@ -1776,4 +1776,19 @@ function get_incident_types ($only_names = true) {
 	}
 	return $types;
 }
+
+function print_user_avatar ($id_user = 0, $small = false, $return = false) {
+	if ($id_user == 0) {
+		global $config;
+		$id_user = $config['id_user'];
+	}
+	$avatar =  get_db_value ('avatar', 'tusuario', 'id_usuario', $id_user);
+	$output = '';
+	if ($avatar != '') 
+		$output .= '<img src="images/avatars/'.$avatar.($small ? '_small' : '').'.png" />';
+	
+	if ($return)
+		return $output;
+	echo $output;
+}
 ?>
