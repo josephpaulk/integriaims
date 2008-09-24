@@ -393,7 +393,7 @@ function show_add_workunit_dialog (id_incident) {
 			$("#dialog-add-workunit").dialog ({"title" : "Add workunit",
 					minHeight: 300,
 					minWidth: 300,
-					height: 400,
+					height: 500,
 					width: 600,
 					modal: true
 					});
@@ -448,27 +448,39 @@ function show_add_file_dialog (id_incident) {
 	);
 }
 
-function configure_incident_side_menu (id_incident) {
-	$("#incident-menu h3").empty ()
-		.append ("Incident #"+id_incident);
+function configure_incident_side_menu (id_incident, refresh_users) {
+	$(".id-incident-menu").empty ().append (id_incident);
 	
-	$("#incident-menu #incident-create-work").empty ()
-		.append ($('<a></a>').attr ('href', "index.php?sec=incidents&sec2=operation/incidents/incident_create_work&id="+id_incident)
-			.html ("Add workunit"));
+	$("#incident-menu-actions #incident-create-work")
+		.attr ('href', "index.php?sec=incidents&sec2=operation/incidents/incident_create_work&id="+id_incident)
+		.click ( function () {
+			show_add_workunit_dialog (id_incident);
+			return false;
+		});
 	
-	$("#incident-menu #incident-attach-file").empty ()
-		.append ($('<a></a>').attr ('href', "index.php?sec=incidents&sec2=operation/incidents/incident_attach_file&id="+id_incident)
-			.html ("Add file"));
+	$("#incident-menu-actions #incident-attach-file")
+		.attr ('href', "index.php?sec=incidents&sec2=operation/incidents/incident_attach_file&id="+id_incident)
+		.click ( function () {
+			show_add_file_dialog (id_incident);
+			return false;
+		});
 	
-	$("#incident-menu #incident-create-work a").click ( function () {
-		show_add_workunit_dialog (id_incident);
-		return false;
-	});
-	
-	$("#incident-menu #incident-attach-file a").click ( function () {
-		show_add_file_dialog (id_incident);
-		return false;
-	});
+	if (refresh_users) {
+		values = Array ();
+		values.push ({name: "page",
+					value: "operation/incidents/incident_detail"});
+		values.push ({name: "id",
+					value: id_incident});
+		values.push ({name: "action",
+					value: 'get-users-list'});
+		jQuery.get ("ajax.php",
+			values,
+			function (data, status) {
+				$("#incident-menu-users #incident-users").empty ().append (data);
+			},
+			"html"
+		);
+	}
 }
 
 function configure_inventory_form (enable_ajax_form) {

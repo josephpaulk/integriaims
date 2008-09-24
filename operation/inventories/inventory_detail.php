@@ -57,11 +57,11 @@ if ($update) {
 	$sql = sprintf ('UPDATE tinventory SET name = "%s", description = "%s",
 			id_product = %d, id_contract = %d, ip_address = "%s",
 			id_parent = %d, id_building = %d, serial_number = "%s",
-			part_number = "%s", id_manufacturer = %d
+			part_number = "%s", id_manufacturer = %d, id_sla = %d
 			WHERE id = %d',
 			$name, $description, $id_product, $id_contract, $ip_address,
 			$id_parent, $id_building, $serial_number, $part_number,
-			$id_manufacturer, $id);
+			$id_manufacturer, $id_sla, $id);
 	$id = process_sql ($sql);
 	if ($id !== false) {
 		$result_msg = '<h3 class="suc">'.__('Inventory object updated successfuly').'</h3>';
@@ -78,11 +78,11 @@ if ($update) {
 if ($create) {
 	$sql = sprintf ('INSERT INTO tinventory (name, description, id_product,
 			id_contract, ip_address, id_parent, id_building, serial_number,
-			part_number, id_manufacturer)
+			part_number, id_manufacturer, id_sla)
 			VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s", %d)',
 			$name, $description, $id_product, $id_contract, $ip_address,
 			$id_parent, $id_building, $serial_number, $part_number,
-			$id_manufacturer);
+			$id_manufacturer, $id_sla);
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
 		$result_msg = '<h3 class="suc">'.__('Inventory object created successfuly').'</h3>';

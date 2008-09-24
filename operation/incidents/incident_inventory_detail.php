@@ -58,9 +58,9 @@ foreach ($inventories as $inventory) {
 	$data[1] = $company['name'];
 	$data[2] = $contract['name'];
 	$data[3] = $sla['name'];
-	$sla_description = __('Minimun response').': '.$sla['min_response'].'<br />'.
-		__('Maximum response').': '.$sla['max_response'].'<br />'.
-		__('Maximum incidents').': '.$sla['max_incidents'].'<br />';
+	$sla_description = '<strong>'.__('Minimun response').'</strong>: '.$sla['min_response'].'<br />'.
+		'<strong>'.__('Maximum response').'</strong>: '.$sla['max_response'].'<br />'.
+		'<strong>'.__('Maximum incidents').'</strong>: '.$sla['max_incidents'].'<br />';
 	$data[3] .= print_help_tip ($sla_description, true);
 	
 	$details = '';

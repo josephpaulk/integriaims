@@ -1414,6 +1414,33 @@ function get_user_groups ($id_user = 0) {
 	return $user_groups;
 }
 
+/** 
+ * Get all the users that belongs to a group.
+ * 
+ * @param id_group Group id to get all the users.
+ *
+ * @return A list of the groups the user has reading privileges.
+ */
+function get_users_in_group ($id_group = 0, $only_names = true) {
+	$sql = sprintf ('SELECT tusuario.* FROM tusuario_perfil, tusuario
+		WHERE tusuario_perfil.id_usuario = tusuario.id_usuario
+		AND id_grupo = %d GROUP BY id_usuario',
+		$id_group);
+	$users = get_db_all_rows_sql ($sql);
+	if ($users === false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($users as $user) {
+			$retval[$user['id_usuario']] = $user['nombre_real'];
+		}
+		return $retval;
+	}
+	
+	return $users;
+}
+
 function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true) {
 	if ($id_user == 0) {
 		global $config;

@@ -588,6 +588,8 @@ function form_search_incident ($return = false) {
 	$id_inventory = (int) get_parameter ('search_id_inventory');
 	$id_company = (int) get_parameter ('search_id_company');
 	$id_product = (int) get_parameter ('search_id_product');
+	$search_serial_number = (string) get_parameter ('search_serial_number');
+	$search_part_number = (string) get_parameter ('search_part_number');
 	
 	/* No action is set, so the form will be sent to the current page */
 	$table->width = "100%";
@@ -602,7 +604,7 @@ function form_search_incident ($return = false) {
 	$table->style[0] = 'font-weight: bold';
 	$table->style[1] = 'font-weight: bold';
 	$table->style[2] = 'font-weight: bold';
-	$table->colspan[2][0] = 2;
+	$table->colspan[3][0] = 2;
 
 	$table->data[0][0] = print_select (get_indicent_status (),
 					'search_status', $status,
@@ -635,16 +637,54 @@ function form_search_incident ($return = false) {
 					'', __('All'), 0, true, false, false,
 					__('Product type'));
 	
-	$table->data[2][0] = print_input_text ('search_string', $search_string,
-						'', 40, 50, true, __('Search string'));
+	$table->data[2][0] = print_input_text ('search_serial_number', $search_serial_number,
+						'', 30, 100, true, __('Serial number'));
+	$table->data[2][2] = print_input_text ('search_part_number', $search_part_number,
+						'', 30, 100, true, __('Part number'));
+	
+	$table->data[3][0] = print_input_text ('search_string', $search_string,
+						'', 40, 100, true, __('Search string'));
 	
 
-	$table->data[2][1] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$table->data[3][1] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= '<form id="search_incident_form" method="post">';
 	$output .= print_table ($table, true);
 	$output .= '</form>';
 
+	if ($return)
+		return $output;
+	echo $output;
+}
+
+function incident_users_list ($id_incident, $return = false) {
+	$output = '';
+	
+	$incident = get_db_row ('tincidencia', 'id_incidencia', (int) $id_incident);
+	$creator = get_db_row ('tusuario', 'id_usuario', $incident['id_creator']);
+	$assigned = get_db_row ('tusuario', 'id_usuario', $incident['id_usuario']);
+	
+	$output .= '<ul id="incident-users-list" class="sidemenu">';
+	$output .= '<li>';
+	if ($assigned['avatar'] != '')
+		$output .= '<img src="images/avatars/'.$assigned['avatar'].'_small.png" />';
+	$output .= '<strong>'.$incident['id_usuario'].'</strong> <em>'.__('Responsible').'</em><li>';
+		
+	$output .= '<li>';
+	if ($creator['avatar'] != '')
+		$output .= '<img src="images/avatars/'.$creator['avatar'].'_small.png" />';
+	$output .= '<strong>'.$incident['id_creator'].'</strong> <em>'.__('Creator').'</em><li>';
+	
+	$users = get_users_in_group ($incident['id_grupo'], false);
+	foreach ($users as $user) {
+		$output .= '<li>';
+		if ($user['avatar'] != '')
+			$output .= '<img src="images/avatars/'.$user['avatar'].'_small.png" />';
+		$output .= '<strong>'.$user['id_usuario'].'</strong><li>';
+	}
+	
+	$output .= '</ul>';
+	
 	if ($return)
 		return $output;
 	echo $output;

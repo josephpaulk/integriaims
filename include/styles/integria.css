@@ -30,7 +30,7 @@ td, th {
 /* links */
 a {
 	background: inherit;
-	color: #EC981F;
+	color: #2179B1;
 }
 a:hover {
 	text-decoration: none;
@@ -137,7 +137,6 @@ tr.green {
 ul, ol {
 	margin: 10px 30px;
 	padding: 0 15px;
-	color: #EC981F;
 }
 ul span, ol span {
 	color: #666666;
@@ -167,7 +166,7 @@ code {
   /* white-space: pre; */
   background: #FAFAFA;
   border: 1px solid #f2f2f2;
-  border-left: 3px solid #EC981F;
+  border-left: 3px solid #2179B1;
 }
 acronym {
   cursor: help;
@@ -179,7 +178,7 @@ blockquote {
   	background: #FAFAFA url(../../images/quote.gif) no-repeat 5px 10px !important;
 	background-position: 8px 10px;
 	border: 1px solid #f2f2f2;
-	border-left: 3px solid #EC981F;
+	border-left: 3px solid #2179B1;
 	font-weight: bold;
 }
 
@@ -219,6 +218,7 @@ select {
 	border:1px solid #A9C4D6;
 	font: normal 0.9em Arial, sans-serif;
 	color:#666;
+	float: left;
 }
 
 input[type="checkbox"] {

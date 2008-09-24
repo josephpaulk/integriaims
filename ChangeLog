@@ -1,5 +1,41 @@
 2008-09-23  Esteban Sanchez  <estebans@artica.es>
 
+	* include/functions_db.php: Added get_users_in_group().
+
+	* include/functions_form.php: Added serial and part numbers criterium
+	on incident search form (not working yet). Added incident_users_list()
+	to get a list for the sidebar of the affected users in an incident.
+
+	* integria/include/js/integria.js: Added support to toggleDiv() to get
+	an HTML element or id.
+
+	* include/js/integria_incident_search.js: Add workunit dialog a bit
+	bigger. Fixes in configure_incident_side_menu() to show affected users
+	in an incident.
+	
+	* include/styles/integria.css: Replaced previous orange color with new
+	blue one. Some fixes in lists and selects.
+
+	* operation/side_menu.php: Replaced lang_string() with __(). Added new
+	affected users sidebar.
+
+	* operation/incidents/incident.php: Some fixes when selecting an
+	incident in the results and when an id was given to the page.
+
+	* operation/incidents/incident_create_work.php: Fixed a little bit the
+	layout and the form buttons.
+
+	* operation/incidents/incident_detail.php: Added an AJAX operation to
+	get the list of affected users.
+
+	* operation/incidents/incident_inventory_detail.php: A bit styling in
+	SLA description.
+
+	* operation/inventories/inventory_detail.php: Updating or inserting
+	SLA was being ignored.
+
+2008-09-23  Esteban Sanchez  <estebans@artica.es>
+
 	* include/functions_db.php: Added get_building() and get_sla().
 
 	* include/js/integria_incident_search.js: Added a close button at the

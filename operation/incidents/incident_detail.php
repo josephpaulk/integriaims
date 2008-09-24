@@ -42,10 +42,16 @@ $action = get_parameter ('action');
 
 if ($action == 'get-info') {
 	$incident = get_db_row ('tincidencia', 'id_incidencia', $id);
-
+	
 	$incident['hours'] = (int) give_hours_incident ($id);
-
+	
 	echo json_encode ($incident);
+	if (defined ('AJAX'))
+		return;
+}
+
+if ($action == 'get-users-list') {
+	incident_users_list ($id);
 	if (defined ('AJAX'))
 		return;
 }

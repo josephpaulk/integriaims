@@ -38,7 +38,7 @@ echo lang_string ('add_workunit')." - $title</h3>";
 $now = date ("Y/m/d H:i:s");
 
 echo '<form id="form-add-workunit" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
-echo "<table cellpadding=3 cellspacing=3 border=0 width='100%' class='databox' >";
+echo "<table cellpadding=3 cellspacing=3 border=0 width='90%' class='databox' >";
 echo "<tr><td class='datos' width='140'><b>".lang_string ('date')."</b></td>";
 echo "<td class='datos'>".$now;
 
@@ -47,10 +47,7 @@ echo "<b>".lang_string ('profile')."</b>";
 echo "<td class='datos2'>";
 echo combo_roles (1, 'work_profile');
 
-echo "&nbsp;&nbsp;";
-echo "<input type='checkbox' name='have_cost' value=1>";
-echo "&nbsp;&nbsp;";
-echo "<b>".lang_string ('have_cost')."</b>";
+print_checkbox ('have_cost', 1, false, false, __('have_cost'));
 
 echo "<tr><td class='datos'>";
 echo "<b>".lang_string ('time_used')."</b>";
@@ -60,7 +57,10 @@ echo "<input type='text' name='duration' value='0' size='7'>";
 echo '<tr><td colspan="2" class="datos2"><textarea name="nota" rows="8" cols="90">';
 echo '</textarea>';
 echo "</tr></table>";
-echo '<input name="addnote" type="submit" class="sub next" value="'.lang_string ('add').'">';
+
+echo '<div style="width: 90%" class="button">';
+print_submit_button (__('Add'), 'addnote', false, 'class="sub next"');
+echo '</div>';
 
 print_input_hidden ('timestamp', $now);
 print_input_hidden ('insert_workunit', 1);

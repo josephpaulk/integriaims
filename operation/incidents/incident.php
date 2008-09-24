@@ -209,14 +209,14 @@ function tab_loaded (event, tab) {
 		if (id_incident == old_incident) {
 			return;
 		}
-		if ($("#incident-menu").css ('display') != 'none') {
-			$("#incident-menu").slideUp ('normal', function () {
-				configure_incident_side_menu (id_incident);
+		if ($(".incident-menu").css ('display') != 'none') {
+			$(".incident-menu").slideUp ('normal', function () {
+				configure_incident_side_menu (id_incident, true);
 				$(this).slideDown ();
 			});
 		} else {
-			configure_incident_side_menu (id_incident);
-			$("#incident-menu").slideDown ();
+			configure_incident_side_menu (id_incident, true);
+			$(".incident-menu").slideDown ();
 		}
 		old_incident = id_incident;
 	}
@@ -226,6 +226,9 @@ function tab_loaded (event, tab) {
 $(document).ready (function () {
 	$("#tabs > ul").tabs ({"load" : tab_loaded});
 <?php if ($id) : ?>
+	old_incident = id_incident = <?php echo $id ?>;
+	configure_incident_side_menu (id_incident, false);
+	$(".incident-menu").slideDown ();
 	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_detail&id=" + <?php echo $id; ?>);
 	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_tracking&id=" + <?php echo $id; ?>);
 	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + <?php echo $id; ?>);
@@ -238,6 +241,7 @@ $(document).ready (function () {
 <?php endif; ?>
 	
 	configure_incident_search_form (10, function (id, name) {
+		id_incident = id;
 		$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_detail&id=" + id);
 		$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_tracking&id=" + id);
 		$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + id);
