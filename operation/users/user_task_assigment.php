@@ -1,9 +1,10 @@
 <?php
 
-// Integria 1.1 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -36,45 +37,45 @@ if (($id_user != $config["id_user"]) AND (give_acl($config["id_user"], 0, "PM") 
 	$id_user = $config["id_user"];
 }
 
-if (give_acl($config["id_user"], 0, "PM") == 1){
-	 echo "<form name='xx' method=post action='index.php?sec=users&sec2=operation/users/user_task_assigment'><td>";
-        // Show user
-        combo_user_visible_for_me ($config["id_user"], "id_user", 0, "PR");
-        echo "<input type=submit value=go class='sub upd'>";
-        echo "</form></table>";
-}
-
 $sql = "SELECT ttask.id, ttask.name, tproject.name, ttask.completion, tproject.id, ttask.id FROM trole_people_task, ttask, tproject WHERE trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.completion < 100 ORDER BY ttask.completion DESC";
 
     echo "<h2>".lang_string ("Global task assignment")."</h2>";
-    echo "<h3>".lang_string ("For user"). " ".$id_user."</h3>";
-    echo "<table cellpadding=4 cellspacing=4 class='databox_color' width=800>";
+    echo "<h3>".lang_string ("For user"). " '".$id_user. "' ".print_user_avatar($id_user, true,true)."</h3>";
+
+if (give_acl($config["id_user"], 0, "PM") == 1){
+	echo "<form name='xx' method=post action='index.php?sec=users&sec2=operation/users/user_task_assigment'>";
+	
+	echo "<table style='margin-left: 15px;' class=blank>";
+	echo "<tr><td>";
+	// Show user
+	combo_user_visible_for_me ($config["id_user"], "id_user", 0, "PR");
+	echo "<td>";
+	echo "<input type=submit value=go class='sub upd'>";
+    echo "</form></table>";
+}
+
+    echo "<table  class='listing' width=800>";
     echo "<th>".lang_string ("Project");
     echo "<th>".lang_string ("Task");
     echo "<th>".lang_string ("Progress");
     echo "<th>".lang_string ("Worked Hr");
     echo "<th>".lang_string ("Last update");
     $result=mysql_query($sql);
-    $color=1;
+    
     while ($row=mysql_fetch_array($result)){
-        if ($color == 1){
-            $tdcolor = "datos";
-            $color = 0;
-        }
-        else {
-            $tdcolor = "datos2";
-            $color = 1;
-        }
         echo "<tr>";
-        echo "<td class=$tdcolor>".$row[2];
+        echo "<td>".$row[2];
 	$id_proj = $row[4];
         $id_task = $row[5];
-        echo "<td class=$tdcolor><a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_proj&id_task=$id_task&operation=view'>".$row[1]."</a>";
-	echo "<td class=$tdcolor>";
-	echo "<img src='include/functions_graph.php?type=progress&width=70&height=20&percent=".$row[3]."'>";
-        echo "<td class=$tdcolor>".give_wu_task_user ($row[0], $id_user);
+        echo "<td><a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_proj&id_task=$id_task&operation=view'>".$row[1]."</a>";
+		
+		echo "<td >";
+		echo "<img src='include/functions_graph.php?type=progress&width=70&height=20&percent=".$row[3]."'>";
+        
+		echo "<td>".give_wu_task_user ($row[0], $id_user);
         $wutime = give_db_sqlfree_field ("SELECT timestamp FROM tworkunit_task, tworkunit WHERE tworkunit.id_user = '$id_user' AND tworkunit_task.id_task = ".$row[0]." AND tworkunit.id = tworkunit_task.id_workunit order by timestamp desc LIMIT 1");
-        echo "<td class='$tdcolor".'f9'."'>".$wutime;
+
+        echo "<td class='f9'>".$wutime;
 
     }
     echo "</table>";

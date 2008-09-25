@@ -30,8 +30,14 @@ $id_user = $config["id_user"];
 		$nombre = get_parameter ("nombre","");
         $id_grupo = get_parameter ("id_grupo",0);
         $icon = get_parameter ("icon","");
-		$sql_insert="INSERT INTO tgrupo (nombre, icon) 
-		VALUES ('".$nombre."', '".$icon."') ";
+		$url = get_parameter ("url", "");
+		$banner = get_parameter ("banner", "");
+		$lang = get_parameter ("lang", "en");
+		$forced_email = get_parameter ("forced_email", 0);
+		$id_user_default = get_parameter ("id_user_default", "");
+	
+		$sql_insert="INSERT INTO tgrupo (nombre, icon, forced_email, lang, banner, url, id_user_default) 
+		VALUES ('$nombre', '$icon', '$forced_email', '$lang', '$banner', '$url', '$id_user_default') ";
 		$result=mysql_query($sql_insert);	
 		if (! $result)
 			echo "<h3 class='error'>".$lang_label["create_group_no"]."</h3>";
@@ -45,9 +51,21 @@ $id_user = $config["id_user"];
 		$nombre = get_parameter ("nombre","");
 		$id_grupo = get_parameter ("id_grupo",0);
 		$icon = get_parameter ("icon","");
-	    $sql_update ="UPDATE tgrupo 
-		SET nombre = '".$nombre."', icon = '".$icon."' 
-		WHERE id_grupo = '".$id_grupo."'";
+		$url = get_parameter ("url", "");
+		$banner = get_parameter ("banner", "");
+		$lang = get_parameter ("lang", "en");
+		$forced_email = get_parameter ("forced_email", 0);
+		$id_user_default = get_parameter ("id_user_default", "");
+
+	    $sql_update = "UPDATE tgrupo SET 
+						nombre = '$nombre', 
+						icon = '$icon',
+						url = '$url',
+						forced_email = '$forced_email',
+						banner = '$banner',
+						lang = '$lang',
+						id_user_default = '$id_user_default' 
+						WHERE id_grupo = '".$id_grupo."'";
 		$result=mysql_query($sql_update);
 		if (! $result)
 			echo "<h3 class='error'>".$lang_label["modify_group_no"]."</h3>";

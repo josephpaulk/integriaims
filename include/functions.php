@@ -174,7 +174,7 @@ function no_permission () {
  * 
  * @return The list if $return parameter is true.
  */
-function list_files ($directory, $stringSearch, $searchHandler, $return) {
+function list_files ($directory, $stringSearch, $searchHandler, $return = true, $inverse_filter = "") {
 	$errorHandler = false;
 	$result = array ();
 	if (! $directoryHandler = @opendir ($directory)) {
@@ -183,13 +183,17 @@ function list_files ($directory, $stringSearch, $searchHandler, $return) {
 	}
 	if ($searchHandler == 0) {
 		while (false !== ($fileName = @readdir ($directoryHandler))) {
-			$result[$fileName] = $fileName;
+			if (($fileName != ".") AND ($fileName != ".."))
+				$result[$fileName] = $fileName;
 		}
 	}
 	if ($searchHandler == 1) {
 		while(false !== ($fileName = @readdir ($directoryHandler))) {
 			if(@substr_count ($fileName, $stringSearch) > 0) {
-				$result[$fileName] = $fileName;
+				if ($inverse_filter != "")
+					if (strpos($fileName, $inverse_filter) ==0)
+						if (($fileName != ".") AND ($fileName != ".."))
+							$result[$fileName] = $fileName;
 			}
 		}
 	}

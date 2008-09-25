@@ -237,7 +237,7 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 	
 }
 
-function show_task_tree ( $id_project, $level = 0, $parent_task = 0, $color = 0, $FILTER = ""){
+function show_task_tree ( $id_project, $level = 0, $parent_task = 0, $color = 0, $FILTER = " 1=1 "){
 	global $config;
 	$id_user = $config["id_user"];
 	// Simple query, needs to implement group control and ACL checking
@@ -254,7 +254,7 @@ function show_task_tree ( $id_project, $level = 0, $parent_task = 0, $color = 0,
 		}
 		if ((user_belong_task ($id_user, $row2["id"]) == 1)) 
 			show_task_row ( $id_project, $row2, $tdcolor, $level );
-		show_task_tree ( $id_project, $level+1, $row2["id"], $color);
+		show_task_tree ( $id_project, $level+1, $row2["id"], $color, $FILTER);
 	}
 }
 ?>

@@ -344,9 +344,9 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 			AND trole_people_task.id_user = "%s"
 			ORDER BY ttask.id_project', $id_user);
 	
-	$output .= print_select_from_sql ($sql, 'task', $actual, '', '', __('N/A'), '0', true,
-				false, false, __('Task'));
-	
+	$output .= print_select_from_sql ($sql, 'task', $actual, '', __('N/A'), '0', true,
+				false, false, false);
+
 	if ($return)
 		return $output;
 	echo $output;
@@ -397,6 +397,15 @@ function show_workunit_data ($row3, $title) {
 	$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_user);
 	$nota = $row3["description"];
 	$id_workunit = $row3["id"];
+	$public = $row3["public"];
+	$locked = $row3["locked"];
+
+	$id_group = get_db_sql ("SELECT i.id_grupo FROM tincidencia as i, tworkunit_incident as w WHERE w.id_workunit = $id_workunit AND i.id_incidencia = w.id_incident");
+
+
+	// ACL Check for visibility
+	if (($public == 0) AND ($id_user != $config["id_user"]) AND (give_acl_extra ($config["id_user"], $id_group, "IM")== 0))
+		return;
 
 	// Show data
 	echo "<div class='notetitle'>"; // titulo
@@ -408,10 +417,21 @@ function show_workunit_data ($row3, $title) {
 	echo "&nbsp;".__('said_on')."&nbsp;";
 	echo $timestamp;
 	echo "</span>";
+
+	// Public WU ?
+	echo "<span style='float:right; margin-top: -15px; margin-bottom:0px; padding-right:10px;'>";
+	if ($public == 1)
+		echo "<img src='images/group.png' title='".__("Public Workunit")."' border=0>";
+	else
+		echo "<img src='images/delete.png' title='".__("Non public Workunit")."' border=0>";
+	echo "</span>";
+
+	// WU Duration 
 	echo "<span style='float:right; margin-top: -15px; margin-bottom:0px; padding-right:10px;'>";
 	echo $duration;
 	echo "&nbsp; ".__('hr');
 	echo "</span>";
+
 	echo "</div>";
 
 	// Body
@@ -561,17 +581,23 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	if ((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR (($id_user == $config["id_user"]) AND ($locked == 0)) ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_create_work&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&operation=edit'><img border=0 src='images/page_white_text.png'></a>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_create_work&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&operation=edit'><img border=0 src='images/page_white_text.png' title='".__("Lock workunit")."'></a>";
 		echo "</td>";
 	}
 
 // Lock workunit
-	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == 0) ) {
+	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == "") ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
-		echo "<a href='$myurl&id_workunit=$id_workunit&operation=lock'><img border=0 src='images/lock.png'></a>";
+		echo "<a href='$myurl&id_workunit=$id_workunit&operation=lock'><img border=0 src='images/lock.png' title='".__("Lock workunit")."'></a>";
+		echo "</td>";
+	} else {
+		echo "<tr><td align='right'>";
+		echo "<br><img src='images/rosette.png' title='".__("Locked by")." $locked'";
+		echo print_user_avatar ($locked, true);
 		echo "</td>";
 	}
+
   	echo "</tr></table>";
 	echo "</tr></table>";
 	echo "</div>";
@@ -591,7 +617,8 @@ function form_search_incident ($return = false) {
 	$search_serial_number = (string) get_parameter ('search_serial_number');
 	$search_id_building = (int) get_parameter ('search_id_building');
 	$search_sla_fired = (bool) get_parameter ('search_sla_fired');
-	
+	$search_ticket = (int) get_parameter ('search_ticket',0);
+
 	/* No action is set, so the form will be sent to the current page */
 	$table->width = "100%";
 	$table->class = "databox_color";
@@ -605,7 +632,7 @@ function form_search_incident ($return = false) {
 	$table->style[0] = 'font-weight: bold';
 	$table->style[1] = 'font-weight: bold';
 	$table->style[2] = 'font-weight: bold';
-	$table->colspan[3][0] = 2;
+	//$table->colspan[3][0] = 2;
 
 	$table->data[0][0] = print_select (get_indicent_status (),
 			'search_status', $status,
@@ -646,11 +673,15 @@ function form_search_incident ($return = false) {
 			__('Building'));
 	$table->data[2][2] = print_checkbox ('search_sla_fired', 1, $search_sla_fired, true, __('SLA fired'));
 	
-	$table->data[3][0] = print_input_text ('search_string', $search_string,
-			'', 40, 100, true, __('Search string'));
+	$table->data[3][1] = print_input_text ('search_string', $search_string,
+			'', 30, 100, true, __('Search string'));
 	
-	$table->data[3][1] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$table->data[3][0] = print_input_text ('search_ticket', $search_ticket,
+			'', 4, 10, true, __('Ticket ID#'));
+
+	$table->data[3][2] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
+
 	$output .= '<form id="search_incident_form" method="post">';
 	$output .= print_table ($table, true);
 	$output .= '</form>';
@@ -668,19 +699,17 @@ function incident_users_list ($id_incident, $return = false) {
 	$assigned = get_db_row ('tusuario', 'id_usuario', $incident['id_usuario']);
 	
 	$output .= '<ul id="incident-users-list" class="sidemenu">';
-	$output .= '<li>';
-	$output .= print_user_avatar ($incident['id_usuario'], true, true);
-	$output .= '<strong>'.$incident['id_usuario'].'</strong> <em>'.__('Responsible').'</em><li>';
+
+	$output .= "&nbsp;&nbsp;" . print_user_avatar ($incident['id_usuario'], true, true);
+	$output .= ' <strong>'.$incident['id_usuario'].'</strong> (<em>'.__('Responsible').'</em>)<br>';
 		
-	$output .= '<li>';
-	$output .= print_user_avatar ($incident['id_creator'], true, true);
-	$output .= '<strong>'.$incident['id_creator'].'</strong> <em>'.__('Creator').'</em><li>';
+	$output .= "&nbsp;&nbsp;" .print_user_avatar ($incident['id_creator'], true, true);
+	$output .= ' <strong>'.$incident['id_creator'].'</strong> (<em>'.__('Creator').'</em>)<br>';
 	
 	$users = get_users_in_group ($incident['id_grupo'], false);
 	foreach ($users as $user) {
-		$output .= '<li>';
-		$output .= print_user_avatar ($user['id_usuario'], true, true);
-		$output .= '<strong>'.$user['id_usuario'].'</strong><li>';
+		$output .= "&nbsp;&nbsp;" . print_user_avatar ($user['id_usuario'], true, true);
+		$output .= ' <strong>'.$user['id_usuario'].'</strong> ('.__('Participant').')<br>';
 	}
 	
 	$output .= '</ul>';

@@ -31,7 +31,7 @@ $offset = get_parameter ("offset",0);
 $total_events = give_db_sqlfree_field ("SELECT COUNT(id) FROM tevent");
 pagination ($total_events, "index.php?sec=godmode&sec2=godmode/setup/event", $offset);
 
-echo "<table cellpadding=4 cellspacing=4 width=710 class='databox'>";
+echo "<table width=740 class='listing'>";
 echo "<th>".lang_string ("Type")."</th>";
 echo "<th>".lang_string ("User")."</th>";
 echo "<th>".lang_string ("Extended Info")."</th>";

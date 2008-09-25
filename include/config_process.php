@@ -18,19 +18,19 @@
 global $config;
 
 // Integria version
-$config["build"]="80916";
-$config["version"]="v1.2";
+$config["build"]="80924";
+$config["version"]="v1.2-dev";
 $config["build_version"] = $config["build"];
 
 // Read remaining config tokens from DB
 if (! mysql_connect ($config["dbhost"], $config["dbuser"], $config["dbpass"])) {
 	//Non-persistent connection. If you want persistent conn change it to mysql_pconnect()
 	exit ('<html><head><title>Integria Error</title>
-		<link rel="stylesheet" href="./include/styles/integria.css" type="text/css">
+		<link rel="stylesheet" href="'.$config["base_url"].'/include/styles/integria.css" type="text/css">
 		</head><body><div align="center">
 		<div id="db_f">
 		<div>
-		<a href="index.php"><img src="images/integria_white.png" border="0"></a>
+		<a href="index.php"><img src="'.$config["base_url"].'/images/integria_white.png" border="0"></a>
 		</div>
 		<div id="db_ftxt">
 		<h1 id="log_f" class="error">Integria Error DB-001</h1>
@@ -50,11 +50,11 @@ require_once ($config["homedir"]."/include/functions_db.php");
 $configs = get_db_all_rows_in_table ('tconfig');
 if ($configs === false) {
 	exit ('<html><head><title>Integria Error</title>
-		<link rel="stylesheet" href="./include/styles/integria.css" type="text/css">
+		<link rel="stylesheet"  href="'.$config["base_url"].'/include/styles/integria.css" type="text/css">
 		</head><body><div align="center">
 		<div id="db_f">
 		<div>
-		<a href="index.php"><img src="images/integria_white.png" border="0"></a>
+		<a href="index.php"><img src="'.$config["base_url"].'/images/integria_white.png" border="0"></a>
 		</div>
 		<div id="db_ftxt">
 		<h1 id="log_f" class="error">Integria Error DB-002</h1>
@@ -90,7 +90,6 @@ if (!isset ($config["hours_perday"]))
 
 if (!isset ($config["sitename"]))
 	$config["sitename"] = "INTEGRIA";
-
 
 include_once ($config["homedir"]."/include/functions.php");
 include_once ($config["homedir"]."/include/functions_html.php");

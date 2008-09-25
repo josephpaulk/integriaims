@@ -72,7 +72,7 @@ $next_one_month = "$next_year-$next_month-$day";
 
 echo "<h1>".lang_string("Monthly report for")." $id_user</h1>";
 echo "<h3>".$year."/".$month."</h3>";
-echo "<table width=700>";
+echo "<table class=blank width=700>";
 echo "<tr><td>";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$prev_month&year=$prev_year&id=$id_user'> Prev</A>";
 echo "<td width=85%>";
@@ -84,7 +84,7 @@ echo "</table>";
 // Show graphs
 //$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
 echo "<div>";
-echo "<table width=750 class='databox_color' cellpadding=4 cellspacing=4>";
+echo "<table width=750 class='blank'>";
 echo "<tr><td class=datos>";
 echo "<h3>".lang_string("Workunit by task")."</h3>";
 echo "<tr><td class=datos>";

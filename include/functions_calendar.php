@@ -1,13 +1,13 @@
 <?php
 
-// INTEGRIA IMS v1.2
-// http://www.integriaims.com
-// ===========================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica, info@artica.es
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public License (LGPL)
+// modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -174,7 +174,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 	@list($p, $pl) = each($pn); @list($n, $nl) = each($pn); #previous and next links, if applicable
 	if($p) $p = '<span class="calendar-prev">'.($pl ? '<a href="'.htmlspecialchars($pl).'">'.$p.'</a>' : $p).'</span>&nbsp;';
 	if($n) $n = '&nbsp;<span class="calendar-next">'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n).'</span>';
-	$calendar = '<table class="blank calendar">'."\n".
+	$calendar = '<table class="calendar">'."\n".
 		'<caption class="calendar-month">'.$p.'<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$month.'&year='.$year.'&id='.$id_user.'">'.$title.'</a>'.$n."</caption>\n<tr>";
 
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
@@ -184,7 +184,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 		$calendar .= "</tr>\n<tr>";
 	}
 
-	if($weekday > 0) $calendar .= '<td colspan="'.$weekday.'">&nbsp;</td>'; #initial 'empty' days
+	if($weekday > 0) $calendar .= '<td class="calendar" colspan="'.$weekday.'">&nbsp;</td>'; #initial 'empty' days
 	for($day=1,$days_in_month=gmdate('t',$first_of_month); $day<=$days_in_month; $day++,$weekday++){
 		if($weekday == 7){
 			$weekday   = 0; #start a new week
@@ -227,17 +227,17 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 		$mylink = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user&timestamp_l=$year-$month-$day 00:00:00&timestamp_h=$year-$month-$day 23:59:59";
 
 	    if ($normal == 0)
-    		$calendar .= "<td>$day</td>";
+    		$calendar .= "<td class='calendar'>$day</td>";
         elseif ($normal == 1)
-            $calendar .= "<td style='background-color: #98FF8B;'><a href='$mylink' title='$workhours_a'>$day</A></td>";
+            $calendar .= "<td class='calendar' style='background-color: #98FF8B;'><a href='$mylink' title='$workhours_a'>$day</A></td>";
         elseif ($normal == 2)
-            $calendar .= "<td style='background-color: #FFFF80;'><a href='$mylink' title='$workhours_b'>$day</a></td>";
+            $calendar .= "<td class='calendar' style='background-color: #FFFF80;'><a href='$mylink' title='$workhours_b'>$day</a></td>";
         elseif ($normal == 3) {
             $total_wu = $workhours_a + $workhours_c;
-            $calendar .= "<td style='background-color: #FF7BFE;'><a href='$mylink' title='$total_wu'>$day</a></td>";
+            $calendar .= "<td class='calendar' style='background-color: #FF7BFE;'><a href='$mylink' title='$total_wu'>$day</a></td>";
         }
 	}
-	if($weekday != 7) $calendar .= '<td colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
+	if($weekday != 7) $calendar .= '<td class=calendar" colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
 
 	return $calendar."</tr>\n</table>\n";
 }

@@ -6,6 +6,7 @@
 */
 
 @import url(integria_tip.css);
+@import url(calendar.css);
 
 /* top elements */
 * {
@@ -65,11 +66,19 @@ h6 { font-size: 0.5em; }
 	text-transform: none;
 }
 
-p, h1, h2, h3, h4, h5, table {
+p, h1, h2, h3, h4, h5 {
 	margin: 10px 15px;
 }
 
 table {
+	border: none;
+	padding: 0px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	background: transparent;
+}
+
+table.box {
 	border-top: 2px solid #2179B1;
 	border-bottom: 1px solid #2179B1;
 	padding-left: 5px;
@@ -109,9 +118,9 @@ table.listing {
 
 .button {
 	margin-left: 15px;
-	padding-top: 0px;
-	padding-bottom: 0px;
-	padding-left: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 0px;
 	border-top: 2px solid #2179B1;
 	border-bottom: 2px solid #2179B1;
 	background: #eee;
@@ -213,6 +222,19 @@ input.button {
 	margin-left: 0px;
 	padding-left: 0px;
 }
+
+input.dialogbtn {
+	margin: 0;
+	font: normal 0.9em Arial, sans-serif;
+	background: #fafafa;
+	padding: 0;
+	color: #666;
+	border:1px solid #A9C4D6;
+	height: 20px;
+	margin-left: 0px;
+	padding-left: 0px;
+}
+
 select {
 	padding: 0px;
 	border:1px solid #A9C4D6;
@@ -542,18 +564,16 @@ input.login {
 	width: 90px;
 	font-size: 12px;
 }
-input.sub, input.dialogbtn {
+input.sub {
 	border-bottom-color: #708090;
 	border-right-color: #708090;
 	-moz-border-radius: 5%;
 	font-size: 0.85em;
 	font-weight: bold;
 	height: 22px;
+	margin-right: 10px;
 }
 
-input.sub {
-	margin: 10px 15px;
-}
 
 input.next {
 	padding-right: 15px;
@@ -946,14 +966,13 @@ div.pager input {
 }
 
 #incident_inventories {
-	width: 200px;
+	width: 230px;
 }
 
-#incident_inventories, textarea {
+textarea {
 	width: 100%;
 }
 
 label {
 	font-weight: bold;
 }
-

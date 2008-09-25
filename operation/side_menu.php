@@ -577,13 +577,6 @@ if ($sec == "godmode") {
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".__("Setup")."</a></li>";
 
-	// Incident management per task
-	if ($sec2 == "godmode/setup/incident")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/incident'>".__("Incident SLA")."</a></li>";
-
 	// Link management
 	if ($sec2 == "godmode/setup/links")
 		echo "<li id='sidesel'>";
@@ -740,11 +733,14 @@ echo "<div class='portlet'>";
 
 // Testing boxes for side menus
 $id_user = $_SESSION['id_usuario'];
-$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_user);
-$realname = give_db_value ("nombre_real", "tusuario", "id_usuario", $id_user);
-$email = give_db_value ("direccion", "tusuario", "id_usuario", $id_user);
-$description = give_db_value ("comentarios", "tusuario", "id_usuario", $id_user);
+$user_row = get_db_row ("tusuario", "id_usuario", $id_user);
 
+$avatar = $user_row["avatar"];
+$realname = $user_row["nombre_real"];
+$email = $user_row["direccion"];
+$description = $user_row["comentarios"];
+$userlang = $user_row["lang"];
+$telephone = $user_row["telefono"];
 
 $now = date("Y-m-d H:i:s");
 $now_year = date("Y");
@@ -758,10 +754,13 @@ echo '
 
   <div class="portletBody" id="userdiv">';
 
-echo "<img src='images/avatars/".$avatar."_small.png' align='left'>";
-echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&ver='.$id_user.'">'.$id_user.'</a><br>';
-echo "<b>".$realname."</b><br>";
-echo '<b>E-mail:</b>&nbsp;'.$email.'<br><b>Timezone:</b>Europe/Madrid<br>';
+
+echo "<img src='images/avatars/".$avatar."_small.png' align=left hspace=10>";
+echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&ver='.$id_user.'"><b>'.$id_user.'</b></a><br>';
+echo "<i>".$realname."</i><br>";
+echo __("Language").": $userlang<br>";
+echo __("Phone").": $telephone <br>";
+echo '<b>E-mail:</b> '.$email.'<br><br>';
 
 // Link to workunit calendar (month)
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=$id_user'><img border=0 hspace=5 src='images/clock.png' title='".__('work_unit_report')."'></a>";

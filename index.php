@@ -86,8 +86,8 @@ if ($intervalo = give_parameter_get ("refr") != "") {
 // This is a clean output ?
 $clean_output = give_parameter_get ("clean_output", 0);
 
+echo "<title>".$config["sitename"]."</title>";
 ?>
-<title>I N T E G R I A   I M S  - ITIL Management System</title>
 <meta http-equiv="expires" content="0" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="resource-type" content="document" />

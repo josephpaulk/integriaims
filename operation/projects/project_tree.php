@@ -32,14 +32,29 @@ if (give_acl($config["id_user"], 0, "IR") != 1){
     exit;
 }
 
-$id_user = give_parameter_post ("user_form", $config["id_user"]);
-$completion = give_parameter_post ("completion", 100);
-$project_kind = give_parameter_post ("project_kind", "defined_end");
+$id_user = get_parameter ("user_form", $config["id_user"]);
+$completion = get_parameter ("completion", 100);
+$project_kind = get_parameter ("project_kind", "defined_end");
 
 echo "<form name='xx' method=post action='index.php?sec=projects&sec2=operation/projects/project_tree'>";
 // Show user
-combo_user_visible_for_me ($id_user, "user_form", 0, "PR");
 
+
+echo "<table class='blank'>";
+
+echo "<tr><td>";
+echo __("User");
+echo "</td>";
+
+echo "<td>";
+combo_user_visible_for_me ($id_user, "user_form", 0, "PR");
+echo "</td>";
+
+echo "<td>";
+echo __("Progress");
+echo "</td>";
+
+echo "<td>";
 // Show completion level
 echo "<select name='completion'>";
 if ($completion == -1)
@@ -53,7 +68,13 @@ echo "<option value=-1>All";
 echo "<option value=100>Not finished";
 echo "<option value=666>Done";
 echo "</select>";
+echo "</td>";
 
+echo "<td>";
+echo __("Project type");
+echo "</td>";
+
+echo "<td>";
 // Project kind (all time or defined end)
 echo "<select name='project_kind'>";
 if ($project_kind == "all")
@@ -64,9 +85,11 @@ if ($completion == "defined_end")
 echo "<option value='defined_end'>Defined end";
 echo "<option value='all'>All projects";
 echo "</select>";
+echo "</td>";
 
-
+echo "<td>";
 echo "<input type=submit value=go class='sub upd'>";
+echo "</td></tr></table>";
 echo "</form>";
 
 if ($id_user != ""){

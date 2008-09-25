@@ -14,21 +14,25 @@
 
 INSERT INTO `tconfig` (token, value) VALUES  
 ('language_code','en'),
-('block_size','20'),
-('db_scheme_version','1.2'),
-('db_scheme_build','ID80911'),
+('block_size','25'),
+('db_scheme_version','1.2-dev'),
+('db_scheme_build','ID80925'),
 ('date_format', 'F j, Y, g:i a'),
+('currency', 'eu'),
+('sitename', 'Integria IMS - the ITIL Management Way'),
+('hours_perday','8'),
+('FOOTER_EMAIL','Please do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n'),
+('HEADER_EMAIL','Hello, \n\nThis is an automated message coming from Integria\n\n'),
 ('notification_period','86400');
 
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (1,'All','world',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (2,'Customer #A','eye',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (3,'Customer #B','eye',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (8,'Development Dpt.','database_gear',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (9,'Comunication Dpt.','transmit',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (10,'Sales Dpt.','house',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (11,'Engineering','computer',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (12,'Helpdesk & Support','bricks',0);
-
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (1,'All','world.png',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (2,'Customer #A','eye.png',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (3,'Customer #B','eye.png',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (8,'Development Dpt.','database_gear.png',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (9,'Comunication Dpt.','transmit.png',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (10,'Sales Dpt.','house.png',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (11,'Engineering','computer.png',0);
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (12,'Helpdesk & Support','bricks.png',0);
 
 INSERT INTO `tlanguage` VALUES ('en','English');
 

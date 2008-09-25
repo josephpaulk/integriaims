@@ -258,15 +258,13 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 				$counter++;
             }
             print_table ($table);
-			echo "<table width=720 class='button'>";
-			echo "<tr><td align='right'>";
-			echo "<form method=post action='index.php?sec=inventory&
-			sec2=operation/contacts/contact_detail&create=1'>";
-			echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create contact")."'>";
-			echo "</form></td></tr></table>";
         }
-
-
+		echo "<table width=720 class='button'>";
+		echo "<tr><td align='right'>";
+		echo "<form method=post action='index.php?sec=inventory&
+		sec2=operation/contacts/contact_detail&create=1'>";
+		echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create contact")."'>";
+		echo "</form></td></tr></table>";
     } // end of list
 
 ?>

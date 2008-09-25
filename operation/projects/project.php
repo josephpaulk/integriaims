@@ -161,7 +161,7 @@ if ($filter_id_group != 0)
 
 
 
-echo "<table width=710>";
+echo "<table width=710 class=box>";
 	echo "<form method=post action='index.php?sec=projects&sec2=operation/projects/project'>";
 	echo "<tr><td>";
 	echo lang_string ("Free text search");
@@ -180,7 +180,7 @@ echo "<table width=710>";
 // -------------
 // Show headers
 // -------------
-echo "<table width='100%' class='listing'>";
+echo "<table width='740' class='listing'>";
 echo "<tr>";
 echo "<th>".$lang_label["name"];
 echo "<th>".__ ("PG");
@@ -267,7 +267,7 @@ while ($row2=mysql_fetch_array($result2)){
 }
 echo "</table>";
 
-
+/*
 if (give_acl($config["id_user"], 0, "PM")==1) {
 	echo "<table width=100% class='button'>";
 	echo "<tr><td align=right>";
@@ -276,6 +276,6 @@ if (give_acl($config["id_user"], 0, "PM")==1) {
 	echo "</form>";
 	echo "</td></tr></table>";
 }
-
+*/
 
 ?>

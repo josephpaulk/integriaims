@@ -832,7 +832,7 @@ if (isset($_GET["height"]))
 else
 	$height= 50;
 
-$id_user = get_parameter ("id_user",0);
+$id_user = get_parameter ("id_user", "");
 $id_project = get_parameter ("id_project",0);
 $graphtype = get_parameter ("graphtype",0);
 $completion = get_parameter ("completion",0);

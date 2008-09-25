@@ -29,6 +29,7 @@ $search_ip_address = (string) get_parameter ('search_ip_address');
 $search_serial_number = (string) get_parameter ('search_serial_number');
 $search_part_number = (string) get_parameter ('search_part_number');
 $search = (bool) get_parameter ('search');
+$search_inventory_id = (string) get_parameter ('search_inventory_id', '');
 
 if ($search) {
 	$sql_clause = '';
@@ -44,7 +45,9 @@ if ($search) {
 		$sql_clause .= sprintf (' AND serial_number LIKE "%%%s%%"', $search_serial_number);
 	if ($search_part_number != '')
 		$sql_clause .= sprintf (' AND part_number LIKE "%%%s%%"', $search_part_number);
-	
+	if ($search_inventory_id != '')
+		$sql_clause .= sprintf (' AND id = "%s"', $search_inventory_id);
+
 	$sql = sprintf ('SELECT id, name, description, comments
 			FROM tinventory
 			WHERE (name LIKE "%%%s%%" OR description LIKE "%%%s%%")
@@ -59,6 +62,17 @@ if ($search) {
 	$total_inventories = 0;
 	foreach ($inventories as $inventory) {
 		echo '<tr id="result-'.$inventory['id'].'">';
+		echo '<td><b>#'.$inventory['id'].'</b></td>';
+		echo '<td>'.$inventory['name'].'</td>';
+
+		$incidents = get_incidents_on_inventory ($inventory['id'], false);
+		$num_inc = sizeof($incidents);
+
+		if ($num_inc == 0)
+			echo "<td>";
+		else
+			echo "<td><img src='images/info.png'> $num_inc";
+
 		echo '<td>'.$inventory['name'].'</td>';
 		echo '<td>'.$inventory['description'].'</td>';
 		echo '<td>'.$inventory['comments'].'</td>';
@@ -79,7 +93,7 @@ $table->width = '97%';
 $table->style = array ();
 $table->style[0] = 'font-weight: bold';
 $table->colspan = array ();
-$table->colspan[3][0] = 2;
+//$table->colspan[3][0] = 2;
 
 $table->data[1][0] = print_select (get_products (),
 					'search_id_product', $search_id_product,
@@ -106,7 +120,10 @@ $table->data[2][2] = print_input_text ('search_part_number', $search_part_number
 $table->data[3][0] = print_input_text ('search_string', $search_string, '', 20, 255,
 			true, lang_string ('Search string'));
 
-$table->data[3][1] = print_submit_button (lang_string ('Search'), 'search_button',
+$table->data[3][1] = print_input_text ('search_inventory_id', $search_inventory_id, '', 5, 55,
+			true, lang_string ('Inventory ID#'));
+
+$table->data[3][2] = print_submit_button (lang_string ('Search'), 'search_button',
 			false, 'class="sub search"', true);
 
 echo '<div id="inventory_search_result"></div>';
@@ -121,9 +138,11 @@ $table->class = 'hide result_table listing';
 $table->width = '90%';
 $table->id = 'inventory_search_result_table';
 $table->head = array ();
-$table->head[0] = lang_string ("Name");
-$table->head[1] = lang_string ("Description");
-$table->head[2] = lang_string ("Comments");
+$table->head[1] = lang_string ("ID");
+$table->head[2] = lang_string ("Name");
+$table->head[3] = lang_string ("Active Incidents");
+$table->head[4] = lang_string ("Description");
+$table->head[5] = lang_string ("Comments");
 
 print_table ($table);
 

@@ -51,7 +51,7 @@ foreach ($incidents as $incident) {
 	$data[3] = get_db_value ('name', 'tincident_status', 'id', $incident['estado']);
 	$user_avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $incident['id_usuario']);
 	$data[4] = print_user_avatar ($incident['id_usuario'], true, true);
-	$data[4] .= $incident['id_usuario'];
+	$data[4] .= " ".$incident['id_usuario'];
 	$data[5] = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.
 		$incident['id_incidencia'].'"><img src="images/zoom.png" /></a>';
 	

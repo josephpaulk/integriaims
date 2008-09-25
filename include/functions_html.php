@@ -574,7 +574,14 @@ function print_label ($label, $id, $input_type = 'text', $return = false) {
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
  */
 function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $attributes, $return = false, $label = false) {
-	$output = '<input name="'.$name.'" type="checkbox" value="'.$value.'" '. ($checked ? 'checked': '');
+	$output = '';
+
+	if ($label) {
+		$output .= ' ';
+		$output .= print_label ($label, $name, 'checkbox', true);
+	}
+
+	$output .= '<input name="'.$name.'" type="checkbox" value="'.$value.'" '. ($checked ? 'checked': '');
 	$output .= ' id="checkbox-'.$name.'"';
 
 	if ($script != '') {
@@ -587,10 +594,7 @@ function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $
 
 	$output .= ' />';
 	$output .= "\n";
-	if ($label) {
-		$output .= ' ';
-		$output .= print_label ($label, $name, 'checkbox', true);
-	}
+
 	if ($return)
 		return $output;
 	echo $output;

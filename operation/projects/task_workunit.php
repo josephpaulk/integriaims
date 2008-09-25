@@ -39,7 +39,7 @@ if ($operation == "lock"){
     $id_workunit = give_parameter_get ("id_workunit",0);
     $id_task = give_db_value ("id_task", "tworkunit_task", "id_workunit", $id_workunit);
     $id_group = give_db_value ("id_group", "ttask", "id", $id_task);
-    $sql = "UPDATE tworkunit SET locked = 1 WHERE id = $id_workunit";
+    $sql = "UPDATE tworkunit SET locked = '".$config["id_user"]."' WHERE id = $id_workunit";
     mysql_query($sql);
 }
 

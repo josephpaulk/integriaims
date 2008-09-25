@@ -34,7 +34,7 @@ CREATE TABLE `tattachment` (
 CREATE TABLE `tconfig` (
   `id_config` int(10) unsigned NOT NULL auto_increment,
   `token` varchar(100) NOT NULL default '',
-  `value` varchar(100) NOT NULL default '',
+  `value` text NOT NULL default '',
   PRIMARY KEY  (`id_config`)
 );
 
@@ -47,6 +47,8 @@ CREATE TABLE `tgrupo` (
   `url` varchar(150) default NULL,
   `lang` varchar(10) default NULL,
   `parent` tinyint(4) NOT NULL default '-1',
+  `id_user_default` varchar(250) NOT NULL default '',
+  `forced_email` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY  (`id_grupo`)
 );
 
@@ -253,8 +255,8 @@ CREATE TABLE `tworkunit` (
   `description` mediumtext NOT NULL,
   `have_cost` tinyint unsigned NOT NULL DEFAULT 0,
   `id_profile` int(10) unsigned NOT NULL default '0',
-  `locked` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
-  `locked_id_user` VARCHAR(125) DEFAULT NULL,
+  `locked` VARCHAR(125) DEFAULT '',
+  `public` TINYINT(3) UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY  (`id`)
 );
 
@@ -374,20 +376,6 @@ CREATE TABLE `tcost` (
   `locked` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
   `locked_id_user` VARCHAR(125) DEFAULT NULL,
   PRIMARY KEY  (`id`)
-);
-
--- 1.1 new table
--- Assign a manager for each group (to automatically
--- assign a user to an incident
-
-CREATE TABLE `tgroup_manager` (
-  `id_group` int(10) unsigned NOT NULL default '0',
-  `id_user` varchar(250) NOT NULL default '',
-  `forced_email` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
-  `max_response_hr` int(10) unsigned NOT NULL default '0',
-  `max_resolution_hr` int(10) unsigned NOT NULL default '0',
-  `max_active` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id_group`)
 );
 
 -- 1.1 new table

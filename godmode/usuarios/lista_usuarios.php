@@ -1,9 +1,10 @@
 <?php
 
-// Integria 1.0 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -39,19 +40,14 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 		echo "<h3 class='suc'>".$lang_label["delete_user_ok"]."</h3>";
 }
 
-?>
+echo '<h2>'.__("user_management") . '</h2>';
+echo '<table width="550" class="listing">';
+echo '<th>'.__("user_ID").'</td>';
+echo '<th>'.__("last_contact");
+echo '<th>'.__("profile");
+echo '<th>'.__("name");
+echo '<th>'.__("delete");
 
-<h2><?php echo $lang_label["user_management"] ?></h2>
-<h3><?php echo $lang_label["users"] ?></h3>
- 
-<table width=550 class='listing'>
-<th class="w80"><?php echo $lang_label["user_ID"]?>
-<th><?php echo $lang_label["last_contact"]?>
-<th><?php echo $lang_label["profile"]?>
-<th><?php echo $lang_label["name"]?>
-<th width=30><?php echo $lang_label["delete"]?>
-
-<?php
 $query1="SELECT * FROM tusuario";
 $resq1=mysql_query($query1);
 // Init vars
@@ -59,7 +55,6 @@ $nombre = "";
 $nivel = "";
 $comentarios = "";
 $fecha_registro = "";
-$color=1;
 
 while ($rowdup=mysql_fetch_array($resq1)){
 	$nombre=$rowdup["id_usuario"];
@@ -67,18 +62,11 @@ while ($rowdup=mysql_fetch_array($resq1)){
 	$comentarios =$rowdup["nombre_real"];
 	$fecha_registro =$rowdup["fecha_registro"];
 	$avatar = $rowdup["avatar"];
-	if ($color == 1){
-		$tdcolor = "datos";
-		$color = 0;
-	}
-	else {
-		$tdcolor = "datos2";
-		$color = 1;
-	}
-	echo "<tr><td class='$tdcolor'>";
+	
+	echo "<tr><td>";
 	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=".$nombre."'><b>".$nombre."</b></a>";
-	echo "<td class='$tdcolor'>".$fecha_registro;
-	echo "<td class='$tdcolor'>";
+	echo "<td>".$fecha_registro;
+	echo "<td>";
 	print_user_avatar ($nombre, true);
 	$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
 	$result=mysql_query($sql1);
@@ -89,19 +77,21 @@ while ($rowdup=mysql_fetch_array($resq1)){
 			echo dame_grupo($row["id_grupo"])."<br>";
 		}
 	}
-	else { echo $lang_label["no_profile"]; }
+	else { 
+		echo __("no_profile"); 
+	}
 	echo "</span></a>";
 	
-	echo "<td class='$tdcolor'>".$comentarios;
-	echo "<td class='$tdcolor' align='center'><a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario=".$nombre."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img border='0' src='images/cross.png'></a>";
+	echo "<td>" . $comentarios;
+	echo "<td align='center'><a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario=".$nombre."' onClick='if (!confirm(\' ".__("are_you_sure")."\')) return false;'><img border='0' src='images/cross.png'></a>";
 }
 echo "</table>";
 
-echo "<table width=550 class='button'>";
-echo "<tr><td align=right>";
+echo "<div style='width:550px' class='button'>";
+
 echo "<form method=post action='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>";
-echo "<input type='submit' class='sub create' name='crt' value='".$lang_label["create_user"]."'>";
+echo "<input type='submit' class='sub create' name='crt' value='".__("create_user")."'>";
 echo "</form>";
-echo "</table>";
+echo "</div>";
 
 ?>

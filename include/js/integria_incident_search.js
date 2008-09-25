@@ -149,14 +149,17 @@ function configure_incident_form (enable_ajax_form) {
 	
 	if (enable_ajax_form) {
 		$(dialog+"#incident_status_form").submit (function () {
+			/* THIS NEEDS FIX !!!*/
+/*
 			if ($(this).children (".selected-inventories").length == 0) {
 				$(dialog+"#incident_inventories").fadeOut ('normal',function () {
 					pulsate (this);
 				});
-				result_msg_error ("There's no affected object");
-				
+				result_msg_error ("There's no affected inventory object");
+
 				return false;
 			}
+*/
 			values = get_form_input_values (this);
 			values.push ({name: "page",
 				value: "operation/incidents/incident_detail"});
@@ -173,17 +176,18 @@ function configure_incident_form (enable_ajax_form) {
 			return false;
 		});
 	}
-	
+	/*
 	$(dialog+"#incident_status_form").submit (function () {
 		if ($(this).children (".selected-inventories").length == 0) {
 			$(dialog+"#incident_inventories").fadeOut ('normal',function () {
 				pulsate (this);
 			});
-			result_msg_error ("There's no affected object");
+			result_msg_error ("There's no affected object (INS)");
 			
 			return false;
 		}
 	});
+*/
 }
 
 function configure_incident_search_form (page_size, row_click_callback) {

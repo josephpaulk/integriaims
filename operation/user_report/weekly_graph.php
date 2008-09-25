@@ -48,7 +48,7 @@ echo "<h1>".lang_string("Weekly report for")." $id_user</h1>";
 echo "<h3>".$timestamp_l." -&gt;".$timestamp_h."</h3>";
 
 echo "<div>";
-echo "<table width=750 class='databox_color' cellpadding=4 cellspacing=4>";
+echo "<table width=750 class='blank' >";
 echo "<tr><td class=datos>";
 echo "<h3>".lang_string("Workunit by task")."</h3>";
 echo "<tr><td class=datos>";

@@ -277,16 +277,15 @@ if (!isset ($_GET["update"]) && ! isset ($_GET["create"])) {
 						return false;'>
 						<img border='0' src='images/cross.png'></a>";
 			array_push ($table->data, $data);
-		}
-		
+		}	
 		print_table ($table);
-		echo "<table width=720 class='button'>";
-		echo "<tr><td align='right'>";
-		echo "<form method=post action='index.php?sec=inventory&
-		sec2=operation/contracts/contract_detail&create=1'>";
-		echo "<input type='submit' class='sub next' name='crt' value='".__("Create contract")."'>";
-		echo "</form></td></tr></table>";
 	}
+	echo "<table width=720 class='button'>";
+	echo "<tr><td align='right'>";
+	echo "<form method=post action='index.php?sec=inventory&
+	sec2=operation/contracts/contract_detail&create=1'>";
+	echo "<input type='submit' class='sub next' name='crt' value='".__("Create contract")."'>";
+	echo "</form></td></tr></table>";
 } // end of list
 
 ?>

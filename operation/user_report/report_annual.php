@@ -30,15 +30,19 @@
         echo "<h2>".lang_string("Annual report for user")." ". $id_user_show. "</h2>";
     } else {
     	$id_user_show = get_parameter ("id_user", $config["id_user"]);
-	    echo "<h2>".lang_string("Annual report for user")." ". $id_user_show. "</h2><table cellpadding=4 cellspacing=4 class=databox_color><tr><td>";
+	    echo "<h2>".lang_string("Annual report for user")." ". $id_user_show. "</h2>";
+
+		echo "<table cellpadding=4 cellspacing=4 class='blank' style='margin-left: 10px'>";
+		echo "<tr><td>";
         echo "<form name='xx' method=post action='index.php?sec=users&sec2=operation/user_report/report_annual'><td>";
         // Show user
         combo_user_visible_for_me ($id_user, "id_user", 0, "AR");
+		echo "<td>";
         echo "<input type=submit value=go class='sub upd'>";
         echo "</form></table>";
     }
 
-    echo "<table cellspacing=4 cellpadding=4 class=databox_color><tr>";
+    echo "<table class='button'><tr>";
     echo "<td style='background-color: #FFFF80;'>";
     echo return_vacations_user ($id_user_show, $year). "</td><td>".lang_string("Vacations days");
     

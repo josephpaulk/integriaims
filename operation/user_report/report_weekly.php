@@ -32,15 +32,7 @@
 	$now_month = date("m");
 
 	$week_begin = give_parameter_post ( "working_week");
-	echo "<table class='databox' cellpadding=4 cellspacing=4 width='200'>";
-	echo "<tr><td>";
-	echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/report_weekly'>";
-	working_weeks_combo();
-	echo "</td><td>";
-	echo "<input type=submit class='next' value='".lang_string("update")."'>";
-	echo "</form>";
-	echo "</table>";
-
+	
 	if ($week_begin == "")
 		$begin_week = first_working_week() . " 00:00:00";
 	else
@@ -53,12 +45,21 @@
 	echo "<h3>";
 	echo lang_string("Totals for week $begin_week - $end_week "). " - ( $total_hours ".lang_string("hr").")";
 	echo "</h3>";
+echo "<table style='margin-left: 10px;' class='blank' width='200'>";
+	echo "<tr><td>";
+	echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/report_weekly'>";
+	working_weeks_combo();
+	echo "</td><td>";
+	echo "<input type=submit class='next' value='".lang_string("update")."'>";
+	echo "</form>";
+	echo "</table>";
 
-	echo '<table cellpadding="4" cellspacing="4" width="600" class="databox_color">';
+
+	echo '<table width="600" class="listing">';
     echo "<th>".$lang_label["user_ID"];
     echo "<th>".lang_string ("Workunit report");
     echo "<th>".lang_string ("Graph overview");
-    echo "<th>".lang_string ("total_hours_for_this_week");
+    echo "<th>".lang_string ("Total hours");
 	
 	$sql0= "SELECT * FROM tusuario";
 	if ($res0 = mysql_query($sql0)) {
@@ -72,21 +73,12 @@
 			    if ($res = mysql_query($sql)) {	
 				    $row=mysql_fetch_array($res);
 			    }
-			    if ($color == 1){
-				    $tdcolor = "datos";
-				    $color = 0;
-				    $tip = "tip";
-			    }
-			    else {
-				    $tdcolor = "datos2";
-				    $color = 1;
-				    $tip = "tip2";
-			    }
-			    echo "<tr><td class='$tdcolor'>";
+			   
+			    echo "<tr><td>";
                 echo "<img src='images/avatars/".$avatar."_small.png'>";
                 $sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
                 $result1=mysql_query($sql1);
-                echo "<a href='#' class='$tip'>&nbsp;<span>";
+                echo "<a href='#' class='tip'>&nbsp;<span>";
                 if (mysql_num_rows($result1)){
                     while ($row1=mysql_fetch_array($result1)){
                         echo dame_perfil($row1["id_perfil"])."/ ";
@@ -97,15 +89,15 @@
                 echo "</span></a> $nombre";
 
                 // Text wu report 
-                echo "<td class='$tdcolor' width=60><center>";
+                echo "<td><center>";
 			    echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_week&timestamp_h=$end_week&id=$nombre'>";
                 echo "<img border=0 src='images/page_white_text.png'></A>";
 
                 // Graph stats montly report for X user
-                echo "<td class='$tdcolor'><center>";
+                echo "<td><center>";
                 echo "<a href='index.php?sec=users&sec2=operation/user_report/weekly_graph&timestamp_l=$begin_week&timestamp_h=$end_week&id=$nombre'><img src='images/chart_bar.png' border=0></a></center></td>";
 			    
-			    echo "<td class='$tdcolor' width=60><center>";
+			    echo "<td><center>";
 			    echo $row[0];
             }
 		}

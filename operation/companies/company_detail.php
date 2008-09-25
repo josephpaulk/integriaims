@@ -172,78 +172,76 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 }
 
 
-	// Show list of items
-	if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-		echo "<h2>".__("Company management")."</h2>";
+// Show list of items
+if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
+	echo "<h2>".__("Company management")."</h2>";
 
-		$text = get_parameter ("freetext", "");
-		if ($text != ""){
-			$sql_search = "WHERE name LIKE '%$text%' OR address LIKE '%$text%' OR comments LIKE '%$text%' ";
-			echo "<h4>".__("Searching for")." ".$text."</h4>";
+	$text = get_parameter ("freetext", "");
+	if ($text != ""){
+		$sql_search = "WHERE name LIKE '%$text%' OR address LIKE '%$text%' OR comments LIKE '%$text%' ";
+		echo "<h4>".__("Searching for")." ".$text."</h4>";
+	}
+	else
+		$sql_search = "";
+
+	echo "<table width=400>";
+	echo "<form method=post action='index.php?sec=inventory&sec2=operation/companies/company_detail'>";
+	echo "<tr><td>";
+	echo __("Free text search");
+	echo "<td>";
+	print_input_text ("freetext", $text, "", 15, 100, false);
+	echo "<td>";
+	print_submit_button (__("Search"), "enviar", false, "class='sub search'", false);
+	echo "</form></td></tr></table>";
+
+	$sql1 = "SELECT * FROM tcompany $sql_search ORDER BY name";
+	$color =0;
+	if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
+
+		$table->width = "720";
+		$table->class = "listing";
+		$table->cellspacing = 0;
+		$table->cellpadding = 0;
+		$table->data = array ();
+		$table->size = array ();
+		$table->style = array ();
+		$table->colspan = array ();
+		$table->head[0] = __("Company");
+		$table->head[1] = __("Role");
+		$table->head[2] = __("Contracts");
+		$table->head[3] = __("Contacts");
+		$table->head[4] = __("Delete");
+		$counter = 0;
+		while ($row=mysql_fetch_array($result)){
+			// Name
+			$table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/companies/company_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
+			
+			// Role
+			$table->data[$counter][1] = get_db_sql("SELECT name FROM tcompany_role WHERE id = ".$row["id_company_role"]);
+
+			// Contracts (link to new window)
+			$table->data[$counter][2] = "<img src='images/maintab.gif'>";
+
+			// Contacts (link to new window)
+			$table->data[$counter][3] = "<img src='images/group.png'>";
+
+			// Delete
+			$table->data[$counter][4] = "<a href='index.php?sec=inventory&
+						sec2=operation/companies/company_detail&
+						delete=".$row["id"]."'
+						onClick='if (!confirm(\' ".__('are_you_sure')."\'))
+						return false;'>
+						<img border='0' src='images/cross.png'></a>";
+			$counter++;
 		}
-		else
-			$sql_search = "";
-
-		echo "<table width=400>";
-		echo "<form method=post action='index.php?sec=inventory&sec2=operation/companies/company_detail'>";
-		echo "<tr><td>";
-		echo __("Free text search");
-		echo "<td>";
-		print_input_text ("freetext", $text, "", 15, 100, false);
-		echo "<td>";
-		print_submit_button (__("Search"), "enviar", false, "class='sub search'", false);
-		echo "</form></td></tr></table>";
-
-	   	$sql1 = "SELECT * FROM tcompany $sql_search ORDER BY name";
-		$color =0;
-		if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
-
-			$table->width = "720";
-			$table->class = "listing";
-			$table->cellspacing = 0;
-			$table->cellpadding = 0;
-			$table->data = array ();
-			$table->size = array ();
-			$table->style = array ();
-			$table->colspan = array ();
-			$table->head[0] = __("Company");
-			$table->head[1] = __("Role");
-			$table->head[2] = __("Contracts");
-			$table->head[3] = __("Contacts");
-			$table->head[4] = __("Delete");
-			$counter = 0;
-			while ($row=mysql_fetch_array($result)){
-				// Name
-				$table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/companies/company_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
-				
-				// Role
-				$table->data[$counter][1] = get_db_sql("SELECT name FROM tcompany_role WHERE id = ".$row["id_company_role"]);
-
-				// Contracts (link to new window)
-			   	$table->data[$counter][2] = "<img src='images/maintab.gif'>";
-
-				// Contacts (link to new window)
-			   	$table->data[$counter][3] = "<img src='images/group.png'>";
-
-				// Delete
-				$table->data[$counter][4] = "<a href='index.php?sec=inventory&
-							sec2=operation/companies/company_detail&
-							delete=".$row["id"]."'
-							onClick='if (!confirm(\' ".__('are_you_sure')."\'))
-							return false;'>
-							<img border='0' src='images/cross.png'></a>";
-				$counter++;
-			}
-			print_table ($table);
-		}
-
+		print_table ($table);
+	}
 	echo "<table width=720 class='button'>";
-                        echo "<tr><td align='right'>";
-                        echo "<form method=post action='index.php?sec=inventory&
-                        sec2=operation/companies/company_detail&create=1'>";
-                        echo "<input type='submit' class='sub next' name='crt' value='".__("Create company")."'>";
-                        echo "</form></td></tr></table>";
-
-	} // end of list
+	echo "<tr><td align='right'>";
+	echo "<form method=post action='index.php?sec=inventory&
+	sec2=operation/companies/company_detail&create=1'>";
+	echo "<input type='submit' class='sub next' name='crt' value='".__("Create company")."'>";
+	echo "</form></td></tr></table>";
+} // end of list
 
 ?>

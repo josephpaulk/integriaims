@@ -1,9 +1,10 @@
 <?php
 
-// Integria 1.1 - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -12,7 +13,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-
 // Load global vars
 
 global $config;
@@ -181,6 +181,8 @@ if ($action == "insert") {
 			process_sql ($sql);
 		}
 		$result_msg  = "<h3 class='suc'>".__('create_incid_ok')." (id #$id)</h3>";
+		$result_msg  .= "<h4><a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id'>".__("Please click here to continue working with incident #").$id."</a></h4>";
+
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 			"Incident created",
 			"User ".$config['id_user']." created incident #".$id);
@@ -226,6 +228,7 @@ if ($id) {
 	$epilog = $row["epilog"];
 	$id_task = $row["id_task"];
 	$id_parent = $row["id_parent"];
+	$affected_sla_id = $row["affected_sla_id"];
 	$sla_disabled = false; /* TODO */
 	$id_incident_type = $row['id_incident_type'];
 	$grupo = dame_nombre_grupo($id_grupo);
@@ -248,6 +251,7 @@ if ($id) {
 		$timeused = number_format ($timeused, 2);
 		$have_cost = get_parameter ("have_cost",0);
 		$profile = get_parameter ("work_profile",0);
+		$public = get_parameter ("public", 1);
 
 		$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s"
 				WHERE id_incidencia = %d', $timestamp, $id);
@@ -256,9 +260,9 @@ if ($id) {
 		incident_tracking ($id, $config['id_user'], 2);
 
 		// Add work unit if enabled
-		$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description)
-				VALUES ("%s", "%s", "%s", "%s")',
-				$timestamp, $timeused, $config['id_user'], $nota);
+		$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public)
+				VALUES ("%s", "%s", "%s", "%s", "$s")',
+				$timestamp, $timeused, $config['id_user'], $nota, $public);
 		$id_workunit = process_sql ($sql, "insert_id");
 		$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit)
 				VALUES (%d, %d)',
@@ -344,6 +348,7 @@ if ($id) {
 	$email_notify = 0;
 	$sla_disabled = false;
 	$id_incident_type = 0;
+	$affected_sla_id = 0;
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Show the form
@@ -364,7 +369,12 @@ if (! $id) {
 $has_permission = (give_acl ($iduser_temp, $id_grupo, "IM")  || ($usuario == $iduser_temp));
 
 if ($id) {
-	echo "<h1>".__('incident')." #$id</h1>";
+	echo "<h1>".__('incident')." #$id";
+	if ($affected_sla_id != 0){
+		echo '&nbsp;&nbsp;&nbsp;<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">';
+	}
+	echo "</h1>";
+
 } else {
 	if (! defined ('AJAX'))
 		echo "<h2>".__('create_incident')."</h2>";
@@ -393,13 +403,9 @@ $table->colspan[6][0] = 4;
 $disabled = !$has_permission;
 $actual_only = !$has_permission;
 
-$table->data[0][0] = print_input_text ('titulo', $titulo, '', 40, 100, true, __('incident'));
-if ($create_incident) {
-	$table->data[0][1] = '';
-} else {
-	$table->data[0][1] = 'SLA BIEN/MAL';
-}
-$table->data[0][1] .= print_checkbox_extended ('sla_disabled', 0, $sla_disabled,
+$table->data[0][0] = print_input_text ('titulo', $titulo, '', 40, 100, true, __('Title'));
+
+$table->data[0][1] = print_checkbox_extended ('sla_disabled', 0, $sla_disabled,
 						$disabled, '', '', true, __('SLA disabled'));
 $table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
 						$disabled, '', '', true, __('email_notify'));
@@ -420,9 +426,14 @@ $table->data[1][1] .= print_priority_flag_image ($priority, true);
 
 $table->data[1][2] = combo_incident_resolution ($resolution, $disabled, true);
 $parent_name = $id_parent ? get_inventory_name ($id_parent) : __('Search parent');
+
 $table->data[1][3] = print_button ($parent_name, 'search_parent', $disabled, '',
 			'class="dialogbtn"', true, __('Parent incident'));
 $table->data[1][3] .= print_input_hidden ('id_parent', $id_parent, true);
+
+// Show link to go parent incident
+if ($id_parent > 0)
+	$table->data[1][3] .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_parent'><img src='images/go.png' border=0></a>";
 
 $table->data[2][0] = combo_incident_origin ($origen, $disabled, true);
 $table->data[2][1] = print_select (get_incident_types (), 'id_incident_type',

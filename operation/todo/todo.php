@@ -100,8 +100,8 @@ if (check_login() == 0){
 		$priority = $row["priority"];
 		$id_task = $row["id_task"];
 
-        	echo "<h2>".lang_string ("todo_update")." - $name </h2>";
-		echo '<table class="databox_color" cellpadding="4" cellspacing="4" width="700">';
+        echo "<h2>".lang_string ("todo_update")." - $name </h2>";
+		echo '<table class="databox"  width="700">';
 		echo "<form name='todou' method='post' action='index.php?sec=todo&sec2=operation/todo/todo&operation=update2&id=$id_todo'>";
 		
 		// Priority
@@ -133,10 +133,9 @@ if (check_login() == 0){
 		echo "</table>";
 
 		// Submit
-		echo '<table cellpadding="0" cellspacing="0" width="710">';
-		echo "<tr><td align='right'>";
+		echo '<div class="button" style="height: 700px">';
 		echo "<input name='crtbutton' type='submit' class='sub' value='".lang_string ("update")."'>";
-		echo '</form></table>';
+		echo '</form></div>';
 	}
 
 	// ---------------
@@ -144,7 +143,8 @@ if (check_login() == 0){
 	// ---------------
 	if ($operation == "create") {
         echo "<h2>".lang_string ("todo_creation")."</h2>";
-		echo '<table class="databox_color" cellpadding="4" cellspacing="4" width="80%">';
+
+		echo '<table class="databox" width="700">';
 		echo '<form name="ilink" method="post" action="index.php?sec=todo&sec2=operation/todo/todo&operation=create2">';
 
 		echo "<tr><td class='datos'>".lang_string ("todo");
@@ -169,16 +169,15 @@ if (check_login() == 0){
 		// Task
 		echo "<tr><td class='datos'>".lang_string ("task");
 		echo "<td class='datos' valign='top'>";
-		echo combo_task_user_participant ($config["id_user"],0 ,0);
-		
+		echo combo_task_user_participant ($config["id_user"],0 ,0, true);
 		echo "<tr><td class='datos2' valign='top'>".lang_string ("description");
 		echo "<td class='datos2'><textarea name='description' style='width:100%; height:230px'>";
 		echo "</textarea>";
 		echo "</table>";
-		echo '<table cellpadding="0" cellspacing="0" width="760">';
-		echo "<tr><td align='right'>";
+
+		echo '<div class="button" style="width: 700px">';
 		echo "<input name='crtbutton' type='submit' class='sub next' value='".lang_string ("create")."'>";
-		echo '</form></table>';
+		echo '</form></div>';
 	}
 
 	// -------------------------
@@ -189,7 +188,7 @@ if (check_login() == 0){
 			echo "<h1>".$lang_label["todo_management"]. " - ". lang_string("assigned_to_other_users")."</h1>";
 		else
 			echo "<h1>".$lang_label["todo_management"]."</h1>";
-		echo "<table cellpadding=4 cellspacing=4 class='databox_color' width=760>";
+		echo "<table class='listing' width=760>";
 		echo "<th>".lang_string ("todo");
 		echo "<th>".$lang_label["priority"];
 		echo "<th>".$lang_label["progress"];
@@ -206,35 +205,25 @@ if (check_login() == 0){
 		else
 			$sql1="SELECT * FROM ttodo WHERE assigned_user = '$id_user' ORDER BY priority DESC";
 		$result=mysql_query($sql1);
-		$color=1;
 		while ($row=mysql_fetch_array($result)){
-			if ($color == 1){
-				$tdcolor = "datos";
-				$color = 0;
-				$tip = "tip";
-			}
-			else {
-				$tdcolor = "datos2";
-				$color = 1;
-				$tip = "tip2";
-			}
-			echo "<tr><td class='$tdcolor'>";
+			
+			echo "<tr><td>";
 			echo "<a href='index.php?sec=todo&sec2=operation/todo/todo&operation=update&id=".$row["id"]."'>";
 			echo $row["name"];
 			echo "</A>";
 			
 			if (strlen($row["description"]) > 0){
-				echo "<a href='#' class='$tip'>&nbsp;<span>";
+				echo "<a href='#' class='tip'>&nbsp;<span>";
 				echo clean_output_breaks($row["description"]);
 				echo "</span></a>";
 			}
 			
-			echo '<td class="'.$tdcolor.'" align="center">';
+			echo '<td align="center">';
 			echo render_priority ($row["priority"]);
-			echo '<td class="'.$tdcolor.'" align="center">';
+			echo '<td align="center">';
 			$completion = $row["progress"];
 			echo "<img src='include/functions_graph.php?type=progress&width=80&height=20&percent=$completion'>";
-			echo '<td class="'.$tdcolor.'" valign="middle">';
+			echo '<td valign="middle">';
 			if ($operation == "notme") 
 				$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $row["assigned_user"]);
 			else
@@ -248,17 +237,17 @@ if (check_login() == 0){
 			echo "</span></a>";
 			//echo '<td class="'.$tdcolor.'f9">';
 			//echo  human_time_comparation ($row["timestamp"]);
-			echo '<td class="'.$tdcolor.'f9">';
+			echo '<td class="f9">';
 			echo human_time_comparation ($row["last_update"]);
 			// Close and assign WU to associate task
-			echo '<td class="'.$tdcolor.'" align="center">';
+			echo '<td align="center">';
 			if ($row["id_task"] > 0){
 				$id_project = get_db_value ("id_project", "ttask", "id", $row["id_task"]);
 				$myurl = "index.php?sec=projects&sec2=operation/projects/task_create_work&id_project=$id_project&id_task=".$row["id_task"];
 				echo '<a href="'.$myurl.'"><img border=0 src="images/award_star_silver_1.png"></a>';			
 			}
 			// DELETE
-			echo '<td class="'.$tdcolor.'" align="center">';
+			echo '<td align="center">';
 			echo '<a href="index.php?sec=todo&sec2=operation/todo/todo&operation=delete&id='.$row["id"].'" onClick="if (!confirm(\' '.$lang_label["are_you_sure"].'\')) return false;"><img border=0 src="images/cross.png"></a>';
 			
 		}

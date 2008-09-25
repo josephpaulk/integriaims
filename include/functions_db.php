@@ -18,8 +18,8 @@
 
 global $config;
 
-if (file_exists ($config["homedir"]."/include/functions_extra.php"))
-	include ($config["homedir"]."/include/functions_extra.php");
+if (file_exists ($config["homedir"]."/enterprise/include/functions_extra.php"))
+	include ($config["homedir"]."/enterprise/include/functions_extra.php");
 
 // --------------------------------------------------------------- 
 // give_acl ()
@@ -1450,10 +1450,7 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 	$values = array ();
 	
 	if (give_acl ($id_user, 1, "")) {
-		$sql = sprintf ('SELECT * FROM tusuario
-				WHERE id_usuario != "%s"',
-				$id_user);
-		$users = get_db_all_rows_sql ($sql);
+		$users = get_db_all_rows_in_table("tusuario");
 		if ($users === false)
 			$users = array ();
 		foreach ($users as $user) {
@@ -1777,8 +1774,8 @@ function get_incident_types ($only_names = true) {
 	return $types;
 }
 
-function print_user_avatar ($id_user = 0, $small = false, $return = false) {
-	if ($id_user == 0) {
+function print_user_avatar ($id_user = "", $small = false, $return = false) {
+	if ($id_user == "") {
 		global $config;
 		$id_user = $config['id_user'];
 	}

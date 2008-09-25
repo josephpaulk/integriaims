@@ -1,3 +1,94 @@
+2008-09-25  Sancho Lerena <slerena@artica.es>
+
+	* images/avatar: Deleted old simpon stuff and added a lot new icons.
+
+	* config_process.php: Updated vars. Error strings uses homeurl path.
+
+	* function.php: list_files(), "." and ".." detection, added a new 
+	string to "filter out" directory results.
+
+	* functions_calendar.php: Style issues solved.
+
+	* functions_db.php: get_user_visible_users() was not working fine,
+	missing current user. Fixed. print_user_avatar() was not working fine
+	due default value, fixed.
+
+	* functions_form.php: Fixed label removed on combo_task_user_participant()
+	Implemented public for WU in incidents, in show_workunit_data(). Also
+	added code to lock and view locked info with avatar and username.
+	form_search_incident(), have now a search field for ticket id.
+	incident_users_list(), fixed layout.
+
+	* functions_graph.php: A bad default value in id_user was crashing 
+	whole system :(. Fixed.
+
+	* functions_html.php: print_checkbox_extended() now shows label in
+	the same way other form components.
+
+	* print_checkbox_extended.js: Temporal fix to be able to edit incidents,
+	needs to fix properly.
+
+	* calendar.css: New specific styles for calendar.
+
+	* integria.css: A lot of minor changes.
+
+	* side_menu.php: Added more info for user box.
+
+	* contract_detail.php, company_detail.php, company_role.php: 
+	Fixed button creation.
+
+	* incident_create_work.php: Layout changes, added support for public
+	workunits.
+
+	* incident_detail.php: Support for public wu, added link after creation 
+	of an incident. Added a link to parent incident in detail view. 
+	Parent incident editor don't work, needs to be fixed.
+
+	* incident_search.php: Added support for search on ticket id. SLA fired
+	check is now real.
+
+	* inventory_detail.php: Fixed layout.
+
+	* inventory_search.php: Added support for search on inventory ID. Added
+	column to show if an object have active incidents active.
+
+	* project_tree.php:  Fixed layout and serach options better presented.
+
+	* task.php: show_task_tree() fixed, now show nested elements.
+
+	* task_create_work.php: Support public WU..
+
+	* task_workunit.php: Locking mechanism now stores user id.
+
+	* todo.php: Fixed a lot of style issues.
+
+	* user.php: Solved some style issues.
+
+	* user_edit.php: Nows uses a better way to detect available avatars and show.
+	Also show link to user editor (Godmode) and disable some info if only viewing
+	data.
+
+	* user_spare_workunit.php: Support for private/public, solved problems with
+	task combo, layout changed.
+
+	* index.php: Show sitename in title.
+
+	* setup.php: new options added to setup managemene (siteinfo, currency, 
+	hoursperday, mailheader and mailfooter).
+
+	* integria_db.sql: tconfig now uses a TEXT field to store VALUE. 
+	tgrupo has id_user_default and forced_email to replace usage of old table
+	tgroup_manager that has been deleted. Tworkunit changes locked to a varchar
+	and removes locked_id_user. 
+
+	* integria_dbdata.sql: New options for tconfig used in setup.php.
+
+	* lista_grupos.php, configurar_grupo.php: New options for groups. 
+	Icon change now works.
+
+	* configurar_usuarios.php: Issues with avatars are now fixed. This uses 
+	a icon name WITHOUT extension, and adds "small" for using small avatars.
+
 2008-09-24  Esteban Sanchez  <estebans@artica.es>
 
 	* include/functions_db.php: Added print_user_avatar() to show the

@@ -58,6 +58,7 @@ if (check_login() == 0) {
 			$telefono = clean_input($_POST["telefono"]);
 			$nombre_real = clean_input($_POST["nombre_real"]);
 			$avatar = get_parameter ("avatar");
+			$avatar = substr($avatar, 0, strlen($avatar)-4);
 			
 			if ($pass1 != $pass2) {
 				echo "<h3 class='error'>".$lang_label["pass_nomatch"]."</h3>";
@@ -87,12 +88,19 @@ if (check_login() == 0) {
 			echo "<h3 class='error'>".$lang_label["pass_nomatch"]."</h3>";
 		}
 	} 
-		echo "<h2>".$lang_label["user_edit_title"]."</h3>";
+	
+	if ($view_mode == 0)
+		echo "<h2>" . __("user_edit_title");
+	else
+		echo "<h2>" . __("User details");
+
+	if (user_visible_for_me ($config["id_user"], $id_ver) == 1)
+		echo "&nbsp;&nbsp;<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=$id_ver'><img src='images/wrench.png' border=0 title='".__("Edit")."'></A></h2>";
 
 	// Si no se obtiene la variable "modificado" es que se esta visualizando la informacion y
 	// preparandola para su modificacion, no se almacenan los datos
 	
-	$nombre=$rowdup["id_usuario"];
+	$nombre = $rowdup["id_usuario"];
 	if ($view_mode == 0)
 		$password=$rowdup["password"];
 	else 	
@@ -109,7 +117,7 @@ if (check_login() == 0) {
 	<table width="550" class="databox";>
 	<?php 
 	if ($view_mode == 0) 
-		echo '<form name="user_mod" method="post" action="index.php?sec=usuarios&sec2=operation/users/user_edit&ver='.$id_usuario.'&modificado=1">';
+		echo '<form name="user_mod" method="post" action="index.php?sec=users&sec2=operation/users/user_edit&ver='.$id_usuario.'&modificado=1">';
 	else 	
 		echo '<form name="user_mod" method="post" action="">';
 	?>
@@ -117,7 +125,7 @@ if (check_login() == 0) {
 	<td class="datos"><input class=input type="text" name="nombre" value="<?php echo $nombre ?>" disabled>
 	<?php
 	if (isset($avatar)) {
-		echo "<td class='datos' rowspan=3>";
+		echo "<td class='datos' rowspan=5>";
 		echo '<img id="avatar-preview" src="images/avatars/'.$avatar.'.png">';
 	}
  	?>
@@ -127,33 +135,32 @@ if (check_login() == 0) {
 	<td class="datos"><input class=input type="password" name="pass1" value="<?php echo $password ?>">
 	<tr><td class="datos2"><?php echo $lang_label["password"]; echo " ".$lang_label["confirmation"]?>
 	<td class="datos2" colspan=2><input class=input type="password" name="pass2" value="<?php echo $password ?>">
-	<tr><td class="datos">E-Mail
-	<td class="datos" colspan=2><input class=input type="text" name="direccion" size="40" value="<?php echo $direccion ?>">
 
-	<?php
-	// Avatar
-	echo "<tr><td class='datos2'>".lang_string("avatar");
-	echo '<td class="datos2" colspan="2"><select name="avatar" id="avatar">';
-	if ($avatar!=""){
-		echo '<option>'.$avatar;
-	}
-	$ficheros = list_files('images/avatars/', "",0, 0);
-	$a=0;
-	while (isset($ficheros[$a])) {
-		if ((strpos($ficheros[$a],"small") == 0) && (strlen($ficheros[$a])>4))
-			echo "<option>".substr($ficheros[$a],0,strlen($ficheros[$a])-4);
-		$a++;
-	}
-	echo '</select>';
-	
-	echo "&nbsp;";
-	echo "&nbsp;";
+<?PHP
+
+	echo "<tr>";
+	echo "<td>";
 	echo lang_string ("Language");
-	echo "&nbsp;";
-	print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', '', false, false, true, false);
-	?>
+	echo "<td>";
+	if ($view_mode ==0)
+		print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', '', false, false, true, false);
+	else 
+		echo $lang;
 
-		
+
+	if ($view_mode ==0) {
+		// Avatar
+		echo "<tr><td class='datos2'>".lang_string("avatar");
+		echo '<td class="datos2" colspan="2">';
+		$ficheros = list_files('images/avatars/', "png",1, 0, "small");
+		$avatar_forlist = $avatar . ".png";
+		echo print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, false, false);
+	}	
+
+	echo '<tr><td>E-Mail';
+	echo '<td colspan=2><input class=input type="text" name="direccion" size="40" value="'.$direccion.'">';
+
+	?>
 
 	<tr><td class="datos"><?php echo $lang_label["telefono"] ?>
 	<td class="datos" colspan=2><input class=input type="text" name="telefono" size=15 value="<?php echo $telefono ?>">
@@ -162,11 +169,9 @@ if (check_login() == 0) {
 	</table>
 <?php
 	if ($view_mode ==0) {
-		echo '<table width="550" class="button">';
-		echo "<tr><td align='right'>";
+		echo '<div style="width:550px" class="button">';
 		echo "<input name='uptbutton' type='submit' class='sub upd' value='".$lang_label["update"]."'>";
-		echo "</tr></td>";
-		echo "</table>";
+		echo "</div>";
 	}
 	
 	echo '<h3>'.$lang_label["listGroupUser"].'</h3>';
@@ -202,7 +207,8 @@ if (check_login() == 0) {
 <script  type="text/javascript">
 $(document).ready (function () {
 	$("#avatar").change (function () {
-		icon = this.value;
+		icon = this.value.substr(0,this.value.length-4);
+		
 		$("#avatar-preview").fadeOut ('normal', function () {
 			$(this).attr ("src", "images/avatars/"+icon+".png").fadeIn ();
 		});

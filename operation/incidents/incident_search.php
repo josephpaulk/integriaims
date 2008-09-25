@@ -69,6 +69,7 @@ $search_id_inventory = (int) get_parameter ('search_id_inventory');
 $search_serial_number = (string) get_parameter ('search_serial_number');
 $search_id_building = (int) get_parameter ('search_id_building');
 $search_sla_fired = (bool) get_parameter ('search_sla_fired');
+$search_ticket = (int) get_parameter ('search_ticket',0);
 
 if ($status == 0)
 	$status = implode (',', array_keys (get_indicent_status ()));
@@ -82,6 +83,8 @@ if ($search_id_group != 1)
 	$sql_clause .= sprintf (' AND id_grupo = %d', $search_id_group);
 if ($search_status)
 	$sql_clause .= sprintf (' AND estado = %d', $search_status);
+if ($search_ticket > 0)
+	$sql_clause .= sprintf (' AND id_incidencia = %d', $search_ticket);
 
 $sql = sprintf ('SELECT * FROM tincidencia
 		WHERE estado IN (%s)
@@ -189,9 +192,10 @@ foreach ($incidents as $incident) {
 
 	echo '<td><strong>#'.$incident['id_incidencia'].'</strong></td>';
 
+	
+
 	// SLA Fired ?? 
-	$sla = rand  ( 0 , 1 ); // Not real check, only to render something
-	if ($sla == 0)
+	if ($incident["affected_sla_id"] != 0)
 		echo '<td><img src="images/exclamation.png" border=0></td>';
 	else
 		echo '<td></td>';

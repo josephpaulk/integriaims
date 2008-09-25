@@ -34,7 +34,6 @@ echo "<th>".lang_string ('profile');
 echo "<th>".lang_string ('name');
 echo "<th>".lang_string ('description');
 
-$color = 1;
 
 $resq1=mysql_query("SELECT * FROM tusuario");
 while ($rowdup=mysql_fetch_array($resq1)){
@@ -44,25 +43,16 @@ while ($rowdup=mysql_fetch_array($resq1)){
 	$fecha_registro =$rowdup["fecha_registro"];
 	$avatar = $rowdup["avatar"];
 	
-	if ($color == 1){
-		$tdcolor = "datos";
-		$color = 0;
-		$tip = "tip";
-	}
-	else {
-		$tdcolor = "datos2";
-		$color = 1;
-		$tip = "tip2";
-	}
 	if (user_visible_for_me ($config["id_user"], $rowdup["id_usuario"]) == 1){
-		echo "<tr><td class='$tdcolor'><a href='index.php?sec=users&sec2=operation/users/user_edit&ver=".$nombre."'><b>".$nombre."</b></a>";
-		echo "<td class='".$tdcolor."f9' width=150>".$fecha_registro;
-		echo "<td class='$tdcolor' width=60>";
-		echo "<img src='images/avatars/".$avatar."_small.png'>";
+		echo "<tr><td><a href='index.php?sec=users&sec2=operation/users/user_edit&ver=".$nombre."'><b>".$nombre."</b></a>";
+		echo "<td class='f9'>".$fecha_registro;
+		echo "<td>";
+		print_user_avatar ($rowdup["id_usuario"], true);
+		
 
 		$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
 		$result=mysql_query($sql1);
-		echo "<a href='#' class='$tip'>&nbsp;<span>";
+		echo "<a href='#' class='tip'>&nbsp;<span>";
 		if (mysql_num_rows($result)){
 			while ($row=mysql_fetch_array($result)){
 				echo dame_perfil($row["id_perfil"])."/ ";
@@ -71,8 +61,8 @@ while ($rowdup=mysql_fetch_array($resq1)){
 		}
 		else { echo lang_string ('no_profile'); }
 		echo "</span></a>";
-		echo "<td class='$tdcolor' width='100'>".substr($rowdup["nombre_real"],0,16);
-		echo "<td class='$tdcolor'>".$comentarios;
+		echo "<td>".substr(clean_output($rowdup["nombre_real"]),0,16);
+		echo "<td>".substr(clean_output($comentarios),0,32);
 	}
 }
 
@@ -126,48 +116,48 @@ while ($rowdup=mysql_fetch_array($resq1)){
 	$tw = $rowdup["tw"];
 	$tm = $rowdup["tm"];
 	$pm = $rowdup["pm"];
-	echo "<tr><td class='$tdcolor"."_id'>".$nombre;
+	echo "<tr><td>".$nombre;
 	
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($ir == 1) echo "<img src='images/ok.png' border=0>";
 		
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($iw == 1) echo "<img src='images/ok.png' border=0>";
 		
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($im == 1) echo "<img src='images/ok.png' border=0>";
 
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($um == 1) echo "<img src='images/ok.png' border=0>";
 		
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($dm == 1) echo "<img src='images/ok.png' border=0>";
 		
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($fm == 1) echo "<img src='images/ok.png' border=0>";
 // agenda
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($ar == 1) echo "<img src='images/ok.png' border=0>";
 		
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($aw == 1) echo "<img src='images/ok.png' border=0>";
 		
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($am == 1) echo "<img src='images/ok.png' border=0>";
 // Project
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($pr == 1) echo "<img src='images/ok.png' border=0>";
 		
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($pw == 1) echo "<img src='images/ok.png' border=0>";
 
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($pm == 1) echo "<img src='images/ok.png' border=0>";			
 
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($tw== 1) echo "<img src='images/ok.png' border=0>";
 
-	echo "<td class='$tdcolor'>";
+	echo "<td>";
 	if ($tm== 1) echo "<img src='images/ok.png' border=0>";
 
 }

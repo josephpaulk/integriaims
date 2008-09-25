@@ -174,11 +174,11 @@ $table->data[2][1] = print_select (get_buildings (),
 			__('Building'));
 
 /* Fourth row */
-$table->data[3][0] = print_input_text ('serial_number', $serial_number, '', 40, 250,
+$table->data[3][0] = print_input_text ('serial_number', $serial_number, '', 20, 250,
 			true, __('Serial number'));
-$table->data[3][1] = print_input_text ('part_number', $part_number, '', 40, 250,
+$table->data[3][1] = print_input_text ('part_number', $part_number, '', 20, 250,
 			true, __('Part number'));
-$table->data[3][2] = print_input_text ('ip_address', $ip_address, '', 20, 60,
+$table->data[3][2] = print_input_text ('ip_address', $ip_address, '', 15, 60,
 			true, __('IP address'));
 
 $table->colspan[4][0] = 3;
@@ -189,7 +189,7 @@ echo '<div class="result">'.$result_msg.'</div>';
 echo '<form method="post" id="inventory_status_form">';
 print_table ($table);
 
-echo '<div style="width: '.$table->width .'" class="action-buttons button">';
+echo '<div style="width:740px;" class="action-buttons button">';
 if ($id) {
 	print_input_hidden ('update_inventory', 1);
 	print_input_hidden ('id', $id);

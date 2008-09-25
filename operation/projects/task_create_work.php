@@ -40,10 +40,9 @@ if ($id_workunit != -1){
 	$have_cost = $row["have_cost"];
 	$id_profile = $row["id_profile"];
 	$ahora = $row["timestamp"];
+	$public = $row["timestamp"];
 	$ahora_date = substr($ahora,0,10);
 	$ahora_time = substr($ahora,10,8);
-	$id_inventory = get_db_row ("tworkunit_inventory", "id_wu", $id_workunit);
-	
 	
 } else {
 	$id_user = $config["id_user"];
@@ -51,6 +50,7 @@ if ($id_workunit != -1){
 	$description = "";
 	$id_inventory = array();
 	$have_cost = 0;
+	$public = 1;
 	$id_profile = "";
 	$ahora_date = date("Y-m-d");
 	$ahora_time = date("H:i:s");
@@ -83,10 +83,10 @@ if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])
 	echo "<td><b>";
 	echo lang_string ("Inventory")."</b></td>";
 	echo "<td>";
-	echo print_select_from_sql ("SELECT * FROM ttask_inventory WHERE id_task = $id_task", "id_inventory", $id_inventory, '', lang_string ("Nothing"), '0',  false, true, true, false);
 
-//print_select_from_sql ($sql, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = false, $sort = true, $label = false) {
-
+echo print_select (array (), 'incident_inventories', NULL, '', '', '', true, false, false, __('Inventory affected'));
+echo print_button (__("Add"), 'search_inventory', false, '', 'class="dialogbtn"', true);
+echo print_button (__("Remove"), 'delete_inventory', false, '', 'class="dialogbtn"', true);
 
 	echo "<tr><td class='datos2'  width='140'>";
 	echo "<b>".$lang_label["profile"]."</b>";
@@ -101,9 +101,14 @@ if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])
 
 	echo "<tr><td class='datos'>";
 	echo "<b>".$lang_label["time_used"]."</b>";
-	echo "<td class='datos'>";
+	echo "<td>";
 	echo "<input type='text' name='duration' value='$duration' size='7'>"." ".lang_string("hr");
 	
+	echo "<td>";
+	echo "<b>".__("Public");
+	echo "<td>";
+	print_checkbox ("public", 1, $public, false, false);
+
 	echo '<tr><td colspan="4" class="datos2"><textarea name="description" style="height: 250px; width: 100%;">';
 	echo $description;
 	echo '</textarea>';

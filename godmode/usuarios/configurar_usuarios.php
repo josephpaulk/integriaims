@@ -13,6 +13,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 // Load global vars
 
 global $config;
@@ -90,7 +91,8 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 				$telefono = give_parameter_post ("telefono");
 				$comentarios = give_parameter_post ("comentarios");
 				$avatar = give_parameter_post ("avatar");
-				
+				$avatar = substr($avatar, 0, strlen($avatar)-4);
+
 				if (dame_password($nombre_viejo)!=$password){
 					$password=md5($password);
 					$sql = "UPDATE tusuario SET `lang` = '$lang', nombre_real ='".$nombre_real."', id_usuario ='".$nombre."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar' WHERE id_usuario = '$nombre_viejo'";
@@ -151,8 +153,9 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 			$nivel = give_parameter_post ("nivel");
 		$password = md5($password);
 		$avatar = give_parameter_post ("avatar");
-		
-		$ahora = date("Y/m/d H:i:s");
+		$avatar = substr($avatar, 0, strlen($avatar)-4);
+
+		$ahora = date("Y-m-d H:i:s");
 		$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real,avatar, lang) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','$avatar','$lang')";
 		$resq1 = mysql_query($sql_insert);
 			if (! $resq1)
@@ -174,7 +177,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 	}
 
 ?> 
-<table width='620'  class='databox'>
+<table width='620' class='databox'>
 <?php 
 if (isset($_GET["alta"]))
 	// Create URL
@@ -188,35 +191,28 @@ else
 <td class="datos"><input type="text" size=15 name="nombre" value="<?php echo $id_usuario_mio ?>">
 <?php
 if (isset($avatar)){
-	echo "<td class='datos' rowspan=5>";
+	echo "<td class='datos' rowspan=6>";
 	echo "<img src='images/avatars/".$avatar.".png' id='avatar_preview'>";
 }
 ?>
 <tr><td class="datos2"><?php echo lang_string ('real_name') ?>
-<td class="datos2"><input type="text" size=45 name="nombre_real" value="<?php echo $nombre_real ?>">
+<td class="datos2"><input type="text" size=25 name="nombre_real" value="<?php echo $nombre_real ?>">
 <tr><td class="datos"><?php echo lang_string ('password') ?>
 <td class="datos"><input type="password" name="pass1" value="<?php echo $password ?>">
 <tr><td class="datos2"><?php echo lang_string ('password') ?> - <?php echo lang_string ('confirmation') ?>
 <td class="datos2"><input type="password" name="pass2" value="<?php echo $password ?>">
 <tr><td class="datos">E-Mail
-<td class="datos"><input type="text" name="direccion" size="40" value="<?php echo $direccion ?>">
+<td class="datos"><input type="text" name="direccion" size="30" value="<?php echo $direccion ?>">
 
 
 <?PHP
 // Avatar
-echo "<tr><td class='datos2'>".lang_string("avatar");
-echo "<td class='datos2'><select name='avatar' id='avatar'>";
-if ($avatar!=""){
-	echo '<option>'.$avatar;
-}
-$ficheros = list_files('images/avatars/', "",0, 0);
-$a=0;
-while (isset($ficheros[$a])){
-	if ((strpos($ficheros[$a],"small") == 0) && (strlen($ficheros[$a])>4))
-		echo "<option>".substr($ficheros[$a],0,strlen($ficheros[$a])-4);
-	$a++;
-}
-echo '</select>';
+echo "<tr><td>".lang_string("avatar");
+echo "<td>";
+
+$ficheros = list_files('images/avatars/', "png", 1, 0, "small");
+$avatar_forlist = $avatar . ".png";
+echo print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, false, false);	
 
 ?>
 
@@ -235,14 +231,13 @@ echo '</select>';
 	echo lang_string ('normal_user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0" checked><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg2"].'</span></a>';
 }
 
-echo "&nbsp;";
+echo "<tr>";
+echo "<td>";
 echo lang_string("Language");
-echo "&nbsp;";
+echo "<td>";
 print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', '', false, false, true, false);
 
 ?>
-
-
 
 
 <tr><td class="datos" colspan="3"><?php echo lang_string ('comments') ?>
@@ -250,6 +245,7 @@ print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', 
 
 <?php
 if ($modo == "edicion") { // Only show groups for existing users
+
 	// Combo for group
 	echo '<input type="hidden" name="edicion" value="1">';
 	echo '<input type="hidden" name="id_usuario_antiguo" value="'.$id_usuario_mio.'">';
@@ -272,9 +268,13 @@ if ($modo == "edicion") { // Only show groups for existing users
 	}
 	echo '</select>';
 	echo "</table>";
-	echo "<table width='615' cellpadding='0' cellspacing='0'>";
-	echo "<tr><td align='right'>";
-	echo "<input name='uptbutton' type='submit' class='sub next' value='".lang_string ('update')."'></table><br>";
+
+	echo "<div class='button' style='width:620px'>";
+	echo "<input name='uptbutton' type='submit' class='sub next' value='".__('update')."'>";
+	echo "</div><br>";
+
+
+	
 
 
 	// Show user profile / groups assigned
@@ -283,45 +283,37 @@ if ($modo == "edicion") { // Only show groups for existing users
 	$result=mysql_query($sql1);
 	
 	echo '<h3>'.lang_string ('listGroupUser').'</h3>';
-	echo "<table width='500' cellpadding='3' cellspacing='3' class='databox_color'>";
+	echo "<table width='620'  class='databox'>";
 	if (mysql_num_rows($result)){
-		$color=1;
 		while ($row=mysql_fetch_array($result)){
-			if ($color == 1){
-				$tdcolor = "datos";
-				$color = 0;
-				}
-			else {
-				$tdcolor = "datos2";
-				$color = 1;
-			}
-			echo '<td class="'.$tdcolor.'">';
+			echo '<td>';
 			echo "<b style='margin-left:10px'>".dame_perfil($row["id_perfil"])."</b> / ";
 			echo "<b>".dame_grupo($row["id_grupo"])."</b>";
-			echo '<td class="'.$tdcolor.'t"><a href="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio='.$id_usuario_mio.'&borrar_grupo='.$row["id_up"].' " onClick="if (!confirm(\' '.lang_string ('are_you_sure').'\')) return false;"><img border=0 src="images/cross.png"></a><tr>';
+			echo '<td><a href="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio='.$id_usuario_mio.'&borrar_grupo='.$row["id_up"].' " onClick="if (!confirm(\' '.lang_string ('are_you_sure').'\')) return false;"><img border=0 src="images/cross.png"></a><tr>';
 		}
 	}
-	else { echo '<tr><td class="red" colspan="3">'.lang_string ('no_profile').'</td></tr>';}
+	else { echo '<tr><td colspan="3">'.lang_string ('no_profile').'</td></tr>';}
 }	
-?>
 
-<?php if (isset($_GET["alta"])){
-	echo "</table><table width='615' cellpadding='0' cellspacing='0'>";
-	echo "<tr><td align='right'>";
-	echo '<input name="crtbutton" type="submit" class="sub create" value="'.lang_string ('create').'"></table>';
-} 
+	if (isset($_GET["alta"])){
+		echo "</table>";
+		echo "<div class='button' style='width: 615px' >";
+		echo '<input name="crtbutton" type="submit" class="sub create" value="'.lang_string ('create').'">';
+		echo '</div>';
+	} 
 ?> 
 </form>
 </td></tr></table>
 
-<script type="text/javascript">
+
+<script  type="text/javascript">
 $(document).ready (function () {
 	$("#avatar").change (function () {
-		imgsrc = "images/avatars/" + this.value + ".png";
+		icon = this.value.substr(0,this.value.length-4);
 		$("#avatar_preview").fadeOut ('normal', function () {
-			$("#avatar_preview").attr ("src", imgsrc).fadeIn ();
+			$(this).attr ("src", "images/avatars/"+icon).fadeIn ();
 		});
 	});
 });
-
 </script>
+
