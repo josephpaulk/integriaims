@@ -109,7 +109,7 @@ $id_user = $config["id_user"];
 			echo "
 			<tr>
 				<td class='$tdcolor' align='center'>
-				<img src='images/groups_small/".$row["icon"].".png'
+				<img src='images/groups_small/".$row["icon"]."'
 				border='0'>
 				</td>
 				<td class='$tdcolor'>

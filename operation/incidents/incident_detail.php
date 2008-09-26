@@ -399,7 +399,7 @@ $table->colspan[0][0] = 2;
 $table->colspan[4][2] = 2; 
 $table->colspan[5][0] = 4;
 $table->colspan[6][0] = 4;
-
+$table->colspan[2][2] = 2;
 $disabled = !$has_permission;
 $actual_only = !$has_permission;
 
@@ -440,8 +440,6 @@ $table->data[2][1] = print_select (get_incident_types (), 'id_incident_type',
 			$id_incident_type, '', __('None'), 0, true, false, true, __('Type'));
 $table->data[2][2] = combo_task_user ($id_task, $config["id_user"], 0, $disabled, true);
 
-$table->data[2][3] = print_label (__('Creator'), '', '', true);
-$table->data[2][3] .= $id_creator." (<em>".dame_nombre_real ($id_creator)."</em>)";
 
 if ($has_permission) {
 	$table->data[4][0] = combo_groups_visible_for_me ($iduser_temp, "grupo_form", 0, "IW", $id_grupo, true);

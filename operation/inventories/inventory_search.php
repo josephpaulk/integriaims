@@ -89,7 +89,7 @@ if ($search) {
 }
 
 $table->data = array ();
-$table->width = '97%';
+$table->width = '95%';
 $table->style = array ();
 $table->style[0] = 'font-weight: bold';
 $table->colspan = array ();
@@ -135,13 +135,13 @@ echo '</form>';
 
 unset ($table);
 $table->class = 'hide result_table listing';
-$table->width = '90%';
+$table->width = '95%';
 $table->id = 'inventory_search_result_table';
 $table->head = array ();
 $table->head[1] = lang_string ("ID");
 $table->head[2] = lang_string ("Name");
 $table->head[3] = lang_string ("Active Incidents");
-$table->head[4] = lang_string ("Description");
+$table->head[4] = lang_string ("Title");
 $table->head[5] = lang_string ("Comments");
 
 print_table ($table);
@@ -162,6 +162,7 @@ if (defined ('AJAX')) {
 	echo '<option value="20">20</option>';
 	echo '<option value="30">30</option>';
 	echo '<option  value="40">40</option>';
+	echo '<option  value="100">100</option>';
 	echo '</select>';
 }
 echo '</select>';

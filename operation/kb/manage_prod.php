@@ -46,7 +46,7 @@ if ($get_icon) {
 // ==================
 if ($insert_product) {
 	$name = (string) get_parameter ("name");
-	$parent = (int) get_parameter ("category",0);
+	$parent = (int) get_parameter ("product",0);
 	$icon = (string) get_parameter ("icon","");
 	$description = (string) get_parameter ("description","");
 	$sql = sprintf ('INSERT INTO tkb_product (name, description, parent, icon) 

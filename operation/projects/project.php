@@ -214,7 +214,7 @@ while ($row2=mysql_fetch_array($result2)){
 				$icon = get_db_sql ("SELECT icon FROM tproject_group WHERE id = ". $row2["id_project_group"]);
 				$name = get_db_sql ("SELECT name FROM tproject_group WHERE id = ". $row2["id_project_group"]);
 
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/project&filter_id_project_group=".$row2["id_project_group"]."'><img src='images/project_groups_small/".$icon.".png' border=0 title='$name'></a>";
+				echo "<a href='index.php?sec=projects&sec2=operation/projects/project&filter_id_project_group=".$row2["id_project_group"]."'><img src='images/project_groups_small/".$icon."' border=0 title='$name'></a>";
 			}
 
 			// Progress

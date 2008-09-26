@@ -169,7 +169,7 @@ function combo_kb_products ($id_product, $show_none = 0){
 
 	if ($id_product == 0)
 		$id_product = 1;
-	$sql = "SELECT * FROM tkb_product WHERE id != $id_product";
+	$sql = "SELECT * FROM tkb_product WHERE id != $id_product ORDER BY parent, name ";
 	$result = mysql_query($sql);
 	echo "<select name='product' style='width: 180px;'>";
 	if ($id_product > 0){

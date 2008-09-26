@@ -137,19 +137,8 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	echo "<tr>";
 	echo "<td class=datos colspan=4>";
-
-
-	echo '<select name="icon">';
-	if ($icon != ""){
-		echo '<option>' . $icon;
-	}
-
-	$ficheros = list_files ('images/project_groups_small/', "png", 1, 0);
-	$size = count ($ficheros);
-	for ($i = 0; $i < $size; $i++) {
-		echo "<option>".substr($ficheros[$i],0,strlen($ficheros[$i])-4);
-	}
-	echo '</select>';
+	$ficheros = list_files ('images/project_groups_small/', "png", 1, 0, 'svn');
+	echo print_select ($ficheros, "icon", $icon, '', '', 0, true, 0, false, false);
 	echo "</table>";
 
 	echo "<table width=620 class='button'>";
@@ -193,7 +182,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			$table->data[$counter][0] = "<b><a href='index.php?sec=projects&sec2=operation/projects/project_group_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
 
 			// Contracts (link to new window)
-			$table->data[$counter][1] = "<img src='images/project_groups_small/".$row["icon"].".png' border=0>";
+			$table->data[$counter][1] = "<img src='images/project_groups_small/".$row["icon"]."' border=0>";
 
 			// Delete
 			$table->data[$counter][2] = "<a href='index.php?sec=projects&

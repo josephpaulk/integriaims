@@ -54,7 +54,7 @@ echo "<td>";
 print_checkbox ('have_cost', 1, false, false, __('have_cost'));
 
 echo "<td>";
-print_checkbox ('public', 1, false, false, __('Public'));
+print_checkbox ('public', 1, true, false, __('Public'));
 
 echo '<tr><td colspan="3" class="datos2"><textarea name="nota" rows="15" cols="90">';
 echo '</textarea>';

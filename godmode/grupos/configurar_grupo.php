@@ -91,11 +91,11 @@
 
 	echo "<tr>";
 	echo '<td>';	
-	$ficheros = list_files ('images/groups_small/', "png", 1, true);
-	echo print_select ($ficheros, "icon", $icon, $script = '', '', 0, true, 0, false, __("Icon"));
+	$ficheros = list_files ('images/groups_small/', "png", 0, true, '');
+	echo print_select ($ficheros, "icon", $icon, '', '', 0, true, 0, false, __("Icon"));
 	
 	echo '<td>';	
-	$banners = list_files ('images/', "png", 1, true);
+	$banners = list_files ('images/', "png", 0, true);
 	echo print_select ($banners, "banner", $banner, $script = '', '', 0, true, 0, false, __("Banner"));
 
 	echo "<tr><td>";
@@ -103,7 +103,7 @@
 	echo combo_user_visible_for_me ($config["id_user"], "id_user_default", 0, "IR");
 
 	echo "<td>";
-	echo print_select_from_sql ("SELECT id_language, name FROM tlanguage", "lang", $lang, '', '', '0', true, false, true, __("Language") );
+	print_select_from_sql ("SELECT id_language, name FROM tlanguage", "lang", $lang, '', '', '0', true, false, true, __("Language") );
 
 	echo "</table>";
 

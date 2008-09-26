@@ -222,7 +222,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 				$table->data[$counter][2] = get_db_sql ("SELECT name FROM tcompany_role WHERE id = ".$row["id_company_role"]);
 
 				// SLA 
-				$table->data[$counter][3] = get_db_sql ("SELECT name FROM tsla_base WHERE id = ".$row["id_sla"]);
+				$table->data[$counter][3] = get_db_sql ("SELECT name FROM tsla WHERE id = ".$row["id_sla"]);
 
                 // Delete
                 $table->data[$counter][4] = "<a href='index.php?sec=inventory&

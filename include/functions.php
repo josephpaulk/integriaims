@@ -190,10 +190,15 @@ function list_files ($directory, $stringSearch, $searchHandler, $return = true, 
 	if ($searchHandler == 1) {
 		while(false !== ($fileName = @readdir ($directoryHandler))) {
 			if(@substr_count ($fileName, $stringSearch) > 0) {
-				if ($inverse_filter != "")
+				if ($inverse_filter != "") {
 					if (strpos($fileName, $inverse_filter) ==0)
 						if (($fileName != ".") AND ($fileName != ".."))
 							$result[$fileName] = $fileName;
+				} else {
+					 if (($fileName != ".") AND ($fileName != ".."))
+                                             $result[$fileName] = $fileName;
+				}
+				
 			}
 		}
 	}
@@ -201,12 +206,7 @@ function list_files ($directory, $stringSearch, $searchHandler, $return = true, 
 		echo ("<pre>\nerror: no filetype \"$fileExtension\" found!\n</pre>\n");
 	} else {
 		asort ($result);
-		if ($return == 0) {
-			return $result;
-		}
-		echo ("<pre>\n");
-		print_r ($result);
-		echo ("</pre>\n");
+		return $result;
 	}
 }
 
