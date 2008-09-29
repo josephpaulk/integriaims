@@ -69,7 +69,7 @@ $search_id_inventory = (int) get_parameter ('search_id_inventory');
 $search_serial_number = (string) get_parameter ('search_serial_number');
 $search_id_building = (int) get_parameter ('search_id_building');
 $search_sla_fired = (bool) get_parameter ('search_sla_fired');
-$search_ticket = (int) get_parameter ('search_ticket',0);
+$search_id_incident = (int) get_parameter ('search_id_incident');
 
 if ($status == 0)
 	$status = implode (',', array_keys (get_indicent_status ()));
@@ -83,8 +83,8 @@ if ($search_id_group != 1)
 	$sql_clause .= sprintf (' AND id_grupo = %d', $search_id_group);
 if ($search_status)
 	$sql_clause .= sprintf (' AND estado = %d', $search_status);
-if ($search_ticket > 0)
-	$sql_clause .= sprintf (' AND id_incidencia = %d', $search_ticket);
+if ($search_id_incident)
+	$sql_clause .= sprintf (' AND id_incidencia = %d', $search_id_incident);
 
 $sql = sprintf ('SELECT * FROM tincidencia
 		WHERE estado IN (%s)

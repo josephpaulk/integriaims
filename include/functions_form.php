@@ -387,21 +387,25 @@ function combo_projects_user ($id_user, $name = 'project') {
 
 
 
-function show_workunit_data ($row3, $title) {
+function show_workunit_data ($workunit, $title) {
 	global $config;
 	global $lang_label;
 
-	$timestamp = $row3["timestamp"];
-	$duration = $row3["duration"];
-	$id_user = $row3["id_user"];
+	$timestamp = $workunit["timestamp"];
+	$duration = $workunit["duration"];
+	$id_user = $workunit["id_user"];
 	$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_user);
-	$nota = $row3["description"];
-	$id_workunit = $row3["id"];
-	$public = $row3["public"];
-	$locked = $row3["locked"];
+	$nota = $workunit["description"];
+	$id_workunit = $workunit["id"];
+	$public = $workunit["public"];
+	$locked = $workunit["locked"];
 
-	$id_group = get_db_sql ("SELECT i.id_grupo FROM tincidencia as i, tworkunit_incident as w WHERE w.id_workunit = $id_workunit AND i.id_incidencia = w.id_incident");
-
+	$sql = sprintf ('SELECT tincidencia.id_grupo
+			FROM tincidencia, tworkunit_incident
+			WHERE tworkunit_incident.id_workunit = %d
+			AND tincidencia.id_incidencia = tworkunit_incident.id_incident',
+			$id_workunit);
+	$id_group = get_db_sql ($sql);
 
 	// ACL Check for visibility
 	if (($public == 0) AND ($id_user != $config["id_user"]) AND (give_acl_extra ($config["id_user"], $id_group, "IM")== 0))
@@ -436,14 +440,14 @@ function show_workunit_data ($row3, $title) {
 
 	// Body
 	echo "<div class='notebody'>";
-	if (strlen($nota) > 1024){
-		echo clean_output_breaks(substr($nota,0,1024));
+	if (strlen ($nota) > 1024) {
+		echo clean_output_breaks (substr ($nota, 0, 1024));
 		echo "<br><br>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/common/workunit_detail&id=".$id_workunit."&title=$title'>";
 		echo __('read_more');
 		echo "</a>";
 	} else {
-		echo clean_output_breaks($nota);
+		echo clean_output_breaks ($nota);
 	}
 	echo "</div>";
 }
@@ -617,7 +621,7 @@ function form_search_incident ($return = false) {
 	$search_serial_number = (string) get_parameter ('search_serial_number');
 	$search_id_building = (int) get_parameter ('search_id_building');
 	$search_sla_fired = (bool) get_parameter ('search_sla_fired');
-	$search_ticket = (int) get_parameter ('search_ticket',0);
+	$search_id_incident = (string) get_parameter ('search_id_incident');
 
 	/* No action is set, so the form will be sent to the current page */
 	$table->width = "100%";
@@ -676,7 +680,7 @@ function form_search_incident ($return = false) {
 	$table->data[3][1] = print_input_text ('search_string', $search_string,
 			'', 30, 100, true, __('Search string'));
 	
-	$table->data[3][0] = print_input_text ('search_ticket', $search_ticket,
+	$table->data[3][0] = print_input_text ('search_id_incident', $search_id_incident,
 			'', 4, 10, true, __('Ticket ID#'));
 
 	$table->data[3][2] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);

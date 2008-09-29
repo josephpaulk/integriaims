@@ -1591,6 +1591,7 @@ function get_companies ($only_names = true) {
 function get_contract ($id_contract) {
 	return get_db_row ('tcontract', 'id', $id_contract);
 }
+
 function get_contracts ($only_names = true) {
 	$contracts = get_db_all_rows_in_table ('tcontract');
 	if ($contracts === false)
@@ -1643,6 +1644,20 @@ function get_company_contacts ($id_company, $only_names = true) {
 function get_incident_workunits ($id_incident) {
 	return get_db_all_rows_field_filter ('tworkunit_incident', 'id_incident',
 					$id_incident, 'id_workunit ASC');
+}
+
+function get_inventory_workunits ($id_inventory) {
+	$sql = sprintf ("SELECT tworkunit.*, tincidencia.id_incidencia as id_incident
+		FROM tworkunit, tworkunit_incident, tincidencia, tincident_inventory
+		WHERE tworkunit.id = tworkunit_incident.id_workunit
+		AND tworkunit_incident.id_incident = tincidencia.id_incidencia
+		AND tincidencia.id_incidencia = tincident_inventory.id_incident
+		AND tincident_inventory.id_inventory = %d ORDER BY timestamp DESC",
+		$id_inventory);
+	$workunits = get_db_all_rows_sql ($sql);
+	if ($workunits === false)
+		return array ();
+	return $workunits;
 }
 
 function get_workunit_data ($id_workunit) {

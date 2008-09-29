@@ -27,7 +27,7 @@ if (give_acl ($config['id_user'], 0, "IR") != 1) {
 	exit;
 }
 
-echo '<h3>'.__('Incidents affecting inventories').'</h3>';
+echo '<h3>'.__('Incidents affecting inventory object').' #'.$id.'</h3>';
 
 $table->width = '90%';
 $table->class = 'listing';

@@ -142,16 +142,20 @@ function configure_incident_form (enable_ajax_form) {
 	});
 	
 	$(dialog+"#button-delete_inventory").click (function () {
-		selected = $(dialog+"#incident_inventories").attr ("selectedIndex");
+		var s;
 		
-		$(dialog+"#incident_inventories").children (":eq("+selected+")").remove ();
+		s = $(dialog+"#incident_inventories").attr ("selectedIndex");
+		selected_id = $(dialog+"#incident_inventories").children (":eq("+s+")").attr ("value");
+		$(dialog+"#incident_inventories").children (":eq("+s+")").remove ();
+		$(dialog+".selected-inventories").each (function () {
+			if (this.value == selected_id)
+				$(this).remove ();
+		});
 	});
 	
 	if (enable_ajax_form) {
 		$(dialog+"#incident_status_form").submit (function () {
-			/* THIS NEEDS FIX !!!*/
-/*
-			if ($(this).children (".selected-inventories").length == 0) {
+			if ($(".selected-inventories", this).length == 0) {
 				$(dialog+"#incident_inventories").fadeOut ('normal',function () {
 					pulsate (this);
 				});
@@ -159,7 +163,6 @@ function configure_incident_form (enable_ajax_form) {
 
 				return false;
 			}
-*/
 			values = get_form_input_values (this);
 			values.push ({name: "page",
 				value: "operation/incidents/incident_detail"});
@@ -175,19 +178,18 @@ function configure_incident_form (enable_ajax_form) {
 			);
 			return false;
 		});
-	}
-	/*
-	$(dialog+"#incident_status_form").submit (function () {
-		if ($(this).children (".selected-inventories").length == 0) {
-			$(dialog+"#incident_inventories").fadeOut ('normal',function () {
-				pulsate (this);
-			});
-			result_msg_error ("There's no affected object (INS)");
+	} else {
+		$(dialog+"#incident_status_form").submit (function () {
+			if ($(".selected-inventories", this).length == 0) {
+				$(dialog+"#incident_inventories").fadeOut ('normal',function () {
+					pulsate (this);
+				});
+				result_msg_error ("There's no affected object");
 			
-			return false;
-		}
-	});
-*/
+				return false;
+			}
+		});
+	}
 }
 
 function configure_incident_search_form (page_size, row_click_callback) {
@@ -281,7 +283,7 @@ function configure_inventory_search_form (page_size, incident_click_callback) {
 						.tablesorterPager ({container: $(dialog+"#inventory-pager"), size: page_size});
 					$(dialog+"#inventory_search_result_table tbody tr").click (function () {
 						id = this.id.split ("-").pop ();
-						name = $(this).children (":eq(0)").text ();
+						name = $(this).children (":eq(1)").text ();
 						incident_click_callback (id, name);
 					});
 					$(dialog+"#inventory_search_result_table tbody").fadeIn ();

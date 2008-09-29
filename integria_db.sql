@@ -48,7 +48,7 @@ CREATE TABLE `tgrupo` (
   `lang` varchar(10) default NULL,
   `parent` tinyint(4) NOT NULL default '-1',
   `id_user_default` varchar(250) NOT NULL default '',
-  `forced_email` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `forced_email` tinyint(3) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY  (`id_grupo`)
 );
 
@@ -79,19 +79,19 @@ CREATE TABLE `tincidencia` (
   `titulo` varchar(100) NOT NULL default '',
   `descripcion` mediumtext NOT NULL,
   `id_usuario` varchar(100) NOT NULL default '',
-  `origen` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `estado` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `prioridad` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `origen` tinyint unsigned NOT NULL DEFAULT 0,
+  `estado` tinyint unsigned NOT NULL DEFAULT 0,
+  `prioridad` tinyint unsigned NOT NULL DEFAULT 0,
   `id_grupo` mediumint(9) NOT NULL default '0',
   `actualizacion` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_creator` varchar(60) default NULL,
-  `notify_email` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `notify_email` tinyint unsigned NOT NULL DEFAULT 0,
   `id_task` int(10) NOT NULL default '0',
-  `resolution` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `resolution` tinyint unsigned NOT NULL DEFAULT 0,
   `epilog` mediumtext NOT NULL,
   `id_parent` bigint(20) unsigned NULL,
-  `sla_disabled` tinyint UNSIGNED NOT NULL DEFAULT 0,
-  `affected_sla_id` tinyint UNSIGNED NOT NULL DEFAULT 0,
+  `sla_disabled` tinyint unsigned NOT NULL DEFAULT 0,
+  `affected_sla_id` tinyint unsigned NOT NULL DEFAULT 0,
   `id_incident_type` mediumint(8) unsigned NULL,
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_index_1` (`id_usuario`,`id_incidencia`),
@@ -210,7 +210,7 @@ CREATE TABLE `tproject` (
   `description` mediumtext NOT NULL,
   `start` date NOT NULL default '0000-00-00',
   `end` date NOT NULL default '0000-00-00',
-  `id_owner` VARCHAR(125),
+  `id_owner` varchar(125),
   `disabled` int(2) unsigned NOT NULL default '0',
   `id_project_group` int(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
@@ -240,7 +240,7 @@ CREATE TABLE `ttask` (
   `start` date NOT NULL default '0000-00-00',
   `end` date NOT NULL default '0000-00-00',
   `hours` int unsigned NOT NULL DEFAULT 0,
-  `estimated_cost` float (9,2) UNSIGNED NOT NULL DEFAULT 0.0,
+  `estimated_cost` float (9,2) unsigned NOT NULL DEFAULT 0.0,
   `id_group` int(10) NOT NULL default '0',
   `periodicity` enum ('none', 'weekly', 'monthly', 'year', '15days', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none',
   PRIMARY KEY  (`id`)
@@ -251,12 +251,12 @@ CREATE TABLE `tworkunit` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `duration` float (10,2) unsigned NOT NULL default '0',
-  `id_user` VARCHAR(125) DEFAULT NULL,
+  `id_user` varchar(125) DEFAULT NULL,
   `description` mediumtext NOT NULL,
   `have_cost` tinyint unsigned NOT NULL DEFAULT 0,
   `id_profile` int(10) unsigned NOT NULL default '0',
-  `locked` VARCHAR(125) DEFAULT '',
-  `public` TINYINT(3) UNSIGNED NOT NULL DEFAULT 1,
+  `locked` varchar(125) DEFAULT '',
+  `public` tinyint(1) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY  (`id`)
 );
 
@@ -283,7 +283,7 @@ CREATE TABLE `tagenda` (
   `alarm` int(10) unsigned NOT NULL DEFAULT 0,
   `duration` int(10) unsigned NOT NULL DEFAULT 0,
   `id_group` int(10) NOT NULL default '0',
-  `content` VARCHAR(255) DEFAULT '',
+  `content` varchar(255) DEFAULT '',
   PRIMARY KEY  (`id`)
 );
 
@@ -308,7 +308,7 @@ CREATE TABLE `tincident_origin` (
 CREATE TABLE `trole` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(125) NOT NULL default '',
-  `description` VARCHAR(255) DEFAULT '',
+  `description` varchar(255) DEFAULT '',
   `cost` int(8) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY  (`id`)
 );
@@ -373,8 +373,8 @@ CREATE TABLE `tcost` (
   `ammount` float(9,2) NOT NULL DEFAULT '0.0',
   `description` mediumtext NOT NULL,
   `id_attachment` int(11) unsigned NULL default NULL,
-  `locked` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
-  `locked_id_user` VARCHAR(125) DEFAULT NULL,
+  `locked` tinyint(3) unsigned NOT NULL DEFAULT 0,
+  `locked_id_user` varchar(125) DEFAULT NULL,
   PRIMARY KEY  (`id`)
 );
 

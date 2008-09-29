@@ -1,3 +1,36 @@
+2008-09-29  Esteban Sanchez <estebans@artica.es>
+
+	* include/js/integria_incident_search.js: Fixed bug on incident dialog
+	when checking affected objects. Fixed code when removing an object.
+	Fixed name fetching in inventory search result table.
+
+	* include/functions_db.php: Added get_inventory_workunits() to get all
+	the workunits affecting an inventory object.
+
+	* include/functions_form.php: Renamed $row3 variable to $workunit.
+	Renamed $search_ticket variable to $search_id_incident and cast into
+	string.
+
+	* operation/incidents/incident_search.php: Renamed $search_ticket to
+	$search_id_incident.
+
+	* operation/inventories/inventory.php: Added login checks. Added
+	contracts and workunits tabs.
+
+	* operation/inventories/inventory_contracts.php: Added to repository.
+	Show contracts affecting an inventory object (need more styling).
+
+	* operation/inventories/inventory_workunits.php: Show the workunits
+	done that affects an inventory object.
+	
+	* operation/inventories/inventory_incidents.php: Added a better title
+	to the page.
+
+	* operation/inventories/inventory_search.php: Added support to filter
+	by company. Use __() instead of lang_string().
+
+	* integria_db.sql: Normalize indentation of field type.
+
 2008-09-26  Sancho Lerena <slerena@artica.es>
 
 	* Small fixes on several files.

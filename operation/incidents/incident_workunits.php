@@ -15,7 +15,7 @@
 
 global $config;
 
-if (check_login() != 0) {
+if (check_login ()) {
 	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access incident viewer");
 	require ("general/noaccess.php");
 	exit;
@@ -62,12 +62,12 @@ if ($id_incident) {
 
 echo $result_msg;
 
-echo "<h3>".lang_string ("Incident"). " #$id_incident - ".give_inc_title ($id_incident)."</h3>";
+echo "<h3>".__('Incident'). " #$id_incident - ".give_inc_title ($id_incident)."</h3>";
 
 $workunits = get_incident_workunits ($id_incident);
 
 if ($workunits === false) {
-	echo '<h4>'.lang_string ('No workunit was done in this incident').'</h4>';
+	echo '<h4>'.__('No workunit was done in this incident').'</h4>';
 	return;
 }
 

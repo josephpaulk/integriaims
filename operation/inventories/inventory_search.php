@@ -29,7 +29,8 @@ $search_ip_address = (string) get_parameter ('search_ip_address');
 $search_serial_number = (string) get_parameter ('search_serial_number');
 $search_part_number = (string) get_parameter ('search_part_number');
 $search = (bool) get_parameter ('search');
-$search_inventory_id = (string) get_parameter ('search_inventory_id', '');
+$search_id_inventory = (string) get_parameter ('search_id_inventory');
+$search_id_company = (int) get_parameter ('search_id_company');
 
 if ($search) {
 	$sql_clause = '';
@@ -45,10 +46,10 @@ if ($search) {
 		$sql_clause .= sprintf (' AND serial_number LIKE "%%%s%%"', $search_serial_number);
 	if ($search_part_number != '')
 		$sql_clause .= sprintf (' AND part_number LIKE "%%%s%%"', $search_part_number);
-	if ($search_inventory_id != '')
-		$sql_clause .= sprintf (' AND id = "%s"', $search_inventory_id);
+	if ($search_id_inventory != '')
+		$sql_clause .= sprintf (' AND id = "%s"', $search_id_inventory);
 
-	$sql = sprintf ('SELECT id, name, description, comments
+	$sql = sprintf ('SELECT id, name, description, comments, id_building
 			FROM tinventory
 			WHERE (name LIKE "%%%s%%" OR description LIKE "%%%s%%")
 			%s',
@@ -61,27 +62,54 @@ if ($search) {
 	
 	$total_inventories = 0;
 	foreach ($inventories as $inventory) {
+		if ($search_id_company) {
+			$companies = get_inventory_affected_companies ($inventory['id']);
+			$found = false;
+			foreach ($companies as $company) {
+				if ($company['id'] == $search_id_company)
+					$found = true;
+			}
+			if (! $found)
+				continue;
+		}
+	
 		echo '<tr id="result-'.$inventory['id'].'">';
-		echo '<td><b>#'.$inventory['id'].'</b></td>';
+		echo '<td><strong>#'.$inventory['id'].'</strong></td>';
 		echo '<td>'.$inventory['name'].'</td>';
 
 		$incidents = get_incidents_on_inventory ($inventory['id'], false);
-		$num_inc = sizeof($incidents);
-
-		if ($num_inc == 0)
-			echo "<td>";
-		else
-			echo "<td><img src='images/info.png'> $num_inc";
-
-		echo '<td>'.$inventory['name'].'</td>';
+		$total_incidents = sizeof ($incidents);
+		
+		echo '<td>';
+		if ($total_incidents) {
+			$actived = 0;
+			foreach ($incidents as $incident) {
+				if ($incident['estado'] != 7 && $incident['estado'] != 6)
+					$actived++;
+			}
+			echo '<img src="images/info.png" /> <strong>'.$actived.'</strong> / '.$total_incidents;
+		}
+		echo '</td>';
+		
+		$companies = get_inventory_affected_companies ($inventory['id'], false);
+		echo '<td>';
+		if (isset ($companies[0]['name']))
+			echo $companies[0]['name'];
+		echo '</td>';
+		
+		$building = get_building ($inventory['id_building']);
+		echo '<td>';
+		if ($building)
+			echo $building['name'];
+		echo '</td>';
+		
 		echo '<td>'.$inventory['description'].'</td>';
-		echo '<td>'.$inventory['comments'].'</td>';
 		echo '</tr>';
 		$total_inventories++;
 	}
 	
 	if ($total_inventories == 0) {
-		echo '<tr colspan="4">'.lang_string ('No inventory found').'</tr>';
+		echo '<tr colspan="4">'.__('No inventory found').'</tr>';
 	}
 	
 	if (defined ('AJAX'))
@@ -97,33 +125,38 @@ $table->colspan = array ();
 
 $table->data[1][0] = print_select (get_products (),
 					'search_id_product', $search_id_product,
-					'', lang_string ('All'), 0, true, false, false,
-					lang_string ('Product type'));
+					'', __('All'), 0, true, false, false,
+					__('Product type'));
 
 $table->data[1][1] = print_select (get_contracts (),
 			'search_id_contract', $search_id_contract,
-			'', lang_string ('All'), 0, true, false, false,
-			lang_string ('Contract'));
+			'', __('All'), 0, true, false, false,
+			__('Contract'));
 
 $table->data[1][2] = print_select (get_buildings (),
 			'search_id_building', $search_id_building,
-			'', lang_string ('All'), 0, true, false, false,
-			lang_string ('Building'));
+			'', __('All'), 0, true, false, false,
+			__('Building'));
 
-$table->data[2][0] = print_input_text ('search_ip_address', $search_ip_address, '', 20, 255,
-			true, lang_string ('IP address'));
-$table->data[2][1] = print_input_text ('search_serial_number', $search_serial_number, '', 20, 255,
-			true, lang_string ('Serial number'));
-$table->data[2][2] = print_input_text ('search_part_number', $search_part_number, '', 20, 255,
-			true, lang_string ('Part number'));
+$table->data[2][1] = print_select (get_companies (),
+			'search_id_company', $search_id_company,
+			'', __('All'), 0, true, false, false,
+			__('Company'));
 
-$table->data[3][0] = print_input_text ('search_string', $search_string, '', 20, 255,
-			true, lang_string ('Search string'));
+$table->data[3][0] = print_input_text ('search_ip_address', $search_ip_address, '', 20, 255,
+			true, __('IP address'));
+$table->data[3][1] = print_input_text ('search_serial_number', $search_serial_number, '', 20, 255,
+			true, __('Serial number'));
+$table->data[3][2] = print_input_text ('search_part_number', $search_part_number, '', 20, 255,
+			true, __('Part number'));
 
-$table->data[3][1] = print_input_text ('search_inventory_id', $search_inventory_id, '', 5, 55,
-			true, lang_string ('Inventory ID#'));
+$table->data[4][0] = print_input_text ('search_string', $search_string, '', 20, 255,
+			true, __('Search string'));
 
-$table->data[3][2] = print_submit_button (lang_string ('Search'), 'search_button',
+$table->data[4][1] = print_input_text ('search_id_inventory', $search_id_inventory, '', 5, 55,
+			true, __('Inventory ID#'));
+
+$table->data[4][2] = print_submit_button (__('Search'), 'search_button',
 			false, 'class="sub search"', true);
 
 echo '<div id="inventory_search_result"></div>';
@@ -138,11 +171,12 @@ $table->class = 'hide result_table listing';
 $table->width = '95%';
 $table->id = 'inventory_search_result_table';
 $table->head = array ();
-$table->head[1] = lang_string ("ID");
-$table->head[2] = lang_string ("Name");
-$table->head[3] = lang_string ("Active Incidents");
-$table->head[4] = lang_string ("Title");
-$table->head[5] = lang_string ("Comments");
+$table->head[1] = __('ID');
+$table->head[2] = __('Name');
+$table->head[3] = __('Active Incidents');
+$table->head[4] = __('Company');
+$table->head[5] = __('Building');
+$table->head[6] = __('Title');
 
 print_table ($table);
 
