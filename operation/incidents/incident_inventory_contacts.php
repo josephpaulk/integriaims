@@ -28,8 +28,13 @@ $table->head = array ();
 $table->head[0] = lang_string ('Inventory object');
 $table->head[1] = lang_string ('Company');
 $table->head[2] = lang_string ('Contact');
-$table->head[3] = lang_string ('View');
+$table->head[3] = lang_string ('Details');
+$table->head[4] = lang_string ('Edit');
+$table->size = array ();
+$table->size[4] = '40px';
+$table->size[5] = '40px';
 $table->align[3] = 'center';
+$table->align[4] = 'center';
 $table->data = array ();
 
 echo "<h3>".lang_string ("Incident"). " #$id_incident - ".give_inc_title ($id_incident)."</h3>";
@@ -54,9 +59,16 @@ foreach ($inventories as $inventory) {
 			$data[0] = $inventory['name'];
 			$data[1] = $company['name'];
 			$data[2] = $contact['fullname'];
-			$data[3] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact&id='.$contact['id'].'">'.
-					'<img border="0" src="images/zoom.png" /></a>';
-		
+			$details = '';
+			if ($contact['phone'] != '')
+				$details .= '<strong>'.__('Phone number').'</strong>: '.$contact['phone'].'<br />';
+			if ($contact['mobile'] != '')
+				$details .= '<strong>'.__('Mobile phone').'</strong>: '.$contact['mobile'].'<br />';
+			if ($contact['position'] != '')
+				$details .= '<strong>'.__('Position').'</strong>: '.$contact['position'].'<br />';
+			$data[3] = print_help_tip ($details, true, 'tip_view');
+			$data[4] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'">'.
+					'<img src="images/setup.gif" /></a>';
 			array_push ($table->data, $data);
 		}
 	}

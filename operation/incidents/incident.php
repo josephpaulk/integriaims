@@ -147,6 +147,32 @@ echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: '.($id ? 'none' 
 
 echo '<div class="result"></div>';
 
+$table->id = 'saved_searches_table';
+$table->width = '740px';
+$table->class = 'search-table';
+$table->size = array ();
+$table->size[0] = '120px';
+$table->style = array ();
+$table->style[0] = 'font-weight: bold';
+$table->style[2] = 'display: none; font-weight: bold';
+$table->style[3] = 'display: none';
+$table->style[4] = 'display: none';
+$table->data = array ();
+$table->data[0][0] = __('Custom searches');
+$sql = sprintf ('SELECT id, name FROM tcustom_search
+	WHERE id_user = "%s"
+	AND section = "incidents"
+	ORDER BY name',
+	$config['id_user']);
+$table->data[0][1] = print_select_from_sql ($sql, 'saved_searches', 0, '', __('Select'), 0, true);
+$table->data[0][2] = __('Save current search');
+$table->data[0][3] = print_input_text ('search_name', '', '', 10, 20, true);
+$table->data[0][4] = print_submit_button (__('Save'), 'save-search', false, 'class="sub next"', true);
+
+echo '<form id="saved-searches-form">';
+print_table ($table);
+echo '</form>';
+
 form_search_incident ();
 
 unset ($table);
@@ -240,6 +266,45 @@ $(document).ready (function () {
 		.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
 	$("#tabs > ul").tabs ("select", 1);
 <?php endif; ?>
+	
+	$("#saved-searches-form").submit (function () {
+		search_values = get_form_input_values ('search_incident_form');
+		
+		values = get_form_input_values (this);
+		values.push ({name: "page", value: "operation/incidents/incident_search"});
+		$(search_values).each (function () {
+			values.push ({name: "form_values["+this.name+"]", value: this.value});
+		});
+		values.push ({name: "create_custom_search", value: 1});
+		jQuery.post ("ajax.php",
+			values,
+			function (data, status) {
+				result_msg (data);
+			},
+			"html"
+		);
+		return false;
+	});
+	
+	$("#saved_searches").change (function () {
+		values = Array ();
+		values.push ({name: "page", value: "operation/incidents/incident_search"});
+		values.push ({name: "get_custom_search_values", value: 1});
+		values.push ({name: "id_search", value: this.value});
+		
+		jQuery.get ("ajax.php",
+			values,
+			function (data, status) {
+				load_form_values ("search_incident_form", data);
+				$("#search_incident_form").submit ();
+			},
+			"json"
+		);
+	});
+	
+	$("#search_incident_form").submit (function () {
+		$("#saved_searches_table td:gt(1)").fadeIn ();
+	});
 	
 	configure_incident_search_form (10, function (id, name) {
 		id_incident = id;

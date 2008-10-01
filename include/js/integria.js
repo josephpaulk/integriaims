@@ -81,6 +81,17 @@ function result_msg_success (message) {
 }
 
 /**
+ * Show an message in result div.
+ * 
+ * @param string message Message to show
+ */
+function result_msg (message) {
+	$(".result").fadeOut ("fast", function () {
+		$(this).empty ().append (message).fadeIn ();
+	});
+}
+
+/**
  * Pulsate an HTML element to get user attention.
  *
  * @param element HTML element to animate.
@@ -94,5 +105,17 @@ function pulsate (element) {
 				});
 			});
 		});
+	});
+}
+
+
+function load_form_values (form_id, values) {
+	$("#"+form_id+" :input").each (function () {
+		if (values[this.name] != undefined) {
+			if (this.type == 'checkbox' && values[this.name])
+				this.checked = "1";
+			else
+				this.value = values[this.name];
+		}
 	});
 }

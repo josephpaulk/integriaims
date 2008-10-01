@@ -493,7 +493,7 @@ $.fieldValue = function(el, successful) {
     var n = el.name, t = el.type, tag = el.tagName.toLowerCase();
     if (typeof successful == 'undefined') successful = true;
 
-    if (successful && (!n || el.disabled || t == 'reset' || t == 'button' ||
+    if (successful && (!n || el.disabled || t == 'reset' ||
         (t == 'checkbox' || t == 'radio') && !el.checked ||
         (t == 'submit' || t == 'image') && el.form && el.form.clk != el ||
         tag == 'select' && el.selectedIndex == -1))

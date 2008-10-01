@@ -1,3 +1,35 @@
+2008-10-01  Esteban Sanchez <estebans@artica.es>
+
+	* integria_db.sql: Boolean field are better representated with
+	tinyint(1). Added new table tcustom_search.
+
+	* include/js/integria.js: Added result_msg() and load_form_values().
+
+	* include/js/integria_incident_search.js: Style correction.
+
+	* include/js/jquery.form.js: Added a patch to get button values of a
+	form (needed to implement custo searchs).
+
+	* include/styles/integria.css: Added style to search tables.
+
+	* include/functions_db.php: Database error are shown with
+	trigger_error(), so they can be disabled with error_reporting(). Added
+	create_custom_search() and get_custom_search().
+
+	* include/functions_html.php: XHTML fixes.
+
+	* operation/contacts/contact_detail.php,
+	operation/contracts/contract_detail.php: Form rewritten and adapted to
+	new editor form styles.
+	
+	* operation/incidents/incident.php,
+	operation/incidents/incident_search.php,
+	operation/inventories/inventory_search.php,
+	operation/inventories/inventory.php: Added support to save searches.
+
+	* operation/incidents/incident_inventory_contacts.php: Show contacts
+	details in a popup menu.
+
 2008-09-29  Esteban Sanchez <estebans@artica.es>
 
 	* include/js/integria_incident_search.js: Fixed bug on incident dialog

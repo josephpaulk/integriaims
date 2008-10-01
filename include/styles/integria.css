@@ -105,6 +105,11 @@ table.databox, table.databox_color {
 	border-bottom: none;
 }
 
+table.search-table {
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+
 table.listing {
 	margin-left: 15px;
 	padding-top: 5px;

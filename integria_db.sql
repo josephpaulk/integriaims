@@ -465,7 +465,7 @@ CREATE TABLE `tcompany_contact` (
   `mobile` varchar(55) NULL default NULL,
   `position` varchar(150) NULL default NULL,
   `description` text NULL DEFAULT NULL,
-  `disabled` tinyint NULL default 0,
+  `disabled` tinyint(1) NULL default 0,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE
@@ -574,3 +574,16 @@ CREATE TABLE `tworkunit_inventory` (
   `id_inventory` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id_wu`, `id_inventory`)
 );
+
+CREATE TABLE `tcustom_search` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(60) NOT NULL,
+  `section` varchar(20) NOT NULL,
+  `id_user` varchar(60) NOT NULL,
+  `form_values` text NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE (`id_user`, `name`),
+  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE SET NULL
+);
+

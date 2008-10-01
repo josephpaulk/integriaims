@@ -581,7 +581,7 @@ function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $
 		$output .= print_label ($label, $name, 'checkbox', true);
 	}
 
-	$output .= '<input name="'.$name.'" type="checkbox" value="'.$value.'" '. ($checked ? 'checked': '');
+	$output .= '<input name="'.$name.'" type="checkbox" value="'.$value.'" '. ($checked ? 'checked="1"': '');
 	$output .= ' id="checkbox-'.$name.'"';
 
 	if ($script != '') {
@@ -589,7 +589,7 @@ function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $
 	}
 
 	if ($disabled) {
-		 $output .= ' disabled';
+		 $output .= ' disabled="1"';
 	}
 
 	$output .= ' />';

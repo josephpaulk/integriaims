@@ -853,7 +853,7 @@ function process_sql ($sql, $rettype = "affected_rows") {
 	} else {
 		$result = mysql_query ($sql);
 		if ($result === false) {
-			echo '<strong>Error:</strong>process_sql ("'.$sql.'") :'. mysql_error ().'<br />';
+			trigger_error (mysql_error ());
 			return false;
 		} elseif ($result === true) {
 			if ($rettype == "insert_id") {
@@ -861,7 +861,8 @@ function process_sql ($sql, $rettype = "affected_rows") {
 			} elseif ($rettype == "info") {
 				return mysql_info ();
 			}
-			return mysql_affected_rows (); //This happens in case the statement was executed but didn't need a resource
+			//This happens in case the statement was executed but didn't need a resource
+			return mysql_affected_rows ();
 		} else {
 			while ($row = mysql_fetch_array ($result)) {
 				array_push ($retval, $row);
@@ -1803,4 +1804,26 @@ function print_user_avatar ($id_user = "", $small = false, $return = false) {
 		return $output;
 	echo $output;
 }
+
+function create_custom_search ($name, $section, $search_values) {
+	global $config;
+	
+	$sql = sprintf ('INSERT INTO tcustom_search (section, name, id_user,
+		form_values) VALUES ("%s", "%s", "%s", \'%s\')', 
+		$section, $name, $config['id_user'],
+		clean_output (serialize ($search_values)));
+	return process_sql ($sql, 'insert-id');
+}
+
+function get_custom_search ($id_search, $section) {
+	global $config;
+	
+	$sql = sprintf ('SELECT * FROM tcustom_search
+		WHERE id = %d
+		AND id_user = "%s"
+		AND section = "%s"',
+		$id_search, $config['id_user'], $section);
+	return get_db_row_sql ($sql);
+}
+
 ?>

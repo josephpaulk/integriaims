@@ -36,7 +36,7 @@ function configure_user_search_form () {
 function show_user_search_dialog (title) {
 	$("#dialog-user-search").remove ();
 	$("body").append ($("<div></div>").attr ("id", "dialog-user-search").addClass ("dialog"));
-	values = [];
+	values = Array ();
 	values.push ({name: "page",
 				value: "operation/users/user_search"});
 	jQuery.get ("ajax.php",
@@ -576,4 +576,3 @@ function configure_inventory_form (enable_ajax_form) {
 		});
 	}
 }
-

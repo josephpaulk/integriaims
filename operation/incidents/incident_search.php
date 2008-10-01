@@ -22,7 +22,40 @@ if (! defined ('AJAX'))
 	return;
 
 $search_form = (bool) get_parameter ('search_form');
+$create_custom_search = (bool) get_parameter ('create_custom_search');
+$get_custom_search_values = (bool) get_parameter ('get_custom_search_values');
 
+/* Create a custom saved search via AJAX */
+if ($create_custom_search) {
+	$form_values = get_parameter ('form_values');
+	$search_name = (string) get_parameter ('search_name');
+	
+	$result = create_custom_search ($search_name, 'incidents', $form_values);
+	
+	if ($result === false) {
+		echo '<h3 class="error">'.__('Could not create custom search').'</h3>';
+	} else {
+		echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
+	}
+	
+	if (defined ('AJAX')) {
+		return;
+	}
+}
+
+/* Get a custom search via AJAX */
+if ($get_custom_search_values) {
+	$id_search = (int) get_parameter ('id_search');
+	$search = get_custom_search ($id_search, 'incidents');
+	if ($search === false) {
+		echo json_encode (false);
+		return;
+	}
+	echo json_encode (unserialize ($search['form_values']));
+	return;
+}
+
+/* Show search form via AJAX */
 if ($search_form) {
 	form_search_incident ();
 	$table->class = 'hide result_table listing';
@@ -55,7 +88,9 @@ if ($search_form) {
 	echo '</form>';
 	echo '</div>';
 	
-	return;
+	if (defined ('AJAX')) {
+		return;
+	}
 }
 
 $search_string = (string) get_parameter ('search_string');

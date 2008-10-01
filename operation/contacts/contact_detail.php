@@ -19,84 +19,86 @@ global $config;
 
 check_login();
 
-if (give_acl($config["id_user"], 0, "IR")==0) {
+if (! give_acl ($config["id_user"], 0, "IR")) {
 	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access Contact");
 	require ("general/noaccess.php");
 	exit;
 }
 
-$id_user = $config["id_user"];
+$id = (int) get_parameter ('id');
+$new_contact = (bool) get_parameter ('new_contact');
+$create_contact = (bool) get_parameter ('create_contact');
+$update_contact = (bool) get_parameter ('update_contact');
+$delete_contact = (bool) get_parameter ('delete_contact');
 
-// CREATE
-// ==================
-if (isset($_GET["create2"])){ //
+// Create
+if ($create_contact) {
+	$fullname = (string) get_parameter ('fullname');
+	$phone = (string) get_parameter ('phone');
+	$mobile = (string) get_parameter ('mobile');
+	$email = (string) get_parameter ('email');
+	$position = (string) get_parameter ('position');
+	$id_company = (int) get_parameter ('id_company');
+	$disabled = (int) get_parameter ('disabled');
+	$description = (string) get_parameter ('description');
 
-	$fullname = get_parameter ("fullname","");
-	$phone = get_parameter ("phone", "");
-	$mobile = get_parameter ("mobile","");
-	$email = get_parameter ("email","");
-	$position = get_parameter ("position","");
-	$id_company = get_parameter ("id_company", 0);
-	$disabled = get_parameter ("disabled", 0);
-	$description = get_parameter ("description", "");
+	$sql = sprintf ('INSERT INTO tcompany_contact (fullname, phone, mobile,
+		email, position, id_company, disabled, description)
+		VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, "%s")',
+		$fullname, $phone, $mobile, $email, $position,
+		$id_company, $disabled, $description);
 
-	$sql_insert="INSERT INTO tcompany_contact (fullname, phone, mobile, email, position, id_company, disabled, description) VALUE ('$fullname','$phone', '$mobile', '$email', '$position', '$id_company', '$disabled', '$description') ";
-
-	$result=mysql_query($sql_insert);
-	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Contact cannot be created")."</h3>";
-	else {
-		echo "<h3 class='suc'>".lang_string ("Contact has been created successfully")."</h3>";
-		$id_data = mysql_insert_id();
-		insert_event ("CONTACT CREATED", $id_data, 0, $fullname);
+	$id = process_sql ($sql, 'insert_id');
+	if ($result === false) {
+		echo "<h3 class='error'>".__('Contact cannot be created')."</h3>";
+	} else {
+		echo "<h3 class='suc'>".__('Contact has been created successfully')."</h3>";
+		insert_event ("CONTACT CREATED", $id, 0, $fullname);
 	}
+	$id = 0;
 }
 
-// UPDATE
-// ==================
-if (isset($_GET["update2"])){ // if modified any parameter
-	$id = get_parameter ("id","");
-	$fullname = get_parameter ("fullname","");
-	$phone = get_parameter ("phone", "");
-	$mobile = get_parameter ("mobile","");
-	$email = get_parameter ("email","");
-	$position = get_parameter ("position","");
-	$id_company = get_parameter ("id_company", 0);
-	$disabled = get_parameter ("disabled", 0);
-	$description = get_parameter ("description", "");
+// Update
+if ($update_contact) { // if modified any parameter
+	$fullname = (string) get_parameter ('fullname');
+	$phone = (string) get_parameter ('phone');
+	$mobile = (string) get_parameter ('mobile');
+	$email = (string) get_parameter ('email');
+	$position = (string) get_parameter ('position');
+	$id_company = (int) get_parameter ('id_company');
+	$disabled = (int) get_parameter ('disabled');
+	$description = (string) get_parameter ('description');
 
-	$sql_update ="UPDATE tcompany_contact
-	SET description = '$description', fullname = '$fullname', phone = '$phone', mobile = '$mobile', email = '$email', position = '$position', id_company = '$id_company', disabled = '$disabled' WHERE id = $id";
+	$sql = sprintf ('UPDATE tcompany_contact
+		SET description = "%s", fullname = "%s", phone = "%s",
+		mobile = "%s", email = "%s", position = "%s",
+		id_company = %d, disabled = %d WHERE id = %d',
+		$description, $fullname, $phone, $mobile, $email, $position,
+		$id_company, $disabled, $id);
 
-	$result=mysql_query($sql_update);
-	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Contact cannot be updated")."</h3>";
-	else {
-		echo "<h3 class='suc'>".lang_string ("Contact updated ok")."</h3>";
+	$result = process_sql ($sql);
+	if ($result === false) {
+		echo "<h3 class='error'>".__('Contact cannot be updated')."</h3>";
+	} else {
+		echo "<h3 class='suc'>".__('Contact updated ok')."</h3>";
 		insert_event ("CONTACT", $id, 0, $fullname);
 	}
+	$id = 0;
 }
 
-// DELETE
-// ==================
-if (isset($_GET["delete"])){ // if delete
-	$id = get_parameter ("delete",0);
-	$fullname = give_db_sqlfree_field  ("SELECT fullname FROM tcompany_contact WHERE id = $id ");
-	$sql_delete= "DELETE FROM tcompany_contact WHERE id = $id";
-	$result=mysql_query($sql_delete);
+// Delete
+if ($delete_contact) {
+	$fullname = get_db_value  ('fullname', 'tcompany_contact', 'id', $id);
+	$sql = sprintf ('DELETE FROM tcompany_contact WHERE id = %d', $id);
+	process_sql ($sql);
 	insert_event ("CONTACT DELETED", $id, 0, "$fullname");
-	echo "<h3 class='suc'>".lang_string("Deleted successfully")."</h3>";
-}
-
-if (isset($_GET["update2"])){
-	// After apply update, let's redirecto to UPDATE form again.
-	$_GET["update"]= $id;
+	echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
 }
 
 // FORM (Update / Create)
-if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
-	if (isset($_GET["create"])){
-		$id = -1;
+if ($id || $new_contact) {
+	if ($new_contact){
+		$id = 0;
 		$fullname = "";
 		$phone = "";
 		$mobile = "";
@@ -106,165 +108,112 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$disabled = "";
 		$description = "";
 	} else {
-		$id = get_parameter ("update", -1);
-		$row = get_db_row ("tcompany_contact", "id", $id);
-		$fullname = $row["fullname"];
-		$phone = $row["phone"];
-		$mobile = $row["mobile"];
-		$email = $row["email"];
-		$position = $row["position"];
-		$id_company = $row["id_company"];
-		$disabled = $row["disabled"];
-		$description = $row["description"];
+		$contact = get_db_row ("tcompany_contact", "id", $id);
+		$fullname = $contact['fullname'];
+		$phone = $contact['phone'];
+		$mobile = $contact['mobile'];
+		$email = $contact['email'];
+		$position = $contact['position'];
+		$id_company = $contact['id_company'];
+		$disabled = $contact['disabled'];
+		$description = $contact['description'];
 	}
 
-	echo "<h2>".lang_string ("Contact management")."</h2>";
-	if ($id == -1){
-		echo "<h3>".lang_string ("Create a new contact")."</a></h3>";
-		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/contacts/contact_detail&create2=1'>";
+	echo "<h2>".__('Contact management')."</h2>";
+	
+	$table->width = "720px";
+	$table->class = "databox";
+	$table->data = array ();
+	$table->colspan = array ();
+	$table->colspan[0][0] = 4;
+	$table->colspan[1][0] = 4;
+	$table->colspan[4][0] = 4;
+	
+	$table->data[0][0] = print_input_text ("fullname", $fullname, "", 60, 100, true, __('Full name'));
+	
+	$table->data[1][0] = print_input_text ("email", $email, "", 35, 100, true, __('Email'));
+	$table->data[2][0] = print_input_text ("phone", $phone, "", 15, 60, true, __('Phone number'));
+	$table->data[2][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
+	$table->data[3][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
+	$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
+		'id_company', $id_company, '', __('Select'), 0, true, false, false, __('Company'));
+	$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
+	
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contacts/contact_detail">';
+	print_table ($table);
+	
+	echo '<div class="button" style="width: '.$table->width.'">';
+	if ($id) {
+		print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
+		print_input_hidden ('update_contact', 1);
+		print_input_hidden ("id", $id);
+	} else {
+		print_input_hidden ('create_contact', 1);
+		print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', false);
 	}
-	else {
-		echo "<h3>".lang_string ("Update existing contact")."</a></h3>";
-		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/contacts/contact_detail&update2=1'>";
-		print_input_hidden ("id", "$id", false, '');
-	}
-
-	echo "<table width=620 class='databox'>";
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo lang_string ("Full name");
-	echo "<tr>";
-	echo "<td class=datos colspan=4>";
-	print_input_text ("fullname", $fullname, "", 60, 100, false);
-
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo lang_string ("Email");
-	echo "<tr>";
-	echo "<td class=datos colspan=4>";
-	print_input_text ("email", $email, "", 35, 100, false);
-
-	echo "<tr>";
-	echo "<td class=datos2>";
-	echo lang_string ("Phone number");
-
-	echo "<td class=datos2>";
-	echo lang_string ("Mobile number");
-
-	echo "<tr>";
-	echo "<td class=datos2>";
-	print_input_text ("phone", $phone, "", 15, 40, false);
-
-	echo "<td class=datos2>";
-	print_input_text ("mobile", $mobile, "", 15, 40, false);
-
-	echo "<tr>";
-
-	echo "<td class=datos>";
-	echo lang_string ("Position");
-
-	echo "<td class=datos>";
-	echo lang_string ("Company");
-
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo "<input type=text size=25 name='position' value='$position'>";
-	echo "<td class=datos>";
-	print_select_from_sql ("SELECT id, name FROM tcompany", "id_company", $id_company, '', 'Select', 0, false, false, true);
-
-
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo lang_string ("Description");
-	echo "<tr>";
-	echo "<td class=datos colspan=4>";
-	print_textarea ("description", 1, 1, $description, "style='width: 600px; height: 120px;'", false);
-	echo "</table>";
-
-	echo "<table width=620 class='button'>";
-	echo "<tr>";
-	echo "<td class='datos3' align=right>";
-	if ($id == -1)
-		print_submit_button (lang_string("Create"), "enviar", false, "class='sub next'", false);
-	else
-		print_submit_button (lang_string("Update"), "enviar", false, "class='sub upd'", false);
-	echo "</table>";
+	echo "</div>";
 	echo "</form>";
+} else {
+	echo "<h2>".__('Contact management')."</h2>";
 
-	// Get some space here
-	echo "<div style='min-height:50px'></div>";
+	$search_text = (string) get_parameter ('search_text');
+	
+	$where_clause = "";
+	if ($search_text != "") {
+		$where_clause = sprintf ('WHERE fullname LIKE "%%%s%%"', $search_text);
+	}
+
+	$table->width = '400px';
+	$table->class = 'search-table';
+	$table->style = array ();
+	$table->style[0] = 'font-weight: bold;';
+	$table->data = array ();
+	$table->data[0][0] = __('Search');
+	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
+	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contacts/contact_detail">';
+	print_table ($table);
+	echo '</form>';
+
+	$sql = "SELECT * FROM tcompany_contact $where_clause ORDER BY id_company, fullname";
+	$contacts = get_db_all_rows_sql ($sql);
+	if ($contacts !== false) {
+		unset ($table);
+		$table->width = "720px";
+		$table->class = "listing";
+		$table->data = array ();
+		$table->style = array ();
+		$table->style[0] = 'font-weight: bold';
+		$table->head = array ();
+		$table->head[0] = __('Full name');
+		$table->head[1] = __('Company');
+		$table->head[2] = __('Email');
+		$table->head[3] = __('Delete');
+		
+		foreach ($contacts as $contact) {
+			$data = array ();
+			// Name
+			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail&id=".
+				$contact['id']."'>".$contact['fullname']."</a>";
+			$data[1] = get_db_value ('name', 'tcompany', 'id', $contact['id_company']);
+			$data[2] = $contact['email'];
+			$data[3] = '<a href="index.php?sec=inventory&
+						sec2=operation/contacts/contact_detail&
+						delete=1&id='.$contact['id'].'"
+						onClick="if (!confirm(\''.__('are_you_sure').'\'))
+						return false;">
+						<img src="images/cross.png"></a>';
+			array_push ($table->data, $data);
+		}
+		print_table ($table);
+	}
+	
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contacts/contact_detail">';
+	echo '<div class="button" style="width: '.$table->width.'">';
+	print_submit_button (__('Create contact'), 'new_btn', false, 'class="sub next"');
+	print_input_hidden ('new_contact', 1);
+	echo '</div>';
+	echo '</form>';
 }
-
-
-    // Show list of items
-    // =======================
-    if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-        echo "<h2>".lang_string ("Contact management")."</h2>";
-
-    	$text = get_parameter ("freetext", "");
-    	if ($text != ""){
-    		$sql_search = "WHERE fullname LIKE '%$text%'";
-    		echo "<h4>".__("Searching for")." ".$text."</h4>";
-    	}
-    	else
-    		$sql_search = "";
-
-
-		echo "<table width=400>";
-    	echo "<form method=post action='index.php?sec=inventory&sec2=operation/contacts/contact_detail'>";
-    	echo "<tr><td>";
-    	echo lang_string ("Free text search");
-    	echo "<td>";
-    	print_input_text ("freetext", $text, "", 15, 100, false);
-    	echo "<td>";
-    	print_submit_button (lang_string("Search"), "enviar", false, "class='sub search'", false);
-    	echo "</form></td></tr></table>";
-
-	    $sql1 = "SELECT * FROM tcompany_contact $sql_search ORDER BY fullname, id_company";
-        $color =0;
-	    if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
-
-            $table->width = "720";
-			$table->class = "listing";
-			$table->cellspacing = 0;
-			$table->cellpadding = 0;
-			$table->tablealign="left";
-			$table->data = array ();
-			$table->size = array ();
-			$table->style = array ();
-			$table->colspan = array ();
-			$table->head[0] = lang_string ("Full name");
-			$table->head[1] = lang_string ("Company");
-			$table->head[2] = lang_string ("eMail");
-			$table->head[3] = lang_string ("Delete");
-			$counter = 0;
-	        while ($row=mysql_fetch_array($result)){
-                // Name
-                $table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail&update=".$row["id"]."'>".$row["fullname"]."</a></b>";
-
-				// Company
-               	$table->data[$counter][1] = give_db_sqlfree_field ("SELECT name FROM tcompany WHERE id = ".$row["id_company"]);
-
-         		// Email
-                $table->data[$counter][2] = $row["email"];
-
-                // Delete
-                $table->data[$counter][3] = "<a href='index.php?sec=inventory&
-				            sec2=operation/contacts/contact_detail&
-				            delete=".$row["id"]."'
-				            onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
-				            return false;'>
-				            <img border='0' src='images/cross.png'></a>";
-				$counter++;
-            }
-            print_table ($table);
-        }
-		echo "<table width=720 class='button'>";
-		echo "<tr><td align='right'>";
-		echo "<form method=post action='index.php?sec=inventory&
-		sec2=operation/contacts/contact_detail&create=1'>";
-		echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create contact")."'>";
-		echo "</form></td></tr></table>";
-    } // end of list
-
 ?>

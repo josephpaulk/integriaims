@@ -19,6 +19,39 @@ if (check_login () != 0) {
 	exit;
 }
 
+$create_custom_search = (bool) get_parameter ('create_custom_search');
+$get_custom_search_values = (bool) get_parameter ('get_custom_search_values');
+
+/* Create a custom saved search via AJAX */
+if ($create_custom_search) {
+	$form_values = get_parameter ('form_values');
+	$search_name = (string) get_parameter ('search_name');
+	
+	$result = create_custom_search ($search_name, 'inventories', $form_values);
+	
+	if ($result === false) {
+		echo '<h3 class="error">'.__('Could not create custom search').'</h3>';
+	} else {
+		echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
+	}
+	
+	if (defined ('AJAX')) {
+		return;
+	}
+}
+
+/* Get a custom search via AJAX */
+if ($get_custom_search_values) {
+	$id_search = (int) get_parameter ('id_search');
+	$search = get_custom_search ($id_search, 'inventories');
+	if ($search === false) {
+		echo json_encode (false);
+		return;
+	}
+	echo json_encode (unserialize ($search['form_values']));
+	return;
+}
+
 $id_profile = (int) get_parameter ('user_profile_search');
 $id_group = (int) get_parameter ('user_group_search');
 $search_string = (string) get_parameter ('search_string');
