@@ -1,5 +1,18 @@
 2008-10-01  Esteban Sanchez <estebans@artica.es>
 
+	* integria_db.sql: Added a field to unique constraint on
+	tcustom_search.
+
+	* operation/companies/company_detail.php,
+	operation/companies/company_role.php: Rewritten to fix other editors
+	forms style.
+
+	* operation/contacts/contact_detail.php,
+	operation/contracts/contract_detail.php: Fixed some bugs when
+	deleting.
+
+2008-10-01  Esteban Sanchez <estebans@artica.es>
+
 	* integria_db.sql: Boolean field are better representated with
 	tinyint(1). Added new table tcustom_search.
 

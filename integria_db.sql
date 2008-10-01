@@ -582,7 +582,7 @@ CREATE TABLE `tcustom_search` (
   `id_user` varchar(60) NOT NULL,
   `form_values` text NOT NULL default '',
   PRIMARY KEY  (`id`),
-  UNIQUE (`id_user`, `name`),
+  UNIQUE (`id_user`, `name`, `section`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE SET NULL
 );

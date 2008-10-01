@@ -93,7 +93,10 @@ if ($delete_contact) {
 	process_sql ($sql);
 	insert_event ("CONTACT DELETED", $id, 0, "$fullname");
 	echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
+	$id = 0;
 }
+
+echo "<h2>".__('Contact management')."</h2>";
 
 // FORM (Update / Create)
 if ($id || $new_contact) {
@@ -118,8 +121,6 @@ if ($id || $new_contact) {
 		$disabled = $contact['disabled'];
 		$description = $contact['description'];
 	}
-
-	echo "<h2>".__('Contact management')."</h2>";
 	
 	$table->width = "720px";
 	$table->class = "databox";
@@ -154,8 +155,6 @@ if ($id || $new_contact) {
 	echo "</div>";
 	echo "</form>";
 } else {
-	echo "<h2>".__('Contact management')."</h2>";
-
 	$search_text = (string) get_parameter ('search_text');
 	
 	$where_clause = "";
@@ -200,7 +199,7 @@ if ($id || $new_contact) {
 			$data[2] = $contact['email'];
 			$data[3] = '<a href="index.php?sec=inventory&
 						sec2=operation/contacts/contact_detail&
-						delete=1&id='.$contact['id'].'"
+						delete_contact=1&id='.$contact['id'].'"
 						onClick="if (!confirm(\''.__('are_you_sure').'\'))
 						return false;">
 						<img src="images/cross.png"></a>';

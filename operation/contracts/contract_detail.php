@@ -108,6 +108,7 @@ if ($delete_contract) {
 	process_sql ($sql);
 	insert_event ("CONTRACT DELETED", $id, 0, "$name");
 	echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
+	$id = 0;
 }
 
 echo "<h2>".__('Contract management')."</h2>";
@@ -231,7 +232,7 @@ if ($id | $new_contract) {
 			// Delete
 			$data[6] = '<a href=index.php?sec=inventory&
 						sec2=operation/contracts/contract_detail&
-						delete=1&id='.$contract["id"].'"
+						delete_role=1&id='.$contract["id"].'"
 						onClick="if (!confirm(\''.__('are_you_sure').'\'))
 						return false;">
 						<img src="images/cross.png"></a>';

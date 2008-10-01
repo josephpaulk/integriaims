@@ -14,202 +14,159 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
-
 global $config;
 
 check_login();
 
-if (give_acl($config["id_user"], 0, "IM")==0) {
-	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access company role management");
+if (! give_acl ($config["id_user"], 0, "IM")) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access company role management");
 	require ("general/noaccess.php");
 	exit;
 }
 
-$id_user = $config["id_user"];
+$id = (int) get_parameter ('id');
+$new_role = (bool) get_parameter ('new_role');
+$create_role = (bool) get_parameter ('create_role');
+$update_role = (bool) get_parameter ('update_role');
+$delete_role = (bool) get_parameter ('delete_role');
 
-// =======================
 // CREATE
-// =======================
-
-if (isset($_GET["create2"])){ //
-
-	$name = get_parameter ("name","");
-	$description = get_parameter ("description","");
-	$sql_insert="INSERT INTO tcompany_role (`name`, `description` ) VALUE ('$name', '$description') ";
-
-	$result=mysql_query($sql_insert);
-	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Company role cannot be created")."</h3>";
-	else {
-		echo "<h3 class='suc'>".lang_string ("Company role has been created successfully")."</h3>";
-		$id_data = mysql_insert_id();
-		insert_event ("COMPANY ROLE CREATED", $id_data, 0, $name);
+if ($create_role) {
+	$name = (string) get_parameter ("name");
+	$description = (string) get_parameter ("description");
+	$sql = sprintf ('INSERT INTO tcompany_role (name, description)
+		VALUE ("%s", "%s")', $name, $description);
+	$id = process_sql ($sql, 'insert_id');
+	if ($id === false) {
+		echo "<h3 class='error'>".__('Company role cannot be created')."</h3>";
+	} else {
+		echo "<h3 class='suc'>".__('Company role has been created successfully')."</h3>";
+		insert_event ("COMPANY ROLE CREATED", $id, 0, $name);
 	}
+	$id = 0;
 }
 
-// =======================
 // UPDATE
-// =======================
+if ($update_role) {
+	$name = (string) get_parameter ('name');
+	$description = (string) get_parameter ('description');
 
-if (isset($_GET["update2"])){ // if modified any parameter
-	$id = get_parameter ("id","");
-	$name = get_parameter ("name","");
-	$description = get_parameter ("description","");
+	$sql = sprintf ('UPDATE tcompany_role
+		SET description = "%s", name = "%s" WHERE id = %d',
+		$description, $name, $id);
 
-	$sql_update ="UPDATE tcompany_role
-	SET description = '$description', name = '$name' WHERE id = $id";
-
-	$result=mysql_query($sql_update);
-	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Company role cannot be updated")."</h3>";
+	$result = process_sql ($sql);
+	if ($result === false)
+		echo "<h3 class='error'>".__('Company role cannot be updated')."</h3>";
 	else {
-		echo "<h3 class='suc'>".lang_string ("Company role updated ok")."</h3>";
+		echo "<h3 class='suc'>".__('Company role updated ok')."</h3>";
 		insert_event ("COMPANY ROLE", $id, 0, $name);
 	}
+	$id = 0;
 }
-// =======================
+
 // DELETE
-// =======================
-
-if (isset($_GET["delete"])){ // if delete
-	$id = get_parameter ("delete",0);
-	$name = give_db_sqlfree_field  ("SELECT name FROM tcompany_role WHERE id = $id ");
-	$sql_delete= "DELETE FROM tcompany_role WHERE id = $id";
-	$result=mysql_query($sql_delete);
-	insert_event ("COMPANY ROLE DELETED", $id, 0, "$name");
-	echo "<h3 class='suc'>".lang_string("Deleted successfully")."</h3>";
+if ($delete_role) {
+	$name = get_db_value ('name', 'tcompany_role', 'id', $id);
+	$sql = sprintf ('DELETE FROM tcompany_role WHERE id = %d', $id);
+	$result = process_sql ($sql);
+	insert_event ("COMPANY ROLE DELETED", $id, 0, $name);
+	echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
+	$id = 0;
 }
 
-if (isset($_GET["update2"])){
-	// After apply update, let's redirecto to UPDATE form again.
-	$_GET["update"]= $id;
-}
+echo "<h2>".__('Company role management')."</h2>";
 
-
-// =======================
 // FORM (Update / Create)
-// =======================
-
-if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
-	if (isset($_GET["create"])){
-		$id = -1;
-		$name = "";
-		$description = "";
+if ($id || $new_role) {
+	if ($new_role) {
+		$name = '';
+		$description = '';
 	} else {
-		$id = get_parameter ("update", -1);
-		$row = get_db_row ("tcompany_role", "id", $id);
-		$name = $row["name"];
-		$description = $row["description"];
+		$role = get_db_row ('tcompany_role', 'id', $id);
+		$name = $role['name'];
+		$description = $role['description'];
+	}
+	
+	$table->width = '720px';
+	$table->class = 'databox';
+	$table->data = array ();
+	$table->colspan = array ();
+	
+	$table->data[0][0] = print_input_text ("name", $name, "", 60, 100, true, __('Role name'));
+	$table->data[1][0] = print_textarea ('description', 14, 1, $description, '', true, __('Description'));
+	
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_role">';
+	print_table ($table);
+	echo '<div class="button" style="width: '.$table->width.'">';
+	if ($id) {
+		print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
+		print_input_hidden ('update_role', 1);
+		print_input_hidden ('id', $id);
+	} else {
+		print_input_hidden ('create_role', 1);
+		print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', false);
+	}
+	echo "</div>";
+	echo '</form>';
+} else {
+	$search_text = (string) get_parameter ('search_text');
+	
+	$where_clause = "";
+	if ($search_text != "") {
+		$where_clause = sprintf ('WHERE name LIKE "%%%s%%"
+			OR description LIKE "%%%s%%"', $search_text, $search_text);
 	}
 
-	echo "<h2>".lang_string ("Company role management")."</h2>";
-	if ($id == -1){
-		echo "<h3>".lang_string ("Create a new role")."</a></h3>";
-		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/companies/company_role&create2=1'>";
-	}
-	else {
-		echo "<h3>".lang_string ("Update existing role")."</a></h3>";
-		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/companies/company_role&update2=1'>";
-		print_input_hidden ("id", "$id", false, '');
-	}
+	$table->width = '400px';
+	$table->class = 'search-table';
+	$table->style = array ();
+	$table->style[0] = 'font-weight: bold;';
+	$table->data = array ();
+	$table->data[0][0] = __('Search');
+	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
+	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_role">';
+	print_table ($table);
+	echo '</form>';
+	
+	$sql = "SELECT * FROM tcompany_role $where_clause ORDER BY name";
+	$roles = get_db_all_rows_sql ($sql);
 
-	echo "<table width=620 class='databox'>";
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo lang_string ("Role name");
-
-	echo "<tr>";
-	echo "<td class=datos colspan=4>";
-	print_input_text ("name", $name, "", 60, 100, false);
-
-
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo lang_string ("Description");
-
-	echo "<tr>";
-	echo "<td class=datos colspan=4>";
-	print_textarea ("description", 1, 1, $description, "style='width: 600px; height: 60px;'", false);
-	echo "</table>";
-
-	echo "<table width=620 class='button'>";
-	echo "<tr>";
-	echo "<td class='datos3' align=right>";
-	if ($id == -1)
-		print_submit_button (lang_string("Create"), "enviar", false, "class='sub next'", false);
-	else
-		print_submit_button (lang_string("Update"), "enviar", false, "class='sub upd'", false);
-	echo "</table>";
-	echo "</form>";
-
-	// Get some space here
-	echo "<div style='min-height:50px'></div>";
-}
-
-// =======================
-// Show LIST of items
-// =======================
-if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h2>".lang_string ("Company roles")."</h2>";
-
-	$text = get_parameter ("freetext", "");
-	if ($text != ""){
-		$sql_search = "WHERE name LIKE '%$text%' OR description LIKE '%$text%' ";
-		echo "<h4>".__("Searching for")." ".$text."</h4>";
-	}
-	else
-		$sql_search = "";
-
-	echo "<table width=400>";
-	echo "<form method=post action='index.php?sec=inventory&sec2=operation/companies/company_role'>";
-	echo "<tr><td>";
-	echo lang_string ("Free text search");
-	echo "<td>";
-	print_input_text ("freetext", $text, "", 15, 100, false);
-	echo "<td>";
-	print_submit_button (lang_string("Search"), "enviar", false, "class='sub search'", false);
-	echo "</form></td></tr></table>";
-
-	$sql1 = "SELECT * FROM tcompany_role $sql_search ORDER BY name";
-	$color =0;
-	if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
+	if ($roles !== false) {
 
 		$table->width = "720";
 		$table->class = "listing";
-		$table->cellspacing = 0;
-		$table->cellpadding = 0;
 		$table->data = array ();
 		$table->size = array ();
 		$table->style = array ();
-		$table->colspan = array ();
-		$table->head[0] = lang_string ("Name");
-		$table->head[1] = lang_string ("Description");
-		$table->head[2] = lang_string ("Delete");
-		$counter = 0;
-		while ($row=mysql_fetch_array($result)){
-			// Name
-			$table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/companies/company_role&update=".$row["id"]."'>".$row["name"]."</a></b>";
-
-			// Contracts (link to new window)
-			$table->data[$counter][1] = substr($row["description"],0,70). "...";
-
-			// Delete
-			$table->data[$counter][2] = "<a href='index.php?sec=inventory&
+		$table->style[0] = 'font-weight: bold';
+		$table->head[0] = __('Name');
+		$table->head[1] = __('Description');
+		$table->head[2] = __('Delete');
+		
+		foreach ($roles as $role) {
+			$data = array ();
+			
+			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_role&id=".
+				$role["id"]."'>".$role["name"]."</a>";
+			$data[1] = substr ($role["description"], 0, 70)."...";
+			$data[3] = '<a href="index.php?sec=inventory&
 						sec2=operation/companies/company_role&
-						delete=".$row["id"]."'
-						onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
-						return false;'>
-						<img border='0' src='images/cross.png'></a>";
-			$counter++;
+						delete_role=1&id='.$role['id'].'"
+						onClick="if (!confirm(\''.__('are_you_sure').'\'))
+						return false;">
+						<img src="images/cross.png"></a>';
+			array_push ($table->data, $data);
 		}
 		print_table ($table);
 	}
-	echo "<table width=720 class='button'>";
-	echo "<tr><td align='right'>";
-	echo "<form method=post action='index.php?sec=inventory&
-	sec2=operation/companies/company_role&create=1'>";
-	echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create role")."'>";
-	echo "</form></td></tr></table>";
-} // end of list
+	
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_role">';
+	echo '<div class="button" style="width: '.$table->width.'">';
+	print_submit_button (__('Create role'), 'new_btn', false, 'class="sub next"');
+	print_input_hidden ('new_role', 1);
+	echo '</div>';
+}
 ?>
