@@ -50,6 +50,8 @@ if (! give_acl ($config["id_user"], $id_group, "IR")) {
 
 echo '<h3>'.__('Incident').' #'.$id_incident.' - '.give_inc_title ($id_incident).'</h3>';
 
+echo '<div class="result"></div>';
+
 // Files attached to this incident
 $files = get_incident_files ($id_incident);
 if ($files === false) {
@@ -57,6 +59,7 @@ if ($files === false) {
 	return;
 }
 
+$table->id = 'table_file_list';
 $table->class = 'listing';
 $table->width = '90%';
 $table->data = array ();
@@ -84,8 +87,8 @@ foreach ($files as $file) {
 	// Delete attachment
 	if (give_acl ($config['id_user'], $id_group, 'IM')) {
 		$data[3] = '<a class="delete" id="delete-file-'.$file["id_attachment"].'"
-			href="index.php?sec=incidencias&sec2=operation/incidents/incident&id='.
-			$id_incident.'&delete_file=1&id_file='.$file["id_attachment"].'">
+			href="ajax.php?page=operation/incidents/incident_detail&id='.
+			$id_incident.'&delete_file=1&id_attachment='.$file["id_attachment"].'">
 			<img src="images/cross.png"></a>';
 	}
 	

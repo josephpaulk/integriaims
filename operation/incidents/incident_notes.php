@@ -101,7 +101,7 @@ if (isset($_GET["id"])){
 	$file_number = give_number_files_incident($id_inc);
 	if ($file_number > 0){
 		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".$lang_label["Attachment"]." ($file_number) </a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".$lang_label["Attachment"]." ($file_number) </a>";
 		echo "</li>";
 	}
 
@@ -109,7 +109,7 @@ if (isset($_GET["id"])){
 	$note_number = dame_numero_notas($id_inc);
 	if ($note_number > 0){
 		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidencias&sec2=operation/incidents/incident_notes&id=$id_inc'><img src='images/note.png' class='top' border=0> ".$lang_label["Notes"]." ($note_number) </a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_notes&id=$id_inc'><img src='images/note.png' class='top' border=0> ".$lang_label["Notes"]." ($note_number) </a>";
 		echo "</li>";
 	}
 	

@@ -255,7 +255,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			$table->data[$counter][6] = "<a href='index.php?sec=inventorys&
 						sec2=operation/slas/sla_detail&
 						delete=".$row["id"]."'
-						onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
+						onClick='if (!confirm(\' ".__('Are you sure?')."\'))
 						return false;'>
 						<img border='0' src='images/cross.png'></a>";
 			$counter++;

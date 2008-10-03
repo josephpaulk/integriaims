@@ -1,4 +1,22 @@
-2008-10-01  Esteban Sanchez <estebans@artica.es>
+2008-10-03  Esteban Sanchez <estebans@artica.es>
+
+	* operation/incidents/incident.php: Added javascript code to treat
+	delete operation on files tab so it can be made using AJAX.
+
+	* operation/incidents/incident_detail.php: Fixes in code for removing
+	an attachment of an incident. 
+
+	* operation/incidents/incident_files.php: Added an id to the files
+	table. Added also a missing result div. Changed delete link to AJAX
+	interface.
+
+	* operation/incidents/incident_notes.php,
+	operation/incidents/incident_work.php: Fixed wrong "sec" parameter in
+	links.
+
+	* operation/slas/sla_detail.php: Removed old $lang_label use.
+
+2008-10-03  Esteban Sanchez <estebans@artica.es>
 
 	* include/js/integria.js: Added an h3 tag to result_msg().
 

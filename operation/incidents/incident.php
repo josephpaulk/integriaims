@@ -229,6 +229,7 @@ var id_incident;
 var old_incident = 0;
 
 function tab_loaded (event, tab) {
+	/* Details tab */
 	if (tab.index == 1) {
 		/* In integria_incident_search.js */
 		configure_incident_form (true, false);
@@ -247,6 +248,28 @@ function tab_loaded (event, tab) {
 		}
 		old_incident = id_incident;
 	}
+	/* Files tab */
+	if (tab.index == 6) {
+		$("#table_file_list td a.delete").click (function () {
+			tr = $(this).parents ("tr");
+			if (!confirm ("<?php echo __('Are you sure?');?>"))
+				return false;
+			console.log ();
+			jQuery.get (
+				$(this).attr ("href"),
+				null,
+				function (data) {
+					result_msg (data);
+					$(tr).fadeOut ('normal', function () {
+						$(this).empty ();
+					});
+				}
+			);
+			
+			return false;
+		});
+	}
+	
 	$(".result").empty ();
 }
 

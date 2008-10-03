@@ -345,19 +345,26 @@ if ($id) {
 	// Delete file
 	$delete_file = (bool) get_parameter ('delete_file');
 	if ($delete_file) {
-		if (give_acl ($config['id_user'], $id_group, "IM")) {
-			$id_file = get_parameter ('id_file');
+		if (give_acl ($config['id_user'], $id_grupo, "IM")) {
+			$id_attachment = get_parameter ('id_attachment');
 			$filename = get_db_value ('filename', 'tattachment',
-				'id_attachment', $id_file);
+				'id_attachment', $id_attachment);
 			$sql = sprintf ('DELETE FROM tattachment WHERE id_attachment = %d',
-				$id_file);
+				$id_attachment);
 			process_sql ($sql);
-			unlink ($config["homedir"].'/attachment/pand'.$id_file.'_'.$filename);
-			incident_tracking ($id_incident, $id_usuario, 7);
+			$result_msg = '<h3 class="suc">'.__('File deleted successfuly').'</h3>';
+			if (!unlink ($config["homedir"].'attachment/pand'.$id_attachment.'_'.$filename))
+				$result_msg = '<h3 class="error">'.__('File could not be deleted').'</h3>';
+			incident_tracking ($id, $config['id_user'], 7);
+			
+		} else {
+			$result_msg = '<h3 class="error">'.__('You have no permission').'</h3>';
 		}
-	
-		if (defined ('AJAX'))
+		
+		if (defined ('AJAX')) {
+			echo $result_msg;
 			return;
+		}
 	}
 	
 } else {
