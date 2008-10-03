@@ -1,5 +1,9 @@
 2008-10-03  Esteban Sanchez <estebans@artica.es>
 
+	* operation/slas/sla_detail.php: Adapted to new form styles.
+
+2008-10-03  Esteban Sanchez <estebans@artica.es>
+
 	* operation/incidents/incident.php: Added javascript code to treat
 	delete operation on files tab so it can be made using AJAX.
 

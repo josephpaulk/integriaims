@@ -20,82 +20,88 @@ global $config;
 
 check_login();
 
-if (give_acl($config["id_user"], 0, "IM")==0) {
-	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access SLA Management");
+if (! give_acl ($config["id_user"], 0, "IM")) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation",
+		"Trying to access SLA Management");
 	require ("general/noaccess.php");
 	exit;
 }
 
-$id_user = $config["id_user"];
+$id = (int) get_parameter ('id');
+$new_sla = (bool) get_parameter ('new_sla');
+$create_sla = (bool) get_parameter ('create_sla');
+$update_sla = (bool) get_parameter ('update_sla');
+$delete_sla = (bool) get_parameter ('delete_sla');
 
 // CREATE
-// ==================
-if (isset($_GET["create2"])){ //
+if ($create_sla) {
+	$name = (string) get_parameter ('name');
+	$description = (string) get_parameter ('description');
+	$min_response = (int) get_parameter ('min_response');
+	$max_response = (int) get_parameter ('max_response');
+	$max_incidents = (int) get_parameter ('max_incidents');
+	$id_sla_base = (int) get_parameter ('id_sla_base');
+	$enforced = (int) get_parameter ('enforced');
 
-	$name = get_parameter ("name","");
-	$description = get_parameter ("description", "");
-	$min_response = get_parameter ("min_response", "");
-	$max_response = get_parameter ("max_response", "");
-	$max_incidents = get_parameter ("max_incidents", "");
-	$id_sla_base = get_parameter ("id_sla_base", 0);
-	$enforced = get_parameter ("enforced", 0);
+	$sql = sprintf ('INSERT INTO tsla (`name`, `description`, id_sla_base,
+		min_response, max_response, max_incidents, `enforced`)
+		VALUE ("%s", "%s", %d, %d, %d, %d, %d)',
+		$name, $description, $id_sla_base, $min_response,
+		$max_response, $max_incidents, $enforced);
 
-	$sql_insert="INSERT INTO tsla (`name`, `description`, id_sla_base, min_response, max_response, max_incidents, `enforced`) VALUE ('$name','$description', '$id_sla_base', '$min_response', '$max_response', '$max_incidents', '$enforced') ";
-
-	$result=mysql_query($sql_insert);
-	if (! $result)
-		echo "<h3 class='error'>".lang_string ("SLA cannot be created")."</h3>";
+	$id = process_sql ($sql);
+	if ($id === false)
+		echo '<h3 class="error">'.__('SLA cannot be created')."</h3>";
 	else {
-		echo "<h3 class='suc'>".lang_string ("SLA has been created successfully")."</h3>";
-		$id_data = mysql_insert_id();
-		insert_event ("SLA CREATED", $id_data, 0, $name);
+		echo "<h3 class='suc'>".__('SLA has been created successfully')."</h3>";
+		insert_event ("SLA CREATED", $id, 0, $name);
 	}
+	$id = 0;
 }
 
 // UPDATE
 // ==================
-if (isset($_GET["update2"])){ // if modified any parameter
-	$id = get_parameter ("id","");
-	$name = get_parameter ("name","");
-	$description = get_parameter ("description", "");
-	$min_response = get_parameter ("min_response", "");
-	$max_response = get_parameter ("max_response", "");
-	$max_incidents = get_parameter ("max_incidents", "");
-	$id_sla_base = get_parameter ("id_sla_base", 0);
-	$enforced = get_parameter ("enforced", 0);
+if ($update_sla) {
+	$name = (string) get_parameter ('name');
+	$description = (string) get_parameter ('description');
+	$min_response = (int) get_parameter ('min_response');
+	$max_response = (int) get_parameter ('max_response');
+	$max_incidents = (int) get_parameter ('max_incidents');
+	$id_sla_base = (int) get_parameter ('id_sla_base');
+	$enforced = (int) get_parameter ('enforced');
 
-	$sql_update ="UPDATE tsla 
-	SET enforced = $enforced, description = '$description', name = '$name', max_incidents = '$max_incidents', min_response = '$min_response', max_response = '$max_response', id_sla_base = '$id_sla_base' WHERE id = $id";
+	$sql = sprintf ('UPDATE tsla SET enforced = %d, description = "%s",
+		name = "%s", max_incidents = %d, min_response = %d, max_response = %d,
+		id_sla_base = %d WHERE id = %d',
+		$enforced, $description, $name, $max_incidents, $min_response,
+		$max_response, $id_sla_base, $id);
 
-	$result=mysql_query($sql_update);
+	$result = process_sql ($sql);
 	if (! $result)
-		echo "<h3 class='error'>".lang_string ("SLA cannot be updated")."</h3>";
+		echo '<h3 class="error">'.__('SLA cannot be updated').'</h3>';
 	else {
-		echo "<h3 class='suc'>".lang_string ("SLA updated ok")."</h3>";
+		echo '<h3 class="suc">'.__('SLA updated ok').'</h3>';
 		insert_event ("SLA UPDATED", $id, 0, $name);
 	}
+	$id = 0;
 }
 
 // DELETE
 // ==================
-if (isset($_GET["delete"])){ // if delete
-	$id = get_parameter ("delete",0);
-	$name = give_db_sqlfree_field  ("SELECT name FROM tsla WHERE id = $id ");
-	$sql_delete= "DELETE FROM tsla WHERE id = $id";
-	$result=mysql_query($sql_delete);
+if ($delete_sla) {
+	$name = get_db_value ('name', 'tsla', 'id', $id);
+	$sql = sprintf ('DELETE FROM tsla WHERE id = %d', $id);
+	$result = process_sql ($sql);
 	insert_event ("SLA DELETED", $id, 0, "$name");
-	echo "<h3 class='suc'>".lang_string("Deleted successfully")."</h3>";
+	echo '<h3 class="suc">'.__('Deleted successfully').'</h3>';
+	$id = 0;
 }
 
-if (isset($_GET["update2"])){
-	// After apply update, let's redirecto to UPDATE form again.
-	$_GET["update"]= $id;
-}
+echo "<h2>".__('SLA Management')."</h2>";
 
 // FORM (Update / Create)
-if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
-	if (isset($_GET["create"])){
-		$id = -1;
+if ($id || $new_sla) {
+	if ($new_sla) {
 		$name = "";
 		$description = "";
 		$min_response = 48;
@@ -103,173 +109,113 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$max_incidents = 10;
 		$id_sla_base = 0;
 		$enforced = 1;
-
 	} else {
-		$id = get_parameter ("update", -1);
-		$row = get_db_row ("tsla", "id", $id);
-		$name = $row["name"];
-		$description = $row["description"];
-		$min_response = $row["min_response"];
-		$max_response = $row["max_response"];
-		$max_incidents = $row["max_incidents"];
-		$id_sla_base = $row["id_sla_base"];
-		$enforced = $row["enforced"];
+		$sla = get_db_row ('tsla', 'id', $id);
+		$name = $sla['name'];
+		$description = $sla['description'];
+		$min_response = $sla['min_response'];
+		$max_response = $sla['max_response'];
+		$max_incidents = $sla['max_incidents'];
+		$id_sla_base = $sla['id_sla_base'];
+		$enforced = $sla['enforced'];
 	}
 
-	echo "<h2>".lang_string ("SLA Management")."</h2>";
-	if ($id == -1){
-		echo "<h3>".lang_string ("Create a new SLA")."</a></h3>";
-		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/slas/sla_detail&create2=1'>";
+	$table->width = "720px";
+	$table->class = "databox";
+	$table->data = array ();
+	$table->colspan = array ();
+	$table->colspan[3][0] = 2;
+	
+	$table->data[0][0] = print_input_text ("name", $name, "", 30, 100, true, __('SLA name'));
+	$table->data[0][1] = print_checkbox ('enforced', 1 ,$enforced, true, __('Enforced'));
+	$table->data[1][0] = print_input_text ('min_response', $min_response, '',
+		5, 100, true, __('Min. response time (in hours)'));
+	$table->data[1][1] = print_input_text ('max_response', $max_response, '',
+		5, 100, true, __('Max. resolution time (in hours)'));
+	$table->data[2][0] = print_input_text ("max_incidents", $max_incidents, '',
+		5, 100, true, __('Max. incidents at the same time'));
+	$table->data[2][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
+		'id_sla_base', $id_sla_base, '', __('None'), 0, true, false, false, __('SLA Base'));
+	$table->data[3][0] = print_textarea ("description", 8, 1, $description, '', true, __('Description'));
+
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/slas/sla_detail">';
+	print_table ($table);
+	
+	echo '<div class="button" style="width: '.$table->width.'">';
+	if ($id) {
+		print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
+		print_input_hidden ('update_sla', 1);
+		print_input_hidden ("id", $id);
+	} else {
+		print_input_hidden ('create_sla', 1);
+		print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', false);
 	}
-	else {
-		echo "<h3>".lang_string ("Update existing SLA")."</a></h3>";
-		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/slas/sla_detail&update2=1'>";
-		print_input_hidden ("id", "$id", false, '');
-	}
-
-	echo "<table width=620 class='databox'>";
-	echo "<tr>";
-	echo "<td>";
-	echo lang_string ("SLA name");
-	echo "<td>";
-	echo lang_string ("Enforced");
-
-	echo "<tr>";
-	echo "<td>";
-	print_input_text ("name", $name, "", 30, 100, false);
-	echo "<td>";
-	print_checkbox ("enforced", 1 ,$enforced, false);
-
-	echo "<tr>";
-	echo "<td>";
-	echo lang_string ("Min. Response");
-	echo "<td>";
-	echo lang_string ("Max. Resolution");
-
-	echo "<tr>";
-	echo "<td>";
-	print_input_text ("min_response", $min_response, "", 5, 100, false);
-	echo "<td>";
-	print_input_text ("max_response", $max_response, "", 5, 100, false);
-
-
-	echo "<tr>";
-	echo "<td>";
-	echo lang_string ("Max. Incidents");
-	echo "<td>";
-	echo lang_string ("SLA Base");
-
-	echo "<tr>";
-	echo "<td>";
-	print_input_text ("max_incidents", $max_incidents, "", 5, 100, false);
-	echo "<td>";
-	print_select_from_sql ("SELECT id, name FROM tsla", "id_sla_base", $id_sla_base, '', 'None', 0, false, false, true);
-
-	echo "<tr>";
-	echo "<td>";
-	echo lang_string ("Description");
-	echo "<tr>";
-	echo "<td colspan=4>";
-	print_textarea ("description", 1, 1, $description, "style='width: 600px; height: 60px;'", false);
-
-	echo "</table>";
-	echo "<table width=620 class='button'>";
-	echo "<tr>";
-	echo "<td class='datos3' align=right>";
-	if ($id == -1)
-		print_submit_button (lang_string("Create"), "enviar", false, "class='sub next'", false);
-	else
-		print_submit_button (lang_string("Update"), "enviar", false, "class='sub upd'", false);
-	echo "</table>";
+	echo "</div>";
 	echo "</form>";
-
-	// Get some space here
-	echo "<div style='min-height:50px'></div>";
-}
-
-
-// Show list of items
-// =======================
-if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h2>".lang_string ("SLA management")."</h2>";
-
-	$text = get_parameter ("freetext", "");
-	if ($text != ""){
-		$sql_search = "WHERE name LIKE '%$text%' OR descriptionLIKE '%$text%'";
-		echo "<h4>".__("Searching for")." ".$text."</h4>";
+} else {
+	$search_text = (string) get_parameter ('search_text');
+	
+	$where_clause = "";
+	if ($search_text != "") {
+		$where_clause = sprintf ('WHERE name LIKE "%%%s%%"
+			OR description LIKE "%%%s%%"',
+			$search_text, $search_text);
 	}
-	else
-		$sql_search = "";
 
-	echo "<table width=400>";
-	echo "<form method=post action='index.php?sec=inventory&sec2=operation/slas/sla_detail'>";
-	echo "<tr><td>";
-	echo lang_string ("Free text search");
-	echo "<td>";
-	print_input_text ("freetext", $text, "", 15, 100, false);
-	echo "<td>";
-	print_submit_button (lang_string("Search"), "enviar", false, "class='sub search'", false);
-	echo "</form></td></tr></table>";
-
-   	$sql1 = "SELECT * FROM tsla  $sql_search ORDER BY name";
-	$color =0;
-	if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
-
-		$table->width = "720";
+	$table->width = '400px';
+	$table->class = 'search-table';
+	$table->style = array ();
+	$table->style[0] = 'font-weight: bold;';
+	$table->data = array ();
+	$table->data[0][0] = __('Search');
+	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
+	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contacts/contact_detail">';
+	print_table ($table);
+	echo '</form>';
+	$sql = "SELECT * FROM tsla $where_clause ORDER BY name";
+	$slas = get_db_all_rows_sql ($sql);
+	
+	if ($slas !== false) {
+		$table->width = "720px";
 		$table->class = "listing";
-		$table->cellspacing = 0;
-		$table->cellpadding = 0;
 		$table->data = array ();
-		$table->size = array ();
 		$table->style = array ();
-		$table->colspan = array ();
-		$table->head[0] = lang_string ("Name");
-		$table->head[1] = lang_string ("Min.Response");
-		$table->head[2] = lang_string ("Max.Resolution");
-		$table->head[3] = lang_string ("Max.Incidents");
-		$table->head[4] = lang_string ("Enforced");
-		$table->head[5] = lang_string ("Parent");
-		$table->head[6] = lang_string ("Delete");
-		$counter = 0;
-		while ($row=mysql_fetch_array($result)){
-
-			// Name
-			$table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/slas/sla_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
+		$table->style[0] = 'font-weight: bold';
+		$table->head[0] = __('Name');
+		$table->head[1] = __('Min.Response');
+		$table->head[2] = __('Max.Resolution');
+		$table->head[3] = __('Max.Incidents');
+		$table->head[4] = __('Enforced');
+		$table->head[5] = __('Parent');
+		$table->head[6] = __('Delete');
+		
+		foreach ($slas as $sla) {
+			$data = array ();
 			
-			// Minresp
-			$table->data[$counter][1] = $row["min_response"];
-
-			// Minresp
-			$table->data[$counter][2] = $row["max_response"];
-
-			// Minresp
-			$table->data[$counter][3] = $row["max_incidents"];
-
-			// Minresp
-			$table->data[$counter][4] = $row["enforced"];
-
-			// Minresp
-			$table->data[$counter][5] = get_db_sql("SELECT name FROM tsla WHERE id = ".$row["id_sla_base"]);
-			
-			// Delete
-			$table->data[$counter][6] = "<a href='index.php?sec=inventorys&
+			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/slas/sla_detail&id=".$sla['id']."'>".$sla['name']."</a>";
+			$data[1] = $sla['min_response'].' '.__('Hours');
+			$data[2] = $sla['max_response'].' '.__('Hours');
+			$data[3] = $sla['max_incidents'];
+			$data[4] = $sla['enforced'];
+			$data[5] = get_db_value ('name', 'tsla', 'id', $sla['id_sla_base']);
+			$data[6] = '<a href="index.php?sec=inventory&
 						sec2=operation/slas/sla_detail&
-						delete=".$row["id"]."'
-						onClick='if (!confirm(\' ".__('Are you sure?')."\'))
-						return false;'>
-						<img border='0' src='images/cross.png'></a>";
-			$counter++;
+						delete_sla=1&id='.$sla['id'].'"
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
+						return false;">
+						<img src="images/cross.png"></a>';
+			array_push ($table->data, $data);
 		}
 		print_table ($table);
 	}
-	echo "<table width=720 class='button'>";
-	echo "<tr><td align='right'>";
-	echo "<form method=post action='index.php?sec=inventory&
-		sec2=operation/slas/sla_detail&create=1'>";
-	echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create SLA")."'>";
-	echo "</form></td></tr></table>";
-
-
-} // end of list
-
+	
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/slas/sla_detail">';
+	echo '<div class="button" style="width: '.$table->width.'">';
+	print_submit_button (__('Create SLA'), 'new_btn', false, 'class="sub next"');
+	print_input_hidden ('new_sla', 1);
+	echo '</div>';
+	echo '</form>';
+}
 ?>
