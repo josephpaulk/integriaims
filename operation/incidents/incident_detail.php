@@ -180,8 +180,8 @@ if ($action == "insert") {
 					$id, $id_inventory);
 			process_sql ($sql);
 		}
-		$result_msg  = "<h3 class='suc'>".__('create_incid_ok')." (id #$id)</h3>";
-		$result_msg  .= "<h4><a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id'>".__("Please click here to continue working with incident #").$id."</a></h4>";
+		$result_msg = "<h3 class='suc'>".__('create_incid_ok')." (id #$id)</h3>";
+		$result_msg .= "<h4><a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id'>".__("Please click here to continue working with incident #").$id."</a></h4>";
 
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 			"Incident created",
@@ -286,10 +286,8 @@ if ($id) {
 	$upload_file = (bool) get_parameter ('upload_file');
 	if ((give_acl ($iduser_temp, $id_grupo, "IW") == 1) && $upload_file) {
 		$result_msg = '<h3 class="err">'.__('No file was attached').'</h3>';
-		print_r ($_FILES);
 		/* if file */
-		if ($_FILES['userfile']['name'] != "") {
-			$tipo = $_FILES['userfile']['type'];
+		if ($_FILES['userfile']['name'] != "" && $_FILES['userfile']['error'] == 0) {
 			$file_description = get_parameter ("file_description",
 					__('No description available'));
 			
@@ -304,7 +302,7 @@ if ($id) {
 
 			$id_attachment = process_sql ($sql, 'insert_id');
 			incident_tracking ($id, $config['id_user'], 3);
-			$result_msg = "<h3 class='suc'>".__('File added')."</h3>";
+			$result_msg = '<h3 class="suc">'.__('File added').'</h3>';
 			// Email notify to all people involved in this incident
 			if ($email_notify == 1) {
 				mail_incident ($id, $iduser_temp, 0, 0, 2);
@@ -312,7 +310,7 @@ if ($id) {
 			
 			// Copy file to directory and change name
 			$filename = $config["homedir"]."attachment/pand".$id_attachment."_".$filename;
-
+			
 			if (! copy ($_FILES['userfile']['tmp_name'], $filename)) {
 				$result_msg = '<h3 class="error">'.__('attach_error').'</h3>';
 				$sql = sprintf ('DELETE FROM tattachment
@@ -322,13 +320,46 @@ if ($id) {
 				// Delete temporal file
 				unlink ($_FILES['userfile']['tmp_name']);
 			}
+		}  else {
+			switch ($_FILES['userfile']['error']) {
+			case 1:
+				$result_msg = '<h3 class="error">'.__('File is too big').'</h3>';
+				break;
+			case 3:
+				$result_msg = '<h3 class="error">'.__('File was partially uploaded. Please try again').'</h3>';
+				break;
+			case 4:
+				$result_msg = '<h3 class="error">'.__('No file was uploaded').'</h3>';
+				break;
+			default:
+				$result_msg = '<h3 class="error">'.__('Generic upload error').'(Code: '.$_FILES['userfile']['error'].')</h3>';
+			}
 		}
 		
-		if ($defined ('AJAX')) {
+		if (defined ('AJAX')) {
 			echo $result_msg;
 			return;
 		}
 	}
+	
+	// Delete file
+	$delete_file = (bool) get_parameter ('delete_file');
+	if ($delete_file) {
+		if (give_acl ($config['id_user'], $id_group, "IM")) {
+			$id_file = get_parameter ('id_file');
+			$filename = get_db_value ('filename', 'tattachment',
+				'id_attachment', $id_file);
+			$sql = sprintf ('DELETE FROM tattachment WHERE id_attachment = %d',
+				$id_file);
+			process_sql ($sql);
+			unlink ($config["homedir"].'/attachment/pand'.$id_file.'_'.$filename);
+			incident_tracking ($id_incident, $id_usuario, 7);
+		}
+	
+		if (defined ('AJAX'))
+			return;
+	}
+	
 } else {
 	$iduser_temp = $config['id_user'];
 	$titulo = "";

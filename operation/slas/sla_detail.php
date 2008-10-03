@@ -119,11 +119,11 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<h2>".lang_string ("SLA Management")."</h2>";
 	if ($id == -1){
 		echo "<h3>".lang_string ("Create a new SLA")."</a></h3>";
-		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/inventory/sla_detail&create2=1'>";
+		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/slas/sla_detail&create2=1'>";
 	}
 	else {
 		echo "<h3>".lang_string ("Update existing SLA")."</a></h3>";
-		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/inventory/sla_detail&update2=1'>";
+		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/slas/sla_detail&update2=1'>";
 		print_input_hidden ("id", "$id", false, '');
 	}
 
@@ -188,88 +188,88 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 }
 
 
-    // Show list of items
-    // =======================
-    if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-        echo "<h2>".lang_string ("SLA management")."</h2>";
+// Show list of items
+// =======================
+if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
+	echo "<h2>".lang_string ("SLA management")."</h2>";
 
-    	$text = get_parameter ("freetext", "");
-    	if ($text != ""){
-    		$sql_search = "WHERE name LIKE '%$text%' OR descriptionLIKE '%$text%'";
-    		echo "<h4>".__("Searching for")." ".$text."</h4>";
-    	}
-    	else
-    		$sql_search = "";
+	$text = get_parameter ("freetext", "");
+	if ($text != ""){
+		$sql_search = "WHERE name LIKE '%$text%' OR descriptionLIKE '%$text%'";
+		echo "<h4>".__("Searching for")." ".$text."</h4>";
+	}
+	else
+		$sql_search = "";
 
-		echo "<table width=400>";
-    	echo "<form method=post action='index.php?sec=inventory&sec2=operation/inventory/sla_detail'>";
-    	echo "<tr><td>";
-    	echo lang_string ("Free text search");
-    	echo "<td>";
-    	print_input_text ("freetext", $text, "", 15, 100, false);
-    	echo "<td>";
-    	print_submit_button (lang_string("Search"), "enviar", false, "class='sub search'", false);
-    	echo "</form></td></tr></table>";
+	echo "<table width=400>";
+	echo "<form method=post action='index.php?sec=inventory&sec2=operation/slas/sla_detail'>";
+	echo "<tr><td>";
+	echo lang_string ("Free text search");
+	echo "<td>";
+	print_input_text ("freetext", $text, "", 15, 100, false);
+	echo "<td>";
+	print_submit_button (lang_string("Search"), "enviar", false, "class='sub search'", false);
+	echo "</form></td></tr></table>";
 
-	   	$sql1 = "SELECT * FROM tsla  $sql_search ORDER BY name";
-        $color =0;
-	    if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
+   	$sql1 = "SELECT * FROM tsla  $sql_search ORDER BY name";
+	$color =0;
+	if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
 
-            $table->width = "720";
-			$table->class = "listing";
-			$table->cellspacing = 0;
-			$table->cellpadding = 0;
-			$table->data = array ();
-			$table->size = array ();
-			$table->style = array ();
-			$table->colspan = array ();
-			$table->head[0] = lang_string ("Name");
-			$table->head[1] = lang_string ("Min.Response");
-			$table->head[2] = lang_string ("Max.Resolution");
-			$table->head[3] = lang_string ("Max.Incidents");
-			$table->head[4] = lang_string ("Enforced");
-			$table->head[5] = lang_string ("Parent");
-			$table->head[6] = lang_string ("Delete");
-			$counter = 0;
-	        while ($row=mysql_fetch_array($result)){
+		$table->width = "720";
+		$table->class = "listing";
+		$table->cellspacing = 0;
+		$table->cellpadding = 0;
+		$table->data = array ();
+		$table->size = array ();
+		$table->style = array ();
+		$table->colspan = array ();
+		$table->head[0] = lang_string ("Name");
+		$table->head[1] = lang_string ("Min.Response");
+		$table->head[2] = lang_string ("Max.Resolution");
+		$table->head[3] = lang_string ("Max.Incidents");
+		$table->head[4] = lang_string ("Enforced");
+		$table->head[5] = lang_string ("Parent");
+		$table->head[6] = lang_string ("Delete");
+		$counter = 0;
+		while ($row=mysql_fetch_array($result)){
 
-                // Name
-                $table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/inventory/sla_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
-				
-				// Minresp
-                $table->data[$counter][1] = $row["min_response"];
+			// Name
+			$table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/slas/sla_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
+			
+			// Minresp
+			$table->data[$counter][1] = $row["min_response"];
 
-				// Minresp
-                $table->data[$counter][2] = $row["max_response"];
+			// Minresp
+			$table->data[$counter][2] = $row["max_response"];
 
-				// Minresp
-                $table->data[$counter][3] = $row["max_incidents"];
+			// Minresp
+			$table->data[$counter][3] = $row["max_incidents"];
 
-				// Minresp
-                $table->data[$counter][4] = $row["enforced"];
+			// Minresp
+			$table->data[$counter][4] = $row["enforced"];
 
-				// Minresp
-                $table->data[$counter][5] = get_db_sql("SELECT name FROM tsla WHERE id = ".$row["id_sla_base"]);
-				
-                // Delete
-                $table->data[$counter][6] = "<a href='index.php?sec=inventorys&
-				            sec2=operation/inventory/sla_detail&
-				            delete=".$row["id"]."'
-				            onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
-				            return false;'>
-				            <img border='0' src='images/cross.png'></a>";
-				$counter++;
-            }
-            print_table ($table);
-        }
-		echo "<table width=720 class='button'>";
-		echo "<tr><td align='right'>";
-		echo "<form method=post action='index.php?sec=inventory&
-		sec2=operation/inventory/sla_detail&create=1'>";
-		echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create SLA")."'>";
-		echo "</form></td></tr></table>";
+			// Minresp
+			$table->data[$counter][5] = get_db_sql("SELECT name FROM tsla WHERE id = ".$row["id_sla_base"]);
+			
+			// Delete
+			$table->data[$counter][6] = "<a href='index.php?sec=inventorys&
+						sec2=operation/slas/sla_detail&
+						delete=".$row["id"]."'
+						onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
+						return false;'>
+						<img border='0' src='images/cross.png'></a>";
+			$counter++;
+		}
+		print_table ($table);
+	}
+	echo "<table width=720 class='button'>";
+	echo "<tr><td align='right'>";
+	echo "<form method=post action='index.php?sec=inventory&
+		sec2=operation/slas/sla_detail&create=1'>";
+	echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create SLA")."'>";
+	echo "</form></td></tr></table>";
 
 
-    } // end of list
+} // end of list
 
 ?>

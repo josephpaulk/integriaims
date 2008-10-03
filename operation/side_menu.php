@@ -449,11 +449,11 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
 	echo "<ul class='sidemenu'>";
 
 	// Building overview
-	if ($sec2=="operation/inventory/sla_detail")
+	if ($sec2=="operation/slas/sla_detail")
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/inventory/sla_detail'>".__('SLA Management')."</a></li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/slas/sla_detail'>".__('SLA Management')."</a></li>";
 
 	echo "</ul>";
 	echo "</div>";
@@ -466,11 +466,11 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
 	echo "<ul class='sidemenu'>";
 
 	// Building overview
-	if ($sec2=="operation/inventory/manufacturer_detail")
+	if ($sec2=="operation/manufacturers/manufacturer_detail")
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/inventory/manufacturer_detail'>".__('Manufacturer overview')."</a></li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail'>".__('Manufacturer overview')."</a></li>";
 
 	echo "</ul>";
 	echo "</div>";
@@ -483,11 +483,11 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
 	echo "<ul class='sidemenu'>";
 
 	// Building overview
-	if ($sec2=="operation/inventory/building_detail")
+	if ($sec2=="operation/buildings/building_detail")
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/inventory/building_detail'>".__('Building overview')."</a></li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/buildings/building_detail'>".__('Building overview')."</a></li>";
 
 	echo "</ul>";
 	echo "</div>";

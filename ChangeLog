@@ -1,5 +1,23 @@
 2008-10-01  Esteban Sanchez <estebans@artica.es>
 
+	* include/js/integria.js: Added an h3 tag to result_msg().
+
+	* include/js/integria_incident_search.js: Fixed upload dialog form, so
+	it can now add a file using AJAX. Fixed height of file upload dialog.
+
+	* include/functions_db.php: Style correction.
+
+	* include/functions_html.php: Added print_input_file() to create an
+	input file HTML object.
+
+	* operation/buildings/building_detail.php,
+	operation/manufacturers/manufacturer_detail.php,
+	operation/slas/sla_detail.php: Moved from operation/inventory/
+
+	* operation/side_menu.php: Fixed link to moved files.
+
+2008-10-01  Esteban Sanchez <estebans@artica.es>
+
 	* integria_db.sql: Added a field to unique constraint on
 	tcustom_search.
 

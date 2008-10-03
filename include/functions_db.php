@@ -404,7 +404,7 @@ function check_login () {
 			return false;	
 		}
 	}
-	require("general/noaccess.php");
+	require ("general/noaccess.php");
 	return true;	
 }
 
@@ -1824,6 +1824,10 @@ function get_custom_search ($id_search, $section) {
 		AND section = "%s"',
 		$id_search, $config['id_user'], $section);
 	return get_db_row_sql ($sql);
+}
+
+function get_incident_files ($id_incident) {
+	return get_db_all_rows_field_filter ('tattachment', 'id_incidencia', $id_incident);
 }
 
 ?>

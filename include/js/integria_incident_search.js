@@ -410,21 +410,17 @@ function show_add_workunit_dialog (id_incident) {
 }
 
 function configure_file_form () {
-	$("#form-add-file").submit (function () {
-		values = get_form_input_values ("form-add-file");
-		values.push ({name: "page",
-			value: "operation/incidents/incident_detail"});
-		jQuery.post ("ajax.php",
-			values,
-			function (data, status) {
-				$(".result").slideUp ('fast', function () {
-					$(".result").empty ().append (data).slideDown ();
-				});
-				$("#dialog-add-file").dialog ("close");
-			},
-			"html"
-		);
-		return false;
+	$('#form-add-file').ajaxForm ({
+		beforeSubmit: function (a, f, o) {
+			o.dataType = "html";
+			$('#upload_result').html ('Submitting...');
+		},
+		success: function (data) {
+			console.log (data);
+			$('#upload_result').fadeOut ('fast', function () {
+				$(this).empty ().html (data).fadeIn ();
+			});
+		}
 	});
 }
 
@@ -442,9 +438,9 @@ function show_add_file_dialog (id_incident) {
 		function (data, status) {
 			$("#dialog-add-file").empty ().append (data);
 			$("#dialog-add-file").dialog ({"title" : "Upload file",
-					minHeight: 500,
+					minHeight: 350,
 					minWidth: 200,
-					height: 200,
+					height: 350,
 					width: 600,
 					modal: true
 					});

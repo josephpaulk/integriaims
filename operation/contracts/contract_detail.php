@@ -232,7 +232,7 @@ if ($id | $new_contract) {
 			// Delete
 			$data[6] = '<a href=index.php?sec=inventory&
 						sec2=operation/contracts/contract_detail&
-						delete_role=1&id='.$contract["id"].'"
+						delete_contract=1&id='.$contract["id"].'"
 						onClick="if (!confirm(\''.__('are_you_sure').'\'))
 						return false;">
 						<img src="images/cross.png"></a>';

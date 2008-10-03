@@ -87,7 +87,7 @@ function result_msg_success (message) {
  */
 function result_msg (message) {
 	$(".result").fadeOut ("fast", function () {
-		$(this).empty ().append (message).fadeIn ();
+		$(this).empty ().append ($("<h3></h3>").append (message)).fadeIn ();
 	});
 }
 

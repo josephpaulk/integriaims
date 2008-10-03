@@ -159,6 +159,43 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
 }
 
 /**
+ * Render an input text element. Extended version, use print_input_text() to simplify.
+ *
+ * @param string $name Input name.
+ * @param int $size Size of the input.
+ * @param bool $disabled Wheter to disable the input or not.
+ * @param string $attributes Optional HTML attributs.
+ * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ * @param string $label HTML label element to add (none by default).
+ */
+function print_input_file ($name, $size, $disabled = false, $attributes = '', $return = false, $label = false) {
+	
+	$output = '';
+	
+	if ($label) {
+		$output .= print_label ($label, $name, 'file', true);
+	}
+	
+	if (empty ($name)) {
+		$name = 'unnamed';
+	}
+	
+	$output .= '<input name="'.$name.'" type="file" value="" size="'.$size.'"  ';
+	$output .= ' id="file-'.$name.'"';
+	
+	if ($disabled)
+		$output .= ' disabled';
+
+	if ($attributes != '')
+		$output .= ' '.$attributes;
+	$output .= ' />';
+
+	if ($return)
+		return $output;
+	echo $output;
+}
+
+/**
  * Render an input password element.
  *
  * @param string $name Input name.
@@ -545,6 +582,9 @@ function print_label ($label, $id, $input_type = 'text', $return = false) {
 		break;
 	case 'checkbox':
 		$id = 'checkbox-'.$id;
+		break;
+	case 'file':
+		$id = 'file-'.$id;
 		break;
 	case 'select':
 	default:

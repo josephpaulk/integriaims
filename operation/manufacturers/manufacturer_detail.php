@@ -40,9 +40,9 @@ if (isset($_GET["create2"])){ //
 
 	$result=mysql_query($sql_insert);
 	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Manufacturer cannot be created")."</h3>";
+		echo "<h3 class='error'>".__('Manufacturer cannot be created')."</h3>";
 	else {
-		echo "<h3 class='suc'>".lang_string ("Manufacturer has been created successfully")."</h3>";
+		echo "<h3 class='suc'>".__('Manufacturer has been created successfully')."</h3>";
 		$id_data = mysql_insert_id();
 		insert_event ("MANUFACTURER CREATED", $id_data, 0, $name);
 	}
@@ -63,9 +63,9 @@ if (isset($_GET["update2"])){ // if modified any parameter
 
 	$result=mysql_query($sql_update);
 	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Manufacturer cannot be updated")."</h3>";
+		echo "<h3 class='error'>".__('Manufacturer cannot be updated')."</h3>";
 	else {
-		echo "<h3 class='suc'>".lang_string ("Manufacturer updated ok")."</h3>";
+		echo "<h3 class='suc'>".__('Manufacturer updated ok')."</h3>";
 		insert_event ("MANUFACTURER", $id, 0, $name);
 	}
 }
@@ -78,7 +78,7 @@ if (isset($_GET["delete"])){ // if delete
 	$sql_delete= "DELETE FROM tmanufacturer WHERE id = $id";
 	$result=mysql_query($sql_delete);
 	insert_event ("MANUFACTURER DELETED", $id, 0, "$name");
-	echo "<h3 class='suc'>".lang_string("Deleted successfully")."</h3>";
+	echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
 }
 
 if (isset($_GET["update2"])){
@@ -106,14 +106,14 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id_company_role = $row["id_company_role"];
 	}
 
-	echo "<h2>".lang_string ("Manufacturer management")."</h2>";
+	echo "<h2>".__('Manufacturer management')."</h2>";
 	if ($id == -1){
-		echo "<h3>".lang_string ("Create a new manufacturer")."</a></h3>";
-		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/inventory/manufacturer_detail&create2=1'>";
+		echo "<h3>".__('Create a new manufacturer')."</a></h3>";
+		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&create2=1'>";
 	}
 	else {
-		echo "<h3>".lang_string ("Update existing manufacturer")."</a></h3>";
-		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/inventory/manufacturer_detail&update2=1'>";
+		echo "<h3>".__('Update existing manufacturer')."</a></h3>";
+		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&update2=1'>";
 		print_input_hidden ("id", "$id", false, '');
 	}
 
@@ -121,15 +121,15 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo lang_string ("Manufacturer name");
+	echo __('Manufacturer name');
 	echo "</td><tr>";
 	echo "<td class=datos colspan=4>";
 	print_input_text ("name", $name, "", 60, 100, false);
 	echo "</td></tr>";
 	
 	echo "<tr>";
-	echo "<td>".lang_string ("Company role");
-	echo "<td>".lang_string ("Base SLA");
+	echo "<td>".__('Company role');
+	echo "<td>".__('Base SLA');
 	
 	echo "<tr>";
 	echo "<td>";
@@ -139,7 +139,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo lang_string ("Address");
+	echo __('Address');
 	echo "</td><tr>";
 	echo "<td class=datos colspan=4>";
 	print_textarea ("address", 1, 1, $address, "style='width: 600px; height: 100px;'", false);
@@ -147,7 +147,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo lang_string ("Comments");
+	echo __('Comments');
 	echo "</td><tr>";
 	echo "<td class=datos colspan=4>";
 	print_textarea ("comments", 1, 1, $comments, "style='width: 600px; height: 100px;'", false);
@@ -160,9 +160,9 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<tr>";
 	echo "<td class='datos3' align=right>";
 	if ($id == -1)
-		print_submit_button (lang_string("Create"), "enviar", false, "class='sub next'", false);
+		print_submit_button (__('Create'), "enviar", false, "class='sub next'", false);
 	else
-		print_submit_button (lang_string("Update"), "enviar", false, "class='sub upd'", false);
+		print_submit_button (__('Update'), "enviar", false, "class='sub upd'", false);
 	echo "</td></tr></table>";
 	echo "</form>";
 
@@ -171,33 +171,33 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 }
 
 
-    // Show list of items
-    // =======================
-    if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-        echo "<h2>".lang_string ("Manufacturers management")."</h2>";
+	// Show list of items
+	// =======================
+	if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
+		echo "<h2>".__('Manufacturers management')."</h2>";
 
-    	$text = get_parameter ("freetext", "");
-    	if ($text != ""){
-    		$sql_search = "WHERE address LIKE '%$text%' OR name LIKE '%$text%' OR comments LIKE '%$text%' ";
-    		echo "<h4>".__("Searching for")." ".$text."</h4>";
-    	}
-    	else
-    		$sql_search = "";
+		$text = get_parameter ("freetext", "");
+		if ($text != ""){
+			$sql_search = "WHERE address LIKE '%$text%' OR name LIKE '%$text%' OR comments LIKE '%$text%' ";
+			echo "<h4>".__("Searching for")." ".$text."</h4>";
+		}
+		else
+			$sql_search = "";
 
 		echo "<table width=400>";
-    	echo "<form method=post action='index.php?sec=inventory&sec2=operation/inventory/building_detail'>";
-    	echo "<tr><td>";
-    	echo lang_string ("Free text search");
-    	echo "<td>";
-    	print_input_text ("freetext", $text, "", 15, 100, false);
-    	echo "<td>";
-    	print_submit_button (lang_string("Search"), "enviar", false, "class='sub search'", false);
-    	echo "</form></td></tr></table>";
+		echo "<form method=post action='index.php?sec=inventory&sec2=operation/inventory/building_detail'>";
+		echo "<tr><td>";
+		echo __('Free text search');
+		echo "<td>";
+		print_input_text ("freetext", $text, "", 15, 100, false);
+		echo "<td>";
+		print_submit_button (__('Search'), "enviar", false, "class='sub search'", false);
+		echo "</form></td></tr></table>";
 
 	   	$sql1 = "SELECT * FROM tmanufacturer $sql_search ORDER BY name";
-        $color =0;
-	    if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
-            $table->width = "720";
+		$color =0;
+		if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
+			$table->width = "720";
 			$table->class = "listing";
 			$table->cellspacing = 0;
 			$table->cellpadding = 0;
@@ -205,15 +205,15 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			$table->size = array ();
 			$table->style = array ();
 			$table->colspan = array ();
-			$table->head[0] = lang_string ("Name");
-			$table->head[1] = lang_string ("Address");
-			$table->head[2] = lang_string ("Company role");
-			$table->head[3] = lang_string ("SLA");
-			$table->head[4] = lang_string ("Delete");
+			$table->head[0] = __('Name');
+			$table->head[1] = __('Address');
+			$table->head[2] = __('Company role');
+			$table->head[3] = __('SLA');
+			$table->head[4] = __('Delete');
 			$counter = 0;
-	        while ($row=mysql_fetch_array($result)){
-                // Name
-                $table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/inventory/manufacturer_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
+			while ($row=mysql_fetch_array($result)){
+				// Name
+				$table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
 				
 				// Address
 				$table->data[$counter][1] = substr($row["address"], 0, 50). "...";
@@ -224,22 +224,22 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 				// SLA 
 				$table->data[$counter][3] = get_db_sql ("SELECT name FROM tsla WHERE id = ".$row["id_sla"]);
 
-                // Delete
-                $table->data[$counter][4] = "<a href='index.php?sec=inventory&
-				            sec2=operation/inventory/building_detail&
-				            delete=".$row["id"]."'
-				            onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
-				            return false;'>
-				            <img border='0' src='images/cross.png'></a>";
+				// Delete
+				$table->data[$counter][4] = "<a href='index.php?sec=inventory&
+							sec2=operation/inventory/building_detail&
+							delete=".$row["id"]."'
+							onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
+							return false;'>
+							<img src='images/cross.png'></a>";
 				$counter++;
-            }
-            print_table ($table);
-        }
+			}
+			print_table ($table);
+		}
 		echo "<table width=720 class='button'>";
 		echo "<tr><td align='right'>";
-		echo "<form method=post action='index.php?sec=inventory&sec2=operation/inventory/manufacturer_detail&create=1'>";
-		echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create new manufacturer")."'>";
+		echo "<form method=post action='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&create=1'>";
+		echo "<input type='submit' class='sub next' name='crt' value='".__('Create new manufacturer')."'>";
 		echo "</form></td></tr></table>";
-    } // end of list
+	} // end of list
 
 ?>

@@ -23,91 +23,75 @@
 global $config;
 
 if (check_login() != 0) {
- 	audit_db("Noauth",$REMOTE_ADDR, "No authenticated access","Trying to access event viewer");
+ 	audit_db ("Noauth", $REMOTE_ADDR, "No authenticated access","Trying to access event viewer");
 	require ("general/noaccess.php");
 	exit;
 }
 
-$id_grupo = "";
-$creacion_incidente = "";
+$id_incident = (int) get_parameter ('id');
+$delete_file = (bool) get_parameter ('delete_file');
 
-if (isset($_GET["id"])){
-	$id_inc = $_GET["id"];
-	$iduser_temp=$_SESSION['id_usuario'];
-	// Obtain group of this incident
-	$sql1 = 'SELECT * FROM tincidencia WHERE id_incidencia = '.$id_inc;
-	$result = mysql_query($sql1);
-	$row = mysql_fetch_array($result);
-	// Get values
-	$titulo = $row["titulo"];
-	$texto = $row["descripcion"];
-	$inicio = $row["inicio"];
-	$actualizacion = $row["actualizacion"];
-	$estado = $row["estado"];
-	$prioridad = $row["prioridad"];
-	$origen = $row["origen"];
-	$usuario = $row["id_usuario"];
-	$nombre_real = dame_nombre_real($usuario);
-	$id_grupo = $row["id_grupo"];
-	$id_creator = $row["id_creator"];
-	$grupo = dame_nombre_grupo($id_grupo);
-
-	if (give_acl($config["id_user"], $id_grupo, "IR") != 1){
-	 	// Doesn't have access to this page
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
-		include ("general/noaccess.php");
-		exit;
-	}
-
-	// ------------
- 	// Delete file
- 	// ------------
-	if (((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($usuario == $iduser_temp)) AND isset($_GET["delete_file"])){
-		$file_id = $_GET["delete_file"];
-		$sql2 = "SELECT * FROM tattachment WHERE id_attachment = ".$file_id;
-		$res2=mysql_query($sql2);
-		$row2=mysql_fetch_array($res2);
-		$filename = $row2["filename"];
-		$sql2 = "DELETE FROM tattachment WHERE id_attachment = ".$file_id;
-		$res2=mysql_query($sql2);
-		unlink ($config["homedir"]."/attachment/pand".$file_id."_".$filename);
-		incident_tracking ( $id_inc, $id_usuario, 7);
-	}
-
-
-} else {
-	audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to incident ".$id_inc." '".$titulo."'");
-		include ("general/noaccess.php");
-		exit;
+if (!$id_incident) {
+	audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Violation",
+		"Trying to access files of incident #".$id_incident);
+	include ("general/noaccess.php");
+	exit;
 }
 
-// ************************************************************
+$id_group = (int) get_db_value ('id_grupo', 'tincidencia', 'id_incidencia', $id_incident);
+
+if (! give_acl ($config["id_user"], $id_group, "IR")) {
+ 	// Doesn't have access to this page
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation",
+		'Trying to access files of incident #'.$id_incident." '".$titulo."'");
+	include ("general/noaccess.php");
+	exit;
+}
+
+echo '<h3>'.__('Incident').' #'.$id_incident.' - '.give_inc_title ($id_incident).'</h3>';
+
 // Files attached to this incident
-// ************************************************************
-
-// Attach head if there's attach for this incident
-$att_fil=mysql_query("SELECT * FROM tattachment WHERE id_incidencia = ".$id_inc);
-
-echo "<h3>".lang_string ("Incident"). " #$id_inc - ".give_inc_title ($id_inc)."</h3>";
-
-if (mysql_num_rows($att_fil)){
-	echo "<table width='750' cellspacing=4 cellpadding=4 class='databox'><tr><th class=datos>".lang_string ('filename');
-	echo "<th class=datos>".lang_string ('description');
-	echo "<th class=datos>".lang_string ('size');
-	echo "<th class=datos>".lang_string ('delete');
-
-	while ($row=mysql_fetch_array ($att_fil)){
-		echo "<tr><td class=datos><img src='images/disk.png' border=0 align='top'>  <a target='_new' href='attachment/pand".$row["id_attachment"]."_".$row["filename"]."'>".$row["filename"]."</a>";
-		echo "<td class=datos>".$row["description"];
-		echo "<td class=datos>".byte_convert ($row["size"]);
-
-		if (give_acl($iduser_temp, $id_grupo, "IM")==1){ // Delete attachment
-			echo '<td class=datos align="center"><a href="index.php?sec=incidencias&sec2=operation/incidents/incident_files&id='.$id_inc.'&delete_file='.$row["id_attachment"].'"><img src="images/delete.png" border=0>';
-		}
-
-	}
-	echo "</table><br>";
-} else {
-	echo '<h4>'.lang_string ('no_data').'</h4>';
+$files = get_incident_files ($id_incident);
+if ($files === false) {
+	echo '<h4>'.__('No files were added to the incidence').'</h4>';
+	return;
 }
+
+$table->class = 'listing';
+$table->width = '90%';
+$table->data = array ();
+$table->align = array ();
+$table->align[3] = 'center';
+$table->size = array ();
+$table->size[3] = '40px';
+$table->head = array ();
+$table->head[0] = __('Filename');
+$table->head[1] = __('Description');
+$table->head[2] = __('Size');
+if (give_acl ($config['id_user'], $id_group, "IM")) {
+	$table->head[3] = __('Delete');
+}
+
+foreach ($files as $file) {
+	$data = array ();
+	
+	$data[0] = '<img src="images/disk.png" /><a target="_blank"
+		href="attachment/pand'.$file['id_attachment'].'_'.$file['filename'].'">'.
+		$file['filename'].'</a>';
+	$data[1] = $file["description"];
+	$data[2] = byte_convert ($file['size']);
+
+	// Delete attachment
+	if (give_acl ($config['id_user'], $id_group, 'IM')) {
+		$data[3] = '<a class="delete" id="delete-file-'.$file["id_attachment"].'"
+			href="index.php?sec=incidencias&sec2=operation/incidents/incident&id='.
+			$id_incident.'&delete_file=1&id_file='.$file["id_attachment"].'">
+			<img src="images/cross.png"></a>';
+	}
+	
+	array_push ($table->data, $data);
+}
+
+print_table ($table);
+
 ?>
