@@ -1,3 +1,15 @@
+2008-10-06  Esteban Sanchez <estebans@artica.es>
+
+	* integria/integria_db.sql: Added missing foreing keys (they make life
+	easier) and reordered table creation.
+
+	* include/functions_db.php: Added get_incident(), get_incident_slas()
+	and check_incident_sla(). That last function checks if affected SLAs
+	were overdue or not.
+
+	* include/integria_cron.php: Style correction. Rewritten to use
+	generic db functions.
+
 2008-10-03  Esteban Sanchez <estebans@artica.es>
 
 	* operation/slas/sla_detail.php: Adapted to new form styles.

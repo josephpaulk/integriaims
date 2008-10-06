@@ -12,32 +12,23 @@
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 
--- Table structure for table `tattachment`
+--
+-- Table structure for table `tusuario`
 --
 
-CREATE TABLE `tattachment` (
-  `id_attachment` bigint(20) unsigned NOT NULL auto_increment,
-  `id_incidencia` bigint(20) NOT NULL default '0',
-  `id_task` bigint(20) NOT NULL default '0',
-  `id_kb` bigint(20) NOT NULL default '0',
-  `id_usuario` varchar(60) NOT NULL default '',
-  `filename` varchar(255) NOT NULL default '',
-  `description` varchar(150) default '',
-  `size` bigint(20) NOT NULL default '0',
-  PRIMARY KEY  (`id_attachment`)
+CREATE TABLE `tusuario` (
+  `id_usuario` varchar(60) NOT NULL default '0',
+  `nombre_real` varchar(125) NOT NULL default '',
+  `password` varchar(45) default NULL,
+  `comentarios` varchar(200) default NULL,
+  `fecha_registro` datetime NOT NULL default '0000-00-00 00:00:00',
+  `direccion` varchar(100) default '',
+  `telefono` varchar(100) default '',
+  `nivel` tinyint(1) NOT NULL default '0',
+  `avatar` varchar(100) default 'people_1',
+  `lang` varchar(10) default '',
+   PRIMARY KEY  (`id_usuario`)
 );
-
---
--- Table structure for table `tconfig`
---
-
-CREATE TABLE `tconfig` (
-  `id_config` int(10) unsigned NOT NULL auto_increment,
-  `token` varchar(100) NOT NULL default '',
-  `value` text NOT NULL default '',
-  PRIMARY KEY  (`id_config`)
-);
-
 
 CREATE TABLE `tgrupo` (
   `id_grupo` mediumint(8) unsigned NOT NULL auto_increment,
@@ -50,6 +41,85 @@ CREATE TABLE `tgrupo` (
   `id_user_default` varchar(250) NOT NULL default '',
   `forced_email` tinyint(3) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY  (`id_grupo`)
+);
+
+CREATE TABLE `tproject_group` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `icon` varchar(50) default NULL,
+  PRIMARY KEY  (`id`)
+);
+
+-- New tables created 23/04/07 for project management
+
+CREATE TABLE `tproject` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(240) NOT NULL default '',
+  `description` mediumtext NOT NULL,
+  `start` date NOT NULL default '0000-00-00',
+  `end` date NOT NULL default '0000-00-00',
+  `id_owner` varchar(60)  NOT NULL default '',
+  `disabled` int(2) unsigned NOT NULL default '0',
+  `id_project_group` mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_owner`) REFERENCES tusuario(`id_usuario`)
+     ON UPDATE CASCADE ON DELETE SET default,
+  FOREIGN KEY (`id_project_group`) REFERENCES tproject_group(`id`)
+     ON UPDATE CASCADE ON DELETE SET default
+);
+
+CREATE TABLE `ttask` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_project` int(10) unsigned NOT NULL default 0,
+  `id_parent_task` int(10) unsigned NOT NULL default '0',
+  `name` varchar(240) NOT NULL default '',
+  `description` mediumtext NOT NULL,
+  `completion` tinyint unsigned NOT NULL default '0',
+  `priority` tinyint unsigned NOT NULL default '0',
+  `dep_type` tinyint unsigned NOT NULL DEFAULT 0,
+  `start` date NOT NULL default '0000-00-00',
+  `end` date NOT NULL default '0000-00-00',
+  `hours` int unsigned NOT NULL DEFAULT 0,
+  `estimated_cost` float (9,2) unsigned NOT NULL DEFAULT 0.0,
+  `id_group` int(10) NOT NULL default '0',
+  `periodicity` enum ('none', 'weekly', 'monthly', 'year', '15days', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none',
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
+     ON UPDATE CASCADE ON DELETE SET default,
+  FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
+     ON UPDATE CASCADE ON DELETE SET default
+);
+
+ALTER TABLE ttask ADD FOREIGN KEY (`id_parent_task`) REFERENCES ttask(`id`)
+     ON UPDATE CASCADE ON DELETE SET default;
+
+-- Table structure for table `tattachment`
+--
+CREATE TABLE `tattachment` (
+  `id_attachment` bigint(20) unsigned NOT NULL auto_increment,
+  `id_incidencia` bigint(20) NOT NULL default '0',
+  `id_task` int(10) unsigned NOT NULL default 0,
+  `id_kb` bigint(20) NOT NULL default '0',
+  `id_usuario` varchar(60) NOT NULL default '',
+  `filename` varchar(255) NOT NULL default '',
+  `description` varchar(150) default '',
+  `size` bigint(20) NOT NULL default '0',
+  PRIMARY KEY  (`id_attachment`),
+  FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
+     ON UPDATE CASCADE ON DELETE SET default,
+  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
+     ON UPDATE CASCADE ON DELETE SET default
+);
+
+--
+-- Table structure for table `tconfig`
+--
+
+CREATE TABLE `tconfig` (
+  `id_config` int(10) unsigned NOT NULL auto_increment,
+  `token` varchar(100) NOT NULL default '',
+  `value` text NOT NULL default '',
+  PRIMARY KEY  (`id_config`)
 );
 
 CREATE TABLE `twizard` (
@@ -68,6 +138,18 @@ CREATE TABLE `tincident_type` (
       ON UPDATE CASCADE ON DELETE SET NULL
 );
 
+CREATE TABLE `tsla` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` varchar(250) NULL default NULL,
+  `min_response` int(11) NULL default NULL,
+  `max_response` int(11) NULL default NULL,
+  `max_incidents` int(11) NULL default NULL,
+  `enforced` tinyint NULL default 0,
+  `id_sla_base` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
 --
 -- Table structure for table `tincidencia`
 --
@@ -78,7 +160,7 @@ CREATE TABLE `tincidencia` (
   `cierre` datetime NOT NULL default '0000-00-00 00:00:00',
   `titulo` varchar(100) NOT NULL default '',
   `descripcion` mediumtext NOT NULL,
-  `id_usuario` varchar(100) NOT NULL default '',
+  `id_usuario` varchar(60) NOT NULL default '',
   `origen` tinyint unsigned NOT NULL DEFAULT 0,
   `estado` tinyint unsigned NOT NULL DEFAULT 0,
   `prioridad` tinyint unsigned NOT NULL DEFAULT 0,
@@ -86,21 +168,29 @@ CREATE TABLE `tincidencia` (
   `actualizacion` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_creator` varchar(60) default NULL,
   `notify_email` tinyint unsigned NOT NULL DEFAULT 0,
-  `id_task` int(10) NOT NULL default '0',
+  `id_task` int(10) unsigned NOT NULL default '0',
   `resolution` tinyint unsigned NOT NULL DEFAULT 0,
   `epilog` mediumtext NOT NULL,
-  `id_parent` bigint(20) unsigned NULL,
-  `sla_disabled` tinyint unsigned NOT NULL DEFAULT 0,
+  `id_parent` bigint(20) unsigned NULL default 0,
+  `sla_disabled` mediumint(8) unsigned NOT NULL DEFAULT 0,
   `affected_sla_id` tinyint unsigned NOT NULL DEFAULT 0,
   `id_incident_type` mediumint(8) unsigned NULL,
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_index_1` (`id_usuario`,`id_incidencia`),
   FOREIGN KEY (`id_incident_type`) REFERENCES tincident_type(`id`)
-      ON UPDATE CASCADE ON DELETE SET NULL
+      ON UPDATE CASCADE ON DELETE SET NULL,
+  FOREIGN KEY (`id_grupo`) REFERENCES tgrupo(`id_grupo`)
+      ON UPDATE CASCADE ON DELETE SET NULL,
+  FOREIGN KEY (`id_creator`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE SET NULL,
+  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
+      ON UPDATE CASCADE ON DELETE SET NULL,
+  FOREIGN KEY (`affected_sla_id`) REFERENCES tsla(`id`)
+      ON UPDATE CASCADE ON DELETE SET default
 );
 
 ALTER TABLE `tincidencia` ADD FOREIGN KEY (`id_parent`) REFERENCES tincidencia(`id_incidencia`)
-  ON UPDATE CASCADE ON DELETE SET NULL;
+  ON UPDATE CASCADE ON DELETE SET default;
 
 --
 -- Table structure for table `tlanguage`
@@ -149,7 +239,6 @@ CREATE TABLE  `tprofile` (
   PRIMARY KEY  (`id`)
 );
 
-
 CREATE TABLE `tsesion` (
   `ID_sesion` bigint(4) unsigned NOT NULL auto_increment,
   `ID_usuario` varchar(60) NOT NULL default '0',
@@ -158,94 +247,57 @@ CREATE TABLE `tsesion` (
   `descripcion` varchar(200) NOT NULL default '',
   `fecha` datetime NOT NULL default '0000-00-00 00:00:00',
   `utimestamp` bigint(20) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`ID_sesion`)
-);
-
---
--- Table structure for table `tusuario`
---
-
-CREATE TABLE `tusuario` (
-  `id_usuario` varchar(60) NOT NULL default '0',
-  `nombre_real` varchar(125) NOT NULL default '',
-  `password` varchar(45) default NULL,
-  `comentarios` varchar(200) default NULL,
-  `fecha_registro` datetime NOT NULL default '0000-00-00 00:00:00',
-  `direccion` varchar(100) default '',
-  `telefono` varchar(100) default '',
-  `nivel` tinyint(1) NOT NULL default '0',
-  `avatar` varchar(100) default 'people_1',
-  `lang` varchar(10) default '',
-   PRIMARY KEY  (`id_usuario`)
+  PRIMARY KEY  (`ID_sesion`),
+  FOREIGN KEY (`ID_usuario`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 --
 -- Table structure for table `tusuario_perfil`
 --
-
 CREATE TABLE `tusuario_perfil` (
   `id_up` bigint(20) unsigned NOT NULL auto_increment,
-  `id_usuario` varchar(100) NOT NULL default '',
-  `id_perfil` int(20) NOT NULL default '0',
-  `id_grupo` int(11) NOT NULL default '0',
+  `id_usuario` varchar(60) NOT NULL default '',
+  `id_perfil` int(10) unsigned NOT NULL default '0',
+  `id_grupo` mediumint(8) unsigned NOT NULL default '0',
   `assigned_by` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (`id_up`)
+  PRIMARY KEY  (`id_up`),
+  FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_grupo`) REFERENCES tgrupo(`id_grupo`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_perfil`) REFERENCES tprofile(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `tincident_track` (
   `id_it` int(10) unsigned NOT NULL auto_increment,
-  `id_incident` int(10) unsigned NOT NULL default '0',
+  `id_incident` bigint(20) unsigned NOT NULL default '0',
   `state` int(10) unsigned NOT NULL default '0',
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
-  `id_user` varchar(250) NOT NULL default '',
+  `id_user` varchar(60) NOT NULL default '',
   `id_aditional` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id_it`)
-);
-
--- New tables created 23/04/07 for project management
-
-CREATE TABLE `tproject` (
-  `id` int(10) NOT NULL auto_increment,
-  `name` varchar(240) NOT NULL default '',
-  `description` mediumtext NOT NULL,
-  `start` date NOT NULL default '0000-00-00',
-  `end` date NOT NULL default '0000-00-00',
-  `id_owner` varchar(125),
-  `disabled` int(2) unsigned NOT NULL default '0',
-  `id_project_group` int(8) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id_it`),
+  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
 CREATE TABLE `ttask_track` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `id_task` int(10) NOT NULL default '0',
-  `id_user` varchar(240) NOT NULL default '',
+  `id_task` int(10) unsigned NOT NULL default '0',
+  `id_user` varchar(60) NOT NULL default '',
   `id_external` int(10) unsigned NOT NULL default '0',
   `state` tinyint unsigned NOT NULL default '0',
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
-
-
-CREATE TABLE `ttask` (
-  `id` int(10) NOT NULL auto_increment,
-  `id_project` int(10) NOT NULL default '0',
-  `id_parent_task` int(10) unsigned NOT NULL default '0',
-  `name` varchar(240) NOT NULL default '',
-  `description` mediumtext NOT NULL,
-  `completion` tinyint unsigned NOT NULL default '0',
-  `priority` tinyint unsigned NOT NULL default '0',
-  `dep_type` tinyint unsigned NOT NULL DEFAULT 0,
-  `start` date NOT NULL default '0000-00-00',
-  `end` date NOT NULL default '0000-00-00',
-  `hours` int unsigned NOT NULL DEFAULT 0,
-  `estimated_cost` float (9,2) unsigned NOT NULL DEFAULT 0.0,
-  `id_group` int(10) NOT NULL default '0',
-  `periodicity` enum ('none', 'weekly', 'monthly', 'year', '15days', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none',
-  PRIMARY KEY  (`id`)
-);
-
 
 CREATE TABLE `tworkunit` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -257,14 +309,18 @@ CREATE TABLE `tworkunit` (
   `id_profile` int(10) unsigned NOT NULL default '0',
   `locked` varchar(125) DEFAULT '',
   `public` tinyint(1) unsigned NOT NULL DEFAULT 1,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `tworkunit_task` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_task` int(10) NOT NULL default '0',
   `id_workunit` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_workunit`) REFERENCES tworkunit(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
@@ -272,19 +328,25 @@ CREATE TABLE `tworkunit_incident` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_incident` int(10) unsigned NOT NULL default '0',
   `id_workunit` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_workunit`) REFERENCES tworkunit(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `tagenda` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
-  `id_user` varchar(125) NOT NULL default '',
+  `id_user` varchar(60) NOT NULL default '',
   `public` tinyint unsigned NOT NULL DEFAULT 0,
   `alarm` int(10) unsigned NOT NULL DEFAULT 0,
   `duration` int(10) unsigned NOT NULL DEFAULT 0,
   `id_group` int(10) NOT NULL default '0',
   `content` varchar(255) DEFAULT '',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `tincident_resolution` (
@@ -315,18 +377,30 @@ CREATE TABLE `trole` (
 
 CREATE TABLE `trole_people_task` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `id_user` varchar(125) NOT NULL default '',
+  `id_user` varchar(60) NOT NULL default '',
   `id_role` int(10) unsigned NOT NULL default '0',
   `id_task` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_role`) REFERENCES trole(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `trole_people_project` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `id_user` varchar(125) NOT NULL default '',
+  `id_user` varchar(60) NOT NULL default '',
   `id_role` int(10) unsigned NOT NULL default '0',
   `id_project` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_role`) REFERENCES trole(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `ttodo` (
@@ -339,8 +413,14 @@ CREATE TABLE `ttodo` (
   `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
   `description` mediumtext,
   `last_update` datetime NOT NULL default '2000-01-01 00:00:00',
-  `id_task` int(11) unsigned NULL default NULL,
-  PRIMARY KEY  (`id`)
+  `id_task` int(10) unsigned NULL default NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`assigned_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`created_by_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_task`) REFERENCES ttask(`id_task`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
@@ -350,7 +430,9 @@ CREATE TABLE `tmilestone` (
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `name` varchar(250) NOT NULL default '',
   `description` mediumtext NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Table for special days, non working or corporate vacations --
@@ -367,18 +449,23 @@ CREATE TABLE `tvacationday` (
 
 CREATE TABLE `tcost` (
   `id` int(6) unsigned NOT NULL auto_increment,
-  `id_user` varchar(250) default NULL,
-  `id_wu` int(11) unsigned NULL default NULL,
+  `id_user` varchar(60) default NULL,
+  `id_wu` int(10) unsigned NULL default NULL,
   `bill_id` varchar(50) NOT NULL default '',
   `ammount` float(9,2) NOT NULL DEFAULT '0.0',
   `description` mediumtext NOT NULL,
-  `id_attachment` int(11) unsigned NULL default NULL,
+  `id_attachment` bigint(20) unsigned NULL default NULL,
   `locked` tinyint(3) unsigned NOT NULL DEFAULT 0,
-  `locked_id_user` varchar(125) DEFAULT NULL,
-  PRIMARY KEY  (`id`)
+  `locked_id_user` varchar(60) DEFAULT NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_wu`) REFERENCES tworkunied(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`locked_id_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
--- 1.1 new table
 -- Used to track notificacion (emails) for agenda,
 -- incident SLA notifications, system events and more
 -- in the future.
@@ -387,23 +474,13 @@ CREATE TABLE `tevent` (
   `id` int(6) unsigned NOT NULL auto_increment,
   `type` varchar(250) default NULL,
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
-  `id_user` varchar(150) NOT NULL default '',
+  `id_user` varchar(60) NOT NULL default '',
   `id_item` int(11) unsigned NULL default NULL,
   `id_item2` int(11) unsigned NULL default NULL,
   `id_item3` varchar(250) default NULL,
-  PRIMARY KEY  (`id`)
-);
-
-
-CREATE TABLE `tkb_data` (
-  `id` int(6) unsigned NOT NULL auto_increment,
-  `title` varchar(250) default NULL,
-  `data` mediumtext NOT NULL,
-  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
-  `id_user` varchar(150) NOT NULL default '',
-  `id_product` mediumint(8) unsigned default 0,
-  `id_category` mediumint(8) unsigned default 0,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Product: OS, OS/Windows, OS/Windows/IE
@@ -414,9 +491,12 @@ CREATE TABLE `tkb_category` (
   `name` varchar(100) NOT NULL default '',
   `description` varchar(250) default NULL,
   `icon` varchar(75) default NULL,
-  `parent` tinyint(4) NOT NULL default '-1',
+  `parent` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );
+
+ALTER TABLE `tkb_category` ADD FOREIGN KEY (`parent`) REFERENCES tkb_category(`id`)
+     ON UPDATE CASCADE ON DELETE RESTRICT;
 
 CREATE TABLE `tkb_product` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -429,6 +509,23 @@ CREATE TABLE `tkb_product` (
 
 ALTER TABLE `tkb_product` ADD FOREIGN KEY (`parent`) REFERENCES tkb_product(`id`)
      ON UPDATE CASCADE ON DELETE RESTRICT;
+
+CREATE TABLE `tkb_data` (
+  `id` int(6) unsigned NOT NULL auto_increment,
+  `title` varchar(250) default NULL,
+  `data` mediumtext NOT NULL,
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  `id_user` varchar(150) NOT NULL default '',
+  `id_product` mediumint(8) unsigned default 0,
+  `id_category` mediumint(8) unsigned default 0,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_product`) REFERENCES tkb_product(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_category`) REFERENCES tkb_category(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE
+);
 
 CREATE TABLE `tbuilding` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -471,18 +568,6 @@ CREATE TABLE `tcompany_contact` (
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE `tsla` (
-  `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) NULL default NULL,
-  `min_response` int(11) NULL default NULL,
-  `max_response` int(11) NULL default NULL,
-  `max_incidents` int(11) NULL default NULL,
-  `enforced` tinyint NULL default 0,
-  `id_sla_base` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id`)
-);
-
 CREATE TABLE `tcontract` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
@@ -510,6 +595,8 @@ CREATE TABLE `tmanufacturer` (
   `id_sla` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_company_role`) REFERENCES tcompany_role(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_sla`) REFERENCES tsla(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -556,23 +643,24 @@ CREATE TABLE `tincident_inventory` (
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE `tproject_group` (
-  `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL default '',
-  `icon` varchar(50) default NULL,
-  PRIMARY KEY  (`id`)
-);
-
 CREATE TABLE `ttask_inventory` (
-  `id_task` bigint(20) unsigned NOT NULL,
+  `id_task` int(10) unsigned unsigned NOT NULL,
   `id_inventory` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id_task`, `id_inventory`)
+  PRIMARY KEY  (`id_task`, `id_inventory`),
+  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `tworkunit_inventory` (
   `id_wu` bigint(20) unsigned NOT NULL,
-  `id_inventory` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id_wu`, `id_inventory`)
+  `id_inventory` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id_wu`, `id_inventory`),
+  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_wu`) REFERENCES tworkunit(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE `tcustom_search` (

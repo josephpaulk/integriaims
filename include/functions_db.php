@@ -1569,6 +1569,31 @@ function get_inventory_affected_companies ($id_inventory, $only_names = true) {
 	return $companies;
 }
 
+function get_incident ($id_incident) {
+	return get_db_row ('tincidencia', 'id_incidencia', $id_incident);
+}
+
+function get_incident_slas ($id_incident, $only_names = true) {
+	$sql = sprintf ('SELECT tsla.*
+		FROM tinventory, tsla, tincident_inventory
+		WHERE tinventory.id_sla = tsla.id
+		AND tincident_inventory.id_inventory = tinventory.id
+		AND tincident_inventory.id_incident = %d', $id_incident);
+	$slas = get_db_all_rows_sql ($sql);
+	if ($slas == false)
+		return array ();
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($slas as $sla) {
+			$result[$sla['id']] = $sla['name'];
+		}
+		return $result;
+	}
+	return $slas;
+}
+
+
 function get_company ($id_company) {
 	return get_db_row ('tcompany', 'id', $id_company);
 }
@@ -1828,6 +1853,34 @@ function get_custom_search ($id_search, $section) {
 
 function get_incident_files ($id_incident) {
 	return get_db_all_rows_field_filter ('tattachment', 'id_incidencia', $id_incident);
+}
+
+function check_incident_sla ($id_incident) {
+	$incident = get_incident ($id_incident);
+	
+	/* If closed, disable any affected SLA */
+	if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+		$sql = sprintf ('UPDATE tincidencia
+			SET affected_sla_id = 0
+			WHERE id_incidencia = %d', $id_incident);
+		return false;
+	}
+	
+	$slas = get_incident_slas ($id_incident, false);
+	$start = strtotime ($incident['inicio']);
+	$now = time ();
+	foreach ($slas as $sla) {
+		if ($now < ($start + $sla['max_response'] * 3600))
+			 continue;
+		$sql = sprintf ('UPDATE tincidencia
+			SET affected_sla_id = %d
+			WHERE id_incidencia = %d',
+			$sla['id'], $id_incident);
+		process_sql ($sql);
+		/* SLA has expired */
+		return $sla['id'];
+	}
+	return false;
 }
 
 ?>
