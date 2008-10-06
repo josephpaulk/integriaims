@@ -577,6 +577,20 @@ if ($sec == "godmode") {
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".__("Setup")."</a></li>";
 
+	// Update Manager
+	if ($sec2 == "godmode/updatemanager/main")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/updatemanager/main'>".__("Update")."</a></li>";
+
+	// Setup Update Manager
+	if ($sec2 == "godmode/updatemanager/settings")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/updatemanager/settings'>".__("Configure updates")."</a></li>";
+
 	// Link management
 	if ($sec2 == "godmode/setup/links")
 		echo "<li id='sidesel'>";

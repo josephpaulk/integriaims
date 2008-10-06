@@ -675,3 +675,41 @@ CREATE TABLE `tcustom_search` (
       ON UPDATE CASCADE ON DELETE SET NULL
 );
 
+CREATE TABLE `um_tupdate_settings` (
+  `key` varchar(255) default '',
+  `value` varchar(255) default '',
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `um_tupdate_package` (
+  id int(11) unsigned NOT NULL auto_increment,
+  timestamp datetime NOT NULL,  description mediumtext NOT NULL default '', 
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `um_tupdate` (
+  id int(11) unsigned NOT NULL auto_increment,
+  type enum('code', 'db_data', 'db_schema', 'binary'),
+  id_update_package int(11) unsigned NOT NULL default 0, 
+  filename  varchar(250) default '', 
+  checksum  varchar(250) default '',
+  previous_checksum  varchar(250) default '',
+  svn_version int(4) unsigned NOT NULL default 0,
+  data LONGTEXT default '',
+  data_rollback LONGTEXT default '',
+  description TEXT default '',
+  db_table_name varchar(140) default '',
+  db_field_name varchar(140) default '',
+  db_field_value varchar(1024) default '',
+  PRIMARY KEY  (`id`), 
+  FOREIGN KEY (`id_update_package`) REFERENCES um_tupdate_package(`id`)
+  ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `um_tupdate_journal` (
+  id int(11) unsigned NOT NULL auto_increment,
+  id_update int(11) unsigned NOT NULL default 0,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_update`) REFERENCES um_tupdate(`id`)
+  ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -1,3 +1,23 @@
+2008-10-06  Ramon Novoa  <rnovoa@artica.es>
+
+	* integria_dbdata.sql,
+	  integria_db.sql: Added Update Manager client support.
+
+	* godmode/updatemanager,
+	  godmode/updatemanager/lang,
+	  godmode/updatemanager/lang/language_en.php,
+	  godmode/updatemanager/load_updatemanager.php,
+	  godmode/updatemanager/lib,
+	  godmode/updatemanager/lib/load_updatemanager.php,
+	  godmode/updatemanager/lib/libupdate_manager_client.php,
+	  godmode/updatemanager/lib/libupdate_manager.php,
+	  godmode/updatemanager/lib/libupdate_manager_utils.php,
+	  godmode/updatemanager/lib/libupdate_manager_updates.php,
+	  godmode/updatemanager/lib/libupdate_manager_components.php,
+	  godmode/updatemanager/settings.php,
+	  godmode/updatemanager/main.php: Added to repository. Update Manager
+	  client.
+
 2008-10-06  Esteban Sanchez <estebans@artica.es>
 
 	* integria/integria_db.sql: Added missing foreing keys (they make life
