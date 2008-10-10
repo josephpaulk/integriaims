@@ -451,7 +451,7 @@ function give_human_time ($int_seconds, $flag_hide_zero = true) {
 	}
 
 	// return output, if !empty, implode into string, else output $if_reached
-	return ( !empty($build)?implode(', ', $build):$if_reached );
+	return ( !empty($build)?implode(', ', $build):__('Unknown'));
 }
 
 function human_time_comparation ( $timestamp ){

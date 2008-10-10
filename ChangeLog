@@ -1,5 +1,13 @@
 2008-10-10  Esteban Sanchez  <estebans@artica.es>
 
+	* include/functions_calendar.php: Removed undefined variable and
+	replaced by a fixed string.
+
+	* operation/incidents/incident_search.php: Fixes to solve division by
+	zero errors.
+
+2008-10-10  Esteban Sanchez  <estebans@artica.es>
+
 	* integria_db.sql: Added cost field to tinventory. Change description
 	fields to text instead of varchars. Fixed some foreign key actions
 	when deleting.

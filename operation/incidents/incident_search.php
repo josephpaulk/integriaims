@@ -306,11 +306,18 @@ if ($show_stats) {
 		}
 		$total_hours += $hours;
 	}
+	$closed = $total - $opened;
+	$opened_pct = 0;
+	$mean_work = 0;
+	$mean_lifetime = 0;
+	if ($total != 0) {
+		$opened_pct = format_numeric ($opened / $total * 100);
+		$mean_work = format_numeric ($total_hours / $total, 2);
+	}
 	
-	$opened_pct = format_numeric ($opened / $total * 100);
-	$mean_work = format_numeric ($total_hours / $total, 2);
-	$mean_lifetime = (int) ($total_lifetime / ($total - $opened)) / 60;
-	
+	if ($closed != 0) {
+		$mean_lifetime = (int) ($total_lifetime / $closed) / 60;
+	}
 	echo '<strong>'.__('Total incicents').'</strong>: '.$total.' <br />';
 	echo '<strong>'.__('Opened').'</strong>: '.$opened.' ('.$opened_pct.'%)<br />';
 	echo '<strong>'.__('Mean life time').'</strong>: '.give_human_time ($mean_lifetime).'<br />';
