@@ -14,7 +14,7 @@
 // GNU General Public License for more details.
 
 if (check_login () != 0) {
-	audit_db ("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access incident viewer");
+	audit_db ("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access incident viewer");
 	require ("general/noaccess.php");
 	exit;
 }

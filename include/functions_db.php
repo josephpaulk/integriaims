@@ -1668,8 +1668,11 @@ function get_company_contacts ($id_company, $only_names = true) {
 }
 
 function get_incident_workunits ($id_incident) {
-	return get_db_all_rows_field_filter ('tworkunit_incident', 'id_incident',
+	$workunits = get_db_all_rows_field_filter ('tworkunit_incident', 'id_incident',
 					$id_incident, 'id_workunit ASC');
+	if ($workunits === false)
+		return array ();
+	return $workunits;
 }
 
 function get_inventory_workunits ($id_inventory) {
@@ -1855,14 +1858,80 @@ function get_incident_files ($id_incident) {
 	return get_db_all_rows_field_filter ('tattachment', 'id_incidencia', $id_incident);
 }
 
-function check_incident_sla ($id_incident) {
+function get_incident_users ($id_incident) {
+	$incident = get_incident ($id_incident);
+	$users = array ();
+	
+	$users['owner'] = get_db_row ('tusuario', 'id_usuario', $incident['id_usuario']);
+	$users['creator'] = get_db_row ('tusuario', 'id_usuario', $incident['id_creator']);
+	$users['affected'] = array ();
+	$affected_users = get_users_in_group ($incident['id_grupo'], false);
+	foreach ($affected_users as $user) {
+		array_push ($users['affected'], $user);
+	}
+	
+	return $users;
+}
+
+function check_incident_sla_min_response ($id_incident) {
 	$incident = get_incident ($id_incident);
 	
 	/* If closed, disable any affected SLA */
 	if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+		if ($incident['affected_sla_id']) {
+			$sql = sprintf ('UPDATE tincidencia
+				SET affected_sla_id = 0
+				WHERE id_incidencia = %d',
+				$id_incident);
+			process_sql ($sql);
+		}
+		return false;
+	}
+	
+	$slas = get_incident_slas ($id_incident, false);
+	$start = strtotime ($incident['inicio']);
+	$now = time ();
+	/* Check wheter it was updated before, so there's no need to check SLA */
+	$update = strtotime ($incident['actualizacion']);
+	if ($update > $start) {
+		if ($incident['affected_sla_id']) {
+			$sql = sprintf ('UPDATE tincidencia
+				SET affected_sla_id = 0
+				WHERE id_incidencia = %d',
+				$id_incident);
+			process_sql ($sql);
+		}
+		return false;
+	}
+	
+	foreach ($slas as $sla) {
+		if ($now < ($start + $sla['min_response'] * 3600))
+			 continue;
 		$sql = sprintf ('UPDATE tincidencia
-			SET affected_sla_id = 0
-			WHERE id_incidencia = %d', $id_incident);
+			SET affected_sla_id = %d
+			WHERE id_incidencia = %d',
+			$sla['id'], $id_incident);
+		process_sql ($sql);
+		
+		/* SLA has expired */
+		return $sla['id'];
+	}
+	
+	return false;
+}
+
+function check_incident_sla_max_response ($id_incident) {
+	$incident = get_incident ($id_incident);
+	
+	/* If closed, disable any affected SLA */
+	if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+		if ($incident['affected_sla_id']) {
+			$sql = sprintf ('UPDATE tincidencia
+				SET affected_sla_id = 0
+				WHERE id_incidencia = %d',
+				$id_incident);
+			process_sql ($sql);
+		}
 		return false;
 	}
 	
@@ -1877,10 +1946,17 @@ function check_incident_sla ($id_incident) {
 			WHERE id_incidencia = %d',
 			$sla['id'], $id_incident);
 		process_sql ($sql);
+		
 		/* SLA has expired */
 		return $sla['id'];
 	}
+	
 	return false;
+}
+
+function get_group_default_user ($id_group) {
+	$id_user = get_db_value ('id_user_default', 'tgrupo', 'id_grupo', $id_group);
+	return get_db_row ('tusuario', 'id_usuario', $id_user);
 }
 
 ?>

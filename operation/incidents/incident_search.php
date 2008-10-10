@@ -63,13 +63,13 @@ if ($search_form) {
 	$table->id = 'incident_search_result_table';
 	$table->head = array ();
 	$table->head[0] = "Id";
-	$table->head[1] = lang_string ("SLA");
-	$table->head[2] = lang_string ("incident");
-	$table->head[3] = lang_string ("group");
-	$table->head[4] = lang_string ("status")." - <i>".lang_string("resolution")."</i>";
-	$table->head[5] = lang_string ("priority");
-	$table->head[6] = lang_string ("Updated")." - <i>".lang_string ("Started")."</i>";
-	$table->head[7] = lang_string ("flags");
+	$table->head[1] = __('SLA');
+	$table->head[2] = __('incident');
+	$table->head[3] = __('group');
+	$table->head[4] = __('status')." - <i>".lang_string("resolution")."</i>";
+	$table->head[5] = __('priority');
+	$table->head[6] = __('Updated')." - <i>".__('Started')."</i>";
+	$table->head[7] = __('flags');
 	$table->style = array ();
 	$table->style[0] = '';
 
@@ -93,6 +93,8 @@ if ($search_form) {
 	}
 }
 
+$show_stats = (bool) get_parameter ('show_stats');
+
 $search_string = (string) get_parameter ('search_string');
 $status = (int) get_parameter ('status');
 $search_priority = (int) get_parameter ('search_priority', -1);
@@ -105,11 +107,12 @@ $search_serial_number = (string) get_parameter ('search_serial_number');
 $search_id_building = (int) get_parameter ('search_id_building');
 $search_sla_fired = (bool) get_parameter ('search_sla_fired');
 $search_id_incident = (int) get_parameter ('search_id_incident');
+$search_id_user = (string) get_parameter ('search_id_user');
 
 if ($status == 0)
 	$status = implode (',', array_keys (get_indicent_status ()));
 
-$resolution = get_incident_resolution();
+$resolutions = get_incident_resolutions ();
 
 $sql_clause = '';
 if ($search_priority != -1)
@@ -118,8 +121,8 @@ if ($search_id_group != 1)
 	$sql_clause .= sprintf (' AND id_grupo = %d', $search_id_group);
 if ($search_status)
 	$sql_clause .= sprintf (' AND estado = %d', $search_status);
-if ($search_id_incident)
-	$sql_clause .= sprintf (' AND id_incidencia = %d', $search_id_incident);
+if ($search_id_user != '0')
+	$sql_clause .= sprintf (' AND id_usuario = "%s"', $search_id_user);
 
 $sql = sprintf ('SELECT * FROM tincidencia
 		WHERE estado IN (%s)
@@ -129,11 +132,16 @@ $sql = sprintf ('SELECT * FROM tincidencia
 
 $incidents = get_db_all_rows_sql ($sql);
 if ($incidents === false) {
-	echo '<tr><td>'.lang_string ('Nothing was found').'</td></tr>';
+	echo '<tr><td colspan="8">'.__('Nothing was found').'</td></tr>';
 	return;
 }
 
 $status = get_indicent_status ();
+
+/* Show stats is a flag to show stats of the incidents on the search */
+if ($show_stats) {
+	$stat_incidents = array ();
+}
 
 foreach ($incidents as $incident) {
 	$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
@@ -213,6 +221,12 @@ foreach ($incidents as $incident) {
 			continue;
 	}
 	
+	if ($show_stats) {
+		array_push ($stat_incidents, $incident);
+		/* Continue to avoid showing any results. Stats HTML are show at
+		the bottom of this file. */
+		continue;
+	}
 	/* We print the rows directly, because it will be used in a sortable
 	   jQuery table and it only needs the rows */
 
@@ -237,7 +251,7 @@ foreach ($incidents as $incident) {
 
 	echo '<td>'.$incident['titulo'].'</td>';
 	echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']).'</td>';
-	echo '<td><strong>'.$status[$incident['estado']].'</strong> - <i>'. $resolution[$incident['resolution']].'</i></td>';
+	echo '<td><strong>'.$status[$incident['estado']].'</strong> - <i>'. $resolutions[$incident['resolution']].'</i></td>';
 
 
 	echo '<td>'.print_priority_flag_image ($incident['prioridad'], true).'</td>';
@@ -253,14 +267,14 @@ foreach ($incidents as $incident) {
 	$files = give_number_files_incident ($incident["id_incidencia"]);
 	if ($files)
 		echo '&nbsp;<img src="images/disk.png"
-			title="'.$files.' '.lang_string ('Files').'" />';
+			title="'.$files.' '.__('Files').'" />';
 
 	/* Mail notification */
 	$mail_check = get_db_value ('notify_email', 'tincidencia',
 				'id_incidencia', $incident["id_incidencia"]);
 	if ($mail_check > 0)
 		echo '&nbsp;<img src="images/email_go.png"
-			title="'.lang_string ('Mail notification').'" />';
+			title="'.__('Mail notification').'" />';
 
 	/* Workunits */
 	$timeused = give_hours_incident ($incident["id_incidencia"]);;
@@ -271,5 +285,35 @@ foreach ($incidents as $incident) {
 	echo '</td>';
 
 	echo '</tr>';
+}
+
+/* Show HTML if show_stats flag is active */
+if ($show_stats) {
+	$total = sizeof ($stat_incidents);
+	$opened = 0;
+	$total_hours = 0;
+	$total_lifetime = 0;
+	foreach ($stat_incidents as $incident) {
+		if ($incident['estado'] != 6 && $incident['estado'] != 7)
+			$opened++;
+		else
+			$total_lifetime += get_db_value ('actualizacion - inicio',
+				'tincidencia', 'id_incidencia', $incident['id_incidencia']);
+		$workunits = get_incident_workunits ($incident['id_incidencia']);
+		$hours = 0;
+		foreach ($workunits as $workunit) {
+			$hours += get_db_value ('duration', 'tworkunit', 'id', $workunit['id_workunit']);
+		}
+		$total_hours += $hours;
+	}
+	
+	$opened_pct = format_numeric ($opened / $total * 100);
+	$mean_work = format_numeric ($total_hours / $total, 2);
+	$mean_lifetime = (int) ($total_lifetime / ($total - $opened)) / 60;
+	
+	echo '<strong>'.__('Total incicents').'</strong>: '.$total.' <br />';
+	echo '<strong>'.__('Opened').'</strong>: '.$opened.' ('.$opened_pct.'%)<br />';
+	echo '<strong>'.__('Mean life time').'</strong>: '.give_human_time ($mean_lifetime).'<br />';
+	echo '<strong>'.__('Mean work time').'</strong>: '.$mean_work.' '.__('Hours').'<br />';
 }
 ?>

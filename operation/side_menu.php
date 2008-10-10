@@ -16,8 +16,6 @@
 if (!isset($config["id_user"]))
 		return;
 
-$id_user = $_SESSION["id_usuario"];
-
 if (isset($_GET["sec"]))
 	$sec = $_GET["sec"];
 else
@@ -50,7 +48,7 @@ if ($sec == "projects"){
 	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_tree'>".__("Project tree")."</a></li>";
 
 	// Project create
-	if (give_acl($id_user, 0, "PM")){
+	if (give_acl ($config['id_user'], 0, "PM")){
 		if (($sec2 == "operation/projects/project_detail&insert_form") AND (isset($_GET["insert_form"])) )
 			echo "<li id='sidesel'>";
 		else
@@ -249,13 +247,14 @@ if ((give_acl($config["id_user"], 0, "PM")==1) AND ($sec == "projects")) {
 	echo "</div>";
 }
 
-
 // INCIDENTS
 if ($sec == "incidents") {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('incidents')."</h3>";
 	echo "<ul class='sidemenu'>";
-
+	
+	$id_incident = get_parameter ('id');
+	
 	// Incident overview
 	if ($sec2 == "operation/incidents/incident")
 		echo "<li id='sidesel'>";
@@ -271,11 +270,18 @@ if ($sec == "incidents") {
 			echo "<li>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail' id='link_create_incident'>".__('create_incident')."</a></li>";
 	}
-
+	
+	if ($sec2 == 'operation/incidents/incident') {
+		echo '<li>';
+		echo '<a href="" onclick="return false">'.__('Incident #').'</a>';
+		echo '<form id="goto-incident-form">';
+		print_input_text ('id', $id_incident ? $id_incident : '', '', 3, 10);
+		echo '</form>';
+		echo '</li>';
+	}
 	echo "</ul></div>";
 
 	// Dynamic incident sub options menu
-	$id_incident = get_parameter ('id');
 	echo "<br>";
 	
 	echo '<div class="portlet incident-menu" id="incident-menu-actions" style="display: none"><h3>'.__('incident').' #<span class="id-incident-menu">';
@@ -308,8 +314,21 @@ if ($sec == "incidents") {
 	echo "</div>";
 	
 	/* Users affected by the incident */
+	echo '<div class="portlet incident-menu" id="incident-menu-details" style="display: none">';
+	echo '<h2 onclick="toggleDiv (\'incident-details\')">'.__('Details for incident').' #<span class="id-incident-menu">';
+	if ($id_incident)
+		echo $id_incident;
+	echo "</h2>";
+	
+	echo '<div id="incident-details">';
+	if ($id_incident) {
+		incident_details_list ($id_incident);
+	}
+	echo '</div></div>';
+	
+	/* Users affected by the incident */
 	echo '<div class="portlet incident-menu" id="incident-menu-users" style="display: none">';
-	echo '<h2 onclick="toggleDiv (\'incident-users\')">'.__('Users for incident').' #<span class="id-incident-menu">';
+	echo '<h2 onclick="toggleDiv (\'incident-users\')">'.__('Users in incident').' #<span class="id-incident-menu">';
 	if ($id_incident)
 		echo $id_incident;
 	echo "</h2>";
@@ -342,6 +361,7 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "incidents")) {
 
 // INVENTORY
 if ($sec == "inventory") {
+	$id_inventory = get_parameter ('id');
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Inventory')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -360,7 +380,15 @@ if ($sec == "inventory") {
 			echo "<li>";
 		echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_detail'>".__('Create inventory object')."</a></li>";
 	}
-
+	
+	if ($sec2 == 'operation/inventories/inventory') {
+		echo '<li>';
+		echo '<a href="" onclick="return false">'.__('Inventory #').'</a>';
+		echo '<form id="goto-inventory-form">';
+		print_input_text ('id', $id_inventory ? $id_inventory : '', '', 3, 10);
+		echo '</form>';
+		echo '</li>';
+	}
 	echo "</ul>";
 	echo "</div>";
 }
@@ -379,18 +407,6 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail'>".__('Contract overview')."</a></li>";
-
-	// Create new contract
-/*
-	if (give_acl($config["id_user"], 0, "IW")==1) {
-		if (($sec2=="operation/contracts/contract_detail") AND (isset($_GET["create"])))
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&create=1'>".__('Create contract')."</a></li>";
-		
-	}
-*/
 
 	echo "</ul>";
 	echo "</div>";
@@ -648,7 +664,7 @@ echo "<div class='portlet'>";
 		echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=$id_user'>".__('work_unit_report')."</a></li>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=".$config['id_user']."'>".__('work_unit_report')."</a></li>";
 
 		// My tasks
 		if ($sec2 == "operation/users/user_task_assigment")
@@ -746,8 +762,7 @@ echo "<div class='portlet'>";
 }
 
 // Testing boxes for side menus
-$id_user = $_SESSION['id_usuario'];
-$user_row = get_db_row ("tusuario", "id_usuario", $id_user);
+$user_row = get_db_row ("tusuario", "id_usuario", $config['id_user']);
 
 $avatar = $user_row["avatar"];
 $realname = $user_row["nombre_real"];
@@ -770,20 +785,20 @@ echo '
 
 
 echo "<img src='images/avatars/".$avatar."_small.png' align=left hspace=10>";
-echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&ver='.$id_user.'"><b>'.$id_user.'</b></a><br>';
+echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&ver='.$config['id_user'].'"><b>'.$config['id_user'].'</b></a><br>';
 echo "<i>".$realname."</i><br>";
 echo __("Language").": $userlang<br>";
 echo __("Phone").": $telephone <br>";
 echo '<b>E-mail:</b> '.$email.'<br><br>';
 
 // Link to workunit calendar (month)
-echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=$id_user'><img border=0 hspace=5 src='images/clock.png' title='".__('work_unit_report')."'></a>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$now_month&year=$now_year&id=".$config['id_user']."'><img border=0 hspace=5 src='images/clock.png' title='".__('work_unit_report')."'></a>";
 
 if (give_acl($config["id_user"], 0, "PR") == 1){
 
 	// Link to project graph
 	echo "&nbsp;&nbsp;";
-	echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$id_user."'>";
+	echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$config['id_user']."'>";
 	echo "<img border=0 src='images/chart_bar.png' title='Project distribution'></a>";
 
 
@@ -798,7 +813,7 @@ if (give_acl($config["id_user"], 0, "PR") == 1){
 	$begin_week .= " 00:00:00";
 	$end_week = date('Y-m-d H:i:s',strtotime("$begin_week + 1 week"));
 	$total_hours = 5 * $config["hours_perday"];
-	$week_hours = give_db_sqlfree_field ("SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_week' AND timestamp <   '$end_week' AND id_user = '".$id_user."'");
+	$week_hours = give_db_sqlfree_field ("SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_week' AND timestamp <   '$end_week' AND id_user = '".$config['id_user']."'");
 	$ratio = "$week_hours / $total_hours";
 	if ($week_hours < $total_hours)
 		echo "<img src='images/exclamation.png' title='".__("Week workunit time not fully justified")." - $ratio'>";
@@ -806,9 +821,7 @@ if (give_acl($config["id_user"], 0, "PR") == 1){
 		echo "<img src='images/heart.png' title='".__("Week workunit are fine")." - $ratio'>";
 }
 
-echo '
-  </div>
-</div>';
+echo '</div></div>';
 // End of user box
 
 

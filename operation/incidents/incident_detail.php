@@ -40,12 +40,8 @@ $result_msg = "";
 
 $action = get_parameter ('action');
 
-if ($action == 'get-info') {
-	$incident = get_db_row ('tincidencia', 'id_incidencia', $id);
-	
-	$incident['hours'] = (int) give_hours_incident ($id);
-	
-	echo json_encode ($incident);
+if ($action == 'get-details-list') {
+	incident_details_list ($id);
 	if (defined ('AJAX'))
 		return;
 }
@@ -399,10 +395,7 @@ if (! $id) {
 	// Take first group defined for this user
 	$default_id_group = give_db_sqlfree_field ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
 	// if have only one group, select default user and email for this group
-	if ($number_group == 1){
-		$default_responsable = give_db_sqlfree_field ("SELECT id_user FROM tgroup_manager WHERE id_group = $default_id_group");
-		$email_notify = give_db_sqlfree_field ("SELECT forced_email FROM tgroup_manager WHERE id_group = $default_id_group");
-	}
+	$email_notify = false;
 }
 $has_permission = (give_acl ($iduser_temp, $id_grupo, "IM")  || ($usuario == $iduser_temp));
 
@@ -487,12 +480,8 @@ if ($has_permission) {
 }
 
 if ($has_permission) {
-	$disabled = false;
-	if ($default_responsable != "") {
-		$disabled = true;
-	}
 	$table->data[4][1] = print_button (dame_nombre_real ($usuario), 'usuario_name',
-					$disabled, '', 'class="dialogbtn"', true, __('assigned_user'));
+					false, '', 'class="dialogbtn"', true, __('assigned_user'));
 	$table->data[4][1] .= print_input_hidden ('usuario_form', $usuario, true);
 	$table->data[4][1] .= print_help_tip (__('incident_user_help'), true);
 } else {

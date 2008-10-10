@@ -14,10 +14,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
 global $config;
 
-check_login();
+check_login ();
 
 if (! give_acl ($config["id_user"], 0, "IR")) {
 	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access Contact");
@@ -145,21 +144,25 @@ if ($id || $new_contact) {
 	
 	echo '<div class="button" style="width: '.$table->width.'">';
 	if ($id) {
-		print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
+		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', false);
 		print_input_hidden ('update_contact', 1);
-		print_input_hidden ("id", $id);
+		print_input_hidden ('id', $id);
 	} else {
+		print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', false);
 		print_input_hidden ('create_contact', 1);
-		print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', false);
 	}
 	echo "</div>";
 	echo "</form>";
 } else {
 	$search_text = (string) get_parameter ('search_text');
+	$id_company = (int) get_parameter ('id_company');
 	
-	$where_clause = "";
+	$where_clause = "WHERE 1=1";
 	if ($search_text != "") {
-		$where_clause = sprintf ('WHERE fullname LIKE "%%%s%%"', $search_text);
+		$where_clause .= sprintf (' AND fullname LIKE "%%%s%%"', $search_text);
+	}
+	if ($id_company) {
+		$where_clause .= sprintf (' AND id_company = %d', $id_company);
 	}
 
 	$table->width = '400px';
@@ -167,8 +170,8 @@ if ($id || $new_contact) {
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->data[0][0] = __('Search');
-	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
+	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
+	$table->data[0][1] = print_select (get_companies (), 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contacts/contact_detail">';
@@ -182,8 +185,10 @@ if ($id || $new_contact) {
 		$table->width = "720px";
 		$table->class = "listing";
 		$table->data = array ();
+		$table->size = array ();
+		$table->size[3] = '40px';
 		$table->style = array ();
-		$table->style[0] = 'font-weight: bold';
+		$table->style[] = 'font-weight: bold';
 		$table->head = array ();
 		$table->head[0] = __('Full name');
 		$table->head[1] = __('Company');

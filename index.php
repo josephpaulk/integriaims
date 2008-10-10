@@ -100,8 +100,8 @@ echo "<title>".$config["sitename"]."</title>";
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/integria_tip.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/flora/flora.all.css" type="text/css" media="screen" title="Flora (Default)">
-<script type='text/JavaScript' src='include/js/calendar.js'></script>
-<script type='text/JavaScript' src='include/js/integria.js'></script>
+<script type="text/javascript" src="include/js/calendar.js"></script>
+<script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript" src="include/js/jquery.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.core.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.tabs.js"></script>
@@ -109,6 +109,9 @@ echo "<title>".$config["sitename"]."</title>";
 <script type="text/javascript" src="include/js/jquery.ui.resizable.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.dialog.js"></script>
 <script type="text/javascript" src="include/js/jquery.form.js"></script>
+<!--[if lte IE 7]>
+<script type="text/javascript" src="include/js/jquery.bgiframe.js"></script>
+<![endif]-->
 
 <?php
 // Login process

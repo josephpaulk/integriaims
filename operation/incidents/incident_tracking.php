@@ -56,72 +56,75 @@ if (isset($_GET["id"])){
 // ********************************************************************
 // Notes
 // ********************************************************************
-$cabecera=0;
-$sql4='SELECT * FROM tincident_track WHERE id_incident= '.$id_inc;
 
-echo "<h3>".lang_string ("Incident"). " #$id_inc - ".give_inc_title ($id_inc)."</h3>";
+echo "<h3>".__('Incident'). " #$id_inc - ".give_inc_title ($id_inc)."</h3>";
 
 echo '<table width="80%" class="listing">';
 
-if ($res4=mysql_query($sql4)){
-	echo "<tr><th>".lang_string ('state')."<th>".lang_string ('user')."<th>".lang_string ('timestamp');
-	while ($row2=mysql_fetch_array($res4)){
-		$timestamp = $row2["timestamp"];
-		$state = $row2["state"];
-		$user = $row2["id_user"];
-		$aditional_data = $row2["id_aditional"];		
-		echo '<tr><td>';
+$trackings = get_db_all_rows_field_filter ('tincident_track', 'id_incident', $id_inc);
+
+if ($trackings !== false) {
+	$table->width = "90%";
+	$table->class = 'listing';
+	$table->data = array ();
+	$table->head = array ();
+	$table->head[0] = __('State');
+	$table->head[1] = __('User');
+	$table->head[2] = __('Date');
+	
+	foreach ($trackings as $tracking) {
+		$data = array ();
+		
+		$timestamp = $tracking["timestamp"];
+		$state = $tracking["state"];
+		$user = $tracking["id_user"];
+		$aditional_data = $tracking["id_aditional"];
 
 		switch ($state) {
 		case 0:
-			$descripcion = lang_string ('incident_creation');
+			$data[0] = __('Incident created');
 			break;
 		case 1:
-			$descripcion = lang_string ('incident_updated');
+			$data[0] = __('Incident updated');
 			break;
 		case 2:
-			$descripcion = lang_string ('incident_note_added');
+			$data[0] = __('Incident note added');
 			break;
 		case 3:
-			$descripcion = lang_string ('incident_file_added');
+			$data[0] = __('Incident file added');
 			break;
 		case 4:
-			$descripcion = lang_string ('incident_note_deleted');
+			$data[0] = __('Incident note deleted');
 			break;
 		case 5:
-			$descripcion = lang_string ('incident_file_deleted');
+			$data[0] = __('Incident file deleted');
 			break;
 		case 6:
-			$descripcion = lang_string ('incident_change_priority');
+			$data[0] = __('Incident change priority');
+			$data[0] .= " -> ".$tracking["id_aditional"];
 			break;
 		case 7:
-			$descripcion = lang_string ('incident_change_status');
+			$data[0] = __('Incident change status');
+			$data[0] .= " -> ". give_db_value ('name', 'tincident_status', 'id', $tracking["id_aditional"]);
 			break;
 		case 8:
-			$descripcion = lang_string ('incident_change_resolution');
+			$data[0] = __('Incident change resolution');
+			$data[0] .= " -> ".give_db_value ("name", "tincident_resolution", 'id', $tracking["id_aditional"]);
 			break;
 		case 9:
-			$descripcion = lang_string ('incident_workunit_added');
+			$data[0] = __('Incident workunit added');
 			break;
 		default:
-			$descripcion = lang_string ('unknown');
+			$data[0] = __('Unknown');
 		}
-		if ($state == 6)
-			$descripcion .= " -> ".$aditional_data;
-	
-		if ($state == 7)
-			$descripcion .= " -> ". give_db_value ("name", "tincident_status", "id", $aditional_data);
-	
-		if ($state == 8)
-			$descripcion .= " -> ".give_db_value ("name", "tincident_resolution", "id", $aditional_data);
-
-		echo $descripcion;
-		echo '<td>'.dame_nombre_real ($user);
-		echo '<td class="f9">';
-		echo $timestamp;
+		$data[0] = $description;
+		$data[1] = dame_nombre_real ($user);
+		$data[2] = $timestamp;
+		
+		array_push ($table->data, $data);
 	}
-	echo "</table>"; 
-} else
-	echo lang_string ('no_data');
-
+	print_table ($table);
+} else {
+	echo __('no_data');
+}
 ?>

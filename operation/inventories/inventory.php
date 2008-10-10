@@ -90,15 +90,20 @@ echo '</div>';
 <script type="text/javascript">
 
 var id_inventory;
-var old_inventory;
+var old_inventory = 0;
 
 function tab_loaded (event, tab) {
 	if (tab.index == 1) {
+		if (id_inventory == old_inventory) {
+			return;
+		}
 		configure_inventory_form (true);
+		old_inventory = id_inventory;
 	}
 }
 
-function incident_row_clicked (id, name) {
+function show_inventory_details (id) {
+	id_inventory = id;
 	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/inventories/inventory_detail&id=" + id);
 	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/inventories/inventory_incidents&id=" + id);
 	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/inventories/inventory_contracts&id=" + id);
@@ -112,13 +117,7 @@ $(document).ready (function () {
 	$("#tabs > ul").tabs ({"load" : tab_loaded});
 
 <?php if ($id) : ?>
-	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/inventories/inventory_detail&id=" + <?php echo $id; ?>);
-	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/inventories/inventory_incidents&id=" + <?php echo $id; ?>);
-	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/inventories/inventory_contracts&id=" + <?php echo $id; ?>);
-	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/inventories/inventory_workunits&id=" + <?php echo $id; ?>);
-	$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
-		.tabs ("enable", 4);
-	$("#tabs > ul").tabs ("select", 1);
+	show_inventory_details (<?php echo $id; ?>);
 <?php endif; ?>
 	
 	$("#saved-searches-form").submit (function () {
@@ -155,10 +154,22 @@ $(document).ready (function () {
 			"json"
 		);
 	});
-
+	
 	$("#inventory_search_form").submit (function () {
 		$("#saved_searches_table td:gt(1)").fadeIn ();
 	});
-	configure_inventory_search_form (10, incident_row_clicked);
+	
+	$("#goto-inventory-form").submit (function () {
+		id = $("#text-id", this).attr ("value");
+		show_inventory_details (id);
+		console.log (old_inventory);
+		if (old_inventory)
+			$("#tabs > ul").tabs ("load", 1);
+		return false;
+	});
+	
+	configure_inventory_search_form (10, function (id, name) {
+		show_inventory_details (id);
+	});
 });
 </script>

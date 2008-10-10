@@ -16,80 +16,83 @@
 
 global $config;
 
-check_login();
+check_login ();
 
-if (give_acl($config["id_user"], 0, "IM")==0) {
-	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access Manufacturer section");
+if (! give_acl($config["id_user"], 0, "IM")) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access Manufacturer section");
 	require ("general/noaccess.php");
 	exit;
 }
 
-$id_user = $config["id_user"];
+$id = (int) get_parameter ('id');
+$new_manufacturer = (bool) get_parameter ('new_manufacturer');
+$create_manufacturer = (bool) get_parameter ('create_manufacturer');
+$update_manufacturer = (bool) get_parameter ('update_manufacturer');
+$delete_manufacturer = (bool) get_parameter ('delete_manufacturer');
 
 // CREATE
-// ==================
-if (isset($_GET["create2"])){ //
+if ($create_manufacturer) {
+	$name = (string) get_parameter ('name');
+	$comments = (string) get_parameter ('comments');
+	$address = (string) get_parameter ('address');
+	$id_company_role = (int) get_parameter ('id_company_role');
+	$id_sla = (int) get_parameter ('id_sla');
 
-	$name = get_parameter ("name","");
-	$comments = get_parameter ("comments", "");
-	$address = get_parameter ("address", "");
-	$id_company_role = get_parameter ("id_company_role", "");
-	$id_sla = get_parameter ("id_sla", "");
+	$sql = sprintf ('INSERT INTO tmanufacturer (`name`, `comments`, `address`,
+		`id_sla`, `id_company_role`)
+		VALUE ("%s", "%s", "%s", %d, %d)',
+		$name, $comments, $address, $id_company_role, $id_sla);
 
-	$sql_insert="INSERT INTO tmanufacturer (`name`, `comments`, `address`, `id_sla`, `id_company_role`) VALUE ('$name','$comments', '$address', '$id_company_role', '$id_sla') ";
-
-	$result=mysql_query($sql_insert);
-	if (! $result)
+	$id = process_sql ($sql, 'insert_id');
+	if ($id === false) {
 		echo "<h3 class='error'>".__('Manufacturer cannot be created')."</h3>";
-	else {
+	} else {
 		echo "<h3 class='suc'>".__('Manufacturer has been created successfully')."</h3>";
-		$id_data = mysql_insert_id();
-		insert_event ("MANUFACTURER CREATED", $id_data, 0, $name);
+		insert_event ("MANUFACTURER CREATED", $id, 0, $name);
 	}
+	$id = 0;
 }
 
 // UPDATE
-// ==================
-if (isset($_GET["update2"])){ // if modified any parameter
-	$id = get_parameter ("id","");
-	$name = get_parameter ("name","");
-	$comments = get_parameter ("comments", "");
-	$address = get_parameter ("address", "");
-	$id_company_role = get_parameter ("id_company_role", "");
-	$id_sla = get_parameter ("id_sla", "");
+if ($update_manufacturer) {
+	$id = (string) get_parameter ('id');
+	$name = (string) get_parameter ('name');
+	$comments = (string) get_parameter ('comments');
+	$address = (string) get_parameter ('address');
+	$id_company_role = (int) get_parameter ('id_company_role');
+	$id_sla = (int) get_parameter ('id_sla');
 
-	$sql_update ="UPDATE tmanufacturer
-	SET address = '$address', id_sla = '$id_sla', id_company_role = '$id_company_role', comments = '$comments', name = '$name' WHERE id = $id";
-
-	$result=mysql_query($sql_update);
-	if (! $result)
-		echo "<h3 class='error'>".__('Manufacturer cannot be updated')."</h3>";
+	$sql = sprintf ('UPDATE tmanufacturer
+		SET address = "%s", id_sla = %d, id_company_role = %d,
+		comments = "%s", name = "%s"" WHERE id = %d',
+		$address, $id_sla, $id_company_role, $comments, $name, $id);
+	$result = process_sql ($sql);
+	if ($result === false)
+		echo '<h3 class="error">'.__('Manufacturer cannot be updated').'</h3>';
 	else {
-		echo "<h3 class='suc'>".__('Manufacturer updated ok')."</h3>";
+		echo '<h3 class="suc">'.__('Manufacturer updated ok').'</h3>';
 		insert_event ("MANUFACTURER", $id, 0, $name);
 	}
+	$id = 0;
 }
 
 // DELETE
 // ==================
-if (isset($_GET["delete"])){ // if delete
-	$id = get_parameter ("delete",0);
-	$name = give_db_sqlfree_field  ("SELECT name FROM tmanufacturer WHERE id = $id ");
-	$sql_delete= "DELETE FROM tmanufacturer WHERE id = $id";
-	$result=mysql_query($sql_delete);
+if ($delete_manufacturer) {
+	$name = get_db_value ('name', 'tmanufacturer', 'id', $id);
+	$sql = sprintf ('DELETE FROM tmanufacturer WHERE id = %d', $id);
+	process_sql ($sql);
 	insert_event ("MANUFACTURER DELETED", $id, 0, "$name");
-	echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
+	echo '<h3 class="suc">'.__('Deleted successfully').'</h3>';
+	$id = 0;
 }
 
-if (isset($_GET["update2"])){
-	// After apply update, let's redirecto to UPDATE form again.
-	$_GET["update"]= $id;
-}
+echo '<h2>'.__('Manufacturers management').'</h2>';
 
 // FORM (Update / Create)
-if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
-	if (isset($_GET["create"])){
-		$id = -1;
+if ($id || $new_manufacturer) {
+	if ($new_manufacturer) {
+		$id = 0;
 		$name = "";
 		$comments = "";
 
@@ -97,149 +100,109 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id_sla = "";
 		$id_company_role = "";
 	} else {
-		$id = get_parameter ("update", -1);
-		$row = get_db_row ("tmanufacturer", "id", $id);
-		$name = $row["name"];
-		$comments = $row["comments"];
-		$address = $row["address"];
-		$id_sla = $row["id_sla"];
-		$id_company_role = $row["id_company_role"];
+		$manufacturer = get_db_row ('tmanufacturer', 'id', $id);
+		$name = $manufacturer["name"];
+		$comments = $manufacturer["comments"];
+		$address = $manufacturer["address"];
+		$id_sla = $manufacturer["id_sla"];
+		$id_company_role = $manufacturer["id_company_role"];
 	}
-
-	echo "<h2>".__('Manufacturer management')."</h2>";
-	if ($id == -1){
-		echo "<h3>".__('Create a new manufacturer')."</a></h3>";
-		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&create2=1'>";
-	}
-	else {
-		echo "<h3>".__('Update existing manufacturer')."</a></h3>";
-		echo "<form method='post' action='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&update2=1'>";
-		print_input_hidden ("id", "$id", false, '');
-	}
-
-	echo "<table width=620 class='databox'>";
-
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo __('Manufacturer name');
-	echo "</td><tr>";
-	echo "<td class=datos colspan=4>";
-	print_input_text ("name", $name, "", 60, 100, false);
-	echo "</td></tr>";
 	
-	echo "<tr>";
-	echo "<td>".__('Company role');
-	echo "<td>".__('Base SLA');
+	$table->width = "720px";
+	$table->class = "databox";
+	$table->data = array ();
+	$table->colspan = array ();
+	$table->colspan[0][0] = 2;
+	$table->colspan[2][0] = 2;
+	$table->colspan[3][0] = 2;
 	
-	echo "<tr>";
-	echo "<td>";
-	print_select_from_sql ("SELECT id, name FROM tcompany_role", "id_company_role", $id_company_role, '', 'select', '0', false, false, true, false);
-	echo "<td>";
-	print_select_from_sql ("SELECT id, name FROM tsla", "id_sla", $id_sla, '', 'select', '0', false, false, true, false);
-
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo __('Address');
-	echo "</td><tr>";
-	echo "<td class=datos colspan=4>";
-	print_textarea ("address", 1, 1, $address, "style='width: 600px; height: 100px;'", false);
-	echo "</td></tr>";
-
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo __('Comments');
-	echo "</td><tr>";
-	echo "<td class=datos colspan=4>";
-	print_textarea ("comments", 1, 1, $comments, "style='width: 600px; height: 100px;'", false);
-	echo "</td></tr>";
-
-
-	echo "</table>";
-
-	echo "<table width=620 class='button'>";
-	echo "<tr>";
-	echo "<td class='datos3' align=right>";
-	if ($id == -1)
-		print_submit_button (__('Create'), "enviar", false, "class='sub next'", false);
-	else
-		print_submit_button (__('Update'), "enviar", false, "class='sub upd'", false);
-	echo "</td></tr></table>";
+	$table->data[0][0] = print_input_text ("name", $name, "", 60, 100, true, __('Name'));
+	$table->data[1][0] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
+		'id_company_role', $id_company_role, '', 'Select', '0', true, false, false, __('Company role'));
+	
+	$table->data[1][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
+		'id_sla', $id_sla, '', 'Select', '0', true, false, false, __('Base SLA'));
+	$table->data[2][0] = print_textarea ("address", 4, 1, $address, '', true, __('Address'));
+	$table->data[3][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
+	
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
+	print_table ($table);
+	
+	echo '<div class="button" style="width: '.$table->width.'">';
+	if ($id) {
+		print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
+		print_input_hidden ('update_manufacturer', 1);
+		print_input_hidden ('id', $id);
+	} else {
+		print_input_hidden ('create_manufacturer', 1);
+		print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', false);
+	}
+	echo "</div>";
 	echo "</form>";
+} else {
+	$search_text = (string) get_parameter ('search_text');
+	
+	$where_clause = "";
+	if ($search_text != "") {
+		$where_clause = sprintf ('WHERE name LIKE "%%%s%%" OR comments LIKE "%%%s%%"',
+			$search_text, $search_text);
+	}
 
-	// Get some space here
-	echo "<div style='min-height:50px'></div>";
-}
-
-
-	// Show list of items
-	// =======================
-	if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-		echo "<h2>".__('Manufacturers management')."</h2>";
-
-		$text = get_parameter ("freetext", "");
-		if ($text != ""){
-			$sql_search = "WHERE address LIKE '%$text%' OR name LIKE '%$text%' OR comments LIKE '%$text%' ";
-			echo "<h4>".__("Searching for")." ".$text."</h4>";
+	$table->width = '400px';
+	$table->class = 'search-table';
+	$table->style = array ();
+	$table->style[0] = 'font-weight: bold;';
+	$table->data = array ();
+	$table->data[0][0] = __('Search');
+	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
+	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
+	print_table ($table);
+	echo '</form>';
+	
+	$sql = "SELECT * FROM tmanufacturer $where_clause ORDER BY name";
+	$manufacturers = get_db_all_rows_sql ($sql);
+	if ($manufacturers !== false) {
+		unset ($table);
+		$table->width = "720px";
+		$table->class = "listing";
+		$table->data = array ();
+		$table->style = array ();
+		$table->style[0] = 'font-weight: bold';
+		$table->head = array ();
+		$table->head[0] = __('Name');
+		$table->head[1] = __('Address');
+		$table->head[2] = __('Company role');
+		$table->head[3] = __('SLA');
+		$table->head[4] = __('Delete');
+		
+		foreach ($manufacturers as $manufacturer) {
+			$data = array ();
+			
+			$data[0] = '<a href="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&id='.
+				$manufacturer['id'].'">'.$manufacturer['name'].'</a>';
+			$data[1] = substr ($manufacturer['address'], 0, 50). "...";
+			$data[2] = get_db_value ('name', 'tcompany_role', 'id', $manufacturer['id_company_role']);
+			$data[3] = get_db_value ('name', 'tsla', 'id', $manufacturer['id_sla']);
+			$data[4] = '<a href="index.php?sec=inventory&
+						sec2=operation/manufacturers/manufacturer_detail&
+						delete_manufacturer=1&id='.$manufacturer['id'].'"
+						onClick="if (!confirm(\''.__('are_you_sure').'\'))
+						return false;">
+						<img src="images/cross.png"></a>';
+			
+			array_push ($table->data, $data);
 		}
-		else
-			$sql_search = "";
-
-		echo "<table width=400>";
-		echo "<form method=post action='index.php?sec=inventory&sec2=operation/inventory/building_detail'>";
-		echo "<tr><td>";
-		echo __('Free text search');
-		echo "<td>";
-		print_input_text ("freetext", $text, "", 15, 100, false);
-		echo "<td>";
-		print_submit_button (__('Search'), "enviar", false, "class='sub search'", false);
-		echo "</form></td></tr></table>";
-
-	   	$sql1 = "SELECT * FROM tmanufacturer $sql_search ORDER BY name";
-		$color =0;
-		if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
-			$table->width = "720";
-			$table->class = "listing";
-			$table->cellspacing = 0;
-			$table->cellpadding = 0;
-			$table->data = array ();
-			$table->size = array ();
-			$table->style = array ();
-			$table->colspan = array ();
-			$table->head[0] = __('Name');
-			$table->head[1] = __('Address');
-			$table->head[2] = __('Company role');
-			$table->head[3] = __('SLA');
-			$table->head[4] = __('Delete');
-			$counter = 0;
-			while ($row=mysql_fetch_array($result)){
-				// Name
-				$table->data[$counter][0] = "<b><a href='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
-				
-				// Address
-				$table->data[$counter][1] = substr($row["address"], 0, 50). "...";
-
-				// Company role
-				$table->data[$counter][2] = get_db_sql ("SELECT name FROM tcompany_role WHERE id = ".$row["id_company_role"]);
-
-				// SLA 
-				$table->data[$counter][3] = get_db_sql ("SELECT name FROM tsla WHERE id = ".$row["id_sla"]);
-
-				// Delete
-				$table->data[$counter][4] = "<a href='index.php?sec=inventory&
-							sec2=operation/inventory/building_detail&
-							delete=".$row["id"]."'
-							onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
-							return false;'>
-							<img src='images/cross.png'></a>";
-				$counter++;
-			}
-			print_table ($table);
-		}
-		echo "<table width=720 class='button'>";
-		echo "<tr><td align='right'>";
-		echo "<form method=post action='index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail&create=1'>";
-		echo "<input type='submit' class='sub next' name='crt' value='".__('Create new manufacturer')."'>";
-		echo "</form></td></tr></table>";
-	} // end of list
+		print_table ($table);
+	}
+	
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
+	echo '<div class="button" style="width: '.$table->width.'">';
+	print_submit_button (__('Create manufacturer'), 'new_btn', false, 'class="sub next"');
+	print_input_hidden ('new_manufacturer', 1);
+	echo '</div>';
+	echo '</form>';
+} // end of list
 
 ?>

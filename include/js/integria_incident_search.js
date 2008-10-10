@@ -48,7 +48,8 @@ function show_user_search_dialog (title) {
 					minWidth: 300,
 					height: 500,
 					width: 450,
-					modal: true
+					modal: true,
+					bgiframe: true
 					});
 			configure_user_search_form ();
 		},
@@ -192,9 +193,10 @@ function configure_incident_form (enable_ajax_form) {
 	}
 }
 
-function configure_incident_search_form (page_size, row_click_callback) {
+function configure_incident_search_form (page_size, row_click_callback, search_callback) {
 	$(dialog+"#search_incident_form").submit (function () {
 		$(dialog+"#incident_search_result_table").removeClass ("hide");
+		values = Array ();
 		values = get_form_input_values (this);
 		values.push ({name: "page",
 				value: "operation/incidents/incident_search"});
@@ -213,6 +215,8 @@ function configure_incident_search_form (page_size, row_click_callback) {
 						.tablesorterPager ({container: $(dialog+"#pager"), size: page_size});
 					$(dialog+"table#incident_search_result_table tbody").fadeIn ();
 					$(dialog+"#pager").removeClass ("hide").fadeIn ();
+					if (search_callback)
+						search_callback ($(dialog+"#search_incident_form"));
 				},
 				"html"
 				);
@@ -250,6 +254,7 @@ function show_add_incident_dialog () {
 					height: 750,
 					width: 800,
 					modal: true,
+					bgiframe: true,
 					open: function () {
 						parent_dialog = dialog;
 						dialog = "#dialog-incident ";
@@ -314,6 +319,7 @@ function show_incident_search_dialog (title, callback_incident_click) {
 					height: 600,
 					width: 750,
 					modal: true,
+					bgiframe: true,
 					open: function () {
 						parent_dialog = dialog;
 						dialog = "#dialog-search-incident ";
@@ -323,7 +329,7 @@ function show_incident_search_dialog (title, callback_incident_click) {
 						parent_dialog = "";
 					}
 					});
-			configure_incident_search_form (5, callback_incident_click);
+			configure_incident_search_form (5, callback_incident_click, null);
 		},
 		"html"
 	);
@@ -345,6 +351,7 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 					height: 700,
 					width: 700,
 					modal: true,
+					bgiframe: true,
 					buttons: {
 						"X": function() { 
 							$(this).dialog("close"); 
@@ -401,7 +408,8 @@ function show_add_workunit_dialog (id_incident) {
 					minWidth: 300,
 					height: 500,
 					width: 600,
-					modal: true
+					modal: true,
+					bgiframe: true
 					});
 			configure_workunit_form ();
 		},
@@ -442,7 +450,8 @@ function show_add_file_dialog (id_incident) {
 					minWidth: 200,
 					height: 350,
 					width: 600,
-					modal: true
+					modal: true,
+					bgiframe: true
 					});
 			configure_file_form ();
 		},
@@ -450,7 +459,7 @@ function show_add_file_dialog (id_incident) {
 	);
 }
 
-function configure_incident_side_menu (id_incident, refresh_users) {
+function configure_incident_side_menu (id_incident, refresh_menu) {
 	$(".id-incident-menu").empty ().append (id_incident);
 	
 	$("#incident-menu-actions #incident-create-work")
@@ -467,7 +476,7 @@ function configure_incident_side_menu (id_incident, refresh_users) {
 			return false;
 		});
 	
-	if (refresh_users) {
+	if (refresh_menu) {
 		values = Array ();
 		values.push ({name: "page",
 					value: "operation/incidents/incident_detail"});
@@ -479,6 +488,21 @@ function configure_incident_side_menu (id_incident, refresh_users) {
 			values,
 			function (data, status) {
 				$("#incident-menu-users #incident-users").empty ().append (data);
+			},
+			"html"
+		);
+		
+		values = Array ();
+		values.push ({name: "page",
+					value: "operation/incidents/incident_detail"});
+		values.push ({name: "id",
+					value: id_incident});
+		values.push ({name: "action",
+					value: 'get-details-list'});
+		jQuery.get ("ajax.php",
+			values,
+			function (data, status) {
+				$("#incident-menu-details #incident-details").empty ().append (data);
 			},
 			"html"
 		);

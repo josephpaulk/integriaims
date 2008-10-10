@@ -22,21 +22,21 @@ global $config;
 // ===============================================================================
 
 function incident_peruser ($width, $height){
-    require ("../include/config.php");
-    
-    $res = mysql_query("SELECT * FROM tusuario");
-    while ($row=mysql_fetch_array($res)){
-        $id_user = $row["id_usuario"];
-        $datos = get_db_sqlf ("SELECT COUNT(id_usuario) FROM tincidencia WHERE id_usuario = '$id_user'");
-        if ($datos > 0){
-            $data[] = $datos;
-            $legend[] = $id_user;
-        } 
-    } 
-    if (isset($data))
-        generic_pie_graph ($width, $height, $data, $legend);
-    else 
-        graphic_error();
+	require ("../include/config.php");
+	
+	$res = mysql_query("SELECT * FROM tusuario");
+	while ($row=mysql_fetch_array($res)){
+		$id_user = $row["id_usuario"];
+		$datos = get_db_sqlf ("SELECT COUNT(id_usuario) FROM tincidencia WHERE id_usuario = '$id_user'");
+		if ($datos > 0){
+			$data[] = $datos;
+			$legend[] = $id_user;
+		} 
+	} 
+	if (isset($data))
+		generic_pie_graph ($width, $height, $data, $legend);
+	else 
+		graphic_error();
 }
 
 // ===============================================================================
@@ -44,21 +44,21 @@ function incident_peruser ($width, $height){
 // ===============================================================================
 
 function graph_workunit_task ($width, $height, $id_task){
-    require ("../include/config.php");
-    
-    $res = mysql_query("SELECT SUM(duration), id_user FROM tworkunit, tworkunit_task
-                    WHERE tworkunit_task.id_task = $id_task AND 
-                    tworkunit_task.id_workunit = tworkunit.id 
-                    GROUP BY id_user");
-    while ($row=mysql_fetch_array($res)){
-        $data[] = $row[0];
-        $legend[] = $row[1];
-    } 
-     
-    if (isset($data))
-        generic_pie_graph ($width, $height, $data, $legend);
-    else 
-        graphic_error();
+	require ("../include/config.php");
+	
+	$res = mysql_query("SELECT SUM(duration), id_user FROM tworkunit, tworkunit_task
+					WHERE tworkunit_task.id_task = $id_task AND 
+					tworkunit_task.id_workunit = tworkunit.id 
+					GROUP BY id_user");
+	while ($row=mysql_fetch_array($res)){
+		$data[] = $row[0];
+		$legend[] = $row[1];
+	} 
+	 
+	if (isset($data))
+		generic_pie_graph ($width, $height, $data, $legend);
+	else 
+		graphic_error();
 }
 
 
@@ -67,29 +67,29 @@ function graph_workunit_task ($width, $height, $id_task){
 // ===============================================================================
 
 function graph_workunit_user ($width, $height, $id_user, $date_from ){
-    require ("../include/config.php");
-    
+	require ("../include/config.php");
+	
 
-    $date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
-    $res = mysql_query("SELECT SUM(duration), id_task, timestamp, ttask.name, tproject.name 
-                    FROM tworkunit, tworkunit_task, ttask, tproject  
-                    WHERE tworkunit.id_user = '$id_user' AND 
-                    tworkunit.id = tworkunit_task.id_workunit AND 
-                    tworkunit.timestamp > '$date_from' AND 
-		    tworkunit.timestamp < '$date_to' AND
-                    tworkunit_task.id_task = ttask.id AND
-                    tproject.id = ttask.id_project 
-                    GROUP BY id_task ORDER BY SUM(duration) DESC");
+	$date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
+	$res = mysql_query("SELECT SUM(duration), id_task, timestamp, ttask.name, tproject.name 
+					FROM tworkunit, tworkunit_task, ttask, tproject  
+					WHERE tworkunit.id_user = '$id_user' AND 
+					tworkunit.id = tworkunit_task.id_workunit AND 
+					tworkunit.timestamp > '$date_from' AND 
+			tworkunit.timestamp < '$date_to' AND
+					tworkunit_task.id_task = ttask.id AND
+					tproject.id = ttask.id_project 
+					GROUP BY id_task ORDER BY SUM(duration) DESC");
 
-    while ($row=mysql_fetch_array($res)){
-        $data[] = $row[0];
-        $legend[] = $row[4]." / ".$row[3] . " (".$row[0].")";
-    } 
-     
-    if (isset($data))
-        generic_pie_graph ($width, $height, $data, $legend);
-    else 
-        graphic_error();
+	while ($row=mysql_fetch_array($res)){
+		$data[] = $row[0];
+		$legend[] = $row[4]." / ".$row[3] . " (".$row[0].")";
+	} 
+	 
+	if (isset($data))
+		generic_pie_graph ($width, $height, $data, $legend);
+	else 
+		graphic_error();
 }
 
 
@@ -98,27 +98,27 @@ function graph_workunit_user ($width, $height, $id_user, $date_from ){
 // ===============================================================================
 
 function graph_workunit_project_user ($width, $height, $id_user, $date_from){
-    require ("../include/config.php");
-    
-    $date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
-    $res = mysql_query("SELECT SUM(duration), tproject.name 
-                    FROM tworkunit, tworkunit_task, ttask, tproject  
-                    WHERE tworkunit.id_user = '$id_user' AND 
-                    tworkunit.id = tworkunit_task.id_workunit AND 
-                    tworkunit.timestamp > '$date_from' AND 
-		    tworkunit.timestamp < '$date_to' AND
-                    tworkunit_task.id_task = ttask.id AND
-                    tproject.id = ttask.id_project 
-                    GROUP BY tproject.name ORDER BY SUM(duration) DESC");
-    while ($row=mysql_fetch_array($res)){
-        $data[] = $row[0];
-        $legend[] = $row[1] ." (".$row[0].")";
-    } 
-     
-    if (isset($data))
-        generic_pie_graph ($width, $height, $data, $legend);
-    else 
-        graphic_error();
+	require ("../include/config.php");
+	
+	$date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
+	$res = mysql_query("SELECT SUM(duration), tproject.name 
+					FROM tworkunit, tworkunit_task, ttask, tproject  
+					WHERE tworkunit.id_user = '$id_user' AND 
+					tworkunit.id = tworkunit_task.id_workunit AND 
+					tworkunit.timestamp > '$date_from' AND 
+			tworkunit.timestamp < '$date_to' AND
+					tworkunit_task.id_task = ttask.id AND
+					tproject.id = ttask.id_project 
+					GROUP BY tproject.name ORDER BY SUM(duration) DESC");
+	while ($row=mysql_fetch_array($res)){
+		$data[] = $row[0];
+		$legend[] = $row[1] ." (".$row[0].")";
+	} 
+	 
+	if (isset($data))
+		generic_pie_graph ($width, $height, $data, $legend);
+	else 
+		graphic_error();
 }
 
 // ===============================================================================
@@ -127,13 +127,13 @@ function graph_workunit_project_user ($width, $height, $id_user, $date_from){
 
 
 function graphic_error () {
-    global $config;
+	global $config;
 
-    Header('Content-type: image/png');
-    $imgPng = imageCreateFromPng($config["homedir"].'/images/error.png');
-    imageAlphaBlending($imgPng, true);
-    imageSaveAlpha($imgPng, true);
-    imagePng($imgPng);
+	Header('Content-type: image/png');
+	$imgPng = imageCreateFromPng($config["homedir"].'/images/error.png');
+	imageAlphaBlending($imgPng, true);
+	imageSaveAlpha($imgPng, true);
+	imagePng($imgPng);
 }
 
 // ***************************************************************************
@@ -373,9 +373,9 @@ function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max
 	if ($value1 <0)
 		$value1=0;
 	if ($value2 <0)
-                $value2=0;
+				$value2=0;
 	if ($value3 <0)
-                $value3=0;
+				$value3=0;
 	/***************************Arrows************************/
 	$Arrows = & Image_Graph::factory('dataset');
 	$Arrows->addPoint('Current', $value1, 'GLOBAL');
@@ -455,9 +455,9 @@ function generic_bar_graph ( $width =380, $height = 200, $data, $legend) {
 	require_once 'Image/Graph.php';
 	require ("../include/languages/language_".$language_code.".php");
 	
-    	if (sizeof($data) > 10){
-    		$height = sizeof($legend) * 20;
-    	}
+		if (sizeof($data) > 10){
+			$height = sizeof($legend) * 20;
+		}
 
 	// create the graph
 	$Graph =& Image_Graph::factory('graph', array($width, $height));
@@ -582,10 +582,10 @@ function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $wi
 		$Font->setSize(7);
 		$Graph->setFont($Font);
 		$Graph->add( Image_Graph::vertical(
-            				$Plotarea = Image_Graph::factory('Image_Graph_Plotarea_Radar'),
-            				$Legend = Image_Graph::factory('legend'),
-            				90
-        			)
+							$Plotarea = Image_Graph::factory('Image_Graph_Plotarea_Radar'),
+							$Legend = Image_Graph::factory('legend'),
+							90
+					)
 		);
 		$Legend->setPlotarea($Plotarea);
 		$Plotarea->addNew('Image_Graph_Grid_Polar', IMAGE_GRAPH_AXIS_Y);
@@ -621,188 +621,188 @@ function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $wi
 
 
 function project_tree ($id_project, $id_user){
-    include ("../include/config.php");
+	include ("../include/config.php");
 
-    if (user_belong_project ($id_user, $id_project)==0){
-        audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
-        include ($config["homedir"]."/general/noaccess.php");
-        exit;
-    }
+	if (user_belong_project ($id_user, $id_project)==0){
+		audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
+		include ($config["homedir"]."/general/noaccess.php");
+		exit;
+	}
 
-    if ($id_project != -1)
-        $project_name = get_db_value ("name", "tproject", "id", $id_project);
-    else
-        $project_name = "";
+	if ($id_project != -1)
+		$project_name = get_db_value ("name", "tproject", "id", $id_project);
+	else
+		$project_name = "";
 
-    $dotfilename = $config["homedir"]. "attachment/tmp/$id_user.dot";
-    $pngfilename = $config["homedir"]. "attachment/tmp/$id_user.project.png";
-    $dotfile = fopen ($dotfilename, "w");
+	$dotfilename = $config["homedir"]. "attachment/tmp/$id_user.dot";
+	$pngfilename = $config["homedir"]. "attachment/tmp/$id_user.project.png";
+	$dotfile = fopen ($dotfilename, "w");
 
-    $total_task = 0;
-    $sql2="SELECT * FROM ttask WHERE id_project = $id_project"; 
-    if ($result2=mysql_query($sql2))    
-    while ($row2=mysql_fetch_array($result2)){
-        if ((user_belong_task ($id_user, $row2["id"]) == 1)){
-            $task[$total_task] = $row2["id"];
-            $task_name[$total_task] = $row2["name"];
-            $task_parent[$total_task] = $row2["id_parent_task"];
-            $task_workunit[$total_task] = give_wu_task ($row2["id"]);
-            $total_task++;
-        }
-    }
-    
-    
-    fwrite ($dotfile, "digraph Integria {\n");
-    fwrite ($dotfile, "      ranksep=2.0;\n");
-    fwrite ($dotfile, "      ratio=auto;\n");
-    fwrite ($dotfile, "      size=\"9,12\";\n");
-    fwrite ($dotfile, "      node[fontsize=8];\n");
-    fwrite ($dotfile, '      project [label="'. wordwrap($project_name,12,'\\n').'",shape="ellipse", style="filled", color="grey"];'."\n");
-    for ($ax=0; $ax < $total_task; $ax++){
-        fwrite ($dotfile, 'TASK'.$task[$ax].' [label="'.wordwrap($task_name[$ax],12,'\\n').'"];');
-        fwrite ($dotfile, "\n");
-    }
-    
-    // Make project first parent task relation visible
-    for ($ax=0; $ax < $total_task; $ax++){
-        if ($task_parent[$ax] == 0){
-            fwrite ($dotfile, 'project -> TASK'.$task[$ax].';');
-            fwrite ($dotfile, "\n");
-        }
-    }
-    // Make task-subtask parent task relation visible
-    for ($ax=0; $ax < $total_task; $ax++){
-        if ($task_parent[$ax] != 0){
-            fwrite ($dotfile, 'TASK'.$task_parent[$ax].' -> TASK'.$task[$ax].';');
-            fwrite ($dotfile, "\n");
-        }
-    }
-    
-    fwrite ($dotfile,"}");
-    fwrite ($dotfile, "\n");
-    
-    // exec ("twopi -Tpng $dotfilename -o $pngfilename");
-    exec ("twopi -Tpng $dotfilename -o $pngfilename");
-    Header('Content-type: image/png');
-    $imgPng = imageCreateFromPng($pngfilename);
-    imageAlphaBlending($imgPng, true);
-    imageSaveAlpha($imgPng, true);
-    imagePng($imgPng);
-    //unlink ($pngfilename);
-    unlink ($dotfilename);
+	$total_task = 0;
+	$sql2="SELECT * FROM ttask WHERE id_project = $id_project"; 
+	if ($result2=mysql_query($sql2))	
+	while ($row2=mysql_fetch_array($result2)){
+		if ((user_belong_task ($id_user, $row2["id"]) == 1)){
+			$task[$total_task] = $row2["id"];
+			$task_name[$total_task] = $row2["name"];
+			$task_parent[$total_task] = $row2["id_parent_task"];
+			$task_workunit[$total_task] = give_wu_task ($row2["id"]);
+			$total_task++;
+		}
+	}
+	
+	
+	fwrite ($dotfile, "digraph Integria {\n");
+	fwrite ($dotfile, "	  ranksep=2.0;\n");
+	fwrite ($dotfile, "	  ratio=auto;\n");
+	fwrite ($dotfile, "	  size=\"9,12\";\n");
+	fwrite ($dotfile, "	  node[fontsize=8];\n");
+	fwrite ($dotfile, '	  project [label="'. wordwrap($project_name,12,'\\n').'",shape="ellipse", style="filled", color="grey"];'."\n");
+	for ($ax=0; $ax < $total_task; $ax++){
+		fwrite ($dotfile, 'TASK'.$task[$ax].' [label="'.wordwrap($task_name[$ax],12,'\\n').'"];');
+		fwrite ($dotfile, "\n");
+	}
+	
+	// Make project first parent task relation visible
+	for ($ax=0; $ax < $total_task; $ax++){
+		if ($task_parent[$ax] == 0){
+			fwrite ($dotfile, 'project -> TASK'.$task[$ax].';');
+			fwrite ($dotfile, "\n");
+		}
+	}
+	// Make task-subtask parent task relation visible
+	for ($ax=0; $ax < $total_task; $ax++){
+		if ($task_parent[$ax] != 0){
+			fwrite ($dotfile, 'TASK'.$task_parent[$ax].' -> TASK'.$task[$ax].';');
+			fwrite ($dotfile, "\n");
+		}
+	}
+	
+	fwrite ($dotfile,"}");
+	fwrite ($dotfile, "\n");
+	
+	// exec ("twopi -Tpng $dotfilename -o $pngfilename");
+	exec ("twopi -Tpng $dotfilename -o $pngfilename");
+	Header('Content-type: image/png');
+	$imgPng = imageCreateFromPng($pngfilename);
+	imageAlphaBlending($imgPng, true);
+	imageSaveAlpha($imgPng, true);
+	imagePng($imgPng);
+	//unlink ($pngfilename);
+	unlink ($dotfilename);
 }
 
 function all_project_tree ($id_user, $completion, $project_kind){
-    include ("../include/config.php");
+	include ("../include/config.php");
 
-    $dotfilename = $config["homedir"]. "attachment/tmp/$id_user.all.dot";
-    $pngfilename = $config["homedir"]. "attachment/tmp/$id_user.projectall.png";
-    $mapfilename = $config["homedir"]. "attachment/tmp/$id_user.projectall.map";
-    $dotfile = fopen ($dotfilename, "w");
-
-
-    fwrite ($dotfile, "digraph Integria {\n");
-    fwrite ($dotfile, "      ranksep=1.8;\n");
-    fwrite ($dotfile, "      ratio=auto;\n");
-    fwrite ($dotfile, "      size=\"9,9\";\n");
-    fwrite ($dotfile, 'URL="'.$config["base_url"].'/index.php?sec=projects&sec2=operation/projects/project_tree";'."\n");
-
-    fwrite ($dotfile, "      node[fontsize=8];\n");
-    fwrite ($dotfile, "      me [label=\"$id_user\", style=\"filled\", color=\"yellow\";\n");
-
-    $total_project = 0;
-    $total_task = 0;
-    if ($project_kind == "all")
-        $sql1="SELECT * FROM tproject WHERE disabled = 0"; 
-    else
-        $sql1="SELECT * FROM tproject WHERE disabled = 0 AND end != '0000-00-00 00:00:00'"; 
-    if ($result1=mysql_query($sql1))    
-    while ($row1=mysql_fetch_array($result1)){
-        if ((user_belong_project ($id_user, $row1["id"],1 ) == 1)){
-            $project[$total_project] = $row1["id"];
-            $project_name[$total_project] = $row1["name"];
-            if ($completion < 0)
-                $sql2="SELECT * FROM ttask WHERE id_project = ".$row1["id"]; 
-            elseif ($completion < 101)
-                $sql2="SELECT * FROM ttask WHERE completion < $completion AND id_project = ".$row1["id"]; 
-            else
-                $sql2="SELECT * FROM ttask WHERE completion = 100 AND id_project = ".$row1["id"]; 
-            if ($result2=mysql_query($sql2))
-            while ($row2=mysql_fetch_array($result2)){
-                if ((user_belong_task ($id_user, $row2["id"],1) == 1)){
-                    $task[$total_task] = $row2["id"];
-                    $task_name[$total_task] = $row2["name"];
-                    $task_parent[$total_task] = $row2["id_parent_task"];
-                    $task_project[$total_task] = $project[$total_project];
-                    $task_workunit[$total_task] = give_wu_task ($row2["id"]);
-                    $task_completion[$total_task] = $row2["completion"];
-                    $total_task++;
-                }
-            }
-            $total_project++;
-        }
-    }
-    // Add project items
-    for ($ax=0; $ax < $total_project; $ax++){
-        fwrite ($dotfile, 'PROY'.$project[$ax].' [label="'.wordwrap($project_name[$ax],12,'\\n').'", style="filled", color="grey", URL="'.$config["base_url"].'/index.php?sec=projects&sec2=operation/projects/task&id_project='.$project[$ax].'"];');
-        fwrite ($dotfile, "\n");
-    }
-    // Add task items
-    for ($ax=0; $ax < $total_task; $ax++){
-
-        $temp = 'TASK'.$task[$ax].' [label="'.wordwrap($task_name[$ax],12,'\\n').'"';
-        if ($task_completion[$ax] < 10)
-            $temp .= 'color="red"';
-        elseif ($task_completion[$ax] < 100)
-            $temp .= 'color="yellow"';
-        elseif ($task_completion[$ax] == 100)
-            $temp .= 'color="green"';
-        $temp .= "URL=\"".$config["base_url"]."/index.php?sec=projects&sec2=operation/projects/task_detail&id_project=".$task_project[$ax]."&id_task=".$task[$ax]."&operation=view\"";
-        $temp .= "];";
-        fwrite ($dotfile, $temp);
+	$dotfilename = $config["homedir"]. "attachment/tmp/$id_user.all.dot";
+	$pngfilename = $config["homedir"]. "attachment/tmp/$id_user.projectall.png";
+	$mapfilename = $config["homedir"]. "attachment/tmp/$id_user.projectall.map";
+	$dotfile = fopen ($dotfilename, "w");
 
 
-    
-        fwrite ($dotfile, "\n");
-    }
+	fwrite ($dotfile, "digraph Integria {\n");
+	fwrite ($dotfile, "	  ranksep=1.8;\n");
+	fwrite ($dotfile, "	  ratio=auto;\n");
+	fwrite ($dotfile, "	  size=\"9,9\";\n");
+	fwrite ($dotfile, 'URL="'.$config["base_url"].'/index.php?sec=projects&sec2=operation/projects/project_tree";'."\n");
 
-    // Make project attach to user "me"
-    for ($ax=0; $ax < $total_project; $ax++){
-        fwrite ($dotfile, 'me -> PROY'.$project[$ax].';');
-        fwrite ($dotfile, "\n");
-        
-    }
+	fwrite ($dotfile, "	  node[fontsize=8];\n");
+	fwrite ($dotfile, "	  me [label=\"$id_user\", style=\"filled\", color=\"yellow\";\n");
 
-    // Make project first parent task relation visible
-    for ($ax=0; $ax < $total_task; $ax++){
-        if ($task_parent[$ax] == 0){
-            fwrite ($dotfile, 'PROY'.$task_project[$ax].' -> TASK'.$task[$ax].';');
-            fwrite ($dotfile, "\n");
-        }
-    }
+	$total_project = 0;
+	$total_task = 0;
+	if ($project_kind == "all")
+		$sql1="SELECT * FROM tproject WHERE disabled = 0"; 
+	else
+		$sql1="SELECT * FROM tproject WHERE disabled = 0 AND end != '0000-00-00 00:00:00'"; 
+	if ($result1=mysql_query($sql1))	
+	while ($row1=mysql_fetch_array($result1)){
+		if ((user_belong_project ($id_user, $row1["id"],1 ) == 1)){
+			$project[$total_project] = $row1["id"];
+			$project_name[$total_project] = $row1["name"];
+			if ($completion < 0)
+				$sql2="SELECT * FROM ttask WHERE id_project = ".$row1["id"]; 
+			elseif ($completion < 101)
+				$sql2="SELECT * FROM ttask WHERE completion < $completion AND id_project = ".$row1["id"]; 
+			else
+				$sql2="SELECT * FROM ttask WHERE completion = 100 AND id_project = ".$row1["id"]; 
+			if ($result2=mysql_query($sql2))
+			while ($row2=mysql_fetch_array($result2)){
+				if ((user_belong_task ($id_user, $row2["id"],1) == 1)){
+					$task[$total_task] = $row2["id"];
+					$task_name[$total_task] = $row2["name"];
+					$task_parent[$total_task] = $row2["id_parent_task"];
+					$task_project[$total_task] = $project[$total_project];
+					$task_workunit[$total_task] = give_wu_task ($row2["id"]);
+					$task_completion[$total_task] = $row2["completion"];
+					$total_task++;
+				}
+			}
+			$total_project++;
+		}
+	}
+	// Add project items
+	for ($ax=0; $ax < $total_project; $ax++){
+		fwrite ($dotfile, 'PROY'.$project[$ax].' [label="'.wordwrap($project_name[$ax],12,'\\n').'", style="filled", color="grey", URL="'.$config["base_url"].'/index.php?sec=projects&sec2=operation/projects/task&id_project='.$project[$ax].'"];');
+		fwrite ($dotfile, "\n");
+	}
+	// Add task items
+	for ($ax=0; $ax < $total_task; $ax++){
 
-    
-    // Make task-subtask parent task relation visible
-    for ($ax=0; $ax < $total_task; $ax++){
-        if ($task_parent[$ax] != 0){
-            fwrite ($dotfile, 'TASK'.$task_parent[$ax].' -> TASK'.$task[$ax].';');
-            fwrite ($dotfile, "\n");
-        }
-    }
-    
-    fwrite ($dotfile,"}");
-    fwrite ($dotfile, "\n");
-    // exec ("twopi -Tpng $dotfilename -o $pngfilename");
+		$temp = 'TASK'.$task[$ax].' [label="'.wordwrap($task_name[$ax],12,'\\n').'"';
+		if ($task_completion[$ax] < 10)
+			$temp .= 'color="red"';
+		elseif ($task_completion[$ax] < 100)
+			$temp .= 'color="yellow"';
+		elseif ($task_completion[$ax] == 100)
+			$temp .= 'color="green"';
+		$temp .= "URL=\"".$config["base_url"]."/index.php?sec=projects&sec2=operation/projects/task_detail&id_project=".$task_project[$ax]."&id_task=".$task[$ax]."&operation=view\"";
+		$temp .= "];";
+		fwrite ($dotfile, $temp);
 
-    exec ("twopi -Timap -o$mapfilename -Tpng -o$pngfilename $dotfilename");
 
-    Header('Content-type: image/png');
-    $imgPng = imageCreateFromPng($pngfilename);
-    imageAlphaBlending($imgPng, true);
-    imageSaveAlpha($imgPng, true);
-    imagePng($imgPng);
-    unlink ($pngfilename);
-    unlink ($dotfilename);
+	
+		fwrite ($dotfile, "\n");
+	}
+
+	// Make project attach to user "me"
+	for ($ax=0; $ax < $total_project; $ax++){
+		fwrite ($dotfile, 'me -> PROY'.$project[$ax].';');
+		fwrite ($dotfile, "\n");
+		
+	}
+
+	// Make project first parent task relation visible
+	for ($ax=0; $ax < $total_task; $ax++){
+		if ($task_parent[$ax] == 0){
+			fwrite ($dotfile, 'PROY'.$task_project[$ax].' -> TASK'.$task[$ax].';');
+			fwrite ($dotfile, "\n");
+		}
+	}
+
+	
+	// Make task-subtask parent task relation visible
+	for ($ax=0; $ax < $total_task; $ax++){
+		if ($task_parent[$ax] != 0){
+			fwrite ($dotfile, 'TASK'.$task_parent[$ax].' -> TASK'.$task[$ax].';');
+			fwrite ($dotfile, "\n");
+		}
+	}
+	
+	fwrite ($dotfile,"}");
+	fwrite ($dotfile, "\n");
+	// exec ("twopi -Tpng $dotfilename -o $pngfilename");
+
+	exec ("twopi -Timap -o$mapfilename -Tpng -o$pngfilename $dotfilename");
+
+	Header('Content-type: image/png');
+	$imgPng = imageCreateFromPng($pngfilename);
+	imageAlphaBlending($imgPng, true);
+	imageSaveAlpha($imgPng, true);
+	imagePng($imgPng);
+	unlink ($pngfilename);
+	unlink ($dotfilename);
 }
 
 // ****************************************************************************
@@ -852,21 +852,20 @@ $mode = get_parameter ( "mode", 1);
 $percent = get_parameter ( "percent", 0);
 $days = get_parameter ( "days", 0);
 
-
 if ( $_GET["type"] == "progress")
 	progress_bar ($percent, $width, $height);
 elseif ($_GET["type"] == "incident_a")
 	incident_peruser ($width, $height);
 elseif ($_GET["type"] == "workunit_task")
-    graph_workunit_task($width, $height, $id_task);
+	graph_workunit_task($width, $height, $id_task);
 elseif ($_GET["type"] == "histogram")
-    generic_histogram ($width, $height, $mode, $valuea, $valueb, $max, $labela, $labelb);
+	generic_histogram ($width, $height, $mode, $valuea, $valueb, $max, $labela, $labelb);
 elseif ($_GET["type"] == "workunit_user")
-    graph_workunit_user ($width, $height, $id_user, $date_from);
+	graph_workunit_user ($width, $height, $id_user, $date_from);
 elseif ($_GET["type"] == "workunit_project_user")
-    graph_workunit_project_user ($width, $height, $id_user, $date_from);
+	graph_workunit_project_user ($width, $height, $id_user, $date_from);
 elseif ($_GET["type"] == "project_tree")
-    project_tree ($id_project, $id_user);
+	project_tree ($id_project, $id_user);
 elseif ($_GET["type"] == "all_project_tree")
-    all_project_tree ($id_user, $completion, $project_kind);
+	all_project_tree ($id_user, $completion, $project_kind);
 ?>

@@ -1,3 +1,91 @@
+2008-10-10  Esteban Sanchez  <estebans@artica.es>
+
+	* integria_db.sql: Added cost field to tinventory. Change description
+	fields to text instead of varchars. Fixed some foreign key actions
+	when deleting.
+
+	* godmode/grupos/configurar_grupo.php,
+	godmode/setup/event.php, godmode/usuarios/role_manager.php,
+	operation/buildings/building_detail.php,
+	operation/incidents/type_detail.php, 
+	operation/manufacturers/manufacturer_detail.php, 
+	godmode/grupos/lista_grupos.php: Rewritten to use integria style for
+	forms. Style correction and use of common functions.
+
+	* operation/contacts/contact_detail.php,
+	operation/contracts/contract_detail.php: Added filter by company
+	option.
+
+	* operation/incidents/incident.php: Moved tab configuration to a
+	function. Manage goto incident form in sidebar menu. Added a callback
+	to configure_incident_search_form() to query for stats for the
+	incidents which are shown at the bottom.
+
+	* operation/incidents/incident_detail.php: Removed reference to old
+	tgroup_manager table.
+
+	* operation/incidents/incident_search.php: Use __(). Added an optional
+	parameter (show_stats) to show stats of the incidents instead of
+	displaying the results.
+
+	* operation/incidents/incident_tracking.php: Style correction and
+	use of common functions. Use __().
+
+	* operation/inventories/inventory.php: Manage goto incident form at
+	the sidebar. Style corrections in the javascript and manage of
+	previous selected inventory.
+
+	* operation/inventories/inventory_contracts.php: Show a better display
+	of the contract details.
+
+	* operation/inventories/inventory_detail.php: Added cost field.
+
+	* operation/inventories/inventory_search.php: Form reordered. Removed
+	searching by id, since it's now done in the sidebar.
+
+	* operation/users/user_search.php: Style correction.
+
+	* operation/side_menu.php: Added two new forms to move quickly to a
+	incident or inventory object by the id. Added a new block to show
+	incident details.
+
+	* integria/index.php: Added a javascript fix for Internet Explorer.
+	HTML quote style corrections.
+
+	* include/js/integria_incident_search.js: Added fixes to Internet
+	explorer. Added a new callback to configure_incident_search_form() to
+	execute a function when results are shown.
+
+	* include/styles/flora/flora.dialog.css: Style correction.
+
+	* include/styles/integria.css: Added a style to dialogs in the
+	sidebar.
+	
+	* integria/include/functions.php: Skip directories and hidden files in
+	list_files(). Renamed get_incident_resolutions(). Style corrections
+	and uses of common functions.
+
+	* include/functions_calendar.php: Added optional parameter to
+	give_human_time().
+
+	* include/functions_db.php: Return empty array if no results in
+	get_incident_workunits(). Renamed check_incident_sla_max_response()
+	and added check_incident_sla_min_response() and
+	get_group_default_user().
+
+	* include/functions_form.php: Added label parameter to
+	combo_user_visible_for_me(). Style corrections. Added a combo to
+	search incidents for the users. Added incident_details_list() to show
+	incidents details in a side box.
+
+	* include/functions_graph.php, include/styles/flora/flora.dialog.css:
+	Tab style correction.
+
+	* include/functions_html.php: Added rowspan to table object for
+	print_table().
+
+	* include/integria_cron.php: Rewritten and adopted to new tables.
+
 2008-10-06  Ramon Novoa  <rnovoa@artica.es>
 
 	* integria_dbdata.sql,

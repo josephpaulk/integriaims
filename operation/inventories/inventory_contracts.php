@@ -28,17 +28,46 @@ echo '<h3>'.__('Contract details on inventory object').' #'.$id.'</h3>';
 
 $contracts = get_inventory_contracts ($id, false);
 
+$table->class = 'inventory-contracts databox';
+$table->width = '740px';
+$table->colspan = array ();
+$table->colspan[1][1] = 3;
+$table->style = array ();
+$table->style[0] = 'font-weight: bold';
+$table->style[2] = 'font-weight: bold';
+
 foreach ($contracts as $contract) {
-	echo '<strong>'.__('Contract').'</strong>';
-	echo ': '.$contract['name'].'<br />';
-	echo '<strong>'.__('SLA').'</strong>';
-	echo ': '.get_db_value ('name', 'tsla', 'id', $contract['id_sla']).'<br />';
-	echo '<strong>'.__('Company').'</strong>';
-	echo ': '.get_db_value ('name', 'tcompany', 'id', $contract['id_company']).'<br />';
-	echo '<strong>'.__('Date begin').'</strong>';
-	echo ': '.$contract['date_begin'].'<br />';
-	echo '<strong>'.__('Date end').'</strong>';
-	echo ': '.$contract['date_end'];
+	$table->data = array ();
+	$table->id = 'inventory-contracts-table-'.$contract['id'];
+	
+	$table->data[0][0] = __('Company');
+	$table->data[0][1] = get_db_value ('name', 'tcompany', 'id', $contract['id_company']);
+	$table->data[0][2] = __('Contract');
+	$table->data[0][3] = $contract['name'];
+	
+	$table->data[1][0] = __('Description');
+	$table->data[1][1] = $contract['description'];
+	
+	$table->data[2][0] = __('Date begin');
+	$table->data[2][1] = $contract['date_begin'];
+	if ($contract['date_end'] != '0000-00-00') {
+		$table->data[2][1] = __('Date end');
+		$table->data[2][2] = $contract['date_end'];
+	}
+	
+	$sla = get_sla ($contract['id_sla']);
+	$table->data[3][0] = __('SLA');
+	$table->data[3][1] = get_db_value ('name', 'tsla', 'id', $contract['id_sla']);
+	
+	$table->data[4][0] = __('Minimun response');
+	$table->data[4][1] = $sla['min_response'].' '.__('hours');
+	$table->data[4][2] = __('Maximun response');
+	$table->data[4][3] = $sla['max_response'].' '.__('hours');
+	
+	$table->data[5][0] = __('Maximun incidents');
+	$table->data[5][1] = $sla['max_incidents'];
+	
+	print_table ($table);
 	echo '<p />';
 }
 

@@ -14,207 +14,176 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
-
 global $config;
 
-check_login();
+check_login ();
 
-if (give_acl($config["id_user"], 0, "IM")==0) {
-	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access company section");
+if (! give_acl ($config["id_user"], 0, "IM")) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
 	require ("general/noaccess.php");
 	exit;
 }
 
-$id_user = $config["id_user"];
+$id = (int) get_parameter ('id');
+$new_type = (bool) get_parameter ('new_type');
+$create_type = (bool) get_parameter ('create_type');
+$update_type = (bool) get_parameter ('update_type');
+$delete_type = (bool) get_parameter ('delete_type');
 
 // CREATE
-// ==================
-if (isset($_GET["create2"])){ //
+if ($create_type) {
+	$name = (string) get_parameter ('name');
+	$description = (string) get_parameter ('description');
+	$id_wizard = (int) get_parameter ('id_wizard');
 
-	$name = get_parameter ("name","");
-	$description = get_parameter ("description", "");
-	$id_wizard = get_parameter ("id_wizard", 0);
-
-	$sql_insert="INSERT INTO tincident_type (`name`, `description`, id_wizard) VALUE ('$name','$description', '$id_wizard') ";
-
-	$result=mysql_query($sql_insert);
-	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Incident type cannot be created")."</h3>";
-	else {
-		echo "<h3 class='suc'>".lang_string ("Incident type has been created successfully")."</h3>";
-		$id_data = mysql_insert_id();
-		insert_event ("INCIDENT TYPE CREATED", $id_data, 0, $name);
+	$sql = sprintf ('INSERT INTO tincident_type (`name`, `description`, `id_wizard`)
+		VALUE ("%s", "%s", %d)',
+		$name, $description, $id_wizard);
+	
+	$id = process_sql ($sql, 'insert-id');
+	if ($id === false) {
+		echo '<h3 class="error">'.__('Incident type cannot be created').'</h3>';
+	} else {
+		echo '<h3 class="suc">'.__('Incident type has been created successfully').'</h3>';
+		insert_event ("INCIDENT TYPE CREATED", $id, 0, $name);
 	}
+	$id = 0;
 }
 
 // UPDATE
-// ==================
-if (isset($_GET["update2"])){ // if modified any parameter
-	$id = get_parameter ("id","");
-	$name = get_parameter ("name","");
-	$description = get_parameter ("description", "");
-	$id_wizard = get_parameter ("id_wizard", 0);
+if ($update_type) {
+	$name = (string) get_parameter ('name');
+	$description = (string) get_parameter ('description');
+	$id_wizard = (int) get_parameter ('id_wizard');
 
-	$sql_update ="UPDATE tincident_type
-	SET description = '$description', name = '$name', id_wizard= '$id_wizard' WHERE id = $id";
-
-	$result=mysql_query($sql_update);
-	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Incident type cannot be updated")."</h3>";
+	$sql = sprintf ('UPDATE tincident_type
+	SET description = "%s", name = "%s", id_wizard = %d
+	WHERE id = %d',
+	$description, $name, $id_wizard, $id);
+	
+	$result = process_sql ($sql);
+	if ($result === false)
+		echo '<h3 class="error">'.__('Incident type cannot be updated').'</h3>';
 	else {
-		echo "<h3 class='suc'>".lang_string ("Incident type updated ok")."</h3>";
+		echo '<h3 class="suc">'.__('Incident type updated ok').'</h3>';
 		insert_event ("INCIDENT TYPE", $id, 0, $name);
 	}
+	$id = 0;
 }
 
 // DELETE
-// ==================
-if (isset($_GET["delete"])){ // if delete
-	$id = get_parameter ("delete",0);
-	$name = give_db_sqlfree_field  ("SELECT name FROM tincident_type WHERE id = $id ");
-	$sql_delete= "DELETE FROM tincident_type WHERE id = $id";
-	$result=mysql_query($sql_delete);
-	insert_event ("INCIDENT TYPE DELETED", $id, 0, "$name");
-	echo "<h3 class='suc'>".lang_string("Deleted successfully")."</h3>";
+if ($delete_type) {
+	$name = get_db_value ('name', 'tincident_type', 'id', $id);
+	$sql = sprintf ('DELETE FROM tincident_type WHERE id = %d', $id);
+	process_sql ($sql);
+	insert_event ("INCIDENT TYPE DELETED", $id, 0, $name);
+	echo '<h3 class="suc">'.__('Deleted successfully').'</h3>';
+	$id = 0;
 }
 
-if (isset($_GET["update2"])){
-	// After apply update, let's redirecto to UPDATE form again.
-	$_GET["update"]= $id;
-}
+echo '<h2>'.__('Incident types').'</h2>';
 
 // FORM (Update / Create)
-if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
-	if (isset($_GET["create"])){
-		$id = -1;
+if ($id || $new_type) {
+	if ($new_type) {
+		$id = 0;
 		$name = "";
 		$description = "";
 		$id_wizard = "";
 	} else {
-		$id = get_parameter ("update", -1);
-		$row = get_db_row ("tincident_type", "id", $id);
-		$name = $row["name"];
-		$description = $row["description"];
-		$id_wizard = $row["id_wizard"];
+		$type = get_db_row ('tincident_type', 'id', $id);
+		$name = $type['name'];
+		$description = $type['description'];
+		$id_wizard = $type['id_wizard'];
+	}
+	
+	$table->width = '740px';
+	$table->width = "720px";
+	$table->class = "databox";
+	$table->data = array ();
+	$table->colspan = array ();
+	$table->colspan[1][0] = 2;
+	
+	$table->data[0][0] = print_input_text ('name', $name, '', 30, 100, true, __('Type name'));
+	$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM twizard ORDER BY name',
+		'id_wizard', $id_wizard, '', 'Select', 0, true, false, false, __('Wizard'));
+	$table->data[1][0] = print_textarea ('description', 14, 1, $description, '', true, __('Description'));
+	
+	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
+	print_table ($table);
+	
+	echo '<div class="button" style="width: '.$table->width.'">';
+	if ($id) {
+		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', false);
+		print_input_hidden ('update_type', 1);
+		print_input_hidden ('id', $id);
+	} else {
+		print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', false);
+		print_input_hidden ('create_type', 1);
+	}
+	echo '</div>';
+	echo '</form>';
+} else {
+	$search_text = (string) get_parameter ('search_text');
+	
+	$where_clause = '';
+	if ($search_text != "") {
+		$where_clause .= sprintf ('WHERE name LIKE "%%%s%%"', $search_text);
 	}
 
-	echo "<h2>".lang_string ("Incident types")."</h2>";
-	if ($id == -1){
-		echo "<h3>".lang_string ("Create a new type")."</a></h3>";
-		echo "<form method='post' action='index.php?sec=incidents&sec2=operation/incidents/type_detail&create2=1'>";
+	$table->width = '400px';
+	$table->class = 'search-table';
+	$table->style = array ();
+	$table->style[0] = 'font-weight: bold;';
+	$table->data = array ();
+	$table->data[0][0] = __('Search');
+	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
+	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	
+	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/types/type_detail">';
+	print_table ($table);
+	echo '</form>';
+
+	$sql = "SELECT * FROM tincident_type $where_clause ORDER BY name";
+	$types = get_db_all_rows_sql ($sql);
+	
+	if ($types !== false) {
+		$table->width = '720px';
+		$table->class = 'listing';
+		$table->data = array ();
+		$table->size = array ();
+		$table->size[2] = '40px';
+		$table->align = array ();
+		$table->align[2] = 'center';
+		$table->style = array ();
+		$table->style[0] = 'font-weight: bold';
+		$table->head[0] = __('Name');
+		$table->head[1] = __('Wizard');
+		$table->head[2] = __('Delete');
+		
+		foreach ($types as $type) {
+			$data = array ();
+			
+			$data[0] = '<a href="index.php?sec=incidents&sec2=operation/incidents/type_detail&id='.
+				$type['id'].'">'.$type['name'].'</a>';
+			$data[1] = get_db_value ('name', 'tincident_type', 'id', $type['id_wizard']);
+			$data[2] = '<a href="index.php?sec=incidents&
+						sec2=operation/incidents/type_detail&
+						delete_type=1&id='.$type['id'].'"
+						onClick="if (!confirm(\''.__('are_you_sure').'\'))
+						return false;">
+						<img src="images/cross.png"></a>';
+			array_push ($table->data, $data);
+		}
+		print_table ($table);
 	}
-	else {
-		echo "<h3>".lang_string ("Update existing company")."</a></h3>";
-		echo "<form method='post' action='index.php?sec=incidents&sec2=operation/incidents/type_detail&update2=1'>";
-		print_input_hidden ("id", "$id", false, '');
-	}
-
-	echo "<table width=620 class='databox'>";
-	echo "<tr>";
-	echo "<td>";
-	echo lang_string ("Type name");
-	echo "<td>";
-	echo lang_string ("Wizard");
-
-
-	echo "<tr>";
-	echo "<td>";
-	print_input_text ("name", $name, "", 30, 100, false);
-
-	echo "<td>";
-	print_select_from_sql ("SELECT id, name FROM twizard", "id_wizard", $id_wizard, '', 'Select', 0, false, false, true);
-
-
-	echo "<tr>";
-	echo "<td>";
-	echo lang_string ("Description");
-	echo "<tr>";
-	echo "<td colspan=4>";
-	print_textarea ("description", 1, 1, $description, "style='width: 600px; height: 60px;'", false);
-
-	echo "</table>";
-	echo "<table width=620 class='button'>";
-	echo "<tr>";
-	echo "<td class='datos3' align=right>";
-	if ($id == -1)
-		print_submit_button (lang_string("Create"), "enviar", false, "class='sub next'", false);
-	else
-		print_submit_button (lang_string("Update"), "enviar", false, "class='sub upd'", false);
-	echo "</table>";
-	echo "</form>";
-
-	// Get some space here
-	echo "<div style='min-height:50px'></div>";
+	
+	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
+	echo '<div class="button" style="width: '.$table->width.'">';
+	print_submit_button (__('Create type'), 'new_btn', false, 'class="sub next"');
+	print_input_hidden ('new_type', 1);
+	echo '</div>';
+	echo '</form>';
 }
-
-
-    // Show list of items
-    // =======================
-    if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-        echo "<h2>".lang_string ("Type management")."</h2>";
-
-    	$text = get_parameter ("freetext", "");
-    	if ($text != ""){
-    		$sql_search = "WHERE name LIKE '%$text%' OR descriptionLIKE '%$text%'";
-    		echo "<h4>".__("Searching for")." ".$text."</h4>";
-    	}
-    	else
-    		$sql_search = "";
-
-		echo "<table width=400>";
-    	echo "<form method=post action='index.php?sec=incidents&sec2=operation/incidents/type_detail'>";
-    	echo "<tr><td>";
-    	echo lang_string ("Free text search");
-    	echo "<td>";
-    	print_input_text ("freetext", $text, "", 15, 100, false);
-    	echo "<td>";
-    	print_submit_button (lang_string("Search"), "enviar", false, "class='sub search'", false);
-    	echo "</form></td></tr></table>";
-
-	   	$sql1 = "SELECT * FROM tincident_type $sql_search ORDER BY name";
-        $color =0;
-	    if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
-
-            $table->width = "720";
-			$table->class = "listing";
-			$table->cellspacing = 0;
-			$table->cellpadding = 0;
-			$table->data = array ();
-			$table->size = array ();
-			$table->style = array ();
-			$table->colspan = array ();
-			$table->head[0] = lang_string ("Name");
-			$table->head[1] = lang_string ("Wizard");
-			$table->head[2] = lang_string ("Delete");
-			$counter = 0;
-	        while ($row=mysql_fetch_array($result)){
-
-                // Name
-                $table->data[$counter][0] = "<b><a href='index.php?sec=incidents&sec2=operation/incidents/type_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
-				
-				// Wizard
-				$table->data[$counter][1] = get_db_sql("SELECT name FROM tincident_type WHERE id = ".$row["id_wizard"]);
-
-                // Delete
-                $table->data[$counter][4] = "<a href='index.php?sec=incidents&
-				            sec2=operation/incidents/type_detail&
-				            delete=".$row["id"]."'
-				            onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
-				            return false;'>
-				            <img border='0' src='images/cross.png'></a>";
-				$counter++;
-            }
-            print_table ($table);
-        }
-		echo "<table width=720 class='button'>";
-		echo "<tr><td align='right'>";
-		echo "<form method=post action='index.php?sec=incidents&
-		sec2=operation/incidents/type_detail&create=1'>";
-		echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create type")."'>";
-		echo "</form></td></tr></table>";
-
-
-    } // end of list
 
 ?>

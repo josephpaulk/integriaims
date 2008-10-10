@@ -209,9 +209,10 @@ echo '</select>';
 echo '</form>';
 echo '</div>';
 
+echo '<div id="incident-stats"></div>';
+
 /* End of first tab container */
 echo '</div>';
-
 
 echo '</div>';
 /* End of tabs code */
@@ -273,21 +274,26 @@ function tab_loaded (event, tab) {
 	$(".result").empty ();
 }
 
+function show_incident_details (id) {
+	id_incident = id;
+	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_detail&id=" + id);
+	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_tracking&id=" + id);
+	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + id);
+	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + id);
+	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/incidents/incident_workunits&id=" + id);
+	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_files&id=" + id);
+	$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
+		.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
+	$("#tabs > ul").tabs ("select", 1);
+}
+
 $(document).ready (function () {
 	$("#tabs > ul").tabs ({"load" : tab_loaded});
 <?php if ($id) : ?>
 	old_incident = id_incident = <?php echo $id ?>;
 	configure_incident_side_menu (id_incident, false);
 	$(".incident-menu").slideDown ();
-	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_detail&id=" + <?php echo $id; ?>);
-	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_tracking&id=" + <?php echo $id; ?>);
-	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + <?php echo $id; ?>);
-	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + <?php echo $id; ?>);
-	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/incidents/incident_workunits&id=" + <?php echo $id; ?>);
-	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_files&id=" + <?php echo $id; ?>);
-	$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
-		.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
-	$("#tabs > ul").tabs ("select", 1);
+	show_incident_details (<?php echo $id; ?>);
 <?php endif; ?>
 	
 	$("#saved-searches-form").submit (function () {
@@ -329,17 +335,34 @@ $(document).ready (function () {
 		$("#saved_searches_table td:gt(1)").fadeIn ();
 	});
 	
-	configure_incident_search_form (10, function (id, name) {
-		id_incident = id;
-		$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_detail&id=" + id);
-		$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_tracking&id=" + id);
-		$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + id);
-		$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + id);
-		$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/incidents/incident_workunits&id=" + id);
-		$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_files&id=" + id);
-		$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
-			.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
-		$("#tabs > ul").tabs ("select", 1);
+	$("#goto-incident-form").submit (function () {
+		id = $("#text-id", this).attr ("value");
+		show_incident_details (id);
+		if (old_incident)
+			$("#tabs > ul").tabs ("load", 1);
+		return false;
+	});
+	
+	configure_incident_search_form (10,
+		function (id, name) {
+			show_incident_details (id);
+		},
+		function (form) {
+			val = get_form_input_values (form);
+			val.push ({name: "page",
+					value: "operation/incidents/incident_search"});
+			val.push ({name: "show_stats",
+					value: 1});
+			$("#incident-stats").fadeOut ('normal', function () {
+				$(this).empty ();
+				jQuery.post ("ajax.php",
+					val,
+					function (data, status) {
+						$("#incident-stats").empty ().append (data).slideDown ();
+					},
+					"html"
+					);
+		});
 	});
 });
 </script>

@@ -150,7 +150,6 @@ if ($id | $new_contract) {
 		'id_sla', $id_sla, '', '', '', true, false, false, __('SLA'));
 	$table->data[3][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
 	
-	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contracts/contract_detail">';
 	print_table ($table);
 	echo '<div class="button" style="width: '.$table->width.'">';
@@ -166,19 +165,23 @@ if ($id | $new_contract) {
 	echo "</form>";
 } else {
 	$search_text = (string) get_parameter ('search_text');
+	$id_company = (int) get_parameter ('id_company');
 	
-	$where_clause = "";
+	$where_clause = "WHERE 1=1";
 	if ($search_text != "") {
-		$where_clause = sprintf ('WHERE name LIKE "%%%s%%"', $search_text);
+		$where_clause = sprintf ('AND name LIKE "%%%s%%"', $search_text);
 	}
-
+	if ($id_company) {
+		$where_clause .= sprintf (' AND id_company = %d', $id_company);
+	}
+	
 	$table->width = '400px';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->data[0][0] = __('Search');
-	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
+	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
+	$table->data[0][1] = print_select (get_companies (), 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contracts/contract_detail">';
@@ -212,21 +215,13 @@ if ($id | $new_contract) {
 			if (! give_acl ($config["id_user"], $contract["id_group"], "IR"))
 				continue;
 			$data = array ();
-			// Name
+			
 			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&id="
 				.$contract["id"]."'>".$contract["name"]."</a>";
 			$data[1] = get_db_value ('name', 'tcompany', 'id', $contract["id_company"]);
-
-			// SLA
 			$data[2] = get_db_value ('name', 'tsla', 'id', $contract["id_sla"]);
-
-			// Group
 			$data[3] = get_db_value ('nombre', 'tgrupo', 'id_grupo', $contract["id_group"]);
-
-			// Begin
 			$data[4] = $contract["date_begin"];
-
-			// End
 			$data[5] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
 
 			// Delete

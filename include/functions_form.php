@@ -16,7 +16,7 @@
 
 global $config;
 
-function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0, $access = "IR", $return = false) {
+function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0, $access = "IR", $return = false, $label = false) {
 	global $config;
 	$userlist = array();
 	$output = '';
@@ -25,7 +25,7 @@ function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0,
 	if ($any)
 		$values[''] = __('Any');
 
-	$output = print_select ($values, $form_name, $id_user, '', '', 0, true, false, false);
+	$output .= print_select ($values, $form_name, $id_user, '', '', 0, true, false, false, $label);
 
 	if ($return)
 		return $output;
@@ -38,22 +38,22 @@ function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any =
 	$values = array ();
 
 	$sql = sprintf ("SELECT COUNT(*) FROM tusuario_perfil
-			WHERE id_usuario = '%s' AND id_grupo = 1",
-			$id_user);
+		WHERE id_usuario = '%s' AND id_grupo = 1",
+		$id_user);
 	$in_any = get_db_sql ($sql);
 	if ($in_any) {
 		$groups = get_db_all_rows_sql ('SELECT id_grupo, nombre
-						FROM tgrupo
-						WHERE id_grupo != 1
-						ORDER BY nombre');
+				FROM tgrupo
+				WHERE id_grupo != 1
+				ORDER BY nombre');
 	} else {
 		$values[1] = __('Any');
 		$sql = sprintf ('SELECT g.id_grupo, nombre
-				FROM tusuario_perfil u, tgrupo g
-				WHERE u.id_grupo = g.id_grupo
-				AND id_usuario = "%s"
-				ORDER BY nombre',
-				$id_user);
+			FROM tusuario_perfil u, tgrupo g
+			WHERE u.id_grupo = g.id_grupo
+			AND id_usuario = "%s"
+			ORDER BY nombre',
+			$id_user);
 		$groups = get_db_all_rows_sql ($sql);
 	}
 
@@ -609,6 +609,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 
 function form_search_incident ($return = false) {
+	global $config;
 	$output = '';
 
 	$search_string = (string) get_parameter ('search_string');
@@ -622,7 +623,8 @@ function form_search_incident ($return = false) {
 	$search_id_building = (int) get_parameter ('search_id_building');
 	$search_sla_fired = (bool) get_parameter ('search_sla_fired');
 	$search_id_incident = (string) get_parameter ('search_id_incident');
-
+	$search_id_user = (string) get_parameter ('search_id_user');
+	
 	/* No action is set, so the form will be sent to the current page */
 	$table->width = "100%";
 	$table->class = "databox_color";
@@ -632,12 +634,11 @@ function form_search_incident ($return = false) {
 	$table->size = array ();
 	$table->style = array ();
 	$table->colspan = array ();
-
+	
 	$table->style[0] = 'font-weight: bold';
 	$table->style[1] = 'font-weight: bold';
 	$table->style[2] = 'font-weight: bold';
-	//$table->colspan[3][0] = 2;
-
+	
 	$table->data[0][0] = print_select (get_indicent_status (),
 			'search_status', $status,
 			'', __('Any'), 0, true, false, false,
@@ -650,42 +651,42 @@ function form_search_incident ($return = false) {
 
 	$table->data[0][2] = print_select (get_user_groups (),
 			'search_id_group', $id_group,
-			'', '', '', true, false, false, __('Group'));
+			'', __('All'), 1, true, false, false, __('Group'));
 	
 	$table->data[1][0] = print_input_hidden ('search_id_inventory', $id_inventory, true);
 	$name = __("Any");
 	if ($id_inventory)
 		$name = get_inventory_name ($id_inventory);
 	$table->data[1][0] .= print_button ($name, 'inventory_name', false, '',
-			'class="dialogbtn"', true, __('Inventory'));
+		'class="dialogbtn"', true, __('Inventory'));
 	
 	$table->data[1][1] = print_select (get_companies (),
-			'search_id_company', $id_company,
-			'', __('All'), 0, true, false, false,
-			__('Company'));
+		'search_id_company', $id_company,
+		'', __('All'), 0, true, false, false,
+		__('Company'));
 	
 	$table->data[1][2] = print_select (get_products (),
-			'search_id_product', $id_product,
-			'', __('All'), 0, true, false, false,
-			__('Product type'));
+		'search_id_product', $id_product,
+		'', __('All'), 0, true, false, false,
+		__('Product type'));
 
 	$table->data[2][0] = print_input_text ('search_serial_number', $search_serial_number,
 				'', 30, 100, true, __('Serial number'));
 	$table->data[2][1] = print_select (get_buildings (),
-			'search_id_building', $search_id_building,
-			'', __('All'), 0, true, false, false,
-			__('Building'));
+		'search_id_building', $search_id_building,
+		'', __('All'), 0, true, false, false,
+		__('Building'));
 	$table->data[2][2] = print_checkbox ('search_sla_fired', 1, $search_sla_fired, true, __('SLA fired'));
 	
 	$table->data[3][1] = print_input_text ('search_string', $search_string,
-			'', 30, 100, true, __('Search string'));
+		'', 30, 100, true, __('Search string'));
 	
-	$table->data[3][0] = print_input_text ('search_id_incident', $search_id_incident,
-			'', 4, 10, true, __('Ticket ID#'));
+	$table->data[3][0] = print_select (get_user_visible_users ($config['id_user'], 'IR', true),
+		'search_id_user', $search_id_user,
+		'', 'Any', 0, true, false, false, __('User'));
 
 	$table->data[3][2] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
-
 	$output .= '<form id="search_incident_form" method="post">';
 	$output .= print_table ($table, true);
 	$output .= '</form>';
@@ -698,22 +699,59 @@ function form_search_incident ($return = false) {
 function incident_users_list ($id_incident, $return = false) {
 	$output = '';
 	
-	$incident = get_db_row ('tincidencia', 'id_incidencia', (int) $id_incident);
-	$creator = get_db_row ('tusuario', 'id_usuario', $incident['id_creator']);
-	$assigned = get_db_row ('tusuario', 'id_usuario', $incident['id_usuario']);
+	$users = get_incident_users ($id_incident);
 	
 	$output .= '<ul id="incident-users-list" class="sidemenu">';
 
-	$output .= "&nbsp;&nbsp;" . print_user_avatar ($incident['id_usuario'], true, true);
-	$output .= ' <strong>'.$incident['id_usuario'].'</strong> (<em>'.__('Responsible').'</em>)<br>';
-		
-	$output .= "&nbsp;&nbsp;" .print_user_avatar ($incident['id_creator'], true, true);
-	$output .= ' <strong>'.$incident['id_creator'].'</strong> (<em>'.__('Creator').'</em>)<br>';
+	$output .= "&nbsp;&nbsp;".print_user_avatar ($users['owner']['id_usuario'], true, true);
+	$output .= ' <strong>'.$users['owner']['id_usuario'].'</strong> (<em>'.__('Responsible').'</em>)';
 	
-	$users = get_users_in_group ($incident['id_grupo'], false);
-	foreach ($users as $user) {
-		$output .= "&nbsp;&nbsp;" . print_user_avatar ($user['id_usuario'], true, true);
-		$output .= ' <strong>'.$user['id_usuario'].'</strong> ('.__('Participant').')<br>';
+	if ($users['owner']['id_usuario'] != $users['creator']['id_usuario']) {
+		$output .= "<br />&nbsp;&nbsp;".print_user_avatar ($users['creator']['id_usuario'], true, true);
+		$output .= ' <strong>'.$users['creator']['id_usuario'].'</strong> (<em>'.__('Creator').'</em>)<br />';
+	} else {
+		$output .= ' (<em>'.__('Creator').'</em>)';
+	}
+	
+	
+	foreach ($users['affected'] as $user) {
+		$output .= "<br />&nbsp;&nbsp;" . print_user_avatar ($user['id_usuario'], true, true);
+		$output .= ' <strong>'.$user['id_usuario'].'</strong> (<em>'.__('Participant').'</em>)';
+	}
+	
+	$output .= '</ul>';
+	
+	if ($return)
+		return $output;
+	echo $output;
+}
+
+function incident_details_list ($id_incident, $return = false) {
+	$output = '';
+	
+	$incident = get_incident ($id_incident);
+	
+	$output .= '<ul id="incident-details-list" class="sidemenu">';
+	$output .= '&nbsp;&nbsp;<strong>'.__('Opened').'</strong>: '.$incident['inicio'];
+	
+	if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Closed at').'</strong>: '.$incident['cierre'];
+	}
+	if ($incident['actualizacion'] != $incident['inicio']) {
+		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last update').'</strong>: '.$incident['actualizacion'];
+	}
+	if ($incident['actualizacion'] != $incident['inicio']) {
+		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last update').'</strong>: '.$incident['actualizacion'];
+	}
+	
+	/* Show workunits if there are some */
+	$work_hours = give_wu_incident ($id_incident);
+	if ($work_hours) {
+		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Hours worked').'</strong>: '.$work_hours;
+		$workunits = get_incident_workunits ($id_incident);
+		$workunit_data = get_workunit_data ($workunits[0]['id_workunit']);
+		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last work at').'</strong>: '.$workunit_data['timestamp'];
+		$output .= '<br />&nbsp;&nbsp;<strong>'._('Done by').'</strong>: <em>'.$workunit_data['id_user'].'</em>';
 	}
 	
 	$output .= '</ul>';

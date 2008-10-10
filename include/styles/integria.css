@@ -428,6 +428,10 @@ form.searchform input.button {
 	padding: 0;
 	display: inline;
 }
+#sidebar form {
+	display: inline;
+}
+
 #sidebar ul.sidemenu {
 	list-style: none;
 	text-align: left;

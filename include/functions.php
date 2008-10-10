@@ -183,20 +183,24 @@ function list_files ($directory, $stringSearch, $searchHandler, $return = true, 
 	}
 	if ($searchHandler == 0) {
 		while (false !== ($fileName = @readdir ($directoryHandler))) {
-			if (($fileName != ".") AND ($fileName != ".."))
+			if (is_dir ($directory.'/'.$fileName))
+				continue;
+			if ($fileName[0] != ".")
 				$result[$fileName] = $fileName;
 		}
 	}
 	if ($searchHandler == 1) {
 		while(false !== ($fileName = @readdir ($directoryHandler))) {
+			if (is_dir ($directory.'/'.$fileName))
+				continue;
 			if(@substr_count ($fileName, $stringSearch) > 0) {
 				if ($inverse_filter != "") {
-					if (strpos($fileName, $inverse_filter) ==0)
-						if (($fileName != ".") AND ($fileName != ".."))
+					if (strpos($fileName, $inverse_filter) == 0)
+						if ($fileName[0] != ".")
 							$result[$fileName] = $fileName;
 				} else {
-					 if (($fileName != ".") AND ($fileName != ".."))
-                                             $result[$fileName] = $fileName;
+					 if ($fileName[0] != ".")
+						$result[$fileName] = $fileName;
 				}
 				
 			}
@@ -374,22 +378,22 @@ function render_priority ($pri){
 	}
 }
 
-function topi_sendmail ( $destination, $msg_subject = "[INTEGRIA] Automatic email notification", $msg_text) {
+function topi_sendmail ($destination, $msg_subject = "[INTEGRIA] Automatic email notification", $msg_text) {
 	global $config;
-	if ($destination != ""){
-	$msg_text = ascii_output ($msg_text);
-	$msg_subject = ascii_output ($msg_subject);
+	if ($destination != "") {
+		$msg_text = ascii_output ($msg_text);
+		$msg_subject = ascii_output ($msg_subject);
 		$real_text = $config["HEADER_EMAIL"].$msg_text."\n\n".$config["FOOTER_EMAIL"];
 		mail ($destination, $msg_subject, $real_text);
 	}
 }
 
-function topi_rndcode ($length=6) {
+function topi_rndcode ($length = 6) {
 	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPRQSTUVWXYZ0123456789";
 	$code = "";
-	$clen = strlen($chars) - 1;  //a variable with the fixed length of chars correct for the fence post issue
-	while (strlen($code) < $length) {
-		$code .= $chars[mt_rand(0,$clen)];  //mt_rand's range is inclusive - this is why we need 0 to n-1
+	$clen = strlen ($chars) - 1;  //a variable with the fixed length of chars correct for the fence post issue
+	while (strlen ($code) < $length) {
+		$code .= $chars[mt_rand (0, $clen)];  //mt_rand's range is inclusive - this is why we need 0 to n-1
 	}
 	return $code;
 }
@@ -402,23 +406,25 @@ function topi_quicksession ($url, $id_user = "") {
 	global $config;
 	if ($id_user == "")
 		$id_user = $config["id_user"];
-	$today=date('Y-m-d H:i:s');
+	$today = date ('Y-m-d H:i:s');
 
 	// Build quicksession data and URL
 	$id_user = $config["id_user"];
-	$cadena = topi_rndcode(16).$id_user.$today;
-	$cadena_md5 = substr(md5($cadena),1,8);
+	$cadena = topi_rndcode (16).$id_user.$today;
+	$cadena_md5 = substr (md5 ($cadena), 1, 8);
 	$param = "&quicksession=$cadena_md5&quickuser=$id_user";
 	$myurl = $config["base_url"].$url.$param;
 	//Insert quicksession data in DB
-	$sql = "INSERT INTO tquicksession (id_user, timestamp, pwdhash) VALUES ('$id_user', '$today', '$cadena_md5')";
-	mysql_query($sql);
+	$sql = sprintf ('INSERT INTO tquicksession (id_user, timestamp, pwdhash)
+		VALUES ("%s", "%s", "%s")',
+		$id_user, $today, $cadena_md5);
+	process_sql ($sql);
 	return $myurl;
 }
 
 
 function return_value ($var) {
-	if (isset($var))
+	if (isset ($var))
 		return $var;
 	return "";
 }
@@ -456,7 +462,7 @@ function get_indicent_status () {
 	return $status;
 }
 
-function get_incident_resolution () {
+function get_incident_resolutions () {
 	$status = array ();
 
 	$status[1] = lang_string ('Fixed');

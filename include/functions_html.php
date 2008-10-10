@@ -319,6 +319,7 @@ function print_textarea ($name, $rows, $columns, $value = '', $attributes = '', 
  *     $table->rowstyle  - An array of personalized style of each row.
  *     $table->rowclass  - An array of personalized classes of each row (odd-evens classes will be ignored).
  *     $table->colspan  - An array of colspans of each column.
+ *     $table->rowspan  - An array of rowspans of each column.
  *     $table->data[] - An array of arrays containing the data.
  *     $table->width  - A percentage of the page
  *     $table->border  - Border of the table.
@@ -386,6 +387,14 @@ function print_table (&$table, $return = false) {
 			}
 		}
 	}
+	if (isset ($table->rowspan)) {
+		foreach ($table->rowspan as $keyrow => $cspan) {
+			foreach ($cspan as $key => $span) {
+				$rowspan[$keyrow][$key] = ' rowspan="'.$span.'"';
+			}
+		}
+	}
+	
 	if (empty ($table->width)) {
 		$table->width = '80%';
 	}
@@ -461,6 +470,9 @@ function print_table (&$table, $return = false) {
 				if (!isset ($colspan[$keyrow][$key])) {
 					$colspan[$keyrow][$key] = '';
 				}
+				if (!isset ($rowspan[$keyrow][$key])) {
+					$rowspan[$keyrow][$key] = '';
+				}
 				if (!isset ($align[$key])) {
 					$align[$key] = '';
 				}
@@ -474,7 +486,10 @@ function print_table (&$table, $return = false) {
 					$style[$key] = '';
 				}
 
-				$output .= '<td id="'.$tableid.'-'.$keyrow.'-'.$key.'" style="'. $style[$key].$valign[$key].$align[$key].$size[$key].$wrap[$key] .'" '.$colspan[$keyrow][$key].' class="'.$class.'">'. $item .'</td>'."\n";
+				$output .= '<td id="'.$tableid.'-'.$keyrow.'-'.$key.
+					'" style="'. $style[$key].$valign[$key].$align[$key].$size[$key].$wrap[$key].
+					'" '.$colspan[$keyrow][$key].' '.$rowspan[$keyrow][$key].
+					' class="'.$class.'">'. $item .'</td>'."\n";
 			}
 			$output .= '</tr>'."\n";
 		}

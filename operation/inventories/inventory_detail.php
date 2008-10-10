@@ -42,6 +42,7 @@ $update = (bool) get_parameter ('update_inventory');
 $create = (bool) get_parameter ('create_inventory');
 $name = (string) get_parameter ('name');
 $description = (string) get_parameter ('description');
+$cost = (float) get_parameter ('cost');
 $id_product = (int) get_parameter ('id_product');
 $id_contract = (int) get_parameter ('id_contract');
 $ip_address = (string) get_parameter ('ip_address');
@@ -57,11 +58,12 @@ if ($update) {
 	$sql = sprintf ('UPDATE tinventory SET name = "%s", description = "%s",
 			id_product = %d, id_contract = %d, ip_address = "%s",
 			id_parent = %d, id_building = %d, serial_number = "%s",
-			part_number = "%s", id_manufacturer = %d, id_sla = %d
+			part_number = "%s", id_manufacturer = %d, id_sla = %d,
+			cost = %f
 			WHERE id = %d',
 			$name, $description, $id_product, $id_contract, $ip_address,
 			$id_parent, $id_building, $serial_number, $part_number,
-			$id_manufacturer, $id_sla, $id);
+			$id_manufacturer, $id_sla, $cost, $id);
 	$id = process_sql ($sql);
 	if ($id !== false) {
 		$result_msg = '<h3 class="suc">'.__('Inventory object updated successfuly').'</h3>';
@@ -78,11 +80,11 @@ if ($update) {
 if ($create) {
 	$sql = sprintf ('INSERT INTO tinventory (name, description, id_product,
 			id_contract, ip_address, id_parent, id_building, serial_number,
-			part_number, id_manufacturer, id_sla)
-			VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s", %d, %d)',
+			part_number, id_manufacturer, id_sla, cost)
+			VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s", %d, %d, %f)',
 			$name, $description, $id_product, $id_contract, $ip_address,
 			$id_parent, $id_building, $serial_number, $part_number,
-			$id_manufacturer, $id_sla);
+			$id_manufacturer, $id_sla, $cost);
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
 		$result_msg = '<h3 class="suc">'.__('Inventory object created successfuly').'</h3>';
@@ -123,6 +125,7 @@ if ($id) {
 	$confirmed = false;
 	$id_sla = $inventory['id_sla'];
 	$id_manufacturer = $inventory['id_manufacturer'];
+	$cost = $inventory['cost'];
 }
 
 if (! $id) {
@@ -167,11 +170,13 @@ $table->data[2][0] = print_button ($parent_name,
 			'parent_search', false, '', 'class="dialogbtn"',
 			true, __('Parent object'));
 $table->data[2][0] .= print_input_hidden ('id_parent', $id_parent, true);
-
 $table->data[2][1] = print_select (get_buildings (),
 			'id_building', $id_building,
 			'', __('None'), 0, true, false, false,
 			__('Building'));
+$table->data[2][2] = print_input_text ('cost', $cost, '', 5, 15,
+			true, __('Cost'));
+
 
 /* Fourth row */
 $table->data[3][0] = print_input_text ('serial_number', $serial_number, '', 20, 250,

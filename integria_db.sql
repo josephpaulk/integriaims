@@ -37,11 +37,16 @@ CREATE TABLE `tgrupo` (
   `banner` varchar(150) default NULL,
   `url` varchar(150) default NULL,
   `lang` varchar(10) default NULL,
-  `parent` tinyint(4) NOT NULL default '-1',
-  `id_user_default` varchar(250) NOT NULL default '',
-  `forced_email` tinyint(3) unsigned NOT NULL DEFAULT 1,
-  PRIMARY KEY  (`id_grupo`)
+  `parent` mediumint(8) unsigned NOT NULL default 0,
+  `id_user_default` varchar(60) NOT NULL default '',
+  `forced_email` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  PRIMARY KEY  (`id_grupo`),
+  FOREIGN KEY (`id_user_default`) REFERENCES tusuario(`id_usuario`)
+     ON UPDATE CASCADE ON DELETE SET default
 );
+
+ALTER TABLE tgrupo ADD FOREIGN KEY (`parent`) REFERENCES tgrupo(`id_grupo`)
+     ON UPDATE CASCADE ON DELETE SET default;
 
 CREATE TABLE `tproject_group` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -131,7 +136,7 @@ CREATE TABLE `twizard` (
 CREATE TABLE `tincident_type` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
-  `description` mediumtext NULL default NULL,
+  `description` text NULL default NULL,
   `id_wizard` mediumint(8) unsigned NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_wizard`) REFERENCES twizard(`id`)
@@ -141,14 +146,17 @@ CREATE TABLE `tincident_type` (
 CREATE TABLE `tsla` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) NULL default NULL,
+  `description` text NULL default NULL,
   `min_response` int(11) NULL default NULL,
   `max_response` int(11) NULL default NULL,
   `max_incidents` int(11) NULL default NULL,
   `enforced` tinyint NULL default 0,
-  `id_sla_base` mediumint(8) unsigned NOT NULL,
+  `id_sla_base` mediumint(8) unsigned NULL default 0,
   PRIMARY KEY  (`id`)
 );
+
+ALTER TABLE `tsla` ADD FOREIGN KEY (`id_sla_base`) REFERENCES tsla(`id`)
+  ON UPDATE CASCADE ON DELETE SET default;
 
 --
 -- Table structure for table `tincidencia`
@@ -164,7 +172,7 @@ CREATE TABLE `tincidencia` (
   `origen` tinyint unsigned NOT NULL DEFAULT 0,
   `estado` tinyint unsigned NOT NULL DEFAULT 0,
   `prioridad` tinyint unsigned NOT NULL DEFAULT 0,
-  `id_grupo` mediumint(9) NOT NULL default '0',
+  `id_grupo` mediumint(9) NOT NULL default 0,
   `actualizacion` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_creator` varchar(60) default NULL,
   `notify_email` tinyint unsigned NOT NULL DEFAULT 0,
@@ -180,13 +188,13 @@ CREATE TABLE `tincidencia` (
   FOREIGN KEY (`id_incident_type`) REFERENCES tincident_type(`id`)
       ON UPDATE CASCADE ON DELETE SET NULL,
   FOREIGN KEY (`id_grupo`) REFERENCES tgrupo(`id_grupo`)
-      ON UPDATE CASCADE ON DELETE SET NULL,
+      ON UPDATE CASCADE ON DELETE SET default,
   FOREIGN KEY (`id_creator`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE SET NULL,
   FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
       ON UPDATE CASCADE ON DELETE SET NULL,
   FOREIGN KEY (`affected_sla_id`) REFERENCES tsla(`id`)
-      ON UPDATE CASCADE ON DELETE SET default
+      ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 ALTER TABLE `tincidencia` ADD FOREIGN KEY (`id_parent`) REFERENCES tincidencia(`id_incidencia`)
@@ -489,7 +497,7 @@ CREATE TABLE `tevent` (
 CREATE TABLE `tkb_category` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) default NULL,
+  `description` text default NULL,
   `icon` varchar(75) default NULL,
   `parent` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
@@ -501,9 +509,9 @@ ALTER TABLE `tkb_category` ADD FOREIGN KEY (`parent`) REFERENCES tkb_category(`i
 CREATE TABLE `tkb_product` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) default NULL,
+  `description` text default NULL,
   `icon` varchar(75) default NULL,
-  `parent` tinyint(4) NOT NULL default '-1',
+  `parent` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 );
 
@@ -530,14 +538,14 @@ CREATE TABLE `tkb_data` (
 CREATE TABLE `tbuilding` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) NULL default NULL,
+  `description` text NULL default NULL,
   PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tcompany_role` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) NULL default NULL,
+  `description` text NULL default NULL,
   PRIMARY KEY  (`id`)
 );
 
@@ -546,7 +554,7 @@ CREATE TABLE `tcompany` (
   `name` varchar(100) NOT NULL default '',
   `address` varchar(300) NOT NULL default '', 
   `fiscal_id` varchar(250) NULL default NULL,
-  `comments` varchar(1024) NULL default NULL,
+  `comments` text NULL default NULL,
   `id_company_role` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_company_role`) REFERENCES tcompany_role(`id`)
@@ -571,7 +579,7 @@ CREATE TABLE `tcompany_contact` (
 CREATE TABLE `tcontract` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) NULL default NULL,
+  `description` text NULL default NULL,
   `date_begin` date NOT NULL default '0000-00-00',
   `date_end` date NOT NULL default '0000-00-00',
   `id_company` mediumint(8) unsigned NULL default NULL,
@@ -579,7 +587,7 @@ CREATE TABLE `tcontract` (
   `id_group` mediumint(8) unsigned NULL default NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_sla`) REFERENCES tsla(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
+     ON UPDATE CASCADE ON DELETE RESTRICT,
   FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
      ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
@@ -597,7 +605,7 @@ CREATE TABLE `tmanufacturer` (
   FOREIGN KEY (`id_company_role`) REFERENCES tcompany_role(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_sla`) REFERENCES tsla(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
+     ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE `tinventory` (
@@ -607,7 +615,8 @@ CREATE TABLE `tinventory` (
   `serial_number` varchar(250) NULL default NULL,
   `part_number` varchar(250) NULL default NULL,
   `comments` varchar(250) NULL default NULL,
-  `confirmed` tinyint(1) NULL default '0',
+  `confirmed` tinyint(1) NULL default 0,
+  `cost` float(10,3) NULL default 0.0,
   `ip_address` varchar(60) NULL default NULL,
   `id_contract` mediumint(8) unsigned default NULL,
   `id_product` mediumint(8) unsigned default NULL,
@@ -617,15 +626,15 @@ CREATE TABLE `tinventory` (
   `id_parent` mediumint(8) unsigned default NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_contract`) REFERENCES tcontract(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
+     ON UPDATE CASCADE ON DELETE SET NULL,
   FOREIGN KEY (`id_product`) REFERENCES tkb_product(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
+     ON UPDATE CASCADE ON DELETE SET NULL,
   FOREIGN KEY (`id_sla`) REFERENCES tsla (`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
+     ON UPDATE CASCADE ON DELETE SET NULL,
   FOREIGN KEY (`id_manufacturer`) REFERENCES tmanufacturer(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
+     ON UPDATE CASCADE ON DELETE SET NULL,
   FOREIGN KEY (`id_building`) REFERENCES tbuilding(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
+     ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 ALTER TABLE `tinventory` ADD

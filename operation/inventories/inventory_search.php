@@ -142,7 +142,7 @@ if ($search) {
 	}
 	
 	if ($total_inventories == 0) {
-		echo '<tr colspan="4">'.__('No inventory found').'</tr>';
+		echo '<tr><td colspan="6">'.__('No inventory objects found').'</td></tr>';
 	}
 	
 	if (defined ('AJAX'))
@@ -161,34 +161,29 @@ $table->data[1][0] = print_select (get_products (),
 					'', __('All'), 0, true, false, false,
 					__('Product type'));
 
-$table->data[1][1] = print_select (get_contracts (),
-			'search_id_contract', $search_id_contract,
-			'', __('All'), 0, true, false, false,
-			__('Contract'));
-
-$table->data[1][2] = print_select (get_buildings (),
+$table->data[1][1] = print_select (get_buildings (),
 			'search_id_building', $search_id_building,
 			'', __('All'), 0, true, false, false,
 			__('Building'));
+$table->data[1][2] = print_input_text ('search_serial_number', $search_serial_number, '', 20, 255,
+			true, __('Serial number'));
 
-$table->data[2][1] = print_select (get_companies (),
+$table->data[2][0] = print_select (get_companies (),
 			'search_id_company', $search_id_company,
 			'', __('All'), 0, true, false, false,
 			__('Company'));
 
-$table->data[3][0] = print_input_text ('search_ip_address', $search_ip_address, '', 20, 255,
-			true, __('IP address'));
-$table->data[3][1] = print_input_text ('search_serial_number', $search_serial_number, '', 20, 255,
-			true, __('Serial number'));
-$table->data[3][2] = print_input_text ('search_part_number', $search_part_number, '', 20, 255,
+$table->data[2][1] = print_select (get_contracts (),
+			'search_id_contract', $search_id_contract,
+			'', __('All'), 0, true, false, false,
+			__('Contract'));
+$table->data[2][2] = print_input_text ('search_part_number', $search_part_number, '', 20, 255,
 			true, __('Part number'));
 
 $table->data[4][0] = print_input_text ('search_string', $search_string, '', 20, 255,
 			true, __('Search string'));
-
-$table->data[4][1] = print_input_text ('search_id_inventory', $search_id_inventory, '', 5, 55,
-			true, __('Inventory ID#'));
-
+$table->data[4][1] = print_input_text ('search_ip_address', $search_ip_address, '', 20, 255,
+			true, __('IP address'));
 $table->data[4][2] = print_submit_button (__('Search'), 'search_button',
 			false, 'class="sub search"', true);
 

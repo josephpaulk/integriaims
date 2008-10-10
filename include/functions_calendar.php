@@ -420,8 +420,8 @@ function is_working_day ($datecalc) {
 // ---------------------------------------------------------------
 // Return string with time-threshold in secs, mins, days or weeks
 // ---------------------------------------------------------------
-
-function give_human_time ($int_seconds) {
+// $flag_hide_zero Used to hide 0's in higher periods
+function give_human_time ($int_seconds, $flag_hide_zero = true) {
 	$key_suffix = 's';
 	$periods = array (
 		'year'   => 31556926,
@@ -431,9 +431,6 @@ function give_human_time ($int_seconds) {
 		'minute' => 60,
 		'second' => 1
 	);
-
-	// used to hide 0's in higher periods
-	$flag_hide_zero = true;
 
 	// do the loop thang
 	foreach ($periods as $key => $length) {
