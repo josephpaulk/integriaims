@@ -1,3 +1,22 @@
+
+
+2008-10-16  Sancho Lerena <slerena@artica.es>
+
+	* integria_db.sql: Stripped enterprise SQL code.
+
+	* config_process.php: Added include for functions.php (missing).
+
+	* functions.php: Added enterprise function hooks and constants.
+
+	* functions_db.php: Adapted code for new enterprise function syntax.
+
+	* side_menu.php: Stripped enterprise links.
+
+	* task_detail.php: Some improvements in creation of a task (quick
+	link to created task, removed graph info in creation process.)
+
+	* user.php: Profile information with enteprise include hook.
+
 2008-10-10  Esteban Sanchez  <estebans@artica.es>
 
 	* include/functions_calendar.php: Removed undefined variable and

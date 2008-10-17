@@ -1,6 +1,6 @@
 <?php
 
-// INTEGRIA IMS v1.2
+// INTEGRIA IMS v2.0
 // http://www.integriaims.com
 // ===========================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
@@ -15,6 +15,8 @@
 // GNU General Public License for more details.
 
 global $config;
+
+define ('ENTERPRISE_NOT_HOOK', -1);
 
 /*
 
@@ -517,4 +519,23 @@ function print_priority_flag_image ($priority, $return = false) {
 	echo $output;
 }
 
+function enterprise_hook ($function_name, $parameters = false) {
+	if (function_exists ($function_name)) {
+		if (!is_array ($parameters))
+			return call_user_func ($function_name);
+		return call_user_func_array ($function_name, $parameters);
+	}
+	return ENTERPRISE_NOT_HOOK;
+}
+
+function enterprise_include ($filename) {
+	global $config;
+	// Load enterprise extensions
+	$fullfilename = $config["homedir"]."/enterprise/" . $filename;
+	if (file_exists ($fullfilename)) {
+		include ($fullfilename);
+		return true;
+	}
+	return ENTERPRISE_NOT_HOOK;
+}
 ?>

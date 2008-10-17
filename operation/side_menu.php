@@ -28,17 +28,25 @@ else
 
 
 // PROJECTS
-if ($sec == "projects"){
+if (($sec == "projects") AND (give_acl ($config["id_user"], 0, "PR"))) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('projects')."</h3>";
 	echo "<ul class='sidemenu'>";
 
 	// Project overview
+	if ($sec2 == "operation/projects/project_overview")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_overview'>".__('project_overview')."</a></li>";
+
+
+	// Project detail
 	if ($sec2 == "operation/projects/project")
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".__('project_overview')."</a></li>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".__('Project detail')."</a></li>";
 
 	// Project tree
 	if ($sec2 == "operation/projects/project_tree")
@@ -509,6 +517,23 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
 	echo "</div>";
 }
 
+// Product types
+if ((give_acl($config["id_user"], 0, "VR")==1) AND ($sec == "inventory")) {
+	echo "<div class='portlet'>";
+	echo "<h3 class='admin'>".__('Products')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	// Building overview
+	if ($sec2=="operation/inventories/manage_prod")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/manage_prod'>".__('Manage products')."</a></li>";
+
+	echo "</ul>";
+	echo "</div>";
+}
+
 // KNOWLEDGE BASE (KB)
 if (($sec == "kb") AND (give_acl($config["id_user"], 0, "KR"))) {
 	echo "<div class='portlet'>";
@@ -536,14 +561,6 @@ if (($sec == "kb") AND (give_acl($config["id_user"], 0, "KR"))) {
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_cat'>".__("Manage Categories")."</a></li>";
-
-		// KB Manage Prod.
-		if ($sec2 == "operation/kb/manage_prod")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_prod'>".__("Manage Products")."</a></li>";
-
 	}
 
 
@@ -647,6 +664,8 @@ echo "<div class='portlet'>";
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&ver=".$_SESSION["id_usuario"]."'>".__("Edit my user")."</a></li>";
 
+	if  (give_acl($config["id_user"], 0, "TW")) {
+
 		// Add spare workunit
 		if ($sec2 == "operation/users/user_spare_workunit")
 		echo "<li id='sidesel'>";
@@ -676,6 +695,7 @@ echo "<div class='portlet'>";
 
 		echo "</ul>";
 		echo "</div>";
+	}
 
 	if  ((give_acl($config["id_user"], 0, "PR")) OR  (give_acl($config["id_user"], 0, "IR"))) {
 		echo "<div class='portlet'>";
@@ -741,20 +761,7 @@ echo "<div class='portlet'>";
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__("manage_groups")."</a></li>";
 
-		// Profile manager
-		if ($sec2 == "godmode/perfiles/lista_perfiles")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=godmode/perfiles/lista_perfiles'>".__("manage_profiles")."</a></li>";
-
-		// Global user/role/task assigment
-		if ($sec2 == "godmode/usuarios/role_user_global")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/role_user_global'>".__("Global task assigment")."</a></li>";
-
+		enterprise_include ("operation/sidemenu_user_mgmt.php");	
 
 		echo "</ul>";
 		echo "</div>";

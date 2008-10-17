@@ -224,28 +224,6 @@ CREATE TABLE `tlink` (
 );
 
 
-CREATE TABLE  `tprofile` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(150) NOT NULL default '',
-  `ir` tinyint(1) NOT NULL default '0',
-  `iw` tinyint(1) NOT NULL default '0',
-  `im` tinyint(1) NOT NULL default '0',
-  `um` tinyint(1) NOT NULL default '0',
-  `dm` tinyint(1) NOT NULL default '0',
-  `fm` tinyint(1) NOT NULL default '0',
-  `ar` tinyint(1) NOT NULL default '0',
-  `aw` tinyint(1) NOT NULL default '0',
-  `am` tinyint(1) NOT NULL default '0',
-  `pr` tinyint(1) NOT NULL default '0',
-  `pw` tinyint(1) NOT NULL default '0',
-  `pm` tinyint(1) NOT NULL default '0',
-  `tw` tinyint(1) NOT NULL default '0',
-  `tm` tinyint(1) NOT NULL default '0',
-  `kr` tinyint(1) NOT NULL default '0',
-  `kw` tinyint(1) NOT NULL default '0',
-  `km` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-);
 
 CREATE TABLE `tsesion` (
   `ID_sesion` bigint(4) unsigned NOT NULL auto_increment,
@@ -257,24 +235,6 @@ CREATE TABLE `tsesion` (
   `utimestamp` bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (`ID_sesion`),
   FOREIGN KEY (`ID_usuario`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE
-);
-
---
--- Table structure for table `tusuario_perfil`
---
-CREATE TABLE `tusuario_perfil` (
-  `id_up` bigint(20) unsigned NOT NULL auto_increment,
-  `id_usuario` varchar(60) NOT NULL default '',
-  `id_perfil` int(10) unsigned NOT NULL default '0',
-  `id_grupo` mediumint(8) unsigned NOT NULL default '0',
-  `assigned_by` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (`id_up`),
-  FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_grupo`) REFERENCES tgrupo(`id_grupo`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_perfil`) REFERENCES tprofile(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -662,16 +622,6 @@ CREATE TABLE `ttask_inventory` (
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE `tworkunit_inventory` (
-  `id_wu` bigint(20) unsigned NOT NULL,
-  `id_inventory` int(10) unsigned NOT NULL,
-  PRIMARY KEY  (`id_wu`, `id_inventory`),
-  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_wu`) REFERENCES tworkunit(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
-);
-
 CREATE TABLE `tcustom_search` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(60) NOT NULL,
@@ -722,3 +672,4 @@ CREATE TABLE `um_tupdate_journal` (
   FOREIGN KEY (`id_update`) REFERENCES um_tupdate(`id`)
   ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

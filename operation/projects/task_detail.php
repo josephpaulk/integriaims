@@ -24,7 +24,7 @@ if (check_login() != 0) {
 }
 
 // Get our main stuff
-$id_user = $_SESSION['id_usuario'];
+$id_user = $config['id_user'];
 $id_project = give_parameter_get ("id_project", -1);
 $id_task = give_parameter_get ("id_task", -1);
 $project_manager = give_db_sqlfree_field("SELECT id_owner FROM tproject WHERE id = $id_project");
@@ -85,6 +85,9 @@ if ($operation == "insert"){
 		$result_output = "<h3 class='suc'>".$lang_label["create_ok"]."</h3>";
 		audit_db ($id_user, $config["REMOTE_ADDR"], "Task added to project", "Task '$name' added to project '$id_project'");
 		$operation = "view";
+
+		$result_output .= "<p><a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>";
+		$result_output .= __("Click here to continue working with this task"). "</A><br></p>";
 
         // Add all users assigned to current project for new task or parent task if has parent
         if ($parent != 0)
@@ -222,8 +225,10 @@ echo '<td class="datos2"><input type="text" name="name" size=30 value="'.$name.'
 echo "<td rowspan=6>";
 echo '<table class="blank">';
 echo "<tr><td>";
-echo "<i>Workunit distribution</i><br>";
-echo "<img src='include/functions_graph.php?type=workunit_task&width=200&height=170&id_task=$id_task'>";
+if ($id_task != -1){
+	echo "<i>" . __("Workunit distribution") . "</i><br>";
+	echo "<img src='include/functions_graph.php?type=workunit_task&width=200&height=170&id_task=$id_task'>";	
+}
 echo "</table>";
 
 // Parent task
@@ -300,42 +305,44 @@ echo "<td class='datos'>";
 echo "<input type='text' name='estimated_cost' size=7 value='$estimated_cost'>";
 echo " ".$config["currency"];
 
-// Cost estimation graph
-echo "<td rowspan=5>";
-echo '<table class="blank">';
-echo "<tr><td>";
-echo "<i>".lang_string("Cost estimation")."</i>";
-echo "<tr><td>";
-$labela=lang_string("Est.");
-$labelb=lang_string("Real");
-$a = $estimated_cost;
-$b = round (task_workunit_cost ($id_task, 1));
-$max = maxof($a, $b);
-echo "<img src='include/functions_graph.php?type=histogram&width=200&height=30&a=$a&b=$b&labela=$labela&labelb=$labelb&max=$max'>";
+if ($id_task != -1){
 
-// Imputable cost graph
-echo "<tr><td>";
-echo "<i>".lang_string("Imputable costs")."</i>";
-echo "<tr><td>";
-$labela=lang_string("Tot");
-$labelb=lang_string("Imp");
-$a = round (task_workunit_cost ($id_task, 0));
-$b = round (task_workunit_cost ($id_task, 1));
-$max = maxof($a, $b);
-echo "<img src='include/functions_graph.php?type=histogram&width=200&height=30&a=$a&b=$b&labela=$labela&labelb=$labelb&max=$max'>";
-
-// Task hours graph
-echo "<tr><td>";
-echo "<i>".lang_string("Estimated hours")."</i>";
-echo "<tr><td>";
-$labela=lang_string("Est.");
-$labelb=lang_string("Real");
-$a = round ($hours);
-$b = round (give_hours_task ($id_task));
-$max = maxof($a, $b);
-echo "<img src='include/functions_graph.php?type=histogram&width=200&height=30&a=$a&b=$b&labela=$labela&labelb=$labelb&max=$max'>";
-echo "</table>";
-
+	// Cost estimation graph
+	echo "<td rowspan=5>";
+	echo '<table class="blank">';
+	echo "<tr><td>";
+	echo "<i>".__("Cost estimation")."</i>";
+	echo "<tr><td>";
+	$labela=lang_string("Est.");
+	$labelb=lang_string("Real");
+	$a = $estimated_cost;
+	$b = round (task_workunit_cost ($id_task, 1));
+	$max = maxof($a, $b);
+	echo "<img src='include/functions_graph.php?type=histogram&width=200&height=30&a=$a&b=$b&labela=$labela&labelb=$labelb&max=$max'>";
+	
+	// Imputable cost graph
+	echo "<tr><td>";
+	echo "<i>".lang_string("Imputable costs")."</i>";
+	echo "<tr><td>";
+	$labela=lang_string("Tot");
+	$labelb=lang_string("Imp");
+	$a = round (task_workunit_cost ($id_task, 0));
+	$b = round (task_workunit_cost ($id_task, 1));
+	$max = maxof($a, $b);
+	echo "<img src='include/functions_graph.php?type=histogram&width=200&height=30&a=$a&b=$b&labela=$labela&labelb=$labelb&max=$max'>";
+	
+	// Task hours graph
+	echo "<tr><td>";
+	echo "<i>".lang_string("Estimated hours")."</i>";
+	echo "<tr><td>";
+	$labela=lang_string("Est.");
+	$labelb=lang_string("Real");
+	$a = round ($hours);
+	$b = round (give_hours_task ($id_task));
+	$max = maxof($a, $b);
+	echo "<img src='include/functions_graph.php?type=histogram&width=200&height=30&a=$a&b=$b&labela=$labela&labelb=$labelb&max=$max'>";
+	echo "</table>";
+}
 
 // Real costs (imputable)
 echo '<tr><td class="datos2">';

@@ -18,8 +18,7 @@
 
 global $config;
 
-if (file_exists ($config["homedir"]."/enterprise/include/functions_extra.php"))
-	include ($config["homedir"]."/enterprise/include/functions_extra.php");
+enterprise_include ("include/functions_extra.php");
 
 // --------------------------------------------------------------- 
 // give_acl ()
@@ -28,14 +27,11 @@ if (file_exists ($config["homedir"]."/enterprise/include/functions_extra.php"))
 // --------------------------------------------------------------- 
 
 function give_acl ($id_user, $id_group, $access) {
-	if (function_exists ('give_acl_extra'))
-		return give_acl_extra ($id_user, $id_group, $access);
-	return give_acl_free ($id_user, $id_group);
-}
-
-
-function give_acl_free ($id_user, $id_group) {
 	global $config;
+
+	$hook_return = enterprise_hook ("give_acl_extra", array($id_user, $id_group, $access));
+	if ($hook_return !== ENTERPRISE_NOT_HOOK)
+		return $hook_return;
 	
 	$is_admin = (bool) get_db_value ('nivel', 'tusuario', 'id_usuario', $id_user);
 	if ($is_admin)
@@ -404,7 +400,7 @@ function check_login () {
 			return false;	
 		}
 	}
-	require ("general/noaccess.php");
+	require ($config["homedir"]."/general/noaccess.php");
 	return true;	
 }
 

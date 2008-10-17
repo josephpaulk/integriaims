@@ -45,6 +45,7 @@ if (! mysql_connect ($config["dbhost"], $config["dbuser"], $config["dbpass"])) {
 }
 
 mysql_select_db ($config["dbname"]);
+require_once ($config["homedir"]."/include/functions.php");
 require_once ($config["homedir"]."/include/functions_db.php");
 
 $configs = get_db_all_rows_in_table ('tconfig');
