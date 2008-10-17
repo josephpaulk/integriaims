@@ -76,9 +76,9 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	WHERE id = $id";
 	$result=mysql_query($sql_update);
 	if (! $result)
-		echo "<h3 class='error'>".__("KB Product cannot be updated")."</h3>"; 
+		echo "<h3 class='error'>".__("Product cannot be updated")."</h3>"; 
 	else {
-		echo "<h3 class='suc'>".__("KB Product updated ok")."</h3>";
+		echo "<h3 class='suc'>".__("Product updated ok")."</h3>";
 		insert_event ("PRODUCT UPDATED", $id, 0, $name);
 	}
 }
@@ -117,14 +117,14 @@ if ($create || $update) {
 		$parent = $row["parent"];
 	}
 
-	echo "<h2>".__("KB Product management")."</h2>";	
+	echo "<h2>".__("Product management")."</h2>";	
 	if ($id == -1){
 		echo "<h3>".__("Create a new product")."</a></h3>";
-		echo "<form name=prodman method='post' action='index.php?sec=kb&sec2=operation/kb/manage_prod'>";
+		echo "<form name=prodman method='post' action='index.php?sec=inventory&sec2=operation/inventories/manage_prod'>";
 		print_input_hidden ('insert_product', 1);
 	} else {
 		echo "<h3>".__("Update existing product")."</a></h3>";
-		echo "<form name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/manage_prod&update2'>";
+		echo "<form name=prodman2 method='post' action='index.php?sec=inventory&sec2=operation/inventories/manage_prod&update2'>";
 		echo "<input type=hidden name=id value='$id'>";
 	}
 	
@@ -170,7 +170,7 @@ if ($create || $update) {
 // Show list of product
 // =======================
 if (! $update && ! $create) {
-	echo "<h2>".__("KB Product management")."</h2>";	
+	echo "<h2>".__("Product management")."</h2>";	
 	echo "<h3>".__("Defined products")."</a></h3>";
 	$sql1='SELECT * FROM tkb_product ORDER BY parent, name';
 	$color =0;
@@ -197,22 +197,23 @@ if (! $update && ! $create) {
 			echo "<img src='images/products/".$row["icon"]."' border='0'>";
 			echo "</td>";
 			// Name
-			echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=kb&
-					sec2=operation/kb/manage_prod&update=".$row["id"]."'>".$row["name"]."</a></b></td>";
+			echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=inventory&
+					sec2=operation/inventories/manage_prod&update=".$row["id"]."'>".$row["name"]."</a></b></td>";
 			// Parent
 			echo "<td class='$tdcolor' valign='top'>".give_db_sqlfree_field ("SELECT name FROM tkb_product WHERE id = ".$row["parent"]);
 			
 			// Descripcion
 			echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
 			echo $row["description"];
+
 			// Items
 			echo "<td class='".$tdcolor."f9' align='center'>";
 			echo give_db_sqlfree_field ("SELECT COUNT(id) FROM tkb_data WHERE id_product = ".$row["id"]);
 
 			// Delete
 			echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
-			echo "<a href='index.php?sec=kb&
-						sec2=operation/kb/manage_prod&
+			echo "<a href='index.php?sec=inventory&
+						sec2=operation/inventories/manage_prod&
 						delete_prod=".$row["id"]."' 
 						onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) 
 						return false;'>
@@ -222,7 +223,7 @@ if (! $update && ! $create) {
 	}			
 	echo "<table width=700 class='button'>";
 	echo "<tr><td align='right'>";
-	echo "<form method=post action='index.php?sec=kb&sec2=operation/kb/manage_prod'>";
+	echo "<form method=post action='index.php?sec=inventory&sec2=operation/inventories/manage_prod'>";
 	print_input_hidden ('create', 1);
 	echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create product")."'>";
 	echo "</form></td></tr></table>";

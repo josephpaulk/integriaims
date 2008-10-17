@@ -1,6 +1,12 @@
-
-
 2008-10-16  Sancho Lerena <slerena@artica.es>
+
+	* operation/projects/project_overview.php: Added project overview
+	page, who shows projects using project groups.
+
+	* operation/kb/manage_prod.php (deleted). 
+
+	* operation/inventories/manage_prod.php: Product type management
+	is now under inventory submenu, not KB.
 
 	* integria_db.sql: Stripped enterprise SQL code.
 
