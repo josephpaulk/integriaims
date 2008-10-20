@@ -1,10 +1,20 @@
 <?php 
 
-// Pandora - The Free Monitoring System
-// This code is protected by GPL license.
-// Este codigo esta protegido por la licencia GPL.
-// Sancho Lerena <slerena@gmail.com>, 2003-2006
-// Raul Mateos <raulofpandora@gmail.com>, 2005-2006
+// Integria 2.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Artica Soluciones Tecnologicas
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 // Load global vars
 require("include/config.php");
@@ -22,15 +32,15 @@ if (comprueba_login() == 0)
  		- A more powerful selection (by Agent, by Module, etc).
  	*/
 ?>
-	<h2><?php echo $lang_label["dbmain_title"] ?></h2>
-	<h3><?php echo $lang_label["current_dbsetup"] ?><a href="help/<?php echo $help_code ?>/chap8.php#8" target="_help" class="help">&nbsp;<span><?php echo $lang_label["help"] ?></span></a></h3>
+	<h2><?php echo __('Database Maintenance') ?></h2>
+	<h3><?php echo __('This is your current database maintenance setup') ?><a href="help/<?php echo $help_code ?>/chap8.php#8" target="_help" class="help">&nbsp;<span><?php echo __('Help') ?></span></a></h3>
 	<table width=550 cellspacing=3 cellpadding=3 border=0>
 	<tr><td>
-	<i><?php echo $lang_label["days_compact"]; ?>:</i>&nbsp;<b><?php echo $days_compact; ?></b><br><br>
-	<i><?php echo $lang_label["days_purge"]; ?>:</i>&nbsp;<b><?php echo $days_purge; ?></b><br><br>
+	<i><?php echo __('Max. days before compact data'); ?>:</i>&nbsp;<b><?php echo $days_compact; ?></b><br><br>
+	<i><?php echo __('Max. days before purge'); ?>:</i>&nbsp;<b><?php echo $days_purge; ?></b><br><br>
 	<tr><td>
 	<div align='justify'>
-	<?php echo $lang_label["dbsetup_info"]; ?>
+	<?php echo __('Please check your Integria Server setup and be sure that database maintenance daemon is running. It\'s very important to keep up-to-date database to get the best performance and results in Integria'); ?>
 	</div><br>
 	<img src="reporting/fgraph.php?tipo=db_agente_purge&id=-1">
 	</table>

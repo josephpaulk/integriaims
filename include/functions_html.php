@@ -48,7 +48,7 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 		if ($nothing_value == $selected) {
 			$output .= " selected";
 		}
-		$output .= '>'.lang_string ($nothing)."</option>\n";
+		$output .= '>'.$nothing."</option>\n";
 	}
 
 	if (!empty ($fields)) {

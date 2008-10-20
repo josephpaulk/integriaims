@@ -170,7 +170,7 @@ if ($id || $new_type) {
 			$data[2] = '<a href="index.php?sec=incidents&
 						sec2=operation/incidents/type_detail&
 						delete_type=1&id='.$type['id'].'"
-						onClick="if (!confirm(\''.__('are_you_sure').'\'))
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">
 						<img src="images/cross.png"></a>';
 			array_push ($table->data, $data);

@@ -26,7 +26,7 @@ if (check_login () != 0) {
 $id_grupo = (int) get_parameter ('id_grupo');
 $id = (int) get_parameter ('id');
 
-if (give_acl ($config['id_user'], $id_grupo, "IR") != 1){
+if (give_acl ($config['id_user'], $id_grupo, "IR") != 1) {
  	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
 	include ("general/noaccess.php");
@@ -59,7 +59,7 @@ if ($action == 'update') {
 	// Only admins (manage incident) or owners can modify incidents
 	if (! give_acl ($config["id_user"], $grupo, "IM")) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
-		echo "<h3 class='error'>".__('upd_incid_no')."</h3>";
+		echo "<h3 class='error'>".__('There was a problem updating incident')."</h3>";
 		no_permission ();
 		exit ();
 	}
@@ -108,7 +108,7 @@ if ($action == 'update') {
 	/* Update inventory objects in incident */
 	$sql = sprintf ('DELETE FROM tincident_inventory WHERE id_incident = %d', $id);
 	process_sql ($sql);
-	$inventories = get_parameter ('inventories');
+	$inventories = (array) get_parameter ('inventories');
 	foreach ($inventories as $id_inventory) {
 		$sql = sprintf ('INSERT INTO tincident_inventory
 				VALUES (%d, %d)',
@@ -117,9 +117,9 @@ if ($action == 'update') {
 	}
 
 	if ($result === false)
-		$result_msg = "<h3 class='suc'>".__('upd_incid_no')."</h3>";
+		$result_msg = "<h3 class='suc'>".__('There was a problem updating incident')."</h3>";
 	else
-		$result_msg = "<h3 class='suc'>".__('upd_incid_ok')."</h3>";
+		$result_msg = "<h3 class='suc'>".__('Incident successfully updated')."</h3>";
 
 	// Email notify to all people involved in this incident
 	if ($email_notify == 1) {
@@ -176,8 +176,8 @@ if ($action == "insert") {
 					$id, $id_inventory);
 			process_sql ($sql);
 		}
-		$result_msg = "<h3 class='suc'>".__('create_incid_ok')." (id #$id)</h3>";
-		$result_msg .= "<h4><a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id'>".__("Please click here to continue working with incident #").$id."</a></h4>";
+		$result_msg = "<h3 class='suc'>".__('Incident successfully created')." (id #$id)</h3>";
+		$result_msg .= "<h4><a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id'>".__('Please click here to continue working with incident #').$id."</a></h4>";
 
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 			"Incident created",
@@ -189,7 +189,7 @@ if ($action == "insert") {
 			mail_incident ($id, $usuario, "", 0, 1);
 		}
 	} else {
-		$result_msg  = '<h3 class="err">'.__('create_incid_no').'</h3>';
+		$result_msg  = '<h3 class="err">'.__('Incident could not be created').'</h3>';
 	}
 	if (defined ('AJAX')) {
 		echo $result_msg;
@@ -265,7 +265,7 @@ if ($id) {
 				$id, $id_workunit);
 		$res = process_sql ($sql);
 		if ($res !== false) {
-			$result_msg = "<h3 class='suc'>".__('create_work_ok')."</h3>";
+			$result_msg = "<h3 class='suc'>".__('Workunit added successfully')."</h3>";
 			// Email notify to all people involved in this incident
 			if ($email_notify == 1) {
 				mail_incident ($id, $config['id_user'], $nota, $timeused, 10);
@@ -308,7 +308,7 @@ if ($id) {
 			$filename = $config["homedir"]."attachment/pand".$id_attachment."_".$filename;
 			
 			if (! copy ($_FILES['userfile']['tmp_name'], $filename)) {
-				$result_msg = '<h3 class="error">'.__('attach_error').'</h3>';
+				$result_msg = '<h3 class="error">'.__('File cannot be saved. Please contact Integria administrator about this error').'</h3>';
 				$sql = sprintf ('DELETE FROM tattachment
 						WHERE id_attachment = %d', $id_attachment);
 				process_sql ($sql);
@@ -400,7 +400,7 @@ if (! $id) {
 $has_permission = (give_acl ($iduser_temp, $id_grupo, "IM")  || ($usuario == $iduser_temp));
 
 if ($id) {
-	echo "<h1>".__('incident')." #$id";
+	echo "<h1>".__('Incident')." #$id";
 	if ($affected_sla_id != 0){
 		echo '&nbsp;&nbsp;&nbsp;<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">';
 	}
@@ -408,7 +408,7 @@ if ($id) {
 
 } else {
 	if (! defined ('AJAX'))
-		echo "<h2>".__('create_incident')."</h2>";
+		echo "<h2>".__('Create incident')."</h2>";
 }
 
 echo '<div class="result">'.$result_msg.'</div>';
@@ -439,8 +439,7 @@ $table->data[0][0] = print_input_text ('titulo', $titulo, '', 40, 100, true, __(
 $table->data[0][1] = print_checkbox_extended ('sla_disabled', 0, $sla_disabled,
 						$disabled, '', '', true, __('SLA disabled'));
 $table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
-						$disabled, '', '', true, __('email_notify'));
-//$table->data[1][2] .= print_help_tip (__('email_notify_help'), true);
+						$disabled, '', '', true, __('Notify changes by email'));
 
 $table->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
 
@@ -481,20 +480,31 @@ if ($has_permission) {
 
 if ($has_permission) {
 	$table->data[4][1] = print_button (dame_nombre_real ($usuario), 'usuario_name',
-					false, '', 'class="dialogbtn"', true, __('assigned_user'));
+					false, '', 'class="dialogbtn"', true, __('Assigned user'));
 	$table->data[4][1] .= print_input_hidden ('usuario_form', $usuario, true);
-	$table->data[4][1] .= print_help_tip (__('incident_user_help'), true);
+	$table->data[4][1] .= print_help_tip (__('User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user'), true);
 } else {
-	$table->data[4][1] = print_input_hidden ('usuario_form', $usuario, true, __('assigned_user'));
+	$table->data[4][1] = print_input_hidden ('usuario_form', $usuario, true, __('Assigned user'));
 	$table->data[4][1] .= $usuario;
 }
 
 if ($create_incident) {
-	$table->data[4][2] = print_select (array (), 'incident_inventories', NULL,
+	$id_inventory = (int) get_parameter ('id_inventory');
+	$inventories = array ();
+	if ($id_inventory) {
+		if (! give_acl ($config['id_user'], $id_inventory, "VR"))
+			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation",
+				"Trying to access inventory #".$id);
+		else {
+			$inventories[$id_inventory] = get_db_value ('name', 'tinventory',
+				'id', $id_inventory);
+		}
+	}
+	$table->data[4][2] = print_select ($inventories, 'incident_inventories', NULL,
 					'', '', '', true, false, false, __('Objects affected'));
-	$table->data[4][2] .= print_button (__("Add"),
+	$table->data[4][2] .= print_button (__('Add'),
 					'search_inventory', false, '', 'class="dialogbtn"', true);
-	$table->data[4][2] .= print_button (__("Remove"),
+	$table->data[4][2] .= print_button (__('Remove'),
 					'delete_inventory', false, '', 'class="dialogbtn"', true);
 } else {
 	$inventories = get_inventories_in_incident ($id);
@@ -519,7 +529,7 @@ $table->data[5][0] = print_textarea ('description', 14, 80, $description, $disab
 		true, __('Description'));
 
 $table->data[6][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,
-		true, __('resolution_epilog'));
+		true, __('Resolution epilog'));
 
 if ($estado != 6 && $estado != 7) {
 	$table->rowstyle[6] = 'display: none';
@@ -533,13 +543,13 @@ echo '<div style="width:'.$table->width.'" class="button">';
 if ($create_incident) {
 	print_input_hidden ('action', 'insert');
 	if (give_acl ($config["id_user"], 0, "IW")) {
-		print_submit_button (__('create'), 'accion', false, 'class="sub create"');
+		print_submit_button (__('Create'), 'accion', false, 'class="sub create"');
 	}
 } else {
 	print_input_hidden ('id', $id);
 	print_input_hidden ('action', 'update');
 	if ($has_permission) {
-		print_submit_button (__('update'), 'accion', false, 'class="sub next"');
+		print_submit_button (__('Update'), 'accion', false, 'class="sub next"');
 	}
 }
 echo '</div>';

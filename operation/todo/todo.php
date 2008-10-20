@@ -23,9 +23,9 @@ if (check_login() == 0){
 
 		$result=mysql_query($sql_insert);	
 		if (! $result)
-			echo "<h3 class='error'>".$lang_label["create_no"]."</h3>";
+			echo "<h3 class='error'>".__('Not created. Error inserting data')."</h3>";
 		else {
-			echo "<h3 class='suc'>".$lang_label["create_ok"]."</h3>"; 
+			echo "<h3 class='suc'>".__('Created successfully')."</h3>"; 
 			$id_todo = mysql_insert_id();
 		}
         mail_todo (0, $id_todo);
@@ -51,9 +51,9 @@ if (check_login() == 0){
 		$sql_update = "UPDATE ttodo SET id_task = $id_task, priority = '$priority', progress = '$progress', description = '$description', last_update = '$last_update' WHERE id = $id_todo";
 		$result=mysql_query($sql_update);
 		if (! $result)
-			echo "<h3 class='error'>".$lang_label["modify_no"]."</h3>";
+			echo "<h3 class='error'>".__('Not updated. Error updating data')."</h3>";
 		else
-			echo "<h3 class='suc'>".$lang_label["modify_ok"]."</h3>";
+			echo "<h3 class='suc'>".__('Updated successfully')."</h3>";
         mail_todo (1, $id_todo);
 		$operation = "";
 	}
@@ -77,9 +77,9 @@ if (check_login() == 0){
         mail_todo (2, $id_todo);
 		$result=mysql_query($sql_delete);
 		if (! $result)
-			echo "<h3 class='error'>".$lang_label["delete_no"]."</h3>";
+			echo "<h3 class='error'>".__('Not deleted. Error deleting data')."</h3>";
 		else
-			echo "<h3 class='suc'>".$lang_label["delete_ok"]."</h3>";
+			echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
 		$operation = "";
 	}
 
@@ -99,13 +99,12 @@ if (check_login() == 0){
 		$description = $row["description"];
 		$priority = $row["priority"];
 		$id_task = $row["id_task"];
-
-        echo "<h2>".lang_string ("todo_update")." - $name </h2>";
+		
 		echo '<table class="databox"  width="700">';
 		echo "<form name='todou' method='post' action='index.php?sec=todo&sec2=operation/todo/todo&operation=update2&id=$id_todo'>";
 		
 		// Priority
-		echo "<tr><td class='datos2'>".lang_string ("priority");
+		echo "<tr><td class='datos2'>".__('Priority');
 		echo "<td class='datos2'><select name='priority'>";
 		echo "<option value='$priority'>".render_priority($priority);
 		for ($ax=0; $ax < 5; $ax++)
@@ -113,7 +112,7 @@ if (check_login() == 0){
 		echo "</select>";
 
 		// Progress
-		echo "<tr><td class='datos'>".lang_string ("progress");
+		echo "<tr><td class='datos'>".__('Progress');
 		echo "<td class='datos'><select name='progress'>";
 		echo "<option value='$progress'>".$progress." %";
 		for ($ax=0; $ax < 11; $ax++)
@@ -121,20 +120,20 @@ if (check_login() == 0){
 		echo "</select>";
 
 		// Description
-		echo "<tr><td class='datos2' valign='top'>".lang_string ("description");
+		echo "<tr><td class='datos2' valign='top'>".__('Description');
 		echo "<td class='datos2'><textarea name='description' style='width:100%; height:250px' >";
 		echo $description;
 		echo "</textarea>";
 
 		// Task
-		echo "<tr><td class='datos'>".lang_string ("task");
+		echo "<tr><td class='datos'>".__('Task');
 		echo "<td class='datos' valign='top'>";
 		echo combo_task_user_participant ($config["id_user"],0 ,$id_task);
 		echo "</table>";
 
 		// Submit
 		echo '<div class="button" style="height: 700px">';
-		echo "<input name='crtbutton' type='submit' class='sub' value='".lang_string ("update")."'>";
+		echo "<input name='crtbutton' type='submit' class='sub' value='".__('Update')."'>";
 		echo '</form></div>';
 	}
 
@@ -142,41 +141,39 @@ if (check_login() == 0){
 	// CREATE new todo (form)
 	// ---------------
 	if ($operation == "create") {
-        echo "<h2>".lang_string ("todo_creation")."</h2>";
-
 		echo '<table class="databox" width="700">';
 		echo '<form name="ilink" method="post" action="index.php?sec=todo&sec2=operation/todo/todo&operation=create2">';
 
-		echo "<tr><td class='datos'>".lang_string ("todo");
+		echo "<tr><td class='datos'>".__('To-Do');
 		echo "<td class='datos'><input name='name' size=40>";
 
-		echo "<tr><td class='datos2'>".lang_string ("priority");
+		echo "<tr><td class='datos2'>".__('Priority');
 		echo "<td class='datos2'><select name='priority'>";
 		for ($ax=0; $ax < 5; $ax++)
 			echo "<option value='$ax'>".render_priority($ax);
 		echo "</select>";
 
-		echo "<tr><td class='datos'>".lang_string ("progress");
+		echo "<tr><td class='datos'>".__('Progress');
 		echo "<td class='datos'><select name='progress'>";
 		for ($ax=0; $ax < 11; $ax++)
 			echo "<option value='". ($ax * 10) ."'>".($ax*10)." %";
 		echo "</select>";
 
-		echo "<tr><td class='datos2'>".lang_string ("assigned_to_user");
+		echo "<tr><td class='datos2'>".__('Assigned to user');
 		echo "<td class='datos2'>";	
         combo_user_visible_for_me ($config["id_user"],"user",0, "");
 
 		// Task
-		echo "<tr><td class='datos'>".lang_string ("task");
+		echo "<tr><td class='datos'>".__('Task');
 		echo "<td class='datos' valign='top'>";
 		echo combo_task_user_participant ($config["id_user"],0 ,0, true);
-		echo "<tr><td class='datos2' valign='top'>".lang_string ("description");
+		echo "<tr><td class='datos2' valign='top'>".__('Description');
 		echo "<td class='datos2'><textarea name='description' style='width:100%; height:230px'>";
 		echo "</textarea>";
 		echo "</table>";
 
 		echo '<div class="button" style="width: 700px">';
-		echo "<input name='crtbutton' type='submit' class='sub next' value='".lang_string ("create")."'>";
+		echo "<input name='crtbutton' type='submit' class='sub next' value='".__('Create')."'>";
 		echo '</form></div>';
 	}
 
@@ -185,21 +182,21 @@ if (check_login() == 0){
 	// -------------------------
 	if (($operation == "") OR ($operation == "notme")){
 		if ($operation == "notme")
-			echo "<h1>".$lang_label["todo_management"]. " - ". lang_string("assigned_to_other_users")."</h1>";
+			echo "<h1>".__('To-Do management'). " - ". __('Assigned to other users')."</h1>";
 		else
-			echo "<h1>".$lang_label["todo_management"]."</h1>";
+			echo "<h1>".__('To-Do management')."</h1>";
 		echo "<table class='listing' width=760>";
-		echo "<th>".lang_string ("todo");
-		echo "<th>".$lang_label["priority"];
-		echo "<th>".$lang_label["progress"];
+		echo "<th>".__('To-Do');
+		echo "<th>".__('Priority');
+		echo "<th>".__('Progress');
 		if ($operation == "notme")
-			echo "<th>".lang_string ("assigned_to");
+			echo "<th>".__('Assigned to');
 		else
-			echo "<th>".$lang_label["assigned_by"];
-		//echo "<th>".lang_string ("created");
-		echo "<th>".lang_string ("updated");
-		echo "<th>".lang_string ("task");
-		echo "<th>".lang_string ("delete");
+			echo "<th>".__('Assigned by');
+		//echo "<th>".__('Created');
+		echo "<th>".__('Updated');
+		echo "<th>".__('Task');
+		echo "<th>".__('Delete');
 		if ($operation == "notme")
 			$sql1="SELECT * FROM ttodo WHERE created_by_user = '$id_user' AND assigned_user != '$id_user'ORDER BY priority DESC";
 		else
@@ -248,7 +245,7 @@ if (check_login() == 0){
 			}
 			// DELETE
 			echo '<td align="center">';
-			echo '<a href="index.php?sec=todo&sec2=operation/todo/todo&operation=delete&id='.$row["id"].'" onClick="if (!confirm(\' '.$lang_label["are_you_sure"].'\')) return false;"><img border=0 src="images/cross.png"></a>';
+			echo '<a href="index.php?sec=todo&sec2=operation/todo/todo&operation=delete&id='.$row["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
 			
 		}
 		echo "</table>";

@@ -50,7 +50,7 @@ if ($id) {
 		$lang = $group['lang'];
 		$forced_email = $group['forced_email'];
 	} else {
-		echo "<h3 class='error'>".__('group_error')."</h3>";
+		echo "<h3 class='error'>".__('There was a problem loading group')."</h3>";
 		include ("general/footer.php");
 		exit;
 	}

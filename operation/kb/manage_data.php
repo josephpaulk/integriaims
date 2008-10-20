@@ -39,9 +39,9 @@
               		 VALUE ('$title','$data', '$id_product', '$id_category', '".$config["id_user"]."', '$timestamp') ";
 		$result=mysql_query($sql_insert);	
 		if (! $result)
-			echo "<h3 class='error'>".lang_string ("KB data item cannot be created")."</h3>"; 
+			echo "<h3 class='error'>".__('KB data item cannot be created')."</h3>"; 
 		else {
-			echo "<h3 class='suc'>".lang_string ("KB data item created ok")."</h3>";
+			echo "<h3 class='suc'>".__('KB data item created ok')."</h3>";
             $id_data = mysql_insert_id();
             insert_event ("KB ITEM CREATED", $id_data, 0, $title);
 		}
@@ -59,7 +59,7 @@
 		mysql_query($sql);
 		unlink ($nombre_archivo);
 		insert_event ("KB ITEM UPDATED", $id_kb, 0, "File ".$attach_row["filename"]." deleted");
-		echo "<h3 class='suc'>".lang_string ("Attach deleted ok")."</h3>";
+		echo "<h3 class='suc'>".__('Attach deleted ok')."</h3>";
 		unset ($id_kb);
 	}
 
@@ -80,9 +80,9 @@
 		WHERE id = $id";
 		$result=mysql_query($sql_update);
 		if (! $result)
-			echo "<h3 class='error'>".lang_string ("KB data item cannot be updated")."</h3>"; 
+			echo "<h3 class='error'>".__('KB data item cannot be updated')."</h3>"; 
 		else {
-			echo "<h3 class='suc'>".lang_string ("KB data item updated ok")."</h3>";
+			echo "<h3 class='suc'>".__('KB data item updated ok')."</h3>";
             insert_event ("KB ITEM UPDATED", $id, 0, $title);
         }
 
@@ -98,12 +98,12 @@
 
 			mysql_query($sql);
 			$id_attachment=mysql_insert_id();
-			$result_msg = "<h3 class='suc'>".$lang_label["file_added"]."</h3>";
+			$result_msg = "<h3 class='suc'>".__('File added')."</h3>";
 			// Copy file to directory and change name
 			$nombre_archivo = $config["homedir"]."attachment/".$id_attachment."_".$filename;
 
 			if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo ))){
-				$result_msg = "<h3 class=error>".$lang_label["attach_error"]."</h3>";
+				$result_msg = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
 				$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
 				mysql_query($sql);
 				unlink ($_FILES['userfile']['tmp_name']);
@@ -134,7 +134,7 @@
 			mysql_query($sql);
 		}
 		insert_event ("KB ITEM DELETED", $id, 0, "Deleted KB $kb_title");
-		echo "<h3 class='error'>".lang_string("Deleted successfully")."</h3>"; 
+		echo "<h3 class='error'>".__('Deleted successfully')."</h3>"; 
 	}
 	
 	if (isset($_GET["update2"])){
@@ -159,13 +159,13 @@
             $id_category = $row["id_category"];
         }
 
-        echo "<h2>".lang_string ("KB Data management")."</h2>";	
+        echo "<h2>".__('KB Data management')."</h2>";	
         if ($id == -1){
-        	echo "<h3>".lang_string ("Create a new KB item")."</a></h3>";
+        	echo "<h3>".__('Create a new KB item')."</a></h3>";
             echo "<form name=prodman method='post' action='index.php?sec=kb&sec2=operation/kb/manage_data&create2'>";
         }
         else {
-            echo "<h3>".lang_string ("Update existing KB item")."</a></h3>";
+            echo "<h3>".__('Update existing KB item')."</a></h3>";
             echo "<form enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/manage_data&update2'>";
             echo "<input type=hidden name=id value='$id'>";
         }
@@ -173,40 +173,40 @@
         echo "<table width=700 class='databox'>";
         echo "<tr>";
         echo "<td class=datos>";
-        echo lang_string ("Title");
+        echo __('Title');
         echo "<td class=datos>";
         echo "<input type=text size=60 name='title' value='$title'>";
 
         echo "<tr>";
         echo "<td class=datos2>";
-        echo lang_string ("Data");
+        echo __('Data');
         echo "<td class=datos2>";
         echo "<textarea cols=60 rows=15 name=data>$data</textarea>";
 
         echo "<tr>";
         echo "<td class=datos>";
-        echo lang_string ("Attach");
+        echo __('Attach');
         echo "<td class=datos>";
         if ($id == -1)
-            echo "<i>".lang_string ("Need to create first")."</i>";
+            echo "<i>".__('Need to create first')."</i>";
 		else {
 			echo "<input type=file size=60 value='userfile' name='userfile'>";
 	        echo "<tr>";
         	echo "<td class=datos>";
-	        echo lang_string ("Attach description");
+	        echo __('Attach description');
 	        echo "<td class=datos>";
 	        echo "<input type=text size=60 name='attach_description' value=''>";
 		}
 
         echo "<tr>";
         echo "<td class=datos2>";
-        echo lang_string ("Product");
+        echo __('Product');
         echo "<td class=datos2>";
         combo_kb_products ($id_product);
 
         echo "<tr>";
         echo "<td class=datos>";
-        echo lang_string ("Category");
+        echo __('Category');
         echo "<td class=datos>";
         combo_kb_categories ($id_category);
 
@@ -225,7 +225,7 @@
 		$sql1 = "SELECT * FROM tattachment WHERE id_kb = $id ORDER BY description";
     	$result = mysql_query($sql1);
 		if (mysql_num_rows($result) > 0){
-			echo "<h3>".lang_string("Attachment list")."</h3>";
+			echo "<h3>".__('Attachment list')."</h3>";
 			echo "<table class=databox width=500>";		
 	     	while ($row=mysql_fetch_array($result)){
 				echo "<tr>";
@@ -251,19 +251,19 @@
     // Show list of items
     // =======================
     if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-        echo "<h2>".lang_string ("KB Data management")."</h2>";	
-    	echo "<h3>".lang_string ("Defined data")."</a></h3>";
+        echo "<h2>".__('KB Data management')."</h2>";	
+    	echo "<h3>".__('Defined data')."</a></h3>";
 	    $sql1='SELECT * FROM tkb_data ORDER BY title, id_category, id_product';
 	    if ($result=mysql_query($sql1)){
             echo "<table cellpadding=4 cellspacing=4 width=820 class='listing'>";
 
-	        echo "<th>".lang_string ("Title")."</th>";
-	        echo "<th>".lang_string ("Timestamp")."</th>";
-	        echo "<th>".lang_string ("Category")."</th>";
-	        echo "<th>".lang_string ("Product")."</th>";
-	        echo "<th>".lang_string ("File")."</th>";
-	        echo "<th>".lang_string ("User")."</th>";
-	        echo "<th>".lang_string ("Delete")."</th>";
+	        echo "<th>".__('Title')."</th>";
+	        echo "<th>".__('Timestamp')."</th>";
+	        echo "<th>".__('Category')."</th>";
+	        echo "<th>".__('Product')."</th>";
+	        echo "<th>".__('File')."</th>";
+	        echo "<th>".__('User')."</th>";
+	        echo "<th>".__('Delete')."</th>";
 	        while ($row=mysql_fetch_array($result)){
 		        echo "<tr>";
                 // Name
@@ -295,7 +295,7 @@
                 echo "<a href='index.php?sec=kb&
 				            sec2=operation/kb/manage_data&
 				            delete_data=".$row["id"]."' 
-				            onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) 
+				            onClick='if (!confirm(\' ".__('Are you sure?')."\')) 
 				            return false;'>
 				            <img border='0' src='images/cross.png'></a>";
             }
@@ -305,7 +305,7 @@
 	    echo "<tr><td align='right'>";
 	    echo "<form method=post action='index.php?sec=kb&
 	    sec2=operation/kb/manage_data&create=1'>";
-	    echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create data")."'>";
+	    echo "<input type='submit' class='sub next' name='crt' value='".__('Create data')."'>";
 	    echo "</form></td></tr></table>";
     } // end of list
 

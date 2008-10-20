@@ -70,7 +70,7 @@ if (isset($_GET["id"])){
 			mysql_query($query);
 			mysql_query($query2);
 			if (mysql_query($query))
-				$result_msg = "<h3 class='suc'>".$lang_label["del_note_ok"]."</h3>";
+				$result_msg = "<h3 class='suc'>".__('Note successfully deleted')."</h3>";
 			incident_tracking ( $id_inc, $id_usuario, 6);
 		}
 	}
@@ -80,28 +80,28 @@ if (isset($_GET["id"])){
 	
 	// Incident main
 	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["Incident"]." </a>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".__('Incident')." </a>";
 	echo "</li>";
 
 	// Tracking
 	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".__('Tracking')." </a>";
 	echo "</li>";
 	
 	// Workunits
 	$timeused = give_hours_incident ( $id_inc);
 	echo "<li class='nomn'>";
 	if ($timeused > 0)
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".__('Workunits')." ($timeused)</a>";
 	else
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".__('Workunits')."</a>";
 	echo "</li>";
 
 	// Attach
 	$file_number = give_number_files_incident($id_inc);
 	if ($file_number > 0){
 		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".$lang_label["Attachment"]." ($file_number) </a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".__('Files')." ($file_number) </a>";
 		echo "</li>";
 	}
 
@@ -109,7 +109,7 @@ if (isset($_GET["id"])){
 	$note_number = dame_numero_notas($id_inc);
 	if ($note_number > 0){
 		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_notes&id=$id_inc'><img src='images/note.png' class='top' border=0> ".$lang_label["Notes"]." ($note_number) </a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_notes&id=$id_inc'><img src='images/note.png' class='top' border=0> ".__('Notes')." ($note_number) </a>";
 		echo "</li>";
 	}
 	
@@ -131,20 +131,19 @@ if (isset($_GET["id"])){
 
 echo $result_msg;
 echo "<br>";
-$title = $lang_label["in_notas_t1"]." #$id_inc '".give_inc_title($id_inc)."'";
+$title = __('Notes attached to incident')." #$id_inc '".give_inc_title($id_inc)."'";
 echo "<h3>$title</h3>";
 
 $sql4='SELECT * FROM tworkunit_incident WHERE id_incident = '.$id_inc.' ORDER BY id_workunit ASC';
 if ($res4=mysql_query($sql4)){
 	while ($row4=mysql_fetch_array($res4)){
 		$sql3='SELECT * FROM tworkunit WHERE id = '.$row4["id_workunit"];
-echo "DEBUG $sql3";
 		$res3=mysql_query($sql3);
 		while ($row3=mysql_fetch_array($res3)){
 			show_workunit_data ($row3, $title);
 		}
 	}
 } else 
-	echo $lang_label["no_data"];
+	echo __('No data available');
 
 ?>

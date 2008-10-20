@@ -1,12 +1,8 @@
 <?php
 
-// Pandora FMS - the Free monitoring system
-// ========================================
-// Copyright (c) 2004-2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2005-2007 Artica Soluciones Tecnologicas
-// Copyright (c) 2004-2007 Raul Mateos Martin, raulofpandora@gmail.com
-// Copyright (c) 2006-2007 Jose Navarro jose@jnavarro.net
-// Copyright (c) 2006-2007 Jonathan Barajas, jonathan.barajas[AT]gmail[DOT]com
+// Integria 2.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -57,21 +53,21 @@ if (isset($_GET["id_inc"])){
 
 	// Incident main
 	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".$lang_label["Incident"]." </a>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc'><img src='images/page_white_text.png' class='top' border=0> ".__('Incident')." </a>";
 	echo "</li>";
 
 	// Tracking
 	echo "<li class='nomn'>";
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".$lang_label["tracking"]." </a>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_tracking&id=$id_inc'><img src='images/eye.png' class='top' border=0> ".__('Tracking')." </a>";
 	echo "</li>";
 
 	// Workunits
 	$timeused = give_hours_incident ( $id_inc);
 	echo "<li class='nomn'>";
 	if ($timeused > 0)
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]." ($timeused)</a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".__('Workunits')." ($timeused)</a>";
 	else
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".$lang_label["workunits"]."</a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".__('Workunits')."</a>";
 	echo "</li>";	
 
 
@@ -79,7 +75,7 @@ if (isset($_GET["id_inc"])){
 	$file_number = give_number_files_incident ($id_inc);
 	if ($file_number > 0){
 		echo "<li class='nomn'>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".$lang_label["Attachment"]." ($file_number) </a>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".__('Files')." ($file_number) </a>";
 		echo "</li>";
 	}
 
@@ -98,11 +94,11 @@ $cabecera=0;
 $sql4 = "SELECT tworkunit.timestamp, tworkunit.duration, tworkunit.id_user, tworkunit.description FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident= $id_inc AND tworkunit.id = tworkunit_incident.id_workunit";
 
 $color = 0;
-echo "<h3>".$lang_label["incident_workunit_tracking"]."</h3>";
+echo "<h3>".__('Incident workunits tracking')."</h3>";
 echo "<table cellpadding='3' cellspacing='3' border='0' width=740 class='databox'>";
 
 if ($res4=mysql_query($sql4)){
-	echo "<tr><th>".$lang_label["date"]."<th>".$lang_label["user"]."<th  width='80'>".$lang_label["time_used"]."<th  width='80'>".$lang_label["description"];
+	echo "<tr><th>".__('Date')."<th>".__('User')."<th  width='80'>".__('Time used')."<th  width='80'>".__('Description');
 	while ($row=mysql_fetch_array($res4)){
 		if ($color == 1){
 			$tdcolor = "datos";
@@ -124,6 +120,6 @@ if ($res4=mysql_query($sql4)){
 	}
 echo "</table>"; 
 } else
-	echo $lang_label["no_data"];
+	echo __('No data available');
 
 ?>

@@ -1,10 +1,9 @@
 <?php 
 
-// Pandora - the Free monitoring system
-// ====================================
-// Copyright (c) 2004-2006 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2005-2006 Artica Soluciones Tecnológicas S.L, info@artica.es
-// Copyright (c) 2004-2006 Raul Mateos Martin, raulofpandora@gmail.com
+// Integria 2.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Artica Soluciones Tecnologicas
+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -32,12 +31,12 @@ if (comprueba_login() == 0)
  		- A more powerful selection (by Agent, by Module, etc).
  	*/
 		
-	echo "<h2>".$lang_label["dbmain_title"]."</h2>";
-	echo "<h3>".$lang_label["db_stat_agent"]."</h3>";
+	echo "<h2>".__('Database Maintenance')."</h2>";
+	echo "<h3>".__('Database Statistics per Agent')."</h3>";
 	echo "<table cellspacing='3' cellpadding='3'>";
-	echo "<tr><th>".$lang_label["agent_name"];
-	echo "<th>".$lang_label["assigned_module"];
-	echo "<th>".$lang_label["total_data"];
+	echo "<tr><th>".__('Agent name');
+	echo "<th>".__('Assigned module');
+	echo "<th>".__('Total data');
 	$color=0;
 	
 	$result_2=mysql_query("SELECT id_agente FROM tagente");

@@ -22,16 +22,11 @@ else {
 	$config["version"] = "1.2";
 }
 
-if (file_exists("include/languages/language_".$config["language_code"].".php")) {
-	 include "include/languages/language_".$config["language_code"].".php";
-} else {
-	include "include/languages/language_en.php";
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>I N T E G R I A - Install error<?php echo $lang_label["header_title"]; ?></title>
+<title>I N T E G R I A - <?php __('Installer error')?></title>
 <meta http-equiv="expires" content="0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="resource-type" content="document">

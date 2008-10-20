@@ -26,11 +26,11 @@ if (!isset($config["id_user"]))
 	$agenda = give_db_sqlfree_field ("SELECT COUNT(*) FROM tagenda WHERE  (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3'");
 	if ($agenda > 0){
 	echo "<tr><td>";
-	echo "<h1>".$lang_label["agenda"]."</h1>";
+	echo "<h1>".__('Agenda')."</h1>";
 	echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
 	echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'><img src='images/calendar.png' border=0></A></div>";
 	echo "<td valign='top'><br><b>";
-    echo lang_string("Events for next three days");
+    echo __('Events for next three days');
     echo "<hr width=500 size=1>";
     echo "</b><br><br>";
     $now = date('Y-m-d', strtotime("now"));
@@ -48,11 +48,11 @@ if (!isset($config["id_user"]))
 	$todo = give_db_sqlfree_field ("SELECT COUNT(*) FROM ttodo WHERE assigned_user = '".$config["id_user"]."'");
 	if ($todo > 0){
 	echo "<tr><td>";
-	echo "<h1>".$lang_label["todo"]."</h1>";
+	echo "<h1>".__('To-Do')."</h1>";
 	echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
 	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'><img src='images/todo.png' border=0></a></div>";
     echo "<td valign='top'><br><b>";
-    echo lang_string("Todo active you have")." : ".todos_active_user ($config["id_user"])."</b><br>";
+    echo __('Todo active you have')." : ".todos_active_user ($config["id_user"])."</b><br>";
     echo "<hr width=500 size=1><br><br>";
     $sql_2 = "SELECT * FROM ttodo WHERE assigned_user = '".$config["id_user"]."' ORDER BY priority DESC limit 5";
     $result_2 = mysql_query($sql_2);
@@ -66,13 +66,13 @@ if (!isset($config["id_user"]))
     $projects = projects_active_user ($config["id_user"]);
     if ($projects > 0){
     echo "<tr><td>";
-    echo "<h1>".$lang_label["projects"]."</h1>";
+    echo "<h1>".__('Projects')."</h1>";
     echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
     echo "<a href='index.php?sec=projects&sec2=operation/projects/project'><img src='images/project.png' border=0></a></div>";
 
 
     echo "<td valign='top'><br><b>";
-    echo lang_string("Projects active you have")." : ".projects_active_user ($config["id_user"]);
+    echo __('Projects active you have')." : ".projects_active_user ($config["id_user"]);
     echo "<hr width=500 size=1>";
     echo "<br>";
     $from_one_month = date('Y-m-d', strtotime("now - 1 month"));
@@ -83,11 +83,11 @@ if (!isset($config["id_user"]))
 	$incidents = incidents_active_user ($config["id_user"]);
 	if ($incidents > 0){
 	echo "<tr><td>";
-	echo "<h1>".$lang_label["incidents"]."</h1>";
+	echo "<h1>".__('Incidents')."</h1>";
 	echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
 	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'><img src='images/incidents.png' border=0></A></div>";
     echo "<td valign='top'><br><b>";
-    echo lang_string("Incidents active you have")." : ".incidents_active_user ($config["id_user"]);
+    echo __('Incidents active you have')." : ".incidents_active_user ($config["id_user"]);
     echo "<hr width=500 size=1>";
     echo "</b><br><br>";
      $sql_2 = "SELECT * FROM tincidencia WHERE id_usuario = '".$config["id_user"]."' AND estado IN (1,2,3,4,5) ORDER BY actualizacion DESC limit 5";

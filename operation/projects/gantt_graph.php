@@ -143,11 +143,11 @@ $definitions['dependency_color']['START_TO_START']=array(0, 0, 0);//black
 $definitions['dependency_color']['END_TO_END']=array(0, 0, 0);//black
 $definitions['dependency_color']['START_TO_END']=array(0, 0, 0);//black
 $definitions['planned']['legend'] = 'INITIAL PLANNING';
-$definitions['planned_adjusted']['legend'] = lang_string ("Planning");
-$definitions['real']['legend'] = lang_string ("Work reported");
-$definitions['progress']['legend'] = lang_string ("Progress");
-$definitions['milestone']['legend'] = lang_string ("Milestone");
-$definitions['today']['legend'] = lang_string ("Today");
+$definitions['planned_adjusted']['legend'] = __('Planning');
+$definitions['real']['legend'] = __('Work reported');
+$definitions['progress']['legend'] = __('Progress');
+$definitions['milestone']['legend'] = __('Milestone');
+$definitions['today']['legend'] = __('Today');
 $definitions['today']['pixels'] = 10; //set the number of pixels to line interval
 $definitions['limit']['cell']['m'] = $project_scale_month / 1.2; // size of cells (each day)
 $definitions['limit']['cell']['w'] = '8'; // size of cells (each day)
@@ -180,7 +180,7 @@ $definitions['today']['data']= strtotime("now"); //time();//draw a line in this 
 // use loops to define these variables with database data
 
 // you need to set groups to graphic be created
-$definitions['groups']['group'][0]['name'] = lang_string("Full project");
+$definitions['groups']['group'][0]['name'] = __('Full project');
 $definitions['groups']['group'][0]['start'] = strtotime($project_begin);
 $definitions['groups']['group'][0]['end'] = strtotime($project_end);
 

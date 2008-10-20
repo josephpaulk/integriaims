@@ -35,18 +35,18 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 	$resq1=mysql_query($query_del1);
 	$resq1=mysql_query($query_del2);
 	if (! $resq1)
-		echo "<h3 class='error'>".$lang_label["delete_user_no"]."</h3>";
+		echo "<h3 class='error'>".__('There was a problem deleting user')."</h3>";
 	else
-		echo "<h3 class='suc'>".$lang_label["delete_user_ok"]."</h3>";
+		echo "<h3 class='suc'>".__('User successfully deleted')."</h3>";
 }
 
-echo '<h2>'.__("user_management") . '</h2>';
+echo '<h2>'.__('User management') . '</h2>';
 echo '<table width="550" class="listing">';
-echo '<th>'.__("user_ID").'</td>';
-echo '<th>'.__("last_contact");
-echo '<th>'.__("profile");
-echo '<th>'.__("name");
-echo '<th>'.__("delete");
+echo '<th>'.__('UserID').'</td>';
+echo '<th>'.__('Last contact');
+echo '<th>'.__('Profile');
+echo '<th>'.__('Name');
+echo '<th>'.__('Delete');
 
 $query1="SELECT * FROM tusuario";
 $resq1=mysql_query($query1);
@@ -78,19 +78,19 @@ while ($rowdup=mysql_fetch_array($resq1)){
 		}
 	}
 	else { 
-		echo __("no_profile"); 
+		echo __('This user doesn\'t have any assigned profile/group'); 
 	}
 	echo "</span></a>";
 	
 	echo "<td>" . $comentarios;
-	echo "<td align='center'><a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario=".$nombre."' onClick='if (!confirm(\' ".__("are_you_sure")."\')) return false;'><img border='0' src='images/cross.png'></a>";
+	echo "<td align='center'><a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario=".$nombre."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
 }
 echo "</table>";
 
 echo "<div style='width:550px' class='button'>";
 
 echo "<form method=post action='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>";
-echo "<input type='submit' class='sub create' name='crt' value='".__("create_user")."'>";
+echo "<input type='submit' class='sub create' name='crt' value='".__('Create user')."'>";
 echo "</form>";
 echo "</div>";
 

@@ -51,7 +51,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 		$resq1 = mysql_query ($query1);
 		$rowdup = mysql_fetch_array ($resq1);
 		if (!$rowdup) {
-			echo "<h3 class='error'>".lang_string ('user_error')."</h3>";
+			echo "<h3 class='error'>".__('There was a problem loading user')."</h3>";
 			echo "</table>";
 			include ("general/footer.php");
 			exit;
@@ -82,7 +82,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 			$lang = give_parameter_post ("lang");
 
 			if ($password <> $password2){
-				echo "<h3 class='error'>".lang_string ('pass_nomatch')."</h3>";
+				echo "<h3 class='error'>".__('Passwords don\'t match.')."</h3>";
 			}
 			else {
 				if (isset($_POST["nivel"]))
@@ -126,11 +126,11 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 				$avatar = $rowdup ["avatar"];
 				$lang = $rowdup ["lang"];
 				$modo = "edicion";
-				echo "<h3 class='suc'>".lang_string ('update_user_ok')."</h3>";
+				echo "<h3 class='suc'>".__('User successfully updated')."</h3>";
 			}
 		}
 		else {
-			echo "<h3 class='error'>".lang_string ('update_user_no')."</h3>";
+			echo "<h3 class='error'>".__('There was a problem updating user')."</h3>";
 		}
 	} 
 
@@ -144,7 +144,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 		$nombre_real = give_parameter_post ("nombre_real");
 		$lang = give_parameter_post ("lang");
 		if ($password <> $password2){
-			echo "<h3 class='error'>".lang_string ('pass_nomatch')."</h3>";
+			echo "<h3 class='error'>".__('Passwords don\'t match. Please repeat again')."</h3>";
 		}
 		$direccion = give_parameter_post ("direccion");
 		$telefono = give_parameter_post ("telefono");
@@ -159,21 +159,21 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 		$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real,avatar, lang) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','$avatar','$lang')";
 		$resq1 = mysql_query($sql_insert);
 			if (! $resq1)
-				echo "<h3 class='error'>".lang_string ('create_user_no')."</h3>";
+				echo "<h3 class='error'>".__('User could not be created')."</h3>";
 			else {
-				echo "<h3 class='suc'>".lang_string ('create_user_ok')."</h3>";
+				echo "<h3 class='suc'>".__('User successfully created')."</h3>";
 			}
 		$id_usuario_mio = $nombre;
 		$modo ="edicion";
 	}
-	echo "<h2>".lang_string ('user_management')."</h2>";
+	echo "<h2>".__('User management')."</h2>";
 	if (isset($_GET["alta"])){
 			if ($_GET["alta"]==1){
-			echo '<h3>'.lang_string ('create_user').'</h3>';
+			echo '<h3>'.__('Create user').'</h3>';
 			}
 	}
 	if (isset($_GET["id_usuario_mio"]) OR isset($_GET["nuevo_usuario"])){
-		echo '<h3>'.lang_string ('update_user').'</h3>';
+		echo '<h3>'.__('Update user').'</h3>';
 	}
 
 ?> 
@@ -187,7 +187,7 @@ else
 	echo '<form name="user_mod" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio='.$id_usuario_mio.'">';
 ?>
 <tr>
-<td class="datos"><?php echo lang_string ('id_user') ?>
+<td class="datos"><?php echo __('User ID') ?>
 <td class="datos"><input type="text" size=15 name="nombre" value="<?php echo $id_usuario_mio ?>">
 <?php
 if (isset($avatar)){
@@ -195,11 +195,11 @@ if (isset($avatar)){
 	echo "<img src='images/avatars/".$avatar.".png' id='avatar_preview'>";
 }
 ?>
-<tr><td class="datos2"><?php echo lang_string ('real_name') ?>
+<tr><td class="datos2"><?php echo __('Real name') ?>
 <td class="datos2"><input type="text" size=25 name="nombre_real" value="<?php echo $nombre_real ?>">
-<tr><td class="datos"><?php echo lang_string ('password') ?>
+<tr><td class="datos"><?php echo __('Password') ?>
 <td class="datos"><input type="password" name="pass1" value="<?php echo $password ?>">
-<tr><td class="datos2"><?php echo lang_string ('password') ?> - <?php echo lang_string ('confirmation') ?>
+<tr><td class="datos2"><?php echo __('Password confirmation') ?>
 <td class="datos2"><input type="password" name="pass2" value="<?php echo $password ?>">
 <tr><td class="datos">E-Mail
 <td class="datos"><input type="text" name="direccion" size="30" value="<?php echo $direccion ?>">
@@ -207,7 +207,7 @@ if (isset($avatar)){
 
 <?PHP
 // Avatar
-echo "<tr><td>".lang_string("avatar");
+echo "<tr><td>".__('Avatar');
 echo "<td>";
 
 $ficheros = list_files('images/avatars/', "png", 1, 0, "small");
@@ -216,31 +216,31 @@ echo print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, fal
 
 ?>
 
-<tr><td class="datos"><?php echo lang_string ('telefono') ?>
+<tr><td class="datos"><?php echo __('Telephone') ?>
 <td class="datos" colspan=2><input type="text" name="telefono" value="<?php echo $telefono ?>">
-<tr><td class="datos2"><?php echo lang_string ('global_profile') ?>
+<tr><td class="datos2"><?php echo __('Global Profile') ?>
 
 <td class="datos2" colspan=2>
 <?php if ($nivel == "1"){
-	echo lang_string ('administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1" checked><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg1"].'</span></a>&nbsp;';
+	echo __('Administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1" checked><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg1"].'</span></a>&nbsp;';
 	echo "&nbsp;&nbsp;";
-	echo lang_string ('normal_user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0"><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg2"].'</span></a>';
+	echo __('Standard user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0"><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg2"].'</span></a>';
 } else {
-	echo lang_string ('administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1"><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg1"].'</span></a>&nbsp;';
+	echo __('Administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1"><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg1"].'</span></a>&nbsp;';
 	echo "&nbsp;&nbsp;";
-	echo lang_string ('normal_user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0" checked><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg2"].'</span></a>';
+	echo __('Standard user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0" checked><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg2"].'</span></a>';
 }
 
 echo "<tr>";
 echo "<td>";
-echo lang_string("Language");
+echo __('Language');
 echo "<td>";
 print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', '', false, false, true, false);
 
 ?>
 
 
-<tr><td class="datos" colspan="3"><?php echo lang_string ('comments') ?>
+<tr><td class="datos" colspan="3"><?php echo __('Comments') ?>
 <tr><td class="datos2" colspan="3"><textarea name="comentarios" cols="75" rows="3"><?php echo $comentarios ?></textarea>
 
 <?php
@@ -250,8 +250,8 @@ if ($modo == "edicion") { // Only show groups for existing users
 	echo '<input type="hidden" name="edicion" value="1">';
 	echo '<input type="hidden" name="id_usuario_antiguo" value="'.$id_usuario_mio.'">';
 	
-	echo '<tr><td class="datos">'.lang_string ('group_avail').'<td class="datos" colspan=2><select name="grupo" class="w155">';
-	echo "<option value=''>".lang_string ('none');
+	echo '<tr><td class="datos">'.__('Group(s) available').'<td class="datos" colspan=2><select name="grupo" class="w155">';
+	echo "<option value=''>".__('None');
 	$sql1='SELECT * FROM tgrupo ORDER BY nombre';
 	$result=mysql_query($sql1);
 	while ($row=mysql_fetch_array($result)){
@@ -259,7 +259,7 @@ if ($modo == "edicion") { // Only show groups for existing users
 	}
 	echo '</select>';
 	
-	echo "<tr><td class='datos2'>".lang_string ('profiles');
+	echo "<tr><td class='datos2'>".__('Profiles');
 	echo "<td class='datos2' colspan=2><select name='perfil' class='w155'>";
 	$sql1='SELECT * FROM tprofile ORDER BY name';
 	$result=mysql_query($sql1);
@@ -270,7 +270,7 @@ if ($modo == "edicion") { // Only show groups for existing users
 	echo "</table>";
 
 	echo "<div class='button' style='width:620px'>";
-	echo "<input name='uptbutton' type='submit' class='sub next' value='".__('update')."'>";
+	echo "<input name='uptbutton' type='submit' class='sub next' value='".__('Update')."'>";
 	echo "</div><br>";
 
 
@@ -282,23 +282,23 @@ if ($modo == "edicion") { // Only show groups for existing users
 	$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$id_usuario_mio.'"';
 	$result=mysql_query($sql1);
 	
-	echo '<h3>'.lang_string ('listGroupUser').'</h3>';
+	echo '<h3>'.__('Profiles/Groups assigned to this user').'</h3>';
 	echo "<table width='620'  class='databox'>";
 	if (mysql_num_rows($result)){
 		while ($row=mysql_fetch_array($result)){
 			echo '<td>';
 			echo "<b style='margin-left:10px'>".dame_perfil($row["id_perfil"])."</b> / ";
 			echo "<b>".dame_grupo($row["id_grupo"])."</b>";
-			echo '<td><a href="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio='.$id_usuario_mio.'&borrar_grupo='.$row["id_up"].' " onClick="if (!confirm(\' '.lang_string ('are_you_sure').'\')) return false;"><img border=0 src="images/cross.png"></a><tr>';
+			echo '<td><a href="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio='.$id_usuario_mio.'&borrar_grupo='.$row["id_up"].' " onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a><tr>';
 		}
 	}
-	else { echo '<tr><td colspan="3">'.lang_string ('no_profile').'</td></tr>';}
+	else { echo '<tr><td colspan="3">'.__('This user doesn\'t have any assigned profile/group').'</td></tr>';}
 }	
 
 	if (isset($_GET["alta"])){
 		echo "</table>";
 		echo "<div class='button' style='width: 615px' >";
-		echo '<input name="crtbutton" type="submit" class="sub create" value="'.lang_string ('create').'">';
+		echo '<input name="crtbutton" type="submit" class="sub create" value="'.__('Create').'">';
 		echo '</div>';
 	} 
 ?> 

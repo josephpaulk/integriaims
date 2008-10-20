@@ -113,7 +113,7 @@ function combo_users_task ($id_task, $iconic = 0){
 		echo "<a href='#' class='tip_people'><span><font size=1>";
 		// Show also groupname
 		$groupname = give_db_sqlfree_field ("SELECT nombre FROM tgrupo, ttask WHERE ttask.id = $id_task AND ttask.id_group = tgrupo.id_grupo");
-		echo lang_string("Group")." <b>$groupname</b><br>";
+		echo __('Group')." <b>$groupname</b><br>";
 		while ($row=mysql_fetch_array($result)){
 			echo $row["id_user"]." / ".give_db_value ("name","trole","id",$row["id_role"]);
 			echo "<br>";
@@ -182,7 +182,7 @@ function combo_kb_products ($id_product, $show_none = 0){
 			echo "<option value='".$id_product."'>".$name;
 	}
 	if ($show_none == 1)
-		echo "<option value=0>".lang_string ("none");
+		echo "<option value=0>".__('None');
 	while ($row=mysql_fetch_array($result)){
 		$parent = give_db_value ("name","tkb_product","id",$row["parent"]);
 		if ($parent != "")
@@ -279,7 +279,7 @@ function combo_incident_origin ($actual = -1, $disabled = 0, $return = false) {
 function combo_incident_resolution ($actual = -1, $disabled = false, $return = false) {
 	$output = print_select_from_sql ('SELECT id, name FROM tincident_resolution ORDER BY 2',
 					'incident_resolution', $actual, '', '',
-					0, true, false, false, __('resolution'));
+					0, true, false, false, __('Resolution'));
 	if ($return)
 		return $output;
 	echo $output;
@@ -301,7 +301,7 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 	$values = array ();
 	$values[0] = __('N/A');
 	if ($show_vacations == 1)
-		$values[-1] = __('vacations');
+		$values[-1] = __('Vacations');
 
 	$sql = sprintf ('SELECT ttask.id, ttask.name
 			FROM ttask, trole_people_task
@@ -331,9 +331,9 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 	$values = array ();
 	
 	if ($show_vacations) {
-		$values[-1] = __("vacations");
-		$values[-2] = __("not_working_by_disease");
-		$values[-3] = __("not_justified");
+		$values[-1] = __('Vacations');
+		$values[-2] = __('Not working for disease');
+		$values[-3] = __('Not justified');
 	}
 	
 	$sql = sprintf ('SELECT DISTINCT (ttask.id), CONCAT(tproject.name," / ",ttask.name)
@@ -356,8 +356,7 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 // ----------------------------------------------------------------------
 function combo_roles ($include_na = 0, $name = 'role') {
 	global $config;
-	global $lang_label;
-
+	
 	echo "<select name='$name'>";
 	if ($include_na == 1)
 		echo "<option value=0>".__('N/A');
@@ -389,8 +388,7 @@ function combo_projects_user ($id_user, $name = 'project') {
 
 function show_workunit_data ($workunit, $title) {
 	global $config;
-	global $lang_label;
-
+	
 	$timestamp = $workunit["timestamp"];
 	$duration = $workunit["duration"];
 	$id_user = $workunit["id_user"];
@@ -418,22 +416,21 @@ function show_workunit_data ($workunit, $title) {
 	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
 	echo $id_user;
 	echo "</a>";
-	echo "&nbsp;".__('said_on')."&nbsp;";
-	echo $timestamp;
+	echo " ".__('said on ').' '.$timestamp;
 	echo "</span>";
 
 	// Public WU ?
 	echo "<span style='float:right; margin-top: -15px; margin-bottom:0px; padding-right:10px;'>";
 	if ($public == 1)
-		echo "<img src='images/group.png' title='".__("Public Workunit")."' border=0>";
+		echo "<img src='images/group.png' title='".__('Public Workunit')."' border=0>";
 	else
-		echo "<img src='images/delete.png' title='".__("Non public Workunit")."' border=0>";
+		echo "<img src='images/delete.png' title='".__('Non public Workunit')."' border=0>";
 	echo "</span>";
 
 	// WU Duration 
 	echo "<span style='float:right; margin-top: -15px; margin-bottom:0px; padding-right:10px;'>";
 	echo $duration;
-	echo "&nbsp; ".__('hr');
+	echo "&nbsp; ".__('Hours');
 	echo "</span>";
 
 	echo "</div>";
@@ -444,7 +441,7 @@ function show_workunit_data ($workunit, $title) {
 		echo clean_output_breaks (substr ($nota, 0, 1024));
 		echo "<br><br>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/common/workunit_detail&id=".$id_workunit."&title=$title'>";
-		echo __('read_more');
+		echo __('Read more...');
 		echo "</a>";
 	} else {
 		echo clean_output_breaks ($nota);
@@ -468,8 +465,7 @@ function topi_richtext ( $string ){
 
 function show_workunit_user ($id_workunit, $full = 0) {
 	global $config;
-	global $lang_label;
-
+	
 	$sql = "SELECT * FROM tworkunit WHERE id = $id_workunit";
 	if ($res = mysql_query($sql))
 		$row=mysql_fetch_array($res);
@@ -501,14 +497,14 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 	echo "<td width='60%'><b>";
 	if ($id_task != ""){
-		echo __("task")." </b> : ";
+		echo __('Task')." </b> : ";
 		echo $task_title;
 	} else  {
-		echo __("incident")." </b> : ";
+		echo __('Incident')." </b> : ";
 		echo $incident_title;
 	}
 	echo "<td width='13%'><b>";
-	echo __("duration")."</b>";
+	echo __('Duration')."</b>";
 
 	echo "<td width='20%'>";
 	echo " : ".format_numeric($duration);
@@ -517,10 +513,10 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<tr>";
 	echo "<td><b>";
 	if ($id_task != ""){
-		echo __("project")." </b> : ";
+		echo __('Project')." </b> : ";
 		echo $project_title;
 	} else {
-		echo __("group")."</b> : ";
+		echo __('Group')."</b> : ";
 		echo dame_nombre_grupo (give_db_sqlfree_field ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident"));
 	}
 
@@ -532,7 +528,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 		$cost = $cost ." &euro;";
 	} else
 		$cost = __('N/A');
-	echo __("cost");
+	echo __('Cost');
 	echo "</b>";
 	echo "<td>";
 	echo " : ".$cost;
@@ -543,10 +539,9 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
 	echo "<b>".$id_user."</b>";
 	echo "</a>";
-	echo "&nbsp;".__('said_on')."&nbsp;";
-	echo $timestamp;
+	echo " ".__('said on $timestamp');
 	echo "<td><b>";
-	echo __("profile");
+	echo __('Profile');
 	echo "</b></td><td>";
 	echo " : ".give_db_value ("name", "trole", "id", $profile);
 	echo "</table>";
@@ -561,7 +556,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 		echo topi_richtext ( clean_output_breaks(substr($nota,0,1024)) );
 		echo "<br><br>";
 		echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id_workunit=".$id_workunit."&title=$task_title'>";
-		echo __('read_more');
+		echo __('Read more...');
 		echo "</a>";
 	} else {
 		echo topi_richtext(clean_output_breaks($nota));
@@ -585,7 +580,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	if ((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR (($id_user == $config["id_user"]) AND ($locked == 0)) ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_create_work&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&operation=edit'><img border=0 src='images/page_white_text.png' title='".__("Lock workunit")."'></a>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_create_work&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&operation=edit'><img border=0 src='images/page_white_text.png' title='".__('Lock workunit')."'></a>";
 		echo "</td>";
 	}
 
@@ -593,11 +588,11 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == "") ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
-		echo "<a href='$myurl&id_workunit=$id_workunit&operation=lock'><img border=0 src='images/lock.png' title='".__("Lock workunit")."'></a>";
+		echo "<a href='$myurl&id_workunit=$id_workunit&operation=lock'><img border=0 src='images/lock.png' title='".__('Lock workunit')."'></a>";
 		echo "</td>";
 	} else {
 		echo "<tr><td align='right'>";
-		echo "<br><img src='images/rosette.png' title='".__("Locked by")." $locked'";
+		echo "<br><img src='images/rosette.png' title='".__('Locked by')." $locked'";
 		echo print_user_avatar ($locked, true);
 		echo "</td>";
 	}
@@ -633,34 +628,42 @@ function form_search_incident ($return = false) {
 	$table->data = array ();
 	$table->size = array ();
 	$table->style = array ();
+	$table->style[0] = 'width: 30%';
+	$table->style[1] = 'width: 20%';
+	$table->style[2] = 'width: 30%';
+	$table->rowstyle = array ();
+	$table->rowstyle[1] = 'display: none';
+	$table->rowstyle[2] = 'display: none';
+	$table->rowstyle[3] = 'display: none';
+	$table->rowstyle[4] = 'text-align: right';
 	$table->colspan = array ();
+	$table->colspan[4][0] = 3;
 	
-	$table->style[0] = 'font-weight: bold';
-	$table->style[1] = 'font-weight: bold';
-	$table->style[2] = 'font-weight: bold';
+	$table->data[0][0] = print_input_text ('search_string', $search_string,
+		'', 30, 100, true, __('Search string'));
 	
-	$table->data[0][0] = print_select (get_indicent_status (),
+	$table->data[0][1] = print_select (get_indicent_status (),
 			'search_status', $status,
 			'', __('Any'), 0, true, false, false,
 			__('Status'));
 	
-	$table->data[0][1] = print_select (get_indicent_priorities (),
+	$table->data[0][2] = print_select (get_indicent_priorities (),
 			'search_priority', $priority,
 			'', __('Any'), -1, true, false, false,
 			__('Priority'));
 
-	$table->data[0][2] = print_select (get_user_groups (),
+	$table->data[1][0] = print_select (get_user_groups (),
 			'search_id_group', $id_group,
 			'', __('All'), 1, true, false, false, __('Group'));
 	
-	$table->data[1][0] = print_input_hidden ('search_id_inventory', $id_inventory, true);
-	$name = __("Any");
+	$table->data[1][1] = print_input_hidden ('search_id_inventory', $id_inventory, true);
+	$name = __('Any');
 	if ($id_inventory)
 		$name = get_inventory_name ($id_inventory);
-	$table->data[1][0] .= print_button ($name, 'inventory_name', false, '',
+	$table->data[1][1] .= print_button ($name, 'inventory_name', false, '',
 		'class="dialogbtn"', true, __('Inventory'));
 	
-	$table->data[1][1] = print_select (get_companies (),
+	$table->data[1][2] = print_select (get_companies (),
 		'search_id_company', $id_company,
 		'', __('All'), 0, true, false, false,
 		__('Company'));
@@ -678,19 +681,20 @@ function form_search_incident ($return = false) {
 		__('Building'));
 	$table->data[2][2] = print_checkbox ('search_sla_fired', 1, $search_sla_fired, true, __('SLA fired'));
 	
-	$table->data[3][1] = print_input_text ('search_string', $search_string,
-		'', 30, 100, true, __('Search string'));
-	
 	$table->data[3][0] = print_select (get_user_visible_users ($config['id_user'], 'IR', true),
 		'search_id_user', $search_id_user,
 		'', 'Any', 0, true, false, false, __('User'));
-
-	$table->data[3][2] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$table->data[3][1] = print_input_text ('search_first_date', '', '', 15, 15, true, __('Begin date'));
+	$table->data[3][2] = print_input_text ('search_last_date', '', '', 15, 15, true, __('End date'));
+	
+	$table->data[4][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= '<form id="search_incident_form" method="post">';
 	$output .= print_table ($table, true);
 	$output .= '</form>';
-
+	
+	$output .= '<a class="show_advanced_search" href="index.php">'.__('Advanced search').' >></a>';
+	
 	if ($return)
 		return $output;
 	echo $output;
@@ -755,6 +759,39 @@ function incident_details_list ($id_incident, $return = false) {
 	}
 	
 	$output .= '</ul>';
+	
+	if ($return)
+		return $output;
+	echo $output;
+}
+
+function print_table_pager ($id = 'pager', $hidden = true, $return = false) {
+	global $config;
+	
+	$output = '';
+	
+	$output .= '<div id="'.$id.'" class="'.($hidden ? 'hide ' : '').'pager">';
+	$output .= '<form>';
+	$output .= '<img src="images/control_start_blue.png" class="first" />';
+	$output .= '<img src="images/control_rewind_blue.png" class="prev" />';
+	$output .= '<input type="text" class="pagedisplay" />';
+	$output .= '<img src="images/control_fastforward_blue.png" class="next" />';
+	$output .= '<img src="images/control_end_blue.png" class="last" />';
+	if (defined ('AJAX')) {
+		$output .= '<select class="pagesize" style="display: none">';
+		$output .= '<option selected="selected" value="5">5</option>';
+	} else {
+		$output .= '<select class="pagesize">';
+		$output .= '<option selected="selected" value="'.$config['block_size'].'">'.$config['block_size'].'</option>';
+		$output .= '<option value="'.($config['block_size'] * 2).'">'.($config['block_size'] * 2).'</option>';
+		$output .= '<option value="'.($config['block_size'] * 3).'">'.($config['block_size'] * 3).'</option>';
+		$output .= '<option value="'.($config['block_size'] * 5).'">'.($config['block_size'] * 5).'</option>';
+		$output .= '<option value="'.($config['block_size'] * 10).'">'.($config['block_size'] * 10).'</option>';
+		$output .= '</select>';
+	}
+	$output .= '</select>';
+	$output .= '</form>';
+	$output .= '</div>';
 	
 	if ($return)
 		return $output;

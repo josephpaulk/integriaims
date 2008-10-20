@@ -194,6 +194,14 @@ function configure_incident_form (enable_ajax_form) {
 }
 
 function configure_incident_search_form (page_size, row_click_callback, search_callback) {
+	$(dialog+".show_advanced_search").click (function () {
+		table = $(dialog+"#search_incident_form").children ("table");
+		$("tr", table).show ();
+		$(this).remove ();
+		return false;
+	});
+	$(dialog+"#text-search_first_date").datepicker ();
+	$(dialog+"#text-search_last_date").datepicker ();
 	$(dialog+"#search_incident_form").submit (function () {
 		$(dialog+"#incident_search_result_table").removeClass ("hide");
 		values = Array ();
@@ -271,6 +279,12 @@ function show_add_incident_dialog () {
 }
 
 function configure_inventory_search_form (page_size, incident_click_callback) {
+	$(dialog+".show_advanced_search").click (function () {
+		table = $(dialog+"#inventory_search_form").children ("table");
+		$("tr", table).show ();
+		$(this).remove ();
+		return false;
+	});
 	$(dialog+"#inventory_search_result_table").tablesorter ();
 	$(dialog+"#inventory_search_form").submit (function () {
 		$(dialog+"#inventory_search_result_table tbody").fadeOut ('normal',
@@ -424,7 +438,6 @@ function configure_file_form () {
 			$('#upload_result').html ('Submitting...');
 		},
 		success: function (data) {
-			console.log (data);
 			$('#upload_result').fadeOut ('fast', function () {
 				$(this).empty ().html (data).fadeIn ();
 			});
@@ -507,6 +520,14 @@ function configure_incident_side_menu (id_incident, refresh_menu) {
 			"html"
 		);
 	}
+}
+
+function configure_inventory_side_menu (id_inventory, refresh_menu) {
+	$(".id-inventory-menu").empty ().append (id_inventory);
+	
+	$("#inventory-menu-actions #inventory-create-incident")
+		.attr ('href', "index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_inventory="+id_inventory);
+	
 }
 
 function configure_inventory_form (enable_ajax_form) {

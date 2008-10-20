@@ -125,6 +125,6 @@ if ($trackings !== false) {
 	}
 	print_table ($table);
 } else {
-	echo __('no_data');
+	echo __('No data available');
 }
 ?>

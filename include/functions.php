@@ -153,13 +153,12 @@ function parametro_limpio ($texto){
 
 function no_permission () {
 	global $config;
-	global $lang_label;
-	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
-	echo "<h3 class='error'>".__('no_permission_title')."</h3>";
+	
+	echo "<h3 class='error'>".__('You don\'t have access')."</h3>";
 	echo "<img src='".$config["base_url"]."/images/noaccess.gif' width='120'><br><br>";
 	echo "<table width=550>";
 	echo "<tr><td>";
-	echo __('no_permission_text');
+	echo __('You don\'t have enough permission to access this resource');
 	echo "</table>";
 	echo "<tr><td><td><td><td>";
 	include $config["homedir"]."/general/footer.php";
@@ -239,7 +238,7 @@ function byte_convert ($bytes) {
 
 function pagination ($count, $url, $offset ) {
 	global $config;
-	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
+	
 	$block_size = $config["block_size"];
 
 	/* 	URL passed render links with some parameter
@@ -353,30 +352,42 @@ function format_numeric ( $number, $decimals=1, $dec_point=".", $thousands_sep="
  	return 0;
 }
 
-function __ ($string){
-		return lang_string ($string);
+/** 
+ * Get a translated string
+ * 
+ * @param string String to translate
+ * 
+ * @return The translated string. If not defined, the same string will be returned
+ */
+function __ ($string) {
+	global $l10n;
+
+	if (is_null ($l10n))
+		return $string;
+
+	return $l10n->translate ($string);
 }
 
 function lang_string ($string) {
-	global $config;
-	global $lang_label;
-	require (realpath ($config["homedir"]."/include/languages/language_".$config["language_code"].".php"));
-	
-	if (isset ($lang_label[$string]))
-		return $lang_label[$string];
-	return $string;
+	return __($string);
 }
 
 function render_priority ($pri){
 	global $config;
-	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
+	
 	switch ($pri){
-		case 0: return __("very low");
-		case 1: return __("low");
-		case 2: return __("medium");
-		case 3: return __("high");
-		case 4: return __("very high");
-		default: return __("other");
+	case 0:
+		return __('Very low');
+	case 1:
+		return __('Low');
+	case 2:
+		return __('Medium');
+	case 3:
+		return __('High');
+	case 4:
+		return __('Very high');
+	default:
+		return __('Other');
 	}
 }
 
@@ -438,12 +449,12 @@ function maxof ($a, $b) {
 function get_indicent_priorities () {
 	$incidents = array ();
 
-	$incidents[0] = __('informative');
-	$incidents[1] = __('low');
-	$incidents[2] = __('medium');
-	$incidents[3] = __('serious');
-	$incidents[4] = __('very_serious');
-	$incidents[10] = __('maintenance');
+	$incidents[0] = __('Informative');
+	$incidents[1] = __('Low');
+	$incidents[2] = __('Medium');
+	$incidents[3] = __('Serious');
+	$incidents[4] = __('Very Serious');
+	$incidents[10] = __('Maintenance');
 
 	return $incidents;
 }
@@ -453,13 +464,13 @@ function get_indicent_priorities () {
 function get_indicent_status () {
 	$status = array ();
 
-	$status[1] = __('status_new');
-	$status[2] = __('status_unconfirmed');
-	$status[3] = __('status_assigned');
-	$status[4] = __('status_reopened');
-	$status[5] = __('status_verified');
-	$status[6] = __('status_resolved');
-	$status[7] = __('status_closed');
+	$status[1] = __('New');
+	$status[2] = __('Unconfirmed');
+	$status[3] = __('Assigned');
+	$status[4] = __('Re-opened');
+	$status[5] = __('Verified');
+	$status[6] = __('Resolved');
+	$status[7] = __('Closed');
 
 	return $status;
 }
@@ -467,15 +478,15 @@ function get_indicent_status () {
 function get_incident_resolutions () {
 	$status = array ();
 
-	$status[1] = lang_string ('Fixed');
-	$status[2] = lang_string ('Invalid');
-	$status[3] = lang_string ('Wont fix');
-	$status[4] = lang_string ('Duplicate');
-	$status[5] = lang_string ('Works for me');
-	$status[6] = lang_string ('Incomplete');
-	$status[7] = lang_string ('Expired');
-    $status[8] = lang_string ('Moved');
-	$status[9] = lang_string ('In process');
+	$status[1] = __('Fixed');
+	$status[2] = __('Invalid');
+	$status[3] = __('Wont fix');
+	$status[4] = __('Duplicate');
+	$status[5] = __('Works for me');
+	$status[6] = __('Incomplete');
+	$status[7] = __('Expired');
+    $status[8] = __('Moved');
+	$status[9] = __('In process');
 
 	return $status;
 }

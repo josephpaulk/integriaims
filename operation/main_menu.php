@@ -13,12 +13,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
-if (isset($_GET["sec"]))
-	$sec = $_GET["sec"];
-else
-	$sec = "";
-
 if (!isset($config["id_user"]))
 	return;
 
@@ -31,7 +25,7 @@ if (give_acl($config["id_user"], 0, "PR") == 1){
 	    echo "<li id='current'>";
     else
 	    echo "<li>";
-    echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".lang_string("Projects")."</a></li>";
+    echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".__('Projects')."</a></li>";
 }
 
 // Incidents
@@ -41,7 +35,7 @@ if (give_acl($config["id_user"], 0, "IR") == 1){
 	    echo "<li id='current'>";
     else
 	    echo "<li>";
-    echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".lang_string("Incidents")."</a></li>";
+    echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".__('Incidents')."</a></li>";
 }
 
 // Inventory
@@ -51,7 +45,7 @@ if (give_acl($config["id_user"], 0, "IR") == 1){
 	    echo "<li id='current'>";
     else
 	    echo "<li>";
-    echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory'>".lang_string("Inventory")."</a></li>";
+    echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory'>".__('Inventory')."</a></li>";
 }
 
 // KB
@@ -60,7 +54,7 @@ if (give_acl($config["id_user"], 0, "KR") == 1){
 	    echo "<li id='current'>";
     else
 	    echo "<li>";
-    echo "<a href='index.php?sec=kb&sec2=operation/kb/browse'>".lang_string("kb")."</a></li>";
+    echo "<a href='index.php?sec=kb&sec2=operation/kb/browse'>".__('KB')."</a></li>";
 }
 
 // Users
@@ -68,14 +62,14 @@ if ($sec == "users" )
 	echo "<li id='current'>";
 else
 	echo "<li>";
-echo "<a href='index.php?sec=users&sec2=operation/users/user'>".lang_string("Users")."</a></li>";
+echo "<a href='index.php?sec=users&sec2=operation/users/user'>".__('Users')."</a></li>";
 
 // TODO
 if ($sec == "todo" )
 	echo "<li id='current'>";
 else
 	echo "<li>";
-echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>".lang_string("Todo")."</a></li>";
+echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>".__('Todo')."</a></li>";
 
 // Agenda
 if (give_acl($config["id_user"], 0, "AR") == 1){
@@ -84,7 +78,7 @@ if (give_acl($config["id_user"], 0, "AR") == 1){
 	    echo "<li id='current'>";
     else
 	    echo "<li>";
-    echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>".lang_string("Agenda")."</a></li>";
+    echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>".__('Agenda')."</a></li>";
 }
 
 // Setup
@@ -95,7 +89,7 @@ if (isset($config["id_user"]))
 	        echo "<li id='current'>";
 	    else
 	        echo "<li>";
-	    echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".lang_string ("setup")."</a></li>";
+	    echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".__('Setup')."</a></li>";
 	}
 
     echo "</ul>";

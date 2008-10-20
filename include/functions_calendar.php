@@ -272,7 +272,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 		#if day_name_length is >3, the full name of the day will be printed
 		foreach($day_names as $d)
 			$calendar .= '<th width=70 abbr="'.htmlentities($d).'">'.htmlentities($day_name_length < 4 ? substr($d,0,$day_name_length) : $d).'</th>';
-		$calendar .= '<th width=70>'.lang_string("Week Total").'</th>';
+		$calendar .= '<th width=70>'.__('Week Total').'</th>';
 		$calendar .= "</tr>\n<tr>";
 	}
 	$time = time();
@@ -297,7 +297,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 			if ($row=mysql_fetch_array($res)){
 				$workhours = $row[0];
 				if ($workhours > 0){
-					$calendar .= "<td style='background-color: #e3e9e9;'><b><center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$before_week."&timestamp_h=".$this_week."'>".$workhours." ".lang_string("hr")."</a></center></b></td>";
+					$calendar .= "<td style='background-color: #e3e9e9;'><b><center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$before_week."&timestamp_h=".$this_week."'>".$workhours." ".__('Hours')."</a></center></b></td>";
 				} else {
 					$calendar .= "<td style='background-color: #e3e9e9;'><center> -- </center></td>";
 				}
@@ -338,7 +338,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 			$workhours = $row[0];
 			if ($workhours > 0){
 
-				$calendar .= "<center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$mysql_date. " 00:00:00"."&timestamp_h=".$mysql_date."  23:59:59'>".$workhours." ".lang_string("hr")."</a></center>";
+				$calendar .= "<center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$mysql_date. " 00:00:00"."&timestamp_h=".$mysql_date."  23:59:59'>".$workhours." ".__('Hours')."</a></center>";
 
 				//$calendar .= "<a  href='index.php?sec=users&sec2=operation/users/user_workunit_report'>".$workhours." <img border=0 src='images/award_star_silver_1.png'></a>";
 			}
@@ -359,7 +359,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 		if ($row=mysql_fetch_array($res)){
 			$workhours = $row[0];
 			if ($workhours > 0){
-				$calendar .= "<td><b><center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$before_week."&timestamp_h=".$this_week."'>".$workhours." ".lang_string("hr")."</a></center></b></td>";
+				$calendar .= "<td><b><center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$before_week."&timestamp_h=".$this_week."'>".$workhours." ".__('Hours')."</a></center></b></td>";
 			} else {
 				$calendar .= "<td style='background-color: #e3e9e9;'><center> -- </center></td>";
 			}
@@ -456,7 +456,7 @@ function give_human_time ($int_seconds, $flag_hide_zero = true) {
 
 function human_time_comparation ( $timestamp ){
 	global $config;
-	require ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
+	
 	$ahora=date("Y/m/d H:i:s");
 	if (strtotime($ahora) < strtotime($timestamp)){
 		$seconds = strtotime($timestamp) - strtotime($ahora) ;
@@ -466,15 +466,15 @@ function human_time_comparation ( $timestamp ){
 		$direction = "< ";
 	}
 	if ($seconds < 3600)
-		$render = format_numeric($seconds/60,1)." ".$lang_label["minutes"];
+		$render = format_numeric($seconds/60,1)." ".__('Minutes');
 	elseif (($seconds >= 3600) and ($seconds < 86400))
-		$render = format_numeric ($seconds/3600,1)." ".$lang_label["hours"];
+		$render = format_numeric ($seconds/3600,1)." ".__('Hours');
 	elseif (($seconds >= 86400) and ($seconds < 604800))
-		$render = format_numeric ($seconds/86400,1)." ".$lang_label["days"];
+		$render = format_numeric ($seconds/86400,1)." ".__('Days');
 	elseif (($seconds >= 604800) and ($seconds <2592000))
-		$render = format_numeric ($seconds/604800,1)." ".$lang_label["weeks"];
+		$render = format_numeric ($seconds/604800,1)." ".__('Weeks');
 	elseif ($seconds >= 2592000)
-		$render = format_numeric ($seconds/2592000,1)." ".$lang_label["months"];
+		$render = format_numeric ($seconds/2592000,1)." ".__('Months');
 	return $direction.$render;
 }
 

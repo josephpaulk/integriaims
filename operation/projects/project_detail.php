@@ -66,9 +66,9 @@ if ((isset($_GET["action"])) AND ($_GET["action"]=="update")){
 		$result = mysql_query($sql);
 		audit_db($config["id_user"], $config["REMOTE_ADDR"], "Project updated", "Project $name");
 		if ($result)
-			$result_output = "<h3 class='suc'>".$lang_label["update_ok"]."</h3>";
+			$result_output = "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		else
-			$result_output = "<h3 class='error'>".$lang_label["update_no"]."</h3>";
+			$result_output = "<h3 class='error'>".__('Error while updating. Aborted')."</h3>";
 		$_GET["id"] = $id_project;
 	} else {
 		audit_db ($config["id_user"] ,$config["REMOTE_ADDR"], "ACL Violation","Trying to update an unauthorized Project");
@@ -143,33 +143,33 @@ if (isset($id_project)) {
 // Main project table
 // --------------------
 
-echo "<h2>".$lang_label["project_management"]." -&gt;";
+echo "<h2>".__('Project management')." -&gt;";
 if ($create_mode == 0){
-	echo $lang_label["rev_project"]." </h2><h3>".give_db_value ("name", "tproject", "id", $id_project)."</h3>";
+	echo __('Project review / update')." </h2><h3>".give_db_value ("name", "tproject", "id", $id_project)."</h3>";
 } else {
-	echo $lang_label["create_project"]."</h2>";
+	echo __('Create project')."</h2>";
 }
 
 echo '<table width=740 class="databox" >';
 
 // Name
 
-echo '<tr><td class="datos"><b>'.$lang_label["name"].'</b>';
+echo '<tr><td class="datos"><b>'.__('Name').'</b>';
 echo '<td colspan=3><input type="text" name="name" size=70 value="'.$name.'">';
 
 // start and end date
-echo '<tr><td class="datos2"><b>'.$lang_label["start"].'</b>';
+echo '<tr><td class="datos2"><b>'.__('Start').'</b>';
 echo "<td class='datos2'>";
 
 echo "<input type='text' id='start_date' name='start_date' size=10 value='$start_date'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"start_date\"),this);'> ";
-echo '<td class="datos2"><b>'.$lang_label["end"].'</b>';
+echo '<td class="datos2"><b>'.__('End').'</b>';
 echo "<td class='datos2'>";
 echo "<input type='text' id='end_date' name='end_date' size=10 value='$end_date'> <img src='images/calendar_view_day.png' title='Click Here' alt='Click Here' onclick='scwShow(scwID(\"end_date\"),this);'>";
 
 // Owner
 
 echo '<tr>';
-echo '<td class="datos"><b>'.$lang_label["project_manager"].'</b>';
+echo '<td class="datos"><b>'.__('Project manager').'</b>';
 echo "<td class='datos'>";
 $id_owner = give_db_value ( 'id_owner', 'tproject', 'id', $id_project);
 if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_owner )) {
@@ -179,37 +179,37 @@ if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_ow
 }
 
 echo "<td><b>";
-echo lang_string ("Project group") . "</b>";
+echo __('Project group') . "</b>";
 echo "<td>";
-echo print_select_from_sql ("SELECT * from tproject_group ORDER BY name", "id_project_group", $id_project_group, "", lang_string("None"), '0', false, false, true, false);
+echo print_select_from_sql ("SELECT * from tproject_group ORDER BY name", "id_project_group", $id_project_group, "", __('None'), '0', false, false, true, false);
 
 
 if ($create_mode == 0){
 
-echo '<tr><td class="datos"><b>'.lang_string ("Current progress").'</b>';
+echo '<tr><td class="datos"><b>'.__('Current progress').'</b>';
 echo "<td class='datos'>";
 $completion =  format_numeric(calculate_project_progress ($id_project));
 echo "<img src='include/functions_graph.php?type=progress&width=90&height=20&percent=$completion'>";
 
 
 echo '<tr>';
-echo '<td class="datos2"><b>'.lang_string("Total workunit (hr)").'</b>';
+echo '<td class="datos2"><b>'.__('Total workunit (hr)').'</b>';
 echo "<td class='datos2'>";
 $total_hr = give_hours_project ($id_project);
 echo $total_hr;
-echo '<td class="datos2"><b>'.lang_string("Total people involved").'</b>';
+echo '<td class="datos2"><b>'.__('Total people involved').'</b>';
 echo "<td class='datos2'>";
 $people_inv = give_db_sqlfree_field ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
 echo $people_inv;
 
 
 echo '<tr>';
-echo '<td class="datos"><b>'.lang_string("Total payable workunit (hr)").'</b>';
+echo '<td class="datos"><b>'.__('Total payable workunit (hr)').'</b>';
 echo '<td class="datos">';
 $pr_hour = give_hours_project ($id_project, 1);
 echo $pr_hour;
 
-echo '<td class="datos"><b>'.lang_string("Project profitability").'</b>';
+echo '<td class="datos"><b>'.__('Project profitability').'</b>';
 echo '<td class="datos">';
 $total = project_workunit_cost ($id_project, 1);
 $real = project_workunit_cost ($id_project, 0);
@@ -219,26 +219,26 @@ if ($real > 0){
 }
 
 echo '<tr>';
-echo '<td class="datos2"><b>'.lang_string("Project costs").'</b>';
+echo '<td class="datos2"><b>'.__('Project costs').'</b>';
 echo "<td class='datos2'>";
 echo $real. " ". $config["currency"];
-echo '<td class="datos2"><b>'.lang_string("Charged to customer").'</b>';
+echo '<td class="datos2"><b>'.__('Charged to customer').'</b>';
 echo "<td class='datos2'>";
 echo $total." ". $config["currency"];
 
 
 echo '<tr>';
-echo '<td class="datos"><b>'.lang_string("Charged cost per hour").'</b>';
+echo '<td class="datos"><b>'.__('Charged cost per hour').'</b>';
 echo '<td class="datos">';
 if (($people_inv > 0) AND ($total_hr >0))
     echo format_numeric ($total/($total_hr/$people_inv)). " ". $config["currency"];
 else
     echo "N/A";
-echo '<td class="datos"><b>'.lang_string("Proyect length deviation (days)").'</b>';
+echo '<td class="datos"><b>'.__('Proyect length deviation (days)').'</b>';
 echo '<td class="datos">';
 $expected_length = give_db_sqlfree_field ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
 $deviation = format_numeric(($pr_hour-$expected_length)/$config["hours_perday"]);
-echo $deviation. " ".lang_string("days");
+echo $deviation. " ".__('Days');
 }
 
 // Description
@@ -253,16 +253,16 @@ echo "<tr><td align=right>";
 
 if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_owner )) {
     if ($create_mode == 0){
-    	echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["update"].'" border="0">';
+    	echo '<input type="submit" class="sub next" name="accion" value="'.__('Update').'" border="0">';
     } else {
-    	echo '<input type="submit" class="sub create" name="accion" value="'.$lang_label["create"].'" border="0">';
+    	echo '<input type="submit" class="sub create" name="accion" value="'.__('Create').'" border="0">';
     }
 }
 echo "</form>";
 echo "</table>";
 
 if ($id_project > 0){
-	echo "<h3>".lang_string("Project schema")."</h3>";
+	echo "<h3>".__('Project schema')."</h3>";
 	echo "<img src=include/functions_graph.php?type=project_tree&id_project=$id_project&id_user=$id_user>";
 }
 ?>

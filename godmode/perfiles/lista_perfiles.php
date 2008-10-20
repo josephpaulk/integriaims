@@ -35,9 +35,9 @@ if (isset($_GET["delete_profile"])){ // if any parameter is modified
 	$query_del2="DELETE FROM tusuario_perfil WHERE id_perfil = '".$id_perfil."'";
 	$resq1=mysql_query($query_del1);
 		if (! $resq1)
-			echo "<h3 class='error'>".$lang_label["delete_profile_no"]."</h3>";
+			echo "<h3 class='error'>".__('Profile could not be deleted')."</h3>";
 		else
-			echo "<h3 class='suc'>".$lang_label["delete_profile_ok"]."</h3>";
+			echo "<h3 class='suc'>".__('Profile successfully deleted')."</h3>";
 	$resq1=mysql_query($query_del2);
 	unset($id_perfil); // forget it to show list
 }
@@ -67,7 +67,7 @@ elseif (isset($_GET["new_profile"])){ // create a new profile
 	$resq1=mysql_query($query_del1);
 	$rowq1=mysql_fetch_array($resq1);
 	if (!$rowq1){
-		echo "<h3 class='error'>".$lang_label["profile_error"]."</h3>";
+		echo "<h3 class='error'>".__('There was a problem loading profile')."</h3>";
 		echo "</table>";
 		include ("general/footer.php");
 		exit;
@@ -117,9 +117,9 @@ elseif (isset($_GET["new_profile"])){ // create a new profile
         //echo "DEBUG: ".$query;
 		$res=mysql_query($query);
 		if ($res)
-			echo "<h3 class='suc'>".$lang_label["create_profile_ok"]."</h3>";
+			echo "<h3 class='suc'>".__('Profile successfully created')."</h3>";
 		else {
-			echo "<h3 class='error'>".$lang_label["create_profile_no"]."</h3>";
+			echo "<h3 class='error'>".__('Profile could not be created')."</h3>";
 		}
 
 	} else { // UPDATE
@@ -142,74 +142,74 @@ elseif (isset($_GET["new_profile"])){ // create a new profile
 		WHERE id = $id_perfil ";
         //echo "DEBUG: ".$query;
 		$res=mysql_query($query);
-		echo "<h3 class='suc'>".$lang_label['profile_upd']."</h3>";
+		echo "<h3 class='suc'>".__('Profile successfully updated')."</h3>";
 	}
 	unset($id_perfil);
 }
 
 // Header
-echo '<h2>'.$lang_label["profile_title"].'</h2>';
+echo '<h2>'.__('Profile management').'</h2>';
 if (isset($_GET["new_profile"]))
-    echo '<h3>'.$lang_label["create_profile"].'</h3>';
+    echo '<h3>'.__('Create profile').'</h3>';
 elseif (isset($_GET["edit_profile"]))
-    echo '<h3>'.$lang_label["update_profile"].'</h3>';
+    echo '<h3>'.__('Update profile').'</h3>';
 else 
-    '<h3>'.$lang_label["definedprofiles"].'</h3>';
+    '<h3>'.__('Profiles defined in Integria').'</h3>';
 
 // Form to manage date
 if (isset ($id_perfil)){ // There are values defined, let's show form with data for INSERT or UPDATE
 	echo "<table width='400' cellpadding='3' cellspacing='3'>";
 	echo "<form method='post' action='index.php?sec=gperfiles&sec2=godmode/perfiles/lista_perfiles&update_data'>";
 	echo "<input type=hidden name=id_perfil value='".$id_perfil."'>";
-	echo "<tr><td class=datos>".$lang_label["profile_name"]."<td class=datos><input name='name' type=text size='27' value='".$name."'>";
+	echo "<tr><td class=datos>".__('Profile name')."<td class=datos><input name='name' type=text size='27' value='".$name."'>";
 	
-	echo "<tr><td class=datos2>".$lang_label["incident_view"]."<td class=datos2><input name='ir' type=checkbox class='chk' value='1' ";
+	echo "<tr><td class=datos2>".__('View incidents')."<td class=datos2><input name='ir' type=checkbox class='chk' value='1' ";
 	if ($ir == 1) echo "checked"; echo ">";
 	
-	echo "<tr><td class=datos>".$lang_label["incident_edit"]."<td class=datos><input name='iw' type=checkbox class='chk' value='1' ";
+	echo "<tr><td class=datos>".__('Edit incidents')."<td class=datos><input name='iw' type=checkbox class='chk' value='1' ";
 	if ($iw == 1) echo "checked";echo ">";
 	
-	echo "<tr><td class=datos2>".$lang_label["manage_incidents"]."<td class=datos2><input name='im' type=checkbox class='chk' value='1' ";
+	echo "<tr><td class=datos2>".__('Manage Incidents')."<td class=datos2><input name='im' type=checkbox class='chk' value='1' ";
 	if ($im == 1) echo "checked";echo ">";
 	
-	echo "<tr><td class=datos>".lang_string ("agenda_read")."<td class=datos><input name='ar' type=checkbox class='chk' value='1' ";
+	echo "<tr><td class=datos>".__('Agenda read')."<td class=datos><input name='ar' type=checkbox class='chk' value='1' ";
 	if ($ar == 1) echo "checked";echo ">";
 	
-	echo "<tr><td class=datos2>".lang_string ("agenda_write")."<td class=datos2><input name='aw'  type=checkbox class='chk' value='1' ";
+	echo "<tr><td class=datos2>".__('Agenda write')."<td class=datos2><input name='aw'  type=checkbox class='chk' value='1' ";
 	if ($aw == 1) echo "checked";echo ">";
 	
-	echo "<tr><td class=datos>".lang_string ("agenda_management")."<td class=datos><input name='am'  type=checkbox class='chk' value='1' ";
+	echo "<tr><td class=datos>".__('Agenda management')."<td class=datos><input name='am'  type=checkbox class='chk' value='1' ";
 	if ($am == 1) echo "checked";echo ">";
 	
-    echo "<tr><td class=datos2>".lang_string ("user_management")."<td class=datos2><input name='um'  type=checkbox class='chk' value='1' ";
+    echo "<tr><td class=datos2>".__('User management')."<td class=datos2><input name='um'  type=checkbox class='chk' value='1' ";
     if ($um == 1) echo "checked";echo ">";
     
-    echo "<tr><td class=datos>".lang_string ("database_management")."<td class=datos><input name='dm'  type=checkbox class='chk' value='1' ";
+    echo "<tr><td class=datos>".__('Database management')."<td class=datos><input name='dm'  type=checkbox class='chk' value='1' ";
     if ($dm == 1) echo "checked";echo ">";
 
-    echo "<tr><td class=datos2>".lang_string ("framework_management")."<td class=datos2><input name='fm'  type=checkbox class='chk' value='1' ";
+    echo "<tr><td class=datos2>".__('Framework management')."<td class=datos2><input name='fm'  type=checkbox class='chk' value='1' ";
     if ($fm == 1) echo "checked";echo ">";
 
-    echo "<tr><td class=datos>".lang_string ("project_read")."<td class=datos><input name='pr'  type=checkbox class='chk' value='1' ";
+    echo "<tr><td class=datos>".__('Project read')."<td class=datos><input name='pr'  type=checkbox class='chk' value='1' ";
     if ($pr == 1) echo "checked";echo ">";
 
-    echo "<tr><td class=datos2>".lang_string ("project_write")."<td class=datos2><input name='pw'  type=checkbox class='chk' value='1' ";
+    echo "<tr><td class=datos2>".__('Project write')."<td class=datos2><input name='pw'  type=checkbox class='chk' value='1' ";
     if ($pw == 1) echo "checked";echo ">";
 
-    echo "<tr><td class=datos>".lang_string ("project_management")."<td class=datos><input name='pm'  type=checkbox class='chk' value='1' ";
+    echo "<tr><td class=datos>".__('Project management')."<td class=datos><input name='pm'  type=checkbox class='chk' value='1' ";
     if ($pm == 1) echo "checked";echo ">";
 
-    echo "<tr><td class=datos2>".lang_string ("task_write")."<td class=datos2><input name='tw' type=checkbox class='chk' value='1' ";
+    echo "<tr><td class=datos2>".__('Task write')."<td class=datos2><input name='tw' type=checkbox class='chk' value='1' ";
     if ($tw == 1) echo "checked";echo ">";
 
-    echo "<tr><td class=datos>".lang_string ("task_management")."<td class=datos><input name='tm' type=checkbox class='chk' value='1' ";
+    echo "<tr><td class=datos>".__('Task management')."<td class=datos><input name='tm' type=checkbox class='chk' value='1' ";
     if ($tm == 1) echo "checked";echo ">";
 	
 	if (isset($_GET["new_profile"])){
-        echo "<tr><td colspan='3' align='right'><input name='crtbutton' type='submit' class='sub' value='".$lang_label["create"]."'>";
+        echo "<tr><td colspan='3' align='right'><input name='crtbutton' type='submit' class='sub' value='".__('Create')."'>";
     }
     if (isset($_GET["edit_profile"])){
-        echo "<tr><td colspan='3' align='right'><input name='uptbutton' type='submit' class='sub' value='" .$lang_label["update"]."'>";
+        echo "<tr><td colspan='3' align='right'><input name='uptbutton' type='submit' class='sub' value='" .__('Update')."'>";
     }
 	echo "</table>";
 	
@@ -224,7 +224,7 @@ if (isset ($id_perfil)){ // There are values defined, let's show form with data 
 	$query_del1="SELECT * FROM tprofile";
 	$resq1=mysql_query($query_del1);
     echo "<tr>";
-    echo "<th width='180px'><font size=1>".$lang_label["profiles"];
+    echo "<th width='180px'><font size=1>".__('Profiles');
     echo "<th width='40px'><font size=1>IR";
     echo "<th width='40px'><font size=1>IW";
     echo "<th width='40px'><font size=1>IM";
@@ -239,7 +239,7 @@ if (isset ($id_perfil)){ // There are values defined, let's show form with data 
     echo "<th width='40px'><font size=1>PM";
     echo "<th width='40px'><font size=1>TW";
     echo "<th width='40px'><font size=1>TM";
-	echo "<th width='40px'>".$lang_label["delete"]."</th></tr>";
+	echo "<th width='40px'>".__('Delete')."</th></tr>";
 	while ($rowq1=mysql_fetch_array($resq1)){
 		$id_perfil = $rowq1["id"];
 		$name = $rowq1["name"];
@@ -309,13 +309,12 @@ if (isset ($id_perfil)){ // There are values defined, let's show form with data 
         if ($tm == 1) echo "<img src='images/ok.png' border=0>";
 
 
-		echo "<td class='$tdcolor' align='center'><a href='index.php?sec=users&sec2=godmode/perfiles/lista_perfiles&delete_profile=".$id_perfil."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img border='0' src='images/cross.png'></a></td></tr>";
-		
+		echo "<td class='$tdcolor' align='center'><a href='index.php?sec=users&sec2=godmode/perfiles/lista_perfiles&delete_profile=".$id_perfil."' onClick='if (!confirm(\'".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a></td></tr>";		
 	}
 	echo "</div></td></tr>";
 	echo "<tr><td colspan='12' align='right'>";
 	echo "<form method=post action='index.php?sec=gperfiles&sec2=godmode/perfiles/lista_perfiles&new_profile=1'>";
-	echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_profile"]."'>";
+	echo "<input type='submit' class='sub next' name='crt' value='".__('Create profile')."'>";
 	echo "</form></table>";
 }
 	

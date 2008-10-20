@@ -17,107 +17,81 @@
 // Load global vars
 global $config;
 
-if (check_login() != 0) {
-    audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access setup ");
-    require ("general/noaccess.php");
-    exit;
-}
-    
-if (dame_admin($config["id_user"]) == 0){
-    audit_db("ACL Violation",$config["REMOTE_ADDR"], "No administrator access","Trying to access setup");
-    require ("general/noaccess.php");
-    exit;
+check_login ();
+	
+if (dame_admin ($config["id_user"]) == 0) {
+	audit_db ("ACL Violation", $config["REMOTE_ADDR"], "No administrator access", "Trying to access setup");
+	require ("general/noaccess.php");
+	exit;
 }
 
-$update = get_parameter ("update",0);
+$update = (bool) get_parameter ("update");
 
-if ($update == 1){
-	$config["block_size"] = get_parameter ("block_size", 20);
-	$config["language_code"] = get_parameter ("language_code", "en");
-	$config["notification_period"] = get_parameter ("notification_period", 86400);
-	$config["currency"] = get_parameter ("currency", "€");
-	$config["hours_perday"] = get_parameter ("hours_perday", "8");
-	$config["sitename"] = get_parameter ("sitename", "Integria IMS");
-	$config["FOOTER_EMAIL"] = get_parameter ("FOOTER_EMAIL", "");
-	$config["HEADER_EMAIL"] = get_parameter ("HEADER_EMAIL", "");
+if ($update) {
+	$config["block_size"] = (int) get_parameter ("block_size", 20);
+	$config["language_code"] = (string) get_parameter ("language_code", "en");
+	$config["notification_period"] = (int) get_parameter ("notification_period", 86400);
+	$config["currency"] = (string) get_parameter ("currency", "€");
+	$config["hours_perday"] = (int) get_parameter ("hours_perday", "8");
+	$config["sitename"] = (string) get_parameter ("sitename", "Integria IMS");
+	$config["FOOTER_EMAIL"] = (string) get_parameter ("footer_email", "");
+	$config["HEADER_EMAIL"] = (string) get_parameter ("header_email", "");
+	$config["limit_size"] = (int) get_parameter ("limit_size");
 
-	$result2 = mysql_query("UPDATE tconfig SET VALUE='".$config["block_size"]."' WHERE TOKEN='block_size'");
-	$result2 = mysql_query("UPDATE tconfig SET VALUE='".$config["language_code"]."' WHERE TOKEN='language_code'");
-    $result2 = mysql_query("UPDATE tconfig SET VALUE='".$config["notification_period"]."' WHERE TOKEN='notification_period'");
-
-	$result2 = mysql_query ("UPDATE tconfig SET VALUE='".$config["hours_perday"]."' WHERE TOKEN='hours_perday'");
-
-	$result2 = mysql_query ("UPDATE tconfig SET VALUE='".$config["currency"]."' WHERE TOKEN='currency'");
-
-	$result2 = mysql_query ("UPDATE tconfig SET VALUE='".$config["FOOTER_EMAIL"]."' WHERE TOKEN='FOOTER_EMAIL'");
-
-	$result2 = mysql_query ("UPDATE tconfig SET VALUE='".$config["HEADER_EMAIL"]."' WHERE TOKEN='HEADER_EMAIL'");
-
-	$result2 = mysql_query ("UPDATE tconfig SET VALUE='".$config["sitename"]."' WHERE TOKEN='sitename'");
+	process_sql ("UPDATE tconfig SET value='".$config["block_size"]."' WHERE token='block_size'");
+	process_sql ("UPDATE tconfig SET value='".$config["language_code"]."' WHERE token='language_code'");
+	process_sql ("UPDATE tconfig SET value='".$config["notification_period"]."' WHERE token='notification_period'");
+	process_sql ("UPDATE tconfig SET value='".$config["hours_perday"]."' WHERE token='hours_perday'");
+	process_sql ("UPDATE tconfig SET value='".$config["currency"]."' WHERE token='currency'");
+	process_sql ("UPDATE tconfig SET value='".$config["FOOTER_EMAIL"]."' WHERE token='FOOTER_EMAIL'");
+	process_sql ("UPDATE tconfig SET value='".$config["HEADER_EMAIL"]."' WHERE token='HEADER_EMAIL'");
+	process_sql ("UPDATE tconfig SET value='".$config["sitename"]."' WHERE token='sitename'");
+	process_sql ("UPDATE tconfig SET value='".$config["limit_size"]."' WHERE token='limit_size'");
 
 }	
 
-echo "<h2>".$lang_label["setup_screen"]."</h2>";
-echo "<h3>".$lang_label["general_config"]."</h3>";
+echo "<h2>".__('Integria Setup')."</h2>";
 
-echo "<form name='setup' method='POST' action='index.php?sec=godmode&sec2=godmode/setup/setup&update=1'>";
+$table->width = '740px';
+$table->class = 'databox';
+$table->colspan = array ();
+$table->colspan[4][0] = 2;
+$table->colspan[5][0] = 2;
+$table->data = array ();
 
-echo '<table width="550" class="databox">';
+$table->data[0][0] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
+	'language_code', $config['language_code'], 'javascript:this.form.submit()',
+	'', '', true, false, false, __('Language'));
+$table->data[1][0] = print_input_text ("block_size", $config["block_size"], '',
+	5, 5, true, __('Block size for pagination'));
+$table->data[1][1] = print_input_text ("limit_size", $config["limit_size"], '',
+	5, 5, true, __('Max. data limit size'));
 
-echo '<tr><td class="datos">'.$lang_label["language_code"];
-echo '<td class="datos"><select name="language_code" onChange="javascript:this.form.submit();" width="180px">';
+$table->data[2][0] = print_input_text ("notification_period", $config["notification_period"],
+	'', 7, 7, true, __('Notification period'));
+$table->data[2][0] .= integria_help ("notification_period", true);
+$table->data[2][1] = print_input_text ("hours_perday", $config["hours_perday"], '',
+	5, 5, true, __('Work hours per day'));
 
-$sql="SELECT * FROM tlanguage";
-$result=mysql_query($sql);
-$result2=mysql_query("SELECT * FROM tlanguage WHERE id_language = '".$config["language_code"]."'");
-if ($row2=mysql_fetch_array($result2)){
-	echo '<option value="'.$row2["id_language"].'">'.$row2["name"];
-}
-while ($row=mysql_fetch_array($result)){
-	echo "<option value=".$row["id_language"].">".$row["name"];
-}
-echo '</select>';
-		
-echo '<tr><td>'.__("block_size");
-echo '<td>';
-print_input_text ("block_size", $config["block_size"], '', 5, 0, false, false);
+$table->data[3][0] = print_input_text ("sitename", $config["sitename"], '',
+	15, 30, true, __('Sitename'));
+$table->data[3][1] = print_input_text ("currency", $config["currency"], '',
+	3, 3, true, __('Currency'));
 
-echo '<tr><td>'.__("Notification period");
-echo '<td>';
-print_input_text ("notification_period", $config["notification_period"], '', 7, 0, false, false);
-echo integria_help("notification_period");
+$table->data[4][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
+	'', true, __('Email header'));
+$table->data[5][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
+	'', true, __('Email footer'));
 
-// NEW 1.2
+echo "<form name='setup' method='post'>";
 
-echo '<tr><td>'.__("Currency");
-echo '<td>';
-print_input_text ("currency", $config["currency"], '', 5, 0, false, false);
+print_table ($table);
 
-echo '<tr><td>'.__("Sitename");
-echo '<td>';
-print_input_text ("sitename", $config["sitename"], '', 15, 0, false, false);
-
-
-echo '<tr><td>'.__("Hours per day");
-echo '<td>';
-print_input_text ("hours_perday", $config["hours_perday"], '', 5, 0, false, false);
-
-
-echo '<tr><td colspan=2>';
-print_textarea ("HEADER_EMAIL", 5, 40, $config["HEADER_EMAIL"],'', false, __("Email header"));
-
-echo '<tr><td colspan=2>';
-print_textarea ("FOOTER_EMAIL", 5, 40, $config["FOOTER_EMAIL"],'', false, __("Email footer"));
-
-
-echo "</table>";
- 
-
-
-
-echo "<div style='width:550px' class=button>";
-echo '<input type="submit" class="sub upd" value="'.$lang_label["update"].'">';
-echo "</div>";
+echo '<div style="width: '.$table->width.'" class="button">';
+print_input_hidden ('update', 1);
+print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"');
+echo '</div>';
+echo '</form>';
 
 
 ?>

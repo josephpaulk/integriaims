@@ -28,7 +28,7 @@ $id_task = give_parameter_get ("id_task", -1);
 $cabecera=0;
 $sql4='SELECT * FROM ttask_track WHERE id_task= '.$id_task;
 
-echo "<h1>".lang_string ("task_tracking")."</h1>";
+echo "<h1>".__('Task tracking')."</h1>";
 echo "<h3>";
 echo give_db_sqlfree_field("SELECT name FROM ttask WHERE id = $id_task");
 echo "</h3>";
@@ -36,7 +36,7 @@ echo "</h3>";
 echo "<table class='listing' width=630>";
 
 if ($res4=mysql_query($sql4)){
-	echo "<tr><th>".__("Status")."<th>".__("user")."<th>".__("timestamp");
+	echo "<tr><th>".__('Status')."<th>".__('User')."<th>".__('Timestamp');
 	while ($row2=mysql_fetch_array($res4)){
 		$timestamp = $row2["timestamp"];
 		$state = $row2["state"];
@@ -45,25 +45,25 @@ if ($res4=mysql_query($sql4)){
 		echo '<tr><td>';
 
 		switch($state){
-			case 11: $descripcion = lang_string ("Task added");
+			case 11: $descripcion = __('Task added');
 				break;
-            case 12: $descripcion = lang_string ("Task updated");
+            case 12: $descripcion = __('Task updated');
                 break;
-            case 14: $descripcion = lang_string ("Workunit added");
+            case 14: $descripcion = __('Workunit added');
                 break;
-            case 15: $descripcion = lang_string ("File added");
+            case 15: $descripcion = __('File added');
                 break;			
-            case 16: $descripcion = lang_string ("Task completion progress updated");
+            case 16: $descripcion = __('Task completion progress updated');
                 break;
-            case 17: $descripcion = lang_string ("Task finished");
+            case 17: $descripcion = __('Task finished');
                 break;
-            case 18: $descripcion = lang_string ("Task member updated");
+            case 18: $descripcion = __('Task member updated');
                 break;
-            case 19: $descripcion = lang_string ("Task moved");
+            case 19: $descripcion = __('Task moved');
                 break;
-            case 20: $descripcion = lang_string ("Task deleted");
+            case 20: $descripcion = __('Task deleted');
                 break;
- 			default: $descripcion = $lang_label["unknown"];
+ 			default: $descripcion = __('Unknown');
 		}
 		
 		echo $descripcion;
@@ -76,6 +76,6 @@ if ($res4=mysql_query($sql4)){
 	}
 echo "</table>"; 
 } else
-	echo $lang_label["no_data"];
+	echo __('No data available');
 
 ?>

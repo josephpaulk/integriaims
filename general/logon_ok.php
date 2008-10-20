@@ -17,20 +17,20 @@
 
 	echo "<div>";
 	$nick = $_SESSION['id_usuario'];
-	echo "<h1>" . $lang_label["welcome_title"] . "</h1>";
+	echo "<h1>" . __('Welcome to Integria') . "</h1>";
 	echo "<p>";
-	echo $lang_label["main_text"];
+	echo __('This is the Web Management System for Integria. From here you can manage its agents, alerts and incidents. Session will be open while activity exists.');
 	echo "</p>";
 
 	// Show last activity from this user
-	echo "<h2>" . $lang_label["user_last_activity"] . "</h2>";
+	echo "<h2>" . __('This is your last activity in Integria console') . "</h2>";
 	// Show table header
 	echo '<table cellpadding="3" cellspacing="3" width="740"><tr>'; 
-	echo '<th>' . $lang_label["user"] . '</th>';
-	echo '<th>' . $lang_label["action"] . '</th>';
-	echo '<th>' . $lang_label["date"] . '</th>';
-	echo '<th>' . $lang_label["src_address"] . '</th>';
-	echo '<th>' . $lang_label["comments"] . '</th></tr>';
+	echo '<th>' . __('User') . '</th>';
+	echo '<th>' . __('Action') . '</th>';
+	echo '<th>' . __('Date') . '</th>';
+	echo '<th>' . __('Source IP') . '</th>';
+	echo '<th>' . __('Comments') . '</th></tr>';
 
 	// Skip offset records
 	$query1="SELECT * FROM tsesion WHERE (TO_DAYS(fecha) > TO_DAYS(NOW()) - 7) AND ID_usuario = '" . $nick . "' ORDER BY fecha DESC limit 15";
@@ -71,12 +71,12 @@
 	$sql_news = "SELECT * FROM tnews ORDER by utimestamp LIMIT 3";
 	$news = 0;
 	if ($result_news = mysql_query ($sql_news)){
-		echo '<h2>' . $lang_label["site_news"] . '</h2>';
+		echo '<h2>' . __('Site news') . '</h2>';
 		echo '<table width="700"><tr>'; 
 		while ($row = mysql_fetch_array ($result_news)) {
 			$news = 1;
 			echo '<tr><th align="left">';
-			echo $lang_label["at"]. " <i>". $row["timestamp"] ."</i> ".$lang_label["user"]. " <b>". $row["author"]."</b> ".$lang_label["says"].":  \"<b>".$row["subject"]."\"</b>";
+			echo __('At'). " <i>". $row["timestamp"] ."</i> ".__('user'). " <b>". $row["author"]."</b> ".__('said').":  \"<b>".$row["subject"]."\"</b>";
 			echo '<tr><td class=datos>';
 			echo clean_output_breaks($row["text"]);
 			echo '<td><td class=datos3">';

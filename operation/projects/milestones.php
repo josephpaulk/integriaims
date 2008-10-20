@@ -45,9 +45,9 @@ if ($operation == "create2") {
 	$sql_insert="INSERT INTO tmilestone (name, description, timestamp, id_project) VALUES ('$name','$description', '$timestamp', '$id_project') ";
 	$result=mysql_query($sql_insert);	
 	if (! $result)
-		echo "<h3 class='error'>".$lang_label["create_no"]."</h3>";
+		echo "<h3 class='error'>".__('Not created. Error inserting data')."</h3>";
 	else {
-		echo "<h3 class='suc'>".$lang_label["create_ok"]."</h3>"; 
+		echo "<h3 class='suc'>".__('Created successfully')."</h3>"; 
 		$id_ms = mysql_insert_id();
 	}
 	/*
@@ -69,9 +69,9 @@ if ($operation == "delete") {
 	$sql_delete= "DELETE FROM tmilestone WHERE id = $id_milestone";
 	$result=mysql_query($sql_delete);
 	if (! $result)
-		echo "<h3 class='error'>".$lang_label["delete_no"]."</h3>";
+		echo "<h3 class='error'>".__('Not deleted. Error deleting data')."</h3>";
 	else
-		echo "<h3 class='suc'>".$lang_label["delete_ok"]."</h3>";
+		echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
 	$operation = "";
 }
 
@@ -80,19 +80,19 @@ if ($operation == "delete") {
 // CREATE new todo (form)
 // ---------------
 if ($operation == "create") {
-echo "<h2>".lang_string ("milestone_creation")."</h2>";
+	echo "<h2>".__('Milestone creation')."</h2>";
 	echo '<table class="databox"  width="720">';
 	echo '<form name="ilink" method="post" action="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=create2">';
 
-	echo "<tr><td class='datos'>".lang_string ("name");
+	echo "<tr><td class='datos'>".__('Name');
 	echo "<td class='datos'><input name='name' size=40>";
 	
-	echo "<tr><td class='datos2'>".lang_string ("timestamp");
+	echo "<tr><td class='datos2'>".__('Timestamp');
 	echo "<td class='datos2'>";
     $ahora_date = date("Y-m-d");
 	echo "<input type='text' id='timestamp' name='timestamp' size=10 value='$ahora_date'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"timestamp\"),this);'> ";
 
-	echo "<tr><td class='datos' valign='top'>".lang_string ("description");
+	echo "<tr><td class='datos' valign='top'>".__('Description');
 	echo "<td class='datos'><textarea name='description' style='width:100%; height:100px'>";
 	echo "</textarea>";
 	echo "</table>";
@@ -104,7 +104,7 @@ echo "<h2>".lang_string ("milestone_creation")."</h2>";
 	    echo "<tr><td align='right'>";
 
 	    echo "<input type=hidden name='id_project' value='$id_project'>";
-	    echo "<input name='crtbutton' type='submit' class='sub wizard' value='".lang_string ("create")."'>";
+	    echo "<input name='crtbutton' type='submit' class='sub wizard' value='".__('Create')."'>";
     }
 	echo '</form></table>';
 }
@@ -113,13 +113,13 @@ echo "<h2>".lang_string ("milestone_creation")."</h2>";
 // Milestone view
 // -------------------------
 if ($operation == ""){
-	echo "<h1>".lang_string("milestones management");
+	echo "<h1>".__('Milestones management');
 	echo "</h1>";
 	echo "<table class='listing' width=720>";
-	echo "<th>".lang_string ("milestone");
-	echo "<th>".lang_string ("description");
-	echo "<th>".lang_string ("timestamp");
-	echo "<th>".lang_string ("delete");
+	echo "<th>".__('Milestone');
+	echo "<th>".__('Description');
+	echo "<th>".__('Timestamp');
+	echo "<th>".__('Delete');
 	$color=1;
 	$sql1="SELECT * FROM tmilestone WHERE id_project = $id_project";
 	if ($result=mysql_query($sql1))
@@ -145,7 +145,7 @@ if ($operation == ""){
 			
 			// DELETE
 			echo '<td class="'.$tdcolor.'" align="center">';
-			echo '<a href="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=delete&id='.$row["id"].'" onClick="if (!confirm(\' '.$lang_label["are_you_sure"].'\')) return false;"><img border=0 src="images/cross.png"></a>';
+			echo '<a href="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=delete&id='.$row["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
 			
 		}
 	echo "</table>";
@@ -157,7 +157,7 @@ if ($operation == ""){
 	    echo "<tr><td align=right>";
     
 	    echo "<form name='ms' method='POST'  action='index.php?sec=projects&sec2=operation/projects/milestones&operation=create&id_project=$id_project'>";
-	    echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create")."'>";
+	    echo "<input type='submit' class='sub next' name='crt' value='".__('Create')."'>";
 	    echo "</form>";
 	    echo "</table>";
     }

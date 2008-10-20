@@ -85,9 +85,9 @@ if ($search) {
 	$sql = sprintf ('SELECT id, name, description, comments, id_building
 			FROM tinventory
 			WHERE (name LIKE "%%%s%%" OR description LIKE "%%%s%%")
-			%s',
+			%s LIMIT %d',
 			$search_string, $search_string,
-			$sql_clause);
+			$sql_clause, $config['limit_size']);
 	$inventories = get_db_all_rows_sql ($sql);
 	if ($inventories === false) {
 		$inventories = array ();
@@ -151,40 +151,45 @@ if ($search) {
 
 $table->data = array ();
 $table->width = '95%';
-$table->style = array ();
-$table->style[0] = 'font-weight: bold';
 $table->colspan = array ();
-//$table->colspan[3][0] = 2;
+$table->rowstyle = array ();
+$table->rowstyle[1] = 'display: none';
+$table->rowstyle[2] = 'display: none';
+$table->rowstyle[3] = 'text-align: right';
+$table->colspan = array ();
+$table->colspan[3][0] = 3;
 
-$table->data[1][0] = print_select (get_products (),
+$table->data[0][0] = print_input_text ('search_string', $search_string, '', 20, 255,
+			true, __('Search string'));
+
+$table->data[0][1] = print_select (get_products (),
 					'search_id_product', $search_id_product,
 					'', __('All'), 0, true, false, false,
 					__('Product type'));
-
-$table->data[1][1] = print_select (get_buildings (),
-			'search_id_building', $search_id_building,
-			'', __('All'), 0, true, false, false,
-			__('Building'));
-$table->data[1][2] = print_input_text ('search_serial_number', $search_serial_number, '', 20, 255,
-			true, __('Serial number'));
-
-$table->data[2][0] = print_select (get_companies (),
+$table->data[0][2] = print_select (get_companies (),
 			'search_id_company', $search_id_company,
 			'', __('All'), 0, true, false, false,
 			__('Company'));
 
-$table->data[2][1] = print_select (get_contracts (),
+$table->data[1][0] = print_select (get_buildings (),
+			'search_id_building', $search_id_building,
+			'', __('All'), 0, true, false, false,
+			__('Building'));
+$table->data[1][1] = print_input_text ('search_serial_number', $search_serial_number, '', 20, 255,
+			true, __('Serial number'));
+
+
+$table->data[1][2] = print_select (get_contracts (),
 			'search_id_contract', $search_id_contract,
 			'', __('All'), 0, true, false, false,
 			__('Contract'));
-$table->data[2][2] = print_input_text ('search_part_number', $search_part_number, '', 20, 255,
+$table->data[2][0] = print_input_text ('search_part_number', $search_part_number, '', 20, 255,
 			true, __('Part number'));
 
-$table->data[4][0] = print_input_text ('search_string', $search_string, '', 20, 255,
-			true, __('Search string'));
-$table->data[4][1] = print_input_text ('search_ip_address', $search_ip_address, '', 20, 255,
+$table->data[2][1] = print_input_text ('search_ip_address', $search_ip_address, '', 20, 255,
 			true, __('IP address'));
-$table->data[4][2] = print_submit_button (__('Search'), 'search_button',
+
+$table->data[3][0] = print_submit_button (__('Search'), 'search_button',
 			false, 'class="sub search"', true);
 
 echo '<div id="inventory_search_result"></div>';
@@ -193,6 +198,7 @@ echo '<form id="inventory_search_form" method="post">';
 print_table ($table);
 print_input_hidden ('search', 1);
 echo '</form>';
+echo '<a class="show_advanced_search" href="index.php">'.__('Advanced search').' >></a>';
 
 unset ($table);
 $table->class = 'hide result_table listing';
@@ -208,27 +214,6 @@ $table->head[6] = __('Title');
 
 print_table ($table);
 
-echo '<div id="inventory-pager" class="hide pager">';
-echo '<form>';
-echo '<img src="images/control_start_blue.png" class="first" />';
-echo '<img src="images/control_rewind_blue.png" class="prev" />';
-echo '<input type="text" class="pagedisplay" />';
-echo '<img src="images/control_fastforward_blue.png" class="next" />';
-echo '<img src="images/control_end_blue.png" class="last" />';
-if (defined ('AJAX')) {
-	echo '<select class="pagesize" style="display: none">';
-	echo '<option selected="selected" value="5">5</option>';
-} else {
-	echo '<select class="pagesize">';
-	echo '<option selected="selected" value="10">10</option>';
-	echo '<option value="20">20</option>';
-	echo '<option value="30">30</option>';
-	echo '<option  value="40">40</option>';
-	echo '<option  value="100">100</option>';
-	echo '</select>';
-}
-echo '</select>';
-echo '</form>';
-echo '</div>';
+print_table_pager ('inventory-pager');
 
 ?>

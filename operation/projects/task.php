@@ -52,7 +52,7 @@ if ($operation == "delete") {
 	
 	if ((dame_admin($id_user)==1) OR (project_manager_check ($id_project) == 1)){
 		delete_task ($id_task);
-		echo "<h3 class='suc'>".$lang_label["delete_ok"]."</h3>";
+		echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
 		$operation = "";
         task_tracking ($id_user, $id_task, 20, 0, 0);
 	} else {
@@ -73,7 +73,7 @@ elseif ($operation == "move") {
 
 // MAIN LIST OF TASKS
 
-echo "<h2>".$project_name." - ".$lang_label["task_management"]."</h2>";
+echo "<h2>".$project_name." - ".__('Task management')."</h2>";
 
 $filter_id_group = get_parameter ("filter_id_group", 0);
 $filter_freetext = get_parameter ("filter_freetext", "");
@@ -91,17 +91,17 @@ if ($filter_id_group != 0)
 echo "<table width=610>";
 	echo "<form method=post action='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>";
 	echo "<tr><td>";
-	echo lang_string ("Free text search");
+	echo __('Free text search');
 	echo "<td>";
 	echo print_input_text ("filter_freetext", $filter_freetext, "", 15, 100, false);
 
 	echo "<td>";
-	echo lang_string ("Group");
+	echo __('Group');
 	echo "<td>";
-	echo print_select_from_sql ("SELECT * from tgrupo WHERE id_grupo > 1 ORDER BY nombre", "filter_id_group", $filter_id_group, "", lang_string("None"), '0', false, false, true, false); 
+	echo print_select_from_sql ("SELECT * from tgrupo WHERE id_grupo > 1 ORDER BY nombre", "filter_id_group", $filter_id_group, "", __('None'), '0', false, false, true, false); 
 
 	echo "<td>";
-	print_submit_button (lang_string("Search"), "enviar", false, "class='sub search'", false);
+	print_submit_button (__('Search'), "enviar", false, "class='sub search'", false);
 	echo "</form></td></tr></table>";
 
 
@@ -110,17 +110,17 @@ echo "<table width=610>";
 // -------------
 echo "<table width='100%' class='listing'>";
 echo "<tr>";
-echo "<th class='f9'>".$lang_label["name"];
-echo "<th class='f9'>".lang_string ("pri");
-echo "<th class='f9'>".lang_string ("progress");
-echo "<th class='f9'>".lang_string ("Estimation");
-echo "<th class='f9'>".$lang_label["time_used"];
-echo "<th class='f9'>".lang_string ("Cost");
-echo "<th class='f9'>".$lang_label["people"];
+echo "<th class='f9'>".__('Name');
+echo "<th class='f9'>".__('Pri');
+echo "<th class='f9'>".__('Progress');
+echo "<th class='f9'>".__('Estimation');
+echo "<th class='f9'>".__('Time used');
+echo "<th class='f9'>".__('Cost');
+echo "<th class='f9'>".__('People');
 
-echo "<th>".$lang_label["start"];
-echo "<th>".$lang_label["end"];
-echo "<th>".lang_string ("delete");
+echo "<th>".__('Start');
+echo "<th>".__('End');
+echo "<th>".__('Delete');
 $color = 1;
 show_task_tree ($id_project, 0, 0, 0, $FILTER);
 echo "</table>";
@@ -130,7 +130,7 @@ if (give_acl($config["id_user"], 0, "IW")==1) {
 	echo "<table width=100% class='button'>";
 	echo "<tr><td align=right>";
     echo "<form name='boton' method='POST'  action='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>";
-    echo "<input type='submit' class='sub next' name='crt' value='".$lang_label["create_task"]."'>";
+    echo "<input type='submit' class='sub next' name='crt' value='".__('New task')."'>";
     echo "</form>";
 	echo "</td></tr></table>";
 }
@@ -205,7 +205,7 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 
 	if ($row2["start"] == $row2["end"]){
 		echo "<td colspan=2>";
-		echo __("Periodicity");
+		echo __('Periodicity');
 		echo "&nbsp;";
 		echo $row2["periodicity"];
 	} else {
@@ -232,7 +232,7 @@ function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
 
 	// Delete
 	echo "<td class='$tdcolor' align='center'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project=$id_project&id=".$row2["id"]."' onClick='if (!confirm(\' ".lang_string ("are_you_sure")."\')) return false;'><img src='images/cross.png' border='0'></a>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project=$id_project&id=".$row2["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
 	
 	
 }

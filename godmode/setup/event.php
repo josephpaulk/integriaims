@@ -24,7 +24,7 @@ if (give_acl($config["id_user"], 0, "KM")==0) {
 
 $color = 0;
 $id_user = $config["id_user"];
-echo "<h2>".lang_string ("Event history")."</h2>";	
+echo "<h2>".__('Event history')."</h2>";	
 
 // Pagination
 $offset = get_parameter ("offset",0);

@@ -64,7 +64,6 @@ require_once ("include/functions_db.php");
 require_once ("include/functions_html.php");
 require_once ("include/config.php");
 global $config;
-require_once ("include/languages/language_".$config["language_code"].".php");
 require_once ("include/functions_form.php");
 require_once ("include/functions_calendar.php");
 ?>
@@ -114,60 +113,34 @@ echo "<title>".$config["sitename"]."</title>";
 <![endif]-->
 
 <?php
+
+$login = (bool) get_parameter ('login');
+$sec = get_parameter ('sec');
+$sec2 = get_parameter ('sec2');
+
 // Login process
-if ( (! isset ($_SESSION['id_usuario'])) AND (isset ($_GET["login"]))) {
-	$nick = give_parameter_post ("nick");
-	$pass = give_parameter_post ("pass");
-
-	// Connect to Database
-	$sql1 = 'SELECT * FROM tusuario WHERE id_usuario = "'.$nick.'"';
-	$result = mysql_query ($sql1);
-
+if (! isset ($_SESSION['id_usuario']) && $login) {
+	$nick = get_parameter ("nick");
+	$pass = get_parameter ("pass");
+	
+	$user = get_db_row ('tusuario', 'id_usuario', $nick);
+	
 	// For every registry
-	if ($row = mysql_fetch_array ($result)){
-		if ($row["password"] == md5 ($pass)){
-			// Login OK
-			// Nick could be uppercase or lowercase (select in MySQL
-			// is not case sensitive)
-			// We get DB nick to put in PHP Session variable,
-			// to avoid problems with case-sensitive usernames.
-			$nick = $row["id_usuario"];
-			unset ($_GET["sec2"]);
-			$_GET["sec"] = "general/logon_ok";
-			update_user_contact ($nick);
-			logon_db ($nick, $config["REMOTE_ADDR"]);
-			$_SESSION['id_usuario'] = $nick;
-			$config["id_user"]= $nick;
-			$prelogin_url = get_parameter ("prelogin_url", "");
-
-			if ($prelogin_url == "") {
-				$prelogin_url = "http://". $_SERVER["SERVER_NAME"]. $_SERVER['REQUEST_URI'];
-				echo "<meta http-equiv='refresh' content='0;$new_url'>";
-			}
-			else {
-				// REDIRECT ON Different LOGIN URL
-				// Simple login URL is something like xxxxxx/index.php or simply index.php
-				$url_a = explode("/", $prelogin_url);
-				if (isset($url_a)){
-					if (array_pop($url_a) != "index.php"){
-						$new_url = "http://" . $_SERVER['SERVER_NAME'] . $prelogin_url;
-						echo "<meta http-equiv='refresh' content='0;$new_url'>";
-					}
-				}
-			}
-		} else {
-			// Login failed (bad password)
-			unset ($_GET["sec2"]);
-			echo '</head>';
-			echo '<body bgcolor="#ffffff">';
-			include "general/logon_failed.php";
-			// change password to do not show all string
-			$primera = substr ($pass,0,1);
-			$ultima = substr ($pass, strlen ($pass) - 1, 1);
-			$pass = $primera . "****" . $ultima;
-			audit_db ($nick, $config["REMOTE_ADDR"], "Logon Failed",
-				  "Incorrect password: " . $nick . " / " . $pass);
-			exit;
+	if ($user !== false && $user['password'] == md5 ($pass)) {
+		// Login OK
+		// Nick could be uppercase or lowercase (select in MySQL
+		// is not case sensitive)
+		// We get DB nick to put in PHP Session variable,
+		// to avoid problems with case-sensitive usernames.
+		$nick = $user["id_usuario"];
+		
+		update_user_contact ($nick);
+		logon_db ($nick, $config["REMOTE_ADDR"]);
+		$_SESSION['id_usuario'] = $nick;
+		$config["id_user"]= $nick;
+		
+		if ($sec2 == '') {
+			$sec2 = 'general/home';
 		}
 	} else {
 		// User not known
@@ -175,11 +148,11 @@ if ( (! isset ($_SESSION['id_usuario'])) AND (isset ($_GET["login"]))) {
 		echo '</head>';
 		echo '<body bgcolor="#ffffff">';
 		include "general/logon_failed.php";
-		$primera = substr ($pass, 0, 1);
-		$ultima = substr ($pass, strlen ($pass) - 1, 1);
-		$pass = $primera . "****" . $ultima;
+		$first = substr ($pass, 0, 1);
+		$last = substr ($pass, strlen ($pass) - 1, 1);
+		$pass = $first . "****" . $last;
 		audit_db ($nick, $config["REMOTE_ADDR"], "Logon Failed",
-			  "Invalid username: " . $nick . " / " . $pass);
+			  "Invalid username: ".$nick." / ".$pass);
 		exit;
 	}
 } elseif (! isset ($_SESSION['id_usuario'])) {
@@ -192,15 +165,6 @@ if ( (! isset ($_SESSION['id_usuario'])) AND (isset ($_GET["login"]))) {
 	// Create id_user variable in $config hash, of ALL pages.
 	$config["id_user"] = $_SESSION['id_usuario'];
 }
-
-// User language load
-if (isset($config["id_user"])){
-	$user_lang = get_db_sql ("SELECT lang FROM tusuario WHERE id_usuario = '".$config["id_user"]."'");
-	if ($user_lang != "")
-	$config["language_code"] = $user_lang;
-}
-	
-
 
 // Log off
 if (isset ($_GET["bye"])) {
@@ -216,54 +180,42 @@ if (isset ($_GET["bye"])) {
 // Common code for all operations
 echo '</head>';
 echo '<body>';
-$pagina = "";
 
-if (isset ($_GET["sec2"])){
-	$sec2 = parametro_limpio ($_GET["sec2"]);
-	$pagina = $sec2;
-} else
-	$sec2 = "";
-
-if (isset ($_GET["sec"])){
-	$sec = parametro_limpio ($_GET["sec"]);
-	$pagina = $sec2;
-}
-else
-	$sec = "";
 // http://es2.php.net/manual/en/ref.session.php#64525
 // Session locking concurrency speedup!
-session_write_close();
+session_write_close ();
 ?>
 
 <?php
-if ($clean_output == 0){
+if ($clean_output == 0) {
 ?>
 	<div id="wrap">
 		<div id="header">
-			<?php require("general/header.php"); ?>
+			<?php require ("general/header.php"); ?>
 		</div>
 
 		<div id="menu">
-			<?php require("operation/main_menu.php"); ?>
+			<?php require ("operation/main_menu.php"); ?>
 		</div>
 
 		<div id="content-wrap">
 			<div id="sidebar">
-			<?php require("operation/side_menu.php"); ?>
-			<?php require("operation/tool_menu.php"); ?>
+			<?php require ("operation/side_menu.php"); ?>
+			<?php require ("operation/tool_menu.php"); ?>
 			</div>
 
 			<div id="main">
 			<?php
 				// Page loader / selector
-				if ($pagina != ""){
-					if (file_exists ($pagina . ".php")) {
-						require ($pagina . ".php");
+				if ($sec2 != "") {
+					if (file_exists ($sec2.".php")) {
+						require ($sec2.".php");
 					} else {
-						echo "<br><b class='error'>".lang_string ('cannot_find_page')."</b>";
+						echo "<h3 class='error'>".__('Page not found')."</h3>";
 					}
-				} else
+				} else {
 					require ("general/home.php");  //default
+				}
 			?>
 			</div>
 		<!-- content-wrap ends here -->
@@ -280,11 +232,11 @@ if ($clean_output == 0){
 <?php // end of clean output
 } else {
 	// clean output
-	if ($pagina != "") {
-		if (file_exists ($pagina . ".php")) {
-			require ($pagina . ".php");
+	if ($sec2 != "") {
+		if (file_exists ($sec2.".php")) {
+			require ($sec2.".php");
 		} else {
-			echo "<br><b class='error'>".lang_string ('cannot_find_page')."</b>";
+			echo "<br><b class='error'>".__('Page not found')."</b>";
 		}
 	} else
 		require ("general/home.php");  //default

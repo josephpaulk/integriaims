@@ -22,7 +22,7 @@ global $config;
 <center>
 <br>
 <div id='login' style='padding: 10px'>
-	<h1 id='log'><?php echo $lang_label['err_auth']; ?></h1>
+	<h1 id='log'><?php echo __('Authentication Error'); ?></h1>
 	<div style='padding: 10px' id='login_in'>
 		<table cellpadding='4' cellspacing='4' width='400' class='blank'>
 		<tr><td rowspan='3' align='left' style="border-right: solid 1px #678;">
@@ -33,7 +33,7 @@ global $config;
 		<td class='f9b'>
 		<?PHP
 			echo "<center><img src='images/noaccess.gif'></center>";	
-			echo '<div><br>'.$lang_label["err_auth_msg"]."<br><br></div>";
+			echo '<div><br>'.__('Either, your password or your login are incorrect. Please check your CAPS LOCK key, username and password are case SeNSiTiVe.<br><br>All actions, included failed login attempts are logged in Integria System logs, and these can be reviewed by each user, please report to admin any incident or malfunction.')."<br><br></div>";
 		?>
 		</td></tr>
 		</table>

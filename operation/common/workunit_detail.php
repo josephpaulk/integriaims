@@ -47,8 +47,7 @@ if ($row3=mysql_fetch_array($res4)){
 	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
 	echo $id_usuario_nota;
 	echo "</a>";
-	echo "&nbsp;".$lang_label["said_on"]."&nbsp;";
-	echo "</i>".$timestamp."</i>";
+	echo ' '.__('said on').' '.$timestamp;
 	echo "</div>";
 
 	// Body
@@ -56,6 +55,6 @@ if ($row3=mysql_fetch_array($res4)){
 	echo clean_output_breaks($description);
 	echo "</div>";
 } else 
-	echo $lang_label["no_data"];
+	echo __('No data available');
 
 ?>

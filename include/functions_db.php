@@ -497,8 +497,7 @@ function task_start_date ($id_task){
 
 function user_belong_project ($id_user, $id_project, $real = 0){ 
 	global $config;
-		global $lang_label;
-
+	
 	if ($real == 0){
 		if (dame_admin ($id_user) != 0)
 			return 1;
@@ -522,7 +521,6 @@ function user_belong_project ($id_user, $id_project, $real = 0){
 
 function user_belong_task ($id_user, $id_task, $real=0){ 
 	global $config;
-		global $lang_label;
 
 	if ($real == 0){
 	   if (dame_admin ($id_user) != 0)
@@ -616,7 +614,6 @@ function return_user_email ($id_user) {
 
 function project_manager_check ($id_project) {
 	global $config;
-	global $lang_label;
 
 	$manager = get_db_value ("id_owner", "tproject", "id", $id_project);
 	if (isset($_SESSION["id_usuario"])){
@@ -629,37 +626,37 @@ function project_manager_check ($id_project) {
 
 function incident_tracking ( $id_incident, $id_user, $state, $aditional_data = 0) {
 	global $config;
-	require ("include/languages/language_".$config["language_code"].".php");
+	
 	switch($state){
 	case 0:
-		$descripcion = lang_string ('incident_creation');
+		$descripcion = __('Incident created');
 		break;
 	case 1:
-		$descripcion = lang_string ('incident_updated');
+		$descripcion = __('Incident updated');
 		break;
 	case 2:
-		$descripcion = lang_string ('incident_note_added');
+		$descripcion = __('Workunit added to incident');
 		break;
 	case 3:
-		$descripcion = lang_string ('incident_file_added');
+		$descripcion = __('File added to incident');
 		break;
 	case 4:
-		$descripcion = lang_string ('incident_note_deleted');
+		$descripcion = __('Incident note deleted');
 		break;
 	case 5:
-		$descripcion = lang_string ('incident_file_deleted');
+		$descripcion = __('Incident file removed');
 		break;
 	case 6:
-		$descripcion = lang_string ('incident_change_priority');
+		$descripcion = __('Incident change priority');
 		break;
 	case 7:
-		$descripcion = lang_string ('incident_change_status');
+		$descripcion = __('Incident status has changed');
 		break;
 	case 8:
-		$descripcion = lang_string ('incident_change_resolution');
+		$descripcion = __('Incident resolution has changed');
 		break;
 	case 9:
-		$descripcion = lang_string ('incident_workunit_added');
+		$descripcion = __('Workunit added to incident');
 		break;
 	}
 
@@ -681,7 +678,6 @@ function incident_tracking ( $id_incident, $id_user, $state, $aditional_data = 0
 
 function task_tracking ( $id_user, $id_task, $state, $id_note = 0, $id_file = 0) {
 	global $config;
-	global $lang_label;
 	global $REMOTE_ADDR;
 
 	/* 
@@ -979,9 +975,9 @@ function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg 
 	$duration = $workunit["duration"];
 	$have_cost = $workunit["have_cost"];
 	if ($have_cost == 1)
-		$have_cost = lang_string("YES");
+		$have_cost = __('Yes');
 	else
-		$have_cost = lang_string("NO");
+		$have_cost = __('No');
 	$description = $workunit["description"];
 	$url = $config["base_url"]."/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task";
 

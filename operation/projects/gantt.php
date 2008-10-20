@@ -51,11 +51,11 @@ if (user_belong_project ($id_user, $id_project)==0){
 	exit;
 }
 
-echo "<h2>".$project_name." - ".lang_string ("Gantt_graph")."</h2>";
+echo "<h2>".$project_name." - ".__('Gantt graph')."</h2>";
 
 echo "<img src='operation/projects/gantt_graph.php?id_project=$id_project'>";
 
 echo "<br><br>";
-echo "<a target='top' href='index.php?sec=projects&sec2=operation/projects/gantt&id_project=$id_project&clean_output=1'>".lang_string ("Full_screen")."</a>";
+echo "<a target='top' href='index.php?sec=projects&sec2=operation/projects/gantt&id_project=$id_project&clean_output=1'>".__('Full screen')."</a>";
 ?>
 

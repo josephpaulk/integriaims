@@ -155,7 +155,7 @@ if ($id || $new_role) {
 			$data[3] = '<a href="index.php?sec=inventory&
 						sec2=operation/companies/company_role&
 						delete_role=1&id='.$role['id'].'"
-						onClick="if (!confirm(\''.__('are_you_sure').'\'))
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">
 						<img src="images/cross.png"></a>';
 			array_push ($table->data, $data);

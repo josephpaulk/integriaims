@@ -45,7 +45,7 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
 	else
 		$category = "";
 	
-	echo "<h2>".lang_string ("KB article review")."</h2>";	
+	echo "<h2>".__('KB article review')."</h2>";	
     echo "<h3>$product </h3>";
 
 	$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $id_user);
@@ -59,11 +59,11 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
 	echo "<img src='images/avatars/".$avatar."_small.png'>";
 	
 	echo "<td width='50%'><b>";
-	echo lang_string ("Title")." </b> : ";
+	echo __('Title')." </b> : ";
 	echo $title;
 
 	echo "<td> <b>";
-    echo lang_string ("Product")." </b> : ";
+    echo __('Product')." </b> : ";
     echo $product;
     
     	
@@ -73,11 +73,10 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
 	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
 	echo "<b>".$id_user."</b>";
 	echo "</a>";
-	echo "&nbsp;".lang_string ("write on")."&nbsp;";
-	echo $timestamp;
+	echo " ".__("Write on $timestamp");
 	echo "<td>";
 	echo "<b>";
-	echo lang_string ("Category")." </b> : ";
+	echo __('Category')." </b> : ";
 	echo $category;
 
 	echo "</table>";
@@ -96,11 +95,11 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
 	$sql1 = "SELECT * FROM tattachment WHERE id_kb = $id ORDER BY description";
 	$result = mysql_query($sql1);
 	if (mysql_num_rows($result) > 0){
-		echo "<h3>".lang_string("Attachment list")."</h3>";
+		echo "<h3>".__('Attachment list')."</h3>";
 		echo "<table cellpadding=4 cellspacing=4 class=databox width=500>";	
 		echo "<tr>";
-		echo "<th width=200>" . lang_string ("Filename");
-		echo "<th>" . lang_string ("Description");
+		echo "<th width=200>" . __('Filename');
+		echo "<th>" . __('Description');
 
 		$color=0;
 		while ($row=mysql_fetch_array($result)){

@@ -14,7 +14,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
 global $config;
 
 // Integria version
@@ -45,6 +44,7 @@ if (! mysql_connect ($config["dbhost"], $config["dbuser"], $config["dbpass"])) {
 }
 
 mysql_select_db ($config["dbname"]);
+
 require_once ($config["homedir"]."/include/functions.php");
 require_once ($config["homedir"]."/include/functions_db.php");
 
@@ -71,6 +71,18 @@ foreach ($configs as $c) {
 	$config[$c["token"]] = $c["value"];
 }
 
+require_once ('streams.php');
+require_once ('gettext.php');
+
+if (isset ($config['id_user']))
+	$config['language_code'] = get_db_value ('lang', 'tusuario', 'id_usuario', $config['id_user']);
+
+$l10n = NULL;
+if (file_exists ('./include/languages/'.$config['language_code'].'.mo')) {
+	$l10n = new gettext_reader (new CachedFileReader ('./include/languages/'.$config['language_code'].'.mo'));
+	$l10n->load_tables ();
+}
+
 if (!isset($config["notification_period"]))
 	$config["notification_period"] = "86400";
 
@@ -78,23 +90,25 @@ if (!isset ($config["language_code"]))
 	$config["language_code"] = "en";
 
 if (!isset ($config["FOOTER_EMAIL"]))
-	$config["FOOTER_EMAIL"] = "Please do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n";
+	$config["FOOTER_EMAIL"] = __('Please do NOT answer this email, it has been automatically created by Integria (http://integria.sourceforge.net).');
 
 if (!isset ($config["HEADER_EMAIL"]))
 	$config["HEADER_EMAIL"] = "Hello, \n\nThis is an automated message coming from Integria\n\n";
 
 if (!isset ($config["currency"]))
-	$config["currency"]="€";
+	$config["currency"] = "€";
 
 if (!isset ($config["hours_perday"]))
 	$config["hours_perday"] = 8;
+
+if (!isset ($config["limit_size"]))
+	$config["limit_size"] = 1000;
 
 if (!isset ($config["sitename"]))
 	$config["sitename"] = "INTEGRIA";
 
 include_once ($config["homedir"]."/include/functions.php");
 include_once ($config["homedir"]."/include/functions_html.php");
-include_once ($config["homedir"]."/include/languages/language_".$config["language_code"].".php");
 include_once ($config["homedir"]."/include/functions_form.php");
 include_once ($config["homedir"]."/include/functions_calendar.php");
 

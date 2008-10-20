@@ -56,72 +56,15 @@ if (isset ($_GET["quick_delete"])) {
 				mail_incident ($id_inc, $id_usuario, "", 0, 3);
 			}
 			borrar_incidencia($id_inc);
-			echo "<h3 class='suc'>".__('del_incid_ok')."</h3>";
+			echo "<h3 class='suc'>".__('Incident successfully deleted')."</h3>";
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Incident deleted","User ".$id_usuario." deleted incident #".$id_inc);
 		} else {
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$_SESSION["id_usuario"]." try to delete incident");
-			echo "<h3 class='error'>".__('del_incid_no')."</h3>";
+			echo "<h3 class='error'>".__('There was a problem deleting incident')."</h3>";
 			no_permission();
 		}
 	}
 }
-
-$busqueda="";
-
-$texto_form = get_parameter ("texto");
-$incident_form = get_parameter ("incident_id");
-$usuario_form = get_parameter("usuario");
-
-// Search tokens for search filter
-if ($texto_form != "")
-	$busqueda = sprintf ('(titulo LIKE "%%%s" OR epilog LIKE "%%%s" OR descripcion LIKE "%%%s"',
-			$texto_form, $texto_form);
-
-if ($usuario_form != ""){
-	if ($texto_form != "")
-		$busqueda = $busqueda." and ";
-	$busqueda= $busqueda." id_usuario = '".$usuario_form."' ";
-}
-
-if ($incident_form != "") {
-	$busqueda = "id_incidencia = $incident_form";
-}
-
-// Filter tokens add to search
-if ($busqueda != "")
-	$sql1= "WHERE ".$busqueda;
-else
-	$sql1="";
-
-$filter_estado = get_parameter ("estado", -1);
-$filter_grupo = get_parameter ("grupo", -1);
-$filter_prioridad = get_parameter ("prioridad", -1);
-
-if (($filter_estado != -1) || ($filter_grupo != -1) || ($filter_prioridad != -1)) {
-	if ($filter_estado != -1) {
-		if ($sql1 == "")
-			$sql1='WHERE estado='.$filter_estado;
-		else
-			$sql1 =$sql1.' AND estado='.$filter_estado;
-	}
-	if ($filter_prioridad != -1){
-		if ($sql1 == "")
-			$sql1='WHERE prioridad='.$filter_prioridad;
-		else
-			$sql1 =$sql1.' and prioridad='.$filter_prioridad;
-	}
-	if ($filter_grupo > 1){
-		if ($sql1 == "")
-			$sql1='WHERE id_grupo='.$filter_grupo ;
-		else
-			$sql1 =$sql1.' AND id_grupo='.$filter_grupo;
-	}
-}
-
-$sql0="SELECT * FROM tincidencia ".$sql1." ORDER BY actualizacion DESC";
-$sql1_count="SELECT COUNT(id_incidencia) FROM tincidencia ".$sql1;
-$sql1=$sql0;
-$sql1=$sql1." LIMIT $offset, ". $config["block_size"];
 
 /* Tabs code */
 echo '<div id="tabs">';
@@ -181,33 +124,19 @@ $table->width = '100%';
 $table->id = 'incident_search_result_table';
 $table->head = array ();
 $table->head[0] = "Id";
-$table->head[1] = __("SLA");
-$table->head[2] = __("incident");
-$table->head[3] = __("group");
-$table->head[4] = __("status")." - <i>".__("resolution")."</i>";
-$table->head[5] = __("priority");
-$table->head[6] = __("Updated")." - <i>".__("Started")."</i>";
-$table->head[7] = __("flags");
+$table->head[1] = __('SLA');
+$table->head[2] = __('Incident');
+$table->head[3] = __('Group');
+$table->head[4] = __('Status')." - <i>".__('Resolution')."</i>";
+$table->head[5] = __('Priority');
+$table->head[6] = __('Updated')." - <i>".__('Started')."</i>";
+$table->head[7] = __('Flags');
 $table->style = array ();
 $table->style[0] = '';
 
 print_table ($table);
 
-echo '<div id="pager" class="hide pager">';
-echo '<form>';
-echo '<img src="images/control_start_blue.png" class="first" />';
-echo '<img src="images/control_rewind_blue.png" class="prev" />';
-echo '<input type="text" class="pager pagedisplay" size=5 />';
-echo '<img src="images/control_fastforward_blue.png" class="next" />';
-echo '<img src="images/control_end_blue.png" class="last" />';
-echo '<select class="pager pagesize">';
-echo '<option selected="selected" value="10">10</option>';
-echo '<option value="20">20</option>';
-echo '<option value="30">30</option>';
-echo '<option  value="40">40</option>';
-echo '</select>';
-echo '</form>';
-echo '</div>';
+print_table_pager ();
 
 echo '<div id="incident-stats"></div>';
 
@@ -219,6 +148,8 @@ echo '</div>';
 
 ?>
 
+<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="include/languages/date_<?php echo $config['language']; ?>.js"></script>
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
 <script type="text/javascript" src="include/js/jquery.tablesorter.js"></script>
 <script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
@@ -343,7 +274,7 @@ $(document).ready (function () {
 		return false;
 	});
 	
-	configure_incident_search_form (10,
+	configure_incident_search_form (<?php echo $config['block_size']?>,
 		function (id, name) {
 			show_incident_details (id);
 		},

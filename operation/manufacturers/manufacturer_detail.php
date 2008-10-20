@@ -188,7 +188,7 @@ if ($id || $new_manufacturer) {
 			$data[4] = '<a href="index.php?sec=inventory&
 						sec2=operation/manufacturers/manufacturer_detail&
 						delete_manufacturer=1&id='.$manufacturer['id'].'"
-						onClick="if (!confirm(\''.__('are_you_sure').'\'))
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">
 						<img src="images/cross.png"></a>';
 			

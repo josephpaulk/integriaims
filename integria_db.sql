@@ -223,8 +223,6 @@ CREATE TABLE `tlink` (
   PRIMARY KEY  (`id_link`)
 );
 
-
-
 CREATE TABLE `tsesion` (
   `ID_sesion` bigint(4) unsigned NOT NULL auto_increment,
   `ID_usuario` varchar(60) NOT NULL default '0',

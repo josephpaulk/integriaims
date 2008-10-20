@@ -65,7 +65,7 @@ if ($operation == "attachfile"){
 		mysql_query($sql);
 		$id_attachment=mysql_insert_id();
 		//project_tracking ( $id_inc, $id_usuario, 3);
-		$result_output = "<h3 class='suc'>".$lang_label["file_added"]."</h3>";
+		$result_output = "<h3 class='suc'>".__('File added')."</h3>";
 		// Copy file to directory and change name
 		$nombre_archivo = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
 /*
@@ -75,7 +75,7 @@ if ($operation == "attachfile"){
 */
 	
 		if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo ))){
-				$result_output = "<h3 class=error>".$lang_label["attach_error"]."</h3>";
+				$result_output = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
 			$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
 			mysql_query($sql);
 		} else {
@@ -88,17 +88,17 @@ if ($operation == "attachfile"){
 // Specific task
 if ($id_task != -1){ 
 	$sql= "SELECT * FROM tattachment WHERE id_task = $id_task";
-	echo "<h3>".$lang_label["attached_files"];
-	echo " - ".$lang_label["task"]." - ".$task_name."</h3>";
+	echo "<h3>".__('Attached files');
+	echo " - ".__('Task')." - ".$task_name."</h3>";
 	echo "<table border='0' width=600 class='listing'>";
 	echo "<tr><th width=120>"; 
-	echo $lang_label["filename"];
+	echo __('Filename');
 	echo "<th width=170>"; 
-	echo $lang_label["user"];
+	echo __('User');
 	echo "<th width=70>"; 
-	echo $lang_label["size"];
+	echo __('Size');
 	echo "<th>"; 
-	echo $lang_label["description"];
+	echo __('Description');
 }
 
 // Whole project
@@ -106,19 +106,19 @@ if ($id_task == -1){
 	$sql= "SELECT tattachment.id_attachment, tattachment.size, tattachment.description, tattachment.filename, tattachment.id_usuario, ttask.name FROM tattachment, ttask
 			WHERE ttask.id_project = $id_project AND ttask.id = tattachment.id_task";
 
-	echo "<h3>".$lang_label["attached_files"];
-	echo " - ".$lang_label["project"]." - ".$project_name."</h3>";
+	echo "<h3>".__('Attached files');
+	echo " - ".__('Project')." - ".$project_name."</h3>";
 	echo "<table  width=600 class='listing'>";
 	echo "<tr><th>"; 
-	echo $lang_label["task"];
+	echo __('Task');
 	echo "<th width=120>"; 
-	echo $lang_label["filename"];
+	echo __('Filename');
 	echo "<th width=170>"; 
-	echo $lang_label["user"];
+	echo __('User');
 	echo "<th width=70>"; 
-	echo $lang_label["size"];
+	echo __('Size');
 	echo "<th>"; 
-	echo $lang_label["description"];
+	echo __('Description');
 }
 
 $color = 0;

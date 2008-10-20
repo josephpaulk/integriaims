@@ -18,19 +18,18 @@
 
 <?PHP
 global $config;
-global $lang_label;
 
 echo 'Integria '.$config["version"].' Build '.$config["build_version"].'<br>';
 
 if (isset($_SESSION['id_usuario'])) {
 	echo '<a target="_new" href="general/license/integria_info_'.$config["language_code"].'.html">'.
-	$lang_label["gpl_notice"].'</a><br>';
+	__('Integria is a <b>Free Software Project, licensed under GPL terms</b>').'</a><br>';
 	if (isset($_SERVER['REQUEST_TIME'])) {
 		$time = $_SERVER['REQUEST_TIME'];
 	} else {
 		$time = time();
 	}
-	echo $lang_label["gen_date"]." ".date("D F d, Y H:i:s", $time)."<br>";
+	echo __('Page generated at')." ".date("D F d, Y H:i:s", $time)."<br>";
 }
 ?>
 </p>

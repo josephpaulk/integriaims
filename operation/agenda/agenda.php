@@ -99,7 +99,7 @@ if (isset($_GET["create_item"])){
                    $full_filename, "text/Calendar", $mail_description );
     }
     unlink ($full_filename);
-    echo "<h3 class='suc'>".lang_string("Added event to calendar")."</h3>";
+    echo "<h3 class='suc'>".__('Added event to calendar')."</h3>";
     insert_event ("INSERT CALENDAR EVENT", 0, 0, '$description');
 
 }
@@ -169,20 +169,20 @@ echo generate_calendar_agenda ($year, $month, $days_f, 3, NULL, $locale, $pn, $i
 
 // Legend for icons
 	echo "<div style='float: right;'>";
-	echo "<h3>".$lang_label["legend"]."</h3>";
+	echo "<h3>".__('Legend')."</h3>";
 	echo "<table width=150 cellspacing=10 border=0 class='databox'>";
 	echo "<tr><td valign='top'>";
 	echo "<img src='images/user_comment.png'>";
 	echo "<td valign='top'>";
-	echo "&nbsp;".$lang_label["public"];
+	echo "&nbsp;".__('Public');
 	echo "<tr><td valign='top'>";
 	echo "<img src='images/cancel.gif'>";
 	echo "<td valign='top'>";
-	echo "&nbsp;".$lang_label["delete"];
+	echo "&nbsp;".__('Delete');
 	echo "<tr><td valign='top'>";
 	echo "<img src='images/bell.png'>";
 	echo "<td valign='top'>";
-	echo "&nbsp;".$lang_label["alert"];
+	echo "&nbsp;".__('Alert');
 	echo "</table>";
 	echo "</div>";
 
@@ -192,46 +192,46 @@ echo generate_calendar_agenda ($year, $month, $days_f, 3, NULL, $locale, $pn, $i
 		<h3><img src='images/note.png'>&nbsp;&nbsp;
 		<a href="javascript:;" onmousedown="toggleDiv('calendar_control');">
 	<?PHP
-	echo $lang_label["add_agenda_entry"]."</A></h3>";
+	echo __('Add agenda entry')."</A></h3>";
 
 	echo "<div id='calendar_control' style='display:none'>";
 	echo "<form method='post' action='index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month&year=$year&create_item=1' enctype='multipart/form-data'>";
 	echo "<table cellpadding=3 cellspacing=3 border=0 width='400' class='databox'>";
-	echo '<td class="datos">'.$lang_label["description"].'</td>';
+	echo '<td class="datos">'.__('Description').'</td>';
 	echo '<td class="datos" colspan=3><input type="text" name="description" size=45>';
 	
 
     
-	echo '<tr><td class="datos2">'.lang_string ("Lenght (hr)").'</td>';
+	echo '<tr><td class="datos2">'.__('Lenght (hr)').'</td>';
 	echo '<td class="datos2" colspan=3><input type="text" name="duration" size=6>';
 
-	echo '<tr><td class="datos">'.lang_string ("Group").'</td>';
+	echo '<tr><td class="datos">'.__('Group').'</td>';
 	echo '<td class="datos" colspan=3>';
 
     echo combo_groups_visible_for_me ($id_user, "id_group", 0, 'AR', 0);
 
-	echo '<tr><td class="datos2">'.$lang_label["public"].'</td>';
+	echo '<tr><td class="datos2">'.__('Public').'</td>';
 	echo '<td class="datos2"><input type="checkbox" name="public" value=1>';
 
-	echo '<td class="datos2">'.$lang_label["alarm"].'</td>';
+	echo '<td class="datos2">'.__('Alarm').'</td>';
 	echo '<td class="datos2"><select name="alarm">';
-	echo "<option value=0>".$lang_label["N/A"];
-	echo "<option value=60> 1 ".$lang_label["hour"];
-	echo "<option value=120> 2 ".$lang_label["hour"];
-	echo "<option value=240> 4 ".$lang_label["hour"];
-	echo "<option value=1440> 1 ".$lang_label["day"];
+	echo "<option value=0>".__('N/A');
+	echo "<option value=60> 1 ".__('Hours');
+	echo "<option value=120> 2 ".__('Hours');
+	echo "<option value=240> 4 ".__('Hours');
+	echo "<option value=1440> 1 ".__('Day');
 	echo "</select>";
 
 
 
-	echo '<tr><td class="datos">'.$lang_label["date"].'</td>';
+	echo '<tr><td class="datos">'.__('Date').'</td>';
 	echo '<td class="datos">';
 	echo "<input type='text' id='date' name='date' size=10 value='$start_date'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"date\"),this);'> ";
 
-	echo '<td class="datos">'.$lang_label["time"].'</td>';
+	echo '<td class="datos">'.__('Time').'</td>';
 	echo '<td class="datos"><input type="text" name="time" value="00:00:00" size=12>';
 	
-	echo '<tr><td colspan="4" align="right"><input type="submit" class="sub next" value="'.$lang_label["upload"].'">';
+	echo '<tr><td colspan="4" align="right"><input type="submit" class="sub next" value="'.__('Upload').'">';
 	echo "</td></tr></table></form></div><br>";
 	
 

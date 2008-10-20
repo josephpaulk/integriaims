@@ -147,10 +147,8 @@ function progress_bar ($progress, $width, $height) {
 	// Get from official documentation PHP.net website. Thanks guys :-)
 	function drawRating($rating, $width, $height) {
 		global $config;
-		global $lang_label;
 		global $REMOTE_ADDR;
-
-		require ("languages/language_".$config["language_code"].".php");
+		
 		if ($width == 0) {
 			$width = 150;
 		}
@@ -180,7 +178,7 @@ function progress_bar ($progress, $width, $height) {
 		ImageRectangle($image,0,0,$width-1,$height-1,$border);
 		if ($rating > 50)
 			if ($rating > 100)
-				ImageTTFText($image, 8, 0, ($width/4), ($height/2)+($height/5), $back, $config["fontpath"],$lang_label["out_of_limits"]);
+				ImageTTFText($image, 8, 0, ($width/4), ($height/2)+($height/5), $back, $config["fontpath"],__('Out of limits'));
 			else
 				ImageTTFText($image, 8, 0, ($width/2)-($width/10), ($height/2)+($height/5), $back, $config["fontpath"], $rating."%");
 		else
@@ -203,7 +201,7 @@ function progress_bar ($progress, $width, $height) {
 
 function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue, $labela, $labelb){
 	include ("../include/config.php");
-	require ("../include/languages/language_".$config["language_code"].".php");
+	
 	// $ratingA, $ratingB, $ratingA_leg, $ratingB_leg;
 	$ratingA=$valuea;
 	$ratingB=$valueb;
@@ -269,7 +267,7 @@ function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue,
 function generic_pie_graph ($width=300, $height=200, $data, $legend) {
 	require ("../include/config.php");
 	require_once '../include/Image/Graph.php';
-	require ("../include/languages/language_".$config["language_code"].".php");
+	
 	if (sizeof($data) > 0){
 		// create the graph
 		$driver=& Image_Canvas::factory('png',array('width'=>$width,'height'=>$height,'antialias' => 'native'));
@@ -453,11 +451,10 @@ function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max
 function generic_bar_graph ( $width =380, $height = 200, $data, $legend) {
 	include ("../include/config.php");
 	require_once 'Image/Graph.php';
-	require ("../include/languages/language_".$language_code.".php");
 	
-		if (sizeof($data) > 10){
-			$height = sizeof($legend) * 20;
-		}
+	if (sizeof($data) > 10){
+		$height = sizeof($legend) * 20;
+	}
 
 	// create the graph
 	$Graph =& Image_Graph::factory('graph', array($width, $height));
@@ -493,7 +490,7 @@ function generic_bar_graph ( $width =380, $height = 200, $data, $legend) {
 function generic_area_graph ($data, $data_label, $width, $height){
 	require_once 'Image/Graph.php';
 	include ("../include/config.php");
-	require ("../include/languages/language_".$language_code.".php");
+	
 	$color ="#437722"; 
 	
 	$mymax = 0;
@@ -556,7 +553,6 @@ function generic_area_graph ($data, $data_label, $width, $height){
 
 function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $width, $height) {
 	include ("../include/config.php");
-	require ("../include/languages/language_".$language_code.".php");
 	require_once 'Image/Graph.php';
 	require_once 'Image/Canvas.php';
 

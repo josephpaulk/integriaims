@@ -33,17 +33,17 @@
 	$id_project = give_parameter_get ("id_project", -1);
 	
 	echo "<h3><img src='images/disk.png'>&nbsp;&nbsp;";
-	echo $lang_label["upload_file"]." - $task_name</A></h3>";
+	echo __('Upload file')." - $task_name</A></h3>";
 
 	echo "<div id='upload_control'>";
 	echo "<table cellpadding=4 cellspacing=4 border=0 width='700' class='databox_color'>";
 	echo "<tr>";
-	echo '<td class="datos">'.$lang_label["filename"].'</td><td class="datos">';
+	echo '<td class="datos">'.__('Filename').'</td><td class="datos">';
 	echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/task_files&id_task=$id_task&id_project=$id_project&operation=attachfile' enctype='multipart/form-data'>";
 	echo '<input type="file" name="userfile" value="userfile" class="sub" size="40">';
-	echo '<tr><td class="datos2">'.$lang_label["description"].'</td><td class="datos2" colspan=3><input type="text" name="file_description" size=47>';
+	echo '<tr><td class="datos2">'.__('Description').'</td><td class="datos2" colspan=3><input type="text" name="file_description" size=47>';
 	echo "</td></tr></table>";
-	echo '<input type="submit" name="upload" value="'.$lang_label["upload"].'" class="sub next">';
+	echo '<input type="submit" name="upload" value="'.__('Upload').'" class="sub next">';
 	echo "</form>";
 	echo '</div><br>';
 

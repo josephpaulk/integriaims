@@ -44,17 +44,17 @@ if (($id != "") && ($id != $id_user)){
 $timestamp_l = give_parameter_get ( "timestamp_l","");
 $timestamp_h = give_parameter_get ( "timestamp_h","");
 
-echo "<h1>".lang_string("Weekly report for")." $id_user</h1>";
+echo "<h1>".__('Weekly report for')." $id_user</h1>";
 echo "<h3>".$timestamp_l." -&gt;".$timestamp_h."</h3>";
 
 echo "<div>";
 echo "<table width=750 class='blank' >";
 echo "<tr><td class=datos>";
-echo "<h3>".lang_string("Workunit by task")."</h3>";
+echo "<h3>".__('Workunit by task')."</h3>";
 echo "<tr><td class=datos>";
 echo "<img src='include/functions_graph.php?type=workunit_user&width=650&height=350&id_user=$id_user&date_from=$timestamp_l'>";
 echo "<tr><td class=datos>";
-echo "<h3>".lang_string("Workunit by project")."</h3>";
+echo "<h3>".__('Workunit by project')."</h3>";
 echo "<tr><td class=datos>";
 echo "<img src='include/functions_graph.php?type=workunit_project_user&width=650&height=350&id_user=$id_user&date_from=$timestamp_h'>";
 echo "</table>";

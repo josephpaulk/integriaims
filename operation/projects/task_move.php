@@ -31,15 +31,15 @@ $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
 if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
 
     echo "<form name='project_move' method='POST' action='index.php?sec=projects&sec2=operation/projects/task&operation=move&id_project=$id_project&id_task=$id_task'>";
-    echo "<h3>".lang_string("Move this task to other project")."</h3>";
+    echo "<h3>".__('Move this task to other project')."</h3>";
     echo '<table width="600" class="databox_color" cellpadding=4 cellspacing=4>';
     
     // Project combo
-    echo '<tr><td class="datos"><b>'.lang_string("Destination project").'</b>';
+    echo '<tr><td class="datos"><b>'.__('Destination project').'</b>';
     echo '</td><td class="datos">';
     combo_projects_user ($config["id_user"], 'target_project');
     echo '</td><td class="datos">';
-    echo '<input type="submit" class="sub create" name="accion" value="'.lang_string("Move").'" border="0">';
+    echo '<input type="submit" class="sub create" name="accion" value="'.__('Move').'" border="0">';
     echo "</form></td></tr></table>";
 
 }

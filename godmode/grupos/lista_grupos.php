@@ -45,9 +45,9 @@ if ($create_group) {
 	echo $sql;
 	$id = process_sql ($sql, 'insert-id');	
 	if ($id === false)
-		echo '<h3 class="error">'.__('create_group_no').'</h3>';
+		echo '<h3 class="error">'.__('There was a problem creating group').'</h3>';
 	else {
-		echo '<h3 class="suc">'.__('create_group_ok').'</h3>'; 
+		echo '<h3 class="suc">'.__('Group successfully created').'</h3>'; 
 	}
 	$id = 0;
 }
@@ -69,9 +69,9 @@ if ($update_group) {
 		$lang, $id_user_default, $id);
 	$result = process_sql ($sql);
 	if ($result === false)
-		echo '<h3 class="error">'.__('modify_group_no').'</h3>';
+		echo '<h3 class="error">'.__('There was a problem modifying group').'</h3>';
 	else
-		echo '<h3 class="suc">'.__('modify_group_ok').'</h3>';
+		echo '<h3 class="suc">'.__('Group successfully updated').'</h3>';
 }
 
 // Delete group
@@ -79,9 +79,9 @@ if ($delete_group) {
 	$sql = sprintf ('DELETE FROM tgrupo WHERE id_grupo = %d', $id);
 	$result = process_sql ($sql);
 	if ($result === false) {
-		echo '<h3 class="error">'.__('delete_group_no').'</h3>'; 
+		echo '<h3 class="error">'.__('There was a problem deleting group').'</h3>'; 
 	} else {
-		echo '<h3 class="suc">'.__('delete_group_ok').'</h3>';
+		echo '<h3 class="suc">'.__('Group successfully deleted').'</h3>';
 	}
 }
 
@@ -120,7 +120,7 @@ foreach ($groups as $group) {
 			sec2=godmode/grupos/lista_grupos&
 			id_grupo='.$group["id_grupo"].'&
 			delete_group=1&id='.$group["id_grupo"].
-			'" onClick="if (!confirm(\''.__('are_you_sure').'\')) 
+			'" onClick="if (!confirm(\''.__('Are you sure?').'\')) 
 			return false;">
 			<img src="images/cross.png"></a>';
 	array_push ($table->data, $data);

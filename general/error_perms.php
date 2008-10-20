@@ -22,12 +22,6 @@ else {
 	$config["build_version"] = "N/A";
 }
 
-if (file_exists ("include/languages/language_".$config["language_code"].".php")) {
-	include "include/languages/language_".$config["language_code"].".php";
-} else {
-	include "include/languages/language_en.php";
-}
-?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>

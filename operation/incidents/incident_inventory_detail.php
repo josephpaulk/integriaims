@@ -25,12 +25,12 @@ $inventories = get_inventories_in_incident ($id_incident, false);
 $table->class = 'listing';
 $table->width = '90%';
 $table->head = array ();
-$table->head[0] = lang_string ('Name');
-$table->head[1] = lang_string ('Company');
-$table->head[2] = lang_string ('Contract');
-$table->head[3] = lang_string ('SLA');
-$table->head[4] = lang_string ('Details');
-$table->head[5] = lang_string ('Edit');
+$table->head[0] = __('Name');
+$table->head[1] = __('Company');
+$table->head[2] = __('Contract');
+$table->head[3] = __('SLA');
+$table->head[4] = __('Details');
+$table->head[5] = __('Edit');
 $table->align[4] = 'center';
 $table->align[5] = 'center';
 $table->size = array ();
@@ -38,10 +38,10 @@ $table->size[4] = '40px';
 $table->size[5] = '40px';
 $table->data = array ();
 
-echo "<h3>".lang_string ("Incident"). " #$id_incident - ".give_inc_title ($id_incident)."</h3>";
+echo "<h3>".__('Incident'). " #$id_incident - ".give_inc_title ($id_incident)."</h3>";
 
 if (count ($inventories) == 0) {
-	echo '<h4>'.lang_string ('There\'s no inventory objects associated to this incident').'</h4>';
+	echo '<h4>'.__('There\'s no inventory objects associated to this incident').'</h4>';
 	return;
 }
 

@@ -70,7 +70,7 @@ $day = date('d', strtotime("now"));
 
 $from_one_month = "$prev_year-$prev_month-$day";
 
-echo "<h1>".lang_string("Monthly report for")." $id_user</h1>";
+echo "<h1>".__('Monthly report for')." $id_user</h1>";
 echo "<table width=700>";
 echo "<tr><td>";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$prev_month&year=$prev_year&id=$id_user'> Prev</A>";

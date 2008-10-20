@@ -985,3 +985,8 @@ textarea {
 label {
 	font-weight: bold;
 }
+
+.img_help {
+	cursor: pointer;
+}
+

@@ -23,7 +23,8 @@ INSERT INTO `tconfig` (token, value) VALUES
 ('hours_perday','8'),
 ('FOOTER_EMAIL','Please do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n'),
 ('HEADER_EMAIL','Hello, \n\nThis is an automated message coming from Integria\n\n'),
-('notification_period','86400');
+('notification_period','86400'),
+('limit_size','1000');
 
 INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (1,'All','world.png',0);
 INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (2,'Customer #A','eye.png',0);

@@ -19,10 +19,20 @@
 <center>
 <div class='databox' id='login' style='height: 200px; padding-top: 20px;'>
 	<div style='padding-top: 5px;' id='login_in' style='height: 100px;'>
-		<form method="post" action="index.php?login=1">
-
-<?PHP
-        echo "<input type='hidden' name='prelogin_url' value='".$_SERVER['REQUEST_URI']."'>";
+<?php 
+	$action = "index.php";
+	$params = '';
+	foreach ($_GET as $name => $value) {
+		$params .= $name.'='.$value.'&';
+	}
+	if ($params != '')
+		$action .= '?'.$params;
+?>
+		<form method="post" action="<?php echo $action ?>">
+<?php
+	print_input_hidden ('login', 1);
+	foreach ($_POST as $name => $value)
+		print_input_hidden ($name, $value);
 ?>
 		<table cellpadding='4' cellspacing='1' width='400' class='blank'>
 		<tr><td rowspan='3' align='left' style="border-right: solid 1px #678;">

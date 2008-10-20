@@ -32,17 +32,17 @@ $db =& um_db_connect ('mysql', $config['dbhost'], $config['dbuser'],
 
 $settings = um_db_load_settings ();
 
-echo '<h2>'.lang_string('Update manager').'</h2>';
+echo '<h2>'.__('Update manager').'</h2>';
 
 if ($settings->customer_key == FREE_USER) {
 	echo '<div class="notify" style="width: 80%; text-align:left;" >';
 	echo '<img src="images/information.png" /> ';
 	/* Translators: Do not translade Update Manager, it's the name of the program */
-	echo lang_string('The new <a href="http://updatemanager.sourceforge.net">Update Manager</a> client is shipped with the new Babel Enterprise 2.0. It lets systems administrators to do not need to update their Babel Enterprise manually since the Update Manager is the one getting new modules, new plugins and new features (even full migrations tools for future versions) automatically');
+	echo __('The new <a href="http://updatemanager.sourceforge.net">Update Manager</a> client is shipped with the new Babel Enterprise 2.0. It lets systems administrators to do not need to update their Babel Enterprise manually since the Update Manager is the one getting new modules, new plugins and new features (even full migrations tools for future versions) automatically');
 	echo '<p />';
-	echo lang_string('Update Manager is one of the most advanced features of Babel Enterprise 2.0 Enterprise version, for more information visit <a href="http://babelenterprise.com">http://babelenterprise.com</a>');
+	echo __('Update Manager is one of the most advanced features of Babel Enterprise 2.0 Enterprise version, for more information visit <a href="http://babelenterprise.com">http://babelenterprise.com</a>');
 	echo '<p />';
-	echo lang_string('Update Manager sends anonymous information about Babel Enterprise usage (number of agents and modules running).');
+	echo __('Update Manager sends anonymous information about Babel Enterprise usage (number of agents and modules running).');
 	echo '</div>';
 }
 
@@ -62,38 +62,38 @@ if ($update_package) {
 $package = um_client_check_latest_update ($settings, $user_key);
 
 if (is_int ($package) && $package == 1) {
-	echo '<h5 class="suc">'.lang_string('Your system is up-to-date').'.</h5>';
+	echo '<h5 class="suc">'.__('Your system is up-to-date').'.</h5>';
 } elseif ($package === false) {
-	echo '<h5 class="error">'.lang_string('Server connection failed')."</h5>";
+	echo '<h5 class="error">'.__('Server connection failed')."</h5>";
 } elseif (is_int ($package) && $package == 0) {
-	echo '<h5 class="error">'.lang_string('Server authorization rejected')."</h5>";
+	echo '<h5 class="error">'.__('Server authorization rejected')."</h5>";
 } else {
-	echo '<h5 class="suc">'.lang_string('There\'s a new update for Babel Enterprise')."</h5>";
+	echo '<h5 class="suc">'.__('There\'s a new update for Babel Enterprise')."</h5>";
 	
 	$table->width = '50%';
 	$table->data = array ();
 	
-	$table->data[0][0] = '<strong>'.lang_string('Id').'</strong>';
+	$table->data[0][0] = '<strong>'.__('Id').'</strong>';
 	$table->data[0][1] = $package->id;
 	
-	$table->data[1][0] = '<strong>'.lang_string('Timestamp').'</strong>';
+	$table->data[1][0] = '<strong>'.__('Timestamp').'</strong>';
 	$table->data[1][1] = $package->timestamp;
 	
-	$table->data[2][0] = '<strong>'.lang_string('Description').'</strong>';
+	$table->data[2][0] = '<strong>'.__('Description').'</strong>';
 	$table->data[2][1] = html_entity_decode ($package->description);
 	
 	print_table ($table);
 	echo '<div class="action-buttons" style="width: '.$table->width.'">';
 	echo '<form method="post">';
-	echo lang_string('Overwrite local changes');
+	echo __('Overwrite local changes');
 	print_checkbox ('force_update', '1', false);
 	echo '<p />';
 	print_input_hidden ('update_package', 1);
-	print_submit_button (lang_string('Update'), 'update_button', false, 'class="sub upd"');
+	print_submit_button (__('Update'), 'update_button', false, 'class="sub upd"');
 	echo '</form>';
 	echo '</div>';
 }
 
-echo '<h4>'.lang_string('Your system version number is').': '.$settings->current_update.'</h4>';
+echo '<h4>'.__('Your system version number is').': '.$settings->current_update.'</h4>';
 
 ?>

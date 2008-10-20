@@ -1,10 +1,9 @@
 <?php
 
-// Pandora - the Free monitoring system
-// ====================================
-// Copyright (c) 2004-2006 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2005-2006 Artica Soluciones Tecnologicas S.L, info@artica.es
-// Copyright (c) 2004-2006 Raul Mateos Martin, raulofpandora@gmail.com
+// Integria 2.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Artica Soluciones Tecnologicas
+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -24,23 +23,24 @@ global $config;
 function create_message($usuario_origen, $usuario_destino, $subject, $mensaje){
 	global $config;
 	$ahora=date("Y/m/d H:i:s");
-	require ("include/languages/language_".$config["language_code"].".php");
+	
 	$sql='INSERT INTO tmensajes (id_usuario_origen, id_usuario_destino, subject, mensaje, timestamp) VALUES ("'.$usuario_origen.'", "'.$usuario_destino.'", "'.$subject.'", "'.$mensaje.'","'.$ahora.'")';
 	$result=mysql_query($sql);
-	if ($result) echo "<h3 class='suc'>".$lang_label["message_ok"]."</h3>";
-	else echo "<h3 class='error'>".$lang_label["message_no"]."</h3>";
+	if ($result)
+		echo "<h3 class='suc'>".__('Message successfully sent')."</h3>";
+	else 
+		echo "<h3 class='error'>".__('There was a problem sending message')."</h3>";
 	}
 
 function create_message_g($usuario_origen, $usuario_destino, $subject, $mensaje){
 	global $config;
 	$ahora=date("Y/m/d H:i:s");
-	require ("include/languages/language_".$config["language_code"].".php");
 	$sql='INSERT INTO tmensajes (id_usuario_origen, id_usuario_destino, subject, mensaje, timestamp) VALUES ("'.$usuario_origen.'", "'.$usuario_destino.'", "'.$subject.'", "'.$mensaje.'","'.$ahora.'")';
 	$result=mysql_query($sql);
-	if ($result) $error=0;
-	else $error=1;
-	return $error;
-	}
+	if ($result)
+		return 0;
+	return 1;
+}
 
 //First Queries
 $iduser=$_SESSION['id_usuario'];
@@ -71,19 +71,19 @@ if (isset($_GET["nuevo_mensaje_g"])){
 		while ($row=mysql_fetch_array($result)){
 			$error=create_message_g($iduser, $row["id_usuario"], $subject, $mensaje);
 		}
-		if ($error==0) echo "<h3 class='suc'>".$lang_label["message_ok"]."</h3>";
-		else echo "<h3 class='error'>".$lang_label["message_no"]."</h3>";
+		if ($error==0) echo "<h3 class='suc'>".__('Message successfully sended')."</h3>";
+		else echo "<h3 class='error'>".__('There was a problem sending message')."</h3>";
 	}
-	else {echo "<h3 class='error'>".$lang_label["message_no"]."</h3>";}
+	else {echo "<h3 class='error'>".__('There was a problem sending message')."</h3>";}
 }
 if (isset($_GET["nuevo"]) || isset($_GET["nuevo_g"])){
 	if (isset($_GET["nuevo"])){ //create message
-		echo '<h2>'.$lang_label["new_message"].'</h2>';
+		echo '<h2>'.__('New message').'</h2>';
 		echo '
 		<form name="new_mes" method="POST" action="index.php?sec=messages&sec2=operation/messages/message&nuevo_mensaje=1">
 		<table width=500 class="databox_color">
-		<tr><td class="datos">'.$lang_label["m_from"].':</td><td class="datos"><b>'.$iduser.'</b></td></tr>
-		<tr><td class="datos2">'.$lang_label["m_to"].':</td><td>';
+		<tr><td class="datos">'.__('From').':</td><td class="datos"><b>'.$iduser.'</b></td></tr>
+		<tr><td class="datos2">'.__('To').':</td><td>';
 		if (isset($_POST["u_destino"])) {
 			echo '<b>'.$_POST["u_destino"].'</b><input type="hidden" name="u_destino" value='.$_POST["u_destino"].'>';
 			}
@@ -103,29 +103,29 @@ if (isset($_GET["nuevo"]) || isset($_GET["nuevo_g"])){
 			echo '</select>';
 			}
 		echo '</td></tr>
-		<tr><td class="datos">'.$lang_label["subject"].':</td><td class="datos">';
+		<tr><td class="datos">'.__('Subject').':</td><td class="datos">';
 			if (isset($_POST["subject"])) 
 				echo '</b><input name="subject" value="'.$_POST["subject"].'" size=60>';
 			else 
 				echo '<input name="subject" size=60>';
 		echo '</td></tr>
-		<tr><td class="datos2">'.$lang_label["message"].':</td>
+		<tr><td class="datos2">'.__('Message').':</td>
 		<td class="datos2"><textarea name="mensaje" rows="12" cols=60 >';
 			if (isset($_POST["mensaje"])) {
 				echo $_POST["mensaje"];
 			}
 		echo '</textarea></td></tr>
 		</table>
-		<input type="submit" class="sub create" name="send_mes" value="'.$lang_label["send_mes"].'"></form>';
+		<input type="submit" class="sub create" name="send_mes" value="'.__('Send message').'"></form>';
 	}
 	
 	if (isset($_GET["nuevo_g"])){
-		echo '<h2>'.$lang_label["new_message_g"].'<a href="help/'.$help_code.'/chap2.php#251" target="_help" class="help">&nbsp;<span>'.$lang_label["help"].'</span></a></h2>';
+		echo '<h2>'.__('New message').'<a href="help/'.$help_code.'/chap2.php#251" target="_help" class="help">&nbsp;<span>'.__('Help').'</span></a></h2>';
 		echo '
 		<form name="new_mes" method="post" action="index.php?sec=messages&sec2=operation/messages/message&nuevo_mensaje_g=1">
 		<table class="databox_color">
-		<tr><td class="datos">'.$lang_label["m_from"].':</td><td class="datos"><b>'.$iduser.'</b></td></tr>
-		<tr><td class="datos2">'.$lang_label["m_to"].':</td><td class="datos2">';
+		<tr><td class="datos">'.__('From').':</td><td class="datos"><b>'.$iduser.'</b></td></tr>
+		<tr><td class="datos2">'.__('To').':</td><td class="datos2">';
 			echo '<select name="g_destino" class="w130">';
 
 			$sql_1="SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$iduser'";
@@ -136,11 +136,11 @@ if (isset($_GET["nuevo"]) || isset($_GET["nuevo_g"])){
 			}
 			echo '</select>';
 		echo '</td></tr>
-		<tr><td class="datos">'.$lang_label["subject"].':</td><td class="datos"><input name="subject" size=60></td></tr>
-		<tr><td class="datos2">'.$lang_label["message"].':</td>
+		<tr><td class="datos">'.__('Subject').':</td><td class="datos"><input name="subject" size=60></td></tr>
+		<tr><td class="datos2">'.__('Message').':</td>
 		<td class="datos"><textarea name="mensaje" rows="12" cols=60></textarea></td></tr>
 		</table>
-		<input type="submit" class="sub create" name="send_mes" value="'.$lang_label["send_mes"].'"></form>';
+		<input type="submit" class="sub create" name="send_mes" value="'.__('Send message').'"></form>';
 	}
 }
 else {
@@ -150,20 +150,23 @@ else {
 		$id_mensaje = $_GET["id_mensaje"];
 		$sql5='DELETE FROM tmensajes WHERE id_usuario_destino="'.$iduser.'" AND id_mensaje="'.$id_mensaje.'"';
 		$resultado5=mysql_query($sql5);
-		if ($resultado5) {echo "<h3 class='suc'>".$lang_label["del_message_ok"]."</h3>";}
-		else {echo "<h3 class='suc'>".$lang_label["del_message_no"]."</h3>";}
+		if ($resultado5) {echo "<h3 class='suc'>".__('Message sucessfully deleted')."</h3>";}
+		else {echo "<h3 class='suc'>".__('There was a problem deleting message')."</h3>";}
 	}
 	
-	echo "<h2>".$lang_label["read_mes"]."</h2>";
-	if ($row2["COUNT(*)"]!=0){
-		echo "<p>";
-		echo $lang_label["new_message_bra"]."<b> ".$row2["COUNT(*)"]."</b> <img src='images/mail.gif'>".$lang_label["new_message_ket"]."</p>";
-		}
+	echo "<h2>".__('Read messages')."</h2>";
+	if ($row2["COUNT(*)"] != 0) {
+		$messages = $row2["COUNT(*)"];
+		echo '<p>';
+		echo __("You have <strong>$messages</strong> unread message(s)");
+		echo '<img src="images/mail.gif">';
+		echo '</p>';
+	}
 	$sql3='SELECT * FROM tmensajes WHERE id_usuario_destino="'.$iduser.'"';
 	$resultado3=mysql_query($sql3);
 	$color=1;
 	if (mysql_num_rows($resultado3)) {
-		echo "<table width=500 class='databox'><tr><th>".$lang_label["read"]."</th><th>".$lang_label["sender"]."</th><th>".$lang_label["subject"]."</th><th>".$lang_label["timestamp"]."</th><th>".$lang_label["delete"]."</th></tr>";
+		echo "<table width=500 class='databox'><tr><th>".__('Read')."</th><th>".__('Sender')."</th><th>".__('Subject')."</th><th>".__('Timestamp')."</th><th>".__('Delete')."</th></tr>";
 		while ($row3=mysql_fetch_array($resultado3)){
 			if ($color == 1){
 				$tdcolor = "datos";
@@ -185,7 +188,7 @@ else {
 			if ($row3["subject"]) 
 				echo $row3["subject"]."</a>";
 			else 
-				echo "<i>".$lang_label["no_subject"]."</i></a>";
+				echo "<i>".__('No subject')."</i></a>";
 
 			echo "</a></td><td class='".$tdcolor."'>".$row3["timestamp"]."</td>";
 			echo "<td class='$tdcolor' align='center'><a href='index.php?sec=messages&sec2=operation/messages/message&borrar=1&id_mensaje=".$row3["id_mensaje"]."'><img src='images/cross.png' border='0'></a></td></tr>";
@@ -193,7 +196,7 @@ else {
 		echo "</table>";
 	}
 	else 
-		echo "<p>".$lang_label["no_messages"]."</p>"; //no messages
+		echo "<p>".__('There are no messages')."</p>"; //no messages
 	
 	// Read message
 	if (isset($_GET["leer"])){
@@ -205,18 +208,18 @@ else {
 		$resultado41=mysql_query($sql41);
 		echo '<table class="databox_color" width=500>';
 		echo '<form method="post" name="reply_mes" action="index.php?sec=messages&sec2=operation/messages/message&nuevo">';
-		echo '<tr><td class="datos">'.$lang_label["from"].':</td><td class="datos"><b>'.$row4["id_usuario_origen"].'</b></td></tr>';
+		echo '<tr><td class="datos">'.__('From').':</td><td class="datos"><b>'.$row4["id_usuario_origen"].'</b></td></tr>';
 		// Subject
-		echo '<tr><td class="datos2">'.$lang_label["subject"].':</td><td class="datos2" valign="top"><b>'.$row4["subject"].'</b></td></tr>';
+		echo '<tr><td class="datos2">'.__('Subject').':</td><td class="datos2" valign="top"><b>'.$row4["subject"].'</b></td></tr>';
 		// text
-		echo '<tr><td class="datos" valign="top">'.$lang_label["message"].':</td>
+		echo '<tr><td class="datos" valign="top">'.__('Message').':</td>
 		<td class="datos"><textarea name="mensaje" rows="12" cols=50 readonly>'.$row4["mensaje"].'</textarea></td></tr>
 		</table>';
 		echo '
 		<input type="hidden" name="u_destino" value="'.$row4["id_usuario_origen"].'">
 		<input type="hidden" name="subject" value="Re: '.$row4["subject"].'">
-		<input type="hidden" name="mensaje" value="'.$row4["id_usuario_origen"].$lang_label["wrote"].': '.$row4["mensaje"].'">';
-		echo '<input type="submit" class="sub create" name="send_mes" value="'.$lang_label["reply"].'">';
+		<input type="hidden" name="mensaje" value="'.$row4["id_usuario_origen"].' '.__('wrote').': '.$row4["mensaje"].'">';
+		echo '<input type="submit" class="sub create" name="send_mes" value="'.__('Reply').'">';
 		echo '</form>';
 	}
 	

@@ -16,13 +16,12 @@
 
 
 global $config;
-global $lang_label;
 
 ?>
 <div align='center'>
 	<div id='login' style='padding: 15px'>	
 		<div id="login_box" style='width:75%;padding-left: 40px;'>
-			<center><?PHP echo $lang_label["logout_msg"]; ?></center>
+			<center><?php echo __('Your session is over. Please close your browser window to close session on Integria'); ?>.</center>
 		</div>
 		<div id="logo_box">
 			<center>

@@ -2,7 +2,7 @@
 
 // Sponsors / Banner
 echo "<div class='portlet' >";
-echo "<h3 class='system'>".$lang_label["links_header"]."</h3>";
+echo "<h3 class='system'>".__('Links')."</h3>";
 echo "<ul class='sidemenu'>";
 
 $sql1='SELECT * FROM tlink ORDER BY name';

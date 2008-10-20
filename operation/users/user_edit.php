@@ -61,10 +61,10 @@ if (check_login() == 0) {
 			$avatar = substr($avatar, 0, strlen($avatar)-4);
 			
 			if ($pass1 != $pass2) {
-				echo "<h3 class='error'>".$lang_label["pass_nomatch"]."</h3>";
+				echo "<h3 class='error'>".__('Passwords don\'t match')."</h3>";
 			}
 			else {
-				echo "<h3 class='suc'>".$lang_label["update_user_ok"]."</h3>";
+				echo "<h3 class='suc'>".__('User successfully updated')."</h3>";
 			}
 			$comentarios = clean_input($_POST["comentarios"]);
 			if (dame_password($nombre)!=$pass1){
@@ -85,17 +85,17 @@ if (check_login() == 0) {
 			$nombre=$rowdup["id_usuario"];			
 		}
 		else {
-			echo "<h3 class='error'>".$lang_label["pass_nomatch"]."</h3>";
+			echo "<h3 class='error'>".__('Passwords don\'t match')."</h3>";
 		}
 	} 
 	
 	if ($view_mode == 0)
-		echo "<h2>" . __("user_edit_title");
+		echo "<h2>" . __('User detail editor');
 	else
-		echo "<h2>" . __("User details");
+		echo "<h2>" . __('User details');
 
 	if (user_visible_for_me ($config["id_user"], $id_ver) == 1)
-		echo "&nbsp;&nbsp;<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=$id_ver'><img src='images/wrench.png' border=0 title='".__("Edit")."'></A></h2>";
+		echo "&nbsp;&nbsp;<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=$id_ver'><img src='images/wrench.png' border=0 title='".__('Edit')."'></A></h2>";
 
 	// Si no se obtiene la variable "modificado" es que se esta visualizando la informacion y
 	// preparandola para su modificacion, no se almacenan los datos
@@ -121,7 +121,7 @@ if (check_login() == 0) {
 	else 	
 		echo '<form name="user_mod" method="post" action="">';
 	?>
-	<tr><td class="datos"><?php echo $lang_label["id_user"] ?>
+	<tr><td class="datos"><?php echo __('User ID') ?>
 	<td class="datos"><input class=input type="text" name="nombre" value="<?php echo $nombre ?>" disabled>
 	<?php
 	if (isset($avatar)) {
@@ -129,18 +129,18 @@ if (check_login() == 0) {
 		echo '<img id="avatar-preview" src="images/avatars/'.$avatar.'.png">';
 	}
  	?>
-	<tr><td class="datos2"><?php echo $lang_label["real_name"] ?>
+	<tr><td class="datos2"><?php echo __('Real name') ?>
 	<td class="dato2s"><input class=input type="text" name="nombre_real" value="<?php echo $nombre_real ?>">
-	<tr><td class="datos"><?php echo $lang_label["password"] ?>
+	<tr><td class="datos"><?php echo __('Password') ?>
 	<td class="datos"><input class=input type="password" name="pass1" value="<?php echo $password ?>">
-	<tr><td class="datos2"><?php echo $lang_label["password"]; echo " ".$lang_label["confirmation"]?>
+	<tr><td class="datos2"><?php echo __('Password confirmation')?>
 	<td class="datos2" colspan=2><input class=input type="password" name="pass2" value="<?php echo $password ?>">
 
 <?PHP
 
 	echo "<tr>";
 	echo "<td>";
-	echo lang_string ("Language");
+	echo __('Language');
 	echo "<td>";
 	if ($view_mode ==0)
 		print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', '', false, false, true, false);
@@ -150,7 +150,7 @@ if (check_login() == 0) {
 
 	if ($view_mode ==0) {
 		// Avatar
-		echo "<tr><td class='datos2'>".lang_string("avatar");
+		echo "<tr><td class='datos2'>".__('Avatar');
 		echo '<td class="datos2" colspan="2">';
 		$ficheros = list_files('images/avatars/', "png",1, 0, "small");
 		$avatar_forlist = $avatar . ".png";
@@ -162,19 +162,19 @@ if (check_login() == 0) {
 
 	?>
 
-	<tr><td class="datos"><?php echo $lang_label["telefono"] ?>
+	<tr><td class="datos"><?php echo __('Telephone') ?>
 	<td class="datos" colspan=2><input class=input type="text" name="telefono" size=15 value="<?php echo $telefono ?>">
-	<tr><td class="datos2" colspan="3"><?php echo $lang_label["comments"] ?>
+	<tr><td class="datos2" colspan="3"><?php echo __('Comments') ?>
 	<tr><td class="datos" colspan="3"><textarea name="comentarios" cols="55" rows="4"><?php echo $comentarios ?></textarea>
 	</table>
 <?php
 	if ($view_mode ==0) {
 		echo '<div style="width:550px" class="button">';
-		echo "<input name='uptbutton' type='submit' class='sub upd' value='".$lang_label["update"]."'>";
+		echo "<input name='uptbutton' type='submit' class='sub upd' value='".__('Update')."'>";
 		echo "</div>";
 	}
 	
-	echo '<h3>'.$lang_label["listGroupUser"].'</h3>';
+	echo '<h3>'.__('Profiles/Groups assigned to this user').'</h3>';
 	echo "<table width='500' cellpadding='3' cellspacing='3' class='databox_color'>";
 	$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
 	$result=mysql_query($sql1);
@@ -195,7 +195,7 @@ if (check_login() == 0) {
 		}
 	}
 	else { 
-		echo '<tr><td class="red" colspan="3">'.$lang_label["no_profile"]; 
+		echo '<tr><td class="red" colspan="3">'.__('This user doesn\'t have any assigned profile/group'); 
 	}
 
 	echo '</form></td></tr></table> ';

@@ -46,9 +46,9 @@ if (isset($_GET["create2"])){ //
 
 	$result=mysql_query($sql_insert);
 	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Project group cannot be created")."</h3>";
+		echo "<h3 class='error'>".__('Project group cannot be created')."</h3>";
 	else {
-		echo "<h3 class='suc'>".lang_string ("Project group has been created successfully")."</h3>";
+		echo "<h3 class='suc'>".__('Project group has been created successfully')."</h3>";
 		$id_data = mysql_insert_id();
 		insert_event ("PROJECT GROUP CREATED", $id_data, 0, $name);
 	}
@@ -68,9 +68,9 @@ if (isset($_GET["update2"])){ // if modified any parameter
 
 	$result=mysql_query($sql_update);
 	if (! $result)
-		echo "<h3 class='error'>".lang_string ("Project group cannot be updated")."</h3>";
+		echo "<h3 class='error'>".__('Project group cannot be updated')."</h3>";
 	else {
-		echo "<h3 class='suc'>".lang_string ("Project updated ok")."</h3>";
+		echo "<h3 class='suc'>".__('Project updated ok')."</h3>";
 		insert_event ("PROJECT GROUP UPDATED", $id, 0, $name);
 	}
 }
@@ -84,7 +84,7 @@ if (isset($_GET["delete"])){ // if delete
 	$sql_delete= "DELETE FROM tproject_group WHERE id = $id";
 	$result=mysql_query($sql_delete);
 	insert_event ("PROJECT GROUP DELETED", $id, 0, "$name");
-	echo "<h3 class='suc'>".lang_string("Deleted successfully")."</h3>";
+	echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
 }
 
 if (isset($_GET["update2"])){
@@ -110,13 +110,13 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$icon = $row["icon"];
 	}
 
-	echo "<h2>".lang_string ("Project group management")."</h2>";
+	echo "<h2>".__('Project group management')."</h2>";
 	if ($id == -1){
-		echo "<h3>".lang_string ("Create a project group")."</a></h3>";
+		echo "<h3>".__('Create a project group')."</a></h3>";
 		echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/project_group_detail&create2=1'>";
 	}
 	else {
-		echo "<h3>".lang_string ("Update project group")."</a></h3>";
+		echo "<h3>".__('Update project group')."</a></h3>";
 		echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/project_group_detail&update2=1'>";
 		print_input_hidden ("id", "$id", false, '');
 	}
@@ -124,7 +124,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<table width=620 class='databox'>";
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo lang_string ("Project group name");
+	echo __('Project group name');
 
 	echo "<tr>";
 	echo "<td class=datos colspan=4>";
@@ -133,7 +133,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo lang_string ("Icon");
+	echo __('Icon');
 
 	echo "<tr>";
 	echo "<td class=datos colspan=4>";
@@ -145,9 +145,9 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<tr>";
 	echo "<td class='datos3' align=right>";
 	if ($id == -1)
-		print_submit_button (lang_string("Create"), "enviar", false, "class='sub next'", false);
+		print_submit_button (__('Create'), "enviar", false, "class='sub next'", false);
 	else
-		print_submit_button (lang_string("Update"), "enviar", false, "class='sub upd'", false);
+		print_submit_button (__('Update'), "enviar", false, "class='sub upd'", false);
 	echo "</table>";
 	echo "</form>";
 
@@ -159,7 +159,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 // Show LIST of items
 // =======================
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h2>".lang_string ("Project groups")."</h2>";
+	echo "<h2>".__('Project groups')."</h2>";
 
 	$sql1 = "SELECT * FROM tproject_group ORDER BY name";
 	$color =0;
@@ -173,9 +173,9 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		$table->size = array ();
 		$table->style = array ();
 		$table->colspan = array ();
-		$table->head[0] = lang_string ("Name");
-		$table->head[1] = lang_string ("Icon");
-		$table->head[2] = lang_string ("Delete");
+		$table->head[0] = __('Name');
+		$table->head[1] = __('Icon');
+		$table->head[2] = __('Delete');
 		$counter = 0;
 		while ($row=mysql_fetch_array($result)){
 			// Name
@@ -188,7 +188,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			$table->data[$counter][2] = "<a href='index.php?sec=projects&
 						sec2=operation/projects/project_group_detail&
 						delete=".$row["id"]."'
-						onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\'))
+						onClick='if (!confirm(\' ".__('Are you sure?')."\'))
 						return false;'>
 						<img border='0' src='images/cross.png'></a>";
 			$counter++;
@@ -199,7 +199,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	echo "<tr><td align='right'>";
 	echo "<form method=post action='index.php?sec=projects&
 	sec2=operation/projects/project_group_detail&create=1'>";
-	echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create group")."'>";
+	echo "<input type='submit' class='sub next' name='crt' value='".__('Create group')."'>";
 	echo "</form></td></tr></table>";
 } // end of list
 ?>

@@ -64,12 +64,12 @@ if ($search_form) {
 	$table->head = array ();
 	$table->head[0] = "Id";
 	$table->head[1] = __('SLA');
-	$table->head[2] = __('incident');
-	$table->head[3] = __('group');
-	$table->head[4] = __('status')." - <i>".lang_string("resolution")."</i>";
-	$table->head[5] = __('priority');
+	$table->head[2] = __('Incident');
+	$table->head[3] = __('Group');
+	$table->head[4] = __('Status')." - <i>".__('Resolution')."</i>";
+	$table->head[5] = __('Priority');
 	$table->head[6] = __('Updated')." - <i>".__('Started')."</i>";
-	$table->head[7] = __('flags');
+	$table->head[7] = __('Flags');
 	$table->style = array ();
 	$table->style[0] = '';
 
@@ -108,6 +108,8 @@ $search_id_building = (int) get_parameter ('search_id_building');
 $search_sla_fired = (bool) get_parameter ('search_sla_fired');
 $search_id_incident = (int) get_parameter ('search_id_incident');
 $search_id_user = (string) get_parameter ('search_id_user');
+$search_first_date = (string) get_parameter ('search_first_date');
+$search_last_date = (string) get_parameter ('search_last_date');
 
 if ($status == 0)
 	$status = implode (',', array_keys (get_indicent_status ()));
@@ -123,16 +125,29 @@ if ($search_status)
 	$sql_clause .= sprintf (' AND estado = %d', $search_status);
 if ($search_id_user != '0')
 	$sql_clause .= sprintf (' AND id_usuario = "%s"', $search_id_user);
+if ($search_id_user != '0')
+	$sql_clause .= sprintf (' AND id_usuario = "%s"', $search_id_user);
+if ($search_first_date != '') {
+	$time = strtotime ($search_first_date);
+	$sql_clause .= sprintf (' AND inicio >= "%s"', date ("Y-m-d", $time));
+}
+if ($search_last_date != '') {
+	$time = strtotime ($search_last_date);
+	$sql_clause .= sprintf (' AND inicio <= "%s"', date ("Y-m-d", $time));
+}
 
 $sql = sprintf ('SELECT * FROM tincidencia
 		WHERE estado IN (%s)
 		%s
-		AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%")',
-		$status, $sql_clause, $search_string, $search_string);
+		AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%")
+		LIMIT %d',
+		$status, $sql_clause, $search_string, $search_string,
+		$config['limit_size']);
 
 $incidents = get_db_all_rows_sql ($sql);
 if ($incidents === false) {
-	echo '<tr><td colspan="8">'.__('Nothing was found').'</td></tr>';
+	if (!$show_stats)
+		echo '<tr><td colspan="8">'.__('Nothing was found').'</td></tr>';
 	return;
 }
 

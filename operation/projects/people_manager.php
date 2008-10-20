@@ -73,7 +73,7 @@ if ($operation == "insert"){
 	
 	if (mysql_query($sql)){
 		$id_task_inserted = mysql_insert_id();
-		$result_output = "<h3 class='suc'>".$lang_label["create_ok"]."</h3>";
+		$result_output = "<h3 class='suc'>".__('Created successfully')."</h3>";
 		if ($id_task != -1){
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to task", "User $user added to task ".give_db_value ("name", "ttask", "id", $id_task));
 		} else {
@@ -83,7 +83,7 @@ if ($operation == "insert"){
 	} else {
 		$update_mode = 0;
 		$create_mode = 1;
-		$result_output = "<h3 class='error'>".$lang_label["create_no"]."</h3>";
+		$result_output = "<h3 class='error'>".__('Not created. Error inserting data')."</h3>";
 	}
 }
 
@@ -101,7 +101,7 @@ if ($operation == "delete"){
 		$sql = "DELETE FROM trole_people_project WHERE id = $id";
 	}
 	if (mysql_query($sql)){
-		$result_output = "<h3 class='suc'>".$lang_label["delete_ok"]."</h3>";
+		$result_output = "<h3 class='suc'>".__('Deleted successfully')."</h3>";
 		$operation = "view";
 	}
 }
@@ -119,22 +119,22 @@ echo $result_output;
 // --------------------
 
 if ($id_task != -1){
-	echo "<h2>".$lang_label["task_people_management"]."</h2>";
+	echo "<h2>".__('Task human resources management')."</h2>";
 	echo "<h3>".give_db_value('name', 'ttask','id',$id_task)."</h3><br>";
 
 	$sql = "SELECT COUNT(*) FROM trole_people_task where id_task = $id_task";
 	$result = mysql_query($sql);
 	$row=mysql_fetch_array($result);
 	if ($row[0] > 0){
-		echo "<h3>".$lang_label["assigned_roles"]."</h3>";
+		echo "<h3>".__('Assigned roles')."</h3>";
 		$sql = "SELECT * FROM trole_people_task where id_task = $id_task";
 		$result = mysql_query($sql);
 		echo "<table width=500 class='listing'>";
-		echo "<th>".$lang_label["user"];
-		echo "<th>".$lang_label["role"];
+		echo "<th>".__('User');
+		echo "<th>".__('Role');
 		if ($config["id_user"] == give_db_value('id_owner','tproject','id', $id_project) OR
 		give_acl ($config["id_user"], give_db_value('id_group','ttask','id', $id_task), "TM"))
-			echo "<th>".$lang_label["delete"];
+			echo "<th>".__('Delete');
 			
 		$color = 1;
 		while ($row=mysql_fetch_array($result)){
@@ -151,7 +151,7 @@ if ($id_task != -1){
 			if ($config["id_user"] == give_db_value('id_owner','tproject','id', $id_project) OR
 			give_acl ($config["id_user"], give_db_value('id_group','ttask','id', $id_task), "TM")){
 				echo "<td valign='top' class='$tdcolor' align='center'>";
-				echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a>";
+				echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
 			}
 		}
 		echo "</table>";
@@ -159,7 +159,7 @@ if ($id_task != -1){
 } else {
 
 // MAIN PROJECT PEOPLE LIST
-	echo "<h2>".$lang_label["project_people_management"]."</h2>";
+	echo "<h2>".__('Project people management')."</h2>";
 	echo "<h3>".give_db_value('name', 'tproject','id',$id_project)."</h3><br>";
 
 	if ($config["id_user"] != give_db_value('id_owner','tproject','id', $id_project) AND
@@ -173,13 +173,13 @@ if ($id_task != -1){
 	$result = mysql_query($sql);
 	$row=mysql_fetch_array($result);
 	if ($row[0] > 0){
-		echo "<h3>".$lang_label["assigned_roles"]."</h3>";
+		echo "<h3>".__('Assigned roles')."</h3>";
 		$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project";
 		$result = mysql_query($sql);
 		echo "<table width=500 class='listing'>";
-		echo "<th>".$lang_label["user"];
-		echo "<th>".$lang_label["role"];
-		echo "<th>".$lang_label["delete"];
+		echo "<th>".__('User');
+		echo "<th>".__('Role');
+		echo "<th>".__('Delete');
 		$color = 1;
 		while ($row=mysql_fetch_array($result)){
 			if ($color == 1){
@@ -193,7 +193,7 @@ if ($id_task != -1){
 			echo "<tr><td valign='top' class='$tdcolor'>".$row["id_user"];
 			echo "<td valign='top' class='$tdcolor'>".give_db_value('name','trole','id',$row["id_role"]);
 			echo "<td valign='top' class='$tdcolor' align='center'>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) return false;'><img src='images/cross.png' border='0'></a>";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
 		}
 		echo "</table>";
 	}
@@ -208,19 +208,19 @@ if ($id_task != -1){
 		
         // Task people manager editor
         // ===============================
-		echo "<h3>".$lang_label["roletask_assignment"]."</h3>";
+		echo "<h3>".__('Role/Group assignment')."</h3>";
 		echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
 		echo "<table cellpadding=4 cellspacing=4 width=500 class='databox_color'>";
 
 		echo "<tr>";
 		echo "<td valign='top' class='datos2'>";
-		echo $lang_label["user"]. "/".$lang_label["role"];
+		echo __('User'). "/".__('Role');
 		echo "<td valign='top' class='datos2'>";
 		echo combo_users_project($id_project);
 		echo "</table>";
 		echo "<table class='button' width=510>";
 		echo "<tr><td align='right'>";
-		echo "<input type=submit class='sub next' value='".$lang_label["update"]."'>";
+		echo "<input type=submit class='sub next' value='".__('Update')."'>";
 		echo "</table>";
 	}
 } else {
@@ -233,24 +233,24 @@ if ($id_task != -1){
     	exit;
 	}
 
-	echo "<h3>".$lang_label["role_project_assignment"]."</h3>";
+	echo "<h3>".__('Project role assignment')."</h3>";
 	echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
 	echo "<table width=500 class='databox_color'>";
 
 	echo "<tr><td valign='top' class='datos2'>";
-	echo $lang_label["role"];
+	echo __('Role');
 	echo "<td valign='top' class='datos2'>";
 	echo combo_roles ();
 
 	echo "<td valign='top' class='datos2'>";
-	echo $lang_label["user"];
+	echo __('User');
 	echo "<td valign='top' class='datos2'>";
     combo_user_visible_for_me ($config["id_user"], "user", 0, "PR");
 	echo "</table>";
 		
 	echo "<table class='button' width=500>";
 	echo "<tr><td align='right'>";
-	echo "<input type=submit class='sub next' value='".$lang_label["update"]."'>";
+	echo "<input type=submit class='sub next' value='".__('Update')."'>";
 	echo "</table>";
 }
 
@@ -262,12 +262,12 @@ if ($id_task != -1){
 		<a href="javascript:;" onmousedown="toggleDiv('arole');">
 	<?PHP
 
-echo " ".$lang_label["available_roles"]."</a></h3>";
+echo " ".__('Available roles')."</a></h3>";
 echo "<div id='arole' style='display:none'>";
 echo "<table cellpadding=4 cellspacing=4 width=700 class='databox_color'>";
-echo "<th>".$lang_label["name"];
-echo "<th>".$lang_label["description"];
-echo "<th>".$lang_label["cost"];
+echo "<th>".__('Name');
+echo "<th>".__('Description');
+echo "<th>".__('Cost');
 $sql1='SELECT * FROM trole ORDER BY name';
 $result=mysql_query($sql1);
 $color=1;

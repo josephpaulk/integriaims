@@ -43,7 +43,7 @@ echo "<form name='xx' method=post action='index.php?sec=projects&sec2=operation/
 echo "<table class='blank'>";
 
 echo "<tr><td>";
-echo __("User");
+echo __('User');
 echo "</td>";
 
 echo "<td>";
@@ -51,7 +51,7 @@ combo_user_visible_for_me ($id_user, "user_form", 0, "PR");
 echo "</td>";
 
 echo "<td>";
-echo __("Progress");
+echo __('Progress');
 echo "</td>";
 
 echo "<td>";
@@ -71,7 +71,7 @@ echo "</select>";
 echo "</td>";
 
 echo "<td>";
-echo __("Project type");
+echo __('Project type');
 echo "</td>";
 
 echo "<td>";

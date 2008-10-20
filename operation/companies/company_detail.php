@@ -141,7 +141,7 @@ if ($id || $new_company) {
 	
 	$where_clause = "";
 	if ($search_text != "") {
-		$where_clause = sprintf ('WHERE fullname LIKE "%%%s%%"', $search_text);
+		$where_clause = sprintf ('WHERE name LIKE "%%%s%%"', $search_text);
 	}
 
 	$table->width = '400px';
@@ -184,7 +184,7 @@ if ($id || $new_company) {
 			$data[4] ='<a href="index.php?sec=inventory&
 						sec2=operation/companies/company_detail&
 						delete_company=1&id='.$company['id'].'"
-						onClick="if (!confirm(\''.__('are_you_sure').'\'))
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">
 						<img src="images/cross.png"></a>';
 			array_push ($table->data, $data);

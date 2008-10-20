@@ -1,10 +1,9 @@
 <?php 
 
-// Pandora - the Free monitoring system
-// ====================================
-// Copyright (c) 2004-2006 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2005-2006 Artica Soluciones Tecnológicas S.L, info@artica.es
-// Copyright (c) 2004-2006 Raul Mateos Martin, raulofpandora@gmail.com
+// Integria 2.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Artica Soluciones Tecnologicas
+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
@@ -94,45 +93,45 @@ if (comprueba_login() == 0)
 	}
 	# End of get parameters block
 	
-	echo "<h2>".$lang_label["dbmain_title"]."</h2>";
-	echo "<h3>".$lang_label["db_purge_audit"]."<a href='help/".$help_code."/chap8.php#841' target='_help' class='help'>&nbsp;<span>".$lang_label["help"]."</span></a></h3>";
+	echo "<h2>".__('Database Maintenance')."</h2>";
+	echo "<h3>".__('Database Audit purge')."<a href='help/".$help_code."/chap8.php#841' target='_help' class='help'>&nbsp;<span>".__('Help')."</span></a></h3>";
 
 	echo "<table cellpadding='4' cellspacing='4' border='0'>";
 	echo "<tr><td class='datos'>";
 	$result_t=mysql_query("SELECT COUNT(*) FROM tsesion");
 	$row=mysql_fetch_array($result_t);
-	echo "<b>".$lang_label["total"]."</b>";
-	echo "<td class='datos'>".$row[0]." ".$lang_label["records"];
+	echo "<b>".__('Total')."</b>";
+	echo "<td class='datos'>".$row[0]." ".__('Records');
 	
 	echo "<tr>";	
 	$result_t=mysql_query("SELECT min(fecha) FROM tsesion");
 	$row=mysql_fetch_array($result_t);
-	echo "<td class='datos2'><b>".$lang_label["first_date"]."</b>";
+	echo "<td class='datos2'><b>".__('First date')."</b>";
 	echo "<td class='datos2'>".$row[0];
 
 	echo "<tr><td class='datos'>";	
 	$result_t=mysql_query("SELECT max(fecha) FROM tsesion");
 	$row=mysql_fetch_array($result_t);
-	echo "<b>".$lang_label["latest_date"]."</b>";
+	echo "<b>".__('Latest date')."</b>";
 	echo "<td class='datos'>".$row[0];
 	echo "</table>";
 ?>
-	<h3><?php echo $lang_label["purge_data"] ?></h3>
+	<h3><?php echo __('Purge data') ?></h3>
 	<form name="db_audit" method="post" action="index.php?sec=gdbman&sec2=godmode/db/db_audit">
 	<table width='300' border='0'>
 	<tr><td class='datos'>
 	<select name="date_purge" class="w255">
-	<option value="<?php echo $month3 ?>"><?php echo $lang_label["purge_audit_90day"] ?>
-	<option value="<?php echo $month ?>"><?php echo $lang_label["purge_audit_30day"] ?>
-	<option value="<?php echo $week2 ?>"><?php echo $lang_label["purge_audit_14day"] ?>
-	<option value="<?php echo $week ?>"><?php echo $lang_label["purge_audit_7day"] ?>
-	<option value="<?php echo $d3 ?>"><?php echo $lang_label["purge_audit_3day"] ?>
-	<option value="<?php echo $d1 ?>"><?php echo $lang_label["purge_audit_1day"] ?>
-	<option value="<?php echo $all_data ?>"><?php echo $lang_label["purge_audit_all"] ?>
+	<option value="<?php echo $month3 ?>"><?php echo __('Purge audit data over 90 days') ?>
+	<option value="<?php echo $month ?>"><?php echo __('Purge audit data over 30 days') ?>
+	<option value="<?php echo $week2 ?>"><?php echo __('Purge audit data over 14 days') ?>
+	<option value="<?php echo $week ?>"><?php echo __('Purge audit data over 7 days') ?>
+	<option value="<?php echo $d3 ?>"><?php echo __('Purge audit data over 3 days') ?>
+	<option value="<?php echo $d1 ?>"><?php echo __('Purge audit data over 1 day') ?>
+	<option value="<?php echo $all_data ?>"><?php echo __('Purge all audit data') ?>
 	</select>
 	
 	<td class="datos">
-	<input class="sub" type="submit" name="purgedb" value="<?php echo $lang_label["doit"] ?>"  onClick="if (!confirm('<?php  echo $lang_label["are_you_sure"] ?>')) return false;">
+	<input class="sub" type="submit" name="purgedb" value="<?php echo __('Do it!') ?>"  onClick="if (!confirm('<?php echo __('Are you sure?') ?>')) return false;">
 	
 	</table>
 	</form>

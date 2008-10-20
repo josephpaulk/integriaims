@@ -60,9 +60,9 @@ if ($id_workunit != -1){
 if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])) {
 	echo "<h3><img src='images/award_star_silver_1.png'>&nbsp;&nbsp;";
 	if ($id_workunit != -1)
-		echo lang_string ("update_workunit")." - $task_name</h3>";
+		echo __('Update workunit')." - $task_name</h3>";
 	else
-		echo $lang_label["add_workunit"]." - $task_name</h3>";
+		echo __('Add workunit')." - $task_name</h3>";
 
 	echo "<table cellpadding=4 cellspacing=4 border=0 width='700' class='databox_color' >";
 	// Insert or edit mode ?
@@ -72,7 +72,7 @@ if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])
 	} else { // insert
 		echo "<form name='nota' method='post' action='index.php?sec=projects&sec2=operation/projects/task_workunit&operation=workunit&id_task=$id_task&id_project=$id_project'>";
 	}
-	echo "<tr><td class='datos' width='140'><b>".$lang_label["date"]."</b></td>";
+	echo "<tr><td class='datos' width='140'><b>".__('Date')."</b></td>";
 	echo "<td class='datos'>";
 
 	echo "<input type='text' id='date' name='date' size=10 value='$ahora_date'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"date\"),this);'> ";
@@ -81,31 +81,31 @@ if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])
 	echo "<input type='text' name='time' size=10 value='$ahora_time'>";
 
 	echo "<td><b>";
-	echo lang_string ("Inventory")."</b></td>";
+	echo __('Inventory')."</b></td>";
 	echo "<td>";
 
 echo print_select (array (), 'incident_inventories', NULL, '', '', '', true, false, false, __('Inventory affected'));
-echo print_button (__("Add"), 'search_inventory', false, '', 'class="dialogbtn"', true);
-echo print_button (__("Remove"), 'delete_inventory', false, '', 'class="dialogbtn"', true);
+echo print_button (__('Add'), 'search_inventory', false, '', 'class="dialogbtn"', true);
+echo print_button (__('Remove'), 'delete_inventory', false, '', 'class="dialogbtn"', true);
 
 	echo "<tr><td class='datos2'  width='140'>";
-	echo "<b>".$lang_label["profile"]."</b>";
+	echo "<b>".__('Profile')."</b>";
 	echo "<td class='datos2'>";
 	echo combo_user_task_profile ($id_task,"work_profile",$id_profile, $id_user);
 
 	echo "<td>";
-	echo "<b>".$lang_label["have_cost"]."</b>";
+	echo "<b>".__('Have cost')."</b>";
 	echo "<td>";
 	echo print_checkbox ("have_cost", 1, $have_cost, false);
 
 
 	echo "<tr><td class='datos'>";
-	echo "<b>".$lang_label["time_used"]."</b>";
+	echo "<b>".__('Time used')."</b>";
 	echo "<td>";
-	echo "<input type='text' name='duration' value='$duration' size='7'>"." ".lang_string("hr");
+	echo "<input type='text' name='duration' value='$duration' size='7'>"." ".__('Hourrs');
 	
 	echo "<td>";
-	echo "<b>".__("Public");
+	echo "<b>".__('Public');
 	echo "<td>";
 	print_checkbox ("public", 1, $public, false, false);
 
@@ -117,9 +117,9 @@ echo print_button (__("Remove"), 'delete_inventory', false, '', 'class="dialogbt
 	echo "<table class='button' width=700>";
 	echo "<tr><td align=right>";
 	if ($id_workunit != -1)
-		echo '<input name="addnote" type="submit" class="sub upd" value="'.$lang_label["update"].'">';
+		echo '<input name="addnote" type="submit" class="sub upd" value="'.__('Update').'">';
 	else
-		echo '<input name="addnote" type="submit" class="sub next" value="'.$lang_label["add"].'">';
+		echo '<input name="addnote" type="submit" class="sub next" value="'.__('Add').'">';
 	echo "</td></tr></table>";
 	echo "</form>";
 }

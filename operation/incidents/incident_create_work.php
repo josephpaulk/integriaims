@@ -33,7 +33,7 @@ if (! give_acl ($config["id_user"], 0, "IR")) {
 }
 	
 echo "<h3><img src='images/award_star_silver_1.png'>&nbsp;&nbsp;";
-echo lang_string ('add_workunit')." - $title</h3>";
+echo __('Add workunit')." - $title</h3>";
 
 $now = date ("Y-m-d H:i:s");
 
@@ -41,17 +41,17 @@ echo '<form id="form-add-workunit" method="post" action="index.php?sec=incidents
 
 echo "<table width='550' class='databox'>";
 echo "<tr><td>";
-print_input_text ("timestamp", $now, '', 18,  50, false,__("Date_Time"));
+print_input_text ("timestamp", $now, '', 18,  50, false,__('Date'));
 
 echo "<td colspan=2>";
-echo "<b>".lang_string ('profile')."</b><br>";
+echo "<b>".__('Profile')."</b><br>";
 echo combo_roles (1, 'work_profile');
 
 echo "<tr><td>";
-print_input_text ("duration", '0', '', 7,  10, false, __("time_used"));
+print_input_text ("duration", '0', '', 7,  10, false, __('Time used'));
 
 echo "<td>";
-print_checkbox ('have_cost', 1, false, false, __('have_cost'));
+print_checkbox ('have_cost', 1, false, false, __('Have cost'));
 
 echo "<td>";
 print_checkbox ('public', 1, true, false, __('Public'));

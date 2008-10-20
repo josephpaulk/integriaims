@@ -57,7 +57,7 @@ if ($search) {
 	}
 	
 	if ($total_users == 0) {
-		echo '<tr colspan="4">'.lang_string ('No users found').'</tr>';
+		echo '<tr colspan="4">'.__('No users found').'</tr>';
 	}
 	
 	if (defined ('AJAX'))
@@ -70,15 +70,15 @@ $table->width = '90%';
 
 $table->data[0][0] = print_select_from_sql ('SELECT id,name FROM tprofile ORDER BY 2',
 					'user_profile_search', $id_profile, '',
-					lang_string ('Any'), 0, true, false, false, lang_string ("Role"));
+					__('Any'), 0, true, false, false, __('Role'));
 
 $table->data[0][1] = print_select (get_user_groups (), 'user_group_search',
-			$id_group, '', lang_string ('Any'), -1,
-			true, false, false, lang_string ("Group"));
+			$id_group, '', __('Any'), -1,
+			true, false, false, __('Group'));
 
 $table->data[2][0] = print_input_text ('search_string', '', '', 20, 255, true,
-			lang_string ('Name'));
-$table->data[2][1] = print_submit_button (lang_string ('Search'), 'search_button', false, 'class="sub search"', true);
+			__('Name'));
+$table->data[2][1] = print_submit_button (__('Search'), 'search_button', false, 'class="sub search"', true);
 
 echo '<form id="user_search_form" method="post">';
 print_table ($table);
@@ -90,9 +90,9 @@ $table->class = 'hide result_table';
 $table->width = '90%';
 $table->id = 'user_search_result_table';
 $table->head = array ();
-$table->head[0] = lang_string ("User name");
-$table->head[1] = lang_string ("Real name");
-$table->head[2] = lang_string ("Comments");
+$table->head[0] = __('User name');
+$table->head[1] = __('Real name');
+$table->head[2] = __('Comments');
 
 print_table ($table);
 

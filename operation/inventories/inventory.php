@@ -30,16 +30,17 @@ echo '<div id="tabs">';
 /* Tabs list */
 echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 if ($id) {
-	echo '<li class="ui-tabs"><a href="#ui-tabs-1"><span>'.lang_string ('Search').'</span></a></li>';
-	echo '<li class="ui-tabs-selected"><a href="ajax.php?page=operation/inventories/inventory_detail&id='.$id.'"><span>'.lang_string ('Details').'</span></a></li>';
+	echo '<li class="ui-tabs"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
+	echo '<li class="ui-tabs-selected"><a href="ajax.php?page=operation/inventories/inventory_detail&id='.$id.'"><span>'.__('Details').'</span></a></li>';
 } else {
-	echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.lang_string ('Search').'</span></a></li>';
-	echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Details').'</span></a></li>';
+	echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
+	echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Details').'</span></a></li>';
 }
 
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Incidents').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Contracts').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.lang_string ('Workunits').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Incidents').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Contracts').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Contacts').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Workunits').'</span></a></li>';
 echo '</ul>';
 
 /* Tabs first container is manually set, so it loads immediately */
@@ -97,6 +98,16 @@ function tab_loaded (event, tab) {
 		if (id_inventory == old_inventory) {
 			return;
 		}
+		
+		if ($(".inventory-menu").css ('display') != 'none') {
+			$(".inventory-menu").slideUp ('normal', function () {
+				configure_inventory_side_menu (id_inventory, false);
+				$(this).slideDown ();
+			});
+		} else {
+			configure_inventory_side_menu (id_inventory, false);
+			$(".inventory-menu").slideDown ();
+		}
 		configure_inventory_form (true);
 		old_inventory = id_inventory;
 	}
@@ -107,9 +118,10 @@ function show_inventory_details (id) {
 	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/inventories/inventory_detail&id=" + id);
 	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/inventories/inventory_incidents&id=" + id);
 	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/inventories/inventory_contracts&id=" + id);
-	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/inventories/inventory_workunits&id=" + id);
+	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/inventories/inventory_contacts&id=" + id);
+	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/inventories/inventory_workunits&id=" + id);
 	$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
-		.tabs ("enable", 4);
+		.tabs ("enable", 4).tabs ("enable", 5);
 	$("#tabs > ul").tabs ("select", 1);
 }
 
@@ -117,6 +129,9 @@ $(document).ready (function () {
 	$("#tabs > ul").tabs ({"load" : tab_loaded});
 
 <?php if ($id) : ?>
+	old_inventory = id_inventory = <?php echo $id ?>;
+	configure_inventory_side_menu (id_inventory, false);
+	$(".inventory-menu").slideDown ();
 	show_inventory_details (<?php echo $id; ?>);
 <?php endif; ?>
 	
@@ -162,13 +177,13 @@ $(document).ready (function () {
 	$("#goto-inventory-form").submit (function () {
 		id = $("#text-id", this).attr ("value");
 		show_inventory_details (id);
-		console.log (old_inventory);
 		if (old_inventory)
 			$("#tabs > ul").tabs ("load", 1);
 		return false;
 	});
 	
-	configure_inventory_search_form (10, function (id, name) {
+	configure_inventory_search_form (<?php echo $config['block_size']?>,
+		function (id, name) {
 		show_inventory_details (id);
 	});
 });

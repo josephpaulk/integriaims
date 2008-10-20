@@ -205,7 +205,7 @@ if ($id || $new_contact) {
 			$data[3] = '<a href="index.php?sec=inventory&
 						sec2=operation/contacts/contact_detail&
 						delete_contact=1&id='.$contact['id'].'"
-						onClick="if (!confirm(\''.__('are_you_sure').'\'))
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">
 						<img src="images/cross.png"></a>';
 			array_push ($table->data, $data);

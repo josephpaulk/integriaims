@@ -25,14 +25,14 @@ if (check_login() != 0) {
 
 $id_user =$_SESSION["id_usuario"];
 
-echo "<h2>".lang_string ('users_')."</h2>";
+echo "<h2>".__('Integria users')."</h2>";
 
 echo '<table width="90%" class="listing">';
-echo "<th>".lang_string ('user_ID');
-echo "<th>".lang_string ('last_contact');
-echo "<th>".lang_string ('profile');
-echo "<th>".lang_string ('name');
-echo "<th>".lang_string ('description');
+echo "<th>".__('UserID');
+echo "<th>".__('Last contact');
+echo "<th>".__('Profile');
+echo "<th>".__('Name');
+echo "<th>".__('Description');
 
 
 $resq1=mysql_query("SELECT * FROM tusuario");
@@ -58,8 +58,9 @@ while ($rowdup=mysql_fetch_array($resq1)){
 				echo dame_perfil($row["id_perfil"])."/ ";
 				echo dame_grupo($row["id_grupo"])."<br>";
 			}
+		} else {
+			echo __('This user doesn\'t have any assigned profile/group');
 		}
-		else { echo lang_string ('no_profile'); }
 		echo "</span></a>";
 		echo "<td>".substr(clean_output($rowdup["nombre_real"]),0,16);
 		echo "<td>".substr(clean_output($comentarios),0,32);
@@ -69,5 +70,4 @@ while ($rowdup=mysql_fetch_array($resq1)){
 echo "</table>";
 
 enterprise_include ("operation/user/user_defined_profiles.php");
-
 ?>

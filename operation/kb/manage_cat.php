@@ -37,9 +37,9 @@ $id_user = $config["id_user"];
               		 VALUE ('$name','$description', '$parent', '$icon') ";
 		$result=mysql_query($sql_insert);	
 		if (! $result)
-			echo "<h3 class='error'>".lang_string ("KB Category cannot be created")."</h3>"; 
+			echo "<h3 class='error'>".__('KB Category cannot be created')."</h3>"; 
 		else {
-			echo "<h3 class='suc'>".lang_string ("KB Category created ok")."</h3>";
+			echo "<h3 class='suc'>".__('KB Category created ok')."</h3>";
             $id_cat = mysql_insert_id();
             insert_event ("CATEGORY CREATED", $id_cat, 0, $name);
 		}
@@ -60,9 +60,9 @@ $id_user = $config["id_user"];
 		WHERE id = $id";
 		$result=mysql_query($sql_update);
 		if (! $result)
-			echo "<h3 class='error'>".lang_string ("KB Category cannot be updated")."</h3>"; 
+			echo "<h3 class='error'>".__('KB Category cannot be updated')."</h3>"; 
 		else {
-			echo "<h3 class='suc'>".lang_string ("KB Category updated ok")."</h3>";
+			echo "<h3 class='suc'>".__('KB Category updated ok')."</h3>";
             insert_event ("CATEGORY UPDATED", $id, 0, $name);
         }
 	}
@@ -79,9 +79,9 @@ $id_user = $config["id_user"];
         mysql_query("UPDATE tkb_category SET parent = 0 WHERE parent = $id");        
 		$result=mysql_query($sql_delete);
 		if (! $result)
-			echo "<h3 class='error'>".lang_string("Deleted successfully")."</h3>"; 
+			echo "<h3 class='error'>".__('Deleted successfully')."</h3>"; 
 		else
-			echo "<h3 class='suc'>".lang_string("Cannot be deteled")."</h3>";
+			echo "<h3 class='suc'>".__('Cannot be deteled')."</h3>";
 	}
 	
 
@@ -103,14 +103,14 @@ $id_user = $config["id_user"];
             $parent = $row["parent"];
         }
 
-        echo "<h2>".lang_string ("KB Category management")."</h2>";	
+        echo "<h2>".__('KB Category management')."</h2>";	
         if ($id == -1){
-        	echo "<h3>".lang_string ("Create a new category")."</a></h3>";
+        	echo "<h3>".__('Create a new category')."</a></h3>";
             echo "<form name=catman method='post' action='index.php?sec=kb&
 				            sec2=operation/kb/manage_cat&create2'>";
         }
         else {
-            echo "<h3>".lang_string ("Update existing category")."</a></h3>";
+            echo "<h3>".__('Update existing category')."</a></h3>";
             echo "<form name=catman method='post' action='index.php?sec=kb&
 				            sec2=operation/kb/manage_cat&update2'>";
             echo "<input type=hidden name=id value='$id'>";
@@ -119,26 +119,26 @@ $id_user = $config["id_user"];
         echo "<table cellpadding=4 cellspacing=4 width=500 class='databox'>";
         echo "<tr>";
         echo "<td class=datos>";
-        echo lang_string ("Name");
+        echo __('Name');
         echo "<td class=datos>";
         echo "<input type=text size=20 name=name value='$name'>";
 
         echo "<tr>";
         echo "<td class=datos2>";
-        echo lang_string ("Description");
+        echo __('Description');
         echo "<td class=datos2>";
         echo "<input type=text size=50 name=description value='$description'>";
 
         echo "<tr>";
         echo "<td class=datos>";
-        echo lang_string ("Icon");
+        echo __('Icon');
         echo "<td class=datos>";
         $files = list_files ('images/groups_small/', "png", 1, 0);
-	print_select ($files, 'icon', $icon, '', __("None"), "");
+	print_select ($files, 'icon', $icon, '', __('None'), "");
 
         echo "<tr>";
         echo "<td class=datos2>";
-        echo lang_string ("Parent");
+        echo __('Parent');
         echo "<td class=datos2>";
         combo_kb_categories ( $parent);
 
@@ -158,18 +158,18 @@ $id_user = $config["id_user"];
     // Show list of categories
     // =======================
     if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-        echo "<h2>".lang_string ("KB Category management")."</h2>";	
-    	echo "<h3>".lang_string ("Defined categories")."</a></h3>";
+        echo "<h2>".__('KB Category management')."</h2>";	
+    	echo "<h3>".__('Defined categories')."</a></h3>";
 	    $sql1='SELECT * FROM tkb_category ORDER BY parent, name';
         $color =0;
 	    if ($result=mysql_query($sql1)){
             echo "<table width=740 class='listing'>";
-	        echo "<th>".lang_string ("icon")."</th>";
-			echo "<th>".lang_string ("Name")."</th>";
-	        echo "<th>".lang_string ("parent")."</th>";
-	        echo "<th>".lang_string ("Description")."</th>";
-	        echo "<th>".lang_string ("Items")."</th>";
-	        echo "<th>".lang_string ("delete")."</th>";
+	        echo "<th>".__('Icon')."</th>";
+			echo "<th>".__('Name')."</th>";
+	        echo "<th>".__('Parent')."</th>";
+	        echo "<th>".__('Description')."</th>";
+	        echo "<th>".__('Items')."</th>";
+	        echo "<th>".__('Delete')."</th>";
 	        while ($row=mysql_fetch_array($result)){
 		        if ($color == 1){
 			        $tdcolor = "datos";
@@ -206,7 +206,7 @@ $id_user = $config["id_user"];
                 echo "<a href='index.php?sec=kb&
 				            sec2=operation/kb/manage_cat&
 				            delete_cat=".$row["id"]."' 
-				            onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) 
+				            onClick='if (!confirm(\' ".__('Are you sure?')."\')) 
 				            return false;'>
 				            <img border='0' src='images/cross.png'></a>";
             }
@@ -216,7 +216,7 @@ $id_user = $config["id_user"];
 	    echo "<tr><td align='right'>";
 	    echo "<form method=post action='index.php?sec=kb&
 	    sec2=operation/kb/manage_cat&create=1'>";
-	    echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create category")."'>";
+	    echo "<input type='submit' class='sub next' name='crt' value='".__('Create category')."'>";
 	    echo "</form></td></tr></table>";
     } // end of list
 

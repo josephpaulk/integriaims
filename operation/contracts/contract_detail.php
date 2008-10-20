@@ -228,7 +228,7 @@ if ($id | $new_contract) {
 			$data[6] = '<a href=index.php?sec=inventory&
 						sec2=operation/contracts/contract_detail&
 						delete_contract=1&id='.$contract["id"].'"
-						onClick="if (!confirm(\''.__('are_you_sure').'\'))
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">
 						<img src="images/cross.png"></a>';
 			

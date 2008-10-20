@@ -1,10 +1,20 @@
 <?php 
 
-// Pandora - The Free Monitoring System
-// This code is protected by GPL license.
-// Este codigo esta protegido por la licencia GPL.
-// Sancho Lerena <slerena@gmail.com>, 2003-2006
-// Raul Mateos <raulofpandora@gmail.com>, 2005-2006
+// Integria 2.0 - http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Artica Soluciones Tecnologicas
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 // Load global vars
 require("include/config.php");
@@ -75,47 +85,47 @@ if (comprueba_login() == 0)
 	}
 	# End of get parameters block
 	
-	echo "<h2>".$lang_label["dbmain_title"]."</h2>";
-	echo "<h3>".$lang_label["db_purge_event"]."<a href='help/".$help_code."/chap8.php#842' target='_help' class='help'>&nbsp;<span>".$lang_label["help"]."</span></a></h3>";
+	echo "<h2>".__('Database Maintenance')."</h2>";
+	echo "<h3>".__('Event Database cleanup')."<a href='help/".$help_code."/chap8.php#842' target='_help' class='help'>&nbsp;<span>".__('Help')."</span></a></h3>";
 
 	echo "<table cellpadding='4' cellspacing='4' border='0'>";
 	echo "<tr><td class='datos'>";	
 	$result_t=mysql_query("SELECT COUNT(*) FROM tevento");
 	$row=mysql_fetch_array($result_t);
-	echo "<b>".$lang_label["total"]."</b>";
-	echo "<td class='datos'>".$row[0]." ".$lang_label["records"];
+	echo "<b>".__('Total')."</b>";
+	echo "<td class='datos'>".$row[0]." ".__('Records');
 	
 	echo "<tr>";	
 	$result_t=mysql_query("SELECT min(timestamp) FROM tevento");
 	$row=mysql_fetch_array($result_t);
-	echo "<td class='datos2'><b>".$lang_label["first_date"]."</b>";
+	echo "<td class='datos2'><b>".__('First date')."</b>";
 	echo "<td class='datos2'>".$row[0];
 	
 	
 	echo "<tr><td class='datos'>";
 	$result_t=mysql_query("SELECT max(timestamp) FROM tevento");
 	$row=mysql_fetch_array($result_t);
-	echo "<b>".$lang_label["latest_date"]."</b>";
+	echo "<b>".__('Latest date')."</b>";
 	echo "<td class='datos'>".$row[0];
 	echo "</table>";
 ?>
 
-	<h3><?php echo $lang_label["purge_data"] ?></h3>
+	<h3><?php echo __('Purge data') ?></h3>
 	<form name="db_audit" method="post" action="index.php?sec=gdbman&sec2=godmode/db/db_event">
 	<table width='300' border='0'>
 	<tr><td class='datos'>
 	<select name="date_purge" class="w255">
-	<option value="<?php echo $month3 ?>"><?php echo $lang_label["purge_event_90day"] ?>
-	<option value="<?php echo $month ?>"><?php echo $lang_label["purge_event_30day"] ?>
-	<option value="<?php echo $week2 ?>"><?php echo $lang_label["purge_event_14day"] ?>
-	<option value="<?php echo $week ?>"><?php echo $lang_label["purge_event_7day"] ?>
-	<option value="<?php echo $d3 ?>"><?php echo $lang_label["purge_event_3day"] ?>
-	<option value="<?php echo $d1 ?>"><?php echo $lang_label["purge_event_1day"] ?>
-	<option value="<?php echo $all_data ?>"><?php echo $lang_label["purge_event_all"] ?>
+	<option value="<?php echo $month3 ?>"><?php echo __('Purge event data over 90 days') ?>
+	<option value="<?php echo $month ?>"><?php echo __('Purge event data over 30 days') ?>
+	<option value="<?php echo $week2 ?>"><?php echo __('Purge event data over 14 days') ?>
+	<option value="<?php echo $week ?>"><?php echo __('Purge event data over 7 days') ?>
+	<option value="<?php echo $d3 ?>"><?php echo __('Purge event data over 3 days') ?>
+	<option value="<?php echo $d1 ?>"><?php echo __('Purge event data over 1 day') ?>
+	<option value="<?php echo $all_data ?>"><?php echo __('Purge all event data') ?>
 	</select>
 	
 	<td class="datos">
-	<input class="sub" type="submit" name="purgedb" value="<?php echo $lang_label["doit"] ?>" onClick="if (!confirm('<?php  echo $lang_label["are_you_sure"] ?>')) return false;">
+	<input class="sub" type="submit" name="purgedb" value="<?php echo __('Do it!') ?>" onClick="if (!confirm('<?php echo __('Are you sure?') ?>')) return false;">
 	</table>
 	</form>
 	

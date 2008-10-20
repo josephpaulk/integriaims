@@ -23,7 +23,7 @@ echo "<img src='images/integria_logo.png' border=0>";
 echo "<div width=100%>";
 echo "<span>";
 echo "<a href='index.php'><img src='images/house.png' border=0>";
-echo " ".lang_string ("Home")."</a>";
+echo " ".__('Home')."</a>";
 
 
 
@@ -34,9 +34,9 @@ if (dame_admin($id_usuario)==1)
 	echo "<img src='images/user_suit.png'> ";
 else
 	echo "<img src='images/user_green.png'> ";
-echo $lang_label["has_connected"].' [ <b><font color="#ffffff">'. $id_usuario. '</b></font> ]</a>';
+echo __('You are connected as').' [ <b><font color="#ffffff">'. $id_usuario. '</b></font> ]</a>';
 echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-echo "<a href='index.php?bye=bye'><img src='images/lock.png'> ". $lang_label["logout"]."</A>";
+echo "<a href='index.php?bye=bye'><img src='images/lock.png'> ". __('Logout')."</a>";
 echo "</span>";
 echo "</div>";
 ?>

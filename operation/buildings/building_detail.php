@@ -158,7 +158,7 @@ if ($id || $new_building) {
 			$data[2] = '<a href="index.php?sec=inventory&
 						sec2=operation/buildings/building_detail&
 						delete_building=1&id='.$building['id'].'"
-						onClick="if (!confirm(\''.__('are_you_sure').'\'))
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;"><img src="images/cross.png"></a>';
 			array_push ($table->data, $data);
 		}

@@ -42,7 +42,7 @@
 	$color = 0;
 	
 	echo "<h3>";
-	echo getmonth($working_month). " - ".lang_string("Totals for this month"). " - ( $total_hours )";
+	echo getmonth($working_month). " - ".__('Totals for this month'). " - ( $total_hours )";
 	echo "</h3>";
 
 	echo "<table class='blank' style='margin-left: 10px' width='200'>";
@@ -56,18 +56,18 @@
 
 	echo "</select>";
 	echo "</td><td>";
-	echo "<input type=submit class='next' value='".lang_string("update")."'>";
+	echo "<input type=submit class='next' value='".__('Update')."'>";
 	echo "</form>";
 	echo "</table>";
 
 
 	echo '<table width="700" class="listing">';
-	echo "<th>".$lang_label["user_ID"];
-	echo "<th>".lang_string ("Workunit report");
-	echo "<th>".lang_string ("Calendar view");
-    echo "<th>".lang_string ("Graph overview");
-	echo "<th>".lang_string ("total_hours_for_this_month");
-    echo "<th>".lang_string ("Charged this month");
+	echo "<th>".__('UserID');
+	echo "<th>".__('Workunit report');
+	echo "<th>".__('Calendar view');
+    echo "<th>".__('Graph overview');
+	echo "<th>".__('Total hours for this month');
+    echo "<th>".__('Charged this month');
 
 	$sql0= "SELECT * FROM tusuario";
 	if ($res0 = mysql_query($sql0)) {
@@ -97,7 +97,7 @@
                     }
                 }
                 else { 
-                    echo $lang_label["no_profile"]; 
+                    echo __('This user doesn\'t have any assigned profile/group'); 
                 }
                 echo "</span></a>";
                 echo "<b>".$nombre."</b>";

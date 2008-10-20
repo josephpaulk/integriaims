@@ -77,17 +77,17 @@ if ($operation == "workunit"){
             mail_project (0, $id_user, $id_workunit, $id_task);
 			$sql2 = "INSERT INTO tworkunit_task (id_task, id_workunit) VALUES ($id_task, $id_workunit)";
 			if (mysql_query($sql2)){
-				$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
+				$result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
                 insert_event ("PWU INSERT", 0, 0, $description);
 			}
             task_tracking ( $config["id_user"], $id_task, 14);
 		} else {
             mail_project (1, $id_user, $id_workunit, $id_task);
-			$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
+			$result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
             insert_event ("PWU UPDATED", 0, 0, $description);
 		}
 	} else 
-		$result_output = "<h3 class='error'>".$lang_label["workunit_no"]."</h3>";
+		$result_output = "<h3 class='error'>".__('Problemd adding workunit.')."</h3>";
 	$operation = "view";
 }
 
@@ -112,10 +112,10 @@ if ($operation == "delete"){
 	if (($id_user_wu == $config["id_user"]) OR (give_acl($config["id_user"], 0,"PM") ==1 ) OR (project_manager_check($id_project) == 1)){
 		mysql_query ("DELETE FROM tworkunit where id = '$id_workunit'");
 		if (mysql_query ("DELETE FROM tworkunit_task where id_workunit = '$id_workunit'")){
-				$result_output = "<h3 class='suc'>".$lang_label["delete_ok"]."</h3>";
+				$result_output = "<h3 class='suc'>".__('Deleted successfully')."</h3>";
 				audit_db ($id_user, $config["REMOTE_ADDR"], "Work unit deleted", "Workunit for $id_user");
 		} else {
-			$result_output = "<h3 class='error'>".$lang_label["delete_no"]."</h3>";
+			$result_output = "<h3 class='error'>".__('Not deleted. Error deleting data')."</h3>";
 		}
 	} else {
 		audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to delete WU $id_workunit without rigths");
@@ -138,7 +138,7 @@ if ($id_task != 0){
 			FROM tworkunit, tworkunit_task 
 			WHERE tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id
 			ORDER BY tworkunit.timestamp DESC";
-	echo "<h3>".$lang_label["workunit_resume"];
+	echo "<h3>".__('Workunit resume');
 	echo " - ".$project_name." - ".$task_name."</h3>";
 } 
 
@@ -150,8 +150,8 @@ elseif ($id_project != 0){
 					ttask.id_project = $id_project AND 
 					tworkunit_task.id_workunit = tworkunit.id
 			ORDER BY tworkunit.timestamp DESC";
-	echo "<h3>".$lang_label["workunit_resume"];
-	echo " - ".$project_name." - ". lang_string ("all_tasks")."</h3>";
+	echo "<h3>".__('Workunit resume');
+	echo " - ".$project_name." - ". __('All tasks')."</h3>";
 }
 /*
 if ($id_project = -1){

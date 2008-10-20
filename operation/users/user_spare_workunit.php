@@ -67,9 +67,9 @@ if ($operation == "addworkunit"){
         		$sql2 = "INSERT INTO tworkunit_task 
         		                (id_task, id_workunit) VALUES ($task,   $id_workunit)";
         	    if (mysql_query($sql2))
-        	        $result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
+        	        $result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
 	            else
-	                $result_output = "<h3 class='error'>".$lang_label["workunit_no"]."</h3>";
+	                $result_output = "<h3 class='error'>".__('Problemd adding workunit.')."</h3>";
             }
         }
         mail_project (0, $id_user, $id_workunit, $task, "This is part of a multi-workunit assigment of $duration hours");
@@ -85,13 +85,13 @@ if ($operation == "addworkunit"){
     		$sql2 = "INSERT INTO tworkunit_task 
     		        (id_task, id_workunit) VALUES ($task,   $id_workunit)";
     		if (mysql_query($sql2)){
-    			$result_output = "<h3 class='suc'>".$lang_label["workunit_ok"]."</h3>";
+    			$result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
 			    audit_db ($id_user, $config["REMOTE_ADDR"], "Spare work unit added", 
 			            "Workunit for $id_user added to Task ID #$task");
                 mail_project (0, $id_user, $id_workunit, $task);
 	    	}    
     	} else 
-    		$result_output = "<h3 class='error'>".$lang_label["workunit_no"]."</h3>";
+    		$result_output = "<h3 class='error'>".__('Problemd adding workunit.')."</h3>";
 	}
     insert_event ("PWU INSERT", $task, 0, $description);
 	echo $result_output;
@@ -104,25 +104,25 @@ if ($operation == "addworkunit"){
 if ($operation != "create"){
 
 	echo "<h3><img src='images/award_star_silver_1.png'> ";
-	echo $lang_label["add_spare_workunit"]."</h3>";
+	echo __('Add spare workunit')."</h3>";
 	
 	echo "<table width='700' class='databox'>";
 	echo "<form name='nota' method='post' action='index.php?sec=users&sec2=operation/users/user_spare_workunit&operation=addworkunit'>";
 
 	// Date
-	echo "<td><b>".$lang_label["date"]."</b>";
+	echo "<td><b>".__('Date')."</b>";
 	echo "<td>";
 	echo "<input type='text' id='workunit_date' name='workunit_date' size=10 value='".substr($ahora,0,10)."'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"workunit_date\"),this);'> ";
 
 	// Role
 	echo "<td>";
-	echo "<b>".$lang_label["profile"]."</b>";
+	echo "<b>".__('Profile')."</b>";
 	echo "<td>";
 	combo_roles(1); // role
 	
 	// task id - included hard-written "VACATIONS"
 	echo "<tr><td>";
-	echo "<b>".$lang_label["task"]."</b>";
+	echo "<b>".__('Task')."</b>";
 	echo "<td colspan=3>";
 	echo combo_task_user_participant ($id_user, false, 0, false);
 	
@@ -130,7 +130,7 @@ if ($operation != "create"){
 
 	// TIme wasted
 	echo "<tr><td class='datos'>";
-	echo "<b>".$lang_label["time_used"]."</b>";
+	echo "<b>".__('Time used')."</b>";
 	echo "<td class='datos'>";
 	echo "<input type='text' name='duration' value='0' size='7'>";
     
@@ -138,22 +138,22 @@ if ($operation != "create"){
 
 	// have cost checkbox
 	echo "<tr><td>";
-	echo "<b>".$lang_label["have_cost"]."</b>";
+	echo "<b>".__('Have cost')."</b>";
 	echo "<td>";
 	echo "<input type='checkbox' name='have_cost' value=1>";
 
 
     
 	echo "<td>";
-	echo "<b>".__("Public");
+	echo "<b>".__('Public');
 	echo "<td>";
 	print_checkbox ("public", 1, $public, false, false);
     
     
     echo "<tr><td>";
-    echo "<b>".__("Forward")."</b>";
+    echo "<b>".__('Forward')."</b>";
     echo "<a href='#' class='tip'>&nbsp;<span>";
-    echo lang_string("If this checkbox is activated, propagation will be forward instead backward");
+    echo __('If this checkbox is activated, propagation will be forward instead backward');
     echo "</span></a>";
 	echo "<td>";
 	echo "<input type=checkbox name='forward' value=1>";
@@ -161,9 +161,9 @@ if ($operation != "create"){
 
 
     echo "<td>";
-	echo "<b>".__("Split > 1day")."</b>";
+	echo "<b>".__('Split > 1day')."</b>";
     echo "&nbsp;<a href='#' class='tip'>&nbsp;<span>";
-    echo lang_string("If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned");
+    echo __('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned');
     echo "</span></a>";
 	echo "<td>";
 	echo "<input type=checkbox name='split' value=1>&nbsp;";
@@ -177,7 +177,7 @@ if ($operation != "create"){
 	echo "</table>";
 
 	echo "<div style='width: 700px' class='button'>";
-	echo '<input name="addnote" type="submit" class="sub next" value="'.$lang_label["add"].'">';
+	echo '<input name="addnote" type="submit" class="sub next" value="'.__('Add').'">';
 	echo "</form></div>";
 	
 }

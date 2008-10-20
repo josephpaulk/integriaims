@@ -39,8 +39,8 @@ if (($id_user != $config["id_user"]) AND (give_acl($config["id_user"], 0, "PM") 
 
 $sql = "SELECT ttask.id, ttask.name, tproject.name, ttask.completion, tproject.id, ttask.id FROM trole_people_task, ttask, tproject WHERE trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.completion < 100 ORDER BY ttask.completion DESC";
 
-    echo "<h2>".lang_string ("Global task assignment")."</h2>";
-    echo "<h3>".lang_string ("For user"). " '".$id_user. "' ".print_user_avatar($id_user, true,true)."</h3>";
+    echo "<h2>".__('Global task assignment')."</h2>";
+    echo "<h3>".__('For user'). " '".$id_user. "' ".print_user_avatar($id_user, true,true)."</h3>";
 
 if (give_acl($config["id_user"], 0, "PM") == 1){
 	echo "<form name='xx' method=post action='index.php?sec=users&sec2=operation/users/user_task_assigment'>";
@@ -55,11 +55,11 @@ if (give_acl($config["id_user"], 0, "PM") == 1){
 }
 
     echo "<table  class='listing' width=800>";
-    echo "<th>".lang_string ("Project");
-    echo "<th>".lang_string ("Task");
-    echo "<th>".lang_string ("Progress");
-    echo "<th>".lang_string ("Worked Hr");
-    echo "<th>".lang_string ("Last update");
+    echo "<th>".__('Project');
+    echo "<th>".__('Task');
+    echo "<th>".__('Progress');
+    echo "<th>".__('Worked hours');
+    echo "<th>".__('Last update');
     $result=mysql_query($sql);
     
     while ($row=mysql_fetch_array($result)){

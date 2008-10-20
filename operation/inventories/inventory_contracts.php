@@ -60,9 +60,9 @@ foreach ($contracts as $contract) {
 	$table->data[3][1] = get_db_value ('name', 'tsla', 'id', $contract['id_sla']);
 	
 	$table->data[4][0] = __('Minimun response');
-	$table->data[4][1] = $sla['min_response'].' '.__('hours');
+	$table->data[4][1] = $sla['min_response'].' '.__('Hours');
 	$table->data[4][2] = __('Maximun response');
-	$table->data[4][3] = $sla['max_response'].' '.__('hours');
+	$table->data[4][3] = $sla['max_response'].' '.__('Hours');
 	
 	$table->data[5][0] = __('Maximun incidents');
 	$table->data[5][1] = $sla['max_incidents'];

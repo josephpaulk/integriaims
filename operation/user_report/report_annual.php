@@ -27,10 +27,10 @@
 
 	if (dame_admin ($config["id_user"]) == 0){
         $id_user_show = $config["id_user"];
-        echo "<h2>".lang_string("Annual report for user")." ". $id_user_show. "</h2>";
+        echo "<h2>".__('Annual report for user')." ". $id_user_show. "</h2>";
     } else {
     	$id_user_show = get_parameter ("id_user", $config["id_user"]);
-	    echo "<h2>".lang_string("Annual report for user")." ". $id_user_show. "</h2>";
+	    echo "<h2>".__('Annual report for user')." ". $id_user_show. "</h2>";
 
 		echo "<table cellpadding=4 cellspacing=4 class='blank' style='margin-left: 10px'>";
 		echo "<tr><td>";
@@ -44,13 +44,13 @@
 
     echo "<table class='button'><tr>";
     echo "<td style='background-color: #FFFF80;'>";
-    echo return_vacations_user ($id_user_show, $year). "</td><td>".lang_string("Vacations days");
+    echo return_vacations_user ($id_user_show, $year). "</td><td>".__('Vacations days');
     
     echo "<td style='background-color: #98FF8B;'>";
-    echo return_daysworked_user ($id_user_show, $year). "</td><td>".lang_string("Days worked (projects)");
+    echo return_daysworked_user ($id_user_show, $year). "</td><td>".__('Days worked (projects)');
 
     echo "<td style='background-color: #FF7BFE;'>";
-    echo return_daysworked_incident_user ($id_user_show, $year). "</td><td>".lang_string("Days worked (incidents)");
+    echo return_daysworked_incident_user ($id_user_show, $year). "</td><td>".__('Days worked (incidents)');
 
     echo "</table>";
     

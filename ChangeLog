@@ -1,9 +1,159 @@
+2008-10-20  Esteban Sanchez  <estebans@artica.es>
+
+	* integria_db.sql: Added three news flags to tprofile for inventory
+	management.
+
+	* integria_dbdata.sql: Added new option to tconfig.
+
+	* include/gettext.php, include/streams.php: Added to repository.
+	Gettext support.
+
+	* index.php: Rewrite the login proccess so the redirection is now
+	smoother. Strings moved to gettext.
+
+	* general/login_page.php: Better management of given parameters so the
+	redirection is smoother.
+
+	* operation/side_menu.php: Fixes managing sec and sec2. Added a new
+	dinamic menu to inventory.
+
+	* operation/main_menu.php: Fixes when managing sec and sec2. Strings
+	moved to gettext.
+
+	* operation/user_report/report_weekly.php: Tab style correction.
+	Strings moved to gettext.
+
+	* operation/inventories/inventory.php: Added a new tab to show
+	contacts. Manage the side menu when an inventory object is shown.
+	Paginate the results in base to the integria configuration.
+
+	* operation/inventories/inventory_search.php: Added a limit to the
+	search. Added a link to display the advanced search dialog.
+
+	* operation/inventories/inventory_contacts.php: Added to repository.
+	Show a list of contacts relative to an inventory object.
+
+	* operation/incidents/incident.php: Deleted old code. Added datepicker
+	javascript reference. Paginate the results in base to the integria
+	configuration.
+
+	* operation/incidents/incident_detail.php: Added support to insert a
+	giving inventory object when creating. Strings moved to gettext.
+
+	* operation/incidents/incident_inventory_contacts.php: Updated style
+	indexes.
+
+	* operation/incidents/incident_search.php: Added support to date
+	searching. Strings moved to gettext.
+
+	* operation/incidents/incident_notes.php: Strings moved to gettext.
+	Removed debug output.
+
+	* operation/incidents/incident_work.php, include/styles/link.css:
+	Header replaced.
+
+	* operation/companies/company_detail.php: Strings moved to gettext.
+	Fixed field name on SQL sentence when searching.
+
+	* include/config_process.php: Added gettext loading routine. Added
+	limit size value. Removed old language_*.php inclusion.
+
+	* include/functions.php: Use gettext object on __(). Strings moved to
+	gettext.
+
+	* include/languages/language*.php: Deleted from repository.
+	
+	* include/functions_form.php: Added support to advanced incident
+	search. Added print_table_pager() to show the pager on sortable
+	tables. Strings moved to gettext.
+	
+	* include/functions_html.php: Removed variable use in __().
+
+	* include/styles/flora/flora.css: Fixed background color.
+
+	* include/styles/flora/flora.tabs.css: Style correction.
+
+	* include/styles/integria.css: Changed cursor in help elements.
+
+	* languages/Makefile, languages/date_*.js, languages/index.pot: Added
+	to repository.
+
+	* include/js/jquery.ui.datepicker.js: Added to repository. Datepicker
+	javascript dialog.
+
+	* godmode/setup/setup.php: Added limit_size setup. Use generic
+	functions to show the page.
+	
+	* operation/contracts/contract_detail.php,
+	include/functions_graph.php, godmode/perfiles/lista_perfiles.php,
+	godmode/grupos/configurar_grupo.php, godmode/grupos/lista_grupos.php, 
+	integria/general/error_install.php, general/error_noconfig.php,
+	general/logoff.php, general/logon_failed.php, general/logon_ok.php,
+	general/main_menu.php, general/noaccess.php,
+	general/error_perms.php, general/footer.php, general/header.php,
+	general/home.php, general/links_menu.php,
+	godmode/admin_access_logs.php, integria/godmode/menu.php,
+	godmode/db/db_audit.php, godmode/db/db_event.php,
+	godmode/db/db_info.php, godmode/db/db_info_data.php,
+	godmode/db/db_purge.php. godmode/db/db_main.php.
+	godmode/db/db_refine.php, 
+	godmode/usuarios/configurar_usuarios.php,
+	godmode/usuarios/lista_usuarios.php,
+	godmode/usuarios/role_manager.php,
+	godmode/usuarios/role_user_global.php,
+	godmode/updatemanager/load_updatemanager.php,
+	godmode/updatemanager/main.php, godmode/updatemanager/settings.php,
+	godmode/setup/event.php, godmode/setup/links.php, 
+	include/functions_calendar.php, include/functions_db.php, 
+	operation/companies/company_role.php,
+	operation/common/workunit_detail.php,
+	operation/buildings/building_detail.php, operation/agenda/agenda.php,
+	operation/contacts/contact_detail.php,
+	operation/incidents/incident_tracking.php,
+	operation/incidents/incident_work.php,
+	operation/incidents/type_detail.php,
+	operation/incidents/incident_statistics.php,
+	operation/incidents/incident_notes_detail.php,
+	operation/incidents/incident_inventory_detail.php,
+	operation/incidents/incident_create_work.php,
+	operation/tool_menu.php, operation/users/user.php,
+	operation/users/user_edit.php, operation/users/user_search.php,
+	operation/users/user_spare_workunit.php,
+	operation/users/user_statistics.php,
+	operation/users/user_task_assigment.php,
+	operation/users/user_workunit_report.php,
+	operation/user_report/monthly.php,
+	operation/user_report/monthly_graph.php,
+	operation/user_report/report_annual.php,
+	operation/user_report/report_monthly.php,
+	operation/user_report/weekly_graph.php, operation/todo/todo.php,
+	operation/projects/gantt.php, operation/projects/gantt_graph.php,
+	operation/projects/task.php, operation/projects/task_workunit.php,
+	operation/projects/project_group_detail.php,
+	operation/projects/project.php, operation/projects/gantt.php,
+	operation/projects/people_manager.php,
+	operation/projects/milestones.php,
+	operation/projects/task_tracking.php,
+	operation/projects/task_files.php, operation/projects/task_detail.php,
+	operation/projects/task_attach_file.php,
+	operation/projects/project_tree.php,
+	operation/projects/task_create_work.php,
+	operation/projects/task_move.php,
+	operation/projects/project_detail.php, operation/messages/message.php,
+	operation/manufacturers/manufacturer_detail.php,
+	operation/kb/browse_data.php, operation/kb/manage_prod.php,
+	operation/kb/manage_cat.php, operation/kb/browse.php,
+	operation/kb/manage_data.php, operation/kb/search.php,
+	operation/inventories/inventory_contracts.php: Strings moved to
+	gettext. References to lang_label removed. References to
+	include/language*php removed.
+
 2008-10-16  Sancho Lerena <slerena@artica.es>
 
 	* operation/projects/project_overview.php: Added project overview
 	page, who shows projects using project groups.
 
-	* operation/kb/manage_prod.php (deleted). 
+	* operation/kb/manage_prod.php: Deleted.
 
 	* operation/inventories/manage_prod.php: Product type management
 	is now under inventory submenu, not KB.

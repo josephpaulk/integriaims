@@ -18,9 +18,9 @@
 global $config;
 
 if (check_login() != 0) {
-    audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
-    require ("general/noaccess.php");
-    exit;
+	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
+	require ("general/noaccess.php");
+	exit;
 }
 
 // Get our main stuff
@@ -82,32 +82,32 @@ if ($operation == "insert"){
 			($id_project, '$name', '$description', '$priority', '$completion', '$start',  '$end', '$parent', $id_group, '$hours', '$estimated_cost', '$periodicity')";
 	if (mysql_query($sql)){
 		$id_task = mysql_insert_id();
-		$result_output = "<h3 class='suc'>".$lang_label["create_ok"]."</h3>";
+		$result_output = "<h3 class='suc'>".__('Task successfuly created')."</h3>";
 		audit_db ($id_user, $config["REMOTE_ADDR"], "Task added to project", "Task '$name' added to project '$id_project'");
 		$operation = "view";
 
 		$result_output .= "<p><a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>";
 		$result_output .= __("Click here to continue working with this task"). "</A><br></p>";
 
-        // Add all users assigned to current project for new task or parent task if has parent
-        if ($parent != 0)
-            $query1="SELECT * FROM trole_people_task WHERE id_task = $parent";
-        else
-            $query1="SELECT * FROM trole_people_project WHERE id_project = $id_project";
-        $resq1=mysql_query($query1);
-        while ($row=mysql_fetch_array($resq1)){
-            $id_role_tt = $row["id_role"];
-            $id_user_tt = $row["id_user"];
-            $sql = "INSERT INTO trole_people_task
-            (id_task, id_user, id_role) VALUES
-            ($id_task, '$id_user_tt', $id_role_tt)";
-            mysql_query($sql);
-        }
-        task_tracking ( $config["id_user"], $id_task, 11, 0, 0);
+		// Add all users assigned to current project for new task or parent task if has parent
+		if ($parent != 0)
+			$query1="SELECT * FROM trole_people_task WHERE id_task = $parent";
+		else
+			$query1="SELECT * FROM trole_people_project WHERE id_project = $id_project";
+		$resq1=mysql_query($query1);
+		while ($row=mysql_fetch_array($resq1)){
+			$id_role_tt = $row["id_role"];
+			$id_user_tt = $row["id_user"];
+			$sql = "INSERT INTO trole_people_task
+			(id_task, id_user, id_role) VALUES
+			($id_task, '$id_user_tt', $id_role_tt)";
+			mysql_query($sql);
+		}
+		task_tracking ( $config["id_user"], $id_task, 11, 0, 0);
 	} else {
 		$update_mode = 0;
 		$create_mode = 1;
-		$result_output = "<h3 class='error'>".$lang_label["create_no"]."</h3>";
+		$result_output = "<h3 class='error'>".__('Could not create task')."</h3>";
 	}
 }
 
@@ -128,7 +128,7 @@ if ($operation == "update"){
 	$start = give_parameter_post ("start_date");
 	$end = give_parameter_post ("end_date");
 	$hours = give_parameter_post ("hours",0);
-        $estimated_cost = give_parameter_post ("estimated_cost",0);
+		$estimated_cost = give_parameter_post ("estimated_cost",0);
 	$id_group = give_parameter_post ("group",1);
 	$periodicity = get_parameter ("periodicity", "none");
 
@@ -141,17 +141,17 @@ if ($operation == "update"){
 			end = '$end',
 			hours = '$hours',
 			periodicity = '$periodicity',
-            estimated_cost = '$estimated_cost',
+			estimated_cost = '$estimated_cost',
 			id_parent_task = '$parent',
 			id_group = '$id_group'
 			WHERE id = $id_task";
 	if (mysql_query($sql)){
-		$result_output = "<h3 class='suc'>".$lang_label["update_ok"]."</h3>";
+		$result_output = "<h3 class='suc'>".__('Task updated successfuly')."</h3>";
 		audit_db ($id_user, $config["REMOTE_ADDR"], "Task updated", "Task '$name' updated to project '$id_project'");
 		$operation = "view";
-        task_tracking ( $config["id_user"], $id_task, 12);
+		task_tracking ( $config["id_user"], $id_task, 12);
 	} else {
-		$result_output = "<h3 class='error'>".$lang_label["update_no"]."</h3>";
+		$result_output = "<h3 class='error'>".__('Could not update task')."</h3>";
 		echo "DEBUG $sql";
 	}
 }
@@ -162,10 +162,10 @@ if ($operation == "update"){
 if ($operation == "view"){
 	$sql1='SELECT * FROM ttask WHERE id = '.$id_task;
 	if (!$result = mysql_query($sql1)){
-        audit_db ($_SESSION['id_usuario'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to other task hacking with URL");
-        include ("general/noaccess.php");
-        exit;
-    }
+		audit_db ($_SESSION['id_usuario'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to other task hacking with URL");
+		include ("general/noaccess.php");
+		exit;
+	}
 	$row=mysql_fetch_array($result);
 	// Get values
 	$name = clean_output ($row["name"]);
@@ -176,11 +176,11 @@ if ($operation == "view"){
 	$start = clean_output  ($row["start"]);
 	$end = clean_output  ($row["end"]);
 	$estimated_cost = clean_output  ($row["estimated_cost"]);
-    $hours = clean_output  ($row["hours"]);
+	$hours = clean_output  ($row["hours"]);
 	$parent = clean_output  ($row["id_parent_task"]);
 	$id_group = clean_output  ($row["id_group"]);
 	$periodicity = $row["periodicity"];
-        
+		
 } 
 
 echo $result_output;
@@ -207,18 +207,18 @@ else
 // Main task form table
 // --------------------
 
-echo "<h2>".$lang_label["task_management"]." -&gt;";
+echo "<h2>".__('Task management')." -&gt;";
 
 if ($operation != "create"){
-	echo $lang_label["rev_task"]." ( $project_name )</h2>";
+	echo __('Updating task')." ($project_name)</h2>";
 } else {
-	echo $lang_label["create_task"]." ( $project_name )</h2>";
+	echo __('Create task')." ($project_name)</h2>";
 }
 
 echo '<table width=750 class="databox" >';
 
 // Name
-echo '<tr><td class="datos2"><b>'.$lang_label["name"].'</b>';
+echo '<tr><td class="datos2"><b>'.__('Name').'</b>';
 echo '<td class="datos2"><input type="text" name="name" size=30 value="'.$name.'">';
 
 // Workunit distribution graph
@@ -234,14 +234,14 @@ echo "</table>";
 // Parent task
 echo "<tr>";
 echo '<td class="datos">';
-echo "<b>".lang_string ("Parent task")."</b> ";
+echo "<b>".__('Parent task')."</b> ";
 echo '<td class="datos">';
 echo '<select name="parent">';
 
 if ($parent > 0)
 	echo "<option value='$parent'>".give_db_value ("name", "ttask", "id", $parent);
 
-echo "<option value=0>".$lang_label["none"];
+echo "<option value=0>".__('None');
 $query1="SELECT * FROM ttask WHERE id_project = $id_project and id != $id_task and id != $parent";
 $resq1=mysql_query($query1);
 while ($row=mysql_fetch_array($resq1)){
@@ -251,7 +251,7 @@ while ($row=mysql_fetch_array($resq1)){
 // Priority
 echo "<tr>";
 echo '<td class="datos2">';
-echo '<b>'.$lang_label["priority"].'</b>';
+echo '<b>'.__('Priority').'</b>';
 echo '<td class="datos2">';
 echo "<select name='priority'>";
 if ($priority != "")
@@ -263,32 +263,32 @@ echo "</select>";
 
 
 // start date
-echo '<tr><td class="datos"><b>'.$lang_label["start"].'</b>';
+echo '<tr><td class="datos"><b>'.__('Start').'</b>';
 echo "<td class='datos'>";
 echo "<input type='text' id='start_date' name='start_date' size=10 value='$start'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"start_date\"),this);'> ";
 
 // end date
-echo '<tr><td class="datos2"><b>'.lang_string ("end").'</b>';
+echo '<tr><td class="datos2"><b>'.__('End').'</b>';
 echo "<td class='datos2'>";
 echo "<input type='text' id='end_date' name='end_date' size=10 value='$end'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"end_date\"),this);'> ";
 
 // Periodicity
-echo '<tr><td class="datos2"><b>'.lang_string ("Periodicity").'</b>';
+echo '<tr><td class="datos2"><b>'.__('Periodicity').'</b>';
 echo "<td class='datos2'>";
 $periodicityc[$periodicity] = $periodicity;
-$periodicityc['none'] = lang_string ('None');
-$periodicityc['weekly'] = lang_string ("Weekly");
-$periodicityc['monthly'] = lang_string ("Monthly");
-$periodicityc['year'] = lang_string ("Annual");
-$periodicityc['15days'] = lang_string ("15 days");
-$periodicityc['60days'] = lang_string ("60 days");
-$periodicityc['90days'] = lang_string ("90 days");
+$periodicityc['none'] = __('None');
+$periodicityc['weekly'] = __('Weekly');
+$periodicityc['monthly'] = __('Monthly');
+$periodicityc['year'] = __('Annual');
+$periodicityc['15days'] = __('15 days');
+$periodicityc['60days'] = __('60 days');
+$periodicityc['90days'] = __('90 days');
 
 echo print_select ($periodicityc, "periodicity", $periodicity, 'None', "none", false, false, false, false);
 
 
 // Estimated hours
-echo '<tr><td class="datos"><b>'.lang_string ("Estimated hours").'</b>';
+echo '<tr><td class="datos"><b>'.__('Estimated hours').'</b>';
 echo "<td class='datos'>";
 echo "<input type='text' name='hours' size=5 value='$hours'>";
 
@@ -297,10 +297,10 @@ echo '<tr><td class="datos2">';
 echo "<b>".lang_string("Worked hours").": </b> ";
 echo "<td class='datos2'><i>";
 echo give_hours_task ($id_task);
-echo " </i>".lang_string ("hr");
+echo " </i>".__('hr');
 
 // Estimated cost
-echo '<tr><td class="datos"><b>'.lang_string ("Estimated cost").'</b>';
+echo '<tr><td class="datos"><b>'.__('Estimated cost').'</b>';
 echo "<td class='datos'>";
 echo "<input type='text' name='estimated_cost' size=7 value='$estimated_cost'>";
 echo " ".$config["currency"];
@@ -346,26 +346,26 @@ if ($id_task != -1){
 
 // Real costs (imputable)
 echo '<tr><td class="datos2">';
-echo "<b>".lang_string ("Imputable costs")."</b>";
+echo "<b>".__('Imputable costs')."</b>";
 echo "<td class='datos2'><i>";
 echo task_workunit_cost ($id_task, 1);
 echo " </i>".$config["currency"];
 
 // Real costs (total)
 echo '<tr><td class="datos">';
-echo "<b>".lang_string ("Total costs")."</b>";
+echo "<b>".__('Total costs')."</b>";
 echo "<td class='datos'><i>";
 echo task_workunit_cost ($id_task, 0);
 echo " </i>".$config["currency"];
 
 // Group for this task
-echo '<tr><td class="datos2"><b>'.$lang_label["group"].'</b>';
+echo '<tr><td class="datos2"><b>'.__('Group').'</b>';
 echo '<td class="datos2">';
 echo combo_groups($id_group, "TW");
 
 
 // Completion
-echo '<tr><td class="datos"><b>'.$lang_label["completion"].'</b>';
+echo '<tr><td class="datos"><b>'.__('Completion').'</b>';
 echo '<td class="datos">';
 echo "<select name='completion'>";
 if ($completion != "")
@@ -395,15 +395,15 @@ echo "</td></tr>";
 echo "</table>";
 
 if ((give_acl($config["id_user"], $id_group, "TM") ==1) OR ($config["id_user"] == $project_manager )) {
-    echo "<table width=750 class=button>";
-    echo "<tr><td align=right>";
-    if ($operation != "create")
-	    echo '<input type="submit" class="sub next" name="accion" value="'.$lang_label["update"].'" border="0">';
-    else 
-	    echo '<input type="submit" class="sub create" name="accion" value="'.$lang_label["create"].'" border="0">';
-    
-    echo "</form>";
-    echo "</table>";
+	echo "<table width=750 class=button>";
+	echo "<tr><td align=right>";
+	if ($operation != "create")
+		echo '<input type="submit" class="sub next" name="accion" value="'.__('Update').'" border="0">';
+	else 
+		echo '<input type="submit" class="sub create" name="accion" value="'.__('Create').'" border="0">';
+	
+	echo "</form>";
+	echo "</table>";
 }
 
 ?>

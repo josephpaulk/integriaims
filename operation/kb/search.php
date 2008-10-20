@@ -26,8 +26,8 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
 // Show list of items
 // =======================
 
-echo "<h2>".lang_string ("KB Data management")."</h2>";	
-echo "<h3>".lang_string ("Defined data")."</a></h3>";
+echo "<h2>".__('KB Data management')."</h2>";	
+echo "<h3>".__('Defined data')."</a></h3>";
 
 
 // Search parameter 
@@ -38,11 +38,11 @@ echo "<table cellpadding=4 cellspacing=4 width=400>";
 echo "<tr>";
 echo "<form method='post' action='index.php?sec=kb&sec2=operation/kb/browse'>";
 echo "<td>";
-echo lang_string ("Free text search");
+echo __('Free text search');
 echo "<td>";
 echo "<input type=text name='free_text' size=20 value='$free_text'>";
 echo "<td>";
-echo "<input type=submit class='sub next' value='".lang_string("Search")."'>";
+echo "<input type=submit class='sub next' value='".__('Search')."'>";
 echo "</td></tr></table></form>";
 
 // Search filter processing
@@ -58,12 +58,12 @@ $color =0;
 if ($result=mysql_query($sql1)){
 	echo "<table cellpadding=4 cellspacing=4 width=800 class='listing'>";
 
-	echo "<th>".lang_string ("Title")."</th>";
-	echo "<th>".lang_string ("Timestamp")."</th>";
-	echo "<th>".lang_string ("Category")."</th>";
-	echo "<th>".lang_string ("Product")."</th>";
-	echo "<th>".lang_string ("File")."</th>";
-	echo "<th>".lang_string ("User")."</th>";
+	echo "<th>".__('Title')."</th>";
+	echo "<th>".__('Timestamp')."</th>";
+	echo "<th>".__('Category')."</th>";
+	echo "<th>".__('Product')."</th>";
+	echo "<th>".__('File')."</th>";
+	echo "<th>".__('User')."</th>";
 	while ($row=mysql_fetch_array($result)){
 		if ($color == 1){
 			$tdcolor = "datos";
