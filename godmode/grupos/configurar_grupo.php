@@ -92,7 +92,8 @@ $table->data[3][0] .= '</span>';
 
 $banners = list_files ('images/group_banners/', 'png', 0, true);
 $table->data[3][1] = print_select ($banners, "banner", $banner, '', 'None', '', true, false, false, __('Banner'));
-$table->data[4][0] = combo_user_visible_for_me ($config["id_user"], "id_user_default", 0, "IR", true, __('Default user'));
+
+$table->data[4][0] = combo_user_visible_for_me ($id_user_default, "id_user_default", 0, "IR", true, __('Default user'));
 $table->data[4][1] = print_select_from_sql ("SELECT id_language, name FROM tlanguage ORDER BY name",
 	'lang', $lang, '', '', 0, true, false, false, __('Language'));
 
@@ -101,11 +102,11 @@ print_table ($table);
 echo '<div class="button" style="width: '.$table->width.'">';
 
 if ($id) {
-	print_submit_button (__('Update'), '', false, 'class="sub upd"', '', false);
+	print_submit_button (__('Update'), '', false, 'class="sub upd"');
 	print_input_hidden ('update_group', 1);
 	print_input_hidden ('id', $id);
 } else {
-	print_submit_button (__('Create'), '', false, 'class="sub next"', '', false);
+	print_submit_button (__('Create'), '', false, 'class="sub next"');
 	print_input_hidden ('create_group', 1);
 } 
 echo '</div></form>';

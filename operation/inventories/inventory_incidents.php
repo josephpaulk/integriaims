@@ -20,8 +20,8 @@ if (check_login () != 0) {
 
 $id = (int) get_parameter ('id');
 
-if (give_acl ($config['id_user'], 0, "IR") != 1) {
- 	// Doesn't have access to this page
+if (give_acl ($config['id_user'], get_inventory_group ($id), 'IR') != 1) {
+	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to inventory ".$id);
 	include ("general/noaccess.php");
 	exit;
@@ -44,6 +44,9 @@ $incidents = get_incidents_on_inventory ($id, false);
 
 foreach ($incidents as $incident) {
 	$data = array ();
+	
+	if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR'))
+		continue;
 	
 	$data[0] = $incident['titulo'];
 	$data[1] = $incident['inicio'];

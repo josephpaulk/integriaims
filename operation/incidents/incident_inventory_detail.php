@@ -26,11 +26,6 @@ $table->class = 'listing';
 $table->width = '90%';
 $table->head = array ();
 $table->head[0] = __('Name');
-$table->head[1] = __('Company');
-$table->head[2] = __('Contract');
-$table->head[3] = __('SLA');
-$table->head[4] = __('Details');
-$table->head[5] = __('Edit');
 $table->align[4] = 'center';
 $table->align[5] = 'center';
 $table->size = array ();
@@ -48,39 +43,51 @@ if (count ($inventories) == 0) {
 foreach ($inventories as $inventory) {
 	$data = array ();
 	
+	$id_group = get_inventory_group ($inventory['id']);
+	$has_permission = true;
+	if (! give_acl ($config['id_user'], $id_group, 'VR'))
+		$has_permission = false;
 	$contract = get_contract ($inventory['id_contract']);
 	$company = get_company ($contract['id_company']);
 	$sla = get_sla ($inventory['id_sla']);
 	
 	$data[0] = $inventory['name'];
-	if ($inventory['description'])
-		$data[0] .= ' '.print_help_tip ($inventory['description'], true, 'tip_info');
-	$data[1] = $company['name'];
-	$data[2] = $contract['name'];
-	$data[3] = $sla['name'];
-	$sla_description = '<strong>'.__('Minimun response').'</strong>: '.$sla['min_response'].'<br />'.
-		'<strong>'.__('Maximum response').'</strong>: '.$sla['max_response'].'<br />'.
-		'<strong>'.__('Maximum incidents').'</strong>: '.$sla['max_incidents'].'<br />';
-	$data[3] .= print_help_tip ($sla_description, true);
+	if ($has_permission) {
+		$table->head[1] = __('Company');
+		$table->head[2] = __('Contract');
+		$table->head[3] = __('SLA');
+		$table->head[4] = __('Details');
+		if ($inventory['description'])
+			$data[0] .= ' '.print_help_tip ($inventory['description'], true, 'tip_info');
+		$data[1] = $company['name'];
+		$data[2] = $contract['name'];
+		$data[3] = $sla['name'];
+		$sla_description = '<strong>'.__('Minimun response').'</strong>: '.$sla['min_response'].'<br />'.
+			'<strong>'.__('Maximum response').'</strong>: '.$sla['max_response'].'<br />'.
+			'<strong>'.__('Maximum incidents').'</strong>: '.$sla['max_incidents'].'<br />';
+		$data[3] .= print_help_tip ($sla_description, true);
 	
-	$details = '';
-	if ($inventory['ip_address'] != '')
-		$details .= '<strong>'.__('IP address').'</strong>: '.$inventory['ip_address'].'<br />';
-	if ($inventory['serial_number'] != '')
-		$details .= '<strong>'.__('Serial number').'</strong>: '.$inventory['serial_number'].'<br />';
-	if ($inventory['part_number'] != '')
-		$details .= '<strong>'.__('Part number').'</strong>: '.$inventory['part_number'].'<br />';
-	if ($inventory['comments'] != '')
-		$details .= '<strong>'.__('Comments').'</strong>: '.$inventory['Comments'].'<br />';
-	if ($inventory['id_building'] != 0) {
-		$building = get_building ($inventory['id_building']);
-		$details .= '<strong>'.__('Building').'</strong>: '.$building['name'].'<br />';
+		$details = '';
+		if ($inventory['ip_address'] != '')
+			$details .= '<strong>'.__('IP address').'</strong>: '.$inventory['ip_address'].'<br />';
+		if ($inventory['serial_number'] != '')
+			$details .= '<strong>'.__('Serial number').'</strong>: '.$inventory['serial_number'].'<br />';
+		if ($inventory['part_number'] != '')
+			$details .= '<strong>'.__('Part number').'</strong>: '.$inventory['part_number'].'<br />';
+		if ($inventory['comments'] != '')
+			$details .= '<strong>'.__('Comments').'</strong>: '.$inventory['Comments'].'<br />';
+		if ($inventory['id_building'] != 0) {
+			$building = get_building ($inventory['id_building']);
+			$details .= '<strong>'.__('Building').'</strong>: '.$building['name'].'<br />';
+		}
+		$data[4] = print_help_tip ($details, true, 'tip_view');
 	}
-	$data[4] = print_help_tip ($details, true, 'tip_view');
 	
-	$data[5] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$inventory['id'].'">'.
-			'<img src="images/setup.gif" /></a>';
-	
+	if (give_acl ($config['id_user'], $id_group, "VW")) {
+		$table->head[5] = __('Edit');
+		$data[5] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$inventory['id'].'">'.
+				'<img src="images/setup.gif" /></a>';
+	}
 	array_push ($table->data, $data);
 }
 

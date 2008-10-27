@@ -238,7 +238,8 @@ function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $
 	$output = '';
 
 	if ($disabled) {
-		$output .= get_db_value ('name', 'tincident_status', 'id', $actual);
+		$value = get_db_value ('name', 'tincident_status', 'id', $actual);
+		$output .= print_label (__('Status'), '', '', true, $value);
 		if ($return)
 			return $output;
 		echo $output;
@@ -261,7 +262,8 @@ function combo_incident_origin ($actual = -1, $disabled = 0, $return = false) {
 	$output = '';
 
 	if ($disabled) {
-		$output .= get_db_value ('name', 'tincident_origin', 'id', $actual);
+		$value = get_db_value ('name', 'tincident_origin', 'id', $actual);
+		$output .= print_label (__('Source'), '', '', true, $value);
 		if ($return)
 			return $output;
 		echo $output;
@@ -277,9 +279,42 @@ function combo_incident_origin ($actual = -1, $disabled = 0, $return = false) {
 // Returns a combo with the incident resolution
 // ----------------------------------------------------------------------
 function combo_incident_resolution ($actual = -1, $disabled = false, $return = false) {
-	$output = print_select_from_sql ('SELECT id, name FROM tincident_resolution ORDER BY 2',
-					'incident_resolution', $actual, '', '',
+	$output = '';
+	
+	if ($disabled) {
+		$resolutions = get_incident_resolutions ();
+		$resolution = isset ($resolutions[$actual]) ? $resolutions[$actual] : __('None');
+		$output .= print_label (__('Resolution'), '', '', true, $resolution);
+		if ($return)
+			return $output;
+		echo $output;
+		return;
+	}
+	
+	$output .= print_select_from_sql ('SELECT id, name FROM tincident_resolution ORDER BY 2',
+					'incident_resolution', $actual, '', __('None'),
 					0, true, false, false, __('Resolution'));
+	if ($return)
+		return $output;
+	echo $output;
+}
+
+function combo_incident_types ($selected, $disabled = false, $return = false) {
+	$output = '';
+	
+	$types = get_incident_types ();
+	
+	if ($disabled) {
+		$output .= print_label (__('Type'), '', '', true);
+		$output .= isset ($types['selected']) ? $types['selected'] : __('None');
+		if ($return)
+			return $output;
+		echo $output;
+		return;
+	}
+	
+	$output .= print_select ($types, 'id_incident_type', $selected, '',
+		__('None'), 0, true, false, true, __('Type'));
 	if ($return)
 		return $output;
 	echo $output;
@@ -291,7 +326,11 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 	$output = '';
 
 	if ($disabled) {
-		$output .= '';
+		$output .= print_label (__('Task'), '', '', true);
+		$name = get_db_value ('name', 'ttask', 'id', $actual);
+		if ($name === false)
+			$name = __('N/A');
+		$output .= $name;
 		if ($return)
 			return $output;
 		echo $output;
@@ -316,7 +355,7 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 	foreach ($tasks as $task) {
 		$values[$task['id']] = $task['name'];
 	}
-	$output = print_select ($values,'task_user', $actual, '', '',
+	$output = print_select ($values, 'task_user', $actual, '', '',
 				0, true, false, false, __('Task'));
 	if ($return)
 		return $output;
@@ -406,14 +445,14 @@ function show_workunit_data ($workunit, $title) {
 	$id_group = get_db_sql ($sql);
 
 	// ACL Check for visibility
-	if (($public == 0) AND ($id_user != $config["id_user"]) AND (give_acl_extra ($config["id_user"], $id_group, "IM")== 0))
+	if (($public == 0) AND ($id_user != $config["id_user"]) AND (! give_acl ($config["id_user"], $id_group, "IM")))
 		return;
 
 	// Show data
 	echo "<div class='notetitle'>"; // titulo
 	echo "<span>";
 	print_user_avatar ($id_user, true);
-	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
+	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
 	echo $id_user;
 	echo "</a>";
 	echo " ".__('said on ').' '.$timestamp;
@@ -536,7 +575,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 	echo "<tr>";
 	echo "<td>";
-	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
+	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
 	echo "<b>".$id_user."</b>";
 	echo "</a>";
 	echo " ".__('said on $timestamp');
@@ -647,7 +686,7 @@ function form_search_incident ($return = false) {
 			'', __('Any'), 0, true, false, false,
 			__('Status'));
 	
-	$table->data[0][2] = print_select (get_indicent_priorities (),
+	$table->data[0][2] = print_select (get_priorities (),
 			'search_priority', $priority,
 			'', __('Any'), -1, true, false, false,
 			__('Priority'));

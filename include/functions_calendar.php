@@ -457,24 +457,31 @@ function give_human_time ($int_seconds, $flag_hide_zero = true) {
 function human_time_comparation ( $timestamp ){
 	global $config;
 	
-	$ahora=date("Y/m/d H:i:s");
-	if (strtotime($ahora) < strtotime($timestamp)){
-		$seconds = strtotime($timestamp) - strtotime($ahora) ;
-		$direction = "> ";
-	} else {
-		$seconds = strtotime($ahora) - strtotime($timestamp);
-		$direction = "< ";
+	$now = time ();
+	$time = strtotime ($timestamp);
+	$seconds = abs ($time - $now);
+	
+	if ($seconds < 60)
+		$render = format_numeric ($seconds, 0)." ".__('seconds');
+	
+	if ($seconds < 3600) {
+		$minutes = format_numeric ($seconds / 60, 0);
+		$seconds = format_numeric ($seconds % 60, 0);
+		if ($seconds == 0)
+			$render = $minutes.' '.__('minutes');
+		$seconds = sprintf ("%02d", $seconds);
+		$render = $minutes.':'.$seconds.' '.__('minutes');
 	}
-	if ($seconds < 3600)
-		$render = format_numeric($seconds/60,1)." ".__('Minutes');
-	elseif (($seconds >= 3600) and ($seconds < 86400))
-		$render = format_numeric ($seconds/3600,1)." ".__('Hours');
-	elseif (($seconds >= 86400) and ($seconds < 604800))
-		$render = format_numeric ($seconds/86400,1)." ".__('Days');
-	elseif (($seconds >= 604800) and ($seconds <2592000))
-		$render = format_numeric ($seconds/604800,1)." ".__('Weeks');
-	elseif ($seconds >= 2592000)
-		$render = format_numeric ($seconds/2592000,1)." ".__('Months');
+	if ($seconds < 86400)
+		$render = format_numeric ($seconds / 3600, 0)." ".__('hours');
+	
+	if ($seconds < 2592000)
+		$render = format_numeric ($seconds / 86400, 0)." ".__('days');
+	
+	if ($seconds < 15552000)
+		$render = format_numeric ($seconds / 2592000, 0)." ".__('months');
+	
+	$direction = ($now < $time) ? '> ' : '< ';
 	return $direction.$render;
 }
 

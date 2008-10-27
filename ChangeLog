@@ -1,5 +1,147 @@
 2008-10-20  Esteban Sanchez  <estebans@artica.es>
 
+	* general/header.php: Added a link to the main page at top right logo.
+	Style correction and renamed the "bye" parameter to "logout", which is
+	more clear.
+
+	* index.php: Use "logout" parameter.
+
+	* general/main_menu.php, godmode/menu.php: Deleted from repository.
+	Old and unused file.
+
+	* godmode/grupos/configurar_grupo.php: Fixed the default user combo.
+	Style correction.
+
+	* godmode/grupos/lista_grupos.php: Added AJAX support to get group
+	details. Fixed default user assignment on insert and update.
+
+	* godmode/usuarios/configurar_usuarios.php: Removed use of
+	help_label().
+
+	* include/js/integria_incident_search.js: Removed references to
+	refresh_table() because new tables design doesn't use different
+	colors. Fixed an error when paginating inventories.
+
+	* include/js/jquery.ui.slider.js: Added to repository. Slider jQuery
+	UI component.
+
+	* include/languages/date_en.js: Added default date format.
+
+	* include/styles/flora/i/slider-bg-1.png: Updated and removed round
+	corners.
+
+	* include/styles/flora/flora.slider.css: Make the sliders a bit wider
+	and fixed the background.
+
+	* include/styles/integria.css: Removed background on links.
+
+	* include/config_process.php: Added enterprise definition. Style
+	correction.
+
+	* include/functions.php: Added get_periodicities(). Renamed
+	get_indicent_priorities() to get_priorities(). Added
+	ellipsize_string().
+
+	* include/functions_calendar.php: Fixed human_time_comparation() to
+	avoid showing "1.7 minutes". 
+
+	* include/functions_db.php: Improved incident_tracking() and added
+	constants to all the types of trackings available to avoid magic
+	numbers. Added get_task_hours() and marked give_hours_task() as
+	deprecated. check_login() now exits the application. Added ACL checks
+	on get_inventories_in_incident(). Added get_inventory_group() to get
+	the group of an inventory and checks ACLs easily. get_incident_users()
+	don't duplicate owner and creators in affected.
+
+	* include/functions_form.php: Now combos are more consistent with the
+	interface if no editing is allowed. Added combo_incident_types().
+	Style correction.
+
+	* include/functions_html.php: Added an extra parameter to
+	print_label() to add extra HTML after the label. Useful to show
+	non-editable form elements.
+
+	* operation/common/workunit_detail.php, operation/kb/browse_data.php,
+	operation/messages/message.php,
+	operation/incidents/incident_notes_detail.php: Fixed link to
+	user_edit.
+
+	* operation/contracts/contract_detail.php: Added search_ prefix to
+	id_company parameter to avoid collisions. Added datepicker support to
+	date elements.
+
+	* operation/incidents/incident.php: Fixed reference to language config
+	value.
+
+	* operation/incidents/incident_detail.php: Added incident tracking.
+	Fixed parent updating which was not working. Style correction and
+	bugfixing. Make the form more user-friendly for read-only users.
+
+	* operation/incidents/incident_files.php,
+	operation/incidents/incident_workunits.php,
+	operation/inventories/inventory_contacts.php, 
+	operation/inventories/inventory_incidents.php,
+	operation/incidents/incident_inventory_detail.php: Better ACL check
+	for reader and writer users.
+
+	* operation/incidents/incident_notes.php: Incident tracking. Style
+	correction.
+
+	* operation/incidents/incident_search.php: Better ACL check. Show
+	longest incident on stats.
+
+	* operation/incidents/incident_tracking.php: Better display of
+	tracking operations in an incident.
+
+	* operation/inventories/inventory_contracts.php: Better ACL check.
+	Fixed an display error when the contract was finished.
+
+	* operation/inventories/inventory_detail.php: Better ACL check.
+	Make the form more user-friendly for read-only users.
+
+	* operation/inventories/inventory_search.php: Better ACL check for
+	inventory objects. 
+
+	* operation/projects/project.php: Style correction.
+
+	* operation/projects/task_detail.php: Rewritten to clean up the
+	interface and make it consistent with the rest. Completion value is
+	now a cool slider.
+
+	* operation/users/user.php: Rewritten to use generic functions.
+
+	* operation/users/user_edit.php: Rewritten to use generic functions.
+	Make the page more user-friendly for read-only users, now it don't
+	show the info in a form which seems editable. Separate password form
+	of general form.
+
+	* operation/users/user_search.php: Fixed the class of the result
+	table.
+
+	* operation/side_menu.php: Style correction. Fixed highlight of "Edit
+	my user" option.
+
+2008-10-20  Esteban Sanchez  <estebans@artica.es>
+
+	* godmode/db: Deleted from repository. Old code from other
+	application. If we need these files in the future, it's better to
+	write from scratch.
+
+	* general/main_menu.php, godmode/menu.php: Deleted from repository.
+	Old and unused menu.
+
+	* general/header.php: Added a link in the main top right picture.
+	Style correction.
+
+	* include/styles/integria.css: Removed background for all the links
+	and menu items.
+
+	* index.php: Use logout instead of bye.
+
+	* include/languages/index.pot: Generated.
+
+2008-10-20  Esteban Sanchez  <estebans@artica.es>
+
 	* integria_db.sql: Added three news flags to tprofile for inventory
 	management.
 

@@ -1,6 +1,6 @@
 /* This file skins sliders */
 
-.ui-slider { width: 200px; height: 23px; position: relative; background-repeat: no-repeat; background-position: center center; }
+.ui-slider { width: 90%; height: 23px; position: relative; background-repeat: repeat-x; background-position: center center; }
 .ui-slider-handle { position: absolute; z-index: 1; height: 23px; width: 12px; top: 0px; left: 0px; background-image: url(i/slider-handle.gif);  }
 .ui-slider-handle-active { border: 1px dotted black;  }
 .ui-slider-disabled .ui-slider-handle { opacity: 0.5; filter: alpha(opacity=50); }

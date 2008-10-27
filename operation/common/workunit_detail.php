@@ -44,7 +44,7 @@ if ($row3=mysql_fetch_array($res4)){
 
 	// Show data
 	echo "<img src='images/avatars/".$avatar."_small.png'>&nbsp;";
-	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
+	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
 	echo $id_usuario_nota;
 	echo "</a>";
 	echo ' '.__('said on').' '.$timestamp;

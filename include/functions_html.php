@@ -572,8 +572,9 @@ function print_radio_button ($name, $value, $label = '', $checkedvalue = '', $re
  * @param string $input_type Input type of the element. The id of the elements using print_* functions add a prefix, this
  *               variable helps with that. Values: text, password, textarea, button, submit, hidden, select. Default: text.
  * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ * @param string $html  Extra HTML to add after the label.
  */
-function print_label ($label, $id, $input_type = 'text', $return = false) {
+function print_label ($label, $id, $input_type = 'text', $return = false, $html = false) {
 	$output = '';
 	
 	switch ($input_type) {
@@ -609,6 +610,9 @@ function print_label ($label, $id, $input_type = 'text', $return = false) {
 	$output .= '<label id="label-'.$id.'" for="'.$id.'">';
 	$output .= $label;
 	$output .= '</label>';
+	
+	if ($html)
+		$output .= $html;
 	
 	if ($return)
 		return $output;

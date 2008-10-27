@@ -86,7 +86,7 @@ print_input_hidden ('search', 1);
 echo '</form>';
 
 unset ($table);
-$table->class = 'hide result_table';
+$table->class = 'hide listing';
 $table->width = '90%';
 $table->id = 'user_search_result_table';
 $table->head = array ();

@@ -32,7 +32,7 @@ if (give_acl($id_user, 0, "IR")!=1) {
 	exit;
 }
 
-
+$delete_project = (bool) get_parameter ('delete_project');
 $accion = "";
 
 // Disable project
@@ -43,7 +43,7 @@ if (isset($_GET["quick_delete"])){
 	$id_owner = give_db_value ("id_owner", "tproject", "id", $id_project);
 	if (($id_owner == $id_user) OR (dame_admin ($id_user))) {
 		// delete_project ($id_project);
-		$sql =" UPDATE tproject SET disabled=1 WHERE id = $id_project";
+		$sql = " UPDATE tproject SET disabled=1 WHERE id = $id_project";
 		mysql_query($sql);
 		echo "<h3 class='suc'>".__('Incident successfully deleted')."</h3>";
 		audit_db($id_user,$REMOTE_ADDR,"Project disabled","User ".$id_user." disabled project #".$id_project);
@@ -72,11 +72,9 @@ if (isset($_GET["activate"])){
 	}
 }
 
-
-// REAL PROJECT DELETE
-// ======================
-if (isset($_GET["real_delete"])){
-	$id_project = $_GET["real_delete"];
+// Delete
+if ($delete_project) {
+	$id_project = (int) get_parameter ('id');
 	$id_owner = give_db_value ("id_owner", "tproject", "id", $id_project);
 	if (($id_owner == $id_user) OR (dame_admin ($id_user))) {
 		// delete_project ($id_project);
@@ -98,44 +96,48 @@ if (isset($_GET["real_delete"])){
 }
 
 // INSERT PROJECT
-if ((isset($_GET["action"])) AND ($_GET["action"]=="insert")){
-	if (give_acl($config["id_user"], 0, "PW") == 1){
+if ((isset($_GET["action"])) && ($_GET["action"]=="insert")) {
+	if (give_acl ($config["id_user"], 0, "PW")) {
 		// Read input variables
-		$usuario = give_parameter_post ("user");
-		$name = give_parameter_post ("name");
-		$description = give_parameter_post ('description');
-		$start_date = give_parameter_post ('start_date');
-		$end_date = give_parameter_post ('end_date');
-		$id_project_group = get_parameter ("id_project_group",0);
+		$usuario = (string) get_parameter ("user");
+		$name = (string) get_parameter ("name");
+		$description = (string) get_parameter ('description');
+		$start_date = (string) get_parameter ('start_date');
+		$end_date = (string) get_parameter ('end_date');
+		$id_project_group = (int) get_parameter ('id_project_group');
 
 		$id_owner = $usuario;
-		$sql = " INSERT INTO tproject
-			(name, description, start, end, id_owner, id_project_group) VALUES
-			('$name', '$description', '$start_date', '$end_date', '$id_owner', '$id_project_group') ";
-		if (mysql_query($sql)){
-			$id_inc = mysql_insert_id();
-			echo "<h3 class='suc'>".__('Project created successfully')." ( id #$id_inc )</h3>";
+		$sql = sprintf ('INSERT INTO tproject
+			(name, description, start, end, id_owner, id_project_group)
+			VALUES ("%s", "%s", "%s", "%s", %d, %d)',
+			$name, $description, $start_date, $end_date, $id_owner,
+			$id_project_group);
+		$id_project = process_sql ($sql, 'insert_id');
+		if ($id_project === false) {
+			echo "<h3 class='err'>".__('Project cannot be created, problem found.').'</h3>';
+		} else {
+			echo "<h3 class='suc'>".__('Project created successfully').' #'.$id_project.'</h3>';
 			audit_db ($usuario, $REMOTE_ADDR, "Project created", "User ".$id_user." created project '$name'");
 			
 			// Add this user as profile 1 (project manager) automatically
-			$sql = "INSERT INTO trole_people_project
-			(id_project, id_user, id_role) VALUES
-			($id_inc, '$id_owner', 1)";
-			mysql_query($sql);
-
+			$sql = sprintf ('INSERT INTO trole_people_project
+				(id_project, id_user, id_role)
+				VALUES ("%s", "%s", 1)',
+				$id_project, $id_owner, 1);
+			process_sql ($sql);
+			
 			// If current user is different than owner, add also current user
-			if ($config["id_user"] != $id_owner){
-				$sql = "INSERT INTO trole_people_project
-				(id_project, id_user, id_role) VALUES
-				($id_inc, '".$config["id_user"]."', 1)";
-				mysql_query($sql);
+			if ($config["id_user"] != $id_owner) {
+				$sql = sprintf ('INSERT INTO trole_people_project
+					(id_project, id_user, id_role)
+					VALUES (%d, "%s", 1)',
+					$id, $config["id_user"]);
+				process_sql ($sql);
 			}
-		} else {
-			echo "<h3 class='err'>".__('Project cannot be created, problem found.')." ( id #$id_inc )</h3>";
 		}
 	} else {
-		audit_db($id_user, $REMOTE_ADDR, "ACL Forbidden", "User ".$id_user. " try to create project");
-		no_permission();
+		audit_db ($id_user, $REMOTE_ADDR, "ACL Forbidden", "User ".$id_user. " try to create project");
+		no_permission ();
 	}
 }
 
@@ -188,7 +190,7 @@ echo "<th>".__('Completion');
 echo "<th>".__('Task / People');
 echo "<th>".__('Time used');
 echo "<th>".__('Cost');
-echo "<th>".__('Updated at');
+echo "<th>".__('Updated');
 echo "<th>".__('Delete');
 
 // -------------
@@ -201,7 +203,7 @@ $sql2="SELECT * FROM tproject WHERE $FILTER AND disabled = $view_disabled ORDER 
 if ($result2=mysql_query($sql2))	
 while ($row2=mysql_fetch_array($result2)){
 	if (give_acl($config["id_user"], 0, "PR") ==1){
-		if (user_belong_project ($id_user, $row2["id"]) != 0){	
+		if (user_belong_project ($id_user, $row2["id"]) != 0) {
 			echo "<tr>";
 		
 			// Project name
@@ -250,14 +252,14 @@ while ($row2=mysql_fetch_array($result2)){
 			if ($timestamp != "")
 				echo human_time_comparation ( $timestamp );
 			else
-				echo __('N/A');
+				echo __('Never');
 		
 		// Delete	
 		if ((give_acl($config["id_user"], 0, "PW") ==1) OR ($config["id_user"] == $row2["id_owner"] )) {
-			if ($view_disabled == 0)
-				 echo "<td><a href='index.php?sec=projects&sec2=operation/projects/project&quick_delete=".$row2["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
-			else {
-				echo "<td '><a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&real_delete=".$row2["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a> &nbsp;";
+			if ($view_disabled == 0) {
+				 echo "<td><a href='index.php?sec=projects&sec2=operation/projects/project&disable_project=1&id=".$row2["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a></td>";
+			} else {
+				echo "<td '><a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id=".$row2["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a> &nbsp;";
 				echo "<a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate=".$row2["id"]."' ><img src='images/play.gif' border='0'></a></td>";
 		   } 
 		} else

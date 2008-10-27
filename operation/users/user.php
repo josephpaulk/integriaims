@@ -27,45 +27,43 @@ $id_user =$_SESSION["id_usuario"];
 
 echo "<h2>".__('Integria users')."</h2>";
 
-echo '<table width="90%" class="listing">';
-echo "<th>".__('UserID');
-echo "<th>".__('Last contact');
-echo "<th>".__('Profile');
-echo "<th>".__('Name');
-echo "<th>".__('Description');
+$table->width = '90%';
+$table->class = 'listing';
+$table->data = array ();
+$table->head = array ();
+$table->head[0] = __('UserID');
+$table->head[1] = __('Last contact');
+$table->head[2] = __('Profile');
+$table->head[3] = __('Name');
+$table->head[4] = __('Description');
 
-
-$resq1=mysql_query("SELECT * FROM tusuario");
-while ($rowdup=mysql_fetch_array($resq1)){
-	$nombre=$rowdup["id_usuario"];
-	$nivel =$rowdup["nivel"];
-	$comentarios =$rowdup["comentarios"];
-	$fecha_registro =$rowdup["fecha_registro"];
-	$avatar = $rowdup["avatar"];
+$users = get_user_visible_users (0, "IR", false);
+foreach ($users as $user) {
+	$data = array ();
 	
-	if (user_visible_for_me ($config["id_user"], $rowdup["id_usuario"]) == 1){
-		echo "<tr><td><a href='index.php?sec=users&sec2=operation/users/user_edit&ver=".$nombre."'><b>".$nombre."</b></a>";
-		echo "<td class='f9'>".$fecha_registro;
-		echo "<td>";
-		print_user_avatar ($rowdup["id_usuario"], true);
-		
-
-		$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
-		$result=mysql_query($sql1);
-		echo "<a href='#' class='tip'>&nbsp;<span>";
-		if (mysql_num_rows($result)){
-			while ($row=mysql_fetch_array($result)){
-				echo dame_perfil($row["id_perfil"])."/ ";
-				echo dame_grupo($row["id_grupo"])."<br>";
-			}
-		} else {
-			echo __('This user doesn\'t have any assigned profile/group');
+	$data[0] = '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='
+		.$user['id_usuario'].'"><strong>'.$user['id_usuario'].'</strong></a>';
+	$data[1] = $user['fecha_registro'];
+	$data[2] = print_user_avatar ($user['id_usuario'], true, true);
+	
+	$profiles = get_db_all_rows_field_filter ('tusuario_perfil', 'id_usuario', $user['id_usuario']);
+	$data[2] .= "<a href='#' class='tip'>&nbsp;<span>";
+	if ($profiles !== false) {
+		foreach ($profiles as $profile) {
+			$data[2] .= dame_perfil ($profile["id_perfil"])."/ ";
+			$data[2] .= dame_grupo ($profile["id_grupo"])."<br />";
 		}
-		echo "</span></a>";
-		echo "<td>".substr(clean_output($rowdup["nombre_real"]),0,16);
-		echo "<td>".substr(clean_output($comentarios),0,32);
+	} else {
+		$data[2] .= __('This user doesn\'t have any assigned profile/group');
 	}
+	$data[2] .= "</span></a>";
+	$data[3] = $user['nombre_real'];
+	$data[4] = $user['comentarios'];
+	
+	array_push ($table->data, $data);
 }
+
+print_table ($table);
 
 echo "</table>";
 

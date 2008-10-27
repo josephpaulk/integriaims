@@ -30,12 +30,10 @@ td, th {
 
 /* links */
 a {
-	background: inherit;
 	color: #2179B1;
 }
 a:hover {
 	text-decoration: none;
-	background: inherit;
 	color: #806B4D;
 }
 
@@ -510,7 +508,6 @@ form.searchform input.button {
 	margin-top: 0px;
 	text-decoration: none;
 /*	background: white url(../../images/menudivide.gif) repeat-y right top;*/
-	background-color: #eee;
 	border-bottom: 4px solid #2179B1;
 }
 #menu ul li a:hover{

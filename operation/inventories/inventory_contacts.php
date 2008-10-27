@@ -24,6 +24,12 @@ if (check_login () != 0) {
 
 $id = (int) get_parameter ('id');
 
+if (! give_acl ($config['id_user'], get_inventory_group ($id), 'VR')) {
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to inventory ".$id);
+	include ("general/noaccess.php");
+	return;
+}
+
 $inventory = get_db_row ('tinventory', 'id', $id);
 
 echo '<h3>'.__('Contact details on inventory object').' #'.$id.'</h3>';
@@ -50,6 +56,8 @@ $table->data = array ();
 foreach ($contracts as $contract) {
 	$company = get_company ($contract['id_company']);
 	if ($company === false)
+		continue;
+	if (! give_acl ($config['id_user'], $contract['id_group'], "IR"))
 		continue;
 	$contacts = get_company_contacts ($company['id'], false);
 	

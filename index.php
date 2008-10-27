@@ -59,13 +59,12 @@ if ($develop_bypass != 1) {
 	}
 }
 
-require_once ("include/functions.php");
-require_once ("include/functions_db.php");
-require_once ("include/functions_html.php");
-require_once ("include/config.php");
-global $config;
-require_once ("include/functions_form.php");
-require_once ("include/functions_calendar.php");
+require_once ('include/config.php');
+require_once ('include/functions.php');
+require_once ('include/functions_db.php');
+require_once ('include/functions_html.php');
+require_once ('include/functions_form.php');
+require_once ('include/functions_calendar.php');
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -167,7 +166,8 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 }
 
 // Log off
-if (isset ($_GET["bye"])) {
+$logout = (bool) get_parameter ('logout');
+if ($logout) {
 	echo '</head>';
 	echo '<body bgcolor="#ffffff">';
 	include "general/logoff.php";

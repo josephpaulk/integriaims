@@ -159,6 +159,9 @@ if ($show_stats) {
 }
 
 foreach ($incidents as $incident) {
+	if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR'))
+		continue;
+	
 	$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
 	
 	/* Check aditional searching clauses */
@@ -266,7 +269,8 @@ foreach ($incidents as $incident) {
 
 	echo '<td>'.$incident['titulo'].'</td>';
 	echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']).'</td>';
-	echo '<td><strong>'.$status[$incident['estado']].'</strong> - <i>'. $resolutions[$incident['resolution']].'</i></td>';
+	$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
+	echo '<td><strong>'.$status[$incident['estado']].'</strong> - <em>'.$resolution.'</em></td>';
 
 
 	echo '<td>'.print_priority_flag_image ($incident['prioridad'], true).'</td>';
@@ -302,18 +306,26 @@ foreach ($incidents as $incident) {
 	echo '</tr>';
 }
 
-/* Show HTML if show_stats flag is active */
+/* Show HTML if show_stats flag is active on HTML request */
 if ($show_stats) {
 	$total = sizeof ($stat_incidents);
 	$opened = 0;
 	$total_hours = 0;
 	$total_lifetime = 0;
+	$max_lifetime = 0;
+	$oldest_incident = false;
 	foreach ($stat_incidents as $incident) {
 		if ($incident['estado'] != 6 && $incident['estado'] != 7)
 			$opened++;
-		else
-			$total_lifetime += get_db_value ('actualizacion - inicio',
+		else{
+			$lifetime = get_db_value ('actualizacion - inicio',
 				'tincidencia', 'id_incidencia', $incident['id_incidencia']);
+			if ($lifetime > $max_lifetime) {
+				$oldest_incident = $incident;
+				$max_lifetime = $lifetime;
+			}
+			$total_lifetime += $lifetime;
+		}
 		$workunits = get_incident_workunits ($incident['id_incidencia']);
 		$hours = 0;
 		foreach ($workunits as $workunit) {
@@ -337,5 +349,10 @@ if ($show_stats) {
 	echo '<strong>'.__('Opened').'</strong>: '.$opened.' ('.$opened_pct.'%)<br />';
 	echo '<strong>'.__('Mean life time').'</strong>: '.give_human_time ($mean_lifetime).'<br />';
 	echo '<strong>'.__('Mean work time').'</strong>: '.$mean_work.' '.__('Hours').'<br />';
+	if ($oldest_incident) {
+		echo '<strong>'.__('Longest closed incident').'</strong>: ';
+		echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$oldest_incident['id_incidencia'].'">';
+		echo $oldest_incident['titulo'].'</a><br />';
+	}
 }
 ?>

@@ -18,11 +18,7 @@
 
 global $config;
 
-if (check_login () != 0) {
-	audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Violation", "Trying to access User Management");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
 if (give_acl ($config["id_user"], 0, "UM")) {
 	// Init. vars
@@ -222,13 +218,13 @@ echo print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, fal
 
 <td class="datos2" colspan=2>
 <?php if ($nivel == "1"){
-	echo __('Administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1" checked><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg1"].'</span></a>&nbsp;';
+	echo __('Administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1" checked>';
 	echo "&nbsp;&nbsp;";
-	echo __('Standard user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0"><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg2"].'</span></a>';
+	echo __('Standard user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0">';
 } else {
-	echo __('Administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1"><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg1"].'</span></a>&nbsp;';
+	echo __('Administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1">';
 	echo "&nbsp;&nbsp;";
-	echo __('Standard user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0" checked><a href="#" class="tip">&nbsp;<span>'.$help_label["users_msg2"].'</span></a>';
+	echo __('Standard user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0" checked>';
 }
 
 echo "<tr>";

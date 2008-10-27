@@ -60,18 +60,19 @@ if (isset($_GET["id"])){
 	// Delete note
 	if (isset($_GET["id_nota"])){
 		$note_user = give_note_author ($_GET["id_nota"]);
-		if (((give_acl($iduser_temp, $id_grupo, "IM")==1) OR ($note_user == $iduser_temp)) OR ($usuario = $iduser_temp) ) { // Only admins (manage incident) or owners can modify incidents, including their notes
+		if ((give_acl ($iduser_temp, $id_grupo, "IM") || ($note_user == $iduser_temp)) || ($usuario = $iduser_temp) ) {
+		// Only admins (manage incident) or owners can modify incidents, including their notes
 		// But note authors was able to delete this own notes
 			$id_nota = $_GET["id_nota"];
 			$id_nota_inc = $_GET["id_nota_inc"];
 			$query = "DELETE FROM tnota WHERE id_nota = ".$id_nota;
 			$query2 = "DELETE FROM tnota_inc WHERE id_nota_inc = ".$id_nota_inc;
-			//echo "DEBUG: DELETING NOTE: ".$query."(----)".$query2;
+			
 			mysql_query($query);
 			mysql_query($query2);
 			if (mysql_query($query))
 				$result_msg = "<h3 class='suc'>".__('Note successfully deleted')."</h3>";
-			incident_tracking ( $id_inc, $id_usuario, 6);
+			incident_tracking ($id_inc, $id_usuario, INCIDENT_NOTE_DELETED);
 		}
 	}
 

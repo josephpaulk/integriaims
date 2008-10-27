@@ -34,9 +34,9 @@ if (!$id_incident) {
 	exit;
 }
 
-$id_group = (int) get_db_value ('id_grupo', 'tincidencia', 'id_incidencia', $id_incident);
+$incident = get_db_row ('tincidencia', 'id_incidencia', $id_incident);
 
-if (! give_acl ($config["id_user"], $id_group, "IR")) {
+if (! give_acl ($config["id_user"], $incident['id_grupo'], "IR")) {
  	// Doesn't have access to this page
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation",
 		'Trying to access files of incident #'.$id_incident." '".$titulo."'");
@@ -44,7 +44,7 @@ if (! give_acl ($config["id_user"], $id_group, "IR")) {
 	exit;
 }
 
-echo '<h3>'.__('Incident').' #'.$id_incident.' - '.give_inc_title ($id_incident).'</h3>';
+echo '<h3>'.__('Incident').' #'.$id_incident.' - '.$incident['titulo'].'</h3>';
 
 echo '<div class="result"></div>';
 
@@ -67,7 +67,7 @@ $table->head = array ();
 $table->head[0] = __('Filename');
 $table->head[1] = __('Description');
 $table->head[2] = __('Size');
-if (give_acl ($config['id_user'], $id_group, "IM")) {
+if (give_acl ($config['id_user'], $incident['id_grupo'], "IM")) {
 	$table->head[3] = __('Delete');
 }
 
@@ -81,7 +81,7 @@ foreach ($files as $file) {
 	$data[2] = byte_convert ($file['size']);
 
 	// Delete attachment
-	if (give_acl ($config['id_user'], $id_group, 'IM')) {
+	if (give_acl ($config['id_user'], $incident['id_grupo'], 'IM')) {
 		$data[3] = '<a class="delete" id="delete-file-'.$file["id_attachment"].'"
 			href="ajax.php?page=operation/incidents/incident_detail&id='.
 			$id_incident.'&delete_file=1&id_attachment='.$file["id_attachment"].'">

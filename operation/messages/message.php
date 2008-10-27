@@ -183,7 +183,7 @@ else {
 				echo "<td align='center' class='$tdcolor'><img src='images/email_go.png' border=0></td>";
 
 			echo "<td class='$tdcolor'>";
-			echo "<b><a href=index.php?sec=usuarios&sec2=operation/users/user_edit&ver=".$row3["id_usuario_origen"].">".$row3["id_usuario_origen"]."</b></td><td class='".$tdcolor."'><a href='index.php?sec=messages&sec2=operation/messages/message&leer=1&id_mensaje=".$row3["id_mensaje"]."'>";
+			echo "<b><a href=index.php?sec=usuarios&sec2=operation/users/user_edit&id=".$row3["id_usuario_origen"].">".$row3["id_usuario_origen"]."</b></td><td class='".$tdcolor."'><a href='index.php?sec=messages&sec2=operation/messages/message&leer=1&id_mensaje=".$row3["id_mensaje"]."'>";
 
 			if ($row3["subject"]) 
 				echo $row3["subject"]."</a>";

@@ -24,6 +24,12 @@ if (check_login () != 0) {
 
 $id = (int) get_parameter ('id');
 
+if (! give_acl ($config['id_user'], get_inventory_group ($id), 'VR')) {
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to inventory ".$id);
+	include ("general/noaccess.php");
+	return;
+}
+
 echo '<h3>'.__('Contract details on inventory object').' #'.$id.'</h3>';
 
 $contracts = get_inventory_contracts ($id, false);
@@ -51,8 +57,8 @@ foreach ($contracts as $contract) {
 	$table->data[2][0] = __('Date begin');
 	$table->data[2][1] = $contract['date_begin'];
 	if ($contract['date_end'] != '0000-00-00') {
-		$table->data[2][1] = __('Date end');
-		$table->data[2][2] = $contract['date_end'];
+		$table->data[2][2] = __('Date end');
+		$table->data[2][3] = $contract['date_end'];
 	}
 	
 	$sla = get_sla ($contract['id_sla']);

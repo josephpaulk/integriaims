@@ -17,26 +17,20 @@
 check_login();
 
 // Put here your logo
-echo "<img src='images/integria_logo.png' border=0>";
+echo '<a href="index.php"><img src="images/integria_logo.png" title="'.__('Home').'"/></a>';
 
 // Adjust width with &nbsp; to fit your logo
 echo "<div width=100%>";
 echo "<span>";
-echo "<a href='index.php'><img src='images/house.png' border=0>";
-echo " ".__('Home')."</a>";
 
-
-
-echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-$id_usuario = clean_input ($_SESSION["id_usuario"]);
-echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&amp;ver=".$_SESSION["id_usuario"]."'>";
-if (dame_admin($id_usuario)==1)
-	echo "<img src='images/user_suit.png'> ";
+echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'" >';
+if (dame_admin ($config['id_user']))
+	echo '<img src="images/user_suit.png"> ';
 else
-	echo "<img src='images/user_green.png'> ";
-echo __('You are connected as').' [ <b><font color="#ffffff">'. $id_usuario. '</b></font> ]</a>';
+	echo '<img src="images/user_green.png"> ';
+echo __('You are connected as').' <span style="font-wieght: bold; color: #ffffff"">['.$config['id_user'].']</span></a>';
 echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-echo "<a href='index.php?bye=bye'><img src='images/lock.png'> ". __('Logout')."</a>";
-echo "</span>";
-echo "</div>";
+echo '<a href="index.php?logout=1"><img src="images/lock.png"> '. __('Logout').'</a>';
+echo '</span>';
+echo '</div>';
 ?>

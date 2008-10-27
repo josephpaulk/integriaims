@@ -70,7 +70,7 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
 
 	echo "<tr>";
 	echo "<td>";
-	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&ver=$id_user'>";
+	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
 	echo "<b>".$id_user."</b>";
 	echo "</a>";
 	echo " ".__("Write on $timestamp");

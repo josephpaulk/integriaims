@@ -82,7 +82,7 @@ if ($search) {
 	if ($search_id_inventory != '')
 		$sql_clause .= sprintf (' AND id = "%s"', $search_id_inventory);
 
-	$sql = sprintf ('SELECT id, name, description, comments, id_building
+	$sql = sprintf ('SELECT id, name, description, comments, id_building, id_contract
 			FROM tinventory
 			WHERE (name LIKE "%%%s%%" OR description LIKE "%%%s%%")
 			%s LIMIT %d',
@@ -95,8 +95,14 @@ if ($search) {
 	
 	$total_inventories = 0;
 	foreach ($inventories as $inventory) {
+		if ($inventory['id_contract']) {
+			/* Only check ACLs if the inventory has a contract */
+			if (! give_acl ($config['id_user'], get_inventory_group ($inventory['id']), "VR"))
+				continue;
+		}
+		
 		if ($search_id_company) {
-			$companies = get_inventory_affected_companies ($inventory['id']);
+			$companies = get_inventory_affected_companies ($inventory['id'], false);
 			$found = false;
 			foreach ($companies as $company) {
 				if ($company['id'] == $search_id_company)
@@ -105,11 +111,11 @@ if ($search) {
 			if (! $found)
 				continue;
 		}
-	
+		
 		echo '<tr id="result-'.$inventory['id'].'">';
 		echo '<td><strong>#'.$inventory['id'].'</strong></td>';
 		echo '<td>'.$inventory['name'].'</td>';
-
+		
 		$incidents = get_incidents_on_inventory ($inventory['id'], false);
 		$total_incidents = sizeof ($incidents);
 		

@@ -21,6 +21,9 @@ $config["build"]="80924";
 $config["version"]="v1.2-dev";
 $config["build_version"] = $config["build"];
 
+if (! defined ('ENTERPRISE_DIR'))
+	define ('ENTERPRISE_DIR', 'enterprise');
+
 // Read remaining config tokens from DB
 if (! mysql_connect ($config["dbhost"], $config["dbuser"], $config["dbpass"])) {
 	//Non-persistent connection. If you want persistent conn change it to mysql_pconnect()
@@ -45,8 +48,8 @@ if (! mysql_connect ($config["dbhost"], $config["dbuser"], $config["dbpass"])) {
 
 mysql_select_db ($config["dbname"]);
 
-require_once ($config["homedir"]."/include/functions.php");
-require_once ($config["homedir"]."/include/functions_db.php");
+require_once ($config["homedir"].'/include/functions.php');
+require_once ($config["homedir"].'/include/functions_db.php');
 
 $configs = get_db_all_rows_in_table ('tconfig');
 if ($configs === false) {

@@ -13,7 +13,6 @@ function configure_user_search_form () {
 				function (data, status) {
 					$("#user_search_result_table").removeClass ("hide");
 					$("#user_search_result_table tbody").empty ().append (data);
-					refresh_table ("user_search_result_table");
 					$("#user_search_result_table").trigger ("update")
 						.tablesorterPager ({container: $("#users-pager"), size: 3});
 					$("#user_search_result_table tbody tr").click (function () {
@@ -80,7 +79,28 @@ function configure_incident_form (enable_ajax_form) {
 			$(dialog+"#incident-editor-6").css ('display', 'none');
 		}
 	});
-	
+	$(dialog+"#grupo_form").change (function () {
+		values = Array ();
+		values.push ({name: "page",
+			value: "godmode/grupos/lista_grupos"});
+		values.push ({name: "id",
+			value: this.value});
+		values.push ({name: "get_group_details",
+			value: 1});
+		
+		jQuery.get ("ajax.php",
+			values,
+			function (data, status) {
+				$(dialog+"#hidden-usuario_form").attr ("value", data["id_user_default"]);
+				$(dialog+"#button-usuario_name").attr ("value", data["user_real_name"]);
+				if (data["forced_email"])
+					$(dialog+"#checkbox-email_notify").attr ("checked", "checked");
+				else
+					$(dialog+"#checkbox-email_notify").removeAttr ("checked");
+			},
+			"json"
+		);
+	});
 	$(dialog+"#incident_status").children ().each (function () {
 		switch (this.value) {
 		case 1:
@@ -297,14 +317,13 @@ function configure_inventory_search_form (page_size, incident_click_callback) {
 				function (data, status) {
 					$(dialog+"#inventory_search_result_table").removeClass ("hide");
 					$(dialog+"#inventory_search_result_table tbody").empty ().append (data);
-					refresh_table ($(dialog+"#inventory_search_result_table"));
-					$(dialog+"#inventory_search_result_table").trigger ("update")
-						.tablesorterPager ({container: $(dialog+"#inventory-pager"), size: page_size});
 					$(dialog+"#inventory_search_result_table tbody tr").click (function () {
 						id = this.id.split ("-").pop ();
 						name = $(this).children (":eq(1)").text ();
 						incident_click_callback (id, name);
 					});
+					$(dialog+"#inventory_search_result_table").trigger ("update")
+						.tablesorterPager ({container: $(dialog+"#inventory-pager"), size: page_size});
 					$(dialog+"#inventory_search_result_table tbody").fadeIn ();
 					$(dialog+"#inventory-pager").removeClass ("hide").fadeIn ();
 				},

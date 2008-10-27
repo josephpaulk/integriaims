@@ -17,6 +17,24 @@ global $config;
 
 check_login();
 
+$get_group_details = (bool) get_parameter ('get_group_details');
+$id = (int) get_parameter ('id');
+
+if ($get_group_details) {
+	if (! give_acl ($config["id_user"], $id, "IR"))
+		return;
+	
+	$default_user = get_db_value ('id_user_default', 'tgrupo', 'id_grupo', $id);
+	$real_name = get_db_value ('nombre_real', 'tusuario', 'id_usuario', $default_user);
+	$group = array ();
+	$group['forced_email'] = get_db_value ('forced_email', 'tgrupo', 'id_grupo', $id);
+	$group['user_real_name'] = $real_name;
+	$group['id_user_default'] = $default_user;
+	echo json_encode ($group);
+	if (defined ('AJAX'))
+		return;
+}
+
 if (! give_acl ($config["id_user"], 0, "UM")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access group management");
 	require ("general/noaccess.php");
@@ -26,7 +44,6 @@ if (! give_acl ($config["id_user"], 0, "UM")) {
 $create_group = (bool) get_parameter ('create_group');
 $update_group = (bool) get_parameter ('update_group');
 $delete_group = (bool) get_parameter ('delete_group');
-$id = (int) get_parameter ('id');
 
 // Create group
 if ($create_group) {
@@ -40,9 +57,8 @@ if ($create_group) {
 
 	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, lang,
 		banner, url, id_user_default) 
-		VALUES ("%s", "%s", %d, "%s", "%s", "%s", %d)',
+		VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s")',
 		$name, $icon, $forced_email, $lang, $banner, $url, $id_user_default);
-	echo $sql;
 	$id = process_sql ($sql, 'insert-id');	
 	if ($id === false)
 		echo '<h3 class="error">'.__('There was a problem creating group').'</h3>';
@@ -64,7 +80,7 @@ if ($update_group) {
 
 	$sql = sprintf ('UPDATE tgrupo
 		SET nombre = "%s", icon = "%s", url = "%s", forced_email = "%s",
-		banner = "%s", lang = "%s", id_user_default = %d WHERE id_grupo = %d',
+		banner = "%s", lang = "%s", id_user_default = "%s" WHERE id_grupo = %d',
 		$name, $icon, $url, $forced_email, $banner,
 		$lang, $id_user_default, $id);
 	$result = process_sql ($sql);

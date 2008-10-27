@@ -20,9 +20,9 @@ global $config;
 check_login();
 
 if (! give_acl ($config["id_user"], 0, "IM")) {
-		audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a contract");
-		require ("general/noaccess.php");
-		exit;
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+	require ("general/noaccess.php");
+	exit;
 }
 
 $id = (int) get_parameter ('id');
@@ -165,14 +165,14 @@ if ($id | $new_contract) {
 	echo "</form>";
 } else {
 	$search_text = (string) get_parameter ('search_text');
-	$id_company = (int) get_parameter ('id_company');
+	$search_id_company = (int) get_parameter ('search_id_company');
 	
-	$where_clause = "WHERE 1=1";
+	$where_clause = "WHERE 1=1 ";
 	if ($search_text != "") {
-		$where_clause = sprintf ('AND name LIKE "%%%s%%"', $search_text);
+		$where_clause .= sprintf ('AND name LIKE "%%%s%%"', $search_text);
 	}
-	if ($id_company) {
-		$where_clause .= sprintf (' AND id_company = %d', $id_company);
+	if ($search_id_company) {
+		$where_clause .= sprintf (' AND id_company = %d', $search_id_company);
 	}
 	
 	$table->width = '400px';
@@ -180,8 +180,10 @@ if ($id | $new_contract) {
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
-	$table->data[0][1] = print_select (get_companies (), 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
+	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15,
+		100, true, __('Search'));
+	$table->data[0][1] = print_select (get_companies (), 'search_id_company',
+		$search_id_company, '', __('All'), 0, true, false, false, __('Company'));
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contracts/contract_detail">';
@@ -244,5 +246,16 @@ if ($id | $new_contract) {
 	echo '</div>';
 	echo '</form>';
 }
-
 ?>
+
+<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+
+<script type="text/javascript">
+$(document).ready (function () {
+	$("#text-date_begin").datepicker ();
+	$("#text-date_end").datepicker ();
+});
+</script>
+
+<script type="text/javascript" src="include/js/jquery.datepicker.js"></script>

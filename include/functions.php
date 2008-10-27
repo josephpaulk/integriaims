@@ -372,10 +372,10 @@ function lang_string ($string) {
 	return __($string);
 }
 
-function render_priority ($pri){
+function render_priority ($pri) {
 	global $config;
 	
-	switch ($pri){
+	switch ($pri) {
 	case 0:
 		return __('Very low');
 	case 1:
@@ -446,7 +446,7 @@ function maxof ($a, $b) {
 	return max ($a, $b);
 }
 
-function get_indicent_priorities () {
+function get_priorities () {
 	$incidents = array ();
 
 	$incidents[0] = __('Informative');
@@ -459,7 +459,21 @@ function get_indicent_priorities () {
 	return $incidents;
 }
 
-// This both functions need to be updated to use values FROM datatabase, not fixed ones
+function get_periodicities () {
+	$periodicites = array ();
+	
+	$periodicites['none'] = __('None');
+	$periodicites['weekly'] = __('Weekly');
+	$periodicites['15days'] = __('15 days');
+	$periodicites['monthly'] = __('Monthly');
+	$periodicites['60days'] = __('60 days');
+	$periodicites['90days'] = __('90 days');
+	$periodicites['year'] = __('Annual');
+	
+	return $periodicites;
+}
+
+// FIXME: This both functions need to be updated to use values FROM datatabase, not fixed ones
 
 function get_indicent_status () {
 	$status = array ();
@@ -490,6 +504,11 @@ function get_incident_resolutions () {
 
 	return $status;
 }
+
+function ellipsize_string ($string, $len = 2) {
+	return substr ($string, 0, $len).'(....)'.substr ($string, strlen ($string) - $len, $len);
+}
+
 function print_priority_flag_image ($priority, $return = false) {
 	$output = '';
 	
@@ -541,10 +560,13 @@ function enterprise_hook ($function_name, $parameters = false) {
 
 function enterprise_include ($filename) {
 	global $config;
+	
 	// Load enterprise extensions
-	$fullfilename = $config["homedir"]."/enterprise/" . $filename;
-	if (file_exists ($fullfilename)) {
-		include ($fullfilename);
+	$filepath = realpath ($config["homedir"].'/'.ENTERPRISE_DIR.'/'.$filename);
+	if ($filepath === false)
+		return ENTERPRISE_NOT_HOOK;
+	if (file_exists ($filepath)) {
+		include ($filepath);
 		return true;
 	}
 	return ENTERPRISE_NOT_HOOK;

@@ -18,7 +18,20 @@
 
 global $config;
 
-enterprise_include ("include/functions_extra.php");
+enterprise_include ('include/functions_db.php');
+
+define ('INCIDENT_CREATED', 0);
+define ('INCIDENT_UPDATED', 1);
+define ('INCIDENT_WORKUNIT_ADDED', 2);
+define ('INCIDENT_FILE_ADDED', 3);
+define ('INCIDENT_NOTE_ADDED', 4);
+define ('INCIDENT_FILE_REMOVED', 5);
+define ('INCIDENT_PRIORITY_CHANGED', 6);
+define ('INCIDENT_STATUS_CHANGED', 7);
+define ('INCIDENT_RESOLUTION_CHANGED', 8);
+define ('INCIDENT_NOTE_DELETED', 9);
+define ('INCIDENT_INVENTORY_ADDED', 10);
+define ('INCIDENT_USER_CHANGED', 10);
 
 // --------------------------------------------------------------- 
 // give_acl ()
@@ -29,9 +42,9 @@ enterprise_include ("include/functions_extra.php");
 function give_acl ($id_user, $id_group, $access) {
 	global $config;
 
-	$hook_return = enterprise_hook ("give_acl_extra", array($id_user, $id_group, $access));
-	if ($hook_return !== ENTERPRISE_NOT_HOOK)
-		return $hook_return;
+	$return = enterprise_hook ('give_acl_extra', array ($id_user, $id_group, $access));
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
 	
 	$is_admin = (bool) get_db_value ('nivel', 'tusuario', 'id_usuario', $id_user);
 	if ($is_admin)
@@ -56,12 +69,12 @@ function give_acl ($id_user, $id_group, $access) {
 // audit_db, update audit log
 // --------------------------------------------------------------- 
 
-function audit_db ($id, $ip, $accion, $descripcion) {
+function audit_db ($id, $ip, $accion, $description) {
 	require ("config.php");
 	$today = date('Y-m-d H:i:s');
 	$utimestamp = time();
-	$sql1 = 'INSERT INTO tsesion (ID_usuario, accion, fecha, IP_origen,descripcion, utimestamp) VALUES ("'.$id.'","'.$accion.'","'.$today.'","'.$ip.'","'.$descripcion.'", '.$utimestamp.')';
-	$result = mysql_query($sql1);
+	$sql = 'INSERT INTO tsesion (ID_usuario, accion, fecha, IP_origen,descripcion, utimestamp) VALUES ("'.$id.'","'.$accion.'","'.$today.'","'.$ip.'","'.$description.'", '.$utimestamp.')';
+	process_sql ($sql);
 }
 
 
@@ -252,15 +265,18 @@ function give_wu_project ($id_project) {
 *
 * $id_task	integer 	ID of task
 **/
-
-function give_hours_task ($id_task){
-	global $config;
+function get_task_hours ($id_task) {
 	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task
 			WHERE tworkunit_task.id_task = %d
 			AND tworkunit_task.id_workunit = tworkunit.id',
 			$id_task);
 	return (int) get_db_sql ($sql);
+}
+
+function give_hours_task ($id_task) {
+	/* DEPRECATED */
+	return get_task_hours ($id_task);
 }
 
 
@@ -397,11 +413,12 @@ function check_login () {
 		$id = $_SESSION["id_usuario"];
 		$id_user = get_db_value ('id_usuario', 'tusuario', 'id_usuario', $id);
 		if ($id == $id_user) {
-			return false;	
+			return false;
 		}
 	}
+	global $config;
 	require ($config["homedir"]."/general/noaccess.php");
-	return true;	
+	exit;
 }
 
 
@@ -563,20 +580,24 @@ function group_belong_group($id_group_a, $id_groupset){
 		return 0;
 }
 
+function get_incident_resolution ($id_incident) {
+	return get_db_value ('resolution', 'tincidencia', 'id_incidencia', $id_incident);
+}
+
+function get_incident_status ($id_incident) {
+	return get_db_value ('estado', 'tincidencia', 'id_incidencia', $id_incident);
+}
+
+function get_incident_creator ($id_incident) {
+	return (int) get_db_value ('id_creator', 'tincidencia', 'id_incidencia', $id_incident);
+}
 
 // --------------------------------------------------------------- 
 // Return incident priority
 // --------------------------------------------------------------- 
 
-function give_inc_priority ($id_inc){
-	require("config.php");
-	$query1="SELECT * FROM tincidencia WHERE id_incidencia= ".$id_inc;
-	$resq1=mysql_query($query1);
-	if ($rowdup=mysql_fetch_array($resq1))
-		$pro=$rowdup["prioridad"];
-	else
-		$pro = "";
-	return $pro;
+function get_incident_priority ($id_incident) {
+	return get_db_value ('prioridad', 'tincidencia', 'id_incidencia', $id_incident);
 }
 
 // --------------------------------------------------------------- 
@@ -624,56 +645,60 @@ function project_manager_check ($id_project) {
 	return 0;
 }
 
-function incident_tracking ( $id_incident, $id_user, $state, $aditional_data = 0) {
+function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 	global $config;
 	
-	switch($state){
-	case 0:
-		$descripcion = __('Incident created');
+	switch ($state) {
+	case INCIDENT_CREATED:
+		$description = __('Created');
+		echo $state;
 		break;
-	case 1:
-		$descripcion = __('Incident updated');
+	case INCIDENT_UPDATED:
+		$description = __('Updated');
 		break;
-	case 2:
-		$descripcion = __('Workunit added to incident');
+	case INCIDENT_WORKUNIT_ADDED:
+		$description = __('Workunit added');
 		break;
-	case 3:
-		$descripcion = __('File added to incident');
+	case INCIDENT_FILE_ADDED:
+		$description = __('File added');
 		break;
-	case 4:
-		$descripcion = __('Incident note deleted');
+	case INCIDENT_NOTE_ADDED:
+		$description = __('Note added');
 		break;
-	case 5:
-		$descripcion = __('Incident file removed');
+	case INCIDENT_FILE_REMOVED:
+		$description = __('File removed');
 		break;
-	case 6:
-		$descripcion = __('Incident change priority');
+	case INCIDENT_PRIORITY_CHANGED:
+		$description = __('Priority changed');
+		$priorities = get_priorities ();
+		$description .= " -> ".$priorities[$aditional_data];
 		break;
-	case 7:
-		$descripcion = __('Incident status has changed');
+	case INCIDENT_STATUS_CHANGED:
+		$description = __('Status changed');
+		$description .= " -> ".get_db_value ("name", "tincident_status", "id", $aditional_data);
 		break;
-	case 8:
-		$descripcion = __('Incident resolution has changed');
+	case INCIDENT_RESOLUTION_CHANGED:
+		$description = __('Resolution changed');
+		$description .= " -> ".get_db_value ("name", "tincident_resolution", "id", $aditional_data);
 		break;
-	case 9:
-		$descripcion = __('Workunit added to incident');
+	case INCIDENT_NOTE_DELETED:
+		$description = __('Note deleted');
+		break;
+	case INCIDENT_USER_CHANGED:
+		$description = __('Assigned user changed');
+		$description .= ' -> '.get_db_value ('nombre', 'tusuario', 'id_usuario', $aditional_data);
+		break;
+	default:
+		$description = __('Unknown update');
 		break;
 	}
-
-	if ($state == 6)
-		$descripcion .= " -> ".$aditional_data;
-
-	if ($state == 7)
-		$descripcion .= " -> ".get_db_value ("name", "tincident_status", "id", $aditional_data);
-
-	if ($state == 8)
-		$descripcion .= " -> ".get_db_value ("name", "tincident_resolution", "id", $aditional_data);
 	
-
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident updated", $descripcion);
-	$sql = "INSERT INTO tincident_track (id_user, id_incident, timestamp, state, id_aditional) values ('$id_user', $id_incident, NOW(), $state, $aditional_data)";
-	$resq1=mysql_query($sql);
-	
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident updated", $description);
+	$sql = sprintf ('INSERT INTO tincident_track (id_user, id_incident,
+		timestamp, state, id_aditional, description)
+		VALUES ("%s", %d, NOW(), %d, %d, "%s")',
+		$config['id_user'], $id_incident, $state, $aditional_data, $description);
+	return process_sql ($sql, 'insert_id');
 }
 
 function task_tracking ( $id_user, $id_task, $state, $id_note = 0, $id_file = 0) {
@@ -696,7 +721,7 @@ function task_tracking ( $id_user, $id_task, $state, $id_note = 0, $id_file = 0)
 	audit_db ($id_user, $REMOTE_ADDR, "Task #$id_task tracking updated", "State #$state");
 	$id_external = $id_note + $id_file; // one or two of them must be 0, so sum is a good option to calculate who is usable
 	$sql = "INSERT INTO ttask_track (id_user, id_task, timestamp, state, id_external) values ('$id_user', $id_task, NOW(), $state, $id_external)";
-	$resq1=mysql_query($sql);
+	process_sql ($sql);
 }
 
 $sql_cache = array ('saved' => 0);
@@ -1067,7 +1092,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode){
 
 	$row = get_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$titulo =$row["titulo"];
-	$descripcion = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
+	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
 	$prioridad = $row["prioridad"];
 	$nota = wordwrap($nota, 70, "\n");
 
@@ -1119,7 +1144,7 @@ RESOLUTION  : $resolution
 ASSIGNED TO : $usuario
 TIME USED   : $timeused
 ----------------------------------------------[DESCRIPTION]---------
-$descripcion\n\n";
+$description\n\n";
 
 if ($mode == 10){
 $text .= "
@@ -1169,10 +1194,10 @@ function people_involved_incident ($id_inc){
 
 /* Returns cost for a given task */
 
-function task_workunit_cost ($id_task, $only_marked = 1){
+function task_workunit_cost ($id_task, $only_marked = true) {
 	global $config;
 	$total = 0;
-	if ($only_marked == 1)
+	if ($only_marked)
 		$res = mysql_query("SELECT id_profile, SUM(duration) FROM tworkunit, tworkunit_task
 				WHERE tworkunit_task.id_task = $id_task AND 
 				tworkunit_task.id_workunit = tworkunit.id AND 
@@ -1211,18 +1236,17 @@ function project_workunit_cost ($id_project, $only_marked = 1){
 
 function user_visible_for_me ($id_user, $target_user, $access = ""){
 	global $config; 
-	$access = strtolower($access);
-
-	if (dame_admin ($id_user) == 1){
+	
+	$access = strtolower ($access);
+	if (dame_admin ($id_user)) {
 		return 1;
 	}
 
-	if ($id_user == $target_user){
-	return 1;
+	if ($id_user == $target_user) {
+		return 1;
 	}
 
 	// I have access to group ANY ?
-
 	if ($access == "")
 		$sql_0 = "SELECT COUNT(*) FROM tusuario_perfil WHERE id_usuario = '$id_user' AND id_grupo = 1 ";
 	else
@@ -1442,7 +1466,7 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 	
 	$values = array ();
 	
-	if (give_acl ($id_user, 1, "")) {
+	if (give_acl ($id_user, 1, $access)) {
 		$users = get_db_all_rows_in_table("tusuario");
 		if ($users === false)
 			$users = array ();
@@ -1510,9 +1534,18 @@ function get_inventories_in_incident ($id_incident, $only_names = true) {
 			WHERE tincidencia.id_incidencia = tincident_inventory.id_incident
 			AND tinventory.id = tincident_inventory.id_inventory
 			AND tincidencia.id_incidencia = %d', $id_incident);
-	$inventories = get_db_all_rows_sql ($sql);
-	if ($inventories == false)
+	$all_inventories = get_db_all_rows_sql ($sql);
+	if ($all_inventories == false)
 		return array ();
+	
+	global $config;
+	$inventories = array ();
+	foreach ($all_inventories as $inventory) {
+		if (! give_acl ($config['id_user'], get_inventory_group ($inventory['id']), 'VR')) {
+			$inventory['name'] = ellipsize_string ($inventory['name']);
+		}
+		array_push ($inventories, $inventory);
+	}
 	
 	if ($only_names) {
 		$result = array ();
@@ -1540,6 +1573,18 @@ function get_inventory_contracts ($id_inventory, $only_names = true) {
 		return $result;
 	}
 	return $contracts;
+}
+
+function get_inventory_group ($id_inventory, $only_id = true) {
+	$sql = sprintf ('SELECT tgrupo.%s FROM tinventory, tcontract, tgrupo
+			WHERE tinventory.id_contract = tcontract.id
+			AND tcontract.id_group = tgrupo.id_grupo
+			AND tinventory.id = %d',
+			($only_id ? "id_grupo" : "*"),
+			$id_inventory);
+	if ($only_id)
+		return (int) get_db_sql ($sql);
+	return get_db_row_sql ($sql);
 }
 
 function get_inventory_affected_companies ($id_inventory, $only_names = true) {
@@ -1781,16 +1826,20 @@ function get_incidents_on_inventory ($id_inventory, $only_names = true) {
 			AND tincident_inventory.id_inventory = %d
 			ORDER BY tincidencia.inicio DESC',
 			$id_inventory);
-	$incidents = get_db_all_rows_sql ($sql);
-	if ($incidents == false)
+	$all_incidents = get_db_all_rows_sql ($sql);
+	if ($all_incidents == false)
 		return array ();
 	
-	if ($only_names) {
-		$result = array ();
-		foreach ($incidents as $incident) {
-			$result[$incident['id']] = $incident['name'];
+	global $config;
+	$incidents = array ();
+	foreach ($all_incidents as $incident) {
+		if (give_acl ($config['id_user'], $incident['id_grupo'], 'IR')) {
+			if ($only_names) {
+				$incidents[$incident['id']] = $incident['name'];
+			} else {
+				array_push ($incidents, $incident);
+			}
 		}
-		return $result;
 	}
 	return $incidents;
 }
@@ -1859,6 +1908,10 @@ function get_incident_users ($id_incident) {
 	$users['affected'] = array ();
 	$affected_users = get_users_in_group ($incident['id_grupo'], false);
 	foreach ($affected_users as $user) {
+		if ($users['owner']['id_usuario'] == $user['id_usuario'])
+			continue;
+		if ($users['creator']['id_usuario'] == $user['id_usuario'])
+			continue;
 		array_push ($users['affected'], $user);
 	}
 	
