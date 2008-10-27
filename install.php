@@ -39,7 +39,7 @@
 
 error_reporting(0);
 
-$integria_version = "1.2-dev";
+$integria_version = "2.0-dev";
 
 $integria_footertext = "<div id='foot'>
                         <i>Integria is an OpenSource Software project 
@@ -226,7 +226,7 @@ function install_step2() {
 	echo "
 	<div align='center'>
 	<h1>Integria IMS $integria_version instalation wizard. Step #2 of 4</h1>
-	<div id='wizard' style='height: 380px;'>
+	<div id='wizard' style='height: 450px;'>
 		<div id='install_box'>";
 		echo "<h1>Checking software dependencies</h1>";
 			echo "<table border=0 width=330 cellpadding=5 cellspacing=5>";
@@ -276,7 +276,7 @@ function install_step3() {
 	echo "
 	<div align='center''>
 	<h1>Integria $integria_version instalation wizard. Step #3 of 4 </h1>
-	<div id='wizard' style='height: 670px;'>
+	<div id='wizard' style='height: 590px;'>
 		<div id='install_box'>
 			<h1>Environment and database setup</h1>
 			<p>
@@ -318,7 +318,7 @@ function install_step3() {
 				<span class='f9b'>For example /integria</span>
 				</div>
 				<input class='login' type='text' name='url' style='width: 250px;'  value='".dirname ($_SERVER['PHP_SELF'])."'>
-				
+				<br><br>
 				<div><input align='right' style='align: right; width:70px; height: 16px;' type='image' src='images/arrow_next.png'  value='Step #4'></div>
 			</form>
 			</div>
@@ -378,7 +378,7 @@ function install_step4() {
 	echo "
 	<div align='center' class='mt35'>
 	<h1>Integria IMS $integria_version instalation wizard. Step #4 of 4 </h1>
-	<div id='wizard' style='height: 410px;'>
+	<div id='wizard' style='height: 510px;'>
 		<div id='install_box'>
 			<h1>Creating database and default configuration file</h1>
 			<table>";
@@ -401,7 +401,12 @@ function install_step4() {
 			
 					$step4 = parse_mysql_dump("integria_dbdata.sql");
 					check_generic ($step4, "Populating database");
-	
+
+					if (file_exists("enterprise/integria_db.sql")){
+						$step5 = parse_mysql_dump("enterprise/integria_db.sql");
+						check_generic ($step5, "Populating enterprise database");
+					}
+
 					$random_password = random_name (8);
 					if ($createuser==1){
 						$query = 
@@ -415,8 +420,8 @@ function install_step4() {
 					$step6 = is_writable("include");
 					check_generic ($step6, "Write permissions to save config file in './include'");
 						
-					$cfgin = fopen ("include/config.inc.php","r");
-					$cfgout = fopen ($INTEGRIA_config,"w");
+					$cfgin = fopen ("include/config.inc.php", "r");
+					$cfgout = fopen ($INTEGRIA_config, "w");
 					$config_contents = fread ($cfgin, filesize("include/config.inc.php"));
 	
 					$config_new = '<?PHP

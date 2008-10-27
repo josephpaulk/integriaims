@@ -17,8 +17,8 @@
 global $config;
 
 // Integria version
-$config["build"]="80924";
-$config["version"]="v1.2-dev";
+$config["build"]="81016";
+$config["version"]="v2.0-dev";
 $config["build_version"] = $config["build"];
 
 if (! defined ('ENTERPRISE_DIR'))

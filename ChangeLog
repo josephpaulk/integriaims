@@ -1,3 +1,11 @@
+2008-10-20  Sancho Lerena <slerena@artica.es>
+
+	* include/config_process.php: Updated version.
+
+	* install.php: Added support for enterprise installer (db).
+
+	* integria_dbdata.sql: Cleaned unused code.
+
 2008-10-20  Esteban Sanchez  <estebans@artica.es>
 
 	* general/header.php: Added a link to the main page at top right logo.
