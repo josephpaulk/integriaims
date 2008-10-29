@@ -151,7 +151,7 @@ if ($id || $new_company) {
 	$table->data = array ();
 	$table->data[0][0] = __('Search');
 	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_detail">';
 	print_table ($table);

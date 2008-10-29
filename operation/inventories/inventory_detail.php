@@ -38,7 +38,7 @@ $id_sla = (int) get_parameter ('id_sla');
 $id_manufacturer = (int) get_parameter ('id_manufacturer');
 
 if ($update) {
-	if (! give_acl ($config['id_user'], get_inventory_group ($id), "IW") != 1) {
+	if (! give_acl ($config['id_user'], get_inventory_group ($id), "IW")) {
 		// Doesn't have access to this page
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update inventory #".$id);
 		include ("general/noaccess.php");
@@ -68,7 +68,7 @@ if ($update) {
 }
 
 if ($create) {
-	if (! give_acl ($config['id_user'], 0, "IM") != 1) {
+	if (! give_acl ($config['id_user'], 0, "IM")) {
 		// Doesn't have access to this page
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create inventory object");
 		include ("general/noaccess.php");

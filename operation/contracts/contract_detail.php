@@ -253,8 +253,20 @@ if ($id | $new_contract) {
 
 <script type="text/javascript">
 $(document).ready (function () {
-	$("#text-date_begin").datepicker ();
-	$("#text-date_end").datepicker ();
+	$("#text-date_begin").datepicker ({
+		beforeShow: function () {
+			return {
+				maxDate: $("#text-date_end").datepicker ("getDate")
+			};
+		}
+	});
+	$("#text-date_end").datepicker ({
+		beforeShow: function () {
+			return {
+				minDate: $("#text-date_begin").datepicker ("getDate")
+			};
+		}
+	});
 });
 </script>
 

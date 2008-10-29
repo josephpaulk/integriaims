@@ -22,6 +22,23 @@ check_login ();
 $id_grupo = (int) get_parameter ('id_grupo');
 $id = (int) get_parameter ('id');
 
+if ($id) {
+	$incident = get_incident ($id);
+	if ($incident !== false) {
+		$id_grupo = $incident['id_grupo'];
+	}
+}
+
+$check_incident = (bool) get_parameter ('check_incident');
+if ($check_incident) {
+	if ($incident !== false && give_acl ($config['id_user'], $id_grupo, "IR"))
+		echo 1;
+	else
+		echo 0;
+	if (defined ('AJAX'))
+		return;
+}
+
 if (give_acl ($config['id_user'], $id_grupo, "IR") != 1) {
  	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
@@ -69,7 +86,7 @@ if ($action == 'update') {
 	$email_notify = (bool) get_parameter ("email_notify");
 	$epilog = get_parameter ('epilog');
 	$resolution = get_parameter ('incident_resolution');
-	$id_task = get_parameter ('task_user');
+	$id_task = (int) get_parameter ('task_user');
 	$id_incident_type = get_parameter ('id_incident_type');
 	$id_parent = (int) get_parameter ('id_parent');
 	
@@ -92,9 +109,7 @@ if ($action == 'update') {
 		incident_tracking ($id, INCIDENT_USER_CHANGED, $user);
 		$tracked = true;
 	}
-	if (! $tracked) {
-		incident_tracking ($id, INCIDENT_UPDATED);
-	}
+	incident_tracking ($id, INCIDENT_UPDATED);
 	
 	$sql = sprintf ('UPDATE tincidencia SET actualizacion = NOW(),
 			titulo = "%s", origen = %d, estado = %d,
@@ -107,7 +122,6 @@ if ($action == 'update') {
 			$email_notify, $priority, $description,
 			$epilog, $id_task, $resolution, $id_incident_type,
 			$id_parent, $id);
-	
 	$result = process_sql ($sql);
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
 
@@ -141,8 +155,8 @@ if ($action == 'update') {
 }
 
 if ($action == "insert") {
-	$grupo = get_parameter ('grupo_form');
-	$usuario = get_parameter ('usuario_form');
+	$grupo = (int) get_parameter ('grupo_form');
+	$usuario = (string) get_parameter ('usuario_form');
 
 	if (! give_acl ($config['id_user'], $grupo, "IW") && $usuario != $config['id_user']) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],
@@ -160,7 +174,7 @@ if ($action == "insert") {
 	$id_creator = $config['id_user'];
 	$estado = get_parameter ("incident_status");
 	$resolution = get_parameter ("incident_resolution");
-	$id_task = get_parameter ("task_user");
+	$id_task = (int) get_parameter ("task_user");
 	$email_notify = (bool) get_parameter ('email_notify');
 	$id_incident_type = get_parameter ('id_incident_type');
 	$id_parent = (int) get_parameter ('id_parent');
@@ -186,12 +200,13 @@ if ($action == "insert") {
 					$id, $id_inventory);
 			process_sql ($sql);
 		}
-		$result_msg = "<h3 class='suc'>".__('Incident successfully created')." (id #$id)</h3>";
-		$result_msg .= "<h4><a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id'>".__('Please click here to continue working with incident #').$id."</a></h4>";
+		$result_msg = '<h3 class="suc">'.__('Incident successfully created').' (id #'.$id.')</h3>';
+		$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
 
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 			"Incident created",
 			"User ".$config['id_user']." created incident #".$id);
+		
 		incident_tracking ($id, INCIDENT_CREATED);
 
 		// Email notify to all people involved in this incident
@@ -211,32 +226,29 @@ if ($action == "insert") {
 // Edit / Visualization MODE - Get data from database
 if ($id) {
 	$create_incident = false;
-	$iduser_temp=$_SESSION['id_usuario'];
-	// Obtain group of this incident
-	$sql = sprintf ('SELECT * FROM tincidencia
-			WHERE id_incidencia = %d', $id);
-	$result = mysql_query ($sql);
-	$row = mysql_fetch_array ($result);
+	$iduser_temp = $_SESSION['id_usuario'];
+	
+	$incident = get_db_row ('tincidencia', 'id_incidencia', $id);
 	// Get values
-	$titulo = $row["titulo"];
-	$description = $row["descripcion"];
-	$inicio = $row["inicio"];
-	$actualizacion = $row["actualizacion"];
-	$estado = $row["estado"];
-	$priority = $row["prioridad"];
-	$origen = $row["origen"];
-	$usuario = $row["id_usuario"];
+	$titulo = $incident["titulo"];
+	$description = $incident["descripcion"];
+	$inicio = $incident["inicio"];
+	$actualizacion = $incident["actualizacion"];
+	$estado = $incident["estado"];
+	$priority = $incident["prioridad"];
+	$origen = $incident["origen"];
+	$usuario = $incident["id_usuario"];
 	$nombre_real = dame_nombre_real($usuario);
-	$id_grupo = $row["id_grupo"];
-	$id_creator = $row["id_creator"];
-	$email_notify=$row["notify_email"];
-	$resolution = $row["resolution"];
-	$epilog = $row["epilog"];
-	$id_task = $row["id_task"];
-	$id_parent = $row["id_parent"];
-	$affected_sla_id = $row["affected_sla_id"];
+	$id_grupo = $incident["id_grupo"];
+	$id_creator = $incident["id_creator"];
+	$email_notify=$incident["notify_email"];
+	$resolution = $incident["resolution"];
+	$epilog = $incident["epilog"];
+	$id_task = $incident["id_task"];
+	$id_parent = $incident["id_parent"];
+	$affected_sla_id = $incident["affected_sla_id"];
 	$sla_disabled = false; /* TODO */
-	$id_incident_type = $row['id_incident_type'];
+	$id_incident_type = $incident['id_incident_type'];
 	$grupo = dame_nombre_grupo($id_grupo);
 
 	// Aditional ACL check on read incident
@@ -244,10 +256,8 @@ if ($id) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config["id_user"]." try to access to an unauthorized incident ID #id_inc");
 		no_permission ();
 	}
-
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
 	// Workunit ADD
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	$insert_workunit = (bool) get_parameter ('insert_workunit');
 	if ($insert_workunit) {
 		$timestamp = get_parameter ("timestamp");
@@ -315,7 +325,7 @@ if ($id) {
 			}
 			
 			// Copy file to directory and change name
-			$filename = $config["homedir"]."attachment/pand".$id_attachment."_".$filename;
+			$filename = $config["homedir"]."/attachment/pand".$id_attachment."_".$filename;
 			
 			if (! copy ($_FILES['userfile']['tmp_name'], $filename)) {
 				$result_msg = '<h3 class="error">'.__('File cannot be saved. Please contact Integria administrator about this error').'</h3>';
@@ -410,7 +420,7 @@ $has_permission = (give_acl ($iduser_temp, $id_grupo, "IM")  || ($usuario == $id
 
 if ($id) {
 	echo "<h1>".__('Incident')." #$id";
-	if ($affected_sla_id != 0){
+	if ($affected_sla_id != 0) {
 		echo '&nbsp;&nbsp;&nbsp;<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">';
 	}
 	echo "</h1>";
@@ -502,15 +512,17 @@ if ($has_permission) {
 if ($create_incident) {
 	$id_inventory = (int) get_parameter ('id_inventory');
 	$inventories = array ();
+	
 	if ($id_inventory) {
-		if (! give_acl ($config['id_user'], $id_inventory, "VR"))
+		if (! give_acl ($config['id_user'], $id_inventory, "VR")) {
 			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation",
 				"Trying to access inventory #".$id);
-		else {
+		} else {
 			$inventories[$id_inventory] = get_db_value ('name', 'tinventory',
 				'id', $id_inventory);
 		}
 	}
+	
 	$table->data[4][2] = print_select ($inventories, 'incident_inventories', NULL,
 					'', '', '', true, false, false, __('Objects affected'));
 	$table->data[4][2] .= print_button (__('Add'),
@@ -528,11 +540,13 @@ if ($create_incident) {
 					'search_inventory', false, '', 'class="dialogbtn"', true);
 		$table->data[4][2] .= print_button (__('Remove'),
 					'delete_inventory', false, '', 'class="dialogbtn"', true);
-		foreach ($inventories as $inventory_id => $inventory_name) {
-			$table->data[4][2] .= print_input_hidden ("inventories[]",
-								$inventory_id, true, 'selected-inventories');
-		}
+		
 	}
+}
+
+foreach ($inventories as $inventory_id => $inventory_name) {
+	$table->data[4][2] .= print_input_hidden ("inventories[]",
+						$inventory_id, true, 'selected-inventories');
 }
 
 $disabled_str = $disabled ? 'readonly="1"' : '';

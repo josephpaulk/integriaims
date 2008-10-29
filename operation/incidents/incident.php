@@ -130,7 +130,8 @@ $table->head[3] = __('Group');
 $table->head[4] = __('Status')." - <i>".__('Resolution')."</i>";
 $table->head[5] = __('Priority');
 $table->head[6] = __('Updated')." - <i>".__('Started')."</i>";
-$table->head[7] = __('Flags');
+$table->head[7] = __('Work');
+$table->head[8] = __('Flags');
 $table->style = array ();
 $table->style[0] = '';
 
@@ -186,7 +187,6 @@ function tab_loaded (event, tab) {
 			tr = $(this).parents ("tr");
 			if (!confirm ("<?php echo __('Are you sure?');?>"))
 				return false;
-			console.log ();
 			jQuery.get (
 				$(this).attr ("href"),
 				null,
@@ -205,6 +205,26 @@ function tab_loaded (event, tab) {
 	$(".result").empty ();
 }
 
+function check_incident (id) {
+	values = Array ();
+	values.push ({name: "page",
+		value: "operation/incidents/incident_detail"});
+	values.push ({name: "id",
+		value: id});
+	values.push ({name: "check_incident",
+		value: 1});
+	jQuery.get ("ajax.php",
+		values,
+		function (data, status) {
+			if (data == 1) {
+				show_incident_details (id);
+			} else {
+				result_msg_error ("<?php echo __('Unable to load incident')?> #" + id);
+			}
+		},
+		"html"
+	);
+}
 function show_incident_details (id) {
 	id_incident = id;
 	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_detail&id=" + id);
@@ -215,11 +235,17 @@ function show_incident_details (id) {
 	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_files&id=" + id);
 	$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
 		.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
-	$("#tabs > ul").tabs ("select", 1);
+	if (tabs.data ("selected.tabs") == 1) {
+		$("#tabs > ul").tabs ("load", 1);
+	} else {
+		$("#tabs > ul").tabs ("select", 1);
+	}
 }
 
+var tabs;
+
 $(document).ready (function () {
-	$("#tabs > ul").tabs ({"load" : tab_loaded});
+	tabs = $("#tabs > ul").tabs ({"load" : tab_loaded});
 <?php if ($id) : ?>
 	old_incident = id_incident = <?php echo $id ?>;
 	configure_incident_side_menu (id_incident, false);
@@ -268,15 +294,13 @@ $(document).ready (function () {
 	
 	$("#goto-incident-form").submit (function () {
 		id = $("#text-id", this).attr ("value");
-		show_incident_details (id);
-		if (old_incident)
-			$("#tabs > ul").tabs ("load", 1);
+		check_incident (id);
 		return false;
 	});
 	
 	configure_incident_search_form (<?php echo $config['block_size']?>,
 		function (id, name) {
-			show_incident_details (id);
+			check_incident (id);
 		},
 		function (form) {
 			val = get_form_input_values (form);

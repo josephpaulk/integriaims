@@ -90,7 +90,7 @@ CREATE TABLE `ttask` (
   `periodicity` enum ('none', 'weekly', 'monthly', 'year', '15days', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none',
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
-     ON UPDATE CASCADE ON DELETE SET default,
+     ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
      ON UPDATE CASCADE ON DELETE SET default
 );
@@ -243,6 +243,7 @@ CREATE TABLE `tincident_track` (
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_user` varchar(60) NOT NULL default '',
   `id_aditional` int(10) unsigned NOT NULL default '0',
+  `description` text NOT NULL default '',
   PRIMARY KEY  (`id_it`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE,
@@ -282,9 +283,11 @@ CREATE TABLE `tworkunit` (
 
 CREATE TABLE `tworkunit_task` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `id_task` int(10) NOT NULL default '0',
+  `id_task` int(10) unsigned NOT NULL default '0',
   `id_workunit` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
+      ON UPDATE CASCADE ON DELETE SET default,
   FOREIGN KEY (`id_workunit`) REFERENCES tworkunit(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
 );

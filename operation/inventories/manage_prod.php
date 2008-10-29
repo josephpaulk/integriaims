@@ -215,7 +215,7 @@ if (! $update && ! $create) {
 			echo "<a href='index.php?sec=inventory&
 						sec2=operation/inventories/manage_prod&
 						delete_prod=".$row["id"]."' 
-						onClick='if (!confirm(\' ".$lang_label["are_you_sure"]."\')) 
+						onClick='if (!confirm(\'".__('Are you sure?'])."\')) 
 						return false;'>
 						<img border='0' src='images/cross.png'></a>";
 		}
@@ -225,7 +225,7 @@ if (! $update && ! $create) {
 	echo "<tr><td align='right'>";
 	echo "<form method=post action='index.php?sec=inventory&sec2=operation/inventories/manage_prod'>";
 	print_input_hidden ('create', 1);
-	echo "<input type='submit' class='sub next' name='crt' value='".lang_string("Create product")."'>";
+	echo "<input type='submit' class='sub next' name='crt' value='".__("Create product")."'>";
 	echo "</form></td></tr></table>";
 } // end of list
 

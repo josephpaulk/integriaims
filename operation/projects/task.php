@@ -18,243 +18,224 @@
 
 global $config;
 
+check_login ();
 
-if (check_login() != 0) {
-    audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
-    require ("general/noaccess.php");
-    exit;
-}
+$id_project = (int) get_parameter ('id_project');
 
-$id_user = $config["id_user"];
-
-$id_project = give_parameter_get ("id_project", -1);
-if ($id_project != -1)
-	$project_name = give_db_value ("name", "tproject", "id", $id_project);
-else
-	$project_name = "";
-
-if ( $id_project == -1 ){
-    // Doesn't have access to this page
-    audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager withour project");
-    include ("general/noaccess.php");
-    exit;
-}
-
-if (user_belong_project ($id_user, $id_project)==0){
-	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
+if (! $id_project) {// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager without project");
 	include ("general/noaccess.php");
 	exit;
 }
 
-$operation = give_parameter_get ("operation", -1);
-if ($operation == "delete") {
-	$id_task = give_parameter_get ("id");
-	
-	if ((dame_admin($id_user)==1) OR (project_manager_check ($id_project) == 1)){
+$project = get_db_row ('tproject', 'id', $id_project);
+
+if (! user_belong_project ($config['id_user'], $id_project)) {
+	audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
+	include ("general/noaccess.php");
+	exit;
+}
+
+$id_task = (int) get_parameter ('id');
+$operation = (string) get_parameter ('operation');
+
+if ($operation == 'delete') {
+	if (dame_admin ($config['id_user']) || project_manager_check ($id_project)) {
 		delete_task ($id_task);
-		echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
-		$operation = "";
-        task_tracking ($id_user, $id_task, 20, 0, 0);
+		echo '<h3 class="suc">'.__('Deleted successfully').'</h3>';
+		$operation = '';
+		task_tracking ($config['id_user'], $id_task, 20, 0, 0);
 	} else {
-		no_permission();
+		no_permission ();
 	}
 }
-elseif ($operation == "move") {
-    $target_project = get_parameter ("target_project");
-    $id_task = give_parameter_get ("id_task");
-    if ((dame_admin($id_user)==1) OR (project_manager_check ($id_project) == 1)){
-        $sql = "UPDATE ttask SET id_project = $target_project, id_parent_task = 0 WHERE id = $id_task";
-        mysql_query($sql);
-        task_tracking ($id_user, $id_task, 19, 0, 0);
-    } else {
-        no_permission();
-    }
+
+if ($operation == 'move') {
+	$target_project = get_parameter ("target_project");
+	$id_task = give_parameter_get ("id_task");
+	if ((dame_admin($config['id_user'])==1) OR (project_manager_check ($id_project) == 1)){
+		$sql = sprintf ('UPDATE ttask
+			SET id_project = %d,
+			id_parent_task = 0
+			WHERE id = %d', $target_project, $id_task);
+		process_sql ($sql);
+		task_tracking ($config['id_user'], $id_task, 19, 0, 0);
+	} else {
+		no_permission ();
+	}
 }
 
 // MAIN LIST OF TASKS
 
-echo "<h2>".$project_name." - ".__('Task management')."</h2>";
+echo '<h2>'.$project['name'].' - '.__('Task management').'</h2>';
 
-$filter_id_group = get_parameter ("filter_id_group", 0);
-$filter_freetext = get_parameter ("filter_freetext", "");
+$search_id_group = (int) get_parameter ('search_id_group');
+$search_text = (string) get_parameter ('search_text');
 
-$FILTER = " 1=1 ";
+$where_clause = ' 1=1 ';
+if ($search_text != "")
+	$where_clause .= sprintf (' AND name LIKE "%%%s%%" OR description LIKE "%%%s%%"',
+		$search_text, $search_text);
 
-if ( $filter_freetext != "")
-	$FILTER .= " AND name LIKE '%$filter_freetext%' OR description LIKE '%$filter_freetext%' ";
+if ($search_id_group != 0)
+	$where_clause .= spintf ('( AND id_group = ', $search_id_group);
 
-if ($filter_id_group != 0)
-	$FILTER .= " AND id_group = $filter_id_group";
+$table->width = '400px';
+$table->class = 'search-table';
+$table->style = array ();
+$table->style[0] = 'font-weight: bold;';
+$table->style[2] = 'font-weight: bold;';
+$table->data = array ();
+$table->data[0][0] = __('Search');
+$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
+$table->data[0][2] = __('Group');
+$table->data[0][3] = print_select (get_user_groups (),
+	'search_id_group', $search_id_group, '', __('Any'), '0', true);
+$table->data[0][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 
+echo '<form method="post">';
+print_table ($table);
+echo '</form>';
 
+unset ($table);
 
-echo "<table width=610>";
-	echo "<form method=post action='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>";
-	echo "<tr><td>";
-	echo __('Free text search');
-	echo "<td>";
-	echo print_input_text ("filter_freetext", $filter_freetext, "", 15, 100, false);
+$table->width = '90%';
+$table->class = 'listing';
+$table->data = array ();
+$table->style = array ();
+$table->style[0] = 'font-weight: bold';
+$table->head = array ();
+$table->head[0] = __('Name');
+$table->head[1] = __('Pri');
+$table->head[2] = __('Progress');
+$table->head[3] = __('Estimation');
+$table->head[4] = __('Time used');
+$table->head[5] = __('Cost');
+$table->head[6] = __('People');
+$table->head[7] = __('Start');
+$table->head[8] = __('End');
+$table->align = array ();
+$table->align[1] = 'center';
+$table->align[2] = 'center';
+$table->align[3] = 'center';
+$table->align[4] = 'center';
+$table->align[9] = 'center';
 
-	echo "<td>";
-	echo __('Group');
-	echo "<td>";
-	echo print_select_from_sql ("SELECT * from tgrupo WHERE id_grupo > 1 ORDER BY nombre", "filter_id_group", $filter_id_group, "", __('None'), '0', false, false, true, false); 
-
-	echo "<td>";
-	print_submit_button (__('Search'), "enviar", false, "class='sub search'", false);
-	echo "</form></td></tr></table>";
-
-
-// -------------
 // Show headers
-// -------------
-echo "<table width='100%' class='listing'>";
+echo "<table width='750px' class='listing'>";
 echo "<tr>";
-echo "<th class='f9'>".__('Name');
-echo "<th class='f9'>".__('Pri');
-echo "<th class='f9'>".__('Progress');
-echo "<th class='f9'>".__('Estimation');
-echo "<th class='f9'>".__('Time used');
-echo "<th class='f9'>".__('Cost');
-echo "<th class='f9'>".__('People');
-
-echo "<th>".__('Start');
-echo "<th>".__('End');
-echo "<th>".__('Delete');
 $color = 1;
-show_task_tree ($id_project, 0, 0, 0, $FILTER);
-echo "</table>";
+show_task_tree ($table, $id_project, 0, 0, $where_clause);
+
+print_table ($table);
 
 
-if (give_acl($config["id_user"], 0, "IW")==1) {
-	echo "<table width=100% class='button'>";
-	echo "<tr><td align=right>";
-    echo "<form name='boton' method='POST'  action='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>";
-    echo "<input type='submit' class='sub next' name='crt' value='".__('New task')."'>";
-    echo "</form>";
-	echo "</td></tr></table>";
+if (give_acl ($config['id_user'], 0, 'PW')) {
+	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
+	echo '<div class="button" style="width: '.$table->width.'">';
+	print_input_hidden ('id_project', $id_project);
+	print_input_hidden ('operation', 'create');
+	print_submit_button (__('New task'), 'crt_btn', false, 'class="sub next"');
+	echo '</div>';
+	echo '</form>';
 }
 
 
-function show_task_row ( $id_project, $row2, $tdcolor, $level = 0){
-    global $config;
-
-	echo "<tr>";
+function show_task_row ($table, $id_project, $task, $level) {
+	global $config;
+	
+	$data = array ();
+	
 	// Task  name
-	echo "<td class='$tdcolor' align='left' >";
-	for ($ax=0; $ax < $level; $ax++)
-		echo "<img src='images/copy.png'>";
-	//if ($level > 0)
-	//echo "<img src='images/copy.png'>&nbsp;";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=".$row2["id"]."&operation=view'>".$row2["name"]."</a></td>";
+	$data[0] = '';
+	for ($i = 0; $i < $level; $i++)
+		$data[0] .= '<img src="images/copy.png" />';
+	
+	$data[0] .= '<a href="index.php?sec=projects&sec2=operation/projects/task_detail&id_project='.
+		$id_project.'&id_task='.$task['id'].'&operation=view">'.
+		$task['name'].'</a>';
 
 	// Priority
-	echo "<td class='$tdcolor' align='center'>";
-    switch ( $row2["priority"] ){
-        case 0: echo "<img src='images/flag_white.png' title='Informative'>"; break; // Informative
-        case 1: echo "<img src='images/flag_green.png' title='Low'>"; break; // Low
-        case 2: echo "<img src='images/flag_yellow.png' title='Medium'>"; break; // Medium
-        case 3: echo "<img src='images/flag_orange.png' title='Serious'>"; break; // Serious
-        case 4: echo "<img src='images/flag_red.png' title='Very serious'>"; break; // Very serious
-        case 10: echo "<img src='images/flag_blue.png' title='Maintance'>"; break; // Maintance
-    }
-
+	$data[1] = print_priority_flag_image ($task['priority'], true);
+	
 	// Completion
-	echo "<td class='$tdcolor' align='center'>";
-	//echo clean_input ($row2["completion"]."%");
-	echo "<img src='include/functions_graph.php?type=progress&width=70&height=20&percent=".$row2["completion"]."'>";
+	$data[2] = '<img src="include/functions_graph.php?type=progress&width=70&height=20&percent='.$task["completion"].'">';
+	
+	// Estimation
+	$imghelp = "Estimated hours = ".$task["hours"];
+	$taskhours = give_hours_task ($task["id"]);
+	$imghelp .= "\nWorked hours = $taskhours";
+	$a = round ($task["hours"]);
+	$b = round ($taskhours);
+	$max = maxof($a, $b);
+	if ($a > 0)
+		$data[3] = '<img src="include/functions_graph.php?type=histogram&width=60&mode=2&height=18&a='.$a.'&b='.$b.'&&max='.$max.'" title="'.$imghelp.'">';
+	else
+		$data[3] = '--';
 
-    // Estimation
-    echo "<td class='$tdcolor' align='center'>";
-    $imghelp = "Estimated hours = ".$row2["hours"];
-    $taskhours = give_hours_task ($row2["id"]);
-    $imghelp .= "\nWorked hours = $taskhours";
-    $a = round ($row2["hours"]);
-    $b = round ($taskhours);
-    $max = maxof($a, $b);
-    if ($a > 0)
-        echo "<img src='include/functions_graph.php?type=histogram&width=60&mode=2&height=18&a=$a&b=$b&&max=$max' title='$imghelp'>";
-    else
-        echo "--";
+	// Time used
+	$timeuser = give_hours_task ( $task["id"]);
+	$data[4] = $timeuser ? $timeuser : '--';
+	
+	// Costs (client / total)
+	$costdata = format_numeric (task_workunit_cost ($task["id"], 1));
+	$data[5] = $costdata ? $costdata.' '.$config['currency'] : '--';
 
-    // Time used
-    echo "<td class='$tdcolor' align='center'>";
-    $timeuser = give_hours_task ( $row2["id"]);
-    if ($timeuser > 0)
-        echo $timeuser;
-    else
-        echo "--";
+	// People
+	$data[6] = combo_users_task ($task['id'], 1, true);
+	$data[6] .= ' ';
+	$data[6] .= get_db_value ('COUNT(DISTINCT(id_user))', 'trole_people_task', 'id_task', $task['id']);
 
-    // Costs (client / total)
-    echo "<td class='".$tdcolor."f9' align='center'>";
-    $costdata = format_numeric (task_workunit_cost ($row2["id"], 1));
-    if ($costdata > 0){
-    	echo $costdata;
-	    echo $config["currency"];
-    } else {
-    	echo "--";
-    }
-   
-
-    // People
-    echo "<td class='$tdcolor'>";
-    echo combo_users_task ($row2["id"],1);
-    echo "&nbsp;";
-    echo give_db_sqlfree_field ("SELECT COUNT(DISTINCT (id_user)) FROM trole_people_task WHERE id_task =".$row2["id"]);
-
-
-	if ($row2["start"] == $row2["end"]){
-		echo "<td colspan=2>";
-		echo __('Periodicity');
-		echo "&nbsp;";
-		echo $row2["periodicity"];
+	if ($task["start"] == $task["end"]){
+		$data[7] = date ('Y-m-d', strtotime ($task['start']));
+		$data[8] = __('Periodicity').': '.$task['periodicity'];
 	} else {
 		// Start
-		echo "<td class='".$tdcolor."f9'>";
-		echo substr($row2["start"],0,10);
-		// End
-		echo "<td class='".$tdcolor."f9'>";
-		$ahora=date("Y/m/d H:i:s");
-		$endtime = $row2["end"];
-	
-		if ($row2["completion"] == 100){
-			echo "<font color='green'>";
+		$start = strtotime ($task['start']);
+		$end = strtotime ($task['end']);
+		$now = time ();
+		
+		$data[7] = date ('Y-m-d', $start);
+		
+		if ($task['completion'] == 100) {
+			$data[8] = '<span style="color: green">';
 		} else {
-			if (strtotime($ahora) > strtotime($endtime))
-				echo "<font color='red'>";
+			if ($now > $end)
+				$data[8] = '<span style="color: red">';
 			else
-			echo "<font>";
+				$data[8] = '<span>';
 		}
-		// echo human_time_comparation ($endtime);
-			echo $endtime;
-		echo "</font>";
+		$data[8] .= date ('Y-m-d', $end);
+		$data[8] .= '</span>';
 	}
 
 	// Delete
-	echo "<td class='$tdcolor' align='center'>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project=$id_project&id=".$row2["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
-	
-	
+	if (give_acl ($config['id_user'], 0, 'PM')) {
+		$table->head[9] = __('Delete');
+		$data[9] = '<a href="index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project='.$id_project.'&id='.$task["id"].'"
+			onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+			<img src="images/cross.png" /></a>';
+	}
+	array_push ($table->data, $data);
 }
 
-function show_task_tree ( $id_project, $level = 0, $parent_task = 0, $color = 0, $FILTER = " 1=1 "){
+function show_task_tree (&$table, $id_project, $level, $id_parent_task, $where_clause) {
 	global $config;
-	$id_user = $config["id_user"];
+	
 	// Simple query, needs to implement group control and ACL checking
-	$sql2 = "SELECT * FROM ttask WHERE $FILTER AND id_project = $id_project and id_parent_task = $parent_task ORDER BY name"; 
-	if ($result2=mysql_query($sql2))    
-	while ($row2=mysql_fetch_array($result2)){
-		if ($color == 1){
-			$tdcolor = "datos";
-			$color = 0;
-		}
-		else {
-			$tdcolor = "datos2";
-			$color = 1;
-		}
-		if ((user_belong_task ($id_user, $row2["id"]) == 1)) 
-			show_task_row ( $id_project, $row2, $tdcolor, $level );
-		show_task_tree ( $id_project, $level+1, $row2["id"], $color, $FILTER);
+	$sql = sprintf ('SELECT * FROM ttask
+		WHERE %s
+		AND id_project = %d
+		AND id_parent_task = %d
+		ORDER BY name',
+		$where_clause, $id_project, $id_parent_task);
+	$tasks = get_db_all_rows_sql ($sql);
+	if ($tasks === false)
+		return;
+	foreach ($tasks as $task) {
+		if (user_belong_task ($config['id_user'], $task['id']))
+			show_task_row ($table, $id_project, $task, $level);
+		show_task_tree ($table, $id_project, $level + 1, $task['id'], $where_clause);
 	}
 }
 ?>

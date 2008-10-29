@@ -1,5 +1,38 @@
-2008-10-20  Sancho Lerena <slerena@artica.es>
+2008-10-29  Esteban Sanchez  <estebans@artica.es>
 
+	* integria_db.sql: Changed cascade trigger on foreign keys of ttask.
+	Added description field to tincident_track. Added foreign key to
+	tworkunit_task.
+
+	* integria_dbdata.sql: Style correction.
+
+	* include/js/integria_incident_search.js: Moved configurations of
+	adding and removing an inventory to a new function
+	configure_inventory_buttons() so they can be added to add workunit to
+	task dialog.
+
+	* include/styles/flora/flora.datepicker.css: Make the theme blue like
+	all current theme.
+
+	* include/functions_calendar.php: Fixed human_time_comparation() which
+	was allways returnings monts. Style correction.
+
+	* include/functions_db.php: Improved the code of user_belong_project()
+	so the database query is easier. Removed debug output in
+	incident_tracking().
+
+	* include/functions_form.php: Rewritten combo_user_task_profile() to
+	use generic functions. Rewritten combo_users_task() to use generic
+	funcitons and allow returning instead of echoing. Fixed an error in
+	combo_task_user() which did not allow to show selected task. String
+	correction in show_workunit_user().
+
+	* operation/side_menu.php: Translatable string correction.
+
+	* include/config.php.old: Removed. Unused file.
+
+2008-10-20  Sancho Lerena <slerena@artica.es>
+:
 	* include/config_process.php: Updated version.
 
 	* install.php: Added support for enterprise installer (db).

@@ -20,107 +20,92 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 global $config;
-if (check_login() != 0) {
-	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access task workunit assignment");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
-$id_project = get_parameter ("id_project", -1);
-$id_workunit = get_parameter ("id_workunit", -1);
-$id_task = get_parameter ("id_task", -1);
-$task_name = get_db_value ("name", "ttask", "id", $id_task);
+$id_project = (int) get_parameter ('id_project');
+$id_workunit = (int) get_parameter ('id_workunit');
+$id_task = (int) get_parameter ('id_task');
+$task_name = get_db_value ('name', 'ttask', 'id', $id_task);
 
-//if (($id_project != -1) && ($id_workunit != -1)) OR ($id_workunit {
-if ($id_workunit != -1){
-	$row = get_db_row ("tworkunit", "id", $id_workunit);
-	$id_user = $row["id_user"];
-	$duration =$row["duration"]; 
-	$description = $row["description"];
-	$have_cost = $row["have_cost"];
-	$id_profile = $row["id_profile"];
-	$ahora = $row["timestamp"];
-	$public = $row["timestamp"];
-	$ahora_date = substr($ahora,0,10);
-	$ahora_time = substr($ahora,10,8);
-	
+if ($id_workunit){
+	$workunit = get_db_row ("tworkunit", "id", $id_workunit);
+	$id_user = $workunit['id_user'];
+	$duration = $workunit['duration']; 
+	$description = $workunit['description'];
+	$have_cost = $workunit['have_cost'];
+	$id_profile = $workunit['id_profile'];
+	$now = $workunit['timestamp'];
+	$public = (bool) $workunit['public'];
+	$now_date = substr ($now, 0, 10);
+	$now_time = substr ($now, 10, 8);
 } else {
 	$id_user = $config["id_user"];
 	$duration = 1; 
 	$description = "";
 	$id_inventory = array();
 	$have_cost = 0;
-	$public = 1;
+	$public = true;
 	$id_profile = "";
-	$ahora_date = date("Y-m-d");
-	$ahora_time = date("H:i:s");
-	$ahora = date("Y-m-d H:i:s");
+	$now_date = date ("Y-m-d");
+	$now_time = date ("H:i:s");
+	$now = date ("Y-m-d H:i:s");
 }
 
-if ((project_manager_check($id_project) == 1) OR ($id_user = $config["id_user"])) {
-	echo "<h3><img src='images/award_star_silver_1.png'>&nbsp;&nbsp;";
-	if ($id_workunit != -1)
+if (project_manager_check ($id_project) || ($id_user = $config["id_user"])) {
+	if ($id_workunit)
 		echo __('Update workunit')." - $task_name</h3>";
 	else
 		echo __('Add workunit')." - $task_name</h3>";
-
-	echo "<table cellpadding=4 cellspacing=4 border=0 width='700' class='databox_color' >";
-	// Insert or edit mode ?
-	if ($id_workunit != -1){
-		// Update
-		echo "<form name='nota' method='post' action='index.php?sec=projects&sec2=operation/projects/task_workunit&operation=workunit&id_task=$id_task&id_project=$id_project&id_workunit=$id_workunit'>";
-	} else { // insert
-		echo "<form name='nota' method='post' action='index.php?sec=projects&sec2=operation/projects/task_workunit&operation=workunit&id_task=$id_task&id_project=$id_project'>";
-	}
-	echo "<tr><td class='datos' width='140'><b>".__('Date')."</b></td>";
-	echo "<td class='datos'>";
-
-	echo "<input type='text' id='date' name='date' size=10 value='$ahora_date'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"date\"),this);'> ";
-
-	echo "&nbsp;&nbsp;";
-	echo "<input type='text' name='time' size=10 value='$ahora_time'>";
-
-	echo "<td><b>";
-	echo __('Inventory')."</b></td>";
-	echo "<td>";
-
-echo print_select (array (), 'incident_inventories', NULL, '', '', '', true, false, false, __('Inventory affected'));
-echo print_button (__('Add'), 'search_inventory', false, '', 'class="dialogbtn"', true);
-echo print_button (__('Remove'), 'delete_inventory', false, '', 'class="dialogbtn"', true);
-
-	echo "<tr><td class='datos2'  width='140'>";
-	echo "<b>".__('Profile')."</b>";
-	echo "<td class='datos2'>";
-	echo combo_user_task_profile ($id_task,"work_profile",$id_profile, $id_user);
-
-	echo "<td>";
-	echo "<b>".__('Have cost')."</b>";
-	echo "<td>";
-	echo print_checkbox ("have_cost", 1, $have_cost, false);
-
-
-	echo "<tr><td class='datos'>";
-	echo "<b>".__('Time used')."</b>";
-	echo "<td>";
-	echo "<input type='text' name='duration' value='$duration' size='7'>"." ".__('Hourrs');
 	
-	echo "<td>";
-	echo "<b>".__('Public');
-	echo "<td>";
-	print_checkbox ("public", 1, $public, false, false);
-
-	echo '<tr><td colspan="4" class="datos2"><textarea name="description" style="height: 250px; width: 100%;">';
-	echo $description;
-	echo '</textarea>';
-
-	echo "</tr></table>";
-	echo "<table class='button' width=700>";
-	echo "<tr><td align=right>";
-	if ($id_workunit != -1)
-		echo '<input name="addnote" type="submit" class="sub upd" value="'.__('Update').'">';
-	else
-		echo '<input name="addnote" type="submit" class="sub next" value="'.__('Add').'">';
-	echo "</td></tr></table>";
-	echo "</form>";
+	$table->class = 'databox';
+	$table->width = '750px';
+	$table->colspan = array ();
+	$table->colspan[3][0] = 3;
+	$table->data = array ();
+	
+	$table->data[0][0] = print_input_text ('date', $now_date, '', 10, 10, true, __('Date'));
+	$table->data[0][1] = print_input_text ('time', $now_time, '', 10, 10, true, __('Time'));
+	
+	$table->data[0][2] = print_select (array (), 'incident_inventories', false, '', '', '', true, false, false, __('Inventory affected'));
+	$table->data[0][2] .= print_button (__('Add'), 'search_inventory', false, '', 'class="dialogbtn"', true);
+	$table->data[0][2] .= print_button (__('Remove'), 'delete_inventory', false, '', 'class="dialogbtn"', true);
+	
+	$table->data[1][0] = combo_user_task_profile ($id_task, 'work_profile', $id_profile, false, true);
+	$table->data[1][1] = print_checkbox ('have_cost', 1, $have_cost, true, __('Have cost'));
+	
+	$table->data[2][0] = print_input_text ('duration', $duration, '', 7, 7, true, __('Time used'));
+	$table->data[2][0] .= ' '.__('Hours');
+	$table->data[2][1] = print_checkbox ('public', 1, $public, true, __('Public'));
+	
+	$table->data[3][0] = print_textarea ('description', 5, 10, $description, '', true, __('Description'));
+	
+	echo '<form method="post" id="add_workunit_form" action="index.php?sec=projects&sec2=operation/projects/task_workunit">';
+	print_table ($table);
+	echo '<div class="button" style="width:'.$table->width.'">';
+	
+	print_input_hidden ('operation', 'workunit');
+	print_input_hidden ('id_task', $id_task);
+	print_input_hidden ('id_project', $id_project);
+	
+	if ($id_workunit) {
+		// Update
+		print_input_hidden ('id_workunit', $id_workunit);
+		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
+	} else {
+		// Insert
+		print_submit_button (__('Add'), 'crt_btn', false, 'class="sub next"');
+	}
+	echo '</div>';
+	echo '</form>';
 }
 ?>
+
+<script type="text/javascript" src="include/js/jquery.metadata.js"></script>
+<script type="text/javascript" src="include/js/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
+<script type="text/javascript" src="include/js/integria_incident_search.js"></script>
+<script  type="text/javascript">
+$(document).ready (function () {
+	configure_inventory_buttons ("add_workunit_form", "");
+});
+</script>

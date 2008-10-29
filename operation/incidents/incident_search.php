@@ -274,11 +274,20 @@ foreach ($incidents as $incident) {
 
 
 	echo '<td>'.print_priority_flag_image ($incident['prioridad'], true).'</td>';
-	echo '<td class="f9">'.human_time_comparation ($incident["actualizacion"]).' / <i>';
+	echo '<td>'.human_time_comparation ($incident["actualizacion"]).' / <i>';
 	echo human_time_comparation ($incident["inicio"]).'</i></td>';
 
+	/* Workunits */
+	echo '<td>';
+	$timeused = give_hours_incident ($incident["id_incidencia"]);
+	$incident_wu = $in_wu = give_wu_incident ($incident["id_incidencia"]);
+	if ($incident_wu > 0) {
+		echo '<img src="images/award_star_silver_1.png" />'.$timeused;
+	}
+	echo '</td>';
+	
 	/* Get special details about the incident */
-	echo '<td class="f9">';
+	echo '<td>';
 	$people = people_involved_incident ($incident["id_incidencia"]);
 	print_help_tip (implode ('&nbsp;', $people), false, 'tip_people');
 
@@ -294,13 +303,6 @@ foreach ($incidents as $incident) {
 	if ($mail_check > 0)
 		echo '&nbsp;<img src="images/email_go.png"
 			title="'.__('Mail notification').'" />';
-
-	/* Workunits */
-	$timeused = give_hours_incident ($incident["id_incidencia"]);;
-	$incident_wu = $in_wu = give_wu_incident ($incident["id_incidencia"]);
-	if ($incident_wu > 0) {
-		echo '&nbsp;<img src="images/award_star_silver_1.png" valign="bottom">'.$timeused;
-	}
 	echo '</td>';
 
 	echo '</tr>';

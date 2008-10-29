@@ -27,7 +27,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_overview'>".__('project_overview')."</a></li>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_overview'>".__('Project overview')."</a></li>";
 
 
 	// Project detail

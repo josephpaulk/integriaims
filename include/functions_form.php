@@ -76,50 +76,70 @@ function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any =
 
 // Returns a combo with valid profiles for CURRENT user in this task
 // ----------------------------------------------------------------------
-function combo_user_task_profile ($id_task, $form_name="work_profile", $id="", $id_user = ""){
-	if ($id_user == "")
-		$current_user = $_SESSION["id_usuario"];
-	else
-		$current_user = $id_user;
+function combo_user_task_profile ($id_task, $form_name = "work_profile", $selected = "", $id_user = false, $return = false) {
+	global $config;
+	
+	$output = '';
+	
+	if (! $id_user)
+		$id_user = $config['id_user'];
+	
 	// Show only users assigned to this project
-	$sql = "SELECT * FROM trole_people_task  WHERE id_task = $id_task AND id_user = '$current_user'";
-	echo "<select name='$form_name'>";
-	if ($result = mysql_query($sql)){
-		if ($id != "")
-			echo "<option value='".$id."'>".give_db_value ("name","trole","id",$id);
-		while ($row=mysql_fetch_array($result)){
-			echo "<option value='".$row["id_role"]."'>".give_db_value ("name","trole","id",$row["id_role"]);
-		}
-	} else
-		echo "N/A";
-	echo "</select>";
+	$sql = sprintf ('SELECT trole.id, trole.name
+		FROM trole_people_task, trole
+		WHERE trole.id = trole_people_task.id_role
+		AND id_task = %d
+		AND id_user = "%s"
+		ORDER BY name',
+		$id_task, $id_user);
+	
+	$output .= print_select_from_sql ($sql, $form_name, $selected, '', '', '',
+		true, false, false, __('Role'));
+	
+	if ($return)
+		return $output;
+	
+	echo $output;
 }
 
 
 // Returns a combo with the users that belongs to a task
 // ----------------------------------------------------------------------
-function combo_users_task ($id_task, $iconic = 0){
+function combo_users_task ($id_task, $icon_list = false, $return = false) {
 	// Show only users assigned to this project
-	$sql = "SELECT * FROM trole_people_task WHERE id_task = $id_task";
-	$result = mysql_query($sql);
-
-	if ($iconic == 0){
-		echo "<select name='user' style='width: 100px;'>";
-		while ($row=mysql_fetch_array($result)){
-			echo "<option value='".$row["id"]."'>".$row["id_user"]." / ".give_db_value ("name","trole","id",$row["id_role"]);
-		}
-		echo "</select>";
-	} else {
-		echo "<a href='#' class='tip_people'><span><font size=1>";
-		// Show also groupname
-		$groupname = give_db_sqlfree_field ("SELECT nombre FROM tgrupo, ttask WHERE ttask.id = $id_task AND ttask.id_group = tgrupo.id_grupo");
-		echo __('Group')." <b>$groupname</b><br>";
-		while ($row=mysql_fetch_array($result)){
-			echo $row["id_user"]." / ".give_db_value ("name","trole","id",$row["id_role"]);
-			echo "<br>";
-		}
-		echo "</font></span></a>";
+	$task_users = get_db_all_rows_field_filter ('trole_people_task', 'id_task', $id_task);
+	$visible_users = get_user_visible_users (0, 'PR', true);
+	$users = array ();
+	
+	foreach ($task_users as $user) {
+		if (isset ($visible_users[$user['id']]))
+			if ($icon_list)
+				array_push ($users, $user);
+			else
+				$users[$user['id']] = $user['id_user'];
 	}
+	
+	$output = '';
+	
+	if (! $icon_list) {
+		$output .= print_select ($users, 'user', '', '', '', '', true);
+	} else {
+		// Show also groupname
+		$sql = sprintf ('SELECT nombre FROM tgrupo, ttask
+			WHERE ttask.id_group = tgrupo.id_grupo
+			AND ttask.id = %d', $id_task);
+		$group_name = get_db_sql ($sql);
+		$text = __('Group').' <strong>'.$group_name.'</strong><br />';
+		foreach ($users as $user) {
+			$text .= $user.' / '.get_db_value ('name', 'trole', 'id', $row['id_role']);
+			$text .= "<br />";
+		}
+		$output .= print_help_tip ($text, true, 'tip_people');
+	}
+	
+	if ($return)
+		return $output;
+	echo $output;
 }
 
 // Returns a combo with the users that belongs to a project
@@ -322,7 +342,7 @@ function combo_incident_types ($selected, $disabled = false, $return = false) {
 
 // Returns a combo with the tasks that current user could see
 // ----------------------------------------------------------------------
-function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations = 0, $return = false) {
+function combo_task_user ($actual, $id_user, $disabled = 0, $show_vacations = 0, $return = false) {
 	$output = '';
 
 	if ($disabled) {
@@ -344,11 +364,10 @@ function combo_task_user ($actual = 0, $id_user, $disabled = 0, $show_vacations 
 
 	$sql = sprintf ('SELECT ttask.id, ttask.name
 			FROM ttask, trole_people_task
-			WHERE ttask.id != %d
-			AND ttask.id = trole_people_task.id_task
+			WHERE ttask.id = trole_people_task.id_task
 			AND trole_people_task.id_user = "%s"
 			ORDER BY 2',
-			$actual, $id_user);
+			$id_user);
 	$tasks = get_db_all_rows_sql ($sql);
 	if ($tasks === false)
 		$tasks = array ();
@@ -578,7 +597,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
 	echo "<b>".$id_user."</b>";
 	echo "</a>";
-	echo " ".__('said on $timestamp');
+	echo " ".__('said on').' '.$timestamp;
 	echo "<td><b>";
 	echo __('Profile');
 	echo "</b></td><td>";

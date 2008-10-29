@@ -56,6 +56,48 @@ function show_user_search_dialog (title) {
 	);
 }
 
+function configure_inventory_buttons (form, dialog) {
+	$(dialog+"#button-search_inventory").click (function () {
+		show_inventory_search_dialog ("Search inventory object",
+			function (id, name) {
+				var exists = false
+				$(parent_dialog+".selected-inventories").each (function () {
+					if (this.value == id) {
+						exists = true;
+						return;
+					}
+				});
+				
+				if (exists) {
+					$("#dialog-search-inventory #inventory_search_result").fadeOut ('normal',
+						function () {
+						$(this).empty ().append ('<h3 class="error">Already added</h3>').fadeIn ();
+					});
+					return;
+				}
+				$(parent_dialog+"#incident_inventories").append ($('<option value="'+id+'">'+name+'</option>'));
+				$(parent_dialog+"#"+form).append ($('<input type="hidden" value="'+id+'" class="selected-inventories" name="inventories[]" />'));
+				$("#dialog-search-inventory #inventory_search_result").fadeOut ('normal',
+					function () {
+						$(this).empty ().append ('<h3 class="suc">Added</h3>').fadeIn ();
+				});
+			}
+		);
+	});
+	
+	$(dialog+"#button-delete_inventory").click (function () {
+		var s;
+		
+		s = $(dialog+"#incident_inventories").attr ("selectedIndex");
+		selected_id = $(dialog+"#incident_inventories").children (":eq("+s+")").attr ("value");
+		$(dialog+"#incident_inventories").children (":eq("+s+")").remove ();
+		$(dialog+".selected-inventories").each (function () {
+			if (this.value == selected_id)
+				$(this).remove ();
+		});
+	});
+}
+
 function configure_incident_form (enable_ajax_form) {
 	$(dialog+"#button-search_parent").click (function () {
 		show_incident_search_dialog ("Search parent incident",
@@ -134,45 +176,7 @@ function configure_incident_form (enable_ajax_form) {
 		$(dialog+".priority-color").attr ("src", img);
 	});
 	
-	$(dialog+"#button-search_inventory").click (function () {
-		show_inventory_search_dialog ("Search inventory object",
-			function (id, name) {
-				var exists = false
-				$(parent_dialog+".selected-inventories").each (function () {
-					if (this.value == id) {
-						exists = true;
-						return;
-					}
-				});
-				
-				if (exists) {
-					$("#dialog-search-inventory #inventory_search_result").fadeOut ('normal',
-						function () {
-						$(this).empty ().append ('<h3 class="error">Already added</h3>').fadeIn ();
-					});
-					return;
-				}
-				$(parent_dialog+"#incident_inventories").append ($('<option value="'+id+'">'+name+'</option>'));
-				$(parent_dialog+"#incident_status_form").append ($('<input type="hidden" value="'+id+'" class="selected-inventories" name="inventories[]" />'));
-				$("#dialog-search-inventory #inventory_search_result").fadeOut ('normal',
-					function () {
-						$(this).empty ().append ('<h3 class="suc">Added</h3>').fadeIn ();
-				});
-			}
-		);
-	});
-	
-	$(dialog+"#button-delete_inventory").click (function () {
-		var s;
-		
-		s = $(dialog+"#incident_inventories").attr ("selectedIndex");
-		selected_id = $(dialog+"#incident_inventories").children (":eq("+s+")").attr ("value");
-		$(dialog+"#incident_inventories").children (":eq("+s+")").remove ();
-		$(dialog+".selected-inventories").each (function () {
-			if (this.value == selected_id)
-				$(this).remove ();
-		});
-	});
+	configure_inventory_buttons ("incident_status_form", dialog);
 	
 	if (enable_ajax_form) {
 		$(dialog+"#incident_status_form").submit (function () {
@@ -220,8 +224,20 @@ function configure_incident_search_form (page_size, row_click_callback, search_c
 		$(this).remove ();
 		return false;
 	});
-	$(dialog+"#text-search_first_date").datepicker ();
-	$(dialog+"#text-search_last_date").datepicker ();
+	$(dialog+"#text-search_first_date").datepicker ({
+		beforeShow: function () {
+			return {
+				maxDate: $(dialog+"#text-search_last_date").datepicker ("getDate")
+			};
+		}
+	});
+	$(dialog+"#text-search_last_date").datepicker ({
+		beforeShow: function () {
+			return {
+				minDate: $(dialog+"#text-search_first_date").datepicker ("getDate")
+			};
+		}
+	});
 	$(dialog+"#search_incident_form").submit (function () {
 		$(dialog+"#incident_search_result_table").removeClass ("hide");
 		values = Array ();

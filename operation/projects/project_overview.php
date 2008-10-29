@@ -16,10 +16,7 @@
 global $REMOTE_ADDR;
 global $config;
 
-if (check_login() != 0) {
-	audit_db("Noauth", $REMOTE_ADDR, "No authenticated acces", "Trying to access incident viewer");
-	exit;
-}
+check_login ();
 
 // MAIN LIST OF PROJECTS GROUPS
 echo "<h2>".__("Project overview")."</h2>";

@@ -203,12 +203,14 @@ $table->colspan = array ();
 $table->colspan[0][0] = 2;
 $table->colspan[8][0] = 3;
 $table->style = array ();
+$table->style[0] = 'vertical-align: top';
+$table->style[1] = 'vertical-align: top';
 $table->style[2] = 'vertical-align: top';
 $table->data = array ();
 $table->data[0][0] = print_input_text ('name', $name, '', 50, 240, true, __('Name'));
 
 if ($id_task != -1) {
-	$table->rowspan[0][2] = 3;
+	$table->rowspan[0][2] = 5;
 	$image = '<img src="include/functions_graph.php?type=workunit_task&width=200&height=170&id_task='.$id_task.'">';
 	$table->data[0][2] = print_label (__('Workunit distribution'), '', '', true, $image);
 }
@@ -221,8 +223,8 @@ $table->data[1][1] = print_select (get_priorities (), 'priority', $priority,
 
 $table->data[2][0] = combo_groups_visible_for_me ($config['id_user'], 'group', 0, 'TW', $id_group, true);
 
-$table->data[3][0] = print_input_text ('start', $start, '', 15, 15, true, __('Start'));
-$table->data[3][1] = print_input_text ('end', $end, '', 15, 15, true, __('End'));
+$table->data[3][0] = print_input_text ('start_date', $start, '', 15, 15, true, __('Start'));
+$table->data[3][1] = print_input_text ('end_date', $end, '', 15, 15, true, __('End'));
 
 $table->data[4][0] = print_select (get_periodicities (), 'periodicity',
 	$periodicity, '', __('None'), 'none', true, false, false, __('Periodicity'));
@@ -302,9 +304,35 @@ if (give_acl ($config["id_user"], $id_group, "TM") || ($config["id_user"] == $pr
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 
 <script type="text/javascript">
+
 $(document).ready (function () {
-	$("#text-start").datepicker ();
-	$("#text-end").datepicker ();
+	$("#text-start_date").datepicker ({
+		beforeShow: function () {
+			return {
+				maxDate: $("#text-end_date").datepicker ("getDate")
+			};
+		}
+	});
+	$("#text-end_date").datepicker ({
+		defaultDate: +7,
+		beforeShow: function () {
+			return {
+				minDate: $("#text-start_date").datepicker ("getDate")
+			};
+		},
+		onSelect: function (datetext) {
+			hours_day = <?php echo $config['hours_perday'];?>;
+			start_date = $("#text-start_date").datepicker ("getDate"); 
+			end_date = $(this).datepicker ("getDate");
+			if (end_date < start_date) {
+				pulsate (this);
+				return true;
+			}
+			
+			hours = Math.floor ((end_date - start_date) / 86400000 * hours_day);
+			$("#text-hours").attr ("value", hours);
+		}
+	});
 	$("#slider").slider ({
 		min: 0,
 		max: 100,

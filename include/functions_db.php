@@ -512,24 +512,16 @@ function task_start_date ($id_task){
 // Return true (1) if userid belongs to given project as any role
 // ---------------------------------------------------------------
 
-function user_belong_project ($id_user, $id_project, $real = 0){ 
+function user_belong_project ($id_user, $id_project, $real = 0) { 
 	global $config;
 	
-	if ($real == 0){
-		if (dame_admin ($id_user) != 0)
-			return 1;
-	}
-
-	$query1="SELECT COUNT(*) from trole_people_project WHERE id_project = $id_project AND id_user = '$id_user'";
-		$resq1=mysql_query($query1);
-	if ($resq1){
-			$rowdup=mysql_fetch_array($resq1);
-		if ($rowdup[0] == 0)
-			return 0;
-		else
-			return 1; // There is at least one role for this person in that project
-	} else 
-		return 0;
+	if ($real == 0 && dame_admin ($id_user) != 0)
+		return 1;
+	
+	$sql = spintf ('SELECT COUNT(*) FROM  trole_people_project
+		WHERE id_project = %d
+		AND id_user = "%s"', $id_project, $id_user);
+	return (bool) get_db_sql ($sql);
 }
 
 // ---------------------------------------------------------------
@@ -636,13 +628,10 @@ function return_user_email ($id_user) {
 function project_manager_check ($id_project) {
 	global $config;
 
-	$manager = get_db_value ("id_owner", "tproject", "id", $id_project);
-	if (isset($_SESSION["id_usuario"])){
-	   $id = $_SESSION["id_usuario"];
-	   if ($manager == $id)
-			return 1;
-	}
-	return 0;
+	$manager = get_db_value ('id_owner', 'tproject', 'id', $id_project);
+	if ($manager == $config['id_user'])
+		return true;
+	return false;
 }
 
 function incident_tracking ($id_incident, $state, $aditional_data = 0) {
@@ -651,7 +640,6 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 	switch ($state) {
 	case INCIDENT_CREATED:
 		$description = __('Created');
-		echo $state;
 		break;
 	case INCIDENT_UPDATED:
 		$description = __('Updated');

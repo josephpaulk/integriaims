@@ -454,7 +454,7 @@ function give_human_time ($int_seconds, $flag_hide_zero = true) {
 	return ( !empty($build)?implode(', ', $build):__('Unknown'));
 }
 
-function human_time_comparation ( $timestamp ){
+function human_time_comparation ($timestamp) {
 	global $config;
 	
 	$now = time ();
@@ -472,13 +472,13 @@ function human_time_comparation ( $timestamp ){
 		$seconds = sprintf ("%02d", $seconds);
 		$render = $minutes.':'.$seconds.' '.__('minutes');
 	}
-	if ($seconds < 86400)
+	if ($seconds > 3600 && $seconds < 86400)
 		$render = format_numeric ($seconds / 3600, 0)." ".__('hours');
 	
-	if ($seconds < 2592000)
+	if ($seconds > 86400 && $seconds < 2592000)
 		$render = format_numeric ($seconds / 86400, 0)." ".__('days');
 	
-	if ($seconds < 15552000)
+	if ($seconds > 2592000 && $seconds < 15552000)
 		$render = format_numeric ($seconds / 2592000, 0)." ".__('months');
 	
 	$direction = ($now < $time) ? '> ' : '< ';
