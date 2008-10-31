@@ -42,7 +42,7 @@ while ($row2=mysql_fetch_array($result2)){
 	
 		// Project group name
 		echo "<td align='left' >";
-		echo "<b><a href='index.php?sec=projects&sec2=operation/projects/project&filter_id_project_group=".$row2["id"]."'>".$row2["name"]."</a></b></td>";
+		echo "<b><a href='index.php?sec=projects&sec2=operation/projects/project&search_id_project_group=".$row2["id"]."'>".$row2["name"]."</a></b></td>";
 
 		// Project group
 		echo "<td>";

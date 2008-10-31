@@ -25,7 +25,7 @@ $id_user =$_SESSION["id_usuario"];
 
 echo "<h2>".__('Integria users')."</h2>";
 
-$table->width = '90%';
+$table->width = '95%';
 $table->class = 'listing';
 $table->data = array ();
 $table->head = array ();
@@ -49,7 +49,7 @@ foreach ($users as $user) {
 	}
 	
 	$data[3] = $user['nombre_real'];
-	$data[4] = $user['comentarios'];
+	$data[4] = substr($user['comentarios'],0,45);
 	
 	array_push ($table->data, $data);
 }

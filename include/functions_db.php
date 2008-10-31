@@ -1,6 +1,6 @@
 <?php
 
-// INTEGRIA IMS v1.2
+// INTEGRIA IMS 
 // http://www.integriaims.com
 // ===========================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
@@ -935,13 +935,20 @@ function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg 
 		$have_cost = __('Yes');
 	else
 		$have_cost = __('No');
+
+	$public = $workunit["public"];
+	if ($public == 1)
+		$public_desc = "Yes";
+	else
+		$public_desc = "No";
+
 	$description = $workunit["description"];
 	$url = $config["base_url"]."/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task";
 
 	switch ($mode){
 	case 0: // Workunit add
 		$text = "
-Task ".$task["name"]." of project ".$project["name"]." has been updated by user $id_user and a new workunit has been added to history. You could track this workunit in the following URL (need to use your credentials): $url\n\n";
+Task ".$task["name"]." of project ".$project["name"]." has been updated by user [$id_user] and a new workunit has been added to history. You could track this workunit in the following URL (need to use your credentials): $url\n\n";
 		$subject = "[".$config["sitename"]."] New workunit added to task '$task_name'";
 		break;
 	case 1: // Workunit updated
@@ -960,8 +967,10 @@ DATE / TIME : $current_timestamp
 ASSIGNED BY : $id_user
 HAVE COST   : $have_cost
 TIME USED   : $duration
----------------------------------------------------[DESCRIPTION]-----
-$description\n\n";
+PUBLIC      : $public_desc
+----------------------------------------------[DESCRIPTION BEGIN]----
+$description\n\n
+----------------------------------------------[DESCRIPTION END]------";
 
 		$text = ascii_output ($text);
 		$subject = ascii_output ($subject);
@@ -1026,7 +1035,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode){
 	$titulo =$row["titulo"];
 	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
 	$prioridad = $row["prioridad"];
-	$nota = wordwrap($nota, 70, "\n");
+	$nota = wordwrap($nota, 75, "\n");
 
 	$estado = get_db_sql ("SELECT name FROM tincident_status WHERE id = ".$row["estado"]);
 	$resolution = get_db_sql ("SELECT name FROM tincident_resolution WHERE id = ".$row["resolution"]);
@@ -1034,11 +1043,12 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode){
 	$update_timestamp = $row["actualizacion"];
 	$usuario = $row["id_usuario"];
 	$creator = $row["id_creator"];
+	$public = $row["public"];
 
 	// Resolve code for its name
 	switch ($mode){
 	case 10: // Add Workunit
-		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new workunit from $id_usuario ";
+		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new workunit from [$id_usuario]";
 		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc";
 		break;
 	case 0: // Incident update
@@ -1064,14 +1074,13 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode){
 	$email_owner = get_db_value ("direccion", "tusuario", "id_usuario", $usuario);
   
 	// Incident owner
-	$text = "
-Incident #$id_inc ($titulo) has been updated. You could track this incident in the following URL (need to use your credentials): $url\n
+	$text = "Incident #$id_inc ($titulo) has been updated. You can track this incident in the following URL (need to use your credentials): \n\n$url\n
 -----------------------------------------------[INFORMATION]--------
-ID		  : # $id_inc - $titulo
+ID          : # $id_inc - $titulo
 CREATED ON  : $create_timestamp
 LAST UPDATE : $update_timestamp
-PRIORITY	: $prioridad
-STATUS	  : $estado
+PRIORITY    : $prioridad
+STATUS	    : $estado
 RESOLUTION  : $resolution
 ASSIGNED TO : $usuario
 TIME USED   : $timeused
@@ -1081,9 +1090,11 @@ $description\n\n";
 if ($mode == 10){
 $text .= "
 ----------------------------------------------[WORK UNIT ADDED]-----
-WORKUNIT ADDED BY $id_usuario
+WORKUNIT ADDED BY : $id_usuario
 ---------------------------------------------------------------------
-$nota \n\n";
+$nota 
+---------------------------------------------------------------------\n\n";
+
 }
 
 	$text = ascii_output ($text);
@@ -1093,12 +1104,14 @@ $nota \n\n";
 	if ($email_owner != $email_creator)
 		topi_sendmail ($email_creator, $subject, $text);
 	
-	// Send email for all users with workunits for this incident
-	$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
-	if ($result=mysql_query($sql1)) {
-		while ($row=mysql_fetch_array($result)){
-			if (($row[0] != $email_owner) AND ($row[0] != $email_creator))
-				topi_sendmail ( $row[0], $subject, $text);
+	if ($public == 1){
+		// Send email for all users with workunits for this incident
+		$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
+		if ($result=mysql_query($sql1)) {
+			while ($row=mysql_fetch_array($result)){
+				if (($row[0] != $email_owner) AND ($row[0] != $email_creator))
+					topi_sendmail ( $row[0], $subject, $text);
+			}
 		}
 	}
 }
@@ -1391,13 +1404,14 @@ function get_users_in_group ($id_group = 0, $only_names = true) {
 }
 
 function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true) {
-	if ($id_user == 0) {
-		global $config;
-		$id_user = $config['id_user'];
-	}
-	
+	global $config;
+
 	$values = array ();
 	
+	if ($id_user == 0) {
+		$id_user = $config['id_user'];
+	}
+
 	if (give_acl ($id_user, 1, $access)) {
 		$users = get_db_all_rows_in_table("tusuario");
 		if ($users === false)
@@ -1432,6 +1446,7 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 			}
 		}
 	}
+
 	
 	return $values;
 }

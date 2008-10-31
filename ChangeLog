@@ -1,3 +1,14 @@
+
+2008-10-29  Sancho Lerena <slerena@artica.es>
+
+	* functions_db.php: Some small changes on email functions.
+
+	* functions_form.php: Fixed problem rendering userlist in incident.
+
+	* project_overview.php, project.php: Fixed project group filtering.
+
+	* user.php: Description shortened to avoid bad render.
+
 2008-10-29  Esteban Sanchez  <estebans@artica.es>
 
 	* install.php: Added a final slash in path.

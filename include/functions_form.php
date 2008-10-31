@@ -778,8 +778,9 @@ function incident_users_list ($id_incident, $return = false) {
 	
 	
 	foreach ($users['affected'] as $user) {
-		$output .= "<br />&nbsp;&nbsp;" . print_user_avatar ($user['id_usuario'], true, true);
+		$output .= "&nbsp;&nbsp;" . print_user_avatar ($user['id_usuario'], true, true);
 		$output .= ' <strong>'.$user['id_usuario'].'</strong> (<em>'.__('Participant').'</em>)';
+		$output .= "<br>";
 	}
 	
 	$output .= '</ul>';

@@ -154,8 +154,7 @@ $table->data = array ();
 $table->data[0][0] = __('Search');
 $table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
 $table->data[0][2] = __('Group');
-$table->data[0][3] = print_select (get_user_groups ($config['id_user']),
-	'search_id_project_group', $search_id_project_group, '', __('Any'), '0', true);
+$table->data[0][3] = print_select_from_sql ("SELECT * FROM tproject_group", "search_id_project_group", $search_id_project_group, '', __("Any"), '0', true, false, true, false);
 $table->data[0][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 
 echo '<form method="post">';
