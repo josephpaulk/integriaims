@@ -865,4 +865,11 @@ elseif ($_GET["type"] == "project_tree")
 	project_tree ($id_project, $id_user);
 elseif ($_GET["type"] == "all_project_tree")
 	all_project_tree ($id_user, $completion, $project_kind);
+elseif ($_GET["type"] == "pipe") {
+	$data = (string) get_parameter ("data");
+	$legend = (string) get_parameter ("legend");
+	$data = split (',', $data);
+	$legend = split (',', $legend);
+	generic_pie_graph ($width, $height, $data, $legend);
+}
 ?>

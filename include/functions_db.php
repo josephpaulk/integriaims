@@ -554,6 +554,10 @@ function get_incident_creator ($id_incident) {
 	return (int) get_db_value ('id_creator', 'tincidencia', 'id_incidencia', $id_incident);
 }
 
+function get_incident_group ($id_incident) {
+	return (int) get_db_value ('id_grupo', 'tincidencia', 'id_incidencia', $id_incident);
+}
+
 // --------------------------------------------------------------- 
 // Return incident priority
 // --------------------------------------------------------------- 
@@ -1179,16 +1183,16 @@ function project_workunit_cost ($id_project, $only_marked = 1){
  have.
 */
 
-function user_visible_for_me ($id_user, $target_user, $access = ""){
+function user_visible_for_me ($id_user, $target_user, $access = "") {
 	global $config; 
 	
 	$access = strtolower ($access);
 	if (dame_admin ($id_user)) {
-		return 1;
+		return true;
 	}
 
 	if ($id_user == $target_user) {
-		return 1;
+		return true;
 	}
 
 	// I have access to group ANY ?
@@ -1198,7 +1202,7 @@ function user_visible_for_me ($id_user, $target_user, $access = ""){
 		$sql_0 = "SELECT COUNT(*) FROM tusuario_perfil, tprofile WHERE tusuario_perfil.id_usuario = '$id_user' AND id_grupo = 1 AND tprofile.$access = 1 AND tprofile.id = tusuario_perfil.id_perfil";
 	$result_0 = mysql_query($sql_0);
 	$row_0 = mysql_fetch_array($result_0);
-	if ($row_0[0] > 0){
+	if ($row_0[0] > 0) {
 		return 1;
 	}
 
@@ -1353,10 +1357,11 @@ function get_groups ($order = 'nombre') {
  * Get all the groups a user has reading privileges.
  * 
  * @param id_user User id
+ * @param permission Permission to have in the group (IR by default)
  * 
  * @return A list of the groups the user has reading privileges.
  */
-function get_user_groups ($id_user = 0) {
+function get_user_groups ($id_user = 0, $permission = 'IR') {
 	if ($id_user == 0) {
 		global $config;
 		$id_user = $config['id_user'];
@@ -1368,7 +1373,7 @@ function get_user_groups ($id_user = 0) {
 		return $user_groups;
 
 	foreach ($groups as $group) {
-		if (! give_acl ($id_user, $group["id_grupo"], "IR"))
+		if (! give_acl ($id_user, $group["id_grupo"], $permission))
 			continue;
 		$user_groups[$group['id_grupo']] = $group['nombre'];
 	}

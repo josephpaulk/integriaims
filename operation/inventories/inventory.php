@@ -15,10 +15,12 @@
 
 global $config;
 
-if (check_login () != 0) {
- 	audit_db ("Noauth", $config["REMOTE_ADDR"], "No authenticated access",
- 		"Trying to access inventory listing");
-	require ("general/noaccess.php");
+check_login ();
+
+if (! give_acl ($config['id_user'], 0, "VR")) {
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access inventory list");
+	include ("general/noaccess.php");
 	exit;
 }
 

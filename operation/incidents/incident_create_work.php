@@ -18,54 +18,49 @@
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 global $config;
-if (check_login() != 0) {
-	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access incident viewer");
-	require ("general/noaccess.php");
+
+check_login ();
+
+$id = (int) get_parameter ("id");
+
+if (! give_acl ($config["id_user"], get_incident_group ($id), "IW")) {
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident #".$id);
+	include ("general/noaccess.php");
 	exit;
 }
 
-$id_incident = (int) get_parameter ("id");
-$title = get_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident);
-$id_task = get_db_value ("id_task", "tincidencia", "id_incidencia", $id_incident);
+$title = get_db_value ("titulo", "tincidencia", "id_incidencia", $id);
+$id_task = get_db_value ("id_task", "tincidencia", "id_incidencia", $id);
 
-if (! give_acl ($config["id_user"], 0, "IR")) {
-	return;
-}
-	
 echo "<h3><img src='images/award_star_silver_1.png'>&nbsp;&nbsp;";
 echo __('Add workunit')." - $title</h3>";
 
 $now = date ("Y-m-d H:i:s");
 
+$table->width = '550px';
+$table->class = 'databox';
+$table->colspan = array ();
+$table->colspan[2][0] = 3;
+$table->data = array ();
+
+$table->data[0][0] = print_input_text ("timestamp", $now, '', 18,  50, true,__('Date'));
+$table->data[0][1] = combo_roles (1, 'work_profile', __('Profile'), true);
+
+$table->data[1][0] = print_input_text ("duration", '0', '', 7,  10, true, __('Time used'));
+$table->data[1][1] = print_checkbox ('have_cost', 1, false, true, __('Have cost'));
+$table->data[1][2] = print_checkbox ('public', 1, true, true, __('Public'));
+
+$table->data[2][0] = print_textarea ('nota', 13, 70, '', '', true, __('Description'));
+
 echo '<form id="form-add-workunit" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
 
-echo "<table width='550' class='databox'>";
-echo "<tr><td>";
-print_input_text ("timestamp", $now, '', 18,  50, false,__('Date'));
-
-echo "<td colspan=2>";
-echo "<b>".__('Profile')."</b><br>";
-echo combo_roles (1, 'work_profile');
-
-echo "<tr><td>";
-print_input_text ("duration", '0', '', 7,  10, false, __('Time used'));
-
-echo "<td>";
-print_checkbox ('have_cost', 1, false, false, __('Have cost'));
-
-echo "<td>";
-print_checkbox ('public', 1, true, false, __('Public'));
-
-echo '<tr><td colspan="3" class="datos2"><textarea name="nota" rows="15" cols="90">';
-echo '</textarea>';
-echo "</tr></table>";
+print_table ($table);
 
 echo '<div style="width: 550" class="button">';
 print_submit_button (__('Add'), 'addnote', false, 'class="sub next"');
-echo '</div>';
-
 print_input_hidden ('insert_workunit', 1);
-print_input_hidden ('id', $id_incident);
-
+print_input_hidden ('id', $id);
+echo '</div>';
 echo "</form>";
 ?>

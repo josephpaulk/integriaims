@@ -26,22 +26,24 @@ INSERT INTO `tconfig` (token, value) VALUES
 ('notification_period','86400'),
 ('limit_size','1000');
 
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (1,'All','world.png',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (2,'Customer #A','eye.png',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (3,'Customer #B','eye.png',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (8,'Development Dpt.','database_gear.png',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (9,'Comunication Dpt.','transmit.png',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (10,'Sales Dpt.','house.png',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (11,'Engineering','computer.png',0);
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent) VALUES (12,'Helpdesk & Support','bricks.png',0);
+
+-- Default password is 'integria'
+
+INSERT INTO `tusuario` (id_usuario, nombre_real, password, comentarios, fecha_registro, direccion, telefono, nivel, avatar, lang) VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2007-03-27 18:59:39','admin@integria.sf.net','555-555-555',1,'people_1',''),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2006-04-20 13:00:05','demo@nowhere.net','+4555435435',0,'people_3','');
+
+
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (1,'All','world.png',0, 'admin');
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (2,'Customer #A','eye.png',0, 'admin');
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (3,'Customer #B','eye.png',0, 'admin');
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (8,'Development Dpt.','database_gear.png',0, 'admin');
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (9,'Comunication Dpt.','transmit.png',0, 'admin');
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (10,'Sales Dpt.','house.png',0, 'admin');
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (11,'Engineering','computer.png',0, 'admin');
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (12,'Helpdesk & Support','bricks.png',0, 'admin');
 
 INSERT INTO `tlanguage` VALUES ('en','English');
 
 INSERT INTO `tlink` VALUES  (0000000001,'Integria Project','http://integria.sourceforge.net'), (0000000002,'Artica ST','http://www.artica.es'),(0000000003,'Pandora FMS Project','http://pandora.sourceforge.net'),(0000000004,'Babel Project','http://babel.sourceforge.net'),(0000000005,'Google','http://www.google.com');
-
--- Default password is 'integria2008'
-
-INSERT INTO `tusuario` (id_usuario, nombre_real, password, comentarios, fecha_registro, direccion, telefono, nivel, avatar, lang) VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2007-03-27 18:59:39','admin@integria.sf.net','555-555-555',1,'people_1',''),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2006-04-20 13:00:05','demo@nowhere.net','+4555435435',0,'people_3','');
 
 INSERT INTO `tproject` VALUES  (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0);
 

@@ -140,6 +140,7 @@ $sql = sprintf ('SELECT * FROM tincidencia
 		WHERE estado IN (%s)
 		%s
 		AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%")
+		ORDER BY actualizacion desc
 		LIMIT %d',
 		$status, $sql_clause, $search_string, $search_string,
 		$config['limit_size']);
@@ -347,14 +348,34 @@ if ($show_stats) {
 	if ($closed != 0) {
 		$mean_lifetime = (int) ($total_lifetime / $closed) / 60;
 	}
-	echo '<strong>'.__('Total incicents').'</strong>: '.$total.' <br />';
-	echo '<strong>'.__('Opened').'</strong>: '.$opened.' ('.$opened_pct.'%)<br />';
-	echo '<strong>'.__('Mean life time').'</strong>: '.give_human_time ($mean_lifetime).'<br />';
-	echo '<strong>'.__('Mean work time').'</strong>: '.$mean_work.' '.__('Hours').'<br />';
+	$table->width = '400px';
+	$table->class = 'databox';
+	$table->rowspan = array ();
+	$table->rowspan[0][1] = 2;
+	$table->colspan = array ();
+	$table->colspan[3][0] = 2;
+	$table->style = array ();
+	$table->style[2] = 'vertical-align: top';
+	$table->data = array ();
+	
+	$table->data[0][0] = print_label (__('Total incicents'), '', '', true, $total);
+	$data = implode (',', array ($opened, $total - $opened));
+	$legend = implode (',', array (__('Opened'), __('Closed')));
+	$table->data[0][1] = '<img src="include/functions_graph.php?type=pipe&width=200&height=100&data='.$data.'&legend='.$legend.'" />';
+	$table->data[1][0] = print_label (__('Opened'), '', '', true,
+		$opened.' ('.$opened_pct.'%)');
+	$table->data[2][0] = print_label (__('Mean life time'), '', '', true,
+		give_human_time ($mean_lifetime));
+	$table->data[2][1] = print_label (__('Mean work time'), '', '', true,
+		$mean_work.' '.__('Hours'));
+	
 	if ($oldest_incident) {
-		echo '<strong>'.__('Longest closed incident').'</strong>: ';
-		echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$oldest_incident['id_incidencia'].'">';
-		echo $oldest_incident['titulo'].'</a><br />';
+		$link = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.
+			$oldest_incident['id_incidencia'].'">'.$oldest_incident['titulo'].'</a>';
+		$table->data[3][0] = print_label (__('Longest closed incident'), '', '', true,
+			$link);
 	}
+	
+	print_table ($table);
 }
 ?>

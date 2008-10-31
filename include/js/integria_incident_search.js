@@ -135,7 +135,7 @@ function configure_incident_form (enable_ajax_form) {
 			function (data, status) {
 				$(dialog+"#hidden-usuario_form").attr ("value", data["id_user_default"]);
 				$(dialog+"#button-usuario_name").attr ("value", data["user_real_name"]);
-				if (data["forced_email"])
+				if (data["forced_email"] == 1)
 					$(dialog+"#checkbox-email_notify").attr ("checked", "checked");
 				else
 					$(dialog+"#checkbox-email_notify").removeAttr ("checked");

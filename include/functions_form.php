@@ -37,35 +37,13 @@ function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any =
 
 	$values = array ();
 
-	$sql = sprintf ("SELECT COUNT(*) FROM tusuario_perfil
-		WHERE id_usuario = '%s' AND id_grupo = 1",
-		$id_user);
-	$in_any = get_db_sql ($sql);
-	if ($in_any) {
-		$groups = get_db_all_rows_sql ('SELECT id_grupo, nombre
-				FROM tgrupo
-				WHERE id_grupo != 1
-				ORDER BY nombre');
-	} else {
-		$values[1] = __('Any');
-		$sql = sprintf ('SELECT g.id_grupo, nombre
-			FROM tusuario_perfil u, tgrupo g
-			WHERE u.id_grupo = g.id_grupo
-			AND id_usuario = "%s"
-			ORDER BY nombre',
-			$id_user);
-		$groups = get_db_all_rows_sql ($sql);
+	$groups = get_user_groups ($id_user, $perm);
+	
+	if ($any) {
+		$groups[1] = __('Any');
 	}
-
-	if ($groups === false)
-		$groups = array ();
-	foreach ($groups as $group) {
-		if ($perm != "" && ! give_acl ($id_user, $group['id_grupo'], $perm))
-			continue;
-
-		$values[$group['id_grupo']] = $group['nombre'];
-	}
-	$output .= print_select ($values, $form_name, $id_group, '', '', 0,
+	
+	$output .= print_select ($groups, $form_name, $id_group, '', '', 0,
 				true, false, false, __('Group'));
 
 	if ($return)
@@ -413,18 +391,23 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 
 // Returns a combo with the available roles
 // ----------------------------------------------------------------------
-function combo_roles ($include_na = 0, $name = 'role') {
+function combo_roles ($include_na = 0, $name = 'role', $label = '', $return = false) {
 	global $config;
 	
-	echo "<select name='$name'>";
-	if ($include_na == 1)
-		echo "<option value=0>".__('N/A');
-	$sql = "SELECT * FROM trole";
-	$result=mysql_query($sql);
-	while ($row=mysql_fetch_array($result)){
-		echo "<option value='".$row["id"]."'>".$row["name"];
+	$output = '';
+	
+	$nothing = '';
+	$nothing_value = '';
+	if ($include_na) {
+		$nothing = __('N/A');
+		$nothing_value = 0;
 	}
-	echo "</select>";
+	$output .= print_select_from_sql ('SELECT id, name FROM trole',
+		$name, '', '', $nothing, $nothing_value, true, false, false, $label);
+	
+	if ($return)
+		return $output;
+	echo $output;
 }
 
 // Returns a combo with projects with id_user inside participants

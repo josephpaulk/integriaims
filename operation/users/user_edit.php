@@ -28,7 +28,7 @@ if ($user === false) {
 }
 
 if (! user_visible_for_me ($config["id_user"], $id_user)) {
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden", "User ".$config["id_user"]." tried to access to user detail of '$nombre'");
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden", "User ".$config["id_user"]." tried to access to user detail of '$id_user'");
 	no_permission ();
 }
 
@@ -110,7 +110,7 @@ $table->class = 'databox';
 $table->rowspan = array ();
 $table->rowspan[0][2] = 5;
 $table->colspan = array ();
-$table->colspan[5][0] = 3;
+$table->colspan[5][0] = 2;
 $table->style[0] = 'vertical-align: top';
 $table->style[1] = 'vertical-align: top';
 $table->style[2] = 'vertical-align: top';

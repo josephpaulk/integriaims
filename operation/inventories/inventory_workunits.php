@@ -19,6 +19,13 @@ check_login ();
 
 $id = (int) get_parameter ('id');
 
+if (! give_acl ($config['id_user'], get_inventory_group ($id), "VR")) {
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access inventory search");
+	include ("general/noaccess.php");
+	exit;
+}
+
 echo '<h3>'.__('Workunits done in inventory object').' #'.$id.'</h3>';
 
 $workunits = get_inventory_workunits ($id);

@@ -52,7 +52,7 @@ if ($create_group) {
 	$url = (string) get_parameter ('url');
 	$banner = (string) get_parameter ('banner');
 	$lang = (string) get_parameter ('lang', 'en');
-	$forced_email = (bool) get_parameter ('forced_email', 0);
+	$forced_email = (bool) get_parameter ('forced_email');
 	$id_user_default = (string) get_parameter ('id_user_default');
 
 	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, lang,
@@ -75,11 +75,11 @@ if ($update_group) {
 	$url = (string) get_parameter ('url');
 	$banner = (string) get_parameter ('banner');
 	$lang = (string) get_parameter ('lang', 'en');
-	$forced_email = (int) get_parameter ('forced_email');
+	$forced_email = (bool) get_parameter ('forced_email');
 	$id_user_default = (string) get_parameter ('id_user_default');
 
 	$sql = sprintf ('UPDATE tgrupo
-		SET nombre = "%s", icon = "%s", url = "%s", forced_email = "%s",
+		SET nombre = "%s", icon = "%s", url = "%s", forced_email = %d,
 		banner = "%s", lang = "%s", id_user_default = "%s" WHERE id_grupo = %d',
 		$name, $icon, $url, $forced_email, $banner,
 		$lang, $id_user_default, $id);

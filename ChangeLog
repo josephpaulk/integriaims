@@ -1,5 +1,47 @@
+2008-10-31  Esteban Sanchez  <estebans@artica.es>
 
-2008-10-29  Sancho Lerena <slerena@artica.es>
+	* godmode/grupos/configurar_grupo.php: Make forced_email a bool.
+
+	* godmode/grupos/lista_grupos.php: Fixes with forced_email which was
+	not updating or inserting properly.
+
+	* include/js/integria_incident_search.js: Little fix when loading
+	email notifies values from group.
+
+	* include/functions_db.php: Added get_incident_group(). Added
+	permission parameter to get_user_groups().
+
+	* include/functions_form.php: Rewritten combo_roles().
+
+	* include/functions_graph.php: Added a new generic pipe type.
+
+	* operation/incidents/incident_attach_file.php: ACL fixes. Style
+	correction.
+
+	* operation/incidents/incident_create_work.php: ACL fixes. Style
+	correction. Uses generic functions.
+
+	* operation/incidents/incident_detail.php: Fixed bug with public flag
+	in workunits. Minor style corrections.
+
+	* operation/incidents/incident_search.php: Improved the incident stats
+	featuring a new pie graph. Incidents are now ordered by the status
+	date.
+
+	* operation/inventories/inventory.php,
+	operation/inventories/inventory_workunits.php: Added ACL checks.
+
+	* operation/inventories/inventory_incidents.php,
+	operation/inventories/inventory_search.php: ACL fixes.
+
+	* operation/users/user_edit.php: Variable name fixed.
+
+	* operation/side_menu.php: Do not show incidents menu if user doesn't
+	have privileges. Style correction.
+
+	* integria_dbdata.sql: Added default user to groups.
+
+2008-10-31  Sancho Lerena <slerena@artica.es>
 
 	* functions_db.php: Some small changes on email functions.
 
@@ -9,7 +51,7 @@
 
 	* user.php: Description shortened to avoid bad render.
 
-2008-10-29  Esteban Sanchez  <estebans@artica.es>
+2008-10-31  Esteban Sanchez  <estebans@artica.es>
 
 	* install.php: Added a final slash in path.
 

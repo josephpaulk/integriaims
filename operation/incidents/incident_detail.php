@@ -262,12 +262,10 @@ if ($id) {
 	if ($insert_workunit) {
 		$timestamp = get_parameter ("timestamp");
 		$nota = get_parameter ("nota");
-		$workunit = get_parameter ("workunit",0);
-		$timeused = get_parameter ("duration",0);
-		$timeused = number_format ($timeused, 2);
-		$have_cost = get_parameter ("have_cost",0);
-		$profile = get_parameter ("work_profile",0);
-		$public = get_parameter ("public", 1);
+		$timeused = (int) get_parameter ('duration');
+		$have_cost = (int) get_parameter ('have_cost');
+		$profile = (int) get_parameter ('work_profile');
+		$public = (bool) get_parameter ('public');
 
 		$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s"
 				WHERE id_incidencia = %d', $timestamp, $id);
@@ -277,7 +275,7 @@ if ($id) {
 
 		// Add work unit if enabled
 		$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public)
-				VALUES ("%s", "%s", "%s", "%s", "$s")',
+				VALUES ("%s", %.2f, "%s", "%s", %d)',
 				$timestamp, $timeused, $config['id_user'], $nota, $public);
 		$id_workunit = process_sql ($sql, "insert_id");
 		$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit)
@@ -285,7 +283,7 @@ if ($id) {
 				$id, $id_workunit);
 		$res = process_sql ($sql);
 		if ($res !== false) {
-			$result_msg = "<h3 class='suc'>".__('Workunit added successfully')."</h3>";
+			$result_msg = '<h3 class="suc">'.__('Workunit added successfully').'</h3>';
 			// Email notify to all people involved in this incident
 			if ($email_notify == 1) {
 				mail_incident ($id, $config['id_user'], $nota, $timeused, 10);
@@ -596,6 +594,7 @@ if (! defined ('AJAX')) :
 $(document).ready (function () {
 	/* First parameter indicates to add AJAX support to the form */
 	configure_incident_form (false);
+	$("#grupo_form").change ();
 });
 </script>
 

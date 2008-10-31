@@ -48,7 +48,7 @@ if ($id) {
 		$banner = $group['banner'];
 		$parent = $group['parent'];
 		$lang = $group['lang'];
-		$forced_email = $group['forced_email'];
+		$forced_email = (bool) $group['forced_email'];
 	} else {
 		echo "<h3 class='error'>".__('There was a problem loading group')."</h3>";
 		include ("general/footer.php");

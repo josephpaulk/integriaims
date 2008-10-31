@@ -13,19 +13,19 @@
 // GNU General Public License for more details.
 
 global $config;
-if (check_login() != 0) {
-	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access incident viewer");
-	require ("general/noaccess.php");
-	exit;
-}
 
-$id_incident = (int) get_parameter ('id');
-$title = get_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident);
+check_login ();
 
+$id = (int) get_parameter ('id');
 
 if (! give_acl($config["id_user"], 0, "IW")) {
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident #".$id);
+	include ("general/noaccess.php");
 	return;
 }
+
+$title = get_db_value ("titulo", "tincidencia", "id_incidencia", $id);
 
 echo '<div id="upload_result"></div>';
 
@@ -46,7 +46,7 @@ print_table ($table);
 echo '<div class="button" style="width: '.$table->width.'">';
 print_submit_button (__('Upload'), 'upload', false, 'class="sub next"');
 echo '</div>';
-print_input_hidden ('id', $id_incident);
+print_input_hidden ('id', $id);
 print_input_hidden ('upload_file', 1);
 echo "</form>";
 echo '</div>';

@@ -263,13 +263,13 @@ if (give_acl ($config["id_user"], 0, "PM") && $sec == "projects") {
 }
 
 // INCIDENTS
-if ($sec == "incidents") {
+if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR")) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Incidents')."</h3>";
 	echo "<ul class='sidemenu'>";
-	
+
 	$id_incident = get_parameter ('id');
-	
+
 	// Incident overview
 	if ($sec2 == "operation/incidents/incident")
 		echo "<li id='sidesel'>";
@@ -285,7 +285,7 @@ if ($sec == "incidents") {
 			echo "<li>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail' id='link_create_incident'>".__('Create incident')."</a></li>";
 	}
-	
+
 	if ($sec2 == 'operation/incidents/incident') {
 		echo '<li>';
 		echo '<a href="" onclick="return false">'.__('Incident #').'</a>';
@@ -298,23 +298,23 @@ if ($sec == "incidents") {
 
 	// Dynamic incident sub options menu
 	echo "<br>";
-	
+
 	echo '<div class="portlet incident-menu" id="incident-menu-actions" style="display: none">';
 	echo '<h3>'.__('Incident').' #<span class="id-incident-menu">';
 	if ($id_incident)
 		echo $id_incident;
 	echo '</span></h3>';
-	
+
 	echo "<ul class='sidemenu'>";
-	
+
 	// Add workunit to incident
 	if ($sec2 == "operation/incidents/incident_create_work")
 		echo "<li id='sidesel'>";
 	else
 		echo '<li>';
-	
+
 	echo "<a id='incident-create-work' href='index.php?sec=incidents&sec2=operation/incidents/incident_create_work&id=$id_incident'>".__('Add workunit')."</a>";
-		
+	
 	echo "</li>";
 
 	// Add file to incident
@@ -324,42 +324,42 @@ if ($sec == "incidents") {
 		echo '<li id="incident-attach-file">';
 	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_attach_file&id=$id_incident'>".__('Add file')."</a>";
 	echo "</li>";
-	
+
 	// Blockend
 	echo "</ul>";
 	echo "</div>";
-	
+
 	/* Users affected by the incident */
 	echo '<div class="portlet incident-menu" id="incident-menu-details" style="display: none">';
 	echo '<h2 onclick="toggleDiv (\'incident-details\')">'.__('Details for incident').' #<span class="id-incident-menu">';
 	if ($id_incident)
 		echo $id_incident;
 	echo "</h2>";
-	
+
 	echo '<div id="incident-details">';
 	if ($id_incident) {
 		incident_details_list ($id_incident);
 	}
 	echo '</div></div>';
-	
+
 	/* Users affected by the incident */
 	echo '<div class="portlet incident-menu" id="incident-menu-users" style="display: none">';
 	echo '<h2 onclick="toggleDiv (\'incident-users\')">'.__('Users in incident').' #<span class="id-incident-menu">';
 	if ($id_incident)
 		echo $id_incident;
 	echo "</h2>";
-	
+
 	echo '<div id="incident-users">';
-	
+
 	if ($id_incident) {
 		incident_users_list ($id_incident);
 	}
-	
+
 	echo "</div></div>";
 }
 
 // Indicent type editor
-if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "incidents")) {
+if (give_acl ($config["id_user"], 0, "IM") && $sec == "incidents") {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Incident types')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -376,7 +376,7 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "incidents")) {
 }
 
 // INVENTORY
-if ($sec == "inventory") {
+if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR")) {
 	$id_inventory = get_parameter ('id');
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Inventory')."</h3>";
@@ -388,7 +388,7 @@ if ($sec == "inventory") {
 		echo "<li>";
 	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory'>".__('Inventory overview')."</a></li>";
 
-	if (give_acl ($config["id_user"], 0, "IW")) {
+	if (give_acl ($config["id_user"], 0, "VW")) {
 		// Incident creation
 		if ($sec2 == "operation/inventories/inventory_detail")
 			echo "<li id='sidesel'>";
@@ -396,7 +396,7 @@ if ($sec == "inventory") {
 			echo "<li>";
 		echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_detail'>".__('Create inventory object')."</a></li>";
 	}
-	
+
 	if ($sec2 == 'operation/inventories/inventory') {
 		echo '<li>';
 		echo '<a href="" onclick="return false">'.__('Inventory #').'</a>';
@@ -406,9 +406,9 @@ if ($sec == "inventory") {
 		echo '</li>';
 	}
 	echo "</ul>";
-	
+
 	echo "</div>";
-	
+
 	// Dynamic inventory sub options menu
 	echo '<div class="portlet inventory-menu" id="inventory-menu-actions" style="display: none">';
 	echo '<h3>'.__('Inventory').' #<span class="id-inventory-menu">';
@@ -419,7 +419,7 @@ if ($sec == "inventory") {
 	echo "<ul class='sidemenu'>";
 	echo '<li>';
 	echo '<a id="inventory-create-incident" href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_inventory='.$id_inventory.'">'.__('Create incident').'</a>';
-	
+
 	echo '</li>';
 
 	echo "</ul>";
@@ -427,7 +427,7 @@ if ($sec == "inventory") {
 }
 
 // CONTRACTS
-if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
 	echo "<div class='portlet'>";
 
 	// Contract
@@ -446,7 +446,7 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 }
 
 // CONTACTS
-if (give_acl ($config["id_user"], 0, "IM") && $sec == "inventory") {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
 	echo "<div class='portlet'>";
 
 
@@ -465,7 +465,7 @@ if (give_acl ($config["id_user"], 0, "IM") && $sec == "inventory") {
 }
 
 // COMPANIES
-if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
 	echo "<div class='portlet'>";
 
 	// Contract
@@ -492,7 +492,7 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND  ($sec == "inventory")) {
 }
 
 // SLA's
-if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('SLA')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -509,7 +509,7 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
 }
 
 // MANUFACTURER
-if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Manufacturers')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -526,7 +526,7 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
 }
 
 // BUILDINGS
-if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Buildings')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -543,7 +543,7 @@ if ((give_acl($config["id_user"], 0, "IM")==1) AND ($sec == "inventory")) {
 }
 
 // Product types
-if ((give_acl($config["id_user"], 0, "VR")==1) AND ($sec == "inventory")) {
+if ($sec == "inventory" && give_acl($config["id_user"], 0, "VM")) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Products')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -560,7 +560,7 @@ if ((give_acl($config["id_user"], 0, "VR")==1) AND ($sec == "inventory")) {
 }
 
 // KNOWLEDGE BASE (KB)
-if (($sec == "kb") AND (give_acl($config["id_user"], 0, "KR"))) {
+if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR")) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Knowledge Base')."</h3>";
 	echo "<ul class='sidemenu'>";

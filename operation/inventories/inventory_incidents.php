@@ -20,7 +20,7 @@ if (check_login () != 0) {
 
 $id = (int) get_parameter ('id');
 
-if (give_acl ($config['id_user'], get_inventory_group ($id), 'IR') != 1) {
+if (! give_acl ($config['id_user'], get_inventory_group ($id), 'IR')) {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to inventory ".$id);
 	include ("general/noaccess.php");
