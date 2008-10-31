@@ -17,29 +17,25 @@
 
 global $config;
 
-if (check_login() != 0) {
-    audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
-    require ("general/noaccess.php");
-    exit;
-}
+check_login ();
 
 $id_user = $_SESSION["id_usuario"];
-$operation = give_parameter_get ("operation");
-$ahora = give_parameter_get ("givendate", date("Y-m-d H:i:s"));
+$operation = get_parameter ("operation");
+$ahora = get_parameter ("givendate", date("Y-m-d H:i:s"));
 $public =  get_parameter ("public", 1);
 
 // -----------
 // Workunit
 // -----------
 if ($operation == "addworkunit"){
-	$duration = give_parameter_post ("duration",0);
+	$duration = get_parameter ("duration",0);
 	if (!is_numeric( $duration))
 		$duration = 0;
-	$timestamp = give_parameter_post ("workunit_date");
-	$description = give_parameter_post ("description");
-	$have_cost = give_parameter_post ("have_cost",0);
-	$task = give_parameter_post ("task",-1);
-	$role = give_parameter_post ("role",0);
+	$timestamp = get_parameter ("workunit_date");
+	$description = get_parameter ("description");
+	$have_cost = get_parameter ("have_cost",0);
+	$task = get_parameter ("task",-1);
+	$role = get_parameter ("role",0);
     $split = get_parameter ("split",0);
 	
 	// Multi-day assigment

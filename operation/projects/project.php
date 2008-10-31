@@ -13,9 +13,8 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
-global $REMOTE_ADDR;
 global $config;
+global $REMOTE_ADDR;
 
 check_login ();
 
@@ -44,6 +43,7 @@ if ($disable_project) {
 		process_sql ($sql);
 		echo '<h3 class="suc">'.__('Project successfully disabled').'</h3>';
 		audit_db ($config['id_user'], $REMOTE_ADDR, "Project disabled", "User ".$config['id_user']." disabled project #".$id_project);
+		project_tracking ($id_project, PROJECT_DISABLED);
 	} else {
 		audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Forbidden", "User ".$config['id_user']." try to disable project #$id_project");
 		echo '<h3 class="error">'.__('There was a problem deleting project').'</h3>';
@@ -59,6 +59,7 @@ if ($activate_project) {
 		process_sql ($sql);
 		echo '<h3 class="suc">'.__('Project successfully deleted').'</h3>';
 		audit_db ($config['id_user'], $REMOTE_ADDR, "Project activated", "User ".$config['id_user']." activated project #".$id_project);
+		project_tracking ($id_project, PROJECT_ACTIVATED);
 	} else {
 		audit_db ($config['id_user'], $REMOTE_ADDR,"ACL Forbidden", "User ".$config['id_user']." try to activate project #$id_project");
 		echo '<h3 class="error">'.__('There was a problem deleting project').'</h3>';
@@ -73,9 +74,9 @@ if ($delete_project) {
 		// delete_project ($id_project);
 		$sql = sprintf ('DELETE FROM tproject WHERE disabled = 1 AND id = %d', $id_project);
 		process_sql ($sql);
-
 		echo '<h3 class="suc">'.__('Incident successfully deleted').'</h3>';
 		audit_db ($config['id_user'], $REMOTE_ADDR, "Project deleted", "User ".$config['id_user']." deleted project #".$id_project);
+		project_tracking ($id_project, PROJECT_DELETED);
 	} else {
 		audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Forbidden", "User ".$config['id_user']." try to delete project #$id_project");
 		echo '<h3 class="error">'.__('There was a problem deleting incident').'</h3>';
@@ -110,6 +111,8 @@ if ($action == 'insert') {
 	} else {
 		echo '<h3 class="suc">'.__('Project created successfully').' #'.$id_project.'</h3>';
 		audit_db ($usuario, $REMOTE_ADDR, "Project created", "User ".$config['id_user']." created project '$name'");
+		
+		project_tracking ($id_project, PROJECT_CREATED);
 		
 		// Add this user as profile 1 (project manager) automatically
 		$sql = sprintf ('INSERT INTO trole_people_project
@@ -226,7 +229,7 @@ foreach ($projects as $project) {
 	$data[4] = get_db_value ('COUNT(*)', 'trole_people_project', 'id_project', $project['id']);
 
 	// Time wasted
-	$data[5] = format_numeric (give_hours_project ($project['id'])).' '.__('Hours');
+	$data[5] = format_numeric (get_project_workunit_hours ($project['id'])).' '.__('Hours');
 	
 	// Costs (client / total)
 	$data[6] = format_numeric (project_workunit_cost ($project['id'], 1)).' '.$config['currency'];

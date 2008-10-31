@@ -25,12 +25,12 @@
 		exit;
 	}
 
-	$id_task = give_parameter_get ("id_task", -1);
+	$id_task = get_parameter ("id_task", -1);
 	if ($id_task != -1)
-		$task_name = give_db_value ("name", "ttask", "id", $id_task);
+		$task_name = get_db_value ("name", "ttask", "id", $id_task);
 	else
 		$task_name = "";
-	$id_project = give_parameter_get ("id_project", -1);
+	$id_project = get_parameter ("id_project", -1);
 	
 	echo "<h3><img src='images/disk.png'>&nbsp;&nbsp;";
 	echo __('Upload file')." - $task_name</A></h3>";

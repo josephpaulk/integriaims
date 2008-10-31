@@ -310,9 +310,9 @@ function install_step3() {
 				</div>		
 			
 				<div>Full path to HTTP publication directory.<br>
-				<span class='f9b'>For example /var/www/integria</span>
+				<span class='f9b'>For example /var/www/integria/</span>
 				</div>
-				<input class='login' type='text' name='path' style='width: 190px;' value='".dirname (__FILE__)."'>
+				<input class='login' type='text' name='path' style='width: 190px;' value='".dirname (__FILE__)."/'>
 
 				<div>Full local URL to Integria<br>
 				<span class='f9b'>For example /integria</span>
@@ -368,7 +368,7 @@ function install_step4() {
 		if (isset($_POST["path"]))
 			$path = $_POST["path"];
 		else
-			$path = "/var/www";
+			$path = "/var/www/";
 	}
 	$everything_ok = 0;
 	$step1=0;

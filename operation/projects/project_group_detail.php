@@ -80,7 +80,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 
 if (isset($_GET["delete"])){ // if delete
 	$id = get_parameter ("delete",0);
-	$name = give_db_sqlfree_field  ("SELECT name FROM tproject_group WHERE id = $id ");
+	$name = get_db_sql  ("SELECT name FROM tproject_group WHERE id = $id ");
 	$sql_delete= "DELETE FROM tproject_group WHERE id = $id";
 	$result=mysql_query($sql_delete);
 	insert_event ("PROJECT GROUP DELETED", $id, 0, "$name");

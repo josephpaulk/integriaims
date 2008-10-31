@@ -20,10 +20,10 @@ if (check_login() != 0) {
 }
 
 $id_user = $config["id_user"];
-$operation = give_parameter_get ("operation");
-$id_project = give_parameter_get ("id_project", -1);
+$operation = get_parameter ("operation");
+$id_project = get_parameter ("id_project", -1);
 if ($id_project != 1)
-	$project_name = give_db_value ("name", "tproject", "id", $id_project);
+	$project_name = get_db_value ("name", "tproject", "id", $id_project);
 else
 	$project_name = "";
 
@@ -38,10 +38,10 @@ if ( $id_project == -1 ){
 // CREATE new milestone
 // ---------------
 if ($operation == "create2") {
-	$name = give_parameter_post ("name");
-	$description = give_parameter_post ("description");
-	$timestamp = give_parameter_post ("timestamp");
-	$id_project = give_parameter_post ("id_project");
+	$name = get_parameter ("name");
+	$description = get_parameter ("description");
+	$timestamp = get_parameter ("timestamp");
+	$id_project = get_parameter ("id_project");
 	$sql_insert="INSERT INTO tmilestone (name, description, timestamp, id_project) VALUES ('$name','$description', '$timestamp', '$id_project') ";
 	$result=mysql_query($sql_insert);	
 	if (! $result)
@@ -50,14 +50,7 @@ if ($operation == "create2") {
 		echo "<h3 class='suc'>".__('Created successfully')."</h3>"; 
 		$id_ms = mysql_insert_id();
 	}
-	/*
-	$msgtext = "A new Milestone has been created by user [$id_user] for user [$assigned_user]. Todo information is:\n\nTitle   : $name\nPriority: $priority\nDescription: $description\n\nFor more information please visit ".$config["base_url"]."/index.php?sec=todo&sec2=operation/todo/todo";
-	if ($id_user != $assigned_user){
-		topi_sendmail (return_user_email($id_user), "[TOPI] New ToDo item has been created", $msgtext);
-		topi_sendmail (return_user_email($assigned_user), "[TOPI] New ToDo item has been created", $msgtext);
-	} else
-		topi_sendmail (return_user_email($assigned_user), "[TOPI] New ToDo item has been created", $msgtext);
-	*/
+	
 	$operation = "";
 }
 
@@ -65,7 +58,7 @@ if ($operation == "create2") {
 // DELETE new todo
 // ---------------
 if ($operation == "delete") {
-	$id_milestone = give_parameter_get ("id");
+	$id_milestone = get_parameter ("id");
 	$sql_delete= "DELETE FROM tmilestone WHERE id = $id_milestone";
 	$result=mysql_query($sql_delete);
 	if (! $result)
@@ -98,7 +91,7 @@ if ($operation == "create") {
 	echo "</table>";
 	echo '<table class="button" width="720">';
     
-    $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
+    $project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
     if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
 	    echo "<tr><td align='right'>";
@@ -150,7 +143,7 @@ if ($operation == ""){
 		}
 	echo "</table>";
 
-    $project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
+    $project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
     if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
 	    echo "<table class='button' width=720>";

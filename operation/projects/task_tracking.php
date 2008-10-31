@@ -24,13 +24,13 @@ if (check_login() != 0) {
 	exit;
 }
 
-$id_task = give_parameter_get ("id_task", -1);
+$id_task = get_parameter ("id_task", -1);
 $cabecera=0;
 $sql4='SELECT * FROM ttask_track WHERE id_task= '.$id_task;
 
 echo "<h1>".__('Task tracking')."</h1>";
 echo "<h3>";
-echo give_db_sqlfree_field("SELECT name FROM ttask WHERE id = $id_task");
+echo get_db_sql("SELECT name FROM ttask WHERE id = $id_task");
 echo "</h3>";
 
 echo "<table class='listing' width=630>";

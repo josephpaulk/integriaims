@@ -17,36 +17,20 @@
 
 // Load global vars
 
-?>
-
-<script language="javascript">
-
-	/* Function to hide/unhide a specific Div id */
-	function toggleDiv (divid){
-		if (document.getElementById(divid).style.display == 'none'){
-			document.getElementById(divid).style.display = 'block';
-		} else {
-			document.getElementById(divid).style.display = 'none';
-		}
-	}
-</script>
-
-<?PHP
-
 global $config;
 
 if (check_login() != 0) {
-    audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
-    require ("general/noaccess.php");
-    exit;
+	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
+	require ("general/noaccess.php");
+	exit;
 }
 
 // Get main variables and init
-$id_task = give_parameter_get ("id_task", -1);
+$id_task = get_parameter ("id_task", -1);
 // id_task = -1 is for project people management, different than people task management
 
-$id_project = give_parameter_get ("id_project", 0);
-$operation = give_parameter_get ("action");
+$id_project = get_parameter ("id_project", 0);
+$operation = get_parameter ("action");
 $result_output = "";
 
 
@@ -54,16 +38,16 @@ $result_output = "";
 // Add user for this task
 // -----------
 if ($operation == "insert"){
-	$role = give_parameter_post ("role",0);
-	$user = give_parameter_post ("user");
+	$role = get_parameter ("role",0);
+	$user = get_parameter ("user");
 	// People add for TASK
 	if ($id_task != -1){
-		$temp_id_user = give_db_value ("id_user", "trole_people_project", "id", $user);
-		$temp_id_role = give_db_value ("id_role", "trole_people_project", "id", $user);
+		$temp_id_user = get_db_value ("id_user", "trole_people_project", "id", $user);
+		$temp_id_role = get_db_value ("id_role", "trole_people_project", "id", $user);
 		$sql = "INSERT INTO trole_people_task
 			(id_task, id_user, id_role) VALUES
 			($id_task, '$temp_id_user', '$temp_id_role')";
-        task_tracking ( $config["id_user"], $id_task, 18);
+		task_tracking ($id_task, TASK_MEMBER_ADDED);
 	// People add for whole PROJECT
 	} else {
 		$sql = "INSERT INTO trole_people_project
@@ -71,13 +55,14 @@ if ($operation == "insert"){
 			($id_project, '$user', '$role')";
 	}
 	
-	if (mysql_query($sql)){
-		$id_task_inserted = mysql_insert_id();
+	$id_task_inserted = process_sql ($sql, 'insert_id');
+	
+	if ($id_task_inserted !== false) {
 		$result_output = "<h3 class='suc'>".__('Created successfully')."</h3>";
 		if ($id_task != -1){
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to task", "User $user added to task ".give_db_value ("name", "ttask", "id", $id_task));
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to task", "User $user added to task ".get_db_value ("name", "ttask", "id", $id_task));
 		} else {
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to project", "User $user added to project ".give_db_value ("name", "tproject", "id", $id_project));
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to project", "User $user added to project ".get_db_value ("name", "tproject", "id", $id_project));
 		}
 		$operation = "view";
 	} else {
@@ -90,12 +75,12 @@ if ($operation == "insert"){
 // DELETE Users from this project / task
 
 if ($operation == "delete"){
-	$id = give_parameter_get ("id",-1);
+	$id = get_parameter ("id",-1);
 
 	// People delete for TASK
 	if ($id_task != -1){
 		$sql = "DELETE FROM trole_people_task WHERE id = $id";
-        task_tracking ( $config["id_user"], $id_task, 18);
+		task_tracking ($id_task, TASK_MEMBER_DELETED);
 	// People delete for whole PROJECT
 	} else {
 		$sql = "DELETE FROM trole_people_project WHERE id = $id";
@@ -118,9 +103,9 @@ echo $result_output;
 // Main task form table
 // --------------------
 
-if ($id_task != -1){
+if ($id_task != -1) {
 	echo "<h2>".__('Task human resources management')."</h2>";
-	echo "<h3>".give_db_value('name', 'ttask','id',$id_task)."</h3><br>";
+	echo "<h3>".get_db_value('name', 'ttask','id',$id_task)."</h3><br>";
 
 	$sql = "SELECT COUNT(*) FROM trole_people_task where id_task = $id_task";
 	$result = mysql_query($sql);
@@ -132,8 +117,8 @@ if ($id_task != -1){
 		echo "<table width=500 class='listing'>";
 		echo "<th>".__('User');
 		echo "<th>".__('Role');
-		if ($config["id_user"] == give_db_value('id_owner','tproject','id', $id_project) OR
-		give_acl ($config["id_user"], give_db_value('id_group','ttask','id', $id_task), "TM"))
+		if ($config["id_user"] == get_db_value ('id_owner','tproject','id', $id_project) OR
+			give_acl ($config["id_user"], get_db_value ('id_group','ttask','id', $id_task), "TM"))
 			echo "<th>".__('Delete');
 			
 		$color = 1;
@@ -147,9 +132,9 @@ if ($id_task != -1){
 				$color = 1;
 			}
 			echo "<tr><td valign='top' class='$tdcolor'>".$row["id_user"];
-			echo "<td valign='top' class='$tdcolor'>".give_db_value('name','trole','id',$row["id_role"]);
-			if ($config["id_user"] == give_db_value('id_owner','tproject','id', $id_project) OR
-			give_acl ($config["id_user"], give_db_value('id_group','ttask','id', $id_task), "TM")){
+			echo "<td valign='top' class='$tdcolor'>".get_db_value('name','trole','id',$row["id_role"]);
+			if ($config["id_user"] == get_db_value('id_owner','tproject','id', $id_project) OR
+			give_acl ($config["id_user"], get_db_value('id_group','ttask','id', $id_task), "TM")){
 				echo "<td valign='top' class='$tdcolor' align='center'>";
 				echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
 			}
@@ -160,13 +145,13 @@ if ($id_task != -1){
 
 // MAIN PROJECT PEOPLE LIST
 	echo "<h2>".__('Project people management')."</h2>";
-	echo "<h3>".give_db_value('name', 'tproject','id',$id_project)."</h3><br>";
+	echo "<h3>".get_db_value('name', 'tproject','id',$id_project)."</h3><br>";
 
-	if ($config["id_user"] != give_db_value('id_owner','tproject','id', $id_project) AND
-		give_acl ($config["id_user"], give_db_value('id_group','ttask','id', $id_task), "PM")!=1){
+	if ($config["id_user"] != get_db_value('id_owner','tproject','id', $id_project) AND
+		give_acl ($config["id_user"], get_db_value('id_group','ttask','id', $id_task), "PM")!=1){
 		audit_db("Project People Management", $config["REMOTE_ADDR"], "Unauthorized access", "Try to access people project management");
-    	require ("general/noaccess.php");
-    	exit;
+		require ("general/noaccess.php");
+		exit;
 	}
 
 	$sql = "SELECT COUNT(*) FROM trole_people_project WHERE id_project = $id_project";
@@ -191,7 +176,7 @@ if ($id_task != -1){
 				$color = 1;
 			}
 			echo "<tr><td valign='top' class='$tdcolor'>".$row["id_user"];
-			echo "<td valign='top' class='$tdcolor'>".give_db_value('name','trole','id',$row["id_role"]);
+			echo "<td valign='top' class='$tdcolor'>".get_db_value('name','trole','id',$row["id_role"]);
 			echo "<td valign='top' class='$tdcolor' align='center'>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
 		}
@@ -203,11 +188,11 @@ if ($id_task != -1){
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Only project owner or Project ADMIN could modify
 if ($id_task != -1){
-	if ($config["id_user"] == give_db_value('id_owner','tproject','id', $id_project) OR
-		give_acl ($config["id_user"], give_db_value('id_group','ttask','id', $id_task), "TM")){
+	if ($config["id_user"] == get_db_value('id_owner','tproject','id', $id_project) OR
+		give_acl ($config["id_user"], get_db_value('id_group','ttask','id', $id_task), "TM")){
 		
-        // Task people manager editor
-        // ===============================
+		// Task people manager editor
+		// ===============================
 		echo "<h3>".__('Role/Group assignment')."</h3>";
 		echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
 		echo "<table cellpadding=4 cellspacing=4 width=500 class='databox_color'>";
@@ -224,13 +209,13 @@ if ($id_task != -1){
 		echo "</table>";
 	}
 } else {
-    // PROYECT PEOPLE MANAGER editor
-    // ===============================
-	if ($config["id_user"] != give_db_value('id_owner','tproject','id', $id_project) AND
-		give_acl ($config["id_user"], give_db_value('id_group','ttask','id', $id_task), "PM")!=1){
+	// PROYECT PEOPLE MANAGER editor
+	// ===============================
+	if ($config["id_user"] != get_db_value('id_owner','tproject','id', $id_project) AND
+		give_acl ($config["id_user"], get_db_value('id_group','ttask','id', $id_task), "PM")!=1){
 		audit_db("Project People Management", $config["REMOTE_ADDR"], "Unauthorized access", "Try to access people project management");
-    	require ("general/noaccess.php");
-    	exit;
+		require ("general/noaccess.php");
+		exit;
 	}
 
 	echo "<h3>".__('Project role assignment')."</h3>";
@@ -245,7 +230,7 @@ if ($id_task != -1){
 	echo "<td valign='top' class='datos2'>";
 	echo __('User');
 	echo "<td valign='top' class='datos2'>";
-    combo_user_visible_for_me ($config["id_user"], "user", 0, "PR");
+	combo_user_visible_for_me ($config["id_user"], "user", 0, "PR");
 	echo "</table>";
 		
 	echo "<table class='button' width=500>";

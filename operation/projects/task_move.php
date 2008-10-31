@@ -22,12 +22,12 @@ if (check_login() != 0) {
 }
 
 // Get our main stuff
-$id_project = give_parameter_get ("id_project", -1);
-$id_task = give_parameter_get ("id_task", -1);
+$id_project = get_parameter ("id_project", -1);
+$id_task = get_parameter ("id_task", -1);
 
 //TASK MOVE Operation
 // PROJECT - People management
-$project_manager = give_db_value ("id_owner", "tproject", "id", $id_project);
+$project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
 if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
 
     echo "<form name='project_move' method='POST' action='index.php?sec=projects&sec2=operation/projects/task&operation=move&id_project=$id_project&id_task=$id_task'>";

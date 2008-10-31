@@ -630,8 +630,8 @@ function project_tree ($id_project, $id_user){
 	else
 		$project_name = "";
 
-	$dotfilename = $config["homedir"]. "attachment/tmp/$id_user.dot";
-	$pngfilename = $config["homedir"]. "attachment/tmp/$id_user.project.png";
+	$dotfilename = $config["homedir"]. "/attachment/tmp/$id_user.dot";
+	$pngfilename = $config["homedir"]. "/attachment/tmp/$id_user.project.png";
 	$dotfile = fopen ($dotfilename, "w");
 
 	$total_task = 0;
@@ -642,7 +642,7 @@ function project_tree ($id_project, $id_user){
 			$task[$total_task] = $row2["id"];
 			$task_name[$total_task] = $row2["name"];
 			$task_parent[$total_task] = $row2["id_parent_task"];
-			$task_workunit[$total_task] = give_wu_task ($row2["id"]);
+			$task_workunit[$total_task] = get_task_workunit_hours ($row2["id"]);
 			$total_task++;
 		}
 	}
@@ -692,9 +692,9 @@ function all_project_tree ($id_user, $completion, $project_kind){
 	include ("../include/config.php");
 	$config["id_user"] = $id_user;
 
-	$dotfilename = $config["homedir"]. "attachment/tmp/$id_user.all.dot";
-	$pngfilename = $config["homedir"]. "attachment/tmp/$id_user.projectall.png";
-	$mapfilename = $config["homedir"]. "attachment/tmp/$id_user.projectall.map";
+	$dotfilename = $config["homedir"]. "/attachment/tmp/$id_user.all.dot";
+	$pngfilename = $config["homedir"]. "/attachment/tmp/$id_user.projectall.png";
+	$mapfilename = $config["homedir"]. "/attachment/tmp/$id_user.projectall.map";
 	$dotfile = fopen ($dotfilename, "w");
 
 
@@ -731,7 +731,7 @@ function all_project_tree ($id_user, $completion, $project_kind){
 					$task_name[$total_task] = $row2["name"];
 					$task_parent[$total_task] = $row2["id_parent_task"];
 					$task_project[$total_task] = $project[$total_project];
-					$task_workunit[$total_task] = give_wu_task ($row2["id"]);
+					$task_workunit[$total_task] = get_task_workunit_hours ($row2["id"]);
 					$task_completion[$total_task] = $row2["completion"];
 					$total_task++;
 				}

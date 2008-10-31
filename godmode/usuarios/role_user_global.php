@@ -75,8 +75,8 @@ if ($id_user != ""){
         echo "<tr>";
         echo "<td class=$tdcolor>".$row[2];
         echo "<td class=$tdcolor><b><a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=".$row[4]."&id_task=".$row[0]."&operation=view'>".$row[1]."</a></b>";
-        echo "<td class=$tdcolor>".give_db_sqlfree_field ("SELECT name FROM trole WHERE id = ".$row[3]);
-        echo "<td class=$tdcolor>".give_wu_task_user ($row[0], $id_user);
+        echo "<td class=$tdcolor>".get_db_sql ("SELECT name FROM trole WHERE id = ".$row[3]);
+        echo "<td class=$tdcolor>".get_task_workunit_hours_user ($row[0], $id_user);
         echo '<td class="'.$tdcolor.'" align="center"><a href="index.php?sec=users&sec2=godmode/usuarios/role_user_global&id_user='.$id_user.'&delete='.$row[0].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
     }
     echo "</table>";

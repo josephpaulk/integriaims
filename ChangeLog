@@ -1,3 +1,101 @@
+2008-10-29  Esteban Sanchez  <estebans@artica.es>
+
+	* install.php: Added a final slash in path.
+
+	* include/js/integria_incident_search.js: Fixed a bug on users dialog
+	when paginating. Users dialog is wider now.
+
+	* operation/projects/project.php: Added tracking support.
+
+	* operation/projects/project_tracking.php: Added to repository.
+	Project tracking view.
+
+	* operation/projects/project_detail.php: Fixed form style. Use new
+	javascript date controls.
+
+	* include/js/jquery.ui.core.js,
+	include/js/jquery.ui.datepicker.js,
+	include/js/jquery.ui.dialog.js,
+	include/js/jquery.ui.draggable.js,
+	include/js/jquery.ui.resizable.js,
+	include/js/jquery.ui.tabs.js,
+	include/js/jquery.ui.slider.js,: Updated to latest version. Minified
+	version.
+
+	* include/styles/integria.css: Added width to user button on incidents
+	dialog.
+
+	* include/functions.php: Improved the code of get_parameter*. Removed
+	old, deprecated and unused functions. Added
+	get_project_tracking_state()
+
+	* include/functions_db.php: Added project_tracking(). Fixed references
+	to unexistent tables like tusuario_perfil. Renamed functions to be
+	consistent (removed give_*). Removed deprecated and unused functions.
+	Removed useless user parameter in task_tracking().
+
+	* operation/projects/task.php: Fixed task_tracking() calls. Renamed
+	deprecated functions.
+
+	* operation/projects/task_create_work.php: Removed inventory object
+	controls since it's not implemented yet.
+
+	* operation/users/user.php: Moved profiles icons to enterprise
+	version.
+
+	* operation/side_menu.php: Many fixes on selected items on the menu.
+	Fixed an error when showing project details. Renamed deprecated
+	functions.
+
+	* operation/projects/task_detail.php: Fixed silly string. Added date
+	range checking. Fixed task_tracking() calls. Removed big and annoying
+	title. Use functions in integria_date.js.
+
+	* operation/projects/task_workunit.php: Style correction. Use of
+	generic functions.
+
+	* operation/agenda/agenda.php: Rewritted to use generic functions and
+	new date control.
+
+	* include/js/integria_date.js: Added to repository. Common functions
+	to date ranges controls.
+
+	* general/home.php, godmode/updatemanager/load_updatemanager.php,
+	godmode/usuarios/configurar_usuarios.php,
+	godmode/usuarios/role_user_global.php,
+	include/functions_form.php, include/functions_graph.php,
+	include/gantt.php, operation/common/workunit_detail.php,
+	operation/incidents/incident_attach_file.php,
+	operation/incidents/incident_create_work.php,
+	operation/incidents/incident_detail.php,
+	operation/incidents/incident_inventory_contacts.php,
+	operation/incidents/incident_inventory_detail.php,
+	operation/incidents/incident_notes.php,
+	operation/incidents/incident_notes_detail.php,
+	operation/incidents/incident_search.php,
+	operation/incidents/incident_work.php,
+	operation/inventories/inventory_workunits.php,
+	operation/inventories/manage_prod.php, operation/kb/browse.php,
+	operation/kb/search.php, operation/messages/message.php,
+	operation/projects/gantt.php, operation/projects/gantt_graph.php,
+	operation/projects/milestones.php,
+	operation/projects/people_manager.php,
+	operation/projects/project_group_detail.php,
+	operation/projects/task_attach_file.php,
+	operation/projects/task_files.php, operation/projects/task_move.php,
+	operation/projects/task_tracking.php, operation/todo/todo.php,
+	operation/user_report/monthly.php,
+	operation/user_report/monthly_graph.php,
+	operation/user_report/report_annual.php,
+	operation/user_report/report_monthly.php,
+	operation/user_report/report_weekly.php,
+	operation/user_report/weekly_graph.php,
+	operation/users/user_spare_workunit.php,
+	operation/users/user_task_assigment.php,
+	operation/users/user_workunit_report.php, index.php, 
+	godmode/setup/event.php: 
+	Renamed deprecated functions. Style correction.
+
 2008-10-29  Sancho Lerena <slerena@artica.es>
 
 	* operation/users/user_edit.php: Fixed problems with

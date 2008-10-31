@@ -83,15 +83,15 @@ if ($result=mysql_query($sql1)){
 
 		// Category
 		echo "<td class='".$tdcolor."' align='center'>";
-		echo give_db_sqlfree_field ("SELECT name FROM tkb_category WHERE id = ".$row["id_category"]);
+		echo get_db_sql ("SELECT name FROM tkb_category WHERE id = ".$row["id_category"]);
 
 		// Product
 		echo "<td class='".$tdcolor."' align='center'>";
-		echo give_db_sqlfree_field ("SELECT name FROM tkb_product WHERE id = ".$row["id_product"]);
+		echo get_db_sql ("SELECT name FROM tkb_product WHERE id = ".$row["id_product"]);
 
 		// Attach ?
 		echo "<td class='".$tdcolor."' align='center'>";
-		if (give_db_sqlfree_field ("SELECT count(*) FROM tattachment WHERE id_kb = ".$row["id"]) != 0)
+		if (get_db_sql ("SELECT count(*) FROM tattachment WHERE id_kb = ".$row["id"]) != 0)
 			echo "<img src='images/disk.png'>";
 
 		// User

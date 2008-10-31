@@ -41,7 +41,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 		
 	if (isset($_GET["id_usuario_mio"])){ // if any parameter changed
 		$modo = "edicion";
-		$id_usuario_mio = give_parameter_get ("id_usuario_mio", "");
+		$id_usuario_mio = get_parameter ("id_usuario_mio", "");
 		// Read user data to include in form
 		$query1 = "SELECT * FROM tusuario WHERE id_usuario = '".$id_usuario_mio."'";
 		$resq1 = mysql_query ($query1);
@@ -70,23 +70,23 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 	if (isset ($_POST["edicion"])){		
 		// We do it
 		if (isset ($_POST["pass1"])){
-			$nombre = give_parameter_post ("nombre");
-			$nombre_real = give_parameter_post ("nombre_real");
-			$nombre_viejo = give_parameter_post ("id_usuario_antiguo");
-			$password = give_parameter_post ("pass1");
-			$password2 = give_parameter_post ("pass2");
-			$lang = give_parameter_post ("lang");
+			$nombre = get_parameter ("nombre");
+			$nombre_real = get_parameter ("nombre_real");
+			$nombre_viejo = get_parameter ("id_usuario_antiguo");
+			$password = get_parameter ("pass1");
+			$password2 = get_parameter ("pass2");
+			$lang = get_parameter ("lang");
 
 			if ($password <> $password2){
 				echo "<h3 class='error'>".__('Passwords don\'t match.')."</h3>";
 			}
 			else {
 				if (isset($_POST["nivel"]))
-				$nivel = give_parameter_post ("nivel");
-				$direccion = give_parameter_post ("direccion");
-				$telefono = give_parameter_post ("telefono");
-				$comentarios = give_parameter_post ("comentarios");
-				$avatar = give_parameter_post ("avatar");
+				$nivel = get_parameter ("nivel");
+				$direccion = get_parameter ("direccion");
+				$telefono = get_parameter ("telefono");
+				$comentarios = get_parameter ("comentarios");
+				$avatar = get_parameter ("avatar");
 				$avatar = substr($avatar, 0, strlen($avatar)-4);
 
 				if (dame_password($nombre_viejo)!=$password){
@@ -134,21 +134,21 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	if (isset($_GET["nuevo_usuario"])){
 		// Get data from POST
-		$nombre = give_parameter_post ("nombre");
-		$password = give_parameter_post ("pass1");
-		$password2 = give_parameter_post ("pass2");
-		$nombre_real = give_parameter_post ("nombre_real");
-		$lang = give_parameter_post ("lang");
+		$nombre = get_parameter ("nombre");
+		$password = get_parameter ("pass1");
+		$password2 = get_parameter ("pass2");
+		$nombre_real = get_parameter ("nombre_real");
+		$lang = get_parameter ("lang");
 		if ($password <> $password2){
 			echo "<h3 class='error'>".__('Passwords don\'t match. Please repeat again')."</h3>";
 		}
-		$direccion = give_parameter_post ("direccion");
-		$telefono = give_parameter_post ("telefono");
-		$comentarios = give_parameter_post ("comentarios");
+		$direccion = get_parameter ("direccion");
+		$telefono = get_parameter ("telefono");
+		$comentarios = get_parameter ("comentarios");
 		if (isset($_POST["nivel"]))
-			$nivel = give_parameter_post ("nivel");
+			$nivel = get_parameter ("nivel");
 		$password = md5($password);
-		$avatar = give_parameter_post ("avatar");
+		$avatar = get_parameter ("avatar");
 		$avatar = substr($avatar, 0, strlen($avatar)-4);
 
 		$ahora = date("Y-m-d H:i:s");

@@ -59,8 +59,8 @@ function get_user_key ($settings) {
 	   We only want to know this for statistics records.
 	   Feel free to disable this extension if you want.
 	 */
-	$n = (int) give_db_value ('COUNT(`id_agent`)', 'tagent', 'disabled', 0);
-	$m = (int) give_db_value ('COUNT(`id_agentmodule`)', 'tagentmodule',
+	$n = (int) get_db_value ('COUNT(`id_agent`)', 'tagent', 'disabled', 0);
+	$m = (int) get_db_value ('COUNT(`id_agentmodule`)', 'tagentmodule',
 				0, 0);
 	$user_key = array ('A' => $n, 'M' => $m);
 	

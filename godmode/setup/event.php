@@ -28,7 +28,7 @@ echo "<h2>".__('Event history')."</h2>";
 
 // Pagination
 $offset = get_parameter ("offset",0);
-$total_events = give_db_sqlfree_field ("SELECT COUNT(id) FROM tevent");
+$total_events = get_db_sql ("SELECT COUNT(id) FROM tevent");
 pagination ($total_events, "index.php?sec=godmode&sec2=godmode/setup/event", $offset);
 
 $table->width = '740px';

@@ -20,7 +20,7 @@ if (check_login() != 0) {
 	exit;
 }
 
-$id_grupo = give_parameter_get ("id_grupo",0);
+$id_grupo = get_parameter ("id_grupo",0);
 $id_user=$config['id_user'];
 
 if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo, "IR") != 1)){
@@ -29,7 +29,7 @@ if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo
 	include ("general/noaccess.php");
 	exit;
 }
-$id = give_parameter_get ("id","");
+$id = get_parameter ("id","");
 if (($id != "") && ($id != $id_user)){
 	if (give_acl($id_user, 0, "PW"))
 		$id_user = $id;
@@ -44,8 +44,8 @@ if (($id != "") && ($id != $id_user)){
 
 // Get parameters for actual Calendar show
 $time = time();
-$month = give_parameter_get ( "month", date('n', $time));
-$year = give_parameter_get ( "year", date('y', $time));
+$month = get_parameter ( "month", date('n', $time));
+$year = get_parameter ( "year", date('y', $time));
 
 $today = date('j',$time);
 $days_f = array();

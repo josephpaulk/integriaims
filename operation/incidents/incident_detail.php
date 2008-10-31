@@ -39,7 +39,7 @@ if ($check_incident) {
 		return;
 }
 
-if (give_acl ($config['id_user'], $id_grupo, "IR") != 1) {
+if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
  	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
 	include ("general/noaccess.php");
@@ -76,7 +76,7 @@ if ($action == 'update') {
 		no_permission ();
 		exit ();
 	}
-	$id_author_inc = give_incident_author ($id);
+	$id_author_inc = get_incident_author ($id);
 	$titulo = get_parameter ('titulo');
 	$description = get_parameter ('description');
 	$origen = get_parameter ("incident_origin", 1);
@@ -410,9 +410,9 @@ if ($id) {
 $default_responsable = "";
 if (! $id) {
 	// How many groups has this user ?
-	$number_group = give_db_sqlfree_field ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
+	$number_group = get_db_sql ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
 	// Take first group defined for this user
-	$default_id_group = give_db_sqlfree_field ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
+	$default_id_group = get_db_sql ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
 	// if have only one group, select default user and email for this group
 	$email_notify = false;
 }

@@ -60,16 +60,20 @@ if ($operation == "") {
 // Create task
 if ($operation == "insert") {
 	$name = get_parameter ("name");
+	$start = get_parameter ("start_date", date ("Y-m-d"));
+	$end = get_parameter ("end_date", date ("Y-m-d"));
+	
 	if ($name == '') {
 		$operation = 'create';
-		$result_output = '<h3 class="error">'.__('Name could not be name').'</h3>';
+		$result_output = '<h3 class="error">'.__('Name could not be empty').'</h3>';
+	} elseif (strtotime ($start) > strtotime ($end)) {
+		$operation = 'create';
+		$result_output = '<h3 class="error">'.__('Begin date could not be before end date').'</h3>';
 	} else {
 		$description = get_parameter ("description");
 		$priority = get_parameter ("priority", 0);
 		$completion = get_parameter ("completion", 0);
 		$parent = get_parameter ("parent", 0);
-		$start = get_parameter ("start_date", date("Y-m-d"));
-		$end = get_parameter ("end_date", date("Y-m-d"));
 		$hours = get_parameter ("hours", 0);
 		$periodicity = get_parameter ("periodicity", "none");
 		$estimated_cost = get_parameter ("estimated_cost", 0);
@@ -101,7 +105,8 @@ if ($operation == "insert") {
 				($id_task, '$id_user_tt', $id_role_tt)";
 				mysql_query($sql);
 			}
-			task_tracking ( $config["id_user"], $id_task, 11, 0, 0);
+			task_tracking ($id_task, TASK_CREATED);
+			project_tracking ($id_project, PROJECT_TASK_ADDED);
 		} else {
 			$update_mode = 0;
 			$create_mode = 1;
@@ -145,7 +150,7 @@ if ($operation == "update") {
 		$result_output = '<h3 class="suc">'.__('Task updated successfuly').'</h3>';
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task updated", "Task '$name' updated to project '$id_project'");
 		$operation = "view";
-		task_tracking ($config["id_user"], $id_task, 12);
+		task_tracking ($id_task, TASK_UPDATED);
 	} else {
 		$result_output = "<h3 class='error'>".__('Could not update task')."</h3>";
 	}
@@ -177,23 +182,20 @@ echo $result_output;
 // Show forms
 // ********************************************************************************************************
 
-echo '<h2>'.__('Task management').' &gt;';
+echo '<h2>'.__('Task management').'</h2>';
 if ($operation == "create") {
 	$estimated_cost = 0;
 	$priority = 0;
 	$parent = 0;
 	$hours = 0;
-	$start = date("Y-m-d");
-	$end = date("Y-m-d");
+	$start = date ("Y-m-d");
+	$end = date ("Y-m-d");
 	$periodicity = "none";
-	
-	echo __('Create task').' ('.$project_name.')</h2>';
 } else {
 	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 	print_input_hidden ('id_project', $id_project);
 	print_input_hidden ('id_task', $id_task);
 	print_input_hidden ('operation', 'update');
-	echo __('Updating task').' ('.$project_name.')</h2>';
 }
 
 $table->width = '750px';
@@ -232,7 +234,7 @@ $table->data[4][0] = print_select (get_periodicities (), 'periodicity',
 $table->data[5][0] = print_input_text ('hours', $hours, '', 5, 5, true, __('Estimated hours'));
 
 if ($id_task != -1) {
-	$table->data[5][1] = print_label (__('Worked hours'), '', '', true, give_hours_task ($id_task).' '.__('Hours'));
+	$table->data[5][1] = print_label (__('Worked hours'), '', '', true, get_task_workunit_hours ($id_task).' '.__('Hours'));
 }
 
 $table->data[6][0] = print_input_text ('estimated_cost', $estimated_cost, '', 7,
@@ -251,8 +253,8 @@ if ($id_task != -1) {
 	$labela = __('Est.');
 	$labelb = __('Real');
 	$a = round ($hours);
-	$b = round (give_hours_task ($id_task));
-	$max = maxof($a, $b);
+	$b = round (get_task_workunit_hours ($id_task));
+	$max = max($a, $b);
 	$image = '<img src="include/functions_graph.php?type=histogram&width=200&height=30&a='.$a.'&b='.$b.'&labela='.$labela.'&labelb='.$labelb.'&max='.$max.'" />';
 	$table->data[5][2] = print_label (__('Estimated hours'), '', '', true, $image);
 	
@@ -260,7 +262,7 @@ if ($id_task != -1) {
 	$labelb = __('Imp');
 	$a = round (task_workunit_cost ($id_task, 0));
 	$b = round (task_workunit_cost ($id_task, 1));
-	$max = maxof ($a, $b);
+	$max = max ($a, $b);
 	$image = '<img src="include/functions_graph.php?type=histogram&width=200&height=30&a='.$a.'&b='.$b.'&labela='.$labela.'&labelb='.$labelb.'&max='.$max.'" />';
 	$table->data[5][2] .= print_label (__('Imputable estimation'), '', '', true, $image);	
 	
@@ -268,7 +270,7 @@ if ($id_task != -1) {
 	$labelb = __('Real');
 	$a = $estimated_cost;
 	$b = round (task_workunit_cost ($id_task, 1));
-	$max = maxof ($a, $b);
+	$max = max ($a, $b);
 	$image = '<img src="include/functions_graph.php?type=histogram&width=200&height=30&a='.$a.'&b='.$b.'&labela='.$labela.'&labelb='.$labelb.'&max='.$max.'" />';
 	$table->data[5][2] .= print_label (__('Cost estimation'), '', '', true, $image);
 }
@@ -298,41 +300,28 @@ if (give_acl ($config["id_user"], $id_group, "TM") || ($config["id_user"] == $pr
 } else {
 	print_table ($table);
 }
+
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
 
 <script type="text/javascript">
 
 $(document).ready (function () {
-	$("#text-start_date").datepicker ({
-		beforeShow: function () {
-			return {
-				maxDate: $("#text-end_date").datepicker ("getDate")
-			};
-		}
-	});
-	$("#text-end_date").datepicker ({
-		defaultDate: +7,
-		beforeShow: function () {
-			return {
-				minDate: $("#text-start_date").datepicker ("getDate")
-			};
-		},
-		onSelect: function (datetext) {
-			hours_day = <?php echo $config['hours_perday'];?>;
-			start_date = $("#text-start_date").datepicker ("getDate"); 
-			end_date = $(this).datepicker ("getDate");
-			if (end_date < start_date) {
-				pulsate (this);
-				return true;
-			}
-			
+	configure_range_dates (function (datetext) {
+		hours_day = <?php echo $config['hours_perday'];?>;
+		start_date = $("#text-start_date").datepicker ("getDate"); 
+		end_date = $(this).datepicker ("getDate");
+		if (end_date < start_date) {
+			pulsate (this);
+		} else {
 			hours = Math.floor ((end_date - start_date) / 86400000 * hours_day);
 			$("#text-hours").attr ("value", hours);
 		}
 	});
+	
 	$("#slider").slider ({
 		min: 0,
 		max: 100,

@@ -71,18 +71,9 @@ require_once ('include/functions_calendar.php');
 <html>
 <head>
 <?php
-// Refresh page
-if ($intervalo = give_parameter_get ("refr") != "") {
-	// Agent selection filters and refresh
- 	if ($ag_group = give_parameter_post ("ag_group" != "")) {
-		$query = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] . '&ag_group_refresh=' . $ag_group;
-		echo '<meta http-equiv="refresh" content="' . $intervalo . '; URL=' . $query . '">';
-	} else
-		echo '<meta http-equiv="refresh" content="' . $intervalo . '">';
-}
 
 // This is a clean output ?
-$clean_output = give_parameter_get ("clean_output", 0);
+$clean_output = get_parameter ("clean_output", 0);
 
 echo "<title>".$config["sitename"]."</title>";
 ?>

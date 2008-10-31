@@ -31,8 +31,8 @@
 	$now_year = date("Y");
 	$now_month = date("m");
 
-	$working_month = give_parameter_post ("working_month", $now_month);
-	$working_year = give_parameter_post ("working_year", $now_year);
+	$working_month = get_parameter ("working_month", $now_month);
+	$working_year = get_parameter ("working_year", $now_year);
 
 
 	$begin_month = "$working_year-$working_month-01 00:00:00";
@@ -121,7 +121,7 @@
                 
                 // Total charged hours this month
                 echo "<td  >";
-                $tempsum = give_db_sqlfree_field ("SELECT SUM(duration) FROM tworkunit WHERE have_cost = 1 AND id_user = '$nombre' AND timestamp > '$begin_month' AND timestamp <= '$end_month'");
+                $tempsum = get_db_sql ("SELECT SUM(duration) FROM tworkunit WHERE have_cost = 1 AND id_user = '$nombre' AND timestamp > '$begin_month' AND timestamp <= '$end_month'");
                 if ($tempsum != "")
                     echo $tempsum. " hr";
                 else

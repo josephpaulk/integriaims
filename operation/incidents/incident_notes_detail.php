@@ -24,8 +24,8 @@ if (check_login() != 0) {
 	exit;
 }
 
-$id_nota = give_parameter_get ("id",0);
-$id_incident = give_parameter_get ("id_inc",0);
+$id_nota = get_parameter ("id",0);
+$id_incident = get_parameter ("id_inc",0);
 
 // ********************************************************************
 // Note detail of $id_note
@@ -41,7 +41,7 @@ if ($row3=mysql_fetch_array($res4)){
 	$nota = $row3["nota"];
 	$id_usuario_nota = $row3["id_usuario"];
 
-	$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_usuario_nota);
+	$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $id_usuario_nota);
 
 	// Show data
 	echo "<img src='images/avatars/".$avatar."_small.png'>&nbsp;";

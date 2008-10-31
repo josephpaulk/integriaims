@@ -33,6 +33,25 @@ define ('INCIDENT_NOTE_DELETED', 9);
 define ('INCIDENT_INVENTORY_ADDED', 10);
 define ('INCIDENT_USER_CHANGED', 10);
 
+define ('TASK_CREATED', 11);
+define ('TASK_UPDATED', 12);
+define ('TASK_NOTE_ADDED', 13);
+define ('TASK_WORKUNIT_ADDED', 14);
+define ('TASK_FILE_ADDED', 15);
+define ('TASK_COMPLETION_CHANGED', 16);
+define ('TASK_FINISHED', 17);
+define ('TASK_MEMBER_ADDED', 18);
+define ('TASK_MOVED', 19);
+define ('TASK_DELETED', 20);
+define ('TASK_MEMBER_DELETED', 20);
+
+define ('PROJECT_CREATED', 21);
+define ('PROJECT_UPDATED', 22);
+define ('PROJECT_DISABLED', 23);
+define ('PROJECT_ACTIVATED', 24);
+define ('PROJECT_DELETED', 25);
+define ('PROJECT_TASK_ADDED', 26);
+
 // --------------------------------------------------------------- 
 // give_acl ()
 // Main Function to get access to resources
@@ -46,23 +65,7 @@ function give_acl ($id_user, $id_group, $access) {
 	if ($return !== ENTERPRISE_NOT_HOOK)
 		return $return;
 	
-	$is_admin = (bool) get_db_value ('nivel', 'tusuario', 'id_usuario', $id_user);
-	if ($is_admin)
-		return true;
-	
-	if ($id_group == 0)
-		// Group doesnt matter, any group, for check permission to do at least an action in a group
-		$sql = sprintf ('SELECT COUNT(*) FROM tusuario_perfil
-				WHERE id_usuario = "%s"', $id_user);
-	else
-		// GroupID = 1 ALL groups
-		$sql = sprintf ('SELECT COUNT(*) FROM tusuario_perfil
-				WHERE id_usuario = "%s"
-				AND (id_grupo = %d OR id_grupo = 1)',
-				$id_user, $id_group);
-	
-	$result = get_db_sql ($sql);
-	return $result > 0 ? true : false;
+	return true;
 } 
 
 // --------------------------------------------------------------- 
@@ -145,8 +148,8 @@ function dame_nombre_real ($id_user) {
 // This function returns ID of user who has created incident
 // --------------------------------------------------------------- 
 
-function give_incident_author ($id) {
-	return get_db_value ('id_usuario', 'tincidencia', 'id_incidencia', $id);
+function get_incident_author ($id_incident) {
+	return get_db_value ('id_usuario', 'tincidencia', 'id_incidencia', $id_incident);
 }
 
 
@@ -154,16 +157,16 @@ function give_incident_author ($id) {
 // Return name of a group when given ID
 // --------------------------------------------------------------- 
 
-function dame_nombre_grupo ($id) {
-	return get_db_value ('nombre', 'tgrupo', 'id_grupo', $id);
+function dame_nombre_grupo ($id_group) {
+	return get_db_value ('nombre', 'tgrupo', 'id_grupo', $id_group);
 } 
 
 // --------------------------------------------------------------- 
 // Returns number of files from a given incident
 // --------------------------------------------------------------- 
 
-function give_number_files_incident ($id) {
-	return (int) get_db_value ('COUNT(*)', 'tattachment', 'id_incidencia', $id);
+function get_number_files_incident ($id_incident) {
+	return (int) get_db_value ('COUNT(*)', 'tattachment', 'id_incidencia', $id_incident);
 }
 
 
@@ -171,8 +174,8 @@ function give_number_files_incident ($id) {
 // Returns number of files from a given incident
 // --------------------------------------------------------------- 
 
-function give_number_files_task ($id) {
-	return (int) get_db_value ('COUNT(*)', 'tattachment', 'id_task', $id);
+function get_number_files_task ($id_task) {
+	return (int) get_db_value ('COUNT(*)', 'tattachment', 'id_task', $id_task);
 }
 
 
@@ -191,8 +194,8 @@ function give_number_files_project ($id) {
 *
 * $id		integer 	ID of project
 **/
-function give_number_tasks ($id) {
-	return (int) get_db_value ('COUNT(*)', 'ttask', 'id_project', $id);
+function get_tasks_count_in_project ($id_project) {
+	return (int) get_db_value ('COUNT(*)', 'ttask', 'id_project', $id_project);
 }
 
 /**
@@ -201,13 +204,13 @@ function give_number_tasks ($id) {
 * $id_inc	integer 	ID of incident
 **/
 
-function give_hours_incident ($id) {
+function get_incident_wokunit_hours ($id_incident) {
 	global $config;
 	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_incident, tincidencia 
-			WHERE 	tworkunit_incident.id_incident = tincidencia.id_incidencia AND 
-					tworkunit_incident.id_workunit = tworkunit.id AND
-					 tincidencia.id_incidencia = %d', $id);
+			WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
+			AND tworkunit_incident.id_workunit = tworkunit.id
+			AND tincidencia.id_incidencia = %d', $id_incident);
 	return (int) get_db_sql ($sql);
 }
 
@@ -217,7 +220,7 @@ function give_hours_incident ($id) {
 *
 * $id_incident   integer	 ID of incident
 **/
-function give_wu_incident ($id_incident) {
+function get_incident_count_workunits ($id_incident) {
 	global $config;
 	$sql = sprintf ('SELECT COUNT(tworkunit.duration) 
 			FROM tworkunit, tworkunit_incident, tincidencia 
@@ -234,7 +237,7 @@ function give_wu_incident ($id_incident) {
 * $id_project	integer 	ID of project
 **/
 
-function give_hours_project ($id_project, $with_cost =0){ 
+function get_project_workunit_hours ($id_project, $with_cost =0){ 
 	global $config;
 	if ($with_cost != 0) {
 		$sql = sprintf ('SELECT SUM(tworkunit.duration) 
@@ -260,7 +263,7 @@ function give_hours_project ($id_project, $with_cost =0){
 * $id_project   integer	 ID of project
 **/
 
-function give_wu_project ($id_project) {
+function get_project_count_workunits ($id_project) {
 	$sql = sprintf ('SELECT COUNT(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task, ttask 
 			WHERE tworkunit_task.id_task = ttask.id
@@ -276,7 +279,7 @@ function give_wu_project ($id_project) {
 *
 * $id_task	integer 	ID of task
 **/
-function get_task_hours ($id_task) {
+function get_task_workunit_hours ($id_task) {
 	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task
 			WHERE tworkunit_task.id_task = %d
@@ -285,19 +288,12 @@ function get_task_hours ($id_task) {
 	return (int) get_db_sql ($sql);
 }
 
-function give_hours_task ($id_task) {
-	/* DEPRECATED */
-	return get_task_hours ($id_task);
-}
-
-
 /**
 * Return total workunits assigned to task
 *
 * $id_task  integer	 ID of task
 **/
-
-function give_wu_task ($id_task){
+function get_task_count_workunits ($id_task) {
 	$sql = sprintf ('SELECT COUNT(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task
 			WHERE tworkunit_task.id_task = %d
@@ -314,7 +310,7 @@ function give_wu_task ($id_task){
 * $id_user  string	  ID of user
 **/
 
-function give_wu_task_user ($id_task, $id_user) {
+function get_task_workunit_hours_user ($id_task, $id_user) {
 	$sql = sprintf ('SELECT COUNT(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task 
 			WHERE tworkunit_task.id_task = %d
@@ -451,21 +447,6 @@ function existe($id){
 	} else { return 0 ; }
 }
 
-
-// ---------------------------------------------------------------
-// Return all childs groups of a given id_group inside array $child
-// ---------------------------------------------------------------
-
-function give_groupchild($id_group, &$child){
-		// Conexion con la base Datos 
-		$query1="select * from tgrupo where parent = ".$id_group;
-		$resq1=mysql_query($query1);  
-		while ($resq1 != NULL && $rowdup=mysql_fetch_array($resq1)){
-			$child[]=$rowdup["id_grupo"];
-		}
-}
-
-
 // ---------------------------------------------------------------
 // Return if a task have childs
 // Return date of end of this task of last of it's childs
@@ -529,7 +510,7 @@ function user_belong_project ($id_user, $id_project, $real = 0) {
 	if ($real == 0 && dame_admin ($id_user) != 0)
 		return 1;
 	
-	$sql = sprintf ('SELECT COUNT(*) FROM  trole_people_project
+	$sql = sprintf ('SELECT COUNT(*) FROM trole_people_project
 		WHERE id_project = %d
 		AND id_user = "%s"', $id_project, $id_user);
 	return (bool) get_db_sql ($sql);
@@ -561,28 +542,6 @@ function user_belong_task ($id_user, $id_task, $real=0){
 		return 1; // There is at least one role for this person in that project
 }
 
-
-// ---------------------------------------------------------------
-// Return true (1) if given group (a) belongs to given groupset
-// ---------------------------------------------------------------
-
-function group_belong_group($id_group_a, $id_groupset){
-	// Conexion con la base Datos 
-	$childgroup[] = "";
-	if ($id_group_a == $id_groupset)
-		return 1;
-	give_groupchild($id_groupset, $childgroup);
-	foreach ($childgroup as $key => $value){
-		if (($value != $id_groupset) AND
-			(group_belong_group($id_group_a, $value) == 1))
-			return 1;
-  	}
-	if (array_in ($childgroup, $id_group_a) == 1)
-		return 1; 
-	else 
-		return 0;
-}
-
 function get_incident_resolution ($id_incident) {
 	return get_db_value ('resolution', 'tincidencia', 'id_incidencia', $id_incident);
 }
@@ -607,32 +566,15 @@ function get_incident_priority ($id_incident) {
 // Return incident title
 // --------------------------------------------------------------- 
 
-function give_inc_title ($id_incident) {
+function get_incident_title ($id_incident) {
 	return (string) get_db_value ('titulo', 'tincidencia', 'id_incidencia', $id_incident);
 }
-
-// --------------------------------------------------------------- 
-// Return incident notify by email feature
-// --------------------------------------------------------------- 
-
-function give_inc_email ($id_incident) {
-	return (bool) get_db_value ('notify_email', 'tincidencia', 'id_incidencia', $id_incident);
-}
-
-// --------------------------------------------------------------- 
-// Return incident original author
-// --------------------------------------------------------------- 
-
-function give_inc_creator ($id_incident) {
-	return (int) get_db_value ('id_creator', 'tincidencia', 'id_incidencia', $id_incident);
-}
-
 
 // --------------------------------------------------------------- 
 // Returns user email fiven its id
 // --------------------------------------------------------------- 
 
-function return_user_email ($id_user) {
+function get_user_email ($id_user) {
 	return (string) get_db_value ('direccion', 'tusuario', 'id_usuario', $id_user);
 }
 
@@ -700,27 +642,28 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 	return process_sql ($sql, 'insert_id');
 }
 
-function task_tracking ( $id_user, $id_task, $state, $id_note = 0, $id_file = 0) {
+function task_tracking ($id_task, $state, $id_external = 0) {
 	global $config;
 	global $REMOTE_ADDR;
-
-	/* 
-		11 - Task added
-		12 - Task updated
-		13 - Task. Note added
-		14 - Task. Workunit added.
-		15 - Task. File added
-		16 - Task completion changed
-		17 - Task finished.
-		18 - Task member added
-		19 - Task moved 
-		20 - Task deleted
-	*/		
 	
-	audit_db ($id_user, $REMOTE_ADDR, "Task #$id_task tracking updated", "State #$state");
-	$id_external = $id_note + $id_file; // one or two of them must be 0, so sum is a good option to calculate who is usable
-	$sql = "INSERT INTO ttask_track (id_user, id_task, timestamp, state, id_external) values ('$id_user', $id_task, NOW(), $state, $id_external)";
-	process_sql ($sql);
+	audit_db ($config['id_user'], $REMOTE_ADDR, "Task #$id_task tracking updated", "State #$state");
+	$sql = sprintf ('INSERT INTO ttask_track (id_user, id_task, timestamp,
+		state, id_external)
+		VALUES ("%s", %d, NOW(), %d, %d)',
+		$config['id_user'], $id_task, $state, $id_external);
+	return process_sql ($sql);
+}
+
+function project_tracking ($id_project, $state, $id_aditional = 0) {
+	global $config;
+	global $REMOTE_ADDR;
+	
+	audit_db ($config['id_user'], $REMOTE_ADDR, "Project #$id_project tracking updated", "State #$state");
+	$sql = sprintf ('INSERT INTO tproject_track (id_user, id_project, timestamp,
+		state, id_aditional)
+		VALUES ("%s", %d, NOW(), %d, %d)',
+		$config['id_user'], $id_project, $state, $id_aditional);
+	return process_sql ($sql);
 }
 
 $sql_cache = array ('saved' => 0);
@@ -752,11 +695,6 @@ function get_db_value ($field, $table, $field_search = 1, $condition = 1) {
 		return false;
 	
 	return $result[0][$field];
-}
-
-/** Deprecated function */
-function give_db_value ($field, $table, $field_search = 1, $condition = 1) {
-	return get_db_value ($field, $table, $field_search, $condition);
 }
 
 /** 
@@ -819,11 +757,6 @@ function get_db_sql ($sql, $field = 0) {
 		return false;
 
 	return $result[0][$field];
-}
-
-/** Deprecated function */
-function give_db_sqlfree_field ($sql, $field = 0) {
-	return get_db_sql ($sql, $field = 0);
 }
 
 /**
@@ -1033,7 +966,7 @@ $description\n\n";
 		$text = ascii_output ($text);
 		$subject = ascii_output ($subject);
 		// Send an email to project manager
-		topi_sendmail (return_user_email($id_manager), $subject, $text);
+		topi_sendmail (get_user_email($id_manager), $subject, $text);
 }
 
 function mail_todo ($mode, $id_todo) {
@@ -1082,8 +1015,8 @@ $tdescription\n\n";
 		$text = ascii_output ($text);
 		$subject = ascii_output ($subject);
 		// Send an email to both
-		topi_sendmail (return_user_email($tcreated), $subject, $text);
-		topi_sendmail (return_user_email($tassigned), $subject, $text);
+		topi_sendmail (get_user_email ($tcreated), $subject, $text);
+		topi_sendmail (get_user_email ($tassigned), $subject, $text);
 }
 
 function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode){
@@ -1305,19 +1238,19 @@ function todos_active_user ($id_user) {
 	return get_db_sql ($sql);
 }
 
-function return_vacations_user ($id_user, $year){
+function get_user_vacations ($id_user, $year){
 	global $config;
 	$hours = get_db_sql ("SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task =-1 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59'");
 	return format_numeric ($hours/$config["hours_perday"]);
 }
 
-function return_daysworked_user ($id_user, $year) {
+function get_user_worked_days ($id_user, $year) {
 	global $config;
 	$hours = get_db_sql ("SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59'");
 	return format_numeric ($hours/$config["hours_perday"]);
 }
 
-function return_daysworked_incident_user ($id_user, $year) {
+function get_user_incident_worked_days ($id_user, $year) {
 	global $config;
 	$hours = get_db_sql ("SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident > 0 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59'");
 	return format_numeric ($hours/$config["hours_perday"]);
@@ -1377,7 +1310,7 @@ function email_attach ( $name, $email, $from, $subject, $fileatt, $fileatttype, 
 			"Content-Transfer-Encoding: 7bit\n\n" . 
 			$texto . "\n\n";
 
-	$data = chunk_split( base64_encode( $data ) );
+	$data = chunk_split (base64_encode ($data));
 	$message .= "--{$mime_boundary}\n" . 
 			 "Content-Type: {$fileatttype};\n" . 
 			 " name=\"{$fileattname}\"\n" . 

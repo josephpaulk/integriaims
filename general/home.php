@@ -23,7 +23,7 @@ if (!isset($config["id_user"]))
 	// Show Agenda items
 	$now = date('Y-m-d', strtotime("now"));
         $now3 = date('Y-m-d', strtotime("now + 3 days"));
-	$agenda = give_db_sqlfree_field ("SELECT COUNT(*) FROM tagenda WHERE  (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3'");
+	$agenda = get_db_sql ("SELECT COUNT(*) FROM tagenda WHERE  (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3'");
 	if ($agenda > 0){
 	echo "<tr><td>";
 	echo "<h1>".__('Agenda')."</h1>";
@@ -45,7 +45,7 @@ if (!isset($config["id_user"]))
 
 
 	// Show Todo items
-	$todo = give_db_sqlfree_field ("SELECT COUNT(*) FROM ttodo WHERE assigned_user = '".$config["id_user"]."'");
+	$todo = get_db_sql ("SELECT COUNT(*) FROM ttodo WHERE assigned_user = '".$config["id_user"]."'");
 	if ($todo > 0){
 	echo "<tr><td>";
 	echo "<h1>".__('To-Do')."</h1>";

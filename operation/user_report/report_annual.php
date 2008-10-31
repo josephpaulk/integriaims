@@ -44,13 +44,13 @@
 
     echo "<table class='button'><tr>";
     echo "<td style='background-color: #FFFF80;'>";
-    echo return_vacations_user ($id_user_show, $year). "</td><td>".__('Vacations days');
+    echo get_user_vacations ($id_user_show, $year). "</td><td>".__('Vacations days');
     
     echo "<td style='background-color: #98FF8B;'>";
-    echo return_daysworked_user ($id_user_show, $year). "</td><td>".__('Days worked (projects)');
+    echo get_user_worked_days ($id_user_show, $year). "</td><td>".__('Days worked (projects)');
 
     echo "<td style='background-color: #FF7BFE;'>";
-    echo return_daysworked_incident_user ($id_user_show, $year). "</td><td>".__('Days worked (incidents)');
+    echo get_user_incident_worked_days ($id_user_show, $year). "</td><td>".__('Days worked (incidents)');
 
     echo "</table>";
     

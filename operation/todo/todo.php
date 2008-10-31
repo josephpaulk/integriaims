@@ -3,18 +3,18 @@
 // Load global vars
 if (check_login() == 0){
    	$id_user = $config["id_user"];
-	$operation = give_parameter_get ("operation");
+	$operation = get_parameter ("operation");
 
 	// ---------------
 	// CREATE new todo
 	// ---------------
 	if ($operation == "create2") {
-		$name = give_parameter_post ("name");
-		$assigned_user = give_parameter_post ("user");
-		$priority = give_parameter_post ("priority");
-		$progress = give_parameter_post ("progress");
-		$description = give_parameter_post ("description");
-		$id_task = give_parameter_post ("task",0);
+		$name = get_parameter ("name");
+		$assigned_user = get_parameter ("user");
+		$priority = get_parameter ("priority");
+		$progress = get_parameter ("progress");
+		$description = get_parameter ("description");
+		$id_task = get_parameter ("task",0);
 		$timestamp = date('Y-m-d H:i:s');
 		$last_updated = $timestamp;
 		if ($id_task == "")
@@ -36,17 +36,17 @@ if (check_login() == 0){
 	// UPDATE new todo
 	// ---------------
 	if ($operation == "update2") {
-		$id_todo = give_parameter_get ("id");
+		$id_todo = get_parameter ("id");
 		$row = get_db_row ("ttodo", "id", $id_todo);
 		if (($row["assigned_user"] != $id_user) AND ($row["created_by_user"] != $id_user)){
 			no_permission();
 		}
 		$name = $row["name"];
 		$created_by_user = $row["created_by_user"];
-		$id_task = give_parameter_post ("task", 0);
-		$priority = give_parameter_post ("priority");
-		$progress = give_parameter_post ("progress");
-		$description = give_parameter_post ("description");
+		$id_task = get_parameter ("task", 0);
+		$priority = get_parameter ("priority");
+		$progress = get_parameter ("progress");
+		$description = get_parameter ("description");
 		$last_update = date('Y-m-d H:i:s');
 		$sql_update = "UPDATE ttodo SET id_task = $id_task, priority = '$priority', progress = '$progress', description = '$description', last_update = '$last_update' WHERE id = $id_todo";
 		$result=mysql_query($sql_update);
@@ -62,7 +62,7 @@ if (check_login() == 0){
 	// DELETE new todo
 	// ---------------
 	if ($operation == "delete") {
-		$id_todo = give_parameter_get ("id");
+		$id_todo = get_parameter ("id");
 		$row = get_db_row ("ttodo", "id", $id_todo);
 		if (($row["assigned_user"] != $id_user) AND ($row["created_by_user"] != $id_user)){
 			no_permission();
@@ -87,7 +87,7 @@ if (check_login() == 0){
 	// UPDATE todo (form)
 	// ---------------
 	if ($operation == "update") {
-		$id_todo = give_parameter_get ("id");
+		$id_todo = get_parameter ("id");
 		$row = get_db_row ("ttodo", "id", $id_todo);
 		if (($row["assigned_user"] != $id_user) AND ($row["created_by_user"] != $id_user)){
 			no_permission();

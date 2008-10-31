@@ -32,9 +32,9 @@ if (check_login() != 0) {
     exit;
 }
 $id_user = $_SESSION['id_usuario'];
-$id_project = give_parameter_get ("id_project", -1);
+$id_project = get_parameter ("id_project", -1);
 if ($id_project != -1)
-	$project_name = give_db_value ("name", "tproject", "id", $id_project);
+	$project_name = get_db_value ("name", "tproject", "id", $id_project);
 else
 	$project_name = "";
 

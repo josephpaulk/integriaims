@@ -82,75 +82,83 @@ function clean_input ($value) {
 * $input    string  Input string
 */
 
-function clean_output_breaks ($string){
-	return preg_replace ('/\n/',"<br>", $string);
+function clean_output_breaks ($string) {
+	return preg_replace ('/\n/', "<br />", $string);
 }
 
-/**
-* Search item in a given array.
-*
-* @exampleArray	array 	Source of items to search in
-* $item		varchar	Data to search
-*/
-
-function array_in($exampleArray, $item){
-	$result = 0;
-	foreach ($exampleArray as $key => $value){
-  		if ($value == $item){
-   			$result = 1;
-		}
-  	}
-	return $result;
-}
-
-function get_parameter ($name, $default = ""){
-    $temp = give_parameter_get ($name, $default);
-    if ($temp == $default){
-        $temp = give_parameter_post ($name, $default);
-    }
-    return $temp;
-}
-
-function give_parameter_get ( $name, $default = "" ){
-	$output = $default;
-	if (isset ($_GET[$name])){
-		$output = clean_input ($_GET[$name]);
+/** 
+ * Cleans a string by decoding from UTF-8 and replacing the HTML
+ * entities.
+ * 
+ * @param value String or array of strings to be cleaned.
+ * 
+ * @return The cleaned string.
+ */
+function safe_input ($value) {
+	if (is_numeric ($value))
+		return $value;
+	if (is_array ($value)) {
+		array_walk ($value, 'safe_input');
+		return $value;
 	}
-	return $output;
+	return htmlentities (utf8_decode ($value), ENT_QUOTES); 
 }
 
-function give_parameter_post ( $name, $default = "" ){
-	$output = $default;
-	if (isset ($_POST[$name])){
-		$output = clean_input ($_POST[$name]);
-	}
-	return $output;
+/** 
+ * Get a parameter from get request array.
+ * 
+ * @param name Name of the parameter
+ * @param default Value returned if there were no parameter.
+ * 
+ * @return Parameter value.
+ */
+function get_parameter_get ($name, $default = "") {
+	if ((isset ($_GET[$name])) && ($_GET[$name] != ""))
+		return safe_input ($_GET[$name]);
+
+	return $default;
 }
 
-// ---------------------------------------------------------------
-// Esta funcion lee una cadena y la da "limpia", para su uso con
-// parametros pasados a funcion de abrir fichero. Usados en sec y sec2
-// ---------------------------------------------------------------
+/** 
+ * Get a parameter from post request array.
+ * 
+ * @param name Name of the parameter
+ * @param default Value returned if there were no parameter.
+ * 
+ * @return Parameter value.
+ */
+function get_parameter_post ($name, $default = "") {
+	if ((isset ($_POST[$name])) && ($_POST[$name] != ""))
+		return safe_input ($_POST[$name]);
 
-function parametro_limpio ($texto){
-	// Metemos comprobaciones de seguridad para los includes de paginas pasados por parametro
-	// Gracias Raul (http://seclists.org/lists/incidents/2004/Jul/0034.html)
-	// Consiste en purgar los http:// de las cadenas
-	$pos = strpos($texto,"://");	// quitamos la parte "fea" de http:// o ftp:// o telnet:// :-)))
-	if ($pos <> 0)
-	$texto = substr_replace($texto,"",$pos,+3);
-	// limitamos la entrada de datos por parametros a 125 caracteres
-	$texto = substr_replace($texto,"",125);
-	$safe = preg_replace('/[^a-z0-9_\/]/i','',$texto);
-	return $safe;
+	return $default;
 }
 
+/** 
+ * Get a paramter from a request.
+ *
+ * It checks first on post request, if there were nothing defined, it
+ * would return get request
+ * 
+ * @param name 
+ * @param default 
+ * 
+ * @return 
+ */
+function get_parameter ($name, $default = '') {
+	// POST has precedence
+	if (isset($_POST[$name]))
+		return get_parameter_post ($name, $default);
 
+	if (isset($_GET[$name]))
+		return get_parameter_get ($name, $default);
+
+	return $default;
+}
 
 // ---------------------------------------------------------------
 // no_permission () - Display no perm. access
 // ---------------------------------------------------------------
-
 function no_permission () {
 	global $config;
 	
@@ -414,7 +422,6 @@ function topi_rndcode ($length = 6) {
 /* Given a local URL, compose a internet valid URL
    with quicklogin HASH data, and enter it on DB
 */
-
 function topi_quicksession ($url, $id_user = "") {
 	global $config;
 	if ($id_user == "")
@@ -440,10 +447,6 @@ function return_value ($var) {
 	if (isset ($var))
 		return $var;
 	return "";
-}
-
-function maxof ($a, $b) {
-	return max ($a, $b);
 }
 
 function get_priorities () {
@@ -547,6 +550,25 @@ function print_priority_flag_image ($priority, $return = false) {
 	if ($return)
 		return $output;
 	echo $output;
+}
+
+function get_project_tracking_state ($state) {
+	switch ($state) {
+	case PROJECT_CREATED:
+		return __('Project created');
+	case PROJECT_UPDATED:
+		return __('Project updated');
+	case PROJECT_DISABLED:
+		return __('Project disabled');
+	case PROJECT_ACTIVATED:
+		return __('Project activated');
+	case PROJECT_DELETED:
+		return __('Project deleted');
+	case PROJECT_TASK_ADDED:
+		return __('Task added');
+	default:
+		return __('Unknown');
+	}
 }
 
 function enterprise_hook ($function_name, $parameters = false) {

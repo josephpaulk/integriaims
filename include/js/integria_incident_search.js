@@ -13,8 +13,6 @@ function configure_user_search_form () {
 				function (data, status) {
 					$("#user_search_result_table").removeClass ("hide");
 					$("#user_search_result_table tbody").empty ().append (data);
-					$("#user_search_result_table").trigger ("update")
-						.tablesorterPager ({container: $("#users-pager"), size: 3});
 					$("#user_search_result_table tbody tr").click (function () {
 						user_id = this.id.slice (7); /* Remove "result-" */
 						user_realname = $(this).children (":eq(1)").text ();
@@ -22,6 +20,8 @@ function configure_user_search_form () {
 						$(dialog+"#hidden-usuario_form").attr ("value", user_id);
 						$("#dialog-user-search").dialog ("close").empty ();
 					});
+					$("#user_search_result_table").trigger ("update")
+						.tablesorterPager ({container: $("#users-pager"), size: 3});
 					$("#user_search_result_table tbody").fadeIn ();
 					$("#users-pager").removeClass ("hide").fadeIn ();
 				},
@@ -46,7 +46,7 @@ function show_user_search_dialog (title) {
 					minHeight: 300,
 					minWidth: 300,
 					height: 500,
-					width: 450,
+					width: 600,
 					modal: true,
 					bgiframe: true
 					});

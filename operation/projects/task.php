@@ -44,7 +44,7 @@ if ($operation == 'delete') {
 		delete_task ($id_task);
 		echo '<h3 class="suc">'.__('Deleted successfully').'</h3>';
 		$operation = '';
-		task_tracking ($config['id_user'], $id_task, 20, 0, 0);
+		task_tracking ($id_task, TASK_DELETED);
 	} else {
 		no_permission ();
 	}
@@ -52,14 +52,14 @@ if ($operation == 'delete') {
 
 if ($operation == 'move') {
 	$target_project = get_parameter ("target_project");
-	$id_task = give_parameter_get ("id_task");
+	$id_task = get_parameter ("id_task");
 	if ((dame_admin($config['id_user'])==1) OR (project_manager_check ($id_project) == 1)){
 		$sql = sprintf ('UPDATE ttask
 			SET id_project = %d,
 			id_parent_task = 0
 			WHERE id = %d', $target_project, $id_task);
 		process_sql ($sql);
-		task_tracking ($config['id_user'], $id_task, 19, 0, 0);
+		task_tracking ($id_task, TASK_MOVED);
 	} else {
 		no_permission ();
 	}
@@ -163,18 +163,18 @@ function show_task_row ($table, $id_project, $task, $level) {
 	
 	// Estimation
 	$imghelp = "Estimated hours = ".$task["hours"];
-	$taskhours = give_hours_task ($task["id"]);
+	$taskhours = get_task_workunit_hours ($task["id"]);
 	$imghelp .= "\nWorked hours = $taskhours";
 	$a = round ($task["hours"]);
 	$b = round ($taskhours);
-	$max = maxof($a, $b);
+	$max = max($a, $b);
 	if ($a > 0)
 		$data[3] = '<img src="include/functions_graph.php?type=histogram&width=60&mode=2&height=18&a='.$a.'&b='.$b.'&&max='.$max.'" title="'.$imghelp.'">';
 	else
 		$data[3] = '--';
 
 	// Time used
-	$timeuser = give_hours_task ( $task["id"]);
+	$timeuser = get_task_workunit_hours ( $task["id"]);
 	$data[4] = $timeuser ? $timeuser : '--';
 	
 	// Costs (client / total)

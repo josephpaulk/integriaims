@@ -17,11 +17,9 @@
 // Load global vars
 global $config;
 
-if (check_login() != 0) {
-	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated acces","Trying to access incident viewer");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
+
+enterprise_include ('operation/user/user.php');
 
 $id_user =$_SESSION["id_usuario"];
 
@@ -45,18 +43,11 @@ foreach ($users as $user) {
 		.$user['id_usuario'].'"><strong>'.$user['id_usuario'].'</strong></a>';
 	$data[1] = $user['fecha_registro'];
 	$data[2] = print_user_avatar ($user['id_usuario'], true, true);
-	
-	$profiles = get_db_all_rows_field_filter ('tusuario_perfil', 'id_usuario', $user['id_usuario']);
-	$data[2] .= "<a href='#' class='tip'>&nbsp;<span>";
-	if ($profiles !== false) {
-		foreach ($profiles as $profile) {
-			$data[2] .= dame_perfil ($profile["id_perfil"])."/ ";
-			$data[2] .= dame_grupo ($profile["id_grupo"])."<br />";
-		}
-	} else {
-		$data[2] .= __('This user doesn\'t have any assigned profile/group');
+	$profiles = enterprise_hook ('get_user_profiles', array ($user['id_usuario']));
+	if ($profiles !== ENTERPRISE_NOT_HOOK) {
+		$data[2] .= $profiles;
 	}
-	$data[2] .= "</span></a>";
+	
 	$data[3] = $user['nombre_real'];
 	$data[4] = $user['comentarios'];
 	
@@ -67,5 +58,5 @@ print_table ($table);
 
 echo "</table>";
 
-enterprise_include ("operation/user/user_defined_profiles.php");
+enterprise_hook ('print_profiles_table');
 ?>

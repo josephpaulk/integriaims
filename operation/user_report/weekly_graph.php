@@ -14,13 +14,9 @@
 
 global $config;
 
-if (check_login() != 0) {
- 	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
-$id_grupo = give_parameter_get ("id_grupo",0);
+$id_grupo = get_parameter ("id_grupo",0);
 $id_user=$config['id_user'];
 if (give_acl($id_user, $id_grupo, "PR") != 1){
  	// Doesn't have access to this page
@@ -28,7 +24,7 @@ if (give_acl($id_user, $id_grupo, "PR") != 1){
 	include ("general/noaccess.php");
 	exit;
 }
-$id = give_parameter_get ("id","");
+$id = get_parameter ("id","");
 if (($id != "") && ($id != $id_user)){
 	if (give_acl($id_user, 0, "PW"))
 		$id_user = $id;
@@ -41,8 +37,8 @@ if (($id != "") && ($id != $id_user)){
 }
 
 // Get parameters for actual Calendar show
-$timestamp_l = give_parameter_get ( "timestamp_l","");
-$timestamp_h = give_parameter_get ( "timestamp_h","");
+$timestamp_l = get_parameter ( "timestamp_l","");
+$timestamp_h = get_parameter ( "timestamp_h","");
 
 echo "<h1>".__('Weekly report for')." $id_user</h1>";
 echo "<h3>".$timestamp_l." -&gt;".$timestamp_h."</h3>";

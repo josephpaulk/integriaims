@@ -150,7 +150,7 @@ function combo_users_project ($id_project){
 	$result = mysql_query($sql);
 	echo "<select name='user' style='width: 100px;'>";
 	while ($row=mysql_fetch_array($result)){
-		echo "<option value='".$row["id"]."'>".$row["id_user"]." / ".give_db_value ("name","trole","id",$row["id_role"]);
+		echo "<option value='".$row["id"]."'>".$row["id_user"]." / ".get_db_value ("name","trole","id",$row["id_role"]);
 	}
 	echo "</select>";
 }
@@ -164,16 +164,16 @@ function combo_kb_categories ($id_category){
 	$result = mysql_query($sql);
 	echo "<select name='category' style='width: 180px;'>";
 	
-	$parent = give_db_value ("parent","tkb_category","id",$id_category);
-	$parent_name = give_db_value ("name","tkb_category","id",$parent);
-	$name = give_db_value ("name","tkb_category","id",$id_category);
+	$parent = get_db_value ("parent","tkb_category","id",$id_category);
+	$parent_name = get_db_value ("name","tkb_category","id",$parent);
+	$name = get_db_value ("name","tkb_category","id",$id_category);
 	if ($parent != 0)
 		echo "<option value='".$id_category."'>".$parent_name."/".$name;
 	else
 		echo "<option value='".$id_category."'>".$name;
 
 	while ($row=mysql_fetch_array($result)){
-		$parent = give_db_value ("name","tkb_category","id",$row["parent"]);
+		$parent = get_db_value ("name","tkb_category","id",$row["parent"]);
 		if ($parent != "")
 			echo "<option value='".$row["id"]."'>".$parent . "/".$row["name"];
 		else
@@ -191,9 +191,9 @@ function combo_kb_products ($id_product, $show_none = 0){
 	$result = mysql_query($sql);
 	echo "<select name='product' style='width: 180px;'>";
 	if ($id_product > 0){
-		$parent = give_db_value ("parent","tkb_product","id",$id_product);
-		$parent_name = give_db_value ("name","tkb_product","id",$parent);
-		$name = give_db_value ("name","tkb_product","id",$id_product);
+		$parent = get_db_value ("parent","tkb_product","id",$id_product);
+		$parent_name = get_db_value ("name","tkb_product","id",$parent);
+		$name = get_db_value ("name","tkb_product","id",$id_product);
 		if ($parent != 0)
 			echo "<option value='".$id_product."'>".$parent_name."/".$name;
 		else
@@ -205,7 +205,7 @@ function combo_kb_products ($id_product, $show_none = 0){
 	if ($show_none == 1)
 		echo "<option value=0>".__('None');
 	while ($row=mysql_fetch_array($result)){
-		$parent = give_db_value ("name","tkb_product","id",$row["parent"]);
+		$parent = get_db_value ("name","tkb_product","id",$row["parent"]);
 		if ($parent != "")
 			echo "<option value='".$row["id"]."'>".$parent . "/".$row["name"];
 		else
@@ -436,7 +436,7 @@ function combo_projects_user ($id_user, $name = 'project') {
 	$sql = "SELECT DISTINCT(id_project) FROM trole_people_project WHERE id_user = '$id_user'";
 	$result=mysql_query($sql);
 	while ($row=mysql_fetch_array($result)){
-		$nombre = give_db_sqlfree_field("SELECT name FROM tproject WHERE disabled=0 AND id = ".$row[0]);
+		$nombre = get_db_sql("SELECT name FROM tproject WHERE disabled=0 AND id = ".$row[0]);
 		if ($nombre != "")
 		echo "<option value='".$row[0]."'>".$nombre;
 	}
@@ -451,7 +451,7 @@ function show_workunit_data ($workunit, $title) {
 	$timestamp = $workunit["timestamp"];
 	$duration = $workunit["duration"];
 	$id_user = $workunit["id_user"];
-	$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_user);
+	$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $id_user);
 	$nota = $workunit["description"];
 	$id_workunit = $workunit["id"];
 	$public = $workunit["public"];
@@ -534,20 +534,20 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	$timestamp = $row["timestamp"];
 	$duration = $row["duration"];
 	$id_user = $row["id_user"];
-	$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_user);
+	$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $id_user);
 	$nota = $row["description"];
 	$have_cost = $row["have_cost"];
 	$profile = $row["id_profile"];
 	$locked = $row["locked"];
-	$id_task = give_db_value ("id_task", "tworkunit_task", "id_workunit", $row["id"]);
+	$id_task = get_db_value ("id_task", "tworkunit_task", "id_workunit", $row["id"]);
 	if ($id_task == "")
-		$id_incident = give_db_value ("id_incident", "tworkunit_incident", "id_workunit", $row["id"]);
-	$id_group = give_db_value ("id_group", "ttask", "id", $id_task);
-	$id_project = give_db_value ("id_project", "ttask", "id", $id_task);
-	$task_title = substr(give_db_value ("name", "ttask", "id", $id_task), 0, 50);
+		$id_incident = get_db_value ("id_incident", "tworkunit_incident", "id_workunit", $row["id"]);
+	$id_group = get_db_value ("id_group", "ttask", "id", $id_task);
+	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
+	$task_title = substr(get_db_value ("name", "ttask", "id", $id_task), 0, 50);
 	if ($id_task == "")
-		$incident_title = substr(give_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident), 0, 50);
-	$project_title = substr(give_db_value ("name", "tproject", "id", $id_project), 0, 50);
+		$incident_title = substr(get_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident), 0, 50);
+	$project_title = substr(get_db_value ("name", "tproject", "id", $id_project), 0, 50);
 	// Show data
 	echo "<div class='notetitle' style='height: 75px;'>"; // titulo
 	echo "<table class='blank' border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px; background: transparent;'>";
@@ -576,13 +576,13 @@ function show_workunit_user ($id_workunit, $full = 0) {
 		echo $project_title;
 	} else {
 		echo __('Group')."</b> : ";
-		echo dame_nombre_grupo (give_db_sqlfree_field ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident"));
+		echo dame_nombre_grupo (get_db_sql ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident"));
 	}
 
 	echo "<td><b>";
 
 	if ($have_cost != 0){
-		$profile_cost = give_db_value ("cost", "trole", "id", $profile);
+		$profile_cost = get_db_value ("cost", "trole", "id", $profile);
 		$cost = format_numeric ($duration * $profile_cost);
 		$cost = $cost ." &euro;";
 	} else
@@ -602,7 +602,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<td><b>";
 	echo __('Profile');
 	echo "</b></td><td>";
-	echo " : ".give_db_value ("name", "trole", "id", $profile);
+	echo " : ".get_db_value ("name", "trole", "id", $profile);
 	echo "</table>";
 	echo "</div>";
 
@@ -808,7 +808,7 @@ function incident_details_list ($id_incident, $return = false) {
 	}
 	
 	/* Show workunits if there are some */
-	$work_hours = give_wu_incident ($id_incident);
+	$work_hours = get_incident_count_workunits ($id_incident);
 	if ($work_hours) {
 		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Hours worked').'</strong>: '.$work_hours;
 		$workunits = get_incident_workunits ($id_incident);

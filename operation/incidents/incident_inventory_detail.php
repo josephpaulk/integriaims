@@ -33,7 +33,7 @@ $table->size[4] = '40px';
 $table->size[5] = '40px';
 $table->data = array ();
 
-echo "<h3>".__('Incident'). " #$id_incident - ".give_inc_title ($id_incident)."</h3>";
+echo "<h3>".__('Incident'). " #$id_incident - ".get_incident_title ($id_incident)."</h3>";
 
 if (count ($inventories) == 0) {
 	echo '<h4>'.__('There\'s no inventory objects associated to this incident').'</h4>';

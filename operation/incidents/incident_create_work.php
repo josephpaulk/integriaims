@@ -25,8 +25,8 @@ if (check_login() != 0) {
 }
 
 $id_incident = (int) get_parameter ("id");
-$title = give_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident);
-$id_task = give_db_value ("id_task", "tincidencia", "id_incidencia", $id_incident);
+$title = get_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident);
+$id_task = get_db_value ("id_task", "tincidencia", "id_incidencia", $id_incident);
 
 if (! give_acl ($config["id_user"], 0, "IR")) {
 	return;

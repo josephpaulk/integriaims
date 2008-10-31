@@ -18,11 +18,7 @@
 
 global $config;
 
-if (check_login() != 0) {
-	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access incident viewer");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
 $id_grupo = "";
 $creacion_incidente = "";
@@ -90,7 +86,7 @@ if (isset($_GET["id"])){
 	echo "</li>";
 	
 	// Workunits
-	$timeused = give_hours_incident ( $id_inc);
+	$timeused = get_incident_wokunit_hours ( $id_inc);
 	echo "<li class='nomn'>";
 	if ($timeused > 0)
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".__('Workunits')." ($timeused)</a>";
@@ -99,7 +95,7 @@ if (isset($_GET["id"])){
 	echo "</li>";
 
 	// Attach
-	$file_number = give_number_files_incident($id_inc);
+	$file_number = get_number_files_incident($id_inc);
 	if ($file_number > 0){
 		echo "<li class='nomn'>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".__('Files')." ($file_number) </a>";
@@ -132,7 +128,7 @@ if (isset($_GET["id"])){
 
 echo $result_msg;
 echo "<br>";
-$title = __('Notes attached to incident')." #$id_inc '".give_inc_title($id_inc)."'";
+$title = __('Notes attached to incident')." #$id_inc '".get_incident_title($id_inc)."'";
 echo "<h3>$title</h3>";
 
 $sql4='SELECT * FROM tworkunit_incident WHERE id_incident = '.$id_inc.' ORDER BY id_workunit ASC';

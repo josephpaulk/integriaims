@@ -279,8 +279,8 @@ foreach ($incidents as $incident) {
 
 	/* Workunits */
 	echo '<td>';
-	$timeused = give_hours_incident ($incident["id_incidencia"]);
-	$incident_wu = $in_wu = give_wu_incident ($incident["id_incidencia"]);
+	$timeused = get_incident_wokunit_hours ($incident["id_incidencia"]);
+	$incident_wu = $in_wu = get_incident_count_workunits ($incident["id_incidencia"]);
 	if ($incident_wu > 0) {
 		echo '<img src="images/award_star_silver_1.png" />'.$timeused;
 	}
@@ -292,7 +292,7 @@ foreach ($incidents as $incident) {
 	print_help_tip (implode ('&nbsp;', $people), false, 'tip_people');
 
 	/* Files */
-	$files = give_number_files_incident ($incident["id_incidencia"]);
+	$files = get_number_files_incident ($incident["id_incidencia"]);
 	if ($files)
 		echo '&nbsp;<img src="images/disk.png"
 			title="'.$files.' '.__('Files').'" />';

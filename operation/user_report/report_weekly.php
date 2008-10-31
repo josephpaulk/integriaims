@@ -31,7 +31,7 @@ $now = date("Y-m-d H:i:s");
 $now_year = date("Y");
 $now_month = date("m");
 
-$week_begin = give_parameter_post ( "working_week");
+$week_begin = get_parameter ( "working_week");
 
 if ($week_begin == "")
 	$begin_week = first_working_week() . " 00:00:00";

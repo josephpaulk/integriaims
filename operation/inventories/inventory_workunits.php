@@ -15,12 +15,7 @@
 
 global $config;
 
-if (check_login () != 0) {
- 	audit_db ("Noauth", $config["REMOTE_ADDR"], "No authenticated access",
- 		"Trying to access inventory workunit details");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
 $id = (int) get_parameter ('id');
 

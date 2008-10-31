@@ -989,3 +989,6 @@ label {
 	cursor: pointer;
 }
 
+#button-usuario_name {
+	width: 110px;
+}

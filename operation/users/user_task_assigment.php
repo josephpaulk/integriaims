@@ -18,11 +18,7 @@
 
 global $config;
 
-if (check_login() != 0) {
-    audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access user task assigment view");
-    require ("general/noaccess.php");
-    exit;
-}
+check_login ();
     
 if (give_acl($config["id_user"], 0, "PR") != 1){
     // Doesn't have access to this page
@@ -72,8 +68,8 @@ if (give_acl($config["id_user"], 0, "PM") == 1){
 		echo "<td >";
 		echo "<img src='include/functions_graph.php?type=progress&width=70&height=20&percent=".$row[3]."'>";
         
-		echo "<td>".give_wu_task_user ($row[0], $id_user);
-        $wutime = give_db_sqlfree_field ("SELECT timestamp FROM tworkunit_task, tworkunit WHERE tworkunit.id_user = '$id_user' AND tworkunit_task.id_task = ".$row[0]." AND tworkunit.id = tworkunit_task.id_workunit order by timestamp desc LIMIT 1");
+		echo "<td>".get_task_workunit_hours_user ($row[0], $id_user);
+        $wutime = get_db_sql ("SELECT timestamp FROM tworkunit_task, tworkunit WHERE tworkunit.id_user = '$id_user' AND tworkunit_task.id_task = ".$row[0]." AND tworkunit.id = tworkunit_task.id_workunit order by timestamp desc LIMIT 1");
 
         echo "<td class='f9'>".$wutime;
 

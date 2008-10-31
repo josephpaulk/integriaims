@@ -23,8 +23,8 @@ if (check_login() != 0) {
 	exit;
 }
 
-$id = give_parameter_get ("id",0);
-$title = give_parameter_get ("title",0);
+$id = get_parameter ("id",0);
+$title = get_parameter ("title",0);
 
 // ********************************************************************
 // Note detail of $id_note
@@ -39,7 +39,7 @@ if ($row3=mysql_fetch_array($res4)){
 	$timestamp = $row3["timestamp"];
 	$duration = $row3["duration"];
 	$id_user = $row3["id_user"];
-	$avatar = give_db_value ("avatar", "tusuario", "id_usuario", $id_user);
+	$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $id_user);
 	$description = $row3["description"];
 
 	// Show data

@@ -53,9 +53,9 @@ if ($id_workunit){
 
 if (project_manager_check ($id_project) || ($id_user = $config["id_user"])) {
 	if ($id_workunit)
-		echo __('Update workunit')." - $task_name</h3>";
+		echo '<h3>'.__('Update workunit').' - '.$task_name.'</h3>';
 	else
-		echo __('Add workunit')." - $task_name</h3>";
+		echo '<h3>'.__('Add workunit').' - '.$task_name.'</h3>';
 	
 	$table->class = 'databox';
 	$table->width = '750px';
@@ -66,9 +66,15 @@ if (project_manager_check ($id_project) || ($id_user = $config["id_user"])) {
 	$table->data[0][0] = print_input_text ('date', $now_date, '', 10, 10, true, __('Date'));
 	$table->data[0][1] = print_input_text ('time', $now_time, '', 10, 10, true, __('Time'));
 	
-	$table->data[0][2] = print_select (array (), 'incident_inventories', false, '', '', '', true, false, false, __('Inventory affected'));
+	/*
+	WARNING:
+	This code is commented because it will be re-enabled in 2.1!!
+	*/
+	
+	/*$table->data[0][2] = print_select (array (), 'incident_inventories', false, '', '', '', true, false, false, __('Inventory affected'));
 	$table->data[0][2] .= print_button (__('Add'), 'search_inventory', false, '', 'class="dialogbtn"', true);
 	$table->data[0][2] .= print_button (__('Remove'), 'delete_inventory', false, '', 'class="dialogbtn"', true);
+	*/
 	
 	$table->data[1][0] = combo_user_task_profile ($id_task, 'work_profile', $id_profile, false, true);
 	$table->data[1][1] = print_checkbox ('have_cost', 1, $have_cost, true, __('Have cost'));

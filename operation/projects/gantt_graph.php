@@ -53,8 +53,8 @@ function add_task_child (&$definitions, $id_task, &$task_counter, &$task_array, 
     	$task_begin =  strtotime ($row["start"]);
     	$task_end = strtotime ($row["end"]);
 
-    	$task_work_end =  strtotime (give_db_sqlfree_field ("SELECT MAX(tworkunit.timestamp) FROM tworkunit_task, tworkunit WHERE tworkunit.id = tworkunit_task.id_workunit AND tworkunit_task.id_task = $task_id"));
-    	$task_work_begin =  strtotime (give_db_sqlfree_field ("SELECT MIN(tworkunit.timestamp) FROM tworkunit_task, tworkunit WHERE tworkunit.id = tworkunit_task.id_workunit AND tworkunit_task.id_task = $task_id"));
+    	$task_work_end =  strtotime (get_db_sql ("SELECT MAX(tworkunit.timestamp) FROM tworkunit_task, tworkunit WHERE tworkunit.id = tworkunit_task.id_workunit AND tworkunit_task.id_task = $task_id"));
+    	$task_work_begin =  strtotime (get_db_sql ("SELECT MIN(tworkunit.timestamp) FROM tworkunit_task, tworkunit WHERE tworkunit.id = tworkunit_task.id_workunit AND tworkunit_task.id_task = $task_id"));
     	if ($task_work_begin == "")
     		$task_work_begin = $project_begin;
     	if ($task_work_end == "")
@@ -87,11 +87,11 @@ function add_task_child (&$definitions, $id_task, &$task_counter, &$task_array, 
 $dependency_counter=0;
 // Get data about this project
 $id_user = $_SESSION['id_usuario'];
-$id_project = give_parameter_get ("id_project", -1);
+$id_project = get_parameter ("id_project", -1);
 if ($id_project != -1){
-	$project_name = give_db_value ("name", "tproject", "id", $id_project);
-	$project_begin =  give_db_value ("start", "tproject", "id", $id_project);
-	$project_end = give_db_value ("end", "tproject", "id", $id_project);
+	$project_name = get_db_value ("name", "tproject", "id", $id_project);
+	$project_begin =  get_db_value ("start", "tproject", "id", $id_project);
+	$project_end = get_db_value ("end", "tproject", "id", $id_project);
 	$project_scale = (strtotime ($project_end) - strtotime ($project_begin)) / 86400;
 	if ($project_scale < 46)
 		$project_scale_option ="d";

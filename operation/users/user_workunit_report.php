@@ -17,15 +17,11 @@
 	global $config;
 	$id_user = $config["id_user"];
 	
-	if (check_login() != 0) {
-		audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
-		require ("general/noaccess.php");
-		exit;
-	}
+	check_login ();
 
-	$id_workunit = give_parameter_get ("id_workunit", -1);
-	$id = give_parameter_get ("id");
-	$operation = give_parameter_get ("operation");
+	$id_workunit = get_parameter ("id_workunit", -1);
+	$id = get_parameter ("id");
+	$operation = get_parameter ("operation");
 	if (($id != "") && ($id != $id_user)) {
 		if (give_acl($id_user, 0, "PW"))
 			$id_user = $id;
@@ -37,8 +33,8 @@
 		
 	}
 
-	$timestamp_l = give_parameter_get ("timestamp_l");
-	$timestamp_h = give_parameter_get ("timestamp_h");
+	$timestamp_l = get_parameter ("timestamp_l");
+	$timestamp_h = get_parameter ("timestamp_h");
 
     // ---------------
     // DELETE Workunit
@@ -46,7 +42,7 @@
 
     if ($operation == "delete"){
 	    // Delete workunit with ACL / Project manager check
-	    $id_workunit = give_parameter_get ("id_workunit");
+	    $id_workunit = get_parameter ("id_workunit");
 	    $sql = "SELECT * FROM tworkunit WHERE id = $id_workunit";
 	    if ($res = mysql_query($sql)) 
 		    $row=mysql_fetch_array($res);

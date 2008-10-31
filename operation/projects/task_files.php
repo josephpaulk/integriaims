@@ -26,17 +26,17 @@ if (check_login() != 0) {
 }
 
 $id_user = $_SESSION['id_usuario'];
-$id_project = give_parameter_get ("id_project", -1);
-$id_task = give_parameter_get ("id_task", -1);
-$operation = give_parameter_get ("operation", "");
+$id_project = get_parameter ("id_project", -1);
+$id_task = get_parameter ("id_task", -1);
+$operation = get_parameter ("operation", "");
 // Get names
 if ($id_project != 1)
-	$project_name = give_db_value ("name", "tproject", "id", $id_project);
+	$project_name = get_db_value ("name", "tproject", "id", $id_project);
 else
 	$project_name = "";
 
 if ($id_task != 1)
-	$task_name = give_db_value ("name", "ttask", "id", $id_task);
+	$task_name = get_db_value ("name", "ttask", "id", $id_task);
 else
 	$task_name = "";
 

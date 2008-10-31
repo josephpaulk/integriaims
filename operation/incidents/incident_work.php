@@ -62,7 +62,7 @@ if (isset($_GET["id_inc"])){
 	echo "</li>";
 
 	// Workunits
-	$timeused = give_hours_incident ( $id_inc);
+	$timeused = get_incident_wokunit_hours ( $id_inc);
 	echo "<li class='nomn'>";
 	if ($timeused > 0)
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_work&id_inc=$id_inc'><img src='images/award_star_silver_1.png' class='top' border=0> ".__('Workunits')." ($timeused)</a>";
@@ -72,7 +72,7 @@ if (isset($_GET["id_inc"])){
 
 
 	// Attach
-	$file_number = give_number_files_incident ($id_inc);
+	$file_number = get_number_files_incident ($id_inc);
 	if ($file_number > 0){
 		echo "<li class='nomn'>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_files&id=$id_inc'><img src='images/disk.png' class='top' border=0> ".__('Files')." ($file_number) </a>";
