@@ -130,8 +130,8 @@ if ($has_permission) {
 }
 
 if ($has_permission) {
-	$table->data[2][0] = print_input_text ('email', $user['direccion'], '', 20, 20, true, __('E-Mail'));
-	$table->data[2][1] = print_input_text ('phone', $user['telefono'], '', 20, 20, true, __('Telephone'));
+	$table->data[2][0] = print_input_text ('email', $user['direccion'], '', 20, 60, true, __('E-Mail'));
+	$table->data[2][1] = print_input_text ('phone', $user['telefono'], '', 20, 40, true, __('Telephone'));
 	$table->data[4][0] = print_select_from_sql ("SELECT id_language, name FROM tlanguage ORDER BY name",
 		'lang', $user['lang'], '', __('Default'), '', true, false, false, __('Language'));
 	$table->data[5][0] = print_textarea ('comments', 8, 55, $user['comentarios'], '', true, __('Comments'));

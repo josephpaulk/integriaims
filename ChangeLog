@@ -1,5 +1,8 @@
 2008-10-29  Sancho Lerena <slerena@artica.es>
 
+	* operation/users/user_edit.php: Fixed problems with
+	length of email field.
+
 	* functions.php: topi_rndcode now works with spaces.
 
 	* integria.css: Added margin left for search table.
