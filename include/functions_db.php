@@ -175,6 +175,17 @@ function give_number_files_task ($id) {
 	return (int) get_db_value ('COUNT(*)', 'tattachment', 'id_task', $id);
 }
 
+
+/**
+* Return number of files associated to a project
+*
+* $id		integer 	ID of project
+**/
+function give_number_files_project ($id) {
+	return (int) get_db_sql ('SELECT COUNT(*) FROM tattachment, ttask WHERE ttask.id_project = '.$id.' AND ttask.id = tattachment.id_task');
+}
+
+
 /**
 * Return number of tasks associated to an incident
 *
@@ -518,7 +529,7 @@ function user_belong_project ($id_user, $id_project, $real = 0) {
 	if ($real == 0 && dame_admin ($id_user) != 0)
 		return 1;
 	
-	$sql = spintf ('SELECT COUNT(*) FROM  trole_people_project
+	$sql = sprintf ('SELECT COUNT(*) FROM  trole_people_project
 		WHERE id_project = %d
 		AND id_user = "%s"', $id_project, $id_user);
 	return (bool) get_db_sql ($sql);

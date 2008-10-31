@@ -690,6 +690,7 @@ function project_tree ($id_project, $id_user){
 
 function all_project_tree ($id_user, $completion, $project_kind){
 	include ("../include/config.php");
+	$config["id_user"] = $id_user;
 
 	$dotfilename = $config["homedir"]. "attachment/tmp/$id_user.all.dot";
 	$pngfilename = $config["homedir"]. "attachment/tmp/$id_user.projectall.png";

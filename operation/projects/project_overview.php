@@ -46,7 +46,7 @@ while ($row2=mysql_fetch_array($result2)){
 
 		// Project group
 		echo "<td>";
-		echo "<img src='images/project_groups_small/".$row2["icon"].".png'>";
+		echo "<img src='images/project_groups_small/".$row2["icon"]."'>";
 			
 		// Projects inside
 		echo "<td>";

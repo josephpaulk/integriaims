@@ -429,7 +429,7 @@ CREATE TABLE `tcost` (
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_wu`) REFERENCES tworkunied(`id`)
+  FOREIGN KEY (`id_wu`) REFERENCES tworkunit(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`locked_id_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE

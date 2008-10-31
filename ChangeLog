@@ -1,3 +1,45 @@
+2008-10-29  Sancho Lerena <slerena@artica.es>
+
+	* functions.php: topi_rndcode now works with spaces.
+
+	* integria.css: Added margin left for search table.
+
+	* upgrade.sql: Sql script to migrate DB schema from 1.2 to 2.0.
+
+	* integria_db.sql: Fixed typo in tcost table.
+
+	* login_page.php: Adjusted some styles to look better.
+
+	* functions_calendar.php: Un-init variable now has initilization.
+
+	* functions_db.php: Added give_number_files_project(), fixed typo
+	in user_belong_project().
+
+	* functions_form.php: combo_kb_products() improved (works with 
+	any value, optional).
+
+	* functions_graph.php: all_project_tree() fixed (missing user). Need
+	to fix and get user session properly.
+
+	* side_menu.php: Added total file list to project view.
+
+	* inventory_detail.php: Header update.
+
+	* manage_prod.php: Fixed small typo.
+
+	* kb/browse.php: Improved search on KB navigation.
+
+	* kb/browse_data.php: Improved visualization on KB article.
+
+	* kb/manage_data.php: Set defaults on product type and cateogry.
+
+	* project_overview.php: Fixed icon render.
+
+	* task_attach_file.php: Fixed layout.
+
+	* task_files.php: Implemented deletion on task attachments.
+
+
 2008-10-29  Esteban Sanchez  <estebans@artica.es>
 
 	* integria_db.sql: Changed cascade trigger on foreign keys of ttask.

@@ -402,7 +402,7 @@ function topi_sendmail ($destination, $msg_subject = "[INTEGRIA] Automatic email
 }
 
 function topi_rndcode ($length = 6) {
-	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPRQSTUVWXYZ0123456789";
+	$chars = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPRQSTUVWXYZ0123456789 ";
 	$code = "";
 	$clen = strlen ($chars) - 1;  //a variable with the fixed length of chars correct for the fence post issue
 	while (strlen ($code) < $length) {

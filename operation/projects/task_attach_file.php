@@ -43,9 +43,11 @@
 	echo '<input type="file" name="userfile" value="userfile" class="sub" size="40">';
 	echo '<tr><td class="datos2">'.__('Description').'</td><td class="datos2" colspan=3><input type="text" name="file_description" size=47>';
 	echo "</td></tr></table>";
+	echo "<div class=button style='width:700px'>";
 	echo '<input type="submit" name="upload" value="'.__('Upload').'" class="sub next">';
 	echo "</form>";
-	echo '</div><br>';
+	echo "</div>";
+	echo '</div>';
 
 
 ?>

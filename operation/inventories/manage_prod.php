@@ -215,7 +215,7 @@ if (! $update && ! $create) {
 			echo "<a href='index.php?sec=inventory&
 						sec2=operation/inventories/manage_prod&
 						delete_prod=".$row["id"]."' 
-						onClick='if (!confirm(\'".__('Are you sure?'])."\')) 
+						onClick='if (!confirm(\' ".__("are_you_sure")."\')) 
 						return false;'>
 						<img border='0' src='images/cross.png'></a>";
 		}

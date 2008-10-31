@@ -187,8 +187,6 @@ function combo_kb_categories ($id_category){
 // ----------------------------------------------------------------------
 function combo_kb_products ($id_product, $show_none = 0){
 
-	if ($id_product == 0)
-		$id_product = 1;
 	$sql = "SELECT * FROM tkb_product WHERE id != $id_product ORDER BY parent, name ";
 	$result = mysql_query($sql);
 	echo "<select name='product' style='width: 180px;'>";
@@ -200,7 +198,10 @@ function combo_kb_products ($id_product, $show_none = 0){
 			echo "<option value='".$id_product."'>".$parent_name."/".$name;
 		else
 			echo "<option value='".$id_product."'>".$name;
+	} else {
+		echo "<option value='0'>".__("Any");
 	}
+	
 	if ($show_none == 1)
 		echo "<option value=0>".__('None');
 	while ($row=mysql_fetch_array($result)){

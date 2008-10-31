@@ -32,17 +32,32 @@ echo "<h3>".__('Defined data')."</a></h3>";
 
 // Search parameter 
 $free_text = get_parameter ("free_text", "");
+$product = get_parameter ("product", 0);
+$category = get_parameter ("category", 0);
 
 // Search filters
-echo "<table cellpadding=4 cellspacing=4 width=400>";
+echo "<table cellpadding=4 cellspacing=4 width=800 class='blank'>";
 echo "<tr>";
 echo "<form method='post' action='index.php?sec=kb&sec2=operation/kb/browse'>";
 echo "<td>";
+echo __('Product types');
+echo "<td>";
+combo_kb_products ($product, 0);
+echo "<td>";
+echo __('Categories');
+echo "<td>";
+combo_kb_categories($category);
+
+echo "<tr>";
+echo "<td>";
 echo __('Free text search');
 echo "<td>";
-echo "<input type=text name='free_text' size=20 value='$free_text'>";
-echo "<td>";
+echo "<input type=text name='free_text' size=25 value='$free_text'>";
+
+echo "<td >";
 echo "<input type=submit class='sub next' value='".__('Search')."'>";
+
+
 echo "</td></tr></table></form>";
 
 // Search filter processing
@@ -52,6 +67,13 @@ $sql_filter = "WHERE 1=1 ";
 
 if ($free_text != "")
 	$sql_filter .= "AND title LIKE '%$free_text%' OR data LIKE '%$free_text%'";
+
+if ($product != 0)
+	$sql_filter .= "AND id_product = $product ";
+
+if ($category != 0)
+	$sql_filter .= "AND id_category = $category ";
+
 
 $sql1 = "SELECT * FROM tkb_data $sql_filter ORDER BY title, id_category, id_product";
 $color =0;

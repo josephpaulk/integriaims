@@ -42,9 +42,9 @@ if ($kb_data["id_category"])
 	$category = get_db_value ('name', 'tkb_category', 'id', $kb_data['id_category']);
 
 echo '<h2>'.__('KB article review').'</h2>';
-echo '<h3>'.$product.'</h3>';
-
 $avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $kb_data['id_user']);
+
+echo "<p><b>$title</b>";
 
 // Title header
 echo "<div class='notetitle' style='height: 50px;'>"; 
@@ -53,23 +53,27 @@ echo "<tr><td rowspan=3 width='7%'>";
 echo "<img src='images/avatars/".$avatar."_small.png'>";
 
 echo "<td width='50%'><b>";
-echo __('Title')." </b> : ";
-echo $title;
-
+echo __('Author')." </b> : ";
+echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$kb_data['id_user'].'">';
+echo $kb_data['id_user'];
+echo "</a>";
 echo "<td> <b>";
 echo __('Product')." </b> : ";
 echo $product;
 
 echo "<tr>";
 echo "<td>";
-echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$kb_data['id_user'].'">';
-echo "<b>".$kb_data['id_user']."</b>";
-echo "</a>";
+
 echo " ".__("Write on $timestamp");
 echo "<td>";
 echo "<b>";
 echo __('Category')." </b> : ";
 echo $category;
+
+echo "<td align=right>";
+if (give_acl ($config["id_user"], 0, "KM")){
+	echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$kb_data['id']."'><img border=0 src='images/page_white_text.png'></a>";
+}
 
 echo "</table>";
 echo "</div>";
@@ -88,7 +92,7 @@ $attachments = get_db_all_rows_field_filter ('tattachment', 'id_kb', $id, 'descr
 if ($attachments !== false) {
 	echo '<h3>'.__('Attachment list').'</h3>';
 	
-	$table->width = '500px';
+	$table->width = '735';
 	$table->class = 'listing';
 	$table->data = array ();
 	$table->head = array ();
@@ -100,8 +104,8 @@ if ($attachments !== false) {
 		
 		$attach_id = $attachment['id_attachment'];
 		$link = 'attachment/'.$attachment['id_attachment'].'_'.$attachment['filename'];
-		$data[0] = '<a href="'.$filelink.'" title="'.$attachment['description'].'">';
-		$data[0] .= '<img src="images/disk.png" />';
+		$data[0] = '<a href="'.$link.'" title="'.$attachment['description'].'">';
+		$data[0] .= '<img src="images/disk.png"/> ';
 		$data[0] .= $attachment['filename'];
 		$data[0] .= '</a>';
 		$data[1] = $attachment['description'];
@@ -109,5 +113,6 @@ if ($attachments !== false) {
 		array_push ($table->data, $data);
 	}
 	print_table ($table);
+	echo "</div>";
 }
 ?>

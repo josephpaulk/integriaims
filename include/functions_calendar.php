@@ -456,7 +456,7 @@ function give_human_time ($int_seconds, $flag_hide_zero = true) {
 
 function human_time_comparation ($timestamp) {
 	global $config;
-	
+	$render = "";
 	$now = time ();
 	$time = strtotime ($timestamp);
 	$seconds = abs ($time - $now);

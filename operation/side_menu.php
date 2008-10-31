@@ -138,6 +138,17 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 			echo "</a></li>";
 		}
 
+		// Files
+		$numberfiles = give_number_files_project ($id_project);
+		if ($numberfiles > 0){
+			if ($sec2 == "operation/projects/task_files")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_files&id_project=$id_project'>".__('Files')." ($numberfiles)";
+			echo "</a></li>";
+		}
+
 		echo "</ul>";
 		echo "</div>";
 	}

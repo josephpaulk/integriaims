@@ -117,6 +117,7 @@ $login = (bool) get_parameter ('login');
 $sec = get_parameter ('sec');
 $sec2 = get_parameter ('sec2');
 
+
 // Login process
 if (! isset ($_SESSION['id_usuario']) && $login) {
 	$nick = get_parameter ("nick");

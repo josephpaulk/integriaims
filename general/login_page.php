@@ -34,21 +34,22 @@
 	foreach ($_POST as $name => $value)
 		print_input_hidden ($name, $value);
 ?>
-		<table cellpadding='4' cellspacing='1' width='400' class='blank'>
+		<table cellpadding='4' cellspacing='1' width='350' class='blank'>
 		<tr><td rowspan='3' align='left' style="border-right: solid 1px #678;">
 			<a href="index.php">
 			<img src="images/integria_white.png" border="0" alt="logo"></a>
 			<?php echo $config["version"]; ?>
 		<td rowspan='3' width='5'>
-		<td class='f9b'>
+		<td>
 			Login <br>
 			<input class="login" type="text" name="nick" id="nick" value="">
 		</td></tr>
-		<tr><td class='f9b'>
+		<tr><td>
 			Password <br>
 			<input class="login" type="password" name="pass" value="">
 		</td></tr>
-		<tr><td align='center'>
+		<tr><td align='right'>
+			<br>
 			<input type="submit" class="sub next" value="Login">
 		</td></tr>
 		</table>

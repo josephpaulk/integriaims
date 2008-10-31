@@ -148,8 +148,8 @@
             $data = "";
             $title = "";
             $id = -1;
-            $id_product = 0;
-            $id_category = 0;    
+            $id_product = 1;
+            $id_category = 1;    
         } else {
             $id = get_parameter ("update",-1);
             $row = get_db_row ("tkb_data", "id", $id);

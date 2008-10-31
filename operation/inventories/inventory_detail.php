@@ -1,6 +1,6 @@
 <?php
 
-// Integria 1.2 - http://integria.sourceforge.net
+// Integria IMS - http://integriaims.com
 // ==================================================
 // Copyright (c) 2008 Artica Soluciones Tecnologicas
 // Copyright (c) 2008 Esteban Sanchez, estebans@artica.es

@@ -85,20 +85,34 @@ if ($operation == "attachfile"){
 	}
 }
 
+// -----------
+// Delete file
+// -----------
+if ($operation == "delete"){
+	$file_id = get_parameter ("file", "");
+	$file_row = get_db_row ("tattachment", "id_attachment", $file_id);
+	$nombre_archivo = $config["homedir"]."/attachment/".$file_id."_".$file_row["filename"];
+	unlink ($nombre_archivo);
+	get_db_sql ("DELETE FROM tattachment WHERE id_attachment = $file_id");
+	$result_output = "<h3 class='suc'>".__('File deleted')."</h3>";
+}
+
 // Specific task
 if ($id_task != -1){ 
 	$sql= "SELECT * FROM tattachment WHERE id_task = $id_task";
 	echo "<h3>".__('Attached files');
 	echo " - ".__('Task')." - ".$task_name."</h3>";
-	echo "<table border='0' width=600 class='listing'>";
-	echo "<tr><th width=120>"; 
+	echo "<table border='0' width=700 class='listing'>";
+	echo "<tr><th>"; 
 	echo __('Filename');
-	echo "<th width=170>"; 
+	echo "<th>"; 
 	echo __('User');
-	echo "<th width=70>"; 
+	echo "<th>"; 
 	echo __('Size');
 	echo "<th>"; 
 	echo __('Description');
+	echo "<th>"; 
+	echo __('Delete');
 }
 
 // Whole project
@@ -108,17 +122,19 @@ if ($id_task == -1){
 
 	echo "<h3>".__('Attached files');
 	echo " - ".__('Project')." - ".$project_name."</h3>";
-	echo "<table  width=600 class='listing'>";
+	echo "<table  width=700 class='listing'>";
 	echo "<tr><th>"; 
 	echo __('Task');
-	echo "<th width=120>"; 
+	echo "<th>"; 
 	echo __('Filename');
-	echo "<th width=170>"; 
+	echo "<th>"; 
 	echo __('User');
-	echo "<th width=70>"; 
+	echo "<th>"; 
 	echo __('Size');
 	echo "<th>"; 
 	echo __('Description');
+	echo "<th>"; 
+	echo __('Delete');
 }
 
 $color = 0;
@@ -152,6 +168,9 @@ if ($res = mysql_query($sql)) {
 
 		echo "<td class='$tdcolor' valign='top'>";
 		echo $row["description"];
+
+		echo "<td class='$tdcolor' valign='top'>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_files&id_project=$id_project&operation=delete&file=".$row["id_attachment"]."'><img src='images/cross.png' border=0></A>";
 	}
 }
 echo "</table>";
