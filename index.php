@@ -98,6 +98,7 @@ echo "<title>".$config["sitename"]."</title>";
 <script type="text/javascript" src="include/js/jquery.ui.resizable.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.dialog.js"></script>
 <script type="text/javascript" src="include/js/jquery.form.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.textarearesizer.js"></script>
 <!--[if lte IE 7]>
 <script type="text/javascript" src="include/js/jquery.bgiframe.js"></script>
 <![endif]-->

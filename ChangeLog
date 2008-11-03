@@ -1,3 +1,24 @@
+2008-11-03  Esteban Sanchez  <estebans@artica.es>
+
+	* include/js/jquery.ui.textarearesizer.js: Added to repository. jQuery
+	plugin to make textareas resizeables.
+
+	* include/styles/flora/i/grippie.png: Added to repository. Textarea
+	resizer helper.
+
+	* include/styles/flora/flora.css: Added style to resizeable textareas.
+
+	* include/js/integria_incident_search.js: Make textarea resizeable in
+	incident, inventory and workunit forms.
+
+	* operation/incidents/incident_create_work.php: Make textarea a bit
+	shorter since it was too much for the dialog.
+
+	* operation/projects/task_detail.php: Make description textarea
+	resizeable.
+
+	* index.php: Added jquery.ui.textarearesizer.js to script list.
+
 2008-11-03  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_db.php: incident_mail has public switch to 

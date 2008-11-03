@@ -99,6 +99,8 @@ function configure_inventory_buttons (form, dialog) {
 }
 
 function configure_incident_form (enable_ajax_form) {
+	$(dialog+"#textarea-description").TextAreaResizer ();
+	$(dialog+"#textarea-epilog").TextAreaResizer ();
 	$(dialog+"#button-search_parent").click (function () {
 		show_incident_search_dialog ("Search parent incident",
 			function (id, name) {
@@ -422,6 +424,7 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 }
 
 function configure_workunit_form () {
+	$(dialog+"#textarea-nota").TextAreaResizer ();
 	$("#form-add-workunit").submit (function () {
 		values = get_form_input_values ("form-add-workunit");
 		values.push ({name: "page",
@@ -566,6 +569,7 @@ function configure_inventory_side_menu (id_inventory, refresh_menu) {
 }
 
 function configure_inventory_form (enable_ajax_form) {
+	$(dialog+"#textarea-description").TextAreaResizer ();
 	$(dialog+"#button-parent_search").click (function () {
 		show_inventory_search_dialog ("Search parent inventory",
 					function (id, name) {

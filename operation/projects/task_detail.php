@@ -310,6 +310,7 @@ if (give_acl ($config["id_user"], $id_group, "TM") || ($config["id_user"] == $pr
 <script type="text/javascript">
 
 $(document).ready (function () {
+	$("#textarea-description").TextAreaResizer ();
 	configure_range_dates (function (datetext) {
 		hours_day = <?php echo $config['hours_perday'];?>;
 		start_date = $("#text-start_date").datepicker ("getDate"); 

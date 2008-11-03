@@ -51,7 +51,7 @@ $table->data[1][0] = print_input_text ("duration", '0', '', 7,  10, true, __('Ti
 $table->data[1][1] = print_checkbox ('have_cost', 1, false, true, __('Have cost'));
 $table->data[1][2] = print_checkbox ('public', 1, true, true, __('Public'));
 
-$table->data[2][0] = print_textarea ('nota', 13, 70, '', '', true, __('Description'));
+$table->data[2][0] = print_textarea ('nota', 10, 70, '', '', true, __('Description'));
 
 echo '<form id="form-add-workunit" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
 
