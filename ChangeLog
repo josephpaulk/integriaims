@@ -1,3 +1,12 @@
+2008-11-03  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_db.php: incident_mail has public switch to 
+	inform about public workunits.
+
+	* operation/incidents/incident_detail.php: Pass argument correctly.
+
+	* operation/users/user.php: Fixed width table for listing.
+
 2008-10-31  Esteban Sanchez  <estebans@artica.es>
 
 	* godmode/grupos/configurar_grupo.php: Make forced_email a bool.

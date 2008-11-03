@@ -286,7 +286,7 @@ if ($id) {
 			$result_msg = '<h3 class="suc">'.__('Workunit added successfully').'</h3>';
 			// Email notify to all people involved in this incident
 			if ($email_notify == 1) {
-				mail_incident ($id, $config['id_user'], $nota, $timeused, 10);
+				mail_incident ($id, $config['id_user'], $nota, $timeused, 10, $public);
 			}
 		}
 		

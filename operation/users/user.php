@@ -25,7 +25,7 @@ $id_user =$_SESSION["id_usuario"];
 
 echo "<h2>".__('Integria users')."</h2>";
 
-$table->width = '95%';
+$table->width = '860px';
 $table->class = 'listing';
 $table->data = array ();
 $table->head = array ();
@@ -53,10 +53,9 @@ foreach ($users as $user) {
 	
 	array_push ($table->data, $data);
 }
-
+echo "<div>";
 print_table ($table);
-
+echo "</div>";
 echo "</table>";
-
 enterprise_hook ('print_profiles_table');
 ?>

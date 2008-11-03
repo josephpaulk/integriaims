@@ -1032,7 +1032,7 @@ $tdescription\n\n";
 		topi_sendmail (get_user_email ($tassigned), $subject, $text);
 }
 
-function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode){
+function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public = 1){
 	global $config;
 
 	$row = get_db_row ("tincidencia", "id_incidencia", $id_inc);
@@ -1047,7 +1047,6 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode){
 	$update_timestamp = $row["actualizacion"];
 	$usuario = $row["id_usuario"];
 	$creator = $row["id_creator"];
-	$public = $row["public"];
 
 	// Resolve code for its name
 	switch ($mode){
