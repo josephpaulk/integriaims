@@ -750,7 +750,7 @@ function incident_users_list ($id_incident, $return = false) {
 		$output .= "<br />&nbsp;&nbsp;".print_user_avatar ($users['creator']['id_usuario'], true, true);
 		$output .= ' <strong>'.$users['creator']['id_usuario'].'</strong> (<em>'.__('Creator').'</em>)<br />';
 	} else {
-		$output .= ' (<em>'.__('Creator').'</em>)';
+		$output .= ' (<em>'.__('Creator').'</em>)<br>';
 	}
 	
 	

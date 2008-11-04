@@ -323,4 +323,18 @@ CREATE TABLE `tsla` (
 ALTER TABLE `tsla` ADD FOREIGN KEY (`id_sla_base`) REFERENCES tsla(`id`)
   ON UPDATE CASCADE ON DELETE SET default;
 
+CREATE TABLE `tproject_track` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_project` int(10) unsigned NOT NULL default '0',
+  `id_user` varchar(60) NOT NULL default '',
+  `state` tinyint unsigned NOT NULL default '0',
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  `id_aditional`  int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE SET default,
+  FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 

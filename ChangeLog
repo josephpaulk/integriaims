@@ -1,3 +1,10 @@
+2008-11-04  Sancho Lerena <slerena@artica.es>
+
+	* upgrade.sql: tproject_task table was not exist before.
+
+	* include/functions_form.php: Small fix for participant list
+	on an incident (a break like).
+
 2008-11-04  Esteban Sanchez  <estebans@artica.es>
 
 	* godmode/setup/event.php, godmode/setup/setup.php,
