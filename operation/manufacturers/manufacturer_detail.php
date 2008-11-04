@@ -108,7 +108,7 @@ if ($id || $new_manufacturer) {
 		$id_company_role = $manufacturer["id_company_role"];
 	}
 	
-	$table->width = "720px";
+	$table->width = "90%";
 	$table->class = "databox";
 	$table->data = array ();
 	$table->colspan = array ();
@@ -165,7 +165,7 @@ if ($id || $new_manufacturer) {
 	$manufacturers = get_db_all_rows_sql ($sql);
 	if ($manufacturers !== false) {
 		unset ($table);
-		$table->width = "720px";
+		$table->width = "90%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();

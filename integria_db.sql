@@ -490,7 +490,7 @@ CREATE TABLE `tkb_product` (
 );
 
 ALTER TABLE `tkb_product` ADD FOREIGN KEY (`parent`) REFERENCES tkb_product(`id`)
-     ON UPDATE CASCADE ON DELETE RESTRICT;
+     ON UPDATE CASCADE ON DELETE SET default;
 
 CREATE TABLE `tkb_data` (
   `id` int(6) unsigned NOT NULL auto_increment,

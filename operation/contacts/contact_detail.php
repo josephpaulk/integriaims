@@ -121,7 +121,7 @@ if ($id || $new_contact) {
 		$description = $contact['description'];
 	}
 	
-	$table->width = "720px";
+	$table->width = "90%";
 	$table->class = "databox";
 	$table->data = array ();
 	$table->colspan = array ();
@@ -182,7 +182,7 @@ if ($id || $new_contact) {
 	$contacts = get_db_all_rows_sql ($sql);
 	if ($contacts !== false) {
 		unset ($table);
-		$table->width = "720px";
+		$table->width = "90%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();

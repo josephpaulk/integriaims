@@ -59,9 +59,9 @@ if ($operation == "") {
 
 // Create task
 if ($operation == "insert") {
-	$name = get_parameter ("name");
-	$start = get_parameter ("start_date", date ("Y-m-d"));
-	$end = get_parameter ("end_date", date ("Y-m-d"));
+	$name = get_parameter ('name');
+	$start = get_parameter ('start_date', date ("Y-m-d"));
+	$end = get_parameter ('end_date', date ("Y-m-d"));
 	
 	if ($name == '') {
 		$operation = 'create';
@@ -70,14 +70,14 @@ if ($operation == "insert") {
 		$operation = 'create';
 		$result_output = '<h3 class="error">'.__('Begin date could not be before end date').'</h3>';
 	} else {
-		$description = get_parameter ("description");
-		$priority = get_parameter ("priority", 0);
-		$completion = get_parameter ("completion", 0);
-		$parent = get_parameter ("parent", 0);
-		$hours = get_parameter ("hours", 0);
-		$periodicity = get_parameter ("periodicity", "none");
-		$estimated_cost = get_parameter ("estimated_cost", 0);
-		$id_group = get_parameter ("group", 1);
+		$description = (string) get_parameter ('description');
+		$priority = (int) get_parameter ('priority');
+		$completion = (int) get_parameter ('completion');
+		$parent = (int) get_parameter ('parent');
+		$hours = (int) get_parameter ('hours');
+		$periodicity = (string) get_parameter ('periodicity', 'none');
+		$estimated_cost = (int) get_parameter ('estimated_cost');
+		$id_group = (int) get_parameter ('group', 1);
 	
 		$sql = sprintf ('INSERT INTO ttask (id_project, name, description, priority,
 			completion, start, end, id_parent_task, id_group, hours, estimated_cost,
@@ -124,17 +124,17 @@ if ($operation == "update") {
 		include ("general/noaccess.php");
 		exit;
 	}
-	$name = get_parameter ("name");
-	$description = get_parameter ("description");
-	$priority = get_parameter ("priority");
-	$completion = get_parameter ("completion");
-	$parent = get_parameter ("parent");
-	$start = get_parameter ("start_date");
-	$end = get_parameter ("end_date");
-	$hours = get_parameter ("hours",0);
-	$estimated_cost = (float) get_parameter ("estimated_cost");
-	$id_group = get_parameter ("group",1);
-	$periodicity = get_parameter ("periodicity", "none");
+	$name = (string) get_parameter ('name');
+	$description = (string) get_parameter ('description');
+	$priority = (int) get_parameter ('priority');
+	$completion = (int) get_parameter ('completion');
+	$parent = (int) get_parameter ('parent');
+	$hours = (int) get_parameter ('hours');
+	$periodicity = (string) get_parameter ('periodicity', 'none');
+	$estimated_cost = (int) get_parameter ('estimated_cost');
+	$id_group = (int) get_parameter ('group', 1);
+	$start = get_parameter ('start_date', date ("Y-m-d"));
+	$end = get_parameter ('end_date', date ("Y-m-d"));
 
 	$sql = sprintf ('UPDATE ttask SET name = "%s", description = "%s",
 			priority = %d, completion = %d,
@@ -198,7 +198,7 @@ if ($operation == "create") {
 	print_input_hidden ('operation', 'update');
 }
 
-$table->width = '750px';
+$table->width = '90%x';
 $table->class = 'databox';
 $table->rowspan = array ();
 $table->colspan = array ();

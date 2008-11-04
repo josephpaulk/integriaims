@@ -101,6 +101,7 @@ echo "<title>".$config["sitename"]."</title>";
 <script type="text/javascript" src="include/js/jquery.ui.textarearesizer.js"></script>
 <!--[if lte IE 7]>
 <script type="text/javascript" src="include/js/jquery.bgiframe.js"></script>
+<link rel="stylesheet" href="include/styles/integria-ie-fixes.css" type="text/css" />
 <![endif]-->
 
 <?php
@@ -151,7 +152,7 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 	// There is no user connected
 	echo '</head>';
 	echo '<body bgcolor="#ffffff">';
-	include "general/login_page.php";
+	require ('general/login_page.php');
 	exit;
 } else {
 	// Create id_user variable in $config hash, of ALL pages.
@@ -163,7 +164,10 @@ $logout = (bool) get_parameter ('logout');
 if ($logout) {
 	echo '</head>';
 	echo '<body bgcolor="#ffffff">';
-	include "general/logoff.php";
+	$_REQUEST = array ();
+	$_GET = array ();
+	$_POST = array ();
+	require ('general/login_page.php');
 	$iduser = $_SESSION["id_usuario"];
 	logoff_db ($iduser, $config["REMOTE_ADDR"]);
 	session_unregister ("id_usuario");

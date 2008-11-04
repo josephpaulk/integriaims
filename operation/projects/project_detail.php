@@ -27,7 +27,6 @@ if (! give_acl ($config["id_user"], 0, "PR")) {
 	exit;
 }
 
-
 $create_mode = 0;
 $name = "";
 $description = "";
@@ -117,7 +116,7 @@ if ($create_mode == 0){
 	echo __('Create project')."</h2>";
 }
 
-echo '<table width=740 class="databox" >';
+echo '<table width="90%" class="databox" >';
 
 // Name
 
@@ -210,12 +209,12 @@ if ($id_project) {
 
 // Description
 
-echo '<tr><td class="datos2" colspan="4"><textarea name="description" style="height: 300px; width: 720px">';
+echo '<tr><td class="datos2" colspan="4"><textarea name="description" style="height: 300px;">';
 	echo $description;
 echo "</textarea>";
 
 echo "</table>";
-echo '<div style="width:740px" class="button">';
+echo '<div style="width:90%" class="button">';
 
 if (give_acl ($config["id_user"], 0, "PM") || $config["id_user"] == $id_owner) {
 	if ($id_project) {
@@ -244,5 +243,6 @@ if ($id_project) {
 
 $(document).ready (function () {
 	configure_range_dates (null);
+	$("textarea").TextAreaResizer ();
 });
 </script>

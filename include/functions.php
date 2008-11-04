@@ -593,4 +593,8 @@ function enterprise_include ($filename) {
 	}
 	return ENTERPRISE_NOT_HOOK;
 }
+
+function round_number ($number, $rounder = 5) {
+	return (int) ($number / $rounder + 0.5) * $rounder;
+}  
 ?>

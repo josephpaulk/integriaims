@@ -144,8 +144,8 @@ if (! $id) {
 		echo "<h2>".__('Create inventory object')."</h2>";
 }
 
-$table->class = "databox";
-$table->width = "740px";
+$table->class = 'databox';
+$table->width = '90%';
 $table->data = array ();
 $table->colspan = array ();
 
@@ -245,7 +245,7 @@ if ($has_permission) {
 	print_table ($table);
 
 
-	echo '<div style="width:740px;" class="action-buttons button">';
+	echo '<div style="width:'.$table->width.'" class="action-buttons button">';
 	if ($id) {
 		print_input_hidden ('update_inventory', 1);
 		print_input_hidden ('id', $id);

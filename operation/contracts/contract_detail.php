@@ -134,7 +134,7 @@ if ($id | $new_contract) {
 		$id_sla = $contract["id_sla"];
 	}
 	
-	$table->width = '740px';
+	$table->width = '90%';
 	$table->class = 'databox';
 	$table->colspan = array ();
 	$table->colspan[3][0] = 2;
@@ -194,7 +194,7 @@ if ($id | $new_contract) {
 	$contracts = get_db_all_rows_sql ($sql);
 	if ($contracts !== false) {
 		
-		$table->width = "720px";
+		$table->width = "90%";
 		$table->class = "listing";
 		$table->cellspacing = 0;
 		$table->cellpadding = 0;

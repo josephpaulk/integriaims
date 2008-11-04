@@ -14,17 +14,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-/*
-CREATE TABLE `tproject_group` (
-  `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL default '',
-  `icon` varchar(50) default NULL,
-  PRIMARY KEY  (`id`)
-);*/
-
 global $config;
 
-check_login();
+check_login ();
 
 if (give_acl($config["id_user"], 0, "IM")==0) {
 	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access company role management");
@@ -34,39 +26,39 @@ if (give_acl($config["id_user"], 0, "IM")==0) {
 
 $id_user = $config["id_user"];
 
-// =======================
-// CREATE
-// =======================
+$id = (int) get_parameter ('id');
+$new_group = (bool) get_parameter ('new_group');
+$insert_group = (bool) get_parameter ('insert_group');
+$update_group = (bool) get_parameter ('update_group');
+$delete_group = (bool) get_parameter ('delete_group');
 
-if (isset($_GET["create2"])){ //
+if ($insert_group) {
+	$name = (string) get_parameter ('name');
+	$icon= (string) get_parameter ('icon');
+	$sql = sprintf ('INSERT INTO tproject_group (name, icon)
+		VALUES ("%s", "%s")', $name, $icon);
 
-	$name = get_parameter ("name","");
-	$icon= get_parameter ("icon","");
-	$sql_insert="INSERT INTO tproject_group (`name`, `icon` ) VALUE ('$name', '$icon') ";
-
-	$result=mysql_query($sql_insert);
-	if (! $result)
-		echo "<h3 class='error'>".__('Project group cannot be created')."</h3>";
-	else {
-		echo "<h3 class='suc'>".__('Project group has been created successfully')."</h3>";
-		$id_data = mysql_insert_id();
-		insert_event ("PROJECT GROUP CREATED", $id_data, 0, $name);
+	$id = process_sql ($sql, 'insert_id');
+	if (! $id) {
+		echo '<h3 class="error">'.__('Project group cannot be created').'</h3>';
+	} else {
+		echo '<h3 class="suc">'.__('Project group has been created successfully').'</h3>';
+		insert_event ("PROJECT GROUP CREATED", $id, 0, $name);
 	}
+	$id = 0;
 }
 
-// =======================
 // UPDATE
-// =======================
+if ($update_group) {
+	$name = (string) get_parameter ('name');
+	$icon= (string) get_parameter ('icon');
 
-if (isset($_GET["update2"])){ // if modified any parameter
-	$id = get_parameter ("id","");
-	$name = get_parameter ("name","");
-	$icon = get_parameter ("icon","");
+	$sql = sprintf ('UPDATE tproject_group
+		SET icon = "%s", name = "%s"
+		WHERE id = %d',
+		$icon, $name, $id);
 
-	$sql_update ="UPDATE tproject_group
-	SET icon = '$icon', name = '$name' WHERE id = $id";
-
-	$result=mysql_query($sql_update);
+	$result = process_sql ($sql);
 	if (! $result)
 		echo "<h3 class='error'>".__('Project group cannot be updated')."</h3>";
 	else {
@@ -74,132 +66,95 @@ if (isset($_GET["update2"])){ // if modified any parameter
 		insert_event ("PROJECT GROUP UPDATED", $id, 0, $name);
 	}
 }
-// =======================
+
 // DELETE
-// =======================
-
-if (isset($_GET["delete"])){ // if delete
-	$id = get_parameter ("delete",0);
-	$name = get_db_sql  ("SELECT name FROM tproject_group WHERE id = $id ");
-	$sql_delete= "DELETE FROM tproject_group WHERE id = $id";
-	$result=mysql_query($sql_delete);
-	insert_event ("PROJECT GROUP DELETED", $id, 0, "$name");
-	echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
+if ($delete_group) {
+	$name = get_db_value ('name', 'tproject_group', 'id', $id);
+	$sql = sprintf ('DELETE FROM tproject_group WHERE id = %d', $id);
+	process_sql ($sql);
+	insert_event ("PROJECT GROUP DELETED", $id, 0, $name);
+	echo '<h3 class="suc">'.__('Deleted successfully').'</h3>';
+	$id = 0;
 }
 
-if (isset($_GET["update2"])){
-	// After apply update, let's redirecto to UPDATE form again.
-	$_GET["update"]= $id;
-}
+echo "<h2>".__('Project group management')."</h2>";
 
-
-// =======================
 // FORM (Update / Create)
-// =======================
-
-if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
-	if (isset($_GET["create"])){
-		$id = -1;
-		$name = "";
-		$icon = "";
-		$description = "";
+if ($id || $new_group) {
+	if ($new_group) {
+		$name = '';
+		$icon = '';
+		$description = '';
 	} else {
-		$id = get_parameter ("update", -1);
-		$row = get_db_row ("tproject_group", "id", $id);
-		$name = $row["name"];
-		$icon = $row["icon"];
+		$group = get_db_row ("tproject_group", "id", $id);
+		$name = $group["name"];
+		$icon = $group["icon"];
 	}
+	
+	$table->width = '90%';
+	$table->class = 'databox';
+	$table->data = array ();
+	
+	$table->data[0][0] = print_input_text ('name', $name, '', 60, 100, true,
+		__('Project group name'));
 
-	echo "<h2>".__('Project group management')."</h2>";
-	if ($id == -1){
-		echo "<h3>".__('Create a project group')."</a></h3>";
-		echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/project_group_detail&create2=1'>";
+	$icons = list_files ('images/project_groups_small/', "png", 1, 0, 'svn');
+	$table->data[1][0] = print_select ($icons, "icon", $icon, '', '', 0, true,
+		false, false, __('Icon'));
+	
+	echo '<form method="post">';
+	print_table ($table);
+	echo '<div class="button" style="width: '.$table->width.'">';
+	if ($id) {
+		print_submit_button (__('Update'), "enviar", false, 'class="sub upd"');
+		print_input_hidden ('update_group', 1);
+		print_input_hidden ('id', $id);
+	} else {
+		print_submit_button (__('Create'), "enviar", false, 'class="sub next"');
+		print_input_hidden ('insert_group', 1);
 	}
-	else {
-		echo "<h3>".__('Update project group')."</a></h3>";
-		echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/project_group_detail&update2=1'>";
-		print_input_hidden ("id", "$id", false, '');
-	}
-
-	echo "<table width=620 class='databox'>";
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo __('Project group name');
-
-	echo "<tr>";
-	echo "<td class=datos colspan=4>";
-	print_input_text ("name", $name, "", 60, 100, false);
-
-
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo __('Icon');
-
-	echo "<tr>";
-	echo "<td class=datos colspan=4>";
-	$ficheros = list_files ('images/project_groups_small/', "png", 1, 0, 'svn');
-	echo print_select ($ficheros, "icon", $icon, '', '', 0, true, 0, false, false);
-	echo "</table>";
-
-	echo "<table width=620 class='button'>";
-	echo "<tr>";
-	echo "<td class='datos3' align=right>";
-	if ($id == -1)
-		print_submit_button (__('Create'), "enviar", false, "class='sub next'", false);
-	else
-		print_submit_button (__('Update'), "enviar", false, "class='sub upd'", false);
-	echo "</table>";
+	echo "</div>";
 	echo "</form>";
-
-	// Get some space here
-	echo "<div style='min-height:50px'></div>";
-}
-
-// =======================
-// Show LIST of items
-// =======================
-if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h2>".__('Project groups')."</h2>";
-
-	$sql1 = "SELECT * FROM tproject_group ORDER BY name";
-	$color =0;
-	if (($result=mysql_query($sql1)) AND (mysql_num_rows($result) >0)){
-
-		$table->width = "720";
+} else {
+	$groups = get_db_all_rows_in_table ('tproject_group', 'name');
+	
+	$table->width = "90%";
+	
+	if ($groups !== false) {
 		$table->class = "listing";
-		$table->cellspacing = 0;
-		$table->cellpadding = 0;
 		$table->data = array ();
-		$table->size = array ();
 		$table->style = array ();
-		$table->colspan = array ();
+		$table->style[0] = 'font-weight: bold';
+		$table->size = array ();
+		$table->size[1] = '40px';
+		$table->align = array ();
+		$table->align[1] = 'center';
+		$table->head = array ();
 		$table->head[0] = __('Name');
-		$table->head[1] = __('Icon');
-		$table->head[2] = __('Delete');
-		$counter = 0;
-		while ($row=mysql_fetch_array($result)){
+		$table->head[1] = __('Delete');
+		
+		foreach ($groups as $group) {
+			$data = array ();
+			
 			// Name
-			$table->data[$counter][0] = "<b><a href='index.php?sec=projects&sec2=operation/projects/project_group_detail&update=".$row["id"]."'>".$row["name"]."</a></b>";
-
-			// Contracts (link to new window)
-			$table->data[$counter][1] = "<img src='images/project_groups_small/".$row["icon"]."' border=0>";
-
-			// Delete
-			$table->data[$counter][2] = "<a href='index.php?sec=projects&
+			$data[0] = '<img src="images/project_groups_small/'.$group["icon"].'" /> ';
+			$data[0] .= '<a href=index.php?sec=projects&sec2=operation/projects/project_group_detail&id='.$group["id"]."'>".$group["name"]."</a>";
+			
+			$data[1] = '<a href="index.php?sec=projects&
 						sec2=operation/projects/project_group_detail&
-						delete=".$row["id"]."'
-						onClick='if (!confirm(\' ".__('Are you sure?')."\'))
-						return false;'>
-						<img border='0' src='images/cross.png'></a>";
-			$counter++;
+						delete_group=1&id='.$group["id"].'"
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
+						return false;">
+						<img src="images/cross.png" /></a>';
+			array_push ($table->data, $data);
 		}
 		print_table ($table);
 	}
-	echo "<table width=720 class='button'>";
-	echo "<tr><td align='right'>";
-	echo "<form method=post action='index.php?sec=projects&
-	sec2=operation/projects/project_group_detail&create=1'>";
-	echo "<input type='submit' class='sub next' name='crt' value='".__('Create group')."'>";
-	echo "</form></td></tr></table>";
+	
+	echo '<div width="'.$table->width.'" class="button">';
+	echo '<form method="post">';
+	print_submit_button (__('Create group'), "crt", false, 'class="sub next"');
+	print_input_hidden ('new_group', 1);
+	echo "</form></div>";
 } // end of list
 ?>

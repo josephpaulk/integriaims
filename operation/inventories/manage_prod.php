@@ -18,18 +18,17 @@ global $config;
 
 check_login ();
 
-if (! give_acl($config["id_user"], 0, "KM")) {
-	audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access KB Management");
+if (! give_acl ($config["id_user"], 0, "KM")) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access KB Management");
 	require ("general/noaccess.php");
 	exit;
 }
 
-$id_user = $config["id_user"];
-
 $id = (int) get_parameter ('id');
 $create = (bool) get_parameter ('create');
 $insert_product = (bool) get_parameter ('insert_product');
-$update = (bool) get_parameter ('update');
+$update_product = (bool) get_parameter ('update_product');
+$delete_product = (bool) get_parameter ('delete_product');
 $get_icon = (bool) get_parameter ('get_icon');
 
 if ($get_icon) {
@@ -41,43 +40,42 @@ if ($get_icon) {
 	}
 }
 
-
 // Database Creation
 // ==================
 if ($insert_product) {
 	$name = (string) get_parameter ("name");
-	$parent = (int) get_parameter ("product",0);
-	$icon = (string) get_parameter ("icon","");
-	$description = (string) get_parameter ("description","");
+	$parent = (int) get_parameter ("product");
+	$icon = (string) get_parameter ("icon");
+	$description = (string) get_parameter ("description");
+	
 	$sql = sprintf ('INSERT INTO tkb_product (name, description, parent, icon) 
-		  		 VALUES ("%s", "%s", %d, "%s")',
-		  		 $name, $description, $parent, $icon);
-	$result = mysql_query ($sql);	
-	if (! $result)
-		echo "<h3 class='error'>".__('KB Product cannot be created')."</h3>"; 
-	else {
-		echo "<h3 class='suc'>".__('KB Product created ok')."</h3>";
-		$id_cat = mysql_insert_id();
-		insert_event ("PRODUCT CREATED", $id_cat, 0, $name);
+			VALUES ("%s", "%s", %d, "%s")',
+			$name, $description, $parent, $icon);
+	$id = process_sql ($sql, 'insert_id');
+	if (! $id) {
+		echo '<h3 class="error">'.__('KB Product cannot be created').'</h3>';
+	} else {
+		echo '<h3 class="suc">'.__('KB Product created ok').'</h3>';
+		insert_event ("PRODUCT CREATED", $id, 0, $name);
 	}
+	$id = 0;
 }
 
-
 // Database UPDATE
-// ==================
-if (isset($_GET["update2"])){ // if modified any parameter
-	$id = get_parameter ("id","");
-	$name = get_parameter ("name","");
-	$parent = get_parameter ("product",0);
-	$icon = get_parameter ("icon","");
-	$description = get_parameter ("description","");
-	$sql_update ="UPDATE tkb_product
-	SET name = '$name', icon = '$icon', description = '$description', parent = '$parent' 
-	WHERE id = $id";
-	$result=mysql_query($sql_update);
-	if (! $result)
+if ($update_product) {
+	$name = (string) get_parameter ("name");
+	$parent = (int) get_parameter ("product");
+	$icon = (string) get_parameter ("icon");
+	$description = (string) get_parameter ("description");
+	
+	$sql = sprintf ('UPDATE tkb_product SET name = "%s", icon = "%s",
+		description = "%s", parent = %d
+		WHERE id = $id',
+		$name, $icon, $description, $parent, $id);
+	$result = process_sql ($sql);
+	if (! $result) {
 		echo "<h3 class='error'>".__('Product cannot be updated')."</h3>"; 
-	else {
+	} else {
 		echo "<h3 class='suc'>".__('Product updated ok')."</h3>";
 		insert_event ("PRODUCT UPDATED", $id, 0, $name);
 	}
@@ -86,22 +84,21 @@ if (isset($_GET["update2"])){ // if modified any parameter
 
 // Database DELETE
 // ==================
-if (isset($_GET["delete_prod"])){ // if delete
-	$id = get_parameter ("delete_prod",0);
-	
-	// First delete from tagente_modulo
-	$sql_delete= "DELETE FROM tkb_product WHERE id = $id";
-	$result=mysql_query($sql_delete);
-
+if ($delete_product) {
 	// Move parent who has this product to 0
-	mysql_query("UPDATE tkb_product SET parent = 0 WHERE parent = $id");		
+	$sql = sprintf ('UPDATE tkb_product SET parent = 0 WHERE parent = %d', $id);
+	process_sql ($sql);
+	
+	$sql = sprintf ('DELETE FROM tkb_product WHERE id = %d', $id);
+	$result = process_sql ($sql);
+
 	if (! $result)
-		echo "<h3 class='error'>".lang_string("Deleted successfully")."</h3>"; 
+		echo '<h3 class="error">'.__("Deleted successfully").'</h3>';
 	else
-		echo "<h3 class='suc'>".lang_string("Cannot be deteled")."</h3>";
+		echo '<h3 class="suc">'.__("Cannot be deteled").'</h3>';
 }
 
-if ($create || $update) {
+if ($create || $id) {
 	if ($create) {
 		$icon = "";
 		$description = "";
@@ -109,124 +106,98 @@ if ($create || $update) {
 		$id = -1;
 		$parent = -1;
 	} else {
-		$id = get_parameter ("update", -1);
-		$row = get_db_row ("tkb_product", "id", $id);
-		$description = $row["description"];
-		$name = $row["name"];
-		$icon = $row["icon"];
-		$parent = $row["parent"];
+		$product = get_db_row ("tkb_product", "id", $id);
+		$description = $product["description"];
+		$name = $product["name"];
+		$icon = $product["icon"];
+		$parent = $product["parent"];
 	}
 
-	echo "<h2>".__('Product management')."</h2>";	
-	if ($id == -1){
-		echo "<h3>".__('Create a new product')."</a></h3>";
-		echo "<form name=prodman method='post' action='index.php?sec=inventory&sec2=operation/inventories/manage_prod'>";
-		print_input_hidden ('insert_product', 1);
+	echo "<h2>".__('Product management')."</h2>";
+	if ($id == -1) {
+		echo "<h3>".__('Create a new product')."</h3>";
 	} else {
-		echo "<h3>".__('Update existing product')."</a></h3>";
-		echo "<form name=prodman2 method='post' action='index.php?sec=inventory&sec2=operation/inventories/manage_prod&update2'>";
-		echo "<input type=hidden name=id value='$id'>";
+		echo "<h3>".__('Update existing product')."</h3>";
 	}
 	
-	echo "<table cellpadding=4 cellspacing=4 width=500 class='databox'>";
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo __('Name');
-	echo "<td class=datos>";
-	echo "<input type=text size=45 name=name value='$name'>";
-
-	echo "<tr>";
-	echo "<td class=datos2>";
-	echo __('Description');
-	echo "<td class=datos2>";
-	echo "<input type=text size=50 name=description value='$description'>";
-
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo __('Icon');
-	echo "<td class=datos>";
+	$table->width = '90%';
+	$table->class = 'databox';
+	$table->colspan = array ();
+	$table->colspan[0][0] = 2;
+	$table->colspan[2][0] = 2;
+	$table->data = array ();
+	
+	$table->data[0][0] = print_input_text ('name', $name, '', 45, 100, true, __('Name'));
 	
 	$files = list_files ('images/products/', "png", 1, 0);
-	print_select ($files, 'icon', $icon, '', __('None'), "");
-	print_product_icon ($id);
+	$table->data[1][0] = print_select ($files, 'icon', $icon, '', __('None'), "", true, false, false, __('Icon'));
+	$table->data[1][0] .= print_product_icon ($id, true);
+	$table->data[1][1] = combo_kb_products ($parent, 1, __('Product'), true);
+	$table->data[2][0] = print_textarea ('description', 10, 50, $description, '',
+		true, __('Description'));
 	
-	echo "<tr>";
-	echo "<td class=datos2>";
-	echo __('Parent');
-	echo "<td class=datos2>";
-	combo_kb_products ($parent, 1);
-
-	echo "</table>";
-	echo "<table cellpadding=4 cellspacing=4 width=500>";
-	echo "<tr>";
-	echo "<td align=right>";
-	if ($id == -1)
-		echo "<input type=submit class='sub next' value='Create'>";
-	else
-		echo "<input type=submit class='sub upd' value='Update'>";
-	echo "</table></form>";
+	echo '<form method="post">';
+	print_table ($table);
+	echo '<div class="button" style="width: '.$table->width.'">';
+	if ($id == -1) {
+		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+		print_input_hidden ('insert_product', 1);
+	} else {
+		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
+		print_input_hidden ('id', $id);
+		print_input_hidden ('update_product', 1);
+	}
+	echo "</div></form>";
 }
 
 // Show list of product
 // =======================
-if (! $update && ! $create) {
-	echo "<h2>".__('Product management')."</h2>";	
-	echo "<h3>".__('Defined products')."</a></h3>";
-	$sql1='SELECT * FROM tkb_product ORDER BY parent, name';
-	$color =0;
-	if ($result=mysql_query($sql1)){
-		echo "<table width=700 class='listing'>";
-		echo "<th>".__('Icon')."</th>";
-		echo "<th>".__('Name')."</th>";
-		echo "<th>".__('Parent')."</th>";
-		echo "<th>".__('Description')."</th>";
-		echo "<th>".__('Items')."</th>";
-		echo "<th>".__('Delete')."</th>";
-		while ($row=mysql_fetch_array($result)){
-			if ($color == 1){
-				$tdcolor = "datos";
-				$color = 0;
-				}
-			else {
-				$tdcolor = "datos2";
-				$color = 1;
-			}
-			echo "<tr>";
-			// Icon
-			echo "<td class='$tdcolor' valign='top' align='center'>";
-			echo "<img src='images/products/".$row["icon"]."' border='0'>";
-			echo "</td>";
-			// Name
-			echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=inventory&
-					sec2=operation/inventories/manage_prod&update=".$row["id"]."'>".$row["name"]."</a></b></td>";
-			// Parent
-			echo "<td class='$tdcolor' valign='top'>".get_db_sql ("SELECT name FROM tkb_product WHERE id = ".$row["parent"]);
+if (! $id && ! $create) {
+	echo "<h2>".__('Product management')."</h2>";
+	$products = get_db_all_rows_in_table ('tkb_product', 'parent, name');
+	
+	$table->width = '90%';
+	
+	if ($products !== false) {
+		echo "<h3>".__('Defined products')."</h3>";
+		
+		$table->class = 'listing';
+		$table->data = array ();
+		$table->head = array ();
+		$table->head[0] = __('Name');
+		$table->head[1] = __('Parent');
+		$table->head[2] = __('Description');
+		$table->head[3] = __('Items');
+		$table->head[4] = __('Delete');
+		$table->style = array ();
+		$table->style[0] = 'font-weight: bold';
+		$table->align = array ();
+		$table->align[4] = 'center';
+		
+		echo '<table width="90%" class="listing">';
+		foreach ($products as $product) {
+			$data = array ();
 			
-			// Descripcion
-			echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
-			echo $row["description"];
-
-			// Items
-			echo "<td class='".$tdcolor."f9' align='center'>";
-			echo get_db_sql ("SELECT COUNT(id) FROM tkb_data WHERE id_product = ".$row["id"]);
-
-			// Delete
-			echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
-			echo "<a href='index.php?sec=inventory&
-						sec2=operation/inventories/manage_prod&
-						delete_prod=".$row["id"]."'
-						onClick='if (!confirm(\'".__('Are you sure?')."\'))
-						return false;'>
-						<img border='0' src='images/cross.png'></a>";
+			$data[0] = print_product_icon ($product['id'], true);
+			$data[0] .= ' <a href=index.php?sec=inventory&sec2=operation/inventories/manage_prod&id='.
+				$product['id'].'">'.$product['name'].'</a>';
+			$data[1] = get_db_value ('name', 'tkb_product', 'id', $product["parent"]);
+			$data[2] = substr ($product["description"], 0, 200);
+			$data[3] = get_db_value ('COUNT(id)', 'tkb_data', 'id_product', $product['id']);
+			$data[4] = '<a href=index.php?sec=inventory&sec2=operation/inventories/manage_prod&delete_product=1&id='.
+				$product["id"].' onClick="if (!confirm(\''.__('Are you sure?').'\'))
+				return false;"><img src="images/cross.png"></a>';
+			
+			array_push ($table->data, $data);
 		}
-		echo "</table>";
-	}			
-	echo "<table width=700 class='button'>";
-	echo "<tr><td align='right'>";
-	echo "<form method=post action='index.php?sec=inventory&sec2=operation/inventories/manage_prod'>";
+		print_table ($table);
+	}
+	
+	echo '<div class="button" style="width: '.$table->width.'">';
+	echo '<form method="post">';
 	print_input_hidden ('create', 1);
-	echo "<input type='submit' class='sub next' name='crt' value='".__('Create product')."'>";
-	echo "</form></td></tr></table>";
+	print_submit_button (__('Create product'), 'crt_btn', false, 'class="sub next"');
+	echo "</form></div>";
 } // end of list
 
 ?>

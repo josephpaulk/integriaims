@@ -142,7 +142,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 			else
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project'>".__('Workunits');
-			echo " ( $totalhours ".__('Hours')." )";
+			echo " ($totalhours ".__('Hours').")";
 			echo "</a></li>";
 		}
 
@@ -847,7 +847,7 @@ if (give_acl ($config["id_user"], 0, "PR")) {
 		AND id_user = "%s"',
 		$begin_week, $end_week, $config['id_user']);
 	$week_hours = get_db_sql ($sql);
-	$ratio = "$week_hours / $total_hours";
+	$ratio = $week_hours.__('over').$total_hours;
 	if ($week_hours < $total_hours)
 		echo '<img src="images/exclamation.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" />';
 	else
@@ -856,6 +856,4 @@ if (give_acl ($config["id_user"], 0, "PR")) {
 
 echo '</div></div>';
 // End of user box
-
-
 ?>

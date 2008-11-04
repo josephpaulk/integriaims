@@ -25,7 +25,7 @@ $id_user =$_SESSION["id_usuario"];
 
 echo "<h2>".__('Integria users')."</h2>";
 
-$table->width = '860px';
+$table->width = '100%';
 $table->class = 'listing';
 $table->data = array ();
 $table->head = array ();
@@ -41,7 +41,7 @@ foreach ($users as $user) {
 	
 	$data[0] = '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='
 		.$user['id_usuario'].'"><strong>'.$user['id_usuario'].'</strong></a>';
-	$data[1] = $user['fecha_registro'];
+	$data[1] = human_time_comparation ($user['fecha_registro']);
 	$data[2] = print_user_avatar ($user['id_usuario'], true, true);
 	$profiles = enterprise_hook ('get_user_profiles', array ($user['id_usuario']));
 	if ($profiles !== ENTERPRISE_NOT_HOOK) {
@@ -56,6 +56,6 @@ foreach ($users as $user) {
 echo "<div>";
 print_table ($table);
 echo "</div>";
-echo "</table>";
+
 enterprise_hook ('print_profiles_table');
 ?>

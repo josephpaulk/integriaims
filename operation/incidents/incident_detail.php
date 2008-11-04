@@ -430,8 +430,8 @@ if ($id) {
 
 echo '<div class="result">'.$result_msg.'</div>';
 
-$table->width = "700px";
-$table->class = "databox_color";
+$table->width = '90%';
+$table->class = 'databox_color';
 $table->id = "incident-editor";
 $table->size = array ();
 $table->size[0] = '25%';

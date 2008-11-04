@@ -16,7 +16,7 @@
 
 global $config;
 
-check_login();
+check_login ();
 
 if (! give_acl($config["id_user"], 0, "IM")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
@@ -90,7 +90,7 @@ if ($id || $new_building) {
 		$description = $building['description'];
 	}
 	
-	$table->width = "720px";
+	$table->width = "90%";
 	$table->class = "databox";
 	$table->data = array ();
 	$table->colspan = array ();
@@ -138,7 +138,7 @@ if ($id || $new_building) {
 	$buildings = get_db_all_rows_sql ($sql);
 	
 	if ($buildings !== false) {
-		$table->width = '720px';
+		$table->width = '90%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->size = array ();

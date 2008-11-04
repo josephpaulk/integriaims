@@ -24,7 +24,7 @@ echo "<h2>".__("Project overview")."</h2>";
 // -------------
 // Show headers
 // -------------
-echo "<table width='740' class='listing'>";
+echo "<table width='90%' class='listing'>";
 echo "<tr>";
 echo "<th>".__ ("Project group");
 echo "<th>".__ ("Icon");

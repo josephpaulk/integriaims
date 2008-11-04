@@ -14,11 +14,9 @@
 // GNU General Public License for more details.
 
 ?>
-<div style='height: 60px'>
-</div>
 <center>
-<div class='databox' id='login' style='height: 200px; padding-top: 20px;'>
-	<div style='padding-top: 5px;' id='login_in' style='height: 100px;'>
+<div class="databox" id="login">
+	<div id="login_in">
 <?php 
 	$action = "index.php";
 	$params = '';
@@ -34,31 +32,37 @@
 	foreach ($_POST as $name => $value)
 		print_input_hidden ($name, $value);
 ?>
-		<table cellpadding='4' cellspacing='1' width='350' class='blank'>
-		<tr><td rowspan='3' align='left' style="border-right: solid 1px #678;">
+		<table width="350px" class="blank">
+		<tr>
+		<td rowspan="3" style="text-align: left; border-right: solid 1px #678;">
 			<a href="index.php">
-			<img src="images/integria_white.png" border="0" alt="logo"></a>
+			<img src="images/integria_white.png" alt="logo">
+			</a><br />
 			<?php echo $config["version"]; ?>
-		<td rowspan='3' width='5'>
+		<td rowspan="3" width="5" />
 		<td>
-			Login <br>
-			<input class="login" type="text" name="nick" id="nick" value="">
-		</td></tr>
-		<tr><td>
-			Password <br>
-			<input class="login" type="password" name="pass" value="">
-		</td></tr>
-		<tr><td align='right'>
+			<?php print_input_text ('nick', '', '', '', 50, false, __('User')); ?>
+		</td>
+		</tr>
+		<tr>
+		<td>
+			<?php print_input_password ('pass', '', '', '', 50, false, __('Password')); ?>
+		</td>
+		</tr>
+		<tr>
+		<td align="right">
 			<br>
-			<input type="submit" class="sub next" value="Login">
-		</td></tr>
+			<?php print_submit_button (__('Login'), '', false, 'class="sub login"'); ?>
+		</td>
+		</tr>
 		</table>
 		</form>
 	</div>
-
 </div>
 </center>
 
 <script type="text/javascript">
-	document.getElementById('nick').focus();
+$(document).ready (function () {
+	$("#text-nick").focus ();
+});
 </script>

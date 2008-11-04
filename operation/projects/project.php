@@ -145,7 +145,7 @@ if ($search_text != "")
 if ($search_id_project_group)
 	$where_clause .= sprintf (' AND id_project_group = %d', $search_id_project_group);
 
-$table->width = '400px';
+$table->width = '90%';
 $table->class = 'search-table';
 $table->style = array ();
 $table->style[0] = 'font-weight: bold;';
@@ -163,15 +163,13 @@ echo '</form>';
 
 unset ($table);
 
-$table->width = '740px';
+$table->width = '90%';
 $table->class = 'listing';
 $table->style = array ();
 $table->style[0] = 'font-weight: bold';
 $table->align = array ();
 $table->align[8] = 'center';
 $table->head = array ();
-echo "<table width='740' class='listing'>";
-echo "<tr>";
 $table->head[0] = __('Name');
 // PG: Abbreviation for "Project group"
 $table->head[1] = __ ('PG');

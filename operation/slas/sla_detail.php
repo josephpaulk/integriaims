@@ -120,7 +120,7 @@ if ($id || $new_sla) {
 		$enforced = $sla['enforced'];
 	}
 
-	$table->width = "720px";
+	$table->width = "90%";
 	$table->class = "databox";
 	$table->data = array ();
 	$table->colspan = array ();
@@ -178,7 +178,7 @@ if ($id || $new_sla) {
 	$slas = get_db_all_rows_sql ($sql);
 	
 	if ($slas !== false) {
-		$table->width = "720px";
+		$table->width = "90%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();

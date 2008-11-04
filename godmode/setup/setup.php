@@ -19,7 +19,7 @@ global $config;
 
 check_login ();
 	
-if (dame_admin ($config["id_user"]) == 0) {
+if (! dame_admin ($config["id_user"])) {
 	audit_db ("ACL Violation", $config["REMOTE_ADDR"], "No administrator access", "Trying to access setup");
 	require ("general/noaccess.php");
 	exit;
@@ -52,7 +52,7 @@ if ($update) {
 
 echo "<h2>".__('Integria Setup')."</h2>";
 
-$table->width = '740px';
+$table->width = '90%';
 $table->class = 'databox';
 $table->colspan = array ();
 $table->colspan[4][0] = 2;
@@ -92,6 +92,10 @@ print_input_hidden ('update', 1);
 print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"');
 echo '</div>';
 echo '</form>';
-
-
 ?>
+
+<script type="text/javascript">
+$(document).ready (function () {
+	$("textarea").TextAreaResizer ();
+});
+</script>

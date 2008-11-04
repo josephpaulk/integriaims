@@ -16,9 +16,13 @@
 
 global $config;
 
-function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0, $access = "IR", $return = false, $label = false) {
+function combo_user_visible_for_me ($id_user = 0, $form_name ="user_form", $any = 0, $access = "IR", $return = false, $label = false) {
 	global $config;
-	$userlist = array();
+	
+	if ($id_user == 0)
+		$id_user = $config['id_user'];
+	
+	$userlist = array ();
 	$output = '';
 
 	$values = get_user_visible_users ($id_user, $access, true);
@@ -163,33 +167,23 @@ function combo_kb_categories ($id_category){
 
 // Returns a combo with products
 // ----------------------------------------------------------------------
-function combo_kb_products ($id_product, $show_none = 0){
-
-	$sql = "SELECT * FROM tkb_product WHERE id != $id_product ORDER BY parent, name ";
-	$result = mysql_query($sql);
-	echo "<select name='product' style='width: 180px;'>";
-	if ($id_product > 0){
-		$parent = get_db_value ("parent","tkb_product","id",$id_product);
-		$parent_name = get_db_value ("name","tkb_product","id",$parent);
-		$name = get_db_value ("name","tkb_product","id",$id_product);
-		if ($parent != 0)
-			echo "<option value='".$id_product."'>".$parent_name."/".$name;
-		else
-			echo "<option value='".$id_product."'>".$name;
-	} else {
-		echo "<option value='0'>".__("Any");
+function combo_kb_products ($id_product, $show_none = 0, $label = '', $return = false) {
+	$output = '';
+	
+	$none = '';
+	$none_value = '';
+	if ($show_none) {
+		$none = __('None');
+		$none_value = 0;
 	}
 	
-	if ($show_none == 1)
-		echo "<option value=0>".__('None');
-	while ($row=mysql_fetch_array($result)){
-		$parent = get_db_value ("name","tkb_product","id",$row["parent"]);
-		if ($parent != "")
-			echo "<option value='".$row["id"]."'>".$parent . "/".$row["name"];
-		else
-			echo "<option value='".$row["id"]."'>".$row["name"];
-	}
-	echo "</select>";
+	$sql = "";
+	$output = print_select_from_sql ('SELECT id, name FROM tkb_product ORDER BY name',
+		'product', $id_product, '', $none, $none_value, true, false, false, $label);
+	
+	if ($return)
+		return $output;
+	echo $output;
 }
 
 
@@ -363,7 +357,7 @@ function combo_task_user ($actual, $id_user, $disabled = 0, $show_vacations = 0,
 
 // Returns a combo with the tasks that current user is working on
 // ----------------------------------------------------------------------
-function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false) {
+function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false) {
 	$output = '';
 	$values = array ();
 	
@@ -382,7 +376,7 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 			ORDER BY ttask.id_project', $id_user);
 	
 	$output .= print_select_from_sql ($sql, 'task', $actual, '', __('N/A'), '0', true,
-				false, false, false);
+		false, false, $label);
 
 	if ($return)
 		return $output;
@@ -448,17 +442,17 @@ function show_workunit_data ($workunit, $title) {
 	$id_group = get_db_sql ($sql);
 
 	// ACL Check for visibility
-	if (($public == 0) AND ($id_user != $config["id_user"]) AND (! give_acl ($config["id_user"], $id_group, "IM")))
+	if (!$public && $id_user != $config["id_user"] && ! give_acl ($config["id_user"], $id_group, "IM"))
 		return;
 
 	// Show data
-	echo "<div class='notetitle'>"; // titulo
+	echo '<div class="notetitle">';
 	echo "<span>";
 	print_user_avatar ($id_user, true);
 	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
 	echo $id_user;
 	echo "</a>";
-	echo " ".__('said on ').' '.$timestamp;
+	echo " ".__('said').'<span title="'.$timestamp.'">'.human_time_comparation ($timestamp).'</span>';
 	echo "</span>";
 
 	// Public WU ?
@@ -480,18 +474,18 @@ function show_workunit_data ($workunit, $title) {
 	// Body
 	echo "<div class='notebody'>";
 	if (strlen ($nota) > 1024) {
-		echo clean_output_breaks (substr ($nota, 0, 1024));
-		echo "<br><br>";
+		echo wordwrap (clean_output_breaks (substr ($nota, 0, 1024)), 70, '-<br />', true);
+		echo "<br /><br />";
 		echo "<a href='index.php?sec=incidents&sec2=operation/common/workunit_detail&id=".$id_workunit."&title=$title'>";
 		echo __('Read more...');
 		echo "</a>";
 	} else {
-		echo clean_output_breaks ($nota);
+		echo wordwrap (clean_output_breaks ($nota), 70, '-<br />', true);
 	}
 	echo "</div>";
 }
 
-function topi_richtext ( $string ){
+function topi_richtext ($string) {
 	$imageBullet = "<img src='images/bg_bullet_full_1.gif'>";
 	$string = str_replace ( "->", $imageBullet, $string);
 	$string = str_replace ( "*", $imageBullet, $string);

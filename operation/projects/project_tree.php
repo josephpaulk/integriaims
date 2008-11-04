@@ -19,84 +19,54 @@
 
 global $config;
 
-if (check_login() != 0) {
-    audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
-    require ("general/noaccess.php");
-    exit;
-}
-    
-if (give_acl($config["id_user"], 0, "IR") != 1){
-    // Doesn't have access to this page
-    audit_db ($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
-    include ("general/noaccess.php");
-    exit;
+check_login ();
+
+if (! give_acl ($config["id_user"], 0, "IR")) {
+	// Doesn't have access to this page
+	audit_db ($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
+	include ("general/noaccess.php");
+	exit;
 }
 
 $id_user = get_parameter ("user_form", $config["id_user"]);
 $completion = get_parameter ("completion", 100);
 $project_kind = get_parameter ("project_kind", "defined_end");
 
-echo "<form name='xx' method=post action='index.php?sec=projects&sec2=operation/projects/project_tree'>";
 // Show user
+$table->width = '90%';
+$table->class = 'blank';
+$table->data = array ();
+$table->data[0][0] = combo_user_visible_for_me ($id_user, "user_form", 0, "PR", true, __('User'));
 
+$completions = array ();
+$completions[-1] = __('All');
+$completions[100] = __('Not finished');
+$completions[666] = __('Done');
+$table->data[0][1] = print_select ($completions, 'completion', '', $completion,
+	'', '', true, false, false, __('Completion'));
 
-echo "<table class='blank'>";
+$table->data[0][2] = print_select ($completions, 'completion', '', $completion,
+	'', '', true, false, false, __('Progress'));
 
-echo "<tr><td>";
-echo __('User');
-echo "</td>";
+$types = array ();
+$types['all'] = __('All');
+$types['defined_end'] = __('Defined end');
+$table->data[0][3] = print_select ($types, 'project_kind', '', $project_kind,
+	'', '', true, false, false, __('Type'));
 
-echo "<td>";
-combo_user_visible_for_me ($id_user, "user_form", 0, "PR");
-echo "</td>";
-
-echo "<td>";
-echo __('Progress');
-echo "</td>";
-
-echo "<td>";
-// Show completion level
-echo "<select name='completion'>";
-if ($completion == -1)
-    echo "<option value=-1>All";
-if ($completion == 100)
-    echo "<option value=100>Not finished";
-if ($completion == 666)
-    echo "<option value=666>Done";
-
-echo "<option value=-1>All";
-echo "<option value=100>Not finished";
-echo "<option value=666>Done";
-echo "</select>";
-echo "</td>";
-
-echo "<td>";
-echo __('Project type');
-echo "</td>";
-
-echo "<td>";
-// Project kind (all time or defined end)
-echo "<select name='project_kind'>";
-if ($project_kind == "all")
-    echo "<option value=all>All projects";
-if ($completion == "defined_end")
-    echo "<option value='defined_end'>Defined end";
-
-echo "<option value='defined_end'>Defined end";
-echo "<option value='all'>All projects";
-echo "</select>";
-echo "</td>";
-
-echo "<td>";
-echo "<input type=submit value=go class='sub upd'>";
-echo "</td></tr></table>";
-echo "</form>";
+echo '<form method="post">';
+print_table ($table);
+echo '<div class="button" style="width: '.$table->width.'">';
+print_submit_button (__('Update'), '', false, 'class="sub upd"');
+echo '</div>';
+echo '</form>';
 
 if ($id_user != ""){
-    $mapfilename = $config["base_url"]. "/attachment/tmp/$id_user.projectall.map";
+	$mapfilename = $config["base_url"]. "/attachment/tmp/$id_user.projectall.map";
 
-    echo "<A HREF='$mapfilename'>";
-    echo "<img border=0  src='include/functions_graph.php?type=all_project_tree&project_kind=$project_kind&id_user=$id_user&completion=$completion' ISMAP></A>";
+	echo '<a href="'.$mapfilename.'">';
+	echo "<img src='include/functions_graph.php?type=all_project_tree&project_kind=$project_kind&id_user=$id_user&completion=$completion'>";
+	echo '</a>';
 }
 
 ?>

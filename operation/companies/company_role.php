@@ -88,7 +88,7 @@ if ($id || $new_role) {
 		$description = $role['description'];
 	}
 	
-	$table->width = '720px';
+	$table->width = '90%';
 	$table->class = 'databox';
 	$table->data = array ();
 	$table->colspan = array ();
@@ -136,7 +136,7 @@ if ($id || $new_role) {
 
 	if ($roles !== false) {
 
-		$table->width = "720";
+		$table->width = "90%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();

@@ -4,31 +4,27 @@ global $config;
 
 check_login ();
 
-$id_project = get_parameter ("id_project", 0);
-$id_task = get_parameter ("id_task", 0);
-$operation = get_parameter ("operation", "");
-// Get names
-if ($id_project != 0)
-	$project_name = get_db_value ("name", "tproject", "id", $id_project);
-else
-	$project_name = "";
-
-if ($id_task != 0)
-	$task_name = get_db_value ("name", "ttask", "id", $id_task);
-else
-	$task_name = "";
+$id_project = (int) get_parameter ("id_project");
+$id_task = (int) get_parameter ("id_task");
+$operation = (string) get_parameter ("operation");
 
 if (! $id_project) {
 	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager withour project");
-	echo "ASDSADSA";
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager without project");
 	include ("general/noaccess.php");
 	exit;
 }
 
+// Get names
+$project_name = get_db_value ("name", "tproject", "id", $id_project);
+
+$task_name = "";
+if ($id_task != 0)
+	$task_name = get_db_value ("name", "ttask", "id", $id_task);
+
 // Lock Workunit
-if ($operation == "lock"){
-	$id_workunit = get_parameter ('id_workunit');
+if ($operation == "lock") {
+	$id_workunit = (int) get_parameter ('id_workunit');
 	$id_task = get_db_value ("id_task", "tworkunit_task", "id_workunit", $id_workunit);
 	$id_group = get_db_value ("id_group", "ttask", "id", $id_task);
 	$sql = sprintf ('UPDATE tworkunit SET locked = "%s" WHERE id = %d',
@@ -38,29 +34,33 @@ if ($operation == "lock"){
 
 // ADD / UPDATE Workunit
 if ($operation == "workunit") {
-	$id_workunit = (int) get_parameter ("id_workunit");
-	$duration = (int) get_parameter ("duration");
-	$time = get_parameter ('time');
-	$date = get_parameter ('date');
+	$id_workunit = (int) get_parameter ('id_workunit');
+	$insert = false;
+	if ($id_workunit == 0) {
+		$insert = true;
+	}
+	$duration = (float) get_parameter ("duration");
+	$time = (string) get_parameter ('time');
+	$date = (string) get_parameter ('date');
 	$timestamp = $date." ".$time;
 	$real_timestamp = date ('Y-m-d H:i:s');
-	// TODO: Sanitize timestamp string
-	$description = get_parameter ('description');
+	$description = (string) get_parameter ('description');
 	$have_cost = (bool) get_parameter ('have_cost');
 	$user_role = (int) get_parameter ('work_profile');
 
-	if ($id_workunit == 0) {
+	if ($insert) {
 		// INSERT
 		$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user,
 			description, have_cost, id_profile)
-			VALUES ("%s", %d, "%s", "%s", %d, %d)',
+			VALUES ("%s", %.2f, "%s", "%s", %d, %d)',
 			$timestamp, $duration, $config['id_user'], $description,
 			$have_cost, $user_role);
 		$result = process_sql ($sql, 'insert_id');
+		$id_workunit = $result;
 	} else {
 		// UPDATE WORKUNIT
 		$sql = sprintf ('UPDATE tworkunit
-			SET timestamp = "%s", duration = %f, description = "%s",
+			SET timestamp = "%s", duration = %.2f, description = "%s",
 			have_cost = %d, id_profile = %d
 			WHERE id = %d',
 			$timestamp, $duration, $description, $have_cost,
@@ -69,27 +69,41 @@ if ($operation == "workunit") {
 	}
 	
 	if ($result) {
-		$id_project2 = get_db_value ("id_project", "ttask", "id", $id_task);
-		$id_manager = get_db_value ("id_owner", "tproject", "id", $id_project2);
-		if ($id_workunit == 0) {
-			$id_workunit = $result;
+		$task = get_db_row ('ttask', 'id', $id_task);
+		$current_hours = get_task_workunit_hours ($id_task);
+		if ($insert) {
 			mail_project (0, $config['id_user'], $id_workunit, $id_task);
 			$sql = sprintf ('INSERT INTO tworkunit_task (id_task, id_workunit)
 				VALUES (%d, %d)',
 				$id_task, $id_workunit);
-			$result = process_sql ($sql);
-			if ($result) {
-				$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
-				insert_event ("PWU INSERT", 0, 0, $description);
-			}
+			process_sql ($sql);
+			$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
+			insert_event ("PWU INSERT", 0, 0, $description);
 			task_tracking ($id_task, TASK_WORKUNIT_ADDED, $id_workunit);
 		} else {
 			mail_project (1, $config['id_user'], $id_workunit, $id_task);
-			$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
+			$result_output = '<h3 class="suc">'.__('Workunit updated').'</h3>';
 			insert_event ("PWU UPDATED", 0, 0, $description);
 		}
+		
+		/* Autocomplete task progress */
+		if ($insert && $task['completion'] < 100 && $task['hours']) {
+			/* Get expected task completion, based on worked hours */
+			$expected_completion = round_number (floor ($current_hours * 100 / $task['hours']));
+			
+			/* If completion was not set manually, update with current progress */
+			if ($task['completion'] == $expected_completion) {
+				$current_hours += $duration;
+				$expected_completion =  round_number (floor ($current_hours * 100 / $task['hours']));
+				$sql = sprintf ('UPDATE ttask
+					SET completion = %d
+					WHERE id = %d',
+					$expected_completion, $id_task);
+				process_sql ($sql);
+			}
+		}
 	} else {
-		$result_output = '<h3 class="error">'.__('Problemd adding workunit.').'</h3>';
+		$result_output = '<h3 class="error">'.__('Problem adding workunit').'</h3>';
 	}
 	$operation = "view";
 }

@@ -1,4 +1,4 @@
-<?PHP
+<?php
 
 // Sponsors / Banner
 echo "<div class='portlet' >";
@@ -8,11 +8,11 @@ echo "<ul class='sidemenu'>";
 $sql1='SELECT * FROM tlink ORDER BY name';
 $result=mysql_query($sql1);
 if ($row=mysql_fetch_array($result)){
-        $sql1='SELECT * FROM tlink ORDER BY name';
-        $result2=mysql_query($sql1);
-        while ($row2=mysql_fetch_array($result2)){
-                echo "<li><a href='".$row2["link"]."' target='_new' class='mn'>".$row2["name"]."</a></li>";
-        }
+	$sql1='SELECT * FROM tlink ORDER BY name';
+	$result2=mysql_query($sql1);
+	while ($row2=mysql_fetch_array($result2)){
+		echo "<li><a href='".$row2["link"]."' target='_new' class='mn'>".$row2["name"]."</a></li>";
+	}
 }
 echo "</ul></div>";
 

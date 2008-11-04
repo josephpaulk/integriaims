@@ -159,7 +159,7 @@ if ($search) {
 }
 
 $table->data = array ();
-$table->width = '95%';
+$table->width = '90%';
 $table->colspan = array ();
 $table->rowstyle = array ();
 $table->rowstyle[1] = 'display: none';
@@ -211,7 +211,7 @@ echo '<a class="show_advanced_search" href="index.php">'.__('Advanced search').'
 
 unset ($table);
 $table->class = 'hide result_table listing';
-$table->width = '95%';
+$table->width = '100%';
 $table->id = 'inventory_search_result_table';
 $table->head = array ();
 $table->head[1] = __('ID');

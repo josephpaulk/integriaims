@@ -1,3 +1,79 @@
+2008-11-04  Esteban Sanchez  <estebans@artica.es>
+
+	* godmode/setup/event.php, godmode/setup/setup.php,
+	operation/buildings/building_detail.php,
+	operation/companies/company_detail.php,
+	operation/companies/company_role.php,
+	operation/contacts/contact_detail.php,
+	operation/contracts/contract_detail.php,
+	operation/incidents/incident_detail.php,
+	operation/inventories/inventory.php,
+	operation/inventories/inventory_detail.php,
+	operation/inventories/inventory_search.php, operation/kb/browse.php,
+	operation/kb/manage_data.php,
+	operation/manufacturers/manufacturer_detail.php,
+	operation/projects/project.php, operation/projects/project_detail.php,
+	operation/projects/project_overview.php,
+	operation/slas/sla_detail.php, operation/users/user.php, 
+	general/home.php: Fixed table width to work
+	in IE6+. Style correction.
+
+	* operation/agenda/agenda.php: Use generic database functions.
+
+	* operation/incidents/incident.php: Fixed table width for IE6+. It now
+	makes a default search when the page is shown.
+
+	* godmode/updatemanager/settings.php, godmode/setup/links.php,
+	operation/projects/project_group_detail.php,
+	operation/projects/project_tree.php, operation/todo/todo.php, 
+	operation/inventories/manage_prod.php, operation/kb/manage_cat.php:
+	Rewritten to use generic functions which results in a more consistent
+	interface.
+
+	* general/login_page.php: HTML style correction. New style using
+	generic functions.
+
+	* general/logoff.php: Removed from repository. Logout now moves to
+	login page.
+
+	* images/login.png: Added to repository. New image for login button.
+
+	* include/styles/integria-ie-fixes.css: Added to repository. CSS fixes
+	for IE6+.
+
+	* include/styles/integria.css: Added a new class for login button.
+	Some fixes for IE6+ and porcentual width tables.
+
+	* include/functions.php: Added round_number() to round a number on
+	multiplies of another.
+
+	* include/functions_form.php: Now combo_user_visible_for_me() can get
+	no user and get current. Rewritten combo_kb_products() to use generic
+	functions and receive some new parameters.
+	combo_task_user_participant() now receives a label. Fixes in
+	show_workunit_data() to wrap long words (some kind of fix for IE6+)
+
+	* operation/incidents/incident_work.php,
+	operation/incidents/incident_workunits.php,
+	operation/incidents/incident_files.php: Removed useless code when
+	using check_login ().
+
+	* operation/projects/task_detail.php: Style correction when getting
+	parameters. IE6+ fixes.
+
+	* operation/projects/task_workunit.php: Task project is now
+	autocalculated when a workunit is added. Style correction and code
+	cleanup.
+
+	* index.php: Added CSS IE fixes. Redirect to login page when user has
+	logouts.
+
+	* operation/side_menu.php: Style correction of a couple of string.
+
+	* operation/tool_menu.php: Tab style correction.
+
+	* integria_db.sql: Change delete constraint on tkb_product.
+
 2008-11-03  Esteban Sanchez  <estebans@artica.es>
 
 	* include/js/jquery.ui.textarearesizer.js: Added to repository. jQuery

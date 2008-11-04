@@ -51,7 +51,7 @@ echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: '.($id ? 'none' 
 echo '<div class="result"></div>';
 
 $table->id = 'saved_searches_table';
-$table->width = '740px';
+$table->width = '90%';
 $table->class = 'search-table';
 $table->size = array ();
 $table->size[0] = '120px';
@@ -80,7 +80,6 @@ unset ($table);
 require_once ('inventory_search.php');
 
 echo '</div>';
-
 echo '</div>';
 
 ?>

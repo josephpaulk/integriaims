@@ -92,8 +92,8 @@ if ($delete_event) {
 	
 	if ($event_user == $config['id_user']) { 
 		// Only admins (manage incident) or owners can modify incidents, including their notes
-		$query = "DELETE FROM tagenda WHERE id = ".$id;
-		mysql_query($query);
+		$sql = sprintf ('DELETE FROM tagenda WHERE id = %d', $id);
+		process_sql ($sql);
 	}
 	insert_event ("DELETE CALENDAR EVENT", 0, 0, $event_user);
 }

@@ -15,11 +15,7 @@
 
 global $config;
 
-if (check_login ()) {
-	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access incident viewer");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
 $id_grupo = "";
 $creacion_incidente = "";
@@ -50,6 +46,7 @@ if ($workunits === false) {
 	echo '<h4>'.__('No workunit was done in this incident').'</h4>';
 	return;
 }
+
 foreach ($workunits as $workunit) {
 	$workunit_data = get_workunit_data ($workunit['id_workunit']);
 	show_workunit_data ($workunit_data, $title);

@@ -14,9 +14,9 @@
 
 global $config;
 
-check_login();
+check_login ();
 
-if (give_acl($config["id_user"], 0, "KM")==0) {
+if (! give_acl ($config["id_user"], 0, "KM")) {
 	audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access KB Management");
 	require ("general/noaccess.php");
 	exit;
@@ -24,14 +24,14 @@ if (give_acl($config["id_user"], 0, "KM")==0) {
 
 $color = 0;
 $id_user = $config["id_user"];
-echo "<h2>".__('Event history')."</h2>";	
+echo "<h2>".__('Event history')."</h2>";
 
 // Pagination
-$offset = get_parameter ("offset",0);
+$offset = (int) get_parameter ("offset");
 $total_events = get_db_sql ("SELECT COUNT(id) FROM tevent");
 pagination ($total_events, "index.php?sec=godmode&sec2=godmode/setup/event", $offset);
 
-$table->width = '740px';
+$table->width = '90%';
 $table->class = 'listing';
 $table->head = array ();
 $table->head[0] = __('Type');

@@ -91,15 +91,13 @@ echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: '.($id ? 'none' 
 echo '<div class="result"></div>';
 
 $table->id = 'saved_searches_table';
-$table->width = '740px';
+$table->width = '90%';
 $table->class = 'search-table';
 $table->size = array ();
 $table->size[0] = '120px';
 $table->style = array ();
 $table->style[0] = 'font-weight: bold';
-$table->style[2] = 'display: none; font-weight: bold';
-$table->style[3] = 'display: none';
-$table->style[4] = 'display: none';
+$table->style[2] = 'font-weight: bold';
 $table->data = array ();
 $table->data[0][0] = __('Custom searches');
 $sql = sprintf ('SELECT id, name FROM tcustom_search
@@ -288,10 +286,6 @@ $(document).ready (function () {
 		);
 	});
 	
-	$("#search_incident_form").submit (function () {
-		$("#saved_searches_table td:gt(1)").fadeIn ();
-	});
-	
 	$("#goto-incident-form").submit (function () {
 		id = $("#text-id", this).attr ("value");
 		check_incident (id);
@@ -319,6 +313,9 @@ $(document).ready (function () {
 					);
 		});
 	});
+<?php if (! $id) : ?>
+	$("#search_incident_form").submit ();
+<?php endif; ?>
 });
 </script>
 

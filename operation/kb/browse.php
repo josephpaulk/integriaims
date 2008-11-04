@@ -36,9 +36,9 @@ $product = get_parameter ("product", 0);
 $category = get_parameter ("category", 0);
 
 // Search filters
-echo "<table cellpadding=4 cellspacing=4 width=800 class='blank'>";
+echo '<form method="post">';
+echo '<table width="90%" class="blank">';
 echo "<tr>";
-echo "<form method='post' action='index.php?sec=kb&sec2=operation/kb/browse'>";
 echo "<td>";
 echo __('Product types');
 echo "<td>";
@@ -46,16 +46,16 @@ combo_kb_products ($product, 0);
 echo "<td>";
 echo __('Categories');
 echo "<td>";
-combo_kb_categories($category);
+combo_kb_categories ($category);
 
 echo "<tr>";
 echo "<td>";
-echo __('Free text search');
+echo __('Search');
 echo "<td>";
 echo "<input type=text name='free_text' size=25 value='$free_text'>";
 
 echo "<td >";
-echo "<input type=submit class='sub next' value='".__('Search')."'>";
+echo "<input type=submit class='sub search' value='".__('Search')."'>";
 
 
 echo "</td></tr></table></form>";
@@ -78,7 +78,7 @@ if ($category != 0)
 $sql1 = "SELECT * FROM tkb_data $sql_filter ORDER BY title, id_category, id_product";
 $color =0;
 if ($result=mysql_query($sql1)){
-	echo "<table width=800 class='listing'>";
+	echo '<table width="90%" class="listing">';
 
 	echo "<th>".__('Title')."</th>";
 	echo "<th>".__('Timestamp')."</th>";
