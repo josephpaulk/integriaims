@@ -73,11 +73,11 @@ $from_one_month = "$prev_year-$prev_month-$day";
 echo "<h1>".__('Monthly report for')." $id_user</h1>";
 echo "<table width=700>";
 echo "<tr><td>";
-echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$prev_month&year=$prev_year&id=$id_user'> Prev</A>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$prev_month&year=$prev_year&id=$id_user'> ".__('Prev')."</a>";
 echo "<td width=85%>";
 echo "&nbsp;";
 echo "<td>";
-echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$next_month&year=$next_year&id=$id_user'> Next</A>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$next_month&year=$next_year&id=$id_user'> ".__('Next')."</a>";
 echo "</table>";
 
 // Generate calendar

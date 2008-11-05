@@ -476,6 +476,12 @@ function get_periodicities () {
 	return $periodicites;
 }
 
+function get_periodicity ($recurrence) {
+	$recurrences = get_periodicities ();
+	
+	return isset ($recurrences[$recurrence]) ? $recurrences[$recurrence] : __('Unknown');
+}
+
 // FIXME: This both functions need to be updated to use values FROM datatabase, not fixed ones
 
 function get_indicent_status () {
@@ -596,5 +602,5 @@ function enterprise_include ($filename) {
 
 function round_number ($number, $rounder = 5) {
 	return (int) ($number / $rounder + 0.5) * $rounder;
-}  
+}
 ?>

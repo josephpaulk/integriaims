@@ -95,8 +95,7 @@ if ((isset($_GET["form_add"])) or (isset($_GET["form_edit"]))){
 	}
 
 	// Create link
-	echo "<h2>".__('Integria Setup')."</h2>";
-	echo "<h3>".__('Link management')."</h3>";
+	echo "<h2>".__('Role management')." &raquo; ".__('Add role')."</h2>";
 	echo '<table class="fon" cellpadding="3" cellspacing="3" width="500" class="databox_color">';
 	echo '<form name="ilink" method="post" action="index.php?sec=users&sec2=godmode/usuarios/role_manager">';
 	if ($creation_mode == 1){

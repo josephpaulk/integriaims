@@ -106,8 +106,7 @@ if ($operation == "create") {
 // Milestone view
 // -------------------------
 if ($operation == ""){
-	echo "<h1>".__('Milestones management');
-	echo "</h1>";
+	echo "<h2>".__('Milestones management')."</h2>";
 	echo "<table class='listing' width=720>";
 	echo "<th>".__('Milestone');
 	echo "<th>".__('Description');

@@ -67,7 +67,7 @@ if ($operation == 'move') {
 
 // MAIN LIST OF TASKS
 
-echo '<h2>'.$project['name'].' - '.__('Task management').'</h2>';
+echo '<h2>'.$project['name'].' &raquo; '.__('Task management').'</h2>';
 
 $search_id_group = (int) get_parameter ('search_id_group');
 $search_text = (string) get_parameter ('search_text');
@@ -189,7 +189,7 @@ function show_task_row ($table, $id_project, $task, $level) {
 
 	if ($task["start"] == $task["end"]){
 		$data[7] = date ('Y-m-d', strtotime ($task['start']));
-		$data[8] = __('Periodicity').': '.$task['periodicity'];
+		$data[8] = __('Recurrence').': '.get_periodicity ($task['periodicity']);
 	} else {
 		// Start
 		$start = strtotime ($task['start']);

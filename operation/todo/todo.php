@@ -158,7 +158,7 @@ if ($operation == "create" || $operation == "update") {
 // -------------------------
 if (($operation == "") OR ($operation == "notme")) {
 	if ($operation == "notme")
-		echo "<h1>".__('To-Do management'). " - ". __('Assigned to other users')."</h1>";
+		echo "<h1>".__('To-Do management'). " &raquo; ". __('Assigned to other users')."</h1>";
 	else
 		echo "<h1>".__('To-Do management')."</h1>";
 	echo '<table class="listing" width="90%">';

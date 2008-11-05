@@ -828,7 +828,7 @@ if (give_acl ($config["id_user"], 0, "PR")) {
 	// Link to project graph
 	echo "&nbsp;&nbsp;";
 	echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$config['id_user']."'>";
-	echo "<img src='images/chart_bar.png' title='Project distribution'></a>";
+	echo '<img src="images/chart_bar.png" title="'.__('Project distribution').'"></a>';
 
 	// Link to Work user spare inster
 	echo "&nbsp;&nbsp;";
@@ -847,7 +847,7 @@ if (give_acl ($config["id_user"], 0, "PR")) {
 		AND id_user = "%s"',
 		$begin_week, $end_week, $config['id_user']);
 	$week_hours = get_db_sql ($sql);
-	$ratio = $week_hours.__('over').$total_hours;
+	$ratio = $week_hours." ".__('over')." ".$total_hours;
 	if ($week_hours < $total_hours)
 		echo '<img src="images/exclamation.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" />';
 	else

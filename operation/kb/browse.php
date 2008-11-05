@@ -26,9 +26,7 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
 // Show list of items
 // =======================
 
-echo "<h2>".__('KB Data management')."</h2>";	
-echo "<h3>".__('Defined data')."</a></h3>";
-
+echo "<h2>".__('KB Data management')." &raquo; ".__('Defined data')."</a></h2>";
 
 // Search parameter 
 $free_text = get_parameter ("free_text", "");

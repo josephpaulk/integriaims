@@ -40,7 +40,7 @@ if ($update_settings) {
 
 $settings = um_db_load_settings ();
 
-echo '<h3>'.__('Settings').'</h3>';
+echo '<h2>'.__('Update Manager Settings').'</h2>';
 
 $table->width = '90%';
 $table->data = array ();

@@ -34,7 +34,7 @@ $title = get_db_value ("titulo", "tincidencia", "id_incidencia", $id);
 $id_task = get_db_value ("id_task", "tincidencia", "id_incidencia", $id);
 
 echo "<h3><img src='images/award_star_silver_1.png'>&nbsp;&nbsp;";
-echo __('Add workunit')." - $title</h3>";
+echo __('Add workunit')." &raquo; $title</h3>";
 
 $now = date ("Y-m-d H:i:s");
 

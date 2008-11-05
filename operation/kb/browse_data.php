@@ -64,7 +64,7 @@ echo $product;
 echo "<tr>";
 echo "<td>";
 
-echo " ".__("Write on $timestamp");
+echo " ".__("Wrote on ").$timestamp;
 echo "<td>";
 echo "<b>";
 echo __('Category')." </b> : ";

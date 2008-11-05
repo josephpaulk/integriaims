@@ -65,7 +65,7 @@ $add = (bool) get_parameter ('add');
 $edit = (bool) get_parameter ('edit');
 
 
-echo "<h3>".__('Link management')."</h3>";
+echo "<h2>".__('Link management')."</h2>";
 
 // Main form view for Links edit
 if ($add || $edit) {

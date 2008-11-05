@@ -155,8 +155,7 @@ print_select ($files, 'icon', $icon, '', __('None'), "");
 // Show list of categories
 // =======================
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h2>".__('KB Category management')."</h2>";	
-	echo "<h3>".__('Defined categories')."</a></h3>";
+	echo "<h2>".__('KB Category management')." &raquo; ".__('Defined categories')."</h2>";
 	$sql1='SELECT * FROM tkb_category ORDER BY parent, name';
 	$color =0;
 	if ($result=mysql_query($sql1)){

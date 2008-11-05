@@ -1,3 +1,28 @@
+2008-11-05  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/functions_form.php, include/functions.php,
+	  integria_dbdata.sql, operation/incidents/incident_create_work.php,
+	  operation/tool_menu.php, operation/projects/task.php,
+	  operation/projects/gantt.php,
+	  operation/projects/people_manager.php,
+	  operation/projects/milestones.php,
+	  operation/projects/task_detail.php,
+	  operation/projects/project_detail.php,
+	  operation/projects/project_tracking.php,
+	  operation/kb/browse_data.php, operation/kb/manage_cat.php,
+	  operation/kb/browse.php, operation/kb/manage_data.php,
+	  operation/side_menu.php, operation/users/user_task_assigment.php,
+	  operation/users/user_edit.php, operation/todo/todo.php,
+	  operation/user_report/monthly.php,
+	  operation/user_report/monthly_graph.php,
+	  operation/user_report/report_monthly.php, godmode/setup/links.php,
+	  godmode/admin_access_logs.php, godmode/usuarios/role_manager.php,
+	  godmode/updatemanager/settings.php,
+	  godmode/updatemanager/main.php, include/languages/index.pot: Updated translaion infrastructure
+
+	* include/languages/es.mo, include/languages/es.po: Added Spanish
+	  translation.
+
 2008-11-05  Sancho Lerena <slerena@artica.es>
 
 	* login_page, login_failed: Minimal style changes, better layout.

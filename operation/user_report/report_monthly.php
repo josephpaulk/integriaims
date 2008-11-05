@@ -42,7 +42,7 @@
 	$color = 0;
 	
 	echo "<h3>";
-	echo getmonth($working_month). " - ".__('Totals for this month'). " - ( $total_hours )";
+	echo getmonth($working_month). " &raquo; ".__('Totals for this month'). " &raquo; ( $total_hours )";
 	echo "</h3>";
 
 	echo "<table class='blank' style='margin-left: 10px' width='200'>";

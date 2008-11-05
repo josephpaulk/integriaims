@@ -720,7 +720,7 @@ function form_search_incident ($return = false) {
 	
 	$table->data[3][0] = print_select (get_user_visible_users ($config['id_user'], 'IR', true),
 		'search_id_user', $search_id_user,
-		'', 'Any', 0, true, false, false, __('User'));
+		'', __('Any'), 0, true, false, false, __('User'));
 	$table->data[3][1] = print_input_text ('search_first_date', '', '', 15, 15, true, __('Begin date'));
 	$table->data[3][2] = print_input_text ('search_last_date', '', '', 15, 15, true, __('End date'));
 	

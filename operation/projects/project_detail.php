@@ -109,12 +109,11 @@ else
 	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/project&action=insert">';
 // Main project table
 
-echo "<h2>".__('Project management')." -&gt;";
+echo "<h2>".__('Project management')." &raquo; ";
 if ($create_mode == 0){
-	echo __('Project review / update')." </h2><h3>".get_db_value ("name", "tproject", "id", $id_project)."</h3>";
-} else {
-	echo __('Create project')."</h2>";
+	echo get_db_value ("name", "tproject", "id", $id_project);
 }
+echo "</h2>";
 
 echo '<table width="90%" class="databox" >';
 

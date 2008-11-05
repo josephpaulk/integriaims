@@ -68,7 +68,7 @@ if ($operation == "insert"){
 	} else {
 		$update_mode = 0;
 		$create_mode = 1;
-		$result_output = "<h3 class='error'>".__('Not created. Error inserting data')."</h3>";
+		$result_output = "<h3 class='error'>".__('Not created. Error inserting data.')."</h3>";
 	}
 }
 
@@ -104,8 +104,7 @@ echo $result_output;
 // --------------------
 
 if ($id_task != -1) {
-	echo "<h2>".__('Task human resources management')."</h2>";
-	echo "<h3>".get_db_value('name', 'ttask','id',$id_task)."</h3><br>";
+	echo "<h2>".__('Task human resources management')." &raquo; ".get_db_value('name', 'ttask','id',$id_task)."</h2>";
 
 	$sql = "SELECT COUNT(*) FROM trole_people_task where id_task = $id_task";
 	$result = mysql_query($sql);
@@ -144,8 +143,7 @@ if ($id_task != -1) {
 } else {
 
 // MAIN PROJECT PEOPLE LIST
-	echo "<h2>".__('Project people management')."</h2>";
-	echo "<h3>".get_db_value('name', 'tproject','id',$id_project)."</h3><br>";
+	echo "<h2>".__('Project people management')." &raquo; ".get_db_value('name', 'tproject','id',$id_project)."</h2>";
 
 	if ($config["id_user"] != get_db_value('id_owner','tproject','id', $id_project) AND
 		give_acl ($config["id_user"], get_db_value('id_group','ttask','id', $id_task), "PM")!=1){

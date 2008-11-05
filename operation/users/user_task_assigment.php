@@ -35,8 +35,7 @@ if (($id_user != $config["id_user"]) AND (give_acl($config["id_user"], 0, "PM") 
 
 $sql = "SELECT ttask.id, ttask.name, tproject.name, ttask.completion, tproject.id, ttask.id FROM trole_people_task, ttask, tproject WHERE trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.completion < 100 ORDER BY ttask.completion DESC";
 
-    echo "<h2>".__('Global task assignment')."</h2>";
-    echo "<h3>".__('For user'). " '".$id_user. "' ".print_user_avatar($id_user, true,true)."</h3>";
+    echo "<h2>".__('Global task assignment')." ".__('For user'). " '".$id_user. "' ".print_user_avatar($id_user, true,true)."</h2>";
 
 if (give_acl($config["id_user"], 0, "PM") == 1){
 	echo "<form name='xx' method=post action='index.php?sec=users&sec2=operation/users/user_task_assigment'>";
@@ -46,7 +45,8 @@ if (give_acl($config["id_user"], 0, "PM") == 1){
 	// Show user
 	combo_user_visible_for_me ($config["id_user"], "id_user", 0, "PR");
 	echo "<td>";
-	echo "<input type=submit value=go class='sub upd'>";
+	print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"');
+	//echo "<input type=submit value=go class='sub upd'>";
     echo "</form></table>";
 }
 

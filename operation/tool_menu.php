@@ -19,7 +19,7 @@ echo "</ul></div>";
 
 // Banners
 echo '<div class="portlet">';
-echo "<h3 class='system'>Our sponsors</h3>";
+echo "<h3 class='system'>".__('Our sponsors')."</h3>";
 echo "<p>";
 echo "<img src='images/minilogoartica.jpg'>";
 echo "<br><br>";

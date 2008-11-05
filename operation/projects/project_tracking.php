@@ -24,7 +24,7 @@ if ($project === false || ! give_acl ($config['id_user'], $project['id_project_g
 	exit;
 }
 
-echo '<h2>'.__('Project tracking').' &gt; '.$project['name'].'</h2>';
+echo '<h2>'.__('Project tracking').' &raquo; '.$project['name'].'</h2>';
 
 $trackings = get_db_all_rows_field_filter ('tproject_track', 'id_project', $id);
 

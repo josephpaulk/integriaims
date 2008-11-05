@@ -234,7 +234,7 @@ $table->data[3][0] = print_input_text ('start_date', $start, '', 15, 15, true, _
 $table->data[3][1] = print_input_text ('end_date', $end, '', 15, 15, true, __('End'));
 
 $table->data[4][0] = print_select (get_periodicities (), 'periodicity',
-	$periodicity, '', __('None'), 'none', true, false, false, __('Periodicity'));
+	$periodicity, '', __('None'), 'none', true, false, false, __('Recurrence'));
 
 $table->data[5][0] = print_input_text ('hours', $hours, '', 5, 5, true, __('Estimated hours'));
 

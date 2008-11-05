@@ -248,8 +248,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 // Show list of items
 // =======================
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h2>".__('KB Data management')."</h2>";	
-	echo "<h3>".__('Defined data')."</a></h3>";
+	echo "<h2>".__('KB Data management')." &raquo; ".__('Defined data')."</h2>";
 	$sql1='SELECT * FROM tkb_data ORDER BY title, id_category, id_product';
 	if ($result=mysql_query($sql1)){
 		echo '<table width="90%" class="listing">';

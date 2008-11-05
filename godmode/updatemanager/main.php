@@ -1,5 +1,5 @@
 <?php
-// Babel Enterprise
+// Integria Enterprise
 // ============================================
 // Copyright (c) 2008 Artica Soluciones Tecnologicas, http://www.artica.es
 //
@@ -38,11 +38,11 @@ if ($settings->customer_key == FREE_USER) {
 	echo '<div class="notify" style="width: 80%; text-align:left;" >';
 	echo '<img src="images/information.png" /> ';
 	/* Translators: Do not translade Update Manager, it's the name of the program */
-	echo __('The new <a href="http://updatemanager.sourceforge.net">Update Manager</a> client is shipped with the new Babel Enterprise 2.0. It lets systems administrators to do not need to update their Babel Enterprise manually since the Update Manager is the one getting new modules, new plugins and new features (even full migrations tools for future versions) automatically');
+	echo __('The new <a href="http://updatemanager.sourceforge.net">Update Manager</a> client is shipped with the new Integria Enterprise. It allows systems administrators to do not need to update their Integria Enterprise manually since the Update Manager is the one getting new modules, new plugins and new features (even full migrations tools for future versions) automatically');
 	echo '<p />';
-	echo __('Update Manager is one of the most advanced features of Babel Enterprise 2.0 Enterprise version, for more information visit <a href="http://babelenterprise.com">http://babelenterprise.com</a>');
+	echo __('Update Manager is one of the most advanced features of Integria Enterprise version, for more information visit <a href="http://integria.sourceforge.net">http://integria.sourceforge.net</a>');
 	echo '<p />';
-	echo __('Update Manager sends anonymous information about Babel Enterprise usage (number of agents and modules running).');
+	echo __('Update Manager sends anonymous information about Integria Enterprise usage (number of agents and modules running).');
 	echo '</div>';
 }
 
@@ -68,7 +68,7 @@ if (is_int ($package) && $package == 1) {
 } elseif (is_int ($package) && $package == 0) {
 	echo '<h5 class="error">'.__('Server authorization rejected')."</h5>";
 } else {
-	echo '<h5 class="suc">'.__('There\'s a new update for Babel Enterprise')."</h5>";
+	echo '<h5 class="suc">'.__('There\'s a new update for Integria Enterprise')."</h5>";
 	
 	$table->width = '50%';
 	$table->data = array ();

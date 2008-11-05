@@ -51,7 +51,7 @@ if (user_belong_project ($id_user, $id_project)==0){
 	exit;
 }
 
-echo "<h2>".$project_name." - ".__('Gantt graph')."</h2>";
+echo "<h2>".$project_name." &raquo; ".__('Gantt graph')."</h2>";
 
 echo "<img src='operation/projects/gantt_graph.php?id_project=$id_project'>";
 
