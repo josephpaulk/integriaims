@@ -104,7 +104,7 @@ if ($id || $new_group) {
 	
 	echo '<form method="post">';
 	print_table ($table);
-	echo '<div class="button" style="width: '.$table->width.'">';
+	echo '<div class="button" style="width: 90%">';
 	if ($id) {
 		print_submit_button (__('Update'), "enviar", false, 'class="sub upd"');
 		print_input_hidden ('update_group', 1);
@@ -151,7 +151,7 @@ if ($id || $new_group) {
 		print_table ($table);
 	}
 	
-	echo '<div width="'.$table->width.'" class="button">';
+	echo '<div style="width:'.$table->width.'" class="button">';
 	echo '<form method="post">';
 	print_submit_button (__('Create group'), "crt", false, 'class="sub next"');
 	print_input_hidden ('new_group', 1);

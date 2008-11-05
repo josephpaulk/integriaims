@@ -90,27 +90,32 @@ if ($operation == "insert") {
 			$result_output = "<h3 class='suc'>".__('Task successfuly created')."</h3>";
 			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task added to project", "Task '$name' added to project '$id_project'");
 			$operation = "view";
-			
-			// Add all users assigned to current project for new task or parent task if has parent
-			if ($parent != 0)
-				$query1="SELECT * FROM trole_people_task WHERE id_task = $parent";
-			else
-				$query1="SELECT * FROM trole_people_project WHERE id_project = $id_project";
-			$resq1=mysql_query($query1);
-			while ($row=mysql_fetch_array($resq1)){
-				$id_role_tt = $row["id_role"];
-				$id_user_tt = $row["id_user"];
-				$sql = "INSERT INTO trole_people_task
-				(id_task, id_user, id_role) VALUES
-				($id_task, '$id_user_tt', $id_role_tt)";
-				mysql_query($sql);
-			}
-			task_tracking ($id_task, TASK_CREATED);
-			project_tracking ($id_project, PROJECT_TASK_ADDED);
-		} else {
-			$update_mode = 0;
-			$create_mode = 1;
-			$result_output = "<h3 class='error'>".__('Could not create task')."</h3>";
+	
+			// Show link to continue working with Task
+			$result_output .= "<p><h3>";
+			$result_output .= "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>";
+			$result_output .= __("Continue working with task #").$id_task;
+			$result_output .= "</a></h3></p>";
+		// Add all users assigned to current project for new task or parent task if has parent
+		if ($parent != 0)
+			$query1="SELECT * FROM trole_people_task WHERE id_task = $parent";
+		else
+			$query1="SELECT * FROM trole_people_project WHERE id_project = $id_project";
+		$resq1=mysql_query($query1);
+		while ($row=mysql_fetch_array($resq1)){
+			$id_role_tt = $row["id_role"];
+			$id_user_tt = $row["id_user"];
+			$sql = "INSERT INTO trole_people_task
+			(id_task, id_user, id_role) VALUES
+			($id_task, '$id_user_tt', $id_role_tt)";
+			mysql_query($sql);
+		}
+		task_tracking ($id_task, TASK_CREATED);
+		project_tracking ($id_project, PROJECT_TASK_ADDED);
+	} else {
+		$update_mode = 0;
+		$create_mode = 1;
+		$result_output = "<h3 class='error'>".__('Could not create task')."</h3>";
 		}
 	}
 }
@@ -198,7 +203,7 @@ if ($operation == "create") {
 	print_input_hidden ('operation', 'update');
 }
 
-$table->width = '90%x';
+$table->width = '90%';
 $table->class = 'databox';
 $table->rowspan = array ();
 $table->colspan = array ();

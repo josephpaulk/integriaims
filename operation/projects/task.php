@@ -105,8 +105,8 @@ $table->data = array ();
 $table->style = array ();
 $table->style[0] = 'font-weight: bold';
 $table->head = array ();
-$table->head[0] = __('Name');
-$table->head[1] = __('Pri');
+$table->head[0] = __('Pri');
+$table->head[1] = __('Name');
 $table->head[2] = __('Progress');
 $table->head[3] = __('Estimation');
 $table->head[4] = __('Time used');
@@ -115,14 +115,14 @@ $table->head[6] = __('People');
 $table->head[7] = __('Start');
 $table->head[8] = __('End');
 $table->align = array ();
-$table->align[1] = 'center';
+$table->align[1] = 'left';
 $table->align[2] = 'center';
 $table->align[3] = 'center';
 $table->align[4] = 'center';
 $table->align[9] = 'center';
 
 // Show headers
-echo "<table width='750px' class='listing'>";
+echo "<table width='750px' cellpadding=4 class='listing'>";
 echo "<tr>";
 $color = 1;
 show_task_tree ($table, $id_project, 0, 0, $where_clause);
@@ -145,18 +145,19 @@ function show_task_row ($table, $id_project, $task, $level) {
 	global $config;
 	
 	$data = array ();
+
+	// Priority
+        $data[0] = print_priority_flag_image ($task['priority'], true);
 	
 	// Task  name
-	$data[0] = '';
+	$data[1] = '';
 	for ($i = 0; $i < $level; $i++)
-		$data[0] .= '<img src="images/copy.png" />';
+		$data[1] .= '<img src="images/copy.png" />';
 	
-	$data[0] .= '<a href="index.php?sec=projects&sec2=operation/projects/task_detail&id_project='.
+	$data[1] .= '<a href="index.php?sec=projects&sec2=operation/projects/task_detail&id_project='.
 		$id_project.'&id_task='.$task['id'].'&operation=view">'.
 		$task['name'].'</a>';
 
-	// Priority
-	$data[1] = print_priority_flag_image ($task['priority'], true);
 	
 	// Completion
 	$data[2] = '<img src="include/functions_graph.php?type=progress&width=70&height=20&percent='.$task["completion"].'">';

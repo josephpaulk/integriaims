@@ -21,11 +21,11 @@ global $config;
 ?>
 <center>
 <br>
-<div id='login' style='padding: 10px'>
+<div id='login' style='padding: 10px; height: 440px;'>
 	<h1 id='log'><?php echo __('Authentication Error'); ?></h1>
 	<div style='padding: 10px' id='login_in'>
 		<table cellpadding='4' cellspacing='4' width='400' class='blank'>
-		<tr><td rowspan='3' align='left' style="border-right: solid 1px #678;">
+		<tr><td rowspan='3' align='left' style="padding-right: 15px; border-right: solid 1px #678;">
 			<a href="index.php">
 			<img src="images/integria_white.png" border="0" alt="logo"></a>
 			<?php echo $config["version"]; ?>

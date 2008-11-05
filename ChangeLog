@@ -1,3 +1,16 @@
+2008-11-05  Sancho Lerena <slerena@artica.es>
+
+	* login_page, login_failed: Minimal style changes, better layout.
+	
+	* functions_form.php: Added a Foreach() check for empty array.
+	
+	* project_group_detail.php: Table/Button div not same size.
+	
+	* task.php: Some changes in column and table layout (priority).
+
+	* task_detail.php: Added link to continue working with Task after
+	create one.
+	
 2008-11-04  Sancho Lerena <slerena@artica.es>
 
 	* upgrade.sql: tproject_task table was not exist before.

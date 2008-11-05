@@ -92,7 +92,8 @@ function combo_users_task ($id_task, $icon_list = false, $return = false) {
 	$task_users = get_db_all_rows_field_filter ('trole_people_task', 'id_task', $id_task);
 	$visible_users = get_user_visible_users (0, 'PR', true);
 	$users = array ();
-	
+
+	if ($task_users)	
 	foreach ($task_users as $user) {
 		if (isset ($visible_users[$user['id']]))
 			if ($icon_list)

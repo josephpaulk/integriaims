@@ -15,7 +15,7 @@
 
 ?>
 <center>
-<div class="databox" id="login">
+<div class="databox" id="login" style='height: 170px'>
 	<div id="login_in">
 <?php 
 	$action = "index.php";
@@ -32,9 +32,9 @@
 	foreach ($_POST as $name => $value)
 		print_input_hidden ($name, $value);
 ?>
-		<table width="350px" class="blank">
+		<table width="400px" class="blank">
 		<tr>
-		<td rowspan="3" style="text-align: left; border-right: solid 1px #678;">
+		<td rowspan="3" style="text-align: left; border-right: solid 1px #678;padding-right: 25px;">
 			<a href="index.php">
 			<img src="images/integria_white.png" alt="logo">
 			</a><br />
