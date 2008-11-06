@@ -1,5 +1,10 @@
 2008-11-06  Esteban Sanchez  <estebans@artica.es>
 
+	* include/functions_form.php: Removed wordwrap on show_workunit_data()
+	since it was not showing properly in some cases.
+
+2008-11-06  Esteban Sanchez  <estebans@artica.es>
+
 	* include/js/integria_incident_search.js: Inventory search dialog is a
 	bit wider now. Added a check on inventory search to don't show
 	active incidents. It also shows more elements in a dialog.
