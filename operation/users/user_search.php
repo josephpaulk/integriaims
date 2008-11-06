@@ -13,14 +13,11 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-if (check_login () != 0) {
-	audit_db ("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access incident viewer");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
 $id_profile = (int) get_parameter ('user_profile_search');
 $id_group = (int) get_parameter ('user_group_search');
+$search_string = (string) get_parameter ('search_string');
 $search = (bool) get_parameter ('search');
 
 if ($search) {
@@ -28,6 +25,12 @@ if ($search) {
 	
 	$total_users = 0;
 	foreach ($users as $user) {
+		if ($search_string != '') {
+			if (strpos ($user['id_usuario'], $search_string) === false 
+				&& strpos ($user['nombre_real'], $search_string) === false)
+				continue;
+		}
+		
 		if ($id_profile) {
 			$sql = sprintf ("SELECT COUNT(*) FROM tusuario_perfil
 					WHERE id_perfil = %d

@@ -1,5 +1,10 @@
 2008-11-06  Esteban Sanchez  <estebans@artica.es>
 
+	* operation/users/user_search.php: Implemented user search by string,
+	it was missing in the code but appears in the interface.
+
+2008-11-06  Esteban Sanchez  <estebans@artica.es>
+
 	* operation/incidents/incident_detail.php: Added jQuery datepicker
 	files when the page is loaded without AJAX. It was causing a failure
 	when searching parent incident.
