@@ -179,7 +179,7 @@ if (! $id && ! $create) {
 			$data = array ();
 			
 			$data[0] = print_product_icon ($product['id'], true);
-			$data[0] .= ' <a href=index.php?sec=inventory&sec2=operation/inventories/manage_prod&id='.
+			$data[0] .= ' <a href="index.php?sec=inventory&sec2=operation/inventories/manage_prod&id='.
 				$product['id'].'">'.$product['name'].'</a>';
 			$data[1] = get_db_value ('name', 'tkb_product', 'id', $product["parent"]);
 			$data[2] = substr ($product["description"], 0, 200);

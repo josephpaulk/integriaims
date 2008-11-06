@@ -1,3 +1,21 @@
+2008-11-06  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_form.php: Added blank space. Incident_details_list 
+	now reports human time not mysql timestamp.
+
+	* include/functions_calendar.php: With invalid dates (0000-00-00) 
+	render to never.
+
+	* include/functions_db.php: mail_incident() now also includes
+	group name in incident information.
+
+	* operation/incidents/incident.php: Header resolution and started
+	has now a <br>.
+
+	* operation/projects/project.php: Funny SQL/Logic bug fixed :-) 
+
+	* operation/inventories/manage_prod.php: Missing " char.
+
 2008-11-06  Esteban Sanchez  <estebans@artica.es>
 
 	* operation/users/user_search.php: Implemented user search by string,

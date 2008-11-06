@@ -453,7 +453,7 @@ function show_workunit_data ($workunit, $title) {
 	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
 	echo $id_user;
 	echo "</a>";
-	echo " ".__('said').'<span title="'.$timestamp.'">'.human_time_comparation ($timestamp).'</span>';
+	echo " ".__('said').' <span title="'.$timestamp.'">'.human_time_comparation ($timestamp).'</span>';
 	echo "</span>";
 
 	// Public WU ?
@@ -774,16 +774,16 @@ function incident_details_list ($id_incident, $return = false) {
 	$incident = get_incident ($id_incident);
 	
 	$output .= '<ul id="incident-details-list" class="sidemenu">';
-	$output .= '&nbsp;&nbsp;<strong>'.__('Opened').'</strong>: '.$incident['inicio'];
+	$output .= '&nbsp;&nbsp;<strong>'.__('Opened').'</strong>: '.human_time_comparation($incident['inicio']);
 	
 	if ($incident['estado'] == 6 || $incident['estado'] == 7) {
-		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Closed at').'</strong>: '.$incident['cierre'];
+		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Closed at').'</strong>: '.human_time_comparation($incident['cierre']);
 	}
 	if ($incident['actualizacion'] != $incident['inicio']) {
-		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last update').'</strong>: '.$incident['actualizacion'];
+		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last update').'</strong>: '.human_time_comparation($incident['actualizacion']);
 	}
 	if ($incident['actualizacion'] != $incident['inicio']) {
-		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last update').'</strong>: '.$incident['actualizacion'];
+		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last update').'</strong>: '.human_time_comparation($incident['actualizacion']);
 	}
 	
 	/* Show workunits if there are some */
@@ -792,7 +792,7 @@ function incident_details_list ($id_incident, $return = false) {
 		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Hours worked').'</strong>: '.$work_hours;
 		$workunits = get_incident_workunits ($id_incident);
 		$workunit_data = get_workunit_data ($workunits[0]['id_workunit']);
-		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last work at').'</strong>: '.$workunit_data['timestamp'];
+		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last work at').'</strong>: '.human_time_comparation ($workunit_data['timestamp']);
 		$output .= '<br />&nbsp;&nbsp;<strong>'._('Done by').'</strong>: <em>'.$workunit_data['id_user'].'</em>';
 	}
 	

@@ -183,10 +183,11 @@ $table->data = array ();
 
 // Simple query, needs to implement group control and ACL checking
 $sql = sprintf ('SELECT * FROM tproject
-	WHERE %s
+	WHERE (%s) 
 	AND disabled = %d
 	ORDER by name',
 	$where_clause, $view_disabled); 
+
 $projects = get_db_all_rows_sql ($sql);
 if ($projects === false)
 	$projects = array ();

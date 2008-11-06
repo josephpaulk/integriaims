@@ -456,6 +456,10 @@ function give_human_time ($int_seconds, $flag_hide_zero = true) {
 
 function human_time_comparation ($timestamp) {
 	global $config;
+
+	if ($timestamp == "0000-00-00 00:00:00")
+		return __('Never');
+
 	$render = "";
 	$now = time ();
 	$time = strtotime ($timestamp);
@@ -481,7 +485,7 @@ function human_time_comparation ($timestamp) {
 	if ($seconds > 2592000 && $seconds < 15552000)
 		$render = format_numeric ($seconds / 2592000, 0)." ".__('months');
 	
-	$direction = ($now < $time) ? '> ' : '< ';
+	$direction = ($now < $time) ? '&gt; ' : '&lt; ';
 	return $direction.$render;
 }
 

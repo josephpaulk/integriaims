@@ -1036,6 +1036,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	global $config;
 
 	$row = get_db_row ("tincidencia", "id_incidencia", $id_inc);
+	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$titulo =$row["titulo"];
 	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
 	$prioridad = $row["prioridad"];
@@ -1082,10 +1083,12 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 ID          : # $id_inc - $titulo
 CREATED ON  : $create_timestamp
 LAST UPDATE : $update_timestamp
+GROUP       : $group_name 
+AUTHOR      : $creator
+ASSIGNED TO : $usuario
 PRIORITY    : $prioridad
 STATUS	    : $estado
 RESOLUTION  : $resolution
-ASSIGNED TO : $usuario
 TIME USED   : $timeused
 ----------------------------------------------[DESCRIPTION]---------
 $description\n\n";
