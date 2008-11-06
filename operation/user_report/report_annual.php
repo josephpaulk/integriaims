@@ -36,9 +36,10 @@
 		echo "<tr><td>";
         echo "<form name='xx' method=post action='index.php?sec=users&sec2=operation/user_report/report_annual'><td>";
         // Show user
-        combo_user_visible_for_me ($id_user, "id_user", 0, "AR");
+        combo_user_visible_for_me ($config["id_user"], "id_user", 0, "AR");
 		echo "<td>";
-        echo "<input type=submit value=go class='sub upd'>";
+//        echo "<input type=submit value=go class='sub upd'>";
+	print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"');
         echo "</form></table>";
     }
 

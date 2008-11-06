@@ -1,3 +1,8 @@
+2008-11-06  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* operation/user_report/report_annual.php: fixed bug, a variable
+	  that didn't exit.
+
 2008-11-05  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/functions_form.php, include/functions.php,
