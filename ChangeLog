@@ -1,5 +1,11 @@
 2008-11-06  Esteban Sanchez  <estebans@artica.es>
 
+	* operation/incidents/incident_detail.php: Added jQuery datepicker
+	files when the page is loaded without AJAX. It was causing a failure
+	when searching parent incident.
+
+2008-11-06  Esteban Sanchez  <estebans@artica.es>
+
 	* include/functions_form.php: Removed wordwrap on show_workunit_data()
 	since it was not showing properly in some cases.
 

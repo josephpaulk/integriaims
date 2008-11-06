@@ -588,6 +588,8 @@ if (! defined ('AJAX')) :
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
 <script type="text/javascript" src="include/js/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 <script  type="text/javascript">
