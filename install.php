@@ -290,16 +290,16 @@ function install_step3() {
 			<div style='padding-left: 30px'>
 			<form method='post' action='install.php?step=4'>
 				<div>DB User with privileges on MySQL</div>
-				<input class='login' type='text' name='user' value='root'>
+				<input type='text' name='user' value='root'>
 
 				<div>DB Password for this user</div>
-				<input class='login' type='password' name='pass' value=''>
+				<input type='password' name='pass' value=''>
 				
 				<div>DB Hostname of MySQL</div>
-				<input class='login' type='text' name='host' value='localhost'>
+				<input type='text' name='host' value='localhost'>
 
 				<div>DB Name (<i>integria</i> by default)</div>
-				<input class='login' type='text' name='dbname' value='integria'>
+				<input type='text' name='dbname' value='integria'>
 				
 		
 				<div><input type='checkbox' name='createdb' checked value='1'>  
@@ -312,12 +312,12 @@ function install_step3() {
 				<div>Full path to HTTP publication directory.<br>
 				<span class='f9b'>For example /var/www/integria/</span>
 				</div>
-				<input class='login' type='text' name='path' style='width: 190px;' value='".dirname (__FILE__)."/'>
+				<input type='text' name='path' style='width: 190px;' value='".dirname (__FILE__)."/'>
 
 				<div>Full local URL to Integria<br>
 				<span class='f9b'>For example /integria</span>
 				</div>
-				<input class='login' type='text' name='url' style='width: 250px;'  value='".dirname ($_SERVER['PHP_SELF'])."'>
+				<input type='text' name='url' style='width: 250px;'  value='".dirname ($_SERVER['PHP_SELF'])."'>
 				<br><br>
 				<div><input align='right' style='align: right; width:70px; height: 16px;' type='image' src='images/arrow_next.png'  value='Step #4'></div>
 			</form>

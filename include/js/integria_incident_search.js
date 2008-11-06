@@ -330,6 +330,10 @@ function configure_inventory_search_form (page_size, incident_click_callback) {
 			values = get_form_input_values ("inventory_search_form");
 			values.push ({name: "page",
 				value: "operation/inventories/inventory_search"});
+			if (dialog != "") {
+				values.push ({name: "short_table",
+					value: 1});
+			}
 			jQuery.post ("ajax.php",
 				values,
 				function (data, status) {
@@ -400,14 +404,9 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 					minHeight: 500,
 					minWidth: 600,
 					height: 700,
-					width: 700,
+					width: 800,
 					modal: true,
 					bgiframe: true,
-					buttons: {
-						"X": function() { 
-							$(this).dialog("close"); 
-						} 
-					},
 					open: function () {
 						parent_dialog = dialog;
 						dialog = "#dialog-search-inventory ";
@@ -417,7 +416,7 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 						parent_dialog = "";
 					}
 					});
-			configure_inventory_search_form (5, callback_incident_click);
+			configure_inventory_search_form (10, callback_incident_click);
 		},
 		"html"
 	);

@@ -96,6 +96,7 @@ if ($search) {
 		$inventories = array ();
 	}
 	
+	$short_table = (bool) get_parameter ('short_table');
 	$total_inventories = 0;
 	foreach ($inventories as $inventory) {
 		if ($inventory['id_contract']) {
@@ -119,20 +120,20 @@ if ($search) {
 		echo '<td><strong>#'.$inventory['id'].'</strong></td>';
 		echo '<td>'.$inventory['name'].'</td>';
 		
-		$incidents = get_incidents_on_inventory ($inventory['id'], false);
-		$total_incidents = sizeof ($incidents);
-		
-		echo '<td>';
-		if ($total_incidents) {
-			$actived = 0;
-			foreach ($incidents as $incident) {
-				if ($incident['estado'] != 7 && $incident['estado'] != 6)
-					$actived++;
+		if (! $short_table) {
+			$incidents = get_incidents_on_inventory ($inventory['id'], false);
+			$total_incidents = sizeof ($incidents);
+			echo '<td>';
+			if ($total_incidents) {
+				$actived = 0;
+				foreach ($incidents as $incident) {
+					if ($incident['estado'] != 7 && $incident['estado'] != 6)
+						$actived++;
+				}
+				echo '<img src="images/info.png" /> <strong>'.$actived.'</strong> / '.$total_incidents;
 			}
-			echo '<img src="images/info.png" /> <strong>'.$actived.'</strong> / '.$total_incidents;
+			echo '</td>';
 		}
-		echo '</td>';
-		
 		$companies = get_inventory_affected_companies ($inventory['id'], false);
 		echo '<td>';
 		if (isset ($companies[0]['name']))
@@ -216,7 +217,9 @@ $table->id = 'inventory_search_result_table';
 $table->head = array ();
 $table->head[1] = __('ID');
 $table->head[2] = __('Name');
-$table->head[3] = __('Active Incidents');
+if (! defined ('AJAX')) {
+	$table->head[3] = __('Active Incidents');
+}
 $table->head[4] = __('Company');
 $table->head[5] = __('Building');
 $table->head[6] = __('Title');
