@@ -1,5 +1,12 @@
 2008-11-06  Jorge Gonzalez  <jorgegonz@artica.es>
 
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	  translation
+
+	* include/languages/index.pot: Updated po template.
+
+2008-11-06  Jorge Gonzalez  <jorgegonz@artica.es>
+
 	* operation/user_report/report_annual.php: fixed bug, a variable
 	  that didn't exit.
 
