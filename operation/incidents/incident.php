@@ -314,7 +314,9 @@ $(document).ready (function () {
 		});
 	});
 <?php if (! $id) : ?>
+	$("#search_status").attr ("value", 1);
 	$("#search_incident_form").submit ();
+	$("#search_status").attr ("value", 0);
 <?php endif; ?>
 });
 </script>

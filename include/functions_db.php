@@ -631,7 +631,7 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 		break;
 	case INCIDENT_USER_CHANGED:
 		$description = __('Assigned user changed');
-		$description .= ' -> '.get_db_value ('nombre', 'tusuario', 'id_usuario', $aditional_data);
+		$description .= ' -> '.get_db_value ('nombre_real', 'tusuario', 'id_usuario', $aditional_data);
 		break;
 	default:
 		$description = __('Unknown update');
@@ -787,6 +787,8 @@ function get_db_all_rows_sql ($sql) {
  * @param $errstr Contains the error message.
  */
 function sql_error_handler ($errno, $errstr) {
+	if (error_reporting () < $errno)
+		return false;
 	echo "<strong>SQL error</strong>: ".$errstr."<br />\n";
 	return true;
 }
