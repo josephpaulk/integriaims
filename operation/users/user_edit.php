@@ -47,6 +47,14 @@ if ($id_user == $config['id_user']) {
 	}
 }
 
+/* Get fields for user */
+$email = $user['direccion'];
+$phone = $user['telefono'];
+$real_name = $user['nombre_real'];
+$avatar = $user['avatar'];
+$comments = $user['comentarios'];
+$lang = $user['lang'];
+
 // Get user ID to modify data of current user.
 if ($update_user) {
 	if (! $has_permission) {
@@ -62,6 +70,7 @@ if ($update_user) {
 	$avatar = (string) get_parameter ('avatar');
 	$avatar = substr ($avatar, 0, strlen ($avatar) - 4);
 	$comments = (string) get_parameter ('comments');
+	$lang = (string) get_parameter ('lang');
 	
 	$error = false;
 	if ($password != '' && md5 ($password) != $user['password']) {
@@ -71,20 +80,17 @@ if ($update_user) {
 		} else {
 			// Only when change password
 			$sql = sprintf ('UPDATE tusuario
-				SET nombre_real = "%s",
-				password = MD5("%s"), telefono = "%s", direccion = "%s",
-				avatar = "%s", comentarios = "%s"
+				SET password = MD5("%s")
 				WHERE id_usuario = "%s"',
-				$real_name, $password, $phone, $email, $avatar,
-				$comments, $id_user);
+				$password, $id_user);
 		}
 	} else {
 		$sql = sprintf ('UPDATE tusuario
 			SET nombre_real = "%s", telefono = "%s", direccion = "%s",
-			avatar = "%s", comentarios = "%s"
+			avatar = "%s", comentarios = "%s", lang = "%s"
 			WHERE id_usuario = "%s"',
 			$real_name, $phone, $email, $avatar,
-			$comments, $id_user);
+			$comments, $lang, $id_user);
 	}
 	
 	if (! $error) {
@@ -92,9 +98,6 @@ if ($update_user) {
 		
 		if ($result !== false) {
 			echo '<h3 class="suc">'.__('User successfuly updated').'</h3>';
-			/* Do a commit so we can read the fields and fill $user */
-			process_sql ('COMMIT');
-			$user = get_db_row ('tusuario', 'id_usuario', $id_user);
 		} else {
 			echo '<h3 class="error">'.__('Could not update user').'</h3>';
 		}
@@ -102,8 +105,6 @@ if ($update_user) {
 } 
 
 echo '<h2>'.__('User details').'</h2>';
-
-$user = get_db_row ('tusuario', 'id_usuario', $id_user);
 
 $table->width = '740px';
 $table->class = 'databox';
@@ -118,35 +119,35 @@ $table->size = array ();
 $table->size[2] = '50px';
 $table->data = array ();
 
-$table->data[0][0] = print_label (__('User ID'), '', '', true, $user['id_usuario']);
+$table->data[0][0] = print_label (__('User ID'), '', '', true, $id_user);
 $table->data[0][1] = '';
 $table->data[0][2] = print_label (__('Avatar'), '', '', true);
-$table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/'.$user['avatar'].'.png">';
+$table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/'.$avatar.'.png">';
 
 if ($has_permission) {
-	$table->data[0][1] = print_input_text ('real_name', $user['nombre_real'], '', 20, 125, true, __('Real name'));
+	$table->data[0][1] = print_input_text ('real_name', $real_name, '', 20, 125, true, __('Real name'));
 } else {
-	$table->data[0][1] = print_label (__('Real name'), '', '', true, $user['nombre_real']);
+	$table->data[0][1] = print_label (__('Real name'), '', '', true, $real_name);
 }
 
 if ($has_permission) {
-	$table->data[2][0] = print_input_text ('email', $user['direccion'], '', 20, 60, true, __('E-mail'));
-	$table->data[2][1] = print_input_text ('phone', $user['telefono'], '', 20, 40, true, __('Telephone'));
+	$table->data[2][0] = print_input_text ('email', $email, '', 20, 60, true, __('E-mail'));
+	$table->data[2][1] = print_input_text ('phone', $phone, '', 20, 40, true, __('Telephone'));
 	$table->data[4][0] = print_select_from_sql ("SELECT id_language, name FROM tlanguage ORDER BY name",
 		'lang', $user['lang'], '', __('Default'), '', true, false, false, __('Language'));
-	$table->data[5][0] = print_textarea ('comments', 8, 55, $user['comentarios'], '', true, __('Comments'));
+	$table->data[5][0] = print_textarea ('comments', 8, 55, $comments, '', true, __('Comments'));
 	
-	$files = list_files ('images/avatars/', "png",1, 0, "small");
-	$avatar = $user['avatar'].".png";
+	$files = list_files ('images/avatars/', "png", 1, 0, "small");
+	$avatar = $avatar.".png";
 	$table->data[0][2] .= print_select ($files, "avatar", $avatar, '', '', 0, true);
 } else {
-	$email = ($user['direccion'] != '') ? $user['direccion'] : __('Not provided');
-	$phone = ($user['telefono'] != '') ? $user['telefono'] : __('Not provided');
+	$email = ($email != '') ? $email : __('Not provided');
+	$phone = ($phone != '') ? $phone : __('Not provided');
 	
 	$table->data[2][0] = print_label (__('E-mail'), '', '', true, $email);
 	$table->data[2][1] = print_label (__('Telephone'), '', '', true, $phone);
 	if ($user['comentarios'] != '')
-		$table->data[3][0] = print_label (__('Comments'), '', '', true, $user['comentarios']);
+		$table->data[3][0] = print_label (__('Comments'), '', '', true, $comments);
 }
 
 if ($has_permission) {
@@ -178,11 +179,12 @@ if ($has_permission) {
 <script  type="text/javascript">
 $(document).ready (function () {
 	$("#avatar").change (function () {
-		icon = this.value.substr(0,this.value.length-4);
+		icon = this.value.substr (0, this.value.length - 4);
 		
 		$("#avatar-preview").fadeOut ('normal', function () {
 			$(this).attr ("src", "images/avatars/"+icon+".png").fadeIn ();
 		});
 	});
+	$('textarea').TextAreaResizer ();
 });
 </script>
