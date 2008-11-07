@@ -103,7 +103,7 @@ if ($attachments !== false) {
 		$data = array ();
 		
 		$attach_id = $attachment['id_attachment'];
-		$link = 'attachment/'.$attachment['id_attachment'].'_'.$attachment['filename'];
+		$link = 'attachment/'.$attachment['id_attachment'].'_'.rawurlencode ($attachment['filename']);
 		$data[0] = '<a href="'.$link.'" title="'.$attachment['description'].'">';
 		$data[0] .= '<img src="images/disk.png"/> ';
 		$data[0] .= $attachment['filename'];

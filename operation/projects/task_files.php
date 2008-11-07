@@ -154,11 +154,11 @@ if ($res = mysql_query($sql)) {
 			echo $row["name"];
 			echo "<td class='$tdcolor' valign='top'>";
 			echo "<img src='images/attach.png'> ";
-			echo "<b><a href='$filename'>".$row["filename"]."</a></b>";
+			echo '<b><a href="'.rawurlencode ($filename).'">'.$row["filename"]."</a></b>";
 		} else {
 			echo "<tr><td class='$tdcolor' valign='top'>";
 			echo "<img src='images/attach.png'> ";
-			echo "<b><a href='$filename'>".$row["filename"]."</a></b>";
+			echo '<b><a href="'.rawurlencode ($filename).'">'.$row["filename"]."</a></b>";
 		}
 		echo "<td class='$tdcolor' valign='top'>";
 		echo $row["id_usuario"];

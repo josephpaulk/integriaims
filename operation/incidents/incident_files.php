@@ -71,7 +71,7 @@ foreach ($files as $file) {
 	$data = array ();
 	
 	$data[0] = '<img src="images/disk.png" /><a target="_blank"
-		href="attachment/pand'.$file['id_attachment'].'_'.$file['filename'].'">'.
+		href="attachment/pand'.$file['id_attachment'].'_'.rawurlencode ($file['filename']).'">'.
 		$file['filename'].'</a>';
 	$data[1] = $file["description"];
 	$data[2] = byte_convert ($file['size']);

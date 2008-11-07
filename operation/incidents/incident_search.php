@@ -318,9 +318,9 @@ if ($show_stats) {
 	$max_lifetime = 0;
 	$oldest_incident = false;
 	foreach ($stat_incidents as $incident) {
-		if ($incident['estado'] != 6 && $incident['estado'] != 7)
+		if ($incident['estado'] != 6 && $incident['estado'] != 7) {
 			$opened++;
-		else{
+		} elseif ($incident['actualizacion'] != '0000-00-00 00:00:00') {
 			$lifetime = get_db_value ('actualizacion - inicio',
 				'tincidencia', 'id_incidencia', $incident['id_incidencia']);
 			if ($lifetime > $max_lifetime) {

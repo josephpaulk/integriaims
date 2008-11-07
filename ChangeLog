@@ -1,3 +1,14 @@
+2008-11-07  Esteban Sanchez  <estebans@artica.es>
+
+	* operation/incidents/incident_files.php,
+	operation/kb/browse_data.php, operation/kb/manage_data.php,
+	operation/projects/task_files.php: Encode files URL characters to
+	allow special characters in filenames. It was causing 404 errors if
+	the filename has characters like #@=.
+
+	* operation/incidents/incident_search.php: Ignore closed incident
+	without valid date in statistics.
+
 2008-11-06  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_form.php: Added blank space. Incident_details_list 
