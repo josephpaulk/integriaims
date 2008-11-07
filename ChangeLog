@@ -1,5 +1,10 @@
 2008-11-07  Esteban Sanchez  <estebans@artica.es>
 
+	* sql_error_handler: Added sql_error_handler() to hable SQL errors on
+	process_sql. Improve SQL error handling in process_sql().
+
+2008-11-07  Esteban Sanchez  <estebans@artica.es>
+
 	* operation/users/user_edit.php: Fixed an error when updating the user
 	which was not showing the updated fields, but the old ones.
 
