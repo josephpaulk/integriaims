@@ -1,4 +1,15 @@
 2008-11-10  Esteban Sanchez  <estebans@artica.es>
+
+	* operation/companies/company_detail.php: Fixed type error when
+	fetching company id.
+
+	* include/functions_graph.php: Do not show any error on
+	generic_graph().
+
+	* operation/incidents/type_detail.php: Fixed table width to work in
+	IE6+.
+
+2008-11-10  Esteban Sanchez  <estebans@artica.es>
 	
 	* include/functions_form.php: Added support to search by incident
 	type. Also it's now possible to search by company.

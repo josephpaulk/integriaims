@@ -97,8 +97,7 @@ if ($id || $new_type) {
 		$id_wizard = $type['id_wizard'];
 	}
 	
-	$table->width = '740px';
-	$table->width = "720px";
+	$table->width = "90%";
 	$table->class = "databox";
 	$table->data = array ();
 	$table->colspan = array ();
@@ -131,7 +130,7 @@ if ($id || $new_type) {
 		$where_clause .= sprintf ('WHERE name LIKE "%%%s%%"', $search_text);
 	}
 
-	$table->width = '400px';
+	$table->width = '90%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
@@ -148,7 +147,7 @@ if ($id || $new_type) {
 	$types = get_db_all_rows_sql ($sql);
 	
 	if ($types !== false) {
-		$table->width = '720px';
+		$table->width = '90%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->size = array ();

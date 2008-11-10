@@ -268,6 +268,7 @@ function generic_pie_graph ($width=300, $height=200, $data, $legend) {
 	require ("../include/config.php");
 	require_once '../include/Image/Graph.php';
 	
+	error_reporting (0);
 	if (sizeof($data) > 0){
 		// create the graph
 		$driver=& Image_Canvas::factory('png',array('width'=>$width,'height'=>$height,'antialias' => 'native'));

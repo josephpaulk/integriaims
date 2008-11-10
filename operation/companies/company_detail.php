@@ -24,7 +24,7 @@ if (! give_acl ($config["id_user"], 0, "IM")) {
 	exit;
 }
 
-$id = (bool) get_parameter ('id');
+$id = (int) get_parameter ('id');
 $new_company = (bool) get_parameter ('new_company');
 $create_company = (bool) get_parameter ('create_company');
 $update_company = (bool) get_parameter ('update_company');
