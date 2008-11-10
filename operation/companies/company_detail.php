@@ -179,8 +179,10 @@ if ($id || $new_company) {
 			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=".
 				$company["id"]."'>".$company["name"]."</a>";
 			$data[1] = get_db_sql("SELECT name FROM tcompany_role WHERE id = ".$company["id_company_role"]);
-			$data[2] = "<img src='images/maintab.gif'>";
-			$data[3] = "<img src='images/group.png'>";
+			$data[2] = '<a href="index.php?sec=inventory&sec2=operation/contracts/contract_detail&search_id_company='.
+				$company['id'].'"><img src="images/maintab.gif"></a>';
+			$data[3] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id_company='.
+				$company['id'].'"><img src="images/group.png"></a>';
 			$data[4] ='<a href="index.php?sec=inventory&
 						sec2=operation/companies/company_detail&
 						delete_company=1&id='.$company['id'].'"

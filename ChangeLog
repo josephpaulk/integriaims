@@ -1,3 +1,17 @@
+2008-11-10  Esteban Sanchez  <estebans@artica.es>
+	
+	* include/functions_form.php: Added support to search by incident
+	type. Also it's now possible to search by company.
+
+	* operation/companies/company_detail.php: Added link to contracts and
+	contacts.
+
+	* operation/incidents/incident.php: Style correction. Removed
+	$id_usuario and replaced by $config.
+
+	* operation/incidents/incident_search.php: Added support to search by
+	incident type.
+
 2008-11-07  Esteban Sanchez  <estebans@artica.es>
 
 	* operation/incidents/incident.php: Default search now only show new

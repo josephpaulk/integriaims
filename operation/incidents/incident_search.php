@@ -100,14 +100,14 @@ $status = (int) get_parameter ('status');
 $search_priority = (int) get_parameter ('search_priority', -1);
 $search_id_group = (int) get_parameter ('search_id_group', 1);
 $search_status = (int) get_parameter ('search_status', 0);
-$search_id_product = (int) get_parameter ('search_id_product', 0);
-$search_id_company = (int) get_parameter ('search_id_company', 0);
+$search_id_product = (int) get_parameter ('search_id_product');
+$search_id_company = (int) get_parameter ('search_id_company');
 $search_id_inventory = (int) get_parameter ('search_id_inventory');
 $search_serial_number = (string) get_parameter ('search_serial_number');
 $search_id_building = (int) get_parameter ('search_id_building');
 $search_sla_fired = (bool) get_parameter ('search_sla_fired');
-$search_id_incident = (int) get_parameter ('search_id_incident');
-$search_id_user = (string) get_parameter ('search_id_user');
+$search_id_incident_type = (int) get_parameter ('search_id_incident_type');
+$search_id_user = (string) get_parameter ('search_id_user', '');
 $search_first_date = (string) get_parameter ('search_first_date');
 $search_last_date = (string) get_parameter ('search_last_date');
 
@@ -125,8 +125,8 @@ if ($search_status)
 	$sql_clause .= sprintf (' AND estado = %d', $search_status);
 if ($search_id_user != '0')
 	$sql_clause .= sprintf (' AND id_usuario = "%s"', $search_id_user);
-if ($search_id_user != '0')
-	$sql_clause .= sprintf (' AND id_usuario = "%s"', $search_id_user);
+if ($search_id_incident_type)
+	$sql_clause .= sprintf (' AND id_incident_type = %d', $search_id_incident_type);
 if ($search_first_date != '') {
 	$time = strtotime ($search_first_date);
 	$sql_clause .= sprintf (' AND inicio >= "%s"', date ("Y-m-d", $time));

@@ -19,15 +19,10 @@
 $accion = "";
 global $config;
 
-if (check_login () != 0) {
-	audit_db ("Noauth", $config["REMOTE_ADDR"], "No authenticated access","Trying to access incident viewer");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
-$id_usuario =$_SESSION["id_usuario"];
-if (! give_acl ($id_usuario, 0, "IR")) {
-	audit_db ($id_usuario, $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
+if (! give_acl ($config['id_user'], 0, "IR")) {
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -50,16 +45,16 @@ if (isset ($_GET["quick_delete"])) {
 	if ($row2) {
 		$id_author_inc = $row2["id_usuario"];
 		$email_notify = $row2["notify_email"];
-		if ((give_acl($id_usuario, $row2["id_grupo"], "IM") ==1) OR ($_SESSION["id_usuario"] == $id_author_inc) ) {
+		if (give_acl ($config['id_user'], $row2["id_grupo"], "IM") || $config['id_user'] == $id_author_inc) {
 			if ($email_notify == 1){
 				// Email notify to all people involved in this incident
-				mail_incident ($id_inc, $id_usuario, "", 0, 3);
+				mail_incident ($id_inc, $config['id_user'], "", 0, 3);
 			}
 			borrar_incidencia($id_inc);
 			echo "<h3 class='suc'>".__('Incident successfully deleted')."</h3>";
-			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Incident deleted","User ".$id_usuario." deleted incident #".$id_inc);
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Incident deleted","User ".$config['id_user']." deleted incident #".$id_inc);
 		} else {
-			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$_SESSION["id_usuario"]." try to delete incident");
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config['id_user']." try to delete incident");
 			echo "<h3 class='error'>".__('There was a problem deleting incident')."</h3>";
 			no_permission();
 		}

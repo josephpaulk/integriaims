@@ -654,8 +654,8 @@ function form_search_incident ($return = false) {
 	$search_serial_number = (string) get_parameter ('search_serial_number');
 	$search_id_building = (int) get_parameter ('search_id_building');
 	$search_sla_fired = (bool) get_parameter ('search_sla_fired');
-	$search_id_incident = (string) get_parameter ('search_id_incident');
 	$search_id_user = (string) get_parameter ('search_id_user');
+	$search_id_incident_type = (int) get_parameter ('search_id_incident_type');
 	
 	/* No action is set, so the form will be sent to the current page */
 	$table->width = "100%";
@@ -672,9 +672,10 @@ function form_search_incident ($return = false) {
 	$table->rowstyle[1] = 'display: none';
 	$table->rowstyle[2] = 'display: none';
 	$table->rowstyle[3] = 'display: none';
-	$table->rowstyle[4] = 'text-align: right';
+	$table->rowstyle[4] = 'display: none';
+	$table->rowstyle[5] = 'text-align: right';
 	$table->colspan = array ();
-	$table->colspan[4][0] = 3;
+	$table->colspan[5][0] = 3;
 	
 	$table->data[0][0] = print_input_text ('search_string', $search_string,
 		'', 30, 100, true, __('Search string'));
@@ -700,11 +701,6 @@ function form_search_incident ($return = false) {
 	$table->data[1][1] .= print_button ($name, 'inventory_name', false, '',
 		'class="dialogbtn"', true, __('Inventory'));
 	
-	$table->data[1][2] = print_select (get_companies (),
-		'search_id_company', $id_company,
-		'', __('All'), 0, true, false, false,
-		__('Company'));
-	
 	$table->data[1][2] = print_select (get_products (),
 		'search_id_product', $id_product,
 		'', __('All'), 0, true, false, false,
@@ -724,7 +720,12 @@ function form_search_incident ($return = false) {
 	$table->data[3][1] = print_input_text ('search_first_date', '', '', 15, 15, true, __('Begin date'));
 	$table->data[3][2] = print_input_text ('search_last_date', '', '', 15, 15, true, __('End date'));
 	
-	$table->data[4][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$table->data[4][0] = print_select (get_companies (), 'search_id_company',
+		$id_company, '', __('All'), 0, true, false, false, __('Company'));
+	$table->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
+		$id_company, '', __('All'), 0, true, false, false, __('Incident type'));
+	
+	$table->data[5][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= '<form id="search_incident_form" method="post">';
 	$output .= print_table ($table, true);
