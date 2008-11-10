@@ -1,5 +1,10 @@
 2008-11-10  Esteban Sanchez  <estebans@artica.es>
 
+	* include/styles/integria.css: Added style to show order arrow in
+	sorting tables.
+
+2008-11-10  Esteban Sanchez  <estebans@artica.es>
+
 	* operation/companies/company_detail.php: Fixed type error when
 	fetching company id.
 

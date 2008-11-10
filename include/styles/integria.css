@@ -635,6 +635,19 @@ th {
 	line-height: 22px;
 }
 
+thead tr .header {
+	background-repeat: no-repeat;
+	background-position: center right;
+}
+
+thead tr .headerSortUp {
+	background-image: url(asc.gif);
+}
+
+thead tr .headerSortDown {
+	background-image: url(desc.gif);
+}
+
 .f9, .f9i, .f9b, td.f9, td.f9i, td.datosf9, td.datos2f9,
 td.datosf9i, td.datos2f9i {
 	font-size: 9px;
