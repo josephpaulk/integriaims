@@ -1,3 +1,12 @@
+2008-11-11  Ramon Novoa  <rnovoa@artica.es>
+
+	* include/styles/integria.css,
+	  include/functions_db.php,
+	  operation/incidents/incident_search.php: Added additional
+	  incident statistics.
+
+	* operation/projects/project.php: Fixed a typo.
+
 2008-11-11  Esteban Sanchez  <estebans@artica.es>
 
 	* general/login_page.php: Show a message if login proccess failed.

@@ -999,3 +999,7 @@ label {
 #button-usuario_name {
 	width: 110px;
 }
+
+.float_left {
+	float:left;
+}

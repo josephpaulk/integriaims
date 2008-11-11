@@ -1976,4 +1976,40 @@ function get_group_default_user ($id_group) {
 	return get_db_row ('tusuario', 'id_usuario', $id_user);
 }
 
+/** 
+ * Returns the n most active users (users with more hours worked on incidents).
+ *
+ * @param lim n, number of users to return.
+ */
+function get_most_active_users ($lim) {
+	$most_active_users = get_db_all_rows_sql ('SELECT id_user, SUM(duration) as worked_hours
+	                                          FROM tworkunit GROUP BY id_user
+	                                          ORDER BY worked_hours DESC LIMIT ' . $lim);
+	return $most_active_users;
+}
+
+/** 
+ * Returns the n most active incidents (incidents with more worked hours).
+ *
+ * @param lim n, number of incidents to return.
+ */
+function get_most_active_incidents ($lim) {
+	$most_active_incidents = get_db_all_rows_sql ('SELECT titulo, SUM(duration) AS worked_hours
+	                                               FROM tworkunit, tworkunit_incident, tincidencia
+	                                               WHERE tworkunit.id = tworkunit_incident.id_workunit
+	                                                 AND tworkunit_incident.id_incident = tincidencia.id_incidencia
+	                                               GROUP BY tworkunit_incident.id_incident
+	                                               ORDER BY worked_hours DESC LIMIT ' . $lim);
+	return $most_active_incidents;
+}
+
+/** 
+ * Returns the incident SLA compliance percentage.
+ *
+ */
+function get_sla_compliance () {
+	$sla_compliance = get_db_row_sql ('SELECT 100 * COUNT(IF (affected_sla_id = 0, 1, NULL)) / COUNT(*) AS sla_compliance FROM tincidencia');
+	return $sla_compliance{'sla_compliance'};
+}
+
 ?>

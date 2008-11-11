@@ -126,7 +126,7 @@ if ($action == 'insert') {
 			$sql = sprintf ('INSERT INTO trole_people_project
 				(id_project, id_user, id_role)
 				VALUES (%d, "%s", 1)',
-				$id, $config['id_user']);
+				$id_project, $config['id_user']);
 			process_sql ($sql);
 		}
 	}

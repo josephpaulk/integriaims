@@ -348,12 +348,15 @@ if ($show_stats) {
 	if ($closed != 0) {
 		$mean_lifetime = (int) ($total_lifetime / $closed) / 60;
 	}
+	
+	// Get incident SLA compliance
+	$sla_compliance = get_sla_compliance ();
+
 	$table->width = '400px';
-	$table->class = 'databox';
+	$table->class = 'float_left databox';
 	$table->rowspan = array ();
 	$table->rowspan[0][1] = 2;
 	$table->colspan = array ();
-	$table->colspan[3][0] = 2;
 	$table->style = array ();
 	$table->style[2] = 'vertical-align: top';
 	$table->data = array ();
@@ -368,14 +371,38 @@ if ($show_stats) {
 		give_human_time ($mean_lifetime));
 	$table->data[2][1] = print_label (__('Mean work time'), '', '', true,
 		$mean_work.' '.__('Hours'));
+	$table->data[3][0] = print_label (__('SLA compliance'), '', '', true,
+		$sla_compliance.' '.__('%'));
 	
 	if ($oldest_incident) {
 		$link = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.
 			$oldest_incident['id_incidencia'].'">'.$oldest_incident['titulo'].'</a>';
-		$table->data[3][0] = print_label (__('Longest closed incident'), '', '', true,
+		$table->data[3][1] = print_label (__('Longest closed incident'), '', '', true,
 			$link);
 	}
 	
+	print_table ($table);
+	unset ($table);
+
+	// Find the 5 most active users (more hours worked)
+	$most_active_users = get_most_active_users (5);
+	$users_label = '';
+	foreach ($most_active_users as $user) {
+		$users_label .= $user{'id_user'} . " (" . $user{'worked_hours'} . " " . __('Hours') . ") <br />";
+	}
+
+	// Find the 5 most active incidents (more worked hours)
+	$most_active_incidents = get_most_active_incidents (5);
+	$incidents_label = '';
+	foreach ($most_active_incidents as $incident) {
+		$incidents_label .= $incident{'titulo'} . " (" . $incident{'worked_hours'} . " " . __('Hours') . ") <br />";
+	}
+	
+	$table->width = '450px';
+	$table->class = 'float_left databox';
+	$table->data = array ();
+	$table->data[0][0] = print_label (__('Most active users'), '', '', true, $users_label);
+	$table->data[0][1] = print_label (__('Most active incidents'), '', '', true, $incidents_label);
 	print_table ($table);
 }
 ?>
