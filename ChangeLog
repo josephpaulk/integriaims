@@ -1,5 +1,9 @@
 2008-11-11  Ramon Novoa  <rnovoa@artica.es>
 
+	* include/functions_db.php: Handle empty query results.
+
+2008-11-11  Ramon Novoa  <rnovoa@artica.es>
+
 	* include/styles/integria.css,
 	  include/functions_db.php,
 	  operation/incidents/incident_search.php: Added additional

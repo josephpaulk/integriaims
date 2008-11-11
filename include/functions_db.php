@@ -1985,6 +1985,10 @@ function get_most_active_users ($lim) {
 	$most_active_users = get_db_all_rows_sql ('SELECT id_user, SUM(duration) as worked_hours
 	                                          FROM tworkunit GROUP BY id_user
 	                                          ORDER BY worked_hours DESC LIMIT ' . $lim);
+	if ($most_active_users === false) {
+		return array ();
+	}
+
 	return $most_active_users;
 }
 
@@ -2000,6 +2004,10 @@ function get_most_active_incidents ($lim) {
 	                                                 AND tworkunit_incident.id_incident = tincidencia.id_incidencia
 	                                               GROUP BY tworkunit_incident.id_incident
 	                                               ORDER BY worked_hours DESC LIMIT ' . $lim);
+	if ($most_active_incidents === false) {
+		return array ();
+	}
+
 	return $most_active_incidents;
 }
 
