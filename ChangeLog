@@ -1,3 +1,9 @@
+2008-11-11  Sancho Lerena <slerena@artica.es>
+	
+	* index.php: Update link menu, now associated to Agenda ACL check.
+
+	* integria_dbdata.sql: Updated version number in SQL:
+
 2008-11-10  Esteban Sanchez  <estebans@artica.es>
 
 	* include/styles/integria.css: Added style to show order arrow in
