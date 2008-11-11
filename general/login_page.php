@@ -15,7 +15,7 @@
 
 ?>
 <center>
-<div class="databox" id="login" style='height: 170px'>
+<div class="databox" id="login">
 	<div id="login_in">
 <?php 
 	$action = "index.php";
@@ -33,12 +33,18 @@
 		print_input_hidden ($name, $value);
 ?>
 		<table width="400px" class="blank">
+<?php if (isset ($login_failed)): ?>
+		<tr>
+		<h3 style="width: 230px;" class="error"><?php echo __('Login failed')?></h3>
+		</tr>
+<?php endif; ?>
 		<tr>
 		<td rowspan="3" style="text-align: left; border-right: solid 1px #678;padding-right: 25px;">
 			<a href="index.php">
 			<img src="images/integria_white.png" alt="logo">
 			</a><br />
 			<?php echo $config["version"]; ?>
+		</td>
 		<td rowspan="3" width="5" />
 		<td>
 			<?php print_input_text ('nick', '', '', '', 50, false, __('User')); ?>

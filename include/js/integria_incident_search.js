@@ -21,7 +21,10 @@ function configure_user_search_form () {
 						$("#dialog-user-search").dialog ("close").empty ();
 					});
 					$("#user_search_result_table").trigger ("update")
-						.tablesorterPager ({container: $("#users-pager"), size: 3});
+						.tablesorterPager ({
+							container: $("#users-pager"),
+							size: 3
+						});
 					$("#user_search_result_table tbody").fadeIn ();
 					$("#users-pager").removeClass ("hide").fadeIn ();
 				},
@@ -135,6 +138,8 @@ function configure_incident_form (enable_ajax_form) {
 		jQuery.get ("ajax.php",
 			values,
 			function (data, status) {
+				if (! data["user_real_name"])
+					return;
 				$(dialog+"#hidden-usuario_form").attr ("value", data["id_user_default"]);
 				$(dialog+"#button-usuario_name").attr ("value", data["user_real_name"]);
 				if (data["forced_email"] == 1)
@@ -258,7 +263,13 @@ function configure_incident_search_form (page_size, row_click_callback, search_c
 						row_click_callback (id, name);
 					});
 					$(dialog+"table#incident_search_result_table").trigger ("update")
-						.tablesorterPager ({container: $(dialog+"#pager"), size: page_size});
+						.tablesorterPager ({
+							container: $(dialog+"#pager"),
+							size: page_size,
+							headers: {
+								0: "currency"
+							}
+						});
 					$(dialog+"table#incident_search_result_table tbody").fadeIn ();
 					$(dialog+"#pager").removeClass ("hide").fadeIn ();
 					if (search_callback)
@@ -345,7 +356,13 @@ function configure_inventory_search_form (page_size, incident_click_callback) {
 						incident_click_callback (id, name);
 					});
 					$(dialog+"#inventory_search_result_table").trigger ("update")
-						.tablesorterPager ({container: $(dialog+"#inventory-pager"), size: page_size});
+						.tablesorterPager ({
+							container: $(dialog+"#inventory-pager"),
+							size: page_size,
+							headers: {
+								0: "currency"
+							}
+						});
 					$(dialog+"#inventory_search_result_table tbody").fadeIn ();
 					$(dialog+"#inventory-pager").removeClass ("hide").fadeIn ();
 				},

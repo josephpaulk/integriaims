@@ -140,12 +140,14 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 		unset ($_GET["sec2"]);
 		echo '</head>';
 		echo '<body bgcolor="#ffffff">';
-		include "general/logon_failed.php";
 		$first = substr ($pass, 0, 1);
 		$last = substr ($pass, strlen ($pass) - 1, 1);
 		$pass = $first . "****" . $last;
 		audit_db ($nick, $config["REMOTE_ADDR"], "Logon Failed",
-			  "Invalid username: ".$nick." / ".$pass);
+			"Invalid username: ".$nick." / ".$pass);
+		
+		$login_failed = true;
+		require ('general/login_page.php');
 		exit;
 	}
 } elseif (! isset ($_SESSION['id_usuario'])) {

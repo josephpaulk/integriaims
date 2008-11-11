@@ -1,3 +1,20 @@
+2008-11-11  Esteban Sanchez  <estebans@artica.es>
+
+	* general/login_page.php: Show a message if login proccess failed.
+
+	* general/logon_failed.php: Removed from repository.
+
+	* index.php: Do not redirect to logon_failed anymore.
+
+	* include/styles/integria.css: Removed unused styles and height
+	property of login div element.
+
+	* include/js/integria_incident_search.js: Added sort options to first
+	column (id) in inventories and incidents tables.
+
+	* include/js/jquery.tablesorter.js: Little hack added to currency
+	parser.
+
 2008-11-11  Sancho Lerena <slerena@artica.es>
 	
 	* index.php: Update link menu, now associated to Agenda ACL check.

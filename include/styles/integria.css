@@ -905,18 +905,7 @@ div#login {
 	border-top: solid 1px #000;
 	border-bottom: solid 2px #000;
 	border-right: solid 2px #000;
-	height: 200px;
 	padding-top: 20px;
-}
-div#login_in, #login_f {
-	margin: 0 auto;
-	width: 400px;
-	padding-top: 5px;
-	height: 100px;
-}
-div#login_f {
-	margin-top: 10px;
-	margin-bottom: 25px;
 }
 
 div#foot {
