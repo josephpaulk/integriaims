@@ -21,8 +21,11 @@ check_login ();
 if (! defined ('AJAX'))
 	return;
 
+require_once ('include/functions_incidents.php');
+
 $search_form = (bool) get_parameter ('search_form');
 $create_custom_search = (bool) get_parameter ('create_custom_search');
+$delete_custom_search = (bool) get_parameter ('delete_custom_search');
 $get_custom_search_values = (bool) get_parameter ('get_custom_search_values');
 
 /* Create a custom saved search via AJAX */
@@ -54,6 +57,26 @@ if ($get_custom_search_values) {
 	echo json_encode (unserialize ($search['form_values']));
 	return;
 }
+
+/* Delete a custom saved search via AJAX */
+if ($delete_custom_search) {
+	$id_search = (int) get_parameter ('id_search');
+	$sql = sprintf ('DELETE FROM tcustom_search
+		WHERE id_user = "%s"
+		AND id = %d',
+		$config['id_user'], $id_search);
+	$result = process_sql ($sql);
+	if ($result === false) {
+		echo '<h3 class="error">'.__('Could not delete custom search').'</h3>';
+	} else {
+		echo '<h3 class="suc">'.__('Custom search deleted').'</h3>';
+	}
+	
+	if (defined ('AJAX')) {
+		return;
+	}
+}
+
 
 /* Show search form via AJAX */
 if ($search_form) {
@@ -95,157 +118,42 @@ if ($search_form) {
 
 $show_stats = (bool) get_parameter ('show_stats');
 
-$search_string = (string) get_parameter ('search_string');
-$status = (int) get_parameter ('status');
-$search_priority = (int) get_parameter ('search_priority', -1);
-$search_id_group = (int) get_parameter ('search_id_group', 1);
-$search_status = (int) get_parameter ('search_status', 0);
-$search_id_product = (int) get_parameter ('search_id_product');
-$search_id_company = (int) get_parameter ('search_id_company');
-$search_id_inventory = (int) get_parameter ('search_id_inventory');
-$search_serial_number = (string) get_parameter ('search_serial_number');
-$search_id_building = (int) get_parameter ('search_id_building');
-$search_sla_fired = (bool) get_parameter ('search_sla_fired');
-$search_id_incident_type = (int) get_parameter ('search_id_incident_type');
-$search_id_user = (string) get_parameter ('search_id_user', '');
-$search_first_date = (string) get_parameter ('search_first_date');
-$search_last_date = (string) get_parameter ('search_last_date');
+$filter = array ();
+$filter['string'] = (string) get_parameter ('search_string');
+$filter['status'] = (int) get_parameter ('status');
+$filter['priority'] = (int) get_parameter ('search_priority', -1);
+$filter['id_group'] = (int) get_parameter ('search_id_group', 1);
+$filter['status'] = (int) get_parameter ('search_status', 0);
+$filter['id_product'] = (int) get_parameter ('search_id_product');
+$filter['id_company'] = (int) get_parameter ('search_id_company');
+$filter['id_inventory'] = (int) get_parameter ('search_id_inventory');
+$filter['serial_number'] = (string) get_parameter ('search_serial_number');
+$filter['id_building'] = (int) get_parameter ('search_id_building');
+$filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
+$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
+$filter['id_user'] = (string) get_parameter ('search_id_user', '');
+$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
+$filter['id_user'] = (string) get_parameter ('search_id_user', '');
+//$filter['first_date'] = (string) get_parameter ('search_first_date');
+//$filter['last_date'] = (string) get_parameter ('search_last_date');
 
-if ($status == 0)
-	$status = implode (',', array_keys (get_indicent_status ()));
-
-$resolutions = get_incident_resolutions ();
-
-$sql_clause = '';
-if ($search_priority != -1)
-	$sql_clause .= sprintf (' AND prioridad = %d', $search_priority);
-if ($search_id_group != 1)
-	$sql_clause .= sprintf (' AND id_grupo = %d', $search_id_group);
-if ($search_status)
-	$sql_clause .= sprintf (' AND estado = %d', $search_status);
-if ($search_id_user != '0')
-	$sql_clause .= sprintf (' AND id_usuario = "%s"', $search_id_user);
-if ($search_id_incident_type)
-	$sql_clause .= sprintf (' AND id_incident_type = %d', $search_id_incident_type);
-if ($search_first_date != '') {
-	$time = strtotime ($search_first_date);
-	$sql_clause .= sprintf (' AND inicio >= "%s"', date ("Y-m-d", $time));
-}
-if ($search_last_date != '') {
-	$time = strtotime ($search_last_date);
-	$sql_clause .= sprintf (' AND inicio <= "%s"', date ("Y-m-d", $time));
-}
-
-$sql = sprintf ('SELECT * FROM tincidencia
-		WHERE estado IN (%s)
-		%s
-		AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%")
-		ORDER BY actualizacion desc
-		LIMIT %d',
-		$status, $sql_clause, $search_string, $search_string,
-		$config['limit_size']);
-
-$incidents = get_db_all_rows_sql ($sql);
+$incidents = filter_incidents ($filter);
 if ($incidents === false) {
 	if (!$show_stats)
 		echo '<tr><td colspan="8">'.__('Nothing was found').'</td></tr>';
 	return;
 }
 
-$status = get_indicent_status ();
-
-/* Show stats is a flag to show stats of the incidents on the search */
+/* Show HTML if show_stats flag is active on HTML request */
 if ($show_stats) {
-	$stat_incidents = array ();
+	print_incidents_stats ($incidents);
+	
+	return;
 }
 
+$statuses = get_indicent_status ();
+
 foreach ($incidents as $incident) {
-	if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR'))
-		continue;
-	
-	$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
-	
-	/* Check aditional searching clauses */
-	if ($search_sla_fired && $incident['affected_sla_id'] == 0) {
-		continue;
-	}
-	
-	if ($search_id_inventory) {
-		$found = false;
-		foreach ($inventories as $inventory) {
-			if ($inventory['id'] == $search_id_inventory) {
-				$found = true;
-				break;
-			}
-		}
-		
-		if (! $found)
-			continue;
-	}
-	
-	if ($search_serial_number != '') {
-		$found = false;
-		foreach ($inventories as $inventory) {
-			if (strcasecmp ($inventory['serial_number'], $search_serial_number)) {
-				$found = true;
-				break;
-			}
-		}
-		
-		if (! $found)
-			continue;
-	}
-	
-	if ($search_id_building) {
-		$found = false;
-		foreach ($inventories as $inventory) {
-			if ($inventory['id_building'] == $search_id_building) {
-				$found = true;
-				break;
-			}
-		}
-		
-		if (! $found)
-			continue;
-	}
-	
-	if ($search_id_product) {
-		$found = false;
-		foreach ($inventories as $inventory) {
-			if ($inventory['id_product'] == $search_id_product) {
-				$found = true;
-				break;
-			}
-		}
-		
-		if (! $found)
-			continue;
-	}
-	
-	if ($search_id_company) {
-		$found = false;
-		foreach ($inventories as $inventory) {
-			$companies = get_inventory_affected_companies ($inventory['id'], false);
-			foreach ($companies as $company) {
-				if ($company['id'] == $search_id_company) {
-					$found = true;
-					break;
-				}
-			}
-			if ($found)
-				break;
-		}
-		
-		if (! $found)
-			continue;
-	}
-	
-	if ($show_stats) {
-		array_push ($stat_incidents, $incident);
-		/* Continue to avoid showing any results. Stats HTML are show at
-		the bottom of this file. */
-		continue;
-	}
 	/* We print the rows directly, because it will be used in a sortable
 	   jQuery table and it only needs the rows */
 
@@ -271,7 +179,7 @@ foreach ($incidents as $incident) {
 	echo '<td>'.$incident['titulo'].'</td>';
 	echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']).'</td>';
 	$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
-	echo '<td><strong>'.$status[$incident['estado']].'</strong> - <em>'.$resolution.'</em></td>';
+	echo '<td><strong>'.$statuses[$incident['estado']].'</strong> - <em>'.$resolution.'</em></td>';
 
 
 	echo '<td>'.print_priority_flag_image ($incident['prioridad'], true).'</td>';
@@ -307,104 +215,5 @@ foreach ($incidents as $incident) {
 	echo '</td>';
 
 	echo '</tr>';
-}
-
-/* Show HTML if show_stats flag is active on HTML request */
-if ($show_stats) {
-	$total = sizeof ($stat_incidents);
-	$opened = 0;
-	$total_hours = 0;
-	$total_lifetime = 0;
-	$max_lifetime = 0;
-	$oldest_incident = false;
-	foreach ($stat_incidents as $incident) {
-		if ($incident['estado'] != 6 && $incident['estado'] != 7) {
-			$opened++;
-		} elseif ($incident['actualizacion'] != '0000-00-00 00:00:00') {
-			$lifetime = get_db_value ('actualizacion - inicio',
-				'tincidencia', 'id_incidencia', $incident['id_incidencia']);
-			if ($lifetime > $max_lifetime) {
-				$oldest_incident = $incident;
-				$max_lifetime = $lifetime;
-			}
-			$total_lifetime += $lifetime;
-		}
-		$workunits = get_incident_workunits ($incident['id_incidencia']);
-		$hours = 0;
-		foreach ($workunits as $workunit) {
-			$hours += get_db_value ('duration', 'tworkunit', 'id', $workunit['id_workunit']);
-		}
-		$total_hours += $hours;
-	}
-	$closed = $total - $opened;
-	$opened_pct = 0;
-	$mean_work = 0;
-	$mean_lifetime = 0;
-	if ($total != 0) {
-		$opened_pct = format_numeric ($opened / $total * 100);
-		$mean_work = format_numeric ($total_hours / $total, 2);
-	}
-	
-	if ($closed != 0) {
-		$mean_lifetime = (int) ($total_lifetime / $closed) / 60;
-	}
-	
-	// Get incident SLA compliance
-	$sla_compliance = get_sla_compliance ();
-
-	$table->width = '400px';
-	$table->class = 'float_left databox';
-	$table->rowspan = array ();
-	$table->rowspan[0][1] = 2;
-	$table->colspan = array ();
-	$table->style = array ();
-	$table->style[2] = 'vertical-align: top';
-	$table->data = array ();
-	
-	$table->data[0][0] = print_label (__('Total incicents'), '', '', true, $total);
-	$data = implode (',', array ($opened, $total - $opened));
-	$legend = implode (',', array (__('Opened'), __('Closed')));
-	$table->data[0][1] = '<img src="include/functions_graph.php?type=pipe&width=200&height=100&data='.$data.'&legend='.$legend.'" />';
-	$table->data[1][0] = print_label (__('Opened'), '', '', true,
-		$opened.' ('.$opened_pct.'%)');
-	$table->data[2][0] = print_label (__('Mean life time'), '', '', true,
-		give_human_time ($mean_lifetime));
-	$table->data[2][1] = print_label (__('Mean work time'), '', '', true,
-		$mean_work.' '.__('Hours'));
-	$table->data[3][0] = print_label (__('SLA compliance'), '', '', true,
-		format_numeric ($sla_compliance) .' '.__('%'));
-	
-	if ($oldest_incident) {
-		$link = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.
-			$oldest_incident['id_incidencia'].'">'.$oldest_incident['titulo'].'</a>';
-		$table->data[3][1] = print_label (__('Longest closed incident'), '', '', true,
-			$link);
-	}
-	
-	print_table ($table);
-	unset ($table);
-
-	// Find the 5 most active users (more hours worked)
-	$most_active_users = get_most_active_users (5);
-	$users_label = '';
-	foreach ($most_active_users as $user) {
-		$users_label .= '<a href="index.php?sec=users&sec2=operation/users/user_edit&id=' . $user{'id_user'} . '">' . $user{'id_user'} . "</a> (" . $user{'worked_hours'} . " " . __('Hours') . ") <br />";
-	}
-
-	// Find the 5 most active incidents (more worked hours)
-	$most_active_incidents = get_most_active_incidents (5);
-	$incidents_label = '';
-	foreach ($most_active_incidents as $incident) {
-		$incidents_label .= '<a class="incident_link" id="incident_link_' . $incident{'id_incidencia'} . '" href="#">' . $incident{'titulo'} . "</a> (" . $incident{'worked_hours'} . " " . __('Hours') . ") <br />";
-	}
-	
-	$table->width = '450px';
-	$table->class = 'float_left databox';
-	$table->style = array ();
-	$table->style[0] = 'vertical-align: top';
-	$table->data = array ();
-	$table->data[0][0] = print_label (__('Most active users'), '', '', true, $users_label);
-	$table->data[0][1] = print_label (__('Most active incidents'), '', '', true, $incidents_label);
-	print_table ($table);
 }
 ?>

@@ -104,6 +104,8 @@ $sql = sprintf ('SELECT id, name FROM tcustom_search
 	ORDER BY name',
 	$config['id_user']);
 $table->data[0][1] = print_select_from_sql ($sql, 'saved_searches', 0, '', __('Select'), 0, true);
+$table->data[0][1] .= '<a href="ajax.php" style="display:none" id="delete_custom_search">';
+$table->data[0][1] .= '<img src="images/cross.png" /></a>';
 $table->data[0][2] = __('Save current search');
 $table->data[0][3] = print_input_text ('search_name', '', '', 10, 20, true);
 $table->data[0][4] = print_submit_button (__('Save'), 'save-search', false, 'class="sub next"', true);
@@ -270,6 +272,12 @@ $(document).ready (function () {
 	});
 	
 	$("#saved_searches").change (function () {
+		if (this.value == 0) {
+			$("#delete_custom_search").fadeOut ();
+			return;
+		}
+		$("#delete_custom_search").fadeIn ();
+		
 		values = Array ();
 		values.push ({name: "page", value: "operation/incidents/incident_search"});
 		values.push ({name: "get_custom_search_values", value: 1});
@@ -283,6 +291,26 @@ $(document).ready (function () {
 			},
 			"json"
 		);
+	});
+	
+	$("#delete_custom_search").click (function () {
+		id_search = $("#saved_searches").attr ("value");
+		values = Array ();
+		values.push ({name: "page", value: "operation/incidents/incident_search"});
+		values.push ({name: "delete_custom_search", value: 1});
+		values.push ({name: "id_search", value: id_search});
+		
+		jQuery.get ("ajax.php",
+			values,
+			function (data, status) {
+				result_msg (data);
+				$("#delete_custom_search").fadeOut ();
+				$("#saved_searches").attr ("value", 0);
+				$("option[value="+id_search+"]", "#saved_searches").remove ();
+			},
+			"html"
+		);
+		return false;
 	});
 	
 	$("#goto-incident-form").submit (function () {

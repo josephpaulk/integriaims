@@ -1,4 +1,21 @@
-2008-11-11  Esteban Sanchez  <estebans@artica.es>
+2008-11-12  Esteban Sanchez  <estebans@artica.es>
+
+	* include/styles/integria.css: Added cursor style to dialog buttons so
+	user know they are clickable.
+
+	* include/functions_incidents.php: Added to repository. Incident
+	functions will be placed here. At this moment it only holds two new
+	functions: filter_incidents() and print_incidents_stats().
+
+	* operation/incidents/incident.php: Allow deletion of custom searches.
+
+	* operation/incidents/incident_detail.php: Default resolution state is
+	none now.
+
+	* operation/incidents/incident_search.php: Use functions of
+	functions_incidents.php. Added support to custom search removing.
+
+2008-11-12  Esteban Sanchez  <estebans@artica.es>
 
 	* include/js/integria_incident_search.js: Fixed page size in users
 	search dialog. User search dialog is a bit bigger now.

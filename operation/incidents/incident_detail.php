@@ -392,7 +392,7 @@ if ($id) {
 	$id_parent = 0;
 	$usuario= $config["id_user"];
 	$estado = 1;
-	$resolution = 9;
+	$resolution = 0;
 	$id_task = 0;
 	$epilog = "";
 	$id_creator = $iduser_temp;
