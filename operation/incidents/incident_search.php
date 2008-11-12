@@ -372,7 +372,7 @@ if ($show_stats) {
 	$table->data[2][1] = print_label (__('Mean work time'), '', '', true,
 		$mean_work.' '.__('Hours'));
 	$table->data[3][0] = print_label (__('SLA compliance'), '', '', true,
-		$sla_compliance.' '.__('%'));
+		format_numeric ($sla_compliance) .' '.__('%'));
 	
 	if ($oldest_incident) {
 		$link = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.
@@ -388,18 +388,20 @@ if ($show_stats) {
 	$most_active_users = get_most_active_users (5);
 	$users_label = '';
 	foreach ($most_active_users as $user) {
-		$users_label .= $user{'id_user'} . " (" . $user{'worked_hours'} . " " . __('Hours') . ") <br />";
+		$users_label .= '<a href="index.php?sec=users&sec2=operation/users/user_edit&id=' . $user{'id_user'} . '">' . $user{'id_user'} . "</a> (" . $user{'worked_hours'} . " " . __('Hours') . ") <br />";
 	}
 
 	// Find the 5 most active incidents (more worked hours)
 	$most_active_incidents = get_most_active_incidents (5);
 	$incidents_label = '';
 	foreach ($most_active_incidents as $incident) {
-		$incidents_label .= $incident{'titulo'} . " (" . $incident{'worked_hours'} . " " . __('Hours') . ") <br />";
+		$incidents_label .= '<a class="incident_link" id="incident_link_' . $incident{'id_incidencia'} . '" href="#">' . $incident{'titulo'} . "</a> (" . $incident{'worked_hours'} . " " . __('Hours') . ") <br />";
 	}
 	
 	$table->width = '450px';
 	$table->class = 'float_left databox';
+	$table->style = array ();
+	$table->style[0] = 'vertical-align: top';
 	$table->data = array ();
 	$table->data[0][0] = print_label (__('Most active users'), '', '', true, $users_label);
 	$table->data[0][1] = print_label (__('Most active incidents'), '', '', true, $incidents_label);

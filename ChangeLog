@@ -1,3 +1,11 @@
+2008-11-12  Ramon Novoa  <rnovoa@artica.es>
+
+	* include/functions_db.php: Fixed user worked hours calculation.
+
+	* operation/incidents/incident.php,
+	  operation/incidents/incident_search.php: Added user and incident
+	  links to statistics.
+
 2008-11-11  Ramon Novoa  <rnovoa@artica.es>
 
 	* include/functions_db.php: Handle empty query results.

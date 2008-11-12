@@ -303,6 +303,11 @@ $(document).ready (function () {
 					val,
 					function (data, status) {
 						$("#incident-stats").empty ().append (data).slideDown ();
+						$(".incident_link").click (function () {
+							id = this.id.split ("_").pop ();
+							check_incident (id);
+							return false;
+						});
 					},
 					"html"
 					);
