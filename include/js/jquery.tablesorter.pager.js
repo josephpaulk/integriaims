@@ -151,6 +151,11 @@
 					
 					config.size = parseInt($(".pagesize",pager).val());
 					
+					$(config.cssFirst,pager).unbind();
+					$(config.cssNext,pager).unbind();
+					$(config.cssPrev,pager).unbind();
+					$(config.cssLast,pager).unbind();
+
 					$(config.cssFirst,pager).click(function() {
 						moveToFirstPage(table);
 						return false;

@@ -23,7 +23,7 @@ function configure_user_search_form () {
 					$("#user_search_result_table").trigger ("update")
 						.tablesorterPager ({
 							container: $("#users-pager"),
-							size: 3
+							size: 10
 						});
 					$("#user_search_result_table tbody").fadeIn ();
 					$("#users-pager").removeClass ("hide").fadeIn ();
@@ -47,9 +47,9 @@ function show_user_search_dialog (title) {
 			$("#dialog-user-search").empty ().append (data);
 			$("#dialog-user-search").dialog ({"title" : title,
 					minHeight: 300,
-					minWidth: 300,
-					height: 500,
-					width: 600,
+					minWidth: 500,
+					height: 550,
+					width: 700,
 					modal: true,
 					bgiframe: true
 					});

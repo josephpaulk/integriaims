@@ -107,7 +107,7 @@ echo '<input type="text" class="pagedisplay" />';
 echo '<img src="images/control_fastforward_blue.png" class="next" />';
 echo '<img src="images/control_end_blue.png" class="last" />';
 echo '<select class="pagesize" style="display: none">';
-echo '<option selected="selected" value="3">3</option>';
+echo '<option selected="selected" value="10">10</option>';
 echo '</select>';
 echo '</form>';
 echo '</div>';

@@ -1,3 +1,20 @@
+2008-11-11  Esteban Sanchez  <estebans@artica.es>
+
+	* include/js/integria_incident_search.js: Fixed page size in users
+	search dialog. User search dialog is a bit bigger now.
+
+	* operation/users/user_search.php: Fixed page size in users search
+	dialog.
+
+	* include/js/jquery.tablesorter.pager.js: Fixed a bug that was causing
+	double pagination if another search is done.
+
+	* operation/incidents/incident.php: Fixed a bug on the first search,
+	which was causing some inconsistent values in the statistics.
+
+	* operation/incidents/incident_detail.php: Fixed a bug that was not
+	allowing to add decimal values in the time.
+
 2008-11-12  Ramon Novoa  <rnovoa@artica.es>
 
 	* include/functions_db.php: Fixed user worked hours calculation.

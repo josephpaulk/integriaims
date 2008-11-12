@@ -262,7 +262,7 @@ if ($id) {
 	if ($insert_workunit) {
 		$timestamp = get_parameter ("timestamp");
 		$nota = get_parameter ("nota");
-		$timeused = (int) get_parameter ('duration');
+		$timeused = (float) get_parameter ('duration');
 		$have_cost = (int) get_parameter ('have_cost');
 		$profile = (int) get_parameter ('work_profile');
 		$public = (bool) get_parameter ('public');

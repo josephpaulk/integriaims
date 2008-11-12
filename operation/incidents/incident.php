@@ -29,6 +29,9 @@ if (! give_acl ($config['id_user'], 0, "IR")) {
 
 // Take input parameters
 $id = (int) get_parameter ('id');
+$do_first_search = true;
+if ($id)
+	$do_first_search = false;
 
 // Offset adjustment
 if (isset($_GET["offset"]))
@@ -236,6 +239,7 @@ function show_incident_details (id) {
 }
 
 var tabs;
+var first_search = false;
 
 $(document).ready (function () {
 	tabs = $("#tabs > ul").tabs ({"load" : tab_loaded});
@@ -292,7 +296,10 @@ $(document).ready (function () {
 			check_incident (id);
 		},
 		function (form) {
+			if (first_search)
+				$("#search_status").attr ("value", 1);
 			val = get_form_input_values (form);
+			
 			val.push ({name: "page",
 					value: "operation/incidents/incident_search"});
 			val.push ({name: "show_stats",
@@ -303,6 +310,10 @@ $(document).ready (function () {
 					val,
 					function (data, status) {
 						$("#incident-stats").empty ().append (data).slideDown ();
+						if (first_search) {
+							$("#search_status").attr ("value", 0);
+							first_search = false;
+						}
 						$(".incident_link").click (function () {
 							id = this.id.split ("_").pop ();
 							check_incident (id);
@@ -313,7 +324,8 @@ $(document).ready (function () {
 					);
 		});
 	});
-<?php if (! $id) : ?>
+<?php if ($do_first_search) : ?>
+	first_search = true;
 	$("#search_status").attr ("value", 1);
 	$("#search_incident_form").submit ();
 	$("#search_status").attr ("value", 0);
