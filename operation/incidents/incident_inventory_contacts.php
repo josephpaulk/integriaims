@@ -44,6 +44,8 @@ if (count ($inventories) == 0) {
 	return;
 }
 
+$contacts_printed = array ();
+
 $companies = array ();
 foreach ($inventories as $inventory) {
 	$contracts = get_inventory_contracts ($inventory['id'], false);
@@ -54,8 +56,13 @@ foreach ($inventories as $inventory) {
 		$contacts = get_company_contacts ($company['id'], false);
 		
 		foreach ($contacts as $contact) {
+			if (isset ($contacts_printed[$contact['id']]))
+				continue;
+			
+			$contacts_printed[$contact['id']] = true;
+			
 			$data = array ();
-		
+			
 			$data[0] = $inventory['name'];
 			$data[1] = $company['name'];
 			$data[2] = $contact['fullname'];

@@ -1,5 +1,11 @@
 2008-11-12  Esteban Sanchez  <estebans@artica.es>
 
+	* operation/incidents/incident_inventory_contacts.php,
+	operation/inventories/inventory_contacts.php: Avoid printing contacts
+	twice.
+
+2008-11-12  Esteban Sanchez  <estebans@artica.es>
+
 	* operation/inventories/inventory.php,
 	operation/inventories/inventory_search.php: Added support to delete
 	custom searches.

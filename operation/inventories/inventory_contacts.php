@@ -15,12 +15,7 @@
 
 global $config;
 
-if (check_login () != 0) {
- 	audit_db ("Noauth", $config["REMOTE_ADDR"], "No authenticated access",
- 		"Trying to access inventory viewer");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
 $id = (int) get_parameter ('id');
 
@@ -53,6 +48,8 @@ $table->align[3] = 'center';
 $table->align[4] = 'center';
 $table->data = array ();
 
+$contacts_printed = array ();
+
 foreach ($contracts as $contract) {
 	$company = get_company ($contract['id_company']);
 	if ($company === false)
@@ -62,6 +59,11 @@ foreach ($contracts as $contract) {
 	$contacts = get_company_contacts ($company['id'], false);
 	
 	foreach ($contacts as $contact) {
+		if (isset ($contacts_printed[$contact['id']]))
+			continue;
+		
+		$contacts_printed[$contact['id']] = true;
+		
 		$data = array ();
 		
 		$data[0] = $company['name'];
