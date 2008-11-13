@@ -77,7 +77,6 @@ if ($delete_custom_search) {
 	}
 }
 
-
 /* Show search form via AJAX */
 if ($search_form) {
 	form_search_incident ();

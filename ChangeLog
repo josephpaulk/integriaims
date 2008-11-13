@@ -1,5 +1,11 @@
 2008-11-12  Esteban Sanchez  <estebans@artica.es>
 
+	* operation/inventories/inventory.php,
+	operation/inventories/inventory_search.php: Added support to delete
+	custom searches.
+
+2008-11-12  Esteban Sanchez  <estebans@artica.es>
+
 	* include/styles/integria.css: Added cursor style to dialog buttons so
 	user know they are clickable.
 

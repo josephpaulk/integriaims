@@ -24,6 +24,7 @@ if (! give_acl ($config['id_user'], 0, "VR")) {
 
 $create_custom_search = (bool) get_parameter ('create_custom_search');
 $get_custom_search_values = (bool) get_parameter ('get_custom_search_values');
+$delete_custom_search = (bool) get_parameter ('delete_custom_search');
 
 /* Create a custom saved search via AJAX */
 if ($create_custom_search) {
@@ -53,6 +54,25 @@ if ($get_custom_search_values) {
 	}
 	echo json_encode (unserialize ($search['form_values']));
 	return;
+}
+
+/* Delete a custom saved search via AJAX */
+if ($delete_custom_search) {
+	$id_search = (int) get_parameter ('id_search');
+	$sql = sprintf ('DELETE FROM tcustom_search
+		WHERE id_user = "%s"
+		AND id = %d',
+		$config['id_user'], $id_search);
+	$result = process_sql ($sql);
+	if ($result === false) {
+		echo '<h3 class="error">'.__('Could not delete custom search').'</h3>';
+	} else {
+		echo '<h3 class="suc">'.__('Custom search deleted').'</h3>';
+	}
+	
+	if (defined ('AJAX')) {
+		return;
+	}
 }
 
 $id_profile = (int) get_parameter ('user_profile_search');
