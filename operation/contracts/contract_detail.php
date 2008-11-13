@@ -44,6 +44,7 @@ if ($get_sla) {
 // CREATE
 if ($create_contract) {
 	$name = (string) get_parameter ('name');
+	$contract_number = (string) get_parameter ('contract_number');
 	$id_company = (int) get_parameter ('id_company');
 	$description = (string) get_parameter ('description');
 	$date_begin = (string) get_parameter ('date_begin');
@@ -54,10 +55,10 @@ if ($create_contract) {
 	if ($id_group < 2){
 		echo "<h3 class='error'>".__('You must specify a valid group')."</h3>";
 	} else {
-		$sql = sprintf ('INSERT INTO tcontract (name, description, date_begin,
+		$sql = sprintf ('INSERT INTO tcontract (name, contract_number, description, date_begin,
 			date_end, id_company, id_sla, id_group)
-			VALUE ("%s", "%s", "%s", "%s", %d, %d, %d)',
-			$name, $description, $date_begin, $date_end,
+			VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, %d)',
+			$name, $contract_number, $description, $date_begin, $date_end,
 			$id_company, $id_sla, $id_group);
 	
 		$id = process_sql ($sql, 'insert_id');
@@ -74,6 +75,7 @@ if ($create_contract) {
 // UPDATE
 if ($update_contract) { // if modified any parameter
 	$name = (string) get_parameter ('name');
+	$contract_number = (string) get_parameter ('contract_number');
 	$id_company = (int) get_parameter ('id_company');
 	$description = (string) get_parameter ('description');
 	$date_begin = (string) get_parameter ('date_begin');
@@ -84,10 +86,10 @@ if ($update_contract) { // if modified any parameter
 	if ($id_group < 2) {
 		echo "<h3 class='error'>".__('You must specify a valid group')."</h3>";
 	} else {
-		$sql = sprintf ('UPDATE tcontract SET id_sla = %d, id_group = %d,
+		$sql = sprintf ('UPDATE tcontract SET contract_number = "%s", id_sla = %d, id_group = %d,
 			description = "%s", name = "%s", date_begin = "%s",
 			date_end = "%s", id_company = %d WHERE id = %d',
-			$id_sla, $id_group, $description, $name, $date_begin,
+			$contract_number, $id_sla, $id_group, $description, $name, $date_begin,
 			$date_end, $id_company, $id);
 	
 		$result = process_sql ($sql);
@@ -117,6 +119,7 @@ echo "<h2>".__('Contract management')."</h2>";
 if ($id | $new_contract) {
 	if ($new_contract) {
 		$name = "";
+		$contract_number = "";
 		$date_begin = date('Y-m-d');
 		$date_end = $date_begin;
 		$id_company = "";
@@ -126,6 +129,7 @@ if ($id | $new_contract) {
 	} else {
 		$contract = get_db_row ("tcontract", "id", $id);
 		$name = $contract["name"];
+		$contract_number = $contract["contract_number"];
 		$id_company = $contract["id_company"];
 		$date_begin = $contract["date_begin"];
 		$id_group = $contract["id_group"];
@@ -137,18 +141,19 @@ if ($id | $new_contract) {
 	$table->width = '90%';
 	$table->class = 'databox';
 	$table->colspan = array ();
-	$table->colspan[3][0] = 2;
+	$table->colspan[4][0] = 2;
 	$table->data = array ();
 	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Contract name'));
-	$table->data[0][1] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo WHERE id_grupo > 1 ORDER BY nombre',
+	$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
+	$table->data[1][1] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo WHERE id_grupo > 1 ORDER BY nombre',
 		'id_group', $id_group, '', '', '', true, false, false, __('Group'));
-	$table->data[1][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
-	$table->data[1][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
-	$table->data[2][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
+	$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
+	$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
+	$table->data[3][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
 		'id_company', $id_company, '', '', '', true, false, false, __('Company'));
-	$table->data[2][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
+	$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
 		'id_sla', $id_sla, '', '', '', true, false, false, __('SLA'));
-	$table->data[3][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
+	$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contracts/contract_detail">';
 	print_table ($table);
@@ -169,7 +174,7 @@ if ($id | $new_contract) {
 	
 	$where_clause = "WHERE 1=1 ";
 	if ($search_text != "") {
-		$where_clause .= sprintf ('AND name LIKE "%%%s%%"', $search_text);
+		$where_clause .= sprintf ('AND (name LIKE "%%%s%%" OR contract_number LIKE "%%%s%%")', $search_text, $search_text);
 	}
 	if ($search_id_company) {
 		$where_clause .= sprintf (' AND id_company = %d', $search_id_company);
@@ -205,12 +210,13 @@ if ($id | $new_contract) {
 		$table->style[0] = 'font-weight: bold';
 		$table->colspan = array ();
 		$table->head[0] = __('Name');
-		$table->head[1] = __('Company');
-		$table->head[2] = __('SLA');
-		$table->head[3] = __('Group');
-		$table->head[4] = __('Begin');
-		$table->head[5] = __('End');
-		$table->head[6] = __('Delete');
+		$table->head[1] = __('Contract number');
+		$table->head[2] = __('Company');
+		$table->head[3] = __('SLA');
+		$table->head[4] = __('Group');
+		$table->head[5] = __('Begin');
+		$table->head[6] = __('End');
+		$table->head[7] = __('Delete');
 		$counter = 0;
 		
 		foreach ($contracts as $contract) {
@@ -220,14 +226,15 @@ if ($id | $new_contract) {
 			
 			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&id="
 				.$contract["id"]."'>".$contract["name"]."</a>";
-			$data[1] = get_db_value ('name', 'tcompany', 'id', $contract["id_company"]);
-			$data[2] = get_db_value ('name', 'tsla', 'id', $contract["id_sla"]);
-			$data[3] = get_db_value ('nombre', 'tgrupo', 'id_grupo', $contract["id_group"]);
-			$data[4] = $contract["date_begin"];
-			$data[5] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
+			$data[1] = $contract["contract_number"];
+			$data[2] = get_db_value ('name', 'tcompany', 'id', $contract["id_company"]);
+			$data[3] = get_db_value ('name', 'tsla', 'id', $contract["id_sla"]);
+			$data[4] = get_db_value ('nombre', 'tgrupo', 'id_grupo', $contract["id_group"]);
+			$data[5] = $contract["date_begin"];
+			$data[6] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
 
 			// Delete
-			$data[6] = '<a href=index.php?sec=inventory&
+			$data[7] = '<a href=index.php?sec=inventory&
 						sec2=operation/contracts/contract_detail&
 						delete_contract=1&id='.$contract["id"].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))

@@ -1,3 +1,16 @@
+2008-11-13  Ramon Novoa  <rnovoa@artica.es>
+
+	* include/styles/integria.css,
+	  include/functions_db.php,
+	  operation/incidents/incident.php,
+	  operation/incidents/incident_detail.php,
+	  operation/inventories/inventory.php,
+	  operation/inventories/inventory_detail.php: Added support for
+	  incident and object deletion. Small ACL fix.
+
+	* operation/contracts/contract_detail.php,
+	  integria_db.sql: Added contract number information.
+
 2008-11-13  Esteban Sanchez  <estebans@artica.es>
 
 	* integria_db.sql: Added tinventory_contact to hold a list of contacts

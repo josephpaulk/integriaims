@@ -388,6 +388,13 @@ function borrar_incidencia ($id_incident) {
 	process_sql ($sql);
 }
 
+// --------------------------------------------------------------- 
+// Delete an inventory object given its id
+// --------------------------------------------------------------- 
+function borrar_objeto ($id) {
+	$sql = sprintf ('DELETE FROM tinventory WHERE id = %d', $id);
+	process_sql ($sql);
+}
 
 // --------------------------------------------------------------- 
 //  Update "contact" field in User table for username $nick

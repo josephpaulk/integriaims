@@ -553,6 +553,7 @@ CREATE TABLE `tcompany_contact` (
 CREATE TABLE `tcontract` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
+  `contract_number` varchar(100) NOT NULL default '',
   `description` text NULL default NULL,
   `date_begin` date NOT NULL default '0000-00-00',
   `date_end` date NOT NULL default '0000-00-00',

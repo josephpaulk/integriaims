@@ -40,8 +40,8 @@ else
 	$offset=0;
 
 // Delete incident
-if (isset ($_GET["quick_delete"])) {
-	$id_inc = $_GET["quick_delete"];
+if (isset ($_POST["quick_delete"])) {
+	$id_inc = $_POST["quick_delete"];
 	$sql2="SELECT * FROM tincidencia WHERE id_incidencia=".$id_inc;
 	$result2=mysql_query($sql2);
 	$row2=mysql_fetch_array($result2);

@@ -409,7 +409,13 @@ if ($id) {
 		echo '&nbsp;&nbsp;&nbsp;<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">';
 	}
 	echo "</h1>";
-
+	/* Delete incident */
+	if ($has_permission) {
+		echo '<form name="delete_incident_form" method="post" action="index.php?sec=incident&sec2=operation/incidents/incident">';
+		print_input_hidden ('quick_delete', $id, false);
+		echo '<input type="image" class="cross" src="images/cross.png" title="' . __('Delete') .'">';
+		echo '</form>';
+	}
 } else {
 	if (! defined ('AJAX'))
 		echo "<h2>".__('Create incident')."</h2>";

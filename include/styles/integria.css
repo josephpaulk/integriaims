@@ -1002,5 +1002,12 @@ label {
 }
 
 .float_left {
-	float:left;
+	float: left;
+}
+
+.cross {
+	border: none;
+	height: auto;
+	vertical-align: middle;
+	margin-left: 15px;
 }
