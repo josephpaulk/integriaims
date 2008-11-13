@@ -23,8 +23,6 @@ if (! give_acl ($config["id_user"], 0, "UM")) {
 	exit;
 }
 
-$id_user = $config["id_user"];
-
 // Inic vars
 
 $id = (int) get_parameter ('id');

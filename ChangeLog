@@ -1,5 +1,16 @@
 2008-11-13  Esteban Sanchez  <estebans@artica.es>
 
+	* godmode/grupos/configurar_grupo.php: Deleted useless id_user.
+
+	* include/functions_form.php: Removed default value for
+	combo_user_visible_for_me() and compare with an empty string. It was
+	causing some errors and selected user was wrong.
+
+	* operation/todo/todo.php: Fixed parameter for
+	combo_user_visible_for_me().
+
+2008-11-13  Esteban Sanchez  <estebans@artica.es>
+
 	* operation/users/user_search.php: Added result_table class so a
 	cusor pointer is applied.
 

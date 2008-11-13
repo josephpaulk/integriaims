@@ -124,7 +124,7 @@ if ($operation == "create" || $operation == "update") {
 		'', '', '', true, false, false, __('Priority'));
 	
 	if ($operation == "create") {
-		$table->data[1][1] = combo_user_visible_for_me (0, "user", 0,
+		$table->data[1][1] = combo_user_visible_for_me ('', "user", 0,
 			"TW", true, __('Assigned to'));
 	}
 	
