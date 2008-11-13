@@ -1,3 +1,8 @@
+2008-11-13  Esteban Sanchez  <estebans@artica.es>
+
+	* operation/users/user_search.php: Added result_table class so a
+	cusor pointer is applied.
+
 2008-11-13  Ramon Novoa  <rnovoa@artica.es>
 
 	* include/styles/integria.css,
