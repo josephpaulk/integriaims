@@ -377,7 +377,7 @@ if (give_acl ($config["id_user"], 0, "IM") && $sec == "incidents") {
 
 // INVENTORY
 if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR")) {
-	$id_inventory = get_parameter ('id');
+	$id_inventory = (int) get_parameter ('id');
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Inventory')."</h3>";
 	echo "<ul class='sidemenu'>";

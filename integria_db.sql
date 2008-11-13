@@ -615,9 +615,18 @@ ALTER TABLE `tinventory` ADD
  FOREIGN KEY (`id_parent`) REFERENCES tinventory(`id`)
    ON UPDATE CASCADE ON DELETE SET NULL;
 
+CREATE TABLE `tinventory_contact` (
+  `id_inventory` mediumint(8) unsigned NOT NULL,
+  `id_company_contact` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id_inventory`, `id_company_contact`),
+  FOREIGN KEY (`id_company_contact`) REFERENCES tcompany_contact(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
+);
 
 CREATE TABLE `tincident_inventory` (
-  `id_incident` bigint(20) unsigned NOT NULL auto_increment,
+  `id_incident` bigint(20) unsigned NOT NULL,
   `id_inventory` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id_incident`, `id_inventory`),
   FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)

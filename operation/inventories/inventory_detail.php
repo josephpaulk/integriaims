@@ -17,6 +17,8 @@ global $config;
 
 check_login ();
 
+require_once ('include/functions_inventories.php');
+
 $result_msg = '';
 
 $id = (int) get_parameter ('id');
@@ -55,6 +57,10 @@ if ($update) {
 			$id_parent, $id_building, $serial_number, $part_number,
 			$id_manufacturer, $id_sla, $cost, $id);
 	$result = process_sql ($sql);
+	
+	/* Update contacts in inventory */
+	update_inventory_contacts ($id, get_parameter ('contacts'));
+	
 	if ($result !== false) {
 		$result_msg = '<h3 class="suc">'.__('Inventory object updated successfuly').'</h3>';
 	} else {
@@ -85,6 +91,8 @@ if ($create) {
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
 		$result_msg = '<h3 class="suc">'.__('Inventory object created successfuly').'</h3>';
+		/* Update contacts in inventory */
+		update_inventory_contacts ($id, get_parameter ('contacts'));
 	} else {
 		$result_msg = '<h3 class="err">'.__('There was an error creating inventory object').'</h3>';
 	}
@@ -148,6 +156,8 @@ $table->class = 'databox';
 $table->width = '90%';
 $table->data = array ();
 $table->colspan = array ();
+$table->colspan[4][0] = 3;
+$table->colspan[5][0] = 3;
 
 /* First row */
 if ($has_permission) {
@@ -233,10 +243,29 @@ if ($has_permission) {
 	$table->data[3][1] = print_label (__('Part number'), '', '', true, $part_number);
 	$table->data[3][2] = print_label (__('IP address'), '', '', true, $ip_address);
 }
-$table->colspan[4][0] = 3;
+
+/* Fifth row */
+if ($id) {
+	$contacts = get_inventory_contacts ($id, true);
+} else {
+	$contacts = array ();
+}
+$table->data[4][0] = print_select ($contacts, 'inventory_contacts', NULL,
+	'', '', '', true, false, false, __('Contacts'));
+$table->data[4][0] .= print_button (__('Add'),
+	'search_contact', false, '', 'class="dialogbtn"', true);
+$table->data[4][0] .= print_button (__('Remove'),
+	'delete_contact', false, '', 'class="dialogbtn"', true);
+
+foreach ($contacts as $contact_id => $contact_name) {
+	$table->data[4][0] .= print_input_hidden ("contacts[]",
+						$contact_id, true, 'selected-contacts');
+}
+
+/* Sixth row */
 $disabled_str = ! $has_permission ? 'readonly="1"' : '';
-$table->data[4][0] = print_textarea ('description', 15, 100, $description, $disabled_str,
-			true, __('Description'));
+$table->data[5][0] = print_textarea ('description', 15, 100, $description,
+	$disabled_str, true, __('Description'));
 
 echo '<div class="result">'.$result_msg.'</div>';
 

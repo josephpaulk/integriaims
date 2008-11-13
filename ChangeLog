@@ -1,5 +1,39 @@
 2008-11-13  Esteban Sanchez  <estebans@artica.es>
 
+	* integria_db.sql: Added tinventory_contact to hold a list of contacts
+	related to an incident. Removed auto_increment constraint on
+	tincident_inventory.
+
+	* operation/inventories/inventory_detail.php: It now handle to edit
+	affected contacts. You can add or remove the list of contacts but by
+	default it will use the defined by the contact.
+
+	* operation/inventories/inventory.php: Fixed an error that makes web
+	redirection instead of AJAX handling when navigating from an object to
+	another.
+
+	* operation/inventories/inventory_contacts.php: Make use of functions
+	in functions_inventories.php.
+
+	* include/functions_inventories.php: Added to repository. Incident
+	functions.
+
+	* include/functions_incidents.php: Added update_incident_inventories()
+	and fixed inventory objects removal.
+
+	* operation/inventories/inventory_contacts_search.php: Added to
+	repository. Dialog to search contacts while editing an inventory.
+
+	* include/js/integria_incident_search.js: Added a new dialog to search
+	contacts on an inventory.
+
+	* operation/incidents/incident_detail.php: Make use of new functions
+	in functions_incidents.php.
+
+	* operation/side_menu.php: Variable type style correction.
+
+2008-11-13  Esteban Sanchez  <estebans@artica.es>
+
 	* include/js/integria_incident_search.js: Unbind click event on side
 	menu links which cause wrong incidents id and recursive dialog open in
 	some changes.

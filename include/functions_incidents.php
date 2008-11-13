@@ -300,4 +300,35 @@ function print_incidents_stats ($incidents, $return = false) {
 	echo $output;
 }
 
+/**
+ * Update affected inventory objects in an incident.
+ *
+ * @param int Incident id to update.
+ * @param array List of affected inventory objects ids.
+ */
+function update_incident_inventories ($id_incident, $inventories) {
+	error_reporting (0);
+	$where_clause = '';
+	
+	if (empty ($inventories)) {
+		$inventories = array (0);
+	}
+	$where_clause = sprintf ('AND id_inventory NOT IN (%s)',
+		implode (',', $inventories));
+	
+	$sql = sprintf ('DELETE FROM tincident_inventory
+		WHERE id_incident = %d %s',
+		$id_incident, $where_clause);
+	process_sql ($sql);
+	foreach ($inventories as $id_inventory) {
+		$sql = sprintf ('INSERT INTO tincident_inventory
+			VALUES (%d, %d)',
+			$id_incident, $id_inventory);
+		$tmp = process_sql ($sql);
+		if ($tmp !== false)
+			incident_tracking ($id, INCIDENT_INVENTORY_ADDED,
+				$id_inventory);
+	}
+}
+
 ?>

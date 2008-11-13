@@ -19,6 +19,8 @@ global $config;
 
 check_login ();
 
+require_once ('include/functions_incidents.php');
+
 $id_grupo = (int) get_parameter ('id_grupo');
 $id = (int) get_parameter ('id');
 
@@ -126,17 +128,7 @@ if ($action == 'update') {
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
 
 	/* Update inventory objects in incident */
-	$inventories = (array) get_parameter ('inventories');
-	error_reporting (0);
-	foreach ($inventories as $id_inventory) {
-		$sql = sprintf ('INSERT INTO tincident_inventory
-				VALUES (%d, %d)',
-				$id, $id_inventory);
-		$tmp = process_sql ($sql);
-		if ($tmp !== false)
-			incident_tracking ($id, INCIDENT_INVENTORY_ADDED,
-				$id_inventory);
-	}
+	update_incident_inventories ($id, get_parameter ('inventories'));
 	
 	if ($result === false)
 		$result_msg = "<h3 class='error'>".__('There was a problem updating incident')."</h3>";
@@ -192,14 +184,9 @@ if ($action == "insert") {
 			$id_parent);
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
-		$inventories = (array) get_parameter ('inventories');
-
-		foreach ($inventories as $id_inventory) {
-			$sql = sprintf ('INSERT INTO tincident_inventory
-					VALUES (%d, %d)',
-					$id, $id_inventory);
-			process_sql ($sql);
-		}
+		/* Update inventory objects in incident */
+		update_incident_inventories ($id, get_parameter ('inventories'));
+		
 		$result_msg = '<h3 class="suc">'.__('Incident successfully created').' (id #'.$id.')</h3>';
 		$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
 
@@ -486,7 +473,6 @@ if ($id_parent)
 	$table->data[1][3] .= '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id_parent.'"><img src="images/go.png" /></a>';
 
 $table->data[2][0] = combo_incident_origin ($origen, $disabled, true);
-
 $table->data[2][1] = combo_incident_types ($id_incident_type, $disabled, true);
 $table->data[2][2] = combo_task_user ($id_task, $config["id_user"], $disabled, false, true);
 

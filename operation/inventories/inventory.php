@@ -99,6 +99,8 @@ var old_inventory = 0;
 
 function tab_loaded (event, tab) {
 	if (tab.index == 1) {
+		configure_inventory_form (true);
+		
 		if (id_inventory == old_inventory) {
 			return;
 		}
@@ -112,7 +114,6 @@ function tab_loaded (event, tab) {
 			configure_inventory_side_menu (id_inventory, false);
 			$(".inventory-menu").slideDown ();
 		}
-		configure_inventory_form (true);
 		old_inventory = id_inventory;
 	}
 }
@@ -133,8 +134,7 @@ $(document).ready (function () {
 	$("#tabs > ul").tabs ({"load" : tab_loaded});
 
 <?php if ($id) : ?>
-	old_inventory = id_inventory = <?php echo $id ?>;
-	configure_inventory_side_menu (id_inventory, false);
+	id_inventory = <?php echo $id ?>;
 	$(".inventory-menu").slideDown ();
 	show_inventory_details (<?php echo $id; ?>);
 <?php endif; ?>
@@ -214,7 +214,8 @@ $(document).ready (function () {
 	
 	configure_inventory_search_form (<?php echo $config['block_size']?>,
 		function (id, name) {
-		show_inventory_details (id);
-	});
+			show_inventory_details (id);
+		}
+	);
 });
 </script>

@@ -29,6 +29,17 @@ $new_contact = (bool) get_parameter ('new_contact');
 $create_contact = (bool) get_parameter ('create_contact');
 $update_contact = (bool) get_parameter ('update_contact');
 $delete_contact = (bool) get_parameter ('delete_contact');
+$get_contacts = (bool) get_parameter ('get_contacts');
+
+if ($get_contacts) {
+	$contract = get_contract ($id);
+	$company = get_company ($contract['id']);
+	$contacts = get_company_contacts ($company['id'], false);
+	
+	echo json_encode ($contacts);
+	if (defined ('AJAX'))
+		return;
+}
 
 // Create
 if ($create_contact) {
@@ -174,7 +185,7 @@ if ($id || $new_contact) {
 	$table->data[0][1] = print_select (get_companies (), 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contacts/contact_detail">';
+	echo '<form method="post">';
 	print_table ($table);
 	echo '</form>';
 
