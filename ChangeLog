@@ -1,10 +1,16 @@
-2008-11-12  Esteban Sanchez  <estebans@artica.es>
+2008-11-13  Esteban Sanchez  <estebans@artica.es>
+
+	* include/js/integria_incident_search.js: Unbind click event on side
+	menu links which cause wrong incidents id and recursive dialog open in
+	some changes.
+
+2008-11-13  Esteban Sanchez  <estebans@artica.es>
 
 	* operation/incidents/incident_inventory_contacts.php,
 	operation/inventories/inventory_contacts.php: Avoid printing contacts
 	twice.
 
-2008-11-12  Esteban Sanchez  <estebans@artica.es>
+2008-11-13  Esteban Sanchez  <estebans@artica.es>
 
 	* operation/inventories/inventory.php,
 	operation/inventories/inventory_search.php: Added support to delete
