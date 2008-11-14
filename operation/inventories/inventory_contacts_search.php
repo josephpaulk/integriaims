@@ -64,12 +64,14 @@ echo '</form>';
 unset ($table);
 
 $table->width = '90%';
-$table->class = 'listing';
+$table->class = 'result_table listing';
 $table->id = 'contact_search_result_table';
 $table->head = array ();
 $table->head[0] = __('Name');
 $table->head[1] = __('Company');
 
 print_table ($table);
+
+print_table_pager ('contact-pager', true);
 
 ?>

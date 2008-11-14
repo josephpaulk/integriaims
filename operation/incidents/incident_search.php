@@ -91,7 +91,8 @@ if ($search_form) {
 	$table->head[4] = __('Status')." - <i>".__('Resolution')."</i>";
 	$table->head[5] = __('Priority');
 	$table->head[6] = __('Updated')." - <i>".__('Started')."</i>";
-	$table->head[7] = __('Flags');
+	$table->head[7] = __('Work');
+	$table->head[8] = __('Flags');
 	$table->style = array ();
 	$table->style[0] = '';
 
@@ -133,8 +134,8 @@ $filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
 $filter['id_user'] = (string) get_parameter ('search_id_user', '');
 $filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
 $filter['id_user'] = (string) get_parameter ('search_id_user', '');
-//$filter['first_date'] = (string) get_parameter ('search_first_date');
-//$filter['last_date'] = (string) get_parameter ('search_last_date');
+$filter['first_date'] = (string) get_parameter ('search_first_date');
+$filter['last_date'] = (string) get_parameter ('search_last_date');
 
 $incidents = filter_incidents ($filter);
 if ($incidents === false) {
@@ -164,27 +165,23 @@ foreach ($incidents as $incident) {
 		$tr_status = 'class="green"';
 
 	echo '<tr '.$tr_status.' id="indicent-'.$incident['id_incidencia'].'">';
-
 	echo '<td><strong>#'.$incident['id_incidencia'].'</strong></td>';
-
 	
-
 	// SLA Fired ?? 
 	if ($incident["affected_sla_id"] != 0)
 		echo '<td><img src="images/exclamation.png" border=0></td>';
 	else
 		echo '<td></td>';
-
+	
 	echo '<td>'.$incident['titulo'].'</td>';
 	echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']).'</td>';
 	$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
 	echo '<td><strong>'.$statuses[$incident['estado']].'</strong> - <em>'.$resolution.'</em></td>';
-
-
+	
 	echo '<td>'.print_priority_flag_image ($incident['prioridad'], true).'</td>';
 	echo '<td>'.human_time_comparation ($incident["actualizacion"]).' / <i>';
 	echo human_time_comparation ($incident["inicio"]).'</i></td>';
-
+	
 	/* Workunits */
 	echo '<td>';
 	$timeused = get_incident_wokunit_hours ($incident["id_incidencia"]);
@@ -198,13 +195,13 @@ foreach ($incidents as $incident) {
 	echo '<td>';
 	$people = people_involved_incident ($incident["id_incidencia"]);
 	print_help_tip (implode ('&nbsp;', $people), false, 'tip_people');
-
+	
 	/* Files */
 	$files = get_number_files_incident ($incident["id_incidencia"]);
 	if ($files)
 		echo '&nbsp;<img src="images/disk.png"
 			title="'.$files.' '.__('Files').'" />';
-
+	
 	/* Mail notification */
 	$mail_check = get_db_value ('notify_email', 'tincidencia',
 				'id_incidencia', $incident["id_incidencia"]);
@@ -212,7 +209,7 @@ foreach ($incidents as $incident) {
 		echo '&nbsp;<img src="images/email_go.png"
 			title="'.__('Mail notification').'" />';
 	echo '</td>';
-
+	
 	echo '</tr>';
 }
 ?>

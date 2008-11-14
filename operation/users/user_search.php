@@ -26,8 +26,8 @@ if ($search) {
 	$total_users = 0;
 	foreach ($users as $user) {
 		if ($search_string != '') {
-			if (strpos ($user['id_usuario'], $search_string) === false 
-				&& strpos ($user['nombre_real'], $search_string) === false)
+			if (stripos ($user['id_usuario'], $search_string) === false 
+				&& stripos ($user['nombre_real'], $search_string) === false)
 				continue;
 		}
 		

@@ -213,7 +213,6 @@ if ($action == "insert") {
 // Edit / Visualization MODE - Get data from database
 if ($id) {
 	$create_incident = false;
-	$iduser_temp = $_SESSION['id_usuario'];
 	
 	$incident = get_db_row ('tincidencia', 'id_incidencia', $id);
 	// Get values
@@ -285,7 +284,7 @@ if ($id) {
 
 	// Upload file
 	$upload_file = (bool) get_parameter ('upload_file');
-	if ((give_acl ($iduser_temp, $id_grupo, "IW") == 1) && $upload_file) {
+	if (give_acl ($config['id_user'], $id_grupo, "IW") && $upload_file) {
 		$result_msg = '<h3 class="err">'.__('No file was attached').'</h3>';
 		/* if file */
 		if ($_FILES['userfile']['name'] != "" && $_FILES['userfile']['error'] == 0) {
@@ -299,14 +298,14 @@ if ($id) {
 			$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
 					filename, description, size)
 					VALUES (%d, "%s", "%s", "%s", %d)',
-					$id, $iduser_temp, $filename, $file_description, $filesize);
+					$id, $config['id_user'], $filename, $file_description, $filesize);
 
 			$id_attachment = process_sql ($sql, 'insert_id');
 			incident_tracking ($id, INCIDENT_FILE_ADDED);
 			$result_msg = '<h3 class="suc">'.__('File added').'</h3>';
 			// Email notify to all people involved in this incident
 			if ($email_notify == 1) {
-				mail_incident ($id, $iduser_temp, 0, 0, 2);
+				mail_incident ($id, $config['id_user'], 0, 0, 2);
 			}
 			
 			// Copy file to directory and change name
@@ -368,7 +367,6 @@ if ($id) {
 		}
 	}
 } else {
-	$iduser_temp = $config['id_user'];
 	$titulo = "";
 	$titulo = "";
 	$description = "";
@@ -382,7 +380,7 @@ if ($id) {
 	$resolution = 0;
 	$id_task = 0;
 	$epilog = "";
-	$id_creator = $iduser_temp;
+	$id_creator = $config['id_user'];
 	$email_notify = 0;
 	$sla_disabled = false;
 	$id_incident_type = 0;
@@ -401,7 +399,7 @@ if (! $id) {
 	// if have only one group, select default user and email for this group
 	$email_notify = false;
 }
-$has_permission = (give_acl ($iduser_temp, $id_grupo, "IM")  || ($usuario == $iduser_temp));
+$has_permission = (give_acl ($config['id_user'], $id_grupo, "IM")  || ($usuario == $config['id_user']));
 
 if ($id) {
 	echo "<h1>".__('Incident')." #$id";
@@ -483,7 +481,7 @@ $table->data[2][1] = combo_incident_types ($id_incident_type, $disabled, true);
 $table->data[2][2] = combo_task_user ($id_task, $config["id_user"], $disabled, false, true);
 
 if ($has_permission) {
-	$table->data[4][0] = combo_groups_visible_for_me ($iduser_temp, "grupo_form", 0, "IW", $id_grupo, true);
+	$table->data[4][0] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo, true);
 } else {
 	$table->data[4][0] = print_label (__('Group'), '', '', true, dame_nombre_grupo ($id_grupo));
 }

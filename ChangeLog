@@ -1,3 +1,18 @@
+2008-11-14  Esteban Sanchez  <estebans@artica.es>
+
+	* operation/incidents/incident_detail.php: Removed variable
+	$iduser_temp because it was an alias for $config[id_user].
+
+	* operation/incidents/incident_search.php: Added a missing header in
+	search form asked via AJAX. Search for date range was commented. Style
+	correction.
+
+	* operation/inventories/inventory_contacts_search.php: Added
+	result_table class to table. Added also a pager.
+
+	* operation/users/user_search.php: Make string searching not case
+	senstive.
+
 2008-11-13  Esteban Sanchez  <estebans@artica.es>
 
 	* godmode/grupos/configurar_grupo.php: Deleted useless id_user.
