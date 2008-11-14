@@ -1,5 +1,13 @@
 2008-11-14  Esteban Sanchez  <estebans@artica.es>
 
+	* operation/kb/manage_data.php: Avoid use of homedir to create file
+	link since it can cause wrong links.
+
+	* operation/projects/task_files.php: Use rawurlencode() only in the
+	filename because it was causing wrong links.
+
+2008-11-14  Esteban Sanchez  <estebans@artica.es>
+
 	* operation/incidents/incident_detail.php: Removed variable
 	$iduser_temp because it was an alias for $config[id_user].
 

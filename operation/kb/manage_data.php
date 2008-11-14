@@ -231,10 +231,9 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			echo "<td>";
 			echo "<img src='images/disk.png'>&nbsp;";
 			$attach_id = $row["id_attachment"];
-			$filelink= $config["homedir"]."attachment/".$row["id_attachment"]."_".rawurlencode ($row["filename"]);
-			echo "<a href='$filelink'>";
+			echo '<a href="attachment/'.$row["id_attachment"].'_'.rawurlencode ($row["filename"]).'">';
 			echo $row["filename"];
-			echo "</A>";
+			echo "</a>";
 			echo "<td>";
 			echo $row["description"];
 			echo "<td>";

@@ -147,18 +147,18 @@ if ($res = mysql_query($sql)) {
 			$tdcolor = "datos2";
 			$color = 1;
 		}
-		$filename=$config["base_url"]."/attachment/".$row["id_attachment"]."_".$row["filename"];
+		$link = "/attachment/".$row["id_attachment"]."_".rawurlencode ($row["filename"]);
 		// Show data
-		if ($id_task == -1){
+		if ($id_task == -1) {
 			echo "<tr><td class='$tdcolor' valign='top'>";
 			echo $row["name"];
 			echo "<td class='$tdcolor' valign='top'>";
 			echo "<img src='images/attach.png'> ";
-			echo '<b><a href="'.rawurlencode ($filename).'">'.$row["filename"]."</a></b>";
+			echo '<b><a href="'.$link.'">'.$row["filename"]."</a></b>";
 		} else {
 			echo "<tr><td class='$tdcolor' valign='top'>";
 			echo "<img src='images/attach.png'> ";
-			echo '<b><a href="'.rawurlencode ($filename).'">'.$row["filename"]."</a></b>";
+			echo '<b><a href="'.$link.'">'.$row["filename"]."</a></b>";
 		}
 		echo "<td class='$tdcolor' valign='top'>";
 		echo $row["id_usuario"];
