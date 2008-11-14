@@ -496,6 +496,8 @@ function configure_file_form () {
 		success: function (data) {
 			$('#upload_result').fadeOut ('fast', function () {
 				$(this).empty ().html (data).fadeIn ();
+				if (tabs != undefined && tabs.data ("selected.tabs") == 6)
+					$("#tabs > ul").tabs ("load", 6);
 			});
 		}
 	});

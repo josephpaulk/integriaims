@@ -1,4 +1,9 @@
 2008-11-14  Esteban Sanchez  <estebans@artica.es>
+	
+	* include/js/integria_incident_search.js: Reload files tab when a new
+	file is added to an incident.
+
+2008-11-14  Esteban Sanchez  <estebans@artica.es>
 
 	* include/js/integria_incident_search.js: Inventory search dialog is
 	now wider. Reload workunit tab when adding a workunit to an incident.
