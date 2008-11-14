@@ -1,8 +1,8 @@
 <?php
-// FRITS - the FRee Incident Tracking System
+// Integria IMS - The ITIL Management System
 // =========================================
 // Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2007 Artica Soluciones Tecnologicas
+// Copyright (c) 2008 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -63,16 +63,17 @@ if ($operation == "attachfile"){
 
 		$sql = " INSERT INTO tattachment (id_task, id_usuario, filename, description, size ) VALUES (".$id_task.", '".$id_user." ','".$filename."','".$description."',".$filesize.") ";
 		mysql_query($sql);
+echo $sql;
 		$id_attachment=mysql_insert_id();
 		//project_tracking ( $id_inc, $id_usuario, 3);
 		$result_output = "<h3 class='suc'>".__('File added')."</h3>";
 		// Copy file to directory and change name
 		$nombre_archivo = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
-/*
+
 	echo "Source file ".$_FILES['userfile']['tmp_name'];
 	echo "<br>";
 	echo "Destination file $nombre_archivo<br>";
-*/
+
 	
 		if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo ))){
 				$result_output = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
@@ -102,7 +103,7 @@ if ($id_task != -1){
 	$sql= "SELECT * FROM tattachment WHERE id_task = $id_task";
 	echo "<h3>".__('Attached files');
 	echo " - ".__('Task')." - ".$task_name."</h3>";
-	echo "<table border='0' width=700 class='listing'>";
+	echo "<table cellpadding=4 cellspacing=4 border='0' width=700 class='listing'>";
 	echo "<tr><th>"; 
 	echo __('Filename');
 	echo "<th>"; 
@@ -117,12 +118,12 @@ if ($id_task != -1){
 
 // Whole project
 if ($id_task == -1){
-	$sql= "SELECT tattachment.id_attachment, tattachment.size, tattachment.description, tattachment.filename, tattachment.id_usuario, ttask.name FROM tattachment, ttask
+	$sql= "SELECT tattachment.id_attachment, tattachment.size, tattachment.description, tattachment.filename, tattachment.id_usuario, ttask.name, ttask.id as task_id FROM tattachment, ttask
 			WHERE ttask.id_project = $id_project AND ttask.id = tattachment.id_task";
 
 	echo "<h3>".__('Attached files');
 	echo " - ".__('Project')." - ".$project_name."</h3>";
-	echo "<table  width=700 class='listing'>";
+	echo "<table  width=95% class='listing'>";
 	echo "<tr><th>"; 
 	echo __('Task');
 	echo "<th>"; 
@@ -147,23 +148,30 @@ if ($res = mysql_query($sql)) {
 			$tdcolor = "datos2";
 			$color = 1;
 		}
-		$link = "/attachment/".$row["id_attachment"]."_".rawurlencode ($row["filename"]);
+
+		if (strlen($row["filename"]) > 15)
+			$filename = substr($row["filename"],0,15)."...";
+		else
+			$filename = $row["filename"];
+
+		$link = $config["base_url"]."/attachment/".$row["id_attachment"]."_".rawurlencode ($row["filename"]);
 		// Show data
 		if ($id_task == -1) {
 			echo "<tr><td class='$tdcolor' valign='top'>";
+			$task_id = $row["task_id"];
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$task_id&operation=view'>";
 			echo $row["name"];
+			echo "</a>";
 			echo "<td class='$tdcolor' valign='top'>";
-			echo "<img src='images/attach.png'> ";
-			echo '<b><a href="'.$link.'">'.$row["filename"]."</a></b>";
+			echo '<b><a href="'.$link.'">'.$filename."</a></b>";
 		} else {
 			echo "<tr><td class='$tdcolor' valign='top'>";
-			echo "<img src='images/attach.png'> ";
-			echo '<b><a href="'.$link.'">'.$row["filename"]."</a></b>";
+			echo '<b><a href="'.$link.'">'.$filename."</a></b>";
 		}
-		echo "<td class='$tdcolor' valign='top'>";
+		echo "<td class='$tdcolor f9' valign='top'>";
 		echo $row["id_usuario"];
 
-		echo "<td class='$tdcolor' valign='top'>";
+		echo "<td class='$tdcolor f9' valign='top'>";
 		echo $row["size"];
 
 		echo "<td class='$tdcolor' valign='top'>";

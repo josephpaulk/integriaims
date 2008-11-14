@@ -133,6 +133,11 @@ table.listing tr:hover {
 	background: #E8E8E8;
 }
 
+table.listing th, td {
+	padding-left: 3px;
+	padding-right: 2px;
+}
+
 tr.yellow {
 	background: #FFFCA0;
 }
@@ -640,7 +645,7 @@ thead tr .headerSortDown {
 
 .f9, .f9i, .f9b, td.f9, td.f9i, td.datosf9, td.datos2f9,
 td.datosf9i, td.datos2f9i {
-	font-size: 9px;
+	font-size: 11px;
 }
 
 .error {

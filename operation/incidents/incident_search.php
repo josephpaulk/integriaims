@@ -80,6 +80,7 @@ if ($delete_custom_search) {
 /* Show search form via AJAX */
 if ($search_form) {
 	form_search_incident ();
+
 	$table->class = 'hide result_table listing';
 	$table->width = '100%';
 	$table->id = 'incident_search_result_table';
@@ -88,9 +89,9 @@ if ($search_form) {
 	$table->head[1] = __('SLA');
 	$table->head[2] = __('Incident');
 	$table->head[3] = __('Group');
-	$table->head[4] = __('Status')." - <i>".__('Resolution')."</i>";
+	$table->head[4] = __('Status')."<br><i>".__('Resolution')."</i>";
 	$table->head[5] = __('Priority');
-	$table->head[6] = __('Updated')." - <i>".__('Started')."</i>";
+	$table->head[6] = __('Updated')."<br><i>".__('Started')."</i>";
 	$table->head[7] = __('Work');
 	$table->head[8] = __('Flags');
 	$table->style = array ();
@@ -164,22 +165,26 @@ foreach ($incidents as $incident) {
 	else
 		$tr_status = 'class="green"';
 
-	echo '<tr '.$tr_status.' id="indicent-'.$incident['id_incidencia'].'">';
-	echo '<td><strong>#'.$incident['id_incidencia'].'</strong></td>';
+	echo '<tr '.$tr_status.' id="indicent-'.$incident['id_incidencia'].'"';
+
+	echo " style='border-bottom: 1px solid #ccc;' >";
+	echo '<td width=30><strong>#'.$incident['id_incidencia'].'</strong></td>';
 	
 	// SLA Fired ?? 
 	if ($incident["affected_sla_id"] != 0)
-		echo '<td><img src="images/exclamation.png" border=0></td>';
+		echo '<td width=25><img src="images/exclamation.png" border=0></td>';
 	else
 		echo '<td></td>';
 	
-	echo '<td>'.$incident['titulo'].'</td>';
+	echo '<td width=400>'.$incident['titulo'].'</td>';
 	echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']).'</td>';
 	$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
-	echo '<td><strong>'.$statuses[$incident['estado']].'</strong> - <em>'.$resolution.'</em></td>';
+
+	echo '<td class="f9"><strong>'.$statuses[$incident['estado']].'</strong><br><em>'.$resolution.'</em></td>';
 	
 	echo '<td>'.print_priority_flag_image ($incident['prioridad'], true).'</td>';
-	echo '<td>'.human_time_comparation ($incident["actualizacion"]).' / <i>';
+	
+	echo '<td class="f9">'.human_time_comparation ($incident["actualizacion"]).'<br><i>';
 	echo human_time_comparation ($incident["inicio"]).'</i></td>';
 	
 	/* Workunits */

@@ -17,7 +17,7 @@
 global $config;
 
 // Integria version
-$config["build"]="81016";
+$config["build"]="081112";
 $config["version"]="v2.0-dev";
 $config["build_version"] = $config["build"];
 
@@ -109,6 +109,10 @@ if (!isset ($config["limit_size"]))
 
 if (!isset ($config["sitename"]))
 	$config["sitename"] = "INTEGRIA";
+
+// Mail address used to send mails
+if (!isset ($config["mail_from"]))
+	$config["mail_from"] = "integria@localhost";
 
 include_once ($config["homedir"]."/include/functions.php");
 include_once ($config["homedir"]."/include/functions_html.php");

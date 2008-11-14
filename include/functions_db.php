@@ -1004,7 +1004,7 @@ $description\n\n
 		$text = ascii_output ($text);
 		$subject = ascii_output ($subject);
 		// Send an email to project manager
-		topi_sendmail (get_user_email($id_manager), $subject, $text);
+		integria_sendmail (get_user_email($id_manager), $subject, $text);
 }
 
 function mail_todo ($mode, $id_todo) {
@@ -1053,8 +1053,8 @@ $tdescription\n\n";
 		$text = ascii_output ($text);
 		$subject = ascii_output ($subject);
 		// Send an email to both
-		topi_sendmail (get_user_email ($tcreated), $subject, $text);
-		topi_sendmail (get_user_email ($tassigned), $subject, $text);
+		integria_sendmail (get_user_email ($tcreated), $subject, $text);
+		integria_sendmail (get_user_email ($tassigned), $subject, $text);
 }
 
 function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public = 1){
@@ -1130,10 +1130,10 @@ $nota
 
 	$text = ascii_output ($text);
 	$subject = ascii_output ( $subject ) ;
-	topi_sendmail ($email_owner, $subject, $text);
+	integria_sendmail ($email_owner, $subject, $text);
 	// Incident owner
 	if ($email_owner != $email_creator)
-		topi_sendmail ($email_creator, $subject, $text);
+		integria_sendmail ($email_creator, $subject, $text);
 	
 	if ($public == 1){
 		// Send email for all users with workunits for this incident
@@ -1141,7 +1141,7 @@ $nota
 		if ($result=mysql_query($sql1)) {
 			while ($row=mysql_fetch_array($result)){
 				if (($row[0] != $email_owner) AND ($row[0] != $email_creator))
-					topi_sendmail ( $row[0], $subject, $text);
+					integria_sendmail ( $row[0], $subject, $text);
 			}
 		}
 	}
@@ -1334,38 +1334,7 @@ function create_ical ( $date_from, $duration, $id_user, $title, $description ){
 	return $output;
 }
 
-function email_attach ( $name, $email, $from, $subject, $fileatt, $fileatttype, $texto ){
-	$to = "$name <$email>";
-	$fileattname = "$fileatt";
-	$headers = "From: $from";
-	$file = fopen( $fileatt, 'rb' ); 
-	$data = fread( $file, filesize( $fileatt ) ); 
-	fclose( $file );
-	$semi_rand = md5( time() ); 
-	$mime_boundary = "==Multipart_Boundary_x{$semi_rand}x"; 
 
-	$headers .= "\nMIME-Version: 1.0\n" . 
-				"Content-Type: multipart/mixed;\n" . 
-				" boundary=\"{$mime_boundary}\"";
-
-	$message = "This is a multi-part message in MIME format.\n\n" . 
-			"--{$mime_boundary}\n" . 
-			"Content-Type: text/plain; charset=\"iso-8859-1\"\n" . 
-			"Content-Transfer-Encoding: 7bit\n\n" . 
-			$texto . "\n\n";
-
-	$data = chunk_split (base64_encode ($data));
-	$message .= "--{$mime_boundary}\n" . 
-			 "Content-Type: {$fileatttype};\n" . 
-			 " name=\"{$fileattname}\"\n" . 
-			 "Content-Disposition: attachment;\n" . 
-			 " filename=\"{$fileattname}\"\n" . 
-			 "Content-Transfer-Encoding: base64\n\n" . 
-			 $data . "\n\n" . 
-			 "--{$mime_boundary}--\n"; 
-	$message .= "\n".$texto;
-	mail( $to, $subject, $message, $headers );
-}
 
 function insert_event ($type, $id1 = 0, $id2 = 0, $id3 = 0){
    	require("config.php");

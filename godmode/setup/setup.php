@@ -37,6 +37,7 @@ if ($update) {
 	$config["FOOTER_EMAIL"] = (string) get_parameter ("footer_email", "");
 	$config["HEADER_EMAIL"] = (string) get_parameter ("header_email", "");
 	$config["limit_size"] = (int) get_parameter ("limit_size");
+	$config["mail_from"] = (string) get_parameter ("mail_from");
 
 	process_sql ("UPDATE tconfig SET value='".$config["block_size"]."' WHERE token='block_size'");
 	process_sql ("UPDATE tconfig SET value='".$config["language_code"]."' WHERE token='language_code'");
@@ -48,6 +49,8 @@ if ($update) {
 	process_sql ("UPDATE tconfig SET value='".$config["sitename"]."' WHERE token='sitename'");
 	process_sql ("UPDATE tconfig SET value='".$config["limit_size"]."' WHERE token='limit_size'");
 
+	process_sql ("DELETE FROM tconfig WHERE token = 'mail_from'");
+	process_sql ("INSERT INTO tconfig (token, value) VALUES ('mail_from', '".$config["mail_from"]."')");
 }	
 
 echo "<h2>".__('Integria Setup')."</h2>";
@@ -55,8 +58,8 @@ echo "<h2>".__('Integria Setup')."</h2>";
 $table->width = '90%';
 $table->class = 'databox';
 $table->colspan = array ();
-$table->colspan[4][0] = 2;
 $table->colspan[5][0] = 2;
+$table->colspan[6][0] = 2;
 $table->data = array ();
 
 $table->data[0][0] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
@@ -78,9 +81,13 @@ $table->data[3][0] = print_input_text ("sitename", $config["sitename"], '',
 $table->data[3][1] = print_input_text ("currency", $config["currency"], '',
 	3, 3, true, __('Currency'));
 
-$table->data[4][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
+$table->data[4][0] = print_input_text ("mail_from", $config["mail_from"], '',
+	30, 50, true, __('Mail from'));
+
+
+$table->data[5][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
 	'', true, __('Email header'));
-$table->data[5][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
+$table->data[6][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
 	'', true, __('Email footer'));
 
 echo "<form name='setup' method='post'>";

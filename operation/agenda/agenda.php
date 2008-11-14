@@ -71,12 +71,12 @@ if ($create_item) {
 		foreach ($users as $user) {
 			$nombre = $user['nombre_real'];
 			$email = $user['direccion'];
-			email_attach ( $nombre, $email, "integria@localhost", 
+			integria_sendmail_attach ( $nombre, $email, $config["mail_from"], 
 					"[".$config["sitename"]."] New calendar event", 
 					$full_filename, "text/Calendar", $mail_description );
 		}
 	} else {
-		email_attach ( $nombre, $email, "integria@localhost",
+		integria_sendmail_attach ( $nombre, $email, $config["mail_from"],
 			"[".$config["sitename"]."] New calendar event", 
 			$full_filename, "text/Calendar", $mail_description );
 	}

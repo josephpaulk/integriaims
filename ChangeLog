@@ -1,3 +1,27 @@
+2008-11-14  Sancho Lerena <slerena@artica.es>
+
+	* include/styles/integria.css: Update listing style.
+
+	* include/config_process.php: Addedd support for mail_from token.
+
+	* include/functions.php: topi_sendmail is now integria_sendmail.
+	And now supports new mail_from config token.
+
+	* include/functions_db.php: Updated code for email function name
+	change.
+	
+	* operation/agenda/agenda.php: updated code for email funcion.
+
+	* operation/incidents/incident_search.php: Better layout, some
+	data are now presented on two lines, font sizes has been reduced
+	for some columns, and title column has fixed size.
+
+	* operation/projects/task_files.php: Fixed previous commit from 
+	Esteban a missing home_url variable was missing, now seems to 
+	work fine.
+
+	* godmode/setup/setup.php: Added support for new token mail_from.
+
 2008-11-14  Esteban Sanchez  <estebans@artica.es>
 	
 	* include/js/integria_incident_search.js: Reload files tab when a new

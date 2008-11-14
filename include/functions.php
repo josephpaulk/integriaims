@@ -399,13 +399,48 @@ function render_priority ($pri) {
 	}
 }
 
-function topi_sendmail ($destination, $msg_subject = "[INTEGRIA] Automatic email notification", $msg_text) {
+function integria_sendmail_attach ( $name, $email, $from, $subject, $fileatt, $fileatttype, $texto ){
+	$to = "$name <$email>";
+	$fileattname = "$fileatt";
+	$headers = "From: $from";
+	$file = fopen( $fileatt, 'rb' ); 
+	$data = fread( $file, filesize( $fileatt ) ); 
+	fclose( $file );
+	$semi_rand = md5( time() ); 
+	$mime_boundary = "==Multipart_Boundary_x{$semi_rand}x"; 
+
+	$headers .= "\nMIME-Version: 1.0\n" . 
+				"Content-Type: multipart/mixed;\n" . 
+				" boundary=\"{$mime_boundary}\"";
+
+	$message = "This is a multi-part message in MIME format.\n\n" . 
+			"--{$mime_boundary}\n" . 
+			"Content-Type: text/plain; charset=\"iso-8859-1\"\n" . 
+			"Content-Transfer-Encoding: 7bit\n\n" . 
+			$texto . "\n\n";
+
+	$data = chunk_split (base64_encode ($data));
+	$message .= "--{$mime_boundary}\n" . 
+			 "Content-Type: {$fileatttype};\n" . 
+			 " name=\"{$fileattname}\"\n" . 
+			 "Content-Disposition: attachment;\n" . 
+			 " filename=\"{$fileattname}\"\n" . 
+			 "Content-Transfer-Encoding: base64\n\n" . 
+			 $data . "\n\n" . 
+			 "--{$mime_boundary}--\n"; 
+	$message .= "\n".$texto;
+	mail( $to, $subject, $message, $headers );
+}
+
+function integria_sendmail ($destination, $msg_subject = "[INTEGRIA] Automatic email notification", $msg_text) {
 	global $config;
 	if ($destination != "") {
 		$msg_text = ascii_output ($msg_text);
 		$msg_subject = ascii_output ($msg_subject);
 		$real_text = $config["HEADER_EMAIL"].$msg_text."\n\n".$config["FOOTER_EMAIL"];
-		mail ($destination, $msg_subject, $real_text);
+		$from = $config["mail_from"];
+		$headers = "From: $from\nX-Mailer: Integria IMS\n";
+		mail ($destination, $msg_subject, $real_text, $headers);
 	}
 }
 
