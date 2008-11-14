@@ -18,12 +18,7 @@
 
 global $config;
 
-
-if (check_login() != 0) {
-    audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
-    require ("general/noaccess.php");
-    exit;
-}
+check_login ();
 
 $id_user = $_SESSION['id_usuario'];
 $id_project = get_parameter ("id_project", -1);
@@ -40,11 +35,11 @@ if ($id_task != 1)
 else
 	$task_name = "";
 
-if ( $id_project == -1 ){
-    // Doesn't have access to this page
-    audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager withour project");
-    include ("general/noaccess.php");
-    exit;
+if ($id_project == -1) {
+	// Doesn't have access to this page
+	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager withour project");
+	include ("general/noaccess.php");
+	exit;
 }
 
 // -----------
@@ -62,23 +57,16 @@ if ($operation == "attachfile"){
 		$filesize = $_FILES['userfile']['size'];
 
 		$sql = " INSERT INTO tattachment (id_task, id_usuario, filename, description, size ) VALUES (".$id_task.", '".$id_user." ','".$filename."','".$description."',".$filesize.") ";
-		mysql_query($sql);
-echo $sql;
-		$id_attachment=mysql_insert_id();
+		$id_attachment = process_sql ($sql, 'insert_id');
 		//project_tracking ( $id_inc, $id_usuario, 3);
 		$result_output = "<h3 class='suc'>".__('File added')."</h3>";
 		// Copy file to directory and change name
 		$nombre_archivo = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
-
-	echo "Source file ".$_FILES['userfile']['tmp_name'];
-	echo "<br>";
-	echo "Destination file $nombre_archivo<br>";
-
-	
-		if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo ))){
+		
+		if (! copy($_FILES['userfile']['tmp_name'], $nombre_archivo )) {
 				$result_output = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
-			$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
-			mysql_query($sql);
+			$sql = "DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
+			process_sql ($sql);
 		} else {
 			// Delete temporal file
 			unlink ($_FILES['userfile']['tmp_name']);
