@@ -96,12 +96,9 @@ table.blank {
 }
 
 table.databox, table.databox_color {
-	margin-left: 15px;
 	padding-top: 5px;
-	padding-left: 5px;
 	padding-bottom: 5px;
 	background: #eee;
-	border-bottom: none;
 }
 
 table.search-table {
@@ -285,18 +282,10 @@ form.searchform input.button {
 
 .databox_color {
 	border-top: 2px solid #2179B1;
-	margin-left: 10px;
 	padding-top: 5px;
 }
 
-.databox {
-	border-top: 2px solid #2179B1;
-	margin-left: 10px;
-	padding-top: 5px;
-}
-
-.databox_frame {
-	margin-left: 10px;
+.databox, .databox_frame {
 	border-top: 2px solid #2179B1;
 	padding-top: 5px;
 }
@@ -949,36 +938,6 @@ div.pager input {
 
 .image-button, .result_table tr, .pager img {
 	cursor: pointer;
-}
-
-.dialog {
-	background-color: #FFFFFF;
-}
-
-.dialog .ui-dialog-titlebar {
-	background-color: #2179B1;
-	padding-top: 10px;
-	height: 20px;
-	color: #FFFFFF;
-	font-weight: bold;
-	cursor: move;
-	font-variant: small-caps;
-}
-
-.dialog .ui-dialog-titlebar-title {
-	position: relative;
-	margin-left: 5px;
-	left: 4px;
-	top: 7px;
-}
-
-.dialog .ui-dialog-titlebar-close {
-	cursor: default;
-	position: absolute;
-	height: 16px;
-	right: 10px;
-	top: 6px;
-	width: 16px;
 }
 
 #incident_inventories {

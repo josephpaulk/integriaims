@@ -421,7 +421,7 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 					minHeight: 500,
 					minWidth: 600,
 					height: 700,
-					width: 800,
+					width: 900,
 					modal: true,
 					bgiframe: true,
 					open: function () {
@@ -452,6 +452,8 @@ function configure_workunit_form () {
 					$(".result").empty ().append (data).slideDown ();
 				});
 				$("#dialog-add-workunit").dialog ("close");
+				if (tabs != undefined && tabs.data ("selected.tabs") == 5)
+					$("#tabs > ul").tabs ("load", 5);
 			},
 			"html"
 		);
