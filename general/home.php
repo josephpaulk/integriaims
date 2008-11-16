@@ -22,8 +22,13 @@ if (!isset($config["id_user"]))
 	
 	// Show Agenda items
 	$now = date('Y-m-d', strtotime("now"));
-		$now3 = date('Y-m-d', strtotime("now + 3 days"));
+	$now3 = date('Y-m-d', strtotime("now + 3 days"));
 	$agenda = get_db_sql ("SELECT COUNT(*) FROM tagenda WHERE  (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3'");
+
+	$agenda  += get_db_sql ("SELECT COUNT(tproject.name) FROM trole_people_project, tproject WHERE trole_people_project.id_user = '".$config["id_user"]."' AND trole_people_project.id_project = tproject.id AND tproject.end >= '$now' AND tproject.end <= '$now3'");
+
+	$agenda += get_db_sql ("SELECT COUNT(ttask.name) FROM trole_people_task, ttask WHERE trole_people_task.id_user = '".$config["id_user"]."' AND trole_people_task.id_task = ttask.id AND ttask.end >= '$now' AND ttask.end <= '$now3'");
+
 	if ($agenda > 0){
 		echo "<tr><td>";
 		echo "<h1>".__('Agenda')."</h1>";
@@ -33,14 +38,41 @@ if (!isset($config["id_user"]))
 		echo __('Events for next three days');
 		echo '<hr width="100%" size="1">';
 		echo "</b><br><br>";
-		$now = date('Y-m-d', strtotime("now"));
-		$now3 = date('Y-m-d', strtotime("now + 3 days"));
 		$sql_2 = "SELECT * FROM tagenda WHERE (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3' ORDER BY timestamp ASC";
 		$result_2 = mysql_query($sql_2);
 		while ($row_2 = mysql_fetch_array($result_2)){
 			echo $row_2["timestamp"]." - ".$row_2["content"];
 			echo "<br>";
 		}
+
+		// Search for Project end in this date
+		$sql = "SELECT tproject.name as pname, tproject.end as pend, tproject.id as idp FROM trole_people_project, tproject WHERE trole_people_project.id_user = '".$config["id_user"]."' AND trole_people_project.id_project = tproject.id AND tproject.end >= '$now' AND tproject.end <= '$now3'";
+		$res = mysql_query ($sql);
+		while ($row=mysql_fetch_array ($res)){
+			$pname = $row["pname"];
+			$idp = $row["idp"];
+			$pend = $row["pend"];
+			echo "<b>".__("Project end"). "</b> (".$pend.") : ";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$idp'>";
+			echo $pname;
+			echo "</A>";
+			echo "<br>";
+		}
+
+		// Search for Task end in this date
+		$sql = "SELECT ttask.name as tname, ttask.end as tend, ttask.id as idt FROM trole_people_task, ttask WHERE trole_people_task.id_user = '".$config["id_user"]."' AND trole_people_task.id_task = ttask.id AND ttask.end >= '$now' AND ttask.end <= '$now3'";
+		$res = mysql_query ($sql);
+		while ($row=mysql_fetch_array ($res)){
+			$tname = $row["tname"];
+			$idt = $row["idt"];
+			$tend = $row["tend"];
+			echo "<b>".__("Task end"). "</b> (". $tend.") : ";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view'>";
+			echo $tname;
+			echo "</A>";
+			echo "<br>";
+		}
+
 	}
 
 
@@ -93,7 +125,11 @@ if (!isset($config["id_user"]))
 		 $sql_2 = "SELECT * FROM tincidencia WHERE id_usuario = '".$config["id_user"]."' AND estado IN (1,2,3,4,5) ORDER BY actualizacion DESC limit 5";
 		$result_2 = mysql_query($sql_2);
 		while ($row_2 = mysql_fetch_array($result_2)){
-			echo $row_2["actualizacion"]." - ".substr($row_2["titulo"],0,55);
+			$idi = $row_2["id_incidencia"];
+			echo $row_2["actualizacion"]." : ";
+			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$idi'>";
+			echo substr($row_2["titulo"],0,55);
+			echo "</A>";
 			echo "<br>";
 		}
 	}

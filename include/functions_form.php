@@ -812,10 +812,11 @@ function print_table_pager ($id = 'pager', $hidden = true, $return = false) {
 	$output .= '<div id="'.$id.'" class="'.($hidden ? 'hide ' : '').'pager">';
 	$output .= '<form>';
 	$output .= '<img src="images/control_start_blue.png" class="first" />';
-	$output .= '<img src="images/control_rewind_blue.png" class="prev" />';
-	$output .= '<input type="text" class="pagedisplay" />';
+	$output .= '<img src="images/control_rewind_blue.png" class="prev" /> ';
+	$output .= '<input type="text" size=3 class="pagedisplay" />';
 	$output .= '<img src="images/control_fastforward_blue.png" class="next" />';
 	$output .= '<img src="images/control_end_blue.png" class="last" />';
+	$output .= '&nbsp;&nbsp;'. __("Items per page"). '&nbsp;';
 	if (defined ('AJAX')) {
 		$output .= '<select class="pagesize" style="display: none">';
 		$output .= '<option selected="selected" value="5">5</option>';

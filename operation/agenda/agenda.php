@@ -138,7 +138,7 @@ echo "</div>";
 
 
 // Space to skip blocks
-echo "<div style='height: 180px'> </div>";
+echo "<div style='height: 200px'> </div>";
 
 
 $start_date = $mydate_sql = date("Y-m-d", time());

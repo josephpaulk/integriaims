@@ -66,24 +66,5 @@
 
 	echo "</table>";
 
-	// Site news !
-	
-	$sql_news = "SELECT * FROM tnews ORDER by utimestamp LIMIT 3";
-	$news = 0;
-	if ($result_news = mysql_query ($sql_news)){
-		echo '<h2>' . __('Site news') . '</h2>';
-		echo '<table width="700"><tr>'; 
-		while ($row = mysql_fetch_array ($result_news)) {
-			$news = 1;
-			echo '<tr><th align="left">';
-			echo __('At'). " <i>". $row["timestamp"] ."</i> ".__('user'). " <b>". $row["author"]."</b> ".__('said').":  \"<b>".$row["subject"]."\"</b>";
-			echo '<tr><td class=datos>';
-			echo clean_output_breaks($row["text"]);
-			echo '<td><td class=datos3">';
-		}
-		echo "</table>";
-	} 
-
-
 
 ?>

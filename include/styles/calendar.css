@@ -5,7 +5,7 @@
 	margin-top: 2px;
 	font-size: 12px;
 	text-align: center;
-line-height: 15px;
+	line-height: 15px;
 }
 
 table.calendar th td {
@@ -32,5 +32,8 @@ table.calendar th {
 	height: 10px;
 	color: #ffffff;
 	font-weight: bold;
+	padding: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
 }
 

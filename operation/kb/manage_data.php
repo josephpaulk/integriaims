@@ -181,7 +181,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos2>";
 	echo __('Data');
 	echo "<td class=datos2>";
-	echo "<textarea cols=60 rows=15 name=data>$data</textarea>";
+	print_textarea ("data", 15, 50, $data, '', false,false);
 
 	echo "<tr>";
 	echo "<td class=datos>";
@@ -301,5 +301,10 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	print_submit_button (__('Create data'), 'crt_btn', false, 'class="sub next"');
 	echo "</form></div>";
 } // end of list
-
 ?>
+
+<script  type="text/javascript">
+$(document).ready (function () {
+	$('textarea').TextAreaResizer ();
+});
+</script>

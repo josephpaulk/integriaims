@@ -409,11 +409,11 @@ function print_table (&$table, $return = false) {
 	}
 
 	if (empty ($table->cellpadding)) {
-		$table->cellpadding = '4';
+		$table->cellpadding = '0';
 	}
 
 	if (empty ($table->cellspacing)) {
-		$table->cellspacing = '4';
+		$table->cellspacing = '0';
 	}
 
 	if (empty ($table->class)) {

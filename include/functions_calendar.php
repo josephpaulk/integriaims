@@ -82,6 +82,8 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 		if ($day < 10)
 			$day = "0".$day;
 		$mysql_date = "$year-$month-$day";
+
+		// Search for agenda item for this date
 		$sqlquery = "SELECT * FROM tagenda WHERE timestamp LIKE '$mysql_date%' ORDER BY timestamp ASC";
  		$res=mysql_query($sqlquery);
 		while ($row=mysql_fetch_array($res)){
@@ -100,8 +102,34 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 			    $calendar .= "<br><hr width=110><font size='1pt'>[$event_user] ".$event_string."</font><br><br>";
             }
 		}
+
+		// Search for Project end in this date
+		$sql = "SELECT tproject.name as pname, tproject.id as idp FROM trole_people_project, tproject WHERE trole_people_project.id_user = '".$config["id_user"]."' AND trole_people_project.id_project = tproject.id AND tproject.end LIKE '$mysql_date%'";
+		$res = mysql_query ($sql);
+		while ($row=mysql_fetch_array ($res)){
+			$pname = $row["pname"];
+			$idp = $row["idp"];
+			$calendar .= __("Project end"). " <a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$idp'>";
+			$calendar .= "<img src='images/bricks.png'>";
+			$calendar .= "</A> ";
+ 			$calendar .= "<br><hr width=110><font size='1pt'>$pname</font><br><br>";
+		}
+
+		// Search for Task end in this date
+		$sql = "SELECT ttask.name as tname, ttask.id as idt FROM trole_people_task, ttask WHERE trole_people_task.id_user = '".$config["id_user"]."' AND trole_people_task.id_task = ttask.id AND ttask.end LIKE '$mysql_date%'";
+		$res = mysql_query ($sql);
+		while ($row=mysql_fetch_array ($res)){
+			$tname = $row["tname"];
+			$idt = $row["idt"];
+			$calendar .= __("Task end"). " <a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view'>";
+			$calendar .= "<img src='images/brick.png'>";
+			$calendar .= "</A> ";
+ 			$calendar .= "<br><hr width=110><font size='1pt'>$tname</font><br><br>";
+		}
+
 	}
-	if($weekday != 7) $calendar .= '<td colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
+	if($weekday != 7) 
+		$calendar .= '<td colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
 	return $calendar."</tr>\n</table>\n";
 }
 
@@ -125,7 +153,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 	if($p) $p = '<span class="calendar-prev">'.($pl ? '<a href="'.htmlspecialchars($pl).'">'.$p.'</a>' : $p).'</span>&nbsp;';
 	if($n) $n = '&nbsp;<span class="calendar-next">'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n).'</span>';
 	$calendar = '<table class="blank calendar">'."\n".
-		'<caption class="calendar-month">'.$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</caption>\n<tr>";
+		'<caption class="calendar-month">'.$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</caption>\n<tr></tr><tr>";
 
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed

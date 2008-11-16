@@ -1,3 +1,25 @@
+2008-11-16  Sancho Lerena <slerena@artica.es>
+
+	* integria.css: Table pagination controls now more formatted.
+
+	* side_menu.php: Added direct link to create KB item.
+
+	* manage_data.php: Now has resize textarea control.
+
+	* incident_search.php: Title column is now variable width. 
+	
+	* agenda.php: Fixed space between small months calendar and big.
+
+	* calendar.css: Better format for small calendars.
+
+	* functions_html.php: Cellspacing is now 0 by default.
+
+	* functions_form.php: print_table_pager() includes text for control
+	of pagination size and adds some spaces.
+
+	* home.php, functions_calendar.php: Added checks for ending dates of 
+	projects and tasks.
+
 2008-11-14  Esteban Sanchez  <estebans@artica.es>
 
 	* operation/projects/task_files.php: Use generic functions for SQL.

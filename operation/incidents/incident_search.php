@@ -96,6 +96,8 @@ if ($search_form) {
 	$table->head[8] = __('Flags');
 	$table->style = array ();
 	$table->style[0] = '';
+	// Dont work
+	$table->rowstyle[4] = "font-size: 4px;";
 
 	print_table ($table);
 
@@ -176,7 +178,7 @@ foreach ($incidents as $incident) {
 	else
 		echo '<td></td>';
 	
-	echo '<td width=400>'.$incident['titulo'].'</td>';
+	echo '<td>'.$incident['titulo'].'</td>';
 	echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']).'</td>';
 	$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
 
