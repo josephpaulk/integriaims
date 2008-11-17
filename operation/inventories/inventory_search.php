@@ -75,20 +75,24 @@ if ($delete_custom_search) {
 	}
 }
 
-$id_profile = (int) get_parameter ('user_profile_search');
-$id_group = (int) get_parameter ('user_group_search');
-$search_string = (string) get_parameter ('search_string');
-$search_id_contract = (int) get_parameter ('search_id_contract');
-$search_id_product = (int) get_parameter ('search_id_product');
-$search_id_building = (int) get_parameter ('search_id_building');
-$search_ip_address = (string) get_parameter ('search_ip_address');
-$search_serial_number = (string) get_parameter ('search_serial_number');
-$search_part_number = (string) get_parameter ('search_part_number');
+require_once ('include/functions_inventories.php')
+
 $search = (bool) get_parameter ('search');
-$search_id_inventory = (string) get_parameter ('search_id_inventory');
-$search_id_company = (int) get_parameter ('search_id_company');
 
 if ($search) {
+	$filter = array ();
+	$filter['id_profile'] = (int) get_parameter ('user_profile_search');
+	$filter['id_group'] = (int) get_parameter ('user_group_search');
+	$filter['string'] = (string) get_parameter ('search_string');
+	$filter['id_contract'] = (int) get_parameter ('search_id_contract');
+	$filter['id_product'] = (int) get_parameter ('search_id_product');
+	$filter['id_building'] = (int) get_parameter ('search_id_building');
+	$filter['ip_address'] = (string) get_parameter ('search_ip_address');
+	$filter['serial_number'] = (string) get_parameter ('search_serial_number');
+	$filter['part_number'] = (string) get_parameter ('search_part_number');
+	$filter['id_inventory'] = (string) get_parameter ('search_id_inventory');
+	$filter['id_company'] = (int) get_parameter ('search_id_company');
+	
 	$sql_clause = '';
 	if ($search_id_contract)
 		$sql_clause .= sprintf (' AND id_contract = %d', $search_id_contract);
@@ -102,9 +106,7 @@ if ($search) {
 		$sql_clause .= sprintf (' AND serial_number LIKE "%%%s%%"', $search_serial_number);
 	if ($search_part_number != '')
 		$sql_clause .= sprintf (' AND part_number LIKE "%%%s%%"', $search_part_number);
-	if ($search_id_inventory != '')
-		$sql_clause .= sprintf (' AND id = "%s"', $search_id_inventory);
-
+	
 	$sql = sprintf ('SELECT id, name, description, comments, id_building, id_contract
 			FROM tinventory
 			WHERE (name LIKE "%%%s%%" OR description LIKE "%%%s%%")
@@ -180,7 +182,9 @@ if ($search) {
 }
 
 $table->data = array ();
-$table->width = '90%';
+$table->width = '100%';
+$table->cellspacing = 2;
+$table->cellpadding = 2;
 $table->colspan = array ();
 $table->rowstyle = array ();
 $table->rowstyle[1] = 'display: none';
