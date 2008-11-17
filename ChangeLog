@@ -1,3 +1,15 @@
+2008-11-17  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	  translation.
+
+	*  include/languages/index.pot: Updated po template file.
+
+	* operation/user_report/report_annual.php,
+	  operation/user_report/report_weekly.php,
+	  operation/user_report/report_monthly.php: Updated tables width and
+	  translation infrastructure.
+
 2008-11-17  Esteban Sanchez  <estebans@artica.es>
 
 	* images/html.png: Added to repository. New icon for report buttons.

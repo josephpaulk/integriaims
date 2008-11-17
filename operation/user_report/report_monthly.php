@@ -42,7 +42,7 @@
 	$color = 0;
 	
 	echo "<h3>";
-	echo getmonth($working_month). " &raquo; ".__('Totals for this month'). " &raquo; ( $total_hours )";
+	echo getmonth($working_month). " &raquo; ".__('Totals for this month'). " &raquo; ($total_hours)";
 	echo "</h3>";
 
 	echo "<table class='blank' style='margin-left: 10px' width='200'>";
@@ -61,7 +61,7 @@
 	echo "</table>";
 
 
-	echo '<table width="700" class="listing">';
+	echo '<table width="90%" class="listing">';
 	echo "<th>".__('UserID');
 	echo "<th>".__('Workunit report');
 	echo "<th>".__('Calendar view');

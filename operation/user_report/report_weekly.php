@@ -43,7 +43,7 @@ $total_hours = 5 * $config["hours_perday"]; // TODO: subroutine to minus festive
 $color = 0;
 
 echo "<h3>";
-echo __("Totals for week $begin_week - $end_week").' - ('.$total_hours.__('Hours').')';
+echo __("Totals for week")." ".$begin_week." - ".$end_week." - ".$total_hours." ".__("Hours");
 echo "</h3>";
 echo "<table style='margin-left: 10px;' class='blank' width='200'>";
 echo "<tr><td>";
@@ -55,7 +55,7 @@ echo "</form>";
 echo "</table>";
 
 
-echo '<table width="600" class="listing">';
+echo '<table width="90%" class="listing">';
 echo "<th>".__('User ID');
 echo "<th>".__('Workunit report');
 echo "<th>".__('Graph overview');

@@ -27,10 +27,10 @@
 
 	if (dame_admin ($config["id_user"]) == 0){
         $id_user_show = $config["id_user"];
-        echo "<h2>".__('Annual report for user')." ". $id_user_show. "</h2>";
+        echo "<h3>".__('Annual report for user')." ". $id_user_show. "</h3>";
     } else {
     	$id_user_show = get_parameter ("id_user", $config["id_user"]);
-	    echo "<h2>".__('Annual report for user')." ". $id_user_show. "</h2>";
+	    echo "<h3>".__('Annual report for user')." ". $id_user_show. "</h3>";
 
 		echo "<table cellpadding=4 cellspacing=4 class='blank' style='margin-left: 10px'>";
 		echo "<tr><td>";

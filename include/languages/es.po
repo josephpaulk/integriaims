@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: index.es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-06 10:42+0100\n"
-"PO-Revision-Date: 2008-11-06 10:47+0100\n"
+"POT-Creation-Date: 2008-11-17 15:21+0100\n"
+"PO-Revision-Date: 2008-11-17 15:27+0100\n"
 "Last-Translator: Jorge Gonzalez <jorge.gonzalez@artica.es>\n"
 "Language-Team: Español <artica@artica.es>\n"
 "MIME-Version: 1.0\n"
@@ -17,12 +17,16 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: ../../general/login_page.php:44 ../../general/logon_ok.php:29
-#: ../../godmode/setup/event.php:38 ../../include/functions_form.php:723
+#: ../../general/login_page.php:38
+msgid "Login failed"
+msgstr "Falló el inicio de sesión"
+
+#: ../../general/login_page.php:50 ../../general/logon_ok.php:29
+#: ../../godmode/setup/event.php:38 ../../include/functions_form.php:719
 #: ../../operation/incidents/incident_work.php:96
 #: ../../operation/incidents/incident_tracking.php:51
-#: ../../operation/projects/task_files.php:109
-#: ../../operation/projects/task_files.php:131
+#: ../../operation/projects/task_files.php:98
+#: ../../operation/projects/task_files.php:120
 #: ../../operation/projects/project_tree.php:39
 #: ../../operation/projects/people_manager.php:117
 #: ../../operation/projects/people_manager.php:163
@@ -30,18 +34,18 @@ msgstr ""
 #: ../../operation/projects/people_manager.php:229
 #: ../../operation/projects/task_tracking.php:39
 #: ../../operation/projects/project_tracking.php:37
-#: ../../operation/kb/browse.php:86 ../../operation/kb/manage_data.php:261
+#: ../../operation/kb/browse.php:86 ../../operation/kb/manage_data.php:260
 #: ../../operation/kb/search.php:66
 msgid "User"
 msgstr "Usuario"
 
-#: ../../general/login_page.php:49
+#: ../../general/login_page.php:55
 #: ../../godmode/usuarios/configurar_usuarios.php:196
-#: ../../operation/users/user_edit.php:162
+#: ../../operation/users/user_edit.php:163
 msgid "Password"
 msgstr "Contraseña"
 
-#: ../../general/login_page.php:55
+#: ../../general/login_page.php:61
 msgid "Login"
 msgstr "Iniciar sesión"
 
@@ -58,8 +62,8 @@ msgid ""
 "Integria IMS help system has been called with a help reference that "
 "currently don't exist. There is no help content to show."
 msgstr ""
-"Se ha llamado al sistema de ayuda de Integria IMS con una referencia que "
-"no existe. No hay contenido para mostrar."
+"Se ha llamado al sistema de ayuda de Integria IMS con una referencia que no "
+"existe. No hay contenido para mostrar."
 
 #: ../../general/integria_help.php:47
 msgid "Integria IMS Help System"
@@ -67,7 +71,9 @@ msgstr "Sistema de ayuda de Integria IMS"
 
 #: ../../general/footer.php:26
 msgid "Integria is a <b>Free Software Project, licensed under GPL terms</b>"
-msgstr "Integria es un <b>Proyecto de Software Libre, licenciado bajo los términos de la GPL</b>"
+msgstr ""
+"Integria es un <b>Proyecto de Software Libre, licenciado bajo los términos "
+"de la GPL</b>"
 
 #: ../../general/footer.php:32
 msgid "Page generated at"
@@ -77,7 +83,7 @@ msgstr "Página generada en"
 msgid "Installer error"
 msgstr "Error del instalador"
 
-#: ../../general/links_menu.php:21 ../../operation/side_menu.php:657
+#: ../../general/links_menu.php:21 ../../operation/side_menu.php:664
 #: ../../operation/tool_menu.php:5
 msgid "Links"
 msgstr "Enlaces"
@@ -93,9 +99,10 @@ msgid ""
 "attempts to access this page are recorded in security logs of Integria "
 "System Database"
 msgstr ""
-"El acceso a esta página está restringido a usuarios autorizados, contacte con "
-"el administrador del sistema si necesita asistencia. <br><br>Sepa que todos los "
-"intentos de acceso a esta página se guardan en los registros de seguridad de la base de datos de Integria."
+"El acceso a esta página está restringido a usuarios autorizados, contacte "
+"con el administrador del sistema si necesita asistencia. <br><br>Sepa que "
+"todos los intentos de acceso a esta página se guardan en los registros de "
+"seguridad de la base de datos de Integria."
 
 #: ../../general/logon_ok.php:20
 msgid "Welcome to Integria"
@@ -105,7 +112,10 @@ msgstr "Bienvenido a Integria"
 msgid ""
 "This is the Web Management System for Integria. From here you can manage its "
 "agents, alerts and incidents. Session will be open while activity exists."
-msgstr "Este es el sistema de gestión web de Integria. Desde aquí puede gestionar sus agentes, alertas e incidentes. La sesión permanecerá abierta mientras exista actividad."
+msgstr ""
+"Este es el sistema de gestión web de Integria. Desde aquí puede gestionar "
+"sus agentes, alertas e incidentes. La sesión permanecerá abierta mientras "
+"exista actividad."
 
 #: ../../general/logon_ok.php:26
 msgid "This is your last activity in Integria console"
@@ -135,27 +145,11 @@ msgstr "IP origen"
 #: ../../operation/manufacturers/manufacturer_detail.php:126
 #: ../../operation/incidents/incident_inventory_detail.php:78
 #: ../../operation/companies/company_detail.php:124
-#: ../../operation/users/user_edit.php:137
-#: ../../operation/users/user_edit.php:149
-#: ../../operation/users/user_search.php:95
+#: ../../operation/users/user_edit.php:138
+#: ../../operation/users/user_edit.php:150
+#: ../../operation/users/user_search.php:98
 msgid "Comments"
 msgstr "Comentarios"
-
-#: ../../general/logon_ok.php:74
-msgid "Site news"
-msgstr "Noticias del sistema"
-
-#: ../../general/logon_ok.php:79
-msgid "At"
-msgstr "En"
-
-#: ../../general/logon_ok.php:79
-msgid "user"
-msgstr "usuario"
-
-#: ../../general/logon_ok.php:79 ../../include/functions_form.php:456
-msgid "said"
-msgstr "dijo"
 
 #: ../../general/header.php:20
 msgid "Home"
@@ -169,60 +163,51 @@ msgstr "Está conectado como"
 msgid "Logout"
 msgstr "Finalizar sesión"
 
-#: ../../general/logon_failed.php:25
-msgid "Authentication Error"
-msgstr "Error de autenticación"
-
-#: ../../general/logon_failed.php:36
-msgid ""
-"Either, your password or your login are incorrect. Please check your CAPS "
-"LOCK key, username and password are case SeNSiTiVe.<br><br>All actions, "
-"included failed login attempts are logged in Integria System logs, and these "
-"can be reviewed by each user, please report to admin any incident or "
-"malfunction."
-msgstr ""
-"O bien su contraseña o su nombre de usuario son incorrectos. Compruebe la tecla Bloq Mayús, "
-"el nombre de usuario y la contraseña son SeNsIbLeS a las mayúsculas.<br><br>Todas las acciones, "
-"incluídos los intentos de inicio de sesión fallidos, se guardan en los registros del sistema de Integria, "
-"y los usuarios pueden consultarlos; informe al administrador de cualquier incidente o mal funcionamiento."
-
-#: ../../general/home.php:29 ../../operation/main_menu.php:81
+#: ../../general/home.php:34 ../../operation/main_menu.php:81
 msgid "Agenda"
 msgstr "Agenda"
 
-#: ../../general/home.php:33
+#: ../../general/home.php:38
 msgid "Events for next three days"
 msgstr "Eventos para los próximos tres días"
 
-#: ../../general/home.php:51 ../../operation/side_menu.php:599
-#: ../../operation/side_menu.php:607 ../../operation/todo/todo.php:165
+#: ../../general/home.php:55 ../../include/functions_calendar.php:112
+msgid "Project end"
+msgstr "Final del proyecto"
+
+#: ../../general/home.php:69 ../../include/functions_calendar.php:124
+msgid "Task end"
+msgstr "Final de la tarea"
+
+#: ../../general/home.php:83 ../../operation/side_menu.php:606
+#: ../../operation/side_menu.php:614 ../../operation/todo/todo.php:165
 msgid "To-Do"
 msgstr "Por hacer"
 
-#: ../../general/home.php:55
+#: ../../general/home.php:87
 msgid "Todo active you have"
 msgstr "Cosas por hacer que tiene"
 
-#: ../../general/home.php:69 ../../operation/side_menu.php:23
+#: ../../general/home.php:101 ../../operation/side_menu.php:23
 #: ../../operation/main_menu.php:28
 msgid "Projects"
 msgstr "Proyectos"
 
-#: ../../general/home.php:75
+#: ../../general/home.php:107
 msgid "Projects active you have"
 msgstr "Proyectos activos que tiene"
 
-#: ../../general/home.php:86 ../../operation/side_menu.php:268
-#: ../../operation/inventories/inventory.php:42
+#: ../../general/home.php:118 ../../operation/side_menu.php:268
+#: ../../operation/inventories/inventory.php:57
 #: ../../operation/main_menu.php:38
 msgid "Incidents"
 msgstr "Incidentes"
 
-#: ../../general/home.php:90
+#: ../../general/home.php:122
 msgid "Incidents active you have"
 msgstr "Incidentes activos que tiene"
 
-#: ../../index.php:211 ../../index.php:236
+#: ../../index.php:216 ../../index.php:241
 msgid "Page not found"
 msgstr "No se encontró la página"
 
@@ -321,7 +306,7 @@ msgstr "Gestión de agenda"
 #: ../../godmode/perfiles/lista_perfiles.php:184
 #: ../../godmode/usuarios/lista_usuarios.php:43
 #: ../../godmode/usuarios/configurar_usuarios.php:165
-#: ../../operation/side_menu.php:762
+#: ../../operation/side_menu.php:769
 msgid "User management"
 msgstr "Gestión de usuarios"
 
@@ -364,7 +349,7 @@ msgid "Task management"
 msgstr "Gestión de tareas"
 
 #: ../../godmode/perfiles/lista_perfiles.php:209
-#: ../../godmode/grupos/configurar_grupo.php:109
+#: ../../godmode/grupos/configurar_grupo.php:107
 #: ../../godmode/usuarios/configurar_usuarios.php:297
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:248
 #: ../../enterprise/godmode/usuarios/profile_list.php:237
@@ -372,9 +357,9 @@ msgstr "Gestión de tareas"
 #: ../../operation/manufacturers/manufacturer_detail.php:138
 #: ../../operation/buildings/building_detail.php:111
 #: ../../operation/inventories/manage_prod.php:143
-#: ../../operation/inventories/inventory_detail.php:255
-#: ../../operation/incidents/type_detail.php:121
-#: ../../operation/incidents/incident_detail.php:570
+#: ../../operation/inventories/inventory_detail.php:290
+#: ../../operation/incidents/type_detail.php:120
+#: ../../operation/incidents/incident_detail.php:560
 #: ../../operation/todo/todo.php:146
 #: ../../operation/companies/company_role.php:108
 #: ../../operation/companies/company_detail.php:135
@@ -383,8 +368,8 @@ msgstr "Gestión de tareas"
 #: ../../operation/projects/task_detail.php:299
 #: ../../operation/projects/milestones.php:100
 #: ../../operation/projects/milestones.php:152
-#: ../../operation/contacts/contact_detail.php:151
-#: ../../operation/contracts/contract_detail.php:161
+#: ../../operation/contacts/contact_detail.php:162
+#: ../../operation/contracts/contract_detail.php:166
 #: ../../operation/slas/sla_detail.php:151
 #: ../../operation/kb/manage_data.php:217
 #: ../../operation/kb/manage_cat.php:148
@@ -392,21 +377,21 @@ msgid "Create"
 msgstr "Crear"
 
 #: ../../godmode/perfiles/lista_perfiles.php:212
-#: ../../godmode/setup/setup.php:92 ../../godmode/setup/links.php:101
-#: ../../godmode/grupos/configurar_grupo.php:105
+#: ../../godmode/setup/setup.php:99 ../../godmode/setup/links.php:101
+#: ../../godmode/grupos/configurar_grupo.php:103
 #: ../../godmode/updatemanager/main.php:92
 #: ../../godmode/updatemanager/settings.php:81
 #: ../../godmode/usuarios/configurar_usuarios.php:269
 #: ../../godmode/usuarios/role_manager.php:116
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:252
 #: ../../enterprise/godmode/usuarios/profile_list.php:242
-#: ../../operation/side_menu.php:643
+#: ../../operation/side_menu.php:650
 #: ../../operation/manufacturers/manufacturer_detail.php:133
 #: ../../operation/buildings/building_detail.php:107
 #: ../../operation/inventories/manage_prod.php:146
-#: ../../operation/inventories/inventory_detail.php:252
-#: ../../operation/incidents/type_detail.php:117
-#: ../../operation/incidents/incident_detail.php:576
+#: ../../operation/inventories/inventory_detail.php:287
+#: ../../operation/incidents/type_detail.php:116
+#: ../../operation/incidents/incident_detail.php:566
 #: ../../operation/user_report/report_weekly.php:53
 #: ../../operation/user_report/report_monthly.php:59
 #: ../../operation/todo/todo.php:149
@@ -419,10 +404,10 @@ msgstr "Crear"
 #: ../../operation/projects/task_detail.php:296
 #: ../../operation/projects/people_manager.php:206
 #: ../../operation/projects/people_manager.php:236
-#: ../../operation/contacts/contact_detail.php:147
-#: ../../operation/users/user_edit.php:157
-#: ../../operation/users/user_edit.php:169
-#: ../../operation/contracts/contract_detail.php:157
+#: ../../operation/contacts/contact_detail.php:158
+#: ../../operation/users/user_edit.php:158
+#: ../../operation/users/user_edit.php:170
+#: ../../operation/contracts/contract_detail.php:162
 #: ../../operation/slas/sla_detail.php:146
 #: ../../operation/kb/manage_data.php:219
 #: ../../operation/kb/manage_cat.php:150
@@ -448,24 +433,26 @@ msgstr "Perfiles"
 #: ../../operation/manufacturers/manufacturer_detail.php:178
 #: ../../operation/buildings/building_detail.php:150
 #: ../../operation/inventories/manage_prod.php:171
-#: ../../operation/incidents/type_detail.php:162
+#: ../../operation/inventories/inventory_detail.php:276
+#: ../../operation/incidents/type_detail.php:161
 #: ../../operation/incidents/incident_files.php:67
+#: ../../operation/incidents/incident_detail.php:414
 #: ../../operation/todo/todo.php:175
 #: ../../operation/companies/company_role.php:147
 #: ../../operation/companies/company_detail.php:174
 #: ../../operation/projects/project_group_detail.php:134
-#: ../../operation/projects/task_files.php:115
-#: ../../operation/projects/task_files.php:137
+#: ../../operation/projects/task_files.php:104
+#: ../../operation/projects/task_files.php:126
 #: ../../operation/projects/task.php:215
 #: ../../operation/projects/milestones.php:114
 #: ../../operation/projects/people_manager.php:121
 #: ../../operation/projects/people_manager.php:165
-#: ../../operation/projects/project.php:250
-#: ../../operation/contacts/contact_detail.php:196
+#: ../../operation/projects/project.php:251
+#: ../../operation/contacts/contact_detail.php:207
 #: ../../operation/messages/message.php:169
-#: ../../operation/contracts/contract_detail.php:213
+#: ../../operation/contracts/contract_detail.php:219
 #: ../../operation/slas/sla_detail.php:192
-#: ../../operation/kb/manage_data.php:262
+#: ../../operation/kb/manage_data.php:261
 #: ../../operation/kb/manage_cat.php:168
 msgid "Delete"
 msgstr "Borrar"
@@ -483,65 +470,69 @@ msgstr "Borrar"
 #: ../../operation/buildings/building_detail.php:161
 #: ../../operation/inventories/manage_prod.php:188
 #: ../../operation/incidents/incident.php:186
-#: ../../operation/incidents/type_detail.php:173
+#: ../../operation/incidents/type_detail.php:172
 #: ../../operation/todo/todo.php:234
 #: ../../operation/companies/company_role.php:158
-#: ../../operation/companies/company_detail.php:187
+#: ../../operation/companies/company_detail.php:189
 #: ../../operation/projects/project_group_detail.php:146
 #: ../../operation/projects/task.php:217
 #: ../../operation/projects/milestones.php:140
 #: ../../operation/projects/people_manager.php:138
 #: ../../operation/projects/people_manager.php:179
-#: ../../operation/projects/project.php:253
-#: ../../operation/projects/project.php:257
-#: ../../operation/contacts/contact_detail.php:208
-#: ../../operation/contracts/contract_detail.php:233
+#: ../../operation/projects/project.php:254
+#: ../../operation/projects/project.php:258
+#: ../../operation/contacts/contact_detail.php:219
+#: ../../operation/contracts/contract_detail.php:240
 #: ../../operation/slas/sla_detail.php:206
-#: ../../operation/kb/manage_data.php:294
+#: ../../operation/kb/manage_data.php:293
 #: ../../operation/kb/manage_cat.php:205
 msgid "Are you sure?"
 msgstr "¿Está seguro?"
 
-#: ../../godmode/setup/setup.php:53
+#: ../../godmode/setup/setup.php:56
 msgid "Integria Setup"
 msgstr "Configuración de Integria"
 
-#: ../../godmode/setup/setup.php:64
-#: ../../godmode/grupos/configurar_grupo.php:98
+#: ../../godmode/setup/setup.php:67
+#: ../../godmode/grupos/configurar_grupo.php:96
 #: ../../godmode/usuarios/configurar_usuarios.php:232
-#: ../../operation/users/user_edit.php:136
+#: ../../operation/users/user_edit.php:137
 msgid "Language"
 msgstr "Idioma"
 
-#: ../../godmode/setup/setup.php:66
+#: ../../godmode/setup/setup.php:69
 msgid "Block size for pagination"
 msgstr "Tamaño de bloque para la paginación"
 
-#: ../../godmode/setup/setup.php:68
+#: ../../godmode/setup/setup.php:71
 msgid "Max. data limit size"
 msgstr "Límite del tamaño máx. de los datos"
 
-#: ../../godmode/setup/setup.php:71
+#: ../../godmode/setup/setup.php:74
 msgid "Notification period"
 msgstr "Periodo de notificación"
 
-#: ../../godmode/setup/setup.php:74
+#: ../../godmode/setup/setup.php:77
 msgid "Work hours per day"
 msgstr "Horas de trabajo por día"
 
-#: ../../godmode/setup/setup.php:77
+#: ../../godmode/setup/setup.php:80
 msgid "Sitename"
 msgstr "Nombre del sitio"
 
-#: ../../godmode/setup/setup.php:79
+#: ../../godmode/setup/setup.php:82
 msgid "Currency"
 msgstr "Moneda"
 
-#: ../../godmode/setup/setup.php:82
+#: ../../godmode/setup/setup.php:85
+msgid "Mail from"
+msgstr "Correo-e de"
+
+#: ../../godmode/setup/setup.php:89
 msgid "Email header"
 msgstr "Cabecera del correo-e"
 
-#: ../../godmode/setup/setup.php:84
+#: ../../godmode/setup/setup.php:91
 msgid "Email footer"
 msgstr "Pie del correo-e"
 
@@ -564,7 +555,7 @@ msgstr "Información extendida"
 #: ../../operation/projects/milestones.php:113
 #: ../../operation/projects/task_tracking.php:39
 #: ../../operation/messages/message.php:169 ../../operation/kb/browse.php:82
-#: ../../operation/kb/manage_data.php:257 ../../operation/kb/search.php:62
+#: ../../operation/kb/manage_data.php:256 ../../operation/kb/search.php:62
 msgid "Timestamp"
 msgstr "Fecha/Hora"
 
@@ -574,10 +565,10 @@ msgstr "Fecha/Hora"
 #: ../../operation/incidents/incident_files.php:43
 #: ../../operation/incidents/incident_notes.php:80
 #: ../../operation/incidents/incident_inventory_contacts.php:40
-#: ../../operation/incidents/incident_detail.php:420
-#: ../../operation/incidents/incident_detail.php:478
+#: ../../operation/incidents/incident_detail.php:405
+#: ../../operation/incidents/incident_detail.php:469
 #: ../../operation/incidents/incident_inventory_detail.php:36
-#: ../../operation/incidents/incident_search.php:67
+#: ../../operation/incidents/incident_search.php:90
 #: ../../operation/incidents/incident_work.php:51
 #: ../../operation/incidents/incident_workunits.php:41
 #: ../../operation/incidents/incident_tracking.php:41
@@ -586,15 +577,15 @@ msgstr "Incidente"
 
 #: ../../godmode/setup/event.php:64 ../../include/functions_form.php:51
 #: ../../include/functions_form.php:115 ../../include/functions_form.php:556
-#: ../../include/functions_form.php:694
+#: ../../include/functions_form.php:695
 #: ../../operation/incidents/incident.php:127
-#: ../../operation/incidents/incident_detail.php:496
-#: ../../operation/incidents/incident_search.php:68
+#: ../../operation/incidents/incident_detail.php:486
+#: ../../operation/incidents/incident_search.php:91
 #: ../../operation/projects/task.php:91
 #: ../../operation/projects/project.php:156
-#: ../../operation/users/user_search.php:77
-#: ../../operation/contracts/contract_detail.php:144
-#: ../../operation/contracts/contract_detail.php:210
+#: ../../operation/users/user_search.php:80
+#: ../../operation/contracts/contract_detail.php:149
+#: ../../operation/contracts/contract_detail.php:216
 msgid "Group"
 msgstr "Grupo"
 
@@ -639,30 +630,31 @@ msgid "Link"
 msgstr "Enlace"
 
 #: ../../godmode/setup/links.php:114
-#: ../../godmode/grupos/configurar_grupo.php:80
+#: ../../godmode/grupos/configurar_grupo.php:78
 msgid "URL"
 msgstr "URL"
 
 #: ../../godmode/setup/links.php:136
 #: ../../godmode/usuarios/role_manager.php:153
+#: ../../operation/inventories/inventory_detail.php:255
 #: ../../operation/incidents/incident_create_work.php:61
-#: ../../operation/incidents/incident_detail.php:526
-#: ../../operation/incidents/incident_detail.php:537
+#: ../../operation/incidents/incident_detail.php:516
+#: ../../operation/incidents/incident_detail.php:527
 #: ../../operation/projects/task_create_work.php:102
 #: ../../operation/users/user_spare_workunit.php:176
 msgid "Add"
 msgstr "Añadir"
 
-#: ../../godmode/grupos/configurar_grupo.php:53
+#: ../../godmode/grupos/configurar_grupo.php:51
 msgid "There was a problem loading group"
 msgstr "Hubo un error al cargar la configuración del grupo"
 
-#: ../../godmode/grupos/configurar_grupo.php:59
+#: ../../godmode/grupos/configurar_grupo.php:57
 #: ../../godmode/grupos/lista_grupos.php:104
 msgid "Group management"
 msgstr "Gestionar grupos"
 
-#: ../../godmode/grupos/configurar_grupo.php:71
+#: ../../godmode/grupos/configurar_grupo.php:69
 #: ../../godmode/grupos/lista_grupos.php:110
 #: ../../godmode/usuarios/lista_usuarios.php:48
 #: ../../godmode/usuarios/role_manager.php:125
@@ -671,11 +663,12 @@ msgstr "Gestionar grupos"
 #: ../../operation/buildings/building_detail.php:148
 #: ../../operation/inventories/manage_prod.php:130
 #: ../../operation/inventories/manage_prod.php:167
-#: ../../operation/inventories/inventory_detail.php:155
-#: ../../operation/inventories/inventory_detail.php:157
-#: ../../operation/inventories/inventory_detail.php:169
-#: ../../operation/inventories/inventory_search.php:218
-#: ../../operation/incidents/type_detail.php:160
+#: ../../operation/inventories/inventory_detail.php:165
+#: ../../operation/inventories/inventory_detail.php:167
+#: ../../operation/inventories/inventory_detail.php:179
+#: ../../operation/inventories/inventory_search.php:239
+#: ../../operation/inventories/inventory_contacts_search.php:70
+#: ../../operation/incidents/type_detail.php:159
 #: ../../operation/incidents/incident_inventory_detail.php:28
 #: ../../operation/companies/company_role.php:145
 #: ../../operation/projects/project_group_detail.php:133
@@ -685,18 +678,18 @@ msgstr "Gestionar grupos"
 #: ../../operation/projects/milestones.php:80
 #: ../../operation/projects/people_manager.php:251
 #: ../../operation/projects/project.php:173
-#: ../../operation/users/user_search.php:80 ../../operation/users/user.php:35
-#: ../../operation/contracts/contract_detail.php:207
+#: ../../operation/users/user_search.php:83 ../../operation/users/user.php:35
+#: ../../operation/contracts/contract_detail.php:212
 #: ../../operation/slas/sla_detail.php:186
 #: ../../operation/kb/manage_cat.php:122 ../../operation/kb/manage_cat.php:164
 msgid "Name"
 msgstr "Nombre"
 
-#: ../../godmode/grupos/configurar_grupo.php:72
+#: ../../godmode/grupos/configurar_grupo.php:70
 msgid "Forced email"
 msgstr "Forzar el correo-e"
 
-#: ../../godmode/grupos/configurar_grupo.php:83
+#: ../../godmode/grupos/configurar_grupo.php:81
 #: ../../godmode/grupos/lista_grupos.php:111
 #: ../../operation/inventories/manage_prod.php:168
 #: ../../operation/projects/task_detail.php:227
@@ -705,7 +698,7 @@ msgstr "Forzar el correo-e"
 msgid "Parent"
 msgstr "Padre"
 
-#: ../../godmode/grupos/configurar_grupo.php:86
+#: ../../godmode/grupos/configurar_grupo.php:84
 #: ../../godmode/grupos/lista_grupos.php:109
 #: ../../operation/inventories/manage_prod.php:133
 #: ../../operation/projects/project_group_detail.php:103
@@ -714,11 +707,11 @@ msgstr "Padre"
 msgid "Icon"
 msgstr "Icono"
 
-#: ../../godmode/grupos/configurar_grupo.php:94
+#: ../../godmode/grupos/configurar_grupo.php:92
 msgid "Banner"
 msgstr "Banner"
 
-#: ../../godmode/grupos/configurar_grupo.php:96
+#: ../../godmode/grupos/configurar_grupo.php:94
 msgid "Default user"
 msgstr "Usuario predeterminado"
 
@@ -772,26 +765,29 @@ msgid ""
 "features (even full migrations tools for future versions) automatically"
 msgstr ""
 "El nuevo cliente de <a href=\"http://updatemanager.sourceforge.net\">Update "
-"Manager</a> viene con la nueva versión de Integria Enterprise. Permite que los "
-"administradores actualicen sus Integria Enterprise automáticamente, ya que el Update "
-"Manager obtendrá los módulos complementos y otras características nuevas "
-"(incluso migraciones completas de herramientas para futuras versiones) de "
-"forma automática."
+"Manager</a> viene con la nueva versión de Integria Enterprise. Permite que "
+"los administradores actualicen sus Integria Enterprise automáticamente, ya "
+"que el Update Manager obtendrá los módulos complementos y otras "
+"características nuevas (incluso migraciones completas de herramientas para "
+"futuras versiones) de forma automática."
 
 #: ../../godmode/updatemanager/main.php:43
 msgid ""
 "Update Manager is one of the most advanced features of Integria Enterprise "
 "version, for more information visit <a href=\"http://integria.sourceforge.net"
 "\">http://integria.sourceforge.net</a>"
-msgstr "El Update Manager es una de las características más avanzadas de Integria Enterprise, para obtener más información visite <a href=\"http://pandorafms.com\">http://integria.sourceforge.net</a>."
+msgstr ""
+"El Update Manager es una de las características más avanzadas de Integria "
+"Enterprise, para obtener más información visite <a href=\"http://pandorafms."
+"com\">http://integria.sourceforge.net</a>."
 
 #: ../../godmode/updatemanager/main.php:45
 msgid ""
 "Update Manager sends anonymous information about Integria Enterprise usage "
 "(number of agents and modules running)."
 msgstr ""
-"El Update Manager envía información anónima acerca del uso de Integria Enterprise "
-"(número de agentes y módulos en ejecución)."
+"El Update Manager envía información anónima acerca del uso de Integria "
+"Enterprise (número de agentes y módulos en ejecución)."
 
 #: ../../godmode/updatemanager/main.php:65
 msgid "Your system is up-to-date"
@@ -821,20 +817,20 @@ msgstr "ID"
 #: ../../operation/buildings/building_detail.php:149
 #: ../../operation/inventories/manage_prod.php:137
 #: ../../operation/inventories/manage_prod.php:169
-#: ../../operation/inventories/inventory_detail.php:239
+#: ../../operation/inventories/inventory_detail.php:268
 #: ../../operation/inventories/inventory_contracts.php:54
 #: ../../operation/incidents/incident_create_work.php:54
-#: ../../operation/incidents/type_detail.php:110
+#: ../../operation/incidents/type_detail.php:109
 #: ../../operation/incidents/incident_files.php:64
-#: ../../operation/incidents/incident_detail.php:552
+#: ../../operation/incidents/incident_detail.php:542
 #: ../../operation/incidents/incident_work.php:96
 #: ../../operation/incidents/incident_attach_file.php:37
 #: ../../operation/incidents/incident_tracking.php:50
 #: ../../operation/todo/todo.php:139
 #: ../../operation/companies/company_role.php:97
 #: ../../operation/companies/company_role.php:146
-#: ../../operation/projects/task_files.php:113
-#: ../../operation/projects/task_files.php:135
+#: ../../operation/projects/task_files.php:102
+#: ../../operation/projects/task_files.php:124
 #: ../../operation/projects/task_create_work.php:86
 #: ../../operation/projects/task_attach_file.php:44
 #: ../../operation/projects/task_detail.php:288
@@ -842,9 +838,9 @@ msgstr "ID"
 #: ../../operation/projects/milestones.php:112
 #: ../../operation/projects/people_manager.php:252
 #: ../../operation/projects/project_tracking.php:36
-#: ../../operation/contacts/contact_detail.php:140
+#: ../../operation/contacts/contact_detail.php:151
 #: ../../operation/users/user.php:36
-#: ../../operation/contracts/contract_detail.php:151
+#: ../../operation/contracts/contract_detail.php:156
 #: ../../operation/slas/sla_detail.php:139
 #: ../../operation/kb/browse_data.php:100
 #: ../../operation/kb/manage_cat.php:128 ../../operation/kb/manage_cat.php:166
@@ -873,15 +869,15 @@ msgstr "Clave del cliente"
 
 #: ../../godmode/updatemanager/settings.php:52
 msgid "Update server host"
-msgstr "Actualizar servidor"
+msgstr "Servidor de actualización"
 
 #: ../../godmode/updatemanager/settings.php:55
 msgid "Update server port"
-msgstr "Actualizar puerto del servidor"
+msgstr "Puerto del servidor de actualización"
 
 #: ../../godmode/updatemanager/settings.php:58
 msgid "Update server path"
-msgstr "Actualizar ruta del servidor"
+msgstr "Ruta del servidor de actualización"
 
 #: ../../godmode/updatemanager/settings.php:61
 msgid "Binary input path"
@@ -996,7 +992,7 @@ msgstr "Para el usuario"
 #: ../../include/functions_form.php:553
 #: ../../enterprise/godmode/usuarios/role_user_global.php:58
 #: ../../operation/side_menu.php:77
-#: ../../operation/projects/task_files.php:124
+#: ../../operation/projects/task_files.php:113
 #: ../../operation/users/user_task_assigment.php:54
 msgid "Project"
 msgstr "Proyecto"
@@ -1007,8 +1003,8 @@ msgstr "Proyecto"
 #: ../../enterprise/godmode/usuarios/role_user_global.php:59
 #: ../../operation/side_menu.php:170 ../../operation/todo/todo.php:132
 #: ../../operation/todo/todo.php:174
-#: ../../operation/projects/task_files.php:104
-#: ../../operation/projects/task_files.php:127
+#: ../../operation/projects/task_files.php:93
+#: ../../operation/projects/task_files.php:116
 #: ../../operation/users/user_task_assigment.php:55
 #: ../../operation/users/user_spare_workunit.php:121
 msgid "Task"
@@ -1023,7 +1019,7 @@ msgstr "Tarea"
 #: ../../operation/projects/people_manager.php:164
 #: ../../operation/projects/people_manager.php:200
 #: ../../operation/projects/people_manager.php:224
-#: ../../operation/users/user_search.php:73
+#: ../../operation/users/user_search.php:76
 msgid "Role"
 msgstr "Rol"
 
@@ -1066,30 +1062,30 @@ msgstr "Actualizar usuario"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:186
 #: ../../operation/user_report/report_weekly.php:59
-#: ../../operation/users/user_edit.php:121
+#: ../../operation/users/user_edit.php:122
 msgid "User ID"
 msgstr "ID usuario"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:194
-#: ../../operation/users/user_edit.php:127
-#: ../../operation/users/user_edit.php:129
-#: ../../operation/users/user_search.php:94
+#: ../../operation/users/user_edit.php:128
+#: ../../operation/users/user_edit.php:130
+#: ../../operation/users/user_search.php:97
 msgid "Real name"
 msgstr "Nombre Real"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:198
-#: ../../operation/users/user_edit.php:163
+#: ../../operation/users/user_edit.php:164
 msgid "Password confirmation"
 msgstr "Confirmar contraseña"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:206
-#: ../../operation/users/user_edit.php:123
+#: ../../operation/users/user_edit.php:124
 msgid "Avatar"
 msgstr "Imagen"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:215
-#: ../../operation/users/user_edit.php:134
-#: ../../operation/users/user_edit.php:147
+#: ../../operation/users/user_edit.php:135
+#: ../../operation/users/user_edit.php:148
 msgid "Telephone"
 msgstr "Teléfono"
 
@@ -1114,16 +1110,16 @@ msgstr "Grupo(s) disponible(s)"
 #: ../../godmode/usuarios/configurar_usuarios.php:250
 #: ../../include/functions_form.php:177 ../../include/functions_form.php:280
 #: ../../include/functions_form.php:289 ../../include/functions_form.php:303
-#: ../../include/functions_form.php:311 ../../include/functions.php:468
+#: ../../include/functions_form.php:311 ../../include/functions.php:503
 #: ../../operation/agenda/agenda.php:197
 #: ../../operation/inventories/manage_prod.php:133
-#: ../../operation/inventories/inventory_detail.php:165
-#: ../../operation/inventories/inventory_detail.php:179
-#: ../../operation/inventories/inventory_detail.php:181
-#: ../../operation/inventories/inventory_detail.php:183
-#: ../../operation/inventories/inventory_detail.php:205
-#: ../../operation/incidents/incident_detail.php:478
-#: ../../operation/incidents/incident_search.php:273
+#: ../../operation/inventories/inventory_detail.php:175
+#: ../../operation/inventories/inventory_detail.php:189
+#: ../../operation/inventories/inventory_detail.php:191
+#: ../../operation/inventories/inventory_detail.php:193
+#: ../../operation/inventories/inventory_detail.php:215
+#: ../../operation/incidents/incident_detail.php:469
+#: ../../operation/incidents/incident_search.php:183
 #: ../../operation/projects/project_detail.php:150
 #: ../../operation/projects/task_detail.php:227
 #: ../../operation/projects/task_detail.php:237
@@ -1176,9 +1172,9 @@ msgstr "No se pudo borrar. Error al borrar los datos."
 #: ../../operation/projects/milestones.php:67
 #: ../../operation/projects/task_workunit.php:130
 #: ../../operation/projects/people_manager.php:89
-#: ../../operation/contacts/contact_detail.php:94
+#: ../../operation/contacts/contact_detail.php:105
 #: ../../operation/users/user_workunit_report.php:56
-#: ../../operation/contracts/contract_detail.php:110
+#: ../../operation/contracts/contract_detail.php:112
 #: ../../operation/slas/sla_detail.php:96
 #: ../../operation/kb/manage_data.php:137 ../../operation/kb/manage_cat.php:82
 msgid "Deleted successfully"
@@ -1196,77 +1192,84 @@ msgstr "Añadir rol"
 #: ../../godmode/usuarios/role_manager.php:112
 #: ../../godmode/usuarios/role_manager.php:127
 #: ../../include/functions_form.php:568
-#: ../../operation/inventories/inventory_detail.php:207
-#: ../../operation/inventories/inventory_detail.php:216
+#: ../../operation/inventories/inventory_detail.php:217
+#: ../../operation/inventories/inventory_detail.php:226
 #: ../../operation/projects/task.php:113
 #: ../../operation/projects/people_manager.php:253
 #: ../../operation/projects/project.php:180
 msgid "Cost"
 msgstr "Coste"
 
-#: ../../include/functions_calendar.php:275
+#: ../../include/functions_calendar.php:303
 msgid "Week Total"
 msgstr "Total semanal"
 
-#: ../../include/functions_calendar.php:300
-#: ../../include/functions_calendar.php:341
-#: ../../include/functions_calendar.php:362
-#: ../../include/functions_form.php:470 ../../operation/side_menu.php:145
+#: ../../include/functions_calendar.php:328
+#: ../../include/functions_calendar.php:369
+#: ../../include/functions_calendar.php:390
+#: ../../include/functions_form.php:470
+#: ../../include/functions_incidents.php:249
+#: ../../include/functions_incidents.php:270
+#: ../../include/functions_incidents.php:279 ../../operation/side_menu.php:145
 #: ../../operation/side_menu.php:227
 #: ../../operation/inventories/inventory_contracts.php:69
 #: ../../operation/inventories/inventory_contracts.php:71
-#: ../../operation/incidents/incident_search.php:370
 #: ../../operation/user_report/report_weekly.php:46
 #: ../../operation/projects/task_create_work.php:83
 #: ../../operation/projects/task_detail.php:242
-#: ../../operation/projects/project.php:229
+#: ../../operation/projects/project.php:230
 #: ../../operation/slas/sla_detail.php:198
 #: ../../operation/slas/sla_detail.php:199
 msgid "Hours"
 msgstr "Horas"
 
-#: ../../include/functions_calendar.php:454 ../../include/functions.php:482
-#: ../../include/functions.php:552 ../../include/functions.php:576
+#: ../../include/functions_calendar.php:482 ../../include/functions.php:517
+#: ../../include/functions.php:587 ../../include/functions.php:611
 #: ../../operation/projects/task_tracking.php:66
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: ../../include/functions_calendar.php:465
+#: ../../include/functions_calendar.php:489
+#: ../../operation/projects/project.php:247
+msgid "Never"
+msgstr "Nunca"
+
+#: ../../include/functions_calendar.php:497
 msgid "seconds"
 msgstr "segundos"
 
-#: ../../include/functions_calendar.php:471
-#: ../../include/functions_calendar.php:473
+#: ../../include/functions_calendar.php:503
+#: ../../include/functions_calendar.php:505
 msgid "minutes"
 msgstr "minutos"
 
-#: ../../include/functions_calendar.php:476
+#: ../../include/functions_calendar.php:508
 msgid "hours"
 msgstr "horas"
 
-#: ../../include/functions_calendar.php:479
+#: ../../include/functions_calendar.php:511
 msgid "days"
 msgstr "días"
 
-#: ../../include/functions_calendar.php:482
+#: ../../include/functions_calendar.php:514
 msgid "months"
 msgstr "meses"
 
 #: ../../include/functions_form.php:30 ../../include/functions_form.php:47
-#: ../../include/functions_form.php:684 ../../include/functions_form.php:689
-#: ../../include/functions_form.php:697 ../../include/functions_form.php:723
+#: ../../include/functions_form.php:685 ../../include/functions_form.php:690
+#: ../../include/functions_form.php:698 ../../include/functions_form.php:719
 #: ../../operation/projects/task.php:93
 #: ../../operation/projects/project.php:157
-#: ../../operation/users/user_search.php:73
 #: ../../operation/users/user_search.php:76
+#: ../../operation/users/user_search.php:79
 msgid "Any"
 msgstr "Cualquiera"
 
 #: ../../include/functions_form.php:236 ../../include/functions_form.php:246
-#: ../../include/functions_form.php:685
+#: ../../include/functions_form.php:686
 #: ../../operation/inventories/inventory_incidents.php:39
 #: ../../operation/incidents/incident.php:128
-#: ../../operation/incidents/incident_search.php:69
+#: ../../operation/incidents/incident_search.php:92
 #: ../../operation/projects/task_tracking.php:39
 msgid "Status"
 msgstr "Estado"
@@ -1277,7 +1280,7 @@ msgstr "Origen"
 
 #: ../../include/functions_form.php:281 ../../include/functions_form.php:290
 #: ../../operation/incidents/incident.php:128
-#: ../../operation/incidents/incident_search.php:69
+#: ../../operation/incidents/incident_search.php:92
 msgid "Resolution"
 msgstr "Resolución"
 
@@ -1299,6 +1302,10 @@ msgstr "No trabajó por enfermedad"
 #: ../../include/functions_form.php:368
 msgid "Not justified"
 msgstr "Sin justificar"
+
+#: ../../include/functions_form.php:456
+msgid "said"
+msgstr "dijo"
 
 #: ../../include/functions_form.php:462
 msgid "Public Workunit"
@@ -1329,106 +1336,115 @@ msgstr "Bloquear unidades de trabajo"
 msgid "Locked by"
 msgstr "Bloqueado por"
 
-#: ../../include/functions_form.php:680
-#: ../../operation/inventories/inventory_search.php:172
+#: ../../include/functions_form.php:681
+#: ../../operation/inventories/inventory_search.php:193
 msgid "Search string"
 msgstr "Cadena de búsqueda"
 
-#: ../../include/functions_form.php:690
+#: ../../include/functions_form.php:691
 #: ../../operation/inventories/inventory_incidents.php:38
 #: ../../operation/incidents/incident.php:129
-#: ../../operation/incidents/incident_detail.php:467
-#: ../../operation/incidents/incident_detail.php:472
-#: ../../operation/incidents/incident_search.php:70
+#: ../../operation/incidents/incident_detail.php:458
+#: ../../operation/incidents/incident_detail.php:463
+#: ../../operation/incidents/incident_search.php:93
 #: ../../operation/todo/todo.php:124 ../../operation/todo/todo.php:166
 #: ../../operation/projects/task_detail.php:229
 msgid "Priority"
 msgstr "Prioridad"
 
-#: ../../include/functions_form.php:694 ../../include/functions_form.php:705
-#: ../../include/functions_form.php:710 ../../include/functions_form.php:717
-#: ../../operation/inventories/inventory_search.php:176
-#: ../../operation/inventories/inventory_search.php:180
-#: ../../operation/inventories/inventory_search.php:185
-#: ../../operation/inventories/inventory_search.php:193
+#: ../../include/functions_form.php:695 ../../include/functions_form.php:706
+#: ../../include/functions_form.php:713 ../../include/functions_form.php:724
+#: ../../include/functions_form.php:726
+#: ../../operation/inventories/inventory_search.php:197
+#: ../../operation/inventories/inventory_search.php:201
+#: ../../operation/inventories/inventory_search.php:206
+#: ../../operation/inventories/inventory_search.php:214
 #: ../../operation/projects/project_tree.php:42
 #: ../../operation/projects/project_tree.php:52
-#: ../../operation/contracts/contract_detail.php:186
+#: ../../operation/contracts/contract_detail.php:191
 msgid "All"
 msgstr "Todo"
 
-#: ../../include/functions_form.php:701 ../../operation/side_menu.php:382
-#: ../../operation/side_menu.php:414 ../../operation/incidents/incident.php:82
+#: ../../include/functions_form.php:702 ../../operation/side_menu.php:382
+#: ../../operation/side_menu.php:414 ../../operation/incidents/incident.php:80
 #: ../../operation/main_menu.php:48
 msgid "Inventory"
 msgstr "Inventario"
 
-#: ../../include/functions_form.php:706
-#: ../../operation/inventories/inventory_search.php:181
-#: ../../operation/inventories/inventory_search.php:220
-#: ../../operation/inventories/inventory_contacts.php:44
-#: ../../operation/inventories/inventory_contracts.php:49
-#: ../../operation/incidents/incident_inventory_contacts.php:29
-#: ../../operation/incidents/incident_inventory_detail.php:56
-#: ../../operation/companies/company_detail.php:170
-#: ../../operation/contacts/contact_detail.php:139
-#: ../../operation/contacts/contact_detail.php:174
-#: ../../operation/contacts/contact_detail.php:194
-#: ../../operation/contracts/contract_detail.php:148
-#: ../../operation/contracts/contract_detail.php:186
-#: ../../operation/contracts/contract_detail.php:208
-msgid "Company"
-msgstr "Empresa"
-
-#: ../../include/functions_form.php:711
-#: ../../operation/inventories/inventory_detail.php:166
-#: ../../operation/inventories/inventory_search.php:177
+#: ../../include/functions_form.php:707
+#: ../../operation/inventories/inventory_detail.php:176
+#: ../../operation/inventories/inventory_search.php:198
 msgid "Product type"
 msgstr "Tipo de producto"
 
-#: ../../include/functions_form.php:714
-#: ../../operation/inventories/inventory_detail.php:222
+#: ../../include/functions_form.php:710
 #: ../../operation/inventories/inventory_detail.php:232
-#: ../../operation/inventories/inventory_search.php:188
+#: ../../operation/inventories/inventory_detail.php:242
+#: ../../operation/inventories/inventory_search.php:209
 #: ../../operation/incidents/incident_inventory_detail.php:74
 msgid "Serial number"
 msgstr "Número de serie"
 
-#: ../../include/functions_form.php:718
-#: ../../operation/inventories/inventory_detail.php:205
+#: ../../include/functions_form.php:714
 #: ../../operation/inventories/inventory_detail.php:215
-#: ../../operation/inventories/inventory_search.php:186
-#: ../../operation/inventories/inventory_search.php:221
+#: ../../operation/inventories/inventory_detail.php:225
+#: ../../operation/inventories/inventory_search.php:207
+#: ../../operation/inventories/inventory_search.php:244
 #: ../../operation/incidents/incident_inventory_detail.php:81
 msgid "Building"
 msgstr "Edificio"
 
-#: ../../include/functions_form.php:719
+#: ../../include/functions_form.php:715
 msgid "SLA fired"
 msgstr "SLA activado"
 
-#: ../../include/functions_form.php:724
-#: ../../operation/contracts/contract_detail.php:145
+#: ../../include/functions_form.php:720
+#: ../../operation/contracts/contract_detail.php:150
 msgid "Begin date"
 msgstr "Fecha de inicio"
 
-#: ../../include/functions_form.php:725
-#: ../../operation/contracts/contract_detail.php:146
+#: ../../include/functions_form.php:721
+#: ../../operation/contracts/contract_detail.php:151
 msgid "End date"
 msgstr "Fecha de finalización"
 
-#: ../../include/functions_form.php:727
+#: ../../include/functions_form.php:724
+#: ../../operation/inventories/inventory_search.php:202
+#: ../../operation/inventories/inventory_search.php:243
+#: ../../operation/inventories/inventory_contacts.php:37
+#: ../../operation/inventories/inventory_contracts.php:49
+#: ../../operation/inventories/inventory_contacts_search.php:54
+#: ../../operation/inventories/inventory_contacts_search.php:71
+#: ../../operation/incidents/incident_inventory_contacts.php:29
+#: ../../operation/incidents/incident_inventory_detail.php:56
+#: ../../operation/companies/company_detail.php:170
+#: ../../operation/contacts/contact_detail.php:150
+#: ../../operation/contacts/contact_detail.php:185
+#: ../../operation/contacts/contact_detail.php:205
+#: ../../operation/contracts/contract_detail.php:153
+#: ../../operation/contracts/contract_detail.php:191
+#: ../../operation/contracts/contract_detail.php:214
+msgid "Company"
+msgstr "Empresa"
+
+#: ../../include/functions_form.php:726
+msgid "Incident type"
+msgstr "Tipo de incidentes"
+
+#: ../../include/functions_form.php:728
 #: ../../operation/manufacturers/manufacturer_detail.php:156
 #: ../../operation/manufacturers/manufacturer_detail.php:158
 #: ../../operation/buildings/building_detail.php:129
 #: ../../operation/buildings/building_detail.php:131
-#: ../../operation/inventories/inventory.php:35
-#: ../../operation/inventories/inventory.php:38
-#: ../../operation/inventories/inventory_search.php:201
-#: ../../operation/incidents/incident.php:75
-#: ../../operation/incidents/incident.php:78
-#: ../../operation/incidents/type_detail.php:139
-#: ../../operation/incidents/type_detail.php:141
+#: ../../operation/inventories/inventory.php:50
+#: ../../operation/inventories/inventory.php:53
+#: ../../operation/inventories/inventory_search.php:222
+#: ../../operation/inventories/inventory_contacts_search.php:53
+#: ../../operation/inventories/inventory_contacts_search.php:55
+#: ../../operation/incidents/incident.php:73
+#: ../../operation/incidents/incident.php:76
+#: ../../operation/incidents/type_detail.php:138
+#: ../../operation/incidents/type_detail.php:140
 #: ../../operation/companies/company_role.php:126
 #: ../../operation/companies/company_role.php:128
 #: ../../operation/companies/company_detail.php:152
@@ -1436,60 +1452,100 @@ msgstr "Fecha de finalización"
 #: ../../operation/projects/task.php:89 ../../operation/projects/task.php:94
 #: ../../operation/projects/project.php:154
 #: ../../operation/projects/project.php:158
-#: ../../operation/contacts/contact_detail.php:173
-#: ../../operation/contacts/contact_detail.php:175
-#: ../../operation/users/user_search.php:81
-#: ../../operation/contracts/contract_detail.php:184
-#: ../../operation/contracts/contract_detail.php:187
+#: ../../operation/contacts/contact_detail.php:184
+#: ../../operation/contacts/contact_detail.php:186
+#: ../../operation/users/user_search.php:84
+#: ../../operation/contracts/contract_detail.php:189
+#: ../../operation/contracts/contract_detail.php:192
 #: ../../operation/slas/sla_detail.php:170
 #: ../../operation/slas/sla_detail.php:172 ../../operation/kb/browse.php:51
 #: ../../operation/kb/browse.php:56 ../../operation/kb/search.php:45
 msgid "Search"
 msgstr "Buscar"
 
-#: ../../include/functions_form.php:733
-#: ../../operation/inventories/inventory_search.php:210
+#: ../../include/functions_form.php:734
+#: ../../operation/inventories/inventory_search.php:231
 msgid "Advanced search"
 msgstr "Búsqueda avanzada"
 
-#: ../../include/functions_form.php:748
+#: ../../include/functions_form.php:749
 msgid "Responsible"
 msgstr "Responsable"
 
-#: ../../include/functions_form.php:752 ../../include/functions_form.php:754
+#: ../../include/functions_form.php:753 ../../include/functions_form.php:755
 msgid "Creator"
 msgstr "Creador"
 
-#: ../../include/functions_form.php:760
+#: ../../include/functions_form.php:761
 msgid "Participant"
 msgstr "Participante"
 
-#: ../../include/functions_form.php:777
-#: ../../operation/incidents/incident_search.php:363
-#: ../../operation/incidents/incident_search.php:365
+#: ../../include/functions_form.php:778
+#: ../../include/functions_incidents.php:242
+#: ../../include/functions_incidents.php:244
 msgid "Opened"
 msgstr "Abierto"
 
-#: ../../include/functions_form.php:780
+#: ../../include/functions_form.php:781
 msgid "Closed at"
 msgstr "Cerrado el"
 
-#: ../../include/functions_form.php:783 ../../include/functions_form.php:786
+#: ../../include/functions_form.php:784 ../../include/functions_form.php:787
 #: ../../operation/users/user_task_assigment.php:58
 msgid "Last update"
 msgstr "Última actualización"
 
-#: ../../include/functions_form.php:792
+#: ../../include/functions_form.php:793
 msgid "Hours worked"
 msgstr "Horas de trabajo"
 
-#: ../../include/functions_form.php:795
+#: ../../include/functions_form.php:796
 msgid "Last work at"
 msgstr "Último trabajo por"
 
-#: ../../include/functions_form.php:796
+#: ../../include/functions_form.php:797
 msgid "Done by"
 msgstr "Por"
+
+#: ../../include/functions_form.php:819
+msgid "Items per page"
+msgstr "Elementos por página"
+
+#: ../../include/functions_incidents.php:240
+msgid "Total incicents"
+msgstr "Número total de incidentes"
+
+#: ../../include/functions_incidents.php:242 ../../include/functions.php:531
+msgid "Closed"
+msgstr "Cerrado"
+
+#: ../../include/functions_incidents.php:246
+msgid "Mean life time"
+msgstr "Tiempo de vida medio"
+
+#: ../../include/functions_incidents.php:248
+msgid "Mean work time"
+msgstr "Media de horas de trabajo"
+
+#: ../../include/functions_incidents.php:250
+msgid "SLA compliance"
+msgstr "Cumplimiento de SLA"
+
+#: ../../include/functions_incidents.php:251
+msgid "%"
+msgstr "%"
+
+#: ../../include/functions_incidents.php:256
+msgid "Longest closed incident"
+msgstr "Incidente cerrado más tarde"
+
+#: ../../include/functions_incidents.php:287
+msgid "Most active users"
+msgstr "Usuarios más activos"
+
+#: ../../include/functions_incidents.php:288
+msgid "Most active incidents"
+msgstr "Incidentes más activos"
 
 #: ../../include/config_process.php:96
 msgid ""
@@ -1511,13 +1567,13 @@ msgstr "No tiene suficientes permisos para acceder a este recurso"
 msgid "Very low"
 msgstr "Muy baja"
 
-#: ../../include/functions.php:390 ../../include/functions.php:456
-#: ../../include/functions.php:532
+#: ../../include/functions.php:390 ../../include/functions.php:491
+#: ../../include/functions.php:567
 msgid "Low"
 msgstr "Bajo"
 
-#: ../../include/functions.php:392 ../../include/functions.php:457
-#: ../../include/functions.php:536
+#: ../../include/functions.php:392 ../../include/functions.php:492
+#: ../../include/functions.php:571
 msgid "Medium"
 msgstr "Medio"
 
@@ -1533,156 +1589,151 @@ msgstr "Muy alta"
 msgid "Other"
 msgstr "Otro"
 
-#: ../../include/functions.php:455 ../../include/functions.php:528
+#: ../../include/functions.php:490 ../../include/functions.php:563
 msgid "Informative"
 msgstr "Informativo"
 
-#: ../../include/functions.php:458 ../../include/functions.php:540
+#: ../../include/functions.php:493 ../../include/functions.php:575
 msgid "Serious"
 msgstr "Grave"
 
-#: ../../include/functions.php:459
+#: ../../include/functions.php:494
 msgid "Very Serious"
 msgstr "Muy grave"
 
-#: ../../include/functions.php:460
+#: ../../include/functions.php:495
 msgid "Maintenance"
 msgstr "Mantenimiento"
 
-#: ../../include/functions.php:469
+#: ../../include/functions.php:504
 msgid "Weekly"
 msgstr "Semanal"
 
-#: ../../include/functions.php:470
+#: ../../include/functions.php:505
 msgid "15 days"
 msgstr "15 días"
 
-#: ../../include/functions.php:471
+#: ../../include/functions.php:506
 msgid "Monthly"
 msgstr "Mensual"
 
-#: ../../include/functions.php:472
+#: ../../include/functions.php:507
 msgid "60 days"
 msgstr "60 días"
 
-#: ../../include/functions.php:473
+#: ../../include/functions.php:508
 msgid "90 days"
 msgstr "90 días"
 
-#: ../../include/functions.php:474
+#: ../../include/functions.php:509
 msgid "Annual"
 msgstr "Anual"
 
-#: ../../include/functions.php:490
+#: ../../include/functions.php:525
 msgid "New"
 msgstr "Nuevo"
 
-#: ../../include/functions.php:491
+#: ../../include/functions.php:526
 msgid "Unconfirmed"
 msgstr "Sin confirmar"
 
-#: ../../include/functions.php:492
+#: ../../include/functions.php:527
 msgid "Assigned"
 msgstr "Asignado"
 
-#: ../../include/functions.php:493
+#: ../../include/functions.php:528
 msgid "Re-opened"
 msgstr "Reabierto"
 
-#: ../../include/functions.php:494
+#: ../../include/functions.php:529
 msgid "Verified"
 msgstr "Verificado"
 
-#: ../../include/functions.php:495
+#: ../../include/functions.php:530
 msgid "Resolved"
 msgstr "Resuelto"
 
-#: ../../include/functions.php:496
-#: ../../operation/incidents/incident_search.php:363
-msgid "Closed"
-msgstr "Cerrado"
-
-#: ../../include/functions.php:504
+#: ../../include/functions.php:539
 msgid "Fixed"
 msgstr "Arreglado"
 
-#: ../../include/functions.php:505
+#: ../../include/functions.php:540
 msgid "Invalid"
 msgstr "Inválido"
 
-#: ../../include/functions.php:506
+#: ../../include/functions.php:541
 msgid "Wont fix"
 msgstr "No se solucionará"
 
-#: ../../include/functions.php:507
+#: ../../include/functions.php:542
 msgid "Duplicate"
 msgstr "Duplicado"
 
-#: ../../include/functions.php:508
+#: ../../include/functions.php:543
 msgid "Works for me"
 msgstr "Funciona para mi"
 
-#: ../../include/functions.php:509
+#: ../../include/functions.php:544
 msgid "Incomplete"
 msgstr "Incompleto"
 
-#: ../../include/functions.php:510
+#: ../../include/functions.php:545
 msgid "Expired"
 msgstr "Caducado"
 
-#: ../../include/functions.php:511
+#: ../../include/functions.php:546
 msgid "Moved"
 msgstr "Movido"
 
-#: ../../include/functions.php:512
+#: ../../include/functions.php:547
 msgid "In process"
 msgstr "En proceso"
 
-#: ../../include/functions.php:544
+#: ../../include/functions.php:579
 msgid "Very serious"
 msgstr "Muy grave"
 
-#: ../../include/functions.php:548
+#: ../../include/functions.php:583
 msgid "Maintance"
 msgstr "Mantenimiento"
 
-#: ../../include/functions.php:564
+#: ../../include/functions.php:599
 msgid "Project created"
 msgstr "Proyecto creado"
 
-#: ../../include/functions.php:566
+#: ../../include/functions.php:601
 msgid "Project updated"
 msgstr "Proyecto actualizado"
 
-#: ../../include/functions.php:568
+#: ../../include/functions.php:603
 msgid "Project disabled"
 msgstr "Proyecto desactivado"
 
-#: ../../include/functions.php:570
+#: ../../include/functions.php:605
 msgid "Project activated"
 msgstr "Proyecto activado"
 
-#: ../../include/functions.php:572
+#: ../../include/functions.php:607
 msgid "Project deleted"
 msgstr "Proyecto borrado"
 
-#: ../../include/functions.php:574
+#: ../../include/functions.php:609
 #: ../../operation/projects/task_tracking.php:48
 msgid "Task added"
 msgstr "Tarea añadida"
 
-#: ../../include/functions_db.php:599
+#: ../../include/functions_db.php:602
 msgid "Created"
 msgstr "Creado"
 
-#: ../../include/functions_db.php:602
+#: ../../include/functions_db.php:605
 #: ../../operation/incidents/incident.php:130
-#: ../../operation/incidents/incident_search.php:71
+#: ../../operation/incidents/incident_search.php:94
 #: ../../operation/todo/todo.php:173 ../../operation/projects/project.php:181
 msgid "Updated"
 msgstr "Actualizado hace"
 
-#: ../../include/functions_db.php:605
+#: ../../include/functions_db.php:608
 #: ../../operation/projects/task_workunit.php:80
 #: ../../operation/projects/task_tracking.php:52
 #: ../../operation/users/user_spare_workunit.php:66
@@ -1690,51 +1741,51 @@ msgstr "Actualizado hace"
 msgid "Workunit added"
 msgstr "Hora de trabajo añadida"
 
-#: ../../include/functions_db.php:608
-#: ../../operation/incidents/incident_detail.php:319
-#: ../../operation/projects/task_files.php:68
+#: ../../include/functions_db.php:611
+#: ../../operation/incidents/incident_detail.php:305
+#: ../../operation/projects/task_files.php:62
 #: ../../operation/projects/task_tracking.php:54
 #: ../../operation/kb/manage_data.php:101
 msgid "File added"
 msgstr "Fichero añadido"
 
-#: ../../include/functions_db.php:611
+#: ../../include/functions_db.php:614
 msgid "Note added"
 msgstr "Nota añadida"
 
-#: ../../include/functions_db.php:614
+#: ../../include/functions_db.php:617
 msgid "File removed"
 msgstr "Archivo eliminado"
 
-#: ../../include/functions_db.php:617
+#: ../../include/functions_db.php:620
 msgid "Priority changed"
 msgstr "Cambio de prioridad"
 
-#: ../../include/functions_db.php:622
+#: ../../include/functions_db.php:625
 msgid "Status changed"
 msgstr "Cambio de estado"
 
-#: ../../include/functions_db.php:626
+#: ../../include/functions_db.php:629
 msgid "Resolution changed"
 msgstr "Cambio de resolución"
 
-#: ../../include/functions_db.php:630
+#: ../../include/functions_db.php:633
 msgid "Note deleted"
 msgstr "Nota borrada"
 
-#: ../../include/functions_db.php:633
+#: ../../include/functions_db.php:636
 msgid "Assigned user changed"
 msgstr "Cambio de usuario asignado"
 
-#: ../../include/functions_db.php:637
+#: ../../include/functions_db.php:640
 msgid "Unknown update"
 msgstr "Actualización desconocida"
 
-#: ../../include/functions_db.php:939
+#: ../../include/functions_db.php:960
 msgid "Yes"
 msgstr "Sí"
 
-#: ../../include/functions_db.php:941
+#: ../../include/functions_db.php:962
 msgid "No"
 msgstr "No"
 
@@ -1756,47 +1807,47 @@ msgstr "Perfil actualizado correctamente"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:188
 msgid "agenda_read"
-msgstr ""
+msgstr "Leer de la agenda"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:191
 msgid "agenda_write"
-msgstr ""
+msgstr "Escribir en la agenda"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:194
 msgid "agenda_management"
-msgstr ""
+msgstr "Gestión de la agenda"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:197
 msgid "user_management"
-msgstr ""
+msgstr "Gestión de usuarios"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:200
 msgid "database_management"
-msgstr ""
+msgstr "Gesitión de la base de datos"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:203
 msgid "framework_management"
-msgstr ""
+msgstr "Gestión de Integria IMS"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:206
 msgid "project_read"
-msgstr ""
+msgstr "Leer de proyectos"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:209
 msgid "project_write"
-msgstr ""
+msgstr "Escribir en proyectos"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:212
 msgid "project_management"
-msgstr ""
+msgstr "Gestión de proyectos"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:215
 msgid "task_write"
-msgstr ""
+msgstr "Escribir tareas"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:218
 msgid "task_management"
-msgstr ""
+msgstr "Gestión de tareas"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:222
 msgid "KB Read"
@@ -1857,7 +1908,7 @@ msgstr "Gestionar agenda"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:204
 #: ../../enterprise/godmode/usuarios/profile_list.php:273
-#: ../../operation/side_menu.php:770
+#: ../../operation/side_menu.php:777
 msgid "Manage users"
 msgstr "Gestionar usuarios"
 
@@ -1935,6 +1986,7 @@ msgid "Manage task"
 msgstr "Gestionar tareas"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:46
+#: ../../operation/user_report/report_annual.php:42
 #: ../../operation/users/user_task_assigment.php:48
 msgid "Go"
 msgstr "Ir"
@@ -1974,47 +2026,47 @@ msgstr "Gestión de incidentes"
 
 #: ../../enterprise/operation/user/user.php:65
 msgid "UM"
-msgstr "GU"
+msgstr "UM"
 
 #: ../../enterprise/operation/user/user.php:66
 msgid "DM"
-msgstr "GBD"
+msgstr "DM"
 
 #: ../../enterprise/operation/user/user.php:67
 msgid "FM"
-msgstr "GI"
+msgstr "FM"
 
 #: ../../enterprise/operation/user/user.php:69
 msgid "AR"
-msgstr "LA"
+msgstr "AR"
 
 #: ../../enterprise/operation/user/user.php:70
 msgid "AW"
-msgstr "EA"
+msgstr "AW"
 
 #: ../../enterprise/operation/user/user.php:71
 msgid "AM"
-msgstr "GA"
+msgstr "AM"
 
 #: ../../enterprise/operation/user/user.php:77
 msgid "ToDo write"
-msgstr ""
+msgstr "Escribir cosas por hacer"
 
 #: ../../enterprise/operation/user/user.php:78
 msgid "ToDo manage"
-msgstr ""
+msgstr "Gestión de cosas por hacer"
 
 #: ../../enterprise/operation/user/user.php:80
 msgid "KB management"
-msgstr ""
+msgstr "Gestión de la BC"
 
 #: ../../enterprise/operation/user/user.php:81
 msgid "KB read"
-msgstr ""
+msgstr "Leer de la BC"
 
 #: ../../enterprise/operation/user/user.php:82
 msgid "KB write"
-msgstr ""
+msgstr "Escribir en la BC"
 
 #: ../../operation/agenda/agenda.php:84
 msgid "Added event to calendar"
@@ -2064,7 +2116,7 @@ msgstr "Hora"
 #: ../../operation/side_menu.php:31 ../../operation/side_menu.php:85
 #: ../../operation/projects/project_overview.php:22
 msgid "Project overview"
-msgstr "Vista general de proyectos"
+msgstr "Vista general de proy."
 
 #: ../../operation/side_menu.php:39
 msgid "Project detail"
@@ -2080,7 +2132,7 @@ msgstr "Crear proyecto"
 
 #: ../../operation/side_menu.php:62
 msgid "Disabled projects"
-msgstr "Proyectos desactivados"
+msgstr "Proy. desactivados"
 
 #: ../../operation/side_menu.php:93
 #: ../../operation/projects/project_tracking.php:27
@@ -2110,8 +2162,8 @@ msgid "People"
 msgstr "Personas"
 
 #: ../../operation/side_menu.php:144 ../../operation/side_menu.php:226
-#: ../../operation/inventories/inventory.php:45
-#: ../../operation/incidents/incident.php:84
+#: ../../operation/inventories/inventory.php:60
+#: ../../operation/incidents/incident.php:82
 #: ../../operation/incidents/incident_notes.php:92
 #: ../../operation/incidents/incident_notes.php:94
 #: ../../operation/incidents/incident_work.php:63
@@ -2120,9 +2172,9 @@ msgid "Workunits"
 msgstr "Horas de trabajo"
 
 #: ../../operation/side_menu.php:156 ../../operation/side_menu.php:238
-#: ../../operation/incidents/incident.php:85
+#: ../../operation/incidents/incident.php:83
 #: ../../operation/incidents/incident_notes.php:101
-#: ../../operation/incidents/incident_search.php:299
+#: ../../operation/incidents/incident_search.php:210
 #: ../../operation/incidents/incident_work.php:73
 msgid "Files"
 msgstr "Ficheros"
@@ -2159,7 +2211,7 @@ msgid "Incidents overview"
 msgstr "Vista general de incidentes"
 
 #: ../../operation/side_menu.php:286 ../../operation/side_menu.php:421
-#: ../../operation/incidents/incident_detail.php:428
+#: ../../operation/incidents/incident_detail.php:419
 msgid "Create incident"
 msgstr "Crear incidente"
 
@@ -2185,7 +2237,7 @@ msgid "Inventory overview"
 msgstr "Vista general del inventario"
 
 #: ../../operation/side_menu.php:397
-#: ../../operation/inventories/inventory_detail.php:144
+#: ../../operation/inventories/inventory_detail.php:152
 msgid "Create inventory object"
 msgstr "Crear objeto de inventario"
 
@@ -2194,7 +2246,7 @@ msgid "Inventory #"
 msgstr "Inventario nº "
 
 #: ../../operation/side_menu.php:434
-#: ../../operation/inventories/inventory.php:43
+#: ../../operation/inventories/inventory.php:58
 #: ../../operation/companies/company_detail.php:172
 msgid "Contracts"
 msgstr "Contratos"
@@ -2204,7 +2256,8 @@ msgid "Contract overview"
 msgstr "Vista general de contratos"
 
 #: ../../operation/side_menu.php:453
-#: ../../operation/inventories/inventory.php:44
+#: ../../operation/inventories/inventory.php:59
+#: ../../operation/inventories/inventory_detail.php:254
 #: ../../operation/companies/company_detail.php:173
 msgid "Contacts"
 msgstr "Contactos"
@@ -2227,14 +2280,14 @@ msgstr "Roles de las empresas"
 
 #: ../../operation/side_menu.php:497
 #: ../../operation/manufacturers/manufacturer_detail.php:177
-#: ../../operation/inventories/inventory_detail.php:181
-#: ../../operation/inventories/inventory_detail.php:189
+#: ../../operation/inventories/inventory_detail.php:191
+#: ../../operation/inventories/inventory_detail.php:199
 #: ../../operation/inventories/inventory_contracts.php:65
 #: ../../operation/incidents/incident.php:125
 #: ../../operation/incidents/incident_inventory_detail.php:58
-#: ../../operation/incidents/incident_search.php:66
-#: ../../operation/contracts/contract_detail.php:150
-#: ../../operation/contracts/contract_detail.php:209
+#: ../../operation/incidents/incident_search.php:89
+#: ../../operation/contracts/contract_detail.php:155
+#: ../../operation/contracts/contract_detail.php:215
 msgid "SLA"
 msgstr "S.L.A."
 
@@ -2275,121 +2328,125 @@ msgid "Browse"
 msgstr "Examinar"
 
 #: ../../operation/side_menu.php:581
+msgid "Create KB item"
+msgstr "Crear elemento de la BC"
+
+#: ../../operation/side_menu.php:588
 msgid "Manage KB item"
 msgstr "Gestionar elementos de la BC"
 
-#: ../../operation/side_menu.php:588
+#: ../../operation/side_menu.php:595
 msgid "Manage Categories"
 msgstr "Gestionar categorías"
 
-#: ../../operation/side_menu.php:614
+#: ../../operation/side_menu.php:621
 msgid "To-Do another people"
 msgstr "Cosas por hacer de otros"
 
-#: ../../operation/side_menu.php:621
+#: ../../operation/side_menu.php:628
 msgid "Add todo"
 msgstr "Añadir algo por hacer"
 
-#: ../../operation/side_menu.php:628 ../../operation/side_menu.php:636
+#: ../../operation/side_menu.php:635 ../../operation/side_menu.php:643
 #: ../../operation/main_menu.php:92
 msgid "Setup"
 msgstr "Configuración"
 
-#: ../../operation/side_menu.php:650
+#: ../../operation/side_menu.php:657
 msgid "Configure updates"
-msgstr "Configuración de actualizaciones"
+msgstr "Config. actualizaciones"
 
-#: ../../operation/side_menu.php:664
+#: ../../operation/side_menu.php:671
 msgid "System events"
 msgstr "Eventos del sistema"
 
-#: ../../operation/side_menu.php:672
+#: ../../operation/side_menu.php:679
 #: ../../operation/users/user_statistics.php:23
 msgid "Users defined in Integria"
-msgstr "Usuarios definidos en Integria"
+msgstr "Usuarios definidos"
 
-#: ../../operation/side_menu.php:680
+#: ../../operation/side_menu.php:687
 msgid "View Users"
 msgstr "Ver usuarios"
 
-#: ../../operation/side_menu.php:690
+#: ../../operation/side_menu.php:697
 msgid "Edit my user"
 msgstr "Editar mi usuario"
 
-#: ../../operation/side_menu.php:698
+#: ../../operation/side_menu.php:705
 msgid "Spare workunit"
 msgstr "Horas de trabajo sueltas"
 
-#: ../../operation/side_menu.php:710 ../../operation/side_menu.php:825
+#: ../../operation/side_menu.php:717 ../../operation/side_menu.php:832
 #: ../../operation/user_report/report_weekly.php:60
 #: ../../operation/user_report/report_monthly.php:66
 msgid "Workunit report"
-msgstr "Informe de horas de trabajo"
+msgstr "Informe: horas de trabajo"
 
-#: ../../operation/side_menu.php:717
+#: ../../operation/side_menu.php:724
 msgid "My task assigments"
 msgstr "Mis tareas asignadas"
 
-#: ../../operation/side_menu.php:726
+#: ../../operation/side_menu.php:733
 msgid "User reporting"
 msgstr "Informe de usuario"
 
-#: ../../operation/side_menu.php:734
+#: ../../operation/side_menu.php:741
 msgid "Montly report"
 msgstr "Informe mensual"
 
-#: ../../operation/side_menu.php:741
+#: ../../operation/side_menu.php:748
 msgid "Weekly report"
 msgstr "Informe semanal"
 
-#: ../../operation/side_menu.php:748
+#: ../../operation/side_menu.php:755
 msgid "Annual report"
 msgstr "Informe anual"
 
-#: ../../operation/side_menu.php:755
+#: ../../operation/side_menu.php:762
 msgid "View vacations"
 msgstr "Ver vacaciones"
 
-#: ../../operation/side_menu.php:777
+#: ../../operation/side_menu.php:784
 msgid "Manage roles"
 msgstr "Gestionar roles"
 
-#: ../../operation/side_menu.php:784
+#: ../../operation/side_menu.php:791
 msgid "Manage Groups"
 msgstr "Gestionar grupos"
 
-#: ../../operation/side_menu.php:811
+#: ../../operation/side_menu.php:818
 msgid "User info"
 msgstr "Información del usuario"
 
-#: ../../operation/side_menu.php:820
+#: ../../operation/side_menu.php:827
 msgid "Phone"
 msgstr "Teléfono"
 
-#: ../../operation/side_menu.php:821 ../../operation/users/user_edit.php:133
-#: ../../operation/users/user_edit.php:146
+#: ../../operation/side_menu.php:828 ../../operation/users/user_edit.php:134
+#: ../../operation/users/user_edit.php:147
 msgid "E-mail"
 msgstr "Correo-e"
 
-#: ../../operation/side_menu.php:831
+#: ../../operation/side_menu.php:838
 msgid "Project distribution"
 msgstr "Distribución en proyectos"
 
-#: ../../operation/side_menu.php:836
+#: ../../operation/side_menu.php:843
 msgid "Workunit"
 msgstr "Horas de trabajo"
 
-#: ../../operation/side_menu.php:850
+#: ../../operation/side_menu.php:857
 msgid "over"
 msgstr "sobre"
 
-#: ../../operation/side_menu.php:852
+#: ../../operation/side_menu.php:859
 msgid "Week workunit time not fully justified"
 msgstr ""
 "Las horas de trabajo semanales\n"
 "no están completamente justificadas"
 
-#: ../../operation/side_menu.php:854
+#: ../../operation/side_menu.php:861
 msgid "Week workunit are fine"
 msgstr "Las horas de trabajo son correctas"
 
@@ -2460,33 +2517,42 @@ msgstr "Nombre del edificio"
 msgid "Create building"
 msgstr "Crear edificio"
 
-#: ../../operation/inventories/inventory.php:36
+#: ../../operation/inventories/inventory.php:35
+msgid "Object successfully deleted"
+msgstr "Objeto borrado correctamente"
+
 #: ../../operation/inventories/inventory.php:39
-#: ../../operation/inventories/inventory_contacts.php:47
-#: ../../operation/incidents/incident.php:76
-#: ../../operation/incidents/incident.php:79
+msgid "There was a problem deleting object"
+msgstr "Hubo un problema al borrar el objeto"
+
+#: ../../operation/inventories/inventory.php:51
+#: ../../operation/inventories/inventory.php:54
+#: ../../operation/inventories/inventory_contacts.php:40
+#: ../../operation/incidents/incident.php:74
+#: ../../operation/incidents/incident.php:77
 #: ../../operation/incidents/incident_inventory_contacts.php:31
 #: ../../operation/incidents/incident_inventory_detail.php:59
 msgid "Details"
 msgstr "Detalles"
 
-#: ../../operation/inventories/inventory.php:64
-#: ../../operation/incidents/incident.php:102
+#: ../../operation/inventories/inventory.php:79
+#: ../../operation/incidents/incident.php:100
 msgid "Custom searches"
 msgstr "Búsquedas personalizadas"
 
-#: ../../operation/inventories/inventory.php:70
-#: ../../operation/incidents/incident.php:108
-#: ../../operation/contacts/contact_detail.php:139
+#: ../../operation/inventories/inventory.php:85
+#: ../../operation/incidents/incident.php:106
+#: ../../operation/contacts/contact_detail.php:150
 msgid "Select"
 msgstr "Seleccionar"
 
-#: ../../operation/inventories/inventory.php:71
+#: ../../operation/inventories/inventory.php:88
+#: ../../operation/inventories/inventory.php:89
 #: ../../operation/incidents/incident.php:109
 msgid "Save current search"
 msgstr "Guardar la búsqueda actual"
 
-#: ../../operation/inventories/inventory.php:73
+#: ../../operation/inventories/inventory.php:91
 #: ../../operation/incidents/incident.php:111
 msgid "Save"
 msgstr "Guardar"
@@ -2496,19 +2562,19 @@ msgid "Incidents affecting inventory object"
 msgstr "Incidentes que afectan al objeto de inventariof"
 
 #: ../../operation/inventories/inventory_incidents.php:36
-#: ../../operation/inventories/inventory_search.php:222
-#: ../../operation/incidents/incident_detail.php:455
-#: ../../operation/incidents/incident_detail.php:457
+#: ../../operation/inventories/inventory_search.php:245
+#: ../../operation/incidents/incident_detail.php:446
+#: ../../operation/incidents/incident_detail.php:448
 #: ../../operation/todo/todo.php:121 ../../operation/kb/browse.php:81
 #: ../../operation/kb/manage_data.php:176
-#: ../../operation/kb/manage_data.php:256 ../../operation/kb/search.php:61
+#: ../../operation/kb/manage_data.php:255 ../../operation/kb/search.php:61
 msgid "Title"
 msgstr "Título"
 
 #: ../../operation/inventories/inventory_incidents.php:40
-#: ../../operation/incidents/incident_detail.php:501
-#: ../../operation/incidents/incident_detail.php:505
-#: ../../operation/incidents/incident_detail.php:506
+#: ../../operation/incidents/incident_detail.php:491
+#: ../../operation/incidents/incident_detail.php:495
+#: ../../operation/incidents/incident_detail.php:496
 msgid "Assigned user"
 msgstr "Usuario asignado"
 
@@ -2553,7 +2619,7 @@ msgstr "Actualizar un producto existente"
 #: ../../operation/inventories/manage_prod.php:135
 #: ../../operation/kb/browse.php:84 ../../operation/kb/browse_data.php:61
 #: ../../operation/kb/manage_data.php:203
-#: ../../operation/kb/manage_data.php:259 ../../operation/kb/search.php:64
+#: ../../operation/kb/manage_data.php:258 ../../operation/kb/search.php:64
 msgid "Product"
 msgstr "Producto"
 
@@ -2570,93 +2636,109 @@ msgstr "Elementos"
 msgid "Create product"
 msgstr "Crear producto"
 
-#: ../../operation/inventories/inventory_detail.php:59
+#: ../../operation/inventories/inventory_detail.php:65
 msgid "Inventory object updated successfuly"
 msgstr "Objeto del inventario actualizado correctamente"
 
-#: ../../operation/inventories/inventory_detail.php:61
+#: ../../operation/inventories/inventory_detail.php:67
 msgid "There was an error updating inventory object"
 msgstr "Hubo un error al actualizar el objeto de inventario"
 
-#: ../../operation/inventories/inventory_detail.php:87
+#: ../../operation/inventories/inventory_detail.php:93
 msgid "Inventory object created successfuly"
 msgstr "Objeto de inventario creado correctamente"
 
-#: ../../operation/inventories/inventory_detail.php:89
+#: ../../operation/inventories/inventory_detail.php:97
 msgid "There was an error creating inventory object"
 msgstr "Hubo un error al crear el objeto de inventario"
 
-#: ../../operation/inventories/inventory_detail.php:160
+#: ../../operation/inventories/inventory_detail.php:170
 msgid "Confirmed"
 msgstr "Confirmado"
 
-#: ../../operation/inventories/inventory_detail.php:168
-#: ../../operation/inventories/inventory_detail.php:185
-#: ../../operation/inventories/inventory_detail.php:186
-#: ../../operation/inventories/inventory_detail.php:187
-#: ../../operation/inventories/inventory_detail.php:209
-#: ../../operation/inventories/inventory_detail.php:210
-#: ../../operation/inventories/inventory_detail.php:228
-#: ../../operation/inventories/inventory_detail.php:229
-#: ../../operation/inventories/inventory_detail.php:230
+#: ../../operation/inventories/inventory_detail.php:178
+#: ../../operation/inventories/inventory_detail.php:195
+#: ../../operation/inventories/inventory_detail.php:196
+#: ../../operation/inventories/inventory_detail.php:197
+#: ../../operation/inventories/inventory_detail.php:219
+#: ../../operation/inventories/inventory_detail.php:220
+#: ../../operation/inventories/inventory_detail.php:238
+#: ../../operation/inventories/inventory_detail.php:239
+#: ../../operation/inventories/inventory_detail.php:240
 msgid "Not set"
 msgstr "Sin establecer"
 
-#: ../../operation/inventories/inventory_detail.php:179
-#: ../../operation/inventories/inventory_detail.php:188
-#: ../../operation/inventories/inventory_search.php:194
+#: ../../operation/inventories/inventory_detail.php:189
+#: ../../operation/inventories/inventory_detail.php:198
+#: ../../operation/inventories/inventory_search.php:215
 #: ../../operation/inventories/inventory_contracts.php:51
 #: ../../operation/incidents/incident_inventory_detail.php:57
 msgid "Contract"
 msgstr "Contrato"
 
-#: ../../operation/inventories/inventory_detail.php:183
-#: ../../operation/inventories/inventory_detail.php:190
+#: ../../operation/inventories/inventory_detail.php:193
+#: ../../operation/inventories/inventory_detail.php:200
 msgid "Manufacturer"
 msgstr "Fabricante"
 
-#: ../../operation/inventories/inventory_detail.php:196
+#: ../../operation/inventories/inventory_detail.php:206
 msgid "Search parent"
 msgstr "Buscar padre"
 
-#: ../../operation/inventories/inventory_detail.php:199
-#: ../../operation/inventories/inventory_detail.php:212
+#: ../../operation/inventories/inventory_detail.php:209
+#: ../../operation/inventories/inventory_detail.php:222
 msgid "Parent object"
 msgstr "Objeto padre"
 
-#: ../../operation/inventories/inventory_detail.php:224
-#: ../../operation/inventories/inventory_detail.php:233
-#: ../../operation/inventories/inventory_search.php:196
+#: ../../operation/inventories/inventory_detail.php:234
+#: ../../operation/inventories/inventory_detail.php:243
+#: ../../operation/inventories/inventory_search.php:217
 #: ../../operation/incidents/incident_inventory_detail.php:76
 msgid "Part number"
 msgstr "Número de parte"
 
-#: ../../operation/inventories/inventory_detail.php:226
-#: ../../operation/inventories/inventory_detail.php:234
-#: ../../operation/inventories/inventory_search.php:199
+#: ../../operation/inventories/inventory_detail.php:236
+#: ../../operation/inventories/inventory_detail.php:244
+#: ../../operation/inventories/inventory_search.php:220
 #: ../../operation/incidents/incident_inventory_detail.php:72
 msgid "IP address"
 msgstr "Dirección IP"
 
-#: ../../operation/inventories/inventory_search.php:36
-#: ../../operation/incidents/incident_search.php:36
+#: ../../operation/inventories/inventory_detail.php:257
+#: ../../operation/incidents/incident_detail.php:518
+#: ../../operation/incidents/incident_detail.php:529
+msgid "Remove"
+msgstr "Quitar"
+
+#: ../../operation/inventories/inventory_search.php:37
+#: ../../operation/incidents/incident_search.php:39
 msgid "Could not create custom search"
 msgstr "No se pudo crear la búsqueda personalizada"
 
-#: ../../operation/inventories/inventory_search.php:38
-#: ../../operation/incidents/incident_search.php:38
+#: ../../operation/inventories/inventory_search.php:39
+#: ../../operation/incidents/incident_search.php:41
 msgid "Custom search saved"
 msgstr "Búsqueda personalizada guardada"
 
-#: ../../operation/inventories/inventory_search.php:154
+#: ../../operation/inventories/inventory_search.php:68
+#: ../../operation/incidents/incident_search.php:70
+msgid "Could not delete custom search"
+msgstr "No se pudo realizar la búsqueda personalizada"
+
+#: ../../operation/inventories/inventory_search.php:70
+#: ../../operation/incidents/incident_search.php:72
+msgid "Custom search deleted"
+msgstr "Búsqueda personalizada borrada"
+
+#: ../../operation/inventories/inventory_search.php:175
 msgid "No inventory objects found"
 msgstr "No se encontró ningún objeto del inventario"
 
-#: ../../operation/inventories/inventory_search.php:217
+#: ../../operation/inventories/inventory_search.php:238
 msgid "ID"
 msgstr "ID"
 
-#: ../../operation/inventories/inventory_search.php:219
+#: ../../operation/inventories/inventory_search.php:241
 msgid "Active Incidents"
 msgstr "Incidentes activos"
 
@@ -2664,36 +2746,36 @@ msgstr "Incidentes activos"
 msgid "Workunits done in inventory object"
 msgstr "Horas de trabajo realizadas sobre el objeto de inventario"
 
-#: ../../operation/inventories/inventory_contacts.php:35
+#: ../../operation/inventories/inventory_contacts.php:32
 msgid "Contact details on inventory object"
 msgstr "Detalles del contacto acerca del objeto de inventario"
 
-#: ../../operation/inventories/inventory_contacts.php:45
-#: ../../operation/incidents/incident.php:83
+#: ../../operation/inventories/inventory_contacts.php:38
+#: ../../operation/incidents/incident.php:81
 #: ../../operation/incidents/incident_inventory_contacts.php:30
 msgid "Contact"
 msgstr "Contacto"
 
-#: ../../operation/inventories/inventory_contacts.php:46
-#: ../../operation/incidents/incident_inventory_contacts.php:68
-#: ../../operation/contacts/contact_detail.php:137
+#: ../../operation/inventories/inventory_contacts.php:39
+#: ../../operation/incidents/incident_inventory_contacts.php:75
+#: ../../operation/contacts/contact_detail.php:148
 msgid "Position"
 msgstr "Posición"
 
-#: ../../operation/inventories/inventory_contacts.php:48
+#: ../../operation/inventories/inventory_contacts.php:41
 #: ../../operation/incidents/incident_inventory_contacts.php:32
 #: ../../operation/incidents/incident_inventory_detail.php:87
 msgid "Edit"
 msgstr "Editar"
 
-#: ../../operation/inventories/inventory_contacts.php:71
-#: ../../operation/incidents/incident_inventory_contacts.php:64
-#: ../../operation/contacts/contact_detail.php:135
+#: ../../operation/inventories/inventory_contacts.php:62
+#: ../../operation/incidents/incident_inventory_contacts.php:71
+#: ../../operation/contacts/contact_detail.php:146
 msgid "Phone number"
 msgstr "Número de teléfono"
 
-#: ../../operation/inventories/inventory_contacts.php:73
-#: ../../operation/incidents/incident_inventory_contacts.php:66
+#: ../../operation/inventories/inventory_contacts.php:64
+#: ../../operation/incidents/incident_inventory_contacts.php:73
 msgid "Mobile phone"
 msgstr "Teléfono móvil"
 
@@ -2722,33 +2804,34 @@ msgstr "Respuesta máxima"
 msgid "Maximun incidents"
 msgstr "Incidentes máximos"
 
-#: ../../operation/incidents/incident.php:59
+#: ../../operation/incidents/incident.php:57
 #: ../../operation/projects/project.php:77
 msgid "Incident successfully deleted"
 msgstr "Incidente eliminado correctamente"
 
-#: ../../operation/incidents/incident.php:63
+#: ../../operation/incidents/incident.php:61
 #: ../../operation/projects/project.php:82
 msgid "There was a problem deleting incident"
 msgstr "Ha habido un problema al eliminar el incidente"
 
-#: ../../operation/incidents/incident.php:81
+#: ../../operation/incidents/incident.php:79
 #: ../../operation/incidents/incident_notes.php:85
 #: ../../operation/incidents/incident_work.php:56
 msgid "Tracking"
 msgstr "Seguimiento"
 
 #: ../../operation/incidents/incident.php:130
-#: ../../operation/incidents/incident_search.php:71
+#: ../../operation/incidents/incident_search.php:94
 msgid "Started"
 msgstr "Iniciado hace"
 
 #: ../../operation/incidents/incident.php:131
+#: ../../operation/incidents/incident_search.php:95
 msgid "Work"
 msgstr "Trabajo"
 
 #: ../../operation/incidents/incident.php:132
-#: ../../operation/incidents/incident_search.php:72
+#: ../../operation/incidents/incident_search.php:96
 msgid "Flags"
 msgstr "Banderas"
 
@@ -2797,16 +2880,16 @@ msgstr "No se pudo actualizar el tipo de incidente"
 msgid "Incident type updated ok"
 msgstr "Tipo de incidente actualizado correctamente"
 
-#: ../../operation/incidents/type_detail.php:107
+#: ../../operation/incidents/type_detail.php:106
 msgid "Type name"
 msgstr "Nombre del tipo"
 
-#: ../../operation/incidents/type_detail.php:109
-#: ../../operation/incidents/type_detail.php:161
+#: ../../operation/incidents/type_detail.php:108
+#: ../../operation/incidents/type_detail.php:160
 msgid "Wizard"
 msgstr "Asistente"
 
-#: ../../operation/incidents/type_detail.php:183
+#: ../../operation/incidents/type_detail.php:182
 msgid "Create type"
 msgstr "Crear tipo"
 
@@ -2815,16 +2898,16 @@ msgid "No files were added to the incidence"
 msgstr "No se añadió ningún fichero al incidente"
 
 #: ../../operation/incidents/incident_files.php:63
-#: ../../operation/projects/task_files.php:107
-#: ../../operation/projects/task_files.php:129
+#: ../../operation/projects/task_files.php:96
+#: ../../operation/projects/task_files.php:118
 #: ../../operation/projects/task_attach_file.php:41
 #: ../../operation/kb/browse_data.php:99
 msgid "Filename"
 msgstr "Nombre del fichero"
 
 #: ../../operation/incidents/incident_files.php:65
-#: ../../operation/projects/task_files.php:111
-#: ../../operation/projects/task_files.php:133
+#: ../../operation/projects/task_files.php:100
+#: ../../operation/projects/task_files.php:122
 msgid "Size"
 msgstr "Tamaño"
 
@@ -2858,107 +2941,108 @@ msgstr "Estadísticas"
 msgid "Help"
 msgstr "Ayuda"
 
-#: ../../operation/incidents/incident_detail.php:75
-#: ../../operation/incidents/incident_detail.php:142
+#: ../../operation/incidents/incident_detail.php:77
+#: ../../operation/incidents/incident_detail.php:134
 msgid "There was a problem updating incident"
 msgstr "Hubo un problema al actualizar el incidente"
 
-#: ../../operation/incidents/incident_detail.php:144
+#: ../../operation/incidents/incident_detail.php:136
 msgid "Incident successfully updated"
 msgstr "Incidente actualizado correctamente"
 
-#: ../../operation/incidents/incident_detail.php:203
+#: ../../operation/incidents/incident_detail.php:190
 msgid "Incident successfully created"
 msgstr "Incidente creado correctamente"
 
-#: ../../operation/incidents/incident_detail.php:204
+#: ../../operation/incidents/incident_detail.php:191
 msgid "Please click here to continue working with incident #"
 msgstr "Pulse aquí para continuar trabajando sobre el incidente nº"
 
-#: ../../operation/incidents/incident_detail.php:217
+#: ../../operation/incidents/incident_detail.php:204
 msgid "Incident could not be created"
 msgstr "No se pudo crear el incidente"
 
-#: ../../operation/incidents/incident_detail.php:286
+#: ../../operation/incidents/incident_detail.php:272
 msgid "Workunit added successfully"
 msgstr "Unidad de trabajo añadida correctamente"
 
-#: ../../operation/incidents/incident_detail.php:302
+#: ../../operation/incidents/incident_detail.php:288
 msgid "No file was attached"
 msgstr "No se adjuntó ningún fichero"
 
-#: ../../operation/incidents/incident_detail.php:306
+#: ../../operation/incidents/incident_detail.php:292
 msgid "No description available"
 msgstr "Sin descripción disponible"
 
-#: ../../operation/incidents/incident_detail.php:329
-#: ../../operation/projects/task_files.php:78
+#: ../../operation/incidents/incident_detail.php:315
+#: ../../operation/projects/task_files.php:67
 #: ../../operation/kb/manage_data.php:106
-msgid "File cannot be saved. Please contact Integria administrator about this error"
-msgstr "No se pudo guardar el fichero. Contacte con el administrador de Integria para solucionar este error."
+msgid ""
+"File cannot be saved. Please contact Integria administrator about this error"
+msgstr ""
+"No se pudo guardar el fichero. Contacte con el administrador de Integria "
+"para solucionar este error."
 
-#: ../../operation/incidents/incident_detail.php:340
+#: ../../operation/incidents/incident_detail.php:326
 msgid "File is too big"
 msgstr "El fichero es demasiado grande"
 
-#: ../../operation/incidents/incident_detail.php:343
+#: ../../operation/incidents/incident_detail.php:329
 msgid "File was partially uploaded. Please try again"
 msgstr "El fichero se subió parcialmente. Inténtelo de nuevo."
 
-#: ../../operation/incidents/incident_detail.php:346
+#: ../../operation/incidents/incident_detail.php:332
 msgid "No file was uploaded"
 msgstr "No se subió ningún fichero"
 
-#: ../../operation/incidents/incident_detail.php:349
+#: ../../operation/incidents/incident_detail.php:335
 msgid "Generic upload error"
 msgstr "Error de subida genérico"
 
-#: ../../operation/incidents/incident_detail.php:369
+#: ../../operation/incidents/incident_detail.php:355
 msgid "File deleted successfuly"
 msgstr "Fichero borrado correctamente"
 
-#: ../../operation/incidents/incident_detail.php:371
+#: ../../operation/incidents/incident_detail.php:357
 msgid "File could not be deleted"
 msgstr "No se pudo borrar el fichero"
 
-#: ../../operation/incidents/incident_detail.php:375
+#: ../../operation/incidents/incident_detail.php:361
 msgid "You have no permission"
 msgstr "No tiene permisos"
 
-#: ../../operation/incidents/incident_detail.php:422
+#: ../../operation/incidents/incident_detail.php:407
 msgid "SLA Fired"
 msgstr "SLA activado"
 
-#: ../../operation/incidents/incident_detail.php:460
+#: ../../operation/incidents/incident_detail.php:451
 msgid "SLA disabled"
 msgstr "SLA desactivado"
 
-#: ../../operation/incidents/incident_detail.php:462
+#: ../../operation/incidents/incident_detail.php:453
 msgid "Notify changes by email"
 msgstr "Notificar cambios por correo-e"
 
-#: ../../operation/incidents/incident_detail.php:481
+#: ../../operation/incidents/incident_detail.php:472
 msgid "Parent incident"
 msgstr "Incidente padre"
 
-#: ../../operation/incidents/incident_detail.php:503
+#: ../../operation/incidents/incident_detail.php:493
 msgid ""
 "User assigned here is user that will be responsible to manage incident. If "
 "you are opening an incident and want to be resolved by someone different "
 "than yourself, please assign to other user"
-msgstr "El usuario asignado aquí es el usuario responsable de gestionar el incidente. Si está abriendo un incidente y quiere que lo resuelva alguien distinto a usted mismo, asígnelo a otro usuario"
+msgstr ""
+"El usuario asignado aquí es el usuario responsable de gestionar el "
+"incidente. Si está abriendo un incidente y quiere que lo resuelva alguien "
+"distinto a usted mismo, asígnelo a otro usuario"
 
-#: ../../operation/incidents/incident_detail.php:525
-#: ../../operation/incidents/incident_detail.php:534
+#: ../../operation/incidents/incident_detail.php:515
+#: ../../operation/incidents/incident_detail.php:524
 msgid "Objects affected"
 msgstr "Objetos afectados"
 
-#: ../../operation/incidents/incident_detail.php:528
-#: ../../operation/incidents/incident_detail.php:539
-msgid "Remove"
-msgstr "Quitar"
-
-#: ../../operation/incidents/incident_detail.php:555
+#: ../../operation/incidents/incident_detail.php:545
 msgid "Resolution epilog"
 msgstr "Epílogo de resolución"
 
@@ -2974,36 +3058,20 @@ msgstr "Respuesta máxima"
 msgid "Maximum incidents"
 msgstr "Incidentes máximos"
 
-#: ../../operation/incidents/incident_search.php:151
+#: ../../operation/incidents/incident_search.php:146
 msgid "Nothing was found"
 msgstr "No se encontró nada"
 
-#: ../../operation/incidents/incident_search.php:306
+#: ../../operation/incidents/incident_search.php:217
 msgid "Mail notification"
 msgstr "Notificación por correo-e"
-
-#: ../../operation/incidents/incident_search.php:361
-msgid "Total incicents"
-msgstr "Número total de incidentes"
-
-#: ../../operation/incidents/incident_search.php:367
-msgid "Mean life time"
-msgstr "Tiempo de vida medio"
-
-#: ../../operation/incidents/incident_search.php:369
-msgid "Mean work time"
-msgstr "Media de horas de trabajo"
-
-#: ../../operation/incidents/incident_search.php:375
-msgid "Longest closed incident"
-msgstr "Incidente cerrado más tarde"
 
 #: ../../operation/incidents/incident_work.php:92
 msgid "Incident workunits tracking"
 msgstr "Seguimiento de unidades de trabajo del incidente"
 
 #: ../../operation/incidents/incident_attach_file.php:36
-#: ../../operation/kb/browse.php:85 ../../operation/kb/manage_data.php:260
+#: ../../operation/kb/browse.php:85 ../../operation/kb/manage_data.php:259
 #: ../../operation/kb/search.php:65
 msgid "File"
 msgstr "Fichero"
@@ -3032,14 +3100,18 @@ msgstr "Ant."
 msgid "Next"
 msgstr "Sig."
 
+#: ../../operation/user_report/report_weekly.php:46
+msgid "Totals for week"
+msgstr "Totales para la semana"
+
 #: ../../operation/user_report/report_weekly.php:61
 #: ../../operation/user_report/report_monthly.php:68
 msgid "Graph overview"
-msgstr "Vista general de la gráfica"
+msgstr "Vista gráfica general"
 
 #: ../../operation/user_report/report_weekly.php:62
 msgid "Total hours"
-msgstr "Total de horas"
+msgstr "Horas totales"
 
 #: ../../operation/user_report/monthly_graph.php:89
 #: ../../operation/user_report/weekly_graph.php:49
@@ -3060,15 +3132,15 @@ msgstr "Informe semanal para"
 msgid "Annual report for user"
 msgstr "Informe anual para el usuario"
 
-#: ../../operation/user_report/report_annual.php:47
+#: ../../operation/user_report/report_annual.php:48
 msgid "Vacations days"
 msgstr "Días de vacaciones"
 
-#: ../../operation/user_report/report_annual.php:50
+#: ../../operation/user_report/report_annual.php:51
 msgid "Days worked (projects)"
 msgstr "Días trabajados (proyectos)"
 
-#: ../../operation/user_report/report_annual.php:53
+#: ../../operation/user_report/report_annual.php:54
 msgid "Days worked (incidents)"
 msgstr "Días trabajados (incidentes)"
 
@@ -3082,7 +3154,7 @@ msgstr "Vista de calendario"
 
 #: ../../operation/user_report/report_monthly.php:69
 msgid "Total hours for this month"
-msgstr "Horas totales para este mes"
+msgstr "Horas totales en el mes"
 
 #: ../../operation/user_report/report_monthly.php:70
 msgid "Charged this month"
@@ -3178,7 +3250,7 @@ msgstr "ID fiscal"
 msgid "Company Role"
 msgstr "Rol de la empresa"
 
-#: ../../operation/companies/company_detail.php:197
+#: ../../operation/companies/company_detail.php:199
 msgid "Create company"
 msgstr "Crear empresa"
 
@@ -3206,12 +3278,12 @@ msgstr "Gestión de grupos de proyectos"
 msgid "Project group name"
 msgstr "Nombre del grupo de proyectos"
 
-#: ../../operation/projects/task_files.php:97
+#: ../../operation/projects/task_files.php:86
 msgid "File deleted"
 msgstr "Fichero borrado"
 
-#: ../../operation/projects/task_files.php:103
-#: ../../operation/projects/task_files.php:123
+#: ../../operation/projects/task_files.php:92
+#: ../../operation/projects/task_files.php:112
 msgid "Attached files"
 msgstr "Ficheros adjuntos"
 
@@ -3244,7 +3316,7 @@ msgstr "Inicio"
 #: ../../operation/projects/task.php:116
 #: ../../operation/projects/project_detail.php:130
 #: ../../operation/projects/task_detail.php:234
-#: ../../operation/contracts/contract_detail.php:212
+#: ../../operation/contracts/contract_detail.php:218
 msgid "End"
 msgstr "Final"
 
@@ -3550,49 +3622,45 @@ msgstr "GP"
 msgid "Tasks"
 msgstr "Tareas"
 
-#: ../../operation/projects/project.php:218
+#: ../../operation/projects/project.php:219
 msgid "Unlimited"
 msgstr "Ilimitado"
 
-#: ../../operation/projects/project.php:246
-msgid "Never"
-msgstr "Nunca"
-
-#: ../../operation/contacts/contact_detail.php:52
+#: ../../operation/contacts/contact_detail.php:63
 msgid "Contact cannot be created"
 msgstr "No se pudo crear el contacto"
 
-#: ../../operation/contacts/contact_detail.php:54
+#: ../../operation/contacts/contact_detail.php:65
 msgid "Contact has been created successfully"
 msgstr "Contacto actualizado correctamente"
 
-#: ../../operation/contacts/contact_detail.php:80
+#: ../../operation/contacts/contact_detail.php:91
 msgid "Contact cannot be updated"
 msgstr "No se pudo actualizar el contacto"
 
-#: ../../operation/contacts/contact_detail.php:82
+#: ../../operation/contacts/contact_detail.php:93
 msgid "Contact updated ok"
 msgstr "Contacto actualizado correctamente"
 
-#: ../../operation/contacts/contact_detail.php:98
+#: ../../operation/contacts/contact_detail.php:109
 msgid "Contact management"
 msgstr "Gestión de contratos"
 
-#: ../../operation/contacts/contact_detail.php:132
-#: ../../operation/contacts/contact_detail.php:193
+#: ../../operation/contacts/contact_detail.php:143
+#: ../../operation/contacts/contact_detail.php:204
 msgid "Full name"
 msgstr "Nombre completo"
 
-#: ../../operation/contacts/contact_detail.php:134
-#: ../../operation/contacts/contact_detail.php:195
+#: ../../operation/contacts/contact_detail.php:145
+#: ../../operation/contacts/contact_detail.php:206
 msgid "Email"
 msgstr "Correo-e"
 
-#: ../../operation/contacts/contact_detail.php:136
+#: ../../operation/contacts/contact_detail.php:147
 msgid "Mobile number"
 msgstr "Teléfono móvil"
 
-#: ../../operation/contacts/contact_detail.php:218
+#: ../../operation/contacts/contact_detail.php:229
 msgid "Create contact"
 msgstr "Crear contacto"
 
@@ -3622,8 +3690,11 @@ msgid "Forward"
 msgstr "Hacia adelante"
 
 #: ../../operation/users/user_spare_workunit.php:152
-msgid "If this checkbox is activated, propagation will be forward instead backward"
-msgstr "Si esta casilla está activada la propagación se hará hacia adelante en lugar de hacia atrás"
+msgid ""
+"If this checkbox is activated, propagation will be forward instead backward"
+msgstr ""
+"Si esta casilla está activada la propagación se hará hacia adelante en lugar "
+"de hacia atrás"
 
 #: ../../operation/users/user_spare_workunit.php:160
 msgid "Split > 1day"
@@ -3633,7 +3704,10 @@ msgstr "Saltar > 1 día"
 msgid ""
 "If workunit added is superior to 8 hours, it will be propagated to previous "
 "workday and deduced from the total, until deplete total hours assigned"
-msgstr "Si la unidad añadida es superior a 8 horas, entonces se propagará al día de trabajo anterior y deducido del total, hasta que se acaben las horas totales asignadas"
+msgstr ""
+"Si la unidad añadida es superior a 8 horas, entonces se propagará al día de "
+"trabajo anterior y deducido del total, hasta que se acaben las horas totales "
+"asignadas"
 
 #: ../../operation/users/user_statistics.php:24
 msgid "User activity statistics"
@@ -3643,40 +3717,40 @@ msgstr "Estadísticas de actividad de los usuarios"
 msgid "Workunit personal report"
 msgstr "Informe personal de unidades de trabajo"
 
-#: ../../operation/users/user_edit.php:69
+#: ../../operation/users/user_edit.php:78
 msgid "Passwords don't match"
 msgstr "Las contraseñas no coinciden"
 
-#: ../../operation/users/user_edit.php:94
+#: ../../operation/users/user_edit.php:100
 msgid "User successfuly updated"
 msgstr "Usuario actualizado correctamente"
 
-#: ../../operation/users/user_edit.php:99
+#: ../../operation/users/user_edit.php:102
 msgid "Could not update user"
 msgstr "No se pudo actualizar el usuario"
 
-#: ../../operation/users/user_edit.php:104
+#: ../../operation/users/user_edit.php:107
 msgid "User details"
 msgstr "Detalles del usuario"
 
-#: ../../operation/users/user_edit.php:136
+#: ../../operation/users/user_edit.php:137
 msgid "Default"
 msgstr "Predeterminado"
 
-#: ../../operation/users/user_edit.php:143
 #: ../../operation/users/user_edit.php:144
+#: ../../operation/users/user_edit.php:145
 msgid "Not provided"
 msgstr "No se proporcionó"
 
-#: ../../operation/users/user_edit.php:165
+#: ../../operation/users/user_edit.php:166
 msgid "Change password"
 msgstr "Cambiar contraseña"
 
-#: ../../operation/users/user_search.php:60
+#: ../../operation/users/user_search.php:63
 msgid "No users found"
 msgstr "No se encontró ningún usuario"
 
-#: ../../operation/users/user_search.php:93
+#: ../../operation/users/user_search.php:96
 msgid "User name"
 msgstr "Nombre de usuario"
 
@@ -3768,40 +3842,45 @@ msgstr "escribió"
 msgid "Reply"
 msgstr "Responder"
 
-#: ../../operation/contracts/contract_detail.php:55
-#: ../../operation/contracts/contract_detail.php:85
+#: ../../operation/contracts/contract_detail.php:56
+#: ../../operation/contracts/contract_detail.php:87
 msgid "You must specify a valid group"
 msgstr "Debe especificar un grupo válido"
 
-#: ../../operation/contracts/contract_detail.php:65
+#: ../../operation/contracts/contract_detail.php:66
 msgid "Contract cannot be created"
 msgstr "No se pudo crear el contrato"
 
-#: ../../operation/contracts/contract_detail.php:67
+#: ../../operation/contracts/contract_detail.php:68
 msgid "Contract has been created successfully"
 msgstr "Contrato creado correctamente"
 
-#: ../../operation/contracts/contract_detail.php:95
+#: ../../operation/contracts/contract_detail.php:97
 msgid "Contract cannot be updated"
 msgstr "No se pudo actualizar el contrato"
 
-#: ../../operation/contracts/contract_detail.php:97
+#: ../../operation/contracts/contract_detail.php:99
 msgid "Contract updated ok"
 msgstr "Contrato actualizado correctamente"
 
-#: ../../operation/contracts/contract_detail.php:114
+#: ../../operation/contracts/contract_detail.php:116
 msgid "Contract management"
 msgstr "Gestión de contratos"
 
-#: ../../operation/contracts/contract_detail.php:142
+#: ../../operation/contracts/contract_detail.php:146
 msgid "Contract name"
 msgstr "Nombre del contrato"
 
-#: ../../operation/contracts/contract_detail.php:211
+#: ../../operation/contracts/contract_detail.php:147
+#: ../../operation/contracts/contract_detail.php:213
+msgid "Contract number"
+msgstr "Número de contratoo"
+
+#: ../../operation/contracts/contract_detail.php:217
 msgid "Begin"
 msgstr "Inicio"
 
-#: ../../operation/contracts/contract_detail.php:244
+#: ../../operation/contracts/contract_detail.php:251
 msgid "Create contract"
 msgstr "Crear contrato"
 
@@ -3867,11 +3946,11 @@ msgid "Our sponsors"
 msgstr "Nuestros patrocinadores"
 
 #: ../../operation/kb/browse.php:29 ../../operation/kb/manage_data.php:162
-#: ../../operation/kb/manage_data.php:251 ../../operation/kb/search.php:29
+#: ../../operation/kb/manage_data.php:250 ../../operation/kb/search.php:29
 msgid "KB Data management"
 msgstr "Gestión de datos de la BC"
 
-#: ../../operation/kb/browse.php:29 ../../operation/kb/manage_data.php:251
+#: ../../operation/kb/browse.php:29 ../../operation/kb/manage_data.php:250
 #: ../../operation/kb/search.php:30
 msgid "Defined data"
 msgstr "Datos definidos"
@@ -3886,7 +3965,7 @@ msgstr "Categorías"
 
 #: ../../operation/kb/browse.php:83 ../../operation/kb/browse_data.php:70
 #: ../../operation/kb/manage_data.php:209
-#: ../../operation/kb/manage_data.php:258 ../../operation/kb/search.php:63
+#: ../../operation/kb/manage_data.php:257 ../../operation/kb/search.php:63
 msgid "Category"
 msgstr "Categoría"
 
@@ -3951,7 +4030,7 @@ msgstr "Primero debe crearlo"
 msgid "Attach description"
 msgstr "Adjuntar descripción"
 
-#: ../../operation/kb/manage_data.php:302
+#: ../../operation/kb/manage_data.php:301
 msgid "Create data"
 msgstr "Crear datos"
 
@@ -3994,4 +4073,3 @@ msgstr "Crear categoría"
 #: ../../operation/kb/search.php:41
 msgid "Free text search"
 msgstr "Búsqueda libre de texto"
-
