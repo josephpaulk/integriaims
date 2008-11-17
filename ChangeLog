@@ -1,5 +1,27 @@
 2008-11-17  Esteban Sanchez  <estebans@artica.es>
 
+	* images/html.png: Added to repository. New icon for report buttons.
+
+	* include/styles/integria.css: Added new style for report buttons.
+	Added a float_right class.
+
+	* include/functions_incidents.php: Complete documentation for
+	print_incidents_stats(). Incident links now point to the right place.
+	Removed enterprise_hook call.
+
+	* operation/incidents/incident.php: Make a string translatable. Fixed
+	HTML style.
+
+	* operation/incidents/incident_search.php: Fixed an error showing
+	resolution names. Added an enterprise hook when printing incidents to
+	report tool. HTML style fixed.
+
+	* include/config_process.php: PHP tag must be lowercase.
+
+	* operation/users/user_task_assigment.php: Tab style correction.
+
+2008-11-17  Esteban Sanchez  <estebans@artica.es>
+
 	* include/functions_incidents.php: Fixed variable name that was
 	causing notices.
 

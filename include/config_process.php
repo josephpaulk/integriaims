@@ -1,4 +1,4 @@
-<?PHP
+<?php
 
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net

@@ -142,7 +142,7 @@ $filter['last_date'] = (string) get_parameter ('search_last_date');
 
 $incidents = filter_incidents ($filter);
 if ($incidents === false) {
-	if (!$show_stats)
+	if (! $show_stats)
 		echo '<tr><td colspan="8">'.__('Nothing was found').'</td></tr>';
 	return;
 }
@@ -151,10 +151,15 @@ if ($incidents === false) {
 if ($show_stats) {
 	print_incidents_stats ($incidents);
 	
+	enterprise_include ('operation/incidents/incident_search.php');
+	
+	enterprise_hook ('incidents_report');
+	
 	return;
 }
 
 $statuses = get_indicent_status ();
+$resolutions = get_incident_resolutions ();
 
 foreach ($incidents as $incident) {
 	/* We print the rows directly, because it will be used in a sortable
@@ -174,7 +179,7 @@ foreach ($incidents as $incident) {
 	
 	// SLA Fired ?? 
 	if ($incident["affected_sla_id"] != 0)
-		echo '<td width=25><img src="images/exclamation.png" border=0></td>';
+		echo '<td width="25"><img src="images/exclamation.png" /></td>';
 	else
 		echo '<td></td>';
 	
@@ -182,12 +187,14 @@ foreach ($incidents as $incident) {
 	echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']).'</td>';
 	$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
 
-	echo '<td class="f9"><strong>'.$statuses[$incident['estado']].'</strong><br><em>'.$resolution.'</em></td>';
+	echo '<td class="f9"><strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em></td>';
 	
-	echo '<td>'.print_priority_flag_image ($incident['prioridad'], true).'</td>';
+	echo '<td>';
+	print_priority_flag_image ($incident['prioridad']);
+	echo '</td>';
 	
-	echo '<td class="f9">'.human_time_comparation ($incident["actualizacion"]).'<br><i>';
-	echo human_time_comparation ($incident["inicio"]).'</i></td>';
+	echo '<td class="f9">'.human_time_comparation ($incident["actualizacion"]).'<br /><em>';
+	echo human_time_comparation ($incident["inicio"]).'</em></td>';
 	
 	/* Workunits */
 	echo '<td>';
@@ -219,4 +226,5 @@ foreach ($incidents as $incident) {
 	
 	echo '</tr>';
 }
+
 ?>

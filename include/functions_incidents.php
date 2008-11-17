@@ -182,7 +182,12 @@ function filter_incidents ($filters) {
 }
 
 /**
- * Print a 
+ * Print a table with statistics of a list of incidents.
+ *
+ * @param array List of incidents to get stats.
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
+ *
+ * @return Incidents stats if return parameter is true. Nothing otherwise
  */
 function print_incidents_stats ($incidents, $return = false) {
 	$output = '';
@@ -275,8 +280,10 @@ function print_incidents_stats ($incidents, $return = false) {
 	$incidents_label = '';
 	foreach ($most_active_incidents as $incident) {
 		$incidents_label .= '<a class="incident_link" id="incident_link_'.
-			$incident['id_incidencia'].'" href="#">'.$incident['titulo'].
-			"</a> (".$incident['worked_hours']." ".__('Hours').") <br />";
+			$incident['id_incidencia'].'"
+			href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.
+			$incident['titulo']."</a> (".$incident['worked_hours']." ".
+			__('Hours').") <br />";
 	}
 	
 	$table->width = '450px';
@@ -288,12 +295,6 @@ function print_incidents_stats ($incidents, $return = false) {
 	$table->data[0][1] = print_label (__('Most active incidents'), '', '', true, $incidents_label);
 	
 	$output .= print_table ($table, true);
-	
-	enterprise_include ('operation/incidents/incident_search.php');
-	
-	$enterprise_output = enterprise_hook ('incidents_report');
-	if ($enterprise_output !== ENTERPRISE_NOT_HOOK)
-		$output .= $enterprise_output;
 	
 	if ($return)
 		return $output;
