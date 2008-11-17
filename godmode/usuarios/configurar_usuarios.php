@@ -197,7 +197,7 @@ if (isset($avatar)){
 <td class="datos"><input type="password" name="pass1" value="<?php echo $password ?>">
 <tr><td class="datos2"><?php echo __('Password confirmation') ?>
 <td class="datos2"><input type="password" name="pass2" value="<?php echo $password ?>">
-<tr><td class="datos">E-Mail
+<tr><td class="datos"><?php echo __('E-Mail') ?>
 <td class="datos"><input type="text" name="direccion" size="30" value="<?php echo $direccion ?>">
 
 

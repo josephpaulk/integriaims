@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: index.es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-17 15:21+0100\n"
-"PO-Revision-Date: 2008-11-17 15:42+0100\n"
+"POT-Creation-Date: 2008-11-17 16:30+0100\n"
+"PO-Revision-Date: 2008-11-17 16:31+0100\n"
 "Last-Translator: Jorge Gonzalez <jorge.gonzalez@artica.es>\n"
 "Language-Team: Español <artica@artica.es>\n"
 "MIME-Version: 1.0\n"
@@ -357,9 +357,10 @@ msgstr "Gestión de tareas"
 #: ../../operation/manufacturers/manufacturer_detail.php:138
 #: ../../operation/buildings/building_detail.php:111
 #: ../../operation/inventories/manage_prod.php:143
-#: ../../operation/inventories/inventory_detail.php:290
+#: ../../operation/inventories/inventory_detail.php:259
+#: ../../operation/inventories/inventory_detail.php:293
 #: ../../operation/incidents/type_detail.php:120
-#: ../../operation/incidents/incident_detail.php:560
+#: ../../operation/incidents/incident_detail.php:561
 #: ../../operation/todo/todo.php:146
 #: ../../operation/companies/company_role.php:108
 #: ../../operation/companies/company_detail.php:135
@@ -368,7 +369,7 @@ msgstr "Gestión de tareas"
 #: ../../operation/projects/task_detail.php:299
 #: ../../operation/projects/milestones.php:100
 #: ../../operation/projects/milestones.php:152
-#: ../../operation/contacts/contact_detail.php:162
+#: ../../operation/contacts/contact_detail.php:171
 #: ../../operation/contracts/contract_detail.php:166
 #: ../../operation/slas/sla_detail.php:151
 #: ../../operation/kb/manage_data.php:217
@@ -389,9 +390,9 @@ msgstr "Crear"
 #: ../../operation/manufacturers/manufacturer_detail.php:133
 #: ../../operation/buildings/building_detail.php:107
 #: ../../operation/inventories/manage_prod.php:146
-#: ../../operation/inventories/inventory_detail.php:287
+#: ../../operation/inventories/inventory_detail.php:290
 #: ../../operation/incidents/type_detail.php:116
-#: ../../operation/incidents/incident_detail.php:566
+#: ../../operation/incidents/incident_detail.php:567
 #: ../../operation/user_report/report_weekly.php:53
 #: ../../operation/user_report/report_monthly.php:59
 #: ../../operation/todo/todo.php:149
@@ -404,7 +405,7 @@ msgstr "Crear"
 #: ../../operation/projects/task_detail.php:296
 #: ../../operation/projects/people_manager.php:206
 #: ../../operation/projects/people_manager.php:236
-#: ../../operation/contacts/contact_detail.php:158
+#: ../../operation/contacts/contact_detail.php:167
 #: ../../operation/users/user_edit.php:158
 #: ../../operation/users/user_edit.php:170
 #: ../../operation/contracts/contract_detail.php:162
@@ -433,10 +434,10 @@ msgstr "Perfiles"
 #: ../../operation/manufacturers/manufacturer_detail.php:178
 #: ../../operation/buildings/building_detail.php:150
 #: ../../operation/inventories/manage_prod.php:171
-#: ../../operation/inventories/inventory_detail.php:276
+#: ../../operation/inventories/inventory_detail.php:279
 #: ../../operation/incidents/type_detail.php:161
 #: ../../operation/incidents/incident_files.php:67
-#: ../../operation/incidents/incident_detail.php:414
+#: ../../operation/incidents/incident_detail.php:415
 #: ../../operation/todo/todo.php:175
 #: ../../operation/companies/company_role.php:147
 #: ../../operation/companies/company_detail.php:174
@@ -448,7 +449,7 @@ msgstr "Perfiles"
 #: ../../operation/projects/people_manager.php:121
 #: ../../operation/projects/people_manager.php:165
 #: ../../operation/projects/project.php:251
-#: ../../operation/contacts/contact_detail.php:207
+#: ../../operation/contacts/contact_detail.php:216
 #: ../../operation/messages/message.php:169
 #: ../../operation/contracts/contract_detail.php:219
 #: ../../operation/slas/sla_detail.php:192
@@ -481,7 +482,7 @@ msgstr "Borrar"
 #: ../../operation/projects/people_manager.php:179
 #: ../../operation/projects/project.php:254
 #: ../../operation/projects/project.php:258
-#: ../../operation/contacts/contact_detail.php:219
+#: ../../operation/contacts/contact_detail.php:228
 #: ../../operation/contracts/contract_detail.php:240
 #: ../../operation/slas/sla_detail.php:206
 #: ../../operation/kb/manage_data.php:293
@@ -566,7 +567,7 @@ msgstr "Fecha/Hora"
 #: ../../operation/incidents/incident_notes.php:80
 #: ../../operation/incidents/incident_inventory_contacts.php:40
 #: ../../operation/incidents/incident_detail.php:405
-#: ../../operation/incidents/incident_detail.php:469
+#: ../../operation/incidents/incident_detail.php:470
 #: ../../operation/incidents/incident_inventory_detail.php:36
 #: ../../operation/incidents/incident_search.php:90
 #: ../../operation/incidents/incident_work.php:51
@@ -579,7 +580,7 @@ msgstr "Incidente"
 #: ../../include/functions_form.php:115 ../../include/functions_form.php:556
 #: ../../include/functions_form.php:695
 #: ../../operation/incidents/incident.php:127
-#: ../../operation/incidents/incident_detail.php:486
+#: ../../operation/incidents/incident_detail.php:487
 #: ../../operation/incidents/incident_search.php:91
 #: ../../operation/projects/task.php:91
 #: ../../operation/projects/project.php:156
@@ -638,8 +639,8 @@ msgstr "URL"
 #: ../../godmode/usuarios/role_manager.php:153
 #: ../../operation/inventories/inventory_detail.php:255
 #: ../../operation/incidents/incident_create_work.php:61
-#: ../../operation/incidents/incident_detail.php:516
-#: ../../operation/incidents/incident_detail.php:527
+#: ../../operation/incidents/incident_detail.php:517
+#: ../../operation/incidents/incident_detail.php:528
 #: ../../operation/projects/task_create_work.php:102
 #: ../../operation/users/user_spare_workunit.php:176
 msgid "Add"
@@ -806,6 +807,7 @@ msgid "There's a new update for Integria Enterprise"
 msgstr "Existe una nueva actualización para Integria Enterprise"
 
 #: ../../godmode/updatemanager/main.php:76
+#: ../../operation/incidents/incident.php:124
 msgid "Id"
 msgstr "ID"
 
@@ -817,12 +819,12 @@ msgstr "ID"
 #: ../../operation/buildings/building_detail.php:149
 #: ../../operation/inventories/manage_prod.php:137
 #: ../../operation/inventories/manage_prod.php:169
-#: ../../operation/inventories/inventory_detail.php:268
+#: ../../operation/inventories/inventory_detail.php:270
 #: ../../operation/inventories/inventory_contracts.php:54
 #: ../../operation/incidents/incident_create_work.php:54
 #: ../../operation/incidents/type_detail.php:109
 #: ../../operation/incidents/incident_files.php:64
-#: ../../operation/incidents/incident_detail.php:542
+#: ../../operation/incidents/incident_detail.php:543
 #: ../../operation/incidents/incident_work.php:96
 #: ../../operation/incidents/incident_attach_file.php:37
 #: ../../operation/incidents/incident_tracking.php:50
@@ -838,7 +840,7 @@ msgstr "ID"
 #: ../../operation/projects/milestones.php:112
 #: ../../operation/projects/people_manager.php:252
 #: ../../operation/projects/project_tracking.php:36
-#: ../../operation/contacts/contact_detail.php:151
+#: ../../operation/contacts/contact_detail.php:160
 #: ../../operation/users/user.php:36
 #: ../../operation/contracts/contract_detail.php:156
 #: ../../operation/slas/sla_detail.php:139
@@ -993,7 +995,7 @@ msgstr "Para el usuario"
 #: ../../enterprise/godmode/usuarios/role_user_global.php:58
 #: ../../operation/side_menu.php:77
 #: ../../operation/projects/task_files.php:113
-#: ../../operation/users/user_task_assigment.php:54
+#: ../../operation/users/user_task_assigment.php:53
 msgid "Project"
 msgstr "Proyecto"
 
@@ -1005,7 +1007,7 @@ msgstr "Proyecto"
 #: ../../operation/todo/todo.php:174
 #: ../../operation/projects/task_files.php:93
 #: ../../operation/projects/task_files.php:116
-#: ../../operation/users/user_task_assigment.php:55
+#: ../../operation/users/user_task_assigment.php:54
 #: ../../operation/users/user_spare_workunit.php:121
 msgid "Task"
 msgstr "Tarea"
@@ -1071,12 +1073,16 @@ msgstr "ID usuario"
 #: ../../operation/users/user_edit.php:130
 #: ../../operation/users/user_search.php:97
 msgid "Real name"
-msgstr "Nombre Real"
+msgstr "Nombre real"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:198
 #: ../../operation/users/user_edit.php:164
 msgid "Password confirmation"
 msgstr "Confirmar contraseña"
+
+#: ../../godmode/usuarios/configurar_usuarios.php:200
+msgid "E-Mail"
+msgstr "Correo-e"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:206
 #: ../../operation/users/user_edit.php:124
@@ -1118,8 +1124,8 @@ msgstr "Grupo(s) disponible(s)"
 #: ../../operation/inventories/inventory_detail.php:191
 #: ../../operation/inventories/inventory_detail.php:193
 #: ../../operation/inventories/inventory_detail.php:215
-#: ../../operation/incidents/incident_detail.php:469
-#: ../../operation/incidents/incident_search.php:183
+#: ../../operation/incidents/incident_detail.php:470
+#: ../../operation/incidents/incident_search.php:188
 #: ../../operation/projects/project_detail.php:150
 #: ../../operation/projects/task_detail.php:227
 #: ../../operation/projects/task_detail.php:237
@@ -1172,7 +1178,7 @@ msgstr "No se pudo borrar. Error al borrar los datos."
 #: ../../operation/projects/milestones.php:67
 #: ../../operation/projects/task_workunit.php:130
 #: ../../operation/projects/people_manager.php:89
-#: ../../operation/contacts/contact_detail.php:105
+#: ../../operation/contacts/contact_detail.php:110
 #: ../../operation/users/user_workunit_report.php:56
 #: ../../operation/contracts/contract_detail.php:112
 #: ../../operation/slas/sla_detail.php:96
@@ -1208,9 +1214,9 @@ msgstr "Total semanal"
 #: ../../include/functions_calendar.php:369
 #: ../../include/functions_calendar.php:390
 #: ../../include/functions_form.php:470
-#: ../../include/functions_incidents.php:249
-#: ../../include/functions_incidents.php:270
-#: ../../include/functions_incidents.php:279 ../../operation/side_menu.php:145
+#: ../../include/functions_incidents.php:254
+#: ../../include/functions_incidents.php:275
+#: ../../include/functions_incidents.php:286 ../../operation/side_menu.php:145
 #: ../../operation/side_menu.php:227
 #: ../../operation/inventories/inventory_contracts.php:69
 #: ../../operation/inventories/inventory_contracts.php:71
@@ -1344,8 +1350,8 @@ msgstr "Cadena de búsqueda"
 #: ../../include/functions_form.php:691
 #: ../../operation/inventories/inventory_incidents.php:38
 #: ../../operation/incidents/incident.php:129
-#: ../../operation/incidents/incident_detail.php:458
-#: ../../operation/incidents/incident_detail.php:463
+#: ../../operation/incidents/incident_detail.php:459
+#: ../../operation/incidents/incident_detail.php:464
 #: ../../operation/incidents/incident_search.php:93
 #: ../../operation/todo/todo.php:124 ../../operation/todo/todo.php:166
 #: ../../operation/projects/task_detail.php:229
@@ -1418,9 +1424,9 @@ msgstr "Fecha de finalización"
 #: ../../operation/incidents/incident_inventory_contacts.php:29
 #: ../../operation/incidents/incident_inventory_detail.php:56
 #: ../../operation/companies/company_detail.php:170
-#: ../../operation/contacts/contact_detail.php:150
-#: ../../operation/contacts/contact_detail.php:185
-#: ../../operation/contacts/contact_detail.php:205
+#: ../../operation/contacts/contact_detail.php:159
+#: ../../operation/contacts/contact_detail.php:194
+#: ../../operation/contacts/contact_detail.php:214
 #: ../../operation/contracts/contract_detail.php:153
 #: ../../operation/contracts/contract_detail.php:191
 #: ../../operation/contracts/contract_detail.php:214
@@ -1452,8 +1458,8 @@ msgstr "Tipo de incidentes"
 #: ../../operation/projects/task.php:89 ../../operation/projects/task.php:94
 #: ../../operation/projects/project.php:154
 #: ../../operation/projects/project.php:158
-#: ../../operation/contacts/contact_detail.php:184
-#: ../../operation/contacts/contact_detail.php:186
+#: ../../operation/contacts/contact_detail.php:193
+#: ../../operation/contacts/contact_detail.php:195
 #: ../../operation/users/user_search.php:84
 #: ../../operation/contracts/contract_detail.php:189
 #: ../../operation/contracts/contract_detail.php:192
@@ -1481,8 +1487,8 @@ msgid "Participant"
 msgstr "Participante"
 
 #: ../../include/functions_form.php:778
-#: ../../include/functions_incidents.php:242
-#: ../../include/functions_incidents.php:244
+#: ../../include/functions_incidents.php:247
+#: ../../include/functions_incidents.php:249
 msgid "Opened"
 msgstr "Abierto"
 
@@ -1491,7 +1497,7 @@ msgid "Closed at"
 msgstr "Cerrado el"
 
 #: ../../include/functions_form.php:784 ../../include/functions_form.php:787
-#: ../../operation/users/user_task_assigment.php:58
+#: ../../operation/users/user_task_assigment.php:57
 msgid "Last update"
 msgstr "Última actualización"
 
@@ -1511,39 +1517,39 @@ msgstr "Por"
 msgid "Items per page"
 msgstr "Elementos por página"
 
-#: ../../include/functions_incidents.php:240
+#: ../../include/functions_incidents.php:245
 msgid "Total incicents"
 msgstr "Número total de incidentes"
 
-#: ../../include/functions_incidents.php:242 ../../include/functions.php:531
+#: ../../include/functions_incidents.php:247 ../../include/functions.php:531
 msgid "Closed"
 msgstr "Cerrado"
 
-#: ../../include/functions_incidents.php:246
+#: ../../include/functions_incidents.php:251
 msgid "Mean life time"
 msgstr "Tiempo de vida medio"
 
-#: ../../include/functions_incidents.php:248
+#: ../../include/functions_incidents.php:253
 msgid "Mean work time"
 msgstr "Media de horas de trabajo"
 
-#: ../../include/functions_incidents.php:250
+#: ../../include/functions_incidents.php:255
 msgid "SLA compliance"
 msgstr "Cumplimiento de SLA"
 
-#: ../../include/functions_incidents.php:251
+#: ../../include/functions_incidents.php:256
 msgid "%"
 msgstr "%"
 
-#: ../../include/functions_incidents.php:256
+#: ../../include/functions_incidents.php:261
 msgid "Longest closed incident"
 msgstr "Incidente cerrado más tarde"
 
-#: ../../include/functions_incidents.php:287
+#: ../../include/functions_incidents.php:294
 msgid "Most active users"
 msgstr "Usuarios más activos"
 
-#: ../../include/functions_incidents.php:288
+#: ../../include/functions_incidents.php:295
 msgid "Most active incidents"
 msgstr "Incidentes más activos"
 
@@ -2174,7 +2180,7 @@ msgstr "Horas de trabajo"
 #: ../../operation/side_menu.php:156 ../../operation/side_menu.php:238
 #: ../../operation/incidents/incident.php:83
 #: ../../operation/incidents/incident_notes.php:101
-#: ../../operation/incidents/incident_search.php:210
+#: ../../operation/incidents/incident_search.php:217
 #: ../../operation/incidents/incident_work.php:73
 msgid "Files"
 msgstr "Ficheros"
@@ -2211,7 +2217,7 @@ msgid "Incidents overview"
 msgstr "Vista general de incidentes"
 
 #: ../../operation/side_menu.php:286 ../../operation/side_menu.php:421
-#: ../../operation/incidents/incident_detail.php:419
+#: ../../operation/incidents/incident_detail.php:420
 msgid "Create incident"
 msgstr "Crear incidente"
 
@@ -2542,7 +2548,7 @@ msgstr "Búsquedas personalizadas"
 
 #: ../../operation/inventories/inventory.php:85
 #: ../../operation/incidents/incident.php:106
-#: ../../operation/contacts/contact_detail.php:150
+#: ../../operation/contacts/contact_detail.php:159
 msgid "Select"
 msgstr "Seleccionar"
 
@@ -2563,8 +2569,8 @@ msgstr "Incidentes que afectan al objeto de inventariof"
 
 #: ../../operation/inventories/inventory_incidents.php:36
 #: ../../operation/inventories/inventory_search.php:245
-#: ../../operation/incidents/incident_detail.php:446
-#: ../../operation/incidents/incident_detail.php:448
+#: ../../operation/incidents/incident_detail.php:447
+#: ../../operation/incidents/incident_detail.php:449
 #: ../../operation/todo/todo.php:121 ../../operation/kb/browse.php:81
 #: ../../operation/kb/manage_data.php:176
 #: ../../operation/kb/manage_data.php:255 ../../operation/kb/search.php:61
@@ -2572,9 +2578,9 @@ msgid "Title"
 msgstr "Título"
 
 #: ../../operation/inventories/inventory_incidents.php:40
-#: ../../operation/incidents/incident_detail.php:491
-#: ../../operation/incidents/incident_detail.php:495
+#: ../../operation/incidents/incident_detail.php:492
 #: ../../operation/incidents/incident_detail.php:496
+#: ../../operation/incidents/incident_detail.php:497
 msgid "Assigned user"
 msgstr "Usuario asignado"
 
@@ -2705,8 +2711,8 @@ msgid "IP address"
 msgstr "Dirección IP"
 
 #: ../../operation/inventories/inventory_detail.php:257
-#: ../../operation/incidents/incident_detail.php:518
-#: ../../operation/incidents/incident_detail.php:529
+#: ../../operation/incidents/incident_detail.php:519
+#: ../../operation/incidents/incident_detail.php:530
 msgid "Remove"
 msgstr "Quitar"
 
@@ -2758,7 +2764,7 @@ msgstr "Contacto"
 
 #: ../../operation/inventories/inventory_contacts.php:39
 #: ../../operation/incidents/incident_inventory_contacts.php:75
-#: ../../operation/contacts/contact_detail.php:148
+#: ../../operation/contacts/contact_detail.php:157
 msgid "Position"
 msgstr "Posición"
 
@@ -2770,7 +2776,7 @@ msgstr "Editar"
 
 #: ../../operation/inventories/inventory_contacts.php:62
 #: ../../operation/incidents/incident_inventory_contacts.php:71
-#: ../../operation/contacts/contact_detail.php:146
+#: ../../operation/contacts/contact_detail.php:155
 msgid "Phone number"
 msgstr "Número de teléfono"
 
@@ -2977,8 +2983,7 @@ msgstr "Sin descripción disponible"
 #: ../../operation/incidents/incident_detail.php:315
 #: ../../operation/projects/task_files.php:67
 #: ../../operation/kb/manage_data.php:106
-msgid ""
-"File cannot be saved. Please contact Integria administrator about this error"
+msgid "File cannot be saved. Please contact Integria administrator about this error"
 msgstr ""
 "No se pudo guardar el fichero. Contacte con el administrador de Integria "
 "para solucionar este error."
@@ -3015,19 +3020,19 @@ msgstr "No tiene permisos"
 msgid "SLA Fired"
 msgstr "SLA activado"
 
-#: ../../operation/incidents/incident_detail.php:451
+#: ../../operation/incidents/incident_detail.php:452
 msgid "SLA disabled"
 msgstr "SLA desactivado"
 
-#: ../../operation/incidents/incident_detail.php:453
+#: ../../operation/incidents/incident_detail.php:454
 msgid "Notify changes by email"
 msgstr "Notificar cambios por correo-e"
 
-#: ../../operation/incidents/incident_detail.php:472
+#: ../../operation/incidents/incident_detail.php:473
 msgid "Parent incident"
 msgstr "Incidente padre"
 
-#: ../../operation/incidents/incident_detail.php:493
+#: ../../operation/incidents/incident_detail.php:494
 msgid ""
 "User assigned here is user that will be responsible to manage incident. If "
 "you are opening an incident and want to be resolved by someone different "
@@ -3037,12 +3042,12 @@ msgstr ""
 "incidente. Si está abriendo un incidente y quiere que lo resuelva alguien "
 "distinto a usted mismo, asígnelo a otro usuario"
 
-#: ../../operation/incidents/incident_detail.php:515
-#: ../../operation/incidents/incident_detail.php:524
+#: ../../operation/incidents/incident_detail.php:516
+#: ../../operation/incidents/incident_detail.php:525
 msgid "Objects affected"
 msgstr "Objetos afectados"
 
-#: ../../operation/incidents/incident_detail.php:545
+#: ../../operation/incidents/incident_detail.php:546
 msgid "Resolution epilog"
 msgstr "Epílogo de resolución"
 
@@ -3062,7 +3067,7 @@ msgstr "Incidentes máximos"
 msgid "Nothing was found"
 msgstr "No se encontró nada"
 
-#: ../../operation/incidents/incident_search.php:217
+#: ../../operation/incidents/incident_search.php:224
 msgid "Mail notification"
 msgstr "Notificación por correo-e"
 
@@ -3182,7 +3187,7 @@ msgstr "Asignadas a otros usuarios"
 #: ../../operation/todo/todo.php:167 ../../operation/projects/task.php:110
 #: ../../operation/projects/project_tree.php:49
 #: ../../operation/projects/gantt_graph.php:148
-#: ../../operation/users/user_task_assigment.php:56
+#: ../../operation/users/user_task_assigment.php:55
 msgid "Progress"
 msgstr "Progreso"
 
@@ -3448,7 +3453,7 @@ msgid "Estimated hours"
 msgstr "Horas estimadas"
 
 #: ../../operation/projects/task_detail.php:242
-#: ../../operation/users/user_task_assigment.php:57
+#: ../../operation/users/user_task_assigment.php:56
 msgid "Worked hours"
 msgstr "Horas trabajadas"
 
@@ -3626,41 +3631,41 @@ msgstr "Tareas"
 msgid "Unlimited"
 msgstr "Ilimitado"
 
-#: ../../operation/contacts/contact_detail.php:63
+#: ../../operation/contacts/contact_detail.php:68
 msgid "Contact cannot be created"
 msgstr "No se pudo crear el contacto"
 
-#: ../../operation/contacts/contact_detail.php:65
+#: ../../operation/contacts/contact_detail.php:70
 msgid "Contact has been created successfully"
 msgstr "Contacto actualizado correctamente"
 
-#: ../../operation/contacts/contact_detail.php:91
+#: ../../operation/contacts/contact_detail.php:96
 msgid "Contact cannot be updated"
 msgstr "No se pudo actualizar el contacto"
 
-#: ../../operation/contacts/contact_detail.php:93
+#: ../../operation/contacts/contact_detail.php:98
 msgid "Contact updated ok"
 msgstr "Contacto actualizado correctamente"
 
-#: ../../operation/contacts/contact_detail.php:109
+#: ../../operation/contacts/contact_detail.php:114
 msgid "Contact management"
 msgstr "Gestión de contratos"
 
-#: ../../operation/contacts/contact_detail.php:143
-#: ../../operation/contacts/contact_detail.php:204
+#: ../../operation/contacts/contact_detail.php:152
+#: ../../operation/contacts/contact_detail.php:213
 msgid "Full name"
 msgstr "Nombre completo"
 
-#: ../../operation/contacts/contact_detail.php:145
-#: ../../operation/contacts/contact_detail.php:206
+#: ../../operation/contacts/contact_detail.php:154
+#: ../../operation/contacts/contact_detail.php:215
 msgid "Email"
 msgstr "Correo-e"
 
-#: ../../operation/contacts/contact_detail.php:147
+#: ../../operation/contacts/contact_detail.php:156
 msgid "Mobile number"
 msgstr "Teléfono móvil"
 
-#: ../../operation/contacts/contact_detail.php:229
+#: ../../operation/contacts/contact_detail.php:238
 msgid "Create contact"
 msgstr "Crear contacto"
 
@@ -3690,8 +3695,7 @@ msgid "Forward"
 msgstr "Hacia adelante"
 
 #: ../../operation/users/user_spare_workunit.php:152
-msgid ""
-"If this checkbox is activated, propagation will be forward instead backward"
+msgid "If this checkbox is activated, propagation will be forward instead backward"
 msgstr ""
 "Si esta casilla está activada la propagación se hará hacia adelante en lugar "
 "de hacia atrás"
@@ -4073,3 +4077,4 @@ msgstr "Crear categoría"
 #: ../../operation/kb/search.php:41
 msgid "Free text search"
 msgstr "Búsqueda libre de texto"
+

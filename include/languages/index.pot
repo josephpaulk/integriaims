@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-17 16:06+0100\n"
+"POT-Creation-Date: 2008-11-17 16:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1055,6 +1055,10 @@ msgstr ""
 #: ../../godmode/usuarios/configurar_usuarios.php:198
 #: ../../operation/users/user_edit.php:164
 msgid "Password confirmation"
+msgstr ""
+
+#: ../../godmode/usuarios/configurar_usuarios.php:200
+msgid "E-Mail"
 msgstr ""
 
 #: ../../godmode/usuarios/configurar_usuarios.php:206

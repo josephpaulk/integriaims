@@ -1,3 +1,13 @@
+2008-11-17  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	  translation.
+
+	* include/languages/index.pot: Updated po template.
+
+	* godmode/usuarios/configurar_usuarios.php: Added new string for
+	  translation.
+
 2008-11-17  Esteban Sanchez  <estebans@artica.es>
 
 	* operation/users/user_spare_workunit.php: Fixed date picker control
