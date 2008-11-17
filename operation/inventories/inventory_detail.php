@@ -147,7 +147,19 @@ if ($id) {
 	$cost = $inventory['cost'];
 }
 
-if (! $id) {
+
+if ($id) {
+	echo "<h1>".__('Object')." #$id";
+	/* Delete incident */
+	if ($has_permission) {
+		/* Delete object */
+		echo '<form name="delete_object_form" class="delete" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
+		print_input_hidden ('quick_delete', $id, false);
+		echo '<input type="image" class="cross" src="images/cross.png" title="' . __('Delete') .'">';
+		echo '</form>';	
+	}
+	echo "</h1>";
+} else {
 	if (! defined ('AJAX'))
 		echo "<h2>".__('Create inventory object')."</h2>";
 }
@@ -272,14 +284,6 @@ $table->data[5][0] = print_textarea ('description', 15, 100, $description,
 echo '<div class="result">'.$result_msg.'</div>';
 
 if ($has_permission) {	
-	if ($id) {
-		/* Delete object */
-		echo '<form name="delete_object_form" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
-		print_input_hidden ('quick_delete', $id, false);
-		echo '<input type="image" class="cross" src="images/cross.png" title="' . __('Delete') .'">';
-		echo '</form>';
-	}
-	
 	echo '<form method="post" id="inventory_status_form">';
 	print_table ($table);
 

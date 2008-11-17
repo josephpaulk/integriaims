@@ -1,3 +1,9 @@
+2008-11-17  Ramon Novoa  <rnovoa@artica.es>
+
+	* include/styles/integria.css,
+	  operation/incidents/incident_detail.php,
+	  operation/inventories/inventory_detail.php: Fixed delete buttons.
+
 2008-11-17  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish
@@ -67,6 +73,7 @@
 	* operation/inventories/inventory_detail.php: Added a button to create
 	a contact for the list. Do not show delete link when creating.
 
+>>>>>>> .r173
 2008-11-16  Sancho Lerena <slerena@artica.es>
 
 	* integria.css: Table pagination controls now more formatted.

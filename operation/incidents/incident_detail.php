@@ -403,18 +403,18 @@ $has_permission = (give_acl ($config['id_user'], $id_grupo, "IM")  || ($usuario 
 
 if ($id) {
 	echo "<h1>".__('Incident')." #$id";
-	if ($affected_sla_id != 0) {
-		echo '&nbsp;&nbsp;&nbsp;<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">';
-	}
-	echo "</h1>";
 	
 	/* Delete incident */
-	if ($has_permission && $id) {
-		echo '<form name="delete_incident_form" method="post" action="index.php?sec=incident&sec2=operation/incidents/incident">';
+	if ($has_permission) {
+		echo '<form name="delete_incident_form" class="delete" method="post" action="index.php?sec=incident&sec2=operation/incidents/incident">';
 		print_input_hidden ('quick_delete', $id, false);
 		echo '<input type="image" class="cross" src="images/cross.png" title="' . __('Delete') .'">';
 		echo '</form>';
 	}
+	if ($affected_sla_id != 0) {
+		echo '&nbsp;<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">';
+	}
+	echo "</h1>";
 } else {
 	if (! defined ('AJAX'))
 		echo "<h2>".__('Create incident')."</h2>";

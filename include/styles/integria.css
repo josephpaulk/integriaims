@@ -987,6 +987,10 @@ label {
 .cross {
 	border: none;
 	height: auto;
-	vertical-align: middle;
+	vertical-align: top;
 	margin-left: 15px;
+}
+
+form.delete {
+		display: inline;
 }
