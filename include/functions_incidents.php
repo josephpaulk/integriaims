@@ -233,8 +233,8 @@ function print_incidents_stats ($incidents, $return = false) {
 	// Get incident SLA compliance
 	$sla_compliance = get_sla_compliance ();
 
-	$table->width = '400px';
-	$table->class = 'float_left databox';
+	$table->width = '40%';
+	$table->class = 'float_left blank';
 	$table->rowspan = array ();
 	$table->rowspan[0][1] = 2;
 	$table->colspan = array ();
@@ -272,7 +272,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	foreach ($most_active_users as $user) {
 		$users_label .= '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.
 			$user['id_user'].'">'.$user['id_user']."</a> (".$user['worked_hours'].
-			" ".__('Hours').") <br />";
+			" ".__('Hr').") <br />";
 	}
 
 	// Find the 5 most active incidents (more worked hours)
@@ -283,13 +283,14 @@ function print_incidents_stats ($incidents, $return = false) {
 			$incident['id_incidencia'].'"
 			href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.
 			$incident['titulo']."</a> (".$incident['worked_hours']." ".
-			__('Hours').") <br />";
+			__('Hr').") <br />";
 	}
 	
-	$table->width = '450px';
-	$table->class = 'float_left databox';
+	$table->width = '60%';
+	$table->class = 'float_left blank';
 	$table->style = array ();
-	$table->style[0] = 'vertical-align: top';
+	$table->style[0] = 'vertical-align: top; margin-right: 15px;';
+	$table->style[1] = 'vertical-align: top';
 	$table->data = array ();
 	$table->data[0][0] = print_label (__('Most active users'), '', '', true, $users_label);
 	$table->data[0][1] = print_label (__('Most active incidents'), '', '', true, $incidents_label);

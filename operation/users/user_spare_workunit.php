@@ -23,6 +23,10 @@ $id_user = $_SESSION["id_usuario"];
 $operation = get_parameter ("operation");
 $ahora = get_parameter ("givendate", date("Y-m-d H:i:s"));
 $public =  get_parameter ("public", 1);
+$id_profile = get_parameter ("work_profile", "");
+$description =  get_parameter ("wu_description", "");
+$pass_id_project = get_parameter("id_project", "");
+$pass_id_task = get_parameter("id_task", "");
 
 // -----------
 // Workunit
@@ -32,7 +36,7 @@ if ($operation == "addworkunit"){
 	if (!is_numeric( $duration))
 		$duration = 0;
 	$timestamp = get_parameter ("start_date");
-	$description = get_parameter ("description");
+	$description = get_parameter ("wu_description", "");
 	$have_cost = get_parameter ("have_cost",0);
 	$task = get_parameter ("task",-1);
 	$role = get_parameter ("role",0);
@@ -59,12 +63,10 @@ if ($operation == "addworkunit"){
         	        (timestamp, duration, id_user, description, have_cost, id_profile, public) 
 	                VALUES	('$current_timestamp', $hours_day, '$wu_user', '$description',
 	                         $have_cost, $role, $public)";
-echo "DEBUG $sql <br><br>";
     	    if (mysql_query($sql)){
         	    $id_workunit = mysql_insert_id();
         		$sql2 = "INSERT INTO tworkunit_task 
         		                (id_task, id_workunit) VALUES ($task, $id_workunit)";
-echo "DEBUG $sql2 <br><br>";
         	    if (mysql_query($sql2))
         	        $result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
 	            else
@@ -78,15 +80,11 @@ echo "DEBUG $sql2 <br><br>";
     	$sql = "INSERT INTO tworkunit 
     	        (timestamp, duration, id_user, description, have_cost, id_profile, public) 
 	             VALUES	('$timestamp', $duration, '$wu_user', '$description', $have_cost, $role, $public)";
-
-echo "DEBUG $sql <br><br>";
-
     	if (mysql_query($sql)){
     		$id_workunit = mysql_insert_id();
     		$sql2 = "INSERT INTO tworkunit_task 
     		        (id_task, id_workunit) VALUES ($task, $id_workunit)";
 
-echo "DEBUG $sql2 <br><br>";
     		if (mysql_query($sql2)){
     			$result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
 			    audit_db ($id_user, $config["REMOTE_ADDR"], "Spare work unit added", 
@@ -107,11 +105,19 @@ echo "DEBUG $sql2 <br><br>";
 if ($operation != "create"){
 
 	echo "<h3><img src='images/award_star_silver_1.png'> ";
-	echo __('Add spare workunit')."</h3>";
-	
-	echo "<table width='700' class='databox'>";
-	echo "<form name='nota' method='post' action='index.php?sec=users&sec2=operation/users/user_spare_workunit&operation=addworkunit'>";
 
+	if ($pass_id_task != ""){
+		$task_name = get_db_value ('name', 'ttask', 'id', $pass_id_task);
+		echo __('Add workunit').' - '.$task_name.'</h3>';
+	} else {
+		echo __('Add spare workunit')."</h3>";
+	}
+
+	echo "<table width='700' class='databox'>";
+	if ($pass_id_task != "")
+		echo "<form name='nota' method='post' action='index.php?sec=projects&sec2=operation/users/user_spare_workunit&operation=addworkunit&id_project=$pass_id_project&id_task=$pass_id_task'>";
+	else
+		echo "<form name='nota' method='post' action='index.php?sec=users&sec2=operation/users/user_spare_workunit&operation=addworkunit'>";
 	// Date
 	echo "<td><b>".__('Date')."</b>";
 	echo "<td>";
@@ -122,13 +128,20 @@ if ($operation != "create"){
 	echo "<td>";
 	echo "<b>".__('Profile')."</b>";
 	echo "<td>";
-	combo_roles(1); // role
+	if (dame_admin($id_user) == 1){
+		echo combo_user_task_profile ($pass_id_task, 'work_profile', $id_profile, false, true);
+	} else 
+		combo_roles(1); // role
 	
 	// task id - included hard-written "VACATIONS"
-	echo "<tr><td>";
-	echo "<b>".__('Task')."</b>";
-	echo "<td colspan=3>";
-	echo combo_task_user_participant ($id_user, true, 0, false, false);
+	if ($pass_id_task != "")
+		echo "<input type='hidden' name='task' value='".$pass_id_task."'>";
+	else {
+		echo "<tr><td>";
+		echo "<b>".__('Task')."</b>";
+		echo "<td colspan=3>";
+		echo combo_task_user_participant ($id_user, true, 0, false, false);
+	}
 
 	// TIme wasted
 	echo "<tr><td class='datos'>";
@@ -179,7 +192,7 @@ if ($operation != "create"){
 
 	echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
 	echo '<tr><td colspan="4">';
-	echo print_textarea ('description', 10, 30, "", '',	true, false);
+	echo print_textarea ('wu_description', 10, 30, "$description", '', true, false);
 	echo "</table>";
 
 	echo "<div style='width: 700px' class='button'>";

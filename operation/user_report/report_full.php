@@ -63,40 +63,63 @@
 		echo "<h3>";
 		echo __("There is no data to show");
 		echo "</h3>";
-		return;
-	}
+	} else {
 
-	echo '<table width="90%" class="listing">';
-	echo "<th>".__('Project');
-	echo "<th>".__('User hours');
-	echo "<th>".__('Project total');
-	echo "<th>".__('%');
+		echo '<table width="90%" class="listing">';
+		echo "<th>".__('Project');
+		echo "<th>".__('User hours');
+		echo "<th>".__('Project total');
+		echo "<th>".__('%');
+	
+		$sql0= "SELECT tproject.id as pid, tproject.name as pname, SUM(tworkunit.duration) as suma FROM tproject, ttask, tworkunit_task, tworkunit WHERE tworkunit.id_user = '$user_id' and tworkunit_task.id_workunit = tworkunit.id AND  tworkunit_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tworkunit.timestamp >= '$start_date' AND tworkunit.timestamp <= '$end_date' GROUP BY tproject.name ";
+		if ($res0 = mysql_query($sql0)) {
+			while ($row0=mysql_fetch_array($res0)){
 
-	$sql0= "SELECT tproject.id as pid, tproject.name as pname, SUM(tworkunit.duration) as suma FROM tproject, ttask, tworkunit_task, tworkunit WHERE tworkunit.id_user = '$user_id' and tworkunit_task.id_workunit = tworkunit.id AND  tworkunit_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tworkunit.timestamp >= '$start_date' AND tworkunit.timestamp <= '$end_date' GROUP BY tproject.name ";
-	if ($res0 = mysql_query($sql0)) {
-		while ($row0=mysql_fetch_array($res0)){
+				$nombre = $row0["pname"];
+				$total_user = $row0["suma"];
+				$project_id = $row0["pid"];	
+				$total_project = get_project_workunit_hours ($project_id, 0, $start_date, $end_date);
+				
+				echo "<tr>";
+				echo "<td>";
+				echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$project_id'>";
+				echo "<b>$nombre</b>";;
+				echo "</a>";
+				echo "<td>";
+				echo $total_user;
+				echo "<td>";	
+				echo $total_project;
+				echo "<td>";
+				echo format_numeric (($total_user /  ($total_project/100)) ). "%";
 
+				$sql1= "SELECT ttask.id as tid, ttask.name as tname, tproject.id as pid, tproject.name as pname, SUM(tworkunit.duration) as suma FROM tproject, ttask, tworkunit_task, tworkunit WHERE tworkunit.id_user = '$user_id' and tworkunit_task.id_workunit = tworkunit.id AND ttask.id_project = $project_id AND tworkunit_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tworkunit.timestamp >= '$start_date' AND tworkunit.timestamp <= '$end_date' GROUP BY ttask.name ";
 
-			$nombre = $row0["pname"];
-			$total_user = $row0["suma"];
-			$project_id = $row0["pid"];	
-			$total_project = get_project_workunit_hours ($project_id, 0, $start_date, $end_date);
-			
-			echo "<tr>";
-			echo "<td>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$project_id'>";
-			echo $nombre;
-			echo "</a>";
-			echo "<td>";
-			echo $total_user;
-			echo "<td>";	
-			echo $total_project;
-			echo "<td>";
-			echo format_numeric (($total_user /  ($total_project/100)) ). "%";
-            
+				if ($res1 = mysql_query($sql1)) {
+					while ($row1 = mysql_fetch_array($res1)){
+		
+						$task_id = $row1["tid"];
+						$task_name = $row1["tname"];
+						$tsuma  = $row1["suma"];
+						$total_task = get_task_workunit_hours($task_id);
+		
+						echo "<tr>";
+						echo "<td>&nbsp;&nbsp;&nbsp;<img src='images/copy.png'>";
+						echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$project_id&id_task=$task_id&operation=view'>";
+						echo $task_name;
+						echo "</a>";
+						echo "<td>";
+						echo $tsuma;
+						echo "<td>";	
+						echo $total_task;
+						echo "<td>";
+						echo format_numeric (($tsuma /  ($total_task/100)) ). "%";
+					}
+						
+				}
+			}
+			echo "</table>";
 		}
 	}
-	echo "</table>";
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>

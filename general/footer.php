@@ -23,7 +23,7 @@ echo 'Integria '.$config["version"].' Build '.$config["build_version"].'<br>';
 
 if (isset($_SESSION['id_usuario'])) {
 	echo '<a target="_new" href="general/license/integria_info_'.$config["language_code"].'.html">'.
-	__('Integria is a <b>Free Software Project, licensed under GPL terms</b>').'</a><br>';
+	__('Integria IMS is an <b>OpenSource Project, licensed under GPL terms</b>').'</a><br>';
 	if (isset($_SERVER['REQUEST_TIME'])) {
 		$time = $_SERVER['REQUEST_TIME'];
 	} else {

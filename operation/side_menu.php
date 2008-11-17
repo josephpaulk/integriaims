@@ -189,7 +189,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_create_work&id_task=$id_task&id_project=$id_project'>".__('Add workunit')."</a></li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task'>".__('Add workunit')."</a></li>";
 
 		// Add task file
 		if ($sec2 == "operation/projects/task_attach_file")

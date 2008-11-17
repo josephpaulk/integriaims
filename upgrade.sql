@@ -1,3 +1,5 @@
+alter table tworkunit MODIFY locked varchar(80) default "";
+
 ALTER TABLE tagenda ADD FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE;
 
@@ -336,5 +338,3 @@ CREATE TABLE `tproject_track` (
   FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
 );
-
-

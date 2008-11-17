@@ -1,3 +1,24 @@
+
+2008-11-17 Sancho Lerena <slerena@artica.es>
+
+	* upgrade.php: Fix on locked field in tworkunit.
+
+	* footer.php: We're now opensource :-)
+
+	* functions_form.php: Going to unification of Incident and Project
+	workunits: show_workunit_user() shows visibility.
+
+	* project.php: Proyect free text search now search also in task names.
+
+	* side_menu.php: New workunit on project now uses spare workunit 
+	code (much more useful than single project wu code).
+
+	* report_full.php: Now also show task details inside projects. Control
+	date picker now works.
+
+	* user_spare_workunit.php: now can receive specific id_task to work
+	on creation of WU from projects menu.
+
 2008-11-17  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish
@@ -134,7 +155,6 @@
 	* operation/inventories/inventory_detail.php: Added a button to create
 	a contact for the list. Do not show delete link when creating.
 
->>>>>>> .r173
 2008-11-16  Sancho Lerena <slerena@artica.es>
 
 	* integria.css: Table pagination controls now more formatted.

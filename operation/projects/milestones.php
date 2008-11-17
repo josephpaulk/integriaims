@@ -74,7 +74,7 @@ if ($operation == "delete") {
 // ---------------
 if ($operation == "create") {
 	echo "<h2>".__('Milestone creation')."</h2>";
-	echo '<table class="databox"  width="720">';
+	echo '<table class="databox"  width="90%">';
 	echo '<form name="ilink" method="post" action="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=create2">';
 
 	echo "<tr><td class='datos'>".__('Name');
@@ -89,7 +89,7 @@ if ($operation == "create") {
 	echo "<td class='datos'><textarea name='description' style='width:100%; height:100px'>";
 	echo "</textarea>";
 	echo "</table>";
-	echo '<table class="button" width="720">';
+	echo '<table class="button" width="90%">';
     
     $project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
@@ -107,7 +107,7 @@ if ($operation == "create") {
 // -------------------------
 if ($operation == ""){
 	echo "<h2>".__('Milestones management')."</h2>";
-	echo "<table class='listing' width=720>";
+	echo "<table class='listing' width=90%>";
 	echo "<th>".__('Milestone');
 	echo "<th>".__('Description');
 	echo "<th>".__('Timestamp');
@@ -145,7 +145,7 @@ if ($operation == ""){
     $project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
     if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
-	    echo "<table class='button' width=720>";
+	    echo "<table class='button' width=90%>";
 	    echo "<tr><td align=right>";
     
 	    echo "<form name='ms' method='POST'  action='index.php?sec=projects&sec2=operation/projects/milestones&operation=create&id_project=$id_project'>";

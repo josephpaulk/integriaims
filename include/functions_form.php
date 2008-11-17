@@ -426,6 +426,18 @@ function combo_projects_user ($id_user, $name = 'project') {
 	echo "</select>";
 }
 
+function topi_richtext ($string) {
+	$imageBullet = "<img src='images/bg_bullet_full_1.gif'>";
+	$string = str_replace ( "->", $imageBullet, $string);
+	$string = str_replace ( "*", $imageBullet, $string);
+	$string = str_replace ( "[b]", "<b>",  $string);
+	$string = str_replace ( "[/b]", "</b>",  $string);
+	$string = str_replace ( "[u]", "<u>",  $string);
+	$string = str_replace ( "[/u]", "</u>",  $string);
+	$string = str_replace ( "[i]", "<i>",  $string);
+	$string = str_replace ( "[/i]", "</i>",  $string);
+	return $string;
+}
 
 
 function show_workunit_data ($workunit, $title) {
@@ -491,19 +503,6 @@ function show_workunit_data ($workunit, $title) {
 	echo "</div>";
 }
 
-function topi_richtext ($string) {
-	$imageBullet = "<img src='images/bg_bullet_full_1.gif'>";
-	$string = str_replace ( "->", $imageBullet, $string);
-	$string = str_replace ( "*", $imageBullet, $string);
-	$string = str_replace ( "[b]", "<b>",  $string);
-	$string = str_replace ( "[/b]", "</b>",  $string);
-	$string = str_replace ( "[u]", "<u>",  $string);
-	$string = str_replace ( "[/u]", "</u>",  $string);
-	$string = str_replace ( "[i]", "<i>",  $string);
-	$string = str_replace ( "[/i]", "</i>",  $string);
-	return $string;
-}
-
 
 function show_workunit_user ($id_workunit, $full = 0) {
 	global $config;
@@ -521,6 +520,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	$nota = $row["description"];
 	$have_cost = $row["have_cost"];
 	$profile = $row["id_profile"];
+	$public = $row["public"];
 	$locked = $row["locked"];
 	$id_task = get_db_value ("id_task", "tworkunit_task", "id_workunit", $row["id"]);
 	if ($id_task == "")
@@ -531,6 +531,12 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	if ($id_task == "")
 		$incident_title = substr(get_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident), 0, 50);
 	$project_title = substr(get_db_value ("name", "tproject", "id", $id_project), 0, 50);
+
+	// ACL Check for visibility
+	if (!$public && $id_user != $config["id_user"] && ! give_acl ($config["id_user"], $id_group, "TM"))
+		return;
+
+
 	// Show data
 	echo "<div class='notetitle' style='height: 75px;'>"; // titulo
 	echo "<table class='blank' border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px; background: transparent;'>";
@@ -550,7 +556,13 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 	echo "<td width='20%'>";
 	echo " : ".format_numeric($duration);
-
+	// Public WU ?
+	echo "<span style='float:right; margin-top: -15px; margin-bottom:0px; padding-right:10px;'>";
+	if ($public == 1)
+		echo "<img src='images/group.png' title='".__('Public Workunit')."' border=0>";
+	else
+		echo "<img src='images/delete.png' title='".__('Non public Workunit')."' border=0>";
+	echo "</span>";
 
 	echo "<tr>";
 	echo "<td><b>";
@@ -619,14 +631,14 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	}
 
 	// Edit workunit
-	if ((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR (($id_user == $config["id_user"]) AND ($locked == 0)) ) {
+	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == "") ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_create_work&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&operation=edit'><img border=0 src='images/page_white_text.png' title='".__('Lock workunit')."'></a>";
 		echo "</td>";
 	}
 
-// Lock workunit
+	// Lock workunit
 	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == "") ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";

@@ -137,6 +137,8 @@ print_table ($table);
 
 print_table_pager ();
 
+echo "<div style='height: 35px'></div>";
+
 echo '<div id="incident-stats"></div>';
 
 /* End of first tab container */

@@ -80,7 +80,7 @@ if ($search_text != "")
 if ($search_id_group != 0)
 	$where_clause .= spintf ('( AND id_group = ', $search_id_group);
 
-$table->width = '400px';
+$table->width = '450px';
 $table->class = 'search-table';
 $table->style = array ();
 $table->style[0] = 'font-weight: bold;';
@@ -99,7 +99,7 @@ echo '</form>';
 
 unset ($table);
 
-$table->width = '90%';
+$table->width = '95%';
 $table->class = 'listing';
 $table->data = array ();
 $table->style = array ();
@@ -121,8 +121,11 @@ $table->align[3] = 'center';
 $table->align[4] = 'center';
 $table->align[9] = 'center';
 
+$table->style[7] = "font-size: 9px";
+$table->style[8] = "font-size: 9px";
+
 // Show headers
-echo "<table width='750px' cellpadding=4 class='listing'>";
+echo "<table width='95%' class='listing'>";
 echo "<tr>";
 $color = 1;
 show_task_tree ($table, $id_project, 0, 0, $where_clause);

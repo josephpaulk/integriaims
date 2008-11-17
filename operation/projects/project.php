@@ -139,8 +139,8 @@ $search_text = (string) get_parameter ('search_text');
 
 $where_clause = ' 1=1';
 if ($search_text != "")
-	$where_clause .= sprintf (' AND name LIKE "%%%s%%" OR description LIKE "%%%s%%"',
-		$search_text, $search_text);
+	$where_clause .= sprintf (' AND (tproject.name LIKE "%%%s%%" OR tproject.description LIKE "%%%s%%" OR ttask.id_project = tproject.id AND ttask.name LIKE "%%%s%%" )',
+		$search_text, $search_text, $search_text);
 
 if ($search_id_project_group)
 	$where_clause .= sprintf (' AND id_project_group = %d', $search_id_project_group);
@@ -182,10 +182,10 @@ $table->head[7] = __('Updated');
 $table->data = array ();
 
 // Simple query, needs to implement group control and ACL checking
-$sql = sprintf ('SELECT * FROM tproject
+$sql = sprintf ('SELECT tproject.id, tproject.name, tproject.description, tproject.start, tproject.end, tproject.id_owner, tproject.disabled, tproject.id_project_group  FROM tproject, ttask 
 	WHERE (%s) 
-	AND disabled = %d
-	ORDER by name',
+	AND tproject.disabled = %d
+	GROUP BY tproject.id ORDER by tproject.name',
 	$where_clause, $view_disabled); 
 
 $projects = get_db_all_rows_sql ($sql);
