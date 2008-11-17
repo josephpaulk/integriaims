@@ -1,4 +1,10 @@
-<<<<<<< .mine
+2008-11-17 Sancho Lerena <slerena@artica.es>
+
+	* report_full.php: New full repor for user.
+
+	* integria.css: Textareas hae now a 99% width.
+	
+	* user_spare_workunit.php: Fixed problem with dates.
 
 2008-11-17  Sancho Lerena <slerena@artica.es>
 
@@ -31,7 +37,6 @@
 
 	* user_task_assigment.php: Fixed typo in sql rewritten with sprintf.
 
-=======
 2008-11-17  Ramon Novoa  <rnovoa@artica.es>
 
 	* include/styles/integria.css,
@@ -61,7 +66,6 @@
 	  operation/user_report/report_monthly.php: Updated tables width and
 	  translation infrastructure.
 
->>>>>>> .r174
 2008-11-17  Esteban Sanchez  <estebans@artica.es>
 
 	* images/html.png: Added to repository. New icon for report buttons.

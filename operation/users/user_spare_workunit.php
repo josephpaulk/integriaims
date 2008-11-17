@@ -31,7 +31,7 @@ if ($operation == "addworkunit"){
 	$duration = get_parameter ("duration",0);
 	if (!is_numeric( $duration))
 		$duration = 0;
-	$timestamp = get_parameter ("workunit_date");
+	$timestamp = get_parameter ("start_date");
 	$description = get_parameter ("description");
 	$have_cost = get_parameter ("have_cost",0);
 	$task = get_parameter ("task",-1);
@@ -59,10 +59,12 @@ if ($operation == "addworkunit"){
         	        (timestamp, duration, id_user, description, have_cost, id_profile, public) 
 	                VALUES	('$current_timestamp', $hours_day, '$wu_user', '$description',
 	                         $have_cost, $role, $public)";
+echo "DEBUG $sql <br><br>";
     	    if (mysql_query($sql)){
         	    $id_workunit = mysql_insert_id();
         		$sql2 = "INSERT INTO tworkunit_task 
         		                (id_task, id_workunit) VALUES ($task, $id_workunit)";
+echo "DEBUG $sql2 <br><br>";
         	    if (mysql_query($sql2))
         	        $result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
 	            else
@@ -77,10 +79,14 @@ if ($operation == "addworkunit"){
     	        (timestamp, duration, id_user, description, have_cost, id_profile, public) 
 	             VALUES	('$timestamp', $duration, '$wu_user', '$description', $have_cost, $role, $public)";
 
+echo "DEBUG $sql <br><br>";
+
     	if (mysql_query($sql)){
     		$id_workunit = mysql_insert_id();
     		$sql2 = "INSERT INTO tworkunit_task 
     		        (id_task, id_workunit) VALUES ($task, $id_workunit)";
+
+echo "DEBUG $sql2 <br><br>";
     		if (mysql_query($sql2)){
     			$result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
 			    audit_db ($id_user, $config["REMOTE_ADDR"], "Spare work unit added", 
@@ -172,8 +178,8 @@ if ($operation != "create"){
 	echo "<input type=checkbox name='split' value=1>&nbsp;";
 
 	echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
-	echo '<tr><td colspan="4" class="datos2"><textarea name="description" rows="15" cols="85">';
-	echo '</textarea>';
+	echo '<tr><td colspan="4">';
+	echo print_textarea ('description', 10, 30, "", '',	true, false);
 	echo "</table>";
 
 	echo "<div style='width: 700px' class='button'>";
@@ -192,5 +198,6 @@ if ($operation != "create"){
 
 $(document).ready (function () {
 	configure_range_dates (null);
+	$("#textarea-description").TextAreaResizer ();
 });
 </script>
