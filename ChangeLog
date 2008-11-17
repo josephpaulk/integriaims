@@ -3,6 +3,17 @@
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish
 	  translation.
 
+	* include/languages/index.pot: Updated po template file.
+
+	* godmode/grupos/lista_grupos.php,
+	  godmode/usuarios/role_manager.php,
+	  godmode/usuarios/lista_usuarios.php: Updated tables width.
+
+2008-11-17  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	  translation.
+
 	*  include/languages/index.pot: Updated po template file.
 
 	* operation/user_report/report_annual.php,

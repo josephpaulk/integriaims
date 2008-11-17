@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: index.es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-11-17 15:21+0100\n"
-"PO-Revision-Date: 2008-11-17 15:27+0100\n"
+"PO-Revision-Date: 2008-11-17 15:42+0100\n"
 "Last-Translator: Jorge Gonzalez <jorge.gonzalez@artica.es>\n"
 "Language-Team: Español <artica@artica.es>\n"
 "MIME-Version: 1.0\n"
@@ -2116,7 +2116,7 @@ msgstr "Hora"
 #: ../../operation/side_menu.php:31 ../../operation/side_menu.php:85
 #: ../../operation/projects/project_overview.php:22
 msgid "Project overview"
-msgstr "Vista general de proy."
+msgstr "Vista general de proyectos"
 
 #: ../../operation/side_menu.php:39
 msgid "Project detail"
@@ -2132,7 +2132,7 @@ msgstr "Crear proyecto"
 
 #: ../../operation/side_menu.php:62
 msgid "Disabled projects"
-msgstr "Proy. desactivados"
+msgstr "Proyectos desactivados"
 
 #: ../../operation/side_menu.php:93
 #: ../../operation/projects/project_tracking.php:27

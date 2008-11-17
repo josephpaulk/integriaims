@@ -103,7 +103,7 @@ if ($delete_group) {
 
 echo '<h2>'.__('Group management').'</h2>';
 
-$table->width = '740px';
+$table->width = '90%';
 $table->class = 'listing';
 $table->head = array ();
 $table->head[0] = __('Icon');

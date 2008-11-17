@@ -41,7 +41,7 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 }
 
 echo '<h2>'.__('User management') . '</h2>';
-echo '<table width="550" class="listing">';
+echo '<table width="90%" class="listing">';
 echo '<th>'.__('UserID').'</td>';
 echo '<th>'.__('Last contact');
 echo '<th>'.__('Profile');
@@ -87,7 +87,7 @@ while ($rowdup=mysql_fetch_array($resq1)){
 }
 echo "</table>";
 
-echo "<div style='width:550px' class='button'>";
+echo "<div style='width:90%' class='button'>";
 
 echo "<form method=post action='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>";
 echo "<input type='submit' class='sub create' name='crt' value='".__('Create user')."'>";

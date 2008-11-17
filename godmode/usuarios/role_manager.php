@@ -96,7 +96,7 @@ if ((isset($_GET["form_add"])) or (isset($_GET["form_edit"]))){
 
 	// Create link
 	echo "<h2>".__('Role management')." &raquo; ".__('Add role')."</h2>";
-	echo '<table class="fon" cellpadding="3" cellspacing="3" width="500" class="databox_color">';
+	echo '<table class="fon" cellpadding="3" cellspacing="3" width="90%" class="databox_color">';
 	echo '<form name="ilink" method="post" action="index.php?sec=users&sec2=godmode/usuarios/role_manager">';
 	if ($creation_mode == 1){
 		echo "<input type='hidden' name='create' value='1'>";
@@ -111,7 +111,7 @@ if ((isset($_GET["form_add"])) or (isset($_GET["form_edit"]))){
 
 	echo '<tr><td class="datos">'.__('Cost').'<td class="datos"><input type="text" name="cost" size="6" value="'.$cost.'">';
 	echo "</table>";
-	echo '<table class="fon" cellpadding="3" cellspacing="3" width="500">';
+	echo '<table class="fon" cellpadding="3" cellspacing="3" width="90%">';
 	echo "<tr><td align='right'>";
 	echo "<input name='crtbutton' type='submit' class='sub next' value='".__('Update')."'>";
 	echo '</form></table>';
@@ -121,7 +121,7 @@ if ((isset($_GET["form_add"])) or (isset($_GET["form_edit"]))){
 // ~~~~~~~~~~~~~~~~~~~~~~~4
 else {  // Main list view for Links editor
 	echo "<h2>".__('Role management')."</h2>";
-	echo "<table cellpadding=4 cellspacing=4 width=700 class='listing'>";
+	echo "<table cellpadding='4' cellspacing='4' width='90%' class='listing'>";
 	echo "<th>".__('Name');
 	echo "<th>".__('Description');
 	echo "<th>".__('Cost');
@@ -147,7 +147,7 @@ else {  // Main list view for Links editor
 		}
 	}
 	echo "</table>";
-	echo "<table cellpadding=4 cellspacing=4 width=700>";
+	echo "<table cellpadding='4' cellspacing='4' width='90%'>";
 	echo "<tr><td align='right'>";
 	echo "<form method='post' action='index.php?sec=users&sec2=godmode/usuarios/role_manager&form_add=1'>";
 	echo "<input type='submit' class='sub create' name='form_add' value='".__('Add')."'>";
