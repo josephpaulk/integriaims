@@ -256,6 +256,8 @@ $table->data[4][0] .= print_button (__('Add'),
 	'search_contact', false, '', 'class="dialogbtn"', true);
 $table->data[4][0] .= print_button (__('Remove'),
 	'delete_contact', false, '', 'class="dialogbtn"', true);
+$table->data[4][0] .= print_button (__('Create'),
+	'create_contact', false, '', 'class="dialogbtn"', true);
 
 foreach ($contacts as $contact_id => $contact_name) {
 	$table->data[4][0] .= print_input_hidden ("contacts[]",
@@ -270,15 +272,16 @@ $table->data[5][0] = print_textarea ('description', 15, 100, $description,
 echo '<div class="result">'.$result_msg.'</div>';
 
 if ($has_permission) {	
-	/* Delete object */
-	echo '<form name="delete_object_form" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
-	print_input_hidden ('quick_delete', $id, false);
-	echo '<input type="image" class="cross" src="images/cross.png" title="' . __('Delete') .'">';
-	echo '</form>';
-
+	if ($id) {
+		/* Delete object */
+		echo '<form name="delete_object_form" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
+		print_input_hidden ('quick_delete', $id, false);
+		echo '<input type="image" class="cross" src="images/cross.png" title="' . __('Delete') .'">';
+		echo '</form>';
+	}
+	
 	echo '<form method="post" id="inventory_status_form">';
 	print_table ($table);
-
 
 	echo '<div style="width:'.$table->width.'" class="action-buttons button">';
 	if ($id) {

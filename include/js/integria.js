@@ -101,7 +101,7 @@ function pulsate (element) {
 		$(this).fadeOut ("normal", function () {
 			$(this).fadeIn ("normal", function () {
 				$(this).fadeOut ("normal", function () {
-					$(this).fadeIn ();
+					$(this).fadeIn ().focus ();
 				});
 			});
 		});

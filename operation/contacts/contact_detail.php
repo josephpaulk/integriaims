@@ -59,7 +59,12 @@ if ($create_contact) {
 		$id_company, $disabled, $description);
 
 	$id = process_sql ($sql, 'insert_id');
-	if ($result === false) {
+	if (defined ('AJAX')) {
+		echo json_encode ($id);
+		return;
+	}
+	
+	if ($id === false) {
 		echo "<h3 class='error'>".__('Contact cannot be created')."</h3>";
 	} else {
 		echo "<h3 class='suc'>".__('Contact has been created successfully')."</h3>";
@@ -110,16 +115,20 @@ echo "<h2>".__('Contact management')."</h2>";
 
 // FORM (Update / Create)
 if ($id || $new_contact) {
-	if ($new_contact){
+	if ($new_contact) {
 		$id = 0;
-		$fullname = "";
-		$phone = "";
-		$mobile = "";
-		$email = "";
-		$position = "";
-		$id_company = "";
-		$disabled = "";
-		$description = "";
+		$fullname = (string) get_parameter ('fullname');
+		$phone = (string) get_parameter ('phone');
+		$mobile = (string) get_parameter ('mobile');
+		$email = (string) get_parameter ('email');
+		$position = (string) get_parameter ('position');
+		$id_company = (int) get_parameter ('id_company');
+		$disabled = (int) get_parameter ('disabled');
+		$description = (string) get_parameter ('description');
+		$id_contract = (int) get_parameter ('id_contract');
+		if ($id_contract) {
+			$id_company = (int) get_db_value ('id_company', 'tcontract', 'id', $id_contract);
+		}
 	} else {
 		$contact = get_db_row ("tcompany_contact", "id", $id);
 		$fullname = $contact['fullname'];
@@ -148,9 +157,9 @@ if ($id || $new_contact) {
 	$table->data[3][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
 	$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
 		'id_company', $id_company, '', __('Select'), 0, true, false, false, __('Company'));
-	$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
+	$table->data[4][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contacts/contact_detail">';
+	echo '<form method="post" id="contact_form">';
 	print_table ($table);
 	
 	echo '<div class="button" style="width: '.$table->width.'">';

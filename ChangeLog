@@ -1,3 +1,27 @@
+2008-11-17  Esteban Sanchez  <estebans@artica.es>
+
+	* include/functions_incidents.php: Fixed variable name that was
+	causing notices.
+
+	* include/js/integria.js: When an element is pulsated, it receives the
+	focus also.
+
+	* include/js/integria_incident_search.js: Added
+	configure_contact_create_form(), show_contact_create_dialog(). Removed
+	debug output using console.log. Show create contact dialog when
+	clicking create on contact list in an inventory.
+
+	* operation/contacts/contact_detail.php: It now can create contacts
+	via AJAX. Fixed an error when checking creation result. Creation
+	can now receive parameters via HTTP request. When receiving an
+	id_contract it sets the contact company.
+
+	* operation/incidents/incident_detail.php: Do not show delete link
+	when creating.
+
+	* operation/inventories/inventory_detail.php: Added a button to create
+	a contact for the list. Do not show delete link when creating.
+
 2008-11-16  Sancho Lerena <slerena@artica.es>
 
 	* integria.css: Table pagination controls now more formatted.

@@ -626,6 +626,65 @@ function configure_contact_search_form (page_size, contact_click_callback) {
 	});
 }
 
+function configure_contact_create_form (callback_contact_created) {
+	$(dialog+"#contact_form").submit (function () {
+		var name = $(dialog+"#text-fullname").attr ("value");
+		if (name == "") {
+			pulsate ($(dialog+"#text-fullname"));
+			return false;
+		}
+		values = Array ();
+		values = get_form_input_values (this);
+		values.push ({name: "page",
+					value: "operation/contacts/contact_detail"});
+		jQuery.post ("ajax.php",
+			values,
+			function (data, status) {
+				$("#dialog-create-contact").dialog ("close");
+				callback_contact_created (data, name);
+			},
+			"json"
+		);
+		return false;
+	});
+}
+
+function show_contact_create_dialog (title, callback_contact_created) {
+	$("#dialog-create-contact").remove ();
+	$("body").append ($("<div></div>").attr ("id", "dialog-create-contact").addClass ("dialog"));
+	values = Array ();
+	values.push ({name: "page",
+				value: "operation/contacts/contact_detail"});
+	values.push ({name: "new_contact",
+				value: 1});
+	values.push ({name: "id_contract",
+				value: $(dialog+"#id_contract").attr ("value")});
+	jQuery.get ("ajax.php",
+		values,
+		function (data, status) {
+			$("#dialog-create-contact").empty ().append (data);
+			$("#dialog-create-contact").dialog ({"title" : title,
+				minHeight: 500,
+				minWidth: 600,
+				height: 600,
+				width: 700,
+				modal: true,
+				bgiframe: true,
+				open: function () {
+					parent_dialog = dialog;
+					dialog = "#dialog-create-contact ";
+				},
+				close: function () {
+					dialog = parent_dialog;
+					parent_dialog = "";
+				}
+			});
+			configure_contact_create_form (callback_contact_created);
+		},
+		"html"
+	);
+}
+
 function show_contact_search_dialog (title, callback_contact_click) {
 	$("#dialog-search-contact").remove ();
 	$("body").append ($("<div></div>").attr ("id", "dialog-search-contact").addClass ("dialog"));
@@ -698,6 +757,15 @@ function configure_contact_buttons (form, dialog) {
 				$(this).remove ();
 		});
 	});
+	
+	$(dialog+"#button-create_contact").click (function () {
+		show_contact_create_dialog ("Create contact",
+			function (id, name) {
+				$(parent_dialog+"#inventory_contacts").append ($('<option value="'+id+'">'+name+'</option>'));
+				$(parent_dialog+"#"+form).append ($('<input type="hidden" value="'+id+'" class="selected-contacts" name="contacts[]" />'));
+			}
+		);
+	});
 }
 
 function configure_inventory_form (enable_ajax_form) {
@@ -757,7 +825,6 @@ function configure_inventory_form (enable_ajax_form) {
 					$(this).empty ();
 					$(dialog+".selected-contacts").remove ();
 					$(data).each (function () {
-						console.log (this);
 						$(dialog+"#inventory_contacts").append ($('<option value="'+this.id+'">'+this.fullname+'</option>'));
 						$(dialog+"#inventory_status_form").append ($('<input type="hidden" value="'+this.id+'" class="selected-contacts" name="contacts[]" />'));
 					});
