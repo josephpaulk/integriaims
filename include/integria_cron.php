@@ -15,11 +15,118 @@
 // GNU General Public License for more details.
 
 include ("config.php");
+require_once ($config["homedir"].'/include/functions_calendar.php');
 
 $config["id_user"] = 'System';
 $now = time ();
 $compare_timestamp = date ("Y-m-d H:i:s", $now -  $config["notification_period"]);
 $human_notification_period = give_human_time ($config["notification_period"]);
+
+
+/**
+ * This check is executed once per day and can do several different subtasks
+ * like email notify ending tasks or projects, events for this day, etc
+ *
+ */
+
+function run_daily_check () {
+	$current_date = date ("Y-m-d h:i:s");
+
+	// Create a mark in event log
+	process_sql ("INSERT INTO tevent (type, timestamp) VALUES ('DAILY_CHECK', '$current_date') ");
+
+	// Do checks
+	run_calendar_check();
+	run_project_check();
+	run_task_check();
+}
+
+
+/**
+ * This check notify user by mail if in current day there agenda items 
+ *
+ */
+
+function run_calendar_check () {
+	global $config;
+
+	$now = date ("Y-m-d");
+	$events = get_event_date ($now, 1, "_ANY_");
+
+	foreach ($events as $event){
+		list ($timestamp, $event_data, $user_event) = split ("\|", $event);
+		$user = get_db_row ("tusuario", "id_usuario", $user_event);
+		$nombre = $user['nombre_real'];
+		$email = $user['direccion'];
+		$mail_description = "There is an Integria agenda event planned for today at ($timestamp): \n\n$event_data\n\n";
+		integria_sendmail ($email, "[".$config["sitename"]."] Calendar event for today ",  $mail_description );
+	}
+}
+
+/**
+ * This check notify user by mail if in current day there are ending projects
+ *
+ */
+
+function run_project_check () {
+	global $config;
+
+	$now = date ("Y-m-d");
+	$projects = get_project_end_date ($now, 0, "_ANY_");
+
+	foreach ($projects as $project){
+		list ($pname, $idp, $pend, $owner) = split ("\|", $project);
+		$user = get_db_row ("tusuario", "id_usuario", $owner);
+		$nombre = $user['nombre_real'];
+		$email = $user['direccion'];
+		$mail_description = "There is an Integria project ending today ($pend): $pname. \n\nUse this link to review the project information:\n";
+		$mail_description .= $config["base_url"]. "/index.php?sec=projects&sec2=operation/projects/task&id_project=$idp\n";
+
+		integria_sendmail ($email, "[".$config["sitename"]."] Project ends today ($pname)",  $mail_description );
+	}
+}
+
+
+/**
+ * This check notify user by mail if in current day there are ending tasks
+ *
+ */
+
+function run_task_check () {
+	global $config;
+
+	$now = date ("Y-m-d");
+	$baseurl = 
+	$tasks = get_task_end_date_by_user ($now);
+	
+	foreach ($tasks as $task){
+		list ($tname, $idt, $tend, $pname, $user) = split ("\|", $task);
+		$user_row = get_db_row ("tusuario", "id_usuario", $user);
+		$nombre = $user_row['nombre_real'];
+		$email = $user_row['direccion'];
+		
+		$mail_description = "There is a task ending today ($tend) : $pname / $tname \n\nUse this link to review the project information:\n";
+		$mail_description .= $config["base_url"]. "/index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view\n";
+
+		integria_sendmail ($email, "[".$config["sitename"]."] Task ends today ($tname)",  $mail_description );
+	}
+}
+
+
+
+/**
+ * Check if daily task has been executed
+ *
+ */
+function check_daily_task () {
+	$current_date = date ("Y-m-d");
+	$current_date .= " 23:59:59";
+	$result = get_db_sql ("SELECT COUNT(id) FROM tevent WHERE type = 'DAILY_CHECK' AND timestamp < '$current_date'");
+	if ($result > 0)
+		return 0; // Daily check has been executed yet
+	else
+		return 1; // need to run daily check
+}
 
 /**
  * Check an SLA min response value on an incident and send emails if needed.
@@ -74,4 +181,9 @@ foreach ($slas as $sla) {
 			$incident['id_incidencia']);
 	}
 }
+
+// Daily check
+if (check_daily_task() == 1)
+	run_daily_check();
+
 ?>

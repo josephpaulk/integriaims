@@ -733,6 +733,13 @@ if ($sec == "users") {
 		echo "<h3>".__('User reporting')."</h3>";
 		echo "<ul class='sidemenu'>";
 
+		// Full report 
+		if ($sec2 == "operation/user_report/report_full")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_full'>".__('Full  report')."</a></li>";
+
 		// Basic report (monthly)
 		if ($sec2 == "operation/user_report/report_monthly")
 			echo "<li id='sidesel'>";

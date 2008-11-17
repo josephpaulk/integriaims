@@ -363,20 +363,25 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 	$values = array ();
 	
 	if ($show_vacations) {
-		$values[-1] = __('Vacations');
-		$values[-2] = __('Not working for disease');
-		$values[-3] = __('Not justified');
+		$values[-1] = "(*) ".__('Vacations');
+		$values[-2] = "(*) ".__('Not working for disease');
+		$values[-3] = "(*) ".__('Not justified');
 	}
 	
 	$sql = sprintf ('SELECT DISTINCT (ttask.id), CONCAT(tproject.name," / ",ttask.name)
 			FROM ttask, trole_people_task, tproject
-			WHERE ttask.id_project = tproject.id
+			WHERE (ttask.id_project = tproject.id
 			AND tproject.disabled = 0
 			AND ttask.id = trole_people_task.id_task
-			AND trole_people_task.id_user = "%s"
+			AND trole_people_task.id_user = "%s") 
 			ORDER BY ttask.id_project', $id_user);
 	
-	$output .= print_select_from_sql ($sql, 'task', $actual, '', __('N/A'), '0', true,
+	$tasks = get_db_all_rows_sql ($sql);
+	foreach ($tasks as $task){
+		$values[$task[0]] = $task[1];
+	}
+
+	$output .= print_select ($values, 'task', $actual, '', __('N/A'), '0', true,
 		false, false, $label);
 
 	if ($return)

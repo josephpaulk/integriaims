@@ -1,5 +1,5 @@
 <?php
-// Integria 1.1 - http://integria.sourceforge.net
+// Integria IMS - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2008 Artica Soluciones Tecnologicas

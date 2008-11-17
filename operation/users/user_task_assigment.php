@@ -1,6 +1,6 @@
 <?php
 
-// INTEGRIA - the ITIL Management System
+// INTEGRIA IMS - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2008 Ártica Soluciones Tecnológicas
@@ -49,7 +49,7 @@ if (give_acl ($config["id_user"], 0, "PM")) {
 	echo "</form></table>";
 }
 
-echo "<table  class='listing' width=800>";
+echo "<table  class='listing' width=90%>";
 echo "<th>".__('Project');
 echo "<th>".__('Task');
 echo "<th>".__('Progress');
@@ -74,7 +74,7 @@ while ($row=mysql_fetch_array($result)){
 		FROM tworkunit_task, tworkunit
 		WHERE tworkunit.id_user = '$id_user'
 		AND tworkunit_task.id_task = ".$row[0].
-		'AND tworkunit.id = tworkunit_task.id_workunit
+		' AND tworkunit.id = tworkunit_task.id_workunit
 		ORDER BY timestamp DESC LIMIT 1');
 
 }

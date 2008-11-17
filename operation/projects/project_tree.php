@@ -56,6 +56,7 @@ $table->data[0][3] = print_select ($types, 'project_kind', '', $project_kind,
 
 echo '<form method="post">';
 print_table ($table);
+echo "<br>";
 echo '<div class="button" style="width: '.$table->width.'">';
 print_submit_button (__('Update'), '', false, 'class="sub upd"');
 echo '</div>';

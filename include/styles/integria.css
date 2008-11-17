@@ -117,18 +117,24 @@ table.listing {
 	text-align: left;
 }
 
-.button {
-	padding-top: 5px;
-	padding-bottom: 5px;
-	padding-right: 0px;
-	border-top: 2px solid #2179B1;
-	border-bottom: 2px solid #2179B1;
-	background: #eee;
-	text-align: right;
-}
+
 
 table.listing tr:hover {
 	background: #E8E8E8;
+}
+
+table.listing th {
+	font-size: 11px;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 5px;
+}
+
+table.listing td {
+	padding-left: 3px;
+	padding-right: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
 
 tr.yellow {
@@ -152,6 +158,16 @@ ul span, ol span {
 }
 
 /* images */
+
+.button {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 0px;
+	border-top: 2px solid #2179B1;
+	border-bottom: 2px solid #2179B1;
+	background: #eee;
+	text-align: right;
+}
 
 img {
 	border: 0;
@@ -197,6 +213,7 @@ label {
 	display:block;
 	font-weight:bold;
 	margin:2px 0;
+	margin-left: 5px;
 	font: normal 0.9em Arial, sans-serif;
 }
 div.report_info label {
@@ -205,6 +222,7 @@ div.report_info label {
 
 input {
 	padding: 2px;
+	margin-left: 5px;
 	border:1px solid #A9C4D6;
 	height: 20px;
 	font: normal 0.9em Arial, sans-serif;
@@ -212,6 +230,7 @@ input {
 }
 textarea {
 	padding:2px;
+	margin-left: 5px;
 	font: normal 0.9em Arial, sans-serif;
 	border:1px solid #A9C4D6;
 	color:#666;
@@ -243,6 +262,7 @@ input.dialogbtn {
 select {
 	padding: 0px;
 	border:1px solid #A9C4D6;
+	margin-left: 5px;
 	font: normal 0.9em Arial, sans-serif;
 	color:#666;
 	float: left;

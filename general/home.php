@@ -37,16 +37,16 @@ if (!isset($config["id_user"]))
 		echo "<td valign='top'><br><b>";
 		echo __('Events for next three days');
 		echo '<hr width="100%" size="1">';
-		echo "</b><br><br>";
+		echo "</b>";
 		$sql_2 = "SELECT * FROM tagenda WHERE (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3' ORDER BY timestamp ASC";
 		$result_2 = mysql_query($sql_2);
 		while ($row_2 = mysql_fetch_array($result_2)){
-			echo $row_2["timestamp"]." - ".$row_2["content"];
+			echo "<b>".__("Agenda event")." </b>(".$row_2["timestamp"].") - ".$row_2["content"];
 			echo "<br>";
 		}
 
 		// Search for Project end in this date
-		$sql = "SELECT tproject.name as pname, tproject.end as pend, tproject.id as idp FROM trole_people_project, tproject WHERE trole_people_project.id_user = '".$config["id_user"]."' AND trole_people_project.id_project = tproject.id AND tproject.end >= '$now' AND tproject.end <= '$now3'";
+		$sql = "SELECT tproject.name as pname, tproject.end as pend, tproject.id as idp FROM trole_people_project, tproject WHERE trole_people_project.id_user = '".$config["id_user"]."' AND trole_people_project.id_project = tproject.id AND tproject.end >= '$now' AND tproject.end <= '$now3' group by idp";
 		$res = mysql_query ($sql);
 		while ($row=mysql_fetch_array ($res)){
 			$pname = $row["pname"];
@@ -60,7 +60,7 @@ if (!isset($config["id_user"]))
 		}
 
 		// Search for Task end in this date
-		$sql = "SELECT ttask.name as tname, ttask.end as tend, ttask.id as idt FROM trole_people_task, ttask WHERE trole_people_task.id_user = '".$config["id_user"]."' AND trole_people_task.id_task = ttask.id AND ttask.end >= '$now' AND ttask.end <= '$now3'";
+		$sql = "SELECT ttask.name as tname, ttask.end as tend, ttask.id as idt FROM trole_people_task, ttask WHERE trole_people_task.id_user = '".$config["id_user"]."' AND trole_people_task.id_task = ttask.id AND ttask.end >= '$now' AND ttask.end <= '$now3' group by idt";
 		$res = mysql_query ($sql);
 		while ($row=mysql_fetch_array ($res)){
 			$tname = $row["tname"];

@@ -1,3 +1,37 @@
+<<<<<<< .mine
+
+2008-11-17  Sancho Lerena <slerena@artica.es>
+
+	* install.php: Home_url default value is now well taken. Other minor 
+	issues with form style.
+
+	* functions_calendar.php: Added generic functions to know when a task,
+	event or project is ending and return information about it. Added 
+	support to show in agenda the ending of tasks, projects and events in
+	current month and in the other two smalls calendar (prev/next).
+
+	* functions_db.php: get_project_workunit_hours() now supports start
+	and begin dates for returning data. ADdded get_task_end_date_by_user()
+
+	* functions_form.php: Fixed code in combo_task_user_participant() to 
+	show vacations and other special types.
+
+	* integria_cron.php: Added check_daily_task() and checks for notify 
+	ending tasks, projects and events of the day by mail.
+
+	* calendar.css: Some new styles to notify events in mini agenda.
+
+	* integria.css: Minimal changes to beautify listing types and some
+	controls (margins).
+
+	* side_menu.css: Added full report on a user (with time ranges).
+
+	* user_spare_workunit.php: Now admin users can enter workunits for
+	other users. Vacations  and other special project types now works.
+
+	* user_task_assigment.php: Fixed typo in sql rewritten with sprintf.
+
+=======
 2008-11-17  Ramon Novoa  <rnovoa@artica.es>
 
 	* include/styles/integria.css,
@@ -27,6 +61,7 @@
 	  operation/user_report/report_monthly.php: Updated tables width and
 	  translation infrastructure.
 
+>>>>>>> .r174
 2008-11-17  Esteban Sanchez  <estebans@artica.es>
 
 	* images/html.png: Added to repository. New icon for report buttons.

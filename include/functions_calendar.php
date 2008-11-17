@@ -18,6 +18,78 @@
 // http://keithdevens.com/software/php_calendar
 // License: Artistic Licence
 
+/**
+ * Get an array with events for a given date. Returns an array
+ *
+ * $param $now  - Current date (only Y-M-D)
+ * $param $days - Margin in (days) to compare from $now (default 1)
+ * $param $ud_user - If void, get from session. __ANY__ for all users.
+ */
+
+function get_event_date ($now, $days_margin = 1, $id_user = ""){
+	global $config;
+	
+	if ($id_user == "")
+		$id_user = $config["id_user"];
+
+	$now = "$now 00:00:00";
+	$now3 = date('Y-m-d h:i:s', strtotime("$now + $days_margin days"));
+
+	$result = array();
+
+	if ($id_user == "_ANY_")
+		$sql = "SELECT * FROM tagenda WHERE timestamp >= '$now' AND timestamp <= '$now3' ORDER BY timestamp ASC"; // Notify all events for today and return user
+	else
+		$sql = "SELECT * FROM tagenda WHERE (id_user ='$id_user' OR public = 1) AND timestamp >= '$now' AND timestamp <= '$now3' ORDER BY timestamp ASC";
+
+	$res = mysql_query ($sql);
+	while ($row=mysql_fetch_array ($res)){
+		$result[] = $row["timestamp"] ."|".$row["content"]."|".$row["id_user"];
+	}
+
+	return $result;
+}
+
+function get_project_end_date ($now, $days_margin = 0, $id_user = ""){
+	global $config;
+	
+	if ($id_user == "")
+		$id_user = $config["id_user"];
+
+	$now3 = date('Y-m-d', strtotime("$now + $days_margin days"));
+	$result = array();
+
+	// Search for Project end in this date
+	if ($id_user == '_ANY_')
+		$sql = "SELECT tproject.name as pname, tproject.end as pend, tproject.id as idp, tproject.id_owner as id_owner FROM tproject WHERE tproject.end >= '$now' AND tproject.end <= '$now3' GROUP BY idp";
+	else
+		$sql = "SELECT tproject.name as pname, tproject.end as pend, tproject.id as idp, tproject.id_owner as id_owner FROM trole_people_project, tproject WHERE trole_people_project.id_user = '$id_user' AND trole_people_project.id_project = tproject.id AND tproject.end >= '$now' AND tproject.end <= '$now3' GROUP BY idp";
+	$res = mysql_query ($sql);
+	while ($row=mysql_fetch_array ($res)){
+		$result[] = $row["pname"] ."|".$row["idp"]."|".$row["pend"]."|".$row["id_owner"];
+	}
+	return $result;
+}
+
+function get_task_end_date ($now, $days_margin = 0, $id_user = ""){
+	global $config;
+	
+	if ($id_user == "")
+		$id_user = $config["id_user"];
+
+	$now3 = date('Y-m-d', strtotime("$now + $days_margin days"));
+	$result = array();
+
+	// Search for Project end in this date
+	$sql = "SELECT tproject.name as pname, ttask.name as tname, ttask.end as tend, ttask.id as idt FROM trole_people_task, tproject, ttask WHERE tproject.id = ttask.id_project AND trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.end >= '$now' AND ttask.end <= '$now3' GROUP BY idt";
+	$res = mysql_query ($sql);
+	while ($row=mysql_fetch_array ($res)){
+		$result[] = $row["tname"] ."|".$row["idt"]."|".$row["tend"]."|".$row["pname"];
+	}
+	return $result;
+}
+
+
 function generate_calendar_agenda ($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array(), $id_user = "" ){
     global $config;
 
@@ -103,28 +175,22 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
             }
 		}
 
-		// Search for Project end in this date
-		$sql = "SELECT tproject.name as pname, tproject.id as idp FROM trole_people_project, tproject WHERE trole_people_project.id_user = '".$config["id_user"]."' AND trole_people_project.id_project = tproject.id AND tproject.end LIKE '$mysql_date%'";
-		$res = mysql_query ($sql);
-		while ($row=mysql_fetch_array ($res)){
-			$pname = $row["pname"];
-			$idp = $row["idp"];
+		$agenda_project = get_project_end_date ($mysql_date);
+		foreach ($agenda_project as $agenda_pitem){
+			list ($pname, $idp, $pend) = split ("\|", $agenda_pitem);
 			$calendar .= __("Project end"). " <a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$idp'>";
 			$calendar .= "<img src='images/bricks.png'>";
 			$calendar .= "</A> ";
  			$calendar .= "<br><hr width=110><font size='1pt'>$pname</font><br><br>";
 		}
 
-		// Search for Task end in this date
-		$sql = "SELECT ttask.name as tname, ttask.id as idt FROM trole_people_task, ttask WHERE trole_people_task.id_user = '".$config["id_user"]."' AND trole_people_task.id_task = ttask.id AND ttask.end LIKE '$mysql_date%'";
-		$res = mysql_query ($sql);
-		while ($row=mysql_fetch_array ($res)){
-			$tname = $row["tname"];
-			$idt = $row["idt"];
+		$agenda_task = get_task_end_date ($mysql_date);
+		foreach ($agenda_task as $agenda_titem){
+			list ($tname, $idt, $tend, $pname) = split ("\|", $agenda_titem);
 			$calendar .= __("Task end"). " <a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view'>";
 			$calendar .= "<img src='images/brick.png'>";
 			$calendar .= "</A> ";
- 			$calendar .= "<br><hr width=110><font size='1pt'>$tname</font><br><br>";
+ 			$calendar .= "<br><hr width=110><font size='1pt'>$pname / $tname</font><br><br>";
 		}
 
 	}
@@ -168,13 +234,46 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 			$weekday   = 0; #start a new week
 			$calendar .= "</tr>\n<tr>";
 		}
+
+		$content  = $day;
+		$my_classes = "";
+		$mysql_date = "$year-$month-$day";
+
+		$agenda_eventt = get_event_date ($mysql_date);
+		foreach ($agenda_eventt as $agenda_event){
+			list ($timestamp, $event) = split ("\|", $agenda_event);
+			$days[$day][1] = "agenda";
+			$days[$day][2] = "$day"."A";
+			$days[$day][0] = "index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month&year=$year"; 
+		}
+
+		$agenda_task = get_task_end_date ($mysql_date);
+		foreach ($agenda_task as $agenda_titem){
+			list ($tname, $idt, $tend, $pname) = split ("\|", $agenda_titem);
+			$days[$day][1] = "task";
+			$days[$day][2] = "$day"."T";
+			$days[$day][0] = "index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view";
+		}
+			
+		$agenda_project = get_project_end_date ($mysql_date);
+		foreach ($agenda_project as $agenda_pitem){
+			list ($pname, $idp, $pend) = split ("\|", $agenda_pitem);
+			$days[$day][1] = "project";
+			$days[$day][2] = "$day"."P";
+			$days[$day][0] = "index.php?sec=projects&sec2=operation/projects/task&id_project=$idp";
+		}
+
 		if(isset($days[$day]) and is_array($days[$day])){
 			@list($link, $classes, $content) = $days[$day];
-			if(is_null($content))  $content  = $day;
-			$calendar .= '<td'.($classes ? ' class="'.htmlspecialchars($classes).'">' : '>').
-				($link ? '<a href="'.htmlspecialchars($link).'">'.$content.'</a>' : $content).'</td>';
+			$calendar .= '<td class="'.htmlspecialchars($classes).'">';
+			if ($link)
+				$calendar .= '<a href="'.htmlspecialchars($link).'">'.$content.'</a></td>';
+			else
+			 	$calendar .= $content.'</td>';
 		}
-		else $calendar .= "<td>$day</td>";
+		else {
+			$calendar .= "<td>$content</td>";
+		}
 	}
 	if($weekday != 7) $calendar .= '<td colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
 

@@ -276,7 +276,7 @@ function install_step3() {
 	echo "
 	<div align='center''>
 	<h1>Integria $integria_version instalation wizard. Step #3 of 4 </h1>
-	<div id='wizard' style='height: 590px;'>
+	<div id='wizard' style='height: 640px;'>
 		<div id='install_box'>
 			<h1>Environment and database setup</h1>
 			<p>
@@ -287,39 +287,39 @@ function install_step3() {
 			<p>
 			<b>NOTICE</b> that database will be destroyed if already exists!.
 			</p>
-			<div style='padding-left: 30px'>
+			<div style='padding-left: 30px;'>
 			<form method='post' action='install.php?step=4'>
-				<div>DB User with privileges on MySQL</div>
+				<div style='padding: 8px'>DB User with privileges on MySQL<br></div>
 				<input type='text' name='user' value='root'>
 
-				<div>DB Password for this user</div>
+				<div style='padding: 8px'>DB Password for this user</div>
 				<input type='password' name='pass' value=''>
 				
-				<div>DB Hostname of MySQL</div>
+				<div style='padding: 8px'>DB Hostname of MySQL</div>
 				<input type='text' name='host' value='localhost'>
 
-				<div>DB Name (<i>integria</i> by default)</div>
+				<div style='padding: 8px'>DB Name (<i>integria</i> by default)</div>
 				<input type='text' name='dbname' value='integria'>
 				
 		
-				<div><input type='checkbox' name='createdb' checked value='1'>  
+				<div style='padding: 8px'><input type='checkbox' name='createdb' checked value='1'>  
 				Create Database <br>
 				</div>
 		
-				<div><input type='checkbox' name='createuser' checked value='1'> Create Database user 'integria' and give privileges <br>
+				<div style='padding: 8px'><input type='checkbox' name='createuser' checked value='1'> Create Database user 'integria' and give privileges <br>
 				</div>		
 			
-				<div>Full path to HTTP publication directory.<br>
+				<div style='padding: 8px'>Full path to HTTP publication directory.<br>
 				<span class='f9b'>For example /var/www/integria/</span>
 				</div>
 				<input type='text' name='path' style='width: 190px;' value='".dirname (__FILE__)."/'>
 
-				<div>Full local URL to Integria<br>
-				<span class='f9b'>For example /integria</span>
+				<div style='padding: 8px'>Full local URL to Integria<br>
+				<span class='f9b'>For example http://10.10.10.1/integria</span>
 				</div>
-				<input type='text' name='url' style='width: 250px;'  value='".dirname ($_SERVER['PHP_SELF'])."'>
+				<input type='text' name='url' style='width: 250px;'  value='http://".$_SERVER["SERVER_NAME"].dirname ($_SERVER['PHP_SELF']) ."'>
 				<br><br>
-				<div><input align='right' style='align: right; width:70px; height: 16px;' type='image' src='images/arrow_next.png'  value='Step #4'></div>
+				<div style='padding: 8px'><input align='right' style='align: right; width:70px; height: 16px;' type='image' src='images/arrow_next.png'  value='Step #4'></div>
 			</form>
 			</div>
 			</div>

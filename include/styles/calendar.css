@@ -18,6 +18,25 @@ table.calendar th td {
 	line-height: 15px;
 }
 
+table.calendar td.project a {
+	background-color: #aa3333;
+	color: #fff;
+	font-weight: bold;
+}
+
+table.calendar td.task a {
+	background-color: #33aa33;
+	color: #fff;
+	font-weight: bold;
+}
+
+table.calendar td.agenda a {
+	background-color: #3333aa;
+	color: #fff;
+	font-weight: bold;
+}
+
+
 table.calendar {
 	margin-left: 20px;
 }

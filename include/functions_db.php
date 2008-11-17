@@ -237,22 +237,27 @@ function get_incident_count_workunits ($id_incident) {
 * $id_project	integer 	ID of project
 **/
 
-function get_project_workunit_hours ($id_project, $with_cost =0){ 
+function get_project_workunit_hours ($id_project, $with_cost = 0, $start_date = "", $end_date =""){ 
 	global $config;
+	
+	$timesearch = "";
+	if ($start_date != "")
+		$timesearch = " AND tworkunit.timestamp >= '$start_date' AND tworkunit.timestamp <= '$end_date'";
+
 	if ($with_cost != 0) {
 		$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task, ttask 
 			WHERE tworkunit_task.id_task = ttask.id
 			AND ttask.id_project = %d
 			AND tworkunit_task.id_workunit = tworkunit.id
-			AND tworkunit.have_cost = 1', $id_project);
+			AND tworkunit.have_cost = 1 %s', $id_project, $timesearch);
 	} else {
 		$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task, ttask 
 			WHERE tworkunit_task.id_task = ttask.id
 			AND ttask.id_project = %d
-			AND tworkunit_task.id_workunit = tworkunit.id',
-			$id_project);
+			AND tworkunit_task.id_workunit = tworkunit.id %s',
+			$id_project, $timesearch);
 	}
 	return (int) get_db_sql ($sql);
 }
@@ -1992,6 +1997,20 @@ function get_most_active_incidents ($lim) {
 function get_sla_compliance () {
 	$sla_compliance = get_db_row_sql ('SELECT 100 * COUNT(IF (affected_sla_id = 0, 1, NULL)) / COUNT(*) AS sla_compliance FROM tincidencia');
 	return $sla_compliance{'sla_compliance'};
+}
+
+function get_task_end_date_by_user ($now){
+	global $config;
+	
+	$result = array();
+
+	// Search for Project end in this date
+	$sql = "SELECT tproject.name as pname, ttask.name as tname, ttask.end as tend, ttask.id as idt, trole_people_task.id_user as user FROM trole_people_task, tproject, ttask WHERE tproject.id = ttask.id_project AND trole_people_task.id_task = ttask.id AND ttask.end = '$now' GROUP BY idt, user";
+	$res = mysql_query ($sql);
+	while ($row=mysql_fetch_array ($res)){
+		$result[] = $row["tname"] ."|".$row["idt"]."|".$row["tend"]."|".$row["pname"]."|".$row["user"];
+	}
+	return $result;
 }
 
 ?>

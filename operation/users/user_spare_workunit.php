@@ -1,5 +1,5 @@
 <?php
-// INTEGRIA - the ITIL Management System
+// INTEGRIA IMS - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2008 Ártica Soluciones Tecnológicas
@@ -37,6 +37,7 @@ if ($operation == "addworkunit"){
 	$task = get_parameter ("task",-1);
 	$role = get_parameter ("role",0);
     $split = get_parameter ("split",0);
+	$wu_user = get_parameter ("wu_user", $id_user);
 	
 	// Multi-day assigment
 	if (($split == 1) AND ($duration > $config["hours_perday"])){
@@ -56,12 +57,12 @@ if ($operation == "addworkunit"){
 
         	$sql = "INSERT INTO tworkunit 
         	        (timestamp, duration, id_user, description, have_cost, id_profile, public) 
-	                VALUES	('$current_timestamp', $hours_day, '$id_user', '$description',
+	                VALUES	('$current_timestamp', $hours_day, '$wu_user', '$description',
 	                         $have_cost, $role, $public)";
     	    if (mysql_query($sql)){
         	    $id_workunit = mysql_insert_id();
         		$sql2 = "INSERT INTO tworkunit_task 
-        		                (id_task, id_workunit) VALUES ($task,   $id_workunit)";
+        		                (id_task, id_workunit) VALUES ($task, $id_workunit)";
         	    if (mysql_query($sql2))
         	        $result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
 	            else
@@ -74,12 +75,12 @@ if ($operation == "addworkunit"){
 	} else {
     	$sql = "INSERT INTO tworkunit 
     	        (timestamp, duration, id_user, description, have_cost, id_profile, public) 
-	             VALUES	('$timestamp', $duration, '$id_user', '$description', $have_cost, $role, $public)";
+	             VALUES	('$timestamp', $duration, '$wu_user', '$description', $have_cost, $role, $public)";
 
     	if (mysql_query($sql)){
     		$id_workunit = mysql_insert_id();
     		$sql2 = "INSERT INTO tworkunit_task 
-    		        (id_task, id_workunit) VALUES ($task,   $id_workunit)";
+    		        (id_task, id_workunit) VALUES ($task, $id_workunit)";
     		if (mysql_query($sql2)){
     			$result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
 			    audit_db ($id_user, $config["REMOTE_ADDR"], "Spare work unit added", 
@@ -108,7 +109,8 @@ if ($operation != "create"){
 	// Date
 	echo "<td><b>".__('Date')."</b>";
 	echo "<td>";
-	echo "<input type='text' id='workunit_date' name='workunit_date' size=10 value='".substr($ahora,0,10)."'> <img src='images/calendar_view_day.png' onclick='scwShow(scwID(\"workunit_date\"),this);'> ";
+	$start_date = substr($ahora,0,10);
+	print_input_text ('start_date', $start_date, '', 10, 20);	
 
 	// Role
 	echo "<td>";
@@ -120,9 +122,7 @@ if ($operation != "create"){
 	echo "<tr><td>";
 	echo "<b>".__('Task')."</b>";
 	echo "<td colspan=3>";
-	echo combo_task_user_participant ($id_user, false, 0, false);
-	
-
+	echo combo_task_user_participant ($id_user, true, 0, false, false);
 
 	// TIme wasted
 	echo "<tr><td class='datos'>";
@@ -130,6 +130,13 @@ if ($operation != "create"){
 	echo "<td class='datos'>";
 	echo "<input type='text' name='duration' value='0' size='7'>";
     
+
+	if (dame_admin($id_user) == 1){
+		echo "<td>";
+		echo "<b>".__('Username')."</b>";
+		echo "<td>";
+		combo_user_visible_for_me ($config["id_user"], "wu_user", 0, "TW", false, false);
+	}
 
 
 	// have cost checkbox
@@ -164,9 +171,6 @@ if ($operation != "create"){
 	echo "<td>";
 	echo "<input type=checkbox name='split' value=1>&nbsp;";
 
-
-
-
 	echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
 	echo '<tr><td colspan="4" class="datos2"><textarea name="description" rows="15" cols="85">';
 	echo '</textarea>';
@@ -179,3 +183,14 @@ if ($operation != "create"){
 }
 
 ?>
+
+<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready (function () {
+	configure_range_dates (null);
+});
+</script>
