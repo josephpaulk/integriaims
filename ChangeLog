@@ -1,5 +1,16 @@
 2008-11-18  Esteban Sanchez  <estebans@artica.es>
 
+	* include/functions_form.php: combo_user_task_profile() now handles a
+	null id_task which was showing weird combos sometimes.
+
+	* operation/user_report/report_full.php: Removed checking for
+	check_login() since this function exists by itself.
+
+	* operation/users/user_spare_workunit.php: Form redesign. Fixed a UI
+	error when showing profiles combo that cause mess and redundancy.
+
+2008-11-18  Esteban Sanchez  <estebans@artica.es>
+
 	* include/styles/integria.css: Removed border in image inputs.
 
 	* include/functions_html.php: Added print_input_image(). Added support

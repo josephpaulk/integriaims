@@ -65,22 +65,23 @@ function combo_user_task_profile ($id_task, $form_name = "work_profile", $select
 	
 	if (! $id_user)
 		$id_user = $config['id_user'];
+	$where_clause = '';
+	if ($id_task)
+		$where_clause = sprintf ('AND id_task = %d', $id_task);
 	
 	// Show only users assigned to this project
 	$sql = sprintf ('SELECT trole.id, trole.name
 		FROM trole_people_task, trole
 		WHERE trole.id = trole_people_task.id_role
-		AND id_task = %d
+		%s
 		AND id_user = "%s"
 		ORDER BY name',
-		$id_task, $id_user);
-	
+		$where_clause, $id_user);
 	$output .= print_select_from_sql ($sql, $form_name, $selected, '', '', '',
 		true, false, false, __('Role'));
 	
 	if ($return)
 		return $output;
-	
 	echo $output;
 }
 

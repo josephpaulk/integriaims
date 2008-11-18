@@ -19,14 +19,13 @@ global $config;
 
 check_login ();
 
-$id_user = $_SESSION["id_usuario"];
 $operation = get_parameter ("operation");
 $ahora = get_parameter ("givendate", date("Y-m-d H:i:s"));
 $public =  get_parameter ("public", 1);
 $id_profile = get_parameter ("work_profile", "");
 $description =  get_parameter ("wu_description", "");
 $pass_id_project = get_parameter("id_project", "");
-$pass_id_task = get_parameter("id_task", "");
+$id_task = get_parameter("id_task", "");
 
 // -----------
 // Workunit
@@ -41,7 +40,7 @@ if ($operation == "addworkunit"){
 	$task = get_parameter ("task",-1);
 	$role = get_parameter ("role",0);
 	$split = get_parameter ("split",0);
-	$wu_user = get_parameter ("wu_user", $id_user);
+	$wu_user = get_parameter ("wu_user", $config['id_user']);
 	
 	// Multi-day assigment
 	if (($split == 1) AND ($duration > $config["hours_perday"])){
@@ -73,7 +72,7 @@ if ($operation == "addworkunit"){
 					$result_output = "<h3 class='error'>".__('Problemd adding workunit.')."</h3>";
 			}
 		}
-		mail_project (0, $id_user, $id_workunit, $task, "This is part of a multi-workunit assigment of $duration hours");
+		mail_project (0, $config['id_user'], $id_workunit, $task, "This is part of a multi-workunit assigment of $duration hours");
 	
 	// Single day workunit
 	} else {
@@ -87,9 +86,9 @@ if ($operation == "addworkunit"){
 
 			if (mysql_query($sql2)){
 				$result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
-				audit_db ($id_user, $config["REMOTE_ADDR"], "Spare work unit added", 
-						"Workunit for $id_user added to Task ID #$task");
-				mail_project (0, $id_user, $id_workunit, $task);
+				audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Spare work unit added", 
+						'Workunit for '.$config['id_user'].' added to Task ID #'.$task);
+				mail_project (0, $config['id_user'], $id_workunit, $task);
 			}	
 		} else 
 			$result_output = "<h3 class='error'>".__('Problemd adding workunit.')."</h3>";
@@ -106,93 +105,71 @@ if ($operation != "create"){
 
 	echo "<h3><img src='images/award_star_silver_1.png'> ";
 
-	if ($pass_id_task != ""){
-		$task_name = get_db_value ('name', 'ttask', 'id', $pass_id_task);
+	if ($id_task != ""){
+		$task_name = get_db_value ('name', 'ttask', 'id', $id_task);
 		echo __('Add workunit').' - '.$task_name.'</h3>';
 	} else {
 		echo __('Add spare workunit')."</h3>";
 	}
 
 	echo "<table width='90%' class='databox'>";
-	if ($pass_id_task != "")
-		echo "<form name='nota' method='post' action='index.php?sec=projects&sec2=operation/users/user_spare_workunit&operation=addworkunit&id_project=$pass_id_project&id_task=$pass_id_task'>";
+	if ($id_task != "")
+		echo "<form name='nota' method='post' action='index.php?sec=projects&sec2=operation/users/user_spare_workunit&operation=addworkunit&id_project=$pass_id_project&id_task=$id_task'>";
 	else
 		echo "<form name='nota' method='post' action='index.php?sec=users&sec2=operation/users/user_spare_workunit&operation=addworkunit'>";
 	// Date
-	echo "<td><b>".__('Date')."</b>";
 	echo "<td>";
 	$start_date = substr($ahora,0,10);
-	print_input_text ('start_date', $start_date, '', 10, 20);	
+	print_input_text ('start_date', $start_date, '', 10, 20, false, __('Date'));
 
 	// Role
 	echo "<td>";
-	echo "<b>".__('Profile')."</b>";
-	echo "<td>";
-	if (dame_admin($id_user) == 1){
-		echo combo_user_task_profile ($pass_id_task, 'work_profile', $id_profile, false, true);
-	} else 
-		combo_roles(1); // role
-	
+	if (dame_admin ($config['id_user']) == 1){
+		combo_user_task_profile ($id_task, 'work_profile', $id_profile, false);
+	} else {
+		combo_roles (1); // role
+	}
 	// task id - included hard-written "VACATIONS"
-	if ($pass_id_task != "")
-		echo "<input type='hidden' name='task' value='".$pass_id_task."'>";
-	else {
-		echo "<tr><td>";
-		echo "<b>".__('Task')."</b>";
+	if ($id_task != "") {
+		echo "<input type='hidden' name='task' value='".$id_task."'>";
+	} else {
+		echo "<tr>";
 		echo "<td colspan=3>";
-		echo combo_task_user_participant ($id_user, true, 0, false, false);
+		echo combo_task_user_participant ($config['id_user'], true, 0, false, __('Task'));
 	}
-
-	// TIme wasted
-	echo "<tr><td class='datos'>";
-	echo "<b>".__('Time used')."</b>";
-	echo "<td class='datos'>";
-	echo "<input type='text' name='duration' value='0' size='7'>";
 	
-
-	if (dame_admin($id_user) == 1){
-		echo "<td>";
-		echo "<b>".__('Username')."</b>";
-		echo "<td>";
-		combo_user_visible_for_me ($config["id_user"], "wu_user", 0, "TW", false, false);
+	// TIme wasted
+	echo "<tr>";
+	echo "<td class='datos'>";
+	print_input_text ('duration', 0, '', 7, 7, false, __('Time used'));
+	echo '</td>';
+	
+	if (dame_admin ($config['id_user'])) {
+		echo '<td colspan="3">';
+		combo_user_visible_for_me ($config["id_user"], "wu_user", 0, "TW", false, __('Username'));
+		echo "</td>";
 	}
-
-
+	
 	// have cost checkbox
 	echo "<tr><td>";
-	echo "<b>".__('Have cost')."</b>";
-	echo "<td>";
-	echo "<input type='checkbox' name='have_cost' value=1>";
-
-
+	print_checkbox ('have_cost', 1, false, false, __('Have cost'));
+	
+	echo "</td><td>";
+	print_checkbox ("public", 1, $public, false, __('Public'));
+	
+	echo "</td></tr><tr><td>";
+	print_checkbox ('forward', 1, false, false, __('Forward'));
+	print_help_tip (__('If this checkbox is activated, propagation will be forward instead backward'));
+	echo '</td>';
 	
 	echo "<td>";
-	echo "<b>".__('Public');
-	echo "<td>";
-	print_checkbox ("public", 1, $public, false, false);
-	
-	
-	echo "<tr><td>";
-	echo "<b>".__('Forward')."</b>";
-	echo "<a href='#' class='tip'>&nbsp;<span>";
-	echo __('If this checkbox is activated, propagation will be forward instead backward');
-	echo "</span></a>";
-	echo "<td>";
-	echo "<input type=checkbox name='forward' value=1>";
-	
-
-
-	echo "<td>";
-	echo "<b>".__('Split > 1day')."</b>";
-	echo "&nbsp;<a href='#' class='tip'>&nbsp;<span>";
-	echo __('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned');
-	echo "</span></a>";
-	echo "<td>";
-	echo "<input type=checkbox name='split' value=1>&nbsp;";
+	print_checkbox ('split', 1, false, false, __('Split > 1day'));
+	print_help_tip (__('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned'));
+	echo '</td>';
 
 	echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
 	echo '<tr><td colspan="4">';
-	echo print_textarea ('wu_description', 10, 30, "$description", '', true, false);
+	echo print_textarea ('wu_description', 10, 30, $description, '', true, __('Description'));
 	echo "</table>";
 
 	echo "<div style='width: 90%' class='button'>";

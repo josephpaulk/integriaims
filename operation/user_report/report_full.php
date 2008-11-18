@@ -17,16 +17,10 @@
 global $config;
 $id_user = $config["id_user"];
 
-if (check_login() != 0) {
-	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access monthly report");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
 
-// --------------------
 // Workunit report
-// --------------------
 $now = date ('Y-m-d');
 $start_date = get_parameter ("start_date", date ('Y-m-d', strtotime ("$now - 3 months")));
 $end_date = get_parameter ('end_date', $now);
