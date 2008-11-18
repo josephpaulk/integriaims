@@ -29,16 +29,12 @@ if (! give_acl ($config['id_user'], 0, "IR")) {
 
 // Take input parameters
 $id = (int) get_parameter ('id');
-$do_first_search = true;
-if ($id)
-	$do_first_search = false;
-
-// Offset adjustment
-if (isset($_GET["offset"]))
-	$offset=$_GET["offset"];
-else
-	$offset=0;
-
+$do_search = (bool) get_parameter ('do_search');
+/* Search new incidents if no other search is forced and no id is set */
+$do_search_news = false;
+if (! $do_search && ! $id) {
+	$do_search_news = true;
+}
 // Delete incident
 if (isset ($_POST["quick_delete"])) {
 	$id_inc = $_POST["quick_delete"];
@@ -354,12 +350,13 @@ $(document).ready (function () {
 					);
 		});
 	});
-<?php if ($do_first_search) : ?>
+<?php if ($do_search_news) : ?>
 	first_search = true;
 	$("#search_status").attr ("value", 1);
 	$("#search_incident_form").submit ();
 	$("#search_status").attr ("value", 0);
+<?php elseif ($do_search) : ?>
+	$("#search_incident_form").submit ();
 <?php endif; ?>
 });
 </script>
-

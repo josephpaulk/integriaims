@@ -75,8 +75,7 @@ if ($update_company) {
 	$id = 0;
 }
 
-// DELETE
-// ==================
+// Delete company
 if ($delete_company) { // if delete
 	$id = (int) get_parameter ('delete');
 	$name = get_db_value ('name', 'tcompany', 'id', $id);
@@ -171,19 +170,25 @@ if ($id || $new_company) {
 		$table->head[1] = __('Role');
 		$table->head[2] = __('Contracts');
 		$table->head[3] = __('Contacts');
-		$table->head[4] = __('Delete');
+		$table->head[4] = __('Incidents');
+		$table->head[5] = __('Delete');
 		
 		foreach ($companies as $company) {
 			$data = array ();
 			
 			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=".
 				$company["id"]."'>".$company["name"]."</a>";
-			$data[1] = get_db_sql("SELECT name FROM tcompany_role WHERE id = ".$company["id_company_role"]);
+			$data[1] = get_db_value ('name', 'tcompany_role', 'id', $company["id_company_role"]);
 			$data[2] = '<a href="index.php?sec=inventory&sec2=operation/contracts/contract_detail&search_id_company='.
 				$company['id'].'"><img src="images/maintab.gif"></a>';
 			$data[3] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id_company='.
 				$company['id'].'"><img src="images/group.png"></a>';
-			$data[4] ='<a href="index.php?sec=inventory&
+			$data[4] = '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident">';
+			$data[4] .= print_input_hidden ('do_search', 1, true);
+			$data[4] .= print_input_hidden ('search_id_company', $company['id'], true);
+			$data[4] .= print_input_image ('btn', 'images/bug.png', 1, '', true);
+			$data[4] .= '</form>';
+			$data[5] ='<a href="index.php?sec=inventory&
 						sec2=operation/companies/company_detail&
 						delete_company=1&id='.$company['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))

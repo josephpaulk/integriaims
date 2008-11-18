@@ -1,3 +1,16 @@
+2008-11-18  Esteban Sanchez  <estebans@artica.es>
+
+	* include/styles/integria.css: Removed border in image inputs.
+
+	* include/functions_html.php: Added print_input_image(). Added support
+	for image inputs to print_label.
+
+	* operation/companies/company_detail.php: Added a link to show
+	incidents that belongs to a company.
+
+	* operation/incidents/incident.php: A search can be forced now by
+	passing do_search HTTP parameter.
+
 2008-11-18  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish

@@ -273,6 +273,28 @@ function print_submit_button ($value = 'OK', $name = '', $disabled = false, $att
 	echo $output;
 }
 
+/**
+ * Render an input image element.
+ * 
+ * @param string $name Input name.
+ * @param string $src Image source.
+ * @param string $value Input value.
+ * @param string $style HTML style property.
+ * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ */
+function print_input_image ($name, $src, $value, $style = '', $return = false, $label = false) {
+	$output = '';
+	
+	if ($label) {
+		$output .= print_label ($label, $name, 'image', true);
+	}
+	$output .= '<input id="image-'.$name.'" src="'.$src.'" style="'.$style.'" name="'.$name.'" type="image" value="'.$value.'" />';
+	
+	if ($return)
+		return $output;
+	echo $output;
+}
+
 function print_button ($value = 'OK', $name = '', $disabled = false, $script = '', $attributes = '', $return = false, $label = false) {
 	$output = '';
 	
@@ -601,6 +623,9 @@ function print_label ($label, $id, $input_type = 'text', $return = false, $html 
 		break;
 	case 'file':
 		$id = 'file-'.$id;
+		break;
+	case 'image':
+		$id = 'image-'.$id;
 		break;
 	case 'select':
 	default:
