@@ -138,15 +138,16 @@ echo "</div>";
 
 
 // Space to skip blocks
-echo "<div style='height: 200px'> </div>";
-
+echo "<div style='height: 250px'> </div>";
+//echo "<br>";
 
 $start_date = $mydate_sql = date("Y-m-d", time());
 
 $pn = array('&laquo;'=>"index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month_p&year=$year_p", '&raquo;'=>"index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month_n&year=$year_n");
 
+echo '<div align="center">';
 echo generate_calendar_agenda ($year, $month, $days_f, 3, NULL, $locale, $pn, $config['id_user']);
-
+echo '</div>';
 
 // Legend for icons
 echo "<div style='float: right;'>";

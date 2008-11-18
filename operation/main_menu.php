@@ -85,7 +85,7 @@ if (give_acl($config["id_user"], 0, "AR") == 1){
 if (isset($config["id_user"]))
 	if (dame_admin($config["id_user"]) == 1){
 	    // Setup
-	    if ($sec == "setup" )
+	    if ($sec == "godmode" )
 	        echo "<li id='current'>";
 	    else
 	        echo "<li>";

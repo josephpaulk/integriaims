@@ -13,6 +13,15 @@
 
 2008-11-18  Jorge Gonzalez  <jorgegonz@artica.es>
 
+	* operation/agenda/agenda.php: Changed the space between
+	  minicalendars and the calendar view. Added a div to make the
+	  central calendar be centered.
+
+	* operation/main_menu.php: Changed the tag for the setup section,
+	  so now it is highlighted. Fixes bug #2284175.
+
+2008-11-18  Jorge Gonzalez  <jorgegonz@artica.es>
+
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish
 	  translation
 
