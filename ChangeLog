@@ -1,5 +1,9 @@
 2008-11-18  Ramon Novoa  <rnovoa@artica.es>
 
+	* upgrade.sql: Updated upgrade script.
+
+2008-11-18  Ramon Novoa  <rnovoa@artica.es>
+
 	* include/functions_inventories.php,
 	  operation/inventories/inventory_tree.php,
 	  operation/inventories/inventory_search.php: Added object tree

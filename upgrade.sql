@@ -261,6 +261,8 @@ CREATE TABLE `um_tupdate_settings` (
   PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `um_tupdate_settings` VALUES  ('current_update', '0'), ('customer_key', 'INTEGRIA-FREE'), ('keygen_path', '/usr/share/integria/util/keygen'), ('update_server_host', 'www.artica.es'), ('update_server_port', '80'), ('update_server_path', '/integriaupdate/server.php'), ('updating_binary_path', 'Path where the updated binary files will be stored'), ('updating_code_path', 'Path where the updated code is stored'), ('dbname', ''), ('dbhost', ''), ('dbpass', ''), ('dbuser', ''), ('proxy', ''), ('proxy_port', ''), ('proxy_user', ''), ('proxy_pass', '');
+
 CREATE TABLE `um_tupdate_package` (
   id int(11) unsigned NOT NULL auto_increment,
   timestamp datetime NOT NULL,  description mediumtext NOT NULL default '', 
