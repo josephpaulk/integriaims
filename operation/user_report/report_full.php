@@ -113,7 +113,7 @@ if ($user_id == "") {
 			$tasks = get_db_all_rows_sql ($sql);
 			if ($tasks) {
 				foreach ($tasks as $task) {
-					$total_task = get_task_workunit_hours ($task_id);
+					$total_task = get_task_workunit_hours ($task['id']);
 	
 					echo "<tr>";
 					echo "<td>&nbsp;&nbsp;&nbsp;<img src='images/copy.png'>";
