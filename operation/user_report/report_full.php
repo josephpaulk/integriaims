@@ -109,7 +109,7 @@ if ($user_id == "") {
 				AND tworkunit.timestamp >= "%s"
 				AND tworkunit.timestamp <= "%s"
 				GROUP BY ttask.name',
-				$user_id, $project_id, $start_date, $end_date);
+				$user_id, $project['id'], $start_date, $end_date);
 			$tasks = get_db_all_rows_sql ($sql);
 			if ($tasks) {
 				foreach ($task as $task) {
