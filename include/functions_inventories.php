@@ -270,4 +270,28 @@ function print_inventory_object ($id, $inventory, $tree, $show_children = false,
 	}
 }
 
+/**
+ * Get the children of the given inventory object.
+ *
+ * @param id ID of the object.
+ *
+ * @return array A list of inventory objects.
+ */
+function get_inventory_children ($id) {
+	global $config;
+	$result = array ();
+
+	$sql = sprintf ('SELECT * FROM tinventory WHERE id_parent = "'.$id.'"');
+	$children = get_db_all_rows_sql ($sql);
+	if ($children === false) {
+		return false;
+	}
+
+	foreach ($children as $child) {
+		$result[$child['id']] = $child;
+	}
+	
+	return $result;
+}
+
 ?>

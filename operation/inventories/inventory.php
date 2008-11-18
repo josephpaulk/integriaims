@@ -58,6 +58,7 @@ echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Incidents').'
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Contracts').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Contacts').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Workunits').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Tree').'</span></a></li>';
 echo '</ul>';
 
 /* Tabs first container is manually set, so it loads immediately */
@@ -130,6 +131,11 @@ function tab_loaded (event, tab) {
 			$(".inventory-menu").slideDown ();
 		}
 		old_inventory = id_inventory;
+	} else if (tab.index == 6) {
+    	$("table#tree tr").click (function () {
+    		id = this.id.split ("-").pop ();
+    		show_inventory_details (id);
+    	});
 	}
 }
 
@@ -140,12 +146,17 @@ function show_inventory_details (id) {
 	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/inventories/inventory_contracts&id=" + id);
 	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/inventories/inventory_contacts&id=" + id);
 	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/inventories/inventory_workunits&id=" + id);
+	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/inventories/inventory_tree&id=" + id);
 	$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
-		.tabs ("enable", 4).tabs ("enable", 5);
+		.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
 	$("#tabs > ul").tabs ("select", 1);
 }
 
 $(document).ready (function () {
+	$("table#inventory_search_result_table th").click (function () {
+    	$("span.indent").remove ();
+	});
+
 	$("#tabs > ul").tabs ({"load" : tab_loaded});
 
 <?php if ($id) : ?>
