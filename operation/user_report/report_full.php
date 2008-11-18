@@ -82,7 +82,7 @@ if ($user_id == "") {
 	
 	if ($projects) {
 		foreach ($projects as $project) {
-			$total_project = get_project_workunit_hours ($project_id, 0, $start_date, $end_date);
+			$total_project = get_project_workunit_hours ($project['id'], 0, $start_date, $end_date);
 			
 			echo "<tr>";
 			echo "<td>";
@@ -112,7 +112,7 @@ if ($user_id == "") {
 				$user_id, $project['id'], $start_date, $end_date);
 			$tasks = get_db_all_rows_sql ($sql);
 			if ($tasks) {
-				foreach ($task as $task) {
+				foreach ($tasks as $task) {
 					$total_task = get_task_workunit_hours ($task_id);
 	
 					echo "<tr>";

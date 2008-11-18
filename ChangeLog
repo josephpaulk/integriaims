@@ -1,5 +1,10 @@
 2008-11-18  Esteban Sanchez  <estebans@artica.es>
 
+	* operation/user_report/report_full.php: Fixed variable names that
+	cause notice PHP warnings.
+
+2008-11-18  Esteban Sanchez  <estebans@artica.es>
+
 	* operation/user_report/report_full.php: Fixed variable name that
 	cause notice PHP warnings.
 
