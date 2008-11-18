@@ -1,3 +1,7 @@
+2008-11-18  Esteban Sanchez  <estebans@artica.es>
+
+	* operation/users/user_spare_workunit.php: Tab style correction. Fixed
+	datepicker control.
 
 2008-11-17 Sancho Lerena <slerena@artica.es>
 

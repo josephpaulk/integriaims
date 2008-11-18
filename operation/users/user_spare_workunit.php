@@ -40,63 +40,63 @@ if ($operation == "addworkunit"){
 	$have_cost = get_parameter ("have_cost",0);
 	$task = get_parameter ("task",-1);
 	$role = get_parameter ("role",0);
-    $split = get_parameter ("split",0);
+	$split = get_parameter ("split",0);
 	$wu_user = get_parameter ("wu_user", $id_user);
 	
 	// Multi-day assigment
 	if (($split == 1) AND ($duration > $config["hours_perday"])){
-	    $forward = get_parameter ("forward",0);
-	    $total_days = ceil($duration / $config["hours_perday"]);
-	    $total_days_sum = 0; $hours_day = 0;
-	    for ($ax=0;$ax < $total_days; $ax++){
-	        if ($forward == 0)
-        	    $current_timestamp = calcdate_business_prev ($timestamp, $ax);
-	        else
-                $current_timestamp = calcdate_business ($timestamp, $ax);
-            if (($total_days_sum + 8) > $duration)
-                $hours_day = $duration - $total_days_sum;
-            else 
-                $hours_day = $config["hours_perday"];
-            $total_days_sum += $hours_day;
+		$forward = get_parameter ("forward",0);
+		$total_days = ceil($duration / $config["hours_perday"]);
+		$total_days_sum = 0; $hours_day = 0;
+		for ($ax=0;$ax < $total_days; $ax++){
+			if ($forward == 0)
+				$current_timestamp = calcdate_business_prev ($timestamp, $ax);
+			else
+				$current_timestamp = calcdate_business ($timestamp, $ax);
+			if (($total_days_sum + 8) > $duration)
+				$hours_day = $duration - $total_days_sum;
+			else 
+				$hours_day = $config["hours_perday"];
+			$total_days_sum += $hours_day;
 
-        	$sql = "INSERT INTO tworkunit 
-        	        (timestamp, duration, id_user, description, have_cost, id_profile, public) 
-	                VALUES	('$current_timestamp', $hours_day, '$wu_user', '$description',
-	                         $have_cost, $role, $public)";
-    	    if (mysql_query($sql)){
-        	    $id_workunit = mysql_insert_id();
-        		$sql2 = "INSERT INTO tworkunit_task 
-        		                (id_task, id_workunit) VALUES ($task, $id_workunit)";
-        	    if (mysql_query($sql2))
-        	        $result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
-	            else
-	                $result_output = "<h3 class='error'>".__('Problemd adding workunit.')."</h3>";
-            }
-        }
-        mail_project (0, $id_user, $id_workunit, $task, "This is part of a multi-workunit assigment of $duration hours");
-    
-    // Single day workunit
+			$sql = "INSERT INTO tworkunit 
+					(timestamp, duration, id_user, description, have_cost, id_profile, public) 
+					VALUES	('$current_timestamp', $hours_day, '$wu_user', '$description',
+							 $have_cost, $role, $public)";
+			if (mysql_query($sql)){
+				$id_workunit = mysql_insert_id();
+				$sql2 = "INSERT INTO tworkunit_task 
+								(id_task, id_workunit) VALUES ($task, $id_workunit)";
+				if (mysql_query($sql2))
+					$result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
+				else
+					$result_output = "<h3 class='error'>".__('Problemd adding workunit.')."</h3>";
+			}
+		}
+		mail_project (0, $id_user, $id_workunit, $task, "This is part of a multi-workunit assigment of $duration hours");
+	
+	// Single day workunit
 	} else {
-    	$sql = "INSERT INTO tworkunit 
-    	        (timestamp, duration, id_user, description, have_cost, id_profile, public) 
-	             VALUES	('$timestamp', $duration, '$wu_user', '$description', $have_cost, $role, $public)";
-    	if (mysql_query($sql)){
-    		$id_workunit = mysql_insert_id();
-    		$sql2 = "INSERT INTO tworkunit_task 
-    		        (id_task, id_workunit) VALUES ($task, $id_workunit)";
+		$sql = "INSERT INTO tworkunit 
+				(timestamp, duration, id_user, description, have_cost, id_profile, public) 
+				 VALUES	('$timestamp', $duration, '$wu_user', '$description', $have_cost, $role, $public)";
+		if (mysql_query($sql)){
+			$id_workunit = mysql_insert_id();
+			$sql2 = "INSERT INTO tworkunit_task 
+					(id_task, id_workunit) VALUES ($task, $id_workunit)";
 
-    		if (mysql_query($sql2)){
-    			$result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
-			    audit_db ($id_user, $config["REMOTE_ADDR"], "Spare work unit added", 
-			            "Workunit for $id_user added to Task ID #$task");
-                mail_project (0, $id_user, $id_workunit, $task);
-	    	}    
-    	} else 
-    		$result_output = "<h3 class='error'>".__('Problemd adding workunit.')."</h3>";
+			if (mysql_query($sql2)){
+				$result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
+				audit_db ($id_user, $config["REMOTE_ADDR"], "Spare work unit added", 
+						"Workunit for $id_user added to Task ID #$task");
+				mail_project (0, $id_user, $id_workunit, $task);
+			}	
+		} else 
+			$result_output = "<h3 class='error'>".__('Problemd adding workunit.')."</h3>";
 	}
-    insert_event ("PWU INSERT", $task, 0, $description);
+	insert_event ("PWU INSERT", $task, 0, $description);
 	echo $result_output;
-    		
+			
 }
 
 // --------------------
@@ -148,7 +148,7 @@ if ($operation != "create"){
 	echo "<b>".__('Time used')."</b>";
 	echo "<td class='datos'>";
 	echo "<input type='text' name='duration' value='0' size='7'>";
-    
+	
 
 	if (dame_admin($id_user) == 1){
 		echo "<td>";
@@ -165,28 +165,28 @@ if ($operation != "create"){
 	echo "<input type='checkbox' name='have_cost' value=1>";
 
 
-    
+	
 	echo "<td>";
 	echo "<b>".__('Public');
 	echo "<td>";
 	print_checkbox ("public", 1, $public, false, false);
-    
-    
-    echo "<tr><td>";
-    echo "<b>".__('Forward')."</b>";
-    echo "<a href='#' class='tip'>&nbsp;<span>";
-    echo __('If this checkbox is activated, propagation will be forward instead backward');
-    echo "</span></a>";
+	
+	
+	echo "<tr><td>";
+	echo "<b>".__('Forward')."</b>";
+	echo "<a href='#' class='tip'>&nbsp;<span>";
+	echo __('If this checkbox is activated, propagation will be forward instead backward');
+	echo "</span></a>";
 	echo "<td>";
 	echo "<input type=checkbox name='forward' value=1>";
-    
+	
 
 
-    echo "<td>";
+	echo "<td>";
 	echo "<b>".__('Split > 1day')."</b>";
-    echo "&nbsp;<a href='#' class='tip'>&nbsp;<span>";
-    echo __('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned');
-    echo "</span></a>";
+	echo "&nbsp;<a href='#' class='tip'>&nbsp;<span>";
+	echo __('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned');
+	echo "</span></a>";
 	echo "<td>";
 	echo "<input type=checkbox name='split' value=1>&nbsp;";
 
@@ -205,12 +205,11 @@ if ($operation != "create"){
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
-<script type="text/javascript" src="include/js/integria_date.js"></script>
 
 <script type="text/javascript">
 
 $(document).ready (function () {
-	configure_range_dates (null);
+	$("#text-start_date").datepicker ();
 	$("#textarea-description").TextAreaResizer ();
 });
 </script>
