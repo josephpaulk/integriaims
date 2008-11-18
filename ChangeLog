@@ -1,5 +1,25 @@
 2008-11-18  Esteban Sanchez  <estebans@artica.es>
 
+	* include/functions_form.php: Fixed an error in
+	combo_user_visible_for_me() when checking ACL.
+
+	* include/functions_incidents.php: Added filter_inventories(). Better
+	function documentation.
+	
+	* include/functions_inventories.php: Better function documentation.
+
+	* operation/inventories/inventory_search.php: Use
+	filter_inventories(). Removed variable values in form.
+
+	* operation/user_report/report_full.php: Tab style correction. Use
+	generic function. Addeed permission parameter when calling
+	combo_user_visible_for_me(). Code cleanup and table fixed when no
+	projects.
+
+	* operation/users/user_spare_workunit.php: Fixed table width for IE6.
+
+2008-11-18  Esteban Sanchez  <estebans@artica.es>
+
 	* operation/users/user_spare_workunit.php: Tab style correction. Fixed
 	datepicker control.
 

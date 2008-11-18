@@ -14,7 +14,7 @@
 // GNU General Public License for more details.
 
 /**
- * Filter all the incidents.
+ * Filter all the incidents and return a list of matching elements.
  *
  * This function only return the incidents that can be accessed for the current
  * user with IR permission.

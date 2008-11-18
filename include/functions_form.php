@@ -16,7 +16,7 @@
 
 global $config;
 
-function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0, $access = "IR", $return = false, $label = false) {
+function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = false, $access = "IR", $return = false, $label = false) {
 	global $config;
 	
 	if ($id_user == '')
@@ -25,7 +25,7 @@ function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = 0,
 	$userlist = array ();
 	$output = '';
 
-	$values = get_user_visible_users ($id_user, $access, true);
+	$values = get_user_visible_users ($config['id_user'], $access, true);
 	if ($any)
 		$values[''] = __('Any');
 

@@ -113,7 +113,7 @@ if ($operation != "create"){
 		echo __('Add spare workunit')."</h3>";
 	}
 
-	echo "<table width='700' class='databox'>";
+	echo "<table width='90%' class='databox'>";
 	if ($pass_id_task != "")
 		echo "<form name='nota' method='post' action='index.php?sec=projects&sec2=operation/users/user_spare_workunit&operation=addworkunit&id_project=$pass_id_project&id_task=$pass_id_task'>";
 	else
@@ -195,12 +195,10 @@ if ($operation != "create"){
 	echo print_textarea ('wu_description', 10, 30, "$description", '', true, false);
 	echo "</table>";
 
-	echo "<div style='width: 700px' class='button'>";
+	echo "<div style='width: 90%' class='button'>";
 	echo '<input name="addnote" type="submit" class="sub next" value="'.__('Add').'">';
 	echo "</form></div>";
-	
 }
-
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>

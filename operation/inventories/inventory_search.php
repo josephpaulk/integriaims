@@ -75,7 +75,7 @@ if ($delete_custom_search) {
 	}
 }
 
-require_once ('include/functions_inventories.php')
+require_once ('include/functions_inventories.php');
 
 $search = (bool) get_parameter ('search');
 
@@ -93,27 +93,7 @@ if ($search) {
 	$filter['id_inventory'] = (string) get_parameter ('search_id_inventory');
 	$filter['id_company'] = (int) get_parameter ('search_id_company');
 	
-	$sql_clause = '';
-	if ($search_id_contract)
-		$sql_clause .= sprintf (' AND id_contract = %d', $search_id_contract);
-	if ($search_id_product)
-		$sql_clause .= sprintf (' AND id_product = %d', $search_id_product);
-	if ($search_id_building)
-		$sql_clause .= sprintf (' AND id_building = %d', $search_id_building);
-	if ($search_ip_address != '')
-		$sql_clause .= sprintf (' AND ip_address LIKE "%%%s%%"', $search_ip_address);
-	if ($search_serial_number != '')
-		$sql_clause .= sprintf (' AND serial_number LIKE "%%%s%%"', $search_serial_number);
-	if ($search_part_number != '')
-		$sql_clause .= sprintf (' AND part_number LIKE "%%%s%%"', $search_part_number);
-	
-	$sql = sprintf ('SELECT id, name, description, comments, id_building, id_contract
-			FROM tinventory
-			WHERE (name LIKE "%%%s%%" OR description LIKE "%%%s%%")
-			%s LIMIT %d',
-			$search_string, $search_string,
-			$sql_clause, $config['limit_size']);
-	$inventories = get_db_all_rows_sql ($sql);
+	$inventories = filter_inventories ($filter);
 	if ($inventories === false) {
 		$inventories = array ();
 	}
@@ -121,23 +101,6 @@ if ($search) {
 	$short_table = (bool) get_parameter ('short_table');
 	$total_inventories = 0;
 	foreach ($inventories as $inventory) {
-		if ($inventory['id_contract']) {
-			/* Only check ACLs if the inventory has a contract */
-			if (! give_acl ($config['id_user'], get_inventory_group ($inventory['id']), "VR"))
-				continue;
-		}
-		
-		if ($search_id_company) {
-			$companies = get_inventory_affected_companies ($inventory['id'], false);
-			$found = false;
-			foreach ($companies as $company) {
-				if ($company['id'] == $search_id_company)
-					$found = true;
-			}
-			if (! $found)
-				continue;
-		}
-		
 		echo '<tr id="result-'.$inventory['id'].'">';
 		echo '<td><strong>#'.$inventory['id'].'</strong></td>';
 		echo '<td>'.$inventory['name'].'</td>';
@@ -193,34 +156,34 @@ $table->rowstyle[3] = 'text-align: right';
 $table->colspan = array ();
 $table->colspan[3][0] = 3;
 
-$table->data[0][0] = print_input_text ('search_string', $search_string, '', 20, 255,
+$table->data[0][0] = print_input_text ('search_string', '', '', 20, 255,
 			true, __('Search string'));
 
 $table->data[0][1] = print_select (get_products (),
-					'search_id_product', $search_id_product,
+					'search_id_product', 0,
 					'', __('All'), 0, true, false, false,
 					__('Product type'));
 $table->data[0][2] = print_select (get_companies (),
-			'search_id_company', $search_id_company,
+			'search_id_company', 0,
 			'', __('All'), 0, true, false, false,
 			__('Company'));
 
 $table->data[1][0] = print_select (get_buildings (),
-			'search_id_building', $search_id_building,
+			'search_id_building', '',
 			'', __('All'), 0, true, false, false,
 			__('Building'));
-$table->data[1][1] = print_input_text ('search_serial_number', $search_serial_number, '', 20, 255,
+$table->data[1][1] = print_input_text ('search_serial_number', '', '', 20, 255,
 			true, __('Serial number'));
 
 
 $table->data[1][2] = print_select (get_contracts (),
-			'search_id_contract', $search_id_contract,
+			'search_id_contract', 0,
 			'', __('All'), 0, true, false, false,
 			__('Contract'));
-$table->data[2][0] = print_input_text ('search_part_number', $search_part_number, '', 20, 255,
+$table->data[2][0] = print_input_text ('search_part_number', '', '', 20, 255,
 			true, __('Part number'));
 
-$table->data[2][1] = print_input_text ('search_ip_address', $search_ip_address, '', 20, 255,
+$table->data[2][1] = print_input_text ('search_ip_address', '', '', 20, 255,
 			true, __('IP address'));
 
 $table->data[3][0] = print_submit_button (__('Search'), 'search_button',
