@@ -97,42 +97,33 @@ if ($search) {
 	if ($inventories === false) {
 		$inventories = array ();
 	}
-	
+
+	// Build object tree
+	$tree = array ();
+	$tree_root = array ();
+	foreach ($inventories as $inventory) {
+		$id = $inventory['id'];
+		$id_parent = $inventory['id_parent'];
+
+		if (! isset ($tree[$id])) {
+			$tree[$id] = array ();
+		}
+
+		if ($id_parent > 0) {
+			if (! isset ($tree[$id_parent])) {
+				$tree[$id_parent] = array ();
+			}
+			
+			array_push ($tree[$id_parent], $id);
+		} else {
+			array_push ($tree_root, $id);
+		}
+	}
+
 	$short_table = (bool) get_parameter ('short_table');
 	$total_inventories = 0;
-	foreach ($inventories as $inventory) {
-		echo '<tr id="result-'.$inventory['id'].'">';
-		echo '<td><strong>#'.$inventory['id'].'</strong></td>';
-		echo '<td>'.$inventory['name'].'</td>';
-		
-		if (! $short_table) {
-			$incidents = get_incidents_on_inventory ($inventory['id'], false);
-			$total_incidents = sizeof ($incidents);
-			echo '<td>';
-			if ($total_incidents) {
-				$actived = 0;
-				foreach ($incidents as $incident) {
-					if ($incident['estado'] != 7 && $incident['estado'] != 6)
-						$actived++;
-				}
-				echo '<img src="images/info.png" /> <strong>'.$actived.'</strong> / '.$total_incidents;
-			}
-			echo '</td>';
-		}
-		$companies = get_inventory_affected_companies ($inventory['id'], false);
-		echo '<td>';
-		if (isset ($companies[0]['name']))
-			echo $companies[0]['name'];
-		echo '</td>';
-		
-		$building = get_building ($inventory['id_building']);
-		echo '<td>';
-		if ($building)
-			echo $building['name'];
-		echo '</td>';
-		
-		echo '<td>'.$inventory['description'].'</td>';
-		echo '</tr>';
+	foreach ($tree_root as $object) {
+		print_inventory_object ($object, $inventories, $tree, true, !$short_table);
 		$total_inventories++;
 	}
 	

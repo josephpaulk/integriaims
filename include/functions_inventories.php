@@ -155,7 +155,7 @@ function filter_inventories ($filters) {
 	if ($filters['part_number'] != '')
 		$sql_clause .= sprintf (' AND part_number LIKE "%%%s%%"', $filters['part_number']);
 	
-	$sql = sprintf ('SELECT id, name, description, comments, id_building, id_contract
+	$sql = sprintf ('SELECT id, name, description, comments, id_building, id_contract, id_parent
 			FROM tinventory
 			WHERE (name LIKE "%%%s%%" OR description LIKE "%%%s%%")
 			%s LIMIT %d',
@@ -185,12 +185,89 @@ function filter_inventories ($filters) {
 			if (! $found)
 				continue;
 		}
-		array_push ($inventories, $inventory);
+		$inventories[$inventory['id']] = $inventory;
 	}
 	
 	if (sizeof ($inventories) == 0)
 		return false;
 	return $inventories;
+}
+
+/**
+ * Prints the details of an inventory object and, optionally, its children. 
+ *
+ * @param id ID of the object.
+ * @param inventory Array containing inventory objects.
+ * @param tree Inventory object tree.
+ * @param show_children Show child nodes.
+ * @param show_incidents Show incident statistics.
+ * @param depth Call depth, used for indentation.
+ */
+function print_inventory_object ($id, $inventory, $tree, $show_children = false, $show_incidents = false, $depth = 0) {
+	global $config;
+
+	if (! isset ($inventory[$id])) {
+		return;
+	}
+
+	$object = $inventory[$id];
+
+	if ($object['id_contract']) {
+		/* Only check ACLs if the inventory has a contract */
+		if (! give_acl ($config['id_user'], get_inventory_group ($object['id']), "VR"))
+			continue;
+	}
+
+	echo '<tr id="result-'.$object['id'].'">';
+	echo '<td><strong>#'.$object['id'].'</strong></td>';
+	echo '<td>';
+	echo '<span class="indent">';
+	for ($i = 0; $i < $depth; $i++) {
+		echo '&nbsp;&nbsp;&nbsp;&nbsp;';
+	}
+	echo '</span>';
+	if ($depth > 0) {
+		echo '<img src="images/copy.png" />';
+	}
+	echo $object['name'] . '</td>';
+	
+	if ($show_incidents) {
+		$incidents = get_incidents_on_inventory ($object['id'], false);
+		$total_incidents = sizeof ($incidents);
+		echo '<td>';
+		if ($total_incidents) {
+			$actived = 0;
+			foreach ($incidents as $incident) {
+				if ($incident['estado'] != 7 && $incident['estado'] != 6)
+					$actived++;
+			}
+			echo '<img src="images/info.png" /> <strong>'.$actived.'</strong> / '.$total_incidents;
+		}
+		echo '</td>';
+	}
+	$companies = get_inventory_affected_companies ($object['id'], false);
+	echo '<td>';
+	if (isset ($companies[0]['name']))
+		echo $companies[0]['name'];
+	echo '</td>';
+	
+	$building = get_building ($object['id_building']);
+	echo '<td>';
+	if ($building)
+		echo $building['name'];
+	echo '</td>';
+	
+	echo '<td>'.$object['description'].'</td>';
+	echo '</tr>';
+	
+	// Print child objects
+	if (! $show_children || ! isset ($tree[$object['id']])) {
+		return;
+	}
+
+	foreach ($tree[$object['id']] as $child) {
+		print_inventory_object ($child, $inventory, $tree, $show_children, $show_incidents, $depth + 1);
+	}
 }
 
 ?>
