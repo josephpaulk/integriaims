@@ -161,13 +161,13 @@ if ($id) {
 
 
 if ($id) {
-	echo "<h1>".__('Object')." #$id";
+	echo "<h1>".__('Object')." #$id"."&nbsp;&nbsp;";
 	/* Delete incident */
 	if ($has_permission) {
 		/* Delete object */
-		echo '<form name="delete_object_form" class="delete" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
+		echo '<form name="delete_object_form" class="action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
 		print_input_hidden ('quick_delete', $id, false);
-		echo '<input type="image" class="cross" src="images/cross.png" title="' . __('Delete') .'">';
+		echo '<input type="image" class="action" src="images/cross.png" title="' . __('Delete') .'">';
 		echo '</form>';	
 	}
 	echo "</h1>";

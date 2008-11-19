@@ -204,6 +204,11 @@ function configure_incident_form (enable_ajax_form) {
 					$(".result").slideUp ('fast', function () {
 						$(".result").empty ().append (data).slideDown ();
 						$("#dialog-incident").dialog ("close");
+						if ($("#incident_status").attr ("value") == 6) {
+							$("[name=kb_form]").fadeIn ();
+						} else {
+							$("[name=kb_form]").fadeOut ();
+						}
 					});
 				},
 				"html"

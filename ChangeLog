@@ -1,3 +1,12 @@
+2008-11-19  Ramon Novoa  <rnovoa@artica.es>
+
+	* include/styles/integria.css,
+	  include/js/integria_incident_search.js,
+	  operation/incidents/incident_detail.php,
+	  operation/kb/manage_data.php,
+	  operation/inventories/inventory_detail.php: Added support for
+	  automatic KB item creation from resolved incidents.
+
 2008-11-19  Esteban Sanchez  <estebans@artica.es>
 
 	* include/js/integria_incident_search.js: Added a callback to

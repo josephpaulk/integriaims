@@ -402,17 +402,29 @@ if (! $id) {
 $has_permission = (give_acl ($config['id_user'], $id_grupo, "IM")  || ($usuario == $config['id_user']));
 
 if ($id) {
-	echo "<h1>".__('Incident')." #$id";
-	
+	echo "<h1>";
+	if ($affected_sla_id != 0) {
+		echo '<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">&nbsp;&nbsp;';
+	}
+
+	echo __('Incident')." #$id"."&nbsp;&nbsp;";
+
 	/* Delete incident */
 	if ($has_permission) {
-		echo '<form name="delete_incident_form" class="delete" method="post" action="index.php?sec=incident&sec2=operation/incidents/incident">';
+		echo '<form name="delete_incident_form" class="action" method="post" action="index.php?sec=incident&sec2=operation/incidents/incident">';
 		print_input_hidden ('quick_delete', $id, false);
-		echo '<input type="image" class="cross" src="images/cross.png" title="' . __('Delete') .'">';
+		echo '<input type="image" class="action" src="images/cross.png" title="' . __('Delete') .'">';
 		echo '</form>';
 	}
-	if ($affected_sla_id != 0) {
-		echo '&nbsp;<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">';
+	if (give_acl ($config['id_user'], $id_grupo, "KW")) {
+		echo '<form name="kb_form" ';
+		if ($estado != 6) {
+			echo 'style="display:none" ';
+		}
+		echo 'class="action" method="post" action="index.php?sec=kb&sec2=operation/kb/manage_data&create=1">';
+		print_input_hidden ('id_incident', $id, false);
+		echo '<input type="image" class="action" src="images/star.png" title="' . __('Add to KB') .'">';
+		echo '</form>';
 	}
 	echo "</h1>";
 } else {

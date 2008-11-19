@@ -1011,15 +1011,14 @@ label {
 	clear: none;
 }
 
-.cross {
+input.action {
 	border: none;
 	height: auto;
 	vertical-align: top;
-	margin-left: 15px;
 }
 
-form.delete {
-		display: inline;
+form.action {
+	display: inline;
 }
 
 div#incident-stats, div#inventories-stats {

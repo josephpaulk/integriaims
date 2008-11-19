@@ -150,6 +150,20 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id = -1;
 		$id_product = 1;
 		$id_category = 1;	
+		$id_incident = (int) get_parameter ("id_incident", 0);
+		if ($id_incident) {
+			// Get the product id of the first inventory object associated to the incident
+			$id_product_db = get_db_sql ('SELECT id_product FROM tinventory WHERE id = (SELECT id_inventory FROM tincident_inventory WHERE id_incident = ' . $id_incident . ' LIMIT 1)');
+			if ($id_product_db !== false) {
+				$id_product = $id_product_db;
+			}
+			// Get incident data
+			$incident = get_db_row_sql ('SELECT titulo, descripcion, epilog FROM tincidencia WHERE id_incidencia = ' . $id_incident);
+			if ($incident !== false) {
+				$title = $incident['titulo'];
+				$data = $incident['descripcion'] . "\n\n" .$incident['epilog'];
+			}
+		}
 	} else {
 		$id = get_parameter ("update",-1);
 		$row = get_db_row ("tkb_data", "id", $id);
