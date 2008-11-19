@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: index.es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-11-19 11:55+0100\n"
-"PO-Revision-Date: 2008-11-19 11:56+0100\n"
+"PO-Revision-Date: 2008-11-19 16:12+0100\n"
 "Last-Translator: Jorge Gonzalez <jorge.gonzalez@artica.es>\n"
 "Language-Team: Español <artica@artica.es>\n"
 "MIME-Version: 1.0\n"
@@ -2346,7 +2346,7 @@ msgstr "Incidente nº "
 
 #: ../../operation/side_menu.php:334
 msgid "Details for incident"
-msgstr "Detalles para el incidente"
+msgstr "Detalles del incidente"
 
 #: ../../operation/side_menu.php:347
 msgid "Users in incident"
@@ -2368,7 +2368,7 @@ msgstr "Crear objeto de inventario"
 
 #: ../../operation/side_menu.php:402
 msgid "Inventory #"
-msgstr "Inventario nº "
+msgstr "Nº de inventario "
 
 #: ../../operation/side_menu.php:434
 #: ../../operation/inventories/inventory.php:58
@@ -3087,7 +3087,8 @@ msgstr "Sin descripción disponible"
 #: ../../operation/incidents/incident_detail.php:315
 #: ../../operation/projects/task_files.php:67
 #: ../../operation/kb/manage_data.php:106
-msgid "File cannot be saved. Please contact Integria administrator about this error"
+msgid ""
+"File cannot be saved. Please contact Integria administrator about this error"
 msgstr ""
 "No se pudo guardar el fichero. Contacte con el administrador de Integria "
 "para solucionar este error."
@@ -3828,7 +3829,8 @@ msgid "Forward"
 msgstr "Hacia adelante"
 
 #: ../../operation/users/user_spare_workunit.php:162
-msgid "If this checkbox is activated, propagation will be forward instead backward"
+msgid ""
+"If this checkbox is activated, propagation will be forward instead backward"
 msgstr ""
 "Si esta casilla está activada la propagación se hará hacia adelante en lugar "
 "de hacia atrás"
@@ -4199,4 +4201,3 @@ msgstr "Crear categoría"
 #: ../../operation/kb/search.php:41
 msgid "Free text search"
 msgstr "Búsqueda libre de texto"
-

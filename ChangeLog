@@ -1,3 +1,13 @@
+2008-11-19  Jorge Gonzalez  <jorgegonz@artica.es>                             
+
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	translation.
+
+	* include/languages/index.pot: Updated po template.
+
+	* operation/inventories/manage_prod.php: Bug fixed (%s instead of
+	$id in a querry).
+
 2008-11-19  Esteban Sanchez  <estebans@artica.es>
 
 	* operation/inventories/inventory.php: Removed javascript debug.

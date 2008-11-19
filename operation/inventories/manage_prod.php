@@ -70,7 +70,7 @@ if ($update_product) {
 	
 	$sql = sprintf ('UPDATE tkb_product SET name = "%s", icon = "%s",
 		description = "%s", parent = %d
-		WHERE id = $id',
+		WHERE id = %s',
 		$name, $icon, $description, $parent, $id);
 	$result = process_sql ($sql);
 	if (! $result) {
