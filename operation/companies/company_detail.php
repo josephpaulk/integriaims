@@ -117,7 +117,7 @@ if ($id || $new_company) {
 	$table->data[0][0] = print_input_text ('name', $name, '', 60, 100, true, __('Company name'));
 	$table->data[1][0] = print_input_text ("fiscal_id", $fiscal_id, "", 10, 100, true, __('Fiscal ID'));
 	$table->data[1][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
-		'id_company_role', $id_company_role, '', 'Select', 0, true, false, false, __('Company Role'));
+		'id_company_role', $id_company_role, '', __('Select'), 0, true, false, false, __('Company Role'));
 
 	$table->data[2][0] = print_textarea ('address', 3, 1, $address, '', true, __('Address'));
 	$table->data[3][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));

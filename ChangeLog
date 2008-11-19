@@ -1,3 +1,16 @@
+2008-11-19  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
+
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	  translation.
+
+	* include/languages/index.pot: Updated po template.
+
+	* operation/manufacturers/manufacturer_detail.php: fixed bug that
+	  made unable to update details. Updated i18n infrastructure.
+
+	* operation/companies/company_detail.php: Updated i18n
+	  infrastructure.
+
 2008-11-19  Sancho Lerena <slerena@artica.es>
 
 	* integria_db.sql Added email to tgrupo, tproject, ttask, 

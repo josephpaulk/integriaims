@@ -64,7 +64,7 @@ if ($update_manufacturer) {
 
 	$sql = sprintf ('UPDATE tmanufacturer
 		SET address = "%s", id_sla = %d, id_company_role = %d,
-		comments = "%s", name = "%s"" WHERE id = %d',
+		comments = "%s", name = "%s" WHERE id = %d',
 		$address, $id_sla, $id_company_role, $comments, $name, $id);
 	$result = process_sql ($sql);
 	if ($result === false)
@@ -118,10 +118,10 @@ if ($id || $new_manufacturer) {
 	
 	$table->data[0][0] = print_input_text ("name", $name, "", 60, 100, true, __('Name'));
 	$table->data[1][0] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
-		'id_company_role', $id_company_role, '', 'Select', '0', true, false, false, __('Company role'));
+		'id_company_role', $id_company_role, '', __('Select'), '0', true, false, false, __('Company role'));
 	
 	$table->data[1][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
-		'id_sla', $id_sla, '', 'Select', '0', true, false, false, __('Base SLA'));
+		'id_sla', $id_sla, '', __('Select'), '0', true, false, false, __('Base SLA'));
 	$table->data[2][0] = print_textarea ("address", 4, 1, $address, '', true, __('Address'));
 	$table->data[3][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
 	
