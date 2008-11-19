@@ -145,7 +145,8 @@ if ($operation == 'insert') {
 				}
 			}
 		}
-		mail_project (0, $config['id_user'], $id_workunit, $task, "This is part of a multi-workunit assigment of $duration hours");
+		mail_project (0, $config['id_user'], $id_workunit, $id_task,
+			"This is part of a multi-workunit assigment of $duration hours");
 	} else {
 		// Single day workunit
 		$sql = sprintf ('INSERT INTO tworkunit 
