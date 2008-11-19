@@ -31,7 +31,8 @@ define ('INCIDENT_STATUS_CHANGED', 7);
 define ('INCIDENT_RESOLUTION_CHANGED', 8);
 define ('INCIDENT_NOTE_DELETED', 9);
 define ('INCIDENT_INVENTORY_ADDED', 10);
-define ('INCIDENT_USER_CHANGED', 10);
+define ('INCIDENT_USER_CHANGED', 17);
+define ('INCIDENT_DELETED', 18);
 
 define ('TASK_CREATED', 11);
 define ('TASK_UPDATED', 12);
@@ -51,6 +52,28 @@ define ('PROJECT_DISABLED', 23);
 define ('PROJECT_ACTIVATED', 24);
 define ('PROJECT_DELETED', 25);
 define ('PROJECT_TASK_ADDED', 26);
+
+// Incident status constants
+
+define ('STATUS_NEW', 1);
+define ('STATUS_UNCONFIRMED', 2);
+define ('STATUS_ASSIGNED', 3);
+define ('STATUS_REOPENED', 4);
+define ('STATUS_VERIFIED', 5);
+define ('STATUS_RESOLVED', 6);
+define ('STATUS_CLOSED', 7);
+
+// Incident resolution constants
+
+define ('RES_FIXED', 1);
+define ('RES_INVALID', 2);
+define ('RES_WONTFIX', 3);
+define ('RES_DUPLICATE', 4);
+define ('RES_WORKSFORME', 5);
+define ('RES_INCOMPLETE', 6);
+define ('RES_EXPIRED', 7);
+define ('RES_MOVED', 8);
+define ('RES_INPROCESS', 9);
 
 // --------------------------------------------------------------- 
 // give_acl ()
@@ -204,7 +227,7 @@ function get_tasks_count_in_project ($id_project) {
 * $id_inc	integer 	ID of incident
 **/
 
-function get_incident_wokunit_hours ($id_incident) {
+function get_incident_workunit_hours ($id_incident) {
 	global $config;
 	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_incident, tincidencia 
@@ -213,6 +236,56 @@ function get_incident_wokunit_hours ($id_incident) {
 			AND tincidencia.id_incidencia = %d', $id_incident);
 	return (int) get_db_sql ($sql);
 }
+
+/**
+* Return total hours assigned to incidents assigned to a task
+*
+* $id_task	integer 	ID of task
+**/
+
+function get_incident_task_workunit_hours ($id_task) {
+	global $config;
+	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
+			FROM tworkunit, tworkunit_incident, tincidencia 
+			WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
+			AND tworkunit_incident.id_workunit = tworkunit.id
+			AND tincidencia.id_task = %d', $id_task);
+	return (int) get_db_sql ($sql);
+}
+
+/**
+* Return total hours assigned to incidents assigned to tasks in a project
+*
+* $id_project	integer 	ID of project
+**/
+
+function get_incident_project_workunit_hours ($id_project) {
+	global $config;
+	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
+			FROM tworkunit, tworkunit_incident, tincidencia, ttask 
+			WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
+			AND tworkunit_incident.id_workunit = tworkunit.id
+			AND ttask.id_project = %d
+			AND ttask.id = tincidencia.id_task', $id_project);
+	return (int) get_db_sql ($sql);
+}
+
+
+
+/**
+* Return total number of incidents related to a task
+*
+* $id_task	integer 	ID of task
+**/
+
+function get_incident_task ($id_task) {
+	global $config;
+	$sql = sprintf ('SELECT COUNT(id_incidencia) 
+			FROM tincidencia 
+			WHERE id_task = %d', $id_task);
+	return (int) get_db_sql ($sql);
+}
+
 
 
 /**
@@ -339,18 +412,21 @@ function calculate_project_progress ($id_project){
 	global $config;
 	$sql = sprintf ('SELECT AVG(completion)
 			FROM ttask
-			WHERE id_project = %d
-			AND priority > 0',
+			WHERE id_project = %d',
 			$id_project);
 	return get_db_sql ($sql);
 }
 
-
-// --------------------------------------------------------------- 
-// Delete incident given its id and all its notes
-// --------------------------------------------------------------- 
+/**
+* Delete an incident
+*
+* Delete incident given its id and all its workunits
+* $id_incident integer 	ID of incident
+**/
+ 
 function borrar_incidencia ($id_incident) {
-	require("config.php");
+	global $config;
+
 	$sql = sprintf ('DELETE FROM tincidencia
 			WHERE id_incidencia = %d', $id_incident);
 	process_sql ($sql);
@@ -382,7 +458,7 @@ function borrar_incidencia ($id_incident) {
 		// Unlink all attached files for this incident
 		$id = $attachment["id_attachment"];
 		$name = $attachment["filename"];
-		unlink ($attachment_store."attachment/pand".$id."_".$name);
+		unlink ($config["homedir"]."/attachment/".$id."_".$name);
 	}
 	
 	$sql = sprintf ('DELETE FROM tattachment
@@ -391,7 +467,15 @@ function borrar_incidencia ($id_incident) {
 	$sql = sprintf ('DELETE FROM tincident_track
 			WHERE id_incident = %d', $id_incident);
 	process_sql ($sql);
+	incident_tracking ($id_incident, INCIDENT_DELETED, 0);
 }
+
+/**
+* Delete an inventory object. All depending data will 
+* deleted using SQL referencial integrity
+*
+* $id_inventory integer 	ID of inventory object
+**/
 
 // --------------------------------------------------------------- 
 // Delete an inventory object given its id
@@ -412,7 +496,6 @@ function update_user_contact ($id_user) {
 			$today, $id_user);
 	process_sql ($sql);
 }
-
 
 // ---------------------------------------------------------------
 // Returns Admin value (0 no admin, 1 admin)
@@ -640,6 +723,9 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 	case INCIDENT_USER_CHANGED:
 		$description = __('Assigned user changed');
 		$description .= ' -> '.get_db_value ('nombre_real', 'tusuario', 'id_usuario', $aditional_data);
+		break;
+	case INCIDENT_DELETED:
+		$description = __('Incident deleted');
 		break;
 	default:
 		$description = __('Unknown update');

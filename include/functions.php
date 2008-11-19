@@ -246,7 +246,7 @@ function byte_convert ($bytes) {
 
 function pagination ($count, $url, $offset ) {
 	global $config;
-	
+
 	$block_size = $config["block_size"];
 
 	/* 	URL passed render links with some parameter
@@ -344,6 +344,19 @@ function pagination ($count, $url, $offset ) {
 	// End div and layout
 	echo "</p></div>";
 	}
+}
+
+function print_array_pagination ($array, $url, $offset = 0){
+	global $config;
+
+	if (!is_array($array))
+		return array();
+
+	$count = sizeof($array);
+	$offset = get_parameter ("offset", 0);	
+	$output =  pagination ($count, $url, $offset );
+	$array = array_slice ($array, $offset, $config["block_size"]);
+	return $array;
 }
 
 // Render data in a fashion way :-)
@@ -550,7 +563,7 @@ function get_incident_resolutions () {
 }
 
 function ellipsize_string ($string, $len = 2) {
-	return substr ($string, 0, $len).'(....)'.substr ($string, strlen ($string) - $len, $len);
+	return substr ($string, 0, $len).'(..)'.substr ($string, strlen ($string) - $len, $len);
 }
 
 function print_priority_flag_image ($priority, $return = false) {

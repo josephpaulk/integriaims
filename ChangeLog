@@ -1,3 +1,85 @@
+2008-11-19  Sancho Lerena <slerena@artica.es>
+
+	* integria_db.sql Added email to tgrupo, tproject, ttask, 
+	tworkunit_task has SIGNED id's (to be used with vacations..)
+
+	* parche.sql: Uploaded to solve problems with 2.0-dev installs
+	that have UNSIGNED id's in task, project, etc. This should be
+	deleted shortly.
+
+	* upgrade.sql: Added contract_number in tcontract, and email in
+	tgrupo. Other changes in tconfig.
+
+	* lista_grupos.php, configurar_grupo.php: Added email to group setup.
+
+	* event.php: Style adjustement.
+
+	* setup.php: Removed email settings from this page. Added Autowu
+	parameters. Added help to other items.
+
+	* setup_mail.php: Added new setup page for email settings.
+
+	* configurar_usuario.php: Fixed javascript code that strip off
+	image filename / extension.
+
+	* lista_usuarios.php,
+	company_detail.php,
+	todo.php, 
+	operation/user.php, 
+	contact_detail.php,
+	manufacturer_detail.php, 
+	contract_detail.php: Added pagination.
+
+	* task.php, 
+	task_detail.php, 
+	project.php: Show WU from incidents related to tasks of project.
+
+	* task_incidents.php: New file, shows incidents related to current
+	task.
+
+	* report_full.php: New user report with all data (projects and incidents)
+	between specific dates. Also includes a print view.
+
+	* incident_work.php: renamed function get_incident_workunit_hours().
+
+	* kb/browse.php: Pagination added and changed layout. 
+
+	* kb/manage_data.php: Added pagination, changed layout.
+
+	* incident_detail.php: Show if incident is related to a task. 
+	Show link to task.
+
+	* incident_search.php: Show if incident is related to a task. 
+	Show link to task.
+
+	* config_process.php: Added $config["autowu_completion"].
+
+	* functions.php: Added print_array_pagination(), 
+	
+	* functions_calendar.php: Fix in human_time_comparation () that dont
+	return anything on dates > 6 months. Added get_working_days (). Fixed
+	function get_event_date().
+
+	* functions_db.php: Added INCIDENT_DELETED event. Added incident status
+	and resolutions constants. Added functions: get_incident_task_workunit_hours()
+	get_incident_project_workunit_hours (), get_incident_task(). 
+	Deletion of an incident dont't unlink properly attached files. 
+
+	* functions_form.php: combo_task_user() fixed and show part of project name
+	and show list sorted by Project. combo_task_user_participant() also show
+	information sorted by title..
+
+	* functions_graph.php: graph_workunit_project_user() has small problems
+	rendering data (< insted <=). Now gets end/start dates.
+
+	* integria_cron.php: Added checks for agenda, project ends, and task ends. 
+	Added email sending for max_opened incidents SLA check. TODO's pending here.
+
+	* integria.css: Added more padding space to generic TD. Was too tigth!.
+
+	* side_menu.php: Added new mail setup, Incidents for this task, 
+
+
 2008-11-18  Ramon Novoa  <rnovoa@artica.es>
 
 	* include/functions_inventories.php,

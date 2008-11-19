@@ -33,6 +33,7 @@ $id_user_default = "";
 $banner = "";
 $parent = "";
 $lang = "";
+$email = "";
 $forced_email = true;
 $creacion_grupo = (bool) get_parameter ('creacion_grupo');
 	
@@ -45,6 +46,7 @@ if ($id) {
 		$id_user_default = $group['id_user_default'];
 		$banner = $group['banner'];
 		$parent = $group['parent'];
+		$email = $group['email'];
 		$lang = $group['lang'];
 		$forced_email = (bool) $group['forced_email'];
 	} else {
@@ -59,7 +61,6 @@ echo '<h2>'.__('Group management').'</h2>';
 $table->width = '600px';
 $table->class = 'databox';
 $table->colspan = array ();
-$table->colspan[1][0] = 2;
 $table->colspan[2][0] = 2;
 $table->rowspan = array ();
 $table->rowspan[0][2] = 5;
@@ -75,16 +76,18 @@ if ($id && $banner != '') {
 }
 $table->data[0][2] .= '</span>';
 
-$table->data[1][0] = print_input_text ('url', $url, '', 50, 0, true , __('URL'));
+$table->data[1][0] = print_input_text ('url', $url, '', 40, 0, true , __('URL'));
+
+$table->data[1][1] = print_input_text ('email', $email, '', 15, 0, true , __('Email'));
 
 $table->data[2][0] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo ORDER BY nombre',
 	'parent', $parent, '', 'None', '', true, false, false, __('Parent'));
 
 $icons = list_files ('images/groups_small/', 'png', 0, true, '');
 $table->data[3][0] = print_select ($icons, 'icon', $icon, '', 'None', '', true, false, false, __('Icon'));
-$table->data[3][0] .= '<span id="icon_preview">';
+$table->data[3][0] .= '&nbsp;&nbsp;<span id="icon_preview">';
 if ($id && $icon != '') {
-	$table->data[3][0] .= ' <img src="images/groups_small/'.$icon.'" />';
+	$table->data[3][0] .= '<img src="images/groups_small/'.$icon.'" />';
 }
 $table->data[3][0] .= '</span>';
 

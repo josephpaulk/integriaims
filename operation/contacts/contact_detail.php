@@ -200,6 +200,9 @@ if ($id || $new_contact) {
 
 	$sql = "SELECT * FROM tcompany_contact $where_clause ORDER BY id_company, fullname";
 	$contacts = get_db_all_rows_sql ($sql);
+
+	$contacts = print_array_pagination ($contacts, "index.php?sec=inventory&sec2=operation/contacts/contact_detail");
+
 	if ($contacts !== false) {
 		unset ($table);
 		$table->width = "90%";

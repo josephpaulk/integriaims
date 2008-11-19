@@ -198,7 +198,12 @@ foreach ($incidents as $incident) {
 	
 	/* Workunits */
 	echo '<td>';
-	$timeused = get_incident_wokunit_hours ($incident["id_incidencia"]);
+	if ($incident["id_task"] > 0){
+		$id_project = get_db_value ("id_project", "ttask", "id", $incident["id_task"]);
+		$id_task = $incident["id_task"] ;
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'><img src='images/bricks.png' border=0></a>";
+	}
+	$timeused = get_incident_workunit_hours ($incident["id_incidencia"]);
 	$incident_wu = $in_wu = get_incident_count_workunits ($incident["id_incidencia"]);
 	if ($incident_wu > 0) {
 		echo '<img src="images/award_star_silver_1.png" />'.$timeused;

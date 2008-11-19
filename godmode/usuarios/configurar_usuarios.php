@@ -305,11 +305,12 @@ if ($modo == "edicion") { // Only show groups for existing users
 <script  type="text/javascript">
 $(document).ready (function () {
 	$("#avatar").change (function () {
-		icon = this.value.substr(0,this.value.length-4);
+		icon = this.value;
 		$("#avatar_preview").fadeOut ('normal', function () {
 			$(this).attr ("src", "images/avatars/"+icon).fadeIn ();
 		});
 	});
 });
 </script>
+
 

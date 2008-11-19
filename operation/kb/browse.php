@@ -72,43 +72,38 @@ if ($product != 0)
 if ($category != 0)
 	$sql_filter .= "AND id_category = $category ";
 
+$offset = get_parameter ("offset", 0);
 
-$sql1 = "SELECT * FROM tkb_data $sql_filter ORDER BY title, id_category, id_product";
+$count = get_db_sql("SELECT COUNT(id) FROM tkb_data $sql_filter");
+pagination ($count, "index.php?sec=kb&sec2=operation/kb/browse", $offset);
+
+$sql1 = "SELECT * FROM tkb_data $sql_filter ORDER BY title, id_category, id_product LIMIT $offset, ". $config["block_size"];
+
 $color =0;
 if ($result=mysql_query($sql1)){
 	echo '<table width="90%" class="listing">';
 
 	echo "<th>".__('Title')."</th>";
-	echo "<th>".__('Timestamp')."</th>";
 	echo "<th>".__('Category')."</th>";
 	echo "<th>".__('Product')."</th>";
-	echo "<th>".__('File')."</th>";
-	echo "<th>".__('User')."</th>";
+	echo "<th>".__('Timestamp')."</th>";
 	while ($row=mysql_fetch_array($result)){
 		echo "<tr>";
 		// Name
 		echo "<td valign='top'><b><a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$row["id"]."'>".$row["title"]."</a></b></td>";
 
-		// Timestamp
-		echo "<td class='f9' valign='top'>";
-		echo $row["timestamp"];
-
 		// Category
-		echo "<td>";
+		echo "<td class=f9>";
 		echo get_db_sql ("SELECT name FROM tkb_category WHERE id = ".$row["id_category"]);
 
 		// Product
-		echo "<td>";
+		echo "<td class=f9>";
 		echo get_db_sql ("SELECT name FROM tkb_product WHERE id = ".$row["id_product"]);
 
-		// Attach ?
-		echo "<td>";
-		if (get_db_sql ("SELECT count(*) FROM tattachment WHERE id_kb = ".$row["id"]) != 0)
-			echo "<img src='images/disk.png'>";
+		// Timestamp
+		echo "<td class='f9' valign='top'>";
+		echo human_time_comparation($row["timestamp"]);
 
-		// User
-		echo "<td class='f9' >";
-		echo $row["id_user"];
 
 	}
 	echo "</table>";

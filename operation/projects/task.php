@@ -67,10 +67,13 @@ if ($operation == 'move') {
 
 // MAIN LIST OF TASKS
 
-echo '<h2>'.$project['name'].' &raquo; '.__('Task management').'</h2>';
-
 $search_id_group = (int) get_parameter ('search_id_group');
 $search_text = (string) get_parameter ('search_text');
+
+
+echo '<h2>'.$project['name'].' &raquo; '.__('Task management');
+echo "&nbsp;&nbsp;<a title='"._("Report")."'  href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project&search_id_group=$search_id_group&search_text=$search_text&clean_output=1'><img src='images/html.png'></a>";
+echo '</h2><br>';
 
 $where_clause = ' 1=1 ';
 if ($search_text != "")
@@ -125,14 +128,14 @@ $table->style[7] = "font-size: 9px";
 $table->style[8] = "font-size: 9px";
 
 // Show headers
-echo "<table width='95%' class='listing'>";
+echo "<table width='90%' class='listing'>";
 echo "<tr>";
 $color = 1;
 show_task_tree ($table, $id_project, 0, 0, $where_clause);
 
 print_table ($table);
 
-
+/*
 if (give_acl ($config['id_user'], 0, 'PW')) {
 	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
@@ -141,7 +144,7 @@ if (give_acl ($config['id_user'], 0, 'PW')) {
 	print_submit_button (__('New task'), 'crt_btn', false, 'class="sub next"');
 	echo '</div>';
 	echo '</form>';
-}
+}*/
 
 
 function show_task_row ($table, $id_project, $task, $level) {
@@ -181,6 +184,12 @@ function show_task_row ($table, $id_project, $task, $level) {
 	$timeuser = get_task_workunit_hours ( $task["id"]);
 	$data[4] = $timeuser ? $timeuser : '--';
 	
+	$wu_incidents = get_incident_task_workunit_hours ($task["id"]);
+
+	
+	if ($wu_incidents > 0)
+	$data[4] .= " (+ $wu_incidents) ";
+
 	// Costs (client / total)
 	$costdata = format_numeric (task_workunit_cost ($task["id"], 1));
 	$data[5] = $costdata ? $costdata.' '.$config['currency'] : '--';

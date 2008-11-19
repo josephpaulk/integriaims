@@ -464,7 +464,7 @@ if ($disabled) {
 		'', true, false, false, __('Priority'));
 }
 
-$table->data[1][1] .= print_priority_flag_image ($priority, true);
+$table->data[1][1] .= '&nbsp;'. print_priority_flag_image ($priority, true);
 
 $table->data[1][2] = combo_incident_resolution ($resolution, $disabled, true);
 $parent_name = $id_parent ? (__('Incident').' #'.$id_parent) : __('None');
@@ -475,11 +475,17 @@ $table->data[1][3] .= print_input_hidden ('id_parent', $id_parent, true);
 
 // Show link to go parent incident
 if ($id_parent)
-	$table->data[1][3] .= '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id_parent.'"><img src="images/go.png" /></a>';
+	$table->data[1][3] .= '&nbsp;<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id_parent.'"><img src="images/go.png" /></a>';
 
 $table->data[2][0] = combo_incident_origin ($origen, $disabled, true);
 $table->data[2][1] = combo_incident_types ($id_incident_type, $disabled, true);
 $table->data[2][2] = combo_task_user ($id_task, $config["id_user"], $disabled, false, true);
+
+if ($id_task > 0){
+	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
+	$table->data[2][2] .= "&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>";
+	$table->data[2][2] .= "<img src='images/bricks.png'></a>";
+}
 
 if ($has_permission) {
 	$table->data[4][0] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo, true);

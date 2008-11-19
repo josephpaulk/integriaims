@@ -159,6 +159,8 @@ if ($id || $new_company) {
 	$sql = "SELECT * FROM tcompany $where_clause ORDER BY name";
 	$companies = get_db_all_rows_sql ($sql);
 	
+	$companies = print_array_pagination ($companies, "index.php?sec=inventory&sec2=operation/companies/company_detail");
+
 	if ($companies !== false) {
 		$table->width = "90%";
 		$table->class = "listing";

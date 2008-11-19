@@ -120,7 +120,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 // ==================
 if (isset($_GET["delete_data"])){ // if delete
 	$id = get_parameter ("delete_data",0);
-	$kb_title = get_db_sqlfree_field  ("SELECT title FROM tkb_data WHERE id = $id ");
+	$kb_title = get_db_sql ("SELECT title FROM tkb_data WHERE id = $id ");
 
 	$sql_delete= "DELETE FROM tkb_data WHERE id = $id";		
 	$result=mysql_query($sql_delete);
@@ -175,10 +175,10 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	echo __('Title');
 	echo "<td class=datos>";
-	echo "<input type=text size=60 name='title' value='$title'>";
+	echo "<input type=text size=70 name='title' value='$title'>";
 
 	echo "<tr>";
-	echo "<td class=datos2>";
+	echo "<td class=datos2 valign=top>";
 	echo __('Data');
 	echo "<td class=datos2>";
 	print_textarea ("data", 15, 50, $data, '', false,false);
@@ -249,17 +249,18 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	echo "<h2>".__('KB Data management')." &raquo; ".__('Defined data')."</h2>";
 	$sql1='SELECT * FROM tkb_data ORDER BY title, id_category, id_product';
-	if ($result=mysql_query($sql1)){
+	$kb = get_db_all_rows_sql ($sql1);
+	if (sizeof($kb) > 0){
 		echo '<table width="90%" class="listing">';
-
 		echo "<th>".__('Title')."</th>";
 		echo "<th>".__('Timestamp')."</th>";
 		echo "<th>".__('Category')."</th>";
 		echo "<th>".__('Product')."</th>";
-		echo "<th>".__('File')."</th>";
 		echo "<th>".__('User')."</th>";
 		echo "<th>".__('Delete')."</th>";
-		while ($row=mysql_fetch_array($result)){
+
+		$kb = print_array_pagination ($kb, "index.php?sec=kb&sec2=operation/kb/manage_data");
+		foreach ($kb as $row){
 			echo "<tr>";
 			// Name
 			echo "<td valign='top'><b><a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$row["id"]."'>".$row["title"]."</a></b></td>";
@@ -269,24 +270,19 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			echo $row["timestamp"];
 
 			// Category
-			echo "<td>";
+			echo "<td class='f9'>";
 			echo get_db_sql ("SELECT name FROM tkb_category WHERE id = ".$row["id_category"]);
 
 			// Product
-			echo "<td>";
+			echo "<td class='f9'>";
 			echo get_db_sql ("SELECT name FROM tkb_product WHERE id = ".$row["id_product"]);
-
-			// Attach ?
-			echo "<td>";
-			if (get_db_sql ("SELECT count(*) FROM tattachment WHERE id_kb = ".$row["id"]) != 0)
-				echo "<img src='images/disk.png'>";
 
 			// User
 			echo "<td class='f9' align='center'>";
 			echo $row["id_user"];
 
 			// Delete
-			echo "<td class='f9' align='center' valign='top'>";
+			echo "<td class='f9' align='center' >";
 			echo "<a href='index.php?sec=kb&
 						sec2=operation/kb/manage_data&
 						delete_data=".$row["id"]."' 
@@ -296,10 +292,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		}
 		echo "</table>";
 	}			
-	echo '<div style="width: 90%" class="button">';
-	echo "<form method=post action='index.php?sec=kb&sec2=operation/kb/manage_data&create=1'>";
-	print_submit_button (__('Create data'), 'crt_btn', false, 'class="sub next"');
-	echo "</form></div>";
+	echo "</form>";
 } // end of list
 ?>
 

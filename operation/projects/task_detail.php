@@ -240,6 +240,12 @@ $table->data[5][0] = print_input_text ('hours', $hours, '', 5, 5, true, __('Esti
 
 if ($id_task != -1) {
 	$table->data[5][1] = print_label (__('Worked hours'), '', '', true, get_task_workunit_hours ($id_task).' '.__('Hours'));
+
+	$incident_wu = get_incident_task_workunit_hours ($id_task);
+	if ($incident_wu > 0)
+		$table->data[5][1] .= " ( + $incident_wu )";
+	
+
 }
 
 $table->data[6][0] = print_input_text ('estimated_cost', $estimated_cost, '', 7,

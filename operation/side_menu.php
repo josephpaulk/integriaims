@@ -92,14 +92,6 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_tracking&id_project=$id_project'>".__('Project tracking')."</a></li>";
 		
-		if (give_acl ($config["id_user"], 0, "PM") || $config["id_user"] == $project_manager) {
-			// Create task
-			if ($sec2 == "operation/projects/task_detail" && !$id_task)
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>".__('New task')."</a></li>";
-		}
 		// Tasks
 		$task_number = get_tasks_count_in_project ($id_project);
 		if ($task_number > 0) {
@@ -108,6 +100,15 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 			else
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>".__('Task list')." ($task_number)</a></li>";
+		}
+
+		if (give_acl ($config["id_user"], 0, "PM") || $config["id_user"] == $project_manager) {
+			// Create task
+			if ($sec2 == "operation/projects/task_detail" && !$id_task)
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>".__('New task')."</a></li>";
 		}
 
 		// Gantt graph
@@ -225,6 +226,19 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task'>".__('Workunits');
 			echo " ($totalhours ".__('Hours').")";
+			echo "</a></li>";
+		}
+
+		// Incidents for this task
+		$task_incidents = get_incident_task($id_task);
+		if ( $task_incidents > 0){
+			$task_incidents_wu = get_incident_task_workunit_hours ($id_task);
+			if ($sec2 == "operation/projects/task_incidents")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_incidents&id_project=$id_project&id_task=$id_task'>".__('Incidents');
+			echo " ($task_incidents / $task_incidents_wu ".__('Hours').")";
 			echo "</a></li>";
 		}
 
@@ -640,7 +654,15 @@ if ($sec == "godmode") {
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".__('Setup')."</a></li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".__('General setup')."</a></li>";
+
+	// Mail Seetup
+	if ($sec2 == "godmode/setup/setup_mail")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_mail'>".__('Mail setup')."</a></li>";
+
 
 	// Update Manager
 	if ($sec2 == "godmode/updatemanager/main")

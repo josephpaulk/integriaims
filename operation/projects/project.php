@@ -227,8 +227,15 @@ foreach ($projects as $project) {
 	$data[4] = get_db_value ('COUNT(*)', 'trole_people_project', 'id_project', $project['id']);
 
 	// Time wasted
-	$data[5] = format_numeric (get_project_workunit_hours ($project['id'])).' '.__('Hours');
+	$data[5] = format_numeric (get_project_workunit_hours ($project['id']));
+
 	
+	
+	$project_wu_inc = get_incident_project_workunit_hours ($project["id"]);
+	if ($project_wu_inc  > 0 )
+		$data[5] .= " / ".$project_wu_inc;
+	$data[5] .= " ".__('hr');
+
 	// Costs (client / total)
 	$data[6] = format_numeric (project_workunit_cost ($project['id'], 1)).' '.$config['currency'];
 	

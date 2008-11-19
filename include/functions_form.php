@@ -337,17 +337,17 @@ function combo_task_user ($actual, $id_user, $disabled = 0, $show_vacations = 0,
 	if ($show_vacations == 1)
 		$values[-1] = __('Vacations');
 
-	$sql = sprintf ('SELECT ttask.id, ttask.name
-			FROM ttask, trole_people_task
-			WHERE ttask.id = trole_people_task.id_task
+	$sql = sprintf ('SELECT ttask.id, ttask.name as tname, tproject.name as pname
+			FROM tproject, ttask, trole_people_task
+			WHERE ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.id = trole_people_task.id_task
 			AND trole_people_task.id_user = "%s"
-			ORDER BY 2',
+			ORDER BY pname',
 			$id_user);
 	$tasks = get_db_all_rows_sql ($sql);
 	if ($tasks === false)
 		$tasks = array ();
 	foreach ($tasks as $task) {
-		$values[$task['id']] = $task['name'];
+		$values[$task['id']] = substr($task['pname'],0,17). " / ".substr($task['tname'],0,22);
 	}
 	$output = print_select ($values, 'task_user', $actual, '', '',
 				0, true, false, false, __('Task'));
@@ -369,13 +369,13 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 		$values[-3] = "(*) ".__('Not justified');
 	}
 	
-	$sql = sprintf ('SELECT DISTINCT (ttask.id), CONCAT(tproject.name," / ",ttask.name)
+	$sql = sprintf ('SELECT DISTINCT (ttask.id), CONCAT(tproject.name," / ",ttask.name) as title
 			FROM ttask, trole_people_task, tproject
 			WHERE (ttask.id_project = tproject.id
 			AND tproject.disabled = 0
 			AND ttask.id = trole_people_task.id_task
 			AND trole_people_task.id_user = "%s") 
-			ORDER BY ttask.id_project', $id_user);
+			ORDER BY title', $id_user);
 	
 	$tasks = get_db_all_rows_sql ($sql);
 	foreach ($tasks as $task){

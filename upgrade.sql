@@ -1,3 +1,4 @@
+alter table tconfig MODIFY value TEXT;
 alter table tworkunit MODIFY locked varchar(80) default "";
 
 ALTER TABLE tagenda ADD FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
@@ -31,6 +32,7 @@ ALTER TABLE tevent ADD FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
 
 ALTER TABLE tgrupo ADD `banner` varchar(150) default NULL;
 ALTER TABLE tgrupo ADD `url` varchar(150) default NULL;
+ALTER TABLE tgrupo ADD `email` varchar(150) default NULL;
 ALTER TABLE tgrupo ADD `lang` varchar(10) default NULL;
 ALTER TABLE tgrupo ADD `id_user_default` varchar(60) NOT NULL default '';
 ALTER TABLE tgrupo ADD `forced_email` tinyint(1) unsigned NOT NULL DEFAULT 1;
@@ -160,6 +162,7 @@ CREATE TABLE `tcompany_contact` (
 CREATE TABLE `tcontract` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
+  `contract_number` varchar(100) NOT NULL default '',
   `description` text NULL default NULL,
   `date_begin` date NOT NULL default '0000-00-00',
   `date_end` date NOT NULL default '0000-00-00',
@@ -340,3 +343,17 @@ CREATE TABLE `tproject_track` (
   FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+ALTER TABLE tgrupo ADD `email` varchar(128) default '';
+
+CREATE TABLE `tinventory_contact` (
+  `id_inventory` mediumint(8) unsigned NOT NULL,
+  `id_company_contact` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id_inventory`, `id_company_contact`),
+  FOREIGN KEY (`id_company_contact`) REFERENCES tcompany_contact(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+INSERT INTO `um_tupdate_settings` VALUES  ('current_update', '0'), ('customer_key', 'INTEGRIA-FREE'), ('keygen_path', '/usr/share/integria/util/keygen'), ('update_server_host', 'www.artica.es'), ('update_server_port', '80'), ('update_server_path', '/integriaupdate/server.php'), ('updating_binary_path', 'Path where the updated binary files will be stored'), ('updating_code_path', 'Path where the updated code is stored'), ('dbname', ''), ('dbhost', ''), ('dbpass', ''), ('dbuser', ''), ('proxy', ''), ('proxy_port', ''), ('proxy_user', ''), ('proxy_pass', '');

@@ -163,6 +163,9 @@ if ($id || $new_manufacturer) {
 	
 	$sql = "SELECT * FROM tmanufacturer $where_clause ORDER BY name";
 	$manufacturers = get_db_all_rows_sql ($sql);
+
+	$manufacturers = print_array_pagination ($manufacturers, "index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail");
+
 	if ($manufacturers !== false) {
 		unset ($table);
 		$table->width = "90%";

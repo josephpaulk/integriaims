@@ -134,6 +134,13 @@ function check_daily_task () {
  * @param $incident Incident array to check
  */
 function check_sla_min ($incident) {
+
+	// TODO: Send and email if SLA turns red AND before affected_sla_id = 0
+	// AND sla_disabled = 0.
+
+	// TODO: Check if in notification period $config["notification_period"]
+	// an email has been sent. If not, sent it.
+
 	check_incident_sla_min_response ($incident['id_incidencia']);
 }
 
@@ -143,6 +150,13 @@ function check_sla_min ($incident) {
  * @param $incident Incident array to check
  */
 function check_sla_max ($incident) {
+
+	// TODO: Send and email if SLA turns red AND before affected_sla_id = 0
+	// AND sla_disabled = 0.
+
+	// TODO: Check if in notification period $config["notification_period"]
+	// an email has been sent. If not, sent it.
+
 	check_incident_sla_max_response ($incident['id_incidencia']);
 }
 
@@ -162,23 +176,42 @@ foreach ($slas as $sla) {
 	if ($inventories === false)
 		$inventories = array ();
 	
+	$noticed_groups = array();
 	foreach ($inventories as $inventory) {
-		$sql = sprintf ('SELECT tincidencia.id_incidencia
+		$sql = sprintf ('SELECT tincidencia.id_incidencia, tincidencia.id_grupo 
 			FROM tincidencia, tincident_inventory
 			WHERE tincidencia.id_incidencia = tincident_inventory.id_incident
 			AND tincident_inventory.id_inventory = %d
+			AND affected_sla_id = 0 
+			AND sla_disabled = 0  
 			AND estado NOT IN (6,7)', $inventory['id']);
 		
-		$opened_incidents = get_db_sql ($sql);
-		if ($opened_incidents <= $sla['max_incidents']) 
+		$opened_incidents = get_db_all_rows_sql ($sql);
+	
+		if (sizeof($opened_incidents) <= $sla['max_incidents']) 
 			continue;
-		
-		/* There are too many open incidents */
-		$sql = sprintf ('UPDATE tincidencia
-			SET affected_sla_id = %d
-			WHERE id_incidencia = %d',
-			$id_sla,
-			$incident['id_incidencia']);
+		foreach ($opened_incidents as $incident_item){
+			/* There are too many open incidents */
+			$sql = sprintf ('UPDATE tincidencia
+				SET affected_sla_id = %d
+				WHERE id_incidencia = %d',
+				$incident_item['id_incidencia']);
+
+
+			// TODO: Check if in notification period $config["notification_period"]
+			// an email has been sent. If not, sent it.
+
+			// Notify by mail for max. incidents opened (ONCE) to this 
+			// the group email, if defined, if not, to default user.
+
+			if (!isset($noticed_groups[$incident_item['id_group']])){
+				$noticed_groups[$incident_item['id_group']] = 1;			
+				$group = get_db_row ("tgrupo", "id_grupo", $incident_item['id_group']);
+				$nombre = $group['nombre'];
+				$email = $group['email'];
+				$mail_description = "Opened incidents limit for this group has been exceeded. Please check opened incidentes ASAP.\n";
+				integria_sendmail ($email, "[".$config["sitename"]."] Openened incident limit reached ($nombre)",  $mail_description );
+			}
 	}
 }
 

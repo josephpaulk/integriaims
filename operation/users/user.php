@@ -25,7 +25,7 @@ $id_user =$_SESSION["id_usuario"];
 
 echo "<h2>".__('Integria users')."</h2>";
 
-$table->width = '100%';
+$table->width = '90%';
 $table->class = 'listing';
 $table->data = array ();
 $table->head = array ();
@@ -35,7 +35,11 @@ $table->head[2] = __('Profile');
 $table->head[3] = __('Name');
 $table->head[4] = __('Description');
 
+
 $users = get_user_visible_users (0, "IR", false);
+
+$users = print_array_pagination ($users, "index.php?sec=users&sec2=operation/users/user");
+
 foreach ($users as $user) {
 	$data = array ();
 	

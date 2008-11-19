@@ -239,7 +239,6 @@ textarea {
 }
 
 input.button {
-	margin: 0;
 	font: normal 0.9em Arial, sans-serif;
 	background: #FFF;
 	padding: 2px 3px;
@@ -633,8 +632,11 @@ input.people {
 	background: #e5e5e5 url(../../images/group.png) no-repeat right 3px;
 }
 
-td {
-	padding: 1px 1px 1px 1px;
+td {	
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 5px;
+	padding-right: 2px;
 }
 
 td.datos3 {

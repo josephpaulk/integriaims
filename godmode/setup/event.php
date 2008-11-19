@@ -39,6 +39,10 @@ $table->head[1] = __('User');
 $table->head[2] = __('Extended info');
 $table->head[3] = __('Timestamp');
 $table->data = array ();
+$table->style[3] = "font-size: 9px; width: 110px;";
+$table->style[2] = "font-size: 9px; ";
+$table->style[0] = "width: 200px;";
+
 
 $sql = sprintf ('SELECT * FROM tevent
 	ORDER by timestamp

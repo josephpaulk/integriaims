@@ -197,6 +197,9 @@ if ($id | $new_contract) {
 	
 	$sql = "SELECT * FROM tcontract $where_clause ORDER BY name, id_company";
 	$contracts = get_db_all_rows_sql ($sql);
+
+	$contracts = print_array_pagination ($contracts, "index.php?sec=inventory&sec2=operation/contracts/contract_detail");
+
 	if ($contracts !== false) {
 		
 		$table->width = "90%";

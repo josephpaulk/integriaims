@@ -50,14 +50,15 @@ if ($create_group) {
 	$name = (string) get_parameter ('name');
 	$icon = (string) get_parameter ('icon');
 	$url = (string) get_parameter ('url');
+	$email = (string) get_parameter ('email');
 	$banner = (string) get_parameter ('banner');
 	$lang = (string) get_parameter ('lang', 'en');
 	$forced_email = (bool) get_parameter ('forced_email');
 	$id_user_default = (string) get_parameter ('id_user_default');
 
 	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, lang,
-		banner, url, id_user_default) 
-		VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s")',
+		banner, url, id_user_default, email) 
+		VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s")',
 		$name, $icon, $forced_email, $lang, $banner, $url, $id_user_default);
 	$id = process_sql ($sql, 'insert-id');	
 	if ($id === false)
@@ -75,13 +76,14 @@ if ($update_group) {
 	$url = (string) get_parameter ('url');
 	$banner = (string) get_parameter ('banner');
 	$lang = (string) get_parameter ('lang', 'en');
+	$email = (string) get_parameter ('email');
 	$forced_email = (bool) get_parameter ('forced_email');
 	$id_user_default = (string) get_parameter ('id_user_default');
 
 	$sql = sprintf ('UPDATE tgrupo
-		SET nombre = "%s", icon = "%s", url = "%s", forced_email = %d,
-		banner = "%s", lang = "%s", id_user_default = "%s" WHERE id_grupo = %d',
-		$name, $icon, $url, $forced_email, $banner,
+		SET nombre = "%s", icon = "%s", url = "%s", forced_email = %d, email = "%s"
+		, banner = "%s", lang = "%s", id_user_default = "%s" WHERE id_grupo = %d',
+		$name, $icon, $url, $forced_email, $email, $banner,
 		$lang, $id_user_default, $id);
 	$result = process_sql ($sql);
 	if ($result === false)
@@ -119,6 +121,9 @@ $table->size = array ();
 $table->size[3] = '40px';
 
 $groups = get_db_all_rows_in_table ('tgrupo', 'nombre');
+
+$groups = print_array_pagination ($groups, "index.php?sec=users&sec2=operation/users/user");
+
 if ($groups === false)
 	$groups = array ();
 foreach ($groups as $group) {

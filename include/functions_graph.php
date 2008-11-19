@@ -97,16 +97,19 @@ function graph_workunit_user ($width, $height, $id_user, $date_from ){
 // Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
 // ===============================================================================
 
-function graph_workunit_project_user ($width, $height, $id_user, $date_from){
+function graph_workunit_project_user ($width, $height, $id_user, $date_from, $date_to = 0){
 	require ("../include/config.php");
-	
-	$date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
+	if ($date_to == 0){
+		echo $date_to;
+		$date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
+	}
+
 	$res = mysql_query("SELECT SUM(duration), tproject.name 
 					FROM tworkunit, tworkunit_task, ttask, tproject  
 					WHERE tworkunit.id_user = '$id_user' AND 
 					tworkunit.id = tworkunit_task.id_workunit AND 
-					tworkunit.timestamp > '$date_from' AND 
-			tworkunit.timestamp < '$date_to' AND
+					tworkunit.timestamp >= '$date_from' AND 
+					tworkunit.timestamp <= '$date_to' AND
 					tworkunit_task.id_task = ttask.id AND
 					tproject.id = ttask.id_project 
 					GROUP BY tproject.name ORDER BY SUM(duration) DESC");
@@ -861,7 +864,7 @@ elseif ($_GET["type"] == "histogram")
 elseif ($_GET["type"] == "workunit_user")
 	graph_workunit_user ($width, $height, $id_user, $date_from);
 elseif ($_GET["type"] == "workunit_project_user")
-	graph_workunit_project_user ($width, $height, $id_user, $date_from);
+	graph_workunit_project_user ($width, $height, $id_user, $date_from, $date_to);
 elseif ($_GET["type"] == "project_tree")
 	project_tree ($id_project, $id_user);
 elseif ($_GET["type"] == "all_project_tree")

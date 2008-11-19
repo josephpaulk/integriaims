@@ -17,7 +17,7 @@
 global $config;
 
 // Integria version
-$config["build"]="081112";
+$config["build"]="081118";
 $config["version"]="v2.0-dev";
 $config["build_version"] = $config["build"];
 
@@ -91,6 +91,9 @@ if (!isset($config["notification_period"]))
 
 if (!isset ($config["language_code"]))
 	$config["language_code"] = "en";
+
+if (!isset ($config["autowu_completion"]))
+	$config["autowu_completion"] = "0";
 
 if (!isset ($config["FOOTER_EMAIL"]))
 	$config["FOOTER_EMAIL"] = __('Please do NOT answer this email, it has been automatically created by Integria (http://integria.sourceforge.net).');

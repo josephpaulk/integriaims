@@ -40,6 +40,7 @@ CREATE TABLE `tgrupo` (
   `parent` mediumint(8) unsigned NOT NULL default 0,
   `id_user_default` varchar(60) NOT NULL default '',
   `forced_email` tinyint(1) unsigned NOT NULL DEFAULT 1,
+  `email` varchar(128) default '',
   PRIMARY KEY  (`id_grupo`),
   FOREIGN KEY (`id_user_default`) REFERENCES tusuario(`id_usuario`)
      ON UPDATE CASCADE ON DELETE SET default
@@ -58,7 +59,7 @@ CREATE TABLE `tproject_group` (
 -- New tables created 23/04/07 for project management
 
 CREATE TABLE `tproject` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+  `id` int(10) signed NOT NULL auto_increment,
   `name` varchar(240) NOT NULL default '',
   `description` mediumtext NOT NULL,
   `start` date NOT NULL default '0000-00-00',
@@ -74,8 +75,8 @@ CREATE TABLE `tproject` (
 );
 
 CREATE TABLE `ttask` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `id_project` int(10) unsigned NOT NULL default 0,
+  `id` int(10) signed NOT NULL auto_increment,
+  `id_project` int(10) signed NOT NULL default 0,
   `id_parent_task` int(10) unsigned NOT NULL default '0',
   `name` varchar(240) NOT NULL default '',
   `description` mediumtext NOT NULL,
@@ -297,7 +298,7 @@ CREATE TABLE `tworkunit` (
 
 CREATE TABLE `tworkunit_task` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `id_task` int(10) unsigned NOT NULL default '0',
+  `id_task` int(10) signed NOT NULL default '0',
   `id_workunit` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)

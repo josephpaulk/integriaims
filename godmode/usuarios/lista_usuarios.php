@@ -40,7 +40,33 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 		echo "<h3 class='suc'>".__('User successfully deleted')."</h3>";
 }
 
+$offset = get_parameter ("offset", 0);
+$search_text = get_parameter ("search_text", "");
+
 echo '<h2>'.__('User management') . '</h2>';
+
+echo "<table class='blank'><form name='bskd' method=post action='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>";
+echo "<td>";
+echo __('Search text');
+echo "<td>";
+print_input_text ("search_text", $search_text, '', 15, 0, false);
+echo "<td>";
+print_submit_button ('Search', '', false, '', false, false);
+echo "</table></form>";
+
+
+$search = "WHERE 1=1 ";
+if ($search_text != "")
+	$search .= sprintf (" AND (id_usuario = '%s' OR comentarios = '%s' OR nombre_real = '%s')", $search_text, $search_text, $search_text );
+$query1 = "SELECT * FROM tusuario $search";
+
+$count = get_db_sql("SELECT COUNT(id_usuario) FROM tusuario $search ");
+
+pagination ($count, "index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&search_text=$search_text", $offset);
+
+$sql1 = "$query1 LIMIT $offset, ". $config["block_size"];
+
+
 echo '<table width="90%" class="listing">';
 echo '<th>'.__('UserID').'</td>';
 echo '<th>'.__('Last contact');
@@ -48,8 +74,7 @@ echo '<th>'.__('Profile');
 echo '<th>'.__('Name');
 echo '<th>'.__('Delete');
 
-$query1="SELECT * FROM tusuario";
-$resq1=mysql_query($query1);
+$resq1=mysql_query($sql1);
 // Init vars
 $nombre = "";
 $nivel = "";

@@ -161,18 +161,7 @@ if (($operation == "") OR ($operation == "notme")) {
 		echo "<h1>".__('To-Do management'). " &raquo; ". __('Assigned to other users')."</h1>";
 	else
 		echo "<h1>".__('To-Do management')."</h1>";
-	echo '<table class="listing" width="90%">';
-	echo "<th>".__('To-Do');
-	echo "<th>".__('Priority');
-	echo "<th>".__('Progress');
-	if ($operation == "notme")
-		echo "<th>".__('Assigned to');
-	else
-		echo "<th>".__('Assigned by');
-	//echo "<th>".__('Created');
-	echo "<th>".__('Updated');
-	echo "<th>".__('Task');
-	echo "<th>".__('Delete');
+
 	if ($operation == "notme")
 		$sql = sprintf ('SELECT * FROM ttodo
 			WHERE created_by_user = "%s"
@@ -188,6 +177,21 @@ if (($operation == "") OR ($operation == "notme")) {
 	if ($todos === false)
 		$todos = array ();
 	
+	$todos = print_array_pagination ($todos, "index.php?sec=todo&sec2=operation/todo/todo");
+
+	echo '<table class="listing" width="90%">';
+	echo "<th>".__('To-Do');
+	echo "<th>".__('Priority');
+	echo "<th>".__('Progress');
+	if ($operation == "notme")
+		echo "<th>".__('Assigned to');
+	else
+		echo "<th>".__('Assigned by');
+	//echo "<th>".__('Created');
+	echo "<th>".__('Updated');
+	echo "<th>".__('Task');
+	echo "<th>".__('Delete');
+
 	foreach ($todos as $todo) {
 		
 		echo "<tr><td>";

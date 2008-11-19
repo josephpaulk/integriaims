@@ -33,8 +33,9 @@ function get_event_date ($now, $days_margin = 1, $id_user = ""){
 		$id_user = $config["id_user"];
 
 	$now = "$now 00:00:00";
-	$now3 = date('Y-m-d h:i:s', strtotime("$now + $days_margin days"));
-
+	$days_margin = $days_margin*24;
+	$now3 = date('Y-m-d', strtotime("$now + $days_margin hours"));
+	$now3 = "$now3 00:00:00";
 	$result = array();
 
 	if ($id_user == "_ANY_")
@@ -591,7 +592,8 @@ function human_time_comparation ($timestamp) {
 	$now = time ();
 	$time = strtotime ($timestamp);
 	$seconds = abs ($time - $now);
-	
+	$raw = 0;
+
 	if ($seconds < 60)
 		$render = format_numeric ($seconds, 0)." ".__('seconds');
 	
@@ -603,16 +605,27 @@ function human_time_comparation ($timestamp) {
 		$seconds = sprintf ("%02d", $seconds);
 		$render = $minutes.':'.$seconds.' '.__('minutes');
 	}
-	if ($seconds > 3600 && $seconds < 86400)
+	elseif ($seconds > 3600 && $seconds < 86400)
 		$render = format_numeric ($seconds / 3600, 0)." ".__('hours');
 	
-	if ($seconds > 86400 && $seconds < 2592000)
+	elseif ($seconds > 86400 && $seconds < 2592000)
 		$render = format_numeric ($seconds / 86400, 0)." ".__('days');
 	
-	if ($seconds > 2592000 && $seconds < 15552000)
+	elseif ($seconds > 2592000 && $seconds < 231104000)
 		$render = format_numeric ($seconds / 2592000, 0)." ".__('months');
+
+	elseif ($seconds > 231104000 && $seconds < 1155520000)
+		$render = format_numeric ($seconds / 231104000, 0)." ".__('years');
+	else {
+		$raw = 1; // TOO OLD !!!!!, possible 1970. Print real date
+		$render = substr($timestamp, 0, 11); 
+	}
 	
-	$direction = ($now < $time) ? '&gt; ' : '&lt; ';
+	if ($raw != 1)
+		$direction = ($now < $time) ? '&gt; ' : '&lt; ';
+	else
+		$direction = "";
+	
 	return $direction.$render;
 }
 
@@ -681,6 +694,12 @@ function week_start_day (){
 
 function getmonth ($m = 0) {
 	return (($m==0 ) ? date ("F") : date ("F", mktime (0, 0, 0, $m)));
+}
+
+// Return working days (of $config["hours_perday"] hours) given a total in hours)
+function get_working_days ( $hours ) {
+	global $config;
+	return ($hours / $config["hours_perday"]);
 }
 
 ?>
