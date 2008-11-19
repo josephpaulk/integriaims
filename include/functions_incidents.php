@@ -191,7 +191,7 @@ function filter_incidents ($filters) {
  */
 function print_incidents_stats ($incidents, $return = false) {
 	$output = '';
-
+	
 	$total = sizeof ($incidents);
 	$opened = 0;
 	$total_hours = 0;

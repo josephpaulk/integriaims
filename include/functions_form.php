@@ -392,7 +392,7 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 
 // Returns a combo with the available roles
 // ----------------------------------------------------------------------
-function combo_roles ($include_na = 0, $name = 'role', $label = '', $return = false) {
+function combo_roles ($include_na = false, $name = 'role', $label = '', $return = false) {
 	global $config;
 	
 	$output = '';
@@ -560,14 +560,14 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	// Public WU ?
 	echo "<span style='float:right; margin-top: -15px; margin-bottom:0px; padding-right:10px;'>";
 	if ($public == 1)
-		echo "<img src='images/group.png' title='".__('Public Workunit')."' border=0>";
+		echo "<img src='images/group.png' title='".__('Public Workunit')."' />";
 	else
-		echo "<img src='images/delete.png' title='".__('Non public Workunit')."' border=0>";
+		echo "<img src='images/delete.png' title='".__('Non public Workunit')."' />";
 	echo "</span>";
 
 	echo "<tr>";
 	echo "<td><b>";
-	if ($id_task != ""){
+	if ($id_task != "") {
 		echo __('Project')." </b> : ";
 		echo $project_title;
 	} else {
@@ -607,8 +607,8 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<table width='100%'  class='blank'>";
 	echo "<tr><td valign='top'>";
 
-	if ((strlen($nota) > 1024) AND ($full == 0)){
-		echo topi_richtext ( clean_output_breaks(substr($nota,0,1024)) );
+	if ((strlen($nota) > 1024) AND ($full == 0)) {
+		echo topi_richtext (clean_output_breaks (substr ($nota, 0, 1024)));
 		echo "<br><br>";
 		echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&id_workunit=".$id_workunit."&title=$task_title'>";
 		echo __('Read more...');
@@ -621,21 +621,21 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 
 	if ($id_project > 0)
-		$myurl = "index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task";
+		$myurl = "index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task";
 	else
 		$myurl = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user";
 
 	if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"]) OR  (give_acl($config["id_user"], $id_group, "TM")) ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
-		echo "<a href='$myurl&id_workunit=$id_workunit&operation=delete'><img src='images/cross.png' border='0'></a>";
+		echo "<a class='delete-workunit' id='delete-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=delete' onclick='if (!confirm(\"".__('Are you sure?')."\")) return false;'><img src='images/cross.png' /></a>";
 	}
 
 	// Edit workunit
 	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == "") ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_create_work&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit&operation=edit'><img border=0 src='images/page_white_text.png' title='".__('Lock workunit')."'></a>";
+		echo "<a class='edit-workunit' id='edit-$id_workunit' href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit'><img border=0 src='images/page_white_text.png' title='".__('Edit workunit')."'></a>";
 		echo "</td>";
 	}
 
@@ -643,7 +643,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == "") ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
-		echo "<a href='$myurl&id_workunit=$id_workunit&operation=lock'><img border=0 src='images/lock.png' title='".__('Lock workunit')."'></a>";
+		echo "<a class='lock_workunit' id='delete-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=lock'><img src='images/lock.png' title='".__('Lock workunit')."'></a>";
 		echo "</td>";
 	} else {
 		echo "<tr><td align='right'>";

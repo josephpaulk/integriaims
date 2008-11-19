@@ -43,14 +43,14 @@ if (! give_acl ($config['id_user'], get_inventory_group ($id), "VR")) {
 }
 
 echo '<h3>'.__('Object').' #'.$id.'</h3>';
-echo '<table id="tree" class="result_table listing" cellspacing="0" cellpadding="0" border="0" width="100%" >';
+echo '<table id="tree" class="result_table listing" width="100%" >';
 echo '<thead>';
-echo '  <th>' .  __('ID') . '</th>';
-echo '  <th>' .  __('Name') . '</th>';
-echo '  <th>' .  __('Active Incidents') . '</th>';
-echo '  <th>' .  __('Company') . '</th>';
-echo '  <th>' .  __('Building') . '</th>';
-echo '  <th>' .  __('Title') . '</th>';
+echo '<th>'.__('ID').'</th>';
+echo '<th>'.__('Name').'</th>';
+echo '<th>'.__('Active Incidents').'</th>';
+echo '<th>'.__('Company').'</th>';
+echo '<th>'.__('Building').'</th>';
+echo '<th>'.__('Title').'</th>';
 echo '</thead>';
 echo '<tbody>';
 print_child_tree ($id, 1);

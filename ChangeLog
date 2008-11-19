@@ -1,3 +1,58 @@
+2008-11-19  Esteban Sanchez  <estebans@artica.es>
+
+	* include/js/integria_incident_search.js: Added a callback to
+	configure_inventory_search_form() to launch when the search is done.
+
+	* integria/include/styles/integria.css: Added style to inventory and
+	incidents stats div.
+
+	* include/functions_inventories.php: Removed unused filter parameter
+	in filter_inventories(). Fixed print_inventory_object() documentation
+	and added return parameter to print or return.
+
+	* operation/incidents/incident.php: Removed unneccesary div since it's
+	done using CSS.
+
+	* operation/incidents/incident_search.php: Added a HTML report button
+	which was taken from enterprise version and it's now open.
+
+	* operation/inventories/inventory.php,
+	operation/inventories/inventory_detail.php,
+	operation/inventories/inventory_search.php: Show a button in the
+	footer to generate HTML report when a search is done. Added an inventory
+	check to avoid showing unexistant or unreachable objects.
+
+	* operation/inventories/inventory_tree.php: Style correction.
+
+	* operation/reporting/incidents_html.php,
+	operation/reporting/inventories_html.php: Added to repository.
+	Incidents and inventory report.
+
+	* include/functions_db.php: Added get_inventory().
+
+	* include/functions_form.php: Removed image borders. Style corrections.
+
+	* include/functions_tasks.php: Added to repository. Functions to manage and
+	operate over tasks.
+
+	* include/functions_workunits.php: Added to repository. Functions to manage
+	and operate over tasks workunits.
+
+	* operation/projects/task_create_work.php: Removed from repository. All
+	tasks workunits are now managed by user_spare_workunit.
+
+	* operation/projects/task_workunit.php: Use functions in
+	functions_workunits. Manage lock and deletion using AJAX.
+
+	* operation/todo/todo.php, operation/side_menu.php: Link to
+	task_create_work changed to user_spare_workunit.
+
+	* operation/users/user_spare_workunit.php: Rewritten to allow workunit
+	updating and others operations.
+
+	* operation/users/user_workunit_report.php: Removed one unneccesary
+	indentation level.
+
 2008-11-19  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
 
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish
@@ -91,7 +146,6 @@
 	* integria.css: Added more padding space to generic TD. Was too tigth!.
 
 	* side_menu.php: Added new mail setup, Incidents for this task, 
-
 
 2008-11-18  Ramon Novoa  <rnovoa@artica.es>
 

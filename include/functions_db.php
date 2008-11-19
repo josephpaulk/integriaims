@@ -1560,6 +1560,10 @@ function get_inventories ($only_names = true, $exclude_id = false) {
 	return $inventories;
 }
 
+function get_inventory ($id_inventory) {
+	return get_db_row ('tinventory', 'id', $id_inventory);
+}
+
 function get_inventory_name ($id) {
 	return (string) get_db_value ('name', 'tinventory', 'id', $id);
 }

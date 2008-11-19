@@ -99,6 +99,7 @@ unset ($table);
 require_once ('inventory_search.php');
 
 echo '</div>';
+echo '<div id="inventories-stats"></div>';
 echo '</div>';
 
 ?>
@@ -132,11 +133,33 @@ function tab_loaded (event, tab) {
 		}
 		old_inventory = id_inventory;
 	} else if (tab.index == 6) {
-    	$("table#tree tr").click (function () {
-    		id = this.id.split ("-").pop ();
-    		show_inventory_details (id);
-    	});
+		$("table#tree tr").click (function () {
+			id = this.id.split ("-").pop ();
+			check_inventory (id);
+		});
 	}
+}
+
+function check_inventory (id) {
+	values = Array ();
+	values.push ({name: "page",
+		value: "operation/inventories/inventory_detail"});
+	values.push ({name: "id",
+		value: id});
+	values.push ({name: "check_inventory",
+		value: 1});
+	jQuery.get ("ajax.php",
+		values,
+		function (data, status) {
+			console.log (data);
+			if (data == 1) {
+				show_inventory_details (id);
+			} else {
+				result_msg_error ("<?php echo __('Unable to load inventory')?> #" + id);
+			}
+		},
+		"html"
+	);
 }
 
 function show_inventory_details (id) {
@@ -154,7 +177,7 @@ function show_inventory_details (id) {
 
 $(document).ready (function () {
 	$("table#inventory_search_result_table th").click (function () {
-    	$("span.indent").remove ();
+		$("table#inventory_search_result_table span.indent").remove ();
 	});
 
 	$("#tabs > ul").tabs ({"load" : tab_loaded});
@@ -162,7 +185,7 @@ $(document).ready (function () {
 <?php if ($id) : ?>
 	id_inventory = <?php echo $id ?>;
 	$(".inventory-menu").slideDown ();
-	show_inventory_details (<?php echo $id; ?>);
+	check_inventory (<?php echo $id; ?>);
 <?php endif; ?>
 	
 	$("#saved-searches-form").submit (function () {
@@ -232,7 +255,7 @@ $(document).ready (function () {
 	
 	$("#goto-inventory-form").submit (function () {
 		id = $("#text-id", this).attr ("value");
-		show_inventory_details (id);
+		check_inventory (id);
 		if (old_inventory)
 			$("#tabs > ul").tabs ("load", 1);
 		return false;
@@ -240,7 +263,25 @@ $(document).ready (function () {
 	
 	configure_inventory_search_form (<?php echo $config['block_size']?>,
 		function (id, name) {
-			show_inventory_details (id);
+			check_inventory (id);
+		},
+		function (form) {
+			val = get_form_input_values (form);
+			
+			val.push ({name: "page",
+					value: "operation/inventories/inventory_search"});
+			val.push ({name: "show_stats",
+					value: 1});
+			$("#inventories-stats").fadeOut ('normal', function () {
+				$(this).empty ();
+				jQuery.post ("ajax.php",
+					val,
+					function (data, status) {
+						$("#inventories-stats").empty ().append (data).slideDown ();
+					},
+					"html"
+				);
+			});
 		}
 	);
 });

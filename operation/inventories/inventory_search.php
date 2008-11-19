@@ -78,10 +78,10 @@ if ($delete_custom_search) {
 require_once ('include/functions_inventories.php');
 
 $search = (bool) get_parameter ('search');
+$show_stats = (bool) get_parameter ('show_stats');
 
 if ($search) {
 	$filter = array ();
-	$filter['id_profile'] = (int) get_parameter ('user_profile_search');
 	$filter['id_group'] = (int) get_parameter ('user_group_search');
 	$filter['string'] = (string) get_parameter ('search_string');
 	$filter['id_contract'] = (int) get_parameter ('search_id_contract');
@@ -97,7 +97,24 @@ if ($search) {
 	if ($inventories === false) {
 		$inventories = array ();
 	}
-
+	
+	/* Show HTML if show_stats flag is active on HTML request */
+	if ($show_stats) {
+		/* Add a button to generate HTML reports */
+		echo '<form method="post" target="_blank" action="index.php" style="clear: both">';
+		foreach ($_POST as $key => $value) {
+			print_input_hidden ($key, $value);
+		}
+		echo '<div style="width:90%; text-align: right;">';
+		print_input_hidden ('sec2', 'operation/reporting/inventories_html');
+		print_input_hidden ('clean_output', 1);
+		print_submit_button (__('HTML report'), 'inventory_report', false,
+			'class="sub report"');
+		echo '</div></form>';
+	
+		return;
+	}
+	
 	// Build object tree
 	$tree = array ();
 	$tree_root = array ();

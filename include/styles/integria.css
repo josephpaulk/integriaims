@@ -1021,3 +1021,8 @@ label {
 form.delete {
 		display: inline;
 }
+
+div#incident-stats, div#inventories-stats {
+	margin-top: 35px;
+	margin-bottom: 15px;
+}

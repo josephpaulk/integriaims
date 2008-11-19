@@ -133,8 +133,6 @@ print_table ($table);
 
 print_table_pager ();
 
-echo "<div style='height: 35px'></div>";
-
 echo '<div id="incident-stats"></div>';
 
 /* End of first tab container */
@@ -221,6 +219,7 @@ function check_incident (id) {
 		"html"
 	);
 }
+
 function show_incident_details (id) {
 	id_incident = id;
 	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_detail&id=" + id);
@@ -347,9 +346,10 @@ $(document).ready (function () {
 						});
 					},
 					"html"
-					);
-		});
-	});
+				);
+			});
+		}
+	);
 <?php if ($do_search_news) : ?>
 	first_search = true;
 	$("#search_status").attr ("value", 1);

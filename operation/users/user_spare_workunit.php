@@ -19,163 +19,291 @@ global $config;
 
 check_login ();
 
-$operation = get_parameter ("operation");
-$ahora = get_parameter ("givendate", date("Y-m-d H:i:s"));
-$public =  get_parameter ("public", 1);
-$id_profile = get_parameter ("work_profile", "");
-$description =  get_parameter ("wu_description", "");
-$pass_id_project = get_parameter("id_project", "");
-$id_task = get_parameter("id_task", "");
+require_once ('include/functions_tasks.php');
+require_once ('include/functions_workunits.php');
 
-// -----------
-// Workunit
-// -----------
-if ($operation == "addworkunit"){
-	$duration = get_parameter ("duration",0);
-	if (!is_numeric( $duration))
-		$duration = 0;
-	$timestamp = get_parameter ("start_date");
-	$description = get_parameter ("wu_description", "");
-	$have_cost = get_parameter ("have_cost",0);
-	$task = get_parameter ("task",-1);
-	$role = get_parameter ("role",0);
-	$split = get_parameter ("split",0);
-	$wu_user = get_parameter ("wu_user", $config['id_user']);
+$operation = (string) get_parameter ("operation");
+$now = (string) get_parameter ("givendate", date ("Y-m-d H:i:s"));
+$public = (bool) get_parameter ("public", 1);
+$id_project = (int) get_parameter ("id_project");
+$id_workunit = (int) get_parameter ('id_workunit');
+$id_task = (int) get_parameter ("id_task");
+// If id_task is set, ignore id_project and get it from the task
+if ($id_task) {
+	$id_project = get_db_value ('id_project', 'ttask', 'id', $id_task);
+}
+
+// Lock Workunit
+if ($operation == "lock") {
+	$success = lock_task_workunit ($id_workunit);
+	if (! $success) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation",
+			"Trying to lock WU $id_workunit without rigths");
+		if (!defined ('AJAX'))
+			include ("general/noaccess.php");
+		return;
+	}
+	
+	$result_output = '<h3 class="suc">'.__('Locked successfully').'</h3>';
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Work unit locked",
+		"Workunit for ".$config['id_user']);
+	
+	if (defined ('AJAX')) {
+		echo '<img src="images/rosette.png" title="'.__('Locked by').' '.$config['id_user'].'" />';
+		print_user_avatar ($config['id_user'], true);
+		return;
+	}
+}
+
+if ($id_workunit) {
+	$sql = sprintf ('SELECT *
+		FROM tworkunit, tworkunit_task
+		WHERE tworkunit.id = tworkunit_task.id_workunit
+		AND tworkunit.id = %d', $id_workunit);
+	$workunit = get_db_row_sql ($sql);
+	if ($workunit === false) {
+		require ("general/noaccess.php");
+		return;
+	}
+	
+	$id_task = $workunit['id_task'];
+	$id_project = get_db_value ('id_project', 'ttask', 'id', $id_task);
+	$id_user = $workunit['id_user'];
+	$duration = $workunit['duration']; 
+	$description = $workunit['description'];
+	$have_cost = $workunit['have_cost'];
+	$id_profile = $workunit['id_profile'];
+	$now = $workunit['timestamp'];
+	$public = (bool) $workunit['public'];
+	$now_date = substr ($now, 0, 10);
+	$now_time = substr ($now, 10, 8);
+	
+	if (!$public && $id_user != $config["id_user"] && ! project_manager_check ($id_project) ) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation",
+			"Trying to access workunit");
+		require ("general/noaccess.php");
+		return;
+	}
+} else {
+	$id_user = $config["id_user"];
+	$duration = 1; 
+	$description = "";
+	$id_inventory = array();
+	$have_cost = false;
+	$public = true;
+	$id_profile = "";
+	$now_date = date ("Y-m-d");
+	$now_time = date ("H:i:s");
+	$now = date ("Y-m-d H:i:s");
+}
+
+// Insert workunit
+if ($operation == 'insert') {
+	$duration = (float) get_parameter ("duration");
+	$timestamp = (string) get_parameter ("start_date");
+	$description = (string) get_parameter ("description");
+	$have_cost = (bool) get_parameter ("have_cost");
+	$id_task = (int) get_parameter ("id_task", -1);
+	$id_profile = (int) get_parameter ("id_profile");
+	$public = (bool) get_parameter ("public");
+	$split = (bool) get_parameter ("split");
+	$id_user = (string) get_parameter ("wu_user", $config['id_user']);
 	
 	// Multi-day assigment
-	if (($split == 1) AND ($duration > $config["hours_perday"])){
-		$forward = get_parameter ("forward",0);
-		$total_days = ceil($duration / $config["hours_perday"]);
-		$total_days_sum = 0; $hours_day = 0;
-		for ($ax=0;$ax < $total_days; $ax++){
-			if ($forward == 0)
-				$current_timestamp = calcdate_business_prev ($timestamp, $ax);
+	if ($split && $duration > $config["hours_perday"]) {
+		$forward = (bool) get_parameter ("forward");
+		$total_days = ceil ($duration / $config["hours_perday"]);
+		$total_days_sum = 0;
+		$hours_day = 0;
+		for ($i = 0; $i < $total_days; $i++) {
+			if (! $forward)
+				$current_timestamp = calcdate_business_prev ($timestamp, $i);
 			else
-				$current_timestamp = calcdate_business ($timestamp, $ax);
+				$current_timestamp = calcdate_business ($timestamp, $i);
+			
 			if (($total_days_sum + 8) > $duration)
 				$hours_day = $duration - $total_days_sum;
 			else 
 				$hours_day = $config["hours_perday"];
 			$total_days_sum += $hours_day;
-
-			$sql = "INSERT INTO tworkunit 
-					(timestamp, duration, id_user, description, have_cost, id_profile, public) 
-					VALUES	('$current_timestamp', $hours_day, '$wu_user', '$description',
-							 $have_cost, $role, $public)";
-			if (mysql_query($sql)){
-				$id_workunit = mysql_insert_id();
-				$sql2 = "INSERT INTO tworkunit_task 
-								(id_task, id_workunit) VALUES ($task, $id_workunit)";
-				if (mysql_query($sql2))
-					$result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
-				else
-					$result_output = "<h3 class='error'>".__('Problemd adding workunit.')."</h3>";
+			
+			$sql = sprintf ('INSERT INTO tworkunit 
+				(timestamp, duration, id_user, description, have_cost, id_profile, public) 
+				VALUES ("%s", %f, "%s", "%s", %d, %d, %d)',
+				$current_timestamp, $hours_day, $id_user, $description,
+				$have_cost, $id_profile, $public);
+			$id_workunit = process_sql ($sql, 'insert_id');
+			if ($id_workunit !== false) {
+				$sql = sprintf ('INSERT INTO tworkunit_task 
+					(id_task, id_workunit) VALUES (%d, %d)',
+					$id_task, $id_workunit);
+				$result = process_sql ($sql, 'insert_id');
+				if ($result !== false) {
+					$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
+				} else {
+					$result_output = '<h3 class="error">'.__('Problem adding workunit.').'</h3>';
+				}
 			}
 		}
 		mail_project (0, $config['id_user'], $id_workunit, $task, "This is part of a multi-workunit assigment of $duration hours");
-	
-	// Single day workunit
 	} else {
-		$sql = "INSERT INTO tworkunit 
+		// Single day workunit
+		$sql = sprintf ('INSERT INTO tworkunit 
 				(timestamp, duration, id_user, description, have_cost, id_profile, public) 
-				 VALUES	('$timestamp', $duration, '$wu_user', '$description', $have_cost, $role, $public)";
-		if (mysql_query($sql)){
-			$id_workunit = mysql_insert_id();
-			$sql2 = "INSERT INTO tworkunit_task 
-					(id_task, id_workunit) VALUES ($task, $id_workunit)";
-
-			if (mysql_query($sql2)){
-				$result_output = "<h3 class='suc'>".__('Workunit added')."</h3>";
+				VALUES ("%s", %.2f, "%s", "%s", %d, %d, %d)',
+				$timestamp, $duration, $id_user, $description,
+				$have_cost, $id_profile, $public);
+		$id_workunit = process_sql ($sql, 'insert_id');
+		if ($id_workunit !== false) {
+			$sql = sprintf ('INSERT INTO tworkunit_task 
+					(id_task, id_workunit) VALUES (%d, %d)',
+					$id_task, $id_workunit);
+			$result = process_sql ($sql, 'insert_id');
+			if ($result !== false) {
+				$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
 				audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Spare work unit added", 
-						'Workunit for '.$config['id_user'].' added to Task ID #'.$task);
-				mail_project (0, $config['id_user'], $id_workunit, $task);
-			}	
-		} else 
-			$result_output = "<h3 class='error'>".__('Problemd adding workunit.')."</h3>";
+						'Workunit for '.$config['id_user'].' added to Task ID #'.$id_task);
+				mail_project (0, $config['id_user'], $id_workunit, $id_task);
+			}
+		} else {
+			$result_output = '<h3 class="error">'.__('Problemd adding workunit.').'</h3>';
+		}
 	}
-	insert_event ("PWU INSERT", $task, 0, $description);
+	
+	if ($id_workunit !== false) {
+		add_task_hours ($id_task, $duration);
+	}
+	
+	insert_event ("PWU INSERT", $id_task, 0, $description);
 	echo $result_output;
-			
 }
 
-// --------------------
-// Workunit / Note  form
-// --------------------
-if ($operation != "create"){
-
-	echo "<h3><img src='images/award_star_silver_1.png'> ";
-
-	if ($id_task != ""){
-		$task_name = get_db_value ('name', 'ttask', 'id', $id_task);
-		echo __('Add workunit').' - '.$task_name.'</h3>';
-	} else {
-		echo __('Add spare workunit')."</h3>";
-	}
-
-	echo "<table width='90%' class='databox'>";
-	if ($id_task != "")
-		echo "<form name='nota' method='post' action='index.php?sec=projects&sec2=operation/users/user_spare_workunit&operation=addworkunit&id_project=$pass_id_project&id_task=$id_task'>";
-	else
-		echo "<form name='nota' method='post' action='index.php?sec=users&sec2=operation/users/user_spare_workunit&operation=addworkunit'>";
-	// Date
-	echo "<td>";
-	$start_date = substr($ahora,0,10);
-	print_input_text ('start_date', $start_date, '', 10, 20, false, __('Date'));
-
-	// Role
-	echo "<td>";
-	if (dame_admin ($config['id_user']) == 1){
-		combo_user_task_profile ($id_task, 'work_profile', $id_profile, false);
-	} else {
-		combo_roles (1); // role
-	}
-	// task id - included hard-written "VACATIONS"
-	if ($id_task != "") {
-		echo "<input type='hidden' name='task' value='".$id_task."'>";
-	} else {
-		echo "<tr>";
-		echo "<td colspan=3>";
-		echo combo_task_user_participant ($config['id_user'], true, 0, false, __('Task'));
+if ($operation == "delete") {
+	$success = delete_task_workunit ($id_workunit);
+	if (! $success) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation",
+			"Trying to delete WU $id_workunit without rigths");
+		include ("general/noaccess.php");
+		return;
 	}
 	
-	// TIme wasted
-	echo "<tr>";
-	echo "<td class='datos'>";
-	print_input_text ('duration', 0, '', 7, 7, false, __('Time used'));
-	echo '</td>';
+	$result_output = '<h3 class="suc">'.__('Deleted successfully').'</h3>';
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Work unit deleted", "Workunit for ".$config['id_user']);
 	
-	if (dame_admin ($config['id_user'])) {
-		echo '<td colspan="3">';
-		combo_user_visible_for_me ($config["id_user"], "wu_user", 0, "TW", false, __('Username'));
-		echo "</td>";
-	}
-	
-	// have cost checkbox
-	echo "<tr><td>";
-	print_checkbox ('have_cost', 1, false, false, __('Have cost'));
-	
-	echo "</td><td>";
-	print_checkbox ("public", 1, $public, false, __('Public'));
-	
-	echo "</td></tr><tr><td>";
-	print_checkbox ('forward', 1, false, false, __('Forward'));
-	print_help_tip (__('If this checkbox is activated, propagation will be forward instead backward'));
-	echo '</td>';
-	
-	echo "<td>";
-	print_checkbox ('split', 1, false, false, __('Split > 1day'));
-	print_help_tip (__('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned'));
-	echo '</td>';
-
-	echo "<input type='hidden' name='timestamp' value='".$ahora."'>";
-	echo '<tr><td colspan="4">';
-	echo print_textarea ('wu_description', 10, 30, $description, '', true, __('Description'));
-	echo "</table>";
-
-	echo "<div style='width: 90%' class='button'>";
-	echo '<input name="addnote" type="submit" class="sub next" value="'.__('Add').'">';
-	echo "</form></div>";
+	if (defined ('AJAX'))
+		return;
 }
+
+// Edit workunit
+if ($operation == 'update') {
+	$duration = (float) get_parameter ("duration");
+	$timestamp = (string) get_parameter ("start_date");
+	$description = (string) get_parameter ("description");
+	$have_cost = (bool) get_parameter ("have_cost");
+	$id_profile = (int) get_parameter ("id_profile");
+	$public = (bool) get_parameter ("public");
+	$id_user = (string) get_parameter ("wu_user", $config['id_user']);
+	
+	// UPDATE WORKUNIT
+	$sql = sprintf ('UPDATE tworkunit
+		SET timestamp = "%s", duration = %.2f, description = "%s",
+		have_cost = %d, id_profile = %d, public = %d
+		WHERE id = %d',
+		$timestamp, $duration, $description, $have_cost,
+		$id_profile, $public, $id_workunit);
+	$result = process_sql ($sql);
+	mail_project (1, $config['id_user'], $id_workunit, $id_task);
+	$result_output = '<h3 class="suc">'.__('Workunit updated').'</h3>';
+	insert_event ("PWU UPDATED", 0, 0, $description);
+}
+
+echo "<h3><img src='images/award_star_silver_1.png'> ";
+
+if ($id_workunit) {
+	echo __('Update workunit');
+} else {
+	echo __('Add workunit');
+}
+if ($id_task) {
+	echo ' - ';
+	echo get_db_value ('name', 'ttask', 'id', $id_task);
+}
+echo '</h3>';
+
+$table->class = 'databox';
+$table->width = '90%';
+$table->data = array ();
+$table->colspan = array ();
+$table->colspan[5][0] = 3;
+
+$start_date = substr ($now, 0, 10);
+$table->data[0][0] = print_input_text ('start_date', $start_date, '', 10, 20,
+	true, __('Date'));
+
+// Profile or role
+if (dame_admin ($config['id_user'])) {
+	$table->data[0][1] = combo_roles (true, 'role', __('Role'), true);
+} else {
+	$table->data[0][1] = combo_user_task_profile ($id_task, 'id_profile',
+		$id_profile, false, true);
+}
+
+// Show task combo if none was given.
+if (! $id_task) {
+	$table->colspan[1][0] = 3;
+	$table->data[1][0] = combo_task_user_participant ($config['id_user'],
+		true, 0, true, __('Task'));
+}
+
+// Time used
+$table->data[2][0] = print_input_text ('duration', $duration, '', 7, 7,
+	true, __('Time used'));
+
+if (dame_admin ($config['id_user'])) {
+	$table->colspan[2][1] = 3;
+	$table->data[2][1] = combo_user_visible_for_me ($id_user,
+		'wu_user', 0, "TW", true, __('Username'));
+}
+
+// Various checkboxes
+$table->data[3][0] = print_checkbox ('have_cost', 1, $have_cost, true,
+	__('Have cost'));
+$table->data[3][1] = print_checkbox ('public', 1, $public, true, __('Public'));
+
+if (! $id_workunit) {
+	$table->data[4][0] = print_checkbox ('forward', 1, false, true,
+		__('Forward'));
+	$table->data[4][0] .= print_help_tip (__('If this checkbox is activated, propagation will be forward instead backward'),
+		true);
+
+	$table->data[4][1] = print_checkbox ('split', 1, false, true,
+		__('Split > 1day'));
+	$table->data[4][1] .= print_help_tip (__('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned'),
+		true);
+}
+$table->data[5][0] = print_textarea ('description', 10, 30, $description,
+	'', true, __('Description'));
+
+echo '<form method="post">';
+print_table ($table);
+
+echo '<div style="width: '.$table->width.'" class="button">';
+if ($id_workunit) {
+	print_input_hidden ('operation', 'update');
+	print_input_hidden ('id_workunit', $id_workunit);
+	print_submit_button (__('Update'), 'btn_upd', false, 'class="sub upd"');
+} else {
+	print_input_hidden ('operation', 'insert');
+	print_submit_button (__('Add'), 'btn_add', false, 'class="sub next"');
+}
+print_input_hidden ('timestamp', $now);
+if ($id_task) {
+	/* This is useful when adding a workunit to a task */
+	print_input_hidden ('id_task', $id_task);
+	print_input_hidden ('id_project', $id_project);
+}
+echo '</div>';
+echo '</form>';
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>

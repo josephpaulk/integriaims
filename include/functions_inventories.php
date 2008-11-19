@@ -117,7 +117,6 @@ function update_inventory_contacts ($id_inventory, $contacts) {
  * serial_number Inventory serial number.
  * part_number Inventory part number.
  * ip_address Inventory IP address.
- * id_profile Inventory profile id.
  * id_group Inventory group id.
  * id_contract Inventory contract id.
  * id_product Inventory product id.
@@ -134,7 +133,6 @@ function filter_inventories ($filters) {
 	$filters['serial_number'] = isset ($filters['serial_number']) ? $filters['serial_number'] : '';
 	$filters['part_number'] = isset ($filters['part_number']) ? $filters['part_number'] : '';
 	$filters['ip_address'] = isset ($filters['ip_address']) ? $filters['ip_address'] : '';
-	$filters['id_profile'] = isset ($filters['id_profile']) ? $filters['id_profile'] : 0;
 	$filters['id_group'] = isset ($filters['id_group']) ? $filters['id_group'] : 0;
 	$filters['id_contract'] = isset ($filters['id_contract']) ? $filters['id_contract'] : 0;
 	$filters['id_product'] = isset ($filters['id_product']) ? $filters['id_product'] : 0;
@@ -196,84 +194,95 @@ function filter_inventories ($filters) {
 /**
  * Prints the details of an inventory object and, optionally, its children. 
  *
- * @param id ID of the object.
- * @param inventory Array containing inventory objects.
- * @param tree Inventory object tree.
- * @param show_children Show child nodes.
- * @param show_incidents Show incident statistics.
- * @param depth Call depth, used for indentation.
+ * @param int ID of the object.
+ * @param array Array containing inventory objects.
+ * @param array Inventory object tree.
+ * @param bool Show child nodes.
+ * @param bool Show incident statistics.
+ * @param int Call depth, used for indentation.
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
-function print_inventory_object ($id, $inventory, $tree, $show_children = false, $show_incidents = false, $depth = 0) {
+function print_inventory_object ($id, $inventory, $tree, $show_children = false, $show_incidents = false, $depth = 0, $return = false) {
 	global $config;
-
+	
+	$output = '';
+	
 	if (! isset ($inventory[$id])) {
-		return;
+		return '';
 	}
-
+	
 	$object = $inventory[$id];
-
+	
 	if ($object['id_contract']) {
 		/* Only check ACLs if the inventory has a contract */
 		if (! give_acl ($config['id_user'], get_inventory_group ($object['id']), "VR"))
-			continue;
+			return '';
 	}
-
-	echo '<tr id="result-'.$object['id'].'">';
-	echo '<td><strong>#'.$object['id'].'</strong></td>';
-	echo '<td>';
-	echo '<span class="indent">';
-	for ($i = 0; $i < $depth; $i++) {
-		echo '&nbsp;&nbsp;&nbsp;&nbsp;';
-	}
-	echo '</span>';
+	
+	$output .= '<tr id="result-'.$object['id'].'">';
+	$output .= '<td><strong>#'.$object['id'].'</strong></td>';
+	$output .= '<td>';
 	if ($depth > 0) {
-		echo '<img src="images/copy.png" />';
+		$output .= '<span class="indent">';
+		for ($i = 0; $i < $depth; $i++) {
+			$output .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+		}
+		$output .= '</span>';
+		$output .= '<img src="images/copy.png" />';
 	}
-	echo $object['name'] . '</td>';
+	$output .= $object['name'] . '</td>';
 	
 	if ($show_incidents) {
 		$incidents = get_incidents_on_inventory ($object['id'], false);
 		$total_incidents = sizeof ($incidents);
-		echo '<td>';
+		$output .= '<td>';
 		if ($total_incidents) {
 			$actived = 0;
 			foreach ($incidents as $incident) {
 				if ($incident['estado'] != 7 && $incident['estado'] != 6)
 					$actived++;
 			}
-			echo '<img src="images/info.png" /> <strong>'.$actived.'</strong> / '.$total_incidents;
+			$output .= '<img src="images/info.png" /> <strong>'.$actived.'</strong> / '.$total_incidents;
 		}
-		echo '</td>';
+		$output .= '</td>';
 	}
 	$companies = get_inventory_affected_companies ($object['id'], false);
-	echo '<td>';
+	$output .= '<td>';
 	if (isset ($companies[0]['name']))
-		echo $companies[0]['name'];
-	echo '</td>';
+		$output .= $companies[0]['name'];
+	$output .= '</td>';
 	
 	$building = get_building ($object['id_building']);
-	echo '<td>';
+	$output .= '<td>';
 	if ($building)
-		echo $building['name'];
-	echo '</td>';
+		$output .= $building['name'];
+	$output .= '</td>';
 	
-	echo '<td>'.$object['description'].'</td>';
-	echo '</tr>';
+	$output .= '<td>'.$object['description'].'</td>';
+	$output .= '</tr>';
 	
 	// Print child objects
 	if (! $show_children || ! isset ($tree[$object['id']])) {
+		if ($return)
+			return $output;
+		echo $output;
 		return;
 	}
 
 	foreach ($tree[$object['id']] as $child) {
-		print_inventory_object ($child, $inventory, $tree, $show_children, $show_incidents, $depth + 1);
+		$output .= print_inventory_object ($child, $inventory, $tree,
+			$show_children, $show_incidents, $depth + 1, true);
 	}
+	
+	if ($return)
+		return $output;
+	echo $output;
 }
 
 /**
  * Get the children of the given inventory object.
  *
- * @param id ID of the object.
+ * @param int ID of the object.
  *
  * @return array A list of inventory objects.
  */
@@ -281,7 +290,7 @@ function get_inventory_children ($id) {
 	global $config;
 	$result = array ();
 
-	$sql = sprintf ('SELECT * FROM tinventory WHERE id_parent = "'.$id.'"');
+	$sql = sprintf ('SELECT * FROM tinventory WHERE id_parent = %d', $id);
 	$children = get_db_all_rows_sql ($sql);
 	if ($children === false) {
 		return false;
@@ -292,6 +301,63 @@ function get_inventory_children ($id) {
 	}
 	
 	return $result;
+}
+
+/**
+ * Print a table with statistics of a list of inventories.
+ *
+ * @param array List of inventories to get stats.
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
+ *
+ * @return Inventories stats if return parameter is true. Nothing otherwise
+ */
+function print_inventory_stats ($inventories, $return = false) {
+	$output = '';
+	
+	$total = sizeof ($inventories);
+	$inventory_incidents = 0;
+	$inventory_opened = 0; 
+	foreach ($inventories as $inventory) {
+		$incidents = get_incidents_on_inventory ($inventory['id'], false);
+		if (sizeof ($incidents) == 0)
+			continue;
+		$inventory_incidents++;
+		foreach ($incidents as $incident) {
+			if ($incident['estado'] != 7 && $incident['estado'] != 6) {
+				$inventory_opened++;
+				break;
+			}
+		}
+	}
+	
+	$incidents_pct = 0;
+	if ($total != 0) {
+		$incidents_pct = format_numeric ($inventory_incidents / $total * 100);
+		$incidents_opened_pct = format_numeric ($inventory_opened / $total * 100);
+	}
+	
+	$table->width = '50%';
+	$table->class = 'float_left blank';
+	$table->style = array ();
+	$table->style[1] = 'vertical-align: top';
+	$table->rowspan = array ();
+	$table->rowspan[0][1] = 3;
+	$table->data = array ();
+	
+	$table->data[0][0] = print_label (__('Total objects'), '', '', true, $total);
+	$data = implode (',', array ($inventory_incidents, $total - $inventory_incidents));
+	$legend = implode (',', array (__('With incidents'), __('Without incidents')));
+	$table->data[0][1] = '<img src="include/functions_graph.php?type=pipe&width=200&height=150&data='.$data.'&legend='.$legend.'" />';
+	$table->data[1][0] = print_label (__('Total objects with incidents'), '', '', true,
+		$inventory_incidents.' ('.$incidents_pct.'%)');
+	$table->data[2][0] = print_label (__('Total objects with opened incidents'),
+		'', '', true, $inventory_opened.' ('.$incidents_opened_pct.'%)');
+	
+	$output .= print_table ($table, true);
+	
+	if ($return)
+		return $output;
+	echo $output;
 }
 
 ?>

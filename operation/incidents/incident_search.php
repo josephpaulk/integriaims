@@ -151,9 +151,17 @@ if ($incidents === false) {
 if ($show_stats) {
 	print_incidents_stats ($incidents);
 	
-	enterprise_include ('operation/incidents/incident_search.php');
-	
-	enterprise_hook ('incidents_report');
+	/* Add a button to generate HTML reports */
+	echo '<form method="post" target="_blank" action="index.php" style="clear: both">';
+	foreach ($_POST as $key => $value) {
+		print_input_hidden ($key, $value);
+	}
+	echo '<div style="width:90%; text-align: right;">';
+	print_input_hidden ('sec2', 'operation/reporting/incidents_html');
+	print_input_hidden ('clean_output', 1);
+	print_submit_button (__('HTML report'), 'incident_report', false,
+		'class="sub report"');
+	echo '</div></form>';
 	
 	return;
 }

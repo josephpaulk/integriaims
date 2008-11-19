@@ -186,7 +186,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_tracking&id_project=$id_project&id_task=$id_task&operation=view'>".__('Task tracking')."</a></li>";
 
 		// Add task workunit
-		if ($sec2 == "operation/projects/task_create_work")
+		if ($sec2 == "operation/users/user_spare_workunit")
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";

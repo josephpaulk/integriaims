@@ -22,6 +22,18 @@ require_once ('include/functions_inventories.php');
 $result_msg = '';
 
 $id = (int) get_parameter ('id');
+
+$check_inventory = (bool) get_parameter ('check_inventory');
+if ($check_inventory) {
+	$inventory = get_inventory ($id);
+	if ($inventory !== false && give_acl ($config['id_user'], get_inventory_group ($id), "VR"))
+		echo 1;
+	else
+		echo 0;
+	if (defined ('AJAX'))
+		return;
+}
+
 $update = (bool) get_parameter ('update_inventory');
 $create = (bool) get_parameter ('create_inventory');
 $name = (string) get_parameter ('name');

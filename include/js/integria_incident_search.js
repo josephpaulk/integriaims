@@ -327,7 +327,7 @@ function show_add_incident_dialog () {
 	);
 }
 
-function configure_inventory_search_form (page_size, incident_click_callback) {
+function configure_inventory_search_form (page_size, incident_click_callback, search_callback) {
 	$(dialog+".show_advanced_search").click (function () {
 		table = $(dialog+"#inventory_search_form").children ("table");
 		$("tr", table).show ();
@@ -365,6 +365,8 @@ function configure_inventory_search_form (page_size, incident_click_callback) {
 						});
 					$(dialog+"#inventory_search_result_table tbody").fadeIn ();
 					$(dialog+"#inventory-pager").removeClass ("hide").fadeIn ();
+					if (search_callback)
+						search_callback ($(dialog+"#inventory_search_form"));
 				},
 				"html"
 			);
@@ -433,7 +435,7 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 						parent_dialog = "";
 					}
 					});
-			configure_inventory_search_form (10, callback_incident_click);
+			configure_inventory_search_form (10, callback_incident_click, false);
 		},
 		"html"
 	);

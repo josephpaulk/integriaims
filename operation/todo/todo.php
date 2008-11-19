@@ -230,8 +230,8 @@ if (($operation == "") OR ($operation == "notme")) {
 		echo '<td align="center">';
 		if ($todo["id_task"] > 0){
 			$id_project = get_db_value ("id_project", "ttask", "id", $todo["id_task"]);
-			$myurl = "index.php?sec=projects&sec2=operation/projects/task_create_work&id_project=$id_project&id_task=".$todo["id_task"];
-			echo '<a href="'.$myurl.'"><img border=0 src="images/award_star_silver_1.png"></a>';			
+			$url = "index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=".$todo["id_task"];
+			echo '<a href="'.$url.'"><img border=0 src="images/award_star_silver_1.png"></a>';
 		}
 		// DELETE
 		echo '<td align="center">';

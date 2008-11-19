@@ -4,6 +4,8 @@ global $config;
 
 check_login ();
 
+require_once ('include/functions_workunits.php');
+
 $id_project = (int) get_parameter ("id_project");
 $id_task = (int) get_parameter ("id_task");
 $operation = (string) get_parameter ("operation");
@@ -24,12 +26,7 @@ if ($id_task != 0)
 
 // Lock Workunit
 if ($operation == "lock") {
-	$id_workunit = (int) get_parameter ('id_workunit');
-	$id_task = get_db_value ("id_task", "tworkunit_task", "id_workunit", $id_workunit);
-	$id_group = get_db_value ("id_group", "ttask", "id", $id_task);
-	$sql = sprintf ('UPDATE tworkunit SET locked = "%s" WHERE id = %d',
-		$config['id_user'], $id_workunit);
-	process_sql ($sql);
+	lock_task_workunit ($id_workunit);
 }
 
 // ADD / UPDATE Workunit
@@ -109,36 +106,18 @@ if ($operation == "workunit") {
 }
 
 // DELETE Workunit
-if ($operation == "delete"){
-	// Delete workunit with ACL / Project manager check
-	$id_workunit = get_parameter ("id_workunit");
-	$sql = "SELECT * FROM tworkunit WHERE id = $id_workunit";
-	if ($res = mysql_query($sql)) 
-		$row=mysql_fetch_array($res);
-	else
-		return;
-		
-	$id_user_wu = $row["id_user"];
-	$id_task_wu = get_db_value ("id_task", "tworkunit_task", "id_workunit", $row["id"]);
-	$id_project_wu = get_db_value ("id_project", "ttask", "id", $id_task_wu);
-	if ($id_user_wu == $config["id_user"] 
-		|| give_acl ($config["id_user"], 0,"PM")
-		|| project_manager_check ($id_project)) {
-				
-		mysql_query ("DELETE FROM tworkunit where id = '$id_workunit'");
-		if (mysql_query ("DELETE FROM tworkunit_task where id_workunit = '$id_workunit'")){
-				$result_output = "<h3 class='suc'>".__('Deleted successfully').'</h3>';
-				audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Work unit deleted", "Workunit for ".$config['id_user']);
-		} else {
-			$result_output = "<h3 class='error'>".__('Not deleted. Error deleting data').'</h3>';
-		}
-	} else {
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete WU $id_workunit without rigths");
+if ($operation == "delete") {
+	$success = delete_task_workunit ($id_workunit);
+	if (! $success) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation",
+			"Trying to delete WU $id_workunit without rigths");
 		include ("general/noaccess.php");
-		exit;
+		return;
 	}
+	
+	$result_output = "<h3 class='suc'>".__('Deleted successfully').'</h3>';
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Work unit deleted", "Workunit for ".$config['id_user']);
 }
-
 
 // Render
 if (isset($result_output))
@@ -171,5 +150,53 @@ if ($workunits) {
 		show_workunit_user ($workunit['id']);
 	}
 }
-
 ?>
+
+<script type="text/javascript">
+$(document).ready (function () {
+	$(".lock_workunit").click (function () {
+		var img = this;
+		id = this.id.split ("-").pop ();
+		values = Array ();
+		values.push ({name: "page", value: "operation/users/user_spare_workunit"});
+		values.push ({name: "operation", value: "lock"});
+		values.push ({name: "id_workunit", value: id});
+		jQuery.post ("ajax.php",
+			values,
+			function (data, status) {
+				$(img).fadeOut (function () {
+					$(this).remove ();
+				});
+				$("#edit-"+id).fadeOut (function () {
+					$(this).parent ("td").append (data);
+					$(this).remove ();
+				});
+			},
+			"html");
+		return false;
+	});
+	
+	$(".delete-workunit").attr ("onclick", "").click (function () {
+		if (! confirm ("<?php echo __('Are you sure?')?>"))
+			return false;
+		var div = $(this).parents ("div.notebody");
+		id = this.id.split ("-").pop ();
+		values = Array ();
+		values.push ({name: "page", value: "operation/users/user_spare_workunit"});
+		values.push ({name: "operation", value: "delete"});
+		values.push ({name: "id_workunit", value: id});
+		jQuery.post ("ajax.php",
+			values,
+			function (data, status) {
+				$(div).prev ("div.notetitle").slideUp (function () {
+					$(this).remove ();
+				});
+				$(div).slideUp (function () {
+					$(this).remove ();
+				});
+			},
+			"html");
+		return false;
+	});
+});
+</script>
