@@ -16,19 +16,17 @@
 
 include ("config.php");
 require_once ($config["homedir"].'/include/functions_calendar.php');
+require_once ($config["homedir"].'/include/functions_groups.php');
 
 $config["id_user"] = 'System';
 $now = time ();
-$compare_timestamp = date ("Y-m-d H:i:s", $now -  $config["notification_period"]);
+$compare_timestamp = date ("Y-m-d H:i:s", $now - $config["notification_period"]);
 $human_notification_period = give_human_time ($config["notification_period"]);
 
-
 /**
- * This check is executed once per day and can do several different subtasks
- * like email notify ending tasks or projects, events for this day, etc
- *
+ * This function is executed once per day and do several different subtasks
+ * like email notify ending tasks or projects, events for this day, etc.
  */
-
 function run_daily_check () {
 	$current_date = date ("Y-m-d h:i:s");
 
@@ -36,17 +34,14 @@ function run_daily_check () {
 	process_sql ("INSERT INTO tevent (type, timestamp) VALUES ('DAILY_CHECK', '$current_date') ");
 
 	// Do checks
-	run_calendar_check();
-	run_project_check();
-	run_task_check();
+	run_calendar_check ();
+	run_project_check ();
+	run_task_check ();
 }
 
-
 /**
- * This check notify user by mail if in current day there agenda items 
- *
+ * Checks and notify user by mail if in current day there agenda items 
  */
-
 function run_calendar_check () {
 	global $config;
 
@@ -64,10 +59,9 @@ function run_calendar_check () {
 }
 
 /**
- * This check notify user by mail if in current day there are ending projects
+ * Checks and notify user by mail if in current day there are ending projects
  *
  */
-
 function run_project_check () {
 	global $config;
 
@@ -88,10 +82,8 @@ function run_project_check () {
 
 
 /**
- * This check notify user by mail if in current day there are ending tasks
- *
+ * Checks and notify user by mail if in current day there are ending tasks
  */
-
 function run_task_check () {
 	global $config;
 
@@ -115,53 +107,115 @@ function run_task_check () {
 
 
 /**
- * Check if daily task has been executed
- *
+ * Check if daily task has been executed in the last 24 hours.
  */
 function check_daily_task () {
 	$current_date = date ("Y-m-d");
 	$current_date .= " 23:59:59";
-	$result = get_db_sql ("SELECT COUNT(id) FROM tevent WHERE type = 'DAILY_CHECK' AND timestamp < '$current_date'");
+	$result = get_db_sql ("SELECT COUNT(id) FROM tevent
+		WHERE type = 'DAILY_CHECK'
+		AND timestamp < '$current_date'");
 	if ($result > 0)
-		return 0; // Daily check has been executed yet
-	else
-		return 1; // need to run daily check
+		// Daily check has been executed in the past 24 hours.
+		return false;
+	return true;
 }
 
 /**
  * Check an SLA min response value on an incident and send emails if needed.
  *
- * @param $incident Incident array to check
+ * @param array Incident to check
  */
 function check_sla_min ($incident) {
-
-	// TODO: Send and email if SLA turns red AND before affected_sla_id = 0
-	// AND sla_disabled = 0.
-
-	// TODO: Check if in notification period $config["notification_period"]
-	// an email has been sent. If not, sent it.
-
-	check_incident_sla_min_response ($incident['id_incidencia']);
+	global $compare_timestamp;
+	global $config;
+	
+	$id_sla = check_incident_sla_min_response ($incident['id_incidencia']);
+	if (! $id_sla)
+		return false;
+	
+	/* Check if it was already notified in a specified time interval */
+	$sql = sprintf ('SELECT COUNT(id) FROM tevent
+		WHERE type = "SLA_MIN_RESPONSE_NOTIFY"
+		AND id_item = %d
+		AND timestamp > "%s"',
+		$incident['id_incidencia'],
+		$compare_timestamp);
+	$notified = get_db_sql ($sql);
+	if ($notified > 0)
+		return true;
+	
+	/* We need to notify via email to the risponsable user */
+	$user = get_user ($incident['id_usuario']);
+	$group_name = dame_nombre_grupo ($incident['id_grupo']);
+	$sla = get_sla ($id_sla);
+	$time = give_human_time ($sla['min_response'] * 3600);
+	$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
+	
+	$subject = "Incident #".$incident["id_incidencia"]."[".substr ($incident['titulo'], 0, 20)."...] need inmediate status change (SLA Min.Response Time)";
+	$body = 'Hello '.$user['nombre_real'].",\n\n";
+	$body .= 'Our SLA policy for incidents of group '.$group_name;
+	$body .= ', incidents should be updated in less than a specific time. ';
+	$body .= 'For this group this time is configured to be '.$time."\n\n";
+	$body .= "Please connect as soon as possible and update status for this incident. ";
+	$body .= "Otherwise, you will continue to receive this notifications.\n";
+	$body .= " You also could click on following URL: \n\n$url";
+	
+	integria_sendmail ($user['direccion'], $subject, $body);
+	
+	insert_event ('SLA_MIN_RESPONSE_NOTIFY', $incident['id_incidencia']);
+	
+	return true;
 }
 
 /**
  * Check an SLA max response value on an incident and send emails if needed.
  *
- * @param $incident Incident array to check
+ * @param array Incident to check
  */
 function check_sla_max ($incident) {
-
-	// TODO: Send and email if SLA turns red AND before affected_sla_id = 0
-	// AND sla_disabled = 0.
-
-	// TODO: Check if in notification period $config["notification_period"]
-	// an email has been sent. If not, sent it.
-
-	check_incident_sla_max_response ($incident['id_incidencia']);
+	global $compare_timestamp;
+	global $config;
+	
+	$id_sla = check_incident_sla_max_response ($incident['id_incidencia']);
+	if (! $id_sla)
+		return false;
+	
+	/* Check if it was already notified in a specified time interval */
+	$sql = sprintf ('SELECT COUNT(id) FROM tevent
+		WHERE type = "SLA_MAX_RESPONSE_NOTIFY"
+		AND id_item = %d
+		AND timestamp > "%s"',
+		$incident['id_incidencia'],
+		$compare_timestamp);
+	$notified = get_db_sql ($sql);
+	if ($notified > 0)
+		return true;
+	
+	/* We need to notify via email to the risponsable user */
+	$user = get_user ($incident['id_usuario']);
+	$group_name = dame_nombre_grupo ($incident['id_grupo']);
+	$sla = get_sla ($id_sla);
+	$time = give_human_time ($sla['max_response'] * 3600);
+	$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
+	
+	$subject = "Incident #".$incident["id_incidencia"]."[".substr ($incident['titulo'], 0, 20)."...] need inmediate status change (SLA Max.Response Time)";
+	$body = 'Hello '.$user['nombre_real'].",\n\n";
+	$body .= 'Our SLA policy for incidents of group '.$group_name;
+	$body .= ', incidents should has a resolution in a maximun period of time. ';
+	$body .= 'For this group this period is configured to be '.$time."\n\n";
+	$body .= "Please connect as soon as possible and update status for this incident. ";
+	$body .= "Otherwise, you will continue to receive this notifications.\n";
+	$body .= " You also could click on following URL: \n\n$url";
+	
+	integria_sendmail ($user['direccion'], $subject, $body);
+	
+	insert_event ('SLA_MAX_RESPONSE_NOTIFY', $incident['id_incidencia']);
 }
 
 $incidents = get_db_all_rows_sql ('SELECT * FROM tincidencia
-	WHERE sla_disabled = 0 AND estado NOT IN (6,7)');
+	WHERE sla_disabled = 0
+	AND estado NOT IN (6,7)');
 if ($incidents === false)
 	$incidents = array ();
 foreach ($incidents as $incident) {
@@ -169,54 +223,59 @@ foreach ($incidents as $incident) {
 	check_sla_max ($incident);
 }
 
-$slas = get_slas ();
+$slas = get_slas (false);
 foreach ($slas as $sla) {
 	$sql = sprintf ('SELECT id FROM tinventory WHERE id_sla = %d', $sla['id']);
+	
 	$inventories = get_db_all_rows_sql ($sql);
 	if ($inventories === false)
 		$inventories = array ();
 	
-	$noticed_groups = array();
+	$noticed_groups = array ();
 	foreach ($inventories as $inventory) {
 		$sql = sprintf ('SELECT tincidencia.id_incidencia, tincidencia.id_grupo 
 			FROM tincidencia, tincident_inventory
 			WHERE tincidencia.id_incidencia = tincident_inventory.id_incident
 			AND tincident_inventory.id_inventory = %d
-			AND affected_sla_id = 0 
-			AND sla_disabled = 0  
+			AND affected_sla_id = 0
+			AND sla_disabled = 0
 			AND estado NOT IN (6,7)', $inventory['id']);
-		
 		$opened_incidents = get_db_all_rows_sql ($sql);
-	
-		if (sizeof($opened_incidents) <= $sla['max_incidents']) 
+		
+		if (sizeof ($opened_incidents) <= $sla['max_incidents']) 
 			continue;
-		foreach ($opened_incidents as $incident_item){
-			/* There are too many open incidents */
-			$sql = sprintf ('UPDATE tincidencia
-				SET affected_sla_id = %d
-				WHERE id_incidencia = %d',
-				$incident_item['id_incidencia']);
-
-
-			// TODO: Check if in notification period $config["notification_period"]
-			// an email has been sent. If not, sent it.
-
+		
+		/* There are too many open incidents */
+		foreach ($opened_incidents as $incident) {
+			/* Check if it was already notified in a specified time interval */
+			$sql = sprintf ('SELECT COUNT(id) FROM tevent
+				WHERE type = "SLA_MAX_OPENED_INCIDENTS_NOTIFY"
+				AND id_item = %d
+				AND timestamp > "%s"',
+				$incident['id_grupo'],
+				$compare_timestamp);
+			$notified = get_db_sql ($sql);
+			if ($notified > 0)
+				continue;
+			
 			// Notify by mail for max. incidents opened (ONCE) to this 
 			// the group email, if defined, if not, to default user.
 
-			if (!isset($noticed_groups[$incident_item['id_group']])){
-				$noticed_groups[$incident_item['id_group']] = 1;			
-				$group = get_db_row ("tgrupo", "id_grupo", $incident_item['id_group']);
-				$nombre = $group['nombre'];
-				$email = $group['email'];
-				$mail_description = "Opened incidents limit for this group has been exceeded. Please check opened incidentes ASAP.\n";
-				integria_sendmail ($email, "[".$config["sitename"]."] Openened incident limit reached ($nombre)",  $mail_description );
+			if (! isset ($noticed_groups[$incident['id_grupo']])) {
+				$noticed_groups[$incident['id_grupo']] = 1;
+				$group_name = dame_nombre_grupo ($incident['id_grupo']);
+				$subject = "[".$config['sitename']."] Openened incident limit reached ($group_name)";
+				$body = "Opened incidents limit for this group has been exceeded. Please check opened incidentes.\n";
+				send_group_email ($incident['id_grupo'], $subject, $body);
+				insert_event ('SLA_MAX_OPENED_INCIDENTS_NOTIFY',
+					$incident['id_grupo']);
 			}
+		}
 	}
 }
 
 // Daily check
-if (check_daily_task() == 1)
-	run_daily_check();
+if (check_daily_task ())
+	run_daily_check ();
 
 ?>

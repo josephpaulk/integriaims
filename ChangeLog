@@ -1,3 +1,18 @@
+2008-11-19  Esteban Sanchez  <estebans@artica.es>
+
+	* include/functions_db.php: Added get_user(). Use generic functions in
+	some cases. Make check_incident_sla_min_response () to only check
+	not opened status.
+
+	* include/functions_groups.php: Added to repository. Group functions.
+
+	* include/integria_cron.php: Make email notifies available for SLA
+	checkings. Style corrections.
+
+	* index.php: Style correction.
+
+	* include/functions.php: Style correction in integria_sendmail().
+
 2008-11-19  Jorge Gonzalez  <jorgegonz@artica.es>                             
 
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish

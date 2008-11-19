@@ -665,9 +665,9 @@ function get_incident_title ($id_incident) {
 	return (string) get_db_value ('titulo', 'tincidencia', 'id_incidencia', $id_incident);
 }
 
-// --------------------------------------------------------------- 
-// Returns user email fiven its id
-// --------------------------------------------------------------- 
+function get_user ($id_user) {
+	return get_db_row ('tusuario', 'id_usuario', $id_user);
+}
 
 function get_user_email ($id_user) {
 	return (string) get_db_value ('direccion', 'tusuario', 'id_usuario', $id_user);
@@ -1186,8 +1186,8 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	}
 		
 	// Send email for owner and creator of this incident
-	$email_creator = get_db_value ("direccion", "tusuario", "id_usuario", $creator);
-	$email_owner = get_db_value ("direccion", "tusuario", "id_usuario", $usuario);
+	$email_creator = get_user_email ($creator);
+	$email_owner = get_user_email ($usuario);
   
 	// Incident owner
 	$text = "Incident #$id_inc ($titulo) has been updated. You can track this incident in the following URL (need to use your credentials): \n\n$url\n
@@ -1971,6 +1971,10 @@ function check_incident_sla_min_response ($id_incident) {
 		}
 		return false;
 	}
+	
+	/* Only incidents in status new are checked */
+	if ($incident['estado'] != 1)
+		return false;
 	
 	$slas = get_incident_slas ($id_incident, false);
 	$start = strtotime ($incident['inicio']);

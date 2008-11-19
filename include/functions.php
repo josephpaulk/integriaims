@@ -447,14 +447,16 @@ function integria_sendmail_attach ( $name, $email, $from, $subject, $fileatt, $f
 
 function integria_sendmail ($destination, $msg_subject = "[INTEGRIA] Automatic email notification", $msg_text) {
 	global $config;
-	if ($destination != "") {
-		$msg_text = ascii_output ($msg_text);
-		$msg_subject = ascii_output ($msg_subject);
-		$real_text = $config["HEADER_EMAIL"].$msg_text."\n\n".$config["FOOTER_EMAIL"];
-		$from = $config["mail_from"];
-		$headers = "From: $from\nX-Mailer: Integria IMS\n";
-		mail ($destination, $msg_subject, $real_text, $headers);
-	}
+	
+	if ($destination == '')
+		return false;
+	
+	$msg_text = ascii_output ($msg_text);
+	$msg_subject = ascii_output ($msg_subject);
+	$real_text = $config["HEADER_EMAIL"].$msg_text."\n\n".$config["FOOTER_EMAIL"];
+	$from = $config["mail_from"];
+	$headers = "From: $from\nX-Mailer: Integria IMS\n";
+	mail ($destination, $msg_subject, $real_text, $headers);
 }
 
 function topi_rndcode ($length = 6) {
