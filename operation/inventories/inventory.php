@@ -151,7 +151,6 @@ function check_inventory (id) {
 	jQuery.get ("ajax.php",
 		values,
 		function (data, status) {
-			console.log (data);
 			if (data == 1) {
 				show_inventory_details (id);
 			} else {

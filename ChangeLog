@@ -1,5 +1,9 @@
 2008-11-19  Esteban Sanchez  <estebans@artica.es>
 
+	* operation/inventories/inventory.php: Removed javascript debug.
+
+2008-11-19  Esteban Sanchez  <estebans@artica.es>
+
 	* operation/users/user_spare_workunit.php: Fixed an notice PHP error.
 
 2008-11-19  Ramon Novoa  <rnovoa@artica.es>
