@@ -1,5 +1,5 @@
 <?php
-// Integria 1.1 - http://integria.sourceforge.net
+// Integria IMS - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
@@ -52,6 +52,9 @@
 
     echo "<td style='background-color: #FF7BFE;'>";
     echo get_user_incident_worked_days ($id_user_show, $year). "</td><td>".__('Days worked (incidents)');
+
+	echo "<td style='background-color: #FFE053;'>";
+    echo get_user_other ($id_user_show, $year). "</td><td>".__('Other)');
 
     echo "</table>";
     

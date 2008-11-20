@@ -1,3 +1,33 @@
+2008-11-20  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_graph.php: Fixed problem in graph (bad parameter).
+
+	* include/functions_calendar.php: Shows Non Justified hours in yellow.
+ 
+	* include/functions.php: no_permission() now show noaccess.php and break.
+
+	* include/functions_db.php: Added get_wu_hours_user(), get_user_other().
+	Added event creation on incident, task and project deletion.
+	Added a generic WU/Task function that should be used to create WU':
+	create_wu_task().
+
+	* include/integria_cron.php: Implemented autowu feature.
+
+	* operation/projects/task_emailreport.php: New feature that sends an
+	email with task detail to all participants.
+
+	* operation/side_menu.php: added taskemailreport, added check to do not
+	view task menu with id_task < 0
+
+	* operation/user_report/report_annual.php: Now shows non justified hours.
+	Fixed a bug that don't sum data properly when different sources mixed.
+
+	* general/noaccess.php: Message update.
+
+	* godmode/setup/setup.php, config_process.php: Added a black list of 
+	people without auto-wu feature activated.
+
+
 2008-11-19  Esteban Sanchez  <estebans@artica.es>
 
 	* include/functions_db.php: Added get_user(). Use generic functions in

@@ -163,7 +163,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 	}
 
 	// Dynamic sub options menu (TASKS)
-	if ($id_task) {
+	if ($id_task > 0) {
 		echo "<br>";
 
 		echo "<div class='portlet'>";
@@ -207,6 +207,13 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 			else
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task'>".__('People')."</a></li>";
+
+			// Task email report
+			if ($sec2 == "operation/projects/task_emailreport")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_emailreport&id_task=$id_task&id_project=$id_project'>".__('Email report')."</a></li>";
 
 			// Move this task
 			if ($sec2 == "operation/projects/task_move")

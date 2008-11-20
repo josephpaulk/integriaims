@@ -156,20 +156,14 @@ function get_parameter ($name, $default = '') {
 	return $default;
 }
 
-// ---------------------------------------------------------------
-// no_permission () - Display no perm. access
-// ---------------------------------------------------------------
+/** 
+* Display a notice about no access and close output stream
+*
+*/
+
 function no_permission () {
 	global $config;
-	
-	echo "<h3 class='error'>".__('You don\'t have access')."</h3>";
-	echo "<img src='".$config["base_url"]."/images/noaccess.gif' width='120'><br><br>";
-	echo "<table width=550>";
-	echo "<tr><td>";
-	echo __('You don\'t have enough permission to access this resource');
-	echo "</table>";
-	echo "<tr><td><td><td><td>";
-	include $config["homedir"]."/general/footer.php";
+	include $config["homedir"]."/general/noaccess.php";
 	exit;
 }
 

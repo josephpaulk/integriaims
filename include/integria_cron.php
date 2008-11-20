@@ -37,6 +37,71 @@ function run_daily_check () {
 	run_calendar_check ();
 	run_project_check ();
 	run_task_check ();
+	run_autowu();
+}
+
+/**
+ * Autofill WU ("Not justified") for users without reporting anything.
+ * 
+ * This function is used to verify that a user has $config["hours_perday"]
+ * (as minimum) in each labor day in a period of time going from
+ * now - $config["autowu_completion"] until now - ($config["autowu_completion"]*2)
+ * If user dont have WU in that days, will create a WU associated 
+ * to task "Not Justified" inside special project -1.
+ */
+
+function run_autowu () {
+	global $config;
+
+	$now = date ("Y-m-d");
+ 	// getWorkingDays($startDate,$endDate,$holidays){
+
+	$autowu = $config["autowu_completion"];
+
+	if ($autowu == 0)
+		return;
+
+	$autowu2 = $autowu * 2;
+
+	// Calc interval dates
+	$start_date = date('Y-m-d', strtotime("$now - $autowu2 days"));
+	$end_date = date('Y-m-d', strtotime("$now - $autowu days"));
+	$current_date = $start_date;
+
+	
+	// For each user
+	$users = get_db_all_rows_sql ("SELECT * FROM tusuario");
+
+	$end_loop = 0;
+	
+	while ($end_loop == 0){
+		foreach ($users as $user){
+			if (!is_working_day($current_date))
+				continue;
+			
+			// If this user is in no_wu_completion list, skip it.
+			if (strpos($config["no_wu_completion"], $user["id_usuario"]))
+				continue;
+			
+	
+			$user_wu = get_wu_hours_user ($user["id_usuario"], $current_date);
+			if ($user_wu < $config["hours_perday"]) {
+				$nombre = $user['nombre_real'];
+				$email = $user['direccion'];
+	
+				$mail_description = "Integria IMS has entered an automated Workunit to 'Not justified' task because you've more than $autowu days without filling by a valid Workunit.";
+	
+				integria_sendmail ($email, "[".$config["sitename"]."] Automatic WU (Non justified) has been entered",  $mail_description );
+	
+				create_wu_task (-3, $user["id_usuario"], $mail_description, 0, 0, 0, $config["hours_perday"]-$user_wu, $current_date);
+	
+			}
+			
+		}
+	$current_date = date('Y-m-d', strtotime("$current_date +1 day"));	
+	if ($current_date == $end_date)
+		$end_loop = 1;
+	}
 }
 
 /**

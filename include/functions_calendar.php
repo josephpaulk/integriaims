@@ -352,17 +352,36 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
             }
 		}
 		
+		// Show SUM workunits for that day (YELLOW) - ORANGE (not justified)
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task <-1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+
+		$res=mysql_query($sqlquery);
+		if ($row=mysql_fetch_array($res)){
+			$workhours_d = $row[0];
+			if ($workhours_d > 0){
+				$normal = 4;
+            }
+		}
+
 		$mylink = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user&timestamp_l=$year-$month-$day 00:00:00&timestamp_h=$year-$month-$day 23:59:59";
 
 	    if ($normal == 0)
     		$calendar .= "<td class='calendar'>$day</td>";
-        elseif ($normal == 1)
-            $calendar .= "<td class='calendar' style='background-color: #98FF8B;'><a href='$mylink' title='$workhours_a'>$day</A></td>";
-        elseif ($normal == 2)
-            $calendar .= "<td class='calendar' style='background-color: #FFFF80;'><a href='$mylink' title='$workhours_b'>$day</a></td>";
+        elseif ($normal == 1){
+			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
+            $calendar .= "<td class='calendar' style='background-color: #98FF8B;'><a href='$mylink' title='$total_wu'>$day</A></td>";
+		} 
+        elseif ($normal == 2) {
+			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
+            $calendar .= "<td class='calendar' style='background-color: #FFFF80;'><a href='$mylink' title='$total_wu'>$day</a></td>";
+		}
         elseif ($normal == 3) {
-            $total_wu = $workhours_a + $workhours_c;
+            $total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
             $calendar .= "<td class='calendar' style='background-color: #FF7BFE;'><a href='$mylink' title='$total_wu'>$day</a></td>";
+		}
+		elseif ($normal == 4) {
+            $total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
+            $calendar .= "<td class='calendar' style='background-color: #FFDE46;'><a href='$mylink' title='$total_wu'>$day</a></td>";
         }
 	}
 	if($weekday != 7) $calendar .= '<td class=calendar" colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
@@ -701,5 +720,83 @@ function get_working_days ( $hours ) {
 	global $config;
 	return ($hours / $config["hours_perday"]);
 }
+
+
+/**
+* Converts a unix timestamp to iCal format (UTC) - if no timezone is
+* specified then it presumes the uStamp is already in UTC format.
+* tzone must be in decimal such as 1hr 45mins would be 1.75, behind
+* times should be represented as negative decimals 10hours behind
+* would be -10
+* 
+* $uStamp longint UNIX timestamp
+* $tzone  float   Timezone  
+*/
+
+function unixToiCal($uStamp = 0, $tzone = 0.0) {
+	$uStampUTC = $uStamp + ($tzone * 3600);       
+	$stamp  = date("Ymd\THis\Z", $uStampUTC);	
+	return $stamp;       
+}
+
+/**
+* Returns the no. of business days between two dates and it skeeps the holidays
+*
+* $startDate string Startdate for interval of check (yyyy-mm-dd)
+* $endDate   string Startdate for interval of check (yyyy-mm-dd)
+* $holidays array Array containing holidays (yyyy-mm-dd)
+*
+**/
+
+function getWorkingDays($startDate,$endDate,$holidays){
+    //The total number of days between the two dates. We compute the no. of seconds and divide it to 60*60*24
+    //We add one to inlude both dates in the interval.
+    $days = (strtotime($endDate) - strtotime($startDate)) / 86400 + 1;
+
+    $no_full_weeks = floor($days / 7);
+    $no_remaining_days = fmod($days, 7);
+
+    //It will return 1 if it's Monday,.. ,7 for Sunday
+    $the_first_day_of_week = date("N",strtotime($startDate));
+    $the_last_day_of_week = date("N",strtotime($endDate));
+
+    //---->The two can be equal in leap years when february has 29 days, the equal sign is added here
+    //In the first case the whole interval is within a week, in the second case the interval falls in two weeks.
+    if ($the_first_day_of_week <= $the_last_day_of_week){
+        if ($the_first_day_of_week <= 6 && 6 <= $the_last_day_of_week) $no_remaining_days--;
+        if ($the_first_day_of_week <= 7 && 7 <= $the_last_day_of_week) $no_remaining_days--;
+    }
+    else{
+        if ($the_first_day_of_week <= 6) $no_remaining_days--;
+        //In the case when the interval falls in two weeks, there will be a Sunday for sure
+        $no_remaining_days--;
+    }
+
+    //The no. of business days is: (number of weeks between the two dates) * (5 working days) + the remainder
+//---->february in none leap years gave a remainder of 0 but still calculated weekends between first and last day, this is one way to fix it
+   $workingDays = $no_full_weeks * 5;
+    if ($no_remaining_days > 0 )
+    {
+      $workingDays += $no_remaining_days;
+    }
+
+    //We subtract the holidays
+    foreach($holidays as $holiday){
+        $time_stamp=strtotime($holiday);
+        //If the holiday doesn't fall in weekend
+        if (strtotime($startDate) <= $time_stamp && $time_stamp <= strtotime($endDate) && date("N",$time_stamp) != 6 && date("N",$time_stamp) != 7)
+            $workingDays--;
+    }
+
+    return $workingDays;
+
+	/* Samples: 
+		$holidays=array("2006-12-25","2006-12-26","2007-01-01");
+		echo getWorkingDays("2006-12-22","2007-01-06",$holidays)
+ 		=> will return 8
+	*/
+
+}
+
 
 ?>

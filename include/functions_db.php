@@ -253,6 +253,24 @@ function get_incident_task_workunit_hours ($id_task) {
 	return (int) get_db_sql ($sql);
 }
 
+
+/**
+* Return total hours assigned in specific day by a user
+*
+* $id_user	string ID Of user
+* $timestamp string date in format YYYY-MM-DD
+**/
+
+function get_wu_hours_user ($id_user, $timestamp) {
+	global $config;
+	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
+			FROM tworkunit
+			WHERE tworkunit.id_user = "%s"  
+			AND tworkunit.timestamp LIKE "%s%%"', $id_user, $timestamp);
+	return (int) get_db_sql ($sql);
+}
+
+
 /**
 * Return total hours assigned to incidents assigned to tasks in a project
 *
@@ -427,6 +445,7 @@ function calculate_project_progress ($id_project){
 function borrar_incidencia ($id_incident) {
 	global $config;
 
+	$incident_title = get_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident);
 	$sql = sprintf ('DELETE FROM tincidencia
 			WHERE id_incidencia = %d', $id_incident);
 	process_sql ($sql);
@@ -468,6 +487,7 @@ function borrar_incidencia ($id_incident) {
 			WHERE id_incident = %d', $id_incident);
 	process_sql ($sql);
 	incident_tracking ($id_incident, INCIDENT_DELETED, 0);
+	insert_event ('INCIDENT_DELETED', 0,0, $incident_title);
 }
 
 /**
@@ -1000,6 +1020,7 @@ function get_db_all_fields_in_table ($table, $field, $condition='') {
 
 
 function delete_project ($id_project){
+	$project_name = get_db_value ("name", "tproject", "id", $id_project);
 	$query = "DELETE FROM trole_people_project WHERE id_project = $id_project";
 	mysql_query($query);
 	$query = "DELETE FROM trole_people_task, ttask WHERE ttask.id_project = $id_project AND trole_people_task.id_task = ttask.id";
@@ -1008,10 +1029,10 @@ function delete_project ($id_project){
 	mysql_query($query);
 	$query = "DELETE FROM tproject WHERE id = $id_project";
 	mysql_query($query);
+	insert_event ('PROJECT_DELETED', 0,0, $project_name);
 }
 
 function delete_task ($id_task){
-
 	// Have a parent ?
 	$task = get_db_row ("ttask", "id", $id_task);
 	if ($task["id_parent_task"] > 0){
@@ -1031,6 +1052,7 @@ function delete_task ($id_task){
 		$query = "DELETE FROM ttask WHERE id = $id_task";
 		mysql_query($query);
 	}
+	insert_event ('TASK_DELETED', 0,0, $task["name"]);
 }
 
 function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg = "") {
@@ -1384,6 +1406,12 @@ function get_user_worked_days ($id_user, $year) {
 function get_user_incident_worked_days ($id_user, $year) {
 	global $config;
 	$hours = get_db_sql ("SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident > 0 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59'");
+	return format_numeric ($hours/$config["hours_perday"]);
+}
+
+function get_user_other ($id_user, $year){
+	global $config;
+	$hours = get_db_sql ("SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task < -1 AND id_user = '$id_user' AND timestamp >= '$year-01-00 00:00:00' AND timestamp <= '$year-12-31 23:59:59'");
 	return format_numeric ($hours/$config["hours_perday"]);
 }
 
@@ -2107,4 +2135,18 @@ function get_task_end_date_by_user ($now){
 	return $result;
 }
 
+function create_wu_task ($id_task, $id_user, $description, $have_cost, $id_profile, $public, $duration, $timestamp){
+	global $config;
+	$sql = sprintf ('INSERT INTO tworkunit 
+					(timestamp, duration, id_user, description, have_cost, id_profile, public) 
+					VALUES ("%s", %f, "%s", "%s", %d, %d, %d)',
+					$timestamp, $duration, $id_user, $description, $have_cost, $id_profile, $public);
+	$id_workunit = process_sql ($sql, 'insert_id');
+	if ($id_workunit !== false) {
+		$sql = sprintf ('INSERT INTO tworkunit_task (id_task, id_workunit) VALUES (%d, %d)', -3, $id_workunit);
+		$result = process_sql ($sql, 'insert_id');
+		return $id_workunit;
+	}
+	return false;
+}
 ?>

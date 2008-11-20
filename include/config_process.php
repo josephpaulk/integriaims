@@ -95,6 +95,9 @@ if (!isset ($config["language_code"]))
 if (!isset ($config["autowu_completion"]))
 	$config["autowu_completion"] = "0";
 
+if (!isset ($config["no_wu_completion"]))
+	$config["no_wu_completion"] = "";
+
 if (!isset ($config["FOOTER_EMAIL"]))
 	$config["FOOTER_EMAIL"] = __('Please do NOT answer this email, it has been automatically created by Integria (http://integria.sourceforge.net).');
 

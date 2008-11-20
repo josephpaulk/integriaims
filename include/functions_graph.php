@@ -100,7 +100,6 @@ function graph_workunit_user ($width, $height, $id_user, $date_from ){
 function graph_workunit_project_user ($width, $height, $id_user, $date_from, $date_to = 0){
 	require ("../include/config.php");
 	if ($date_to == 0){
-		echo $date_to;
 		$date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
 	}
 

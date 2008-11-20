@@ -72,11 +72,8 @@ if ($delete_project) {
 	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 	if ($id_owner == $config['id_user'] || dame_admin ($config['id_user'])) {
 		// delete_project ($id_project);
-		$sql = sprintf ('DELETE FROM tproject WHERE disabled = 1 AND id = %d', $id_project);
-		process_sql ($sql);
+		delete_project ($id_project);
 		echo '<h3 class="suc">'.__('Incident successfully deleted').'</h3>';
-		audit_db ($config['id_user'], $REMOTE_ADDR, "Project deleted", "User ".$config['id_user']." deleted project #".$id_project);
-		project_tracking ($id_project, PROJECT_DELETED);
 	} else {
 		audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Forbidden", "User ".$config['id_user']." try to delete project #$id_project");
 		echo '<h3 class="error">'.__('There was a problem deleting incident').'</h3>';

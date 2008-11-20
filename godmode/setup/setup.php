@@ -30,7 +30,7 @@ $update = (bool) get_parameter ("update");
 if ($update) {
 	$config["block_size"] = (int) get_parameter ("block_size", 20);
 	$config["language_code"] = (string) get_parameter ("language_code", "en");
-
+	$config["no_wu_completion"] = (string) get_parameter ("no_wu_completion", "");
 	$config["currency"] = (string) get_parameter ("currency", "€");
 	$config["hours_perday"] = (int) get_parameter ("hours_perday", "8");
 	$config["sitename"] = (string) get_parameter ("sitename", "Integria IMS");
@@ -49,6 +49,9 @@ if ($update) {
 	process_sql ("DELETE FROM tconfig WHERE token = 'autowu_completion'");
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('autowu_completion', '".$config["autowu_completion"]."')");
 
+	process_sql ("DELETE FROM tconfig WHERE token = 'no_wu_completion'");
+	process_sql ("INSERT INTO tconfig (token, value) VALUES ('no_wu_completion', '".$config["no_wu_completion"]."')");
+
 }	
 
 echo "<h2>".__('Integria general setup')."</h2>";
@@ -61,6 +64,11 @@ $table->data = array ();
 $table->data[0][0] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
 	'language_code', $config['language_code'], 'javascript:this.form.submit()',
 	'', '', true, false, false, __('Language'));
+
+$table->data[0][1] = print_input_text ("no_wu_completion", $config["no_wu_completion"], '',
+	20, 500, true, __('No WU completion users'));
+$table->data[0][1] .= integria_help ("no_wu_completion", true);
+
 
 $table->data[1][0] = print_input_text ("block_size", $config["block_size"], '',
 	5, 5, true, __('Block size for pagination'));
