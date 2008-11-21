@@ -54,7 +54,7 @@
     echo get_user_incident_worked_days ($id_user_show, $year). "</td><td>".__('Days worked (incidents)');
 
 	echo "<td style='background-color: #FFE053;'>";
-    echo get_user_other ($id_user_show, $year). "</td><td>".__('Other)');
+    echo get_user_other ($id_user_show, $year). "</td><td>".__('Other');
 
     echo "</table>";
     

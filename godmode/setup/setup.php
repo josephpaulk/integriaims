@@ -54,7 +54,7 @@ if ($update) {
 
 }	
 
-echo "<h2>".__('Integria general setup')."</h2>";
+echo "<h2>".__('General setup')."</h2>";
 
 $table->width = '90%';
 $table->class = 'databox';

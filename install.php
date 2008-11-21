@@ -195,16 +195,16 @@ function install_step1() {
 		echo "
 		</div>
 		<div class='box'>
-			<img src='images/integria_white.png' border='0'>
+			<img src='images/integria_white.png'>
 			<br><br>
 		</div>
 		<div class='box'>
-			<img src='images/step0.png' border='0'>
+			<img src='images/step0.png'>
 		</div>
 		<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'>";
 		if ($writable == 0)
 			echo "
-			<a href='install.php?step=2'><img align='right' src='images/arrow_next.png' border='0'></a>";
+			<a href='install.php?step=2'><img align='right' src='images/arrow_next.png'></a>";
 		else
 			echo "<div class='warn'><b>ERROR:</b>You need to setup permissions to be able to write in ./include directory</div>";
 
@@ -229,7 +229,7 @@ function install_step2() {
 	<div id='wizard' style='height: 450px;'>
 		<div id='install_box'>";
 		echo "<h1>Checking software dependencies</h1>";
-			echo "<table border=0 width=330 cellpadding=5 cellspacing=5>";
+			echo "<table border='0' width='330' cellpadding='5' cellspacing='5'>";
 			$res = 0;
 			$res += check_variable(phpversion(),"4.3","PHP version >= 4.3.x",1);
 			$res += check_extension("mysql","PHP MySQL extension");
@@ -246,11 +246,11 @@ function install_step2() {
 			echo "</table>
 		</div>
 		<div class='box'>
-			<img src='images/integria_white.png' border='0'' alt=''>
+			<img src='images/integria_white.png' alt=''>
 			<br><br>
 		</div>
 		<div class='box'>
-			<img src='images/step1.png' border='0' alt=''>
+			<img src='images/step1.png' alt=''>
 		</div>
 		<div id='install_box' style='margin-bottom: 0px;margin-left: 25px; '>";
 			if ($res > 0) {
@@ -260,7 +260,7 @@ function install_step2() {
 				</p>
 				Ignore it. <a href='install.php?step=3'>Force install Step #3</a>";
 			} else {
-				echo "<a href='install.php?step=3'><img align='right' src='images/arrow_next.png' border=0 alt=''></a>";
+				echo "<a href='install.php?step=3'><img align='right' src='images/arrow_next.png' alt=''></a>";
 			}
 			echo "
 		</div>
@@ -324,11 +324,11 @@ function install_step3() {
 			</div>
 			</div>
 			<div class='box'>
-				<img src='images/integria_white.png' border='0' alt=''>
+				<img src='images/integria_white.png' alt=''>
 				<br><br>
 			</div>
 			<div class='box'>
-				<img src='images/step2.png' border='0' alt=''>
+				<img src='images/step2.png' alt=''>
 			</div>
 		</div>
 		$integria_footertext
@@ -457,17 +457,17 @@ $config["base_url"]="'.$url.'";		// Base URL
 			}
 		echo "</table></div>
 		<div class='box'>
-			<img src='images/integria_white.png' border='0' alt=''>
+			<img src='images/integria_white.png' alt=''>
 			<br><br>
 		</div>
 		
 		<div class='box'>
-			<img src='images/step3.png' border='0' alt=''>
+			<img src='images/step3.png' alt=''>
 		</div>
 		
 		<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'><p>";
 			if ($everything_ok == 1) {
-				echo "<a href='install.php?step=5'><img align='right' src='images/arrow_next.png' border=0 class=''></a>";
+				echo "<a href='install.php?step=5'><img align='right' src='images/arrow_next.png' class=''></a>";
 			} else {
 				echo "<img src='images/info.png'> You get some problems. Installation is not completed. 
 				<p>Please correct failures before trying again. All database schemes created in this step have been dropped.</p>";
@@ -500,11 +500,11 @@ function install_step5() {
 			<p><a href='index.php'>Click here to access Integria</A></p>
 		</div>
 		<div class='box'>
-			<img src='images/integria_white.png' border='0'></a>
+			<img src='images/integria_white.png'></a>
 			<br><br>			
 		</div>
 		<div class='box'>
-			<img src='images/step4.png' border='0'><br>
+			<img src='images/step4.png'><br>
 		</div>
 	</div>
 	$integria_footertext

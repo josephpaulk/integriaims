@@ -1,3 +1,21 @@
+2008-11-21  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	  translation.
+
+	* include/languages/index.pot: Updated po template.
+
+	* install.php: Removed border=0 occurences.
+
+	* operation/projects/task_emailreport.php, operation/side_menu.php,
+	  operation/users/user_edit.php,
+	  operation/user_report/report_annual.php,
+	  operation/user_report/report_full.php, general/home.php,
+	  godmode/setup/setup.php, godmode/usuarios/configurar_usuarios.php,
+	  godmode/updatemanager/main.php: Improved i18n infrastructure.
+
+	* general/logon_ok.php: Deleted unlinked page.
+
 2008-11-20  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_graph.php: Fixed problem in graph (bad parameter).

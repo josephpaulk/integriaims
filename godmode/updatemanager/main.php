@@ -42,7 +42,7 @@ if ($settings->customer_key == FREE_USER) {
 	echo '<p />';
 	echo __('Update Manager is one of the most advanced features of Integria Enterprise version, for more information visit <a href="http://integria.sourceforge.net">http://integria.sourceforge.net</a>');
 	echo '<p />';
-	echo __('Update Manager sends anonymous information about Integria Enterprise usage (number of agents and modules running).');
+	echo __('Update Manager sends anonymous information about Integria Enterprise usage (number of users, projects, and items at the inventory).');
 	echo '</div>';
 }
 

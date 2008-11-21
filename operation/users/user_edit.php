@@ -131,7 +131,7 @@ if ($has_permission) {
 }
 
 if ($has_permission) {
-	$table->data[2][0] = print_input_text ('email', $email, '', 20, 60, true, __('E-mail'));
+	$table->data[2][0] = print_input_text ('email', $email, '', 20, 60, true, __('Email'));
 	$table->data[2][1] = print_input_text ('phone', $phone, '', 20, 40, true, __('Telephone'));
 	$table->data[4][0] = print_select_from_sql ("SELECT id_language, name FROM tlanguage ORDER BY name",
 		'lang', $user['lang'], '', __('Default'), '', true, false, false, __('Language'));
@@ -144,7 +144,7 @@ if ($has_permission) {
 	$email = ($email != '') ? $email : __('Not provided');
 	$phone = ($phone != '') ? $phone : __('Not provided');
 	
-	$table->data[2][0] = print_label (__('E-mail'), '', '', true, $email);
+	$table->data[2][0] = print_label (__('Email'), '', '', true, $email);
 	$table->data[2][1] = print_label (__('Telephone'), '', '', true, $phone);
 	if ($user['comentarios'] != '')
 		$table->data[3][0] = print_label (__('Comments'), '', '', true, $comments);

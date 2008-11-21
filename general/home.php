@@ -33,7 +33,7 @@ if (!isset($config["id_user"]))
 		echo "<tr><td>";
 		echo "<h1>".__('Agenda')."</h1>";
 		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-		echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'><img src='images/calendar.png' border=0></A></div>";
+		echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'><img src='images/calendar.png'></a></div>";
 		echo "<td valign='top'><br><b>";
 		echo __('Events for next three days');
 		echo '<hr width="100%" size="1">';
@@ -52,10 +52,10 @@ if (!isset($config["id_user"]))
 			$pname = $row["pname"];
 			$idp = $row["idp"];
 			$pend = $row["pend"];
-			echo "<b>".__("Project end"). "</b> (".$pend.") : ";
+			echo "<b>".__("Project end"). "</b> (".$pend."): ";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$idp'>";
 			echo $pname;
-			echo "</A>";
+			echo "</a>";
 			echo "<br>";
 		}
 
@@ -66,10 +66,10 @@ if (!isset($config["id_user"]))
 			$tname = $row["tname"];
 			$idt = $row["idt"];
 			$tend = $row["tend"];
-			echo "<b>".__("Task end"). "</b> (". $tend.") : ";
+			echo "<b>".__("Task end"). "</b> (". $tend."): ";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view'>";
 			echo $tname;
-			echo "</A>";
+			echo "</a>";
 			echo "<br>";
 		}
 
@@ -82,9 +82,9 @@ if (!isset($config["id_user"]))
 		echo "<tr><td>";
 		echo "<h1>".__('To-Do')."</h1>";
 		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-		echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'><img src='images/todo.png' border=0></a></div>";
+		echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'><img src='images/todo.png'></a></div>";
 		echo "<td valign='top'><br><b>";
-		echo __('Todo active you have')." : ".todos_active_user ($config["id_user"])."</b><br>";
+		echo __('Todo active you have').": ".todos_active_user ($config["id_user"])."</b><br>";
 		echo '<hr width="100%" size="1">';
 		$sql_2 = "SELECT * FROM ttodo WHERE assigned_user = '".$config["id_user"]."' ORDER BY priority DESC limit 5";
 		$result_2 = mysql_query($sql_2);
@@ -100,11 +100,11 @@ if (!isset($config["id_user"]))
 		echo "<tr><td>";
 		echo "<h1>".__('Projects')."</h1>";
 		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project'><img src='images/project.png' border=0></a></div>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/project'><img src='images/project.png'></a></div>";
 
 
 		echo "<td valign='top'><br><b>";
-		echo __('Projects active you have')." : ".projects_active_user ($config["id_user"]);
+		echo __('Projects active you have').": ".projects_active_user ($config["id_user"]);
 		echo '<hr width="100%" size="1">';
 		echo "<br>";
 		$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
@@ -117,19 +117,19 @@ if (!isset($config["id_user"]))
 		echo "<tr><td>";
 		echo "<h1>".__('Incidents')."</h1>";
 		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'><img src='images/incidents.png' border=0></A></div>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'><img src='images/incidents.png'></a></div>";
 		echo "<td valign='top'><br><b>";
-		echo __('Incidents active you have')." : ".incidents_active_user ($config["id_user"]);
+		echo __('Incidents active you have').": ".incidents_active_user ($config["id_user"]);
 		echo '<hr width="100%" size="1">';
 		echo "</b><br><br>";
 		 $sql_2 = "SELECT * FROM tincidencia WHERE id_usuario = '".$config["id_user"]."' AND estado IN (1,2,3,4,5) ORDER BY actualizacion DESC limit 5";
 		$result_2 = mysql_query($sql_2);
 		while ($row_2 = mysql_fetch_array($result_2)){
 			$idi = $row_2["id_incidencia"];
-			echo $row_2["actualizacion"]." : ";
+			echo $row_2["actualizacion"].": ";
 			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$idi'>";
 			echo substr($row_2["titulo"],0,55);
-			echo "</A>";
+			echo "</a>";
 			echo "<br>";
 		}
 	}

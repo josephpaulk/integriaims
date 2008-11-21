@@ -613,7 +613,7 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR")) {
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_cat'>".__('Manage Categories')."</a></li>";
+		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_cat'>".__('Manage categories')."</a></li>";
 	}
 
 
@@ -713,7 +713,7 @@ if ($sec == "users") {
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=users&amp;sec2=operation/users/user'>".__('View Users')."</a></li>";
+		echo "<a href='index.php?sec=users&amp;sec2=operation/users/user'>".__('View users')."</a></li>";
 
 		// Edit my user
 		if ($sec2 == "operation/users/user_edit")
@@ -824,7 +824,7 @@ if ($sec == "users") {
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage Groups')."</a></li>";
+		echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
 		
 		enterprise_include ("operation/sidemenu_user_mgmt.php");
 		
@@ -861,7 +861,7 @@ echo '<strong>'.$config['id_user'].'</strong>';
 echo '</a><br/>';
 echo "<em>".$realname."</em><br />";
 echo __('Phone').": $telephone <br />";
-echo __('E-mail').':</strong> '.$email.'<br />';
+echo __('Email').':</strong> '.$email.'<br />';
 
 // Link to workunit calendar (month)
 echo '<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';
