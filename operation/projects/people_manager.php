@@ -58,7 +58,7 @@ if ($operation == "insert"){
 	$id_task_inserted = process_sql ($sql, 'insert_id');
 	
 	if ($id_task_inserted !== false) {
-		$result_output = "<h3 class='suc'>".__('Created successfully')."</h3>";
+		$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
 		if ($id_task != -1){
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to task", "User $user added to task ".get_db_value ("name", "ttask", "id", $id_task));
 		} else {

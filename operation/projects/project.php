@@ -57,7 +57,7 @@ if ($activate_project) {
 	if ($id_owner == $config['id_user'] || dame_admin ($config['id_user'])) {
 		$sql = sprintf ('UPDATE tproject SET disabled = 0 WHERE id = %d', $id_project);
 		process_sql ($sql);
-		echo '<h3 class="suc">'.__('Project successfully deleted').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 		audit_db ($config['id_user'], $REMOTE_ADDR, "Project activated", "User ".$config['id_user']." activated project #".$id_project);
 		project_tracking ($id_project, PROJECT_ACTIVATED);
 	} else {
@@ -106,7 +106,7 @@ if ($action == 'insert') {
 	if ($id_project === false) {
 		echo '<h3 class="err">'.__('Project cannot be created, problem found.').'</h3>';
 	} else {
-		echo '<h3 class="suc">'.__('Project created successfully').' #'.$id_project.'</h3>';
+		echo '<h3 class="suc">'.__('Successfully created').' #'.$id_project.'</h3>';
 		audit_db ($usuario, $REMOTE_ADDR, "Project created", "User ".$config['id_user']." created project '$name'");
 		
 		project_tracking ($id_project, PROJECT_CREATED);

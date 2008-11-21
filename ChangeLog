@@ -5,6 +5,37 @@
 
 	* include/languages/index.pot: Updated po template.
 
+	* operation/manufacturers/manufacturer_detail.php,
+	  operation/incidents/type_detail.php,
+	  operation/incidents/incident_detail.php,
+	  operation/buildings/building_detail.php,
+	  operation/projects/project_group_detail.php,
+	  operation/projects/project.php,
+	  operation/projects/people_manager.php,
+	  operation/projects/milestones.php,
+	  operation/projects/task_detail.php, operation/kb/manage_cat.php,
+	  operation/kb/manage_data.php,
+	  operation/contracts/contract_detail.php,
+	  operation/slas/sla_detail.php, operation/todo/todo.php,
+	  operation/inventories/manage_prod.php,
+	  operation/inventories/inventory.php,
+	  operation/inventories/inventory_detail.php,
+	  operation/contacts/contact_detail.php,
+	  operation/companies/company_role.php,
+	  operation/companies/company_detail.php,
+	  godmode/grupos/lista_grupos.php, godmode/setup/links.php,
+	  godmode/perfiles/lista_perfiles.php,
+	  godmode/usuarios/configurar_usuarios.php,
+	  godmode/usuarios/role_manager.php: Changed i18n strings to reduce its
+	  number.
+
+2008-11-21  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	  translation.
+
+	* include/languages/index.pot: Updated po template.
+
 	* install.php: Removed border=0 occurences.
 
 	* operation/projects/task_emailreport.php, operation/side_menu.php,

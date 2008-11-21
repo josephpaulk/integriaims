@@ -27,7 +27,7 @@ if ($operation == "insert") {
 	if (! $id)
 		echo '<h3 class="error">'.__('Not created. Error inserting data').'</h3>';
 	else {
-		echo '<h3 class="suc">'.__('Created successfully').'</h3>'; 
+		echo '<h3 class="suc">'.__('Successfully created').'</h3>'; 
 		mail_todo (0, $id);
 	}
 	$operation = "";
@@ -55,7 +55,7 @@ if ($operation == "update2") {
 	if (! $result)
 		echo "<h3 class='error'>".__('Not updated. Error updating data')."</h3>";
 	else
-		echo "<h3 class='suc'>".__('Updated successfully')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 	mail_todo (1, $id_todo);
 	$operation = "";
 }

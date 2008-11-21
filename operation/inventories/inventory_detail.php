@@ -74,7 +74,7 @@ if ($update) {
 	update_inventory_contacts ($id, get_parameter ('contacts'));
 	
 	if ($result !== false) {
-		$result_msg = '<h3 class="suc">'.__('Inventory object updated successfuly').'</h3>';
+		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
 	} else {
 		$result_msg = '<h3 class="err">'.__('There was an error updating inventory object').'</h3>';
 	}
@@ -102,11 +102,11 @@ if ($create) {
 			$id_manufacturer, $id_sla, $cost);
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
-		$result_msg = '<h3 class="suc">'.__('Inventory object created successfuly').'</h3>';
+		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
 		/* Update contacts in inventory */
 		update_inventory_contacts ($id, get_parameter ('contacts'));
 	} else {
-		$result_msg = '<h3 class="err">'.__('There was an error creating inventory object').'</h3>';
+		$result_msg = '<h3 class="err">'.__('Could not be created').'</h3>';
 	}
 	
 	if (defined ('AJAX')) {

@@ -187,7 +187,7 @@ if ($action == "insert") {
 		/* Update inventory objects in incident */
 		update_incident_inventories ($id, get_parameter ('inventories'));
 		
-		$result_msg = '<h3 class="suc">'.__('Incident successfully created').' (id #'.$id.')</h3>';
+		$result_msg = '<h3 class="suc">'.__('Successfully created').' (id #'.$id.')</h3>';
 		$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
 
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"],
@@ -201,7 +201,7 @@ if ($action == "insert") {
 			mail_incident ($id, $usuario, "", 0, 1);
 		}
 	} else {
-		$result_msg  = '<h3 class="err">'.__('Incident could not be created').'</h3>';
+		$result_msg  = '<h3 class="err">'.__('Could not be created').'</h3>';
 	}
 	if (defined ('AJAX')) {
 		echo $result_msg;

@@ -64,7 +64,7 @@ if ($create_group) {
 	if ($id === false)
 		echo '<h3 class="error">'.__('There was a problem creating group').'</h3>';
 	else {
-		echo '<h3 class="suc">'.__('Group successfully created').'</h3>'; 
+		echo '<h3 class="suc">'.__('Successfully created').'</h3>'; 
 	}
 	$id = 0;
 }
@@ -89,7 +89,7 @@ if ($update_group) {
 	if ($result === false)
 		echo '<h3 class="error">'.__('There was a problem modifying group').'</h3>';
 	else
-		echo '<h3 class="suc">'.__('Group successfully updated').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
 }
 
 // Delete group
@@ -99,7 +99,7 @@ if ($delete_group) {
 	if ($result === false) {
 		echo '<h3 class="error">'.__('There was a problem deleting group').'</h3>'; 
 	} else {
-		echo '<h3 class="suc">'.__('Group successfully deleted').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	}
 }
 
@@ -151,7 +151,7 @@ print_table ($table);
 
 echo '<form method="post" action="index.php?sec=users&sec2=godmode/grupos/configurar_grupo">';
 echo '<div class="button" style="width: '.$table->width.'">';
-print_submit_button (__('Create group'), 'create_btn', false, 'class="sub next"');
+print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
 echo '</div>';
 echo '</form>';
 

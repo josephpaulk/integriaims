@@ -39,9 +39,9 @@ if (isset($_GET["create2"])){ // Create group
 		  		 VALUE ('$title','$data', '$id_product', '$id_category', '".$config["id_user"]."', '$timestamp') ";
 	$result=mysql_query($sql_insert);	
 	if (! $result)
-		echo "<h3 class='error'>".__('KB data item cannot be created')."</h3>"; 
+		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
 	else {
-		echo "<h3 class='suc'>".__('KB data item created ok')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 		$id_data = mysql_insert_id();
 		insert_event ("KB ITEM CREATED", $id_data, 0, $title);
 	}
@@ -80,9 +80,9 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	WHERE id = $id";
 	$result=mysql_query($sql_update);
 	if (! $result)
-		echo "<h3 class='error'>".__('KB data item cannot be updated')."</h3>"; 
+		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
 	else {
-		echo "<h3 class='suc'>".__('KB data item updated ok')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		insert_event ("KB ITEM UPDATED", $id, 0, $title);
 	}
 

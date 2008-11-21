@@ -53,9 +53,9 @@ if ($insert_product) {
 			$name, $description, $parent, $icon);
 	$id = process_sql ($sql, 'insert_id');
 	if (! $id) {
-		echo '<h3 class="error">'.__('KB Product cannot be created').'</h3>';
+		echo '<h3 class="error">'.__('Could not be created').'</h3>';
 	} else {
-		echo '<h3 class="suc">'.__('KB Product created ok').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
 		insert_event ("PRODUCT CREATED", $id, 0, $name);
 	}
 	$id = 0;
@@ -76,7 +76,7 @@ if ($update_product) {
 	if (! $result) {
 		echo "<h3 class='error'>".__('Product cannot be updated')."</h3>"; 
 	} else {
-		echo "<h3 class='suc'>".__('Product updated ok')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		insert_event ("PRODUCT UPDATED", $id, 0, $name);
 	}
 }
@@ -93,7 +93,7 @@ if ($delete_product) {
 	$result = process_sql ($sql);
 
 	if (! $result)
-		echo '<h3 class="error">'.__("Deleted successfully").'</h3>';
+		echo '<h3 class="error">'.__("Successfully deleted").'</h3>';
 	else
 		echo '<h3 class="suc">'.__("Cannot be deteled").'</h3>';
 }
@@ -196,7 +196,7 @@ if (! $id && ! $create) {
 	echo '<div class="button" style="width: '.$table->width.'">';
 	echo '<form method="post">';
 	print_input_hidden ('create', 1);
-	print_submit_button (__('Create product'), 'crt_btn', false, 'class="sub next"');
+	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
 	echo "</form></div>";
 } // end of list
 

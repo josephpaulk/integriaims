@@ -33,7 +33,7 @@ if (isset($_POST["create"])){ // If create
 	if (! $result)
 		echo "<h3 class='error'>".__('There was a problem creating link')."</h3>";
 	else {
-		echo "<h3 class='suc'>".__('Link successfully created')."</h3>"; 
+		echo "<h3 class='suc'>".__('Successfully created')."</h3>"; 
 		$id_link = mysql_insert_id();
 	}
 }
@@ -47,7 +47,7 @@ if (isset($_POST["update"])){ // if update
 	if (! $result)
 		echo "<h3 class='error'>".__('There was a problem modifying link')."</h3>";
 	else
-		echo "<h3 class='suc'>".__('Link successfully updated')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 }
 
 if (isset($_GET["borrar"])){ // if delete
@@ -57,7 +57,7 @@ if (isset($_GET["borrar"])){ // if delete
 	if (! $result)
 		echo "<h3 class='error'>".__('Link could not be deleted')."</h3>";
 	else
-		echo "<h3 class='suc'>".__('Link was successfully deleted')."</h3>"; 
+		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>"; 
 
 }
 

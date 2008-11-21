@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-21 11:07+0100\n"
+"POT-Creation-Date: 2008-11-21 12:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -167,8 +167,6 @@ msgid "Profile could not be deleted"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:40
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:32
-#: ../../enterprise/godmode/usuarios/profile_list.php:33
 msgid "Profile successfully deleted"
 msgstr ""
 
@@ -179,18 +177,67 @@ msgid "There was a problem loading profile"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:120
+#: ../../godmode/setup/links.php:36 ../../godmode/grupos/lista_grupos.php:67
+#: ../../godmode/usuarios/configurar_usuarios.php:160
+#: ../../godmode/usuarios/role_manager.php:37
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:138
 #: ../../enterprise/godmode/usuarios/profile_list.php:119
-msgid "Profile successfully created"
+#: ../../operation/manufacturers/manufacturer_detail.php:50
+#: ../../operation/buildings/building_detail.php:44
+#: ../../operation/inventories/manage_prod.php:58
+#: ../../operation/inventories/inventory_detail.php:105
+#: ../../operation/incidents/type_detail.php:47
+#: ../../operation/incidents/incident_detail.php:190
+#: ../../operation/todo/todo.php:30
+#: ../../operation/companies/company_role.php:43
+#: ../../operation/companies/company_detail.php:49
+#: ../../operation/projects/project_group_detail.php:45
+#: ../../operation/projects/task_detail.php:90
+#: ../../operation/projects/milestones.php:50
+#: ../../operation/projects/people_manager.php:61
+#: ../../operation/projects/project.php:109
+#: ../../operation/contacts/contact_detail.php:70
+#: ../../operation/contracts/contract_detail.php:68
+#: ../../operation/slas/sla_detail.php:56
+#: ../../operation/kb/manage_data.php:44 ../../operation/kb/manage_cat.php:42
+msgid "Successfully created"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:122
-msgid "Profile could not be created"
+#: ../../godmode/usuarios/configurar_usuarios.php:158
+#: ../../operation/manufacturers/manufacturer_detail.php:48
+#: ../../operation/buildings/building_detail.php:42
+#: ../../operation/inventories/manage_prod.php:56
+#: ../../operation/inventories/inventory_detail.php:109
+#: ../../operation/incidents/type_detail.php:45
+#: ../../operation/incidents/incident_detail.php:204
+#: ../../operation/companies/company_role.php:41
+#: ../../operation/companies/company_detail.php:47
+#: ../../operation/projects/project_group_detail.php:43
+#: ../../operation/contacts/contact_detail.php:68
+#: ../../operation/contracts/contract_detail.php:66
+#: ../../operation/slas/sla_detail.php:54
+#: ../../operation/kb/manage_data.php:42 ../../operation/kb/manage_cat.php:40
+msgid "Could not be created"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:145
+#: ../../godmode/setup/links.php:50 ../../godmode/grupos/lista_grupos.php:92
+#: ../../godmode/usuarios/configurar_usuarios.php:125
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:154
 #: ../../enterprise/godmode/usuarios/profile_list.php:78
-msgid "Profile successfully updated"
+#: ../../operation/manufacturers/manufacturer_detail.php:73
+#: ../../operation/buildings/building_detail.php:63
+#: ../../operation/inventories/manage_prod.php:79
+#: ../../operation/inventories/inventory_detail.php:77
+#: ../../operation/todo/todo.php:58
+#: ../../operation/projects/project_detail.php:67
+#: ../../operation/projects/task_detail.php:155
+#: ../../operation/contacts/contact_detail.php:98
+#: ../../operation/contracts/contract_detail.php:99
+#: ../../operation/slas/sla_detail.php:83
+#: ../../operation/kb/manage_data.php:85 ../../operation/kb/manage_cat.php:65
+msgid "Successfully updated"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:151
@@ -200,15 +247,11 @@ msgid "Profile management"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:153
-#: ../../godmode/perfiles/lista_perfiles.php:317
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:164
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:389
 #: ../../enterprise/godmode/usuarios/profile_list.php:350
 msgid "Create profile"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:155
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:166
 msgid "Update profile"
 msgstr ""
 
@@ -243,25 +286,30 @@ msgid "Manage Incidents"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:175
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:188
 msgid "Agenda read"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:178
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:191
 msgid "Agenda write"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:181
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:194
 msgid "Agenda management"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:184
 #: ../../godmode/usuarios/lista_usuarios.php:46
 #: ../../godmode/usuarios/configurar_usuarios.php:165
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:197
 #: ../../operation/side_menu.php:805
 msgid "User management"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:187
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:200
 #: ../../enterprise/godmode/usuarios/profile_list.php:274
 msgid "Database management"
 msgstr ""
@@ -273,16 +321,19 @@ msgid "Framework management"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:193
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:206
 #: ../../enterprise/operation/user/user.php:54
 msgid "Project read"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:196
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:209
 #: ../../enterprise/operation/user/user.php:55
 msgid "Project write"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:199
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:212
 #: ../../enterprise/operation/user/user.php:56
 #: ../../operation/projects/project_detail.php:112
 #: ../../operation/projects/project.php:132
@@ -290,24 +341,33 @@ msgid "Project management"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:202
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:215
 msgid "Task write"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:205
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:218
 #: ../../operation/projects/task.php:74
 #: ../../operation/projects/task_detail.php:190
 msgid "Task management"
 msgstr ""
 
 #: ../../godmode/perfiles/lista_perfiles.php:209
+#: ../../godmode/perfiles/lista_perfiles.php:317
 #: ../../godmode/grupos/configurar_grupo.php:110
+#: ../../godmode/grupos/lista_grupos.php:154
 #: ../../godmode/usuarios/configurar_usuarios.php:297
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:164
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:248
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:389
 #: ../../enterprise/godmode/usuarios/profile_list.php:237
 #: ../../operation/agenda/agenda.php:207
 #: ../../operation/manufacturers/manufacturer_detail.php:138
+#: ../../operation/manufacturers/manufacturer_detail.php:205
 #: ../../operation/buildings/building_detail.php:111
+#: ../../operation/buildings/building_detail.php:170
 #: ../../operation/inventories/manage_prod.php:143
+#: ../../operation/inventories/manage_prod.php:199
 #: ../../operation/inventories/inventory_detail.php:283
 #: ../../operation/inventories/inventory_detail.php:309
 #: ../../operation/incidents/type_detail.php:120
@@ -322,9 +382,11 @@ msgstr ""
 #: ../../operation/projects/milestones.php:152
 #: ../../operation/contacts/contact_detail.php:171
 #: ../../operation/contracts/contract_detail.php:166
+#: ../../operation/contracts/contract_detail.php:254
 #: ../../operation/slas/sla_detail.php:151
+#: ../../operation/slas/sla_detail.php:216
 #: ../../operation/kb/manage_data.php:231
-#: ../../operation/kb/manage_cat.php:148
+#: ../../operation/kb/manage_cat.php:148 ../../operation/kb/manage_cat.php:213
 msgid "Create"
 msgstr ""
 
@@ -336,6 +398,7 @@ msgstr ""
 #: ../../godmode/updatemanager/settings.php:81
 #: ../../godmode/usuarios/configurar_usuarios.php:269
 #: ../../godmode/usuarios/role_manager.php:116
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:166
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:252
 #: ../../enterprise/godmode/usuarios/profile_list.php:242
 #: ../../operation/side_menu.php:679
@@ -567,24 +630,22 @@ msgstr ""
 msgid "There was a problem creating link"
 msgstr ""
 
-#: ../../godmode/setup/links.php:36
-msgid "Link successfully created"
-msgstr ""
-
 #: ../../godmode/setup/links.php:48
 msgid "There was a problem modifying link"
-msgstr ""
-
-#: ../../godmode/setup/links.php:50
-msgid "Link successfully updated"
 msgstr ""
 
 #: ../../godmode/setup/links.php:58
 msgid "Link could not be deleted"
 msgstr ""
 
-#: ../../godmode/setup/links.php:60
-msgid "Link was successfully deleted"
+#: ../../godmode/setup/links.php:60 ../../godmode/grupos/lista_grupos.php:102
+#: ../../enterprise/godmode/usuarios/lista_perfiles.php:32
+#: ../../enterprise/godmode/usuarios/profile_list.php:33
+#: ../../operation/buildings/building_detail.php:75
+#: ../../operation/inventories/inventory.php:35
+#: ../../operation/inventories/manage_prod.php:96
+#: ../../operation/projects/project.php:60
+msgid "Successfully deleted"
 msgstr ""
 
 #: ../../godmode/setup/links.php:68
@@ -704,29 +765,12 @@ msgstr ""
 msgid "There was a problem creating group"
 msgstr ""
 
-#: ../../godmode/grupos/lista_grupos.php:67
-msgid "Group successfully created"
-msgstr ""
-
 #: ../../godmode/grupos/lista_grupos.php:90
 msgid "There was a problem modifying group"
 msgstr ""
 
-#: ../../godmode/grupos/lista_grupos.php:92
-msgid "Group successfully updated"
-msgstr ""
-
 #: ../../godmode/grupos/lista_grupos.php:100
 msgid "There was a problem deleting group"
-msgstr ""
-
-#: ../../godmode/grupos/lista_grupos.php:102
-msgid "Group successfully deleted"
-msgstr ""
-
-#: ../../godmode/grupos/lista_grupos.php:154
-#: ../../operation/projects/project_group_detail.php:156
-msgid "Create group"
 msgstr ""
 
 #: ../../godmode/updatemanager/load_updatemanager.php:36
@@ -957,24 +1001,12 @@ msgstr ""
 msgid "Passwords don't match."
 msgstr ""
 
-#: ../../godmode/usuarios/configurar_usuarios.php:125
-msgid "User successfully updated"
-msgstr ""
-
 #: ../../godmode/usuarios/configurar_usuarios.php:129
 msgid "There was a problem updating user"
 msgstr ""
 
 #: ../../godmode/usuarios/configurar_usuarios.php:143
 msgid "Passwords don't match. Please repeat again"
-msgstr ""
-
-#: ../../godmode/usuarios/configurar_usuarios.php:158
-msgid "User could not be created"
-msgstr ""
-
-#: ../../godmode/usuarios/configurar_usuarios.php:160
-msgid "User successfully created"
 msgstr ""
 
 #: ../../godmode/usuarios/configurar_usuarios.php:172
@@ -1011,7 +1043,7 @@ msgid "Telephone"
 msgstr ""
 
 #: ../../godmode/usuarios/configurar_usuarios.php:217
-msgid "Global Profile"
+msgid "Global profile"
 msgstr ""
 
 #: ../../godmode/usuarios/configurar_usuarios.php:221
@@ -1069,18 +1101,12 @@ msgstr ""
 msgid "Not created. Error inserting data"
 msgstr ""
 
-#: ../../godmode/usuarios/role_manager.php:37 ../../operation/todo/todo.php:30
-#: ../../operation/projects/milestones.php:50
-#: ../../operation/projects/people_manager.php:61
-msgid "Created successfully"
-msgstr ""
-
 #: ../../godmode/usuarios/role_manager.php:54 ../../operation/todo/todo.php:56
 msgid "Not updated. Error updating data"
 msgstr ""
 
-#: ../../godmode/usuarios/role_manager.php:56 ../../operation/todo/todo.php:58
-msgid "Updated successfully"
+#: ../../godmode/usuarios/role_manager.php:56
+msgid "Succcessfully updated"
 msgstr ""
 
 #: ../../godmode/usuarios/role_manager.php:68
@@ -1092,8 +1118,6 @@ msgstr ""
 
 #: ../../godmode/usuarios/role_manager.php:70
 #: ../../operation/manufacturers/manufacturer_detail.php:86
-#: ../../operation/buildings/building_detail.php:75
-#: ../../operation/inventories/manage_prod.php:96
 #: ../../operation/incidents/type_detail.php:80
 #: ../../operation/todo/todo.php:84
 #: ../../operation/companies/company_role.php:74
@@ -1820,52 +1844,8 @@ msgstr ""
 msgid "Could not create profile"
 msgstr ""
 
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:154
-msgid "Profile updated successfuly"
-msgstr ""
-
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:188
-msgid "agenda_read"
-msgstr ""
-
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:191
-msgid "agenda_write"
-msgstr ""
-
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:194
-msgid "agenda_management"
-msgstr ""
-
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:197
-msgid "user_management"
-msgstr ""
-
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:200
-msgid "database_management"
-msgstr ""
-
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:203
-msgid "framework_management"
-msgstr ""
-
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:206
-msgid "project_read"
-msgstr ""
-
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:209
-msgid "project_write"
-msgstr ""
-
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:212
-msgid "project_management"
-msgstr ""
-
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:215
-msgid "task_write"
-msgstr ""
-
-#: ../../enterprise/godmode/usuarios/lista_perfiles.php:218
-msgid "task_management"
+msgid "Integria management"
 msgstr ""
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:222
@@ -2609,20 +2589,8 @@ msgstr ""
 msgid "Week workunit are fine"
 msgstr ""
 
-#: ../../operation/manufacturers/manufacturer_detail.php:48
-msgid "Manufacturer cannot be created"
-msgstr ""
-
-#: ../../operation/manufacturers/manufacturer_detail.php:50
-msgid "Manufacturer has been created successfully"
-msgstr ""
-
 #: ../../operation/manufacturers/manufacturer_detail.php:71
 msgid "Manufacturer cannot be updated"
-msgstr ""
-
-#: ../../operation/manufacturers/manufacturer_detail.php:73
-msgid "Manufacturer updated ok"
 msgstr ""
 
 #: ../../operation/manufacturers/manufacturer_detail.php:90
@@ -2653,24 +2621,8 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: ../../operation/manufacturers/manufacturer_detail.php:205
-msgid "Create manufacturer"
-msgstr ""
-
-#: ../../operation/buildings/building_detail.php:42
-msgid "Building cannot be created"
-msgstr ""
-
-#: ../../operation/buildings/building_detail.php:44
-msgid "Building has been created successfully"
-msgstr ""
-
 #: ../../operation/buildings/building_detail.php:61
 msgid "Building cannot be updated"
-msgstr ""
-
-#: ../../operation/buildings/building_detail.php:63
-msgid "Building updated ok"
 msgstr ""
 
 #: ../../operation/buildings/building_detail.php:79
@@ -2679,14 +2631,6 @@ msgstr ""
 
 #: ../../operation/buildings/building_detail.php:99
 msgid "Building name"
-msgstr ""
-
-#: ../../operation/buildings/building_detail.php:170
-msgid "Create building"
-msgstr ""
-
-#: ../../operation/inventories/inventory.php:35
-msgid "Object successfully deleted"
 msgstr ""
 
 #: ../../operation/inventories/inventory.php:39
@@ -2742,20 +2686,8 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: ../../operation/inventories/manage_prod.php:56
-msgid "KB Product cannot be created"
-msgstr ""
-
-#: ../../operation/inventories/manage_prod.php:58
-msgid "KB Product created ok"
-msgstr ""
-
 #: ../../operation/inventories/manage_prod.php:77
 msgid "Product cannot be updated"
-msgstr ""
-
-#: ../../operation/inventories/manage_prod.php:79
-msgid "Product updated ok"
 msgstr ""
 
 #: ../../operation/inventories/manage_prod.php:98
@@ -2785,24 +2717,8 @@ msgstr ""
 msgid "Items"
 msgstr ""
 
-#: ../../operation/inventories/manage_prod.php:199
-msgid "Create product"
-msgstr ""
-
-#: ../../operation/inventories/inventory_detail.php:77
-msgid "Inventory object updated successfuly"
-msgstr ""
-
 #: ../../operation/inventories/inventory_detail.php:79
 msgid "There was an error updating inventory object"
-msgstr ""
-
-#: ../../operation/inventories/inventory_detail.php:105
-msgid "Inventory object created successfuly"
-msgstr ""
-
-#: ../../operation/inventories/inventory_detail.php:109
-msgid "There was an error creating inventory object"
 msgstr ""
 
 #: ../../operation/inventories/inventory_detail.php:164
@@ -2981,14 +2897,6 @@ msgstr ""
 msgid "No data available"
 msgstr ""
 
-#: ../../operation/incidents/type_detail.php:45
-msgid "Incident type cannot be created"
-msgstr ""
-
-#: ../../operation/incidents/type_detail.php:47
-msgid "Incident type has been created successfully"
-msgstr ""
-
 #: ../../operation/incidents/type_detail.php:66
 msgid "Incident type cannot be updated"
 msgstr ""
@@ -3063,16 +2971,8 @@ msgstr ""
 msgid "Incident successfully updated"
 msgstr ""
 
-#: ../../operation/incidents/incident_detail.php:190
-msgid "Incident successfully created"
-msgstr ""
-
 #: ../../operation/incidents/incident_detail.php:191
 msgid "Please click here to continue working with incident #"
-msgstr ""
-
-#: ../../operation/incidents/incident_detail.php:204
-msgid "Incident could not be created"
 msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:272
@@ -3362,14 +3262,6 @@ msgstr ""
 msgid "Assigned by"
 msgstr ""
 
-#: ../../operation/companies/company_role.php:41
-msgid "Company role cannot be created"
-msgstr ""
-
-#: ../../operation/companies/company_role.php:43
-msgid "Company role has been created successfully"
-msgstr ""
-
 #: ../../operation/companies/company_role.php:60
 msgid "Company role cannot be updated"
 msgstr ""
@@ -3388,14 +3280,6 @@ msgstr ""
 
 #: ../../operation/companies/company_role.php:168
 msgid "Create role"
-msgstr ""
-
-#: ../../operation/companies/company_detail.php:47
-msgid "Company cannot be created"
-msgstr ""
-
-#: ../../operation/companies/company_detail.php:49
-msgid "Company has been created successfully"
 msgstr ""
 
 #: ../../operation/companies/company_detail.php:70
@@ -3426,14 +3310,6 @@ msgstr ""
 msgid "Create company"
 msgstr ""
 
-#: ../../operation/projects/project_group_detail.php:43
-msgid "Project group cannot be created"
-msgstr ""
-
-#: ../../operation/projects/project_group_detail.php:45
-msgid "Project group has been created successfully"
-msgstr ""
-
 #: ../../operation/projects/project_group_detail.php:63
 msgid "Project group cannot be updated"
 msgstr ""
@@ -3448,6 +3324,10 @@ msgstr ""
 
 #: ../../operation/projects/project_group_detail.php:99
 msgid "Project group name"
+msgstr ""
+
+#: ../../operation/projects/project_group_detail.php:156
+msgid "Create group"
 msgstr ""
 
 #: ../../operation/projects/task_files.php:86
@@ -3501,10 +3381,6 @@ msgstr ""
 #: ../../operation/projects/task.php:204
 #: ../../operation/projects/task_detail.php:237
 msgid "Recurrence"
-msgstr ""
-
-#: ../../operation/projects/project_detail.php:67
-msgid "Successfully updated"
 msgstr ""
 
 #: ../../operation/projects/project_detail.php:69
@@ -3592,20 +3468,12 @@ msgstr ""
 msgid "Begin date could not be before end date"
 msgstr ""
 
-#: ../../operation/projects/task_detail.php:90
-msgid "Task successfuly created"
-msgstr ""
-
 #: ../../operation/projects/task_detail.php:97
 msgid "Continue working with task #"
 msgstr ""
 
 #: ../../operation/projects/task_detail.php:118
 msgid "Could not create task"
-msgstr ""
-
-#: ../../operation/projects/task_detail.php:155
-msgid "Task updated successfuly"
 msgstr ""
 
 #: ../../operation/projects/task_detail.php:160
@@ -3805,16 +3673,8 @@ msgstr ""
 msgid "There was a problem deleting project"
 msgstr ""
 
-#: ../../operation/projects/project.php:60
-msgid "Project successfully deleted"
-msgstr ""
-
 #: ../../operation/projects/project.php:107
 msgid "Project cannot be created, problem found."
-msgstr ""
-
-#: ../../operation/projects/project.php:109
-msgid "Project created successfully"
 msgstr ""
 
 #: ../../operation/projects/project.php:172
@@ -3833,20 +3693,11 @@ msgstr ""
 msgid "hr"
 msgstr ""
 
-#: ../../operation/contacts/contact_detail.php:68
-msgid "Contact cannot be created"
-msgstr ""
-
-#: ../../operation/contacts/contact_detail.php:70
-msgid "Contact has been created successfully"
-msgstr ""
-
 #: ../../operation/contacts/contact_detail.php:96
-msgid "Contact cannot be updated"
-msgstr ""
-
-#: ../../operation/contacts/contact_detail.php:98
-msgid "Contact updated ok"
+#: ../../operation/contracts/contract_detail.php:97
+#: ../../operation/slas/sla_detail.php:81
+#: ../../operation/kb/manage_data.php:83 ../../operation/kb/manage_cat.php:63
+msgid "Could not be updated"
 msgstr ""
 
 #: ../../operation/contacts/contact_detail.php:114
@@ -4033,22 +3884,6 @@ msgstr ""
 msgid "You must specify a valid group"
 msgstr ""
 
-#: ../../operation/contracts/contract_detail.php:66
-msgid "Contract cannot be created"
-msgstr ""
-
-#: ../../operation/contracts/contract_detail.php:68
-msgid "Contract has been created successfully"
-msgstr ""
-
-#: ../../operation/contracts/contract_detail.php:97
-msgid "Contract cannot be updated"
-msgstr ""
-
-#: ../../operation/contracts/contract_detail.php:99
-msgid "Contract updated ok"
-msgstr ""
-
 #: ../../operation/contracts/contract_detail.php:116
 msgid "Contract management"
 msgstr ""
@@ -4064,26 +3899,6 @@ msgstr ""
 
 #: ../../operation/contracts/contract_detail.php:220
 msgid "Begin"
-msgstr ""
-
-#: ../../operation/contracts/contract_detail.php:254
-msgid "Create contract"
-msgstr ""
-
-#: ../../operation/slas/sla_detail.php:54
-msgid "SLA cannot be created"
-msgstr ""
-
-#: ../../operation/slas/sla_detail.php:56
-msgid "SLA has been created successfully"
-msgstr ""
-
-#: ../../operation/slas/sla_detail.php:81
-msgid "SLA cannot be updated"
-msgstr ""
-
-#: ../../operation/slas/sla_detail.php:83
-msgid "SLA updated ok"
 msgstr ""
 
 #: ../../operation/slas/sla_detail.php:129
@@ -4121,10 +3936,6 @@ msgstr ""
 
 #: ../../operation/slas/sla_detail.php:189
 msgid "Max.Incidents"
-msgstr ""
-
-#: ../../operation/slas/sla_detail.php:216
-msgid "Create SLA"
 msgstr ""
 
 #: ../../operation/tool_menu.php:22
@@ -4172,24 +3983,8 @@ msgstr ""
 msgid "Attachment list"
 msgstr ""
 
-#: ../../operation/kb/manage_data.php:42
-msgid "KB data item cannot be created"
-msgstr ""
-
-#: ../../operation/kb/manage_data.php:44
-msgid "KB data item created ok"
-msgstr ""
-
 #: ../../operation/kb/manage_data.php:62
 msgid "Attach deleted ok"
-msgstr ""
-
-#: ../../operation/kb/manage_data.php:83
-msgid "KB data item cannot be updated"
-msgstr ""
-
-#: ../../operation/kb/manage_data.php:85
-msgid "KB data item updated ok"
 msgstr ""
 
 #: ../../operation/kb/manage_data.php:178
@@ -4216,22 +4011,6 @@ msgstr ""
 msgid "Attach description"
 msgstr ""
 
-#: ../../operation/kb/manage_cat.php:40
-msgid "KB Category cannot be created"
-msgstr ""
-
-#: ../../operation/kb/manage_cat.php:42
-msgid "KB Category created ok"
-msgstr ""
-
-#: ../../operation/kb/manage_cat.php:63
-msgid "KB Category cannot be updated"
-msgstr ""
-
-#: ../../operation/kb/manage_cat.php:65
-msgid "KB Category updated ok"
-msgstr ""
-
 #: ../../operation/kb/manage_cat.php:106 ../../operation/kb/manage_cat.php:158
 msgid "KB Category management"
 msgstr ""
@@ -4246,10 +4025,6 @@ msgstr ""
 
 #: ../../operation/kb/manage_cat.php:158
 msgid "Defined categories"
-msgstr ""
-
-#: ../../operation/kb/manage_cat.php:213
-msgid "Create category"
 msgstr ""
 
 #: ../../operation/kb/search.php:41

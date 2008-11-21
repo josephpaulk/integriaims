@@ -51,9 +51,9 @@ if ($create_sla) {
 
 	$id = process_sql ($sql);
 	if ($id === false)
-		echo '<h3 class="error">'.__('SLA cannot be created')."</h3>";
+		echo '<h3 class="error">'.__('Could not be created')."</h3>";
 	else {
-		echo "<h3 class='suc'>".__('SLA has been created successfully')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 		insert_event ("SLA CREATED", $id, 0, $name);
 	}
 	$id = 0;
@@ -78,9 +78,9 @@ if ($update_sla) {
 
 	$result = process_sql ($sql);
 	if (! $result)
-		echo '<h3 class="error">'.__('SLA cannot be updated').'</h3>';
+		echo '<h3 class="error">'.__('Could not be updated').'</h3>';
 	else {
-		echo '<h3 class="suc">'.__('SLA updated ok').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
 		insert_event ("SLA UPDATED", $id, 0, $name);
 	}
 	$id = 0;
@@ -213,7 +213,7 @@ if ($id || $new_sla) {
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/slas/sla_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Create SLA'), 'new_btn', false, 'class="sub next"');
+	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_sla', 1);
 	echo '</div>';
 	echo '</form>';

@@ -117,9 +117,9 @@ elseif (isset($_GET["new_profile"])){ // create a new profile
         //echo "DEBUG: ".$query;
 		$res=mysql_query($query);
 		if ($res)
-			echo "<h3 class='suc'>".__('Profile successfully created')."</h3>";
+			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 		else {
-			echo "<h3 class='error'>".__('Profile could not be created')."</h3>";
+			echo "<h3 class='error'>".__('Could not be created')."</h3>";
 		}
 
 	} else { // UPDATE
@@ -142,7 +142,7 @@ elseif (isset($_GET["new_profile"])){ // create a new profile
 		WHERE id = $id_perfil ";
         //echo "DEBUG: ".$query;
 		$res=mysql_query($query);
-		echo "<h3 class='suc'>".__('Profile successfully updated')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 	}
 	unset($id_perfil);
 }
@@ -314,7 +314,7 @@ if (isset ($id_perfil)){ // There are values defined, let's show form with data 
 	echo "</div></td></tr>";
 	echo "<tr><td colspan='12' align='right'>";
 	echo "<form method=post action='index.php?sec=gperfiles&sec2=godmode/perfiles/lista_perfiles&new_profile=1'>";
-	echo "<input type='submit' class='sub next' name='crt' value='".__('Create profile')."'>";
+	echo "<input type='submit' class='sub next' name='crt' value='".__('Create')."'>";
 	echo "</form></table>";
 }
 	

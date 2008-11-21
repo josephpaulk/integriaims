@@ -42,9 +42,9 @@ if ($create_type) {
 	
 	$id = process_sql ($sql, 'insert-id');
 	if ($id === false) {
-		echo '<h3 class="error">'.__('Incident type cannot be created').'</h3>';
+		echo '<h3 class="error">'.__('Could not be created').'</h3>';
 	} else {
-		echo '<h3 class="suc">'.__('Incident type has been created successfully').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
 		insert_event ("INCIDENT TYPE CREATED", $id, 0, $name);
 	}
 	$id = 0;

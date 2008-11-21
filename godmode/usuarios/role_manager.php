@@ -34,7 +34,7 @@ if (isset($_POST["create"])){ // If create
 	if (! $result)
 		echo "<h3 class='error'>".__('Not created. Error inserting data')."</h3>";
 	else {
-		echo "<h3 class='suc'>".__('Created successfully')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 		$id = mysql_insert_id();
 	}
 }
@@ -53,7 +53,7 @@ if (isset($_POST["update"])){ // if update
 	if (! $result)
 		echo "<h3 class='error'>".__('Not updated. Error updating data')."</h3>";
 	else
-		echo "<h3 class='suc'>".__('Updated successfully')."</h3>";
+		echo "<h3 class='suc'>".__('Succcessfully updated')."</h3>";
 }
 
 // DELETE

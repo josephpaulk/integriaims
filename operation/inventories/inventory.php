@@ -32,7 +32,7 @@ if (isset ($_POST["quick_delete"])) {
 	
 	if (give_acl ($config['id_user'], 0, "VW")) {
 		borrar_objeto ($id_inv);
-		echo "<h3 class='suc'>".__('Object successfully deleted')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 		audit_db($config["id_user"], $config["REMOTE_ADDR"], "Object deleted","User ".$config['id_user']." deleted object #".$id_inv);
 	} else {
 		audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config['id_user']." try to delete object");

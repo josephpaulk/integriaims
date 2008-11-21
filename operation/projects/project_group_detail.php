@@ -40,9 +40,9 @@ if ($insert_group) {
 
 	$id = process_sql ($sql, 'insert_id');
 	if (! $id) {
-		echo '<h3 class="error">'.__('Project group cannot be created').'</h3>';
+		echo '<h3 class="error">'.__('Could not be created').'</h3>';
 	} else {
-		echo '<h3 class="suc">'.__('Project group has been created successfully').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
 		insert_event ("PROJECT GROUP CREATED", $id, 0, $name);
 	}
 	$id = 0;

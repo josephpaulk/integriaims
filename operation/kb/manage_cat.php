@@ -37,9 +37,9 @@ if (isset($_GET["create2"])){ // Create group
 		  		 VALUE ('$name','$description', '$parent', '$icon') ";
 	$result=mysql_query($sql_insert);	
 	if (! $result)
-		echo "<h3 class='error'>".__('KB Category cannot be created')."</h3>"; 
+		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
 	else {
-		echo "<h3 class='suc'>".__('KB Category created ok')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 		$id_cat = mysql_insert_id();
 		insert_event ("CATEGORY CREATED", $id_cat, 0, $name);
 	}
@@ -60,9 +60,9 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	WHERE id = $id";
 	$result=mysql_query($sql_update);
 	if (! $result)
-		echo "<h3 class='error'>".__('KB Category cannot be updated')."</h3>"; 
+		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
 	else {
-		echo "<h3 class='suc'>".__('KB Category updated ok')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		insert_event ("CATEGORY UPDATED", $id, 0, $name);
 	}
 }
@@ -210,7 +210,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	}			
 	echo '<div style="width:90%" class="button">';
 	echo "<form method=post action='index.php?sec=kb&sec2=operation/kb/manage_cat&create=1'>";
-	print_submit_button (__('Create category'), 'crt_btn', false, 'class="sub next"');
+	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
 	echo "</form></div>";
 } // end of list
 

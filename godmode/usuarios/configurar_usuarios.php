@@ -122,7 +122,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 				$avatar = $rowdup ["avatar"];
 				$lang = $rowdup ["lang"];
 				$modo = "edicion";
-				echo "<h3 class='suc'>".__('User successfully updated')."</h3>";
+				echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 			}
 		}
 		else {
@@ -155,9 +155,9 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 		$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real,avatar, lang) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','$avatar','$lang')";
 		$resq1 = mysql_query($sql_insert);
 			if (! $resq1)
-				echo "<h3 class='error'>".__('User could not be created')."</h3>";
+				echo "<h3 class='error'>".__('Could not be created')."</h3>";
 			else {
-				echo "<h3 class='suc'>".__('User successfully created')."</h3>";
+				echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 			}
 		$id_usuario_mio = $nombre;
 		$modo ="edicion";
@@ -214,7 +214,7 @@ echo print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, fal
 
 <tr><td class="datos"><?php echo __('Telephone') ?>
 <td class="datos" colspan=2><input type="text" name="telefono" value="<?php echo $telefono ?>">
-<tr><td class="datos2"><?php echo __('Global Profile') ?>
+<tr><td class="datos2"><?php echo __('Global profile') ?>
 
 <td class="datos2" colspan=2>
 <?php if ($nivel == "1"){
@@ -246,7 +246,7 @@ if ($modo == "edicion") { // Only show groups for existing users
 	echo '<input type="hidden" name="edicion" value="1">';
 	echo '<input type="hidden" name="id_usuario_antiguo" value="'.$id_usuario_mio.'">';
 	
-	echo '<tr><td class="datos">'.__('Group(s) available').'<td class="datos" colspan=2><select name="grupo" class="w155">';
+	echo '<tr><td class="datos">'.__('Group(s) available').'<td class="datos" colspan="2"><select name="grupo" class="w155">';
 	echo "<option value=''>".__('None');
 	$sql1='SELECT * FROM tgrupo ORDER BY nombre';
 	$result=mysql_query($sql1);

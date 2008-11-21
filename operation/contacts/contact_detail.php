@@ -65,9 +65,9 @@ if ($create_contact) {
 	}
 	
 	if ($id === false) {
-		echo "<h3 class='error'>".__('Contact cannot be created')."</h3>";
+		echo "<h3 class='error'>".__('Could not be created')."</h3>";
 	} else {
-		echo "<h3 class='suc'>".__('Contact has been created successfully')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 		insert_event ("CONTACT CREATED", $id, 0, $fullname);
 	}
 	$id = 0;
@@ -93,9 +93,9 @@ if ($update_contact) { // if modified any parameter
 
 	$result = process_sql ($sql);
 	if ($result === false) {
-		echo "<h3 class='error'>".__('Contact cannot be updated')."</h3>";
+		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 	} else {
-		echo "<h3 class='suc'>".__('Contact updated ok')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		insert_event ("CONTACT", $id, 0, $fullname);
 	}
 	$id = 0;

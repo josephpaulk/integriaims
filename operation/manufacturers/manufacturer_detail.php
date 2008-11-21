@@ -45,9 +45,9 @@ if ($create_manufacturer) {
 
 	$id = process_sql ($sql, 'insert_id');
 	if ($id === false) {
-		echo "<h3 class='error'>".__('Manufacturer cannot be created')."</h3>";
+		echo "<h3 class='error'>".__('Could not be created')."</h3>";
 	} else {
-		echo "<h3 class='suc'>".__('Manufacturer has been created successfully')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 		insert_event ("MANUFACTURER CREATED", $id, 0, $name);
 	}
 	$id = 0;
@@ -70,7 +70,7 @@ if ($update_manufacturer) {
 	if ($result === false)
 		echo '<h3 class="error">'.__('Manufacturer cannot be updated').'</h3>';
 	else {
-		echo '<h3 class="suc">'.__('Manufacturer updated ok').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
 		insert_event ("MANUFACTURER", $id, 0, $name);
 	}
 	$id = 0;
@@ -202,7 +202,7 @@ if ($id || $new_manufacturer) {
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Create manufacturer'), 'new_btn', false, 'class="sub next"');
+	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_manufacturer', 1);
 	echo '</div>';
 	echo '</form>';

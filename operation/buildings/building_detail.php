@@ -39,9 +39,9 @@ if ($create_building) {
 
 	$id = process_sql ($sql, 'insert-id');
 	if ($id === false)
-		echo '<h3 class="error">'.__('Building cannot be created').'</h3>';
+		echo '<h3 class="error">'.__('Could not be created').'</h3>';
 	else {
-		echo '<h3 class="suc">'.__('Building has been created successfully').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
 		insert_event ("BUILDING CREATED", $id, 0, $name);
 	}
 	$id = 0;
@@ -60,7 +60,7 @@ if ($update_building) {
 	if ($result === false)
 		echo '<h3 class="error">'.__('Building cannot be updated').'</h3>';
 	else {
-		echo '<h3 class="suc">'.__('Building updated ok').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
 		insert_event ("BUILDING", $id, 0, $name);
 	}
 	$id = 0;
@@ -72,7 +72,7 @@ if ($delete_building) {
 	$sql = sprintf ('DELETE FROM tbuilding WHERE id = %d', $id);
 	process_sql ($sql);
 	insert_event ("BUILDING DELETED", $id, 0, "$name");
-	echo '<h3 class="suc">'.__('Deleted successfully').'</h3>';
+	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	$id = 0;
 }
 
@@ -167,7 +167,7 @@ if ($id || $new_building) {
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/buildings/building_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Create building'), 'new_btn', false, 'class="sub next"');
+	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_building', 1);
 	echo '</div>';
 	echo '</form>';

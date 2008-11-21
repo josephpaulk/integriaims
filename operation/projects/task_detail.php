@@ -87,7 +87,7 @@ if ($operation == "insert") {
 			$parent, $id_group, $hours, $estimated_cost, $periodicity);
 		$id_task = process_sql ($sql, 'insert_id');
 		if ($id_task !== false) {
-			$result_output = "<h3 class='suc'>".__('Task successfuly created')."</h3>";
+			$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
 			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task added to project", "Task '$name' added to project '$id_project'");
 			$operation = "view";
 	
@@ -152,7 +152,7 @@ if ($operation == "update") {
 			$id_task);
 	$result = process_sql ($sql);
 	if ($result !== false) {
-		$result_output = '<h3 class="suc">'.__('Task updated successfuly').'</h3>';
+		$result_output = '<h3 class="suc">'.__('Successfully updated').'</h3>';
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task updated", "Task '$name' updated to project '$id_project'");
 		$operation = "view";
 		task_tracking ($id_task, TASK_UPDATED);

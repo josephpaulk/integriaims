@@ -63,9 +63,9 @@ if ($create_contract) {
 	
 		$id = process_sql ($sql, 'insert_id');
 		if ($id === false)
-			echo '<h3 class="error">'.__('Contract cannot be created').'</h3>';
+			echo '<h3 class="error">'.__('Could not be created').'</h3>';
 		else {
-			echo '<h3 class="suc">'.__('Contract has been created successfully').'</h3>';
+			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
 			insert_event ("CONTRACT CREATED", $id, 0, $name);
 		}
 		$id = 0;
@@ -94,9 +94,9 @@ if ($update_contract) { // if modified any parameter
 	
 		$result = process_sql ($sql);
 		if ($result === false) {
-			echo "<h3 class='error'>".__('Contract cannot be updated')."</h3>";
+			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 		} else {
-			echo "<h3 class='suc'>".__('Contract updated ok')."</h3>";
+			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 			insert_event ("CONTRACT UPDATED", $id, 0, $name);
 		}
 	}
@@ -251,7 +251,7 @@ if ($id | $new_contract) {
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contracts/contract_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Create contract'), 'new_btn', false, 'class="sub next"');
+	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_contract', 1);
 	echo '</div>';
 	echo '</form>';

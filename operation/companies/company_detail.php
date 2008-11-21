@@ -44,9 +44,9 @@ if ($create_company) {
 
 	$id = process_sql ($sql, 'insert_id');
 	if ($id === false)
-		echo "<h3 class='error'>".__('Company cannot be created')."</h3>";
+		echo "<h3 class='error'>".__('Could not be created')."</h3>";
 	else {
-		echo "<h3 class='suc'>".__('Company has been created successfully')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 		insert_event ("COMPANY CREATED", $id, 0, $name);
 	}
 	$id = 0;
