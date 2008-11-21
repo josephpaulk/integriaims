@@ -1,3 +1,8 @@
+2008-11-21  Esteban Sanchez  <estebans@artica.es>
+
+	* include/functions_tasks.php: Fixed some PHP undefined variable
+	notices.
+
 2008-11-21  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish

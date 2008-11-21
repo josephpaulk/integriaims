@@ -39,14 +39,14 @@ function add_task_hours ($id_task, $hours) {
 		return;
 	
 	/* Get expected task completion, based on worked hours */
-	$expected_completion = round_number (floor ($current_hours * 100 / $hours));
+	$expected_completion = round_number (floor ($task['hours'] * 100 / $hours));
 	
 	/* If completion was not set manually, update with current progress */
 	if ($task['completion'] != $expected_completion)
 		return;
 	
-	$current_hours += $duration;
-	$expected_completion =  round_number (floor ($current_hours * 100 / $hours));
+	$current_hours += $hours;
+	$expected_completion =  round_number (floor ($task['hours'] * 100 / $hours));
 	$sql = sprintf ('UPDATE ttask
 		SET completion = %d
 		WHERE id = %d',
