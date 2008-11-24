@@ -42,7 +42,8 @@ INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (1
 INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (12,'Helpdesk & Support','bricks.png',0, 'admin');
 
 INSERT INTO `tlanguage` VALUES ('en','English');
-INSERT INTO `tlanguage` VALUES ('es','Spanish');
+INSERT INTO `tlanguage` VALUES ('es','Español');
+INSERT INTO `tlanguage` VALUES ('da','Dansk');
 
 INSERT INTO `tlink` VALUES  (0000000001,'Integria Project','http://integria.sourceforge.net'), (0000000002,'Artica ST','http://www.artica.es'),(0000000003,'Pandora FMS Project','http://pandora.sourceforge.net'),(0000000004,'Babel Project','http://babel.sourceforge.net'),(0000000005,'Google','http://www.google.com');
 

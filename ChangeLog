@@ -1,3 +1,15 @@
+2008-11-24  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/languages/da.mo, include/languages/da.po: Added Danish
+	  translation, thanks to Rosetta translators.
+
+	* include/languages/index.pot: Updated po template.
+
+	* include/languages/Makefile: Added 'da' to translations.
+
+	* integria_dbdata.sql: Added Danish to translations, modified
+	  Spanish for Español.
+
 2008-11-21  Esteban Sanchez  <estebans@artica.es>
 
 	* include/functions_tasks.php: Fixed some PHP undefined variable

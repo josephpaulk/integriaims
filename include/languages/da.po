@@ -1,24 +1,25 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Danish translation for integria-ims
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the integria-ims package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-24 10:17+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: integria-ims\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-11-21 12:20+0100\n"
+"PO-Revision-Date: 2008-11-23 01:14+0000\n"
+"Last-Translator: nanker <Unknown>\n"
+"Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2008-11-24 09:01+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #: ../../general/login_page.php:38
 msgid "Login failed"
-msgstr ""
+msgstr "Log in mislykkedes"
 
 #: ../../general/login_page.php:50 ../../godmode/setup/event.php:38
 #: ../../include/functions_form.php:737
@@ -37,25 +38,25 @@ msgstr ""
 #: ../../operation/projects/project_tracking.php:37
 #: ../../operation/kb/manage_data.php:273 ../../operation/kb/search.php:66
 msgid "User"
-msgstr ""
+msgstr "Bruger"
 
 #: ../../general/login_page.php:55
 #: ../../godmode/usuarios/configurar_usuarios.php:196
 #: ../../operation/users/user_edit.php:163
 msgid "Password"
-msgstr ""
+msgstr "Adgangskode"
 
 #: ../../general/login_page.php:61
 msgid "Login"
-msgstr ""
+msgstr "Log in"
 
 #: ../../general/integria_help.php:23
 msgid "Integria IMS help system"
-msgstr ""
+msgstr "Integria IMS hjælpesystem"
 
 #: ../../general/integria_help.php:33
 msgid "Help system error"
-msgstr ""
+msgstr "Hjælpesystem fejl"
 
 #: ../../general/integria_help.php:39
 msgid ""
@@ -65,11 +66,14 @@ msgstr ""
 
 #: ../../general/integria_help.php:47
 msgid "Integria IMS Help System"
-msgstr ""
+msgstr "Integria IMS hjælpesystem"
 
 #: ../../general/footer.php:26
-msgid "Integria IMS is an <b>OpenSource Project, licensed under GPL terms</b>"
+msgid ""
+"Integria IMS is an <b>OpenSource Project, licensed under GPL terms</b>"
 msgstr ""
+"Integria IMS er et <b>OpenSource Projekt, med licens under GPL "
+"betingelserne</b>"
 
 #: ../../general/footer.php:32
 msgid "Page generated at"
@@ -77,16 +81,16 @@ msgstr ""
 
 #: ../../general/error_install.php:29
 msgid "Installer error"
-msgstr ""
+msgstr "Installations fejl"
 
 #: ../../general/links_menu.php:21 ../../operation/side_menu.php:693
 #: ../../operation/tool_menu.php:5
 msgid "Links"
-msgstr ""
+msgstr "Links"
 
 #: ../../general/noaccess.php:22
 msgid "You don't have access to this page"
-msgstr ""
+msgstr "Du har ikke adgang til denne side"
 
 #: ../../general/noaccess.php:26
 msgid ""
@@ -98,40 +102,40 @@ msgstr ""
 
 #: ../../general/header.php:20
 msgid "Home"
-msgstr ""
+msgstr "Hjem"
 
 #: ../../general/header.php:31
 msgid "You are connected as"
-msgstr ""
+msgstr "Du er tilsluttet som"
 
 #: ../../general/header.php:33
 msgid "Logout"
-msgstr ""
+msgstr "Log af"
 
 #: ../../general/home.php:34 ../../operation/main_menu.php:81
 msgid "Agenda"
-msgstr ""
+msgstr "Dagsorden"
 
 #: ../../general/home.php:38
 msgid "Events for next three days"
-msgstr ""
+msgstr "Begivenheder de næste tre dage"
 
 #: ../../general/home.php:44
 msgid "Agenda event"
-msgstr ""
+msgstr "Dagsordens begivenhed"
 
 #: ../../general/home.php:55 ../../include/functions_calendar.php:182
 msgid "Project end"
-msgstr ""
+msgstr "Projekt afsluttet"
 
 #: ../../general/home.php:69 ../../include/functions_calendar.php:191
 msgid "Task end"
-msgstr ""
+msgstr "Opgave afsluttet"
 
 #: ../../general/home.php:83 ../../operation/side_menu.php:627
 #: ../../operation/side_menu.php:635 ../../operation/todo/todo.php:183
 msgid "To-Do"
-msgstr ""
+msgstr "At gøre"
 
 #: ../../general/home.php:87
 msgid "Todo active you have"
@@ -140,7 +144,7 @@ msgstr ""
 #: ../../general/home.php:101 ../../operation/side_menu.php:23
 #: ../../operation/main_menu.php:28
 msgid "Projects"
-msgstr ""
+msgstr "Projekter"
 
 #: ../../general/home.php:107
 msgid "Projects active you have"
@@ -152,7 +156,7 @@ msgstr ""
 #: ../../operation/companies/company_detail.php:175
 #: ../../operation/main_menu.php:38
 msgid "Incidents"
-msgstr ""
+msgstr "Hændelser"
 
 #: ../../general/home.php:122
 msgid "Incidents active you have"
@@ -160,11 +164,11 @@ msgstr ""
 
 #: ../../index.php:215 ../../index.php:240
 msgid "Page not found"
-msgstr ""
+msgstr "Side ikke fundet"
 
 #: ../../godmode/perfiles/lista_perfiles.php:38
 msgid "Profile could not be deleted"
-msgstr ""
+msgstr "Profil kunne ikke slettes"
 
 #: ../../godmode/perfiles/lista_perfiles.php:40
 msgid "Profile successfully deleted"
@@ -174,7 +178,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:70
 #: ../../enterprise/godmode/usuarios/profile_list.php:156
 msgid "There was a problem loading profile"
-msgstr ""
+msgstr "Der var et problem med indlæsning af profil"
 
 #: ../../godmode/perfiles/lista_perfiles.php:120
 #: ../../godmode/setup/links.php:36 ../../godmode/grupos/lista_grupos.php:67
@@ -201,7 +205,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:56
 #: ../../operation/kb/manage_data.php:44 ../../operation/kb/manage_cat.php:42
 msgid "Successfully created"
-msgstr ""
+msgstr "Succesfuldt oprettet"
 
 #: ../../godmode/perfiles/lista_perfiles.php:122
 #: ../../godmode/usuarios/configurar_usuarios.php:158
@@ -219,7 +223,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:54
 #: ../../operation/kb/manage_data.php:42 ../../operation/kb/manage_cat.php:40
 msgid "Could not be created"
-msgstr ""
+msgstr "Kunne ikke oprettes"
 
 #: ../../godmode/perfiles/lista_perfiles.php:145
 #: ../../godmode/setup/links.php:50 ../../godmode/grupos/lista_grupos.php:92
@@ -238,7 +242,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:83
 #: ../../operation/kb/manage_data.php:85 ../../operation/kb/manage_cat.php:65
 msgid "Successfully updated"
-msgstr ""
+msgstr "Succesfuldt opdateret"
 
 #: ../../godmode/perfiles/lista_perfiles.php:151
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:161
@@ -249,56 +253,56 @@ msgstr ""
 #: ../../godmode/perfiles/lista_perfiles.php:153
 #: ../../enterprise/godmode/usuarios/profile_list.php:350
 msgid "Create profile"
-msgstr ""
+msgstr "Opret profil"
 
 #: ../../godmode/perfiles/lista_perfiles.php:155
 msgid "Update profile"
-msgstr ""
+msgstr "Opdatér profil"
 
 #: ../../godmode/perfiles/lista_perfiles.php:157
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:168
 msgid "Profiles defined in Integria"
-msgstr ""
+msgstr "Profiler defineret i Integria"
 
 #: ../../godmode/perfiles/lista_perfiles.php:164
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:176
 #: ../../enterprise/godmode/usuarios/profile_list.php:190
 msgid "Profile name"
-msgstr ""
+msgstr "Profilnavn"
 
 #: ../../godmode/perfiles/lista_perfiles.php:166
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:177
 #: ../../enterprise/godmode/usuarios/profile_list.php:192
 #: ../../enterprise/godmode/usuarios/profile_list.php:267
 msgid "View incidents"
-msgstr ""
+msgstr "Vis hændelser"
 
 #: ../../godmode/perfiles/lista_perfiles.php:169
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:181
 #: ../../enterprise/godmode/usuarios/profile_list.php:194
 #: ../../enterprise/godmode/usuarios/profile_list.php:268
 msgid "Edit incidents"
-msgstr ""
+msgstr "Redigér hændelser"
 
 #: ../../godmode/perfiles/lista_perfiles.php:172
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:185
 msgid "Manage Incidents"
-msgstr ""
+msgstr "Styr hændelser"
 
 #: ../../godmode/perfiles/lista_perfiles.php:175
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:188
 msgid "Agenda read"
-msgstr ""
+msgstr "Læs dagsorden"
 
 #: ../../godmode/perfiles/lista_perfiles.php:178
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:191
 msgid "Agenda write"
-msgstr ""
+msgstr "Skriv dagsorden"
 
 #: ../../godmode/perfiles/lista_perfiles.php:181
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:194
 msgid "Agenda management"
-msgstr ""
+msgstr "Styr dagsorden"
 
 #: ../../godmode/perfiles/lista_perfiles.php:184
 #: ../../godmode/usuarios/lista_usuarios.php:46
@@ -306,13 +310,13 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:197
 #: ../../operation/side_menu.php:805
 msgid "User management"
-msgstr ""
+msgstr "Styr brugere"
 
 #: ../../godmode/perfiles/lista_perfiles.php:187
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:200
 #: ../../enterprise/godmode/usuarios/profile_list.php:274
 msgid "Database management"
-msgstr ""
+msgstr "Databasestyring"
 
 #: ../../godmode/perfiles/lista_perfiles.php:190
 #: ../../enterprise/godmode/usuarios/profile_list.php:208
@@ -324,13 +328,13 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:206
 #: ../../enterprise/operation/user/user.php:54
 msgid "Project read"
-msgstr ""
+msgstr "Læs projekt"
 
 #: ../../godmode/perfiles/lista_perfiles.php:196
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:209
 #: ../../enterprise/operation/user/user.php:55
 msgid "Project write"
-msgstr ""
+msgstr "Skriv projekt"
 
 #: ../../godmode/perfiles/lista_perfiles.php:199
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:212
@@ -338,19 +342,19 @@ msgstr ""
 #: ../../operation/projects/project_detail.php:112
 #: ../../operation/projects/project.php:132
 msgid "Project management"
-msgstr ""
+msgstr "Projektstyring"
 
 #: ../../godmode/perfiles/lista_perfiles.php:202
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:215
 msgid "Task write"
-msgstr ""
+msgstr "Skriv opgave"
 
 #: ../../godmode/perfiles/lista_perfiles.php:205
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:218
 #: ../../operation/projects/task.php:74
 #: ../../operation/projects/task_detail.php:190
 msgid "Task management"
-msgstr ""
+msgstr "Styr opgave"
 
 #: ../../godmode/perfiles/lista_perfiles.php:209
 #: ../../godmode/perfiles/lista_perfiles.php:317
@@ -388,7 +392,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:231
 #: ../../operation/kb/manage_cat.php:148 ../../operation/kb/manage_cat.php:213
 msgid "Create"
-msgstr ""
+msgstr "Opret"
 
 #: ../../godmode/perfiles/lista_perfiles.php:212
 #: ../../godmode/setup/setup.php:100 ../../godmode/setup/setup_mail.php:74
@@ -428,7 +432,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:233
 #: ../../operation/kb/manage_cat.php:150
 msgid "Update"
-msgstr ""
+msgstr "Opdatér"
 
 #: ../../godmode/perfiles/lista_perfiles.php:227
 #: ../../godmode/usuarios/configurar_usuarios.php:258
@@ -436,7 +440,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/profile_list.php:266
 #: ../../enterprise/operation/user/user.php:40
 msgid "Profiles"
-msgstr ""
+msgstr "Profiler"
 
 #: ../../godmode/perfiles/lista_perfiles.php:242
 #: ../../godmode/setup/links.php:115 ../../godmode/grupos/lista_grupos.php:114
@@ -471,7 +475,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:274
 #: ../../operation/kb/manage_cat.php:168
 msgid "Delete"
-msgstr ""
+msgstr "Slet"
 
 #: ../../godmode/perfiles/lista_perfiles.php:312
 #: ../../godmode/setup/links.php:127 ../../godmode/grupos/lista_grupos.php:144
@@ -504,7 +508,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:303
 #: ../../operation/kb/manage_cat.php:205
 msgid "Are you sure?"
-msgstr ""
+msgstr "Er du sikker?"
 
 #: ../../godmode/setup/setup.php:57 ../../operation/side_menu.php:664
 msgid "General setup"
@@ -515,7 +519,7 @@ msgstr ""
 #: ../../godmode/usuarios/configurar_usuarios.php:232
 #: ../../operation/users/user_edit.php:137
 msgid "Language"
-msgstr ""
+msgstr "Sprog"
 
 #: ../../godmode/setup/setup.php:69
 msgid "No WU completion users"
@@ -535,7 +539,7 @@ msgstr ""
 
 #: ../../godmode/setup/setup.php:85
 msgid "Work hours per day"
-msgstr ""
+msgstr "Arbejdstimer pr. dag"
 
 #: ../../godmode/setup/setup.php:89
 msgid "Sitename"
@@ -543,7 +547,7 @@ msgstr ""
 
 #: ../../godmode/setup/setup.php:91
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #: ../../godmode/setup/event.php:27
 msgid "Event history"
@@ -553,7 +557,7 @@ msgstr ""
 #: ../../include/functions_form.php:312
 #: ../../operation/projects/project_tree.php:55
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: ../../godmode/setup/event.php:39
 msgid "Extended info"
@@ -566,7 +570,7 @@ msgstr ""
 #: ../../operation/messages/message.php:169 ../../operation/kb/browse.php:89
 #: ../../operation/kb/manage_data.php:270 ../../operation/kb/search.php:62
 msgid "Timestamp"
-msgstr ""
+msgstr "Tidsstempel"
 
 #: ../../godmode/setup/event.php:65 ../../include/functions_form.php:552
 #: ../../operation/reporting/incidents_html.php:114
@@ -585,7 +589,7 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:181
 #: ../../operation/projects/task_incidents.php:55
 msgid "Incident"
-msgstr ""
+msgstr "Hændelse"
 
 #: ../../godmode/setup/event.php:68 ../../include/functions_form.php:51
 #: ../../include/functions_form.php:116 ../../include/functions_form.php:574
@@ -604,11 +608,11 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:149
 #: ../../operation/contracts/contract_detail.php:219
 msgid "Group"
-msgstr ""
+msgstr "Gruppe"
 
 #: ../../godmode/setup/setup_mail.php:46 ../../operation/side_menu.php:671
 msgid "Mail setup"
-msgstr ""
+msgstr "Opsætning af mail"
 
 #: ../../godmode/setup/setup_mail.php:56
 msgid "Notification period"
@@ -636,7 +640,7 @@ msgstr ""
 
 #: ../../godmode/setup/links.php:58
 msgid "Link could not be deleted"
-msgstr ""
+msgstr "Link kunne ikke slettes"
 
 #: ../../godmode/setup/links.php:60 ../../godmode/grupos/lista_grupos.php:102
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:32
@@ -646,28 +650,28 @@ msgstr ""
 #: ../../operation/inventories/manage_prod.php:96
 #: ../../operation/projects/project.php:60
 msgid "Successfully deleted"
-msgstr ""
+msgstr "Succesfuldt slettet"
 
 #: ../../godmode/setup/links.php:68
 msgid "Link management"
-msgstr ""
+msgstr "Styring af links"
 
 #: ../../godmode/setup/links.php:81 ../../godmode/usuarios/role_manager.php:89
 msgid "Name error"
-msgstr ""
+msgstr "Navne fejl"
 
 #: ../../godmode/setup/links.php:99 ../../godmode/setup/links.php:113
 msgid "Link name"
-msgstr ""
+msgstr "Link navn"
 
 #: ../../godmode/setup/links.php:100
 msgid "Link"
-msgstr ""
+msgstr "Link"
 
 #: ../../godmode/setup/links.php:114
 #: ../../godmode/grupos/configurar_grupo.php:79
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ../../godmode/setup/links.php:136
 #: ../../godmode/usuarios/role_manager.php:153
@@ -677,16 +681,16 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:546
 #: ../../operation/users/user_spare_workunit.php:298
 msgid "Add"
-msgstr ""
+msgstr "Tilføj"
 
 #: ../../godmode/grupos/configurar_grupo.php:53
 msgid "There was a problem loading group"
-msgstr ""
+msgstr "Der var et problem med indlæsning af gruppe"
 
 #: ../../godmode/grupos/configurar_grupo.php:59
 #: ../../godmode/grupos/lista_grupos.php:106
 msgid "Group management"
-msgstr ""
+msgstr "Styring af gruppe"
 
 #: ../../godmode/grupos/configurar_grupo.php:70
 #: ../../godmode/grupos/lista_grupos.php:112
@@ -719,7 +723,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:186
 #: ../../operation/kb/manage_cat.php:122 ../../operation/kb/manage_cat.php:164
 msgid "Name"
-msgstr ""
+msgstr "Navn"
 
 #: ../../godmode/grupos/configurar_grupo.php:71
 msgid "Forced email"
@@ -733,7 +737,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:134
 #: ../../operation/users/user_edit.php:147
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: ../../godmode/grupos/configurar_grupo.php:84
 #: ../../godmode/grupos/lista_grupos.php:113
@@ -751,7 +755,7 @@ msgstr ""
 #: ../../operation/projects/project_overview.php:30
 #: ../../operation/kb/manage_cat.php:134 ../../operation/kb/manage_cat.php:163
 msgid "Icon"
-msgstr ""
+msgstr "Ikon"
 
 #: ../../godmode/grupos/configurar_grupo.php:95
 msgid "Banner"
@@ -759,7 +763,7 @@ msgstr ""
 
 #: ../../godmode/grupos/configurar_grupo.php:97
 msgid "Default user"
-msgstr ""
+msgstr "Standard bruger"
 
 #: ../../godmode/grupos/lista_grupos.php:65
 msgid "There was a problem creating group"
@@ -797,8 +801,8 @@ msgstr ""
 #: ../../godmode/updatemanager/main.php:43
 msgid ""
 "Update Manager is one of the most advanced features of Integria Enterprise "
-"version, for more information visit <a href=\"http://integria.sourceforge.net"
-"\">http://integria.sourceforge.net</a>"
+"version, for more information visit <a "
+"href=\"http://integria.sourceforge.net\">http://integria.sourceforge.net</a>"
 msgstr ""
 
 #: ../../godmode/updatemanager/main.php:45
@@ -809,11 +813,11 @@ msgstr ""
 
 #: ../../godmode/updatemanager/main.php:65
 msgid "Your system is up-to-date"
-msgstr ""
+msgstr "Dit system er opdateret"
 
 #: ../../godmode/updatemanager/main.php:67
 msgid "Server connection failed"
-msgstr ""
+msgstr "Server forbindelse mislykkedes"
 
 #: ../../godmode/updatemanager/main.php:69
 msgid "Server authorization rejected"
@@ -821,13 +825,13 @@ msgstr ""
 
 #: ../../godmode/updatemanager/main.php:71
 msgid "There's a new update for Integria Enterprise"
-msgstr ""
+msgstr "Der er en ny opdatering til Integria Enterprise"
 
 #: ../../godmode/updatemanager/main.php:76
 #: ../../operation/reporting/incidents_html.php:112
 #: ../../operation/incidents/incident.php:120
 msgid "Id"
-msgstr ""
+msgstr "Id"
 
 #: ../../godmode/updatemanager/main.php:82
 #: ../../godmode/usuarios/role_manager.php:110
@@ -865,15 +869,15 @@ msgstr ""
 #: ../../operation/kb/browse_data.php:100
 #: ../../operation/kb/manage_cat.php:128 ../../operation/kb/manage_cat.php:166
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
 #: ../../godmode/updatemanager/main.php:88
 msgid "Overwrite local changes"
-msgstr ""
+msgstr "Overskriv lokale ændringer"
 
 #: ../../godmode/updatemanager/main.php:97
 msgid "Your system version number is"
-msgstr ""
+msgstr "Dit systems versionsnummer er"
 
 #: ../../godmode/updatemanager/settings.php:38
 msgid "Update manager settings updated"
@@ -885,19 +889,19 @@ msgstr ""
 
 #: ../../godmode/updatemanager/settings.php:49
 msgid "Customer key"
-msgstr ""
+msgstr "Kundenøgle"
 
 #: ../../godmode/updatemanager/settings.php:52
 msgid "Update server host"
-msgstr ""
+msgstr "Opdatér værts server"
 
 #: ../../godmode/updatemanager/settings.php:55
 msgid "Update server port"
-msgstr ""
+msgstr "Opdatér serverport"
 
 #: ../../godmode/updatemanager/settings.php:58
 msgid "Update server path"
-msgstr ""
+msgstr "Opdatér serversti"
 
 #: ../../godmode/updatemanager/settings.php:61
 msgid "Binary input path"
@@ -909,42 +913,42 @@ msgstr ""
 
 #: ../../godmode/updatemanager/settings.php:67
 msgid "Proxy server"
-msgstr ""
+msgstr "Proxy-server"
 
 #: ../../godmode/updatemanager/settings.php:70
 msgid "Proxy port"
-msgstr ""
+msgstr "Proxy port"
 
 #: ../../godmode/updatemanager/settings.php:73
 msgid "Proxy user"
-msgstr ""
+msgstr "Proxy bruger"
 
 #: ../../godmode/updatemanager/settings.php:75
 msgid "Proxy password"
-msgstr ""
+msgstr "Proxy adgangskode"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:553
 msgid "Development"
-msgstr ""
+msgstr "Udvikling"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:554
 msgid "Testing"
-msgstr ""
+msgstr "Tester"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:555
 #: ../../operation/agenda/agenda.php:159 ../../operation/agenda/agenda.php:191
 #: ../../operation/incidents/incident_create_work.php:52
 #: ../../operation/users/user_spare_workunit.php:272
 msgid "Public"
-msgstr ""
+msgstr "Offentlig"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:556
 msgid "Disabled"
-msgstr ""
+msgstr "Slået fra"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:564
 msgid "Database"
-msgstr ""
+msgstr "Database"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:565
 msgid "Code / binary directory"
@@ -952,7 +956,7 @@ msgstr ""
 
 #: ../../godmode/usuarios/lista_usuarios.php:38
 msgid "There was a problem deleting user"
-msgstr ""
+msgstr "Der var et problem med at slette bruger"
 
 #: ../../godmode/usuarios/lista_usuarios.php:40
 msgid "User successfully deleted"
@@ -960,25 +964,25 @@ msgstr ""
 
 #: ../../godmode/usuarios/lista_usuarios.php:50
 msgid "Search text"
-msgstr ""
+msgstr "Søg tekst"
 
 #: ../../godmode/usuarios/lista_usuarios.php:71
 #: ../../operation/user_report/report_monthly.php:65
 #: ../../operation/users/user.php:32
 msgid "UserID"
-msgstr ""
+msgstr "BrugerID"
 
 #: ../../godmode/usuarios/lista_usuarios.php:72
 #: ../../operation/users/user.php:33
 msgid "Last contact"
-msgstr ""
+msgstr "Sidste kontakt"
 
 #: ../../godmode/usuarios/lista_usuarios.php:73
 #: ../../include/functions_form.php:599
 #: ../../operation/incidents/incident_create_work.php:48
 #: ../../operation/users/user.php:34
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #: ../../godmode/usuarios/lista_usuarios.php:106
 #: ../../godmode/usuarios/configurar_usuarios.php:291
@@ -991,7 +995,7 @@ msgstr ""
 #: ../../godmode/usuarios/lista_usuarios.php:118
 #: ../../godmode/usuarios/configurar_usuarios.php:168
 msgid "Create user"
-msgstr ""
+msgstr "Opret bruger"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:50
 msgid "There was a problem loading user"
@@ -999,7 +1003,7 @@ msgstr ""
 
 #: ../../godmode/usuarios/configurar_usuarios.php:81
 msgid "Passwords don't match."
-msgstr ""
+msgstr "Adgangskoder stemmer ikke"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:129
 msgid "There was a problem updating user"
@@ -1011,25 +1015,25 @@ msgstr ""
 
 #: ../../godmode/usuarios/configurar_usuarios.php:172
 msgid "Update user"
-msgstr ""
+msgstr "Opdatér bruger"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:186
 #: ../../operation/user_report/report_weekly.php:59
 #: ../../operation/users/user_edit.php:122
 msgid "User ID"
-msgstr ""
+msgstr "Bruger ID"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:194
 #: ../../operation/users/user_edit.php:128
 #: ../../operation/users/user_edit.php:130
 #: ../../operation/users/user_search.php:97
 msgid "Real name"
-msgstr ""
+msgstr "Rigtigt navn"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:198
 #: ../../operation/users/user_edit.php:164
 msgid "Password confirmation"
-msgstr ""
+msgstr "Adgangskode bekræftet"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:206
 #: ../../operation/users/user_edit.php:124
@@ -1040,7 +1044,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:135
 #: ../../operation/users/user_edit.php:148
 msgid "Telephone"
-msgstr ""
+msgstr "Telefon"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:217
 msgid "Global profile"
@@ -1049,12 +1053,12 @@ msgstr ""
 #: ../../godmode/usuarios/configurar_usuarios.php:221
 #: ../../godmode/usuarios/configurar_usuarios.php:225
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:223
 #: ../../godmode/usuarios/configurar_usuarios.php:227
 msgid "Standard user"
-msgstr ""
+msgstr "Standard bruger"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:239
 #: ../../operation/manufacturers/manufacturer_detail.php:126
@@ -1064,11 +1068,11 @@ msgstr ""
 #: ../../operation/users/user_edit.php:150
 #: ../../operation/users/user_search.php:98
 msgid "Comments"
-msgstr ""
+msgstr "Kommentarer"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:249
 msgid "Group(s) available"
-msgstr ""
+msgstr "Gruppe(r) tilgængelig(e)"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:250
 #: ../../include/functions_form.php:178 ../../include/functions_form.php:281
@@ -1090,7 +1094,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:138
 #: ../../operation/kb/manage_cat.php:137
 msgid "None"
-msgstr ""
+msgstr "Ingen"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:281
 msgid "Profiles/Groups assigned to this user"
@@ -1099,22 +1103,22 @@ msgstr ""
 #: ../../godmode/usuarios/role_manager.php:35 ../../operation/todo/todo.php:28
 #: ../../operation/projects/milestones.php:48
 msgid "Not created. Error inserting data"
-msgstr ""
+msgstr "Ikke oprettet. Fejl ved indsættelse af data"
 
 #: ../../godmode/usuarios/role_manager.php:54 ../../operation/todo/todo.php:56
 msgid "Not updated. Error updating data"
-msgstr ""
+msgstr "Ikke opdateret. Fejl ved opdatering af data"
 
 #: ../../godmode/usuarios/role_manager.php:56
 msgid "Succcessfully updated"
-msgstr ""
+msgstr "Succesfuldt opdateret"
 
 #: ../../godmode/usuarios/role_manager.php:68
 #: ../../godmode/usuarios/role_manager.php:72 ../../operation/todo/todo.php:82
 #: ../../operation/projects/milestones.php:65
 #: ../../operation/users/user_workunit_report.php:59
 msgid "Not deleted. Error deleting data"
-msgstr ""
+msgstr "Ikke slettet. Fejl ved sletning af data"
 
 #: ../../godmode/usuarios/role_manager.php:70
 #: ../../operation/manufacturers/manufacturer_detail.php:86
@@ -1134,16 +1138,16 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:96
 #: ../../operation/kb/manage_data.php:137 ../../operation/kb/manage_cat.php:82
 msgid "Deleted successfully"
-msgstr ""
+msgstr "Slettet succesfuldt"
 
 #: ../../godmode/usuarios/role_manager.php:98
 #: ../../godmode/usuarios/role_manager.php:123
 msgid "Role management"
-msgstr ""
+msgstr "Styring af roller"
 
 #: ../../godmode/usuarios/role_manager.php:98
 msgid "Add role"
-msgstr ""
+msgstr "Tilføj rolle"
 
 #: ../../godmode/usuarios/role_manager.php:108
 #: ../../include/functions_form.php:81
@@ -1156,7 +1160,7 @@ msgstr ""
 #: ../../operation/users/user_spare_workunit.php:246
 #: ../../operation/users/user_search.php:76
 msgid "Role"
-msgstr ""
+msgstr "Rolle"
 
 #: ../../godmode/usuarios/role_manager.php:112
 #: ../../godmode/usuarios/role_manager.php:127
@@ -1167,11 +1171,11 @@ msgstr ""
 #: ../../operation/projects/people_manager.php:253
 #: ../../operation/projects/project.php:177
 msgid "Cost"
-msgstr ""
+msgstr "Omkostning"
 
 #: ../../include/functions_calendar.php:422
 msgid "Week Total"
-msgstr ""
+msgstr "Uge total"
 
 #: ../../include/functions_calendar.php:447
 #: ../../include/functions_calendar.php:488
@@ -1186,43 +1190,43 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:198
 #: ../../operation/slas/sla_detail.php:199
 msgid "Hours"
-msgstr ""
+msgstr "Timer"
 
 #: ../../include/functions_calendar.php:601 ../../include/functions.php:526
 #: ../../include/functions.php:596 ../../include/functions.php:620
 #: ../../operation/projects/task_tracking.php:66
 msgid "Unknown"
-msgstr ""
+msgstr "Ukendt"
 
 #: ../../include/functions_calendar.php:608
 #: ../../operation/projects/project.php:251
 msgid "Never"
-msgstr ""
+msgstr "Aldrig"
 
 #: ../../include/functions_calendar.php:617
 msgid "seconds"
-msgstr ""
+msgstr "sekunder"
 
 #: ../../include/functions_calendar.php:623
 #: ../../include/functions_calendar.php:625
 msgid "minutes"
-msgstr ""
+msgstr "minutter"
 
 #: ../../include/functions_calendar.php:628
 msgid "hours"
-msgstr ""
+msgstr "timer"
 
 #: ../../include/functions_calendar.php:631
 msgid "days"
-msgstr ""
+msgstr "dage"
 
 #: ../../include/functions_calendar.php:634
 msgid "months"
-msgstr ""
+msgstr "måneder"
 
 #: ../../include/functions_calendar.php:637
 msgid "years"
-msgstr ""
+msgstr "år"
 
 #: ../../include/functions_form.php:30 ../../include/functions_form.php:47
 #: ../../include/functions_form.php:703 ../../include/functions_form.php:708
@@ -1232,7 +1236,7 @@ msgstr ""
 #: ../../operation/users/user_search.php:76
 #: ../../operation/users/user_search.php:79
 msgid "Any"
-msgstr ""
+msgstr "Enhver"
 
 #: ../../include/functions_form.php:237 ../../include/functions_form.php:247
 #: ../../include/functions_form.php:704
@@ -1244,18 +1248,18 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:184
 #: ../../operation/projects/task_tracking.php:39
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: ../../include/functions_form.php:261 ../../include/functions_form.php:268
 msgid "Source"
-msgstr ""
+msgstr "Kilde"
 
 #: ../../include/functions_form.php:282 ../../include/functions_form.php:291
 #: ../../operation/reporting/incidents_html.php:116
 #: ../../operation/incidents/incident.php:124
 #: ../../operation/incidents/incident_search.php:92
 msgid "Resolution"
-msgstr ""
+msgstr "Opløsning"
 
 #: ../../include/functions_form.php:324 ../../include/functions_form.php:353
 #: ../../include/functions_form.php:549
@@ -1268,18 +1272,18 @@ msgstr ""
 #: ../../operation/users/user_task_assigment.php:54
 #: ../../operation/users/user_spare_workunit.php:256
 msgid "Task"
-msgstr ""
+msgstr "Opgave"
 
 #: ../../include/functions_form.php:327 ../../include/functions_form.php:336
 #: ../../include/functions_form.php:385 ../../include/functions_form.php:403
 #: ../../include/functions_form.php:585
 #: ../../operation/projects/project_detail.php:201
 msgid "N/A"
-msgstr ""
+msgstr "Ikke tilgængelig"
 
 #: ../../include/functions_form.php:338 ../../include/functions_form.php:367
 msgid "Vacations"
-msgstr ""
+msgstr "Ferie"
 
 #: ../../include/functions_form.php:368
 msgid "Not working for disease"
@@ -1303,11 +1307,11 @@ msgstr ""
 
 #: ../../include/functions_form.php:499 ../../include/functions_form.php:614
 msgid "Read more..."
-msgstr ""
+msgstr "Læs mere..."
 
 #: ../../include/functions_form.php:556
 msgid "Duration"
-msgstr ""
+msgstr "Varighed"
 
 #: ../../include/functions_form.php:571
 #: ../../enterprise/godmode/usuarios/role_user_global.php:68
@@ -1316,7 +1320,7 @@ msgstr ""
 #: ../../operation/projects/task_files.php:113
 #: ../../operation/users/user_task_assigment.php:53
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #: ../../include/functions_form.php:597
 #: ../../operation/common/workunit_detail.php:50
@@ -1339,7 +1343,7 @@ msgstr ""
 #: ../../include/functions_form.php:699
 #: ../../operation/inventories/inventory_search.php:168
 msgid "Search string"
-msgstr ""
+msgstr "Søgestreng"
 
 #: ../../include/functions_form.php:709
 #: ../../operation/reporting/incidents_html.php:62
@@ -1352,7 +1356,7 @@ msgstr ""
 #: ../../operation/todo/todo.php:124 ../../operation/todo/todo.php:184
 #: ../../operation/projects/task_detail.php:229
 msgid "Priority"
-msgstr ""
+msgstr "Prioritet"
 
 #: ../../include/functions_form.php:713 ../../include/functions_form.php:724
 #: ../../include/functions_form.php:731 ../../include/functions_form.php:742
@@ -1365,20 +1369,20 @@ msgstr ""
 #: ../../operation/projects/project_tree.php:52
 #: ../../operation/contracts/contract_detail.php:191
 msgid "All"
-msgstr ""
+msgstr "Alle"
 
 #: ../../include/functions_form.php:720
 #: ../../operation/reporting/incidents_html.php:76
 #: ../../operation/side_menu.php:403 ../../operation/side_menu.php:435
 #: ../../operation/incidents/incident.php:76 ../../operation/main_menu.php:48
 msgid "Inventory"
-msgstr ""
+msgstr "Inventarliste"
 
 #: ../../include/functions_form.php:725
 #: ../../operation/inventories/inventory_detail.php:200
 #: ../../operation/inventories/inventory_search.php:173
 msgid "Product type"
-msgstr ""
+msgstr "Produkttype"
 
 #: ../../include/functions_form.php:728
 #: ../../operation/reporting/inventories_html.php:62
@@ -1388,7 +1392,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:184
 #: ../../operation/incidents/incident_inventory_detail.php:74
 msgid "Serial number"
-msgstr ""
+msgstr "Serienummer"
 
 #: ../../include/functions_form.php:732
 #: ../../operation/reporting/inventories_html.php:70
@@ -1401,7 +1405,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_tree.php:52
 #: ../../operation/incidents/incident_inventory_detail.php:81
 msgid "Building"
-msgstr ""
+msgstr "Bygning"
 
 #: ../../include/functions_form.php:733
 #: ../../operation/reporting/incidents_html.php:68
@@ -1412,13 +1416,13 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:53
 #: ../../operation/contracts/contract_detail.php:150
 msgid "Begin date"
-msgstr ""
+msgstr "Start dato"
 
 #: ../../include/functions_form.php:739
 #: ../../operation/user_report/report_full.php:56
 #: ../../operation/contracts/contract_detail.php:151
 msgid "End date"
-msgstr ""
+msgstr "Slut dato"
 
 #: ../../include/functions_form.php:742
 #: ../../operation/reporting/inventories_html.php:59
@@ -1442,12 +1446,12 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:191
 #: ../../operation/contracts/contract_detail.php:217
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #: ../../include/functions_form.php:744
 #: ../../operation/reporting/incidents_html.php:88
 msgid "Incident type"
-msgstr ""
+msgstr "Hændelsestype"
 
 #: ../../include/functions_form.php:746
 #: ../../operation/manufacturers/manufacturer_detail.php:156
@@ -1479,65 +1483,65 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:172 ../../operation/kb/browse.php:51
 #: ../../operation/kb/browse.php:56 ../../operation/kb/search.php:45
 msgid "Search"
-msgstr ""
+msgstr "Søg"
 
 #: ../../include/functions_form.php:752
 #: ../../operation/inventories/inventory_search.php:206
 msgid "Advanced search"
-msgstr ""
+msgstr "Avanceret søgning"
 
 #: ../../include/functions_form.php:767
 #: ../../operation/reporting/incidents_html.php:120
 msgid "Responsible"
-msgstr ""
+msgstr "Ansvarlig"
 
 #: ../../include/functions_form.php:771 ../../include/functions_form.php:773
 #: ../../operation/user_report/report_full.php:183
 msgid "Creator"
-msgstr ""
+msgstr "Ophavsmand"
 
 #: ../../include/functions_form.php:779
 msgid "Participant"
-msgstr ""
+msgstr "Deltager"
 
 #: ../../include/functions_form.php:796
 #: ../../include/functions_incidents.php:247
 #: ../../include/functions_incidents.php:249
 msgid "Opened"
-msgstr ""
+msgstr "Åbnet"
 
 #: ../../include/functions_form.php:799
 msgid "Closed at"
-msgstr ""
+msgstr "Lukket"
 
 #: ../../include/functions_form.php:802 ../../include/functions_form.php:805
 #: ../../operation/users/user_task_assigment.php:57
 msgid "Last update"
-msgstr ""
+msgstr "Sidste opdatering"
 
 #: ../../include/functions_form.php:811
 msgid "Hours worked"
-msgstr ""
+msgstr "Timer arbejdet"
 
 #: ../../include/functions_form.php:814
 msgid "Last work at"
-msgstr ""
+msgstr "Sidst arbejdet"
 
 #: ../../include/functions_form.php:815
 msgid "Done by"
-msgstr ""
+msgstr "Udført af"
 
 #: ../../include/functions_form.php:837
 msgid "Items per page"
-msgstr ""
+msgstr "Emner pr. side"
 
 #: ../../include/functions_incidents.php:245
 msgid "Total incicents"
-msgstr ""
+msgstr "Totale hændelser"
 
 #: ../../include/functions_incidents.php:247 ../../include/functions.php:540
 msgid "Closed"
-msgstr ""
+msgstr "Lukket"
 
 #: ../../include/functions_incidents.php:251
 msgid "Mean life time"
@@ -1554,11 +1558,11 @@ msgstr ""
 #: ../../include/functions_incidents.php:256
 #: ../../operation/user_report/report_full.php:73
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: ../../include/functions_incidents.php:261
 msgid "Longest closed incident"
-msgstr ""
+msgstr "Længst lukket hændelse"
 
 #: ../../include/functions_incidents.php:275
 #: ../../include/functions_incidents.php:286
@@ -1567,11 +1571,11 @@ msgstr ""
 
 #: ../../include/functions_incidents.php:295
 msgid "Most active users"
-msgstr ""
+msgstr "Mest aktive brugere"
 
 #: ../../include/functions_incidents.php:296
 msgid "Most active incidents"
-msgstr ""
+msgstr "Mest aktive hændelser"
 
 #: ../../include/config_process.php:102
 msgid ""
@@ -1581,154 +1585,154 @@ msgstr ""
 
 #: ../../include/functions_inventories.php:347
 msgid "Total objects"
-msgstr ""
+msgstr "Total for objekter"
 
 #: ../../include/functions_inventories.php:349
 msgid "With incidents"
-msgstr ""
+msgstr "Med hændelser"
 
 #: ../../include/functions_inventories.php:349
 msgid "Without incidents"
-msgstr ""
+msgstr "Uden hændelser"
 
 #: ../../include/functions_inventories.php:351
 msgid "Total objects with incidents"
-msgstr ""
+msgstr "Total for objekter med hændelser"
 
 #: ../../include/functions_inventories.php:353
 msgid "Total objects with opened incidents"
-msgstr ""
+msgstr "Total for objekter med åbne hændelser"
 
 #: ../../include/functions.php:395
 msgid "Very low"
-msgstr ""
+msgstr "Meget lav"
 
 #: ../../include/functions.php:397 ../../include/functions.php:500
 #: ../../include/functions.php:576
 msgid "Low"
-msgstr ""
+msgstr "Lav"
 
 #: ../../include/functions.php:399 ../../include/functions.php:501
 #: ../../include/functions.php:580
 msgid "Medium"
-msgstr ""
+msgstr "Middel"
 
 #: ../../include/functions.php:401
 msgid "High"
-msgstr ""
+msgstr "Høj"
 
 #: ../../include/functions.php:403
 msgid "Very high"
-msgstr ""
+msgstr "Meget høj"
 
 #: ../../include/functions.php:405
 #: ../../operation/user_report/report_annual.php:57
 msgid "Other"
-msgstr ""
+msgstr "Andet"
 
 #: ../../include/functions.php:499 ../../include/functions.php:572
 msgid "Informative"
-msgstr ""
+msgstr "Informativ"
 
 #: ../../include/functions.php:502 ../../include/functions.php:584
 msgid "Serious"
-msgstr ""
+msgstr "Alvorlig"
 
 #: ../../include/functions.php:503
 msgid "Very Serious"
-msgstr ""
+msgstr "Meget alvorlig"
 
 #: ../../include/functions.php:504
 msgid "Maintenance"
-msgstr ""
+msgstr "Vedligeholdelse"
 
 #: ../../include/functions.php:513
 msgid "Weekly"
-msgstr ""
+msgstr "Ugentlig"
 
 #: ../../include/functions.php:514
 msgid "15 days"
-msgstr ""
+msgstr "15 dage"
 
 #: ../../include/functions.php:515
 msgid "Monthly"
-msgstr ""
+msgstr "Månedlig"
 
 #: ../../include/functions.php:516
 msgid "60 days"
-msgstr ""
+msgstr "60 dage"
 
 #: ../../include/functions.php:517
 msgid "90 days"
-msgstr ""
+msgstr "90 dage"
 
 #: ../../include/functions.php:518
 msgid "Annual"
-msgstr ""
+msgstr "Årligt"
 
 #: ../../include/functions.php:534
 msgid "New"
-msgstr ""
+msgstr "Ny"
 
 #: ../../include/functions.php:535
 msgid "Unconfirmed"
-msgstr ""
+msgstr "Ubekræftet"
 
 #: ../../include/functions.php:536
 msgid "Assigned"
-msgstr ""
+msgstr "Tildelt"
 
 #: ../../include/functions.php:537
 msgid "Re-opened"
-msgstr ""
+msgstr "Genåbnet"
 
 #: ../../include/functions.php:538
 msgid "Verified"
-msgstr ""
+msgstr "Bekræftet"
 
 #: ../../include/functions.php:539
 msgid "Resolved"
-msgstr ""
+msgstr "Løst igen"
 
 #: ../../include/functions.php:548
 msgid "Fixed"
-msgstr ""
+msgstr "Løst"
 
 #: ../../include/functions.php:549
 msgid "Invalid"
-msgstr ""
+msgstr "Ugyldig"
 
 #: ../../include/functions.php:550
 msgid "Wont fix"
-msgstr ""
+msgstr "Ikke løst"
 
 #: ../../include/functions.php:551
 msgid "Duplicate"
-msgstr ""
+msgstr "Dobbeltgænger"
 
 #: ../../include/functions.php:552
 msgid "Works for me"
-msgstr ""
+msgstr "Arbejder for mig"
 
 #: ../../include/functions.php:553
 msgid "Incomplete"
-msgstr ""
+msgstr "Ufuldstændig"
 
 #: ../../include/functions.php:554
 msgid "Expired"
-msgstr ""
+msgstr "Udløbet"
 
 #: ../../include/functions.php:555
 msgid "Moved"
-msgstr ""
+msgstr "Flyttet"
 
 #: ../../include/functions.php:556
 msgid "In process"
-msgstr ""
+msgstr "I proces"
 
 #: ../../include/functions.php:588
 msgid "Very serious"
-msgstr ""
+msgstr "Meget alvorlig"
 
 #: ../../include/functions.php:592
 msgid "Maintance"
@@ -1736,11 +1740,11 @@ msgstr ""
 
 #: ../../include/functions.php:608
 msgid "Project created"
-msgstr ""
+msgstr "Projekt dannet"
 
 #: ../../include/functions.php:610
 msgid "Project updated"
-msgstr ""
+msgstr "Projekt opdateret"
 
 #: ../../include/functions.php:612
 msgid "Project disabled"
@@ -1752,16 +1756,16 @@ msgstr ""
 
 #: ../../include/functions.php:616
 msgid "Project deleted"
-msgstr ""
+msgstr "Projekt slettet"
 
 #: ../../include/functions.php:618
 #: ../../operation/projects/task_tracking.php:48
 msgid "Task added"
-msgstr ""
+msgstr "Opgave tilføjet"
 
 #: ../../include/functions_db.php:710
 msgid "Created"
-msgstr ""
+msgstr "Oprettet"
 
 #: ../../include/functions_db.php:713
 #: ../../operation/reporting/incidents_html.php:118
@@ -1769,7 +1773,7 @@ msgstr ""
 #: ../../operation/incidents/incident_search.php:94
 #: ../../operation/todo/todo.php:191 ../../operation/projects/project.php:178
 msgid "Updated"
-msgstr ""
+msgstr "Opdateret"
 
 #: ../../include/functions_db.php:716
 #: ../../operation/projects/task_workunit.php:77
@@ -1785,80 +1789,80 @@ msgstr ""
 #: ../../operation/projects/task_tracking.php:54
 #: ../../operation/kb/manage_data.php:101
 msgid "File added"
-msgstr ""
+msgstr "Fil tilføjet"
 
 #: ../../include/functions_db.php:722
 msgid "Note added"
-msgstr ""
+msgstr "Note tilføjet"
 
 #: ../../include/functions_db.php:725
 msgid "File removed"
-msgstr ""
+msgstr "Fil fjernet"
 
 #: ../../include/functions_db.php:728
 msgid "Priority changed"
-msgstr ""
+msgstr "Prioritet ændret"
 
 #: ../../include/functions_db.php:733
 msgid "Status changed"
-msgstr ""
+msgstr "Status ændret"
 
 #: ../../include/functions_db.php:737
 msgid "Resolution changed"
-msgstr ""
+msgstr "Opløsning ændret"
 
 #: ../../include/functions_db.php:741
 msgid "Note deleted"
-msgstr ""
+msgstr "Note slettet"
 
 #: ../../include/functions_db.php:744
 msgid "Assigned user changed"
-msgstr ""
+msgstr "Tilknyttet bruger ændret"
 
 #: ../../include/functions_db.php:748
 msgid "Incident deleted"
-msgstr ""
+msgstr "Hændelse slettet"
 
 #: ../../include/functions_db.php:751
 msgid "Unknown update"
-msgstr ""
+msgstr "Ukendt opdatering"
 
 #: ../../include/functions_db.php:1073
 #: ../../operation/reporting/incidents_html.php:68
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: ../../include/functions_db.php:1075
 msgid "No"
-msgstr ""
+msgstr "Nej"
 
 #: ../../include/functions_graph.php:183
 msgid "Out of limits"
-msgstr ""
+msgstr "Udenfor grænser"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:30
 msgid "Could not delete profile"
-msgstr ""
+msgstr "Kunne ikke slette profil"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:140
 msgid "Could not create profile"
-msgstr ""
+msgstr "Kunne ikke oprette profil"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:203
 msgid "Integria management"
-msgstr ""
+msgstr "Integria styring"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:222
 msgid "KB Read"
-msgstr ""
+msgstr "KB læs"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:225
 msgid "KB Write"
-msgstr ""
+msgstr "KB skriv"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:228
 msgid "KB Management"
-msgstr ""
+msgstr "KB styring"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:233
 #: ../../enterprise/operation/user/user.php:66
@@ -1877,82 +1881,82 @@ msgstr ""
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:31
 msgid "There was a problem deleting the profile"
-msgstr ""
+msgstr "Der var et problem med at slette profil"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:80
 msgid "There was a problem updating this profile"
-msgstr ""
+msgstr "Der var et problem med at opdatere profil"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:121
 msgid "There was a problem creating this profile"
-msgstr ""
+msgstr "Der var et problem med at oprette profil"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:196
 #: ../../enterprise/godmode/usuarios/profile_list.php:269
 msgid "Manage incidents"
-msgstr ""
+msgstr "Styring af hændelser"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:198
 msgid "View agenda"
-msgstr ""
+msgstr "Vis dagsorden"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:200
 #: ../../enterprise/godmode/usuarios/profile_list.php:271
 msgid "Edit agenda"
-msgstr ""
+msgstr "Redigér dagsorden"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:202
 #: ../../enterprise/godmode/usuarios/profile_list.php:272
 msgid "Manage agenda"
-msgstr ""
+msgstr "Styr dagsorden"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:204
 #: ../../enterprise/godmode/usuarios/profile_list.php:273
 #: ../../operation/side_menu.php:813
 msgid "Manage users"
-msgstr ""
+msgstr "Styr brugere"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:206
 msgid "Manage Database"
-msgstr ""
+msgstr "Styr database"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:210
 #: ../../enterprise/godmode/usuarios/profile_list.php:276
 msgid "View project"
-msgstr ""
+msgstr "Vis projekt"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:212
 #: ../../enterprise/godmode/usuarios/profile_list.php:277
 msgid "Edit project"
-msgstr ""
+msgstr "Redigér projekt"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:214
 #: ../../enterprise/godmode/usuarios/profile_list.php:278
 msgid "Manage projects"
-msgstr ""
+msgstr "Styr projekt"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:216
 msgid "Edit tasks"
-msgstr ""
+msgstr "Redigér opgaver"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:218
 msgid "Manage tasks"
-msgstr ""
+msgstr "Styr opgaver"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:220
 #: ../../enterprise/godmode/usuarios/profile_list.php:281
 msgid "View Knowledge Base"
-msgstr ""
+msgstr "Vis vidensbase"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:222
 #: ../../enterprise/godmode/usuarios/profile_list.php:282
 msgid "Edit Knowledge Base"
-msgstr ""
+msgstr "Redigér vidensbase"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:224
 #: ../../enterprise/godmode/usuarios/profile_list.php:283
 msgid "Manage Knowledge Base"
-msgstr ""
+msgstr "Styr vidensbase"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:226
 #: ../../enterprise/godmode/usuarios/profile_list.php:284
@@ -1971,15 +1975,15 @@ msgstr ""
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:270
 msgid "Read agenda"
-msgstr ""
+msgstr "Læs dagsorden"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:279
 msgid "Edit task"
-msgstr ""
+msgstr "Redigér opgave"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:280
 msgid "Manage task"
-msgstr ""
+msgstr "Styr opgave"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:39
 msgid "Assigment removed succesfully"
@@ -1993,13 +1997,13 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/role_user_global.php:45
 #: ../../operation/users/user_task_assigment.php:38
 msgid "For user"
-msgstr ""
+msgstr "For bruger"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:57
 #: ../../operation/user_report/report_annual.php:42
 #: ../../operation/users/user_task_assigment.php:48
 msgid "Go"
-msgstr ""
+msgstr "Kør"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:71
 msgid "WU"
@@ -2019,24 +2023,24 @@ msgstr ""
 
 #: ../../enterprise/operation/user/user.php:27
 msgid "Defined profiles"
-msgstr ""
+msgstr "Definerede profiler"
 
 #: ../../enterprise/operation/user/user.php:31
 msgid "There are no profiles defined"
-msgstr ""
+msgstr "Der er ikke defineret profiler"
 
 #: ../../enterprise/operation/user/user.php:42
 msgid "Incident read"
-msgstr ""
+msgstr "Læs hændelser"
 
 #: ../../enterprise/operation/user/user.php:43
 msgid "Incident write"
-msgstr ""
+msgstr "Skriv hændelser"
 
 #: ../../enterprise/operation/user/user.php:44
 #: ../../operation/incidents/incident_statistics.php:25
 msgid "Incident management"
-msgstr ""
+msgstr "Styr hændelser"
 
 #: ../../enterprise/operation/user/user.php:58
 msgid "ToDo write"
@@ -2060,43 +2064,43 @@ msgstr ""
 
 #: ../../operation/agenda/agenda.php:84
 msgid "Added event to calendar"
-msgstr ""
+msgstr "Tilføjede begivenheder til kalender"
 
 #: ../../operation/agenda/agenda.php:154
 msgid "Legend"
-msgstr ""
+msgstr "Forklaring"
 
 #: ../../operation/agenda/agenda.php:167
 msgid "Alert"
-msgstr ""
+msgstr "Alarm"
 
 #: ../../operation/agenda/agenda.php:177
 msgid "Add agenda entry"
-msgstr ""
+msgstr "Tilføj dagsordenspunkt"
 
 #: ../../operation/agenda/agenda.php:188
 msgid "Duration in hours"
-msgstr ""
+msgstr "Varighed i timer"
 
 #: ../../operation/agenda/agenda.php:194
 msgid "One hour"
-msgstr ""
+msgstr "En time"
 
 #: ../../operation/agenda/agenda.php:195
 msgid "Two hours"
-msgstr ""
+msgstr "To timer"
 
 #: ../../operation/agenda/agenda.php:196
 msgid "Four hours"
-msgstr ""
+msgstr "Fire timer"
 
 #: ../../operation/agenda/agenda.php:197
 msgid "One day"
-msgstr ""
+msgstr "En dag"
 
 #: ../../operation/agenda/agenda.php:199
 msgid "Alarm"
-msgstr ""
+msgstr "Alarm"
 
 #: ../../operation/agenda/agenda.php:201
 #: ../../operation/reporting/inventories_html.php:41
@@ -2108,11 +2112,11 @@ msgstr ""
 #: ../../operation/projects/project_tracking.php:38
 #: ../../operation/users/user_spare_workunit.php:242
 msgid "Date"
-msgstr ""
+msgstr "Dato"
 
 #: ../../operation/agenda/agenda.php:202
 msgid "Time"
-msgstr ""
+msgstr "Tid"
 
 #: ../../operation/reporting/inventories_html.php:35
 msgid "Inventory report"
@@ -2121,12 +2125,12 @@ msgstr ""
 #: ../../operation/reporting/inventories_html.php:38
 #: ../../operation/reporting/incidents_html.php:44
 msgid "Generated by"
-msgstr ""
+msgstr "Oprettet af"
 
 #: ../../operation/reporting/inventories_html.php:50
 #: ../../operation/reporting/incidents_html.php:56
 msgid "Containing"
-msgstr ""
+msgstr "Indeholder"
 
 #: ../../operation/reporting/inventories_html.php:56
 #: ../../operation/reporting/incidents_html.php:70
@@ -2135,7 +2139,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:217
 #: ../../operation/kb/manage_data.php:272 ../../operation/kb/search.php:64
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #: ../../operation/reporting/inventories_html.php:65
 #: ../../operation/inventories/inventory_detail.php:258
@@ -2143,7 +2147,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:192
 #: ../../operation/incidents/incident_inventory_detail.php:76
 msgid "Part number"
-msgstr ""
+msgstr "Del nummer"
 
 #: ../../operation/reporting/inventories_html.php:68
 #: ../../operation/inventories/inventory_detail.php:260
@@ -2151,7 +2155,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:195
 #: ../../operation/incidents/incident_inventory_detail.php:72
 msgid "IP address"
-msgstr ""
+msgstr "IP adresse"
 
 #: ../../operation/reporting/inventories_html.php:76
 #: ../../operation/inventories/inventory_detail.php:213
@@ -2160,7 +2164,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_contracts.php:51
 #: ../../operation/incidents/incident_inventory_detail.php:57
 msgid "Contract"
-msgstr ""
+msgstr "Kontrakt"
 
 #: ../../operation/reporting/inventories_html.php:84
 msgid "All inventory"
@@ -2178,7 +2182,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:213
 #: ../../operation/inventories/inventory_tree.php:48
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: ../../operation/reporting/inventories_html.php:121
 #: ../../operation/inventories/inventory_search.php:216
@@ -2197,7 +2201,7 @@ msgstr ""
 #: ../../operation/kb/browse.php:86 ../../operation/kb/manage_data.php:190
 #: ../../operation/kb/manage_data.php:269 ../../operation/kb/search.php:61
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #: ../../operation/reporting/inventories_html.php:134
 #: ../../operation/inventories/inventory_search.php:148
@@ -2206,24 +2210,24 @@ msgstr ""
 
 #: ../../operation/reporting/incidents_html.php:41
 msgid "Incidents report"
-msgstr ""
+msgstr "Hændelser rapporteret"
 
 #: ../../operation/reporting/incidents_html.php:92
 #: ../../operation/messages/message.php:85
 #: ../../operation/messages/message.php:127
 #: ../../operation/messages/message.php:211
 msgid "From"
-msgstr ""
+msgstr "Fra"
 
 #: ../../operation/reporting/incidents_html.php:95
 #: ../../operation/messages/message.php:86
 #: ../../operation/messages/message.php:128
 msgid "To"
-msgstr ""
+msgstr "Til"
 
 #: ../../operation/reporting/incidents_html.php:103
 msgid "All incidents"
-msgstr ""
+msgstr "Alle hændelser"
 
 #: ../../operation/reporting/incidents_html.php:113
 #: ../../operation/side_menu.php:518
@@ -2237,81 +2241,81 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:155
 #: ../../operation/contracts/contract_detail.php:218
 msgid "SLA"
-msgstr ""
+msgstr "SLA"
 
 #: ../../operation/reporting/incidents_html.php:118
 #: ../../operation/incidents/incident.php:126
 #: ../../operation/incidents/incident_search.php:94
 msgid "Started"
-msgstr ""
+msgstr "Begyndt"
 
 #: ../../operation/reporting/incidents_html.php:119
 #: ../../operation/incidents/incident.php:127
 #: ../../operation/incidents/incident_search.php:95
 msgid "Work"
-msgstr ""
+msgstr "Arbejde"
 
 #: ../../operation/reporting/incidents_html.php:125
 #: ../../operation/incidents/incident_statistics.php:26
 msgid "Statistics"
-msgstr ""
+msgstr "Statistik"
 
 #: ../../operation/reporting/incidents_html.php:132
 #: ../../operation/incidents/incident_search.php:146
 msgid "Nothing was found"
-msgstr ""
+msgstr "Intet fundet"
 
 #: ../../operation/reporting/incidents_html.php:168
 msgid "Incident list"
-msgstr ""
+msgstr "Hændelsesliste"
 
 #: ../../operation/side_menu.php:31 ../../operation/side_menu.php:85
 #: ../../operation/projects/project_overview.php:22
 msgid "Project overview"
-msgstr ""
+msgstr "Projekt overblik"
 
 #: ../../operation/side_menu.php:39
 msgid "Project detail"
-msgstr ""
+msgstr "Projekt detaljer"
 
 #: ../../operation/side_menu.php:46
 msgid "Project tree"
-msgstr ""
+msgstr "Projekt træ"
 
 #: ../../operation/side_menu.php:54
 msgid "Create project"
-msgstr ""
+msgstr "Opret projekt"
 
 #: ../../operation/side_menu.php:62
 msgid "Disabled projects"
-msgstr ""
+msgstr "Luk projekt"
 
 #: ../../operation/side_menu.php:93
 #: ../../operation/projects/project_tracking.php:27
 msgid "Project tracking"
-msgstr ""
+msgstr "Projekt sporing"
 
 #: ../../operation/side_menu.php:102
 msgid "Task list"
-msgstr ""
+msgstr "Opgave liste"
 
 #: ../../operation/side_menu.php:111
 msgid "New task"
-msgstr ""
+msgstr "Ny opgave"
 
 #: ../../operation/side_menu.php:119 ../../operation/projects/gantt.php:54
 msgid "Gantt graph"
-msgstr ""
+msgstr "Gant diagram"
 
 #: ../../operation/side_menu.php:126
 msgid "Milestones"
-msgstr ""
+msgstr "Milepæle"
 
 #: ../../operation/side_menu.php:134 ../../operation/side_menu.php:209
 #: ../../operation/projects/task.php:117
 #: ../../operation/projects/project.php:175
 msgid "People"
-msgstr ""
+msgstr "Personer"
 
 #: ../../operation/side_menu.php:145 ../../operation/side_menu.php:234
 #: ../../operation/inventories/inventory.php:60
@@ -2329,16 +2333,16 @@ msgstr ""
 #: ../../operation/incidents/incident_search.php:230
 #: ../../operation/incidents/incident_work.php:73
 msgid "Files"
-msgstr ""
+msgstr "Filer"
 
 #: ../../operation/side_menu.php:179
 msgid "Task detail"
-msgstr ""
+msgstr "Opgave detaljer"
 
 #: ../../operation/side_menu.php:186
 #: ../../operation/projects/task_tracking.php:31
 msgid "Task tracking"
-msgstr ""
+msgstr "Opgave sporing"
 
 #: ../../operation/side_menu.php:193 ../../operation/side_menu.php:337
 #: ../../operation/incidents/incident_create_work.php:37
@@ -2348,45 +2352,45 @@ msgstr ""
 
 #: ../../operation/side_menu.php:200 ../../operation/side_menu.php:346
 msgid "Add file"
-msgstr ""
+msgstr "Tilføj fil"
 
 #: ../../operation/side_menu.php:216
 msgid "Email report"
-msgstr ""
+msgstr "Email raport"
 
 #: ../../operation/side_menu.php:223
 msgid "Move task"
-msgstr ""
+msgstr "Flyt opgave"
 
 #: ../../operation/side_menu.php:272 ../../operation/side_menu.php:280
 msgid "Project groups"
-msgstr ""
+msgstr "Projektgruppe"
 
 #: ../../operation/side_menu.php:299
 msgid "Incidents overview"
-msgstr ""
+msgstr "Hændelses overblik"
 
 #: ../../operation/side_menu.php:307 ../../operation/side_menu.php:442
 #: ../../operation/incidents/incident_detail.php:432
 msgid "Create incident"
-msgstr ""
+msgstr "Opret hændelse"
 
 #: ../../operation/side_menu.php:312
 msgid "Incident #"
-msgstr ""
+msgstr "Hændelse #"
 
 #: ../../operation/side_menu.php:355
 msgid "Details for incident"
-msgstr ""
+msgstr "Detaljer for hændelse"
 
 #: ../../operation/side_menu.php:368
 msgid "Users in incident"
-msgstr ""
+msgstr "Brugere i hændelse"
 
 #: ../../operation/side_menu.php:385 ../../operation/side_menu.php:393
 #: ../../operation/incidents/type_detail.php:84
 msgid "Incident types"
-msgstr ""
+msgstr "Hændelses typer"
 
 #: ../../operation/side_menu.php:410
 msgid "Inventory overview"
@@ -2405,70 +2409,70 @@ msgstr ""
 #: ../../operation/inventories/inventory.php:58
 #: ../../operation/companies/company_detail.php:173
 msgid "Contracts"
-msgstr ""
+msgstr "Kontrakter"
 
 #: ../../operation/side_menu.php:463
 msgid "Contract overview"
-msgstr ""
+msgstr "Kontrakt overblik"
 
 #: ../../operation/side_menu.php:474
 #: ../../operation/inventories/inventory.php:59
 #: ../../operation/inventories/inventory_detail.php:278
 #: ../../operation/companies/company_detail.php:174
 msgid "Contacts"
-msgstr ""
+msgstr "Kontakter"
 
 #: ../../operation/side_menu.php:482
 msgid "Contact overview"
-msgstr ""
+msgstr "Kontrakt overblik"
 
 #: ../../operation/side_menu.php:493
 msgid "Companies"
-msgstr ""
+msgstr "Firmaer"
 
 #: ../../operation/side_menu.php:501
 msgid "Company overview"
-msgstr ""
+msgstr "Firma overblik"
 
 #: ../../operation/side_menu.php:508
 msgid "Company roles"
-msgstr ""
+msgstr "Firma rolle"
 
 #: ../../operation/side_menu.php:526 ../../operation/slas/sla_detail.php:100
 msgid "SLA Management"
-msgstr ""
+msgstr "SLA styring"
 
 #: ../../operation/side_menu.php:535
 msgid "Manufacturers"
-msgstr ""
+msgstr "Fabrikanter"
 
 #: ../../operation/side_menu.php:543
 msgid "Manufacturer overview"
-msgstr ""
+msgstr "Fabrikant overblik"
 
 #: ../../operation/side_menu.php:552
 msgid "Buildings"
-msgstr ""
+msgstr "Bygninger"
 
 #: ../../operation/side_menu.php:560
 msgid "Building overview"
-msgstr ""
+msgstr "Bygnings overblik"
 
 #: ../../operation/side_menu.php:569
 msgid "Products"
-msgstr ""
+msgstr "Produkter"
 
 #: ../../operation/side_menu.php:577
 msgid "Manage products"
-msgstr ""
+msgstr "Styr produkter"
 
 #: ../../operation/side_menu.php:586
 msgid "Knowledge Base"
-msgstr ""
+msgstr "Vidensbase"
 
 #: ../../operation/side_menu.php:594
 msgid "Browse"
-msgstr ""
+msgstr "Gennemse"
 
 #: ../../operation/side_menu.php:602
 msgid "Create KB item"
@@ -2480,7 +2484,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:616
 msgid "Manage categories"
-msgstr ""
+msgstr "Styr kategorier"
 
 #: ../../operation/side_menu.php:642
 msgid "To-Do another people"
@@ -2492,7 +2496,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:656 ../../operation/main_menu.php:92
 msgid "Setup"
-msgstr ""
+msgstr "Opsætning"
 
 #: ../../operation/side_menu.php:686
 msgid "Configure updates"
@@ -2500,20 +2504,20 @@ msgstr ""
 
 #: ../../operation/side_menu.php:700
 msgid "System events"
-msgstr ""
+msgstr "Systemhændelser"
 
 #: ../../operation/side_menu.php:708
 #: ../../operation/users/user_statistics.php:23
 msgid "Users defined in Integria"
-msgstr ""
+msgstr "Brugere defineret i Integria"
 
 #: ../../operation/side_menu.php:716
 msgid "View users"
-msgstr ""
+msgstr "Vis brugere"
 
 #: ../../operation/side_menu.php:726
 msgid "Edit my user"
-msgstr ""
+msgstr "Redigér min bruger"
 
 #: ../../operation/side_menu.php:734
 msgid "Spare workunit"
@@ -2531,43 +2535,43 @@ msgstr ""
 
 #: ../../operation/side_menu.php:762
 msgid "User reporting"
-msgstr ""
+msgstr "Bruger rapportering"
 
 #: ../../operation/side_menu.php:770
 msgid "Full  report"
-msgstr ""
+msgstr "Fuld rapport"
 
 #: ../../operation/side_menu.php:777
 msgid "Montly report"
-msgstr ""
+msgstr "Månedlig rapport"
 
 #: ../../operation/side_menu.php:784
 msgid "Weekly report"
-msgstr ""
+msgstr "Ugentlig rapport"
 
 #: ../../operation/side_menu.php:791
 msgid "Annual report"
-msgstr ""
+msgstr "Årlig rapport"
 
 #: ../../operation/side_menu.php:798
 msgid "View vacations"
-msgstr ""
+msgstr "Vis ferier"
 
 #: ../../operation/side_menu.php:820
 msgid "Manage roles"
-msgstr ""
+msgstr "Styr roller"
 
 #: ../../operation/side_menu.php:827
 msgid "Manage groups"
-msgstr ""
+msgstr "Styr grupper"
 
 #: ../../operation/side_menu.php:854
 msgid "User info"
-msgstr ""
+msgstr "Bruger info"
 
 #: ../../operation/side_menu.php:863
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #: ../../operation/side_menu.php:874
 msgid "Project distribution"
@@ -2604,38 +2608,38 @@ msgstr ""
 #: ../../operation/companies/company_detail.php:120
 #: ../../operation/contacts/contact_detail.php:159
 msgid "Select"
-msgstr ""
+msgstr "Vælg"
 
 #: ../../operation/manufacturers/manufacturer_detail.php:121
 #: ../../operation/manufacturers/manufacturer_detail.php:179
 msgid "Company role"
-msgstr ""
+msgstr "Firma rolle"
 
 #: ../../operation/manufacturers/manufacturer_detail.php:124
 msgid "Base SLA"
-msgstr ""
+msgstr "Grundlæggende SLA"
 
 #: ../../operation/manufacturers/manufacturer_detail.php:125
 #: ../../operation/manufacturers/manufacturer_detail.php:178
 #: ../../operation/companies/company_detail.php:122
 msgid "Address"
-msgstr ""
+msgstr "Adresse"
 
 #: ../../operation/buildings/building_detail.php:61
 msgid "Building cannot be updated"
-msgstr ""
+msgstr "Bygning kan ikke opdateres"
 
 #: ../../operation/buildings/building_detail.php:79
 msgid "Building management"
-msgstr ""
+msgstr "Styr bygning"
 
 #: ../../operation/buildings/building_detail.php:99
 msgid "Building name"
-msgstr ""
+msgstr "Bygnings navn"
 
 #: ../../operation/inventories/inventory.php:39
 msgid "There was a problem deleting object"
-msgstr ""
+msgstr "Der var et problem med sletning af objekt"
 
 #: ../../operation/inventories/inventory.php:51
 #: ../../operation/inventories/inventory.php:54
@@ -2645,27 +2649,27 @@ msgstr ""
 #: ../../operation/incidents/incident_inventory_contacts.php:31
 #: ../../operation/incidents/incident_inventory_detail.php:59
 msgid "Details"
-msgstr ""
+msgstr "Detaljer"
 
 #: ../../operation/inventories/inventory.php:61
 msgid "Tree"
-msgstr ""
+msgstr "Træ"
 
 #: ../../operation/inventories/inventory.php:80
 #: ../../operation/incidents/incident.php:96
 msgid "Custom searches"
-msgstr ""
+msgstr "Kundesøgning"
 
 #: ../../operation/inventories/inventory.php:89
 #: ../../operation/inventories/inventory.php:90
 #: ../../operation/incidents/incident.php:105
 msgid "Save current search"
-msgstr ""
+msgstr "Gem denne søgning"
 
 #: ../../operation/inventories/inventory.php:92
 #: ../../operation/incidents/incident.php:107
 msgid "Save"
-msgstr ""
+msgstr "Gem"
 
 #: ../../operation/inventories/inventory.php:157
 msgid "Unable to load inventory"
@@ -2680,42 +2684,42 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:514
 #: ../../operation/incidents/incident_detail.php:515
 msgid "Assigned user"
-msgstr ""
+msgstr "Tilknyttede brugere"
 
 #: ../../operation/inventories/inventory_incidents.php:41
 msgid "View"
-msgstr ""
+msgstr "Vis"
 
 #: ../../operation/inventories/manage_prod.php:77
 msgid "Product cannot be updated"
-msgstr ""
+msgstr "Produkt kan ikke opdateres"
 
 #: ../../operation/inventories/manage_prod.php:98
 #: ../../operation/kb/manage_cat.php:84
 msgid "Cannot be deteled"
-msgstr ""
+msgstr "Kan ikke slettes"
 
 #: ../../operation/inventories/manage_prod.php:116
 #: ../../operation/inventories/manage_prod.php:156
 msgid "Product management"
-msgstr ""
+msgstr "Styr produkter"
 
 #: ../../operation/inventories/manage_prod.php:118
 msgid "Create a new product"
-msgstr ""
+msgstr "Opret et nyt produkt"
 
 #: ../../operation/inventories/manage_prod.php:120
 msgid "Update existing product"
-msgstr ""
+msgstr "Opdatér et eksisterende produkt"
 
 #: ../../operation/inventories/manage_prod.php:162
 msgid "Defined products"
-msgstr ""
+msgstr "Definér produkt"
 
 #: ../../operation/inventories/manage_prod.php:170
 #: ../../operation/kb/manage_cat.php:167
 msgid "Items"
-msgstr ""
+msgstr "Emner"
 
 #: ../../operation/inventories/inventory_detail.php:79
 msgid "There was an error updating inventory object"
@@ -2724,11 +2728,11 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:164
 #: ../../operation/inventories/inventory_tree.php:45
 msgid "Object"
-msgstr ""
+msgstr "Objekt"
 
 #: ../../operation/inventories/inventory_detail.php:194
 msgid "Confirmed"
-msgstr ""
+msgstr "Bekræftet"
 
 #: ../../operation/inventories/inventory_detail.php:202
 #: ../../operation/inventories/inventory_detail.php:219
@@ -2740,12 +2744,12 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:263
 #: ../../operation/inventories/inventory_detail.php:264
 msgid "Not set"
-msgstr ""
+msgstr "Ikke sat"
 
 #: ../../operation/inventories/inventory_detail.php:217
 #: ../../operation/inventories/inventory_detail.php:224
 msgid "Manufacturer"
-msgstr ""
+msgstr "Fabrikant"
 
 #: ../../operation/inventories/inventory_detail.php:230
 msgid "Search parent"
@@ -2760,7 +2764,7 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:537
 #: ../../operation/incidents/incident_detail.php:548
 msgid "Remove"
-msgstr ""
+msgstr "Fjern"
 
 #: ../../operation/inventories/inventory_search.php:37
 #: ../../operation/incidents/incident_search.php:39
@@ -2785,7 +2789,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:111
 #: ../../operation/incidents/incident_search.php:162
 msgid "HTML report"
-msgstr ""
+msgstr "HTML rapport"
 
 #: ../../operation/inventories/inventory_workunits.php:29
 msgid "Workunits done in inventory object"
@@ -2799,30 +2803,30 @@ msgstr ""
 #: ../../operation/incidents/incident.php:77
 #: ../../operation/incidents/incident_inventory_contacts.php:30
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #: ../../operation/inventories/inventory_contacts.php:39
 #: ../../operation/incidents/incident_inventory_contacts.php:75
 #: ../../operation/contacts/contact_detail.php:157
 msgid "Position"
-msgstr ""
+msgstr "Stilling"
 
 #: ../../operation/inventories/inventory_contacts.php:41
 #: ../../operation/incidents/incident_inventory_contacts.php:32
 #: ../../operation/incidents/incident_inventory_detail.php:87
 msgid "Edit"
-msgstr ""
+msgstr "Redigér"
 
 #: ../../operation/inventories/inventory_contacts.php:62
 #: ../../operation/incidents/incident_inventory_contacts.php:71
 #: ../../operation/contacts/contact_detail.php:155
 msgid "Phone number"
-msgstr ""
+msgstr "Telefonnummer"
 
 #: ../../operation/inventories/inventory_contacts.php:64
 #: ../../operation/incidents/incident_inventory_contacts.php:73
 msgid "Mobile phone"
-msgstr ""
+msgstr "Mobiltelefon"
 
 #: ../../operation/inventories/inventory_contracts.php:33
 msgid "Contract details on inventory object"
@@ -2830,11 +2834,11 @@ msgstr ""
 
 #: ../../operation/inventories/inventory_contracts.php:57
 msgid "Date begin"
-msgstr ""
+msgstr "Start dato"
 
 #: ../../operation/inventories/inventory_contracts.php:60
 msgid "Date end"
-msgstr ""
+msgstr "Slut dato"
 
 #: ../../operation/inventories/inventory_contracts.php:68
 #: ../../operation/incidents/incident_inventory_detail.php:65
@@ -2852,27 +2856,27 @@ msgstr ""
 #: ../../operation/incidents/incident.php:53
 #: ../../operation/projects/project.php:76
 msgid "Incident successfully deleted"
-msgstr ""
+msgstr "Hændelse succesfuldt slettet"
 
 #: ../../operation/incidents/incident.php:57
 #: ../../operation/projects/project.php:79
 msgid "There was a problem deleting incident"
-msgstr ""
+msgstr "Der var et problem med at slette hændelse"
 
 #: ../../operation/incidents/incident.php:75
 #: ../../operation/incidents/incident_notes.php:85
 #: ../../operation/incidents/incident_work.php:56
 msgid "Tracking"
-msgstr ""
+msgstr "Sporing"
 
 #: ../../operation/incidents/incident.php:128
 #: ../../operation/incidents/incident_search.php:96
 msgid "Flags"
-msgstr ""
+msgstr "Statusindikatorer"
 
 #: ../../operation/incidents/incident.php:216
 msgid "Unable to load incident"
-msgstr ""
+msgstr "Kunne ikke indlæse hændelse"
 
 #: ../../operation/incidents/incident_create_work.php:50
 #: ../../operation/incidents/incident_work.php:96
@@ -2880,7 +2884,7 @@ msgstr ""
 #: ../../operation/projects/project.php:176
 #: ../../operation/users/user_spare_workunit.php:261
 msgid "Time used"
-msgstr ""
+msgstr "Tid brugt"
 
 #: ../../operation/incidents/incident_create_work.php:51
 #: ../../operation/users/user_spare_workunit.php:271
@@ -2895,7 +2899,7 @@ msgstr ""
 #: ../../operation/projects/task_tracking.php:79
 #: ../../operation/projects/project_tracking.php:51
 msgid "No data available"
-msgstr ""
+msgstr "Ingen data tilgængelige"
 
 #: ../../operation/incidents/type_detail.php:66
 msgid "Incident type cannot be updated"
@@ -2912,7 +2916,7 @@ msgstr ""
 #: ../../operation/incidents/type_detail.php:108
 #: ../../operation/incidents/type_detail.php:160
 msgid "Wizard"
-msgstr ""
+msgstr "Guide"
 
 #: ../../operation/incidents/type_detail.php:182
 msgid "Create type"
@@ -2920,7 +2924,7 @@ msgstr ""
 
 #: ../../operation/incidents/incident_files.php:50
 msgid "No files were added to the incidence"
-msgstr ""
+msgstr "Ingen fil tilføjet hændelse"
 
 #: ../../operation/incidents/incident_files.php:63
 #: ../../operation/projects/task_files.php:96
@@ -2928,25 +2932,25 @@ msgstr ""
 #: ../../operation/projects/task_attach_file.php:41
 #: ../../operation/kb/browse_data.php:99
 msgid "Filename"
-msgstr ""
+msgstr "Filnavn"
 
 #: ../../operation/incidents/incident_files.php:65
 #: ../../operation/projects/task_files.php:100
 #: ../../operation/projects/task_files.php:122
 msgid "Size"
-msgstr ""
+msgstr "Størrelse"
 
 #: ../../operation/incidents/incident_notes.php:70
 msgid "Note successfully deleted"
-msgstr ""
+msgstr "Note succesfuldt slettet"
 
 #: ../../operation/incidents/incident_notes.php:109
 msgid "Notes"
-msgstr ""
+msgstr "Noter"
 
 #: ../../operation/incidents/incident_notes.php:131
 msgid "Notes attached to incident"
-msgstr ""
+msgstr "Noter tilknyttet til hændelser"
 
 #: ../../operation/incidents/incident_inventory_contacts.php:28
 msgid "Inventory object"
@@ -2960,20 +2964,20 @@ msgstr ""
 #: ../../operation/users/user_statistics.php:24
 #: ../../operation/messages/message.php:123
 msgid "Help"
-msgstr ""
+msgstr "Hjælp"
 
 #: ../../operation/incidents/incident_detail.php:77
 #: ../../operation/incidents/incident_detail.php:134
 msgid "There was a problem updating incident"
-msgstr ""
+msgstr "Der var et problem med opdatering af hændelse"
 
 #: ../../operation/incidents/incident_detail.php:136
 msgid "Incident successfully updated"
-msgstr ""
+msgstr "Hændelse succesfuldt opdateret"
 
 #: ../../operation/incidents/incident_detail.php:191
 msgid "Please click here to continue working with incident #"
-msgstr ""
+msgstr "Klik venligst her for at fortsætte med at arbejde med hændelse #"
 
 #: ../../operation/incidents/incident_detail.php:272
 msgid "Workunit added successfully"
@@ -2981,11 +2985,11 @@ msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:288
 msgid "No file was attached"
-msgstr ""
+msgstr "Ingen fil var vedhæftet"
 
 #: ../../operation/incidents/incident_detail.php:292
 msgid "No description available"
-msgstr ""
+msgstr "Ingen beskrivelse tilgængelig"
 
 #: ../../operation/incidents/incident_detail.php:315
 #: ../../operation/projects/task_files.php:67
@@ -2996,31 +3000,31 @@ msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:326
 msgid "File is too big"
-msgstr ""
+msgstr "Fil er for stor"
 
 #: ../../operation/incidents/incident_detail.php:329
 msgid "File was partially uploaded. Please try again"
-msgstr ""
+msgstr "Fil blev delvist uploadet. Forsøg venligst igen"
 
 #: ../../operation/incidents/incident_detail.php:332
 msgid "No file was uploaded"
-msgstr ""
+msgstr "Ingen fil blev uploaded"
 
 #: ../../operation/incidents/incident_detail.php:335
 msgid "Generic upload error"
-msgstr ""
+msgstr "Upload fejl"
 
 #: ../../operation/incidents/incident_detail.php:355
 msgid "File deleted successfuly"
-msgstr ""
+msgstr "Fil succesfuldt slettet"
 
 #: ../../operation/incidents/incident_detail.php:357
 msgid "File could not be deleted"
-msgstr ""
+msgstr "Fil kunne ikke slettes"
 
 #: ../../operation/incidents/incident_detail.php:361
 msgid "You have no permission"
-msgstr ""
+msgstr "Du har ingen tilladelse"
 
 #: ../../operation/incidents/incident_detail.php:407
 msgid "SLA Fired"
@@ -3036,7 +3040,7 @@ msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:466
 msgid "Notify changes by email"
-msgstr ""
+msgstr "Advisér ændring pr. mail"
 
 #: ../../operation/incidents/incident_detail.php:485
 msgid "Parent incident"
@@ -3064,15 +3068,15 @@ msgstr ""
 
 #: ../../operation/incidents/incident_inventory_detail.php:66
 msgid "Maximum response"
-msgstr ""
+msgstr "Maksimun reaktioner"
 
 #: ../../operation/incidents/incident_inventory_detail.php:67
 msgid "Maximum incidents"
-msgstr ""
+msgstr "Maksimun hændelser"
 
 #: ../../operation/incidents/incident_search.php:237
 msgid "Mail notification"
-msgstr ""
+msgstr "Mail advisering"
 
 #: ../../operation/incidents/incident_work.php:92
 msgid "Incident workunits tracking"
@@ -3081,12 +3085,12 @@ msgstr ""
 #: ../../operation/incidents/incident_attach_file.php:36
 #: ../../operation/kb/search.php:65
 msgid "File"
-msgstr ""
+msgstr "Fil"
 
 #: ../../operation/incidents/incident_attach_file.php:47
 #: ../../operation/projects/task_attach_file.php:47
 msgid "Upload"
-msgstr ""
+msgstr "Upload"
 
 #: ../../operation/incidents/incident_workunits.php:46
 msgid "No workunit was done in this incident"
@@ -3095,31 +3099,31 @@ msgstr ""
 #: ../../operation/user_report/monthly.php:73
 #: ../../operation/user_report/monthly_graph.php:73
 msgid "Monthly report for"
-msgstr ""
+msgstr "Månedlig rapport for"
 
 #: ../../operation/user_report/monthly.php:76
 #: ../../operation/user_report/monthly_graph.php:77
 msgid "Prev"
-msgstr ""
+msgstr "Foregående"
 
 #: ../../operation/user_report/monthly.php:80
 #: ../../operation/user_report/monthly_graph.php:81
 msgid "Next"
-msgstr ""
+msgstr "Næste"
 
 #: ../../operation/user_report/report_weekly.php:46
 msgid "Totals for week"
-msgstr ""
+msgstr "Totaler for uge"
 
 #: ../../operation/user_report/report_weekly.php:61
 #: ../../operation/user_report/report_monthly.php:68
 msgid "Graph overview"
-msgstr ""
+msgstr "Grafisk overblik"
 
 #: ../../operation/user_report/report_weekly.php:62
 #: ../../operation/user_report/report_full.php:187
 msgid "Total hours"
-msgstr ""
+msgstr "Totale timer"
 
 #: ../../operation/user_report/monthly_graph.php:89
 #: ../../operation/user_report/weekly_graph.php:49
@@ -3133,100 +3137,100 @@ msgstr ""
 
 #: ../../operation/user_report/weekly_graph.php:43
 msgid "Weekly report for"
-msgstr ""
+msgstr "Ugentlig rapport for"
 
 #: ../../operation/user_report/report_full.php:34
 msgid "Full report"
-msgstr ""
+msgstr "Fuld rapport"
 
 #: ../../operation/user_report/report_full.php:50
 #: ../../operation/users/user_spare_workunit.php:266
 msgid "Username"
-msgstr ""
+msgstr "Brugernavn"
 
 #: ../../operation/user_report/report_full.php:59
 msgid "Show"
-msgstr ""
+msgstr "Vis"
 
 #: ../../operation/user_report/report_full.php:65
 #: ../../operation/user_report/report_full.php:176
 msgid "There is no data to show"
-msgstr ""
+msgstr "Der er ingen data at vise"
 
 #: ../../operation/user_report/report_full.php:68
 msgid "Project report"
-msgstr ""
+msgstr "Projekt rapport"
 
 #: ../../operation/user_report/report_full.php:71
 #: ../../operation/user_report/report_full.php:186
 msgid "User hours"
-msgstr ""
+msgstr "Bruger timer"
 
 #: ../../operation/user_report/report_full.php:72
 msgid "Project total"
-msgstr ""
+msgstr "Projekt totalt"
 
 #: ../../operation/user_report/report_full.php:145
 #: ../../operation/user_report/report_full.php:209
 msgid "Totals"
-msgstr ""
+msgstr "Totaler"
 
 #: ../../operation/user_report/report_full.php:147
 #: ../../operation/user_report/report_full.php:148
 #: ../../operation/user_report/report_full.php:211
 #: ../../operation/user_report/report_full.php:213
 msgid "Working days"
-msgstr ""
+msgstr "Arbejdsdage"
 
 #: ../../operation/user_report/report_full.php:153
 msgid "Project graph report"
-msgstr ""
+msgstr "Grafisk rapport for projekt"
 
 #: ../../operation/user_report/report_full.php:160
 msgid "Incident report"
-msgstr ""
+msgstr "Hændelsesrapport"
 
 #: ../../operation/user_report/report_full.php:183
 msgid "Owner"
-msgstr ""
+msgstr "Ejer"
 
 #: ../../operation/user_report/report_full.php:185
 msgid "Dates"
-msgstr ""
+msgstr "Datoer"
 
 #: ../../operation/user_report/report_full.php:213
 #: ../../operation/projects/task_detail.php:272
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: ../../operation/user_report/report_annual.php:30
 #: ../../operation/user_report/report_annual.php:33
 msgid "Annual report for user"
-msgstr ""
+msgstr "Årlig rapport for bruger"
 
 #: ../../operation/user_report/report_annual.php:48
 msgid "Vacations days"
-msgstr ""
+msgstr "Ferie dage"
 
 #: ../../operation/user_report/report_annual.php:51
 msgid "Days worked (projects)"
-msgstr ""
+msgstr "Arbejdsdage (projekter)"
 
 #: ../../operation/user_report/report_annual.php:54
 msgid "Days worked (incidents)"
-msgstr ""
+msgstr "Arbejdsdage (hændelser)"
 
 #: ../../operation/user_report/report_monthly.php:45
 msgid "Totals for this month"
-msgstr ""
+msgstr "Totalt for denne måned"
 
 #: ../../operation/user_report/report_monthly.php:67
 msgid "Calendar view"
-msgstr ""
+msgstr "Vis kalender"
 
 #: ../../operation/user_report/report_monthly.php:69
 msgid "Total hours for this month"
-msgstr ""
+msgstr "Totalt antal timer for denne måned"
 
 #: ../../operation/user_report/report_monthly.php:70
 msgid "Charged this month"
@@ -3234,14 +3238,14 @@ msgstr ""
 
 #: ../../operation/todo/todo.php:128 ../../operation/todo/todo.php:187
 msgid "Assigned to"
-msgstr ""
+msgstr "Tildelt til"
 
 #: ../../operation/todo/todo.php:134
 #: ../../operation/projects/project_tree.php:46
 #: ../../operation/projects/task_detail.php:290
 #: ../../operation/projects/project.php:173
 msgid "Completion"
-msgstr ""
+msgstr "Gennemførelse"
 
 #: ../../operation/todo/todo.php:161 ../../operation/todo/todo.php:163
 msgid "To-Do management"
@@ -3256,7 +3260,7 @@ msgstr ""
 #: ../../operation/projects/gantt_graph.php:148
 #: ../../operation/users/user_task_assigment.php:55
 msgid "Progress"
-msgstr ""
+msgstr "Fremgang"
 
 #: ../../operation/todo/todo.php:189
 msgid "Assigned by"
@@ -3264,11 +3268,11 @@ msgstr ""
 
 #: ../../operation/companies/company_role.php:60
 msgid "Company role cannot be updated"
-msgstr ""
+msgstr "Firmarolle kan ikke opdateres"
 
 #: ../../operation/companies/company_role.php:62
 msgid "Company role updated ok"
-msgstr ""
+msgstr "Firmarolle opdatering OK"
 
 #: ../../operation/companies/company_role.php:78
 msgid "Company role management"
@@ -3276,19 +3280,19 @@ msgstr ""
 
 #: ../../operation/companies/company_role.php:96
 msgid "Role name"
-msgstr ""
+msgstr "Rolle navn"
 
 #: ../../operation/companies/company_role.php:168
 msgid "Create role"
-msgstr ""
+msgstr "Opret rolle"
 
 #: ../../operation/companies/company_detail.php:70
 msgid "Company cannot be updated"
-msgstr ""
+msgstr "Firma kunne ikke opdateres"
 
 #: ../../operation/companies/company_detail.php:72
 msgid "Company updated ok"
-msgstr ""
+msgstr "Firmaopdatering OK"
 
 #: ../../operation/companies/company_detail.php:90
 msgid "Company management"
@@ -3296,52 +3300,52 @@ msgstr ""
 
 #: ../../operation/companies/company_detail.php:117
 msgid "Company name"
-msgstr ""
+msgstr "Firmanavn"
 
 #: ../../operation/companies/company_detail.php:118
 msgid "Fiscal ID"
-msgstr ""
+msgstr "Økonomisk ID"
 
 #: ../../operation/companies/company_detail.php:120
 msgid "Company Role"
-msgstr ""
+msgstr "Firmarolle"
 
 #: ../../operation/companies/company_detail.php:206
 msgid "Create company"
-msgstr ""
+msgstr "Opret firma"
 
 #: ../../operation/projects/project_group_detail.php:63
 msgid "Project group cannot be updated"
-msgstr ""
+msgstr "Projekt gruppe kan ikke opdateres"
 
 #: ../../operation/projects/project_group_detail.php:65
 msgid "Project updated ok"
-msgstr ""
+msgstr "Projekt opdatering OK"
 
 #: ../../operation/projects/project_group_detail.php:80
 msgid "Project group management"
-msgstr ""
+msgstr "Projekt gruppe ledelse"
 
 #: ../../operation/projects/project_group_detail.php:99
 msgid "Project group name"
-msgstr ""
+msgstr "Projekt gruppe navn"
 
 #: ../../operation/projects/project_group_detail.php:156
 msgid "Create group"
-msgstr ""
+msgstr "Opret gruppe"
 
 #: ../../operation/projects/task_files.php:86
 msgid "File deleted"
-msgstr ""
+msgstr "Fil slettet"
 
 #: ../../operation/projects/task_files.php:92
 #: ../../operation/projects/task_files.php:112
 msgid "Attached files"
-msgstr ""
+msgstr "Vedhæftede filer"
 
 #: ../../operation/projects/task_move.php:34
 msgid "Move this task to other project"
-msgstr ""
+msgstr "Flyt denne opgave til et andet projekt"
 
 #: ../../operation/projects/task_move.php:38
 msgid "Destination project"
@@ -3349,26 +3353,26 @@ msgstr ""
 
 #: ../../operation/projects/task_move.php:42
 msgid "Move"
-msgstr ""
+msgstr "Flyt"
 
 #: ../../operation/projects/task.php:75
 msgid "Report"
-msgstr ""
+msgstr "Rapport"
 
 #: ../../operation/projects/task.php:111
 msgid "Pri"
-msgstr ""
+msgstr "Prioritet"
 
 #: ../../operation/projects/task.php:114
 msgid "Estimation"
-msgstr ""
+msgstr "Estimat"
 
 #: ../../operation/projects/task.php:118
 #: ../../operation/projects/project_detail.php:126
 #: ../../operation/projects/task_detail.php:233
 #: ../../operation/projects/task_incidents.php:63
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: ../../operation/projects/task.php:119
 #: ../../operation/projects/project_detail.php:130
@@ -3376,29 +3380,29 @@ msgstr ""
 #: ../../operation/projects/task_incidents.php:65
 #: ../../operation/contracts/contract_detail.php:221
 msgid "End"
-msgstr ""
+msgstr "Slut"
 
 #: ../../operation/projects/task.php:204
 #: ../../operation/projects/task_detail.php:237
 msgid "Recurrence"
-msgstr ""
+msgstr "Gentagelse"
 
 #: ../../operation/projects/project_detail.php:69
 msgid "Could not update project"
-msgstr ""
+msgstr "Kunne ikke opdatere projekt"
 
 #: ../../operation/projects/project_detail.php:137
 msgid "Project manager"
-msgstr ""
+msgstr "Projektleder"
 
 #: ../../operation/projects/project_detail.php:147
 #: ../../operation/projects/project_overview.php:29
 msgid "Project group"
-msgstr ""
+msgstr "Projekt gruppe"
 
 #: ../../operation/projects/project_detail.php:154
 msgid "Current progress"
-msgstr ""
+msgstr "Aktuel fremdrift"
 
 #: ../../operation/projects/project_detail.php:161
 msgid "Total workunit (hr)"
@@ -3406,7 +3410,7 @@ msgstr ""
 
 #: ../../operation/projects/project_detail.php:165
 msgid "Total people involved"
-msgstr ""
+msgstr "Totalt antal personer involveret"
 
 #: ../../operation/projects/project_detail.php:172
 msgid "Total payable workunit (hr)"
@@ -3418,15 +3422,15 @@ msgstr ""
 
 #: ../../operation/projects/project_detail.php:187
 msgid "Project costs"
-msgstr ""
+msgstr "Projektomkostninger"
 
 #: ../../operation/projects/project_detail.php:190
 msgid "Charged to customer"
-msgstr ""
+msgstr "Faktureret til kunder"
 
 #: ../../operation/projects/project_detail.php:196
 msgid "Charged cost per hour"
-msgstr ""
+msgstr "Fakturerede omkostninger pr. time"
 
 #: ../../operation/projects/project_detail.php:202
 msgid "Proyect length deviation (days)"
@@ -3434,27 +3438,27 @@ msgstr ""
 
 #: ../../operation/projects/project_detail.php:206
 msgid "Days"
-msgstr ""
+msgstr "Dage"
 
 #: ../../operation/projects/project_detail.php:232
 msgid "Project schema"
-msgstr ""
+msgstr "Projektskema"
 
 #: ../../operation/projects/project_overview.php:31
 msgid "# Projects"
-msgstr ""
+msgstr "# Projekter"
 
 #: ../../operation/projects/task_attach_file.php:36
 msgid "Upload file"
-msgstr ""
+msgstr "Upload fil"
 
 #: ../../operation/projects/project_tree.php:43
 msgid "Not finished"
-msgstr ""
+msgstr "Ikke afsluttet"
 
 #: ../../operation/projects/project_tree.php:44
 msgid "Done"
-msgstr ""
+msgstr "Færdig"
 
 #: ../../operation/projects/project_tree.php:53
 msgid "Defined end"
@@ -3462,23 +3466,23 @@ msgstr ""
 
 #: ../../operation/projects/task_detail.php:68
 msgid "Name could not be empty"
-msgstr ""
+msgstr "Navn kan ikke være tomt"
 
 #: ../../operation/projects/task_detail.php:71
 msgid "Begin date could not be before end date"
-msgstr ""
+msgstr "Start dato kan ikke være før slut dato"
 
 #: ../../operation/projects/task_detail.php:97
 msgid "Continue working with task #"
-msgstr ""
+msgstr "Fortsæt med at arbejde med opgave #"
 
 #: ../../operation/projects/task_detail.php:118
 msgid "Could not create task"
-msgstr ""
+msgstr "Kunne ikke oprette opgave"
 
 #: ../../operation/projects/task_detail.php:160
 msgid "Could not update task"
-msgstr ""
+msgstr "Kunne ikke opdatere opgave"
 
 #: ../../operation/projects/task_detail.php:222
 msgid "Workunit distribution"
@@ -3487,7 +3491,7 @@ msgstr ""
 #: ../../operation/projects/task_detail.php:239
 #: ../../operation/projects/task_detail.php:270
 msgid "Estimated hours"
-msgstr ""
+msgstr "Estimerede timer"
 
 #: ../../operation/projects/task_detail.php:242
 #: ../../operation/users/user_task_assigment.php:56
@@ -3496,7 +3500,7 @@ msgstr ""
 
 #: ../../operation/projects/task_detail.php:252
 msgid "Estimated cost"
-msgstr ""
+msgstr "Estimerede omkostninger"
 
 #: ../../operation/projects/task_detail.php:256
 msgid "Imputable costs"
@@ -3504,17 +3508,17 @@ msgstr ""
 
 #: ../../operation/projects/task_detail.php:258
 msgid "Total costs"
-msgstr ""
+msgstr "Totale omkostninger"
 
 #: ../../operation/projects/task_detail.php:264
 #: ../../operation/projects/task_detail.php:280
 msgid "Est."
-msgstr ""
+msgstr "Estimat"
 
 #: ../../operation/projects/task_detail.php:265
 #: ../../operation/projects/task_detail.php:281
 msgid "Real"
-msgstr ""
+msgstr "Reelt"
 
 #: ../../operation/projects/task_detail.php:273
 msgid "Imp"
@@ -3526,24 +3530,24 @@ msgstr ""
 
 #: ../../operation/projects/task_detail.php:286
 msgid "Cost estimation"
-msgstr ""
+msgstr "Omkostnings estimat"
 
 #: ../../operation/projects/milestones.php:76
 msgid "Milestone creation"
-msgstr ""
+msgstr "Milepælsoprettelse"
 
 #: ../../operation/projects/milestones.php:109
 msgid "Milestones management"
-msgstr ""
+msgstr "Milepælsstyring"
 
 #: ../../operation/projects/milestones.php:111
 #: ../../operation/projects/gantt_graph.php:149
 msgid "Milestone"
-msgstr ""
+msgstr "Milepæle"
 
 #: ../../operation/projects/task_incidents.php:51
 msgid "Related incidents"
-msgstr ""
+msgstr "Relaterede hændelser"
 
 #: ../../operation/projects/task_incidents.php:61
 msgid "WU Hours"
@@ -3551,7 +3555,7 @@ msgstr ""
 
 #: ../../operation/projects/gantt_graph.php:146
 msgid "Planning"
-msgstr ""
+msgstr "Planlægning"
 
 #: ../../operation/projects/gantt_graph.php:147
 msgid "Work reported"
@@ -3559,7 +3563,7 @@ msgstr ""
 
 #: ../../operation/projects/gantt_graph.php:150
 msgid "Today"
-msgstr ""
+msgstr "I dag"
 
 #: ../../operation/projects/gantt_graph.php:183
 msgid "Full project"
@@ -3581,7 +3585,7 @@ msgstr ""
 
 #: ../../operation/projects/task_workunit.php:144
 msgid "All tasks"
-msgstr ""
+msgstr "Alle opgaver"
 
 #: ../../operation/projects/people_manager.php:71
 msgid "Not created. Error inserting data."
@@ -3594,7 +3598,7 @@ msgstr ""
 #: ../../operation/projects/people_manager.php:113
 #: ../../operation/projects/people_manager.php:159
 msgid "Assigned roles"
-msgstr ""
+msgstr "Tilknyttede roller"
 
 #: ../../operation/projects/people_manager.php:146
 msgid "Project people management"
@@ -3610,11 +3614,11 @@ msgstr ""
 
 #: ../../operation/projects/people_manager.php:248
 msgid "Available roles"
-msgstr ""
+msgstr "Tilgængelige roller"
 
 #: ../../operation/projects/task_tracking.php:50
 msgid "Task updated"
-msgstr ""
+msgstr "Opgave opdateret"
 
 #: ../../operation/projects/task_tracking.php:56
 msgid "Task completion progress updated"
@@ -3622,7 +3626,7 @@ msgstr ""
 
 #: ../../operation/projects/task_tracking.php:58
 msgid "Task finished"
-msgstr ""
+msgstr "Opgave afsluttet"
 
 #: ../../operation/projects/task_tracking.php:60
 msgid "Task member updated"
@@ -3630,11 +3634,11 @@ msgstr ""
 
 #: ../../operation/projects/task_tracking.php:62
 msgid "Task moved"
-msgstr ""
+msgstr "Opgave flyttet"
 
 #: ../../operation/projects/task_tracking.php:64
 msgid "Task deleted"
-msgstr ""
+msgstr "Opgave slettet"
 
 #: ../../operation/projects/task_emailreport.php:46
 msgid "Operation successfully completed"
@@ -3650,19 +3654,19 @@ msgstr ""
 #: ../../operation/messages/message.php:169
 #: ../../operation/messages/message.php:213
 msgid "Subject"
-msgstr ""
+msgstr "Emne"
 
 #: ../../operation/projects/task_emailreport.php:92
 msgid "Message text"
-msgstr ""
+msgstr "Besked tekst"
 
 #: ../../operation/projects/task_emailreport.php:96
 msgid "Send"
-msgstr ""
+msgstr "Send"
 
 #: ../../operation/projects/gantt.php:59
 msgid "Full screen"
-msgstr ""
+msgstr "Fuld Skærm"
 
 #: ../../operation/projects/project.php:44
 msgid "Project successfully disabled"
@@ -3671,7 +3675,7 @@ msgstr ""
 #: ../../operation/projects/project.php:49
 #: ../../operation/projects/project.php:65
 msgid "There was a problem deleting project"
-msgstr ""
+msgstr "Der var et problem med at slette projektet"
 
 #: ../../operation/projects/project.php:107
 msgid "Project cannot be created, problem found."
@@ -3683,11 +3687,11 @@ msgstr ""
 
 #: ../../operation/projects/project.php:174
 msgid "Tasks"
-msgstr ""
+msgstr "Opgaver"
 
 #: ../../operation/projects/project.php:216
 msgid "Unlimited"
-msgstr ""
+msgstr "Ubegrænset"
 
 #: ../../operation/projects/project.php:234
 msgid "hr"
@@ -3698,36 +3702,36 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:81
 #: ../../operation/kb/manage_data.php:83 ../../operation/kb/manage_cat.php:63
 msgid "Could not be updated"
-msgstr ""
+msgstr "Kunne ikke opdateres"
 
 #: ../../operation/contacts/contact_detail.php:114
 msgid "Contact management"
-msgstr ""
+msgstr "Kontrakt ledelse"
 
 #: ../../operation/contacts/contact_detail.php:152
 #: ../../operation/contacts/contact_detail.php:216
 msgid "Full name"
-msgstr ""
+msgstr "Fuldt navn"
 
 #: ../../operation/contacts/contact_detail.php:156
 msgid "Mobile number"
-msgstr ""
+msgstr "Mobil nummer"
 
 #: ../../operation/contacts/contact_detail.php:241
 msgid "Create contact"
-msgstr ""
+msgstr "OPret kontrakt"
 
 #: ../../operation/main_menu.php:57
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #: ../../operation/main_menu.php:65
 msgid "Users"
-msgstr ""
+msgstr "Brugere"
 
 #: ../../operation/main_menu.php:72
 msgid "Todo"
-msgstr ""
+msgstr "At gøre"
 
 #: ../../operation/users/user_spare_workunit.php:47
 msgid "Locked successfully"
@@ -3747,7 +3751,7 @@ msgstr ""
 
 #: ../../operation/users/user_spare_workunit.php:276
 msgid "Forward"
-msgstr ""
+msgstr "Fremad"
 
 #: ../../operation/users/user_spare_workunit.php:277
 msgid ""
@@ -3774,141 +3778,141 @@ msgstr ""
 
 #: ../../operation/users/user_edit.php:78
 msgid "Passwords don't match"
-msgstr ""
+msgstr "Adgangskoder stemmer ikke"
 
 #: ../../operation/users/user_edit.php:100
 msgid "User successfuly updated"
-msgstr ""
+msgstr "Bruger succesfuldt opdateret"
 
 #: ../../operation/users/user_edit.php:102
 msgid "Could not update user"
-msgstr ""
+msgstr "Kunne ikk opdatere bruger"
 
 #: ../../operation/users/user_edit.php:107
 msgid "User details"
-msgstr ""
+msgstr "Brugerdetaljer"
 
 #: ../../operation/users/user_edit.php:137
 msgid "Default"
-msgstr ""
+msgstr "Standard"
 
 #: ../../operation/users/user_edit.php:144
 #: ../../operation/users/user_edit.php:145
 msgid "Not provided"
-msgstr ""
+msgstr "Ikke oplyst"
 
 #: ../../operation/users/user_edit.php:166
 msgid "Change password"
-msgstr ""
+msgstr "Ændre adgangskode"
 
 #: ../../operation/users/user_search.php:63
 msgid "No users found"
-msgstr ""
+msgstr "Ingen brugere fundet"
 
 #: ../../operation/users/user_search.php:96
 msgid "User name"
-msgstr ""
+msgstr "Brugernavn"
 
 #: ../../operation/users/user.php:26
 msgid "Integria users"
-msgstr ""
+msgstr "Integria brugere"
 
 #: ../../operation/messages/message.php:30
 msgid "Message successfully sent"
-msgstr ""
+msgstr "Besked afsendt"
 
 #: ../../operation/messages/message.php:32
 #: ../../operation/messages/message.php:75
 #: ../../operation/messages/message.php:77
 msgid "There was a problem sending message"
-msgstr ""
+msgstr "Der var ingen problemer med at sende besked"
 
 #: ../../operation/messages/message.php:74
 msgid "Message successfully sended"
-msgstr ""
+msgstr "Besked succesfuldt afsendt"
 
 #: ../../operation/messages/message.php:81
 #: ../../operation/messages/message.php:123
 msgid "New message"
-msgstr ""
+msgstr "Ny besked"
 
 #: ../../operation/messages/message.php:112
 #: ../../operation/messages/message.php:140
 #: ../../operation/messages/message.php:215
 msgid "Message"
-msgstr ""
+msgstr "Besked"
 
 #: ../../operation/messages/message.php:119
 #: ../../operation/messages/message.php:143
 msgid "Send message"
-msgstr ""
+msgstr "Send besked"
 
 #: ../../operation/messages/message.php:153
 msgid "Message sucessfully deleted"
-msgstr ""
+msgstr "Besked succesfuldt slettet"
 
 #: ../../operation/messages/message.php:154
 msgid "There was a problem deleting message"
-msgstr ""
+msgstr "Der var ingen problemer med at slette besked"
 
 #: ../../operation/messages/message.php:157
 msgid "Read messages"
-msgstr ""
+msgstr "Læs beskedder"
 
 #: ../../operation/messages/message.php:169
 msgid "Read"
-msgstr ""
+msgstr "Læs"
 
 #: ../../operation/messages/message.php:169
 msgid "Sender"
-msgstr ""
+msgstr "Afsender"
 
 #: ../../operation/messages/message.php:191
 msgid "No subject"
-msgstr ""
+msgstr "Intet emne"
 
 #: ../../operation/messages/message.php:199
 msgid "There are no messages"
-msgstr ""
+msgstr "Der er ingen beskedder"
 
 #: ../../operation/messages/message.php:221
 msgid "wrote"
-msgstr ""
+msgstr "skrev"
 
 #: ../../operation/messages/message.php:222
 msgid "Reply"
-msgstr ""
+msgstr "Svar"
 
 #: ../../operation/contracts/contract_detail.php:56
 #: ../../operation/contracts/contract_detail.php:87
 msgid "You must specify a valid group"
-msgstr ""
+msgstr "Du skal angive en gyldig gruppe"
 
 #: ../../operation/contracts/contract_detail.php:116
 msgid "Contract management"
-msgstr ""
+msgstr "Kontrakt ledelse"
 
 #: ../../operation/contracts/contract_detail.php:146
 msgid "Contract name"
-msgstr ""
+msgstr "Kontrakt navn"
 
 #: ../../operation/contracts/contract_detail.php:147
 #: ../../operation/contracts/contract_detail.php:216
 msgid "Contract number"
-msgstr ""
+msgstr "Kontrakt nummer"
 
 #: ../../operation/contracts/contract_detail.php:220
 msgid "Begin"
-msgstr ""
+msgstr "Begynd"
 
 #: ../../operation/slas/sla_detail.php:129
 msgid "SLA name"
-msgstr ""
+msgstr "SLA navn"
 
 #: ../../operation/slas/sla_detail.php:130
 #: ../../operation/slas/sla_detail.php:190
 msgid "Enforced"
-msgstr ""
+msgstr "Iværksat"
 
 #: ../../operation/slas/sla_detail.php:132
 msgid "Min. response time (in hours)"
@@ -3924,7 +3928,7 @@ msgstr ""
 
 #: ../../operation/slas/sla_detail.php:138
 msgid "SLA Base"
-msgstr ""
+msgstr "SLA base"
 
 #: ../../operation/slas/sla_detail.php:187
 msgid "Min.Response"
@@ -3940,7 +3944,7 @@ msgstr ""
 
 #: ../../operation/tool_menu.php:22
 msgid "Our sponsors"
-msgstr ""
+msgstr "Vores sponsorer"
 
 #: ../../operation/kb/browse.php:29 ../../operation/kb/manage_data.php:176
 #: ../../operation/kb/manage_data.php:264 ../../operation/kb/search.php:29
@@ -3950,21 +3954,21 @@ msgstr ""
 #: ../../operation/kb/browse.php:29 ../../operation/kb/manage_data.php:264
 #: ../../operation/kb/search.php:30
 msgid "Defined data"
-msgstr ""
+msgstr "Definerede data"
 
 #: ../../operation/kb/browse.php:41
 msgid "Product types"
-msgstr ""
+msgstr "Produkttyper"
 
 #: ../../operation/kb/browse.php:45
 msgid "Categories"
-msgstr ""
+msgstr "Kategorier"
 
 #: ../../operation/kb/browse.php:87 ../../operation/kb/browse_data.php:70
 #: ../../operation/kb/manage_data.php:223
 #: ../../operation/kb/manage_data.php:271 ../../operation/kb/search.php:63
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #: ../../operation/kb/browse_data.php:44
 msgid "KB article review"
@@ -3972,7 +3976,7 @@ msgstr ""
 
 #: ../../operation/kb/browse_data.php:56
 msgid "Author"
-msgstr ""
+msgstr "Forfatter"
 
 #: ../../operation/kb/browse_data.php:67
 msgid "Wrote on "
@@ -3997,19 +4001,19 @@ msgstr ""
 
 #: ../../operation/kb/manage_data.php:196
 msgid "Data"
-msgstr ""
+msgstr "Data"
 
 #: ../../operation/kb/manage_data.php:202
 msgid "Attach"
-msgstr ""
+msgstr "Vedhæft"
 
 #: ../../operation/kb/manage_data.php:205
 msgid "Need to create first"
-msgstr ""
+msgstr "Skal oprette først"
 
 #: ../../operation/kb/manage_data.php:210
 msgid "Attach description"
-msgstr ""
+msgstr "Beskrivelse af vedhæftet bilag"
 
 #: ../../operation/kb/manage_cat.php:106 ../../operation/kb/manage_cat.php:158
 msgid "KB Category management"
@@ -4017,16 +4021,16 @@ msgstr ""
 
 #: ../../operation/kb/manage_cat.php:108
 msgid "Create a new category"
-msgstr ""
+msgstr "Opret en ny kategori"
 
 #: ../../operation/kb/manage_cat.php:113
 msgid "Update existing category"
-msgstr ""
+msgstr "Opdatér eksisterede kategori"
 
 #: ../../operation/kb/manage_cat.php:158
 msgid "Defined categories"
-msgstr ""
+msgstr "Definér kategorier"
 
 #: ../../operation/kb/search.php:41
 msgid "Free text search"
-msgstr ""
+msgstr "Fri tekst søgning"
