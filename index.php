@@ -207,6 +207,22 @@ if ($clean_output == 0) {
 
 			<div id="main">
 			<?php
+				
+				// Check for problems
+				if (!is_writable("attachment")){
+					echo "<h3 class='error'>".__('Attachment directory is not writtable by HTTP Server')."</h3>";
+					echo '<p>';
+					echo __('Please check that {HOMEDIR}/attachment directory has write rights for HTTP server');
+					echo "</p>";
+				}
+			
+				if (!is_writable("attachment/tmp")){
+					echo "<h3 class='error'>".__('Temporal directory is not writtable by HTTP Server')."</h3>";
+					echo '<p>';
+					echo __('Please check that {HOMEDIR}/attachment/tmp directory has write rights for HTTP server');
+					echo "</p>";
+				}
+
 				// Page loader / selector
 				if ($sec2 != "") {
 					if (file_exists ($sec2.".php")) {

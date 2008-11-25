@@ -15,7 +15,7 @@ if ($operation == "insert") {
 	$priority = (int) get_parameter ("priority");
 	$progress = (int) get_parameter ("progress");
 	$description = (string) get_parameter ("description");
-	$id_task = (int) get_parameter ("task");
+	$id_task = (int) get_parameter ("id_task");
 	$timestamp = date ('Y-m-d H:i:s');
 	$last_updated = $timestamp;
 	$sql = sprintf ('INSERT INTO ttodo (name, priority, assigned_user,
@@ -45,7 +45,7 @@ if ($operation == "update2") {
 	}
 	$name = $todo["name"];
 	$created_by_user = $todo["created_by_user"];
-	$id_task = get_parameter ("task", 0);
+	$id_task = get_parameter ("id_task", 0);
 	$priority = get_parameter ("priority");
 	$progress = get_parameter ("progress");
 	$description = get_parameter ("description");

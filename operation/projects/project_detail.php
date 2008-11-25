@@ -22,9 +22,8 @@ check_login ();
 
 if (! give_acl ($config["id_user"], 0, "PR")) {
  	// Doesn't have access to this page
-	audit_db ($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
-	include ("general/noaccess.php");
-	exit;
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
+	no_permission ();
 }
 
 $create_mode = 0;
@@ -228,10 +227,6 @@ if (give_acl ($config["id_user"], 0, "PM") || $config["id_user"] == $id_owner) {
 echo '</div>';
 echo "</form>";
 
-if ($id_project) {
-	echo "<h3>".__('Project schema')."</h3>";
-	echo '<img src="include/functions_graph.php?type=project_tree&id_project='.$id_project.'&id_user='.$config['id_user'].'">';
-}
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>

@@ -655,7 +655,7 @@ function project_tree ($id_project, $id_user){
 	fwrite ($dotfile, "	  ranksep=2.0;\n");
 	fwrite ($dotfile, "	  ratio=auto;\n");
 	fwrite ($dotfile, "	  size=\"9,12\";\n");
-	fwrite ($dotfile, "	  node[fontsize=8];\n");
+	fwrite ($dotfile, "	  node[fontsize=10];\n");
 	fwrite ($dotfile, '	  project [label="'. wordwrap($project_name,12,'\\n').'",shape="ellipse", style="filled", color="grey"];'."\n");
 	for ($ax=0; $ax < $total_task; $ax++){
 		fwrite ($dotfile, 'TASK'.$task[$ax].' [label="'.wordwrap($task_name[$ax],12,'\\n').'"];');

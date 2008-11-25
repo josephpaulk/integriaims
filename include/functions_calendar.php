@@ -219,7 +219,9 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 	@list($p, $pl) = each($pn); @list($n, $nl) = each($pn); #previous and next links, if applicable
 	if($p) $p = '<span class="calendar-prev">'.($pl ? '<a href="'.htmlspecialchars($pl).'">'.$p.'</a>' : $p).'</span>&nbsp;';
 	if($n) $n = '&nbsp;<span class="calendar-next">'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n).'</span>';
-	$calendar = '<table class="blank calendar">'."\n".
+
+
+	$calendar = '<table style="padding: 0px; margin: 0px;" class="blank calendar">'."\n".
 		'<caption class="calendar-month">'.$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</caption>\n<tr></tr><tr>";
 
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)

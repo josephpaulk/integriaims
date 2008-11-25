@@ -382,7 +382,7 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 		$values[$task[0]] = $task[1];
 	}
 
-	$output .= print_select ($values, 'task', $actual, '', __('N/A'), '0', true,
+	$output .= print_select ($values, 'id_task', $actual, '', __('N/A'), '0', true,
 		false, false, $label);
 
 	if ($return)

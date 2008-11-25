@@ -84,8 +84,14 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>".__('Project overview')."</a></li>";
 		
+		// Project Bubble graph
+		if ($sec2 == "operation/projects/project_bubblegraph")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_bubblegraph&id_project=$id_project'>".__('Process graph')."</a></li>";
 		
-		// Project detail
+		// Project tracking
 		if ($sec2 == "operation/projects/project_tracking")
 			echo "<li id='sidesel'>";
 		else
@@ -833,6 +839,20 @@ if ($sec == "users") {
 	}
 }
 
+// Calendar box
+$month = get_parameter ("month", date ('n'));
+$year = get_parameter ("year", date ('y'));
+
+echo '<div class="portlet" style="border:padding: 0px; margin: 0px;">';
+echo '<a href="javascript:;" onclick="$(\'#calendar_div\').slideToggle (); return false">';
+echo '<h2>'.__('Calendar').'</h2>';
+echo '</a>';
+echo '<div id="calendar_div" style="padding: 0px; margin: 0px">';
+echo generate_calendar ($year, $month, array(), 1, NULL, $config["language_code"]);
+echo '</div></div>';
+// End of calendar box
+
+
 // Testing boxes for side menus
 $user_row = get_db_row ("tusuario", "id_usuario", $config['id_user']);
 
@@ -899,4 +919,5 @@ if (give_acl ($config["id_user"], 0, "PR")) {
 
 echo '</div></div>';
 // End of user box
+
 ?>
