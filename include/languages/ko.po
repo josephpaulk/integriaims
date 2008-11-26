@@ -1,24 +1,26 @@
-# SOME DESCRIPTIVE TITLE.
+# translation of integria-ko.po to Korean
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# Jorge Gonzalez <jorge.gonzalez@artica.es>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: integria-ko\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-26 09:56+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2008-11-24 10:17+0100\n"
+"PO-Revision-Date: 2008-11-26 09:51+0100\n"
+"Last-Translator: Jorge Gonzalez <jorge.gonzalez@artica.es>\n"
+"Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=1; plural=0;\n"
 
 #: ../../general/login_page.php:38
+#, fuzzy
 msgid "Login failed"
-msgstr ""
+msgstr "로그인 실패"
 
 #: ../../general/login_page.php:50 ../../godmode/setup/event.php:38
 #: ../../include/functions_form.php:737
@@ -36,18 +38,21 @@ msgstr ""
 #: ../../operation/projects/task_tracking.php:39
 #: ../../operation/projects/project_tracking.php:37
 #: ../../operation/kb/manage_data.php:273 ../../operation/kb/search.php:66
+#, fuzzy
 msgid "User"
-msgstr ""
+msgstr "사용자"
 
 #: ../../general/login_page.php:55
 #: ../../godmode/usuarios/configurar_usuarios.php:196
 #: ../../operation/users/user_edit.php:163
+#, fuzzy
 msgid "Password"
-msgstr ""
+msgstr "암호"
 
 #: ../../general/login_page.php:61
+#, fuzzy
 msgid "Login"
-msgstr ""
+msgstr "로그인"
 
 #: ../../general/integria_help.php:23
 msgid "Integria IMS help system"
@@ -79,10 +84,11 @@ msgstr ""
 msgid "Installer error"
 msgstr ""
 
-#: ../../general/links_menu.php:21 ../../operation/side_menu.php:699
+#: ../../general/links_menu.php:21 ../../operation/side_menu.php:693
 #: ../../operation/tool_menu.php:5
+#, fuzzy
 msgid "Links"
-msgstr ""
+msgstr "링크"
 
 #: ../../general/noaccess.php:22
 msgid "You don't have access to this page"
@@ -97,16 +103,18 @@ msgid ""
 msgstr ""
 
 #: ../../general/header.php:20
+#, fuzzy
 msgid "Home"
-msgstr ""
+msgstr "홈"
 
 #: ../../general/header.php:31
 msgid "You are connected as"
 msgstr ""
 
 #: ../../general/header.php:33
+#, fuzzy
 msgid "Logout"
-msgstr ""
+msgstr "로그아웃"
 
 #: ../../general/home.php:34 ../../operation/main_menu.php:81
 msgid "Agenda"
@@ -128,8 +136,8 @@ msgstr ""
 msgid "Task end"
 msgstr ""
 
-#: ../../general/home.php:83 ../../operation/side_menu.php:633
-#: ../../operation/side_menu.php:641 ../../operation/todo/todo.php:183
+#: ../../general/home.php:83 ../../operation/side_menu.php:627
+#: ../../operation/side_menu.php:635 ../../operation/todo/todo.php:183
 msgid "To-Do"
 msgstr ""
 
@@ -139,15 +147,16 @@ msgstr ""
 
 #: ../../general/home.php:101 ../../operation/side_menu.php:23
 #: ../../operation/main_menu.php:28
+#, fuzzy
 msgid "Projects"
-msgstr ""
+msgstr "프로젝트"
 
 #: ../../general/home.php:107
 msgid "Projects active you have"
 msgstr ""
 
-#: ../../general/home.php:118 ../../operation/side_menu.php:253
-#: ../../operation/side_menu.php:295
+#: ../../general/home.php:118 ../../operation/side_menu.php:247
+#: ../../operation/side_menu.php:289
 #: ../../operation/inventories/inventory.php:57
 #: ../../operation/companies/company_detail.php:175
 #: ../../operation/main_menu.php:38
@@ -158,29 +167,10 @@ msgstr ""
 msgid "Incidents active you have"
 msgstr ""
 
-#: ../../index.php:213
-msgid "Attachment directory is not writtable by HTTP Server"
-msgstr ""
-
-#: ../../index.php:215
-msgid ""
-"Please check that {HOMEDIR}/attachment directory has write rights for HTTP "
-"server"
-msgstr ""
-
-#: ../../index.php:220
-msgid "Temporal directory is not writtable by HTTP Server"
-msgstr ""
-
-#: ../../index.php:222
-msgid ""
-"Please check that {HOMEDIR}/attachment/tmp directory has write rights for "
-"HTTP server"
-msgstr ""
-
-#: ../../index.php:231 ../../index.php:256
+#: ../../index.php:215 ../../index.php:240
+#, fuzzy
 msgid "Page not found"
-msgstr ""
+msgstr "페이지가 없습니다"
 
 #: ../../godmode/perfiles/lista_perfiles.php:38
 msgid "Profile could not be deleted"
@@ -251,7 +241,7 @@ msgstr ""
 #: ../../operation/inventories/manage_prod.php:79
 #: ../../operation/inventories/inventory_detail.php:77
 #: ../../operation/todo/todo.php:58
-#: ../../operation/projects/project_detail.php:66
+#: ../../operation/projects/project_detail.php:67
 #: ../../operation/projects/task_detail.php:155
 #: ../../operation/contacts/contact_detail.php:98
 #: ../../operation/contracts/contract_detail.php:99
@@ -283,8 +273,9 @@ msgstr ""
 #: ../../godmode/perfiles/lista_perfiles.php:164
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:176
 #: ../../enterprise/godmode/usuarios/profile_list.php:190
+#, fuzzy
 msgid "Profile name"
-msgstr ""
+msgstr "프로파일 이름"
 
 #: ../../godmode/perfiles/lista_perfiles.php:166
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:177
@@ -324,7 +315,7 @@ msgstr ""
 #: ../../godmode/usuarios/lista_usuarios.php:46
 #: ../../godmode/usuarios/configurar_usuarios.php:165
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:197
-#: ../../operation/side_menu.php:811
+#: ../../operation/side_menu.php:805
 msgid "User management"
 msgstr ""
 
@@ -355,7 +346,7 @@ msgstr ""
 #: ../../godmode/perfiles/lista_perfiles.php:199
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:212
 #: ../../enterprise/operation/user/user.php:56
-#: ../../operation/projects/project_detail.php:111
+#: ../../operation/projects/project_detail.php:112
 #: ../../operation/projects/project.php:132
 msgid "Project management"
 msgstr ""
@@ -396,7 +387,7 @@ msgstr ""
 #: ../../operation/companies/company_role.php:108
 #: ../../operation/companies/company_detail.php:134
 #: ../../operation/projects/project_group_detail.php:113
-#: ../../operation/projects/project_detail.php:224
+#: ../../operation/projects/project_detail.php:225
 #: ../../operation/projects/task_detail.php:305
 #: ../../operation/projects/milestones.php:100
 #: ../../operation/projects/milestones.php:152
@@ -407,8 +398,9 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:216
 #: ../../operation/kb/manage_data.php:231
 #: ../../operation/kb/manage_cat.php:148 ../../operation/kb/manage_cat.php:213
+#, fuzzy
 msgid "Create"
-msgstr ""
+msgstr "만들기"
 
 #: ../../godmode/perfiles/lista_perfiles.php:212
 #: ../../godmode/setup/setup.php:100 ../../godmode/setup/setup_mail.php:74
@@ -421,7 +413,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:166
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:252
 #: ../../enterprise/godmode/usuarios/profile_list.php:242
-#: ../../operation/side_menu.php:685
+#: ../../operation/side_menu.php:679
 #: ../../operation/manufacturers/manufacturer_detail.php:133
 #: ../../operation/buildings/building_detail.php:107
 #: ../../operation/inventories/manage_prod.php:146
@@ -434,7 +426,7 @@ msgstr ""
 #: ../../operation/companies/company_role.php:103
 #: ../../operation/companies/company_detail.php:129
 #: ../../operation/projects/project_group_detail.php:109
-#: ../../operation/projects/project_detail.php:221
+#: ../../operation/projects/project_detail.php:222
 #: ../../operation/projects/project_tree.php:61
 #: ../../operation/projects/task_detail.php:302
 #: ../../operation/projects/people_manager.php:206
@@ -447,16 +439,18 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:146
 #: ../../operation/kb/manage_data.php:233
 #: ../../operation/kb/manage_cat.php:150
+#, fuzzy
 msgid "Update"
-msgstr ""
+msgstr "업데이트"
 
 #: ../../godmode/perfiles/lista_perfiles.php:227
 #: ../../godmode/usuarios/configurar_usuarios.php:258
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:268
 #: ../../enterprise/godmode/usuarios/profile_list.php:266
 #: ../../enterprise/operation/user/user.php:40
+#, fuzzy
 msgid "Profiles"
-msgstr ""
+msgstr "프로파일"
 
 #: ../../godmode/perfiles/lista_perfiles.php:242
 #: ../../godmode/setup/links.php:115 ../../godmode/grupos/lista_grupos.php:114
@@ -490,8 +484,9 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:192
 #: ../../operation/kb/manage_data.php:274
 #: ../../operation/kb/manage_cat.php:168
+#, fuzzy
 msgid "Delete"
-msgstr ""
+msgstr "지우기"
 
 #: ../../godmode/perfiles/lista_perfiles.php:312
 #: ../../godmode/setup/links.php:127 ../../godmode/grupos/lista_grupos.php:144
@@ -526,7 +521,7 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: ../../godmode/setup/setup.php:57 ../../operation/side_menu.php:670
+#: ../../godmode/setup/setup.php:57 ../../operation/side_menu.php:664
 msgid "General setup"
 msgstr ""
 
@@ -534,8 +529,9 @@ msgstr ""
 #: ../../godmode/grupos/configurar_grupo.php:99
 #: ../../godmode/usuarios/configurar_usuarios.php:232
 #: ../../operation/users/user_edit.php:137
+#, fuzzy
 msgid "Language"
-msgstr ""
+msgstr "언어"
 
 #: ../../godmode/setup/setup.php:69
 msgid "No WU completion users"
@@ -562,8 +558,9 @@ msgid "Sitename"
 msgstr ""
 
 #: ../../godmode/setup/setup.php:91
+#, fuzzy
 msgid "Currency"
-msgstr ""
+msgstr "통화"
 
 #: ../../godmode/setup/event.php:27
 msgid "Event history"
@@ -572,8 +569,9 @@ msgstr ""
 #: ../../godmode/setup/event.php:37 ../../include/functions_form.php:303
 #: ../../include/functions_form.php:312
 #: ../../operation/projects/project_tree.php:55
+#, fuzzy
 msgid "Type"
-msgstr ""
+msgstr "종류"
 
 #: ../../godmode/setup/event.php:39
 msgid "Extended info"
@@ -590,7 +588,7 @@ msgstr ""
 
 #: ../../godmode/setup/event.php:65 ../../include/functions_form.php:552
 #: ../../operation/reporting/incidents_html.php:114
-#: ../../operation/side_menu.php:330
+#: ../../operation/side_menu.php:324
 #: ../../operation/incidents/incident.php:122
 #: ../../operation/incidents/incident_files.php:43
 #: ../../operation/incidents/incident_notes.php:80
@@ -623,10 +621,11 @@ msgstr ""
 #: ../../operation/users/user_search.php:80
 #: ../../operation/contracts/contract_detail.php:149
 #: ../../operation/contracts/contract_detail.php:219
+#, fuzzy
 msgid "Group"
-msgstr ""
+msgstr "그룹"
 
-#: ../../godmode/setup/setup_mail.php:46 ../../operation/side_menu.php:677
+#: ../../godmode/setup/setup_mail.php:46 ../../operation/side_menu.php:671
 msgid "Mail setup"
 msgstr ""
 
@@ -681,13 +680,15 @@ msgid "Link name"
 msgstr ""
 
 #: ../../godmode/setup/links.php:100
+#, fuzzy
 msgid "Link"
-msgstr ""
+msgstr "링크"
 
 #: ../../godmode/setup/links.php:114
 #: ../../godmode/grupos/configurar_grupo.php:79
+#, fuzzy
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ../../godmode/setup/links.php:136
 #: ../../godmode/usuarios/role_manager.php:153
@@ -696,8 +697,9 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:535
 #: ../../operation/incidents/incident_detail.php:546
 #: ../../operation/users/user_spare_workunit.php:298
+#, fuzzy
 msgid "Add"
-msgstr ""
+msgstr "더하기"
 
 #: ../../godmode/grupos/configurar_grupo.php:53
 msgid "There was a problem loading group"
@@ -729,7 +731,7 @@ msgstr ""
 #: ../../operation/companies/company_role.php:145
 #: ../../operation/projects/project_group_detail.php:133
 #: ../../operation/projects/task.php:112
-#: ../../operation/projects/project_detail.php:121
+#: ../../operation/projects/project_detail.php:122
 #: ../../operation/projects/task_detail.php:217
 #: ../../operation/projects/milestones.php:80
 #: ../../operation/projects/people_manager.php:251
@@ -738,8 +740,9 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:215
 #: ../../operation/slas/sla_detail.php:186
 #: ../../operation/kb/manage_cat.php:122 ../../operation/kb/manage_cat.php:164
+#, fuzzy
 msgid "Name"
-msgstr ""
+msgstr "이름"
 
 #: ../../godmode/grupos/configurar_grupo.php:71
 msgid "Forced email"
@@ -747,13 +750,14 @@ msgstr ""
 
 #: ../../godmode/grupos/configurar_grupo.php:81
 #: ../../godmode/usuarios/configurar_usuarios.php:200
-#: ../../operation/side_menu.php:884
+#: ../../operation/side_menu.php:864
 #: ../../operation/contacts/contact_detail.php:154
 #: ../../operation/contacts/contact_detail.php:218
 #: ../../operation/users/user_edit.php:134
 #: ../../operation/users/user_edit.php:147
+#, fuzzy
 msgid "Email"
-msgstr ""
+msgstr "전자메일"
 
 #: ../../godmode/grupos/configurar_grupo.php:84
 #: ../../godmode/grupos/lista_grupos.php:113
@@ -761,8 +765,9 @@ msgstr ""
 #: ../../operation/projects/task_detail.php:227
 #: ../../operation/slas/sla_detail.php:191
 #: ../../operation/kb/manage_cat.php:141 ../../operation/kb/manage_cat.php:165
+#, fuzzy
 msgid "Parent"
-msgstr ""
+msgstr "상위 위젯"
 
 #: ../../godmode/grupos/configurar_grupo.php:87
 #: ../../godmode/grupos/lista_grupos.php:111
@@ -770,8 +775,9 @@ msgstr ""
 #: ../../operation/projects/project_group_detail.php:103
 #: ../../operation/projects/project_overview.php:30
 #: ../../operation/kb/manage_cat.php:134 ../../operation/kb/manage_cat.php:163
+#, fuzzy
 msgid "Icon"
-msgstr ""
+msgstr "아이콘"
 
 #: ../../godmode/grupos/configurar_grupo.php:95
 msgid "Banner"
@@ -846,8 +852,9 @@ msgstr ""
 #: ../../godmode/updatemanager/main.php:76
 #: ../../operation/reporting/incidents_html.php:112
 #: ../../operation/incidents/incident.php:120
+#, fuzzy
 msgid "Id"
-msgstr ""
+msgstr "ID"
 
 #: ../../godmode/updatemanager/main.php:82
 #: ../../godmode/usuarios/role_manager.php:110
@@ -884,8 +891,9 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:139
 #: ../../operation/kb/browse_data.php:100
 #: ../../operation/kb/manage_cat.php:128 ../../operation/kb/manage_cat.php:166
+#, fuzzy
 msgid "Description"
-msgstr ""
+msgstr "설명"
 
 #: ../../godmode/updatemanager/main.php:88
 msgid "Overwrite local changes"
@@ -944,8 +952,9 @@ msgid "Proxy password"
 msgstr ""
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:553
+#, fuzzy
 msgid "Development"
-msgstr ""
+msgstr "개발"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:554
 msgid "Testing"
@@ -955,16 +964,19 @@ msgstr ""
 #: ../../operation/agenda/agenda.php:159 ../../operation/agenda/agenda.php:191
 #: ../../operation/incidents/incident_create_work.php:52
 #: ../../operation/users/user_spare_workunit.php:272
+#, fuzzy
 msgid "Public"
-msgstr ""
+msgstr "공개"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:556
+#, fuzzy
 msgid "Disabled"
-msgstr ""
+msgstr "사용하지 않음"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:564
+#, fuzzy
 msgid "Database"
-msgstr ""
+msgstr "데이터베이스"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:565
 msgid "Code / binary directory"
@@ -997,8 +1009,9 @@ msgstr ""
 #: ../../include/functions_form.php:599
 #: ../../operation/incidents/incident_create_work.php:48
 #: ../../operation/users/user.php:34
+#, fuzzy
 msgid "Profile"
-msgstr ""
+msgstr "프로파일"
 
 #: ../../godmode/usuarios/lista_usuarios.php:106
 #: ../../godmode/usuarios/configurar_usuarios.php:291
@@ -1036,8 +1049,9 @@ msgstr ""
 #: ../../godmode/usuarios/configurar_usuarios.php:186
 #: ../../operation/user_report/report_weekly.php:59
 #: ../../operation/users/user_edit.php:122
+#, fuzzy
 msgid "User ID"
-msgstr ""
+msgstr "사용자 아이디"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:194
 #: ../../operation/users/user_edit.php:128
@@ -1059,8 +1073,9 @@ msgstr ""
 #: ../../godmode/usuarios/configurar_usuarios.php:215
 #: ../../operation/users/user_edit.php:135
 #: ../../operation/users/user_edit.php:148
+#, fuzzy
 msgid "Telephone"
-msgstr ""
+msgstr "전화"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:217
 msgid "Global profile"
@@ -1068,8 +1083,9 @@ msgstr ""
 
 #: ../../godmode/usuarios/configurar_usuarios.php:221
 #: ../../godmode/usuarios/configurar_usuarios.php:225
+#, fuzzy
 msgid "Administrator"
-msgstr ""
+msgstr "관리자"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:223
 #: ../../godmode/usuarios/configurar_usuarios.php:227
@@ -1104,13 +1120,14 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:239
 #: ../../operation/incidents/incident_detail.php:482
 #: ../../operation/incidents/incident_search.php:196
-#: ../../operation/projects/project_detail.php:149
+#: ../../operation/projects/project_detail.php:150
 #: ../../operation/projects/task_detail.php:227
 #: ../../operation/projects/task_detail.php:237
 #: ../../operation/slas/sla_detail.php:138
 #: ../../operation/kb/manage_cat.php:137
+#, fuzzy
 msgid "None"
-msgstr ""
+msgstr "없음"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:281
 msgid "Profiles/Groups assigned to this user"
@@ -1175,8 +1192,9 @@ msgstr ""
 #: ../../operation/projects/people_manager.php:224
 #: ../../operation/users/user_spare_workunit.php:246
 #: ../../operation/users/user_search.php:76
+#, fuzzy
 msgid "Role"
-msgstr ""
+msgstr "역할"
 
 #: ../../godmode/usuarios/role_manager.php:112
 #: ../../godmode/usuarios/role_manager.php:127
@@ -1186,63 +1204,73 @@ msgstr ""
 #: ../../operation/projects/task.php:116
 #: ../../operation/projects/people_manager.php:253
 #: ../../operation/projects/project.php:177
+#, fuzzy
 msgid "Cost"
-msgstr ""
+msgstr "비용"
 
-#: ../../include/functions_calendar.php:424
+#: ../../include/functions_calendar.php:422
 msgid "Week Total"
 msgstr ""
 
-#: ../../include/functions_calendar.php:449
-#: ../../include/functions_calendar.php:490
-#: ../../include/functions_calendar.php:511
+#: ../../include/functions_calendar.php:447
+#: ../../include/functions_calendar.php:488
+#: ../../include/functions_calendar.php:509
 #: ../../include/functions_form.php:488
-#: ../../include/functions_incidents.php:254 ../../operation/side_menu.php:152
-#: ../../operation/side_menu.php:241 ../../operation/side_menu.php:254
+#: ../../include/functions_incidents.php:254 ../../operation/side_menu.php:146
+#: ../../operation/side_menu.php:235 ../../operation/side_menu.php:248
 #: ../../operation/inventories/inventory_contracts.php:69
 #: ../../operation/inventories/inventory_contracts.php:71
 #: ../../operation/user_report/report_weekly.php:46
 #: ../../operation/projects/task_detail.php:242
 #: ../../operation/slas/sla_detail.php:198
 #: ../../operation/slas/sla_detail.php:199
+#, fuzzy
 msgid "Hours"
-msgstr ""
+msgstr "시간"
 
-#: ../../include/functions_calendar.php:603 ../../include/functions.php:526
+#: ../../include/functions_calendar.php:601 ../../include/functions.php:526
 #: ../../include/functions.php:596 ../../include/functions.php:620
 #: ../../operation/projects/task_tracking.php:66
+#, fuzzy
 msgid "Unknown"
-msgstr ""
+msgstr "알 수 없음"
 
-#: ../../include/functions_calendar.php:610
+#: ../../include/functions_calendar.php:608
 #: ../../operation/projects/project.php:251
+#, fuzzy
 msgid "Never"
-msgstr ""
+msgstr "사용 안 함"
 
-#: ../../include/functions_calendar.php:619
+#: ../../include/functions_calendar.php:617
+#, fuzzy
 msgid "seconds"
-msgstr ""
+msgstr "초"
 
+#: ../../include/functions_calendar.php:623
 #: ../../include/functions_calendar.php:625
-#: ../../include/functions_calendar.php:627
+#, fuzzy
 msgid "minutes"
-msgstr ""
+msgstr "분"
 
-#: ../../include/functions_calendar.php:630
+#: ../../include/functions_calendar.php:628
+#, fuzzy
 msgid "hours"
-msgstr ""
+msgstr "시간"
 
-#: ../../include/functions_calendar.php:633
+#: ../../include/functions_calendar.php:631
+#, fuzzy
 msgid "days"
-msgstr ""
+msgstr "일"
 
-#: ../../include/functions_calendar.php:636
+#: ../../include/functions_calendar.php:634
+#, fuzzy
 msgid "months"
-msgstr ""
+msgstr "달"
 
-#: ../../include/functions_calendar.php:639
+#: ../../include/functions_calendar.php:637
+#, fuzzy
 msgid "years"
-msgstr ""
+msgstr "연도"
 
 #: ../../include/functions_form.php:30 ../../include/functions_form.php:47
 #: ../../include/functions_form.php:703 ../../include/functions_form.php:708
@@ -1251,8 +1279,9 @@ msgstr ""
 #: ../../operation/projects/project.php:154
 #: ../../operation/users/user_search.php:76
 #: ../../operation/users/user_search.php:79
+#, fuzzy
 msgid "Any"
-msgstr ""
+msgstr "모두"
 
 #: ../../include/functions_form.php:237 ../../include/functions_form.php:247
 #: ../../include/functions_form.php:704
@@ -1263,39 +1292,44 @@ msgstr ""
 #: ../../operation/incidents/incident_search.php:92
 #: ../../operation/user_report/report_full.php:184
 #: ../../operation/projects/task_tracking.php:39
+#, fuzzy
 msgid "Status"
-msgstr ""
+msgstr "상태"
 
 #: ../../include/functions_form.php:261 ../../include/functions_form.php:268
+#, fuzzy
 msgid "Source"
-msgstr ""
+msgstr "소스"
 
 #: ../../include/functions_form.php:282 ../../include/functions_form.php:291
 #: ../../operation/reporting/incidents_html.php:116
 #: ../../operation/incidents/incident.php:124
 #: ../../operation/incidents/incident_search.php:92
+#, fuzzy
 msgid "Resolution"
-msgstr ""
+msgstr "해상도"
 
 #: ../../include/functions_form.php:324 ../../include/functions_form.php:353
 #: ../../include/functions_form.php:549
 #: ../../enterprise/godmode/usuarios/role_user_global.php:69
-#: ../../operation/side_menu.php:177 ../../operation/todo/todo.php:132
+#: ../../operation/side_menu.php:171 ../../operation/todo/todo.php:132
 #: ../../operation/todo/todo.php:192
 #: ../../operation/projects/task_files.php:93
 #: ../../operation/projects/task_files.php:116
 #: ../../operation/projects/task_incidents.php:52
 #: ../../operation/users/user_task_assigment.php:54
 #: ../../operation/users/user_spare_workunit.php:256
+#, fuzzy
 msgid "Task"
-msgstr ""
+msgstr "작업"
 
 #: ../../include/functions_form.php:327 ../../include/functions_form.php:336
 #: ../../include/functions_form.php:385 ../../include/functions_form.php:403
 #: ../../include/functions_form.php:585
-#: ../../operation/projects/project_detail.php:200
+#: ../../operation/projects/project_detail.php:201
+#, fuzzy
 msgid "N/A"
-msgstr ""
+msgstr "해당 없음"
 
 #: ../../include/functions_form.php:338 ../../include/functions_form.php:367
 msgid "Vacations"
@@ -1326,8 +1360,9 @@ msgid "Read more..."
 msgstr ""
 
 #: ../../include/functions_form.php:556
+#, fuzzy
 msgid "Duration"
-msgstr ""
+msgstr "시간"
 
 #: ../../include/functions_form.php:571
 #: ../../enterprise/godmode/usuarios/role_user_global.php:68
@@ -1335,8 +1370,9 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:70
 #: ../../operation/projects/task_files.php:113
 #: ../../operation/users/user_task_assigment.php:53
+#, fuzzy
 msgid "Project"
-msgstr ""
+msgstr "프로젝트"
 
 #: ../../include/functions_form.php:597
 #: ../../operation/common/workunit_detail.php:50
@@ -1358,8 +1394,9 @@ msgstr ""
 
 #: ../../include/functions_form.php:699
 #: ../../operation/inventories/inventory_search.php:168
+#, fuzzy
 msgid "Search string"
-msgstr ""
+msgstr "문자열 찾기"
 
 #: ../../include/functions_form.php:709
 #: ../../operation/reporting/incidents_html.php:62
@@ -1371,8 +1408,9 @@ msgstr ""
 #: ../../operation/incidents/incident_search.php:93
 #: ../../operation/todo/todo.php:124 ../../operation/todo/todo.php:184
 #: ../../operation/projects/task_detail.php:229
+#, fuzzy
 msgid "Priority"
-msgstr ""
+msgstr "우선순위"
 
 #: ../../include/functions_form.php:713 ../../include/functions_form.php:724
 #: ../../include/functions_form.php:731 ../../include/functions_form.php:742
@@ -1384,12 +1422,13 @@ msgstr ""
 #: ../../operation/projects/project_tree.php:42
 #: ../../operation/projects/project_tree.php:52
 #: ../../operation/contracts/contract_detail.php:191
+#, fuzzy
 msgid "All"
-msgstr ""
+msgstr "모두"
 
 #: ../../include/functions_form.php:720
 #: ../../operation/reporting/incidents_html.php:76
-#: ../../operation/side_menu.php:409 ../../operation/side_menu.php:441
+#: ../../operation/side_menu.php:403 ../../operation/side_menu.php:435
 #: ../../operation/incidents/incident.php:76 ../../operation/main_menu.php:48
 msgid "Inventory"
 msgstr ""
@@ -1420,8 +1459,9 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:219
 #: ../../operation/inventories/inventory_tree.php:52
 #: ../../operation/incidents/incident_inventory_detail.php:81
+#, fuzzy
 msgid "Building"
-msgstr ""
+msgstr "건축"
 
 #: ../../include/functions_form.php:733
 #: ../../operation/reporting/incidents_html.php:68
@@ -1461,8 +1501,9 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:153
 #: ../../operation/contracts/contract_detail.php:191
 #: ../../operation/contracts/contract_detail.php:217
+#, fuzzy
 msgid "Company"
-msgstr ""
+msgstr "회사"
 
 #: ../../include/functions_form.php:744
 #: ../../operation/reporting/incidents_html.php:88
@@ -1498,8 +1539,9 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:170
 #: ../../operation/slas/sla_detail.php:172 ../../operation/kb/browse.php:51
 #: ../../operation/kb/browse.php:56 ../../operation/kb/search.php:45
+#, fuzzy
 msgid "Search"
-msgstr ""
+msgstr "찾기"
 
 #: ../../include/functions_form.php:752
 #: ../../operation/inventories/inventory_search.php:206
@@ -1513,8 +1555,9 @@ msgstr ""
 
 #: ../../include/functions_form.php:771 ../../include/functions_form.php:773
 #: ../../operation/user_report/report_full.php:183
+#, fuzzy
 msgid "Creator"
-msgstr ""
+msgstr "Creator"
 
 #: ../../include/functions_form.php:779
 msgid "Participant"
@@ -1532,8 +1575,9 @@ msgstr ""
 
 #: ../../include/functions_form.php:802 ../../include/functions_form.php:805
 #: ../../operation/users/user_task_assigment.php:57
+#, fuzzy
 msgid "Last update"
-msgstr ""
+msgstr "최근 업데이트"
 
 #: ../../include/functions_form.php:811
 msgid "Hours worked"
@@ -1556,8 +1600,9 @@ msgid "Total incicents"
 msgstr ""
 
 #: ../../include/functions_incidents.php:247 ../../include/functions.php:540
+#, fuzzy
 msgid "Closed"
-msgstr ""
+msgstr "닫힘"
 
 #: ../../include/functions_incidents.php:251
 msgid "Mean life time"
@@ -1573,8 +1618,9 @@ msgstr ""
 
 #: ../../include/functions_incidents.php:256
 #: ../../operation/user_report/report_full.php:73
+#, fuzzy
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: ../../include/functions_incidents.php:261
 msgid "Longest closed incident"
@@ -1625,17 +1671,20 @@ msgstr ""
 
 #: ../../include/functions.php:397 ../../include/functions.php:500
 #: ../../include/functions.php:576
+#, fuzzy
 msgid "Low"
-msgstr ""
+msgstr "낮음"
 
 #: ../../include/functions.php:399 ../../include/functions.php:501
 #: ../../include/functions.php:580
+#, fuzzy
 msgid "Medium"
-msgstr ""
+msgstr "중간"
 
 #: ../../include/functions.php:401
+#, fuzzy
 msgid "High"
-msgstr ""
+msgstr "높음"
 
 #: ../../include/functions.php:403
 msgid "Very high"
@@ -1643,8 +1692,9 @@ msgstr ""
 
 #: ../../include/functions.php:405
 #: ../../operation/user_report/report_annual.php:57
+#, fuzzy
 msgid "Other"
-msgstr ""
+msgstr "기타"
 
 #: ../../include/functions.php:499 ../../include/functions.php:572
 msgid "Informative"
@@ -1687,16 +1737,18 @@ msgid "Annual"
 msgstr ""
 
 #: ../../include/functions.php:534
+#, fuzzy
 msgid "New"
-msgstr ""
+msgstr "새로 만들기"
 
 #: ../../include/functions.php:535
 msgid "Unconfirmed"
 msgstr ""
 
 #: ../../include/functions.php:536
+#, fuzzy
 msgid "Assigned"
-msgstr ""
+msgstr "예약됨"
 
 #: ../../include/functions.php:537
 msgid "Re-opened"
@@ -1711,20 +1763,23 @@ msgid "Resolved"
 msgstr ""
 
 #: ../../include/functions.php:548
+#, fuzzy
 msgid "Fixed"
-msgstr ""
+msgstr "고정"
 
 #: ../../include/functions.php:549
+#, fuzzy
 msgid "Invalid"
-msgstr ""
+msgstr "잘못됨"
 
 #: ../../include/functions.php:550
 msgid "Wont fix"
 msgstr ""
 
 #: ../../include/functions.php:551
+#, fuzzy
 msgid "Duplicate"
-msgstr ""
+msgstr "겹침"
 
 #: ../../include/functions.php:552
 msgid "Works for me"
@@ -1735,8 +1790,9 @@ msgid "Incomplete"
 msgstr ""
 
 #: ../../include/functions.php:554
+#, fuzzy
 msgid "Expired"
-msgstr ""
+msgstr "만료됨"
 
 #: ../../include/functions.php:555
 msgid "Moved"
@@ -1780,16 +1836,18 @@ msgid "Task added"
 msgstr ""
 
 #: ../../include/functions_db.php:710
+#, fuzzy
 msgid "Created"
-msgstr ""
+msgstr "만듦"
 
 #: ../../include/functions_db.php:713
 #: ../../operation/reporting/incidents_html.php:118
 #: ../../operation/incidents/incident.php:126
 #: ../../operation/incidents/incident_search.php:94
 #: ../../operation/todo/todo.php:191 ../../operation/projects/project.php:178
+#, fuzzy
 msgid "Updated"
-msgstr ""
+msgstr "업데이트됨"
 
 #: ../../include/functions_db.php:716
 #: ../../operation/projects/task_workunit.php:77
@@ -1845,12 +1903,14 @@ msgstr ""
 
 #: ../../include/functions_db.php:1073
 #: ../../operation/reporting/incidents_html.php:68
+#, fuzzy
 msgid "Yes"
-msgstr ""
+msgstr "예"
 
 #: ../../include/functions_db.php:1075
+#, fuzzy
 msgid "No"
-msgstr ""
+msgstr "아니오"
 
 #: ../../include/functions_graph.php:183
 msgid "Out of limits"
@@ -1928,7 +1988,7 @@ msgstr ""
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:204
 #: ../../enterprise/godmode/usuarios/profile_list.php:273
-#: ../../operation/side_menu.php:819
+#: ../../operation/side_menu.php:813
 msgid "Manage users"
 msgstr ""
 
@@ -2018,8 +2078,9 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/role_user_global.php:57
 #: ../../operation/user_report/report_annual.php:42
 #: ../../operation/users/user_task_assigment.php:48
+#, fuzzy
 msgid "Go"
-msgstr ""
+msgstr "이동"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:71
 msgid "WU"
@@ -2087,8 +2148,9 @@ msgid "Legend"
 msgstr ""
 
 #: ../../operation/agenda/agenda.php:167
+#, fuzzy
 msgid "Alert"
-msgstr ""
+msgstr "경보"
 
 #: ../../operation/agenda/agenda.php:177
 msgid "Add agenda entry"
@@ -2099,8 +2161,9 @@ msgid "Duration in hours"
 msgstr ""
 
 #: ../../operation/agenda/agenda.php:194
+#, fuzzy
 msgid "One hour"
-msgstr ""
+msgstr "1시간"
 
 #: ../../operation/agenda/agenda.php:195
 msgid "Two hours"
@@ -2127,12 +2190,14 @@ msgstr ""
 #: ../../operation/incidents/incident_tracking.php:52
 #: ../../operation/projects/project_tracking.php:38
 #: ../../operation/users/user_spare_workunit.php:242
+#, fuzzy
 msgid "Date"
-msgstr ""
+msgstr "날짜"
 
 #: ../../operation/agenda/agenda.php:202
+#, fuzzy
 msgid "Time"
-msgstr ""
+msgstr "시간"
 
 #: ../../operation/reporting/inventories_html.php:35
 msgid "Inventory report"
@@ -2170,8 +2235,9 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:268
 #: ../../operation/inventories/inventory_search.php:195
 #: ../../operation/incidents/incident_inventory_detail.php:72
+#, fuzzy
 msgid "IP address"
-msgstr ""
+msgstr "IP 주소"
 
 #: ../../operation/reporting/inventories_html.php:76
 #: ../../operation/inventories/inventory_detail.php:213
@@ -2197,8 +2263,9 @@ msgstr ""
 #: ../../operation/reporting/inventories_html.php:119
 #: ../../operation/inventories/inventory_search.php:213
 #: ../../operation/inventories/inventory_tree.php:48
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: ../../operation/reporting/inventories_html.php:121
 #: ../../operation/inventories/inventory_search.php:216
@@ -2216,8 +2283,9 @@ msgstr ""
 #: ../../operation/projects/task_incidents.php:57
 #: ../../operation/kb/browse.php:86 ../../operation/kb/manage_data.php:190
 #: ../../operation/kb/manage_data.php:269 ../../operation/kb/search.php:61
+#, fuzzy
 msgid "Title"
-msgstr ""
+msgstr "제목"
 
 #: ../../operation/reporting/inventories_html.php:134
 #: ../../operation/inventories/inventory_search.php:148
@@ -2232,21 +2300,23 @@ msgstr ""
 #: ../../operation/messages/message.php:85
 #: ../../operation/messages/message.php:127
 #: ../../operation/messages/message.php:211
+#, fuzzy
 msgid "From"
-msgstr ""
+msgstr "보낸 사람"
 
 #: ../../operation/reporting/incidents_html.php:95
 #: ../../operation/messages/message.php:86
 #: ../../operation/messages/message.php:128
+#, fuzzy
 msgid "To"
-msgstr ""
+msgstr "받는 사람"
 
 #: ../../operation/reporting/incidents_html.php:103
 msgid "All incidents"
 msgstr ""
 
 #: ../../operation/reporting/incidents_html.php:113
-#: ../../operation/side_menu.php:524
+#: ../../operation/side_menu.php:518
 #: ../../operation/manufacturers/manufacturer_detail.php:180
 #: ../../operation/inventories/inventory_detail.php:215
 #: ../../operation/inventories/inventory_detail.php:223
@@ -2262,19 +2332,22 @@ msgstr ""
 #: ../../operation/reporting/incidents_html.php:118
 #: ../../operation/incidents/incident.php:126
 #: ../../operation/incidents/incident_search.php:94
+#, fuzzy
 msgid "Started"
-msgstr ""
+msgstr "시작됨"
 
 #: ../../operation/reporting/incidents_html.php:119
 #: ../../operation/incidents/incident.php:127
 #: ../../operation/incidents/incident_search.php:95
+#, fuzzy
 msgid "Work"
-msgstr ""
+msgstr "업무"
 
 #: ../../operation/reporting/incidents_html.php:125
 #: ../../operation/incidents/incident_statistics.php:26
+#, fuzzy
 msgid "Statistics"
-msgstr ""
+msgstr "통계"
 
 #: ../../operation/reporting/incidents_html.php:132
 #: ../../operation/incidents/incident_search.php:146
@@ -2306,38 +2379,36 @@ msgstr ""
 msgid "Disabled projects"
 msgstr ""
 
-#: ../../operation/side_menu.php:92
-msgid "Process graph"
-msgstr ""
-
-#: ../../operation/side_menu.php:99
+#: ../../operation/side_menu.php:93
 #: ../../operation/projects/project_tracking.php:27
 msgid "Project tracking"
 msgstr ""
 
-#: ../../operation/side_menu.php:108
+#: ../../operation/side_menu.php:102
 msgid "Task list"
 msgstr ""
 
-#: ../../operation/side_menu.php:117
+#: ../../operation/side_menu.php:111
+#, fuzzy
 msgid "New task"
-msgstr ""
+msgstr "새 작업"
 
-#: ../../operation/side_menu.php:125 ../../operation/projects/gantt.php:54
+#: ../../operation/side_menu.php:119 ../../operation/projects/gantt.php:54
 msgid "Gantt graph"
 msgstr ""
 
-#: ../../operation/side_menu.php:132
+#: ../../operation/side_menu.php:126
 msgid "Milestones"
 msgstr ""
 
-#: ../../operation/side_menu.php:140 ../../operation/side_menu.php:215
+#: ../../operation/side_menu.php:134 ../../operation/side_menu.php:209
 #: ../../operation/projects/task.php:117
 #: ../../operation/projects/project.php:175
+#, fuzzy
 msgid "People"
-msgstr ""
+msgstr "사람"
 
-#: ../../operation/side_menu.php:151 ../../operation/side_menu.php:240
+#: ../../operation/side_menu.php:145 ../../operation/side_menu.php:234
 #: ../../operation/inventories/inventory.php:60
 #: ../../operation/incidents/incident.php:78
 #: ../../operation/incidents/incident_notes.php:92
@@ -2347,273 +2418,275 @@ msgstr ""
 msgid "Workunits"
 msgstr ""
 
-#: ../../operation/side_menu.php:163 ../../operation/side_menu.php:265
+#: ../../operation/side_menu.php:157 ../../operation/side_menu.php:259
 #: ../../operation/incidents/incident.php:79
 #: ../../operation/incidents/incident_notes.php:101
 #: ../../operation/incidents/incident_search.php:230
 #: ../../operation/incidents/incident_work.php:73
+#, fuzzy
 msgid "Files"
-msgstr ""
+msgstr "파일"
 
-#: ../../operation/side_menu.php:185
+#: ../../operation/side_menu.php:179
 msgid "Task detail"
 msgstr ""
 
-#: ../../operation/side_menu.php:192
+#: ../../operation/side_menu.php:186
 #: ../../operation/projects/task_tracking.php:31
 msgid "Task tracking"
 msgstr ""
 
-#: ../../operation/side_menu.php:199 ../../operation/side_menu.php:343
+#: ../../operation/side_menu.php:193 ../../operation/side_menu.php:337
 #: ../../operation/incidents/incident_create_work.php:37
 #: ../../operation/users/user_spare_workunit.php:226
 msgid "Add workunit"
 msgstr ""
 
-#: ../../operation/side_menu.php:206 ../../operation/side_menu.php:352
+#: ../../operation/side_menu.php:200 ../../operation/side_menu.php:346
 msgid "Add file"
 msgstr ""
 
-#: ../../operation/side_menu.php:222
+#: ../../operation/side_menu.php:216
 msgid "Email report"
 msgstr ""
 
-#: ../../operation/side_menu.php:229
+#: ../../operation/side_menu.php:223
 msgid "Move task"
 msgstr ""
 
-#: ../../operation/side_menu.php:278 ../../operation/side_menu.php:286
+#: ../../operation/side_menu.php:272 ../../operation/side_menu.php:280
 msgid "Project groups"
 msgstr ""
 
-#: ../../operation/side_menu.php:305
+#: ../../operation/side_menu.php:299
 msgid "Incidents overview"
 msgstr ""
 
-#: ../../operation/side_menu.php:313 ../../operation/side_menu.php:448
+#: ../../operation/side_menu.php:307 ../../operation/side_menu.php:442
 #: ../../operation/incidents/incident_detail.php:432
 msgid "Create incident"
 msgstr ""
 
-#: ../../operation/side_menu.php:318
+#: ../../operation/side_menu.php:312
 msgid "Incident #"
 msgstr ""
 
-#: ../../operation/side_menu.php:361
+#: ../../operation/side_menu.php:355
 msgid "Details for incident"
 msgstr ""
 
-#: ../../operation/side_menu.php:374
+#: ../../operation/side_menu.php:368
 msgid "Users in incident"
 msgstr ""
 
-#: ../../operation/side_menu.php:391 ../../operation/side_menu.php:399
+#: ../../operation/side_menu.php:385 ../../operation/side_menu.php:393
 #: ../../operation/incidents/type_detail.php:84
 msgid "Incident types"
 msgstr ""
 
-#: ../../operation/side_menu.php:416
+#: ../../operation/side_menu.php:410
 msgid "Inventory overview"
 msgstr ""
 
-#: ../../operation/side_menu.php:424
+#: ../../operation/side_menu.php:418
 #: ../../operation/inventories/inventory_detail.php:176
 msgid "Create inventory object"
 msgstr ""
 
-#: ../../operation/side_menu.php:429
+#: ../../operation/side_menu.php:423
 msgid "Inventory #"
 msgstr ""
 
-#: ../../operation/side_menu.php:461
+#: ../../operation/side_menu.php:455
 #: ../../operation/inventories/inventory.php:58
 #: ../../operation/companies/company_detail.php:173
 msgid "Contracts"
 msgstr ""
 
-#: ../../operation/side_menu.php:469
+#: ../../operation/side_menu.php:463
 msgid "Contract overview"
 msgstr ""
 
-#: ../../operation/side_menu.php:480
+#: ../../operation/side_menu.php:474
 #: ../../operation/inventories/inventory.php:59
 #: ../../operation/inventories/inventory_detail.php:278
 #: ../../operation/companies/company_detail.php:174
+#, fuzzy
 msgid "Contacts"
-msgstr ""
+msgstr "연락처"
 
-#: ../../operation/side_menu.php:488
+#: ../../operation/side_menu.php:482
 msgid "Contact overview"
 msgstr ""
 
-#: ../../operation/side_menu.php:499
+#: ../../operation/side_menu.php:493
 msgid "Companies"
 msgstr ""
 
-#: ../../operation/side_menu.php:507
+#: ../../operation/side_menu.php:501
 msgid "Company overview"
 msgstr ""
 
-#: ../../operation/side_menu.php:514
+#: ../../operation/side_menu.php:508
 msgid "Company roles"
 msgstr ""
 
-#: ../../operation/side_menu.php:532 ../../operation/slas/sla_detail.php:100
+#: ../../operation/side_menu.php:526 ../../operation/slas/sla_detail.php:100
 msgid "SLA Management"
 msgstr ""
 
-#: ../../operation/side_menu.php:541
+#: ../../operation/side_menu.php:535
 msgid "Manufacturers"
 msgstr ""
 
-#: ../../operation/side_menu.php:549
+#: ../../operation/side_menu.php:543
 msgid "Manufacturer overview"
 msgstr ""
 
-#: ../../operation/side_menu.php:558
+#: ../../operation/side_menu.php:552
 msgid "Buildings"
 msgstr ""
 
-#: ../../operation/side_menu.php:566
+#: ../../operation/side_menu.php:560
 msgid "Building overview"
 msgstr ""
 
-#: ../../operation/side_menu.php:575
+#: ../../operation/side_menu.php:569
 msgid "Products"
 msgstr ""
 
-#: ../../operation/side_menu.php:583
+#: ../../operation/side_menu.php:577
 msgid "Manage products"
 msgstr ""
 
-#: ../../operation/side_menu.php:592
+#: ../../operation/side_menu.php:586
 msgid "Knowledge Base"
 msgstr ""
 
-#: ../../operation/side_menu.php:600
+#: ../../operation/side_menu.php:594
+#, fuzzy
 msgid "Browse"
-msgstr ""
+msgstr "찾아보기"
 
-#: ../../operation/side_menu.php:608
+#: ../../operation/side_menu.php:602
 msgid "Create KB item"
 msgstr ""
 
-#: ../../operation/side_menu.php:615
+#: ../../operation/side_menu.php:609
 msgid "Manage KB item"
 msgstr ""
 
-#: ../../operation/side_menu.php:622
+#: ../../operation/side_menu.php:616
 msgid "Manage categories"
 msgstr ""
 
-#: ../../operation/side_menu.php:648
+#: ../../operation/side_menu.php:642
 msgid "To-Do another people"
 msgstr ""
 
-#: ../../operation/side_menu.php:655
+#: ../../operation/side_menu.php:649
 msgid "Add todo"
 msgstr ""
 
-#: ../../operation/side_menu.php:662 ../../operation/main_menu.php:92
+#: ../../operation/side_menu.php:656 ../../operation/main_menu.php:92
+#, fuzzy
 msgid "Setup"
-msgstr ""
+msgstr "설정"
 
-#: ../../operation/side_menu.php:692
+#: ../../operation/side_menu.php:686
 msgid "Configure updates"
 msgstr ""
 
-#: ../../operation/side_menu.php:706
+#: ../../operation/side_menu.php:700
+#, fuzzy
 msgid "System events"
-msgstr ""
+msgstr "시스템 이벤트"
 
-#: ../../operation/side_menu.php:714
+#: ../../operation/side_menu.php:708
 #: ../../operation/users/user_statistics.php:23
 msgid "Users defined in Integria"
 msgstr ""
 
-#: ../../operation/side_menu.php:722
+#: ../../operation/side_menu.php:716
 msgid "View users"
 msgstr ""
 
-#: ../../operation/side_menu.php:732
+#: ../../operation/side_menu.php:726
 msgid "Edit my user"
 msgstr ""
 
-#: ../../operation/side_menu.php:740
+#: ../../operation/side_menu.php:734
 msgid "Spare workunit"
 msgstr ""
 
-#: ../../operation/side_menu.php:752 ../../operation/side_menu.php:888
+#: ../../operation/side_menu.php:746 ../../operation/side_menu.php:868
 #: ../../operation/user_report/report_weekly.php:60
 #: ../../operation/user_report/report_monthly.php:66
 msgid "Workunit report"
 msgstr ""
 
-#: ../../operation/side_menu.php:759
+#: ../../operation/side_menu.php:753
 msgid "My task assigments"
 msgstr ""
 
-#: ../../operation/side_menu.php:768
+#: ../../operation/side_menu.php:762
 msgid "User reporting"
 msgstr ""
 
-#: ../../operation/side_menu.php:776
+#: ../../operation/side_menu.php:770
 msgid "Full  report"
 msgstr ""
 
-#: ../../operation/side_menu.php:783
+#: ../../operation/side_menu.php:777
 msgid "Montly report"
 msgstr ""
 
-#: ../../operation/side_menu.php:790
+#: ../../operation/side_menu.php:784
 msgid "Weekly report"
 msgstr ""
 
-#: ../../operation/side_menu.php:797
+#: ../../operation/side_menu.php:791
 msgid "Annual report"
 msgstr ""
 
-#: ../../operation/side_menu.php:804
+#: ../../operation/side_menu.php:798
 msgid "View vacations"
 msgstr ""
 
-#: ../../operation/side_menu.php:826
+#: ../../operation/side_menu.php:820
 msgid "Manage roles"
 msgstr ""
 
-#: ../../operation/side_menu.php:833
+#: ../../operation/side_menu.php:827
 msgid "Manage groups"
 msgstr ""
 
-#: ../../operation/side_menu.php:848
-msgid "Calendar"
-msgstr ""
-
-#: ../../operation/side_menu.php:874
+#: ../../operation/side_menu.php:854
 msgid "User info"
 msgstr ""
 
-#: ../../operation/side_menu.php:883
+#: ../../operation/side_menu.php:863
+#, fuzzy
 msgid "Phone"
-msgstr ""
+msgstr "전화"
 
-#: ../../operation/side_menu.php:894
+#: ../../operation/side_menu.php:874
 msgid "Project distribution"
 msgstr ""
 
-#: ../../operation/side_menu.php:899
+#: ../../operation/side_menu.php:879
 msgid "Workunit"
 msgstr ""
 
-#: ../../operation/side_menu.php:913
+#: ../../operation/side_menu.php:893
 msgid "over"
 msgstr ""
 
-#: ../../operation/side_menu.php:915
+#: ../../operation/side_menu.php:895
 msgid "Week workunit time not fully justified"
 msgstr ""
 
-#: ../../operation/side_menu.php:917
+#: ../../operation/side_menu.php:897
 msgid "Week workunit are fine"
 msgstr ""
 
@@ -2631,8 +2704,9 @@ msgstr ""
 #: ../../operation/incidents/incident.php:102
 #: ../../operation/companies/company_detail.php:120
 #: ../../operation/contacts/contact_detail.php:159
+#, fuzzy
 msgid "Select"
-msgstr ""
+msgstr "선택"
 
 #: ../../operation/manufacturers/manufacturer_detail.php:121
 #: ../../operation/manufacturers/manufacturer_detail.php:179
@@ -2646,8 +2720,9 @@ msgstr ""
 #: ../../operation/manufacturers/manufacturer_detail.php:125
 #: ../../operation/manufacturers/manufacturer_detail.php:178
 #: ../../operation/companies/company_detail.php:122
+#, fuzzy
 msgid "Address"
-msgstr ""
+msgstr "주소"
 
 #: ../../operation/buildings/building_detail.php:61
 msgid "Building cannot be updated"
@@ -2672,12 +2747,14 @@ msgstr ""
 #: ../../operation/incidents/incident.php:73
 #: ../../operation/incidents/incident_inventory_contacts.php:31
 #: ../../operation/incidents/incident_inventory_detail.php:59
+#, fuzzy
 msgid "Details"
-msgstr ""
+msgstr "자세히"
 
 #: ../../operation/inventories/inventory.php:61
+#, fuzzy
 msgid "Tree"
-msgstr ""
+msgstr "트리"
 
 #: ../../operation/inventories/inventory.php:80
 #: ../../operation/incidents/incident.php:96
@@ -2692,8 +2769,9 @@ msgstr ""
 
 #: ../../operation/inventories/inventory.php:92
 #: ../../operation/incidents/incident.php:107
+#, fuzzy
 msgid "Save"
-msgstr ""
+msgstr "저장"
 
 #: ../../operation/inventories/inventory.php:157
 msgid "Unable to load inventory"
@@ -2711,8 +2789,9 @@ msgid "Assigned user"
 msgstr ""
 
 #: ../../operation/inventories/inventory_incidents.php:41
+#, fuzzy
 msgid "View"
-msgstr ""
+msgstr "보기"
 
 #: ../../operation/inventories/manage_prod.php:77
 msgid "Product cannot be updated"
@@ -2742,8 +2821,9 @@ msgstr ""
 
 #: ../../operation/inventories/manage_prod.php:170
 #: ../../operation/kb/manage_cat.php:167
+#, fuzzy
 msgid "Items"
-msgstr ""
+msgstr "아이템"
 
 #: ../../operation/inventories/inventory_detail.php:79
 msgid "There was an error updating inventory object"
@@ -2751,8 +2831,9 @@ msgstr ""
 
 #: ../../operation/inventories/inventory_detail.php:164
 #: ../../operation/inventories/inventory_tree.php:45
+#, fuzzy
 msgid "Object"
-msgstr ""
+msgstr "오브젝트"
 
 #: ../../operation/inventories/inventory_detail.php:194
 msgid "Confirmed"
@@ -2787,8 +2868,9 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:281
 #: ../../operation/incidents/incident_detail.php:537
 #: ../../operation/incidents/incident_detail.php:548
+#, fuzzy
 msgid "Remove"
-msgstr ""
+msgstr "지우기"
 
 #: ../../operation/inventories/inventory_search.php:37
 #: ../../operation/incidents/incident_search.php:39
@@ -2826,20 +2908,23 @@ msgstr ""
 #: ../../operation/inventories/inventory_contacts.php:38
 #: ../../operation/incidents/incident.php:77
 #: ../../operation/incidents/incident_inventory_contacts.php:30
+#, fuzzy
 msgid "Contact"
-msgstr ""
+msgstr "연락처"
 
 #: ../../operation/inventories/inventory_contacts.php:39
 #: ../../operation/incidents/incident_inventory_contacts.php:75
 #: ../../operation/contacts/contact_detail.php:157
+#, fuzzy
 msgid "Position"
-msgstr ""
+msgstr "위치"
 
 #: ../../operation/inventories/inventory_contacts.php:41
 #: ../../operation/incidents/incident_inventory_contacts.php:32
 #: ../../operation/incidents/incident_inventory_detail.php:87
+#, fuzzy
 msgid "Edit"
-msgstr ""
+msgstr "편집"
 
 #: ../../operation/inventories/inventory_contacts.php:62
 #: ../../operation/incidents/incident_inventory_contacts.php:71
@@ -2895,8 +2980,9 @@ msgstr ""
 
 #: ../../operation/incidents/incident.php:128
 #: ../../operation/incidents/incident_search.php:96
+#, fuzzy
 msgid "Flags"
-msgstr ""
+msgstr "프래그"
 
 #: ../../operation/incidents/incident.php:216
 msgid "Unable to load incident"
@@ -2939,8 +3025,9 @@ msgstr ""
 
 #: ../../operation/incidents/type_detail.php:108
 #: ../../operation/incidents/type_detail.php:160
+#, fuzzy
 msgid "Wizard"
-msgstr ""
+msgstr "Wizard"
 
 #: ../../operation/incidents/type_detail.php:182
 msgid "Create type"
@@ -2955,22 +3042,25 @@ msgstr ""
 #: ../../operation/projects/task_files.php:118
 #: ../../operation/projects/task_attach_file.php:41
 #: ../../operation/kb/browse_data.php:99
+#, fuzzy
 msgid "Filename"
-msgstr ""
+msgstr "파일 이름"
 
 #: ../../operation/incidents/incident_files.php:65
 #: ../../operation/projects/task_files.php:100
 #: ../../operation/projects/task_files.php:122
+#, fuzzy
 msgid "Size"
-msgstr ""
+msgstr "크기"
 
 #: ../../operation/incidents/incident_notes.php:70
 msgid "Note successfully deleted"
 msgstr ""
 
 #: ../../operation/incidents/incident_notes.php:109
+#, fuzzy
 msgid "Notes"
-msgstr ""
+msgstr "메모"
 
 #: ../../operation/incidents/incident_notes.php:131
 msgid "Notes attached to incident"
@@ -2987,8 +3077,9 @@ msgstr ""
 #: ../../operation/incidents/incident_statistics.php:26
 #: ../../operation/users/user_statistics.php:24
 #: ../../operation/messages/message.php:123
+#, fuzzy
 msgid "Help"
-msgstr ""
+msgstr "도움말"
 
 #: ../../operation/incidents/incident_detail.php:77
 #: ../../operation/incidents/incident_detail.php:134
@@ -3012,14 +3103,14 @@ msgid "No file was attached"
 msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:292
+#, fuzzy
 msgid "No description available"
-msgstr ""
+msgstr "설명이 없습니다"
 
 #: ../../operation/incidents/incident_detail.php:315
 #: ../../operation/projects/task_files.php:67
 #: ../../operation/kb/manage_data.php:106
-msgid ""
-"File cannot be saved. Please contact Integria administrator about this error"
+msgid "File cannot be saved. Please contact Integria administrator about this error"
 msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:326
@@ -3108,8 +3199,9 @@ msgstr ""
 
 #: ../../operation/incidents/incident_attach_file.php:36
 #: ../../operation/kb/search.php:65
+#, fuzzy
 msgid "File"
-msgstr ""
+msgstr "파일"
 
 #: ../../operation/incidents/incident_attach_file.php:47
 #: ../../operation/projects/task_attach_file.php:47
@@ -3127,13 +3219,15 @@ msgstr ""
 
 #: ../../operation/user_report/monthly.php:76
 #: ../../operation/user_report/monthly_graph.php:77
+#, fuzzy
 msgid "Prev"
-msgstr ""
+msgstr "이전"
 
 #: ../../operation/user_report/monthly.php:80
 #: ../../operation/user_report/monthly_graph.php:81
+#, fuzzy
 msgid "Next"
-msgstr ""
+msgstr "다음"
 
 #: ../../operation/user_report/report_weekly.php:46
 msgid "Totals for week"
@@ -3169,12 +3263,14 @@ msgstr ""
 
 #: ../../operation/user_report/report_full.php:50
 #: ../../operation/users/user_spare_workunit.php:266
+#, fuzzy
 msgid "Username"
-msgstr ""
+msgstr "사용자이름"
 
 #: ../../operation/user_report/report_full.php:59
+#, fuzzy
 msgid "Show"
-msgstr ""
+msgstr "보기"
 
 #: ../../operation/user_report/report_full.php:65
 #: ../../operation/user_report/report_full.php:176
@@ -3215,8 +3311,9 @@ msgid "Incident report"
 msgstr ""
 
 #: ../../operation/user_report/report_full.php:183
+#, fuzzy
 msgid "Owner"
-msgstr ""
+msgstr "소유자"
 
 #: ../../operation/user_report/report_full.php:185
 msgid "Dates"
@@ -3224,8 +3321,9 @@ msgstr ""
 
 #: ../../operation/user_report/report_full.php:213
 #: ../../operation/projects/task_detail.php:272
+#, fuzzy
 msgid "Total"
-msgstr ""
+msgstr "전체"
 
 #: ../../operation/user_report/report_annual.php:30
 #: ../../operation/user_report/report_annual.php:33
@@ -3283,8 +3381,9 @@ msgstr ""
 #: ../../operation/projects/project_tree.php:49
 #: ../../operation/projects/gantt_graph.php:148
 #: ../../operation/users/user_task_assigment.php:55
+#, fuzzy
 msgid "Progress"
-msgstr ""
+msgstr "진행"
 
 #: ../../operation/todo/todo.php:189
 msgid "Assigned by"
@@ -3376,8 +3475,9 @@ msgid "Destination project"
 msgstr ""
 
 #: ../../operation/projects/task_move.php:42
+#, fuzzy
 msgid "Move"
-msgstr ""
+msgstr "이동"
 
 #: ../../operation/projects/task.php:75
 msgid "Report"
@@ -3392,76 +3492,84 @@ msgid "Estimation"
 msgstr ""
 
 #: ../../operation/projects/task.php:118
-#: ../../operation/projects/project_detail.php:125
+#: ../../operation/projects/project_detail.php:126
 #: ../../operation/projects/task_detail.php:233
 #: ../../operation/projects/task_incidents.php:63
+#, fuzzy
 msgid "Start"
-msgstr ""
+msgstr "시작"
 
 #: ../../operation/projects/task.php:119
-#: ../../operation/projects/project_detail.php:129
+#: ../../operation/projects/project_detail.php:130
 #: ../../operation/projects/task_detail.php:234
 #: ../../operation/projects/task_incidents.php:65
 #: ../../operation/contracts/contract_detail.php:221
+#, fuzzy
 msgid "End"
-msgstr ""
+msgstr "끝"
 
 #: ../../operation/projects/task.php:204
 #: ../../operation/projects/task_detail.php:237
+#, fuzzy
 msgid "Recurrence"
-msgstr ""
+msgstr "반복"
 
-#: ../../operation/projects/project_detail.php:68
+#: ../../operation/projects/project_detail.php:69
 msgid "Could not update project"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:136
+#: ../../operation/projects/project_detail.php:137
 msgid "Project manager"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:146
+#: ../../operation/projects/project_detail.php:147
 #: ../../operation/projects/project_overview.php:29
 msgid "Project group"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:153
+#: ../../operation/projects/project_detail.php:154
 msgid "Current progress"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:160
+#: ../../operation/projects/project_detail.php:161
 msgid "Total workunit (hr)"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:164
+#: ../../operation/projects/project_detail.php:165
 msgid "Total people involved"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:171
+#: ../../operation/projects/project_detail.php:172
 msgid "Total payable workunit (hr)"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:176
+#: ../../operation/projects/project_detail.php:177
 msgid "Project profitability"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:186
+#: ../../operation/projects/project_detail.php:187
 msgid "Project costs"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:189
+#: ../../operation/projects/project_detail.php:190
 msgid "Charged to customer"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:195
+#: ../../operation/projects/project_detail.php:196
 msgid "Charged cost per hour"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:201
+#: ../../operation/projects/project_detail.php:202
 msgid "Proyect length deviation (days)"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:205
+#: ../../operation/projects/project_detail.php:206
+#, fuzzy
 msgid "Days"
+msgstr "일"
+
+#: ../../operation/projects/project_detail.php:232
+msgid "Project schema"
 msgstr ""
 
 #: ../../operation/projects/project_overview.php:31
@@ -3477,8 +3585,9 @@ msgid "Not finished"
 msgstr ""
 
 #: ../../operation/projects/project_tree.php:44
+#, fuzzy
 msgid "Done"
-msgstr ""
+msgstr "완료"
 
 #: ../../operation/projects/project_tree.php:53
 msgid "Defined end"
@@ -3582,8 +3691,9 @@ msgid "Work reported"
 msgstr ""
 
 #: ../../operation/projects/gantt_graph.php:150
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "오늘"
 
 #: ../../operation/projects/gantt_graph.php:183
 msgid "Full project"
@@ -3673,23 +3783,21 @@ msgstr ""
 #: ../../operation/messages/message.php:139
 #: ../../operation/messages/message.php:169
 #: ../../operation/messages/message.php:213
+#, fuzzy
 msgid "Subject"
-msgstr ""
+msgstr "제목"
 
 #: ../../operation/projects/task_emailreport.php:92
 msgid "Message text"
 msgstr ""
 
 #: ../../operation/projects/task_emailreport.php:96
+#, fuzzy
 msgid "Send"
-msgstr ""
+msgstr "보내기"
 
 #: ../../operation/projects/gantt.php:59
 msgid "Full screen"
-msgstr ""
-
-#: ../../operation/projects/project_bubblegraph.php:36
-msgid "Project schema"
 msgstr ""
 
 #: ../../operation/projects/project.php:44
@@ -3710,12 +3818,14 @@ msgid "PG"
 msgstr ""
 
 #: ../../operation/projects/project.php:174
+#, fuzzy
 msgid "Tasks"
-msgstr ""
+msgstr "작업"
 
 #: ../../operation/projects/project.php:216
+#, fuzzy
 msgid "Unlimited"
-msgstr ""
+msgstr "무제한"
 
 #: ../../operation/projects/project.php:234
 msgid "hr"
@@ -3734,8 +3844,9 @@ msgstr ""
 
 #: ../../operation/contacts/contact_detail.php:152
 #: ../../operation/contacts/contact_detail.php:216
+#, fuzzy
 msgid "Full name"
-msgstr ""
+msgstr "전체 이름"
 
 #: ../../operation/contacts/contact_detail.php:156
 msgid "Mobile number"
@@ -3746,12 +3857,14 @@ msgid "Create contact"
 msgstr ""
 
 #: ../../operation/main_menu.php:57
+#, fuzzy
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #: ../../operation/main_menu.php:65
+#, fuzzy
 msgid "Users"
-msgstr ""
+msgstr "사용자"
 
 #: ../../operation/main_menu.php:72
 msgid "Todo"
@@ -3774,12 +3887,12 @@ msgid "Update workunit"
 msgstr ""
 
 #: ../../operation/users/user_spare_workunit.php:276
+#, fuzzy
 msgid "Forward"
-msgstr ""
+msgstr "앞으로"
 
 #: ../../operation/users/user_spare_workunit.php:277
-msgid ""
-"If this checkbox is activated, propagation will be forward instead backward"
+msgid "If this checkbox is activated, propagation will be forward instead backward"
 msgstr ""
 
 #: ../../operation/users/user_spare_workunit.php:281
@@ -3817,8 +3930,9 @@ msgid "User details"
 msgstr ""
 
 #: ../../operation/users/user_edit.php:137
+#, fuzzy
 msgid "Default"
-msgstr ""
+msgstr "기본값"
 
 #: ../../operation/users/user_edit.php:144
 #: ../../operation/users/user_edit.php:145
@@ -3826,16 +3940,18 @@ msgid "Not provided"
 msgstr ""
 
 #: ../../operation/users/user_edit.php:166
+#, fuzzy
 msgid "Change password"
-msgstr ""
+msgstr "암호 바꾸기"
 
 #: ../../operation/users/user_search.php:63
 msgid "No users found"
 msgstr ""
 
 #: ../../operation/users/user_search.php:96
+#, fuzzy
 msgid "User name"
-msgstr ""
+msgstr "사용자 이름"
 
 #: ../../operation/users/user.php:26
 msgid "Integria users"
@@ -3863,13 +3979,15 @@ msgstr ""
 #: ../../operation/messages/message.php:112
 #: ../../operation/messages/message.php:140
 #: ../../operation/messages/message.php:215
+#, fuzzy
 msgid "Message"
-msgstr ""
+msgstr "메세지"
 
 #: ../../operation/messages/message.php:119
 #: ../../operation/messages/message.php:143
+#, fuzzy
 msgid "Send message"
-msgstr ""
+msgstr "메세지 보내기"
 
 #: ../../operation/messages/message.php:153
 msgid "Message sucessfully deleted"
@@ -3884,12 +4002,14 @@ msgid "Read messages"
 msgstr ""
 
 #: ../../operation/messages/message.php:169
+#, fuzzy
 msgid "Read"
-msgstr ""
+msgstr "읽기"
 
 #: ../../operation/messages/message.php:169
+#, fuzzy
 msgid "Sender"
-msgstr ""
+msgstr "보낸 사람"
 
 #: ../../operation/messages/message.php:191
 msgid "No subject"
@@ -3904,8 +4024,9 @@ msgid "wrote"
 msgstr ""
 
 #: ../../operation/messages/message.php:222
+#, fuzzy
 msgid "Reply"
-msgstr ""
+msgstr "회신"
 
 #: ../../operation/contracts/contract_detail.php:56
 #: ../../operation/contracts/contract_detail.php:87
@@ -3926,8 +4047,9 @@ msgid "Contract number"
 msgstr ""
 
 #: ../../operation/contracts/contract_detail.php:220
+#, fuzzy
 msgid "Begin"
-msgstr ""
+msgstr "시작"
 
 #: ../../operation/slas/sla_detail.php:129
 msgid "SLA name"
@@ -3985,22 +4107,25 @@ msgid "Product types"
 msgstr ""
 
 #: ../../operation/kb/browse.php:45
+#, fuzzy
 msgid "Categories"
-msgstr ""
+msgstr "분류"
 
 #: ../../operation/kb/browse.php:87 ../../operation/kb/browse_data.php:70
 #: ../../operation/kb/manage_data.php:223
 #: ../../operation/kb/manage_data.php:271 ../../operation/kb/search.php:63
+#, fuzzy
 msgid "Category"
-msgstr ""
+msgstr "분류"
 
 #: ../../operation/kb/browse_data.php:44
 msgid "KB article review"
 msgstr ""
 
 #: ../../operation/kb/browse_data.php:56
+#, fuzzy
 msgid "Author"
-msgstr ""
+msgstr "저자"
 
 #: ../../operation/kb/browse_data.php:67
 msgid "Wrote on "
@@ -4024,12 +4149,14 @@ msgid "Update existing KB item"
 msgstr ""
 
 #: ../../operation/kb/manage_data.php:196
+#, fuzzy
 msgid "Data"
-msgstr ""
+msgstr "데이터"
 
 #: ../../operation/kb/manage_data.php:202
+#, fuzzy
 msgid "Attach"
-msgstr ""
+msgstr "첨부"
 
 #: ../../operation/kb/manage_data.php:205
 msgid "Need to create first"
@@ -4044,8 +4171,9 @@ msgid "KB Category management"
 msgstr ""
 
 #: ../../operation/kb/manage_cat.php:108
+#, fuzzy
 msgid "Create a new category"
-msgstr ""
+msgstr "새 분류 만들기"
 
 #: ../../operation/kb/manage_cat.php:113
 msgid "Update existing category"
@@ -4058,3 +4186,4 @@ msgstr ""
 #: ../../operation/kb/search.php:41
 msgid "Free text search"
 msgstr ""
+
