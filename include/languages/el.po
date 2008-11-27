@@ -1,24 +1,25 @@
-# SOME DESCRIPTIVE TITLE.
+# translation of integria-el.po to Greek
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# Jorge Gonzalez <jorgegonz@artica.es>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: integria-el\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-27 14:52+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2008-11-26 09:56+0100\n"
+"PO-Revision-Date: 2008-11-27 14:45+0100\n"
+"Last-Translator: Jorge Gonzalez <jorgegonz@artica.es>\n"
+"Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: ../../general/login_page.php:38
 msgid "Login failed"
-msgstr ""
+msgstr "Αποτυχία εισόδου στο σύστημα"
 
 #: ../../general/login_page.php:50 ../../godmode/setup/event.php:38
 #: ../../include/functions_form.php:737
@@ -37,17 +38,17 @@ msgstr ""
 #: ../../operation/projects/project_tracking.php:37
 #: ../../operation/kb/manage_data.php:273 ../../operation/kb/search.php:66
 msgid "User"
-msgstr ""
+msgstr "Χρήστης"
 
 #: ../../general/login_page.php:55
 #: ../../godmode/usuarios/configurar_usuarios.php:196
 #: ../../operation/users/user_edit.php:163
 msgid "Password"
-msgstr ""
+msgstr "Κωδικός πρόσβασης"
 
 #: ../../general/login_page.php:61
 msgid "Login"
-msgstr ""
+msgstr "Σύνδεση"
 
 #: ../../general/integria_help.php:23
 msgid "Integria IMS help system"
@@ -82,7 +83,7 @@ msgstr ""
 #: ../../general/links_menu.php:21 ../../operation/side_menu.php:699
 #: ../../operation/tool_menu.php:5
 msgid "Links"
-msgstr ""
+msgstr "Σύνδεσμοι"
 
 #: ../../general/noaccess.php:22
 msgid "You don't have access to this page"
@@ -98,7 +99,7 @@ msgstr ""
 
 #: ../../general/header.php:20
 msgid "Home"
-msgstr ""
+msgstr "Αρχικός κατάλογος"
 
 #: ../../general/header.php:31
 msgid "You are connected as"
@@ -106,7 +107,7 @@ msgstr ""
 
 #: ../../general/header.php:33
 msgid "Logout"
-msgstr ""
+msgstr "Αποσύνδεση"
 
 #: ../../general/home.php:34 ../../operation/main_menu.php:81
 msgid "Agenda"
@@ -140,7 +141,7 @@ msgstr ""
 #: ../../general/home.php:101 ../../operation/side_menu.php:23
 #: ../../operation/main_menu.php:28
 msgid "Projects"
-msgstr ""
+msgstr "Έργα"
 
 #: ../../general/home.php:107
 msgid "Projects active you have"
@@ -180,7 +181,7 @@ msgstr ""
 
 #: ../../index.php:231 ../../index.php:256
 msgid "Page not found"
-msgstr ""
+msgstr "Η σελίδα δε βρέθηκε"
 
 #: ../../godmode/perfiles/lista_perfiles.php:38
 msgid "Profile could not be deleted"
@@ -284,7 +285,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:176
 #: ../../enterprise/godmode/usuarios/profile_list.php:190
 msgid "Profile name"
-msgstr ""
+msgstr "Όνομα προφίλ"
 
 #: ../../godmode/perfiles/lista_perfiles.php:166
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:177
@@ -408,7 +409,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:231
 #: ../../operation/kb/manage_cat.php:148 ../../operation/kb/manage_cat.php:213
 msgid "Create"
-msgstr ""
+msgstr "Δημιουργία"
 
 #: ../../godmode/perfiles/lista_perfiles.php:212
 #: ../../godmode/setup/setup.php:100 ../../godmode/setup/setup_mail.php:74
@@ -448,7 +449,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:233
 #: ../../operation/kb/manage_cat.php:150
 msgid "Update"
-msgstr ""
+msgstr "Ενημέρωση"
 
 #: ../../godmode/perfiles/lista_perfiles.php:227
 #: ../../godmode/usuarios/configurar_usuarios.php:258
@@ -456,7 +457,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/profile_list.php:266
 #: ../../enterprise/operation/user/user.php:40
 msgid "Profiles"
-msgstr ""
+msgstr "Προφίλ"
 
 #: ../../godmode/perfiles/lista_perfiles.php:242
 #: ../../godmode/setup/links.php:115 ../../godmode/grupos/lista_grupos.php:114
@@ -491,7 +492,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:274
 #: ../../operation/kb/manage_cat.php:168
 msgid "Delete"
-msgstr ""
+msgstr "Διαγραφή"
 
 #: ../../godmode/perfiles/lista_perfiles.php:312
 #: ../../godmode/setup/links.php:127 ../../godmode/grupos/lista_grupos.php:144
@@ -535,7 +536,7 @@ msgstr ""
 #: ../../godmode/usuarios/configurar_usuarios.php:232
 #: ../../operation/users/user_edit.php:137
 msgid "Language"
-msgstr ""
+msgstr "Γλώσσα"
 
 #: ../../godmode/setup/setup.php:69
 msgid "No WU completion users"
@@ -563,7 +564,7 @@ msgstr ""
 
 #: ../../godmode/setup/setup.php:91
 msgid "Currency"
-msgstr ""
+msgstr "Νόμισμα"
 
 #: ../../godmode/setup/event.php:27
 msgid "Event history"
@@ -573,7 +574,7 @@ msgstr ""
 #: ../../include/functions_form.php:312
 #: ../../operation/projects/project_tree.php:55
 msgid "Type"
-msgstr ""
+msgstr "Τύπος"
 
 #: ../../godmode/setup/event.php:39
 msgid "Extended info"
@@ -624,7 +625,7 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:149
 #: ../../operation/contracts/contract_detail.php:219
 msgid "Group"
-msgstr ""
+msgstr "Ομάδα"
 
 #: ../../godmode/setup/setup_mail.php:46 ../../operation/side_menu.php:677
 msgid "Mail setup"
@@ -682,12 +683,12 @@ msgstr ""
 
 #: ../../godmode/setup/links.php:100
 msgid "Link"
-msgstr ""
+msgstr "Σύνδεσμος"
 
 #: ../../godmode/setup/links.php:114
 #: ../../godmode/grupos/configurar_grupo.php:79
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ../../godmode/setup/links.php:136
 #: ../../godmode/usuarios/role_manager.php:153
@@ -697,7 +698,7 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:546
 #: ../../operation/users/user_spare_workunit.php:298
 msgid "Add"
-msgstr ""
+msgstr "Προσθήκη"
 
 #: ../../godmode/grupos/configurar_grupo.php:53
 msgid "There was a problem loading group"
@@ -739,7 +740,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:186
 #: ../../operation/kb/manage_cat.php:122 ../../operation/kb/manage_cat.php:164
 msgid "Name"
-msgstr ""
+msgstr "Όνομα"
 
 #: ../../godmode/grupos/configurar_grupo.php:71
 msgid "Forced email"
@@ -753,7 +754,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:134
 #: ../../operation/users/user_edit.php:147
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: ../../godmode/grupos/configurar_grupo.php:84
 #: ../../godmode/grupos/lista_grupos.php:113
@@ -762,7 +763,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:191
 #: ../../operation/kb/manage_cat.php:141 ../../operation/kb/manage_cat.php:165
 msgid "Parent"
-msgstr ""
+msgstr "Γονέας"
 
 #: ../../godmode/grupos/configurar_grupo.php:87
 #: ../../godmode/grupos/lista_grupos.php:111
@@ -771,7 +772,7 @@ msgstr ""
 #: ../../operation/projects/project_overview.php:30
 #: ../../operation/kb/manage_cat.php:134 ../../operation/kb/manage_cat.php:163
 msgid "Icon"
-msgstr ""
+msgstr "Εικονίδιο"
 
 #: ../../godmode/grupos/configurar_grupo.php:95
 msgid "Banner"
@@ -847,7 +848,7 @@ msgstr ""
 #: ../../operation/reporting/incidents_html.php:112
 #: ../../operation/incidents/incident.php:120
 msgid "Id"
-msgstr ""
+msgstr "Ταυτότητα (ID)"
 
 #: ../../godmode/updatemanager/main.php:82
 #: ../../godmode/usuarios/role_manager.php:110
@@ -885,7 +886,7 @@ msgstr ""
 #: ../../operation/kb/browse_data.php:100
 #: ../../operation/kb/manage_cat.php:128 ../../operation/kb/manage_cat.php:166
 msgid "Description"
-msgstr ""
+msgstr "Περιγραφή"
 
 #: ../../godmode/updatemanager/main.php:88
 msgid "Overwrite local changes"
@@ -945,7 +946,7 @@ msgstr ""
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:553
 msgid "Development"
-msgstr ""
+msgstr "Ανάπτυξη εφαρμογών"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:554
 msgid "Testing"
@@ -956,15 +957,15 @@ msgstr ""
 #: ../../operation/incidents/incident_create_work.php:52
 #: ../../operation/users/user_spare_workunit.php:272
 msgid "Public"
-msgstr ""
+msgstr "Δημόσιο"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:556
 msgid "Disabled"
-msgstr ""
+msgstr "Ανενεργό"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:564
 msgid "Database"
-msgstr ""
+msgstr "Βάση δεδομένων"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:565
 msgid "Code / binary directory"
@@ -998,7 +999,7 @@ msgstr ""
 #: ../../operation/incidents/incident_create_work.php:48
 #: ../../operation/users/user.php:34
 msgid "Profile"
-msgstr ""
+msgstr "Προφίλ"
 
 #: ../../godmode/usuarios/lista_usuarios.php:106
 #: ../../godmode/usuarios/configurar_usuarios.php:291
@@ -1037,7 +1038,7 @@ msgstr ""
 #: ../../operation/user_report/report_weekly.php:59
 #: ../../operation/users/user_edit.php:122
 msgid "User ID"
-msgstr ""
+msgstr "Ταυτότητα (ID) χρήστη"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:194
 #: ../../operation/users/user_edit.php:128
@@ -1060,7 +1061,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:135
 #: ../../operation/users/user_edit.php:148
 msgid "Telephone"
-msgstr ""
+msgstr "Τηλέφωνο"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:217
 msgid "Global profile"
@@ -1069,7 +1070,7 @@ msgstr ""
 #: ../../godmode/usuarios/configurar_usuarios.php:221
 #: ../../godmode/usuarios/configurar_usuarios.php:225
 msgid "Administrator"
-msgstr ""
+msgstr "Διαχειριστής"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:223
 #: ../../godmode/usuarios/configurar_usuarios.php:227
@@ -1084,7 +1085,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:150
 #: ../../operation/users/user_search.php:98
 msgid "Comments"
-msgstr ""
+msgstr "Σχόλια"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:249
 msgid "Group(s) available"
@@ -1110,7 +1111,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:138
 #: ../../operation/kb/manage_cat.php:137
 msgid "None"
-msgstr ""
+msgstr "Κανένα"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:281
 msgid "Profiles/Groups assigned to this user"
@@ -1176,7 +1177,7 @@ msgstr ""
 #: ../../operation/users/user_spare_workunit.php:246
 #: ../../operation/users/user_search.php:76
 msgid "Role"
-msgstr ""
+msgstr "Ρόλος"
 
 #: ../../godmode/usuarios/role_manager.php:112
 #: ../../godmode/usuarios/role_manager.php:127
@@ -1187,7 +1188,7 @@ msgstr ""
 #: ../../operation/projects/people_manager.php:253
 #: ../../operation/projects/project.php:177
 msgid "Cost"
-msgstr ""
+msgstr "Κόστος"
 
 #: ../../include/functions_calendar.php:424
 msgid "Week Total"
@@ -1206,43 +1207,43 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:198
 #: ../../operation/slas/sla_detail.php:199
 msgid "Hours"
-msgstr ""
+msgstr "Ώρες"
 
 #: ../../include/functions_calendar.php:603 ../../include/functions.php:526
 #: ../../include/functions.php:596 ../../include/functions.php:620
 #: ../../operation/projects/task_tracking.php:66
 msgid "Unknown"
-msgstr ""
+msgstr "Άγνωστο"
 
 #: ../../include/functions_calendar.php:610
 #: ../../operation/projects/project.php:251
 msgid "Never"
-msgstr ""
+msgstr "Ποτέ"
 
 #: ../../include/functions_calendar.php:619
 msgid "seconds"
-msgstr ""
+msgstr "δευτερόλεπτα"
 
 #: ../../include/functions_calendar.php:625
 #: ../../include/functions_calendar.php:627
 msgid "minutes"
-msgstr ""
+msgstr "λεπτά"
 
 #: ../../include/functions_calendar.php:630
 msgid "hours"
-msgstr ""
+msgstr "ώρες"
 
 #: ../../include/functions_calendar.php:633
 msgid "days"
-msgstr ""
+msgstr "ημέρες"
 
 #: ../../include/functions_calendar.php:636
 msgid "months"
-msgstr ""
+msgstr "μήνες"
 
 #: ../../include/functions_calendar.php:639
 msgid "years"
-msgstr ""
+msgstr "χρόνια"
 
 #: ../../include/functions_form.php:30 ../../include/functions_form.php:47
 #: ../../include/functions_form.php:703 ../../include/functions_form.php:708
@@ -1252,7 +1253,7 @@ msgstr ""
 #: ../../operation/users/user_search.php:76
 #: ../../operation/users/user_search.php:79
 msgid "Any"
-msgstr ""
+msgstr "Οποιοδήποτε"
 
 #: ../../include/functions_form.php:237 ../../include/functions_form.php:247
 #: ../../include/functions_form.php:704
@@ -1264,18 +1265,18 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:184
 #: ../../operation/projects/task_tracking.php:39
 msgid "Status"
-msgstr ""
+msgstr "Κατάσταση"
 
 #: ../../include/functions_form.php:261 ../../include/functions_form.php:268
 msgid "Source"
-msgstr ""
+msgstr "Πηγή"
 
 #: ../../include/functions_form.php:282 ../../include/functions_form.php:291
 #: ../../operation/reporting/incidents_html.php:116
 #: ../../operation/incidents/incident.php:124
 #: ../../operation/incidents/incident_search.php:92
 msgid "Resolution"
-msgstr ""
+msgstr "Ανάλυση"
 
 #: ../../include/functions_form.php:324 ../../include/functions_form.php:353
 #: ../../include/functions_form.php:549
@@ -1288,14 +1289,14 @@ msgstr ""
 #: ../../operation/users/user_task_assigment.php:54
 #: ../../operation/users/user_spare_workunit.php:256
 msgid "Task"
-msgstr ""
+msgstr "Εργασία"
 
 #: ../../include/functions_form.php:327 ../../include/functions_form.php:336
 #: ../../include/functions_form.php:385 ../../include/functions_form.php:403
 #: ../../include/functions_form.php:585
 #: ../../operation/projects/project_detail.php:200
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #: ../../include/functions_form.php:338 ../../include/functions_form.php:367
 msgid "Vacations"
@@ -1327,7 +1328,7 @@ msgstr ""
 
 #: ../../include/functions_form.php:556
 msgid "Duration"
-msgstr ""
+msgstr "Διάρκεια"
 
 #: ../../include/functions_form.php:571
 #: ../../enterprise/godmode/usuarios/role_user_global.php:68
@@ -1336,7 +1337,7 @@ msgstr ""
 #: ../../operation/projects/task_files.php:113
 #: ../../operation/users/user_task_assigment.php:53
 msgid "Project"
-msgstr ""
+msgstr "Έργο"
 
 #: ../../include/functions_form.php:597
 #: ../../operation/common/workunit_detail.php:50
@@ -1359,7 +1360,7 @@ msgstr ""
 #: ../../include/functions_form.php:699
 #: ../../operation/inventories/inventory_search.php:168
 msgid "Search string"
-msgstr ""
+msgstr "Αναζήτηση αλφαριθμητικού"
 
 #: ../../include/functions_form.php:709
 #: ../../operation/reporting/incidents_html.php:62
@@ -1372,7 +1373,7 @@ msgstr ""
 #: ../../operation/todo/todo.php:124 ../../operation/todo/todo.php:184
 #: ../../operation/projects/task_detail.php:229
 msgid "Priority"
-msgstr ""
+msgstr "Προτεραιότητα"
 
 #: ../../include/functions_form.php:713 ../../include/functions_form.php:724
 #: ../../include/functions_form.php:731 ../../include/functions_form.php:742
@@ -1385,7 +1386,7 @@ msgstr ""
 #: ../../operation/projects/project_tree.php:52
 #: ../../operation/contracts/contract_detail.php:191
 msgid "All"
-msgstr ""
+msgstr "Όλα"
 
 #: ../../include/functions_form.php:720
 #: ../../operation/reporting/incidents_html.php:76
@@ -1421,7 +1422,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_tree.php:52
 #: ../../operation/incidents/incident_inventory_detail.php:81
 msgid "Building"
-msgstr ""
+msgstr "Κατασκευή"
 
 #: ../../include/functions_form.php:733
 #: ../../operation/reporting/incidents_html.php:68
@@ -1462,7 +1463,7 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:191
 #: ../../operation/contracts/contract_detail.php:217
 msgid "Company"
-msgstr ""
+msgstr "Εταιρία:"
 
 #: ../../include/functions_form.php:744
 #: ../../operation/reporting/incidents_html.php:88
@@ -1499,7 +1500,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:172 ../../operation/kb/browse.php:51
 #: ../../operation/kb/browse.php:56 ../../operation/kb/search.php:45
 msgid "Search"
-msgstr ""
+msgstr "Αναζήτηση"
 
 #: ../../include/functions_form.php:752
 #: ../../operation/inventories/inventory_search.php:206
@@ -1514,11 +1515,11 @@ msgstr ""
 #: ../../include/functions_form.php:771 ../../include/functions_form.php:773
 #: ../../operation/user_report/report_full.php:183
 msgid "Creator"
-msgstr ""
+msgstr "Δημιουργός"
 
 #: ../../include/functions_form.php:779
 msgid "Participant"
-msgstr ""
+msgstr "Συμμετέχων"
 
 #: ../../include/functions_form.php:796
 #: ../../include/functions_incidents.php:247
@@ -1557,7 +1558,7 @@ msgstr ""
 
 #: ../../include/functions_incidents.php:247 ../../include/functions.php:540
 msgid "Closed"
-msgstr ""
+msgstr "Κλειστό"
 
 #: ../../include/functions_incidents.php:251
 msgid "Mean life time"
@@ -1574,7 +1575,7 @@ msgstr ""
 #: ../../include/functions_incidents.php:256
 #: ../../operation/user_report/report_full.php:73
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: ../../include/functions_incidents.php:261
 msgid "Longest closed incident"
@@ -1626,16 +1627,16 @@ msgstr ""
 #: ../../include/functions.php:397 ../../include/functions.php:500
 #: ../../include/functions.php:576
 msgid "Low"
-msgstr ""
+msgstr "Χαμηλή"
 
 #: ../../include/functions.php:399 ../../include/functions.php:501
 #: ../../include/functions.php:580
 msgid "Medium"
-msgstr ""
+msgstr "Μεσαίο"
 
 #: ../../include/functions.php:401
 msgid "High"
-msgstr ""
+msgstr "Υψηλή"
 
 #: ../../include/functions.php:403
 msgid "Very high"
@@ -1644,7 +1645,7 @@ msgstr ""
 #: ../../include/functions.php:405
 #: ../../operation/user_report/report_annual.php:57
 msgid "Other"
-msgstr ""
+msgstr "Άλλο"
 
 #: ../../include/functions.php:499 ../../include/functions.php:572
 msgid "Informative"
@@ -1652,7 +1653,7 @@ msgstr ""
 
 #: ../../include/functions.php:502 ../../include/functions.php:584
 msgid "Serious"
-msgstr ""
+msgstr "Σοβαρές"
 
 #: ../../include/functions.php:503
 msgid "Very Serious"
@@ -1664,7 +1665,7 @@ msgstr ""
 
 #: ../../include/functions.php:513
 msgid "Weekly"
-msgstr ""
+msgstr "Εβδομαδιαία"
 
 #: ../../include/functions.php:514
 msgid "15 days"
@@ -1688,7 +1689,7 @@ msgstr ""
 
 #: ../../include/functions.php:534
 msgid "New"
-msgstr ""
+msgstr "Νέο"
 
 #: ../../include/functions.php:535
 msgid "Unconfirmed"
@@ -1696,7 +1697,7 @@ msgstr ""
 
 #: ../../include/functions.php:536
 msgid "Assigned"
-msgstr ""
+msgstr "Ανάθεση"
 
 #: ../../include/functions.php:537
 msgid "Re-opened"
@@ -1708,15 +1709,15 @@ msgstr ""
 
 #: ../../include/functions.php:539
 msgid "Resolved"
-msgstr ""
+msgstr "Έχει αναλυθεί"
 
 #: ../../include/functions.php:548
 msgid "Fixed"
-msgstr ""
+msgstr "Σταθερό (Fixed)"
 
 #: ../../include/functions.php:549
 msgid "Invalid"
-msgstr ""
+msgstr "Μη έγκυρο"
 
 #: ../../include/functions.php:550
 msgid "Wont fix"
@@ -1724,7 +1725,7 @@ msgstr ""
 
 #: ../../include/functions.php:551
 msgid "Duplicate"
-msgstr ""
+msgstr "Αντίγραφο"
 
 #: ../../include/functions.php:552
 msgid "Works for me"
@@ -1736,7 +1737,7 @@ msgstr ""
 
 #: ../../include/functions.php:554
 msgid "Expired"
-msgstr ""
+msgstr "Έληξε"
 
 #: ../../include/functions.php:555
 msgid "Moved"
@@ -1781,7 +1782,7 @@ msgstr ""
 
 #: ../../include/functions_db.php:710
 msgid "Created"
-msgstr ""
+msgstr "Δημιουργήθηκε"
 
 #: ../../include/functions_db.php:713
 #: ../../operation/reporting/incidents_html.php:118
@@ -1789,7 +1790,7 @@ msgstr ""
 #: ../../operation/incidents/incident_search.php:94
 #: ../../operation/todo/todo.php:191 ../../operation/projects/project.php:178
 msgid "Updated"
-msgstr ""
+msgstr "Ενημερώθηκε"
 
 #: ../../include/functions_db.php:716
 #: ../../operation/projects/task_workunit.php:77
@@ -1846,11 +1847,11 @@ msgstr ""
 #: ../../include/functions_db.php:1073
 #: ../../operation/reporting/incidents_html.php:68
 msgid "Yes"
-msgstr ""
+msgstr "Ναι"
 
 #: ../../include/functions_db.php:1075
 msgid "No"
-msgstr ""
+msgstr "Όχι"
 
 #: ../../include/functions_graph.php:183
 msgid "Out of limits"
@@ -2019,7 +2020,7 @@ msgstr ""
 #: ../../operation/user_report/report_annual.php:42
 #: ../../operation/users/user_task_assigment.php:48
 msgid "Go"
-msgstr ""
+msgstr "Μετάβαση"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:71
 msgid "WU"
@@ -2088,7 +2089,7 @@ msgstr ""
 
 #: ../../operation/agenda/agenda.php:167
 msgid "Alert"
-msgstr ""
+msgstr "Alert"
 
 #: ../../operation/agenda/agenda.php:177
 msgid "Add agenda entry"
@@ -2100,7 +2101,7 @@ msgstr ""
 
 #: ../../operation/agenda/agenda.php:194
 msgid "One hour"
-msgstr ""
+msgstr "Μία ώρα"
 
 #: ../../operation/agenda/agenda.php:195
 msgid "Two hours"
@@ -2128,11 +2129,11 @@ msgstr ""
 #: ../../operation/projects/project_tracking.php:38
 #: ../../operation/users/user_spare_workunit.php:242
 msgid "Date"
-msgstr ""
+msgstr "Ημερομηνία"
 
 #: ../../operation/agenda/agenda.php:202
 msgid "Time"
-msgstr ""
+msgstr "Χρόνος"
 
 #: ../../operation/reporting/inventories_html.php:35
 msgid "Inventory report"
@@ -2155,7 +2156,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:217
 #: ../../operation/kb/manage_data.php:272 ../../operation/kb/search.php:64
 msgid "Product"
-msgstr ""
+msgstr "Προϊόν"
 
 #: ../../operation/reporting/inventories_html.php:65
 #: ../../operation/inventories/inventory_detail.php:258
@@ -2171,7 +2172,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:195
 #: ../../operation/incidents/incident_inventory_detail.php:72
 msgid "IP address"
-msgstr ""
+msgstr "Διεύθυνση IP"
 
 #: ../../operation/reporting/inventories_html.php:76
 #: ../../operation/inventories/inventory_detail.php:213
@@ -2198,7 +2199,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:213
 #: ../../operation/inventories/inventory_tree.php:48
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: ../../operation/reporting/inventories_html.php:121
 #: ../../operation/inventories/inventory_search.php:216
@@ -2217,7 +2218,7 @@ msgstr ""
 #: ../../operation/kb/browse.php:86 ../../operation/kb/manage_data.php:190
 #: ../../operation/kb/manage_data.php:269 ../../operation/kb/search.php:61
 msgid "Title"
-msgstr ""
+msgstr "Τίτλος"
 
 #: ../../operation/reporting/inventories_html.php:134
 #: ../../operation/inventories/inventory_search.php:148
@@ -2233,13 +2234,13 @@ msgstr ""
 #: ../../operation/messages/message.php:127
 #: ../../operation/messages/message.php:211
 msgid "From"
-msgstr ""
+msgstr "Από"
 
 #: ../../operation/reporting/incidents_html.php:95
 #: ../../operation/messages/message.php:86
 #: ../../operation/messages/message.php:128
 msgid "To"
-msgstr ""
+msgstr "Προς"
 
 #: ../../operation/reporting/incidents_html.php:103
 msgid "All incidents"
@@ -2263,18 +2264,18 @@ msgstr ""
 #: ../../operation/incidents/incident.php:126
 #: ../../operation/incidents/incident_search.php:94
 msgid "Started"
-msgstr ""
+msgstr "Ξεκίνησε"
 
 #: ../../operation/reporting/incidents_html.php:119
 #: ../../operation/incidents/incident.php:127
 #: ../../operation/incidents/incident_search.php:95
 msgid "Work"
-msgstr ""
+msgstr "Εργασία"
 
 #: ../../operation/reporting/incidents_html.php:125
 #: ../../operation/incidents/incident_statistics.php:26
 msgid "Statistics"
-msgstr ""
+msgstr "Στατιστικά"
 
 #: ../../operation/reporting/incidents_html.php:132
 #: ../../operation/incidents/incident_search.php:146
@@ -2321,7 +2322,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:117
 msgid "New task"
-msgstr ""
+msgstr "Νέα εργασία"
 
 #: ../../operation/side_menu.php:125 ../../operation/projects/gantt.php:54
 msgid "Gantt graph"
@@ -2335,7 +2336,7 @@ msgstr ""
 #: ../../operation/projects/task.php:117
 #: ../../operation/projects/project.php:175
 msgid "People"
-msgstr ""
+msgstr "Άνθρωποι"
 
 #: ../../operation/side_menu.php:151 ../../operation/side_menu.php:240
 #: ../../operation/inventories/inventory.php:60
@@ -2353,7 +2354,7 @@ msgstr ""
 #: ../../operation/incidents/incident_search.php:230
 #: ../../operation/incidents/incident_work.php:73
 msgid "Files"
-msgstr ""
+msgstr "Αρχεία"
 
 #: ../../operation/side_menu.php:185
 msgid "Task detail"
@@ -2440,7 +2441,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:278
 #: ../../operation/companies/company_detail.php:174
 msgid "Contacts"
-msgstr ""
+msgstr "Επαφές"
 
 #: ../../operation/side_menu.php:488
 msgid "Contact overview"
@@ -2492,7 +2493,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:600
 msgid "Browse"
-msgstr ""
+msgstr "Περιήγηση"
 
 #: ../../operation/side_menu.php:608
 msgid "Create KB item"
@@ -2516,7 +2517,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:662 ../../operation/main_menu.php:92
 msgid "Setup"
-msgstr ""
+msgstr "Διαμόρφωση"
 
 #: ../../operation/side_menu.php:692
 msgid "Configure updates"
@@ -2524,7 +2525,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:706
 msgid "System events"
-msgstr ""
+msgstr "Γεγονότα συστήματος"
 
 #: ../../operation/side_menu.php:714
 #: ../../operation/users/user_statistics.php:23
@@ -2587,7 +2588,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:848
 msgid "Calendar"
-msgstr ""
+msgstr "Ημερολόγιο"
 
 #: ../../operation/side_menu.php:874
 msgid "User info"
@@ -2595,7 +2596,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:883
 msgid "Phone"
-msgstr ""
+msgstr "Τηλέφωνο"
 
 #: ../../operation/side_menu.php:894
 msgid "Project distribution"
@@ -2632,7 +2633,7 @@ msgstr ""
 #: ../../operation/companies/company_detail.php:120
 #: ../../operation/contacts/contact_detail.php:159
 msgid "Select"
-msgstr ""
+msgstr "Επιλογή"
 
 #: ../../operation/manufacturers/manufacturer_detail.php:121
 #: ../../operation/manufacturers/manufacturer_detail.php:179
@@ -2647,7 +2648,7 @@ msgstr ""
 #: ../../operation/manufacturers/manufacturer_detail.php:178
 #: ../../operation/companies/company_detail.php:122
 msgid "Address"
-msgstr ""
+msgstr "Διεύθυνση"
 
 #: ../../operation/buildings/building_detail.php:61
 msgid "Building cannot be updated"
@@ -2673,11 +2674,11 @@ msgstr ""
 #: ../../operation/incidents/incident_inventory_contacts.php:31
 #: ../../operation/incidents/incident_inventory_detail.php:59
 msgid "Details"
-msgstr ""
+msgstr "Λεπτομέρειες"
 
 #: ../../operation/inventories/inventory.php:61
 msgid "Tree"
-msgstr ""
+msgstr "Δένδρο"
 
 #: ../../operation/inventories/inventory.php:80
 #: ../../operation/incidents/incident.php:96
@@ -2693,7 +2694,7 @@ msgstr ""
 #: ../../operation/inventories/inventory.php:92
 #: ../../operation/incidents/incident.php:107
 msgid "Save"
-msgstr ""
+msgstr "Αποθήκευση"
 
 #: ../../operation/inventories/inventory.php:157
 msgid "Unable to load inventory"
@@ -2712,7 +2713,7 @@ msgstr ""
 
 #: ../../operation/inventories/inventory_incidents.php:41
 msgid "View"
-msgstr ""
+msgstr "Προβολή"
 
 #: ../../operation/inventories/manage_prod.php:77
 msgid "Product cannot be updated"
@@ -2743,7 +2744,7 @@ msgstr ""
 #: ../../operation/inventories/manage_prod.php:170
 #: ../../operation/kb/manage_cat.php:167
 msgid "Items"
-msgstr ""
+msgstr "Στοιχεία"
 
 #: ../../operation/inventories/inventory_detail.php:79
 msgid "There was an error updating inventory object"
@@ -2752,7 +2753,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:164
 #: ../../operation/inventories/inventory_tree.php:45
 msgid "Object"
-msgstr ""
+msgstr "Αντικείμενο"
 
 #: ../../operation/inventories/inventory_detail.php:194
 msgid "Confirmed"
@@ -2788,7 +2789,7 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:537
 #: ../../operation/incidents/incident_detail.php:548
 msgid "Remove"
-msgstr ""
+msgstr "Αφαίρεση"
 
 #: ../../operation/inventories/inventory_search.php:37
 #: ../../operation/incidents/incident_search.php:39
@@ -2827,30 +2828,30 @@ msgstr ""
 #: ../../operation/incidents/incident.php:77
 #: ../../operation/incidents/incident_inventory_contacts.php:30
 msgid "Contact"
-msgstr ""
+msgstr "Επαφή"
 
 #: ../../operation/inventories/inventory_contacts.php:39
 #: ../../operation/incidents/incident_inventory_contacts.php:75
 #: ../../operation/contacts/contact_detail.php:157
 msgid "Position"
-msgstr ""
+msgstr "Θέση"
 
 #: ../../operation/inventories/inventory_contacts.php:41
 #: ../../operation/incidents/incident_inventory_contacts.php:32
 #: ../../operation/incidents/incident_inventory_detail.php:87
 msgid "Edit"
-msgstr ""
+msgstr "Επεξεργασία"
 
 #: ../../operation/inventories/inventory_contacts.php:62
 #: ../../operation/incidents/incident_inventory_contacts.php:71
 #: ../../operation/contacts/contact_detail.php:155
 msgid "Phone number"
-msgstr ""
+msgstr "Αριθμός τηλεφώνου"
 
 #: ../../operation/inventories/inventory_contacts.php:64
 #: ../../operation/incidents/incident_inventory_contacts.php:73
 msgid "Mobile phone"
-msgstr ""
+msgstr "Κινητό τηλέφωνο"
 
 #: ../../operation/inventories/inventory_contracts.php:33
 msgid "Contract details on inventory object"
@@ -2896,7 +2897,7 @@ msgstr ""
 #: ../../operation/incidents/incident.php:128
 #: ../../operation/incidents/incident_search.php:96
 msgid "Flags"
-msgstr ""
+msgstr "Διακόπτες"
 
 #: ../../operation/incidents/incident.php:216
 msgid "Unable to load incident"
@@ -2940,7 +2941,7 @@ msgstr ""
 #: ../../operation/incidents/type_detail.php:108
 #: ../../operation/incidents/type_detail.php:160
 msgid "Wizard"
-msgstr ""
+msgstr "Οδηγός"
 
 #: ../../operation/incidents/type_detail.php:182
 msgid "Create type"
@@ -2956,13 +2957,13 @@ msgstr ""
 #: ../../operation/projects/task_attach_file.php:41
 #: ../../operation/kb/browse_data.php:99
 msgid "Filename"
-msgstr ""
+msgstr "Όνομα αρχείου"
 
 #: ../../operation/incidents/incident_files.php:65
 #: ../../operation/projects/task_files.php:100
 #: ../../operation/projects/task_files.php:122
 msgid "Size"
-msgstr ""
+msgstr "Μέγεθος"
 
 #: ../../operation/incidents/incident_notes.php:70
 msgid "Note successfully deleted"
@@ -2970,7 +2971,7 @@ msgstr ""
 
 #: ../../operation/incidents/incident_notes.php:109
 msgid "Notes"
-msgstr ""
+msgstr "Σημειώσεις"
 
 #: ../../operation/incidents/incident_notes.php:131
 msgid "Notes attached to incident"
@@ -2988,7 +2989,7 @@ msgstr ""
 #: ../../operation/users/user_statistics.php:24
 #: ../../operation/messages/message.php:123
 msgid "Help"
-msgstr ""
+msgstr "Βοήθεια"
 
 #: ../../operation/incidents/incident_detail.php:77
 #: ../../operation/incidents/incident_detail.php:134
@@ -3013,13 +3014,12 @@ msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:292
 msgid "No description available"
-msgstr ""
+msgstr "Δεν υπάρχει διαθέσιμη περιγραφή"
 
 #: ../../operation/incidents/incident_detail.php:315
 #: ../../operation/projects/task_files.php:67
 #: ../../operation/kb/manage_data.php:106
-msgid ""
-"File cannot be saved. Please contact Integria administrator about this error"
+msgid "File cannot be saved. Please contact Integria administrator about this error"
 msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:326
@@ -3109,7 +3109,7 @@ msgstr ""
 #: ../../operation/incidents/incident_attach_file.php:36
 #: ../../operation/kb/search.php:65
 msgid "File"
-msgstr ""
+msgstr "Αρχείο"
 
 #: ../../operation/incidents/incident_attach_file.php:47
 #: ../../operation/projects/task_attach_file.php:47
@@ -3128,12 +3128,12 @@ msgstr ""
 #: ../../operation/user_report/monthly.php:76
 #: ../../operation/user_report/monthly_graph.php:77
 msgid "Prev"
-msgstr ""
+msgstr "Προηγούμενο"
 
 #: ../../operation/user_report/monthly.php:80
 #: ../../operation/user_report/monthly_graph.php:81
 msgid "Next"
-msgstr ""
+msgstr "Επόμενο"
 
 #: ../../operation/user_report/report_weekly.php:46
 msgid "Totals for week"
@@ -3170,11 +3170,11 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:50
 #: ../../operation/users/user_spare_workunit.php:266
 msgid "Username"
-msgstr ""
+msgstr "Όνομα χρήστη"
 
 #: ../../operation/user_report/report_full.php:59
 msgid "Show"
-msgstr ""
+msgstr "Εμφάνιση"
 
 #: ../../operation/user_report/report_full.php:65
 #: ../../operation/user_report/report_full.php:176
@@ -3216,7 +3216,7 @@ msgstr ""
 
 #: ../../operation/user_report/report_full.php:183
 msgid "Owner"
-msgstr ""
+msgstr "Ιδιοκτήτης"
 
 #: ../../operation/user_report/report_full.php:185
 msgid "Dates"
@@ -3225,7 +3225,7 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:213
 #: ../../operation/projects/task_detail.php:272
 msgid "Total"
-msgstr ""
+msgstr "Σύνολο"
 
 #: ../../operation/user_report/report_annual.php:30
 #: ../../operation/user_report/report_annual.php:33
@@ -3262,7 +3262,7 @@ msgstr ""
 
 #: ../../operation/todo/todo.php:128 ../../operation/todo/todo.php:187
 msgid "Assigned to"
-msgstr ""
+msgstr "Ανατέθηκε σε"
 
 #: ../../operation/todo/todo.php:134
 #: ../../operation/projects/project_tree.php:46
@@ -3284,7 +3284,7 @@ msgstr ""
 #: ../../operation/projects/gantt_graph.php:148
 #: ../../operation/users/user_task_assigment.php:55
 msgid "Progress"
-msgstr ""
+msgstr "Πρόοδος"
 
 #: ../../operation/todo/todo.php:189
 msgid "Assigned by"
@@ -3377,11 +3377,11 @@ msgstr ""
 
 #: ../../operation/projects/task_move.php:42
 msgid "Move"
-msgstr ""
+msgstr "Μετακίνηση"
 
 #: ../../operation/projects/task.php:75
 msgid "Report"
-msgstr ""
+msgstr "Αναφορά"
 
 #: ../../operation/projects/task.php:111
 msgid "Pri"
@@ -3396,7 +3396,7 @@ msgstr ""
 #: ../../operation/projects/task_detail.php:233
 #: ../../operation/projects/task_incidents.php:63
 msgid "Start"
-msgstr ""
+msgstr "Έναρξη"
 
 #: ../../operation/projects/task.php:119
 #: ../../operation/projects/project_detail.php:129
@@ -3404,12 +3404,12 @@ msgstr ""
 #: ../../operation/projects/task_incidents.php:65
 #: ../../operation/contracts/contract_detail.php:221
 msgid "End"
-msgstr ""
+msgstr "Τέλος"
 
 #: ../../operation/projects/task.php:204
 #: ../../operation/projects/task_detail.php:237
 msgid "Recurrence"
-msgstr ""
+msgstr "Επανεμφάνιση"
 
 #: ../../operation/projects/project_detail.php:68
 msgid "Could not update project"
@@ -3462,7 +3462,7 @@ msgstr ""
 
 #: ../../operation/projects/project_detail.php:205
 msgid "Days"
-msgstr ""
+msgstr "Ημέρες"
 
 #: ../../operation/projects/project_overview.php:31
 msgid "# Projects"
@@ -3478,7 +3478,7 @@ msgstr ""
 
 #: ../../operation/projects/project_tree.php:44
 msgid "Done"
-msgstr ""
+msgstr "Έγινε"
 
 #: ../../operation/projects/project_tree.php:53
 msgid "Defined end"
@@ -3538,7 +3538,7 @@ msgstr ""
 #: ../../operation/projects/task_detail.php:265
 #: ../../operation/projects/task_detail.php:281
 msgid "Real"
-msgstr ""
+msgstr "Πραγματικό"
 
 #: ../../operation/projects/task_detail.php:273
 msgid "Imp"
@@ -3583,7 +3583,7 @@ msgstr ""
 
 #: ../../operation/projects/gantt_graph.php:150
 msgid "Today"
-msgstr ""
+msgstr "Σήμερα"
 
 #: ../../operation/projects/gantt_graph.php:183
 msgid "Full project"
@@ -3674,7 +3674,7 @@ msgstr ""
 #: ../../operation/messages/message.php:169
 #: ../../operation/messages/message.php:213
 msgid "Subject"
-msgstr ""
+msgstr "Θέμα"
 
 #: ../../operation/projects/task_emailreport.php:92
 msgid "Message text"
@@ -3682,7 +3682,7 @@ msgstr ""
 
 #: ../../operation/projects/task_emailreport.php:96
 msgid "Send"
-msgstr ""
+msgstr "Αποστολή"
 
 #: ../../operation/projects/gantt.php:59
 msgid "Full screen"
@@ -3711,11 +3711,11 @@ msgstr ""
 
 #: ../../operation/projects/project.php:174
 msgid "Tasks"
-msgstr ""
+msgstr "Εργασίες"
 
 #: ../../operation/projects/project.php:216
 msgid "Unlimited"
-msgstr ""
+msgstr "Χωρίς περιορισμό"
 
 #: ../../operation/projects/project.php:234
 msgid "hr"
@@ -3735,7 +3735,7 @@ msgstr ""
 #: ../../operation/contacts/contact_detail.php:152
 #: ../../operation/contacts/contact_detail.php:216
 msgid "Full name"
-msgstr ""
+msgstr "Πλήρες όνομα"
 
 #: ../../operation/contacts/contact_detail.php:156
 msgid "Mobile number"
@@ -3747,11 +3747,11 @@ msgstr ""
 
 #: ../../operation/main_menu.php:57
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #: ../../operation/main_menu.php:65
 msgid "Users"
-msgstr ""
+msgstr "Χρήστες"
 
 #: ../../operation/main_menu.php:72
 msgid "Todo"
@@ -3775,11 +3775,10 @@ msgstr ""
 
 #: ../../operation/users/user_spare_workunit.php:276
 msgid "Forward"
-msgstr ""
+msgstr "Προώθηση"
 
 #: ../../operation/users/user_spare_workunit.php:277
-msgid ""
-"If this checkbox is activated, propagation will be forward instead backward"
+msgid "If this checkbox is activated, propagation will be forward instead backward"
 msgstr ""
 
 #: ../../operation/users/user_spare_workunit.php:281
@@ -3818,7 +3817,7 @@ msgstr ""
 
 #: ../../operation/users/user_edit.php:137
 msgid "Default"
-msgstr ""
+msgstr "Προεπιλογή"
 
 #: ../../operation/users/user_edit.php:144
 #: ../../operation/users/user_edit.php:145
@@ -3827,7 +3826,7 @@ msgstr ""
 
 #: ../../operation/users/user_edit.php:166
 msgid "Change password"
-msgstr ""
+msgstr "Αλλαγή κωδικού"
 
 #: ../../operation/users/user_search.php:63
 msgid "No users found"
@@ -3835,7 +3834,7 @@ msgstr ""
 
 #: ../../operation/users/user_search.php:96
 msgid "User name"
-msgstr ""
+msgstr "Όνομα χρήστη"
 
 #: ../../operation/users/user.php:26
 msgid "Integria users"
@@ -3864,12 +3863,12 @@ msgstr ""
 #: ../../operation/messages/message.php:140
 #: ../../operation/messages/message.php:215
 msgid "Message"
-msgstr ""
+msgstr "Μήνυμα"
 
 #: ../../operation/messages/message.php:119
 #: ../../operation/messages/message.php:143
 msgid "Send message"
-msgstr ""
+msgstr "Αποστολή μηνύματος"
 
 #: ../../operation/messages/message.php:153
 msgid "Message sucessfully deleted"
@@ -3885,11 +3884,11 @@ msgstr ""
 
 #: ../../operation/messages/message.php:169
 msgid "Read"
-msgstr ""
+msgstr "Ανάγνωση"
 
 #: ../../operation/messages/message.php:169
 msgid "Sender"
-msgstr ""
+msgstr "Αποστολέας"
 
 #: ../../operation/messages/message.php:191
 msgid "No subject"
@@ -3905,7 +3904,7 @@ msgstr ""
 
 #: ../../operation/messages/message.php:222
 msgid "Reply"
-msgstr ""
+msgstr "Απάντηση"
 
 #: ../../operation/contracts/contract_detail.php:56
 #: ../../operation/contracts/contract_detail.php:87
@@ -3927,7 +3926,7 @@ msgstr ""
 
 #: ../../operation/contracts/contract_detail.php:220
 msgid "Begin"
-msgstr ""
+msgstr "Αρχή"
 
 #: ../../operation/slas/sla_detail.php:129
 msgid "SLA name"
@@ -3986,13 +3985,13 @@ msgstr ""
 
 #: ../../operation/kb/browse.php:45
 msgid "Categories"
-msgstr ""
+msgstr "Κατηγορίες"
 
 #: ../../operation/kb/browse.php:87 ../../operation/kb/browse_data.php:70
 #: ../../operation/kb/manage_data.php:223
 #: ../../operation/kb/manage_data.php:271 ../../operation/kb/search.php:63
 msgid "Category"
-msgstr ""
+msgstr "Κατηγορία"
 
 #: ../../operation/kb/browse_data.php:44
 msgid "KB article review"
@@ -4000,7 +3999,7 @@ msgstr ""
 
 #: ../../operation/kb/browse_data.php:56
 msgid "Author"
-msgstr ""
+msgstr "Δημιουργός"
 
 #: ../../operation/kb/browse_data.php:67
 msgid "Wrote on "
@@ -4025,11 +4024,11 @@ msgstr ""
 
 #: ../../operation/kb/manage_data.php:196
 msgid "Data"
-msgstr ""
+msgstr "Δεδομένα"
 
 #: ../../operation/kb/manage_data.php:202
 msgid "Attach"
-msgstr ""
+msgstr "Επισύναψη"
 
 #: ../../operation/kb/manage_data.php:205
 msgid "Need to create first"
@@ -4045,7 +4044,7 @@ msgstr ""
 
 #: ../../operation/kb/manage_cat.php:108
 msgid "Create a new category"
-msgstr ""
+msgstr "Δημιουργία νέας κατηγορίας"
 
 #: ../../operation/kb/manage_cat.php:113
 msgid "Update existing category"
@@ -4058,3 +4057,4 @@ msgstr ""
 #: ../../operation/kb/search.php:41
 msgid "Free text search"
 msgstr ""
+

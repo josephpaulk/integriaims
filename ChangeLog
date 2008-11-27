@@ -1,3 +1,14 @@
+2008-11-27  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/languages/index.pot: Updated po template.
+
+	* include/languages/el.mo, include/languages/el.po: Added Greek
+	  translation.
+
+	* include/languages/Makefile: Added 'el' to translations.
+
+	* include/languages/Makefile: Added Greek to translations.
+
 2008-11-26  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/languages/ko.mo, include/languages/ko.po: Added korean
