@@ -241,3 +241,5 @@ foreach ($incidents as $incident) {
 }
 
 ?>
+
+<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>

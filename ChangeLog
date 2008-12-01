@@ -1,3 +1,19 @@
+2008-12-01  Ramon Novoa  <rnovoa@artica.es>
+
+	* include/FusionCharts,
+	  include/FusionCharts/FCF_Pie3D.swf,
+	  include/FusionCharts/FusionCharts.js,
+	  include/FusionCharts/FusionCharts_Gen.php,
+	  include/FusionCharts/FCF_Gantt.swf,
+	  include/FusionCharts/FusionCharts.php,
+	  include/functions_fsgraph.php: Added to repository. FusionCharts
+	  Free support.
+
+	* include/functions_incidents.php,
+	  operation/incidents/incident_search.php,
+	  operation/projects/gantt.php: Added flash Gantt and pie charts.
+
+
 2008-12-01  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish

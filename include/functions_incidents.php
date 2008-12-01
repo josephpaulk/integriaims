@@ -38,6 +38,9 @@
  *
  * @return array A list of matching incidents. False if no matches.
  */
+
+require_once ("functions_fsgraph.php");
+
 function filter_incidents ($filters) {
 	global $config;
 	
@@ -243,9 +246,9 @@ function print_incidents_stats ($incidents, $return = false) {
 	$table->data = array ();
 	
 	$table->data[0][0] = print_label (__('Total incicents'), '', '', true, $total);
-	$data = implode (',', array ($opened, $total - $opened));
-	$legend = implode (',', array (__('Opened'), __('Closed')));
-	$table->data[0][1] = '<img src="include/functions_graph.php?type=pipe&width=200&height=100&data='.$data.'&legend='.$legend.'" />';
+	$data = array ($opened, $total - $opened);
+	$legend = array (__('Opened'), __('Closed'));
+	$table->data[0][1] = fs_3d_pie_chart ($data, $legend, 200, 100);
 	$table->data[1][0] = print_label (__('Opened'), '', '', true,
 		$opened.' ('.$opened_pct.'%)');
 	$table->data[2][0] = print_label (__('Mean life time'), '', '', true,
