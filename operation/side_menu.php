@@ -711,7 +711,7 @@ if ($sec == "godmode") {
 
 if ($sec == "users") {
 	echo "<div class='portlet'>";
-	echo "<h3>".__('Users defined in Integria')."</h3>";
+	echo "<h3>".__('Users defined')."</h3>";
 	echo "<ul class='sidemenu'>";
 
 		// View users
