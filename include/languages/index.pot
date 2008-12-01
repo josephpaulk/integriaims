@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-27 14:52+0100\n"
+"POT-Creation-Date: 2008-12-01 16:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2528,7 +2528,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:714
 #: ../../operation/users/user_statistics.php:23
-msgid "Users defined in Integria"
+msgid "Users defined"
 msgstr ""
 
 #: ../../operation/side_menu.php:722

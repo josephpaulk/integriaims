@@ -1,5 +1,12 @@
 2008-12-01  Jorge Gonzalez  <jorgegonz@artica.es>
 
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	  translation.
+
+	* include/languages/index.pot: Updated po template.
+
+2008-12-01  Jorge Gonzalez  <jorgegonz@artica.es>
+
 	* operation/side_menu.php, operation/users/user_statistics.php:
 	  Changed a string to make it easier to translate.
 
