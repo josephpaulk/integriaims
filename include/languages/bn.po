@@ -1,24 +1,25 @@
-# SOME DESCRIPTIVE TITLE.
+# translation of integria-bn.po to Bengali
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# Jorge Gonzalez <jorge.gonzalez@artica.es>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: integria-bn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-02 12:33+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2008-12-01 16:11+0100\n"
+"PO-Revision-Date: 2008-12-02 12:19+0100\n"
+"Last-Translator: Jorge Gonzalez <jorge.gonzalez@artica.es>\n"
+"Language-Team: Bengali <bn@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../../general/login_page.php:38
 msgid "Login failed"
-msgstr ""
+msgstr "লগ-ইন করা গেল না"
 
 #: ../../general/login_page.php:50 ../../godmode/setup/event.php:38
 #: ../../include/functions_form.php:737
@@ -37,17 +38,17 @@ msgstr ""
 #: ../../operation/projects/project_tracking.php:37
 #: ../../operation/kb/manage_data.php:273 ../../operation/kb/search.php:66
 msgid "User"
-msgstr ""
+msgstr "ব্যবহারকারী"
 
 #: ../../general/login_page.php:55
 #: ../../godmode/usuarios/configurar_usuarios.php:196
 #: ../../operation/users/user_edit.php:163
 msgid "Password"
-msgstr ""
+msgstr "পাসওয়ার্ড"
 
 #: ../../general/login_page.php:61
 msgid "Login"
-msgstr ""
+msgstr "লগ-ইন"
 
 #: ../../general/integria_help.php:23
 msgid "Integria IMS help system"
@@ -98,7 +99,7 @@ msgstr ""
 
 #: ../../general/header.php:20
 msgid "Home"
-msgstr ""
+msgstr "গৃহ"
 
 #: ../../general/header.php:31
 msgid "You are connected as"
@@ -106,7 +107,7 @@ msgstr ""
 
 #: ../../general/header.php:33
 msgid "Logout"
-msgstr ""
+msgstr "লগ-আউট"
 
 #: ../../general/home.php:34 ../../operation/main_menu.php:81
 msgid "Agenda"
@@ -180,7 +181,7 @@ msgstr ""
 
 #: ../../index.php:231 ../../index.php:256
 msgid "Page not found"
-msgstr ""
+msgstr "পৃষ্ঠাটি পাওয়া যায় নি"
 
 #: ../../godmode/perfiles/lista_perfiles.php:38
 msgid "Profile could not be deleted"
@@ -408,7 +409,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:231
 #: ../../operation/kb/manage_cat.php:148 ../../operation/kb/manage_cat.php:213
 msgid "Create"
-msgstr ""
+msgstr "তৈরি করুন"
 
 #: ../../godmode/perfiles/lista_perfiles.php:212
 #: ../../godmode/setup/setup.php:100 ../../godmode/setup/setup_mail.php:74
@@ -448,7 +449,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:233
 #: ../../operation/kb/manage_cat.php:150
 msgid "Update"
-msgstr ""
+msgstr "আপডেট করুন"
 
 #: ../../godmode/perfiles/lista_perfiles.php:227
 #: ../../godmode/usuarios/configurar_usuarios.php:258
@@ -456,7 +457,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/profile_list.php:266
 #: ../../enterprise/operation/user/user.php:40
 msgid "Profiles"
-msgstr ""
+msgstr "প্রোফাইল"
 
 #: ../../godmode/perfiles/lista_perfiles.php:242
 #: ../../godmode/setup/links.php:115 ../../godmode/grupos/lista_grupos.php:114
@@ -491,7 +492,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:274
 #: ../../operation/kb/manage_cat.php:168
 msgid "Delete"
-msgstr ""
+msgstr "মুছে ফেলুন"
 
 #: ../../godmode/perfiles/lista_perfiles.php:312
 #: ../../godmode/setup/links.php:127 ../../godmode/grupos/lista_grupos.php:144
@@ -535,7 +536,7 @@ msgstr ""
 #: ../../godmode/usuarios/configurar_usuarios.php:232
 #: ../../operation/users/user_edit.php:137
 msgid "Language"
-msgstr ""
+msgstr "ভাষা"
 
 #: ../../godmode/setup/setup.php:69
 msgid "No WU completion users"
@@ -573,7 +574,7 @@ msgstr ""
 #: ../../include/functions_form.php:312
 #: ../../operation/projects/project_tree.php:55
 msgid "Type"
-msgstr ""
+msgstr "ধরন"
 
 #: ../../godmode/setup/event.php:39
 msgid "Extended info"
@@ -624,7 +625,7 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:149
 #: ../../operation/contracts/contract_detail.php:219
 msgid "Group"
-msgstr ""
+msgstr "গ্রুপ"
 
 #: ../../godmode/setup/setup_mail.php:46 ../../operation/side_menu.php:677
 msgid "Mail setup"
@@ -682,12 +683,12 @@ msgstr ""
 
 #: ../../godmode/setup/links.php:100
 msgid "Link"
-msgstr ""
+msgstr "লিঙ্ক"
 
 #: ../../godmode/setup/links.php:114
 #: ../../godmode/grupos/configurar_grupo.php:79
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ../../godmode/setup/links.php:136
 #: ../../godmode/usuarios/role_manager.php:153
@@ -697,7 +698,7 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:546
 #: ../../operation/users/user_spare_workunit.php:298
 msgid "Add"
-msgstr ""
+msgstr "যোগ"
 
 #: ../../godmode/grupos/configurar_grupo.php:53
 msgid "There was a problem loading group"
@@ -739,7 +740,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:186
 #: ../../operation/kb/manage_cat.php:122 ../../operation/kb/manage_cat.php:164
 msgid "Name"
-msgstr ""
+msgstr "নাম"
 
 #: ../../godmode/grupos/configurar_grupo.php:71
 msgid "Forced email"
@@ -753,7 +754,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:134
 #: ../../operation/users/user_edit.php:147
 msgid "Email"
-msgstr ""
+msgstr "ই-মেইল"
 
 #: ../../godmode/grupos/configurar_grupo.php:84
 #: ../../godmode/grupos/lista_grupos.php:113
@@ -771,7 +772,7 @@ msgstr ""
 #: ../../operation/projects/project_overview.php:30
 #: ../../operation/kb/manage_cat.php:134 ../../operation/kb/manage_cat.php:163
 msgid "Icon"
-msgstr ""
+msgstr "আইকন"
 
 #: ../../godmode/grupos/configurar_grupo.php:95
 msgid "Banner"
@@ -885,7 +886,7 @@ msgstr ""
 #: ../../operation/kb/browse_data.php:100
 #: ../../operation/kb/manage_cat.php:128 ../../operation/kb/manage_cat.php:166
 msgid "Description"
-msgstr ""
+msgstr "বিবরণ"
 
 #: ../../godmode/updatemanager/main.php:88
 msgid "Overwrite local changes"
@@ -945,7 +946,7 @@ msgstr ""
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:553
 msgid "Development"
-msgstr ""
+msgstr "উন্নয়ন"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:554
 msgid "Testing"
@@ -956,15 +957,15 @@ msgstr ""
 #: ../../operation/incidents/incident_create_work.php:52
 #: ../../operation/users/user_spare_workunit.php:272
 msgid "Public"
-msgstr ""
+msgstr "পাবলিক"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:556
 msgid "Disabled"
-msgstr ""
+msgstr "নিষ্ক্রিয়"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:564
 msgid "Database"
-msgstr ""
+msgstr "ডাটাবেস"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:565
 msgid "Code / binary directory"
@@ -1060,7 +1061,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:135
 #: ../../operation/users/user_edit.php:148
 msgid "Telephone"
-msgstr ""
+msgstr "টেলিফোন"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:217
 msgid "Global profile"
@@ -1110,7 +1111,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:138
 #: ../../operation/kb/manage_cat.php:137
 msgid "None"
-msgstr ""
+msgstr "শূণ্য"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:281
 msgid "Profiles/Groups assigned to this user"
@@ -1176,7 +1177,7 @@ msgstr ""
 #: ../../operation/users/user_spare_workunit.php:246
 #: ../../operation/users/user_search.php:76
 msgid "Role"
-msgstr ""
+msgstr "ভূমিকা"
 
 #: ../../godmode/usuarios/role_manager.php:112
 #: ../../godmode/usuarios/role_manager.php:127
@@ -1206,43 +1207,43 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:198
 #: ../../operation/slas/sla_detail.php:199
 msgid "Hours"
-msgstr ""
+msgstr "ঘণ্টা"
 
 #: ../../include/functions_calendar.php:603 ../../include/functions.php:526
 #: ../../include/functions.php:596 ../../include/functions.php:620
 #: ../../operation/projects/task_tracking.php:66
 msgid "Unknown"
-msgstr ""
+msgstr "অজানা"
 
 #: ../../include/functions_calendar.php:610
 #: ../../operation/projects/project.php:251
 msgid "Never"
-msgstr ""
+msgstr "কখনো নয়"
 
 #: ../../include/functions_calendar.php:619
 msgid "seconds"
-msgstr ""
+msgstr "সেকেন্ড"
 
 #: ../../include/functions_calendar.php:625
 #: ../../include/functions_calendar.php:627
 msgid "minutes"
-msgstr ""
+msgstr "মিনিট"
 
 #: ../../include/functions_calendar.php:630
 msgid "hours"
-msgstr ""
+msgstr "ঘন্টা"
 
 #: ../../include/functions_calendar.php:633
 msgid "days"
-msgstr ""
+msgstr "দিন"
 
 #: ../../include/functions_calendar.php:636
 msgid "months"
-msgstr ""
+msgstr "মাস"
 
 #: ../../include/functions_calendar.php:639
 msgid "years"
-msgstr ""
+msgstr "বত্সর"
 
 #: ../../include/functions_form.php:30 ../../include/functions_form.php:47
 #: ../../include/functions_form.php:703 ../../include/functions_form.php:708
@@ -1252,7 +1253,7 @@ msgstr ""
 #: ../../operation/users/user_search.php:76
 #: ../../operation/users/user_search.php:79
 msgid "Any"
-msgstr ""
+msgstr "যেকোন"
 
 #: ../../include/functions_form.php:237 ../../include/functions_form.php:247
 #: ../../include/functions_form.php:704
@@ -1264,11 +1265,11 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:184
 #: ../../operation/projects/task_tracking.php:39
 msgid "Status"
-msgstr ""
+msgstr "অবস্থা"
 
 #: ../../include/functions_form.php:261 ../../include/functions_form.php:268
 msgid "Source"
-msgstr ""
+msgstr "উৎস"
 
 #: ../../include/functions_form.php:282 ../../include/functions_form.php:291
 #: ../../operation/reporting/incidents_html.php:116
@@ -1288,14 +1289,14 @@ msgstr ""
 #: ../../operation/users/user_task_assigment.php:54
 #: ../../operation/users/user_spare_workunit.php:256
 msgid "Task"
-msgstr ""
+msgstr "কর্ম"
 
 #: ../../include/functions_form.php:327 ../../include/functions_form.php:336
 #: ../../include/functions_form.php:385 ../../include/functions_form.php:403
 #: ../../include/functions_form.php:585
 #: ../../operation/projects/project_detail.php:200
 msgid "N/A"
-msgstr ""
+msgstr "প্রযোজ্য নয়"
 
 #: ../../include/functions_form.php:338 ../../include/functions_form.php:367
 msgid "Vacations"
@@ -1327,7 +1328,7 @@ msgstr ""
 
 #: ../../include/functions_form.php:556
 msgid "Duration"
-msgstr ""
+msgstr "সময়"
 
 #: ../../include/functions_form.php:571
 #: ../../enterprise/godmode/usuarios/role_user_global.php:68
@@ -1336,7 +1337,7 @@ msgstr ""
 #: ../../operation/projects/task_files.php:113
 #: ../../operation/users/user_task_assigment.php:53
 msgid "Project"
-msgstr ""
+msgstr "প্রজেক্ট"
 
 #: ../../include/functions_form.php:597
 #: ../../operation/common/workunit_detail.php:50
@@ -1359,7 +1360,7 @@ msgstr ""
 #: ../../include/functions_form.php:699
 #: ../../operation/inventories/inventory_search.php:168
 msgid "Search string"
-msgstr ""
+msgstr "অনুসন্ধান পঙ্‌ক্তি"
 
 #: ../../include/functions_form.php:709
 #: ../../operation/reporting/incidents_html.php:62
@@ -1372,7 +1373,7 @@ msgstr ""
 #: ../../operation/todo/todo.php:124 ../../operation/todo/todo.php:184
 #: ../../operation/projects/task_detail.php:229
 msgid "Priority"
-msgstr ""
+msgstr "অগ্রগণ্য"
 
 #: ../../include/functions_form.php:713 ../../include/functions_form.php:724
 #: ../../include/functions_form.php:731 ../../include/functions_form.php:742
@@ -1385,7 +1386,7 @@ msgstr ""
 #: ../../operation/projects/project_tree.php:52
 #: ../../operation/contracts/contract_detail.php:191
 msgid "All"
-msgstr ""
+msgstr "সব"
 
 #: ../../include/functions_form.php:720
 #: ../../operation/reporting/incidents_html.php:76
@@ -1462,7 +1463,7 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:191
 #: ../../operation/contracts/contract_detail.php:217
 msgid "Company"
-msgstr ""
+msgstr "কোম্পানি"
 
 #: ../../include/functions_form.php:744
 #: ../../operation/reporting/incidents_html.php:88
@@ -1499,7 +1500,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:172 ../../operation/kb/browse.php:51
 #: ../../operation/kb/browse.php:56 ../../operation/kb/search.php:45
 msgid "Search"
-msgstr ""
+msgstr "অনুসন্ধান"
 
 #: ../../include/functions_form.php:752
 #: ../../operation/inventories/inventory_search.php:206
@@ -1574,7 +1575,7 @@ msgstr ""
 #: ../../include/functions_incidents.php:256
 #: ../../operation/user_report/report_full.php:73
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: ../../include/functions_incidents.php:261
 msgid "Longest closed incident"
@@ -1626,16 +1627,16 @@ msgstr ""
 #: ../../include/functions.php:397 ../../include/functions.php:500
 #: ../../include/functions.php:576
 msgid "Low"
-msgstr ""
+msgstr "নিম্ন"
 
 #: ../../include/functions.php:399 ../../include/functions.php:501
 #: ../../include/functions.php:580
 msgid "Medium"
-msgstr ""
+msgstr "মাঝারি"
 
 #: ../../include/functions.php:401
 msgid "High"
-msgstr ""
+msgstr "উচ্চ"
 
 #: ../../include/functions.php:403
 msgid "Very high"
@@ -1644,7 +1645,7 @@ msgstr ""
 #: ../../include/functions.php:405
 #: ../../operation/user_report/report_annual.php:57
 msgid "Other"
-msgstr ""
+msgstr "অন্যান্য"
 
 #: ../../include/functions.php:499 ../../include/functions.php:572
 msgid "Informative"
@@ -1668,7 +1669,7 @@ msgstr ""
 
 #: ../../include/functions.php:514
 msgid "15 days"
-msgstr ""
+msgstr "১৫ দিন"
 
 #: ../../include/functions.php:515
 msgid "Monthly"
@@ -1688,7 +1689,7 @@ msgstr ""
 
 #: ../../include/functions.php:534
 msgid "New"
-msgstr ""
+msgstr "নতুন"
 
 #: ../../include/functions.php:535
 msgid "Unconfirmed"
@@ -1696,7 +1697,7 @@ msgstr ""
 
 #: ../../include/functions.php:536
 msgid "Assigned"
-msgstr ""
+msgstr "বরাদ্দকৃত"
 
 #: ../../include/functions.php:537
 msgid "Re-opened"
@@ -1716,7 +1717,7 @@ msgstr ""
 
 #: ../../include/functions.php:549
 msgid "Invalid"
-msgstr ""
+msgstr "অবৈধ"
 
 #: ../../include/functions.php:550
 msgid "Wont fix"
@@ -1724,7 +1725,7 @@ msgstr ""
 
 #: ../../include/functions.php:551
 msgid "Duplicate"
-msgstr ""
+msgstr "নকল (ডুপ্লিকেট)"
 
 #: ../../include/functions.php:552
 msgid "Works for me"
@@ -1781,7 +1782,7 @@ msgstr ""
 
 #: ../../include/functions_db.php:710
 msgid "Created"
-msgstr ""
+msgstr "নির্মাণের সময়"
 
 #: ../../include/functions_db.php:713
 #: ../../operation/reporting/incidents_html.php:118
@@ -1789,7 +1790,7 @@ msgstr ""
 #: ../../operation/incidents/incident_search.php:94
 #: ../../operation/todo/todo.php:191 ../../operation/projects/project.php:178
 msgid "Updated"
-msgstr ""
+msgstr "আপডেট করা হয়েছে"
 
 #: ../../include/functions_db.php:716
 #: ../../operation/projects/task_workunit.php:77
@@ -1846,11 +1847,11 @@ msgstr ""
 #: ../../include/functions_db.php:1073
 #: ../../operation/reporting/incidents_html.php:68
 msgid "Yes"
-msgstr ""
+msgstr "হ্যাঁ"
 
 #: ../../include/functions_db.php:1075
 msgid "No"
-msgstr ""
+msgstr "না"
 
 #: ../../include/functions_graph.php:183
 msgid "Out of limits"
@@ -2019,7 +2020,7 @@ msgstr ""
 #: ../../operation/user_report/report_annual.php:42
 #: ../../operation/users/user_task_assigment.php:48
 msgid "Go"
-msgstr ""
+msgstr "যাও"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:71
 msgid "WU"
@@ -2088,7 +2089,7 @@ msgstr ""
 
 #: ../../operation/agenda/agenda.php:167
 msgid "Alert"
-msgstr ""
+msgstr "এলার্ট"
 
 #: ../../operation/agenda/agenda.php:177
 msgid "Add agenda entry"
@@ -2128,11 +2129,11 @@ msgstr ""
 #: ../../operation/projects/project_tracking.php:38
 #: ../../operation/users/user_spare_workunit.php:242
 msgid "Date"
-msgstr ""
+msgstr "তারিখ"
 
 #: ../../operation/agenda/agenda.php:202
 msgid "Time"
-msgstr ""
+msgstr "সময়"
 
 #: ../../operation/reporting/inventories_html.php:35
 msgid "Inventory report"
@@ -2198,7 +2199,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:213
 #: ../../operation/inventories/inventory_tree.php:48
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: ../../operation/reporting/inventories_html.php:121
 #: ../../operation/inventories/inventory_search.php:216
@@ -2217,7 +2218,7 @@ msgstr ""
 #: ../../operation/kb/browse.php:86 ../../operation/kb/manage_data.php:190
 #: ../../operation/kb/manage_data.php:269 ../../operation/kb/search.php:61
 msgid "Title"
-msgstr ""
+msgstr "শিরোনাম"
 
 #: ../../operation/reporting/inventories_html.php:134
 #: ../../operation/inventories/inventory_search.php:148
@@ -2233,13 +2234,13 @@ msgstr ""
 #: ../../operation/messages/message.php:127
 #: ../../operation/messages/message.php:211
 msgid "From"
-msgstr ""
+msgstr "প্রেরক"
 
 #: ../../operation/reporting/incidents_html.php:95
 #: ../../operation/messages/message.php:86
 #: ../../operation/messages/message.php:128
 msgid "To"
-msgstr ""
+msgstr "প্রাপক"
 
 #: ../../operation/reporting/incidents_html.php:103
 msgid "All incidents"
@@ -2263,18 +2264,18 @@ msgstr ""
 #: ../../operation/incidents/incident.php:126
 #: ../../operation/incidents/incident_search.php:94
 msgid "Started"
-msgstr ""
+msgstr "প্রারম্ভকাল"
 
 #: ../../operation/reporting/incidents_html.php:119
 #: ../../operation/incidents/incident.php:127
 #: ../../operation/incidents/incident_search.php:95
 msgid "Work"
-msgstr ""
+msgstr "কাজকর্ম"
 
 #: ../../operation/reporting/incidents_html.php:125
 #: ../../operation/incidents/incident_statistics.php:26
 msgid "Statistics"
-msgstr ""
+msgstr "পরিসংখ্যান"
 
 #: ../../operation/reporting/incidents_html.php:132
 #: ../../operation/incidents/incident_search.php:146
@@ -2321,7 +2322,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:117
 msgid "New task"
-msgstr ""
+msgstr "নতুন কাজ"
 
 #: ../../operation/side_menu.php:125 ../../operation/projects/gantt.php:54
 msgid "Gantt graph"
@@ -2335,7 +2336,7 @@ msgstr ""
 #: ../../operation/projects/task.php:117
 #: ../../operation/projects/project.php:175
 msgid "People"
-msgstr ""
+msgstr "মানুষ"
 
 #: ../../operation/side_menu.php:151 ../../operation/side_menu.php:240
 #: ../../operation/inventories/inventory.php:60
@@ -2353,7 +2354,7 @@ msgstr ""
 #: ../../operation/incidents/incident_search.php:230
 #: ../../operation/incidents/incident_work.php:73
 msgid "Files"
-msgstr ""
+msgstr "ফাইল"
 
 #: ../../operation/side_menu.php:185
 msgid "Task detail"
@@ -2440,7 +2441,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:278
 #: ../../operation/companies/company_detail.php:174
 msgid "Contacts"
-msgstr ""
+msgstr "পরিচিতি"
 
 #: ../../operation/side_menu.php:488
 msgid "Contact overview"
@@ -2492,7 +2493,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:600
 msgid "Browse"
-msgstr ""
+msgstr "ব্রাউজ"
 
 #: ../../operation/side_menu.php:608
 msgid "Create KB item"
@@ -2516,7 +2517,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:662 ../../operation/main_menu.php:92
 msgid "Setup"
-msgstr ""
+msgstr "বৈশিষ্ট্য"
 
 #: ../../operation/side_menu.php:692
 msgid "Configure updates"
@@ -2524,7 +2525,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:706
 msgid "System events"
-msgstr ""
+msgstr "সিস্টেম ইভেন্টসমূহ"
 
 #: ../../operation/side_menu.php:714
 #: ../../operation/users/user_statistics.php:23
@@ -2587,7 +2588,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:848
 msgid "Calendar"
-msgstr ""
+msgstr "বর্ষপঞ্জি"
 
 #: ../../operation/side_menu.php:874
 msgid "User info"
@@ -2595,7 +2596,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:883
 msgid "Phone"
-msgstr ""
+msgstr "ফোন"
 
 #: ../../operation/side_menu.php:894
 msgid "Project distribution"
@@ -2632,7 +2633,7 @@ msgstr ""
 #: ../../operation/companies/company_detail.php:120
 #: ../../operation/contacts/contact_detail.php:159
 msgid "Select"
-msgstr ""
+msgstr "বাছাই করা"
 
 #: ../../operation/manufacturers/manufacturer_detail.php:121
 #: ../../operation/manufacturers/manufacturer_detail.php:179
@@ -2647,7 +2648,7 @@ msgstr ""
 #: ../../operation/manufacturers/manufacturer_detail.php:178
 #: ../../operation/companies/company_detail.php:122
 msgid "Address"
-msgstr ""
+msgstr "ঠিকানা"
 
 #: ../../operation/buildings/building_detail.php:61
 msgid "Building cannot be updated"
@@ -2673,11 +2674,11 @@ msgstr ""
 #: ../../operation/incidents/incident_inventory_contacts.php:31
 #: ../../operation/incidents/incident_inventory_detail.php:59
 msgid "Details"
-msgstr ""
+msgstr "বিস্তারিত"
 
 #: ../../operation/inventories/inventory.php:61
 msgid "Tree"
-msgstr ""
+msgstr "ট্রি"
 
 #: ../../operation/inventories/inventory.php:80
 #: ../../operation/incidents/incident.php:96
@@ -2693,7 +2694,7 @@ msgstr ""
 #: ../../operation/inventories/inventory.php:92
 #: ../../operation/incidents/incident.php:107
 msgid "Save"
-msgstr ""
+msgstr "সংরক্ষণ"
 
 #: ../../operation/inventories/inventory.php:157
 msgid "Unable to load inventory"
@@ -2712,7 +2713,7 @@ msgstr ""
 
 #: ../../operation/inventories/inventory_incidents.php:41
 msgid "View"
-msgstr ""
+msgstr "প্রদর্শন"
 
 #: ../../operation/inventories/manage_prod.php:77
 msgid "Product cannot be updated"
@@ -2752,7 +2753,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:164
 #: ../../operation/inventories/inventory_tree.php:45
 msgid "Object"
-msgstr ""
+msgstr "অবজেক্ট"
 
 #: ../../operation/inventories/inventory_detail.php:194
 msgid "Confirmed"
@@ -2788,7 +2789,7 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:537
 #: ../../operation/incidents/incident_detail.php:548
 msgid "Remove"
-msgstr ""
+msgstr "মুছে ফেলা"
 
 #: ../../operation/inventories/inventory_search.php:37
 #: ../../operation/incidents/incident_search.php:39
@@ -2827,19 +2828,19 @@ msgstr ""
 #: ../../operation/incidents/incident.php:77
 #: ../../operation/incidents/incident_inventory_contacts.php:30
 msgid "Contact"
-msgstr ""
+msgstr "যোগাযোগ"
 
 #: ../../operation/inventories/inventory_contacts.php:39
 #: ../../operation/incidents/incident_inventory_contacts.php:75
 #: ../../operation/contacts/contact_detail.php:157
 msgid "Position"
-msgstr ""
+msgstr "অবস্থান"
 
 #: ../../operation/inventories/inventory_contacts.php:41
 #: ../../operation/incidents/incident_inventory_contacts.php:32
 #: ../../operation/incidents/incident_inventory_detail.php:87
 msgid "Edit"
-msgstr ""
+msgstr "সম্পাদনা"
 
 #: ../../operation/inventories/inventory_contacts.php:62
 #: ../../operation/incidents/incident_inventory_contacts.php:71
@@ -2896,7 +2897,7 @@ msgstr ""
 #: ../../operation/incidents/incident.php:128
 #: ../../operation/incidents/incident_search.php:96
 msgid "Flags"
-msgstr ""
+msgstr "ফ্ল্যাগ"
 
 #: ../../operation/incidents/incident.php:216
 msgid "Unable to load incident"
@@ -2956,13 +2957,13 @@ msgstr ""
 #: ../../operation/projects/task_attach_file.php:41
 #: ../../operation/kb/browse_data.php:99
 msgid "Filename"
-msgstr ""
+msgstr "ফাইলের নাম"
 
 #: ../../operation/incidents/incident_files.php:65
 #: ../../operation/projects/task_files.php:100
 #: ../../operation/projects/task_files.php:122
 msgid "Size"
-msgstr ""
+msgstr "মাপ"
 
 #: ../../operation/incidents/incident_notes.php:70
 msgid "Note successfully deleted"
@@ -2970,7 +2971,7 @@ msgstr ""
 
 #: ../../operation/incidents/incident_notes.php:109
 msgid "Notes"
-msgstr ""
+msgstr "নোট"
 
 #: ../../operation/incidents/incident_notes.php:131
 msgid "Notes attached to incident"
@@ -2988,7 +2989,7 @@ msgstr ""
 #: ../../operation/users/user_statistics.php:24
 #: ../../operation/messages/message.php:123
 msgid "Help"
-msgstr ""
+msgstr "সহায়িকা"
 
 #: ../../operation/incidents/incident_detail.php:77
 #: ../../operation/incidents/incident_detail.php:134
@@ -3013,13 +3014,12 @@ msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:292
 msgid "No description available"
-msgstr ""
+msgstr "বর্ণনা উপলব্ধ নেই"
 
 #: ../../operation/incidents/incident_detail.php:315
 #: ../../operation/projects/task_files.php:67
 #: ../../operation/kb/manage_data.php:106
-msgid ""
-"File cannot be saved. Please contact Integria administrator about this error"
+msgid "File cannot be saved. Please contact Integria administrator about this error"
 msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:326
@@ -3109,7 +3109,7 @@ msgstr ""
 #: ../../operation/incidents/incident_attach_file.php:36
 #: ../../operation/kb/search.php:65
 msgid "File"
-msgstr ""
+msgstr "ফাইল"
 
 #: ../../operation/incidents/incident_attach_file.php:47
 #: ../../operation/projects/task_attach_file.php:47
@@ -3133,7 +3133,7 @@ msgstr ""
 #: ../../operation/user_report/monthly.php:80
 #: ../../operation/user_report/monthly_graph.php:81
 msgid "Next"
-msgstr ""
+msgstr "পরবর্তী"
 
 #: ../../operation/user_report/report_weekly.php:46
 msgid "Totals for week"
@@ -3170,11 +3170,11 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:50
 #: ../../operation/users/user_spare_workunit.php:266
 msgid "Username"
-msgstr ""
+msgstr "ব্যবহারকারীর নাম"
 
 #: ../../operation/user_report/report_full.php:59
 msgid "Show"
-msgstr ""
+msgstr "প্রদর্শন"
 
 #: ../../operation/user_report/report_full.php:65
 #: ../../operation/user_report/report_full.php:176
@@ -3216,7 +3216,7 @@ msgstr ""
 
 #: ../../operation/user_report/report_full.php:183
 msgid "Owner"
-msgstr ""
+msgstr "মালিক"
 
 #: ../../operation/user_report/report_full.php:185
 msgid "Dates"
@@ -3225,7 +3225,7 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:213
 #: ../../operation/projects/task_detail.php:272
 msgid "Total"
-msgstr ""
+msgstr "সর্বমোট"
 
 #: ../../operation/user_report/report_annual.php:30
 #: ../../operation/user_report/report_annual.php:33
@@ -3284,7 +3284,7 @@ msgstr ""
 #: ../../operation/projects/gantt_graph.php:148
 #: ../../operation/users/user_task_assigment.php:55
 msgid "Progress"
-msgstr ""
+msgstr "অগ্রগতি"
 
 #: ../../operation/todo/todo.php:189
 msgid "Assigned by"
@@ -3396,7 +3396,7 @@ msgstr ""
 #: ../../operation/projects/task_detail.php:233
 #: ../../operation/projects/task_incidents.php:63
 msgid "Start"
-msgstr ""
+msgstr "আরম্ভ"
 
 #: ../../operation/projects/task.php:119
 #: ../../operation/projects/project_detail.php:129
@@ -3404,12 +3404,12 @@ msgstr ""
 #: ../../operation/projects/task_incidents.php:65
 #: ../../operation/contracts/contract_detail.php:221
 msgid "End"
-msgstr ""
+msgstr "সমাপ্তি"
 
 #: ../../operation/projects/task.php:204
 #: ../../operation/projects/task_detail.php:237
 msgid "Recurrence"
-msgstr ""
+msgstr "পুনরাবৃত্তি"
 
 #: ../../operation/projects/project_detail.php:68
 msgid "Could not update project"
@@ -3462,7 +3462,7 @@ msgstr ""
 
 #: ../../operation/projects/project_detail.php:205
 msgid "Days"
-msgstr ""
+msgstr "দিন"
 
 #: ../../operation/projects/project_overview.php:31
 msgid "# Projects"
@@ -3478,7 +3478,7 @@ msgstr ""
 
 #: ../../operation/projects/project_tree.php:44
 msgid "Done"
-msgstr ""
+msgstr "সম্পন্ন"
 
 #: ../../operation/projects/project_tree.php:53
 msgid "Defined end"
@@ -3583,7 +3583,7 @@ msgstr ""
 
 #: ../../operation/projects/gantt_graph.php:150
 msgid "Today"
-msgstr ""
+msgstr "আজ"
 
 #: ../../operation/projects/gantt_graph.php:183
 msgid "Full project"
@@ -3674,7 +3674,7 @@ msgstr ""
 #: ../../operation/messages/message.php:169
 #: ../../operation/messages/message.php:213
 msgid "Subject"
-msgstr ""
+msgstr "বিষয়"
 
 #: ../../operation/projects/task_emailreport.php:92
 msgid "Message text"
@@ -3682,7 +3682,7 @@ msgstr ""
 
 #: ../../operation/projects/task_emailreport.php:96
 msgid "Send"
-msgstr ""
+msgstr "প্রেরণ করুন"
 
 #: ../../operation/projects/gantt.php:59
 msgid "Full screen"
@@ -3711,11 +3711,11 @@ msgstr ""
 
 #: ../../operation/projects/project.php:174
 msgid "Tasks"
-msgstr ""
+msgstr "কর্ম"
 
 #: ../../operation/projects/project.php:216
 msgid "Unlimited"
-msgstr ""
+msgstr "সীমাহীন"
 
 #: ../../operation/projects/project.php:234
 msgid "hr"
@@ -3735,7 +3735,7 @@ msgstr ""
 #: ../../operation/contacts/contact_detail.php:152
 #: ../../operation/contacts/contact_detail.php:216
 msgid "Full name"
-msgstr ""
+msgstr "সম্পূর্ণ নাম"
 
 #: ../../operation/contacts/contact_detail.php:156
 msgid "Mobile number"
@@ -3747,11 +3747,11 @@ msgstr ""
 
 #: ../../operation/main_menu.php:57
 msgid "KB"
-msgstr ""
+msgstr "কিলোবাইট"
 
 #: ../../operation/main_menu.php:65
 msgid "Users"
-msgstr ""
+msgstr "ব্যবহারকারী"
 
 #: ../../operation/main_menu.php:72
 msgid "Todo"
@@ -3775,11 +3775,10 @@ msgstr ""
 
 #: ../../operation/users/user_spare_workunit.php:276
 msgid "Forward"
-msgstr ""
+msgstr "ফরওয়ার্ড"
 
 #: ../../operation/users/user_spare_workunit.php:277
-msgid ""
-"If this checkbox is activated, propagation will be forward instead backward"
+msgid "If this checkbox is activated, propagation will be forward instead backward"
 msgstr ""
 
 #: ../../operation/users/user_spare_workunit.php:281
@@ -3818,7 +3817,7 @@ msgstr ""
 
 #: ../../operation/users/user_edit.php:137
 msgid "Default"
-msgstr ""
+msgstr "ডিফল্ট"
 
 #: ../../operation/users/user_edit.php:144
 #: ../../operation/users/user_edit.php:145
@@ -3827,7 +3826,7 @@ msgstr ""
 
 #: ../../operation/users/user_edit.php:166
 msgid "Change password"
-msgstr ""
+msgstr "পাসওয়ার্ড পরিবর্তন"
 
 #: ../../operation/users/user_search.php:63
 msgid "No users found"
@@ -3835,7 +3834,7 @@ msgstr ""
 
 #: ../../operation/users/user_search.php:96
 msgid "User name"
-msgstr ""
+msgstr "ব্যবহারকারীর নাম"
 
 #: ../../operation/users/user.php:26
 msgid "Integria users"
@@ -3864,7 +3863,7 @@ msgstr ""
 #: ../../operation/messages/message.php:140
 #: ../../operation/messages/message.php:215
 msgid "Message"
-msgstr ""
+msgstr "বার্তা"
 
 #: ../../operation/messages/message.php:119
 #: ../../operation/messages/message.php:143
@@ -3885,11 +3884,11 @@ msgstr ""
 
 #: ../../operation/messages/message.php:169
 msgid "Read"
-msgstr ""
+msgstr "পড়ো"
 
 #: ../../operation/messages/message.php:169
 msgid "Sender"
-msgstr ""
+msgstr "প্রেরক"
 
 #: ../../operation/messages/message.php:191
 msgid "No subject"
@@ -3905,7 +3904,7 @@ msgstr ""
 
 #: ../../operation/messages/message.php:222
 msgid "Reply"
-msgstr ""
+msgstr "প্রত্যুত্তর"
 
 #: ../../operation/contracts/contract_detail.php:56
 #: ../../operation/contracts/contract_detail.php:87
@@ -3927,7 +3926,7 @@ msgstr ""
 
 #: ../../operation/contracts/contract_detail.php:220
 msgid "Begin"
-msgstr ""
+msgstr "শুরু"
 
 #: ../../operation/slas/sla_detail.php:129
 msgid "SLA name"
@@ -3986,13 +3985,13 @@ msgstr ""
 
 #: ../../operation/kb/browse.php:45
 msgid "Categories"
-msgstr ""
+msgstr "বিভাগ"
 
 #: ../../operation/kb/browse.php:87 ../../operation/kb/browse_data.php:70
 #: ../../operation/kb/manage_data.php:223
 #: ../../operation/kb/manage_data.php:271 ../../operation/kb/search.php:63
 msgid "Category"
-msgstr ""
+msgstr "শ্রেণীবিভাগ"
 
 #: ../../operation/kb/browse_data.php:44
 msgid "KB article review"
@@ -4000,7 +3999,7 @@ msgstr ""
 
 #: ../../operation/kb/browse_data.php:56
 msgid "Author"
-msgstr ""
+msgstr "লেখক"
 
 #: ../../operation/kb/browse_data.php:67
 msgid "Wrote on "
@@ -4029,7 +4028,7 @@ msgstr ""
 
 #: ../../operation/kb/manage_data.php:202
 msgid "Attach"
-msgstr ""
+msgstr "সংযুক্ত করুন"
 
 #: ../../operation/kb/manage_data.php:205
 msgid "Need to create first"
@@ -4058,3 +4057,4 @@ msgstr ""
 #: ../../operation/kb/search.php:41
 msgid "Free text search"
 msgstr ""
+

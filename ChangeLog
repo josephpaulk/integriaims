@@ -1,3 +1,18 @@
+2008-12-02  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/languages/fr.mo, include/languages/fr.po,
+	  include/languages/tr.mo, include/languages/tr.po,
+	  include/languages/bn.mo, include/languages/bn.po: Added French,
+	  Turkish and Bengali translation.
+
+	* include/languages/index.pot: Updated po template.
+
+	* include/languages/Makefile: Added French, Turkish and Bengali
+	  translations.
+
+	* integria_dbdata.sql: Added French, Turkish and Bengali
+	  translations.
+
 2008-12-01  Ramon Novoa  <rnovoa@artica.es>
 
 	* include/FusionCharts,
