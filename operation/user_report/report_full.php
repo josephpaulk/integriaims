@@ -30,7 +30,7 @@ $total_time = 0;
 $total_global = 0;
 $incident_time = 0;
 
-echo "<h1>";
+echo "<h3>";
 echo __("Full report");
 if ($user_id != "") {
 	echo " &raquo; ";
@@ -38,11 +38,11 @@ if ($user_id != "") {
 }
 
 // link full screen
-echo "&nbsp;&nbsp;<a title='Full screen'  href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&clean_output=1'>";
+echo "&nbsp;&nbsp;<a title='Full screen' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&clean_output=1'>";
 echo "<img src='images/html.png'>";
-echo "</A>";
+echo "</a>";
 
-echo  "</h1>";
+echo  "</h3>";
 
 echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/report_full'>";
 echo "<table class='blank' style='margin-left: 10px' width='90%'>";

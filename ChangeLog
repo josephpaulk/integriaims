@@ -1,5 +1,9 @@
 2008-12-03  Jorge Gonzalez  <jorgegonz@artica.es>
 
+	* operation/user_report/report_full.php: Stetics.
+
+2008-12-03  Jorge Gonzalez  <jorgegonz@artica.es>
+
 	* include/languages/es.mo, include/languages/fr.mo,
 	  include/languages/ko.mo, include/languages/fr.po,
 	  include/languages/ko.po, include/languages/da.mo,
