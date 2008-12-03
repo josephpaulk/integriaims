@@ -1,5 +1,16 @@
 2008-12-03  Jorge Gonzalez  <jorgegonz@artica.es>
 
+	* include/languages/es.mo, include/languages/fr.mo,
+	  include/languages/ko.mo, include/languages/fr.po,
+	  include/languages/ko.po, include/languages/da.mo,
+	  include/languages/tr.mo, include/languages/da.po,
+	  include/languages/tr.po, include/languages/el.mo,
+	  include/languages/el.po: updated translations from Rosetta.
+
+	* include/languages/index.pot: Updated po template.
+
+2008-12-03  Jorge Gonzalez  <jorgegonz@artica.es>
+
 	* include/functions.php: changed duplicated string.
 
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish 
