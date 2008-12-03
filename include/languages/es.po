@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Jorge Gonzalez <jorge.gonzalez@artica.es>, 2008.
+# Jorge González <jorgegonz@svn.gnome.org>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: index.es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-12-03 11:25+0100\n"
-"PO-Revision-Date: 2008-12-03 11:25+0100\n"
-"Last-Translator: Jorge Gonzalez <jorge.gonzalez@artica.es>\n"
-"Language-Team: Español <artica@artica.es>\n"
+"PO-Revision-Date: 2008-12-03 17:15+0100\n"
+"Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
+"Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -140,11 +141,11 @@ msgstr "Final de la tarea"
 #: ../../general/home.php:83 ../../operation/side_menu.php:633
 #: ../../operation/side_menu.php:641 ../../operation/todo/todo.php:183
 msgid "To-Do"
-msgstr "Por hacer"
+msgstr "Tareas"
 
 #: ../../general/home.php:87
 msgid "Todo active you have"
-msgstr "Cosas por hacer que tiene"
+msgstr "Tareas activas que tiene"
 
 #: ../../general/home.php:101 ../../operation/side_menu.php:23
 #: ../../operation/main_menu.php:28
@@ -175,7 +176,9 @@ msgstr "El servidor HTTP no puede escribir en el directorio de los adjuntos"
 msgid ""
 "Please check that {HOMEDIR}/attachment directory has write rights for HTTP "
 "server"
-msgstr "Revise que el servidor HTTP tiene permisos de escritura en el directorio {DIRECTORIODEINICIO}/attachment"
+msgstr ""
+"Revise que el servidor HTTP tiene permisos de escritura en el directorio "
+"{DIRECTORIODEINICIO}/attachment"
 
 #: ../../index.php:220
 msgid "Temporal directory is not writtable by HTTP Server"
@@ -185,7 +188,9 @@ msgstr "El servidor HTTP no puede escribir en el directorio temporal"
 msgid ""
 "Please check that {HOMEDIR}/attachment/tmp directory has write rights for "
 "HTTP server"
-msgstr "Revise que el servidor HTTP tiene permisos de escritura en el directorio {DIRECTORIODEINICIO}/attachment/tmp"
+msgstr ""
+"Revise que el servidor HTTP tiene permisos de escritura en el directorio "
+"{DIRECTORIODEINICIO}/attachment/tmp"
 
 #: ../../index.php:231 ../../index.php:256
 msgid "Page not found"
@@ -860,7 +865,9 @@ msgstr ""
 msgid ""
 "Update Manager sends anonymous information about Integria Enterprise usage "
 "(number of users, projects, and items at the inventory)."
-msgstr "El Update Manager envía información anónima acerca del uso de Integria Enterprise (número de usuarios, proyectos y elementos del inventario)."
+msgstr ""
+"El Update Manager envía información anónima acerca del uso de Integria "
+"Enterprise (número de usuarios, proyectos y elementos del inventario)."
 
 #: ../../godmode/updatemanager/main.php:65
 msgid "Your system is up-to-date"
@@ -2085,11 +2092,11 @@ msgstr "Gestión de incidentes"
 
 #: ../../enterprise/operation/user/user.php:58
 msgid "ToDo write"
-msgstr "Escribir cosas por hacer"
+msgstr "Escribir tareas"
 
 #: ../../enterprise/operation/user/user.php:59
 msgid "ToDo manage"
-msgstr "Gestión de cosas por hacer"
+msgstr "Gestión de tareas"
 
 #: ../../enterprise/operation/user/user.php:61
 msgid "KB management"
@@ -2529,11 +2536,11 @@ msgstr "Gestionar categorías"
 
 #: ../../operation/side_menu.php:648
 msgid "To-Do another people"
-msgstr "Cosas por hacer de otros"
+msgstr "Tareas de otros"
 
 #: ../../operation/side_menu.php:655
 msgid "Add todo"
-msgstr "Añadir algo por hacer"
+msgstr "Añadir tarea"
 
 #: ../../operation/side_menu.php:662 ../../operation/main_menu.php:92
 msgid "Setup"
@@ -3035,7 +3042,8 @@ msgstr "Sin descripción disponible"
 #: ../../operation/incidents/incident_detail.php:315
 #: ../../operation/projects/task_files.php:67
 #: ../../operation/kb/manage_data.php:106
-msgid "File cannot be saved. Please contact Integria administrator about this error"
+msgid ""
+"File cannot be saved. Please contact Integria administrator about this error"
 msgstr ""
 "No se pudo guardar el fichero. Contacte con el administrador de Integria "
 "para solucionar este error."
@@ -3721,7 +3729,7 @@ msgstr "Usuarios"
 
 #: ../../operation/main_menu.php:72
 msgid "Todo"
-msgstr "Por hacer"
+msgstr "Tareas"
 
 #: ../../operation/users/user_spare_workunit.php:47
 msgid "Locked successfully"
@@ -3744,7 +3752,8 @@ msgid "Forward"
 msgstr "Hacia adelante"
 
 #: ../../operation/users/user_spare_workunit.php:277
-msgid "If this checkbox is activated, propagation will be forward instead backward"
+msgid ""
+"If this checkbox is activated, propagation will be forward instead backward"
 msgstr ""
 "Si esta casilla está activada la propagación se hará hacia adelante en lugar "
 "de hacia atrás"
@@ -4020,4 +4029,3 @@ msgstr "Categorías definidas"
 #: ../../operation/kb/search.php:41
 msgid "Free text search"
 msgstr "Búsqueda libre de texto"
-

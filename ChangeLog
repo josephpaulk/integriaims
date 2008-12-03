@@ -1,3 +1,10 @@
+2008-12-03  Jorge Gonzalez <jorgegonz@artica.es>
+
+	* include/languages/es.mo, include/languages/es.po: Updated spanish
+	  translation.
+
+	* include/languages/index.pot: Updated po template.
+
 2008-12-03  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* operation/user_report/report_full.php: Stetics.
