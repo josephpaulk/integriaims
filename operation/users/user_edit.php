@@ -97,9 +97,9 @@ if ($update_user) {
 		$result = process_sql ($sql);
 		
 		if ($result !== false) {
-			echo '<h3 class="suc">'.__('User successfuly updated').'</h3>';
+			echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
 		} else {
-			echo '<h3 class="error">'.__('Could not update user').'</h3>';
+			echo '<h3 class="error">'.__('Could not be updated').'</h3>';
 		}
 	}
 } 

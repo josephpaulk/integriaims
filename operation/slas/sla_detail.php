@@ -93,7 +93,7 @@ if ($delete_sla) {
 	$sql = sprintf ('DELETE FROM tsla WHERE id = %d', $id);
 	$result = process_sql ($sql);
 	insert_event ("SLA DELETED", $id, 0, "$name");
-	echo '<h3 class="suc">'.__('Deleted successfully').'</h3>';
+	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	$id = 0;
 }
 

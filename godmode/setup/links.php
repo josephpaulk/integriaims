@@ -55,7 +55,7 @@ if (isset($_GET["borrar"])){ // if delete
 	$sql_delete= "DELETE FROM tlink WHERE id_link = ".$id_link;
 	$result=mysql_query($sql_delete);
 	if (! $result)
-		echo "<h3 class='error'>".__('Link could not be deleted')."</h3>";
+		echo "<h3 class='error'>".__('Could not be deleted')."</h3>";
 	else
 		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>"; 
 

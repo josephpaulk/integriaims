@@ -79,7 +79,7 @@ if (isset($_GET["delete_cat"])){ // if delete
 	mysql_query("UPDATE tkb_category SET parent = 0 WHERE parent = $id");		
 	$result=mysql_query($sql_delete);
 	if (! $result)
-		echo "<h3 class='error'>".__('Deleted successfully')."</h3>"; 
+		echo "<h3 class='error'>".__('Successfully deleted')."</h3>"; 
 	else
 		echo "<h3 class='suc'>".__('Cannot be deteled')."</h3>";
 }

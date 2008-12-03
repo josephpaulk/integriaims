@@ -35,9 +35,9 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 	$resq1=mysql_query($query_del1);
 	$resq1=mysql_query($query_del2);
 	if (! $resq1)
-		echo "<h3 class='error'>".__('There was a problem deleting user')."</h3>";
+		echo "<h3 class='error'>".__('Could not be deleted')."</h3>";
 	else
-		echo "<h3 class='suc'>".__('User successfully deleted')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 }
 
 $offset = get_parameter ("offset", 0);
@@ -68,7 +68,7 @@ $sql1 = "$query1 LIMIT $offset, ". $config["block_size"];
 
 
 echo '<table width="90%" class="listing">';
-echo '<th>'.__('UserID').'</td>';
+echo '<th>'.__('User ID').'</td>';
 echo '<th>'.__('Last contact');
 echo '<th>'.__('Profile');
 echo '<th>'.__('Name');

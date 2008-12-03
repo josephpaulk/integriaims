@@ -33,7 +33,7 @@ $incident_time = 0;
 echo "<h1>";
 echo __("Full report");
 if ($user_id != "") {
-	echo " - ";
+	echo " &raquo; ";
 	echo dame_nombre_real ($user_id);
 }
 
@@ -144,8 +144,8 @@ if ($user_id == "") {
 	echo "<tr style='border-top: 2px solid #ccc'>";
 	echo "<td><b>".__("Totals")."</b>";
 	echo "<td colspan=3>";
-	echo $total_time. " ( ". get_working_days ($total_time). " ".__("Working days").")";
-	echo "&nbsp;&nbsp;&nbsp; $total_global ( ". get_working_days ($total_global). " ".__("Working days").")";
+	echo $total_time. " (". get_working_days ($total_time). " ".__("Working days").")";
+	echo "&nbsp;&nbsp;&nbsp; $total_global (". get_working_days ($total_global). " ".__("Working days").")";
 
 	echo "</table>";
 

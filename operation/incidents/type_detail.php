@@ -63,9 +63,9 @@ if ($update_type) {
 	
 	$result = process_sql ($sql);
 	if ($result === false)
-		echo '<h3 class="error">'.__('Incident type cannot be updated').'</h3>';
+		echo '<h3 class="error">'.__('Could not be updated').'</h3>';
 	else {
-		echo '<h3 class="suc">'.__('Incident type updated ok').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
 		insert_event ("INCIDENT TYPE", $id, 0, $name);
 	}
 	$id = 0;
@@ -77,7 +77,7 @@ if ($delete_type) {
 	$sql = sprintf ('DELETE FROM tincident_type WHERE id = %d', $id);
 	process_sql ($sql);
 	insert_event ("INCIDENT TYPE DELETED", $id, 0, $name);
-	echo '<h3 class="suc">'.__('Deleted successfully').'</h3>';
+	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	$id = 0;
 }
 

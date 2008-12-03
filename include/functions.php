@@ -500,7 +500,7 @@ function get_priorities () {
 	$incidents[1] = __('Low');
 	$incidents[2] = __('Medium');
 	$incidents[3] = __('Serious');
-	$incidents[4] = __('Very Serious');
+	$incidents[4] = __('Very serious');
 	$incidents[10] = __('Maintenance');
 
 	return $incidents;

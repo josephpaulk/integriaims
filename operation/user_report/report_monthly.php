@@ -62,7 +62,7 @@
 
 
 	echo '<table width="90%" class="listing">';
-	echo "<th>".__('UserID');
+	echo "<th>".__('User ID');
 	echo "<th>".__('Workunit report');
 	echo "<th>".__('Calendar view');
     echo "<th>".__('Graph overview');

@@ -53,7 +53,7 @@ if ($operation == "delete"){
 	if (($id_user_wu == $config["id_user"]) OR (give_acl($config["id_user"], 0,"PM") ==1 ) OR (project_manager_check($id_project) == 1)){
 		mysql_query ("DELETE FROM tworkunit where id = '$id_workunit'");
 		if (mysql_query ("DELETE FROM tworkunit_task where id_workunit = '$id_workunit'")){
-				$result_output = "<h3 class='suc'>".__('Deleted successfully')."</h3>";
+				$result_output = "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 				audit_db ($id_user, $config["REMOTE_ADDR"], "Work unit deleted", "Workunit for $id_user");
 		} else {
 			$result_output = "<h3 class='error'>".__('Not deleted. Error deleting data')."</h3>";

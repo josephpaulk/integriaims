@@ -65,10 +65,10 @@ if ($operation == "insert") {
 	
 	if ($name == '') {
 		$operation = 'create';
-		$result_output = '<h3 class="error">'.__('Name could not be empty').'</h3>';
+		$result_output = '<h3 class="error">'.__('Name cannot be empty').'</h3>';
 	} elseif (strtotime ($start) > strtotime ($end)) {
 		$operation = 'create';
-		$result_output = '<h3 class="error">'.__('Begin date could not be before end date').'</h3>';
+		$result_output = '<h3 class="error">'.__('Begin date cannot be before end date').'</h3>';
 	} else {
 		$description = (string) get_parameter ('description');
 		$priority = (int) get_parameter ('priority');
@@ -115,7 +115,7 @@ if ($operation == "insert") {
 	} else {
 		$update_mode = 0;
 		$create_mode = 1;
-		$result_output = "<h3 class='error'>".__('Could not create task')."</h3>";
+		$result_output = "<h3 class='error'>".__('Could not be created')."</h3>";
 		}
 	}
 }
@@ -157,7 +157,7 @@ if ($operation == "update") {
 		$operation = "view";
 		task_tracking ($id_task, TASK_UPDATED);
 	} else {
-		$result_output = "<h3 class='error'>".__('Could not update task')."</h3>";
+		$result_output = "<h3 class='error'>".__('Could not be updated')."</h3>";
 	}
 }
 

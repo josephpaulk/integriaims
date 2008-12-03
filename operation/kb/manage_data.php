@@ -134,7 +134,7 @@ if (isset($_GET["delete_data"])){ // if delete
 		mysql_query($sql);
 	}
 	insert_event ("KB ITEM DELETED", $id, 0, "Deleted KB $kb_title");
-	echo "<h3 class='error'>".__('Deleted successfully')."</h3>"; 
+	echo "<h3 class='error'>".__('Successfully deleted')."</h3>"; 
 }
 
 if (isset($_GET["update2"])){

@@ -109,7 +109,7 @@ if ($delete_contract) {
 	$sql = sprintf ('DELETE FROM tcontract WHERE id = %d', $id);
 	process_sql ($sql);
 	insert_event ("CONTRACT DELETED", $id, 0, "$name");
-	echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
+	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 	$id = 0;
 }
 

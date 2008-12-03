@@ -35,9 +35,9 @@ if (isset($_GET["delete_profile"])){ // if any parameter is modified
 	$query_del2="DELETE FROM tusuario_perfil WHERE id_perfil = '".$id_perfil."'";
 	$resq1=mysql_query($query_del1);
 		if (! $resq1)
-			echo "<h3 class='error'>".__('Profile could not be deleted')."</h3>";
+			echo "<h3 class='error'>".__('Could not be deleted')."</h3>";
 		else
-			echo "<h3 class='suc'>".__('Profile successfully deleted')."</h3>";
+			echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 	$resq1=mysql_query($query_del2);
 	unset($id_perfil); // forget it to show list
 }
@@ -150,9 +150,9 @@ elseif (isset($_GET["new_profile"])){ // create a new profile
 // Header
 echo '<h2>'.__('Profile management').'</h2>';
 if (isset($_GET["new_profile"]))
-    echo '<h3>'.__('Create profile').'</h3>';
+    echo '<h3>'.__('Create').'</h3>';
 elseif (isset($_GET["edit_profile"]))
-    echo '<h3>'.__('Update profile').'</h3>';
+    echo '<h3>'.__('Update').'</h3>';
 else 
     '<h3>'.__('Profiles defined in Integria').'</h3>';
 

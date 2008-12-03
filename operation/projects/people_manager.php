@@ -86,7 +86,7 @@ if ($operation == "delete"){
 		$sql = "DELETE FROM trole_people_project WHERE id = $id";
 	}
 	if (mysql_query($sql)){
-		$result_output = "<h3 class='suc'>".__('Deleted successfully')."</h3>";
+		$result_output = "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 		$operation = "view";
 	}
 }

@@ -93,7 +93,7 @@ $table->class = 'hide result_table listing';
 $table->width = '90%';
 $table->id = 'user_search_result_table';
 $table->head = array ();
-$table->head[0] = __('User name');
+$table->head[0] = __('Username');
 $table->head[1] = __('Real name');
 $table->head[2] = __('Comments');
 

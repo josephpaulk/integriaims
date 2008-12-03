@@ -188,7 +188,7 @@ if ($operation == "delete") {
 		return;
 	}
 	
-	$result_output = '<h3 class="suc">'.__('Deleted successfully').'</h3>';
+	$result_output = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Work unit deleted", "Workunit for ".$config['id_user']);
 	
 	if (defined ('AJAX'))

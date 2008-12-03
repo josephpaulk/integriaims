@@ -67,9 +67,9 @@ if ($update_company) {
 
 	$result = mysql_query ($sql);
 	if ($result === false)
-		echo "<h3 class='error'>".__('Company cannot be updated')."</h3>";
+		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 	else {
-		echo "<h3 class='suc'>".__('Company updated ok')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		insert_event ("COMPANY", $id, 0, $name);
 	}
 	$id = 0;
@@ -82,7 +82,7 @@ if ($delete_company) { // if delete
 	$sql= sprintf ('DELETE FROM tcompany WHERE id = %d', $id);
 	process_sql ($sql);
 	insert_event ("COMPANY DELETED", $id, 0, $name);
-	echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
+	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 	$id = 0;
 }
 

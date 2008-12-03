@@ -352,9 +352,9 @@ if ($id) {
 			$sql = sprintf ('DELETE FROM tattachment WHERE id_attachment = %d',
 				$id_attachment);
 			process_sql ($sql);
-			$result_msg = '<h3 class="suc">'.__('File deleted successfuly').'</h3>';
+			$result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 			if (!unlink ($config["homedir"].'attachment/pand'.$id_attachment.'_'.$filename))
-				$result_msg = '<h3 class="error">'.__('File could not be deleted').'</h3>';
+				$result_msg = '<h3 class="error">'.__('Could not be deleted').'</h3>';
 			incident_tracking ($id, INCIDENT_FILE_REMOVED);
 			
 		} else {

@@ -57,9 +57,9 @@ if ($update_role) {
 
 	$result = process_sql ($sql);
 	if ($result === false)
-		echo "<h3 class='error'>".__('Company role cannot be updated')."</h3>";
+		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 	else {
-		echo "<h3 class='suc'>".__('Company role updated ok')."</h3>";
+		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		insert_event ("COMPANY ROLE", $id, 0, $name);
 	}
 	$id = 0;
@@ -71,7 +71,7 @@ if ($delete_role) {
 	$sql = sprintf ('DELETE FROM tcompany_role WHERE id = %d', $id);
 	$result = process_sql ($sql);
 	insert_event ("COMPANY ROLE DELETED", $id, 0, $name);
-	echo "<h3 class='suc'>".__('Deleted successfully')."</h3>";
+	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 	$id = 0;
 }
 

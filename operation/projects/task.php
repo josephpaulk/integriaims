@@ -42,7 +42,7 @@ $operation = (string) get_parameter ('operation');
 if ($operation == 'delete') {
 	if (dame_admin ($config['id_user']) || project_manager_check ($id_project)) {
 		delete_task ($id_task);
-		echo '<h3 class="suc">'.__('Deleted successfully').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 		$operation = '';
 		task_tracking ($id_task, TASK_DELETED);
 	} else {

@@ -74,7 +74,7 @@ if ($update_product) {
 		$name, $icon, $description, $parent, $id);
 	$result = process_sql ($sql);
 	if (! $result) {
-		echo "<h3 class='error'>".__('Product cannot be updated')."</h3>"; 
+		echo "<h3 class='error'>".__('Could not be updated')."</h3>"; 
 	} else {
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 		insert_event ("PRODUCT UPDATED", $id, 0, $name);
@@ -95,7 +95,7 @@ if ($delete_product) {
 	if (! $result)
 		echo '<h3 class="error">'.__("Successfully deleted").'</h3>';
 	else
-		echo '<h3 class="suc">'.__("Cannot be deteled").'</h3>';
+		echo '<h3 class="suc">'.__("Could not be deleted").'</h3>';
 }
 
 if ($create || $id) {

@@ -68,7 +68,7 @@ if ($update_manufacturer) {
 		$address, $id_sla, $id_company_role, $comments, $name, $id);
 	$result = process_sql ($sql);
 	if ($result === false)
-		echo '<h3 class="error">'.__('Manufacturer cannot be updated').'</h3>';
+		echo '<h3 class="error">'.__('Could not be updated').'</h3>';
 	else {
 		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
 		insert_event ("MANUFACTURER", $id, 0, $name);
@@ -83,7 +83,7 @@ if ($delete_manufacturer) {
 	$sql = sprintf ('DELETE FROM tmanufacturer WHERE id = %d', $id);
 	process_sql ($sql);
 	insert_event ("MANUFACTURER DELETED", $id, 0, "$name");
-	echo '<h3 class="suc">'.__('Deleted successfully').'</h3>';
+	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	$id = 0;
 }
 
