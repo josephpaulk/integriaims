@@ -72,7 +72,7 @@ if ($action == 'update') {
 	$user = get_parameter ('usuario_form');
 
 	// Only admins (manage incident) or owners can modify incidents
-	if (! give_acl ($config["id_user"], $grupo, "IW")) {
+	if ((! give_acl ($config["id_user"], $grupo, "IW")) AND (! give_acl ($config["id_user"], $grupo, "IM"))) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
 		echo "<h3 class='error'>".__('There was a problem updating incident')."</h3>";
 		no_permission ();

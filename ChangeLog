@@ -1,3 +1,8 @@
+2008-12-06  Sancho Lerena  <slerena@artica.es>
+
+	* operation/incidents/incident_detail.php: Updated permissions for IM 
+	on update operations. 
+
 2008-12-03  Jorge Gonzalez <jorgegonz@artica.es>
 
 	* include/languages/es.mo, include/languages/es.po: Updated spanish
