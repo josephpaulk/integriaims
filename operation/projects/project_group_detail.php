@@ -18,10 +18,9 @@ global $config;
 
 check_login ();
 
-if (give_acl($config["id_user"], 0, "IM")==0) {
-	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access company role management");
-	require ("general/noaccess.php");
-	exit;
+if (give_acl($config["id_user"], 0, "FM")==0) {
+	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access project group management");
+	no_permission();
 }
 
 $id_user = $config["id_user"];

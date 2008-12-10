@@ -33,6 +33,12 @@ if ($id_task) {
 	$id_project = get_db_value ('id_project', 'ttask', 'id', $id_task);
 }
 
+if ($id_task > 0 && ! user_belong_task ($config["id_user"], $id_task)){
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task workunit form without permission");
+	no_permission();
+}
+
 // Lock Workunit
 if ($operation == "lock") {
 	$success = lock_task_workunit ($id_workunit);

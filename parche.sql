@@ -9,3 +9,5 @@ update ttask set id_project = -1 where id < 0;
 update tproject set id = -1 where id = 0;
 alter table tproject modify id int(10) signed;
 alter tworkunit_task alter id_task int(10) signed; 
+
+alter table tkb_data ADD `id_language` varchar(15) NOT NULL default '';

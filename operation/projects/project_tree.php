@@ -45,13 +45,10 @@ $completions[666] = __('Done');
 $table->data[0][1] = print_select ($completions, 'completion', '', $completion,
 	'', '', true, false, false, __('Completion'));
 
-$table->data[0][2] = print_select ($completions, 'completion', '', $completion,
-	'', '', true, false, false, __('Progress'));
-
 $types = array ();
 $types['all'] = __('All');
 $types['defined_end'] = __('Defined end');
-$table->data[0][3] = print_select ($types, 'project_kind', '', $project_kind,
+$table->data[0][2] = print_select ($types, 'project_kind', '', $project_kind,
 	'', '', true, false, false, __('Type'));
 
 echo '<form method="post">';

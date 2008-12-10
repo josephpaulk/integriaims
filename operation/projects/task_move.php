@@ -15,15 +15,18 @@
 
 global $config;
 
-if (check_login() != 0) {
-    audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
-    require ("general/noaccess.php");
-    exit;
-}
+check_login ();
 
 // Get our main stuff
 $id_project = get_parameter ("id_project", -1);
 $id_task = get_parameter ("id_task", -1);
+
+if (! user_belong_task ($config["id_user"], $id_task)){
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task move without permission");
+	no_permission();
+}
+
 
 //TASK MOVE Operation
 // PROJECT - People management

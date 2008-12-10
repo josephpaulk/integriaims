@@ -20,12 +20,6 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "PR")) {
- 	// Doesn't have access to this page
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
-	no_permission ();
-}
-
 $create_mode = 0;
 $name = "";
 $description = "";
@@ -38,6 +32,12 @@ $id_project_group = 0;
 $action = (string) get_parameter ('action');
 $id_project = (int) get_parameter ('id_project');
 $create_project = (bool) get_parameter ('create_project');
+
+if (!$create_project && ! user_belong_project ($config["id_user"], $id_project)) {
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access project ".$id_project);
+	no_permission();
+}
 
 // Update project
 if ($action == 'update') {

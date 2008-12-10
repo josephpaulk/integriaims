@@ -26,17 +26,28 @@ echo '<body>';
 
 $id = get_parameter ('id');
 $help_file = $config["homedir"]."/include/help/".$config["language_code"]."/help_".$id.".php";
+if (!file_exists ($help_file))
+		$help_file = $config["homedir"]."/include/help/en/help_".$id.".php"; 
 
 if (! $id || ! file_exists ($help_file)) {
-	echo "<div class='databox' id='login'><div id='login_f' class='databox'>";
-	echo '<h1 id="log_f" style="margin-top: 0px;" class="error">';
+	echo "<div class='databox' id='login'>";
+	echo "<div class='blank'>";
+	echo "<div style='text-align:center;' >";
+	echo '<h1>';
 	echo __('Help system error');
-	echo "</h1><div id='noa' style='width:120px' >";
-	echo "<img src='../images/help.jpg' alt='No help section'></div>";
-	echo "<div style='width: 350px'>";
-	echo '<a href="index.php"><img src="../images/integria_white.png" border="0"></a><br>';
+	echo "</h1>";
+
+	echo "<h3>";
+	echo __("No help section");
+	echo "</h3>";
+	
+	echo '<div class="msg">'.__('Integria IMS help system has been called with a help reference that currently don\'t exist. There is no help content to show.').'</div>';
+	echo "<br><br>";
+	echo '<a href="index.php"><img src="../images/integria_small.png" border="0"></a><br>';
 	echo "</div>";
-	echo '<div class="msg">'.__('Integria IMS help system has been called with a help reference that currently don\'t exist. There is no help content to show.').'</div></div></div>';
+	echo "</div>";
+	echo "</div>";
+	
 	return;
 }
 

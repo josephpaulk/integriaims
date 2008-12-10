@@ -24,6 +24,13 @@ $id_user = $_SESSION['id_usuario'];
 $id_project = get_parameter ("id_project", -1);
 $id_task = get_parameter ("id_task", -1);
 $operation = get_parameter ("operation", "");
+
+if ($id_task > 0 && ! user_belong_task ($config["id_user"], $id_task)){
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task files without permission");
+	no_permission();
+}
+
 // Get names
 if ($id_project != 1)
 	$project_name = get_db_value ("name", "tproject", "id", $id_project);

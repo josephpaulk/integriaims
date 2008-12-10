@@ -18,7 +18,14 @@ if (!isset($config["id_user"]))
 
 // PROJECTS
 if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {	
-	$id_project = get_parameter ('id_project');
+	$id_project = get_parameter ('id_project', -1);
+	$id_task = get_parameter ('id_task');
+	
+	// Get id_task but not id_project
+	if (($id_task != -1) AND ($id_project == -1)){
+		$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
+	}
+
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Projects')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -607,13 +614,6 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR")) {
 			echo "<li>";
 		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&create=1'>".__('Create KB item')."</a></li>";
 
-		// Manage KB
-		if (($sec2 == "operation/kb/manage_data") AND (!isset($_GET["create"])))
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data'>".__('Manage KB item')."</a></li>";
-
 		// KB Manage Cat.
 		if ($sec2 == "operation/kb/manage_cat")
 			echo "<li id='sidesel'>";
@@ -775,6 +775,14 @@ if ($sec == "users") {
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_full'>".__('Full  report')."</a></li>";
 
+		// Full graph report 
+		if ($sec2 == "operation/user_report/report_full_graph")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_full_graph'>".__('Full  graph report')."</a></li>";
+
+
 		// Basic report (monthly)
 		if ($sec2 == "operation/user_report/report_monthly")
 			echo "<li id='sidesel'>";
@@ -897,6 +905,13 @@ if (give_acl ($config["id_user"], 0, "PR")) {
 	echo "&nbsp;&nbsp;";
 	echo '<a href="index.php?sec=users&sec2=operation/users/user_spare_workunit">';
 	echo '<img src="images/award_star_silver_1.png" title="'.__('Workunit').'"></a>';
+
+	// Link to User detailed graph view
+	echo "&nbsp;&nbsp;";
+	echo '<a href="index.php?sec=users&sec2=operation/user_report/report_full_graph">';
+	echo '<img src="images/lightbulb.png" title="'.__('Full graph report').'"></a>';
+
+
 
 	// Week Workunit meter
 	echo "&nbsp;&nbsp;";

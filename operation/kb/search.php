@@ -32,6 +32,7 @@ echo "<h3>".__('Defined data')."</a></h3>";
 
 // Search parameter 
 $free_text = get_parameter ("free_text", "");
+$id_language = get_parameter ("id_language", "");
 
 // Search filters
 echo "<table cellpadding=4 cellspacing=4 width=400>";
@@ -41,7 +42,13 @@ echo "<td>";
 echo __('Free text search');
 echo "<td>";
 echo "<input type=text name='free_text' size=20 value='$free_text'>";
+
 echo "<td>";
+echo __('Language');
+echo "<td>";
+echo print_select_from_sql ('SELECT id_language FROM tlanguage', 'id_language',
+					$id_language, '', '', 0, true, false, false, '');
+
 echo "<input type=submit class='sub next' value='".__('Search')."'>";
 echo "</td></tr></table></form>";
 

@@ -1,18 +1,20 @@
 <?PHP
 
-// INTEGRIA IMS v1.2
+// INTEGRIA IMS v2.0
 // http://www.integriaims.com
 // ===========================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2008 Esteban Sanchez, estebans@artica.es
 // Copyright (c) 2007-2008 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public License (LGPL)
-// as published by the Free Software Foundation; version 2
+// modify it under the terms of the GNU Lesser General Public License
+// (LGPL) as published by the Free Software Foundation; version 2
+
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Lesser General Public License for more details.
 
 global $config;
 
@@ -89,18 +91,20 @@ function combo_user_task_profile ($id_task, $form_name = "work_profile", $select
 // Returns a combo with the users that belongs to a task
 // ----------------------------------------------------------------------
 function combo_users_task ($id_task, $icon_list = false, $return = false) {
+	global $config;
+
 	// Show only users assigned to this project
 	$task_users = get_db_all_rows_field_filter ('trole_people_task', 'id_task', $id_task);
-	$visible_users = get_user_visible_users (0, 'PR', true);
+	$visible_users = get_user_visible_users ($config["id_user"], 'PR', true);
 	$users = array ();
 
 	if ($task_users)	
 	foreach ($task_users as $user) {
-		if (isset ($visible_users[$user['id']]))
+		if (isset ($visible_users[$user['id_user']]))
 			if ($icon_list)
 				array_push ($users, $user);
 			else
-				$users[$user['id']] = $user['id_user'];
+				$users[$user['id_user']] = $user['id_user'];
 	}
 	
 	$output = '';
@@ -115,8 +119,8 @@ function combo_users_task ($id_task, $icon_list = false, $return = false) {
 		$group_name = get_db_sql ($sql);
 		$text = __('Group').' <strong>'.$group_name.'</strong><br />';
 		foreach ($users as $user) {
-			$text .= $user.' / '.get_db_value ('name', 'trole', 'id', $row['id_role']);
-			$text .= "<br />";
+			$text .= $user["id_user"];
+			$text .= ", ";
 		}
 		$output .= print_help_tip ($text, true, 'tip_people');
 	}
@@ -141,12 +145,21 @@ function combo_users_project ($id_project){
 
 // Returns a combo with categories
 // ----------------------------------------------------------------------
-function combo_kb_categories ($id_category){
+function combo_kb_categories ($id_category, $show_any = 0){
+	global $config;
+
 	if ($id_category == 0)
-		$id_category =1;
+		$id_category = 1;
+
+	
+
+	echo "<select name='category' style='width: 180px;'>";
+	if ($show_any != 0){
+		$id_category = -1;
+		echo "<option value=''>".__("Any");
+	}	
 	$sql = "SELECT * FROM tkb_category WHERE id != $id_category ORDER by parent, name";
 	$result = mysql_query($sql);
-	echo "<select name='category' style='width: 180px;'>";
 	
 	$parent = get_db_value ("parent","tkb_category","id",$id_category);
 	$parent_name = get_db_value ("name","tkb_category","id",$parent);
@@ -378,6 +391,7 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 			ORDER BY title', $id_user);
 	
 	$tasks = get_db_all_rows_sql ($sql);
+	if ($tasks)
 	foreach ($tasks as $task){
 		$values[$task[0]] = $task[1];
 	}
@@ -547,10 +561,10 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<td width='60%'><b>";
 	if ($id_task != ""){
 		echo __('Task')." </b> : ";
-		echo $task_title;
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$id_task&operation=view'>$task_title</A>";
 	} else  {
 		echo __('Incident')." </b> : ";
-		echo $incident_title;
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_incident'>$incident_title</A>";
 	}
 	echo "<td width='13%'><b>";
 	echo __('Duration')."</b>";
@@ -569,7 +583,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<td><b>";
 	if ($id_task != "") {
 		echo __('Project')." </b> : ";
-		echo $project_title;
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>$project_title</A>";
 	} else {
 		echo __('Group')."</b> : ";
 		echo dame_nombre_grupo (get_db_sql ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident"));
@@ -643,7 +657,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == "") ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
-		echo "<a class='lock_workunit' id='delete-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=lock'><img src='images/lock.png' title='".__('Lock workunit')."'></a>";
+		echo "<a class='lock_workunit' id='lock-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=lock'><img src='images/lock.png' title='".__('Lock workunit')."'></a>";
 		echo "</td>";
 	} else {
 		echo "<tr><td align='right'>";
@@ -773,7 +787,7 @@ function incident_users_list ($id_incident, $return = false) {
 		$output .= ' (<em>'.__('Creator').'</em>)<br>';
 	}
 	
-	
+	if ($users['affected'])
 	foreach ($users['affected'] as $user) {
 		$output .= "&nbsp;&nbsp;" . print_user_avatar ($user['id_usuario'], true, true);
 		$output .= ' <strong>'.$user['id_usuario'].'</strong> (<em>'.__('Participant').'</em>)';
@@ -837,7 +851,7 @@ function print_table_pager ($id = 'pager', $hidden = true, $return = false) {
 	$output .= '&nbsp;&nbsp;'. __("Items per page"). '&nbsp;';
 	if (defined ('AJAX')) {
 		$output .= '<select class="pagesize" style="display: none">';
-		$output .= '<option selected="selected" value="5">5</option>';
+		$output .= '<option selected="selected" value="10">10</option>';
 	} else {
 		$output .= '<select class="pagesize">';
 		$output .= '<option selected="selected" value="'.$config['block_size'].'">'.$config['block_size'].'</option>';

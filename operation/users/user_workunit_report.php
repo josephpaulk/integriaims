@@ -68,6 +68,7 @@ if ($operation == "delete"){
 // --------------------
 // Workunit report
 // --------------------
+
 $ahora = date("Y-m-d H:i:s");
 if ($timestamp_h == "")
 	$timestamp_h == $ahora ;

@@ -15,6 +15,9 @@
 
 global $config;
 
+include $config["homedir"]."/include/functions_graph.php";
+
+
 if (!isset($config["id_user"]))
 	$config["id_user"] = $_SESSION['id_usuario'];
 
@@ -108,7 +111,10 @@ if (!isset($config["id_user"]))
 		echo '<hr width="100%" size="1">';
 		echo "<br>";
 		$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
-		echo "<img src='include/functions_graph.php?type=workunit_project_user&width=350&height=210&id_user=".$config["id_user"]."&date_from=$from_one_month'>";
+
+		echo graph_workunit_project_user (700, 200, $config["id_user"], $from_one_month,0, 1);
+
+		//echo "<img src='include/functions_graph.php?type=workunit_project_user&width=350&height=210&id_user=".$config["id_user"]."&date_from=$from_one_month'>";
 	}
 
 	// Show Incident items
@@ -137,3 +143,4 @@ if (!isset($config["id_user"]))
 	echo "</table>";
 
 ?>
+<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>

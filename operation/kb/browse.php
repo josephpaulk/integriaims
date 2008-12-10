@@ -32,6 +32,7 @@ echo "<h2>".__('KB Data management')." &raquo; ".__('Defined data')."</a></h2>";
 $free_text = get_parameter ("free_text", "");
 $product = get_parameter ("product", 0);
 $category = get_parameter ("category", 0);
+$id_language = get_parameter ("id_language", '');
 
 // Search filters
 echo '<form method="post">';
@@ -40,17 +41,25 @@ echo "<tr>";
 echo "<td>";
 echo __('Product types');
 echo "<td>";
-combo_kb_products ($product, 0);
+
+echo print_select_from_sql ('SELECT id, name FROM tkb_product ORDER BY name', 'product', $product, '', __("Any"), '', true, false, false, '');
+
 echo "<td>";
 echo __('Categories');
 echo "<td>";
-combo_kb_categories ($category);
+combo_kb_categories ($category, 1);
 
 echo "<tr>";
 echo "<td>";
 echo __('Search');
 echo "<td>";
 echo "<input type=text name='free_text' size=25 value='$free_text'>";
+
+echo "<td>";
+echo __('Language');
+echo "<td>";
+echo print_select_from_sql ('SELECT id_language, name FROM tlanguage', 'id_language',
+					$id_language, '', __("Any"), '', true, false, false, '');
 
 echo "<td >";
 echo "<input type=submit class='sub search' value='".__('Search')."'>";
@@ -64,13 +73,16 @@ echo "</td></tr></table></form>";
 $sql_filter = "WHERE 1=1 ";
 
 if ($free_text != "")
-	$sql_filter .= "AND title LIKE '%$free_text%' OR data LIKE '%$free_text%'";
+	$sql_filter .= " AND title LIKE '%$free_text%' OR data LIKE '%$free_text%'";
 
 if ($product != 0)
-	$sql_filter .= "AND id_product = $product ";
+	$sql_filter .= " AND id_product = $product ";
 
 if ($category != 0)
-	$sql_filter .= "AND id_category = $category ";
+	$sql_filter .= " AND id_category = $category ";
+
+if ($id_language != '')
+	$sql_filter .= " AND id_language = '$id_language' ";
 
 $offset = get_parameter ("offset", 0);
 
@@ -86,11 +98,12 @@ if ($result=mysql_query($sql1)){
 	echo "<th>".__('Title')."</th>";
 	echo "<th>".__('Category')."</th>";
 	echo "<th>".__('Product')."</th>";
+	echo "<th>".__('Language')."</th>";
 	echo "<th>".__('Timestamp')."</th>";
 	while ($row=mysql_fetch_array($result)){
 		echo "<tr>";
 		// Name
-		echo "<td valign='top'><b><a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$row["id"]."'>".$row["title"]."</a></b></td>";
+		echo "<td valign='top'><b><a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$row["id"]."'>".short_string($row["title"],54)."</a></b></td>";
 
 		// Category
 		echo "<td class=f9>";
@@ -99,6 +112,10 @@ if ($result=mysql_query($sql1)){
 		// Product
 		echo "<td class=f9>";
 		echo get_db_sql ("SELECT name FROM tkb_product WHERE id = ".$row["id_product"]);
+
+		// Language
+		echo "<td class=f9>";
+		echo $row["id_language"];
 
 		// Timestamp
 		echo "<td class='f9' valign='top'>";

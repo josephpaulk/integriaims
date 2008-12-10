@@ -12,13 +12,10 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+include "include/functions_graph.php";
 global $config;
 
-if (check_login() != 0) {
- 	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
 $id_grupo = get_parameter ("id_grupo",0);
 $id_user=$config['id_user'];
@@ -88,14 +85,19 @@ echo "<table width=750 class='blank'>";
 echo "<tr><td class=datos>";
 echo "<h3>".__('Workunit by task')."</h3>";
 echo "<tr><td class=datos>";
-echo "<img src='include/functions_graph.php?type=workunit_user&width=650&height=350&id_user=$id_user&date_from=$from_one_month'>";
+
+echo graph_workunit_user (750, 270, $id_user, $from_one_month, 0, 1);
+
 echo "<tr><td class=datos>";
 echo "<h3>".__('Workunit by project')."</h3>";
 echo "<tr><td class=datos>";
-echo "<img src='include/functions_graph.php?type=workunit_project_user&width=650&height=350&id_user=$id_user&date_from=$from_one_month'>";
+
+echo graph_workunit_project_user (750, 270, $id_user, $from_one_month, 0, 1); 
+
 echo "</table>";
 echo "</div>";
 
 
 
 ?>
+<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>

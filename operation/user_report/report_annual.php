@@ -15,11 +15,7 @@
 // Load global vars
 
 	global $config;
-	if (check_login() != 0) {
-		audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
-		require ("general/noaccess.php");
-		exit;
-	}
+	check_login ();
 
     $days_f = array();
     $date = date('Y-m-d');

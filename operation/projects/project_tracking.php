@@ -17,11 +17,10 @@ check_login ();
 $id = (int) get_parameter ('id_project');
 $project = get_db_row ('tproject', 'id', $id);
 
-if ($project === false || ! give_acl ($config['id_user'], $project['id_project_group'], 'PR')) {
+if ($project === false || ! user_belong_project ($config["id_user"], $id)) {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access project ".$id);
-	include ("general/noaccess.php");
-	exit;
+	no_permission();
 }
 
 echo '<h2>'.__('Project tracking').' &raquo; '.$project['name'].'</h2>';

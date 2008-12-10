@@ -171,7 +171,7 @@ function show_task_row ($table, $id_project, $task, $level) {
 	// Estimation
 	$imghelp = "Estimated hours = ".$task["hours"];
 	$taskhours = get_task_workunit_hours ($task["id"]);
-	$imghelp .= "\nWorked hours = $taskhours";
+	$imghelp .= ", Worked hours = $taskhours";
 	$a = round ($task["hours"]);
 	$b = round ($taskhours);
 	$max = max($a, $b);

@@ -103,6 +103,9 @@ if ($create) {
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
 		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
+
+		$result_msg .= "<h3><a href='index.php?sec=inventory&sec2=operation/inventories/inventory&id=$id'>".__("Click here to continue working with Object #").$id."</a></h3>";
+
 		/* Update contacts in inventory */
 		update_inventory_contacts ($id, get_parameter ('contacts'));
 	} else {

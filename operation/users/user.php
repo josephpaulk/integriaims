@@ -61,5 +61,5 @@ echo "<div>";
 print_table ($table);
 echo "</div>";
 
-enterprise_hook ('print_profiles_table');
+// enterprise_hook ('print_profiles_table');
 ?>

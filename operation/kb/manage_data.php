@@ -35,8 +35,10 @@ if (isset($_GET["create2"])){ // Create group
 	$data = get_parameter ("data",0);
 	$id_product = get_parameter ("product","");
 	$id_category = get_parameter ("category","");
-	$sql_insert="INSERT INTO tkb_data (title, data, id_product, id_category, id_user, timestamp) 
-		  		 VALUE ('$title','$data', '$id_product', '$id_category', '".$config["id_user"]."', '$timestamp') ";
+	$id_language = get_parameter ("id_language", "");
+
+	$sql_insert="INSERT INTO tkb_data (title, data, id_product, id_category, id_user, timestamp, id_language) 
+		  		 VALUE ('$title','$data', '$id_product', '$id_category', '".$config["id_user"]."', '$timestamp', '$id_language') ";
 	$result=mysql_query($sql_insert);	
 	if (! $result)
 		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
@@ -73,9 +75,10 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	$id_product = get_parameter ("product","");
 	$id_category = get_parameter ("category","");
 	$id_user = $config["id_user"];
+	$id_language = get_parameter ("id_language", "");
 
 	$sql_update ="UPDATE tkb_data
-	SET title = '$title', data = '$data', timestamp = '$timestamp', id_user = '$id_user',
+	SET title = '$title', data = '$data', id_language = '$id_language', timestamp = '$timestamp', id_user = '$id_user',
 	id_category = $id_category, id_product = $id_product 
 	WHERE id = $id";
 	$result=mysql_query($sql_update);
@@ -150,6 +153,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id = -1;
 		$id_product = 1;
 		$id_category = 1;	
+		$id_language = '';
 		$id_incident = (int) get_parameter ("id_incident", 0);
 		if ($id_incident) {
 			// Get the product id of the first inventory object associated to the incident
@@ -170,6 +174,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$data = $row["data"];
 		$title = $row["title"];
 		$id_product = $row["id_product"];
+		$id_language = $row["id_language"];
 		$id_category = $row["id_category"];
 	}
 
@@ -189,28 +194,20 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	echo __('Title');
 	echo "<td class=datos>";
-	echo "<input type=text size=70 name='title' value='$title'>";
+	echo "<input type=text size=60 name='title' value='$title'>";
+
+	echo "<tr>";
+	echo "<td>";
+	echo __('Language');
+	echo "<td>";
+	echo print_select_from_sql ('SELECT id_language, name FROM tlanguage', 'id_language',
+					$id_language, '', __("Any"), '', true, false, false, '');
 
 	echo "<tr>";
 	echo "<td class=datos2 valign=top>";
 	echo __('Data');
 	echo "<td class=datos2>";
-	print_textarea ("data", 15, 50, $data, '', false,false);
-
-	echo "<tr>";
-	echo "<td class=datos>";
-	echo __('Attach');
-	echo "<td class=datos>";
-	if ($id == -1)
-		echo "<i>".__('Need to create first')."</i>";
-	else {
-		echo "<input type=file size=60 value='userfile' name='userfile'>";
-		echo "<tr>";
-		echo "<td class=datos>";
-		echo __('Attach description');
-		echo "<td class=datos>";
-		echo "<input type=text size=60 name='attach_description' value=''>";
-	}
+	print_textarea ("data", 15, 40, $data, '', false,false);
 
 	echo "<tr>";
 	echo "<td class=datos2>";
@@ -223,6 +220,23 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo __('Category');
 	echo "<td class=datos>";
 	combo_kb_categories ($id_category);
+
+	if ($id != -1){
+		echo "<tr>";
+		echo "<td class=datos>";
+		echo __('Attach');
+		echo "<td class=datos>";
+		if ($id == -1)
+			echo "<i>".__('Need to create first')."</i>";
+		else {
+			echo "<input type=file size=60 value='userfile' name='userfile'>";
+			echo "<tr>";
+			echo "<td class=datos>";
+			echo __('Attach description');
+			echo "<td class=datos>";
+			echo "<input type=text size=60 name='attach_description' value=''>";
+		}
+	}
 
 	echo "</table>";
 	

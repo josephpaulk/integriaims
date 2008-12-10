@@ -18,13 +18,16 @@
 
 global $config;
 
-if (check_login() != 0) {
- 	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access task tracking");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
 $id_task = get_parameter ("id_task", -1);
+
+if ( ! user_belong_task ($config["id_user"], $id_task)){
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task tracking without permission");
+	no_permission();
+}
+
 $cabecera=0;
 $sql4='SELECT * FROM ttask_track WHERE id_task= '.$id_task;
 

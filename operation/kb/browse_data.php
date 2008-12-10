@@ -33,6 +33,8 @@ $kb_data = get_db_row ("tkb_data", "id", $id);
 $data = $kb_data["data"];
 $title = $kb_data["title"];
 $timestamp = $kb_data["timestamp"];
+$id_language = $kb_data["id_language"];
+
 $product = '';
 if ($kb_data["id_product"])
 	$product = get_db_value ('name', 'tkb_product', 'id', $kb_data['id_product']);
@@ -61,6 +63,10 @@ echo "<td> <b>";
 echo __('Product')." </b> : ";
 echo $product;
 
+echo "<td><b>";
+echo __('Language');
+echo "</b> : ".$id_language;
+
 echo "<tr>";
 echo "<td>";
 
@@ -70,9 +76,11 @@ echo "<b>";
 echo __('Category')." </b> : ";
 echo $category;
 
+
+
 echo "<td align=right>";
 if (give_acl ($config["id_user"], 0, "KM")){
-	echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$kb_data['id']."'><img border=0 src='images/page_white_text.png'></a>";
+	echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$kb_data['id']."'><img border=0 title='".__('Edit')."' src='images/page_white_text.png'></a>";
 }
 
 echo "</table>";

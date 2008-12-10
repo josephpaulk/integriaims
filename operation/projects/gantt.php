@@ -1,5 +1,5 @@
 <?php
-// INTEGRIA - the ITIL Management System
+// INTEGRIA IMS - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2008 Ártica Soluciones Tecnológicas
@@ -13,9 +13,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
-// gantt php class example and configuration file
-// Copyright (C) 2005 Alexandre Miguel de Andrade Souza
 
 include_once ('include/functions_fsgraph.php');
 
@@ -35,7 +32,9 @@ function fix_date ($date, $default='') {
 
 // Get project tasks
 function get_tasks (&$tasks, $project_id, $project_start, $project_end, $parent_id = 0, $depth = 0) {
+	global $config;
 
+	$id_user = $config["id_user"];
     $result = mysql_query ('SELECT * FROM ttask 
                             WHERE id_parent_task = ' . $parent_id
                             . ' AND id_project = ' . $project_id);
@@ -49,24 +48,29 @@ function get_tasks (&$tasks, $project_id, $project_start, $project_end, $parent_
 	}
 
     while ($row = mysql_fetch_array ($result)) {
-    	$task['id'] = $row['id'];
-    	$task['name'] = $indent . $row['name'];
-    	$task['parent'] = $parent_id;
-    	$task['link'] = 'index.php?sec=projects&sec2=operation/projects/task_detail&id_project=' . $project_id .'&id_task=' . $row['id'] .'&operation=view';
-    	// start > end
-   		$task['start'] = fix_date ($row['start'], $project_start);
-   		$task['end'] = fix_date ($row['end'], $project_start);
-    	if (date_to_epoch ($task['start']) > date_to_epoch ($task['end'])) {
-    		$temp = $task['start'];
-    		$task['start'] = $task['end'];
-    		$task['end'] = $temp;
+		
+		// ACL Check for this task
+		// This user is assigned to this task ?	
+		if ( user_belong_task ($config["id_user"], $row['id'])){
+			$task['id'] = $row['id'];
+			$task['name'] = $indent . $row['name'];
+			$task['parent'] = $parent_id;
+			$task['link'] = 'index.php?sec=projects&sec2=operation/projects/task_detail&id_project=' . $project_id .'&id_task=' . $row['id'] .'&operation=view';
+			// start > end
+			$task['start'] = fix_date ($row['start'], $project_start);
+			$task['end'] = fix_date ($row['end'], $project_end);
+			if (date_to_epoch ($task['start']) > date_to_epoch ($task['end'])) {
+				$temp = $task['start'];
+				$task['start'] = $task['end'];
+				$task['end'] = $temp;
+			}
+			$task['real_start'] = fix_date (get_db_sql ('SELECT MIN(timestamp) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND timestamp <> \'0000-00-00 00:00:00\' AND id_task = ' . $row['id']), $task['start']);
+			$task['real_end'] = fix_date (get_db_sql ('SELECT MAX(timestamp) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND timestamp <> \'0000-00-00 00:00:00\' AND id_task = ' . $row['id']), $task['start']);
+			$task['completion'] = $row['completion'];
+			array_push ($tasks, $task);
+	
+			get_tasks (&$tasks, $project_id, $project_start, $project_end, $task['id'], $depth + 1);
 		}
-		$task['real_start'] = fix_date (get_db_sql ('SELECT MIN(timestamp) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND timestamp <> \'0000-00-00 00:00:00\' AND id_task = ' . $row['id']), $task['start']);
-		$task['real_end'] = fix_date (get_db_sql ('SELECT MAX(timestamp) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND timestamp <> \'0000-00-00 00:00:00\' AND id_task = ' . $row['id']), $task['start']);
-    	$task['completion'] = $row['completion'];
-    	array_push ($tasks, $task);
-
-        get_tasks (&$tasks, $project_id, $project_start, $project_end, $task['id'], $depth + 1);
     }
 }
 
@@ -94,12 +98,8 @@ if (!isset($config["base_url"]))
 	exit;
 
 // Security checks for this project
+	check_login ();
 
-if (check_login() != 0) {
-    audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
-    require ($config["base_url"]."/general/noaccess.php");
-    exit;
-}
 $id_user = $_SESSION['id_usuario'];
 $id_project = get_parameter ("id_project", -1);
 if ($id_project != -1)
@@ -108,17 +108,9 @@ else
 	$project_name = "";
 $clean_output = get_parameter ("clean_output", 0);
 
-if ( $id_project == -1 ){
-    // Doesn't have access to this page
-    	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager withour project");
-	require ($config["base_url"]."/general/noaccess.php");
-    	exit;
-}
-
-if (user_belong_project ($id_user, $id_project)==0){
+if (user_belong_project ($id_user, $id_project) == 0){
 	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
-	require ($config["base_url"]."/general/noaccess.php");
-	exit;
+	no_permission();
 }
 
 echo "<h2>".$project_name." &raquo; ".__('Gantt graph')."</h2>";
@@ -134,6 +126,7 @@ $to = $project_end;
 
 // Minimum date from project/tasks/workunits
 $min_start = fix_date (get_db_sql ('SELECT MIN(start) FROM integria.ttask WHERE start <> \'0000-00-00\' AND id_project = ' . $id_project));
+
 if ($min_start !== false && (date_to_epoch ($min_start) < date_to_epoch ($from) || $from == '00/00/0000')) {
 	$from = $min_start;
 }
@@ -174,9 +167,9 @@ if ($project_end != '00/00/0000') {
 
 // Calculate chart width
 if ($clean_output) {
-	$width = 900;
+	$width = 950;
 } else {
-	$width = 750;
+	$width = 780;
 }
 
 // Calculate chart height

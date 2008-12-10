@@ -1,17 +1,22 @@
 <?php 
 
-// Integria 2.0 - http://integria.sourceforge.net
-// ==================================================
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
-// Copyright (c) 2008 Esteban Sanchez
+
+// INTEGRIA IMS v2.0
+// http://www.integriaims.com
+// ===========================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2008 Esteban Sanchez, estebans@artica.es
+// Copyright (c) 2007-2008 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; version 2
+// modify it under the terms of the GNU Lesser General Public License
+// (LGPL) as published by the Free Software Foundation; version 2
+
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Lesser General Public License for more details.
+
 
 /**
  * Filter all the incidents and return a list of matching elements.
@@ -248,7 +253,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	$table->data[0][0] = print_label (__('Total incicents'), '', '', true, $total);
 	$data = array ($opened, $total - $opened);
 	$legend = array (__('Opened'), __('Closed'));
-	$table->data[0][1] = fs_3d_pie_chart ($data, $legend, 200, 100);
+	$table->data[0][1] = fs_3d_pie_chart ($data, $legend, 200, 100, "ffffff");
 	$table->data[1][0] = print_label (__('Opened'), '', '', true,
 		$opened.' ('.$opened_pct.'%)');
 	$table->data[2][0] = print_label (__('Mean life time'), '', '', true,

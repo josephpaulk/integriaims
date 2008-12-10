@@ -1,5 +1,6 @@
 alter table tconfig MODIFY value TEXT;
 alter table tworkunit MODIFY locked varchar(80) default "";
+alter table tkb_data ADD `id_language` varchar(15) NOT NULL default '';
 
 ALTER TABLE tagenda ADD FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE;

@@ -39,7 +39,10 @@ if ($search_contact) {
 	foreach ($contacts as $contact) {
 		echo '<tr id="result-'.$contact['id'].'">';
 		echo '<td><strong>'.$contact['fullname'].'</strong></td>';
-		echo '<td>'.$companies[$contact['id_company']].'</td>';
+		if (isset($companies[$contact['id_company']]))
+			echo '<td>'.$companies[$contact['id_company']].'</td>';
+		else	
+			echo '<td></td>';
 	}
 	
 	return;

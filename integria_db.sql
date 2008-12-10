@@ -498,6 +498,7 @@ CREATE TABLE `tkb_data` (
   `title` varchar(250) default NULL,
   `data` mediumtext NOT NULL,
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  `id_language` varchar(6) NOT NULL default '',
   `id_user` varchar(150) NOT NULL default '',
   `id_product` mediumint(8) unsigned default 0,
   `id_category` mediumint(8) unsigned default 0,

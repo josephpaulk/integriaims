@@ -27,12 +27,12 @@ $id_group = get_db_value ('id_group', 'ttask', 'id', $id_task);
 $title = get_parameter ("title", "");
 $description = get_parameter ("description", "");
 
-// ACL checks
-if (give_acl ($config["id_user"], $id_group, "TM") == 0)
-	no_permission();
 
-if ($id_task <  1)
+if (! user_belong_task ($config["id_user"], $id_task)){
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task email report  without permission");
 	no_permission();
+}
 
 if ($operation == "generate_email"){
 	$task_participants = get_db_all_rows_sql ("SELECT direccion, nombre_real FROM tusuario, trole_people_task WHERE tusuario.id_usuario = trole_people_task.id_user AND trole_people_task.id_task = $id_task");

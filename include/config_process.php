@@ -17,7 +17,7 @@
 global $config;
 
 // Integria version
-$config["build"]="081118";
+$config["build"]="081205";
 $config["version"]="v2.0-dev";
 $config["build_version"] = $config["build"];
 
@@ -77,8 +77,9 @@ foreach ($configs as $c) {
 require_once ('streams.php');
 require_once ('gettext.php');
 
-if (isset ($config['id_user']))
-	$config['language_code'] = get_db_value ('lang', 'tusuario', 'id_usuario', $config['id_user']);
+if (isset ($_SESSION['id_usuario'])) {
+	$config['language_code'] = get_db_value ('lang', 'tusuario', 'id_usuario', $_SESSION['id_usuario']);
+}
 
 $l10n = NULL;
 if (file_exists ('./include/languages/'.$config['language_code'].'.mo')) {
@@ -115,6 +116,9 @@ if (!isset ($config["limit_size"]))
 
 if (!isset ($config["sitename"]))
 	$config["sitename"] = "INTEGRIA";
+
+if (!isset ($config["fontsize"]))
+	$config['fontsize'] = 10;
 
 // Mail address used to send mails
 if (!isset ($config["mail_from"]))

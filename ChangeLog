@@ -1,4 +1,106 @@
-2008-12-06  Sancho Lerena  <slerena@artica.es>
+2008-12-10  Sancho Lerena  <slerena@artica.es>
+	
+	* integria_db.sql: Added field id_language to tkb_data.
+
+	* upgrade.sql, parche.sql: Added new field to KB table.
+
+	* home.php: Added new project overview graph (flash) to home page.
+
+	* integria_help.php: Fixed on not-existant help files (using en). Fixed
+	format of missing help page.
+
+	* login_page.php: More height on box (format).
+
+	* links.php: Fixed bug on link deletion.
+
+	* config_process.php, setup.php: Added option to define general font 
+	size (buble only).
+
+	* functions.php: Added short_string(), clean_flash_string(), updated
+	width of print_priority_flag_image() output 
+	
+	* functions_calendar.php: Added square on minicalendar to show current day.
+
+	* functions_form.php: combo_users_task() fixed, not working fine until now, 
+	combo_kb_categories() shows "any" value for no filtering, added links to
+	wu boxes in show_workunit_user(), some minor notice fixes in foreach. Fixed
+	a typo in show_workunit_user() that makes the superb ajax feature on WU
+	lock to don't work. Now works like a charm :-)
+
+	* functions_fsgraph.php: Added fs_hbar_chart(), some uses of 
+	clean_flash_string function to sanitize some gantt texts. Added background
+	color support. Minor fixes.
+
+	* functions_graph.php: modified version to be able to use with flash as
+	unique point for graphs (flash and normal). Old GD generated graphs now
+	uses transparent backgrounds.
+
+	* functions_incidents.php: Updated pie graph to use background color.
+
+	* integria_incident_search.js: Fixed silly problem in manage product 
+	ajax code.
+
+	* query.ui.datepicker.js: Hardcoded format causing problems modified.
+
+	* integria.css: input.login button more narrow.
+
+	* sidemenu.php: Added check to get project id if missing and task passed.
+	Added full graph report option, add quick link for that report in userbox.
+	KB options simplified (removed manager view).
+
+	* inventory_detail.php: Quick link to continue working with object after 
+	creating it. Old-style solution to avoid more AJAX!.
+
+	* kb/browse.php: added language to kb search.
+	
+	* kb/manage_data.php: Added language management for kb items.
+
+	* operation/projects/gantt.php: Some fixes. Added full ACL checks.
+
+	* operation/projects/milestones.php: Added full ACL checks.
+
+	* operation/projects/people_manager.php: Added full ACL checks.
+
+	* operation/projects/project.php: Delete is now disable :-)
+
+	* operation/projects/project_detail.php: Added more ACL checks.
+
+	* operation/projects/project_group_detail.php: More ACL checks.
+	
+	* operation/projects/project_tracking.php: More ACL checks
+
+	* operation/projects/project_tree.php: Duplicated combo removed ¿?
+
+	* operation/projects/task_attach_file.php: More ACL checks.
+
+	* operation/projects/task_detail.php: More ACL checks. Changed graph for
+	a better one in Flash.
+
+	* operation/projects/task_emailreport.php: More ACL checks.
+
+	* operation/projects/task_files.php, 
+	operation/projects/task_move.php,
+	operation/projects/task_tracking.php,
+	operation/projects/task_workunit.php: More ACL checks.
+
+	* operation/user_report/monthly_graph.php,
+	operation/user_report/report_full.php,
+	operation/reporting/incidents_html.php: Changed graph for a better one 
+	in Flash. 
+
+	* operation/users/user.php: removed listing of profiles here.
+
+	* operation/users/user_spare_workunit.php: more ACL Checks.
+
+	* operation/user_report/report_full_graph.php: New user graph with assigned
+	tasks and reported work.
+
+	* integria_small.png: added for help page.
+
+	* include/FusionCharts/*.swf: Added more Flash base graphs from fussion
+	chart library.
+
+2008-12-04  Sancho Lerena  <slerena@artica.es>
 
 	* operation/incidents/incident_detail.php: Updated permissions for IM 
 	on update operations. 

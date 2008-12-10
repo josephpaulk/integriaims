@@ -425,9 +425,9 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 		function (data, status) {
 			$("#dialog-search-inventory").empty ().append (data);
 			$("#dialog-search-inventory").dialog ({"title" : title,
-					minHeight: 500,
+					minHeight: 400,
 					minWidth: 600,
-					height: 700,
+					height: 600,
 					width: 900,
 					modal: true,
 					bgiframe: true,
@@ -851,7 +851,7 @@ function configure_inventory_form (enable_ajax_form) {
 			}
 			values = Array ();
 			values.push ({name: "page",
-						value: "operation/kb/manage_prod"});
+						value: "operation/inventories/manage_prod"});
 			values.push ({name: "id",
 						value: id_product});
 			values.push ({name: "get_icon",

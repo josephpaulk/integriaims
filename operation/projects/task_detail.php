@@ -14,7 +14,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
+include "include/functions_graph.php";
 global $config;
 
 check_login ();
@@ -50,11 +50,19 @@ $id_group = 1;
 $result_output = "";
 $parent = 0;
 
+// ACL Check for this task
+// This user is assigned to this task ?
+
+if ( ! user_belong_task ($config["id_user"], $id_task)){
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager without project");
+	no_permission();
+}
+
 if ($operation == "") {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager without project");
-	include ("general/noaccess.php");
-	exit;
+	no_permission();
 }
 
 // Create task
@@ -218,7 +226,9 @@ $table->data[0][0] = print_input_text ('name', $name, '', 50, 240, true, __('Nam
 
 if ($id_task != -1) {
 	$table->rowspan[0][2] = 5;
-	$image = '<img src="include/functions_graph.php?type=workunit_task&width=200&height=170&id_task='.$id_task.'">';
+
+	$image = graph_workunit_task (200, 170, $id_task, 1);
+	//$image = '<img src="include/functions_graph.php?type=workunit_task&width=200&height=170&id_task='.$id_task.'">';
 	$table->data[0][2] = print_label (__('Workunit distribution'), '', '', true, $image);
 }
 
@@ -350,3 +360,4 @@ $(document).ready (function () {
 ?>
 });
 </script>
+<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>

@@ -71,7 +71,7 @@ if ($search) {
 $table->data = array ();
 $table->width = '90%';
 
-$table->data[0][0] = print_select_from_sql ('SELECT id,name FROM tprofile ORDER BY 2',
+$table->data[0][0] = print_select_from_sql ('SELECT id,name FROM trole ORDER BY 2',
 					'user_profile_search', $id_profile, '',
 					__('Any'), 0, true, false, false, __('Role'));
 

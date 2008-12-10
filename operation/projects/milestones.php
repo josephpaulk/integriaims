@@ -29,9 +29,13 @@ else
 
 if ( $id_project == -1 ){
 	// Doesn't have access to this page
-	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager withour project");
-	include ("general/noaccess.php");
-	exit;
+	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to milestone manager without project");
+	no_permission();
+}
+
+if (! user_belong_project ($config["id_user"], $id_project)) {
+	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to milestone manager without permissions");
+	no_permission();
 }
 
 // ---------------

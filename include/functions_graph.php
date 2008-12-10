@@ -1,21 +1,31 @@
 <?PHP
 
-// INTEGRIA - the ITIL Management System
-// http://integria.sourceforge.net
-// ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
-// http://www.artica.es  <info@artica.es>
+
+// INTEGRIA IMS v2.0
+// http://www.integriaims.com
+// ===========================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2008 Esteban Sanchez, estebans@artica.es
+// Copyright (c) 2007-2008 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; version 2
+// modify it under the terms of the GNU Lesser General Public License
+// (LGPL) as published by the Free Software Foundation; version 2
+
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Lesser General Public License for more details.
 
-include_once ("config.php");
-global $config;
+
+if (file_exists("config.php")){
+	include_once ("config.php");
+	include_once ("functions_fsgraph.php");
+}
+elseif (file_exists("include/config.php")){
+	include_once ("include/config.php");
+	include_once ("include/functions_fsgraph.php");
+}
 
 // ===============================================================================
 // Draw a simple pie graph with incidents, by assigned user
@@ -43,9 +53,11 @@ function incident_peruser ($width, $height){
 // Draw a simple pie graph with reported workunits for a specific TASK
 // ===============================================================================
 
-function graph_workunit_task ($width, $height, $id_task){
-	require ("../include/config.php");
-	
+function graph_workunit_task ($width, $height, $id_task, $flash = 0){
+	global $config;
+	$data = array();
+	$legend = array();
+
 	$res = mysql_query("SELECT SUM(duration), id_user FROM tworkunit, tworkunit_task
 					WHERE tworkunit_task.id_task = $id_task AND 
 					tworkunit_task.id_workunit = tworkunit.id 
@@ -54,8 +66,10 @@ function graph_workunit_task ($width, $height, $id_task){
 		$data[] = $row[0];
 		$legend[] = $row[1];
 	} 
-	 
-	if (isset($data))
+	
+	if ($flash == 1){ 
+		return fs_3d_pie_chart ($data, $legend, $width, $height);
+	} elseif (isset($data))
 		generic_pie_graph ($width, $height, $data, $legend);
 	else 
 		graphic_error();
@@ -66,30 +80,40 @@ function graph_workunit_task ($width, $height, $id_task){
 // Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
 // ===============================================================================
 
-function graph_workunit_user ($width, $height, $id_user, $date_from ){
-	require ("../include/config.php");
-	
+function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 0, $flash = 0 ){
+	global $config;
 
-	$date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
+	if ($date_to == 0){
+		$date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
+	}
+
 	$res = mysql_query("SELECT SUM(duration), id_task, timestamp, ttask.name, tproject.name 
 					FROM tworkunit, tworkunit_task, ttask, tproject  
 					WHERE tworkunit.id_user = '$id_user' AND 
 					tworkunit.id = tworkunit_task.id_workunit AND 
 					tworkunit.timestamp > '$date_from' AND 
-			tworkunit.timestamp < '$date_to' AND
+					tworkunit.timestamp < '$date_to' AND
 					tworkunit_task.id_task = ttask.id AND
 					tproject.id = ttask.id_project 
 					GROUP BY id_task ORDER BY SUM(duration) DESC");
 
-	while ($row=mysql_fetch_array($res)){
+	while ($row = mysql_fetch_array($res)){
 		$data[] = $row[0];
-		$legend[] = $row[4]." / ".$row[3] . " (".$row[0].")";
+		//$legend[] = clean_flash_string ($row[4]." ".$row[3]);
+		$legend[] = substr(clean_flash_string ($row[3]),0,25);
 	} 
-	 
-	if (isset($data))
-		generic_pie_graph ($width, $height, $data, $legend);
-	else 
-		graphic_error();
+
+
+	if ($flash == 1){
+		return fs_hbar_chart ($data, $legend, $width, $height);		
+		// echo fs_3d_pie_chart ($data, $legend, $width, $height);
+	}
+	else {
+		if (isset($data))
+			generic_pie_graph ($width, $height, $data, $legend);
+		else 
+			graphic_error();
+	}
 }
 
 
@@ -97,8 +121,9 @@ function graph_workunit_user ($width, $height, $id_user, $date_from ){
 // Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
 // ===============================================================================
 
-function graph_workunit_project_user ($width, $height, $id_user, $date_from, $date_to = 0){
-	require ("../include/config.php");
+function graph_workunit_project_user ($width, $height, $id_user, $date_from, $date_to = 0, $flash = 0){
+	global $config;
+
 	if ($date_to == 0){
 		$date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
 	}
@@ -114,13 +139,17 @@ function graph_workunit_project_user ($width, $height, $id_user, $date_from, $da
 					GROUP BY tproject.name ORDER BY SUM(duration) DESC");
 	while ($row=mysql_fetch_array($res)){
 		$data[] = $row[0];
-		$legend[] = $row[1] ." (".$row[0].")";
+		$legend[] = clean_flash_string ($row[1]);
 	} 
 	 
-	if (isset($data))
-		generic_pie_graph ($width, $height, $data, $legend);
-	else 
-		graphic_error();
+	if ($flash == 1){
+		return fs_hbar_chart ($data, $legend, $width, $height);		
+	} else {
+		if (isset($data))
+			generic_pie_graph ($width, $height, $data, $legend);
+		else 
+			graphic_error();
+	}
 }
 
 // ===============================================================================
@@ -162,12 +191,16 @@ function progress_bar ($progress, $width, $height) {
 		$ratingbar = (($rating/100)*$width)-2;
 
 		$image = imagecreate($width,$height);
+		
+
 		//colors
 		$back = ImageColorAllocate($image,255,255,255);
-		$border = ImageColorAllocate($image,0,0,0);
+		imagecolortransparent ($image, $back);
+		$border = ImageColorAllocate($image,174,174,174);
+		$text = ImageColorAllocate($image,74,74,74);
 		$red = ImageColorAllocate($image,255,60,75);
 		$green = ImageColorAllocate($image,50,205,50);
-		$fill = ImageColorAllocate($image,44,81,150);
+		$fill = ImageColorAllocate($image,44,81,120);
 
 		ImageFilledRectangle($image,0,0,$width-1,$height-1,$back);
 		if ($rating > 100)
@@ -184,7 +217,7 @@ function progress_bar ($progress, $width, $height) {
 			else
 				ImageTTFText($image, 8, 0, ($width/2)-($width/10), ($height/2)+($height/5), $back, $config["fontpath"], $rating."%");
 		else
-			ImageTTFText($image, 8, 0, ($width/2)-($width/10), ($height/2)+($height/5), $border, $config["fontpath"], $rating."%");
+			ImageTTFText($image, 8, 0, ($width/2)-($width/10), ($height/2)+($height/5), $text, $config["fontpath"], $rating."%");
 		imagePNG($image);
 		imagedestroy($image);
    	}
@@ -210,12 +243,16 @@ function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue,
 	
    	Header("Content-type: image/png");
 	$image = imagecreate($width,$height);
-	//colors
 	$white = ImageColorAllocate($image,255,255,255);
+	imagecolortransparent ($image, $white);
+
 	$black = ImageColorAllocate($image,0,0,0);
 	$red = ImageColorAllocate($image,255,60,75);
 	$blue = ImageColorAllocate($image,75,60,255);
 	$grey = ImageColorAllocate($image,120,120,120);
+
+
+
 	$margin_up = 2;
 	$max_value = $maxvalue;
 	if ($mode != 2){
@@ -227,10 +264,17 @@ function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue,
 		$rectangle_height = ($height - 10 - 2 - $margin_up ) / 2;
 	else
 		$rectangle_height = ($height - 2 - $margin_up ) / 2;
+
+	
+
+
 	// First rectangle
 	if ($size_per == 0)
 		$size_per = 1;
 	if ($mode != 2){
+
+
+
 		ImageFilledRectangle($image, 40, $margin_up, ($ratingA/$size_per)+40, $margin_up+$rectangle_height -1 , $blue);
 		$legend = $ratingA;
 		ImageTTFText($image, 7, 0, 0, $margin_up+8, $black, $config["fontpath"], $labela);
@@ -245,6 +289,7 @@ function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue,
 		// Second rectangle
 		ImageFilledRectangle($image, 1, $margin_up+$rectangle_height + 1 , ($ratingB/$size_per)+1, ($rectangle_height*2)+$margin_up , $red);
 		$legend = $ratingA;
+
 	}
 	if ($mode == 0){ // With strips
 		// Draw limits
@@ -655,7 +700,7 @@ function project_tree ($id_project, $id_user){
 	fwrite ($dotfile, "	  ranksep=2.0;\n");
 	fwrite ($dotfile, "	  ratio=auto;\n");
 	fwrite ($dotfile, "	  size=\"9,12\";\n");
-	fwrite ($dotfile, "	  node[fontsize=10];\n");
+	fwrite ($dotfile, "	  node[fontsize=".$config['fontsize']."];\n");
 	fwrite ($dotfile, '	  project [label="'. wordwrap($project_name,12,'\\n').'",shape="ellipse", style="filled", color="grey"];'."\n");
 	for ($ax=0; $ax < $total_task; $ax++){
 		fwrite ($dotfile, 'TASK'.$task[$ax].' [label="'.wordwrap($task_name[$ax],12,'\\n').'"];');
@@ -707,7 +752,7 @@ function all_project_tree ($id_user, $completion, $project_kind){
 	fwrite ($dotfile, "	  size=\"9,9\";\n");
 	fwrite ($dotfile, 'URL="'.$config["base_url"].'/index.php?sec=projects&sec2=operation/projects/project_tree";'."\n");
 
-	fwrite ($dotfile, "	  node[fontsize=8];\n");
+	fwrite ($dotfile, "	  node[fontsize=".$config['fontsize']."];\n");
 	fwrite ($dotfile, "	  me [label=\"$id_user\", style=\"filled\", color=\"yellow\";\n");
 
 	$total_project = 0;
@@ -851,24 +896,26 @@ $date_to   = get_parameter ( "date_to", 0);
 $mode = get_parameter ( "mode", 1);
 $percent = get_parameter ( "percent", 0);
 $days = get_parameter ( "days", 0);
+$type= get_parameter ("type", "");
+$background = get_parameter ("background", "#ffffff");
 
-if ( $_GET["type"] == "progress")
+if ( $type == "progress")
 	progress_bar ($percent, $width, $height);
-elseif ($_GET["type"] == "incident_a")
+elseif ($type == "incident_a")
 	incident_peruser ($width, $height);
-elseif ($_GET["type"] == "workunit_task")
+elseif ($type == "workunit_task")
 	graph_workunit_task($width, $height, $id_task);
-elseif ($_GET["type"] == "histogram")
+elseif ($type == "histogram")
 	generic_histogram ($width, $height, $mode, $valuea, $valueb, $max, $labela, $labelb);
-elseif ($_GET["type"] == "workunit_user")
+elseif ($type == "workunit_user")
 	graph_workunit_user ($width, $height, $id_user, $date_from);
-elseif ($_GET["type"] == "workunit_project_user")
+elseif ($type == "workunit_project_user")
 	graph_workunit_project_user ($width, $height, $id_user, $date_from, $date_to);
-elseif ($_GET["type"] == "project_tree")
+elseif ($type == "project_tree")
 	project_tree ($id_project, $id_user);
-elseif ($_GET["type"] == "all_project_tree")
+elseif ($type == "all_project_tree")
 	all_project_tree ($id_user, $completion, $project_kind);
-elseif ($_GET["type"] == "pipe") {
+elseif ($type == "pipe") {
 	$data = (string) get_parameter ("data");
 	$legend = (string) get_parameter ("legend");
 	$data = split (',', $data);

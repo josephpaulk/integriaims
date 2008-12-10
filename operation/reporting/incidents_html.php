@@ -157,7 +157,7 @@ foreach ($incidents as $incident) {
 	$workunits = get_incident_count_workunits ($incident["id_incidencia"]);
 	if ($workunits > 0) {
 		$data[7] = '<img src="images/award_star_silver_1.png" />';
-		$data[7] .= get_incident_wokunit_hours ($incident["id_incidencia"]);
+		$data[7] .= get_incident_workunit_hours ($incident["id_incidencia"]);
 	}
 	
 	$data[8] = $incident['id_usuario'];
@@ -175,3 +175,4 @@ include ('general/footer.php');
 echo '</div>';
 echo "</div>";
 ?>
+<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>

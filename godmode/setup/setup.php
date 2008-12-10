@@ -36,6 +36,7 @@ if ($update) {
 	$config["sitename"] = (string) get_parameter ("sitename", "Integria IMS");
 	$config["limit_size"] = (int) get_parameter ("limit_size");
 	$config["autowu_completion"] = (int) get_parameter ("autowu_completion", 0);
+	$config["fontsize"] = (int) get_parameter ("fontsize", 10);
 
 	process_sql ("UPDATE tconfig SET value='".$config["block_size"]."' WHERE token='block_size'");
 	process_sql ("UPDATE tconfig SET value='".$config["language_code"]."' WHERE token='language_code'");
@@ -51,6 +52,9 @@ if ($update) {
 
 	process_sql ("DELETE FROM tconfig WHERE token = 'no_wu_completion'");
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('no_wu_completion', '".$config["no_wu_completion"]."')");
+
+	process_sql ("DELETE FROM tconfig WHERE token = 'fontsize'");
+	process_sql ("INSERT INTO tconfig (token, value) VALUES ('fontsize', '".$config["fontsize"]."')");
 
 }	
 
@@ -89,6 +93,9 @@ $table->data[3][0] = print_input_text ("sitename", $config["sitename"], '',
 	30, 50, true, __('Sitename'));
 $table->data[3][1] = print_input_text ("currency", $config["currency"], '',
 	3, 3, true, __('Currency'));
+
+$table->data[4][0] = print_input_text ("fontsize", $config["fontsize"], '',
+	3, 5, true, __('Graphics font size'));
 
 
 echo "<form name='setup' method='post'>";

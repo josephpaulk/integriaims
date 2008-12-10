@@ -1,18 +1,20 @@
 <?php
 
-// INTEGRIA - the ITIL Management System
-// http://integria.sourceforge.net
-// ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
-// http://www.artica.es  <info@artica.es>
+// INTEGRIA IMS v2.0
+// http://www.integriaims.com
+// ===========================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2008 Esteban Sanchez, estebans@artica.es
+// Copyright (c) 2007-2008 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; version 2
+// modify it under the terms of the GNU Lesser General Public License
+// (LGPL) as published by the Free Software Foundation; version 2
+
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Lesser General Public License for more details.
 
 // PHP Calendar (version 2.3), written by Keith Devens
 // http://keithdevens.com/software/php_calendar
@@ -70,6 +72,12 @@ function get_project_end_date ($now, $days_margin = 0, $id_user = ""){
 		$result[] = $row["pname"] ."|".$row["idp"]."|".$row["pend"]."|".$row["id_owner"];
 	}
 	return $result;
+}
+
+/** TODO
+*/
+function get_project_milestone ($now, $id_user = ""){
+	global $config;
 }
 
 function get_task_end_date ($now, $days_margin = 0, $id_user = ""){
@@ -266,16 +274,23 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 			$days[$day][0] = "index.php?sec=projects&sec2=operation/projects/task&id_project=$idp";
 		}
 
+		$time = time();
+		$today = date('j',$time);
+		$today_m = date('n',$time);
+		$today_style = "";
+		if (($today == $day) && ($today_m == $month))
+			$today_style .= "style='border: 1px solid #00ff00;'";		
+
 		if(isset($days[$day]) and is_array($days[$day])){
 			@list($link, $classes, $content) = $days[$day];
-			$calendar .= '<td class="'.htmlspecialchars($classes).'">';
+			$calendar .= '<td '.$today_style.' class="'.htmlspecialchars($classes).'">';
 			if ($link)
 				$calendar .= '<a href="'.htmlspecialchars($link).'">'.$content.'</a></td>';
 			else
 			 	$calendar .= $content.'</td>';
 		}
 		else {
-			$calendar .= "<td>$content</td>";
+			$calendar .= "<td $today_style>$content</td>";
 		}
 	}
 	if($weekday != 7) $calendar .= '<td colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days

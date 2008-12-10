@@ -15,8 +15,8 @@
 
 ?>
 <center>
-<div class="databox" id="login">
-	<div id="login_in">
+<div class="databox" id="login" style='height: 165px'>
+	<div>
 <?php 
 	$action = "index.php";
 	$params = '';

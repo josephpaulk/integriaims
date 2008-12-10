@@ -1,18 +1,22 @@
 <?PHP
 
-// INTEGRIA - the ITIL Management System
-// http://integria.sourceforge.net
-// ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
-// http://www.artica.es  <info@artica.es>
+
+// INTEGRIA IMS v2.0
+// http://www.integriaims.com
+// ===========================================================
+// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2008 Esteban Sanchez, estebans@artica.es
+// Copyright (c) 2007-2008 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; version 2
+// modify it under the terms of the GNU Lesser General Public License
+// (LGPL) as published by the Free Software Foundation; version 2
+
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Lesser General Public License for more details.
+
 
 include_once ("config.php");
 require_once ("FusionCharts/FusionCharts_Gen.php");
@@ -43,25 +47,49 @@ function get_chart_code ($chart, $width, $height, $swf) {
 }
 
 // Prints a 3D pie chart
-function fs_3d_pie_chart ($data, $names, $width, $height) {
+function fs_3d_pie_chart ($data, $names, $width, $height, $background = "EEEEEE") {
+	global $config;
 
-	if (sizeof ($data) != sizeof ($names)) {
+	if ((sizeof ($data) != sizeof ($names)) OR (sizeof($data) == 0) ){
 		return;
 	}
 
 	// Generate the XML
 	$chart = new FusionCharts("Pie3D", $width, $height);
 	$chart->setSWFPath("FusionCharts/");
-  	$params="showNames=1;showValues=0";
+  	$params="showNames=1;showValues=0;showPercentageValues=0;baseFontSize=9;bgColor=$background;bgAlpha=100;canvasBgAlpha=100;";
   	$chart->setChartParams($params);
 
 	for ($i = 0; $i < sizeof ($data); $i++) {
-		$chart->addChartData($data[$i], 'name=' . $names[$i]);
+		$chart->addChartData($data[$i], 'name=' . clean_flash_string($names[$i]));
 	}
 
 	// Return the code
 	return get_chart_code ($chart, $width, $height, 'include/FusionCharts/FCF_Pie3D.swf');
 }
+
+// Prints a BAR Horizontalchart
+function fs_hbar_chart ($data, $names, $width, $height) {
+	global $config;
+
+	if (sizeof ($data) != sizeof ($names)) {
+		return;
+	}
+
+	// Generate the XML
+	$chart = new FusionCharts("Bar2D", $width, $height);
+	$chart->setSWFPath("FusionCharts/");
+  	$params="showNames=1;showValues=0;showPercentageValues=0;baseFontSize=9;rotateNames=1;chartLeftMargin=0;chartRightMargin=0;chartBottomMargin=0;chartTopMargin=0;showBarShadow=1;showLimits=1";
+  	$chart->setChartParams($params);
+
+	for ($i = 0; $i < sizeof ($data); $i++) {
+		$chart->addChartData($data[$i], 'name=' . clean_flash_string($names[$i]));
+	}
+
+	// Return the code
+	return get_chart_code ($chart, $width, $height, 'include/FusionCharts/FCF_Bar2D.swf');
+}
+
 
 // Prints a Gantt chart
 function fs_gantt_chart ($title, $from, $to, $tasks, $milestones, $width, $height) {
@@ -70,7 +98,7 @@ function fs_gantt_chart ($title, $from, $to, $tasks, $milestones, $width, $heigh
 	$chart = new FusionCharts("Gantt", $width, $height, "1", "0");
 	$chart->setSWFPath("FusionCharts/");
 	$chart->setChartParams('dateFormat=dd/mm/yyyy;hoverCapBorderColor=2222ff;hoverCapBgColor=e1f5ff;ganttLineAlpha=80;canvasBorderColor=024455;canvasBorderThickness=0;gridBorderColor=2179b1;gridBorderAlpha=20;ganttWidthPercent=80');
-	$chart->setGanttProcessesParams('headerText=' . __('Task') . ';fontColor=ffffff;fontSize=10;isBold=1;isAnimated=1;bgColor=2179b1;headerbgColor=2179b1;headerFontColor=ffffff;headerFontSize=16;align=left');
+	$chart->setGanttProcessesParams('headerText=' . __('Task') . ';fontColor=ffffff;fontSize=9;isBold=1;isAnimated=1;bgColor=2179b1;headerbgColor=2179b1;headerFontColor=ffffff;headerFontSize=12;align=left');
 	$chart->setGanttTasksParams('');
 
 	$start_date = explode ('/', $from);
@@ -186,15 +214,17 @@ function fs_gantt_chart ($title, $from, $to, $tasks, $milestones, $width, $heigh
 
 	// Tasks
 	foreach ($tasks as $task) {
-		$chart->addGanttProcess ($task['name'], 'id=' . $task['id'] . ';link=' . urlencode($task['link']));
+		$chart->addGanttProcess (clean_flash_string($task['name']), 'id=' . $task['id'] . ';link=' . urlencode($task['link']));
+
 		$chart->addGanttTask (__('Planned'), 'start=' . $task['start'] . ';end=' . $task['end'] . ';id=' . $task['id'] . ';processId=' . $task['id'] . ';color=4b3cff;height=5;topPadding=10;animation=0');
+
 		if ($task['real_start'] !== false && $task['real_end']) {
 			$chart->addGanttTask (__('Actual'), 'start=' . $task['real_start'] . ';end=' . $task['real_end'] . ';processId=' . $task['id'] . ';color=ff3c4b;alpha=100;topPadding=15;height=5');
 		}
 		if ($task['completion'] != 0) {
 			$task_span = date_to_epoch ($task['end']) - date_to_epoch ($task['start']);
 			$end = date ('d/m/Y', date_to_epoch ($task['start']) + $task_span * $task['completion'] / 100.0);
-			$chart->addGanttTask (__('Completion'), 'start=' . $task['start'] . ';end=' . $end . ';processId=' . $task['id'] . ';color=32cd32;alpha=100;topPadding=20;height=5');
+			$chart->addGanttTask (__('Completion')." (".$task['completion'].")", 'start=' . $task['start'] . ';end=' . $end . ';processId=' . $task['id'] . ';color=32cd32;alpha=100;topPadding=20;height=5');
 		}
 		if ($task['parent'] != 0) {
 			$chart->addGanttConnector ($task['parent'], $task['id'], 'color=2179b1;thickness=2;fromTaskConnectStart=1');
@@ -205,7 +235,7 @@ function fs_gantt_chart ($title, $from, $to, $tasks, $milestones, $width, $heigh
 	if ($milestones !== '') {
 		$chart->addGanttProcess (__('Milestones'), 'id=0');
 		foreach ($milestones as $milestone) {
-			$chart->addGanttTask ($milestone['name'], 'start=' . $milestone['date'] . ';end=' . $milestone['date'] . ';id=ms-' . $milestone['id'] . ';processId=0;color=ffffff;alpha=0;height=60;topPadding=0;animation=0');
+			$chart->addGanttTask (clean_flash_string($milestone['name']), 'start=' . $milestone['date'] . ';end=' . $milestone['date'] . ';id=ms-' . $milestone['id'] . ';processId=0;color=ffffff;alpha=0;height=60;topPadding=0;animation=0');
 			$chart->addGanttMilestone ('ms-' . $milestone['id'], 'date=' . $milestone['date'] . ';radius=8;color=efbb07;shape=star;numSides=3;borderThickness=1');
 		}
 	}

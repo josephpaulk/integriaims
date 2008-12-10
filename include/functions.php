@@ -7,12 +7,15 @@
 // Copyright (c) 2007-2008 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public License (LGPL)
-// as published by the Free Software Foundation; version 2
+// modify it under the terms of the GNU Lesser General Public License
+// (LGPL) as published by the Free Software Foundation; version 2
+
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// GNU Lesser General Public License for more details.
+
+
 
 global $config;
 
@@ -407,6 +410,10 @@ function render_priority ($pri) {
 }
 
 function integria_sendmail_attach ( $name, $email, $from, $subject, $fileatt, $fileatttype, $texto ){
+
+	$texto = ascii_output ($texto);
+	$subject = ascii_output ($subject);
+
 	$to = "$name <$email>";
 	$fileattname = "$fileatt";
 	$headers = "From: $from";
@@ -562,10 +569,27 @@ function ellipsize_string ($string, $len = 2) {
 	return substr ($string, 0, $len).'(..)'.substr ($string, strlen ($string) - $len, $len);
 }
 
+/** Cut string if bigger than $len. Put three dots after point of cut in the string
+*/
+function short_string ($string, $len = 15) {
+	if (strlen($string) > $len)
+		return substr ($string, 0, $len).'...';
+	else
+		return $string;
+}
+
+/** Clean FLASH string strips non-valid characters for flashchart
+*/
+function clean_flash_string ($string) {
+	$string = ascii_output($string);
+	$temp =  str_replace("&", "", $string);
+	return str_replace ("\"", "", $temp);
+}
+
 function print_priority_flag_image ($priority, $return = false) {
 	$output = '';
 	
-	$output .= '<img class="priority-color" height="15" width="30" ';
+	$output .= '<img class="priority-color" height="15" width="15" ';
 	switch ($priority) {
 	case 0:
 		// Informative

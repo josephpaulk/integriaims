@@ -10,11 +10,22 @@ $id_project = (int) get_parameter ("id_project");
 $id_task = (int) get_parameter ("id_task");
 $operation = (string) get_parameter ("operation");
 
+if ($id_project > 0 && ! user_belong_project ($config["id_user"], $id_project)) {
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to view workunit not in this access range");
+	no_permission();
+}
+
+if ($id_task > 0 && ! user_belong_task ($config["id_user"], $id_task)){
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to view workunit not in this access range");
+	no_permission();
+}
+
 if (! $id_project) {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager without project");
-	include ("general/noaccess.php");
-	exit;
+	no_permission();
 }
 
 // Get names

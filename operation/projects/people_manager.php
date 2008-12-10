@@ -19,11 +19,7 @@
 
 global $config;
 
-if (check_login() != 0) {
-	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
-	require ("general/noaccess.php");
-	exit;
-}
+check_login ();
 
 // Get main variables and init
 $id_task = get_parameter ("id_task", -1);
@@ -33,6 +29,15 @@ $id_project = get_parameter ("id_project", 0);
 $operation = get_parameter ("action");
 $result_output = "";
 
+if (! user_belong_project ($config["id_user"], $id_project)) {
+	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project people manager without permissions");
+	no_permission();
+}
+
+if (($id_task > 0) AND (! user_belong_task ($config["id_user"], $id_task))) {
+	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task people manager without permissions");
+	no_permission();
+}
 
 // -----------
 // Add user for this task

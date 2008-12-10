@@ -14,13 +14,12 @@
 
 // Load global vars
 
+include "include/functions_graph.php";
 global $config;
 $id_user = $config["id_user"];
 
 check_login ();
 
-
-// Workunit report
 $now = date ('Y-m-d');
 $start_date = get_parameter ("start_date", date ('Y-m-d', strtotime ("$now - 3 months")));
 $end_date = get_parameter ('end_date', $now);
@@ -151,7 +150,9 @@ if ($user_id == "") {
 
 if ($total_time > 0){
 	echo "<h3>". __("Project graph report")."</h3>";
-	echo "<img src='include/functions_graph.php?type=workunit_project_user&width=650&height=300&id_user=$user_id&date_from=$start_date&date_to=$end_date'>";
+
+	echo graph_workunit_user (800, 350, $user_id, $start_date, $end_date, 1);
+
 	echo "<br><br>";
 }
 
@@ -230,3 +231,4 @@ $(document).ready (function () {
 	configure_range_dates (null);
 });
 </script>
+<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>

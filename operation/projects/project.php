@@ -252,7 +252,7 @@ foreach ($projects as $project) {
 	
 	// Delete
 	if ($project['id'] != -1 && give_acl ($config['id_user'], 0, "PW") || $config['id_user'] == $project["id_owner"]) {
-		$table->head[8] = __('Delete');
+		$table->head[8] = __('Disable');
 		if ($view_disabled == 0) {
 			$data[8] = '<a href="index.php?sec=projects&sec2=operation/projects/project&disable_project=1&id='.$project['id'].'" 
 				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">

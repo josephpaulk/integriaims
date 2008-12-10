@@ -19,10 +19,11 @@ global $config;
 
 check_login ();
 
-if (! dame_admin ($config["id_user"])) {
-	audit_db("ACL Violation",$config["REMOTE_ADDR"], "No administrator access","Trying to access setup");
-	require ("general/noaccess.php");
-	exit;
+$delete = get_parameter("delete", 0);
+
+if (give_acl($config["id_user"], 0, "FM")==0) {
+	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access project group management");
+	no_permission();
 }
 
 if (isset($_POST["create"])){ // If create
@@ -50,8 +51,9 @@ if (isset($_POST["update"])){ // if update
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 }
 
-if (isset($_GET["borrar"])){ // if delete
-	$id_link = clean_input($_GET["borrar"]);
+
+if ($delete != 0){
+	$id_link = get_parameter ("id_link");
 	$sql_delete= "DELETE FROM tlink WHERE id_link = ".$id_link;
 	$result=mysql_query($sql_delete);
 	if (! $result)
