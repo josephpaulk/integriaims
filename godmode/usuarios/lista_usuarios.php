@@ -30,10 +30,14 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 	// Delete user
 	// Delete cols from table tgrupo_usuario
 
-	$query_del1="DELETE FROM tusuario_perfil WHERE id_usuario = '".$nombre."'";
-	$query_del2="DELETE FROM tusuario WHERE id_usuario = '".$nombre."'";
-	$resq1=mysql_query($query_del1);
-	$resq1=mysql_query($query_del2);
+	if ($config["enteprise"] == 1){
+		$query_del1 = "DELETE FROM tusuario_perfil WHERE id_usuario = '".$nombre."'";
+		$resq1 = mysql_query($query_del1);
+	}
+
+	$query_del2 = "DELETE FROM tusuario WHERE id_usuario = '".$nombre."'";
+	$resq1 = mysql_query($query_del2);
+
 	if (! $resq1)
 		echo "<h3 class='error'>".__('Could not be deleted')."</h3>";
 	else
@@ -93,19 +97,21 @@ while ($rowdup=mysql_fetch_array($resq1)){
 	echo "<td>".$fecha_registro;
 	echo "<td>";
 	print_user_avatar ($nombre, true);
-	$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
-	$result=mysql_query($sql1);
-	echo "<a href='#' class='tip'>&nbsp;<span>";
-	if (mysql_num_rows($result)){
-		while ($row=mysql_fetch_array($result)){
-			echo dame_perfil($row["id_perfil"])."/ ";
-			echo dame_grupo($row["id_grupo"])."<br>";
+	if ($config["enteprise"] == 1){
+		$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
+		$result=mysql_query($sql1);
+		echo "<a href='#' class='tip'>&nbsp;<span>";
+		if (mysql_num_rows($result)){
+			while ($row=mysql_fetch_array($result)){
+				echo dame_perfil($row["id_perfil"])."/ ";
+				echo dame_grupo($row["id_grupo"])."<br>";
+			}
 		}
+		else { 
+			echo __('This user doesn\'t have any assigned profile/group'); 
+		}
+		echo "</span></a>";
 	}
-	else { 
-		echo __('This user doesn\'t have any assigned profile/group'); 
-	}
-	echo "</span></a>";
 	
 	echo "<td>" . $comentarios;
 	echo "<td align='center'><a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario=".$nombre."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";

@@ -17,7 +17,7 @@ $config["dbuser"] = "integria";
 $config["dbpass"] = "integria"; // DB Password
 $config["dbhost"] = "localhost"; // DB Host
 $config["homedir"] = "/var/www/integria/";      // Config homedir
-$config["base_url"] = "http://192.168.1.1/integria";            // Base URL
+$config["base_url"] = "/integria";            // Base URL
 */
 
 // TODO: NEED TO IMPLEMENT IN SETUP THIS TOKENS:

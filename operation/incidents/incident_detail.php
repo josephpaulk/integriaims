@@ -392,10 +392,15 @@ if ($id) {
 
 $default_responsable = "";
 if (! $id) {
-	// How many groups has this user ?
-	$number_group = get_db_sql ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
-	// Take first group defined for this user
-	$default_id_group = get_db_sql ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
+	if ($config["enteprise"] == 1){
+		// How many groups has this user ?
+		$number_group = get_db_sql ("SELECT COUNT(id_grupo) FROM tusuario_perfil WHERE id_usuario = '$usuario'");
+		// Take first group defined for this user
+		$default_id_group = get_db_sql ("SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$usuario' LIMIT 1");
+	} else {
+		$default_id_group = 1;
+		$number_group = 1;
+	}
 	// if have only one group, select default user and email for this group
 	$email_notify = false;
 }

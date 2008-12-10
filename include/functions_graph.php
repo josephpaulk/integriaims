@@ -124,6 +124,9 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 function graph_workunit_project_user ($width, $height, $id_user, $date_from, $date_to = 0, $flash = 0){
 	global $config;
 
+	$data= array();
+	$legend = array();
+
 	if ($date_to == 0){
 		$date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
 	}
@@ -666,7 +669,7 @@ function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $wi
 
 function project_tree ($id_project, $id_user){
 	include ("../include/config.php");
-
+	$config["id_user"] = $id_user;
 	if (user_belong_project ($id_user, $id_project)==0){
 		audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
 		include ($config["homedir"]."/general/noaccess.php");
@@ -733,7 +736,7 @@ function project_tree ($id_project, $id_user){
 	imageSaveAlpha($imgPng, true);
 	imagePng($imgPng);
 	//unlink ($pngfilename);
-	unlink ($dotfilename);
+	//unlink ($dotfilename);
 }
 
 function all_project_tree ($id_user, $completion, $project_kind){
@@ -753,7 +756,7 @@ function all_project_tree ($id_user, $completion, $project_kind){
 	fwrite ($dotfile, 'URL="'.$config["base_url"].'/index.php?sec=projects&sec2=operation/projects/project_tree";'."\n");
 
 	fwrite ($dotfile, "	  node[fontsize=".$config['fontsize']."];\n");
-	fwrite ($dotfile, "	  me [label=\"$id_user\", style=\"filled\", color=\"yellow\";\n");
+	fwrite ($dotfile, "	  me [label=\"$id_user\", style=\"filled\", color=\"yellow\"]; \n");
 
 	$total_project = 0;
 	$total_task = 0;
@@ -846,7 +849,7 @@ function all_project_tree ($id_user, $completion, $project_kind){
 	imageAlphaBlending($imgPng, true);
 	imageSaveAlpha($imgPng, true);
 	imagePng($imgPng);
-	unlink ($pngfilename);
+	//unlink ($pngfilename);
 	unlink ($dotfilename);
 }
 

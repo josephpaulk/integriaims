@@ -77,11 +77,11 @@ define ('RES_EXPIRED', 7);
 define ('RES_MOVED', 8);
 define ('RES_INPROCESS', 9);
 
-// --------------------------------------------------------------- 
-// give_acl ()
-// Main Function to get access to resources
-// Return 0 if no access, > 0  if access
-// --------------------------------------------------------------- 
+/**
+ * Function to check user permissions in a group.
+ * NOT ENABLED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+*/
 
 function give_acl ($id_user, $id_group, $access) {
 	global $config;
@@ -92,6 +92,24 @@ function give_acl ($id_user, $id_group, $access) {
 	
 	return true;
 } 
+
+/**
+ This function return 1 if target_user is visible for a user (id_user)
+ with a specific permission bit on any of its profiles 
+ * NOT ENABLED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+**/
+
+function user_visible_for_me ($id_user, $target_user, $access = "") {
+	global $config;
+
+	$return = enterprise_hook ('user_visible_for_me_extra', array ($id_user, $target_user, $access));
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	
+	return true;
+} 
+
 
 // --------------------------------------------------------------- 
 // audit_db, update audit log
@@ -1314,69 +1332,7 @@ function project_workunit_cost ($id_project, $only_marked = 1){
 }
 
 
-/*
- This function return 1 if target_user is visible for a user (id_user)
- with a permission oc $access (PM, IM, IW...) on any of its profiles 
- For each comparation uses profile (access bit) and group that id_user
- have.
-*/
 
-function user_visible_for_me ($id_user, $target_user, $access = "") {
-	global $config; 
-	
-	$access = strtolower ($access);
-	if (dame_admin ($id_user)) {
-		return true;
-	}
-
-	if ($id_user == $target_user) {
-		return true;
-	}
-
-	// I have access to group ANY ?
-	if ($access == "")
-		$sql_0 = "SELECT COUNT(*) FROM tusuario_perfil WHERE id_usuario = '$id_user' AND id_grupo = 1 ";
-	else
-		$sql_0 = "SELECT COUNT(*) FROM tusuario_perfil, tprofile WHERE tusuario_perfil.id_usuario = '$id_user' AND id_grupo = 1 AND tprofile.$access = 1 AND tprofile.id = tusuario_perfil.id_perfil";
-	$result_0 = mysql_query($sql_0);
-	$row_0 = mysql_fetch_array($result_0);
-	if ($row_0[0] > 0) {
-		return 1;
-	}
-
-	// Show users from my groups
-	if ($access == "")
-		$sql_1="SELECT id_grupo FROM tusuario_perfil WHERE id_usuario = '$id_user'";
-	else
-		$sql_1="SELECT tusuario_perfil.id_grupo FROM tusuario_perfil, tprofile WHERE tusuario_perfil.id_usuario = '$id_user' AND tprofile.$access = 1 AND tprofile.id = tusuario_perfil.id_perfil";
-	$result_1=mysql_query($sql_1);
-	while ($row_1=mysql_fetch_array($result_1)){
-		$sql_2="SELECT * FROM tusuario_perfil WHERE id_grupo = ".$row_1["id_grupo"];
-		$result_2=mysql_query($sql_2);
-		while ($row_2=mysql_fetch_array($result_2)){
-			if ($row_2["id_usuario"] == $target_user){
-				return 1;
-			}
-		}
-	}
-   
-	// Show users for group 1 (ANY)
-	$sql_2 = "SELECT * FROM tusuario_perfil WHERE id_grupo = 1";
-	$result_2 = mysql_query($sql_2);
-	while ($row_2 = mysql_fetch_array($result_2)){
-		if ($row_2["id_usuario"] == $target_user){
-			if ($access == ""){
-				return 1; 
-		}
-			else {
-				if (give_acl ($config["id_user"], 1, $access) == 1)
-					return 1;
-			}
-		}
-	}
-	
-	return 0;
-}
 
 function projects_active_user ($id_user) {
 	$sql = "SELECT COUNT(DISTINCT(id_project)) FROM tproject, trole_people_project WHERE trole_people_project.id_user ='$id_user' AND trole_people_project.id_project = tproject.id AND tproject.disabled = 0";

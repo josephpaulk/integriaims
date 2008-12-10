@@ -19,7 +19,12 @@
 <?PHP
 global $config;
 
-echo 'Integria '.$config["version"].' Build '.$config["build_version"].'<br>';
+if ($config["enteprise"] == 1)
+	$enterprise = "Enterprise Edition";
+else
+	$enterprise = "OpenSource Edition";
+
+echo 'Integria IMS '.$enterprise.' '.$config["version"].' Build '.$config["build_version"].'<br>';
 
 if (isset($_SESSION['id_usuario'])) {
 	echo '<a target="_new" href="general/license/integria_info_'.$config["language_code"].'.html">'.

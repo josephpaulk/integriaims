@@ -17,12 +17,19 @@
 global $config;
 
 // Integria version
-$config["build"]="081205";
-$config["version"]="v2.0-dev";
+$config["build"]="081210";
+$config["version"]="v2.0beta1";
 $config["build_version"] = $config["build"];
 
 if (! defined ('ENTERPRISE_DIR'))
 	define ('ENTERPRISE_DIR', 'enterprise');
+
+// Detect enterprise version
+if (file_exists($config["homedir"]."/".ENTERPRISE_DIR."/include/functions_db.php"))
+	$config["enteprise"] = 1;
+else
+	$config["enteprise"] = 0;
+
 
 // Read remaining config tokens from DB
 if (! mysql_connect ($config["dbhost"], $config["dbuser"], $config["dbpass"])) {

@@ -63,10 +63,17 @@ if ($create_item) {
 		Description  : $description\n\n".$config["FOOTER_EMAIL"];
 
 	if ($public) {
-		$sql = sprintf ('SELECT nombre_real, direccion FROM tusuario, tusuario_perfil
+
+		
+		if ($config["enteprise"] == 1){
+			$sql = sprintf ('SELECT nombre_real, direccion FROM tusuario, tusuario_perfil
 			WHERE tusuario_perfil.id_grupo = %d
 			AND tusuario_perfil.id_usuario = tusuario.id_usuario',
 			$id_group_f);
+		} else {
+				$sql = sprintf ('SELECT nombre_real, direccion FROM tusuario');
+		}
+
 		$users = get_db_all_rows_sql ($sql);
 		foreach ($users as $user) {
 			$nombre = $user['nombre_real'];

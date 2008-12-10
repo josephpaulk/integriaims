@@ -1,3 +1,20 @@
+2008-12-11  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_graph.php
+        include/config_process.php
+        include/functions_db.php
+        include/config.inc.php
+        operation/agenda/agenda.php
+        operation/incidents/incident_detail.php
+        operation/user_report/report_weekly.php
+        operation/user_report/report_monthly.php
+        general/footer.php
+        general/login_page.php
+        godmode/usuarios/configurar_usuarios.php
+        godmode/usuarios/lista_usuarios.php:
+	
+	Latest details (ACL checks and Enteprise hooks for several files.
+
 2008-12-10  Sancho Lerena  <slerena@artica.es>
 
 	* operation/users/user_spare_workunit.php: Fixed probelms updateing task.

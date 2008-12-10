@@ -15,7 +15,7 @@
 
 ?>
 <center>
-<div class="databox" id="login" style='height: 165px'>
+<div class="databox" id="login">
 	<div>
 <?php 
 	$action = "index.php";
@@ -60,8 +60,9 @@
 			<br>
 			<?php print_submit_button (__('Login'), '', false, 'class="sub login"'); ?>
 		</td>
-		</tr>
+		</tr>	    
 		</table>
+		<div style='height:15px'> </div>
 		</form>
 	</div>
 </div>

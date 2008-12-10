@@ -75,20 +75,23 @@ if ($res0 = mysql_query($sql0)) {
 			}
 		   
 			echo "<tr><td>";
-			echo "<img src='images/avatars/".$avatar."_small.png'>";
-			$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
-			$result1=mysql_query($sql1);
-			echo "<a href='#' class='tip'>&nbsp;<span>";
-			if (mysql_num_rows($result1)){
-				while ($row1=mysql_fetch_array($result1)){
-					echo dame_perfil($row1["id_perfil"])."/ ";
-					echo dame_grupo($row1["id_grupo"])."<br>";
+			echo "<img src='images/avatars/".$avatar."_small.png'> ";
+			if ($config["enteprise"] == 1){
+				$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
+				$result1=mysql_query($sql1);
+				echo "<a href='#' class='tip'>&nbsp;<span>";
+				if (mysql_num_rows($result1)){
+					while ($row1=mysql_fetch_array($result1)){
+						echo dame_perfil($row1["id_perfil"])."/ ";
+						echo dame_grupo($row1["id_grupo"])."<br>";
+					}
+				} else {
+					echo __('This user doesn\'t have any assigned profile/group');
+					
 				}
-			} else {
-				echo __('This user doesn\'t have any assigned profile/group');
-				
+				echo "</span></a> ";
 			}
-			echo "</span></a> $nombre";
+			echo $nombre;
 
 			// Text wu report 
 			echo "<td><center>";

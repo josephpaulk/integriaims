@@ -20,6 +20,8 @@ global $config;
 
 check_login ();
 
+enterprise_include ('godmode/usuarios/configurar_usuarios.php');
+
 if (give_acl ($config["id_user"], 0, "UM")) {
 	// Init. vars
 	$comentarios = "";
@@ -34,9 +36,9 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 	$modo = "creacion";
 	
 	if (isset($_GET["borrar_grupo"])) {
-		$grupo = get_parameter ('borrar_grupo');
-		$sql = sprintf ('DELETE FROM tusuario_perfil WHERE id_up = %d', $grupo);
-		$resq1 = process_sql ($sql);
+			$grupo = get_parameter ('borrar_grupo');
+			enterprise_hook ('delete_group');
+		}
 	}
 		
 	if (isset($_GET["id_usuario_mio"])){ // if any parameter changed
@@ -63,7 +65,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 			$lang = $rowdup["lang"];
 		}
 	}
-	}
+	
 	
 	// Edit user
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -104,9 +106,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 						$grupo = $_POST["grupo"];
 						$perfil = $_POST["perfil"];
 						$id_usuario_edit = $_SESSION["id_usuario"];
-						$sql = "INSERT INTO tusuario_perfil (id_usuario,id_perfil,id_grupo,assigned_by) VALUES ('".$nombre."',$perfil,$grupo,'".$id_usuario_edit."')";
-						// echo "DEBUG:".$sql;
-						$resq2=mysql_query($sql);
+						enterprise_hook('associate_userprofile');
 					}
 				
 				$query1="SELECT * FROM tusuario WHERE id_usuario = '".$nombre."'";
@@ -242,61 +242,27 @@ print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', 
 <?php
 if ($modo == "edicion") { // Only show groups for existing users
 
-	// Combo for group
-	echo '<input type="hidden" name="edicion" value="1">';
-	echo '<input type="hidden" name="id_usuario_antiguo" value="'.$id_usuario_mio.'">';
-	
-	echo '<tr><td class="datos">'.__('Group(s) available').'<td class="datos" colspan="2"><select name="grupo" class="w155">';
-	echo "<option value=''>".__('None');
-	$sql1='SELECT * FROM tgrupo ORDER BY nombre';
-	$result=mysql_query($sql1);
-	while ($row=mysql_fetch_array($result)){
-		echo "<option value='".$row["id_grupo"]."'>".$row["nombre"];
-	}
-	echo '</select>';
-	
-	echo "<tr><td class='datos2'>".__('Profiles');
-	echo "<td class='datos2' colspan=2><select name='perfil' class='w155'>";
-	$sql1='SELECT * FROM tprofile ORDER BY name';
-	$result=mysql_query($sql1);
-	while ($row=mysql_fetch_array($result)){
-		echo "<option value='".$row["id"]."'>".$row["name"];
-	}
-	echo '</select>';
+	enterprise_hook ('manage_profiles');
 	echo "</table>";
 
 	echo "<div class='button' style='width:620px'>";
 	echo "<input name='uptbutton' type='submit' class='sub next' value='".__('Update')."'>";
 	echo "</div><br>";
-
-
-	
-
-
-	// Show user profile / groups assigned
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$id_usuario_mio.'"';
-	$result=mysql_query($sql1);
-	
-	echo '<h3>'.__('Profiles/Groups assigned to this user').'</h3>';
-	echo "<table width='620'  class='databox'>";
-	if (mysql_num_rows($result)){
-		while ($row=mysql_fetch_array($result)){
-			echo '<td>';
-			echo "<b style='margin-left:10px'>".dame_perfil($row["id_perfil"])."</b> / ";
-			echo "<b>".dame_grupo($row["id_grupo"])."</b>";
-			echo '<td><a href="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio='.$id_usuario_mio.'&borrar_grupo='.$row["id_up"].' " onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a><tr>';
-		}
-	}
-	else { echo '<tr><td colspan="3">'.__('This user doesn\'t have any assigned profile/group').'</td></tr>';}
 }	
 
-	if (isset($_GET["alta"])){
-		echo "</table>";
-		echo "<div class='button' style='width: 615px' >";
-		echo '<input name="crtbutton" type="submit" class="sub create" value="'.__('Create').'">';
-		echo '</div>';
-	} 
+enterprise_hook ('show_delete_profiles');
+
+if (isset($_GET["alta"])){
+	echo "</table>";
+	echo "<div class='button' style='width: 615px' >";
+	echo '<input name="crtbutton" type="submit" class="sub create" value="'.__('Create').'">';
+	echo '</div>';
+} 
+
+
+
+
+	
 ?> 
 </form>
 </td></tr></table>
