@@ -125,7 +125,7 @@ $from = $project_start;
 $to = $project_end;
 
 // Minimum date from project/tasks/workunits
-$min_start = fix_date (get_db_sql ('SELECT MIN(start) FROM integria.ttask WHERE start <> \'0000-00-00\' AND id_project = ' . $id_project));
+$min_start = fix_date (get_db_sql ('SELECT MIN(start) FROM ttask WHERE start <> \'0000-00-00\' AND id_project = ' . $id_project));
 
 if ($min_start !== false && (date_to_epoch ($min_start) < date_to_epoch ($from) || $from == '00/00/0000')) {
 	$from = $min_start;
@@ -137,7 +137,7 @@ if ($min_timestamp !== false && (date_to_epoch ($min_timestamp) < date_to_epoch 
 }
 
 // Minimum date from project/tasks/workunits
-$max_end = fix_date (get_db_sql ('SELECT MAX(end) FROM integria.ttask WHERE end <> \'0000-00-00\' AND id_project = ' . $id_project));
+$max_end = fix_date (get_db_sql ('SELECT MAX(end) FROM ttask WHERE end <> \'0000-00-00\' AND id_project = ' . $id_project));
 if ($max_end !== false && date_to_epoch ($max_end) > date_to_epoch ($to)) {
 	$to = $max_end;
 }

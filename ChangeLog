@@ -1,4 +1,6 @@
 2008-12-10  Sancho Lerena  <slerena@artica.es>
+
+	* functions_db.php: Fixed a weird SQL typo.
 	
 	* integria_db.sql: Added field id_language to tkb_data.
 
