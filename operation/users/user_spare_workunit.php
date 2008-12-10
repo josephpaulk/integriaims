@@ -210,6 +210,7 @@ if ($operation == 'update') {
 	$id_profile = (int) get_parameter ("id_profile");
 	$public = (bool) get_parameter ("public");
 	$id_user = (string) get_parameter ("wu_user", $config['id_user']);
+	$id_task = (int) get_parameter ("id_task",0);
 	
 	// UPDATE WORKUNIT
 	$sql = sprintf ('UPDATE tworkunit
@@ -219,6 +220,15 @@ if ($operation == 'update') {
 		$timestamp, $duration, $description, $have_cost,
 		$id_profile, $public, $id_workunit);
 	$result = process_sql ($sql);
+	if ($id_task !=0) {
+	    // Old old association
+	    process_sql ("DELETE FROM tworkunit_task WHERE id_workunit = $id_workunit");
+	    // Create new one
+            $sql = sprintf ('INSERT INTO tworkunit_task
+                            (id_task, id_workunit) VALUES (%d, %d)',
+                                        $id_task, $id_workunit);
+            $result = process_sql ($sql, 'insert_id');
+	}
 	mail_project (1, $config['id_user'], $id_workunit, $id_task);
 	$result_output = '<h3 class="suc">'.__('Workunit updated').'</h3>';
 	insert_event ("PWU UPDATED", 0, 0, $description);

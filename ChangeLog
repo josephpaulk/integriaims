@@ -1,5 +1,9 @@
 2008-12-10  Sancho Lerena  <slerena@artica.es>
 
+	* operation/users/user_spare_workunit.php: Fixed probelms updateing task.
+
+	* operation/users/user_task_assigment.php: Shows task by priority.
+
 	* functions_db.php: Fixed a weird SQL typo.
 	
 	* integria_db.sql: Added field id_language to tkb_data.

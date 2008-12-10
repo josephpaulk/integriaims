@@ -33,7 +33,7 @@ if (($id_user != $config["id_user"]) AND (give_acl($config["id_user"], 0, "PM") 
 	$id_user = $config["id_user"];
 }
 
-$sql = "SELECT ttask.id, ttask.name, tproject.name, ttask.completion, tproject.id, ttask.id FROM trole_people_task, ttask, tproject WHERE trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.completion < 100 ORDER BY ttask.completion DESC";
+$sql = "SELECT ttask.id, ttask.name, tproject.name, ttask.completion, tproject.id, ttask.id, ttask.priority FROM trole_people_task, ttask, tproject WHERE trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.completion < 100 ORDER BY ttask.priority DESC";
 
 echo "<h2>".__('Global task assignment')." ".__('For user'). " '".$id_user. "' ".print_user_avatar($id_user, true,true)."</h2>";
 
@@ -50,6 +50,7 @@ if (give_acl ($config["id_user"], 0, "PM")) {
 }
 
 echo "<table  class='listing' width=90%>";
+echo "<th>".__('Pri');
 echo "<th>".__('Project');
 echo "<th>".__('Task');
 echo "<th>".__('Progress');
@@ -59,6 +60,7 @@ $result=mysql_query($sql);
 
 while ($row=mysql_fetch_array($result)){
 	echo "<tr>";
+	echo "<td>".print_priority_flag_image ($row['priority'], true);
 	echo "<td>".$row[2];
 	$id_proj = $row[4];
 	$id_task = $row[5];
@@ -67,15 +69,16 @@ while ($row=mysql_fetch_array($result)){
 	echo "<td >";
 	echo "<img src='include/functions_graph.php?type=progress&width=70&height=20&percent=".$row[3]."'>";
 
-	echo "<td>".get_task_workunit_hours_user ($row[0], $id_user);
+	echo "<td align=center>".get_task_workunit_hours_user ($row[0], $id_user);
 	
 	echo "<td class='f9'>";
-	echo get_db_sql ("SELECT timestamp
+	$time1 = get_db_sql ("SELECT timestamp
 		FROM tworkunit_task, tworkunit
 		WHERE tworkunit.id_user = '$id_user'
 		AND tworkunit_task.id_task = ".$row[0].
 		' AND tworkunit.id = tworkunit_task.id_workunit
 		ORDER BY timestamp DESC LIMIT 1');
+	echo substr($time1, 0, 10);
 
 }
 echo "</table>";
