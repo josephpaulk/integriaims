@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-15 11:33+0100\n"
+"POT-Creation-Date: 2008-12-15 15:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2559,8 +2559,8 @@ msgstr ""
 msgid "Full  report"
 msgstr ""
 
-#: ../../operation/side_menu.php:783
-msgid "Full  graph report"
+#: ../../operation/side_menu.php:783 ../../operation/side_menu.php:912
+msgid "Full graph report"
 msgstr ""
 
 #: ../../operation/side_menu.php:791
@@ -2605,10 +2605,6 @@ msgstr ""
 
 #: ../../operation/side_menu.php:907
 msgid "Workunit"
-msgstr ""
-
-#: ../../operation/side_menu.php:912
-msgid "Full graph report"
 msgstr ""
 
 #: ../../operation/side_menu.php:928
@@ -3161,7 +3157,7 @@ msgid "Weekly report for"
 msgstr ""
 
 #: ../../operation/user_report/report_full_graph.php:145
-msgid "Full graph report for user "
+msgid "Full graph report for user"
 msgstr ""
 
 #: ../../operation/user_report/report_full_graph.php:162
@@ -3185,7 +3181,7 @@ msgid "Show"
 msgstr ""
 
 #: ../../operation/user_report/report_full_graph.php:191
-msgid "Tasks assigned to "
+msgid "Tasks assigned to"
 msgstr ""
 
 #: ../../operation/user_report/report_full_graph.php:197

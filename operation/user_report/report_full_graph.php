@@ -142,7 +142,7 @@ $total_global = 0;
 $incident_time = 0;
 
 echo "<h3>";
-echo __("Full graph report for user ");
+echo __("Full graph report for user");
 if ($user_id != "") {
 	echo " &raquo; ";
 	$realname = dame_nombre_real ($user_id);
@@ -188,7 +188,7 @@ $tasks = array ();
 $milestones = array ();
 $project_start =  fix_date ($start_date);
 $project_end = fix_date ($end_date);
-$project_name = __("Tasks assigned to ").$realname;
+$project_name = __("Tasks assigned to")." ".$realname;
 
 get_tasks (&$tasks, $user_id, $start_date, $end_date, $not_finished, $not_recurrent);
 get_milestones (&$milestones, $user_id, $start_date, $end_date);

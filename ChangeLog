@@ -1,5 +1,16 @@
 2008-12-15  Jorge Gonzalez  <jorgegonz@artica.es>
 
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	  translation.
+
+	* include/languages/index.pot: Updated po template.
+
+	* operation/side_menu.php,
+	  operation/user_report/report_full_graph.php: Modified strings to
+	  improve i18n.
+
+2008-12-15  Jorge Gonzalez  <jorgegonz@artica.es>
+
         * include/help/en/help_hours_perday.php,
           include/help/en/help_notification_period.php,
           include/help/en/help_limit_size.php,
