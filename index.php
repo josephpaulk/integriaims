@@ -242,7 +242,7 @@ if ($clean_output == 0) {
 
 	<!-- footer starts here -->
 	<div id="footer">
-		<?php require("general/footer.php") ?></div>
+		<?php require("general/footer.php") ?>
 	</div>
 	<!-- footer ends here -->
 

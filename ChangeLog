@@ -1,17 +1,30 @@
+2008-12-15  Esteban Sanchez  <estebans@artica.es>
+
+	* index.php: Removed unneccessary div closing tag.
+
+	* integria_dbdata.sql: Fixed keygen path since /usr/share/integria
+	does not exist.
+
+	* godmode/updatemanager/load_updatemanager.php: Fixed key generation
+	and free key. 
+
+	* godmode/updatemanager/lib/libupdate_manager_client.php: Timeout
+	value is a bit higher.
+
 2008-12-11  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_graph.php
-        include/config_process.php
-        include/functions_db.php
-        include/config.inc.php
-        operation/agenda/agenda.php
-        operation/incidents/incident_detail.php
-        operation/user_report/report_weekly.php
-        operation/user_report/report_monthly.php
-        general/footer.php
-        general/login_page.php
-        godmode/usuarios/configurar_usuarios.php
-        godmode/usuarios/lista_usuarios.php:
+	include/config_process.php
+	include/functions_db.php
+	include/config.inc.php
+	operation/agenda/agenda.php
+	operation/incidents/incident_detail.php
+	operation/user_report/report_weekly.php
+	operation/user_report/report_monthly.php
+	general/footer.php
+	general/login_page.php
+	godmode/usuarios/configurar_usuarios.php
+	godmode/usuarios/lista_usuarios.php:
 	
 	Latest details (ACL checks and Enteprise hooks for several files.
 
@@ -373,7 +386,6 @@
 	* godmode/setup/setup.php, config_process.php: Added a black list of 
 	people without auto-wu feature activated.
 
-
 2008-11-19  Esteban Sanchez  <estebans@artica.es>
 
 	* include/functions_db.php: Added get_user(). Use generic functions in
@@ -389,7 +401,7 @@
 
 	* include/functions.php: Style correction in integria_sendmail().
 
-2008-11-19  Jorge Gonzalez  <jorgegonz@artica.es>                             
+2008-11-19  Jorge Gonzalez  <jorgegonz@artica.es>			     
 
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish
 	translation.
@@ -3221,7 +3233,7 @@
 
 2008-04-12 Sancho Lerena <slerena@gmail.com>
 
-        * task.php: Removed debug start date in task info
+	* task.php: Removed debug start date in task info
 
 	* gantt*: Sime final fixes on milestones for gant..
 
@@ -3323,29 +3335,29 @@
 
 2007-11-16 Sancho Lerena <slerena@gmail.com>
 
-        * topidb.sql: Added disabled field to projects. No real delete,
-        this is used to mark for "non visible". Real delete should imply
-        delete associated tasks and workunits, I think should not been
-        implemented
+	* topidb.sql: Added disabled field to projects. No real delete,
+	this is used to mark for "non visible". Real delete should imply
+	delete associated tasks and workunits, I think should not been
+	implemented
 
-        * user_workunit_report.php: Implemented full content view for
-        single workunits marked to see full lenght.
+	* user_workunit_report.php: Implemented full content view for
+	single workunits marked to see full lenght.
 
-        * projects.php: Now it's possible to mark for disabled projects.
-        Projects disabled are not seen in that view.
+	* projects.php: Now it's possible to mark for disabled projects.
+	Projects disabled are not seen in that view.
 
-        * monthly.php: New detailed view for workunits mapped over
-        a month graph. Multiuser, multidates, with some ACL check.
+	* monthly.php: New detailed view for workunits mapped over
+	a month graph. Multiuser, multidates, with some ACL check.
 
-        * report_*: Fixed to work with ACL and multi dates.
+	* report_*: Fixed to work with ACL and multi dates.
 
-        * side_menu.php: Updated to work new reporting options for all.
+	* side_menu.php: Updated to work new reporting options for all.
 
-        * language_en.php: Updated strings.
+	* language_en.php: Updated strings.
 
-        * avatars/*: Some new added :)
+	* avatars/*: Some new added :)
 
-        * task.php: Fixed bug (forget to commit) to view nested tasks
+	* task.php: Fixed bug (forget to commit) to view nested tasks
 
 2007-09-03  Sancho Lerena  <slerena@artica.es>
 

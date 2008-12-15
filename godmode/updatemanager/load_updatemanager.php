@@ -21,7 +21,7 @@ error_reporting (E_ALL);
 /* Database backend, not really tested with other backends, so it's 
  not functional right now */
 define ('DB_BACKEND', 'mysql');
-define ('FREE_USER', 'BABEL-FREE');
+define ('FREE_USER', 'INTEGRIA-FREE');
 define ('DB_PREFIX', 'um_');
 
 if (! extension_loaded ('mysql'))
@@ -50,7 +50,7 @@ function get_user_key ($settings) {
 		
 		$user_key = exec (escapeshellcmd ($settings->keygen_path.
 				' '.$settings->customer_key.' '.$config['dbhost'].
-				' '.$config['dbuser'].' '.$config['dbpassword'].
+				' '.$config['dbuser'].' '.$config['dbpass'].
 				' '.$config['dbname']));
 		return $user_key;
 	}
@@ -59,10 +59,9 @@ function get_user_key ($settings) {
 	   We only want to know this for statistics records.
 	   Feel free to disable this extension if you want.
 	 */
-	$n = (int) get_db_value ('COUNT(`id_agent`)', 'tagent', 'disabled', 0);
-	$m = (int) get_db_value ('COUNT(`id_agentmodule`)', 'tagentmodule',
-				0, 0);
-	$user_key = array ('A' => $n, 'M' => $m);
+	$u = (int) get_db_value ('COUNT(`id_usuario`)', 'tusuario', 0, 0);
+	$i = (int) get_db_value ('COUNT(`id_incidencia`)', 'tincidencia', 0, 0);
+	$user_key = array ('U' => $u, 'I' => $i);
 	
 	return json_encode ($user_key);
 }
