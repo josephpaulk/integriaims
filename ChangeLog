@@ -1,3 +1,17 @@
+2008-12-15  Jorge Gonzalez  <jorgegonz@artica.es>
+
+        * include/help/en/help_hours_perday.php,
+          include/help/en/help_notification_period.php,
+          include/help/en/help_limit_size.php,
+          include/help/en/help_autowu_completion.php,
+          include/help/en/help_no_wu_completion.php: Added and modified
+          inline help files.
+
+        * include/languages/es.mo, include/languages/es.po: Updated Spanish 
+          translation.
+
+        * include/languages/index.pot: Updated po template.
+
 2008-12-15  Esteban Sanchez  <estebans@artica.es>
 
 	* index.php: Removed unneccessary div closing tag.

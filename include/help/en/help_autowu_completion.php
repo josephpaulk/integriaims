@@ -2,6 +2,7 @@
 
 <p>
 This feature autocomplete WU on unassigned days for all users, except listed on "No WU completion users". 
-
-Días a partir de los cuales se autocompletarán, hacia atrás el mismo número de días, las horas de trabajo en caso de no ser introducidas manualmente, desde Las horas introducidas no se asignan a ninguna tarea de proyectos, sino a horas sin justificar. Por ejemplo, si se configuran 15 días, se irán completando con el número de horas de trabajo por día todos los días que no tengan ése número de horas, para los 15 días anteriores a la fecha actual menos 15 días. 
+</p>
+<p>
+Days since there will be autocompletion, backwards and the same number of days, the working hours in case they are not manually inserted. The inserted hours are not assigned to any taks in any project, but to <i>"Not justified"</i> hours. For example, if you set 15 days, these will be completed with the number of <i>"Working hours per day"</i> set, for all the days which work hours is below that number, for the 15 days before 15 days of the actual date.
 </p>

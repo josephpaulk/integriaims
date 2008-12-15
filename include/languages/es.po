@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: index.es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-12-03 11:25+0100\n"
-"PO-Revision-Date: 2008-12-03 17:15+0100\n"
+"PO-Revision-Date: 2008-12-15 11:33+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -3288,7 +3288,7 @@ msgstr "Asignado a"
 
 #: ../../operation/todo/todo.php:161 ../../operation/todo/todo.php:163
 msgid "To-Do management"
-msgstr "Gestión de cosas por hacer"
+msgstr "Gestión de tareas"
 
 #: ../../operation/todo/todo.php:161
 msgid "Assigned to other users"
