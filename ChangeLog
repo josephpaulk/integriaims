@@ -1,3 +1,10 @@
+2008-12-16  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_incidents.php: Fixed width in stats.
+
+	* operation/side_menu.php: Fixed problem with projects < 0 or
+	non-defined projects in some odd cases.
+
 2008-12-16  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
 
 	* index.php: language configuration updated.

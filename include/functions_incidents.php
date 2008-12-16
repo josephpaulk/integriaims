@@ -294,7 +294,7 @@ function print_incidents_stats ($incidents, $return = false) {
 			__('Hr').") <br />";
 	}
 	
-	$table->width = '60%';
+	$table->width = '55%';
 	$table->class = 'float_left blank';
 	$table->style = array ();
 	$table->style[0] = 'vertical-align: top; margin-right: 15px;';

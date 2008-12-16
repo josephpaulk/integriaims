@@ -19,7 +19,7 @@ if (!isset($config["id_user"]))
 // PROJECTS
 if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {	
 	$id_project = get_parameter ('id_project', -1);
-	$id_task = get_parameter ('id_task');
+	$id_task = get_parameter ('id_task', -1);
 	
 	// Get id_task but not id_project
 	if (($id_task != -1) AND ($id_project == -1)){
@@ -75,7 +75,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 	
 	// Dynamic project sub options menu (PROJECT)
 	$id_task = get_parameter ('id_task');
-	if ($id_project) {
+	if ($id_project > 0) {
 		echo "<br>";
 		$project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
 
