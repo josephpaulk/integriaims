@@ -1,5 +1,10 @@
 2008-12-16  Esteban Sanchez  <estebans@artica.es>
 
+	* godmode/updatemanager/load_updatemanager.php: Definetely fixed user
+	and incident counts.
+
+2008-12-16  Esteban Sanchez  <estebans@artica.es>
+
 	* integria_dbdata.sql: updating_code_path is now blank.
 
 	* godmode/updatemanager/main.php: Fixed style table when an update was
