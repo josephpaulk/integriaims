@@ -59,8 +59,10 @@ function get_user_key ($settings) {
 	   We only want to know this for statistics records.
 	   Feel free to disable this extension if you want.
 	 */
-	$u = (int) get_db_value ('COUNT(`id_usuario`)', 'tusuario', 0, 0);
-	$i = (int) get_db_value ('COUNT(`id_incidencia`)', 'tincidencia', 0, 0);
+	$u = (int) get_db_value ('COUNT(`id_usuario`)', 'tusuario',
+		'id_usuario', 'id_usuario');
+	$i = (int) get_db_value ('COUNT(`id_incidencia`)', 'tincidencia',
+		'id_incidencia', 'id_incidencia');
 	$user_key = array ('U' => $u, 'I' => $i);
 	
 	return json_encode ($user_key);

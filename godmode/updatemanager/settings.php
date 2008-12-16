@@ -39,6 +39,10 @@ if ($update_settings) {
 }
 
 $settings = um_db_load_settings ();
+if ($settings->updating_code_path == '') {
+	$settings->updating_code_path = $config['homedir'];
+	um_db_update_setting ('updating_code_path', $config['homedir']);
+}
 
 echo '<h2>'.__('Update Manager Settings').'</h2>';
 
@@ -57,8 +61,8 @@ $table->data[1][1] = print_input_text ('keys[update_server_port]',
 $table->data[2][0] = print_input_text ('keys[update_server_path]',
 	$settings->update_server_path, '', 40, 255, true, __('Update server path'));
 
-$table->data[3][0] = print_input_text ('keys[updating_binary_path]',
-	$settings->updating_binary_path, '', 40, 255, true, __('Binary input path'));
+$table->data[3][0] = print_input_text ('keys[updating_code_path]',
+	$settings->updating_code_path, '', 40, 255, true, __('Input path'));
 
 $table->data[4][0] = print_input_text ('keys[keygen_path]',
 	$settings->keygen_path, '', 40, 255, true, __('Keygen path'));

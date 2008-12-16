@@ -73,25 +73,26 @@ if (is_int ($package) && $package == 1) {
 	$table->width = '50%';
 	$table->data = array ();
 	
-	$table->data[0][0] = '<strong>'.__('Id').'</strong>';
-	$table->data[0][1] = $package->id;
+	$table->data[0][0] = print_label (__('Id'), 'id', '', true,
+		$package->id);
 	
-	$table->data[1][0] = '<strong>'.__('Timestamp').'</strong>';
-	$table->data[1][1] = $package->timestamp;
+	$table->data[0][1] = print_label (__('Timestamp'), 'time', '', true,
+		$package->timestamp);
 	
-	$table->data[2][0] = '<strong>'.__('Description').'</strong>';
-	$table->data[2][1] = html_entity_decode ($package->description);
+	$table->data[2][0] = print_label (__('Description'), 'desc', '', true,
+		html_entity_decode ($package->description));
 	
 	print_table ($table);
-	echo '<div class="action-buttons" style="width: '.$table->width.'">';
+	
 	echo '<form method="post">';
-	echo __('Overwrite local changes');
-	print_checkbox ('force_update', '1', false);
-	echo '<p />';
+	echo '<div style="width: '.$table->width.'; text-align: right">';
+	print_checkbox ('force_update', '1', false, false, __('Overwrite local changes'));
+	echo '</div>';
+	echo '<div class="button" style="width: '.$table->width.'">';
 	print_input_hidden ('update_package', 1);
 	print_submit_button (__('Update'), 'update_button', false, 'class="sub upd"');
-	echo '</form>';
 	echo '</div>';
+	echo '</form>';
 }
 
 echo '<h4>'.__('Your system version number is').': '.$settings->current_update.'</h4>';

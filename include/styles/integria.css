@@ -1025,3 +1025,7 @@ div#incident-stats, div#inventories-stats {
 	margin-top: 35px;
 	margin-bottom: 15px;
 }
+
+#checkbox-force_update {
+	float:none;
+}

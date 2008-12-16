@@ -1,5 +1,18 @@
 2008-12-16  Esteban Sanchez  <estebans@artica.es>
 
+	* integria_dbdata.sql: updating_code_path is now blank.
+
+	* godmode/updatemanager/main.php: Fixed style table when an update was
+	found.
+	
+	* godmode/updatemanager/settings.php: Set updating code path to
+	homedir if it's empty. Binary path is not used.
+
+	* godmode/updatemanager/load_updatemanager.php: Fixed sql error when
+	getting users and incidents.
+
+2008-12-16  Esteban Sanchez  <estebans@artica.es>
+
 	* godmode/updatemanager/lib/libupdate_manager_client.php: Disabled
 	debug flag
 
