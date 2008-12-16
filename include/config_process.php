@@ -84,9 +84,11 @@ foreach ($configs as $c) {
 require_once ('streams.php');
 require_once ('gettext.php');
 
-if (isset ($_SESSION['id_usuario'])) {
+if (isset ($_SESSION['id_usuario']))
 	$config['language_code'] = get_db_value ('lang', 'tusuario', 'id_usuario', $_SESSION['id_usuario']);
-}
+
+if ($config["language_code"] == "")
+	$config['language_code'] = get_db_value ('value', 'tconfig', 'id_config', 1);
 
 $l10n = NULL;
 if (file_exists ('./include/languages/'.$config['language_code'].'.mo')) {
@@ -96,9 +98,6 @@ if (file_exists ('./include/languages/'.$config['language_code'].'.mo')) {
 
 if (!isset($config["notification_period"]))
 	$config["notification_period"] = "86400";
-
-if (!isset ($config["language_code"]))
-	$config["language_code"] = "en";
 
 if (!isset ($config["autowu_completion"]))
 	$config["autowu_completion"] = "0";

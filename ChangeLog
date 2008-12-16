@@ -1,3 +1,10 @@
+2008-12-16  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
+
+	* include/config_process.php: language configuration updated; fixes
+	  bug #2431309
+
+	* index.php: changed non standard tags.
+
 2008-12-16  Esteban Sanchez  <estebans@artica.es>
 
 	* godmode/updatemanager/load_updatemanager.php: Definetely fixed user
