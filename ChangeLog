@@ -1,3 +1,7 @@
+2008-12-16  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
+
+	* index.php: language configuration updated.
+
 2008-12-16  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish
