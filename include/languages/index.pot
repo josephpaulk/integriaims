@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-15 15:09+0100\n"
+"POT-Creation-Date: 2008-12-16 17:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -352,8 +352,8 @@ msgstr ""
 #: ../../godmode/setup/setup.php:107 ../../godmode/setup/setup_mail.php:74
 #: ../../godmode/setup/links.php:103
 #: ../../godmode/grupos/configurar_grupo.php:106
-#: ../../godmode/updatemanager/main.php:92
-#: ../../godmode/updatemanager/settings.php:81
+#: ../../godmode/updatemanager/main.php:93
+#: ../../godmode/updatemanager/settings.php:85
 #: ../../godmode/usuarios/configurar_usuarios.php:249
 #: ../../godmode/usuarios/role_manager.php:116
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:166
@@ -488,6 +488,7 @@ msgstr ""
 #: ../../godmode/perfiles/lista_perfiles.php:227
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:268
 #: ../../enterprise/godmode/usuarios/profile_list.php:266
+#: ../../enterprise/godmode/usuarios/configurar_usuarios.php:44
 #: ../../enterprise/operation/user/user.php:40
 msgid "Profiles"
 msgstr ""
@@ -534,6 +535,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:379
 #: ../../enterprise/godmode/usuarios/profile_list.php:341
 #: ../../enterprise/godmode/usuarios/role_user_global.php:87
+#: ../../enterprise/godmode/usuarios/configurar_usuarios.php:19
 #: ../../operation/manufacturers/manufacturer_detail.php:194
 #: ../../operation/buildings/building_detail.php:161
 #: ../../operation/inventories/manage_prod.php:188
@@ -911,11 +913,11 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: ../../godmode/updatemanager/main.php:88
+#: ../../godmode/updatemanager/main.php:89
 msgid "Overwrite local changes"
 msgstr ""
 
-#: ../../godmode/updatemanager/main.php:97
+#: ../../godmode/updatemanager/main.php:98
 msgid "Your system version number is"
 msgstr ""
 
@@ -923,47 +925,47 @@ msgstr ""
 msgid "Update manager settings updated"
 msgstr ""
 
-#: ../../godmode/updatemanager/settings.php:43
+#: ../../godmode/updatemanager/settings.php:47
 msgid "Update Manager Settings"
 msgstr ""
 
-#: ../../godmode/updatemanager/settings.php:49
+#: ../../godmode/updatemanager/settings.php:53
 msgid "Customer key"
 msgstr ""
 
-#: ../../godmode/updatemanager/settings.php:52
+#: ../../godmode/updatemanager/settings.php:56
 msgid "Update server host"
 msgstr ""
 
-#: ../../godmode/updatemanager/settings.php:55
+#: ../../godmode/updatemanager/settings.php:59
 msgid "Update server port"
 msgstr ""
 
-#: ../../godmode/updatemanager/settings.php:58
+#: ../../godmode/updatemanager/settings.php:62
 msgid "Update server path"
 msgstr ""
 
-#: ../../godmode/updatemanager/settings.php:61
-msgid "Binary input path"
+#: ../../godmode/updatemanager/settings.php:65
+msgid "Input path"
 msgstr ""
 
-#: ../../godmode/updatemanager/settings.php:64
+#: ../../godmode/updatemanager/settings.php:68
 msgid "Keygen path"
 msgstr ""
 
-#: ../../godmode/updatemanager/settings.php:67
+#: ../../godmode/updatemanager/settings.php:71
 msgid "Proxy server"
 msgstr ""
 
-#: ../../godmode/updatemanager/settings.php:70
+#: ../../godmode/updatemanager/settings.php:74
 msgid "Proxy port"
 msgstr ""
 
-#: ../../godmode/updatemanager/settings.php:73
+#: ../../godmode/updatemanager/settings.php:77
 msgid "Proxy user"
 msgstr ""
 
-#: ../../godmode/updatemanager/settings.php:75
+#: ../../godmode/updatemanager/settings.php:79
 msgid "Proxy password"
 msgstr ""
 
@@ -1019,6 +1021,7 @@ msgid "Profile"
 msgstr ""
 
 #: ../../godmode/usuarios/lista_usuarios.php:111
+#: ../../enterprise/godmode/usuarios/configurar_usuarios.php:23
 #: ../../enterprise/operation/user/user.php:13
 #: ../../operation/user_report/report_weekly.php:89
 #: ../../operation/user_report/report_monthly.php:101
@@ -1219,6 +1222,7 @@ msgstr ""
 #: ../../include/functions_form.php:191 ../../include/functions_form.php:294
 #: ../../include/functions_form.php:303 ../../include/functions_form.php:317
 #: ../../include/functions_form.php:325 ../../include/functions.php:519
+#: ../../enterprise/godmode/usuarios/configurar_usuarios.php:36
 #: ../../operation/agenda/agenda.php:205
 #: ../../operation/reporting/incidents_html.php:147
 #: ../../operation/inventories/manage_prod.php:133
@@ -1579,7 +1583,7 @@ msgstr ""
 msgid "Most active incidents"
 msgstr ""
 
-#: ../../include/config_process.php:110
+#: ../../include/config_process.php:109
 msgid ""
 "Please do NOT answer this email, it has been automatically created by "
 "Integria (http://integria.sourceforge.net)."
@@ -2033,6 +2037,14 @@ msgstr ""
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:72
 msgid "WU/Tsk"
+msgstr ""
+
+#: ../../enterprise/godmode/usuarios/configurar_usuarios.php:12
+msgid "Profiles/Groups assigned to this user"
+msgstr ""
+
+#: ../../enterprise/godmode/usuarios/configurar_usuarios.php:35
+msgid "Group(s) available"
 msgstr ""
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:11

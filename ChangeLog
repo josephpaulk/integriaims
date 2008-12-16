@@ -1,3 +1,10 @@
+2008-12-16  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	  translation.
+
+	* include/languages/index.pot: Updated po template.
+
 2008-12-16  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
 
 	* include/config_process.php: language configuration updated; fixes
