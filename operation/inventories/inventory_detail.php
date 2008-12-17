@@ -168,7 +168,7 @@ if ($id) {
 	/* Delete incident */
 	if ($has_permission) {
 		/* Delete object */
-		echo '<form name="delete_object_form" class="action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
+		echo '<form name="delete_object_form" class="delete action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
 		print_input_hidden ('quick_delete', $id, false);
 		echo '<input type="image" class="action" src="images/cross.png" title="' . __('Delete') .'">';
 		echo '</form>';	
@@ -327,6 +327,10 @@ if (! defined ('AJAX')):
 <script type="text/javascript">
 $(document).ready (function () {
 	configure_inventory_form (false);
+	$("form.delete").submit (function () {
+		if (! confirm ("<?php echo __('Are you sure?') ?>"))
+			return false;
+	});
 });
 
 </script>

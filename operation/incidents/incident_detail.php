@@ -416,7 +416,7 @@ if ($id) {
 
 	/* Delete incident */
 	if ($has_permission) {
-		echo '<form name="delete_incident_form" class="action" method="post" action="index.php?sec=incident&sec2=operation/incidents/incident">';
+		echo '<form name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident">';
 		print_input_hidden ('quick_delete', $id, false);
 		echo '<input type="image" class="action" src="images/cross.png" title="' . __('Delete') .'">';
 		echo '</form>';

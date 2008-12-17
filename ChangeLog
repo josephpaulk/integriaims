@@ -1,5 +1,21 @@
 2008-12-17  Esteban Sanchez  <estebans@artica.es>
 
+	* godmode/usuarios/lista_usuarios.php,
+	include/js/integria_incident_search.js,
+	operation/incidents/incident_detail.php,
+	operation/inventories/inventory_detail.php: Added javascript
+	confirmation on delete operations
+
+	* include/functions_incidents.php: Fixed search when dates are equal.
+
+	* operation/incidents/incident_inventory_contacts.php: It now shows
+	the contacts assigned to the inventory objects properly.
+
+	* operation/inventories/inventory.php: HTML report button is now only
+	shown in search page.
+
+2008-12-17  Esteban Sanchez  <estebans@artica.es>
+
 	* include/styles/desc.gif, include/styles/asc.gif: Added missing
 	images to show sort order in tables.
 

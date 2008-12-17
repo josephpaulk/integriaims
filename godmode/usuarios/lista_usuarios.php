@@ -19,7 +19,7 @@
 global $config;
 check_login();
 
-if (give_acl($config["id_user"], 0, "UM")==0) {
+if (! give_acl ($config["id_user"], 0, "UM")) {
 	audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access User Management");
 	require ("general/noaccess.php");
 	exit;
@@ -114,7 +114,9 @@ while ($rowdup=mysql_fetch_array($resq1)){
 	}
 	
 	echo "<td>" . $comentarios;
-	echo "<td align='center'><a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario=".$nombre."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
+	echo '<td align="center">';
+	echo '<a href="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario='.$nombre.'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+	echo '</td>';
 }
 echo "</table>";
 

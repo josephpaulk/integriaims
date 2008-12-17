@@ -98,8 +98,8 @@ unset ($table);
 
 require_once ('inventory_search.php');
 
-echo '</div>';
 echo '<div id="inventories-stats"></div>';
+echo '</div>';
 echo '</div>';
 
 ?>

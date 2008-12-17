@@ -102,6 +102,10 @@ function configure_inventory_buttons (form, dialog) {
 }
 
 function configure_incident_form (enable_ajax_form) {
+	$("form.delete").submit (function () {
+		if (! confirm ("Are you sure?"))
+			return false;
+	});
 	$(dialog+"#textarea-description").TextAreaResizer ();
 	$(dialog+"#textarea-epilog").TextAreaResizer ();
 	$(dialog+"#button-search_parent").click (function () {
@@ -776,6 +780,10 @@ function configure_contact_buttons (form, dialog) {
 }
 
 function configure_inventory_form (enable_ajax_form) {
+	$("form.delete").submit (function () {
+		if (! confirm ("Are you sure?"))
+			return false;
+	});
 	$(dialog+"#textarea-description").TextAreaResizer ();
 	$(dialog+"#button-parent_search").click (function () {
 		show_inventory_search_dialog ("Search parent inventory",

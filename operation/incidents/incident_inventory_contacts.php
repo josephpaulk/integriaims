@@ -18,6 +18,8 @@ if (check_login () != 0) {
 	exit;
 }
 
+require_once ('include/functions_inventories.php');
+
 $id_incident = (int) get_parameter ('id');
 
 $inventories = get_inventories_in_incident ($id_incident, false);
@@ -44,40 +46,27 @@ if (count ($inventories) == 0) {
 	return;
 }
 
-$contacts_printed = array ();
-
 $companies = array ();
 foreach ($inventories as $inventory) {
-	$contracts = get_inventory_contracts ($inventory['id'], false);
-	foreach ($contracts as $contract) {
-		$company = get_company ($contract['id_company']);
-		if ($company === false)
-			continue;
-		$contacts = get_company_contacts ($company['id'], false);
+	$contacts = get_inventory_contacts ($inventory['id'], false);
+	
+	foreach ($contacts as $contact) {
+		$data = array ();
 		
-		foreach ($contacts as $contact) {
-			if (isset ($contacts_printed[$contact['id']]))
-				continue;
-			
-			$contacts_printed[$contact['id']] = true;
-			
-			$data = array ();
-			
-			$data[0] = $inventory['name'];
-			$data[1] = $company['name'];
-			$data[2] = $contact['fullname'];
-			$details = '';
-			if ($contact['phone'] != '')
-				$details .= '<strong>'.__('Phone number').'</strong>: '.$contact['phone'].'<br />';
-			if ($contact['mobile'] != '')
-				$details .= '<strong>'.__('Mobile phone').'</strong>: '.$contact['mobile'].'<br />';
-			if ($contact['position'] != '')
-				$details .= '<strong>'.__('Position').'</strong>: '.$contact['position'].'<br />';
-			$data[3] = print_help_tip ($details, true, 'tip_view');
-			$data[4] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'">'.
-					'<img src="images/setup.gif" /></a>';
-			array_push ($table->data, $data);
-		}
+		$data[0] = $inventory['name'];
+		$data[1] = get_db_value  ('name', 'tcompany', 'id', $contact['id_company']);
+		$data[2] = $contact['fullname'];
+		$details = '';
+		if ($contact['phone'] != '')
+			$details .= '<strong>'.__('Phone number').'</strong>: '.$contact['phone'].'<br />';
+		if ($contact['mobile'] != '')
+			$details .= '<strong>'.__('Mobile phone').'</strong>: '.$contact['mobile'].'<br />';
+		if ($contact['position'] != '')
+			$details .= '<strong>'.__('Position').'</strong>: '.$contact['position'].'<br />';
+		$data[3] = print_help_tip ($details, true, 'tip_view');
+		$data[4] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'">'.
+				'<img src="images/setup.gif" /></a>';
+		array_push ($table->data, $data);
 	}
 }
 

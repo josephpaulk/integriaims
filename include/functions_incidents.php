@@ -85,14 +85,21 @@ function filter_incidents ($filters) {
 	}
 	if ($filters['last_date'] != '') {
 		$time = strtotime ($filters['last_date']);
-		$sql_clause .= sprintf (' AND inicio <= "%s"', date ("Y-m-d", $time));
+		if (! isset ($filters['first_date'])) {
+			$sql_clause .= sprintf (' AND inicio <= "%s"', date ("Y-m-d", $time));
+		} else {
+			$time_from = strtotime ($filters['first_date']);
+			if ($time_from < $time)
+				$sql_clause .= sprintf (' AND inicio <= "%s"',
+					date ("Y-m-d", $time));
+		}
 	}
 
 	$sql = sprintf ('SELECT * FROM tincidencia
 			WHERE estado IN (%s)
 			%s
 			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%")
-			ORDER BY actualizacion desc
+			ORDER BY actualizacion DESC
 			LIMIT %d',
 			$filters['status'], $sql_clause, $filters['string'], $filters['string'],
 			$config['limit_size']);
