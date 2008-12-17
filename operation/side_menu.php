@@ -780,7 +780,7 @@ if ($sec == "users") {
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_full'>".__('Full  report')."</a></li>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_full'>".__('Full report')."</a></li>";
 
 		// Full graph report 
 		if ($sec2 == "operation/user_report/report_full_graph")

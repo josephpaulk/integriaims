@@ -73,7 +73,7 @@ if (is_int ($package) && $package == 1) {
 	$table->width = '50%';
 	$table->data = array ();
 	
-	$table->data[0][0] = print_label (__('Id'), 'id', '', true,
+	$table->data[0][0] = print_label (__('ID'), 'id', '', true,
 		$package->id);
 	
 	$table->data[0][1] = print_label (__('Timestamp'), 'time', '', true,

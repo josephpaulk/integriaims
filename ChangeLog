@@ -1,3 +1,16 @@
+2008-12-17  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/help/en/help_profiles.php: Added help for profiles.
+
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	  translation.
+
+	* include/languages/index.pot: Updated po template.
+
+	* operation/incidents/incident.php, operation/side_menu.php,
+	  operation/reporting/incidents_html.php,
+	  godmode/updatemanager/main.php: Updated i18n infrastructure.
+
 2008-12-17  Esteban Sanchez  <estebans@artica.es>
 
 	* include/styles/integria.css: Added some style for profile
