@@ -58,7 +58,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail'>".__('Create project')."</a></li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&create_project=1'>".__('Create project')."</a></li>";
 	}
 
 	// View disabled projects

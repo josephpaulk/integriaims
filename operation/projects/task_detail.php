@@ -20,7 +20,7 @@ global $config;
 check_login ();
 
 // Get our main stuff
-$id_project = get_parameter ('id_project');
+$id_project = get_parameter ('id_project', -1);
 $id_task = get_parameter ('id_task', -1);
 $project_manager = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 $operation = (string) get_parameter ('operation');
@@ -53,7 +53,7 @@ $parent = 0;
 // ACL Check for this task
 // This user is assigned to this task ?
 
-if ( ! user_belong_task ($config["id_user"], $id_task)){
+if ( $operation != "create" && ! user_belong_task ($config["id_user"], $id_task)){
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager without project");
 	no_permission();

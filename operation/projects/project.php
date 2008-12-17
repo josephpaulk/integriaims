@@ -36,7 +36,7 @@ $action = (string) get_parameter ('action');
 // ======================
 
 if ($disable_project) {
-	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);	
+	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 	if ($id_owner == $config['id_user'] || dame_admin ($config['id_user'])) {
 		// delete_project ($id_project);
 		$sql = sprintf ('UPDATE tproject SET disabled = 1 WHERE id = %d', $id_project);
@@ -46,37 +46,41 @@ if ($disable_project) {
 		project_tracking ($id_project, PROJECT_DISABLED);
 	} else {
 		audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Forbidden", "User ".$config['id_user']." try to disable project #$id_project");
-		echo '<h3 class="error">'.__('There was a problem deleting project').'</h3>';
+		echo '<h3 class="error">'.__('There was a problem').'</h3>';
 		no_permission ();
 	}
 }
 
 // Reactivate project
+// ==================
+
 if ($activate_project) {
 	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 	if ($id_owner == $config['id_user'] || dame_admin ($config['id_user'])) {
 		$sql = sprintf ('UPDATE tproject SET disabled = 0 WHERE id = %d', $id_project);
 		process_sql ($sql);
-		echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully reactivated').'</h3>';
 		audit_db ($config['id_user'], $REMOTE_ADDR, "Project activated", "User ".$config['id_user']." activated project #".$id_project);
 		project_tracking ($id_project, PROJECT_ACTIVATED);
 	} else {
 		audit_db ($config['id_user'], $REMOTE_ADDR,"ACL Forbidden", "User ".$config['id_user']." try to activate project #$id_project");
-		echo '<h3 class="error">'.__('There was a problem deleting project').'</h3>';
+		echo '<h3 class="error">'.__('There was a problem').'</h3>';
 		no_permission ();
 	}
 }
 
 // Delete
+// -----------
+
 if ($delete_project) {
 	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 	if ($id_owner == $config['id_user'] || dame_admin ($config['id_user'])) {
 		// delete_project ($id_project);
 		delete_project ($id_project);
-		echo '<h3 class="suc">'.__('Incident successfully deleted').'</h3>';
+		echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	} else {
 		audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Forbidden", "User ".$config['id_user']." try to delete project #$id_project");
-		echo '<h3 class="error">'.__('There was a problem deleting incident').'</h3>';
+		echo '<h3 class="error">'.__('There was a problem').'</h3>';
 		no_permission ();
 	}
 }
@@ -89,17 +93,16 @@ if ($action == 'insert') {
 	}
 	
 	// Read input variables
-	$usuario = (string) get_parameter ("user");
+	$id_owner = get_parameter ("user");
 	$name = (string) get_parameter ("name");
 	$description = (string) get_parameter ('description');
 	$start_date = (string) get_parameter ('start_date');
 	$end_date = (string) get_parameter ('end_date');
 	$id_project_group = (int) get_parameter ('id_project_group');
 
-	$id_owner = $usuario;
 	$sql = sprintf ('INSERT INTO tproject
 		(name, description, start, end, id_owner, id_project_group)
-		VALUES ("%s", "%s", "%s", "%s", %d, %d)',
+		VALUES ("%s", "%s", "%s", "%s", "%s", %d)',
 		$name, $description, $start_date, $end_date, $id_owner,
 		$id_project_group);
 	$id_project = process_sql ($sql, 'insert_id');
@@ -107,7 +110,7 @@ if ($action == 'insert') {
 		echo '<h3 class="err">'.__('Project cannot be created, problem found.').'</h3>';
 	} else {
 		echo '<h3 class="suc">'.__('Successfully created').' #'.$id_project.'</h3>';
-		audit_db ($usuario, $REMOTE_ADDR, "Project created", "User ".$config['id_user']." created project '$name'");
+		audit_db ($id_owner, $REMOTE_ADDR, "Project created", "User ".$config['id_user']." created project '$name'");
 		
 		project_tracking ($id_project, PROJECT_CREATED);
 		

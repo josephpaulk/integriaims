@@ -1,3 +1,12 @@
+2008-12-17  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_form.php
+	operation/side_menu.php
+	operation/projects/project.php
+	operation/projects/task_detail.php
+	operation/projects/project_detail.php: Fixes several problems
+	with ACL's on projecr creation and deletion. 
+
 2008-12-17  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/help/en/help_profiles.php: Added help for profiles.

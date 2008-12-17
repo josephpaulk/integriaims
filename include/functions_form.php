@@ -21,7 +21,7 @@ global $config;
 function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = false, $access = "IR", $return = false, $label = false) {
 	global $config;
 	
-	if ($id_user == '')
+	if ($id_user == '' || $id_user == 0)
 		$id_user = $config['id_user'];
 	
 	$userlist = array ();
