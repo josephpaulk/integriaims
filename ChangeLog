@@ -1,3 +1,8 @@
+2008-12-17  Esteban Sanchez  <estebans@artica.es>
+
+	* include/styles/desc.gif, include/styles/asc.gif: Added missing
+	images to show sort order in tables.
+
 2008-12-16  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_incidents.php: Fixed width in stats.
