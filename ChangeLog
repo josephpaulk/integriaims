@@ -1,5 +1,19 @@
 2008-12-17  Esteban Sanchez  <estebans@artica.es>
 
+	* godmode/setup/incidents_setup.php: Added to repository. New
+	interface for updating incident status, origins (sources) and
+	resolutions.
+
+	* include/functions.php: get_indicent_status() and
+	get_incident_resolutions() moved to functions_db.php.
+
+	* include/functions.php: get_indicent_status() and
+	get_incident_resolutions moved from functions.php.
+
+	* operation/side_menu.php: Added option to incidents setup.
+
+2008-12-17  Esteban Sanchez  <estebans@artica.es>
+
 	* include/functions_incidents.php: Use empty() to check unset values,
 	it's easier, cleaner and safer to do it that way. Check for no
 	incidents in print_incidents_stats().

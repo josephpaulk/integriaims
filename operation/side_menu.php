@@ -662,13 +662,20 @@ if ($sec == "godmode") {
 	echo "<h3>".__('Setup')."</h3>";
 	echo "<ul class='sidemenu'>";
 
-	// Main Seetup
+	// Main Setup
 	if ($sec2 == "godmode/setup/setup")
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".__('General setup')."</a></li>";
-
+	
+	// Incident Setup
+	if ($sec2 == "godmode/setup/incidents_setup")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/incidents_setup'>".__('Incidents setup')."</a></li>";
+	
 	// Mail Seetup
 	if ($sec2 == "godmode/setup/setup_mail")
 		echo "<li id='sidesel'>";

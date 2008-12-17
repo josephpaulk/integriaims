@@ -533,38 +533,6 @@ function get_periodicity ($recurrence) {
 	return isset ($recurrences[$recurrence]) ? $recurrences[$recurrence] : __('Unknown');
 }
 
-// FIXME: This both functions need to be updated to use values FROM datatabase, not fixed ones
-
-function get_indicent_status () {
-	$status = array ();
-
-	$status[1] = __('New');
-	$status[2] = __('Unconfirmed');
-	$status[3] = __('Assigned');
-	$status[4] = __('Re-opened');
-	$status[5] = __('Verified');
-	$status[6] = __('Resolved');
-	$status[7] = __('Closed');
-
-	return $status;
-}
-
-function get_incident_resolutions () {
-	$status = array ();
-
-	$status[1] = __('Fixed');
-	$status[2] = __('Invalid');
-	$status[3] = __('Wont fix');
-	$status[4] = __('Duplicate');
-	$status[5] = __('Works for me');
-	$status[6] = __('Incomplete');
-	$status[7] = __('Expired');
-    $status[8] = __('Moved');
-	$status[9] = __('In process');
-
-	return $status;
-}
-
 function ellipsize_string ($string, $len = 2) {
 	return substr ($string, 0, $len).'(..)'.substr ($string, strlen ($string) - $len, $len);
 }

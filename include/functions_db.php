@@ -2107,4 +2107,27 @@ function create_wu_task ($id_task, $id_user, $description, $have_cost, $id_profi
 	}
 	return false;
 }
+
+
+function get_indicent_status () {
+	$retval = array ();
+	$status = get_db_all_rows_in_table ('tincident_status');
+	
+	foreach ($status as $stat) {
+		$retval[$stat['id']] = $stat['name'];
+	}
+
+	return $retval;
+}
+
+function get_incident_resolutions () {
+	$retval = array ();
+	$resolutions = get_db_all_rows_in_table ('tincident_resolution');
+	
+	foreach ($resolutions as $resolution) {
+		$retval[$resolution['id']] = $resolution['name'];
+	}
+
+	return $retval;
+}
 ?>
