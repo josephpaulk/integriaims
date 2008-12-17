@@ -1030,3 +1030,14 @@ div#incident-stats, div#inventories-stats {
 #checkbox-force_update {
 	float:none;
 }
+
+table#profile_editor label {
+	display: inline;
+	margin-right: 5px;
+	font-weight: normal;
+	font-style: italic;
+}
+
+table#profile_editor input[type="checkbox"] {
+	float: none;
+}

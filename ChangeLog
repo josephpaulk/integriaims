@@ -1,5 +1,10 @@
 2008-12-17  Esteban Sanchez  <estebans@artica.es>
 
+	* include/styles/integria.css: Added some style for profile
+	management.
+
+2008-12-17  Esteban Sanchez  <estebans@artica.es>
+
 	* godmode/setup/incidents_setup.php: Added to repository. New
 	interface for updating incident status, origins (sources) and
 	resolutions.
