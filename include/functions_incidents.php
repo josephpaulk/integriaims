@@ -65,7 +65,7 @@ function filter_incidents ($filters) {
 	$filters['first_date'] = isset ($filters['first_date']) ? $filters['first_date'] : '';
 	$filters['last_date'] = isset ($filters['last_date']) ? $filters['last_date'] : '';
 	
-	if ($filters['status'] == 0)
+	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
 	
 	$resolutions = get_incident_resolutions ();
@@ -75,17 +75,17 @@ function filter_incidents ($filters) {
 		$sql_clause .= sprintf (' AND prioridad = %d', $filters['priority']);
 	if ($filters['id_group'] != 1)
 		$sql_clause .= sprintf (' AND id_grupo = %d', $filters['id_group']);
-	if ($filters['id_user'] != '0')
+	if (! empty ($filters['id_user']))
 		$sql_clause .= sprintf (' AND id_usuario = "%s"', $filters['id_user']);
-	if ($filters['id_incident_type'])
+	if (! empty ($filters['id_incident_type']))
 		$sql_clause .= sprintf (' AND id_incident_type = %d', $filters['id_incident_type']);
-	if ($filters['first_date'] != '') {
+	if (! empty ($filters['first_date'])) {
 		$time = strtotime ($filters['first_date']);
 		$sql_clause .= sprintf (' AND inicio >= "%s"', date ("Y-m-d", $time));
 	}
-	if ($filters['last_date'] != '') {
+	if (! empty ($filters['last_date'])) {
 		$time = strtotime ($filters['last_date']);
-		if (! isset ($filters['first_date'])) {
+		if (! empty ($filters['first_date'])) {
 			$sql_clause .= sprintf (' AND inicio <= "%s"', date ("Y-m-d", $time));
 		} else {
 			$time_from = strtotime ($filters['first_date']);
@@ -112,9 +112,9 @@ function filter_incidents ($filters) {
 	foreach ($incidents as $incident) {
 		if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR'))
 			continue;
-	
+		
 		$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
-	
+		
 		/* Check aditional searching clauses */
 		if ($filters['sla_fired'] && $incident['affected_sla_id'] == 0) {
 			continue;
@@ -213,6 +213,8 @@ function print_incidents_stats ($incidents, $return = false) {
 	$total_lifetime = 0;
 	$max_lifetime = 0;
 	$oldest_incident = false;
+	if ($incidents === false)
+		$incidents = array ();
 	foreach ($incidents as $incident) {
 		if ($incident['estado'] != 6 && $incident['estado'] != 7) {
 			$opened++;

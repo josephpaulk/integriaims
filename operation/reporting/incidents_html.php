@@ -52,10 +52,10 @@ echo $generated_str;
 $output = '<div style="margin-left: 15px; text-align: left; width: 95%;">';
 
 /* Show search criterium */
-if ($filter['string'] != '') 
+if (! empty ($filter['string'])) 
 	$output .= print_label (__('Containing').': ', '', '', true,
 		'"'.$filter['string'].'"').'<br />';
-if ($filter['status'] != '')
+if (! empty ($filter['status']))
 	$output .= print_label (__('Status').': ', '', '', true,
 		$statuses[$filter['status']]).'<br />';
 if ($filter['priority'] != -1)
@@ -64,34 +64,34 @@ if ($filter['priority'] != -1)
 if ($filter['id_group'] != 1)
 	$output .= print_label (__('Group').': ', '', '', true,
 		get_db_value ('nombre', 'tgrupo', 'id_grupo', $filter['id_group'])).'<br />';
-if ($filter['sla_fired'] != 0)
+if (! empty ($filter['sla_fired']))
 	$output .= print_label (__('SLA fired').': ', '', '', true, __('Yes')).'<br />';
-if ($filter['id_product'] != 0)
+if (! empty ($filter['id_product']))
 	$output .= print_label (__('Product').': ', '', '', true, 
 		get_db_value ('name', 'tkb_product', 'id', $filter['id_product'])).'<br />';
-if ($filter['id_company'] != 0)
+if (! empty ($filter['id_company']))
 	$output .= print_label (__('Company').': ', '', '', true,
 		get_db_value ('name', 'tinventory', 'id', $filter['id_company'])).'<br />';
-if ($filter['id_inventory'] != 0)
+if (! empty ($filter['id_inventory']))
 	$output .= print_label (__('Inventory').': ', '', '', true,
 		get_inventory_name ($filter['id_inventory'])).'<br />';
-if ($filter['serial_number'] != '')
+if (! empty ($filter['serial_number']))
 	$output .= print_label (__('Serial number').': ', '', '', true,
 		$filter['serial_number']).'<br />';
-if ($filter['id_building'] != 0)
+if (! empty ($filter['id_building']))
 	$output .= print_label (__('Building').': ', '', '', true, 
 		get_db_value ('name', 'tbuilding', 'id', $filter['id_building'])).'<br />';
-if ($filter['id_user'] != '0')
+if (! empty ($filter['id_user']))
 	$output .= print_label (__('User').': ', '', '', true,
 		$filter['id_user']).'<br />';
-if ($filter['id_incident_type'] != 0)
+if (! empty ($filter['id_incident_type']))
 	$output .= print_label (__('Incident type').': ', '', '', true,
 		get_db_value ('name', 'tincident_type', 'id',
 		$filter['id_incident_type'])).'<br />';
-if ($filter['first_date'] != '')
+if (! empty ($filter['first_date']))
 	$output .= print_label (__('From').': ', '', '', true,
 		$filter['first_date']).'<br />';
-if ($filter['last_date'] != '')
+if (! empty ($filter['last_date']))
 	$output .= print_label (__('To').': ', '', '', true,
 		$filter['last_date']).'<br />';
 

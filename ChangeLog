@@ -1,5 +1,18 @@
 2008-12-17  Esteban Sanchez  <estebans@artica.es>
 
+	* include/functions_incidents.php: Use empty() to check unset values,
+	it's easier, cleaner and safer to do it that way. Check for no
+	incidents in print_incidents_stats().
+
+	* operation/reporting/incidents_html.php: Use empty().
+
+	* operation/inventories/inventory.php: Removed HTML extra tag.
+
+	* operation/inventories/inventory_incidents.php: Added a link to
+	incidents HTML report.
+
+2008-12-17  Esteban Sanchez  <estebans@artica.es>
+
 	* godmode/usuarios/lista_usuarios.php,
 	include/js/integria_incident_search.js,
 	operation/incidents/incident_detail.php,

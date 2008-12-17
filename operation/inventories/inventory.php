@@ -100,7 +100,6 @@ require_once ('inventory_search.php');
 
 echo '<div id="inventories-stats"></div>';
 echo '</div>';
-echo '</div>';
 
 ?>
 

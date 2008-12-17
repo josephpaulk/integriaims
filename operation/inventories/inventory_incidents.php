@@ -63,4 +63,14 @@ foreach ($incidents as $incident) {
 
 print_table ($table);
 
+echo '<div id="inventories-stats">';
+echo '<form style="clear: both;" action="index.php" target="_blank" method="post">';
+
+print_input_hidden ('search_id_inventory', $id);
+print_input_hidden ('sec2', 'operation/reporting/incidents_html');
+print_input_hidden ('clean_output', 1);
+print_submit_button (__('HTML report'), 'incident_report', false,
+	'class="sub report"');
+echo '</form>';
+echo '</div>';
 ?>
