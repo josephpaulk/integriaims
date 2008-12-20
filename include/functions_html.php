@@ -71,7 +71,6 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 	}
 
 	$output .= "</select>\n";
-
 	if ($return)
 		return $output;
 

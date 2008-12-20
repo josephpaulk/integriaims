@@ -1121,6 +1121,7 @@ if ($additional_msg != "")
 	
 $text .= "
 ---------------------------------------------------[INFORMATION]-----
+TASK NAME   : " . $project["name"]. " / " . $task["name"]. " 
 DATE / TIME : $current_timestamp
 ASSIGNED BY : $id_user
 HAVE COST   : $have_cost
@@ -1173,8 +1174,8 @@ TO-DO NAME  : $tname
 DATE / TIME : $tlastupdate
 CREATED BY  : $tcreated
 ASSIGNED TO : $tassigned
-PROGRESS	: $tprogress%
-PRIORITY	: $tpriority
+PROGRESS    : $tprogress%
+PRIORITY    : $tpriority
 DESCRIPTION
 ---------------------------------------------------------------------
 $tdescription\n\n";

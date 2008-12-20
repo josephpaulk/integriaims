@@ -1,3 +1,14 @@
+
+2008-12-20 Sancho Lerena <slerena@artica.es>
+
+	* functions_db.php: Added taskname to workunit mail report.
+
+	* functions_form.php: Fixed problem showing current user in 
+	Combo_user_visible_for_me.
+
+	* operation/user_report/report_full_graph.php: Removed fullscreen 
+	link and better date checking.
+
 2008-12-17  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_form.php

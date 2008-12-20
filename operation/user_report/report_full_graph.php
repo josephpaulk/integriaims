@@ -39,7 +39,7 @@ function get_tasks (&$tasks, $id_user, $start, $end, $not_finished, $not_recurre
 	t.id, t.name, t.start, t.end 
 	FROM tproject as r, ttask as t, trole_people_task as p 
 	WHERE p.id_task = t.id AND p.id_user = '$id_user' AND (
-	(t.start > '$start' AND t.end < '$end') OR (t.start < '$start' AND t.end > '$start') OR (t.end > '$end' AND t.start < '$end')) ";
+	(t.start >= '$start' AND t.end <= '$end') OR (t.start <= '$start' AND t.end >= '$start') OR (t.end >= '$end' AND t.start <= '$end')) ";
 
 	if ($not_recurrent == 0)
 		$sql .= " AND periodicity = 'none' ";
@@ -50,7 +50,6 @@ function get_tasks (&$tasks, $id_user, $start, $end, $not_finished, $not_recurre
 		$sql .= " AND t.completion < 100 ";
 
 	$sql .= " GROUP BY p.id_task, t.id";
-
 	$rows = get_db_all_rows_sql ($sql);
 
     if ($rows === false) {
@@ -218,11 +217,7 @@ if ($num_tasks > 20) {
 // Print the Gantt chart
 print fs_gantt_chart ($project_name, $project_start, $project_end, $tasks, $milestones, $width, $height);
 
-if (!$clean_output) {
-	echo "<br><br>";
-	echo "<a target='top' href='index.php?sec=users&sec2=operation/user_report/report_full_graph&start_date=$start_date&end_date=$end_date&id_user=$user_id&clean_output=1'>".__('Full screen')."</a>";
-}
-
 ?>
 
 <script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>
+
