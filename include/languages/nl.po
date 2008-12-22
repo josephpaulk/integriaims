@@ -1,27 +1,28 @@
-# SOME DESCRIPTIVE TITLE.
+# translation of integria-nl.po to Dutch
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# Jorge Gonzalez <jorge.gonzalez@artica.es>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: integria-nl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-22 10:51+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2008-12-17 16:09+0100\n"
+"PO-Revision-Date: 2008-12-22 10:49+0100\n"
+"Last-Translator: Jorge Gonzalez <jorge.gonzalez@artica.es>\n"
+"Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: ../../general/login_page.php:38
 msgid "Login failed"
-msgstr ""
+msgstr "Inloggen niet gelukt"
 
 #: ../../general/login_page.php:50 ../../godmode/setup/event.php:38
-#: ../../include/functions_form.php:748
+#: ../../include/functions_form.php:751
 #: ../../enterprise/godmode/usuarios/role_user_global.php:52
 #: ../../operation/reporting/incidents_html.php:85
 #: ../../operation/incidents/incident_work.php:96
@@ -37,17 +38,17 @@ msgstr ""
 #: ../../operation/projects/project_tracking.php:36
 #: ../../operation/kb/manage_data.php:287 ../../operation/kb/search.php:73
 msgid "User"
-msgstr ""
+msgstr "Gebruiker"
 
 #: ../../general/login_page.php:55
 #: ../../godmode/usuarios/configurar_usuarios.php:196
 #: ../../operation/users/user_edit.php:163
 msgid "Password"
-msgstr ""
+msgstr "Wachtwoord"
 
 #: ../../general/login_page.php:61
 msgid "Login"
-msgstr ""
+msgstr "Aanmelden"
 
 #: ../../general/integria_help.php:23
 msgid "Integria IMS help system"
@@ -86,11 +87,11 @@ msgstr ""
 #: ../../general/links_menu.php:21 ../../operation/side_menu.php:706
 #: ../../operation/tool_menu.php:5
 msgid "Links"
-msgstr ""
+msgstr "Verwijzingen"
 
 #: ../../general/noaccess.php:22
 msgid "You don't have access to this page"
-msgstr ""
+msgstr "U hebt geen toegang tot deze pagina"
 
 #: ../../general/noaccess.php:26
 msgid ""
@@ -102,7 +103,7 @@ msgstr ""
 
 #: ../../general/header.php:20
 msgid "Home"
-msgstr ""
+msgstr "Persoonlijke map"
 
 #: ../../general/header.php:31
 msgid "You are connected as"
@@ -110,7 +111,7 @@ msgstr ""
 
 #: ../../general/header.php:33
 msgid "Logout"
-msgstr ""
+msgstr "Afmelden"
 
 #: ../../general/home.php:37
 #: ../../enterprise/godmode/usuarios/profile_list.php:205
@@ -147,7 +148,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/profile_list.php:210
 #: ../../operation/side_menu.php:30 ../../operation/main_menu.php:28
 msgid "Projects"
-msgstr ""
+msgstr "Projecten"
 
 #: ../../general/home.php:110
 msgid "Projects active you have"
@@ -188,7 +189,7 @@ msgstr ""
 
 #: ../../index.php:246 ../../index.php:271
 msgid "Page not found"
-msgstr ""
+msgstr "Pagina niet gevonden"
 
 #: ../../godmode/perfiles/lista_perfiles.php:38
 #: ../../godmode/setup/links.php:60
@@ -219,7 +220,7 @@ msgstr ""
 #: ../../operation/projects/milestones.php:71
 #: ../../operation/projects/task_workunit.php:129
 #: ../../operation/projects/people_manager.php:94
-#: ../../operation/projects/project.php:80
+#: ../../operation/projects/project.php:60
 #: ../../operation/contacts/contact_detail.php:110
 #: ../../operation/users/user_spare_workunit.php:197
 #: ../../operation/users/user_workunit_report.php:56
@@ -254,7 +255,7 @@ msgstr ""
 #: ../../operation/projects/task_detail.php:98
 #: ../../operation/projects/milestones.php:54
 #: ../../operation/projects/people_manager.php:66
-#: ../../operation/projects/project.php:112
+#: ../../operation/projects/project.php:109
 #: ../../operation/contacts/contact_detail.php:70
 #: ../../operation/contracts/contract_detail.php:68
 #: ../../operation/slas/sla_detail.php:56
@@ -338,7 +339,7 @@ msgstr ""
 #: ../../operation/companies/company_role.php:108
 #: ../../operation/companies/company_detail.php:134
 #: ../../operation/projects/project_group_detail.php:112
-#: ../../operation/projects/project_detail.php:227
+#: ../../operation/projects/project_detail.php:224
 #: ../../operation/projects/task_detail.php:315
 #: ../../operation/projects/milestones.php:104
 #: ../../operation/projects/milestones.php:156
@@ -350,7 +351,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:245
 #: ../../operation/kb/manage_cat.php:148 ../../operation/kb/manage_cat.php:213
 msgid "Create"
-msgstr ""
+msgstr "Aanmaken"
 
 #: ../../godmode/perfiles/lista_perfiles.php:155
 #: ../../godmode/perfiles/lista_perfiles.php:212
@@ -378,7 +379,7 @@ msgstr ""
 #: ../../operation/companies/company_role.php:103
 #: ../../operation/companies/company_detail.php:129
 #: ../../operation/projects/project_group_detail.php:108
-#: ../../operation/projects/project_detail.php:224
+#: ../../operation/projects/project_detail.php:221
 #: ../../operation/projects/project_tree.php:58
 #: ../../operation/projects/task_detail.php:312
 #: ../../operation/projects/people_manager.php:211
@@ -392,7 +393,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:247
 #: ../../operation/kb/manage_cat.php:150
 msgid "Update"
-msgstr ""
+msgstr "Verversen"
 
 #: ../../godmode/perfiles/lista_perfiles.php:157
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:168
@@ -403,7 +404,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:176
 #: ../../enterprise/godmode/usuarios/profile_list.php:192
 msgid "Profile name"
-msgstr ""
+msgstr "Profielnaam"
 
 #: ../../godmode/perfiles/lista_perfiles.php:166
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:177
@@ -472,7 +473,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:212
 #: ../../enterprise/operation/user/user.php:56
 #: ../../operation/projects/project_detail.php:111
-#: ../../operation/projects/project.php:135
+#: ../../operation/projects/project.php:132
 msgid "Project management"
 msgstr ""
 
@@ -494,7 +495,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/configurar_usuarios.php:44
 #: ../../enterprise/operation/user/user.php:40
 msgid "Profiles"
-msgstr ""
+msgstr "Profielen"
 
 #: ../../godmode/perfiles/lista_perfiles.php:242
 #: ../../godmode/setup/links.php:117 ../../godmode/grupos/lista_grupos.php:114
@@ -528,13 +529,13 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:288
 #: ../../operation/kb/manage_cat.php:168
 msgid "Delete"
-msgstr ""
+msgstr "Verwijderen"
 
 #: ../../godmode/perfiles/lista_perfiles.php:312
 #: ../../godmode/setup/links.php:129 ../../godmode/grupos/lista_grupos.php:144
 #: ../../godmode/usuarios/lista_usuarios.php:118
 #: ../../godmode/usuarios/role_manager.php:146
-#: ../../include/functions_form.php:642
+#: ../../include/functions_form.php:645
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:379
 #: ../../enterprise/godmode/usuarios/profile_list.php:340
 #: ../../enterprise/godmode/usuarios/role_user_global.php:87
@@ -554,8 +555,8 @@ msgstr ""
 #: ../../operation/projects/task_workunit.php:191
 #: ../../operation/projects/people_manager.php:143
 #: ../../operation/projects/people_manager.php:184
-#: ../../operation/projects/project.php:261
-#: ../../operation/projects/project.php:265
+#: ../../operation/projects/project.php:258
+#: ../../operation/projects/project.php:262
 #: ../../operation/contacts/contact_detail.php:231
 #: ../../operation/contracts/contract_detail.php:243
 #: ../../operation/slas/sla_detail.php:206
@@ -575,7 +576,7 @@ msgstr ""
 #: ../../operation/kb/browse.php:101 ../../operation/kb/browse_data.php:67
 #: ../../operation/kb/manage_data.php:201 ../../operation/kb/search.php:47
 msgid "Language"
-msgstr ""
+msgstr "Taal"
 
 #: ../../godmode/setup/setup.php:73
 msgid "No WU completion users"
@@ -603,7 +604,7 @@ msgstr ""
 
 #: ../../godmode/setup/setup.php:95
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #: ../../godmode/setup/setup.php:98
 msgid "Graphics font size"
@@ -613,11 +614,11 @@ msgstr ""
 msgid "Event history"
 msgstr ""
 
-#: ../../godmode/setup/event.php:37 ../../include/functions_form.php:313
-#: ../../include/functions_form.php:322
+#: ../../godmode/setup/event.php:37 ../../include/functions_form.php:316
+#: ../../include/functions_form.php:325
 #: ../../operation/projects/project_tree.php:52
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: ../../godmode/setup/event.php:39
 msgid "Extended info"
@@ -630,9 +631,9 @@ msgstr ""
 #: ../../operation/messages/message.php:169 ../../operation/kb/browse.php:102
 #: ../../operation/kb/manage_data.php:284 ../../operation/kb/search.php:69
 msgid "Timestamp"
-msgstr ""
+msgstr "Tijdstempel"
 
-#: ../../godmode/setup/event.php:65 ../../include/functions_form.php:563
+#: ../../godmode/setup/event.php:65 ../../include/functions_form.php:566
 #: ../../operation/reporting/incidents_html.php:114
 #: ../../operation/side_menu.php:337
 #: ../../operation/incidents/incident.php:122
@@ -651,9 +652,9 @@ msgstr ""
 msgid "Incident"
 msgstr ""
 
-#: ../../godmode/setup/event.php:68 ../../include/functions_form.php:50
-#: ../../include/functions_form.php:117 ../../include/functions_form.php:585
-#: ../../include/functions_form.php:724
+#: ../../godmode/setup/event.php:68 ../../include/functions_form.php:53
+#: ../../include/functions_form.php:120 ../../include/functions_form.php:588
+#: ../../include/functions_form.php:727
 #: ../../operation/reporting/inventories_html.php:53
 #: ../../operation/reporting/incidents_html.php:65
 #: ../../operation/reporting/incidents_html.php:115
@@ -663,12 +664,12 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:183
 #: ../../operation/projects/task.php:94
 #: ../../operation/projects/task_incidents.php:59
-#: ../../operation/projects/project.php:156
+#: ../../operation/projects/project.php:153
 #: ../../operation/users/user_search.php:80
 #: ../../operation/contracts/contract_detail.php:149
 #: ../../operation/contracts/contract_detail.php:219
 msgid "Group"
-msgstr ""
+msgstr "Groep"
 
 #: ../../godmode/setup/setup_mail.php:46 ../../operation/side_menu.php:684
 msgid "Mail setup"
@@ -712,12 +713,12 @@ msgstr ""
 
 #: ../../godmode/setup/links.php:102
 msgid "Link"
-msgstr ""
+msgstr "Verwijzing"
 
 #: ../../godmode/setup/links.php:116
 #: ../../godmode/grupos/configurar_grupo.php:79
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ../../godmode/setup/links.php:138
 #: ../../godmode/usuarios/role_manager.php:153
@@ -727,7 +728,7 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:551
 #: ../../operation/users/user_spare_workunit.php:314
 msgid "Add"
-msgstr ""
+msgstr "Toevoegen"
 
 #: ../../godmode/setup/incidents_setup.php:30
 #: ../../operation/side_menu.php:677
@@ -739,8 +740,8 @@ msgid "Updated successfuly"
 msgstr ""
 
 #: ../../godmode/setup/incidents_setup.php:61
-#: ../../include/functions_form.php:247 ../../include/functions_form.php:257
-#: ../../include/functions_form.php:715
+#: ../../include/functions_form.php:250 ../../include/functions_form.php:260
+#: ../../include/functions_form.php:718
 #: ../../operation/reporting/incidents_html.php:59
 #: ../../operation/reporting/incidents_html.php:116
 #: ../../operation/inventories/inventory_incidents.php:39
@@ -749,7 +750,7 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:185
 #: ../../operation/projects/task_tracking.php:42
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: ../../godmode/setup/incidents_setup.php:83
 msgid "Origins"
@@ -793,13 +794,13 @@ msgstr ""
 #: ../../operation/projects/task_detail.php:225
 #: ../../operation/projects/milestones.php:84
 #: ../../operation/projects/people_manager.php:256
-#: ../../operation/projects/project.php:173
+#: ../../operation/projects/project.php:170
 #: ../../operation/users/user_search.php:83 ../../operation/users/user.php:35
 #: ../../operation/contracts/contract_detail.php:215
 #: ../../operation/slas/sla_detail.php:186
 #: ../../operation/kb/manage_cat.php:122 ../../operation/kb/manage_cat.php:164
 msgid "Name"
-msgstr ""
+msgstr "Naam"
 
 #: ../../godmode/grupos/configurar_grupo.php:71
 msgid "Forced email"
@@ -813,7 +814,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:134
 #: ../../operation/users/user_edit.php:147
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: ../../godmode/grupos/configurar_grupo.php:84
 #: ../../godmode/grupos/lista_grupos.php:113
@@ -822,7 +823,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:191
 #: ../../operation/kb/manage_cat.php:141 ../../operation/kb/manage_cat.php:165
 msgid "Parent"
-msgstr ""
+msgstr "Parent"
 
 #: ../../godmode/grupos/configurar_grupo.php:87
 #: ../../godmode/grupos/lista_grupos.php:111
@@ -831,7 +832,7 @@ msgstr ""
 #: ../../operation/projects/project_overview.php:30
 #: ../../operation/kb/manage_cat.php:134 ../../operation/kb/manage_cat.php:163
 msgid "Icon"
-msgstr ""
+msgstr "Pictogram"
 
 #: ../../godmode/grupos/configurar_grupo.php:95
 msgid "Banner"
@@ -910,7 +911,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_tree.php:48
 #: ../../operation/incidents/incident.php:120
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: ../../godmode/updatemanager/main.php:82
 #: ../../godmode/usuarios/role_manager.php:110
@@ -948,7 +949,7 @@ msgstr ""
 #: ../../operation/kb/browse_data.php:108
 #: ../../operation/kb/manage_cat.php:128 ../../operation/kb/manage_cat.php:166
 msgid "Description"
-msgstr ""
+msgstr "Beschrijving"
 
 #: ../../godmode/updatemanager/main.php:89
 msgid "Overwrite local changes"
@@ -996,7 +997,7 @@ msgstr ""
 
 #: ../../godmode/updatemanager/settings.php:74
 msgid "Proxy port"
-msgstr ""
+msgstr "Proxy poort"
 
 #: ../../godmode/updatemanager/settings.php:77
 msgid "Proxy user"
@@ -1008,7 +1009,7 @@ msgstr ""
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:553
 msgid "Development"
-msgstr ""
+msgstr "Ontwikkeling"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:554
 msgid "Testing"
@@ -1019,16 +1020,16 @@ msgstr ""
 #: ../../operation/incidents/incident_create_work.php:52
 #: ../../operation/users/user_spare_workunit.php:288
 msgid "Public"
-msgstr ""
+msgstr "Openbaar"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:556
 msgid "Disabled"
-msgstr ""
+msgstr "Uitgeschakeld"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:564
 #: ../../enterprise/godmode/usuarios/profile_list.php:227
 msgid "Database"
-msgstr ""
+msgstr "Database"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:565
 msgid "Code / binary directory"
@@ -1044,7 +1045,7 @@ msgstr ""
 #: ../../operation/user_report/report_monthly.php:65
 #: ../../operation/users/user_edit.php:122 ../../operation/users/user.php:32
 msgid "User ID"
-msgstr ""
+msgstr "Gebruiker-id"
 
 #: ../../godmode/usuarios/lista_usuarios.php:76
 #: ../../operation/users/user.php:33
@@ -1052,11 +1053,11 @@ msgid "Last contact"
 msgstr ""
 
 #: ../../godmode/usuarios/lista_usuarios.php:77
-#: ../../include/functions_form.php:610
+#: ../../include/functions_form.php:613
 #: ../../operation/incidents/incident_create_work.php:48
 #: ../../operation/users/user.php:34
 msgid "Profile"
-msgstr ""
+msgstr "Profiel"
 
 #: ../../godmode/usuarios/lista_usuarios.php:111
 #: ../../enterprise/godmode/usuarios/configurar_usuarios.php:23
@@ -1112,7 +1113,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:135
 #: ../../operation/users/user_edit.php:148
 msgid "Telephone"
-msgstr ""
+msgstr "Telefoon"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:217
 msgid "Global profile"
@@ -1121,7 +1122,7 @@ msgstr ""
 #: ../../godmode/usuarios/configurar_usuarios.php:221
 #: ../../godmode/usuarios/configurar_usuarios.php:225
 msgid "Administrator"
-msgstr ""
+msgstr "Beheerder"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:223
 #: ../../godmode/usuarios/configurar_usuarios.php:227
@@ -1136,7 +1137,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:150
 #: ../../operation/users/user_search.php:98
 msgid "Comments"
-msgstr ""
+msgstr "Commentaar"
 
 #: ../../godmode/usuarios/role_manager.php:35 ../../operation/todo/todo.php:28
 #: ../../operation/projects/milestones.php:52
@@ -1168,7 +1169,7 @@ msgid "Add role"
 msgstr ""
 
 #: ../../godmode/usuarios/role_manager.php:108
-#: ../../include/functions_form.php:80
+#: ../../include/functions_form.php:83
 #: ../../enterprise/godmode/usuarios/role_user_global.php:70
 #: ../../operation/companies/company_detail.php:172
 #: ../../operation/projects/people_manager.php:123
@@ -1178,18 +1179,18 @@ msgstr ""
 #: ../../operation/users/user_spare_workunit.php:262
 #: ../../operation/users/user_search.php:76
 msgid "Role"
-msgstr ""
+msgstr "Rol"
 
 #: ../../godmode/usuarios/role_manager.php:112
 #: ../../godmode/usuarios/role_manager.php:127
-#: ../../include/functions_form.php:597
+#: ../../include/functions_form.php:600
 #: ../../operation/inventories/inventory_detail.php:244
 #: ../../operation/inventories/inventory_detail.php:253
 #: ../../operation/projects/task.php:116
 #: ../../operation/projects/people_manager.php:258
-#: ../../operation/projects/project.php:180
+#: ../../operation/projects/project.php:177
 msgid "Cost"
-msgstr ""
+msgstr "Kosten"
 
 #: ../../include/functions_calendar.php:439
 msgid "Week Total"
@@ -1198,7 +1199,7 @@ msgstr ""
 #: ../../include/functions_calendar.php:464
 #: ../../include/functions_calendar.php:505
 #: ../../include/functions_calendar.php:526
-#: ../../include/functions_form.php:499
+#: ../../include/functions_form.php:502
 #: ../../include/functions_incidents.php:271 ../../operation/side_menu.php:159
 #: ../../operation/side_menu.php:248 ../../operation/side_menu.php:261
 #: ../../operation/inventories/inventory_contracts.php:69
@@ -1208,58 +1209,58 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:198
 #: ../../operation/slas/sla_detail.php:199
 msgid "Hours"
-msgstr ""
+msgstr "Uur"
 
 #: ../../include/functions_calendar.php:618 ../../include/functions.php:533
 #: ../../include/functions.php:588 ../../include/functions.php:612
 #: ../../operation/projects/task_tracking.php:69
 msgid "Unknown"
-msgstr ""
+msgstr "Onbekend"
 
 #: ../../include/functions_calendar.php:625
-#: ../../operation/projects/project.php:254
+#: ../../operation/projects/project.php:251
 msgid "Never"
-msgstr ""
+msgstr "Nooit"
 
 #: ../../include/functions_calendar.php:634
 msgid "seconds"
-msgstr ""
+msgstr "seconden"
 
 #: ../../include/functions_calendar.php:640
 #: ../../include/functions_calendar.php:642
 msgid "minutes"
-msgstr ""
+msgstr "minuten"
 
 #: ../../include/functions_calendar.php:645
 msgid "hours"
-msgstr ""
+msgstr "uur"
 
 #: ../../include/functions_calendar.php:648
 msgid "days"
-msgstr ""
+msgstr "dagen"
 
 #: ../../include/functions_calendar.php:651
 msgid "months"
-msgstr ""
+msgstr "maanden"
 
 #: ../../include/functions_calendar.php:654
 msgid "years"
-msgstr ""
+msgstr "jaren"
 
-#: ../../include/functions_form.php:29 ../../include/functions_form.php:46
-#: ../../include/functions_form.php:156 ../../include/functions_form.php:714
-#: ../../include/functions_form.php:719 ../../include/functions_form.php:727
-#: ../../include/functions_form.php:748 ../../operation/projects/task.php:96
-#: ../../operation/projects/project.php:157
+#: ../../include/functions_form.php:32 ../../include/functions_form.php:49
+#: ../../include/functions_form.php:159 ../../include/functions_form.php:717
+#: ../../include/functions_form.php:722 ../../include/functions_form.php:730
+#: ../../include/functions_form.php:751 ../../operation/projects/task.php:96
+#: ../../operation/projects/project.php:154
 #: ../../operation/users/user_search.php:76
 #: ../../operation/users/user_search.php:79 ../../operation/kb/browse.php:45
 #: ../../operation/kb/browse.php:62 ../../operation/kb/manage_data.php:204
 msgid "Any"
-msgstr ""
+msgstr "Alle"
 
-#: ../../include/functions_form.php:188 ../../include/functions_form.php:291
-#: ../../include/functions_form.php:300 ../../include/functions_form.php:314
-#: ../../include/functions_form.php:322 ../../include/functions.php:519
+#: ../../include/functions_form.php:191 ../../include/functions_form.php:294
+#: ../../include/functions_form.php:303 ../../include/functions_form.php:317
+#: ../../include/functions_form.php:325 ../../include/functions.php:519
 #: ../../enterprise/godmode/usuarios/configurar_usuarios.php:36
 #: ../../operation/agenda/agenda.php:205
 #: ../../operation/reporting/incidents_html.php:147
@@ -1271,27 +1272,27 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:242
 #: ../../operation/incidents/incident_detail.php:487
 #: ../../operation/incidents/incident_search.php:196
-#: ../../operation/projects/project_detail.php:152
+#: ../../operation/projects/project_detail.php:149
 #: ../../operation/projects/task_detail.php:237
 #: ../../operation/projects/task_detail.php:247
 #: ../../operation/slas/sla_detail.php:138
 #: ../../operation/kb/manage_cat.php:137
 msgid "None"
-msgstr ""
+msgstr "Geen"
 
-#: ../../include/functions_form.php:271 ../../include/functions_form.php:278
+#: ../../include/functions_form.php:274 ../../include/functions_form.php:281
 msgid "Source"
-msgstr ""
+msgstr "Bron"
 
-#: ../../include/functions_form.php:292 ../../include/functions_form.php:301
+#: ../../include/functions_form.php:295 ../../include/functions_form.php:304
 #: ../../operation/reporting/incidents_html.php:116
 #: ../../operation/incidents/incident.php:124
 #: ../../operation/incidents/incident_search.php:92
 msgid "Resolution"
-msgstr ""
+msgstr "Resolutie"
 
-#: ../../include/functions_form.php:334 ../../include/functions_form.php:363
-#: ../../include/functions_form.php:560
+#: ../../include/functions_form.php:337 ../../include/functions_form.php:366
+#: ../../include/functions_form.php:563
 #: ../../include/functions_fsgraph.php:101
 #: ../../enterprise/godmode/usuarios/role_user_global.php:69
 #: ../../operation/side_menu.php:184 ../../operation/todo/todo.php:132
@@ -1302,80 +1303,80 @@ msgstr ""
 #: ../../operation/users/user_task_assigment.php:55
 #: ../../operation/users/user_spare_workunit.php:272
 msgid "Task"
-msgstr ""
+msgstr "Taak"
 
-#: ../../include/functions_form.php:337 ../../include/functions_form.php:346
-#: ../../include/functions_form.php:396 ../../include/functions_form.php:414
-#: ../../include/functions_form.php:596
-#: ../../operation/projects/project_detail.php:203
+#: ../../include/functions_form.php:340 ../../include/functions_form.php:349
+#: ../../include/functions_form.php:399 ../../include/functions_form.php:417
+#: ../../include/functions_form.php:599
+#: ../../operation/projects/project_detail.php:200
 msgid "N/A"
-msgstr ""
+msgstr "N/B"
 
-#: ../../include/functions_form.php:348 ../../include/functions_form.php:377
+#: ../../include/functions_form.php:351 ../../include/functions_form.php:380
 msgid "Vacations"
 msgstr ""
 
-#: ../../include/functions_form.php:378
+#: ../../include/functions_form.php:381
 msgid "Not working for disease"
 msgstr ""
 
-#: ../../include/functions_form.php:379
+#: ../../include/functions_form.php:382
 msgid "Not justified"
 msgstr ""
 
-#: ../../include/functions_form.php:485
+#: ../../include/functions_form.php:488
 msgid "said"
 msgstr ""
 
-#: ../../include/functions_form.php:491 ../../include/functions_form.php:574
+#: ../../include/functions_form.php:494 ../../include/functions_form.php:577
 msgid "Public Workunit"
 msgstr ""
 
-#: ../../include/functions_form.php:493 ../../include/functions_form.php:576
+#: ../../include/functions_form.php:496 ../../include/functions_form.php:579
 msgid "Non public Workunit"
 msgstr ""
 
-#: ../../include/functions_form.php:510 ../../include/functions_form.php:625
+#: ../../include/functions_form.php:513 ../../include/functions_form.php:628
 msgid "Read more..."
 msgstr ""
 
-#: ../../include/functions_form.php:567
+#: ../../include/functions_form.php:570
 msgid "Duration"
-msgstr ""
+msgstr "Tijdsduur"
 
-#: ../../include/functions_form.php:582
+#: ../../include/functions_form.php:585
 #: ../../enterprise/godmode/usuarios/role_user_global.php:68
 #: ../../operation/side_menu.php:84
 #: ../../operation/user_report/report_full.php:69
 #: ../../operation/projects/task_files.php:120
 #: ../../operation/users/user_task_assigment.php:54
 msgid "Project"
-msgstr ""
+msgstr "Project"
 
-#: ../../include/functions_form.php:608
+#: ../../include/functions_form.php:611
 #: ../../operation/common/workunit_detail.php:50
 msgid "said on"
 msgstr ""
 
-#: ../../include/functions_form.php:649
+#: ../../include/functions_form.php:652
 msgid "Edit workunit"
 msgstr ""
 
-#: ../../include/functions_form.php:657
+#: ../../include/functions_form.php:660
 msgid "Lock workunit"
 msgstr ""
 
-#: ../../include/functions_form.php:661
+#: ../../include/functions_form.php:664
 #: ../../operation/users/user_spare_workunit.php:58
 msgid "Locked by"
 msgstr ""
 
-#: ../../include/functions_form.php:710
+#: ../../include/functions_form.php:713
 #: ../../operation/inventories/inventory_search.php:168
 msgid "Search string"
-msgstr ""
+msgstr "Zoektekst"
 
-#: ../../include/functions_form.php:720
+#: ../../include/functions_form.php:723
 #: ../../operation/reporting/incidents_html.php:62
 #: ../../operation/reporting/incidents_html.php:117
 #: ../../operation/inventories/inventory_incidents.php:38
@@ -1386,11 +1387,11 @@ msgstr ""
 #: ../../operation/todo/todo.php:124 ../../operation/todo/todo.php:184
 #: ../../operation/projects/task_detail.php:239
 msgid "Priority"
-msgstr ""
+msgstr "Prioriteit"
 
-#: ../../include/functions_form.php:724 ../../include/functions_form.php:735
-#: ../../include/functions_form.php:742 ../../include/functions_form.php:753
-#: ../../include/functions_form.php:755
+#: ../../include/functions_form.php:727 ../../include/functions_form.php:738
+#: ../../include/functions_form.php:745 ../../include/functions_form.php:756
+#: ../../include/functions_form.php:758
 #: ../../operation/inventories/inventory_search.php:172
 #: ../../operation/inventories/inventory_search.php:176
 #: ../../operation/inventories/inventory_search.php:181
@@ -1399,9 +1400,9 @@ msgstr ""
 #: ../../operation/projects/project_tree.php:49
 #: ../../operation/contracts/contract_detail.php:191
 msgid "All"
-msgstr ""
+msgstr "Alles"
 
-#: ../../include/functions_form.php:731
+#: ../../include/functions_form.php:734
 #: ../../enterprise/godmode/usuarios/profile_list.php:200
 #: ../../operation/reporting/incidents_html.php:76
 #: ../../operation/side_menu.php:416 ../../operation/side_menu.php:448
@@ -1409,13 +1410,13 @@ msgstr ""
 msgid "Inventory"
 msgstr ""
 
-#: ../../include/functions_form.php:736
+#: ../../include/functions_form.php:739
 #: ../../operation/inventories/inventory_detail.php:203
 #: ../../operation/inventories/inventory_search.php:173
 msgid "Product type"
 msgstr ""
 
-#: ../../include/functions_form.php:739
+#: ../../include/functions_form.php:742
 #: ../../operation/reporting/inventories_html.php:62
 #: ../../operation/reporting/incidents_html.php:79
 #: ../../operation/inventories/inventory_detail.php:259
@@ -1423,9 +1424,9 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:184
 #: ../../operation/incidents/incident_inventory_detail.php:74
 msgid "Serial number"
-msgstr ""
+msgstr "Serienummer"
 
-#: ../../include/functions_form.php:743
+#: ../../include/functions_form.php:746
 #: ../../operation/reporting/inventories_html.php:70
 #: ../../operation/reporting/inventories_html.php:123
 #: ../../operation/reporting/incidents_html.php:82
@@ -1436,28 +1437,28 @@ msgstr ""
 #: ../../operation/inventories/inventory_tree.php:52
 #: ../../operation/incidents/incident_inventory_detail.php:81
 msgid "Building"
-msgstr ""
+msgstr "Bouwen"
 
-#: ../../include/functions_form.php:744
+#: ../../include/functions_form.php:747
 #: ../../operation/reporting/incidents_html.php:68
 msgid "SLA fired"
 msgstr ""
 
-#: ../../include/functions_form.php:749
-#: ../../operation/user_report/report_full_graph.php:164
+#: ../../include/functions_form.php:752
+#: ../../operation/user_report/report_full_graph.php:165
 #: ../../operation/user_report/report_full.php:52
 #: ../../operation/contracts/contract_detail.php:150
 msgid "Begin date"
-msgstr ""
+msgstr "Begin datum"
 
-#: ../../include/functions_form.php:750
-#: ../../operation/user_report/report_full_graph.php:167
+#: ../../include/functions_form.php:753
+#: ../../operation/user_report/report_full_graph.php:168
 #: ../../operation/user_report/report_full.php:55
 #: ../../operation/contracts/contract_detail.php:151
 msgid "End date"
 msgstr ""
 
-#: ../../include/functions_form.php:753
+#: ../../include/functions_form.php:756
 #: ../../operation/reporting/inventories_html.php:59
 #: ../../operation/reporting/inventories_html.php:73
 #: ../../operation/reporting/inventories_html.php:122
@@ -1479,14 +1480,14 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:191
 #: ../../operation/contracts/contract_detail.php:217
 msgid "Company"
-msgstr ""
+msgstr "Bedrijf"
 
-#: ../../include/functions_form.php:755
+#: ../../include/functions_form.php:758
 #: ../../operation/reporting/incidents_html.php:88
 msgid "Incident type"
 msgstr ""
 
-#: ../../include/functions_form.php:757
+#: ../../include/functions_form.php:760
 #: ../../operation/manufacturers/manufacturer_detail.php:156
 #: ../../operation/manufacturers/manufacturer_detail.php:158
 #: ../../operation/buildings/building_detail.php:129
@@ -1505,8 +1506,8 @@ msgstr ""
 #: ../../operation/companies/company_detail.php:151
 #: ../../operation/companies/company_detail.php:153
 #: ../../operation/projects/task.php:92 ../../operation/projects/task.php:97
-#: ../../operation/projects/project.php:154
-#: ../../operation/projects/project.php:158
+#: ../../operation/projects/project.php:151
+#: ../../operation/projects/project.php:155
 #: ../../operation/contacts/contact_detail.php:193
 #: ../../operation/contacts/contact_detail.php:195
 #: ../../operation/users/user_search.php:84
@@ -1516,55 +1517,55 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:172 ../../operation/kb/browse.php:54
 #: ../../operation/kb/browse.php:65 ../../operation/kb/search.php:52
 msgid "Search"
-msgstr ""
+msgstr "Zoeken"
 
-#: ../../include/functions_form.php:763
+#: ../../include/functions_form.php:766
 #: ../../operation/inventories/inventory_search.php:206
 msgid "Advanced search"
 msgstr ""
 
-#: ../../include/functions_form.php:778
+#: ../../include/functions_form.php:781
 #: ../../operation/reporting/incidents_html.php:120
 msgid "Responsible"
 msgstr ""
 
-#: ../../include/functions_form.php:782 ../../include/functions_form.php:784
+#: ../../include/functions_form.php:785 ../../include/functions_form.php:787
 #: ../../operation/user_report/report_full.php:184
 msgid "Creator"
-msgstr ""
+msgstr "Maker"
 
-#: ../../include/functions_form.php:790
+#: ../../include/functions_form.php:793
 msgid "Participant"
-msgstr ""
+msgstr "Deelnemer"
 
-#: ../../include/functions_form.php:807
+#: ../../include/functions_form.php:810
 #: ../../include/functions_incidents.php:264
 #: ../../include/functions_incidents.php:266
 msgid "Opened"
 msgstr ""
 
-#: ../../include/functions_form.php:810
+#: ../../include/functions_form.php:813
 msgid "Closed at"
 msgstr ""
 
-#: ../../include/functions_form.php:813 ../../include/functions_form.php:816
+#: ../../include/functions_form.php:816 ../../include/functions_form.php:819
 #: ../../operation/users/user_task_assigment.php:58
 msgid "Last update"
-msgstr ""
+msgstr "Laatste update"
 
-#: ../../include/functions_form.php:822
+#: ../../include/functions_form.php:825
 msgid "Hours worked"
 msgstr ""
 
-#: ../../include/functions_form.php:825
+#: ../../include/functions_form.php:828
 msgid "Last work at"
 msgstr ""
 
-#: ../../include/functions_form.php:826
+#: ../../include/functions_form.php:829
 msgid "Done by"
 msgstr ""
 
-#: ../../include/functions_form.php:848
+#: ../../include/functions_form.php:851
 msgid "Items per page"
 msgstr ""
 
@@ -1574,7 +1575,7 @@ msgstr ""
 
 #: ../../include/functions_incidents.php:264
 msgid "Closed"
-msgstr ""
+msgstr "Gesloten"
 
 #: ../../include/functions_incidents.php:268
 msgid "Mean life time"
@@ -1591,7 +1592,7 @@ msgstr ""
 #: ../../include/functions_incidents.php:273
 #: ../../operation/user_report/report_full.php:72
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: ../../include/functions_incidents.php:278
 msgid "Longest closed incident"
@@ -1643,16 +1644,16 @@ msgstr ""
 #: ../../include/functions.php:400 ../../include/functions.php:507
 #: ../../include/functions.php:568
 msgid "Low"
-msgstr ""
+msgstr "Laag"
 
 #: ../../include/functions.php:402 ../../include/functions.php:508
 #: ../../include/functions.php:572
 msgid "Medium"
-msgstr ""
+msgstr "Middel"
 
 #: ../../include/functions.php:404
 msgid "High"
-msgstr ""
+msgstr "Hoog"
 
 #: ../../include/functions.php:406
 msgid "Very high"
@@ -1661,19 +1662,19 @@ msgstr ""
 #: ../../include/functions.php:408
 #: ../../operation/user_report/report_annual.php:53
 msgid "Other"
-msgstr ""
+msgstr "Overig"
 
 #: ../../include/functions.php:506 ../../include/functions.php:564
 msgid "Informative"
-msgstr ""
+msgstr "Informatief"
 
 #: ../../include/functions.php:509 ../../include/functions.php:576
 msgid "Serious"
-msgstr ""
+msgstr "Serieus"
 
 #: ../../include/functions.php:510 ../../include/functions.php:580
 msgid "Very serious"
-msgstr ""
+msgstr "Heel serieus"
 
 #: ../../include/functions.php:511
 msgid "Maintenance"
@@ -1681,15 +1682,15 @@ msgstr ""
 
 #: ../../include/functions.php:520
 msgid "Weekly"
-msgstr ""
+msgstr "Wekelijk"
 
 #: ../../include/functions.php:521
 msgid "15 days"
-msgstr ""
+msgstr "15 dagen"
 
 #: ../../include/functions.php:522
 msgid "Monthly"
-msgstr ""
+msgstr "Maandelijks"
 
 #: ../../include/functions.php:523
 msgid "60 days"
@@ -1734,15 +1735,15 @@ msgstr ""
 
 #: ../../include/functions_db.php:730
 msgid "Created"
-msgstr ""
+msgstr "Aangemaakt"
 
 #: ../../include/functions_db.php:733
 #: ../../operation/reporting/incidents_html.php:118
 #: ../../operation/incidents/incident.php:126
 #: ../../operation/incidents/incident_search.php:94
-#: ../../operation/todo/todo.php:191 ../../operation/projects/project.php:181
+#: ../../operation/todo/todo.php:191 ../../operation/projects/project.php:178
 msgid "Updated"
-msgstr ""
+msgstr "Vernieuwd"
 
 #: ../../include/functions_db.php:736
 #: ../../operation/projects/task_workunit.php:88
@@ -1799,11 +1800,11 @@ msgstr ""
 #: ../../include/functions_db.php:1093
 #: ../../operation/reporting/incidents_html.php:68
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: ../../include/functions_db.php:1095
 msgid "No"
-msgstr ""
+msgstr "Nee"
 
 #: ../../include/functions_graph.php:219
 msgid "Out of limits"
@@ -1811,7 +1812,7 @@ msgstr ""
 
 #: ../../include/functions_fsgraph.php:209
 msgid "Week"
-msgstr ""
+msgstr "Week"
 
 #: ../../include/functions_fsgraph.php:219
 msgid "Planned"
@@ -1824,7 +1825,7 @@ msgstr ""
 #: ../../include/functions_fsgraph.php:227 ../../operation/todo/todo.php:134
 #: ../../operation/projects/project_tree.php:46
 #: ../../operation/projects/task_detail.php:300
-#: ../../operation/projects/project.php:176
+#: ../../operation/projects/project.php:173
 msgid "Completion"
 msgstr ""
 
@@ -1835,7 +1836,7 @@ msgstr ""
 #: ../../include/functions_fsgraph.php:244
 #: ../../operation/projects/gantt_graph.php:150
 msgid "Today"
-msgstr ""
+msgstr "Vandaag"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:203
 msgid "Integria management"
@@ -1890,7 +1891,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/profile_list.php:216
 #: ../../operation/inventories/inventory_incidents.php:41
 msgid "View"
-msgstr ""
+msgstr "Beeld"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:197
 #: ../../enterprise/godmode/usuarios/profile_list.php:202
@@ -1903,7 +1904,7 @@ msgstr ""
 #: ../../operation/incidents/incident_inventory_detail.php:87
 #: ../../operation/kb/browse_data.php:83
 msgid "Edit"
-msgstr ""
+msgstr "Bewerken"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:198
 #: ../../enterprise/godmode/usuarios/profile_list.php:203
@@ -1923,14 +1924,14 @@ msgid "Knowledge Base"
 msgstr ""
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:220
-#: ../../operation/projects/project.php:177
+#: ../../operation/projects/project.php:174
 msgid "Tasks"
-msgstr ""
+msgstr "Taken"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:224
 #: ../../operation/main_menu.php:65
 msgid "Users"
-msgstr ""
+msgstr "Gebruikers"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:230
 msgid "Framework"
@@ -2019,7 +2020,7 @@ msgstr ""
 #: ../../operation/user_report/report_annual.php:38
 #: ../../operation/users/user_task_assigment.php:48
 msgid "Go"
-msgstr ""
+msgstr "Ga naar"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:71
 msgid "WU"
@@ -2080,11 +2081,11 @@ msgstr ""
 
 #: ../../operation/agenda/agenda.php:161
 msgid "Legend"
-msgstr ""
+msgstr "Legenda"
 
 #: ../../operation/agenda/agenda.php:174
 msgid "Alert"
-msgstr ""
+msgstr "Alert"
 
 #: ../../operation/agenda/agenda.php:184
 msgid "Add agenda entry"
@@ -2096,7 +2097,7 @@ msgstr ""
 
 #: ../../operation/agenda/agenda.php:201
 msgid "One hour"
-msgstr ""
+msgstr "Een uur"
 
 #: ../../operation/agenda/agenda.php:202
 msgid "Two hours"
@@ -2112,7 +2113,7 @@ msgstr ""
 
 #: ../../operation/agenda/agenda.php:206
 msgid "Alarm"
-msgstr ""
+msgstr "Waarschuwing"
 
 #: ../../operation/agenda/agenda.php:208
 #: ../../operation/reporting/inventories_html.php:41
@@ -2124,11 +2125,11 @@ msgstr ""
 #: ../../operation/projects/project_tracking.php:37
 #: ../../operation/users/user_spare_workunit.php:258
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #: ../../operation/agenda/agenda.php:209
 msgid "Time"
-msgstr ""
+msgstr "Tijd"
 
 #: ../../operation/reporting/inventories_html.php:35
 msgid "Inventory report"
@@ -2151,7 +2152,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:214
 #: ../../operation/kb/manage_data.php:286 ../../operation/kb/search.php:71
 msgid "Product"
-msgstr ""
+msgstr "Product"
 
 #: ../../operation/reporting/inventories_html.php:65
 #: ../../operation/inventories/inventory_detail.php:261
@@ -2167,7 +2168,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:195
 #: ../../operation/incidents/incident_inventory_detail.php:72
 msgid "IP address"
-msgstr ""
+msgstr "IP-adres"
 
 #: ../../operation/reporting/inventories_html.php:76
 #: ../../operation/inventories/inventory_detail.php:216
@@ -2207,7 +2208,7 @@ msgstr ""
 #: ../../operation/kb/browse.php:98 ../../operation/kb/manage_data.php:195
 #: ../../operation/kb/manage_data.php:283 ../../operation/kb/search.php:68
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #: ../../operation/reporting/inventories_html.php:134
 #: ../../operation/inventories/inventory_search.php:148
@@ -2223,13 +2224,13 @@ msgstr ""
 #: ../../operation/messages/message.php:127
 #: ../../operation/messages/message.php:211
 msgid "From"
-msgstr ""
+msgstr "Van"
 
 #: ../../operation/reporting/incidents_html.php:95
 #: ../../operation/messages/message.php:86
 #: ../../operation/messages/message.php:128
 msgid "To"
-msgstr ""
+msgstr "Aan"
 
 #: ../../operation/reporting/incidents_html.php:103
 msgid "All incidents"
@@ -2253,18 +2254,18 @@ msgstr ""
 #: ../../operation/incidents/incident.php:126
 #: ../../operation/incidents/incident_search.php:94
 msgid "Started"
-msgstr ""
+msgstr "Gestart"
 
 #: ../../operation/reporting/incidents_html.php:119
 #: ../../operation/incidents/incident.php:127
 #: ../../operation/incidents/incident_search.php:95
 msgid "Work"
-msgstr ""
+msgstr "Werk"
 
 #: ../../operation/reporting/incidents_html.php:125
 #: ../../operation/incidents/incident_statistics.php:26
 msgid "Statistics"
-msgstr ""
+msgstr "Statistieken"
 
 #: ../../operation/reporting/incidents_html.php:132
 #: ../../operation/incidents/incident_search.php:146
@@ -2311,7 +2312,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:124
 msgid "New task"
-msgstr ""
+msgstr "Nieuwe taak"
 
 #: ../../operation/side_menu.php:132 ../../operation/projects/gantt.php:116
 msgid "Gantt graph"
@@ -2319,9 +2320,9 @@ msgstr ""
 
 #: ../../operation/side_menu.php:147 ../../operation/side_menu.php:222
 #: ../../operation/projects/task.php:117
-#: ../../operation/projects/project.php:178
+#: ../../operation/projects/project.php:175
 msgid "People"
-msgstr ""
+msgstr "Personen"
 
 #: ../../operation/side_menu.php:158 ../../operation/side_menu.php:247
 #: ../../operation/inventories/inventory.php:60
@@ -2339,7 +2340,7 @@ msgstr ""
 #: ../../operation/incidents/incident_search.php:230
 #: ../../operation/incidents/incident_work.php:73
 msgid "Files"
-msgstr ""
+msgstr "Bestanden"
 
 #: ../../operation/side_menu.php:192
 msgid "Task detail"
@@ -2426,7 +2427,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:281
 #: ../../operation/companies/company_detail.php:174
 msgid "Contacts"
-msgstr ""
+msgstr "Contacten"
 
 #: ../../operation/side_menu.php:495
 msgid "Contact overview"
@@ -2474,7 +2475,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:607
 msgid "Browse"
-msgstr ""
+msgstr "Bladeren"
 
 #: ../../operation/side_menu.php:615
 msgid "Create KB item"
@@ -2494,7 +2495,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:662 ../../operation/main_menu.php:92
 msgid "Setup"
-msgstr ""
+msgstr "Instellen"
 
 #: ../../operation/side_menu.php:699
 msgid "Configure updates"
@@ -2502,7 +2503,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:713
 msgid "System events"
-msgstr ""
+msgstr "Systeemgebeurtenissen"
 
 #: ../../operation/side_menu.php:721
 #: ../../operation/users/user_statistics.php:23
@@ -2570,7 +2571,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:863
 msgid "Calendar"
-msgstr ""
+msgstr "Kalender"
 
 #: ../../operation/side_menu.php:889
 msgid "User info"
@@ -2578,7 +2579,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:898
 msgid "Phone"
-msgstr ""
+msgstr "Telefoon"
 
 #: ../../operation/side_menu.php:909
 msgid "Project distribution"
@@ -2626,7 +2627,7 @@ msgstr ""
 #: ../../operation/companies/company_detail.php:120
 #: ../../operation/contacts/contact_detail.php:159
 msgid "Select"
-msgstr ""
+msgstr "Selecteren"
 
 #: ../../operation/manufacturers/manufacturer_detail.php:121
 #: ../../operation/manufacturers/manufacturer_detail.php:179
@@ -2641,7 +2642,7 @@ msgstr ""
 #: ../../operation/manufacturers/manufacturer_detail.php:178
 #: ../../operation/companies/company_detail.php:122
 msgid "Address"
-msgstr ""
+msgstr "Adres"
 
 #: ../../operation/buildings/building_detail.php:61
 msgid "Building cannot be updated"
@@ -2667,11 +2668,11 @@ msgstr ""
 #: ../../operation/incidents/incident_inventory_contacts.php:33
 #: ../../operation/incidents/incident_inventory_detail.php:59
 msgid "Details"
-msgstr ""
+msgstr "Details"
 
 #: ../../operation/inventories/inventory.php:61
 msgid "Tree"
-msgstr ""
+msgstr "Boom"
 
 #: ../../operation/inventories/inventory.php:80
 #: ../../operation/incidents/incident.php:96
@@ -2687,7 +2688,7 @@ msgstr ""
 #: ../../operation/inventories/inventory.php:92
 #: ../../operation/incidents/incident.php:107
 msgid "Save"
-msgstr ""
+msgstr "Opslaan"
 
 #: ../../operation/inventories/inventory.php:156
 msgid "Unable to load inventory"
@@ -2730,7 +2731,7 @@ msgstr ""
 #: ../../operation/inventories/manage_prod.php:170
 #: ../../operation/kb/manage_cat.php:167
 msgid "Items"
-msgstr ""
+msgstr "Items"
 
 #: ../../operation/inventories/inventory_detail.php:79
 msgid "There was an error updating inventory object"
@@ -2743,7 +2744,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:167
 #: ../../operation/inventories/inventory_tree.php:45
 msgid "Object"
-msgstr ""
+msgstr "Object"
 
 #: ../../operation/inventories/inventory_detail.php:197
 msgid "Confirmed"
@@ -2779,7 +2780,7 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:542
 #: ../../operation/incidents/incident_detail.php:553
 msgid "Remove"
-msgstr ""
+msgstr "Verwijderen"
 
 #: ../../operation/inventories/inventory_search.php:37
 #: ../../operation/incidents/incident_search.php:39
@@ -2813,24 +2814,24 @@ msgstr ""
 #: ../../operation/incidents/incident.php:77
 #: ../../operation/incidents/incident_inventory_contacts.php:32
 msgid "Contact"
-msgstr ""
+msgstr "Contact"
 
 #: ../../operation/inventories/inventory_contacts.php:39
 #: ../../operation/incidents/incident_inventory_contacts.php:65
 #: ../../operation/contacts/contact_detail.php:157
 msgid "Position"
-msgstr ""
+msgstr "Positie"
 
 #: ../../operation/inventories/inventory_contacts.php:62
 #: ../../operation/incidents/incident_inventory_contacts.php:61
 #: ../../operation/contacts/contact_detail.php:155
 msgid "Phone number"
-msgstr ""
+msgstr "Telefoonnummer"
 
 #: ../../operation/inventories/inventory_contacts.php:64
 #: ../../operation/incidents/incident_inventory_contacts.php:63
 msgid "Mobile phone"
-msgstr ""
+msgstr "Mobiele telefoon"
 
 #: ../../operation/inventories/inventory_contracts.php:33
 msgid "Contract details on inventory object"
@@ -2858,10 +2859,12 @@ msgid "Maximun incidents"
 msgstr ""
 
 #: ../../operation/incidents/incident.php:53
+#: ../../operation/projects/project.php:76
 msgid "Incident successfully deleted"
 msgstr ""
 
 #: ../../operation/incidents/incident.php:57
+#: ../../operation/projects/project.php:79
 msgid "There was a problem deleting incident"
 msgstr ""
 
@@ -2874,7 +2877,7 @@ msgstr ""
 #: ../../operation/incidents/incident.php:128
 #: ../../operation/incidents/incident_search.php:96
 msgid "Flags"
-msgstr ""
+msgstr "Vlaggen"
 
 #: ../../operation/incidents/incident.php:216
 msgid "Unable to load incident"
@@ -2883,7 +2886,7 @@ msgstr ""
 #: ../../operation/incidents/incident_create_work.php:50
 #: ../../operation/incidents/incident_work.php:96
 #: ../../operation/projects/task.php:115
-#: ../../operation/projects/project.php:179
+#: ../../operation/projects/project.php:176
 #: ../../operation/users/user_spare_workunit.php:277
 msgid "Time used"
 msgstr ""
@@ -2910,7 +2913,7 @@ msgstr ""
 #: ../../operation/incidents/type_detail.php:108
 #: ../../operation/incidents/type_detail.php:160
 msgid "Wizard"
-msgstr ""
+msgstr "Assistent"
 
 #: ../../operation/incidents/type_detail.php:182
 msgid "Create type"
@@ -2926,13 +2929,13 @@ msgstr ""
 #: ../../operation/projects/task_attach_file.php:43
 #: ../../operation/kb/browse_data.php:107
 msgid "Filename"
-msgstr ""
+msgstr "Bestandsnaam"
 
 #: ../../operation/incidents/incident_files.php:65
 #: ../../operation/projects/task_files.php:107
 #: ../../operation/projects/task_files.php:129
 msgid "Size"
-msgstr ""
+msgstr "Grootte"
 
 #: ../../operation/incidents/incident_notes.php:70
 msgid "Note successfully deleted"
@@ -2940,7 +2943,7 @@ msgstr ""
 
 #: ../../operation/incidents/incident_notes.php:109
 msgid "Notes"
-msgstr ""
+msgstr "Opmerkingen"
 
 #: ../../operation/incidents/incident_notes.php:131
 msgid "Notes attached to incident"
@@ -2958,7 +2961,7 @@ msgstr ""
 #: ../../operation/users/user_statistics.php:24
 #: ../../operation/messages/message.php:123
 msgid "Help"
-msgstr ""
+msgstr "Hulp"
 
 #: ../../operation/incidents/incident_detail.php:77
 #: ../../operation/incidents/incident_detail.php:134
@@ -2983,13 +2986,12 @@ msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:292
 msgid "No description available"
-msgstr ""
+msgstr "Geen omschrijving beschikbaar"
 
 #: ../../operation/incidents/incident_detail.php:315
 #: ../../operation/projects/task_files.php:74
 #: ../../operation/kb/manage_data.php:109
-msgid ""
-"File cannot be saved. Please contact Integria administrator about this error"
+msgid "File cannot be saved. Please contact Integria administrator about this error"
 msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:326
@@ -3071,7 +3073,7 @@ msgstr ""
 #: ../../operation/incidents/incident_attach_file.php:36
 #: ../../operation/kb/search.php:72
 msgid "File"
-msgstr ""
+msgstr "Bestand"
 
 #: ../../operation/incidents/incident_attach_file.php:47
 #: ../../operation/projects/task_attach_file.php:49
@@ -3090,12 +3092,12 @@ msgstr ""
 #: ../../operation/user_report/monthly.php:76
 #: ../../operation/user_report/monthly_graph.php:74
 msgid "Prev"
-msgstr ""
+msgstr "Vorige"
 
 #: ../../operation/user_report/monthly.php:80
 #: ../../operation/user_report/monthly_graph.php:78
 msgid "Next"
-msgstr ""
+msgstr "Volgende"
 
 #: ../../operation/user_report/report_weekly.php:46
 msgid "Totals for week"
@@ -3125,44 +3127,44 @@ msgstr ""
 msgid "Weekly report for"
 msgstr ""
 
-#: ../../operation/user_report/report_full_graph.php:144
+#: ../../operation/user_report/report_full_graph.php:145
 msgid "Full graph report for user"
 msgstr ""
 
-#: ../../operation/user_report/report_full_graph.php:161
+#: ../../operation/user_report/report_full_graph.php:162
 #: ../../operation/user_report/report_full.php:49
 #: ../../operation/users/user_spare_workunit.php:282
 #: ../../operation/users/user_search.php:96
 msgid "Username"
-msgstr ""
+msgstr "Gebruikersnaam"
 
-#: ../../operation/user_report/report_full_graph.php:171
+#: ../../operation/user_report/report_full_graph.php:172
 msgid "Show finished"
 msgstr ""
 
-#: ../../operation/user_report/report_full_graph.php:175
+#: ../../operation/user_report/report_full_graph.php:176
 msgid "Show recurrent"
 msgstr ""
 
-#: ../../operation/user_report/report_full_graph.php:179
+#: ../../operation/user_report/report_full_graph.php:180
 #: ../../operation/user_report/report_full.php:58
 msgid "Show"
-msgstr ""
+msgstr "Tonen"
 
-#: ../../operation/user_report/report_full_graph.php:190
+#: ../../operation/user_report/report_full_graph.php:191
 msgid "Tasks assigned to"
 msgstr ""
 
-#: ../../operation/user_report/report_full_graph.php:196
+#: ../../operation/user_report/report_full_graph.php:197
 #: ../../operation/projects/task.php:118
 #: ../../operation/projects/project_detail.php:125
 #: ../../operation/projects/task_detail.php:243
 #: ../../operation/projects/task_incidents.php:63
 #: ../../operation/projects/gantt.php:162
 msgid "Start"
-msgstr ""
+msgstr "Starten"
 
-#: ../../operation/user_report/report_full_graph.php:199
+#: ../../operation/user_report/report_full_graph.php:200
 #: ../../operation/projects/task.php:119
 #: ../../operation/projects/project_detail.php:129
 #: ../../operation/projects/task_detail.php:244
@@ -3170,6 +3172,11 @@ msgstr ""
 #: ../../operation/projects/gantt.php:165
 #: ../../operation/contracts/contract_detail.php:221
 msgid "End"
+msgstr "Eind"
+
+#: ../../operation/user_report/report_full_graph.php:223
+#: ../../operation/projects/gantt.php:188
+msgid "Full screen"
 msgstr ""
 
 #: ../../operation/user_report/report_full.php:64
@@ -3193,7 +3200,7 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:144
 #: ../../operation/user_report/report_full.php:210
 msgid "Totals"
-msgstr ""
+msgstr "Totalen"
 
 #: ../../operation/user_report/report_full.php:146
 #: ../../operation/user_report/report_full.php:147
@@ -3212,16 +3219,16 @@ msgstr ""
 
 #: ../../operation/user_report/report_full.php:184
 msgid "Owner"
-msgstr ""
+msgstr "Eigenaar"
 
 #: ../../operation/user_report/report_full.php:186
 msgid "Dates"
-msgstr ""
+msgstr "Agenda"
 
 #: ../../operation/user_report/report_full.php:214
 #: ../../operation/projects/task_detail.php:282
 msgid "Total"
-msgstr ""
+msgstr "Totaal"
 
 #: ../../operation/user_report/report_annual.php:26
 #: ../../operation/user_report/report_annual.php:29
@@ -3258,7 +3265,7 @@ msgstr ""
 
 #: ../../operation/todo/todo.php:128 ../../operation/todo/todo.php:187
 msgid "Assigned to"
-msgstr ""
+msgstr "Toegewezen aan"
 
 #: ../../operation/todo/todo.php:161 ../../operation/todo/todo.php:163
 msgid "To-Do management"
@@ -3272,7 +3279,7 @@ msgstr ""
 #: ../../operation/projects/gantt_graph.php:148
 #: ../../operation/users/user_task_assigment.php:56
 msgid "Progress"
-msgstr ""
+msgstr "Voortgang"
 
 #: ../../operation/todo/todo.php:189
 msgid "Assigned by"
@@ -3341,11 +3348,11 @@ msgstr ""
 
 #: ../../operation/projects/task_move.php:45
 msgid "Move"
-msgstr ""
+msgstr "Verplaatsen"
 
 #: ../../operation/projects/task.php:75
 msgid "Report"
-msgstr ""
+msgstr "Rapportage"
 
 #: ../../operation/projects/task.php:111
 #: ../../operation/users/user_task_assigment.php:53
@@ -3359,7 +3366,7 @@ msgstr ""
 #: ../../operation/projects/task.php:204
 #: ../../operation/projects/task_detail.php:247
 msgid "Recurrence"
-msgstr ""
+msgstr "Herhaling"
 
 #: ../../operation/projects/project_detail.php:68
 msgid "Could not update project"
@@ -3369,50 +3376,50 @@ msgstr ""
 msgid "Project manager"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:149
+#: ../../operation/projects/project_detail.php:146
 #: ../../operation/projects/project_overview.php:29
 msgid "Project group"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:156
+#: ../../operation/projects/project_detail.php:153
 msgid "Current progress"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:163
+#: ../../operation/projects/project_detail.php:160
 msgid "Total workunit (hr)"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:167
+#: ../../operation/projects/project_detail.php:164
 msgid "Total people involved"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:174
+#: ../../operation/projects/project_detail.php:171
 msgid "Total payable workunit (hr)"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:179
+#: ../../operation/projects/project_detail.php:176
 msgid "Project profitability"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:189
+#: ../../operation/projects/project_detail.php:186
 msgid "Project costs"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:192
+#: ../../operation/projects/project_detail.php:189
 msgid "Charged to customer"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:198
+#: ../../operation/projects/project_detail.php:195
 msgid "Charged cost per hour"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:204
+#: ../../operation/projects/project_detail.php:201
 msgid "Proyect length deviation (days)"
 msgstr ""
 
-#: ../../operation/projects/project_detail.php:208
+#: ../../operation/projects/project_detail.php:205
 msgid "Days"
-msgstr ""
+msgstr "Dagen"
 
 #: ../../operation/projects/project_overview.php:31
 msgid "# Projects"
@@ -3428,7 +3435,7 @@ msgstr ""
 
 #: ../../operation/projects/project_tree.php:44
 msgid "Done"
-msgstr ""
+msgstr "Klaar"
 
 #: ../../operation/projects/project_tree.php:50
 msgid "Defined end"
@@ -3480,7 +3487,7 @@ msgstr ""
 #: ../../operation/projects/task_detail.php:275
 #: ../../operation/projects/task_detail.php:291
 msgid "Real"
-msgstr ""
+msgstr "Reëel"
 
 #: ../../operation/projects/task_detail.php:283
 msgid "Imp"
@@ -3612,7 +3619,7 @@ msgstr ""
 #: ../../operation/messages/message.php:169
 #: ../../operation/messages/message.php:213
 msgid "Subject"
-msgstr ""
+msgstr "Onderwerp"
 
 #: ../../operation/projects/task_emailreport.php:92
 msgid "Message text"
@@ -3620,11 +3627,7 @@ msgstr ""
 
 #: ../../operation/projects/task_emailreport.php:96
 msgid "Send"
-msgstr ""
-
-#: ../../operation/projects/gantt.php:188
-msgid "Full screen"
-msgstr ""
+msgstr "Verzenden"
 
 #: ../../operation/projects/project_bubblegraph.php:36
 msgid "Project schema"
@@ -3635,34 +3638,29 @@ msgid "Project successfully disabled"
 msgstr ""
 
 #: ../../operation/projects/project.php:49
-#: ../../operation/projects/project.php:67
-#: ../../operation/projects/project.php:83
-msgid "There was a problem"
+#: ../../operation/projects/project.php:65
+msgid "There was a problem deleting project"
 msgstr ""
 
-#: ../../operation/projects/project.php:62
-msgid "Successfully reactivated"
-msgstr ""
-
-#: ../../operation/projects/project.php:110
+#: ../../operation/projects/project.php:107
 msgid "Project cannot be created, problem found."
 msgstr ""
 
-#: ../../operation/projects/project.php:175
+#: ../../operation/projects/project.php:172
 msgid "PG"
 msgstr ""
 
-#: ../../operation/projects/project.php:219
+#: ../../operation/projects/project.php:216
 msgid "Unlimited"
-msgstr ""
+msgstr "Ongelimiteerd"
 
-#: ../../operation/projects/project.php:237
+#: ../../operation/projects/project.php:234
 msgid "hr"
 msgstr ""
 
-#: ../../operation/projects/project.php:258
+#: ../../operation/projects/project.php:255
 msgid "Disable"
-msgstr ""
+msgstr "Uitzetten"
 
 #: ../../operation/contacts/contact_detail.php:114
 msgid "Contact management"
@@ -3671,7 +3669,7 @@ msgstr ""
 #: ../../operation/contacts/contact_detail.php:152
 #: ../../operation/contacts/contact_detail.php:216
 msgid "Full name"
-msgstr ""
+msgstr "Volledige naam"
 
 #: ../../operation/contacts/contact_detail.php:156
 msgid "Mobile number"
@@ -3683,7 +3681,7 @@ msgstr ""
 
 #: ../../operation/main_menu.php:57
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #: ../../operation/main_menu.php:72
 msgid "Todo"
@@ -3707,11 +3705,10 @@ msgstr ""
 
 #: ../../operation/users/user_spare_workunit.php:292
 msgid "Forward"
-msgstr ""
+msgstr "Doorsturen"
 
 #: ../../operation/users/user_spare_workunit.php:293
-msgid ""
-"If this checkbox is activated, propagation will be forward instead backward"
+msgid "If this checkbox is activated, propagation will be forward instead backward"
 msgstr ""
 
 #: ../../operation/users/user_spare_workunit.php:297
@@ -3742,7 +3739,7 @@ msgstr ""
 
 #: ../../operation/users/user_edit.php:137
 msgid "Default"
-msgstr ""
+msgstr "Standaard"
 
 #: ../../operation/users/user_edit.php:144
 #: ../../operation/users/user_edit.php:145
@@ -3751,7 +3748,7 @@ msgstr ""
 
 #: ../../operation/users/user_edit.php:166
 msgid "Change password"
-msgstr ""
+msgstr "Wachtwoord wijzigen"
 
 #: ../../operation/users/user_search.php:63
 msgid "No users found"
@@ -3784,12 +3781,12 @@ msgstr ""
 #: ../../operation/messages/message.php:140
 #: ../../operation/messages/message.php:215
 msgid "Message"
-msgstr ""
+msgstr "Bericht"
 
 #: ../../operation/messages/message.php:119
 #: ../../operation/messages/message.php:143
 msgid "Send message"
-msgstr ""
+msgstr "Bericht versturen"
 
 #: ../../operation/messages/message.php:153
 msgid "Message sucessfully deleted"
@@ -3805,11 +3802,11 @@ msgstr ""
 
 #: ../../operation/messages/message.php:169
 msgid "Read"
-msgstr ""
+msgstr "Gelezen"
 
 #: ../../operation/messages/message.php:169
 msgid "Sender"
-msgstr ""
+msgstr "Afzender"
 
 #: ../../operation/messages/message.php:191
 msgid "No subject"
@@ -3825,7 +3822,7 @@ msgstr ""
 
 #: ../../operation/messages/message.php:222
 msgid "Reply"
-msgstr ""
+msgstr "Beantwoorden"
 
 #: ../../operation/contracts/contract_detail.php:56
 #: ../../operation/contracts/contract_detail.php:87
@@ -3847,7 +3844,7 @@ msgstr ""
 
 #: ../../operation/contracts/contract_detail.php:220
 msgid "Begin"
-msgstr ""
+msgstr "Begin"
 
 #: ../../operation/slas/sla_detail.php:129
 msgid "SLA name"
@@ -3906,13 +3903,13 @@ msgstr ""
 
 #: ../../operation/kb/browse.php:48
 msgid "Categories"
-msgstr ""
+msgstr "Categorieën"
 
 #: ../../operation/kb/browse.php:99 ../../operation/kb/browse_data.php:76
 #: ../../operation/kb/manage_data.php:220
 #: ../../operation/kb/manage_data.php:285 ../../operation/kb/search.php:70
 msgid "Category"
-msgstr ""
+msgstr "Categorie"
 
 #: ../../operation/kb/browse_data.php:46
 msgid "KB article review"
@@ -3920,7 +3917,7 @@ msgstr ""
 
 #: ../../operation/kb/browse_data.php:58
 msgid "Author"
-msgstr ""
+msgstr "Auteur"
 
 #: ../../operation/kb/browse_data.php:73
 msgid "Wrote on "
@@ -3945,11 +3942,11 @@ msgstr ""
 
 #: ../../operation/kb/manage_data.php:208
 msgid "Data"
-msgstr ""
+msgstr "Gegevens"
 
 #: ../../operation/kb/manage_data.php:227
 msgid "Attach"
-msgstr ""
+msgstr "Bijvoegen"
 
 #: ../../operation/kb/manage_data.php:230
 msgid "Need to create first"
@@ -3969,7 +3966,7 @@ msgstr ""
 
 #: ../../operation/kb/manage_cat.php:108
 msgid "Create a new category"
-msgstr ""
+msgstr "Nieuwe catalogus aanmaken"
 
 #: ../../operation/kb/manage_cat.php:113
 msgid "Update existing category"
@@ -3982,3 +3979,4 @@ msgstr ""
 #: ../../operation/kb/search.php:42
 msgid "Free text search"
 msgstr ""
+

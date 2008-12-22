@@ -1,5 +1,14 @@
+2008-12-22  Jorge Gonzalez  <jorgegonz@artica.es>
 
-2008-12-20 Sancho Lerena <slerena@artica.es>
+	* include/languages/nl.mo, include/languages/nl.po: Added Dutch
+	  translation. Thanks to Rosetta users.
+
+	* include/languages/index.pot: Updated po template.
+
+	* include/languages/Makefile: Added Dutch to translation
+	  infrastructure.
+
+2008-12-20  Sancho Lerena  <slerena@artica.es>
 
 	* functions_db.php: Added taskname to workunit mail report.
 
@@ -9,7 +18,7 @@
 	* operation/user_report/report_full_graph.php: Removed fullscreen 
 	link and better date checking.
 
-2008-12-17  Sancho Lerena <slerena@artica.es>
+2008-12-17  Sancho Lerena  <slerena@artica.es>
 
 	* include/functions_form.php
 	operation/side_menu.php

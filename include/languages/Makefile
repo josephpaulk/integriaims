@@ -1,4 +1,4 @@
-all: bn.mo  da.mo  el.mo  es.mo  fr.mo  ko.mo  tr.mo
+all: bn.mo  da.mo  el.mo  es.mo  fr.mo  ko.mo  nl.mo  tr.mo
 	xgettext `find ../../ -name "*\.php" 2>/dev/null ! -name config.php` --output=index.pot  --keyword=__ --add-comments=///
 
 bn.mo: bn.po
@@ -18,6 +18,9 @@ fr.mo: fr.po
 
 ko.mo: ko.po
 	msgfmt ko.po -o ko.mo
+
+nl.mo: nl.po
+	msgfmt nl.po -o nl.mo
 
 tr.mo: tr.po
 	msgfmt tr.po -o tr.mo
