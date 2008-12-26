@@ -123,7 +123,7 @@ echo "</table>";
 echo "<div style='width:90%' class='button'>";
 
 echo "<form method=post action='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>";
-echo "<input type='submit' class='sub create' name='crt' value='".__('Create user')."'>";
+echo "<input type='submit' class='sub create' name='crt' value='".__('Create')."'>";
 echo "</form>";
 echo "</div>";
 

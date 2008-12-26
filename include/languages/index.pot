@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-23 14:27+0100\n"
+"POT-Creation-Date: 2008-12-26 10:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -317,6 +317,7 @@ msgstr ""
 #: ../../godmode/perfiles/lista_perfiles.php:317
 #: ../../godmode/grupos/configurar_grupo.php:110
 #: ../../godmode/grupos/lista_grupos.php:154
+#: ../../godmode/usuarios/lista_usuarios.php:126
 #: ../../godmode/usuarios/configurar_usuarios.php:258
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:164
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:248
@@ -336,13 +337,16 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:584
 #: ../../operation/todo/todo.php:146
 #: ../../operation/companies/company_role.php:108
+#: ../../operation/companies/company_role.php:168
 #: ../../operation/companies/company_detail.php:134
+#: ../../operation/companies/company_detail.php:206
 #: ../../operation/projects/project_group_detail.php:112
 #: ../../operation/projects/project_detail.php:227
 #: ../../operation/projects/task_detail.php:315
 #: ../../operation/projects/milestones.php:104
 #: ../../operation/projects/milestones.php:156
 #: ../../operation/contacts/contact_detail.php:171
+#: ../../operation/contacts/contact_detail.php:241
 #: ../../operation/contracts/contract_detail.php:166
 #: ../../operation/contracts/contract_detail.php:254
 #: ../../operation/slas/sla_detail.php:151
@@ -1066,11 +1070,6 @@ msgstr ""
 msgid "This user doesn't have any assigned profile/group"
 msgstr ""
 
-#: ../../godmode/usuarios/lista_usuarios.php:126
-#: ../../godmode/usuarios/configurar_usuarios.php:168
-msgid "Create user"
-msgstr ""
-
 #: ../../godmode/usuarios/configurar_usuarios.php:52
 msgid "There was a problem loading user"
 msgstr ""
@@ -1085,6 +1084,10 @@ msgstr ""
 
 #: ../../godmode/usuarios/configurar_usuarios.php:143
 msgid "Passwords don't match. Please repeat again"
+msgstr ""
+
+#: ../../godmode/usuarios/configurar_usuarios.php:168
+msgid "Create user"
 msgstr ""
 
 #: ../../godmode/usuarios/configurar_usuarios.php:172
@@ -2275,17 +2278,16 @@ msgstr ""
 msgid "Incident list"
 msgstr ""
 
-#: ../../operation/side_menu.php:38 ../../operation/side_menu.php:92
-#: ../../operation/projects/project_overview.php:22
-msgid "Project overview"
+#: ../../operation/side_menu.php:38
+msgid "Projects overview"
 msgstr ""
 
 #: ../../operation/side_menu.php:46
-msgid "Project detail"
+msgid "Projects detail"
 msgstr ""
 
 #: ../../operation/side_menu.php:53
-msgid "Project tree"
+msgid "Projects tree"
 msgstr ""
 
 #: ../../operation/side_menu.php:61
@@ -2294,6 +2296,11 @@ msgstr ""
 
 #: ../../operation/side_menu.php:69
 msgid "Disabled projects"
+msgstr ""
+
+#: ../../operation/side_menu.php:92
+#: ../../operation/projects/project_overview.php:22
+msgid "Project overview"
 msgstr ""
 
 #: ../../operation/side_menu.php:99
@@ -3286,10 +3293,6 @@ msgstr ""
 msgid "Role name"
 msgstr ""
 
-#: ../../operation/companies/company_role.php:168
-msgid "Create role"
-msgstr ""
-
 #: ../../operation/companies/company_detail.php:90
 msgid "Company management"
 msgstr ""
@@ -3304,10 +3307,6 @@ msgstr ""
 
 #: ../../operation/companies/company_detail.php:120
 msgid "Company Role"
-msgstr ""
-
-#: ../../operation/companies/company_detail.php:206
-msgid "Create company"
 msgstr ""
 
 #: ../../operation/projects/project_group_detail.php:79
@@ -3675,10 +3674,6 @@ msgstr ""
 
 #: ../../operation/contacts/contact_detail.php:156
 msgid "Mobile number"
-msgstr ""
-
-#: ../../operation/contacts/contact_detail.php:241
-msgid "Create contact"
 msgstr ""
 
 #: ../../operation/main_menu.php:57

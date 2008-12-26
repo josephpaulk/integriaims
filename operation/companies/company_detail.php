@@ -203,7 +203,7 @@ if ($id || $new_company) {
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Create company'), 'new_btn', false, 'class="sub next"');
+	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_company', 1);
 	echo '</div>';
 	echo '</form>';

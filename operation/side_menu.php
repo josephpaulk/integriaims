@@ -35,7 +35,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_overview'>".__('Project overview')."</a></li>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_overview'>".__('Projects overview')."</a></li>";
 
 
 	// Project detail
@@ -43,14 +43,14 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".__('Project detail')."</a></li>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".__('Projects detail')."</a></li>";
 
 	// Project tree
 	if ($sec2 == "operation/projects/project_tree")
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_tree'>".__('Project tree')."</a></li>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_tree'>".__('Projects tree')."</a></li>";
 
 	// Project create
 	if (give_acl ($config['id_user'], 0, "PM")) {
