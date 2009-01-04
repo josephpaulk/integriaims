@@ -1,3 +1,18 @@
+2009-01-04  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/languages/ru.mo, include/languages/ru.mo: Added Russian
+	  translation.
+
+	* include/languages/index.pot: Updated po template.
+
+	* integria_dbdata.sql: Added Russian to translations.
+
+	* operation/incidents/incident.php: Added a space to a php echo
+	  string.
+
+	* operation/incidents/incident.php: Added a semicolon to the end of
+	  a php string.
+
 2008-12-26  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/languages/es.po, include/languages/es.mo: Updated Spanish

@@ -179,7 +179,7 @@ function tab_loaded (event, tab) {
 	if (tab.index == 6) {
 		$("#table_file_list td a.delete").click (function () {
 			tr = $(this).parents ("tr");
-			if (!confirm ("<?php echo __('Are you sure?');?>"))
+			if (!confirm ("<?php echo __('Are you sure?'); ?>"))
 				return false;
 			jQuery.get (
 				$(this).attr ("href"),

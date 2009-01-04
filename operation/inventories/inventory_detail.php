@@ -328,7 +328,7 @@ if (! defined ('AJAX')):
 $(document).ready (function () {
 	configure_inventory_form (false);
 	$("form.delete").submit (function () {
-		if (! confirm ("<?php echo __('Are you sure?') ?>"))
+		if (! confirm ("<?php echo __('Are you sure?'); ?>"))
 			return false;
 	});
 });

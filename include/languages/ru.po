@@ -1,24 +1,25 @@
-# SOME DESCRIPTIVE TITLE.
+# translation of integria-ru.po to Russian
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# Jorge Gonzalez <jorgegonz@artica.es>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: integria-ru\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-04 15:58+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2008-12-26 10:58+0100\n"
+"PO-Revision-Date: 2009-01-04 15:55+0100\n"
+"Last-Translator: Jorge Gonzalez <jorgegonz@artica.es>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: ../../general/login_page.php:38
 msgid "Login failed"
-msgstr ""
+msgstr "Вход не удался"
 
 #: ../../general/login_page.php:50 ../../godmode/setup/event.php:38
 #: ../../include/functions_form.php:748
@@ -37,17 +38,17 @@ msgstr ""
 #: ../../operation/projects/project_tracking.php:36
 #: ../../operation/kb/manage_data.php:287 ../../operation/kb/search.php:73
 msgid "User"
-msgstr ""
+msgstr "Пользователь"
 
 #: ../../general/login_page.php:55
 #: ../../godmode/usuarios/configurar_usuarios.php:196
 #: ../../operation/users/user_edit.php:163
 msgid "Password"
-msgstr ""
+msgstr "Пароль"
 
 #: ../../general/login_page.php:61
 msgid "Login"
-msgstr ""
+msgstr "Регистрация"
 
 #: ../../general/integria_help.php:23
 msgid "Integria IMS help system"
@@ -55,7 +56,7 @@ msgstr ""
 
 #: ../../general/integria_help.php:37
 msgid "Help system error"
-msgstr ""
+msgstr "Ошибка справочной системы"
 
 #: ../../general/integria_help.php:41
 msgid "No help section"
@@ -86,7 +87,7 @@ msgstr ""
 #: ../../general/links_menu.php:21 ../../operation/side_menu.php:706
 #: ../../operation/tool_menu.php:5
 msgid "Links"
-msgstr ""
+msgstr "Ссылки"
 
 #: ../../general/noaccess.php:22
 msgid "You don't have access to this page"
@@ -102,7 +103,7 @@ msgstr ""
 
 #: ../../general/header.php:20
 msgid "Home"
-msgstr ""
+msgstr "Домашний каталог"
 
 #: ../../general/header.php:31
 msgid "You are connected as"
@@ -110,7 +111,7 @@ msgstr ""
 
 #: ../../general/header.php:33
 msgid "Logout"
-msgstr ""
+msgstr "Выход"
 
 #: ../../general/home.php:37
 #: ../../enterprise/godmode/usuarios/profile_list.php:205
@@ -147,7 +148,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/profile_list.php:210
 #: ../../operation/side_menu.php:30 ../../operation/main_menu.php:28
 msgid "Projects"
-msgstr ""
+msgstr "Проекты"
 
 #: ../../general/home.php:110
 msgid "Projects active you have"
@@ -188,7 +189,7 @@ msgstr ""
 
 #: ../../index.php:246 ../../index.php:271
 msgid "Page not found"
-msgstr ""
+msgstr "Страница не найдена"
 
 #: ../../godmode/perfiles/lista_perfiles.php:38
 #: ../../godmode/setup/links.php:60
@@ -354,7 +355,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:245
 #: ../../operation/kb/manage_cat.php:148 ../../operation/kb/manage_cat.php:213
 msgid "Create"
-msgstr ""
+msgstr "Создать"
 
 #: ../../godmode/perfiles/lista_perfiles.php:155
 #: ../../godmode/perfiles/lista_perfiles.php:212
@@ -396,7 +397,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:247
 #: ../../operation/kb/manage_cat.php:150
 msgid "Update"
-msgstr ""
+msgstr "Обновить"
 
 #: ../../godmode/perfiles/lista_perfiles.php:157
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:168
@@ -407,7 +408,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:176
 #: ../../enterprise/godmode/usuarios/profile_list.php:192
 msgid "Profile name"
-msgstr ""
+msgstr "Имя профиля"
 
 #: ../../godmode/perfiles/lista_perfiles.php:166
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:177
@@ -498,7 +499,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/configurar_usuarios.php:44
 #: ../../enterprise/operation/user/user.php:40
 msgid "Profiles"
-msgstr ""
+msgstr "Профили"
 
 #: ../../godmode/perfiles/lista_perfiles.php:242
 #: ../../godmode/setup/links.php:117 ../../godmode/grupos/lista_grupos.php:114
@@ -532,7 +533,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:288
 #: ../../operation/kb/manage_cat.php:168
 msgid "Delete"
-msgstr ""
+msgstr "Удалить"
 
 #: ../../godmode/perfiles/lista_perfiles.php:312
 #: ../../godmode/setup/links.php:129 ../../godmode/grupos/lista_grupos.php:144
@@ -579,7 +580,7 @@ msgstr ""
 #: ../../operation/kb/browse.php:101 ../../operation/kb/browse_data.php:67
 #: ../../operation/kb/manage_data.php:201 ../../operation/kb/search.php:47
 msgid "Language"
-msgstr ""
+msgstr "Язык"
 
 #: ../../godmode/setup/setup.php:73
 msgid "No WU completion users"
@@ -607,7 +608,7 @@ msgstr ""
 
 #: ../../godmode/setup/setup.php:95
 msgid "Currency"
-msgstr ""
+msgstr "Денежный"
 
 #: ../../godmode/setup/setup.php:98
 msgid "Graphics font size"
@@ -621,7 +622,7 @@ msgstr ""
 #: ../../include/functions_form.php:322
 #: ../../operation/projects/project_tree.php:52
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 #: ../../godmode/setup/event.php:39
 msgid "Extended info"
@@ -672,7 +673,7 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:149
 #: ../../operation/contracts/contract_detail.php:219
 msgid "Group"
-msgstr ""
+msgstr "Группа"
 
 #: ../../godmode/setup/setup_mail.php:46 ../../operation/side_menu.php:684
 msgid "Mail setup"
@@ -716,12 +717,12 @@ msgstr ""
 
 #: ../../godmode/setup/links.php:102
 msgid "Link"
-msgstr ""
+msgstr "Ссылка"
 
 #: ../../godmode/setup/links.php:116
 #: ../../godmode/grupos/configurar_grupo.php:79
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ../../godmode/setup/links.php:138
 #: ../../godmode/usuarios/role_manager.php:153
@@ -731,7 +732,7 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:551
 #: ../../operation/users/user_spare_workunit.php:314
 msgid "Add"
-msgstr ""
+msgstr "Добавить"
 
 #: ../../godmode/setup/incidents_setup.php:30
 #: ../../operation/side_menu.php:677
@@ -753,7 +754,7 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:185
 #: ../../operation/projects/task_tracking.php:42
 msgid "Status"
-msgstr ""
+msgstr "Состояние"
 
 #: ../../godmode/setup/incidents_setup.php:83
 msgid "Origins"
@@ -803,7 +804,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:186
 #: ../../operation/kb/manage_cat.php:122 ../../operation/kb/manage_cat.php:164
 msgid "Name"
-msgstr ""
+msgstr "Имя"
 
 #: ../../godmode/grupos/configurar_grupo.php:71
 msgid "Forced email"
@@ -817,7 +818,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:134
 #: ../../operation/users/user_edit.php:147
 msgid "Email"
-msgstr ""
+msgstr "Эл. почта"
 
 #: ../../godmode/grupos/configurar_grupo.php:84
 #: ../../godmode/grupos/lista_grupos.php:113
@@ -826,7 +827,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:191
 #: ../../operation/kb/manage_cat.php:141 ../../operation/kb/manage_cat.php:165
 msgid "Parent"
-msgstr ""
+msgstr "Родитель"
 
 #: ../../godmode/grupos/configurar_grupo.php:87
 #: ../../godmode/grupos/lista_grupos.php:111
@@ -835,7 +836,7 @@ msgstr ""
 #: ../../operation/projects/project_overview.php:30
 #: ../../operation/kb/manage_cat.php:134 ../../operation/kb/manage_cat.php:163
 msgid "Icon"
-msgstr ""
+msgstr "Значок"
 
 #: ../../godmode/grupos/configurar_grupo.php:95
 msgid "Banner"
@@ -914,7 +915,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_tree.php:48
 #: ../../operation/incidents/incident.php:120
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: ../../godmode/updatemanager/main.php:82
 #: ../../godmode/usuarios/role_manager.php:110
@@ -952,7 +953,7 @@ msgstr ""
 #: ../../operation/kb/browse_data.php:108
 #: ../../operation/kb/manage_cat.php:128 ../../operation/kb/manage_cat.php:166
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #: ../../godmode/updatemanager/main.php:89
 msgid "Overwrite local changes"
@@ -1012,7 +1013,7 @@ msgstr ""
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:553
 msgid "Development"
-msgstr ""
+msgstr "Разработка"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:554
 msgid "Testing"
@@ -1023,16 +1024,16 @@ msgstr ""
 #: ../../operation/incidents/incident_create_work.php:52
 #: ../../operation/users/user_spare_workunit.php:288
 msgid "Public"
-msgstr ""
+msgstr "Общее"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:556
 msgid "Disabled"
-msgstr ""
+msgstr "Выключено"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:564
 #: ../../enterprise/godmode/usuarios/profile_list.php:227
 msgid "Database"
-msgstr ""
+msgstr "База данных"
 
 #: ../../godmode/updatemanager/lib/libupdate_manager.php:565
 msgid "Code / binary directory"
@@ -1048,7 +1049,7 @@ msgstr ""
 #: ../../operation/user_report/report_monthly.php:65
 #: ../../operation/users/user_edit.php:122 ../../operation/users/user.php:32
 msgid "User ID"
-msgstr ""
+msgstr "Идентификатор пользователя"
 
 #: ../../godmode/usuarios/lista_usuarios.php:76
 #: ../../operation/users/user.php:33
@@ -1060,7 +1061,7 @@ msgstr ""
 #: ../../operation/incidents/incident_create_work.php:48
 #: ../../operation/users/user.php:34
 msgid "Profile"
-msgstr ""
+msgstr "Профиль"
 
 #: ../../godmode/usuarios/lista_usuarios.php:111
 #: ../../enterprise/godmode/usuarios/configurar_usuarios.php:23
@@ -1115,7 +1116,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:135
 #: ../../operation/users/user_edit.php:148
 msgid "Telephone"
-msgstr ""
+msgstr "Телефон"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:217
 msgid "Global profile"
@@ -1124,7 +1125,7 @@ msgstr ""
 #: ../../godmode/usuarios/configurar_usuarios.php:221
 #: ../../godmode/usuarios/configurar_usuarios.php:225
 msgid "Administrator"
-msgstr ""
+msgstr "Администратор"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:223
 #: ../../godmode/usuarios/configurar_usuarios.php:227
@@ -1139,7 +1140,7 @@ msgstr ""
 #: ../../operation/users/user_edit.php:150
 #: ../../operation/users/user_search.php:98
 msgid "Comments"
-msgstr ""
+msgstr "Комментарии"
 
 #: ../../godmode/usuarios/role_manager.php:35 ../../operation/todo/todo.php:28
 #: ../../operation/projects/milestones.php:52
@@ -1181,7 +1182,7 @@ msgstr ""
 #: ../../operation/users/user_spare_workunit.php:262
 #: ../../operation/users/user_search.php:76
 msgid "Role"
-msgstr ""
+msgstr "Должность"
 
 #: ../../godmode/usuarios/role_manager.php:112
 #: ../../godmode/usuarios/role_manager.php:127
@@ -1192,7 +1193,7 @@ msgstr ""
 #: ../../operation/projects/people_manager.php:258
 #: ../../operation/projects/project.php:180
 msgid "Cost"
-msgstr ""
+msgstr "Стоимость"
 
 #: ../../include/functions_calendar.php:439
 msgid "Week Total"
@@ -1211,43 +1212,43 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:198
 #: ../../operation/slas/sla_detail.php:199
 msgid "Hours"
-msgstr ""
+msgstr "Часов"
 
 #: ../../include/functions_calendar.php:618 ../../include/functions.php:533
 #: ../../include/functions.php:588 ../../include/functions.php:612
 #: ../../operation/projects/task_tracking.php:69
 msgid "Unknown"
-msgstr ""
+msgstr "Неизвестно"
 
 #: ../../include/functions_calendar.php:625
 #: ../../operation/projects/project.php:254
 msgid "Never"
-msgstr ""
+msgstr "Никогда"
 
 #: ../../include/functions_calendar.php:634
 msgid "seconds"
-msgstr ""
+msgstr "секунд"
 
 #: ../../include/functions_calendar.php:640
 #: ../../include/functions_calendar.php:642
 msgid "minutes"
-msgstr ""
+msgstr "минут"
 
 #: ../../include/functions_calendar.php:645
 msgid "hours"
-msgstr ""
+msgstr "часов"
 
 #: ../../include/functions_calendar.php:648
 msgid "days"
-msgstr ""
+msgstr "дней"
 
 #: ../../include/functions_calendar.php:651
 msgid "months"
-msgstr ""
+msgstr "месяцы"
 
 #: ../../include/functions_calendar.php:654
 msgid "years"
-msgstr ""
+msgstr "годы"
 
 #: ../../include/functions_form.php:29 ../../include/functions_form.php:46
 #: ../../include/functions_form.php:156 ../../include/functions_form.php:714
@@ -1258,7 +1259,7 @@ msgstr ""
 #: ../../operation/users/user_search.php:79 ../../operation/kb/browse.php:45
 #: ../../operation/kb/browse.php:62 ../../operation/kb/manage_data.php:204
 msgid "Any"
-msgstr ""
+msgstr "Любой"
 
 #: ../../include/functions_form.php:188 ../../include/functions_form.php:291
 #: ../../include/functions_form.php:300 ../../include/functions_form.php:314
@@ -1280,18 +1281,18 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:138
 #: ../../operation/kb/manage_cat.php:137
 msgid "None"
-msgstr ""
+msgstr "Нет"
 
 #: ../../include/functions_form.php:271 ../../include/functions_form.php:278
 msgid "Source"
-msgstr ""
+msgstr "Источник"
 
 #: ../../include/functions_form.php:292 ../../include/functions_form.php:301
 #: ../../operation/reporting/incidents_html.php:116
 #: ../../operation/incidents/incident.php:124
 #: ../../operation/incidents/incident_search.php:92
 msgid "Resolution"
-msgstr ""
+msgstr "Разрешение"
 
 #: ../../include/functions_form.php:334 ../../include/functions_form.php:363
 #: ../../include/functions_form.php:560
@@ -1305,14 +1306,14 @@ msgstr ""
 #: ../../operation/users/user_task_assigment.php:55
 #: ../../operation/users/user_spare_workunit.php:272
 msgid "Task"
-msgstr ""
+msgstr "Задача"
 
 #: ../../include/functions_form.php:337 ../../include/functions_form.php:346
 #: ../../include/functions_form.php:396 ../../include/functions_form.php:414
 #: ../../include/functions_form.php:596
 #: ../../operation/projects/project_detail.php:203
 msgid "N/A"
-msgstr ""
+msgstr "Н/Д"
 
 #: ../../include/functions_form.php:348 ../../include/functions_form.php:377
 msgid "Vacations"
@@ -1344,7 +1345,7 @@ msgstr ""
 
 #: ../../include/functions_form.php:567
 msgid "Duration"
-msgstr ""
+msgstr "Продолжительность"
 
 #: ../../include/functions_form.php:582
 #: ../../enterprise/godmode/usuarios/role_user_global.php:68
@@ -1353,7 +1354,7 @@ msgstr ""
 #: ../../operation/projects/task_files.php:120
 #: ../../operation/users/user_task_assigment.php:54
 msgid "Project"
-msgstr ""
+msgstr "Проект"
 
 #: ../../include/functions_form.php:608
 #: ../../operation/common/workunit_detail.php:50
@@ -1376,7 +1377,7 @@ msgstr ""
 #: ../../include/functions_form.php:710
 #: ../../operation/inventories/inventory_search.php:168
 msgid "Search string"
-msgstr ""
+msgstr "Искать строку"
 
 #: ../../include/functions_form.php:720
 #: ../../operation/reporting/incidents_html.php:62
@@ -1389,7 +1390,7 @@ msgstr ""
 #: ../../operation/todo/todo.php:124 ../../operation/todo/todo.php:184
 #: ../../operation/projects/task_detail.php:239
 msgid "Priority"
-msgstr ""
+msgstr "Приоритет"
 
 #: ../../include/functions_form.php:724 ../../include/functions_form.php:735
 #: ../../include/functions_form.php:742 ../../include/functions_form.php:753
@@ -1402,7 +1403,7 @@ msgstr ""
 #: ../../operation/projects/project_tree.php:49
 #: ../../operation/contracts/contract_detail.php:191
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #: ../../include/functions_form.php:731
 #: ../../enterprise/godmode/usuarios/profile_list.php:200
@@ -1426,7 +1427,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:184
 #: ../../operation/incidents/incident_inventory_detail.php:74
 msgid "Serial number"
-msgstr ""
+msgstr "Серийный номер"
 
 #: ../../include/functions_form.php:743
 #: ../../operation/reporting/inventories_html.php:70
@@ -1439,7 +1440,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_tree.php:52
 #: ../../operation/incidents/incident_inventory_detail.php:81
 msgid "Building"
-msgstr ""
+msgstr "Сборка"
 
 #: ../../include/functions_form.php:744
 #: ../../operation/reporting/incidents_html.php:68
@@ -1451,7 +1452,7 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:52
 #: ../../operation/contracts/contract_detail.php:150
 msgid "Begin date"
-msgstr ""
+msgstr "Начальная дата"
 
 #: ../../include/functions_form.php:750
 #: ../../operation/user_report/report_full_graph.php:167
@@ -1482,7 +1483,7 @@ msgstr ""
 #: ../../operation/contracts/contract_detail.php:191
 #: ../../operation/contracts/contract_detail.php:217
 msgid "Company"
-msgstr ""
+msgstr "Компания"
 
 #: ../../include/functions_form.php:755
 #: ../../operation/reporting/incidents_html.php:88
@@ -1519,7 +1520,7 @@ msgstr ""
 #: ../../operation/slas/sla_detail.php:172 ../../operation/kb/browse.php:54
 #: ../../operation/kb/browse.php:65 ../../operation/kb/search.php:52
 msgid "Search"
-msgstr ""
+msgstr "Поиск"
 
 #: ../../include/functions_form.php:763
 #: ../../operation/inventories/inventory_search.php:206
@@ -1534,11 +1535,11 @@ msgstr ""
 #: ../../include/functions_form.php:782 ../../include/functions_form.php:784
 #: ../../operation/user_report/report_full.php:184
 msgid "Creator"
-msgstr ""
+msgstr "Создатель"
 
 #: ../../include/functions_form.php:790
 msgid "Participant"
-msgstr ""
+msgstr "Пользователь"
 
 #: ../../include/functions_form.php:807
 #: ../../include/functions_incidents.php:264
@@ -1553,7 +1554,7 @@ msgstr ""
 #: ../../include/functions_form.php:813 ../../include/functions_form.php:816
 #: ../../operation/users/user_task_assigment.php:58
 msgid "Last update"
-msgstr ""
+msgstr "Последнее обновление"
 
 #: ../../include/functions_form.php:822
 msgid "Hours worked"
@@ -1577,7 +1578,7 @@ msgstr ""
 
 #: ../../include/functions_incidents.php:264
 msgid "Closed"
-msgstr ""
+msgstr "Закрыто"
 
 #: ../../include/functions_incidents.php:268
 msgid "Mean life time"
@@ -1594,7 +1595,7 @@ msgstr ""
 #: ../../include/functions_incidents.php:273
 #: ../../operation/user_report/report_full.php:72
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: ../../include/functions_incidents.php:278
 msgid "Longest closed incident"
@@ -1646,16 +1647,16 @@ msgstr ""
 #: ../../include/functions.php:400 ../../include/functions.php:507
 #: ../../include/functions.php:568
 msgid "Low"
-msgstr ""
+msgstr "Низкий"
 
 #: ../../include/functions.php:402 ../../include/functions.php:508
 #: ../../include/functions.php:572
 msgid "Medium"
-msgstr ""
+msgstr "Средний"
 
 #: ../../include/functions.php:404
 msgid "High"
-msgstr ""
+msgstr "Высокий"
 
 #: ../../include/functions.php:406
 msgid "Very high"
@@ -1664,35 +1665,35 @@ msgstr ""
 #: ../../include/functions.php:408
 #: ../../operation/user_report/report_annual.php:53
 msgid "Other"
-msgstr ""
+msgstr "Прочее"
 
 #: ../../include/functions.php:506 ../../include/functions.php:564
 msgid "Informative"
-msgstr ""
+msgstr "Информативный"
 
 #: ../../include/functions.php:509 ../../include/functions.php:576
 msgid "Serious"
-msgstr ""
+msgstr "Серьезный"
 
 #: ../../include/functions.php:510 ../../include/functions.php:580
 msgid "Very serious"
-msgstr ""
+msgstr "Очень серьезный"
 
 #: ../../include/functions.php:511
 msgid "Maintenance"
-msgstr ""
+msgstr "Управление"
 
 #: ../../include/functions.php:520
 msgid "Weekly"
-msgstr ""
+msgstr "Еженедельно"
 
 #: ../../include/functions.php:521
 msgid "15 days"
-msgstr ""
+msgstr "15 дней"
 
 #: ../../include/functions.php:522
 msgid "Monthly"
-msgstr ""
+msgstr "Ежемесячно"
 
 #: ../../include/functions.php:523
 msgid "60 days"
@@ -1737,7 +1738,7 @@ msgstr ""
 
 #: ../../include/functions_db.php:730
 msgid "Created"
-msgstr ""
+msgstr "Создано"
 
 #: ../../include/functions_db.php:733
 #: ../../operation/reporting/incidents_html.php:118
@@ -1745,7 +1746,7 @@ msgstr ""
 #: ../../operation/incidents/incident_search.php:94
 #: ../../operation/todo/todo.php:191 ../../operation/projects/project.php:181
 msgid "Updated"
-msgstr ""
+msgstr "Обновлено"
 
 #: ../../include/functions_db.php:736
 #: ../../operation/projects/task_workunit.php:88
@@ -1802,19 +1803,19 @@ msgstr ""
 #: ../../include/functions_db.php:1093
 #: ../../operation/reporting/incidents_html.php:68
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: ../../include/functions_db.php:1095
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: ../../include/functions_graph.php:219
 msgid "Out of limits"
-msgstr ""
+msgstr "Кончились лимиты"
 
 #: ../../include/functions_fsgraph.php:209
 msgid "Week"
-msgstr ""
+msgstr "Неделя"
 
 #: ../../include/functions_fsgraph.php:219
 msgid "Planned"
@@ -1838,7 +1839,7 @@ msgstr ""
 #: ../../include/functions_fsgraph.php:244
 #: ../../operation/projects/gantt_graph.php:150
 msgid "Today"
-msgstr ""
+msgstr "Сегодня"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:203
 msgid "Integria management"
@@ -1893,7 +1894,7 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/profile_list.php:216
 #: ../../operation/inventories/inventory_incidents.php:41
 msgid "View"
-msgstr ""
+msgstr "Вид"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:197
 #: ../../enterprise/godmode/usuarios/profile_list.php:202
@@ -1906,7 +1907,7 @@ msgstr ""
 #: ../../operation/incidents/incident_inventory_detail.php:87
 #: ../../operation/kb/browse_data.php:83
 msgid "Edit"
-msgstr ""
+msgstr "Правка"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:198
 #: ../../enterprise/godmode/usuarios/profile_list.php:203
@@ -1928,12 +1929,12 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/profile_list.php:220
 #: ../../operation/projects/project.php:177
 msgid "Tasks"
-msgstr ""
+msgstr "Задачи"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:224
 #: ../../operation/main_menu.php:65
 msgid "Users"
-msgstr ""
+msgstr "Пользователи"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:230
 msgid "Framework"
@@ -2022,7 +2023,7 @@ msgstr ""
 #: ../../operation/user_report/report_annual.php:38
 #: ../../operation/users/user_task_assigment.php:48
 msgid "Go"
-msgstr ""
+msgstr "Перейти"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:71
 msgid "WU"
@@ -2083,11 +2084,11 @@ msgstr ""
 
 #: ../../operation/agenda/agenda.php:161
 msgid "Legend"
-msgstr ""
+msgstr "Описание"
 
 #: ../../operation/agenda/agenda.php:174
 msgid "Alert"
-msgstr ""
+msgstr "Внимание"
 
 #: ../../operation/agenda/agenda.php:184
 msgid "Add agenda entry"
@@ -2099,7 +2100,7 @@ msgstr ""
 
 #: ../../operation/agenda/agenda.php:201
 msgid "One hour"
-msgstr ""
+msgstr "один час"
 
 #: ../../operation/agenda/agenda.php:202
 msgid "Two hours"
@@ -2115,7 +2116,7 @@ msgstr ""
 
 #: ../../operation/agenda/agenda.php:206
 msgid "Alarm"
-msgstr ""
+msgstr "Сигнал"
 
 #: ../../operation/agenda/agenda.php:208
 #: ../../operation/reporting/inventories_html.php:41
@@ -2127,11 +2128,11 @@ msgstr ""
 #: ../../operation/projects/project_tracking.php:37
 #: ../../operation/users/user_spare_workunit.php:258
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 #: ../../operation/agenda/agenda.php:209
 msgid "Time"
-msgstr ""
+msgstr "Время"
 
 #: ../../operation/reporting/inventories_html.php:35
 msgid "Inventory report"
@@ -2154,7 +2155,7 @@ msgstr ""
 #: ../../operation/kb/manage_data.php:214
 #: ../../operation/kb/manage_data.php:286 ../../operation/kb/search.php:71
 msgid "Product"
-msgstr ""
+msgstr "Название"
 
 #: ../../operation/reporting/inventories_html.php:65
 #: ../../operation/inventories/inventory_detail.php:261
@@ -2170,7 +2171,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_search.php:195
 #: ../../operation/incidents/incident_inventory_detail.php:72
 msgid "IP address"
-msgstr ""
+msgstr "IP-адрес"
 
 #: ../../operation/reporting/inventories_html.php:76
 #: ../../operation/inventories/inventory_detail.php:216
@@ -2210,7 +2211,7 @@ msgstr ""
 #: ../../operation/kb/browse.php:98 ../../operation/kb/manage_data.php:195
 #: ../../operation/kb/manage_data.php:283 ../../operation/kb/search.php:68
 msgid "Title"
-msgstr ""
+msgstr "Заголовок"
 
 #: ../../operation/reporting/inventories_html.php:134
 #: ../../operation/inventories/inventory_search.php:148
@@ -2226,13 +2227,13 @@ msgstr ""
 #: ../../operation/messages/message.php:127
 #: ../../operation/messages/message.php:211
 msgid "From"
-msgstr ""
+msgstr "От"
 
 #: ../../operation/reporting/incidents_html.php:95
 #: ../../operation/messages/message.php:86
 #: ../../operation/messages/message.php:128
 msgid "To"
-msgstr ""
+msgstr "Кому"
 
 #: ../../operation/reporting/incidents_html.php:103
 msgid "All incidents"
@@ -2256,18 +2257,18 @@ msgstr ""
 #: ../../operation/incidents/incident.php:126
 #: ../../operation/incidents/incident_search.php:94
 msgid "Started"
-msgstr ""
+msgstr "Запущено"
 
 #: ../../operation/reporting/incidents_html.php:119
 #: ../../operation/incidents/incident.php:127
 #: ../../operation/incidents/incident_search.php:95
 msgid "Work"
-msgstr ""
+msgstr "Работа"
 
 #: ../../operation/reporting/incidents_html.php:125
 #: ../../operation/incidents/incident_statistics.php:26
 msgid "Statistics"
-msgstr ""
+msgstr "Статистика"
 
 #: ../../operation/reporting/incidents_html.php:132
 #: ../../operation/incidents/incident_search.php:146
@@ -2318,7 +2319,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:124
 msgid "New task"
-msgstr ""
+msgstr "Новая задача"
 
 #: ../../operation/side_menu.php:132 ../../operation/projects/gantt.php:116
 msgid "Gantt graph"
@@ -2328,7 +2329,7 @@ msgstr ""
 #: ../../operation/projects/task.php:117
 #: ../../operation/projects/project.php:178
 msgid "People"
-msgstr ""
+msgstr "Люди"
 
 #: ../../operation/side_menu.php:158 ../../operation/side_menu.php:247
 #: ../../operation/inventories/inventory.php:60
@@ -2346,7 +2347,7 @@ msgstr ""
 #: ../../operation/incidents/incident_search.php:230
 #: ../../operation/incidents/incident_work.php:73
 msgid "Files"
-msgstr ""
+msgstr "Файлы"
 
 #: ../../operation/side_menu.php:192
 msgid "Task detail"
@@ -2433,7 +2434,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:281
 #: ../../operation/companies/company_detail.php:174
 msgid "Contacts"
-msgstr ""
+msgstr "Контакты"
 
 #: ../../operation/side_menu.php:495
 msgid "Contact overview"
@@ -2481,7 +2482,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:607
 msgid "Browse"
-msgstr ""
+msgstr "Просмотреть"
 
 #: ../../operation/side_menu.php:615
 msgid "Create KB item"
@@ -2501,7 +2502,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:662 ../../operation/main_menu.php:92
 msgid "Setup"
-msgstr ""
+msgstr "Настройка"
 
 #: ../../operation/side_menu.php:699
 msgid "Configure updates"
@@ -2509,7 +2510,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:713
 msgid "System events"
-msgstr ""
+msgstr "Системные события"
 
 #: ../../operation/side_menu.php:721
 #: ../../operation/users/user_statistics.php:23
@@ -2577,7 +2578,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:863
 msgid "Calendar"
-msgstr ""
+msgstr "Календарь"
 
 #: ../../operation/side_menu.php:889
 msgid "User info"
@@ -2585,7 +2586,7 @@ msgstr ""
 
 #: ../../operation/side_menu.php:898
 msgid "Phone"
-msgstr ""
+msgstr "Телефон"
 
 #: ../../operation/side_menu.php:909
 msgid "Project distribution"
@@ -2633,7 +2634,7 @@ msgstr ""
 #: ../../operation/companies/company_detail.php:120
 #: ../../operation/contacts/contact_detail.php:159
 msgid "Select"
-msgstr ""
+msgstr "Выбрать"
 
 #: ../../operation/manufacturers/manufacturer_detail.php:121
 #: ../../operation/manufacturers/manufacturer_detail.php:179
@@ -2648,7 +2649,7 @@ msgstr ""
 #: ../../operation/manufacturers/manufacturer_detail.php:178
 #: ../../operation/companies/company_detail.php:122
 msgid "Address"
-msgstr ""
+msgstr "Адрес"
 
 #: ../../operation/buildings/building_detail.php:61
 msgid "Building cannot be updated"
@@ -2674,11 +2675,11 @@ msgstr ""
 #: ../../operation/incidents/incident_inventory_contacts.php:33
 #: ../../operation/incidents/incident_inventory_detail.php:59
 msgid "Details"
-msgstr ""
+msgstr "Подробности"
 
 #: ../../operation/inventories/inventory.php:61
 msgid "Tree"
-msgstr ""
+msgstr "Дерево"
 
 #: ../../operation/inventories/inventory.php:80
 #: ../../operation/incidents/incident.php:96
@@ -2694,7 +2695,7 @@ msgstr ""
 #: ../../operation/inventories/inventory.php:92
 #: ../../operation/incidents/incident.php:107
 msgid "Save"
-msgstr ""
+msgstr "Сохранить"
 
 #: ../../operation/inventories/inventory.php:156
 msgid "Unable to load inventory"
@@ -2737,7 +2738,7 @@ msgstr ""
 #: ../../operation/inventories/manage_prod.php:170
 #: ../../operation/kb/manage_cat.php:167
 msgid "Items"
-msgstr ""
+msgstr "Элементы"
 
 #: ../../operation/inventories/inventory_detail.php:79
 msgid "There was an error updating inventory object"
@@ -2750,7 +2751,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_detail.php:167
 #: ../../operation/inventories/inventory_tree.php:45
 msgid "Object"
-msgstr ""
+msgstr "Объект"
 
 #: ../../operation/inventories/inventory_detail.php:197
 msgid "Confirmed"
@@ -2786,7 +2787,7 @@ msgstr ""
 #: ../../operation/incidents/incident_detail.php:542
 #: ../../operation/incidents/incident_detail.php:553
 msgid "Remove"
-msgstr ""
+msgstr "Удалить"
 
 #: ../../operation/inventories/inventory_search.php:37
 #: ../../operation/incidents/incident_search.php:39
@@ -2820,13 +2821,13 @@ msgstr ""
 #: ../../operation/incidents/incident.php:77
 #: ../../operation/incidents/incident_inventory_contacts.php:32
 msgid "Contact"
-msgstr ""
+msgstr "Контакт"
 
 #: ../../operation/inventories/inventory_contacts.php:39
 #: ../../operation/incidents/incident_inventory_contacts.php:65
 #: ../../operation/contacts/contact_detail.php:157
 msgid "Position"
-msgstr ""
+msgstr "Положение"
 
 #: ../../operation/inventories/inventory_contacts.php:62
 #: ../../operation/incidents/incident_inventory_contacts.php:61
@@ -2837,7 +2838,7 @@ msgstr ""
 #: ../../operation/inventories/inventory_contacts.php:64
 #: ../../operation/incidents/incident_inventory_contacts.php:63
 msgid "Mobile phone"
-msgstr ""
+msgstr "Мобильный телефон"
 
 #: ../../operation/inventories/inventory_contracts.php:33
 msgid "Contract details on inventory object"
@@ -2881,7 +2882,7 @@ msgstr ""
 #: ../../operation/incidents/incident.php:128
 #: ../../operation/incidents/incident_search.php:96
 msgid "Flags"
-msgstr ""
+msgstr "Флаги"
 
 #: ../../operation/incidents/incident.php:216
 msgid "Unable to load incident"
@@ -2917,7 +2918,7 @@ msgstr ""
 #: ../../operation/incidents/type_detail.php:108
 #: ../../operation/incidents/type_detail.php:160
 msgid "Wizard"
-msgstr ""
+msgstr "Волшебник"
 
 #: ../../operation/incidents/type_detail.php:182
 msgid "Create type"
@@ -2933,13 +2934,13 @@ msgstr ""
 #: ../../operation/projects/task_attach_file.php:43
 #: ../../operation/kb/browse_data.php:107
 msgid "Filename"
-msgstr ""
+msgstr "Имя файла"
 
 #: ../../operation/incidents/incident_files.php:65
 #: ../../operation/projects/task_files.php:107
 #: ../../operation/projects/task_files.php:129
 msgid "Size"
-msgstr ""
+msgstr "Размер"
 
 #: ../../operation/incidents/incident_notes.php:70
 msgid "Note successfully deleted"
@@ -2947,7 +2948,7 @@ msgstr ""
 
 #: ../../operation/incidents/incident_notes.php:109
 msgid "Notes"
-msgstr ""
+msgstr "Заметки"
 
 #: ../../operation/incidents/incident_notes.php:131
 msgid "Notes attached to incident"
@@ -2965,7 +2966,7 @@ msgstr ""
 #: ../../operation/users/user_statistics.php:24
 #: ../../operation/messages/message.php:123
 msgid "Help"
-msgstr ""
+msgstr "Справка"
 
 #: ../../operation/incidents/incident_detail.php:77
 #: ../../operation/incidents/incident_detail.php:134
@@ -2990,13 +2991,12 @@ msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:292
 msgid "No description available"
-msgstr ""
+msgstr "Описание недоступно"
 
 #: ../../operation/incidents/incident_detail.php:315
 #: ../../operation/projects/task_files.php:74
 #: ../../operation/kb/manage_data.php:109
-msgid ""
-"File cannot be saved. Please contact Integria administrator about this error"
+msgid "File cannot be saved. Please contact Integria administrator about this error"
 msgstr ""
 
 #: ../../operation/incidents/incident_detail.php:326
@@ -3078,7 +3078,7 @@ msgstr ""
 #: ../../operation/incidents/incident_attach_file.php:36
 #: ../../operation/kb/search.php:72
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #: ../../operation/incidents/incident_attach_file.php:47
 #: ../../operation/projects/task_attach_file.php:49
@@ -3097,12 +3097,12 @@ msgstr ""
 #: ../../operation/user_report/monthly.php:76
 #: ../../operation/user_report/monthly_graph.php:74
 msgid "Prev"
-msgstr ""
+msgstr "Предыдущая"
 
 #: ../../operation/user_report/monthly.php:80
 #: ../../operation/user_report/monthly_graph.php:78
 msgid "Next"
-msgstr ""
+msgstr "Следующее"
 
 #: ../../operation/user_report/report_weekly.php:46
 msgid "Totals for week"
@@ -3141,7 +3141,7 @@ msgstr ""
 #: ../../operation/users/user_spare_workunit.php:282
 #: ../../operation/users/user_search.php:96
 msgid "Username"
-msgstr ""
+msgstr "Имя пользователя"
 
 #: ../../operation/user_report/report_full_graph.php:171
 msgid "Show finished"
@@ -3154,7 +3154,7 @@ msgstr ""
 #: ../../operation/user_report/report_full_graph.php:179
 #: ../../operation/user_report/report_full.php:58
 msgid "Show"
-msgstr ""
+msgstr "Показать"
 
 #: ../../operation/user_report/report_full_graph.php:190
 msgid "Tasks assigned to"
@@ -3167,7 +3167,7 @@ msgstr ""
 #: ../../operation/projects/task_incidents.php:63
 #: ../../operation/projects/gantt.php:162
 msgid "Start"
-msgstr ""
+msgstr "Начало"
 
 #: ../../operation/user_report/report_full_graph.php:199
 #: ../../operation/projects/task.php:119
@@ -3177,7 +3177,7 @@ msgstr ""
 #: ../../operation/projects/gantt.php:165
 #: ../../operation/contracts/contract_detail.php:221
 msgid "End"
-msgstr ""
+msgstr "Конец"
 
 #: ../../operation/user_report/report_full.php:64
 #: ../../operation/user_report/report_full.php:177
@@ -3200,7 +3200,7 @@ msgstr ""
 #: ../../operation/user_report/report_full.php:144
 #: ../../operation/user_report/report_full.php:210
 msgid "Totals"
-msgstr ""
+msgstr "Итого"
 
 #: ../../operation/user_report/report_full.php:146
 #: ../../operation/user_report/report_full.php:147
@@ -3219,16 +3219,16 @@ msgstr ""
 
 #: ../../operation/user_report/report_full.php:184
 msgid "Owner"
-msgstr ""
+msgstr "Владелец"
 
 #: ../../operation/user_report/report_full.php:186
 msgid "Dates"
-msgstr ""
+msgstr "Dates"
 
 #: ../../operation/user_report/report_full.php:214
 #: ../../operation/projects/task_detail.php:282
 msgid "Total"
-msgstr ""
+msgstr "Всего"
 
 #: ../../operation/user_report/report_annual.php:26
 #: ../../operation/user_report/report_annual.php:29
@@ -3265,7 +3265,7 @@ msgstr ""
 
 #: ../../operation/todo/todo.php:128 ../../operation/todo/todo.php:187
 msgid "Assigned to"
-msgstr ""
+msgstr "Назначить на"
 
 #: ../../operation/todo/todo.php:161 ../../operation/todo/todo.php:163
 msgid "To-Do management"
@@ -3279,7 +3279,7 @@ msgstr ""
 #: ../../operation/projects/gantt_graph.php:148
 #: ../../operation/users/user_task_assigment.php:56
 msgid "Progress"
-msgstr ""
+msgstr "Прогресс"
 
 #: ../../operation/todo/todo.php:189
 msgid "Assigned by"
@@ -3340,11 +3340,11 @@ msgstr ""
 
 #: ../../operation/projects/task_move.php:45
 msgid "Move"
-msgstr ""
+msgstr "Переместить"
 
 #: ../../operation/projects/task.php:75
 msgid "Report"
-msgstr ""
+msgstr "Отчет"
 
 #: ../../operation/projects/task.php:111
 #: ../../operation/users/user_task_assigment.php:53
@@ -3358,7 +3358,7 @@ msgstr ""
 #: ../../operation/projects/task.php:204
 #: ../../operation/projects/task_detail.php:247
 msgid "Recurrence"
-msgstr ""
+msgstr "Повторение"
 
 #: ../../operation/projects/project_detail.php:68
 msgid "Could not update project"
@@ -3411,7 +3411,7 @@ msgstr ""
 
 #: ../../operation/projects/project_detail.php:208
 msgid "Days"
-msgstr ""
+msgstr "Дней"
 
 #: ../../operation/projects/project_overview.php:31
 msgid "# Projects"
@@ -3427,7 +3427,7 @@ msgstr ""
 
 #: ../../operation/projects/project_tree.php:44
 msgid "Done"
-msgstr ""
+msgstr "Готово"
 
 #: ../../operation/projects/project_tree.php:50
 msgid "Defined end"
@@ -3479,7 +3479,7 @@ msgstr ""
 #: ../../operation/projects/task_detail.php:275
 #: ../../operation/projects/task_detail.php:291
 msgid "Real"
-msgstr ""
+msgstr "Действительное"
 
 #: ../../operation/projects/task_detail.php:283
 msgid "Imp"
@@ -3611,7 +3611,7 @@ msgstr ""
 #: ../../operation/messages/message.php:169
 #: ../../operation/messages/message.php:213
 msgid "Subject"
-msgstr ""
+msgstr "Тема"
 
 #: ../../operation/projects/task_emailreport.php:92
 msgid "Message text"
@@ -3619,7 +3619,7 @@ msgstr ""
 
 #: ../../operation/projects/task_emailreport.php:96
 msgid "Send"
-msgstr ""
+msgstr "Отправить"
 
 #: ../../operation/projects/gantt.php:188
 msgid "Full screen"
@@ -3653,7 +3653,7 @@ msgstr ""
 
 #: ../../operation/projects/project.php:219
 msgid "Unlimited"
-msgstr ""
+msgstr "неограниченно"
 
 #: ../../operation/projects/project.php:237
 msgid "hr"
@@ -3661,7 +3661,7 @@ msgstr ""
 
 #: ../../operation/projects/project.php:258
 msgid "Disable"
-msgstr ""
+msgstr "Отключить"
 
 #: ../../operation/contacts/contact_detail.php:114
 msgid "Contact management"
@@ -3670,7 +3670,7 @@ msgstr ""
 #: ../../operation/contacts/contact_detail.php:152
 #: ../../operation/contacts/contact_detail.php:216
 msgid "Full name"
-msgstr ""
+msgstr "Полное название"
 
 #: ../../operation/contacts/contact_detail.php:156
 msgid "Mobile number"
@@ -3678,7 +3678,7 @@ msgstr ""
 
 #: ../../operation/main_menu.php:57
 msgid "KB"
-msgstr ""
+msgstr "КБ"
 
 #: ../../operation/main_menu.php:72
 msgid "Todo"
@@ -3702,11 +3702,10 @@ msgstr ""
 
 #: ../../operation/users/user_spare_workunit.php:292
 msgid "Forward"
-msgstr ""
+msgstr "Вперёд"
 
 #: ../../operation/users/user_spare_workunit.php:293
-msgid ""
-"If this checkbox is activated, propagation will be forward instead backward"
+msgid "If this checkbox is activated, propagation will be forward instead backward"
 msgstr ""
 
 #: ../../operation/users/user_spare_workunit.php:297
@@ -3737,7 +3736,7 @@ msgstr ""
 
 #: ../../operation/users/user_edit.php:137
 msgid "Default"
-msgstr ""
+msgstr "По умолчанию"
 
 #: ../../operation/users/user_edit.php:144
 #: ../../operation/users/user_edit.php:145
@@ -3746,7 +3745,7 @@ msgstr ""
 
 #: ../../operation/users/user_edit.php:166
 msgid "Change password"
-msgstr ""
+msgstr "Изменить пароль"
 
 #: ../../operation/users/user_search.php:63
 msgid "No users found"
@@ -3779,12 +3778,12 @@ msgstr ""
 #: ../../operation/messages/message.php:140
 #: ../../operation/messages/message.php:215
 msgid "Message"
-msgstr ""
+msgstr "Сообщение"
 
 #: ../../operation/messages/message.php:119
 #: ../../operation/messages/message.php:143
 msgid "Send message"
-msgstr ""
+msgstr "Отправить сообщение"
 
 #: ../../operation/messages/message.php:153
 msgid "Message sucessfully deleted"
@@ -3800,11 +3799,11 @@ msgstr ""
 
 #: ../../operation/messages/message.php:169
 msgid "Read"
-msgstr ""
+msgstr "Чтение"
 
 #: ../../operation/messages/message.php:169
 msgid "Sender"
-msgstr ""
+msgstr "Отправитель"
 
 #: ../../operation/messages/message.php:191
 msgid "No subject"
@@ -3820,7 +3819,7 @@ msgstr ""
 
 #: ../../operation/messages/message.php:222
 msgid "Reply"
-msgstr ""
+msgstr "Ответить"
 
 #: ../../operation/contracts/contract_detail.php:56
 #: ../../operation/contracts/contract_detail.php:87
@@ -3842,7 +3841,7 @@ msgstr ""
 
 #: ../../operation/contracts/contract_detail.php:220
 msgid "Begin"
-msgstr ""
+msgstr "Начало"
 
 #: ../../operation/slas/sla_detail.php:129
 msgid "SLA name"
@@ -3901,13 +3900,13 @@ msgstr ""
 
 #: ../../operation/kb/browse.php:48
 msgid "Categories"
-msgstr ""
+msgstr "Категории"
 
 #: ../../operation/kb/browse.php:99 ../../operation/kb/browse_data.php:76
 #: ../../operation/kb/manage_data.php:220
 #: ../../operation/kb/manage_data.php:285 ../../operation/kb/search.php:70
 msgid "Category"
-msgstr ""
+msgstr "Категория"
 
 #: ../../operation/kb/browse_data.php:46
 msgid "KB article review"
@@ -3915,7 +3914,7 @@ msgstr ""
 
 #: ../../operation/kb/browse_data.php:58
 msgid "Author"
-msgstr ""
+msgstr "Автор"
 
 #: ../../operation/kb/browse_data.php:73
 msgid "Wrote on "
@@ -3940,11 +3939,11 @@ msgstr ""
 
 #: ../../operation/kb/manage_data.php:208
 msgid "Data"
-msgstr ""
+msgstr "Данные"
 
 #: ../../operation/kb/manage_data.php:227
 msgid "Attach"
-msgstr ""
+msgstr "Вложить"
 
 #: ../../operation/kb/manage_data.php:230
 msgid "Need to create first"
@@ -3964,7 +3963,7 @@ msgstr ""
 
 #: ../../operation/kb/manage_cat.php:108
 msgid "Create a new category"
-msgstr ""
+msgstr "Создать новую категорию"
 
 #: ../../operation/kb/manage_cat.php:113
 msgid "Update existing category"
@@ -3977,3 +3976,4 @@ msgstr ""
 #: ../../operation/kb/search.php:42
 msgid "Free text search"
 msgstr ""
+

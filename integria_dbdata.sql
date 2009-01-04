@@ -49,6 +49,7 @@ INSERT INTO `tlanguage` VALUES ('el','Ελληνικά');
 INSERT INTO `tlanguage` VALUES ('fr','Français');
 INSERT INTO `tlanguage` VALUES ('ko','한국어');
 INSERT INTO `tlanguage` VALUES ('nl','Nederlands');
+INSERT INTO `tlanguage` VALUES ('ru','Русский');
 INSERT INTO `tlanguage` VALUES ('tr','Türkçe');
 
 INSERT INTO `tlink` VALUES  (0000000001,'Integria Project','http://integria.sourceforge.net'), (0000000002,'Artica ST','http://www.artica.es'),(0000000003,'Pandora FMS Project','http://pandora.sourceforge.net'),(0000000004,'Babel Project','http://babel.sourceforge.net'),(0000000005,'Google','http://www.google.com');
