@@ -77,7 +77,7 @@ if ($update_company) {
 
 // Delete company
 if ($delete_company) { // if delete
-	$id = (int) get_parameter ('delete');
+	$id = (int) get_parameter ('id');
 	$name = get_db_value ('name', 'tcompany', 'id', $id);
 	$sql= sprintf ('DELETE FROM tcompany WHERE id = %d', $id);
 	process_sql ($sql);

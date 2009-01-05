@@ -63,11 +63,11 @@ if ($update) {
 			id_product = %d, id_contract = %d, ip_address = "%s",
 			id_parent = %d, id_building = %d, serial_number = "%s",
 			part_number = "%s", id_manufacturer = %d, id_sla = %d,
-			cost = %f
+			cost = %f, confirmed = %d 
 			WHERE id = %d',
 			$name, $description, $id_product, $id_contract, $ip_address,
 			$id_parent, $id_building, $serial_number, $part_number,
-			$id_manufacturer, $id_sla, $cost, $id);
+			$id_manufacturer, $id_sla, $cost, $confirmed, $id);
 	$result = process_sql ($sql);
 	
 	/* Update contacts in inventory */
@@ -95,11 +95,11 @@ if ($create) {
 	
 	$sql = sprintf ('INSERT INTO tinventory (name, description, id_product,
 			id_contract, ip_address, id_parent, id_building, serial_number,
-			part_number, id_manufacturer, id_sla, cost)
-			VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s", %d, %d, %f)',
+			part_number, id_manufacturer, id_sla, cost, confirmed)
+			VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s", %d, %d, %f, %d)',
 			$name, $description, $id_product, $id_contract, $ip_address,
 			$id_parent, $id_building, $serial_number, $part_number,
-			$id_manufacturer, $id_sla, $cost);
+			$id_manufacturer, $id_sla, $cost, $confirmed);
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
 		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
@@ -156,7 +156,7 @@ if ($id) {
 	$id_building = $inventory['id_building'];
 	$serial_number = $inventory['serial_number'];
 	$part_number = $inventory['part_number'];
-	$confirmed = false;
+	$confirmed = $inventory['confirmed'];
 	$id_sla = $inventory['id_sla'];
 	$id_manufacturer = $inventory['id_manufacturer'];
 	$cost = $inventory['cost'];

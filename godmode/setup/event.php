@@ -62,7 +62,7 @@ foreach ($events as $event) {
 	case "SLA_MAX_RESOLUTION_NOTIFY":
 	case "SLA_MIN_RESPONSE_NOTIFY":
 	case "SLA_MAX_RESPONSE_NOTIFY":
-		$data[2] = __('Incident')." :".get_db_value ('titulo', 'tincidencia', 'id_incidencia'. $event["id_item"]);
+		$data[2] = __('Incident')." :".get_db_value ('titulo', 'tincidencia', 'id_incidencia', $event["id_item"]);
 		break;
 	case "SLA_MAX_OPEN_NOTIFY":
 		$data[2] = __('Group')." :".get_db_value ('nombre', 'tgrupo', 'id_grupo', $event["id_item"]);

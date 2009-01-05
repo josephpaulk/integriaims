@@ -1,3 +1,10 @@
+2008-01-05  Sancho Lerena  <slerena@artica.es>
+
+	*  operation/inventories/inventory_detail.php
+	operation/companies/company_detail.php
+	godmode/setup/event.php: Solved small problems because several
+	typos.
+
 2009-01-04  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/languages/ru.mo, include/languages/ru.mo: Added Russian
