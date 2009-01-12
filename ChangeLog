@@ -1,3 +1,9 @@
+2009-01-12  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/functions_graph.php: added control to avoid notice
+	  messages when there is no data to show, fixes bug #2501310.
+	  Cleaned code with spaces between braces and brackets.
+
 2008-01-05  Sancho Lerena  <slerena@artica.es>
 
 	*  operation/inventories/inventory_detail.php

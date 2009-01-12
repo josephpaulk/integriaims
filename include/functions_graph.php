@@ -18,11 +18,11 @@
 // GNU Lesser General Public License for more details.
 
 
-if (file_exists("config.php")){
+if (file_exists("config.php")) {
 	include_once ("config.php");
 	include_once ("functions_fsgraph.php");
 }
-elseif (file_exists("include/config.php")){
+elseif (file_exists("include/config.php")) {
 	include_once ("include/config.php");
 	include_once ("include/functions_fsgraph.php");
 }
@@ -31,14 +31,14 @@ elseif (file_exists("include/config.php")){
 // Draw a simple pie graph with incidents, by assigned user
 // ===============================================================================
 
-function incident_peruser ($width, $height){
+function incident_peruser ($width, $height) {
 	require ("../include/config.php");
 	
 	$res = mysql_query("SELECT * FROM tusuario");
-	while ($row=mysql_fetch_array($res)){
+	while ($row=mysql_fetch_array($res)) {
 		$id_user = $row["id_usuario"];
 		$datos = get_db_sqlf ("SELECT COUNT(id_usuario) FROM tincidencia WHERE id_usuario = '$id_user'");
-		if ($datos > 0){
+		if ($datos > 0) {
 			$data[] = $datos;
 			$legend[] = $id_user;
 		} 
@@ -53,7 +53,7 @@ function incident_peruser ($width, $height){
 // Draw a simple pie graph with reported workunits for a specific TASK
 // ===============================================================================
 
-function graph_workunit_task ($width, $height, $id_task, $flash = 0){
+function graph_workunit_task ($width, $height, $id_task, $flash = 0) {
 	global $config;
 	$data = array();
 	$legend = array();
@@ -62,12 +62,12 @@ function graph_workunit_task ($width, $height, $id_task, $flash = 0){
 					WHERE tworkunit_task.id_task = $id_task AND 
 					tworkunit_task.id_workunit = tworkunit.id 
 					GROUP BY id_user");
-	while ($row=mysql_fetch_array($res)){
+	while ($row=mysql_fetch_array($res)) {
 		$data[] = $row[0];
 		$legend[] = $row[1];
 	} 
 	
-	if ($flash == 1){ 
+	if ($flash == 1) { 
 		return fs_3d_pie_chart ($data, $legend, $width, $height);
 	} elseif (isset($data))
 		generic_pie_graph ($width, $height, $data, $legend);
@@ -80,10 +80,10 @@ function graph_workunit_task ($width, $height, $id_task, $flash = 0){
 // Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
 // ===============================================================================
 
-function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 0, $flash = 0 ){
+function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 0, $flash = 0) {
 	global $config;
 
-	if ($date_to == 0){
+	if ($date_to == 0) {
 		$date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
 	}
 
@@ -97,22 +97,29 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 					tproject.id = ttask.id_project 
 					GROUP BY id_task ORDER BY SUM(duration) DESC");
 
-	while ($row = mysql_fetch_array($res)){
-		$data[] = $row[0];
-		//$legend[] = clean_flash_string ($row[4]." ".$row[3]);
-		$legend[] = substr(clean_flash_string ($row[3]),0,25);
-	} 
-
-
-	if ($flash == 1){
-		return fs_hbar_chart ($data, $legend, $width, $height);		
-		// echo fs_3d_pie_chart ($data, $legend, $width, $height);
+	if (mysql_fetch_array($res) != NULL) {
+		while ($row = mysql_fetch_array($res)) {
+			$data[] = $row[0];
+			//$legend[] = clean_flash_string ($row[4]." ".$row[3]);
+			$legend[] = substr(clean_flash_string ($row[3]),0,25);
+		}
+	} else {
+		$data = NULL;
 	}
-	else {
-		if (isset($data))
-			generic_pie_graph ($width, $height, $data, $legend);
-		else 
-			graphic_error();
+
+	if ($data == NULL) {
+		echo __("There is no data to show");
+	} else {
+		if ($flash == 1) {
+			return fs_hbar_chart ($data, $legend, $width, $height);		
+			// echo fs_3d_pie_chart ($data, $legend, $width, $height);
+		}
+		else {
+			if (isset($data))
+				generic_pie_graph ($width, $height, $data, $legend);
+			else 
+				graphic_error();
+		}
 	}
 }
 
@@ -121,13 +128,13 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 // Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
 // ===============================================================================
 
-function graph_workunit_project_user ($width, $height, $id_user, $date_from, $date_to = 0, $flash = 0){
+function graph_workunit_project_user ($width, $height, $id_user, $date_from, $date_to = 0, $flash = 0) {
 	global $config;
 
 	$data= array();
 	$legend = array();
 
-	if ($date_to == 0){
+	if ($date_to == 0) {
 		$date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
 	}
 
@@ -140,12 +147,12 @@ function graph_workunit_project_user ($width, $height, $id_user, $date_from, $da
 					tworkunit_task.id_task = ttask.id AND
 					tproject.id = ttask.id_project 
 					GROUP BY tproject.name ORDER BY SUM(duration) DESC");
-	while ($row=mysql_fetch_array($res)){
+	while ($row=mysql_fetch_array($res)) {
 		$data[] = $row[0];
 		$legend[] = clean_flash_string ($row[1]);
 	} 
 	 
-	if ($flash == 1){
+	if ($flash == 1) {
 		return fs_hbar_chart ($data, $legend, $width, $height);		
 	} else {
 		if (isset($data))
@@ -226,7 +233,7 @@ function progress_bar ($progress, $width, $height) {
    	}
 
    	Header("Content-type: image/png");
-	if ($progress > 100 || $progress < 0){
+	if ($progress > 100 || $progress < 0) {
 		// HACK: This report a static image... will increase render in about 200% :-) useful for
 		// high number of realtime statusbar images creation (in main all agents view, for example
 		$imgPng = imageCreateFromPng("../images/outlimits.png");
@@ -237,7 +244,7 @@ function progress_bar ($progress, $width, $height) {
    		drawRating($progress,$width,$height);
 }
 
-function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue, $labela, $labelb){
+function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue, $labela, $labelb) {
 	include ("../include/config.php");
 	
 	// $ratingA, $ratingB, $ratingA_leg, $ratingB_leg;
@@ -258,7 +265,7 @@ function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue,
 
 	$margin_up = 2;
 	$max_value = $maxvalue;
-	if ($mode != 2){
+	if ($mode != 2) {
 		$size_per = ($max_value / ($width-40));
 	} else {
 		$size_per = ($max_value / ($width));
@@ -274,7 +281,7 @@ function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue,
 	// First rectangle
 	if ($size_per == 0)
 		$size_per = 1;
-	if ($mode != 2){
+	if ($mode != 2) {
 
 
 
@@ -294,7 +301,7 @@ function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue,
 		$legend = $ratingA;
 
 	}
-	if ($mode == 0){ // With strips
+	if ($mode == 0) { // With strips
 		// Draw limits
 		$risk_low =  ($config_risk_low / $size_per) + 40;
 		$risk_med =  ($config_risk_med / $size_per) + 40;
@@ -319,7 +326,7 @@ function generic_pie_graph ($width=300, $height=200, $data, $legend) {
 	require_once '../include/Image/Graph.php';
 	
 	error_reporting (0);
-	if (sizeof($data) > 0){
+	if (sizeof($data) > 0) {
 		// create the graph
 		$driver=& Image_Canvas::factory('png',array('width'=>$width,'height'=>$height,'antialias' => 'native'));
 		$Graph = & Image_Graph::factory('graph', $driver);
@@ -340,7 +347,7 @@ function generic_pie_graph ($width=300, $height=200, $data, $legend) {
 		// Create the dataset
 		// Merge data into a dataset object (sancho)
 		$Dataset1 =& Image_Graph::factory('dataset');
-		for ($a=0;$a < sizeof($data); $a++){
+		for ($a=0;$a < sizeof($data); $a++) {
 			$Dataset1->addPoint(str_pad($legend[$a],15), $data[$a]);
 		}
 		$Plot =& $Plotarea->addNew('pie', $Dataset1);
@@ -381,11 +388,11 @@ function generic_pie_graph ($width=300, $height=200, $data, $legend) {
 // Pure = 0 for no legend, fullscreen graph
 // ===========================================================================
 
-function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max=100, $pure = 1){
+function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max=100, $pure = 1) {
 	require_once 'Image/Graph.php';
 	include ("../include/config.php");
 	
-	if ($max <= $config_risk_high){
+	if ($max <= $config_risk_high) {
 		$max = $config_risk_high+1;
 	}
 	
@@ -399,7 +406,7 @@ function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max
 	$Graph->setFont($Font);
 
 	// create the plotarea
-	if ($pure == 0){
+	if ($pure == 0) {
 		$Graph->add(
 				Image_Graph::vertical(
 					$Plotarea = Image_Graph::factory('plotarea'),
@@ -478,7 +485,7 @@ function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max
 	$Marker->setFontSize(7);
 	$Marker->setFontColor('black');
 	// create a pin-point marker type
-	if ($pure == 0){
+	if ($pure == 0) {
 		$PointingMarker =& $Plot->addNew('Image_Graph_Marker_Pointing_Angular', array(20, &$Marker));
 		// and use the marker on the plot
 		$Plot->setMarker($PointingMarker);
@@ -503,7 +510,7 @@ function generic_bar_graph ( $width =380, $height = 200, $data, $legend) {
 	include ("../include/config.php");
 	require_once 'Image/Graph.php';
 	
-	if (sizeof($data) > 10){
+	if (sizeof($data) > 10) {
 		$height = sizeof($legend) * 20;
 	}
 
@@ -525,7 +532,7 @@ function generic_bar_graph ( $width =380, $height = 200, $data, $legend) {
 	// Create the dataset
 	// Merge data into a dataset object (sancho)
 	$Dataset1 =& Image_Graph::factory('dataset');
-	for ($a=0;$a < sizeof($data); $a++){
+	for ($a=0;$a < sizeof($data); $a++) {
 		$Dataset1->addPoint(substr($legend[$a],0,22), $data[$a]);
 	}
 	$Plot =& $Plotarea->addNew('bar', $Dataset1);
@@ -538,21 +545,21 @@ function generic_bar_graph ( $width =380, $height = 200, $data, $legend) {
 }
 
 
-function generic_area_graph ($data, $data_label, $width, $height){
+function generic_area_graph ($data, $data_label, $width, $height) {
 	require_once 'Image/Graph.php';
 	include ("../include/config.php");
 	
 	$color ="#437722"; 
 	
 	$mymax = 0;
-	for ($ax=0; $ax < sizeof($data); $ax++){
+	for ($ax=0; $ax < sizeof($data); $ax++) {
 		if ($data > $mymax)
 			$mymax = $data[$ax];
 			//echo $data_label[$ax]. " " .$data[$ax]."<br>";
 	}	
 
 	// Create graph 
-	if (sizeof($data) > 1){
+	if (sizeof($data) > 1) {
 		// Create graph
 		// create the graph
 		$Graph =& Image_Graph::factory('graph', array($width, $height));
@@ -569,7 +576,7 @@ function generic_area_graph ($data, $data_label, $width, $height){
 		// Create the dataset
 		// Merge data into a dataset object (sancho)
 		$Dataset =& Image_Graph::factory('dataset');
-		for ($a=0;$a < sizeof($data); $a++){
+		for ($a=0;$a < sizeof($data); $a++) {
 			$Dataset->addPoint(substr($data_label[$a],5,5), round($data[$a],1));
 		}
 		$Plot =& $Plotarea->addNew('area', array(&$Dataset));
@@ -613,7 +620,7 @@ function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $wi
 		$second_data = -1;
 	
 	$maxvalue =0;
-	for ($ax=0;$ax < sizeof($data1); $ax++){
+	for ($ax=0;$ax < sizeof($data1); $ax++) {
 		if ($data1[$ax] > $maxvalue)
 			$maxvalue = $data1[$ax];
 		if ((isset($data2[$ax])) AND ($data2[$ax] > $maxvalue))
@@ -638,14 +645,14 @@ function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $wi
 		$Plotarea->addNew('Image_Graph_Grid_Polar', IMAGE_GRAPH_AXIS_Y);
 		$DS1 =& Image_Graph::factory('dataset');
 		$DS2 =& Image_Graph::factory('dataset');
-		for ($a=0;$a < sizeof($data1); $a++){
+		for ($a=0;$a < sizeof($data1); $a++) {
 			$DS1->addPoint($datalabel[$a],$data1[$a]);
 			if ($second_data != -1)
 				$DS2->addPoint($datalabel[$a],$data2[$a]);
 		}
 		$Plot =& $Plotarea->addNew('Image_Graph_Plot_Radar', $DS1);
 		$Plot->setTitle($label1);
-		if ($second_data!= -1){		
+		if ($second_data!= -1) {		
 			$Plot2 =& $Plotarea->addNew('Image_Graph_Plot_Radar', $DS2);
 			$Plot2->setTitle($label2);
 			$Plot2->setLineColor('red@0.4');
@@ -667,10 +674,10 @@ function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $wi
 }
 
 
-function project_tree ($id_project, $id_user){
+function project_tree ($id_project, $id_user) {
 	include ("../include/config.php");
 	$config["id_user"] = $id_user;
-	if (user_belong_project ($id_user, $id_project)==0){
+	if (user_belong_project ($id_user, $id_project)==0) {
 		audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
 		include ($config["homedir"]."/general/noaccess.php");
 		exit;
@@ -688,8 +695,8 @@ function project_tree ($id_project, $id_user){
 	$total_task = 0;
 	$sql2="SELECT * FROM ttask WHERE id_project = $id_project"; 
 	if ($result2=mysql_query($sql2))	
-	while ($row2=mysql_fetch_array($result2)){
-		if ((user_belong_task ($id_user, $row2["id"]) == 1)){
+	while ($row2=mysql_fetch_array($result2)) {
+		if ((user_belong_task ($id_user, $row2["id"]) == 1)) {
 			$task[$total_task] = $row2["id"];
 			$task_name[$total_task] = $row2["name"];
 			$task_parent[$total_task] = $row2["id_parent_task"];
@@ -705,21 +712,21 @@ function project_tree ($id_project, $id_user){
 	fwrite ($dotfile, "	  size=\"9,12\";\n");
 	fwrite ($dotfile, "	  node[fontsize=".$config['fontsize']."];\n");
 	fwrite ($dotfile, '	  project [label="'. wordwrap($project_name,12,'\\n').'",shape="ellipse", style="filled", color="grey"];'."\n");
-	for ($ax=0; $ax < $total_task; $ax++){
+	for ($ax=0; $ax < $total_task; $ax++) {
 		fwrite ($dotfile, 'TASK'.$task[$ax].' [label="'.wordwrap($task_name[$ax],12,'\\n').'"];');
 		fwrite ($dotfile, "\n");
 	}
 	
 	// Make project first parent task relation visible
-	for ($ax=0; $ax < $total_task; $ax++){
-		if ($task_parent[$ax] == 0){
+	for ($ax=0; $ax < $total_task; $ax++) {
+		if ($task_parent[$ax] == 0) {
 			fwrite ($dotfile, 'project -> TASK'.$task[$ax].';');
 			fwrite ($dotfile, "\n");
 		}
 	}
 	// Make task-subtask parent task relation visible
-	for ($ax=0; $ax < $total_task; $ax++){
-		if ($task_parent[$ax] != 0){
+	for ($ax=0; $ax < $total_task; $ax++) {
+		if ($task_parent[$ax] != 0) {
 			fwrite ($dotfile, 'TASK'.$task_parent[$ax].' -> TASK'.$task[$ax].';');
 			fwrite ($dotfile, "\n");
 		}
@@ -739,7 +746,7 @@ function project_tree ($id_project, $id_user){
 	//unlink ($dotfilename);
 }
 
-function all_project_tree ($id_user, $completion, $project_kind){
+function all_project_tree ($id_user, $completion, $project_kind) {
 	include ("../include/config.php");
 	$config["id_user"] = $id_user;
 
@@ -765,8 +772,8 @@ function all_project_tree ($id_user, $completion, $project_kind){
 	else
 		$sql1="SELECT * FROM tproject WHERE disabled = 0 AND end != '0000-00-00 00:00:00'"; 
 	if ($result1=mysql_query($sql1))	
-	while ($row1=mysql_fetch_array($result1)){
-		if ((user_belong_project ($id_user, $row1["id"],1 ) == 1)){
+	while ($row1=mysql_fetch_array($result1)) {
+		if ((user_belong_project ($id_user, $row1["id"],1 ) == 1)) {
 			$project[$total_project] = $row1["id"];
 			$project_name[$total_project] = $row1["name"];
 			if ($completion < 0)
@@ -776,8 +783,8 @@ function all_project_tree ($id_user, $completion, $project_kind){
 			else
 				$sql2="SELECT * FROM ttask WHERE completion = 100 AND id_project = ".$row1["id"]; 
 			if ($result2=mysql_query($sql2))
-			while ($row2=mysql_fetch_array($result2)){
-				if ((user_belong_task ($id_user, $row2["id"],1) == 1)){
+			while ($row2=mysql_fetch_array($result2)) {
+				if ((user_belong_task ($id_user, $row2["id"],1) == 1)) {
 					$task[$total_task] = $row2["id"];
 					$task_name[$total_task] = $row2["name"];
 					$task_parent[$total_task] = $row2["id_parent_task"];
@@ -791,12 +798,12 @@ function all_project_tree ($id_user, $completion, $project_kind){
 		}
 	}
 	// Add project items
-	for ($ax=0; $ax < $total_project; $ax++){
+	for ($ax=0; $ax < $total_project; $ax++) {
 		fwrite ($dotfile, 'PROY'.$project[$ax].' [label="'.wordwrap($project_name[$ax],12,'\\n').'", style="filled", color="grey", URL="'.$config["base_url"].'/index.php?sec=projects&sec2=operation/projects/task&id_project='.$project[$ax].'"];');
 		fwrite ($dotfile, "\n");
 	}
 	// Add task items
-	for ($ax=0; $ax < $total_task; $ax++){
+	for ($ax=0; $ax < $total_task; $ax++) {
 
 		$temp = 'TASK'.$task[$ax].' [label="'.wordwrap($task_name[$ax],12,'\\n').'"';
 		if ($task_completion[$ax] < 10)
@@ -815,15 +822,15 @@ function all_project_tree ($id_user, $completion, $project_kind){
 	}
 
 	// Make project attach to user "me"
-	for ($ax=0; $ax < $total_project; $ax++){
+	for ($ax=0; $ax < $total_project; $ax++) {
 		fwrite ($dotfile, 'me -> PROY'.$project[$ax].';');
 		fwrite ($dotfile, "\n");
 		
 	}
 
 	// Make project first parent task relation visible
-	for ($ax=0; $ax < $total_task; $ax++){
-		if ($task_parent[$ax] == 0){
+	for ($ax=0; $ax < $total_task; $ax++) {
+		if ($task_parent[$ax] == 0) {
 			fwrite ($dotfile, 'PROY'.$task_project[$ax].' -> TASK'.$task[$ax].';');
 			fwrite ($dotfile, "\n");
 		}
@@ -831,8 +838,8 @@ function all_project_tree ($id_user, $completion, $project_kind){
 
 	
 	// Make task-subtask parent task relation visible
-	for ($ax=0; $ax < $total_task; $ax++){
-		if ($task_parent[$ax] != 0){
+	for ($ax=0; $ax < $total_task; $ax++) {
+		if ($task_parent[$ax] != 0) {
 			fwrite ($dotfile, 'TASK'.$task_parent[$ax].' -> TASK'.$task[$ax].';');
 			fwrite ($dotfile, "\n");
 		}
