@@ -113,6 +113,10 @@ echo '</form>';
 form_search_incident ();
 
 unset ($table);
+
+echo '<div id="loading" style="display:none">'.__('Loading');
+echo '... <img src="images/wait.gif" /></div>';
+
 $table->class = 'hide result_table listing';
 $table->width = '100%';
 $table->id = 'incident_search_result_table';
@@ -186,9 +190,7 @@ function tab_loaded (event, tab) {
 				null,
 				function (data) {
 					result_msg (data);
-					$(tr).fadeOut ('normal', function () {
-						$(this).empty ();
-					});
+					$(tr).hide ().empty ();
 				}
 			);
 			
@@ -270,10 +272,10 @@ $(document).ready (function () {
 	
 	$("#saved_searches").change (function () {
 		if (this.value == 0) {
-			$("#delete_custom_search").fadeOut ();
+			$("#delete_custom_search").hide ();
 			return;
 		}
-		$("#delete_custom_search").fadeIn ();
+		$("#delete_custom_search").show ();
 		
 		values = Array ();
 		values.push ({name: "page", value: "operation/incidents/incident_search"});
@@ -301,7 +303,7 @@ $(document).ready (function () {
 			values,
 			function (data, status) {
 				result_msg (data);
-				$("#delete_custom_search").fadeOut ();
+				$("#delete_custom_search").hide ();
 				$("#saved_searches").attr ("value", 0);
 				$("option[value="+id_search+"]", "#saved_searches").remove ();
 			},
@@ -329,25 +331,23 @@ $(document).ready (function () {
 					value: "operation/incidents/incident_search"});
 			val.push ({name: "show_stats",
 					value: 1});
-			$("#incident-stats").fadeOut ('normal', function () {
-				$(this).empty ();
-				jQuery.post ("ajax.php",
-					val,
-					function (data, status) {
-						$("#incident-stats").empty ().append (data).slideDown ();
-						if (first_search) {
-							$("#search_status").attr ("value", 0);
-							first_search = false;
-						}
-						$(".incident_link").click (function () {
-							id = this.id.split ("_").pop ();
-							check_incident (id);
-							return false;
-						});
-					},
-					"html"
-				);
-			});
+			$("#incident-stats").hide ().empty ();
+			jQuery.post ("ajax.php",
+				val,
+				function (data, status) {
+					$("#incident-stats").empty ().append (data).slideDown ();
+					if (first_search) {
+						$("#search_status").attr ("value", 0);
+						first_search = false;
+					}
+					$(".incident_link").click (function () {
+						id = this.id.split ("_").pop ();
+						check_incident (id);
+						return false;
+					});
+				},
+				"html"
+			);
 		}
 	);
 <?php if ($do_search_news) : ?>

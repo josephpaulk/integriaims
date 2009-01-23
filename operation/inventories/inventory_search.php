@@ -206,6 +206,10 @@ echo '</form>';
 echo '<a class="show_advanced_search" href="index.php">'.__('Advanced search').' >></a>';
 
 unset ($table);
+
+echo '<div id="loading" style="display:none">'.__('Loading');
+echo '... <img src="images/wait.gif" /></div>';
+
 $table->class = 'hide result_table listing';
 $table->width = '100%';
 $table->id = 'inventory_search_result_table';

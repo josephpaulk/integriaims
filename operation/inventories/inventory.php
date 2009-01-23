@@ -207,10 +207,10 @@ $(document).ready (function () {
 	
 	$("#saved_searches").change (function () {
 		if (this.value == 0) {
-			$("#delete_custom_search").fadeOut ();
+			$("#delete_custom_search").hide ();
 			return;
 		}
-		$("#delete_custom_search").fadeIn ();
+		$("#delete_custom_search").show ();
 		
 		values = Array ();
 		values.push ({name: "page", value: "operation/inventories/inventory_search"});
@@ -238,7 +238,7 @@ $(document).ready (function () {
 			values,
 			function (data, status) {
 				result_msg (data);
-				$("#delete_custom_search").fadeOut ();
+				$("#delete_custom_search").hide ();
 				$("#saved_searches").attr ("value", 0);
 				$("option[value="+id_search+"]", "#saved_searches").remove ();
 			},
@@ -248,7 +248,7 @@ $(document).ready (function () {
 	});
 	
 	$("#inventory_search_form").submit (function () {
-		$("#saved_searches_table td:gt(1)").fadeIn ();
+		$("#saved_searches_table td:gt(1)").show ();
 	});
 	
 	$("#goto-inventory-form").submit (function () {
@@ -270,16 +270,14 @@ $(document).ready (function () {
 					value: "operation/inventories/inventory_search"});
 			val.push ({name: "show_stats",
 					value: 1});
-			$("#inventories-stats").fadeOut ('normal', function () {
-				$(this).empty ();
-				jQuery.post ("ajax.php",
-					val,
-					function (data, status) {
-						$("#inventories-stats").empty ().append (data).slideDown ();
-					},
-					"html"
-				);
-			});
+			$("#inventories-stats").hide ().empty ();
+			jQuery.post ("ajax.php",
+				val,
+				function (data, status) {
+					$("#inventories-stats").empty ().append (data).slideDown ();
+				},
+				"html"
+			);
 		}
 	);
 });

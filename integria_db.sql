@@ -552,6 +552,15 @@ CREATE TABLE `tcompany_contact` (
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE `tincident_contact_creator` (
+  `id_incident` bigint(20) unsigned NOT NULL,
+  `id_contact` mediumint(8) unsigned NOT NULL,
+  FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
+     ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_contact`) REFERENCES tcompany_contact(`id`)
+     ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 CREATE TABLE `tcontract` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',

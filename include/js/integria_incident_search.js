@@ -4,33 +4,32 @@ var parent_dialog = "";
 function configure_user_search_form () {
 	$("#user_search_result_table").tablesorter ();
 	$("#user_search_form").submit (function () {
-		$("#user_search_result_table tbody").fadeOut ('normal', function (){
-			values = get_form_input_values ("user_search_form");
-			values.push ({name: "page",
-				value: "operation/users/user_search"});
-			jQuery.post ("ajax.php",
-				values,
-				function (data, status) {
-					$("#user_search_result_table").removeClass ("hide");
-					$("#user_search_result_table tbody").empty ().append (data);
-					$("#user_search_result_table tbody tr").click (function () {
-						user_id = this.id.slice (7); /* Remove "result-" */
-						user_realname = $(this).children (":eq(1)").text ();
-						$(dialog+"#button-usuario_name").attr ("value", user_realname);
-						$(dialog+"#hidden-usuario_form").attr ("value", user_id);
-						$("#dialog-user-search").dialog ("close").empty ();
+		$("#user_search_result_table tbody").hide ();
+		values = get_form_input_values ("user_search_form");
+		values.push ({name: "page",
+			value: "operation/users/user_search"});
+		jQuery.post ("ajax.php",
+			values,
+			function (data, status) {
+				$("#user_search_result_table").removeClass ("hide");
+				$("#user_search_result_table tbody").empty ().append (data);
+				$("#user_search_result_table tbody tr").click (function () {
+					user_id = this.id.slice (7); /* Remove "result-" */
+					user_realname = $(this).children (":eq(1)").text ();
+					$(dialog+"#button-usuario_name").attr ("value", user_realname);
+					$(dialog+"#hidden-usuario_form").attr ("value", user_id);
+					$("#dialog-user-search").dialog ("close").empty ();
+				});
+				$("#user_search_result_table").trigger ("update")
+					.tablesorterPager ({
+						container: $("#users-pager"),
+						size: 10
 					});
-					$("#user_search_result_table").trigger ("update")
-						.tablesorterPager ({
-							container: $("#users-pager"),
-							size: 10
-						});
-					$("#user_search_result_table tbody").fadeIn ();
-					$("#users-pager").removeClass ("hide").fadeIn ();
-				},
-				"html"
-			);
-		});
+				$("#user_search_result_table tbody").show ();
+				$("#users-pager").removeClass ("hide").show ();
+			},
+			"html");
+		
 		return false;
 	});
 }
@@ -72,18 +71,14 @@ function configure_inventory_buttons (form, dialog) {
 				});
 				
 				if (exists) {
-					$("#dialog-search-inventory #inventory_search_result").fadeOut ('normal',
-						function () {
-						$(this).empty ().append ('<h3 class="error">Already added</h3>').fadeIn ();
-					});
+					$("#dialog-search-inventory #inventory_search_result").empty ()
+						.append ('<h3 class="error">Already added</h3>');
 					return;
 				}
 				$(parent_dialog+"#incident_inventories").append ($('<option value="'+id+'">'+name+'</option>'));
 				$(parent_dialog+"#"+form).append ($('<input type="hidden" value="'+id+'" class="selected-inventories" name="inventories[]" />'));
-				$("#dialog-search-inventory #inventory_search_result").fadeOut ('normal',
-					function () {
-						$(this).empty ().append ('<h3 class="suc">Added</h3>').fadeIn ();
-				});
+				$("#dialog-search-inventory #inventory_search_result").empty ()
+					.append ('<h3 class="suc">Added</h3>');
 			}
 		);
 	});
@@ -209,9 +204,9 @@ function configure_incident_form (enable_ajax_form) {
 						$(".result").empty ().append (data).slideDown ();
 						$("#dialog-incident").dialog ("close");
 						if ($("#incident_status").attr ("value") == 6) {
-							$("[name=kb_form]").fadeIn ();
+							$("[name=kb_form]").show ();
 						} else {
-							$("[name=kb_form]").fadeOut ();
+							$("[name=kb_form]").hide ();
 						}
 					});
 				},
@@ -255,38 +250,39 @@ function configure_incident_search_form (page_size, row_click_callback, search_c
 		}
 	});
 	$(dialog+"#search_incident_form").submit (function () {
+		$(dialog+"div#loading").show ();
 		$(dialog+"#incident_search_result_table").removeClass ("hide");
 		values = Array ();
 		values = get_form_input_values (this);
 		values.push ({name: "page",
 				value: "operation/incidents/incident_search"});
-		$(dialog+"table#incident_search_result_table tbody").fadeOut ('normal', function () {
-			$(this).empty ();
-			jQuery.post ("ajax.php",
-				values,
-				function (data, status) {
-					$(dialog+"table#incident_search_result_table tbody").empty ().append (data);
-					$(dialog+"#incident_search_result_table tbody tr").click (function () {
-						id = this.id.split ("-").pop ();
-						name = $(this).children (":eq(2)").html ();
-						row_click_callback (id, name);
+		$(dialog+"table#incident_search_result_table tbody").hide ().empty ();
+		jQuery.post ("ajax.php",
+			values,
+			function (data, status) {
+				$(dialog+"table#incident_search_result_table tbody").empty ().append (data);
+				$(dialog+"#incident_search_result_table tbody tr").click (function () {
+					id = this.id.split ("-").pop ();
+					name = $(this).children (":eq(2)").html ();
+					row_click_callback (id, name);
+				});
+				$(dialog+"table#incident_search_result_table").trigger ("update")
+					.tablesorterPager ({
+						container: $(dialog+"#pager"),
+						size: page_size,
+						headers: {
+							0: "currency"
+						}
 					});
-					$(dialog+"table#incident_search_result_table").trigger ("update")
-						.tablesorterPager ({
-							container: $(dialog+"#pager"),
-							size: page_size,
-							headers: {
-								0: "currency"
-							}
-						});
-					$(dialog+"table#incident_search_result_table tbody").fadeIn ();
-					$(dialog+"#pager").removeClass ("hide").fadeIn ();
-					if (search_callback)
-						search_callback ($(dialog+"#search_incident_form"));
-				},
-				"html"
-				);
-		});
+				$(dialog+"table#incident_search_result_table tbody").show ();
+				$(dialog+"#pager").removeClass ("hide").show ();
+				$(dialog+"div#loading").hide ();
+				if (search_callback)
+					search_callback ($(dialog+"#search_incident_form"));
+			},
+			"html"
+			);
+		
 		return false;
 	});
 	$(dialog+"#incident_search_result_table tr th :eq(0)").addClass ("{sorter: 'text'}");
@@ -345,41 +341,41 @@ function configure_inventory_search_form (page_size, incident_click_callback, se
 	});
 	$(dialog+"#inventory_search_result_table").tablesorter ();
 	$(dialog+"#inventory_search_form").submit (function () {
-		$(dialog+"#inventory_search_result_table tbody").fadeOut ('normal',
-			function () {
-			values = get_form_input_values ("inventory_search_form");
-			values.push ({name: "page",
-				value: "operation/inventories/inventory_search"});
-			if (dialog != "") {
-				values.push ({name: "short_table",
-					value: 1});
-			}
-			jQuery.post ("ajax.php",
-				values,
-				function (data, status) {
-					$(dialog+"#inventory_search_result_table").removeClass ("hide");
-					$(dialog+"#inventory_search_result_table tbody").empty ().append (data);
-					$(dialog+"#inventory_search_result_table tbody tr").click (function () {
-						id = this.id.split ("-").pop ();
-						name = $(this).children (":eq(1)").text ();
-						incident_click_callback (id, name);
+		$(dialog+"div#loading").show ();
+		$(dialog+"#inventory_search_result_table tbody").hide ();
+		
+		values = get_form_input_values ("inventory_search_form");
+		values.push ({name: "page",
+			value: "operation/inventories/inventory_search"});
+		if (dialog != "") {
+			values.push ({name: "short_table",
+				value: 1});
+		}
+		jQuery.post ("ajax.php",
+			values,
+			function (data, status) {
+				$(dialog+"#inventory_search_result_table").removeClass ("hide");
+				$(dialog+"#inventory_search_result_table tbody").empty ().append (data);
+				$(dialog+"#inventory_search_result_table tbody tr").click (function () {
+					id = this.id.split ("-").pop ();
+					name = $(this).children (":eq(1)").text ();
+					incident_click_callback (id, name);
+				});
+				$(dialog+"#inventory_search_result_table").trigger ("update")
+					.tablesorterPager ({
+						container: $(dialog+"#inventory-pager"),
+						size: page_size,
+						headers: {
+							0: "currency"
+						}
 					});
-					$(dialog+"#inventory_search_result_table").trigger ("update")
-						.tablesorterPager ({
-							container: $(dialog+"#inventory-pager"),
-							size: page_size,
-							headers: {
-								0: "currency"
-							}
-						});
-					$(dialog+"#inventory_search_result_table tbody").fadeIn ();
-					$(dialog+"#inventory-pager").removeClass ("hide").fadeIn ();
-					if (search_callback)
-						search_callback ($(dialog+"#inventory_search_form"));
-				},
-				"html"
-			);
-		});
+				$(dialog+"#inventory_search_result_table tbody").show ();
+				$(dialog+"#inventory-pager").removeClass ("hide").show ();
+				$(dialog+"div#loading").hide ();
+				if (search_callback)
+					search_callback ($(dialog+"#inventory_search_form"));
+			},
+			"html");
 		return false;
 	});
 }
@@ -505,11 +501,9 @@ function configure_file_form () {
 			$('#upload_result').html ('Submitting...');
 		},
 		success: function (data) {
-			$('#upload_result').fadeOut ('fast', function () {
-				$(this).empty ().html (data).fadeIn ();
-				if (tabs != undefined && tabs.data ("selected.tabs") == 6)
-					$("#tabs > ul").tabs ("load", 6);
-			});
+			$('#upload_result').hide ().empty ().html (data).show ();
+			if (tabs != undefined && tabs.data ("selected.tabs") == 6)
+				$("#tabs > ul").tabs ("load", 6);
 		}
 	});
 }
@@ -603,36 +597,34 @@ function configure_inventory_side_menu (id_inventory, refresh_menu) {
 function configure_contact_search_form (page_size, contact_click_callback) {
 	$(dialog+"#contact_search_result_table").tablesorter ();
 	$(dialog+"#contact_search_form").submit (function () {
-		$(dialog+"#contact_search_result_table tbody").fadeOut ('normal',
-			function () {
-			values = get_form_input_values ("contact_search_form");
-			values.push ({name: "page",
-				value: "operation/inventories/inventory_contacts_search"});
-			if (dialog != "") {
-				values.push ({name: "short_table",
-					value: 1});
-			}
-			jQuery.post ("ajax.php",
-				values,
-				function (data, status) {
-					$(dialog+"#contact_search_result_table").removeClass ("hide");
-					$(dialog+"#contact_search_result_table tbody").empty ().append (data);
-					$(dialog+"#contact_search_result_table tbody tr").click (function () {
-						id = this.id.split ("-").pop ();
-						name = $(this).children (":eq(0)").text ();
-						contact_click_callback (id, name);
+		$(dialog+"#contact_search_result_table tbody").hide ();
+		values = get_form_input_values ("contact_search_form");
+		values.push ({name: "page",
+			value: "operation/inventories/inventory_contacts_search"});
+		if (dialog != "") {
+			values.push ({name: "short_table",
+				value: 1});
+		}
+		jQuery.post ("ajax.php",
+			values,
+			function (data, status) {
+				$(dialog+"#contact_search_result_table").removeClass ("hide");
+				$(dialog+"#contact_search_result_table tbody").empty ().append (data);
+				$(dialog+"#contact_search_result_table tbody tr").click (function () {
+					id = this.id.split ("-").pop ();
+					name = $(this).children (":eq(0)").text ();
+					contact_click_callback (id, name);
+				});
+				$(dialog+"#contact_search_result_table").trigger ("update")
+					.tablesorterPager ({
+						container: $(dialog+"#contact-pager"),
+						size: page_size
 					});
-					$(dialog+"#contact_search_result_table").trigger ("update")
-						.tablesorterPager ({
-							container: $(dialog+"#contact-pager"),
-							size: page_size
-						});
-					$(dialog+"#contact_search_result_table tbody").fadeIn ();
-					$(dialog+"#contact-pager").removeClass ("hide").fadeIn ();
-				},
-				"html"
-			);
-		});
+				$(dialog+"#contact_search_result_table tbody").show ();
+				$(dialog+"#contact-pager").removeClass ("hide").show ();
+			},
+			"html");
+		
 		return false;
 	});
 }
@@ -741,18 +733,15 @@ function configure_contact_buttons (form, dialog) {
 				});
 				
 				if (exists) {
-					$("#dialog-search-contact #contact_search_result").fadeOut ('normal',
-						function () {
-						$(this).empty ().append ('<h3 class="error">Already added</h3>').fadeIn ();
-					});
+					$("#dialog-search-contact #contact_search_result")..empty ()
+						.append ('<h3 class="error">Already added</h3>');
+					
 					return;
 				}
 				$(parent_dialog+"#inventory_contacts").append ($('<option value="'+id+'">'+name+'</option>'));
 				$(parent_dialog+"#"+form).append ($('<input type="hidden" value="'+id+'" class="selected-contacts" name="contacts[]" />'));
-				$("#dialog-search-contact #contact_search_result").fadeOut ('normal',
-					function () {
-						$(this).empty ().append ('<h3 class="suc">Added</h3>').fadeIn ();
-				});
+				$("#dialog-search-contact #contact_search_result").empty ()
+					.append ('<h3 class="suc">Added</h3>');
 			}
 		);
 	});
@@ -799,10 +788,8 @@ function configure_inventory_form (enable_ajax_form) {
 		id_contract = this.value;
 		
 		if (id_contract == 0) {
-			$(dialog+"#id_sla").fadeOut ('normal', function () {
-				$(this).children (":eq(0)").attr ("selected", "selected");
-				$(this).fadeIn ();
-			});
+			$(dialog+"#id_sla").hide ().children (":eq(0)").attr ("selected", "selected");
+			$(dialog+"#id_sla").show ();
 			return;
 		}
 		values = Array ();
@@ -815,13 +802,10 @@ function configure_inventory_form (enable_ajax_form) {
 		jQuery.get ("ajax.php",
 			values,
 			function (data, status) {
-				$(dialog+"#id_sla").fadeOut ('normal', function () {
-					$(this).children ().each (function () {
+				$(dialog+"#id_sla").hide ().children ().each (function () {
 						if (this.value == data.id)
 							$(this).attr ("selected", "selected");
-					});
-					$(this).fadeIn ();
-				});
+					}).show ();
 			},
 			"json"
 		);
@@ -836,15 +820,13 @@ function configure_inventory_form (enable_ajax_form) {
 		jQuery.get ("ajax.php",
 			values,
 			function (data, status) {
-				$(dialog+"#inventory_contacts").fadeOut ('normal', function () {
-					$(this).empty ();
-					$(dialog+".selected-contacts").remove ();
-					$(data).each (function () {
-						$(dialog+"#inventory_contacts").append ($('<option value="'+this.id+'">'+this.fullname+'</option>'));
-						$(dialog+"#inventory_status_form").append ($('<input type="hidden" value="'+this.id+'" class="selected-contacts" name="contacts[]" />'));
-					});
-					$(this).fadeIn ();
+				$(dialog+"#inventory_contacts").hide ().empty ();
+				$(dialog+".selected-contacts").remove ();
+				$(data).each (function () {
+					$(dialog+"#inventory_contacts").append ($('<option value="'+this.id+'">'+this.fullname+'</option>'));
+					$(dialog+"#inventory_status_form").append ($('<input type="hidden" value="'+this.id+'" class="selected-contacts" name="contacts[]" />'));
 				});
+				$(dialog+"#inventory_contacts").show ();
 			},
 			"json"
 		);
@@ -853,25 +835,24 @@ function configure_inventory_form (enable_ajax_form) {
 	$(dialog+"#id_product").change (function () {
 		id_product = this.value;
 		
-		$(dialog+"#product-icon").fadeOut ('normal', function () {
-			if (id_product == 0) {
-				return;
-			}
-			values = Array ();
-			values.push ({name: "page",
-						value: "operation/inventories/manage_prod"});
-			values.push ({name: "id",
-						value: id_product});
-			values.push ({name: "get_icon",
-						value: 1});
-			jQuery.get ("ajax.php",
-				values,
-				function (data, status) {
-					$(dialog+"#product-icon").attr ("src", "images/products/"+data).fadeIn ();
-				},
-				"html"
-			);
-		});
+		$(dialog+"#product-icon").hide ()
+		if (id_product == 0) {
+			return;
+		}
+		values = Array ();
+		values.push ({name: "page",
+					value: "operation/inventories/manage_prod"});
+		values.push ({name: "id",
+					value: id_product});
+		values.push ({name: "get_icon",
+					value: 1});
+		jQuery.get ("ajax.php",
+			values,
+			function (data, status) {
+				$(dialog+"#product-icon").attr ("src", "images/products/"+data).show ();
+			},
+			"html"
+		);;
 		
 	});
 	

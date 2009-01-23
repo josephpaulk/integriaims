@@ -1,3 +1,20 @@
+2009-01-23  Esteban Sanchez  <estebans@artica.es>
+
+	* images/wait.gif: Added to repository. Image to be shown when an AJAX
+	petition is done.
+
+	* include/js/integria_incident_search.js: Removed a lot of show/hide
+	effects. Show and hide a message when the page is doing AJAX.
+	
+	* include/styles/integria.css: Style for the loading text.
+
+	* operation/inventories/inventory.php,
+	operation/inventories/inventory_search.php,
+	operation/incidents/incident.php: Added the loading text. Remove
+	show/hide effects.
+
+	* integria_db.sql: New table tincident_contact_creator.
+
 2009-01-12  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/functions_graph.php: added control to avoid notice

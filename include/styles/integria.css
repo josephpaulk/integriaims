@@ -1041,3 +1041,17 @@ table#profile_editor label {
 table#profile_editor input[type="checkbox"] {
 	float: none;
 }
+
+div#loading {
+	background-color: #FFF1A8;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 5px;
+	text-align: center;
+	width: 75%;
+}
+
+div#loading img {
+	 float: right;
+	 margin-top: -12px;
+}
