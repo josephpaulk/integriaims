@@ -1,3 +1,29 @@
+2009-01-26  Esteban Sanchez  <estebans@artica.es>
+
+	* include/config_process.php: Improved the language code selection. It
+	was failuring when the user has no language set. If the language is
+	set via a form and the user hasn't set any language, set the provided
+	one.
+
+	* include/functions_db.php: Removed duplicated get_incident_status().
+	Make status, resolutions and origin strings translatable. Added
+	get_incident_origins().
+
+	* include/functions_form.php: Use functions to get translatable
+	strings on status, resolutions and origins.
+
+	* operation/incidents/incident.php: Show loading message on first
+	load.
+	
+	* operation/users/user_edit.php: Renamed language form variable to
+	work on config_process when updating.
+
+	* index.php: Gettext dictionary was already loaded in config_process
+	and it was redundant. Also the language code setting was already done
+	in other place and was giving some problems on setup page.
+
+	* godmode/setup/setup.php: Removed submit when changing the language.
+
 2009-01-26  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
 
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish

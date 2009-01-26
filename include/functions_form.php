@@ -243,18 +243,25 @@ function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $
 	$output = '';
 
 	if ($disabled) {
-		$value = get_db_value ('name', 'tincident_status', 'id', $actual);
+		$value = __(get_db_value ('name', 'tincident_status', 'id', $actual));
 		$output .= print_label (__('Status'), '', '', true, $value);
 		if ($return)
 			return $output;
 		echo $output;
+		return;
 	}
 	if ($actual_only)
 		$sql = sprintf ('SELECT id, name FROM tincident_status WHERE id = %d', $actual);
 	else
 		$sql = 'SELECT id, name FROM tincident_status';
-
-	$output .= print_select_from_sql ($sql, 'incident_status', $actual, '', '', 0, true, false, false, __('Status'));
+	
+	$rows = get_db_all_rows_sql ($sql);
+	$values = array ();
+	foreach ($rows as $row)
+		$values[$row['id']] = __($row['name']);
+	
+	$output .= print_select ($values, 'incident_status', $actual, '', '', 0,
+		true, false, false, __('Status'));
 
 	if ($return)
 		return $output;
@@ -267,14 +274,16 @@ function combo_incident_origin ($actual = -1, $disabled = 0, $return = false) {
 	$output = '';
 
 	if ($disabled) {
-		$value = get_db_value ('name', 'tincident_origin', 'id', $actual);
-		$output .= print_label (__('Source'), '', '', true, $value);
+		$origins = get_incident_resolutions ();
+		$origin = isset ($origins[$actual]) ? $origins[$actual] : __('None');
+		$output .= print_label (__('Source'), '', '', true, $origin);
 		if ($return)
 			return $output;
 		echo $output;
+		return;
 	}
-
-	$output .= print_select_from_sql ('SELECT id,name FROM tincident_origin', 'incident_origin',
+		
+	$output .= print_select (get_incident_origins (), 'incident_origin',
 					$actual, '', '', 0, true, false, false, __('Source'));
 	if ($return)
 		return $output;
@@ -289,6 +298,7 @@ function combo_incident_resolution ($actual = -1, $disabled = false, $return = f
 	if ($disabled) {
 		$resolutions = get_incident_resolutions ();
 		$resolution = isset ($resolutions[$actual]) ? $resolutions[$actual] : __('None');
+		
 		$output .= print_label (__('Resolution'), '', '', true, $resolution);
 		if ($return)
 			return $output;
@@ -296,7 +306,7 @@ function combo_incident_resolution ($actual = -1, $disabled = false, $return = f
 		return;
 	}
 	
-	$output .= print_select_from_sql ('SELECT id, name FROM tincident_resolution ORDER BY 2',
+	$output .= print_select (get_incident_resolutions (),
 					'incident_resolution', $actual, '', __('None'),
 					0, true, false, false, __('Resolution'));
 	if ($return)
@@ -310,8 +320,9 @@ function combo_incident_types ($selected, $disabled = false, $return = false) {
 	$types = get_incident_types ();
 	
 	if ($disabled) {
-		$output .= print_label (__('Type'), '', '', true);
-		$output .= isset ($types['selected']) ? $types['selected'] : __('None');
+		$value = isset ($types[$selected]) ? $types[$selected] : __('None');
+		$output .= print_label (__('Type'), '', '', true, $value);
+		
 		if ($return)
 			return $output;
 		echo $output;

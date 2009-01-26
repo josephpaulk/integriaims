@@ -114,7 +114,8 @@ form_search_incident ();
 
 unset ($table);
 
-echo '<div id="loading" style="display:none">'.__('Loading');
+/* Loading message is always shown at first because we run a default search */
+echo '<div id="loading">'.__('Loading');
 echo '... <img src="images/wait.gif" /></div>';
 
 $table->class = 'hide result_table listing';

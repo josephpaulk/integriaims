@@ -66,8 +66,8 @@ $table->colspan = array ();
 $table->data = array ();
 
 $table->data[0][0] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
-	'language_code', $config['language_code'], 'javascript:this.form.submit()',
-	'', '', true, false, false, __('Language'));
+	'language_code', $config['language_code'], '', '', '', true, false, false,
+	__('Language'));
 
 $table->data[0][1] = print_input_text ("no_wu_completion", $config["no_wu_completion"], '',
 	20, 500, true, __('No WU completion users'));

@@ -70,7 +70,7 @@ if ($update_user) {
 	$avatar = (string) get_parameter ('avatar');
 	$avatar = substr ($avatar, 0, strlen ($avatar) - 4);
 	$comments = (string) get_parameter ('comments');
-	$lang = (string) get_parameter ('lang');
+	$lang = (string) get_parameter ('language_code');
 	
 	$error = false;
 	if ($password != '' && md5 ($password) != $user['password']) {
@@ -134,7 +134,7 @@ if ($has_permission) {
 	$table->data[2][0] = print_input_text ('email', $email, '', 20, 60, true, __('Email'));
 	$table->data[2][1] = print_input_text ('phone', $phone, '', 20, 40, true, __('Telephone'));
 	$table->data[4][0] = print_select_from_sql ("SELECT id_language, name FROM tlanguage ORDER BY name",
-		'lang', $user['lang'], '', __('Default'), '', true, false, false, __('Language'));
+		'language_code', $lang, '', __('Default'), '', true, false, false, __('Language'));
 	$table->data[5][0] = print_textarea ('comments', 8, 55, $comments, '', true, __('Comments'));
 	
 	$files = list_files ('images/avatars/', "png", 1, 0, "small");

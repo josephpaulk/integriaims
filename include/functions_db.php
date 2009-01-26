@@ -678,10 +678,6 @@ function get_incident_resolution ($id_incident) {
 	return get_db_value ('resolution', 'tincidencia', 'id_incidencia', $id_incident);
 }
 
-function get_incident_status ($id_incident) {
-	return get_db_value ('estado', 'tincidencia', 'id_incidencia', $id_incident);
-}
-
 function get_incident_creator ($id_incident) {
 	return (int) get_db_value ('id_creator', 'tincidencia', 'id_incidencia', $id_incident);
 }
@@ -2119,10 +2115,20 @@ function get_indicent_status () {
 	$retval = array ();
 	$status = get_db_all_rows_in_table ('tincident_status');
 	
+	__('New');
+	__('Unconfirmed');
+	__('Assigned');
+	__('Re-opened');
+	__('Verified'); 
+	__('Resolved');
+	__('Closed');
+	
 	foreach ($status as $stat) {
-		$retval[$stat['id']] = $stat['name'];
+		/* FIXME: This is a workaround since you don't change or add any status
+		 on Integria setup */
+		$retval[$stat['id']] = __($stat['name']);
 	}
-
+	
 	return $retval;
 }
 
@@ -2130,10 +2136,45 @@ function get_incident_resolutions () {
 	$retval = array ();
 	$resolutions = get_db_all_rows_in_table ('tincident_resolution');
 	
+	/* Translators: stands for "Incident is fixed" */
+	__('Fixed');
+	__('Invalid');
+	__('Wont fix');
+	__('Duplicate');
+	__('Works for me');
+	__('Incomplete');
+	__('Expired');
+	__('Moved');
+	__('In process');
+	
 	foreach ($resolutions as $resolution) {
-		$retval[$resolution['id']] = $resolution['name'];
+		$retval[$resolution['id']] = __($resolution['name']);
 	}
-
+	
 	return $retval;
 }
+
+function get_incident_origins () {
+	$retval = array ();
+	$origins = get_db_all_rows_in_table ('tincident_origin');
+	
+	/* Translators: Incident is fixed */
+	__('User report');
+	__('Customer');
+	__('Internal department');
+	__('External department');
+	__('Application data');
+	__('Bug report');
+	__('Problem detected');
+	__('Other source');
+	
+	foreach ($origins as $origin) {
+		$retval[$origin['id']] = __($origin['name']);
+	}
+	
+	return $retval;
+}
+
+
+
 ?>

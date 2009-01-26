@@ -199,27 +199,12 @@ if ($logout) {
 echo '</head>';
 echo '<body>';
 
-
-$mylang = get_db_value ('lang', 'tusuario', 'id_usuario', $_SESSION['id_usuario']);
-if ($mylang != '')
-	$config['language_code'] = $mylang;
-
-$l10n = NULL;
-if (file_exists ('./include/languages/'.$config['language_code'].'.mo')) {
-	$l10n = new gettext_reader (new CachedFileReader ('./include/languages/'.$config['language_code'].'.mo'));
-	$l10n->load_tables ();
-}
-
 // http://es2.php.net/manual/en/ref.session.php#64525
 // Session locking concurrency speedup!
 session_write_close ();
 ?>
 
 <?php
-
-if (isset ($_SESSION['id_usuario']))
-	$config['language_code'] = get_db_value ('lang', 'tusuario', 'id_usuario', $_SESSION['id_usuario']);
-
 if ($clean_output == 0) {
 ?>
 	<div id="wrap">

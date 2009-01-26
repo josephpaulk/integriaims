@@ -87,9 +87,12 @@ require_once ('gettext.php');
 if (isset ($_SESSION['id_usuario']))
 	$config['language_code'] = get_db_value ('lang', 'tusuario', 'id_usuario', $_SESSION['id_usuario']);
 
-if ($config["language_code"] == "")
-	$config['language_code'] = get_db_value ('value', 'tconfig', 'id_config', 1);
-
+if (empty ($config["language_code"])) {
+	$config['language_code'] = get_db_value ('value', 'tconfig', 'token', 'language_code');
+	
+	if (isset ($_POST['language_code']))
+		$config['language_code'] = $_POST['language_code'];
+}
 $l10n = NULL;
 if (file_exists ('./include/languages/'.$config['language_code'].'.mo')) {
 	$l10n = new gettext_reader (new CachedFileReader ('./include/languages/'.$config['language_code'].'.mo'));
