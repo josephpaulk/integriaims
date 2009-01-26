@@ -60,7 +60,7 @@ function show_user_search_dialog (title) {
 
 function configure_inventory_buttons (form, dialog) {
 	$(dialog+"#button-search_inventory").click (function () {
-		show_inventory_search_dialog ("Search inventory object",
+		show_inventory_search_dialog (__("Search inventory object"),
 			function (id, name) {
 				var exists = false
 				$(parent_dialog+".selected-inventories").each (function () {
@@ -72,13 +72,13 @@ function configure_inventory_buttons (form, dialog) {
 				
 				if (exists) {
 					$("#dialog-search-inventory #inventory_search_result").empty ()
-						.append ('<h3 class="error">Already added</h3>');
+						.append ('<h3 class="error">'+__("Already added")+'</h3>').show ();
 					return;
 				}
 				$(parent_dialog+"#incident_inventories").append ($('<option value="'+id+'">'+name+'</option>'));
 				$(parent_dialog+"#"+form).append ($('<input type="hidden" value="'+id+'" class="selected-inventories" name="inventories[]" />'));
 				$("#dialog-search-inventory #inventory_search_result").empty ()
-					.append ('<h3 class="suc">Added</h3>');
+					.append ('<h3 class="suc">'+__("Added")+'</h3>').show ();
 			}
 		);
 	});
@@ -98,13 +98,13 @@ function configure_inventory_buttons (form, dialog) {
 
 function configure_incident_form (enable_ajax_form) {
 	$("form.delete").submit (function () {
-		if (! confirm ("Are you sure?"))
+		if (! confirm (__("Are you sure?")))
 			return false;
 	});
 	$(dialog+"#textarea-description").TextAreaResizer ();
 	$(dialog+"#textarea-epilog").TextAreaResizer ();
 	$(dialog+"#button-search_parent").click (function () {
-		show_incident_search_dialog ("Search parent incident",
+		show_incident_search_dialog (__("Search parent incident"),
 			function (id, name) {
 				$("#dialog-search-incident").dialog ("close");
 				$(dialog+"#button-search_parent").attr ("value", "Incident #"+id);
@@ -114,7 +114,7 @@ function configure_incident_form (enable_ajax_form) {
 	});
 	
 	$(dialog+"#button-usuario_name").click (function () {
-		show_user_search_dialog ("User search");
+		show_user_search_dialog (__("User search"));
 	});
 	
 	$(dialog+"#incident_status").change (function () {
@@ -183,6 +183,7 @@ function configure_incident_form (enable_ajax_form) {
 	});
 	
 	configure_inventory_buttons ("incident_status_form", dialog);
+	configure_contact_buttons ("incident_status_form", dialog);
 	
 	if (enable_ajax_form) {
 		$(dialog+"#incident_status_form").submit (function () {
@@ -190,7 +191,7 @@ function configure_incident_form (enable_ajax_form) {
 				$(dialog+"#incident_inventories").fadeOut ('normal',function () {
 					pulsate (this);
 				});
-				result_msg_error ("There's no affected inventory object");
+				result_msg_error (__("There's no affected inventory object"));
 
 				return false;
 			}
@@ -220,7 +221,7 @@ function configure_incident_form (enable_ajax_form) {
 				$(dialog+"#incident_inventories").fadeOut ('normal',function () {
 					pulsate (this);
 				});
-				result_msg_error ("There's no affected object");
+				result_msg_error (__("There's no affected object"));
 			
 				return false;
 			}
@@ -288,7 +289,7 @@ function configure_incident_search_form (page_size, row_click_callback, search_c
 	$(dialog+"#incident_search_result_table tr th :eq(0)").addClass ("{sorter: 'text'}");
 	$(dialog+"#incident_search_result_table").tablesorter ({ cancelSelection : true});
 	$(dialog+"#button-inventory_name").click (function () {
-		show_inventory_search_dialog ("Search inventory",
+		show_inventory_search_dialog (__("Search inventory object"),
 					function (id, name) {
 						$(parent_dialog+"#hidden-search_id_inventory").attr ("value", id);
 						$(parent_dialog+"#button-inventory_name").attr ("value", name);
@@ -455,7 +456,7 @@ function configure_workunit_form () {
 		jQuery.post ("ajax.php",
 			values,
 			function (data, status) {
-				$(".result").slideUp ('fast', function () {
+				$(".result").slideUp ("fast", function () {
 					$(".result").empty ().append (data).slideDown ();
 				});
 				$("#dialog-add-workunit").dialog ("close");
@@ -480,7 +481,7 @@ function show_add_workunit_dialog (id_incident) {
 		values,
 		function (data, status) {
 			$("#dialog-add-workunit").empty ().append (data);
-			$("#dialog-add-workunit").dialog ({"title" : "Add workunit",
+			$("#dialog-add-workunit").dialog ({"title" : __("Add workunit"),
 					minHeight: 300,
 					minWidth: 300,
 					height: 500,
@@ -498,7 +499,7 @@ function configure_file_form () {
 	$('#form-add-file').ajaxForm ({
 		beforeSubmit: function (a, f, o) {
 			o.dataType = "html";
-			$('#upload_result').html ('Submitting...');
+			$('#upload_result').html (__("Submitting")+'...');
 		},
 		success: function (data) {
 			$('#upload_result').hide ().empty ().html (data).show ();
@@ -521,7 +522,7 @@ function show_add_file_dialog (id_incident) {
 		values,
 		function (data, status) {
 			$("#dialog-add-file").empty ().append (data);
-			$("#dialog-add-file").dialog ({"title" : "Upload file",
+			$("#dialog-add-file").dialog ({"title" : __("Upload file"),
 					minHeight: 350,
 					minWidth: 200,
 					height: 350,
@@ -722,7 +723,7 @@ function show_contact_search_dialog (title, callback_contact_click) {
 
 function configure_contact_buttons (form, dialog) {
 	$(dialog+"#button-search_contact").click (function () {
-		show_contact_search_dialog ("Search contact",
+		show_contact_search_dialog (__("Search contact"),
 			function (id, name) {
 				var exists = false
 				$(parent_dialog+".selected-contacts").each (function () {
@@ -733,15 +734,15 @@ function configure_contact_buttons (form, dialog) {
 				});
 				
 				if (exists) {
-					$("#dialog-search-contact #contact_search_result")..empty ()
-						.append ('<h3 class="error">Already added</h3>');
+					$("#dialog-search-contact #contact_search_result").empty ()
+						.append ('<h3 class="error">'+__("Already added")+'</h3>').show ();
 					
 					return;
 				}
-				$(parent_dialog+"#inventory_contacts").append ($('<option value="'+id+'">'+name+'</option>'));
+				$(parent_dialog+"#select_contacts").append ($('<option value="'+id+'">'+name+'</option>'));
 				$(parent_dialog+"#"+form).append ($('<input type="hidden" value="'+id+'" class="selected-contacts" name="contacts[]" />'));
 				$("#dialog-search-contact #contact_search_result").empty ()
-					.append ('<h3 class="suc">Added</h3>');
+					.append ('<h3 class="suc">'+__("Added")+'</h3>').show ();
 			}
 		);
 	});
@@ -749,9 +750,9 @@ function configure_contact_buttons (form, dialog) {
 	$(dialog+"#button-delete_contact").click (function () {
 		var s;
 		
-		s = $(dialog+"#inventory_contacts").attr ("selectedIndex");
-		selected_id = $(dialog+"#inventory_contacts").children (":eq("+s+")").attr ("value");
-		$(dialog+"#inventory_contacts").children (":eq("+s+")").remove ();
+		s = $(dialog+"#select_contacts").attr ("selectedIndex");
+		selected_id = $(dialog+"#select_contacts").children (":eq("+s+")").attr ("value");
+		$(dialog+"#select_contacts").children (":eq("+s+")").remove ();
 		$(dialog+".selected-contacts").each (function () {
 			if (this.value == selected_id)
 				$(this).remove ();
@@ -759,9 +760,9 @@ function configure_contact_buttons (form, dialog) {
 	});
 	
 	$(dialog+"#button-create_contact").click (function () {
-		show_contact_create_dialog ("Create contact",
+		show_contact_create_dialog (__("Create contact"),
 			function (id, name) {
-				$(parent_dialog+"#inventory_contacts").append ($('<option value="'+id+'">'+name+'</option>'));
+				$(parent_dialog+"#select_contacts").append ($('<option value="'+id+'">'+name+'</option>'));
 				$(parent_dialog+"#"+form).append ($('<input type="hidden" value="'+id+'" class="selected-contacts" name="contacts[]" />'));
 			}
 		);
@@ -770,12 +771,12 @@ function configure_contact_buttons (form, dialog) {
 
 function configure_inventory_form (enable_ajax_form) {
 	$("form.delete").submit (function () {
-		if (! confirm ("Are you sure?"))
+		if (! confirm (__("Are you sure?")))
 			return false;
 	});
 	$(dialog+"#textarea-description").TextAreaResizer ();
 	$(dialog+"#button-parent_search").click (function () {
-		show_inventory_search_dialog ("Search parent inventory",
+		show_inventory_search_dialog (__("Search parent inventory"),
 					function (id, name) {
 						$("#button-parent_search").attr ("value", name);
 						$("#hidden-id_parent").attr ("value", id);
@@ -820,13 +821,13 @@ function configure_inventory_form (enable_ajax_form) {
 		jQuery.get ("ajax.php",
 			values,
 			function (data, status) {
-				$(dialog+"#inventory_contacts").hide ().empty ();
+				$(dialog+"#select_contacts").hide ().empty ();
 				$(dialog+".selected-contacts").remove ();
 				$(data).each (function () {
-					$(dialog+"#inventory_contacts").append ($('<option value="'+this.id+'">'+this.fullname+'</option>'));
+					$(dialog+"#select_contacts").append ($('<option value="'+this.id+'">'+this.fullname+'</option>'));
 					$(dialog+"#inventory_status_form").append ($('<input type="hidden" value="'+this.id+'" class="selected-contacts" name="contacts[]" />'));
 				});
-				$(dialog+"#inventory_contacts").show ();
+				$(dialog+"#select_contacts").show ();
 			},
 			"json"
 		);

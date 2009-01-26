@@ -115,14 +115,14 @@ function print_select_from_sql ($sql, $name, $selected = '', $script = '', $noth
 /**
  * Render an input text element. Extended version, use print_input_text() to simplify.
  *
- * @param string $name Input name.
- * @param string $value Input value.
- * @param string $alt Alternative HTML string.
- * @param int $size Size of the input.
- * @param int $maxlength Maximum length allowed.
- * @param bool $disabled Disable the button (optional, button enabled by default).
- * @param string $alt Alternative HTML string.
- * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ * @param string Input name.
+ * @param string Input value.
+ * @param string Alternative HTML string.
+ * @param int Size of the input.
+ * @param int Maximum length allowed.
+ * @param bool Disable the button (optional, button enabled by default).
+ * @param string Alternative HTML string.
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
 function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength, $disabled, $script, $attributes, $return = false, $password = false, $label = false) {
 	$type = $password ? 'password' : 'text';
@@ -163,15 +163,14 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
 /**
  * Render an input text element. Extended version, use print_input_text() to simplify.
  *
- * @param string $name Input name.
- * @param int $size Size of the input.
- * @param bool $disabled Wheter to disable the input or not.
- * @param string $attributes Optional HTML attributs.
- * @param bool $return Whether to return an output string or echo now (optional, echo by default).
- * @param string $label HTML label element to add (none by default).
+ * @param string Input name.
+ * @param int Size of the input.
+ * @param bool Wheter to disable the input or not.
+ * @param string Optional HTML attributes.
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
+ * @param string HTML label element to add (none by default).
  */
 function print_input_file ($name, $size, $disabled = false, $attributes = '', $return = false, $label = false) {
-	
 	$output = '';
 	
 	if ($label) {
@@ -200,12 +199,12 @@ function print_input_file ($name, $size, $disabled = false, $attributes = '', $r
 /**
  * Render an input password element.
  *
- * @param string $name Input name.
- * @param string $value Input value.
- * @param string $alt Alternative HTML string (optional).
- * @param int $size Size of the input (optional).
- * @param int $maxlength Maximum length allowed (optional).
- * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ * @param string Input name.
+ * @param string Input value.
+ * @param string Alternative HTML string (optional).
+ * @param int Size of the input (optional).
+ * @param int Maximum length allowed (optional).
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
 
 function print_input_password ($name, $value, $alt = '', $size = 50, $maxlength = 0, $return = false, $label = false) {
@@ -219,12 +218,12 @@ function print_input_password ($name, $value, $alt = '', $size = 50, $maxlength 
 /**
  * Render an input text element.
  *
- * @param string $name Input name.
- * @param string $value Input value.
- * @param string $alt Alternative HTML string (optional).
- * @param int $size Size of the input (optional).
- * @param int $maxlength Maximum length allowed (optional).
- * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ * @param string Input name.
+ * @param string Input value.
+ * @param string Alternative HTML string (optional).
+ * @param int Size of the input (optional).
+ * @param int Maximum length allowed (optional).
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
 function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0, $return = false, $label = false) {
 	$output = print_input_text_extended ($name, $value, 'text-'.$name, $alt, $size, $maxlength, false, '', '', true, false, $label);
@@ -238,10 +237,10 @@ function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0,
 /**
  * Render an input hidden element.
  *
- * @param string $name Input name.
- * @param string $value Input value.
- * @param bool $return Whether to return an output string or echo now (optional, echo by default).
- * @param string $class HTML class to be added. Useful in javascript code.
+ * @param string Input name.
+ * @param string Input value.
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
+ * @param string HTML class to be added. Useful in javascript code.
  */
 function print_input_hidden ($name, $value, $return = false, $class = '', $label = false) {
 	if ($label) {
@@ -278,11 +277,11 @@ function print_submit_button ($value = 'OK', $name = '', $disabled = false, $att
 /**
  * Render an input image element.
  * 
- * @param string $name Input name.
- * @param string $src Image source.
- * @param string $value Input value.
- * @param string $style HTML style property.
- * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ * @param string Input name.
+ * @param string Image source.
+ * @param string Input value.
+ * @param string HTML style property.
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
 function print_input_image ($name, $src, $value, $style = '', $return = false, $label = false) {
 	$output = '';
@@ -333,7 +332,7 @@ function print_textarea ($name, $rows, $columns, $value = '', $attributes = '', 
 /**
  * Print a nicely formatted table. Code taken from moodle.
  *
- * @param array $table is an object with several properties:
+ * @param object is an object with several properties:
  *     $table->head - An array of heading names.
  *     $table->align - An array of column alignments
  *     $table->valign - An array of column alignments
@@ -351,7 +350,7 @@ function print_textarea ($name, $rows, $columns, $value = '', $attributes = '', 
  *     $table->cellpadding  - Padding on each cell
  *     $table->cellspacing  - Spacing between cells
  *     $table->class  - CSS table class
- * @param  bool $return whether to return an output string or echo now
+ * @param  bool whether to return an output string or echo now
  */
 function print_table (&$table, $return = false) {
 	$output = '';
@@ -530,14 +529,14 @@ function print_table (&$table, $return = false) {
 /**
  * Render a radio button input. Extended version, use print_radio_button() to simplify.
  *
- * @param string $name Input name.
- * @param string $value Input value.
- * @param string $checked Set the button to be marked (optional, unmarked by default).
- * @param bool $disabled Disable the button (optional, button enabled by default).
- * @param string $script Script to execute when onClick event is triggered (optional).
- * @param string $attributes Optional HTML attributes. It's a free string which will be
+ * @param string Input name.
+ * @param string Input value.
+ * @param string Set the button to be marked (optional, unmarked by default).
+ * @param bool Disable the button (optional, button enabled by default).
+ * @param string Script to execute when onClick event is triggered (optional).
+ * @param string Optional HTML attributes. It's a free string which will be
 	inserted into the HTML tag, use it carefully (optional).
- * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
 function print_radio_button_extended ($name, $value, $label, $checkedvalue, $disabled, $script, $attributes, $return = false) {
 	static $idcounter = 0;
@@ -573,11 +572,11 @@ function print_radio_button_extended ($name, $value, $label, $checkedvalue, $dis
 /**
  * Render a radio button input.
  *
- * @param string $name Input name.
- * @param string $value Input value.
- * @param string $label Label to add after the radio button (optional).
- * @param string $checkedvalue Checked and selected value, the button will be selected if it matches $value (optional).
- * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ * @param string Input name.
+ * @param string Input value.
+ * @param string  Label to add after the radio button (optional).
+ * @param string Checked and selected value, the button will be selected if it matches $value (optional).
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
 function print_radio_button ($name, $value, $label = '', $checkedvalue = '', $return = false, $label = false) {
 	$output = print_radio_button_extended ($name, $value, $label, $checkedvalue, false, '', '', true, $label);
@@ -591,12 +590,12 @@ function print_radio_button ($name, $value, $label = '', $checkedvalue = '', $re
 /**
  * Render a label for a input elemennt.
  *
- * @param string $label Label to add.
- * @param string $id Input id to refer.
- * @param string $input_type Input type of the element. The id of the elements using print_* functions add a prefix, this
- *               variable helps with that. Values: text, password, textarea, button, submit, hidden, select. Default: text.
- * @param bool $return Whether to return an output string or echo now (optional, echo by default).
- * @param string $html  Extra HTML to add after the label.
+ * @param string Label to add.
+ * @param string Input id to refer.
+ * @param string Input type of the element. The id of the elements using print_* functions add a prefix, this
+ * variable helps with that. Values: text, password, textarea, button, submit, hidden, select. Default: text.
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
+ * @param string Extra HTML to add after the label.
  */
 function print_label ($label, $id, $input_type = 'text', $return = false, $html = false) {
 	$output = '';
@@ -650,14 +649,14 @@ function print_label ($label, $id, $input_type = 'text', $return = false, $html 
 /**
  * Render a checkbox button input. Extended version, use print_checkbox() to simplify.
  *
- * @param string $name Input name.
- * @param string $value Input value.
- * @param string $checked Set the button to be marked (optional, unmarked by default).
- * @param bool $disabled Disable the button  (optional, button enabled by default).
- * @param string $script Script to execute when onClick event is triggered (optional).
- * @param string $attributes Optional HTML attributes. It's a free string which will be
+ * @param string Input name.
+ * @param string Input value.
+ * @param string Set the button to be marked (optional, unmarked by default).
+ * @param bool Disable the button  (optional, button enabled by default).
+ * @param string Script to execute when onClick event is triggered (optional).
+ * @param string Optional HTML attributes. It's a free string which will be
 	inserted into the HTML tag, use it carefully (optional).
- * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
 function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $attributes, $return = false, $label = false) {
 	$output = '';
@@ -689,10 +688,10 @@ function print_checkbox_extended ($name, $value, $checked, $disabled, $script, $
 /**
  * Render a checkbox button input.
  *
- * @param string $name Input name.
- * @param string $value Input value.
- * @param string $checked Set the button to be marked (optional, unmarked by default).
- * @param bool $return Whether to return an output string or echo now (optional, echo by default).
+ * @param string Input name.
+ * @param string Input value.
+ * @param string Set the button to be marked (optional, unmarked by default).
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
 function print_checkbox ($name, $value, $checked = false, $return = false, $label = false) {
 	$output = print_checkbox_extended ($name, $value, (bool) $checked, false, '', '', true, $label);
@@ -705,8 +704,8 @@ function print_checkbox ($name, $value, $checked = false, $return = false, $labe
 /**
  * Prints only a tip button which shows a text when the user puts the mouse over it.
  *
- * @param  string $text Complete text to show in the tip
- * @param  bool $return whether to return an output string or echo now
+ * @param string Complete text to show in the tip
+ * @param bool whether to return an output string or echo now
  *
  * @return
  */
@@ -721,10 +720,10 @@ function print_help_tip ($text, $return = false, $tip_class = 'tip') {
 /**
  * Prints a help tip icon.
  *
- * @param id Help id
- * @param return Flag to return or output the result
+ * @param int Help id
+ * @param bool Flag to return or output the result
  *
- * @return The help tip if return flag was active.
+ * @return string The help tip if return flag was active.
  */
 function integria_help ($help_id, $return = false) {
 	global $config;

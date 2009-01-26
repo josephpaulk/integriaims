@@ -552,9 +552,10 @@ CREATE TABLE `tcompany_contact` (
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE `tincident_contact_creator` (
+CREATE TABLE `tincident_contact_reporters` (
   `id_incident` bigint(20) unsigned NOT NULL,
   `id_contact` mediumint(8) unsigned NOT NULL,
+  UNIQUE (`id_incident`, `id_contact`),
   FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
      ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_contact`) REFERENCES tcompany_contact(`id`)

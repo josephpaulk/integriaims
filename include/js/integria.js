@@ -119,3 +119,11 @@ function load_form_values (form_id, values) {
 		}
 	});
 }
+
+function __(str) {
+	r = lang[str];
+	
+	if (r == undefined)
+		return str
+	return r;
+}

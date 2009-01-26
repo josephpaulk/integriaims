@@ -129,6 +129,7 @@ if ($action == 'update') {
 
 	/* Update inventory objects in incident */
 	update_incident_inventories ($id, get_parameter ('inventories'));
+	update_incident_contact_reporters ($id, get_parameter ('contacts'));
 	
 	if ($result === false)
 		$result_msg = "<h3 class='error'>".__('There was a problem updating incident')."</h3>";
@@ -186,6 +187,7 @@ if ($action == "insert") {
 	if ($id !== false) {
 		/* Update inventory objects in incident */
 		update_incident_inventories ($id, get_parameter ('inventories'));
+		update_incident_contact_reporters ($id, get_parameter ('contacts'));
 		
 		$result_msg = '<h3 class="suc">'.__('Successfully created').' (id #'.$id.')</h3>';
 		$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
@@ -456,7 +458,6 @@ $table->colspan[0][0] = 2;
 $table->colspan[4][2] = 2; 
 $table->colspan[5][0] = 4;
 $table->colspan[6][0] = 4;
-$table->colspan[2][2] = 2;
 $disabled = !$has_permission;
 $actual_only = !$has_permission;
 
@@ -497,6 +498,25 @@ if ($id_parent)
 $table->data[2][0] = combo_incident_origin ($origen, $disabled, true);
 $table->data[2][1] = combo_incident_types ($id_incident_type, $disabled, true);
 $table->data[2][2] = combo_task_user ($id_task, $config["id_user"], $disabled, false, true);
+
+if ($id) {
+	$contacts = get_incident_contact_reporters ($id, true);
+} else {
+	$contacts = array ();
+}
+
+$table->data[2][3] = print_select ($contacts, 'select_contacts', NULL,
+				'', '', '', true, false, false, __('Reporters'));
+if ($has_permission || $create_incident) {
+	$table->data[2][3] .= print_button (__('Add'),
+					'search_contact', false, '', 'class="dialogbtn"', true);
+	$table->data[2][3] .= print_button (__('Remove'),
+					'delete_contact', false, '', 'class="dialogbtn"', true);
+	foreach ($contacts as $contact_id => $contact_name) {
+		$table->data[2][3] .= print_input_hidden ("contacts[]",
+							$contact_id, true, 'selected-contacts');
+	}
+}
 
 if ($id_task > 0){
 	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);

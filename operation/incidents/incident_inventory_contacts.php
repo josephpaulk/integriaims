@@ -19,6 +19,7 @@ if (check_login () != 0) {
 }
 
 require_once ('include/functions_inventories.php');
+require_once ('include/functions_incidents.php');
 
 $id_incident = (int) get_parameter ('id');
 
@@ -70,6 +71,37 @@ foreach ($inventories as $inventory) {
 	}
 }
 
+echo '<h4>'.__('Contacts grouped by inventory').'</h4>';
+print_table ($table);
+
+$table->data = array ();
+$table->head = array ();
+$table->head[0] = __('Company');
+$table->head[1] = __('Contact');
+$table->head[2] = __('Details');
+$table->head[3] = __('Edit');
+
+$contacts = get_incident_contact_reporters ($id_incident); 
+
+foreach ($contacts as $contact) {
+	$data = array ();
+		
+	$data[0] = get_db_value  ('name', 'tcompany', 'id', $contact['id_company']);
+	$data[1] = $contact['fullname'];
+	$details = '';
+	if ($contact['phone'] != '')
+		$details .= '<strong>'.__('Phone number').'</strong>: '.$contact['phone'].'<br />';
+	if ($contact['mobile'] != '')
+		$details .= '<strong>'.__('Mobile phone').'</strong>: '.$contact['mobile'].'<br />';
+	if ($contact['position'] != '')
+		$details .= '<strong>'.__('Position').'</strong>: '.$contact['position'].'<br />';
+	$data[2] = print_help_tip ($details, true, 'tip_view');
+	$data[3] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'">'.
+			'<img src="images/setup.gif" /></a>';
+	array_push ($table->data, $data);
+}
+
+echo '<h4>'.__('Contacts who reported this incident').'</h4>';
 print_table ($table);
 
 ?>

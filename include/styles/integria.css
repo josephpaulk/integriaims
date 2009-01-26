@@ -1055,3 +1055,7 @@ div#loading img {
 	 float: right;
 	 margin-top: -12px;
 }
+
+select#task_user, select#select_contacts {
+	width: 150px;
+}

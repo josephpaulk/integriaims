@@ -35,6 +35,7 @@ define ('INCIDENT_NOTE_DELETED', 9);
 define ('INCIDENT_INVENTORY_ADDED', 10);
 define ('INCIDENT_USER_CHANGED', 17);
 define ('INCIDENT_DELETED', 18);
+define ('INCIDENT_CONTACT_ADDED', 19);
 
 define ('TASK_CREATED', 11);
 define ('TASK_UPDATED', 12);
@@ -766,6 +767,10 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 		break;
 	case INCIDENT_DELETED:
 		$description = __('Incident deleted');
+		break;
+	case INCIDENT_CONTACT_ADDED:
+		$description = __('Contact added');
+		$description .= ' -> '.get_db_value ('fullname', 'tcompany_contact', 'id', $aditional_data);
 		break;
 	default:
 		$description = __('Unknown update');

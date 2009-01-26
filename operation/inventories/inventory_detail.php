@@ -277,7 +277,7 @@ if ($id) {
 } else {
 	$contacts = array ();
 }
-$table->data[4][0] = print_select ($contacts, 'inventory_contacts', NULL,
+$table->data[4][0] = print_select ($contacts, 'select_contacts', NULL,
 	'', '', '', true, false, false, __('Contacts'));
 $table->data[4][0] .= print_button (__('Add'),
 	'search_contact', false, '', 'class="dialogbtn"', true);

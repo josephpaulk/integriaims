@@ -350,4 +350,65 @@ function update_incident_inventories ($id_incident, $inventories) {
 	}
 }
 
+/**
+ * Update contact reporters in an incident.
+ *
+ * @param int Incident id to update.
+ * @param array List of contacts ids.
+ */
+function update_incident_contact_reporters ($id_incident, $contacts) {
+	error_reporting (0);
+	$where_clause = '';
+	
+	if (empty ($contacts)) {
+		$contacts = array (0);
+	}
+	$where_clause = sprintf ('AND id_contact NOT IN (%s)',
+		implode (',', $contacts));
+	
+	$sql = sprintf ('DELETE FROM tincident_contact_reporters
+		WHERE id_incident = %d %s',
+		$id_incident, $where_clause);
+	process_sql ($sql);
+	foreach ($contacts as $id_contact) {
+		$sql = sprintf ('INSERT INTO tincident_contact_reporters
+			VALUES (%d, %d)',
+			$id_incident, $id_contact);
+		$tmp = process_sql ($sql);
+		if ($tmp !== false)
+			incident_tracking ($id_incident, INCIDENT_CONTACT_ADDED,
+				$id_contact);
+	}
+}
+
+/**
+ * Get all the contacts who reported a incident
+ *
+ * @param int Incident id.
+ * @param bool Wheter to return only the contact names (indexed by id) or all
+ * the data.
+ *
+ * @return array An array with all the contacts who reported the incident. Empty
+ * array if none was set.
+ */
+function get_incident_contact_reporters ($id_incident, $only_names = false) {
+	$sql = sprintf ('SELECT tcompany_contact.*
+		FROM tcompany_contact, tincident_contact_reporters
+		WHERE tcompany_contact.id = tincident_contact_reporters.id_contact
+		AND id_incident = %d', $id_incident);
+	$contacts = get_db_all_rows_sql ($sql);
+	if ($contacts === false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($contacts as $contact) {
+			$retval[$contact['id']] = $contact['fullname'];
+		}
+		return $retval;
+	}
+	
+	return $contacts;
+}
+
 ?>

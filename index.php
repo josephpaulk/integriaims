@@ -99,6 +99,26 @@ echo "<title>".$config["sitename"]."</title>";
 <script type="text/javascript" src="include/js/jquery.ui.dialog.js"></script>
 <script type="text/javascript" src="include/js/jquery.form.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.textarearesizer.js"></script>
+<script type="text/javascript">
+var lang = {
+	"Are you sure?" : "<?php echo __('Are you sure?')?>",
+	"Added" : "<?php echo __('Added')?>",
+	"Search inventory object" : "<?php echo __('Search inventory object')?>",
+	"Already added" : "<?php echo __('Already added')?>",
+	"Added" : "<?php echo __('Added')?>",
+	"Search parent incident" : "<?php echo __('Search parent incident')?>",
+	"User search" : "<?php echo __('User search')?>",
+	"There's no affected inventory object" : "<?php echo __('There\'s no affected inventory object')?>",
+	"There's no affected object" : "<?php echo __('There\'s no affected object')?>",
+	"Create incident" : "<?php echo __('Create incident')?>",
+	"Add workunit" : "<?php echo __('Add workunit')?>",
+	"Submitting" : "<?php echo __('Submitting')?>",
+	"Upload file" : "<?php echo __('Upload file')?>",
+	"Search contact" : "<?php echo __('Search contact')?>",
+	"Create contact" : "<?php echo __('Create contact')?>",
+	"Search parent inventory" : "<?php echo __('Search parent inventory')?>"
+};
+</script>
 <!--[if lte IE 7]>
 <script type="text/javascript" src="include/js/jquery.bgiframe.js"></script>
 <link rel="stylesheet" href="include/styles/integria-ie-fixes.css" type="text/css" />

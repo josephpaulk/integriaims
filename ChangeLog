@@ -1,3 +1,38 @@
+2009-01-26  Esteban Sanchez  <estebans@artica.es>
+
+	* index.php: Added translated strings to be used in javascript.
+	
+	* include/js/integria.js: New function to translate strings added.
+
+	* include/js/integria_incident_search.js: Translate strings. Fixed
+	some errors which was preventing the error messages to be shown. Make
+	configure_contact_buttons() a bit more widely usable by renaming some
+	HTML elements.
+
+	* operation/incidents/incident_detail.php: Added a new option to add a
+	list of company contacts who are supposed to be the people who
+	reported the incident.
+
+	* operation/incidents/incident_inventory_contacts.php: Show the
+	company contacts defined when creating or updating an incident.
+
+	* operation/inventories/inventory_detail.php: Renamed an HTML element
+	so configure_contact_buttons() can work in many places.
+
+	* integria_db.sql: Renamed tincident_contact_creator to
+	tincident_contact_reporters. Added also a restraint to avoid
+	duplicated values.
+
+	* include/styles/integria.css: Added style for some dropdown menus.
+
+	* include/functions_html.php: Fixed documentation.
+
+	* include/functions_incidents.php: Added
+	update_incident_contact_reporters() and
+	get_incident_contact_reporters().
+
+	* include/functions_db.php: Added new tracking for incidents.
+
 2009-01-23  Esteban Sanchez  <estebans@artica.es>
 
 	* images/wait.gif: Added to repository. Image to be shown when an AJAX
