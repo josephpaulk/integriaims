@@ -1,3 +1,10 @@
+2009-01-26  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
+
+	* include/languages/es.mo, include/languages/es.po: Updated Spanish
+	  translation
+
+	* include/languages/index.pot: Updated PO Template.
+
 2009-01-26  Esteban Sanchez  <estebans@artica.es>
 
 	* index.php: Added translated strings to be used in javascript.
