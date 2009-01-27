@@ -1,3 +1,8 @@
+2009-01-27  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
+
+        * godmode/grupos/lista_grupos.php: Fixed bug with an argument not   
+          sent to sql statement.
+
 2009-01-26  Esteban Sanchez  <estebans@artica.es>
 
 	* include/config_process.php: Improved the language code selection. It

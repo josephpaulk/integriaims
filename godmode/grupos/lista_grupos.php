@@ -59,7 +59,7 @@ if ($create_group) {
 	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, lang,
 		banner, url, id_user_default, email) 
 		VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s")',
-		$name, $icon, $forced_email, $lang, $banner, $url, $id_user_default);
+		$name, $icon, $forced_email, $lang, $banner, $url, $id_user_default, $email);
 	$id = process_sql ($sql, 'insert-id');	
 	if ($id === false)
 		echo '<h3 class="error">'.__('There was a problem creating group').'</h3>';
