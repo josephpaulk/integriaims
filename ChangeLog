@@ -1,4 +1,16 @@
-2009-01-30  Jorge Gonzalez  <jorgegonz@svn.gnome.org>
+2009-01-30  Jorge Gonzalez  <jorgegonz@artica.es>
+
+	* include/help/en/help_no_wu_completion.php: fixed wrong header.
+
+	* include/help/es, include/help/es/help_profiles.php,
+	  include/help/es/help_hours_perday.php,
+	  include/help/es/help_notification_period.php,
+	  include/help/es/help_limit_size.php,
+	  include/help/es/help_autowu_completion.php,
+	  include/help/es/help_no_wu_completion.php: Added Spanish help
+	  files.
+
+2009-01-30  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/languages/es.mo, include/languages/es.po: Updated Spanish
 	  translation.
