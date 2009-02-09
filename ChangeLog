@@ -1,3 +1,9 @@
+2009-02-08  Sancho Lerena  <slerena@artica.es>
+
+	* functions_db.php: Fixed link to incident detail. This includes 
+	all the tabs and sidemenu. Fixed listing of workunits, now shows
+	most recents WU the first.
+
 2009-01-30  Jorge Gonzalez  <jorgegonz@artica.es>
 
 	* include/help/en/help_no_wu_completion.php: fixed wrong header.

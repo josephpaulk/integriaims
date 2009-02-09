@@ -1213,19 +1213,19 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		break;
 	case 0: // Incident update
 		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been updated.";
-		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc";
+		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_inc";
 		break;
 	case 1: // Incident creation
 		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been created.";
-		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc";
+		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_inc";
 		break;
 	case 2: // New attach
 		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new file attached.";
-		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc";
+		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_inc";
 		break;
 	case 3: // Incident deleted 
 		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been deleted.";
-		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_detail&id=$id_inc";
+		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_inc";
 		break;
 	}
 		
@@ -1733,7 +1733,7 @@ function get_company_contacts ($id_company, $only_names = true) {
 
 function get_incident_workunits ($id_incident) {
 	$workunits = get_db_all_rows_field_filter ('tworkunit_incident', 'id_incident',
-					$id_incident, 'id_workunit ASC');
+					$id_incident, 'id_workunit DESC');
 	if ($workunits === false)
 		return array ();
 	return $workunits;
