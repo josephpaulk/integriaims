@@ -1,5 +1,10 @@
 2009-02-23  Sancho Lerena  <slerena@artica.es>
 
+	*  operation/incidents/incident_detail.php: SLA Alert removed when
+	update or add any workunit to an incident.
+
+	* integria_db.sql: Fixed a possible problem with Mysql FK creation.
+
 	* functions_db.php: Support for external usermode. Fixed some problems with
 	rendering of status and resolution in mail. Fixed probles due enterprise
 	call wihout table reference. Added creator on count of active incidents. 

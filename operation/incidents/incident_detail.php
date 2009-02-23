@@ -115,7 +115,7 @@ if ($action == 'update') {
 	incident_tracking ($id, INCIDENT_UPDATED);
 
 	if ($sla_disabled == 1)
-		$sla_man = ", sla_disabled = 1, affected_sla_id = 0 ";
+		$sla_man = ", sla_disabled = 1 ";
 	else 
 		$sla_man = "";
 
@@ -124,7 +124,7 @@ if ($action == 'update') {
 			id_grupo = %d, id_usuario = "%s",
 			notify_email = %d, prioridad = %d, descripcion = "%s",
 			epilog = "%s", id_task = %d, resolution = %d,
-			id_incident_type = %d, id_parent = %d %s 
+			id_incident_type = %d, id_parent = %d, affected_sla_id = 0  %s 
 			WHERE id_incidencia = %d',
 			$titulo, $origen, $estado, $grupo, $user,
 			$email_notify, $priority, $description,
@@ -265,7 +265,7 @@ if ($id) {
 		$profile = (int) get_parameter ('work_profile');
 		$public = (bool) get_parameter ('public');
 
-		$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s"
+		$sql = sprintf ('UPDATE tincidencia SET affected_sla_id = 0, actualizacion = "%s"
 				WHERE id_incidencia = %d', $timestamp, $id);
 		process_sql ($sql);
 

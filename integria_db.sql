@@ -17,7 +17,7 @@
 --
 
 CREATE TABLE `tusuario` (
-  `id_usuario` varchar(60) NOT NULL default '0',
+  `id_usuario` varchar(60) NOT NULL default '',
   `nombre_real` varchar(125) NOT NULL default '',
   `password` varchar(45) default NULL,
   `comentarios` varchar(200) default NULL,
