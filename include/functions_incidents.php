@@ -68,6 +68,10 @@ function filter_incidents ($filters) {
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
 	
+	// Not closed
+	if ($filters["status"] == -10)
+		$filters['status'] = "1,2,3,4,5";
+
 	$resolutions = get_incident_resolutions ();
 	
 	$sql_clause = '';
@@ -95,13 +99,18 @@ function filter_incidents ($filters) {
 		}
 	}
 
+	// Manage external users
+	$return = enterprise_hook ('manage_external');
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		$sql_clause .= $return;
+	
 	$sql = sprintf ('SELECT * FROM tincidencia
 			WHERE estado IN (%s)
 			%s
-			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%")
+			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" OR id_creator LIKE "%%%s%%" OR  		id_usuario LIKE "%%%s%%")
 			ORDER BY actualizacion DESC
 			LIMIT %d',
-			$filters['status'], $sql_clause, $filters['string'], $filters['string'],
+			$filters['status'], $sql_clause, $filters['string'], $filters['string'], $filters['string'],$filters['string'],
 			$config['limit_size']);
 	
 	$incidents = get_db_all_rows_sql ($sql);

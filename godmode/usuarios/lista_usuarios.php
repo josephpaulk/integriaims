@@ -75,6 +75,7 @@ echo '<table width="90%" class="listing">';
 echo '<th>'.__('User ID').'</td>';
 echo '<th>'.__('Last contact');
 echo '<th>'.__('Profile');
+echo '<th>'.__('Level');
 echo '<th>'.__('Name');
 echo '<th>'.__('Delete');
 
@@ -91,6 +92,12 @@ while ($rowdup=mysql_fetch_array($resq1)){
 	$comentarios =$rowdup["nombre_real"];
 	$fecha_registro =$rowdup["fecha_registro"];
 	$avatar = $rowdup["avatar"];
+	if ($rowdup["nivel"] == 0)
+		$nivel = __("Standard user");
+	elseif ($rowdup["nivel"] == 1)
+		$nivel = __("Administrator");
+	else
+		$nivel = __("External user");
 	
 	echo "<tr><td>";
 	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=".$nombre."'><b>".$nombre."</b></a>";
@@ -112,7 +119,7 @@ while ($rowdup=mysql_fetch_array($resq1)){
 		}
 		echo "</span></a>";
 	}
-	
+	echo "<td>" . $nivel;
 	echo "<td>" . $comentarios;
 	echo '<td align="center">';
 	echo '<a href="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario='.$nombre.'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';

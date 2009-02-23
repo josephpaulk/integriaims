@@ -543,7 +543,11 @@ function update_user_contact ($id_user) {
 // ---------------------------------------------------------------
 
 function dame_admin ($id) {
-	return (bool) get_db_value ('nivel', 'tusuario', 'id_usuario', $id);
+	$nivel = get_db_value ('nivel', 'tusuario', 'id_usuario', $id);
+	if ($nivel == 1)
+		return true;
+	// Be careful, other possible values on level could be implemented
+	// In the future, so only "admin" value possible is 1
 }
 
 // --------------------------------------------------------------- 
@@ -1195,11 +1199,11 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$titulo =$row["titulo"];
 	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
-	$prioridad = $row["prioridad"];
+	$prioridad = render_priority($row["prioridad"]);
 	$nota = wordwrap($nota, 75, "\n");
 
-	$estado = get_db_sql ("SELECT name FROM tincident_status WHERE id = ".$row["estado"]);
-	$resolution = get_db_sql ("SELECT name FROM tincident_resolution WHERE id = ".$row["resolution"]);
+	$estado = render_status ( $row["estado"]);
+	$resolution = render_resolution ($row["resolution"]);
 	$create_timestamp = $row["inicio"];
 	$update_timestamp = $row["actualizacion"];
 	$usuario = $row["id_usuario"];
@@ -1342,7 +1346,7 @@ function projects_active_user ($id_user) {
 }
 
 function incidents_active_user ($id_user) {
-	$sql = "SELECT COUNT(*) FROM tincidencia WHERE id_usuario = '$id_user' AND estado IN (1,2,3,4,5)";
+	$sql = "SELECT COUNT(*) FROM tincidencia WHERE id_creator = '$id_user' OR id_usuario = '$id_user' AND estado IN (1,2,3,4,5)";
 	return get_db_sql ($sql);
 }
 
@@ -1452,33 +1456,6 @@ function get_user_groups ($id_user = 0, $permission = 'IR') {
 	return $user_groups;
 }
 
-/** 
- * Get all the users that belongs to a group.
- * 
- * @param id_group Group id to get all the users.
- *
- * @return A list of the groups the user has reading privileges.
- */
-function get_users_in_group ($id_group = 0, $only_names = true) {
-	$sql = sprintf ('SELECT tusuario.* FROM tusuario_perfil, tusuario
-		WHERE tusuario_perfil.id_usuario = tusuario.id_usuario
-		AND id_grupo = %d GROUP BY id_usuario',
-		$id_group);
-	$users = get_db_all_rows_sql ($sql);
-	if ($users === false)
-		return array ();
-	
-	if ($only_names) {
-		$retval = array ();
-		foreach ($users as $user) {
-			$retval[$user['id_usuario']] = $user['nombre_real'];
-		}
-		return $retval;
-	}
-	
-	return $users;
-}
-
 function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true) {
 	global $config;
 
@@ -1487,6 +1464,13 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 	if ($id_user == 0) {
 		$id_user = $config['id_user'];
 	}
+
+	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
+	if ($level == -1){
+		$values[$id_user]=$id_user;
+		return $values;
+	}
+		
 
 	if (give_acl ($id_user, 1, $access)) {
 		$users = get_db_all_rows_in_table("tusuario");
@@ -1933,7 +1917,12 @@ function get_incident_users ($id_incident) {
 	$users['owner'] = get_db_row ('tusuario', 'id_usuario', $incident['id_usuario']);
 	$users['creator'] = get_db_row ('tusuario', 'id_usuario', $incident['id_creator']);
 	$users['affected'] = array ();
-	$affected_users = get_users_in_group ($incident['id_grupo'], false);
+	$return = enterprise_hook ("get_users_in_group", array ($incident['id_grupo'], false) );
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		$affected_users = $return;
+	else  
+		$affected_users = array();
+	
 	foreach ($affected_users as $user) {
 		if ($users['owner']['id_usuario'] == $user['id_usuario'])
 			continue;
@@ -2173,6 +2162,18 @@ function get_incident_origins () {
 	}
 	
 	return $retval;
+}
+
+function render_resolution ($res){
+	$res2 =  get_db_sql ("SELECT name FROM tincident_resolution WHERE id = ".$res);
+	if ($res2 == "")
+		return __("None");
+	return __($res2);
+}
+
+function render_status ($sta){
+	$estado = get_db_sql ("SELECT name FROM tincident_status WHERE id = ".$sta);
+	return __($estado);
 }
 
 

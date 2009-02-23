@@ -3,7 +3,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// Copyright (c) 2009 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -17,18 +17,22 @@
 global $config;
 
 // Integria version
-$config["build"]="081210";
-$config["version"]="v2.0beta1";
+$config["build"]="090223";
+$config["version"]="v2.0beta2";
 $config["build_version"] = $config["build"];
 
 if (! defined ('ENTERPRISE_DIR'))
 	define ('ENTERPRISE_DIR', 'enterprise');
 
 // Detect enterprise version
+// NOTE: If you override this value without enterprise code, you will break 
+// the code and get several problems!
+
 if (file_exists($config["homedir"]."/".ENTERPRISE_DIR."/include/functions_db.php"))
 	$config["enteprise"] = 1;
 else
 	$config["enteprise"] = 0;
+
 
 
 // Read remaining config tokens from DB
@@ -123,11 +127,14 @@ if (!isset ($config["hours_perday"]))
 if (!isset ($config["limit_size"]))
 	$config["limit_size"] = 1000;
 
-if (!isset ($config["sitename"]))
+if (!isset ($config["sitename"])) 
 	$config["sitename"] = "INTEGRIA";
 
 if (!isset ($config["fontsize"]))
 	$config['fontsize'] = 10;
+
+if (!isset ($config["incident_reporter"]))
+	$config['incident_reporter'] = 0;
 
 // Mail address used to send mails
 if (!isset ($config["mail_from"]))

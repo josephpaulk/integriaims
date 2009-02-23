@@ -324,8 +324,6 @@ $(document).ready (function () {
 			check_incident (id);
 		},
 		function (form) {
-			if (first_search)
-				$("#search_status").attr ("value", 1);
 			val = get_form_input_values (form);
 			
 			val.push ({name: "page",
@@ -352,10 +350,9 @@ $(document).ready (function () {
 		}
 	);
 <?php if ($do_search_news) : ?>
-	first_search = true;
-	$("#search_status").attr ("value", 1);
+	$("#search_status").attr ("value", -10);
 	$("#search_incident_form").submit ();
-	$("#search_status").attr ("value", 0);
+
 <?php elseif ($do_search) : ?>
 	$("#search_incident_form").submit ();
 <?php endif; ?>

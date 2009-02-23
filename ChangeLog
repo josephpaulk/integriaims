@@ -1,3 +1,66 @@
+2009-02-23  Sancho Lerena  <slerena@artica.es>
+
+	* functions_db.php: Support for external usermode. Fixed some problems with
+	rendering of status and resolution in mail. Fixed probles due enterprise
+	call wihout table reference. Added creator on count of active incidents. 
+	Added new functions to render resolution and status.
+	
+	* functions_form.php: Default search is now "non-closed incidents" that
+	groups status 1-5. Fixed repeated info on incident side menu info and 
+	reordered other info.
+	
+	* include/config_process.php: Added support for incident_reporter switch.
+	
+	* include/functions_incidents.php: Added support for external users,
+	better text search (now by creator, and owner username), and support for
+	search on "non closed incidents" special status code -10.
+	
+	* operation/incidents/incident.php: Fixed JS code for automatic selection
+	on search/status on incident.
+	
+	* operation/incidents/incident_inventory_contacts.php: Added support for
+	incident_reporter switch to show control only if enabled.
+	
+	* operation/incidents/incident_detail.php: Added incident_reporter code,
+	fixed all problems with SLA_Disable, now works and also disable running SLA
+	warnings if disabled. Users without Manage permissions cannot change default
+	assigned user neither status or resolution. 
+	
+	* operation/incidents/incident_workunits.php: Added link to incident full
+	view (is not the best solution, but works).
+	
+	* operation/side_menu.php: Removed old options (like weekly reports and view
+	vacations ) and added new ones, like filemanager menu.
+	
+	* operation/main_menu.php: Fixed bug with inventory ACL. 
+	
+	* operation/users/user_spare_workunit.php: Passing dates from month view
+	now works.
+	
+	* operation/user_report/monthly.php: Added combo to select user.
+	
+	* operation/user_report/weekly_graph.php: Removed not used anymore.
+	
+	* images/group_banners/ties.png: Sample banner for group-enabled header pic.
+	
+	* images/avatars/people_*_small.png: Resized to 22x22.
+	
+	* general/noaccess.php: Fixed message.
+	
+	* general/header.php: Suppor for group-defined banner.
+	
+	* general/home.php: Fixed home to show incident creators their non-closed
+	incidents.
+	
+	* godmode/setup/setup.php: Added support for reporter switch.
+	
+	* godmode/setup/filemgr.php: New file manager to manage images (including
+	upload new ones!).
+	
+	* godmode/usuarios/configurar_usuarios.php: Added switch for external users.
+	
+	* godmode/usuarios/lista_usuarios.php: Show level on list.
+	
 2009-02-08  Sancho Lerena  <slerena@artica.es>
 
 	* functions_db.php: Fixed link to incident detail. This includes 

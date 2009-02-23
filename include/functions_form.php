@@ -685,7 +685,7 @@ function form_search_incident ($return = false) {
 	$output = '';
 
 	$search_string = (string) get_parameter ('search_string');
-	$status = (int) get_parameter ('search_status');
+	$status = (int) get_parameter ('search_status', -10);
 	$priority = (int) get_parameter ('search_priority', -1);
 	$id_group = (int) get_parameter ('search_id_group');
 	$id_inventory = (int) get_parameter ('search_id_inventory');
@@ -720,17 +720,20 @@ function form_search_incident ($return = false) {
 	$table->data[0][0] = print_input_text ('search_string', $search_string,
 		'', 30, 100, true, __('Search string'));
 	
-	$table->data[0][1] = print_select (get_indicent_status (),
+	$available_status = get_indicent_status();
+	$available_status[-10] = __("Not closed");
+	
+	$table->data[0][1] = print_select ($available_status,
 			'search_status', $status,
-			'', __('Any'), 0, true, false, false,
+			'', __('Any'), 0, true, false, true,
 			__('Status'));
 	
-	$table->data[0][2] = print_select (get_priorities (),
+	$table->data[1][0] = print_select (get_priorities (),
 			'search_priority', $priority,
 			'', __('Any'), -1, true, false, false,
 			__('Priority'));
 
-	$table->data[1][0] = print_select (get_user_groups (),
+	$table->data[0][2] = print_select (get_user_groups (),
 			'search_id_group', $id_group,
 			'', __('All'), 1, true, false, false, __('Group'));
 	
@@ -823,17 +826,14 @@ function incident_details_list ($id_incident, $return = false) {
 	if ($incident['actualizacion'] != $incident['inicio']) {
 		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last update').'</strong>: '.human_time_comparation($incident['actualizacion']);
 	}
-	if ($incident['actualizacion'] != $incident['inicio']) {
-		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last update').'</strong>: '.human_time_comparation($incident['actualizacion']);
-	}
 	
 	/* Show workunits if there are some */
 	$work_hours = get_incident_count_workunits ($id_incident);
 	if ($work_hours) {
-		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Hours worked').'</strong>: '.$work_hours;
-		$workunits = get_incident_workunits ($id_incident);
+		$workunits = get_incident_workunits ($id_incident);	
 		$workunit_data = get_workunit_data ($workunits[0]['id_workunit']);
 		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last work at').'</strong>: '.human_time_comparation ($workunit_data['timestamp']);
+		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Hours worked').'</strong>: '.$work_hours;
 		$output .= '<br />&nbsp;&nbsp;<strong>'._('Done by').'</strong>: <em>'.$workunit_data['id_user'].'</em>';
 	}
 	

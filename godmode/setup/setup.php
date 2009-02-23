@@ -37,6 +37,7 @@ if ($update) {
 	$config["limit_size"] = (int) get_parameter ("limit_size");
 	$config["autowu_completion"] = (int) get_parameter ("autowu_completion", 0);
 	$config["fontsize"] = (int) get_parameter ("fontsize", 10);
+	$config["incident_reporter"] = (int) get_parameter ("incident_reporter", 0);
 
 	process_sql ("UPDATE tconfig SET value='".$config["block_size"]."' WHERE token='block_size'");
 	process_sql ("UPDATE tconfig SET value='".$config["language_code"]."' WHERE token='language_code'");
@@ -56,6 +57,9 @@ if ($update) {
 	process_sql ("DELETE FROM tconfig WHERE token = 'fontsize'");
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('fontsize', '".$config["fontsize"]."')");
 
+	process_sql ("DELETE FROM tconfig WHERE token = 'incident_reporter'");
+	process_sql ("INSERT INTO tconfig (token, value) VALUES ('incident_reporter', '".$config["incident_reporter"]."')");
+
 }	
 
 echo "<h2>".__('General setup')."</h2>";
@@ -72,7 +76,6 @@ $table->data[0][0] = print_select_from_sql ('SELECT id_language, name FROM tlang
 $table->data[0][1] = print_input_text ("no_wu_completion", $config["no_wu_completion"], '',
 	20, 500, true, __('No WU completion users'));
 $table->data[0][1] .= integria_help ("no_wu_completion", true);
-
 
 $table->data[1][0] = print_input_text ("block_size", $config["block_size"], '',
 	5, 5, true, __('Block size for pagination'));
@@ -97,6 +100,10 @@ $table->data[3][1] = print_input_text ("currency", $config["currency"], '',
 $table->data[4][0] = print_input_text ("fontsize", $config["fontsize"], '',
 	3, 5, true, __('Graphics font size'));
 
+$incident_reporter_options[0] = "Disabled";
+$incident_reporter_options[1] = "Enabled";
+
+$table->data[4][1] = print_select ($incident_reporter_options, "incident_reporter", $config["incident_reporter"], '','','',true,0,true, "Incident reporter");
 
 echo "<form name='setup' method='post'>";
 

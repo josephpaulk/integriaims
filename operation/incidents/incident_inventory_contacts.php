@@ -81,27 +81,29 @@ $table->head[1] = __('Contact');
 $table->head[2] = __('Details');
 $table->head[3] = __('Edit');
 
-$contacts = get_incident_contact_reporters ($id_incident); 
+if ($config['incident_reporter'] == 1){
+	$contacts = get_incident_contact_reporters ($id_incident); 
 
-foreach ($contacts as $contact) {
-	$data = array ();
+	foreach ($contacts as $contact) {
+		$data = array ();
 		
-	$data[0] = get_db_value  ('name', 'tcompany', 'id', $contact['id_company']);
-	$data[1] = $contact['fullname'];
-	$details = '';
-	if ($contact['phone'] != '')
-		$details .= '<strong>'.__('Phone number').'</strong>: '.$contact['phone'].'<br />';
-	if ($contact['mobile'] != '')
-		$details .= '<strong>'.__('Mobile phone').'</strong>: '.$contact['mobile'].'<br />';
-	if ($contact['position'] != '')
-		$details .= '<strong>'.__('Position').'</strong>: '.$contact['position'].'<br />';
-	$data[2] = print_help_tip ($details, true, 'tip_view');
-	$data[3] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'">'.
-			'<img src="images/setup.gif" /></a>';
-	array_push ($table->data, $data);
-}
+		$data[0] = get_db_value  ('name', 'tcompany', 'id', $contact['id_company']);
+		$data[1] = $contact['fullname'];
+		$details = '';
+		if ($contact['phone'] != '')
+			$details .= '<strong>'.__('Phone number').'</strong>: '.$contact['phone'].'<br />';
+		if ($contact['mobile'] != '')
+			$details .= '<strong>'.__('Mobile phone').'</strong>: '.$contact['mobile'].'<br />';
+		if ($contact['position'] != '')
+			$details .= '<strong>'.__('Position').'</strong>: '.$contact['position'].'<br />';
+		$data[2] = print_help_tip ($details, true, 'tip_view');
+		$data[3] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'">'.
+				'<img src="images/setup.gif" /></a>';
+		array_push ($table->data, $data);
+	}
 
-echo '<h4>'.__('Contacts who reported this incident').'</h4>';
-print_table ($table);
+	echo '<h4>'.__('Contacts who reported this incident').'</h4>';
+	print_table ($table);
+}
 
 ?>

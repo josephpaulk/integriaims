@@ -98,9 +98,7 @@ if ($id_workunit) {
 	$have_cost = false;
 	$public = true;
 	$id_profile = "";
-	$now_date = date ("Y-m-d");
-	$now_time = date ("H:i:s");
-	$now = date ("Y-m-d H:i:s");
+	// $now is passed as parameter or get current time by default
 }
 
 // Insert workunit

@@ -17,14 +17,12 @@
 global $config;
 
 	echo "<center>";
-	echo '<div style="margin-top: 50px; width: 400px;">';
-	echo "<div align='center'>";
+	echo '<div style="margin-top: 100px; width: 450px;">';
 	echo '<h2>'.__('You don\'t have access to this page').'</h2>';
-	echo '<div>&nbsp;</div>';
+	echo "<p align='center'>";
 	echo "<img src='".$config["base_url"]."/images/noaccess.gif'>";
-	echo "<div>&nbsp;</div>";
-	echo "<div class='msg'>". __('Access to this page is restricted to authorized users only, please contact system administrator if you need assistance. <br><br>Please know that all attempts to access this page are recorded in security logs of Integria System Database'). "</div>";
-	echo "</div>";
+	echo "<p>". __('Access to this page is restricted to authorized users only, please contact system administrator if you need assistance. <br><br>Please know that all attempts to access this page are recorded in security logs of Integria System Database'). "</p>";
+	echo "</p>";
 	echo "</div>";
 	echo "</center>";
 	exit;

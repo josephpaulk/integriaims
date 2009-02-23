@@ -39,7 +39,7 @@ if (give_acl($config["id_user"], 0, "IR") == 1){
 }
 
 // Inventory
-if (give_acl($config["id_user"], 0, "IR") == 1){
+if (give_acl($config["id_user"], 0, "VR") == 1){
     // Incident
     if ($sec == "inventory" )
 	    echo "<li id='current'>";

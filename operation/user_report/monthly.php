@@ -22,6 +22,7 @@ if (check_login() != 0) {
 
 $id_grupo = get_parameter ("id_grupo",0);
 $id_user=$config['id_user'];
+$real_user_id = $id_user;
 
 if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo, "IR") != 1)){
  	// Doesn't have access to this page
@@ -29,6 +30,9 @@ if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo
 	include ("general/noaccess.php");
 	exit;
 }
+
+$id = get_parameter ('id', $config["id_user"]);
+
 $id = get_parameter ("id","");
 if (($id != "") && ($id != $id_user)){
 	if (give_acl($id_user, 0, "PW"))
@@ -38,9 +42,7 @@ if (($id != "") && ($id != $id_user)){
 		require ("general/noaccess.php");
 		exit;
 	}
-	
 }
-
 
 // Get parameters for actual Calendar show
 $time = time();
@@ -75,7 +77,13 @@ echo "<table width=700>";
 echo "<tr><td>";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$prev_month&year=$prev_year&id=$id_user'> ".__('Prev')."</a>";
 echo "<td width=85%>";
+
+echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year'>";
+combo_user_visible_for_me ($real_user_id, 'id', 0, 'PR');
 echo "&nbsp;";
+print_submit_button (__('Show'), 'show_btn', false, 'class="next sub"');
+echo "</form>";
+
 echo "<td>";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$next_month&year=$next_year&id=$id_user'> ".__('Next')."</a>";
 echo "</table>";

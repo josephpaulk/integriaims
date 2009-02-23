@@ -16,8 +16,18 @@
 
 check_login();
 
-// Put here your logo
-echo '<a href="index.php"><img src="images/integria_logo.png" title="'.__('Home').'"/></a>';
+
+// Custom logo per group
+if ($config["enteprise"] == 1){
+	$mygroup = get_first_group_of_user ($config["id_user"]);
+	$banner = get_db_sql ("SELECT banner FROM tgrupo WHERE id_grupo = ".$mygroup);
+	if ($banner != "")
+		echo '<a href="index.php"><img src="images/group_banners/'.$banner.'" title="'.__('Home').'"/></a>';	
+	else
+		echo '<a href="index.php"><img src="images/integria_logo.png" title="'.__('Home').'"/></a>';
+} else { 
+	echo '<a href="index.php"><img src="images/integria_logo.png" title="'.__('Home').'"/></a>';
+}
 
 // Adjust width with &nbsp; to fit your logo
 echo "<div width=100%>";

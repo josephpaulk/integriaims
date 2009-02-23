@@ -127,17 +127,28 @@ if (!isset($config["id_user"]))
 		echo "<td valign='top'><br><b>";
 		echo __('Incidents active you have').": ".incidents_active_user ($config["id_user"]);
 		echo '<hr width="100%" size="1">';
-		echo "</b><br><br>";
-		 $sql_2 = "SELECT * FROM tincidencia WHERE id_usuario = '".$config["id_user"]."' AND estado IN (1,2,3,4,5) ORDER BY actualizacion DESC limit 5";
+		echo "</b>";
+		 $sql_2 = "SELECT * FROM tincidencia WHERE id_creator = '".$config["id_user"]."' OR id_usuario = '".$config["id_user"]."' AND estado IN (1,2,3,4,5) ORDER BY actualizacion DESC limit 5";
 		$result_2 = mysql_query($sql_2);
+		if ($result_2){
+			echo "<table class=listing>";
+			echo "<tr><th>".__("Updated")."</th><th>"._("Status")."</th><th>".__("Incident")."</th></tr>";
+		}
 		while ($row_2 = mysql_fetch_array($result_2)){
 			$idi = $row_2["id_incidencia"];
-			echo $row_2["actualizacion"].": ";
+			echo "<tr><td>";
+			echo human_time_comparation ($row_2["actualizacion"]);
+			echo "<td>";
+			echo render_status($row_2["estado"]);
+			echo "<td>";
+			echo "<i>(#".$row_2["id_incidencia"].") </i>";
 			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$idi'>";
-			echo substr($row_2["titulo"],0,55);
-			echo "</a>";
+			echo "<b>&nbsp;".$row_2["titulo"];
+			echo "</b></a>";
 			echo "<br>";
 		}
+		if (isset($row_2))
+			echo "</table>";
 	}
 
 	echo "</table>";

@@ -80,6 +80,7 @@ if ($action == 'update') {
 	}
 	$id_author_inc = get_incident_author ($id);
 	$titulo = get_parameter ('titulo');
+	$sla_disabled = (bool) get_parameter ("sla_disabled");
 	$description = get_parameter ('description');
 	$origen = get_parameter ("incident_origin", 1);
 	$priority = get_parameter ('priority_form');
@@ -112,24 +113,31 @@ if ($action == 'update') {
 		$tracked = true;
 	}
 	incident_tracking ($id, INCIDENT_UPDATED);
-	
+
+	if ($sla_disabled == 1)
+		$sla_man = ", sla_disabled = 1, affected_sla_id = 0 ";
+	else 
+		$sla_man = "";
+
 	$sql = sprintf ('UPDATE tincidencia SET actualizacion = NOW(),
 			titulo = "%s", origen = %d, estado = %d,
 			id_grupo = %d, id_usuario = "%s",
 			notify_email = %d, prioridad = %d, descripcion = "%s",
 			epilog = "%s", id_task = %d, resolution = %d,
-			id_incident_type = %d, id_parent = %d
+			id_incident_type = %d, id_parent = %d %s 
 			WHERE id_incidencia = %d',
 			$titulo, $origen, $estado, $grupo, $user,
 			$email_notify, $priority, $description,
 			$epilog, $id_task, $resolution, $id_incident_type,
-			$id_parent, $id);
+			$id_parent, $sla_man, $id);
 	$result = process_sql ($sql);
+
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
 
 	/* Update inventory objects in incident */
 	update_incident_inventories ($id, get_parameter ('inventories'));
-	update_incident_contact_reporters ($id, get_parameter ('contacts'));
+	if ($config['incident_reporter'] == 1)
+		update_incident_contact_reporters ($id, get_parameter ('contacts'));
 	
 	if ($result === false)
 		$result_msg = "<h3 class='error'>".__('There was a problem updating incident')."</h3>";
@@ -170,24 +178,26 @@ if ($action == "insert") {
 	$id_task = (int) get_parameter ("task_user");
 	$email_notify = (bool) get_parameter ('email_notify');
 	$id_incident_type = get_parameter ('id_incident_type');
+	$sla_disabled = (bool) get_parameter ("sla_disabled");
 	$id_parent = (int) get_parameter ('id_parent');
 	
 	$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, origen, estado, prioridad,
 			id_grupo, id_creator, notify_email, id_task,
-			resolution, id_incident_type, id_parent)
+			resolution, id_incident_type, id_parent, sla_disabled)
 			VALUES (NOW(), NOW(), "%s", "%s", "%s", %d, %d, %d, %d,
-			"%s", %d, %d, %d, %d, %d)',
+			"%s", %d, %d, %d, %d, %d, %d)',
 			$titulo, $description, $usuario,
 			$origen, $estado, $priority, $grupo, $id_creator,
 			$email_notify, $id_task, $resolution, $id_incident_type,
-			$id_parent);
+			$id_parent, $sla_disabled);
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
 		/* Update inventory objects in incident */
 		update_incident_inventories ($id, get_parameter ('inventories'));
-		update_incident_contact_reporters ($id, get_parameter ('contacts'));
+		if ($config['incident_reporter'] == 1)
+			update_incident_contact_reporters ($id, get_parameter ('contacts'));
 		
 		$result_msg = '<h3 class="suc">'.__('Successfully created').' (id #'.$id.')</h3>';
 		$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
@@ -234,8 +244,8 @@ if ($id) {
 	$epilog = $incident["epilog"];
 	$id_task = $incident["id_task"];
 	$id_parent = $incident["id_parent"];
+	$sla_disabled = $incident["sla_disabled"];
 	$affected_sla_id = $incident["affected_sla_id"];
-	$sla_disabled = false; /* TODO */
 	$id_incident_type = $incident['id_incident_type'];
 	$grupo = dame_nombre_grupo($id_grupo);
 
@@ -384,7 +394,7 @@ if ($id) {
 	$epilog = "";
 	$id_creator = $config['id_user'];
 	$email_notify = 0;
-	$sla_disabled = false;
+	$sla_disabled = 0;
 	$id_incident_type = 0;
 	$affected_sla_id = 0;
 }
@@ -407,6 +417,8 @@ if (! $id) {
 	$email_notify = false;
 }
 $has_permission = (give_acl ($config['id_user'], $id_grupo, "IM")  || ($usuario == $config['id_user']));
+$has_manage_permission = give_acl ($config['id_user'], $id_grupo, "IM");
+
 
 if ($id) {
 	echo "<h1>";
@@ -466,12 +478,19 @@ if ($has_permission) {
 } else {
 	$table->data[0][0] = print_label (__('Title'), '', '', true, $titulo);
 }
-$table->data[0][1] = print_checkbox_extended ('sla_disabled', 0, $sla_disabled,
+$table->data[0][1] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
 	$disabled, '', '', true, __('SLA disabled'));
 $table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
 	$disabled, '', '', true, __('Notify changes by email'));
 
-$table->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
+
+if ($has_manage_permission)
+	$table->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
+else {
+	$table->data[1][0] = print_label (__('Status'), '','',true, render_status(STATUS_NEW));
+	$estado = STATUS_NEW;
+	$table->data[1][0] .= print_input_hidden ('incident_status', $estado, true);
+}
 
 if ($disabled) {
 	$table->data[1][1] = print_label (__('Priority'), '', '', true,
@@ -484,7 +503,15 @@ if ($disabled) {
 
 $table->data[1][1] .= '&nbsp;'. print_priority_flag_image ($priority, true);
 
-$table->data[1][2] = combo_incident_resolution ($resolution, $disabled, true);
+if ($has_manage_permission)
+	$table->data[1][2] = combo_incident_resolution ($resolution, $disabled, true);
+else {
+	$table->data[1][2] = print_label (__('Resolution'), '','',true, render_resolution(RES_INPROCESS));
+	$resolution = RES_INPROCESS;
+	$table->data[1][2] .= print_input_hidden ('incident_resolution', $resolution, true);
+}
+
+
 $parent_name = $id_parent ? (__('Incident').' #'.$id_parent) : __('None');
 
 $table->data[1][3] = print_button ($parent_name, 'search_parent', $disabled, '',
@@ -499,22 +526,25 @@ $table->data[2][0] = combo_incident_origin ($origen, $disabled, true);
 $table->data[2][1] = combo_incident_types ($id_incident_type, $disabled, true);
 $table->data[2][2] = combo_task_user ($id_task, $config["id_user"], $disabled, false, true);
 
-if ($id) {
-	$contacts = get_incident_contact_reporters ($id, true);
-} else {
-	$contacts = array ();
-}
+if ($config['incident_reporter'] == 1){
 
-$table->data[2][3] = print_select ($contacts, 'select_contacts', NULL,
-				'', '', '', true, false, false, __('Reporters'));
-if ($has_permission || $create_incident) {
-	$table->data[2][3] .= print_button (__('Add'),
-					'search_contact', false, '', 'class="dialogbtn"', true);
-	$table->data[2][3] .= print_button (__('Remove'),
-					'delete_contact', false, '', 'class="dialogbtn"', true);
-	foreach ($contacts as $contact_id => $contact_name) {
-		$table->data[2][3] .= print_input_hidden ("contacts[]",
-							$contact_id, true, 'selected-contacts');
+	if ($id) {
+		$contacts = get_incident_contact_reporters ($id, true);
+	} else {
+		$contacts = array ();
+	}
+
+	$table->data[2][3] = print_select ($contacts, 'select_contacts', NULL,
+					'', '', '', true, false, false, __('Reporters'));
+	if ($has_permission || $create_incident) {
+		$table->data[2][3] .= print_button (__('Add'),
+						'search_contact', false, '', 'class="dialogbtn"', true);
+		$table->data[2][3] .= print_button (__('Remove'),
+						'delete_contact', false, '', 'class="dialogbtn"', true);
+		foreach ($contacts as $contact_id => $contact_name) {
+			$table->data[2][3] .= print_input_hidden ("contacts[]",
+								$contact_id, true, 'selected-contacts');
+		}
 	}
 }
 
@@ -530,15 +560,25 @@ if ($has_permission) {
 	$table->data[4][0] = print_label (__('Group'), '', '', true, dame_nombre_grupo ($id_grupo));
 }
 
-if ($has_permission) {
+// Only users with manage permission can change auto-assigned user (that information comes from group def.)
+if ($has_manage_permission) {
 	$table->data[4][1] = print_button (dame_nombre_real ($usuario), 'usuario_name',
 		false, '', 'class="dialogbtn"', true, __('Assigned user'));
 	$table->data[4][1] .= print_input_hidden ('usuario_form', $usuario, true);
 	$table->data[4][1] .= print_help_tip (__('User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user'), true);
 } else {
-	$table->data[4][1] = print_input_hidden ('usuario_form', $usuario, true, __('Assigned user'));
-	$table->data[4][1] .= print_label (__('Assigned user'), '', '', true,
+	// Enterprise only
+	if (($create_incident) AND ($config["enteprise"] == 1)){
+		$assigned_user_for_this_incident = get_default_user_for_incident ($usuario);
+		$table->data[4][1] = print_input_hidden ('usuario_form', $assigned_user_for_this_incident, true, __('Assigned user'));
+		$table->data[4][1] .= print_label (__('Assigned user'), '', '', true,
+		dame_nombre_real ($assigned_user_for_this_incident));	
+
+	} else {
+		$table->data[4][1] = print_input_hidden ('usuario_form', $usuario, true, __('Assigned user'));
+		$table->data[4][1] .= print_label (__('Assigned user'), '', '', true,
 		dame_nombre_real ($usuario));
+	}
 }
 
 if ($create_incident) {

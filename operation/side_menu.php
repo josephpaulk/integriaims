@@ -698,6 +698,13 @@ if ($sec == "godmode") {
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/updatemanager/settings'>".__('Configure updates')."</a></li>";
 
+	// File/Image management
+	if ($sec2 == "godmode/setup/filemgr")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/filemgr'>".__('File manager')."</a></li>";
+
 	// Link management
 	if ($sec2 == "godmode/setup/links")
 		echo "<li id='sidesel'>";
@@ -797,26 +804,12 @@ if ($sec == "users") {
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".__('Montly report')."</a></li>";
 
-		// Basic report (weekly)
-		if ($sec2 == "operation/user_report/report_weekly")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_weekly'>".__('Weekly report')."</a></li>";
-
 		// Basic report (annual)
 		if ($sec2 == "operation/user_report/report_annual")
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual'>".__('Annual report')."</a></li>";
-
-		// View vacations
-		if ($sec2 == "operation/projects/task_workunit")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=operation/projects/task_workunit&id_project=-1&id_task=-1'>".__('View vacations')."</a></li>";
 
 		echo "</ul></div>";
 	}
