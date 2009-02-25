@@ -1,3 +1,7 @@
+2009-02-25  Sancho Lerena <lserena@artica.es>
+
+	* general/error_perms.php: Typo fixed. This is Beta2 officially.
+
 2009-02-23  Sancho Lerena  <slerena@artica.es>
 
 	*  operation/incidents/incident_detail.php: SLA Alert removed when
