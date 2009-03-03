@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// Copyright (c) 2009 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -19,8 +19,10 @@ check_login();
 
 // Custom logo per group
 if ($config["enteprise"] == 1){
-	$mygroup = get_first_group_of_user ($config["id_user"]);
-	$banner = get_db_sql ("SELECT banner FROM tgrupo WHERE id_grupo = ".$mygroup);
+	$banner = "";
+    $mygroup = get_first_group_of_user ($config["id_user"]);
+    if ($mygroup != "")
+        $banner = get_db_sql ("SELECT banner FROM tgrupo WHERE id_grupo = ".$mygroup);
 	if ($banner != "")
 		echo '<a href="index.php"><img src="images/group_banners/'.$banner.'" title="'.__('Home').'"/></a>';	
 	else

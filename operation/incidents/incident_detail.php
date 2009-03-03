@@ -33,20 +33,33 @@ if ($id) {
 
 $check_incident = (bool) get_parameter ('check_incident');
 if ($check_incident) {
-	if ($incident !== false && give_acl ($config['id_user'], $id_grupo, "IR"))
-		echo 1;
+	if ($incident !== false && give_acl ($config['id_user'], $id_grupo, "IR")){
+		if ((get_external_user($config["id_user"])) AND ($incident["id_creator"] != $config["id_user"]))
+			echo 0;
+		else
+			echo 1;
+	}
 	else
 		echo 0;
 	if (defined ('AJAX'))
 		return;
 }
 
-if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
+if (! give_acl ($config['id_user'], $id_grupo, "IR")) 
+{
  	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
 	include ("general/noaccess.php");
 	exit;
 }
+
+if (isset($incident))
+	if ((get_external_user($config["id_user"])) AND ($incident["id_creator"] != $config["id_user"])) {
+	 	// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident  (External user) ".$id);
+		include ("general/noaccess.php");
+		exit;
+	}
 
 $id_grupo = 0;
 $texto = "";

@@ -548,7 +548,20 @@ function dame_admin ($id) {
 		return true;
 	// Be careful, other possible values on level could be implemented
 	// In the future, so only "admin" value possible is 1
+	return false;
 }
+
+// ---------------------------------------------------------------
+// Returns true is provided user is external
+// ---------------------------------------------------------------
+
+function get_external_user ($id) {
+	$nivel = get_db_value ('nivel', 'tusuario', 'id_usuario', $id);
+	if ($nivel == -1)
+		return true;
+	return false;
+}
+
 
 // --------------------------------------------------------------- 
 // Gives error message and stops execution if user 

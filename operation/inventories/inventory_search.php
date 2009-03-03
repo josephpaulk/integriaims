@@ -171,7 +171,9 @@ $table->data[0][1] = print_select (get_products (),
 					'search_id_product', 0,
 					'', __('All'), 0, true, false, false,
 					__('Product type'));
-$table->data[0][2] = print_select (get_companies (),
+					
+if (!get_external_user($config["id_user"]))
+	$table->data[0][2] = print_select (get_companies (),
 			'search_id_company', 0,
 			'', __('All'), 0, true, false, false,
 			__('Company'));

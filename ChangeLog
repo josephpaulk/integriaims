@@ -1,3 +1,13 @@
+2009-03-03  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_form.php
+	  include/functions_incidents.php
+          include/functions_db.php
+          operation/incidents/incident_detail.php
+          operation/main_menu.php
+          operation/inventories/inventory_search.php
+          general/header.php: Small changes for better external user isolation.
+
 2009-02-25  Sancho Lerena <lserena@artica.es>
 
 	* general/error_perms.php: Typo fixed. This is Beta2 officially.

@@ -107,7 +107,7 @@ function filter_incidents ($filters) {
 	$sql = sprintf ('SELECT * FROM tincidencia
 			WHERE estado IN (%s)
 			%s
-			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" OR id_creator LIKE "%%%s%%" OR  		id_usuario LIKE "%%%s%%")
+			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%")
 			ORDER BY actualizacion DESC
 			LIMIT %d',
 			$filters['status'], $sql_clause, $filters['string'], $filters['string'], $filters['string'],$filters['string'],

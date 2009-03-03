@@ -38,8 +38,9 @@ if (give_acl($config["id_user"], 0, "IR") == 1){
     echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".__('Incidents')."</a></li>";
 }
 
+
 // Inventory
-if (give_acl($config["id_user"], 0, "VR") == 1){
+if ((give_acl($config["id_user"], 0, "VR") == 1) AND (get_external_user($config["id_user"]) == false)) {
     // Incident
     if ($sec == "inventory" )
 	    echo "<li id='current'>";
