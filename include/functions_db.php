@@ -1480,8 +1480,16 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 
 	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
 	if ($level == -1){
-		$values[$id_user]=$id_user;
-		return $values;
+		$user= array();
+		$sql = sprintf ('SELECT *
+						FROM tusuario 
+						WHERE id_usuario = "%s"', $id_user);
+		$user = get_db_all_rows_sql ($sql);
+		if ($only_name){
+			$user_onlyname ['id_usuario'] = $id_user;
+			return $user_onlyname;
+		}
+		return $user;
 	}
 		
 

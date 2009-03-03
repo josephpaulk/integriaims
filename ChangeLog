@@ -1,5 +1,9 @@
 2009-03-03  Sancho Lerena <slerena@artica.es>
 
+	* include/funcions_db.php: Solved a problem returning a simple user, now
+	returns the whole array record for it or the single name, as requested in
+	get_user_visible_users() function.
+	
 	* include/functions_form.php: Hide company combo for external
 	users.
 
