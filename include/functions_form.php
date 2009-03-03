@@ -763,8 +763,10 @@ function form_search_incident ($return = false) {
 	$table->data[3][1] = print_input_text ('search_first_date', '', '', 15, 15, true, __('Begin date'));
 	$table->data[3][2] = print_input_text ('search_last_date', '', '', 15, 15, true, __('End date'));
 	
-	$table->data[4][0] = print_select (get_companies (), 'search_id_company',
-		$id_company, '', __('All'), 0, true, false, false, __('Company'));
+	if (!get_external_user ($config["id_user"]))
+		$table->data[4][0] = print_select (get_companies (), 'search_id_company',
+			$id_company, '', __('All'), 0, true, false, false, __('Company'));
+			
 	$table->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
 		$id_company, '', __('All'), 0, true, false, false, __('Incident type'));
 	

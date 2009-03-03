@@ -1,5 +1,8 @@
 2009-03-03  Sancho Lerena <slerena@artica.es>
 
+	* include/functions_form.php: Hide company combo for external
+	users.
+
 	* include/functions_form.php
 	  include/functions_incidents.php
           include/functions_db.php
