@@ -60,11 +60,10 @@ echo '</div>';
 echo '</form>';
 
 if ($id_user != ""){
-	$mapfilename = $config["base_url"]. "/attachment/tmp/$id_user.projectall.map";
+	$mapfilename = $config["homedir"]. "/attachment/tmp/$id_user.projectall.map";
 
-	echo '<a href="'.$mapfilename.'">';
-	echo "<img src='include/functions_graph.php?type=all_project_tree&project_kind=$project_kind&id_user=$id_user&completion=$completion'>";
-	echo '</a>';
+	echo "<img src='include/functions_graph.php?type=all_project_tree&project_kind=$project_kind&id_user=$id_user&completion=$completion' usemap='#Integria'>";
+	require ($mapfilename);
 }
 
 ?>

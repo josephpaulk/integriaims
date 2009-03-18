@@ -1,3 +1,9 @@
+
+2009-03-18  Sancho Lerena <slerena@artica.es>
+
+	* operation/projects/project_tree.php,
+	* include/functions_graph.php: Fixed proyect tree links.
+
 2009-03-03  Sancho Lerena <slerena@artica.es>
 
 	* include/funcions_db.php: Solved a problem returning a simple user, now

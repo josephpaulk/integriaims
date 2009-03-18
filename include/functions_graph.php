@@ -849,13 +849,14 @@ function all_project_tree ($id_user, $completion, $project_kind) {
 	fwrite ($dotfile, "\n");
 	// exec ("twopi -Tpng $dotfilename -o $pngfilename");
 
-	exec ("twopi -Timap -o$mapfilename -Tpng -o$pngfilename $dotfilename");
+	exec ("twopi -Tcmapx -o$mapfilename -Tpng -o$pngfilename $dotfilename");
 
 	Header('Content-type: image/png');
 	$imgPng = imageCreateFromPng($pngfilename);
 	imageAlphaBlending($imgPng, true);
 	imageSaveAlpha($imgPng, true);
 	imagePng($imgPng);
+	require ($mapfilename);
 	//unlink ($pngfilename);
 	unlink ($dotfilename);
 }
