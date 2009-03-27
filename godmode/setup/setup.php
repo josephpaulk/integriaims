@@ -39,6 +39,9 @@ if ($update) {
 	$config["fontsize"] = (int) get_parameter ("fontsize", 10);
 	$config["incident_reporter"] = (int) get_parameter ("incident_reporter", 0);
 
+	$config["show_owner_incident"] = (int) get_parameter ("show_owner_incident", 0);
+	$config["show_creator_incident"] = (int) get_parameter ("show_creator_incident", 0);
+	
 	process_sql ("UPDATE tconfig SET value='".$config["block_size"]."' WHERE token='block_size'");
 	process_sql ("UPDATE tconfig SET value='".$config["language_code"]."' WHERE token='language_code'");
 	
@@ -59,7 +62,12 @@ if ($update) {
 
 	process_sql ("DELETE FROM tconfig WHERE token = 'incident_reporter'");
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('incident_reporter', '".$config["incident_reporter"]."')");
+	
+	process_sql ("DELETE FROM tconfig WHERE token = 'show_creator_incident'");
+	process_sql ("INSERT INTO tconfig (token, value) VALUES ('show_creator_incident', '".$config["show_creator_incident"]."')");
 
+	process_sql ("DELETE FROM tconfig WHERE token = 'show_owner_incident'");
+	process_sql ("INSERT INTO tconfig (token, value) VALUES ('show_owner_incident', '".$config["show_owner_incident"]."')");
 }	
 
 echo "<h2>".__('General setup')."</h2>";
@@ -104,6 +112,10 @@ $incident_reporter_options[0] = "Disabled";
 $incident_reporter_options[1] = "Enabled";
 
 $table->data[4][1] = print_select ($incident_reporter_options, "incident_reporter", $config["incident_reporter"], '','','',true,0,true, "Incident reporter");
+
+$table->data[5][0] = print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, "Show incident owner");
+
+$table->data[5][1] = print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, "Show incident creator");
 
 echo "<form name='setup' method='post'>";
 

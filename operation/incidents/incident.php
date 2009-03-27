@@ -131,6 +131,10 @@ $table->head[5] = __('Priority');
 $table->head[6] = __('Updated')."<br /><em>".__('Started')."</em>";
 $table->head[7] = __('Work');
 $table->head[8] = __('Flags');
+if ($config["show_creator_incident"] == 1)
+	$table->head[9] = __('Creator');	
+if ($config["show_owner_incident"] == 1)
+	$table->head[10] = __('Owner');	
 $table->style = array ();
 $table->style[0] = '';
 

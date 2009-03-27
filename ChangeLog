@@ -1,4 +1,11 @@
+2009-03-27  Sancho lerena <slerena@artica.es>
 
+	* operation/incidents/incident.php: 
+	* operation/incidents/incident_search.php
+	* godmode/setup/setup.php
+	* include/config_process.php: Support to show creator/owner in incident
+	search list.
+	
 2009-03-18  Sancho Lerena <slerena@artica.es>
 
 	* operation/projects/project_tree.php,

@@ -136,6 +136,12 @@ if (!isset ($config["fontsize"]))
 if (!isset ($config["incident_reporter"]))
 	$config['incident_reporter'] = 0;
 
+if (!isset ($config["show_owner_incident"]))
+	$config["show_owner_incident"] = 1;
+	
+if (!isset ($config["show_creator_incident"]))
+	$config["show_creator_incident"] = 1;
+
 // Mail address used to send mails
 if (!isset ($config["mail_from"]))
 	$config["mail_from"] = "integria@localhost";

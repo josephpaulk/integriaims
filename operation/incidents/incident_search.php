@@ -94,6 +94,11 @@ if ($search_form) {
 	$table->head[6] = __('Updated')."<br><i>".__('Started')."</i>";
 	$table->head[7] = __('Work');
 	$table->head[8] = __('Flags');
+	if ($config["show_creator_incident"] == 1)
+		$table->head[9] = __('Creator');	
+	if ($config["show_owner_incident"] == 1)
+		$table->head[10] = __('Owner');	
+	
 	$table->style = array ();
 	$table->style[0] = '';
 	// Dont work
@@ -236,6 +241,23 @@ foreach ($incidents as $incident) {
 		echo '&nbsp;<img src="images/email_go.png"
 			title="'.__('Mail notification').'" />';
 	echo '</td>';
+	
+	
+	if ($config["show_creator_incident"] == 1){	
+		echo "<td class='f9'>";
+		$incident_creator = $incident["id_creator"];
+		echo $incident_creator;
+		echo "</td>";
+	}
+	
+	if ($config["show_owner_incident"] == 1){	
+		echo "<td class='f9'>";
+		$incident_owner = $incident["id_usuario"];
+		echo $incident_owner;
+		echo "</td>";
+	}
+	
+	
 	
 	echo '</tr>';
 }
