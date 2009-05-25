@@ -13,6 +13,8 @@
 // GNU General Public License for more details.
 
 global $config;
+require_once ('include/functions_tasks.php');
+require_once ('include/functions_workunits.php');
 
 if (check_login() != 0) {
  	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
@@ -32,7 +34,6 @@ if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo
 }
 
 $id = get_parameter ('id', $config["id_user"]);
-
 $id = get_parameter ("id","");
 if (($id != "") && ($id != $id_user)){
 	if (give_acl($id_user, 0, "PW"))
@@ -48,6 +49,7 @@ if (($id != "") && ($id != $id_user)){
 $time = time();
 $month = get_parameter ( "month", date('n', $time));
 $year = get_parameter ( "year", date('y', $time));
+$lock_month = get_parameter ("lock_month", "");
 
 $today = date('j',$time);
 $days_f = array();
@@ -72,7 +74,32 @@ $day = date('d', strtotime("now"));
 
 $from_one_month = "$prev_year-$prev_month-$day";
 
-echo "<h1>".__('Monthly report for')." $id_user</h1>";
+
+// Lock workunits for this month
+
+//check_workunit_permission ($id_workunit) 
+//lock_task_workunit ($id_workunit) 
+
+if ($lock_month != ""){
+	$this_month = date('Y-m-d H:i:s',strtotime("$year-$month-01"));
+	$this_month_limit = date('Y-m-d H:i:s',strtotime("$year-$month-31"));
+	
+	$workunits = get_db_all_rows_sql ("SELECT id FROM tworkunit WHERE id_user='$id' AND locked = '' AND timestamp >= '$this_month' AND timestamp < '$this_month_limit'");
+
+	foreach ($workunits as $workunit) {
+		if (check_workunit_permission ($workunit["id"]))
+			lock_task_workunit ($workunit["id"]);
+	}
+}
+
+echo "<h1>".__('Monthly report for')." $id_user";
+// Lock all workunits in this month
+echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&lock_month=$month&month=$month&year=$year&id=$id_user'>";
+echo "<img src='images/rosette.png' border=0 title='". _("Lock all workunits in this month"). "'>";
+echo "</a>";
+echo "</h1>";
+
+
 echo "<table width=700>";
 echo "<tr><td>";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$prev_month&year=$prev_year&id=$id_user'> ".__('Prev')."</a>";
@@ -83,9 +110,11 @@ combo_user_visible_for_me ($real_user_id, 'id', 0, 'PR');
 echo "&nbsp;";
 print_submit_button (__('Show'), 'show_btn', false, 'class="next sub"');
 echo "</form>";
+echo "</td>";
 
 echo "<td>";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$next_month&year=$next_year&id=$id_user'> ".__('Next')."</a>";
+echo "</td>";
 echo "</table>";
 
 // Generate calendar

@@ -35,6 +35,8 @@ function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = fa
 	echo $output;
 }
 
+
+
 function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any = 0, $perm = '', $id_group = 0, $return = false) {
 	$output = '';
 
@@ -641,12 +643,15 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	echo "<td valign='top'>";
 	echo "<table width='100%'  class='blank'>";
 
-
-	if ($id_project > 0)
-		$myurl = "index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task";
-	else
+	if ($_GET["sec2"] == "operation/users/user_workunit_report")
 		$myurl = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user";
-
+	else {
+		if ($id_project > 0)
+			$myurl = "index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task";
+		else
+			$myurl = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user";
+	}
+	
 	if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"]) OR  (give_acl($config["id_user"], $id_group, "TM")) ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";

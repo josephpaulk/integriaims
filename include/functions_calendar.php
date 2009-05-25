@@ -456,16 +456,23 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 			$this_week = date('Y-m-d H:i:s',strtotime("$year-$month-$day"));
 
 			// Show SUM for that week
-			$sqlquery = "SELECT SUM(duration) FROM tworkunit WHERE id_user = '$id_user' AND timestamp < '$this_week' AND timestamp >= '$before_week'";
- 			$res=mysql_query($sqlquery);
-			if ($row=mysql_fetch_array($res)){
-				$workhours = $row[0];
-				if ($workhours > 0){
-					$calendar .= "<td style='background-color: #e3e9e9;'><b><center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$before_week."&timestamp_h=".$this_week."'>".$workhours." ".__('Hours')."</a></center></b></td>";
-				} else {
-					$calendar .= "<td style='background-color: #e3e9e9;'><center> -- </center></td>";
+			$workhours = get_db_sql ("SELECT SUM(duration) FROM tworkunit WHERE id_user = '$id_user' AND timestamp < '$this_week' AND timestamp >= '$before_week'");
+			
+			$locked_hours = get_db_sql ("SELECT SUM(duration) FROM tworkunit WHERE id_user = '$id_user' AND timestamp < '$this_week' AND timestamp >= '$before_week' AND locked != ''");
+			if ($locked_hours == "")
+				$locked_hours = 0;
+				
+			if ($workhours > 0){
+				$calendar .= "<td style='background-color: #e3e9e9;'><b><center><a title='Locked: $locked_hours hrs' href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$before_week."&timestamp_h=".$this_week."'>$workhours";
+				if (($locked_hours != 0) AND ($locked_hours != $workhours)){
+					$calendar .= "<br><div style='font-size:7px'>$locked_hours " . _("Locked") . "</div></a></center></b></td>";
 				}
-			}		
+			} else {
+				$calendar .= "<td style='background-color: #e3e9e9;'><center> -- </center></td>";
+			}
+			
+			
+			
 			$calendar .= "</tr>\n<tr>";
 		}
 		if(isset($days[$day]) and is_array($days[$day])){

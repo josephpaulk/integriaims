@@ -608,11 +608,11 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR")) {
 
 	if  (give_acl($config["id_user"], 0, "KW")) {
 		// KB Add
-		if (($sec2 == "operation/kb/manage_data") AND (isset($_GET["create"])))
+		if (($sec2 == "operation/kb/browse") AND (isset($_GET["create"])))
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&create=1'>".__('Create KB item')."</a></li>";
+		echo "<a href='index.php?sec=kb&sec2=operation/kb/browse&create=1'>".__('Create KB item')."</a></li>";
 
 		// KB Manage Cat.
 		if ($sec2 == "operation/kb/manage_cat")

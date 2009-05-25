@@ -19,7 +19,17 @@
 
     $days_f = array();
     $date = date('Y-m-d');
-    $year = substr($date, 0,4);
+
+
+	// --------------------
+	// Workunit report (yearly)
+	// --------------------
+//	$now = date("Y-m-d H:i:s");
+	$year = date("Y");
+
+	$year = get_parameter ("year", $year);
+	$prev_year = $year -1 ;
+	$next_year = $year +1 ;	
 
 	if (dame_admin ($config["id_user"]) == 0){
         $id_user_show = $config["id_user"];
@@ -30,12 +40,33 @@
 
 		echo "<table cellpadding=4 cellspacing=4 class='blank' style='margin-left: 10px'>";
 		echo "<tr><td>";
-        echo "<form name='xx' method=post action='index.php?sec=users&sec2=operation/user_report/report_annual'><td>";
+
+		// Prev. year
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$prev_year&id_user=$id_user_show'> ".__('Prev')."</a>";
+		echo "</td>";
+				
+		echo "<td>";
+		echo "<h2>$year</h2>";
+		echo "</td>";
+		
+		
+        echo "<form name='xx' method=post action='index.php?sec=users&sec2=operation/user_report/report_annual'>";
+        
+        echo "<input type='hidden' name='year' value='$year'>";
+        
+        echo "<td>";
         // Show user
         combo_user_visible_for_me ($config["id_user"], "id_user", 0, "AR");
+		echo "</td>";	
+        		
 		echo "<td>";
-//        echo "<input type=submit value=go class='sub upd'>";
-	print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"');
+		print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"');
+		echo "</td>";	
+		
+		// Next. year
+		echo "<td>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$next_year&id_user=$id_user_show'> ".__('Next')."</a>";
+		echo "</td>";	
         echo "</form></table>";
     }
 
@@ -60,8 +91,29 @@
         if (fmod($ax-1,3) == 0)
             echo "<tr>";
         echo "<td valign=top>";
+        
+        $this_month = date('Y-m-d H:i:s',strtotime("$year-$ax-01"));
+		$this_month_limit = date('Y-m-d H:i:s',strtotime("$year-$ax-31"));
+	
+		$work_hours = get_db_sql ("SELECT SUM(duration) FROM tworkunit WHERE id_user='$id_user_show' AND locked = '' AND timestamp >= '$this_month' AND timestamp < '$this_month_limit'");
+	
+		if ($work_hours == "")
+			$work_hours = 0;	
+        
+        $locked_hours = get_db_sql ("SELECT SUM(duration) FROM tworkunit WHERE id_user='$id_user_show' AND locked != '' AND timestamp >= '$this_month' AND timestamp < '$this_month_limit'");
+        
+		if ($locked_hours == "")
+			$locked_hours = 0;	
+
+			
+		echo _("Total") . " : " . $work_hours;
+		echo " - ";
+		echo _("Locked"). " : " . $locked_hours;        
+ 
         echo generate_small_work_calendar ($year, $ax, $days_f, 3, 0, "en", $id_user_show);
-         
+       
+       
+       	
     }
     echo "</table>";
 

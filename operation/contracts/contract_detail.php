@@ -237,12 +237,7 @@ if ($id | $new_contract) {
 			$data[6] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
 
 			// Delete
-			$data[7] = '<a href=index.php?sec=inventory&
-						sec2=operation/contracts/contract_detail&
-						delete_contract=1&id='.$contract["id"].'"
-						onClick="if (!confirm(\''.__('Are you sure?').'\'))
-						return false;">
-						<img src="images/cross.png"></a>';
+			$data[7] = '<a href="index.php?sec=inventory&sec2=operation/contracts/contract_detail&delete_contract=1&id='.$contract["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
 			
 			array_push ($table->data, $data);
 		}	

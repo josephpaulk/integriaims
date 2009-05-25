@@ -15,6 +15,10 @@
 // Load global vars
 
 global $config;
+
+require_once ('include/functions_tasks.php');
+require_once ('include/functions_workunits.php');
+
 $id_user = $config["id_user"];
 
 check_login ();
@@ -35,6 +39,31 @@ if (($id != "") && ($id != $id_user)) {
 
 $timestamp_l = get_parameter ("timestamp_l");
 $timestamp_h = get_parameter ("timestamp_h");
+
+// ---------------
+// Lock Workunit
+// ---------------
+
+if ($operation == "lock") {
+	$success = lock_task_workunit ($id_workunit);
+	if (! $success) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation",
+			"Trying to lock WU $id_workunit without rigths");
+		if (!defined ('AJAX'))
+			include ("general/noaccess.php");
+		return;
+	}
+	
+	$result_output = '<h3 class="suc">'.__('Locked successfully').'</h3>';
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Work unit locked",
+		"Workunit for ".$config['id_user']);
+	
+	if (defined ('AJAX')) {
+		echo '<img src="images/rosette.png" title="'.__('Locked by').' '.$config['id_user'].'" />';
+		print_user_avatar ($config['id_user'], true);
+		return;
+	}
+}
 
 // ---------------
 // DELETE Workunit
