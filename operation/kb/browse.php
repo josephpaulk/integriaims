@@ -26,6 +26,12 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
 // Database Creation
 // ==================
 if (isset($_GET["create2"])){ // Create group
+
+	if (give_acl($config["id_user"], 0, "KW") != 1){
+		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to write a new KB without privileges");
+	    require ("general/noaccess.php");
+    	exit;
+    }
 	$timestamp = date('Y-m-d H:i:s');
 	$title = get_parameter ("title","");
 	$data = get_parameter ("data",0);
@@ -43,12 +49,18 @@ if (isset($_GET["create2"])){ // Create group
 		$id_data = mysql_insert_id();
 		insert_event ("KB ITEM CREATED", $id_data, 0, $title);
 	}
-	
 }
 
 // Attach DELETE
 // ==============
 if (isset($_GET["delete_attach"])){
+
+	if (give_acl($config["id_user"], 0, "KW") != 1){
+		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to delete an attach on a KB without privileges");
+	    require ("general/noaccess.php");
+    	exit;
+    }
+
 	$id_attachment = get_parameter ("delete_attach", 0);
 	$id_kb = get_parameter ("update", 0);
 	$attach_row = get_db_row ("tattachment", "id_attachment", $id_attachment);
@@ -64,6 +76,14 @@ if (isset($_GET["delete_attach"])){
 // Database UPDATE
 // ==================
 if (isset($_GET["update2"])){ // if modified any parameter
+
+	if (give_acl($config["id_user"], 0, "KW") != 1){
+		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to update an article on KB without privileges");
+	    require ("general/noaccess.php");
+    	exit;
+    }
+
+
 	$id = get_parameter ("id","");
 	$timestamp = date('Y-m-d H:i:s');
 	$title = get_parameter ("title","");
@@ -118,6 +138,13 @@ if (isset($_GET["update2"])){ // if modified any parameter
 // Database DELETE
 // ==================
 if (isset($_GET["delete_data"])){ // if delete
+
+	if (give_acl($config["id_user"], 0, "KW") != 1){
+		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to delete a KB without privileges");
+	    require ("general/noaccess.php");
+    	exit;
+    }
+
 	$id = get_parameter ("delete_data",0);
 	$kb_title = get_db_sql ("SELECT title FROM tkb_data WHERE id = $id ");
 
@@ -261,7 +288,10 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			echo "<td>";
 			echo $row["description"];
 			echo "<td>";
-			echo "<a href='index.php?sec=kb&sec2=operation/kb/browse&update=$id&delete_attach=$attach_id'><img border=0 src='images/cross.png'></A>";
+			
+			if (give_acl($config["id_user"], 0, "KW") == 1){			
+				echo "<a href='index.php?sec=kb&sec2=operation/kb/browse&update=$id&delete_attach=$attach_id'><img border=0 src='images/cross.png'></A>";
+			}
 		}
 		echo "</table>";
 	}

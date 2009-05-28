@@ -1,3 +1,10 @@
+
+2009-05-28  Sancho lerena <slerena@artica.es>
+
+	* include/config_process.php: Updated version.
+
+	* operation/kb/browse.php: Fixed ACL problems in KB.
+ 
 2009-05-23  Sancho lerena <slerena@artica.es>
 
 	* include/functions_calendar.php: Added view of locked hours.  
