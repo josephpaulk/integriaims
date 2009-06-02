@@ -611,6 +611,10 @@ CREATE TABLE `tinventory` (
   `id_manufacturer` mediumint(8) unsigned default NULL,
   `id_building` mediumint(8) unsigned default NULL,
   `id_parent` mediumint(8) unsigned default NULL,
+  `generic_1` varchar(255) default '',
+  `generic_2` varchar(255) default '',
+  `generic_3` text,
+  `generic_4` text,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_contract`) REFERENCES tcontract(`id`)
      ON UPDATE CASCADE ON DELETE SET NULL,

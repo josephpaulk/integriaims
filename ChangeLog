@@ -1,10 +1,21 @@
+2009-06-02  Esteban Sanchez  <estebans@artica.es>
+
+	* integria_db.sql: Added extra fields to tinventory.
+
+	* include/functions_ui.php,
+	extras/inventory_importer.php: Added to repository.
+
+	* include/functions_db.php: Added extra functions to manage database
+	queries.
+
+	* include/styles/integria.css: Style correction.
 
 2009-05-28  Sancho lerena <slerena@artica.es>
 
 	* include/config_process.php: Updated version.
 
 	* operation/kb/browse.php: Fixed ACL problems in KB.
- 
+
 2009-05-23  Sancho lerena <slerena@artica.es>
 
 	* include/functions_calendar.php: Added view of locked hours.  
@@ -13,23 +24,24 @@
 	workunits from other view different than project workunit view 
 	(from calendar/report view).
 	
-	* operation/side_menu.php: Links modified to work with new Knowlegue Base
-	code.
+	* operation/side_menu.php: Links modified to work with new Knowlegue
+	Base code.
 	
-	* operation/contracts/contract_detail.php: Fixed problem deleting contracts.
+	* operation/contracts/contract_detail.php: Fixed problem deleting
+	contracts.
 	
-	* operation/kb/browse.php: new code to manage KB articles in the same page
-	who lists them. It's more usable and now it's possible to delete KB.
+	* operation/kb/browse.php: new code to manage KB articles in the same
+	page who lists them. It's more usable and now it's possible to delete
+	KB.
 	
 	* kb/search.php, browse_data.php : Deleted.
 	
-	* operation/user_report/monthly.php: Added option to lock all workunits in
-	current month.
+	* operation/user_report/monthly.php: Added option to lock all workunits
+	in current month.
 	
 	* operation/user_report/report_annual.php: Added support to navigate to 
 	other years and show totals, including locking workunits.
 
-	
 2009-03-27  Sancho lerena <slerena@artica.es>
 
 	* operation/incidents/incident.php: 
