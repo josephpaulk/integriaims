@@ -1,5 +1,13 @@
 2009-06-02  Esteban Sanchez  <estebans@artica.es>
 
+	* integria_db.sql: Added more extra fields to tinventory.
+
+	* extras/inventory_importer.php: Added new fields for tinventory.
+	Avoid warning message on fopen(). Removed extra parameters on 
+	process_sql_insert()
+
+2009-06-02  Esteban Sanchez  <estebans@artica.es>
+
 	* integria_db.sql: Added extra fields to tinventory.
 
 	* include/functions_ui.php,

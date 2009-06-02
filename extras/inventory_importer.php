@@ -54,7 +54,7 @@ if (! $user) {
 	return 1;
 }
 
-$file = fopen ($filepath, 'r');
+$file = @fopen ($filepath, 'r');
 if (! $file) {
 	echo 'Could not open file '.$filepath."\n";
 	return 1;
@@ -77,7 +77,11 @@ $fields = array ('name',
 	'generic_1',
 	'generic_2',
 	'generic_3',
-	'generic_4');
+	'generic_4',
+	'generic_5',
+	'generic_6',
+	'generic_7',
+	'generic_8');
 $nfields = count ($fields);
 while (($data = fgetcsv ($file, 3000, $separator)) !== false) {
 	/* Auto fill values */
@@ -112,8 +116,7 @@ while (($data = fgetcsv ($file, 3000, $separator)) !== false) {
 		echo 'Updated inventory "'.$values['name'].'"';
 	} else {
 		process_sql_insert ('tinventory',
-			$values,
-			array ('id' => $id_inventory));
+			$values);
 		echo 'Inserted inventory "'.$values['name'].'"';
 	}
 	echo "\n";
