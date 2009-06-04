@@ -431,6 +431,15 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR")) {
 		echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_detail'>".__('Create inventory object')."</a></li>";
 	}
 
+	if (dame_admin ($config['id_user'])) {
+		echo '<li>';
+		echo '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_reports">'.__('Inventory reports').'</a>';
+		echo '</li>';
+		echo '<li>';
+		echo '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail">'.__('Create inventory report').'</a>';
+		echo '</li>';
+	}
+	
 	if ($sec2 == 'operation/inventories/inventory') {
 		echo '<li>';
 		echo '<a href="" onclick="return false">'.__('Inventory #').'</a>';

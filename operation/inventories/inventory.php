@@ -49,9 +49,11 @@ echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 if ($id) {
 	echo '<li class="ui-tabs"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
 	echo '<li class="ui-tabs-selected"><a href="ajax.php?page=operation/inventories/inventory_detail&id='.$id.'"><span>'.__('Details').'</span></a></li>';
+	echo '<li class="ui-tabs"><a href="index.php"><span>'.__('Extra').'</span></a></li>';
 } else {
 	echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
 	echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Details').'</span></a></li>';
+	echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Extra').'</span></a></li>';
 }
 
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Incidents').'</span></a></li>';
@@ -163,13 +165,14 @@ function check_inventory (id) {
 function show_inventory_details (id) {
 	id_inventory = id;
 	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/inventories/inventory_detail&id=" + id);
-	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/inventories/inventory_incidents&id=" + id);
-	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/inventories/inventory_contracts&id=" + id);
-	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/inventories/inventory_contacts&id=" + id);
-	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/inventories/inventory_workunits&id=" + id);
-	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/inventories/inventory_tree&id=" + id);
+	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/inventories/inventory_extra&id=" + id);
+	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/inventories/inventory_incidents&id=" + id);
+	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/inventories/inventory_contracts&id=" + id);
+	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/inventories/inventory_contacts&id=" + id);
+	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/inventories/inventory_workunits&id=" + id);
+	$("#tabs > ul").tabs ("url", 7, "ajax.php?page=operation/inventories/inventory_tree&id=" + id);
 	$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
-		.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
+		.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6).tabs ("enable", 7);
 	$("#tabs > ul").tabs ("select", 1);
 }
 

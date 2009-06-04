@@ -2292,6 +2292,9 @@ function process_sql ($sql, $rettype = "affected_rows") {
 	if ($sql == '')
 		return false;
 	
+	if (empty ($config['mysql_result_type']))
+		$config['mysql_result_type'] = MYSQL_BOTH;
+	
 	if (! empty ($sql_cache[$sql])) {
 		$retval = $sql_cache[$sql];
 		$sql_cache['saved']++;
@@ -2324,7 +2327,7 @@ function process_sql ($sql, $rettype = "affected_rows") {
 		} else {
 			add_database_debug_trace ($sql, 0, mysql_affected_rows (), 
 				array ('time' => $time));
-			while ($row = mysql_fetch_array ($result)) {
+			while ($row = mysql_fetch_array ($result, $config['mysql_result_type'])) {
 				array_push ($retval, $row);
 			}
 			$sql_cache[$sql] = $retval;
@@ -2673,6 +2676,54 @@ function process_sql_update ($table, $values, $where = false, $where_join = 'AND
 			$query .= " WHERE ".$where;
 		} else if (is_array ($where)) {
 			$query .= format_array_to_where_clause_sql ($where, $where_join, ' WHERE ');
+		}
+	}
+	
+	return process_sql ($query);
+}
+
+/**
+ * Delete database records.
+ *
+ * All values should be cleaned before passing. Quoting isn't necessary.
+ * Examples:
+ *
+ * <code>
+process_sql_delete ('table', array ('id' => 1));
+// DELETE FROM table WHERE id = 1
+process_sql_delete ('table', array ('id' => 1, 'name' => 'example'));
+// DELETE FROM table WHERE id = 1 AND name = 'example'
+process_sql_delete ('table', array ('id' => 1, 'name' => 'example'), 'OR');
+// DELETE FROM table WHERE id = 1 OR name = 'example'
+process_sql_delete ('table', 'id in (1, 2, 3) OR id > 10');
+// DELETE FROM table WHERE id in (1, 2, 3) OR id > 10
+ * <code>
+ *
+ * @param string Table to insert into
+ * @param array An associative array of values to update
+ * @param mixed An associative array of field and value matches. Will be joined
+ * with operator specified by $where_join. A custom string can also be provided.
+ * If nothing is provided, the update will affect all rows.
+ * @param string When a $where parameter is given, this will work as the glue
+ * between the fields. "AND" operator will be use by default. Other values might
+ * be "OR", "AND NOT", "XOR"
+ *
+ * @return mixed False in case of error or invalid values passed. Affected rows otherwise
+ */
+function process_sql_delete ($table, $where, $where_join = 'AND') {
+	if (empty ($where))
+		/* Should avoid any mistake that lead to deleting all data */
+		return false;
+	
+	$query = sprintf ("DELETE FROM `%s` WHERE ", $table);
+	
+	if ($where) {
+		if (is_string ($where)) {
+			/* FIXME: Should we clean the string for sanity? 
+			 Who cares if this is deleting data... */
+			$query .= $where;
+		} else if (is_array ($where)) {
+			$query .= format_array_to_where_clause_sql ($where, $where_join);
 		}
 	}
 	

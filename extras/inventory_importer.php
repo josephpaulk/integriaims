@@ -24,7 +24,8 @@ if ($argc < 4) {
 }
 
 $dir = realpath (dirname (__FILE__).'/..');
-set_include_path (get_include_path ().PATH_SEPARATOR.$dir);
+$path = get_include_path ();
+set_include_path ($path.PATH_SEPARATOR.$dir);
 
 $libs = array ('include/config.php',
 	'include/functions.php',
@@ -32,9 +33,12 @@ $libs = array ('include/config.php',
 foreach ($libs as $file) {
 	if (! @include_once ($file)) {
 		echo 'Could not access '.$file."\n";
+		set_include_path ($path);
 		return 1;
 	}
 }
+
+set_include_path ($path);
 
 $username = $argv[1];
 $password = $argv[2];
@@ -54,9 +58,14 @@ if (! $user) {
 	return 1;
 }
 
-$file = @fopen ($filepath, 'r');
+if ($filepath == "-") {
+	$file = fopen ('php://stdin', 'r');
+	$filepath = 'STDIN';
+} else {
+	$file = @fopen ($filepath, 'r');
+}
 if (! $file) {
-	echo 'Could not open file '.$filepath."\n";
+	echo 'Could not open '.$filepath."\n";
 	return 1;
 }
 
@@ -83,22 +92,25 @@ $fields = array ('name',
 	'generic_7',
 	'generic_8');
 $nfields = count ($fields);
-while (($data = fgetcsv ($file, 3000, $separator)) !== false) {
+while (($data = fgetcsv ($file, 0, $separator)) !== false) {
 	/* Auto fill values */
 	$len = count ($data);
 	if ($len < $nfields)
-		$data = array_pad ($data, $nfields, NULL);
+		$data = array_pad ($data, $nfields, '');
 	elseif ($len > $nfields)
 		$data = array_slice ($data, NULL, $nfields);
 	
 	$values = array_combine ($fields, $data);
+	
+	if (empty ($values['name']))
+		continue;
 	
 	/* Check parent */
 	if (is_int ($values['id_parent']))
 		$id_parent = (int) get_db_value ('id', 'tinventory', 'id', $values['id_parent']);
 	else
 		$id_parent = (int) get_db_value ('id', 'tinventory', 'name', (string) $values['id_parent']);
-	$values['id_parent'] = $values['id_parent'] ? $values['id_parent'] : NULL;
+	$values['id_parent'] = $id_parent ? $id_parent : NULL;
 	
 	/* Check empty values */
 	$values['id_manufacturer'] = $values['id_manufacturer'] ? $values['id_manufacturer'] : NULL;
@@ -108,17 +120,54 @@ while (($data = fgetcsv ($file, 3000, $separator)) !== false) {
 	$values['id_contract'] = $values['id_contract'] ? $values['id_contract'] : NULL;
 	
 	/* Check if the inventory item already exists */
-	$id_inventory = (int) get_db_value ('id', 'tinventory', 'name', $values['name']);
+	$id_inventory = (int) get_db_value_filter ('id', 'tinventory', 
+		array ('name' => $values['name'],
+			'id_parent' => $values['id_parent']));
 	if ($id_inventory) {
+		$values['generic_1'] = (isset ($values['generic_1'][0]) && $values['generic_1'][0] == '`') ?
+			get_db_value ($values['generic_1'], 'tinventory', 'id', $id_inventory) :
+			$values['generic_1'];
+		$values['generic_2'] = (isset ($values['generic_2'][0]) && $values['generic_2'][0] == '`') ?
+			get_db_value ($values['generic_2'], 'tinventory', 'id', $id_inventory) :
+			$values['generic_2'];
+		$values['generic_3'] = (isset ($values['generic_3'][0]) && $values['generic_3'][0] == '`') ?
+			get_db_value ($values['generic_3'], 'tinventory', 'id', $id_inventory) :
+			$values['generic_3'];
+		$values['generic_4'] = (isset ($values['generic_4'][0]) && $values['generic_4'][0] == '`') ?
+			get_db_value ($values['generic_4'], 'tinventory', 'id', $id_inventory) :
+			$values['generic_4'];
+		$values['generic_5'] = (isset ($values['generic_5'][0]) && $values['generic_5'][0] == '`') ?
+			get_db_value ($values['generic_5'], 'tinventory', 'id', $id_inventory) :
+			$values['generic_5'];
+		$values['generic_6'] = (isset ($values['generic_6'][0]) && $values['generic_6'][0] == '`') ?
+			get_db_value ($values['generic_6'], 'tinventory', 'id', $id_inventory) :
+			$values['generic_6'];
+		$values['generic_7'] = (isset ($values['generic_7'][0]) && $values['generic_7'][0] == '`') ?
+			get_db_value ($values['generic_7'], 'tinventory', 'id', $id_inventory) :
+			$values['generic_7'];
+		$values['generic_8'] = (isset ($values['generic_8'][0]) && $values['generic_8'][0] == '`') ?
+			get_db_value ($values['generic_8'], 'tinventory', 'id', $id_inventory) :
+			$values['generic_8'];
+			
 		process_sql_update ('tinventory',
 			$values,
 			array ('id' => $id_inventory));
 		echo 'Updated inventory "'.$values['name'].'"';
 	} else {
+		$values['generic_1'] = (isset ($values['generic_1'][0]) && $values['generic_1'][0] == '`') ? '' : $values['generic_1'];
+		$values['generic_2'] = (isset ($values['generic_2'][0]) && $values['generic_2'][0] == '`') ? '' : $values['generic_2'];
+		$values['generic_3'] = (isset ($values['generic_3'][0]) && $values['generic_3'][0] == '`') ? '' : $values['generic_3'];
+		$values['generic_4'] = (isset ($values['generic_4'][0]) && $values['generic_4'][0] == '`') ? '' : $values['generic_4'];
+		$values['generic_5'] = (isset ($values['generic_5'][0]) && $values['generic_5'][0] == '`') ? '' : $values['generic_5'];
+		$values['generic_6'] = (isset ($values['generic_6'][0]) && $values['generic_6'][0] == '`') ? '' : $values['generic_6'];
+		$values['generic_7'] = (isset ($values['generic_7'][0]) && $values['generic_7'][0] == '`') ? '' : $values['generic_7'];
+		$values['generic_8'] = (isset ($values['generic_8'][0]) && $values['generic_8'][0] == '`') ? '' : $values['generic_8'];
+		
 		process_sql_insert ('tinventory',
 			$values);
 		echo 'Inserted inventory "'.$values['name'].'"';
 	}
+	
 	echo "\n";
 }
 fclose ($file);

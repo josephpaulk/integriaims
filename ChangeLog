@@ -1,3 +1,33 @@
+2009-06-04  Esteban Sanchez  <estebans@artica.es>
+
+	* integria_db.sql: Added tinventory_reports.
+
+	* extras/inventory_importer.php: Added support to read from stdin.
+	Avoid empty names. Get id inventory based on name and parent.
+	Generic fields can receive the name of other field to get its value
+	before updating.
+
+	* include/functions_db.php: Added support to allow selecting what kind
+	of result type to be fetched. Added process_sql_delete().
+
+	* include/functions_inventories.php: Added
+	get_inventory_generic_labels ().
+
+	* inventories/inventory_detail.php: Fixed error messages.
+
+	* inventories/inventory_extra.php: Added to repository. Extra fields
+	for inventory objects.
+
+	* inventories/inventory_reports.php: Added to repository. Inventory
+	reports from a SQL sentence.
+
+	* inventories/inventory_reports_detail.php: Added to repository.
+	Inventory reports editor.
+
+	* operation/side_menu.php: Added link to inventory reports.
+
+	* operation/inventories/inventory.php: Added link for extra fields tab.
+
 2009-06-02  Esteban Sanchez  <estebans@artica.es>
 
 	* integria_db.sql: Added more extra fields to tinventory.

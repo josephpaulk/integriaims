@@ -76,7 +76,7 @@ if ($update) {
 	if ($result !== false) {
 		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
 	} else {
-		$result_msg = '<h3 class="err">'.__('There was an error updating inventory object').'</h3>';
+		$result_msg = '<h3 class="error">'.__('There was an error updating inventory object').'</h3>';
 	}
 	
 	if (defined ('AJAX')) {
@@ -109,7 +109,7 @@ if ($create) {
 		/* Update contacts in inventory */
 		update_inventory_contacts ($id, get_parameter ('contacts'));
 	} else {
-		$result_msg = '<h3 class="err">'.__('Could not be created').'</h3>';
+		$result_msg = '<h3 class="error">'.__('Could not be created').'</h3>';
 	}
 	
 	if (defined ('AJAX')) {
@@ -203,7 +203,7 @@ if ($has_permission) {
 		__('Product type'));
 } else {
 	$product = isset ($products[$id_product]) ? $products[$id_product] : __('Not set');
-	$table->data[0][2] = print_label (__('Name'), '', '', true, $product);
+	$table->data[0][2] = print_label (__('Product type'), '', '', true, $product);
 }
 $table->data[0][2] .= print_product_icon ($id_product, true);
 

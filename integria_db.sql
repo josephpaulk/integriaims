@@ -646,6 +646,13 @@ CREATE TABLE `tinventory_contact` (
      ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE `tinventory_reports` (
+  `id` mediumint unsigned NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `sql` text,
+  PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `tincident_inventory` (
   `id_incident` bigint(20) unsigned NOT NULL,
   `id_inventory` mediumint(8) unsigned NOT NULL,
