@@ -365,6 +365,8 @@ function print_inventory_stats ($inventories, $return = false) {
 }
 
 function get_inventory_generic_labels () {
+	global $config;
+	
 	$labels = array ();
 	
 	$labels['generic_1'] = isset ($config['inventory_label_1']) ? $config['inventory_label_1'] : lang_string ('Field #').'1';

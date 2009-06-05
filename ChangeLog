@@ -1,3 +1,14 @@
+2009-06-05  Esteban Sanchez  <estebans@artica.es>
+
+	* godmode/setup/inventories_setup.php: Added to repository. Editor
+	for inventory extra fields.
+
+	* include/functions_inventories.php: Added config variable to
+	get_inventory_generic_labels() scope.
+
+	* operation/side_menu.php: Added link to inventory extra fields
+	editor.
+
 2009-06-04  Esteban Sanchez  <estebans@artica.es>
 
 	* integria_db.sql: Added tinventory_reports.

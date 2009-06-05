@@ -685,6 +685,13 @@ if ($sec == "godmode") {
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/incidents_setup'>".__('Incidents setup')."</a></li>";
 	
+	// Inventories Setup
+	if ($sec2 == "godmode/setup/incidents_setup")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/inventories_setup'>".__('Inventories setup')."</a></li>";
+	
 	// Mail Seetup
 	if ($sec2 == "godmode/setup/setup_mail")
 		echo "<li id='sidesel'>";
