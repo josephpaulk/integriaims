@@ -40,6 +40,24 @@ foreach ($libs as $file) {
 
 set_include_path ($path);
 
+function process_values (&$values, $id_inventory) {
+	/* Check empty values */
+	$values['id_manufacturer'] = $values['id_manufacturer'] ? $values['id_manufacturer'] : NULL;
+	$values['id_building'] = $values['id_building'] ? $values['id_building'] : NULL;
+	$values['id_sla'] = $values['id_sla'] ? $values['id_sla'] : NULL;
+	$values['id_product'] = $values['id_product'] ? $values['id_product'] : NULL;
+	$values['id_contract'] = $values['id_contract'] ? $values['id_contract'] : NULL;
+	
+	foreach ($values as $field => $value) {
+		if ($id_inventory)
+			$values[$field] = (isset ($values[$field][0]) && $values[$field][0] == '`') ?
+				get_db_value ($values[$field], 'tinventory', 'id', $id_inventory) :
+				$values[$field];
+		else
+			$values[$field] = (isset ($values[$field][0]) && $values[$field][0] == '`') ? '' : $values[$field];
+	}
+}
+
 $username = $argv[1];
 $password = $argv[2];
 $filepath = $argv[3];
@@ -112,57 +130,17 @@ while (($data = fgetcsv ($file, 0, $separator)) !== false) {
 		$id_parent = (int) get_db_value ('id', 'tinventory', 'name', (string) $values['id_parent']);
 	$values['id_parent'] = $id_parent ? $id_parent : NULL;
 	
-	/* Check empty values */
-	$values['id_manufacturer'] = $values['id_manufacturer'] ? $values['id_manufacturer'] : NULL;
-	$values['id_building'] = $values['id_building'] ? $values['id_building'] : NULL;
-	$values['id_sla'] = $values['id_sla'] ? $values['id_sla'] : NULL;
-	$values['id_product'] = $values['id_product'] ? $values['id_product'] : NULL;
-	$values['id_contract'] = $values['id_contract'] ? $values['id_contract'] : NULL;
-	
 	/* Check if the inventory item already exists */
 	$id_inventory = (int) get_db_value_filter ('id', 'tinventory', 
 		array ('name' => $values['name'],
 			'id_parent' => $values['id_parent']));
+	process_values ($values, $id_inventory);
 	if ($id_inventory) {
-		$values['generic_1'] = (isset ($values['generic_1'][0]) && $values['generic_1'][0] == '`') ?
-			get_db_value ($values['generic_1'], 'tinventory', 'id', $id_inventory) :
-			$values['generic_1'];
-		$values['generic_2'] = (isset ($values['generic_2'][0]) && $values['generic_2'][0] == '`') ?
-			get_db_value ($values['generic_2'], 'tinventory', 'id', $id_inventory) :
-			$values['generic_2'];
-		$values['generic_3'] = (isset ($values['generic_3'][0]) && $values['generic_3'][0] == '`') ?
-			get_db_value ($values['generic_3'], 'tinventory', 'id', $id_inventory) :
-			$values['generic_3'];
-		$values['generic_4'] = (isset ($values['generic_4'][0]) && $values['generic_4'][0] == '`') ?
-			get_db_value ($values['generic_4'], 'tinventory', 'id', $id_inventory) :
-			$values['generic_4'];
-		$values['generic_5'] = (isset ($values['generic_5'][0]) && $values['generic_5'][0] == '`') ?
-			get_db_value ($values['generic_5'], 'tinventory', 'id', $id_inventory) :
-			$values['generic_5'];
-		$values['generic_6'] = (isset ($values['generic_6'][0]) && $values['generic_6'][0] == '`') ?
-			get_db_value ($values['generic_6'], 'tinventory', 'id', $id_inventory) :
-			$values['generic_6'];
-		$values['generic_7'] = (isset ($values['generic_7'][0]) && $values['generic_7'][0] == '`') ?
-			get_db_value ($values['generic_7'], 'tinventory', 'id', $id_inventory) :
-			$values['generic_7'];
-		$values['generic_8'] = (isset ($values['generic_8'][0]) && $values['generic_8'][0] == '`') ?
-			get_db_value ($values['generic_8'], 'tinventory', 'id', $id_inventory) :
-			$values['generic_8'];
-			
 		process_sql_update ('tinventory',
 			$values,
 			array ('id' => $id_inventory));
 		echo 'Updated inventory "'.$values['name'].'"';
 	} else {
-		$values['generic_1'] = (isset ($values['generic_1'][0]) && $values['generic_1'][0] == '`') ? '' : $values['generic_1'];
-		$values['generic_2'] = (isset ($values['generic_2'][0]) && $values['generic_2'][0] == '`') ? '' : $values['generic_2'];
-		$values['generic_3'] = (isset ($values['generic_3'][0]) && $values['generic_3'][0] == '`') ? '' : $values['generic_3'];
-		$values['generic_4'] = (isset ($values['generic_4'][0]) && $values['generic_4'][0] == '`') ? '' : $values['generic_4'];
-		$values['generic_5'] = (isset ($values['generic_5'][0]) && $values['generic_5'][0] == '`') ? '' : $values['generic_5'];
-		$values['generic_6'] = (isset ($values['generic_6'][0]) && $values['generic_6'][0] == '`') ? '' : $values['generic_6'];
-		$values['generic_7'] = (isset ($values['generic_7'][0]) && $values['generic_7'][0] == '`') ? '' : $values['generic_7'];
-		$values['generic_8'] = (isset ($values['generic_8'][0]) && $values['generic_8'][0] == '`') ? '' : $values['generic_8'];
-		
 		process_sql_insert ('tinventory',
 			$values);
 		echo 'Inserted inventory "'.$values['name'].'"';

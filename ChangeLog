@@ -1,5 +1,10 @@
 2009-06-05  Esteban Sanchez  <estebans@artica.es>
 
+	* extras/inventory_importer.php: Added process_values so any
+	field can now use references to fields.
+
+2009-06-05  Esteban Sanchez  <estebans@artica.es>
+
 	* godmode/setup/inventories_setup.php: Removed debug output.
 
 2009-06-05  Esteban Sanchez  <estebans@artica.es>
