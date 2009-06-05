@@ -49,10 +49,9 @@ if ($update) {
 		$config[$token] = $value;
 	}
 }
-$config['debug'] = 1;
-debug ($config);
+
 $labels = get_inventory_generic_labels ();
-debug ($labels);
+
 echo '<h3>'.__('Inventories extra fields').'</h3>';
 
 $table->width = '30%';

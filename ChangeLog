@@ -1,5 +1,9 @@
 2009-06-05  Esteban Sanchez  <estebans@artica.es>
 
+	* godmode/setup/inventories_setup.php: Removed debug output.
+
+2009-06-05  Esteban Sanchez  <estebans@artica.es>
+
 	* godmode/setup/inventories_setup.php: Added to repository. Editor
 	for inventory extra fields.
 
