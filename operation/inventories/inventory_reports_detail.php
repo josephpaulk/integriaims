@@ -50,7 +50,7 @@ if ($export) {
 	// We'll be outputting a PDF
 	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
 	$config['mysql_result_type'] = MYSQL_ASSOC;
-	$rows = get_db_all_rows_sql ($report['sql']);
+	$rows = get_db_all_rows_sql (clean_output ($report['sql']));
 	if ($rows === false)
 		return;
 	echo implode (',', array_keys ($rows[0]))."\n";

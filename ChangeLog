@@ -1,3 +1,8 @@
+2009-06-10  Esteban Sanchez  <estebans@artica.es>
+
+	* inventories/inventory_reports_detail.php: Unclean the SQL
+	sentence before executing.
+
 2009-06-05  Esteban Sanchez  <estebans@artica.es>
 
 	* extras/inventory_importer.php: Added process_values so any
