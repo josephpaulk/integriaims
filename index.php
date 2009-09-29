@@ -25,7 +25,7 @@
 // Real start
 session_start();
 
-$develop_bypass = 1;
+$develop_bypass = 0;
 
 if ($develop_bypass != 1) {
 
