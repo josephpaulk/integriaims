@@ -1,3 +1,10 @@
+2009-09-30  Sancho Lerena  <slerena@artica.es>
+
+	* integria.spec: New spec for RPM.
+
+ 	* integria_dbdata.sql: Updated SQL for new location of
+	keygen (used in the RPM packages).
+
 2009-09-28  Sancho Lerena  <slerena@artica.es>
 
 	* index.php: Set develop flag to 0
