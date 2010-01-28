@@ -1,3 +1,30 @@
+2010-01-28  Sancho Lerena <slerena@artica.es>
+
+	* include/config_process.php: Minor version modifications 
+	for 2.1-dev.
+
+	* include/functions.php: Replaced mail function, add new 
+	function to implement templates. Added function to update
+	config tokens (deleting & inserting).
+
+	* include/mailtemplates: New directory to put templates
+	
+	* install.php: Updated  version.
+
+	* operation/side_menu.php: Added new setup option for
+	mail templates.
+
+	* integria_db.sql: New structures for downloads feature.
+
+	* godmode/setup/setup_mailtemplates.php: New template 
+	setup page, not finished.
+
+	* godmode/setup/setup_mail.php: New options for setup
+	(SMTP options, not tested).
+
+	* include/swiftmailer: New library for sending mails
+	directly from PHP. 
+
 2009-09-30  Sancho Lerena  <slerena@artica.es>
 
 	* integria.spec: New spec for RPM.

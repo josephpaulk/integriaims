@@ -39,7 +39,7 @@
 
 error_reporting(0);
 
-$integria_version = "2.0-dev";
+$integria_version = "2.1dev Build 100127";
 
 $integria_footertext = "<div id='foot'>
                         <i>Integria is an OpenSource Software project 

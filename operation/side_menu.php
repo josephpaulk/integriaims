@@ -699,6 +699,12 @@ if ($sec == "godmode") {
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_mail'>".__('Mail setup')."</a></li>";
 
+	// Mail Templates Setup
+	if ($sec2 == "godmode/setup/setup_mailtemplates")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates'>".__('Mail templates setup')."</a></li>";
 
 	// Update Manager
 	if ($sec2 == "godmode/updatemanager/main")

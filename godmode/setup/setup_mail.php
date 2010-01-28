@@ -33,15 +33,25 @@ if ($update) {
 	$config["HEADER_EMAIL"] = (string) get_parameter ("header_email", "");
 	$config["mail_from"] = (string) get_parameter ("mail_from");
 
+
+	$config["smtp_user"] = (string) get_parameter ("smtp_user");
+	$config["smtp_pass"] = (string) get_parameter ("smtp_pass");
+	$config["smtp_host"] = (string) get_parameter ("smtp_host");
+	$config["smtp_port"] = (string) get_parameter ("smtp_port");
+
 	
 	process_sql ("UPDATE tconfig SET value='".$config["notification_period"]."' WHERE token='notification_period'");
 	process_sql ("UPDATE tconfig SET value='".$config["FOOTER_EMAIL"]."' WHERE token='FOOTER_EMAIL'");
 
 	process_sql ("UPDATE tconfig SET value='".$config["HEADER_EMAIL"]."' WHERE token='HEADER_EMAIL'");
 
-	process_sql ("DELETE FROM tconfig WHERE token = 'mail_from'");
-	process_sql ("INSERT INTO tconfig (token, value) VALUES ('mail_from', '".$config["mail_from"]."')");
-}	
+	update_config_token ("mail_from", $config["mail_from"]);
+	update_config_token ("smtp_port", $config["smtp_port"]);
+	update_config_token ("smtp_host", $config["smtp_host"]);
+	update_config_token ("smtp_user", $config["smtp_user"]);
+	update_config_token ("smtp_pass", $config["smtp_pass"]);
+}
+
 
 echo "<h2>".__('Mail setup')."</h2>";
 
@@ -59,6 +69,17 @@ $table->data[2][0] .= integria_help ("notification_period", true);
 $table->data[2][1] = print_input_text ("mail_from", $config["mail_from"], '',
 	30, 50, true, __('System mail from address'));
 
+$table->data[3][0] = print_input_text ("smtp_host", $config["smtp_host"],
+	'', 15, 30, true, __('SMTP Host'));
+
+$table->data[3][1] = print_input_text ("smtp_port", $config["smtp_port"],
+	'', 5, 10, true, __('SMTP Port'));
+
+$table->data[4][0] = print_input_text ("smtp_user", $config["smtp_user"],
+	'', 15, 30, true, __('SMTP User'));
+
+$table->data[4][1] = print_input_text ("smtp_pass", $config["smtp_pass"],
+	'', 15, 30, true, __('SMTP Password'));
 
 $table->data[5][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
 	'', true, __('Email header'));

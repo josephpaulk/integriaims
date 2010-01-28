@@ -409,55 +409,48 @@ function render_priority ($pri) {
 	}
 }
 
-function integria_sendmail_attach ( $name, $email, $from, $subject, $fileatt, $fileatttype, $texto ){
-
-	$texto = ascii_output ($texto);
-	$subject = ascii_output ($subject);
-
-	$to = "$name <$email>";
-	$fileattname = "$fileatt";
-	$headers = "From: $from";
-	$file = fopen( $fileatt, 'rb' ); 
-	$data = fread( $file, filesize( $fileatt ) ); 
-	fclose( $file );
-	$semi_rand = md5( time() ); 
-	$mime_boundary = "==Multipart_Boundary_x{$semi_rand}x"; 
-
-	$headers .= "\nMIME-Version: 1.0\n" . 
-				"Content-Type: multipart/mixed;\n" . 
-				" boundary=\"{$mime_boundary}\"";
-
-	$message = "This is a multi-part message in MIME format.\n\n" . 
-			"--{$mime_boundary}\n" . 
-			"Content-Type: text/plain; charset=\"iso-8859-1\"\n" . 
-			"Content-Transfer-Encoding: 7bit\n\n" . 
-			$texto . "\n\n";
-
-	$data = chunk_split (base64_encode ($data));
-	$message .= "--{$mime_boundary}\n" . 
-			 "Content-Type: {$fileatttype};\n" . 
-			 " name=\"{$fileattname}\"\n" . 
-			 "Content-Disposition: attachment;\n" . 
-			 " filename=\"{$fileattname}\"\n" . 
-			 "Content-Transfer-Encoding: base64\n\n" . 
-			 $data . "\n\n" . 
-			 "--{$mime_boundary}--\n"; 
-	$message .= "\n".$texto;
-	mail( $to, $subject, $message, $headers );
+function update_config_token ($cfgtoken, $cfgvalue) {
+	global $config;
+	process_sql ("DELETE FROM tconfig WHERE token = '$cfgtoken'");
+	process_sql ("INSERT INTO tconfig (token, value) VALUES ('$cfgtoken', '$cfgvalue')");
 }
 
-function integria_sendmail ($destination, $msg_subject = "[INTEGRIA] Automatic email notification", $msg_text) {
+
+
+function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments = false) {
 	global $config;
-	
-	if ($destination == '')
+        require_once($config["homedir"]."/include/swiftmailer/swift_required.php");
+
+	if ($to == '')
 		return false;
-	
-	$msg_text = ascii_output ($msg_text);
-	$msg_subject = ascii_output ($msg_subject);
-	$real_text = $config["HEADER_EMAIL"].$msg_text."\n\n".$config["FOOTER_EMAIL"];
-	$from = $config["mail_from"];
-	$headers = "From: $from\nX-Mailer: Integria IMS\n";
-	mail ($destination, $msg_subject, $real_text, $headers);
+
+/*
+	// I'm unsure if needed to convert to pure ASCII here or HTML works ¿?
+	$msg_text = ascii_output ($body;
+	$msg_subject = ascii_output ($body);
+*/
+
+	// Add global header and footer to mail
+
+	$body = $config["HEADER_EMAIL"] . $body . "\n". $config["FOOTER_EMAIL"];
+
+        $transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
+        $transport->setUsername($config["smtp_user"])
+        $transport->setPassword($config["smtp_pass"]);
+
+        $mailer = Swift_Mailer::newInstance($transport);
+
+        $message = Swift_Message::newInstance($subject);
+        $message->setFrom($config["mail_from"]);
+        $message->setTo(array($to => $to));
+        $message->setBody($body, 'text/html');
+
+        if ($attachments !== false)
+                foreach ($attachments as $attachment)
+                        if (is_file($attachment["file"]))
+                                $message->attach(Swift_Attachment::fromPath($attachment["file"]));
+
+        return $mailer->send($message);
 }
 
 function topi_rndcode ($length = 6) {
@@ -639,4 +632,33 @@ function enterprise_include ($filename) {
 function round_number ($number, $rounder = 5) {
 	return (int) ($number / $rounder + 0.5) * $rounder;
 }
+
+function template_process ($filename, $macroarray) {
+
+/* USAGE:
+
+$MACROS["_fullname_"] = "My taylor is rich";
+$msg = template_process ( "messages/mytemplate.tpl", $MACROS);
+
+Will replace all _fullname_ with "My taylor is rich" in the template and return the template
+contents altered on function return
+
+*/
+        $fh = fopen ($filename, "r");
+
+        // Empty string
+        if (! $fh){
+                return "";
+        }
+
+        $contents = fread($fh, filesize($filename));
+        fclose ($fh);
+
+        foreach ($macroarray as $key => $value) {
+                $contents = str_replace($key, $value, $contents);
+        }
+        return $contents;
+}
+
+
 ?>

@@ -17,8 +17,8 @@
 global $config;
 
 // Integria version
-$config["build"]="090425";
-$config["version"]="v2.0";
+$config["build"]="100127";
+$config["version"]="v2.1-dev";
 $config["build_version"] = $config["build"];
 
 if (! defined ('ENTERPRISE_DIR'))
@@ -141,6 +141,10 @@ if (!isset ($config["show_owner_incident"]))
 	
 if (!isset ($config["show_creator_incident"]))
 	$config["show_creator_incident"] = 1;
+
+if (!isset ($config["smtp_host"])){
+	$config["smtp_host"] = "localhost";
+}
 
 // Mail address used to send mails
 if (!isset ($config["mail_from"]))

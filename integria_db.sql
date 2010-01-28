@@ -724,3 +724,26 @@ CREATE TABLE `um_tupdate_journal` (
   ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `tdownload` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(250) NOT NULL default '',
+  `location` text NOT NULL default '', 
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `description` text NOT NULL default '',  
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tdownload_category_group` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `id_download_category` mediumint(8) unsigned NOT NULL,
+  `id_group` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tdownload_category` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(250) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+);
+
+
