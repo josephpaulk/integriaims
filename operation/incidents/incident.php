@@ -129,12 +129,11 @@ $table->head[3] = __('Group');
 $table->head[4] = __('Status')."<br /><em>".__('Resolution')."</em>";
 $table->head[5] = __('Priority');
 $table->head[6] = __('Updated')."<br /><em>".__('Started')."</em>";
-$table->head[7] = __('Work');
-$table->head[8] = __('Flags');
+$table->head[7] = __('Details');
 if ($config["show_creator_incident"] == 1)
-	$table->head[9] = __('Creator');	
+	$table->head[8] = __('Creator');	
 if ($config["show_owner_incident"] == 1)
-	$table->head[10] = __('Owner');	
+	$table->head[9] = __('Owner');	
 $table->style = array ();
 $table->style[0] = '';
 

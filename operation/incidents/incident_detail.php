@@ -606,6 +606,17 @@ if ($create_incident) {
 			$inventories[$id_inventory] = get_db_value ('name', 'tinventory',
 				'id', $id_inventory);
 		}
+	} else {
+	/* Default inventory items for this user:
+
+		* ONLY FOR ENTERPRISE *
+
+		- After choosing group (AJAX) get the default inventory item for that group *TODO
+		$default_inventory = get_db_sql ("SELECT id_inventory FROM tinventory WHERE name grupo WHERE id_grupo = XXX"); 
+
+		$inventories[$default_inventory] =  get_db_value ('name', 'tinventory', 'id', $default_inventory);
+	*/
+
 	}
 	
 	$table->data[4][2] = print_select ($inventories, 'incident_inventories', NULL,

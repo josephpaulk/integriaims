@@ -924,10 +924,10 @@ h3.system {
 div#login {
 	margin-top: 180px;
 	width: 460px;
-	border-left: solid 1px #000;
-	border-top: solid 1px #000;
-	border-bottom: solid 2px #000;
-	border-right: solid 2px #000;
+	border-left: solid 1px #aaa;
+	border-top: solid 1px #aaa;
+	border-bottom: solid 2px #aaa;
+	border-right: solid 2px #aaa;
 	padding-top: 20px;
 }
 

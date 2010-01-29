@@ -409,33 +409,24 @@ function render_priority ($pri) {
 	}
 }
 
-function update_config_token ($cfgtoken, $cfgvalue) {
-	global $config;
-	process_sql ("DELETE FROM tconfig WHERE token = '$cfgtoken'");
-	process_sql ("INSERT INTO tconfig (token, value) VALUES ('$cfgtoken', '$cfgvalue')");
-}
-
-
 
 function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments = false) {
 	global $config;
-        require_once($config["homedir"]."/include/swiftmailer/swift_required.php");
+        require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
 
 	if ($to == '')
 		return false;
 
-/*
-	// I'm unsure if needed to convert to pure ASCII here or HTML works ¿?
-	$msg_text = ascii_output ($body;
-	$msg_subject = ascii_output ($body);
-*/
+	// We need to convert to pure ASCII here to use carriage returns
+	$body = ascii_output ($body);
+	$subject = ascii_output ($subject);
 
 	// Add global header and footer to mail
 
-	$body = $config["HEADER_EMAIL"] . $body . "\n". $config["FOOTER_EMAIL"];
+	$body = $config["HEADER_EMAIL"] . "\r\n". $body . "\r\n". $config["FOOTER_EMAIL"];
 
         $transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
-        $transport->setUsername($config["smtp_user"])
+        $transport->setUsername($config["smtp_user"]);
         $transport->setPassword($config["smtp_pass"]);
 
         $mailer = Swift_Mailer::newInstance($transport);
@@ -443,7 +434,7 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
         $message = Swift_Message::newInstance($subject);
         $message->setFrom($config["mail_from"]);
         $message->setTo(array($to => $to));
-        $message->setBody($body, 'text/html');
+        $message->setBody($body, 'text');
 
         if ($attachments !== false)
                 foreach ($attachments as $attachment)
@@ -658,6 +649,12 @@ contents altered on function return
                 $contents = str_replace($key, $value, $contents);
         }
         return $contents;
+}
+
+function update_config_token ($cfgtoken, $cfgvalue) {
+	global $config;
+	process_sql ("DELETE FROM tconfig WHERE token = '$cfgtoken'");
+	process_sql ("INSERT INTO tconfig (token, value) VALUES ('$cfgtoken', '$cfgvalue')");
 }
 
 

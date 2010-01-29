@@ -420,4 +420,36 @@ function get_incident_contact_reporters ($id_incident, $only_names = false) {
 	return $contacts;
 }
 
+
+/**
+* Return total hours assigned to incident
+*
+* $id_inc       integer         ID of incident
+**/
+
+function get_incident_workunit_hours ($id_incident) {
+        global $config;
+        $sql = sprintf ('SELECT SUM(tworkunit.duration) 
+                        FROM tworkunit, tworkunit_incident, tincidencia 
+                        WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
+                        AND tworkunit_incident.id_workunit = tworkunit.id
+                        AND tincidencia.id_incidencia = %d', $id_incident);
+        return (float) get_db_sql ($sql);
+}
+
+
+/**
+ * Return the last entered WU in a given incident
+ *
+ * @param int Incident id
+ *
+ * @return array WU structure
+ */
+
+function get_incident_lastworkunit ($id_incident) {
+        $workunits = get_incident_workunits ($id_incident);
+        $workunit_data = get_workunit_data ($workunits[0]['id_workunit']);
+        return $workunit_data;
+}
+
 ?>

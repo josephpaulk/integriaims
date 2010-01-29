@@ -39,6 +39,7 @@ CREATE TABLE `tgrupo` (
   `lang` varchar(10) default NULL,
   `parent` mediumint(8) unsigned NOT NULL default 0,
   `id_user_default` varchar(60) NOT NULL default '',
+  `id_inventory_default` mediumint(8) default NULL,
   `forced_email` tinyint(1) unsigned NOT NULL DEFAULT 1,
   `email` varchar(128) default '',
   PRIMARY KEY  (`id_grupo`),
@@ -745,5 +746,4 @@ CREATE TABLE `tdownload_category` (
   `name` varchar(250) NOT NULL default '',
   PRIMARY KEY  (`id`)
 );
-
 

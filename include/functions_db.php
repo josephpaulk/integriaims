@@ -243,21 +243,6 @@ function get_tasks_count_in_project ($id_project) {
 	return (int) get_db_value ('COUNT(*)', 'ttask', 'id_project', $id_project);
 }
 
-/**
-* Return total hours assigned to incident
-*
-* $id_inc	integer 	ID of incident
-**/
-
-function get_incident_workunit_hours ($id_incident) {
-	global $config;
-	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
-			FROM tworkunit, tworkunit_incident, tincidencia 
-			WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
-			AND tworkunit_incident.id_workunit = tworkunit.id
-			AND tincidencia.id_incidencia = %d', $id_incident);
-	return (int) get_db_sql ($sql);
-}
 
 /**
 * Return total hours assigned to incidents assigned to a task

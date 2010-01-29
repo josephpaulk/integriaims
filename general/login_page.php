@@ -39,7 +39,7 @@
 		</tr>
 <?php endif; ?>
 		<tr>
-		<td rowspan="3" style="text-align: left; border-right: solid 1px #678;padding-right: 25px;">
+		<td rowspan="3" style="text-align: left ;padding-right: 25px;">
 			<a href="index.php">
 			<img src="images/integria_white.png" alt="logo">
 			</a><br />

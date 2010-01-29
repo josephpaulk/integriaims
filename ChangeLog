@@ -1,3 +1,52 @@
+2010-01-29  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_form.php: Fixed several problems in incident
+	form 
+	* include/styles/dbmanager.css: New style for dbmanager.
+
+	* include/styles/integria.css: Minor adjustments for login box.
+
+	* include/config_process.php: Added new config tokens.
+
+	* include/functions_incidents.php: get_incident_workunit_hours
+	moved from functions_db.
+
+	* include/functions.php: Updated email function. Tested and working!
+
+	* include/functions_db.php: get_incident_workunit_hours
+	moved to functions_incidents.php.
+
+	* operation/incidents/incident.php: Modified headers of incident
+	listing.
+	
+	* operation/incidents/incident_detail.php: TODO, implement auto
+	load of default inventory object for chosen group (Ajax).
+
+	* operation/incidents/incident_search.php: New layout on listing.
+	Show last user who enter a WU, removed a column an reorder items.
+
+	* operation/common/workunit_detail.php: Fixed "orphan" page, now
+	have a link to go back to incident and show the incident title.
+
+	* operation/main_menu.php: new items in menu (download section).
+
+	* operation/side_menu.php: New items (setup options).
+
+	* integria_db.sql: Added default id_inventory for each group.
+	Not fully implemented in creation of incident. Need to work
+	on jscript code.
+	* 
+	* general/error_install.php: Minor fixes (removed a missing file)
+	and formatting.
+
+	* general/login_page.php: Formatting and new look.
+
+	* godmode/setup/dbmanager.php: New database manager (ported from
+	Pandora FMS).
+
+	* godmode/setup/setup.php: Added new default duration for WU
+	created in Project and Incident management (not fully implemented).
+
 2010-01-28  Sancho Lerena <slerena@artica.es>
 
 	* include/config_process.php: Minor version modifications 

@@ -146,6 +146,15 @@ if (!isset ($config["smtp_host"])){
 	$config["smtp_host"] = "localhost";
 }
 
+if (!isset ($config["iwu_defaultime"])){
+	$config["iwu_defaultime"] = "0.25";
+}
+
+if (!isset ($config["pwu_defaultime"])){
+	$config["pwu_defaultime"] = "4";
+}
+
+
 // Mail address used to send mails
 if (!isset ($config["mail_from"]))
 	$config["mail_from"] = "integria@localhost";

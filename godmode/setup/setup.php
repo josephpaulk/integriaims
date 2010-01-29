@@ -42,6 +42,9 @@ if ($update) {
 	$config["show_owner_incident"] = (int) get_parameter ("show_owner_incident", 0);
 	$config["show_creator_incident"] = (int) get_parameter ("show_creator_incident", 0);
 	
+	$config["pwu_defaultime"] = get_parameter ("pwu_defaultime", 4);
+	$config["iwu_defaultime"] = get_parameter ("iwu_defaultime", 0.25);
+
 	process_sql ("UPDATE tconfig SET value='".$config["block_size"]."' WHERE token='block_size'");
 	process_sql ("UPDATE tconfig SET value='".$config["language_code"]."' WHERE token='language_code'");
 	
@@ -68,6 +71,10 @@ if ($update) {
 
 	process_sql ("DELETE FROM tconfig WHERE token = 'show_owner_incident'");
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('show_owner_incident', '".$config["show_owner_incident"]."')");
+
+	update_config_token ("pwu_defaultime", $config["pwu_defaultime"]);
+
+	update_config_token ("iwu_defaultime", $config["iwu_defaultime"]);
 }	
 
 echo "<h2>".__('General setup')."</h2>";
@@ -105,17 +112,22 @@ $table->data[3][0] = print_input_text ("sitename", $config["sitename"], '',
 $table->data[3][1] = print_input_text ("currency", $config["currency"], '',
 	3, 3, true, __('Currency'));
 
-$table->data[4][0] = print_input_text ("fontsize", $config["fontsize"], '',
+$table->data[4][0] = print_input_text ("iwu_defaultime", $config["iwu_defaultime"], '',
+	5, 5, true, __('Incident WU Default time'));
+$table->data[4][1] = print_input_text ("pwu_defaultime", $config["pwu_defaultime"], '',
+	5, 5, true, __('Project WU Default time'));
+
+$table->data[5][0] = print_input_text ("fontsize", $config["fontsize"], '',
 	3, 5, true, __('Graphics font size'));
 
 $incident_reporter_options[0] = "Disabled";
 $incident_reporter_options[1] = "Enabled";
 
-$table->data[4][1] = print_select ($incident_reporter_options, "incident_reporter", $config["incident_reporter"], '','','',true,0,true, "Incident reporter");
+$table->data[5][1] = print_select ($incident_reporter_options, "incident_reporter", $config["incident_reporter"], '','','',true,0,true, "Incident reporter");
 
-$table->data[5][0] = print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, "Show incident owner");
+$table->data[6][0] = print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, "Show incident owner");
 
-$table->data[5][1] = print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, "Show incident creator");
+$table->data[6][1] = print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, "Show incident creator");
 
 echo "<form name='setup' method='post'>";
 

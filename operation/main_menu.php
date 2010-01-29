@@ -56,6 +56,13 @@ if (give_acl($config["id_user"], 0, "KR") == 1){
     else
 	    echo "<li>";
     echo "<a href='index.php?sec=kb&sec2=operation/kb/browse'>".__('KB')."</a></li>";
+
+    if ($sec == "download" )
+            echo "<li id='current'>";
+    else
+            echo "<li>";
+    echo "<a href='index.php?sec=download&sec2=operation/download/browse'>".__('Downloads')."</a></li>";
+
 }
 
 // Users

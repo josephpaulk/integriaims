@@ -17,6 +17,7 @@
 // GNU Lesser General Public License for more details.
 
 global $config;
+include_once ("functions_incidents.php");
 
 function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = false, $access = "IR", $return = false, $label = false) {
 	global $config;
@@ -484,6 +485,13 @@ function show_workunit_data ($workunit, $title) {
 			$id_workunit);
 	$id_group = get_db_sql ($sql);
 
+	$sql = sprintf ('SELECT tworkunit_incident.id_incident
+                        FROM tincidencia, tworkunit_incident
+                        WHERE tworkunit_incident.id_workunit = %d
+                        AND tincidencia.id_incidencia = tworkunit_incident.id_incident',
+                        $id_workunit);
+        $id_incident = get_db_sql ($sql);
+
 	// ACL Check for visibility
 	if (!$public && $id_user != $config["id_user"] && ! give_acl ($config["id_user"], $id_group, "IM"))
 		return;
@@ -499,7 +507,7 @@ function show_workunit_data ($workunit, $title) {
 	echo "</span>";
 
 	// Public WU ?
-	echo "<span style='float:right; margin-top: -15px; margin-bottom:0px; padding-right:10px;'>";
+	echo "<span style='float:right; margin-top: -1px; margin-bottom:0px; padding-right:10px;'>";
 	if ($public == 1)
 		echo "<img src='images/group.png' title='".__('Public Workunit')."' border=0>";
 	else
@@ -507,7 +515,7 @@ function show_workunit_data ($workunit, $title) {
 	echo "</span>";
 
 	// WU Duration 
-	echo "<span style='float:right; margin-top: -15px; margin-bottom:0px; padding-right:10px;'>";
+	echo "<span style='float:right; margin-top: -1px; margin-bottom:0px; padding-right:10px;'>";
 	echo $duration;
 	echo "&nbsp; ".__('Hours');
 	echo "</span>";
@@ -519,7 +527,7 @@ function show_workunit_data ($workunit, $title) {
 	if (strlen ($nota) > 1024) {
 		echo clean_output_breaks (substr ($nota, 0, 1024));
 		echo "<br /><br />";
-		echo "<a href='index.php?sec=incidents&sec2=operation/common/workunit_detail&id=".$id_workunit."&title=$title'>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/common/workunit_detail&id=".$id_workunit."&id_incident=$id_incident'>";
 		echo __('Read more...');
 		echo "</a>";
 	} else {
@@ -837,12 +845,15 @@ function incident_details_list ($id_incident, $return = false) {
 	}
 	
 	/* Show workunits if there are some */
-	$work_hours = get_incident_count_workunits ($id_incident);
-	if ($work_hours) {
+	$workunit_count = get_incident_count_workunits ($id_incident);
+	if ($workunit_count) {
+		$work_hours = get_incident_workunit_hours ($id_incident);
 		$workunits = get_incident_workunits ($id_incident);	
 		$workunit_data = get_workunit_data ($workunits[0]['id_workunit']);
 		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last work at').'</strong>: '.human_time_comparation ($workunit_data['timestamp']);
-		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Hours worked').'</strong>: '.$work_hours;
+		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Workunits').'</strong>: '.$workunit_count;
+		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Time used').'</strong>: '.$work_hours;
+		;
 		$output .= '<br />&nbsp;&nbsp;<strong>'._('Done by').'</strong>: <em>'.$workunit_data['id_user'].'</em>';
 	}
 	
@@ -852,6 +863,7 @@ function incident_details_list ($id_incident, $return = false) {
 		return $output;
 	echo $output;
 }
+
 
 function print_table_pager ($id = 'pager', $hidden = true, $return = false) {
 	global $config;

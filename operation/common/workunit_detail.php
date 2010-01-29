@@ -24,12 +24,26 @@ if (check_login() != 0) {
 }
 
 $id = get_parameter ("id",0);
-$title = get_parameter ("title",0);
+
+$id_incident = get_parameter ("id_incident", 0);
+$title = get_parameter ("title","");
 
 // ********************************************************************
 // Note detail of $id_note
 // ********************************************************************
-echo "<h1>$title</h1>";
+
+// If WU comes from an incident, get data from incident
+if ($id_incident != 0){
+	echo "<h3>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_incident'>";
+	echo __("Workunit detail for Incident #") . $id_incident;
+	echo " - ". get_incident_title ($id_incident);
+	echo "</a></h3>";
+}
+else {
+	echo "<h2>$title</h2>"; 
+}
+
 $sql4='SELECT * FROM tworkunit WHERE id = '.$id;
 $res4=mysql_query($sql4);
 if ($row3=mysql_fetch_array($res4)){
@@ -45,7 +59,7 @@ if ($row3=mysql_fetch_array($res4)){
 	// Show data
 	echo "<img src='images/avatars/".$avatar."_small.png'>&nbsp;";
 	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
-	echo $id_usuario_nota;
+	echo $id_user;
 	echo "</a>";
 	echo ' '.__('said on').' '.$timestamp;
 	echo "</div>";

@@ -210,7 +210,7 @@ foreach ($incidents as $incident) {
 	echo human_time_comparation ($incident["inicio"]).'</em></td>';
 	
 	/* Workunits */
-	echo '<td>';
+	echo '<td class="f9">';
 	if ($incident["id_task"] > 0){
 		$id_project = get_db_value ("id_project", "ttask", "id", $incident["id_task"]);
 		$id_task = $incident["id_task"] ;
@@ -219,41 +219,49 @@ foreach ($incidents as $incident) {
 	$timeused = get_incident_workunit_hours ($incident["id_incidencia"]);
 	$incident_wu = $in_wu = get_incident_count_workunits ($incident["id_incidencia"]);
 	if ($incident_wu > 0) {
-		echo '<img src="images/award_star_silver_1.png" />'.$timeused;
+		echo '<img src="images/award_star_silver_1.png" title="'.$timeused.' Hr / '.$incident_wu.' WU">';
 	}
+
+ 	/* Files */
+        $files = get_number_files_incident ($incident["id_incidencia"]);
+        if ($files)
+                echo '&nbsp;<img src="images/disk.png"
+                        title="'.$files.' '.__('Files').'" />';
+        
+        /* Mail notification */
+        $mail_check = get_db_value ('notify_email', 'tincidencia',
+                                'id_incidencia', $incident["id_incidencia"]);
+        if ($mail_check > 0)
+                echo '&nbsp;<img src="images/email_go.png"
+                        title="'.__('Mail notification').'" />';
+
+	echo "&nbsp;";
+	/* People involved in the incident  */
+        $people = people_involved_incident ($incident["id_incidencia"]);
+        print_help_tip (implode ('&nbsp;', $people), false, 'tip_people');
+
+
+	/* Last WU */
+	echo "<br>";
+	if ($incident_wu > 0){
+		echo "($incident_wu) ";
+	}
+
+	$last_wu = get_incident_lastworkunit ($incident["id_incidencia"]);
+	echo $last_wu["id_user"];
 	echo '</td>';
-	
-	/* Get special details about the incident */
-	echo '<td>';
-	$people = people_involved_incident ($incident["id_incidencia"]);
-	print_help_tip (implode ('&nbsp;', $people), false, 'tip_people');
-	
-	/* Files */
-	$files = get_number_files_incident ($incident["id_incidencia"]);
-	if ($files)
-		echo '&nbsp;<img src="images/disk.png"
-			title="'.$files.' '.__('Files').'" />';
-	
-	/* Mail notification */
-	$mail_check = get_db_value ('notify_email', 'tincidencia',
-				'id_incidencia', $incident["id_incidencia"]);
-	if ($mail_check > 0)
-		echo '&nbsp;<img src="images/email_go.png"
-			title="'.__('Mail notification').'" />';
-	echo '</td>';
-	
 	
 	if ($config["show_creator_incident"] == 1){	
 		echo "<td class='f9'>";
 		$incident_creator = $incident["id_creator"];
-		echo $incident_creator;
+		echo substr($incident_creator,0,12);
 		echo "</td>";
 	}
 	
 	if ($config["show_owner_incident"] == 1){	
 		echo "<td class='f9'>";
 		$incident_owner = $incident["id_usuario"];
-		echo $incident_owner;
+		echo substr($incident_owner,0,12);
 		echo "</td>";
 	}
 	
