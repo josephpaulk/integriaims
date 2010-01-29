@@ -92,7 +92,7 @@ if ($id_workunit) {
 	}
 } else {
 	$id_user = $config["id_user"];
-	$duration = 1; 
+	$duration = $config["pwu_defaultime"]; 
 	$description = "";
 	$id_inventory = array();
 	$have_cost = false;

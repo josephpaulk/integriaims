@@ -1,3 +1,9 @@
+2010-01-30  Sancho Lerena <slerena@artica.es>
+
+	* operation/incidents/incident_create_work.php
+	operation/users/user_spare_workunit.php : Implemented to have a
+	default duration for WU in projects / incidents.
+
 2010-01-29  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_form.php: Fixed several problems in incident

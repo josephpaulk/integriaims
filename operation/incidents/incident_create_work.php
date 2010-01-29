@@ -47,7 +47,7 @@ $table->data = array ();
 $table->data[0][0] = print_input_text ("timestamp", $now, '', 18,  50, true,__('Date'));
 $table->data[0][1] = combo_roles (1, 'work_profile', __('Profile'), true);
 
-$table->data[1][0] = print_input_text ("duration", '0', '', 7,  10, true, __('Time used'));
+$table->data[1][0] = print_input_text ("duration", $config["iwu_defaultime"], '', 7,  10, true, __('Time used'));
 $table->data[1][1] = print_checkbox ('have_cost', 1, false, true, __('Have cost'));
 $table->data[1][2] = print_checkbox ('public', 1, true, true, __('Public'));
 
