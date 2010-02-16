@@ -59,4 +59,28 @@ function lock_task_workunit ($id_workunit) {
 	return (bool) process_sql ($sql);
 }
 
-?>
+function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_cost = 0, $profile = "", $public = 1) {
+	$sql = sprintf ('UPDATE tincidencia SET affected_sla_id = 0, actualizacion = NOW() 
+			WHERE id_incidencia = %d',$incident_id);
+	process_sql ($sql);
+
+	incident_tracking ($incident_id, INCIDENT_WORKUNIT_ADDED);
+
+	// Add work unit if enabled
+	$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public)
+			VALUES (NOW(), %.2f, "%s", "%s", %d)', $timeused, $user, $wu_text, $public);
+	$id_workunit = process_sql ($sql, "insert_id");
+	$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit)
+			VALUES (%d, %d)',
+			$incident_id, $id_workunit);
+	$res = process_sql ($sql);
+	if ($res !== false) {
+		// Email notify to all people involved in this incident
+		$email_notify = get_db_value ("notify_email", "tincidencia", "id_incidencia", $incident_id);
+		if ($email_notify == 1) {
+			mail_incident ($incident_id, $user, $wu_text, $timeused, 10, $public);
+		}
+	}
+}
+
+

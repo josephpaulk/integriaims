@@ -899,4 +899,40 @@ function print_table_pager ($id = 'pager', $hidden = true, $return = false) {
 	echo $output;
 }
 
+
+// Returns a combo with download categories
+// ----------------------------------------------------------------------
+function combo_download_categories ($id_category, $show_any = 0){
+	global $config;
+
+	if ($id_category == 0)
+		$id_category = 1;
+
+	echo "<select name='category' style='width: 180px;'>";
+	if ($show_any != 0){
+		$id_category = -1;
+		echo "<option value=''>".__("Any");
+	}	
+	$sql = "SELECT * FROM tdownload_category WHERE id != $id_category ORDER by parent, name";
+	$result = mysql_query($sql);
+	
+	$parent = get_db_value ("parent","tkb_category","id",$id_category);
+	$parent_name = get_db_value ("name","tkb_category","id",$parent);
+	$name = get_db_value ("name","tkb_category","id",$id_category);
+	if ($parent != 0)
+		echo "<option value='".$id_category."'>".$parent_name."/".$name;
+	else
+		echo "<option value='".$id_category."'>".$name;
+
+	while ($row=mysql_fetch_array($result)){
+		$parent = get_db_value ("name","tkb_category","id",$row["parent"]);
+		if ($parent != "")
+			echo "<option value='".$row["id"]."'>".$parent . "/".$row["name"];
+		else
+			echo "<option value='".$row["id"]."'>".$row["name"];
+	}
+	echo "</select>";
+}
+
+
 ?>

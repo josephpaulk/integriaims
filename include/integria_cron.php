@@ -210,26 +210,24 @@ function check_sla_min ($incident) {
 	if ($notified > 0)
 		return true;
 	
-	/* We need to notify via email to the risponsable user */
+
+	/* We need to notify via email to the owner user */
 	$user = get_user ($incident['id_usuario']);
-	$group_name = dame_nombre_grupo ($incident['id_grupo']);
-	$sla = get_sla ($id_sla);
-	$time = give_human_time ($sla['min_response'] * 3600);
-	$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
-	
-	$subject = "Incident #".$incident["id_incidencia"]."[".substr ($incident['titulo'], 0, 20)."...] need inmediate status change (SLA Min.Response Time)";
-	$body = 'Hello '.$user['nombre_real'].",\n\n";
-	$body .= 'Our SLA policy for incidents of group '.$group_name;
-	$body .= ', incidents should be updated in less than a specific time. ';
-	$body .= 'For this group this time is configured to be '.$time."\n\n";
-	$body .= "Please connect as soon as possible and update status for this incident. ";
-	$body .= "Otherwise, you will continue to receive this notifications.\n";
-	$body .= " You also could click on following URL: \n\n$url";
-	
-	integria_sendmail ($user['direccion'], $subject, $body);
-	
+
+	$MACROS["_username_"] = $incident['id_usuario'];
+	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
+	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
+	$MACROS["_incident_id_"] = incident["id_incidencia"];
+	$MACROS["_incident_title_"] = $incident['titulo'];
+	$MACROS["_data1_"] = give_human_time ($sla['min_response']);
+
+	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
+
+	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time.tpl", $MACROS);
+	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time_subject.tpl", $MACROS);
+	integria_sendmail ($user['direccion'], $subject, $text);
 	insert_event ('SLA_MIN_RESPONSE_NOTIFY', $incident['id_incidencia']);
-	
+
 	return true;
 }
 
@@ -257,24 +255,20 @@ function check_sla_max ($incident) {
 	if ($notified > 0)
 		return true;
 	
-	/* We need to notify via email to the risponsable user */
+	/* We need to notify via email to the owner user */
 	$user = get_user ($incident['id_usuario']);
-	$group_name = dame_nombre_grupo ($incident['id_grupo']);
-	$sla = get_sla ($id_sla);
-	$time = give_human_time ($sla['max_response'] * 3600);
-	$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
-	
-	$subject = "Incident #".$incident["id_incidencia"]."[".substr ($incident['titulo'], 0, 20)."...] need inmediate status change (SLA Max.Response Time)";
-	$body = 'Hello '.$user['nombre_real'].",\n\n";
-	$body .= 'Our SLA policy for incidents of group '.$group_name;
-	$body .= ', incidents should has a resolution in a maximun period of time. ';
-	$body .= 'For this group this period is configured to be '.$time."\n\n";
-	$body .= "Please connect as soon as possible and update status for this incident. ";
-	$body .= "Otherwise, you will continue to receive this notifications.\n";
-	$body .= " You also could click on following URL: \n\n$url";
-	
-	integria_sendmail ($user['direccion'], $subject, $body);
-	
+
+	$MACROS["_username_"] = $incident['id_usuario'];
+	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
+	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
+	$MACROS["_incident_id_"] = incident["id_incidencia"];
+	$MACROS["_incident_title_"] = $incident['titulo'];
+	$MACROS["_data1_"] = give_human_time ($sla['max_response']);
+	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
+
+	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_response_time.tpl", $MACROS);
+	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_response_time_subject.tpl", $MACROS);
+	integria_sendmail ($user['direccion'], $subject, $text);
 	insert_event ('SLA_MAX_RESPONSE_NOTIFY', $incident['id_incidencia']);
 }
 
@@ -339,8 +333,60 @@ foreach ($slas as $sla) {
 	}
 }
 
-// Daily check
+function run_mail_check () {
+
+	global $config;
+	include_once ($config["homedir"]."/include/functions_pop3.php");
+
+	// Inicialization for internal variables
+
+	$error            = "";   //    Error string.
+	$timeout          = 90;   //    Default timeout before giving up on a network operation.
+	$Count            = -1;   //    Mailbox msg count
+	
+	$RFC1939          = true;  //    Set by noop(). See rfc1939.txt
+	$msg_list_array = array();  //    List of messages from server
+	$login            = $config["pop_user"];
+	$pass             = $config["pop_pass"];
+	$server           = $config["pop_host"];
+
+	set_time_limit($timeout);
+	$fp = connect ($server, $port = 110);
+	$Count = login($login,$pass, $fp);
+	if( (!$Count) or ($Count < 1) ){
+		return 1; 
+	}
+
+	// DEBUG
+	// echo "Login OK: Inbox contains [$Count] messages<BR>\n";
+	$msg_list_array = uidl("", $fp);
+	set_time_limit($timeout);
+
+	// Loop thru the array to get each message
+	for ($i=1; $i <= $Count; $i++){
+		set_time_limit($timeout);
+		$MsgOne = get($i, $fp);
+
+		if( (!$MsgOne) or (gettype($MsgOne) != "array") ) {
+			echo "oops, Message not returned by the server.<BR>\n";
+			return 2;
+		}
+		message_parse($MsgOne, $i, $fp);
+	}
+
+	// Close the email box and delete all messages marked for deletion
+	quit($fp);
+	return 0;
+
+}
+
+// Daily check only
+
 if (check_daily_task ())
 	run_daily_check ();
+
+// Execute always
+
+run_mail_check();
 
 ?>

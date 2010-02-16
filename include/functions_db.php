@@ -881,58 +881,44 @@ function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg 
 	$project  = get_db_row ("tproject", "id", $task["id_project"]);
 	$id_project = $task["id_project"];
 	$id_manager = $project["id_owner"];
-	$task_name = $task["name"];
 
-	// WU data
-	$current_timestamp = $workunit["timestamp"];
-	$duration = $workunit["duration"];
-	$have_cost = $workunit["have_cost"];
-	if ($have_cost == 1)
-		$have_cost = __('Yes');
+	$MACROS["_time_used_"] = $workunit["duration"];
+	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task";
+
+	if ($workunit["have_cost"] == 1)
+		$MACROS["_havecost_"] = __('Yes');
 	else
-		$have_cost = __('No');
+		$MACROS["_havecost_"] = __('No');
 
-	$public = $workunit["public"];
-	if ($public == 1)
-		$public_desc = "Yes";
+	if ($workunit["public"] == 1)
+		$MACROS["_public_"] = __('Yes');
 	else
-		$public_desc = "No";
+		$MACROS["_public_"] = __('No');
 
+	$MACROS["_sitename_"] = $config["sitename"];
+	$MACROS["_taskname_"] = $task["name"];
+	$MACROS["_projectname_"] =  $project["name"];
+	$MACROS["_fullname_"] = dame_nombre_real ($project["id_owner"]);
+	$MACROS["_update_timestamp_"] = $workunit["timestamp"];
+	$MACROS["_owner_"] = $project["id_owner"];
+	$MACROS["_wu_text_"] = $workunit["description"];
+	$MACROS["_wu_user_"] = dame_nombre_real($id_user);
+	$MACROS["_additional_message_"] = $additional_msg;
 	$description = $workunit["description"];
-	$url = $config["base_url"]."/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task";
 
 	switch ($mode){
 	case 0: // Workunit add
-		$text = "
-Task ".$task["name"]." of project ".$project["name"]." has been updated by user [$id_user] and a new workunit has been added to history. You could track this workunit in the following URL (need to use your credentials): $url\n\n";
-		$subject = "[".$config["sitename"]."] New workunit added to task '$task_name'";
+		$text = template_process ($config["homedir"]."/include/mailtemplates/project_wu_create.tpl", $MACROS);
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/project_subject_wucreate.tpl", $MACROS);
 		break;
 	case 1: // Workunit updated
-		$text = "
-Task ".$task["name"]." of project ".$project["name"]." has been updated by user $id_user, a workunit has been updated. You could track this workunit in the following URL (need to use your credentials): $url\n\n";
-		$subject = "[".$config["sitename"]."] A workunit has been updated in task '$task_name'";
+		$text = template_process ($config["homedir"]."/include/mailtemplates/project_wu_update.tpl", $MACROS);
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/project_subject_wuupdate.tpl", $MACROS);
 		break;
 	}
 	
-if ($additional_msg != "")
-	$text .= "\n\n$additional_msg\n\n";
-	
-$text .= "
----------------------------------------------------[INFORMATION]-----
-TASK NAME   : " . $project["name"]. " / " . $task["name"]. " 
-DATE / TIME : $current_timestamp
-ASSIGNED BY : $id_user
-HAVE COST   : $have_cost
-TIME USED   : $duration
-PUBLIC      : $public_desc
-----------------------------------------------[DESCRIPTION BEGIN]----
-$description\n\n
-----------------------------------------------[DESCRIPTION END]------";
-
-		$text = ascii_output ($text);
-		$subject = ascii_output ($subject);
-		// Send an email to project manager
-		integria_sendmail (get_user_email($id_manager), $subject, $text);
+	// Send an email to project manager
+	integria_sendmail (get_user_email($id_manager), $subject, $text);
 }
 
 function mail_todo ($mode, $id_todo) {
@@ -985,116 +971,6 @@ $tdescription\n\n";
 		integria_sendmail (get_user_email ($tassigned), $subject, $text);
 }
 
-function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public = 1){
-	global $config;
-
-	$row = get_db_row ("tincidencia", "id_incidencia", $id_inc);
-	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
-	$titulo =$row["titulo"];
-	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
-	$prioridad = render_priority($row["prioridad"]);
-	$nota = wordwrap($nota, 75, "\n");
-
-	$estado = render_status ( $row["estado"]);
-	$resolution = render_resolution ($row["resolution"]);
-	$create_timestamp = $row["inicio"];
-	$update_timestamp = $row["actualizacion"];
-	$usuario = $row["id_usuario"];
-	$creator = $row["id_creator"];
-
-	// Resolve code for its name
-	switch ($mode){
-	case 10: // Add Workunit
-		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new workunit from [$id_usuario]";
-		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_workunits&id=$id_inc";
-		break;
-	case 0: // Incident update
-		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been updated.";
-		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_inc";
-		break;
-	case 1: // Incident creation
-		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been created.";
-		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_inc";
-		break;
-	case 2: // New attach
-		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new file attached.";
-		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_inc";
-		break;
-	case 3: // Incident deleted 
-		$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has been deleted.";
-		$url = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_inc";
-		break;
-	}
-		
-	// Send email for owner and creator of this incident
-	$email_creator = get_user_email ($creator);
-	$email_owner = get_user_email ($usuario);
-  
-	// Incident owner
-	$text = "Incident #$id_inc ($titulo) has been updated. You can track this incident in the following URL (need to use your credentials): \n\n$url\n
------------------------------------------------[INFORMATION]--------
-ID          : # $id_inc - $titulo
-CREATED ON  : $create_timestamp
-LAST UPDATE : $update_timestamp
-GROUP       : $group_name 
-AUTHOR      : $creator
-ASSIGNED TO : $usuario
-PRIORITY    : $prioridad
-STATUS	    : $estado
-RESOLUTION  : $resolution
-TIME USED   : $timeused
-----------------------------------------------[DESCRIPTION]---------
-$description\n\n";
-
-if ($mode == 10){
-$text .= "
-----------------------------------------------[WORK UNIT ADDED]-----
-WORKUNIT ADDED BY : $id_usuario
----------------------------------------------------------------------
-$nota 
----------------------------------------------------------------------\n\n";
-
-}
-
-	$text = ascii_output ($text);
-	$subject = ascii_output ( $subject ) ;
-	integria_sendmail ($email_owner, $subject, $text);
-	// Incident owner
-	if ($email_owner != $email_creator)
-		integria_sendmail ($email_creator, $subject, $text);
-	
-	if ($public == 1){
-		// Send email for all users with workunits for this incident
-		$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
-		if ($result=mysql_query($sql1)) {
-			while ($row=mysql_fetch_array($result)){
-				if (($row[0] != $email_owner) AND ($row[0] != $email_creator))
-					integria_sendmail ( $row[0], $subject, $text);
-			}
-		}
-	}
-}
-			
-function people_involved_incident ($id_inc){
-	global $config;
-	$row0 = get_db_row ("tincidencia", "id_incidencia", $id_inc);
-	$people = array();
-
-	array_push ($people, $row0["id_creator"]);
-	 if (!in_array($row0["id_usuario"], $people)) {	
-		array_push ($people, $row0["id_usuario"]);
-	}
- 
-	// Take all users with workunits for this incident
-	$sql1 = "SELECT DISTINCT(tusuario.id_usuario) FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
-	if ($result=mysql_query($sql1)) {
-		while ($row=mysql_fetch_array($result)){
-			if (!in_array($row[0], $people))
-				array_push ($people, $row[0]);
-		}
-	}
-	return $people;
-}
 
 /* Returns cost for a given task */
 

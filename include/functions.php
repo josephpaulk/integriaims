@@ -410,7 +410,7 @@ function render_priority ($pri) {
 }
 
 
-function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments = false) {
+function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments = false, $code = "") {
 	global $config;
         require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
 
@@ -429,8 +429,13 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
         $transport->setUsername($config["smtp_user"]);
         $transport->setPassword($config["smtp_pass"]);
 
-        $mailer = Swift_Mailer::newInstance($transport);
+	// Add custom code to the end of message subject (to put there ID's).
+	if ($code != ""){
+		$subject = $subject . " [$code]";
+		$body = $body."\r\nNOTICE: Please don't alter the SUBJECT when answer to this mail, it contains a special code who makes reference to this issue.";
+	}
 
+        $mailer = Swift_Mailer::newInstance($transport);
         $message = Swift_Message::newInstance($subject);
         $message->setFrom($config["mail_from"]);
         $message->setTo(array($to => $to));
@@ -657,5 +662,16 @@ function update_config_token ($cfgtoken, $cfgvalue) {
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('$cfgtoken', '$cfgvalue')");
 }
 
+/**
+ * Avoid magic_quotes protection
+ *
+ * @param string Text string to be stripped of magic_quotes protection
+ */
+
+function unsafe_string ($string){
+	if (get_magic_quotes_gpc() == 1) 
+    	$string = stripslashes ($string);
+	return $string;
+}
 
 ?>

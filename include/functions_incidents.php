@@ -1,6 +1,4 @@
 <?php 
-
-
 // INTEGRIA IMS v2.0
 // http://www.integriaims.com
 // ===========================================================
@@ -274,9 +272,9 @@ function print_incidents_stats ($incidents, $return = false) {
 	$table->data[0][1] = fs_3d_pie_chart ($data, $legend, 200, 100, "ffffff");
 	$table->data[1][0] = print_label (__('Opened'), '', '', true,
 		$opened.' ('.$opened_pct.'%)');
-	$table->data[2][0] = print_label (__('Mean life time'), '', '', true,
+	$table->data[2][0] = print_label (__('Avg. life time'), '', '', true,
 		give_human_time ($mean_lifetime));
-	$table->data[2][1] = print_label (__('Mean work time'), '', '', true,
+	$table->data[2][1] = print_label (__('Avg. work time'), '', '', true,
 		$mean_work.' '.__('Hours'));
 	$table->data[3][0] = print_label (__('SLA compliance'), '', '', true,
 		format_numeric ($sla_compliance) .' '.__('%'));
@@ -312,7 +310,7 @@ function print_incidents_stats ($incidents, $return = false) {
 			__('Hr').") <br />";
 	}
 	
-	$table->width = '55%';
+	$table->width = '50%';
 	$table->class = 'float_left blank';
 	$table->style = array ();
 	$table->style[0] = 'vertical-align: top; margin-right: 15px;';
@@ -450,6 +448,123 @@ function get_incident_lastworkunit ($id_incident) {
         $workunits = get_incident_workunits ($id_incident);
         $workunit_data = get_workunit_data ($workunits[0]['id_workunit']);
         return $workunit_data;
+}
+
+
+function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public = 1){
+	global $config;
+
+	$row = get_db_row ("tincidencia", "id_incidencia", $id_inc);
+	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
+	$titulo =$row["titulo"];
+	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
+	$prioridad = render_priority($row["prioridad"]);
+	$nota = wordwrap($nota, 75, "\n");
+
+	$estado = render_status ( $row["estado"]);
+	$resolution = render_resolution ($row["resolution"]);
+	$create_timestamp = $row["inicio"];
+	$update_timestamp = $row["actualizacion"];
+	$usuario = $row["id_usuario"];
+	$creator = $row["id_creator"];
+
+	// Send email for owner and creator of this incident
+	$email_creator = get_user_email ($creator);
+	$email_owner = get_user_email ($usuario);
+  
+	$MACROS["_sitename_"] = $config["sitename"];
+	$MACROS["_fullname_"] = dame_nombre_real ($usuario);
+	$MACROS["_username_"] = $usuario;
+	$MACROS["_incident_id_"] = $id_inc;
+	$MACROS["_incident_title_"] = $titulo;
+	$MACROS["_creation_timestamp_"] = $create_timestamp;
+	$MACROS["_update_timestamp_"] = $update_timestamp;
+	$MACROS["_group_"] = $group_name ;
+	$MACROS["_author_"] = dame_nombre_real ($creator);
+	$MACROS["_owner_"] = dame_nombre_real ($usuario);
+	$MACROS["_priority_"] = $prioridad ;
+	$MACROS["_status_"] = $estado;
+	$MACROS["_resolution_"] = $resolution;
+	$MACROS["_time_used_"] = $timeused;
+	$MACROS["_incident_main_text_"] = $description;
+	$MACROS["_wu_user_"] = dame_nombre_real ($id_usuario);
+	$MACROS["_wu_text_"] = $nota ;
+	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_inc";
+
+	// Resolve code for its name
+	switch ($mode){
+	case 10: // Add Workunit
+		//$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new workunit from [$id_usuario]";
+
+		$MACROS["_wu_user_"] = dame_nombre_real ($id_usuario);
+		$MACROS["_wu_text_"] = $nota ;
+		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update_wu.tpl", $MACROS);
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_new_wu.tpl", $MACROS);
+		break;
+	case 0: // Incident update
+		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_update.tpl", $MACROS);
+		break;
+	case 1: // Incident creation
+		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_create.tpl", $MACROS);
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_create.tpl", $MACROS);
+		break;
+	case 2: // New attach
+		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_attach.tpl", $MACROS);
+		break;
+	case 3: // Incident deleted 
+		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_delete.tpl", $MACROS);
+		break;
+	}
+		
+		
+	// Create the TicketID for have a secure reference to incident hidden 
+	// in the message. Will be used for POP automatic processing to add workunits
+	// to the incident automatically.
+
+	$msg_code = "TicketID#$id_inc";
+	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $id_usuario),0,5);
+	$msg_code .= "/".$id_usuario;
+
+	integria_sendmail ($email_owner, $subject, $text, false, $msg_code);
+
+	// Incident owner
+	if ($email_owner != $email_creator)
+		integria_sendmail ($email_creator, $subject, $text, false, $msg_code);
+	
+	if ($public == 1){
+		// Send email for all users with workunits for this incident
+		$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
+		if ($result=mysql_query($sql1)) {
+			while ($row=mysql_fetch_array($result)){
+				if (($row[0] != $email_owner) AND ($row[0] != $email_creator))
+					integria_sendmail ( $row[0], $subject, $text, false, $msg_code);
+			}
+		}
+	}
+}
+			
+function people_involved_incident ($id_inc){
+	global $config;
+	$row0 = get_db_row ("tincidencia", "id_incidencia", $id_inc);
+	$people = array();
+
+	array_push ($people, $row0["id_creator"]);
+	 if (!in_array($row0["id_usuario"], $people)) {	
+		array_push ($people, $row0["id_usuario"]);
+	}
+ 
+	// Take all users with workunits for this incident
+	$sql1 = "SELECT DISTINCT(tusuario.id_usuario) FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
+	if ($result=mysql_query($sql1)) {
+		while ($row=mysql_fetch_array($result)){
+			if (!in_array($row[0], $people))
+				array_push ($people, $row[0]);
+		}
+	}
+	return $people;
 }
 
 ?>

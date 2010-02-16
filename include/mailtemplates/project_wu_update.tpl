@@ -1,0 +1,17 @@
+Hello _fullname_. _additional_message_
+
+Task _taskname_ of project _projectname_ has been updated by user _wu_user_ and a already reported workunit has been modified from history. You could track this workunit in the following URL (need to use your credentials):
+
+	_access_url_
+
+===================================================
+    TASK        : _taskname_ _
+    DATE        : _update_timestamp_
+    REPORTED by : _wu_user_
+    TIME USED   : _time_used_
+===================================================
+
+_wu_text_
+
+===================================================
+

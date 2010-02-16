@@ -1,3 +1,57 @@
+2010-02-18  Sancho Lerena <slerena@artica.es>
+
+	* include/styles/integria.css: Small modifications.
+
+	* include/integria_cron.php: Added check to get incident responses by mail.
+	Modified most email calls to use templates.
+	
+	* include/js/integria_incident_search.js: Change in size of window box.
+
+	* include/functions_form.php: Added combo_download_categories().
+	
+	* include/functions_config.php: New file to manage configuration.
+
+	* include/functions_workunits.php: Moved function create_workunit().
+
+	* include/functions_api.php: New API function file.
+	
+	* include/api.php: The new api system ! :-)
+
+	* include/help/en/help_macros.php: Help file for email template macros.
+
+	* include/config_process.php: Now loads config using a function and cleanup
+	of code.
+
+	* include/functions_incidents.php: Function mail_incident() moved here and
+	improved using template system, and other things.
+
+	* include/functions.php: Added unsafe_string(). Modified email function to
+	send custom codes in order to track responses by POP3.
+
+	* include/functions_pop3.php: New POP3 functions.
+
+	* include/mailtemplates/project_wu_update.tpl
+	include/mailtemplates/project_subject_wucreate.tpl
+	include/mailtemplates/incident_sla_min_response_time.tpl
+	include/mailtemplates/incident_sla_max_response_time.tpl
+	include/mailtemplates/incident_subject_delete.tpl
+	include/mailtemplates/incident_update.tpl
+	include/mailtemplates/incident_subject_create.tpl
+	include/mailtemplates/incident_subject_new_wu.tpl
+	include/mailtemplates/incident_subject_attach.tpl
+	include/mailtemplates/project_subject_wuupdate.tpl
+	include/mailtemplates/project_wu_create.tpl
+	include/mailtemplates/incident_update_wu.tpl
+	include/mailtemplates/incident_sla_min_response_time_subject.tpl
+	include/mailtemplates/incident_sla_max_response_time_subject.tpl
+	include/mailtemplates/incident_subject_update.tpl
+	include/mailtemplates/incident_create.tpl: New templates for email template
+	system. These are the "default" templates, editable from setup.
+
+	* include/functions_db.php: mail_project() now uses template system. 
+	mail_incident() moved to functions_incidents.
+	
+
 2010-01-30  Sancho Lerena <slerena@artica.es>
 
 	* operation/incidents/incident_create_work.php
