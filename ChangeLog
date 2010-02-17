@@ -1,4 +1,22 @@
-2010-02-18  Sancho Lerena <slerena@artica.es>
+2010-02-17  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_calendar.php: Added a missing PHP function.
+
+	* include/functions.php: Added error management to SMTP function.
+
+	* install.php: Added support to load the demo database from install.
+
+	* index.php: Enabled the development switch.
+
+	* operation/kb/browse_data.php: added missing file.
+	
+	* integria_demo.sql: demo database for testing.
+
+	* integria_db.sql: Fixed typo.
+
+	* general/home.php: Removed unused link to project graph.
+
+2010-02-16  Sancho Lerena <slerena@artica.es>
 
 	* include/styles/integria.css: Small modifications.
 

@@ -1,6 +1,6 @@
 <?php
 
-// INTEGRIA IMS v2.0
+// INTEGRIA IMS v2.1
 // http://www.integriaims.com
 // ===========================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
@@ -19,6 +19,13 @@
 // PHP Calendar (version 2.3), written by Keith Devens
 // http://keithdevens.com/software/php_calendar
 // License: Artistic Licence
+
+
+// Replace internal PHP function, not present in all PHP engines.
+
+function cal_days_in_month($month, $year) { 
+	return date('t', mktime(0, 0, 0, $month+1, 0, $year)); 
+}
 
 /**
  * Get an array with events for a given date. Returns an array

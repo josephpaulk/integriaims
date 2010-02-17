@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// Copyright (c) 2008-2010 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -19,13 +19,11 @@
 // Integria uses Pear Image::Graph code
 // Integria shares much of it's code with project Babel Enterprise and Pandora FMS,
 // also a Free Software Project coded by some of the people who makes ToPI.
-// Gantt php class example and configuration file
-// Copyright (C) 2005 Alexandre Miguel de Andrade Souza
 
 // Real start
 session_start();
 
-$develop_bypass = 0;
+$develop_bypass = 1;
 
 if ($develop_bypass != 1) {
 

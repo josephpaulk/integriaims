@@ -114,7 +114,6 @@ if (!isset($config["id_user"]))
 
 		echo graph_workunit_project_user (700, 200, $config["id_user"], $from_one_month,0, 1);
 
-		//echo "<img src='include/functions_graph.php?type=workunit_project_user&width=350&height=210&id_user=".$config["id_user"]."&date_from=$from_one_month'>";
 	}
 
 	// Show Incident items

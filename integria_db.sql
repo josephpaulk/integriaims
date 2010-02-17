@@ -44,7 +44,7 @@ CREATE TABLE `tgrupo` (
   `hard_limit` int(5) unsigned NOT NULL default 0,
   `forced_email` tinyint(1) unsigned NOT NULL DEFAULT 1,
   `email` varchar(128) default '',
-  `enforce_soft_limit` int(2) unsigned NOT NULL default 0;
+  `enforce_soft_limit` int(2) unsigned NOT NULL default 0,
   PRIMARY KEY  (`id_grupo`),
   FOREIGN KEY (`id_user_default`) REFERENCES tusuario(`id_usuario`)
      ON UPDATE CASCADE ON DELETE SET default

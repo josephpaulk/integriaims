@@ -39,10 +39,10 @@
 
 error_reporting(0);
 
-$integria_version = "2.1dev Build 100127";
+$integria_version = "v2.1dev Build 100218";
 
 $integria_footertext = "<div id='foot'>
-                        <i>Integria is an OpenSource Software project 
+                        <i>Integria $integria_version is an OpenSource Software project 
                         <a target='_new' href='http://integriaims.com'>integriaims.com</a></i><br>
                         <a href='http://www.artica.es'>(c) Ártica Soluciones Tecnológicas</a><br>
                         </div>";
@@ -168,15 +168,16 @@ function random_name ($size){
 }
 
 function install_step1() {
-    global $integria_footertext;
+
+	global $integria_footertext;
 	global $integria_version;
 
 	echo "
 	<div align='center' '>
-	<h1>Integria IMS $integria_version instalation wizard. Step #1 of 4</h1>
+	<h1>Integria IMS instalation wizard. Step #1 of 4</h1>
 	<div id='wizard' style='height: 430px;'>
 		<div id='install_box'>
-			<h1>Welcome to Integria $integria_version installation Wizard</h1>
+			<h1>Welcome to Integria installation Wizard</h1>
 			<p>This wizard helps you to quick install Integria in your system.</p>
 			<p>In four steps checks all dependencies and make your configuration for a quick installation.</p>";
 
@@ -186,8 +187,7 @@ function install_step1() {
 			$writable += check_writable ( "include/config.php", "Checking if include/config.php is writable");
 		echo "</table>";
 
-		echo "<p>For more information, please refer to documentation.</p>
-			<i>Integria Development team</i>";
+		echo "<p>For more information, please refer to documentation.<i>Integria Development team</i><br>";
 
 		if (file_exists("include/config.php")){
 			echo "<p><img src='images/info.png' valign='bottom'><b> Warning: You already have a config.php file. Configuracion and database would be overwritten if you continue.</b></p>";
@@ -199,7 +199,8 @@ function install_step1() {
 			<br><br>
 		</div>
 		<div class='box'>
-			<img src='images/step0.png'>
+			<img src='images/step0.png'>";
+echo "<br><br><font size=1px>$integria_version</font> 
 		</div>
 		<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'>";
 		if ($writable == 0)
@@ -208,8 +209,7 @@ function install_step1() {
 		else
 			echo "<div class='warn'><b>ERROR:</b>You need to setup permissions to be able to write in ./include directory</div>";
 
-
-		echo "
+			echo "
 			</div>
 		</div>
 
@@ -220,12 +220,12 @@ function install_step1() {
 
 
 function install_step2() {
-    global $integria_footertext;
+	global $integria_footertext;
 	global $integria_version;
 
 	echo "
 	<div align='center'>
-	<h1>Integria IMS $integria_version instalation wizard. Step #2 of 4</h1>
+	<h1>Integria IMS instalation wizard. Step #2 of 4</h1>
 	<div id='wizard' style='height: 450px;'>
 		<div id='install_box'>";
 		echo "<h1>Checking software dependencies</h1>";
@@ -275,8 +275,8 @@ function install_step3() {
 
 	echo "
 	<div align='center''>
-	<h1>Integria $integria_version instalation wizard. Step #3 of 4 </h1>
-	<div id='wizard' style='height: 640px;'>
+	<h1>Integria instalation wizard. Step #3 of 4 </h1>
+	<div id='wizard' style='height: 700px;'>
 		<div id='install_box'>
 			<h1>Environment and database setup</h1>
 			<p>
@@ -305,6 +305,11 @@ function install_step3() {
 				<div style='padding: 8px'><input type='checkbox' name='createdb' checked value='1'>  
 				Create Database <br>
 				</div>
+
+				<div style='padding: 8px'><input type='checkbox' name='demodb' checked value='1'>  
+				Load demo Database (This will load a sample site)<br>
+				</div>
+
 		
 				<div style='padding: 8px'><input type='checkbox' name='createuser' checked value='1'> Create Database user 'integria' and give privileges <br>
 				</div>		
@@ -338,8 +343,9 @@ function install_step3() {
 
 
 function install_step4() {
+
 	$INTEGRIA_config = "include/config.php";
-    global $integria_footertext;
+	global $integria_footertext;
 	global $integria_version;
 
 	if ( (! isset($_POST["user"])) || (! isset($_POST["dbname"])) || (! isset($_POST["host"])) || (! isset($_POST["pass"])) ) {
@@ -351,6 +357,12 @@ function install_step4() {
 		$dbpassword = $_POST["pass"];
 		$dbuser = $_POST["user"];
 		$dbhost = $_POST["host"];
+
+		if (isset($_POST["demodb"]))
+			$demodb = $_POST["demodb"];
+		else
+			$demodb = 0;
+
 		if (isset($_POST["createdb"]))
 			$createdb = $_POST["createdb"];
 		else
@@ -377,7 +389,7 @@ function install_step4() {
 	$step4=0; $step5=0; $step6=0; $step7=0;
 	echo "
 	<div align='center' class='mt35'>
-	<h1>Integria IMS $integria_version instalation wizard. Step #4 of 4 </h1>
+	<h1>Integria IMS instalation wizard. Step #4 of 4 </h1>
 	<div id='wizard' style='height: 510px;'>
 		<div id='install_box'>
 			<h1>Creating database and default configuration file</h1>
@@ -398,8 +410,13 @@ function install_step4() {
 	
 					$step3 = parse_mysql_dump("integria_db.sql");
 					check_generic ($step3, "Creating schema");
-			
-					$step4 = parse_mysql_dump("integria_dbdata.sql");
+
+					// populate database with a blank DB or DEMO database ?
+					if ($demodb == 1)
+						$step4 = parse_mysql_dump("integria_demo.sql");
+					else
+						$step4 = parse_mysql_dump("integria_dbdata.sql");
+
 					check_generic ($step4, "Populating database");
 
 					if (file_exists("enterprise/integria_db.sql")){
@@ -486,18 +503,18 @@ $config["base_url"]="'.$url.'";		// Base URL
 }
 
 function install_step5() {
-    global $integria_footertext;
+    	global $integria_footertext;
 	global $integria_version;
 
 	echo "
 	<div align='center' class='mt35'>
-	<h1>Integria IMS $integria_version instalation wizard. Finished</h1>
+	<h1>Integria IMS instalation wizard. Finished</h1>
 	<div id='wizard' style='height: 300px;'>
 		<div id='install_box'>
 			<h1>Installation complete</h1>
-			<p>You now must delete manually this installer for security, ('install.php') before trying to access to your Integria installation.
+			<p>This installer will try to rename itself to 'install_renamed.php'. You should delete it  manually for security before trying to access to your Integria installation.
 			<p>Don't forget to check <a href='http://integriaims.com'>http://integriaims.com</a> for updates.
-			<p><a href='index.php'>Click here to access Integria</A></p>
+			<p><a href='index.php'>Click here to access Integria</A>, Use the user '<b>admin</b>' with password '</b>integria</b>' to enter and change the password as soon as possible.</p>
 		</div>
 		<div class='box'>
 			<img src='images/integria_white.png'></a>
@@ -510,7 +527,7 @@ function install_step5() {
 	$integria_footertext
 </div>";
 	chmod ('include/config.php', 0600);
-	// unlink ('install.php');
+	rename ('install.php', 'install_renamed.php');
 }
 
 

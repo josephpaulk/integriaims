@@ -425,28 +425,41 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 
 	$body = $config["HEADER_EMAIL"] . "\r\n". $body . "\r\n". $config["FOOTER_EMAIL"];
 
-        $transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
-        $transport->setUsername($config["smtp_user"]);
-        $transport->setPassword($config["smtp_pass"]);
+	try {
+		$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
+		$transport->setUsername($config["smtp_user"]);
+		$transport->setPassword($config["smtp_pass"]);
 
-	// Add custom code to the end of message subject (to put there ID's).
-	if ($code != ""){
-		$subject = $subject . " [$code]";
-		$body = $body."\r\nNOTICE: Please don't alter the SUBJECT when answer to this mail, it contains a special code who makes reference to this issue.";
+		// Add custom code to the end of message subject (to put there ID's).
+		if ($code != ""){
+			$subject = $subject . " [$code]";
+			$body = $body."\r\nNOTICE: Please don't alter the SUBJECT when answer to this mail, it contains a special code who makes reference to this issue.";
+		}
+
+		$mailer = Swift_Mailer::newInstance($transport);
+		$message = Swift_Message::newInstance($subject);
+		$message->setFrom($config["mail_from"]);
+		$message->setTo(array($to => $to));
+		$message->setBody($body, 'text');
+
+		if ($attachments !== false)
+		        foreach ($attachments as $attachment)
+		                if (is_file($attachment["file"]))
+		                        $message->attach(Swift_Attachment::fromPath($attachment["file"]));
+
+		// If SMTP port is not configured, abort mails directly!
+		if ($config["smtp_port"] == 0)
+			return false;
+
+		return $mailer->send($message);	
+
+	// SMTP error management!
+
+	} catch (Swift_TransportException $e) {
+	echo '<h3 class="err">There was a problem communicating with SMTP: "' . $e->getMessage().'</h3>';
+	} catch (Swift_ConnectionException $e) {
+		echo '<h3 class="err">There was a problem communicating with SMTP: "' . $e->getMessage().'</h3>';
 	}
-
-        $mailer = Swift_Mailer::newInstance($transport);
-        $message = Swift_Message::newInstance($subject);
-        $message->setFrom($config["mail_from"]);
-        $message->setTo(array($to => $to));
-        $message->setBody($body, 'text');
-
-        if ($attachments !== false)
-                foreach ($attachments as $attachment)
-                        if (is_file($attachment["file"]))
-                                $message->attach(Swift_Attachment::fromPath($attachment["file"]));
-
-        return $mailer->send($message);
 }
 
 function topi_rndcode ($length = 6) {
