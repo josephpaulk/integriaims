@@ -174,6 +174,10 @@ if ($show_stats) {
 $statuses = get_indicent_status ();
 $resolutions = get_incident_resolutions ();
 
+// ----------------------------------------
+// Here we print the result of the search
+// ----------------------------------------
+
 foreach ($incidents as $incident) {
 	/* We print the rows directly, because it will be used in a sortable
 	   jQuery table and it only needs the rows */
@@ -188,7 +192,8 @@ foreach ($incidents as $incident) {
 	echo '<tr '.$tr_status.' id="indicent-'.$incident['id_incidencia'].'"';
 
 	echo " style='border-bottom: 1px solid #ccc;' >";
-	echo '<td width=30><strong>#'.$incident['id_incidencia'].'</strong></td>';
+	echo '<td>';
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'"><strong>#'.$incident['id_incidencia'].'</strong></A></td>';
 	
 	// SLA Fired ?? 
 	if ($incident["affected_sla_id"] != 0)

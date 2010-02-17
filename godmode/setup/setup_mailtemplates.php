@@ -25,38 +25,77 @@ if (! dame_admin ($config["id_user"])) {
 	exit;
 }
 
-$update = (bool) get_parameter ("update");
 
-if ($update) {
-	$template = get_parameter ($template);
+// Update configuration
+if ( (isset ($_POST["data"]) AND ($filename != ""))) {
+	$data =  unsafe_string (str_replace ("\r\n", "\n", $_POST["data"]));
 
+	$file = fopen ($full_filename, "wb");
+	fwrite ($file, $data);
+	fclose ($file);
+	echo "<h3 class='suc'>".lang_string ('Filesuccessfully updated')."</h3>";
 }
 
 
+function get_template_files () {
+	$base_dir = 'include/mailtemplates';
+	$files = list_files ($base_dir, ".tpl", 1, 0);
+	
+	$retval = array ();
+	foreach ($files as $file) {
+		$retval[$file] = $file;
+	}
+	
+	return $retval;
+}
+
+$update = get_parameter ("upd_button","none");
+$refresh = get_parameter ("edit_button", "none");
+$template = get_parameter ("template", "");
+$data = "";
+
+
+// Load template from disk to textarea
+if ($refresh != "none"){
+	$full_filename = "include/mailtemplates/".get_parameter("template");
+	$data = safe_input (file_get_contents ($full_filename));
+}
+
+// Update configuration
+if ($update != "none") {
+	$data =  unsafe_string (str_replace ("\r\n", "\n", $_POST["template_content"]));
+	$file = "include/mailtemplates/".$template;
+	$file = fopen ($file, "wb");
+	fwrite ($file, $data);
+	fclose ($file);
+	echo "<h3 class='suc'>".lang_string ('Filesuccessfully updated')."</h3>";
+}
+
 echo "<h2>".__('Mail templates setup')."</h2>";
 
-$table->width = '90%';
+$table->width = '100%';
 $table->class = 'databox';
 $table->colspan = array ();
-$table->colspan[5][0] = 2;
-$table->colspan[6][0] = 2;
+$table->colspan[2][0] = 2;
 $table->data = array ();
 
+$templatelist = get_template_files ();
 
-$templatelist["incident_wu_add"] = "WU Addition on incident";
+$table->data[1][0] = print_select ($templatelist, 'template', $template, '', '', '',  true, 0, true, "Template") ;
 
-$table->data[1][0] = print_select ($templatelist, 'template', $template, '', '', '',  false, false);
+$table->data[1][0] .= "&nbsp;&nbsp";
+$table->data[1][0] .=  print_submit_button (__('Edit'), 'edit_button', false, 'class="sub upd"', true); 
+$table->data[1][0] .= integria_help ("macros", true);
 
-
-$table->data[5][0] = print_textarea ("template_content", 5, 40, $template_body,'', true, __('Template contents'));
+$table->data[2][0] = print_textarea ("template_content", 30, 44, $data,'', true, __('Template contents'));
 
 echo "<form name='setup' method='post'>";
 
 print_table ($table);
 
 echo '<div style="width: '.$table->width.'" class="button">';
-print_input_hidden ('update', 1);
-print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"');
+print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', false);
+
 echo '</div>';
 echo '</form>';
 ?>

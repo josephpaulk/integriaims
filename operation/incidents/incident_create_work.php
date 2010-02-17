@@ -38,7 +38,7 @@ echo __('Add workunit')." &raquo; $title</h3>";
 
 $now = date ("Y-m-d H:i:s");
 
-$table->width = '550px';
+$table->width = '100%';
 $table->class = 'databox';
 $table->colspan = array ();
 $table->colspan[2][0] = 3;
@@ -57,7 +57,7 @@ echo '<form id="form-add-workunit" method="post" action="index.php?sec=incidents
 
 print_table ($table);
 
-echo '<div style="width: 550" class="button">';
+echo '<div style="width: 100%" class="button">';
 print_submit_button (__('Add'), 'addnote', false, 'class="sub next"');
 print_input_hidden ('insert_workunit', 1);
 print_input_hidden ('id', $id);

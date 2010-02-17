@@ -35,6 +35,11 @@ $parent = "";
 $lang = "";
 $email = "";
 $forced_email = true;
+$soft_limit = 5;
+$hard_limit = 20;
+$enforce_soft_limit = 1;
+$id_inventory_default = 0;
+
 $creacion_grupo = (bool) get_parameter ('creacion_grupo');
 	
 if ($id) {
@@ -48,7 +53,12 @@ if ($id) {
 		$parent = $group['parent'];
 		$email = $group['email'];
 		$lang = $group['lang'];
+		$soft_limit = $group["soft_limit"];
+		$hard_limit = $group["hard_limit"];
+		$enforce_soft_limit = (bool) $group["enforce_soft_limit"];
 		$forced_email = (bool) $group['forced_email'];
+		$id_inventory_default = $grupo["id_inventory_default"];
+
 	} else {
 		echo "<h3 class='error'>".__('There was a problem loading group')."</h3>";
 		include ("general/footer.php");
@@ -69,6 +79,7 @@ $table->data = array ();
 /* First row */
 $table->data[0][0] = print_input_text ('name', $name, '', 20, 0, true, __('Name'));
 $table->data[0][1] = print_checkbox ('forced_email', 1, $forced_email, true, __('Forced email'));
+
 /* Banner preview image is a bit bigger */
 $table->data[0][2] = '<span id="banner_preview">';
 if ($id && $banner != '') {
@@ -97,6 +108,18 @@ $table->data[3][1] = print_select ($banners, "banner", $banner, '', 'None', '', 
 $table->data[4][0] = combo_user_visible_for_me ($id_user_default, "id_user_default", 0, "IR", true, __('Default user'));
 $table->data[4][1] = print_select_from_sql ("SELECT id_language, name FROM tlanguage ORDER BY name",
 	'lang', $lang, '', '', 0, true, false, false, __('Language'));
+
+
+$table->data[5][0] = print_input_text ('soft_limit', $soft_limit, '', 10, 0, true , __('Incident Soft limit'));
+
+
+$table->data[5][1] = print_checkbox ('enforce_soft_limit', 1, $enforce_soft_limit, true, __('Enforce soft limit'));
+
+$table->data[6][0] = print_input_text ('hard_limit', $hard_limit, '', 10, 0, true , __('Incident Hard limit'));
+
+$table->data[6][1] = print_select_from_sql ("SELECT id, name FROM tinventory ORDER BY name",
+	'id_inventory_default', $id_inventory_default, '', '', 0, true, false, false, __('Default inventory object'));
+
 
 echo '<form method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);

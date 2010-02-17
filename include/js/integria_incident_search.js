@@ -482,9 +482,9 @@ function show_add_workunit_dialog (id_incident) {
 		function (data, status) {
 			$("#dialog-add-workunit").empty ().append (data);
 			$("#dialog-add-workunit").dialog ({"title" : __("Add workunit"),
-					minHeight: 300,
+					minHeight: 280,
 					minWidth: 300,
-					height: 500,
+					height: 440,
 					width: 600,
 					modal: true,
 					bgiframe: true

@@ -51,15 +51,21 @@ if ($create_group) {
 	$icon = (string) get_parameter ('icon');
 	$url = (string) get_parameter ('url');
 	$email = (string) get_parameter ('email');
+
+	$soft_limit = (int) get_parameter ('soft_limit');
+	$hard_limit = (int) get_parameter ('hard_limit');
+	$enforce_soft_limit = (bool) get_parameter ('enforce_soft_limit');
+
 	$banner = (string) get_parameter ('banner');
 	$lang = (string) get_parameter ('lang', 'en');
 	$forced_email = (bool) get_parameter ('forced_email');
 	$id_user_default = (string) get_parameter ('id_user_default');
+	$id_inventory_default = (int) get_parameter ("id_inventory_default");
 
 	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, lang,
-		banner, url, id_user_default, email) 
-		VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s")',
-		$name, $icon, $forced_email, $lang, $banner, $url, $id_user_default, $email);
+		banner, url, id_user_default, email, soft_limit, hard_limit, enforce_soft_limit, 
+		id_inventory_default) VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d)',
+		$name, $icon, $forced_email, $lang, $banner, $url, $id_user_default, $email, $soft_limit, $hard_limit, $enforce_soft_limit, $id_inventory_default);
 	$id = process_sql ($sql, 'insert-id');	
 	if ($id === false)
 		echo '<h3 class="error">'.__('There was a problem creating group').'</h3>';
@@ -79,12 +85,16 @@ if ($update_group) {
 	$email = (string) get_parameter ('email');
 	$forced_email = (bool) get_parameter ('forced_email');
 	$id_user_default = (string) get_parameter ('id_user_default');
+	$soft_limit = (int) get_parameter ('soft_limit');
+	$hard_limit = (int) get_parameter ('hard_limit');
+	$enforce_soft_limit = (bool) get_parameter ('enforce_soft_limit');
+	$id_inventory_default = get_parameter ("id_inventory_default");
 
 	$sql = sprintf ('UPDATE tgrupo
 		SET nombre = "%s", icon = "%s", url = "%s", forced_email = %d, email = "%s"
-		, banner = "%s", lang = "%s", id_user_default = "%s" WHERE id_grupo = %d',
+		, banner = "%s", lang = "%s", id_user_default = "%s", soft_limit = %d, hard_limit = %d, enforce_soft_limit = %d, id_inventory_default = %d WHERE id_grupo = %d',
 		$name, $icon, $url, $forced_email, $email, $banner,
-		$lang, $id_user_default, $id);
+		$lang, $id_user_default, $soft_limit, $hard_limit, $enforce_soft_limit, $id_inventory_default, $id);
 	$result = process_sql ($sql);
 	if ($result === false)
 		echo '<h3 class="error">'.__('There was a problem modifying group').'</h3>';

@@ -250,9 +250,18 @@ print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', 
 
 
 <tr><td class="datos" colspan="3"><?php echo __('Comments') ?>
-<tr><td class="datos2" colspan="3"><textarea name="comentarios" cols="75" rows="3"><?php echo $comentarios ?></textarea>
+<tr><td class="datos2" colspan="3"><textarea name="comentarios" cols="75" rows="3">
+<?php echo $comentarios ?>
+</textarea>
 
 <?php
+
+
+echo '<tr><td class="datos2">'.__('Total incidents');
+echo '<td class="datos2"><b>';
+echo get_db_sql ("SELECT COUNT(*) FROM tincidencia WHERE id_creator = '".$config["id_user"]."'");
+echo "</b></td></tr>";
+
 if ($modo == "edicion") { // Only show groups for existing users
 
 	enterprise_hook ('manage_profiles');
@@ -271,9 +280,6 @@ if (isset($_GET["alta"])){
 	echo '<input name="crtbutton" type="submit" class="sub create" value="'.__('Create').'">';
 	echo '</div>';
 } 
-
-
-
 
 	
 ?> 

@@ -1025,6 +1025,7 @@ div#incident-stats, div#inventories-stats {
 	margin-top: 35px;
 	margin-bottom: 15px;
 	float: right;
+	width: 100%;
 }
 
 #checkbox-force_update {

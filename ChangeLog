@@ -51,6 +51,48 @@
 	* include/functions_db.php: mail_project() now uses template system. 
 	mail_incident() moved to functions_incidents.
 	
+	* attachment/tmp/index.html
+	  attachment/downloads/index.html
+	  attachment/index.html: New index files to protect directory content.
+
+	* integria_db.sql: Added soft_limit, hard_limit and enforce_soft_limit to
+	table tgrupo.
+
+	* integria_dbdata.sql: Modified table tdownload, added tdownload_tracking.
+
+	* operation/incidents/incident_create_work.php: Wider tables.
+
+	* operation/incidents/incident_search.php: Show the #id with a direct link
+	(avoiding javascript/ajax).
+
+	* operation/main_menu.php
+	  operation/side_menu.php: Adding new options.
+
+	* operation/users/user_edit.php: Showing total incidents opened by user.
+	
+	* operation/download
+	  operation/download/manage_cat.php
+  	  operation/download/manage_data.php
+	  operation/download/browse.php: New options for downloads  (not finished!).
+	
+	* general/error_invalidconfig.php
+	general/error_databaseconnect.php: New error screens, taken out of 
+	config_process.php.
+
+	* general/home.php: More information and better formated for pending incidents
+	at login page.
+
+	* godmode/grupos/lista_grupos.php, 
+	* godmode/grupos/configurar_grupo.php: Support for new group options 
+	(soft limit, hardlimit, etc).
+
+	* godmode/setup/setup.php
+	godmode/setup/setup_mailtemplates.php
+	godmode/setup/setup_mail.php: New options and reorganization. Template management
+	and other stuff.
+
+	* godmode/usuarios/configurar_usuarios.php: Show total incidents opened by user.
+
 
 2010-01-30  Sancho Lerena <slerena@artica.es>
 

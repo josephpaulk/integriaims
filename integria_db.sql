@@ -40,8 +40,11 @@ CREATE TABLE `tgrupo` (
   `parent` mediumint(8) unsigned NOT NULL default 0,
   `id_user_default` varchar(60) NOT NULL default '',
   `id_inventory_default` mediumint(8) default NULL,
+  `soft_limit` int(5) unsigned NOT NULL default 0,
+  `hard_limit` int(5) unsigned NOT NULL default 0,
   `forced_email` tinyint(1) unsigned NOT NULL DEFAULT 1,
   `email` varchar(128) default '',
+  `enforce_soft_limit` int(2) unsigned NOT NULL default 0;
   PRIMARY KEY  (`id_grupo`),
   FOREIGN KEY (`id_user_default`) REFERENCES tusuario(`id_usuario`)
      ON UPDATE CASCADE ON DELETE SET default
@@ -730,14 +733,9 @@ CREATE TABLE `tdownload` (
   `name` varchar(250) NOT NULL default '',
   `location` text NOT NULL default '', 
   `date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `description` text NOT NULL default '',  
-  PRIMARY KEY  (`id`)
-);
-
-CREATE TABLE `tdownload_category_group` (
-  `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `id_download_category` mediumint(8) unsigned NOT NULL,
-  `id_group` mediumint(8) unsigned NOT NULL,
+  `description` text NOT NULL default '', 
+  `tag` text NOT NULL default '',
+  `id_category` mediumint(8) unsigned NOT NULL default 0,
   PRIMARY KEY  (`id`)
 );
 
@@ -746,4 +744,14 @@ CREATE TABLE `tdownload_category` (
   `name` varchar(250) NOT NULL default '',
   PRIMARY KEY  (`id`)
 );
+
+CREATE TABLE `tdownload_tracking` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `id_download` mediumint(8) unsigned NOT NULL,
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `id_user` varchar(60) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+);
+
+
 

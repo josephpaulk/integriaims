@@ -38,12 +38,14 @@ if ($update) {
 	$config["autowu_completion"] = (int) get_parameter ("autowu_completion", 0);
 	$config["fontsize"] = (int) get_parameter ("fontsize", 10);
 	$config["incident_reporter"] = (int) get_parameter ("incident_reporter", 0);
-
 	$config["show_owner_incident"] = (int) get_parameter ("show_owner_incident", 0);
 	$config["show_creator_incident"] = (int) get_parameter ("show_creator_incident", 0);
-	
 	$config["pwu_defaultime"] = get_parameter ("pwu_defaultime", 4);
 	$config["iwu_defaultime"] = get_parameter ("iwu_defaultime", 0.25);
+	$config["timezone"] = get_parameter ("timezone", "Europe/Madrid");
+	$config["api_acl"] =get_parameter ("api_acl", "*");
+
+	update_config_token ("timezone", $config["timezone"]);	
 
 	process_sql ("UPDATE tconfig SET value='".$config["block_size"]."' WHERE token='block_size'");
 	process_sql ("UPDATE tconfig SET value='".$config["language_code"]."' WHERE token='language_code'");
@@ -73,8 +75,8 @@ if ($update) {
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('show_owner_incident', '".$config["show_owner_incident"]."')");
 
 	update_config_token ("pwu_defaultime", $config["pwu_defaultime"]);
-
 	update_config_token ("iwu_defaultime", $config["iwu_defaultime"]);
+	update_config_token ("api_acl", $config["api_acl"]);
 }	
 
 echo "<h2>".__('General setup')."</h2>";
@@ -128,6 +130,13 @@ $table->data[5][1] = print_select ($incident_reporter_options, "incident_reporte
 $table->data[6][0] = print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, "Show incident owner");
 
 $table->data[6][1] = print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, "Show incident creator");
+
+$table->data[10][0] = print_input_text ("timezone", $config["timezone"], '',
+	15, 30, true, __('Timezone for integria'));
+
+$table->data[11][0] = print_input_text ("api_acl", $config["api_acl"], '',
+	30, 255, true, __('List of IP with access to API'));
+
 
 echo "<form name='setup' method='post'>";
 

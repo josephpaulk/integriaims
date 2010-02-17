@@ -61,7 +61,7 @@ if (give_acl($config["id_user"], 0, "KR") == 1){
             echo "<li id='current'>";
     else
             echo "<li>";
-    echo "<a href='index.php?sec=download&sec2=operation/download/browse'>".__('Downloads')."</a></li>";
+    echo "<a href='index.php?sec=download&sec2=operation/download/browse'>".__('File Releases')."</a></li>";
 
 }
 

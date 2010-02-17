@@ -358,3 +358,36 @@ CREATE TABLE `tinventory_contact` (
 );
 
 INSERT INTO `um_tupdate_settings` VALUES  ('current_update', '0'), ('customer_key', 'INTEGRIA-FREE'), ('keygen_path', '/usr/share/integria/util/keygen'), ('update_server_host', 'www.artica.es'), ('update_server_port', '80'), ('update_server_path', '/integriaupdate/server.php'), ('updating_binary_path', 'Path where the updated binary files will be stored'), ('updating_code_path', 'Path where the updated code is stored'), ('dbname', ''), ('dbhost', ''), ('dbpass', ''), ('dbuser', ''), ('proxy', ''), ('proxy_port', ''), ('proxy_user', ''), ('proxy_pass', '');
+
+-- 2010, v2.1
+
+ALTER TABLE tgrupo ADD `id_inventory_default` mediumint(8) default NULL;
+ALTER TABLE tgrupo ADD `soft_limit` int(5) unsigned NOT NULL default 0;
+ALTER TABLE tgrupo ADD `enforce_soft_limit` int(2) unsigned NOT NULL default 0;
+ALTER TABLE tgrupo ADD `hard_limit` int(5) unsigned NOT NULL default 0;
+ALTER TABLE tgrupo ADD `forced_email` tinyint(1) unsigned NOT NULL DEFAULT 1;
+
+CREATE TABLE `tdownload` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(250) NOT NULL default '',
+  `location` text NOT NULL default '', 
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `description` text NOT NULL default '',  
+  `id_category` mediumint(8) unsigned NOT NULL default 0,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tdownload_category` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(250) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `tdownload_tracking` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `id_download` mediumint(8) unsigned NOT NULL,
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `id_user` varchar(60) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+);
+

@@ -135,6 +135,9 @@ if ($has_permission) {
 	$table->data[2][1] = print_input_text ('phone', $phone, '', 20, 40, true, __('Telephone'));
 	$table->data[4][0] = print_select_from_sql ("SELECT id_language, name FROM tlanguage ORDER BY name",
 		'language_code', $lang, '', __('Default'), '', true, false, false, __('Language'));
+
+	$table->data[4][1] = "<b>".__('Total incidents opened'). "</b><br><input type=text readonly size=5 value='". get_db_sql ("SELECT COUNT(*) FROM tincidencia WHERE id_creator = '".$config["id_user"]."'"). "'>";
+
 	$table->data[5][0] = print_textarea ('comments', 8, 55, $comments, '', true, __('Comments'));
 	
 	$files = list_files ('images/avatars/', "png", 1, 0, "small");

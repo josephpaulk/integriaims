@@ -636,6 +636,42 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR")) {
 	echo "</div>";
 }
 
+
+// Downloads (FR)
+if ($sec == "download" && give_acl ($config["id_user"], 0, "KR")) {
+	echo "<div class='portlet'>";
+	echo "<h3>".__('File releases')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	// Browser
+	if ($sec2 == "operation/download/browse")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=download&sec2=operation/download/browse'>".__('Browse')."</a></li>";
+
+	if  (give_acl($config["id_user"], 0, "KW")) {
+		// Create / Manage downloads
+		if (($sec2 == "operation/download/browse") AND (isset($_GET["create"])))
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=download&sec2=operation/download/browse&create=1'>".__('Create file release')."</a></li>";
+
+		// FR Manage Cat.
+		if ($sec2 == "operation/download/manage_cat")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=download&sec2=operation/download/manage_cat'>".__('Manage categories')."</a></li>";
+	}
+
+
+	echo "</ul>";
+	echo "</div>";
+}
+
+
 // TODO
 if ($sec == "todo")  {
 	echo "<div class='portlet'>";

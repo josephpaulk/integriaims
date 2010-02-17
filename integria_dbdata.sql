@@ -15,8 +15,8 @@
 INSERT INTO `tconfig` (token, value) VALUES  
 ('language_code','en'),
 ('block_size','25'),
-('db_scheme_version','2.0-dev'),
-('db_scheme_build','ID81110'),
+('db_scheme_version','2.1-dev'),
+('db_scheme_build','ID100219'),
 ('date_format', 'F j, Y, g:i a'),
 ('currency', 'eu'),
 ('sitename', 'Integria IMS - the ITIL Management Way'),
@@ -35,11 +35,7 @@ INSERT INTO `tusuario` (id_usuario, nombre_real, password, comentarios, fecha_re
 INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (1,'All','world.png',0, 'admin');
 INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (2,'Customer #A','eye.png',0, 'admin');
 INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (3,'Customer #B','eye.png',0, 'admin');
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (8,'Development Dpt.','database_gear.png',0, 'admin');
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (9,'Comunication Dpt.','transmit.png',0, 'admin');
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (10,'Sales Dpt.','house.png',0, 'admin');
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (11,'Engineering','computer.png',0, 'admin');
-INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (12,'Helpdesk & Support','bricks.png',0, 'admin');
+INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (4,'Engineering','computer.png',0, 'admin');
 
 INSERT INTO `tlanguage` VALUES ('en','English');
 INSERT INTO `tlanguage` VALUES ('es','Español');
