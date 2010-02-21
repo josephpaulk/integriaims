@@ -28,7 +28,7 @@ CREATE TABLE `tusuario` (
   `avatar` varchar(100) default 'people_1',
   `lang` varchar(10) default '',
    PRIMARY KEY  (`id_usuario`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tgrupo` (
   `id_grupo` mediumint(8) unsigned NOT NULL auto_increment,
@@ -45,25 +45,19 @@ CREATE TABLE `tgrupo` (
   `forced_email` tinyint(1) unsigned NOT NULL DEFAULT 1,
   `email` varchar(128) default '',
   `enforce_soft_limit` int(2) unsigned NOT NULL default 0,
-  PRIMARY KEY  (`id_grupo`),
-  FOREIGN KEY (`id_user_default`) REFERENCES tusuario(`id_usuario`)
-     ON UPDATE CASCADE ON DELETE SET default
-);
+  PRIMARY KEY  (`id_grupo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE tgrupo ADD FOREIGN KEY (`parent`) REFERENCES tgrupo(`id_grupo`)
-     ON UPDATE CASCADE ON DELETE SET default;
 
 CREATE TABLE `tproject_group` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   `icon` varchar(50) default NULL,
   PRIMARY KEY  (`id`)
-);
-
--- New tables created 23/04/07 for project management
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tproject` (
-  `id` int(10) signed NOT NULL auto_increment,
+  `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(240) NOT NULL default '',
   `description` mediumtext NOT NULL,
   `start` date NOT NULL default '0000-00-00',
@@ -72,15 +66,14 @@ CREATE TABLE `tproject` (
   `disabled` int(2) unsigned NOT NULL default '0',
   `id_project_group` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
+  KEY `iproject_idx_1` (`id_project_group`),
   FOREIGN KEY (`id_owner`) REFERENCES tusuario(`id_usuario`)
-     ON UPDATE CASCADE ON DELETE SET default,
-  FOREIGN KEY (`id_project_group`) REFERENCES tproject_group(`id`)
-     ON UPDATE CASCADE ON DELETE SET default
-);
+     ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ttask` (
-  `id` int(10) signed NOT NULL auto_increment,
-  `id_project` int(10) signed NOT NULL default 0,
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_project` int(10) unsigned NOT NULL default 0,
   `id_parent_task` int(10) unsigned NOT NULL default '0',
   `name` varchar(240) NOT NULL default '',
   `description` mediumtext NOT NULL,
@@ -94,17 +87,14 @@ CREATE TABLE `ttask` (
   `id_group` int(10) NOT NULL default '0',
   `periodicity` enum ('none', 'weekly', 'monthly', 'year', '15days', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none',
   PRIMARY KEY  (`id`),
+  KEY `itask_idx_1` (`id_project`),
   FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
-     ON UPDATE CASCADE ON DELETE SET default
-);
-
-ALTER TABLE ttask ADD FOREIGN KEY (`id_parent_task`) REFERENCES ttask(`id`)
-     ON UPDATE CASCADE ON DELETE SET default;
+     ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure for table `tattachment`
 --
+
 CREATE TABLE `tattachment` (
   `id_attachment` bigint(20) unsigned NOT NULL auto_increment,
   `id_incidencia` bigint(20) NOT NULL default '0',
@@ -116,10 +106,8 @@ CREATE TABLE `tattachment` (
   `size` bigint(20) NOT NULL default '0',
   PRIMARY KEY  (`id_attachment`),
   FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
-     ON UPDATE CASCADE ON DELETE SET default,
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
-     ON UPDATE CASCADE ON DELETE SET default
-);
+     ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `tconfig`
@@ -130,23 +118,21 @@ CREATE TABLE `tconfig` (
   `token` varchar(100) NOT NULL default '',
   `value` text NOT NULL default '',
   PRIMARY KEY  (`id_config`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `twizard` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tincident_type` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   `description` text NULL default NULL,
   `id_wizard` mediumint(8) unsigned NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_wizard`) REFERENCES twizard(`id`)
-      ON UPDATE CASCADE ON DELETE SET NULL
-);
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tsla` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -158,10 +144,7 @@ CREATE TABLE `tsla` (
   `enforced` tinyint NULL default 0,
   `id_sla_base` mediumint(8) unsigned NULL default 0,
   PRIMARY KEY  (`id`)
-);
-
-ALTER TABLE `tsla` ADD FOREIGN KEY (`id_sla_base`) REFERENCES tsla(`id`)
-  ON UPDATE CASCADE ON DELETE SET default;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `tincidencia`
@@ -189,21 +172,17 @@ CREATE TABLE `tincidencia` (
   `affected_sla_id` tinyint unsigned NOT NULL DEFAULT 0,
   `id_incident_type` mediumint(8) unsigned NULL,
   PRIMARY KEY  (`id_incidencia`),
-  KEY `incident_index_1` (`id_usuario`,`id_incidencia`),
-  FOREIGN KEY (`id_incident_type`) REFERENCES tincident_type(`id`)
-      ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`id_grupo`) REFERENCES tgrupo(`id_grupo`)
-      ON UPDATE CASCADE ON DELETE SET default,
+  KEY `incident_idx_1` (`id_usuario`),
+  KEY `incident_idx_2` (`estado`),
+  KEY `incident_idx_3` (`id_grupo`),
   FOREIGN KEY (`id_creator`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
-      ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`affected_sla_id`) REFERENCES tsla(`id`)
-      ON UPDATE CASCADE ON DELETE RESTRICT
-);
+      ON UPDATE CASCADE,
+ FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `tincidencia` ADD FOREIGN KEY (`id_parent`) REFERENCES tincidencia(`id_incidencia`)
-  ON UPDATE CASCADE ON DELETE SET default;
+  ON UPDATE CASCADE ON DELETE CASCADE;
 
 --
 -- Table structure for table `tlanguage`
@@ -214,7 +193,7 @@ CREATE TABLE `tlanguage` (
   `id_language` varchar(6) NOT NULL default '',
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id_language`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `tlink`
@@ -226,7 +205,7 @@ CREATE TABLE `tlink` (
   `name` varchar(100) NOT NULL default '',
   `link` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id_link`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tsesion` (
   `ID_sesion` bigint(4) unsigned NOT NULL auto_increment,
@@ -237,9 +216,10 @@ CREATE TABLE `tsesion` (
   `fecha` datetime NOT NULL default '0000-00-00 00:00:00',
   `utimestamp` bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (`ID_sesion`),
+  KEY `tsession_idx_1` (`ID_usuario`),
   FOREIGN KEY (`ID_usuario`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE
-);
+      ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tincident_track` (
   `id_it` int(10) unsigned NOT NULL auto_increment,
@@ -250,11 +230,12 @@ CREATE TABLE `tincident_track` (
   `id_aditional` int(10) unsigned NOT NULL default '0',
   `description` text NOT NULL default '',
   PRIMARY KEY  (`id_it`),
+  KEY `tit_idx_1` (`id_incident`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
       ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `ttask_track` (
@@ -265,11 +246,12 @@ CREATE TABLE `ttask_track` (
   `state` tinyint unsigned NOT NULL default '0',
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
+  KEY `ttt_idx_1` (`id_task`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
+      ON UPDATE CASCADE, 
   FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tproject_track` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -279,11 +261,12 @@ CREATE TABLE `tproject_track` (
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_aditional`  int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
+  KEY `tpt_idx_1` (`id_project`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE SET default,
+      ON UPDATE CASCADE,
   FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tworkunit` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -296,29 +279,31 @@ CREATE TABLE `tworkunit` (
   `locked` varchar(125) DEFAULT '',
   `public` tinyint(1) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY  (`id`),
+  KEY `tw_idx_1` (`id_user`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE
-);
+      ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tworkunit_task` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_task` int(10) signed NOT NULL default '0',
   `id_workunit` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
-      ON UPDATE CASCADE ON DELETE SET default,
+  KEY `twt_idx_1` (`id_task`),
   FOREIGN KEY (`id_workunit`) REFERENCES tworkunit(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tworkunit_incident` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_incident` int(10) unsigned NOT NULL default '0',
   `id_workunit` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
+  KEY `twi_idx_1` (`id_incident`),
+  KEY `twi_idx_2` (`id_workunit`),
   FOREIGN KEY (`id_workunit`) REFERENCES tworkunit(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tagenda` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -330,29 +315,28 @@ CREATE TABLE `tagenda` (
   `id_group` int(10) NOT NULL default '0',
   `content` varchar(255) DEFAULT '',
   PRIMARY KEY  (`id`),
+  KEY `ta_idx_1` (`id_user`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
       ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tincident_resolution` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tincident_status` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tincident_origin` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `trole` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -360,7 +344,7 @@ CREATE TABLE `trole` (
   `description` varchar(255) DEFAULT '',
   `cost` int(8) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `trole_people_task` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -374,7 +358,7 @@ CREATE TABLE `trole_people_task` (
       ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `trole_people_project` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -382,33 +366,37 @@ CREATE TABLE `trole_people_project` (
   `id_role` int(10) unsigned NOT NULL default '0',
   `id_project` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
+  KEY `trp_idx_1` (`id_user`),
+  KEY `trp_idx_2` (`id_project`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_role`) REFERENCES trole(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ttodo` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(250) character set utf8 collate utf8_unicode_ci default NULL,
+  `name` varchar(250) default NULL,
   `progress` int(11) NOT NULL,
-  `assigned_user` varchar(250) character set utf8 collate utf8_unicode_ci NOT NULL,
-  `created_by_user` varchar(250) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `assigned_user` varchar(60)  NOT NULL default '',
+  `created_by_user` varchar(60)  NOT NULL default '',
   `priority` int(11) NOT NULL,
   `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
   `description` mediumtext,
   `last_update` datetime NOT NULL default '2000-01-01 00:00:00',
   `id_task` int(10) unsigned NULL default NULL,
   PRIMARY KEY  (`id`),
+  KEY `tt_idx_1` (`assigned_user`),
+  KEY `tt_idx_2` (`created_by_user`),
   FOREIGN KEY (`assigned_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`created_by_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id_task`)
+  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `tmilestone` (
@@ -418,9 +406,10 @@ CREATE TABLE `tmilestone` (
   `name` varchar(250) NOT NULL default '',
   `description` mediumtext NOT NULL,
   PRIMARY KEY  (`id`),
+  KEY `tm_idx_1` (`id_project`),
   FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table for special days, non working or corporate vacations --
 
@@ -430,7 +419,7 @@ CREATE TABLE `tvacationday` (
   `month` int(4) unsigned NOT NULL default '0',
   `name` varchar(250) NOT NULL default '',
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table for bills, and externals expenses imputable to a task / project
 
@@ -445,13 +434,10 @@ CREATE TABLE `tcost` (
   `locked` tinyint(3) unsigned NOT NULL DEFAULT 0,
   `locked_id_user` varchar(60) DEFAULT NULL,
   PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
+  KEY `tcost_idx_1` (`id_user`),
   FOREIGN KEY (`id_wu`) REFERENCES tworkunit(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`locked_id_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Used to track notificacion (emails) for agenda,
 -- incident SLA notifications, system events and more
@@ -466,9 +452,10 @@ CREATE TABLE `tevent` (
   `id_item2` int(11) unsigned NULL default NULL,
   `id_item3` varchar(250) default NULL,
   PRIMARY KEY  (`id`),
+  KEY `tevent_idx_1` (`id_user`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Product: OS, OS/Windows, OS/Windows/IE
 -- Category: Module, Plugin, Article, Howto, Workaround, Download, Patch, etc
@@ -480,10 +467,7 @@ CREATE TABLE `tkb_category` (
   `icon` varchar(75) default NULL,
   `parent` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-);
-
-ALTER TABLE `tkb_category` ADD FOREIGN KEY (`parent`) REFERENCES tkb_category(`id`)
-     ON UPDATE CASCADE ON DELETE RESTRICT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tkb_product` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -492,10 +476,7 @@ CREATE TABLE `tkb_product` (
   `icon` varchar(75) default NULL,
   `parent` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-);
-
-ALTER TABLE `tkb_product` ADD FOREIGN KEY (`parent`) REFERENCES tkb_product(`id`)
-     ON UPDATE CASCADE ON DELETE SET default;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tkb_data` (
   `id` int(6) unsigned NOT NULL auto_increment,
@@ -507,27 +488,24 @@ CREATE TABLE `tkb_data` (
   `id_product` mediumint(8) unsigned default 0,
   `id_category` mediumint(8) unsigned default 0,
   PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_product`) REFERENCES tkb_product(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_category`) REFERENCES tkb_category(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE
-);
+  KEY `tkb_idx_1` (`id_product`),
+  KEY `tkb_idx_2` (`id_category`),
+  KEY `tkb_idx_3` (`id_language`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tbuilding` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   `description` text NULL default NULL,
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tcompany_role` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   `description` text NULL default NULL,
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tcompany` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -536,10 +514,8 @@ CREATE TABLE `tcompany` (
   `fiscal_id` varchar(250) NULL default NULL,
   `comments` text NULL default NULL,
   `id_company_role` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_company_role`) REFERENCES tcompany_role(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
-);
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tcompany_contact` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -554,7 +530,7 @@ CREATE TABLE `tcompany_contact` (
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tincident_contact_reporters` (
   `id_incident` bigint(20) unsigned NOT NULL,
@@ -564,7 +540,7 @@ CREATE TABLE `tincident_contact_reporters` (
      ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_contact`) REFERENCES tcompany_contact(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tcontract` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -577,13 +553,9 @@ CREATE TABLE `tcontract` (
   `id_sla` mediumint(8) unsigned NULL default NULL,
   `id_group` mediumint(8) unsigned NULL default NULL,
   PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_sla`) REFERENCES tsla(`id`)
-     ON UPDATE CASCADE ON DELETE RESTRICT,
-  FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tmanufacturer` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -592,12 +564,8 @@ CREATE TABLE `tmanufacturer` (
   `comments` varchar(250) NULL default NULL,
   `id_company_role` mediumint(8) unsigned NOT NULL,
   `id_sla` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_company_role`) REFERENCES tcompany_role(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_sla`) REFERENCES tsla(`id`)
-     ON UPDATE CASCADE ON DELETE RESTRICT
-);
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tinventory` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -624,21 +592,9 @@ CREATE TABLE `tinventory` (
   `generic_7` varchar(255) default '',
   `generic_8` text,
   PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_contract`) REFERENCES tcontract(`id`)
-     ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`id_product`) REFERENCES tkb_product(`id`)
-     ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`id_sla`) REFERENCES tsla (`id`)
-     ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`id_manufacturer`) REFERENCES tmanufacturer(`id`)
-     ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`id_building`) REFERENCES tbuilding(`id`)
-     ON UPDATE CASCADE ON DELETE SET NULL
-);
-
-ALTER TABLE `tinventory` ADD
- FOREIGN KEY (`id_parent`) REFERENCES tinventory(`id`)
-   ON UPDATE CASCADE ON DELETE SET NULL;
+  KEY `tinv_idx_1` (`id_contract`),
+  KEY `tinv_idx_2` (`id_sla`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tinventory_contact` (
   `id_inventory` mediumint(8) unsigned NOT NULL,
@@ -648,34 +604,26 @@ CREATE TABLE `tinventory_contact` (
      ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
      ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tinventory_reports` (
   `id` mediumint unsigned NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
   `sql` text,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tincident_inventory` (
   `id_incident` bigint(20) unsigned NOT NULL,
   `id_inventory` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id_incident`, `id_inventory`),
-  FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
-);
+  PRIMARY KEY  (`id_incident`, `id_inventory`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ttask_inventory` (
   `id_task` int(10) unsigned unsigned NOT NULL,
   `id_inventory` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id_task`, `id_inventory`),
-  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
-);
+  PRIMARY KEY  (`id_task`, `id_inventory`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tcustom_search` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -686,8 +634,8 @@ CREATE TABLE `tcustom_search` (
   PRIMARY KEY  (`id`),
   UNIQUE (`id_user`, `name`, `section`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE SET NULL
-);
+      ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `um_tupdate_settings` (
   `key` varchar(255) default '',
@@ -737,13 +685,13 @@ CREATE TABLE `tdownload` (
   `tag` text NOT NULL default '',
   `id_category` mediumint(8) unsigned NOT NULL default 0,
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tdownload_category` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(250) NOT NULL default '',
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tdownload_tracking` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -751,7 +699,7 @@ CREATE TABLE `tdownload_tracking` (
   `date` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_user` varchar(60) NOT NULL default '',
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 

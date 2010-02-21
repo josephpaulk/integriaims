@@ -1,3 +1,10 @@
+2010-02-20  Sancho lerena <slerena@artica.es>
+
+	* parche.sql: Deleted old stuff, unused anymore.
+
+	* integria_db.sql: Fixed the database integrial reference, all tables
+	reviewed and fixed.
+
 2010-02-17  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_calendar.php: Added a missing PHP function.
