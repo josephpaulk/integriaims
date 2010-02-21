@@ -41,9 +41,7 @@ CREATE TABLE `tgrupo` (
   `id_user_default` varchar(60) NOT NULL default '',
   `forced_email` tinyint(1) unsigned NOT NULL DEFAULT 1,
   `email` varchar(128) default '',
-  PRIMARY KEY  (`id_grupo`),
-  FOREIGN KEY (`id_user_default`) REFERENCES tusuario(`id_usuario`)
-     ON UPDATE CASCADE ON DELETE SET default
+  PRIMARY KEY  (`id_grupo`)
 );
 
 ALTER TABLE tgrupo ADD FOREIGN KEY (`parent`) REFERENCES tgrupo(`id_grupo`)
@@ -67,11 +65,7 @@ CREATE TABLE `tproject` (
   `id_owner` varchar(60)  NOT NULL default '',
   `disabled` int(2) unsigned NOT NULL default '0',
   `id_project_group` mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_owner`) REFERENCES tusuario(`id_usuario`)
-     ON UPDATE CASCADE ON DELETE SET default,
-  FOREIGN KEY (`id_project_group`) REFERENCES tproject_group(`id`)
-     ON UPDATE CASCADE ON DELETE SET default
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `ttask` (
@@ -89,11 +83,7 @@ CREATE TABLE `ttask` (
   `estimated_cost` float (9,2) unsigned NOT NULL DEFAULT 0.0,
   `id_group` int(10) NOT NULL default '0',
   `periodicity` enum ('none', 'weekly', 'monthly', 'year', '15days', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none',
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
-     ON UPDATE CASCADE ON DELETE SET default
+  PRIMARY KEY  (`id`)
 );
 
 ALTER TABLE ttask ADD FOREIGN KEY (`id_parent_task`) REFERENCES ttask(`id`)
@@ -110,11 +100,7 @@ CREATE TABLE `tattachment` (
   `filename` varchar(255) NOT NULL default '',
   `description` varchar(150) default '',
   `size` bigint(20) NOT NULL default '0',
-  PRIMARY KEY  (`id_attachment`),
-  FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
-     ON UPDATE CASCADE ON DELETE SET default,
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
-     ON UPDATE CASCADE ON DELETE SET default
+  PRIMARY KEY  (`id_attachment`)
 );
 
 --
@@ -139,9 +125,7 @@ CREATE TABLE `tincident_type` (
   `name` varchar(100) NOT NULL default '',
   `description` text NULL default NULL,
   `id_wizard` mediumint(8) unsigned NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_wizard`) REFERENCES twizard(`id`)
-      ON UPDATE CASCADE ON DELETE SET NULL
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tsla` (
@@ -155,9 +139,6 @@ CREATE TABLE `tsla` (
   `id_sla_base` mediumint(8) unsigned NULL default 0,
   PRIMARY KEY  (`id`)
 );
-
-ALTER TABLE `tsla` ADD FOREIGN KEY (`id_sla_base`) REFERENCES tsla(`id`)
-  ON UPDATE CASCADE ON DELETE SET default;
 
 --
 -- Table structure for table `tincidencia`
@@ -185,21 +166,8 @@ CREATE TABLE `tincidencia` (
   `affected_sla_id` tinyint unsigned NOT NULL DEFAULT 0,
   `id_incident_type` mediumint(8) unsigned NULL,
   PRIMARY KEY  (`id_incidencia`),
-  KEY `incident_index_1` (`id_usuario`,`id_incidencia`),
-  FOREIGN KEY (`id_incident_type`) REFERENCES tincident_type(`id`)
-      ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`id_grupo`) REFERENCES tgrupo(`id_grupo`)
-      ON UPDATE CASCADE ON DELETE SET default,
-  FOREIGN KEY (`id_creator`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
-      ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`affected_sla_id`) REFERENCES tsla(`id`)
-      ON UPDATE CASCADE ON DELETE RESTRICT
+  KEY `incident_index_1` (`id_usuario`,`id_incidencia`)
 );
-
-ALTER TABLE `tincidencia` ADD FOREIGN KEY (`id_parent`) REFERENCES tincidencia(`id_incidencia`)
-  ON UPDATE CASCADE ON DELETE SET default;
 
 --
 -- Table structure for table `tlanguage`
@@ -232,9 +200,7 @@ CREATE TABLE `tsesion` (
   `descripcion` varchar(200) NOT NULL default '',
   `fecha` datetime NOT NULL default '0000-00-00 00:00:00',
   `utimestamp` bigint(20) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`ID_sesion`),
-  FOREIGN KEY (`ID_usuario`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`ID_sesion`)
 );
 
 CREATE TABLE `tincident_track` (
@@ -245,11 +211,7 @@ CREATE TABLE `tincident_track` (
   `id_user` varchar(60) NOT NULL default '',
   `id_aditional` int(10) unsigned NOT NULL default '0',
   `description` text NOT NULL default '',
-  PRIMARY KEY  (`id_it`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id_it`)
 );
 
 
@@ -260,11 +222,7 @@ CREATE TABLE `ttask_track` (
   `id_external` int(10) unsigned NOT NULL default '0',
   `state` tinyint unsigned NOT NULL default '0',
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tproject_track` (
@@ -274,11 +232,7 @@ CREATE TABLE `tproject_track` (
   `state` tinyint unsigned NOT NULL default '0',
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_aditional`  int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE SET default,
-  FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tworkunit` (
@@ -291,29 +245,21 @@ CREATE TABLE `tworkunit` (
   `id_profile` int(10) unsigned NOT NULL default '0',
   `locked` varchar(125) DEFAULT '',
   `public` tinyint(1) unsigned NOT NULL DEFAULT 1,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tworkunit_task` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_task` int(10) signed NOT NULL default '0',
   `id_workunit` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
-      ON UPDATE CASCADE ON DELETE SET default,
-  FOREIGN KEY (`id_workunit`) REFERENCES tworkunit(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tworkunit_incident` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_incident` int(10) unsigned NOT NULL default '0',
   `id_workunit` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_workunit`) REFERENCES tworkunit(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tagenda` (
@@ -325,11 +271,7 @@ CREATE TABLE `tagenda` (
   `duration` int(10) unsigned NOT NULL DEFAULT 0,
   `id_group` int(10) NOT NULL default '0',
   `content` varchar(255) DEFAULT '',
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tincident_resolution` (
@@ -363,13 +305,7 @@ CREATE TABLE `trole_people_task` (
   `id_user` varchar(60) NOT NULL default '',
   `id_role` int(10) unsigned NOT NULL default '0',
   `id_task` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_role`) REFERENCES trole(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `trole_people_project` (
@@ -377,13 +313,7 @@ CREATE TABLE `trole_people_project` (
   `id_user` varchar(60) NOT NULL default '',
   `id_role` int(10) unsigned NOT NULL default '0',
   `id_project` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_role`) REFERENCES trole(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `ttodo` (
@@ -397,13 +327,7 @@ CREATE TABLE `ttodo` (
   `description` mediumtext,
   `last_update` datetime NOT NULL default '2000-01-01 00:00:00',
   `id_task` int(10) unsigned NULL default NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`assigned_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`created_by_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id_task`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 
@@ -413,9 +337,7 @@ CREATE TABLE `tmilestone` (
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `name` varchar(250) NOT NULL default '',
   `description` mediumtext NOT NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 -- Table for special days, non working or corporate vacations --
@@ -440,13 +362,7 @@ CREATE TABLE `tcost` (
   `id_attachment` bigint(20) unsigned NULL default NULL,
   `locked` tinyint(3) unsigned NOT NULL DEFAULT 0,
   `locked_id_user` varchar(60) DEFAULT NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_wu`) REFERENCES tworkunit(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`locked_id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 -- Used to track notificacion (emails) for agenda,
@@ -461,9 +377,7 @@ CREATE TABLE `tevent` (
   `id_item` int(11) unsigned NULL default NULL,
   `id_item2` int(11) unsigned NULL default NULL,
   `id_item3` varchar(250) default NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 -- Product: OS, OS/Windows, OS/Windows/IE
@@ -502,13 +416,7 @@ CREATE TABLE `tkb_data` (
   `id_user` varchar(150) NOT NULL default '',
   `id_product` mediumint(8) unsigned default 0,
   `id_category` mediumint(8) unsigned default 0,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_product`) REFERENCES tkb_product(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_category`) REFERENCES tkb_category(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tbuilding` (
@@ -532,9 +440,7 @@ CREATE TABLE `tcompany` (
   `fiscal_id` varchar(250) NULL default NULL,
   `comments` text NULL default NULL,
   `id_company_role` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_company_role`) REFERENCES tcompany_role(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tcompany_contact` (
@@ -547,19 +453,13 @@ CREATE TABLE `tcompany_contact` (
   `position` varchar(150) NULL default NULL,
   `description` text NULL DEFAULT NULL,
   `disabled` tinyint(1) NULL default 0,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tincident_contact_reporters` (
   `id_incident` bigint(20) unsigned NOT NULL,
   `id_contact` mediumint(8) unsigned NOT NULL,
-  UNIQUE (`id_incident`, `id_contact`),
-  FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_contact`) REFERENCES tcompany_contact(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
+  UNIQUE (`id_incident`, `id_contact`)
 );
 
 CREATE TABLE `tcontract` (
@@ -572,13 +472,7 @@ CREATE TABLE `tcontract` (
   `id_company` mediumint(8) unsigned NULL default NULL,
   `id_sla` mediumint(8) unsigned NULL default NULL,
   `id_group` mediumint(8) unsigned NULL default NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_sla`) REFERENCES tsla(`id`)
-     ON UPDATE CASCADE ON DELETE RESTRICT,
-  FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tmanufacturer` (
@@ -588,11 +482,7 @@ CREATE TABLE `tmanufacturer` (
   `comments` varchar(250) NULL default NULL,
   `id_company_role` mediumint(8) unsigned NOT NULL,
   `id_sla` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_company_role`) REFERENCES tcompany_role(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_sla`) REFERENCES tsla(`id`)
-     ON UPDATE CASCADE ON DELETE RESTRICT
+  PRIMARY KEY  (`id`)
 );
 
 CREATE TABLE `tinventory` (
@@ -619,31 +509,13 @@ CREATE TABLE `tinventory` (
   `generic_6` varchar(255) default '',
   `generic_7` varchar(255) default '',
   `generic_8` text,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_contract`) REFERENCES tcontract(`id`)
-     ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`id_product`) REFERENCES tkb_product(`id`)
-     ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`id_sla`) REFERENCES tsla (`id`)
-     ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`id_manufacturer`) REFERENCES tmanufacturer(`id`)
-     ON UPDATE CASCADE ON DELETE SET NULL,
-  FOREIGN KEY (`id_building`) REFERENCES tbuilding(`id`)
-     ON UPDATE CASCADE ON DELETE SET NULL
+  PRIMARY KEY  (`id`)
 );
-
-ALTER TABLE `tinventory` ADD
- FOREIGN KEY (`id_parent`) REFERENCES tinventory(`id`)
-   ON UPDATE CASCADE ON DELETE SET NULL;
 
 CREATE TABLE `tinventory_contact` (
   `id_inventory` mediumint(8) unsigned NOT NULL,
   `id_company_contact` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id_inventory`, `id_company_contact`),
-  FOREIGN KEY (`id_company_contact`) REFERENCES tcompany_contact(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id_inventory`, `id_company_contact`)
 );
 
 CREATE TABLE `tinventory_reports` (
@@ -656,21 +528,13 @@ CREATE TABLE `tinventory_reports` (
 CREATE TABLE `tincident_inventory` (
   `id_incident` bigint(20) unsigned NOT NULL,
   `id_inventory` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id_incident`, `id_inventory`),
-  FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id_incident`, `id_inventory`)
 );
 
 CREATE TABLE `ttask_inventory` (
   `id_task` int(10) unsigned unsigned NOT NULL,
   `id_inventory` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id_task`, `id_inventory`),
-  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
+  PRIMARY KEY  (`id_task`, `id_inventory`)
 );
 
 CREATE TABLE `tcustom_search` (
@@ -680,9 +544,7 @@ CREATE TABLE `tcustom_search` (
   `id_user` varchar(60) NOT NULL,
   `form_values` text NOT NULL default '',
   PRIMARY KEY  (`id`),
-  UNIQUE (`id_user`, `name`, `section`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE SET NULL
+  UNIQUE (`id_user`, `name`, `section`)
 );
 
 CREATE TABLE `um_tupdate_settings` (
