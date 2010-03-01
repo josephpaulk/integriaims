@@ -1,3 +1,21 @@
+2010-03-01  Sancho lerena <slerena@artica.es>
+
+	* include/functions_form.php: Added combo for FR categories.
+
+	* include/help/en/help_choose_download.php: basic context help about 
+	location of download files.
+
+	* include/functions.php: Added mimetype funcion.
+
+	* operation/download/download.php: Function to "get" the file using
+	a dump of contentfile in a new page.
+
+	* operation/download/manage_cat.php: New code for FR category management.
+	
+	* operation/download/browse.php: New code for FR download view and manage.
+
+	* integria_db.sql: Minor modifications in FR tables.
+
 2010-02-20  Sancho lerena <slerena@artica.es>
 
 	* parche.sql: Deleted old stuff, unused anymore.

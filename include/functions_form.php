@@ -38,7 +38,7 @@ function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = fa
 
 
 
-function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any = 0, $perm = '', $id_group = 0, $return = false) {
+function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any = 0, $perm = '', $id_group = 0, $return = false, $label = 1) {
 	$output = '';
 
 	$values = array ();
@@ -49,8 +49,10 @@ function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any =
 		$groups[1] = __('Any');
 	}
 	
-	$output .= print_select ($groups, $form_name, $id_group, '', '', 0,
-				true, false, false, __('Group'));
+	if ($label == 1)
+		$output .= print_select ($groups, $form_name, $id_group, '', '', 0, true, false, false, __('Group'));
+	else
+		$output .= print_select ($groups, $form_name, $id_group, '', '', 0, true, false, false, '');
 
 	if ($return)
 		return $output;
@@ -908,28 +910,20 @@ function combo_download_categories ($id_category, $show_any = 0){
 	if ($id_category == 0)
 		$id_category = 1;
 
-	echo "<select name='category' style='width: 180px;'>";
-	if ($show_any != 0){
-		$id_category = -1;
-		echo "<option value=''>".__("Any");
+	echo "<select name='id_category' style='width: 180px;'>";
+	if ($show_any == 1){
+		echo "<option value='0'>".__("Any");
 	}	
-	$sql = "SELECT * FROM tdownload_category WHERE id != $id_category ORDER by parent, name";
+	$sql = "SELECT * FROM tdownload_category WHERE id != $id_category ORDER by name";
 	$result = mysql_query($sql);
 	
-	$parent = get_db_value ("parent","tkb_category","id",$id_category);
-	$parent_name = get_db_value ("name","tkb_category","id",$parent);
-	$name = get_db_value ("name","tkb_category","id",$id_category);
-	if ($parent != 0)
-		echo "<option value='".$id_category."'>".$parent_name."/".$name;
-	else
-		echo "<option value='".$id_category."'>".$name;
+	$name = get_db_value ("name","tdownload_category","id",$id_category);
+	echo "<option value='".$id_category."'>".$name;
 
 	while ($row=mysql_fetch_array($result)){
-		$parent = get_db_value ("name","tkb_category","id",$row["parent"]);
-		if ($parent != "")
-			echo "<option value='".$row["id"]."'>".$parent . "/".$row["name"];
-		else
+		if (give_acl($config["id_user"], $row["id_group"], "KR")){
 			echo "<option value='".$row["id"]."'>".$row["name"];
+		}
 	}
 	echo "</select>";
 }

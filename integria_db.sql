@@ -684,12 +684,14 @@ CREATE TABLE `tdownload` (
   `description` text NOT NULL default '', 
   `tag` text NOT NULL default '',
   `id_category` mediumint(8) unsigned NOT NULL default 0,
+  `id_user` varchar(60) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tdownload_category` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(250) NOT NULL default '',
+  `id_group` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
