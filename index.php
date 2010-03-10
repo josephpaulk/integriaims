@@ -63,6 +63,13 @@ require_once ('include/functions_db.php');
 require_once ('include/functions_html.php');
 require_once ('include/functions_form.php');
 require_once ('include/functions_calendar.php');
+
+
+/* Enterprise support */
+if (file_exists ("enterprise/load_enterprise.php")) {
+        include_once ("enterprise/load_enterprise.php");
+}
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">

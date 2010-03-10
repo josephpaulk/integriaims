@@ -1,3 +1,20 @@
+2010-03-10  Sancho Lerena <slerena@artica.es>
+
+	* include/styles/integria.css: Removed inexistant background file.
+
+	* AUTHORS: Updated. Esteban was missing here.
+
+	* install.php: Fixed several issues, added licence splash.
+
+	* index.php: add check for enterprise load.
+
+	* integria_dbdata.sql: Fixed problems with database IR.
+	
+	* integria_demo.sql: Fixed data (without create info) for use
+	with current schema (IR/Innodb).
+
+	* integria_db.sql: The same as above, more IR fixes.
+
 2010-03-01  Sancho lerena <slerena@artica.es>
 
 	* include/functions_form.php: Added combo for FR categories.

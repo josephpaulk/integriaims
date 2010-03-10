@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.1.36, for suse-linux-gnu (i686)
 --
--- Host: localhost    Database: integria
+-- Host: localhost    Database: crap
 -- ------------------------------------------------------
--- Server version	5.1.36-log
+-- Server version	5.0.67-Max
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,26 +16,8 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `tagenda`
+-- Not dumping tablespaces as no INFORMATION_SCHEMA.FILES table on this server
 --
-
-DROP TABLE IF EXISTS `tagenda`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tagenda` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `timestamp` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
-  `id_user` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `public` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `alarm` int(10) unsigned NOT NULL DEFAULT '0',
-  `duration` int(10) unsigned NOT NULL DEFAULT '0',
-  `id_group` int(10) NOT NULL DEFAULT '0',
-  `content` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
-  PRIMARY KEY (`id`),
-  KEY `id_user` (`id_user`),
-  KEY `id_group` (`id_group`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tagenda`
@@ -45,28 +27,6 @@ LOCK TABLES `tagenda` WRITE;
 /*!40000 ALTER TABLE `tagenda` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tagenda` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tattachment`
---
-
-DROP TABLE IF EXISTS `tattachment`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tattachment` (
-  `id_attachment` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `id_incidencia` bigint(20) NOT NULL DEFAULT '0',
-  `id_task` int(10) unsigned NOT NULL DEFAULT '0',
-  `id_kb` bigint(20) NOT NULL DEFAULT '0',
-  `id_usuario` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `filename` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` varchar(150) COLLATE utf8_unicode_ci DEFAULT '',
-  `size` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_attachment`),
-  KEY `id_usuario` (`id_usuario`),
-  KEY `id_task` (`id_task`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tattachment`
@@ -79,21 +39,6 @@ INSERT INTO `tattachment` VALUES (1,1,0,0,'admin','Nil_computer_small.png','It&#
 UNLOCK TABLES;
 
 --
--- Table structure for table `tbuilding`
---
-
-DROP TABLE IF EXISTS `tbuilding`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbuilding` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tbuilding`
 --
 
@@ -102,25 +47,6 @@ LOCK TABLES `tbuilding` WRITE;
 INSERT INTO `tbuilding` VALUES (1,'Silva 2','This is the main office building of Artica ST.');
 /*!40000 ALTER TABLE `tbuilding` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tcompany`
---
-
-DROP TABLE IF EXISTS `tcompany`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tcompany` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `address` varchar(300) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `fiscal_id` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `comments` text COLLATE utf8_unicode_ci,
-  `id_company_role` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_company_role` (`id_company_role`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tcompany`
@@ -133,28 +59,6 @@ INSERT INTO `tcompany` VALUES (1,'Spatial Curvature Ltd.','C/ Pez 3\r\n28013 Mad
 UNLOCK TABLES;
 
 --
--- Table structure for table `tcompany_contact`
---
-
-DROP TABLE IF EXISTS `tcompany_contact`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tcompany_contact` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `id_company` mediumint(8) unsigned NOT NULL,
-  `fullname` varchar(150) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `email` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `phone` varchar(55) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `mobile` varchar(55) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `position` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `description` text COLLATE utf8_unicode_ci,
-  `disabled` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_company` (`id_company`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tcompany_contact`
 --
 
@@ -163,21 +67,6 @@ LOCK TABLES `tcompany_contact` WRITE;
 INSERT INTO `tcompany_contact` VALUES (1,1,'Sancho Lerena','slerena@nowhere.net','23443534545','435748574','Production Engineer','',0);
 /*!40000 ALTER TABLE `tcompany_contact` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tcompany_role`
---
-
-DROP TABLE IF EXISTS `tcompany_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tcompany_role` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tcompany_role`
@@ -190,21 +79,6 @@ INSERT INTO `tcompany_role` VALUES (1,'Developer','');
 UNLOCK TABLES;
 
 --
--- Table structure for table `tconfig`
---
-
-DROP TABLE IF EXISTS `tconfig`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tconfig` (
-  `id_config` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `token` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `value` text COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_config`)
-) ENGINE=MyISAM AUTO_INCREMENT=56 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tconfig`
 --
 
@@ -213,30 +87,6 @@ LOCK TABLES `tconfig` WRITE;
 INSERT INTO `tconfig` VALUES (1,'language_code','en'),(2,'block_size','25'),(3,'db_scheme_version','2.1-dev'),(4,'db_scheme_build','ID100219'),(5,'date_format','F j, Y, g:i a'),(6,'currency','eu'),(7,'sitename','Integria Demo'),(8,'hours_perday','8'),(46,'FOOTER_EMAIL','Please do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\r\n\r\nThanks for your time and have a nice day\r\n\r\n'),(45,'HEADER_EMAIL','Hello, \r\n\r\nThis is an automated message coming from Integria\r\n\r\n'),(47,'notification_period','86400'),(12,'limit_size','1000'),(48,'mail_from','integria@localhost'),(49,'smtp_port','0'),(50,'smtp_host','localhost'),(51,'smtp_user',''),(52,'smtp_pass',''),(53,'pop_host',''),(54,'pop_user',''),(55,'pop_pass',''),(35,'timezone','Europe/Madrid'),(36,'autowu_completion','0'),(37,'no_wu_completion',''),(38,'fontsize','10'),(39,'incident_reporter','0'),(40,'show_creator_incident','1'),(41,'show_owner_incident','1'),(42,'pwu_defaultime','4'),(43,'iwu_defaultime','0.25'),(44,'api_acl','127.0.0.1, *');
 /*!40000 ALTER TABLE `tconfig` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tcontract`
---
-
-DROP TABLE IF EXISTS `tcontract`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tcontract` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `contract_number` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` text COLLATE utf8_unicode_ci,
-  `date_begin` date NOT NULL DEFAULT '0000-00-00',
-  `date_end` date NOT NULL DEFAULT '0000-00-00',
-  `id_company` mediumint(8) unsigned DEFAULT NULL,
-  `id_sla` mediumint(8) unsigned DEFAULT NULL,
-  `id_group` mediumint(8) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_sla` (`id_sla`),
-  KEY `id_group` (`id_group`),
-  KEY `id_company` (`id_company`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tcontract`
@@ -249,30 +99,6 @@ INSERT INTO `tcontract` VALUES (1,'Support','234574854','','2010-02-17','2010-02
 UNLOCK TABLES;
 
 --
--- Table structure for table `tcost`
---
-
-DROP TABLE IF EXISTS `tcost`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tcost` (
-  `id` int(6) unsigned NOT NULL AUTO_INCREMENT,
-  `id_user` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `id_wu` int(10) unsigned DEFAULT NULL,
-  `bill_id` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `ammount` float(9,2) NOT NULL DEFAULT '0.00',
-  `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `id_attachment` bigint(20) unsigned DEFAULT NULL,
-  `locked` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `locked_id_user` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_user` (`id_user`),
-  KEY `id_wu` (`id_wu`),
-  KEY `locked_id_user` (`locked_id_user`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tcost`
 --
 
@@ -280,24 +106,6 @@ LOCK TABLES `tcost` WRITE;
 /*!40000 ALTER TABLE `tcost` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tcost` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tcustom_search`
---
-
-DROP TABLE IF EXISTS `tcustom_search`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tcustom_search` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
-  `section` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `id_user` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
-  `form_values` text COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_user` (`id_user`,`name`,`section`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tcustom_search`
@@ -309,25 +117,6 @@ LOCK TABLES `tcustom_search` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tdownload`
---
-
-DROP TABLE IF EXISTS `tdownload`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tdownload` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(250) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `location` text COLLATE utf8_unicode_ci NOT NULL,
-  `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `description` text COLLATE utf8_unicode_ci NOT NULL,
-  `tag` text COLLATE utf8_unicode_ci NOT NULL,
-  `id_category` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tdownload`
 --
 
@@ -335,20 +124,6 @@ LOCK TABLES `tdownload` WRITE;
 /*!40000 ALTER TABLE `tdownload` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tdownload` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tdownload_category`
---
-
-DROP TABLE IF EXISTS `tdownload_category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tdownload_category` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(250) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tdownload_category`
@@ -360,22 +135,6 @@ LOCK TABLES `tdownload_category` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tdownload_tracking`
---
-
-DROP TABLE IF EXISTS `tdownload_tracking`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tdownload_tracking` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `id_download` mediumint(8) unsigned NOT NULL,
-  `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `id_user` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tdownload_tracking`
 --
 
@@ -383,26 +142,6 @@ LOCK TABLES `tdownload_tracking` WRITE;
 /*!40000 ALTER TABLE `tdownload_tracking` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tdownload_tracking` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tevent`
---
-
-DROP TABLE IF EXISTS `tevent`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tevent` (
-  `id` int(6) unsigned NOT NULL AUTO_INCREMENT,
-  `type` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `id_user` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `id_item` int(11) unsigned DEFAULT NULL,
-  `id_item2` int(11) unsigned DEFAULT NULL,
-  `id_item3` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_user` (`id_user`)
-) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tevent`
@@ -415,34 +154,6 @@ INSERT INTO `tevent` VALUES (1,'MANUFACTURER CREATED','2010-02-17 01:16:29','adm
 UNLOCK TABLES;
 
 --
--- Table structure for table `tgrupo`
---
-
-DROP TABLE IF EXISTS `tgrupo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tgrupo` (
-  `id_grupo` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `icon` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `banner` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `url` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `lang` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `parent` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `id_user_default` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `id_inventory_default` mediumint(8) DEFAULT NULL,
-  `soft_limit` int(5) unsigned NOT NULL DEFAULT '0',
-  `hard_limit` int(5) unsigned NOT NULL DEFAULT '0',
-  `forced_email` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `email` varchar(128) COLLATE utf8_unicode_ci DEFAULT '',
-  `enforce_soft_limit` int(2) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_grupo`),
-  KEY `id_user_default` (`id_user_default`),
-  KEY `parent` (`parent`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tgrupo`
 --
 
@@ -451,45 +162,6 @@ LOCK TABLES `tgrupo` WRITE;
 INSERT INTO `tgrupo` VALUES (1,'All','world.png',NULL,NULL,NULL,0,'admin',NULL,0,0,1,'',0),(2,'Customer #A','eye.png','','','en',0,'demo',1,0,0,1,'',0),(3,'Customer #B','eye.png','','','en',0,'demo',1,0,0,1,'',0),(4,'Engineering','computer.png','','','en',0,'demo',1,0,0,1,'',0);
 /*!40000 ALTER TABLE `tgrupo` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tincidencia`
---
-
-DROP TABLE IF EXISTS `tincidencia`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tincidencia` (
-  `id_incidencia` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `inicio` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `cierre` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `titulo` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `descripcion` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `id_usuario` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `origen` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `estado` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `prioridad` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `id_grupo` mediumint(9) NOT NULL DEFAULT '0',
-  `actualizacion` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `id_creator` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `notify_email` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `id_task` int(10) unsigned NOT NULL DEFAULT '0',
-  `resolution` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `epilog` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `id_parent` bigint(20) unsigned DEFAULT '0',
-  `sla_disabled` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `affected_sla_id` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `id_incident_type` mediumint(8) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id_incidencia`),
-  KEY `incident_index_1` (`id_usuario`,`id_incidencia`),
-  KEY `id_incident_type` (`id_incident_type`),
-  KEY `id_grupo` (`id_grupo`),
-  KEY `id_creator` (`id_creator`),
-  KEY `id_task` (`id_task`),
-  KEY `affected_sla_id` (`affected_sla_id`),
-  KEY `id_parent` (`id_parent`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tincidencia`
@@ -502,21 +174,6 @@ INSERT INTO `tincidencia` VALUES (1,'2010-02-17 01:35:35','0000-00-00 00:00:00',
 UNLOCK TABLES;
 
 --
--- Table structure for table `tincident_contact_reporters`
---
-
-DROP TABLE IF EXISTS `tincident_contact_reporters`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tincident_contact_reporters` (
-  `id_incident` bigint(20) unsigned NOT NULL,
-  `id_contact` mediumint(8) unsigned NOT NULL,
-  UNIQUE KEY `id_incident` (`id_incident`,`id_contact`),
-  KEY `id_contact` (`id_contact`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tincident_contact_reporters`
 --
 
@@ -524,21 +181,6 @@ LOCK TABLES `tincident_contact_reporters` WRITE;
 /*!40000 ALTER TABLE `tincident_contact_reporters` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tincident_contact_reporters` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tincident_inventory`
---
-
-DROP TABLE IF EXISTS `tincident_inventory`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tincident_inventory` (
-  `id_incident` bigint(20) unsigned NOT NULL,
-  `id_inventory` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY (`id_incident`,`id_inventory`),
-  KEY `id_inventory` (`id_inventory`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tincident_inventory`
@@ -551,20 +193,6 @@ INSERT INTO `tincident_inventory` VALUES (1,1),(2,1),(3,1);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tincident_origin`
---
-
-DROP TABLE IF EXISTS `tincident_origin`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tincident_origin` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tincident_origin`
 --
 
@@ -573,20 +201,6 @@ LOCK TABLES `tincident_origin` WRITE;
 INSERT INTO `tincident_origin` VALUES (1,'User report'),(2,'Customer'),(3,'Internal department'),(4,'External department'),(5,'Application data'),(6,'Bug report'),(7,'Problem detected'),(8,'Other source');
 /*!40000 ALTER TABLE `tincident_origin` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tincident_resolution`
---
-
-DROP TABLE IF EXISTS `tincident_resolution`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tincident_resolution` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tincident_resolution`
@@ -599,20 +213,6 @@ INSERT INTO `tincident_resolution` VALUES (1,'Fixed'),(2,'Invalid'),(3,'Wont fix
 UNLOCK TABLES;
 
 --
--- Table structure for table `tincident_status`
---
-
-DROP TABLE IF EXISTS `tincident_status`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tincident_status` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tincident_status`
 --
 
@@ -621,27 +221,6 @@ LOCK TABLES `tincident_status` WRITE;
 INSERT INTO `tincident_status` VALUES (1,'New'),(2,'Unconfirmed'),(3,'Assigned'),(4,'Re-opened'),(5,'Verified'),(6,'Resolved'),(7,'Closed');
 /*!40000 ALTER TABLE `tincident_status` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tincident_track`
---
-
-DROP TABLE IF EXISTS `tincident_track`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tincident_track` (
-  `id_it` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_incident` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `state` int(10) unsigned NOT NULL DEFAULT '0',
-  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `id_user` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `id_aditional` int(10) unsigned NOT NULL DEFAULT '0',
-  `description` text COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_it`),
-  KEY `id_user` (`id_user`),
-  KEY `id_incident` (`id_incident`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tincident_track`
@@ -654,23 +233,6 @@ INSERT INTO `tincident_track` VALUES (1,1,10,'2010-02-17 01:35:35','admin',1,'Un
 UNLOCK TABLES;
 
 --
--- Table structure for table `tincident_type`
---
-
-DROP TABLE IF EXISTS `tincident_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tincident_type` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` text COLLATE utf8_unicode_ci,
-  `id_wizard` mediumint(8) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_wizard` (`id_wizard`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tincident_type`
 --
 
@@ -678,47 +240,6 @@ LOCK TABLES `tincident_type` WRITE;
 /*!40000 ALTER TABLE `tincident_type` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tincident_type` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tinventory`
---
-
-DROP TABLE IF EXISTS `tinventory`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tinventory` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `serial_number` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `part_number` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `comments` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `confirmed` tinyint(1) DEFAULT '0',
-  `cost` float(10,3) DEFAULT '0.000',
-  `ip_address` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `id_contract` mediumint(8) unsigned DEFAULT NULL,
-  `id_product` mediumint(8) unsigned DEFAULT NULL,
-  `id_sla` mediumint(8) unsigned DEFAULT NULL,
-  `id_manufacturer` mediumint(8) unsigned DEFAULT NULL,
-  `id_building` mediumint(8) unsigned DEFAULT NULL,
-  `id_parent` mediumint(8) unsigned DEFAULT NULL,
-  `generic_1` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
-  `generic_2` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
-  `generic_3` text COLLATE utf8_unicode_ci,
-  `generic_4` text COLLATE utf8_unicode_ci,
-  `generic_5` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
-  `generic_6` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
-  `generic_7` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
-  `generic_8` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`),
-  KEY `id_contract` (`id_contract`),
-  KEY `id_product` (`id_product`),
-  KEY `id_sla` (`id_sla`),
-  KEY `id_manufacturer` (`id_manufacturer`),
-  KEY `id_building` (`id_building`),
-  KEY `id_parent` (`id_parent`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tinventory`
@@ -731,21 +252,6 @@ INSERT INTO `tinventory` VALUES (1,'Sample inventory object.','This is a sample 
 UNLOCK TABLES;
 
 --
--- Table structure for table `tinventory_contact`
---
-
-DROP TABLE IF EXISTS `tinventory_contact`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tinventory_contact` (
-  `id_inventory` mediumint(8) unsigned NOT NULL,
-  `id_company_contact` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY (`id_inventory`,`id_company_contact`),
-  KEY `id_company_contact` (`id_company_contact`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tinventory_contact`
 --
 
@@ -756,21 +262,6 @@ INSERT INTO `tinventory_contact` VALUES (1,1);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tinventory_reports`
---
-
-DROP TABLE IF EXISTS `tinventory_reports`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tinventory_reports` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `sql` text COLLATE utf8_unicode_ci,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tinventory_reports`
 --
 
@@ -778,24 +269,6 @@ LOCK TABLES `tinventory_reports` WRITE;
 /*!40000 ALTER TABLE `tinventory_reports` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tinventory_reports` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tkb_category`
---
-
-DROP TABLE IF EXISTS `tkb_category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tkb_category` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` text COLLATE utf8_unicode_ci,
-  `icon` varchar(75) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `parent` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `parent` (`parent`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tkb_category`
@@ -808,29 +281,6 @@ INSERT INTO `tkb_category` VALUES (1,'Demo articles','','bricks.png',0);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tkb_data`
---
-
-DROP TABLE IF EXISTS `tkb_data`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tkb_data` (
-  `id` int(6) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `data` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `id_language` varchar(6) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `id_user` varchar(150) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `id_product` mediumint(8) unsigned DEFAULT '0',
-  `id_category` mediumint(8) unsigned DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_user` (`id_user`),
-  KEY `id_product` (`id_product`),
-  KEY `id_category` (`id_category`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tkb_data`
 --
 
@@ -839,24 +289,6 @@ LOCK TABLES `tkb_data` WRITE;
 INSERT INTO `tkb_data` VALUES (1,'Sample KB article','Swift Mailer version 3 throws exceptions in PHP5. These exceptions should ideally be caught so that you can recover from them if required. It&#039;s not compulsory to catch exceptions but it is good practice and it does help. The API documentation packaged in the ?docs? folder indicates where exceptions are thrown. The only time this should happen in practise, is if your mail server is not configured correctly or is unavailable, or if you try doing something illegal with the message object. ','2010-02-17 02:00:52','en','admin',1,1);
 /*!40000 ALTER TABLE `tkb_data` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tkb_product`
---
-
-DROP TABLE IF EXISTS `tkb_product`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tkb_product` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` text COLLATE utf8_unicode_ci,
-  `icon` varchar(75) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `parent` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `parent` (`parent`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tkb_product`
@@ -869,20 +301,6 @@ INSERT INTO `tkb_product` VALUES (1,'Integria','','box.png',0);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tlanguage`
---
-
-DROP TABLE IF EXISTS `tlanguage`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tlanguage` (
-  `id_language` varchar(6) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`id_language`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tlanguage`
 --
 
@@ -891,21 +309,6 @@ LOCK TABLES `tlanguage` WRITE;
 INSERT INTO `tlanguage` VALUES ('en','English'),('es','Español'),('bn','বাংলা'),('da','Dansk'),('el','Ελληνικά'),('fr','Français'),('ko','한국어'),('nl','Nederlands'),('ru','Русский'),('tr','Türkçe');
 /*!40000 ALTER TABLE `tlanguage` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tlink`
---
-
-DROP TABLE IF EXISTS `tlink`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tlink` (
-  `id_link` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `link` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`id_link`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tlink`
@@ -918,26 +321,6 @@ INSERT INTO `tlink` VALUES (0000000001,'Integria Project','http://integria.sourc
 UNLOCK TABLES;
 
 --
--- Table structure for table `tmanufacturer`
---
-
-DROP TABLE IF EXISTS `tmanufacturer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tmanufacturer` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `address` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `comments` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `id_company_role` mediumint(8) unsigned NOT NULL,
-  `id_sla` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_company_role` (`id_company_role`),
-  KEY `id_sla` (`id_sla`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tmanufacturer`
 --
 
@@ -946,24 +329,6 @@ LOCK TABLES `tmanufacturer` WRITE;
 INSERT INTO `tmanufacturer` VALUES (1,'Artica ST','C/ Silva 2, 1-1\r\n28013 Madrid\r\nSpain','Hey, we&#039;re the developers of Integria !',0,0);
 /*!40000 ALTER TABLE `tmanufacturer` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tmilestone`
---
-
-DROP TABLE IF EXISTS `tmilestone`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tmilestone` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_project` int(10) unsigned NOT NULL DEFAULT '0',
-  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `name` varchar(250) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_project` (`id_project`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tmilestone`
@@ -976,28 +341,6 @@ INSERT INTO `tmilestone` VALUES (1,1,'2010-05-17 00:00:00','First functional ful
 UNLOCK TABLES;
 
 --
--- Table structure for table `tproject`
---
-
-DROP TABLE IF EXISTS `tproject`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tproject` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `name` varchar(240) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `start` date NOT NULL DEFAULT '0000-00-00',
-  `end` date NOT NULL DEFAULT '0000-00-00',
-  `id_owner` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `disabled` int(2) unsigned NOT NULL DEFAULT '0',
-  `id_project_group` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_owner` (`id_owner`),
-  KEY `id_project_group` (`id_project_group`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tproject`
 --
 
@@ -1006,21 +349,6 @@ LOCK TABLES `tproject` WRITE;
 INSERT INTO `tproject` VALUES (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0),(1,'Sample project','This is a sample project.','2010-02-17','2010-12-31','admin',0,1);
 /*!40000 ALTER TABLE `tproject` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tproject_group`
---
-
-DROP TABLE IF EXISTS `tproject_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tproject_group` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `icon` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tproject_group`
@@ -1033,26 +361,6 @@ INSERT INTO `tproject_group` VALUES (1,'R&amp;D','applications-system.png');
 UNLOCK TABLES;
 
 --
--- Table structure for table `tproject_track`
---
-
-DROP TABLE IF EXISTS `tproject_track`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tproject_track` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_project` int(10) unsigned NOT NULL DEFAULT '0',
-  `id_user` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `state` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `id_aditional` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_user` (`id_user`),
-  KEY `id_project` (`id_project`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tproject_track`
 --
 
@@ -1061,22 +369,6 @@ LOCK TABLES `tproject_track` WRITE;
 INSERT INTO `tproject_track` VALUES (1,1,'admin',21,'2010-02-17 01:22:04',0),(2,1,'admin',22,'2010-02-17 01:22:34',0),(3,1,'admin',26,'2010-02-17 01:23:03',0),(4,1,'admin',26,'2010-02-17 01:23:55',0),(5,1,'admin',26,'2010-02-17 01:32:55',0),(6,1,'admin',26,'2010-02-17 01:33:18',0),(7,1,'admin',26,'2010-02-17 01:34:05',0),(8,1,'admin',26,'2010-02-17 01:34:29',0);
 /*!40000 ALTER TABLE `tproject_track` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `trole`
---
-
-DROP TABLE IF EXISTS `trole`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `trole` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(125) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
-  `cost` int(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `trole`
@@ -1089,25 +381,6 @@ INSERT INTO `trole` VALUES (1,'Project manager','',125),(2,'Systems engineer',''
 UNLOCK TABLES;
 
 --
--- Table structure for table `trole_people_project`
---
-
-DROP TABLE IF EXISTS `trole_people_project`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `trole_people_project` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_user` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `id_role` int(10) unsigned NOT NULL DEFAULT '0',
-  `id_project` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_user` (`id_user`),
-  KEY `id_role` (`id_role`),
-  KEY `id_project` (`id_project`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `trole_people_project`
 --
 
@@ -1116,25 +389,6 @@ LOCK TABLES `trole_people_project` WRITE;
 INSERT INTO `trole_people_project` VALUES (1,'admin',1,1),(2,'demo',3,1);
 /*!40000 ALTER TABLE `trole_people_project` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `trole_people_task`
---
-
-DROP TABLE IF EXISTS `trole_people_task`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `trole_people_task` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_user` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `id_role` int(10) unsigned NOT NULL DEFAULT '0',
-  `id_task` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_user` (`id_user`),
-  KEY `id_role` (`id_role`),
-  KEY `id_task` (`id_task`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `trole_people_task`
@@ -1147,26 +401,6 @@ INSERT INTO `trole_people_task` VALUES (1,'admin',1,1),(2,'admin',1,2),(3,'demo'
 UNLOCK TABLES;
 
 --
--- Table structure for table `tsesion`
---
-
-DROP TABLE IF EXISTS `tsesion`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tsesion` (
-  `ID_sesion` bigint(4) unsigned NOT NULL AUTO_INCREMENT,
-  `ID_usuario` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
-  `IP_origen` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `accion` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `descripcion` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `fecha` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `utimestamp` bigint(20) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ID_sesion`),
-  KEY `ID_usuario` (`ID_usuario`)
-) ENGINE=MyISAM AUTO_INCREMENT=66 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tsesion`
 --
 
@@ -1175,27 +409,6 @@ LOCK TABLES `tsesion` WRITE;
 INSERT INTO `tsesion` VALUES (1,'admin','','Project created','User admin created project \'Sample project\'','2010-02-17 01:22:04',1266366124),(2,'admin','','Project #1 tracking updated','State #21','2010-02-17 01:22:04',1266366124),(3,'admin','::1','Project updated','Project Sample project','2010-02-17 01:22:34',1266366154),(4,'admin','','Project #1 tracking updated','State #22','2010-02-17 01:22:34',1266366154),(5,'admin','::1','Task added to project','Task \'Analysis\' added to project \'1\'','2010-02-17 01:23:03',1266366183),(6,'admin','','Task #1 tracking updated','State #11','2010-02-17 01:23:03',1266366183),(7,'admin','','Project #1 tracking updated','State #26','2010-02-17 01:23:03',1266366183),(8,'admin','::1','User/Role added to project','User demo added to project Sample project','2010-02-17 01:23:15',1266366195),(9,'admin','::1','Task added to project','Task \'Design\' added to project \'1\'','2010-02-17 01:23:55',1266366235),(10,'admin','','Task #2 tracking updated','State #11','2010-02-17 01:23:55',1266366235),(11,'admin','','Project #1 tracking updated','State #26','2010-02-17 01:23:55',1266366235),(12,'admin','::1','Task updated','Task \'Analysis\' updated to project \'1\'','2010-02-17 01:32:28',1266366748),(13,'admin','','Task #1 tracking updated','State #12','2010-02-17 01:32:28',1266366748),(14,'admin','::1','Task added to project','Task \'Development\' added to project \'1\'','2010-02-17 01:32:55',1266366775),(15,'admin','','Task #3 tracking updated','State #11','2010-02-17 01:32:55',1266366775),(16,'admin','','Project #1 tracking updated','State #26','2010-02-17 01:32:55',1266366775),(17,'admin','::1','Task added to project','Task \'Testing\' added to project \'1\'','2010-02-17 01:33:18',1266366798),(18,'admin','','Task #4 tracking updated','State #11','2010-02-17 01:33:18',1266366798),(19,'admin','','Project #1 tracking updated','State #26','2010-02-17 01:33:18',1266366798),(20,'admin','::1','Task added to project','Task \'Documentation\' added to project \'1\'','2010-02-17 01:34:05',1266366845),(21,'admin','','Task #5 tracking updated','State #11','2010-02-17 01:34:05',1266366845),(22,'admin','','Project #1 tracking updated','State #26','2010-02-17 01:34:05',1266366845),(23,'admin','::1','Task added to project','Task \'Packaging\' added to project \'1\'','2010-02-17 01:34:29',1266366869),(24,'admin','','Task #6 tracking updated','State #11','2010-02-17 01:34:29',1266366869),(25,'admin','','Project #1 tracking updated','State #26','2010-02-17 01:34:29',1266366869),(26,'admin','::1','Incident updated','Unknown update','2010-02-17 01:35:35',1266366935),(27,'admin','::1','Incident created','User admin created incident #1','2010-02-17 01:35:35',1266366935),(28,'admin','::1','Incident updated','Created','2010-02-17 01:35:35',1266366935),(29,'admin','127.0.0.1','Incident updated','Workunit added','2010-02-17 01:42:58',1266367378),(30,'admin','127.0.0.1','Incident updated','File added','2010-02-17 01:47:33',1266367653),(31,'admin','127.0.0.1','Incident updated','Workunit added','2010-02-17 01:47:46',1266367666),(32,'admin','127.0.0.1','Incident updated','Workunit added','2010-02-17 01:48:56',1266367736),(33,'demo','127.0.0.1','Logon','Logged in','2010-02-17 01:49:41',1266367781),(34,'demo','127.0.0.1','Incident updated','Workunit added','2010-02-17 01:50:22',1266367822),(35,'admin','127.0.0.1','Spare work unit added','Workunit for admin added to Task ID #3','2010-02-17 01:54:15',1266368055),(36,'demo','::1','Incident updated','Unknown update','2010-02-17 01:56:33',1266368193),(37,'demo','::1','Incident created','User demo created incident #2','2010-02-17 01:56:33',1266368193),(38,'demo','::1','Incident updated','Created','2010-02-17 01:56:33',1266368193),(39,'admin','127.0.0.1','Task updated','Task \'Analysis\' updated to project \'1\'','2010-02-17 02:02:16',1266368536),(40,'admin','','Task #1 tracking updated','State #12','2010-02-17 02:02:16',1266368536),(41,'admin','127.0.0.1','Task updated','Task \'Design\' updated to project \'1\'','2010-02-17 02:02:23',1266368543),(42,'admin','','Task #2 tracking updated','State #12','2010-02-17 02:02:23',1266368543),(43,'admin','127.0.0.1','Task updated','Task \'Development\' updated to project \'1\'','2010-02-17 02:02:29',1266368549),(44,'admin','','Task #3 tracking updated','State #12','2010-02-17 02:02:29',1266368549),(45,'admin','127.0.0.1','Task updated','Task \'Documentation\' updated to project \'1\'','2010-02-17 02:02:34',1266368554),(46,'admin','','Task #5 tracking updated','State #12','2010-02-17 02:02:34',1266368554),(47,'admin','127.0.0.1','Task updated','Task \'Testing\' updated to project \'1\'','2010-02-17 02:02:40',1266368560),(48,'admin','','Task #4 tracking updated','State #12','2010-02-17 02:02:40',1266368560),(49,'admin','127.0.0.1','Task updated','Task \'Packaging\' updated to project \'1\'','2010-02-17 02:02:48',1266368568),(50,'admin','','Task #6 tracking updated','State #12','2010-02-17 02:02:48',1266368568),(51,'demo','::1','Incident updated','Workunit added','2010-02-17 02:06:58',1266368818),(52,'admin','::1','Incident updated','Workunit added','2010-02-17 02:07:11',1266368831),(53,'','::1','Incident updated','Unknown update','2010-02-17 02:09:03',1266368943),(54,'admin','::1','Incident created (From API)','User admin created incident #3','2010-02-17 02:09:03',1266368943),(55,'','::1','Incident updated','Created','2010-02-17 02:09:03',1266368943),(56,'admin','::1','Incident updated','Incident deleted','2010-02-17 02:09:10',1266368950),(57,'admin','::1','Incident deleted','User admin deleted incident #3','2010-02-17 02:09:10',1266368950),(58,'admin','::1','Logoff','Logged out','2010-02-17 02:09:18',1266368958),(59,'admin','::1','Logon','Logged in','2010-02-17 02:10:55',1266369055),(60,'admin','::1','Work unit locked','Workunit for admin','2010-02-17 02:11:53',1266369113),(61,'admin','::1','Work unit locked','Workunit for admin','2010-02-17 02:11:55',1266369115),(62,'admin','::1','Logoff','Logged out','2010-02-17 02:16:17',1266369377),(63,'admin','::1','Logon','Logged in','2010-02-17 02:16:54',1266369414),(64,'admin','::1','Incident updated','Workunit added','2010-02-17 02:17:01',1266369421),(65,'admin','::1','Logoff','Logged out','2010-02-17 02:17:12',1266369432);
 /*!40000 ALTER TABLE `tsesion` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tsla`
---
-
-DROP TABLE IF EXISTS `tsla`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tsla` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` text COLLATE utf8_unicode_ci,
-  `min_response` int(11) DEFAULT NULL,
-  `max_response` int(11) DEFAULT NULL,
-  `max_incidents` int(11) DEFAULT NULL,
-  `enforced` tinyint(4) DEFAULT '0',
-  `id_sla_base` mediumint(8) unsigned DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_sla_base` (`id_sla_base`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tsla`
@@ -1208,35 +421,6 @@ INSERT INTO `tsla` VALUES (1,'Basic SLA','',12,240,10,1,0);
 UNLOCK TABLES;
 
 --
--- Table structure for table `ttask`
---
-
-DROP TABLE IF EXISTS `ttask`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ttask` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `id_project` int(10) NOT NULL DEFAULT '0',
-  `id_parent_task` int(10) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(240) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `completion` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `priority` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `dep_type` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `start` date NOT NULL DEFAULT '0000-00-00',
-  `end` date NOT NULL DEFAULT '0000-00-00',
-  `hours` int(10) unsigned NOT NULL DEFAULT '0',
-  `estimated_cost` float(9,2) unsigned NOT NULL DEFAULT '0.00',
-  `id_group` int(10) NOT NULL DEFAULT '0',
-  `periodicity` enum('none','weekly','monthly','year','15days','21days','10days','15days','60days','90days','120days','180days') COLLATE utf8_unicode_ci DEFAULT 'none',
-  PRIMARY KEY (`id`),
-  KEY `id_project` (`id_project`),
-  KEY `id_group` (`id_group`),
-  KEY `id_parent_task` (`id_parent_task`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `ttask`
 --
 
@@ -1247,21 +431,6 @@ INSERT INTO `ttask` VALUES (-1,-1,0,'Vacations','',0,0,0,'0000-00-00','0000-00-0
 UNLOCK TABLES;
 
 --
--- Table structure for table `ttask_inventory`
---
-
-DROP TABLE IF EXISTS `ttask_inventory`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ttask_inventory` (
-  `id_task` int(10) unsigned NOT NULL,
-  `id_inventory` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY (`id_task`,`id_inventory`),
-  KEY `id_inventory` (`id_inventory`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `ttask_inventory`
 --
 
@@ -1269,26 +438,6 @@ LOCK TABLES `ttask_inventory` WRITE;
 /*!40000 ALTER TABLE `ttask_inventory` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ttask_inventory` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `ttask_track`
---
-
-DROP TABLE IF EXISTS `ttask_track`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ttask_track` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_task` int(10) unsigned NOT NULL DEFAULT '0',
-  `id_user` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `id_external` int(10) unsigned NOT NULL DEFAULT '0',
-  `state` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `id_user` (`id_user`),
-  KEY `id_task` (`id_task`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ttask_track`
@@ -1301,31 +450,6 @@ INSERT INTO `ttask_track` VALUES (1,1,'admin',0,11,'2010-02-17 01:23:03'),(2,2,'
 UNLOCK TABLES;
 
 --
--- Table structure for table `ttodo`
---
-
-DROP TABLE IF EXISTS `ttodo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ttodo` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `progress` int(11) NOT NULL,
-  `assigned_user` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
-  `created_by_user` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
-  `priority` int(11) NOT NULL,
-  `timestamp` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
-  `description` mediumtext COLLATE utf8_unicode_ci,
-  `last_update` datetime NOT NULL DEFAULT '2000-01-01 00:00:00',
-  `id_task` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `assigned_user` (`assigned_user`),
-  KEY `created_by_user` (`created_by_user`),
-  KEY `id_task` (`id_task`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `ttodo`
 --
 
@@ -1334,28 +458,6 @@ LOCK TABLES `ttodo` WRITE;
 INSERT INTO `ttodo` VALUES (1,'Sample todo',0,'demo','admin',0,'2010-02-17 02:01:23','Remember to finish design task.','2010-02-17 02:01:23',2),(2,'Myself reminder: Call the doctor !',0,'admin','admin',4,'2010-02-17 02:01:43','Sample todo item.','2010-02-17 02:01:43',0);
 /*!40000 ALTER TABLE `ttodo` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tusuario`
---
-
-DROP TABLE IF EXISTS `tusuario`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tusuario` (
-  `id_usuario` varchar(60) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `nombre_real` varchar(125) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `password` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `comentarios` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `fecha_registro` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `direccion` varchar(100) COLLATE utf8_unicode_ci DEFAULT '',
-  `telefono` varchar(100) COLLATE utf8_unicode_ci DEFAULT '',
-  `nivel` tinyint(1) NOT NULL DEFAULT '0',
-  `avatar` varchar(100) COLLATE utf8_unicode_ci DEFAULT 'people_1',
-  `lang` varchar(10) COLLATE utf8_unicode_ci DEFAULT '',
-  PRIMARY KEY (`id_usuario`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tusuario`
@@ -1368,22 +470,6 @@ INSERT INTO `tusuario` VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bc
 UNLOCK TABLES;
 
 --
--- Table structure for table `tvacationday`
---
-
-DROP TABLE IF EXISTS `tvacationday`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tvacationday` (
-  `id` int(6) unsigned NOT NULL AUTO_INCREMENT,
-  `day` int(4) unsigned NOT NULL DEFAULT '0',
-  `month` int(4) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(250) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tvacationday`
 --
 
@@ -1393,20 +479,6 @@ LOCK TABLES `tvacationday` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `twizard`
---
-
-DROP TABLE IF EXISTS `twizard`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `twizard` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `twizard`
 --
 
@@ -1414,28 +486,6 @@ LOCK TABLES `twizard` WRITE;
 /*!40000 ALTER TABLE `twizard` DISABLE KEYS */;
 /*!40000 ALTER TABLE `twizard` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tworkunit`
---
-
-DROP TABLE IF EXISTS `tworkunit`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tworkunit` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `duration` float(10,2) unsigned NOT NULL DEFAULT '0.00',
-  `id_user` varchar(125) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `description` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `have_cost` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `id_profile` int(10) unsigned NOT NULL DEFAULT '0',
-  `locked` varchar(125) COLLATE utf8_unicode_ci DEFAULT '',
-  `public` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `id_user` (`id_user`)
-) ENGINE=MyISAM AUTO_INCREMENT=198 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tworkunit`
@@ -1448,22 +498,6 @@ INSERT INTO `tworkunit` VALUES (1,'2010-02-17 01:42:36',0.25,'admin','This is a 
 UNLOCK TABLES;
 
 --
--- Table structure for table `tworkunit_incident`
---
-
-DROP TABLE IF EXISTS `tworkunit_incident`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tworkunit_incident` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_incident` int(10) unsigned NOT NULL DEFAULT '0',
-  `id_workunit` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_workunit` (`id_workunit`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tworkunit_incident`
 --
 
@@ -1472,23 +506,6 @@ LOCK TABLES `tworkunit_incident` WRITE;
 INSERT INTO `tworkunit_incident` VALUES (1,1,1),(2,1,2),(3,1,3),(4,1,4),(5,2,190),(6,2,191),(7,2,197);
 /*!40000 ALTER TABLE `tworkunit_incident` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tworkunit_task`
---
-
-DROP TABLE IF EXISTS `tworkunit_task`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tworkunit_task` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_task` int(10) NOT NULL DEFAULT '0',
-  `id_workunit` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_task` (`id_task`),
-  KEY `id_workunit` (`id_workunit`)
-) ENGINE=MyISAM AUTO_INCREMENT=191 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tworkunit_task`
@@ -1501,33 +518,6 @@ INSERT INTO `tworkunit_task` VALUES (1,2,5),(2,2,6),(3,2,7),(4,2,8),(5,2,9),(6,2
 UNLOCK TABLES;
 
 --
--- Table structure for table `um_tupdate`
---
-
-DROP TABLE IF EXISTS `um_tupdate`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `um_tupdate` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `type` enum('code','db_data','db_schema','binary') DEFAULT NULL,
-  `id_update_package` int(11) unsigned NOT NULL DEFAULT '0',
-  `filename` varchar(250) DEFAULT '',
-  `checksum` varchar(250) DEFAULT '',
-  `previous_checksum` varchar(250) DEFAULT '',
-  `svn_version` int(4) unsigned NOT NULL DEFAULT '0',
-  `data` longtext,
-  `data_rollback` longtext,
-  `description` text,
-  `db_table_name` varchar(140) DEFAULT '',
-  `db_field_name` varchar(140) DEFAULT '',
-  `db_field_value` varchar(1024) DEFAULT '',
-  PRIMARY KEY (`id`),
-  KEY `id_update_package` (`id_update_package`),
-  CONSTRAINT `um_tupdate_ibfk_1` FOREIGN KEY (`id_update_package`) REFERENCES `um_tupdate_package` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `um_tupdate`
 --
 
@@ -1535,22 +525,6 @@ LOCK TABLES `um_tupdate` WRITE;
 /*!40000 ALTER TABLE `um_tupdate` DISABLE KEYS */;
 /*!40000 ALTER TABLE `um_tupdate` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `um_tupdate_journal`
---
-
-DROP TABLE IF EXISTS `um_tupdate_journal`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `um_tupdate_journal` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `id_update` int(11) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_update` (`id_update`),
-  CONSTRAINT `um_tupdate_journal_ibfk_1` FOREIGN KEY (`id_update`) REFERENCES `um_tupdate` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `um_tupdate_journal`
@@ -1562,21 +536,6 @@ LOCK TABLES `um_tupdate_journal` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `um_tupdate_package`
---
-
-DROP TABLE IF EXISTS `um_tupdate_package`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `um_tupdate_package` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `timestamp` datetime NOT NULL,
-  `description` mediumtext NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `um_tupdate_package`
 --
 
@@ -1584,20 +543,6 @@ LOCK TABLES `um_tupdate_package` WRITE;
 /*!40000 ALTER TABLE `um_tupdate_package` DISABLE KEYS */;
 /*!40000 ALTER TABLE `um_tupdate_package` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `um_tupdate_settings`
---
-
-DROP TABLE IF EXISTS `um_tupdate_settings`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `um_tupdate_settings` (
-  `key` varchar(255) NOT NULL DEFAULT '',
-  `value` varchar(255) DEFAULT '',
-  PRIMARY KEY (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `um_tupdate_settings`
@@ -1618,4 +563,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2010-02-17  2:17:43
+-- Dump completed on 2010-03-10 20:29:04

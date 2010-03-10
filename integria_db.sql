@@ -57,7 +57,7 @@ CREATE TABLE `tproject_group` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tproject` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+  `id` int(10) NOT NULL auto_increment,
   `name` varchar(240) NOT NULL default '',
   `description` mediumtext NOT NULL,
   `start` date NOT NULL default '0000-00-00',
@@ -66,15 +66,13 @@ CREATE TABLE `tproject` (
   `disabled` int(2) unsigned NOT NULL default '0',
   `id_project_group` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  KEY `iproject_idx_1` (`id_project_group`),
-  FOREIGN KEY (`id_owner`) REFERENCES tusuario(`id_usuario`)
-     ON UPDATE CASCADE
+  KEY `iproject_idx_1` (`id_project_group`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ttask` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `id_project` int(10) unsigned NOT NULL default 0,
-  `id_parent_task` int(10) unsigned NOT NULL default '0',
+  `id` int(10) NOT NULL auto_increment,
+  `id_project` int(10) NOT NULL default 0,
+  `id_parent_task` int(10) NULL default '0',
   `name` varchar(240) NOT NULL default '',
   `description` mediumtext NOT NULL,
   `completion` tinyint unsigned NOT NULL default '0',
@@ -98,7 +96,7 @@ CREATE TABLE `ttask` (
 CREATE TABLE `tattachment` (
   `id_attachment` bigint(20) unsigned NOT NULL auto_increment,
   `id_incidencia` bigint(20) NOT NULL default '0',
-  `id_task` int(10) unsigned NOT NULL default 0,
+  `id_task` int(10) NULL default 0,
   `id_kb` bigint(20) NOT NULL default '0',
   `id_usuario` varchar(60) NOT NULL default '',
   `filename` varchar(255) NOT NULL default '',
@@ -164,7 +162,7 @@ CREATE TABLE `tincidencia` (
   `actualizacion` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_creator` varchar(60) default NULL,
   `notify_email` tinyint unsigned NOT NULL DEFAULT 0,
-  `id_task` int(10) unsigned NOT NULL default '0',
+  `id_task` int(10) NOT NULL default '0',
   `resolution` tinyint unsigned NOT NULL DEFAULT 0,
   `epilog` mediumtext NOT NULL,
   `id_parent` bigint(20) unsigned NULL default 0,
@@ -240,7 +238,7 @@ CREATE TABLE `tincident_track` (
 
 CREATE TABLE `ttask_track` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `id_task` int(10) unsigned NOT NULL default '0',
+  `id_task` int(10) NOT NULL default '0',
   `id_user` varchar(60) NOT NULL default '',
   `id_external` int(10) unsigned NOT NULL default '0',
   `state` tinyint unsigned NOT NULL default '0',
@@ -255,7 +253,7 @@ CREATE TABLE `ttask_track` (
 
 CREATE TABLE `tproject_track` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `id_project` int(10) unsigned NOT NULL default '0',
+  `id_project` int(10) NOT NULL default '0',
   `id_user` varchar(60) NOT NULL default '',
   `state` tinyint unsigned NOT NULL default '0',
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -286,7 +284,7 @@ CREATE TABLE `tworkunit` (
 
 CREATE TABLE `tworkunit_task` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `id_task` int(10) signed NOT NULL default '0',
+  `id_task` int(10) NOT NULL default '0',
   `id_workunit` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `twt_idx_1` (`id_task`),
@@ -350,7 +348,7 @@ CREATE TABLE `trole_people_task` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_user` varchar(60) NOT NULL default '',
   `id_role` int(10) unsigned NOT NULL default '0',
-  `id_task` int(10) unsigned NOT NULL default '0',
+  `id_task` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE,
@@ -364,7 +362,7 @@ CREATE TABLE `trole_people_project` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_user` varchar(60) NOT NULL default '',
   `id_role` int(10) unsigned NOT NULL default '0',
-  `id_project` int(10) unsigned NOT NULL default '0',
+  `id_project` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `trp_idx_1` (`id_user`),
   KEY `trp_idx_2` (`id_project`),
@@ -386,7 +384,7 @@ CREATE TABLE `ttodo` (
   `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
   `description` mediumtext,
   `last_update` datetime NOT NULL default '2000-01-01 00:00:00',
-  `id_task` int(10) unsigned NULL default NULL,
+  `id_task` int(10) default NULL,
   PRIMARY KEY  (`id`),
   KEY `tt_idx_1` (`assigned_user`),
   KEY `tt_idx_2` (`created_by_user`),
@@ -401,7 +399,7 @@ CREATE TABLE `ttodo` (
 
 CREATE TABLE `tmilestone` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `id_project` int(10) unsigned NOT NULL default '0',
+  `id_project` int(10)  NOT NULL default '0',
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `name` varchar(250) NOT NULL default '',
   `description` mediumtext NOT NULL,
@@ -620,7 +618,7 @@ CREATE TABLE `tincident_inventory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ttask_inventory` (
-  `id_task` int(10) unsigned unsigned NOT NULL,
+  `id_task` int(10) NOT NULL,
   `id_inventory` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id_task`, `id_inventory`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

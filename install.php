@@ -39,7 +39,7 @@
 
 error_reporting(0);
 
-$integria_version = "v2.1dev Build 100218";
+$integria_version = "v2.1dev Build 100310";
 
 $integria_footertext = "<div id='foot'>
                         <i>Integria $integria_version is an OpenSource Software project 
@@ -205,7 +205,7 @@ echo "<br><br><font size=1px>$integria_version</font>
 		<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'>";
 		if ($writable == 0)
 			echo "
-			<a href='install.php?step=2'><img align='right' src='images/arrow_next.png'></a>";
+			<a href='install.php?step=1'><img align='right' src='images/arrow_next.png'></a>";
 		else
 			echo "<div class='warn'><b>ERROR:</b>You need to setup permissions to be able to write in ./include directory</div>";
 
@@ -218,6 +218,51 @@ echo "<br><br><font size=1px>$integria_version</font>
 }
 
 
+function install_step1_licence() {
+	global $integria_footertext;
+	global $integria_version;
+
+	echo "
+	<div align='center'>
+	<h1>Integria IMS instalation wizard. Step #2 of 4</h1>
+	<div id='wizard' style='height: 550px;'>
+		<div id='install_box'>";
+
+echo '
+<h2>GPL2 Licence terms agreement</h2>
+			<p>Integria IMS is an OpenSource software project licensed under the GPL2 licence. Integria IMS includes, as well, another software also licensed under LGPL and BSD licenses. Before continue, <i>you must accept the licence terms.</i>.
+			<p>For more information, please refer to our website at http://integriaims.com and contact us if you have any kind of question about the usage of Integria IMS</p>
+<p>If you dont accept the licence terms, please, close your browser and delete Integria IMS files.</p>';
+
+if (!file_exists("COPYING")){
+		echo "<div class='warn'><b>Licence file 'COPYING' is not present in your distribution. This means you have some 'partial' Pandora FMS distribution. We cannot continue without accepting the licence file.";
+		echo "</div>";
+	} else {
+
+		echo "<form method=post action='install.php?step=2'>";
+		echo "<textarea name='gpl2' cols=60 rows=19>";
+		echo file_get_contents ("COPYING");
+		echo "</textarea>";
+		echo "<p>";
+		echo "<input type=submit value='Yes, I accept licence terms'>";
+		}
+    echo "</div>";
+    echo "
+		<div class='box'>
+			<img src='images/integria_white.png' alt=''>
+			<br><br>
+		</div>
+		<div class='box'>
+			<img src='images/step1.png' alt=''>
+		</div>
+		<div id='install_box' style='margin-bottom: 0px;margin-left: 25px; '>";
+
+			echo "
+		</div>
+		</div>
+		$integria_footertext
+        </div>";
+}
 
 function install_step2() {
 	global $integria_footertext;
@@ -226,7 +271,7 @@ function install_step2() {
 	echo "
 	<div align='center'>
 	<h1>Integria IMS instalation wizard. Step #2 of 4</h1>
-	<div id='wizard' style='height: 450px;'>
+	<div id='wizard' style='height: 515px;'>
 		<div id='install_box'>";
 		echo "<h1>Checking software dependencies</h1>";
 			echo "<table border='0' width='330' cellpadding='5' cellspacing='5'>";
@@ -419,11 +464,6 @@ function install_step4() {
 
 					check_generic ($step4, "Populating database");
 
-					if (file_exists("enterprise/integria_db.sql")){
-						$step5 = parse_mysql_dump("enterprise/integria_db.sql");
-						check_generic ($step5, "Populating enterprise database");
-					}
-
 					$random_password = random_name (8);
 					if ($createuser==1){
 						$query = 
@@ -540,6 +580,9 @@ if (! isset ($_GET["step"])){
 } else {
 	$step = (int) $_GET["step"];
 	switch ($step) {
+    case 1: 
+        install_step1_licence();
+        break;
 	case 2:
 		install_step2();
 		break;
