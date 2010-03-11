@@ -194,17 +194,24 @@ if ($action == "insert") {
 	$sla_disabled = (bool) get_parameter ("sla_disabled");
 	$id_parent = (int) get_parameter ('id_parent');
 	
+	if ($id_parent == 0) {
+		$idParentValue = 'NULL';
+	}
+	else {
+		$idParentValue = sprintf ('%d', $id_parent);
+	}
+	
 	$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, origen, estado, prioridad,
 			id_grupo, id_creator, notify_email, id_task,
 			resolution, id_incident_type, id_parent, sla_disabled)
 			VALUES (NOW(), NOW(), "%s", "%s", "%s", %d, %d, %d, %d,
-			"%s", %d, %d, %d, %d, %d, %d)',
+			"%s", %d, %d, %d, %d, %s, %d)',
 			$titulo, $description, $usuario,
 			$origen, $estado, $priority, $grupo, $id_creator,
 			$email_notify, $id_task, $resolution, $id_incident_type,
-			$id_parent, $sla_disabled);
+			$idParentValue, $sla_disabled);
 	$id = process_sql ($sql, 'insert_id');
 	if ($id !== false) {
 		/* Update inventory objects in incident */

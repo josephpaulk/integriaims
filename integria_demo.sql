@@ -169,7 +169,9 @@ UNLOCK TABLES;
 
 LOCK TABLES `tincidencia` WRITE;
 /*!40000 ALTER TABLE `tincidencia` DISABLE KEYS */;
-INSERT INTO `tincidencia` VALUES (1,'2010-02-17 01:35:35','0000-00-00 00:00:00','My first incident !','Hi, this is my first demo incident.\r\n\r\nFantastic !\r\n','demo',1,1,3,3,'2010-02-17 01:50:05','admin',1,0,0,'',0,0,0,0),(2,'2010-02-17 01:56:33','0000-00-00 00:00:00','Another incident','Another sample incident.','admin',1,3,1,4,'2010-02-17 02:16:57','demo',1,0,9,'',0,0,0,0);
+INSERT INTO `tincidencia` (`id_incidencia`, `inicio`, `cierre`, `titulo`, `descripcion`, `id_usuario`, `origen`, `estado`, `prioridad`, `id_grupo`, `actualizacion`, `id_creator`, `notify_email`, `id_task`, `resolution`, `epilog`, `sla_disabled`, `affected_sla_id`, `id_incident_type`)
+VALUES (1,'2010-02-17 01:35:35','0000-00-00 00:00:00','My first incident !','Hi, this is my first demo incident.\r\n\r\nFantastic !\r\n','demo',1,1,3,3,'2010-02-17 01:50:05','admin',1,0,0,'',0,0,0),
+	(2,'2010-02-17 01:56:33','0000-00-00 00:00:00','Another incident','Another sample incident.','admin',1,3,1,4,'2010-02-17 02:16:57','demo',1,0,9,'',0,0,0);
 /*!40000 ALTER TABLE `tincidencia` ENABLE KEYS */;
 UNLOCK TABLES;
 

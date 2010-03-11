@@ -165,7 +165,7 @@ CREATE TABLE `tincidencia` (
   `id_task` int(10) NOT NULL default '0',
   `resolution` tinyint unsigned NOT NULL DEFAULT 0,
   `epilog` mediumtext NOT NULL,
-  `id_parent` bigint(20) unsigned NULL default 0,
+  `id_parent` bigint(20) unsigned NULL default NULL,
   `sla_disabled` mediumint(8) unsigned NOT NULL DEFAULT 0,
   `affected_sla_id` tinyint unsigned NOT NULL DEFAULT 0,
   `id_incident_type` mediumint(8) unsigned NULL,

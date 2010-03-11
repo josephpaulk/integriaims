@@ -1,3 +1,14 @@
+2010-03-11  Miguel de Dios <miguel.dedios@artica.es>
+
+	* operation/incidents/incident_detail.php: changed for when $id_parent is 0
+	set to NULL in DB.
+	
+	* integria_demo.sql: changed the example incidents for to have id_parent
+	NULL.
+	 
+	* integria_db.sql: changed the definition of table "tincidencias" for to
+	set the default id_parent as NULL value.
+
 2010-03-11  SAncho Lerena <slerena@artica.es>
 
 	* include/functions_calendar.php: Fixed re-declaration of calendar
