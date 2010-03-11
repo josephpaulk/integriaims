@@ -131,18 +131,25 @@ if ($action == 'update') {
 		$sla_man = ", sla_disabled = 1 ";
 	else 
 		$sla_man = "";
+		
+	if ($id_parent == 0) {
+		$idParentValue = 'NULL';
+	}
+	else {
+		$idParentValue = sprintf ('%d', $id_parent);
+	}
 
 	$sql = sprintf ('UPDATE tincidencia SET actualizacion = NOW(),
 			titulo = "%s", origen = %d, estado = %d,
 			id_grupo = %d, id_usuario = "%s",
 			notify_email = %d, prioridad = %d, descripcion = "%s",
 			epilog = "%s", id_task = %d, resolution = %d,
-			id_incident_type = %d, id_parent = %d, affected_sla_id = 0  %s 
+			id_incident_type = %d, id_parent = %s, affected_sla_id = 0  %s 
 			WHERE id_incidencia = %d',
 			$titulo, $origen, $estado, $grupo, $user,
 			$email_notify, $priority, $description,
 			$epilog, $id_task, $resolution, $id_incident_type,
-			$id_parent, $sla_man, $id);
+			$idParentValue, $sla_man, $id);
 	$result = process_sql ($sql);
 
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
@@ -575,7 +582,7 @@ if ($id_task > 0){
 }
 
 if ($has_permission) {
-	$table->data[4][0] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo, true);
+	$table->data[4][0] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo, true) . "<div id='group_spinner'></div>";
 } else {
 	$table->data[4][0] = print_label (__('Group'), '', '', true, dame_nombre_grupo ($id_grupo));
 }
@@ -665,7 +672,7 @@ if ($estado != 6 && $estado != 7) {
 
 if ($has_permission){
 	echo '<form id="incident_status_form" method="post">';
-
+	print_input_hidden('id_user', $config['id_user']);
 	print_table ($table);
 
 	echo '<div style="width:'.$table->width.'" class="button">';
@@ -701,7 +708,7 @@ if (! defined ('AJAX')) :
 $(document).ready (function () {
 	/* First parameter indicates to add AJAX support to the form */
 	configure_incident_form (false);
-	$("#grupo_form").change ();
+	//$("#grupo_form").change ();
 });
 </script>
 

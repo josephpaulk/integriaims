@@ -1,3 +1,16 @@
+2010-03-11  Miguel de Dios <miguel.dedios@artica.es>
+
+	* include/js/integria_incident_search.js: in function
+	"configure_incident_form" add the code for check the limits of incidents.
+	
+	* operation/group: php that use to respond ajax query. 
+	
+	* operation/incidents/incident_detail.php: fix $id_parent is 0
+	set to NULL in DB when update. Add the hidden input with id_user, and
+	div for spinner.
+	
+	* images/spinner.gif: animate image for ajax actions.
+
 2010-03-11  Sancho Lerena <slerena@artica.es>
 
 	* include/integria_cron.php: Implemented auto close feature.

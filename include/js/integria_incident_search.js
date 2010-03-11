@@ -97,6 +97,61 @@ function configure_inventory_buttons (form, dialog) {
 }
 
 function configure_incident_form (enable_ajax_form) {
+	//Function for change the select group, test if it's hard limit or soft.
+	$("#grupo_form").change (function() {
+		$("#group_spinner").empty().append('<img src="images/spinner.gif" />');
+		
+		values = Array();
+		values.push ({name: "page", value: "operation/group/group"});
+		values.push ({name: "id_group", value: $("#grupo_form").val()});
+		values.push ({name: "id_user", value: $("#hidden-id_user").val()});
+		
+		//Check the limits of incidents, and show div popup with error message.
+		jQuery.ajax({
+			type: "POST",
+			url: "ajax.php",
+			data: values,
+			async: false,
+			success: function (data, status) {
+				//un serialize data as type//title_window//message_window
+				dataUnserialize = data.split('//');
+				console.log(dataUnserialize);
+				$("#group_spinner").empty();
+				
+				if (dataUnserialize[0] != "correct") {
+					$("#test").remove();
+					$("body").append ($("<div></div>").attr("id", "alert_limits").addClass ("dialog"));
+					
+					$("#alert_limits").empty().append('<img src="images/spinner.gif">');
+					$("#alert_limits").dialog({"title": dataUnserialize[1],
+						position: ['center', 100],
+						resizable: false,
+						height: 100,
+						width: 300,
+						beforeclose: function(event, ui) { return false; }
+					});
+					
+					
+					$("#alert_limits").empty().append(dataUnserialize[2]);
+				
+					$("#alert_limits").dialog('close');
+					$("#alert_limits").bind('dialogbeforeclose', function(event, ui) {
+						$("#alert_limits").dialog('destroy'); $("#alert_limits").remove(); return true;
+					});
+				}
+				else {
+					$("#submit-accion").removeAttr("disabled");
+				}
+			},
+			dataType: "text"
+		});
+	});
+	
+	if ($("#hidden-action").val() == 'insert') {
+		$("#submit-accion").attr("disabled", "disabled");
+	}
+	
+	
 	$("form.delete").submit (function () {
 		if (! confirm (__("Are you sure?")))
 			return false;
