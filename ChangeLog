@@ -1,3 +1,8 @@
+2010-03-11  SAncho Lerena <slerena@artica.es>
+
+	* include/functions_calendar.php: Fixed re-declaration of calendar
+	function included in php-cal package.
+
 2010-03-10  Sancho Lerena <slerena@artica.es>
 
 	* include/styles/integria.css: Removed inexistant background file.
