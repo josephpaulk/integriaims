@@ -34,8 +34,19 @@
 ?>
 		<table width="400px" class="blank">
 <?php if (isset ($login_failed)): ?>
-		<tr>
-		<h3 style="width: 230px;" class="error"><?php echo __('Login failed')?></h3>
+		<tr><td colspan=3>    
+		<h3 class="error"><?php echo __('Login failed')?></h3>
+
+<?php 
+        echo __("If you have lost or does not remember your password");
+        echo " <a href='index.php?recover=$nick'>";
+        echo "<b>click here</b>";
+        echo "</a> ";
+        echo "for sending you instructions to your mailbox on how to change your password.";
+        $nick = get_parameter ($nick);
+        echo "</p>";
+
+?>
 		</tr>
 <?php endif; ?>
 		<tr>

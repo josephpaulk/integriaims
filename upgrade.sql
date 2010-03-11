@@ -28,9 +28,6 @@ CREATE TABLE `tcost` (
       ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-ALTER TABLE tevent ADD FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE;
-
 ALTER TABLE tgrupo ADD `banner` varchar(150) default NULL;
 ALTER TABLE tgrupo ADD `url` varchar(150) default NULL;
 ALTER TABLE tgrupo ADD `email` varchar(150) default NULL;
@@ -115,6 +112,7 @@ ALTER TABLE tproject ADD FOREIGN KEY (`id_project_group`) REFERENCES tproject_gr
 ALTER TABLE ttask ADD `periodicity` enum ('none', 'weekly', 'monthly', 'year', '15days', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none';
 
 ALTER TABLE tusuario ADD   `lang` varchar(10) default '';
+ALTER TABLE tusuario ADD `pwdhash` varchar(100) default '';
 ALTER TABLE `tworkunit` ADD `public` tinyint(1) unsigned NOT NULL DEFAULT 1;
 
 

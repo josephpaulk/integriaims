@@ -70,7 +70,7 @@ INSERT INTO tincident_status (id,name) VALUES
 (2,'Unconfirmed'), 
 (3,'Assigned'), 
 (4,'Re-opened'), 
-(5,'Verified'), 
+(5,'Pending to be closed'), 
 (6,'Resolved'), 
 (7,'Closed');
 

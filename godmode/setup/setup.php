@@ -44,6 +44,7 @@ if ($update) {
 	$config["iwu_defaultime"] = get_parameter ("iwu_defaultime", 0.25);
 	$config["timezone"] = get_parameter ("timezone", "Europe/Madrid");
 	$config["api_acl"] =get_parameter ("api_acl", "*");
+	$config["auto_incident_close"] = get_parameter ("auto_incident_close", "72");
 
 	update_config_token ("timezone", $config["timezone"]);	
 
@@ -77,6 +78,7 @@ if ($update) {
 	update_config_token ("pwu_defaultime", $config["pwu_defaultime"]);
 	update_config_token ("iwu_defaultime", $config["iwu_defaultime"]);
 	update_config_token ("api_acl", $config["api_acl"]);
+    update_config_token ("auto_incident_close", $config["auto_incident_close"]);
 }	
 
 echo "<h2>".__('General setup')."</h2>";
@@ -133,6 +135,10 @@ $table->data[6][1] = print_select ($incident_reporter_options, "show_creator_inc
 
 $table->data[10][0] = print_input_text ("timezone", $config["timezone"], '',
 	15, 30, true, __('Timezone for integria'));
+
+$table->data[10][1] = print_input_text ("auto_incident_close", $config["auto_incident_close"], '',
+	10, 10, true, __('Auto incident close'));
+$table->data[10][1] .= integria_help ("auto_incident_close", true);
 
 $table->data[11][0] = print_input_text ("api_acl", $config["api_acl"], '',
 	30, 255, true, __('List of IP with access to API'));

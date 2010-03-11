@@ -517,7 +517,11 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_delete.tpl", $MACROS);
 		break;
-	}
+    case 5: // Incident closed
+		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_close.tpl", $MACROS);
+		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_close.tpl", $MACROS);
+        break;
+   }
 		
 		
 	// Create the TicketID for have a secure reference to incident hidden 

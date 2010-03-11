@@ -18,7 +18,7 @@
 // Silk icon set 1.3 (cc) Mark James, http://www.famfamfam.com/lab/icons/silk/
 // Integria uses Pear Image::Graph code
 // Integria shares much of it's code with project Babel Enterprise and Pandora FMS,
-// also a Free Software Project coded by some of the people who makes ToPI.
+// also a Free Software Project coded by some of the people who makes Integria.
 
 // Real start
 session_start();
@@ -105,6 +105,7 @@ echo "<title>".$config["sitename"]."</title>";
 <script type="text/javascript" src="include/js/jquery.form.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.textarearesizer.js"></script>
 <script type="text/javascript">
+
 var lang = {
 	"Are you sure?" : "<?php echo __('Are you sure?')?>",
 	"Added" : "<?php echo __('Added')?>",
@@ -134,6 +135,13 @@ var lang = {
 $login = (bool) get_parameter ('login');
 $sec = get_parameter ('sec');
 $sec2 = get_parameter ('sec2');
+
+// Password recovery
+$recover = get_parameter('recover','');
+if ($recover != ""){
+    require ('general/password_recovery.php');
+    exit;
+}
 
 // Login process
 if (! isset ($_SESSION['id_usuario']) && $login) {

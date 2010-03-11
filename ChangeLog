@@ -1,3 +1,33 @@
+2010-03-11  Sancho Lerena <slerena@artica.es>
+
+	* include/integria_cron.php: Implemented auto close feature.
+
+	* include/functions_config.php: Added support for autoclose settings.
+
+	* include/functions_incidents.php: Added close option in incident_mail
+	function, for be used in autoclose feature.
+
+	* include/mailtemplates/incident_close.tpl, 
+	include/mailtemplates/incident_subject_close.tpl: New close template.
+
+	* upgrade.sql: Added new field in tuser and removed restriction in
+	tevent.
+	
+	* index.php: Password recovery feaure added there.
+
+	* integria_dbdata.sql: Verified is now "Pending to be closed".
+
+	* integria_demo.sql: Verified is now "Pending to be closed".
+
+	* integria_db.sql: Added new field in tuser and removed restriction in
+        tevent.
+
+	* general/password_recovery.php: New password recovery feature.
+
+	* general/login_page.php: Added support for password recovery.
+
+	* godmode/setup/setup.php: Added suppor for autoclose feature.
+
 2010-03-11  Miguel de Dios <miguel.dedios@artica.es>
 
 	* operation/incidents/incident_detail.php: changed for when $id_parent is 0

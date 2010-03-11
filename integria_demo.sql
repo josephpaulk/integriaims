@@ -220,7 +220,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tincident_status` WRITE;
 /*!40000 ALTER TABLE `tincident_status` DISABLE KEYS */;
-INSERT INTO `tincident_status` VALUES (1,'New'),(2,'Unconfirmed'),(3,'Assigned'),(4,'Re-opened'),(5,'Verified'),(6,'Resolved'),(7,'Closed');
+INSERT INTO `tincident_status` VALUES (1,'New'),(2,'Unconfirmed'),(3,'Assigned'),(4,'Re-opened'),(5,'Pending to be closed'),(6,'Resolved'),(7,'Closed');
 /*!40000 ALTER TABLE `tincident_status` ENABLE KEYS */;
 UNLOCK TABLES;
 

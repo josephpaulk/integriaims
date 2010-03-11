@@ -27,6 +27,7 @@ CREATE TABLE `tusuario` (
   `nivel` tinyint(1) NOT NULL default '0',
   `avatar` varchar(100) default 'people_1',
   `lang` varchar(10) default '',
+  `pwdhash` varchar(100) default '',
    PRIMARY KEY  (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -450,9 +451,7 @@ CREATE TABLE `tevent` (
   `id_item2` int(11) unsigned NULL default NULL,
   `id_item3` varchar(250) default NULL,
   PRIMARY KEY  (`id`),
-  KEY `tevent_idx_1` (`id_user`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  KEY `tevent_idx_1` (`id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Product: OS, OS/Windows, OS/Windows/IE

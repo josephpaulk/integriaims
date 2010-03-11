@@ -92,6 +92,9 @@ function load_config(){
 		$config["api_acl"] = "127.0.0.1";
 	}
 
+	if (!isset ($config["auto_incident_close"])){
+		$config["auto_incident_close"] = "72";
+	}
 
 	if (isset ($_SESSION['id_usuario']))
 		$config['language_code'] = get_db_value ('lang', 'tusuario', 'id_usuario', $_SESSION['id_usuario']);

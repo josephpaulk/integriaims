@@ -38,6 +38,36 @@ function run_daily_check () {
 	run_project_check ();
 	run_task_check ();
 	run_autowu();
+    run_auto_incident_close();
+}
+
+
+/**
+ * Auto close incidents mark as "pending to be deleted" and no activity in X hrs
+ * Takes no parameters. Checked in the main loop.with the other tasks.
+ */
+
+function run_auto_incident_close () {
+	global $config;
+    require_once ($config["homedir"]."/include/functions_incidents.php");
+
+    $utimestamp = date("U");
+	$limit = date ("Y/m/d H:i:s", $utimestamp - $config["auto_incident_close"] * 3600);
+
+    // For each incident
+	$incidents = get_db_all_rows_sql ("SELECT * FROM tincidencia WHERE estado IN (1,2,3,4) AND actualizacion < '$limit'");
+
+    $mailtext = "This incident has been closed automatically by Integria after waiting confirmation to close this incident for ".$config["auto_incident_close"]." hours.";
+
+    if ($incidents)
+	    foreach ($incidents as $incident){
+            // Set status to "Closed" (# 7).
+            process_sql ("UPDATE tincidencia SET estado = 7 WHERE id_incidencia = ".$incident["id_incidencia"]);
+
+            // Send mail warning about this autoclose
+            mail_incident ($incident["id_incidencia"], $incident["id_usuario"], $mailtext, 0, 10, 1);
+        }
+
 }
 
 /**
@@ -217,7 +247,7 @@ function check_sla_min ($incident) {
 	$MACROS["_username_"] = $incident['id_usuario'];
 	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
-	$MACROS["_incident_id_"] = incident["id_incidencia"];
+	$MACROS["_incident_id_"] = $incident["id_incidencia"];
 	$MACROS["_incident_title_"] = $incident['titulo'];
 	$MACROS["_data1_"] = give_human_time ($sla['min_response']);
 
@@ -261,7 +291,7 @@ function check_sla_max ($incident) {
 	$MACROS["_username_"] = $incident['id_usuario'];
 	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
-	$MACROS["_incident_id_"] = incident["id_incidencia"];
+	$MACROS["_incident_id_"] = $incident["id_incidencia"];
 	$MACROS["_incident_title_"] = $incident['titulo'];
 	$MACROS["_data1_"] = give_human_time ($sla['max_response']);
 	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
