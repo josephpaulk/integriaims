@@ -30,20 +30,32 @@ if (defined ('AJAX')) {
 			FROM tincidencia WHERE id_grupo = ' . $id_group . ' AND id_creator = "' . $id_user . '"');
 		$countOpen = $countOpen[0]['c'];
 		$countAll = $countAll[0]['c'];
-		if (($group['soft_limit'] != 0) && ($group['soft_limit'] == $countOpen)) {
-			echo "open_limit"; //type
-			echo "//";
-			echo __('Warning'); //title
-			echo "//";
-			echo __('You have ') . $countOpen . __(' open incidents, ') . $group['soft_limit'] . __(' over.'); //content
-		}
-		else if (($group['hard_limit'] != 0) && ($group['hard_limit'] == $countAll)) {
+		if (($group['hard_limit'] != 0) && ($group['hard_limit'] <= $countAll)) {
 			echo "incident_limit"; //type
 			echo "//";
 			echo __('Alert'); //title
 			echo "//";
 			echo __('You are in the limit ') . $group['hard_limit'] . __(' incidents in this group.'); //content
+			echo "//";
+			echo "disable_button";
 		}
+		else if (($group['soft_limit'] != 0) && ($group['soft_limit'] <= $countOpen)) {
+			echo "open_limit"; //type
+			echo "//";
+			echo __('Warning'); //title
+			echo "//";
+			echo __('You have ') . $countOpen . __(' open incidents, ') . $group['soft_limit'] . __(' over.'); //content
+			
+			if ($group['enforce_soft_limit'] == 0) {
+				echo "//";
+				echo "enable_button";
+			}
+			else {
+				echo __(' In this group is active opction Enforce soft limit.');
+				echo "//";
+				echo "disable_button";
+			}
+		} 
 		else {
 			echo "correct";
 		}

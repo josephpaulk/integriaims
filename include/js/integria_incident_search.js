@@ -99,6 +99,7 @@ function configure_inventory_buttons (form, dialog) {
 function configure_incident_form (enable_ajax_form) {
 	//Function for change the select group, test if it's hard limit or soft.
 	$("#grupo_form").change (function() {
+		$("#submit-accion").attr("disabled", "disabled");
 		$("#group_spinner").empty().append('<img src="images/spinner.gif" />');
 		
 		values = Array();
@@ -117,6 +118,7 @@ function configure_incident_form (enable_ajax_form) {
 				dataUnserialize = data.split('//');
 				console.log(dataUnserialize);
 				$("#group_spinner").empty();
+				var enableButton = true;
 				
 				if (dataUnserialize[0] != "correct") {
 					$("#test").remove();
@@ -131,6 +133,8 @@ function configure_incident_form (enable_ajax_form) {
 						beforeclose: function(event, ui) { return false; }
 					});
 					
+					if (dataUnserialize[4] != 'enable_button')
+						enableButton = false;
 					
 					$("#alert_limits").empty().append(dataUnserialize[2]);
 				
@@ -139,7 +143,8 @@ function configure_incident_form (enable_ajax_form) {
 						$("#alert_limits").dialog('destroy'); $("#alert_limits").remove(); return true;
 					});
 				}
-				else {
+				
+				if (enableButton) {
 					$("#submit-accion").removeAttr("disabled");
 				}
 			},

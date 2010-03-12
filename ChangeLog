@@ -1,3 +1,10 @@
+2010-03-12  Miguel de Dios <miguel.dedios@artica.es>
+
+	* include/js/integria_incident_search.js: disabled the button when it's
+	in ajax message.
+	
+	* operation/group/group.php: fix source code of ajax.
+
 2010-03-11  Miguel de Dios <miguel.dedios@artica.es>
 
 	* include/js/integria_incident_search.js: in function
