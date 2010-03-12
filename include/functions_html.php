@@ -32,7 +32,7 @@ global $config;
  * $nothing_value Value when nothing is selected
  */
 
-function print_select ($fields, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = 0, $sort = true, $label = false) {
+function print_select ($fields, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = 0, $sort = true, $label = false, $disabled = false) {
 	$output = "\n";
 	
 	if ($label) {
@@ -43,8 +43,15 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 	if ($multiple) {
 		$attributes .= ' multiple="yes" size="'.$multiple.'" ';
 	}
+	
+	if ($disabled) {
+		$disabledText = 'disabled="disabled"';
+	}
+	else {
+		$disabledText = '';
+	}
 
-	$output .= '<select id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
+	$output .= '<select ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
 
 	if ($nothing != '') {
 		$output .= '   <option value="'.$nothing_value.'"';
@@ -91,7 +98,7 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
  * $nothing Label when nothing is selected.
  * $nothing_value Value when nothing is selected
  */
-function print_select_from_sql ($sql, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = false, $sort = true, $label = false) {
+function print_select_from_sql ($sql, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = false, $sort = true, $label = false, $disabled = false) {
 
 	$fields = array ();
 	$result = mysql_query ($sql);
@@ -104,7 +111,7 @@ function print_select_from_sql ($sql, $name, $selected = '', $script = '', $noth
 		$fields[$row[0]] = $row[1];
 	}
 
-	$output = print_select ($fields, $name, $selected, $script, $nothing, $nothing_value, true, $multiple, $sort, $label);
+	$output = print_select ($fields, $name, $selected, $script, $nothing, $nothing_value, true, $multiple, $sort, $label, $disabled);
 
 	if ($return)
 		return $output;

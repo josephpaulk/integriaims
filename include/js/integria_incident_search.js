@@ -102,10 +102,12 @@ function configure_incident_form (enable_ajax_form) {
 		$("#submit-accion").attr("disabled", "disabled");
 		$("#group_spinner").empty().append('<img src="images/spinner.gif" />');
 		
+		id_user = $("#id_user").val();
+		
 		values = Array();
 		values.push ({name: "page", value: "operation/group/group"});
 		values.push ({name: "id_group", value: $("#grupo_form").val()});
-		values.push ({name: "id_user", value: $("#hidden-id_user").val()});
+		values.push ({name: "id_user", value: $("#id_user").val()});
 		
 		//Check the limits of incidents, and show div popup with error message.
 		jQuery.ajax({

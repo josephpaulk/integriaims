@@ -581,6 +581,18 @@ if ($id_task > 0){
 	$table->data[2][2] .= "<img src='images/bricks.png'></a>";
 }
 
+$table->data[2][3] = print_label(__('Creator'), '', '', true);
+
+if (get_db_value_filter('nivel', 'tusuario', array('id_usuario' => $config['id_user'])) == 1) {
+	$enabled = true;
+}
+else {
+	$enabled = false;
+}
+
+$table->data[2][3] .= print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'id_user', $config['id_user'], '', 'select', '0', true, false, true, false, !$enabled);
+//print_input_hidden('id_user', $config['id_user']);
+
 if ($has_permission) {
 	$table->data[4][0] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo, true) . "<div id='group_spinner'></div>";
 } else {
@@ -668,11 +680,10 @@ $table->data[6][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,
 
 if ($estado != 6 && $estado != 7) {
 	$table->rowstyle[6] = 'display: none';
-} 
+}
 
 if ($has_permission){
 	echo '<form id="incident_status_form" method="post">';
-	print_input_hidden('id_user', $config['id_user']);
 	print_table ($table);
 
 	echo '<div style="width:'.$table->width.'" class="button">';
