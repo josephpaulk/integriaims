@@ -118,7 +118,6 @@ function configure_incident_form (enable_ajax_form) {
 			success: function (data, status) {
 				//un serialize data as type//title_window//message_window
 				dataUnserialize = data.split('//');
-				console.log(dataUnserialize);
 				$("#group_spinner").empty();
 				var enableButton = true;
 				
@@ -135,7 +134,7 @@ function configure_incident_form (enable_ajax_form) {
 						beforeclose: function(event, ui) { return false; }
 					});
 					
-					if (dataUnserialize[4] != 'enable_button')
+					if (dataUnserialize[3] != 'enable_button')
 						enableButton = false;
 					
 					$("#alert_limits").empty().append(dataUnserialize[2]);

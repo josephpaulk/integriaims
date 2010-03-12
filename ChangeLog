@@ -1,5 +1,10 @@
 2010-03-12  Miguel de Dios <miguel.dedios@artica.es>
 
+	* include/js/integria_incident_search.js: fixed two things, erase the
+	firebug trace, and fixed array index wrong.
+
+2010-03-12  Miguel de Dios <miguel.dedios@artica.es>
+
 	* include/functions_html.php: in the function "print_select" and
 	"print_select_sql" added new parameter $disable for to disable select.  
 
