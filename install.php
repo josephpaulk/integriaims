@@ -142,24 +142,26 @@ function check_variable ( $var, $value, $label, $mode ){
 
 function parse_mysql_dump($url){
 	if (file_exists($url)){
-   		$file_content = file($url);
-   		$query = "";
-   		foreach($file_content as $sql_line){
+		$file_content = file($url);
+		$query = "";
+		foreach($file_content as $sql_line){
 			if(trim($sql_line) != "" && strpos($sql_line, "--") === false){
 				$query .= $sql_line;
 				if(preg_match("/;[\040]*\$/", $sql_line)){
-					if (!$result = mysql_query($query))
+					if (!$result = mysql_query($query)) {
+					 	echo mysql_error(); //Uncomment for debug
+						echo "<i><br>$query<br></i>";
 						return 0;
+					}
 					$query = "";
 				}
 			}
 		}
 		return 1;
-	} else {
-		return 0;
 	}
+	else
+		return 0;
 }
-
 function random_name ($size){
 	$temp = "";
 	for ($a=0;$a< $size;$a++)

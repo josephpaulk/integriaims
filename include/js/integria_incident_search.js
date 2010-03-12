@@ -129,14 +129,14 @@ function configure_incident_form (enable_ajax_form) {
 					$("#alert_limits").dialog({"title": dataUnserialize[1],
 						position: ['center', 100],
 						resizable: false,
-						height: 100,
-						width: 300,
+						height: 140,
+						width: 350,
 						beforeclose: function(event, ui) { return false; }
 					});
 					
 					if (dataUnserialize[3] != 'enable_button')
 						enableButton = false;
-					
+	
 					$("#alert_limits").empty().append(dataUnserialize[2]);
 				
 					$("#alert_limits").dialog('close');

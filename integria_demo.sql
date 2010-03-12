@@ -170,6 +170,7 @@ UNLOCK TABLES;
 LOCK TABLES `tincidencia` WRITE;
 /*!40000 ALTER TABLE `tincidencia` DISABLE KEYS */;
 INSERT INTO `tincidencia` (`id_incidencia`, `inicio`, `cierre`, `titulo`, `descripcion`, `id_usuario`, `origen`, `estado`, `prioridad`, `id_grupo`, `actualizacion`, `id_creator`, `notify_email`, `id_task`, `resolution`, `epilog`, `sla_disabled`, `affected_sla_id`, `id_incident_type`)
+
 VALUES (1,'2010-02-17 01:35:35','0000-00-00 00:00:00','My first incident !','Hi, this is my first demo incident.\r\n\r\nFantastic !\r\n','demo',1,1,3,3,'2010-02-17 01:50:05','admin',1,0,0,'',0,0,0),
 	(2,'2010-02-17 01:56:33','0000-00-00 00:00:00','Another incident','Another sample incident.','admin',1,3,1,4,'2010-02-17 02:16:57','demo',1,0,9,'',0,0,0);
 /*!40000 ALTER TABLE `tincidencia` ENABLE KEYS */;
@@ -467,7 +468,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tusuario` WRITE;
 /*!40000 ALTER TABLE `tusuario` DISABLE KEYS */;
-INSERT INTO `tusuario` VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2010-02-17 02:16:54','admin@integria.sf.net','555-555-555',1,'people_1',''),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2010-02-17 01:49:41','demo@nowhere.net','+4555435435',0,'people_3','');
+INSERT INTO `tusuario` VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2010-02-17 02:16:54','admin@integria.sf.net','555-555-555',1,'people_1','',''),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2010-02-17 01:49:41','demo@nowhere.net','+4555435435',0,'people_3','','');
 /*!40000 ALTER TABLE `tusuario` ENABLE KEYS */;
 UNLOCK TABLES;
 

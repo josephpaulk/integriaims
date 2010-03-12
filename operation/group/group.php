@@ -33,25 +33,25 @@ if (defined ('AJAX')) {
 		if (($group['hard_limit'] != 0) && ($group['hard_limit'] <= $countAll)) {
 			echo "incident_limit"; //type
 			echo "//";
-			echo __('Alert'); //title
+			echo __('Limit of incidents reached'); //title
 			echo "//";
-			echo __('You are in the limit ') . $group['hard_limit'] . __(' incidents in this group.'); //content
+			echo __('You have reached the limit of incidents for this group') . "(".$group['hard_limit'] . "). ". __('You cannot create more incidents.'); //content
 			echo "//";
 			echo "disable_button";
 		}
 		else if (($group['soft_limit'] != 0) && ($group['soft_limit'] <= $countOpen)) {
 			echo "open_limit"; //type
 			echo "//";
-			echo __('Warning'); //title
+			echo __('Warning: Soft limit reached'); //title
 			echo "//";
-			echo __('You have ') . $countOpen . __(' open incidents, ') . $group['soft_limit'] . __(' over.'); //content
+			echo __('You have ') . $countOpen . __(' opened incidents') . ".". __("Soft limit for this group is "). " ( ".$group['soft_limit'] . " ) ". __(' incidents'). ".". __("Please close some incidents before create more"); //content
 			
 			if ($group['enforce_soft_limit'] == 0) {
 				echo "//";
 				echo "enable_button";
 			}
 			else {
-				echo __(' In this group is active opction Enforce soft limit.');
+				echo ". ". __('You cannot create more incidents in this group until you close an active incident.');
 				echo "//";
 				echo "disable_button";
 			}

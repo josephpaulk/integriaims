@@ -1,3 +1,14 @@
+2010-03-12  Sancho Lerena <slerena@artica.es>
+
+	* include/js/integria_incident_search.js: Fixed size of splash window.
+
+	* install.php: on SQL errors, show line which give problems, easier
+	to debug.
+
+	* operation/group/group.php: Altered strings for be more human ready :)
+
+	* integria_demo.sql: Insert of default users was giving problems.
+
 2010-03-12  Miguel de Dios <miguel.dedios@artica.es>
 
 	* include/js/integria_incident_search.js: fixed two things, erase the
