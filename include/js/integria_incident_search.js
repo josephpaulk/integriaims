@@ -121,7 +121,9 @@ function configure_incident_form (enable_ajax_form) {
 				$("#group_spinner").empty();
 				var enableButton = true;
 				
-				if (dataUnserialize[0] != "correct") {
+				status = dataUnserialize[0];
+				
+				if (status != "correct") {
 					$("#test").remove();
 					$("body").append ($("<div></div>").attr("id", "alert_limits").addClass ("dialog"));
 					
@@ -134,15 +136,25 @@ function configure_incident_form (enable_ajax_form) {
 						beforeclose: function(event, ui) { return false; }
 					});
 					
-					if (dataUnserialize[3] != 'enable_button')
+					enableButtonParam = dataUnserialize[3];
+					if (enableButtonParam != 'enable_button')
 						enableButton = false;
-	
+					
 					$("#alert_limits").empty().append(dataUnserialize[2]);
 				
 					$("#alert_limits").dialog('close');
 					$("#alert_limits").bind('dialogbeforeclose', function(event, ui) {
 						$("#alert_limits").dialog('destroy'); $("#alert_limits").remove(); return true;
 					});
+				}
+				else {
+					//Correct
+					idInventory = dataUnserialize[1];
+					alert(data)
+					if (idInventory != 'null') {
+						nameInventory = dataUnserialize[2];
+						$(parent_dialog+"#incident_inventories").append ($('<option value="' + idInventory + '">' + nameInventory + '</option>'));
+					}
 				}
 				
 				if (enableButton) {

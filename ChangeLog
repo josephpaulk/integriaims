@@ -1,3 +1,11 @@
+2010-03-15  Miguel de Dios <miguel.dedios@artica.es>
+
+ 	* include/js/integria_incident_search.js: use the new parameters returns for
+	correct search of ajax query group.
+ 
+	* operation/group/group.php: now when it's correct search the inventory of
+	group and serialize.
+
 2010-03-12  Sancho Lerena <slerena@artica.es>
 
 	* include/js/integria_incident_search.js: Fixed size of splash window.

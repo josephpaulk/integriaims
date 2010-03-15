@@ -22,6 +22,23 @@ if (defined ('AJAX')) {
 
 	if (($group['hard_limit'] == 0) && ($group['soft_limit'] == 0)) {
 		echo "correct"; //type
+		
+		$inventoryObject = get_db_row_sql('SELECT * FROM tinventory
+			WHERE id IN (
+			SELECT id_inventory_default
+			FROM tgrupo
+			WHERE id_grupo = ' . $id_group . ')');
+		
+		if ($inventoryObject !== false) {
+			echo "//";
+			echo $inventoryObject['id'];
+			echo "//";
+			echo $inventoryObject['name'];
+		}
+		else {
+			echo "//";
+			echo "null";
+		}
 	}
 	else {
 		$countOpen = get_db_all_rows_sql('SELECT COUNT(*) AS c
@@ -58,6 +75,23 @@ if (defined ('AJAX')) {
 		} 
 		else {
 			echo "correct";
+			
+			$inventoryObject = get_db_row_sql('SELECT * FROM tinventory
+				WHERE id IN (
+				SELECT id_inventory_default
+				FROM tgrupo
+				WHERE id_grupo = ' . $id_group . ')');
+			
+			if ($inventoryObject !== false) {
+				echo "//";
+				echo $inventoryObject['id'];
+				echo "//";
+				echo $inventoryObject['name'];
+			}
+			else {
+				echo "//";
+				echo "null";
+			}
 		}
 	}
 
