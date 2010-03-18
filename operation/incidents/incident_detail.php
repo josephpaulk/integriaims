@@ -292,8 +292,13 @@ if ($id) {
 		$profile = (int) get_parameter ('work_profile');
 		$public = (bool) get_parameter ('public');
 
-		$sql = sprintf ('UPDATE tincidencia SET affected_sla_id = 0, actualizacion = "%s"
-				WHERE id_incidencia = %d', $timestamp, $id);
+        // Adding a new workunit to a incident in NEW status
+        // Status go to "Assigned" and Owner is the writer of this Workunit
+        if ($incident["estado"] == 1){
+            $sql = sprintf ('UPDATE tincidencia SET id_usuario = "%s", estado = 3,  affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $config['id_user'], $timestamp, $id);
+        } else {
+            $sql = sprintf ('UPDATE tincidencia SET affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id);
+        }
 		process_sql ($sql);
 
 		incident_tracking ($id, INCIDENT_WORKUNIT_ADDED);

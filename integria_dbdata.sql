@@ -52,7 +52,11 @@ INSERT INTO `tlink` VALUES  (0000000001,'Integria Project','http://integria.sour
 
 INSERT INTO `tproject` VALUES  (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0);
 
+ALTER TABLE tproject AUTO_INCREMENT = 1;
+
 INSERT INTO `ttask` (`id`, `id_project`, `id_parent_task`, `name`, `description`, `completion`, `priority`, `dep_type`, `start`, `id_group`) VALUES (-1,-1,0,'Vacations','',0,0,0,'0000-00-00',0),(-2,-1,0,'Disease','',0,0,0,'0000-00-00',0),(-3,-1,0,'Not justified','',0,0,0,'0000-00-00',0), (-4,-1,0,'Workunits lost (without project/task)','',0,0,0,'0000-00-00',0);
+
+ALTER TABLE ttask AUTO_INCREMENT = 1;
 
 INSERT INTO tincident_resolution (id, name) VALUES 
 (1,'Fixed'), 

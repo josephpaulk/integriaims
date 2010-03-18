@@ -32,7 +32,7 @@ $url = "";
 $id_user_default = "";
 $banner = "";
 $parent = "";
-$lang = "";
+$lang = "en";
 $email = "";
 $forced_email = true;
 $soft_limit = 5;
@@ -57,7 +57,7 @@ if ($id) {
 		$hard_limit = $group["hard_limit"];
 		$enforce_soft_limit = (bool) $group["enforce_soft_limit"];
 		$forced_email = (bool) $group['forced_email'];
-		$id_inventory_default = $grupo["id_inventory_default"];
+		$id_inventory_default = $group["id_inventory_default"];
 
 	} else {
 		echo "<h3 class='error'>".__('There was a problem loading group')."</h3>";
@@ -119,7 +119,6 @@ $table->data[6][0] = print_input_text ('hard_limit', $hard_limit, '', 10, 0, tru
 
 $table->data[6][1] = print_select_from_sql ("SELECT id, name FROM tinventory ORDER BY name",
 	'id_inventory_default', $id_inventory_default, '', '', 0, true, false, false, __('Default inventory object'));
-
 
 echo '<form method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);

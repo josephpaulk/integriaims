@@ -98,7 +98,7 @@ function configure_inventory_buttons (form, dialog) {
 
 function configure_incident_form (enable_ajax_form) {
 	//Function for change the select group, test if it's hard limit or soft.
-	$("#grupo_form").change (function() {
+	$("#grupo_form").click (function() {
 		$("#submit-accion").attr("disabled", "disabled");
 		$("#group_spinner").empty().append('<img src="images/spinner.gif" />');
 		
@@ -108,7 +108,7 @@ function configure_incident_form (enable_ajax_form) {
 		values.push ({name: "page", value: "operation/group/group"});
 		values.push ({name: "id_group", value: $("#grupo_form").val()});
 		values.push ({name: "id_user", value: $("#id_user").val()});
-		
+	
 		//Check the limits of incidents, and show div popup with error message.
 		jQuery.ajax({
 			type: "POST",
@@ -153,8 +153,8 @@ function configure_incident_form (enable_ajax_form) {
 					if (idInventory != 'null') {
 						nameInventory = dataUnserialize[2];
 						$(parent_dialog+"#incident_inventories").empty();
-						$(parent_dialog+".selected-inventories").remove();
 						$(parent_dialog+"#incident_inventories").append ($('<option value="' + idInventory + '">' + nameInventory + '</option>'));
+						$(parent_dialog+".selected-inventories").remove();
 						$(parent_dialog+"#incident_status_form").append ($('<input type="hidden" value="'+idInventory+'" class="selected-inventories" name="inventories[]" />'));
 					}
 				}
@@ -200,7 +200,7 @@ function configure_incident_form (enable_ajax_form) {
 			$(dialog+"#incident-editor-6").css ('display', 'none');
 		}
 	});
-	$(dialog+"#grupo_form").change (function () {
+	$(dialog+"#grupo_form").click (function () {
 		values = Array ();
 		values.push ({name: "page",
 			value: "godmode/grupos/lista_grupos"});

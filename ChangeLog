@@ -1,3 +1,21 @@
+2010-03-18  Sancho Lerena <slerena@artica.es>
+
+    * include/js/integria_incident_search.js: Fixed to work on click and
+    removed some debug stuff.
+
+    * include/functions_form.php: Combo to show groups manage properly the All
+    (any) group.
+
+    * include/functions.php
+
+    * integria_dbdata.sql: Autoincrement fix for project/task table due the
+    internal insert for id < 0 and problems with id 0 in these tables.
+
+    * operation/incidents/incident_detail.php: Adding a workunit now set the 
+    incident to assigned to the user who creates the first WU.
+
+    * godmode/grupos/configurar_grupo.php: Fixed inventory showed in the combo.
+
 2010-03-18  Miguel de Dios <miguel.dedios@artica.es>
 
  	* include/js/integria_incident_search.js: fixed the javascript for the

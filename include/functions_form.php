@@ -38,6 +38,7 @@ function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = fa
 
 
 
+
 function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any = 0, $perm = '', $id_group = 0, $return = false, $label = 1) {
 	$output = '';
 
@@ -47,7 +48,9 @@ function combo_groups_visible_for_me ($id_user, $form_name ="group_form", $any =
 	
 	if ($any) {
 		$groups[1] = __('Any');
-	}
+	} else {
+         unset($groups[1]);
+    }
 	
 	if ($label == 1)
 		$output .= print_select ($groups, $form_name, $id_group, '', '', 0, true, false, false, __('Group'));
