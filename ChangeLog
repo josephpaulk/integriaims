@@ -1,3 +1,9 @@
+2010-03-18  Miguel de Dios <miguel.dedios@artica.es>
+
+ 	* include/js/integria_incident_search.js: fixed the javascript for the
+ 	select "Objects affected" when load from a select "Group". And empty this
+ 	select box in same action. 
+
 2010-03-15  Miguel de Dios <miguel.dedios@artica.es>
 
  	* include/js/integria_incident_search.js: use the new parameters returns for

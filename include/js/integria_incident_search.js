@@ -150,10 +150,12 @@ function configure_incident_form (enable_ajax_form) {
 				else {
 					//Correct
 					idInventory = dataUnserialize[1];
-					alert(data)
 					if (idInventory != 'null') {
 						nameInventory = dataUnserialize[2];
+						$(parent_dialog+"#incident_inventories").empty();
+						$(parent_dialog+".selected-inventories").remove();
 						$(parent_dialog+"#incident_inventories").append ($('<option value="' + idInventory + '">' + nameInventory + '</option>'));
+						$(parent_dialog+"#incident_status_form").append ($('<input type="hidden" value="'+idInventory+'" class="selected-inventories" name="inventories[]" />'));
 					}
 				}
 				
