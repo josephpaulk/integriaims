@@ -389,3 +389,4 @@ CREATE TABLE `tdownload_tracking` (
   PRIMARY KEY  (`id`)
 );
 
+ALTER TABLE tincidencia ADD `score` mediumint(8) default 0;

@@ -105,6 +105,7 @@ if ($action == 'update') {
 	$id_task = (int) get_parameter ('task_user');
 	$id_incident_type = get_parameter ('id_incident_type');
 	$id_parent = (int) get_parameter ('id_parent');
+    $score = (int) get_parameter ('score');
 	
 	$old_incident = get_incident ($id);
 	
@@ -144,12 +145,12 @@ if ($action == 'update') {
 			id_grupo = %d, id_usuario = "%s",
 			notify_email = %d, prioridad = %d, descripcion = "%s",
 			epilog = "%s", id_task = %d, resolution = %d,
-			id_incident_type = %d, id_parent = %s, affected_sla_id = 0  %s 
+			id_incident_type = %d, id_parent = %s, score = %d, affected_sla_id = 0  %s 
 			WHERE id_incidencia = %d',
 			$titulo, $origen, $estado, $grupo, $user,
 			$email_notify, $priority, $description,
 			$epilog, $id_task, $resolution, $id_incident_type,
-			$idParentValue, $sla_man, $id);
+			$idParentValue, $score, $sla_man, $id);
 	$result = process_sql ($sql);
 
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
@@ -275,6 +276,7 @@ if ($id) {
 	$affected_sla_id = $incident["affected_sla_id"];
 	$id_incident_type = $incident['id_incident_type'];
 	$grupo = dame_nombre_grupo($id_grupo);
+    $score = $incident["score"];
 
 	// Aditional ACL check on read incident
 	if (give_acl ($config["id_user"], $id_grupo, "IR") == 0) { // Only admins
@@ -423,6 +425,7 @@ if ($id) {
 	$estado = 1;
 	$resolution = 0;
 	$id_task = 0;
+    $score = 0;
 	$epilog = "";
 	$id_creator = $config['id_user'];
 	$email_notify = 0;
@@ -502,6 +505,8 @@ $table->colspan[0][0] = 2;
 $table->colspan[4][2] = 2; 
 $table->colspan[5][0] = 4;
 $table->colspan[6][0] = 4;
+$table->colspan[7][0] = 4;
+
 $disabled = !$has_permission;
 $actual_only = !$has_permission;
 
@@ -683,9 +688,19 @@ $table->data[5][0] = print_textarea ('description', 9, 80, $description, $disabl
 $table->data[6][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,
 		true, __('Resolution epilog'));
 
+for ($ax=0;$ax < 10; $ax++){
+    $scoreList[$ax] = $ax;
+}
+
+$table->data[7][0] = print_select ($scoreList, "score", $score, "", "Select", 0, true, 0, true, __("Score"),false);
+
+$table->data[7][0] .= "&nbsp;". __("Please score the resolution of this incident to allow us improve the service");
+
 if ($estado != 6 && $estado != 7) {
 	$table->rowstyle[6] = 'display: none';
+	$table->rowstyle[7] = 'display: none';
 }
+
 
 if ($has_permission){
 	echo '<form id="incident_status_form" method="post">';

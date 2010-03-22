@@ -170,6 +170,7 @@ CREATE TABLE `tincidencia` (
   `sla_disabled` mediumint(8) unsigned NOT NULL DEFAULT 0,
   `affected_sla_id` tinyint unsigned NOT NULL DEFAULT 0,
   `id_incident_type` mediumint(8) unsigned NULL,
+  `score` mediumint(8) default 0,
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_idx_1` (`id_usuario`),
   KEY `incident_idx_2` (`estado`),
