@@ -1,3 +1,12 @@
+2010-03-31  Miguel de Dios <miguel.dedios@artica.es>
+
+ 	* include/js/integria_incident_search.js: in event function
+ 	"configure_workunit_form" hidden the add button and show the progress
+ 	send message.
+ 	
+ 	* operation/incidents/incident_create_work.php: added hidden text and
+ 	hidden spinner image for to show when send the data.
+
 2010-03-22  Sancho Lerena <slerena@artica.es>
 
 	* upgrade.sql: Add score field to tincidencia.

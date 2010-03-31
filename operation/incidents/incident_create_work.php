@@ -58,6 +58,7 @@ echo '<form id="form-add-workunit" method="post" action="index.php?sec=incidents
 print_table ($table);
 
 echo '<div style="width: 100%" class="button">';
+echo '<span id="sending_data" style="display: none;">' . __('Sending data...') . '<img src="images/spinner.gif" /></span>';
 print_submit_button (__('Add'), 'addnote', false, 'class="sub next"');
 print_input_hidden ('insert_workunit', 1);
 print_input_hidden ('id', $id);

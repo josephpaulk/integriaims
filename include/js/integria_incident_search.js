@@ -525,6 +525,9 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 function configure_workunit_form () {
 	$(dialog+"#textarea-nota").TextAreaResizer ();
 	$("#form-add-workunit").submit (function () {
+		$("#sending_data").css('display','');
+		$("input[name=addnote]").css('display', 'none');
+		
 		values = get_form_input_values ("form-add-workunit");
 		values.push ({name: "page",
 			value: "operation/incidents/incident_detail"});
