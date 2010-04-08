@@ -921,6 +921,9 @@ function mail_project ($mode, $id_user, $id_workunit, $id_task, $additional_msg 
 	integria_sendmail (get_user_email($id_manager), $subject, $text);
 }
 
+// TODO: Make todo mail using a template, like the other mails !
+
+
 function mail_todo ($mode, $id_todo) {
 	global $config;
 
@@ -1005,8 +1008,6 @@ function project_workunit_cost ($id_project, $only_marked = 1){
 	}
 	return $total;
 }
-
-
 
 
 function projects_active_user ($id_user) {

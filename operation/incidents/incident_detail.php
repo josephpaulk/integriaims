@@ -355,7 +355,7 @@ if ($id) {
 			}
 			
 			// Copy file to directory and change name
-			$filename = $config["homedir"]."/attachment/pand".$id_attachment."_".$filename;
+			$filename = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
 			
 			if (! copy ($_FILES['userfile']['tmp_name'], $filename)) {
 				$result_msg = '<h3 class="error">'.__('File cannot be saved. Please contact Integria administrator about this error').'</h3>';

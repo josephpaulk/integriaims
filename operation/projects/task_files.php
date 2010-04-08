@@ -1,8 +1,9 @@
 <?php
-// Integria IMS - The ITIL Management System
-// =========================================
-// Copyright (c) 2007 Sancho Lerena, slerena@openideas.info
-// Copyright (c) 2008 Artica Soluciones Tecnologicas
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008-2010 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -98,9 +99,11 @@ if ($id_task != -1){
 	$sql= "SELECT * FROM tattachment WHERE id_task = $id_task";
 	echo "<h3>".__('Attached files');
 	echo " - ".__('Task')." - ".$task_name."</h3>";
-	echo "<table cellpadding=4 cellspacing=4 border='0' width=700 class='listing'>";
+	echo "<table cellpadding=4 cellspacing=4 border='0' width=90% class='listing'>";
 	echo "<tr><th>"; 
 	echo __('Filename');
+    echo "<th>"; 
+	echo __('Timestamp');
 	echo "<th>"; 
 	echo __('User');
 	echo "<th>"; 
@@ -118,11 +121,13 @@ if ($id_task == -1){
 
 	echo "<h3>".__('Attached files');
 	echo " - ".__('Project')." - ".$project_name."</h3>";
-	echo "<table  width=95% class='listing'>";
+	echo "<table cellpadding=4 cellspacing=4 border='0' width=95% class='listing'>";
 	echo "<tr><th>"; 
 	echo __('Task');
 	echo "<th>"; 
 	echo __('Filename');
+	echo "<th>"; 
+	echo __('Timestamp');
 	echo "<th>"; 
 	echo __('User');
 	echo "<th>"; 
@@ -144,12 +149,17 @@ if ($res = mysql_query($sql)) {
 			$color = 1;
 		}
 
-		if (strlen($row["filename"]) > 15)
-			$filename = substr($row["filename"],0,15)."...";
+		if (strlen($row["filename"]) > 35)
+			$filename = substr($row["filename"],0,35)."...";
 		else
 			$filename = $row["filename"];
 
-		$link = $config["base_url"]."/attachment/".$row["id_attachment"]."_".rawurlencode ($row["filename"]);
+//		$link = $config["base_url"]."/attachment/".$row["id_attachment"]."_".rawurlencode (w["filename"]);
+
+        $link = $config["base_url"]."/operation/projects/project_download_file.php?id_attachment=".$row["id_attachment"];
+
+        $real_filename = $config["homedir"]."/attachment/".$row["id_attachment"]."_".rawurlencode ($row["filename"]);
+
 		// Show data
 		if ($id_task == -1) {
 			echo "<tr><td class='$tdcolor' valign='top'>";
@@ -163,6 +173,12 @@ if ($res = mysql_query($sql)) {
 			echo "<tr><td class='$tdcolor' valign='top'>";
 			echo '<b><a href="'.$link.'">'.$filename."</a></b>";
 		}
+
+        // Show file datetime
+		echo "<td class='$tdcolor f9' valign='top'>";
+		$stat = stat ($real_filename);
+        echo date ("F d Y H:i:s.", $stat['mtime']);
+
 		echo "<td class='$tdcolor f9' valign='top'>";
 		echo $row["id_usuario"];
 

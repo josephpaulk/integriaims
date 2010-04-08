@@ -67,26 +67,37 @@ function dbmgr_main () {
 
 	echo '<link rel="stylesheet" href="include/styles/dbmanager.css" type="text/css" />';
 
-
 	$sql = (string) get_parameter ('sql');
+    $clean_output = get_parameter("clean_output", 0);
 
-	echo "<h2>".__('Extensions'). " &raquo; ".__('Database interface')."</h2>";
-	echo '<div class="notify">';
-	echo "This is an advanced extension to interface with Integria IMS database directly using native SQL sentences. Please note that <b>you can damage</b> your Integria IMS installation if you don't know </b>exactly</b> what are you doing, this means that you can severily damage your setup using this extension. This extension is intended to be used <b>only by experienced users</b> with a depth knowledgue of Integria IMS.";
-	echo '</div>';
+    if ($clean_output == 0){
+	    echo "<h2>".__('Extensions'). " &raquo; ".__('Database interface');
+        echo "&nbsp;&nbsp;<a title='"._("Report")."'  href='index.php?sec=godmode&sec2=godmode/setup/dbmanager&sql=$sql&clean_output=1'><img src='images/html.png'></a>";
 
-	echo "<br />";
-	echo "Some samples of usage: <blockquote><em>SHOW STATUS;<br />DESCRIBE tincidencia<br />SELECT * FROM tincidencia<br />UPDATE tincidencia SET sla_disabled = 1 WHERE inicio < '2010-01-10 00:00:00';</em></blockquote>";
+        echo "</h2>";
+	    echo '<div class="notify">';
+	    echo "This is an advanced extension to interface with Integria IMS database directly using native SQL sentences. Please note that <b>you can damage</b> your Integria IMS installation if you don't know </b>exactly</b> what are you doing, this means that you can severily damage your setup using this extension. This extension is intended to be used <b>only by experienced users</b> with a depth knowledgue of Integria IMS.";
+	    echo '</div>';
+
+	    echo "<br />";
+	    echo "Some samples of usage: <blockquote><em>SHOW STATUS;<br />DESCRIBE tincidencia<br />SELECT * FROM tincidencia<br />UPDATE tincidencia SET sla_disabled = 1 WHERE inicio < '2010-01-10 00:00:00';</em></blockquote>";
 
 
-	echo "<br /><br />";
-	echo "<form method='post' action=''>";
-	print_textarea ('sql', 5, 50, html_entity_decode($sql, ENT_QUOTES));
-	echo '<br />';
-	echo '<div class="action-buttons" style="width: 100%">';
-	print_submit_button (__('Execute SQL'), '', false, 'class="sub next"');
-	echo '</div>';
-	echo "</form>";
+	    echo "<br /><br />";
+	    echo "<form method='post' action=''>";
+	    print_textarea ('sql', 5, 50, html_entity_decode($sql, ENT_QUOTES));
+	    echo '<br />';
+	    echo '<div class="action-buttons" style="width: 100%">';
+	    print_submit_button (__('Execute SQL'), '', false, 'class="sub next"');
+	    echo '</div>';
+	    echo "</form>";
+    } else {
+        echo "<form method='post' action=''>";
+	    print_textarea ('sql', 2, 40, html_entity_decode($sql, ENT_QUOTES));
+        echo "&nbsp;";
+	    print_submit_button (__('Execute SQL'), '', false, 'class="sub next"');
+	    echo "</form>";
+    }
 
 	// Processing SQL Code
 	if ($sql == '')

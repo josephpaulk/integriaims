@@ -110,6 +110,15 @@ function load_config(){
 	if (!isset ($config["mail_from"]))
 		$config["mail_from"] = "integria@localhost";
 
+    if (!isset ($config["site_logo"])){
+         $config["site_logo"] = "integria_logo.png";
+    }
+
+    if (!isset ($config["header_logo"])){
+         $config["header_logo"] = "integria_logo_header.png";
+    }
+
+
 }
 
 ?>

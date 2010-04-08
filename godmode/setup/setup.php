@@ -46,6 +46,9 @@ if ($update) {
 	$config["api_acl"] =get_parameter ("api_acl", "*");
 	$config["auto_incident_close"] = get_parameter ("auto_incident_close", "72");
 
+	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
+    $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
+
 	update_config_token ("timezone", $config["timezone"]);	
 
 	process_sql ("UPDATE tconfig SET value='".$config["block_size"]."' WHERE token='block_size'");
@@ -79,7 +82,10 @@ if ($update) {
 	update_config_token ("iwu_defaultime", $config["iwu_defaultime"]);
 	update_config_token ("api_acl", $config["api_acl"]);
     update_config_token ("auto_incident_close", $config["auto_incident_close"]);
-}	
+    update_config_token ("site_logo", $config["site_logo"]);
+    update_config_token ("header_logo", $config["header_logo"]);
+
+}
 
 echo "<h2>".__('General setup')."</h2>";
 
@@ -143,6 +149,23 @@ $table->data[10][1] .= integria_help ("auto_incident_close", true);
 $table->data[11][0] = print_input_text ("api_acl", $config["api_acl"], '',
 	30, 255, true, __('List of IP with access to API'));
 
+
+function get_image_files () {
+	$base_dir = 'images';
+	$files = list_files ($base_dir, ".png", 1, 0);
+	
+	$retval = array ();
+	foreach ($files as $file) {
+		$retval[$file] = $file;
+	}
+	
+	return $retval;
+}
+
+$imagelist = get_image_files ();
+$table->data[12][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', '', '',  true, 0, true, "Site logo") ;
+
+$table->data[12][1] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', '', '',  true, 0, true, "Header logo") ;
 
 echo "<form name='setup' method='post'>";
 

@@ -52,7 +52,7 @@
 		<tr>
 		<td rowspan="3" style="text-align: left ;padding-right: 25px;">
 			<a href="index.php">
-			<img src="images/integria_white.png" alt="logo">
+			<img src="images/<?php echo $config['site_logo']; ?>" alt="logo">
 			</a><br />
 			<?php echo $config["version"]; ?>
 		</td>

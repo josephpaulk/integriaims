@@ -70,7 +70,6 @@ if ($operation == 'move') {
 $search_id_group = (int) get_parameter ('search_id_group');
 $search_text = (string) get_parameter ('search_text');
 
-
 echo '<h2>'.$project['name'].' &raquo; '.__('Task management');
 echo "&nbsp;&nbsp;<a title='"._("Report")."'  href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project&search_id_group=$search_id_group&search_text=$search_text&clean_output=1'><img src='images/html.png'></a>";
 echo '</h2><br>';
@@ -81,7 +80,8 @@ if ($search_text != "")
 		$search_text, $search_text);
 
 if ($search_id_group != 0)
-	$where_clause .= spintf ('( AND id_group = ', $search_id_group);
+	$where_clause .= sprintf ('( AND id_group = ', $search_id_group);
+
 
 $table->width = '450px';
 $table->class = 'search-table';
@@ -131,6 +131,7 @@ $table->style[8] = "font-size: 9px";
 echo "<table width='90%' class='listing'>";
 echo "<tr>";
 $color = 1;
+
 show_task_tree ($table, $id_project, 0, 0, $where_clause);
 
 print_table ($table);

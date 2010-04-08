@@ -111,7 +111,7 @@ if ($attachments !== false) {
 		$data = array ();
 		
 		$attach_id = $attachment['id_attachment'];
-		$link = 'attachment/'.$attachment['id_attachment'].'_'.rawurlencode ($attachment['filename']);
+		$link = 'operation/kb/kb_download_file?id_attachment='.$attachment['id_attachment'];
 		$data[0] = '<a href="'.$link.'" title="'.$attachment['description'].'">';
 		$data[0] .= '<img src="images/disk.png"/> ';
 		$data[0] .= $attachment['filename'];

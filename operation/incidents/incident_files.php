@@ -51,42 +51,43 @@ if ($files === false) {
 	return;
 }
 
-$table->id = 'table_file_list';
-$table->class = 'listing';
-$table->width = '90%';
-$table->data = array ();
-$table->align = array ();
-$table->align[3] = 'center';
-$table->size = array ();
-$table->size[3] = '40px';
-$table->head = array ();
-$table->head[0] = __('Filename');
-$table->head[1] = __('Description');
-$table->head[2] = __('Size');
+echo "<table class=listing cellpadding=4 cellspacing=4>";
+echo "<tr>";
+echo "<th>".__('Filename');
+echo "<th>".__('Timestamp');
+echo "<th>".__('Description');
+echo "<th>".__('Size');
+
 if (give_acl ($config['id_user'], $incident['id_grupo'], "IM")) {
-	$table->head[3] = __('Delete');
+	echo "<th>".__('Delete');
 }
 
 foreach ($files as $file) {
-	$data = array ();
-	
-	$data[0] = '<img src="images/disk.png" /><a target="_blank"
-		href="attachment/pand'.$file['id_attachment'].'_'.rawurlencode ($file['filename']).'">'.
-		$file['filename'].'</a>';
-	$data[1] = $file["description"];
-	$data[2] = byte_convert ($file['size']);
+
+     $link = $config["base_url"]."/operation/incidents/incident_download_file.php?id_attachment=".$file["id_attachment"];
+
+     $real_filename = $config["homedir"]."/attachment/".$file["id_attachment"]."_".rawurlencode ($file["filename"]);    
+
+    echo "<tr>";
+    echo "<td valign=top>";
+	echo '<a target="_blank" href="'.$link.'">'. $file['filename'].'</a>';
+
+    $stat = stat ($real_filename);
+    echo "<td valign=top class=f9>".date ("Y-m-d H:i:s", $stat['mtime']);
+
+    echo "<td valign=top class=f9>". $file["description"];
+    echo "<td valign=top>". byte_convert ($file['size']);
 
 	// Delete attachment
 	if (give_acl ($config['id_user'], $incident['id_grupo'], 'IM')) {
-		$data[3] = '<a class="delete" id="delete-file-'.$file["id_attachment"].'"
+		    echo "<td>". '<a class="delete" id="delete-file-'.$file["id_attachment"].'"
 			href="ajax.php?page=operation/incidents/incident_detail&id='.
 			$id_incident.'&delete_file=1&id_attachment='.$file["id_attachment"].'">
 			<img src="images/cross.png"></a>';
 	}
-	
-	array_push ($table->data, $data);
+
 }
 
-print_table ($table);
+echo "</table>";
 
 ?>

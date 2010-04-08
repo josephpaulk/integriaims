@@ -571,4 +571,10 @@ function people_involved_incident ($id_inc){
 	return $people;
 }
 
+// Return TRUE if User has access to that incident
+
+function user_belong_incident ($user, $id_inc) {
+    return in_array($user, people_involved_incident ($id_inc));
+}
+
 ?>

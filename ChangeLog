@@ -1,3 +1,41 @@
+2010-04-08  Sancho Lerena <slerena@artica.es>
+
+    * include/styles/dbmanager.css: Fixed styles for Dababase/SQL manager.
+
+    * include/functions_config.php: Added custom logo parsing.
+
+    * include/config_process.php: Added custom logo parsing (defaults).
+
+    * include/functions_incidents.php: Added function user_belong_incident().
+
+    * include/functions_db.php: Added a todo label for mail_todo().
+
+    * operation/incidents/incident_detail.php,
+      operation/incidents/incident_files.php
+      operation/incidents/incident_attach_file.php
+      operation/incidents/incident_download_file.php: Implemented new secure
+      way to access to attachment, and better file visualizacion: added datetime
+      and other minor format stuff.
+
+    * operation/projects/project_download_file.php, 
+      operation/projects/task.php
+      operation/projects/task_files.php
+      operation/projects/task_attach_file.php: Same as above for project/tasks.
+
+    * operation/kb/browse_data.php, 
+      operation/kb/kb_download_file.php: Same as above for KB articles.
+
+    * images/integria_logo.png: Renamed/moved.
+    
+    * general/login_page.php: Added support for custom logo.
+
+    * general/header.php: Added support for custom header logo.
+
+    * godmode/setup/setup.php: Added support for custom logos.
+
+    * godmode/setup/dbmanager.php: New support for "clean output" (fullscreen)
+    useful to render SQL output in a pure table (useful for a "basic" reports).
+
 2010-03-31  Miguel de Dios <miguel.dedios@artica.es>
 
  	* include/js/integria_incident_search.js: in event function
