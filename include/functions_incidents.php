@@ -220,13 +220,16 @@ function print_incidents_stats ($incidents, $return = false) {
 	$total_lifetime = 0;
 	$max_lifetime = 0;
 	$oldest_incident = false;
+    $scoring_sum = 0;
+    $scoring_valid = 0;
+
 	if ($incidents === false)
 		$incidents = array ();
 	foreach ($incidents as $incident) {
 		if ($incident['estado'] != 6 && $incident['estado'] != 7) {
 			$opened++;
 		} elseif ($incident['actualizacion'] != '0000-00-00 00:00:00') {
-			$lifetime = get_db_value ('actualizacion - inicio',
+			$lifetime = get_db_value ('UNIX_TIMESTAMP(actualizacion)  - UNIX_TIMESTAMP(inicio)',
 				'tincidencia', 'id_incidencia', $incident['id_incidencia']);
 			if ($lifetime > $max_lifetime) {
 				$oldest_incident = $incident;
@@ -234,11 +237,14 @@ function print_incidents_stats ($incidents, $return = false) {
 			}
 			$total_lifetime += $lifetime;
 		}
-		$workunits = get_incident_workunits ($incident['id_incidencia']);
-		$hours = 0;
-		foreach ($workunits as $workunit) {
-			$hours += get_db_value ('duration', 'tworkunit', 'id', $workunit['id_workunit']);
-		}
+
+        // Scoring avg.
+        if ($incident["score"] > 0){
+            $scoring_valid++;
+            $scoring_sum = $scoring_sum + $incident["score"];
+        }
+            
+		$hours = get_incident_workunit_hours  ($incident['id_incidencia']);
 		$total_hours += $hours;
 	}
 	$closed = $total - $opened;
@@ -254,72 +260,95 @@ function print_incidents_stats ($incidents, $return = false) {
 		$mean_lifetime = (int) ($total_lifetime / $closed) / 60;
 	}
 	
+    // Get avg. scoring
+    if ($scoring_valid > 0){
+        $scoring_avg = $scoring_sum / $scoring_valid;
+    } else 
+        $scoring_avg = "N/A";
+
 	// Get incident SLA compliance
 	$sla_compliance = get_sla_compliance ();
 
-	$table->width = '40%';
-	$table->class = 'float_left blank';
-	$table->rowspan = array ();
-	$table->rowspan[0][1] = 2;
-	$table->colspan = array ();
-	$table->style = array ();
-	$table->style[2] = 'vertical-align: top';
-	$table->data = array ();
-	
-	$table->data[0][0] = print_label (__('Total incicents'), '', '', true, $total);
+    $output = "<table class=blank width=100% cellspacing=4 cellpadding=0 border=0 >";
+    $output .= "<tr><td>";
+    $output .= print_label (__('Total incidents'), '', '', true, $total);
 	$data = array ($opened, $total - $opened);
 	$legend = array (__('Opened'), __('Closed'));
-	$table->data[0][1] = fs_3d_pie_chart ($data, $legend, 200, 100, "ffffff");
-	$table->data[1][0] = print_label (__('Opened'), '', '', true,
-		$opened.' ('.$opened_pct.'%)');
-	$table->data[2][0] = print_label (__('Avg. life time'), '', '', true,
-		give_human_time ($mean_lifetime));
-	$table->data[2][1] = print_label (__('Avg. work time'), '', '', true,
-		$mean_work.' '.__('Hours'));
-	$table->data[3][0] = print_label (__('SLA compliance'), '', '', true,
-		format_numeric ($sla_compliance) .' '.__('%'));
+    $output .= "<td>";
+
+    $output .= fs_3d_pie_chart ($data, $legend, 200, 100, "ffffff");
+    $output .= "<tr><td>";
+    $output .= print_label (__('Opened'), '', '', true, $opened.' ('.$opened_pct.'%)');
+    $output .= "<td>";
+    $output .= print_label (__('Avg. life time'), '', '', true, give_human_time ($mean_lifetime));
+    $output .= "<tr><td>";
+    $output .= print_label (__('Avg. work time'), '', '', true, $mean_work.' '.__('Hours'));
+    $output .= "<td>";
+	$output .= print_label (__('SLA compliance'), '', '', true, format_numeric ($sla_compliance) .' '.__('%'));
+    $output .= "<tr><td>";
+    $output .= print_label (__('Avg. Scoring'), '', '', true, format_numeric ($scoring_avg));
+
 	
 	if ($oldest_incident) {
+
+        $oldest_incident_time = get_incident_workunit_hours  ($oldest_incident["id_incidencia"]);
 		$link = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.
-			$oldest_incident['id_incidencia'].'">'.$oldest_incident['titulo'].'</a>';
-		$table->data[3][1] = print_label (__('Longest closed incident'), '', '', true,
+			$oldest_incident['id_incidencia'].'">Incident #'.$oldest_incident['id_incidencia']. " : ".$oldest_incident['titulo']. "</a>";
+            $output .= "<td>";
+            $output .= print_label (__('Longest closed incident'), '', '', true,
 			$link);
+            $output .= "<br>".__("Worktime hours"). " : ".$oldest_incident_time;
+            $output .= "<br>".__("Lifetime"). " : ".give_human_time($max_lifetime);
 	}
-	
-	$output .= print_table ($table, true);
-	unset ($table);
+    $output .= "<tr><td>";
 
-	// Find the 5 most active users (more hours worked)
-	$most_active_users = get_most_active_users (5);
-	
-	$users_label = '';
-	foreach ($most_active_users as $user) {
-		$users_label .= '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.
-			$user['id_user'].'">'.$user['id_user']."</a> (".$user['worked_hours'].
-			" ".__('Hr').") <br />";
-	}
+    //TODO: Work in most_active_XXX, with the LIST of incidents in this search
 
-	// Find the 5 most active incidents (more worked hours)
-	$most_active_incidents = get_most_active_incidents (5);
-	$incidents_label = '';
-	foreach ($most_active_incidents as $incident) {
-		$incidents_label .= '<a class="incident_link" id="incident_link_'.
-			$incident['id_incidencia'].'"
-			href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.
-			$incident['titulo']."</a> (".$incident['worked_hours']." ".
-			__('Hr').") <br />";
-	}
+    // This section is only show to ADMINS!
+
+    if (give_acl($config["id_user"], 0, "IM")){
+	    // Find the 5 most active users (more hours worked)
+	    $most_active_users = get_most_active_users (5);
 	
-	$table->width = '50%';
-	$table->class = 'float_left blank';
-	$table->style = array ();
-	$table->style[0] = 'vertical-align: top; margin-right: 15px;';
-	$table->style[1] = 'vertical-align: top';
-	$table->data = array ();
-	$table->data[0][0] = print_label (__('Most active users'), '', '', true, $users_label);
-	$table->data[0][1] = print_label (__('Most active incidents'), '', '', true, $incidents_label);
-	
-	$output .= print_table ($table, true);
+	    $users_label = '';
+	    foreach ($most_active_users as $user) {
+		    $users_label .= '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.
+			    $user['id_user'].'">'.$user['id_user']."</a> (".$user['worked_hours'].
+			    " ".__('Hr').") <br />";
+	    }
+
+	    // Find the 5 most active incidents (more worked hours)
+	    $most_active_incidents = get_most_active_incidents (5);
+	    $incidents_label = '';
+	    foreach ($most_active_incidents as $incident) {
+		    $incidents_label .= '<a class="incident_link" id="incident_link_'.
+			    $incident['id_incidencia'].'"
+			    href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.
+			    $incident['titulo']."</a> (".$incident['worked_hours']." ".
+			    __('Hr').") <br />";
+	    }
+
+        $top5_submitters = get_most_incident_creators(5);
+        foreach ($top5_submitters as $submitter){
+            $submitter_label .= $submitter["id_creator"]." ( ".$submitter["total"]. " )<br>";
+        }
+
+        $top5_scoring = get_best_incident_scoring (5);
+        foreach ($top5_scoring as $submitter){
+            $scoring_label .= $submitter["id_usuario"]." ( ".$submitter["total"]. " )<br>";
+        }
+        
+
+        $output .= print_label (__('Top 5 active users'), '', '', true, $users_label);
+        $output .= "<td>";
+        $output .= print_label (__('Top 5 active incidents'), '', '', true, $incidents_label);
+        $output .= "<tr><td>";
+        $output .= print_label (__("Top 5 incident submitters"), '', '', true, $submitter_label );
+        $output .= "<td>";
+        $output .= print_label (__('Top 5 average scoring by user'), '', '', true, $scoring_label);
+    }
+
+    $output .= "</table>";
 	
 	if ($return)
 		return $output;
@@ -576,5 +605,35 @@ function people_involved_incident ($id_inc){
 function user_belong_incident ($user, $id_inc) {
     return in_array($user, people_involved_incident ($id_inc));
 }
+
+
+/** 
+ * Returns the n top creator users (users who create a new incident).
+ *
+ * @param lim n, number of users to return.
+ */
+function get_most_incident_creators ($lim) {
+	$most_creators = get_db_all_rows_sql ('select id_creator, count(*) as total from tincidencia GROUP by id_creator ORDER BY total DESC LIMIT '. $lim);
+	if ($most_creators === false) {
+		return array ();
+	}
+
+	return $most_creators;
+}
+
+/** 
+ * Returns the n top incident owner by scoring (users with best scoring).
+ *
+ * @param lim n, number of users to return.
+ */
+function get_best_incident_scoring ($lim) {
+	$most_creators = get_db_all_rows_sql ('select id_usuario, AVG(score) as total from tincidencia GROUP by id_usuario ORDER BY total DESC LIMIT '. $lim);
+	if ($most_creators === false) {
+		return array ();
+	}
+
+	return $most_creators;
+}
+
 
 ?>

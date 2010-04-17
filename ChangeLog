@@ -1,3 +1,38 @@
+2010-04-18  Sancho Lerena <slerena@artica.es>
+    
+    * include/functions_config.php, 
+    godmode/setup/setup.php: Added support for choose to send mail
+    only in incident NEW, CLOSE and WU events, skipping other events.
+
+    * include/functions_incident.php: Added incident statistical funcions
+    get_most_incident_creators. Removed old code formatting stats using
+    the table object and doing by "manual" table formatting. Table object
+    must be used only for listing information, not formatting.
+    Added more stats, and show general ones only for IM.
+ 
+    * include/mailtemplates/*.tpl: Solved some minor problems and typos.
+
+    * incidents/incident_detail.php: Fixed view for creator (only read),
+    finished the "Incident scoring" for ticket submitter, and some minor    
+    fixes.
+
+    * operation/incidents/incident_files.php: More width for table.
+
+    * operation/user_report/report_annual.php,
+    operation/user_report/monthly.php: ACL controls adjusted.
+
+    * operation/user_report/report_full.php: Better ACL controls,
+    added incident scoring, and new link to Task/Sorted WU report.
+    
+    * operation/user_report/report_monthly.php: Better ACL support,
+    added incident scoring.
+
+    * operation/users/user_spare_workunit.php: Finally, PM can change
+    the Task of the WU from here when edit the WU.
+
+    * operation/users/user_workunit_report.php: Now a task id can be 
+    passed to filter output by Task (TODO: do the same for incidents).
+
 2010-04-08  Sancho Lerena <slerena@artica.es>
 
     * include/styles/dbmanager.css: Fixed styles for Dababase/SQL manager.

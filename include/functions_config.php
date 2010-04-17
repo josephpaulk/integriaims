@@ -118,6 +118,9 @@ function load_config(){
          $config["header_logo"] = "integria_logo_header.png";
     }
 
+    if (!isset ($config["email_on_incident_update"])){
+	$config["email_on_incident_update"] = 0;
+    }
 
 }
 

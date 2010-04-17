@@ -1136,6 +1136,8 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 	}
 
 	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
+
+    // External user only can see himself
 	if ($level == -1){
 		$user= array();
 		$sql = sprintf ('SELECT *

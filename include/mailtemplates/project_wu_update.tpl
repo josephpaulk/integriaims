@@ -1,4 +1,4 @@
-Hello _fullname_. _additional_message_
+_additional_message_
 
 Task _taskname_ of project _projectname_ has been updated by user _wu_user_ and a already reported workunit has been modified from history. You could track this workunit in the following URL (need to use your credentials):
 

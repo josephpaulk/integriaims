@@ -105,7 +105,6 @@ if ($action == 'update') {
 	$id_task = (int) get_parameter ('task_user');
 	$id_incident_type = get_parameter ('id_incident_type');
 	$id_parent = (int) get_parameter ('id_parent');
-    $score = (int) get_parameter ('score');
 	
 	$old_incident = get_incident ($id);
 	
@@ -145,18 +144,19 @@ if ($action == 'update') {
 			id_grupo = %d, id_usuario = "%s",
 			notify_email = %d, prioridad = %d, descripcion = "%s",
 			epilog = "%s", id_task = %d, resolution = %d,
-			id_incident_type = %d, id_parent = %s, score = %d, affected_sla_id = 0  %s 
+			id_incident_type = %d, id_parent = %s, affected_sla_id = 0  %s 
 			WHERE id_incidencia = %d',
 			$titulo, $origen, $estado, $grupo, $user,
 			$email_notify, $priority, $description,
 			$epilog, $id_task, $resolution, $id_incident_type,
-			$idParentValue, $score, $sla_man, $id);
+			$idParentValue, $sla_man, $id);
 	$result = process_sql ($sql);
 
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
 
 	/* Update inventory objects in incident */
 	update_incident_inventories ($id, get_parameter ('inventories'));
+
 	if ($config['incident_reporter'] == 1)
 		update_incident_contact_reporters ($id, get_parameter ('contacts'));
 	
@@ -167,7 +167,12 @@ if ($action == 'update') {
 
 	// Email notify to all people involved in this incident
 	if ($email_notify == 1) {
-		mail_incident ($id, $user, "", 0, 0);
+        if (($estado == 7) OR ($estado ==6) OR ($config["email_on_incident_update"] == 1)){
+            if (($estado == 7) OR ($estado ==6))
+    			mail_incident ($id, $user, "", 0, 5);
+            else
+    			mail_incident ($id, $user, "", 0, 0);
+		}
 	}
 
 	if (defined ('AJAX')) {
@@ -351,7 +356,9 @@ if ($id) {
 			$result_msg = '<h3 class="suc">'.__('File added').'</h3>';
 			// Email notify to all people involved in this incident
 			if ($email_notify == 1) {
-				mail_incident ($id, $config['id_user'], 0, 0, 2);
+                if ($config["email_on_incident_update"] == 1){
+    				mail_incident ($id, $config['id_user'], 0, 0, 2);
+                }
 			}
 			
 			// Copy file to directory and change name
@@ -413,7 +420,6 @@ if ($id) {
 		}
 	}
 } else {
-	$titulo = "";
 	$titulo = "";
 	$description = "";
 	$origen = 0;
@@ -480,7 +486,42 @@ if ($id) {
 		echo '<input type="image" class="action" src="images/star.png" title="' . __('Add to KB') .'">';
 		echo '</form>';
 	}
+
+    if (give_acl($config["id_user"], 0, "IM")){
+        if ($incident["score"] > 0){
+            echo "( ".__("Scoring");
+            echo " ". $incident["score"]. "/10 )";
+        }
+    }
+
 	echo "</h1>";
+
+    // Score this incident  
+    if ($id){
+        if (($incident["score"] == 0) AND (($incident["id_creator"] == $config["id_user"]) AND ( 
+    	($incident["estado"] ==6) OR ($incident["estado"] == 7)))) {
+            echo "<form method=post action=index.php?sec=incidents&sec2=operation/incidents/incident_score&id=$id>";
+            echo "<table width=98% cellpadding=4 cellspacing=4><tr><td>";
+            echo "<img src='images/award_star_silver_1.png' width=32>&nbsp;";
+            echo "</td><td>";
+            echo __('Please, help to improve the service and give us a score for the resolution of this incident. People assigned to this incident will not view directly your scoring.');
+            echo "</td><td>";
+            echo "<select name=score>";
+            echo "<option value=10>".__("Very good, excellent !")."</option>";
+            echo "<option value=8>".__("Good, very satisfied.")."</option>";
+            echo "<option value=6>".__("It's ok, but could be better.")."</option>";
+            echo "<option value=5>".__("Average. Not bad, not good.")."</option>";
+            echo "<option value=4>".__("Bad, you must to better")."</option>";
+            echo "<option value=2>".__("Very bad")."</option>";
+            echo "<option value=1>".__("Horrible, you need to change it.")."</option>";
+            echo "</select>";
+            echo "</td><td>";
+            print_submit_button (__('Score'), 'accion', false, 'class="sub next"');
+            echo "</td></tr></table>";
+            echo "</form>";
+    	}
+    }
+
 } else {
 	if (! defined ('AJAX'))
 		echo "<h2>".__('Create incident')."</h2>";
@@ -488,7 +529,7 @@ if ($id) {
 
 echo '<div class="result">'.$result_msg.'</div>';
 
-$table->width = '90%';
+$table->width = '98%';
 $table->class = 'databox_color';
 $table->id = "incident-editor";
 $table->size = array ();
@@ -524,8 +565,7 @@ $table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
 if ($has_manage_permission)
 	$table->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
 else {
-	$table->data[1][0] = print_label (__('Status'), '','',true, render_status(STATUS_NEW));
-	$estado = STATUS_NEW;
+	$table->data[1][0] = print_label (__('Status'), '','',true, render_status($estado));
 	$table->data[1][0] .= print_input_hidden ('incident_status', $estado, true);
 }
 
@@ -543,8 +583,7 @@ $table->data[1][1] .= '&nbsp;'. print_priority_flag_image ($priority, true);
 if ($has_manage_permission)
 	$table->data[1][2] = combo_incident_resolution ($resolution, $disabled, true);
 else {
-	$table->data[1][2] = print_label (__('Resolution'), '','',true, render_resolution(RES_INPROCESS));
-	$resolution = RES_INPROCESS;
+	$table->data[1][2] = print_label (__('Resolution'), '','',true, render_resolution($resolution));
 	$table->data[1][2] .= print_input_hidden ('incident_resolution', $resolution, true);
 }
 
@@ -688,18 +727,6 @@ $table->data[5][0] = print_textarea ('description', 9, 80, $description, $disabl
 $table->data[6][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,
 		true, __('Resolution epilog'));
 
-for ($ax=0;$ax < 10; $ax++){
-    $scoreList[$ax] = $ax;
-}
-
-$table->data[7][0] = print_select ($scoreList, "score", $score, "", "Select", 0, true, 0, true, __("Score"),false);
-
-$table->data[7][0] .= "&nbsp;". __("Please score the resolution of this incident to allow us improve the service");
-
-if ($estado != 6 && $estado != 7) {
-	$table->rowstyle[6] = 'display: none';
-	$table->rowstyle[7] = 'display: none';
-}
 
 
 if ($has_permission){

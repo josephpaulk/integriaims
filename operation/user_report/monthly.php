@@ -17,7 +17,7 @@ require_once ('include/functions_tasks.php');
 require_once ('include/functions_workunits.php');
 
 if (check_login() != 0) {
- 	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
+ 	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -28,7 +28,7 @@ $real_user_id = $id_user;
 
 if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo, "IR") != 1)){
  	// Doesn't have access to this page
-	audit_db($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to user report without projects rights");
+	audit_db($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to user monthly report without projects rights");
 	include ("general/noaccess.php");
 	exit;
 }
@@ -106,9 +106,14 @@ echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$pre
 echo "<td width=85%>";
 
 echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year'>";
-combo_user_visible_for_me ($real_user_id, 'id', 0, 'PR');
-echo "&nbsp;";
-print_submit_button (__('Show'), 'show_btn', false, 'class="next sub"');
+
+
+if (give_acl($config["id_user"], 0, "PM")){
+    combo_user_visible_for_me ($real_user_id, 'id', 0, 'PR');
+    echo "&nbsp;";
+    print_submit_button (__('Show'), 'show_btn', false, 'class="next sub"');
+}
+
 echo "</form>";
 echo "</td>";
 

@@ -51,7 +51,7 @@ if ($files === false) {
 	return;
 }
 
-echo "<table class=listing cellpadding=4 cellspacing=4>";
+echo "<table class=listing cellpadding=4 cellspacing=4 width=90%>";
 echo "<tr>";
 echo "<th>".__('Filename');
 echo "<th>".__('Timestamp');

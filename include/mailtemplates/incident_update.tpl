@@ -1,4 +1,3 @@
-Hello _fullname_.
 
 Incident #_incident_id_ ((_incident_title_)) has been UPDATED. 
 
@@ -7,7 +6,7 @@ You can reply to this mail to add a Workunit to this incident. You also could tr
    _access_url_
 
 ===================================================
-    ID          : #_incident_id - _incident_title_
+    ID          : #_incident_id_ - _incident_title_
     CREATED ON  : _creation_timestamp_
     LAST UPDATE : _update_timestamp_
     GROUP       : _group_

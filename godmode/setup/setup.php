@@ -45,7 +45,7 @@ if ($update) {
 	$config["timezone"] = get_parameter ("timezone", "Europe/Madrid");
 	$config["api_acl"] =get_parameter ("api_acl", "*");
 	$config["auto_incident_close"] = get_parameter ("auto_incident_close", "72");
-
+	$config["email_on_incident_update"] = get_parameter ("email_on_incident_update", 0);
 	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
     $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
 
@@ -84,6 +84,7 @@ if ($update) {
     update_config_token ("auto_incident_close", $config["auto_incident_close"]);
     update_config_token ("site_logo", $config["site_logo"]);
     update_config_token ("header_logo", $config["header_logo"]);
+    update_config_token ("email_on_incident_update", $config["email_on_incident_update"]);
 
 }
 
@@ -148,6 +149,9 @@ $table->data[10][1] .= integria_help ("auto_incident_close", true);
 
 $table->data[11][0] = print_input_text ("api_acl", $config["api_acl"], '',
 	30, 255, true, __('List of IP with access to API'));
+
+
+$table->data[11][1] = print_select ($incident_reporter_options, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, true, "Send email on every incident update");
 
 
 function get_image_files () {

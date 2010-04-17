@@ -31,25 +31,31 @@
 	$prev_year = $year -1 ;
 	$next_year = $year +1 ;	
 
-	if (dame_admin ($config["id_user"]) == 0){
-        $id_user_show = $config["id_user"];
-        echo "<h3>".__('Annual report for user')." ". $id_user_show. "</h3>";
-    } else {
-    	$id_user_show = get_parameter ("id_user", $config["id_user"]);
-	    echo "<h3>".__('Annual report for user')." ". $id_user_show. "</h3>";
 
-		echo "<table cellpadding=4 cellspacing=4 class='blank' style='margin-left: 10px'>";
-		echo "<tr><td>";
+	$id_user_show = get_parameter ("id_user", $config["id_user"]);
 
-		// Prev. year
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$prev_year&id_user=$id_user_show'> ".__('Prev')."</a>";
-		echo "</td>";
-				
-		echo "<td>";
-		echo "<h2>$year</h2>";
-		echo "</td>";
-		
-		
+    if (($id_user_show != $config["id_user"]) AND (!give_acl($config["id_user"], 0, "PM"))){
+    	// Doesn't have access to this page
+    	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to another user yearly report without proper rights");
+    	include ("general/noaccess.php");
+	exit;
+}
+
+    echo "<h3>".__('Annual report for user')." ". $id_user_show. "</h3>";
+
+	echo "<table cellpadding=4 cellspacing=4 class='blank' style='margin-left: 10px'>";
+	echo "<tr><td>";
+
+	// Prev. year
+	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$prev_year&id_user=$id_user_show'> ".__('Prev')."</a>";
+	echo "</td>";
+			
+	echo "<td>";
+	echo "<h2>$year</h2>";
+	echo "</td>";
+
+	if (give_acl($config["id_user"], 0, "PM")){		
+	
         echo "<form name='xx' method=post action='index.php?sec=users&sec2=operation/user_report/report_annual'>";
         
         echo "<input type='hidden' name='year' value='$year'>";
@@ -57,31 +63,40 @@
         echo "<td>";
         // Show user
         combo_user_visible_for_me ($config["id_user"], "id_user", 0, "AR");
-		echo "</td>";	
+	    echo "</td>";	
         		
-		echo "<td>";
-		print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"');
-		echo "</td>";	
-		
-		// Next. year
-		echo "<td>";
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$next_year&id_user=$id_user_show'> ".__('Next')."</a>";
-		echo "</td>";	
-        echo "</form></table>";
-    }
+	    echo "<td>";
+	    print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"');
+	    echo "</td>";	
+	}
 
-    echo "<table class='button'><tr>";
+	// Next. year
+	echo "<td>";
+	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$next_year&id_user=$id_user_show'> ".__('Next')."</a>";
+	echo "</td>";	
+    echo "</form></table>";
+
+
+    echo "<table class='button' width=100%><tr>";
+    echo "<td>".__('Vacations days');
     echo "<td style='background-color: #FFFF80;'>";
-    echo get_user_vacations ($id_user_show, $year). "</td><td>".__('Vacations days');
+    echo get_user_vacations ($id_user_show, $year). "</td>";
     
+    echo "<td>";
+    echo __('Days worked (projects)');
     echo "<td style='background-color: #98FF8B;'>";
-    echo get_user_worked_days ($id_user_show, $year). "</td><td>".__('Days worked (projects)');
+    echo get_user_worked_days ($id_user_show, $year). "</td>";
 
+    echo "<td>";
+    echo __('Days worked (incidents)');
     echo "<td style='background-color: #FF7BFE;'>";
-    echo get_user_incident_worked_days ($id_user_show, $year). "</td><td>".__('Days worked (incidents)');
+    echo get_user_incident_worked_days ($id_user_show, $year). "</td>";
 
+
+    echo "<td>";
+    echo __('Other');
 	echo "<td style='background-color: #FFE053;'>";
-    echo get_user_other ($id_user_show, $year). "</td><td>".__('Other');
+    echo get_user_other ($id_user_show, $year);
 
     echo "</table>";
     

@@ -27,7 +27,13 @@ $now = (string) get_parameter ("givendate", date ("Y-m-d H:i:s"));
 $public = (bool) get_parameter ("public", 1);
 $id_project = (int) get_parameter ("id_project");
 $id_workunit = (int) get_parameter ('id_workunit');
-$id_task = (int) get_parameter ("id_task");
+$id_task = (int) get_parameter ("id_task",0);
+
+if ($id_task == 0){
+    // Try to get id_task from tworkunit_task
+    $id_task = get_db_sql ("SELECT id_task FROM tworkunit_task WHERE id_workunit = $id_workunit");
+}
+
 // If id_task is set, ignore id_project and get it from the task
 if ($id_task) {
 	$id_project = get_db_value ('id_project', 'ttask', 'id', $id_task);
@@ -218,6 +224,7 @@ if ($operation == 'update') {
 		$timestamp, $duration, $description, $have_cost,
 		$id_profile, $public, $id_workunit);
 	$result = process_sql ($sql);
+
 	if ($id_task !=0) {
 	    // Old old association
 	    process_sql ("DELETE FROM tworkunit_task WHERE id_workunit = $id_workunit");
@@ -268,6 +275,13 @@ if (! $id_task) {
 	$table->colspan[1][0] = 3;
 	$table->data[1][0] = combo_task_user_participant ($config['id_user'],
 		true, 0, true, __('Task'));
+} else {
+    // Show task ONLY if Project manager (to change a WU from one task to other
+    if (give_acl($config["id_user"], 0, "PM")){
+    	$table->colspan[1][0] = 3;
+    	$table->data[1][0] = combo_task_user_participant ($config['id_user'],
+		true, $id_task, true, __('Task'));
+    }
 }
 
 // Time used
@@ -312,11 +326,7 @@ if ($id_workunit) {
 	print_submit_button (__('Add'), 'btn_add', false, 'class="sub next"');
 }
 print_input_hidden ('timestamp', $now);
-if ($id_task) {
-	/* This is useful when adding a workunit to a task */
-	print_input_hidden ('id_task', $id_task);
-	print_input_hidden ('id_project', $id_project);
-}
+
 echo '</div>';
 echo '</form>';
 ?>

@@ -334,7 +334,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR")) {
 	echo "<br>";
 
 	echo '<div class="portlet incident-menu" id="incident-menu-actions" style="display: none">';
-	echo '<h3>'.__('Incident').' #<span class="id-incident-menu">';
+	echo '<h3>'.__('Incident').' # <span class="id-incident-menu">';
 	if ($id_incident)
 		echo $id_incident;
 	echo '</span></h3>';
@@ -357,7 +357,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR")) {
 	else
 		echo '<li id="incident-attach-file">';
 	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_attach_file&id=$id_incident'>".__('Add file')."</a>";
-	echo "</li>";
+	echo "</li>";	
 
 	// Blockend
 	echo "</ul>";

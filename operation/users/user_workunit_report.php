@@ -25,6 +25,10 @@ check_login ();
 
 $id_workunit = get_parameter ("id_workunit", -1);
 $id = get_parameter ("id");
+
+// Optional search: by task
+$id_task = get_parameter ("id_task", 0);
+
 $operation = get_parameter ("operation");
 if (($id != "") && ($id != $id_user)) {
 	if (give_acl($id_user, 0, "PW"))
@@ -102,18 +106,40 @@ $ahora = date("Y-m-d H:i:s");
 if ($timestamp_h == "")
 	$timestamp_h == $ahora ;
 echo "<h3>";
-echo __('Workunit personal report');
+
+echo __('Workunit personal report for user');
+echo " '". dame_nombre_real($id_user). "'.";
+
+echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$timestamp_l&timestamp_h=$timestamp_h&id=$id_user&id_task=$id_task&clean_output=1'>";
+echo "<img src='images/html.png'>";
+echo "</A>";
+
+echo "<br>";
+echo __("Between dates");
+echo ": ";
 if ($timestamp_l != "" AND $timestamp_h != "")
-	echo " : ".$timestamp_l. " -&gt;".$timestamp_h;
+	echo " : ".$timestamp_l. " ".__("to")." ".$timestamp_h;
+
+if ($id_task != 0)
+    echo "<br>".__("Task"). " : ".get_db_sql("SELECT name FROM ttask WHERE id = $id_task");
+
 echo "</h3>";
 if ($id_workunit != -1){
 	$sql= "SELECT * FROM tworkunit WHERE tworkunit.id = $id_workunit";
 } else {
-	if ($timestamp_l != "" && $timestamp_h != "")
-		$sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' AND timestamp >= '$timestamp_l' AND timestamp < '$timestamp_h' ORDER BY timestamp DESC";
-	else 
-		$sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' ORDER BY timestamp DESC";
+    if ($id_task == 0){
+	    if ($timestamp_l != "" && $timestamp_h != "")
+		    $sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' AND timestamp >= '$timestamp_l' AND timestamp < '$timestamp_h' ORDER BY timestamp DESC";
+	    else 
+		    $sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' ORDER BY timestamp DESC";
+    } else {
+        if ($timestamp_l != "" && $timestamp_h != "")
+		    $sql= "SELECT * FROM tworkunit, tworkunit_task WHERE tworkunit.id_user = '$id_user' AND timestamp >= '$timestamp_l' AND timestamp < '$timestamp_h' AND tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id ORDER BY timestamp DESC";
+	    else 
+		    $sql= "SELECT * FROM tworkunit, tworkunit_task WHERE tworkunit.id_user = '$id_user' AND tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id ORDER BY timestamp DESC";
+    }
 }
+
 // TODO: Add granularity check to show only data from projects where ACL is active for current user
 if ($res = mysql_query($sql)) {
 	while ($row=mysql_fetch_array($res)) 

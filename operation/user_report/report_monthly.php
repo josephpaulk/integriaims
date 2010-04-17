@@ -68,14 +68,14 @@
     echo "<th>".__('Graph overview');
 	echo "<th>".__('Total hours for this month');
     echo "<th>".__('Charged this month');
+    echo "<th>".__('Avg. Scoring');
 
 	$sql0= "SELECT * FROM tusuario";
 	if ($res0 = mysql_query($sql0)) {
 		while ($row0=mysql_fetch_array($res0)){
 
             // Can current user have access to this user ?
-            if ((user_visible_for_me ($config["id_user"], $row0["id_usuario"], "IM") == 1) OR 
-                (user_visible_for_me ($config["id_user"], $row0["id_usuario"], "PM") == 1)) {
+            if (($row0["id_usuario"] == $config["id_user"]) OR (give_acl($config["id_user"], 0, "IM")) OR (give_acl($config["id_user"], 0, "UM"))) {
 			    $nombre = $row0["id_usuario"];
 			    $avatar = $row0["avatar"];
 
@@ -116,7 +116,6 @@
                 // Graph stats montly report for X user
                 echo "<td ><center>";
                 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$nombre'><img src='images/chart_bar.png' border=0></a></center></td>";
-    
                 // Total hours this month
 			    echo "<td  >";
 			    echo $row[0];
@@ -130,6 +129,13 @@
                     echo "--";
 
 
+                // Average incident scoring
+                echo "<td>";
+                $tempsum = get_db_sql ("SELECT AVG(score) FROM tincidencia WHERE id_usuario = '$nombre'AND inicio > '$begin_month' AND actualizacion <= '$end_month'");
+                if ($tempsum != "")
+                    echo format_numeric($tempsum). "/10";
+                else
+                    echo "--";
             }
 		}
 	}

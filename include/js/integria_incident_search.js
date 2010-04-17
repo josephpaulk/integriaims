@@ -624,7 +624,6 @@ function configure_incident_side_menu (id_incident, refresh_menu) {
 			show_add_workunit_dialog (id_incident);
 			return false;
 		});
-	
 	$("#incident-menu-actions #incident-attach-file")
 		.attr ('href', "index.php?sec=incidents&sec2=operation/incidents/incident_attach_file&id="+id_incident)
 		.unbind ("click")

@@ -20,6 +20,14 @@ $id_user = $config["id_user"];
 
 check_login ();
 
+/*
+if (!give_acl ($config["id_user"], 0, "IM")) {
+	audit_db("Noauth", $config["REMOTE_ADDR"], "Unauthorized access", "Trying to access full user report");
+	require ("general/noaccess.php");
+	exit;
+}
+*/
+
 $now = date ('Y-m-d');
 $start_date = get_parameter ("start_date", date ('Y-m-d', strtotime ("$now - 3 months")));
 $end_date = get_parameter ('end_date', $now);
@@ -47,7 +55,11 @@ echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report
 echo "<table class='blank' style='margin-left: 10px' width='90%'>";
 echo "<tr><td>";
 echo __("Username") ."<br>";
-combo_user_visible_for_me ($user_id, 'user_id', 0, 'PR');
+if (give_acl($config["id_user"], 0, "PM"))
+    combo_user_visible_for_me ($user_id, 'user_id', 0, 'PM');
+else
+    echo $config["id_user"];
+
 echo "</td><td>";
 echo __("Begin date")."<br>";
 print_input_text ('start_date', $start_date, '', 10, 20);	
@@ -124,7 +136,8 @@ if ($user_id == "") {
 	
 					echo "<tr>";
 					echo "<td>&nbsp;&nbsp;&nbsp;<img src='images/copy.png'>";
-					echo '<a href="index.php?sec=projects&sec2=operation/projects/task_detail&id_project='.$project['id'].'&id_task='.$task['id'].'&operation=view">';
+                    echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$start_date&timestamp_h=$end_date&id=demo&id_task=".$task['id']."'>";
+
 					echo $task['name'];
 					echo "</a>";
 					echo "<td>";
@@ -160,7 +173,7 @@ if ($total_time > 0){
 
 echo "<h3>".__("Incident report")."</h3>";
 
-	$sql = sprintf ('SELECT tincidencia.id_incidencia as iid, tincidencia.estado as istatus, tincidencia.titulo as title, tincidencia.id_grupo as id_group, tincidencia.id_creator as creator, tincidencia.id_usuario as owner, tincidencia.inicio as date_start, tincidencia.cierre as date_end, SUM(tworkunit.duration) as `suma`  
+	$sql = sprintf ('SELECT tincidencia.score as score, tincidencia.id_incidencia as iid, tincidencia.estado as istatus, tincidencia.titulo as title, tincidencia.id_grupo as id_group, tincidencia.id_creator as creator, tincidencia.id_usuario as owner, tincidencia.inicio as date_start, tincidencia.cierre as date_end, SUM(tworkunit.duration) as `suma`  
 		FROM tincidencia, tworkunit_incident, tworkunit
 		WHERE tworkunit.id_user = "%s"
 		AND tworkunit_incident.id_workunit = tworkunit.id
@@ -186,6 +199,8 @@ echo "<h3>".__("Incident report")."</h3>";
 		echo "<th>".__('Dates');
 		echo "<th>".__('User hours');
 		echo "<th>".__('Total hours');
+        echo "<th>".__('Score');
+
 		$incident_totals = 0;
 		$incident_user = 0;
 		if ($incidencias) {
@@ -204,14 +219,21 @@ echo "<h3>".__("Incident report")."</h3>";
 				$this_incident = get_incident_workunit_hours($incident["iid"]);
 				echo "<td>". $this_incident;
 				$incident_totals +=  $this_incident;
+                echo "<td>";
+                if (give_acl ($config["id_user"], 0, "IM"))
+                    echo $incident["score"];
+                else
+                    echo "N/A";
 	
 			}
-			echo "<tr>";
+        	echo "<tr style='border-top: 2px solid #ccc'>";
 			echo "<td><b>".__("Totals")."</b>";
-			echo "<td colspan=6>";
+			echo "<td colspan=7>";
 			echo dame_nombre_real ($user_id). ": ". $incident_user. " ( ". get_working_days ($incident_user). " ".__("Working days"). ")";
 
 			echo "&nbsp;&nbsp;&nbsp;".__('Total'). " : ". $incident_totals." ( ". get_working_days ($incident_totals). " ".__("Working days").")";
+
+            
 		}
 		echo "</table>";
 	}
