@@ -702,4 +702,11 @@ CREATE TABLE `tdownload_tracking` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE `tnewsboard` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `title` varchar(250) NOT NULL default '',
+  `content` text NOT NULL default '', 
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

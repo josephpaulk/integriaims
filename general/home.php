@@ -21,9 +21,39 @@ include $config["homedir"]."/include/functions_graph.php";
 if (!isset($config["id_user"]))
 	$config["id_user"] = $_SESSION['id_usuario'];
 
-	echo '<table width="90%">';
-	
+	echo '<table width="100%" cellspacing=0 cellpadding=0 border=0>';
+
+
+    // ==============================================================
+	// Show Newsboard
+    // ==============================================================
+
+    echo "<tr><td>";
+	echo "<h1>".__('System newsboard')."</h1>";
+	echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
+	echo "<img src='images/warning.png'></div>";
+	echo "<td valign='top'><br><b>";
+	echo __('Latest system news (30 days)');
+	echo '<hr width="100%" size="1">';
+	echo "</b>";
+	$sql = "SELECT * FROM tnewsboard  WHERE `date` > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 31 DAY) ORDER BY date ASC";
+
+    $news = get_db_all_rows_sql ($sql);
+	if ($news === false)
+		$news = array ();
+
+    foreach ($news as $news_item) {
+    	echo "<b>".$news_item["title"]."</b>, <i>".$news_item["date"]."</i>";
+		echo "<br>";
+        echo $news_item["content"];
+		echo "<br><br>";
+	}
+
+
+    // ==============================================================
 	// Show Agenda items
+    // ==============================================================
+
 	$now = date('Y-m-d', strtotime("now"));
 	$now3 = date('Y-m-d', strtotime("now + 3 days"));
 	$agenda = get_db_sql ("SELECT COUNT(*) FROM tagenda WHERE  (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3'");
@@ -79,7 +109,10 @@ if (!isset($config["id_user"]))
 	}
 
 
+    // ==============================================================
 	// Show Todo items
+    // ==============================================================
+
 	$todo = get_db_sql ("SELECT COUNT(*) FROM ttodo WHERE assigned_user = '".$config["id_user"]."'");
 	if ($todo > 0){
 		echo "<tr><td>";
@@ -97,7 +130,10 @@ if (!isset($config["id_user"]))
 		}
 	}
 
+    // ==============================================================
 	// Show Projects items
+    // ==============================================================
+
 	$projects = projects_active_user ($config["id_user"]);
 	if ($projects > 0){
 		echo "<tr><td>";
@@ -112,11 +148,14 @@ if (!isset($config["id_user"]))
 		echo "<br>";
 		$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
 
-		echo graph_workunit_project_user (700, 200, $config["id_user"], $from_one_month,0, 1);
+		echo graph_workunit_project_user (600, 200, $config["id_user"], $from_one_month,0, 1);
 
 	}
 
+    // ==============================================================
 	// Show Incident items
+    // ==============================================================
+
 	$incidents = incidents_active_user ($config["id_user"]);
 	if ($incidents > 0){
 		echo "<tr><td>";

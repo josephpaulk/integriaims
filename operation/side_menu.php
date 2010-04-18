@@ -763,6 +763,14 @@ if ($sec == "godmode") {
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/filemgr'>".__('File manager')."</a></li>";
 
+	// Newsboard
+	if ($sec2 == "godmode/setup/newsboard")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/newsboard'>".__('News board')."</a></li>";
+
+
 	// DB manager
 	if ($sec2 == "godmode/setup/dbmanager")
                 echo "<li id='sidesel'>";

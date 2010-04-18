@@ -1,3 +1,17 @@
+2010-04-19  Sancho Lerena <slerena@artica.es>
+    
+    * integria_db.sql,
+    upgrade.sql: Added tnewsboard table.
+
+    * general/home.php: Fixed layout, added newsboard.
+    
+    * godmode/setup/newsboard.php: New newsboard manager.
+
+    * operation/incidents/incident_score.php: Missed file for yesterday 
+    commit to store the score of incidents.
+
+    * operation/sidemenu.php: Added new newsboard option to setup.
+
 2010-04-18  Sancho Lerena <slerena@artica.es>
     
     * include/functions_config.php, 
