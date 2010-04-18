@@ -39,7 +39,7 @@ if ($id_task) {
 	$id_project = get_db_value ('id_project', 'ttask', 'id', $id_task);
 }
 
-if ($id_task > 0 && ! user_belong_task ($config["id_user"], $id_task)){
+if ($id_task > 0 && ! user_belong_task ($config["id_user"], $id_task) && !give_acl($config["id_user"], 0, "UM") ){
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task workunit form without permission");
 	no_permission();
@@ -81,6 +81,7 @@ if ($id_workunit) {
 	$id_task = $workunit['id_task'];
 	$id_project = get_db_value ('id_project', 'ttask', 'id', $id_task);
 	$id_user = $workunit['id_user'];
+	$wu_user = $id_user;
 	$duration = $workunit['duration']; 
 	$description = $workunit['description'];
 	$have_cost = $workunit['have_cost'];
@@ -92,12 +93,13 @@ if ($id_workunit) {
 	
 	if (!$public && $id_user != $config["id_user"] && ! project_manager_check ($id_project) ) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation",
-			"Trying to access workunit");
+			"Trying to access non owned workunit");
 		require ("general/noaccess.php");
 		return;
 	}
 } else {
 	$id_user = $config["id_user"];
+	$wu_user = $id_user;
 	$duration = $config["pwu_defaultime"]; 
 	$description = "";
 	$id_inventory = array();
@@ -118,6 +120,7 @@ if ($operation == 'insert') {
 	$public = (bool) get_parameter ("public");
 	$split = (bool) get_parameter ("split");
 	$id_user = (string) get_parameter ("wu_user", $config['id_user']);
+	$wu_user = $id_user;
 	
 	// Multi-day assigment
 	if ($split && $duration > $config["hours_perday"]) {
@@ -213,16 +216,16 @@ if ($operation == 'update') {
 	$have_cost = (bool) get_parameter ("have_cost");
 	$id_profile = (int) get_parameter ("id_profile");
 	$public = (bool) get_parameter ("public");
-	$id_user = (string) get_parameter ("wu_user", $config['id_user']);
+	$wu_user = (string) get_parameter ("wu_user", $config['id_user']);
 	$id_task = (int) get_parameter ("id_task",0);
 	
 	// UPDATE WORKUNIT
 	$sql = sprintf ('UPDATE tworkunit
 		SET timestamp = "%s", duration = %.2f, description = "%s",
-		have_cost = %d, id_profile = %d, public = %d
+		have_cost = %d, id_profile = %d, public = %d, id_user = "%s" 
 		WHERE id = %d',
 		$timestamp, $duration, $description, $have_cost,
-		$id_profile, $public, $id_workunit);
+		$id_profile, $public, $wu_user, $id_workunit);
 	$result = process_sql ($sql);
 
 	if ($id_task !=0) {
@@ -234,7 +237,6 @@ if ($operation == 'update') {
                                         $id_task, $id_workunit);
             $result = process_sql ($sql, 'insert_id');
 	}
-	mail_project (1, $config['id_user'], $id_workunit, $id_task);
 	$result_output = '<h3 class="suc">'.__('Workunit updated').'</h3>';
 	insert_event ("PWU UPDATED", 0, 0, $description);
 }
@@ -250,6 +252,13 @@ if ($id_task) {
 	echo ' - ';
 	echo get_db_value ('name', 'ttask', 'id', $id_task);
 }
+
+if ($id_workunit) {
+	$wu_user = get_db_value ('id_user', 'tworkunit', 'id', $id_workunit);
+} else {
+	$wu_user = $config["id_user"];
+}
+
 echo '</h3>';
 
 $table->class = 'databox';
@@ -273,15 +282,12 @@ if (dame_admin ($config['id_user'])) {
 // Show task combo if none was given.
 if (! $id_task) {
 	$table->colspan[1][0] = 3;
-	$table->data[1][0] = combo_task_user_participant ($config['id_user'],
+	$table->data[1][0] = combo_task_user_participant ($wu_user,
 		true, 0, true, __('Task'));
 } else {
-    // Show task ONLY if Project manager (to change a WU from one task to other
-    if (give_acl($config["id_user"], 0, "PM")){
     	$table->colspan[1][0] = 3;
-    	$table->data[1][0] = combo_task_user_participant ($config['id_user'],
+    	$table->data[1][0] = combo_task_user_participant ($wu_user,
 		true, $id_task, true, __('Task'));
-    }
 }
 
 // Time used
@@ -290,7 +296,7 @@ $table->data[2][0] = print_input_text ('duration', $duration, '', 7, 7,
 
 if (dame_admin ($config['id_user'])) {
 	$table->colspan[2][1] = 3;
-	$table->data[2][1] = combo_user_visible_for_me ($id_user,
+	$table->data[2][1] = combo_user_visible_for_me ($wu_user,
 		'wu_user', 0, "TW", true, __('Username'));
 }
 
@@ -320,6 +326,7 @@ echo '<div style="width: '.$table->width.'" class="button">';
 if ($id_workunit) {
 	print_input_hidden ('operation', 'update');
 	print_input_hidden ('id_workunit', $id_workunit);
+	print_input_hidden ("wu_user", $wu_user);
 	print_submit_button (__('Update'), 'btn_upd', false, 'class="sub upd"');
 } else {
 	print_input_hidden ('operation', 'insert');

@@ -398,18 +398,19 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 		$values[-3] = "(*) ".__('Not justified');
 	}
 	
-	$sql = sprintf ('SELECT DISTINCT (ttask.id), CONCAT(tproject.name," / ",ttask.name) as title
+	$sql = sprintf ('SELECT ttask.id, tproject.name,ttask.name 
 			FROM ttask, trole_people_task, tproject
-			WHERE (ttask.id_project = tproject.id
+			WHERE ttask.id_project = tproject.id
 			AND tproject.disabled = 0
 			AND ttask.id = trole_people_task.id_task
-			AND trole_people_task.id_user = "%s") 
-			ORDER BY title', $id_user);
+			AND trole_people_task.id_user = "%s" 
+			ORDER BY tproject.name', $id_user);
 	
 	$tasks = get_db_all_rows_sql ($sql);
+
 	if ($tasks)
 	foreach ($tasks as $task){
-		$values[$task[0]] = $task[1];
+		$values[$task[0]] = $task[1]."/".$task[2];
 	}
 
 	$output .= print_select ($values, 'id_task', $actual, '', __('N/A'), '0', true,
@@ -672,7 +673,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	}
 
 	// Edit workunit
-	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == "") ) {
+	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "") OR (give_acl($config["id_user"], $id_group, "UM")) )) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
 		echo "<a class='edit-workunit' id='edit-$id_workunit' href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit'><img border=0 src='images/page_white_text.png' title='".__('Edit workunit')."'></a>";
@@ -680,7 +681,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	}
 
 	// Lock workunit
-	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND ($locked == "") ) {
+	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "")  )) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
 		echo "<a class='lock_workunit' id='lock-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=lock'><img src='images/lock.png' title='".__('Lock workunit')."'></a>";

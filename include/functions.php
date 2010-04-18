@@ -417,6 +417,9 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	if ($to == '')
 		return false;
 
+	$to = trim($to);
+	$config["mail_from"] = trim($config["mail_from"]);
+
 	// We need to convert to pure ASCII here to use carriage returns
 	$body = ascii_output ($body);
 	$subject = ascii_output ($subject);
