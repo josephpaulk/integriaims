@@ -51,14 +51,16 @@ if ($update) {
 
 	update_config_token ("timezone", $config["timezone"]);	
 
+    //TODO: Change all "process_sqlxxx" for update_config_token in following code:
+
 	process_sql ("UPDATE tconfig SET value='".$config["block_size"]."' WHERE token='block_size'");
 	process_sql ("UPDATE tconfig SET value='".$config["language_code"]."' WHERE token='language_code'");
 	
 	process_sql ("UPDATE tconfig SET value='".$config["hours_perday"]."' WHERE token='hours_perday'");
 	process_sql ("UPDATE tconfig SET value='".$config["currency"]."' WHERE token='currency'");
 	
-	process_sql ("UPDATE tconfig SET value='".$config["sitename"]."' WHERE token='sitename'");
-	process_sql ("UPDATE tconfig SET value='".$config["limit_size"]."' WHERE token='limit_size'");
+    update_config_token ("sitename", $config["sitename"]);
+    update_config_token ("limit_size", $config["limit_size"]);
 
 	process_sql ("DELETE FROM tconfig WHERE token = 'autowu_completion'");
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('autowu_completion', '".$config["autowu_completion"]."')");

@@ -136,7 +136,7 @@ if ($user_id == "") {
 	
 					echo "<tr>";
 					echo "<td>&nbsp;&nbsp;&nbsp;<img src='images/copy.png'>";
-                    echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$start_date&timestamp_h=$end_date&id=demo&id_task=".$task['id']."'>";
+                    echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$start_date&timestamp_h=$end_date&id=$user_id&id_task=".$task['id']."'>";
 
 					echo $task['name'];
 					echo "</a>";

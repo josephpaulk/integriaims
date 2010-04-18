@@ -1,5 +1,14 @@
 2010-04-19  Sancho Lerena <slerena@artica.es>
     
+    * upgrade.sql: Fixes a lot of wrong upgrade SQL (tested with a 
+    production Integria).
+
+    * godemode/setup/setup.php: Fixed a wrong update method for sitename
+    variable.
+
+    * operation/user_report/report_full.php: Fixed a bad URL call.
+
+
     * integria_db.sql,
     upgrade.sql: Added tnewsboard table.
 
