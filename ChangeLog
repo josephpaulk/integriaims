@@ -1,5 +1,7 @@
 2010-04-19  Sancho Lerena <slerena@artica.es>
 
+	* images/integria_logo_header.png: Missing file for header.
+
 	* include/functions.php: Fixed problem with encoding in mails.
 	Now recibes perfectly in UTF8.
 
