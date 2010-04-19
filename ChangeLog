@@ -1,4 +1,9 @@
 2010-04-19  Sancho Lerena <slerena@artica.es>
+
+	* include/functions.php: Fixed problem with encoding in mails.
+	Now recibes perfectly in UTF8.
+
+2010-04-19  Sancho Lerena <slerena@artica.es>
     
     * upgrade.sql: Fixes a lot of wrong upgrade SQL (tested with a 
     production Integria).

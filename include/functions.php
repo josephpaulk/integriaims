@@ -421,12 +421,13 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	$config["mail_from"] = trim($config["mail_from"]);
 
 	// We need to convert to pure ASCII here to use carriage returns
-	$body = ascii_output ($body);
-	$subject = ascii_output ($subject);
+
+	$body = ascii_output (html_entity_decode($body, ENT_QUOTES, "UTF-8"));
+	$subject = ascii_output (html_entity_decode($subject, ENT_QUOTES, "UTF-8"));
 
 	// Add global header and footer to mail
 
-	$body = $config["HEADER_EMAIL"] . "\r\n". $body . "\r\n". $config["FOOTER_EMAIL"];
+	$body = html_entity_decode($config["HEADER_EMAIL"]. "\r\n". $body . "\r\n". $config["FOOTER_EMAIL"], ENT_QUOTES, "UTF-8");
 
 	try {
 		$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
@@ -436,14 +437,14 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 		// Add custom code to the end of message subject (to put there ID's).
 		if ($code != ""){
 			$subject = $subject . " [$code]";
-			$body = $body."\r\nNOTICE: Please don't alter the SUBJECT when answer to this mail, it contains a special code who makes reference to this issue.";
+			// $body = $body."\r\nNOTICE: Please don't alter the SUBJECT when answer to this mail, it contains a special code who makes reference to this issue.";
 		}
 
 		$mailer = Swift_Mailer::newInstance($transport);
 		$message = Swift_Message::newInstance($subject);
 		$message->setFrom($config["mail_from"]);
 		$message->setTo(array($to => $to));
-		$message->setBody($body, 'text');
+		$message->setBody($body, 'text/plain', 'utf-8');
 
 		if ($attachments !== false)
 		        foreach ($attachments as $attachment)
@@ -453,7 +454,7 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 		// If SMTP port is not configured, abort mails directly!
 		if ($config["smtp_port"] == 0)
 			return false;
-
+		$message->setContentType("text/plain");
 		return $mailer->send($message);	
 
 	// SMTP error management!
