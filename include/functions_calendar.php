@@ -218,6 +218,7 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 
 // Original function
 function generate_calendar ($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array()){
+
 	$first_of_month = gmmktime(0,0,0,$month,1,$year);
 	#remember that mktime will automatically correct if invalid dates are entered
 	# for instance, mktime(0,0,0,12,32,1997) will be the date for Jan 1, 1998
@@ -264,6 +265,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 			$days[$day][1] = "agenda";
 			$days[$day][2] = "$day"."A";
 			$days[$day][0] = "index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month&year=$year"; 
+			$days[$day][3] = $event;
 		}
 
 		$agenda_task = get_task_end_date ($mysql_date);
@@ -272,6 +274,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 			$days[$day][1] = "task";
 			$days[$day][2] = "$day"."T";
 			$days[$day][0] = "index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view";
+			$days[$day][3] = $pname . " / ". $tname;
 		}
 			
 		$agenda_project = get_project_end_date ($mysql_date);
@@ -280,6 +283,8 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 			$days[$day][1] = "project";
 			$days[$day][2] = "$day"."P";
 			$days[$day][0] = "index.php?sec=projects&sec2=operation/projects/task&id_project=$idp";
+//			$project_name = $pname; // get_db_sql ("SELECT name FROM tproject WHERE id = $idp");
+			$days[$day][3] = $pname;
 		}
 
 		$time = time();
@@ -290,10 +295,10 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 			$today_style .= "style='border: 1px solid #00ff00;'";		
 
 		if(isset($days[$day]) and is_array($days[$day])){
-			@list($link, $classes, $content) = $days[$day];
+			@list($link, $classes, $content, $tooltip) = $days[$day];
 			$calendar .= '<td '.$today_style.' class="'.htmlspecialchars($classes).'">';
 			if ($link)
-				$calendar .= '<a href="'.htmlspecialchars($link).'">'.$content.'</a></td>';
+				$calendar .= '<a title="'.$tooltip.'" href="'.htmlspecialchars($link).'">'.$content.'</a></td>';
 			else
 			 	$calendar .= $content.'</td>';
 		}

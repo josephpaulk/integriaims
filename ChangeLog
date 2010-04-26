@@ -1,3 +1,12 @@
+2010-04-28  SAncho Lerena <slerena@artica.es>
+
+	* include/functions_calendar.php: Added tooltip to the project
+	task and events from the agenda, in the mini calendar view at
+	sidebar.
+
+	* include/mailtemplates/project_wu_update.tpl,
+	include/mailtemplates/project_wu_create.tpl: Removed "_" char.
+
 2010-04-19  Sancho Lerena <slerena@artica.es>
 
 	* images/integria_logo_header.png: Missing file for header.
