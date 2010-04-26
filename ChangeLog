@@ -1,5 +1,8 @@
 2010-04-28  SAncho Lerena <slerena@artica.es>
 
+	* include/integria_cron.php: Fixes to autowu (first name was
+	not included in the filter!).
+
 	* include/functions_calendar.php: Added tooltip to the project
 	task and events from the agenda, in the mini calendar view at
 	sidebar.

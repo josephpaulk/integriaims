@@ -91,7 +91,7 @@ function run_autowu () {
 	if ($autowu == 0)
 		return;
 
-	$autowu2 = $autowu * 2;
+	$autowu2 = $autowu + 7; // Always work with one week of margin
 
 	// Calc interval dates
 	$start_date = date('Y-m-d', strtotime("$now - $autowu2 days"));
@@ -108,17 +108,18 @@ function run_autowu () {
 		foreach ($users as $user){
 			if (!is_working_day($current_date))
 				continue;
+
 			
 			// If this user is in no_wu_completion list, skip it.
-			if (strpos($config["no_wu_completion"], $user["id_usuario"]))
+			if (strpos("_____".$config["no_wu_completion"], $user["id_usuario"]) > 0 ){
 				continue;
+			}
 			
-	
 			$user_wu = get_wu_hours_user ($user["id_usuario"], $current_date);
 			if ($user_wu < $config["hours_perday"]) {
 				$nombre = $user['nombre_real'];
 				$email = $user['direccion'];
-	
+
 				$mail_description = "Integria IMS has entered an automated Workunit to 'Not justified' task because you've more than $autowu days without filling by a valid Workunit.";
 	
 				integria_sendmail ($email, "[".$config["sitename"]."] Automatic WU (Non justified) has been entered",  $mail_description );
