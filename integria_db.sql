@@ -710,3 +710,26 @@ CREATE TABLE `tnewsboard` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `tapp` (
+    `id` int(20) unsigned NOT NULL AUTO_INCREMENT,
+	`app_name` tinytext NOT NULL,
+    `app_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tapp_activity_data` (
+    `id_app` int(20) unsigned NOT NULL default 0,
+    `id_user` varchar(60) NOT NULL default '', 
+	`app_extra` text NOT NULL,
+	`start_timestamp` int(20) unsigned NOT NULL default 0,
+	`end_timestamp` int(20) unsigned NOT NULL default 0,
+	`send_timestamp`  int(20) unsigned NOT NULL default 0,
+	KEY `idx_app` (`id_app`),
+	KEY `idx_user` (`id_user`),
+	KEY `idx_start_timestamp` (`start_timestamp`) USING BTREE,
+	CONSTRAINT `fk_tapp_tapp_activity_data1`
+	  FOREIGN KEY (`id_app`)
+	  REFERENCES tapp(`id`) 
+	  ON UPDATE CASCADE 
+	  ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -1,3 +1,12 @@
+2010-05-19  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_xmlrpc.php
+	include/integria_xmlrpc_api.php
+	integria_db.sql: Added the xmlrpc interface
+	with the methods ims_login, ims_transfer and 
+	ims_status using the database.
+
+
 2010-04-28  SAncho Lerena <slerena@artica.es>
 
 	* include/integria_cron.php: Fixes to autowu (first name was
