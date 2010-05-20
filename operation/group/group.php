@@ -68,7 +68,7 @@ if (defined ('AJAX')) {
 				echo "enable_button";
 			}
 			else {
-				echo ". ". __('You cannot create more incidents in this group until you close an active incident.');
+				echo ".<br><br> ". __('You cannot create more incidents in this group until you close an active incident.');
 				echo "//";
 				echo "disable_button";
 			}

@@ -259,7 +259,7 @@ print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', 
 
 echo '<tr><td class="datos2">'.__('Total incidents');
 echo '<td class="datos2"><b>';
-echo get_db_sql ("SELECT COUNT(*) FROM tincidencia WHERE id_creator = '".$config["id_user"]."'");
+echo get_db_sql ("SELECT COUNT(*) FROM tincidencia WHERE id_creator = '".$id_usuario_mio."'");
 echo "</b></td></tr>";
 
 if ($modo == "edicion") { // Only show groups for existing users

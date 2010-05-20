@@ -1,3 +1,24 @@
+2010-05-20  Sancho Lerena <slerena@artica.es>
+
+        * include/integria_cron.php: Fixed a few small bugs.
+
+        * include/js/integria_incident_search.js: Fixed the problem
+        with limit notice. Now it's checked when enter page, not only
+        when alter any control. Added border to dialogs.  Removed
+        DEBUG code which makes this unusable.
+
+        * include/mailtemplates/incident_sla_max_response_time_subject.tpl
+        Fixed typo.
+
+        * upgrade.sql: Update tdownload_category missing field.
+
+        * operation/group/group.php: Altered AJAX return to more beautiful
+        error message.
+
+        * operation/users/user_edit.php,
+        godmode/usuarios/configurar_usuarios.php: Fixed count of incidents.
+
+
 2010-05-19  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_xmlrpc.php

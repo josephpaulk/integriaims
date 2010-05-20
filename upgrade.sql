@@ -100,8 +100,9 @@ CREATE TABLE `tdownload` (
 CREATE TABLE `tdownload_category` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(250) NOT NULL default '',
+  `id_group` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tdownload_tracking` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -120,4 +121,34 @@ CREATE TABLE `tnewsboard` (
   `date` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+UPDATE tconfig SET `value` = "ID100520" WHERE `token` = "db_scheme_build";
+UPDATE tconfig SET `value` = "2.1dev" WHERE `token` = "db_scheme_version";
+
+-- 20 may
+
+CREATE TABLE `tapp` (
+    `id` int(20) unsigned NOT NULL AUTO_INCREMENT,
+	`app_name` tinytext NOT NULL,
+    `app_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tapp_activity_data` (
+    `id_app` int(20) unsigned NOT NULL default 0,
+    `id_user` varchar(60) NOT NULL default '', 
+	`app_extra` text NOT NULL,
+	`start_timestamp` int(20) unsigned NOT NULL default 0,
+	`end_timestamp` int(20) unsigned NOT NULL default 0,
+	`send_timestamp`  int(20) unsigned NOT NULL default 0,
+	KEY `idx_app` (`id_app`),
+	KEY `idx_user` (`id_user`),
+	KEY `idx_start_timestamp` (`start_timestamp`) USING BTREE,
+	CONSTRAINT `fk_tapp_tapp_activity_data1`
+	  FOREIGN KEY (`id_app`)
+	  REFERENCES tapp(`id`) 
+	  ON UPDATE CASCADE 
+	  ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 

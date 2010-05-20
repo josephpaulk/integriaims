@@ -96,10 +96,7 @@ function configure_inventory_buttons (form, dialog) {
 	});
 }
 
-function configure_incident_form (enable_ajax_form) {
-	//Function for change the select group, test if it's hard limit or soft.
-	$("#grupo_form").click (function() {
-		$("#submit-accion").attr("disabled", "disabled");
+function incident_limit() {
 		$("#group_spinner").empty().append('<img src="images/spinner.gif" />');
 		
 		id_user = $("#id_user").val();
@@ -119,36 +116,38 @@ function configure_incident_form (enable_ajax_form) {
 				//un serialize data as type//title_window//message_window
 				dataUnserialize = data.split('//');
 				$("#group_spinner").empty();
-				var enableButton = true;
-				
 				status = dataUnserialize[0];
 				
 				if (status != "correct") {
-					$("#test").remove();
 					$("body").append ($("<div></div>").attr("id", "alert_limits").addClass ("dialog"));
 					
 					$("#alert_limits").empty().append('<img src="images/spinner.gif">');
 					$("#alert_limits").dialog({"title": dataUnserialize[1],
 						position: ['center', 100],
-						resizable: false,
-						height: 140,
-						width: 350,
+						resizable: true,
+						height: 150,
+						width: 380,
 						beforeclose: function(event, ui) { return false; }
 					});
 					
 					enableButtonParam = dataUnserialize[3];
+
+            // DEBUG
+            //window.alert(enableButtonParam);
+
 					if (enableButtonParam != 'enable_button')
-						enableButton = false;
+                		$("#submit-accion").attr("disabled", "disabled");
 					
 					$("#alert_limits").empty().append(dataUnserialize[2]);
 				
 					$("#alert_limits").dialog('close');
 					$("#alert_limits").bind('dialogbeforeclose', function(event, ui) {
-						$("#alert_limits").dialog('destroy'); $("#alert_limits").remove(); return true;
+						$("#alert_limits").dialog('destroy'); $("#alert_limits").remove();
 					});
 				}
 				else {
 					//Correct
+                    $("#submit-accion").removeAttr("disabled");
 					idInventory = dataUnserialize[1];
 					if (idInventory != 'null') {
 						nameInventory = dataUnserialize[2];
@@ -159,18 +158,20 @@ function configure_incident_form (enable_ajax_form) {
 					}
 				}
 				
-				if (enableButton) {
-					$("#submit-accion").removeAttr("disabled");
-				}
 			},
 			dataType: "text"
 		});
-	});
+}
+
+function configure_incident_form (enable_ajax_form) {
+	//Function for change the select group, test if it's hard limit or soft.
+	$("#grupo_form").click (incident_limit);
 	
-	if ($("#hidden-action").val() == 'insert') {
-		$("#submit-accion").attr("disabled", "disabled");
-	}
-	
+    // Check ALWAYS the restriction limit, even if the user has not altered 
+    // anything.
+    if ($("#hidden-action").val() == 'insert') {
+        incident_limit();
+    }
 	
 	$("form.delete").submit (function () {
 		if (! confirm (__("Are you sure?")))

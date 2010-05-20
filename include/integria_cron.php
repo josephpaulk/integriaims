@@ -230,6 +230,8 @@ function check_sla_min ($incident) {
 	if (! $id_sla)
 		return false;
 	
+    $sla = get_db_row("tsla", "id", $id_sla);
+
 	/* Check if it was already notified in a specified time interval */
 	$sql = sprintf ('SELECT COUNT(id) FROM tevent
 		WHERE type = "SLA_MIN_RESPONSE_NOTIFY"
@@ -245,6 +247,7 @@ function check_sla_min ($incident) {
 	/* We need to notify via email to the owner user */
 	$user = get_user ($incident['id_usuario']);
 
+    $MACROS["_sitename_"] = $config["sitename"];
 	$MACROS["_username_"] = $incident['id_usuario'];
 	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
@@ -275,6 +278,8 @@ function check_sla_max ($incident) {
 	if (! $id_sla)
 		return false;
 	
+    $sla = get_db_row("tsla", "id", $id_sla);
+
 	/* Check if it was already notified in a specified time interval */
 	$sql = sprintf ('SELECT COUNT(id) FROM tevent
 		WHERE type = "SLA_MAX_RESPONSE_NOTIFY"
@@ -289,6 +294,7 @@ function check_sla_max ($incident) {
 	/* We need to notify via email to the owner user */
 	$user = get_user ($incident['id_usuario']);
 
+    $MACROS["_sitename_"] = $config["sitename"];
 	$MACROS["_username_"] = $incident['id_usuario'];
 	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
