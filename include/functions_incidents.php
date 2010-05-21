@@ -331,11 +331,13 @@ function print_incidents_stats ($incidents, $return = false) {
 			    __('Hr').") <br />";
 	    }
 
+        $submitter_label = "";
         $top5_submitters = get_most_incident_creators(5);
         foreach ($top5_submitters as $submitter){
             $submitter_label .= $submitter["id_creator"]." ( ".$submitter["total"]. " )<br>";
         }
 
+        $scoring_label ="";
         $top5_scoring = get_best_incident_scoring (5);
         foreach ($top5_scoring as $submitter){
             $scoring_label .= $submitter["id_usuario"]." ( ".$submitter["total"]. " )<br>";
