@@ -579,7 +579,7 @@ function message_parse ($MsgOne, $msgNo, $fp) {
 	$subject_processed = 0;
 	$purebody = "";
 
-// DEBUG
+// DEBUG 
 // echo "<br>-----[DEBUG]-------------------------------------------------------------------<br>";
 // print_r($MsgOne);
 // echo "<br>--------------------------------------------------------------------------------------<br>";
@@ -677,9 +677,10 @@ function message_parse ($MsgOne, $msgNo, $fp) {
 		if (substr(md5($ticket_id . $config["smtp_pass"]. $user),0,5) == $ticket_id_code){
 //			echo "TICKET ID #$ticket_id VALIDATED !!<br>";
 			create_workunit ($ticket_id, $purebody, $user, 0,  0, "", 1);
-		} else {
-//			echo "TICKET ID #$ticket_id validation FAILED ! :(<br>";
 		}
+//		} else {
+//			echo "TICKET ID #$ticket_id validation FAILED ! :(<br>";
+//		}
 	}
 //	} else {
 //		echo "NO TICKED ID FOUND IN SUBJECT ! :( <br>";

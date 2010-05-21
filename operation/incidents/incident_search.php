@@ -253,7 +253,11 @@ foreach ($incidents as $incident) {
 	}
 
 	$last_wu = get_incident_lastworkunit ($incident["id_incidencia"]);
-	echo $last_wu["id_user"];
+	if ($last_wu["id_user"] == $incident["id_creator"]){
+		echo "<b>".$last_wu["id_user"]."</b>";
+	} else {
+		echo $last_wu["id_user"];
+	}
 	echo '</td>';
 	
 	if ($config["show_creator_incident"] == 1){	

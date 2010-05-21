@@ -1679,6 +1679,19 @@ function check_incident_sla_max_response ($id_incident) {
 		}
 		return false;
 	}
+
+	// Get the writer of the last WU incident
+	$last_wu = get_incident_lastworkunit ($id_incident);
+	if ($last_wu["id_user"] == $incident["id_creator"]){
+		if ($incident['affected_sla_id']) {
+			$sql = sprintf ('UPDATE tincidencia
+                               SET affected_sla_id = 0
+                               WHERE id_incidencia = %d',
+                               $id_incident);
+	                        process_sql ($sql);
+		}
+		return false;
+	}
 	
 	$slas = get_incident_slas ($id_incident, false);
 	$start = strtotime ($incident['inicio']);

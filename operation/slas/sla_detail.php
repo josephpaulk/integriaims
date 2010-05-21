@@ -97,7 +97,9 @@ if ($delete_sla) {
 	$id = 0;
 }
 
-echo "<h2>".__('SLA Management')."</h2>";
+echo "<h2>".__('SLA Management');
+echo integria_help ("sla", true);
+echo "</h2>";
 
 // FORM (Update / Create)
 if ($id || $new_sla) {

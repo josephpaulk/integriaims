@@ -395,7 +395,7 @@ function run_mail_check () {
 	}
 
 	// DEBUG
-	// echo "Login OK: Inbox contains [$Count] messages<BR>\n";
+echo "Login OK: Inbox contains [$Count] messages<BR>\n";
 	$msg_list_array = uidl("", $fp);
 	set_time_limit($timeout);
 
