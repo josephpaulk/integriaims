@@ -53,7 +53,6 @@ if (isset($_GET["create2"])){ // Create group
 	$sql_insert="INSERT INTO tdownload (name, location, description, id_category, id_user, date) 
 		  		 VALUE ('$name','attachment/downloads/$location', '$description', '$id_category', '".$config["id_user"]."', '$timestamp') ";
 	$result=mysql_query($sql_insert);	
-echo $sql_insert;
 	if (! $result)
 		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
 	else {

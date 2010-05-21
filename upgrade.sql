@@ -90,12 +90,15 @@ ALTER TABLE tgrupo ADD `hard_limit` int(5) unsigned NOT NULL default 0;
 CREATE TABLE `tdownload` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(250) NOT NULL default '',
-  `location` text NOT NULL default '', 
+  `location` text NOT NULL default '',
   `date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `description` text NOT NULL default '',  
+  `description` text NOT NULL default '',
+  `tag` text NOT NULL default '',
   `id_category` mediumint(8) unsigned NOT NULL default 0,
+  `id_user` varchar(60) NOT NULL,
   PRIMARY KEY  (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `tdownload_category` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,

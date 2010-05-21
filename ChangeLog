@@ -1,5 +1,9 @@
 2010-05-21  Sancho Lerena <slerena@artica.es>
 
+	* upgrade.sql: tdownload table was incomplete.
+
+	* operation/download/download.php: Removed debug code.
+
 	* include/integria_cron.php: Small fixes on cron operation.
 
 	* include/help/en/help_sla.php: Added help for SLA.
