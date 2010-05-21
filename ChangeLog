@@ -1,3 +1,13 @@
+2010-05-21  Sancho Lerena <slerena@artica.es>
+
+    * general/home.php: Incidents above project.
+
+    * operation/kb/browse.php: Minimal usability fixes, including
+    the annoying search problem losting data between pages.
+
+    * inclide/funcion_incidents: Several notices fixes on undeclared
+    variables.
+
 2010-05-21  Sergio Martin <sergio.martin@artica.es>
 
 	* include/xmlrpc

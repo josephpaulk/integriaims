@@ -212,6 +212,9 @@ function filter_incidents ($filters) {
  * @return Incidents stats if return parameter is true. Nothing otherwise
  */
 function print_incidents_stats ($incidents, $return = false) {
+
+    global $config;
+
 	$output = '';
 	
 	$total = sizeof ($incidents);
@@ -475,6 +478,8 @@ function get_incident_workunit_hours ($id_incident) {
 
 function get_incident_lastworkunit ($id_incident) {
         $workunits = get_incident_workunits ($id_incident);
+        if (!isset($workunits[0]['id_workunit']))
+            return;
         $workunit_data = get_workunit_data ($workunits[0]['id_workunit']);
         return $workunit_data;
 }

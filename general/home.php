@@ -131,28 +131,6 @@ if (!isset($config["id_user"]))
 	}
 
     // ==============================================================
-	// Show Projects items
-    // ==============================================================
-
-	$projects = projects_active_user ($config["id_user"]);
-	if ($projects > 0){
-		echo "<tr><td>";
-		echo "<h1>".__('Projects')."</h1>";
-		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project'><img src='images/project.png'></a></div>";
-
-
-		echo "<td valign='top'><br><b>";
-		echo __('Projects active you have').": ".projects_active_user ($config["id_user"]);
-		echo '<hr width="100%" size="1">';
-		echo "<br>";
-		$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
-
-		echo graph_workunit_project_user (600, 200, $config["id_user"], $from_one_month,0, 1);
-
-	}
-
-    // ==============================================================
 	// Show Incident items
     // ==============================================================
 
@@ -194,6 +172,28 @@ if (!isset($config["id_user"]))
 		}
 		if (isset($row_2))
 			echo "</table>";
+	}
+
+// ==============================================================
+	// Show Projects items
+    // ==============================================================
+
+	$projects = projects_active_user ($config["id_user"]);
+	if ($projects > 0){
+		echo "<tr><td>";
+		echo "<h1>".__('Projects')."</h1>";
+		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/project'><img src='images/project.png'></a></div>";
+
+
+		echo "<td valign='top'><br><b>";
+		echo __('Projects active you have').": ".projects_active_user ($config["id_user"]);
+		echo '<hr width="100%" size="1">';
+		echo "<br>";
+		$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
+
+		echo graph_workunit_project_user (600, 200, $config["id_user"], $from_one_month,0, 1);
+
 	}
 
 	echo "</table>";

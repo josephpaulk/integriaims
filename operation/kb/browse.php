@@ -33,8 +33,8 @@ if (isset($_GET["create2"])){ // Create group
     	exit;
     }
 	$timestamp = date('Y-m-d H:i:s');
-	$title = get_parameter ("title","");
-	$data = get_parameter ("data",0);
+	$title = get_parameter ("title","Untitled article");
+	$data = get_parameter ("data","");
 	$id_product = get_parameter ("product","");
 	$id_category = get_parameter ("category","");
 	$id_language = get_parameter ("id_language", "");
@@ -160,7 +160,7 @@ if (isset($_GET["delete_data"])){ // if delete
 		mysql_query($sql);
 	}
 	insert_event ("KB ITEM DELETED", $id, 0, "Deleted KB $kb_title");
-	echo "<h3 class='error'>".__('Successfully deleted')."</h3>"; 
+	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>"; 
 }
 
 if (isset($_GET["update2"])){
@@ -315,7 +315,7 @@ $id_language = get_parameter ("id_language", '');
 
 // Search filters
 echo '<form method="post">';
-echo '<table width="90%" class="blank">';
+echo '<table width="100%" class="blank">';
 echo "<tr>";
 echo "<td>";
 echo __('Product types');
@@ -343,7 +343,6 @@ echo print_select_from_sql ('SELECT id_language, name FROM tlanguage', 'id_langu
 echo "<td >";
 echo "<input type=submit class='sub search' value='".__('Search')."'>";
 
-
 echo "</td></tr></table></form>";
 
 // Search filter processing
@@ -366,13 +365,13 @@ if ($id_language != '')
 $offset = get_parameter ("offset", 0);
 
 $count = get_db_sql("SELECT COUNT(id) FROM tkb_data $sql_filter");
-pagination ($count, "index.php?sec=kb&sec2=operation/kb/browse", $offset);
+pagination ($count, "index.php?sec=kb&sec2=operation/kb/browse&id_language=$id_language&free_text=$free_text&product=$product&category=$category", $offset);
 
 $sql1 = "SELECT * FROM tkb_data $sql_filter ORDER BY title, id_category, id_product LIMIT $offset, ". $config["block_size"];
 
 $color =0;
 if ($result=mysql_query($sql1)){
-	echo '<table width="90%" class="listing">';
+	echo '<table width="100%" class="listing">';
 
 	echo "<th>".__('Title')."</th>";
 	echo "<th>".__('Category')."</th>";
@@ -384,7 +383,7 @@ if ($result=mysql_query($sql1)){
 	while ($row=mysql_fetch_array($result)){
 		echo "<tr>";
 		// Name
-		echo "<td valign='top'><b><a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$row["id"]."'>".short_string($row["title"],54)."</a></b></td>";
+		echo "<td valign='top'><b><a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$row["id"]."'>".short_string($row["title"],124)."</a></b></td>";
 
 		// Category
 		echo "<td class=f9>";
