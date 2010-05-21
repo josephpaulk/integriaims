@@ -1,3 +1,11 @@
+2010-05-21  Sergio Martin <sergio.martin@artica.es>
+
+	* include/xmlrpc
+	include/xmlrpc/xmlrpcs.inc
+	include/xmlrpc/xmlrpc_wrappers.inc
+	include/xmlrpc/xmlrpc.inc: Added the xmlrpc
+	libreries
+
 2010-05-20  Sancho Lerena <slerena@artica.es>
 
         * include/integria_cron.php: Fixed a few small bugs.
