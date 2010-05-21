@@ -13,7 +13,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
 session_start();
 
 require_once ('../../include/config.php');
@@ -23,18 +22,12 @@ require_once ('../../include/functions_incidents.php');
 
 global $config;
 
-if (isset($_SESSION["id_usuario"]))
-	$config["id_user"] = $_SESSION['id_usuario'];
-else {
-    audit_db("",$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads");
-    require ("general/noaccess.php");
-    exit;
-}
-
-check_login();
+$config["id_user"] = $_SESSION['id_usuario'];
 
 $id_user = $config["id_user"];
 $id_attachment = get_parameter ("id_attachment", 0);
+
+check_login();
 
 $data = get_db_row ("tattachment", "id_attachment", $id_attachment);
 
