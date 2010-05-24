@@ -39,6 +39,7 @@ if ($id_task)
 else
 	$task_name = '';
 
+
 // Init variables
 $name = "";
 $description = "";
@@ -53,17 +54,19 @@ $parent = 0;
 // ACL Check for this task
 // This user is assigned to this task ?
 
-if ( $operation != "create" && ! user_belong_task ($config["id_user"], $id_task)){
+if ( $operation != "create" && $id_task != -1 && ! user_belong_task ($config["id_user"], $id_task)){
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager without project");
 	no_permission();
 }
+
 
 if ($operation == "") {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager without project");
 	no_permission();
 }
+
 
 // Create task
 if ($operation == "insert") {
@@ -303,7 +306,7 @@ $table->data[7][0] .= print_input_hidden ('completion', $completion, true);
 $table->data[8][0] = print_textarea ('description', 8, 30, $description, '',
 	true, __('Description'));
 
-if (give_acl ($config["id_user"], $id_group, "TM") || ($config["id_user"] == $project_manager)) {
+if (give_acl ($config["id_user"], $id_group, "TM") || give_acl ($config["id_user"], 0, "TM") || ($config["id_user"] == $project_manager)) {
 	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 	
 	print_table ($table);

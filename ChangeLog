@@ -1,3 +1,8 @@
+2100-05-24  Sancho Lerena <slerena@artica.es>
+
+	* operation/projects/task_detail.php: Fixed problem
+	with a TaskManager who was not allowd to create a task.
+
 2010-05-21  Sancho Lerena <slerena@artica.es>
 
 	* upgrade.sql: tdownload table was incomplete.
