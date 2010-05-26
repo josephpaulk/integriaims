@@ -351,7 +351,7 @@ echo "</td></tr></table></form>";
 $sql_filter = "WHERE 1=1 ";
 
 if ($free_text != "")
-	$sql_filter .= " AND title LIKE '%$free_text%' OR data LIKE '%$free_text%'";
+	$sql_filter .= " AND (title LIKE '%$free_text%' OR data LIKE '%$free_text%')";
 
 if ($product != 0)
 	$sql_filter .= " AND id_product = $product ";

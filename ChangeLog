@@ -1,9 +1,25 @@
-2100-05-24  Sancho Lerena <slerena@artica.es>
+2010-05-26  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_xmlrpc.php: Updated latest Sergio
+	code.
+		
+	* operation/incidents/incident_download_file.php: Solved
+	problem with blank spaces.
+
+	* operation/kb/browse_data.php, operation/kb/browse.php:
+	Fixed some format in KB table visualization and search.
+
+	* operation/kb/kb_download_file.php: Fixed problem with
+	blank spaces in files when downloads.
+	
+2010-05-24  Sancho Lerena <slerena@artica.es>
 
 	* operation/projects/task_detail.php: Fixed problem
 	with a TaskManager who was not allowd to create a task.
 
 2010-05-21  Sancho Lerena <slerena@artica.es>
+
+    * general/home.php: Incidents above project.
 
 	* upgrade.sql: tdownload table was incomplete.
 
@@ -11,26 +27,11 @@
 
 	* include/integria_cron.php: Small fixes on cron operation.
 
-	* include/help/en/help_sla.php: Added help for SLA.
+    * operation/kb/browse.php: Minimal usability fixes, including
+    the annoying search problem losting data between pages.
 
-	* include/functions_pop3.php: Check code, works for me.
-
-	* include/functions_db.php: Some fixes for SLA, checking
-	on creator las WU, skip SLA fire.
-
-	* operation/incidents/incident_search.php: Show in bold
-	when incident is pending a response from owner because
-	last WU if from creator.
-
-	* operation/slas/sla_detail.php: Added help icon.
-
-    	* general/home.php: Incidents above project.
-
-    	* operation/kb/browse.php: Minimal usability fixes, including
-	  the annoying search problem losting data between pages.
-
-	* inclide/funcion_incidents: Several notices fixes on undeclared
-	  variables.
+    * inclide/funcion_incidents: Several notices fixes on undeclared
+    variables.
 
 2010-05-21  Sergio Martin <sergio.martin@artica.es>
 

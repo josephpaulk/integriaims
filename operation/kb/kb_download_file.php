@@ -59,7 +59,7 @@ if ($id_kb == 0){
 
 // Allow download file
 
-$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".rawurlencode ($data["filename"]);
+$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
 
 $last_name = $data["filename"];
 
@@ -71,6 +71,8 @@ if (file_exists($fileLocation)){
 	readfile($fileLocation);
 
 } else {
+	echo "<h1>Error locating file</h1>";
+	echo "<i>".$fileLocation."</i>";
 	echo "File is missing in disk storage. Please contact the administrator";
 	exit;
 }

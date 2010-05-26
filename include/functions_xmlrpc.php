@@ -137,7 +137,7 @@ function add_app_activities($usr, $data_in){
 			$id_app = $app_exists['id'];
 			
 		
-		$return = add_app_activity ($id_app, $usr, $row['app_extra'], strtotime(str_replace("T", " ", $row['start_datetime'])), strtotime(str_replace("T", " ", $row['start_datetime'])));
+		$return = add_app_activity ($id_app, $usr, $row['app_extra'], $row['start_datetime'], $row['start_datetime']);
 		$msg .= $row['app_name']." info ; ";
 		
 		if($return == false)

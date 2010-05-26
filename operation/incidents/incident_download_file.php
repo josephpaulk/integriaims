@@ -46,7 +46,7 @@ if (! user_belong_incident ($id_user, $id_incident)){
 
 // Allow download file
 
-$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".rawurlencode ($data["filename"]);
+$fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
 
 $last_name = $data["filename"];
 
