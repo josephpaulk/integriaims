@@ -61,7 +61,7 @@ function add_app ($app_name, $app_mode) {
  */
 function add_app_activity ($id_app, $id_user, $app_extra, $start_timestamp, $end_timestamp) {
 	$sql = "INSERT INTO tapp_activity_data (id_app, id_user, app_extra, start_timestamp, end_timestamp, send_timestamp)
-			VALUES (".$id_app.", '".$id_user."', '".$app_extra."', ".$start_timestamp.", ".$end_timestamp.", UNIX_TIMESTAMP())";
+			VALUES (".$id_app.", '".$id_user."', '".addslashes($app_extra)."', ".$start_timestamp.", ".$end_timestamp.", UNIX_TIMESTAMP())";
 	$res = process_sql ($sql);
 	
 	return $res;

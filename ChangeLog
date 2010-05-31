@@ -1,3 +1,8 @@
+2010-05-31  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_xmlrpc.php: Added scape slashes 
+	to characteres that need it on extras field
+
 2010-05-26  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_xmlrpc.php: Updated latest Sergio
