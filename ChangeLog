@@ -1,3 +1,9 @@
+
+2010-06-30  Sancho Lerena <slerena@artica.es>
+
+	* functions_xmlrpc.php: Fixed typo y call to funcion which 
+	enter the data from the external agent in add_app_activity().
+
 2010-05-31  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_xmlrpc.php: Added scape slashes 
