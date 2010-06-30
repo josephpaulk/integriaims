@@ -1,8 +1,7 @@
 <?php
 // Integria 1.1 - http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Artica Soluciones Tecnologicas
-// Copyright (c) 2008 Esteban Sanchez, estebans@artica.es
+// Copyright (c) 2008-2010 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License

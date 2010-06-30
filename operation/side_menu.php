@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// Copyright (c) 2008-2010 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -797,9 +797,9 @@ if ($sec == "godmode") {
 	echo "</div>";
 }
 
-if ($sec == "users") {
+if (($sec == "users") OR ($sec == "user_audit")){
 	echo "<div class='portlet'>";
-	echo "<h3>".__('Users defined')."</h3>";
+	echo "<h3>".__('People defined')."</h3>";
 	echo "<ul class='sidemenu'>";
 
 		// View users
@@ -853,7 +853,7 @@ if ($sec == "users") {
 	
 	if  ((give_acl($config["id_user"], 0, "PR")) OR  (give_acl($config["id_user"], 0, "IR"))) {
 		echo "<div class='portlet'>";
-		echo "<h3>".__('User reporting')."</h3>";
+		echo "<h3>".__('People reporting')."</h3>";
 		echo "<ul class='sidemenu'>";
 
 		// Full report 
@@ -890,7 +890,7 @@ if ($sec == "users") {
 
 	if (give_acl($config["id_user"], 0, "UM")){
 		echo "<div class='portlet'>";
-		echo "<h3>".__('User management')."</h3>";
+		echo "<h3>".__('People management')."</h3>";
 		echo "<ul class='sidemenu'>";
 
 		// Usermanager

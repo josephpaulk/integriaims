@@ -1,4 +1,14 @@
 
+2010-07-01  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_db.php: New SQL operation step-by-step
+
+	* operation/group/group.php: Header update.
+
+	* operation/side_menu.php: Modified for new audit options
+
+	* include/pdf: Added PDF library for future reports in PDF.
+
 2010-06-30  Sancho Lerena <slerena@artica.es>
 
 	* functions_xmlrpc.php: Fixed typo y call to funcion which 
