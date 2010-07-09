@@ -1,3 +1,14 @@
+2010-07-09  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_form.php: List is shown by usersname from the
+	array.
+
+	* include/functions_db.php: incident_users_list alter the way to show
+	affected users, now uses get_incident_users to get affected users, not
+	by group, they are users who put any workunit.
+
+	* operation/incidents/incident_detail.php: Fixed the problem with
+	incident creator combo in edition mode. Now works fine.
 
 2010-07-01  Sancho Lerena <slerena@artica.es>
 

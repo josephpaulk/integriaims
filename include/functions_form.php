@@ -821,13 +821,12 @@ function incident_users_list ($id_incident, $return = false) {
 	
 	if ($users['affected'])
 	foreach ($users['affected'] as $user) {
-		if (!get_external_user($user['id_usuario'])){
-			$output .= "&nbsp;&nbsp;" . print_user_avatar ($user['id_usuario'], true, true);
-			$output .= ' <strong>'.$user['id_usuario'].'</strong> (<em>'.__('Participant').'</em>)';
+		if (!get_external_user($user)){
+			$output .= "&nbsp;&nbsp;" . print_user_avatar ($user, true, true);
+			$output .= ' <strong>'.$user.'</strong> (<em>'.__('Participant').'</em>)';
 			$output .= "<br>";
-		}
+		} 
 	}
-	
 	$output .= '</ul>';
 	
 	if ($return)

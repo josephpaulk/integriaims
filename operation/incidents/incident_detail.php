@@ -556,11 +556,11 @@ if ($has_permission) {
 } else {
 	$table->data[0][0] = print_label (__('Title'), '', '', true, $titulo);
 }
-$table->data[0][1] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
-	$disabled, '', '', true, __('SLA disabled'));
-$table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
-	$disabled, '', '', true, __('Notify changes by email'));
 
+	$table->data[0][1] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
+	$disabled, '', '', true, __('SLA disabled'));
+	$table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
+	$disabled, '', '', true, __('Notify changes by email'));
 
 if ($has_manage_permission)
 	$table->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
@@ -630,17 +630,18 @@ if ($id_task > 0){
 	$table->data[2][2] .= "<img src='images/bricks.png'></a>";
 }
 
-$table->data[2][3] = print_label(__('Creator'), '', '', true);
 
+// Incident creator. Only can be changed by an admin
 if (get_db_value_filter('nivel', 'tusuario', array('id_usuario' => $config['id_user'])) == 1) {
-	$enabled = true;
+     $enabled = true;
 }
 else {
-	$enabled = false;
+     $enabled = false;
 }
-
-$table->data[2][3] .= print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'id_user', $config['id_user'], '', 'select', '0', true, false, true, false, !$enabled);
-//print_input_hidden('id_user', $config['id_user']);
+if ($enabled){
+	$table->data[2][3] = print_label(__('Creator'), '', '', true);
+	$table->data[2][3] .= print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'id_creator', $id_creator, '', 'select', '0', true, false, true, false, !$enabled);
+}
 
 if ($has_permission) {
 	$table->data[4][0] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo, true) . "<div id='group_spinner'></div>";

@@ -1593,24 +1593,19 @@ function get_incident_files ($id_incident) {
 function get_incident_users ($id_incident) {
 	$incident = get_incident ($id_incident);
 	$users = array ();
+	$userswu = array();
 	
 	$users['owner'] = get_db_row ('tusuario', 'id_usuario', $incident['id_usuario']);
 	$users['creator'] = get_db_row ('tusuario', 'id_usuario', $incident['id_creator']);
-	$users['affected'] = array ();
-	$return = enterprise_hook ("get_users_in_group", array ($incident['id_grupo'], false) );
-	if ($return !== ENTERPRISE_NOT_HOOK)
-		$affected_users = $return;
-	else  
-		$affected_users = array();
-	
-	foreach ($affected_users as $user) {
-		if ($users['owner']['id_usuario'] == $user['id_usuario'])
+	$userswu  = people_involved_incident ($id_incident);
+	$users['affected'] = array();
+
+	foreach ($userswu as $user) {
+		if ($users['owner']['id_usuario'] == $user)
 			continue;
-		if ($users['creator']['id_usuario'] == $user['id_usuario'])
+		if ($users['creator']['id_usuario'] == $user)
 			continue;
-		array_push ($users['affected'], $user);
 	}
-	
 	return $users;
 }
 
