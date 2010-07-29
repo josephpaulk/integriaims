@@ -31,6 +31,7 @@ if ($id) {
 	}
 }
 
+
 $check_incident = (bool) get_parameter ('check_incident');
 if ($check_incident) {
 	if ($incident !== false && give_acl ($config['id_user'], $id_grupo, "IR")){
@@ -557,14 +558,19 @@ if ($has_permission) {
 	$table->data[0][0] = print_label (__('Title'), '', '', true, $titulo);
 }
 
-	$table->data[0][1] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
-	$disabled, '', '', true, __('SLA disabled'));
-	$table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
-	$disabled, '', '', true, __('Notify changes by email'));
 
-if ($has_manage_permission)
+if ($has_manage_permission){
+	$table->data[0][1] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
+	        $disabled, '', '', true, __('SLA disabled'));
+
+	$table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
+	                $disabled, '', '', true, __('Notify changes by email'));
+
 	$table->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
-else {
+} else {
+	$table->data[0][2] = print_input_hidden ('email_notify', 1, true);
+	$table->data[0][1] = print_input_hidden ('sla_disabled', 1, true);
+
 	$table->data[1][0] = print_label (__('Status'), '','',true, render_status($estado));
 	$table->data[1][0] .= print_input_hidden ('incident_status', $estado, true);
 }

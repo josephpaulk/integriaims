@@ -38,9 +38,10 @@ if (!isset($data)){
 
 $id_incident =  $data["id_incidencia"];
 
+$id_group = get_db_sql ("SELET id_grupo FROM tincidencia WHERE id_incidencia = $id_incident");
 
-if (! user_belong_incident ($id_user, $id_incident)){
-    echo "You dont have access to that file ($id_user, $id_incident)";
+if (! give_acl ($config['id_user'], $id_group, "IR")){
+    echo "You dont have access to that file - Code #$id_incident";
     exit;
 }
 

@@ -28,6 +28,27 @@ if (!function_exists("cal_days_in_month")){
 	}
 }
 
+function print_timestamp ($unixtime = 0){
+	if ($unixtime == 0){
+		$unixtime = time();
+	}
+	if (!is_numeric ($unixtime)) {
+		$unixtime = strtotime ($unixtime);
+	}
+	$config["date_format"] = 'F j, Y, g:i a';	
+	return date ($config["date_format"], $unixtime);
+}
+
+function print_mysql_timestamp ($unixtime = 0){
+	if ($unixtime == 0){
+                $unixtime = time();
+        }
+        if (!is_numeric ($unixtime)) {
+                $unixtime = strtotime ($unixtime);
+        }
+	return date ("Y-m-d H:m:s", $unixtime);
+}
+
 /**
  * Get an array with events for a given date. Returns an array
  *
@@ -638,53 +659,105 @@ function give_human_time ($int_seconds, $flag_hide_zero = true) {
 	return ( !empty($build)?implode(', ', $build):__('Unknown'));
 }
 
-function human_time_comparation ($timestamp) {
+/**
+ * This function gets the time from either system or sql based on preference and returns it
+ *
+ * @return int Unix timestamp
+ */
+function get_system_time () {
 	global $config;
-
-	if ($timestamp == "0000-00-00 00:00:00")
-		return __('Never');
-
-	$render = "";
-	$now = time ();
-	$time = strtotime ($timestamp);
-	$seconds = abs ($time - $now);
-	$raw = 0;
-
-	if ($seconds < 60)
-		$render = format_numeric ($seconds, 0)." ".__('seconds');
+	static $time = 0;
 	
-	if ($seconds < 3600) {
-		$minutes = format_numeric ($seconds / 60, 0);
-		$seconds = format_numeric ($seconds % 60, 0);
-		if ($seconds == 0)
-			$render = $minutes.' '.__('minutes');
-		$seconds = sprintf ("%02d", $seconds);
-		$render = $minutes.':'.$seconds.' '.__('minutes');
+	if ($time != 0)
+		return $time;
+
+	$config["timesource"] = "system";
+	
+	if ($config["timesource"] = "sql") {
+		$time = get_db_sql ("SELECT UNIX_TIMESTAMP()");
+		if (empty ($time)) {
+			return time ();
+		}
+		return $time;
+	} else {
+		return time ();
 	}
-	elseif ($seconds > 3600 && $seconds < 86400)
-		$render = format_numeric ($seconds / 3600, 0)." ".__('hours');
-	
-	elseif ($seconds > 86400 && $seconds < 2592000)
-		$render = format_numeric ($seconds / 86400, 0)." ".__('days');
-	
-	elseif ($seconds > 2592000 && $seconds < 231104000)
-		$render = format_numeric ($seconds / 2592000, 0)." ".__('months');
-
-	elseif ($seconds > 231104000 && $seconds < 1155520000)
-		$render = format_numeric ($seconds / 231104000, 0)." ".__('years');
-	else {
-		$raw = 1; // TOO OLD !!!!!, possible 1970. Print real date
-		$render = substr($timestamp, 0, 11); 
-	}
-	
-	if ($raw != 1)
-		$direction = ($now < $time) ? '&gt; ' : '&lt; ';
-	else
-		$direction = "";
-	
-	return $direction.$render;
 }
 
+function human_time_comparation ($timestamp) {
+	global $config;
+	
+	if (!is_numeric ($timestamp)) {
+		$timestamp = strtotime ($timestamp);
+	}
+	
+	$seconds = get_system_time () - $timestamp;
+
+	return human_time_description_raw ($seconds);
+}
+
+/** 
+ * INTERNAL (use print_timestamp for output): Transform an amount of time in seconds into a human readable
+ * strings of minutes, hours or days.
+ * 
+ * @param int $seconds Seconds elapsed time
+ * @param int $exactly If it's true, return the exactly human time
+ * 
+ * @return string A human readable translation of minutes.
+ */
+function human_time_description_raw ($seconds, $exactly = false) {
+
+	if ((empty ($seconds)) OR ($seconds < 0)) {
+		return __('Now'); 
+		// slerena 25/03/09
+		// Most times $seconds is empty is because last contact is current date
+		// Put here "uknown" or N/A or something similar is not a good idea
+	}
+
+	if ($exactly) {
+		$secs = $seconds % 60;
+		$mins = ($seconds /60) % 60;
+		$hours = ($seconds / 3600) % 24;
+		$days = ($seconds / 86400) % 30;
+		$months = format_numeric ($seconds / 2592000, 0);
+		
+		if (($mins == 0) && ($hours == 0) && ($days == 0) && ($months == 0))
+			return format_numeric ($secs, 0).' '.__('seconds');
+		else if (($hours == 0) && ($days == 0) && ($months == 0))
+			return sprintf("%02d",$mins).':'.sprintf("%02d",$secs);
+		else if (($days == 0) && ($months == 0))
+			return sprintf("%02d",$hours).':'.sprintf("%02d",$mins).':'.sprintf("%02d",$secs);
+		else if (($months == 0))
+			return $days.' '.__('days').' 
+'.sprintf("%02d",$hours).':'.sprintf("%02d",$mins).':'.sprintf("%02d",$secs);
+		else
+			return $months.' '.__('months').' '.$days.' '.__('days').' 
+'.sprintf("%02d",$hours).':'.sprintf("%02d",$mins).':'.sprintf("%02d",$secs);	
+	}
+	
+	if ($seconds < 60)
+		return format_numeric ($seconds, 0)." ".__('seconds');
+	
+	if ($seconds < 3600) {
+		$minutes = floor($seconds / 60);
+		$seconds = $seconds % 60;
+		if ($seconds == 0)
+			return $minutes.' '.__('minutes');
+		$seconds = sprintf ("%02d", $seconds);
+		return $minutes.':'.$seconds.' '.__('minutes');
+	}
+	
+	if ($seconds < 86400)
+		return format_numeric ($seconds / 3600, 0)." ".__('hours');
+	
+	if ($seconds < 2592000)
+		return format_numeric ($seconds / 86400, 0)." ".__('days');
+	
+	if ($seconds < 15552000)
+		return format_numeric ($seconds / 2592000, 0)." ".__('months');
+	
+	return "+6 ".__('months');
+}
 
 function working_days ($month = "", $year = "" ){
 	if (($month == "") OR ($year == "")){

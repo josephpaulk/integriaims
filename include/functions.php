@@ -104,7 +104,8 @@ function safe_input ($value) {
 		array_walk ($value, 'safe_input');
 		return $value;
 	}
-	return htmlentities (utf8_decode ($value), ENT_QUOTES); 
+	$ret = htmlentities (utf8_decode ($value), ENT_QUOTES); 
+	return str_replace('\\', '&#x005c;', $ret);
 }
 
 /** 

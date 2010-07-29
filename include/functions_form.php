@@ -530,7 +530,7 @@ function show_workunit_data ($workunit, $title) {
 
 	// Body
 	echo "<div class='notebody'>";
-	if (strlen ($nota) > 1024) {
+	if (strlen ($nota) > 3024) {
 		echo clean_output_breaks (substr ($nota, 0, 1024));
 		echo "<br /><br />";
 		echo "<a href='index.php?sec=incidents&sec2=operation/common/workunit_detail&id=".$id_workunit."&id_incident=$id_incident'>";

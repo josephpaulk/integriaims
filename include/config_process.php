@@ -52,15 +52,19 @@ require_once ('gettext.php');
 // Load config from database
 load_config();
 
-
 $l10n = NULL;
 if (file_exists ('./include/languages/'.$config['language_code'].'.mo')) {
 	$l10n = new gettext_reader (new CachedFileReader ('./include/languages/'.$config['language_code'].'.mo'));
 	$l10n->load_tables ();
 }
 
-// Set timezone defined in configuration
-putenv("TZ=".$config["timezone"]);
+// Set a the system timezone default 
+if ((!isset($config["timezone"])) OR ($config["timezone"] == "")){
+        $config["timezone"] = "Europe/Berlin";
+}
+
+
+date_default_timezone_set($config["timezone"]);
 
 include_once ($config["homedir"]."/include/functions_html.php");
 include_once ($config["homedir"]."/include/functions_form.php");

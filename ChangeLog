@@ -1,3 +1,21 @@
+2010-07-30  Sancho Lerena <slerena@artica.es>
+
+    * operation/incidents/incident_detail.php: Some options are not shown to 
+      non incident manager users (email notify, sla disabled) to avoid problems
+      when create new incidents on novice users.
+
+    * operation/incidents/incident_download_file.php: ACL check is done properly, 
+      fixed bug detected.
+
+    * include/functions_form.php: Workunit render breaks on 3024 byte, not 1024.
+
+    * include/functions_calendar.php: added get_system_date and print_mysql_date
+      for the future. Added human_time_raw to avoid negative seconds.
+
+    * include/config_process.php: Fixed the way timezone is used in System/PHP.
+
+    * include/functions.php: Fixed the "\" character management in safe_input 
+
 2010-07-09  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_form.php: List is shown by usersname from the
