@@ -1,3 +1,10 @@
+2010-08-04  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_xmlrpc.php
+	include/integria_xmlrpc_api.php
+	integria_db.sql: Changed the xmlrpc api to optimize the
+	communication receiving less data
+
 2010-07-30  Sancho Lerena <slerena@artica.es>
 
     * operation/incidents/incident_detail.php: Some options are not shown to 

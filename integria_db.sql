@@ -721,6 +721,7 @@ CREATE TABLE `tapp_activity_data` (
     `id_app` int(20) unsigned NOT NULL default 0,
     `id_user` varchar(60) NOT NULL default '', 
 	`app_extra` text NOT NULL,
+	`activity_time` int(20) unsigned NOT NULL default 0,
 	`start_timestamp` int(20) unsigned NOT NULL default 0,
 	`end_timestamp` int(20) unsigned NOT NULL default 0,
 	`send_timestamp`  int(20) unsigned NOT NULL default 0,
@@ -733,3 +734,4 @@ CREATE TABLE `tapp_activity_data` (
 	  ON UPDATE CASCADE 
 	  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

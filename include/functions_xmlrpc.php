@@ -59,9 +59,9 @@ function add_app ($app_name, $app_mode) {
  * @param string Send time.
  * 
  */
-function add_app_activity ($id_app, $id_user, $app_extra, $start_timestamp, $end_timestamp) {
-	$sql = "INSERT INTO tapp_activity_data (id_app, id_user, app_extra, start_timestamp, end_timestamp, send_timestamp)
-			VALUES (".$id_app.", '".$id_user."', '".addslashes($app_extra)."', ".$start_timestamp.", ".$end_timestamp.", UNIX_TIMESTAMP())";
+function add_app_activity ($id_app, $id_user, $app_extra, $activity_time, $start_timestamp, $end_timestamp) {
+	$sql = "INSERT INTO tapp_activity_data (id_app, id_user, app_extra, activity_time, start_timestamp, end_timestamp, send_timestamp)
+			VALUES (".$id_app.", '".$id_user."', '".addslashes($app_extra)."', ".$activity_time.", ".$start_timestamp.", ".$end_timestamp.", UNIX_TIMESTAMP())";
 	$res = process_sql ($sql);
 	
 	return $res;
@@ -120,7 +120,7 @@ function psw_db($user, $psw){
  * @param array data of activities.
  * 
  */
-function add_app_activities($usr, $data_in){
+function add_app_activities($usr, $start_datetime, $end_datetime, $data_in){
 	$msg = "Inserted: ";
 	
 	$cont = 0;
@@ -133,11 +133,11 @@ function add_app_activities($usr, $data_in){
 			$app_new = check_app($row['app_name']);
 			$id_app = $app_new['id'];
 		}
-		else
+		else{
 			$id_app = $app_exists['id'];
-			
+		}
 		
-		$return = add_app_activity ($id_app, $usr, $row['app_extra'], $row['start_datetime'], $row['end_datetime']);
+		$return = add_app_activity ($id_app, $usr, $row['app_extra'], $row['time'], $start_datetime, $end_datetime);
 		$msg .= $row['app_name']." info ; ";
 		
 		if($return == false)

@@ -84,7 +84,7 @@ ini_set('display_errors', 0);
         }
     }
 
-    $transfer_sig=array(array($xmlrpcString, $xmlrpcString, $xmlrpcString, $xmlrpcStruct));
+    $transfer_sig=array(array($xmlrpcString, $xmlrpcString, $xmlrpcString, $xmlrpcInt, $xmlrpcInt, $xmlrpcStruct));
     $transfer_doc='Doing the data transfer including authentification.';
 
     function ims_transfer($m)
@@ -109,20 +109,23 @@ ini_set('display_errors', 0);
         $log = ims_login($f);
         
         if($log->faultCode()){
-            return new xmlrpcresp(0, $xmlrpcerruser, "Login fails");
+            return new xmlrpcresp(0, $xmlrpcerruser, "Login fails for ". $usrv);
         }
         else
         {
 			// get the third param
-			$dat=$m->getParam(2);
+			$start_datetime=$m->getParam(2);
+			// extract the value of the start datetime
+			$start_datetimev=$start_datetime->scalarval();
 			
-			// extract the values of data struct
-			$msg = "";
+			// get the fourth param
+			$end_datetime=$m->getParam(3);
+			// extract the value of the end datetime
+			$end_datetimev=$end_datetime->scalarval();
 			
-			$data_in = get_xmlrpcstruct_array($dat);
-			
-			$msg = add_app_activities($usrv, $data_in);
-			
+			// extract the values of data struct and store it
+						
+			$msg = add_app_activities($usrv, $start_datetimev, $end_datetimev, get_xmlrpcstruct_array($m->getParam(4)));
 			
 			return new xmlrpcresp(new xmlrpcval($msg));
         }
