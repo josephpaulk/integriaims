@@ -17,8 +17,8 @@
 global $config;
 
 // Integria version
-$config["build"]="100712";
-$config["version"]="v2.1";
+$config["build"]="100820";
+$config["version"]="v2.1dev";
 $config["build_version"] = $config["build"];
 
 if (! defined ('ENTERPRISE_DIR'))
@@ -62,7 +62,6 @@ if (file_exists ('./include/languages/'.$config['language_code'].'.mo')) {
 if ((!isset($config["timezone"])) OR ($config["timezone"] == "")){
         $config["timezone"] = "Europe/Berlin";
 }
-
 
 date_default_timezone_set($config["timezone"]);
 

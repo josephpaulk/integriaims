@@ -32,8 +32,8 @@ if (isset($_GET["create2"])){ // Create group
 	$name = get_parameter ("name","");
 	$id_group = get_parameter ("id_group", 0);
 
-	$sql_insert="INSERT INTO tdownload_category (name, id_group) 
-		  		 VALUE ('$name',$id_group)";
+	$sql_insert="INSERT INTO tdownload_category (name, id_group, icon) 
+		  		 VALUE ('$name',$id_group, '$icon')";
 	$result=mysql_query($sql_insert);	
 	if (! $result)
 		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
@@ -52,8 +52,10 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	$id = get_parameter ("id","");
 		$name = get_parameter ("name","");
 	$id_group = get_parameter ("id_group", 0);
+	$icon = get_parameter ("icon", "");
+
 	$sql_update ="UPDATE tdownload_category
-	SET name = '$name', id_group = $id_group 
+	SET name = '$name', icon = '$icon', id_group = $id_group 
 	WHERE id = $id";
 	$result=mysql_query($sql_update);
 	if (! $result)
@@ -90,6 +92,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id = get_parameter ("update",-1);
 		$row = get_db_row ("tdownload_category", "id", $id);
 		$name = $row["name"];
+		$icon = $row["icon"];
 		$id_group = $row["id_group"];
 
 	}
@@ -120,7 +123,13 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo __('Group');
 	echo "<td class=datos2>";
 	combo_groups_visible_for_me ($config["id_user"], 'id_group', 1, 'KR', $id_group, false, 0 );
-	
+
+	echo "<tr>";
+        echo "<td class=datos>";
+	echo __('Icon');
+	echo "<td class=datos>";
+	$files = list_files ('images/download_category/', "png", 1, 0);
+	print_select ($files, 'icon', $icon, '', __('None'), "");
 
 	echo "</table>";
 	echo '<div class="button" style="width:90%">';

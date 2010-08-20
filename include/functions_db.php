@@ -1153,7 +1153,7 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 		
 
 	if (give_acl ($id_user, 1, $access)) {
-		$users = get_db_all_rows_in_table("tusuario");
+		$users = get_db_all_rows_sql ("SELECT * FROM tusuario ORDER BY id_usuario");
 		if ($users === false)
 			$users = array ();
 		foreach ($users as $user) {

@@ -93,6 +93,7 @@ echo __("Base directory");
 echo "<td class='datos'>";
 
 $available_directory["images"] = "images";
+$available_directory["attachment"] = "attachment";
 
 // Current directory
 $available_directory[$current_directory] = $current_directory;

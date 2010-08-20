@@ -139,14 +139,15 @@ if ($action == 'update') {
 	else {
 		$idParentValue = sprintf ('%d', $id_parent);
 	}
+	$timestamp = print_mysql_timestamp();
 
-	$sql = sprintf ('UPDATE tincidencia SET actualizacion = NOW(),
+	$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s",
 			titulo = "%s", origen = %d, estado = %d,
 			id_grupo = %d, id_usuario = "%s",
 			notify_email = %d, prioridad = %d, descripcion = "%s",
 			epilog = "%s", id_task = %d, resolution = %d,
 			id_incident_type = %d, id_parent = %s, affected_sla_id = 0  %s 
-			WHERE id_incidencia = %d',
+			WHERE id_incidencia = %d', $timestamp, 
 			$titulo, $origen, $estado, $grupo, $user,
 			$email_notify, $priority, $description,
 			$epilog, $id_task, $resolution, $id_incident_type,
@@ -214,14 +215,19 @@ if ($action == "insert") {
 	else {
 		$idParentValue = sprintf ('%d', $id_parent);
 	}
-	
+
+	// DONT use MySQL NOW() or UNIXTIME_NOW() because 
+	// Integria can override localtime zone by a user-specified timezone.
+
+	$timestamp = print_mysql_timestamp();
+
 	$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, origen, estado, prioridad,
 			id_grupo, id_creator, notify_email, id_task,
 			resolution, id_incident_type, id_parent, sla_disabled)
-			VALUES (NOW(), NOW(), "%s", "%s", "%s", %d, %d, %d, %d,
-			"%s", %d, %d, %d, %d, %s, %d)',
+			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
+			"%s", %d, %d, %d, %d, %s, %d)', $timestamp, $timestamp,
 			$titulo, $description, $usuario,
 			$origen, $estado, $priority, $grupo, $id_creator,
 			$email_notify, $id_task, $resolution, $id_incident_type,
@@ -363,6 +369,7 @@ if ($id) {
 			}
 			
 			// Copy file to directory and change name
+			$short_filename = $filename;
 			$filename = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
 			
 			if (! copy ($_FILES['userfile']['tmp_name'], $filename)) {
@@ -373,6 +380,17 @@ if ($id) {
 			} else {
 				// Delete temporal file
 				unlink ($_FILES['userfile']['tmp_name']);
+
+	                        // Adding a WU noticing about this
+	                        $nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $short_filename;
+         	                $public = 1;
+				$timestamp = print_mysql_timestamp();
+				$timeused = "0.05";
+	                        $sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public) VALUES ("%s", %.2f, "%s", "%s", %d)', $timestamp, $timeused, $config['id_user'], $nota, $public);
+
+	                        $id_workunit = process_sql ($sql, "insert_id");
+				$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES (%d, %d)', $id, $id_workunit);
+				process_sql ($sql);
 			}
 		}  else {
 			switch ($_FILES['userfile']['error']) {

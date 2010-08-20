@@ -629,6 +629,12 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR")) {
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_cat'>".__('Manage categories')."</a></li>";
+		// KB Product Cat.
+		if ($sec2 == "operation/inventories/manage_prod")
+                        echo "<li id='sidesel'>";
+                else
+                        echo "<li>";
+                echo "<a href='index.php?sec=kb&sec2=operation/inventories/manage_prod'>".__('Manage products')."</a></li>";
 	}
 
 

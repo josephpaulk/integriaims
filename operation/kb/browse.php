@@ -387,11 +387,11 @@ if ($result=mysql_query($sql1)){
 
 		// Category
 		echo "<td class=f9>";
-		echo get_db_sql ("SELECT name FROM tkb_category WHERE id = ".$row["id_category"]);
+		echo "<img src='images/groups_small/".get_db_sql ("SELECT icon FROM tkb_category WHERE id = ".$row["id_category"]). "'>";
 
 		// Product
 		echo "<td class=f9>";
-		echo get_db_sql ("SELECT name FROM tkb_product WHERE id = ".$row["id_product"]);
+		echo "<img src='images/products/". get_db_sql ("SELECT icon FROM tkb_product WHERE id = ".$row["id_product"]). "'>";
 
 		// Language
 		echo "<td class=f9>";

@@ -62,7 +62,7 @@ echo "</table></form>";
 $search = "WHERE 1=1 ";
 if ($search_text != "")
 	$search .= sprintf (" AND (id_usuario = '%s' OR comentarios = '%s' OR nombre_real = '%s')", $search_text, $search_text, $search_text );
-$query1 = "SELECT * FROM tusuario $search";
+$query1 = "SELECT * FROM tusuario $search ORDER BY id_usuario";
 
 $count = get_db_sql("SELECT COUNT(id_usuario) FROM tusuario $search ");
 

@@ -244,7 +244,7 @@ $offset = get_parameter ("offset", 0);
 $count = get_db_sql("SELECT COUNT(id) FROM tdownload $sql_filter");
 pagination ($count, "index.php?sec=download&sec2=operation/download/browse", $offset);
 
-$sql1 = "SELECT * FROM tdownload $sql_filter ORDER BY name, id_category LIMIT $offset, ". $config["block_size"];
+$sql1 = "SELECT * FROM tdownload $sql_filter ORDER BY date DESC, name, id_category LIMIT $offset, ". $config["block_size"];
 
 $color =0;
 if ($result=mysql_query($sql1)){
@@ -252,7 +252,6 @@ if ($result=mysql_query($sql1)){
 
 	echo "<th>".__('Name')."</th>";
 	echo "<th>".__('Category')."</th>";
-	echo "<th width=45%>".__('Description')."</th>";
 	echo "<th>".__('Downloads')."</th>";
 	echo "<th>".__('Date')."</th>";
 	if (give_acl($config["id_user"], 0, "KW")){
@@ -261,17 +260,22 @@ if ($result=mysql_query($sql1)){
 	
 	while ($row=mysql_fetch_array($result)){
 		echo "<tr>";
+
 		// Name
-		echo "<td><b><a href='operation/download/download.php?id=".$row["id"]."'>";
-		echo short_string($row["name"],54)."</a></b></td>";
+		echo "<td><b><a title='".$row["description"]."' href='operation/download/download.php?id=".$row["id"]."'>";
+		echo short_string($row["name"],54)."</a></b> ";
+		if ($row["description"] != ""){
+			echo "<img src='images/zoom.png'>";
+		}
+		echo "</td>";
 
 		// Category
 		echo "<td>";
-		echo get_db_sql ("SELECT name FROM tdownload_category WHERE id = ".$row["id_category"]);
+                echo "<img src='images/download_category/".get_db_sql ("SELECT icon FROM tdownload_category WHERE id = ".$row["id_category"]). "'>";
 
 		// Description
-		echo "<td class=f9>";
-		echo $row["description"];
+	//	echo "<td class=f9>";
+	//	echo $row["description"];
 
 		// Downloads
 		echo "<td>";

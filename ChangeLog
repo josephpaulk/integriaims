@@ -1,3 +1,37 @@
+2010-08-20  Sancho Lerena <slerena@artica.es>
+
+    * include/config_process.php: Build/version update.
+
+    * include/functions_db.php: Function to return users now return userlist
+    sorted by username.
+
+    * operation/incidents/incident_detail.php: Fixed timestamp on creation and
+    modification (was using internal MYSQL time instead time of PHP, which could
+    have the timezone altered). Added automatic WU creation on file attach.
+    
+    * operation/kb/browse.php: Better render, added icons on listing.
+
+    * operation/side_menu.php: Added manage product categories link in KB menu.
+
+    * operation/download/manage_cat.php: Added icon management for category.
+
+    * operation/download/browse.php: Better layout, show icons and put 
+    description only when have info in a hint/mouseover/tooltip info.
+
+    * images/group_banners/flags.png,
+    images/group_banners/users.png,
+    images/products/babel.png,
+    images/download_category/pandora.png,
+    images/download_category/babel.png,
+    images/artica_logo.png
+    images/products/pandora.png: Added missing icons.
+
+    * integria_db.sql: Added icon field for tdownload_category.
+
+    * godmode/setup/filemgr.php: Added directorio "attachments" to filemanager.
+
+    * godmode/usuarios/lista_usuarios.php: Returns sorted list of users.
+
 2010-08-05  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_xmlrpc.php: Changed name of parameter 
