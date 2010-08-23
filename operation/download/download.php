@@ -65,8 +65,24 @@ if (file_exists($fileLocation)){
 	header('Content-type: ' . returnMIMEType($fileLocation) . ';');
 	header("Content-Length: " . filesize($fileLocation));
 	header('Content-Disposition: attachment; filename="' . $last_name . '"');
-	readfile($fileLocation);
 
+	// If it's a large file we don't want the script to timeout, so:
+	set_time_limit(9000);
+	// If it's a large file, readfile might not be able to do it in one go, so:
+	$chunksize = 1 * (1024 * 256); // how many bytes per chunk
+	if (filesize($fileLocation) > $chunksize) {
+		$handle = fopen($fileLocation, 'rb');
+    		$buffer = '';
+      		while (!feof($handle)) {
+          		$buffer = fread($handle, $chunksize);
+	      		echo $buffer;
+	          	ob_flush();
+		      	flush();
+	 	}
+		fclose($handle);
+	} else {
+		readfile($fileLocation);
+	}
 } else {
 	audit_db("",$config["REMOTE_ADDR"], "ACL Violation","Trying to access a non-existant file in disk");
 	echo "File not found";
