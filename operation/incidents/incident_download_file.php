@@ -45,6 +45,8 @@ if (! give_acl ($config['id_user'], $id_group, "IR")){
     exit;
 }
 
+session_write_close();
+
 // Allow download file
 
 $fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
@@ -52,12 +54,30 @@ $fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$da
 $last_name = $data["filename"];
 
 if (file_exists($fileLocation)){
-	header('Content-type: aplication/octet-stream;');
-	header('Content-type: ' . returnMIMEType($fileLocation) . ';');
-	header("Content-Length: " . filesize($fileLocation));
-	header('Content-Disposition: attachment; filename="' . $last_name . '"');
-	readfile($fileLocation);
+	
+	// Just redirect it, this file could be BIG and problematic.
 
+	header("Location: ".$config["base_url"]."/attachment/".$data["id_attachment"]."_".$data["filename"]);
+	return;
+	/*
+	// If it's a large file we don't want the script to timeout, so:
+	        set_time_limit(90000);
+		        // If it's a large file, readfile might not be able to do it in one go, so:
+			        $chunksize = 1 * (1024 * 256); // how many bytes per chunk
+				        if (filesize($fileLocation) > $chunksize) {
+					                $handle = fopen($fileLocation, 'rb');
+							                $buffer = '';
+									                while (!feof($handle)) {
+											                        $buffer = fread($handle, $chunksize);
+														                        echo $buffer;
+																	                        ob_flush();
+																				                        flush();
+																							                }
+																									                fclose($handle);
+																											        } else {
+		              readfile($fileLocation);
+		}
+		*/
 } else {
 	echo "File is missing in disk storage. Please contact the administrator";
 	exit;

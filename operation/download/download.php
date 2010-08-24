@@ -38,6 +38,10 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
     exit;
 }
 
+// http://es2.php.net/manual/en/ref.session.php#64525
+// Session locking concurrency speedup!
+session_write_close ();
+
 $download_id = get_parameter ("id", "");
 $download = get_db_row ("tdownload", "id", $download_id );
 
@@ -61,13 +65,20 @@ if (file_exists($fileLocation)){
 	$timestamp = date('Y-m-d H:i:s');
 	mysql_query ("INSERT INTO tdownload_tracking (id_download, id_user, date) VALUES ($download_id, '".$config['id_user']."','$timestamp')");
 
+
+	# If file is too big (>80MB) do a redirect
+	if (filesize($fileLocation) >80000000){
+		header("Location: ".$config["base_url"]."/".$location);
+		return;
+	} 
+
 	header('Content-type: aplication/octet-stream;');
 	header('Content-type: ' . returnMIMEType($fileLocation) . ';');
 	header("Content-Length: " . filesize($fileLocation));
 	header('Content-Disposition: attachment; filename="' . $last_name . '"');
 
 	// If it's a large file we don't want the script to timeout, so:
-	set_time_limit(9000);
+	set_time_limit(90000);
 	// If it's a large file, readfile might not be able to do it in one go, so:
 	$chunksize = 1 * (1024 * 256); // how many bytes per chunk
 	if (filesize($fileLocation) > $chunksize) {

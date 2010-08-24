@@ -1,3 +1,17 @@
+2010-08-24  Sancho Lerena <slerena@artica.es>
+
+	* operation/download/browse.php: Added filesize column.
+	
+	* include/functions.php: Added function to render numbers with units.
+
+	* operation/incidents/incident_download_file.php: Directly do a 
+	header redirect to file. This avoid problems with huge files.
+
+	* operation/download/download.php: Huge files (>80MB) are always
+	downloaded using a HTTP header redirection, smaller files are buffered
+	(Session close before, to avoid app. locking) and tiny files are 
+	not buffered (< 256KB).
+
 2010-08-23  SAncho Lerena <slerena@artica.es>
 
 	* operation/download/download.php: Fixed problem with large files.

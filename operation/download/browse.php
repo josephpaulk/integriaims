@@ -251,6 +251,7 @@ if ($result=mysql_query($sql1)){
 	echo '<table width="90%" class="listing" cellspacing=4 cellpading=4>';
 
 	echo "<th>".__('Name')."</th>";
+	echo "<th>".__("Size")."</th>";
 	echo "<th>".__('Category')."</th>";
 	echo "<th>".__('Downloads')."</th>";
 	echo "<th>".__('Date')."</th>";
@@ -269,6 +270,10 @@ if ($result=mysql_query($sql1)){
 		}
 		echo "</td>";
 
+		// Size
+		echo "<td>";
+		echo format_for_graph(filesize($config["homedir"].$row["location"]),1,".",",",1024);
+		
 		// Category
 		echo "<td>";
                 echo "<img src='images/download_category/".get_db_sql ("SELECT icon FROM tdownload_category WHERE id = ".$row["id_category"]). "'>";
