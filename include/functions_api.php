@@ -66,15 +66,15 @@ function api_create_incident ($id, $data){
 	$email_notify = get_db_sql ("select forced_email from tgrupo WHERE id_grupo = $grupo");
 	$owner = get_db_sql ("select id_user_default from tgrupo WHERE id_grupo = $grupo");
 	$id_inventory = get_db_sql ("select id_inventory_default from tgrupo WHERE id_grupo = $grupo");
+	$fecha = print_mysql_timestamp();
 
 	$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, origen, estado, prioridad,
 			id_grupo, id_creator, notify_email, 
 			resolution)
-			VALUES (NOW(), NOW(), "%s", "%s", "%s", %d, %d, %d, %d,
-			"%s", %d, %d)',
-			$titulo, $description, $owner,
+			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
+			"%s", %d, %d)', $fecha, $fecha, $titulo, $description, $owner,
 			$origen, $estado, $priority, $grupo, $id_creator,
 			$email_notify, $resolution);
 

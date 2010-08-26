@@ -775,36 +775,38 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 		$description = __('Unknown update');
 		break;
 	}
-	
+	$fecha = print_mysql_timestamp();	
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident updated", $description);
 	$sql = sprintf ('INSERT INTO tincident_track (id_user, id_incident,
 		timestamp, state, id_aditional, description)
-		VALUES ("%s", %d, NOW(), %d, %d, "%s")',
-		$config['id_user'], $id_incident, $state, $aditional_data, $description);
+		VALUES ("%s", %d, "%s", %d, %d, "%s")',
+		$config['id_user'], $id_incident, $fecha, $state, $aditional_data, $description);
 	return process_sql ($sql, 'insert_id');
 }
 
 function task_tracking ($id_task, $state, $id_external = 0) {
 	global $config;
 	global $REMOTE_ADDR;
-	
+
+	$fecha = print_mysql_timestamp();
 	audit_db ($config['id_user'], $REMOTE_ADDR, "Task #$id_task tracking updated", "State #$state");
 	$sql = sprintf ('INSERT INTO ttask_track (id_user, id_task, timestamp,
 		state, id_external)
-		VALUES ("%s", %d, NOW(), %d, %d)',
-		$config['id_user'], $id_task, $state, $id_external);
+		VALUES ("%s", %d, "%s", %d, %d)',
+		$config['id_user'], $id_task, $fecha, $state, $id_external);
 	return process_sql ($sql);
 }
 
 function project_tracking ($id_project, $state, $id_aditional = 0) {
 	global $config;
 	global $REMOTE_ADDR;
-	
+
+	$fecha = print_mysql_timestamp();
 	audit_db ($config['id_user'], $REMOTE_ADDR, "Project #$id_project tracking updated", "State #$state");
 	$sql = sprintf ('INSERT INTO tproject_track (id_user, id_project, timestamp,
 		state, id_aditional)
-		VALUES ("%s", %d, NOW(), %d, %d)',
-		$config['id_user'], $id_project, $state, $id_aditional);
+		VALUES ("%s", %d, "%s", %d, %d)',
+		$config['id_user'], $id_project, $fecha, $state, $id_aditional);
 	return process_sql ($sql);
 }
 

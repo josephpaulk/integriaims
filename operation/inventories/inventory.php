@@ -40,6 +40,46 @@ if (isset ($_POST["quick_delete"])) {
 		no_permission();
 	}
 }
+/* Extras update, temporal patch (slerena, 26Ago2010) */
+$update_extras = get_parameter("update_extras", 0);
+if ($update_extras == 1){
+	$generic_1 = (string) get_parameter ('generic_1');
+	$generic_2 = (string) get_parameter ('generic_2');
+	$generic_3 = (string) get_parameter ('generic_3');
+	$generic_4 = (string) get_parameter ('generic_4');
+	$generic_5 = (string) get_parameter ('generic_5');
+	$generic_6 = (string) get_parameter ('generic_6');
+	$generic_7 = (string) get_parameter ('generic_7');
+	$generic_8 = (string) get_parameter ('generic8');
+	$has_permission = give_acl ($config['id_user'], $id_group, "VW");
+	if (! $has_permission) {
+                // Doesn't have access to this page
+                audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to 
+update inventory extras without permission#".$id);
+                include ("general/noaccess.php");
+                exit;
+        }
+	$result = process_sql_update ('tinventory',
+                array ('generic_1' => $generic_1,
+                        'generic_2' => $generic_2,
+                        'generic_3' => $generic_3,
+                        'generic_4' => $generic_4,
+                        'generic_5' => $generic_5,
+                        'generic_6' => $generic_6,
+                        'generic_7' => $generic_7,
+                        'generic_8' => $generic_8),
+                array ('id' => $id));
+
+        if ($result !== false) {
+                $result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
+        } else {
+                $result_msg = '<h3 class="err">'.__('There was an error updating inventory 
+object').'</h3>';
+        }
+
+        echo $result_msg;
+	
+}
 
 /* Tabs code */
 echo '<div id="tabs">';

@@ -1,3 +1,14 @@
+2010-08-26  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_api.php, 
+	include/functions_db.php,
+	include/functions_workunits.php: Fixing some issues with timestamp,
+	was using MYSQL NOW() instead print_mysql_timestamp() which uses
+	user defined timezone.
+
+	* operation/inventories/inventory.php,
+	operation/inventories/inventory_extra.php: Fixed editing of extra fields.
+
 2010-08-24  Sancho Lerena <slerena@artica.es>
 
 	* operation/download/browse.php: Added filesize column.

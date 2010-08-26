@@ -33,48 +33,9 @@ echo '<h3>'.__('Extra details for the inventory object').' #'.$id.'</h3>';
 
 require_once ('include/functions_inventories.php');
 
-$update = (bool) get_parameter ('update_inventory');
-$generic_1 = (string) get_parameter ('generic_1');
-$generic_2 = (string) get_parameter ('generic_2');
-$generic_3 = (string) get_parameter ('generic_3');
-$generic_4 = (string) get_parameter ('generic_4');
-$generic_5 = (string) get_parameter ('generic_5');
-$generic_6 = (string) get_parameter ('generic_6');
-$generic_7 = (string) get_parameter ('generic_7');
-$generic_8 = (string) get_parameter ('generic8');
 
 $has_permission = give_acl ($config['id_user'], $id_group, "VW");
 
-if ($update) {
-	if (! $has_permission) {
-		// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update inventory #".$id);
-		include ("general/noaccess.php");
-		exit;
-	}
-	
-	$result = process_sql_update ('tinventory',
-		array ('generic_1' => $generic_1,
-			'generic_2' => $generic_2,
-			'generic_3' => $generic_3,
-			'generic_4' => $generic_4,
-			'generic_5' => $generic_5,
-			'generic_6' => $generic_6,
-			'generic_7' => $generic_7,
-			'generic_8' => $generic_8),
-		array ('id' => $id));
-	
-	if ($result !== false) {
-		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
-	} else {
-		$result_msg = '<h3 class="err">'.__('There was an error updating inventory object').'</h3>';
-	}
-	
-	if (defined ('AJAX')) {
-		echo $result_msg;
-		return;
-	}
-}
 
 $inventory = get_db_row ('tinventory', 'id', $id);
 $generic_1 = $inventory['generic_1'];
@@ -126,11 +87,11 @@ if ($has_permission) {
 }
 
 if ($has_permission) {	
-	echo '<form method="post" id="inventory_status_form">';
+	echo '<form method="post" id="inventory_extras_form">';
 	print_table ($table);
 
 	echo '<div style="width:'.$table->width.'" class="action-buttons button">';
-	print_input_hidden ('update_inventory', 1);
+	print_input_hidden ('update_extras', 1);
 	print_input_hidden ('id', $id);
 	print_submit_button (__('Update'), 'update', false, 'class="sub upd"');
 	echo '</div>';
