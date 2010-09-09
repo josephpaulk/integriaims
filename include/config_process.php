@@ -46,15 +46,15 @@ mysql_select_db ($config["dbname"]);
 require_once ($config["homedir"].'/include/functions.php');
 require_once ($config["homedir"].'/include/functions_db.php');
 require_once ($config["homedir"].'/include/functions_config.php');
-require_once ('streams.php');
-require_once ('gettext.php');
+require_once ($config["homedir"].'/include/streams.php');
+require_once ($config["homedir"].'/include/gettext.php');
 
 // Load config from database
 load_config();
 
 $l10n = NULL;
-if (file_exists ('./include/languages/'.$config['language_code'].'.mo')) {
-	$l10n = new gettext_reader (new CachedFileReader ('./include/languages/'.$config['language_code'].'.mo'));
+if (file_exists ($config["homedir"].'/include/languages/'.$config['language_code'].'.mo')) {
+	$l10n = new gettext_reader (new CachedFileReader ($config["homedir"].'/include/languages/'.$config['language_code'].'.mo'));
 	$l10n->load_tables ();
 }
 

@@ -1,3 +1,9 @@
+2010-09-09  Sancho Lerena <slerean@ærtica.es>
+
+	* include/config.inc.php
+	include/config_process.php: Load include absolute paths, more
+	reliable.
+
 2010-08-26  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_api.php, 

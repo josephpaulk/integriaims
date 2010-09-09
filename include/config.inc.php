@@ -38,5 +38,5 @@ error_reporting(E_ALL);
 // Default font used for graphics (a Free TrueType font included with Pandora FMS)
 $config["fontpath"] = $config["homedir"]."/include/FreeSans.ttf";
 
-include ("config_process.php");
+include ($config["homedir"]."/config_process.php");
 ?>
