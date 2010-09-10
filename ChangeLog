@@ -1,3 +1,9 @@
+2010-09-11  Sancho Lerena <slerena@artica.es>
+
+	* include/mailtemplates/incident_close.tpl: Added new line.
+
+	* include/functions_fsgraph.php: Added 2D column graphs (generic flash).
+
 2010-09-09  Sancho Lerena <slerean@ærtica.es>
 
 	* include/config.inc.php

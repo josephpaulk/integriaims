@@ -1,3 +1,5 @@
+Hello, this is an automated message from Integria.
+
 Incident #_incident_id_ ((_incident_title_)) has been CLOSED by _owner_
 
 Please, score the resolution of this incident in the "Score resolution" section of the following webpage :

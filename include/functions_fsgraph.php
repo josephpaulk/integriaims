@@ -19,7 +19,7 @@
 
 
 include_once ("config.php");
-require_once ("FusionCharts/FusionCharts_Gen.php");
+require_once ($config["homedir"]."/include/FusionCharts/FusionCharts_Gen.php");
 global $config;
 
 // Returns the number of seconds since the Epoch for a date in the format dd/mm/yyyy
@@ -90,6 +90,32 @@ function fs_hbar_chart ($data, $names, $width, $height) {
 	return get_chart_code ($chart, $width, $height, 'include/FusionCharts/FCF_Bar2D.swf');
 }
 
+// Returns a 2D column chart
+function fs_2d_column_chart ($data, $width, $height) {
+	global $config;
+
+	if (sizeof ($data) == 0) {
+		return;
+	}
+
+	// Generate the XML
+	$chart = new FusionCharts('Column2D', $width, $height);
+
+	$empty = 1;
+	foreach ($data as $name => $value) {
+		if ($value > 0) {
+			$empty = 0;
+		}
+		$chart->addChartData($value, 'name=' . clean_flash_string($name) . 
+';color=95BB04');
+	}
+	
+$chart->setChartParams('showNames=1;rotateNames=1;showValues=0;showPercentageValues=0;showLimits=0;baseFontSize=9;' 
+. ($empty == 1 ? ';yAxisMinValue=0;yAxisMaxValue=1' : ''));
+
+	// Return the code
+	return get_chart_code ($chart, $width, $height, 'include/FusionCharts/FCF_Column2D.swf');
+}
 
 // Prints a Gantt chart
 function fs_gantt_chart ($title, $from, $to, $tasks, $milestones, $width, $height) {
