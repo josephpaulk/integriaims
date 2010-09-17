@@ -28,28 +28,27 @@ if (!isset($config["id_user"]))
 	// Show Newsboard
     // ==============================================================
 
-    echo "<tr><td>";
-	echo "<h1>".__('System newsboard')."</h1>";
-	echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-	echo "<img src='images/warning.png'></div>";
-	echo "<td valign='top'><br><b>";
-	echo __('Latest system news (30 days)');
-	echo '<hr width="100%" size="1">';
-	echo "</b>";
 	$sql = "SELECT * FROM tnewsboard  WHERE `date` > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 31 DAY) ORDER BY date ASC";
-
     $news = get_db_all_rows_sql ($sql);
-	if ($news === false)
-		$news = array ();
+    if ($news) {
 
-    foreach ($news as $news_item) {
-    	echo "<b>".$news_item["title"]."</b>, <i>".$news_item["date"]."</i>";
-		echo "<br>";
-        echo $news_item["content"];
-		echo "<br><br>";
-	}
+        echo "<tr><td>";
+	    echo "<h1>".__('System newsboard')."</h1>";
+	    echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
+	    echo "<img src='images/warning.png'></div>";
+	    echo "<td valign='top'><br><b>";
+	    echo __('Latest system news (30 days)');
+	    echo '<hr width="100%" size="1">';
+	    echo "</b>";
 
-
+        foreach ($news as $news_item) {
+        	echo "<b>".$news_item["title"]."</b>, <i>".$news_item["date"]."</i>";
+		    echo "<br>";
+            echo $news_item["content"];
+		    echo "<br><br>";
+	    }
+    }
+    
     // ==============================================================
 	// Show Agenda items
     // ==============================================================

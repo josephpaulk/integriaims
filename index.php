@@ -20,9 +20,6 @@
 // Integria shares much of it's code with project Babel Enterprise and Pandora FMS,
 // also a Free Software Project coded by some of the people who makes Integria.
 
-// Real start
-session_start();
-
 $develop_bypass = 1;
 
 if ($develop_bypass != 1) {
@@ -64,6 +61,9 @@ require_once ('include/functions_html.php');
 require_once ('include/functions_form.php');
 require_once ('include/functions_calendar.php');
 
+
+// Set an specific session name for this setup, and doesn't share with others
+session_start();
 
 /* Enterprise support */
 if (file_exists ("enterprise/load_enterprise.php")) {

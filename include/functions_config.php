@@ -119,8 +119,15 @@ function load_config(){
     }
 
     if (!isset ($config["email_on_incident_update"])){
-	$config["email_on_incident_update"] = 0;
+		$config["email_on_incident_update"] = 0;
     }
+
+	if (!isset ($config["error_log"])){
+		$config["error_log"] = 1;
+    }
+	
+	if (!isset ($config["sql_query_limit"]))
+		$config["sql_query_limit"] = 1500;
 
 }
 

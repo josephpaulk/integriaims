@@ -670,6 +670,14 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "KR")) {
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=download&sec2=operation/download/manage_cat'>".__('Manage categories')."</a></li>";
+		
+		// FR Manage access
+		if ($sec2 == "operation/download/manage_perms")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=download&sec2=operation/download/manage_perms'>".__('Manage access')."</a></li>";
+		
 	}
 
 
@@ -805,16 +813,10 @@ if ($sec == "godmode") {
 
 if (($sec == "users") OR ($sec == "user_audit")){
 	echo "<div class='portlet'>";
-	echo "<h3>".__('People defined')."</h3>";
+	echo "<h3>".__('Myself')."</h3>";
 	echo "<ul class='sidemenu'>";
 
-		// View users
-		if ($sec2 == "operation/users/user")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=users&amp;sec2=operation/users/user'>".__('View users')."</a></li>";
-
+		
 		// Edit my user
 		if ($sec2 == "operation/users/user_edit")
 			if (isset ($_REQUEST['id']) && $_REQUEST['id'] == $config['id_user'])
@@ -831,7 +833,7 @@ if (($sec == "users") OR ($sec == "user_audit")){
 		echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=operation/users/user_spare_workunit'>".__('Spare workunit')."</a></li>";
+		echo "<a href='index.php?sec=users&sec2=operation/users/user_spare_workunit'>".__('Add spare workunit')."</a></li>";
 
 
 		$now = date("Y-m-d H:i:s");

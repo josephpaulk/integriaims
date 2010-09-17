@@ -61,7 +61,7 @@
 	echo "</table>";
 
 
-	echo '<table width="90%" class="listing">';
+	echo '<table width="99%" class="listing">';
 	echo "<th>".__('User ID');
 	echo "<th>".__('Workunit report');
 	echo "<th>".__('Calendar view');
@@ -86,11 +86,16 @@
 			    }
 			    
 			    echo "<tr><td>";
-                echo "<img src='images/avatars/".$avatar."_small.png'>";
+                
+                echo "<a href='#' class='tip'>&nbsp;<span>";
+                $usuario = get_db_row ("tusuario", "id_usuario", $nombre);
+				echo "<b>".$usuario["nombre_real"] . "</b><br>";
+				echo "<i>".$usuario["comentarios"] . "</i><br>";
 				if ($config["enteprise"] == 1){
+					echo "<font size=1px>";
 					$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
 					$result1=mysql_query($sql1);
-					echo "<a href='#' class='tip'>&nbsp;<span>";
+				
 					if (mysql_num_rows($result1)){
 						while ($row1=mysql_fetch_array($result1)){
 							echo dame_perfil($row1["id_perfil"])."/ ";
@@ -100,10 +105,16 @@
 					else { 
 						echo __('This user doesn\'t have any assigned profile/group'); 
 					}
-	                echo "</span></a>";
+					
+	            
 				}
-                echo " <b>".$nombre."</b>";
-
+				echo "</font></span></a>";
+				if (strlen($nombre) > 12)
+					echo " <b>".substr($nombre,0,12)."..</b>";
+				else
+					echo " <b>".$nombre."</b>";
+				
+				
                 // Workunit report (detailed)
 			    echo "<td><center>";
                 echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$nombre'>";

@@ -1,3 +1,42 @@
+2010-09-17  Sancho Lerena <slerena@artica.es>
+
+    * config_process.php: Session is now "renamed" to avoid collision with
+    other integria installs in the session cookie. Renamed version to 3.0 because
+    the new features of the enterprise (user activity auditing). Added error log.
+
+    * *download_file.php: Reordeded load of config to have the correct session
+    cookie name,
+
+    * operation/main_menu.php,
+    operation/side_menu.php: Added new download access manager and renamed
+    some options from menu, including new default link for sections.
+
+    * operation/users/user.php: Deleted view of users for normal users, all user
+    management is now done from the user administrator section.
+
+    * operation/user_report/report_monthly.php: Removed icons and added a 
+    more detailed tooltip information on each user.
+
+    * operation/download/manage_perms.php,
+    * upgrade.sql, 
+    * integria_db.sql: Support for file releases access managent (a file
+    release category have access to several (1..n) user groups now.
+
+    * general/home.php: minor layout changes.
+
+    * functions_pop3.php: A lot of changes in message processing, fixed problem 
+    with multiline/encoded subject.
+
+    * integria_cron.php: Fixed the autoincident close. 
+
+    * functions_fsgraph.php: Some changes in fs_2d_column_chart to fit needs for 
+    this graph in the user activity auditing.
+
+    * integria.css: New style, just a little diffs with prev. version.
+
+    * functions_config.php, 
+    * godmode/setup/setup.php: Added new option: error_logging.
+
 2010-09-11  Sancho Lerena <slerena@artica.es>
 
 	* include/mailtemplates/incident_close.tpl: Added new line.

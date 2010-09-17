@@ -1,24 +1,23 @@
 <?php
-// INTEGRIA - the ITIL Management System
-// http://integria.sourceforge.net
+// Integria IMS - http://integriaims.com
 // ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
-// http://www.artica.es  <info@artica.es>
+// Copyright (c) 2008-2010 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; version 2
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-session_start();
-
 require_once ('../../include/config.php');
 require_once ('../../include/functions.php');
 require_once ('../../include/functions_db.php');
 require_once ('../../include/functions_incidents.php');
+
+session_start();
 
 global $config;
 
@@ -59,25 +58,7 @@ if (file_exists($fileLocation)){
 
 	header("Location: ".$config["base_url"]."/attachment/".$data["id_attachment"]."_".$data["filename"]);
 	return;
-	/*
-	// If it's a large file we don't want the script to timeout, so:
-	        set_time_limit(90000);
-		        // If it's a large file, readfile might not be able to do it in one go, so:
-			        $chunksize = 1 * (1024 * 256); // how many bytes per chunk
-				        if (filesize($fileLocation) > $chunksize) {
-					                $handle = fopen($fileLocation, 'rb');
-							                $buffer = '';
-									                while (!feof($handle)) {
-											                        $buffer = fread($handle, $chunksize);
-														                        echo $buffer;
-																	                        ob_flush();
-																				                        flush();
-																							                }
-																									                fclose($handle);
-																											        } else {
-		              readfile($fileLocation);
-		}
-		*/
+	
 } else {
 	echo "File is missing in disk storage. Please contact the administrator";
 	exit;

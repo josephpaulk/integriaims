@@ -101,16 +101,26 @@ function fs_2d_column_chart ($data, $width, $height) {
 	// Generate the XML
 	$chart = new FusionCharts('Column2D', $width, $height);
 
-	$empty = 1;
+
+    $empty = 0;
+    $num_vlines = 0;
+    $count = 0;
+    $step = 3;
+
 	foreach ($data as $name => $value) {
+        if ($count++ % $step == 0) {
+			$show_name = '1';
+			$num_vlines++;
+		} else {
+			$show_name = '0';
+		}
 		if ($value > 0) {
 			$empty = 0;
 		}
-		$chart->addChartData($value, 'name=' . clean_flash_string($name) . 
-';color=95BB04');
+		$chart->addChartData($value, 'name=' . clean_flash_string($name) . ';showName=' . $show_name . ';color=95BB04');
 	}
-	
-$chart->setChartParams('showNames=1;rotateNames=1;showValues=0;showPercentageValues=0;showLimits=0;baseFontSize=9;' 
+
+    $chart->setChartParams('decimalPrecision=0;showAlternateVGridColor=1; numVDivLines='.$num_vlines.';showNames=1;rotateNames=1;showValues=0;showPercentageValues=0;showLimits=0;baseFontSize=9;' 
 . ($empty == 1 ? ';yAxisMinValue=0;yAxisMaxValue=1' : ''));
 
 	// Return the code

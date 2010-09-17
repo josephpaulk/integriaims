@@ -48,7 +48,8 @@ if ($update) {
 	$config["email_on_incident_update"] = get_parameter ("email_on_incident_update", 0);
 	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
     $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
-
+	$config["error_log"] = get_parameter ("error_log", 0);
+	
 	update_config_token ("timezone", $config["timezone"]);	
 
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
@@ -87,6 +88,7 @@ if ($update) {
     update_config_token ("site_logo", $config["site_logo"]);
     update_config_token ("header_logo", $config["header_logo"]);
     update_config_token ("email_on_incident_update", $config["email_on_incident_update"]);
+    update_config_token ("error_log", $config["error_log"]);
 
 }
 
@@ -172,6 +174,10 @@ $imagelist = get_image_files ();
 $table->data[12][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', '', '',  true, 0, true, "Site logo") ;
 
 $table->data[12][1] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', '', '',  true, 0, true, "Header logo") ;
+
+$error_log_options[0] = "Disabled";
+$error_log_options[1] = "Enabled";
+$table->data[13][0] = print_select ($error_log_options, "error_log", $config["error_log"], '','','',true,0,true, "Error log");
 
 echo "<form name='setup' method='post'>";
 

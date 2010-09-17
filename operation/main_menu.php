@@ -70,7 +70,7 @@ if ($sec == "users" )
 	echo "<li id='current'>";
 else
 	echo "<li>";
-echo "<a href='index.php?sec=users&sec2=operation/users/user'>".__('Users')."</a></li>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".__('People')."</a></li>";
 
 // TODO
 if ($sec == "todo" )

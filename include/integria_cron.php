@@ -17,7 +17,7 @@
 include ("config.php");
 require_once ($config["homedir"].'/include/functions_calendar.php');
 require_once ($config["homedir"].'/include/functions_groups.php');
-
+require_once ($config["homedir"].'/include/functions_workunits.php');
 $config["id_user"] = 'System';
 $now = time ();
 $compare_timestamp = date ("Y-m-d H:i:s", $now - $config["notification_period"]);
@@ -55,15 +55,18 @@ function run_auto_incident_close () {
 	$limit = date ("Y/m/d H:i:s", $utimestamp - $config["auto_incident_close"] * 3600);
 
     // For each incident
-	$incidents = get_db_all_rows_sql ("SELECT * FROM tincidencia WHERE estado IN (1,2,3,4) AND actualizacion < '$limit'");
-
-    $mailtext = "This incident has been closed automatically by Integria after waiting confirmation to close this incident for ".$config["auto_incident_close"]." hours.";
+	$incidents = get_db_all_rows_sql ("SELECT * FROM tincidencia WHERE estado IN (1,2,3,4,5) AND actualizacion < '$limit'");
+    $mailtext = __("This incident has been closed automatically by Integria after waiting confirmation to close this incident for ").$config["auto_incident_close"]."  ".__("hours");
 
     if ($incidents)
 	    foreach ($incidents as $incident){
-            // Set status to "Closed" (# 7).
-            process_sql ("UPDATE tincidencia SET estado = 7 WHERE id_incidencia = ".$incident["id_incidencia"]);
+			
+            // Set status to "Closed" (# 7) and solution to 7 (Expired)
+            process_sql ("UPDATE tincidencia SET resolution = 7, estado = 7 WHERE id_incidencia = ".$incident["id_incidencia"]);
 
+			// Add workunit
+			create_workunit ($incident["id_incidencia"], $mailtext, $incident["id_usuario"], 0,  0, "", 1);
+	
             // Send mail warning about this autoclose
             mail_incident ($incident["id_incidencia"], $incident["id_usuario"], $mailtext, 0, 10, 1);
         }
@@ -395,7 +398,7 @@ function run_mail_check () {
 	}
 
 	// DEBUG
-echo "Login OK: Inbox contains [$Count] messages<BR>\n";
+	// echo "Login OK: Inbox contains [$Count] messages<BR>\n";
 	$msg_list_array = uidl("", $fp);
 	set_time_limit($timeout);
 

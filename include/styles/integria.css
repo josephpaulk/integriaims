@@ -51,8 +51,8 @@ h5 { font-size: 0.7em; }
 h6 { font-size: 0.5em; }
 
 #main h1, #rightbar h1 {
-	padding: 10px 0 5px 5px;
-	margin: 0 0 0 10px;
+	padding: 10px 0 5px 0px;
+	margin: 0 0 0 0px;
 	text-transform: uppercase;
 	border-bottom: 1px solid #f2f2f2;
 }
@@ -65,7 +65,7 @@ h6 { font-size: 0.5em; }
 }
 
 p, h1, h2, h3, h4, h5 {
-	margin: 10px 15px;
+	margin: 10px 15px 0px 0px;
 }
 
 table {
@@ -518,8 +518,8 @@ form.searchform input.button {
 #menu ul li a {
 	position: relative; bottom: -4px;
 	float: left;
-	color: #000;
-	padding: 0px 10px;
+	color: #9999AA;
+	padding: 5px 10px;
 	margin-top: 0px;
 	text-decoration: none;
 /*	background: white url(../../images/menudivide.gif) repeat-y right top;*/

@@ -99,12 +99,17 @@ CREATE TABLE `tdownload` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 CREATE TABLE `tdownload_category` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(250) NOT NULL default '',
-  `id_group` int(10) NOT NULL default '0',
+  `icon` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tdownload_category_group` (
+  `id_category` mediumint(8) unsigned NOT NULL,
+  `id_group` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (id_category, id_group)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tdownload_tracking` (

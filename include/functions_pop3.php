@@ -565,7 +565,7 @@ function update_timer(){
 //  message_parse : Do the Integria processing POP mail
 // **************************************************************
 
-function message_parse ($MsgOne, $msgNo, $fp) {
+function message_parse ($MsgOne, $msgNo, $fp, $delete = true) {
 	global $config;
 
 	$body = '';  // get the body of the message into 1 variable
@@ -575,30 +575,26 @@ function message_parse ($MsgOne, $msgNo, $fp) {
 	$body_start_key = false; // body starts at blank line, blank line is separator for from headers to body
 	$base64Flag = false; // flag to handle base 64 encoding by email systems.
 	$mark_begin = "";
-        $subject_start = 0;
+	$subject_start = 0;
 	$subject_processed = 0;
 	$purebody = "";
+	$message_result = array();
+	$matches = array();
 
-// DEBUG 
-// echo "<br>-----[DEBUG]-------------------------------------------------------------------<br>";
-// print_r($MsgOne);
-// echo "<br>--------------------------------------------------------------------------------------<br>";
-
-        foreach ($MsgOne as $key => $value){
-	        
+	foreach ($MsgOne as $key => $value){
+	      
 		if (trim($value) == "Content-Transfer-Encoding: base64"){
 			$base64Flag = true;
 		}
 
-		//get the subject line of the email
-		if ((strlen(stristr($value, "Subject"))>1) && ($subject_processed == 0)) {
-			$subjects = trim(stristr($value, " "));
+		if (preg_match("/^Subject\:([.]*)/", $value, $matches)){
+			$subjects = substr($value, 9);
 			$subject_start = 1;
 			continue;
 		}
 
 		if ($subject_start == 1){
-			if (!preg_match("/From\:\s[A-Za-z0-9]+/", $value, $subject)) {
+			if ((strlen(stristr($value, "Subject"))==0) && (!preg_match("/^[\_\-A-Za-z]+\:/", $value, $subject))) {
 			        $subjects .= $value;
 				continue;
 			} else {
@@ -667,31 +663,27 @@ function message_parse ($MsgOne, $msgNo, $fp) {
 		$body = base64_decode($body);
 	}
 
-// 	echo "Subject: $subjects <br>";
-
+	$subjects = mb_decode_mimeheader($subjects);
+		
 	// Get the TicketID code, for example: [TicketID#2/bfd5d] 
 	if (preg_match("/TicketID\#([0-9]+)\/([a-z0-9]+)\/([a-zA-Z0-9]+)/", $subjects, $matches)){
 		$ticket_id = $matches[1];
 		$ticket_id_code = $matches[2];
 		$user = $matches[3];
 		if (substr(md5($ticket_id . $config["smtp_pass"]. $user),0,5) == $ticket_id_code){
-//			echo "TICKET ID #$ticket_id VALIDATED !!<br>";
+			// echo "TICKET ID #$ticket_id VALIDATED !!<br>";
 			create_workunit ($ticket_id, $purebody, $user, 0,  0, "", 1);
 		}
-//		} else {
-//			echo "TICKET ID #$ticket_id validation FAILED ! :(<br>";
-//		}
 	}
-//	} else {
-//		echo "NO TICKED ID FOUND IN SUBJECT ! :( <br>";
-	//}
-
-//	echo $purebody;
-
+	
+	
 	//delete the message
-	delete($msgNo, $fp);
+	if ($delete == true)
+		delete($msgNo, $fp);
+	$result = array();
+	$result["subject"] = $subjects;
+	$result["body"] = $purebody;
+	return ($result);
+} 
 
-}
-
-       
 ?>

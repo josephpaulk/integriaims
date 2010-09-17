@@ -17,12 +17,15 @@
 global $config;
 
 // Integria version
-$config["build"]="100820";
-$config["version"]="v2.1dev";
+$config["build"]="100917";
+$config["version"]="v3.0dev";
 $config["build_version"] = $config["build"];
 
+// Set specific session name for this instance
+session_name (md5($config["build"].$config["dbuser"].$config["dbpass"].$config["dbname"]));
+
 if (! defined ('ENTERPRISE_DIR'))
-	define ('ENTERPRISE_DIR', 'enterprise');
+	define ('ENTERPRISE_DIR', 'enterprise', FALSE);
 
 // Detect enterprise version
 // NOTE: If you override this value without enterprise code, you will break 
@@ -33,7 +36,12 @@ if (file_exists($config["homedir"]."/".ENTERPRISE_DIR."/include/functions_db.php
 else
 	$config["enteprise"] = 0;
 
-
+// Activate log on disk for errors and other information
+if ($config["error_log"] == 1){
+	error_reporting(E_ALL & ~E_NOTICE);
+	ini_set("display_errors", 0);
+	ini_set("error_log", $config["homedir"]."/integria.log");
+}
 
 // Read remaining config tokens from DB
 if (! mysql_connect ($config["dbhost"], $config["dbuser"], $config["dbpass"])) {
