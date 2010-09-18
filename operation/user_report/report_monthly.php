@@ -109,7 +109,7 @@
 			    
 			    echo "<tr><td>";
                 
-                echo "<a href='#' class='tip'>&nbsp;<span>";
+                echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$nombre' class='tip'>&nbsp;<span>";
                 $usuario = get_db_row ("tusuario", "id_usuario", $nombre);
 				echo "<b>".$usuario["nombre_real"] . "</b><br>";
 				echo "<i>".$usuario["comentarios"] . "</i><br>";

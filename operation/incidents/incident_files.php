@@ -61,7 +61,7 @@ if (give_acl ($config['id_user'], $incident['id_grupo'], "IM")) {
 
 foreach ($files as $file) {
 
-     $link = $config["base_url"]."/operation/incidents/incident_download_file.php?id_attachment=".$file["id_attachment"];
+     $link = "operation/incidents/incident_download_file.php?id_attachment=".$file["id_attachment"];
 
      $real_filename = $config["homedir"]."/attachment/".$file["id_attachment"]."_".rawurlencode ($file["filename"]);    
 

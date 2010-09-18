@@ -16,7 +16,7 @@
 check_login();
 
 // I prefer to make the layout with tables here.
-echo "<table width=100% cellpadding=0 cellspacing=0 style='margin: 0px; padding:0px;'>";
+echo "<table border=0 width=100% cellpadding=0 cellspacing=0 style='margin: 0px; padding:0px;'>";
 echo "<tr>";
 echo "<td width=180>";
 
@@ -33,7 +33,7 @@ if ($config["enteprise"] == 1){
 } else { 
 	echo '<a href="index.php"><img src="images/'.$config["header_logo"].'" title="'.__('Home').'"/></a>';
 }
-echo "</td><td>";
+echo '</td><td>';
 
 echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'" >';
 if (dame_admin ($config['id_user']))
@@ -41,8 +41,18 @@ if (dame_admin ($config['id_user']))
 else
 	echo '<img src="images/user_green.png"> ';
 echo __('You are connected as').' <span style="font-wieght: bold; color: #ffffff"">['.$config['id_user'].']</span></a>';
-echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 echo '<a href="index.php?logout=1"><img src="images/lock.png"> '. __('Logout').'</a>';
+
+echo '</td><td style="padding: 0px; margin: 0px;">';
+
+echo "<form method=post action='index.php?sec=incidents&sec2=operation/incidents/incident'>";
+echo "&nbsp;";
+echo "<input type=text name='search_string' size=10 value=''>";
+echo "&nbsp;";
+echo "<input class='sub search' type=submit name='submit' size=10 value='Search'>";
+echo '</form>';
 echo '</td></tr>';
+
 echo '</table>';
 ?>

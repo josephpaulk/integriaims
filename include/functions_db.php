@@ -127,6 +127,9 @@ function give_acl ($id_user, $id_group, $access) {
     if (($access == "KM") AND ($admin == 0))
         return false;
 
+    if (($access == "TM") AND ($admin == 0))
+        return false;
+
 	return true;
 } 
 

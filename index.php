@@ -86,8 +86,9 @@ echo "<title>".$config["sitename"]."</title>";
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="resource-type" content="document" />
 <meta name="distribution" content="global" />
-<meta name="author" content="Sancho Lerena" />
-<meta name="copyright" content="Artica" />
+<meta name="author" content="Sancho Lerena <slerena@gmail.com>" />
+<meta name="website" content="http://integriaims.com" />
+<meta name="copyright" content="Artica Soluciones Tecnologicas (c) 2007-2010" />
 <meta name="keywords" content="management, project, incident, tracking, ITIL" />
 <meta name="robots" content="index, follow" />
 <link rel="icon" href="images/integria.ico" type="image/ico" />

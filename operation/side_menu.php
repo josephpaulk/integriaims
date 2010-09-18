@@ -615,7 +615,7 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR")) {
 		echo "<li>";
 	echo "<a href='index.php?sec=kb&sec2=operation/kb/browse'>".__('Browse')."</a></li>";
 
-	if  (give_acl($config["id_user"], 0, "KW")) {
+	if  (give_acl($config["id_user"], 0, "KM")) {
 		// KB Add
 		if (($sec2 == "operation/kb/browse") AND (isset($_GET["create"])))
 			echo "<li id='sidesel'>";
@@ -656,7 +656,7 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "KR")) {
 		echo "<li>";
 	echo "<a href='index.php?sec=download&sec2=operation/download/browse'>".__('Browse')."</a></li>";
 
-	if  (give_acl($config["id_user"], 0, "KW")) {
+	if  (give_acl($config["id_user"], 0, "KM")) {
 		// Create / Manage downloads
 		if (($sec2 == "operation/download/browse") AND (isset($_GET["create"])))
 			echo "<li id='sidesel'>";
@@ -806,6 +806,14 @@ if ($sec == "godmode") {
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/event'>".__('System events')."</a></li>";
+
+	// Log viewer
+	if ($sec2 == "godmode/setup/logviewer")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/logviewer'>".__('Error log')."</a></li>";
+
 
 	echo "</ul>";
 	echo "</div>";

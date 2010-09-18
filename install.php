@@ -282,12 +282,12 @@ function install_step2() {
 			$res += check_extension("mysql","PHP MySQL extension");
 			$res += check_extension("gd","PHP gd extension");	
 			$res += check_extension("session","PHP session extension");
-			$res += check_include("PEAR.php","PEAR PHP Library");
+			// $res += check_include("PEAR.php","PEAR PHP Library");
 			$res += check_exists ("/usr/bin/twopi","Graphviz Twopi in /usr/bin/twopi");
 			$res += check_extension("gettext","PHP gettext extension");
 		//$res += check_include("PEAR.php","PEAR PHP Library");
-			$res += check_include("DB.php","PEAR:DB PHP Library");
-			$res += check_include("XML/RPC.php","PEAR XML/RPC.php PHP Library");
+			// $res += check_include("DB.php","PEAR:DB PHP Library");
+			// $res += check_include("XML/RPC.php","PEAR XML/RPC.php PHP Library");
 			$res += check_writable("./include","./include writable by HTTP server");
             $res += check_writable("./attachment/tmp","./attachment/tmp writable by HTTP server");
 			echo "</table>
@@ -371,12 +371,13 @@ function install_step3() {
 				</div>
 				<input type='text' name='url' style='width: 250px;'  value='http://".$_SERVER["SERVER_NAME"].dirname ($_SERVER['PHP_SELF']) ."'>
 				<br><br>
+				
 				<div style='padding: 8px'><input align='right' style='align: right; width:70px; height: 16px;' type='image' src='images/arrow_next.png'  value='Step #4'></div>
 			</form>
 			</div>
 			</div>
 			<div class='box'>
-				<img src='images/integria_white.png' alt=''>
+					<img src='images/integria_white.png' alt=''>
 				<br><br>
 			</div>
 			<div class='box'>
@@ -428,6 +429,7 @@ function install_step4() {
 			$path = $_POST["path"];
 		else
 			$path = "/var/www/";
+		
 	}
 	$everything_ok = 0;
 	$step1=0;
@@ -496,11 +498,11 @@ $config["dbpass"]="'.$dbpassword.'";	// DB Password
 ';
 }
 $config_new = $config_new . '
-$config["dbname"]="'.$dbname.'";    // MySQL DataBase name
-$config["dbhost"]="'.$dbhost.'";    // DB Host
-$config["homedir"]="'.$path.'";		// Config homedir
-$config["base_url"]="'.$url.'";		// Base URL
-// End of automatic config file
+	$config["dbname"]="'.$dbname.'";    // MySQL DataBase name
+	$config["dbhost"]="'.$dbhost.'";    // DB Host
+	$config["homedir"]="'.$path.'";		// Config homedir
+	$config["base_url"]="'.$url.'";		// Public URL
+	// End of automatic config file
 ?>';
 					$step7 = fputs ($cfgout, $config_new);
 					$step7 = $step7 + fputs ($cfgout, $config_contents);
@@ -600,4 +602,4 @@ if (! isset ($_GET["step"])){
 	}
 }
 
-?>
+?>	

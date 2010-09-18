@@ -18,7 +18,7 @@ global $config;
 
 check_login();
 
-if (give_acl($config["id_user"], 0, "KM")==0) {
+if (! give_acl ($config["id_user"], 0, "KM")) {
 	audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access KB Management");
 	require ("general/noaccess.php");
 	exit;

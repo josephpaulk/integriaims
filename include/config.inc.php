@@ -22,22 +22,10 @@ $config["dbuser"] = "integria";
 $config["dbpass"] = "integria"; // DB Password
 $config["dbhost"] = "localhost"; // DB Host
 $config["homedir"] = "/var/www/integria/";      // Config homedir
-$config["base_url"] = "http://mydomain.net/integria";       // Base URL
+$config["base_url"] = "http://mydomain.net/integria";       // Public URL
 */
 
-// TODO: NEED TO IMPLEMENT IN SETUP THIS TOKENS:
-
-$config["REMOTE_ADDR"] = getenv ("REMOTE_ADDR");
-$config["FOOTER_EMAIL"] = "Please do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n";
-$config["HEADER_EMAIL"] = "Hello, \n\nThis is an automated message coming from Integria\n\n";
-$config["currency"]="€";
-$config["hours_perday"] = 8;
-$config["sitename"] = "INTEGRIA";
-
-// Do not display any ERROR
-//error_reporting(0);
-
-// Display ALL errors
+// Display ALL errors until redirect to integria error log
 error_reporting(E_ALL);
 
 // Default font used for graphics (a Free TrueType font included with Pandora FMS)

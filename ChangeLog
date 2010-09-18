@@ -1,3 +1,29 @@
+2010-09-20  Sancho Lerena <slerena@artica.es>
+
+	* include/config.inc.php: Removed some conf tokes already in DB.
+	
+	* include/config_process.php: Better way to build session name based
+	on IP address.
+	
+	* include/functions_db.php: Fix the missing TM in ACL function for
+	opensource version.
+
+	* install.php: Removed pear deps, only used for update manager.
+	
+	* operation/incidents/incident_files.php: Uses relative path to access
+	files, avoiding problems with absolute URL in multidomain sites.
+	
+	* operation/projects/task_detail.php: Fixed some ACL problems (TM)
+	
+	* operation/kb/browse.php, 
+    operation/side_menu.php
+    operation/download/manage_data.php
+    operation/user_report/report_monthly.php: Fixes some ACL problems (TM)
+
+	* general/header.php: Added quick search to header.
+	
+	* godmode/setup/logviewer.php: New log viewer on setup.
+
 2010-09-19  Sancho Lerena <slerena@artica.es>
 
     * include/functions_reporting.php: Added new graph for project, incident and

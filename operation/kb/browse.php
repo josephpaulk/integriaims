@@ -139,7 +139,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 // ==================
 if (isset($_GET["delete_data"])){ // if delete
 
-	if (give_acl($config["id_user"], 0, "KW") != 1){
+	if (give_acl($config["id_user"], 0, "KM") != 1){
 		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to delete a KB without privileges");
 	    require ("general/noaccess.php");
     	exit;
@@ -168,6 +168,10 @@ if (isset($_GET["update2"])){
 }
 
 // CREATE form
+if  (!give_acl($config["id_user"], 0, "KW")) {
+	return;
+}
+
 if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	if (isset($_GET["create"])){
 		

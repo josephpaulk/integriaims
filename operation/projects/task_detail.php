@@ -72,6 +72,13 @@ if ($operation == "") {
 
 // Create task
 if ($operation == "insert") {
+	
+	if (give_acl($config["id_user"], 0, "TM")==0) {
+		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to create task");
+		require ("general/noaccess.php");
+		return;
+	}
+	
 	$name = get_parameter ('name');
 	$start = get_parameter ('start_date', date ("Y-m-d"));
 	$end = get_parameter ('end_date', date ("Y-m-d"));
@@ -140,8 +147,15 @@ if ($operation == "update") {
 	if ($id_task == -1) {
 		audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to update invalid Task");
 		include ("general/noaccess.php");
-		exit;
+		return;
 	}
+	
+	if (give_acl($config["id_user"], 0, "TM")==0) {
+		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to create task");
+		require ("general/noaccess.php");
+		return;
+	}
+	
 	$name = (string) get_parameter ('name');
 	$description = (string) get_parameter ('description');
 	$priority = (int) get_parameter ('priority');
@@ -316,6 +330,7 @@ if (give_acl ($config["id_user"], $id_group, "TM") || give_acl ($config["id_user
 	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 	
 	print_table ($table);
+	
 	echo '<div class="button" style="width:'.$table->width.'">';
 	if ($operation != "create") {
 		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
