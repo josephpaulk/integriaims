@@ -271,5 +271,6 @@ foreach ($projects as $project) {
 	
 	array_push ($table->data, $data);
 }
+
 print_table ($table);
 ?>

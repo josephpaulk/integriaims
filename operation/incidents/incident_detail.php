@@ -1,9 +1,8 @@
 <?php
-
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// Copyright (c) 2008-2010 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -13,7 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// Load global vars
+
 
 global $config;
 
@@ -106,7 +105,7 @@ if ($action == 'update') {
 	$id_task = (int) get_parameter ('task_user');
 	$id_incident_type = get_parameter ('id_incident_type');
 	$id_parent = (int) get_parameter ('id_parent');
-	
+
 	$old_incident = get_incident ($id);
 	
 	$tracked = false;
@@ -141,6 +140,7 @@ if ($action == 'update') {
 	}
 	$timestamp = print_mysql_timestamp();
 
+
 	$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s",
 			titulo = "%s", origen = %d, estado = %d,
 			id_grupo = %d, id_usuario = "%s",
@@ -153,6 +153,14 @@ if ($action == 'update') {
 			$epilog, $id_task, $resolution, $id_incident_type,
 			$idParentValue, $sla_man, $id);
 	$result = process_sql ($sql);
+
+    // When close incident set close date to current date
+    if (($estado == 6) OR ($estado == 7)){
+        $sql = sprintf ('UPDATE tincidencia SET cierre = "%s" 
+			WHERE id_incidencia = %d',$timestamp, $id);
+        $result = process_sql ($sql);
+    }
+
 
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
 

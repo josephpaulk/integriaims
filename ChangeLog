@@ -1,3 +1,32 @@
+2010-09-19  Sancho Lerena <slerena@artica.es>
+
+    * include/functions_reporting.php: Added new graph for project, incident and
+    task tracking in time.
+
+    * include/functions_db.mysql.php: All specific mysql code is here now.
+
+    * include/gantt.php: Deleted old stuff.
+
+    * include/config.inc.php: Fixed an important missing "/include/" in the 
+    config_process load :-o. That makes install from the installer fails.
+
+    * config_process.php: Log error is not working, problem fixed.
+
+    * include/functions_calendar.php: Some improvements in the way calendars
+    are shown.
+
+    * operation/download/manage_cat.php: Fixed problem with previous commit with
+    the new access mode to download categories, now its correctly edited and 
+    shown to the user.
+
+    * funcions_db.php: ACL system for the opensource is now working, missing 
+    code is now implemented. It uses a simple mode for being admin or not for 
+    some ACL bits (all management modes).
+
+    * Several headers replacements.
+
+    * Added fancy graphs to project, task and incident tracking. 
+
 2010-09-17  Sancho Lerena <slerena@artica.es>
 
     * config_process.php: Session is now "renamed" to avoid collision with

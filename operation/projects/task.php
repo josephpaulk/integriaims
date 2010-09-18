@@ -17,8 +17,9 @@
 // Load global vars
 
 global $config;
-
 check_login ();
+
+include_once ("include/functions_reporting.php");
 
 $id_project = (int) get_parameter ('id_project');
 
@@ -126,6 +127,9 @@ $table->align[9] = 'center';
 
 $table->style[7] = "font-size: 9px";
 $table->style[8] = "font-size: 9px";
+
+
+echo project_activity_graph ($id_project);
 
 // Show headers
 echo "<table width='90%' class='listing'>";
@@ -253,3 +257,4 @@ function show_task_tree (&$table, $id_project, $level, $id_parent_task, $where_c
 	}
 }
 ?>
+<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>

@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008-2010 Ártica Soluciones Tecnológicas
+// Copyright (c) 2007-2010 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -20,7 +20,8 @@
 // Integria shares much of it's code with project Babel Enterprise and Pandora FMS,
 // also a Free Software Project coded by some of the people who makes Integria.
 
-$develop_bypass = 1;
+// Set this to 0 on production enviroments
+$develop_bypass = 0;
 
 if ($develop_bypass != 1) {
 
@@ -54,6 +55,7 @@ if ($develop_bypass != 1) {
 	}
 }
 
+
 require_once ('include/config.php');
 require_once ('include/functions.php');
 require_once ('include/functions_db.php');
@@ -61,13 +63,11 @@ require_once ('include/functions_html.php');
 require_once ('include/functions_form.php');
 require_once ('include/functions_calendar.php');
 
-
-// Set an specific session name for this setup, and doesn't share with others
 session_start();
 
 /* Enterprise support */
 if (file_exists ("enterprise/load_enterprise.php")) {
-        include_once ("enterprise/load_enterprise.php");
+        require_once ("enterprise/load_enterprise.php");
 }
 
 ?>

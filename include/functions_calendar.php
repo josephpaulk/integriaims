@@ -1,20 +1,17 @@
 <?php
-
-// INTEGRIA IMS v2.1
-// http://www.integriaims.com
-// ===========================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2008 Esteban Sanchez, estebans@artica.es
-// Copyright (c) 2007-2008 Artica, info@artica.es
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2010 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public License
-// (LGPL) as published by the Free Software Foundation; version 2
-
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
+// GNU General Public License for more details.
 
 // PHP Calendar (version 2.3), written by Keith Devens
 // http://keithdevens.com/software/php_calendar
@@ -215,7 +212,7 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 
 		$agenda_project = get_project_end_date ($mysql_date);
 		foreach ($agenda_project as $agenda_pitem){
-			list ($pname, $idp, $pend) = split ("\|", $agenda_pitem);
+			list ($pname, $idp, $pend) = explode ("|", $agenda_pitem);
 			$calendar .= __("Project end"). " <a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$idp'>";
 			$calendar .= "<img src='images/bricks.png'>";
 			$calendar .= "</A> ";
@@ -224,7 +221,7 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 
 		$agenda_task = get_task_end_date ($mysql_date);
 		foreach ($agenda_task as $agenda_titem){
-			list ($tname, $idt, $tend, $pname) = split ("\|", $agenda_titem);
+			list ($tname, $idt, $tend, $pname) = explode ("|", $agenda_titem);
 			$calendar .= __("Task end"). " <a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view'>";
 			$calendar .= "<img src='images/brick.png'>";
 			$calendar .= "</A> ";
@@ -282,7 +279,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 
 		$agenda_eventt = get_event_date ($mysql_date);
 		foreach ($agenda_eventt as $agenda_event){
-			list ($timestamp, $event) = split ("\|", $agenda_event);
+			list ($timestamp, $event) = explode ("|", $agenda_event);
 			$days[$day][1] = "agenda";
 			$days[$day][2] = "$day"."A";
 			$days[$day][0] = "index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month&year=$year"; 
@@ -291,7 +288,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 
 		$agenda_task = get_task_end_date ($mysql_date);
 		foreach ($agenda_task as $agenda_titem){
-			list ($tname, $idt, $tend, $pname) = split ("\|", $agenda_titem);
+			list ($tname, $idt, $tend, $pname) = explode ("|", $agenda_titem);
 			$days[$day][1] = "task";
 			$days[$day][2] = "$day"."T";
 			$days[$day][0] = "index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view";
@@ -300,7 +297,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 			
 		$agenda_project = get_project_end_date ($mysql_date);
 		foreach ($agenda_project as $agenda_pitem){
-			list ($pname, $idp, $pend) = split ("\|", $agenda_pitem);
+			list ($pname, $idp, $pend) = explode ("|", $agenda_pitem);
 			$days[$day][1] = "project";
 			$days[$day][2] = "$day"."P";
 			$days[$day][0] = "index.php?sec=projects&sec2=operation/projects/task&id_project=$idp";
@@ -392,7 +389,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
             }
 		}
 
-		// Show SUM workunits for that day (MAGENDA) - task wu
+		// Show SUM workunits for that day (MAGENTA) - incident wu
 		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident != -1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
 
 		$res=mysql_query($sqlquery);
@@ -440,6 +437,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 	return $calendar."</tr>\n</table>\n";
 }
 
+// Main function to show integria calendar with WU time on it
 function generate_work_calendar ($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array(), $id_user = "" ){
 
 	$first_of_month = gmmktime(0,0,0,$month,1,$year);
@@ -497,6 +495,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 				$locked_hours = 0;
 				
 			if ($workhours > 0){
+
 				$calendar .= "<td style='background-color: #e3e9e9;'><b><center><a title='Locked: $locked_hours hrs' href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$before_week."&timestamp_h=".$this_week."'>$workhours";
 				if (($locked_hours != 0) AND ($locked_hours != $workhours)){
 					$calendar .= "<br><div style='font-size:7px'>$locked_hours " . _("Locked") . "</div></a></center></b></td>";
@@ -517,38 +516,112 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 				($link ? '<b><a href="'.htmlspecialchars($link).'">'.$content.'</a>' : $content).'</b><br><br><br><br><br></td>';
 		}
 
-		if (($day == $today) && ($today_m == $month))
-			$calendar .= "<td valign='top' style='background: #eeb; width: 70px; height: 70px;' >";				
-		else { // standard day
-        if (is_working_day("$year-$month-$day") == 1)
-    		$calendar .= "<td valign='top' style='background: #f9f9f5; height: 70px; width: 70px;' >";
-        else
-            $calendar .= "<td valign='top' style='background: #e9e9e5; height: 70px; width: 70px;' >";
-            
+
+        $workhours_d = 0; 
+        $workhours_c = 0; 
+        $workhours_b = 0;
+        $workhours_a = 0;
+
+        // Show SUM workunits for that day (GREEN) - standard wu
+        $sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+        $normal = 0;
+        $res=mysql_query($sqlquery);
+        if ($row=mysql_fetch_array($res)){
+            $workhours_a = $row[0];
+            if ($workhours_a > 0){
+                $normal = 1;
+            }
         }
-		$calendar .=  "<b><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit&givendate=$year-$month-$day'>$day</A</b><br><br>";
+
+        // Show SUM workunits for that day (YELLOW) - holidays
+        $sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task =-1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+
+        $res=mysql_query($sqlquery);
+        if ($row=mysql_fetch_array($res)){
+            $workhours_b = $row[0];
+            if ($workhours_b > 0){
+                $normal = 2;
+            }
+        }
+
+        // Show SUM workunits for that day (MAGENTA) - incident wu
+        $sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident != -1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+
+        $res=mysql_query($sqlquery);
+        if ($row=mysql_fetch_array($res)){
+            $workhours_c = $row[0];
+            if ($workhours_c > 0){
+                $normal = 3;
+            }
+        }
+
+        // Show SUM workunits for that day (YELLOW) - ORANGE (not justified)
+        $sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task <-1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+
+        $res=mysql_query($sqlquery);
+        if ($row=mysql_fetch_array($res)){
+            $workhours_d = $row[0];
+            if ($workhours_d > 0){
+                $normal = 4;
+            }
+        }
+
+		if (($day == $today) && ($today_m == $month))
+            $border = "border: 2px dotted #000";
+        else {
+            if (is_working_day("$year-$month-$day") == 1)
+                $border = "border: 1px solid #AAA;";
+            else
+                $border = "border: 1px dashed #AAA;";
+        }
+
+        $background = "#e9e9e5";
 
 		$mysql_time= "";
 		$event_string = "";
 		$event_privacy = 0;
 		$event_alarm = 0;
+        $mydiff = 0;
 
 		if ($day < 10)
 			$day = "0".$day;
 		$mysql_date = "$year-$month-$day";
 
-		$sqlquery = "SELECT SUM(duration) FROM tworkunit WHERE id_user = '$id_user' AND timestamp LIKE '$mysql_date%'";
- 		$res=mysql_query($sqlquery);
-		if ($row=mysql_fetch_array($res)){
-			$workhours = $row[0];
-			if ($workhours > 0){
+        $workhours = $workhours_a + $workhours_b + $workhours_c + $workhours_d;
+        $hours = "";
 
-				$calendar .= "<center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$mysql_date. " 00:00:00"."&timestamp_h=".$mysql_date."  23:59:59'>".$workhours." ".__('Hours')."</a></center>";
+        if ($workhours_a > 0){
+            $background = '#98FF8B';
+            $mydiff++;
+        } 
+        if ($workhours_b > 0){
+            $background = '#FFFF80';
+            $mydiff++;
+        } 
+        if ($workhours_c > 0){
+            $background = '#FF7BFE';
+            $mydiff++;
+		} 
+        if ($workhours_d > 0){
+            $background = '#FFDE46';
+            $mydiff++;
+		} 
 
-				//$calendar .= "<a  href='index.php?sec=users&sec2=operation/users/user_workunit_report'>".$workhours." <img border=0 src='images/award_star_silver_1.png'></a>";
-			}
-		}
-		
+        $calendar .= "<td valign='top' style='$border; background: $background; height: 70px; width: 70px;' ><b><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit&givendate=$year-$month-$day'>$day</A</b>";
+
+        if ($mydiff > 1){
+            $calendar .= "<a href='#' class='tip'>&nbsp;<span>";
+            $calendar .= __("Task/projects"). " : ". $workhours_a . "<br>";
+            $calendar .= __("Vacations"). " : ". $workhours_b . "<br>";
+            $calendar .= __("Incidents"). " : ". $workhours_c . "<br>";
+            $calendar .= __("Non-Justified"). " : ". $workhours_d . "<br>";
+            $calendar .= "</a>";
+        }
+        $calendar .= "<br><br>";
+
+		$calendar .= "<center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$mysql_date. " 00:00:00"."&timestamp_h=".$mysql_date."  23:59:59'><i>".$workhours."</i></a></center>";
+
+        
 
 	}
 	if($weekday != 7) { // remaining "empty" days
@@ -908,5 +981,8 @@ function getWorkingDays($startDate,$endDate,$holidays){
 
 }
 
+function mysql_timestamp ($unix_time){
+    return date('Y-m-d H:i:s', $unix_time);
+}
 
 ?>

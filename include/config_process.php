@@ -36,13 +36,6 @@ if (file_exists($config["homedir"]."/".ENTERPRISE_DIR."/include/functions_db.php
 else
 	$config["enteprise"] = 0;
 
-// Activate log on disk for errors and other information
-if ($config["error_log"] == 1){
-	error_reporting(E_ALL & ~E_NOTICE);
-	ini_set("display_errors", 0);
-	ini_set("error_log", $config["homedir"]."/integria.log");
-}
-
 // Read remaining config tokens from DB
 if (! mysql_connect ($config["dbhost"], $config["dbuser"], $config["dbpass"])) {
 	include ($config["homedir"]."/general/error_databaseconnect.php");
@@ -59,6 +52,13 @@ require_once ($config["homedir"].'/include/gettext.php');
 
 // Load config from database
 load_config();
+
+// Activate log on disk for errors and other information
+if ($config["error_log"] == 1){
+	error_reporting(E_ALL & ~E_NOTICE);
+	ini_set("display_errors", 0);
+	ini_set("error_log", $config["homedir"]."/integria.log");
+}
 
 $l10n = NULL;
 if (file_exists ($config["homedir"].'/include/languages/'.$config['language_code'].'.mo')) {

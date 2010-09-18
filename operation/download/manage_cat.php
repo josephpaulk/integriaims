@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// Copyright (c) 2008-2010 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -30,10 +30,10 @@ $id_user = $config["id_user"];
 // ==================
 if (isset($_GET["create2"])){ // Create group
 	$name = get_parameter ("name","");
-	$id_group = get_parameter ("id_group", 0);
+	$icon = get_parameter ("icon","");
 
-	$sql_insert="INSERT INTO tdownload_category (name, id_group, icon) 
-		  		 VALUE ('$name',$id_group, '$icon')";
+	$sql_insert="INSERT INTO tdownload_category (name, icon) 
+		  		 VALUE ('$name', '$icon')";
 	$result=mysql_query($sql_insert);	
 	if (! $result)
 		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
@@ -50,12 +50,11 @@ if (isset($_GET["create2"])){ // Create group
 // ==================
 if (isset($_GET["update2"])){ // if modified any parameter
 	$id = get_parameter ("id","");
-		$name = get_parameter ("name","");
-	$id_group = get_parameter ("id_group", 0);
+	$name = get_parameter ("name","");
 	$icon = get_parameter ("icon", "");
 
 	$sql_update ="UPDATE tdownload_category
-	SET name = '$name', icon = '$icon', id_group = $id_group 
+	SET name = '$name', icon = '$icon' 
 	WHERE id = $id";
 	$result=mysql_query($sql_update);
 	if (! $result)
@@ -93,8 +92,6 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$row = get_db_row ("tdownload_category", "id", $id);
 		$name = $row["name"];
 		$icon = $row["icon"];
-		$id_group = $row["id_group"];
-
 	}
 
 	echo "<h2>".__('File release category management')."</h2>";	
@@ -117,15 +114,8 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	echo "<input type=text size=20 name=name value='$name'>";
 
-
 	echo "<tr>";
-	echo "<td class=datos2>";
-	echo __('Group');
-	echo "<td class=datos2>";
-	combo_groups_visible_for_me ($config["id_user"], 'id_group', 1, 'KR', $id_group, false, 0 );
-
-	echo "<tr>";
-        echo "<td class=datos>";
+    echo "<td class=datos>";
 	echo __('Icon');
 	echo "<td class=datos>";
 	$files = list_files ('images/download_category/', "png", 1, 0);
@@ -169,10 +159,16 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 
 			// Group
 			echo "<td class='$tdcolor' valign='top'>";
-			echo dame_nombre_grupo($row["id_group"]);
+
+            $groups  =  get_db_all_rows_sql( "SELECT id_group FROM tdownload_category_group WHERE id_category = ".$row["id"]);
+
+        	foreach($groups as $key => $id_group){        
+    			echo dame_nombre_grupo($id_group[0]);
+                echo "<br>";
+            }
 
 			// Items
-			echo "<td class='".$tdcolor."f9' align='center'>";
+			echo "<td class='".$tdcolor."f9' valign=top align='center'>";
 			echo get_db_sql ("SELECT COUNT(id) FROM tdownload WHERE id_category = ".$row["id"]);
 
 			// Delete

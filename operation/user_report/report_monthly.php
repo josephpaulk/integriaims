@@ -1,8 +1,9 @@
 <?php
-// Integria IMS - http://integria.sourceforge.net
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2008-2010 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -11,6 +12,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 // Load global vars
 
@@ -40,13 +42,31 @@
 	$total_days = working_days ( $working_month, $working_year);
 	$total_hours = $total_days * 8;
 	$color = 0;
-	
-	echo "<h3>";
-	echo getmonth($working_month). " &raquo; ".__('Totals for this month'). " &raquo; ($total_hours)";
-	echo "</h3>";
 
-	echo "<table class='blank' style='margin-left: 10px' width='200'>";
+
+    $prev_month = $working_month -1;
+    $prev_year = $working_year;
+    if ($prev_month == 0){
+	    $prev_month = 12;
+	    $prev_year = $prev_year -1;
+    }
+
+    $next_month = $working_month + 1;
+    $next_year = $working_year;
+    if ($next_month == 13){
+	    $next_month = 1;
+	    $next_year = $next_year +1;
+    }
+
+	echo "<h2>";
+	echo getmonth($working_month). " / ". $working_year. " &raquo; ".__('Totals for this month'). " &raquo; ($total_hours)";
+	echo "</h2>";
+
+    echo "<br>";
+	echo "<table class='blank' style='margin-left: 10px' >";
 	echo "<tr><td>";
+    echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$prev_month&working_year=$prev_year'><img src='images/control_rewind_blue.png'> ".__('Prev')."</a> ";
+	echo "</td><td>";
 	echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/report_monthly'>";
 	echo '<select name="working_month">';
 	echo "<option value='$working_month'>".getmonth($working_month);
@@ -55,6 +75,8 @@
         }
 
 	echo "</select>";
+	echo "</td><td>";
+    echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$next_month&working_year=$next_year'><img src='images/control_fastforward_blue.png'> ".__('Prev')."</a> ";
 	echo "</td><td>";
 	echo "<input type=submit class='next' value='".__('Update')."'>";
 	echo "</form>";
@@ -139,10 +161,11 @@
                 else
                     echo "--";
 
-
                 // Average incident scoring
                 echo "<td>";
-                $tempsum = get_db_sql ("SELECT AVG(score) FROM tincidencia WHERE id_usuario = '$nombre'AND inicio > '$begin_month' AND actualizacion <= '$end_month'");
+                $tempsum = get_db_sql ("SELECT SUM(score) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND score > 0 ");
+
+
                 if ($tempsum != "")
                     echo format_numeric($tempsum). "/10";
                 else

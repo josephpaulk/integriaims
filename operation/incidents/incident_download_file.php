@@ -1,16 +1,18 @@
 <?php
-// Integria IMS - http://integriaims.com
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008-2010 Artica Soluciones Tecnologicas
+// Copyright (c) 2008-2010 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+
 
 require_once ('../../include/config.php');
 require_once ('../../include/functions.php');
@@ -37,7 +39,7 @@ if (!isset($data)){
 
 $id_incident =  $data["id_incidencia"];
 
-$id_group = get_db_sql ("SELET id_grupo FROM tincidencia WHERE id_incidencia = $id_incident");
+$id_group = get_db_sql ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident");
 
 if (! give_acl ($config['id_user'], $id_group, "IR")){
     echo "You dont have access to that file - Code #$id_incident";

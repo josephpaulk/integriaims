@@ -18,6 +18,8 @@
 
 global $config;
 
+include_once ("include/functions_reporting.php");
+
 check_login ();
 
 $id_grupo = "";
@@ -39,6 +41,9 @@ if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR')) {
 }
 
 echo '<h3>'.__('Incident'). ' #'.$id.' - '.$incident['titulo'].'</h3>';
+
+echo incident_activity_graph ($incident["id_incidencia"]);
+
 
 $trackings = get_db_all_rows_field_filter ('tincident_track', 'id_incident', $id);
 
@@ -65,3 +70,4 @@ if ($trackings !== false) {
 	echo __('No data available');
 }
 ?>
+<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>

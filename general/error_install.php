@@ -1,32 +1,27 @@
 <?php
-
-// INTEGRIA IMS v1.2
-// http://www.integriaims.com
-// ===========================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica, info@artica.es
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2010 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public License (LGPL)
+// modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-if ((file_exists("include/config.php")) AND (is_readable("include/config.php")))
-	include "include/config.php";
-else {
-	$config["language_code"]="en";
-	$config["build_version"] = "N/A";
-	$config["version"] = "1.2";
-}
+$config["language_code"]="en";
+$config["build_version"] = "dev";
+$config["version"] = "3.0";
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>I N T E G R I A - <?php __('Installer error')?></title>
+<title>I N T E G R I A - Installer error</title>
 <meta http-equiv="expires" content="0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="resource-type" content="document">

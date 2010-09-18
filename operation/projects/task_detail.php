@@ -14,10 +14,12 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-include "include/functions_graph.php";
-global $config;
 
+global $config;
 check_login ();
+
+include_once ("include/functions_graph.php");
+include_once ("include/functions_reporting.php");
 
 // Get our main stuff
 $id_project = get_parameter ('id_project', -1);
@@ -199,6 +201,10 @@ echo $result_output;
 // ********************************************************************************************************
 
 echo '<h2>'.__('Task management').'</h2>';
+
+if ($id_task > 0)
+    echo task_activity_graph ($id_task);
+
 if ($operation == "create") {
 	$estimated_cost = 0;
 	$priority = 0;
