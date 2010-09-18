@@ -2,7 +2,7 @@
 # Integria IMS	
 #
 %define name        integriaIMS
-%define version     2.0.0
+%define version     3.0.0
 %define httpd_name      httpd
 # User and Group under which Apache is running
 %define httpd_name  apache2
@@ -31,11 +31,12 @@ Requires:           php >= 4.3.0
 Requires:           php5-gd, php5-pear, php5-json, php5-gettext
 Requires:           php5-mysql, php5-ldap, php5-mbstring, php5
 Requires:           graphviz, xorg-x11-fonts-core
-Requires:           php5-pear-db php-pear-xml_rpc
 Provides:           %{name}-%{version}
 
 %description
-Integria IMS is a project manager and a full tracking system to manage incidents, user workunit reports, multiuser, and with an excepent reporting and notification system. Includes company contracts management and a full inventory system integrated with the tracking system.
+Integria IMS is a project manager and a full management system to manage tickets, user activity reports 
+(time tracking). Integria is multiuser, and with an integrated email reporting and notification system. Includes 
+company contracts management, SLA and a full inventory system integrated with the incident / ticketing system.
 
 %prep
 rm -rf $RPM_BUILD_ROOT

@@ -1,5 +1,14 @@
 2010-09-20  Sancho Lerena <slerena@artica.es>
 
+	* DEBIAN: Added DEBIAN files to build .deb packages.
+
+	* attachment/filereleases: Removed old directory, not used anymore.
+
+	* integria.spec: Some updates for RPM packages.
+
+	* integria_db.sql: Removed "USING BTREE" in SQL for compatibility 
+	with debian 5.x systems.
+
 	* include/config.inc.php: Removed some conf tokes already in DB.
 	
 	* include/config_process.php: Better way to build session name based

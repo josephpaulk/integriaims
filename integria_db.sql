@@ -734,7 +734,7 @@ CREATE TABLE `tapp_activity_data` (
 	`send_timestamp`  int(20) unsigned NOT NULL default 0,
 	KEY `idx_app` (`id_app`),
 	KEY `idx_user` (`id_user`),
-	KEY `idx_start_timestamp` (`start_timestamp`) USING BTREE,
+	KEY `idx_start_timestamp` (`start_timestamp`),
 	CONSTRAINT `fk_tapp_tapp_activity_data1`
 	  FOREIGN KEY (`id_app`)
 	  REFERENCES tapp(`id`) 

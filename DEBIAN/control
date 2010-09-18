@@ -1,0 +1,10 @@
+package: integriaIMS
+Version: 3.0
+Architecture: all
+Priority: optional
+Section: admin
+Installed-Size: 42112
+Maintainer: Miguel de Dios <miguel.dedios@artica.es>
+Homepage: http://integriaims.com/
+Depends: apache2, libapache2-mod-php5, php5, php5-gd, php5-mysql, php-pear, php-db, php5-xmlrpc, php-gettext, graphviz, dbconfig-common, mysql-client
+Description: Integria IMS is a project manager and a full management system to manage tickets, user activity reports (time tracking). Integria is multiuser, and with an integrated email reporting and notification system. Includes company contracts management, SLA and a full inventory system integrated with the incident / ticketing system.
