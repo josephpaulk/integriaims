@@ -1,3 +1,9 @@
+2010-09-22  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_incidents.php
+	include/functions_pop3.php: Fixed two issues with workunit notifications
+	and pop3 message processing on Base64 mails.
+
 2010-09-20  Sancho Lerena <slerena@artica.es>
 
 	* DEBIAN: Added DEBIAN files to build .deb packages.

@@ -660,7 +660,7 @@ function message_parse ($MsgOne, $msgNo, $fp, $delete = true) {
 	} // foreach
 
 	if ($base64Flag == true) {
-		$body = base64_decode($body);
+		$purebody = base64_decode($purebody);
 	}
 
 	$subjects = mb_decode_mimeheader($subjects);

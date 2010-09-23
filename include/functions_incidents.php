@@ -565,22 +565,33 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	// to the incident automatically.
 
 	$msg_code = "TicketID#$id_inc";
-	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $id_usuario),0,5);
-	$msg_code .= "/".$id_usuario;
+	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $email_owner),0,5);
+	$msg_code .= "/".$email_owner;
 
 	integria_sendmail ($email_owner, $subject, $text, false, $msg_code);
 
 	// Incident owner
-	if ($email_owner != $email_creator)
+	if ($email_owner != $email_creator){
+
+    	$msg_code = "TicketID#$id_inc";
+	    $msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $email_creator),0,5);
+    	$msg_code .= "/".$email_creator;
+
 		integria_sendmail ($email_creator, $subject, $text, false, $msg_code);
-	
+    }	
 	if ($public == 1){
 		// Send email for all users with workunits for this incident
 		$sql1 = "SELECT DISTINCT(tusuario.direccion), tusuario.id_usuario FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
 		if ($result=mysql_query($sql1)) {
 			while ($row=mysql_fetch_array($result)){
-				if (($row[0] != $email_owner) AND ($row[0] != $email_creator))
+				if (($row[0] != $email_owner) AND ($row[0] != $email_creator)){
+                    
+                    $msg_code = "TicketID#$id_inc";
+            	    $msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] .  $row[0]),0,5);
+                	$msg_code .= "/". $row[0];
+
 					integria_sendmail ( $row[0], $subject, $text, false, $msg_code);
+                }
 			}
 		}
 	}
