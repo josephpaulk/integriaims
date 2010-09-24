@@ -565,8 +565,8 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	// to the incident automatically.
 
 	$msg_code = "TicketID#$id_inc";
-	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $email_owner),0,5);
-	$msg_code .= "/".$email_owner;
+	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_usuario"]),0,5);
+	$msg_code .= "/" . $row["id_usuario"];;
 
 	integria_sendmail ($email_owner, $subject, $text, false, $msg_code);
 
@@ -574,10 +574,10 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	if ($email_owner != $email_creator){
 
     	$msg_code = "TicketID#$id_inc";
-	    $msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $email_creator),0,5);
-    	$msg_code .= "/".$email_creator;
+	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_creator"]),0,5);
+    	$msg_code .= "/".$row["id_creator"];
 
-		integria_sendmail ($email_creator, $subject, $text, false, $msg_code);
+	integria_sendmail ($email_creator, $subject, $text, false, $msg_code);
     }	
 	if ($public == 1){
 		// Send email for all users with workunits for this incident
@@ -587,8 +587,8 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 				if (($row[0] != $email_owner) AND ($row[0] != $email_creator)){
                     
                     $msg_code = "TicketID#$id_inc";
-            	    $msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] .  $row[0]),0,5);
-                	$msg_code .= "/". $row[0];
+            	    $msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] .  $row[1]),0,5);
+                	$msg_code .= "/". $row[1];
 
 					integria_sendmail ( $row[0], $subject, $text, false, $msg_code);
                 }
