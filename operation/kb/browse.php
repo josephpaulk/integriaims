@@ -23,6 +23,7 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
     exit;
 }
 
+
 // Database Creation
 // ==================
 if (isset($_GET["create2"])){ // Create group
@@ -167,14 +168,16 @@ if (isset($_GET["update2"])){
 	$_GET["update"]= $id;
 }
 
-// CREATE form
-if  (!give_acl($config["id_user"], 0, "KW")) {
-	return;
-}
 
 if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	if (isset($_GET["create"])){
-		
+
+	// CREATE form
+	if  (!give_acl($config["id_user"], 0, "KW")) {
+	        return;
+	}
+
+
 		$data = "";
 		$title = "";
 		$id = -1;

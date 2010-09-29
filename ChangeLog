@@ -1,5 +1,11 @@
 2010-09-29  Sancho Lerena <slerena@artica.es>
 
+	* operation/kb/browse.php: Fixed access to KB, was not working due
+	ACL problems.
+
+	* godmode/usuarios/lista_usuarios.php: Fixed search un user
+	management.
+
 	* operation/download/download.php: Temporal fix for the downloads,
 	need to re-implement the ACL mechanishm :-/
 	
