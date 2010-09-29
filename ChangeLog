@@ -1,3 +1,8 @@
+2010-09-29  Sancho Lerena <slerena@artica.es>
+
+	* operation/download/download.php: Temporal fix for the downloads,
+	need to re-implement the ACL mechanishm :-/
+	
 2010-09-24  Sancho Lerena <slerenaartica.es>
 
 	* include/functions_incidents.php: Fixed again the ticketing/pop3

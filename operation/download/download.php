@@ -46,17 +46,10 @@ $download_id = get_parameter ("id", "");
 $download = get_db_row ("tdownload", "id", $download_id );
 
 $location = $download["location"];
-$id_group = get_db_sql ("SELECT id_group FROM tdownload_category WHERE id = ".$download["id_category"]);
-if ($id_group == "")
-	$id_group = 0;
 
 $fileLocation = $config["homedir"]."$location";
 
-if (!give_acl($config["id_user"], $id_group, "KR")){
-	audit_db("",$config["REMOTE_ADDR"], "ACL Violation","Trying to access a forbidden file");
-	echo "File not found";
-	exit;
-}
+/*TODO: ACL checking here */
 
 if (file_exists($fileLocation)){
 	$short_name = preg_split ("/\//", $location);
