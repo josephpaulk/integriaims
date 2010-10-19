@@ -1,3 +1,10 @@
+2010-10-19  Sancho Lerena <slerena@artica.es>
+	
+	* operation/download/browse.php: Fixed ACL on download browse.
+
+	* operation/user_report/report_full.php: Fixed ACL on fullscreen
+	reports.
+
 2010-09-29  Sancho Lerena <slerena@artica.es>
 
 	* operation/kb/browse.php: Fixed access to KB, was not working due

@@ -231,20 +231,38 @@ echo "</td></tr></table></form>";
 // Download listings
 // ==================================================================
 
-$sql_filter = "WHERE 1=1 ";
+$sql_filter = "";
 
 if ($free_text != "")
-	$sql_filter .= " AND name LIKE '%$free_text%' OR description LIKE '%$free_text%'";
+	$sql_filter .= " AND tdownload.name LIKE '%$free_text%' OR tdownload.description LIKE 
+'%$free_text%'";
 
 if ($category > 0)
-	$sql_filter .= " AND id_category = $category ";
+	$sql_filter .= " AND tdownload.id_category = $category ";
 
 $offset = get_parameter ("offset", 0);
 
-$count = get_db_sql("SELECT COUNT(id) FROM tdownload $sql_filter");
+$count = get_db_sql("SELECT COUNT(tdownload.id) FROM tusuario, tprofile, tdownload, 
+tusuario_perfil, tdownload_category_group, tdownload_category
+WHERE tusuario.id_usuario = '".$config["id_user"]."' AND 
+tusuario.id_usuario = tusuario_perfil.id_usuario AND
+tusuario_perfil.id_perfil = tprofile.id  AND
+tusuario_perfil.id_grupo = tdownload_category_group.id_group AND
+tdownload_category_group.id_category = tdownload.id_category $sql_filter
+GROUP BY tdownload.id");
+
 pagination ($count, "index.php?sec=download&sec2=operation/download/browse", $offset);
 
-$sql1 = "SELECT * FROM tdownload $sql_filter ORDER BY date DESC, name, id_category LIMIT $offset, ". $config["block_size"];
+$sql1 = "SELECT tdownload.* FROM tusuario, tprofile, tdownload,
+tusuario_perfil, tdownload_category_group, tdownload_category
+WHERE tusuario.id_usuario = '".$config["id_user"]."' AND
+tusuario.id_usuario = tusuario_perfil.id_usuario AND
+tusuario_perfil.id_perfil = tprofile.id  AND
+tusuario_perfil.id_grupo = tdownload_category_group.id_group AND
+tdownload_category_group.id_category = tdownload.id_category $sql_filter 
+GROUP BY tdownload.id ORDER BY date DESC, name, id_category LIMIT
+$offset, ". $config["block_size"];
+
 
 $color =0;
 if ($result=mysql_query($sql1)){

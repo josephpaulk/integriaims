@@ -20,13 +20,15 @@ $id_user = $config["id_user"];
 
 check_login ();
 
-/*
-if (!give_acl ($config["id_user"], 0, "IM")) {
+$user_id = get_parameter ('user_id', $config["id_user"]);
+
+if (($user_id != $config["id_user"]) AND (!give_acl ($config["id_user"], 0, "IM")) AND (!give_acl 
+($config["id_user"], 0, "PM"))) {
 	audit_db("Noauth", $config["REMOTE_ADDR"], "Unauthorized access", "Trying to access full user report");
 	require ("general/noaccess.php");
 	exit;
 }
-*/
+
 
 $now = date ('Y-m-d');
 $start_date = get_parameter ("start_date", date ('Y-m-d', strtotime ("$now - 3 months")));
