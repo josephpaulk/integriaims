@@ -26,17 +26,6 @@ if (! dame_admin ($config["id_user"])) {
 }
 
 
-// Update configuration
-if ( (isset ($_POST["data"]) AND ($filename != ""))) {
-	$data =  unsafe_string (str_replace ("\r\n", "\n", $_POST["data"]));
-
-	$file = fopen ($full_filename, "wb");
-	fwrite ($file, $data);
-	fclose ($file);
-	echo "<h3 class='suc'>".lang_string ('Filesuccessfully updated')."</h3>";
-}
-
-
 function get_template_files () {
 	$base_dir = 'include/mailtemplates';
 	$files = list_files ($base_dir, ".tpl", 1, 0);
@@ -65,10 +54,13 @@ if ($refresh != "none"){
 if ($update != "none") {
 	$data =  unsafe_string (str_replace ("\r\n", "\n", $_POST["template_content"]));
 	$file = "include/mailtemplates/".$template;
-	$file = fopen ($file, "wb");
-	fwrite ($file, $data);
+	$fileh = fopen ($file, "wb");
+	if (fwrite ($fileh, $data))
+    	echo "<h3 class='suc'>".lang_string ('Filesuccessfully updated')."</h3>";
+    else    
+    	echo "<h3 class='error'>".lang_string ('Problem updating file')." ($file) </h3>";
 	fclose ($file);
-	echo "<h3 class='suc'>".lang_string ('Filesuccessfully updated')."</h3>";
+
 }
 
 echo "<h2>".__('Mail templates setup')."</h2>";

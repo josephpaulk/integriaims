@@ -20,7 +20,11 @@ global $config;
 $config["build"]="100917";
 $config["version"]="v3.0dev";
 $config["build_version"] = $config["build"];
-$config["REMOTE_ADDR"] = $_SERVER["REMOTE_ADDR"];
+
+if (!isset($_SERVER["REMOTE_ADDR"]))
+    $config["REMOTE_ADDR"] = "command_line";
+else
+    $config["REMOTE_ADDR"] = $_SERVER["REMOTE_ADDR"];
 
 // Set specific session name for this instance
 session_name (md5($config["build"].$config["REMOTE_ADDR"].$config["dbpass"].$config["dbname"]));

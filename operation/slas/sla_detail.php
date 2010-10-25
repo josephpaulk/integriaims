@@ -43,18 +43,24 @@ if ($create_sla) {
 	$id_sla_base = (int) get_parameter ('id_sla_base');
 	$enforced = (int) get_parameter ('enforced');
 
+    $five_daysonly = (int) get_parameter ("five_daysonly", 0);
+    $time_from = (int) get_parameter ("time_from", 0);
+    $time_to = (int) get_parameter ("time_to", 0);
+
 	$sql = sprintf ('INSERT INTO tsla (`name`, `description`, id_sla_base,
-		min_response, max_response, max_incidents, `enforced`)
-		VALUE ("%s", "%s", %d, %d, %d, %d, %d)',
+		min_response, max_response, max_incidents, `enforced`, five_daysonly, time_from, time_to)
+		VALUE ("%s", "%s", %d, %d, %d, %d, %d, %d, %d, %d)',
 		$name, $description, $id_sla_base, $min_response,
-		$max_response, $max_incidents, $enforced);
+		$max_response, $max_incidents, $enforced, $five_daysonly, $time_from, $time_to);
 
 	$id = process_sql ($sql);
 	if ($id === false)
 		echo '<h3 class="error">'.__('Could not be created')."</h3>";
 	else {
 		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-		insert_event ("SLA CREATED", $id, 0, $name);
+
+        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "SLA Created",
+		"Created a new SLA ($name)", $sql);
 	}
 	$id = 0;
 }
@@ -69,19 +75,23 @@ if ($update_sla) {
 	$max_incidents = (int) get_parameter ('max_incidents');
 	$id_sla_base = (int) get_parameter ('id_sla_base');
 	$enforced = (int) get_parameter ('enforced');
+    $five_daysonly = (int) get_parameter ("five_daysonly", 0);
+    $time_from = (int) get_parameter ("time_from", 0);
+    $time_to = (int) get_parameter ("time_to", 0);
 
 	$sql = sprintf ('UPDATE tsla SET enforced = %d, description = "%s",
 		name = "%s", max_incidents = %d, min_response = %d, max_response = %d,
-		id_sla_base = %d WHERE id = %d',
+		id_sla_base = %d, five_daysonly = %d, time_from = %d, time_to = %d WHERE id = %d',
 		$enforced, $description, $name, $max_incidents, $min_response,
-		$max_response, $id_sla_base, $id);
+		$max_response, $id_sla_base, $five_daysonly, $time_from, $time_to, $id);
 
 	$result = process_sql ($sql);
 	if (! $result)
 		echo '<h3 class="error">'.__('Could not be updated').'</h3>';
 	else {
 		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
-		insert_event ("SLA UPDATED", $id, 0, $name);
+        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "SLA Modified",
+		"Updated SLA ($name)", $sql);
 	}
 	$id = 0;
 }
@@ -92,7 +102,8 @@ if ($delete_sla) {
 	$name = get_db_value ('name', 'tsla', 'id', $id);
 	$sql = sprintf ('DELETE FROM tsla WHERE id = %d', $id);
 	$result = process_sql ($sql);
-	insert_event ("SLA DELETED", $id, 0, "$name");
+    audit_db ($config["id_user"], $config["REMOTE_ADDR"], "SLA Deleted",
+		"Delete SLA ($name)", $sql);
 	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 	$id = 0;
 }
@@ -111,6 +122,10 @@ if ($id || $new_sla) {
 		$max_incidents = 10;
 		$id_sla_base = 0;
 		$enforced = 1;
+        $five_daysonly = 1;
+        $time_from = 8;
+        $time_to = 18;
+
 	} else {
 		$sla = get_db_row ('tsla', 'id', $id);
 		$name = $sla['name'];
@@ -120,13 +135,17 @@ if ($id || $new_sla) {
 		$max_incidents = $sla['max_incidents'];
 		$id_sla_base = $sla['id_sla_base'];
 		$enforced = $sla['enforced'];
+        $five_daysonly = $sla["five_daysonly"];
+        $time_from = $sla["time_from"];
+        $time_to = $sla["time_to"];
+
 	}
 
 	$table->width = "90%";
 	$table->class = "databox";
 	$table->data = array ();
 	$table->colspan = array ();
-	$table->colspan[3][0] = 2;
+	$table->colspan[5][0] = 2;
 	
 	$table->data[0][0] = print_input_text ("name", $name, "", 30, 100, true, __('SLA name'));
 	$table->data[0][1] = print_checkbox ('enforced', 1 ,$enforced, true, __('Enforced'));
@@ -138,7 +157,17 @@ if ($id || $new_sla) {
 		5, 100, true, __('Max. incidents at the same time'));
 	$table->data[2][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
 		'id_sla_base', $id_sla_base, '', __('None'), 0, true, false, false, __('SLA Base'));
-	$table->data[3][0] = print_textarea ("description", 8, 1, $description, '', true, __('Description'));
+
+
+	$table->data[3][0] = print_checkbox ('five_daysonly', 1 ,$five_daysonly, true, __('Fire only between week, not weekends'));
+
+	$table->data[4][0] = print_input_text ('time_from', $time_from, '',
+		5, 10, true, __('Start hour to compute SLA'));
+	$table->data[4][1] = print_input_text ('time_to', $time_to, '',
+		5, 10, true, __('Last hour to compute SLA'));
+
+
+	$table->data[5][0] = print_textarea ("description", 8, 1, $description, '', true, __('Description'));
 
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/slas/sla_detail">';
 	print_table ($table);

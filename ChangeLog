@@ -1,3 +1,32 @@
+2010-10-25  Sancho Lerena <slerena@artica.es>
+
+    * setup/audit.php: A page for reviewing audit records was missing, added.
+
+    * integria_db.sql: Added new fields for SLA (on labour week, and hourly 
+    limits for the SLA. Added extra info field for audit records (to store SQL).
+
+    * update.sql: See above.
+
+    * setup_mailtemplates.php: Some fixes and better info on failure writing 
+    files.
+
+    * config_process.php: Avoid error running from command line.
+
+    * functions_db.php: Added extra_field to audit_db function.
+    Improvement in check_incident_sla_min_response(), now works on all opened
+    status when creator different from last workunit. Added SLA restrictions on
+    day of week and start/end time. Same SLA restriction added to max_resolution
+    SLA check.
+
+    * integria_cron.php: minor fixes on macro templates and reordered code.
+
+    * operation/slas/sla_detail.php: Added new fields to edit. Using new audit
+    function to report changes on SLAs.
+
+    * side_menu.php: Added view audit logs.
+
+    * *.tpl: Some minor fixes.
+
 2010-10-19  Sancho Lerena <slerena@artica.es>
 	
 	* operation/download/browse.php: Fixed ACL on download browse.

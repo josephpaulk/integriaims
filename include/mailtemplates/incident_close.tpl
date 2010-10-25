@@ -1,4 +1,4 @@
-Hello, this is an automated message from Integria.
+Hello, this is an automated message from Integria IMS.
 
 Incident #_incident_id_ ((_incident_title_)) has been CLOSED by _owner_
 

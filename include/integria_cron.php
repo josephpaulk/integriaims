@@ -227,8 +227,9 @@ function check_daily_task () {
 function check_sla_min ($incident) {
 	global $compare_timestamp;
 	global $config;
-	
+
 	$id_sla = check_incident_sla_min_response ($incident['id_incidencia']);
+
 	if (! $id_sla)
 		return false;
 	
@@ -242,9 +243,10 @@ function check_sla_min ($incident) {
 		$incident['id_incidencia'],
 		$compare_timestamp);
 	$notified = get_db_sql ($sql);
-	if ($notified > 0)
+
+	if ($notified > 0){
 		return true;
-	
+   }
 
 	/* We need to notify via email to the owner user */
 	$user = get_user ($incident['id_usuario']);
@@ -255,7 +257,7 @@ function check_sla_min ($incident) {
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
 	$MACROS["_incident_id_"] = $incident["id_incidencia"];
 	$MACROS["_incident_title_"] = $incident['titulo'];
-	$MACROS["_data1_"] = give_human_time ($sla['min_response']);
+	$MACROS["_data1_"] = give_human_time ($sla['min_response']*60*60);
 
 	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
 
@@ -302,7 +304,7 @@ function check_sla_max ($incident) {
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
 	$MACROS["_incident_id_"] = $incident["id_incidencia"];
 	$MACROS["_incident_title_"] = $incident['titulo'];
-	$MACROS["_data1_"] = give_human_time ($sla['max_response']);
+	$MACROS["_data1_"] = give_human_time ($sla['max_response']*3600);
 	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
 
 	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_response_time.tpl", $MACROS);
@@ -311,15 +313,88 @@ function check_sla_max ($incident) {
 	insert_event ('SLA_MAX_RESPONSE_NOTIFY', $incident['id_incidencia']);
 }
 
+function run_mail_check () {
+
+	global $config;
+	include_once ($config["homedir"]."/include/functions_pop3.php");
+
+	// Inicialization for internal variables
+
+	$error            = "";   //    Error string.
+	$timeout          = 90;   //    Default timeout before giving up on a network operation.
+	$Count            = -1;   //    Mailbox msg count
+	
+	$RFC1939          = true;  //    Set by noop(). See rfc1939.txt
+	$msg_list_array = array();  //    List of messages from server
+	$login            = $config["pop_user"];
+	$pass             = $config["pop_pass"];
+	$server           = $config["pop_host"];
+
+    # Check if POP3 server is defined, if not, abort
+    if ($server == ""){
+        return;
+    }
+
+	set_time_limit($timeout);
+	$fp = connect ($server, $port = 110);
+	$Count = login($login,$pass, $fp);
+	if( (!$Count) or ($Count < 1) ){
+		return 1; 
+	}
+
+	// DEBUG
+	// echo "Login OK: Inbox contains [$Count] messages<BR>\n";
+	$msg_list_array = uidl("", $fp);
+	set_time_limit($timeout);
+
+	// Loop thru the array to get each message
+	for ($i=1; $i <= $Count; $i++){
+		set_time_limit($timeout);
+		$MsgOne = get($i, $fp);
+
+		if( (!$MsgOne) or (gettype($MsgOne) != "array") ) {
+			echo "oops, Message not returned by the server.<BR>\n";
+			return 2;
+		}
+		message_parse($MsgOne, $i, $fp);
+	}
+
+	// Close the email box and delete all messages marked for deletion
+	quit($fp);
+	return 0;
+
+}
+
+// ---------------------------------------------------------------------------
+/* Main code goes here */
+// ---------------------------------------------------------------------------
+
+
+// Daily check only
+
+if (check_daily_task ())
+	run_daily_check ();
+
+// Execute always (POP3 processing)
+
+run_mail_check();
+
+// Check SLA on incidents (max. opened time without fixing and min. response)
+
 $incidents = get_db_all_rows_sql ('SELECT * FROM tincidencia
 	WHERE sla_disabled = 0
 	AND estado NOT IN (6,7)');
+
 if ($incidents === false)
 	$incidents = array ();
-foreach ($incidents as $incident) {
-	check_sla_min ($incident);
-	check_sla_max ($incident);
-}
+
+if ($incidents)
+    foreach ($incidents as $incident) {
+    	check_sla_min ($incident);
+    	check_sla_max ($incident);
+    }
+
+// Check SLA for number of opened items.
 
 $slas = get_slas (false);
 foreach ($slas as $sla) {
@@ -372,60 +447,5 @@ foreach ($slas as $sla) {
 	}
 }
 
-function run_mail_check () {
-
-	global $config;
-	include_once ($config["homedir"]."/include/functions_pop3.php");
-
-	// Inicialization for internal variables
-
-	$error            = "";   //    Error string.
-	$timeout          = 90;   //    Default timeout before giving up on a network operation.
-	$Count            = -1;   //    Mailbox msg count
-	
-	$RFC1939          = true;  //    Set by noop(). See rfc1939.txt
-	$msg_list_array = array();  //    List of messages from server
-	$login            = $config["pop_user"];
-	$pass             = $config["pop_pass"];
-	$server           = $config["pop_host"];
-
-	set_time_limit($timeout);
-	$fp = connect ($server, $port = 110);
-	$Count = login($login,$pass, $fp);
-	if( (!$Count) or ($Count < 1) ){
-		return 1; 
-	}
-
-	// DEBUG
-	// echo "Login OK: Inbox contains [$Count] messages<BR>\n";
-	$msg_list_array = uidl("", $fp);
-	set_time_limit($timeout);
-
-	// Loop thru the array to get each message
-	for ($i=1; $i <= $Count; $i++){
-		set_time_limit($timeout);
-		$MsgOne = get($i, $fp);
-
-		if( (!$MsgOne) or (gettype($MsgOne) != "array") ) {
-			echo "oops, Message not returned by the server.<BR>\n";
-			return 2;
-		}
-		message_parse($MsgOne, $i, $fp);
-	}
-
-	// Close the email box and delete all messages marked for deletion
-	quit($fp);
-	return 0;
-
-}
-
-// Daily check only
-
-if (check_daily_task ())
-	run_daily_check ();
-
-// Execute always
-
-run_mail_check();
 
 ?>

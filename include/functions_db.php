@@ -154,11 +154,14 @@ function user_visible_for_me ($id_user, $target_user, $access = "") {
 // audit_db, update audit log
 // --------------------------------------------------------------- 
 
-function audit_db ($id, $ip, $accion, $description) {
+function audit_db ($id, $ip, $accion, $description, $extra = "") {
 	require ("config.php");
 	$today = date('Y-m-d H:i:s');
+
+    $extra = mysql_real_escape_string ($extra);
+
 	$utimestamp = time();
-	$sql = 'INSERT INTO tsesion (ID_usuario, accion, fecha, IP_origen,descripcion, utimestamp) VALUES ("'.$id.'","'.$accion.'","'.$today.'","'.$ip.'","'.$description.'", '.$utimestamp.')';
+	$sql = 'INSERT INTO tsesion (ID_usuario, accion, fecha, IP_origen,descripcion, utimestamp, extra_info) VALUES ("'.$id.'","'.$accion.'","'.$today.'","'.$ip.'","'.$description.'", '.$utimestamp.', "'.$extra.'")';
 	process_sql ($sql);
 }
 
@@ -1639,16 +1642,17 @@ function check_incident_sla_min_response ($id_incident) {
 		}
 		return false;
 	}
-	
-	/* Only incidents in status new are checked */
-	if ($incident['estado'] != 1)
-		return false;
-	
+
 	$slas = get_incident_slas ($id_incident, false);
+
 	$start = strtotime ($incident['inicio']);
 	$now = time ();
+
 	/* Check wheter it was updated before, so there's no need to check SLA */
 	$update = strtotime ($incident['actualizacion']);
+
+
+    /* Clean status of fired SLA */
 	if ($update > $start) {
 		if ($incident['affected_sla_id']) {
 			$sql = sprintf ('UPDATE tincidencia
@@ -1657,22 +1661,54 @@ function check_incident_sla_min_response ($id_incident) {
 				$id_incident);
 			process_sql ($sql);
 		}
-		return false;
 	}
-	
+
+    // Check SLA here.
 	foreach ($slas as $sla) {
+
 		if ($now < ($start + $sla['min_response'] * 3600))
 			 continue;
+
+        // Creator is the last workunit author ?, then SKIP
+    	$last_wu = get_incident_lastworkunit ($id_incident);
+
+    	if ($last_wu["id_user"] == $incident["id_creator"]){
+            continue;
+        }
+
+        // Datetime/Time check when exists (version compatibility code), this
+        // was added as a 3.0 post-feature :-)
+
+        if (isset($sla["five_daysonly"])){
+
+            $dow = date("w", time());
+            $hod = date("G", time());
+
+            // Skip if we're on weekend
+            if (($sla["five_daysonly"] == 1) AND (($dow == 0) OR ($dow == 6))){
+                continue;
+            }
+
+            // Skip if we're out of job time
+            if ($sla["time_from"] != $sla["time_to"]){
+                if (($sla["time_from"] > $hod) OR ($sla["time_to"] < $hod)){
+                    continue;
+                }
+            }
+        }
+
+
 		$sql = sprintf ('UPDATE tincidencia
 			SET affected_sla_id = %d
 			WHERE id_incidencia = %d',
 			$sla['id'], $id_incident);
 		process_sql ($sql);
 		
-		/* SLA has expired */
+		/* SLA has been fired */
 		return $sla['id'];
 	}
-	
+
+    // No SLA fired.
 	return false;
 }
 
@@ -1704,10 +1740,34 @@ function check_incident_sla_max_response ($id_incident) {
 		return false;
 	}
 	
+
 	$slas = get_incident_slas ($id_incident, false);
 	$start = strtotime ($incident['inicio']);
 	$now = time ();
 	foreach ($slas as $sla) {
+
+
+        // Datetime/Time check when exists (version compatibility code), this
+        // was added as a 3.0 post-feature :-)
+
+        if (isset($sla["five_daysonly"])){
+
+            $dow = date("w", time());
+            $hod = date("G", time());
+
+            // Skip if we're on weekend
+            if (($sla["five_daysonly"] == 1) AND (($dow == 0) OR ($dow == 6))){
+                continue;
+            }
+
+            // Skip if we're out of job time
+            if ($sla["time_from"] != $sla["time_to"]){
+                if (($sla["time_from"] > $hod) OR ($sla["time_to"] < $hod)){
+                    continue;
+                }
+            }
+        }
+
 		if ($now < ($start + $sla['max_response'] * 3600))
 			 continue;
 		$sql = sprintf ('UPDATE tincidencia

@@ -807,6 +807,14 @@ if ($sec == "godmode") {
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/event'>".__('System events')."</a></li>";
 
+	// Audit management
+	if ($sec2 == "godmode/setup/audit")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/audit'>".__('Audit log')."</a></li>";
+
+
 	// Log viewer
 	if ($sec2 == "godmode/setup/logviewer")
 		echo "<li id='sidesel'>";

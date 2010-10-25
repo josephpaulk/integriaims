@@ -159,4 +159,8 @@ CREATE TABLE `tapp_activity_data` (
 	  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE tsla ADD `five_daysonly` tinyint NULL default 0;
+ALTER TABLE tsla ADD `time_from` tinyint NULL default 0;
+ALTER TABLE tsla ADD `time_to` tinyint NULL default 0;
+ALTER TABLE tsesion ADD `extra_info` TEXT default NULL;
 

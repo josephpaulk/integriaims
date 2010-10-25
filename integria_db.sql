@@ -141,6 +141,9 @@ CREATE TABLE `tsla` (
   `max_response` int(11) NULL default NULL,
   `max_incidents` int(11) NULL default NULL,
   `enforced` tinyint NULL default 0,
+  `five_daysonly` tinyint NULL default 0,
+  `time_from` tinyint NULL default 0,
+  `time_to` tinyint NULL default 0,
   `id_sla_base` mediumint(8) unsigned NULL default 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -213,6 +216,7 @@ CREATE TABLE `tsesion` (
   `IP_origen` varchar(100) NOT NULL default '',
   `accion` varchar(100) NOT NULL default '',
   `descripcion` varchar(200) NOT NULL default '',
+  `extra_info` TEXT default NULL,
   `fecha` datetime NOT NULL default '0000-00-00 00:00:00',
   `utimestamp` bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (`ID_sesion`),
@@ -742,3 +746,46 @@ CREATE TABLE `tapp_activity_data` (
 	  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE  `tprofile` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(150) NOT NULL default '',
+  `ir` tinyint(1) NOT NULL default '0',
+  `iw` tinyint(1) NOT NULL default '0',
+  `im` tinyint(1) NOT NULL default '0',
+  `um` tinyint(1) NOT NULL default '0',
+  `dm` tinyint(1) NOT NULL default '0',
+  `fm` tinyint(1) NOT NULL default '0',
+  `ar` tinyint(1) NOT NULL default '0',
+  `aw` tinyint(1) NOT NULL default '0',
+  `am` tinyint(1) NOT NULL default '0',
+  `pr` tinyint(1) NOT NULL default '0',
+  `pw` tinyint(1) NOT NULL default '0',
+  `pm` tinyint(1) NOT NULL default '0',
+  `tw` tinyint(1) NOT NULL default '0',
+  `tm` tinyint(1) NOT NULL default '0',
+  `kr` tinyint(1) NOT NULL default '0',
+  `kw` tinyint(1) NOT NULL default '0',
+  `km` tinyint(1) NOT NULL default '0',
+  `vr` tinyint(1) NOT NULL default '0',
+  `vw` tinyint(1) NOT NULL default '0',
+  `vm` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure for table `tusuario_perfil`
+--
+CREATE TABLE `tusuario_perfil` (
+  `id_up` bigint(20) unsigned NOT NULL auto_increment,
+  `id_usuario` varchar(60) NOT NULL default '',
+  `id_perfil` int(10) unsigned NOT NULL default '0',
+  `id_grupo` mediumint(8) unsigned NOT NULL default '0',
+  `assigned_by` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id_up`),
+  FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_grupo`) REFERENCES tgrupo(`id_grupo`)
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_perfil`) REFERENCES tprofile(`id`)
+      ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

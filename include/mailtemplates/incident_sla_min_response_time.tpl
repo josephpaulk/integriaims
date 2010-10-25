@@ -1,6 +1,6 @@
 Hello _fullname_
 
-Our SLA policy for incidents of group _group_, is set to have a minimum response time for new Incidents of _data1_ hours.
+Our SLA policy for incidents of group _group_, is set to have a minimum response time for new Incidents of _data1_
 
 For incident #_incident_id_ _incident_title_ this time has been overdue. 
 
