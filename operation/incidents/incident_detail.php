@@ -105,6 +105,7 @@ if ($action == 'update') {
 	$id_task = (int) get_parameter ('task_user');
 	$id_incident_type = get_parameter ('id_incident_type');
 	$id_parent = (int) get_parameter ('id_parent');
+	$id_creator = get_parameter ('id_creator');
 
 	$old_incident = get_incident ($id);
 	
@@ -142,12 +143,13 @@ if ($action == 'update') {
 
 
 	$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s",
+			  id_creator = "%s",
 			titulo = "%s", origen = %d, estado = %d,
 			id_grupo = %d, id_usuario = "%s",
 			notify_email = %d, prioridad = %d, descripcion = "%s",
 			epilog = "%s", id_task = %d, resolution = %d,
-			id_incident_type = %d, id_parent = %s, affected_sla_id = 0  %s 
-			WHERE id_incidencia = %d', $timestamp, 
+			id_incident_type = %d, id_parent = %s, affected_sla_id = 0 %s 
+			WHERE id_incidencia = %d', $timestamp, $id_creator, 
 			$titulo, $origen, $estado, $grupo, $user,
 			$email_notify, $priority, $description,
 			$epilog, $id_task, $resolution, $id_incident_type,
@@ -208,7 +210,7 @@ if ($action == "insert") {
 	$description =  get_parameter ('description');
 	$origen = get_parameter ('incident_origin', 1);
 	$priority = get_parameter ('priority_form');
-	$id_creator = $config['id_user'];
+	$id_creator = get_parameter ('id_creator');
 	$estado = get_parameter ("incident_status");
 	$resolution = get_parameter ("incident_resolution");
 	$id_task = (int) get_parameter ("task_user");

@@ -1,3 +1,8 @@
+2010-11-03  Sancho Lerena <slerena@artica.es>
+
+	* operation/incidents/incident_detail.php: Fixed creator insert/update
+	operations.
+
 2010-10-25  Sancho Lerena <slerena@artica.es>
 
     * setup/audit.php: A page for reviewing audit records was missing, added.
