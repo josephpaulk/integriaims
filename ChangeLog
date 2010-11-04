@@ -1,3 +1,8 @@
+2010-11-04  Sancho Lerena <slerena@artica.es>
+
+	* operation/incidents/incident_detail.php: Fixed creator on non-admin
+	users, was missing on incident creation ! :-o
+
 2010-11-03  Sancho Lerena <slerena@artica.es>
 
 	* operation/incidents/incident_detail.php: Fixed creator insert/update

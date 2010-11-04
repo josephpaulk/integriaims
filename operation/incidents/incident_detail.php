@@ -210,7 +210,7 @@ if ($action == "insert") {
 	$description =  get_parameter ('description');
 	$origen = get_parameter ('incident_origin', 1);
 	$priority = get_parameter ('priority_form');
-	$id_creator = get_parameter ('id_creator');
+	$id_creator = get_parameter ('id_creator', $config["id_user"]);
 	$estado = get_parameter ("incident_status");
 	$resolution = get_parameter ("incident_resolution");
 	$id_task = (int) get_parameter ("task_user");
