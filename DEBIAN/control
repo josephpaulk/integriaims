@@ -1,5 +1,5 @@
-package: integriaIMS
-Version: 3.0
+package: IntegriaIMS
+Version: 3.0dev
 Architecture: all
 Priority: optional
 Section: admin

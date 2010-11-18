@@ -1,3 +1,14 @@
+2010-11-18  Sancho Lerena <slerena@artica.es>
+
+	* DEBIAN/control,
+	DEBIAN/make_deb_package.sh: Changes to do the DEB packages better.
+
+	* integria.spec: Same for RPM files.
+
+	* extras/build_src.sh,
+	extras/build_deb.sh,
+	extras/build_rpm.sh: Automated scripts for doing the packaging.
+
 2010-11-04  Sancho Lerena <slerena@artica.es>
 
 	* operation/incidents/incident_detail.php: Fixed creator on non-admin

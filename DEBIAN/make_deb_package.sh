@@ -14,62 +14,25 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-integria_version="3.0"
-
-package_pear=0
-package_integria=1
+integria_version="3.0dev"
 
 for param in $@
 do
 	if [ $param = "-h" -o $param = "--help" ]
 	then
-		echo "For only make packages of pear type +pear"
-		echo "For not make packages of pear type -pear"
+		echo "No help, damm, this is easy to use !"
 		exit 0
-	fi
-
-	if [ $param = "+pear" ]
-	then
-		package_integria=0
-	fi
-	if [ $param = "-pear" ]
-	then
-		package_pear=0
 	fi
 done
 
-if [ $package_integria -eq 1 ]
+echo "Test if you have all the needed tools to make the packages."
+whereis dpkg-deb | cut -d":" -f2 | grep dpkg-deb > /dev/null
+if [ $? = 1 ]
 then
-	echo "Test if you have all the needed tools to make the packages."
-	whereis dpkg-deb | cut -d":" -f2 | grep dpkg-deb > /dev/null
-	if [ $? = 1 ]
-	then
-		echo "No found \"dpkg-deb\" aplication, please install."
-		exit 1
-	else
-		echo "Found \"dpkg-debs\"."
-	fi
-fi
-
-if [ $package_pear -eq 1 ]
-then
-	whereis dh-make-pear | cut -d":" -f2 | grep dh-make-pear > /dev/null
-	if [ $? = 1 ]
-	then
-		echo " \"dh-make-pear\" aplication not found, please install."
-		exit 1
-	else
-		echo "Found \"dh-make-pear\"."
-	fi
-
-	whereis fakeroot | cut -d":" -f2 | grep fakeroot > /dev/null
-	if [ $? = 1 ]
-	then
-		echo " \"fakeroot\" aplication not found, please install."
-		exit 1
-	else
-		echo "Found \"fakeroot\"."
-	fi
+	echo "No found \"dpkg-deb\" aplication, please install."
+	exit 1
+else
+	echo "Found \"dpkg-debs\"."
 fi
 
 whereis dpkg-buildpackage | cut -d":" -f2 | grep dpkg-buildpackage > /dev/null
@@ -85,8 +48,7 @@ cd ..
 
 echo "Make a \"temp_package\" temporary dir for job."
 mkdir -p temp_package
-if [ $package_integria -eq 1 ]
-then
+
 	mkdir -p temp_package/var/www/integria
 
 	echo "Make directory system tree for package."
@@ -119,23 +81,10 @@ then
 
 	echo "Make the package \"Integria IMS\"."
 	dpkg-deb --build temp_package
-	mv temp_package.deb integriaIMS_$integria_version.deb
-fi
-
-if [ $package_pear -eq 1 ]
-then
-	echo "Make the package \"php-xml-rpc\"."
-	cd temp_package
-	dh-make-pear --maintainer "Miguel de Dios <miguel.dedios@artica.es>" XML_RPC
-	cd php-xml-rpc-*
-	dpkg-buildpackage -rfakeroot
-	cd ..
-	mv php-xml-rpc*.deb ..
-	cd ..
-fi
-
+	mv temp_package.deb /tmp/IntegriaIMS_$integria_version.deb
+	rm -Rf temp_package
 
 echo "Delete the \"temp_package\" temporary dir for job."
-rm -Rf temp_package
+rm -Rf temp_package.deb
 
-echo "DONE: Package ready at: ../integriaIMS_$integria_version.deb"
+echo "DONE: Package ready at: /tmp/IntegriaIMS_$integria_version.deb"
