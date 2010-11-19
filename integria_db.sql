@@ -221,9 +221,7 @@ CREATE TABLE `tsesion` (
   `fecha` datetime NOT NULL default '0000-00-00 00:00:00',
   `utimestamp` bigint(20) unsigned NOT NULL default '0',
   PRIMARY KEY  (`ID_sesion`),
-  KEY `tsession_idx_1` (`ID_usuario`),
-  FOREIGN KEY (`ID_usuario`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+  KEY `tsession_idx_1` (`ID_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tincident_track` (
