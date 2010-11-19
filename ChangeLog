@@ -1,3 +1,9 @@
+2010-11-19  Sancho Lerena <slerena@artica.es>
+
+	* integria_demo.sql: Updated some SQL not working with the latest  
+    changes on SLA and Session tables.
+
+
 2010-11-18  Sancho Lerena <slerena@artica.es>
 
 	* DEBIAN/control,
