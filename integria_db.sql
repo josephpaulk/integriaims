@@ -105,7 +105,7 @@ CREATE TABLE `tattachment` (
   `size` bigint(20) NOT NULL default '0',
   PRIMARY KEY  (`id_attachment`),
   FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
-     ON UPDATE CASCADE
+     ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -179,9 +179,10 @@ CREATE TABLE `tincidencia` (
   KEY `incident_idx_2` (`estado`),
   KEY `incident_idx_3` (`id_grupo`),
   FOREIGN KEY (`id_creator`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE,
- FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE
+      ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
+      ON UPDATE CASCADE  ON DELETE CASCADE;
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `tincidencia` ADD FOREIGN KEY (`id_parent`) REFERENCES tincidencia(`id_incidencia`)
@@ -222,7 +223,7 @@ CREATE TABLE `tsesion` (
   PRIMARY KEY  (`ID_sesion`),
   KEY `tsession_idx_1` (`ID_usuario`),
   FOREIGN KEY (`ID_usuario`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE
+      ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tincident_track` (
@@ -252,7 +253,7 @@ CREATE TABLE `ttask_track` (
   PRIMARY KEY  (`id`),
   KEY `ttt_idx_1` (`id_task`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE, 
+      ON UPDATE CASCADE ON DELETE CASCADE, 
   FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -267,7 +268,7 @@ CREATE TABLE `tproject_track` (
   PRIMARY KEY  (`id`),
   KEY `tpt_idx_1` (`id_project`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE,
+      ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
       ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -285,7 +286,7 @@ CREATE TABLE `tworkunit` (
   PRIMARY KEY  (`id`),
   KEY `tw_idx_1` (`id_user`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE
+      ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tworkunit_task` (

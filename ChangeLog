@@ -1,5 +1,11 @@
 2010-11-19  Sancho Lerena <slerena@artica.es>
 
+	* include/functions.php: Fixing problems with HTML encoding.
+	Ported functions from Pandora FMS project.
+
+	* integria_db.sql: Fixed some problems on user deletion due
+	foreign keys.
+
 	* integria_demo.sql: Updated some SQL not working with the latest  
     changes on SLA and Session tables.
 
