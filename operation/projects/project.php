@@ -181,7 +181,8 @@ $table->head[6] = __('Cost');
 $table->head[7] = __('Updated');
 $table->data = array ();
 
-// Simple query, needs to implement group control and ACL checking
+// TODO: Needs to implement group control and ACL checking
+
 $sql = sprintf ('SELECT tproject.id, tproject.name, tproject.description, tproject.start, tproject.end, tproject.id_owner, tproject.disabled, tproject.id_project_group  FROM tproject, ttask 
 	WHERE (%s) 
 	AND tproject.disabled = %d
@@ -193,8 +194,6 @@ if ($projects === false)
 	$projects = array ();
 
 foreach ($projects as $project) {
-	if (! give_acl ($config['id_user'], $project['id_project_group'], 'PR'))
-		continue;
 	
 	if (! user_belong_project ($config['id_user'], $project['id']))
 		continue;

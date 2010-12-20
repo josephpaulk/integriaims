@@ -1,3 +1,11 @@
+
+2010-12-20  Sancho Lerena <slerena@artica.es>
+
+	* operation/projects/project_group_detail.php,
+	operation/projects/project.php,
+	operation/user_report/report_monthly.php: Fixed some ACL on 
+	project management and people reporting.
+
 2010-11-19  Sancho Lerena <slerena@artica.es>
 
 	* include/functions.php: Fixing problems with HTML encoding.

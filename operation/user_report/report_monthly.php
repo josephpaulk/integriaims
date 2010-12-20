@@ -92,22 +92,22 @@
     echo "<th>".__('Charged this month');
     echo "<th>".__('Avg. Scoring');
 
-	$sql0= "SELECT * FROM tusuario";
-	if ($res0 = mysql_query($sql0)) {
-		while ($row0=mysql_fetch_array($res0)){
 
-            // Can current user have access to this user ?
-            if (($row0["id_usuario"] == $config["id_user"]) OR (give_acl($config["id_user"], 0, "IM")) OR (give_acl($config["id_user"], 0, "UM"))) {
-			    $nombre = $row0["id_usuario"];
-			    $avatar = $row0["avatar"];
+	$values = get_user_visible_users ($config['id_user'], $access, true);
+	foreach ($values as $key => $value){
 
-                // Get total hours for this month
-			    $sql= "SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_month' AND timestamp < '$end_month' AND id_user = '$nombre'";
-			    if ($res = mysql_query($sql)) {	
-				    $row=mysql_fetch_array($res);
-			    }
+		$row0 = get_db_row ("tusuario", "id_usuario", $key);
+		if ($row0){
+			$nombre = $row0["id_usuario"];
+			$avatar = $row0["avatar"];
+
+	                // Get total hours for this month
+			$sql= "SELECT SUM(duration) FROM tworkunit WHERE timestamp > '$begin_month' AND timestamp < '$end_month' AND id_user = '$nombre'";
+			if ($res = mysql_query($sql)) {	
+				$row=mysql_fetch_array($res);
+			}
 			    
-			    echo "<tr><td>";
+			echo "<tr><td>";
                 
                 echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$nombre' class='tip'>&nbsp;<span>";
                 $usuario = get_db_row ("tusuario", "id_usuario", $nombre);
@@ -171,7 +171,6 @@
                 else
                     echo "--";
             }
-		}
 	}
 	echo "</table>";
 ?>

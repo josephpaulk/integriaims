@@ -18,7 +18,7 @@ global $config;
 
 check_login ();
 
-if (give_acl($config["id_user"], 0, "FM")==0) {
+if (give_acl($config["id_user"], 0, "PM")==0) {
 	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access project group management");
 	no_permission();
 }
