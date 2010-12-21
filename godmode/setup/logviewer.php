@@ -25,6 +25,14 @@ if (give_acl($config["id_user"], 0, "FM")==0) {
 
 $file_name = $config["homedir"]."/integria.log";
 
+
+$delete = get_parameter ("delete", 0);
+if ($delete == 1){
+	if (file_exists($file_name)){
+		unlink ($file_name);
+	}
+}
+
 if (!file_exists($file_name)){
 	echo "<h2 class=error>".__("Cannot find file"). "(".$file_name;
 	echo ")</h1>";
@@ -35,6 +43,7 @@ if (!file_exists($file_name)){
 	} else {
 		$data = file_get_contents ($file_name);			
 		echo "<h2>$file_name (".format_numeric(filesize ($file_name)/1024)." KB) </h2>";
+		echo "<br><a href='index.php?sec=godmode&sec2=godmode/setup/logviewer&delete=1'>.__("Delete logfile").</a><br>";
 		echo "<textarea style='width: 100%; height: 500px;' name='$file_name'>";
 		echo $data;
 		echo "</textarea><br><br>";

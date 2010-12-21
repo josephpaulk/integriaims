@@ -129,24 +129,26 @@ if ($id_workunit != -1){
 } else {
     if ($id_task == 0){
 	    if ($timestamp_l != "" && $timestamp_h != "")
-		    $sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' AND timestamp >= '$timestamp_l' AND timestamp < '$timestamp_h' ORDER BY timestamp DESC";
+		    $sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' AND timestamp >= '$timestamp_l' AND timestamp <= '$timestamp_h' ORDER BY timestamp DESC";
 	    else 
 		    $sql= "SELECT * FROM tworkunit WHERE tworkunit.id_user = '$id_user' ORDER BY timestamp DESC";
     } else {
         if ($timestamp_l != "" && $timestamp_h != "")
-		    $sql= "SELECT * FROM tworkunit, tworkunit_task WHERE tworkunit.id_user = '$id_user' AND timestamp >= '$timestamp_l' AND timestamp < '$timestamp_h' AND tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id ORDER BY timestamp DESC";
+		    $sql= "SELECT * FROM tworkunit, tworkunit_task WHERE tworkunit.id_user = '$id_user' AND timestamp >= '$timestamp_l' AND timestamp <= '$timestamp_h' AND tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id ORDER BY timestamp DESC";
 	    else 
 		    $sql= "SELECT * FROM tworkunit, tworkunit_task WHERE tworkunit.id_user = '$id_user' AND tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id ORDER BY timestamp DESC";
     }
 }
 
-// TODO: Add granularity check to show only data from projects where ACL is active for current user
-if ($res = mysql_query($sql)) {
-	while ($row=mysql_fetch_array($res)) 
-		if ($id_workunit != -1)
-			show_workunit_user ($row[0], 1);
-		else
-			show_workunit_user ($row[0]);
+$sql = safe_output ($sql);
+
+$alldata = get_db_all_rows_sql ($sql);
+foreach ($alldata as $row){ 
+	
+	if ($row["id"] != -1)
+        	show_workunit_user ($row[0], 1);
+	else 
+		show_workunit_user ($row[0]);
 }
 
 ?>

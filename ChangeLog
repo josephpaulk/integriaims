@@ -1,3 +1,9 @@
+2010-12-21  Sancho Lerena <slerena@artica.es>
+
+	* operation/users/user_workunit_report.php: Fixed a weird
+	problem with SQL HTML encoding ¿?¿?¿?.
+
+	* godmode/setup/logviewer.php: Add a link to delete logfile.
 
 2010-12-20  Sancho Lerena <slerena@artica.es>
 
