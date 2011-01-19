@@ -206,9 +206,15 @@ foreach ($incidents as $incident) {
 	$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
 
 	echo '<td class="f9"><strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em></td>';
-	
+
+	// priority
 	echo '<td>';
 	print_priority_flag_image ($incident['prioridad']);
+	$last_wu = get_incident_lastworkunit ($incident["id_incidencia"]);
+	if ($last_wu["id_user"] == $incident["id_creator"]){
+		echo "<br><img src='images/comment.gif'>";
+	}
+
 	echo '</td>';
 	
 	echo '<td class="f9">'.human_time_comparation ($incident["actualizacion"]).'<br /><em>';
@@ -252,9 +258,8 @@ foreach ($incidents as $incident) {
 		echo "($incident_wu) ";
 	}
 
-	$last_wu = get_incident_lastworkunit ($incident["id_incidencia"]);
 	if ($last_wu["id_user"] == $incident["id_creator"]){
-		echo "<b>".$last_wu["id_user"]."</b>";
+		echo "<b>".$last_wu["id_user"]."</b>&nbsp;";
 	} else {
 		echo $last_wu["id_user"];
 	}

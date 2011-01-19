@@ -675,12 +675,15 @@ else {
 if ($enabled){
 	$table->data[2][3] = print_label(__('Creator'), '', '', true);
 	$table->data[2][3] .= print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'id_creator', $id_creator, '', 'select', '0', true, false, true, false, !$enabled);
+} else {
+	$table->data[2][3] .= "<input type='hidden' name=id_creator value=$id_creator>";
 }
 
 if ($has_permission) {
 	$table->data[4][0] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo, true) . "<div id='group_spinner'></div>";
 } else {
 	$table->data[4][0] = print_label (__('Group'), '', '', true, dame_nombre_grupo ($id_grupo));
+	$table->data[4][0] .= "<input type='hidden' name=grupo_form value=$id_grupo>";
 }
 
 // Only users with manage permission can change auto-assigned user (that information comes from group def.)
