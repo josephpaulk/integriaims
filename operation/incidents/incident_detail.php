@@ -673,8 +673,9 @@ else {
      $enabled = false;
 }
 if ($enabled){
+
 	$table->data[2][3] = print_label(__('Creator'), '', '', true);
-	$table->data[2][3] .= print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'id_creator', $id_creator, '', 'select', '0', true, false, true, false, !$enabled);
+	$table->data[2][3] .= print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'id_creator', $id_creator, '', 'select', '', true, false, true, false, !$enabled);
 } else {
 	$table->data[2][3] .= "<input type='hidden' name=id_creator value=$id_creator>";
 }

@@ -185,6 +185,9 @@ else
 <tr>
 <td class="datos"><?php echo __('User ID') ?>
 <td class="datos"><input type="text" size=15 name="nombre" value="<?php echo $id_usuario_mio ?>">
+<i>
+<?php echo __("User cannot have Blank spaces"); ?>
+</i>
 <?php
 if (isset($avatar)){
 	echo "<td class='datos' rowspan=6>";

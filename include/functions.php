@@ -84,7 +84,7 @@ function clean_input ($value) {
 */
 
 function clean_output_breaks ($string) {
-	return preg_replace ('/\n/', "<br />", $string);
+	return preg_replace ('/&#x0a;/', "<br>", $string);
 }
 
 /** 

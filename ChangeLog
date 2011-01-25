@@ -1,3 +1,10 @@
+2011-01-23  Sancho Lerena <slerena@articae.s>
+
+	* include/functions.php: Blank spaces was in HTML encoding and
+	because of that was not properly viewed in Workunit reports
+	(the regexp doesnt match against the HTML encoding).
+
+
 2011-01-19  Sancho lerena <slerena@artica.es>
 
 	* operation/incidents/incident_detail.php: Fixed the problem
