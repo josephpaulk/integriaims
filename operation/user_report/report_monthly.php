@@ -14,13 +14,14 @@
 // GNU General Public License for more details.
 
 
-// Load global vars
+    // Load global vars
 
 	global $config;
 	$id_user = $config["id_user"];
 	
 	if (check_login() != 0) {
-		audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access monthly report");
+		audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", 
+        "Trying to access monthly report");
 		require ("general/noaccess.php");
 		exit;
 	}
@@ -72,7 +73,7 @@
 	echo "<option value='$working_month'>".getmonth($working_month);
 	for ($ax=1; $ax <= $now_month; $ax++){
                 echo "<option value='$ax'>".getmonth($ax);
-        }
+    }
 
 	echo "</select>";
 	echo "</td><td>";
@@ -94,8 +95,8 @@
 
 
 	$values = get_user_visible_users ($config['id_user'], $access, true);
-	foreach ($values as $key => $value){
 
+	foreach ($values as $key => $value){
 		$row0 = get_db_row ("tusuario", "id_usuario", $key);
 		if ($row0){
 			$nombre = $row0["id_usuario"];
@@ -109,68 +110,69 @@
 			    
 			echo "<tr><td>";
                 
-                echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$nombre' class='tip'>&nbsp;<span>";
-                $usuario = get_db_row ("tusuario", "id_usuario", $nombre);
-				echo "<b>".$usuario["nombre_real"] . "</b><br>";
-				echo "<i>".$usuario["comentarios"] . "</i><br>";
-				if ($config["enteprise"] == 1){
-					echo "<font size=1px>";
-					$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
-					$result1=mysql_query($sql1);
-				
-					if (mysql_num_rows($result1)){
-						while ($row1=mysql_fetch_array($result1)){
-							echo dame_perfil($row1["id_perfil"])."/ ";
-							echo dame_grupo($row1["id_grupo"])."<br>";
-						}
+            echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=$nombre' class='tip'>&nbsp;<span>";
+            $usuario = get_db_row ("tusuario", "id_usuario", $nombre);
+			echo "<b>".$usuario["nombre_real"] . "</b><br>";
+			echo "<i>".$usuario["comentarios"] . "</i><br>";
+
+			if ($config["enteprise"] == 1){
+				echo "<font size=1px>";
+				$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
+				$result1=mysql_query($sql1);
+			
+				if (mysql_num_rows($result1)){
+					while ($row1=mysql_fetch_array($result1)){
+						echo dame_perfil($row1["id_perfil"])."/ ";
+						echo dame_grupo($row1["id_grupo"])."<br>";
 					}
-					else { 
-						echo __('This user doesn\'t have any assigned profile/group'); 
-					}
-					
-	            
 				}
-				echo "</font></span></a>";
-				if (strlen($nombre) > 12)
-					echo " <b>".substr($nombre,0,12)."..</b>";
-				else
-					echo " <b>".$nombre."</b>";
-				
-				
-                // Workunit report (detailed)
-			    echo "<td><center>";
-                echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$nombre'>";
-                echo "<img border=0 src='images/page_white_text.png'></A></center></td>";
+				else { 
+					echo __('This user doesn\'t have any assigned profile/group'); 
+				}
+			}
 
-                // Clock to calendar montly report for X user
-			    echo "<td  ><center>";
-			    echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$working_month&year=$working_year&id=$nombre'><img src='images/clock.png' border=0></a></center></td>";
-    
-                // Graph stats montly report for X user
-                echo "<td ><center>";
-                echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$nombre'><img src='images/chart_bar.png' border=0></a></center></td>";
-                // Total hours this month
-			    echo "<td  >";
-			    echo $row[0];
-                
-                // Total charged hours this month
-                echo "<td  >";
-                $tempsum = get_db_sql ("SELECT SUM(duration) FROM tworkunit WHERE have_cost = 1 AND id_user = '$nombre' AND timestamp > '$begin_month' AND timestamp <= '$end_month'");
-                if ($tempsum != "")
-                    echo $tempsum. " hr";
-                else
-                    echo "--";
+			echo "</font></span></a>";
+			if (strlen($nombre) > 12)
+				echo " <b>".substr($nombre,0,12)."..</b>";
+			else
+				echo " <b>".$nombre."</b>";
+			
+			
+            // Workunit report (detailed)
+		    echo "<td><center>";
+            echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$nombre'>";
+            echo "<img border=0 src='images/page_white_text.png'></A></center></td>";
 
-                // Average incident scoring
-                echo "<td>";
-                $tempsum = get_db_sql ("SELECT SUM(score) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND score > 0 ");
+            // Clock to calendar montly report for X user
+		    echo "<td  ><center>";
+		    echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$working_month&year=$working_year&id=$nombre'><img src='images/clock.png' border=0></a></center></td>";
+
+            // Graph stats montly report for X user
+            echo "<td ><center>";
+            echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$nombre'><img src='images/chart_bar.png' border=0></a></center></td>";
+            // Total hours this month
+		    echo "<td  >";
+		    echo $row[0];
+            
+            // Total charged hours this month
+            echo "<td  >";
+            $tempsum = get_db_sql ("SELECT SUM(duration) FROM tworkunit WHERE have_cost = 1 AND id_user = '$nombre' AND timestamp > '$begin_month' AND timestamp <= '$end_month'");
+            if ($tempsum != "")
+                echo $tempsum. " hr";
+            else
+                echo "--";
+
+            // Average incident scoring
+            echo "<td>";
+            $tempsum = get_db_sql ("SELECT SUM(score) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND score > 0 ");
 
 
-                if ($tempsum != "")
-                    echo format_numeric($tempsum). "/10";
-                else
-                    echo "--";
-            }
+            if ($tempsum != "")
+                echo format_numeric($tempsum). "/10";
+            else
+                echo "--";
+        }
 	}
+
 	echo "</table>";
 ?>

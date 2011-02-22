@@ -84,7 +84,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tconfig` WRITE;
 /*!40000 ALTER TABLE `tconfig` DISABLE KEYS */;
-INSERT INTO `tconfig` VALUES (1,'language_code','en'),(2,'block_size','25'),(3,'db_scheme_version','2.1-dev'),(4,'db_scheme_build','ID100219'),(5,'date_format','F j, Y, g:i a'),(6,'currency','eu'),(7,'sitename','Integria Demo'),(8,'hours_perday','8'),(46,'FOOTER_EMAIL','Please do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\r\n\r\nThanks for your time and have a nice day\r\n\r\n'),(45,'HEADER_EMAIL','Hello, \r\n\r\nThis is an automated message coming from Integria\r\n\r\n'),(47,'notification_period','86400'),(12,'limit_size','1000'),(48,'mail_from','integria@localhost'),(49,'smtp_port','0'),(50,'smtp_host','localhost'),(51,'smtp_user',''),(52,'smtp_pass',''),(53,'pop_host',''),(54,'pop_user',''),(55,'pop_pass',''),(35,'timezone','Europe/Madrid'),(36,'autowu_completion','0'),(37,'no_wu_completion',''),(38,'fontsize','10'),(39,'incident_reporter','0'),(40,'show_creator_incident','1'),(41,'show_owner_incident','1'),(42,'pwu_defaultime','4'),(43,'iwu_defaultime','0.25'),(44,'api_acl','127.0.0.1, *');
+INSERT INTO `tconfig` VALUES (1,'language_code','en'),(2,'block_size','25'),(3,'db_scheme_version','3.0RC2'),(4,'db_scheme_build','ID110222'),(5,'date_format','F j, Y, g:i a'),(6,'currency','eu'),(7,'sitename','Integria Demo'),(8,'hours_perday','8'),(46,'FOOTER_EMAIL','Please do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\r\n\r\nThanks for your time and have a nice day\r\n\r\n'),(45,'HEADER_EMAIL','Hello, \r\n\r\nThis is an automated message coming from Integria\r\n\r\n'),(47,'notification_period','86400'),(12,'limit_size','1000'),(48,'mail_from','integria@localhost'),(49,'smtp_port','0'),(50,'smtp_host','localhost'),(51,'smtp_user',''),(52,'smtp_pass',''),(53,'pop_host',''),(54,'pop_user',''),(55,'pop_pass',''),(35,'timezone','Europe/Madrid'),(36,'autowu_completion','0'),(37,'no_wu_completion',''),(38,'fontsize','10'),(39,'incident_reporter','0'),(40,'show_creator_incident','1'),(41,'show_owner_incident','1'),(42,'pwu_defaultime','4'),(43,'iwu_defaultime','0.25'),(44,'api_acl','127.0.0.1, *');
 /*!40000 ALTER TABLE `tconfig` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -556,5 +556,14 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+INSERT INTO `tprofile` VALUES (1,'Project Participant',1,1,0,0,0,0,1,1,0,1,0,0,0,0,1,0,0,1,0,0);
+INSERT INTO `tprofile` VALUES (2,'Project Manager',    1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0);
+INSERT INTO `tprofile` VALUES (3,'Incident Manager',   1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1);
+INSERT INTO `tprofile` VALUES (4,'Incident Operator',  1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,1,0,0);
+INSERT INTO `tprofile` VALUES (5,'Global Manager',     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+
+INSERT INTO `tusuario_perfil` VALUES (2,'admin',5,1,'admin');
+
 
 -- Dump completed on 2010-03-10 20:29:04

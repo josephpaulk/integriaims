@@ -14,7 +14,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-integria_version="3.0dev"
+integria_version="3.0RC2"
 
 for param in $@
 do

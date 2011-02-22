@@ -181,8 +181,7 @@ CREATE TABLE `tincidencia` (
   FOREIGN KEY (`id_creator`) REFERENCES tusuario(`id_usuario`)
       ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE  ON DELETE CASCADE;
-
+      ON UPDATE CASCADE  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `tincidencia` ADD FOREIGN KEY (`id_parent`) REFERENCES tincidencia(`id_incidencia`)
@@ -439,7 +438,7 @@ CREATE TABLE `tcost` (
   PRIMARY KEY  (`id`),
   KEY `tcost_idx_1` (`id_user`),
   FOREIGN KEY (`id_wu`) REFERENCES tworkunit(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+      ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Used to track notificacion (emails) for agenda,
@@ -646,9 +645,10 @@ CREATE TABLE `um_tupdate_settings` (
 
 CREATE TABLE `um_tupdate_package` (
   id int(11) unsigned NOT NULL auto_increment,
-  timestamp datetime NOT NULL,  description mediumtext NOT NULL default '', 
+  timestamp datetime NOT NULL,  description mediumtext NOT NULL default '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `um_tupdate` (
   id int(11) unsigned NOT NULL auto_increment,

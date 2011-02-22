@@ -1,3 +1,7 @@
+2011-02-22  Sancho Lerena <slerena@artica.es>
+
+	* integria_db.sql: Fixed a commna who breaks the SQL :(
+
 2011-01-23  Sancho Lerena <slerena@articae.s>
 
 	* include/functions.php: Blank spaces was in HTML encoding and
