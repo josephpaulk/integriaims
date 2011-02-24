@@ -1,3 +1,8 @@
+2011-02-24  Sancho Lerena <slerena@artica.es>
+
+	* operation/download/browse.php: Fixed bug in filemanager editing
+	and showing entire filename.
+
 2011-02-22  Sancho Lerena <slerena@artica.es>
 
 	* integria_db.sql: Fixed a commna who breaks the SQL :(

@@ -82,7 +82,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 
 
 	$sql_update ="UPDATE tdownload
-	SET name = '$name', location = '$location', description = '$description', id_category = $id_category WHERE id = $id";
+	SET name = '$name', location = 'attachment/downloads/$location', description = '$description', id_category = $id_category WHERE id = $id";
 	$result=mysql_query($sql_update);
 
 	if (! $result)
@@ -266,7 +266,7 @@ $offset, ". $config["block_size"];
 
 $color =0;
 if ($result=mysql_query($sql1)){
-	echo '<table width="90%" class="listing" cellspacing=4 cellpading=4>';
+	echo '<table width="95%" class="listing" cellspacing=4 cellpading=4>';
 
 	echo "<th>".__('Name')."</th>";
 	echo "<th>".__("Size")."</th>";
@@ -282,7 +282,7 @@ if ($result=mysql_query($sql1)){
 
 		// Name
 		echo "<td><b><a title='".$row["description"]."' href='operation/download/download.php?id=".$row["id"]."'>";
-		echo short_string($row["name"],54)."</a></b> ";
+		echo $row["name"]."</a></b> ";
 		if ($row["description"] != ""){
 			echo "<img src='images/zoom.png'>";
 		}
