@@ -1104,7 +1104,7 @@ function create_ical ( $date_from, $duration, $id_user, $title, $description ){
 
 
 
-function insert_event ($type, $id1 = 0, $id2 = 0, $id3 = 0){
+function insert_event ($type, $id1 = 0, $id2 = 0, $id3 = ''){
    	require("config.php");
 	$timestamp = date('Y-m-d H:i:s');
 

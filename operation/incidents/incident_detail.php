@@ -309,7 +309,8 @@ if ($id) {
 	// Workunit ADD
 	$insert_workunit = (bool) get_parameter ('insert_workunit');
 	if ($insert_workunit) {
-		$timestamp = get_parameter ("timestamp");
+//		$timestamp = (string) get_parameter ("timestamp");
+		$timestamp = print_mysql_timestamp();
 		$nota = get_parameter ("nota");
 		$timeused = (float) get_parameter ('duration');
 		$have_cost = (int) get_parameter ('have_cost');
@@ -323,6 +324,7 @@ if ($id) {
         } else {
             $sql = sprintf ('UPDATE tincidencia SET affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id);
         }
+
 		process_sql ($sql);
 
 		incident_tracking ($id, INCIDENT_WORKUNIT_ADDED);
@@ -763,9 +765,11 @@ $disabled_str = $disabled ? 'readonly="1"' : '';
 $table->data[5][0] = print_textarea ('description', 9, 80, $description, $disabled_str,
 		true, __('Description'));
 
-$table->data[6][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,
-		true, __('Resolution epilog'));
+// This is never shown in create form
 
+if (!$create_incident){
+	$table->data[6][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,	true, __('Resolution epilog'));
+}
 
 
 if ($has_permission){

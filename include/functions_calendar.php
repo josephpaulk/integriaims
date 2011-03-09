@@ -43,7 +43,8 @@ function print_mysql_timestamp ($unixtime = 0){
         if (!is_numeric ($unixtime)) {
                 $unixtime = strtotime ($unixtime);
         }
-	return date ("Y-m-d H:m:s", $unixtime);
+	return date ("Y-m-d H:i:s", $unixtime);
+
 }
 
 /**

@@ -36,7 +36,7 @@ $id_task = get_db_value ("id_task", "tincidencia", "id_incidencia", $id);
 echo "<h3><img src='images/award_star_silver_1.png'>&nbsp;&nbsp;";
 echo __('Add workunit')." &raquo; $title</h3>";
 
-$now = date ("Y-m-d H:i:s");
+$now =  print_mysql_timestamp();
 
 $table->width = '100%';
 $table->class = 'databox';
@@ -44,7 +44,7 @@ $table->colspan = array ();
 $table->colspan[2][0] = 3;
 $table->data = array ();
 
-$table->data[0][0] = print_input_text ("timestamp", $now, '', 18,  50, true,__('Date'));
+$table->data[0][0] = "<i>$now</i>";
 $table->data[0][1] = combo_roles (1, 'work_profile', __('Profile'), true);
 
 $table->data[1][0] = print_input_text ("duration", $config["iwu_defaultime"], '', 7,  10, true, __('Time used'));

@@ -1,3 +1,31 @@
+2011-03-09  Sancho Lerena <slerena@artica.es>
+
+	* include/integria_cron.php: Implemented offline mailer, by using
+	a temporal table in database, all sending mails functions store it
+	now in it, and cron send mails periodically. If errors found, it
+	increment and mark as invalid.
+
+	* include/functions_calendar.php: Fixed a DAMM typo which makes
+	all dates generated with a INVALID minute value (Incredible bug!).
+
+	* include/functions.php: Mail function now store emails in database.
+
+	* include/functions_db.php: insert_event() field3 is a blank space by
+	default now.
+
+	* operation/incidents/incident.php: Incidents are deleted prior to 
+	sending mails.
+
+	*  operation/incidents/incident_detail.php: Fixed problems with WU
+	datetimes.
+
+	* operation/incidents/incident_create_work.php: WU form doesnt allow
+	to change dates.
+
+	* integria_db.sql.
+	upgrade_to_3.0.sql: Added temp table for mail queue.
+
+
 2011-02-24  Sancho Lerena <slerena@artica.es>
 
 	* operation/download/browse.php: Fixed bug in filemanager editing

@@ -1,4 +1,5 @@
 <?php
+
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
@@ -17,6 +18,7 @@ include ("config.php");
 require_once ($config["homedir"].'/include/functions_calendar.php');
 require_once ($config["homedir"].'/include/functions_groups.php');
 require_once ($config["homedir"].'/include/functions_workunits.php');
+
 $config["id_user"] = 'System';
 $now = time ();
 $compare_timestamp = date ("Y-m-d H:i:s", $now - $config["notification_period"]);
@@ -313,6 +315,78 @@ function check_sla_max ($incident) {
 	insert_event ('SLA_MAX_RESPONSE_NOTIFY', $incident['id_incidencia']);
 }
 
+// This will send pending mail from database queue, using its defined MTA, and swiftmail functions
+
+function run_mail_queue () {
+
+	global $config;
+	include_once ($config["homedir"]."/include/functions.php");
+	require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
+
+   	$utimestamp = date("U");
+	// $current_date = date ("Y/m/d H:i:s");
+
+	// get pending mails 
+	$mails = get_db_all_rows_sql ("SELECT * FROM tpending_mail WHERE status = 0");
+
+	if ($mails)
+	foreach ($mails as $email){
+
+		try {
+			$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
+			$transport->setUsername($config["smtp_user"]);
+			$transport->setPassword($config["smtp_pass"]);
+			$mailer = Swift_Mailer::newInstance($transport);
+			$message = Swift_Message::newInstance($email["subject"]);
+			$message->setFrom($config["mail_from"]);
+			$message->setTo($email['recipient']);
+			$message->setBody($email['body'], 'text/plain', 'utf-8');
+
+			if ($email["attachment_list"] != ""){
+				$attachments = split ( ",",$email["attachment_list"]);
+				foreach ($attachments as $attachment)
+				        if (is_file($attachment))
+				                $message->attach(Swift_Attachment::fromPath($attachment));
+			}
+
+			// If SMTP port is not configured, abort mails directly!
+			if ($config["smtp_port"] == 0)
+				return;
+
+			$message->setContentType("text/plain");
+
+			if ($mailer->send($message) == 1)
+				process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
+
+
+		// SMTP error management!
+		} catch (Swift_TransportException $e) {
+			$retries = $dmail["attempts"] + 1;
+			if ($retries > 5) {
+				$status = 1;
+				insert_event ('MAIL_FAILURE', 0, 0, $dmail["recipient"]. " - ". $e);
+			}
+			else  {
+				$status = 0;
+			}
+			process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$dmail["id"]);
+
+		} catch (Swift_ConnectionException $e) {
+			$retries = $email["attempts"] + 1;
+			if ($retries > 5) {
+				$status = 1;
+				insert_event ('MAIL_FAILURE', 0, 0, $email["recipient"]. " - ". $e);
+			}
+			else  {
+				$status = 0;
+			}
+			process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$email["id"]);
+		}
+	}
+}
+
+// This will check POP3 pending mail
+
 function run_mail_check () {
 
 	global $config;
@@ -378,6 +452,10 @@ if (check_daily_task ())
 // Execute always (POP3 processing)
 
 run_mail_check();
+
+// Execute always (Send pending mails, SMTP)
+
+run_mail_queue();
 
 // Check SLA on incidents (max. opened time without fixing and min. response)
 
