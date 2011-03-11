@@ -19,6 +19,14 @@ require_once ($config["homedir"].'/include/functions_calendar.php');
 require_once ($config["homedir"].'/include/functions_groups.php');
 require_once ($config["homedir"].'/include/functions_workunits.php');
 
+// Activate errors. Should not be anyone, but if something happen, should be
+// shown on console.
+
+
+error_reporting(E_ALL & ~E_NOTICE);
+ini_set("display_errors", 1);
+
+
 $config["id_user"] = 'System';
 $now = time ();
 $compare_timestamp = date ("Y-m-d H:i:s", $now - $config["notification_period"]);
@@ -339,7 +347,7 @@ function run_mail_queue () {
 			$mailer = Swift_Mailer::newInstance($transport);
 			$message = Swift_Message::newInstance($email["subject"]);
 			$message->setFrom($config["mail_from"]);
-			$message->setTo($email['recipient']);
+			$message->setTo(ascii_output($email['recipient']));
 			$message->setBody($email['body'], 'text/plain', 'utf-8');
 
 			if ($email["attachment_list"] != ""){

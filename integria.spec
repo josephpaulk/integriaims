@@ -34,9 +34,7 @@ Requires:           graphviz, xorg-x11-fonts-core
 Provides:           %{name}-%{version}
 
 %description
-Integria IMS is a project manager and a full management system to manage tickets, user activity reports 
-(time tracking). Integria is multiuser, and with an integrated email reporting and notification system. Includes 
-company contracts management, SLA and a full inventory system integrated with the incident / ticketing system.
+Integria IMS is a project manager and a full management system to manage tickets, user activity reports (time tracking). Integria is multiuser, and with an integrated email reporting and notification system. Includes company contracts management, SLA and a full inventory system integrated with the incident / ticketing system.
 
 %prep
 rm -rf $RPM_BUILD_ROOT

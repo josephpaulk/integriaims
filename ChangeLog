@@ -1,3 +1,8 @@
+2011-03-10  Sancho Lerena <slerena@artica.es>
+
+	* include/integria_cron.php: Fixed small problem with SMTP destination
+	address, when have blank spaces.
+
 2011-03-09  Sancho Lerena <slerena@artica.es>
 
 	* include/integria_cron.php: Implemented offline mailer, by using
