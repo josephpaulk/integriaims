@@ -69,12 +69,14 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 	
 	// Edit user
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	if (isset ($_POST["edicion"])){		
-		// We do it
+	if ((isset ($_POST["uptbutton"])) AND ($_POST["uptbutton"] == "Update")) {
+      	// We do it
+
 		if (isset ($_POST["pass1"])){
-			$nombre = get_parameter ("nombre");
+
 			$nombre_real = get_parameter ("nombre_real");
-			$nombre_viejo = get_parameter ("id_usuario_antiguo");
+			$nombre_viejo = get_parameter ("id_usuario_mio");
+            $nombre = $nombre_viejo ;
 			$password = get_parameter ("pass1");
 			$password2 = get_parameter ("pass2");
 			$lang = get_parameter ("lang");
@@ -85,19 +87,20 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 			else {
 				if (isset($_POST["nivel"]))
 				$nivel = get_parameter ("nivel");
-				$direccion = get_parameter ("direccion");
+				$direccion = rtrim (get_parameter ("direccion"));
 				$telefono = get_parameter ("telefono");
 				$comentarios = get_parameter ("comentarios");
 				$avatar = get_parameter ("avatar");
 				$avatar = substr($avatar, 0, strlen($avatar)-4);
 
-				if (dame_password($nombre_viejo)!=$password){
-					$password=md5($password);
-					$sql = "UPDATE tusuario SET `lang` = '$lang', nombre_real ='".$nombre_real."', id_usuario ='".$nombre."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar' WHERE id_usuario = '$nombre_viejo'";
+				if (dame_password ($nombre_viejo) != $password){
+					$password = md5($password);
+					$sql = "UPDATE tusuario SET `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar' WHERE id_usuario = '$nombre_viejo'";
 				}
 				else 	
-					$sql = "UPDATE tusuario SET lang = '$lang', nombre_real ='".$nombre_real."', id_usuario ='".$nombre."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar' WHERE id_usuario = '".$nombre_viejo."'";
-				$resq2=mysql_query($sql);
+					$sql = "UPDATE tusuario SET lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar' WHERE id_usuario = '".$nombre_viejo."'";
+
+				$resq2 = mysql_query($sql);
 	
 				// Add group / to profile
 				// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -142,7 +145,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 		if ($password <> $password2){
 			echo "<h3 class='error'>".__('Passwords don\'t match. Please repeat again')."</h3>";
 		}
-		$direccion = get_parameter ("direccion");
+		$direccion = rtrim(get_parameter ("direccion"));
 		$telefono = get_parameter ("telefono");
 		$comentarios = get_parameter ("comentarios");
 		if (isset($_POST["nivel"]))
@@ -181,18 +184,27 @@ if (isset($_GET["alta"]))
 else
 	// Update URL
 	echo '<form name="user_mod" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio='.$id_usuario_mio.'">';
-?>
-<tr>
-<td class="datos"><?php echo __('User ID') ?>
-<td class="datos"><input type="text" size=15 name="nombre" value="<?php echo $id_usuario_mio ?>">
-<i>
-<?php echo __("User cannot have Blank spaces"); ?>
-</i>
-<?php
+
+echo '<tr>';
+echo '<td class="datos">'.__('User ID');
+echo '<td class="datos">';
+
+if (isset($_GET["alta"])){
+    echo '<input type="text" size=15 name="nombre" value="'.$id_usuario_mio.'">';
+    echo '<i>';
+    echo __("User cannot have Blank spaces");
+    echo '</i>';
+} else {
+    echo '<i>';
+    echo $id_usuario_mio;
+    echo "</i>";
+}
+
 if (isset($avatar)){
 	echo "<td class='datos' rowspan=6>";
 	echo "<img src='images/avatars/".$avatar.".png' id='avatar_preview'>";
 }
+
 ?>
 <tr><td class="datos2"><?php echo __('Real name') ?>
 <td class="datos2"><input type="text" size=25 name="nombre_real" value="<?php echo $nombre_real ?>">
@@ -250,7 +262,6 @@ echo "<td>";
 print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', '', false, false, true, false);
 
 ?>
-
 
 <tr><td class="datos" colspan="3"><?php echo __('Comments') ?>
 <tr><td class="datos2" colspan="3"><textarea name="comentarios" cols="75" rows="3">

@@ -1,3 +1,28 @@
+2011-03-15  Sancho Lerena <slerena@artica.es>
+
+	* integria_db.sql: Removed a reference on database table tevent
+	(broken when uses non-existant users like SYSTEM.
+
+	* configurar_usuarios.php: Fixed problems editing data.
+
+	* integria_cron.php: Fixed run_mail_queue() problems on error
+	exception management.
+
+	* functions_incidents.php: Added get_incident_stats() function
+	to provide API a quick way to get filtered stat data. In the future
+	this function should provide info for other parts of code, like
+	the reporting.
+
+	* functions.php: integria_sendmail() was sending mails with spaces
+	in the RCPT field :-S... now is fixed by using a prober trim with
+	safe output function (was not working due the encoding).
+
+	* functions_api.php: Added api_get_stats().
+
+	* api.php: Added get_stats() method, and fixed the way on how the
+	include is loaded. Always uses absolute path load to avoid security
+	problems!.
+
 2011-03-15  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_html.php

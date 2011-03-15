@@ -519,4 +519,125 @@ function api_get_users ($return_type, $user){
 
 	return $ret;
 }
+
+function api_get_stats ($return_type, $param){	
+    $filter = array ();
+    $param = split (",", $param);
+
+    if (isset($param[0]))
+        $filter['metric'] = $param[0];
+    else 
+        return; // No valid metric passed as parameter
+
+    if (isset($param[1]))
+        $filter['string'] = $param[1];
+    else 
+        $filter["string"]= "";
+
+    if (isset($param[2]))
+        $filter['status'] = $param[2];
+    else 
+        $filter["status"] = "1,2,3,4,5,6,7";
+
+    // If we need closed incidents, status is fixed to 5 and 6 status
+    if ($filter["metric"] == "closed"){
+        $filter["status"] = "6,7";
+    }
+
+    if ($filter["metric"] == "avg_life"){
+        $filter["status"] = "1,2,3,4,5,6,7";
+    }
+
+    if ($filter["metric"] == "avg_scoring"){
+        $filter["status"] = "1,2,3,4,5,6,7";
+    }
+
+    if (isset($param[3]))
+        $filter['id_user'] = $param[3];
+    else 
+        $filter["id_user"]= "";
+
+    if (isset($param[4]))
+        $filter['id_group'] = $param[4];
+    else 
+        $filter["id_group"]= 1;
+
+    if (isset($param[5]))
+        $filter['id_company'] = $param[5];
+    else 
+        $filter["id_company"]= 0;
+
+
+    if (isset($param[6]))
+        $filter['id_product'] = $param[6];
+    else 
+        $filter["id_product"]= 0;
+
+    if (isset($param[7]))
+        $filter['id_inventory'] = $param[7];
+    else 
+        $filter["id_inventory"]= 0;
+
+    // No values defined for other filters available but not used:
+
+    $filter['priority'] = (int) get_parameter ('search_priority', -1);
+    $filter['serial_number'] = (string) get_parameter ('search_serial_number');
+    $filter['id_building'] = (int) get_parameter ('search_id_building');
+    $filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
+    $filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
+    $filter['first_date'] = (string) get_parameter ('search_first_date');
+    $filter['last_date'] = (string) get_parameter ('search_last_date');
+
+    $incidents = filter_incidents ($filter);
+    $stats = get_incidents_stats ($incidents);
+
+/*
+    $data ["total_incidents"] = $total;
+    $data ["opened"] = $opened;
+    $data ["closed"] = $total - $opened;
+    $data ["avg_life"] = $mean_lifetime;
+    $data ["avg_worktime"] = $mean_work;
+    $data ["sla_compliance"] = $sla_compliance;
+    $data ["avg_scoring"] = $scoring_avg;
+
+*/
+	$ret = '';
+	
+	if($return_type == 'xml') {
+		$ret = "<xml>\n";
+        $ret .= "<data>";
+	}
+
+    switch ($filter['metric']){
+    case "total_incidents": 
+        $ret .= $stats["total_incidents"];
+        break;
+    case "opened": 
+        $ret .= $stats["opened"];
+        break;
+    case "closed": 
+        $ret .= $stats["closed"];
+        break;
+    case "avg_life": 
+        $ret .= $stats["avg_life"];
+        break;
+    case "sla_compliance": 
+        $ret .= $stats["sla_compliance"];
+        break;
+    case "avg_scoring": 
+        $ret .= $stats["avg_scoring"];
+        break;
+    case "avg_worktime": 
+        $ret .= $stats["avg_worktime"];
+        break;
+    }	
+	
+	if($return_type == 'xml') {
+        $ret .= "</data>\n";
+		$ret .= "</xml>\n";
+	}
+
+	return $ret;
+}
+
 ?>

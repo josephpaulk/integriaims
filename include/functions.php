@@ -561,7 +561,7 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	if ($to == '')
 		return false;
 
-	$to = trim($to);
+	$to = trim(safe_output ($to));
 	$config["mail_from"] = trim($config["mail_from"]);
 
 	$current_date = date ("Y/m/d H:i:s");

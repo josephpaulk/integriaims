@@ -19,7 +19,8 @@ if (!file_exists("config.php")){
 }
 
 include_once ("config.php");
-require_once ("functions_api.php");
+
+require_once ($config["homedir"].'/include/functions_api.php');
 
 //Get the parameters and parse if necesary.
 $ip_origin = $_SERVER['REMOTE_ADDR'];
@@ -52,7 +53,6 @@ if(!$correct_login) {
 switch ($op){
 	case "create_incident":
 	{
-
 		$params = explode($token, $params);
 		debugPrint($params);
 		api_create_incident ($return_type, $id, $params);
@@ -121,6 +121,12 @@ switch ($op){
 		echo api_get_incident_tracking ($return_type, $user, $params);
 		break;
 	}
+	case "get_stats":
+	{
+		echo api_get_stats ($return_type, $params);
+		break;
+	}
+
 	default: 
 	{
 	}

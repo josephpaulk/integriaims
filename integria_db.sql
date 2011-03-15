@@ -233,8 +233,6 @@ CREATE TABLE `tincident_track` (
   `description` text NOT NULL default '',
   PRIMARY KEY  (`id_it`),
   KEY `tit_idx_1` (`id_incident`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
       ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

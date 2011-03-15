@@ -113,11 +113,14 @@ function filter_incidents ($filters) {
 			LIMIT %d',
 			$filters['status'], $sql_clause, $filters['string'], $filters['string'], $filters['string'],$filters['string'],
 			$config['limit_size']);
+
+    // DEBUG
+    // echo $sql ." <br>";
 	
 	$incidents = get_db_all_rows_sql ($sql);
 	if ($incidents === false)
 		return false;
-	
+
 	$result = array ();
 	foreach ($incidents as $incident) {
 		if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR'))
@@ -204,6 +207,85 @@ function filter_incidents ($filters) {
 	}
 	
 	return $result;
+}
+
+/**
+ * Return an array with statistics of a given list of incidents.
+ *
+ * @param array List of incidents to get stats.
+ #
+ *
+
+ */
+function get_incidents_stats ($incidents) {
+
+    global $config;
+
+	$total = sizeof ($incidents);
+	$opened = 0;
+	$total_hours = 0;
+	$total_lifetime = 0;
+	$max_lifetime = 0;
+	$oldest_incident = false;
+    $scoring_sum = 0;
+    $scoring_valid = 0;
+
+	if ($incidents === false)
+		$incidents = array ();
+	foreach ($incidents as $incident) {
+		if ($incident['estado'] != 6 && $incident['estado'] != 7) {
+			$opened++;
+		} elseif ($incident['actualizacion'] != '0000-00-00 00:00:00') {
+			$lifetime = get_db_value ('UNIX_TIMESTAMP(actualizacion)  - UNIX_TIMESTAMP(inicio)',
+				'tincidencia', 'id_incidencia', $incident['id_incidencia']);
+			if ($lifetime > $max_lifetime) {
+				$oldest_incident = $incident;
+				$max_lifetime = $lifetime;
+			}
+			$total_lifetime += $lifetime;
+		}
+
+        // Scoring avg.
+        if ($incident["score"] > 0){
+            $scoring_valid++;
+            $scoring_sum = $scoring_sum + $incident["score"];
+        }          
+		$hours = get_incident_workunit_hours  ($incident['id_incidencia']);
+		$total_hours += $hours;
+	}
+	$closed = $total - $opened;
+	$opened_pct = 0;
+	$mean_work = 0;
+	$mean_lifetime = 0;
+	if ($total != 0) {
+		$opened_pct = format_numeric ($opened / $total * 100);
+		$mean_work = format_numeric ($total_hours / $total, 2);
+	}
+	
+	if ($closed != 0) {
+		$mean_lifetime = (int) ($total_lifetime / $closed) / 60;
+	}
+	
+    // Get avg. scoring
+    if ($scoring_valid > 0){
+        $scoring_avg = $scoring_sum / $scoring_valid;
+    } else 
+        $scoring_avg = "N/A";
+
+	// Get incident SLA compliance
+	$sla_compliance = get_sla_compliance ();
+
+    $data = array();
+
+    $data ["total_incidents"] = $total;
+    $data ["opened"] = $opened;
+    $data ["closed"] = $total - $opened;
+    $data ["avg_life"] = $mean_lifetime;
+    $data ["avg_worktime"] = $mean_work;
+    $data ["sla_compliance"] = $sla_compliance;
+    $data ["avg_scoring"] = $scoring_avg;
+
+    return $data;
 }
 
 /**

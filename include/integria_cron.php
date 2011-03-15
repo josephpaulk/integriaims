@@ -366,20 +366,8 @@ function run_mail_queue () {
 			if ($mailer->send($message) == 1)
 				process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
 
-
 		// SMTP error management!
-		} catch (Swift_TransportException $e) {
-			$retries = $dmail["attempts"] + 1;
-			if ($retries > 5) {
-				$status = 1;
-				insert_event ('MAIL_FAILURE', 0, 0, $dmail["recipient"]. " - ". $e);
-			}
-			else  {
-				$status = 0;
-			}
-			process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$dmail["id"]);
-
-		} catch (Swift_ConnectionException $e) {
+		} catch (Exception $e) {
 			$retries = $email["attempts"] + 1;
 			if ($retries > 5) {
 				$status = 1;
@@ -389,6 +377,7 @@ function run_mail_queue () {
 				$status = 0;
 			}
 			process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$email["id"]);
+
 		}
 	}
 }
