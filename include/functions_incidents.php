@@ -60,6 +60,7 @@ function filter_incidents ($filters) {
 	$filters['sla_fired'] = isset ($filters['sla_fired']) ? $filters['sla_fired'] : false;
 	$filters['id_incident_type'] = isset ($filters['id_incident_type']) ? $filters['id_incident_type'] : 0;
 	$filters['id_user'] = isset ($filters['id_user']) ? $filters['id_user'] : '';
+	$filters['id_user_or_creator'] = isset ($filters['id_user_or_creator']) ? $filters['id_user_or_creator'] : '';
 	$filters['first_date'] = isset ($filters['first_date']) ? $filters['first_date'] : '';
 	$filters['last_date'] = isset ($filters['last_date']) ? $filters['last_date'] : '';
 	
@@ -79,6 +80,8 @@ function filter_incidents ($filters) {
 		$sql_clause .= sprintf (' AND id_grupo = %d', $filters['id_group']);
 	if (! empty ($filters['id_user']))
 		$sql_clause .= sprintf (' AND id_usuario = "%s"', $filters['id_user']);
+	if (! empty ($filters['id_user_or_creator']))
+		$sql_clause .= sprintf (' AND (id_usuario = "%s" OR id_creator = "%s")', $filters['id_user_or_creator'], $filters['id_user_or_creator']);
 	if (! empty ($filters['id_incident_type']))
 		$sql_clause .= sprintf (' AND id_incident_type = %d', $filters['id_incident_type']);
 	if (! empty ($filters['first_date'])) {
@@ -466,6 +469,7 @@ function get_incident_workunit_hours ($id_incident) {
                         WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
                         AND tworkunit_incident.id_workunit = tworkunit.id
                         AND tincidencia.id_incidencia = %d', $id_incident);
+
         return (float) get_db_sql ($sql);
 }
 

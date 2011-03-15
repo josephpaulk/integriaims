@@ -1,3 +1,13 @@
+2011-03-15  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_html.php
+	include/functions_api.php
+	include/functions_incidents.php
+	include/api.php
+	include/functions_db.php
+	integria_dbdata.sql: Added several functions to the 
+	api. Api is inestable because is in developing
+
 2011-03-10  Sancho Lerena <slerena@artica.es>
 
 	* include/integria_cron.php: Fixed small problem with SMTP destination

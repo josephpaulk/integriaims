@@ -20,6 +20,27 @@
 global $config;
 
 /**
+ * Prints the print_r with < pre > tags
+ */
+function debugPrint ($var, $file = '') {
+	if ($file === true)
+		$file = '/tmp/logDebug';
+	if (strlen($file) > 0) {
+		$f = fopen($file, "a");
+		ob_start();
+		echo date("Y/m/d H:i:s") . "\n";
+		print_r($var);
+		echo "\n\n";
+		$output = ob_get_clean();
+		fprintf($f,"%s",$output);
+		fclose($f);
+	}
+	else {
+		echo "<pre>";print_r($var);echo "</pre>";
+	}
+}
+
+/**
  * Prints an array of fields in a popup menu of a form.
  *
  * Based on choose_from_menu() from Moodle

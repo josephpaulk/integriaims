@@ -1609,6 +1609,10 @@ function get_incident_files ($id_incident) {
 	return get_db_all_rows_field_filter ('tattachment', 'id_incidencia', $id_incident);
 }
 
+function get_incident_tracking ($id_incident) {
+	return get_db_all_rows_field_filter ('tincident_track', 'id_incident', $id_incident);
+}
+
 function get_incident_users ($id_incident) {
 	$incident = get_incident ($id_incident);
 	$users = array ();
