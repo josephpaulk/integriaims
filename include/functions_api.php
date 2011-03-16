@@ -43,7 +43,15 @@ function api_create_incident ($return_type, $user, $params){
 	global $config;
 
 	// $id is the user who create the incident
-	
+
+    // Check we have proper parameters
+    if (!isset($params[3]))
+        return;
+
+	// If no user, return
+    if ($user == "")
+        return;
+
 	$group = $params[1];
 
 	if (! give_acl ($user, $group, "IW")){
@@ -591,16 +599,6 @@ function api_get_stats ($return_type, $param){
     $incidents = filter_incidents ($filter);
     $stats = get_incidents_stats ($incidents);
 
-/*
-    $data ["total_incidents"] = $total;
-    $data ["opened"] = $opened;
-    $data ["closed"] = $total - $opened;
-    $data ["avg_life"] = $mean_lifetime;
-    $data ["avg_worktime"] = $mean_work;
-    $data ["sla_compliance"] = $sla_compliance;
-    $data ["avg_scoring"] = $scoring_avg;
-
-*/
 	$ret = '';
 	
 	if($return_type == 'xml') {

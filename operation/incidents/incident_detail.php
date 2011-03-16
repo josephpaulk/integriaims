@@ -599,7 +599,7 @@ if ($has_manage_permission){
 	$table->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
 } else {
 	$table->data[0][2] = print_input_hidden ('email_notify', 1, true);
-	$table->data[0][1] = print_input_hidden ('sla_disabled', 1, true);
+	$table->data[0][1] = print_input_hidden ('sla_disabled', 0, true);
 
 	$table->data[1][0] = print_label (__('Status'), '','',true, render_status($estado));
 	$table->data[1][0] .= print_input_hidden ('incident_status', $estado, true);
