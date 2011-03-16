@@ -1655,7 +1655,6 @@ function check_incident_sla_min_response ($id_incident) {
 	/* Check wheter it was updated before, so there's no need to check SLA */
 	$update = strtotime ($incident['actualizacion']);
 
-
     /* Clean status of fired SLA */
 	if ($update > $start) {
 		if ($incident['affected_sla_id']) {
@@ -1676,8 +1675,15 @@ function check_incident_sla_min_response ($id_incident) {
         // Incident owner is the last workunit author ?, then SKIP
     	$last_wu = get_incident_lastworkunit ($id_incident);
 
-    	if ($last_wu["id_user"] == $incident["id_usuario"]){
-            continue;
+	    if ($last_wu["id_user"] != $incident["id_creator"]){
+                if ($incident['affected_sla_id']) {
+                        $sql = sprintf ('UPDATE tincidencia
+                               SET affected_sla_id = 0
+                               WHERE id_incidencia = %d',
+                               $id_incident);
+                                process_sql ($sql);
+                }
+                return false;
         }
 
         if ($last_wu["timestamp"] != ""){
@@ -1708,15 +1714,16 @@ function check_incident_sla_min_response ($id_incident) {
             }
         }
 
+        // Seems that we need to fire the SLA :(
 
-		$sql = sprintf ('UPDATE tincidencia
-			SET affected_sla_id = %d
-			WHERE id_incidencia = %d',
-			$sla['id'], $id_incident);
-		process_sql ($sql);
-		
-		/* SLA has been fired */
-		return $sla['id'];
+	    $sql = sprintf ('UPDATE tincidencia
+		    SET affected_sla_id = %d
+		    WHERE id_incidencia = %d',
+		    $sla['id'], $id_incident);
+	    process_sql ($sql);
+	
+	    /* SLA has been fired */
+	    return $sla['id'];
 	}
 
     // No SLA fired.
@@ -1740,7 +1747,9 @@ function check_incident_sla_max_response ($id_incident) {
 
 	// Get the writer of the last WU incident
 	$last_wu = get_incident_lastworkunit ($id_incident);
-	if ($last_wu["id_user"] == $incident["id_creator"]){
+
+	if ($last_wu["id_user"] != $incident["id_creator"]){
+
 		if ($incident['affected_sla_id']) {
 			$sql = sprintf ('UPDATE tincidencia
                                SET affected_sla_id = 0
@@ -1751,7 +1760,6 @@ function check_incident_sla_max_response ($id_incident) {
 		return false;
 	}
 	
-
 	$slas = get_incident_slas ($id_incident, false);
 	$start = strtotime ($incident['inicio']);
 	$now = time ();
