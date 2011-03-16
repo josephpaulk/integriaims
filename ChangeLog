@@ -1,5 +1,7 @@
 2011-03-16  Sancho Lerena <slerena@artica.es>
 
+	* include/functions_db.php: Another bug solved in check_incident_sla_min_response.
+
 	* api.php,
 	functions_api.php: get_stats() need user to run the filter.
 

@@ -1680,6 +1680,13 @@ function check_incident_sla_min_response ($id_incident) {
             continue;
         }
 
+        if ($last_wu["timestamp"] != ""){
+            $last_wu_time = strtotime ($last_wu['timestamp']);
+        
+    		if ($now < ($last_wu_time + $sla['min_response'] * 3600))
+    			 continue;
+        }
+
         // Datetime/Time check when exists (version compatibility code), this
         // was added as a 3.0 post-feature :-)
 
