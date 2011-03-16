@@ -15,6 +15,8 @@
 // GNU General Public License for more details.
 
 include ("config.php");
+error_reporting(E_ALL & ~E_NOTICE);
+ini_set("display_errors", 1);
 require_once ($config["homedir"].'/include/functions_calendar.php');
 require_once ($config["homedir"].'/include/functions_groups.php');
 require_once ($config["homedir"].'/include/functions_workunits.php');
