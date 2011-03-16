@@ -464,12 +464,15 @@ function update_incident_inventories ($id_incident, $inventories) {
 	$sql = sprintf ('DELETE FROM tincident_inventory
 		WHERE id_incident = %d %s',
 		$id_incident, $where_clause);
+		
 	process_sql ($sql);
+	
 	foreach ($inventories as $id_inventory) {
 		$sql = sprintf ('INSERT INTO tincident_inventory
 			VALUES (%d, %d)',
 			$id_incident, $id_inventory);
 		$tmp = process_sql ($sql);
+
 		if ($tmp !== false)
 			incident_tracking ($id_inventory, INCIDENT_INVENTORY_ADDED,
 				$id_inventory);

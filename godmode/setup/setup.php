@@ -43,7 +43,8 @@ if ($update) {
 	$config["pwu_defaultime"] = get_parameter ("pwu_defaultime", 4);
 	$config["iwu_defaultime"] = get_parameter ("iwu_defaultime", 0.25);
 	$config["timezone"] = get_parameter ("timezone", "Europe/Madrid");
-	$config["api_acl"] =get_parameter ("api_acl", "*");
+	$config["api_acl"] = get_parameter ("api_acl", "*");
+	$config["api_password"] = get_parameter ("api_password", "");
 	$config["auto_incident_close"] = get_parameter ("auto_incident_close", "72");
 	$config["email_on_incident_update"] = get_parameter ("email_on_incident_update", 0);
 	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
@@ -84,6 +85,7 @@ if ($update) {
 	update_config_token ("pwu_defaultime", $config["pwu_defaultime"]);
 	update_config_token ("iwu_defaultime", $config["iwu_defaultime"]);
 	update_config_token ("api_acl", $config["api_acl"]);
+	update_config_token ("api_password", $config["api_password"]);
     update_config_token ("auto_incident_close", $config["auto_incident_close"]);
     update_config_token ("site_logo", $config["site_logo"]);
     update_config_token ("header_logo", $config["header_logo"]);
@@ -154,8 +156,10 @@ $table->data[10][1] .= integria_help ("auto_incident_close", true);
 $table->data[11][0] = print_input_text ("api_acl", $config["api_acl"], '',
 	30, 255, true, __('List of IP with access to API'));
 
-
-$table->data[11][1] = print_select ($incident_reporter_options, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, true, "Send email on every incident update");
+$table->data[11][1] = print_input_text ("api_password", $config["api_password"], '',
+	30, 255, true, __('API password'));
+	
+$table->data[12][0] = print_select ($incident_reporter_options, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, true, "Send email on every incident update");
 
 
 function get_image_files () {
@@ -171,13 +175,13 @@ function get_image_files () {
 }
 
 $imagelist = get_image_files ();
-$table->data[12][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', '', '',  true, 0, true, "Site logo") ;
+$table->data[12][1] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', '', '',  true, 0, true, "Site logo") ;
 
-$table->data[12][1] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', '', '',  true, 0, true, "Header logo") ;
+$table->data[13][0] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', '', '',  true, 0, true, "Header logo") ;
 
 $error_log_options[0] = "Disabled";
 $error_log_options[1] = "Enabled";
-$table->data[13][0] = print_select ($error_log_options, "error_log", $config["error_log"], '','','',true,0,true, "Error log");
+$table->data[13][1] = print_select ($error_log_options, "error_log", $config["error_log"], '','','',true,0,true, "Error log");
 
 echo "<form name='setup' method='post'>";
 

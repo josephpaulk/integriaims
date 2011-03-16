@@ -36,7 +36,7 @@ $api_password = get_db_value_filter('value', 'tconfig', array('token' => 'api_pa
 $correct_login = false;
 
 if (!empty($api_password)) {
-	if ($password === $api_password) {
+	if ($pass === $api_password) {
 		$correct_login = true;
 	}
 }
@@ -54,8 +54,7 @@ switch ($op){
 	case "create_incident":
 	{
 		$params = explode($token, $params);
-		debugPrint($params);
-		api_create_incident ($return_type, $id, $params);
+		api_create_incident ($return_type, $user, $params);
 		break;
 	}
 	case "get_incidents":
@@ -64,11 +63,10 @@ switch ($op){
 		echo api_get_incidents ($return_type, $user, $params);
 		break;
 	}
-	case "update_incident_details":
+	case "update_incident":
 	{
 		$params = explode($token, $params);
-		$id_incident = $params[0];
-		echo api_update_incident ($return_type, $user, $id_incident, $params);
+		echo api_update_incident ($return_type, $user, $params);
 		break;
 	}
 	case "get_incident_details":
@@ -79,6 +77,12 @@ switch ($op){
 	case "get_incident_workunits":
 	{
 		echo api_get_incident_workunits ($return_type, $user, $params);
+		break;
+	}
+	case "create_incident_workunit":
+	{
+		$params = explode($token, $params);
+		api_create_incident_workunit ($return_type, $user, $params);
 		break;
 	}
 	case "get_incident_files":
@@ -126,7 +130,22 @@ switch ($op){
 		echo api_get_stats ($return_type, $params, $token, $user);
 		break;
 	}
-
+	case "get_inventories":
+	{
+		echo api_get_inventories ($return_type, $user, $params);
+		break;
+	}
+	case "create_workunit":
+	{
+		$params = explode($token, $params);
+		echo api_create_incident_workunit ($return_type, $user, $params);
+		break;
+	}
+	case "delete_incident":
+	{
+		echo api_delete_incident ($return_type, $user, $params);
+		break;
+	}
 	default: 
 	{
 	}

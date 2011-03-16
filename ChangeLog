@@ -1,3 +1,12 @@
+2011-03-16  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_api.php
+	include/functions_incidents.php
+	include/api.php
+	godmode/setup/setup.php: Added some functions to API 
+	like delete incident, create workunit... 
+	Fixed update incident in the API
+
 2011-03-16  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_db.php: Another bug solved in check_incident_sla_min_response.

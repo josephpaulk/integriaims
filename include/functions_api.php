@@ -41,6 +41,8 @@ function ip_acl_check ($ip) {
 
 function api_create_incident ($return_type, $user, $params){
 	global $config;
+	
+	$config['id_user'] = $user;
 
 	// $id is the user who create the incident
 
@@ -70,10 +72,13 @@ function api_create_incident ($return_type, $user, $params){
 	$id_creator = $user;
 	$status = 1; // new
 	$resolution = 9; // In process / Pending
+	$id_inventory = $params[4];
 
 	$email_notify = get_db_sql ("select forced_email from tgrupo WHERE id_grupo = $group");
 	$owner = get_db_sql ("select id_user_default from tgrupo WHERE id_grupo = $group");
-	$id_inventory = get_db_sql ("select id_inventory_default from tgrupo WHERE id_grupo = $group");
+	if($id_inventory == 0) {
+		$id_inventory = get_db_sql ("select id_inventory_default from tgrupo WHERE id_grupo = $group");
+	}
 	$timestamp = print_mysql_timestamp();
 
 	$sql = sprintf ('INSERT INTO tincidencia
@@ -94,8 +99,8 @@ function api_create_incident ($return_type, $user, $params){
 
 		/* Update inventory objects in incident */
 		update_incident_inventories ($id, $inventories);
-
-		echo "OK";
+		
+		$ret = 0;
 
 		audit_db ($id_creator, $_SERVER['REMOTE_ADDR'],
 			"Incident created (From API)",
@@ -109,12 +114,13 @@ function api_create_incident ($return_type, $user, $params){
 		}
 
 	} else {
-		echo "ERROR: Cannot create the incident";
+		$ret = -1;
 	}
 	
-	exit;
-
+	return $ret;
 }
+
+
 
 function api_get_incidents ($return_type, $user, $params){
 	$filter = array();
@@ -139,19 +145,16 @@ function api_get_incidents ($return_type, $user, $params){
 	if($return_type == 'xml') {
 		$ret = "<xml>\n";
 	}
+	
+	$result = clean_numerics($result);
+
 
 	foreach($result as $index => $item) {
 		$item['workunits_hours'] = get_incident_workunit_hours ($item['id_incidencia']);
 		$item['workunits_count'] = get_incident_count_workunits ($item['id_incidencia']);
 		switch($return_type) {
 			case "xml":
-				$ret .= "<incident>\n";
-				foreach($item as $key => $value) {
-					if(!is_numeric($key)) {
-						$ret .= "<".$key.">".$value."</".$key.">\n";
-					}
-				}
-				$ret .= "</incident>\n";
+				$ret .= xml_node($item, 'incident', false);
 				break;
 			case "csv":
 				$ret .= array_to_csv($item);
@@ -164,6 +167,52 @@ function api_get_incidents ($return_type, $user, $params){
 	}
 
 	return $ret;
+}
+
+function xml_node($node, $node_name = "data", $xml_header = true) {
+	$ret = "";
+
+	if($xml_header) {
+		$ret .= "<xml>\n";
+	}
+	
+	if($node_name !== false) {
+		$ret .= "<".$node_name.">\n";
+	}
+	if(is_array($node)) {
+		foreach($node as $key => $value) {
+			$ret .= "<".$key.">".$value."</".$key.">\n";
+		}
+	}
+	else {
+		$ret .= $node;
+	}
+	
+	if($node_name !== false) {
+		$ret .= "</".$node_name.">\n";
+	}
+	
+	if($xml_header) {
+		$ret .= "</xml>\n";
+	}
+	
+	return $ret;
+}
+
+function clean_numerics($array) {
+	$array_clean = array();
+	
+	foreach($array as $index => $item) {
+		foreach($item as $key => $value) {
+			if(is_numeric($key)) {
+				unset($item[$key]);
+			}
+		}
+		
+		$array_clean[$index] = $item;
+	}
+
+return $array_clean;
 }
 
 function array_to_csv($array) {
@@ -189,24 +238,19 @@ function api_get_incident_details ($return_type, $user, $id_incident){
 	$filter['id_group'] = 1;
 	
 	$result = get_incident ($id_incident);
-	
+		
 	if($result === false) {
 		return '';
 	}
+	
+	$result = clean_numerics(array($result));
 	
 	$ret = '';
 	
 	switch($return_type) {
 		case 'xml':
-				$ret = "<xml>\n";
-
-				foreach($result as $key => $value) {
-					if(!is_numeric($key)) {
-						$ret .= "<".$key.">".$value."</".$key.">\n";
-					}
-				}
-					
-				$ret .= "</xml>\n";
+				$ret = xml_node($result[0], false, true);
+				
 				break;
 		case 'csv':
 				$ret = array_to_csv($result);
@@ -216,11 +260,24 @@ function api_get_incident_details ($return_type, $user, $id_incident){
 	return $ret;
 }
 
-function api_update_incident ($return_type, $user, $id_incident, $values){	
-	$values = array('titulo' => $values[1], 'descripcion' => $values[2]);
+function api_update_incident ($return_type, $user, $params){	
+	$id_incident = $params[0];
 	
-	
+	$values['titulo'] = $params[1];
+	$values['descripcion'] = $params[2];
+	$values['epilog'] = $params[3];
+	$values['id_grupo'] = $params[4];
+	$values['prioridad'] = $params[5];
+	$values['origen'] = $params[6];
+	$values['resolution'] = $params[7];
+	$values['estado'] = $params[8];
+	//$values['id_creator'] = $params[9];
+		
 	process_sql_update ('tincidencia', $values, array('id_incidencia' => $id_incident));
+}
+
+function api_delete_incident ($return_type, $user, $id_incident){	
+	borrar_incidencia($id_incident);
 }
 
 function api_get_incident_tracking ($return_type, $user, $id_incident){
@@ -264,10 +321,9 @@ function api_get_incident_tracking ($return_type, $user, $id_incident){
 
 function api_get_incident_workunits ($return_type, $user, $id_incident){
 	$filter = array();
-	
 	$workunits = get_incident_workunits ($id_incident);
-	
-	if($workunits === false) {
+
+	if($workunits == false) {
 		return '';
 	}
 	
@@ -309,6 +365,22 @@ function api_get_incident_workunits ($return_type, $user, $id_incident){
 	}
 	
 	return $ret;
+}
+
+function api_create_incident_workunit ($return_type, $user, $params){	
+	$id_incident = $params[0];
+
+	$values['timestamp'] = print_mysql_timestamp();
+	$values['id_user'] = $user;
+	$values['description'] = $params[1];
+	$values['duration'] = $params[2];
+	$values['have_cost'] = $params[3];
+	$values['public'] = $params[4];
+	$values['id_profile'] = $params[5];
+	
+	$id_workunit = process_sql_insert ('tworkunit', $values);
+
+	process_sql_insert('tworkunit_incident', array('id_incident' => $id_incident, 'id_workunit' => $id_workunit));
 }
 
 function api_get_incident_files ($return_type, $user, $id_incident){
@@ -489,7 +561,7 @@ function api_get_groups ($return_type, $user, $return_group_all){
 				$ret .= "</group>\n";
 				break;
 			case "csv":
-				$ret .= array_to_csv($item);
+				$ret .= array_to_csv(array($index,$item));
 				break;
 		}
 	}
@@ -613,31 +685,61 @@ function api_get_stats ($return_type, $param, $token, $user){
 	}
 
     switch ($filter['metric']){
-    case "total_incidents": 
-        $ret .= $stats["total_incidents"];
-        break;
-    case "opened": 
-        $ret .= $stats["opened"];
-        break;
-    case "closed": 
-        $ret .= $stats["closed"];
-        break;
-    case "avg_life": 
-        $ret .= $stats["avg_life"];
-        break;
-    case "sla_compliance": 
-        $ret .= $stats["sla_compliance"];
-        break;
-    case "avg_scoring": 
-        $ret .= $stats["avg_scoring"];
-        break;
-    case "avg_worktime": 
-        $ret .= $stats["avg_worktime"];
-        break;
+		case "total_incidents": 
+			$ret .= $stats["total_incidents"];
+			break;
+		case "opened": 
+			$ret .= $stats["opened"];
+			break;
+		case "closed": 
+			$ret .= $stats["closed"];
+			break;
+		case "avg_life": 
+			$ret .= $stats["avg_life"];
+			break;
+		case "sla_compliance": 
+			$ret .= $stats["sla_compliance"];
+			break;
+		case "avg_scoring": 
+			$ret .= $stats["avg_scoring"];
+			break;
+		case "avg_worktime": 
+			$ret .= $stats["avg_worktime"];
+			break;
     }	
 	
 	if($return_type == 'xml') {
         $ret .= "</data>\n";
+		$ret .= "</xml>\n";
+	}
+
+	return $ret;
+}
+
+function api_get_inventories($return_type, $param){
+	$inventories = get_inventories();
+
+	$ret = '';
+	
+	if($return_type == 'xml') {
+		$ret = "<xml>\n";
+	}
+	
+	foreach($inventories as $index => $item) {
+		switch($return_type) {
+			case "xml":
+				$ret .= "<inventory>\n";
+				$ret .= "<id>".$index."</id>\n";
+				$ret .= "<name>".$item."</name>\n";
+				$ret .= "</inventory>\n";
+				break;
+			case "csv":
+				$ret .= array_to_csv(array($index, $item));
+				break;
+		}
+	}
+	
+	if($return_type == 'xml') {
 		$ret .= "</xml>\n";
 	}
 
