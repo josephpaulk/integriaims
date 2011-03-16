@@ -1673,10 +1673,10 @@ function check_incident_sla_min_response ($id_incident) {
 		if ($now < ($start + $sla['min_response'] * 3600))
 			 continue;
 
-        // Creator is the last workunit author ?, then SKIP
+        // Incident owner is the last workunit author ?, then SKIP
     	$last_wu = get_incident_lastworkunit ($id_incident);
 
-    	if ($last_wu["id_user"] == $incident["id_creator"]){
+    	if ($last_wu["id_user"] == $incident["id_usuario"]){
             continue;
         }
 
@@ -1830,12 +1830,31 @@ function get_most_active_incidents ($lim) {
 }
 
 /** 
- * Returns the incident SLA compliance percentage.
+ * Returns the incident SLA compliance percentage, from a list of incidents, passed as arguments
  *
+ * @param, incidents, array with a list of incidents
  */
-function get_sla_compliance () {
-	$sla_compliance = get_db_row_sql ('SELECT 100 * COUNT(IF (affected_sla_id = 0, 1, NULL)) / COUNT(*) AS sla_compliance FROM tincidencia');
-	return $sla_compliance{'sla_compliance'};
+function get_sla_compliance ($incidents) {
+
+    $total = 0;
+    $sum = 0;
+
+    foreach ($incidents as $incident) {
+        $total++;
+		if ($incident['affected_sla_id'] > 0)
+            $sum = $sum + 1;
+    }
+
+    $OK = $total - $sum;
+
+    // Division by zero check
+    if ($total == 0)
+        return 100;
+
+    $sla_compliance = ( $OK / $total) * 100; 
+
+	return $sla_compliance;
+
 }
 
 function get_task_end_date_by_user ($now){

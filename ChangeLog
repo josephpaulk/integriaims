@@ -1,9 +1,18 @@
 2011-03-16  Sancho Lerena <slerena@artica.es>
+	
+	* include/integria_cron.php: Fixed the way on how min_response
+	sla is checked (was a bug, because it looks for incident creator
+	not incident owner).
+
+	* include/functions_db.php: SLA compliance checks ONLY list of 
+	incidents passed as a filter. Fixed SLA min_response (see above)
 
 	* include/functions_api.php: Minor changes in create incident API
 
 	* operation/incidents/incident_detail.php: Non-privileged users 
 	have disbled SLA in incident insertion by default, fixed.
+
+	* include/functions_incidents.php: Search now works with incident ID.
 
 2011-03-15  Sancho Lerena <slerena@artica.es>
 

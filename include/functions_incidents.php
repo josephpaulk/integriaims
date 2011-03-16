@@ -108,10 +108,10 @@ function filter_incidents ($filters) {
 	$sql = sprintf ('SELECT * FROM tincidencia
 			WHERE estado IN (%s)
 			%s
-			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%")
+			AND (id_incidencia = "%s" OR titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%")
 			ORDER BY actualizacion DESC
 			LIMIT %d',
-			$filters['status'], $sql_clause, $filters['string'], $filters['string'], $filters['string'],$filters['string'],
+			$filters['status'], $sql_clause, $filters['string'], $filters['string'], $filters['string'], $filters['string'],$filters['string'],
 			$config['limit_size']);
 
     // DEBUG
@@ -273,7 +273,7 @@ function get_incidents_stats ($incidents) {
         $scoring_avg = "N/A";
 
 	// Get incident SLA compliance
-	$sla_compliance = get_sla_compliance ();
+	$sla_compliance = get_sla_compliance ($incidents);
 
     $data = array();
 
@@ -355,7 +355,7 @@ function print_incidents_stats ($incidents, $return = false) {
         $scoring_avg = "N/A";
 
 	// Get incident SLA compliance
-	$sla_compliance = get_sla_compliance ();
+	$sla_compliance = get_sla_compliance ($incidents);
 
     $output = "<table class=blank width=100% cellspacing=4 cellpadding=0 border=0 >";
     $output .= "<tr><td>";

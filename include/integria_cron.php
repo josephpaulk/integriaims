@@ -22,10 +22,8 @@ require_once ($config["homedir"].'/include/functions_workunits.php');
 // Activate errors. Should not be anyone, but if something happen, should be
 // shown on console.
 
-
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set("display_errors", 1);
-
 
 $config["id_user"] = 'System';
 $now = time ();
@@ -36,6 +34,7 @@ $human_notification_period = give_human_time ($config["notification_period"]);
  * This function is executed once per day and do several different subtasks
  * like email notify ending tasks or projects, events for this day, etc.
  */
+
 function run_daily_check () {
 	$current_date = date ("Y-m-d h:i:s");
 
@@ -454,7 +453,7 @@ run_mail_check();
 
 run_mail_queue();
 
-// Check SLA on incidents (max. opened time without fixing and min. response)
+// Check SLA on active incidents (max. opened time without fixing and min. response)
 
 $incidents = get_db_all_rows_sql ('SELECT * FROM tincidencia
 	WHERE sla_disabled = 0
