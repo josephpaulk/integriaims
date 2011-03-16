@@ -528,9 +528,9 @@ function api_get_users ($return_type, $user){
 	return $ret;
 }
 
-function api_get_stats ($return_type, $param){	
+function api_get_stats ($return_type, $param, $token){	
     $filter = array ();
-    $param = split (",", $param);
+    $param = explode ($token, $param);
 
     if (isset($param[0]))
         $filter['metric'] = $param[0];

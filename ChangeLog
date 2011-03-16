@@ -1,3 +1,9 @@
+2011-03-16  Dario Rodriguez <dario.rodriguez@artica.es>
+
+	* include/functions_api.php, include/api.php: Fixed a bug with parameters
+	and toke in get_stats function. Also replaced split by explode, because split
+	is deprecated.
+
 2011-03-16  Sancho Lerena <slerena@artica.es>
 	
 	* include/integria_cron.php: Fixed the way on how min_response
