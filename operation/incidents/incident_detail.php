@@ -437,7 +437,7 @@ if ($id) {
 				$id_attachment);
 			process_sql ($sql);
 			$result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
-			if (!unlink ($config["homedir"].'attachment/pand'.$id_attachment.'_'.$filename))
+			if (!unlink ($config["homedir"].'attachment/'.$id_attachment.'_'.$filename))
 				$result_msg = '<h3 class="error">'.__('Could not be deleted').'</h3>';
 			incident_tracking ($id, INCIDENT_FILE_REMOVED);
 			

@@ -1,3 +1,11 @@
+2011-03-17  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_api.php
+	include/functions_incidents.php
+	include/api.php
+	operation/incidents/incident_detail.php: Finished the 
+	first version of the Integria REST API
+
 2011-03-16  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_api.php

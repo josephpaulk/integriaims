@@ -51,16 +51,21 @@ if(!$correct_login) {
 }
 
 switch ($op){
-	case "create_incident":
-	{
-		$params = explode($token, $params);
-		api_create_incident ($return_type, $user, $params);
-		break;
-	}
 	case "get_incidents":
 	{
 		$params = explode($token, $params);
 		echo api_get_incidents ($return_type, $user, $params);
+		break;
+	}
+	case "get_incident_details":
+	{
+		echo api_get_incident_details ($return_type, $user, $params);
+		break;
+	}
+	case "create_incident":
+	{
+		$params = explode($token, $params);
+		api_create_incident ($return_type, $user, $params);
 		break;
 	}
 	case "update_incident":
@@ -69,9 +74,9 @@ switch ($op){
 		echo api_update_incident ($return_type, $user, $params);
 		break;
 	}
-	case "get_incident_details":
+	case "delete_incident":
 	{
-		echo api_get_incident_details ($return_type, $user, $params);
+		echo api_delete_incident ($return_type, $user, $params);
 		break;
 	}
 	case "get_incident_workunits":
@@ -79,7 +84,7 @@ switch ($op){
 		echo api_get_incident_workunits ($return_type, $user, $params);
 		break;
 	}
-	case "create_incident_workunit":
+	case "create_workunit":
 	{
 		$params = explode($token, $params);
 		api_create_incident_workunit ($return_type, $user, $params);
@@ -88,6 +93,27 @@ switch ($op){
 	case "get_incident_files":
 	{
 		echo api_get_incident_files ($return_type, $user, $params);
+		break;
+	}
+	case "download_file":
+	{
+		echo api_download_file ($return_type, $user, $params);
+		break;
+	}
+	case "attach_file":
+	{
+		$params = explode($token, $params);
+		echo api_attach_file ($return_type, $user, $params);
+		break;
+	}
+	case "delete_file":
+	{
+		echo api_delete_file ($return_type, $user, $params);
+		break;
+	}
+	case "get_incident_tracking":
+	{
+		echo api_get_incident_tracking ($return_type, $user, $params);
 		break;
 	}
 	case "get_incidents_resolutions":
@@ -115,35 +141,14 @@ switch ($op){
 		echo api_get_users ($return_type, $user);
 		break;
 	}
-	case "download_file":
-	{
-		echo api_download_file ($return_type, $user, $params);
-		break;
-	}
-	case "get_incident_tracking":
-	{
-		echo api_get_incident_tracking ($return_type, $user, $params);
-		break;
-	}
 	case "get_stats":
 	{
-		echo api_get_stats ($return_type, $params, $token, $user);
+		echo api_get_stats ($return_type, $params);
 		break;
 	}
 	case "get_inventories":
 	{
 		echo api_get_inventories ($return_type, $user, $params);
-		break;
-	}
-	case "create_workunit":
-	{
-		$params = explode($token, $params);
-		echo api_create_incident_workunit ($return_type, $user, $params);
-		break;
-	}
-	case "delete_incident":
-	{
-		echo api_delete_incident ($return_type, $user, $params);
 		break;
 	}
 	default: 
