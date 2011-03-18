@@ -29,8 +29,8 @@ ini_set("display_errors", 1);
 
 $config["id_user"] = 'System';
 $now = time ();
-$compare_timestamp = date ("Y-m-d H:i:s", $now - $config["notification_period"]);
-$human_notification_period = give_human_time ($config["notification_period"]);
+$compare_timestamp = date ("Y-m-d H:i:s", $now - $config["notification_period"]*3600);
+$human_notification_period = give_human_time ($config["notification_period"]*3600);
 
 /**
  * This function is executed once per day and do several different subtasks
@@ -303,6 +303,7 @@ function check_sla_max ($incident) {
 		$incident['id_incidencia'],
 		$compare_timestamp);
 	$notified = get_db_sql ($sql);
+
 	if ($notified > 0)
 		return true;
 	
