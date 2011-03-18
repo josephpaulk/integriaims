@@ -748,9 +748,14 @@ function api_get_users ($return_type, $user){
 	return $ret;
 }
 
-function api_get_stats ($return_type, $param){	
+function api_get_stats ($return_type, $param, $token, $user){
+
+    global $config;
+    $config['id_user'] = $user;
+
+    $param = explode ($token, $param);
+
     $filter = array ();
-    $param = split (",", $param);
 
     if (isset($param[0]))
         $filter['metric'] = $param[0];
@@ -772,12 +777,16 @@ function api_get_stats ($return_type, $param){
         $filter["status"] = "6,7";
     }
 
+    if ($filter["metric"] == "sla_compliance"){
+    	$filter["status"] = "1,2,3,4,5";
+    } 
+
     if ($filter["metric"] == "avg_life"){
-        $filter["status"] = "1,2,3,4,5,6,7";
+        $filter["status"] = "6,7";
     }
 
     if ($filter["metric"] == "avg_scoring"){
-        $filter["status"] = "1,2,3,4,5,6,7";
+        $filter["status"] = "6,7";
     }
 
     if (isset($param[3]))
@@ -811,7 +820,7 @@ function api_get_stats ($return_type, $param){
     $filter['priority'] = (int) get_parameter ('search_priority', -1);
     $filter['serial_number'] = (string) get_parameter ('search_serial_number');
     $filter['id_building'] = (int) get_parameter ('search_id_building');
-    $filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
+    $filter['sla_fired'] = false;
     $filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
     $filter['first_date'] = (string) get_parameter ('search_first_date');
     $filter['last_date'] = (string) get_parameter ('search_last_date');

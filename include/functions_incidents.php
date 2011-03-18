@@ -273,7 +273,7 @@ function get_incidents_stats ($incidents) {
         $scoring_avg = "N/A";
 
 	// Get incident SLA compliance
-	$sla_compliance = get_sla_compliance ();
+	$sla_compliance = get_sla_compliance ($incidents);
 
     $data = array();
 
@@ -308,8 +308,8 @@ function print_incidents_stats ($incidents, $return = false) {
 	$total_lifetime = 0;
 	$max_lifetime = 0;
 	$oldest_incident = false;
-    $scoring_sum = 0;
-    $scoring_valid = 0;
+	$scoring_sum = 0;
+	$scoring_valid = 0;
 
 	if ($incidents === false)
 		$incidents = array ();
@@ -326,15 +326,16 @@ function print_incidents_stats ($incidents, $return = false) {
 			$total_lifetime += $lifetime;
 		}
 
-        // Scoring avg.
-        if ($incident["score"] > 0){
-            $scoring_valid++;
-            $scoring_sum = $scoring_sum + $incident["score"];
-        }
+        	// Scoring avg.
+	        if ($incident["score"] > 0){
+	            $scoring_valid++;
+	            $scoring_sum = $scoring_sum + $incident["score"];
+	        }
             
 		$hours = get_incident_workunit_hours  ($incident['id_incidencia']);
 		$total_hours += $hours;
 	}
+
 	$closed = $total - $opened;
 	$opened_pct = 0;
 	$mean_work = 0;
@@ -350,12 +351,12 @@ function print_incidents_stats ($incidents, $return = false) {
 	
     // Get avg. scoring
     if ($scoring_valid > 0){
-        $scoring_avg = $scoring_sum / $scoring_valid;
+        $scoring_avg = format_numeric($scoring_sum / $scoring_valid);
     } else 
         $scoring_avg = "N/A";
 
 	// Get incident SLA compliance
-	$sla_compliance = get_sla_compliance ();
+	$sla_compliance = get_sla_compliance ($incidents);
 
     $output = "<table class=blank width=100% cellspacing=4 cellpadding=0 border=0 >";
     $output .= "<tr><td>";
@@ -372,10 +373,9 @@ function print_incidents_stats ($incidents, $return = false) {
     $output .= "<tr><td>";
     $output .= print_label (__('Avg. work time'), '', '', true, $mean_work.' '.__('Hours'));
     $output .= "<td>";
-	$output .= print_label (__('SLA compliance'), '', '', true, format_numeric ($sla_compliance) .' '.__('%'));
+    $output .= print_label (__('SLA compliance'), '', '', true, format_numeric ($sla_compliance) .' '.__('%'));
     $output .= "<tr><td>";
-    $output .= print_label (__('Avg. Scoring'), '', '', true, format_numeric ($scoring_avg));
-
+    $output .= print_label (__('Avg. Scoring'), '', '', true, $scoring_avg);
 	
 	if ($oldest_incident) {
 

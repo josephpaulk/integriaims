@@ -143,7 +143,7 @@ switch ($op){
 	}
 	case "get_stats":
 	{
-		echo api_get_stats ($return_type, $params);
+		echo api_get_stats ($return_type, $params, $token, $user);
 		break;
 	}
 	case "get_inventories":
