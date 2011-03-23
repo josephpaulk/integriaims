@@ -25,7 +25,8 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('HEADER_EMAIL','Hello, \n\nThis is an automated message coming from Integria\n\n'),
 ('notification_period','24'),
 ('limit_size','1000'),
-('api_password','');
+('api_password',''),
+('flash_charts','1');
 
 
 -- Default password is 'integria'

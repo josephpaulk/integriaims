@@ -50,6 +50,7 @@ if ($update) {
 	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
     $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
 	$config["error_log"] = get_parameter ("error_log", 0);
+	$config["flash_charts"] = get_parameter ("flash_charts", 1);
 	
 	update_config_token ("timezone", $config["timezone"]);	
 
@@ -91,6 +92,7 @@ if ($update) {
     update_config_token ("header_logo", $config["header_logo"]);
     update_config_token ("email_on_incident_update", $config["email_on_incident_update"]);
     update_config_token ("error_log", $config["error_log"]);
+    update_config_token ("flash_charts", $config["flash_charts"]);
 
 }
 
@@ -137,8 +139,8 @@ $table->data[4][1] = print_input_text ("pwu_defaultime", $config["pwu_defaultime
 $table->data[5][0] = print_input_text ("fontsize", $config["fontsize"], '',
 	3, 5, true, __('Graphics font size'));
 
-$incident_reporter_options[0] = "Disabled";
-$incident_reporter_options[1] = "Enabled";
+$incident_reporter_options[0] = __('Disabled');
+$incident_reporter_options[1] = __('Enabled');
 
 $table->data[5][1] = print_select ($incident_reporter_options, "incident_reporter", $config["incident_reporter"], '','','',true,0,true, "Incident reporter");
 
@@ -182,6 +184,8 @@ $table->data[13][0] = print_select ($imagelist, 'header_logo', $config["header_l
 $error_log_options[0] = "Disabled";
 $error_log_options[1] = "Enabled";
 $table->data[13][1] = print_select ($error_log_options, "error_log", $config["error_log"], '','','',true,0,true, "Error log");
+
+$table->data[14][0] = print_select (array(__('Disabled'),__('Enabled')), "flash_charts", $config["flash_charts"], '','','',true,0,true, __('Flash charts'));
 
 echo "<form name='setup' method='post'>";
 

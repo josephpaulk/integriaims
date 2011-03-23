@@ -189,6 +189,96 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
 }
 
 /**
+ * Prints an image HTML element.
+ *
+ * @param string $src Image source filename.
+ * @param bool $return Whether to return or print
+ * @param array $options Array with optional HTML options to set. At this moment, the 
+ * following options are supported: alt, style, title, width, height, class, pos_tree.
+ * @param bool $return_src Whether to return src field of image ('images/*.*') or complete html img tag ('<img src="..." alt="...">'). 
+ *
+ * @return string HTML code if return parameter is true.
+ */
+function print_image ($src, $return = false, $options = false, $return_src = false) {
+	global $config;
+
+	// path to image 
+	$src = $config["homeurl"] . '/' . $src;
+
+	// Only return src field of image
+	if ($return_src){
+		if (!$return){ 
+			echo safe_input($src); 
+			return; 
+		}
+		return safe_input($src);
+	}
+
+	$output = '<img src="'.safe_input ($src).'" '; //safe input necessary to strip out html entities correctly
+	$style = '';
+	
+	if (!empty ($options)) {
+		//Deprecated or value-less attributes
+		if (isset ($options["align"])) {
+			$style .= 'align:'.$options["align"].';'; //Align is deprecated, use styles.
+		}
+		
+		if (isset ($options["border"])) {
+			$style .= 'border:'.$options["border"].'px;'; //Border is deprecated, use styles
+		}
+				
+		if (isset ($options["hspace"])) {
+			$style .= 'margin-left:'.$options["hspace"].'px;'; //hspace is deprecated, use styles
+			$style .= 'margin-right:'.$options["hspace"].'px;';
+		}
+		
+		if (isset ($options["ismap"])) {
+			$output .= 'ismap="ismap" '; //Defines the image as a server-side image map
+		}
+		
+		if (isset ($options["vspace"])) {
+			$style .= 'margin-top:'.$options["vspace"].'px;'; //hspace is deprecated, use styles
+			$style .= 'margin-bottom:'.$options["vspace"].'px;';
+		}
+				
+		if (isset ($options["style"])) {
+			$style .= $options["style"]; 
+		}
+		
+		//Valid attributes (invalid attributes get skipped)
+		$attrs = array ("height", "longdesc", "usemap","width","id","class","title","lang","xml:lang", 
+						"onclick", "ondblclick", "onmousedown", "onmouseup", "onmouseover", "onmousemove", 
+						"onmouseout", "onkeypress", "onkeydown", "onkeyup","pos_tree");
+		
+		foreach ($attrs as $attribute) {
+			if (isset ($options[$attribute])) {
+				$output .= $attribute.'="'.safe_input_html ($options[$attribute]).'" ';
+			}
+		}
+	} else {
+		$options = array ();
+	}
+	
+	if (!isset ($options["alt"]) && isset ($options["title"])) {
+		$options["alt"] = safe_input($options["title"]); //Set alt to title if it's not set
+	} elseif (!isset ($options["alt"])) {
+		$options["alt"] = "";
+	}
+
+	if (!empty ($style)) {
+		$output .= 'style="'.$style.'" ';
+	}
+	
+	$output .= 'alt="'.safe_input ($options['alt']).'" />';
+
+	if (!$return) {
+		echo $output;
+	}
+
+	return $output;
+}
+
+/**
  * Render an input text element. Extended version, use print_input_text() to simplify.
  *
  * @param string Input name.

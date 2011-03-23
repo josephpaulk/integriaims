@@ -107,6 +107,10 @@ function load_config(){
 			$config['language_code'] = $_POST['language_code'];
 	}	
 
+	if (!isset ($config["flash_charts"])) {
+		$config["flash_charts"] = true;
+	}
+	
 	// Mail address used to send mails
 	if (!isset ($config["mail_from"]))
 		$config["mail_from"] = "integria@localhost";

@@ -1,3 +1,13 @@
+2011-03-23  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_html.php: Added print_image function
+	from pandora library
+
+	* include/functions_config.php
+	integria_dbdata.sql
+	godmode/setup/setup.php: Added the flash_charts bit to the 
+	integria config and setup
+
 2011-03-18  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_api.php,
