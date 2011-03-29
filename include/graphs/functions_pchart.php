@@ -126,7 +126,7 @@ function pch_radar_graph ($graph_type, $data_values, $legend_values, $width, $he
 	 $myPicture = new pImage($width,$height,$MyData,TRUE);
 
 	 /* Set the default font properties */ 
-	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/verdana.ttf","FontSize"=>8,"R"=>80,"G"=>80,"B"=>80));
+	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/code.ttf","FontSize"=>8,"R"=>80,"G"=>80,"B"=>80));
 
 	 /* Create the pRadar object */ 
 	 $SplitChart = new pRadar();
@@ -153,9 +153,28 @@ function pch_radar_graph ($graph_type, $data_values, $legend_values, $width, $he
 function pch_vertical_graph ($graph_type, $index, $data, $width, $height, $xaxisname = "", $yaxisname = "", $show_values = false, $show_legend = false) {
 	 /* CAT:Bar Chart */
 
+     if(is_array($data[0])) {
+	 	$data2 = array();
+		foreach($data as $index =>$values) {
+			$c = 0;
+			foreach($values as $value) {
+				$data2[$c][$index] = $value;
+				$c++;
+			}
+		}
+		$data = $data2;
+	 }
+	 else {
+		$data = array($data);
+	 }
+
 	 /* Create and populate the pData object */
-	 $MyData = new pData();  
-	 $MyData->addPoints($data,"Yaxis");
+	 $MyData = new pData();
+	 foreach($data as $index => $values) {
+		$MyData->addPoints($values,"Yaxis_".$index);
+	 }
+
+	 //$MyData->addPoints($data,"Yaxis");
 	 $MyData->setAxisName(0,$yaxisname);
 	 $MyData->addPoints($index,"Xaxis");
 	 $MyData->setSerieDescription("Xaxis", $xaxisname);
@@ -171,7 +190,7 @@ function pch_vertical_graph ($graph_type, $index, $data, $width, $height, $xaxis
 	 //$myPicture->drawRectangle(0,0,$width,$height,array("R"=>0,"G"=>0,"B"=>0));
 
 	 /* Set the default font */
-	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/pf_arma_five.ttf","FontSize"=>7));
+	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/code.ttf","FontSize"=>7));
 
 	 /* Define the chart area */
 	 $myPicture->setGraphArea(30,20,$width,$height-100);
@@ -226,7 +245,7 @@ function pch_threshold_graph ($graph_type, $index, $data, $width, $height, $xaxi
 	 $myPicture->drawRectangle(0,0,699,229,array("R"=>200,"G"=>200,"B"=>200));
 	 
 	 /* Write the picture title */ 
-	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/Forgotte.ttf","FontSize"=>11));
+	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/code.ttf","FontSize"=>11));
 	 $myPicture->drawText(60,35,$title,array("FontSize"=>20,"Align"=>TEXT_ALIGN_BOTTOMLEFT));
 
 	 /* Do some cosmetic and draw the chart */
@@ -234,7 +253,7 @@ function pch_threshold_graph ($graph_type, $index, $data, $width, $height, $xaxi
 	 $myPicture->drawFilledRectangle(60,40,670,190,array("R"=>255,"G"=>255,"B"=>255,"Surrounding"=>-200,"Alpha"=>10));
 	 $myPicture->drawScale(array("GridR"=>180,"GridG"=>180,"GridB"=>180, "Mode" => SCALE_MODE_START0));
 	 $myPicture->setShadow(TRUE,array("X"=>2,"Y"=>2,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
-	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/pf_arma_five.ttf","FontSize"=>6));
+	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/code.ttf","FontSize"=>6));
 	 $settings = array("Gradient"=>TRUE,"GradientMode"=>GRADIENT_EFFECT_CAN,"DisplayValues"=>$show_values,"DisplayZeroValues"=>FALSE,"DisplayR"=>100,"DisplayG"=>100,"DisplayB"=>100,"DisplayShadow"=>TRUE,"Surrounding"=>5,"AroundZero"=>FALSE);
 	 $myPicture->drawSplineChart($settings);
 	 $myPicture->setShadow(FALSE);
@@ -268,7 +287,7 @@ function pch_horizontal_graph ($graph_type, $index, $data, $width, $height, $xax
 	 //$myPicture->drawRectangle(0,0,$width,$height,array("R"=>0,"G"=>0,"B"=>0));
 
 	 /* Set the default font */
-	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/pf_arma_five.ttf","FontSize"=>7));
+	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/code.ttf","FontSize"=>7));
 
 	 /* Define the chart area */
 	 $myPicture->setGraphArea(75,20,$width,$height);

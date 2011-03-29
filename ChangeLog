@@ -1,5 +1,11 @@
 2011-03-29  Sergio Martin <sergio.martin@artica.es>
 
+	* include/graphs/functions_pchart.php
+	include/graphs/fgraph.php: added multigraph support 
+	to vertical graphs and area graphs to fgraph file
+
+2011-03-29  Sergio Martin <sergio.martin@artica.es>
+
 	* include/graphs/fgraph.php: Fixed typo in 2d 
 	flash pie chart call
 

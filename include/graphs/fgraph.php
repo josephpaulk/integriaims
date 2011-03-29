@@ -33,6 +33,15 @@ function threshold_graph($flash_chart, $chart_data, $width, $height) {
 	}
 }
 
+function area_graph($flash_chart, $chart_data, $width, $height) {
+	if($flash_chart) {
+		echo "";
+	}
+	else {
+		echo "<img src='include/graphs/functions_pchart.php?graph_type=area&data=".json_encode($chart_data)."&width=".$width."&height=".$height."'>";
+	}	
+}
+
 function hbar_graph($flash_chart, $chart_data, $width, $height) {
 	if($flash_chart) {
 		echo fs_hbar_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
