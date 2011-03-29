@@ -198,4 +198,4 @@ if (!isset($config["id_user"]))
 	echo "</table>";
 
 ?>
-<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>
+<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

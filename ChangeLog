@@ -1,3 +1,107 @@
+2011-03-29  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_graph.php
+	include/functions_html.php
+	include/graphs
+	include/graphs/functions_pchart.php
+	include/graphs/pChart
+	include/graphs/pChart/pScatter.class.php
+	include/graphs/pChart/palettes
+	include/graphs/pChart/palettes/spring.color
+	include/graphs/pChart/palettes/shade.color
+	include/graphs/pChart/palettes/kitchen.color
+	include/graphs/pChart/palettes/light.color
+	include/graphs/pChart/palettes/summer.color
+	include/graphs/pChart/palettes/blind.color
+	include/graphs/pChart/palettes/autumn.color
+	include/graphs/pChart/palettes/evening.color
+	include/graphs/pChart/palettes/navy.color
+	include/graphs/pChart/pData.class.php
+	include/graphs/pChart/pBarcode39.class.php
+	include/graphs/pChart/pPie.class.php
+	include/graphs/pChart/fonts
+	include/graphs/pChart/fonts/calibri.ttf
+	include/graphs/pChart/fonts/GeosansLight.ttf
+	include/graphs/pChart/fonts/advent_light.ttf
+	include/graphs/pChart/fonts/Forgotte.ttf
+	include/graphs/pChart/fonts/code.ttf
+	include/graphs/pChart/fonts/MankSans.ttf
+	include/graphs/pChart/fonts/pf_arma_five.ttf
+	include/graphs/pChart/fonts/verdana.ttf
+	include/graphs/pChart/fonts/Bedizen.ttf
+	include/graphs/pChart/fonts/Silkscreen.ttf
+	include/graphs/pChart/pImage.class.php
+	include/graphs/pChart/pStock.class.php
+	include/graphs/pChart/cache
+	include/graphs/pChart/pRadar.class.php
+	include/graphs/pChart/pBarcode128.class.php
+	include/graphs/pChart/pSplit.class.php
+	include/graphs/pChart/pBubble.class.php
+	include/graphs/pChart/pDraw.class.php
+	include/graphs/pChart/data
+	include/graphs/pChart/data/39.db
+	include/graphs/pChart/data/128B.db
+	include/graphs/pChart/pSpring.class.php
+	include/graphs/pChart/pCache.class.php
+	include/graphs/functions_fsgraph.php
+	include/graphs/FusionCharts
+	include/graphs/FusionCharts/FCF_Pie2D.swf
+	include/graphs/FusionCharts/FCF_Pie3D.swf
+	include/graphs/FusionCharts/FusionCharts.js
+	include/graphs/FusionCharts/FusionCharts_Gen.php
+	include/graphs/FusionCharts/FCF_Gantt.swf
+	include/graphs/FusionCharts/FusionCharts.php
+	include/graphs/FusionCharts/FCF_StackedColumn2D.swf
+	include/graphs/FusionCharts/FCF_MSColumn2D.swf
+	include/graphs/FusionCharts/FCF_Column2D.swf
+	include/graphs/FusionCharts/FCF_Doughnut2D.swf
+	include/graphs/FusionCharts/FCF_StackedColumn3D.swf
+	include/graphs/FusionCharts/FCF_Column3D.swf
+	include/graphs/FusionCharts/FCF_Candlestick.swf
+	include/graphs/FusionCharts/FCF_MSColumn3D.swf
+	include/graphs/FusionCharts/FCF_Line.swf
+	include/graphs/FusionCharts/FCF_Funnel.swf
+	include/graphs/FusionCharts/FCF_MSLine.swf
+	include/graphs/FusionCharts/FCF_MSColumn2DLineDY.swf
+	include/graphs/FusionCharts/FCF_StackedBar2D.swf
+	include/graphs/FusionCharts/FCF_MSColumn3DLineDY.swf
+	include/graphs/FusionCharts/FCF_MSBar2D.swf
+	include/graphs/FusionCharts/FCF_Bar2D.swf
+	include/graphs/FusionCharts/FCF_StackedArea2D.swf
+	include/graphs/FusionCharts/FCF_MSArea2D.swf
+	include/graphs/FusionCharts/FCF_Area2D.swf
+	include/graphs/fgraph.php
+	include/functions_reporting.php
+	include/fonts
+	include/fonts/DejaVuSerif-Bold.ttf
+	include/fonts/FreeSans.ttf
+	include/fonts/DejaVuSerif.ttf
+	include/fonts/DejaVuSerifCondensed-Bold.ttf
+	include/fonts/DejaVuSerifCondensed.ttf
+	include/fonts/DejaVuSerif-Italic.ttf
+	include/fonts/code.ttf
+	include/fonts/DejaVuSerif-BoldItalic.ttf
+	include/fonts/DejaVuSerifCondensed-Italic.ttf
+	include/fonts/DejaVuSerifCondensed-BoldItalic.ttf
+	include/FreeSans.ttf
+	include/FusionCharts
+	include/functions_incidents.php
+	include/functions_fsgraph.php
+	operation/incidents/incident_tracking.php
+	operation/incidents/incident_search.php
+	operation/projects/task.php
+	operation/projects/gantt.php
+	operation/projects/task_detail.php
+	operation/reporting/incidents_html.php
+	operation/user_report/monthly_graph.php
+	operation/user_report/report_full.php
+	operation/user_report/report_full_graph.php
+	general/home.php: Changed the graphs interface, 
+	encapsulate flash and static graphs into 
+	include/graphs folder, added the latest 
+	pChart version (5.1) and added fonts family 
+	from pandora
+
 2011-03-23  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_html.php: Added print_image function

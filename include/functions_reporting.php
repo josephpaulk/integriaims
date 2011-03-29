@@ -14,6 +14,7 @@
 // GNU General Public License for more details.
 
 include_once ("functions_calendar.php");
+include_once ("graphs/fgraph.php");
 
 function incident_activity_graph ($id_incident){
 	global $config;
@@ -67,7 +68,7 @@ function incident_activity_graph ($id_incident){
 		$chart2[$timestamp_human] = $total;
    	}
 
-	echo fs_2d_column_chart ($chart2, 650, 300);
+	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300);
 }
 
 function project_activity_graph ($id_project){
@@ -127,7 +128,7 @@ ORDER BY timestamp ASC");
 		$chart2[$timestamp_human] = $total;
    	}
 
-	echo fs_2d_column_chart ($chart2, 650, 300);
+	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300);
 }
 
 function task_activity_graph ($id_task){
@@ -185,8 +186,8 @@ function task_activity_graph ($id_task){
         $timestamp_human = clean_flash_string (date($time_format, $timestamp));
 		$chart2[$timestamp_human] = $total;
    	}
-
-	echo fs_2d_column_chart ($chart2, 650, 300);
+   	
+	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300);
 }
 
 

@@ -70,4 +70,4 @@ if ($trackings !== false) {
 	echo __('No data available');
 }
 ?>
-<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>
+<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

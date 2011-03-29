@@ -14,7 +14,7 @@
 // GNU General Public License for more details.
 
 
-include_once ('include/functions_fsgraph.php');
+include_once ('include/graphs/fgraph.php');
 
 // Returns 'date' in the format 'dd/mm/yyyy'
 function fix_date ($date, $default='') {
@@ -181,7 +181,7 @@ if ($num_tasks > 20) {
 }
 
 // Print the Gantt chart
-print fs_gantt_chart ($project_name, $from, $to, $tasks, $milestones, $width, $height);
+print gantt_graph ($project_name, $from, $to, $tasks, $milestones, $width, $height);
 
 if (!$clean_output) {
 	echo "<br><br>";
@@ -190,4 +190,4 @@ if (!$clean_output) {
 
 ?>
 
-<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>
+<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

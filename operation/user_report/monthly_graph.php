@@ -86,13 +86,13 @@ echo "<tr><td class=datos>";
 echo "<h3>".__('Workunit by task')."</h3>";
 echo "<tr><td class=datos>";
 
-echo graph_workunit_user (750, 270, $id_user, $from_one_month, 0, 1);
+echo graph_workunit_user (750, 270, $id_user, $from_one_month, 0);
 
 echo "<tr><td class=datos>";
 echo "<h3>".__('Workunit by project')."</h3>";
 echo "<tr><td class=datos>";
 
-echo graph_workunit_project_user (750, 270, $id_user, $from_one_month, 0, 1); 
+echo graph_workunit_project_user (750, 270, $id_user, $from_one_month, 0); 
 
 echo "</table>";
 echo "</div>";
@@ -100,4 +100,4 @@ echo "</div>";
 
 
 ?>
-<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>
+<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

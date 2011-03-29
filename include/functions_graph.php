@@ -6,7 +6,7 @@
 // ===========================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2008 Esteban Sanchez, estebans@artica.es
-// Copyright (c) 2007-2008 Artica, info@artica.es
+// Copyright (c) 2007-2011 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License
@@ -17,14 +17,13 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 
-
 if (file_exists("config.php")) {
 	include_once ("config.php");
-	include_once ("functions_fsgraph.php");
+	include_once ("graphs/fgraph.php");
 }
 elseif (file_exists("include/config.php")) {
 	include_once ("include/config.php");
-	include_once ("include/functions_fsgraph.php");
+	include_once("include_once/graphs/fgraph.php");
 }
 
 // ===============================================================================
@@ -53,26 +52,40 @@ function incident_peruser ($width, $height) {
 // Draw a simple pie graph with reported workunits for a specific TASK
 // ===============================================================================
 
-function graph_workunit_task ($width, $height, $id_task, $flash = 0) {
+function graph_workunit_task ($width, $height, $id_task) {
 	global $config;
 	$data = array();
 	$legend = array();
 
-	$res = mysql_query("SELECT SUM(duration), id_user FROM tworkunit, tworkunit_task
+	$res = mysql_query("SELECT SUM(duration) as duration, id_user FROM tworkunit, tworkunit_task
 					WHERE tworkunit_task.id_task = $id_task AND 
 					tworkunit_task.id_workunit = tworkunit.id 
-					GROUP BY id_user");
-	while ($row=mysql_fetch_array($res)) {
-		$data[] = $row[0];
-		$legend[] = $row[1];
-	} 
-	
-	if ($flash == 1) { 
+					GROUP BY id_user ORDER BY duration DESC");
+	$a = true;
+	if (mysql_fetch_array($res) != NULL) {
+		while ($row = mysql_fetch_array($res)) {
+			$data[$row[1]] = $row[0];
+			if($a) { 
+				$data[$row[1]] = $row[0];
+				$a=false; 
+			}
+		}
+	} else {
+		$data = NULL;
+	}
+
+	/*if ($flash == 1) { 
 		return fs_3d_pie_chart ($data, $legend, $width, $height);
 	} elseif (isset($data))
 		generic_pie_graph ($width, $height, $data, $legend);
 	else 
-		graphic_error();
+		graphic_error();*/
+		
+	if ($data == NULL) {
+		echo __("There is no data to show");
+	} else {
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('other'));
+	}
 }
 
 
@@ -80,7 +93,7 @@ function graph_workunit_task ($width, $height, $id_task, $flash = 0) {
 // Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
 // ===============================================================================
 
-function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 0, $flash = 0) {
+function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 0) {
 	global $config;
 
 	if ($date_to == 0) {
@@ -99,9 +112,7 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 
 	if (mysql_fetch_array($res) != NULL) {
 		while ($row = mysql_fetch_array($res)) {
-			$data[] = $row[0];
-			//$legend[] = clean_flash_string ($row[4]." ".$row[3]);
-			$legend[] = substr(clean_flash_string ($row[3]),0,25);
+			$data[substr(clean_flash_string ($row[3]),0,25)] = $row[0];
 		}
 	} else {
 		$data = NULL;
@@ -110,16 +121,7 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 	if ($data == NULL) {
 		echo __("There is no data to show");
 	} else {
-		if ($flash == 1) {
-			return fs_hbar_chart ($data, $legend, $width, $height);		
-			// echo fs_3d_pie_chart ($data, $legend, $width, $height);
-		}
-		else {
-			if (isset($data))
-				generic_pie_graph ($width, $height, $data, $legend);
-			else 
-				graphic_error();
-		}
+		return hbar_graph($config['flash_charts'], $data, $width, $height);
 	}
 }
 
@@ -128,7 +130,7 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 // Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
 // ===============================================================================
 
-function graph_workunit_project_user ($width, $height, $id_user, $date_from, $date_to = 0, $flash = 0) {
+function graph_workunit_project_user ($width, $height, $id_user, $date_from, $date_to = 0) {
 	global $config;
 
 	$data= array();
@@ -147,18 +149,19 @@ function graph_workunit_project_user ($width, $height, $id_user, $date_from, $da
 					tworkunit_task.id_task = ttask.id AND
 					tproject.id = ttask.id_project 
 					GROUP BY tproject.name ORDER BY SUM(duration) DESC");
-	while ($row=mysql_fetch_array($res)) {
-		$data[] = $row[0];
-		$legend[] = clean_flash_string ($row[1]);
-	} 
-	 
-	if ($flash == 1) {
-		return fs_hbar_chart ($data, $legend, $width, $height);		
+	
+	if (mysql_fetch_array($res) != NULL) {
+		while ($row = mysql_fetch_array($res)) {
+			$data[clean_flash_string ($row[1])] = $row[0];
+		}
 	} else {
-		if (isset($data))
-			generic_pie_graph ($width, $height, $data, $legend);
-		else 
-			graphic_error();
+		$data = NULL;
+	}
+	
+	if ($data == NULL) {
+		echo __("There is no data to show");
+	} else {
+		return hbar_graph($config['flash_charts'], $data, $width, $height);
 	}
 }
 
@@ -167,14 +170,18 @@ function graph_workunit_project_user ($width, $height, $id_user, $date_from, $da
 // ===============================================================================
 
 
-function graphic_error () {
+function graphic_error ($flow = true) {
 	global $config;
-
-	Header('Content-type: image/png');
-	$imgPng = imageCreateFromPng($config["homedir"].'/images/error.png');
-	imageAlphaBlending($imgPng, true);
-	imageSaveAlpha($imgPng, true);
-	imagePng($imgPng);
+	if($flow) {
+		Header('Content-type: image/png');
+		$imgPng = imageCreateFromPng($config["homedir"].'/images/error.png');
+		imageAlphaBlending($imgPng, true);
+		imageSaveAlpha($imgPng, true);
+		imagePng($imgPng);
+	}
+	else {
+		return print_image('images/error.png', true);
+	}
 }
 
 // ***************************************************************************
@@ -245,7 +252,7 @@ function progress_bar ($progress, $width, $height) {
 }
 
 function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue, $labela, $labelb) {
-	include ("../include/config.php");
+	include('config.php');
 	
 	// $ratingA, $ratingB, $ratingA_leg, $ratingB_leg;
 	$ratingA=$valuea;
@@ -287,6 +294,7 @@ function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue,
 
 		ImageFilledRectangle($image, 40, $margin_up, ($ratingA/$size_per)+40, $margin_up+$rectangle_height -1 , $blue);
 		$legend = $ratingA;
+		debugPrint($config, '/tmp/logo');
 		ImageTTFText($image, 7, 0, 0, $margin_up+8, $black, $config["fontpath"], $labela);
 		// Second rectangle
 		ImageFilledRectangle($image, 40, $margin_up+$rectangle_height + 1 , ($ratingB/$size_per)+40, ($rectangle_height*2)+$margin_up , $red);
@@ -321,7 +329,7 @@ function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue,
 // Generic PIE graph
 // ===============================================================================
 
-function generic_pie_graph ($width=300, $height=200, $data, $legend) {
+/*function generic_pie_graph ($width=300, $height=200, $data, $legend) {
 	require ("../include/config.php");
 	require_once '../include/Image/Graph.php';
 	
@@ -380,7 +388,7 @@ function generic_pie_graph ($width=300, $height=200, $data, $legend) {
 		$Graph->done();
 	} else 
 		graphic_error ();
-}
+}*/
 
 // ===========================================================================
 // odo_generic - Odometer graph
@@ -388,7 +396,7 @@ function generic_pie_graph ($width=300, $height=200, $data, $legend) {
 // Pure = 0 for no legend, fullscreen graph
 // ===========================================================================
 
-function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max=100, $pure = 1) {
+/*function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max=100, $pure = 1) {
 	require_once 'Image/Graph.php';
 	include ("../include/config.php");
 	
@@ -432,13 +440,13 @@ function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max
 				$value2=0;
 	if ($value3 <0)
 				$value3=0;
-	/***************************Arrows************************/
+	//Arrows
 	$Arrows = & Image_Graph::factory('dataset');
 	$Arrows->addPoint('Current', $value1, 'GLOBAL');
 	$Arrows->addPoint('Past', $value2, 'DATA');
 	$Arrows->addPoint('Objective', $value3, 'MONITOR');
 
-	/**************************PARAMATERS for PLOT*******************/
+	//PARAMATERS for PLOT
 
 	// create the plot as odo chart using the dataset
 	$Plot =& $Plotarea->addNew('Image_Graph_Plot_Odo',$Arrows);
@@ -451,7 +459,7 @@ function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max
 	$Plot->setArrowMarker($Marker);
 
 	$Plotarea->hideAxis();
-	/***************************Axis************************/
+	//Axis
 	// create a Y data value marker
 
 	$Marker->setFillColor('transparent');
@@ -462,7 +470,7 @@ function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max
 	// create a pin-point marker type
 	$Plot->setTickLength(10);
 	$Plot->setAxisTicks(5);
-	/********************************color of arrows*************/
+	//color of arrows
 	$FillArray = & Image_Graph::factory('Image_Graph_Fill_Array');
 	$FillArray->addColor('red@0.9', 'A');
 	$FillArray->addColor('blue@0.9', 'B');
@@ -476,7 +484,7 @@ function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max
 	$Plot->setArrowLineStyle($LineArray);
 	$Plot->setArrowFillStyle($FillArray);
 
-	/***************************MARKER OR ARROW************************/
+	//MARKER OR ARROW
 	// create a Y data value marker
 
 	$Marker =& $Plot->addNew('Image_Graph_Marker_Value', IMAGE_GRAPH_VALUE_Y);
@@ -490,7 +498,7 @@ function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max
 		// and use the marker on the plot
 		$Plot->setMarker($PointingMarker);
 	}
-	/**************************RANGE*******************/
+	//RANGE
 	$Plot->addRangeMarker(0, $config_risk_med);
 	$Plot->addRangeMarker($config_risk_med, $config_risk_high);
 	$Plot->addRangeMarker($config_risk_high, $max);
@@ -502,11 +510,11 @@ function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max
 	$Plot->setRangeMarkerFillStyle($FillRangeArray);
 	// output the Graph
 	$Graph->done();
-}
+}*/
 
 
 
-function generic_bar_graph ( $width =380, $height = 200, $data, $legend) {
+/*function generic_bar_graph ( $width =380, $height = 200, $data, $legend) {
 	include ("../include/config.php");
 	require_once 'Image/Graph.php';
 	
@@ -542,10 +550,10 @@ function generic_bar_graph ( $width =380, $height = 200, $data, $legend) {
 	$Plot->setLineColor('gray');
 	$Plot->setFillColor('blue@0.85');
 	$Graph->done(); 
-}
+}*/
 
 
-function generic_area_graph ($data, $data_label, $width, $height) {
+/*function generic_area_graph ($data, $data_label, $width, $height) {
 	require_once 'Image/Graph.php';
 	include ("../include/config.php");
 	
@@ -602,14 +610,14 @@ function generic_area_graph ($data, $data_label, $width, $height) {
 		Header("Content-type: image/png");
 		drawWarning($width,$height);
 	}
-}
+}*/
 
 // ***************************************************************************
 // Draw a radar/spider generic map graph. Uses three arrays (dataXX)
 // If data1 is empty, draw only a graph data (data1)
 // ***************************************************************************
 
-function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $width, $height) {
+/*function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $width, $height) {
 	include ("../include/config.php");
 	require_once 'Image/Graph.php';
 	require_once 'Image/Canvas.php';
@@ -671,7 +679,7 @@ function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $wi
    		Header("Content-type: image/png");
 		drawWarning($width, $height);
 	}
-}
+}*/
 
 
 function project_tree ($id_project, $id_user) {

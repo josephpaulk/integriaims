@@ -257,4 +257,4 @@ function show_task_tree (&$table, $id_project, $level, $id_parent_task, $where_c
 	}
 }
 ?>
-<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>
+<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

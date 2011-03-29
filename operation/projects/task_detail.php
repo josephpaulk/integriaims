@@ -3,7 +3,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// Copyright (c) 2011 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -250,8 +250,7 @@ $table->data[0][0] = print_input_text ('name', $name, '', 50, 240, true, __('Nam
 if ($id_task != -1) {
 	$table->rowspan[0][2] = 5;
 
-	$image = graph_workunit_task (200, 170, $id_task, 1);
-	//$image = '<img src="include/functions_graph.php?type=workunit_task&width=200&height=170&id_task='.$id_task.'">';
+	$image = graph_workunit_task (200, 170, $id_task);
 	$table->data[0][2] = print_label (__('Workunit distribution'), '', '', true, $image);
 }
 
@@ -277,8 +276,6 @@ if ($id_task != -1) {
 	$incident_wu = get_incident_task_workunit_hours ($id_task);
 	if ($incident_wu > 0)
 		$table->data[5][1] .= " ( + $incident_wu )";
-	
-
 }
 
 $table->data[6][0] = print_input_text ('estimated_cost', $estimated_cost, '', 7,
@@ -384,4 +381,4 @@ $(document).ready (function () {
 ?>
 });
 </script>
-<script language="JavaScript" src="include/FusionCharts/FusionCharts.js"></script>
+<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>
