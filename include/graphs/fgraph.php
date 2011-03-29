@@ -72,7 +72,7 @@ function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height, $oth
 	switch($graph_type) {
 		case "2d":
 				if($flash_chart) {
-					return fs_3d_pie_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
+					return fs_2d_pie_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
 				}
 				else {
 					return "<img src='include/graphs/functions_pchart.php?graph_type=pie2d&data=".json_encode($chart_data)."&width=".$width."&height=".$height."&other_str=".$other_str."'>";
