@@ -1,5 +1,10 @@
 2011-03-30  Sergio Martin <sergio.martin@artica.es>
 
+	* include/graphs/pChart/pDraw.class.php: Fixed typo
+	and forgotten changes from last commit
+
+2011-03-30  Sergio Martin <sergio.martin@artica.es>
+
 	* include/graphs/pChart/pDraw.class.php: Fixed 
 	a pchart bug in the ForceTransparency attribute
 	into the pChart library

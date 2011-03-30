@@ -3040,7 +3040,7 @@
      $DisplayB		= isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
 
      $Data = $this->DataSet->getData();
-     debugPrint($Data, '/tmp/logo');
+
      list($XMargin,$XDivs) = $this->scaleGetXSettings();
      foreach($Data["Series"] as $SerieName => $Serie)
       {
@@ -3733,7 +3733,7 @@
            $Areas[$AreaID][] = $LastX;
            if ( $AroundZero ) { $Areas[$AreaID][] = $YZero; } else { $Areas[$AreaID][] = $this->GraphAreaY2-1; }
 
-           $Alpha = $ForceTransparency != NULL ? $ForceTransparency : $Alpha;
+           $Alpha = $ForceTransparency != -1 ? $ForceTransparency : $Alpha;
            $Color = array("R"=>$R,"G"=>$G,"B"=>$B,"Alpha"=>$Alpha);
            foreach($Areas as $Key => $Points)
             $this->drawPolygon($Points,$Color);
@@ -3785,7 +3785,7 @@
            if ( $AroundZero ) { $Areas[$AreaID][] = $YZero; } else { $Areas[$AreaID][] = $this->GraphAreaX1+1; }
            $Areas[$AreaID][] = $LastY;
 
-           $Alpha = $ForceTransparency != NULL ? $ForceTransparency : $Alpha;
+           $Alpha = $ForceTransparency != -1 ? $ForceTransparency : $Alpha;
            $Color = array("R"=>$R,"G"=>$G,"B"=>$B,"Alpha"=>$Alpha);
            foreach($Areas as $Key => $Points)
             $this->drawPolygon($Points,$Color);
@@ -3813,7 +3813,7 @@
      $DisplayG		= isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
      $DisplayB		= isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
      $AroundZero	= isset($Format["AroundZero"]) ? $Format["AroundZero"] : TRUE;
-     $Interleave	= isset($Format["Interleave"]) ? $Format["Interleave"] : .3;
+     $Interleave	= isset($Format["Interleave"]) ? $Format["Interleave"] : .5;
      $Rounded		= isset($Format["Rounded"]) ? $Format["Rounded"] : FALSE;
      $RoundRadius	= isset($Format["RoundRadius"]) ? $Format["RoundRadius"] : 4;
      $Surrounding	= isset($Format["Surrounding"]) ? $Format["Surrounding"] : NULL;
