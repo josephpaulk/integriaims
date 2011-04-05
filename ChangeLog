@@ -1,3 +1,8 @@
+2011-04-05  SAncho Lerena <slerena@artica.es>
+
+	* operation/projects/project_download_file.php: Fixed
+	broken download attachment on projects.
+
 2011-04-05  Sergio Martin <sergio.martin@artica.es>
 
 	* include/graphs/pChart/pData.class.php
