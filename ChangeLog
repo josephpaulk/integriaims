@@ -1,3 +1,11 @@
+2011-04-05  Sergio Martin <sergio.martin@artica.es>
+
+	* include/graphs/pChart/pData.class.php
+	include/graphs/pChart/pDraw.class.php: Added new 
+	features to the pChart library as the border colours
+	customization in the border colors and selective
+	avoidation of ticks
+
 2011-03-30  Sergio Martin <sergio.martin@artica.es>
 
 	* include/graphs/pChart/pDraw.class.php: Fixed typo

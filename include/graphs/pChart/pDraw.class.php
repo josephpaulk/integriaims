@@ -1707,6 +1707,7 @@
      $OuterTickWidth	= isset($Format["OuterTickWidth"]) ? $Format["OuterTickWidth"] : 2;
      $DrawXLines	= isset($Format["DrawXLines"]) ? $Format["DrawXLines"] : TRUE;
      $DrawYLines	= isset($Format["DrawYLines"]) ? $Format["DrawYLines"] : ALL;
+     $AvoidGridWhenEmpty		= isset($Format["AvoidGridWhenEmpty"]) ? $Format["AvoidGridWhenEmpty"] : FALSE;
      $GridTicks		= isset($Format["GridTicks"]) ? $Format["GridTicks"] : 4;
      $GridR		= isset($Format["GridR"]) ? $Format["GridR"] : 255;
      $GridG		= isset($Format["GridG"]) ? $Format["GridG"] : 255;
@@ -1716,6 +1717,7 @@
      $AxisGo		= isset($Format["AxisG"]) ? $Format["AxisG"] : 0;
      $AxisBo		= isset($Format["AxisB"]) ? $Format["AxisB"] : 0;
      $AxisAlpha		= isset($Format["AxisAlpha"]) ? $Format["AxisAlpha"] : 100;
+     $AvoidTickWhenEmpty		= isset($Format["AvoidTickWhenEmpty"]) ? $Format["AvoidTickWhenEmpty"] : FALSE;
      $TickRo		= isset($Format["TickR"]) ? $Format["TickR"] : 0;
      $TickGo		= isset($Format["TickG"]) ? $Format["TickG"] : 0;
      $TickBo		= isset($Format["TickB"]) ? $Format["TickB"] : 0;
@@ -1978,8 +1980,16 @@
                 }
                else
                 {
-                 if ( $DrawXLines && ($XPos != $this->GraphAreaX1 && $XPos != $this->GraphAreaX2) ) { $this->drawLine($XPos,$this->GraphAreaY1+$FloatingOffset,$XPos,$this->GraphAreaY2-$FloatingOffset,array("R"=>$GridR,"G"=>$GridG,"B"=>$GridB,"Alpha"=>$GridAlpha,"Ticks"=>$GridTicks)); }
-                 if ( $InnerTickWidth !=0 || $OuterTickWidth != 0 ) { $this->drawLine($XPos,$YPos-$InnerTickWidth,$XPos,$YPos+$OuterTickWidth,array("R"=>$TickR,"G"=>$TickG,"B"=>$TickB,"Alpha"=>$TickAlpha)); }
+                 if ( $DrawXLines && ($XPos != $this->GraphAreaX1 && $XPos != $this->GraphAreaX2) ) { 
+					 if($Data["Series"][$Abscissa]["Data"][$i] != "" || $AvoidGridWhenEmpty) {
+						$this->drawLine($XPos,$this->GraphAreaY1+$FloatingOffset,$XPos,$this->GraphAreaY2-$FloatingOffset,array("R"=>$GridR,"G"=>$GridG,"B"=>$GridB,"Alpha"=>$GridAlpha,"Ticks"=>$GridTicks)); 
+					 }
+				 }
+                 if ( $InnerTickWidth !=0 || $OuterTickWidth != 0 ) { 
+					 if($Data["Series"][$Abscissa]["Data"][$i] != "" || $AvoidTickWhenEmpty) {
+						$this->drawLine($XPos,$YPos-$InnerTickWidth,$XPos,$YPos+$OuterTickWidth,array("R"=>$TickR,"G"=>$TickG,"B"=>$TickB,"Alpha"=>$TickAlpha)); 
+					 }
+				 }
                 }
 
               }
@@ -3040,7 +3050,7 @@
      $DisplayB		= isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
 
      $Data = $this->DataSet->getData();
-
+     debugPrint($Data, '/tmp/logo');
      list($XMargin,$XDivs) = $this->scaleGetXSettings();
      foreach($Data["Series"] as $SerieName => $Serie)
       {
@@ -3660,6 +3670,7 @@
    function drawAreaChart($Format=NULL)
     {
      $DisplayValues	= isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : FALSE;
+     $DisplayZeros	= isset($Format["DisplayZeros"]) ? $Format["DisplayZeros"] : TRUE;
      $DisplayOffset	= isset($Format["DisplayOffset"]) ? $Format["DisplayOffset"] : 2;
      $DisplayColor	= isset($Format["DisplayColor"]) ? $Format["DisplayColor"] : DISPLAY_MANUAL;
      $DisplayR		= isset($Format["DisplayR"]) ? $Format["DisplayR"] : 0;
@@ -3675,7 +3686,14 @@
       {
        if ( $Serie["isDrawable"] == TRUE && $SerieName != $Data["Abscissa"] )
         {
-         $R = $Serie["Color"]["R"]; $G = $Serie["Color"]["G"]; $B = $Serie["Color"]["B"]; $Alpha = $Serie["Color"]["Alpha"]; $Ticks = $Serie["Ticks"];
+         $R = $Serie["Color"]["R"]; 
+         $G = $Serie["Color"]["G"]; 
+         $B = $Serie["Color"]["B"];
+         $BorderR = $Serie["Color"]["BorderR"]; 
+         $BorderG = $Serie["Color"]["BorderG"]; 
+         $BorderB = $Serie["Color"]["BorderB"];
+         $Alpha = $Serie["Color"]["Alpha"]; 
+         $Ticks = $Serie["Ticks"];
          if ( $DisplayColor == DISPLAY_AUTO ) { $DisplayR = $R; $DisplayG = $G; $DisplayB = $B; }
 
          $AxisID	= $Serie["Axis"];
@@ -3700,8 +3718,17 @@
            $X = $this->GraphAreaX1 + $XMargin; $LastX = NULL; $LastY = NULL;
 
            if ( !is_array($PosArray) ) { $Value = $PosArray; $PosArray = ""; $PosArray[0] = $Value; }
+           $lastKey = 0;
            foreach($PosArray as $Key => $Y)
             {
+			 // Hack to avoid draw zero values
+			 if(!$DisplayZeros && $Serie["Data"][$Key] == 0 && $lastKey == 0) {
+				$Y = VOID;
+			 }
+			else {
+			}
+             $lastKey = $Serie["Data"][$Key];
+
              if ( $DisplayValues && $Serie["Data"][$Key] != VOID )
               {
                if ( $Serie["Data"][$Key] > 0 ) { $Align = TEXT_ALIGN_BOTTOMMIDDLE; $Offset = $DisplayOffset; } else { $Align = TEXT_ALIGN_TOPMIDDLE; $Offset = -$DisplayOffset; }
@@ -3734,7 +3761,7 @@
            if ( $AroundZero ) { $Areas[$AreaID][] = $YZero; } else { $Areas[$AreaID][] = $this->GraphAreaY2-1; }
 
            $Alpha = $ForceTransparency != -1 ? $ForceTransparency : $Alpha;
-           $Color = array("R"=>$R,"G"=>$G,"B"=>$B,"Alpha"=>$Alpha);
+           $Color = array("BorderR" => $BorderR, "BorderG" => $BorderG, "BorderB" => $BorderB, "R"=>$R,"G"=>$G,"B"=>$B,"Alpha"=>$Alpha);
            foreach($Areas as $Key => $Points)
             $this->drawPolygon($Points,$Color);
           }
@@ -3786,7 +3813,7 @@
            $Areas[$AreaID][] = $LastY;
 
            $Alpha = $ForceTransparency != -1 ? $ForceTransparency : $Alpha;
-           $Color = array("R"=>$R,"G"=>$G,"B"=>$B,"Alpha"=>$Alpha);
+           $Color = array("BorderR" => $BorderR, "BorderG" => $BorderG, "BorderB" => $BorderB, "R"=>$R,"G"=>$G,"B"=>$B,"Alpha"=>$Alpha);
            foreach($Areas as $Key => $Points)
             $this->drawPolygon($Points,$Color);
           }
@@ -3813,7 +3840,7 @@
      $DisplayG		= isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
      $DisplayB		= isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
      $AroundZero	= isset($Format["AroundZero"]) ? $Format["AroundZero"] : TRUE;
-     $Interleave	= isset($Format["Interleave"]) ? $Format["Interleave"] : .5;
+     $Interleave	= isset($Format["Interleave"]) ? $Format["Interleave"] : .3;
      $Rounded		= isset($Format["Rounded"]) ? $Format["Rounded"] : FALSE;
      $RoundRadius	= isset($Format["RoundRadius"]) ? $Format["RoundRadius"] : 4;
      $Surrounding	= isset($Format["Surrounding"]) ? $Format["Surrounding"] : NULL;
