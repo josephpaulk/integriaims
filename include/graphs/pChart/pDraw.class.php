@@ -3050,7 +3050,7 @@
      $DisplayB		= isset($Format["DisplayB"]) ? $Format["DisplayB"] : 0;
 
      $Data = $this->DataSet->getData();
-     debugPrint($Data, '/tmp/logo');
+
      list($XMargin,$XDivs) = $this->scaleGetXSettings();
      foreach($Data["Series"] as $SerieName => $Serie)
       {
@@ -3689,9 +3689,18 @@
          $R = $Serie["Color"]["R"]; 
          $G = $Serie["Color"]["G"]; 
          $B = $Serie["Color"]["B"];
-         $BorderR = $Serie["Color"]["BorderR"]; 
-         $BorderG = $Serie["Color"]["BorderG"]; 
-         $BorderB = $Serie["Color"]["BorderB"];
+         if (isset($Serie["Color"]["BorderR"]))
+         	$BorderR = $Serie["Color"]["BorderR"];
+         else
+         	 $BorderR = $R;
+         if (isset($Serie["Color"]["BorderG"]))
+         	$BorderG = $Serie["Color"]["BorderG"];
+         else
+         	$BorderG = $G; 
+         if (isset($Serie["Color"]["BorderB"]))
+         	$BorderB = $Serie["Color"]["BorderB"];
+         else
+         	$BorderB = $B;
          $Alpha = $Serie["Color"]["Alpha"]; 
          $Ticks = $Serie["Ticks"];
          if ( $DisplayColor == DISPLAY_AUTO ) { $DisplayR = $R; $DisplayG = $G; $DisplayB = $B; }
@@ -3722,11 +3731,16 @@
            foreach($PosArray as $Key => $Y)
             {
 			 // Hack to avoid draw zero values
-			 if(!$DisplayZeros && $Serie["Data"][$Key] == 0 && $lastKey == 0) {
+			 if(isset($Serie["Data"][$Key + 1])) {
+				$nextKey = $Serie["Data"][$Key + 1];
+			 }
+			 else {
+				$nextKey = -1;
+			 }
+			 if((!$DisplayZeros && $Serie["Data"][$Key] == 0 && $lastKey == 0 && $nextKey == 0 && $Key != 0)) {
 				$Y = VOID;
 			 }
-			else {
-			}
+
              $lastKey = $Serie["Data"][$Key];
 
              if ( $DisplayValues && $Serie["Data"][$Key] != VOID )

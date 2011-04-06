@@ -1,3 +1,9 @@
+2011-04-06  Sergio Martin <sergio.martin@artica.es>
+
+	* include/graphs/pChart/pDraw.class.php: Fixed avoid
+	zero values in area graphs and added border colors 
+	miguel fixes
+
 2011-04-05  SAncho Lerena <slerena@artica.es>
 
 	* operation/projects/project_download_file.php: Fixed
