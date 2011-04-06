@@ -1,5 +1,10 @@
 2011-04-06  Sancho Lerena <slerena@artica.es>
 
+	* operation/projects/project_download_file.php: Fixed
+	problem with filenames with spaces.
+
+2011-04-06  Sancho Lerena <slerena@artica.es>
+
 	* include/functions_graph.php: Added new graphs and
 	fixed old one.
 

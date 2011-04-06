@@ -45,15 +45,16 @@ if (!user_belong_task ($id_user, $id_task)){
 // Allow download file
 
 $fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".rawurlencode ($data["filename"]);
+$fileLocation_unencoded = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
 
 $last_name = $data["filename"];
 
-if (file_exists($fileLocation)){
+if (file_exists($fileLocation_unencoded)){
 	header('Content-type: aplication/octet-stream;');
 	header('Content-type: ' . returnMIMEType($fileLocation) . ';');
 	header("Content-Length: " . filesize($fileLocation));
 	header('Content-Disposition: attachment; filename="' . $last_name . '"');
-	readfile($fileLocation);
+	readfile($fileLocation_unencoded);
 
 } else {
 	echo "File is missing in disk storage. Please contact the administrator";
