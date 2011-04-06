@@ -23,7 +23,7 @@ if (file_exists("config.php")) {
 }
 elseif (file_exists("include/config.php")) {
 	include_once ("include/config.php");
-	include_once("include_once/graphs/fgraph.php");
+	include_once("include/graphs/fgraph.php");
 }
 
 // ===============================================================================
@@ -61,25 +61,12 @@ function graph_workunit_task ($width, $height, $id_task) {
 					WHERE tworkunit_task.id_task = $id_task AND 
 					tworkunit_task.id_workunit = tworkunit.id 
 					GROUP BY id_user ORDER BY duration DESC");
-	$a = true;
-	if (mysql_fetch_array($res) != NULL) {
-		while ($row = mysql_fetch_array($res)) {
-			$data[$row[1]] = $row[0];
-			if($a) { 
-				$data[$row[1]] = $row[0];
-				$a=false; 
-			}
-		}
-	} else {
-		$data = NULL;
-	}
 
-	/*if ($flash == 1) { 
-		return fs_3d_pie_chart ($data, $legend, $width, $height);
-	} elseif (isset($data))
-		generic_pie_graph ($width, $height, $data, $legend);
-	else 
-		graphic_error();*/
+	$data = NULL;
+
+	while ($row = mysql_fetch_array($res)) {
+		$data[$row[1]] = $row[0];
+	}
 		
 	if ($data == NULL) {
 		echo __("There is no data to show");
@@ -88,6 +75,62 @@ function graph_workunit_task ($width, $height, $id_task) {
 	}
 }
 
+// ===============================================================================
+// Draw a simple pie graph with reported workunits for a specific PROJECT
+// ===============================================================================
+
+function graph_workunit_project ($width, $height, $id_project) {
+	global $config;
+	$data = array();
+
+	$res = mysql_query("SELECT SUM(duration), ttask.name
+					FROM tworkunit, tworkunit_task, ttask, tproject  
+					WHERE tproject.id = '$id_project' AND 
+					tworkunit.id = tworkunit_task.id_workunit AND 
+					tworkunit_task.id_task = ttask.id AND
+					tproject.id = ttask.id_project 
+					GROUP BY ttask.name ORDER BY SUM(duration) DESC");
+
+	$data = NULL;
+	while ($row = mysql_fetch_array($res)) {
+		$data[$row[1]] = $row[0];
+	}
+		
+	if ($data == NULL) {
+		echo __("There is no data to show");
+	} else {
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('other'));
+	}
+}
+
+// ===============================================================================
+// Draw a simple pie graph with reported workunits for a specific PROJECT, showing
+// time by each user.
+// ===============================================================================
+
+function graph_workunit_project_user_single ($width, $height, $id_project) {
+	global $config;
+	$data = array();
+
+	$res = mysql_query("SELECT SUM(duration), tworkunit.id_user 
+					FROM tworkunit, tworkunit_task, ttask, tproject  
+					WHERE tproject.id = $id_project AND 
+					tworkunit.id = tworkunit_task.id_workunit AND 
+					tworkunit_task.id_task = ttask.id AND
+					tproject.id = ttask.id_project 
+					GROUP BY tworkunit.id_user ORDER BY SUM(duration) DESC");
+	$data = NULL;
+				
+	while ($row = mysql_fetch_array($res)) {
+		$data[$row[1]] = $row[0];
+	}
+		
+	if ($data == NULL) {
+		echo __("There is no data to show");
+	} else {
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('other'));
+	}
+}
 
 // ===============================================================================
 // Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
@@ -109,13 +152,10 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 					tworkunit_task.id_task = ttask.id AND
 					tproject.id = ttask.id_project 
 					GROUP BY id_task ORDER BY SUM(duration) DESC");
+	$data = NULL;
 
-	if (mysql_fetch_array($res) != NULL) {
-		while ($row = mysql_fetch_array($res)) {
-			$data[substr(clean_flash_string ($row[3]),0,25)] = $row[0];
-		}
-	} else {
-		$data = NULL;
+	while ($row = mysql_fetch_array($res)) {
+		$data[substr(clean_flash_string ($row[3]),0,25)] = $row[0];
 	}
 
 	if ($data == NULL) {
@@ -149,13 +189,10 @@ function graph_workunit_project_user ($width, $height, $id_user, $date_from, $da
 					tworkunit_task.id_task = ttask.id AND
 					tproject.id = ttask.id_project 
 					GROUP BY tproject.name ORDER BY SUM(duration) DESC");
+	$data = NULL;
 	
-	if (mysql_fetch_array($res) != NULL) {
-		while ($row = mysql_fetch_array($res)) {
-			$data[clean_flash_string ($row[1])] = $row[0];
-		}
-	} else {
-		$data = NULL;
+	while ($row = mysql_fetch_array($res)) {
+		$data[clean_flash_string ($row[1])] = $row[0];
 	}
 	
 	if ($data == NULL) {
@@ -282,15 +319,10 @@ function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue,
 	else
 		$rectangle_height = ($height - 2 - $margin_up ) / 2;
 
-	
-
-
 	// First rectangle
 	if ($size_per == 0)
 		$size_per = 1;
 	if ($mode != 2) {
-
-
 
 		ImageFilledRectangle($image, 40, $margin_up, ($ratingA/$size_per)+40, $margin_up+$rectangle_height -1 , $blue);
 		$legend = $ratingA;

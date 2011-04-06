@@ -1,3 +1,14 @@
+2011-04-06  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_graph.php: Added new graphs and
+	fixed old one.
+
+	* include/graphs/functions_pchart.php: Removed a debug
+	line.
+
+	* operation/projects/project_detail.php: Project detail
+	show new graphs.
+
 2011-04-06  Sergio Martin <sergio.martin@artica.es>
 
 	* include/graphs/pChart/pDraw.class.php: Fixed avoid

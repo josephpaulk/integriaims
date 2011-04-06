@@ -18,6 +18,9 @@
 
 global $config;
 
+include_once ("include/functions_graph.php");
+include_once ("include/functions_reporting.php");
+
 check_login ();
 
 $create_mode = 0;
@@ -31,6 +34,10 @@ $id_project_group = 0;
 
 $action = (string) get_parameter ('action');
 $id_project = (int) get_parameter ('id_project');
+
+echo '</script>
+<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>';
+
 $create_project = (bool) get_parameter ('create_project');
 
 if (!$create_project && ! user_belong_project ($config["id_user"], $id_project)) {
@@ -169,29 +176,34 @@ if ($id_project) {
 	$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
 	echo $people_inv;
 
-
-	echo '<tr>';
-	echo '<td class="datos"><b>'.__('Total payable workunit (hr)').'</b>';
-	echo '<td class="datos">';
 	$pr_hour = get_project_workunit_hours ($id_project, 1);
-	echo $pr_hour;
-
-	echo '<td class="datos"><b>'.__('Project profitability').'</b>';
-	echo '<td class="datos">';
 	$total = project_workunit_cost ($id_project, 1);
-	$real = project_workunit_cost ($id_project, 0);
-	if ($real > 0) {
-		echo format_numeric(($total/$real)*100);
-		echo  " %" ;
+        $real = project_workunit_cost ($id_project, 0);
+
+	if ($pr_hour > 0){
+		echo '<tr>';
+		echo '<td class="datos"><b>'.__('Total payable workunit (hr)').'</b>';
+		echo '<td class="datos">';
+		echo $pr_hour;
+
+		echo '<td class="datos"><b>'.__('Project profitability').'</b>';
+		echo '<td class="datos">';
+		if ($real > 0) {
+			echo format_numeric(($total/$real)*100);
+			echo  " %" ;
+		}
 	}
 
 	echo '<tr>';
 	echo '<td class="datos2"><b>'.__('Project costs').'</b>';
 	echo "<td class='datos2'>";
-	echo $real. " ". $config["currency"];
-	echo '<td class="datos2"><b>'.__('Charged to customer').'</b>';
-	echo "<td class='datos2'>";
-	echo $total." ". $config["currency"];
+	echo format_numeric($real). " ". $config["currency"];
+
+	echo '<td class="datos"><b>'.__('Proyect length deviation (days)').'</b>';
+        echo '<td class="datos">';
+        $expected_length = get_db_sql ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
+        $deviation = format_numeric(($pr_hour-$expected_length)/$config["hours_perday"]);
+        echo $deviation. " ".__('Days');
 
 
 	echo '<tr>';
@@ -201,18 +213,25 @@ if ($id_project) {
 		echo format_numeric ($total/($total_hr/$people_inv)). " ". $config["currency"];
 	else
 		echo __('N/A');
-	echo '<td class="datos"><b>'.__('Proyect length deviation (days)').'</b>';
-	echo '<td class="datos">';
-	$expected_length = get_db_sql ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
-	$deviation = format_numeric(($pr_hour-$expected_length)/$config["hours_perday"]);
-	echo $deviation. " ".__('Days');
+
+	echo '<td class="datos2"><b>'.__('Charged to customer').'</b>';
+        echo "<td class='datos2'>";
+        echo $total." ". $config["currency"];
 }
 
 // Description
 
-echo '<tr><td class="datos2" colspan="4"><textarea name="description" style="height: 300px;">';
+echo '<tr><td class="datos2" colspan="4"><textarea name="description" style="height: 40px;">';
 	echo $description;
 echo "</textarea>";
+
+echo "<tr><td colspan=2>";
+echo "<b>".__("Task effort")."</b>";;
+echo graph_workunit_project (400, 270, $id_project);
+
+echo "<td colspan=2>";
+echo "<b>".__("People effort") ."</b>";
+echo graph_workunit_project_user_single (400, 270, $id_project);
 
 echo "</table>";
 echo '<div style="width:90%" class="button">';

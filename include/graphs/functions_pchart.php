@@ -74,7 +74,7 @@ function pch_pie_graph ($graph_type, $data_values, $legend_values, $width, $heig
 	 $MyData->addPoints($data_values,"ScoreA");  
 	 $MyData->setSerieDescription("ScoreA","Application A");
 
-	$legend_values = array('日本語', '九州', '訓読み', '北海道');
+	// $legend_values = array('日本語', '九州', '訓読み', '北海道');
 	 /* Define the absissa serie */
 	 $MyData->addPoints($legend_values,"Labels");
 	 $MyData->setAbscissa("Labels");
