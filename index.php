@@ -70,26 +70,31 @@ if (file_exists ("enterprise/load_enterprise.php")) {
         require_once ("enterprise/load_enterprise.php");
 }
 
-?>
+$html_header = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>';
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<?php
-
-// This is a clean output ?
+// This is a clean and/or PDF output ?
 $clean_output = get_parameter ("clean_output", 0);
+$pdf_output = get_parameter ("pdf_output", 0);
 
-echo "<title>".$config["sitename"]."</title>";
+if ($pdf_output == 1){
+	// Buffer the following html with PHP so we can store it to a variable later
+	ob_start();
+}
+
+echo $html_header;
+echo "<title>" . $config["sitename"] . "</title>";
+
 ?>
+
 <meta http-equiv="expires" content="0" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="resource-type" content="document" />
 <meta name="distribution" content="global" />
 <meta name="author" content="Sancho Lerena <slerena@gmail.com>" />
 <meta name="website" content="http://integriaims.com" />
-<meta name="copyright" content="Artica Soluciones Tecnologicas (c) 2007-2010" />
-<meta name="keywords" content="management, project, incident, tracking, ITIL" />
+<meta name="copyright" content="Artica Soluciones Tecnologicas (c) 2007-2011" />
+<meta name="keywords" content="ticketing, management, project, incident, tracking, ITIL" />
 <meta name="robots" content="index, follow" />
 <link rel="icon" href="images/integria.ico" type="image/ico" />
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
@@ -292,9 +297,25 @@ if ($clean_output == 0) {
 	} else
 		require ("general/home.php");  //default
 }
-?>
+
+
+if ($pdf_output == 1){
+	// Now collect the output buffer into a variable
+	$html = ob_get_contents();
+	ob_end_clean();
+
+	include("include/mpdf51/mpdf.php");
+	$mpdf=new mPDF();
+	$mpdf->WriteHTML($html);
+	$mpdf->Output();
+	exit;
+
+}
+
+echo '
 <!-- Dialog helper div -->
 <div id="dialog" class="dialog"></div>
 </body>
-</html>
+</html>';
 
+?>

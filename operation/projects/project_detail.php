@@ -120,6 +120,10 @@ echo "<h2>".__('Project management')." &raquo; ";
 if ($create_mode == 0){
 	echo get_db_value ("name", "tproject", "id", $id_project);
 }
+
+
+echo "&nbsp;&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project&clean_output=1&pdf_output=1'><img src='images/page_white_acrobat.png'></A>";
+
 echo "</h2>";
 
 echo '<table width="90%" class="databox" >';
