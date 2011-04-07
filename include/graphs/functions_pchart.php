@@ -54,8 +54,12 @@ $width = $graph['width'];
 $height = $graph['height'];
 $colors = $graph['color'];
 $legend = $graph['legend'];
-$xaxisname = $graph['xaxisname'];
-$yaxisname = $graph['yaxisname'];
+if(isset($graph['xaxisname'])) { 
+	$xaxisname = $graph['xaxisname'];
+}
+if(isset($graph['yaxisname'])) { 
+	$yaxisname = $graph['yaxisname'];
+}
 	
 /*
 $colors = array();
@@ -216,15 +220,16 @@ function pch_pie_graph ($graph_type, $data_values, $legend_values, $width, $heig
 	 /* Draw an AA pie chart */
 	 switch($graph_type) {
 		 case "pie2d":
-			    $PieChart->draw2DPie($width/4,$height/2,array("DataGapAngle"=>0,"DataGapRadius"=>0, "Border"=>FALSE, "BorderR"=>200, "BorderG"=>200, "BorderB"=>200, "Radius"=>$width/4, "ValueR"=>0, "ValueG"=>0, "ValueB"=>0));
+			    $PieChart->draw2DPie($width/4,$height/2,array("DataGapAngle"=>0,"DataGapRadius"=>0, "Border"=>FALSE, "BorderR"=>200, "BorderG"=>200, "BorderB"=>200, "Radius"=>$width/4, "ValueR"=>0, "ValueG"=>0, "ValueB"=>0, "WriteValues"=>TRUE));
 				break;
 		 case "pie3d":
-			    $PieChart->draw3DPie($width/4,$height/2,array("DataGapAngle"=>10,"DataGapRadius"=>6, "Border"=>TRUE, "Radius"=>$width/4, "ValueR"=>0, "ValueG"=>0, "ValueB"=>0, "WriteValues"=>FALSE));
+			    $PieChart->draw3DPie($width/4,$height/2,array("DataGapAngle"=>10,"DataGapRadius"=>6, "Border"=>TRUE, "Radius"=>$width/4, "ValueR"=>0, "ValueG"=>0, "ValueB"=>0, "WriteValues"=>TRUE));
 				break;
 	 }
 
 	 /* Write down the legend next to the 2nd chart*/
-	 $PieChart->drawPieLegend($width/1.5,$height/4, array("R"=>255,"G"=>255,"B"=>255)); 
+	 $legend_size = $myPicture->getLegendSize(array("BoxSize"=>10));
+	 $PieChart->drawPieLegend($legend_size['Width'],5, array("R"=>255,"G"=>255,"B"=>255, "BoxSize"=>10)); 
  
 	 /* Enable shadow computing */ 
 	 $myPicture->setShadow(TRUE,array("X"=>3,"Y"=>3,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
@@ -336,7 +341,7 @@ function pch_bar_graph ($graph_type, $index, $data, $width, $height, $rgb_color 
 	 // TODO: AvoidTickWhenEmpty = TRUE When the distance between two ticks will be greater than 50 px
 	 switch($graph_type) {
 		case "vbar":
-				$scaleSettings = array("AvoidTickWhenEmpty" => FALSE, "AvoidGridWhenEmpty" => FALSE, "GridR"=>200,"GridG"=>200,"GridB"=>200,"DrawSubTicks"=>TRUE,"CycleBackground"=>TRUE, "Mode"=>SCALE_MODE_START0, "XMargin" => 40, "LabelRotation" => 90);
+				$scaleSettings = array("AvoidTickWhenEmpty" => FALSE, "AvoidGridWhenEmpty" => FALSE, "GridR"=>200,"GridG"=>200,"GridB"=>200,"DrawSubTicks"=>TRUE,"CycleBackground"=>TRUE, "Mode"=>SCALE_MODE_START0, "LabelRotation" => 60);
 				$leftmargin = 40;
 				break;
 		case "hbar":
@@ -346,14 +351,14 @@ function pch_bar_graph ($graph_type, $index, $data, $width, $height, $rgb_color 
 	 }
 	 
 	 /* Define the chart area */
-	 $myPicture->setGraphArea($leftmargin,20,$width,$height-100);
+	 $myPicture->setGraphArea($leftmargin,20,$width,$height-80);
 
 	 $myPicture->drawScale($scaleSettings);
 
 	 if(isset($legend)) {
 		/* Write the chart legend */
 		$size = $myPicture->getLegendSize(array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
-		$myPicture->drawLegend($width-$size['Width'],0,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
+		$myPicture->drawLegend($width-$size['Width'],0,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL, "BoxWidth"=>10, "BoxHeight"=>10));
 	 }
 	 
 	 /* Turn on shadow computing */ 
@@ -449,7 +454,7 @@ function pch_vertical_graph ($graph_type, $index, $data, $width, $height, $rgb_c
 	
 	 if(isset($legend)) {
 		/* Write the chart legend */
-		$myPicture->drawLegend($height/2,$height-20,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
+		$myPicture->drawLegend($height/2,$height-20,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL, "BoxWidth"=>10, "BoxHeight"=>10));
 	 }
 	 
 	 /* Turn on shadow computing */ 

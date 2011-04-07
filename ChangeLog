@@ -1,5 +1,10 @@
 2011-04-07  Sergio Martin <sergio.martin@artica.es>
 
+	* include/graphs/functions_pchart.php: Fixed some 
+	pie graphs issues like legend position
+
+2011-04-07  Sergio Martin <sergio.martin@artica.es>
+
 	* include/graphs/functions_fsgraph.php
 	include/graphs/functions_utils.php: Fixed vertical bar flash
 	graphs and added reverse_data function to utils
