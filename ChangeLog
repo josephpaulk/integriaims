@@ -1,5 +1,9 @@
 2011-04-07  Sancho Lerena <slerena@artica.es>
 
+	* index.php: Added bassic support for doing any page a PDF :-)
+
+	* include/fonts: Added new font directory.
+
 	* include/mpdf51: New PDF library.
 	
 	* include/pdf: Removed un-used PDF library.
@@ -7,8 +11,6 @@
 	* include/Image: Removed old Image:Graph PEAR library.
 	
 	* include/calendar.js: Removed old javascript, not used in that location.
-	
-	* include/fonts: Removed old directory.
 	
 	* operation/projects/project_detail.php: Added first sample of PDF reports
 	
