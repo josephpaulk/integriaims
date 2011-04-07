@@ -35,6 +35,7 @@ $id_project_group = 0;
 $action = (string) get_parameter ('action');
 $id_project = (int) get_parameter ('id_project');
 
+// TODO: INCLUDE THIS CODE INTO ABSTRACTION, NOT HERE
 echo '</script>
 <script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>';
 

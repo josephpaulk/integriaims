@@ -13,7 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-include_once("../functions.php");
+include_once('functions_utils.php');
+include_once('../functions.php');
+include_once('../functions_html.php');
 
 /* pChart library inclusions */
 include_once("pChart/pData.class.php");
@@ -24,18 +26,127 @@ include_once("pChart/pScatter.class.php");
 include_once("pChart/pRadar.class.php");
 
 $graph_type = get_parameter('graph_type', '');
-$width = get_parameter('width', 700);
-$height = get_parameter('height', 300);
-$xaxisname = get_parameter('xaxisname', '');
-$yaxisname = get_parameter('yaxisname', '');
-$title = get_parameter('title', '');
-$data = json_decode(safe_output(get_parameter('data')), true);
 
-if($graph_type != 'pie3d' && $graph_type != 'pie2d') {
-	foreach($data as $i => $d) {
-		$data_values[] = round($d);
-		$data_keys[] = $i;
+$id_graph = get_parameter('id_graph', false);
+
+if (!$id_graph) {
+	exit;
+}
+
+$graph = unserialize_in_temp($id_graph);
+
+if (!isset($graph)) {
+	exit;
+}
+
+$data = $graph['data'];
+$width = $graph['width'];
+$height = $graph['height'];
+$colors = $graph['color'];
+$legend = $graph['legend'];
+$xaxisname = $graph['xaxisname'];
+$yaxisname = $graph['yaxisname'];
+		
+/*
+$colors = array();
+$colors['pep1'] = array('border' => '#000000', 'color' => '#000000', 'alpha' => 50);
+$colors['pep2'] = array('border' => '#ff7f00', 'color' => '#ff0000', 'alpha' => 50);
+$colors['pep3'] = array('border' => '#ff0000', 'color' => '#00ff00', 'alpha' => 50);
+$colors['pep4'] = array('border' => '#000000', 'color' => '#0000ff', 'alpha' => 50);
+*/
+
+$pixels_between_xdata = 40;
+$max_xdata_display = round($width / $pixels_between_xdata);
+$ndata = count($data);
+if($max_xdata_display > $ndata) {
+	$xdata_display = $ndata;
+}
+else {
+	$xdata_display = $max_xdata_display;
+}
+
+$step = round($ndata/$xdata_display);
+$c = 0;
+
+switch($graph_type) {
+	case 'hbar':
+	case 'vbar':
+			$bar_colors = array();
+			foreach($data as $i => $values) {				
+				foreach($values as $name => $val) {
+					$data_values[$name][] = $val;
+				}				
+				
+				if (($c % $step) == 0) {
+					$data_keys[] = $i;
+				}
+				else {
+					$data_keys[] = "";
+				}
+				
+				$c++;
+			}
+
+			// If is set bar colors we store it
+			if(isset($colors[reset(array_keys($data_values))]['bars'])) {
+				foreach($colors[reset(array_keys($data_values))]['bars'] as $i => $bar_color) {
+					$rgb_bar = html2rgb($bar_color);
+					$bar_colors[$i]['R'] = $rgb_bar[0];
+					$bar_colors[$i]['G'] = $rgb_bar[1];
+					$bar_colors[$i]['B'] = $rgb_bar[2];
+					$bar_colors[$i]['Alpha'] = 100;
+				}
+			}
+			
+			break;
+	case 'polar':
+	case 'radar':
+	case 'progress':
+	case 'area':
+	case 'spline':
+	case 'threshold':
+	case 'scatter':
+			foreach($data as $i => $d) {
+				$data_values[] = $d;
+				
+				
+				if (($c % $step) == 0) {
+					$data_keys[] = $i;
+				}
+				else {
+					$data_keys[] = "";
+				}
+				
+				$c++;
+			}
+			
+			break;
+	case 'pie3d':
+	case 'pie2d':
+			break;
+}
+
+
+if(!is_array(reset($data_values))) {
+	$data_values = array($data_values);
+	if(is_array($colors) && !empty($colors)) {
+		$colors = array($colors);
 	}
+}
+
+$rgb_color = array();
+foreach($colors as $i => $color) {		
+	$rgb['border'] = html2rgb($color['border']);
+	$rgb_color[$i]['border']['R'] = $rgb['border'][0];
+	$rgb_color[$i]['border']['G'] = $rgb['border'][1];
+	$rgb_color[$i]['border']['B'] = $rgb['border'][2];
+	
+	$rgb['color'] = html2rgb($color['color']);
+	$rgb_color[$i]['color']['R'] = $rgb['color'][0];
+	$rgb_color[$i]['color']['G'] = $rgb['color'][1];
+	$rgb_color[$i]['color']['B'] = $rgb['color'][2];
+	
+	$rgb_color[$i]['alpha'] = $color['alpha'];
 }
 
 switch($graph_type) {
@@ -47,16 +158,16 @@ switch($graph_type) {
 	case 'radar':
 			pch_radar_graph($graph_type, $data_values, $data_keys, $width, $height);
 			break;
-	case 'hbar':
-			pch_horizontal_graph($graph_type, $data_keys, $data_values, $width, $height, $xaxisname, $yaxisname);
-			break;
 	case 'progress':
 			pch_progress_graph($graph_type, $data_keys, $data_values, $width, $height, $xaxisname, $yaxisname);
 			break;
+	case 'hbar':
 	case 'vbar':
+			pch_bar_graph($graph_type, $data_keys, $data_values, $width, $height, $rgb_color, $xaxisname, $yaxisname, false, $legend, $bar_colors);
+			break;
 	case 'area':
 	case 'spline':
-			pch_vertical_graph($graph_type, $data_keys, $data_values, $width, $height, $xaxisname, $yaxisname);
+			pch_vertical_graph($graph_type, $data_keys, $data_values, $width, $height, $rgb_color, $xaxisname, $yaxisname, false, $legend);
 			break;
 	case 'threshold':
 			pch_threshold_graph($graph_type, $data_keys, $data_values, $width, $height, $xaxisname, $yaxisname, $title);
@@ -74,7 +185,6 @@ function pch_pie_graph ($graph_type, $data_values, $legend_values, $width, $heig
 	 $MyData->addPoints($data_values,"ScoreA");  
 	 $MyData->setSerieDescription("ScoreA","Application A");
 
-	// $legend_values = array('日本語', '九州', '訓読み', '北海道');
 	 /* Define the absissa serie */
 	 $MyData->addPoints($legend_values,"Labels");
 	 $MyData->setAbscissa("Labels");
@@ -83,8 +193,7 @@ function pch_pie_graph ($graph_type, $data_values, $legend_values, $width, $heig
 	 $myPicture = new pImage($width,$height,$MyData,TRUE);
 
 	 /* Set the default font properties */ 
-	 //$myPicture->setFontProperties(array("FontName"=>"pChart/fonts/verdana.ttf","FontSize"=>8,"R"=>80,"G"=>80,"B"=>80));
-	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/code.ttf","FontSize"=>8,"R"=>80,"G"=>80,"B"=>80));
+	 $myPicture->setFontProperties(array("FontName"=>"../fonts/code.ttf","FontSize"=>10,"R"=>80,"G"=>80,"B"=>80));
 
 	 /* Create the pPie object */ 
 	 $PieChart = new pPie($myPicture,$MyData);
@@ -111,7 +220,6 @@ function pch_pie_graph ($graph_type, $data_values, $legend_values, $width, $heig
 
 function pch_radar_graph ($graph_type, $data_values, $legend_values, $width, $height) {
 	 /* CAT:Radar/Polar charts */
-	 debugPrint($legend_values, '/tmp/logo');
 
 	 /* Create and populate the pData object */
 	 $MyData = new pData();   
@@ -126,7 +234,7 @@ function pch_radar_graph ($graph_type, $data_values, $legend_values, $width, $he
 	 $myPicture = new pImage($width,$height,$MyData,TRUE);
 
 	 /* Set the default font properties */ 
-	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/code.ttf","FontSize"=>8,"R"=>80,"G"=>80,"B"=>80));
+	 $myPicture->setFontProperties(array("FontName"=>"../fonts/code.ttf","FontSize"=>8,"R"=>80,"G"=>80,"B"=>80));
 
 	 /* Create the pRadar object */ 
 	 $SplitChart = new pRadar();
@@ -137,11 +245,11 @@ function pch_radar_graph ($graph_type, $data_values, $legend_values, $width, $he
 	 /* Draw an AA pie chart */
 	 switch($graph_type) {
 		 case "radar":
-				$Options = array("SkipLabels"=>0,"LabelPos"=>RADAR_LABELS_HORIZONTAL, "LabelMiddle"=>FALSE,"Layout"=>RADAR_LAYOUT_STAR,"BackgroundGradient"=>array("StartR"=>255,"StartG"=>255,"StartB"=>255,"StartAlpha"=>100,"EndR"=>207,"EndG"=>227,"EndB"=>125,"EndAlpha"=>50), "FontName"=>"pChart/fonts/pf_arma_five.ttf","FontSize"=>6);
+				$Options = array("SkipLabels"=>0,"LabelPos"=>RADAR_LABELS_HORIZONTAL, "LabelMiddle"=>FALSE,"Layout"=>RADAR_LAYOUT_STAR,"BackgroundGradient"=>array("StartR"=>255,"StartG"=>255,"StartB"=>255,"StartAlpha"=>100,"EndR"=>207,"EndG"=>227,"EndB"=>125,"EndAlpha"=>50), "FontName"=>"../fonts/code.ttf","FontSize"=>6);
 			    $SplitChart->drawRadar($myPicture,$MyData,$Options); 
 				break;
 		 case "polar":
-				$Options = array("Layout"=>RADAR_LAYOUT_CIRCLE,"BackgroundGradient"=>array("StartR"=>255,"StartG"=>255,"StartB"=>255,"StartAlpha"=>100,"EndR"=>207,"EndG"=>227,"EndB"=>125,"EndAlpha"=>50), "FontName"=>"pChart/fonts/pf_arma_five.ttf","FontSize"=>6); 
+				$Options = array("Layout"=>RADAR_LAYOUT_CIRCLE,"BackgroundGradient"=>array("StartR"=>255,"StartG"=>255,"StartB"=>255,"StartAlpha"=>100,"EndR"=>207,"EndG"=>227,"EndB"=>125,"EndAlpha"=>50), "FontName"=>"../fonts/code.ttf","FontSize"=>6); 
  			    $SplitChart->drawRadar($myPicture,$MyData,$Options); 
 				break;
 	 }
@@ -150,28 +258,153 @@ function pch_radar_graph ($graph_type, $data_values, $legend_values, $width, $he
 	 $myPicture->stroke(); 
 }
 
-function pch_vertical_graph ($graph_type, $index, $data, $width, $height, $xaxisname = "", $yaxisname = "", $show_values = false, $show_legend = false) {
-	 /* CAT:Bar Chart */
+function pch_bar_graph ($graph_type, $index, $data, $width, $height, $rgb_color = false, $xaxisname = "", $yaxisname = "", $show_values = false, $legend = array(), $bar_colors = array()) {
+	/* CAT: Vertical Bar Chart */
+	if(!is_array($legend) || empty($legend)) {
+		unset($legend);
+	}
 
-     if(is_array($data[0])) {
-	 	$data2 = array();
-		foreach($data as $index =>$values) {
+	 /* Create and populate the pData object */
+	 $MyData = new pData();
+	 $overridePalette = array();
+	 foreach($data as $i => $values) {
+		$MyData->addPoints($values,$i);
+		if($rgb_color !== false) {
+			$MyData->setPalette($i, 
+					array("R" => $rgb_color[$i]['color']["R"], 
+						"G" => $rgb_color[$i]['color']["G"], 
+						"B" => $rgb_color[$i]['color']["B"],
+						"BorderR" => $rgb_color[$i]['border']["R"], 
+						"BorderG" => $rgb_color[$i]['border']["G"], 
+						"BorderB" => $rgb_color[$i]['border']["B"], 
+						"Alpha" => $rgb_color[$i]['alpha']));
+		}
+		
+		// Assign cyclic colors to bars if are setted
+		if($bar_colors) {
 			$c = 0;
-			foreach($values as $value) {
-				$data2[$c][$index] = $value;
+			foreach($values as $ii => $vv) {
+					if(!isset($bar_colors[$c])) {
+						$c = 0;
+					}
+					$overridePalette[$ii] = $bar_colors[$c];
+					$c++;
+			}
+		}
+		else {
+			$overridePalette = false;
+		}
+	 }
+
+	 $MyData->setAxisName(0,$yaxisname);
+	 $MyData->addPoints($index,"Xaxis");
+	 $MyData->setSerieDescription("Xaxis", $xaxisname);
+	 $MyData->setAbscissa("Xaxis");
+
+	 /* Create the pChart object */
+	 $myPicture = new pImage($width,$height,$MyData);
+
+	 /* Turn of Antialiasing */
+	 $myPicture->Antialias = FALSE;
+
+	 /* Add a border to the picture */
+	 //$myPicture->drawRectangle(0,0,$width,$height,array("R"=>0,"G"=>0,"B"=>0));
+
+	 /* Turn on shadow computing */ 
+	 $myPicture->setShadow(TRUE,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10)); 
+
+	 /* Set the default font */
+	 $myPicture->setFontProperties(array("FontName"=>"../fonts/code.ttf","FontSize"=>10));
+
+	 /* Draw the scale */
+	 // TODO: AvoidTickWhenEmpty = FALSE When the distance between two ticks will be less than 50 px
+	 // TODO: AvoidTickWhenEmpty = TRUE When the distance between two ticks will be greater than 50 px
+	 switch($graph_type) {
+		case "vbar":
+				$scaleSettings = array("AvoidTickWhenEmpty" => FALSE, "AvoidGridWhenEmpty" => FALSE, "GridR"=>200,"GridG"=>200,"GridB"=>200,"DrawSubTicks"=>TRUE,"CycleBackground"=>TRUE, "Mode"=>SCALE_MODE_START0, "XMargin" => 40, "LabelRotation" => 90);
+				$leftmargin = 40;
+				break;
+		case "hbar":
+				$scaleSettings = array("GridR"=>200,"GridG"=>200,"GridB"=>200,"DrawSubTicks"=>TRUE,"CycleBackground"=>TRUE, "Mode"=>SCALE_MODE_START0, "Pos"=>SCALE_POS_TOPBOTTOM);
+				$leftmargin = 100;
+				break;
+	 }
+	 
+	 /* Define the chart area */
+	 $myPicture->setGraphArea($leftmargin,20,$width,$height-100);
+
+	 $myPicture->drawScale($scaleSettings);
+
+	 if(isset($legend)) {
+		/* Write the chart legend */
+		$size = $myPicture->getLegendSize(array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
+		$myPicture->drawLegend($width-$size['Width'],0,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
+	 }
+	 
+	 /* Turn on shadow computing */ 
+	 $myPicture->setShadow(TRUE,array("X"=>0,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
+
+	 /* Draw the chart */
+	 $settings = array("ForceTransparency"=>"-1", "Gradient"=>TRUE,"GradientMode"=>GRADIENT_EFFECT_CAN,"DisplayValues"=>$show_values,"DisplayZeroValues"=>FALSE,"DisplayR"=>100,"DisplayG"=>100,"DisplayB"=>100,"DisplayShadow"=>TRUE,"Surrounding"=>5,"AroundZero"=>FALSE, "OverrideColors"=>$overridePalette);
+	 
+	 $myPicture->drawBarChart($settings);
+
+	 /* Render the picture */
+	 $myPicture->stroke(); 
+}
+
+function pch_vertical_graph ($graph_type, $index, $data, $width, $height, $rgb_color = false, $xaxisname = "", $yaxisname = "", $show_values = false, $legend = array()) {
+	/* CAT:Vertical Charts */
+	if(!is_array($legend) || empty($legend)) {
+		unset($legend);
+	}
+	 /*$legend=array('pep1' => 'pep1','pep2' => 'pep2','pep3' => 'pep3','pep4' => 'pep4');
+	 $data=array(array('pep1' => 1, 'pep2' => 1, 'pep3' => 3, 'pep4' => 3), array('pep1' => 1, 'pep2' => 3, 'pep3' => 1,'pep4' => 4), array('pep1' => 3, 'pep2' => 1, 'pep3' => 1,'pep4' =>1), array('pep1' => 1, 'pep2' =>1, 'pep3' =>1,'pep4' =>0));
+	 $index=array(1,2,3,4);
+     */
+    
+/*
+    debugPrint($data, '/tmp/logo');
+     if(is_array(reset($data))) {
+	 	$data2 = array();
+		foreach($data as $i =>$values) {
+			$c = 0;
+			foreach($values as $i2 => $value) {
+				$data2[$i2][$i] = $value;
 				$c++;
 			}
 		}
 		$data = $data2;
 	 }
 	 else {
-		$data = array($data);
+		//$data = array($data);
 	 }
+*/
 
 	 /* Create and populate the pData object */
 	 $MyData = new pData();
-	 foreach($data as $index => $values) {
-		$MyData->addPoints($values,"Yaxis_".$index);
+
+	 foreach($data as $i => $values) {
+		 //debugPrint($values, '/tmp/logo');
+		 //debugPrint($i, '/tmp/logo');
+		 if(isset($legend)) {
+			$point_id = $legend[$i];
+		 }
+		 else {
+			$point_id = $i;
+		 }
+		 
+		$MyData->addPoints($values,"_".$point_id);
+		if($rgb_color !== false) {
+			$MyData->setPalette($point_id, 
+					array("R" => $rgb_color[$i]['color']["R"], 
+						"G" => $rgb_color[$i]['color']["G"], 
+						"B" => $rgb_color[$i]['color']["B"],
+						"BorderR" => $rgb_color[$i]['border']["R"], 
+						"BorderG" => $rgb_color[$i]['border']["G"], 
+						"BorderB" => $rgb_color[$i]['border']["B"], 
+						"Alpha" => $rgb_color[$i]['alpha']));	
+		}
 	 }
 
 	 //$MyData->addPoints($data,"Yaxis");
@@ -190,30 +423,34 @@ function pch_vertical_graph ($graph_type, $index, $data, $width, $height, $xaxis
 	 //$myPicture->drawRectangle(0,0,$width,$height,array("R"=>0,"G"=>0,"B"=>0));
 
 	 /* Set the default font */
-	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/code.ttf","FontSize"=>7));
+	 $myPicture->setFontProperties(array("FontName"=>"../fonts/code.ttf","FontSize"=>10));
 
 	 /* Define the chart area */
 	 $myPicture->setGraphArea(30,20,$width,$height-100);
 
 	 /* Draw the scale */
-	 $scaleSettings = array("GridR"=>200,"GridG"=>200,"GridB"=>200,"DrawSubTicks"=>TRUE,"CycleBackground"=>TRUE, "Mode"=>SCALE_MODE_START0, "XMargin" => 40, "LabelRotation" => 90);
+	 $scaleSettings = array("GridR"=>200,"GridG"=>200,"GridB"=>200,"DrawSubTicks"=>TRUE,"CycleBackground"=>TRUE, "Mode"=>SCALE_MODE_START0, "LabelRotation" => 90);
 	 $myPicture->drawScale($scaleSettings);
-
-	 if($show_legend) {
+	
+	 if(isset($legend)) {
 		/* Write the chart legend */
-		$myPicture->drawLegend(580,12,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
+		$myPicture->drawLegend($height/2,$height-20,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL));
 	 }
 	 
 	 /* Turn on shadow computing */ 
-	 $myPicture->setShadow(TRUE,array("X"=>0,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
+	 //$myPicture->setShadow(TRUE,array("X"=>0,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
 
 	 /* Draw the chart */
-	 $settings = array("Gradient"=>TRUE,"GradientMode"=>GRADIENT_EFFECT_CAN,"DisplayValues"=>$show_values,"DisplayZeroValues"=>FALSE,"DisplayR"=>100,"DisplayG"=>100,"DisplayB"=>100,"DisplayShadow"=>TRUE,"Surrounding"=>5,"AroundZero"=>FALSE);
+	 $settings = array("ForceTransparency"=>"-1",
+	 	"Gradient"=>TRUE,
+	 	"GradientMode"=>GRADIENT_EFFECT_CAN,
+	 	"DisplayValues"=>$show_values,
+	 	"DisplayZeroValues"=>FALSE,
+	 	"DisplayR"=>100,
+	 	"DisplayZeros"=> FALSE,
+	 	"DisplayG"=>100,"DisplayB"=>100,"DisplayShadow"=>TRUE,"Surrounding"=>5,"AroundZero"=>FALSE);
 	 
 	 switch($graph_type) {
-		case "vbar":
-				$myPicture->drawBarChart($settings);
-				break;
 		case "area":
 				$myPicture->drawAreaChart($settings);
 				break;
@@ -221,13 +458,13 @@ function pch_vertical_graph ($graph_type, $index, $data, $width, $height, $xaxis
 				$myPicture->drawLineChart($settings);
 				break;
 	 }
-
+	 
 	 /* Render the picture */
 	 $myPicture->stroke(); 
 }
 
 function pch_threshold_graph ($graph_type, $index, $data, $width, $height, $xaxisname = "", $yaxisname = "", $title = "", $show_values = false, $show_legend = false) {
-	 /* CAT:Bar Chart */
+	 /* CAT:Threshold Chart */
 
 	/* Create and populate the pData object */
 	 $MyData = new pData();  
@@ -245,7 +482,7 @@ function pch_threshold_graph ($graph_type, $index, $data, $width, $height, $xaxi
 	 $myPicture->drawRectangle(0,0,699,229,array("R"=>200,"G"=>200,"B"=>200));
 	 
 	 /* Write the picture title */ 
-	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/code.ttf","FontSize"=>11));
+	 $myPicture->setFontProperties(array("FontName"=>"../fonts/code.ttf","FontSize"=>11));
 	 $myPicture->drawText(60,35,$title,array("FontSize"=>20,"Align"=>TEXT_ALIGN_BOTTOMLEFT));
 
 	 /* Do some cosmetic and draw the chart */
@@ -253,7 +490,7 @@ function pch_threshold_graph ($graph_type, $index, $data, $width, $height, $xaxi
 	 $myPicture->drawFilledRectangle(60,40,670,190,array("R"=>255,"G"=>255,"B"=>255,"Surrounding"=>-200,"Alpha"=>10));
 	 $myPicture->drawScale(array("GridR"=>180,"GridG"=>180,"GridB"=>180, "Mode" => SCALE_MODE_START0));
 	 $myPicture->setShadow(TRUE,array("X"=>2,"Y"=>2,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
-	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/code.ttf","FontSize"=>6));
+	 $myPicture->setFontProperties(array("FontName"=>"../fonts/code.ttf","FontSize"=>6));
 	 $settings = array("Gradient"=>TRUE,"GradientMode"=>GRADIENT_EFFECT_CAN,"DisplayValues"=>$show_values,"DisplayZeroValues"=>FALSE,"DisplayR"=>100,"DisplayG"=>100,"DisplayB"=>100,"DisplayShadow"=>TRUE,"Surrounding"=>5,"AroundZero"=>FALSE);
 	 $myPicture->drawSplineChart($settings);
 	 $myPicture->setShadow(FALSE);
@@ -268,7 +505,7 @@ function pch_threshold_graph ($graph_type, $index, $data, $width, $height, $xaxi
 }
 
 function pch_horizontal_graph ($graph_type, $index, $data, $width, $height, $xaxisname = "", $yaxisname = "", $show_values = false, $show_legend = false) {
-	 /* CAT:Bar Chart */
+	 /* CAT:Horizontal Charts */
 
 	 /* Create and populate the pData object */
 	 $MyData = new pData();  
@@ -287,7 +524,7 @@ function pch_horizontal_graph ($graph_type, $index, $data, $width, $height, $xax
 	 //$myPicture->drawRectangle(0,0,$width,$height,array("R"=>0,"G"=>0,"B"=>0));
 
 	 /* Set the default font */
-	 $myPicture->setFontProperties(array("FontName"=>"pChart/fonts/code.ttf","FontSize"=>7));
+	 $myPicture->setFontProperties(array("FontName"=>"../fonts/code.ttf","FontSize"=>7));
 
 	 /* Define the chart area */
 	 $myPicture->setGraphArea(75,20,$width,$height);

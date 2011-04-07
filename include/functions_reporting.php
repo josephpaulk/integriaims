@@ -125,12 +125,17 @@ ORDER BY timestamp ASC");
 
     	$time_format = "y-m-d H:i";
         $timestamp_human = clean_flash_string (date($time_format, $timestamp));
-		$chart2[$timestamp_human] = $total;
+		$chart2[$timestamp_human]['graph'] = $total;
    	}
+   	
+   	$colors['graph']['color'] = "#2179B1";
+   	$colors['graph']['border'] = "#000";
+   	$colors['graph']['alpha'] = 100;
 
-	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300);
+	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300, $colors);
 }
 
+// TODO: Move to functions_graph.php
 function task_activity_graph ($id_task){
 	global $config;
 
@@ -182,12 +187,25 @@ function task_activity_graph ($id_task){
 			$j++;
 		} 
 
-    	$time_format = "y-m-d H:i";
+    	$time_format = "M d";
         $timestamp_human = clean_flash_string (date($time_format, $timestamp));
 		$chart2[$timestamp_human] = $total;
    	}
    	
-	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300);
+   	$colors['1day']['color'] = "#2179B1";
+   	$colors['1day']['border'] = "#000";
+   	$colors['1day']['alpha'] = 100;
+
+	foreach($chart2 as $key => $ch) { 
+		$chart3[$key]['1day'] = $ch;
+	}
+	
+	$legend = array();
+		
+	$xaxisname = __('Days');
+	$yaxisname = __('Hours in project');
+	
+	echo vbar_graph ($config['flash_charts'], $chart3, 650, 300, $colors, $legend, $xaxisname, $yaxisname);
 }
 
 

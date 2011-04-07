@@ -12,7 +12,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-include "include/functions_graph.php";
+include_once("include/functions_graph.php");
 global $config;
 
 check_login ();

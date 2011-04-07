@@ -23,7 +23,7 @@ if (file_exists("config.php")) {
 }
 elseif (file_exists("include/config.php")) {
 	include_once ("include/config.php");
-	include_once("include/graphs/fgraph.php");
+	include_once("graphs/fgraph.php");
 }
 
 // ===============================================================================
@@ -31,7 +31,7 @@ elseif (file_exists("include/config.php")) {
 // ===============================================================================
 
 function incident_peruser ($width, $height) {
-	require ("../include/config.php");
+	require_once ("../include/config.php");
 	
 	$res = mysql_query("SELECT * FROM tusuario");
 	while ($row=mysql_fetch_array($res)) {
@@ -161,7 +161,11 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 	if ($data == NULL) {
 		echo __("There is no data to show");
 	} else {
-		return hbar_graph($config['flash_charts'], $data, $width, $height);
+		$colors['graph']['color'] = "#2179B1";
+		$colors['graph']['border'] = "#000";
+		$colors['graph']['alpha'] = 100;
+   	
+		return hbar_graph($config['flash_charts'], $data, $width, $height, $colors);
 	}
 }
 
@@ -198,7 +202,10 @@ function graph_workunit_project_user ($width, $height, $id_user, $date_from, $da
 	if ($data == NULL) {
 		echo __("There is no data to show");
 	} else {
-		return hbar_graph($config['flash_charts'], $data, $width, $height);
+		$colors['graph']['color'] = "#2179B1";
+		$colors['graph']['border'] = "#000";
+		$colors['graph']['alpha'] = 100;
+		echo hbar_graph($config['flash_charts'], $data, $width, $height, $colors);
 	}
 }
 
@@ -326,7 +333,7 @@ function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue,
 
 		ImageFilledRectangle($image, 40, $margin_up, ($ratingA/$size_per)+40, $margin_up+$rectangle_height -1 , $blue);
 		$legend = $ratingA;
-		debugPrint($config, '/tmp/logo');
+
 		ImageTTFText($image, 7, 0, 0, $margin_up+8, $black, $config["fontpath"], $labela);
 		// Second rectangle
 		ImageFilledRectangle($image, 40, $margin_up+$rectangle_height + 1 , ($ratingB/$size_per)+40, ($rectangle_height*2)+$margin_up , $red);

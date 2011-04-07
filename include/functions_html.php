@@ -106,6 +106,34 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 }
 
 /**
+ * Convert a html color like #FF00FF into the rgb values like (255,0,255).
+ *
+ * @param string color in format #FFFFFF, FFFFFF, #FFF or FFF
+ */
+function html2rgb($htmlcolor)
+{
+	if ($htmlcolor[0] == '#') {
+		$htmlcolor = substr($htmlcolor, 1);
+	}
+
+	if (strlen($htmlcolor) == 6) {
+		$r = hexdec($htmlcolor[0].$htmlcolor[1]);
+		$g = hexdec($htmlcolor[2].$htmlcolor[3]);
+		$b = hexdec($htmlcolor[4].$htmlcolor[5]);
+		return array($r, $g, $b);
+	}
+	elseif (strlen($htmlcolor) == 3) {
+		$r = hexdec($htmlcolor[0].$htmlcolor[0]);
+		$g = hexdec($htmlcolor[1].$htmlcolor[1]);
+		$b = hexdec($htmlcolor[2].$htmlcolor[2]);
+		return array($r, $g, $b);
+	}
+	else {
+		return false;
+	}
+}
+
+/**
  * Prints an array of fields in a popup menu of a form based on a SQL query.
  * The first and second columns of the query will be used.
  *
