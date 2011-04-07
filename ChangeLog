@@ -1,6 +1,12 @@
 2011-04-07  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_graph.php
+	include/graphs/functions_pchart.php: Fixed last commit bug
+	and added default fine colors system to pchart
+
+2011-04-07  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_graph.php
 	include/functions_html.php
 	include/graphs/functions_pchart.php
 	include/graphs/functions_fsgraph.php

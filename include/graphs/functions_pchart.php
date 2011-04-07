@@ -25,6 +25,16 @@ include_once("pChart/pPie.class.php");
 include_once("pChart/pScatter.class.php");
 include_once("pChart/pRadar.class.php");
 
+// Define default fine colors
+
+$default_fine_colors = array();
+$default_fine_colors[] = "#2222FF";
+$default_fine_colors[] = "#00DD00";
+$default_fine_colors[] = "#CC0033";
+$default_fine_colors[] = "#9900CC";
+$default_fine_colors[] = "#FFCC66";
+$default_fine_colors[] = "#999999";
+
 $graph_type = get_parameter('graph_type', '');
 
 $id_graph = get_parameter('id_graph', false);
@@ -46,7 +56,7 @@ $colors = $graph['color'];
 $legend = $graph['legend'];
 $xaxisname = $graph['xaxisname'];
 $yaxisname = $graph['yaxisname'];
-		
+	
 /*
 $colors = array();
 $colors['pep1'] = array('border' => '#000000', 'color' => '#000000', 'alpha' => 50);
@@ -71,7 +81,6 @@ $c = 0;
 switch($graph_type) {
 	case 'hbar':
 	case 'vbar':
-			$bar_colors = array();
 			foreach($data as $i => $values) {				
 				foreach($values as $name => $val) {
 					$data_values[$name][] = $val;
@@ -86,15 +95,21 @@ switch($graph_type) {
 				
 				$c++;
 			}
+			$fine_colors = array();
 
-			// If is set bar colors we store it
-			if(isset($colors[reset(array_keys($data_values))]['bars'])) {
-				foreach($colors[reset(array_keys($data_values))]['bars'] as $i => $bar_color) {
-					$rgb_bar = html2rgb($bar_color);
-					$bar_colors[$i]['R'] = $rgb_bar[0];
-					$bar_colors[$i]['G'] = $rgb_bar[1];
-					$bar_colors[$i]['B'] = $rgb_bar[2];
-					$bar_colors[$i]['Alpha'] = 100;
+			// If is set fine colors we store it or set default
+			if(isset($colors[reset(array_keys($data_values))]['fine'])) {
+				$fine = $colors[reset(array_keys($data_values))]['fine'];
+				if($fine === true) {
+					$fine = $default_fine_colors;
+				}
+				
+				foreach($fine as $i => $fine_color) {
+					$rgb_fine = html2rgb($fine_color);
+					$fine_colors[$i]['R'] = $rgb_fine[0];
+					$fine_colors[$i]['G'] = $rgb_fine[1];
+					$fine_colors[$i]['B'] = $rgb_fine[2];
+					$fine_colors[$i]['Alpha'] = 100;
 				}
 			}
 			
@@ -163,7 +178,7 @@ switch($graph_type) {
 			break;
 	case 'hbar':
 	case 'vbar':
-			pch_bar_graph($graph_type, $data_keys, $data_values, $width, $height, $rgb_color, $xaxisname, $yaxisname, false, $legend, $bar_colors);
+			pch_bar_graph($graph_type, $data_keys, $data_values, $width, $height, $rgb_color, $xaxisname, $yaxisname, false, $legend, $fine_colors);
 			break;
 	case 'area':
 	case 'spline':
@@ -258,7 +273,7 @@ function pch_radar_graph ($graph_type, $data_values, $legend_values, $width, $he
 	 $myPicture->stroke(); 
 }
 
-function pch_bar_graph ($graph_type, $index, $data, $width, $height, $rgb_color = false, $xaxisname = "", $yaxisname = "", $show_values = false, $legend = array(), $bar_colors = array()) {
+function pch_bar_graph ($graph_type, $index, $data, $width, $height, $rgb_color = false, $xaxisname = "", $yaxisname = "", $show_values = false, $legend = array(), $fine_colors = array()) {
 	/* CAT: Vertical Bar Chart */
 	if(!is_array($legend) || empty($legend)) {
 		unset($legend);
@@ -281,13 +296,13 @@ function pch_bar_graph ($graph_type, $index, $data, $width, $height, $rgb_color 
 		}
 		
 		// Assign cyclic colors to bars if are setted
-		if($bar_colors) {
+		if($fine_colors) {
 			$c = 0;
 			foreach($values as $ii => $vv) {
-					if(!isset($bar_colors[$c])) {
+					if(!isset($fine_colors[$c])) {
 						$c = 0;
 					}
-					$overridePalette[$ii] = $bar_colors[$c];
+					$overridePalette[$ii] = $fine_colors[$c];
 					$c++;
 			}
 		}

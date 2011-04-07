@@ -155,15 +155,13 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 	$data = NULL;
 
 	while ($row = mysql_fetch_array($res)) {
-		$data[substr(clean_flash_string ($row[3]),0,25)] = $row[0];
+		$data[substr(clean_flash_string ($row[3]),0,25)]['graph'] = $row[0];
 	}
 
 	if ($data == NULL) {
 		echo __("There is no data to show");
 	} else {
-		$colors['graph']['color'] = "#2179B1";
-		$colors['graph']['border'] = "#000";
-		$colors['graph']['alpha'] = 100;
+		$colors['graph']['fine'] = true;
    	
 		return hbar_graph($config['flash_charts'], $data, $width, $height, $colors);
 	}
@@ -196,15 +194,14 @@ function graph_workunit_project_user ($width, $height, $id_user, $date_from, $da
 	$data = NULL;
 	
 	while ($row = mysql_fetch_array($res)) {
-		$data[clean_flash_string ($row[1])] = $row[0];
+		$data[clean_flash_string ($row[1])]['graph'] = $row[0];
 	}
 	
 	if ($data == NULL) {
 		echo __("There is no data to show");
 	} else {
-		$colors['graph']['color'] = "#2179B1";
-		$colors['graph']['border'] = "#000";
-		$colors['graph']['alpha'] = 100;
+		$colors['graph']['fine'] = true;
+		
 		echo hbar_graph($config['flash_charts'], $data, $width, $height, $colors);
 	}
 }
