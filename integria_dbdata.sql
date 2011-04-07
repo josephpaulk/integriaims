@@ -15,8 +15,8 @@
 INSERT INTO `tconfig` (`token`, `value`) VALUES  
 ('language_code','en'),
 ('block_size','25'),
-('db_scheme_version','3.0RC1'),
-('db_scheme_build','ID110222'),
+('db_scheme_version','3.0-dev'),
+('db_scheme_build','ID110406'),
 ('date_format', 'F j, Y, g:i a'),
 ('currency', 'eu'),
 ('sitename', 'Integria IMS - the ITIL Management System'),
@@ -56,7 +56,7 @@ INSERT INTO `tproject` VALUES  (-1,'Non imputable hours (Special)','','0000-00-0
 
 ALTER TABLE tproject AUTO_INCREMENT = 1;
 
-INSERT INTO `ttask` (`id`, `id_project`, `id_parent_task`, `name`, `description`, `completion`, `priority`, `dep_type`, `start`, `id_group`) VALUES (-1,-1,0,'Vacations','',0,0,0,'0000-00-00',0),(-2,-1,0,'Disease','',0,0,0,'0000-00-00',0),(-3,-1,0,'Not justified','',0,0,0,'0000-00-00',0), (-4,-1,0,'Workunits lost (without project/task)','',0,0,0,'0000-00-00',0);
+INSERT INTO `ttask` (`id`, `id_project`, `id_parent_task`, `name`, `description`, `completion`, `priority`, `dep_type`, `start`, `id_group`) VALUES (-1,-1,0,'Vacations','',0,0,0,'0000-00-00',0),(-2,-1,0,'Health issues','',0,0,0,'0000-00-00',0),(-3,-1,0,'Not justified','',0,0,0,'0000-00-00',0), (-4,-1,0,'Workunits lost (without project/task)','',0,0,0,'0000-00-00',0);
 
 ALTER TABLE ttask AUTO_INCREMENT = 1;
 

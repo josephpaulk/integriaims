@@ -1,5 +1,7 @@
 2011-04-07  Sancho Lerena <slerena@artica.es>
 
+	* integria_dbdata.sql: Minor updates on SQL.
+
 	* index.php: Added bassic support for doing any page a PDF :-)
 
 	* include/fonts: Added new font directory.
