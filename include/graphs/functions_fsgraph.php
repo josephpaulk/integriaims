@@ -17,14 +17,319 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 
-
-require_once ("FusionCharts/FusionCharts_Gen.php");
+if (!class_exists("FusionCharts")) {
+	require_once ("FusionCharts/FusionCharts_Gen.php");
+}
 
 
 
 ///////////////////////////////
 ///////////////////////////////
 ///////////////////////////////
+function fs_stacked_graph($chart_data, $width, $height, $color, $legend, $long_index) {
+	global $config;
+	
+	$graph_type = "StackedArea2D";
+	
+	$chart = new FusionCharts($graph_type, $width, $height);
+	
+	$pixels_between_xdata = 25;
+	$max_xdata_display = round($width / $pixels_between_xdata);
+	$ndata = count($chart_data);
+	if($max_xdata_display > $ndata) {
+		$xdata_display = $ndata;
+	}
+	else {
+		$xdata_display = $max_xdata_display;
+	}
+	
+	$step = round($ndata/$xdata_display);
+	
+	
+	if(is_array(reset($chart_data))) {
+	 	$data2 = array();
+	 	$count = 0;
+		foreach($chart_data as $i =>$values) {
+//			$count = 0;
+//			$step = 10;
+//			$num_vlines = 0;
+//			
+//			if ($count++ % $step == 0) {
+//				$show_name = '1';
+//				$num_vlines++;
+//			}
+//			else {
+//				$show_name = '0';
+//			}
+
+			$count++;
+			$show_name = '0';
+			if (($count % $step) == 0) {
+				$show_name = '1';
+			}
+			
+			if (isset($long_index[$i])) {
+				$chart->addCategory($i, //'');
+						'hoverText=' . $long_index[$i] .  
+						';showName=' . $show_name);
+			}
+			
+			$c = 0;
+			foreach($values as $i2 => $value) {
+				$data2[$i2][$i] = $value;
+				$c++;
+			}
+		}
+		$data = $data2;
+	 }
+	 else {
+		$data = array($chart_data);
+	 }
+	
+	 $a = 0;
+	 
+	$empty = 1;
+	foreach ($data as $i => $value) {	
+		
+		$legend_text = '';
+		if (isset($legend[$i])) {
+			$legend_text = $legend[$i];
+		}
+		
+		$alpha = '';
+		$areaBorderColor = '';
+		$color = '';
+		$showAreaBorder = 1; //0 old default
+		if (isset($color[$i])) {
+			if (!isset($color[$i]['border'])) {
+				$showAreaBorder = 1;
+			}
+			
+			if (isset($color[$i]['alpha'])) {
+				$alpha = 'alpha=' . $color[$i]['alpha'] . ';';
+			}
+			
+			if (isset($color[$i]['border'])) {
+				$areaBorderColor = 'areaBorderColor=' . $color[$i]['border'] . ';';
+			}
+			
+			if (isset($color[$i]['color'])) {
+				$color = 'color=#' . $color[$i]['color'];
+			}
+		}
+		
+		$chart->addDataSet($legend_text, $alpha . 
+			'showAreaBorder=' . $showAreaBorder . ';' .
+			$areaBorderColor .
+			$color);
+			
+		$count = 0;
+		$step = 10;
+		$num_vlines = 0;
+		
+		foreach ($value as $i2 => $v) {
+			if ($count++ % $step == 0) {
+				$show_name = '1';
+				$num_vlines++;
+			}
+			else {
+				$show_name = '0';
+			}
+			
+			$empty = 0;
+			
+			if ($a < 3) {
+				$a++;
+//			$chart->addCategory(date('G:i', $i2), //'');
+//				'hoverText=' . date (html_entity_decode ($config['date_format'], ENT_QUOTES, "UTF-8"), $i2) .  
+//				';showName=' . $show_name);
+			}
+
+			//Add data
+			$chart->addChartData($v);
+		}
+	}
+	
+	$chart->setChartParams('animation=0;numVDivLines=' . $num_vlines . 
+		';showShadow=0;showAlternateVGridColor=1;showNames=1;rotateNames=1;' . 
+		'lineThickness=0.1;anchorRadius=0.5;showValues=0;baseFontSize=9;showLimits=0;' .
+		'showAreaBorder=1;areaBorderThickness=0.1;areaBorderColor=000000' . ($empty == 1 ? ';yAxisMinValue=0;yAxisMaxValue=1' : ''));
+	
+	$random_number = uniqid();
+	
+	$div_id = 'chart_div_' . $random_number;
+	$chart_id = 'chart_' . $random_number;
+		
+	$output = '<div id="' . $div_id. '" style="z-index:1;"></div>';
+	$output .= '<script language="JavaScript" src="FusionCharts/FusionCharts.js"></script>';
+	$output .= '<script type="text/javascript">
+			<!--
+			function pie_' . $chart_id . ' () {
+				var myChart = new FusionCharts("FusionCharts/FCF_'.$graph_type.'.swf", "' . $chart_id . '", "' . $width. '", "' . $height. '", "0", "1");
+				myChart.setDataXML("' . addslashes($chart->getXML ()) . '");
+				myChart.addParam("WMode", "Transparent");
+				myChart.render("' . $div_id . '");
+			}
+					pie_' . $chart_id . ' ();
+			-->
+		</script>';
+	
+	return $output;	
+}
+
+function fs_line_graph($chart_data, $width, $height, $color, $legend, $long_index) {
+	global $config;
+	
+	$graph_type = "MSLine";
+	
+	$chart = new FusionCharts($graph_type, $width, $height);
+	
+	
+	$pixels_between_xdata = 25;
+	$max_xdata_display = round($width / $pixels_between_xdata);
+	$ndata = count($chart_data);
+	if($max_xdata_display > $ndata) {
+		$xdata_display = $ndata;
+	}
+	else {
+		$xdata_display = $max_xdata_display;
+	}
+	
+	$step = round($ndata/$xdata_display);
+	
+	
+	if(is_array(reset($chart_data))) {
+	 	$data2 = array();
+	 	$count = 0;
+		foreach($chart_data as $i =>$values) {
+//			$count = 0;
+//			$step = 10;
+//			$num_vlines = 0;
+//			
+//			if ($count++ % $step == 0) {
+//				$show_name = '1';
+//				$num_vlines++;
+//			}
+//			else {
+//				$show_name = '0';
+//			}
+
+			$count++;
+			$show_name = '0';
+			if (($count % $step) == 0) {
+				$show_name = '1';
+			}
+			
+			if (isset($long_index[$i])) {
+				$chart->addCategory($i, //'');
+						'hoverText=' . $long_index[$i] .  
+						';showName=' . $show_name);
+			}
+			
+			$c = 0;
+			foreach($values as $i2 => $value) {
+				$data2[$i2][$i] = $value;
+				$c++;
+			}
+		}
+		$data = $data2;
+	 }
+	 else {
+		$data = array($chart_data);
+	 }
+	
+	 $a = 0;
+	 
+	$empty = 1;
+	foreach ($data as $i => $value) {	
+		
+		$legend_text = '';
+		if (isset($legend[$i])) {
+			$legend_text = $legend[$i];
+		}
+		
+		$alpha = '';
+		$areaBorderColor = '';
+		$color = '';
+		$showAreaBorder = 1; //0 old default
+		if (isset($color[$i])) {
+			if (!isset($color[$i]['border'])) {
+				$showAreaBorder = 1;
+			}
+			
+			if (isset($color[$i]['alpha'])) {
+				$alpha = 'alpha=' . $color[$i]['alpha'] . ';';
+			}
+			
+			if (isset($color[$i]['border'])) {
+				$areaBorderColor = 'areaBorderColor=' . $color[$i]['border'] . ';';
+			}
+			
+			if (isset($color[$i]['color'])) {
+				$color = 'color=#' . $color[$i]['color'];
+			}
+		}
+		
+		$chart->addDataSet($legend_text, $alpha . 
+			'showAreaBorder=' . $showAreaBorder . ';' .
+			$areaBorderColor .
+			$color);
+			
+		$count = 0;
+		$step = 10;
+		$num_vlines = 0;
+		
+		foreach ($value as $i2 => $v) {
+			if ($count++ % $step == 0) {
+				$show_name = '1';
+				$num_vlines++;
+			}
+			else {
+				$show_name = '0';
+			}
+			
+			$empty = 0;
+			
+			if ($a < 3) {
+				$a++;
+//			$chart->addCategory(date('G:i', $i2), //'');
+//				'hoverText=' . date (html_entity_decode ($config['date_format'], ENT_QUOTES, "UTF-8"), $i2) .  
+//				';showName=' . $show_name);
+			}
+
+			//Add data
+			$chart->addChartData($v);
+		}
+	}
+	
+	$chart->setChartParams('animation=0;numVDivLines=' . $num_vlines . 
+		';showShadow=0;showAlternateVGridColor=1;showNames=1;rotateNames=1;' . 
+		'lineThickness=0.1;anchorRadius=0.5;showValues=0;baseFontSize=9;showLimits=0;' .
+		'showAreaBorder=1;areaBorderThickness=0.1;areaBorderColor=000000' . ($empty == 1 ? ';yAxisMinValue=0;yAxisMaxValue=1' : ''));
+	
+	$random_number = uniqid();
+	
+	$div_id = 'chart_div_' . $random_number;
+	$chart_id = 'chart_' . $random_number;
+	
+	
+	$output = '<div id="' . $div_id. '" style="z-index:1;"></div>';
+	$output .= '<script language="JavaScript" src="FusionCharts/FusionCharts.js"></script>';
+	$output .= '<script type="text/javascript">
+			<!--
+			function pie_' . $chart_id . ' () {
+				var myChart = new FusionCharts("FusionCharts/FCF_'.$graph_type.'.swf", "' . $chart_id . '", "' . $width. '", "' . $height. '", "0", "1");
+				myChart.setDataXML("' . addslashes($chart->getXML ()) . '");
+				myChart.addParam("WMode", "Transparent");
+				myChart.render("' . $div_id . '");
+			}
+					pie_' . $chart_id . ' ();
+			-->
+		</script>';
+	
+	return $output;	
+}
+
 
 function fs_area_graph($chart_data, $width, $height, $color, $legend, $long_index) {
 	global $config;
@@ -68,9 +373,11 @@ function fs_area_graph($chart_data, $width, $height, $color, $legend, $long_inde
 				$show_name = '1';
 			}
 			
-			$chart->addCategory($i, //'');
-					'hoverText=' . $long_index[$i] .  
-					';showName=' . $show_name);
+			if (isset($long_index[$i])) {
+				$chart->addCategory($i, //'');
+						'hoverText=' . $long_index[$i] .  
+						';showName=' . $show_name);
+			}
 			
 			$c = 0;
 			foreach($values as $i2 => $value) {
@@ -87,20 +394,43 @@ function fs_area_graph($chart_data, $width, $height, $color, $legend, $long_inde
 	 $a = 0;
 	 
 	$empty = 1;
-	foreach ($data as $i => $value) {		
-		$showAreaBorder = 0;
-		if (!is_null($color[$i]['border'])) {
-			$showAreaBorder = 1;
+	foreach ($data as $i => $value) {	
+		
+		$legend_text = '';
+		if (isset($legend[$i])) {
+			$legend_text = $legend[$i];
 		}
 		
-		$chart->addDataSet($legend[$i], 'alpha=' . $color[$i]['alpha'] . ';' . 
-			'showAreaBorder=' . $showAreaBorder . ';' .
-			'areaBorderColor=' . $color[$i]['border'] . ';' . 
-			'color=#' . $color[$i]['color']);
+		$alpha = '';
+		$areaBorderColor = '';
+		$color = '';
+		$showAreaBorder = 1; //0 old default
+		if (isset($color[$i])) {
+			if (!isset($color[$i]['border'])) {
+				$showAreaBorder = 1;
+			}
 			
-			$count = 0;
-			$step = 10;
-			$num_vlines = 0;
+			if (isset($color[$i]['alpha'])) {
+				$alpha = 'alpha=' . $color[$i]['alpha'] . ';';
+			}
+			
+			if (isset($color[$i]['border'])) {
+				$areaBorderColor = 'areaBorderColor=' . $color[$i]['border'] . ';';
+			}
+			
+			if (isset($color[$i]['color'])) {
+				$color = 'color=#' . $color[$i]['color'];
+			}
+		}
+		
+		$chart->addDataSet($legend_text, $alpha . 
+			'showAreaBorder=' . $showAreaBorder . ';' .
+			$areaBorderColor .
+			$color);
+			
+		$count = 0;
+		$step = 10;
+		$num_vlines = 0;
 		
 		foreach ($value as $i2 => $v) {
 			if ($count++ % $step == 0) {
@@ -135,14 +465,13 @@ function fs_area_graph($chart_data, $width, $height, $color, $legend, $long_inde
 	$div_id = 'chart_div_' . $random_number;
 	$chart_id = 'chart_' . $random_number;
 	
-	$pre_url = ($config["homeurl"] == "/") ? '' : $config["homeurl"];
 	
 	$output = '<div id="' . $div_id. '" style="z-index:1;"></div>';
-	$output .= '<script language="JavaScript" src="' . $pre_url . '/include/FusionCharts/FusionCharts.js"></script>';
+	$output .= '<script language="JavaScript" src="FusionCharts/FusionCharts.js"></script>';
 	$output .= '<script type="text/javascript">
 			<!--
 			function pie_' . $chart_id . ' () {
-				var myChart = new FusionCharts("' . $pre_url . '/include/FusionCharts/FCF_'.$graph_type.'.swf", "' . $chart_id . '", "' . $width. '", "' . $height. '", "0", "1");
+				var myChart = new FusionCharts("FusionCharts/FCF_'.$graph_type.'.swf", "' . $chart_id . '", "' . $width. '", "' . $height. '", "0", "1");
 				myChart.setDataXML("' . addslashes($chart->getXML ()) . '");
 				myChart.addParam("WMode", "Transparent");
 				myChart.render("' . $div_id . '");
@@ -153,6 +482,14 @@ function fs_area_graph($chart_data, $width, $height, $color, $legend, $long_inde
 	
 	return $output;	
 }
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+
+
+
+
+
 
 
 // Returns the number of seconds since the Epoch for a date in the format dd/mm/yyyy
@@ -348,7 +685,7 @@ function fs_3d_column_chart ($data, $width, $height) {
 . ($empty == 1 ? ';yAxisMinValue=0;yAxisMaxValue=1' : ''));
 
 	// Return the code
-	return get_chart_code ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Column3D.swf');
+	return get_chart_code ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Column2D.swf');
 }
 
 // Prints a Gantt chart

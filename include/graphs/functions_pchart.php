@@ -60,7 +60,7 @@ if(isset($graph['xaxisname'])) {
 if(isset($graph['yaxisname'])) { 
 	$yaxisname = $graph['yaxisname'];
 }
-	
+
 /*
 $colors = array();
 $colors['pep1'] = array('border' => '#000000', 'color' => '#000000', 'alpha' => 50);
@@ -154,6 +154,10 @@ if(!is_array(reset($data_values))) {
 }
 
 $rgb_color = array();
+
+if (!isset($colors))
+	$colors = array();
+
 foreach($colors as $i => $color) {		
 	$rgb['border'] = html2rgb($color['border']);
 	$rgb_color[$i]['border']['R'] = $rgb['border'][0];
@@ -167,6 +171,26 @@ foreach($colors as $i => $color) {
 	
 	$rgb_color[$i]['alpha'] = $color['alpha'];
 }
+
+/*foreach($colors as $i => $color) {
+	if (isset($color['border'])) {
+		$rgb['border'] = html2rgb($color['border']);
+		$rgb_color[$i]['border']['R'] = $rgb['border'][0];
+		$rgb_color[$i]['border']['G'] = $rgb['border'][1];
+		$rgb_color[$i]['border']['B'] = $rgb['border'][2];
+	}
+	
+	if (isset($color['color'])) {
+		$rgb['color'] = html2rgb($color['color']);
+		$rgb_color[$i]['color']['R'] = $rgb['color'][0];
+		$rgb_color[$i]['color']['G'] = $rgb['color'][1];
+		$rgb_color[$i]['color']['B'] = $rgb['color'][2];
+	}
+	
+	if (isset($color['color'])) {
+		$rgb_color[$i]['alpha'] = $color['alpha'];
+	}
+}*/
 
 switch($graph_type) {
 	case 'pie3d':
@@ -184,8 +208,9 @@ switch($graph_type) {
 	case 'vbar':
 			pch_bar_graph($graph_type, $data_keys, $data_values, $width, $height, $rgb_color, $xaxisname, $yaxisname, false, $legend, $fine_colors);
 			break;
+	case 'stacked_area':
 	case 'area':
-	case 'spline':
+	case 'line':
 			pch_vertical_graph($graph_type, $data_keys, $data_values, $width, $height, $rgb_color, $xaxisname, $yaxisname, false, $legend);
 			break;
 	case 'threshold':
@@ -382,9 +407,6 @@ function pch_vertical_graph ($graph_type, $index, $data, $width, $height, $rgb_c
 	 $data=array(array('pep1' => 1, 'pep2' => 1, 'pep3' => 3, 'pep4' => 3), array('pep1' => 1, 'pep2' => 3, 'pep3' => 1,'pep4' => 4), array('pep1' => 3, 'pep2' => 1, 'pep3' => 1,'pep4' =>1), array('pep1' => 1, 'pep2' =>1, 'pep3' =>1,'pep4' =>0));
 	 $index=array(1,2,3,4);
      */
-    
-/*
-    debugPrint($data, '/tmp/logo');
      if(is_array(reset($data))) {
 	 	$data2 = array();
 		foreach($data as $i =>$values) {
@@ -397,33 +419,47 @@ function pch_vertical_graph ($graph_type, $index, $data, $width, $height, $rgb_c
 		$data = $data2;
 	 }
 	 else {
-		//$data = array($data);
+		$data = array($data);
 	 }
-*/
 
 	 /* Create and populate the pData object */
 	 $MyData = new pData();
 
 	 foreach($data as $i => $values) {
-		 //debugPrint($values, '/tmp/logo');
-		 //debugPrint($i, '/tmp/logo');
 		 if(isset($legend)) {
 			$point_id = $legend[$i];
 		 }
 		 else {
 			$point_id = $i;
 		 }
-		 
-		$MyData->addPoints($values,"_".$point_id);
-		if($rgb_color !== false) {
+
+		$MyData->addPoints($values,$point_id);
+		if (!empty($rgb_color)) {
 			$MyData->setPalette($point_id, 
-					array("R" => $rgb_color[$i]['color']["R"], 
-						"G" => $rgb_color[$i]['color']["G"], 
-						"B" => $rgb_color[$i]['color']["B"],
-						"BorderR" => $rgb_color[$i]['border']["R"], 
-						"BorderG" => $rgb_color[$i]['border']["G"], 
-						"BorderB" => $rgb_color[$i]['border']["B"], 
-						"Alpha" => $rgb_color[$i]['alpha']));	
+				array("R" => $rgb_color[$i]['color']["R"], 
+					"G" => $rgb_color[$i]['color']["G"], 
+					"B" => $rgb_color[$i]['color']["B"],
+					"BorderR" => $rgb_color[$i]['border']["R"], 
+					"BorderG" => $rgb_color[$i]['border']["G"], 
+					"BorderB" => $rgb_color[$i]['border']["B"], 
+					"Alpha" => $rgb_color[$i]['alpha']));
+				
+			/*$palette_color = array();
+			if (isset($rgb_color[$i]['color'])) {
+				$palette_color["R"] = $rgb_color[$i]['color']["R"];
+				$palette_color["G"] = $rgb_color[$i]['color']["G"];
+				$palette_color["B"] = $rgb_color[$i]['color']["B"];
+			}
+	 		if (isset($rgb_color[$i]['color'])) {
+				$palette_color["BorderR"] = $rgb_color[$i]['border']["R"];
+				$palette_color["BorderG"] = $rgb_color[$i]['border']["G"];
+				$palette_color["BorderB"] = $rgb_color[$i]['border']["B"];
+			}
+			if (isset($rgb_color[$i]['color'])) {
+				$palette_color["Alpha"] = $rgb_color[$i]['Alpha'];
+			}
+		
+			$MyData->setPalette($point_id, $palette_color);*/
 		}
 	 }
 
@@ -445,23 +481,43 @@ function pch_vertical_graph ($graph_type, $index, $data, $width, $height, $rgb_c
 	 /* Set the default font */
 	 $myPicture->setFontProperties(array("FontName"=>"../fonts/code.ttf","FontSize"=>10));
 
-	 /* Define the chart area */
-	 $myPicture->setGraphArea(30,20,$width,$height-100);
+ 	if(isset($legend)) {
+		/* Write the chart legend */
+		$size = $myPicture->getLegendSize(array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_VERTICAL));
+		$myPicture->drawLegend($width-$size['Width'], 8,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_VERTICAL));
+	 }
+	 
+	 if (isset($size['Height'])) {
+	 	/* Define the chart area */
+	 	$myPicture->setGraphArea(30,$size['Height'],$width,$height - 60);
+	 }
+	 else {
+	 	/* Define the chart area */
+	 	$myPicture->setGraphArea(30, 5,$width,$height - 60);
+	 }
 
 	 /* Draw the scale */
-	 $scaleSettings = array("GridR"=>200,"GridG"=>200,"GridB"=>200,"DrawSubTicks"=>TRUE,"CycleBackground"=>TRUE, "Mode"=>SCALE_MODE_START0, "LabelRotation" => 90);
+	 $scaleSettings = array("GridR"=>200,
+		 "GridG"=>200,
+		 "GridB"=>200,
+		 "DrawSubTicks"=>TRUE,
+		 "CycleBackground"=>TRUE, "Mode"=>SCALE_MODE_START0, "LabelRotation" => 60);
 	 $myPicture->drawScale($scaleSettings);
-	
-	 if(isset($legend)) {
-		/* Write the chart legend */
-		$myPicture->drawLegend($height/2,$height-20,array("Style"=>LEGEND_NOBORDER,"Mode"=>LEGEND_HORIZONTAL, "BoxWidth"=>10, "BoxHeight"=>10));
-	 }
 	 
 	 /* Turn on shadow computing */ 
 	 //$myPicture->setShadow(TRUE,array("X"=>0,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
 
+	 switch ($graph_type) {
+	 	case 'stacked_area':
+	 		$ForceTransparency = "-1";
+	 		break;
+	 	default:
+	 		$ForceTransparency = "50";
+	 		break;
+	 }
+	 
 	 /* Draw the chart */
-	 $settings = array("ForceTransparency"=>"-1",
+	 $settings = array("ForceTransparency"=> $ForceTransparency, //
 	 	"Gradient"=>TRUE,
 	 	"GradientMode"=>GRADIENT_EFFECT_CAN,
 	 	"DisplayValues"=>$show_values,
@@ -471,6 +527,7 @@ function pch_vertical_graph ($graph_type, $index, $data, $width, $height, $rgb_c
 	 	"DisplayG"=>100,"DisplayB"=>100,"DisplayShadow"=>TRUE,"Surrounding"=>5,"AroundZero"=>FALSE);
 	 
 	 switch($graph_type) {
+	 	case "stacked_area":
 		case "area":
 				$myPicture->drawAreaChart($settings);
 				break;
