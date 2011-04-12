@@ -6,6 +6,8 @@ check_login ();
 $operation = get_parameter ("operation");
 $progress = 0;
 
+include_once ("include/functions_graph.php");
+
 // ---------------
 // CREATE new todo
 // ---------------
@@ -209,7 +211,7 @@ if (($operation == "") OR ($operation == "notme")) {
 		echo render_priority ($todo["priority"]);
 		echo '<td align="center">';
 		$progress = $todo["progress"];
-		echo "<img src='include/functions_graph.php?type=progress&width=80&height=20&percent=$progress'>";
+		echo progress_bar($progress, 80, 20);
 		echo '<td valign="middle">';
 		if ($operation == "notme") 
 			$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $todo["assigned_user"]);

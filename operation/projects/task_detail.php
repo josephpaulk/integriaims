@@ -295,24 +295,22 @@ if ($id_task != -1) {
 	$labelb = __('Real');
 	$a = round ($hours);
 	$b = round (get_task_workunit_hours ($id_task));
-	$max = max($a, $b);
-	$image = '<img src="include/functions_graph.php?type=histogram&width=200&height=30&a='.$a.'&b='.$b.'&labela='.$labela.'&labelb='.$labelb.'&max='.$max.'" />';
+
+	$image = histogram_2values($a, $b, $labela, $labelb);
 	$table->data[5][2] = print_label (__('Estimated hours'), '', '', true, $image);
 	
 	$labela = __('Total');
 	$labelb = __('Imp');
 	$a = round (task_workunit_cost ($id_task, 0));
 	$b = round (task_workunit_cost ($id_task, 1));
-	$max = max ($a, $b);
-	$image = '<img src="include/functions_graph.php?type=histogram&width=200&height=30&a='.$a.'&b='.$b.'&labela='.$labela.'&labelb='.$labelb.'&max='.$max.'" />';
+	$image = histogram_2values($a, $b, $labela, $labelb);
 	$table->data[5][2] .= print_label (__('Imputable estimation'), '', '', true, $image);	
 	
 	$labela = __('Est.');
 	$labelb = __('Real');
 	$a = $estimated_cost;
 	$b = round (task_workunit_cost ($id_task, 1));
-	$max = max ($a, $b);
-	$image = '<img src="include/functions_graph.php?type=histogram&width=200&height=30&a='.$a.'&b='.$b.'&labela='.$labela.'&labelb='.$labelb.'&max='.$max.'" />';
+	$image = histogram_2values($a, $b, $labela, $labelb);
 	$table->data[5][2] .= print_label (__('Cost estimation'), '', '', true, $image);
 }
 

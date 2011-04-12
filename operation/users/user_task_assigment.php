@@ -27,6 +27,8 @@ if (give_acl($config["id_user"], 0, "PR") != 1){
 	exit;
 }
 
+include_once ("include/functions_graph.php");
+
 $id_user = get_parameter ("id_user", $config["id_user"]);
 
 if (($id_user != $config["id_user"]) AND (give_acl($config["id_user"], 0, "PM") != 1)){
@@ -67,7 +69,7 @@ while ($row=mysql_fetch_array($result)){
 	echo "<td><a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_proj&id_task=$id_task&operation=view'>".$row[1]."</a>";
 
 	echo "<td >";
-	echo "<img src='include/functions_graph.php?type=progress&width=70&height=20&percent=".$row[3]."'>";
+	echo progress_bar($row[3], 70, 20);
 
 	echo "<td align=center>".get_task_workunit_hours_user ($row[0], $id_user);
 	

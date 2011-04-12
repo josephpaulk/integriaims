@@ -168,7 +168,7 @@ if ($id_project) {
 	echo '<tr><td class="datos"><b>'.__('Current progress').'</b>';
 	echo "<td class='datos'>";
 	$completion =  format_numeric(calculate_project_progress ($id_project));
-	echo "<img src='include/functions_graph.php?type=progress&width=90&height=20&percent=$completion'>";
+	echo progress_bar($completion, 90, 20);
 
 
 	echo '<tr>';

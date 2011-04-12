@@ -20,6 +20,7 @@ global $config;
 check_login ();
 
 include_once ("include/functions_reporting.php");
+include_once ("include/functions_graph.php");
 
 $id_project = (int) get_parameter ('id_project');
 
@@ -171,7 +172,7 @@ function show_task_row ($table, $id_project, $task, $level) {
 
 	
 	// Completion
-	$data[2] = '<img src="include/functions_graph.php?type=progress&width=70&height=20&percent='.$task["completion"].'">';
+	$data[2] = progress_bar($task["completion"], 70, 20);
 	
 	// Estimation
 	$imghelp = "Estimated hours = ".$task["hours"];
@@ -179,9 +180,9 @@ function show_task_row ($table, $id_project, $task, $level) {
 	$imghelp .= ", Worked hours = $taskhours";
 	$a = round ($task["hours"]);
 	$b = round ($taskhours);
-	$max = max($a, $b);
+	$mode = 2;
 	if ($a > 0)
-		$data[3] = '<img src="include/functions_graph.php?type=histogram&width=60&mode=2&height=18&a='.$a.'&b='.$b.'&&max='.$max.'" title="'.$imghelp.'">';
+		$data[3] = histogram_2values($a, $b, "", "", $mode, 60, 18, $imghelp);
 	else
 		$data[3] = '--';
 

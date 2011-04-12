@@ -123,7 +123,7 @@ ORDER BY timestamp ASC");
 			$j++;
 		} 
 
-    	$time_format = "y-m-d H:i";
+    	$time_format = "M d H:i";
         $timestamp_human = clean_flash_string (date($time_format, $timestamp));
 		$chart2[$timestamp_human]['graph'] = $total;
    	}

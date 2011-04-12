@@ -230,135 +230,25 @@ function graphic_error ($flow = true) {
 // ***************************************************************************
 
 function progress_bar ($progress, $width, $height) {
-	// Copied from the PHP manual:
-	// http://us3.php.net/manual/en/function.imagefilledrectangle.php
-	// With some adds from sdonie at lgc dot com
-	// Get from official documentation PHP.net website. Thanks guys :-)
-	function drawRating($rating, $width, $height) {
-		global $config;
-		global $REMOTE_ADDR;
-		
-		if ($width == 0) {
-			$width = 150;
-		}
-		if ($height == 0) {
-			$height = 20;
-		}
-
-		//$rating = $_GET['rating'];
-		$ratingbar = (($rating/100)*$width)-2;
-
-		$image = imagecreate($width,$height);
-		
-
-		//colors
-		$back = ImageColorAllocate($image,255,255,255);
-		imagecolortransparent ($image, $back);
-		$border = ImageColorAllocate($image,174,174,174);
-		$text = ImageColorAllocate($image,74,74,74);
-		$red = ImageColorAllocate($image,255,60,75);
-		$green = ImageColorAllocate($image,50,205,50);
-		$fill = ImageColorAllocate($image,44,81,120);
-
-		ImageFilledRectangle($image,0,0,$width-1,$height-1,$back);
-		if ($rating > 100)
-			ImageFilledRectangle($image,1,1,$ratingbar,$height-1,$red);
-		elseif ($rating == 100)
-			ImageFilledRectangle($image,1,1,$ratingbar,$height-1,$green);
-		else
-			ImageFilledRectangle($image,1,1,$ratingbar,$height-1,$fill);
-			
-		ImageRectangle($image,0,0,$width-1,$height-1,$border);
-		if ($rating > 50)
-			if ($rating > 100)
-				ImageTTFText($image, 8, 0, ($width/4), ($height/2)+($height/5), $back, $config["fontpath"],__('Out of limits'));
-			else
-				ImageTTFText($image, 8, 0, ($width/2)-($width/10), ($height/2)+($height/5), $back, $config["fontpath"], $rating."%");
-		else
-			ImageTTFText($image, 8, 0, ($width/2)-($width/10), ($height/2)+($height/5), $text, $config["fontpath"], $rating."%");
-		imagePNG($image);
-		imagedestroy($image);
-   	}
-
-   	Header("Content-type: image/png");
-	if ($progress > 100 || $progress < 0) {
-		// HACK: This report a static image... will increase render in about 200% :-) useful for
-		// high number of realtime statusbar images creation (in main all agents view, for example
-		$imgPng = imageCreateFromPng("../images/outlimits.png");
-		imageAlphaBlending($imgPng, true);
-		imageSaveAlpha($imgPng, true);
-		imagePng($imgPng); 
-   	} else 
-   		drawRating($progress,$width,$height);
+	global $config;
+	
+	$out_of_lim_str = __("Out of limits");
+	$title = "";
+	return "<img src='include/graphs/fgraph.php?graph_type=progressbar&width=".$width."&height=".$height."&progress=".$progress."&out_of_lim_str=".$out_of_lim_str."&title=".$title."&font=".$config['fontpath']."' />";
 }
 
-function generic_histogram ($width, $height, $mode, $valuea, $valueb, $maxvalue, $labela, $labelb) {
-	include('config.php');
+function histogram_2values($valuea, $valueb, $labela = "a", $labelb = "b", $mode = 1, $width = 200, $height = 30, $title = "") {
+	global $config;
 	
-	// $ratingA, $ratingB, $ratingA_leg, $ratingB_leg;
-	$ratingA=$valuea;
-	$ratingB=$valueb;
+	$data = array();
+	$data[$labela] = $valuea;
+	$data[$labelb] = $valueb;		
+
+	$data_json = json_encode($data);
 	
-   	Header("Content-type: image/png");
-	$image = imagecreate($width,$height);
-	$white = ImageColorAllocate($image,255,255,255);
-	imagecolortransparent ($image, $white);
+	$max = max($valuea, $valueb);
 
-	$black = ImageColorAllocate($image,0,0,0);
-	$red = ImageColorAllocate($image,255,60,75);
-	$blue = ImageColorAllocate($image,75,60,255);
-	$grey = ImageColorAllocate($image,120,120,120);
-
-
-
-	$margin_up = 2;
-	$max_value = $maxvalue;
-	if ($mode != 2) {
-		$size_per = ($max_value / ($width-40));
-	} else {
-		$size_per = ($max_value / ($width));
-	}
-	if ($mode == 0) // with strips 
-		$rectangle_height = ($height - 10 - 2 - $margin_up ) / 2;
-	else
-		$rectangle_height = ($height - 2 - $margin_up ) / 2;
-
-	// First rectangle
-	if ($size_per == 0)
-		$size_per = 1;
-	if ($mode != 2) {
-
-		ImageFilledRectangle($image, 40, $margin_up, ($ratingA/$size_per)+40, $margin_up+$rectangle_height -1 , $blue);
-		$legend = $ratingA;
-
-		ImageTTFText($image, 7, 0, 0, $margin_up+8, $black, $config["fontpath"], $labela);
-		// Second rectangle
-		ImageFilledRectangle($image, 40, $margin_up+$rectangle_height + 1 , ($ratingB/$size_per)+40, ($rectangle_height*2)+$margin_up , $red);
-		$legend = $ratingA;
-		// ImageTTFText($image, 8, 0, ($width-10), ($height/2)+10, $black, $config_fontpath, $ratingB);
-		ImageTTFText($image, 7, 0, 0,  $margin_up+$rectangle_height+8, $black, $config["fontpath"], $labelb);
-	} else { // mode 2, without labels
-		ImageFilledRectangle($image, 1, $margin_up, ($ratingA/$size_per)+1, $margin_up+$rectangle_height -1 , $blue);
-		$legend = $ratingA;
-		// Second rectangle
-		ImageFilledRectangle($image, 1, $margin_up+$rectangle_height + 1 , ($ratingB/$size_per)+1, ($rectangle_height*2)+$margin_up , $red);
-		$legend = $ratingA;
-
-	}
-	if ($mode == 0) { // With strips
-		// Draw limits
-		$risk_low =  ($config_risk_low / $size_per) + 40;
-		$risk_med =  ($config_risk_med / $size_per) + 40;
-		$risk_high =  ($config_risk_high / $size_per) + 40;
-		imageline($image, $risk_low, 0, $risk_low , $height, $grey);
-		imageline($image, $risk_med , 0, $risk_med  , $height, $grey);
-		imageline($image, $risk_high, 0, $risk_high , $height, $grey);
-		ImageTTFText($image, 7, 0, $risk_low-20, $height, $grey, $config["fontpath"], "Low");
-		ImageTTFText($image, 7, 0, $risk_med-20, $height, $grey, $config["fontpath"], "Med.");
-		ImageTTFText($image, 7, 0, $risk_high-25, $height, $grey, $config["fontpath"], "High");
-	}
-	imagePNG($image);
-	imagedestroy($image);
+	return "<img src='include/graphs/fgraph.php?graph_type=histogram&width=".$width."&height=".$height."&data=".$data_json."&max=".$max."&mode=".$mode."&title=".$title."&font=".$config['fontpath']."' />";
 }
 
 // ===============================================================================
@@ -954,14 +844,10 @@ $days = get_parameter ( "days", 0);
 $type= get_parameter ("type", "");
 $background = get_parameter ("background", "#ffffff");
 
-if ( $type == "progress")
-	progress_bar ($percent, $width, $height);
-elseif ($type == "incident_a")
+if ($type == "incident_a")
 	incident_peruser ($width, $height);
 elseif ($type == "workunit_task")
 	graph_workunit_task($width, $height, $id_task);
-elseif ($type == "histogram")
-	generic_histogram ($width, $height, $mode, $valuea, $valueb, $max, $labela, $labelb);
 elseif ($type == "workunit_user")
 	graph_workunit_user ($width, $height, $id_user, $date_from);
 elseif ($type == "workunit_project_user")

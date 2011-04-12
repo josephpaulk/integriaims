@@ -24,6 +24,8 @@ if (! give_acl ($config['id_user'], 0, "PR")) {
 	exit;
 }
 
+include_once ("include/functions_graph.php");
+
 $id_project = (int) get_parameter ('id');
 $delete_project = (bool) get_parameter ('delete_project');
 $view_disabled = (bool) get_parameter ('view_disabled');
@@ -218,7 +220,7 @@ foreach ($projects as $project) {
 		$data[2] = '<img src="images/comments.png"> '.__('Unlimited');
 	} else {
 		$completion = format_numeric (calculate_project_progress ($project['id']));
-		$data[2] = '<img src="include/functions_graph.php?type=progress&width=90&height=20&percent='.$completion.'" />';
+		$data[2] = progress_bar($completion, 90, 20);
 	}
 	
 	// Total task / People
