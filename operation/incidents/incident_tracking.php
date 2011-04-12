@@ -18,7 +18,7 @@
 
 global $config;
 
-include_once ("include/functions_reporting.php");
+include_once ("include/functions_graph.php");
 
 check_login ();
 
@@ -70,4 +70,3 @@ if ($trackings !== false) {
 	echo __('No data available');
 }
 ?>
-<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

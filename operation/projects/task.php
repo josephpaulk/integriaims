@@ -19,7 +19,6 @@
 global $config;
 check_login ();
 
-include_once ("include/functions_reporting.php");
 include_once ("include/functions_graph.php");
 
 $id_project = (int) get_parameter ('id_project');
@@ -258,4 +257,3 @@ function show_task_tree (&$table, $id_project, $level, $id_parent_task, $where_c
 	}
 }
 ?>
-<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

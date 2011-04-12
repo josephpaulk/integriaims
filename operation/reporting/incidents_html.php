@@ -173,6 +173,4 @@ print_table ($table);
 echo '<div style="width: 95%; text-align: left; ">';
 include ('general/footer.php');
 echo '</div>';
-echo "</div>";
 ?>
-<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

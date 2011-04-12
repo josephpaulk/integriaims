@@ -255,4 +255,3 @@ $(document).ready (function () {
 	configure_range_dates (null);
 });
 </script>
-<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

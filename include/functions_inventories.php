@@ -349,9 +349,8 @@ function print_inventory_stats ($inventories, $return = false) {
 	$table->data = array ();
 	
 	$table->data[0][0] = print_label (__('Total objects'), '', '', true, $total);
-	$data = implode (',', array ($inventory_incidents, $total - $inventory_incidents));
-	$legend = implode (',', array (__('With incidents'), __('Without incidents')));
-	$table->data[0][1] = '<img src="include/functions_graph.php?type=pipe&width=200&height=150&data='.$data.'&legend='.$legend.'" />';
+	$data = array(__('With incidents') => $inventory_incidents, __('Without incidents')=> $total - $inventory_incidents);
+	$table->data[0][1] = pie3d_chart ($config['flash_charts'], $data, 200, 150);
 	$table->data[1][0] = print_label (__('Total objects with incidents'), '', '', true,
 		$inventory_incidents.' ('.$incidents_pct.'%)');
 	$table->data[2][0] = print_label (__('Total objects with opened incidents'),

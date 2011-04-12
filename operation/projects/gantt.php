@@ -189,5 +189,3 @@ if (!$clean_output) {
 }
 
 ?>
-
-<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

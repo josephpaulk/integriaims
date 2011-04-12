@@ -218,6 +218,3 @@ if ($num_tasks > 20) {
 print gantt_graph ($project_name, $project_start, $project_end, $tasks, $milestones, $width, $height);
 
 ?>
-
-<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>
-

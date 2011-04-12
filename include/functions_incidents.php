@@ -42,7 +42,10 @@
  * @return array A list of matching incidents. False if no matches.
  */
 
-require_once ("functions_graph.php");
+// Avoid to mess AJAX with Javascript
+if(defined ('AJAX')) {
+	require_once ("functions_graph.php");
+}
 
 function filter_incidents ($filters) {
 	global $config;

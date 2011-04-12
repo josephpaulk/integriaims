@@ -19,7 +19,6 @@ global $config;
 check_login ();
 
 include_once ("include/functions_graph.php");
-include_once ("include/functions_reporting.php");
 
 // Get our main stuff
 $id_project = get_parameter ('id_project', -1);
@@ -379,4 +378,3 @@ $(document).ready (function () {
 ?>
 });
 </script>
-<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

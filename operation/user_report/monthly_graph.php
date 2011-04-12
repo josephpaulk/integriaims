@@ -2,7 +2,7 @@
 // Integria 1.0 - http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2007-2011 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -36,7 +36,6 @@ if (($id != "") && ($id != $id_user)){
 	}
 	
 }
-
 
 // Get parameters for actual Calendar show
 $time = time();
@@ -97,7 +96,4 @@ echo graph_workunit_project_user (750, 270, $id_user, $from_one_month, 0);
 echo "</table>";
 echo "</div>";
 
-
-
 ?>
-<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

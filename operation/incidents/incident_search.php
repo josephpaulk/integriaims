@@ -285,5 +285,3 @@ foreach ($incidents as $incident) {
 }
 
 ?>
-
-<script language="JavaScript" src="include/graphs/FusionCharts/FusionCharts.js"></script>

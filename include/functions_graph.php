@@ -17,13 +17,16 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 
-if (file_exists("config.php")) {
+// If is called from index
+if (file_exists("include/config.php")) {
+	include_once ("include/config.php");
+	include_once("include/graphs/fgraph.php");
+	include_once ("include/functions_calendar.php");
+} // If is called through url
+elseif (file_exists("config.php")) {
 	include_once ("config.php");
 	include_once ("graphs/fgraph.php");
-}
-elseif (file_exists("include/config.php")) {
-	include_once ("include/config.php");
-	include_once("graphs/fgraph.php");
+	include_once ("functions_calendar.php");
 }
 
 // ===============================================================================
@@ -237,6 +240,198 @@ function progress_bar ($progress, $width, $height) {
 	return "<img src='include/graphs/fgraph.php?graph_type=progressbar&width=".$width."&height=".$height."&progress=".$progress."&out_of_lim_str=".$out_of_lim_str."&title=".$title."&font=".$config['fontpath']."' />";
 }
 
+function project_activity_graph ($id_project){
+	global $config;
+
+    $incident = get_db_row ("tproject", "id", $id_project);
+
+    $start_unixdate = strtotime ($incident["start"]);
+    $end_unixdate = strtotime ("now");
+    $period = $end_unixdate - $start_unixdate;
+    $resolution = 10;
+    
+	$interval = (int) ($period / $resolution);
+
+	echo __("Each bar is"). " ". human_time_description_raw($interval);
+
+	$data = get_db_all_rows_sql ("SELECT tworkunit.duration as duration, 
+            tworkunit.timestamp as timestamp  FROM tworkunit, tworkunit_task, ttask 
+			WHERE tworkunit_task.id_task = ttask.id
+			AND ttask.id_project = $id_project
+			AND tworkunit_task.id_workunit = tworkunit.id
+ORDER BY timestamp ASC");
+
+	if ($data === false) {
+		$data = array ();
+	}
+
+   	$min_necessary = 1;
+
+	// Check available data
+	if (count ($data) < $min_necessary) {
+		return;
+	}
+
+	// Set initial conditions
+	$chart = array();
+	$names = array();
+	$chart2 = array();
+
+	// Calculate chart data
+	for ($i = 0; $i < $resolution; $i++) {
+		$timestamp = $start_unixdate + ($interval * $i);
+		$total = 0;
+		$j = 0;
+
+		while (isset ($data[$j])){
+            $dftime = strtotime($data[$j]['timestamp']);
+
+			if ($dftime >= $timestamp && $dftime < ($timestamp + $interval)) {
+				$total += ($data[$j]['duration']);
+			}
+			$j++;
+		} 
+
+    	$time_format = "M d H:i";
+        $timestamp_human = clean_flash_string (date($time_format, $timestamp));
+		$chart2[$timestamp_human]['graph'] = $total;
+   	}
+   	
+   	$colors['graph']['color'] = "#2179B1";
+   	$colors['graph']['border'] = "#000";
+   	$colors['graph']['alpha'] = 100;
+
+	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300, $colors);
+}
+
+function incident_activity_graph ($id_incident){
+	global $config;
+
+    $incident = get_db_row ("tincidencia", "id_incidencia", $id_incident);
+
+    $start_unixdate = strtotime ($incident["inicio"]);
+    $end_unixdate = strtotime ("now");
+    $period = $end_unixdate - $start_unixdate;
+    $resolution = 10;
+    
+	$interval = (int) ($period / $resolution);
+
+	echo __("Each bar is"). " ". human_time_description_raw($interval);
+
+	$data = get_db_all_rows_sql ("SELECT * FROM tincident_track WHERE id_incident = $id_incident ORDER BY timestamp ASC");
+
+	if ($data === false) {
+		$data = array ();
+	}
+
+   	$min_necessary = 1;
+
+	// Check available data
+	if (count ($data) < $min_necessary) {
+		return;
+	}
+
+	// Set initial conditions
+	$chart = array();
+	$names = array();
+	$chart2 = array();
+
+	// Calculate chart data
+	for ($i = 0; $i < $resolution; $i++) {
+		$timestamp = $start_unixdate + ($interval * $i);
+		$total = 0;
+		$j = 0;
+
+		while (isset ($data[$j])){
+            $dftime = strtotime($data[$j]['timestamp']);
+
+			if ($dftime >= $timestamp && $dftime < ($timestamp + $interval)) {
+				$total++;
+			}
+			$j++;
+		} 
+
+    	$time_format = "y-m-d H:i";
+        $timestamp_human = clean_flash_string (date($time_format, $timestamp));
+		$chart2[$timestamp_human] = $total;
+   	}
+
+	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300);
+}
+
+// TODO: Move to functions_graph.php
+function task_activity_graph ($id_task){
+	global $config;
+
+    $task = get_db_row ("ttask", "id", $id_task);
+
+    $start_unixdate = strtotime ($task["start"]);
+    $end_unixdate = strtotime ("now");
+    $period = $end_unixdate - $start_unixdate;
+    $resolution = 10;
+    
+	$interval = (int) ($period / $resolution);
+
+	echo __("Each bar is"). " ". human_time_description_raw($interval);
+
+	$data = get_db_all_rows_sql ("SELECT tworkunit.duration as duration, 
+            tworkunit.timestamp as timestamp  FROM tworkunit, tworkunit_task, ttask 
+			WHERE tworkunit_task.id_task = $id_task
+			AND tworkunit_task.id_workunit = tworkunit.id GROUP BY tworkunit.id  ORDER BY timestamp ASC");
+
+
+	if ($data === false) {
+		$data = array ();
+	}
+
+   	$min_necessary = 1;
+
+	// Check available data
+	if (count ($data) < $min_necessary) {
+		return;
+	}
+
+	// Set initial conditions
+	$chart = array();
+	$names = array();
+	$chart2 = array();
+
+	// Calculate chart data
+	for ($i = 0; $i < $resolution; $i++) {
+		$timestamp = $start_unixdate + ($interval * $i);
+		$total = 0;
+		$j = 0;
+
+		while (isset ($data[$j])){
+            $dftime = strtotime($data[$j]['timestamp']);
+
+			if ($dftime >= $timestamp && $dftime < ($timestamp + $interval)) {
+				$total += ($data[$j]['duration']);
+			}
+			$j++;
+		} 
+
+    	$time_format = "M d";
+        $timestamp_human = clean_flash_string (date($time_format, $timestamp));
+		$chart2[$timestamp_human] = $total;
+   	}
+   	
+   	$colors['1day']['color'] = "#2179B1";
+   	$colors['1day']['border'] = "#000";
+   	$colors['1day']['alpha'] = 100;
+
+	foreach($chart2 as $key => $ch) { 
+		$chart3[$key]['1day'] = $ch;
+	}
+	
+	$legend = array();
+		
+	$xaxisname = __('Days');
+	$yaxisname = __('Hours in project');
+	
+	echo vbar_graph ($config['flash_charts'], $chart3, 650, 300, $colors, $legend, $xaxisname, $yaxisname);
+}
+
 function histogram_2values($valuea, $valueb, $labela = "a", $labelb = "b", $mode = 1, $width = 200, $height = 30, $title = "") {
 	global $config;
 	
@@ -250,363 +445,6 @@ function histogram_2values($valuea, $valueb, $labela = "a", $labelb = "b", $mode
 
 	return "<img src='include/graphs/fgraph.php?graph_type=histogram&width=".$width."&height=".$height."&data=".$data_json."&max=".$max."&mode=".$mode."&title=".$title."&font=".$config['fontpath']."' />";
 }
-
-// ===============================================================================
-// Generic PIE graph
-// ===============================================================================
-
-/*function generic_pie_graph ($width=300, $height=200, $data, $legend) {
-	require ("../include/config.php");
-	require_once '../include/Image/Graph.php';
-	
-	error_reporting (0);
-	if (sizeof($data) > 0) {
-		// create the graph
-		$driver=& Image_Canvas::factory('png',array('width'=>$width,'height'=>$height,'antialias' => 'native'));
-		$Graph = & Image_Graph::factory('graph', $driver);
-		// add a TrueType font
-		$Font =& $Graph->addNew('font', $config["fontpath"]);
-		// set the font size to 7 pixels
-		$Font->setSize(7);
-		$Graph->setFont($Font);
-		// create the plotarea
-		$Graph->add(
-			Image_Graph::horizontal(
-				$Plotarea = Image_Graph::factory('plotarea'),
-				$Legend = Image_Graph::factory('legend'),
-			50
-			)
-		);
-		$Legend->setPlotarea($Plotarea);
-		// Create the dataset
-		// Merge data into a dataset object (sancho)
-		$Dataset1 =& Image_Graph::factory('dataset');
-		for ($a=0;$a < sizeof($data); $a++) {
-			$Dataset1->addPoint(str_pad($legend[$a],15), $data[$a]);
-		}
-		$Plot =& $Plotarea->addNew('pie', $Dataset1);
-		$Plotarea->hideAxis();
-		// create a Y data value marker
-		$Marker =& $Plot->addNew('Image_Graph_Marker_Value', IMAGE_GRAPH_PCT_Y_TOTAL);
-		// create a pin-point marker type
-		$PointingMarker =& $Plot->addNew('Image_Graph_Marker_Pointing_Angular', array(1, &$Marker));
-		// and use the marker on the 1st plot
-		$Plot->setMarker($PointingMarker);
-		// format value marker labels as percentage values
-		$Marker->setDataPreprocessor(Image_Graph::factory('Image_Graph_DataPreprocessor_Formatted', '%0.1f%%'));
-		$Plot->Radius = 15;
-		$FillArray =& Image_Graph::factory('Image_Graph_Fill_Array');
-		$Plot->setFillStyle($FillArray);
-		
-		$FillArray->addColor('green@0.7');
-		$FillArray->addColor('yellow@0.7');
-		$FillArray->addColor('red@0.7');
-		$FillArray->addColor('orange@0.7');
-		$FillArray->addColor('blue@0.7');
-		$FillArray->addColor('purple@0.7');
-		$FillArray->addColor('lightgreen@0.7');
-		$FillArray->addColor('lightblue@0.7');
-		$FillArray->addColor('lightred@0.7');
-		$FillArray->addColor('grey@0.6', 'rest');
-		$Plot->explode(6);
-		$Plot->setStartingAngle(0);
-		// output the Graph
-		$Graph->done();
-	} else 
-		graphic_error ();
-}*/
-
-// ===========================================================================
-// odo_generic - Odometer graph
-// 
-// Pure = 0 for no legend, fullscreen graph
-// ===========================================================================
-
-/*function odo_generic ($value1, $value2, $value3, $width= 350, $height= 260, $max=100, $pure = 1) {
-	require_once 'Image/Graph.php';
-	include ("../include/config.php");
-	
-	if ($max <= $config_risk_high) {
-		$max = $config_risk_high+1;
-	}
-	
-	// create the graph
-	$driver=& Image_Canvas::factory('png',array('width'=>$width,'height'=>$height,'antialias' => 'native'));
-	$Graph = & Image_Graph::factory('graph', $driver);
-	// add a TrueType font
-	$Font =& $Graph->addNew('font', $config["fontpath"]);
-	// set the font size to 11 pixels
-	$Font->setSize(7);
-	$Graph->setFont($Font);
-
-	// create the plotarea
-	if ($pure == 0) {
-		$Graph->add(
-				Image_Graph::vertical(
-					$Plotarea = Image_Graph::factory('plotarea'),
-					$Legend = Image_Graph::factory('legend'),
-			80
-				)
-		);
-	} else {
-		$Graph->add(
-				Image_Graph::vertical(
-					$Plotarea = Image_Graph::factory('plotarea'),
-					$Legend = Image_Graph::factory('legend'),
-			100
-				)
-		);
-	}
-
-	$Legend->setPlotarea($Plotarea);
-	$Legend->setAlignment(IMAGE_GRAPH_ALIGN_HORIZONTAL);
-	if ($value1 <0)
-		$value1=0;
-	if ($value2 <0)
-				$value2=0;
-	if ($value3 <0)
-				$value3=0;
-	//Arrows
-	$Arrows = & Image_Graph::factory('dataset');
-	$Arrows->addPoint('Current', $value1, 'GLOBAL');
-	$Arrows->addPoint('Past', $value2, 'DATA');
-	$Arrows->addPoint('Objective', $value3, 'MONITOR');
-
-	//PARAMATERS for PLOT
-
-	// create the plot as odo chart using the dataset
-	$Plot =& $Plotarea->addNew('Image_Graph_Plot_Odo',$Arrows);
-	$Plot->setRange(0, $max);
-	$Plot->setAngles(180, 180);
-	$Plot->setRadiusWidth(80);
-	$Plot->setLineColor('black');//for range and outline
-
-	$Marker =& $Plot->addNew('Image_Graph_Marker_Value', IMAGE_GRAPH_VALUE_Y);
-	$Plot->setArrowMarker($Marker);
-
-	$Plotarea->hideAxis();
-	//Axis
-	// create a Y data value marker
-
-	$Marker->setFillColor('transparent');
-	$Marker->setBorderColor('transparent');
-	$Marker->setFontSize(7);
-	$Marker->setFontColor('black');
-
-	// create a pin-point marker type
-	$Plot->setTickLength(10);
-	$Plot->setAxisTicks(5);
-	//color of arrows
-	$FillArray = & Image_Graph::factory('Image_Graph_Fill_Array');
-	$FillArray->addColor('red@0.9', 'A');
-	$FillArray->addColor('blue@0.9', 'B');
-	$FillArray->addColor('green@0.9', 'C');
-
-	// create a line array
-	$LineArray =& Image_Graph::factory('Image_Graph_Line_Array');
-	$LineArray->addColor('red', 'A');
-	$LineArray->addColor('blue', 'B');
-	$LineArray->addColor('green', 'C');
-	$Plot->setArrowLineStyle($LineArray);
-	$Plot->setArrowFillStyle($FillArray);
-
-	//MARKER OR ARROW
-	// create a Y data value marker
-
-	$Marker =& $Plot->addNew('Image_Graph_Marker_Value', IMAGE_GRAPH_VALUE_Y);
-	$Marker->setFillColor('transparent');
-	$Marker->setBorderColor('transparent');
-	$Marker->setFontSize(7);
-	$Marker->setFontColor('black');
-	// create a pin-point marker type
-	if ($pure == 0) {
-		$PointingMarker =& $Plot->addNew('Image_Graph_Marker_Pointing_Angular', array(20, &$Marker));
-		// and use the marker on the plot
-		$Plot->setMarker($PointingMarker);
-	}
-	//RANGE
-	$Plot->addRangeMarker(0, $config_risk_med);
-	$Plot->addRangeMarker($config_risk_med, $config_risk_high);
-	$Plot->addRangeMarker($config_risk_high, $max);
-	// create a fillstyle for the ranges
-	$FillRangeArray = & Image_Graph::factory('Image_Graph_Fill_Array');
-	$FillRangeArray->addColor('#1F4373@0.9');
-	$FillRangeArray->addColor('#708090@0.6');
-	$FillRangeArray->addColor('#FFB300@0.6');
-	$Plot->setRangeMarkerFillStyle($FillRangeArray);
-	// output the Graph
-	$Graph->done();
-}*/
-
-
-
-/*function generic_bar_graph ( $width =380, $height = 200, $data, $legend) {
-	include ("../include/config.php");
-	require_once 'Image/Graph.php';
-	
-	if (sizeof($data) > 10) {
-		$height = sizeof($legend) * 20;
-	}
-
-	// create the graph
-	$Graph =& Image_Graph::factory('graph', array($width, $height));
-	// add a TrueType font
-	$Font =& $Graph->addNew('font', $config["fontpath"]);
-	$Font->setSize(9);
-	$Graph->setFont($Font);
-	$Graph->add(
-		Image_Graph::vertical (
-			$Plotarea = Image_Graph::factory('plotarea',array('category', 'axis', 'horizontal')),
-			$Legend = Image_Graph::factory('legend'),
-			100
-		)
-	);
-	
-	$Legend->setPlotarea($Plotarea);
-	// Create the dataset
-	// Merge data into a dataset object (sancho)
-	$Dataset1 =& Image_Graph::factory('dataset');
-	for ($a=0;$a < sizeof($data); $a++) {
-		$Dataset1->addPoint(substr($legend[$a],0,22), $data[$a]);
-	}
-	$Plot =& $Plotarea->addNew('bar', $Dataset1);
-	$GridY2 =& $Plotarea->addNew('bar_grid', IMAGE_GRAPH_AXIS_Y_SECONDARY);
-	$GridY2->setLineColor('gray');
-	$GridY2->setFillColor('lightgray@0.05');
-	$Plot->setLineColor('gray');
-	$Plot->setFillColor('blue@0.85');
-	$Graph->done(); 
-}*/
-
-
-/*function generic_area_graph ($data, $data_label, $width, $height) {
-	require_once 'Image/Graph.php';
-	include ("../include/config.php");
-	
-	$color ="#437722"; 
-	
-	$mymax = 0;
-	for ($ax=0; $ax < sizeof($data); $ax++) {
-		if ($data > $mymax)
-			$mymax = $data[$ax];
-			//echo $data_label[$ax]. " " .$data[$ax]."<br>";
-	}	
-
-	// Create graph 
-	if (sizeof($data) > 1) {
-		// Create graph
-		// create the graph
-		$Graph =& Image_Graph::factory('graph', array($width, $height));
-		// add a TrueType font
-		$Font =& $Graph->addNew('font', $config["fontpath"]);
-		$Font->setSize(6);
-		$Graph->setFont($Font);
-		$Graph->add(
-		Image_Graph::vertical(
-			Image_Graph::factory('title', array("", 2)),
-			$Plotarea = Image_Graph::factory('plotarea'),
-			0)
-		);
-		// Create the dataset
-		// Merge data into a dataset object (sancho)
-		$Dataset =& Image_Graph::factory('dataset');
-		for ($a=0;$a < sizeof($data); $a++) {
-			$Dataset->addPoint(substr($data_label[$a],5,5), round($data[$a],1));
-		}
-		$Plot =& $Plotarea->addNew('area', array(&$Dataset));
-		// set a line color
-		$Plot->setLineColor('gray');
-		// set a standard fill style
-		$Plot->setFillColor('#708090@0.4');
-		// $Plotarea->hideAxis();
-		$AxisX =& $Plotarea->getAxis(IMAGE_GRAPH_AXIS_X);
-		// $AxisX->Hide();
-		$AxisY =& $Plotarea->getAxis(IMAGE_GRAPH_AXIS_Y);
-		$AxisY->setLabelOption("showtext",true);
-		$interval = round (($mymax/ 5),1);
-		$AxisY->setLabelInterval($interval);
-		$AxisX->setLabelInterval(sizeof($data) / 5);
-		$GridY2 =& $Plotarea->addNew('bar_grid', IMAGE_GRAPH_AXIS_Y_SECONDARY);
-		$GridY2->setLineColor('blue');
-		$GridY2->setFillColor('blue@0.1');
-		$AxisY->forceMaximum($mymax + ($mymax/10)) ;
-		$AxisY2 =& $Plotarea->getAxis(IMAGE_GRAPH_AXIS_Y_SECONDARY);
-		$Graph->done();
-	} else {
-		Header("Content-type: image/png");
-		drawWarning($width,$height);
-	}
-}*/
-
-// ***************************************************************************
-// Draw a radar/spider generic map graph. Uses three arrays (dataXX)
-// If data1 is empty, draw only a graph data (data1)
-// ***************************************************************************
-
-/*function generic_radar ($data1, $data2, $datalabel, $label1="", $label2 ="", $width, $height) {
-	include ("../include/config.php");
-	require_once 'Image/Graph.php';
-	require_once 'Image/Canvas.php';
-
-	if (sizeof($data2) > 2)
-		$second_data = 1;
-	else
-		$second_data = -1;
-	
-	$maxvalue =0;
-	for ($ax=0;$ax < sizeof($data1); $ax++) {
-		if ($data1[$ax] > $maxvalue)
-			$maxvalue = $data1[$ax];
-		if ((isset($data2[$ax])) AND ($data2[$ax] > $maxvalue))
-			$maxvalue = $data2[$ax];		
-	}
-	// Create graph with Image_graph functions
-	// =======================================
-	if (sizeof($data1) > 2) {
-		// create the graph
-		$Graph =& Image_Graph::factory('graph', array($width, $height));
-		// add a TrueType font
-		$Font =& $Graph->addNew('font',$config["fontpath"]);
-		$Font->setSize(7);
-		$Graph->setFont($Font);
-		$Graph->add( Image_Graph::vertical(
-							$Plotarea = Image_Graph::factory('Image_Graph_Plotarea_Radar'),
-							$Legend = Image_Graph::factory('legend'),
-							90
-					)
-		);
-		$Legend->setPlotarea($Plotarea);
-		$Plotarea->addNew('Image_Graph_Grid_Polar', IMAGE_GRAPH_AXIS_Y);
-		$DS1 =& Image_Graph::factory('dataset');
-		$DS2 =& Image_Graph::factory('dataset');
-		for ($a=0;$a < sizeof($data1); $a++) {
-			$DS1->addPoint($datalabel[$a],$data1[$a]);
-			if ($second_data != -1)
-				$DS2->addPoint($datalabel[$a],$data2[$a]);
-		}
-		$Plot =& $Plotarea->addNew('Image_Graph_Plot_Radar', $DS1);
-		$Plot->setTitle($label1);
-		if ($second_data!= -1) {		
-			$Plot2 =& $Plotarea->addNew('Image_Graph_Plot_Radar', $DS2);
-			$Plot2->setTitle($label2);
-			$Plot2->setLineColor('red@0.4');
-			$Plot2->setFillColor('red@0.2');
-		}
-		// set a standard fill style
-		$Plot->setLineColor('blue@0.4');
-		$Plot->setFillColor('blue@0.2');
-		
-		$AxisY =& $Plotarea->getAxis(IMAGE_GRAPH_AXIS_Y);
-		$AxisY->setLabelOption("showtext",true);
-		$AxisY->setLabelInterval(ceil($maxvalue/3));
-		// output the Graph
-		$Graph->done();
-	} else {
-   		Header("Content-type: image/png");
-		drawWarning($width, $height);
-	}
-}*/
-
 
 function project_tree ($id_project, $id_user) {
 	include ("../include/config.php");
@@ -856,11 +694,7 @@ elseif ($type == "project_tree")
 	project_tree ($id_project, $id_user);
 elseif ($type == "all_project_tree")
 	all_project_tree ($id_user, $completion, $project_kind);
-elseif ($type == "pipe") {
-	$data = (string) get_parameter ("data");
-	$legend = (string) get_parameter ("legend");
-	$data = split (',', $data);
-	$legend = split (',', $legend);
-	generic_pie_graph ($width, $height, $data, $legend);
-}
+
+// Always at the end of the funtions_graph
+include_flash_chart_script();
 ?>
