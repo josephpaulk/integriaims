@@ -49,8 +49,25 @@ switch($graph_type) {
 
 				$font = get_parameter('font');
 				$title = get_parameter('title');
-				gd_progress_bar ($width, $height, $progress, $title, $font, $out_of_lim_str, $out_of_lim_image);
+				
+				$mode = get_parameter('mode', 1);
+				
+				gd_progress_bar ($width, $height, $progress, $title, $font, $out_of_lim_str, $out_of_lim_image, $mode);
 				break;
+}
+
+function slicesbar_graph($chart_data, $width, $height, $colors, $font, $round_corner) {
+	$graph = array();
+	$graph['data'] = $chart_data;
+	$graph['width'] = $width;
+	$graph['height'] = $height;
+	$graph['font'] = $font;
+	$graph['round_corner'] = $round_corner;
+	$graph['color'] = $colors;
+
+	$id_graph = serialize_in_temp($graph);
+		
+	return "<img src='include/graphs/functions_pchart.php?graph_type=slicebar&id_graph=".$id_graph."'>";
 }
 
 function vbar_graph($flash_chart, $chart_data, $width, $height, $color = array(), $legend = array(), $xaxisname = "", $yaxisname = "") {

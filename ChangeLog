@@ -1,6 +1,14 @@
 2011-04-13  Sergio Martin <sergio.martin@artica.es>
 
 	* include/graphs/functions_pchart.php
+	include/graphs/functions_gd.php
+	include/graphs/fgraph.php: Added new slicebar graphs
+	to the abstraction and merged the improved by miguel
+	of gd progressbar function
+
+2011-04-13  Sergio Martin <sergio.martin@artica.es>
+
+	* include/graphs/functions_pchart.php
 	include/graphs/fgraph.php: Fixes merged from
 	miguel works on pandora like checks of empty
 	color and legend parameters and checks of 
