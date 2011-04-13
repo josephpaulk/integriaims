@@ -1,5 +1,11 @@
 2011-04-13  Sergio Martin <sergio.martin@artica.es>
 
+	* include/graphs/functions_pchart.php: Restored Miguel
+	code erased by me in the last commit and improved the
+	legend system to show it in horizontal when is possible
+
+2011-04-13  Sergio Martin <sergio.martin@artica.es>
+
 	* include/graphs/functions_pchart.php
 	include/graphs/functions_gd.php
 	include/graphs/fgraph.php: Added new slicebar graphs
