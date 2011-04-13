@@ -237,7 +237,8 @@ function progress_bar ($progress, $width, $height) {
 	
 	$out_of_lim_str = __("Out of limits");
 	$title = "";
-	return "<img src='include/graphs/fgraph.php?graph_type=progressbar&width=".$width."&height=".$height."&progress=".$progress."&out_of_lim_str=".$out_of_lim_str."&title=".$title."&font=".$config['fontpath']."' />";
+	
+	return progressbar($progress, $width, $height, $title, $config['fontpath'], 1, $out_of_lim_str);
 }
 
 function project_activity_graph ($id_project){
@@ -443,7 +444,7 @@ function histogram_2values($valuea, $valueb, $labela = "a", $labelb = "b", $mode
 	
 	$max = max($valuea, $valueb);
 
-	return "<img src='include/graphs/fgraph.php?graph_type=histogram&width=".$width."&height=".$height."&data=".$data_json."&max=".$max."&mode=".$mode."&title=".$title."&font=".$config['fontpath']."' />";
+	return histogram($data_json, $width, $height, $config['fontpath'], $max, $title, $mode);
 }
 
 function project_tree ($id_project, $id_user) {
