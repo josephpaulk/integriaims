@@ -264,8 +264,6 @@ function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height, $oth
 		$graph['data'] = $chart_data;
 		$graph['width'] = $width;
 		$graph['height'] = $height;
-		$graph['color'] = $color;
-		$graph['legend'] = $legend;
 
 		$id_graph = serialize_in_temp($graph);
 	
