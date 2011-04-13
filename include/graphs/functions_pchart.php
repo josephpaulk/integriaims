@@ -120,8 +120,6 @@ switch($graph_type) {
 			}
 			
 			break;
-	case 'polar':
-	case 'radar':
 	case 'progress':
 	case 'area':
 	case 'line':
@@ -142,6 +140,8 @@ switch($graph_type) {
 			}
 			
 			break;
+	case 'polar':
+	case 'radar':
 	case 'pie3d':
 	case 'pie2d':
 			break;
@@ -201,7 +201,7 @@ switch($graph_type) {
 			break;
 	case 'polar':
 	case 'radar':
-			pch_radar_graph($graph_type, $data_values, $data_keys, $width, $height);
+			pch_kiviat_graph($graph_type, array_values($data), array_keys($data), $width, $height);
 			break;
 	case 'progress':
 			pch_progress_graph($graph_type, $data_keys, $data_values, $width, $height, $xaxisname, $yaxisname);
@@ -265,7 +265,7 @@ function pch_pie_graph ($graph_type, $data_values, $legend_values, $width, $heig
 	 $myPicture->stroke(); 
 }
 
-function pch_radar_graph ($graph_type, $data_values, $legend_values, $width, $height) {
+function pch_kiviat_graph ($graph_type, $data_values, $legend_values, $width, $height) {
 	 /* CAT:Radar/Polar charts */
 
 	 /* Create and populate the pData object */

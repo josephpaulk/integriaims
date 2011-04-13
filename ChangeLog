@@ -1,3 +1,14 @@
+2011-04-13  Sergio Martin <sergio.martin@artica.es>
+
+	*  include/graphs/functions_pchart.php
+	 include/graphs/functions_fsgraph.php
+	 include/graphs/functions_gd.php
+	 include/graphs/fgraph.php: Fixed long index
+	 bug into stacked and line graphs. 
+	 Added entry 
+	 for polar and radar graphs (kiviat graphs)
+	 Clean code
+
 2011-04-12  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_graph.php
