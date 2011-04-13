@@ -94,7 +94,7 @@ echo "<td class='datos'>";
 
 $available_directory["images"] = "images";
 $available_directory["attachment"] = "attachment";
-
+$available_directory["attachment/downloads"] = "attachment/downloads";
 // Current directory
 $available_directory[$current_directory] = $current_directory;
 

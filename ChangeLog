@@ -1,3 +1,11 @@
+2011-04-13  Sancho Lerena <slerena@artica.es>
+
+	* include/styles/integria.css: Fixed a lot problems with IE :(
+
+	* include/integria_cron.php: Tab.
+
+	* godmode/setup/filemgr.php: Added repository for filereleases.
+
 2011-04-13  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_graph.php

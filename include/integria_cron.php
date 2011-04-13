@@ -293,7 +293,7 @@ function check_sla_max ($incident) {
 	if (! $id_sla)
 		return false;
 	
-    $sla = get_db_row("tsla", "id", $id_sla);
+        $sla = get_db_row("tsla", "id", $id_sla);
 
 	/* Check if it was already notified in a specified time interval */
 	$sql = sprintf ('SELECT COUNT(id) FROM tevent

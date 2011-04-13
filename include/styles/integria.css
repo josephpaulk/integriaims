@@ -320,7 +320,7 @@ form.searchform input.button {
 /*	Layout	 */
 /*****************/
 #wrap {
-	margin: 0 auto;
+	margin: 0;
    	width: 100%;
 	text-align: left;
 	background: #FFF;
@@ -407,10 +407,11 @@ form.searchform input.button {
 /* main column */
 #main {
 	border-left:1px solid #F2F2F2;
-	margin-left:207px;
+	float: left; 
+	width: 800px;
+	margin-left: 25px;
 	padding-left: 10px;
 	min-height: 500px;
-	margin-right: 20px;
 	padding-top: 1px;
 }
 
@@ -434,9 +435,9 @@ form.searchform input.button {
 
 /* sideabar */
 #sidebar {
-	clear: none;
+/*	clear: none; */
 	float: left;
-	width: 200px;
+	width: 180px;
 	margin: 0;
 	padding: 0;
 	display: inline;
@@ -474,6 +475,7 @@ form.searchform input.button {
 
 /* rightbar */
 #rightbar {
+	border: 1px solid #ff0000;
 	float: right;
 	width: 21%;
 	padding: 0;	margin: 0;
