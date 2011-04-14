@@ -1,6 +1,13 @@
 2011-04-14  Sergio Martin <sergio.martin@artica.es>
 
 	* include/graphs/functions_pchart.php
+	include/graphs/fgraph.php: Merged changes from 
+	miguel works in Pandora like checks, margins in
+	the graphs, etc.
+
+2011-04-14  Sergio Martin <sergio.martin@artica.es>
+
+	* include/graphs/functions_pchart.php
 	include/graphs/pChart/pDraw.class.php: Added the angle of
 	top axis into bar graphs of pchart.
 	Fixed position of pie charts legend

@@ -50,7 +50,7 @@ switch($graph_type) {
 				$title = get_parameter('title');
 				
 				$mode = get_parameter('mode', 1);
-
+				
 				gd_progress_bar ($width, $height, $progress, $title, $font, $out_of_lim_str, $out_of_lim_image, $mode);
 				break;
 }
@@ -257,7 +257,7 @@ function polar_graph($flash_chart, $chart_data, $width, $height, $no_data_image)
 	return kiviat_graph('polar', $flash_chart, $chart_data, $width, $height, $no_data_image);
 }
 
-function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array(), $legend = array(), $xaxisname = "", $yaxisname = "") {
+function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array(), $legend = array(), $xaxisname = "", $yaxisname = "", $force_height = true) {
 	if($flash_chart) {
 		echo fs_hbar_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
 	}
@@ -270,6 +270,7 @@ function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 		$graph['legend'] = $legend;
 		$graph['xaxisname'] = $xaxisname;
 		$graph['yaxisname'] = $yaxisname;
+		$graph['force_height'] = $force_height;
 
 		$id_graph = serialize_in_temp($graph);
 	
@@ -286,8 +287,8 @@ function pie2d_graph($flash_chart, $chart_data, $width, $height, $others_str = "
 }
 
 function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height, $others_str) {
-	// This library allows only 9 colors
-	$max_values = 9;
+	// This library allows only 8 colors
+	$max_values = 8;
 
 	if(count($chart_data) > $max_values) {
 		$chart_data_trunc = array();
@@ -297,6 +298,9 @@ function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height, $oth
 				$chart_data_trunc[$key] = $value;
 			}
 			else {
+				if (!isset($chart_data_trunc[$others_str])) {
+					$chart_data_trunc[$others_str] = 0;
+				}
 				$chart_data_trunc[$others_str] += $value;
 			}
 			$n++;
@@ -321,7 +325,7 @@ function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height, $oth
 		$graph['height'] = $height;
 
 		$id_graph = serialize_in_temp($graph);
-	
+		
 		switch($graph_type) {
 			case "2d":
 					return "<img src='include/graphs/functions_pchart.php?graph_type=pie2d&id_graph=".$id_graph."'>";
