@@ -102,7 +102,8 @@ function slicesbar_graph($chart_data, $width, $height, $colors, $font, $round_co
 	return "<img src='include/graphs/functions_pchart.php?graph_type=slicebar&id_graph=".$id_graph."'>";
 }
 
-function vbar_graph($flash_chart, $chart_data, $width, $height, $color = array(), $legend = array(), $xaxisname = "", $yaxisname = "") {
+function vbar_graph($flash_chart, $chart_data, $width, $height, $color = array(),
+	$legend = array(), $xaxisname = "", $yaxisname = "", $homedir="") {
 	if($flash_chart) {
 		echo fs_2d_column_chart ($chart_data, $width, $height);
 	}
@@ -118,7 +119,7 @@ function vbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 
 		$id_graph = serialize_in_temp($graph);
 	
-		echo "<img src='include/graphs/functions_pchart.php?graph_type=vbar&id_graph=".$id_graph."'>";
+		return "<img src='" . $homedir . "include/graphs/functions_pchart.php?graph_type=vbar&id_graph=".$id_graph."'>";
 	}
 }
 
@@ -257,7 +258,8 @@ function polar_graph($flash_chart, $chart_data, $width, $height, $no_data_image)
 	return kiviat_graph('polar', $flash_chart, $chart_data, $width, $height, $no_data_image);
 }
 
-function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array(), $legend = array(), $xaxisname = "", $yaxisname = "", $force_height = true) {
+function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array(),
+	$legend = array(), $xaxisname = "", $yaxisname = "", $force_height = true, $homedir="") {
 	if($flash_chart) {
 		echo fs_hbar_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
 	}
@@ -274,19 +276,19 @@ function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 
 		$id_graph = serialize_in_temp($graph);
 	
-		echo "<img src='include/graphs/functions_pchart.php?graph_type=hbar&id_graph=".$id_graph."'>";
+		return "<img src='".$homedir."include/graphs/functions_pchart.php?graph_type=hbar&id_graph=".$id_graph."'>";
 	}
 }
 
-function pie3d_graph($flash_chart, $chart_data, $width, $height, $others_str = "other") {
-	return pie_graph('3d', $flash_chart, $chart_data, $width, $height, $others_str);
+function pie3d_graph($flash_chart, $chart_data, $width, $height, $others_str = "other", $homedir="") {
+	return pie_graph('3d', $flash_chart, $chart_data, $width, $height, $others_str, $homedir);
 }
 
-function pie2d_graph($flash_chart, $chart_data, $width, $height, $others_str = "other") {
-	return pie_graph('2d', $flash_chart, $chart_data, $width, $height, $others_str);
+function pie2d_graph($flash_chart, $chart_data, $width, $height, $others_str = "other", $homedir="") {
+	return pie_graph('2d', $flash_chart, $chart_data, $width, $height, $others_str, $homedir);
 }
 
-function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height, $others_str) {
+function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height, $others_str = "other", $homedir="") {
 	// This library allows only 8 colors
 	$max_values = 8;
 
@@ -314,7 +316,7 @@ function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height, $oth
 					return fs_2d_pie_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
 				break;
 			case "3d":				
-					return fs_3d_pie_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
+					return fs_3d_pie_chart(array_values($chart_data), array_keys($chart_data), $width, $height);
 				break;
 		}
 	}
@@ -328,10 +330,10 @@ function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height, $oth
 		
 		switch($graph_type) {
 			case "2d":
-					return "<img src='include/graphs/functions_pchart.php?graph_type=pie2d&id_graph=".$id_graph."'>";
+					return "<img src='" . $homedir . "include/graphs/functions_pchart.php?graph_type=pie2d&id_graph=".$id_graph."'>";
 				break;
 			case "3d":				
-					return "<img src='include/graphs/functions_pchart.php?graph_type=pie3d&id_graph=".$id_graph."'>";
+					return "<img src='" . $homedir . "include/graphs/functions_pchart.php?graph_type=pie3d&id_graph=".$id_graph."'>";
 				break;
 		}
 	}
