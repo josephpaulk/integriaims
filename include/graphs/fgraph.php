@@ -155,7 +155,7 @@ function area_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
 	}	
 }
 
-function stacked_area_graph($flash_chart, $chart_data, $width, $height, $color, $legend, $long_index, $no_data_image) {
+function stacked_area_graph($flash_chart, $chart_data, $width, $height, $color, $legend, $long_index, $no_data_image, $xaxisname = "", $yaxisname = "") {
 	
 	if (empty($chart_data)) {
 		return '<img src="' . $no_data_image . '" />';
@@ -174,6 +174,8 @@ function stacked_area_graph($flash_chart, $chart_data, $width, $height, $color, 
 		$graph['height'] = $height;
 		$graph['color'] = $color;
 		$graph['legend'] = $legend;
+		$graph['xaxisname'] = $xaxisname;
+		$graph['yaxisname'] = $yaxisname;
 		
 		$id_graph = serialize_in_temp($graph);
 		
@@ -181,7 +183,7 @@ function stacked_area_graph($flash_chart, $chart_data, $width, $height, $color, 
 	}	
 }
 
-function stacked_line_graph($flash_chart, $chart_data, $width, $height, $color, $legend, $long_index, $no_data_image) {
+function stacked_line_graph($flash_chart, $chart_data, $width, $height, $color, $legend, $long_index, $no_data_image, $xaxisname = "", $yaxisname = "") {
 	if (empty($chart_data)) {
 		return '<img src="' . $no_data_image . '" />';
 	}
@@ -199,6 +201,8 @@ function stacked_line_graph($flash_chart, $chart_data, $width, $height, $color, 
 		$graph['height'] = $height;
 		$graph['color'] = $color;
 		$graph['legend'] = $legend;
+		$graph['xaxisname'] = $xaxisname;
+		$graph['yaxisname'] = $yaxisname;
 		
 		$id_graph = serialize_in_temp($graph);
 		
@@ -206,7 +210,7 @@ function stacked_line_graph($flash_chart, $chart_data, $width, $height, $color, 
 	}
 }
 
-function line_graph($flash_chart, $chart_data, $width, $height, $color, $legend, $long_index, $no_data_image) {
+function line_graph($flash_chart, $chart_data, $width, $height, $color, $legend, $long_index, $no_data_image, $xaxisname = "", $yaxisname = "") {
 	if (empty($chart_data)) {
 		return '<img src="' . $no_data_image . '" />';
 	}
@@ -221,6 +225,8 @@ function line_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
 		$graph['height'] = $height;
 		$graph['color'] = $color;
 		$graph['legend'] = $legend;
+		$graph['xaxisname'] = $xaxisname;
+		$graph['yaxisname'] = $yaxisname;
 		
 		$id_graph = serialize_in_temp($graph);
 		
