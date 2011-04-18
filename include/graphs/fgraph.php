@@ -132,7 +132,8 @@ function threshold_graph($flash_chart, $chart_data, $width, $height) {
 	}
 }
 
-function area_graph($flash_chart, $chart_data, $width, $height, $color, $legend, $long_index, $no_data_image, $xaxisname = "", $yaxisname = "") {
+function area_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
+	$long_index, $no_data_image, $xaxisname = "", $yaxisname = "", $homedir="") {
 	if (empty($chart_data)) {
 		return '<img src="' . $no_data_image . '" />';
 	}
@@ -152,7 +153,7 @@ function area_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
 				
 		$id_graph = serialize_in_temp($graph);
 
-		return "<img src='include/graphs/functions_pchart.php?graph_type=area&id_graph=" . $id_graph . "'>";
+		return "<img src='".$homedir."include/graphs/functions_pchart.php?graph_type=area&id_graph=" . $id_graph . "'>";
 	}	
 }
 
@@ -261,7 +262,7 @@ function polar_graph($flash_chart, $chart_data, $width, $height, $no_data_image)
 function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array(),
 	$legend = array(), $xaxisname = "", $yaxisname = "", $force_height = true, $homedir="") {
 	if($flash_chart) {
-		echo fs_hbar_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
+		echo fs_2d_hcolumn_chart ($chart_data, $width, $height);
 	}
 	else {
 		$graph = array();
