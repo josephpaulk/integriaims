@@ -28,9 +28,11 @@ $graph_type = get_parameter('graph_type', '');
 
 switch($graph_type) {
 	case 'histogram': 
-				$width = get_parameter('width');
+				
+                $font = "../fonts/".$config["font"];
+				$font = get_parameter('font', $font);
+                $width = get_parameter('width');
 				$height = get_parameter('height');
-				$font = get_parameter('font');
 				$data = json_decode(safe_output(get_parameter('data')), true);
 
 				$max = get_parameter('max');
@@ -45,8 +47,6 @@ switch($graph_type) {
 				
 				$out_of_lim_str = get_parameter('out_of_lim_str', false);
 				$out_of_lim_image = get_parameter('out_of_lim_image', false);
-
-				$font = get_parameter('font');
 				$title = get_parameter('title');
 				
 				$mode = get_parameter('mode', 1);

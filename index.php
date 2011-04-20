@@ -21,7 +21,7 @@
 // also a Free Software Project coded by some of the people who makes Integria.
 
 // Set this to 0 on production enviroments
-$develop_bypass = 0;
+$develop_bypass = 1;
 
 if ($develop_bypass != 1) {
 
@@ -235,7 +235,11 @@ if ($clean_output == 0) {
 			<?php require ("operation/main_menu.php"); ?>
 		</div>
 
-		<div id="content-wrap">
+        <!-- This magic is needed to have it working in IE6.x and Firefox 4.0 -->
+        <!-- DO NOT USE CSS HERE -->
+
+        <table width=100% cellpadding=0 cellspacing=0 border=0>
+        <tr><td width=180 valign=top>
 			<div id="sidebar">
 			<?php 
 				require ("operation/side_menu.php"); 
@@ -243,7 +247,8 @@ if ($clean_output == 0) {
 					require ("operation/tool_menu.php");
 			?>
 			</div>
-
+        </td>
+        <td valign=top>
 			<div id="main">
 			<?php
 				
@@ -274,8 +279,8 @@ if ($clean_output == 0) {
 				}
 			?>
 			</div>
-		<!-- content-wrap ends here -->
-		</div>
+
+		</td></tr></table>
 	<!-- wrap ends here -->
 	</div>
 

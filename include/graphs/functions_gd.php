@@ -19,6 +19,7 @@ if(file_exists('include/functions.php')) {
 	include_once('include/graphs/functions_utils.php');
 } // If is called through url
 else if(file_exists('../functions.php')) {
+    include('../config.php');
 	include_once('../functions.php');
 	include_once('../functions_html.php');
 	include_once('../functions_html.php');
@@ -26,7 +27,6 @@ else if(file_exists('../functions.php')) {
 }
 	
 $id_graph = get_parameter('id_graph', false);
-
 if($id_graph) {
 
 
@@ -39,6 +39,9 @@ if($id_graph) {
 	if (!isset($graph)) {
 		exit;
 	}
+
+    $graph['font'] = $config["homedir"]."/include/fonts/".$config["font"];
+    $fontsize = $config["fontsize"];
 	
 	$graph_type = get_parameter('graph_type', '');
 
@@ -50,7 +53,8 @@ if($id_graph) {
 						json_decode($graph['data'], true), 
 						$graph['max'], 
 						$graph['font'], 
-						$graph['title']);				
+						$graph['title'],
+						$graph['fontsize']);				
 					break;
 		case 'progressbar':	
 					gd_progress_bar ($graph['width'], 
@@ -60,13 +64,14 @@ if($id_graph) {
 						$graph['font'], 
 						$graph['out_of_lim_str'],
 						$graph['out_of_lim_image'], 
-						$graph['mode']);	
+						$graph['mode'],
+						$graph['fontsize']);	
 					break;
 	}
 }
 
 
-function gd_histogram ($width, $height, $mode, $data, $max_value, $font, $title) {	
+function gd_histogram ($width, $height, $mode, $data, $max_value, $font, $title, $fontsize = 8) {	
 	// $title is for future use
 	$nvalues = count($data);
 	
@@ -112,7 +117,7 @@ function gd_histogram ($width, $height, $mode, $data, $max_value, $font, $title)
 	foreach($data as $label => $value) {	
 		ImageFilledRectangle($image, $leftmargin, $margin_up, ($value/$size_per)+$leftmargin, $margin_up+$rectangle_height -1 , $colors[$c]);
 		if ($mode != 2) {
-			ImageTTFText($image, 7, 0, 0, $margin_up+8, $black, $font, $label);
+			ImageTTFText($image, $fontsize, 0, 0, $margin_up+8, $black, $font, $label);
 		}
 		
 		$margin_up += $rectangle_height + 1;
@@ -131,9 +136,9 @@ function gd_histogram ($width, $height, $mode, $data, $max_value, $font, $title)
 		imageline($image, $risk_low, 0, $risk_low , $height, $grey);
 		imageline($image, $risk_med , 0, $risk_med  , $height, $grey);
 		imageline($image, $risk_high, 0, $risk_high , $height, $grey);
-		ImageTTFText($image, 7, 0, $risk_low-20, $height, $grey, $font, "Low");
-		ImageTTFText($image, 7, 0, $risk_med-20, $height, $grey, $font, "Med.");
-		ImageTTFText($image, 7, 0, $risk_high-25, $height, $grey, $font, "High");
+		ImageTTFText($image, $fontsize, 0, $risk_low-20, $height, $grey, $font, "Low");
+		ImageTTFText($image, $fontsize, 0, $risk_med-20, $height, $grey, $font, "Med.");
+		ImageTTFText($image, $fontsize, 0, $risk_high-25, $height, $grey, $font, "High");
 	}
 	imagePNG($image);
 	imagedestroy($image);
@@ -143,7 +148,7 @@ function gd_histogram ($width, $height, $mode, $data, $max_value, $font, $title)
 // Draw a dynamic progress bar using GDlib directly
 // ***************************************************************************
 
-function gd_progress_bar ($width, $height, $progress, $title, $font, $out_of_lim_str, $out_of_lim_image, $mode = 1) {
+function gd_progress_bar ($width, $height, $progress, $title, $font, $out_of_lim_str, $out_of_lim_image, $mode = 1, $fontsize=10) {
 	if($out_of_lim_str === false) {
 		$out_of_lim_str = "Out of limits";
 	}
@@ -159,6 +164,7 @@ function gd_progress_bar ($width, $height, $progress, $title, $font, $out_of_lim
 	function drawRating($rating, $width, $height, $font, $out_of_lim_str, $mode) {
 		global $config;
 		global $REMOTE_ADDR;
+        global $fontsize;
 		
 		if ($width == 0) {
 			$width = 150;
@@ -214,11 +220,11 @@ function gd_progress_bar ($width, $height, $progress, $title, $font, $out_of_lim
 				
 				if ($rating > 50)
 					if ($rating > 100)
-						ImageTTFText($image, 8, 0, ($width/4), ($height/2)+($height/5), $back, $font, $out_of_lim_str);
+						ImageTTFText($image, $fontsize, 0, ($width/4), ($height/2)+($height/5), $back, $font, $out_of_lim_str);
 					else
-						ImageTTFText($image, 8, 0, ($width/2)-($width/10), ($height/2)+($height/5), $back, $font, $rating."%");
+						ImageTTFText($image, $fontsize, 0, ($width/2)-($width/10), ($height/2)+($height/5), $back, $font, $rating."%");
 				else
-					ImageTTFText($image, 8, 0, ($width/2)-($width/10), ($height/2)+($height/5), $text, $font, $rating."%");
+					ImageTTFText($image, $fontsize, 0, ($width/2)-($width/10), ($height/2)+($height/5), $text, $font, $rating."%");
 				break;
 		}
 		imagePNG($image);

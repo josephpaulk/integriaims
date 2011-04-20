@@ -21,7 +21,7 @@ include $config["homedir"]."/include/functions_graph.php";
 if (!isset($config["id_user"]))
 	$config["id_user"] = $_SESSION['id_usuario'];
 
-	echo '<table width="100%" cellspacing=0 cellpadding=0 border=0>';
+	echo '<table width="700" cellspacing=0 cellpadding=0 border=0>';
 
 
     // ==============================================================

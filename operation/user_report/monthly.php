@@ -98,6 +98,9 @@ echo "<h1>".__('Monthly report for')." $id_user";
 echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&lock_month=$month&month=$month&year=$year&id=$id_user'>";
 echo "<img src='images/rosette.png' border=0 title='". _("Lock all workunits in this month"). "'>";
 echo "</a>";
+
+echo "&nbsp;&nbsp;<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year&id=$id_user&clean_output=1&pdf_output=1'><img src='images/page_white_acrobat.png'></A>";
+
 echo "</h1>";
 
 

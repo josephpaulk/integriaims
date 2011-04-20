@@ -1,3 +1,36 @@
+2011-04-20  Sancho Lerena <slerena@artica.es>
+
+    * include/font/smallfont.ttf: Small free font for
+    graphs.
+
+    * godmode/setup/setup_visual.php: new option for 
+    settings visual setup options.
+
+    * images/leftnav_bg.gif,
+    images/leftnav_bg_uncollapsible.gif: Modified size
+    for side menu (smaller).
+
+    * operation/user_report/monthly.php: Added PDF report
+    link for testing (doest work due mPDF table restrictions
+    we should investigate :-S)
+
+    * operation/side_menu.php: Added visual setup.
+
+    * general/home.php: Fixed width.
+
+    * index.php: New layout uses tables instead floating DIVS
+    for better IE6.x compatibility.
+
+    * fgraph.php: Added font and fontsize parameters.
+
+    * graphs/functions_gd.php: Added font and fontsize parameters.
+
+    * graphs/functions_pchart.php: Added font and fontsize parameters.
+
+    * integria.css: New styles to use tables instead floating divs.
+
+    * project_detail.php: Reduced pie graph size.
+
 2011-04-20  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_xmlrpc.php: Compact the input

@@ -134,6 +134,10 @@ function load_config(){
 	if (!isset ($config["sql_query_limit"]))
 		$config["sql_query_limit"] = 1500;
 
+	if (!isset ($config["pdffont"]))
+		$config["pdffont"] = "code.ttf";
+
+
 }
 
 ?>

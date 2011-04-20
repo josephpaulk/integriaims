@@ -56,7 +56,6 @@ if ($update) {
 
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
 
-	process_sql ("UPDATE tconfig SET value='".$config["block_size"]."' WHERE token='block_size'");
 	process_sql ("UPDATE tconfig SET value='".$config["language_code"]."' WHERE token='language_code'");
 	
 	process_sql ("UPDATE tconfig SET value='".$config["hours_perday"]."' WHERE token='hours_perday'");
@@ -70,9 +69,6 @@ if ($update) {
 
 	process_sql ("DELETE FROM tconfig WHERE token = 'no_wu_completion'");
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('no_wu_completion', '".$config["no_wu_completion"]."')");
-
-	process_sql ("DELETE FROM tconfig WHERE token = 'fontsize'");
-	process_sql ("INSERT INTO tconfig (token, value) VALUES ('fontsize', '".$config["fontsize"]."')");
 
 	process_sql ("DELETE FROM tconfig WHERE token = 'incident_reporter'");
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('incident_reporter', '".$config["incident_reporter"]."')");
@@ -88,11 +84,9 @@ if ($update) {
 	update_config_token ("api_acl", $config["api_acl"]);
 	update_config_token ("api_password", $config["api_password"]);
     update_config_token ("auto_incident_close", $config["auto_incident_close"]);
-    update_config_token ("site_logo", $config["site_logo"]);
-    update_config_token ("header_logo", $config["header_logo"]);
     update_config_token ("email_on_incident_update", $config["email_on_incident_update"]);
     update_config_token ("error_log", $config["error_log"]);
-    update_config_token ("flash_charts", $config["flash_charts"]);
+
 
 }
 
@@ -103,6 +97,9 @@ $table->class = 'databox';
 $table->colspan = array ();
 $table->data = array ();
 
+$incident_reporter_options[0] = __('Disabled');
+$incident_reporter_options[1] = __('Enabled');
+
 $table->data[0][0] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
 	'language_code', $config['language_code'], '', '', '', true, false, false,
 	__('Language'));
@@ -111,8 +108,7 @@ $table->data[0][1] = print_input_text ("no_wu_completion", $config["no_wu_comple
 	20, 500, true, __('No WU completion users'));
 $table->data[0][1] .= integria_help ("no_wu_completion", true);
 
-$table->data[1][0] = print_input_text ("block_size", $config["block_size"], '',
-	5, 5, true, __('Block size for pagination'));
+$table->data[1][0] = print_select ($incident_reporter_options, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, true, "Send email on every incident update");
 
 $table->data[1][1] = print_input_text ("limit_size", $config["limit_size"], '',
 	5, 5, true, __('Max. data limit size'));
@@ -136,11 +132,9 @@ $table->data[4][0] = print_input_text ("iwu_defaultime", $config["iwu_defaultime
 $table->data[4][1] = print_input_text ("pwu_defaultime", $config["pwu_defaultime"], '',
 	5, 5, true, __('Project WU Default time'));
 
-$table->data[5][0] = print_input_text ("fontsize", $config["fontsize"], '',
-	3, 5, true, __('Graphics font size'));
-
-$incident_reporter_options[0] = __('Disabled');
-$incident_reporter_options[1] = __('Enabled');
+$error_log_options[0] = "Disabled";
+$error_log_options[1] = "Enabled";
+$table->data[5][0] = print_select ($error_log_options, "error_log", $config["error_log"], '','','',true,0,true, "Error log");
 
 $table->data[5][1] = print_select ($incident_reporter_options, "incident_reporter", $config["incident_reporter"], '','','',true,0,true, "Incident reporter");
 
@@ -160,32 +154,6 @@ $table->data[11][0] = print_input_text ("api_acl", $config["api_acl"], '',
 
 $table->data[11][1] = print_input_text ("api_password", $config["api_password"], '',
 	30, 255, true, __('API password'));
-	
-$table->data[12][0] = print_select ($incident_reporter_options, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, true, "Send email on every incident update");
-
-
-function get_image_files () {
-	$base_dir = 'images';
-	$files = list_files ($base_dir, ".png", 1, 0);
-	
-	$retval = array ();
-	foreach ($files as $file) {
-		$retval[$file] = $file;
-	}
-	
-	return $retval;
-}
-
-$imagelist = get_image_files ();
-$table->data[12][1] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', '', '',  true, 0, true, "Site logo") ;
-
-$table->data[13][0] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', '', '',  true, 0, true, "Header logo") ;
-
-$error_log_options[0] = "Disabled";
-$error_log_options[1] = "Enabled";
-$table->data[13][1] = print_select ($error_log_options, "error_log", $config["error_log"], '','','',true,0,true, "Error log");
-
-$table->data[14][0] = print_select (array(__('Disabled'),__('Enabled')), "flash_charts", $config["flash_charts"], '','','',true,0,true, __('Flash charts'));
 
 echo "<form name='setup' method='post'>";
 

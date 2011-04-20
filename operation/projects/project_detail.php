@@ -227,14 +227,14 @@ echo "</textarea>";
 
 echo "<tr><td colspan=2>";
 echo "<b>".__("Task effort")."</b>";;
-echo graph_workunit_project (400, 270, $id_project);
+echo graph_workunit_project (300, 270, $id_project);
 
 echo "<td colspan=2>";
 echo "<b>".__("People effort") ."</b>";
-echo graph_workunit_project_user_single (400, 270, $id_project);
+echo graph_workunit_project_user_single (300, 270, $id_project);
 
 echo "</table>";
-echo '<div style="width:90%" class="button">';
+echo '<div style="width:100%;" class="button">';
 
 if (give_acl ($config["id_user"], 0, "PM") || $config["id_user"] == $id_owner) {
 	if ($id_project) {

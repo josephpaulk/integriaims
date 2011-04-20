@@ -407,10 +407,9 @@ form.searchform input.button {
 /* main column */
 #main {
 	border-left:1px solid #F2F2F2;
-	float: left; 
-	width: 800px;
-	margin-left: 25px;
-	padding-left: 10px;
+	width: 100%;
+	margin-left: 5px;
+    padding-left: 0px;
 	min-height: 500px;
 	padding-top: 1px;
 }
@@ -825,7 +824,7 @@ span.users, span.agents, span.data, span.alerts, span.time {
 	clear:both;
 	float:left;
 	padding: 10px 0 0 0;
-	width: 200px;
+	width: 170px;
 	overflow:hidden;
 	margin:0 0 0.5em 0;
 	list-style:none;
@@ -834,7 +833,7 @@ span.users, span.agents, span.data, span.alerts, span.time {
 
 .portlet h2 {
 	display:block;
-	width:200px;
+	width:170px;
 	background-color:#A0A0A0;
 	background-image:url(../../images/leftnav_bg.gif);
 	background-repeat:no-repeat;
@@ -871,7 +870,7 @@ span.users, span.agents, span.data, span.alerts, span.time {
 .portlet h3 {
 	height: 20px;
 	display:block;
-	width:200px;
+	width:170px;
 	background-color:#2179B1;
 	background-repeat:no-repeat;
 	background-position:left top;
