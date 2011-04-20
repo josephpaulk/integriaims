@@ -68,6 +68,39 @@ function add_app_activity ($id_app, $id_user, $app_extra, $activity_time, $start
 }
 
 /**
+ * Update an app activity info.
+ *
+ *
+ * @param array data of latest activity
+ * @param string Continuation start timestamp.
+ * @param string Continuation start activity time.
+ * 
+ */
+function merge_app_activity ($data_latest, $cont_end_timestamp, $cont_send_timestamp, $cont_activity_time) {
+	// Increase the activity time to merge activities
+	$new_activity_time = $data_latest['activity_time'] + $cont_activity_time;
+	
+	// Merge acrivities setting the new end and send timestamps and increasing the activity time
+	$sql = "UPDATE tapp_activity_data 
+	SET 
+	end_timestamp = ".$cont_end_timestamp.", 
+	send_timestamp = ".$cont_send_timestamp.", 
+	activity_time = ".$new_activity_time." 
+	WHERE 
+	id_app = ".$data_latest['id_app']." 
+	AND id_user = '".$data_latest['id_user']."' 
+	AND app_extra = '".addslashes($data_latest['app_extra'])."' 
+	AND activity_time = ".$data_latest['activity_time']." 
+	AND start_timestamp = ".$data_latest['start_timestamp']." 
+	AND end_timestamp = ".$data_latest['end_timestamp']." 
+	AND send_timestamp = ".$data_latest['send_timestamp'];
+
+	$res = process_sql ($sql);
+	
+	return $res;
+}
+
+/**
  * Get the last user send datetime.
  *
  *
@@ -137,8 +170,32 @@ function add_app_activities($usr, $start_datetime, $end_datetime, $data_in){
 			$id_app = $app_exists['id'];
 		}
 		
-		$return = add_app_activity ($id_app, $usr, $row['app_extra'], $row['activity_time'], $start_datetime, $end_datetime);
-		$msg .= $row['app_name']." info ; ";
+		// If the data_in unique in the package, we study the compaction
+		if(count($data_in) == 1) {
+			// Check if the last activity was the same app
+			$app_cont = check_app_continues($usr, $id_app, $row['app_extra'], $start_datetime);
+			
+			// Check if the last activity was unique in his package too.
+			// We now this if the activity time is not lower than current
+			// If not, we will not merge any data
+			if($app_cont != false && $app_cont[0]['activity_time'] < $row['activity_time']) {
+				$app_cont = false;
+			}
+		}
+		else {
+			$app_cont = false;
+		}
+
+		//  If is not a continuation we insert the data
+		if($app_cont === false) {
+			debugPrint("Adding new data", true);
+			$return = add_app_activity ($id_app, $usr, $row['app_extra'], $row['activity_time'], $start_datetime, $end_datetime);
+			$msg .= $row['app_name']." info ; ";
+		}
+		else { // If is a continuation we merge the activities
+			debugPrint("Merging data of: ".$app_cont[0]['id_app']." - ".$app_cont[0]['app_extra'], true);
+			$return = merge_app_activity ($app_cont[0], $end_datetime, time(), $row['activity_time']);
+		}
 		
 		if($return == false)
 			$msg = "Error inserting info";
@@ -146,6 +203,34 @@ function add_app_activities($usr, $start_datetime, $end_datetime, $data_in){
 	}
 
 	return $msg;
+}
+
+/**
+ * Check if an activity is continuation of the latest 
+ * activity with little time between both.
+ *
+ *
+ * @param string user name.
+ * @param string app id.
+ * @param string app extra.
+ * @param string start datetime of the app.
+ */
+function check_app_continues ($usr, $id_app, $app_extra, $start_datetime) {
+	// Max time between activities in seconds
+	// TODO: Get this value from config file or any external source
+	$max_time = 2;
+	
+	$bottom_edge = $start_datetime - $max_time;
+	$top_edge = $start_datetime;
+	
+	$sql = "SELECT * FROM tapp_activity_data WHERE 
+	id_user = '$usr' AND 
+	id_app = '$id_app' AND 
+	app_extra = '".addslashes($app_extra)."' AND 
+	end_timestamp >= '$bottom_edge' AND 
+	end_timestamp <= '$top_edge'";
+
+	return process_sql($sql);
 }
 
 /**

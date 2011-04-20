@@ -439,7 +439,7 @@ function fs_area_graph($chart_data, $width, $height, $colors, $legend, $long_ind
 	$output .= '<script type="text/javascript">
 			<!--
 			function pie_' . $chart_id . ' () {
-				var myChart = new FusionCharts("include/graphs/FusionCharts/FCF_'.$graph_type.'.swf", "' . $chart_id . '", "' . $width. '", "' . $height. '", "0", "1");
+				var myChart = new FusionCharts("' . $homeurl . 'include/graphs/FusionCharts/FCF_'.$graph_type.'.swf", "' . $chart_id . '", "' . $width. '", "' . $height. '", "0", "1");
 				myChart.setDataXML("' . addslashes($chart->getXML ()) . '");
 				myChart.addParam("WMode", "Transparent");
 				myChart.render("' . $div_id . '");
