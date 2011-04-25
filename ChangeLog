@@ -1,3 +1,11 @@
+2011-04-25  Sergio Martin <sergio.martin@artica.es>
+
+	* images/arrow_down_red.png
+	images/arrow_down_green.png
+	images/arrow_up_red.png
+	images/arrow_up_green.png: Added some arrow
+	images from famfamfam collection
+
 2011-04-20  Sancho Lerena <slerena@artica.es>
 
     * include/font/smallfont.ttf: Small free font for
