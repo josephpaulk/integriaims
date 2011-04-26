@@ -74,7 +74,7 @@ function graph_workunit_task ($width, $height, $id_task) {
 	if ($data == NULL) {
 		echo __("There is no data to show");
 	} else {
-		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('other'));
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);
 	}
 }
 
@@ -102,7 +102,7 @@ function graph_workunit_project ($width, $height, $id_project) {
 	if ($data == NULL) {
 		echo __("There is no data to show");
 	} else {
-		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('other'));
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);
 	}
 }
 
@@ -131,7 +131,7 @@ function graph_workunit_project_user_single ($width, $height, $id_project) {
 	if ($data == NULL) {
 		echo __("There is no data to show");
 	} else {
-		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('other'));
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);
 	}
 }
 
@@ -166,7 +166,7 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 	} else {
 		$colors['graph']['fine'] = true;
    	
-		return hbar_graph($config['flash_charts'], $data, $width, $height, $colors);
+		return hbar_graph($config['flash_charts'], $data, $width, $height, $colors, array(), "", "", true, "", "", $config['font'], $config['fontsize']);
 	}
 }
 
@@ -205,7 +205,7 @@ function graph_workunit_project_user ($width, $height, $id_user, $date_from, $da
 	} else {
 		$colors['graph']['fine'] = true;
 		
-		echo hbar_graph($config['flash_charts'], $data, $width, $height, $colors);
+		echo hbar_graph($config['flash_charts'], $data, $width, $height, $colors, array(), "", "", true, "", "", $config['font'], $config['fontsize']);
 	}
 }
 
@@ -302,7 +302,7 @@ ORDER BY timestamp ASC");
    	$colors['graph']['border'] = "#000";
    	$colors['graph']['alpha'] = 100;
 
-	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300, $colors);
+	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300, $colors, array(), "", "", "", "", $config['font'], $config['fontsize']);
 }
 
 function incident_activity_graph ($id_incident){
@@ -357,7 +357,7 @@ function incident_activity_graph ($id_incident){
 		$chart2[$timestamp_human] = $total;
    	}
 
-	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300);
+	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300, array(), "", "", "", "", "", $config['font'], $config['fontsize']);
 }
 
 // TODO: Move to functions_graph.php
@@ -430,7 +430,7 @@ function task_activity_graph ($id_task){
 	$xaxisname = __('Days');
 	$yaxisname = __('Hours in project');
 	
-	echo vbar_graph ($config['flash_charts'], $chart3, 650, 300, $colors, $legend, $xaxisname, $yaxisname);
+	echo vbar_graph ($config['flash_charts'], $chart3, 650, 300, $colors, $legend, $xaxisname, $yaxisname, "", "", $config['font'], $config['fontsize']);
 }
 
 function histogram_2values($valuea, $valueb, $labela = "a", $labelb = "b", $mode = 1, $width = 200, $height = 30, $title = "") {
@@ -444,7 +444,7 @@ function histogram_2values($valuea, $valueb, $labela = "a", $labelb = "b", $mode
 	
 	$max = max($valuea, $valueb);
 
-	return histogram($data_json, $width, $height, $config['fontpath'], $max, $title, $mode);
+	return histogram($data_json, $width, $height, $config['font'], $max, $title, $mode);
 }
 
 function project_tree ($id_project, $id_user) {

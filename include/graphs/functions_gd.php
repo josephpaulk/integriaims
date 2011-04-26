@@ -19,7 +19,6 @@ if(file_exists('include/functions.php')) {
 	include_once('include/graphs/functions_utils.php');
 } // If is called through url
 else if(file_exists('../functions.php')) {
-    include('../config.php');
 	include_once('../functions.php');
 	include_once('../functions_html.php');
 	include_once('../functions_html.php');
@@ -27,6 +26,7 @@ else if(file_exists('../functions.php')) {
 }
 	
 $id_graph = get_parameter('id_graph', false);
+
 if($id_graph) {
 
 
@@ -39,9 +39,10 @@ if($id_graph) {
 	if (!isset($graph)) {
 		exit;
 	}
-
-    $graph['font'] = $config["homedir"]."/include/fonts/".$config["font"];
-    $fontsize = $config["fontsize"];
+	
+	if (!isset($graph['fontsize'])) {
+		$graph['fontsize'] = 6;
+	}
 	
 	$graph_type = get_parameter('graph_type', '');
 
@@ -164,7 +165,6 @@ function gd_progress_bar ($width, $height, $progress, $title, $font, $out_of_lim
 	function drawRating($rating, $width, $height, $font, $out_of_lim_str, $mode) {
 		global $config;
 		global $REMOTE_ADDR;
-        global $fontsize;
 		
 		if ($width == 0) {
 			$width = 150;

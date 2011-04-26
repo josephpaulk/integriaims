@@ -370,7 +370,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	$data = array (__('Opened') => $opened, __('Closed') => $total - $opened);
     $output .= "</td>";
     $output .= "<td>";
-    $output .= pie3d_graph ($config['flash_charts'], $data, 300, 150);
+    $output .= pie3d_graph ($config['flash_charts'], $data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']);
     $output .= "</td>";
     $output .= "</tr><tr>";
     $output .= "<td>";
@@ -427,7 +427,7 @@ function print_incidents_stats ($incidents, $return = false) {
 			$scoring_label .= "<br/>N/A";
 		}
 		else {
-			$users_label .= "<br/>".pie3d_graph ($config['flash_charts'], $users_data, 250, 100);
+			$users_label .= "<br/>".pie3d_graph ($config['flash_charts'], $users_data, 250, 100, __('others'), "", "", $config['font'], $config['fontsize']);
 		}
 		
 	    // Find the 5 most active incidents (more worked hours)
@@ -447,7 +447,7 @@ function print_incidents_stats ($incidents, $return = false) {
 			$scoring_label .= "<br/>N/A";
 		}
 		else {
-			$incidents_label .= "<br/>".pie3d_graph ($config['flash_charts'], $incidents_data, 250, 100);
+			$incidents_label .= "<br/>".pie3d_graph ($config['flash_charts'], $incidents_data, 250, 100, __('others'), "", "", $config['font'], $config['fontsize']);
 		}
 		
         $submitter_label = "";
@@ -462,7 +462,7 @@ function print_incidents_stats ($incidents, $return = false) {
 			$scoring_label .= "<br/>N/A";
 		}
 		else {
-			$submitter_label .= "<br/>".pie3d_graph ($config['flash_charts'], $submitter_data, 250, 100);
+			$submitter_label .= "<br/>".pie3d_graph ($config['flash_charts'], $submitter_data, 250, 100, __('others'), "", "", $config['font'], $config['fontsize']);
 		}
 		
         $scoring_label ="";
@@ -476,7 +476,7 @@ function print_incidents_stats ($incidents, $return = false) {
 			$scoring_label .= "<br/>N/A";
 		}
 		else {
-			$scoring_label .= "<br/>".pie3d_graph ($config['flash_charts'], $scoring_data, 250, 100);
+			$scoring_label .= "<br/>".pie3d_graph ($config['flash_charts'], $scoring_data, 250, 100, __('others'), "", "", $config['font'], $config['fontsize']);
 		}
 		
         $output .= print_label (__('Top 5 active users'), '', '', true, $users_label);

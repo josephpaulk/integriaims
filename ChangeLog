@@ -1,5 +1,19 @@
 2011-04-26  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions_graph.php
+	include/graphs/functions_pchart.php
+	include/graphs/functions_fsgraph.php
+	include/graphs/functions_gd.php
+	include/graphs/fgraph.php
+	include/fonts/unicode.ttf
+	include/fonts/code.ttf
+	include/functions_incidents.php
+	godmode/setup/setup_visual.php: Merged fonts pass
+	from miguel works in pandora and passed font and
+	font size to all graph types
+
+2011-04-26  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_incidents.php
 	operation/incidents/incident.php
 	operation/incidents/incident_statistics.php

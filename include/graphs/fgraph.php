@@ -10,6 +10,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+
 // If is called from index
 if(file_exists('include/functions.php')) {
 	include_once('include/functions.php');
@@ -28,11 +29,9 @@ $graph_type = get_parameter('graph_type', '');
 
 switch($graph_type) {
 	case 'histogram': 
-				
-                $font = "../fonts/".$config["font"];
-				$font = get_parameter('font', $font);
-                $width = get_parameter('width');
+				$width = get_parameter('width');
 				$height = get_parameter('height');
+				$font = get_parameter('font');
 				$data = json_decode(safe_output(get_parameter('data')), true);
 
 				$max = get_parameter('max');
@@ -47,6 +46,8 @@ switch($graph_type) {
 				
 				$out_of_lim_str = get_parameter('out_of_lim_str', false);
 				$out_of_lim_image = get_parameter('out_of_lim_image', false);
+
+				$font = get_parameter('font');
 				$title = get_parameter('title');
 				
 				$mode = get_parameter('mode', 1);
@@ -103,7 +104,8 @@ function slicesbar_graph($chart_data, $width, $height, $colors, $font, $round_co
 }
 
 function vbar_graph($flash_chart, $chart_data, $width, $height, $color = array(),
-	$legend = array(), $xaxisname = "", $yaxisname = "", $homedir="") {
+	$legend = array(), $xaxisname = "", $yaxisname = "", $homedir="",
+	$water_mark = '', $font = '', $font_size = '', $force_steps = true) {
 	if($flash_chart) {
 		echo fs_2d_column_chart ($chart_data, $width, $height);
 	}
@@ -116,6 +118,10 @@ function vbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 		$graph['legend'] = $legend;
 		$graph['xaxisname'] = $xaxisname;
 		$graph['yaxisname'] = $yaxisname;
+		$graph['water_mark'] = $water_mark;
+		$graph['font'] = $font;
+		$graph['font_size'] = $font_size;
+		$graph['force_steps'] = $force_steps;
 
 		$id_graph = serialize_in_temp($graph);
 	
@@ -133,7 +139,8 @@ function threshold_graph($flash_chart, $chart_data, $width, $height) {
 }
 
 function area_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
-	$long_index, $no_data_image, $xaxisname = "", $yaxisname = "", $homedir="") {
+	$long_index, $no_data_image, $xaxisname = "", $yaxisname = "", $homedir="",
+	$water_mark = "", $font = '', $font_size = '') {
 	if (empty($chart_data)) {
 		return '<img src="' . $no_data_image . '" />';
 	}
@@ -150,6 +157,9 @@ function area_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
 		$graph['legend'] = $legend;
 		$graph['xaxisname'] = $xaxisname;
 		$graph['yaxisname'] = $yaxisname;
+		$graph['water_mark'] = $water_mark;
+		$graph['font'] = $font;
+		$graph['font_size'] = $font_size;
 				
 		$id_graph = serialize_in_temp($graph);
 
@@ -157,7 +167,9 @@ function area_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
 	}	
 }
 
-function stacked_area_graph($flash_chart, $chart_data, $width, $height, $color, $legend, $long_index, $no_data_image, $xaxisname = "", $yaxisname = "") {
+function stacked_area_graph($flash_chart, $chart_data, $width, $height, $color,
+	$legend, $long_index, $no_data_image, $xaxisname = "", $yaxisname = "",
+	$water_mark = "", $font = '', $font_size = '') {
 	
 	if (empty($chart_data)) {
 		return '<img src="' . $no_data_image . '" />';
@@ -178,6 +190,9 @@ function stacked_area_graph($flash_chart, $chart_data, $width, $height, $color, 
 		$graph['legend'] = $legend;
 		$graph['xaxisname'] = $xaxisname;
 		$graph['yaxisname'] = $yaxisname;
+		$graph['water_mark'] = $water_mark;
+		$graph['font'] = $font;
+		$graph['font_size'] = $font_size;
 		
 		$id_graph = serialize_in_temp($graph);
 		
@@ -185,7 +200,9 @@ function stacked_area_graph($flash_chart, $chart_data, $width, $height, $color, 
 	}	
 }
 
-function stacked_line_graph($flash_chart, $chart_data, $width, $height, $color, $legend, $long_index, $no_data_image, $xaxisname = "", $yaxisname = "") {
+function stacked_line_graph($flash_chart, $chart_data, $width, $height, $color,
+	$legend, $long_index, $no_data_image, $xaxisname = "", $yaxisname = "",
+	$water_mark = "", $font = '', $font_size = '') {
 	if (empty($chart_data)) {
 		return '<img src="' . $no_data_image . '" />';
 	}
@@ -205,6 +222,9 @@ function stacked_line_graph($flash_chart, $chart_data, $width, $height, $color, 
 		$graph['legend'] = $legend;
 		$graph['xaxisname'] = $xaxisname;
 		$graph['yaxisname'] = $yaxisname;
+		$graph['water_mark'] = $water_mark;
+		$graph['font'] = $font;
+		$graph['font_size'] = $font_size;
 		
 		$id_graph = serialize_in_temp($graph);
 		
@@ -212,7 +232,9 @@ function stacked_line_graph($flash_chart, $chart_data, $width, $height, $color, 
 	}
 }
 
-function line_graph($flash_chart, $chart_data, $width, $height, $color, $legend, $long_index, $no_data_image, $xaxisname = "", $yaxisname = "") {
+function line_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
+	$long_index, $no_data_image, $xaxisname = "", $yaxisname = "",
+	$water_mark = "", $font = '', $font_size = '') {
 	if (empty($chart_data)) {
 		return '<img src="' . $no_data_image . '" />';
 	}
@@ -229,6 +251,9 @@ function line_graph($flash_chart, $chart_data, $width, $height, $color, $legend,
 		$graph['legend'] = $legend;
 		$graph['xaxisname'] = $xaxisname;
 		$graph['yaxisname'] = $yaxisname;
+		$graph['water_mark'] = $water_mark;
+		$graph['font'] = $font;
+		$graph['font_size'] = $font_size;
 		
 		$id_graph = serialize_in_temp($graph);
 		
@@ -260,7 +285,8 @@ function polar_graph($flash_chart, $chart_data, $width, $height, $no_data_image)
 }
 
 function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array(),
-	$legend = array(), $xaxisname = "", $yaxisname = "", $force_height = true, $homedir="") {
+	$legend = array(), $xaxisname = "", $yaxisname = "", $force_height = true,
+	$homedir="", $water_mark = '', $font = '', $font_size = '', $force_steps = true) {
 	if($flash_chart) {
 		echo fs_2d_hcolumn_chart ($chart_data, $width, $height);
 	}
@@ -274,6 +300,10 @@ function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 		$graph['xaxisname'] = $xaxisname;
 		$graph['yaxisname'] = $yaxisname;
 		$graph['force_height'] = $force_height;
+		$graph['water_mark'] = $water_mark;
+		$graph['font'] = $font;
+		$graph['font_size'] = $font_size;
+		$graph['force_steps'] = $force_steps;
 
 		$id_graph = serialize_in_temp($graph);
 	
@@ -281,15 +311,20 @@ function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 	}
 }
 
-function pie3d_graph($flash_chart, $chart_data, $width, $height, $others_str = "other", $homedir="") {
-	return pie_graph('3d', $flash_chart, $chart_data, $width, $height, $others_str, $homedir);
+function pie3d_graph($flash_chart, $chart_data, $width, $height,
+	$others_str = "other", $homedir="", $water_mark = "", $font = '', $font_size = '') {
+	return pie_graph('3d', $flash_chart, $chart_data, $width, $height,
+		$others_str, $homedir, $water_mark, $font, $font_size);
 }
 
-function pie2d_graph($flash_chart, $chart_data, $width, $height, $others_str = "other", $homedir="") {
-	return pie_graph('2d', $flash_chart, $chart_data, $width, $height, $others_str, $homedir);
+function pie2d_graph($flash_chart, $chart_data, $width, $height,
+	$others_str = "other", $homedir="", $water_mark = "", $font = '', $font_size = '') {
+	return pie_graph('2d', $flash_chart, $chart_data, $width, $height,
+		$others_str, $homedir, $water_mark, $font, $font_size);
 }
 
-function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height, $others_str = "other", $homedir="") {
+function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height,
+	$others_str = "other", $homedir="", $water_mark = "", $font = '', $font_size = '') {
 	// This library allows only 8 colors
 	$max_values = 8;
 
@@ -326,6 +361,9 @@ function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height, $oth
 		$graph['data'] = $chart_data;
 		$graph['width'] = $width;
 		$graph['height'] = $height;
+		$graph['water_mark'] = $water_mark;
+		$graph['font'] = $font;
+		$graph['font_size'] = $font_size;
 
 		$id_graph = serialize_in_temp($graph);
 		

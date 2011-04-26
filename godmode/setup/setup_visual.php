@@ -57,18 +57,20 @@ $table->data[0][0] = print_input_text ("block_size", $config["block_size"], '',
 
 
 function get_font_files () {
-	$base_dir = 'include/fonts';
+	global $config;
+	$base_dir = $config['homedir'].'include/fonts';
 	$files = list_files ($base_dir, ".ttf", 1, 0);
 	
 	$retval = array ();
 	foreach ($files as $file) {
-		$retval[$file] = $file;
+		$retval[$config['homedir'].'include/fonts/'.$file] = $file;
 	}
 	
 	return $retval;
 }
 
 $fontlist = get_font_files ();
+
 $table->data[0][1] = print_select ($fontlist, 'font', $config["font"], '', '', '',  true, 0, true, "Font for graphs") ;
 
 $table->data[1][0] = print_select ($fontlist, 'pdffont', $config["pdffont"], '', '', '',  true, 0, true, "Font for PDF") ;
