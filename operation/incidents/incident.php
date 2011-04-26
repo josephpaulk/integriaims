@@ -68,9 +68,11 @@ echo '<div id="tabs">';
 echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 if ($id) {
 	echo '<li class="ui-tabs"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
-	echo '<li class="ui-tabs-selected"><a href="ajax.php?page=operation/incidents/incident_detail&id='.$id.'"><span>'.__('Details').'</span></a></li>';
+	echo '<li class="ui-tabs"><a href="index.php"><span>'.__('Statistics').'</span></a></li>';
+	echo '<li class="ui-tabs-selected"><a href="index.php"><span>'.__('Details').'</span></a></li>';
 } else {
 	echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
+	echo '<li class="ui-tabs"><a href="index.php"><span>'.__('Statistics').'</span></a></li>';
 	echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Details').'</span></a></li>';
 }
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Tracking').'</span></a></li>';
@@ -229,19 +231,34 @@ function check_incident (id) {
 
 function show_incident_details (id) {
 	id_incident = id;
-	$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_detail&id=" + id);
-	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_tracking&id=" + id);
-	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + id);
-	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + id);
-	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/incidents/incident_workunits&id=" + id);
-	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_files&id=" + id);
-	$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
-		.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6);
+	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_detail&id=" + id);
+	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_tracking&id=" + id);
+	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + id);
+	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + id);
+	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_workunits&id=" + id);
+	$("#tabs > ul").tabs ("url", 7, "ajax.php?page=operation/incidents/incident_files&id=" + id);
+	$("#tabs > ul").tabs ("enable", 2).tabs ("enable", 3).tabs ("enable", 4)
+		.tabs ("enable", 5).tabs ("enable", 6).tabs ("enable", 7);
 	if (tabs.data ("selected.tabs") == 1) {
-		$("#tabs > ul").tabs ("load", 1);
+		$("#tabs > ul").tabs ("load", 2);
 	} else {
-		$("#tabs > ul").tabs ("select", 1);
+		$("#tabs > ul").tabs ("select", 2);
 	}
+}
+
+function configure_statistics_tab (values) {
+	values.push ({name: "return_filter", value: 1});
+
+	jQuery.post ("ajax.php",
+		values,
+		function (data, status) {
+			$("#tabs > ul").tabs ("url", 1, "ajax.php?page=operation/incidents/incident_statistics&filter=" + data);
+		},
+		"html"
+	);
+	
+	values.pop();
+	return false;
 }
 
 var tabs;
@@ -255,7 +272,6 @@ $(document).ready (function () {
 	$(".incident-menu").slideDown ();
 	show_incident_details (<?php echo $id; ?>);
 <?php endif; ?>
-	
 	$("#saved-searches-form").submit (function () {
 		search_values = get_form_input_values ('search_incident_form');
 		
@@ -329,28 +345,10 @@ $(document).ready (function () {
 		},
 		function (form) {
 			val = get_form_input_values (form);
-			
 			val.push ({name: "page",
 					value: "operation/incidents/incident_search"});
-			val.push ({name: "show_stats",
-					value: 1});
-			$("#incident-stats").hide ().empty ();
-			jQuery.post ("ajax.php",
-				val,
-				function (data, status) {
-					$("#incident-stats").empty ().append (data).slideDown ();
-					if (first_search) {
-						$("#search_status").attr ("value", 0);
-						first_search = false;
-					}
-					$(".incident_link").click (function () {
-						id = this.id.split ("_").pop ();
-						check_incident (id);
-						return false;
-					});
-				},
-				"html"
-			);
+			configure_statistics_tab(val);
+
 		}
 	);
 <?php if ($do_search_news) : ?>

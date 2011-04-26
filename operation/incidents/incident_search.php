@@ -124,7 +124,7 @@ if ($search_form) {
 	}
 }
 
-$show_stats = (bool) get_parameter ('show_stats');
+$return_filter = (bool) get_parameter ('return_filter');
 
 $filter = array ();
 $filter['string'] = (string) get_parameter ('search_string');
@@ -145,29 +145,16 @@ $filter['id_user'] = (string) get_parameter ('search_id_user', '');
 $filter['first_date'] = (string) get_parameter ('search_first_date');
 $filter['last_date'] = (string) get_parameter ('search_last_date');
 
+/* Return json coded filter to AJAX response */
+if($return_filter) {
+	echo json_encode($filter);
+	return;
+}
+
 $incidents = filter_incidents ($filter);
 if ($incidents === false) {
 	if (! $show_stats)
 		echo '<tr><td colspan="8">'.__('Nothing was found').'</td></tr>';
-	return;
-}
-
-/* Show HTML if show_stats flag is active on HTML request */
-if ($show_stats) {
-	print_incidents_stats ($incidents);
-	
-	/* Add a button to generate HTML reports */
-	echo '<form method="post" target="_blank" action="index.php" style="clear: both">';
-	foreach ($_POST as $key => $value) {
-		print_input_hidden ($key, $value);
-	}
-	echo '<div style="width:90%; text-align: right;">';
-	print_input_hidden ('sec2', 'operation/reporting/incidents_html');
-	print_input_hidden ('clean_output', 1);
-	print_submit_button (__('HTML report'), 'incident_report', false,
-		'class="sub report"');
-	echo '</div></form>';
-	
 	return;
 }
 

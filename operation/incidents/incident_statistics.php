@@ -1,44 +1,43 @@
 <?php
 
-// Integria 2.0 - http://integria.sourceforge.net
+// Integria IMS - http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2011-2011 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
+// as published by the Free Software Foundation; version 2
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+global $config;
 
-// Load global vars
-require("include/config.php");
+check_login ();
 
-if (comprueba_login() == 0) {
-	$iduser=$_SESSION['id_usuario'];
-	if (give_acl($id_user, 0, "IR")==1) {	
-		echo "<h2>".__('Incident management')."</h2>";
-		echo "<h3>".__('Statistics')."<a href='help/".$help_code."/chap4.php#44' target='_help' class='help'>&nbsp;<span>".__('Help')."</span></a></h3>";
-?>
-<img src="reporting/fgraph.php?tipo=estado_incidente" border=0>
-<br><br>
-<img src="reporting/fgraph.php?tipo=prioridad_incidente" border=0>
-<br><br>
-<img src="reporting/fgraph.php?tipo=group_incident" border=0>
-<br><br>
-<img src="reporting/fgraph.php?tipo=user_incident" border=0>
-<br><br>
-<img src="reporting/fgraph.php?tipo=source_incident" border=0>
-<br><br>
-<?php
-	} else {
-			require ("general/noaccess.php");
-			audit_db($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access Incident section");
-        }
+$filter = json_decode(safe_output(get_parameter ('filter')), true);
+
+$incidents = filter_incidents ($filter);
+if ($incidents === false) {
+	if (! $show_stats)
+		echo '<tr><td colspan="8">'.__('Nothing was found').'</td></tr>';
+	return;
 }
+
+echo "<h1>".__('Search statistics')."</h1>";
+
+print_incidents_stats ($incidents);
+
+/* Add a button to generate HTML reports */
+echo '<form method="post" target="_blank" action="index.php" style="clear: both">';
+foreach ($filter as $key => $value) {
+	print_input_hidden ($key, $value);
+}
+echo '<div style="width:90%; text-align: right;">';
+print_input_hidden ('sec2', 'operation/reporting/incidents_html');
+print_input_hidden ('clean_output', 1);
+print_submit_button (__('HTML report'), 'incident_report', false,
+	'class="sub report"');
+echo '</div></form>';
+
 ?>

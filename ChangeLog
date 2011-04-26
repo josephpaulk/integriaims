@@ -1,3 +1,12 @@
+2011-04-26  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_incidents.php
+	operation/incidents/incident.php
+	operation/incidents/incident_statistics.php
+	operation/incidents/incident_search.php: Moved 
+	incident statistics from search screen to new 
+	statistics tab
+
 2011-04-25  Sergio Martin <sergio.martin@artica.es>
 
 	* images/arrow_down_red.png
