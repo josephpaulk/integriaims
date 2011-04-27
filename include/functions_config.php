@@ -137,6 +137,9 @@ function load_config(){
 	if (!isset ($config["pdffont"]))
 		$config["pdffont"] = "code.ttf";
 
+	if (!isset ($config["fontpath"])){
+		$config["fontpath"]= $config["font"]; // Compatibility fix to use functions_graph library from pandora, in integria is font in pandora is fontpath
+	}
 
 }
 

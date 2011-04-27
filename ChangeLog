@@ -1,5 +1,11 @@
 2011-04-27  Sancho Lerena <slerena@artica.es>
 
+	* graphs/functions_gd.php: Temporary fix for fontname, is missing ¿?.
+	Fontsize is not passwd to progressbar function!. Fixed.
+
+	* functions_config.php: fontpath config token is taken from "font". 
+	This is used in graph libraries, which are the same in pandora.
+
     * godmode/setup/setup_visual.php: Fixed load of PDFFont.
 
     * integria.spec: Missing php-gzip for PDF library.

@@ -35,7 +35,6 @@ if($id_graph) {
 	}
 
 	$graph = unserialize_in_temp($id_graph);
-
 	if (!isset($graph)) {
 		exit;
 	}
@@ -43,7 +42,10 @@ if($id_graph) {
 	if (!isset($graph['fontsize'])) {
 		$graph['fontsize'] = 6;
 	}
-	
+
+// Temporary fix
+$graph['font']="/srv/www/htdocs/integria/include/fonts/smallfont.ttf";
+
 	$graph_type = get_parameter('graph_type', '');
 
 	switch($graph_type) {
@@ -162,8 +164,9 @@ function gd_progress_bar ($width, $height, $progress, $title, $font, $out_of_lim
 	// http://us3.php.net/manual/en/function.imagefilledrectangle.php
 	// With some adds from sdonie at lgc dot com
 	// Get from official documentation PHP.net website. Thanks guys :-)
-	function drawRating($rating, $width, $height, $font, $out_of_lim_str, $mode) {
+	function drawRating($rating, $width, $height, $font, $out_of_lim_str, $mode, $fontsize) {
 		global $config;
+
 		global $REMOTE_ADDR;
 		
 		if ($width == 0) {
@@ -236,7 +239,7 @@ function gd_progress_bar ($width, $height, $progress, $title, $font, $out_of_lim
    	switch ($mode)
    	{
    		case 0:
-   			drawRating($progress, $width, $height, $font, $out_of_lim_str, $mode);
+   			drawRating($progress, $width, $height, $font, $out_of_lim_str, $mode, $fontsize);
    			/*
 if ($mode == 0) {
 		$engine->background_color = '#E6E6D2';
@@ -267,7 +270,7 @@ if ($mode == 0) {
 				imagePng($imgPng); 
 		   	}
 		   	else 
-		   		drawRating($progress, $width, $height, $font, $out_of_lim_str, $mode);
+		   		drawRating($progress, $width, $height, $font, $out_of_lim_str, $mode, $fontsize);
    			break;
    	}
 }
