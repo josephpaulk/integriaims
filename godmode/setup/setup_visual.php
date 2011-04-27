@@ -31,7 +31,7 @@ if ($update) {
 	$config["block_size"] = (int) get_parameter ("block_size", 20);
 	$config["fontsize"] = (int) get_parameter ("fontsize", 10);
 	$config["font"] = get_parameter ("font", "smallfont.ttf");
-	$config["pdf"] = get_parameter ("pdffont", "code.ttf");
+	$config["pdffont"] = get_parameter ("pdffont", "code.ttf");
 	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
     $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
 	$config["flash_charts"] = get_parameter ("flash_charts", 1);
@@ -58,12 +58,12 @@ $table->data[0][0] = print_input_text ("block_size", $config["block_size"], '',
 
 function get_font_files () {
 	global $config;
-	$base_dir = $config['homedir'].'include/fonts';
+	$base_dir = $config['homedir'].'/include/fonts';
 	$files = list_files ($base_dir, ".ttf", 1, 0);
 	
 	$retval = array ();
 	foreach ($files as $file) {
-		$retval[$config['homedir'].'include/fonts/'.$file] = $file;
+		$retval[$config['homedir'].'/include/fonts/'.$file] = $file;
 	}
 	
 	return $retval;

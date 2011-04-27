@@ -1,5 +1,6 @@
 <?php
 
+global $config;
 
 // Optionally define a folder which contains TTF fonts
 // mPDF will look here before looking in the usual _MPDF_TTFONTPATH
@@ -7,7 +8,7 @@
 // e.g. on Windows: define("_MPDF_SYSTEM_TTFONTS", 'C:/Windows/Fonts/');
 // Leave undefined if not required
 
-// define("_MPDF_SYSTEM_TTFONTS", '');
+define("_MPDF_SYSTEM_TTFONTS", $config["homedir"]."/include/fonts/");
 
 
 // Optionally set font(s) (names as defined below in $this->fontdata) to use for missing characters
@@ -149,14 +150,14 @@ $this->fontdata = array(
 		),
 
 */
+
 //ADDED FOR PANDORA DEVELOPER
 	"code" => array(
-		'R' => "code.ttf",
+		'R' => $config["pdffont"],
 		),
 //ADDED FOR PANDORA DEVELOPER
 
 );
-
 
 // Add fonts to this array if they contain characters in the SIP or SMP Unicode planes
 // but you do not require them. This allows a more efficient form of subsetting to be used.

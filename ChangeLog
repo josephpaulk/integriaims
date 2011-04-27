@@ -1,3 +1,18 @@
+2011-04-27  Sancho Lerena <slerena@artica.es>
+
+    * godmode/setup/setup_visual.php: Fixed load of PDFFont.
+
+    * integria.spec: Missing php-gzip for PDF library.
+
+    * operation/kb/browse_data.php: Added PDF Link to KD article.
+
+    * operation/side_menu.php: Project and task are now collapsible boxes.
+
+    * include/mpdf51/config_fonts.php,
+    * include/mpdf51/mpdf.php: Now uses font defined in config and uses integria
+    font path instead mPDF default paths.
+
+
 2011-04-26  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_graph.php

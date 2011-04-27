@@ -29,7 +29,7 @@ AutoReq:            0
 Requires:           apache2
 Requires:           php >= 4.3.0
 Requires:           php5-gd, php5-pear, php5-json, php5-gettext
-Requires:           php5-mysql, php5-ldap, php5-mbstring, php5
+Requires:           php5-mysql, php5-ldap, php5-mbstring, php5, php5-zlib
 Requires:           graphviz, xorg-x11-fonts-core
 Provides:           %{name}-%{version}
 

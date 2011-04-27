@@ -43,7 +43,11 @@ $category = '';
 if ($kb_data["id_category"])
 	$category = get_db_value ('name', 'tkb_category', 'id', $kb_data['id_category']);
 
-echo '<h2>'.__('KB article review').'</h2>';
+echo '<h2>'.__('KB article review');
+
+echo "&nbsp;&nbsp; <a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=$id&clean_output=1&pdf_output=1'><img src='images/page_white_acrobat.png' title=PDF></a>";
+echo '</h2>';
+
 $avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $kb_data['id_user']);
 
 echo "<p><b>$title</b>";

@@ -25,9 +25,13 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 	if (($id_task != -1) AND ($id_project == -1)){
 		$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
 	}
+	
+	echo "<div class='portlet' style='border:padding: 0px; margin: 0px;'>";
+	echo '<a href="javascript:;" onclick="$(\'#projects\').slideToggle (); return false">';
+	echo "<h2>".__('Projects')."</h2>";
+	echo "</a>";
+	echo "<div id=projects style='padding: 0px; margin: 0px'>";
 
-	echo "<div class='portlet'>";
-	echo "<h3>".__('Projects')."</h3>";
 	echo "<ul class='sidemenu'>";
 
 	// Project overview
@@ -72,6 +76,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 	// end of main Project options block
 	echo "</ul>";
 	echo "</div>";
+	echo "</div>";
 	
 	// Dynamic project sub options menu (PROJECT)
 	$id_task = get_parameter ('id_task');
@@ -80,10 +85,12 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 		$project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
 
 		echo "<div class='portlet'>";
-		$project_title = substr(get_db_value ("name", "tproject", "id", $id_project), 0, 18);
-		echo "<h3>".__('Project')." - $project_title ..</h3>";
+		$project_title = substr(get_db_value ("name", "tproject", "id", $id_project), 0, 25);
+		echo '<a href="javascript:;" onclick="$(\'#project\').slideToggle (); return false">';
+		echo "<h2>$project_title</h2>";
+		echo "</a>";
+		echo "<div id=project>";
 		echo "<ul class='sidemenu'>";
-
 		// Project detail
 		if ($sec2 == "operation/projects/project_detail")
 			echo "<li id='sidesel'>";
@@ -172,7 +179,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 		}
 
 		echo "</ul>";
-		echo "</div>";
+		echo "</div></div>";
 	}
 
 	// Dynamic sub options menu (TASKS)
@@ -275,8 +282,6 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 		echo "</ul>";
 		echo "</div>";
 	}
-
-
 }
 
 // Project group manager
