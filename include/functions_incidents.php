@@ -44,10 +44,10 @@
 
 // Avoid to mess AJAX with Javascript
 if(defined ('AJAX')) {
-	require_once ("include/functions_graph.php");
+	require_once ($config["homedir"]."/include/functions_graph.php");
 }
 
-include_once ("include/graphs/fgraph.php");
+include_once ($config["homedir"]."/include/graphs/fgraph.php");
 
 function filter_incidents ($filters) {
 	global $config;

@@ -1,5 +1,8 @@
 2011-04-28  Sancho Lerena <slerena@artica.es>
 
+	* include/integria_cron.php,
+	include/functions_incidents.php: Fixed a minimal errors (includes).
+
 	* include/functions_calendar.php: Minimal style changes on code
 
 	* operation/projects/csvexport.php: This is used to "print" report

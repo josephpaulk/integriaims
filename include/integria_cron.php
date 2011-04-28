@@ -14,6 +14,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+
 include ("config.php");
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set("display_errors", 1);

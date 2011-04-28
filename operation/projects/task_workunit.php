@@ -88,28 +88,27 @@ if ($operation == "workunit") {
 			$result_output = '<h3 class="suc">'.__('Workunit added').'</h3>';
 			insert_event ("PWU INSERT", 0, 0, $description);
 			task_tracking ($id_task, TASK_WORKUNIT_ADDED, $id_workunit);
+
+			/* Autocomplete task progress */
+
+                	if ($task['completion'] < 100) {
+	                       /* Get expected task completion, based on worked hours */
+       		               $expected_completion = round_number (floor ($current_hours * 100 / $task['hours']));
+
+	                        $current_hours += $duration;
+                        	$expected_completion =  round_number (floor ($current_hours * 100 / $task['hours']));
+                        	$sql = sprintf ('UPDATE ttask
+                                SET completion = %d
+                                WHERE id = %d',
+                                $expected_completion, $id_task);
+                        	process_sql ($sql);
+                	}
 		} else {
 			mail_project (1, $config['id_user'], $id_workunit, $id_task);
 			$result_output = '<h3 class="suc">'.__('Workunit updated').'</h3>';
 			insert_event ("PWU UPDATED", 0, 0, $description);
 		}
 		
-		/* Autocomplete task progress */
-		if ($insert && $task['completion'] < 100 && $task['hours']) {
-			/* Get expected task completion, based on worked hours */
-			$expected_completion = round_number (floor ($current_hours * 100 / $task['hours']));
-			
-			/* If completion was not set manually, update with current progress */
-			if ($task['completion'] == $expected_completion) {
-				$current_hours += $duration;
-				$expected_completion =  round_number (floor ($current_hours * 100 / $task['hours']));
-				$sql = sprintf ('UPDATE ttask
-					SET completion = %d
-					WHERE id = %d',
-					$expected_completion, $id_task);
-				process_sql ($sql);
-			}
-		}
 	} else {
 		$result_output = '<h3 class="error">'.__('There was a problem adding workunit').'</h3>';
 	}
