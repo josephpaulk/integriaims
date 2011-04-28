@@ -462,9 +462,9 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 
 	$calendar = "";
 	$calendar = '<center><h2>'."\n".
-	$calendar = $calendar .$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</center>";
+	$calendar = $calendar .$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</center></h2><br>";
 	
-	$calendar = $calendar . '</h2><table class="blank" border=1 cellpadding=10 cellspacing=0>'."\n";
+	$calendar = $calendar . '<table class="blank" border=1 cellpadding=10 cellspacing=0>'."\n";
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
 		foreach($day_names as $d)
@@ -476,10 +476,14 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 	$today = date('j',$time);
 	$today_m = date('n',$time);
 
-	if($weekday > 0) $calendar .= '<td colspan="'.$weekday.'">&nbsp;</td>'; #initial 'empty' days
+	// Initial empty days
+
+	if($weekday > 0) 
+		$calendar .= '<td colspan="'.$weekday.'">&nbsp;</td>'; 
+
 	for($day=1,$days_in_month=gmdate('t',$first_of_month); $day<=$days_in_month; $day++,$weekday++){
 		if($weekday == 7){
-			$weekday   = 0; #start a new week
+			$weekday   = 0; //start a new week
 			$ending_week = "$year-$month-$day 00:00:00";
 			if ($day < 8) {
 				$before_week = date('Y-m-d H:i:s',strtotime("$year-$month-1"));

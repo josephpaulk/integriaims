@@ -138,6 +138,14 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/gantt&id_project=$id_project'>".__('Gantt graph')."</a></li>";
 
+
+		// Export to CSV
+		if ($sec2 == "operation/projects/csvexport")
+                        echo "<li id='sidesel'>";
+                else
+                        echo "<li>";
+                echo "<a href='index.php?sec=projects&sec2=operation/projects/csvexport&id_project=$id_project'>".__('Report')."</a></li>";
+		
 		// Milestones
 		if ($sec2 == "operation/projects/milestones")
 			echo "<li id='sidesel'>";

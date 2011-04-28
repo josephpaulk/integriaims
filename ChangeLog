@@ -1,3 +1,16 @@
+2011-04-28  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_calendar.php: Minimal style changes on code
+
+	* operation/projects/csvexport.php: This is used to "print" report
+	on proyect (list of tasks), to be improved in the future.
+
+	* operation/projects/project_tree.php: ACL fixed.
+
+	* operation/side_menu.php: Added csvexport.
+
+	* godmode/setup/logviewer.php: Fixed a typo.
+
 2011-04-27  Sancho Lerena <slerena@artica.es>
 
 	* graphs/functions_gd.php: Temporary fix for fontname, is missing ¿?.
