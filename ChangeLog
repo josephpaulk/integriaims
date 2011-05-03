@@ -1,5 +1,13 @@
 2011-05-03  Sergio Martin <sergio.martin@artica.es>
 
+	* include/graphs/functions_gd.php
+	include/graphs/fgraph.php
+	include/functions_incidents.php: Changed the legend of
+	the pie chart of most active incidents in stats. 
+	Fixed flash chart graphs into incident stats
+
+2011-05-03  Sergio Martin <sergio.martin@artica.es>
+
 	* operation/incidents/incident.php
 	operation/incidents/incident_search.php: Fixed statistics
 	tab issues. Updated of side menu when go into incident details.

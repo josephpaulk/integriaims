@@ -223,7 +223,6 @@ function filter_incidents ($filters) {
 
  */
 function get_incidents_stats ($incidents) {
-
     global $config;
 
 	$total = sizeof ($incidents);
@@ -304,6 +303,13 @@ function get_incidents_stats ($incidents) {
 function print_incidents_stats ($incidents, $return = false) {
 
     global $config;
+	
+	// Necessary for flash graphs
+	include_flash_chart_script();
+
+	// TODO: Move this function to function_graphs to encapsulate flash
+	// chart script inclusion or make calls to functions_graph when want 
+	// print a flash chart	
 
 	$output = '';
 	
@@ -434,11 +440,11 @@ function print_incidents_stats ($incidents, $return = false) {
 	    $most_active_incidents = get_most_active_incidents (5);
 	    $incidents_label = '';
 	    foreach ($most_active_incidents as $incident) {
-			$incidents_data[$incident['titulo']] = $incident['worked_hours'];
+			$incidents_data['#'.$incident['id_incidencia']] = $incident['worked_hours'];
 		    $incidents_label .= '<a class="incident_link" id="incident_link_'.
 			    $incident['id_incidencia'].'"
 			    href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.
-			    $incident['titulo']."</a> (".$incident['worked_hours']." ".
+			    '#'.$incident['id_incidencia'].': '.$incident['titulo']."</a> (".$incident['worked_hours']." ".
 			    __('Hr').") <br />";
 	    }
 	    
@@ -791,6 +797,5 @@ function get_best_incident_scoring ($lim) {
 
 	return $most_creators;
 }
-
 
 ?>

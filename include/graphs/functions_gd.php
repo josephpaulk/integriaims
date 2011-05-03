@@ -164,7 +164,6 @@ function gd_progress_bar ($width, $height, $progress, $title, $font, $out_of_lim
 	// Get from official documentation PHP.net website. Thanks guys :-)
 	function drawRating($rating, $width, $height, $font, $out_of_lim_str, $mode, $fontsize) {
 		global $config;
-
 		global $REMOTE_ADDR;
 		
 		if ($width == 0) {
