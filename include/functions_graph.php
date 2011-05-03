@@ -237,8 +237,8 @@ function progress_bar ($progress, $width, $height) {
 	
 	$out_of_lim_str = __("Out of limits");
 	$title = "";
-	
-	return progressbar($progress, $width, $height, $title, $config['fontpath'], 1, $out_of_lim_str);
+
+	return progressbar($progress, $width, $height, $title, $config['font'], 1, $out_of_lim_str);
 }
 
 function project_activity_graph ($id_project){

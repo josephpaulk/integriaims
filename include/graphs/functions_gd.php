@@ -35,6 +35,7 @@ if($id_graph) {
 	}
 
 	$graph = unserialize_in_temp($id_graph);
+
 	if (!isset($graph)) {
 		exit;
 	}
@@ -42,10 +43,7 @@ if($id_graph) {
 	if (!isset($graph['fontsize'])) {
 		$graph['fontsize'] = 6;
 	}
-
-// Temporary fix
-$graph['font']="/srv/www/htdocs/integria/include/fonts/smallfont.ttf";
-
+	
 	$graph_type = get_parameter('graph_type', '');
 
 	switch($graph_type) {

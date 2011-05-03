@@ -28,8 +28,5 @@ $config["base_url"] = "http://mydomain.net/integria";       // Public URL
 // Display ALL errors until redirect to integria error log
 error_reporting(E_ALL);
 
-// Default font used for graphics (a Free TrueType font included with Pandora FMS)
-$config["fontpath"] = $config["homedir"]."/include/FreeSans.ttf";
-
 include ($config["homedir"]."/include/config_process.php");
 ?>

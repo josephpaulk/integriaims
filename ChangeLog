@@ -1,3 +1,14 @@
+2011-05-03  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_graph.php
+	include/graphs/functions_gd.php
+	include/config.inc.php
+	include/functions_config.php: Fixed font pass
+	to progress bars and clean unecessary fontpath 
+	into configuration because the new graphs abstraction 
+	dont read config and compatibility with pandora is
+	total
+
 2011-04-28  Sancho Lerena <slerena@artica.es>
 
 	* include/integria_cron.php,
