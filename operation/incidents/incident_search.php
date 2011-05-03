@@ -180,7 +180,7 @@ foreach ($incidents as $incident) {
 
 	echo " style='border-bottom: 1px solid #ccc;' >";
 	echo '<td>';
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'"><strong>#'.$incident['id_incidencia'].'</strong></A></td>';
+	echo '<strong>#'.$incident['id_incidencia'].'</strong></td>';
 	
 	// SLA Fired ?? 
 	if ($incident["affected_sla_id"] != 0)

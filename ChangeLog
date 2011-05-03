@@ -1,5 +1,13 @@
 2011-05-03  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/incidents/incident.php
+	operation/incidents/incident_search.php: Fixed statistics
+	tab issues. Updated of side menu when go into incident details.
+	Deleted incident id link into incident lists to avoid bugs with
+	the keep of filter parameters.
+
+2011-05-03  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_graph.php
 	include/graphs/functions_gd.php
 	include/config.inc.php

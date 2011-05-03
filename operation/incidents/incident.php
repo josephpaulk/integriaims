@@ -168,7 +168,7 @@ var old_incident = 0;
 
 function tab_loaded (event, tab) {
 	/* Details tab */
-	if (tab.index == 1) {
+	if (tab.index == 2) {
 		/* In integria_incident_search.js */
 		configure_incident_form (true, false);
 		
@@ -187,7 +187,7 @@ function tab_loaded (event, tab) {
 		old_incident = id_incident;
 	}
 	/* Files tab */
-	if (tab.index == 6) {
+	if (tab.index == 7) {
 		$("#table_file_list td a.delete").click (function () {
 			tr = $(this).parents ("tr");
 			if (!confirm ("<?php echo __('Are you sure?'); ?>"))
@@ -302,7 +302,7 @@ $(document).ready (function () {
 		values.push ({name: "page", value: "operation/incidents/incident_search"});
 		values.push ({name: "get_custom_search_values", value: 1});
 		values.push ({name: "id_search", value: this.value});
-		
+
 		jQuery.get ("ajax.php",
 			values,
 			function (data, status) {
