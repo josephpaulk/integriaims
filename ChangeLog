@@ -1,5 +1,21 @@
 2011-05-04  Sancho Lerena <slerena@artica.es>
 
+    * setup_visual.php: Removed token from here.
+
+    * usuarios/configurar_usuarios.php: Fixed code who makes this not
+    working in languages not english :-(
+
+    * include/functions_incidents.php: Implemented code to send email
+    notifications to any incindent reporter subscribed to incident.
+
+    * include/gettext.php: Using code from pandora, this doesnt work 
+    on 64bit systems :-S... not tested in Windows enviroments.
+
+    * operation/side_menu.php: Disabling options for update manager until
+    be properly implemented using code from Pandora 3.x (no pear deps)
+
+    * operation/incidents/incident_detail.php: Showing incident reporters.
+
 	* operation/incidents/incident_attach_file.php: Added description
 	about files not valid (source code) as attach.
 

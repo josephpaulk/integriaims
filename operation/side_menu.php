@@ -777,6 +777,8 @@ if ($sec == "godmode") {
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates'>".__('Mail templates setup')."</a></li>";
 
+/* Disabled at this time
+
 	// Update Manager
 	if ($sec2 == "godmode/updatemanager/main")
 		echo "<li id='sidesel'>";
@@ -790,6 +792,7 @@ if ($sec == "godmode") {
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/updatemanager/settings'>".__('Configure updates')."</a></li>";
+*/
 
 	// File/Image management
 	if ($sec2 == "godmode/setup/filemgr")

@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package Include
+ * @subpackage External Scripts
+ */
+
 /*
    Copyright (c) 2003 Danilo Segan <danilo@kvota.net>.
    Copyright (c) 2005 Nico Kaiser <nico@siriux.net>
@@ -32,6 +37,8 @@
  * While the cache is enabled by default, it can be switched off with the
  * second parameter in the constructor (e.g. whenusing very large MO files
  * that you don't want to keep in memory)
+ * 
+ * @package Include
  */
 class gettext_reader {
   //public:
@@ -93,6 +100,13 @@ class gettext_reader {
    * @param boolean enable_cache Enable or disable caching of strings (default on)
    */
   function gettext_reader($Reader, $enable_cache = true) {
+  	$machine = @shell_exec('uname -m');
+  	
+  	$enabled64Bits = false;
+	if (preg_match('/64/', $machine)) {
+  		$enabled64Bits = true;
+  	}
+  	
     // If there isn't a StreamReader, turn on short circuit mode.
     if (! $Reader || isset($Reader->error) ) {
       $this->short_circuit = true;
@@ -107,15 +121,31 @@ class gettext_reader {
     // $MAGIC2 = (int)0xde120495; //bug
     $MAGIC2 = (int) - 569244523;
 
+    // Applied patch for 64bit systems
+    // http://source.ibiblio.org/trac/lyceum/attachment/ticket/652/gettext-64bit-fix.diff
+
     $this->STREAM = $Reader;
     $magic = $this->readint();
-    if ($magic == $MAGIC1) {
-      $this->BYTEORDER = 0;
-    } elseif ($magic == $MAGIC2) {
-      $this->BYTEORDER = 1;
-    } else {
-      $this->error = 1; // not MO file
-      return false;
+    
+    if ($enabled64Bits) {
+	    if ($magic == ($MAGIC1 & 0xFFFFFFFF)) {
+	        $this->BYTEORDER = 0;
+	    } elseif ($magic == ($MAGIC2 & 0xFFFFFFFF)) {
+	      $this->BYTEORDER = 1;
+	    } else {
+	      $this->error = 1; // not MO file
+	      return false;
+	    }
+    }
+    else {
+    	if ($magic == $MAGIC1) {
+	        $this->BYTEORDER = 0;
+	    } elseif ($magic == $MAGIC2) {
+	      $this->BYTEORDER = 1;
+	    } else {
+	      $this->error = 1; // not MO file
+	      return false;
+	    }
     }
     
     // FIXME: Do we care about revision? We should.

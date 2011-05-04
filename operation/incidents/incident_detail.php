@@ -30,7 +30,6 @@ if ($id) {
 	}
 }
 
-
 $check_incident = (bool) get_parameter ('check_incident');
 if ($check_incident) {
 	if ($incident !== false && give_acl ($config['id_user'], $id_grupo, "IR")){
@@ -574,7 +573,10 @@ $table->cellspacing = 2;
 $table->cellpadding = 2;
 $table->colspan = array ();
 $table->colspan[0][0] = 2;
-$table->colspan[4][2] = 2; 
+
+if ($config['incident_reporter'] == 0){
+    $table->colspan[4][2] = 2; 
+}
 $table->colspan[5][0] = 4;
 $table->colspan[6][0] = 4;
 $table->colspan[7][0] = 4;
@@ -646,15 +648,15 @@ if ($config['incident_reporter'] == 1){
 		$contacts = array ();
 	}
 
-	$table->data[2][3] = print_select ($contacts, 'select_contacts', NULL,
+	$table->data[4][3] = print_select ($contacts, 'select_contacts', NULL,
 					'', '', '', true, false, false, __('Reporters'));
 	if ($has_permission || $create_incident) {
-		$table->data[2][3] .= print_button (__('Add'),
+		$table->data[4][3] .= print_button (__('Add'),
 						'search_contact', false, '', 'class="dialogbtn"', true);
-		$table->data[2][3] .= print_button (__('Remove'),
+		$table->data[4][3] .= print_button (__('Remove'),
 						'delete_contact', false, '', 'class="dialogbtn"', true);
 		foreach ($contacts as $contact_id => $contact_name) {
-			$table->data[2][3] .= print_input_hidden ("contacts[]",
+			$table->data[4][3] .= print_input_hidden ("contacts[]",
 								$contact_id, true, 'selected-contacts');
 		}
 	}

@@ -95,11 +95,7 @@ $table->data[2][0] = print_select ($imagelist, 'site_logo', $config["site_logo"]
 
 $table->data[2][1] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', '', '',  true, 0, true, "Header logo") ;
 
-$error_log_options[0] = "Disabled";
-$error_log_options[1] = "Enabled";
-$table->data[3][0] = print_select ($error_log_options, "error_log", $config["error_log"], '','','',true,0,true, "Error log");
-
-$table->data[3][1] = print_select (array(__('Disabled'),__('Enabled')), "flash_charts", $config["flash_charts"], '','','',true,0,true, __('Flash charts'));
+$table->data[3][0] = print_select (array(__('Disabled'),__('Enabled')), "flash_charts", $config["flash_charts"], '','','',true,0,true, __('Flash charts'));
 
 echo "<form name='setup' method='post'>";
 

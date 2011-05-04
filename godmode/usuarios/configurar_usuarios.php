@@ -66,10 +66,10 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 		}
 	}
 	
-	
+
 	// Edit user
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	if ((isset ($_POST["uptbutton"])) AND ($_POST["uptbutton"] == "Update")) {
+	if (isset ($_POST["uptbutton"]))  {
       	// We do it
 
 		if (isset ($_POST["pass1"])){

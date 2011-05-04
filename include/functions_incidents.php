@@ -739,9 +739,19 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
                 }
 			}
 		}
-	}
+
+        // Send email to incident reporters associated to this incident
+        if ($config['incident_reporter'] == 1){
+        	$contacts = get_incident_contact_reporters ($id_inc , true);
+			if ($contats)
+            foreach ($contacts as $contact) {
+                $contact_email = get_db_sql ("SELECT email FROM tcompany_contact WHERE fullname = '$contact'");
+                integria_sendmail ($contact_email, $subject, $text, false, $msg_code);
+            }
+	    }
+    }
 }
-			
+
 function people_involved_incident ($id_inc){
 	global $config;
 	$row0 = get_db_row ("tincidencia", "id_incidencia", $id_inc);
