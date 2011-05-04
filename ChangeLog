@@ -1,3 +1,8 @@
+2011-05-04  Sancho Lerena <slerena@artica.es>
+
+	* operation/incidents/incident_attach_file.php: Added description
+	about files not valid (source code) as attach.
+
 2011-05-03  Sergio Martin <sergio.martin@artica.es>
 
 	* include/graphs/functions_gd.php
