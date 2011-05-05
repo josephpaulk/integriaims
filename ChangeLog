@@ -1,3 +1,9 @@
+2011-05-05  Sergio Martin <sergio.martin@artica.es>
+
+	* operation/incidents/incident.php
+	operation/companies/company_detail.php: Fixed acces to 
+	incident through GET
+
 2011-05-04  Sancho Lerena <slerena@artica.es>
 
     * setup_visual.php: Removed token from here.

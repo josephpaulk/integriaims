@@ -29,12 +29,7 @@ if (! give_acl ($config['id_user'], 0, "IR")) {
 
 // Take input parameters
 $id = (int) get_parameter ('id');
-$do_search = (bool) get_parameter ('do_search');
-/* Search new incidents if no other search is forced and no id is set */
-$do_search_news = false;
-if (! $do_search && ! $id) {
-	$do_search_news = true;
-}
+
 // Delete incident
 if (isset ($_POST["quick_delete"])) {
 	$id_inc = $_POST["quick_delete"];
@@ -66,15 +61,9 @@ echo '<div id="tabs">';
 
 /* Tabs list */
 echo '<ul style="height: 30px;" class="ui-tabs-nav">';
-if ($id) {
-	echo '<li class="ui-tabs"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
-	echo '<li class="ui-tabs"><a href="index.php"><span>'.__('Statistics').'</span></a></li>';
-	echo '<li class="ui-tabs-selected"><a href="index.php"><span>'.__('Details').'</span></a></li>';
-} else {
-	echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
-	echo '<li class="ui-tabs"><a href="index.php"><span>'.__('Statistics').'</span></a></li>';
-	echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Details').'</span></a></li>';
-}
+echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
+echo '<li class="ui-tabs"><a href="index.php"><span>'.__('Statistics').'</span></a></li>';
+echo '<li class="ui-tabs"><a href="index.php"><span>'.__('Details').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Tracking').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Inventory').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Contact').'</span></a></li>';
@@ -351,12 +340,8 @@ $(document).ready (function () {
 
 		}
 	);
-<?php if ($do_search_news) : ?>
+
 	$("#search_status").attr ("value", -10);
 	$("#search_incident_form").submit ();
-
-<?php elseif ($do_search) : ?>
-	$("#search_incident_form").submit ();
-<?php endif; ?>
 });
 </script>

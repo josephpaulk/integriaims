@@ -186,7 +186,6 @@ if ($id || $new_company) {
 			$data[3] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id_company='.
 				$company['id'].'"><img src="images/group.png"></a>';
 			$data[4] = '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident">';
-			$data[4] .= print_input_hidden ('do_search', 1, true);
 			$data[4] .= print_input_hidden ('search_id_company', $company['id'], true);
 			$data[4] .= print_input_image ('btn', 'images/bug.png', 1, '', true);
 			$data[4] .= '</form>';
