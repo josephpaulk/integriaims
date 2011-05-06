@@ -1,3 +1,8 @@
+2011-05-06  Sergio Martin <sergio.martin@artica.es>
+
+	* operation/incidents/incident.php: Fixed enabled details
+	tab in incidents when no incident is selected (now disabled)
+
 2011-05-05  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/incidents/incident.php

@@ -63,7 +63,7 @@ echo '<div id="tabs">';
 echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
 echo '<li class="ui-tabs"><a href="index.php"><span>'.__('Statistics').'</span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php"><span>'.__('Details').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Details').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Tracking').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Inventory').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Contact').'</span></a></li>';
