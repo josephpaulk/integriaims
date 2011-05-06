@@ -99,12 +99,12 @@ function configure_inventory_buttons (form, dialog) {
 function incident_limit() {
 		$("#group_spinner").empty().append('<img src="images/spinner.gif" />');
 		
-		id_user = $("#id_user").val();
-		
+		id_user = $("#id_user").html();
+
 		values = Array();
 		values.push ({name: "page", value: "operation/group/group"});
 		values.push ({name: "id_group", value: $("#grupo_form").val()});
-		values.push ({name: "id_user", value: $("#id_user").val()});
+		values.push ({name: "id_user", value: id_user});
 	
 		//Check the limits of incidents, and show div popup with error message.
 		jQuery.ajax({
