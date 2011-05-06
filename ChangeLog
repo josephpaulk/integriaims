@@ -1,5 +1,9 @@
 2011-05-06  Sergio Martin <sergio.martin@artica.es>
 
+	* general/header.php: Fixed typo from last commit
+
+2011-05-06  Sergio Martin <sergio.martin@artica.es>
+
 	* include/js/integria_incident_search.js
 	general/header.php: Fixed limit of incidents by group
 	for users

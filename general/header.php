@@ -43,7 +43,7 @@ else
 echo __('You are connected as').' <span style="font-wieght: bold; color: #ffffff"">['.$config['id_user'].']</span></a>';
 
 //// This div is necessary for javascript actions. Dont touch ///
-echo '<div id="id_user" value="dd">'.$config['id_user'].'</div>';
+echo '<div id="id_user">'.$config['id_user'].'</div>';
 /////////////////////////////////////////////////////////////////
 
 echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
