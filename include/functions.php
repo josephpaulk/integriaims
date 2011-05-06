@@ -662,7 +662,7 @@ function get_periodicity ($recurrence) {
 	return isset ($recurrences[$recurrence]) ? $recurrences[$recurrence] : __('Unknown');
 }
 
-function ellipsize_string ($string, $len = 2) {
+function ellipsize_string ($string, $len = 25) {
 	return substr ($string, 0, $len).'(..)'.substr ($string, strlen ($string) - $len, $len);
 }
 

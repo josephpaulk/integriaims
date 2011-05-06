@@ -2,8 +2,7 @@
 
 // Integria IMS - http://integriaims.com
 // ==================================================
-// Copyright (c) 2008 Artica Soluciones Tecnologicas
-// Copyright (c) 2008 Esteban Sanchez, estebans@artica.es
+// Copyright (c) 2008-2011 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -69,11 +68,7 @@ foreach ($reports as $report) {
 	$data[0] .= $report['name'];
 	$data[0] .= '</a>';
 	$data[1] = substr ($report['sql'], 0, 40);
-	$data[3] = '<form method="post" action="operation/inventories/inventory_reports_detail.php">';
-	$data[3] .= print_input_hidden ('generate_report', 1, true);
-	$data[3] .= print_input_hidden ('id', $report['id'], true);
-	$data[3] .= print_input_image ('generate', 'images/datos.gif', 1, '', true);
-	$data[3] .= '</form>';
+	$data[3] = "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail&render=1&raw_output=1&clean_output=1&id=".$report['id']."'><img src='images/datos.gif'></a>";
 	$data[4] = '<form method="post" onsubmit="return confirm (\''.__('Are your sure?').'\')">';
 	$data[4] .= print_input_hidden ('delete_report', 1, true);
 	$data[4] .= print_input_hidden ('id', $report['id'], true);

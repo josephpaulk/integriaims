@@ -17,7 +17,7 @@ function serialize_in_temp($array = array(), $serial_id = null) {
 		$serial_id = uniqid();
 	}
 	
-	$file_path = sys_get_temp_dir()."/pandora_serialize_".$serial_id;
+	$file_path = sys_get_temp_dir()."/integria_graph_serialize_".$serial_id;
 		
 	if (file_put_contents($file_path, $json) === false) {
 		return false;
@@ -31,7 +31,7 @@ function unserialize_in_temp($serial_id = null, $delete = true) {
 		return false;
 	}
 	
-	$file_path = sys_get_temp_dir()."/pandora_serialize_".$serial_id;
+	$file_path = sys_get_temp_dir()."/integria_graph_serialize_".$serial_id;
 
 	$content = file_get_contents($file_path);
 
@@ -40,9 +40,10 @@ function unserialize_in_temp($serial_id = null, $delete = true) {
 	}
 	
 	$array = json_decode($content, true);
-	
+
+    // Omit this to avoid deleting files and use it later (in PDF; for example).
 	if ($delete) {
-		unlink($file_path);
+		// unlink($file_path);
 	}
 
 	return $array;
@@ -53,7 +54,7 @@ function delete_unserialize_in_temp($serial_id = null) {
 		return false;
 	}
 	
-	$file_path = sys_get_temp_dir()."/pandora_serialize_".$serial_id;
+	$file_path = sys_get_temp_dir()."/integria_graph_serialize_".$serial_id;
 		
 	return unlink($file_path);
 }

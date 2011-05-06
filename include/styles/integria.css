@@ -609,6 +609,11 @@ input.report {
 	padding-right: 15px;
 	background: #e5e5e5 url(../../images/html.png) no-repeat right 2px;
 }
+input.pdfreport {
+	padding-right: 15px;
+	background: #e5e5e5 url(../../images/page_white_acrobat.png) no-repeat right 2px;
+}
+
 input.upd {
 	padding-right: 20px;
 	background: #e5e5e5 url(../../images/upd.png) no-repeat right 5px;

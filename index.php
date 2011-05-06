@@ -63,8 +63,6 @@ require_once ('include/functions_html.php');
 require_once ('include/functions_form.php');
 require_once ('include/functions_calendar.php');
 
-session_start();
-
 /* Enterprise support */
 if (file_exists ("enterprise/load_enterprise.php")) {
         require_once ("enterprise/load_enterprise.php");
@@ -76,10 +74,12 @@ $html_header = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 // This is a clean and/or PDF output ?
 $clean_output = get_parameter ("clean_output", 0);
 $pdf_output = get_parameter ("pdf_output", 0);
+$raw_output = get_parameter ("raw_output", 0);
 
-if ($pdf_output == 1){
+if (($pdf_output == 1) OR ($raw_output == 1)) {
 	// Buffer the following html with PHP so we can store it to a variable later
 	ob_start();
+    $config["flash_charts"] = 0;
 }
 
 echo $html_header;
@@ -220,6 +220,7 @@ echo '<body>';
 
 // http://es2.php.net/manual/en/ref.session.php#64525
 // Session locking concurrency speedup!
+$session_id = session_id();
 session_write_close ();
 ?>
 
@@ -303,24 +304,50 @@ if ($clean_output == 0) {
 		require ("general/home.php");  //default
 }
 
-
 if ($pdf_output == 1){
+
+    // Get current date time
+    if (isset($_SERVER['REQUEST_TIME'])) {
+		$time = $_SERVER['REQUEST_TIME'];
+	} else {
+		$time = time();
+	}
+
 	// Now collect the output buffer into a variable
+
 	$html = ob_get_contents();
+    $html .= "</body></html>";
+
+    // Parse HTML and fix a few entries which makes problems with MPDF like <label> tag
+    $html = str_replace ( "</label>" , "</label></b><br>" , $html);
+    $html = str_replace ( "<label" , "<b><label" , $html);
+
 	ob_end_clean();
 
-	include("include/mpdf51/mpdf.php");
-	$mpdf=new mPDF();
-	$mpdf->WriteHTML($html);
-	$mpdf->Output();
-	exit;
+	include("include/pdf_translator.php");
+
+	$pdfObject = new PDFTranslator();
+
+  // Set font from font defined in report
+	$pdfObject->custom_font = $config["pdffont"];
+	$pdfObject->setMetadata(safe_output("Integria IMS PDF Report", 'Integria IMS Report', 'Integria IMS', __("Automated Integria IMS report")));
+
+	$pdfObject->setFooterHTML("Integria IMS Report", true);
+	$pdfObject->setHeaderHTML("<p align=right style='border-bottom: 1px solid #666;'> Integria IMS Report - ".date("D F d, Y H:i:s", $time).'</p>', true);
+
+	$pdfObject->addHTML($html);
+	$pdfObject->showPDF();
+
+    // Dirty thing, just for testing, do not use it
+    // system ("rm /tmp/integria_graph_serialize_*");
 
 }
 
-echo '
-<!-- Dialog helper div -->
-<div id="dialog" class="dialog"></div>
-</body>
-</html>';
-
+if (($raw_output == 0) AND ($pdf_output == 0)){
+    echo '
+    <!-- Dialog helper div -->
+    <div id="dialog" class="dialog"></div>
+    </body>
+    </html>';
+}
 ?>

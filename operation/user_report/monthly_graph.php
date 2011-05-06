@@ -19,12 +19,14 @@ check_login ();
 
 $id_grupo = get_parameter ("id_grupo",0);
 $id_user=$config['id_user'];
-if (give_acl($id_user, $id_grupo, "PR") != 1){
+
+if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo, "IR") != 1)) {
  	// Doesn't have access to this page
-	audit_db($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to user report without projects rights");
+	audit_db($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to user report without projects access or Incident access permissions");
 	include ("general/noaccess.php");
 	exit;
 }
+
 $id = get_parameter ("id","");
 if (($id != "") && ($id != $id_user)){
 	if (give_acl($id_user, 0, "PW"))

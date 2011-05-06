@@ -1252,7 +1252,7 @@ function get_inventories_in_incident ($id_incident, $only_names = true) {
 	$inventories = array ();
 	foreach ($all_inventories as $inventory) {
 		if (! give_acl ($config['id_user'], get_inventory_group ($inventory['id']), 'VR')) {
-			$inventory['name'] = ellipsize_string ($inventory['name']);
+			$inventory['name'] = $inventory['name'];
 		}
 		array_push ($inventories, $inventory);
 	}

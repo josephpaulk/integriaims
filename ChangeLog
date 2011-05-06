@@ -1,3 +1,47 @@
+2011-05-06  Sancho Lerena <slerena@artica.es>
+
+    * include/styles/integria.css: Added PDF report button.
+
+    * include/graphs/functions_utils.php: Removed unlink for
+    images for PDF (temporal until a better solution be founded).
+
+    * include/pdf_translator.php: Added new file for PDF reports.
+
+    * include/functions_config.php: Alter the way how language its managed.
+    In first start, detects local path for fonts.
+
+    * index.php: Added support for raw_output mode. Fixed language for user
+    over system language config. Improved PDF reports.
+
+    * integria_dbdata.sql: Small updates.
+
+    * lista_grupos.php,
+    configurar_grupo.php: Fixed a lot of old stuff and missing thigns.
+
+    * config_process.php: Session starts here now, this solves user 
+    language issue.
+
+    * functions.php:  ellipsize_string minlenght was on 2, fixed.
+
+    * operation/side_menu.php: Removed old sections not used anymore.
+
+    * operation/incidents/incident_statistics.php: Added PDF support.
+
+    * operation/inventories/inventory_reports.php: Added rawoutput support.
+
+    * operation/inventories/inventory_reports_detail.php: Added rawoutput.
+
+    * operation/projects/task_workunit.php: Added PDF support.
+
+    * operation/user_report/monthly_graph.php: ACL fix.
+
+    * peration/user_report/report_full.php: Small fixes, ACL fixes and PDF 
+    support.
+
+    * extras/inventory_importer.readme: Added. small doc.
+
+    * operation/user_report/report_full_graph.php: Deleted, old code.
+    
 2011-05-06  Sergio Martin <sergio.martin@artica.es>
 
 	* general/header.php: Fixed typo from last commit

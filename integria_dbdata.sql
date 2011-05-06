@@ -16,7 +16,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('language_code','en'),
 ('block_size','25'),
 ('db_scheme_version','3.0-dev'),
-('db_scheme_build','ID110406'),
+('db_scheme_build','ID110506'),
 ('date_format', 'F j, Y, g:i a'),
 ('currency', 'eu'),
 ('sitename', 'Integria IMS - the ITIL Management System'),
@@ -24,10 +24,10 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('FOOTER_EMAIL','Please do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n'),
 ('HEADER_EMAIL','Hello, \n\nThis is an automated message coming from Integria\n\n'),
 ('notification_period','24'),
-('limit_size','1000'),
+('limit_size','250'),
 ('api_password',''),
-('flash_charts','1');
-
+('flash_charts','1'),
+('fontsize', 6);
 
 -- Default password is 'integria'
 

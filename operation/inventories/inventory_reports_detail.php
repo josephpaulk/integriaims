@@ -1,9 +1,7 @@
 <?php
-
 // Integria IMS - http://integriaims.com
 // ==================================================
-// Copyright (c) 2008 Artica Soluciones Tecnologicas
-// Copyright (c) 2008 Esteban Sanchez, estebans@artica.es
+// Copyright (c) 2008-2011 Artica Soluciones Tecnologicas
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,19 +12,6 @@
 // GNU General Public License for more details.
 
 global $config;
-
-$export = false;
-if (! isset ($config)) {
-	$dir = realpath (dirname (__FILE__).'/../..');
-	$path = get_include_path ();
-	set_include_path ($path.PATH_SEPARATOR.$dir);
-	session_start ();
-	require_once ('include/config.php');
-	$export = (bool) get_parameter ('generate_report');
-	if (! $export)
-		return;
-	$config['id_user'] = isset ($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : '';
-}
 
 check_login ();
 
@@ -40,14 +25,18 @@ if (! dame_admin ($config['id_user'])) {
 }
 
 $id = (int) get_parameter ('id');
+$render = get_parameter ("render",0);
 
-if ($export) {
+if ($render == 1){
 	$report = get_db_row ('tinventory_reports', 'id', $id);
 	if ($report === false)
 		return;
 	
-	$filename = $report['name'].'-'.date ("YmdHi");
-	// We'll be outputting a PDF
+	$filename = clean_output ($report['name']).'-'.date ("YmdHi");
+
+	ob_end_clean();
+
+	// We'll be outputting a CSV
 	header ('Content-Disposition: attachment; filename="'.$filename.'.csv"');
 	$config['mysql_result_type'] = MYSQL_ASSOC;
 	$rows = get_db_all_rows_sql (clean_output ($report['sql']));
@@ -57,8 +46,7 @@ if ($export) {
 	foreach ($rows as $row) {
 		echo implode (',', $row)."\n";
 	}
-	
-	return;
+    exit;
 }
 
 $create = (bool) get_parameter ('create_report');

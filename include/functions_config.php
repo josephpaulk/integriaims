@@ -62,7 +62,7 @@ function load_config(){
 		$config["sitename"] = "INTEGRIA";
 
 	if (!isset ($config["fontsize"]))
-		$config['fontsize'] = 10;
+		$config['fontsize'] = 7;
 
 	if (!isset ($config["incident_reporter"]))
 		$config['incident_reporter'] = 0;
@@ -96,9 +96,6 @@ function load_config(){
 	if (!isset ($config["auto_incident_close"])){
 		$config["auto_incident_close"] = "72";
 	}
-
-	if (isset ($_SESSION['id_usuario']))
-		$config['language_code'] = get_db_value ('lang', 'tusuario', 'id_usuario', $_SESSION['id_usuario']);
 
 	if (empty ($config["language_code"])) {
 		$config['language_code'] = get_db_value ('value', 'tconfig', 'token', 'language_code');
@@ -135,10 +132,10 @@ function load_config(){
 		$config["sql_query_limit"] = 1500;
 
 	if (!isset ($config["pdffont"]))
-		$config["pdffont"] = "code.ttf";
+		$config["pdffont"] = $config["homedir"]."/include/fonts/FreeSans.ttf";
 
 	if (!isset ($config["font"])){
-		$config["font"] = "smallfont.ttf";
+		$config["font"] = $config["homedir"]."/include/fonts/smallfont.ttf";
 	}
 
 }

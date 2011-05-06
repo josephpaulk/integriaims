@@ -66,6 +66,15 @@ if ($config["error_log"] == 1){
 }
 
 $l10n = NULL;
+
+session_start();
+
+// User language selection prevails over system-wide defined language.
+
+if (isset ($_SESSION['id_usuario']))
+	$config['language_code'] = get_db_value ('lang', 'tusuario', 'id_usuario', $_SESSION['id_usuario']);
+
+
 if (file_exists ($config["homedir"].'/include/languages/'.$config['language_code'].'.mo')) {
 	$l10n = new gettext_reader (new CachedFileReader ($config["homedir"].'/include/languages/'.$config['language_code'].'.mo'));
 	$l10n->load_tables ();

@@ -46,32 +46,41 @@ if ($user_id != "") {
 	echo dame_nombre_real ($user_id);
 }
 
-// link full screen
-echo "&nbsp;&nbsp;<a title='Full screen' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&clean_output=1'>";
-echo "<img src='images/html.png'>";
-echo "</a>";
+if ($clean_output == 0){
+    // link full screen
+    echo "&nbsp;&nbsp;<a title='Full screen' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&clean_output=1'>";
+    echo "<img src='images/html.png'>";
+    echo "</a>";
+
+    // link PDF report
+    echo "&nbsp;&nbsp;<a title='PDF report' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&clean_output=1&pdf_output=1'>";
+    echo "<img src='images/page_white_acrobat.png'>";
+    echo "</a>";
+}
 
 echo  "</h3>";
 
-echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/report_full'>";
-echo "<table class='blank' style='margin-left: 10px' width='90%'>";
-echo "<tr><td>";
-echo __("Username") ."<br>";
-if (give_acl($config["id_user"], 0, "PM"))
-    combo_user_visible_for_me ($user_id, 'user_id', 0, 'PM');
-else
-    echo $config["id_user"];
+if ($clean_output == 0){
+    echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/report_full'>";
+    echo "<table class='blank' style='margin-left: 10px' width='90%'>";
+    echo "<tr><td>";
+    echo __("Username") ."<br>";
+    if (give_acl($config["id_user"], 0, "PM"))
+        combo_user_visible_for_me ($user_id, 'user_id', 0, 'PM');
+    else
+        echo $config["id_user"];
 
-echo "</td><td>";
-echo __("Begin date")."<br>";
-print_input_text ('start_date', $start_date, '', 10, 20);	
-echo "</td><td>";
-echo __("End date")."<br>";;
-print_input_text ('end_date', $end_date, '', 10, 20);	
-echo "</td><td valign='bottom'>";
-print_submit_button (__('Show'), 'show_btn', false, 'class="next sub"');
-echo "</form>";
-echo "</table>";
+    echo "</td><td>";
+    echo __("Begin date")."<br>";
+    print_input_text ('start_date', $start_date, '', 10, 20);	
+    echo "</td><td>";
+    echo __("End date")."<br>";;
+    print_input_text ('end_date', $end_date, '', 10, 20);	
+    echo "</td><td valign='bottom'>";
+    print_submit_button (__('Show'), 'show_btn', false, 'class="next sub"');
+    echo "</form>";
+    echo "</table>";
+}
 
 if ($user_id == "") {
 	echo "<h3>";
@@ -165,9 +174,7 @@ if ($user_id == "") {
 
 if ($total_time > 0){
 	echo "<h3>". __("Project graph report")."</h3>";
-
 	echo graph_workunit_user (800, 350, $user_id, $start_date, $end_date, 1);
-
 	echo "<br><br>";
 }
 
@@ -181,7 +188,7 @@ echo "<h3>".__("Incident report")."</h3>";
 		AND tworkunit_incident.id_workunit = tworkunit.id
 		AND tworkunit_incident.id_incident = tincidencia.id_incidencia  
 		AND tworkunit.timestamp >= "%s" 
-		AND tworkunit.timestamp <= "%s" 
+		AND tworkunit.timestamp <= "%s 23:59:59" 
 		GROUP BY title',
 		$user_id, $start_date, $end_date);
 
@@ -205,10 +212,14 @@ echo "<h3>".__("Incident report")."</h3>";
 
 		$incident_totals = 0;
 		$incident_user = 0;
+        $incident_graph = array();
+
 		if ($incidencias) {
 			foreach ($incidencias as $incident) {
 				// $total_project = get_project_workunit_hours ($project['id'], 0, $start_date, $end_date);
 	
+                $incident_graph[$incident["title"]] = $incident["suma"];
+
 				echo "<tr>";
 				echo "<td>".$incident["title"];
 				echo "<td>".dame_grupo($incident["id_group"]);
@@ -241,7 +252,12 @@ echo "<h3>".__("Incident report")."</h3>";
 	}
 }
 
-
+if ($incident_graph){
+	echo "<h3>". __("Incident graph report")."</h3>";
+    echo "<div>";
+    echo pie3d_graph ($config['flash_charts'], $incident_graph, 500, 300, __('others'), "", "", $config['font'], $config['fontsize']);
+    echo "</div>";
+}
 
 
 ?>

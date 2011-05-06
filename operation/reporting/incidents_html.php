@@ -169,8 +169,4 @@ echo '<h3>'.__('Incident list').'</h3>';
 
 print_table ($table);
 
-/* Print a cute application logo */
-echo '<div style="width: 95%; text-align: left; ">';
-include ('general/footer.php');
-echo '</div>';
 ?>

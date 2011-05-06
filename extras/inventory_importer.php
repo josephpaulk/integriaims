@@ -1,10 +1,9 @@
 <?php
 
-// INTEGRIA IMS v2.0
+// INTEGRIA IMS v3.0
 // http://www.integriaims.com
 // ===========================================================
-// Copyright (c) 2007-2009 Artica, info@artica.es
-// Copyright (c) 2009 Esteban Sanchez, estebans@artica.es
+// Copyright (c) 2007-2011 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License

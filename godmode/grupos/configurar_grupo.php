@@ -28,12 +28,9 @@ if (! give_acl ($config["id_user"], 0, "UM")) {
 $id = (int) get_parameter ('id');
 $name = "";
 $icon = "";
-$url = "";
 $id_user_default = "";
 $banner = "";
 $parent = "";
-$lang = "en";
-$email = "";
 $forced_email = true;
 $soft_limit = 5;
 $hard_limit = 20;
@@ -47,12 +44,9 @@ if ($id) {
 	if ($group) {
 		$name = $group['nombre'];
 		$icon = $group['icon'];
-		$url = $group['url'];
 		$id_user_default = $group['id_user_default'];
 		$banner = $group['banner'];
 		$parent = $group['parent'];
-		$email = $group['email'];
-		$lang = $group['lang'];
 		$soft_limit = $group["soft_limit"];
 		$hard_limit = $group["hard_limit"];
 		$enforce_soft_limit = (bool) $group["enforce_soft_limit"];
@@ -71,7 +65,6 @@ echo '<h2>'.__('Group management').'</h2>';
 $table->width = '600px';
 $table->class = 'databox';
 $table->colspan = array ();
-$table->colspan[2][0] = 2;
 $table->rowspan = array ();
 $table->rowspan[0][2] = 5;
 $table->data = array ();
@@ -87,12 +80,12 @@ if ($id && $banner != '') {
 }
 $table->data[0][2] .= '</span>';
 
-$table->data[1][0] = print_input_text ('url', $url, '', 40, 0, true , __('URL'));
-
-$table->data[1][1] = print_input_text ('email', $email, '', 15, 0, true , __('Email'));
-
 $table->data[2][0] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo ORDER BY nombre',
 	'parent', $parent, '', 'None', '', true, false, false, __('Parent'));
+
+
+$table->data[2][1] = combo_user_visible_for_me ($id_user_default, "id_user_default", 0, "IR", true, __('Default user'));
+
 
 $icons = list_files ('images/groups_small/', 'png', 0, true, '');
 $table->data[3][0] = print_select ($icons, 'icon', $icon, '', 'None', '', true, false, false, __('Icon'));
@@ -105,19 +98,14 @@ $table->data[3][0] .= '</span>';
 $banners = list_files ('images/group_banners/', 'png', 0, true);
 $table->data[3][1] = print_select ($banners, "banner", $banner, '', 'None', '', true, false, false, __('Banner'));
 
-$table->data[4][0] = combo_user_visible_for_me ($id_user_default, "id_user_default", 0, "IR", true, __('Default user'));
-$table->data[4][1] = print_select_from_sql ("SELECT id_language, name FROM tlanguage ORDER BY name",
-	'lang', $lang, '', '', 0, true, false, false, __('Language'));
+$table->data[4][0] = print_input_text ('soft_limit', $soft_limit, '', 10, 0, true , __('Incident Soft limit'));
 
 
-$table->data[5][0] = print_input_text ('soft_limit', $soft_limit, '', 10, 0, true , __('Incident Soft limit'));
+$table->data[4][1] = print_checkbox ('enforce_soft_limit', 1, $enforce_soft_limit, true, __('Enforce soft limit'));
 
+$table->data[5][0] = print_input_text ('hard_limit', $hard_limit, '', 10, 0, true , __('Incident Hard limit'));
 
-$table->data[5][1] = print_checkbox ('enforce_soft_limit', 1, $enforce_soft_limit, true, __('Enforce soft limit'));
-
-$table->data[6][0] = print_input_text ('hard_limit', $hard_limit, '', 10, 0, true , __('Incident Hard limit'));
-
-$table->data[6][1] = print_select_from_sql ("SELECT id, name FROM tinventory ORDER BY name",
+$table->data[5][1] = print_select_from_sql ("SELECT id, name FROM tinventory ORDER BY name",
 	'id_inventory_default', $id_inventory_default, '', '', 0, true, false, false, __('Default inventory object'));
 
 echo '<form method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
