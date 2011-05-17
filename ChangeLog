@@ -1,3 +1,8 @@
+2011-05-17  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_incidents.php: Added some stats to incident
+	reporting.
+
 2011-05-06  Sancho Lerena <slerena@artica.es>
 
     * include/styles/integria.css: Added PDF report button.

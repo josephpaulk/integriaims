@@ -492,8 +492,38 @@ function print_incidents_stats ($incidents, $return = false) {
         $output .= print_label (__('Top 5 incident submitters'), '', '', true, $submitter_label );
         $output .= "</td><td>";
         $output .= print_label (__('Top 5 average scoring by user'), '', '', true, $scoring_label);
-    }
 
+        // Show graph with incident priorities
+         
+	
+	    foreach ($incidents as $incident) {
+            if (!isset( $incident_data[render_priority($incident["prioridad"])]))
+                 $incident_data[render_priority($incident["prioridad"])] = 0;
+
+            $incident_data[render_priority($incident["prioridad"])] = $incident_data[render_priority($incident["prioridad"])] + 1; 
+        }
+
+        $output .= "</td><tr><td>";
+        $output .= print_label (__('Incidents by priority'), '', '', true);
+
+        $output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_data, 250, 100, __('others'), "", "", $config['font'], $config['fontsize']);
+
+
+        // Show graph with incidents by group
+        foreach ($incidents as $incident) {
+            if (!isset( $incident_group_data[dame_grupo($incident["id_grupo"])]))
+                 $incident_group_data[dame_grupo($incident["id_grupo"])] = 0;
+
+            $incident_group_data[dame_grupo($incident["id_grupo"])] = $incident_group_data[dame_grupo($incident["id_grupo"])] + 1; 
+        }
+
+        $output .= "</td><td>";
+        $output .= print_label (__('Incidents by group'), '', '', true);
+
+        $output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data, 250, 100, __('others'), "", "", $config['font'], $config['fontsize']);
+
+
+    }
     $output .= "</td></tr></table>";
 	
 	if ($return)
