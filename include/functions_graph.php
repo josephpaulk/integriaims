@@ -302,7 +302,7 @@ ORDER BY timestamp ASC");
    	$colors['graph']['border'] = "#000";
    	$colors['graph']['alpha'] = 100;
 
-	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300, $colors, array(), "", "", "", "", $config['font'], $config['fontsize']);
+	echo vbar_graph ($config['flash_charts'], $chart2, 650, 150, $colors, array(), "", "", "", "", $config['font'], $config['fontsize']);
 }
 
 function incident_activity_graph ($id_incident){

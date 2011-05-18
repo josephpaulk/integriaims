@@ -19,6 +19,7 @@ body {
 	background: #ffffff;
 	color: #666666;
 	text-align: center;
+	background: url(../../images/greyback.gif);
 }
 
 td, th {
@@ -407,7 +408,7 @@ form.searchform input.button {
 /* main column */
 #main {
 	border-left:1px solid #F2F2F2;
-	width: 100%;
+	width: 99%;
 	margin-left: 5px;
     padding-left: 0px;
 	min-height: 500px;
@@ -934,6 +935,7 @@ div#login {
 	border-bottom: solid 2px #aaa;
 	border-right: solid 2px #aaa;
 	padding-top: 20px;
+	background-color:#ffffff;
 }
 
 div#foot {

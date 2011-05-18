@@ -98,7 +98,8 @@ $table->data[0][3] = print_select (get_user_groups (),
 $table->data[0][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 
 echo '<form method="post">';
-print_table ($table);
+if ($clean_output == 0)
+    print_table ($table);
 echo '</form>';
 
 unset ($table);

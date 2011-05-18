@@ -47,33 +47,59 @@ echo "&nbsp;&nbsp;<a title='"._("Report")."'  href='index.php?sec=projects&sec2=
 echo '</h2><br>';
 
 // Simple query, needs to implement group control and ACL checking
-$sql = "SELECT * FROM ttask WHERE id_project = $id_project
+$sql = "SELECT * FROM ttask WHERE id_project = $id_project and id_parent_task = 0
 		ORDER BY completion DESC";
 
 $tasks = get_db_all_rows_sql ($sql);
 if ($tasks === false)
 return;
 
-echo "<table>";
-echo "<tr><th>Name</th><th>Hours</th><th>Completion</th><th>Start</th></tr>";
+echo "<table width=700 class=listing cellpadding=4 cellspacing=4>";
+echo "<tr><th class='listing'>Name</th><th>Hours</th><th>Completion</th><th>Start / End</th><th>People</th></tr>";
 
 foreach ($tasks as $task) {
 	if (user_belong_task ($config['id_user'], $task['id'])){
-		echo "<tr>";
+	    render_task($task);
+	}
+}
+
+function render_task ($task, $parent = 0){
+        echo "<tr>";
 		echo "<td>";
+        if ($parent != 0)
+            echo "<img src='images/copy.png'>";
+
 		echo $task["name"];
 	
-		echo "<td>";
-		echo $task["hours"];
+		echo "<td><b>";
+        echo get_task_workunit_hours ($task["id"]);
+		echo "</b> / ".$task["hours"];
 	
 		echo "<td>";
-		echo $task["completion"]."%";
+        echo progress_bar($task["completion"], 70, 20);
 
-		echo "<td>";
+		echo "<td style='font-size: 9px'>";
 		echo $task["start"];
+        echo " / ";
+		echo $task["end"];
+
+        echo "<td>";
+        echo get_db_value ('COUNT(DISTINCT(id_user))', 'trole_people_task', 'id_task', $task['id']);
 
 		echo "</tr>";
-	}
+
+        // Simple query, needs to implement group control and ACL checking
+
+        $sql = "SELECT * FROM ttask WHERE id_parent_task = ".$task["id"]." ORDER BY completion DESC";
+        $tasks = get_db_all_rows_sql ($sql);
+        if ($tasks === false)
+            return;
+
+        foreach ($tasks as $task2) {
+        	if (user_belong_task ($config['id_user'], $task2['id'])){
+        	    render_task($task2, $task["id"]);
+            }
+        }
 }
 
 echo "</table>";

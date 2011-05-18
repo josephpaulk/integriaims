@@ -1,3 +1,27 @@
+2011-05-18  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_graph.php: Modified graph for project
+
+	* include/styles/integria.css: Background, icon and small adjust
+	ments.
+
+	* include/styles/integria_clean.css: Css for being included on PDF
+	or HTML cleanoutput, at this time only difference is background.
+
+	* index.php: Small changes for PDF different CSS and new icon.
+
+	* operation/projects/csvexport.php: Tree output, more info on columns
+	and better layout.
+
+	* operation/projects/task.php: Hidden control on cleanoutput
+
+	* images/headerbg-grey.gif
+	images/integria_mini_logo.png
+	images/greyback.gif: New or updated images.
+
+	* general/header.php: better layout. Hidden special div with user_id
+
+
 2011-05-17  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_incidents.php: Added some stats to incident

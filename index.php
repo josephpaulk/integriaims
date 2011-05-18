@@ -96,7 +96,7 @@ echo "<title>" . $config["sitename"] . "</title>";
 <meta name="copyright" content="Artica Soluciones Tecnologicas (c) 2007-2011" />
 <meta name="keywords" content="ticketing, management, project, incident, tracking, ITIL" />
 <meta name="robots" content="index, follow" />
-<link rel="icon" href="images/integria.ico" type="image/ico" />
+<link rel="icon" href="images/integria_mini_logo.png" type="image/png" />
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/integria_tip.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/flora/flora.all.css" type="text/css" media="screen" title="Flora (Default)">
@@ -137,6 +137,9 @@ var lang = {
 <![endif]-->
 
 <?php
+
+if ($clean_output == 1)
+    echo '<link rel="stylesheet" href="include/styles/integria_clean.css" type="text/css" />';
 
 $login = (bool) get_parameter ('login');
 $sec = get_parameter ('sec');
