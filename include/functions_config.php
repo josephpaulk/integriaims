@@ -137,6 +137,12 @@ function load_config(){
 	if (!isset ($config["font"])){
 		$config["font"] = $config["homedir"]."/include/fonts/smallfont.ttf";
 	}
+	
+	// Activity auditing setup
+	
+	if (!isset ($config["audit_category_default"])) {
+		$config["audit_category_default"] = 1;
+	}
 
 }
 

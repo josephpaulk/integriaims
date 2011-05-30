@@ -757,13 +757,13 @@ if ($sec == "godmode") {
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/incidents_setup'>".__('Incidents setup')."</a></li>";
 	
 	// Inventories Setup
-	if ($sec2 == "godmode/setup/incidents_setup")
+	if ($sec2 == "godmode/setup/inventories_setup")
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/inventories_setup'>".__('Inventories setup')."</a></li>";
 	
-	// Mail Seetup
+	// Mail Setup
 	if ($sec2 == "godmode/setup/setup_mail")
 		echo "<li id='sidesel'>";
 	else
@@ -777,6 +777,7 @@ if ($sec == "godmode") {
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates'>".__('Mail templates setup')."</a></li>";
 
+	enterprise_include("godmode/sidemenu_activityauditing_mgmt.php");
 /* Disabled at this time
 
 	// Update Manager

@@ -5,7 +5,7 @@
 // ===========================================================
 // Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2008 Esteban Sanchez, estebans@artica.es
-// Copyright (c) 2007-2008 Artica, info@artica.es
+// Copyright (c) 2007-2011 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License
@@ -24,9 +24,21 @@ include_once ('functions_db.php');
  *
  *
  * @param string app name.
+ * @id_group int group of the user who send data
  */
-function check_app ($app_name) {
-	return get_db_row('tapp', 'app_name', $app_name);
+function check_app ($app_name, $id_group) {
+	return get_db_row_filter('tapp', array('app_name' => $app_name, 'id_group' => $id_group));
+}
+
+/**
+ * Check if an App is stored on default apps.
+ *
+ *
+ * @param string app name.
+ * @id_group int group of the user who send data
+ */
+function check_app_default ($app_name) {
+	return get_db_row_filter('tapp_default', array('app_name' => $app_name));
 }
 
 /**
@@ -38,9 +50,11 @@ function check_app ($app_name) {
  * 		0 -> Autocreated (not policy) 
  * 		1 -> This application should not be used
  * 		2 -> This application is allowed
+ * @id_group int group of the user who send data
+ * @id_category int id of the category
  */
-function add_app ($app_name, $app_mode) {
-	$sql = "INSERT INTO tapp (app_name, app_mode) VALUES ('".$app_name."', ".$app_mode.")";
+function add_app ($app_name, $app_mode, $id_group, $id_category) {
+	$sql = "INSERT INTO tapp (app_name, app_mode, id_group, id_category) VALUES ('".$app_name."', ".$app_mode.", ".$id_group.", ".$id_category.")";
 	$res = process_sql ($sql);
 	
 	return $res;
@@ -156,20 +170,37 @@ function psw_db($user, $psw){
 function add_app_activities($usr, $start_datetime, $end_datetime, $data_in){
 	$msg = "Inserted: ";
 	
+	// Get the first found group of the user
+	$usr_groups = get_user_groups($usr);
+	$id_group = reset(array_keys($usr_groups));
+	
 	$cont = 0;
 	foreach($data_in as $row){
+		// All the applications have mode=0 and category=1 by default
+		$mode = 0;
+		$id_category = 1;
+		
 		//Check if app exists into db
-		$app_exists = check_app($row['app_name']);
+		$app_exists = check_app($row['app_name'], $id_group);
 		// If app not exists, store it
 		if($app_exists === false){
-			add_app($row['app_name'],0);
-			$app_new = check_app($row['app_name']);
+			//Check if app exists into default apps
+			$app_default = check_app_default($row['app_name']);
+			//If exists we get the default mode
+			if($app_default !== false){
+				$mode = $app_default['app_mode'];
+				$id_category = $app_default['id_category'];
+			}
+			
+			add_app($row['app_name'], $mode, $id_group, $id_category);
+			$app_new = check_app($row['app_name'], $id_group);
+
 			$id_app = $app_new['id'];
 		}
 		else{
 			$id_app = $app_exists['id'];
 		}
-		
+
 		// If the data_in unique in the package, we study the compaction
 		if(count($data_in) == 1) {
 			// Check if the last activity was the same app
@@ -188,12 +219,12 @@ function add_app_activities($usr, $start_datetime, $end_datetime, $data_in){
 
 		//  If is not a continuation we insert the data
 		if($app_cont === false) {
-			debugPrint("Adding new data", true);
+			// Adding new data
 			$return = add_app_activity ($id_app, $usr, $row['app_extra'], $row['activity_time'], $start_datetime, $end_datetime);
 			$msg .= $row['app_name']." info ; ";
 		}
 		else { // If is a continuation we merge the activities
-			debugPrint("Merging data of: ".$app_cont[0]['id_app']." - ".$app_cont[0]['app_extra'], true);
+			// Merging data of: ".$app_cont[0]['id_app']." - ".$app_cont[0]['app_extra']
 			$return = merge_app_activity ($app_cont[0], $end_datetime, time(), $row['activity_time']);
 		}
 		

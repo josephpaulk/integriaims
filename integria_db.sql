@@ -722,7 +722,36 @@ CREATE TABLE `tapp` (
     `id` int(20) unsigned NOT NULL AUTO_INCREMENT,
 	`app_name` tinytext NOT NULL,
     `app_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
-	PRIMARY KEY (`id`)
+    `id_group` mediumint(8) unsigned NOT NULL,
+    `id_category` int(20) unsigned NOT NULL,
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (`id_category`) REFERENCES tapp_category(`id_category`)
+		ON UPDATE CASCADE ON DELETE CASCADE,
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tapp_category` (
+    `id_category` int(20) unsigned NOT NULL AUTO_INCREMENT,
+	`category_name` tinytext NOT NULL,
+	PRIMARY KEY (`id_category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tapp_default` (
+    `id` int(20) unsigned NOT NULL AUTO_INCREMENT,
+	`app_name` tinytext NOT NULL,
+    `app_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
+    `id_category` int(20) unsigned NOT NULL,    
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`id_category`) REFERENCES tapp_category(`id_category`)
+		ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tapp_extra_submode` (
+    `id_app` int(20) unsigned NOT NULL default 0,
+	`extra_substring` varchar(100) NOT NULL,
+    `app_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id_app`, `extra_substring`)	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tapp_activity_data` (

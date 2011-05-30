@@ -1126,7 +1126,7 @@ function get_groups ($order = 'nombre') {
  * @return A list of the groups the user has reading privileges.
  */
 function get_user_groups ($id_user = 0, $permission = 'IR') {
-	if ($id_user == 0) {
+	if ($id_user === 0) {
 		global $config;
 		$id_user = $config['id_user'];
 	}

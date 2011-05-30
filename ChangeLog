@@ -1,3 +1,22 @@
+2011-05-30  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_xmlrpc.php: Change the webservice of auditing
+	to check the app_default table before create one app and register
+	the first group of the user that send data
+	
+	* include/functions_db.php: Fixed a bug into get_user_groups
+	to be able to get the groups of a user distinct from the current
+	
+	* include/functions_config.php: Added to config
+	the audit setup fist token: dafault category
+
+	* operation/side_menu.php: Added to side menu the
+	audit setup section
+	
+	* integria_db.sql
+	upgrade_to_3.0.sql: Added some tables and fields to the 
+	database for app activities, their categories, etc. 
+
 2011-05-18  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_graph.php: Modified graph for project
