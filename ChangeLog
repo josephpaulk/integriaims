@@ -1,3 +1,10 @@
+2011-05-30  Sancho Lerena <slerena@artica.es>
+
+    * incident_detail.php: Fixed auto assign user to incident on first
+    workunit if first workunit is from the original creator.
+
+    * general/integria_help.php: Fixed help background.
+
 2011-05-30  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_xmlrpc.php: Change the webservice of auditing

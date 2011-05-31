@@ -318,7 +318,7 @@ if ($id) {
 
         // Adding a new workunit to a incident in NEW status
         // Status go to "Assigned" and Owner is the writer of this Workunit
-        if ($incident["estado"] == 1){
+        if (($incident["estado"] == 1) AND ($incident["id_creator"] != $config['id_user'])){
             $sql = sprintf ('UPDATE tincidencia SET id_usuario = "%s", estado = 3,  affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $config['id_user'], $timestamp, $id);
         } else {
             $sql = sprintf ('UPDATE tincidencia SET affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id);

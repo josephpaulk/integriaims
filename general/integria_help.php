@@ -23,7 +23,7 @@ if (!isset($config['style']))
 
 echo '<html><head><title>'.__('Integria IMS help system').'</title></head>';
 echo '<link rel="stylesheet" href="../include/styles/'.$config['style'].'.css" type="text/css">';
-echo '<body>';
+echo '<body bgcolor=#ffffff style="background: none">';
 
 $id = get_parameter ('id');
 $help_file = $config["homedir"]."/include/help/".$config["language_code"]."/help_".$id.".php";
