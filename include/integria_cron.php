@@ -14,7 +14,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
 include ("config.php");
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set("display_errors", 1);
@@ -262,8 +261,8 @@ function run_task_check () {
  */
 function check_daily_task () {
 	$current_date = date ("Y-m-d");
-	$current_date .= " 23:59:59";
-	$result = get_db_sql ("SELECT COUNT(id) FROM tevent WHERE type = 'DAILY_CHECK' AND timestamp < '$current_date'");
+	$current_date .= " 00:00:00";
+	$result = get_db_sql ("SELECT COUNT(id) FROM tevent WHERE type = 'DAILY_CHECK' AND timestamp > '$current_date'");
 	// Daily check has been executed in the past 24 hours.
 	if ($result > 0)
 		return false;
