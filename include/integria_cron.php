@@ -34,6 +34,45 @@ $compare_timestamp = date ("Y-m-d H:i:s", $now - $config["notification_period"]*
 $human_notification_period = give_human_time ($config["notification_period"]*3600);
 
 /**
+ * This function delete audit data (enterprise only) with more than XXX days
+ * TODO: Define DELETE_DAYS on config
+ */
+
+function delete_audit_data () {
+    global $config;
+
+    if ($config["enteprise"] == 0) {
+        return;
+    }
+    
+    $DELETE_DAYS = $config["audit_delete_days"];
+
+    $limit = strtotime ("now") - ($DELETE_DAYS * 86400);
+
+    $query_del2 = "DELETE FROM tapp_activity_data WHERE start_timestamp < $limit ";
+	$resq2 =  process_sql ($query_del2);    
+}
+
+/**
+ * This function delete tsesion and tevent data with more than XXX days
+ * TODO: Define DELETE_DAYS on config
+ */
+
+function delete_session_data () {
+    global $config;
+   
+    $DELETE_DAYS = 90;
+    $limit = strtotime ("now") - ($DELETE_DAYS * 86400);
+
+    $query_del2 = "DELETE FROM tsesion WHERE utimestamp < $limit ";
+	$resq2 =  process_sql ($query_del2);    
+
+    $limit2 = date ("Y/m/d H:i:s", strtotime ("now") - ($DELETE_DAYS * 86400));
+    $sql = "DELETE FROM tevent where timestamp < '$limit2'";
+    $res = process_sql ($sql);
+}
+
+/**
  * This function is executed once per day and do several different subtasks
  * like email notify ending tasks or projects, events for this day, etc.
  */
@@ -50,6 +89,8 @@ function run_daily_check () {
 	run_task_check ();
 	run_autowu();
     run_auto_incident_close();
+    delete_audit_data();
+    delete_session_data();
 }
 
 
@@ -222,12 +263,11 @@ function run_task_check () {
 function check_daily_task () {
 	$current_date = date ("Y-m-d");
 	$current_date .= " 23:59:59";
-	$result = get_db_sql ("SELECT COUNT(id) FROM tevent
-		WHERE type = 'DAILY_CHECK'
-		AND timestamp < '$current_date'");
+	$result = get_db_sql ("SELECT COUNT(id) FROM tevent WHERE type = 'DAILY_CHECK' AND timestamp < '$current_date'");
+	// Daily check has been executed in the past 24 hours.
 	if ($result > 0)
-		// Daily check has been executed in the past 24 hours.
 		return false;
+
 	return true;
 }
 
@@ -446,8 +486,9 @@ function run_mail_check () {
 
 // Daily check only
 
-if (check_daily_task ())
+if (check_daily_task()){
 	run_daily_check ();
+}
 
 // Execute always (POP3 processing)
 

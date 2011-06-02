@@ -1,3 +1,15 @@
+2011-06-02  Sancho Lerena <slerena@artica.es>
+    
+    * include/integria_cron.php: Fixed daily check. This include delete 
+    of old audit data and event/session information.
+
+    * include/functions_config.php: Processing new audit_data_days parameter.
+
+    * operation/download/browse.php: Fixed bug with file release edition.
+
+    * godmode/usuarios/lista_usuarios.php: Delete a user, delete all it's audit 
+    data associated.
+
 2011-06-02  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_html.php: Fixed a call to non-existent

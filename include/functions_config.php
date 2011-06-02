@@ -77,6 +77,10 @@ function load_config(){
 		$config["smtp_host"] = "localhost";
 	}
 
+	if (!isset ($config["audit_delete_days"])){
+        $config["audit_delete_days"] = 45;
+    }
+
 	if (!isset ($config["iwu_defaultime"])){
 		$config["iwu_defaultime"] = "0.25";
 	}

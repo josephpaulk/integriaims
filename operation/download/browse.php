@@ -167,7 +167,9 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo integria_help ("choose_download", true);
 
 	echo "<td>";
-	print_select (get_download_files(), 'location', $location, '', '', '', false);
+    $location = basename ($location);
+    $files = get_download_files();
+	print_select ($files, 'location', $location, '', '', '', false);
 
 	echo "<tr>";
 	echo "<td class=datos2 valign=top>";
