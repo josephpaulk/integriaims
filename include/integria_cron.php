@@ -103,11 +103,11 @@ function run_auto_incident_close () {
     require_once ($config["homedir"]."/include/functions_incidents.php");
 
     $utimestamp = date("U");
-	$limit = date ("Y/m/d H:i:s", $utimestamp - $config["auto_incident_close"] * 3600);
+	$limit = date ("Y/m/d H:i:s", $utimestamp - $config["auto_incident_close"] * 86400);
 
     // For each incident
 	$incidents = get_db_all_rows_sql ("SELECT * FROM tincidencia WHERE estado IN (1,2,3,4,5) AND actualizacion < '$limit'");
-    $mailtext = __("This incident has been closed automatically by Integria after waiting confirmation to close this incident for ").$config["auto_incident_close"]."  ".__("hours");
+    $mailtext = __("This incident has been closed automatically by Integria after waiting confirmation to close this incident for ").$config["auto_incident_close"]."  ".__("days");
 
     if ($incidents)
 	    foreach ($incidents as $incident){

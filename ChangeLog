@@ -1,4 +1,12 @@
 2011-06-02  Sancho Lerena <slerena@artica.es>
+
+	* include/integria_cron.php: Autoclose was working on hours, not days :(
+
+	* include/help/en/help_auto_incident_close.php: Added help to autowu
+
+	* operation/projects/gantt.php: Fixed broken gantt graph.
+
+2011-06-02  Sancho Lerena <slerena@artica.es>
     
     * include/integria_cron.php: Fixed daily check. This include delete 
     of old audit data and event/session information.

@@ -13,8 +13,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
-include_once ('include/graphs/fgraph.php');
+include_once ("include/functions_graph.php");
 
 // Returns 'date' in the format 'dd/mm/yyyy'
 function fix_date ($date, $default='') {
@@ -158,6 +157,7 @@ if ($to == '00/00/0000') {
 
 get_tasks (&$tasks, $id_project, $from, $to);
 get_milestones (&$milestones, $id_project);
+
 if ($project_start != '00/00/0000') {
 	array_push ($milestones, array ('id' => 'start', 'name' => __('Start'), 'date' => $project_start));
 }
@@ -181,7 +181,10 @@ if ($num_tasks > 20) {
 }
 
 // Print the Gantt chart
-print gantt_graph ($project_name, $from, $to, $tasks, $milestones, $width, $height);
+
+print fs_gantt_chart ($project_name, $from, $to, $tasks, $milestones, $width, $height);
+
+//print gantt_graph ($project_name, $from, $to, $tasks, $milestones, $width, $height);
 
 if (!$clean_output) {
 	echo "<br><br>";
