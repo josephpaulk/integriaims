@@ -1,3 +1,12 @@
+2011-06-02  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_html.php: Fixed a call to non-existent
+	function safe_input_html from a pandora merge
+
+	* images/arrow_ele_blue.png
+	images/sort_down.png
+	images/sort_up.png: Added new images to audit reports
+
 2011-05-30  Sancho Lerena <slerena@artica.es>
 
     * incident_detail.php: Fixed auto assign user to incident on first

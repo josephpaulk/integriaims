@@ -280,7 +280,7 @@ function print_image ($src, $return = false, $options = false, $return_src = fal
 		
 		foreach ($attrs as $attribute) {
 			if (isset ($options[$attribute])) {
-				$output .= $attribute.'="'.safe_input_html ($options[$attribute]).'" ';
+				$output .= $attribute.'="'.safe_input ($options[$attribute]).'" ';
 			}
 		}
 	} else {
