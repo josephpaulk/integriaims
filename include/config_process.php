@@ -17,7 +17,7 @@
 global $config;
 
 // Integria version
-$config["build"]="100917";
+$config["build"]="110603";
 $config["version"]="v3.0dev";
 $config["build_version"] = $config["build"];
 
@@ -71,9 +71,11 @@ session_start();
 
 // User language selection prevails over system-wide defined language.
 
-if (isset ($_SESSION['id_usuario']))
-	$config['language_code'] = get_db_value ('lang', 'tusuario', 'id_usuario', $_SESSION['id_usuario']);
-
+if (isset ($_SESSION['id_usuario'])){
+	$temp = get_db_value ('lang', 'tusuario', 'id_usuario', $_SESSION['id_usuario']);
+    if ($temp != "")
+        $config['language_code'] = $temp;
+}
 
 if (file_exists ($config["homedir"].'/include/languages/'.$config['language_code'].'.mo')) {
 	$l10n = new gettext_reader (new CachedFileReader ($config["homedir"].'/include/languages/'.$config['language_code'].'.mo'));

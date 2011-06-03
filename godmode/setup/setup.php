@@ -15,6 +15,7 @@
 // GNU General Public License for more details.
 
 // Load global vars
+
 global $config;
 
 check_login ();
@@ -89,6 +90,8 @@ if ($update) {
 
 
 }
+// Render SYSTEM language code, not current language.
+$config['language_code'] = get_db_value ('value', 'tconfig', 'token', 'language_code');
 
 echo "<h2>".__('General setup')."</h2>";
 
