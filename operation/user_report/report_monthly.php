@@ -3,7 +3,7 @@
 // http://integria.sourceforge.net
 // ==================================================
 // Copyright (c) 2008-2011 Ártica Soluciones Tecnológicas
- http://www.artica.es  <info@artica.es>
+// http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License

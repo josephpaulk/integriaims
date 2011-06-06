@@ -1,3 +1,9 @@
+2011-06-06  Sancho Lerena <slerena@artica.es>
+
+	* include/help/en/help_auto_incident_close.php: Small text mod.
+
+	* 
+
 2011-06-03  Sancho Lerena <slerena@artica.es>
 
 	* include/config_process.php: Fixed default language for user.
