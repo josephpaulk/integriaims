@@ -168,8 +168,10 @@ if ($action == 'update') {
 
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
 
+	$old_incident_inventories = array_keys(get_inventories_in_incident($id));
+	
 	/* Update inventory objects in incident */
-	update_incident_inventories ($id, get_parameter ('inventories'));
+	update_incident_inventories ($id, get_parameter ('inventories', $old_incident_inventories));
 
 	if ($config['incident_reporter'] == 1)
 		update_incident_contact_reporters ($id, get_parameter ('contacts'));
