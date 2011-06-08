@@ -80,6 +80,8 @@ if ($action == 'get-users-list') {
 }
 
 if ($action == 'update') {
+	// Number of loop in the massive operations. No received in not massive ones
+	$massive_number_loop = get_parameter ('massive_number_loop', -1);
 
 	$old_incident = get_incident ($id);
 
@@ -188,7 +190,12 @@ if ($action == 'update') {
 	}
 
 	if (defined ('AJAX')) {
-		echo $result_msg;
+		if($massive_number_loop != -1) {
+			echo $massive_number_loop;
+		}
+		else {
+			echo $result_msg;
+		}
 		return;
 	}
 }

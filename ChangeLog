@@ -1,5 +1,16 @@
 2011-06-08  Sergio Martin <sergio.martin@artica.es>
 
+	* include/js/integria_incident_search.js
+	include/functions_form.php
+	operation/incidents/incident_detail.php: Refresh the
+	incident list when an incident is updated and when a massive 
+	option modifies various incidents
+	
+	* godmode/setup/setup_visual.php: Fixed a bug of update the block size from
+	setup
+
+2011-06-08  Sergio Martin <sergio.martin@artica.es>
+
 	* operation/incidents/incident_search.php: Added the http link to 
 	the incident ID in the incident list like the old version
 

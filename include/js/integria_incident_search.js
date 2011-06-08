@@ -283,6 +283,19 @@ function configure_incident_form (enable_ajax_form) {
 						if ($("#incident_status").attr ("value") == 6) {
 							$("[name=kb_form]").show ();
 						} else {
+							// Hack to get from the paginer combo the block size value
+							configure_incident_search_form ($('#block_size').attr('value'),
+								function (id, name) {
+									check_incident (id);
+								},
+								function (form) {
+									val = get_form_input_values (form);
+									val.push ({name: "page",
+											value: "operation/incidents/incident_search"});
+									configure_statistics_tab(val);
+
+							});
+							$("#search_incident_form").submit ();
 							$("[name=kb_form]").hide ();
 						}
 					});
@@ -305,7 +318,7 @@ function configure_incident_form (enable_ajax_form) {
 	}
 }
 
-function check_massive_options() {
+function check_massive_options(page_size, row_click_callback, search_callback) {
 	$(".cb_incident").click(function(event) {
 		event.stopPropagation();
 	});
@@ -358,13 +371,19 @@ function check_massive_options() {
 						values.push ({name: "usuario_form",
 								value: assigned_user});
 					}
+					values.push ({name: "massive_number_loop",
+							value: i});
 					values.push ({name: "action",
 								value: 'update'});
-								
+					
 					jQuery.get ("ajax.php",
 						values,
 						function (data, status) {
-							
+							// We refresh the interface in the last loop
+							if(data == (checked_ids.length - 1)) {
+								configure_incident_search_form (page_size, row_click_callback, search_callback);
+								$("#search_incident_form").submit ();
+							}
 						},
 						"html"
 					);
@@ -408,7 +427,7 @@ function configure_incident_search_form (page_size, row_click_callback, search_c
 			values,
 			function (data, status) {
 				$(dialog+"table#incident_search_result_table tbody").empty ().append (data);
-				check_massive_options();
+				check_massive_options(page_size, row_click_callback, search_callback);
 				$(dialog+"#incident_search_result_table tbody tr").click (function () {
 					id = this.id.split ("-").pop ();
 					name = $(this).children (":eq(2)").html ();

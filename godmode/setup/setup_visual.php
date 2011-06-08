@@ -36,7 +36,7 @@ if ($update) {
     $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
 	$config["flash_charts"] = get_parameter ("flash_charts", 1);
 
-    update_config_token ("limit_size", $config["limit_size"]);
+    update_config_token ("block_size", $config["block_size"]);
     update_config_token ("fontsize", $config["fontsize"]);
     update_config_token ("font", $config["font"]);
     update_config_token ("pdffont", $config["pdffont"]);

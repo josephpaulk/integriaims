@@ -902,7 +902,8 @@ function print_table_pager ($id = 'pager', $hidden = true, $return = false) {
 		$output .= '<option selected="selected" value="10">10</option>';
 	} else {
 		$output .= '<select class="pagesize">';
-		$output .= '<option selected="selected" value="'.$config['block_size'].'">'.$config['block_size'].'</option>';
+		// The id of the following <option> is to recover from ajax the block size
+		$output .= '<option id="block_size" selected="selected" value="'.$config['block_size'].'">'.$config['block_size'].'</option>';
 		$output .= '<option value="'.($config['block_size'] * 2).'">'.($config['block_size'] * 2).'</option>';
 		$output .= '<option value="'.($config['block_size'] * 3).'">'.($config['block_size'] * 3).'</option>';
 		$output .= '<option value="'.($config['block_size'] * 5).'">'.($config['block_size'] * 5).'</option>';
