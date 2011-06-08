@@ -184,7 +184,7 @@ foreach ($incidents as $incident) {
 	print_checkbox_extended ('incidentcb-'.$incident['id_incidencia'], $incident['id_incidencia'], false, '', '', 'class="cb_incident"');
 	echo '</td>';
 	echo '<td>';
-	echo '<strong>#'.$incident['id_incidencia'].'</strong></td>';
+	echo '<strong><a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">#'.$incident['id_incidencia'].'</a></strong></td>';
 	
 	// SLA Fired ?? 
 	if ($incident["affected_sla_id"] != 0)

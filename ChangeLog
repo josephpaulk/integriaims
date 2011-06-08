@@ -1,5 +1,10 @@
 2011-06-08  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/incidents/incident_search.php: Added the http link to 
+	the incident ID in the incident list like the old version
+
+2011-06-08  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_html.php: Fixed attributes parameter
 	to be used into html tag
 
