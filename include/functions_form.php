@@ -247,7 +247,7 @@ function combo_groups ($actual = -1, $mode = "IR") {
 
 // Returns a combo with the incident status available
 // ----------------------------------------------------------------------
-function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $return = false) {
+function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $return = false, $for_massives = false) {
 	$output = '';
 
 	if ($disabled) {
@@ -267,9 +267,15 @@ function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $
 	$values = array ();
 	foreach ($rows as $row)
 		$values[$row['id']] = __($row['name']);
-	
+
+	if($for_massives) {
+	$output .= print_select ($values, 'mass_status', $actual, '', __('Select'), -1,
+		true);
+	}
+	else {
 	$output .= print_select ($values, 'incident_status', $actual, '', '', 0,
 		true, false, false, __('Status'));
+	}
 
 	if ($return)
 		return $output;
@@ -300,7 +306,7 @@ function combo_incident_origin ($actual = -1, $disabled = 0, $return = false) {
 
 // Returns a combo with the incident resolution
 // ----------------------------------------------------------------------
-function combo_incident_resolution ($actual = -1, $disabled = false, $return = false) {
+function combo_incident_resolution ($actual = -1, $disabled = false, $return = false, $for_massives = false) {
 	$output = '';
 	
 	if ($disabled) {
@@ -313,10 +319,18 @@ function combo_incident_resolution ($actual = -1, $disabled = false, $return = f
 		echo $output;
 		return;
 	}
+
+	if($for_massives) {
+		$output .= print_select (get_incident_resolutions (),
+						'mass_resolution', $actual, '', __('Select'),
+						-1, true);
+	}
+	else {
+		$output .= print_select (get_incident_resolutions (),
+						'incident_resolution', $actual, '', __('None'),
+						0, true, false, false, __('Resolution'));
+	}
 	
-	$output .= print_select (get_incident_resolutions (),
-					'incident_resolution', $actual, '', __('None'),
-					0, true, false, false, __('Resolution'));
 	if ($return)
 		return $output;
 	echo $output;

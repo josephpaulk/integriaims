@@ -305,6 +305,76 @@ function configure_incident_form (enable_ajax_form) {
 	}
 }
 
+function check_massive_options() {
+	$(".cb_incident").click(function(event) {
+		event.stopPropagation();
+	});
+	$("#submit-massive_update").click(function(event) {
+		var checked_ids = new Array();
+		var status;
+		var priority;
+		var resolution;
+		var assigned_user;
+		
+		$(".cb_incident").each(function() {
+			id = this.id.split ("-").pop ();
+			checked = $(this).attr('checked');
+			if(checked) {
+				checked_ids.push(id);
+			}
+		});
+		
+		if(checked_ids.length == 0) {
+			alert("No items selected");
+		}
+		else {
+			status = $("#mass_status").attr("value");
+			priority = $("#mass_priority").attr("value");
+			resolution = $("#mass_resolution").attr("value");
+			assigned_user = $("#mass_assigned_user").attr("value");
+			if(status == -1 && priority == -1 && resolution == -1 && assigned_user == -1) {
+				alert("Nothing to update");
+			}
+			else {		
+				for(var i=0;i<checked_ids.length;i++){
+					values = Array ();
+					values.push ({name: "page",
+								value: "operation/incidents/incident_detail"});
+					values.push ({name: "id",
+								value: checked_ids[i]});
+					if(status != -1) {
+						values.push ({name: "incident_status",
+								value: status});
+					}
+					if(priority != -1) {
+						values.push ({name: "priority_form",
+								value: priority});
+					}
+					if(resolution != -1) {
+						values.push ({name: "incident_resolution",
+								value: resolution});
+					}
+					if(assigned_user != -1) {
+						values.push ({name: "usuario_form",
+								value: assigned_user});
+					}
+					values.push ({name: "action",
+								value: 'update'});
+								
+					jQuery.get ("ajax.php",
+						values,
+						function (data, status) {
+							
+						},
+						"html"
+					);
+				}		
+			}
+		}
+		
+	});
+}
+
 function configure_incident_search_form (page_size, row_click_callback, search_callback) {
 	$(dialog+".show_advanced_search").click (function () {
 		table = $(dialog+"#search_incident_form").children ("table");
@@ -338,6 +408,7 @@ function configure_incident_search_form (page_size, row_click_callback, search_c
 			values,
 			function (data, status) {
 				$(dialog+"table#incident_search_result_table tbody").empty ().append (data);
+				check_massive_options();
 				$(dialog+"#incident_search_result_table tbody tr").click (function () {
 					id = this.id.split ("-").pop ();
 					name = $(this).children (":eq(2)").html ();

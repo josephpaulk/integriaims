@@ -2,7 +2,7 @@
 
 // Integria 2.0 - http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+// Copyright (c) 2007-2011 Artica Soluciones Tecnologicas
 // Copyright (c) 2008 Esteban Sanchez
 
 // This program is free software; you can redistribute it and/or
@@ -85,24 +85,25 @@ if ($search_form) {
 	$table->width = '100%';
 	$table->id = 'incident_search_result_table';
 	$table->head = array ();
-	$table->head[0] = "Id";
-	$table->head[1] = __('SLA');
-	$table->head[2] = __('Incident');
-	$table->head[3] = __('Group');
-	$table->head[4] = __('Status')."<br><i>".__('Resolution')."</i>";
-	$table->head[5] = __('Priority');
-	$table->head[6] = __('Updated')."<br><i>".__('Started')."</i>";
-	$table->head[7] = __('Work');
-	$table->head[8] = __('Flags');
+	$table->head[0] = '';
+	$table->head[1] = __('ID');
+	$table->head[2] = __('SLA');
+	$table->head[3] = __('Incident');
+	$table->head[4] = __('Group');
+	$table->head[5] = __('Status')."<br><i>".__('Resolution')."</i>";
+	$table->head[6] = __('Priority');
+	$table->head[7] = __('Updated')."<br><i>".__('Started')."</i>";
+	$table->head[8] = __('Work');
+	$table->head[9] = __('Flags');
 	if ($config["show_creator_incident"] == 1)
-		$table->head[9] = __('Creator');	
+		$table->head[10] = __('Creator');	
 	if ($config["show_owner_incident"] == 1)
-		$table->head[10] = __('Owner');	
+		$table->head[11] = __('Owner');	
 	
 	$table->style = array ();
-	$table->style[0] = '';
+	$table->style[1] = '';
 	// Dont work
-	$table->rowstyle[4] = "font-size: 4px;";
+	$table->rowstyle[5] = "font-size: 4px;";
 
 	print_table ($table);
 
@@ -176,9 +177,12 @@ foreach ($incidents as $incident) {
 	else
 		$tr_status = 'class="green"';
 
-	echo '<tr '.$tr_status.' id="indicent-'.$incident['id_incidencia'].'"';
+	echo '<tr '.$tr_status.' id="incident-'.$incident['id_incidencia'].'"';
 
 	echo " style='border-bottom: 1px solid #ccc;' >";
+	echo '<td>';
+	print_checkbox_extended ('incidentcb-'.$incident['id_incidencia'], $incident['id_incidencia'], false, '', '', 'class="cb_incident"');
+	echo '</td>';
 	echo '<td>';
 	echo '<strong>#'.$incident['id_incidencia'].'</strong></td>';
 	
@@ -265,8 +269,6 @@ foreach ($incidents as $incident) {
 		echo substr($incident_owner,0,12);
 		echo "</td>";
 	}
-	
-	
 	
 	echo '</tr>';
 }

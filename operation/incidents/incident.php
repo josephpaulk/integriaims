@@ -114,24 +114,52 @@ $table->class = 'hide result_table listing';
 $table->width = '100%';
 $table->id = 'incident_search_result_table';
 $table->head = array ();
-$table->head[0] = __('ID');
-$table->head[1] = __('SLA');
-$table->head[2] = __('Incident');
-$table->head[3] = __('Group');
-$table->head[4] = __('Status')."<br /><em>".__('Resolution')."</em>";
-$table->head[5] = __('Priority');
-$table->head[6] = __('Updated')."<br /><em>".__('Started')."</em>";
-$table->head[7] = __('Details');
+$table->head[0] = '';
+$table->head[1] = __('ID');
+$table->head[2] = __('SLA');
+$table->head[3] = __('Incident');
+$table->head[4] = __('Group');
+$table->head[5] = __('Status')."<br><i>".__('Resolution')."</i>";
+$table->head[6] = __('Priority');
+$table->head[7] = __('Updated')."<br><i>".__('Started')."</i>";
+$table->head[8] = __('Flags');
 if ($config["show_creator_incident"] == 1)
-	$table->head[8] = __('Creator');	
+	$table->head[9] = __('Creator');	
 if ($config["show_owner_incident"] == 1)
-	$table->head[9] = __('Owner');	
+	$table->head[10] = __('Owner');	
 $table->style = array ();
 $table->style[0] = '';
 
 print_table ($table);
 
 print_table_pager ();
+
+unset($table);
+
+$table->class = 'result_table listing';
+$table->width = '100%';
+$table->id = 'incident_massive';
+
+$table->style = array ();
+
+$table->head[0] = print_label (__('Status'), '', '', true);
+$table->head[1] = print_label (__('Priority'), '', '', true);
+$table->head[2] = print_label (__('Resolution'), '', '', true);
+$table->head[3] = print_label (__('Assigned user'), '', '', true);
+
+echo '<br><h2>&nbsp;'.print_image('images/arrow_ele_blue.png', true).' '.__('Massive operations over selected items').'</h2>';
+
+$table->data[0][0] = combo_incident_status (-1, 0, 0, true, true);
+$table->data[0][1] = print_select (get_priorities (),'mass_priority', -1, '', __('Select'), -1, true);
+$table->data[0][2] = combo_incident_resolution ($resolution, $disabled, true, true);
+$table->data[0][3] = print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'mass_assigned_user', '0', '', __('Select'), -1, true);
+
+print_table ($table);
+
+echo "<div style='width:".$table->width."'>";
+print_submit_button (__('Update selected items'), 'massive_update', false, 'class="sub next" style="float:right;');
+echo "</div>";
+
 
 echo '<div id="incident-stats"></div>';
 

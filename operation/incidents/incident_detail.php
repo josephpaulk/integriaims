@@ -80,8 +80,11 @@ if ($action == 'get-users-list') {
 }
 
 if ($action == 'update') {
- 	$grupo = get_parameter ('grupo_form');
-	$user = get_parameter ('usuario_form');
+
+	$old_incident = get_incident ($id);
+
+	$user = get_parameter ('usuario_form', $old_incident['id_usuario']);
+ 	$grupo = get_parameter ('grupo_form', $old_incident['id_grupo']);
 
 	// Only admins (manage incident) or owners can modify incidents
 	if ((! give_acl ($config["id_user"], $grupo, "IW")) AND (! give_acl ($config["id_user"], $grupo, "IM"))) {
@@ -90,24 +93,22 @@ if ($action == 'update') {
 		no_permission ();
 		exit ();
 	}
-	$id_author_inc = get_incident_author ($id);
-	$titulo = get_parameter ('titulo');
-	$sla_disabled = (bool) get_parameter ("sla_disabled");
-	$description = get_parameter ('description');
-	$origen = get_parameter ("incident_origin", 1);
-	$priority = get_parameter ('priority_form');
-	$estado = get_parameter ('incident_status');
-	$group = get_parameter ('grupo_form');
-	$email_notify = (bool) get_parameter ("email_notify");
-	$epilog = get_parameter ('epilog');
-	$resolution = get_parameter ('incident_resolution');
-	$id_task = (int) get_parameter ('task_user');
-	$id_incident_type = get_parameter ('id_incident_type');
-	$id_parent = (int) get_parameter ('id_parent');
-	$id_creator = get_parameter ('id_creator');
 
-	$old_incident = get_incident ($id);
-	
+	$id_author_inc = get_incident_author ($id);
+	$titulo = get_parameter ('titulo', $old_incident['titulo']);
+	$sla_disabled = (bool) get_parameter ('sla_disabled', $old_incident['sla_disabled']);
+	$description = get_parameter ('description', $old_incident['descripcion']);
+	$origen = get_parameter ('incident_origin', $old_incident['origen']);
+	$priority = get_parameter ('priority_form', $old_incident['prioridad']);
+	$estado = get_parameter ('incident_status', $old_incident['estado']);
+	$email_notify = (bool) get_parameter ('email_notify', $old_incident['notify_email']);
+	$epilog = get_parameter ('epilog', $old_incident['epilog']);
+	$resolution = get_parameter ('incident_resolution', $old_incident['resolution']);
+	$id_task = (int) get_parameter ('task_user', $old_incident['id_task']);
+	$id_incident_type = get_parameter ('id_incident_type', $old_incident['id_incident_type']);
+	$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
+	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
+
 	$tracked = false;
 	if ($old_incident['prioridad'] != $priority) {
 		incident_tracking ($id, INCIDENT_PRIORITY_CHANGED, $priority);

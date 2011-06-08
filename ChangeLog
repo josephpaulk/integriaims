@@ -1,3 +1,17 @@
+2011-06-08  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_html.php: Fixed attributes parameter
+	to be used into html tag
+
+	* include/functions_form.php: Adapted some functions to
+	massive operations
+
+	* include/js/integria_incident_search.js
+	operation/incidents/incident.php
+	operation/incidents/incident_detail.php
+	operation/incidents/incident_search.php: Added massive operations
+	into incidents list
+
 2011-06-06  Sancho Lerena <slerena@artica.es>
 
 	* include/help/en/help_auto_incident_close.php: Small text mod.
