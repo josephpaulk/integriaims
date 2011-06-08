@@ -333,6 +333,7 @@ function check_massive_options(page_size, row_click_callback, search_callback) {
 			id = this.id.split ("-").pop ();
 			checked = $(this).attr('checked');
 			if(checked) {
+				$(this).attr('checked', false);
 				checked_ids.push(id);
 			}
 		});

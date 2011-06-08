@@ -1,5 +1,10 @@
 2011-06-08  Sergio Martin <sergio.martin@artica.es>
 
+	* include/js/integria_incident_search.js: Fixed refresh loop
+	in massive updates
+
+2011-06-08  Sergio Martin <sergio.martin@artica.es>
+
 	* operation/incidents/incident_detail.php: Fixed a bug that
 	losts the inventory object when massive update
 
