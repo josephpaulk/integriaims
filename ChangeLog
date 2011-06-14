@@ -1,3 +1,8 @@
+2011-06-14  Sergio Martin <sergio.martin@artica.es>
+
+	* images/page_white_stack.png: Add new icon to 'copytodefault'
+	feature on users audit
+
 2011-06-08  Sergio Martin <sergio.martin@artica.es>
 
 	* include/js/integria_incident_search.js: Fixed refresh loop
