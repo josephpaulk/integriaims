@@ -1,5 +1,9 @@
 2011-06-16 Sancho lerena <slerena@ærtica.es>
 
+	* include/integria_cron.php,
+	include/help/en/help_auto_incident_close.php: Autoclose is in DAYS.
+	Fixed help and format date in data conversion.
+
 	* include/functions_incidents.php: Stat graphs a bit bigger. Incident
 	/group pie chart was non-legible.
 
