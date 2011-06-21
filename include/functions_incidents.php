@@ -511,10 +511,13 @@ function print_incidents_stats ($incidents, $return = false) {
 
         // Show graph with incidents by group
         foreach ($incidents as $incident) {
-            if (!isset( $incident_group_data[dame_grupo($incident["id_grupo"])]))
-                 $incident_group_data[dame_grupo($incident["id_grupo"])] = 0;
+                $grupo = substr(safe_output(dame_grupo($incident["id_grupo"])),0,15);
 
-            $incident_group_data[dame_grupo($incident["id_grupo"])] = $incident_group_data[dame_grupo($incident["id_grupo"])] + 1; 
+        if (!isset( $incident_group_data[$grupo]))
+                 $incident_group_data[$grupo] = 0;
+
+            $incident_group_data[$grupo] = $incident_group_data[$grupo] + 1;                                 
+
         }
 
         $output .= "</td><td>";

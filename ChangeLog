@@ -1,3 +1,8 @@
+2011-06-21 Sancho Lerena <slerena@artica.es>
+
+	* include/functions_incidents.php: Fixed group stats graph. Problem
+	was due a weird HTML encoding...
+
 2011-06-16 Sancho lerena <slerena@ærtica.es>
 
 	* include/integria_cron.php,
