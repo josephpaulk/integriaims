@@ -1,3 +1,8 @@
+2011-06-22  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_incidents.php: Fixed incidents statistics
+	report to show the graph adding ttl parameter
+
 2011-06-21 Sancho Lerena <slerena@artica.es>
 
 	* include/functions_incidents.php: Fixed group stats graph. Problem

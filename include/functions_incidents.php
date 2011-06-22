@@ -303,6 +303,8 @@ function get_incidents_stats ($incidents) {
 function print_incidents_stats ($incidents, $return = false) {
 
     global $config;
+	$pdf_output = (int)get_parameter('pdf_output', 0);
+	$ttl = $pdf_output+1;
 	
 	// Necessary for flash graphs
 	include_flash_chart_script();
@@ -376,7 +378,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	$data = array (__('Opened') => $opened, __('Closed') => $total - $opened);
     $output .= "</td>";
     $output .= "<td>";
-    $output .= pie3d_graph ($config['flash_charts'], $data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']);
+    $output .= pie3d_graph ($config['flash_charts'], $data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
     $output .= "</td>";
     $output .= "</tr><tr>";
     $output .= "<td>";
@@ -433,7 +435,7 @@ function print_incidents_stats ($incidents, $return = false) {
 			$scoring_label .= "<br/>N/A";
 		}
 		else {
-			$users_label .= "<br/>".pie3d_graph ($config['flash_charts'], $users_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']);
+			$users_label .= "<br/>".pie3d_graph ($config['flash_charts'], $users_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 		}
 		
 	    // Find the 5 most active incidents (more worked hours)
@@ -453,7 +455,7 @@ function print_incidents_stats ($incidents, $return = false) {
 			$scoring_label .= "<br/>N/A";
 		}
 		else {
-			$incidents_label .= "<br/>".pie3d_graph ($config['flash_charts'], $incidents_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']);
+			$incidents_label .= "<br/>".pie3d_graph ($config['flash_charts'], $incidents_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 		}
 		
         $submitter_label = "";
@@ -468,7 +470,7 @@ function print_incidents_stats ($incidents, $return = false) {
 			$scoring_label .= "<br/>N/A";
 		}
 		else {
-			$submitter_label .= "<br/>".pie3d_graph ($config['flash_charts'], $submitter_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']);
+			$submitter_label .= "<br/>".pie3d_graph ($config['flash_charts'], $submitter_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 		}
 		
         $scoring_label ="";
@@ -482,7 +484,7 @@ function print_incidents_stats ($incidents, $return = false) {
 			$scoring_label .= "<br/>N/A";
 		}
 		else {
-			$scoring_label .= "<br/>".pie3d_graph ($config['flash_charts'], $scoring_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']);
+			$scoring_label .= "<br/>".pie3d_graph ($config['flash_charts'], $scoring_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 		}
 		
         $output .= print_label (__('Top 5 active users'), '', '', true, $users_label);
@@ -506,7 +508,7 @@ function print_incidents_stats ($incidents, $return = false) {
         $output .= "</td><tr><td>";
         $output .= print_label (__('Incidents by priority'), '', '', true);
 
-        $output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']);
+        $output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 
 
         // Show graph with incidents by group
@@ -523,7 +525,7 @@ function print_incidents_stats ($incidents, $return = false) {
         $output .= "</td><td>";
         $output .= print_label (__('Incidents by group'), '', '', true);
 
-        $output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1);
+        $output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
 
 
 
