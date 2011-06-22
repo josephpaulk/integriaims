@@ -1,3 +1,8 @@
+2011-06-22  Sancho Lerena <salerena@artica.es>
+
+	* include/graphs/functions_fsgraph.php: Fixed bad call to old
+	function.
+
 2011-06-22  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_incidents.php: Fixed incidents statistics
