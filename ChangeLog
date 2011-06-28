@@ -1,3 +1,8 @@
+2011-06-29  Sancho Lerena <slerena@artica.es>
+
+	* integria_db.sql: Fixed some table creation sql.
+	Now a full install works fine.
+
 2011-06-22  Sancho Lerena <salerena@artica.es>
 
 	* include/graphs/functions_fsgraph.php: Fixed bad call to old

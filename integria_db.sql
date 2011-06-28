@@ -88,7 +88,7 @@ CREATE TABLE `ttask` (
   PRIMARY KEY  (`id`),
   KEY `itask_idx_1` (`id_project`),
   FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
-     ON UPDATE CASCADE ON DELETE CASCADE
+     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure for table `tattachment`
@@ -105,7 +105,7 @@ CREATE TABLE `tattachment` (
   `size` bigint(20) NOT NULL default '0',
   PRIMARY KEY  (`id_attachment`),
   FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
-     ON UPDATE CASCADE ON DELETE CASCADE
+     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -718,23 +718,23 @@ CREATE TABLE `tnewsboard` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `tapp_category` (
+    `id_category` int(20) unsigned NOT NULL AUTO_INCREMENT,
+    `category_name` tinytext NOT NULL,
+    PRIMARY KEY (`id_category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `tapp` (
     `id` int(20) unsigned NOT NULL AUTO_INCREMENT,
-	`app_name` tinytext NOT NULL,
+    `app_name` tinytext NOT NULL,
     `app_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
     `id_group` mediumint(8) unsigned NOT NULL,
     `id_category` int(20) unsigned NOT NULL,
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`id_group`) REFERENCES tgrupo(`id_grupo`)
-		ON UPDATE CASCADE ON DELETE CASCADE,
+		ON DELETE CASCADE,
 	FOREIGN KEY (`id_category`) REFERENCES tapp_category(`id_category`)
-		ON UPDATE CASCADE ON DELETE CASCADE,
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `tapp_category` (
-    `id_category` int(20) unsigned NOT NULL AUTO_INCREMENT,
-	`category_name` tinytext NOT NULL,
-	PRIMARY KEY (`id_category`)
+		ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tapp_default` (
@@ -744,7 +744,7 @@ CREATE TABLE `tapp_default` (
     `id_category` int(20) unsigned NOT NULL,    
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`id_category`) REFERENCES tapp_category(`id_category`)
-		ON UPDATE CASCADE ON DELETE CASCADE
+		ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tapp_extra_submode` (
@@ -768,7 +768,6 @@ CREATE TABLE `tapp_activity_data` (
 	CONSTRAINT `fk_tapp_tapp_activity_data1`
 	  FOREIGN KEY (`id_app`)
 	  REFERENCES tapp(`id`) 
-	  ON UPDATE CASCADE 
 	  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -809,11 +808,11 @@ CREATE TABLE `tusuario_perfil` (
   `assigned_by` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id_up`),
   FOREIGN KEY (`id_usuario`) REFERENCES tusuario(`id_usuario`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
+      ON DELETE CASCADE,
   FOREIGN KEY (`id_grupo`) REFERENCES tgrupo(`id_grupo`)
-      ON UPDATE CASCADE ON DELETE CASCADE,
+      ON DELETE CASCADE,
   FOREIGN KEY (`id_perfil`) REFERENCES tprofile(`id`)
-      ON UPDATE CASCADE ON DELETE CASCADE
+      ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tpending_mail` (
