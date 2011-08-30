@@ -56,7 +56,7 @@ define ('PROJECT_DISABLED', 23);
 define ('PROJECT_ACTIVATED', 24);
 define ('PROJECT_DELETED', 25);
 define ('PROJECT_TASK_ADDED', 26);
-define ('PROJECT_TASK_DELETED', 26);
+define ('PROJECT_TASK_DELETED', 27);
 
 // Incident status constants
 

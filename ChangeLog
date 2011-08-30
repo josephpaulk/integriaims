@@ -1,5 +1,9 @@
 2011-08-30  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions_db.php: Fixed typo in delete task constant
+
+2011-08-30  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions.php
 	include/functions_db.php
 	operation/projects/task.php: Fixed task
