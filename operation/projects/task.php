@@ -81,7 +81,7 @@ if ($search_text != "")
 		$search_text, $search_text);
 
 if ($search_id_group != 0)
-	$where_clause .= sprintf ('( AND id_group = ', $search_id_group);
+	$where_clause .= sprintf (' AND id_group = %d', $search_id_group);
 
 
 $table->width = '450px';

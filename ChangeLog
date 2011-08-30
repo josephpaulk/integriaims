@@ -1,5 +1,10 @@
 2011-08-30  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/projects/task.php: Fixed SQL error when 
+	filter tasks by group. For incident #673
+
+2011-08-30  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_db.php: Fixed typo in delete task constant
 
 2011-08-30  Sergio Martin <sergio.martin@artica.es>
