@@ -737,6 +737,8 @@ function get_project_tracking_state ($state) {
 		return __('Project deleted');
 	case PROJECT_TASK_ADDED:
 		return __('Task added');
+	case PROJECT_TASK_DELETED:
+		return __('Task deleted');
 	default:
 		return __('Unknown');
 	}

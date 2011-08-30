@@ -1,3 +1,11 @@
+2011-08-30  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions.php
+	include/functions_db.php
+	operation/projects/task.php: Fixed task
+	unecessary tracking when delete a task replacing it
+	for a project tracking
+
 2011-06-29  Sancho Lerena <slerena@artica.es>
 
 	* integria_db.sql: Fixed some table creation sql.

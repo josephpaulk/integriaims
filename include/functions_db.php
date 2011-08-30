@@ -48,7 +48,6 @@ define ('TASK_COMPLETION_CHANGED', 16);
 define ('TASK_FINISHED', 17);
 define ('TASK_MEMBER_ADDED', 18);
 define ('TASK_MOVED', 19);
-define ('TASK_DELETED', 20);
 define ('TASK_MEMBER_DELETED', 20);
 
 define ('PROJECT_CREATED', 21);
@@ -57,6 +56,7 @@ define ('PROJECT_DISABLED', 23);
 define ('PROJECT_ACTIVATED', 24);
 define ('PROJECT_DELETED', 25);
 define ('PROJECT_TASK_ADDED', 26);
+define ('PROJECT_TASK_DELETED', 26);
 
 // Incident status constants
 
@@ -881,8 +881,6 @@ function delete_task ($id_task){
 				mysql_query($query);
 	} else {
 		$query = "DELETE FROM trole_people_task WHERE ttask.id_task = $id_task";
-		mysql_query($query);
-		$query = "DELETE FROM ttask_track WHERE id_task = $id_task";
 		mysql_query($query);
 		$query = "DELETE FROM tworkunit_task, tworkunit WHERE tworkunit_task.id_task = $id_task AND tworkunit_task.id_workunit = tworkunit.id";
 		mysql_query($query);

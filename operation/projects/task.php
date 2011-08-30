@@ -45,7 +45,7 @@ if ($operation == 'delete') {
 		delete_task ($id_task);
 		echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 		$operation = '';
-		task_tracking ($id_task, TASK_DELETED);
+		project_tracking ($id_project, PROJECT_TASK_DELETED);
 	} else {
 		no_permission ();
 	}
