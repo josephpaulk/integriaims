@@ -1,5 +1,12 @@
 2011-08-30  Sergio Martin <sergio.martin@artica.es>
 
+	* include/graphs/functions_pchart.php
+	include/graphs/functions_fsgraph.php
+	include/graphs/fgraph.php: Merged the graph library
+	with pandora
+
+2011-08-30  Sergio Martin <sergio.martin@artica.es>
+
 	* operation/projects/task.php: Fixed SQL error when 
 	filter tasks by group. For incident #673
 

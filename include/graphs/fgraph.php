@@ -159,7 +159,7 @@ function vbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 	$water_mark = '', $font = '', $font_size = '', $force_steps = true, $ttl = 1) {
 		
 	if($flash_chart) {
-		echo fs_2d_column_chart ($chart_data, $width, $height);
+		echo fs_2d_column_chart ($chart_data, $width, $height, $homedir);
 	}
 	else {
 		$graph = array();
@@ -407,7 +407,7 @@ function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height,
 					return fs_2d_pie_chart (array_values($chart_data), array_keys($chart_data), $width, $height);
 				break;
 			case "3d":				
-					return fs_3d_pie_chart2(array_values($chart_data), array_keys($chart_data), $width, $height);
+					return fs_3d_pie_chart(array_values($chart_data), array_keys($chart_data), $width, $height);
 				break;
 		}
 	}

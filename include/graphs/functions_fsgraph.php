@@ -462,7 +462,7 @@ function date_to_epoch ($date) {
 }
 
 // Returns the code needed to display the chart
-function get_chart_code2 ($chart, $width, $height, $swf) {
+function get_chart_code ($chart, $width, $height, $swf) {
 	$random_number = rand ();
 	$div_id = 'chart_div_' . $random_number;
 	$chart_id = 'chart_' . $random_number;
@@ -480,7 +480,7 @@ function get_chart_code2 ($chart, $width, $height, $swf) {
 }
 
 // Prints a 3D pie chart
-function fs_3d_pie_chart2 ($data, $names, $width, $height, $background = "EEEEEE") {
+function fs_3d_pie_chart ($data, $names, $width, $height, $background = "EEEEEE") {
 	if ((sizeof ($data) != sizeof ($names)) OR (sizeof($data) == 0) ){
 		return;
 	}
@@ -496,7 +496,7 @@ function fs_3d_pie_chart2 ($data, $names, $width, $height, $background = "EEEEEE
 	}
 
 	// Return the code
-	return get_chart_code2 ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Pie3D.swf');
+	return get_chart_code ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Pie3D.swf');
 }
 
 // Prints a 2D pie chart
@@ -516,11 +516,11 @@ function fs_2d_pie_chart ($data, $names, $width, $height, $background = "EEEEEE"
 	}
 
 	// Return the code
-	return get_chart_code2 ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Pie2D.swf');
+	return get_chart_code ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Pie2D.swf');
 }
 
 // Returns a 2D column chart
-function fs_2d_column_chart ($data, $width, $height) {
+function fs_2d_column_chart ($data, $width, $height, $homeurl = '') {
 	if (sizeof ($data) == 0) {
 		return;
 	}
@@ -539,7 +539,6 @@ function fs_2d_column_chart ($data, $width, $height) {
 	}
 	
 	$step = round($ndata/$xdata_display);
-	
 	
 	if(is_array(reset($data))) {
 	 	$data2 = array();
@@ -591,7 +590,7 @@ function fs_2d_column_chart ($data, $width, $height) {
 . ($empty == 1 ? ';yAxisMinValue=0;yAxisMaxValue=1' : ''));
 
 	// Return the code
-	return get_chart_code ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Column2D.swf');
+	return get_chart_code ($chart, $width, $height, $homeurl . 'include/graphs/FusionCharts/FCF_Column2D.swf');
 }
 
 // Returns a BAR Horizontalchart
@@ -667,7 +666,7 @@ function fs_2d_hcolumn_chart ($data, $width, $height) {
     $chart->setChartParams($params.';numVDivLines='.$num_vlines.($empty == 1 ? ';yAxisMinValue=0;yAxisMaxValue=1' : ''));
 
 	// Return the code
-	return get_chart_code2 ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Bar2D.swf');
+	return get_chart_code ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Bar2D.swf');
 }
 
 // Returns a 3D column chart
@@ -702,7 +701,7 @@ function fs_3d_column_chart ($data, $width, $height) {
 . ($empty == 1 ? ';yAxisMinValue=0;yAxisMaxValue=1' : ''));
 
 	// Return the code
-	return get_chart_code2 ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Column2D.swf');
+	return get_chart_code ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Column2D.swf');
 }
 
 // Prints a Gantt chart
@@ -858,7 +857,7 @@ function fs_gantt_chart ($title, $from, $to, $tasks, $milestones, $width, $heigh
 	$chart->addTrendLine ('start=' . date ('d/m/Y') . ';displayValue='. __('Today') . ';color=666666;isTrendZone=1;alpha=20');
 
 	// Return the code
-	return get_chart_code2 ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Gantt.swf');
+	return get_chart_code ($chart, $width, $height, 'include/graphs/FusionCharts/FCF_Gantt.swf');
 }
 
 ?>
