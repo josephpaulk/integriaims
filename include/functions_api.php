@@ -879,13 +879,15 @@ function api_get_stats ($return_type, $param, $token, $user){
 
 function api_get_inventories($return_type, $param){
 	$inventories = get_inventories();
-
 	$ret = '';
 	
 	if($return_type == 'xml') {
 		$ret = "<xml>\n";
 	}
-	
+
+	if (empty($inventories)){
+		$ret .= "false";
+	}	
 	foreach($inventories as $index => $item) {
 		switch($return_type) {
 			case "xml":
