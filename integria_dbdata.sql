@@ -94,3 +94,5 @@ INSERT INTO `tprofile` VALUES (5,'Global Manager',     1,1,1,1,1,1,1,1,1,1,1,1,1
 
 INSERT INTO `tusuario_perfil` VALUES (2,'admin',5,1,'admin');
 
+INSERT INTO `tapp_category` VALUES  (1, 'Allowed');
+INSERT INTO `tapp_category` VALUES  (2, 'Forbidden');

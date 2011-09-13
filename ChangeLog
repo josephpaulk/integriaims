@@ -1,3 +1,7 @@
+2011-09-13  Sergio Martin <sergio.martin@artica.es>
+
+	* integria_dbdata.sql: Added default app categories
+
 2011-09-06 Juan Manuel Ramon <juanmanuel.ramon@artica.es>
 
 	* include/functions_api.php: Changed return value
