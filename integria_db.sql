@@ -28,6 +28,7 @@ CREATE TABLE `tusuario` (
   `avatar` varchar(100) default 'people_1',
   `lang` varchar(10) default '',
   `pwdhash` varchar(100) default '',
+  `disabled` int default 0,
    PRIMARY KEY  (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
