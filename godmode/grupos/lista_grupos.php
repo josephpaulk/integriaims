@@ -124,7 +124,7 @@ $table->size[3] = '40px';
 
 $groups = get_db_all_rows_in_table ('tgrupo', 'nombre');
 
-$groups = print_array_pagination ($groups, "index.php?sec=users&sec2=operation/users/user");
+$groups = print_array_pagination ($groups, "index.php?sec=users&sec2=godmode/grupos/lista_grupos");
 
 if ($groups === false)
 	$groups = array ();

@@ -935,11 +935,19 @@ if (($sec == "users") OR ($sec == "user_audit")){
 		echo "<ul class='sidemenu'>";
 
 		// Usermanager
-		if ($sec2 == "godmode/usuarios/lista_usuarios")
+		if ($sec2 == "godmode/usuarios/lista_usuarios") 
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a></li>";
+		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";
+
+		if ($sec2 == "godmode/usuarios/lista_usuarios") {
+			echo "<li style='margin-left: 15px; font-size: 10px;'>";
+    		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a>";
+            echo "</li>";
+        }
+
+        echo "</li>";
 
 		// Rolemanager
 		if ($sec2 == "godmode/usuarios/role_manager")
@@ -955,6 +963,11 @@ if (($sec == "users") OR ($sec == "user_audit")){
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
 		
+        if ($sec2 == "godmode/grupos/lista_grupos"){
+            echo "<li style='margin-left: 15px; font-size: 10px;'>";
+            echo "<a href='index.php?sec=users&sec2=godmode/grupos/configurar_grupo'>".__("Create group")."</a></li>";
+        }
+        
 		enterprise_include ("operation/sidemenu_user_mgmt.php");
 		
 		echo "</ul>";

@@ -1204,7 +1204,8 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 		}
 	}
 
-	
+    // Order the array.
+    asort($values);
 	return $values;
 }
 

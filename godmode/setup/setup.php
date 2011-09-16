@@ -52,8 +52,9 @@ if ($update) {
     $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
 	$config["error_log"] = get_parameter ("error_log", 0);
 	$config["flash_charts"] = get_parameter ("flash_charts", 1);
+    $config["max_file_size"] = get_parameter ("max_file_size", 1);
 	
-	update_config_token ("timezone", $config["timezone"]);	
+    update_config_token ("timezone", $config["timezone"]);	
 
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
 
@@ -64,6 +65,7 @@ if ($update) {
 	
     update_config_token ("sitename", $config["sitename"]);
     update_config_token ("limit_size", $config["limit_size"]);
+    update_config_token ("max_file_size", $config["max_file_size"]);
 
 	process_sql ("DELETE FROM tconfig WHERE token = 'autowu_completion'");
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('autowu_completion', '".$config["autowu_completion"]."')");
@@ -157,6 +159,11 @@ $table->data[11][0] = print_input_text ("api_acl", $config["api_acl"], '',
 
 $table->data[11][1] = print_input_text ("api_password", $config["api_password"], '',
 	30, 255, true, __('API password'));
+
+
+$table->data[12][0] = print_input_text ("max_file_size", $config["max_file_size"], '',
+	10, 255, true, __('Max. Upload file size'));
+
 
 echo "<form name='setup' method='post'>";
 

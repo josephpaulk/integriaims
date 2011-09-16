@@ -1,3 +1,34 @@
+2011-09-16  Sancho Lerena <slerena@artica.es>
+
+	* integria_db.sql: Added disabled field for tusuario
+
+	* index.php: Updated login method to do not process
+	disabled users.
+
+	* general/password_recovery.php: Do not recover disabled
+	users.
+
+	* godmode/grupos/lista_grupos.php: Fixed pagination problem.
+
+	* godmode/setup/setup.php: Added new parameter (max file size) 
+	useful for uploads.
+
+	* godmode/usuarios/configurar_usuarios.php: implemented disabling
+	a user.
+
+	* godmode/usuarios/lista_usuarios.php: modified listing of users,
+	now shows disabled field.
+
+	* functions_config.php: Support for max file size.
+
+	* functions_db.php: get_user_visible_users() show ordered output.
+
+	* integria.css, main_menu.php, side_menu.php: Some visual changes on
+	menus (new icons), and added "new xxx" on groups and users.
+
+	* browse.php: File releases are now easier, only displays files not in
+	a file release yet.
+
 2011-09-13  Sergio Martin <sergio.martin@artica.es>
 
 	* integria_dbdata.sql: Added default app categories

@@ -32,6 +32,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 	$lang = "";
 	$nombre_real = "";
 	$nivel = 0;
+	$disabled = 0;
 	// Default is create mode (creacion)
 	$modo = "creacion";
 	
@@ -63,6 +64,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 			$nombre_real=$rowdup["nombre_real"];
 			$avatar = $rowdup["avatar"];
 			$lang = $rowdup["lang"];
+            $disabled = $rowdup["disabled"];
 		}
 	}
 	
@@ -80,6 +82,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 			$password = get_parameter ("pass1");
 			$password2 = get_parameter ("pass2");
 			$lang = get_parameter ("lang");
+			$disabled = get_parameter ("disabled");
 
 			if ($password <> $password2){
 				echo "<h3 class='error'>".__('Passwords don\'t match.')."</h3>";
@@ -95,10 +98,10 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 
 				if (dame_password ($nombre_viejo) != $password){
 					$password = md5($password);
-					$sql = "UPDATE tusuario SET `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar' WHERE id_usuario = '$nombre_viejo'";
+					$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar' WHERE id_usuario = '$nombre_viejo'";
 				}
 				else 	
-					$sql = "UPDATE tusuario SET lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar' WHERE id_usuario = '".$nombre_viejo."'";
+					$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar' WHERE id_usuario = '".$nombre_viejo."'";
 
 				$resq2 = mysql_query($sql);
 	
@@ -124,6 +127,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 				$nombre_real = $rowdup["nombre_real"];
 				$avatar = $rowdup ["avatar"];
 				$lang = $rowdup ["lang"];
+                $disabled = $rowdup["disabled"];
 				$modo = "edicion";
 				echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 			}
@@ -153,9 +157,10 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 		$password = md5($password);
 		$avatar = get_parameter ("avatar");
 		$avatar = substr($avatar, 0, strlen($avatar)-4);
+        $disabled = get_parameter ("disabled");
 
 		$ahora = date("Y-m-d H:i:s");
-		$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real,avatar, lang) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','$avatar','$lang')";
+		$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real,avatar, lang, disabled) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','$avatar','$lang', $disabled)";
 		$resq1 = mysql_query($sql_insert);
 			if (! $resq1)
 				echo "<h3 class='error'>".__('Could not be created')."</h3>";
@@ -205,9 +210,24 @@ if (isset($avatar)){
 	echo "<img src='images/avatars/".$avatar.".png' id='avatar_preview'>";
 }
 
+
+echo '<tr><td class="datos2">'. __('Active');
+echo '<td class="datos2">';
+
+if ($disabled == 0){
+    echo __('Active').'&nbsp;<input type="radio" class="chk" name="disabled" value="0" checked>';
+    echo "&nbsp;&nbsp;";
+    echo __('Disabled').'&nbsp;<input type="radio" class="chk" name="disabled" value="1">';
+} else {
+    echo __('Active').'&nbsp;<input type="radio" class="chk" name="disabled" value="0">';
+    echo "&nbsp;&nbsp;";
+    echo __('Disabled').'&nbsp;<input type="radio" class="chk" name="disabled" value="1" checked>';
+}
 ?>
+
 <tr><td class="datos2"><?php echo __('Real name') ?>
 <td class="datos2"><input type="text" size=25 name="nombre_real" value="<?php echo $nombre_real ?>">
+
 <tr><td class="datos"><?php echo __('Password') ?>
 <td class="datos"><input type="password" name="pass1" value="<?php echo $password ?>">
 <tr><td class="datos2"><?php echo __('Password confirmation') ?>

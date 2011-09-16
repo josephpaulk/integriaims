@@ -78,10 +78,11 @@ $sql1 = "$query1 LIMIT $offset, ". $config["block_size"];
 
 echo '<table width="90%" class="listing">';
 echo '<th>'.__('User ID').'</td>';
+echo '<th>'.__('Name');
 echo '<th>'.__('Last contact');
 echo '<th>'.__('Profile');
 echo '<th>'.__('Level');
-echo '<th>'.__('Name');
+echo '<th>'.__('Disabled');
 echo '<th>'.__('Delete');
 
 $resq1=mysql_query($sql1);
@@ -94,7 +95,7 @@ $fecha_registro = "";
 while ($rowdup=mysql_fetch_array($resq1)){
 	$nombre=$rowdup["id_usuario"];
 	$nivel =$rowdup["nivel"];
-	$comentarios =$rowdup["nombre_real"];
+	$realname =$rowdup["nombre_real"];
 	$fecha_registro =$rowdup["fecha_registro"];
 	$avatar = $rowdup["avatar"];
 	if ($rowdup["nivel"] == 0)
@@ -103,10 +104,13 @@ while ($rowdup=mysql_fetch_array($resq1)){
 		$nivel = __("Administrator");
 	else
 		$nivel = __("External user");
-	
+
+    $disabled = $rowdup["disabled"];	
+
 	echo "<tr><td>";
 	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=".$nombre."'><b>".$nombre."</b></a>";
-	echo "<td>".$fecha_registro;
+	echo "<td>" . $realname;
+	echo "<td style='font-size:9px'>".$fecha_registro;
 	echo "<td>";
 	print_user_avatar ($nombre, true);
 	if ($config["enteprise"] == 1){
@@ -125,7 +129,12 @@ while ($rowdup=mysql_fetch_array($resq1)){
 		echo "</span></a>";
 	}
 	echo "<td>" . $nivel;
-	echo "<td>" . $comentarios;
+
+    if ($disabled == 1)
+    	echo "<td><b><i>".__("Disabled")."</i></b>";
+    else
+    	echo "<td>";
+
 	echo '<td align="center">';
 	echo '<a href="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario='.$nombre.'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
 	echo '</td>';

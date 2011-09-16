@@ -12,7 +12,7 @@ sudo rm -Rf /usr/src/rpm/SOURCES/integriaims*.tar.gz
 # Opensource
 
 cd $CODEHOME
-sudo tar zcvf $RPMHOME/SOURCES/IntegriaIMS-$VERSION.tar.gz --exclude \.svn --exclude config.php --exclude enterprise trunk
+sudo tar zcvf $RPMHOME/SOURCES/IntegriaIMS-$VERSION.tar.gz --exclude \.svn --exclude trunk/include/config.php --exclude enterprise trunk
 
 # Enterprise
 

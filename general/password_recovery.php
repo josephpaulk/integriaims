@@ -40,7 +40,7 @@ if (($recover == "") AND ($hash == "")){
 elseif ($hash == ""){
 
     $randomhash = md5($config["sitename"].rand(0,100).$recover);
-    $email = get_db_sql ("SELECT direccion FROM tusuario WHERE id_usuario = '$recover'");
+    $email = get_db_sql ("SELECT direccion FROM tusuario WHERE disabled = 0 AND id_usuario = '$recover'");
     $subject ="Password recovery for ".$config["sitename"];
     $text = "Integria has received a request for password reset from IP Address ".$_SERVER['REMOTE_ADDR'].". Enter this validation code for reset your password: $randomhash";
 

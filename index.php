@@ -157,7 +157,7 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 	$nick = get_parameter ("nick");
 	$pass = get_parameter ("pass");
 	
-	$user = get_db_row ('tusuario', 'id_usuario', $nick);
+	$user = get_db_row_sql ("SELECT * FROM tusuario WHERE id_usuario = '$nick' AND disabled = 0");
 	
 	// For every registry
 	if ($user !== false && $user['password'] == md5 ($pass)) {

@@ -167,9 +167,28 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo integria_help ("choose_download", true);
 
 	echo "<td>";
+
+    // This chunk of code is to do not show in the combo with files, files already as file downloads
+    // (slerena, Sep2011)
+
     $location = basename ($location);
     $files = get_download_files();
-	print_select ($files, 'location', $location, '', '', '', false);
+    $files_db  = get_db_all_rows_sql ("SELECT * FROM tdownload");
+    $files_not_in = array();
+    $match = 0;
+    foreach ($files as $file) {
+        foreach ($files_db[0] as $file_db){
+            if ($file == basename ($file_db)){
+                $match=1;
+            }
+
+        }
+        if ($match == 0){
+            $files_not_in[$file] = $file;
+        }
+    }
+
+	print_select ($files_not_in, 'location', $location, '', '', '', false);
 
 	echo "<tr>";
 	echo "<td class=datos2 valign=top>";

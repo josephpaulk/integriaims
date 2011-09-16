@@ -538,6 +538,58 @@ form.searchform input.button {
 	border-bottom: 4px solid  #2179B1;
 }
 
+#menu li.project a {
+    background: url(../../images/award_star_bronze_1.png) no-repeat 9px 5px;
+    padding-left: 35px;
+}
+
+#menu li.incident a {
+    background: url(../../images/bug.png) no-repeat 9px 5px;
+    padding-left: 35px;
+}
+
+#menu li.inventory a {
+    background: url(../../images/chart_organisation.png) no-repeat 9px 5px;
+    padding-left: 35px;
+}
+
+#menu li.kb a {
+    background: url(../../images/comments.png) no-repeat 9px 5px;
+    padding-left: 35px;
+}
+
+#menu li.files a {
+    background: url(../../images/disk.png) no-repeat 9px 5px;
+    padding-left: 35px;
+}
+
+#menu li.people a {
+    background: url(../../images/status_online.png) no-repeat 9px 5px;
+    padding-left: 35px;
+}
+
+#menu li.todo a {
+    background: url(../../images/page_white_stack.png) no-repeat 9px 5px;
+    padding-left: 35px;
+}
+
+#menu li.agenda a {
+    background: url(../../images/calendar_view_day.png) no-repeat 9px 5px;
+    padding-left: 35px;
+}
+
+#menu li.wiki a {
+    background: url(../../images/html.png) no-repeat 9px 5px;
+    padding-left: 35px;
+}
+
+
+#menu li.setup a {
+    background: url(../../images/wrench_orange.png) no-repeat 2px 5px;
+    padding-left: 25px;
+}
+
+
 /* Alignment classes */
 .float-left   { float: left;}
 .float-right  { float: right; }
