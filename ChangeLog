@@ -1,3 +1,8 @@
+2011-09-20  Vanessa Gil <vgil@artica.es>
+
+	* integria_dbdata.sql
+	* integria_demo.sql: Added disabled field for tusuario
+
 2011-09-16  Sancho Lerena <slerena@artica.es>
 
 	* integria_db.sql: Added disabled field for tusuario

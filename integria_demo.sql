@@ -459,7 +459,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tusuario` WRITE;
 /*!40000 ALTER TABLE `tusuario` DISABLE KEYS */;
-INSERT INTO `tusuario` VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2010-02-17 02:16:54','admin@integria.sf.net','555-555-555',1,'people_1','',''),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2010-02-17 01:49:41','demo@nowhere.net','+4555435435',0,'people_3','','');
+INSERT INTO `tusuario` VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2010-02-17 02:16:54','admin@integria.sf.net','555-555-555',1,'people_1','','',0),('demo','Demo user','fe01ce2a7fbac8fafaed7c982a04e229','Other users can connect with this account.','2010-02-17 01:49:41','demo@nowhere.net','+4555435435',0,'people_3','','',0);
 /*!40000 ALTER TABLE `tusuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
