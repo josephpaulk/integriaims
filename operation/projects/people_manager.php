@@ -45,35 +45,53 @@ if (($id_task > 0) AND (! user_belong_task ($config["id_user"], $id_task))) {
 if ($operation == "insert"){
 	$role = get_parameter ("role",0);
 	$user = get_parameter ("user");
+
 	// People add for TASK
 	if ($id_task != -1){
 		$temp_id_user = get_db_value ("id_user", "trole_people_project", "id", $user);
 		$temp_id_role = get_db_value ("id_role", "trole_people_project", "id", $user);
-		$sql = "INSERT INTO trole_people_task
-			(id_task, id_user, id_role) VALUES
-			($id_task, '$temp_id_user', '$temp_id_role')";
-		task_tracking ($id_task, TASK_MEMBER_ADDED);
+		
+		$filter['id_role']= $temp_id_role;
+		$filter['id_user']= $temp_id_user;
+		$filter['id_task']= $id_task;
+
+		$result_sql = get_db_value_filter('id_user', 'trole_people_task', $filter);		
+
+		if ( $result_sql !== false) {
+			echo "<h3 class='error'>".__('Not created. Role already exists.')."</h3>";
+		} else {
+			$sql = "INSERT INTO trole_people_task
+				(id_task, id_user, id_role) VALUES
+				($id_task, '$temp_id_user', '$temp_id_role')";
+			task_tracking ($id_task, TASK_MEMBER_ADDED);
+			$id_task_inserted = process_sql ($sql, 'insert_id');
+			
+			if ($id_task_inserted !== false) {
+				$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
+				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to task", "User $user added to task ".get_db_value ("name", "ttask", "id", $id_task));
+			} else {
+				$update_mode = 0;
+				$create_mode = 1;
+				$result_output = "<h3 class='error'>".__('Not created. Error inserting data.')."</h3>";
+			}
+		}
+
 	// People add for whole PROJECT
 	} else {
 		$sql = "INSERT INTO trole_people_project
 			(id_project, id_user, id_role) VALUES
 			($id_project, '$user', '$role')";
-	}
-	
-	$id_task_inserted = process_sql ($sql, 'insert_id');
-	
-	if ($id_task_inserted !== false) {
-		$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
-		if ($id_task != -1){
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to task", "User $user added to task ".get_db_value ("name", "ttask", "id", $id_task));
-		} else {
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to project", "User $user added to project ".get_db_value ("name", "tproject", "id", $id_project));
+			
+		$id_task_inserted = process_sql ($sql, 'insert_id');
+		
+		if ($id_task_inserted !== false) {
+				$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
+				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to project", "User $user added to project ".get_db_value ("name", "tproject", "id", $id_project));
+			} else {
+				$update_mode = 0;
+				$create_mode = 1;
+				$result_output = "<h3 class='error'>".__('Not created. Error inserting data.')."</h3>";
 		}
-		$operation = "view";
-	} else {
-		$update_mode = 0;
-		$create_mode = 1;
-		$result_output = "<h3 class='error'>".__('Not created. Error inserting data.')."</h3>";
 	}
 }
 
