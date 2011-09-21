@@ -78,19 +78,28 @@ if ($operation == "insert"){
 
 	// People add for whole PROJECT
 	} else {
-		$sql = "INSERT INTO trole_people_project
-			(id_project, id_user, id_role) VALUES
-			($id_project, '$user', '$role')";
+		$filter['id_role']= $role;
+		$filter['id_user']= $user;
+		$filter['id_project']= $id_project;
+
+		$result_sql = get_db_value_filter('id_user', 'trole_people_project', $filter);
+		if ($result_sql !== false){
+			echo "<h3 class='error'>".__('Not created. Role already exists.')."</h3>";
+		} else {
+			$sql = "INSERT INTO trole_people_project
+				(id_project, id_user, id_role) VALUES
+				($id_project, '$user', '$role')";
 			
-		$id_task_inserted = process_sql ($sql, 'insert_id');
+			$id_task_inserted = process_sql ($sql, 'insert_id');
 		
-		if ($id_task_inserted !== false) {
+			if ($id_task_inserted !== false) {
 				$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
 				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to project", "User $user added to project ".get_db_value ("name", "tproject", "id", $id_project));
 			} else {
 				$update_mode = 0;
 				$create_mode = 1;
 				$result_output = "<h3 class='error'>".__('Not created. Error inserting data.')."</h3>";
+			}
 		}
 	}
 }
