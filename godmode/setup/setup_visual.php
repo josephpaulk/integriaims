@@ -91,11 +91,11 @@ function get_image_files () {
 }
 
 $imagelist = get_image_files ();
-$table->data[2][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', '', '',  true, 0, true, "Site logo") ;
+$table->data[2][0] = print_select ($imagelist, __('site_logo'), $config["site_logo"], '', '', '',  true, 0, true, "Site logo") ;
 
-$table->data[2][1] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', '', '',  true, 0, true, "Header logo") ;
+$table->data[2][1] = print_select ($imagelist, __('header_logo'), $config["header_logo"], '', '', '',  true, 0, true, "Header logo") ;
 
-$table->data[3][0] = print_select (array(__('Disabled'),__('Enabled')), "flash_charts", $config["flash_charts"], '','','',true,0,true, __('Flash charts'));
+$table->data[3][0] = print_select (array(__('Disabled'),__('Enabled')), __("flash_charts"), $config["flash_charts"], '','','',true,0,true, __('Flash charts'));
 
 echo "<form name='setup' method='post'>";
 

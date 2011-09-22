@@ -226,11 +226,11 @@ echo '<tr><td class="datos2" colspan="4"><textarea name="description" style="hei
 echo "</textarea>";
 
 echo "<tr><td colspan=2>";
-echo "<b>".__("Task effort")."</b>";;
+echo "<b>".__("Task effort ")."</b>";;
 echo graph_workunit_project (300, 270, $id_project);
 
 echo "<td colspan=2>";
-echo "<b>".__("People effort") ."</b>";
+echo "<b>".__("People effort ") ."</b>";
 echo graph_workunit_project_user_single (300, 270, $id_project);
 
 echo "</table>";

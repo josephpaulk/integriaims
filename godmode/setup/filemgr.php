@@ -140,7 +140,7 @@ echo "<h2>".__("Current directory"). " : ".$current_directory . " <a href='index
 	asort($result, SORT_STRING);
 	
 	if (@count ($result) === 0) {
-		echo __ ("No files found");
+		echo __("No files found");
 	} else {
 		asort ($result);
 		
@@ -161,23 +161,23 @@ echo "<h2>".__("Current directory"). " : ".$current_directory . " <a href='index
 			echo "</th></tr>";
 		}
 		echo "<tr><th>";
-		echo __ ("Filename");
+		echo __("Filename");
 		echo "<th>";
-		echo __ ("Image info");
+		echo __("Image info");
 		echo "<th>";
-		echo __ ("Last update");
+		echo __("Last update");
 		echo "<th>";
-		echo __ ("Owner");
+		echo __("Owner");
 		echo "<th>";
-		echo __ ("Perms");
+		echo __("Perms");
 		echo "<th>";
-		echo __ ("Filesize");
+		echo __("Filesize");
 		echo "<th>";
-		echo __ ("File type");
+		echo __("File type");
 		echo "<th>";
-		echo __ ("Directory");
+		echo __("Directory");
 		echo "<th>";
-		echo __ ("Del");
+		echo __("Del");
 		while (@count($result) > 0){
 			$temp = array_shift ($result);
 			$fullfilename = $current_directory.'/'.$temp;

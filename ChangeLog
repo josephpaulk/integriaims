@@ -1,3 +1,19 @@
+2011-09-22  Vanessa Gil <vgil@artica.es>
+
+	* godmode/setup/dbmanager.php
+	godmode/setup/filemgr.php
+	godmode/setup/newsboard.php
+	godmode/setup/setup_mailtemplates.php
+	godmode/setup/setup_visual.php
+	include/languages/*.po
+	include/languages/*.mo
+	include/languages/index.pot
+	include/mailtemplates/incident_close.tpl
+	operation/download/browse.php
+	operation/projects/project_detail.php
+	operation/user_report/report_annual.php: Fixed: some strings don't use
+	the translation system.
+
 2011-09-21  Vanessa Gil <vgil@artica.es>
 
 	* operation/projects/people_manager.php: Fixed: the same user and role 

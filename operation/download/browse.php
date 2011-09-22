@@ -163,7 +163,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	echo "<tr>";
 	echo "<td>";
-	echo __("Choose file from repository");
+	echo __('Choose file from repository');
 	echo integria_help ("choose_download", true);
 
 	echo "<td>";

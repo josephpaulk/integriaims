@@ -339,7 +339,7 @@ function check_massive_options(page_size, row_click_callback, search_callback) {
 		});
 		
 		if(checked_ids.length == 0) {
-			alert("No items selected");
+			alert(__("No items selected"));
 		}
 		else {
 			status = $("#mass_status").attr("value");
@@ -347,7 +347,7 @@ function check_massive_options(page_size, row_click_callback, search_callback) {
 			resolution = $("#mass_resolution").attr("value");
 			assigned_user = $("#mass_assigned_user").attr("value");
 			if(status == -1 && priority == -1 && resolution == -1 && assigned_user == -1) {
-				alert("Nothing to update");
+				alert(__("Nothing to update"));
 			}
 			else {		
 				for(var i=0;i<checked_ids.length;i++){

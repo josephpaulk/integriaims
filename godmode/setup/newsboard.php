@@ -20,7 +20,7 @@ global $config;
 check_login ();
 	
 if (! dame_admin ($config["id_user"])) {
-	audit_db ("ACL Violation", $config["REMOTE_ADDR"], "No administrator access", "Trying to access newsboard setup");
+	audit_db ("ACL Violation", $config["REMOTE_ADDR"], __("No administrator access"), __("Trying to access newsboard setup"));
 	require ("general/noaccess.php");
 	exit;
 }

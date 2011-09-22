@@ -122,9 +122,9 @@
 			$locked_hours = 0;	
 
 			
-		echo _("Total") . " : " . $work_hours;
+		echo __("Total") . " : " . $work_hours;
 		echo " - ";
-		echo _("Locked"). " : " . $locked_hours;        
+		echo __("Locked"). " : " . $locked_hours;        
  
         echo generate_small_work_calendar ($year, $ax, $days_f, 3, 0, "en", $id_user_show);
        

@@ -72,15 +72,15 @@ function dbmgr_main () {
 
     if ($clean_output == 0){
 	    echo "<h2>".__('Extensions'). " &raquo; ".__('Database interface');
-        echo "&nbsp;&nbsp;<a title='"._("Report")."'  href='index.php?sec=godmode&sec2=godmode/setup/dbmanager&sql=$sql&clean_output=1'><img src='images/html.png'></a>";
+        echo "&nbsp;&nbsp;<a title='".__("Report")."'  href='index.php?sec=godmode&sec2=godmode/setup/dbmanager&sql=$sql&clean_output=1'><img src='images/html.png'></a>";
 
         echo "</h2>";
 	    echo '<div class="notify">';
-	    echo "This is an advanced extension to interface with Integria IMS database directly using native SQL sentences. Please note that <b>you can damage</b> your Integria IMS installation if you don't know </b>exactly</b> what are you doing, this means that you can severily damage your setup using this extension. This extension is intended to be used <b>only by experienced users</b> with a depth knowledgue of Integria IMS.";
+	    echo __("This is an advanced extension to interface with Integria IMS database directly using native SQL sentences. Please note that <b>you can damage</b> your Integria IMS installation if you don't know </b>exactly</b> what are you doing, this means that you can severily damage your setup using this extension. This extension is intended to be used <b>only by experienced users</b> with a depth knowledgue of Integria IMS.");
 	    echo '</div>';
 
 	    echo "<br />";
-	    echo "Some samples of usage: <blockquote><em>SHOW STATUS;<br />DESCRIBE tincidencia<br />SELECT * FROM tincidencia<br />UPDATE tincidencia SET sla_disabled = 1 WHERE inicio < '2010-01-10 00:00:00';</em></blockquote>";
+	    echo __("Some samples of usage:")." <blockquote><em>SHOW STATUS;<br />DESCRIBE tincidencia<br />SELECT * FROM tincidencia<br />UPDATE tincidencia SET sla_disabled = 1 WHERE inicio < '2010-01-10 00:00:00';</em></blockquote>";
 
 
 	    echo "<br /><br />";
