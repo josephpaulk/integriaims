@@ -1,3 +1,9 @@
+2011-10-03  Sergio Martin <sergio.martin@artica.es>
+
+	* operation/user_report/report_monthly.php: Fixed users view
+	permission to avoid a user view other users if not has User Manage
+	ACL for bug 3166679
+
 2011-09-22  Vanessa Gil <vgil@artica.es>
 
 	* godmode/setup/dbmanager.php

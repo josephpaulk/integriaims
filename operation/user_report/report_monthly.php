@@ -92,9 +92,12 @@
     echo "<th>".__('Charged this month');
     echo "<th>".__('Avg. Scoring');
 
-
-	$values = get_user_visible_users ($config['id_user'], $access, true);
-
+	$values = get_user_visible_users ($config['id_user'], "UM", true);
+	
+	if(empty($values)) {
+		$values[$config['id_user']] = $config['id_user'];
+	}
+	
 	foreach ($values as $key => $value){
 		$row0 = get_db_row ("tusuario", "id_usuario", $key);
 		if ($row0){
