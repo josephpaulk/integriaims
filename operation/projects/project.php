@@ -33,6 +33,8 @@ $disable_project = (bool) get_parameter ('disable_project');
 $delete_project = (bool) get_parameter ('delete_project');
 $activate_project = (bool) get_parameter ('activate_project');
 $action = (string) get_parameter ('action');
+$search_id_project_group = (int) get_parameter ('search_id_project_group');
+$search_text = (string) get_parameter ('search_text');
 
 // Disable project
 // ======================
@@ -136,17 +138,6 @@ if ($action == 'insert') {
 
 echo '<h2>'.__('Project management').'</h2>';
 
-$search_id_project_group = (int) get_parameter ('search_id_project_group');
-$search_text = (string) get_parameter ('search_text');
-
-$where_clause = ' 1=1';
-if ($search_text != "")
-	$where_clause .= sprintf (' AND (tproject.name LIKE "%%%s%%" OR tproject.description LIKE "%%%s%%" OR ttask.id_project = tproject.id AND ttask.name LIKE "%%%s%%" )',
-		$search_text, $search_text, $search_text);
-
-if ($search_id_project_group)
-	$where_clause .= sprintf (' AND id_project_group = %d', $search_id_project_group);
-
 $table->width = '90%';
 $table->class = 'search-table';
 $table->style = array ();
@@ -185,6 +176,14 @@ $table->data = array ();
 
 // TODO: Needs to implement group control and ACL checking
 
+$where_clause = ' 1=1';
+if ($search_text != "")
+	$where_clause .= sprintf (' AND (tproject.name LIKE "%%%s%%" OR tproject.description LIKE "%%%s%%" OR ttask.id_project = tproject.id AND ttask.name LIKE "%%%s%%" )',
+		$search_text, $search_text, $search_text);
+
+if ($search_id_project_group)
+	$where_clause .= sprintf (' AND id_project_group = %d', $search_id_project_group);
+		
 $sql = sprintf ('SELECT tproject.id, tproject.name, tproject.description, tproject.start, tproject.end, tproject.id_owner, tproject.disabled, tproject.id_project_group  FROM tproject, ttask 
 	WHERE (%s) 
 	AND tproject.disabled = %d
@@ -229,8 +228,6 @@ foreach ($projects as $project) {
 
 	// Time wasted
 	$data[5] = format_numeric (get_project_workunit_hours ($project['id']));
-
-	
 	
 	$project_wu_inc = get_incident_project_workunit_hours ($project["id"]);
 	if ($project_wu_inc  > 0 )
@@ -255,23 +252,34 @@ foreach ($projects as $project) {
 		$data[7] = __('Never');
 	
 	// Delete
-	if ($project['id'] != -1 && give_acl ($config['id_user'], 0, "PW") || $config['id_user'] == $project["id_owner"]) {
-		$table->head[8] = __('Disable');
-		if ($view_disabled == 0) {
-			$data[8] = '<a href="index.php?sec=projects&sec2=operation/projects/project&disable_project=1&id='.$project['id'].'" 
-				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
-				<img src="images/cross.png" /></a>';
-		} else {
-			$data[8] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
-				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
-				<img src="images/cross.png" /></a> ';
-			$data[8] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
-				<img src="images/play.gif" /></a>';
+	if ($project['id'] != -1 && (give_acl ($config['id_user'], 0, "PW") || give_acl ($config['id_user'], 0, "PM"))) {
+		$table->head[8] = __('Delete');
+		if ((give_acl ($config['id_user'], 0, "PW") && $config['id_user'] == $project["id_owner"]) || give_acl ($config['id_user'], 0, "PM")) {
+			if ($view_disabled == 0) {
+				$data[8] = '<a href="index.php?sec=projects&sec2=operation/projects/project&disable_project=1&id='.$project['id'].'" 
+					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+					<img src="images/cross.png" /></a>';
+			} else {
+				$data[8] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
+					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+					<img src="images/cross.png" /></a> ';
+				$data[8] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
+					<img src="images/play.gif" /></a>';
+			}
+		}
+		else {
+			$data[8] = '';
 		}
 	}
 	
 	array_push ($table->data, $data);
 }
 
-print_table ($table);
+
+if(empty($table->data)) {
+	echo '<h3 class="error">'.__('No projects found').'</h3>';
+}
+else {
+	print_table ($table);
+}
 ?>

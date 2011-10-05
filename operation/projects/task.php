@@ -139,7 +139,13 @@ $color = 1;
 
 show_task_tree ($table, $id_project, 0, 0, $where_clause);
 
-print_table ($table);
+if(empty($table->data)) {
+	echo '<h3 class="error">'.__('No tasks found').'</h3>';
+}
+else {
+	print_table ($table);
+}
+
 
 /*
 if (give_acl ($config['id_user'], 0, 'PW')) {

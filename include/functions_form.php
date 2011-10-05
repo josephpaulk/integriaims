@@ -19,13 +19,13 @@
 global $config;
 include_once ("functions_incidents.php");
 
-function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = false, $access = "IR", $return = false, $label = false) {
+function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = false, $access = "IR", $return = false, $label = false, $both = true, $anygroup = false) {
 	global $config;
 	
 	$userlist = array ();
 	$output = '';
 
-	$values = get_user_visible_users ($config['id_user'], $access, true);
+	$values = get_user_visible_users ($config['id_user'], $access, true, $both, $anygroup);
 	if ($any)
 		$values[''] = __('Any');
 

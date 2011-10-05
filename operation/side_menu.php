@@ -57,7 +57,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_tree'>".__('Projects tree')."</a></li>";
 
 	// Project create
-	if (give_acl ($config['id_user'], 0, "PM")) {
+	if (give_acl ($config['id_user'], 0, "PM") || give_acl ($config['id_user'], 0, "PW")) {
 		if ($sec2 == "operation/projects/project_detail" && !$id_project)
 			echo "<li id='sidesel'>";
 		else
@@ -122,7 +122,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>".__('Task list')." ($task_number)</a></li>";
 		}
 
-		if (give_acl ($config["id_user"], 0, "PM") || $config["id_user"] == $project_manager) {
+		if (give_acl ($config["id_user"], 0, "PM") || (give_acl ($config["id_user"], 0, "PW") && $config["id_user"] == $project_manager)) {
 			// Create task
 			if ($sec2 == "operation/projects/task_detail" && !$id_task)
 				echo "<li id='sidesel'>";
@@ -196,7 +196,10 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 
 		echo "<div class='portlet'>";
 		$task_title = substr(get_db_value ("name", "ttask", "id", $id_task), 0, 19);
-		echo "<h3>".__('Task')." - $task_title ..</h3>";
+		echo '<a href="javascript:;" onclick="$(\'#task\').slideToggle (); return false">';
+		echo "<h3>".__('Task')." - $task_title </h3>";
+		echo '</a>';
+		echo "<div id='task'>";
 		echo "<ul class='sidemenu'>";
 
 		// Task detail
@@ -213,23 +216,26 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_tracking&id_project=$id_project&id_task=$id_task&operation=view'>".__('Task tracking')."</a></li>";
 
-		// Add task workunit
-		if ($sec2 == "operation/users/user_spare_workunit")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task'>".__('Add workunit')."</a></li>";
+		$task_group = get_db_value ("id_group", "ttask", "id", $id_task);
+		if (give_acl($config["id_user"], $task_group, "TW") || give_acl($config["id_user"], 0, "PM") || (give_acl($config["id_user"], 0, "PW") && $project_manager == $config["id_user"])) {
+			// Add task workunit
+			if ($sec2 == "operation/users/user_spare_workunit")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task'>".__('Add workunit')."</a></li>";
 
-		// Add task file
-		if ($sec2 == "operation/projects/task_attach_file")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_attach_file&id_task=$id_task&id_project=$id_project'>".__('Add file')."</a></li>";
-
+			// Add task file
+			if ($sec2 == "operation/projects/task_attach_file")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_attach_file&id_task=$id_task&id_project=$id_project'>".__('Add file')."</a></li>";
+		}
+		
 		// Task people_manager
 		$project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
-		if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
+		if (give_acl($config["id_user"], 0, "PM") || (give_acl($config["id_user"], 0, "PW") && $project_manager == $config["id_user"])) {
 			if ($sec2 == "operation/projects/operation/projects/people_manager")
 				echo "<li id='sidesel'>";
 			else
@@ -288,6 +294,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 			echo "</a></li>";
 		}
 		echo "</ul>";
+		echo "</div>";
 		echo "</div>";
 	}
 }

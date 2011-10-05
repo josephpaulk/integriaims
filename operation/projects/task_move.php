@@ -31,7 +31,7 @@ if (! user_belong_task ($config["id_user"], $id_task)){
 //TASK MOVE Operation
 // PROJECT - People management
 $project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
-if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
+if (give_acl($config["id_user"], 0, "PM") || (give_acl($config["id_user"], 0, "PW") && $project_manager == $config["id_user"])) {
 
     echo "<form name='project_move' method='POST' action='index.php?sec=projects&sec2=operation/projects/task&operation=move&id_project=$id_project&id_task=$id_task'>";
     echo "<h3>".__('Move this task to other project')."</h3>";

@@ -260,7 +260,7 @@ if ($id_task != -1){
 	echo "<td valign='top' class='datos2'>";
 	echo __('User');
 	echo "<td valign='top' class='datos2'>";
-	combo_user_visible_for_me ($config["id_user"], "user", 0, "PR");
+	combo_user_visible_for_me ($config["id_user"], "user", 0, "PR", false, false, false, true);
 	echo "</table>";
 		
 	echo "<table class='button' width=500>";

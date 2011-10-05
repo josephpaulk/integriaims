@@ -1,3 +1,16 @@
+2011-10-05  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_form.php
+	include/functions_db.php
+	operation/projects/task.php
+	operation/projects/project.php
+	operation/projects/people_manager.php
+	operation/projects/task_detail.php
+	operation/projects/project_detail.php
+	operation/projects/task_move.php
+	operation/side_menu.php: Fixed several ACLs issues to manage
+	projects and tasks. Clean some code too and fix few little bugs
+
 2011-10-03  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/user_report/report_monthly.php: Fixed users view

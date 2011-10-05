@@ -71,8 +71,7 @@ if ($operation == "") {
 
 // Create task
 if ($operation == "insert") {
-	
-	if (give_acl($config["id_user"], 0, "TM")==0) {
+	if (!give_acl ($config["id_user"], 0, "TM") && !give_acl ($config["id_user"], 0, "PM") && (!give_acl ($config["id_user"], 0, "PW") || !$config["id_user"] == $project_manager)) {
 		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to create task");
 		require ("general/noaccess.php");
 		return;
@@ -320,7 +319,7 @@ $table->data[7][0] .= print_input_hidden ('completion', $completion, true);
 $table->data[8][0] = print_textarea ('description', 8, 30, $description, '',
 	true, __('Description'));
 
-if (give_acl ($config["id_user"], $id_group, "TM") || give_acl ($config["id_user"], 0, "TM") || ($config["id_user"] == $project_manager)) {
+if (give_acl ($config["id_user"], $id_group, "TM") || give_acl ($config["id_user"], $id_group, "PM") || (give_acl ($config["id_user"], 0, "PW") && ($config["id_user"] == $project_manager))) {
 	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 	
 	print_table ($table);

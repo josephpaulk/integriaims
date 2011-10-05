@@ -275,7 +275,7 @@ function give_number_files_project ($id) {
 
 
 /**
-* Return number of tasks associated to an incident
+* Return number of tasks associated to a project
 *
 * $id		integer 	ID of project
 **/
@@ -742,18 +742,44 @@ function get_incident_priority ($id_incident) {
 	return get_db_value ('prioridad', 'tincidencia', 'id_incidencia', $id_incident);
 }
 
-// --------------------------------------------------------------- 
-// Return incident title
-// --------------------------------------------------------------- 
-
+/** 
+ * Get an incident title.
+ * 
+ * @param id_incident Incident Id
+ * 
+ * @return string incident title.
+ */
 function get_incident_title ($id_incident) {
 	return (string) get_db_value ('titulo', 'tincidencia', 'id_incidencia', $id_incident);
 }
 
-function get_user ($id_user) {
-	return get_db_row ('tusuario', 'id_usuario', $id_user);
+/** 
+ * Get a user.
+ * 
+ * @param id_user User id
+ * @param only_name Flag for return only user name (FALSE by default)
+ * 
+ * @return array A full user or user name.
+ */
+function get_user ($id_user, $only_name = false) {
+	$user = get_db_row ('tusuario', 'id_usuario', $id_user);
+	
+	if($only_name) {
+		$user_name['id_usuario'] = $id_user;
+		return $user_name;
+	}
+	
+	return $user;
 }
 
+
+/** 
+ * Get a user email.
+ * 
+ * @param id_user User id
+ * 
+ * @return string User email.
+ */
 function get_user_email ($id_user) {
 	return (string) get_db_value ('direccion', 'tusuario', 'id_usuario', $id_user);
 }
@@ -1115,6 +1141,10 @@ function get_groups ($order = 'nombre') {
 	return get_db_all_rows_in_table ('tgrupo', $order);
 }
 
+function get_groups_id ($order = 'nombre') {
+	return get_db_all_rows_sql (sprintf('SELECT id_grupo FROM tgrupo ORDER BY %s', $order));
+}
+
 /** 
  * Get all the groups a user has reading privileges.
  * 
@@ -1143,7 +1173,20 @@ function get_user_groups ($id_user = 0, $permission = 'IR') {
 	return $user_groups;
 }
 
-function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true) {
+/** 
+ * Get all the visible users for a user.
+ * 
+ * @param integer id_user User id
+ * @param string access Permission to check in the users (IR by default)
+ * @param bool only_name Flag for return only users name (TRUE by default)
+ * @param bool both Flag for check permissions in both sides (id_user sended and
+ * 			list of users). If is false only will be checked on user list
+ * 			(TRUE by default)
+ * @param bool anygroup flag for check permissions in any group, not only in the user groups
+ * 
+ * @return A list of users visible by the id_user sended.
+ */
+function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true, $both = true, $anygroup = false) {
 	global $config;
 
 	$values = array ();
@@ -1156,20 +1199,11 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 
     // External user only can see himself
 	if ($level == -1){
-		$user= array();
-		$sql = sprintf ('SELECT *
-						FROM tusuario 
-						WHERE id_usuario = "%s"', $id_user);
-		$user = get_db_all_rows_sql ($sql);
-		if ($only_name){
-			$user_onlyname ['id_usuario'] = $id_user;
-			return $user_onlyname;
-		}
-		return $user;
+		return get_user ($id_user, $only_name);
 	}
 		
-
-	if (give_acl ($id_user, 1, $access)) {
+	// Group All has id = 1
+	if (give_acl ($id_user, 1, $access) && $both) {
 		$users = get_db_all_rows_sql ("SELECT * FROM tusuario ORDER BY id_usuario");
 		if ($users === false)
 			$users = array ();
@@ -1180,9 +1214,15 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 				$values[$user['id_usuario']] = $user;
 		}
 	} else {
-		$sql = sprintf ('SELECT id_grupo FROM tusuario_perfil
-				WHERE id_usuario = "%s"', $id_user);
-		$groups = get_db_all_rows_sql ($sql);
+		if($anygroup) {
+			$groups = get_groups_id();
+		}
+		else {
+			$sql = sprintf ('SELECT id_grupo FROM tusuario_perfil
+					WHERE id_usuario = "%s"', $id_user);
+			$groups = get_db_all_rows_sql ($sql);
+		}
+		
 		if ($groups === false)
 			$groups = array ();
 		foreach ($groups as $group) {

@@ -143,7 +143,7 @@ echo '<tr>';
 echo '<td class="datos"><b>'.__('Project manager').'</b>';
 echo "<td class='datos'>";
 $id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
-if ((give_acl($config["id_user"], 0, "PM") ==1) OR ($config["id_user"] == $id_owner )) {
+if ((give_acl($config["id_user"], 0, "PM") ==1) OR (give_acl($config["id_user"], 0, "PW") ==1) OR ($config["id_user"] == $id_owner )) {
 	if ($create_project)
 		combo_user_visible_for_me ($config["id_user"], "user", 0, "PR");
 	else
@@ -236,7 +236,7 @@ echo graph_workunit_project_user_single (300, 270, $id_project);
 echo "</table>";
 echo '<div style="width:100%;" class="button">';
 
-if (give_acl ($config["id_user"], 0, "PM") || $config["id_user"] == $id_owner) {
+if (give_acl ($config["id_user"], 0, "PM") || give_acl ($config["id_user"], 0, "PW") || $config["id_user"] == $id_owner) {
 	if ($id_project) {
 		print_input_hidden ('id_project', $id_project);
 		print_input_hidden ('action', 'update');
