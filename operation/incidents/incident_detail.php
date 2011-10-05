@@ -110,6 +110,8 @@ if ($action == 'update') {
 	$id_incident_type = get_parameter ('id_incident_type', $old_incident['id_incident_type']);
 	$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
 	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
+	$email_copy = get_parameter ('email_copy', $old_incident['email_copy']);
+
 
 	$tracked = false;
 	if ($old_incident['prioridad'] != $priority) {
@@ -144,14 +146,14 @@ if ($action == 'update') {
 	$timestamp = print_mysql_timestamp();
 
 
-	$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s",
+	$sql = sprintf ('UPDATE tincidencia SET email_copy = "%s", actualizacion = "%s",
 			  id_creator = "%s",
 			titulo = "%s", origen = %d, estado = %d,
 			id_grupo = %d, id_usuario = "%s",
 			notify_email = %d, prioridad = %d, descripcion = "%s",
 			epilog = "%s", id_task = %d, resolution = %d,
 			id_incident_type = %d, id_parent = %s, affected_sla_id = 0 %s 
-			WHERE id_incidencia = %d', $timestamp, $id_creator, 
+			WHERE id_incidencia = %d', $email_copy, $timestamp, $id_creator, 
 			$titulo, $origen, $estado, $grupo, $user,
 			$email_notify, $priority, $description,
 			$epilog, $id_task, $resolution, $id_incident_type,
@@ -227,7 +229,8 @@ if ($action == "insert") {
 	$id_incident_type = get_parameter ('id_incident_type');
 	$sla_disabled = (bool) get_parameter ("sla_disabled");
 	$id_parent = (int) get_parameter ('id_parent');
-	
+	$email_copy = get_parameter ("email_copy", "");
+
 	if ($id_parent == 0) {
 		$idParentValue = 'NULL';
 	}
@@ -244,14 +247,16 @@ if ($action == "insert") {
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, origen, estado, prioridad,
 			id_grupo, id_creator, notify_email, id_task,
-			resolution, id_incident_type, id_parent, sla_disabled)
+			resolution, id_incident_type, id_parent, sla_disabled, email_copy)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
-			"%s", %d, %d, %d, %d, %s, %d)', $timestamp, $timestamp,
+			"%s", %d, %d, %d, %d, %s, %d, "%s")', $timestamp, $timestamp,
 			$titulo, $description, $usuario,
 			$origen, $estado, $priority, $grupo, $id_creator,
 			$email_notify, $id_task, $resolution, $id_incident_type,
-			$idParentValue, $sla_disabled);
+			$idParentValue, $sla_disabled, $email_copy);
+
 	$id = process_sql ($sql, 'insert_id');
+
 	if ($id !== false) {
 		/* Update inventory objects in incident */
 		update_incident_inventories ($id, get_parameter ('inventories'));
@@ -265,7 +270,7 @@ if ($action == "insert") {
 			"Incident created",
 			"User ".$config['id_user']." created incident #".$id);
 		
-		incident_tracking ($id, INCIDENT_CREATED);
+//		incident_tracking ($id, INCIDENT_CREATED);
 
 		// Email notify to all people involved in this incident
 		if ($email_notify) {
@@ -306,6 +311,8 @@ if ($id) {
 	$sla_disabled = $incident["sla_disabled"];
 	$affected_sla_id = $incident["affected_sla_id"];
 	$id_incident_type = $incident['id_incident_type'];
+    $email_copy = $incident["email_copy"];
+
 	$grupo = dame_nombre_grupo($id_grupo);
     $score = $incident["score"];
 
@@ -478,6 +485,8 @@ if ($id) {
 	$sla_disabled = 0;
 	$id_incident_type = 0;
 	$affected_sla_id = 0;
+    $email_copy = "";
+
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Show the form
@@ -608,7 +617,11 @@ if ($has_manage_permission){
 	$table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
 	                $disabled, '', '', true, __('Notify changes by email'));
 
+// DEBUG
+	$table->data[0][2] .= print_input_text ('email_copy', $email_copy,"",20,500, true);
+
 	$table->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
+
 } else {
 	$table->data[0][2] = print_input_hidden ('email_notify', 1, true);
 	$table->data[0][1] = print_input_hidden ('sla_disabled', 0, true);

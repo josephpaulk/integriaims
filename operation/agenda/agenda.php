@@ -13,8 +13,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
-
 global $config;
 $result_msg = "";
 
@@ -138,6 +136,7 @@ if ($month == 12){
 	$year_n = $year;
 }
 
+/*
 // Next month mini calendar
 echo "<div align='right' style='float: right;'>";
 echo generate_calendar ($year_n, $month_n, $days_f, 3, NULL, $locale);
@@ -147,9 +146,9 @@ echo "<div style='float: left;'>";
 echo generate_calendar ($year_p, $month_p, $days_f, 3, NULL, $locale);
 echo "</div>";
 
-
+*/
 // Space to skip blocks
-echo "<div style='height: 250px'> </div>";
+//echo "<div style='height: 250px'> </div>";
 //echo "<br>";
 
 $start_date = $mydate_sql = date("Y-m-d", time());

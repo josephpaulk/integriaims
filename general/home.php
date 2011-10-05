@@ -17,11 +17,12 @@ global $config;
 
 include $config["homedir"]."/include/functions_graph.php";
 
+$noinfo = 1;
 
 if (!isset($config["id_user"]))
 	$config["id_user"] = $_SESSION['id_usuario'];
 
-	echo '<table width="700" cellspacing=0 cellpadding=0 border=0>';
+	echo '<table width="100%" cellspacing=0 cellpadding=0 border=0>';
 
 
     // ==============================================================
@@ -31,7 +32,7 @@ if (!isset($config["id_user"]))
 	$sql = "SELECT * FROM tnewsboard  WHERE `date` > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 31 DAY) ORDER BY date ASC";
     $news = get_db_all_rows_sql ($sql);
     if ($news) {
-
+        $noinfo = 0;
         echo "<tr><td>";
 	    echo "<h1>".__('System newsboard')."</h1>";
 	    echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
@@ -62,6 +63,7 @@ if (!isset($config["id_user"]))
 	$agenda += get_db_sql ("SELECT COUNT(ttask.name) FROM trole_people_task, ttask WHERE trole_people_task.id_user = '".$config["id_user"]."' AND trole_people_task.id_task = ttask.id AND ttask.end >= '$now' AND ttask.end <= '$now3'");
 
 	if ($agenda > 0){
+        $noinfo = 0;
 		echo "<tr><td>";
 		echo "<h1>".__('Agenda')."</h1>";
 		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
@@ -114,6 +116,7 @@ if (!isset($config["id_user"]))
 
 	$todo = get_db_sql ("SELECT COUNT(*) FROM ttodo WHERE assigned_user = '".$config["id_user"]."'");
 	if ($todo > 0){
+        $noinfo = 0;
 		echo "<tr><td>";
 		echo "<h1>".__('To-Do')."</h1>";
 		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
@@ -135,6 +138,7 @@ if (!isset($config["id_user"]))
 
 	$incidents = incidents_active_user ($config["id_user"]);
 	if ($incidents > 0){
+        $noinfo = 0;
 		echo "<tr><td>";
 		echo "<h1>".__('Incidents')."</h1>";
 		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
@@ -179,6 +183,7 @@ if (!isset($config["id_user"]))
 
 	$projects = projects_active_user ($config["id_user"]);
 	if ($projects > 0){
+        $noinfo = 0;
 		echo "<tr><td>";
 		echo "<h1>".__('Projects')."</h1>";
 		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
@@ -194,7 +199,12 @@ if (!isset($config["id_user"]))
 		echo graph_workunit_project_user (600, 200, $config["id_user"], $from_one_month,0, 1);
 
 	}
-
 	echo "</table>";
+
+    if ($noinfo == 1){
+        include "operation/agenda/agenda.php";
+    }
+
+
 
 ?>

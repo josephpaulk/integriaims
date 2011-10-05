@@ -685,6 +685,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$update_timestamp = $row["actualizacion"];
 	$usuario = $row["id_usuario"];
 	$creator = $row["id_creator"];
+    $email_copy = $row["email_copy"];
 
 	// Send email for owner and creator of this incident
 	$email_creator = get_user_email ($creator);
@@ -751,6 +752,15 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$msg_code .= "/" . $row["id_usuario"];;
 
 	integria_sendmail ($email_owner, $subject, $text, false, $msg_code);
+
+    // Send a copy to each address in "email_copy"
+
+    if ($email_copy != ""){
+        $emails = split (",",$email_copy);
+        foreach ($emails as $em){
+        	integria_sendmail ($em, $subject, $text, false, "");
+        }
+    }
 
 	// Incident owner
 	if ($email_owner != $email_creator){

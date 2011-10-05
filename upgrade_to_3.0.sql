@@ -64,3 +64,11 @@ CREATE TABLE `tapp_activity_data` (
 	  ON UPDATE CASCADE 
 	  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Changes done in Development 3.0 version after July 2011
+
+
+ALTER TABLE tincidencia ADD `email_copy` mediumtext not NULL;
+ALTER TABLE tusuario ADD `disabled` int default 0;
+
+

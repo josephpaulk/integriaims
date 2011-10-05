@@ -796,6 +796,9 @@ function project_manager_check ($id_project) {
 function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 	global $config;
 	
+    if ($id_incident == 0)
+        return;
+
 	switch ($state) {
 	case INCIDENT_CREATED:
 		$description = __('Created');

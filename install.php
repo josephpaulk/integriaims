@@ -39,7 +39,7 @@
 
 error_reporting(0);
 
-$integria_version = "v3.0dev Build 100920";
+$integria_version = "v3.0dev Build 111004";
 
 $integria_footertext = "<div id='foot'>
                         <i>Integria $integria_version is an OpenSource Software project 
@@ -176,10 +176,9 @@ function install_step1() {
 
 	echo "
 	<div align='center' '>
-	<h1>Integria IMS instalation wizard. Step #1 of 4</h1>
-	<div id='wizard' style='height: 430px;'>
+	<div id='wizard' style='height: 480px;'>
 		<div id='install_box'>
-			<h1>Welcome to Integria installation Wizard</h1>
+			<h2>Welcome to installation Wizard</h2>
 			<p>This wizard helps you to quick install Integria in your system.</p>
 			<p>In four steps checks all dependencies and make your configuration for a quick installation.</p>";
 
@@ -192,7 +191,7 @@ function install_step1() {
 		echo "<p>For more information, please refer to documentation.<i>Integria Development team</i><br>";
 
 		if (file_exists("include/config.php")){
-			echo "<p><img src='images/info.png' valign='bottom'><b> Warning: You already have a config.php file. Configuracion and database would be overwritten if you continue.</b></p>";
+			echo "<p><br><img src='images/error.png' valign='bottom'><b> Warning</b> - You already have a config.php file. Configuracion and database would be overwritten if you continue.</b></p>";
 		}
 		echo "
 		</div>
@@ -209,7 +208,7 @@ echo "<br><br><font size=1px>$integria_version</font>
 			echo "
 			<a href='install.php?step=1'><img align='right' src='images/arrow_next.png'></a>";
 		else
-			echo "<div class='warn'><b>ERROR:</b>You need to setup permissions to be able to write in ./include directory</div>";
+			echo "<p><img src='images/info.png' valign='bottom'><b> Error</b> - You need to setup permissions to be able to write in ./include directory";
 
 			echo "
 			</div>
@@ -226,7 +225,6 @@ function install_step1_licence() {
 
 	echo "
 	<div align='center'>
-	<h1>Integria IMS instalation wizard. Step #2 of 4</h1>
 	<div id='wizard' style='height: 550px;'>
 		<div id='install_box'>";
 
@@ -272,7 +270,6 @@ function install_step2() {
 
 	echo "
 	<div align='center'>
-	<h1>Integria IMS instalation wizard. Step #2 of 4</h1>
 	<div id='wizard' style='height: 515px;'>
 		<div id='install_box'>";
 		echo "<h1>Checking software dependencies</h1>";
@@ -322,7 +319,6 @@ function install_step3() {
 
 	echo "
 	<div align='center''>
-	<h1>Integria instalation wizard. Step #3 of 4 </h1>
 	<div id='wizard' style='height: 700px;'>
 		<div id='install_box'>
 			<h1>Environment and database setup</h1>
@@ -336,7 +332,7 @@ function install_step3() {
 			</p>
 			<div style='padding-left: 30px;'>
 			<form method='post' action='install.php?step=4'>
-				<div style='padding: 8px'>DB User with privileges on MySQL<br></div>
+				<div style='padding: 8px'>DB User on MySQL to create schema<br></div>
 				<input type='text' name='user' value='root'>
 
 				<div style='padding: 8px'>DB Password for this user</div>
@@ -356,7 +352,6 @@ function install_step3() {
 				<div style='padding: 8px'><input type='checkbox' name='demodb' checked value='1'>  
 				Load demo Database (This will load a sample site)<br>
 				</div>
-
 		
 				<div style='padding: 8px'><input type='checkbox' name='createuser' checked value='1'> Create Database user 'integria' and give privileges <br>
 				</div>		
@@ -438,7 +433,6 @@ function install_step4() {
 	$step4=0; $step5=0; $step6=0; $step7=0;
 	echo "
 	<div align='center' class='mt35'>
-	<h1>Integria IMS instalation wizard. Step #4 of 4 </h1>
 	<div id='wizard' style='height: 510px;'>
 		<div id='install_box'>
 			<h1>Creating database and default configuration file</h1>

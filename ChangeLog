@@ -1,3 +1,29 @@
+2011-10-06  Sancho Lerena <slerena@artica.es>
+
+    * include/functions_incidents.php: Added email_copy recipients when
+    sending mails to spare email address included in the incident.
+
+    * include/functions_db.php: Fixed a weird problem when create incidents
+    by catching the incidents with ID 0.
+
+    * install.php: Some small updates (Visual styles).
+
+    * integria_dbdata.sql: Fixed error with tusuario table insert.
+
+    * operation/agenda/agenda.php: Removed unused small calendars.
+
+    * operation/incidents/incident_detail.php: Implemented email copy
+    option for sending mails to spare emails.
+
+    * integria_demo.sql: Fixed SQL for demo data.
+
+    * integria_db.sql: Added email_copy in tincidencia.
+
+    * upgrade_to_3.0.sql: Added new sql schema.
+
+    * general/home.php: If no data in home, redirect to calendar view.
+
+
 2011-10-05  Vanessa Gil <vgil@artica.es>
 
 	* index.php
