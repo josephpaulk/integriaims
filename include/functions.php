@@ -920,6 +920,37 @@ case "doc" :
         return "text/plain";
 }
 
+function get_user_language ($id_user = false) {
+	global $config;
+
+	$quick_language = get_parameter('quick_language_change', 0);
+
+	if($quick_language) {
+		$language = get_parameter('language', 0);
+		
+		if($language === 'default') {
+			return $config['language'];
+		}
+
+		if($language !== 0) {
+			return $language;
+		}
+	}
+	
+	if($id_user === false && isset($config['id_user'])) {
+		$id_user = $config['id_user'];
+	}
+	
+	if($id_user !== false) {
+		$userinfo = get_user_info ($id_user);
+		if ($userinfo['language'] != 'default'){
+			return $userinfo['language'];
+		}
+	}
+	
+	return $config['language'];
+}
+
 
 
 ?>

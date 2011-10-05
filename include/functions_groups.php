@@ -37,4 +37,29 @@ function send_group_email ($id_group, $subject, $body) {
 	
 	integria_sendmail ($email, $subject, $body);
 }
+
+/**
+ * Selects all groups (array (id => name)) or groups filtered
+ *
+ * @param mixed Array with filter conditions to retrieve groups or false.  
+ *
+ * @return array List of all groups
+ */
+function group_get_groups ($filter = false) {
+	if ($filter === false) { 
+		$grupos = get_db_all_rows_in_table ("tgrupo", "nombre");
+	}
+	else {
+		$grupos = get_db_all_rows_filter ("tgrupo", $filter);
+	}
+	//$return = array ();
+	if ($grupos === false) {
+		return $return;
+	}
+	foreach ($grupos as $grupo) {
+		$return[$grupo["id_grupo"]] = $grupo["nombre"];
+	}
+	return $return;
+}
+
 ?>

@@ -1,3 +1,11 @@
+2011-10-05  Vanessa Gil <vgil@artica.es>
+
+	* index.php
+	include/functions.php
+	include/functions_group.php
+	include/functions_ui.php
+	operation/side_menu: Added ldap authentication.
+
 2011-10-05  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_form.php

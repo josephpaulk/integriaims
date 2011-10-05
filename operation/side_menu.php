@@ -853,6 +853,13 @@ if ($sec == "godmode") {
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/logviewer'>".__('Error log')."</a></li>";
+	
+	// Authentication
+	if ($sec2 == "godmode/setup/setup_auth")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_auth'>".__('Authentication')."</a></li>";
 
 
 	echo "</ul>";

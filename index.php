@@ -62,6 +62,8 @@ require_once ('include/functions_db.php');
 require_once ('include/functions_html.php');
 require_once ('include/functions_form.php');
 require_once ('include/functions_calendar.php');
+require_once ('include/auth/mysql.php');
+require_once ('include/functions_db.mysql.php');
 
 /* Enterprise support */
 if (file_exists ("enterprise/load_enterprise.php")) {
@@ -156,23 +158,19 @@ if ($recover != ""){
 if (! isset ($_SESSION['id_usuario']) && $login) {
 	$nick = get_parameter ("nick");
 	$pass = get_parameter ("pass");
-	
-	$user = get_db_row_sql ("SELECT * FROM tusuario WHERE id_usuario = '$nick' AND disabled = 0");
-	
-	// For every registry
-	if ($user !== false && $user['password'] == md5 ($pass)) {
-		// Login OK
-		// Nick could be uppercase or lowercase (select in MySQL
-		// is not case sensitive)
-		// We get DB nick to put in PHP Session variable,
-		// to avoid problems with case-sensitive usernames.
-		$nick = $user["id_usuario"];
-		
-		update_user_contact ($nick);
-		logon_db ($nick, $config["REMOTE_ADDR"]);
-		$_SESSION['id_usuario'] = $nick;
-		$config["id_user"]= $nick;
-		
+
+	$config["auth_error"] = "";
+
+	$nick_in_db = process_user_login ($nick, $pass);
+			
+	if ($nick_in_db !== false) {
+		unset ($_GET["sec2"]);
+		$_GET["sec"] = "general/home";
+		logon_db ($nick_in_db, $_SERVER['REMOTE_ADDR']);
+		$_SESSION['id_usuario'] = $nick_in_db;
+		$config['id_user'] = $nick_in_db;
+		//Remove everything that might have to do with people's passwords or logins
+		//unset ($_GET['pass'], $pass, $_POST['pass'], $_REQUEST['pass'], $login_good);
 		if ($sec2 == '') {
 			$sec2 = 'general/home';
 		}

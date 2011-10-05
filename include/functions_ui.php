@@ -15,6 +15,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 
+require_once( "include/functions.php");
+require_once ("include/functions_groups.php");
+require_once ("include/functions_html.php");
 
 /**
  * Powerful debug function that also shows a backtrace.
@@ -86,4 +89,5 @@ function debug ($var, $backtrace = true) {
 	echo '</pre>';
 	return true;
 }
+
 ?>
