@@ -228,7 +228,7 @@ function combo_users ($actual = "") {
 // ----------------------------------------------------------------------
 function combo_groups ($actual = -1, $mode = "IR") {
 	global $config;
-	echo "<select name='group'>";
+	echo "<select id='group' name='group'>";
 	if ($actual != -1){
 		$sql = "SELECT * FROM tgrupo WHERE id_grupo = $actual";
 		$result = mysql_query($sql);

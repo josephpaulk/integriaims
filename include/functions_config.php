@@ -152,8 +152,8 @@ function load_config(){
         $config["max_file_size"] = "50M";
     }
 
-    ini_set("post_max_size",$config[$max_file_size]);
-    ini_set("upload_max_filesize",$config[$max_file_size]);
+    ini_set("post_max_size",$config["max_file_size"]);
+    ini_set("upload_max_filesize",$config["max_file_size"]);
 
 }
 

@@ -1,3 +1,9 @@
+2011-10-06  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_form.php
+	include/functions_config.php: Fixed quotes bug in functions_config
+	and add an id to form in functions form to use it from jquery easily
+
 2011-10-06  Sancho Lerena <slerena@artica.es>
 
     * include/functions_incidents.php: Added email_copy recipients when
