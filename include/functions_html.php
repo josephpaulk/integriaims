@@ -371,8 +371,8 @@ function print_input_password ($name, $value, $alt = '', $size = 50, $maxlength 
  * @param int Maximum length allowed (optional).
  * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
-function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0, $return = false, $label = false) {
-	$output = print_input_text_extended ($name, $value, 'text-'.$name, $alt, $size, $maxlength, false, '', '', true, false, $label);
+function print_input_text ($name, $value, $alt = '', $size = 50, $maxlength = 0, $return = false, $label = false, $disabled) {
+	$output = print_input_text_extended ($name, $value, 'text-'.$name, $alt, $size, $maxlength, $disabled, '', '', true, false, $label);
 
 	if ($return)
 		return $output;

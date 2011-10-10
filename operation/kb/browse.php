@@ -321,7 +321,7 @@ $category = get_parameter ("category", 0);
 $id_language = get_parameter ("id_language", '');
 
 // Search filters
-echo '<form method="post">';
+echo '<form method="post" action="?sec=kb&sec2=operation/kb/browse">';
 echo '<table width="100%" class="blank">';
 echo "<tr>";
 echo "<td>";

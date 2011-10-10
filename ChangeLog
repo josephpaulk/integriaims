@@ -1,3 +1,12 @@
+2011-10-10  Vanessa Gil <vgil@artica.es>
+
+	* operation/kb/browse.php: Fixed bad behaviour of the
+	search of KB.
+
+2011-10-07  Vanessa Gil <vgil@artica.es>
+
+	* include/functions_html.php: modified combo box.
+
 2011-10-06  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_form.php
