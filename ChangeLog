@@ -1,5 +1,12 @@
 2011-10-11  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions.php
+	operation/main_menu.php
+	operation/side_menu.php: Added menu visibility control
+	to side menu and clean main menu code
+
+2011-10-11  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_ui.php: Fixed project trees changing
 	from some requires to includes
 

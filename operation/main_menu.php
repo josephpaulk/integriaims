@@ -19,9 +19,17 @@ if (!isset($config["id_user"]))
 echo "<ul>";
 
 $show_projects = enterprise_hook ('get_menu_section_access', array ('projects'));
+$show_incidents = enterprise_hook ('get_menu_section_access', array ('incidents'));
+$show_inventory = enterprise_hook ('get_menu_section_access', array ('inventory'));
+$show_kb = enterprise_hook ('get_menu_section_access', array ('kb'));
+$show_file_releases = enterprise_hook ('get_menu_section_access', array ('file_releases'));
+$show_people = enterprise_hook ('get_menu_section_access', array ('people'));
+$show_todo = enterprise_hook ('get_menu_section_access', array ('todo'));
+$show_agenda = enterprise_hook ('get_menu_section_access', array ('agenda'));
+$show_setup = enterprise_hook ('get_menu_section_access', array ('setup'));
 
 // Projects
-if (give_acl($config["id_user"], 0, "PR") && $show_projects != 0){
+if (give_acl($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN){
     // Project
     if ($sec == "projects" )
 	    echo "<li id='current' class='project'>";
@@ -32,10 +40,8 @@ if (give_acl($config["id_user"], 0, "PR") && $show_projects != 0){
     echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".__('Projects')."</a></li>";
 }
 
-$show_incidents = enterprise_hook ('get_menu_section_access', array ('incidents'));
-
 // Incidents
-if (give_acl($config["id_user"], 0, "IR") && $show_incidents != 0){
+if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
     // Incident
     if ($sec == "incidents" )
 	    echo "<li id='current' class='incident'>";
@@ -44,10 +50,8 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != 0){
     echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".__('Incidents')."</a></li>";
 }
 
-$show_inventory = enterprise_hook ('get_menu_section_access', array ('inventory'));
-
 // Inventory
-if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user"]) == false) && $show_inventory != 0) {
+if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user"]) == false) && $show_inventory != MENU_HIDDEN) {
     // Incident
     if ($sec == "inventory" )
 	    echo "<li id='current' class='inventory'>";
@@ -56,10 +60,8 @@ if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user
     echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory'>".__('Inventory')."</a></li>";
 }
 
-$show_kb = enterprise_hook ('get_menu_section_access', array ('kb'));
-
 // KB
-if (give_acl($config["id_user"], 0, "KR") && $show_kb != 0){
+if (give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN){
 	if ($sec == "kb" )
 		echo "<li id='current' class='kb'>";
 	else
@@ -67,12 +69,10 @@ if (give_acl($config["id_user"], 0, "KR") && $show_kb != 0){
 	echo "<a href='index.php?sec=kb&sec2=operation/kb/browse'>".__('KB')."</a></li>";
 }
 
-$show_file_releases = enterprise_hook ('get_menu_section_access', array ('file_releases'));
-
 // FILE RELEASES
 if (give_acl($config["id_user"], 0, "KR")){
 
-	if($show_file_releases != 0) {
+	if($show_file_releases != MENU_HIDDEN) {
 		// File Releases
 		if ($sec == "download" )
 				echo "<li id='current' class='files'>";
@@ -82,9 +82,7 @@ if (give_acl($config["id_user"], 0, "KR")){
 	}
 }
 
-$show_people = enterprise_hook ('get_menu_section_access', array ('people'));
-
-if($show_people != 0) {
+if($show_people != MENU_HIDDEN) {
 	// Users
 	if ($sec == "users" )
 		echo "<li id='current' class='people'>";
@@ -93,9 +91,7 @@ if($show_people != 0) {
 	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".__('People')."</a></li>";
 }
 
-$show_todo = enterprise_hook ('get_menu_section_access', array ('todo'));
-
-if($show_todo != 0) {
+if($show_todo != MENU_HIDDEN) {
 	// TODO
 	if ($sec == "todo" )
 		echo "<li id='current' class='todo'>";
@@ -104,10 +100,8 @@ if($show_todo != 0) {
 	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>".__('Todo')."</a></li>";
 }
 
-$show_agenda = enterprise_hook ('get_menu_section_access', array ('agenda'));
-
 // Agenda
-if (give_acl($config["id_user"], 0, "AR") && $show_agenda != 0){
+if (give_acl($config["id_user"], 0, "AR") && $show_agenda != MENU_HIDDEN){
 	// Agenda
 	if ($sec == "agenda" )
 		echo "<li id='current' class='agenda'>";
@@ -116,9 +110,8 @@ if (give_acl($config["id_user"], 0, "AR") && $show_agenda != 0){
 	echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>".__('Agenda')."</a></li>";
 }
 
-$show_setup = enterprise_hook ('get_menu_section_access', array ('setup'));
 // Setup
-if (isset($config["id_user"]) && dame_admin($config["id_user"]) && $show_setup != 0){
+if (isset($config["id_user"]) && dame_admin($config["id_user"]) && $show_setup != MENU_HIDDEN){
 	// Setup
 	if ($sec == "godmode" )
 		echo "<li id='current' class='setup'>";

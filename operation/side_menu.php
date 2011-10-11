@@ -16,8 +16,18 @@
 if (!isset($config["id_user"]))
 	return;
 
+global $show_projects;
+global $show_incidents;
+global $show_inventory;
+global $show_kb;
+global $show_file_releases;
+global $show_people;
+global $show_todo;
+global $show_agenda;
+global $show_setup;
+
 // PROJECTS
-if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {	
+if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN) {	
 	$id_project = get_parameter ('id_project', -1);
 	$id_task = get_parameter ('id_task', -1);
 	
@@ -65,13 +75,14 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&create_project=1'>".__('Create project')."</a></li>";
 	}
 
-	// View disabled projects
-	if (($sec2 == "operation/projects/project") AND (isset($_REQUEST["view_disabled"])) )
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1'>".__('Disabled projects')."</a></li>";
-
+	if($show_projects != MENU_LIMITED) {
+		// View disabled projects
+		if (($sec2 == "operation/projects/project") AND (isset($_REQUEST["view_disabled"])) )
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1'>".__('Disabled projects')."</a></li>";
+	}
 
 	// end of main Project options block
 	echo "</ul>";
@@ -300,7 +311,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR")) {
 }
 
 // Project group manager
-if (give_acl ($config["id_user"], 0, "PM") && $sec == "projects") {
+if (give_acl ($config["id_user"], 0, "PM") && $sec == "projects" && $show_projects != MENU_HIDDEN && $show_projects != MENU_LIMITED) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Project groups')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -317,7 +328,7 @@ if (give_acl ($config["id_user"], 0, "PM") && $sec == "projects") {
 }
 
 // INCIDENTS
-if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR")) {
+if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incidents != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Incidents')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -413,7 +424,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR")) {
 }
 
 // Indicent type editor
-if (give_acl ($config["id_user"], 0, "IM") && $sec == "incidents") {
+if (give_acl ($config["id_user"], 0, "IM") && $sec == "incidents" && $show_incidents != MENU_HIDDEN && $show_incidents != MENU_LIMITED) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Incident types')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -430,7 +441,7 @@ if (give_acl ($config["id_user"], 0, "IM") && $sec == "incidents") {
 }
 
 // INVENTORY
-if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR")) {
+if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inventory != MENU_HIDDEN) {
 	$id_inventory = (int) get_parameter ('id');
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Inventory')."</h3>";
@@ -490,7 +501,7 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR")) {
 }
 
 // CONTRACTS
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 
 	// Contract
@@ -509,7 +520,7 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
 }
 
 // CONTACTS
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 
 
@@ -528,7 +539,7 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
 }
 
 // COMPANIES
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 
 	// Contract
@@ -555,7 +566,7 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
 }
 
 // SLA's
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('SLA')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -572,7 +583,7 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
 }
 
 // MANUFACTURER
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Manufacturers')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -589,7 +600,7 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
 }
 
 // BUILDINGS
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Buildings')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -606,7 +617,7 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM")) {
 }
 
 // Product types
-if ($sec == "inventory" && give_acl($config["id_user"], 0, "VM")) {
+if ($sec == "inventory" && give_acl($config["id_user"], 0, "VM") && $show_inventory != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Products')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -623,7 +634,7 @@ if ($sec == "inventory" && give_acl($config["id_user"], 0, "VM")) {
 }
 
 // KNOWLEDGE BASE (KB)
-if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR")) {
+if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Knowledge Base')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -664,7 +675,7 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR")) {
 
 
 // Downloads (FR)
-if ($sec == "download" && give_acl ($config["id_user"], 0, "KR")) {
+if ($sec == "download" && give_acl ($config["id_user"], 0, "KR") && $show_file_releases != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('File releases')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -707,7 +718,7 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "KR")) {
 
 
 // TODO
-if ($sec == "todo")  {
+if ($sec == "todo" && $show_todo != MENU_HIDDEN)  {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('To-Do')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -736,7 +747,7 @@ if ($sec == "todo")  {
 	echo "</div>";
 }
 
-if ($sec == "godmode") {
+if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Setup')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -866,7 +877,7 @@ if ($sec == "godmode") {
 	echo "</div>";
 }
 
-if (($sec == "users") OR ($sec == "user_audit")){
+if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN){
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Myself')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -882,7 +893,7 @@ if (($sec == "users") OR ($sec == "user_audit")){
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=".$config['id_user']."'>".__('Edit my user')."</a></li>";
 
-	if (give_acl ($config["id_user"], 0, "TW")) {
+	if (give_acl ($config["id_user"], 0, "TW") && $show_people != MENU_LIMITED) {
 		// Add spare workunit
 		if ($sec2 == "operation/users/user_spare_workunit")
 		echo "<li id='sidesel'>";
@@ -914,7 +925,8 @@ if (($sec == "users") OR ($sec == "user_audit")){
 	
 	echo "</div>";
 	
-	if  ((give_acl($config["id_user"], 0, "PR")) OR  (give_acl($config["id_user"], 0, "IR"))) {
+	// PEOPLE REPORTING
+	if  ((give_acl($config["id_user"], 0, "PR") || give_acl($config["id_user"], 0, "IR")) && $show_people != MENU_LIMITED) {
 		echo "<div class='portlet'>";
 		echo "<h3>".__('People reporting')."</h3>";
 		echo "<ul class='sidemenu'>";
@@ -943,7 +955,8 @@ if (($sec == "users") OR ($sec == "user_audit")){
 		echo "</ul></div>";
 	}
 
-	if (give_acl($config["id_user"], 0, "UM")){
+	// PEOPLE MANAGEMENT
+	if (give_acl($config["id_user"], 0, "UM") && $show_people != MENU_LIMITED){
 		echo "<div class='portlet'>";
 		echo "<h3>".__('People management')."</h3>";
 		echo "<ul class='sidemenu'>";
