@@ -1,3 +1,8 @@
+2011-10-11  Sergio Martin <sergio.martin@artica.es>
+
+	* operation/main_menu.php: Added calls to enterprise to 
+	control visibility in main menu
+
 2011-10-10  Vanessa Gil <vgil@artica.es>
 
 	* operation/kb/browse.php: Fixed bad behaviour of the
