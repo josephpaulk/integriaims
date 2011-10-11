@@ -1,5 +1,10 @@
 2011-10-11  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions_ui.php: Fixed project trees changing
+	from some requires to includes
+
+2011-10-11  Sergio Martin <sergio.martin@artica.es>
+
 	* operation/main_menu.php: Added calls to enterprise to 
 	control visibility in main menu
 
