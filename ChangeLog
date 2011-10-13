@@ -1,3 +1,10 @@
+2011-10-13  Sergio Martin <sergio.martin@artica.es>
+
+	* include/config_process.php
+	operation/main_menu.php
+	operation/side_menu.php: Added calendar, user info and tools side
+	menus to visibility control hidden it when limited. Reorganize code
+
 2011-10-11  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions.php

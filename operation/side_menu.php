@@ -1002,92 +1002,92 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN){
 	}
 }
 
-// Calendar box
-$month = get_parameter ("month", date ('n'));
-$year = get_parameter ("year", date ('y'));
+if($show_box) {
+	// Calendar box
+	$month = get_parameter ("month", date ('n'));
+	$year = get_parameter ("year", date ('y'));
 
-echo '<div class="portlet" style="border:padding: 0px; margin: 0px;">';
-echo '<a href="javascript:;" onclick="$(\'#calendar_div\').slideToggle (); return false">';
-echo '<h2>'.__('Calendar').'</h2>';
-echo '</a>';
-echo '<div id="calendar_div" style="padding: 0px; margin: 0px">';
-echo generate_calendar ($year, $month, array(), 1, NULL, $config["language_code"]);
-echo '</div></div>';
-// End of calendar box
-
-
-// Testing boxes for side menus
-$user_row = get_db_row ("tusuario", "id_usuario", $config['id_user']);
-
-$avatar = $user_row["avatar"];
-$realname = $user_row["nombre_real"];
-$email = $user_row["direccion"];
-$description = $user_row["comentarios"];
-$userlang = $user_row["lang"];
-$telephone = $user_row["telefono"];
-
-$now = date("Y-m-d H:i:s");
-$now_year = date("Y");
-$now_month = date("m");
-$working_month = get_parameter ("working_month", $now_month);
-$working_year = get_parameter ("working_year", $now_year);
-
-echo '<div class="portlet">';
-echo '<a href="javascript:;" onclick="$(\'#userdiv\').slideToggle (); return false">';
-echo '<h2>'.__('User info').'</h2>';
-echo '</a>';
-echo '<div class="portletBody" id="userdiv">';
-
-echo '<img src="images/avatars/'.$avatar.'_small.png" style="float: left" />';
-echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'">';
-echo '<strong>'.$config['id_user'].'</strong>';
-echo '</a><br/>';
-echo "<em>".$realname."</em><br />";
-echo __('Phone').": $telephone <br />";
-echo __('Email').':</strong> '.$email.'<br />';
-
-// Link to workunit calendar (month)
-echo '<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';
-echo '<img src="images/clock.png" title="'.__('Workunit report').'" /></a>';
-
-if (give_acl ($config["id_user"], 0, "PR")) {
-	// Link to project graph
-	echo "&nbsp;&nbsp;";
-	echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$config['id_user']."'>";
-	echo '<img src="images/chart_bar.png" title="'.__('Project distribution').'"></a>';
-
-	// Link to Work user spare inster
-	echo "&nbsp;&nbsp;";
-	echo '<a href="index.php?sec=users&sec2=operation/users/user_spare_workunit">';
-	echo '<img src="images/award_star_silver_1.png" title="'.__('Workunit').'"></a>';
-
-	// Link to User detailed graph view
-	echo "&nbsp;&nbsp;";
-	echo '<a href="index.php?sec=users&sec2=operation/user_report/report_full_graph">';
-	echo '<img src="images/lightbulb.png" title="'.__('Full graph report').'"></a>';
+	echo '<div class="portlet" style="border:padding: 0px; margin: 0px;">';
+	echo '<a href="javascript:;" onclick="$(\'#calendar_div\').slideToggle (); return false">';
+	echo '<h2>'.__('Calendar').'</h2>';
+	echo '</a>';
+	echo '<div id="calendar_div" style="padding: 0px; margin: 0px">';
+	echo generate_calendar ($year, $month, array(), 1, NULL, $config["language_code"]);
+	echo '</div></div>';
+	// End of calendar box
 
 
+	// Testing boxes for side menus
+	$user_row = get_db_row ("tusuario", "id_usuario", $config['id_user']);
 
-	// Week Workunit meter
-	echo "&nbsp;&nbsp;";
-	$begin_week = week_start_day ();
-	$begin_week .= " 00:00:00";
-	$end_week = date ('Y-m-d H:i:s', strtotime ("$begin_week + 1 week"));
-	$total_hours = 5 * $config["hours_perday"];
-	$sql = sprintf ('SELECT SUM(duration)
-		FROM tworkunit WHERE timestamp > "%s"
-		AND timestamp < "%s"
-		AND id_user = "%s"',
-		$begin_week, $end_week, $config['id_user']);
-	$week_hours = get_db_sql ($sql);
-	$ratio = $week_hours." ".__('over')." ".$total_hours;
-	if ($week_hours < $total_hours)
-		echo '<img src="images/exclamation.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" />';
-	else
-		echo '<img src="images/heart.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
+	$avatar = $user_row["avatar"];
+	$realname = $user_row["nombre_real"];
+	$email = $user_row["direccion"];
+	$description = $user_row["comentarios"];
+	$userlang = $user_row["lang"];
+	$telephone = $user_row["telefono"];
+
+	$now = date("Y-m-d H:i:s");
+	$now_year = date("Y");
+	$now_month = date("m");
+	$working_month = get_parameter ("working_month", $now_month);
+	$working_year = get_parameter ("working_year", $now_year);
+
+	echo '<div class="portlet">';
+	echo '<a href="javascript:;" onclick="$(\'#userdiv\').slideToggle (); return false">';
+	echo '<h2>'.__('User info').'</h2>';
+	echo '</a>';
+	echo '<div class="portletBody" id="userdiv">';
+
+	echo '<img src="images/avatars/'.$avatar.'_small.png" style="float: left" />';
+	echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'">';
+	echo '<strong>'.$config['id_user'].'</strong>';
+	echo '</a><br/>';
+	echo "<em>".$realname."</em><br />";
+	echo __('Phone').": $telephone <br />";
+	echo __('Email').':</strong> '.$email.'<br />';
+
+	// Link to workunit calendar (month)
+	echo '<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';
+	echo '<img src="images/clock.png" title="'.__('Workunit report').'" /></a>';
+
+	if (give_acl ($config["id_user"], 0, "PR")) {
+		// Link to project graph
+		echo "&nbsp;&nbsp;";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$config['id_user']."'>";
+		echo '<img src="images/chart_bar.png" title="'.__('Project distribution').'"></a>';
+
+		// Link to Work user spare inster
+		echo "&nbsp;&nbsp;";
+		echo '<a href="index.php?sec=users&sec2=operation/users/user_spare_workunit">';
+		echo '<img src="images/award_star_silver_1.png" title="'.__('Workunit').'"></a>';
+
+		// Link to User detailed graph view
+		echo "&nbsp;&nbsp;";
+		echo '<a href="index.php?sec=users&sec2=operation/user_report/report_full_graph">';
+		echo '<img src="images/lightbulb.png" title="'.__('Full graph report').'"></a>';
+
+		// Week Workunit meter
+		echo "&nbsp;&nbsp;";
+		$begin_week = week_start_day ();
+		$begin_week .= " 00:00:00";
+		$end_week = date ('Y-m-d H:i:s', strtotime ("$begin_week + 1 week"));
+		$total_hours = 5 * $config["hours_perday"];
+		$sql = sprintf ('SELECT SUM(duration)
+			FROM tworkunit WHERE timestamp > "%s"
+			AND timestamp < "%s"
+			AND id_user = "%s"',
+			$begin_week, $end_week, $config['id_user']);
+		$week_hours = get_db_sql ($sql);
+		$ratio = $week_hours." ".__('over')." ".$total_hours;
+		if ($week_hours < $total_hours)
+			echo '<img src="images/exclamation.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" />';
+		else
+			echo '<img src="images/heart.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
+	}
+
+	echo '</div></div>';
+	// End of user box
 }
-
-echo '</div></div>';
-// End of user box
 
 ?>

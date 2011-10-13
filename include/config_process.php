@@ -92,8 +92,7 @@ date_default_timezone_set($config["timezone"]);
 include_once ($config["homedir"]."/include/functions_html.php");
 include_once ($config["homedir"]."/include/functions_form.php");
 include_once ($config["homedir"]."/include/functions_calendar.php");
-
-
+			
 // Function include_graphs_dependencies() it's called in the code below
 require_once("include_graph_dependencies.php");
 
