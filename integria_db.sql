@@ -829,3 +829,10 @@ CREATE TABLE `tpending_mail` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `tmenu_visibility` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `menu_section` varchar(100) NOT NULL default '',
+  `id_group` int(10) unsigned NOT NULL default '0',
+  `mode` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

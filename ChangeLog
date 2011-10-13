@@ -1,5 +1,10 @@
 2011-10-13  Sergio Martin <sergio.martin@artica.es>
 
+	* integria_db.sql: Moved menu visability table from 
+	enterpise code
+
+2011-10-13  Sergio Martin <sergio.martin@artica.es>
+
 	* include/config_process.php: Added missed changes from last
 	commit
 
