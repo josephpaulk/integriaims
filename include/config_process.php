@@ -92,6 +92,28 @@ date_default_timezone_set($config["timezone"]);
 include_once ($config["homedir"]."/include/functions_html.php");
 include_once ($config["homedir"]."/include/functions_form.php");
 include_once ($config["homedir"]."/include/functions_calendar.php");
+
+// Get visibility permissions to sections
+$show_projects = enterprise_hook ('get_menu_section_access', array ('projects'));
+$show_incidents = enterprise_hook ('get_menu_section_access', array ('incidents'));
+$show_inventory = enterprise_hook ('get_menu_section_access', array ('inventory'));
+$show_kb = enterprise_hook ('get_menu_section_access', array ('kb'));
+$show_file_releases = enterprise_hook ('get_menu_section_access', array ('file_releases'));
+$show_people = enterprise_hook ('get_menu_section_access', array ('people'));
+$show_todo = enterprise_hook ('get_menu_section_access', array ('todo'));
+$show_agenda = enterprise_hook ('get_menu_section_access', array ('agenda'));
+$show_setup = enterprise_hook ('get_menu_section_access', array ('setup'));
+$sec = get_parameter('sec', '');
+
+$show_box = ($sec == "projects" && $show_projects != MENU_HIDDEN && $show_projects != MENU_LIMITED) || 
+			($sec == "incidents" && $show_inciedents != MENU_HIDDEN && $show_incidents != MENU_LIMITED) || 
+			($sec == "inventory" && $show_inventory != MENU_HIDDEN && $show_inventory != MENU_LIMITED) || 
+			($sec == "kb" && $show_kb != MENU_HIDDEN && $show_kb != MENU_LIMITED) || 
+			($sec == "download" && $show_file_releases != MENU_HIDDEN && $show_file_releases != MENU_LIMITED) || 
+			($sec == "users" && $show_people != MENU_HIDDEN && $show_people != MENU_LIMITED) || 
+			($sec == "todo" && $show_todo != MENU_HIDDEN && $show_todo != MENU_LIMITED) || 
+			($sec == "agenda" && $show_agenda != MENU_HIDDEN && $show_agenda != MENU_LIMITED) || 
+			($sec == "godmode" && $show_setup != MENU_HIDDEN && $show_setup != MENU_LIMITED) || dame_admin($config['id_user']);
 			
 // Function include_graphs_dependencies() it's called in the code below
 require_once("include_graph_dependencies.php");
