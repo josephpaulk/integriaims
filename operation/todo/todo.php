@@ -1,39 +1,87 @@
 <?php
 
-// Load global vars
-check_login ();
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2007-2010 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
 
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+if (defined ('AJAX')) {
+
+	global $config;
+
+	$search_users = (bool) get_parameter ('search_users');
+	
+	if ($search_users) {
+		require_once ('include/functions_db.php');
+		
+		$id_user = $config['id_user'];
+		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
+		
+		$filter = array ();
+		
+		$filter[] = '(nombre COLLATE utf8_general_ci LIKE "%'.$string.'%" OR direccion LIKE "%'.$string.'%" OR comentarios LIKE "%'.$string.'%")';
+
+		$filter[] = 'id_usuario != '.$id_user;
+		
+		$users = get_user_visible_users ($config['id_user'],"IR", false);
+		if ($users === false)
+			return;
+		
+		foreach ($users as $user) {
+			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+		}
+		
+		return;
+ 	}
+	return;
+}
+global $config;
 $operation = get_parameter ("operation");
 $progress = 0;
 
 include_once ("include/functions_graph.php");
+require_once ('include/functions_db.php');
+require_once ('include/functions_ui.php');
 
 // ---------------
 // CREATE new todo
 // ---------------
 if ($operation == "insert") {
 	$name = (string) get_parameter ("name");
-	$assigned_user = (string) get_parameter ("user");
+	$assigned_user = (string) get_parameter ("id_user");
 	$priority = (int) get_parameter ("priority");
 	$progress = (int) get_parameter ("progress");
 	$description = (string) get_parameter ("description");
 	$id_task = (int) get_parameter ("id_task");
 	$timestamp = date ('Y-m-d H:i:s');
 	$last_updated = $timestamp;
-	$sql = sprintf ('INSERT INTO ttodo (name, priority, assigned_user,
-		created_by_user, progress, timestamp, last_update, description, id_task)
-		VALUES ("%s", %d, "%s", "%s", %d, "%s", "%s", "%s", %d)',
-		$name, $priority, $assigned_user, $config['id_user'],
-		$progress, $timestamp, $last_updated, $description, $id_task);
-	$id = process_sql ($sql, 'insert_id');
-	if (! $id)
-		echo '<h3 class="error">'.__('Not created. Error inserting data').'</h3>';
-	else {
-		echo '<h3 class="suc">'.__('Successfully created').'</h3>'; 
-		mail_todo (0, $id);
+	if (!$id_task){
+		echo'<h3 class="error">'.__('You must assigned a task').'</h3>';
+	} else {
+		$sql = sprintf ('INSERT INTO ttodo (name, priority, assigned_user,
+			created_by_user, progress, timestamp, last_update, description, id_task)
+			VALUES ("%s", %d, "%s", "%s", %d, "%s", "%s", "%s", %d)',
+			$name, $priority, $assigned_user, $config['id_user'],
+			$progress, $timestamp, $last_updated, $description, $id_task);
+		$id = process_sql ($sql, 'insert_id');
+		if (! $id)
+			echo '<h3 class="error">'.__('Not created. Error inserting data').'</h3>';
+		else {
+			echo '<h3 class="suc">'.__('Successfully created').'</h3>'; 
+			mail_todo (0, $id);
+		}
+		$operation = "";
+		$id = 0;
 	}
-	$operation = "";
-	$id = 0;
 }
 
 // ---------------
@@ -126,10 +174,12 @@ if ($operation == "create" || $operation == "update") {
 		'', '', '', true, false, false, __('Priority'));
 	
 	if ($operation == "create") {
-		$table->data[1][1] = combo_user_visible_for_me ('', "user", 0,
-			"TW", true, __('Assigned to'));
+		$src_code = print_image('images/group.png', true, false, true);
+		$table->data[0][1] .= print_input_text_extended ('id_user', '', 'text-id_user', '', 30, 100, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))
+		. print_help_tip (__("Type at least two characters to search"), true);
 	}
-	
+
 	$table->data[2][0] = combo_task_user_participant ($config["id_user"],
 		false, 0, true, __('Task'));
 	
@@ -245,8 +295,10 @@ if (($operation == "") OR ($operation == "notme")) {
 
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>
+<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
 
-<script type="text/javascript">
+
+<script type="text/javascript" >
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
 	$("#slider").slider ({
@@ -263,5 +315,28 @@ $(document).ready (function () {
 <?php if ($progress)
 	echo '$("#slider").slider ("moveTo", '.$progress.');';
 ?>
+
+$("#text-id_user").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "operation/todo/todo",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>"
+			},
+			formatItem: function (data, i, total) {
+				if (total == 0)
+					$("#text-id_user").css ('background-color', '#cc0000');
+				else
+					$("#text-id_user").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
+			},
+			delay: 200
+
+		});
 });
+
 </script>

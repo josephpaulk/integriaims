@@ -1,3 +1,11 @@
+2011-10-13  Vanessa Gil <vgil@artica.es>
+
+	* include/functions_html.php
+	operation/todo/todo.php
+	operation/incidents/incidents_detail.php
+	operation/projects/people_manager.php
+	include/styles/integria.css: Change users search.
+
 2011-10-13  Sergio Martin <sergio.martin@artica.es>
 
 	* integria_db.sql: Moved menu visability table from 

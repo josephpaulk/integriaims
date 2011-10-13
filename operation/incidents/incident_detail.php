@@ -18,6 +18,37 @@ global $config;
 
 check_login ();
 
+if (defined ('AJAX')) {
+
+	global $config;
+
+	$search_users = (bool) get_parameter ('search_users');
+	
+	if ($search_users) {
+		require_once ('include/functions_db.php');
+		
+		$id_user = $config['id_user'];
+		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
+		
+		$filter = array ();
+		
+		$filter[] = '(nombre COLLATE utf8_general_ci LIKE "%'.$string.'%" OR direccion LIKE "%'.$string.'%" OR comentarios LIKE "%'.$string.'%")';
+
+		$filter[] = 'id_usuario != '.$id_user;
+		
+		$users = get_user_visible_users ($config['id_user'],"IR", false);
+		if ($users === false)
+			return;
+		
+		foreach ($users as $user) {
+			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+		}
+		
+		return;
+ 	}
+	return;
+}
+
 require_once ('include/functions_incidents.php');
 
 $id_grupo = (int) get_parameter ('id_grupo');
@@ -701,10 +732,14 @@ else {
 }
 if ($enabled){
 
-	$table->data[2][3] = print_label(__('Creator'), '', '', true);
-	$table->data[2][3] .= print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'id_creator', $id_creator, '', 'select', '', true, false, true, false, !$enabled);
+/*	$table->data[2][3] = print_label(__('Creator'), '', '', true);
+	$table->data[2][3] .= print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'id_creator', $id_creator, '', 'select', '', true, false, true, false, !$enabled);*/
+	$src_code = print_image('images/group.png', true, false, true);
+	$table->data[2][3] = print_input_text_extended ('id_creator', '', 'text-id_creator', '', 30, 100, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Creator'))
+		. print_help_tip (__("Type at least two characters to search"), true);
 } else {
-	$table->data[2][3] .= "<input type='hidden' name=id_creator value=$id_creator>";
+	$table->data[2][3] = "<input type='hidden' name=id_creator value=$id_creator>";
 }
 
 if ($has_permission) {
@@ -716,10 +751,10 @@ if ($has_permission) {
 
 // Only users with manage permission can change auto-assigned user (that information comes from group def.)
 if ($has_manage_permission) {
-	$table->data[4][1] = print_button (dame_nombre_real ($usuario), 'usuario_name',
-		false, '', 'class="dialogbtn"', true, __('Assigned user'));
-	$table->data[4][1] .= print_input_hidden ('usuario_form', $usuario, true);
-	$table->data[4][1] .= print_help_tip (__('User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user'), true);
+	$src_code = print_image('images/group.png', true, false, true);
+	$table->data[4][1] = print_input_text_extended ('id_user', 'Default Admin', 'text-id_user', '', 30, 100, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))
+		. print_help_tip (__("User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user"), true);
 } else {
 	// Enterprise only
 	if (($create_incident) AND ($config["enteprise"] == 1)){
@@ -830,11 +865,56 @@ if (! defined ('AJAX')) :
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
+<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
 <script  type="text/javascript">
 $(document).ready (function () {
 	/* First parameter indicates to add AJAX support to the form */
 	configure_incident_form (false);
 	//$("#grupo_form").change ();
+	
+	$("#text-id_creator").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "operation/incidents/incident_detail",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>"
+			},
+			formatItem: function (data, i, total) {
+				if (total == 0)
+					$("#text-id_creator").css ('background-color', '#cc0000');
+				else
+					$("#text-id_creator").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
+			},
+			delay: 200
+
+		});
+		
+		$("#text-id_user").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "operation/incidents/incident_detail",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>"
+			},
+			formatItem: function (data, i, total) {
+				if (total == 0)
+					$("#text-id_user").css ('background-color', '#cc0000');
+				else
+					$("#text-id_user").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
+			},
+			delay: 200
+
+		});
 });
 </script>
 
