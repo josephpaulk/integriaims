@@ -64,24 +64,24 @@ if ($operation == "insert") {
 	$id_task = (int) get_parameter ("id_task");
 	$timestamp = date ('Y-m-d H:i:s');
 	$last_updated = $timestamp;
-	if (!$id_task){
-		echo'<h3 class="error">'.__('You must assigned a task').'</h3>';
-	} else {
-		$sql = sprintf ('INSERT INTO ttodo (name, priority, assigned_user,
-			created_by_user, progress, timestamp, last_update, description, id_task)
-			VALUES ("%s", %d, "%s", "%s", %d, "%s", "%s", "%s", %d)',
-			$name, $priority, $assigned_user, $config['id_user'],
-			$progress, $timestamp, $last_updated, $description, $id_task);
-		$id = process_sql ($sql, 'insert_id');
-		if (! $id)
-			echo '<h3 class="error">'.__('Not created. Error inserting data').'</h3>';
-		else {
-			echo '<h3 class="suc">'.__('Successfully created').'</h3>'; 
-			mail_todo (0, $id);
-		}
-		$operation = "";
-		$id = 0;
+
+    // Notice: Associated task could be "none (NA)"
+
+	$sql = sprintf ('INSERT INTO ttodo (name, priority, assigned_user,
+		created_by_user, progress, timestamp, last_update, description, id_task)
+		VALUES ("%s", %d, "%s", "%s", %d, "%s", "%s", "%s", %d)',
+		$name, $priority, $assigned_user, $config['id_user'],
+		$progress, $timestamp, $last_updated, $description, $id_task);
+	$id = process_sql ($sql, 'insert_id');
+	if (! $id)
+		echo '<h3 class="error">'.__('Not created. Error inserting data').'</h3>';
+	else {
+		echo '<h3 class="suc">'.__('Successfully created').'</h3>'; 
+		mail_todo (0, $id);
 	}
+	$operation = "";
+	$id = 0;
+
 }
 
 // ---------------
@@ -111,7 +111,7 @@ if ($operation == "update2") {
 }
 
 // ---------------
-// DELETE new todo
+// DELETE todo
 // ---------------
 if ($operation == "delete") {
 	$id_todo = get_parameter ("id");
@@ -167,7 +167,7 @@ if ($operation == "create" || $operation == "update") {
 	$table->colspan[4][0] = 2;
 	$table->data = array ();
 	
-	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true,
+	$table->data[0][0] = print_input_text ('name', $name, '', 100, 100, true,
 		__('Title'));
 	
 	$table->data[1][0] = print_select (get_priorities (), 'priority', $priority,
@@ -175,7 +175,7 @@ if ($operation == "create" || $operation == "update") {
 	
 	if ($operation == "create") {
 		$src_code = print_image('images/group.png', true, false, true);
-		$table->data[0][1] .= print_input_text_extended ('id_user', '', 'text-id_user', '', 30, 100, false, '',
+		$table->data[1][1] .= print_input_text_extended ('id_user', '', 'text-id_user', '', 30, 100, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))
 		. print_help_tip (__("Type at least two characters to search"), true);
 	}

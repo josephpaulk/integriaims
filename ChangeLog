@@ -1,3 +1,7 @@
+2011-10-14  Sancho Lerena <slerena@artica.es>
+
+	* operation/todo/todo.php: Fixed layout.
+
 2011-10-14  Vanessa Gil <vgil@artica.es>
 
 	* include/js/jquery.autocomplete.js: Added file.
