@@ -1,3 +1,7 @@
+2011-10-14  Vanessa Gil <vgil@artica.es>
+
+	* include/js/jquery.autocomplete.js: Added file.
+
 2011-10-13  Vanessa Gil <vgil@artica.es>
 
 	* include/functions_html.php
