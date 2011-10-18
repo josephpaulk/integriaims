@@ -19,7 +19,39 @@
 global $config;
 
 check_login ();
-    
+
+if (defined ('AJAX')) {
+
+	global $config;
+
+	$search_users = (bool) get_parameter ('search_users');
+	
+	if ($search_users) {
+		require_once ('include/functions_db.php');
+		
+		$id_user = $config['id_user'];
+		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
+		
+		$filter = array ();
+		
+		$filter[] = '(nombre COLLATE utf8_general_ci LIKE "%'.$string.'%" OR direccion LIKE "%'.$string.'%" OR comentarios LIKE "%'.$string.'%")';
+
+		$filter[] = 'id_usuario != '.$id_user;
+		
+		$users = get_user_visible_users ($config['id_user'],"IR", false);
+		if ($users === false)
+			return;
+		
+		foreach ($users as $user) {
+			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+		}
+		
+		return;
+ 	}
+	return;
+}
+
+
 if (give_acl($config["id_user"], 0, "PR") != 1){
 	// Doesn't have access to this page
 	audit_db ($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
@@ -45,7 +77,11 @@ if (give_acl ($config["id_user"], 0, "PM")) {
 	echo "<table style='margin-left: 15px;' class=blank>";
 	echo "<tr><td>";
 	// Show user
-	combo_user_visible_for_me ($config["id_user"], "id_user", 0, "PR");
+	//combo_user_visible_for_me ($config["id_user"], "id_user", 0, "PR");
+	$src_code = print_image('images/group.png', true, false, true);
+	echo print_input_text_extended ('id_user', '', 'text-id_user', '', 15, 30, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '')
+		. print_help_tip (__("Type at least two characters to search"), true);
 	echo "<td>";
 	print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"');
 	echo "</form></table>";
@@ -87,3 +123,31 @@ echo "</table>";
 
 
 ?>
+<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+
+<script  type="text/javascript">
+$(document).ready (function () {
+	$("#text-id_user").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "operation/incidents/incident_detail",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>"
+			},
+			formatItem: function (data, i, total) {
+				if (total == 0)
+					$("#text-id_user").css ('background-color', '#cc0000');
+				else
+					$("#text-id_user").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
+			},
+			delay: 200
+
+		});
+});
+</script>
+

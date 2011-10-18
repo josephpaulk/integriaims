@@ -22,6 +22,38 @@ include_once ("include/functions_graph.php");
 
 check_login ();
 
+if (defined ('AJAX')) {
+
+	global $config;
+
+	$search_users = (bool) get_parameter ('search_users');
+	
+	if ($search_users) {
+		require_once ('include/functions_db.php');
+		
+		$id_user = $config['id_user'];
+		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
+		
+		$filter = array ();
+		
+		$filter[] = '(nombre COLLATE utf8_general_ci LIKE "%'.$string.'%" OR direccion LIKE "%'.$string.'%" OR comentarios LIKE "%'.$string.'%")';
+
+		$filter[] = 'id_usuario != '.$id_user;
+		
+		$users = get_user_visible_users ($config['id_user'],"IR", false);
+		if ($users === false)
+			return;
+		
+		foreach ($users as $user) {
+			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+		}
+		
+		return;
+ 	}
+	return;
+}
+
+
 $create_mode = 0;
 $name = "";
 $description = "";
@@ -140,17 +172,22 @@ print_input_text ('end_date', $end_date, '', 10, 20);
 // Owner
 
 echo '<tr>';
-echo '<td class="datos"><b>'.__('Project manager').'</b>';
+//echo '<td class="datos"><b>'.__('Project manager').'</b>';
 echo "<td class='datos'>";
 $id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
-if ((give_acl($config["id_user"], 0, "PM") ==1) OR (give_acl($config["id_user"], 0, "PW") ==1) OR ($config["id_user"] == $id_owner )) {
+$src_code = print_image('images/group.png', true, false, true);
+/*if ((give_acl($config["id_user"], 0, "PM") ==1) OR (give_acl($config["id_user"], 0, "PW") ==1) OR ($config["id_user"] == $id_owner )) {
 	if ($create_project)
 		combo_user_visible_for_me ($config["id_user"], "user", 0, "PR");
 	else
 		combo_user_visible_for_me ($id_owner, "user", 0, "PR");
 } else {
 	echo $id_owner;
-}
+}*/
+
+echo print_input_text_extended ('id_manager', '', 'text-id_manager', '', 10, 20, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '',__('Project manager  '))
+		. print_help_tip (__("Type at least two characters to search"), true);
 
 echo "<td><b>";
 echo __('Project group') . "</b>";
@@ -254,11 +291,34 @@ echo "</form>";
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
+<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
 
 <script type="text/javascript">
 
 $(document).ready (function () {
 	configure_range_dates (null);
 	$("textarea").TextAreaResizer ();
+	
+		$("#text-id_manager").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "operation/projects/project_detail",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>"
+			},
+			formatItem: function (data, i, total) {
+				if (total == 0)
+					$("#text-id_manager").css ('background-color', '#cc0000');
+				else
+					$("#text-id_manager").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
+			},
+			delay: 200
+
+		});
 });
 </script>

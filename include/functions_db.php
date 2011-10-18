@@ -1252,6 +1252,15 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 	return $values;
 }
 
+// Returns array with the users that belongs to a project
+// ----------------------------------------------------------------------
+function get_users_project ($id_project){
+	// Show only users assigned to this project
+	$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project ORDER by id_user";
+	$result = get_db_all_rows_sql ($sql);
+
+	return $result;
+}
 function get_inventories ($only_names = true, $exclude_id = false) {
 	if ($exclude_id) {
 		$sql = sprintf ('SELECT * FROM tinventory WHERE id != %d', $exclude_id);

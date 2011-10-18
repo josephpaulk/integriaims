@@ -17,6 +17,37 @@ global $config;
 require_once ('include/functions_tasks.php');
 require_once ('include/functions_workunits.php');
 
+if (defined ('AJAX')) {
+
+	global $config;
+
+	$search_users = (bool) get_parameter ('search_users');
+	
+	if ($search_users) {
+		require_once ('include/functions_db.php');
+		
+		$id_user = $config['id_user'];
+		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
+		
+		$filter = array ();
+		
+		$filter[] = '(nombre COLLATE utf8_general_ci LIKE "%'.$string.'%" OR direccion LIKE "%'.$string.'%" OR comentarios LIKE "%'.$string.'%")';
+
+		$filter[] = 'id_usuario != '.$id_user;
+		
+		$users = get_user_visible_users ($config['id_user'],"IR", false);
+		if ($users === false)
+			return;
+		
+		foreach ($users as $user) {
+			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+		}
+		
+		return;
+ 	}
+	return;
+}
+
 if (check_login() != 0) {
  	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
 	require ("general/noaccess.php");
@@ -34,8 +65,8 @@ if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo
 	exit;
 }
 
-$id = get_parameter ('id', $config["id_user"]);
-$id = get_parameter ("id","");
+$id = get_parameter ('id_username', $config["id_user"]);
+
 if (($id != "") && ($id != $id_user)){
 	if (give_acl($id_user, 0, "PW"))
 		$id_user = $id;
@@ -113,7 +144,11 @@ echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report
 
 
 if (give_acl($config["id_user"], 0, "PM")){
-    combo_user_visible_for_me ($real_user_id, 'id', 0, 'PR');
+    //combo_user_visible_for_me ($real_user_id, 'id', 0, 'PR');
+    $src_code = print_image('images/group.png', true, false, true);
+	echo print_input_text_extended ('id_username', '', 'text-id_username', '', 15, 30, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '')
+		. print_help_tip (__("Type at least two characters to search"), true);
     echo "&nbsp;";
     print_submit_button (__('Show'), 'show_btn', false, 'class="next sub"');
 }
@@ -132,6 +167,37 @@ echo "<div >";
 echo generate_work_calendar ($year, $month, $days_f, 3, NULL, 1, "", $id_user);
 echo "</div>";
 
-
-
 ?>
+<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+
+
+<script type="text/javascript">
+
+$(document).ready (function () {
+	$("#text-start_date").datepicker ();
+	$("#textarea-description").TextAreaResizer ();
+	$("#text-id_username").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "operation/user_report/monthly",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>"
+			},
+			formatItem: function (data, i, total) {
+				if (total == 0)
+					$("#text-id_username").css ('background-color', '#cc0000');
+				else
+					$("#text-id_username").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
+			},
+			delay: 200
+
+		});
+});
+</script>

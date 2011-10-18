@@ -20,7 +20,6 @@
 global $config;
 
 check_login ();
-
 if (defined ('AJAX')) {
 
 	global $config;
@@ -30,7 +29,7 @@ if (defined ('AJAX')) {
 	if ($search_users) {
 		require_once ('include/functions_db.php');
 		
-		//$id_user = (int) get_parameter ('id_user'); //¿?
+		$id_project = (int)  get_parameter ('id_project');
 		$id_user = $config['id_user'];
 		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
 		
@@ -40,12 +39,12 @@ if (defined ('AJAX')) {
 
 		$filter[] = 'id_usuario != '.$id_user;
 		
-		$users = get_user_visible_users ($config['id_user'],"IR", false);
+		$users = get_users_project ($id_project);
 		if ($users === false)
 			return;
 		
 		foreach ($users as $user) {
-			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+			echo $user['id_user'] . "/" .get_db_value ("name","trole","id",$user["id_role"]). "\n";
 		}
 		
 		return;
@@ -265,7 +264,10 @@ if ($id_task != -1){
 		echo "<td valign='top' class='datos2'>";
 		echo __('User'). "/".__('Role');
 		echo "<td valign='top' class='datos2'>";
-		echo combo_users_project($id_project);
+		//echo combo_users_project($id_project);
+		echo print_input_text_extended ('user', '', 'text-user', '', 15, 30, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '')
+		. print_help_tip (__("Type at least two characters to search"), true);
 		echo "</table>";
 		echo "<table class='button' width=510>";
 		echo "<tr><td align='right'>";
@@ -294,7 +296,7 @@ if ($id_task != -1){
 	echo "<td valign='top' class='datos2'>";
 	echo __('User  ');
 	$src_code = print_image('images/group.png', true, false, true);
-	echo print_input_text_extended ('id_user', '', 'text-id_user', '', 20, 100, false, '',
+	echo print_input_text_extended ('user', '', 'text-user', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '','')
 		. print_help_tip (__("Type at least two characters to search"), true);
 	echo "</table>";
@@ -346,27 +348,27 @@ echo "</table></div>";
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
 
-	$("#text-id_user").autocomplete ("ajax.php",
+	$("#text-user").autocomplete ("ajax.php",
 		{
 			scroll: true,
 			minChars: 2,
 			extraParams: {
 				page: "operation/projects/people_manager",
 				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
+				id_user: "<?php echo $config['id_user'] ?>",
+				id_project: "<?php echo $id_project?>"
 			},
 			formatItem: function (data, i, total) {
 				if (total == 0)
-					$("#text-id_user").css ('background-color', '#cc0000');
+					$("#text-user").css ('background-color', '#cc0000');
 				else
-					$("#text-id_user").css ('background-color', '');
+					$("#text-user").css ('background-color', '');
 				if (data == "")
 					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?></span>';
 			},
 			delay: 200
 
 		});
 });
-
 </script>

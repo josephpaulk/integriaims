@@ -19,6 +19,36 @@ global $config;
 
 check_login ();
 
+if (defined ('AJAX')) {
+
+	global $config;
+
+	$search_users = (bool) get_parameter ('search_users');
+	
+	if ($search_users) {
+		require_once ('include/functions_db.php');
+		
+		$id_user = $config['id_user'];
+		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
+		
+		$filter = array ();
+		
+		$filter[] = '(nombre COLLATE utf8_general_ci LIKE "%'.$string.'%" OR direccion LIKE "%'.$string.'%" OR comentarios LIKE "%'.$string.'%")';
+
+		$filter[] = 'id_usuario != '.$id_user;
+		
+		$users = get_user_visible_users ($config['id_user'],"IR", false);
+		if ($users === false)
+			return;
+		
+		foreach ($users as $user) {
+			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+		}
+		
+		return;
+ 	}
+	return;
+}
 require_once ('include/functions_tasks.php');
 require_once ('include/functions_workunits.php');
 
@@ -296,8 +326,12 @@ $table->data[2][0] = print_input_text ('duration', $duration, '', 7, 7,
 
 if (dame_admin ($config['id_user'])) {
 	$table->colspan[2][1] = 3;
-	$table->data[2][1] = combo_user_visible_for_me ($wu_user,
-		'wu_user', 0, "TW", true, __('Username'));
+	/*$table->data[2][1] = combo_user_visible_for_me ($wu_user,
+		'wu_user', 0, "TW", true, __('Username'));*/
+	$src_code = print_image('images/group.png', true, false, true);
+	$table->data[2][1] = print_input_text_extended ('id_username', '', 'text-id_username', '', 15, 30, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Username'))
+		. print_help_tip (__("Type at least two characters to search"), true);
 }
 
 // Various checkboxes
@@ -340,11 +374,34 @@ echo '</form>';
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+
 
 <script type="text/javascript">
 
 $(document).ready (function () {
 	$("#text-start_date").datepicker ();
 	$("#textarea-description").TextAreaResizer ();
+	$("#text-id_username").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "operation/users/user_spare_workunit",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>"
+			},
+			formatItem: function (data, i, total) {
+				if (total == 0)
+					$("#text-id_username").css ('background-color', '#cc0000');
+				else
+					$("#text-id_username").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
+			},
+			delay: 200
+
+		});
 });
 </script>

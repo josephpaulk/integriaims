@@ -15,10 +15,44 @@
 // Load global vars
 
 include "include/functions_graph.php";
+require_once ('include/functions_html.php');
+require_once ('include/functions_db.php');
+
 global $config;
 $id_user = $config["id_user"];
 
 check_login ();
+
+if (defined ('AJAX')) {
+
+	global $config;
+
+	$search_users = (bool) get_parameter ('search_users');
+	
+	if ($search_users) {
+		require_once ('include/functions_db.php');
+		
+		$id_user = $config['id_user'];
+		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
+		
+		$filter = array ();
+		
+		$filter[] = '(nombre COLLATE utf8_general_ci LIKE "%'.$string.'%" OR direccion LIKE "%'.$string.'%" OR comentarios LIKE "%'.$string.'%")';
+
+		$filter[] = 'id_usuario != '.$id_user;
+		
+		$users = get_user_visible_users ($config['id_user'],"IR", false);
+		if ($users === false)
+			return;
+		
+		foreach ($users as $user) {
+			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+		}
+		
+		return;
+ 	}
+	return;
+}
 
 $user_id = get_parameter ('user_id', $config["id_user"]);
 
@@ -66,7 +100,10 @@ if ($clean_output == 0){
     echo "<tr><td>";
     echo __("Username") ."<br>";
     if (give_acl($config["id_user"], 0, "PM"))
-        combo_user_visible_for_me ($user_id, 'user_id', 0, 'PM');
+       //combo_user_visible_for_me ($user_id, 'user_id', 0, 'PM');
+		echo print_input_text_extended ('user_id', '', 'text-user_id', '', 15, 30, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '')
+		. print_help_tip (__("Type at least two characters to search"), true);
     else
         echo $config["id_user"];
 
@@ -264,10 +301,33 @@ if ($incident_graph){
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
+<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+
 
 <script type="text/javascript">
 
 $(document).ready (function () {
 	configure_range_dates (null);
+	$("#text-user_id").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "operation/user_report/report_full",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>"
+			},
+			formatItem: function (data, i, total) {
+				if (total == 0)
+					$("#text-user_id").css ('background-color', '#cc0000');
+				else
+					$("#text-user_id").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
+			},
+			delay: 200
+
+		});
 });
 </script>

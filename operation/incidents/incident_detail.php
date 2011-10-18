@@ -731,11 +731,8 @@ else {
      $enabled = false;
 }
 if ($enabled){
-
-/*	$table->data[2][3] = print_label(__('Creator'), '', '', true);
-	$table->data[2][3] .= print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'id_creator', $id_creator, '', 'select', '', true, false, true, false, !$enabled);*/
 	$src_code = print_image('images/group.png', true, false, true);
-	$table->data[2][3] = print_input_text_extended ('id_creator', '', 'text-id_creator', '', 30, 100, false, '',
+	$table->data[2][3] = print_input_text_extended ('id_creator', '', 'text-id_creator', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Creator'))
 		. print_help_tip (__("Type at least two characters to search"), true);
 } else {
@@ -752,7 +749,7 @@ if ($has_permission) {
 // Only users with manage permission can change auto-assigned user (that information comes from group def.)
 if ($has_manage_permission) {
 	$src_code = print_image('images/group.png', true, false, true);
-	$table->data[4][1] = print_input_text_extended ('id_user', 'Default Admin', 'text-id_user', '', 30, 100, false, '',
+	$table->data[4][1] = print_input_text_extended ('id_user', 'Default Admin', 'text-id_user', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))
 		. print_help_tip (__("User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user"), true);
 } else {
