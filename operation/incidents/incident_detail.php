@@ -30,18 +30,14 @@ if (defined ('AJAX')) {
 		$id_user = $config['id_user'];
 		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
 		
-		$filter = array ();
-		
-		$filter[] = '(nombre COLLATE utf8_general_ci LIKE "%'.$string.'%" OR direccion LIKE "%'.$string.'%" OR comentarios LIKE "%'.$string.'%")';
-
-		$filter[] = 'id_usuario != '.$id_user;
-		
 		$users = get_user_visible_users ($config['id_user'],"IR", false);
 		if ($users === false)
 			return;
 		
 		foreach ($users as $user) {
-			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+			if(preg_match('/'.$string.'/', $user['id_usuario']) || preg_match('/'.$string.'/', $user['nombre_real'])) {
+				echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+			}
 		}
 		
 		return;
@@ -237,7 +233,8 @@ if ($action == 'update') {
 
 if ($action == "insert") {
 	$grupo = (int) get_parameter ('grupo_form');
-	$usuario = (string) get_parameter ('usuario_form');
+	//$usuario = (string) get_parameter ('usuario_form');
+	$usuario = $config['id_user'];
 
 	if (! give_acl ($config['id_user'], $grupo, "IW") && $usuario != $config['id_user']) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],
@@ -907,7 +904,7 @@ $(document).ready (function () {
 					$("#text-id_user").css ('background-color', '');
 				if (data == "")
 					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre real") ?>: '+data[1]+'</span>';
 			},
 			delay: 200
 

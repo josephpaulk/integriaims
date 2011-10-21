@@ -20,6 +20,7 @@
 global $config;
 
 check_login ();
+
 if (defined ('AJAX')) {
 
 	global $config;
@@ -29,22 +30,20 @@ if (defined ('AJAX')) {
 	if ($search_users) {
 		require_once ('include/functions_db.php');
 		
-		$id_project = (int)  get_parameter ('id_project');
+		$id_project = (int) get_parameter ('id_project');
+		debugPrint($id_project,true);
 		$id_user = $config['id_user'];
 		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
 		
-		$filter = array ();
-		
-		$filter[] = '(nombre COLLATE utf8_general_ci LIKE "%'.$string.'%" OR direccion LIKE "%'.$string.'%" OR comentarios LIKE "%'.$string.'%")';
-
-		$filter[] = 'id_usuario != '.$id_user;
-		
 		$users = get_users_project ($id_project);
+		
 		if ($users === false)
 			return;
-		
+
 		foreach ($users as $user) {
-			echo $user['id_user'] . "/" .get_db_value ("name","trole","id",$user["id_role"]). "\n";
+			if(preg_match('/'.$string.'/', $user['id_user'])) {
+				echo $user['id_user'] . "/" . get_db_value ("name","trole","id",$user["id_role"]). "\n";
+			}
 		}
 		
 		return;
@@ -338,7 +337,6 @@ while ($row=mysql_fetch_array($result)){
 	echo '<td valign="top" class="'.$tdcolor.'" align="center">'.$row["cost"];
 }
 echo "</table></div>";
-
 ?>
 
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
@@ -365,7 +363,7 @@ $(document).ready (function () {
 					$("#text-user").css ('background-color', '');
 				if (data == "")
 					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?></span>';
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __("") ?></span>';
 			},
 			delay: 200
 

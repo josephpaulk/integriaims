@@ -1,3 +1,17 @@
+2011-10-21  Vanessa Gil <vgil@artica.es>
+
+	* godmode/grupos/configurar_grupo.php
+	include/functions_db.php
+	operation/incidents/incident_detail.php
+	operation/projects/people_manager.php
+	operation/projects/project_detail.php
+	operation/user_report/monthly.php
+	operation/user_report/report_annual.php
+	operation/user_report/report_full.php
+	operation/users/user_spare_workunit.php
+	operation/users/user_task_assigment.php: improvements in
+	user search.
+
 2011-10-18  Vanessa Gil <vgil@artica.es>
 
 	* godmode/grupos/configurar_grupo.php

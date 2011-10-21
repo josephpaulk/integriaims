@@ -14,9 +14,7 @@
 
 // Load global vars
 
-include "include/functions_graph.php";
-require_once ('include/functions_html.php');
-require_once ('include/functions_db.php');
+
 
 global $config;
 $id_user = $config["id_user"];
@@ -35,24 +33,25 @@ if (defined ('AJAX')) {
 		$id_user = $config['id_user'];
 		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
 		
-		$filter = array ();
-		
-		$filter[] = '(nombre COLLATE utf8_general_ci LIKE "%'.$string.'%" OR direccion LIKE "%'.$string.'%" OR comentarios LIKE "%'.$string.'%")';
-
-		$filter[] = 'id_usuario != '.$id_user;
-		
 		$users = get_user_visible_users ($config['id_user'],"IR", false);
+		
 		if ($users === false)
 			return;
 		
 		foreach ($users as $user) {
-			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+			if(preg_match('/'.$string.'/', $user['id_usuario']) || preg_match('/'.$string.'/', $user['nombre_real'])) {
+				echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+			}
 		}
 		
 		return;
  	}
 	return;
 }
+
+include "include/functions_graph.php";
+require_once ('include/functions_html.php');
+require_once ('include/functions_db.php');
 
 $user_id = get_parameter ('user_id', $config["id_user"]);
 
