@@ -48,7 +48,6 @@ if (defined ('AJAX')) {
 		
 		return;
  	}
-	return;
 }
 
 require_once ('include/functions_db.php');

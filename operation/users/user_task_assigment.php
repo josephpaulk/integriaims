@@ -44,7 +44,6 @@ if (defined ('AJAX')) {
 		
 		return;
  	}
-	return;
 }
 
 

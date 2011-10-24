@@ -43,7 +43,6 @@ if (defined ('AJAX')) {
 		
 		return;
  	}
-	return;
 }
 
     $days_f = array();

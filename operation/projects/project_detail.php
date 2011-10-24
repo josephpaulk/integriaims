@@ -45,7 +45,6 @@ if (defined ('AJAX')) {
 		
 		return;
  	}
-	return;
 }
 
 include_once ("include/functions_graph.php");

@@ -972,8 +972,15 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN){
 			echo "<li style='margin-left: 15px; font-size: 10px;'>";
     		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a>";
             echo "</li>";
+            
+/*
+            echo "<li style='margin-left: 15px; font-size: 10px;'>";
+    		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/import_from_csv'>".__('Import from CSV')."</a>";
+            echo "</li>";
+*/
         }
-
+		echo "<li>";       
+		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/import_from_csv'>".__('Import from CSV')."</a></li>";
         echo "</li>";
 
 		// Rolemanager
@@ -994,7 +1001,7 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN){
             echo "<li style='margin-left: 15px; font-size: 10px;'>";
             echo "<a href='index.php?sec=users&sec2=godmode/grupos/configurar_grupo'>".__("Create group")."</a></li>";
         }
-        
+		
 		enterprise_include ("operation/sidemenu_user_mgmt.php");
 		
 		echo "</ul>";

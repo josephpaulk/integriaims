@@ -43,7 +43,6 @@ if (defined ('AJAX')) {
 		
 		return;
  	}
-	return;
 }
 require_once ('include/functions_tasks.php');
 require_once ('include/functions_workunits.php');

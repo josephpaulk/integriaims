@@ -1,3 +1,8 @@
+2011-10-24  Vanessa Gil <vgil@artica.es>
+
+	* godmode/usuarios/import_from_csv.php: Added import of 
+	users using a csv file.
+
 2011-10-21  Vanessa Gil <vgil@artica.es>
 
 	* godmode/grupos/configurar_grupo.php

@@ -42,7 +42,6 @@ if (defined ('AJAX')) {
 		
 		return;
  	}
-	return;
 }
 
 if (! give_acl ($config["id_user"], 0, "UM")) {

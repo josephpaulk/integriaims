@@ -40,7 +40,6 @@ if (defined ('AJAX')) {
 		}
 		return;
  	}
-	return;
 }
 
 if (check_login() != 0) {
