@@ -1,5 +1,10 @@
 2011-10-25  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/projects/project.php: Fixed creation of 
+	projects sql error for bug 3426493
+
+2011-10-25  Sergio Martin <sergio.martin@artica.es>
+
 	* operation/incidents/incident_detail.php: Fixed creation
 	of incident checking if exist assigned and creator users
 

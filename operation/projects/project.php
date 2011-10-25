@@ -95,23 +95,40 @@ if ($action == 'insert') {
 		audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Forbidden", "User ".$id_user. " try to create project");
 		return;
 	}
-	
+
 	// Read input variables
-	$id_owner = get_parameter ("user");
+	$id_owner = get_parameter ("id_manager", "");
 	$name = (string) get_parameter ("name");
 	$description = (string) get_parameter ('description');
 	$start_date = (string) get_parameter ('start_date');
 	$end_date = (string) get_parameter ('end_date');
 	$id_project_group = (int) get_parameter ('id_project_group');
 
-	$sql = sprintf ('INSERT INTO tproject
-		(name, description, start, end, id_owner, id_project_group)
-		VALUES ("%s", "%s", "%s", "%s", "%s", %d)',
-		$name, $description, $start_date, $end_date, $id_owner,
-		$id_project_group);
-	$id_project = process_sql ($sql, 'insert_id');
+	$error_msg = "";
+	
+	if($id_owner == "") {
+		$id_owner = $config['id_user'];
+	}
+	else {
+		$owner_exists = get_user($id_owner);
+		
+		if($owner_exists === false) {
+			$error_msg  = '<h3 class="error">'.__('Project manager user does not exist').'</h3>';
+			$id_project = false;
+		}
+		else {
+			$sql = sprintf ('INSERT INTO tproject
+				(name, description, start, end, id_owner, id_project_group)
+				VALUES ("%s", "%s", "%s", "%s", "%s", %d)',
+				$name, $description, $start_date, $end_date, $id_owner,
+				$id_project_group);
+			
+			$id_project = process_sql ($sql, 'insert_id');
+		}
+	}
+	
 	if ($id_project === false) {
-		echo '<h3 class="error">'.__('Project cannot be created, problem found.').'</h3>';
+		echo '<h3 class="error">'.__('Project cannot be created, problem found.').'</h3>'.$error_msg;
 	} else {
 		echo '<h3 class="suc">'.__('Successfully created').' #'.$id_project.'</h3>';
 		audit_db ($id_owner, $REMOTE_ADDR, "Project created", "User ".$config['id_user']." created project '$name'");
