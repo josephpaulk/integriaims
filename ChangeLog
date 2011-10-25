@@ -1,3 +1,13 @@
+2011-10-25  Sergio Martin <sergio.martin@artica.es>
+
+	* operation/incidents/incident_detail.php: Fixed creation
+	of incident checking if exist assigned and creator users
+
+	* operation/projects/project.php 
+	operation/inventories/inventory.php
+	godmode/updatemanager/load_updatemanager.php: Fixed
+	error messages css class 
+
 2011-10-24  Vanessa Gil <vgil@artica.es>
 
 	* godmode/usuarios/import_from_csv.php: Added import of 

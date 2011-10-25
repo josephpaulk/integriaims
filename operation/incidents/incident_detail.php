@@ -18,6 +18,8 @@ global $config;
 
 check_login ();
 
+require_once ('include/functions_incidents.php');
+
 if (defined ('AJAX')) {
 
 	global $config;
@@ -44,7 +46,6 @@ if (defined ('AJAX')) {
  	}
 }
 
-require_once ('include/functions_incidents.php');
 
 $id_grupo = (int) get_parameter ('id_grupo');
 $id = (int) get_parameter ('id');
@@ -57,6 +58,7 @@ if ($id) {
 }
 
 $check_incident = (bool) get_parameter ('check_incident');
+
 if ($check_incident) {
 	if ($incident !== false && give_acl ($config['id_user'], $id_grupo, "IR")){
 		if ((get_external_user($config["id_user"])) AND ($incident["id_creator"] != $config["id_user"]))
@@ -171,7 +173,6 @@ if ($action == 'update') {
 	}
 	$timestamp = print_mysql_timestamp();
 
-
 	$sql = sprintf ('UPDATE tincidencia SET email_copy = "%s", actualizacion = "%s",
 			  id_creator = "%s",
 			titulo = "%s", origen = %d, estado = %d,
@@ -232,8 +233,6 @@ if ($action == 'update') {
 
 if ($action == "insert") {
 	$grupo = (int) get_parameter ('grupo_form');
-	//$usuario = (string) get_parameter ('usuario_form');
-	$usuario = $config['id_user'];
 
 	if (! give_acl ($config['id_user'], $grupo, "IW") && $usuario != $config['id_user']) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],
@@ -257,55 +256,69 @@ if ($action == "insert") {
 	$sla_disabled = (bool) get_parameter ("sla_disabled");
 	$id_parent = (int) get_parameter ('id_parent');
 	$email_copy = get_parameter ("email_copy", "");
+	$usuario = get_parameter ("id_user", $config['id_user']);
 
-	if ($id_parent == 0) {
-		$idParentValue = 'NULL';
+	$creator_exists = get_user($id_creator);
+	$user_exists = get_user($usuario);
+	
+	if($creator_exists === false) {
+		$result_msg  = '<h3 class="error">'.__('Creator user does not exist').'</h3>';
+	}
+	else if($user_exists === false) {
+		$result_msg  = '<h3 class="error">'.__('Assigned user does not exist').'</h3>';
 	}
 	else {
-		$idParentValue = sprintf ('%d', $id_parent);
-	}
-
-	// DONT use MySQL NOW() or UNIXTIME_NOW() because 
-	// Integria can override localtime zone by a user-specified timezone.
-
-	$timestamp = print_mysql_timestamp();
-
-	$sql = sprintf ('INSERT INTO tincidencia
-			(inicio, actualizacion, titulo, descripcion,
-			id_usuario, origen, estado, prioridad,
-			id_grupo, id_creator, notify_email, id_task,
-			resolution, id_incident_type, id_parent, sla_disabled, email_copy)
-			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
-			"%s", %d, %d, %d, %d, %s, %d, "%s")', $timestamp, $timestamp,
-			$titulo, $description, $usuario,
-			$origen, $estado, $priority, $grupo, $id_creator,
-			$email_notify, $id_task, $resolution, $id_incident_type,
-			$idParentValue, $sla_disabled, $email_copy);
-
-	$id = process_sql ($sql, 'insert_id');
-
-	if ($id !== false) {
-		/* Update inventory objects in incident */
-		update_incident_inventories ($id, get_parameter ('inventories'));
-		if ($config['incident_reporter'] == 1)
-			update_incident_contact_reporters ($id, get_parameter ('contacts'));
-		
-		$result_msg = '<h3 class="suc">'.__('Successfully created').' (id #'.$id.')</h3>';
-		$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
-
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"],
-			"Incident created",
-			"User ".$config['id_user']." created incident #".$id);
-		
-//		incident_tracking ($id, INCIDENT_CREATED);
-
-		// Email notify to all people involved in this incident
-		if ($email_notify) {
-			mail_incident ($id, $usuario, "", 0, 1);
+	
+		if ($id_parent == 0) {
+			$idParentValue = 'NULL';
 		}
-	} else {
-		$result_msg  = '<h3 class="err">'.__('Could not be created').'</h3>';
+		else {
+			$idParentValue = sprintf ('%d', $id_parent);
+		}
+
+		// DONT use MySQL NOW() or UNIXTIME_NOW() because 
+		// Integria can override localtime zone by a user-specified timezone.
+
+		$timestamp = print_mysql_timestamp();
+
+		$sql = sprintf ('INSERT INTO tincidencia
+				(inicio, actualizacion, titulo, descripcion,
+				id_usuario, origen, estado, prioridad,
+				id_grupo, id_creator, notify_email, id_task,
+				resolution, id_incident_type, id_parent, sla_disabled, email_copy)
+				VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
+				"%s", %d, %d, %d, %d, %s, %d, "%s")', $timestamp, $timestamp,
+				$titulo, $description, $usuario,
+				$origen, $estado, $priority, $grupo, $id_creator,
+				$email_notify, $id_task, $resolution, $id_incident_type,
+				$idParentValue, $sla_disabled, $email_copy);
+
+		$id = process_sql ($sql, 'insert_id');
+
+		if ($id !== false) {
+			/* Update inventory objects in incident */
+			update_incident_inventories ($id, get_parameter ('inventories'));
+			if ($config['incident_reporter'] == 1)
+				update_incident_contact_reporters ($id, get_parameter ('contacts'));
+			
+			$result_msg = '<h3 class="suc">'.__('Successfully created').' (id #'.$id.')</h3>';
+			$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
+
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"],
+				"Incident created",
+				"User ".$config['id_user']." created incident #".$id);
+			
+			//incident_tracking ($id, INCIDENT_CREATED);
+
+			// Email notify to all people involved in this incident
+			if ($email_notify) {
+				mail_incident ($id, $usuario, "", 0, 1);
+			}
+		} else {
+			$result_msg  = '<h3 class="error">'.__('Could not be created').'</h3>';
+		}
 	}
+	
 	if (defined ('AJAX')) {
 		echo $result_msg;
 		return;
@@ -398,7 +411,7 @@ if ($id) {
 	// Upload file
 	$upload_file = (bool) get_parameter ('upload_file');
 	if (give_acl ($config['id_user'], $id_grupo, "IW") && $upload_file) {
-		$result_msg = '<h3 class="err">'.__('No file was attached').'</h3>';
+		$result_msg = '<h3 class="error">'.__('No file was attached').'</h3>';
 		/* if file */
 		if ($_FILES['userfile']['name'] != "" && $_FILES['userfile']['error'] == 0) {
 			$file_description = get_parameter ("file_description",
@@ -745,7 +758,7 @@ if ($has_permission) {
 // Only users with manage permission can change auto-assigned user (that information comes from group def.)
 if ($has_manage_permission) {
 	$src_code = print_image('images/group.png', true, false, true);
-	$table->data[4][1] = print_input_text_extended ('id_user', 'Default Admin', 'text-id_user', '', 15, 30, false, '',
+	$table->data[4][1] = print_input_text_extended ('id_user', '', 'text-id_user', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))
 		. print_help_tip (__("User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user"), true);
 } else {

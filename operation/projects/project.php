@@ -111,7 +111,7 @@ if ($action == 'insert') {
 		$id_project_group);
 	$id_project = process_sql ($sql, 'insert_id');
 	if ($id_project === false) {
-		echo '<h3 class="err">'.__('Project cannot be created, problem found.').'</h3>';
+		echo '<h3 class="error">'.__('Project cannot be created, problem found.').'</h3>';
 	} else {
 		echo '<h3 class="suc">'.__('Successfully created').' #'.$id_project.'</h3>';
 		audit_db ($id_owner, $REMOTE_ADDR, "Project created", "User ".$config['id_user']." created project '$name'");

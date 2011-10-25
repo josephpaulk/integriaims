@@ -73,7 +73,7 @@ update inventory extras without permission#".$id);
         if ($result !== false) {
                 $result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
         } else {
-                $result_msg = '<h3 class="err">'.__('There was an error updating inventory 
+                $result_msg = '<h3 class="error">'.__('There was an error updating inventory 
 object').'</h3>';
         }
 
