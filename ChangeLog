@@ -1,3 +1,11 @@
+2011-10-27  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_incidents.php: Changed deprecated 
+	function split by explode
+
+	* operation/projects/project.php: Fixed a bug when create
+	a project without specify the owner
+
 2011-10-25  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/projects/project.php: Fixed creation of 

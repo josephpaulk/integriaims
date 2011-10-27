@@ -756,7 +756,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
     // Send a copy to each address in "email_copy"
 
     if ($email_copy != ""){
-        $emails = split (",",$email_copy);
+        $emails = explode (",",$email_copy);
         foreach ($emails as $em){
         	integria_sendmail ($em, $subject, $text, false, "");
         }

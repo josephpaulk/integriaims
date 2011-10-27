@@ -108,23 +108,24 @@ if ($action == 'insert') {
 	
 	if($id_owner == "") {
 		$id_owner = $config['id_user'];
+		$owner_exists = true;	
 	}
 	else {
 		$owner_exists = get_user($id_owner);
+	}
+	
+	if($owner_exists === false) {
+		$error_msg  = '<h3 class="error">'.__('Project manager user does not exist').'</h3>';
+		$id_project = false;
+	}
+	else {
+		$sql = sprintf ('INSERT INTO tproject
+			(name, description, start, end, id_owner, id_project_group)
+			VALUES ("%s", "%s", "%s", "%s", "%s", %d)',
+			$name, $description, $start_date, $end_date, $id_owner,
+			$id_project_group);
 		
-		if($owner_exists === false) {
-			$error_msg  = '<h3 class="error">'.__('Project manager user does not exist').'</h3>';
-			$id_project = false;
-		}
-		else {
-			$sql = sprintf ('INSERT INTO tproject
-				(name, description, start, end, id_owner, id_project_group)
-				VALUES ("%s", "%s", "%s", "%s", "%s", %d)',
-				$name, $description, $start_date, $end_date, $id_owner,
-				$id_project_group);
-			
-			$id_project = process_sql ($sql, 'insert_id');
-		}
+		$id_project = process_sql ($sql, 'insert_id');
 	}
 	
 	if ($id_project === false) {
