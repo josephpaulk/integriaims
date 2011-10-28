@@ -261,87 +261,88 @@ if ($free_text != "")
 if ($category > 0)
 	$sql_filter .= " AND tdownload.id_category = $category ";
 
+if(get_admin_user ($config['id_user']) != 1) {
+	$sql_filter = " AND tusuario_perfil.id_grupo = tdownload_category_group.id_group ";
+}
+
 $offset = get_parameter ("offset", 0);
 
-$count = get_db_sql("SELECT COUNT(tdownload.id) FROM tusuario, tprofile, tdownload, 
-tusuario_perfil, tdownload_category_group, tdownload_category
-WHERE tusuario.id_usuario = '".$config["id_user"]."' AND 
-tusuario.id_usuario = tusuario_perfil.id_usuario AND
+$condition = "tusuario, tprofile, tdownload, tusuario_perfil, 
+tdownload_category_group, tdownload_category
+WHERE tusuario_perfil.id_usuario = '".$config["id_user"]."' AND 
 tusuario_perfil.id_perfil = tprofile.id  AND
-tusuario_perfil.id_grupo = tdownload_category_group.id_group AND
-tdownload_category_group.id_category = tdownload.id_category $sql_filter
-GROUP BY tdownload.id");
+tdownload_category_group.id_category = tdownload.id_category $sql_filter";
+
+$count = get_db_sql("SELECT COUNT(DISTINCT tdownload.id) FROM $condition");
 
 pagination ($count, "index.php?sec=download&sec2=operation/download/browse", $offset);
 
-$sql1 = "SELECT tdownload.* FROM tusuario, tprofile, tdownload,
-tusuario_perfil, tdownload_category_group, tdownload_category
-WHERE tusuario.id_usuario = '".$config["id_user"]."' AND
-tusuario.id_usuario = tusuario_perfil.id_usuario AND
-tusuario_perfil.id_perfil = tprofile.id  AND
-tusuario_perfil.id_grupo = tdownload_category_group.id_group AND
-tdownload_category_group.id_category = tdownload.id_category $sql_filter 
-GROUP BY tdownload.id ORDER BY date DESC, name, id_category LIMIT
+$sql = "SELECT tdownload.* FROM $condition GROUP BY tdownload.id ORDER BY date DESC, name, id_category LIMIT
 $offset, ". $config["block_size"];
 
-
 $color =0;
-if ($result=mysql_query($sql1)){
+
+$downloads = process_sql($sql);
+
+if($downloads == false) {
+	$downloads = array();
+	echo "<h3 class='error'>".__('No Downloads found')."</h3>"; 
+}
+else {
 	echo '<table width="95%" class="listing" cellspacing=4 cellpading=4>';
 
 	echo "<th>".__('Name')."</th>";
-	echo "<th>".__("Size")."</th>";
+	echo "<th>".__('Size')."</th>";
 	echo "<th>".__('Category')."</th>";
 	echo "<th>".__('Downloads')."</th>";
 	echo "<th>".__('Date')."</th>";
 	if (give_acl($config["id_user"], 0, "KW")){
 		echo "<th>".__('Admin')."</th>";
 	}
+}
+
+foreach($downloads as $row){
+	echo "<tr>";
+
+	// Name
+	echo "<td><b><a title='".$row["description"]."' href='operation/download/download.php?id=".$row["id"]."'>";
+	echo $row["name"]."</a></b> ";
+	if ($row["description"] != ""){
+		echo "<img src='images/zoom.png'>";
+	}
+	echo "</td>";
+
+	// Size
+	echo "<td>";
+	echo format_for_graph(filesize($config["homedir"].$row["location"]),1,".",",",1024);
 	
-	while ($row=mysql_fetch_array($result)){
-		echo "<tr>";
+	// Category
+	echo "<td>";
+			echo "<img src='images/download_category/".get_db_sql ("SELECT icon FROM tdownload_category WHERE id = ".$row["id_category"]). "'>";
 
-		// Name
-		echo "<td><b><a title='".$row["description"]."' href='operation/download/download.php?id=".$row["id"]."'>";
-		echo $row["name"]."</a></b> ";
-		if ($row["description"] != ""){
-			echo "<img src='images/zoom.png'>";
-		}
-		echo "</td>";
-
-		// Size
-		echo "<td>";
-		echo format_for_graph(filesize($config["homedir"].$row["location"]),1,".",",",1024);
-		
-		// Category
-		echo "<td>";
-                echo "<img src='images/download_category/".get_db_sql ("SELECT icon FROM tdownload_category WHERE id = ".$row["id_category"]). "'>";
-
-		// Description
+	// Description
 	//	echo "<td class=f9>";
 	//	echo $row["description"];
 
-		// Downloads
-		echo "<td>";
-		echo get_db_sql ("SELECT COUNT(*) FROM tdownload_tracking where id_download = ".$row["id"]);
+	// Downloads
+	echo "<td>";
+	echo get_db_sql ("SELECT COUNT(*) FROM tdownload_tracking where id_download = ".$row["id"]);
 
-		// Timestamp
-		echo "<td class='f9'>";
-		echo human_time_comparation($row["date"]);
+	// Timestamp
+	echo "<td class='f9'>";
+	echo human_time_comparation($row["date"]);
 
-		if (give_acl($config["id_user"], 0, "KW")){
+	if (give_acl($config["id_user"], 0, "KW")){
 
-			// Editr
-			echo "<td class='f9' align='center' >";
-			echo "<a href='index.php?sec=download&sec2=operation/download/browse&update=".$row["id"]."'><img border='0' src='images/wrench.png'></a>";
-			echo "&nbsp;&nbsp;";
+		// Editr
+		echo "<td class='f9' align='center' >";
+		echo "<a href='index.php?sec=download&sec2=operation/download/browse&update=".$row["id"]."'><img border='0' src='images/wrench.png'></a>";
+		echo "&nbsp;&nbsp;";
 
-			// Delete
-			echo "<a href='index.php?sec=download&sec2=operation/download/browse&delete_data=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
-		}
-
+		// Delete
+		echo "<a href='index.php?sec=download&sec2=operation/download/browse&delete_data=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
 	}
-	echo "</table>";
-}			
 
+}
+echo "</table>";	
 ?>

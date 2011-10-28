@@ -366,7 +366,7 @@ $(document).ready (function () {
 	$("#slider").slider ({
 		min: 0,
 		max: 100,
-		stepping: 5,
+		stepping: 1,
 		slide: function (event, ui) {
 			$("#completion").empty ().append (ui.value+"%");
 		},

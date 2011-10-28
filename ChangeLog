@@ -1,5 +1,14 @@
 2011-10-28  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions_form.php
+	opeoration/download/browse.php: Fixed errors and 
+	clean code in file releases view
+
+	* operation/projects/task_detail.php: Commited some 
+	missed code in last commit
+
+2011-10-28  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_tasks.php
 	operation/projects/task_detail.php
 	operation/users/user_spare_workunit.php: Fixed auto-update

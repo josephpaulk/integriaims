@@ -925,22 +925,37 @@ function print_table_pager ($id = 'pager', $hidden = true, $return = false) {
 function combo_download_categories ($id_category, $show_any = 0){
 	global $config;
 
-	if ($id_category == 0)
-		$id_category = 1;
-
 	echo "<select name='id_category' style='width: 180px;'>";
 	if ($show_any == 1){
-		echo "<option value='0'>".__("Any");
+		if($id_category == 0) {
+			$selected = 'selected';
+		}
+		else {
+			$selected = '';
+		}
+		echo "<option value='0' selected='$selected'>".__("Any");
 	}	
-	$sql = "SELECT * FROM tdownload_category WHERE id != $id_category ORDER by name";
-	$result = mysql_query($sql);
-	
-	$name = get_db_value ("name","tdownload_category","id",$id_category);
-	echo "<option value='".$id_category."'>".$name;
 
-	while ($row=mysql_fetch_array($result)){
+	// Fix for group All
+	if ($id_category == 0)
+		$id_category = 1;
+		
+	$sql = "SELECT * FROM tdownload_category ORDER by name";
+	$result = process_sql($sql);
+	if($result == false) {
+		$result = array();
+	}
+
+	$debug = "";
+	foreach ($result as $row){
 		if (give_acl($config["id_user"], $row["id_group"], "KR")){
-			echo "<option value='".$row["id"]."'>".$row["name"];
+			if($row["id"] == $id_category) {
+				$selected = 'selected';
+			}
+			else {
+				$selected = '';
+			}
+			echo "<option value='".$row["id"]."' selected='$selected'>".$row["name"];
 		}
 	}
 	echo "</select>";
