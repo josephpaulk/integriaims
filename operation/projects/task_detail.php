@@ -19,6 +19,7 @@ global $config;
 check_login ();
 
 include_once ("include/functions_graph.php");
+include_once ("include/functions_tasks.php");
 
 // Get our main stuff
 $id_project = get_parameter ('id_project', -1);
@@ -181,6 +182,7 @@ if ($operation == "update") {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task updated", "Task '$name' updated to project '$id_project'");
 		$operation = "view";
 		task_tracking ($id_task, TASK_UPDATED);
+		set_task_completion ($id_task);
 	} else {
 		$result_output = "<h3 class='error'>".__('Could not be updated')."</h3>";
 	}

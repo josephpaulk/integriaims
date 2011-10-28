@@ -182,6 +182,9 @@ if ($operation == 'insert') {
 					$result_output = '<h3 class="error">'.__('Problem adding workunit.').'</h3>';
 				}
 			}
+			else {
+				$result_output = '<h3 class="error">'.__('Problem adding workunit.').'</h3>';
+			}
 		}
 		mail_project (0, $config['id_user'], $id_workunit, $id_task,
 			"This is part of a multi-workunit assigment of $duration hours");
@@ -204,13 +207,16 @@ if ($operation == 'insert') {
 						'Workunit for '.$config['id_user'].' added to Task ID #'.$id_task);
 				mail_project (0, $config['id_user'], $id_workunit, $id_task);
 			}
+			else {
+				$result_output = '<h3 class="error">'.__('Problemd adding workunit.').'</h3>';
+			}
 		} else {
 			$result_output = '<h3 class="error">'.__('Problemd adding workunit.').'</h3>';
 		}
 	}
 	
 	if ($id_workunit !== false) {
-		add_task_hours ($id_task, $duration);
+		set_task_completion ($id_task);
 	}
 	
 	insert_event ("PWU INSERT", $id_task, 0, $description);
@@ -264,6 +270,10 @@ if ($operation == 'update') {
 	}
 	$result_output = '<h3 class="suc">'.__('Workunit updated').'</h3>';
 	insert_event ("PWU UPDATED", 0, 0, $description);
+	
+	if ($result !== false) {
+		set_task_completion ($id_task);
+	}
 }
 
 echo "<h3><img src='images/award_star_silver_1.png'> ";
