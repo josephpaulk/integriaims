@@ -167,19 +167,11 @@ print_input_text ('end_date', $end_date, '', 10, 20);
 // Owner
 
 echo '<tr>';
-//echo '<td class="datos"><b>'.__('Project manager').'</b>';
-echo "<td class='datos'>";
 $id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
 $src_code = print_image('images/group.png', true, false, true);
-/*if ((give_acl($config["id_user"], 0, "PM") ==1) OR (give_acl($config["id_user"], 0, "PW") ==1) OR ($config["id_user"] == $id_owner )) {
-	if ($create_project)
-		combo_user_visible_for_me ($config["id_user"], "user", 0, "PR");
-	else
-		combo_user_visible_for_me ($id_owner, "user", 0, "PR");
-} else {
-	echo $id_owner;
-}*/
+echo "<td class='datos'>";
 echo "<b>".__('Project manager  ')."</b>";
+echo "<td class='datos'>";
 echo print_input_text_extended ('id_manager', '', 'text-id_manager', '', 10, 20, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '','')
 		. print_help_tip (__("Type at least two characters to search"), true);

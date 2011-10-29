@@ -1,3 +1,9 @@
+2011-10-29  Sancho Lerena <slerena@artica.es>
+
+	* operation/projects/project_detail.php,
+	godmode/usuarios/configurar_usuarios.php: Small cosmetic
+	changes and user contextual help.
+
 2011-10-28  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_form.php

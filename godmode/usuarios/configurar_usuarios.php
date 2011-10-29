@@ -181,7 +181,7 @@ if (give_acl ($config["id_user"], 0, "UM")) {
 	}
 
 ?> 
-<table width='620' class='databox'>
+<table width='720' class='databox'>
 <?php 
 if (isset($_GET["alta"]))
 	// Create URL
@@ -192,13 +192,11 @@ else
 
 echo '<tr>';
 echo '<td class="datos">'.__('User ID');
-echo '<td class="datos">';
+echo '<td class="datos" colspan=5>';
 
 if (isset($_GET["alta"])){
     echo '<input type="text" size=15 name="nombre" value="'.$id_usuario_mio.'">';
-    echo '<i>';
-    echo __("User cannot have Blank spaces");
-    echo '</i>';
+    print_help_tip (__("User cannot have Blank spaces", false));
 } else {
     echo '<i>';
     echo $id_usuario_mio;
@@ -258,7 +256,6 @@ echo print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, fal
 	echo __('Standard user').'&nbsp;<input type="radio" class="chk" name="nivel" value="0">';
 	echo "&nbsp;&nbsp;";
 	echo __('External user').'&nbsp;<input type="radio" class="chk" name="nivel" value="-1">';
-
 	
 } elseif ($nivel == 0) {
 	echo __('Administrator').'&nbsp;<input type="radio" class="chk" name="nivel" value="1">';
@@ -274,6 +271,7 @@ echo print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, fal
 	echo __('External user').'&nbsp;<input type="radio" class="chk" name="nivel" value="-1" checked>';
 }
 
+print_help_tip (__("External users cannot work inside a group, will show only it's own data. Standard users works with the ACL system, and administrators have full access to everything", false));
 
 echo "<tr>";
 echo "<td>";
@@ -301,7 +299,7 @@ if ($modo == "edicion") { // Only show groups for existing users
 	enterprise_hook ('manage_profiles');
 	echo "</table>";
 
-	echo "<div class='button' style='width:620px'>";
+	echo "<div class='button' style='width:720px'>";
 	echo "<input name='uptbutton' type='submit' class='sub next' value='".__('Update')."'>";
 	echo "</div><br>";
 }	
@@ -310,7 +308,7 @@ enterprise_hook ('show_delete_profiles');
 
 if (isset($_GET["alta"])){
 	echo "</table>";
-	echo "<div class='button' style='width: 615px' >";
+	echo "<div class='button' style='width: 720px' >";
 	echo '<input name="crtbutton" type="submit" class="sub create" value="'.__('Create').'">';
 	echo '</div>';
 } 
