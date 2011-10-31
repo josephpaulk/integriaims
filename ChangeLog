@@ -1,3 +1,8 @@
+2011-10-31  Vanessa Gil <vgil@artica.es>
+
+	* godmode/usuarios/import_from_csv.php: Added help to
+	import users from csv file.
+	
 2011-10-29  Sancho Lerena <slerena@artica.es>
 
 	* operation/projects/project_detail.php,
