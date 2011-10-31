@@ -69,7 +69,7 @@ function load_file ($users_file, $group, $profile, $nivel) {
 }
 
 
-echo "<b>".__('IMPORT USERS FROM CSV')."</b>". print_help_tip (__("A CSV file stores tabular data (numbers and text) in plain-text form. The columns are separated by commas."), true);
+echo "<b>".__('IMPORT USERS FROM CSV')."</b>".integria_help ("import_from_csv", true);
 
 $upload_file = (int) get_parameter('upload_file');
 $group = (int)get_parameter('group');
