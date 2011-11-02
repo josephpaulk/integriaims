@@ -1,5 +1,10 @@
 2011-11-02  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions.php: Added constant with the id
+	of the group ALL
+
+2011-11-02  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_db.php
 	operation/user_report/report_monthly.php: Added
 	search parameter to user visible function and

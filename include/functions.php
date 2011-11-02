@@ -21,6 +21,7 @@ define ('ENTERPRISE_NOT_HOOK', -1);
 define('MENU_HIDDEN', 0);
 define('MENU_LIMITED', 1);
 define('MENU_FULL',2);
+define('GROUP_ALL',1);
 
 /*
 
