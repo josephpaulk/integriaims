@@ -63,25 +63,41 @@
 	echo "</h2>";
 
     echo "<br>";
-	echo "<table class='blank' style='margin-left: 10px' >";
+	echo "<table class='blank'>";
 	echo "<tr><td>";
     echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$prev_month&working_year=$prev_year'><img src='images/control_rewind_blue.png'> ".__('Prev')."</a> ";
 	echo "</td><td>";
 	echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/report_monthly'>";
-	echo '<select name="working_month">';
+	echo "<select name='working_month'>";
 	echo "<option value='$working_month'>".getmonth($working_month);
 	for ($ax=1; $ax <= $now_month; $ax++){
                 echo "<option value='$ax'>".getmonth($ax);
     }
-
 	echo "</select>";
 	echo "</td><td>";
-    echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$next_month&working_year=$next_year'><img src='images/control_fastforward_blue.png'> ".__('Prev')."</a> ";
+    echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$next_month&working_year=$next_year'>".__('Next')." <img src='images/control_fastforward_blue.png'></a> ";
+	echo "</td><td>";
+	echo __('Filter');
+	echo "</td><td>";
+	$search = get_parameter ("search", '');
+	
+	print_input_text ('search', $search, '', 15);
 	echo "</td><td>";
 	echo "<input type=submit class='next' value='".__('Update')."'>";
 	echo "</form>";
 	echo "</table>";
+	
+   	$values = get_user_visible_users ($config['id_user'], "UM", true, true, false, $search);
+	
+	if(empty($values) && $search == '') {
+		$values[$config['id_user']] = $config['id_user'];
+	}
+	
+	$offset = get_parameter('offset', 0);
 
+	echo "<table class='blank'><tr><td>";
+    pagination (count($values), "index.php?sec=users&sec2=operation/user_report/report_monthly", $offset);
+	echo "</td></tr></table>";
 
 	echo '<table width="99%" class="listing">';
 	echo "<th>".__('User ID');
@@ -91,14 +107,17 @@
 	echo "<th>".__('Total hours for this month');
     echo "<th>".__('Charged this month');
     echo "<th>".__('Avg. Scoring');
-
-	$values = get_user_visible_users ($config['id_user'], "UM", true);
 	
-	if(empty($values)) {
-		$values[$config['id_user']] = $config['id_user'];
-	}
-	
+	$min = $offset;
+	$max = $offset+$config['block_size']-1;
+	$i = 0;
 	foreach ($values as $key => $value){
+		if($i < $min || $i > $max) {
+			$i++;
+			continue;
+		}
+		$i++;
+
 		$row0 = get_db_row ("tusuario", "id_usuario", $key);
 		if ($row0){
 			$nombre = $row0["id_usuario"];

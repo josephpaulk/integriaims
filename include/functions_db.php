@@ -1186,14 +1186,15 @@ function get_user_groups ($id_user = 0, $permission = 'IR') {
  * 			list of users). If is false only will be checked on user list
  * 			(TRUE by default)
  * @param bool anygroup flag for check permissions in any group, not only in the user groups
+ * @param string search filter to id_usuario
  * 
  * @return A list of users visible by the id_user sended.
  */
-function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true, $both = true, $anygroup = false) {
+function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true, $both = true, $anygroup = false, $search = '') {
 	global $config;
 
 	$values = array ();
-	
+
 	if ($id_user == 0) {
 		$id_user = $config['id_user'];
 	}
@@ -1207,7 +1208,7 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 		
 	// Group All has id = 1
 	if (give_acl ($id_user, 1, $access) && $both) {
-		$users = get_db_all_rows_sql ("SELECT * FROM tusuario ORDER BY id_usuario");
+		$users = get_db_all_rows_sql ("SELECT * FROM tusuario WHERE id_usuario LIKE '%$search%' ORDER BY id_usuario");
 		if ($users === false)
 			$users = array ();
 		foreach ($users as $user) {
