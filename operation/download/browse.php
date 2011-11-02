@@ -144,6 +144,63 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	}
 
 	echo "<h2>".__('File releases management')."</h2>";	
+	
+	$current_directory = get_parameter ("directory", "/");
+
+	// Upload file
+	if (isset($_GET["upload_file"])) {
+
+		if (isset($_FILES["userfile"]) && ( $_FILES['userfile']['name'] != "" )){ //if file
+			$tipo = $_FILES['userfile']['type'];
+
+			$filename= $_FILES['userfile']['name'];
+			$filesize = $_FILES['userfile']['size'];
+			$directory = get_parameter ("directory","");
+
+			// Copy file to directory and change name
+			$nombre_archivo = $config["homedir"]."/".$directory."/".$filename;
+			if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo))){
+				echo "<h3 class=error>".__("attach_error")."</h3>";
+			} else {
+				// Delete temporal file
+				echo "<h3 class=suc>".__("attach_success")."</h3>";
+				$location = $nombre_archivo;
+				unlink ($_FILES['userfile']['tmp_name']);
+			}
+			
+		}
+	}
+
+	// A miminal security check to avoid directory traversal
+	if (preg_match("/\.\./", $current_directory))
+		$current_directory = "images";
+	if (preg_match("/^\//", $current_directory))
+		$current_directory = "images";
+	if (preg_match("/^manager/", $current_directory))
+		$current_directory = "images";
+
+	echo "<h3>".__('Update a new file')."</a></h3>";
+
+	echo "<form method='post' action='index.php?sec=download&sec2=operation/download/browse&create=1&upload_file' enctype='multipart/form-data'>";
+	echo "<table>";
+
+	echo "<input type='hidden' name='directory' value='attachment/downloads'>";
+	if (is_writable($current_directory)) {
+		echo "<tr><td class='datos'>";
+		echo __("Upload new file");
+		echo "<td class='datos'>";
+		echo "<input type='file' size=25 name='userfile' value='userfile'>";
+		echo "&nbsp;&nbsp;";
+		echo "<input type=submit value='".__("Upload")."'>";
+	} else {
+		echo "<h3 class='error'>".__('Current directory is not writtable by HTTP Server')."</h3>";
+		echo "<p>";
+		echo __('Please check that current directory has write rights for HTTP server');
+		echo "</p>";
+	}
+	echo "</table>";
+	echo "</form>";
+	
 	if ($id == -1){
 		echo "<h3>".__('Create a new file release')."</a></h3>";
 		echo "<form name=prodman method='post' action='index.php?sec=download&sec2=operation/download/browse&create2'>";
@@ -234,6 +291,7 @@ echo "<tr>";
 echo "<td>";
 echo __('Categories');
 echo "<td>";
+
 combo_download_categories ($category, 1);
 
 echo "<tr>";

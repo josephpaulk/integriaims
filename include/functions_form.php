@@ -928,17 +928,13 @@ function combo_download_categories ($id_category, $show_any = 0){
 	echo "<select name='id_category' style='width: 180px;'>";
 	if ($show_any == 1){
 		if($id_category == 0) {
-			$selected = 'selected';
+			$selected = "selected='selected'";
 		}
 		else {
-			$selected = '';
+			$selected = "";
 		}
-		echo "<option value='0' selected='$selected'>".__("Any");
+		echo "<option value='0' $selected>".__("Any")."</option>";
 	}	
-
-	// Fix for group All
-	if ($id_category == 0)
-		$id_category = 1;
 		
 	$sql = "SELECT * FROM tdownload_category ORDER by name";
 	$result = process_sql($sql);
@@ -950,12 +946,12 @@ function combo_download_categories ($id_category, $show_any = 0){
 	foreach ($result as $row){
 		if (give_acl($config["id_user"], $row["id_group"], "KR")){
 			if($row["id"] == $id_category) {
-				$selected = 'selected';
+				$selected = "selected='selected'";
 			}
 			else {
-				$selected = '';
+				$selected = "";
 			}
-			echo "<option value='".$row["id"]."' selected='$selected'>".$row["name"];
+			echo "<option value='".$row["id"]."' $selected>".$row["name"]."</option>";
 		}
 	}
 	echo "</select>";

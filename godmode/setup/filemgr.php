@@ -40,6 +40,7 @@ if (isset($_GET["upload_file"])) {
 		if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo ))){
 			echo "<h3 class=error>".__("attach_error")."</h3>";
 		} else {
+			echo "<h3 class=suc>".__("attach_success")."</h3>";
 			// Delete temporal file
 			unlink ($_FILES['userfile']['tmp_name']);
 		}
@@ -146,7 +147,7 @@ echo "<h2>".__("Current directory"). " : ".$current_directory . " <a href='index
 		
 		echo "<table width='750' class='listing'>";
 		
-		$prev_dir = split( "/", $current_directory );
+		$prev_dir = explode( "/", $current_directory );
 		$prev_dir_str = "";
 		for ($ax = 0; $ax < (count($prev_dir)-1); $ax++){
 

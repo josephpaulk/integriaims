@@ -1,3 +1,13 @@
+2011-11-02  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_form.php: Fixed some bugs
+	in select of categories
+
+	* operation/download/browse.php: Added quick 
+	file uploader to file releases creator
+
+	* godmode/setup/filemgr.php: Clean code
+
 2011-10-31  Vanessa Gil <vgil@artica.es>
 
 	* godmode/usuarios/import_from_csv.php: Added help to
