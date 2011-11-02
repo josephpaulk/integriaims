@@ -1,5 +1,11 @@
 2011-11-02  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/download/browse.php: Fixed show
+	only not included files in the combo when
+	create a file release
+
+2011-11-02  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_form.php: Fixed some bugs
 	in select of categories
 

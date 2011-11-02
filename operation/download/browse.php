@@ -230,18 +230,18 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
     $location = basename ($location);
     $files = get_download_files();
-    $files_db  = get_db_all_rows_sql ("SELECT * FROM tdownload");
+    $files_db  = get_db_all_rows_sql ("SELECT * FROM tdownload WHERE location LIKE 'attachment/downloads/%'");
+	if($files_db == false) {
+		$files_db = array();
+	}
+
     $files_not_in = array();
     $match = 0;
     foreach ($files as $file) {
-        foreach ($files_db[0] as $file_db){
-            if ($file == basename ($file_db)){
-                $match=1;
+        foreach ($files_db as $file_db){
+            if ($file != basename ($file_db['location'])){
+				$files_not_in[$file] = $file;
             }
-
-        }
-        if ($match == 0){
-            $files_not_in[$file] = $file;
         }
     }
 
