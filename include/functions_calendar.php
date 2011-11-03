@@ -464,7 +464,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 	$calendar = '<center><h2>'."\n".
 	$calendar = $calendar .$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</center></h2><br>";
 	
-	$calendar = $calendar . '<table class="blank" border=1 cellpadding=10 cellspacing=0>'."\n";
+	$calendar = $calendar . '<table class="blank" border=1 cellpadding=10 cellspacing=0><tr>'."\n";
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
 		foreach($day_names as $d)
@@ -612,7 +612,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
             $mydiff++;
 		} 
 
-        $calendar .= "<td valign='top' style='$border; background: $background; height: 70px; width: 70px;' ><b><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit&givendate=$year-$month-$day'>$day</A</b>";
+        $calendar .= "<td valign='top' style='$border; background: $background; height: 70px; width: 70px;' ><b><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit&givendate=$year-$month-$day'>$day</a></b>";
 
         if ($mydiff > 1){
             $calendar .= "<a href='#' class='tip'>&nbsp;<span>";
@@ -624,7 +624,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
         }
         $calendar .= "<br><br>";
 
-		$calendar .= "<center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$mysql_date. " 00:00:00"."&timestamp_h=".$mysql_date."  23:59:59'><i>".$workhours."</i></a></center>";
+		$calendar .= "<center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$mysql_date. " 00:00:00"."&timestamp_h=".$mysql_date."  23:59:59'><i>".$workhours."</i></a></center></td>";
 
         
 
