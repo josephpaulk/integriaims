@@ -1,3 +1,11 @@
+2011-11-04  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_graph.php
+	operation/user_report/report_annual.php
+	operation/user_report/monthly.php
+	operation/user_report/report_full.php: Fixed several
+	user reports in pdf
+
 2011-11-03  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_calendar.php: Fixed monthly calendar

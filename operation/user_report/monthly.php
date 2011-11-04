@@ -157,7 +157,7 @@ echo "</table>";
 
 // Generate calendar
 
-echo "<div >";
+echo "<div>";
 echo generate_work_calendar ($year, $month, $days_f, 3, NULL, 1, "", $id_user);
 echo "</div>";
 

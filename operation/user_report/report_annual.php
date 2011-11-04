@@ -69,20 +69,36 @@ if (defined ('AJAX')) {
 	exit;
 }
 
-    echo "<h3>".__('Annual report for user')." ". $id_user_show. "</h3>";
+    echo "<h3>".__('Annual report for user')." ". $id_user_show;
+    
+	if ($clean_output == 0){
+		// link full screen
+		echo "&nbsp;&nbsp;<a title='Full screen' href='index.php?sec=users&sec2=operation/user_report/report_annual&user_id=$user_id&year=$year&clean_output=1'>";
+		echo "<img src='images/html.png'>";
+		echo "</a>";
+
+		// link PDF report
+		echo "&nbsp;&nbsp;<a title='PDF report' href='index.php?sec=users&sec2=operation/user_report/report_annual&user_id=$user_id&year=$year&clean_output=1&pdf_output=1'>";
+		echo "<img src='images/page_white_acrobat.png'>";
+		echo "</a>";
+	}
+	
+	echo "</h3>";
 
 	echo "<table cellpadding=4 cellspacing=4 class='blank' style='margin-left: 10px'>";
 	echo "<tr><td>";
 
-	// Prev. year
-	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$prev_year&id_user=$id_user_show'> ".__('Prev')."</a>";
-	echo "</td>";
+	if($pdf_output == 0) {
+		// Prev. year
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$prev_year&id_user=$id_user_show&clean_output=$clean_output'> ".__('Prev')."</a>";
+		echo "</td>";
+	}
 			
 	echo "<td>";
 	echo "<h2>$year</h2>";
 	echo "</td>";
 
-	if (give_acl($config["id_user"], 0, "PM")){		
+	if (give_acl($config["id_user"], 0, "PM") && $pdf_output == 0){		
 	
         echo "<form name='xx' method=post action='index.php?sec=users&sec2=operation/user_report/report_annual'>";
         
@@ -101,11 +117,13 @@ if (defined ('AJAX')) {
 	    print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"');
 	    echo "</td>";	
 	}
-
-	// Next. year
-	echo "<td>";
-	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$next_year&id_user=$id_user_show'> ".__('Next')."</a>";
-	echo "</td>";	
+	
+	if($pdf_output == 0) {
+		// Next. year
+		echo "<td>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$next_year&id_user=$id_user_show&clean_output=$clean_output'> ".__('Next')."</a>";
+		echo "</td>";	
+	}
     echo "</form></table>";
 
 
@@ -157,10 +175,7 @@ if (defined ('AJAX')) {
 		echo " - ";
 		echo __("Locked"). " : " . $locked_hours;        
  
-        echo generate_small_work_calendar ($year, $ax, $days_f, 3, 0, "en", $id_user_show);
-       
-       
-       	
+        echo generate_small_work_calendar ($year, $ax, $days_f, 3, 0, "en", $id_user_show);	
     }
     echo "</table>";
 

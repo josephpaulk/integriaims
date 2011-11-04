@@ -139,7 +139,7 @@ function graph_workunit_project_user_single ($width, $height, $id_project) {
 // Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
 // ===============================================================================
 
-function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 0) {
+function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 0, $ttl = 1) {
 	global $config;
 
 	if ($date_to == 0) {
@@ -165,8 +165,7 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 		echo __("There is no data to show");
 	} else {
 		$colors['graph']['fine'] = true;
-   	
-		return hbar_graph($config['flash_charts'], $data, $width, $height, $colors, array(), "", "", true, "", "", $config['font'], $config['fontsize']);
+		return hbar_graph($config['flash_charts'], $data, $width, $height, $colors, array(), "", "", true, "", "", $config['font'], $config['fontsize'], true, $ttl);
 	}
 }
 
