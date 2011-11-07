@@ -390,6 +390,14 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_attach_file&id=$id_incident'>".__('Add file')."</a>";
 	echo "</li>";	
 
+	// See incident Report
+	if ($sec2 == "operation/incidents/incident_report")
+		echo '<li id="sidesel">';
+	else
+		echo '<li id="incident-report">';
+	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_report'>".__('Incident Report')."</a>";
+	echo "</li>";	
+
 	// Blockend
 	echo "</ul>";
 	echo "</div>";

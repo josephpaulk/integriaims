@@ -723,6 +723,8 @@ function configure_incident_side_menu (id_incident, refresh_menu) {
 			show_add_file_dialog (id_incident);
 			return false;
 		});
+
+	$("#incident-report").children().attr ('href', "index.php?sec=incidents&sec2=operation/incidents/incident_report&id="+id_incident);
 	
 	if (refresh_menu) {
 		values = Array ();
