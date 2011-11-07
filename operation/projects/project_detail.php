@@ -77,7 +77,7 @@ if ($action == 'update') {
 		include ("general/noaccess.php");
 		exit;
 	}
-	$user = get_parameter ("user");
+	$user = get_parameter('id_owner');
 	$name = get_parameter ("name");
 	$description = get_parameter ('description');
 	$start_date = get_parameter ('start_date');
@@ -172,7 +172,8 @@ $src_code = print_image('images/group.png', true, false, true);
 echo "<td class='datos'>";
 echo "<b>".__('Project manager  ')."</b>";
 echo "<td class='datos'>";
-echo print_input_text_extended ('id_manager', '', 'text-id_manager', '', 10, 20, false, '',
+		
+echo print_input_text_extended ('id_owner', $owner, 'text-id_owner', '', 10, 20, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '','')
 		. print_help_tip (__("Type at least two characters to search"), true);
 
@@ -286,7 +287,7 @@ $(document).ready (function () {
 	configure_range_dates (null);
 	$("textarea").TextAreaResizer ();
 	
-	$("#text-id_manager").autocomplete ("ajax.php",
+	$("#text-id_owner").autocomplete ("ajax.php",
 		{
 			scroll: true,
 			minChars: 2,
@@ -297,9 +298,9 @@ $(document).ready (function () {
 			},
 			formatItem: function (data, i, total) {
 				if (total == 0)
-					$("#text-id_manager").css ('background-color', '#cc0000');
+					$("#text-id_owner").css ('background-color', '#cc0000');
 				else
-					$("#text-id_manager").css ('background-color', '');
+					$("#text-id_owner").css ('background-color', '');
 				if (data == "")
 					return false;
 				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Real name") ?>: '+data[1]+'</span>';

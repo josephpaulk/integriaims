@@ -113,7 +113,7 @@ if ($action == 'update') {
 
 	$old_incident = get_incident ($id);
 
-	$user = get_parameter ('usuario_form', $old_incident['id_usuario']);
+	$user = get_parameter('id_user');
  	$grupo = get_parameter ('grupo_form', $old_incident['id_grupo']);
 
 	// Only admins (manage incident) or owners can modify incidents
@@ -292,7 +292,6 @@ if ($action == "insert") {
 				$origen, $estado, $priority, $grupo, $id_creator,
 				$email_notify, $id_task, $resolution, $id_incident_type,
 				$idParentValue, $sla_disabled, $email_copy);
-
 		$id = process_sql ($sql, 'insert_id');
 
 		if ($id !== false) {
@@ -531,7 +530,6 @@ if ($id) {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Show the form
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 $default_responsable = "";
 if (! $id) {
 	if ($config["enteprise"] == 1){
@@ -741,7 +739,7 @@ else {
 }
 if ($enabled){
 	$src_code = print_image('images/group.png', true, false, true);
-	$table->data[2][3] = print_input_text_extended ('id_creator', '', 'text-id_creator', '', 15, 30, false, '',
+	$table->data[2][3] = print_input_text_extended ('id_creator', $id_creator, 'text-id_creator', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Creator'))
 		. print_help_tip (__("Type at least two characters to search"), true);
 } else {
@@ -758,19 +756,21 @@ if ($has_permission) {
 // Only users with manage permission can change auto-assigned user (that information comes from group def.)
 if ($has_manage_permission) {
 	$src_code = print_image('images/group.png', true, false, true);
-	$table->data[4][1] = print_input_text_extended ('id_user', '', 'text-id_user', '', 15, 30, false, '',
+	$table->data[4][1] = print_input_text_extended ('id_user', $usuario, 'text-id_user', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))
 		. print_help_tip (__("User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user"), true);
 } else {
 	// Enterprise only
 	if (($create_incident) AND ($config["enteprise"] == 1)){
 		$assigned_user_for_this_incident = get_default_user_for_incident ($usuario);
-		$table->data[4][1] = print_input_hidden ('usuario_form', $assigned_user_for_this_incident, true, __('Assigned user'));
+		//$table->data[4][1] = print_input_hidden ('usuario_form', $assigned_user_for_this_incident, true, __('Assigned user'));
+		$table->data[4][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Assigned user'));
 		$table->data[4][1] .= print_label (__('Assigned user'), '', '', true,
 		dame_nombre_real ($assigned_user_for_this_incident));	
 
 	} else {
 		$table->data[4][1] = print_input_hidden ('usuario_form', $usuario, true, __('Assigned user'));
+		//$table->data[4][1] = print_input_hidden ('id_user', $usuario, true, __('Assigned user'));
 		$table->data[4][1] .= print_label (__('Assigned user'), '', '', true,
 		dame_nombre_real ($usuario));
 	}
@@ -862,7 +862,7 @@ if ($has_permission){
 }
 
 /* Javascript is only shown in normal mode */
-if (! defined ('AJAX')) :
+//if (! defined ('AJAX')) :
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
@@ -876,7 +876,7 @@ if (! defined ('AJAX')) :
 $(document).ready (function () {
 	/* First parameter indicates to add AJAX support to the form */
 	configure_incident_form (false);
-	//$("#grupo_form").change ();
+	//$("#text-id_user").change (function(){alert("hola")});
 	
 	$("#text-id_creator").autocomplete ("ajax.php",
 		{
@@ -924,4 +924,4 @@ $(document).ready (function () {
 });
 </script>
 
-<?php endif; ?>
+<?php //endif; ?>

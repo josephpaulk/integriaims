@@ -97,7 +97,7 @@ if ($action == 'insert') {
 	}
 
 	// Read input variables
-	$id_owner = get_parameter ("id_manager", "");
+	$id_owner = get_parameter ("id_owner", "");
 	$name = (string) get_parameter ("name");
 	$description = (string) get_parameter ('description');
 	$start_date = (string) get_parameter ('start_date');
@@ -113,7 +113,6 @@ if ($action == 'insert') {
 	else {
 		$owner_exists = get_user($id_owner);
 	}
-	
 	if($owner_exists === false) {
 		$error_msg  = '<h3 class="error">'.__('Project manager user does not exist').'</h3>';
 		$id_project = false;
@@ -124,10 +123,8 @@ if ($action == 'insert') {
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d)',
 			$name, $description, $start_date, $end_date, $id_owner,
 			$id_project_group);
-		
 		$id_project = process_sql ($sql, 'insert_id');
-	}
-	
+	}	
 	if ($id_project === false) {
 		echo '<h3 class="error">'.__('Project cannot be created, problem found.').'</h3>'.$error_msg;
 	} else {
@@ -141,8 +138,7 @@ if ($action == 'insert') {
 			(id_project, id_user, id_role)
 			VALUES ("%s", "%s", 1)',
 			$id_project, $id_owner, 1);
-		process_sql ($sql);
-		
+		process_sql ($sql);		
 		// If current user is different than owner, add also current user
 		if ($config['id_user'] != $id_owner) {
 			$sql = sprintf ('INSERT INTO trole_people_project

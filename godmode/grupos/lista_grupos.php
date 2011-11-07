@@ -56,7 +56,7 @@ if ($create_group) {
 
 	$banner = (string) get_parameter ('banner');
 	$forced_email = (bool) get_parameter ('forced_email');
-	$id_user_default = (string) get_parameter ('id_user_default');
+	$id_user_default = (string) get_parameter ('id_user');
 	$id_inventory_default = (int) get_parameter ("id_inventory_default");
 
 	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, banner, id_user_default, soft_limit, hard_limit, enforce_soft_limit, id_inventory_default, parent) VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s", %d, %d, "%s")', $name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, $enforce_soft_limit, $id_inventory_default, $parent);
@@ -76,7 +76,7 @@ if ($update_group) {
 	$parent = (int) get_parameter ('parent');
 	$banner = (string) get_parameter ('banner');
 	$forced_email = (bool) get_parameter ('forced_email');
-	$id_user_default = (string) get_parameter ('id_user_default');
+	$id_user_default = (string) get_parameter ('id_user');
 	$soft_limit = (int) get_parameter ('soft_limit');
 	$hard_limit = (int) get_parameter ('hard_limit');
 	$enforce_soft_limit = (bool) get_parameter ('enforce_soft_limit');

@@ -29,6 +29,7 @@ if (! give_acl ($config['id_user'], 0, "IR")) {
 
 // Take input parameters
 $id = (int) get_parameter ('id');
+$id_creator = get_parameter('id_creator');
 
 // Delete incident
 if (isset ($_POST["quick_delete"])) {
