@@ -1,3 +1,15 @@
+2011-11-07  Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/update_manager: added the update_manager lib.
+	
+	* install.php: modified installer for intall update_manager as standar like
+	Babel.
+	
+	* integria_dbdata.sql, integria_demo.sql, integria_db.sql: removed the old
+	rows for the old update_manager.
+	
+	* godmode/updatemanager/settings.php: wip.
+
 2011-11-07  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_calendar.php: Fixed some unclosed tags

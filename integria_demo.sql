@@ -511,42 +511,6 @@ INSERT INTO `tworkunit_task` VALUES (1,2,5),(2,2,6),(3,2,7),(4,2,8),(5,2,9),(6,2
 /*!40000 ALTER TABLE `tworkunit_task` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Dumping data for table `um_tupdate`
---
-
-LOCK TABLES `um_tupdate` WRITE;
-/*!40000 ALTER TABLE `um_tupdate` DISABLE KEYS */;
-/*!40000 ALTER TABLE `um_tupdate` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `um_tupdate_journal`
---
-
-LOCK TABLES `um_tupdate_journal` WRITE;
-/*!40000 ALTER TABLE `um_tupdate_journal` DISABLE KEYS */;
-/*!40000 ALTER TABLE `um_tupdate_journal` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `um_tupdate_package`
---
-
-LOCK TABLES `um_tupdate_package` WRITE;
-/*!40000 ALTER TABLE `um_tupdate_package` DISABLE KEYS */;
-/*!40000 ALTER TABLE `um_tupdate_package` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `um_tupdate_settings`
---
-
-LOCK TABLES `um_tupdate_settings` WRITE;
-/*!40000 ALTER TABLE `um_tupdate_settings` DISABLE KEYS */;
-INSERT INTO `um_tupdate_settings` VALUES ('current_update','0'),('customer_key','INTEGRIA-FREE'),('dbhost',''),('dbname',''),('dbpass',''),('dbuser',''),('keygen_path','/srv/www/htdocs/integria/include/keygen'),('proxy',''),('proxy_pass',''),('proxy_port',''),('proxy_user',''),('update_server_host','www.artica.es'),('update_server_path','/integriaupdate/server.php'),('update_server_port','80'),('updating_binary_path','Path where the updated binary files will be stored'),('updating_code_path','');
-/*!40000 ALTER TABLE `um_tupdate_settings` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

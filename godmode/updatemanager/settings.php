@@ -18,6 +18,10 @@
 require_once ("include/config.php");
 require_once ('godmode/updatemanager/load_updatemanager.php');
 
+global $config;
+
+$config["dbtype"] = "mysql";
+
 check_login ();
 
 if (! give_acl ($config['id_user'], 0, 'PM')) {
@@ -25,6 +29,8 @@ if (! give_acl ($config['id_user'], 0, 'PM')) {
 	include ("general/noaccess.php");
 	return;
 }
+
+require("include/update_manager/lib/libupdate_manager.php");
 
 $db =& um_db_connect ('mysql', $config['dbhost'], $config['dbuser'],
 			$config['dbpass'], $config['dbname']);

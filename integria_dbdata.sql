@@ -84,8 +84,6 @@ INSERT INTO tincident_origin (name) VALUES ('User report'), ('Customer'), ('Inte
 
 INSERT INTO `trole` VALUES (1,'Project manager','',125),(2,'Systems engineer','',40),(3,'Junior consultant','',50),(4,'Junior programmer','',45),(5,'Senior programmer','',65),(6,'Analist','',75),(7,'Senior consultant','',75),(8,'Support engineer','',30);
 
-INSERT INTO `um_tupdate_settings` VALUES  ('current_update', '0'), ('customer_key', 'INTEGRIA-FREE'), ('keygen_path', '/srv/www/htdocs/integria/include/keygen'), ('update_server_host', 'www.artica.es'), ('update_server_port', '80'), ('update_server_path', '/integriaupdate/server.php'), ('updating_binary_path', 'Path where the updated binary files will be stored'), ('updating_code_path', ''), ('dbname', ''), ('dbhost', ''), ('dbpass', ''), ('dbuser', ''), ('proxy', ''), ('proxy_port', ''), ('proxy_user', ''), ('proxy_pass', '');
-
 INSERT INTO `tprofile` VALUES (1,'Project Participant',1,1,0,0,0,0,1,1,0,1,0,0,0,0,1,0,0,1,0,0);
 INSERT INTO `tprofile` VALUES (2,'Project Manager',    1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0);
 INSERT INTO `tprofile` VALUES (3,'Incident Manager',   1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1);

@@ -1,4 +1,4 @@
-<?PHP
+<?php
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
@@ -18,23 +18,23 @@
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-<head>
-<title>I N T E G R I A - Installation Wizard</title>
-<meta http-equiv="expires" content="0">
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta name="resource-type" content="document">
-<meta name="distribution" content="global">
-<meta name="author" content="Sancho Lerena">
-<meta name="copyright" content="This is GPL software. Created by Sancho Lerena">
-<meta name="keywords" content="network, system, GPL, software">
-<meta name="robots" content="index, follow">
-<link rel="icon" href="images/integria.ico" type="image/ico">
-<link rel="stylesheet" href="include/styles/integria.css" type="text/css">
-</head>
-<body background='images/backgrounds/background11.jpg'>
-<div style='height: 10px'>
-</div>
-<?PHP
+	<head>
+		<title>I N T E G R I A - Installation Wizard</title>
+		<meta http-equiv="expires" content="0">
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta name="resource-type" content="document">
+		<meta name="distribution" content="global">
+		<meta name="author" content="Sancho Lerena">
+		<meta name="copyright" content="This is GPL software. Created by Sancho Lerena">
+		<meta name="keywords" content="network, system, GPL, software">
+		<meta name="robots" content="index, follow">
+		<link rel="icon" href="images/integria.ico" type="image/ico">
+		<link rel="stylesheet" href="include/styles/integria.css" type="text/css">
+	</head>
+	<body background='images/backgrounds/background11.jpg'>
+		<div style='height: 10px'>
+		</div>
+<?php
 
 
 error_reporting(0);
@@ -42,10 +42,10 @@ error_reporting(0);
 $integria_version = "v3.0dev Build 111004";
 
 $integria_footertext = "<div id='foot'>
-                        <i>Integria $integria_version is an OpenSource Software project 
-                        <a target='_new' href='http://integriaims.com'>integriaims.com</a></i><br>
-                        <a href='http://www.artica.es'>(c) Ártica Soluciones Tecnológicas</a><br>
-                        </div>";
+	<i>Integria $integria_version is an OpenSource Software project 
+	<a target='_new' href='http://integriaims.com'>integriaims.com</a></i><br>
+	<a href='http://www.artica.es'>(c) Ártica Soluciones Tecnológicas</a><br>
+	</div>";
 
 function check_extension ( $ext, $label ){
 	echo "<tr><td>";
@@ -54,7 +54,8 @@ function check_extension ( $ext, $label ){
 	if (!extension_loaded($ext)){
 		echo "<img src='images/dot_red.gif'>";
 		return 1;
-	} else {
+	}
+	else {
 		echo "<img src='images/dot_green.gif'>";
 		return 0;
 	}
@@ -68,7 +69,8 @@ function check_include ( $ext, $label ){
 	if (!include($ext)){
 		echo "<img src='images/dot_red.gif'>";
 		return 1;
-	} else {
+	}
+	else {
 		echo "<img src='images/dot_green.gif'>";
 		return 0;
 	}
@@ -396,7 +398,8 @@ function install_step4() {
 		$dbuser = "";
 		$dbhost = "";
 		$dbname = "";
-	} else {
+	}
+	else {
 		$dbpassword = $_POST["pass"];
 		$dbuser = $_POST["user"];
 		$dbhost = $_POST["host"];
@@ -430,87 +433,109 @@ function install_step4() {
 	$step1=0;
 	$step2=0;
 	$step3=0;
-	$step4=0; $step5=0; $step6=0; $step7=0;
+	$step4=0;
+	$step5=0;
+	$step6=0;
+	$step7=0;
 	echo "
 	<div align='center' class='mt35'>
 	<div id='wizard' style='height: 510px;'>
 		<div id='install_box'>
 			<h1>Creating database and default configuration file</h1>
 			<table>";
-			if (! mysql_connect ($dbhost,$dbuser,$dbpassword)) {
-				check_generic ( 0, "Connection with Database");
-			} else {
-				check_generic ( 1, "Connection with Database");
-				// Create schema
-				if ($createdb == 1){
-					$step1 = mysql_query ("CREATE DATABASE $dbname");
-					check_generic ($step1, "Creating database '$dbname'");
-				} else 
-					$step1 =1;
-				if ($step1 == 1){
-					$step2 = mysql_select_db($dbname);
-					check_generic ($step2, "Opening database '$dbname'");
+	if (! mysql_connect ($dbhost,$dbuser,$dbpassword)) {
+		check_generic ( 0, "Connection with Database");
+	}
+	else {
+		check_generic ( 1, "Connection with Database");
+		// Create schema
+		if ($createdb == 1){
+			$step1 = mysql_query ("CREATE DATABASE $dbname");
+			check_generic ($step1, "Creating database '$dbname'");
+		}
+		else $step1 =1;
+		if ($step1 == 1) {
+			$step2 = mysql_select_db($dbname);
+			check_generic ($step2, "Opening database '$dbname'");
 	
-					$step3 = parse_mysql_dump("integria_db.sql");
-					check_generic ($step3, "Creating schema");
+			$step3 = parse_mysql_dump("integria_db.sql");
+			check_generic ($step3, "Creating schema");
 
-					// populate database with a blank DB or DEMO database ?
-					if ($demodb == 1)
-						$step4 = parse_mysql_dump("integria_demo.sql");
-					else
-						$step4 = parse_mysql_dump("integria_dbdata.sql");
+			// populate database with a blank DB or DEMO database ?
+			if ($demodb == 1)
+				$step4 = parse_mysql_dump("integria_demo.sql");
+			else
+				$step4 = parse_mysql_dump("integria_dbdata.sql");
 
-					check_generic ($step4, "Populating database");
+			check_generic ($step4, "Populating database");
 
-					$random_password = random_name (8);
-					if ($createuser==1){
-						$query = 
-						"GRANT ALL PRIVILEGES ON $dbname.* to integria@localhost  IDENTIFIED BY '".$random_password."'";
-						$step5 = mysql_query ($query);
-						mysql_query ("FLUSH PRIVILEGES");
-						check_generic ($step5, "Established privileges for user 'integria' on database '$dbname', with password <i>'$random_password'</i>");
-					} else
-						$step5=1;
-	
-					$step6 = is_writable("include");
-					check_generic ($step6, "Write permissions to save config file in './include'");
+			$random_password = random_name (8);
+			if ($createuser==1) {
+				$query = 
+					"GRANT ALL PRIVILEGES ON $dbname.* to integria@localhost  IDENTIFIED BY '".$random_password."'";
+				$step5 = mysql_query ($query);
+				mysql_query ("FLUSH PRIVILEGES");
+				check_generic ($step5,
+					"Established privileges for user 'integria' on database '$dbname', with password <i>'$random_password'</i>");
+			}
+			else $step5=1;
+			
+			$step6 = is_writable("include");
+			check_generic ($step6, "Write permissions to save config file in './include'");
 						
-					$cfgin = fopen ("include/config.inc.php", "r");
-					$cfgout = fopen ($INTEGRIA_config, "w");
-					$config_contents = fread ($cfgin, filesize("include/config.inc.php"));
+			$cfgin = fopen ("include/config.inc.php", "r");
+			$cfgout = fopen ($INTEGRIA_config, "w");
+			$config_contents = fread ($cfgin, filesize("include/config.inc.php"));
+			
+			//---INIT--- CONFIG FILE
+			$config_new = '<?php' . "\n".
+				'// Begin of automatic config file' . "\n".
+				'$config["dbuser"]=';
+			if ($createuser == 1) {
+				$config_new = $config_new . '"integria";' . "\n".
+					'$config["dbpass"]="'.$random_password.'";	// DB Password' . "\n";
+			}
+			else {
+				$config_new = $config_new . '"'.$dbuser.'";' . "\n".
+					'$config["dbpass"]="'.$dbpassword.'";	// DB Password' . "\n";
+			}
+			$config_new = $config_new . "\n" . 
+				'$config["dbname"]="'.$dbname.'";    // MySQL DataBase name' . "\n". 
+				'$config["dbhost"]="'.$dbhost.'";    // DB Host' . "\n".
+				'$config["homedir"]="'.$path.'";		// Config homedir' . "\n".
+				'$config["base_url"]="'.$url.'";		// Public URL' . "\n".
+				'// End of automatic config file' . "\n".
+				'?>';
+			//---END--- CONFIG FILE
+
+			$step7 = fputs ($cfgout, $config_new);
+			$step7 = $step7 + fputs ($cfgout, $config_contents);
+			if ($step7 > 0)
+				$step7 = 1;
+			
+			fclose ($cfgin);
+			fclose ($cfgout);
+			check_generic ($step7, "Created new config file at '".$INTEGRIA_config."'");
+		}
+		
+		mysql_select_db($dbname);
+		$step8 = parse_mysql_dump("include/update_manager/sql/update_manager.sql");
+		check_generic ($step8, "Populating database with update manager");
+		
+		if ($step8) {
+			mysql_query("UPDATE um_tupdate_settings SET `value` = '" . $dbhost . "' WHERE `key` = 'dbhost';");
+			mysql_query("UPDATE um_tupdate_settings SET `value` = '" . $dbname . "' WHERE `key` = 'dbname';");
+			mysql_query("UPDATE um_tupdate_settings SET `value` = '" . $random_password . "' WHERE `key` = 'dbpass';");
+			mysql_query("UPDATE um_tupdate_settings SET `value` = 'babel' WHERE `key` = 'dbuser';");
+			mysql_query("UPDATE um_tupdate_settings SET `value` = '" . dirname ($_SERVER['SCRIPT_FILENAME']) . "' WHERE `key` = 'updating_code_path';");
+		}
+	}
 	
-					$config_new = '<?PHP
-// Begin of automatic config file
-$config["dbuser"]=';
-if ($createuser==1){
-	$config_new = $config_new . '"integria";
-$config["dbpass"]="'.$random_password.'";	// DB Password
-';
-} else { 
-	$config_new = $config_new . '"'.$dbuser.'";
-$config["dbpass"]="'.$dbpassword.'";	// DB Password
-';
-}
-$config_new = $config_new . '
-	$config["dbname"]="'.$dbname.'";    // MySQL DataBase name
-	$config["dbhost"]="'.$dbhost.'";    // DB Host
-	$config["homedir"]="'.$path.'";		// Config homedir
-	$config["base_url"]="'.$url.'";		// Public URL
-	// End of automatic config file
-?>';
-					$step7 = fputs ($cfgout, $config_new);
-					$step7 = $step7 + fputs ($cfgout, $config_contents);
-					if ($step7 > 0)
-						$step7 = 1;
-					fclose ($cfgin);
-					fclose ($cfgout);
-					check_generic ($step7, "Created new config file at '".$INTEGRIA_config."'");
-				}
-			}
-			if (($step7 + $step6 + $step5 + $step4 + $step3 + $step2 + $step1) == 7) {
-				$everything_ok = 1;
-			}
-		echo "</table></div>
+	if (($step8 + $step7 + $step6 + $step5 + $step4 + $step3 + $step2 + $step1) == 8) {
+		$everything_ok = 1;
+	}
+	
+	echo "</table></div>
 		<div class='box'>
 			<img src='images/integria_white.png' alt=''>
 			<br><br>
@@ -521,23 +546,26 @@ $config_new = $config_new . '
 		</div>
 		
 		<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'><p>";
-			if ($everything_ok == 1) {
-				echo "<a href='install.php?step=5'><img align='right' src='images/arrow_next.png' class=''></a>";
-			} else {
-				echo "<img src='images/info.png'> You get some problems. Installation is not completed. 
-				<p>Please correct failures before trying again. All database schemes created in this step have been dropped.</p>";
-
-				if (mysql_error() != "")
-					echo "<p><img src='images/info.png'> <b>ERROR:</b> ". mysql_error()."</p>";
-				if ($createdb == 1){
-					mysql_query ("DROP DATABASE $dbname");
-				}
-			}		
-		echo "
-		</div>
-	</div>
-	$integria_footertext
-</div>";
+	
+	if ($everything_ok == 1) {
+		echo "<a href='install.php?step=5'><img align='right' src='images/arrow_next.png' class=''></a>";
+	}
+	else {
+		echo "<img src='images/info.png'> You get some problems. Installation is not completed. 
+			<p>Please correct failures before trying again. All database schemes created in this step have been dropped.</p>";
+		
+		if (mysql_error() != "")
+			echo "<p><img src='images/info.png'> <b>ERROR:</b> ". mysql_error()."</p>";
+		
+		if ($createdb == 1) {
+				mysql_query ("DROP DATABASE $dbname");
+		}
+	}		
+	
+	echo "		</div>
+			</div>
+			$integria_footertext
+		</div>";
 }
 
 function install_step5() {
@@ -575,7 +603,8 @@ function install_step5() {
 
 if (! isset ($_GET["step"])){
 	install_step1 ();
-} else {
+}
+else {
 	$step = (int) $_GET["step"];
 	switch ($step) {
     case 1: 
