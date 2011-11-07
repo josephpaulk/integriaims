@@ -1,3 +1,8 @@
+2011-11-07  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_calendar.php: Fixed some unclosed tags
+	that generate errors in annual report when export pdf
+
 2011-11-04  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_graph.php

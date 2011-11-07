@@ -352,7 +352,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 	if($p) $p = '<span class="calendar-prev">'.($pl ? '<a href="'.htmlspecialchars($pl).'">'.$p.'</a>' : $p).'</span>&nbsp;';
 	if($n) $n = '&nbsp;<span class="calendar-next">'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n).'</span>';
 	$calendar = '<table class="calendar">'."\n".
-		'<caption class="calendar-month">'.$p.'<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$month.'&year='.$year.'&id='.$id_user.'">'.$title.'</a>'.$n."</caption>\n<tr>";
+		'<tr><th class="calendar-month" colspan="7" style="background: #fff;">'.$p.'<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$month.'&year='.$year.'&id='.$id_user.'">'.$title.'</a>'.$n."</th></tr>\n<tr>";
 
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
@@ -418,7 +418,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
     		$calendar .= "<td class='calendar'>$day</td>";
         elseif ($normal == 1){
 			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar' style='background-color: #98FF8B;'><a href='$mylink' title='$total_wu'>$day</A></td>";
+            $calendar .= "<td class='calendar' style='background-color: #98FF8B;'><a href='$mylink' title='$total_wu'>$day</a></td>";
 		} 
         elseif ($normal == 2) {
 			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
@@ -433,7 +433,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
             $calendar .= "<td class='calendar' style='background-color: #FFDE46;'><a href='$mylink' title='$total_wu'>$day</a></td>";
         }
 	}
-	if($weekday != 7) $calendar .= '<td class=calendar" colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
+	if($weekday != 7) $calendar .= '<td class="calendar" colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
 
 	return $calendar."</tr>\n</table>\n";
 }
