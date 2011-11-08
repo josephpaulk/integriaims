@@ -1,3 +1,19 @@
+2011-11-08  Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/functions_db.mysql.php: added function "clean_cache_db".
+	
+	* include/functions_update_manager.php,
+	include/update_manager/sql/update_manager.sql,
+	godmode/updatemanager/settings.php, godmode/updatemanager/main.php: first
+	stable version of update manager in Integria.
+	
+	* operation/projects/people_manager.php: erased trace.
+	
+	* operation/side_menu.php: renabled the update manager in setup menu.
+	
+	* godmode/updatemanager/lang, godmode/updatemanager/load_updatemanager.php,
+	godmode/updatemanager/lib: removed the old version of update manager.
+
 2011-11-08  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_db.php

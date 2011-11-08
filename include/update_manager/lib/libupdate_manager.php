@@ -42,7 +42,7 @@ function um_db_load_settings () {
 
 function um_db_update_setting ($key, $value = '') {
 	global $config;
-
+	
 	switch ($config["dbtype"]) {
 		case "mysql":
 			$result = get_db_value('COUNT(*)', DB_PREFIX.'tupdate_settings', '`key`', $key);

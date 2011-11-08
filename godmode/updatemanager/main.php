@@ -16,19 +16,24 @@
 
 // Load global vars
 require_once ("include/config.php");
-require_once ('godmode/updatemanager/load_updatemanager.php');
+require("include/update_manager/lib/libupdate_manager.php");
+include_once ("include/functions_update_manager.php");
+
+$config["dbtype"] = "mysql";
 
 check_login ();
 
 if (! give_acl ($config['id_user'], 0, 'PM')) {
 	audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Violation",
 		"Trying to use Open Update Manager extension");
+	
 	include ("general/noaccess.php");
+	
 	exit;
 }
 
 $db =& um_db_connect ('mysql', $config['dbhost'], $config['dbuser'],
-			$config['dbpass'], $config['dbname']);
+	$config['dbpass'], $config['dbname']);
 
 $settings = um_db_load_settings ();
 
@@ -50,49 +55,176 @@ $user_key = get_user_key ($settings);
 $update_package = (bool) get_parameter ('update_package');
 
 if ($update_package) {
-	echo '<h2>Updating...</h2>';
-	flush ();
-	$force = (bool) get_parameter ('force_update');
-	
-	um_client_upgrade_to_latest ($user_key, $force);
-	/* TODO: Add a new in tnews */
-	$settings = um_db_load_settings ();
+	if ($config['enterprise_installed'] == 1) {
+		echo '<h2>'.__('Updating').'...</h2>';
+		flush ();
+		$force = (bool) get_parameter ('force_update');
+
+		um_client_upgrade_to_latest ($user_key, $force);
+		/* TODO: Add a new in tnews */
+
+	}
+	else {
+		echo '<h5 class="error">' . 
+			sprintf(__('This is an Enterprise feature. Visit %s for more information.'),
+				'<a href="http://integriaims.com">http://integriaims.com</a>') . '</h5>';
+	}
 }
+
+
+if (isset($_FILES["fileloaded"]["error"]) && !$_FILES["fileloaded"]["error"]) {
+	$extension = substr($_FILES["fileloaded"]["name"], strlen($_FILES["fileloaded"]["name"])-4, 4);
+	if($extension != '.oum') {
+		$error = '<h5 class="error">'.__('Incorrect file extension').'</h5>';
+	}
+	else {
+		$tempDir = sys_get_temp_dir()."/tmp_oum/";
+
+		$zip = new ZipArchive;
+		if ($zip->open($_FILES["fileloaded"]['tmp_name']) === TRUE) {
+			$zip->extractTo($tempDir);
+			$zip->close();
+		} else {
+			$error = '<h5 class="error">'.__('Update cannot be opened').'</h5>';
+		}
+
+		$package = um_package_info_from_paths ($tempDir);
+		if ($package === false) {
+			$error = '<h5 class="error">'.__('Error, the file package is empty or corrupted.').'</h5>';
+		}
+		else {
+			$settings = um_db_load_settings ();
+
+			if($settings->current_update >= $package->id) {
+				$error = '<h5 class="error">'.__('Your system version is higher or equal than the loaded package').'</h5>';
+			}
+			else {
+				$binary_paths = um_client_get_files ($tempDir."binary/");
+
+				foreach($binary_paths as $key => $paths) {
+					foreach($paths as $index => $path) {
+						$tempDir_scaped = preg_replace('/\//', '\/', $tempDir."binary");
+						$binary_paths[$key][$index] = preg_replace('/^'.$tempDir_scaped.'/', ' ', $path);
+					}
+				}
+
+				$code_paths = um_client_get_files ($tempDir."code/");
+
+				foreach($code_paths as $key => $paths) {
+					foreach($paths as $index => $path) {
+						$tempDir_scaped = preg_replace('/\//', '\/', $tempDir."code");
+						$code_paths[$key][$index] = preg_replace('/^'.$tempDir_scaped.'/', ' ', $path);
+					}
+				}
+
+				$sql_paths = um_client_get_files ($tempDir);
+				foreach($sql_paths as $key => $paths) {
+					foreach($paths as $index => $path) {
+						if($path != $tempDir || ($key == 'info_package' && $path == $tempDir)) {
+							unset($sql_paths[$key]);
+						}
+					}
+				}
+
+				$updates_binary = array();
+				$updates_code = array();
+				$updates_sql = array();
+
+				if(!empty($binary_paths)) {
+					$updates_binary = um_client_update_from_paths ($binary_paths, $tempDir, $package->id, 'binary');
+				}
+				if(!empty($code_paths)) {
+					$updates_code = um_client_update_from_paths ($code_paths, $tempDir, $package->id, 'code');
+				}
+				if(!empty($sql_paths)) {
+					$updates_sql = um_client_update_from_paths ($sql_paths, $tempDir, $package->id, 'sql');
+				}
+
+				um_delete_directory($tempDir);
+
+				$updates= array_merge((array) $updates_binary, (array) $updates_code, (array) $updates_sql);
+
+				$package->updates = $updates;
+
+				$settings = um_db_load_settings ();
+
+				if(um_client_upgrade_to_package ($package, $settings, true)) {
+					echo '<h5 class="suc">'.__('Successfully upgraded').'.</h5>';
+					$settings = um_db_load_settings ();
+				}
+				else {
+					echo '<h5 class="error">'.__('Cannot be upgraded').'</h5>';
+				}
+			}
+		}
+	}
+}
+else {
+	$error = '<h5 class="error">'.__('File cannot be uploaded').'</h5>';
+}
+
+$settings = null;
+$settings = um_db_load_settings ();
+$user_key = get_user_key ($settings);
 
 $package = um_client_check_latest_update ($settings, $user_key);
 
-if (is_int ($package) && $package == 1) {
-	echo '<h5 class="suc">'.__('Your system is up-to-date').'.</h5>';
-} elseif ($package === false) {
-	echo '<h5 class="error">'.__('Server connection failed')."</h5>";
-} elseif (is_int ($package) && $package == 0) {
-	echo '<h5 class="error">'.__('Server authorization rejected')."</h5>";
-} else {
-	echo '<h5 class="suc">'.__('There\'s a new update for Integria Enterprise')."</h5>";
-	
-	$table->width = '50%';
+if (give_acl ($config['id_user'], 0, 'PM')) {
+	if ($package === true) {
+		echo '<h5 class="suc">'.__('Your system is up-to-date').'.</h5>';
+	}
+	elseif ($package === false) {
+		echo '<h5 class="error">'.__('Server authorization rejected').'</h5>';
+	}
+	elseif ($package === 0) {
+		echo '<h5 class="error">'.__('Server connection failed').'</h5>';
+	}
+	else {
+		echo '<h5 class="suc">'.__('There\'s a new update for Integria').'</h5>';
+
+		$table->width = '98%';
+		$table->data = array ();
+
+		$table->data[0][0] = '<strong>'.__('Id').'</strong>';
+		$table->data[0][1] = $package->id;
+
+		$table->data[1][0] = '<strong>'.__('Timestamp').'</strong>';
+		$table->data[1][1] = $package->timestamp;
+
+		$table->data[2][0] = '<strong>'.__('Description').'</strong>';
+		$table->data[2][1] = html_entity_decode ($package->description);
+
+		print_table ($table);
+		echo '<div class="action-buttons" style="width: '.$table->width.'">';
+		echo '<form method="post">';
+		echo __('Overwrite local changes');
+		print_checkbox ('force_update', '1', false);
+		echo '<p />';
+		print_input_hidden ('update_package', 1);
+		print_submit_button (__('Update'), 'update_button', false, 'class="sub upd"');
+		echo '</form>';
+		echo '</div>';
+	}
+
+	if($error != '' && isset($_FILES["fileloaded"]["error"])) {
+		echo $error;
+	}
+
+	unset($table);
+
+	$table->width = '98%';
 	$table->data = array ();
-	
-	$table->data[0][0] = print_label (__('ID'), 'id', '', true,
-		$package->id);
-	
-	$table->data[0][1] = print_label (__('Timestamp'), 'time', '', true,
-		$package->timestamp);
-	
-	$table->data[2][0] = print_label (__('Description'), 'desc', '', true,
-		html_entity_decode ($package->description));
-	
-	print_table ($table);
-	
-	echo '<form method="post">';
-	echo '<div style="width: '.$table->width.'; text-align: right">';
-	print_checkbox ('force_update', '1', false, false, __('Overwrite local changes'));
-	echo '</div>';
-	echo '<div class="button" style="width: '.$table->width.'">';
-	print_input_hidden ('update_package', 1);
-	print_submit_button (__('Update'), 'update_button', false, 'class="sub upd"');
-	echo '</div>';
+	$table->colspan[0][0] = 2;
+
+	$table->data[0][0] = '<h4>'.__('Offline packages loader').'</h4>';
+	$table->data[1][0] = '<input type="hidden" name="upload_package" value="1">';
+	$table->data[1][0] .= '<input type="file" size="55" name="fileloaded">';
+	$table->data[1][1] = '<input type="submit" name="upload_button" value="'.__('Upload').'">';
+
+	echo '<form method="post" enctype="multipart/form-data">';
+	print_table($table);
 	echo '</form>';
+
 }
 
 echo '<h4>'.__('Your system version number is').': '.$settings->current_update.'</h4>';

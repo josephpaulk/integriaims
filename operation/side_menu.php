@@ -804,7 +804,6 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates'>".__('Mail templates setup')."</a></li>";
 
 	enterprise_include("godmode/sidemenu_activityauditing_mgmt.php");
-/* Disabled at this time
 
 	// Update Manager
 	if ($sec2 == "godmode/updatemanager/main")
@@ -819,7 +818,6 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/updatemanager/settings'>".__('Configure updates')."</a></li>";
-*/
 
 	// File/Image management
 	if ($sec2 == "godmode/setup/filemgr")

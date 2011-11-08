@@ -16,12 +16,12 @@
 
 // Load global vars
 require_once ("include/config.php");
-require_once ('godmode/updatemanager/load_updatemanager.php');
 
 global $config;
 
 $config["dbtype"] = "mysql";
 
+// Session check
 check_login ();
 
 if (! give_acl ($config['id_user'], 0, 'PM')) {

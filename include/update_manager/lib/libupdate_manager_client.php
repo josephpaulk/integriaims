@@ -24,7 +24,7 @@ unset ($prev_level);
 define ('XMLRPC_DEBUG', 0);
 define ('XMLRPC_TIMEOUT', 15);
 global $config;
-define('HOME_DIR', $config['homedir']);
+define('HOME_DIR', substr($config['homedir'], 0, -1));
 
 function um_xml_rpc_client_call ($server_host, $server_path, $server_port, $proxy, $proxy_port, $proxy_user, $proxy_pass, $function, $parameters) {
 	$msg = new xmlrpcmsg ($function, $parameters);
@@ -506,16 +506,16 @@ function um_client_upgrade_to_package ($package, $settings, $force = true, $upda
 	$rollback = false;
 	
 		
-	if(!is_object($package)) {
+	if (!is_object($package)) {
 		return false;
 	}
-
-	if(!$update_offline) {
+	
+	if (!$update_offline) {
 		um_client_db_connect ($settings);
 		um_component_db_connect ();
 		
 		foreach ($package->updates as $update) {
-			$success = um_client_apply_update ($update, $settings, $force);	
+			$success = um_client_apply_update ($update, $settings, $force);
 			if (! $success) {
 				echo '<p /><strong>Failed</strong> on:<br />';
 				um_client_print_update ($update, $settings);
@@ -658,9 +658,8 @@ function um_client_upgrade_to_latest ($user_key, $force = true) {
 
 		if (! $success)
 			break;
-
-		$settings->current_update = $package->id;
 		
+		$settings->current_update = $package->id;		
 	} while (1);
 
 	/* Break on error, when there are no more packages on the server (server return true)

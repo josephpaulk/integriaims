@@ -31,7 +31,7 @@ if (defined ('AJAX')) {
 		require_once ('include/functions_db.php');
 		
 		$id_project = (int) get_parameter ('id_project');
-		debugPrint($id_project,true);
+		
 		$id_user = $config['id_user'];
 		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
 		

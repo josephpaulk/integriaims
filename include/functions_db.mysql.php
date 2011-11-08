@@ -47,6 +47,13 @@ function get_db_value ($field, $table, $field_search = 1, $condition = 1) {
 	return $result[0][$field];
 }
 
+function clean_cache_db() {
+	global $config;
+	global $sql_cache;
+
+	$sql_cache = array();
+}
+
 /** 
  * Get the first row of a database query into a table.
  *
