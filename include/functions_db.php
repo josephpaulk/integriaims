@@ -1847,13 +1847,22 @@ function get_group_default_user ($id_group) {
  * Returns the n most active users (users with more hours worked on incidents).
  *
  * @param lim n, number of users to return.
+ * @param id_incident, filter to one incident. If false, show all.
  */
-function get_most_active_users ($lim) {
-	$most_active_users = get_db_all_rows_sql ('SELECT id_user, SUM(duration) as worked_hours
+function get_most_active_users ($lim, $id_incident = false) {
+	if($id_incident === false) {
+		$condition = '';
+	}
+	else {
+		$condition = " AND tworkunit_incident.id_incident = $id_incident ";
+	}
+	
+	$most_active_users = get_db_all_rows_sql ("SELECT id_user, SUM(duration) as worked_hours
 	                                          FROM tworkunit, tworkunit_incident
 	                                          WHERE tworkunit.id = tworkunit_incident.id_workunit
+	                                          $condition
 	                                          GROUP BY id_user
-	                                          ORDER BY worked_hours DESC LIMIT ' . $lim);
+	                                          ORDER BY worked_hours DESC LIMIT $lim");
 	if ($most_active_users === false) {
 		return array ();
 	}

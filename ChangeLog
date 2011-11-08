@@ -1,3 +1,16 @@
+2011-11-08  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_db.php
+	operation/incidents/incident_report.php: Improved 
+	incident report with description and active users
+
+	* operation/projects/project_overview.php
+	images/last_closed.png
+	images/first_closed.png
+	images/branch.png
+	images/closed.png: Improved project overview with browsable
+	tree style
+
 2011-11-07  Vanessa Gil <vgil@artica.es>
 
 	* godmode/grupos/configurar_grupo.php
