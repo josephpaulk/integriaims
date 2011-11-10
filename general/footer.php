@@ -27,7 +27,15 @@ else
 echo 'Integria IMS '.$enterprise.' '.$config["version"].' Build '.$config["build_version"].'<br>';
 
 if (isset($_SESSION['id_usuario'])) {
-	echo '<a target="_new" href="general/license/integria_info_'.$config["language_code"].'.html">'.
+	
+	if(file_exists('general/license/integria_info_'.$config["language_code"].'.html')) {
+		$language_info = $config["language_code"];
+	}
+	else {
+		$language_info = 'en';
+	}
+	
+	echo '<a target="_new" href="general/license/integria_info_'.$language_info.'.html">'.
 	__('Integria IMS is an <b>OpenSource Project, licensed under GPL terms</b>').'</a><br>';
 	if (isset($_SERVER['REQUEST_TIME'])) {
 		$time = $_SERVER['REQUEST_TIME'];

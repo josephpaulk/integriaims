@@ -1,5 +1,14 @@
 2011-11-10  Sergio Martin <sergio.martin@artica.es>
 
+	* general/license/integria_info_en.html
+	general/license/frits_info_es_es.html
+	general/license/frits_info_en.html
+	general/license/integria_info_es.html
+	general/footer.php: Fixed footer link to gpl information
+	for all languages
+
+2011-11-10  Sergio Martin <sergio.martin@artica.es>
+
 	* include/styles/integria.css
 	images/footerbg.gif: Fixed footer layout
 
