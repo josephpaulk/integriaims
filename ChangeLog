@@ -1,5 +1,10 @@
 2011-11-10  Sergio Martin <sergio.martin@artica.es>
 
+	* include/styles/integria.css
+	images/footerbg.gif: Fixed footer layout
+
+2011-11-10  Sergio Martin <sergio.martin@artica.es>
+
 	* godmode/usuarios/lista_usuarios.php: Fixed username problem
 	with spaces with safe input function for bug 3426283
 

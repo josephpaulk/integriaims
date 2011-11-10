@@ -484,10 +484,11 @@ form.searchform input.button {
 /* footer */
 #footer {
 	clear: both;
-	background: #FFF url(../../images/footerbg.gif) repeat-x left top;
+	background: #FFF url(../../images/footerbg.gif) repeat left top;
 	border-top: 1px solid #F2F2F2;
 	text-align: center;
-	height: 50px;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
 }
 #footer a {
 	text-decoration: none;
