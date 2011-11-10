@@ -1,3 +1,8 @@
+2011-11-10  Sergio Martin <sergio.martin@artica.es>
+
+	* godmode/usuarios/lista_usuarios.php: Fixed username problem
+	with spaces with safe input function for bug 3426283
+
 2011-11-08  Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* include/functions_db.mysql.php: added function "clean_cache_db".

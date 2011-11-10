@@ -26,7 +26,8 @@ if (! give_acl ($config["id_user"], 0, "UM")) {
 }
 	
 if (isset($_GET["borrar_usuario"])){ // if delete user
-	$nombre= clean_input ($_GET["borrar_usuario"]);
+	$nombre = safe_input ($_GET["borrar_usuario"]);
+	
 	// Delete user
 	// Delete cols from table tgrupo_usuario
 
@@ -85,14 +86,14 @@ echo '<th>'.__('Level');
 echo '<th>'.__('Disabled');
 echo '<th>'.__('Delete');
 
-$resq1=mysql_query($sql1);
+$resq1=process_sql($sql1);
 // Init vars
 $nombre = "";
 $nivel = "";
 $comentarios = "";
 $fecha_registro = "";
 
-while ($rowdup=mysql_fetch_array($resq1)){
+foreach($resq1 as $rowdup){
 	$nombre=$rowdup["id_usuario"];
 	$nivel =$rowdup["nivel"];
 	$realname =$rowdup["nombre_real"];
