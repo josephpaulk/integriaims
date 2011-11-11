@@ -1,3 +1,8 @@
+2011-11-11  Vanessa Gil <vgil@artica.es>
+
+	* operation/projects/people_manager.php: fixed errors when
+	adding users.
+
 2011-11-10  Sergio Martin <sergio.martin@artica.es>
 
 	* general/license/integria_info_en.html

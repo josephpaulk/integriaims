@@ -26,12 +26,34 @@ if (defined ('AJAX')) {
 	global $config;
 
 	$search_users = (bool) get_parameter ('search_users');
+	$search_users_role = (bool) get_parameter ('search_users_role');
 	
 	if ($search_users) {
 		require_once ('include/functions_db.php');
 		
 		$id_project = (int) get_parameter ('id_project');
+		$id_user = $config['id_user'];
+		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
 		
+		$users = get_user_visible_users ($id_user,"IR", false);
+		
+		if ($users === false)
+			return;
+			
+		foreach ($users as $user) {
+			if(preg_match('/'.$string.'/', $user['id_usuario'])) {
+				echo $user['id_usuario']. "\n";
+			}
+		}
+		
+		return;
+ 	}
+ 	
+ 	if ($search_users_role) {
+		require_once ('include/functions_db.php');
+		
+		$id_project = (int) get_parameter ('id_project');
+		//debugPrint($id_project,true);
 		$id_user = $config['id_user'];
 		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
 		
@@ -45,7 +67,7 @@ if (defined ('AJAX')) {
 				echo $user['id_user'] . "/" . get_db_value ("name","trole","id",$user["id_role"]). "\n";
 			}
 		}
-		
+			
 		return;
  	}
 }
@@ -76,11 +98,24 @@ if (($id_task > 0) AND (! user_belong_task ($config["id_user"], $id_task))) {
 if ($operation == "insert"){
 	$role = get_parameter ("role",0);
 	$user = get_parameter ("user");
+	$user_role = get_parameter("user_role");
+
+if(preg_match('/.*\//', $user_role, $match)) {
+				$user = $match[0];
+				$user=preg_replace('/\//','',$user);
+			}	
+
+if(preg_match('/\/.*/', $user_role, $match)) {
+				$role_user = $match[0];
+				$role_user=preg_replace('/\//','',$role_user);
+			}	
 
 	// People add for TASK
 	if ($id_task != -1){
-		$temp_id_user = get_db_value ("id_user", "trole_people_project", "id", $user);
-		$temp_id_role = get_db_value ("id_role", "trole_people_project", "id", $user);
+		//$temp_id_user = get_db_value ("id_user", "trole_people_project", "id", $user);
+		$temp_id_user = get_db_value ("id_user", "trole_people_project", "id_user", $user);
+		//$temp_id_role = get_db_value ("id_role", "trole_people_project", "id", $user);
+		$temp_id_role = get_db_value('id', 'trole', 'name', safe_output($role_user));
 		
 		$filter['id_role']= $temp_id_role;
 		$filter['id_user']= $temp_id_user;
@@ -263,7 +298,7 @@ if ($id_task != -1){
 		echo __('User'). "/".__('Role');
 		echo "<td valign='top' class='datos2'>";
 		//echo combo_users_project($id_project);
-		echo print_input_text_extended ('user', '', 'text-user', '', 15, 30, false, '',
+		echo print_input_text_extended ('user_role', '', 'text-user_role', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '')
 		. print_help_tip (__("Type at least two characters to search"), true);
 		echo "</table>";
@@ -344,7 +379,7 @@ echo "</table></div>";
 <script type="text/javascript" >
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
-
+//$("#text-user_role").change(function(){alert("hola")});
 	$("#text-user").autocomplete ("ajax.php",
 		{
 			scroll: true,
@@ -356,10 +391,35 @@ $(document).ready (function () {
 				id_project: "<?php echo $id_project?>"
 			},
 			formatItem: function (data, i, total) {
+				
 				if (total == 0)
 					$("#text-user").css ('background-color', '#cc0000');
 				else
 					$("#text-user").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __("") ?></span>';
+			},
+			delay: 200
+
+		});
+		
+		$("#text-user_role").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "operation/projects/people_manager",
+				search_users_role: 1,
+				id_user: "<?php echo $config['id_user'] ?>",
+				id_project: "<?php echo $id_project?>"
+			},
+			formatItem: function (data, i, total) {
+				
+				if (total == 0)
+					$("#text-user_role").css ('background-color', '#cc0000');
+				else
+					$("#text-user_role").css ('background-color', '');
 				if (data == "")
 					return false;
 				return data[0]+'<br><span class="ac_extra_field"><?php echo __("") ?></span>';
