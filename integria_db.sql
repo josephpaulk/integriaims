@@ -727,7 +727,6 @@ CREATE TABLE `tapp_activity_data` (
 	KEY `idx_app` (`id_app`),
 	KEY `idx_user` (`id_user`),
 	KEY `idx_start_timestamp` (`start_timestamp`),
-	CONSTRAINT `fk_tapp_tapp_activity_data1`
 	  FOREIGN KEY (`id_app`)
 	  REFERENCES tapp(`id`) 
 	  ON DELETE CASCADE

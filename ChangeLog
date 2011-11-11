@@ -1,3 +1,9 @@
+2011-11-11  Sergio Martin <sergio.martin@artica.es>
+
+	* integria_db.sql
+	upgrade_to_3.0.sql: Fixed constraint bug in tapp_activity_data
+	table and missed tmenu_visibility table in migration sql script
+
 2011-11-11  Vanessa Gil <vgil@artica.es>
 
 	* operation/projects/people_manager.php: fixed errors when

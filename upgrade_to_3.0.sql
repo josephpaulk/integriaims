@@ -58,11 +58,18 @@ CREATE TABLE `tapp_activity_data` (
 	KEY `idx_app` (`id_app`),
 	KEY `idx_user` (`id_user`),
 	KEY `idx_start_timestamp` (`start_timestamp`),
-	CONSTRAINT `fk_tapp_tapp_activity_data1`
 	  FOREIGN KEY (`id_app`)
 	  REFERENCES tapp(`id`) 
 	  ON UPDATE CASCADE 
 	  ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tmenu_visibility` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `menu_section` varchar(100) NOT NULL default '',
+  `id_group` int(10) unsigned NOT NULL default '0',
+  `mode` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Changes done in Development 3.0 version after July 2011
