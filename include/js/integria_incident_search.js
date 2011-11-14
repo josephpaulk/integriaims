@@ -630,8 +630,12 @@ function configure_workunit_form () {
 					$(".result").empty ().append (data).slideDown ();
 				});
 				$("#dialog-add-workunit").dialog ("close");
-				if (tabs != undefined && tabs.data ("selected.tabs") == 5)
-					$("#tabs > ul").tabs ("load", 5);
+				// If the tracking tab is selected we update it
+				if (tabs != undefined && tabs.data ("selected.tabs") == 3)
+					$("#tabs > ul").tabs ("load", 3);
+				// If the workunits tab is selected we update it
+				if (tabs != undefined && tabs.data ("selected.tabs") == 6)
+					$("#tabs > ul").tabs ("load", 6);
 			},
 			"html"
 		);
@@ -673,8 +677,15 @@ function configure_file_form () {
 		},
 		success: function (data) {
 			$('#upload_result').hide ().empty ().html (data).show ();
+			// If the tracking tab is selected we update it
+			if (tabs != undefined && tabs.data ("selected.tabs") == 3)
+				$("#tabs > ul").tabs ("load", 3);
+			// If the workunits tab is selected we update it
 			if (tabs != undefined && tabs.data ("selected.tabs") == 6)
 				$("#tabs > ul").tabs ("load", 6);
+			// If the files tab is selected we update it
+			if (tabs != undefined && tabs.data ("selected.tabs") == 7)
+				$("#tabs > ul").tabs ("load", 7);
 		}
 	});
 }

@@ -1,3 +1,12 @@
+2011-11-14  Sergio Martin <sergio.martin@artica.es>
+
+	* include/js/integria_incident_search.js
+	operation/incidents/incident_tracking.php: Improved the incidents 
+	refresh conditions loading workunits tab when add a workunit, 
+	the files tab when add a file and the tracking tab when add a 
+	workunit or a file for bug 3429219
+	Changing the order of tracking to DESC too.
+
 2011-11-11  Sergio Martin <sergio.martin@artica.es>
 
 	* integria_db.sql

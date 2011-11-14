@@ -45,7 +45,7 @@ echo '<h3>'.__('Incident'). ' #'.$id.' - '.$incident['titulo'].'</h3>';
 echo incident_activity_graph ($incident["id_incidencia"]);
 
 
-$trackings = get_db_all_rows_field_filter ('tincident_track', 'id_incident', $id);
+$trackings = get_db_all_rows_field_filter ('tincident_track', 'id_incident', $id, 'timestamp DESC');
 
 if ($trackings !== false) {
 	$table->width = "90%";
