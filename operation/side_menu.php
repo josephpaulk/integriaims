@@ -75,7 +75,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&create_project=1'>".__('Create project')."</a></li>";
 	}
 
-	if($show_projects != MENU_LIMITED) {
+	if($show_projects != MENU_LIMITED && $show_projects != MENU_MINIMAL) {
 		// View disabled projects
 		if (($sec2 == "operation/projects/project") AND (isset($_REQUEST["view_disabled"])) )
 			echo "<li id='sidesel'>";
@@ -311,7 +311,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 }
 
 // Project group manager
-if (give_acl ($config["id_user"], 0, "PM") && $sec == "projects" && $show_projects != MENU_HIDDEN && $show_projects != MENU_LIMITED) {
+if (give_acl ($config["id_user"], 0, "PM") && $sec == "projects" && $show_projects == MENU_FULL) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Project groups')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -432,7 +432,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 }
 
 // Indicent type editor
-if (give_acl ($config["id_user"], 0, "IM") && $sec == "incidents" && $show_incidents != MENU_HIDDEN && $show_incidents != MENU_LIMITED) {
+if (give_acl ($config["id_user"], 0, "IM") && $sec == "incidents" && $show_incidents == MENU_FULL) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Incident types')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -899,7 +899,7 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN){
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=".$config['id_user']."'>".__('Edit my user')."</a></li>";
 
-	if (give_acl ($config["id_user"], 0, "TW") && $show_people != MENU_LIMITED) {
+	if (give_acl ($config["id_user"], 0, "TW") && $show_people != MENU_LIMITED && $show_people != MENU_MINIMAL) {
 		// Add spare workunit
 		if ($sec2 == "operation/users/user_spare_workunit")
 		echo "<li id='sidesel'>";
@@ -932,7 +932,7 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN){
 	echo "</div>";
 	
 	// PEOPLE REPORTING
-	if  ((give_acl($config["id_user"], 0, "PR") || give_acl($config["id_user"], 0, "IR")) && $show_people != MENU_LIMITED) {
+	if  ((give_acl($config["id_user"], 0, "PR") || give_acl($config["id_user"], 0, "IR")) && $show_people != MENU_LIMITED && $show_people != MENU_MINIMAL) {
 		echo "<div class='portlet'>";
 		echo "<h3>".__('People reporting')."</h3>";
 		echo "<ul class='sidemenu'>";
@@ -962,7 +962,7 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN){
 	}
 
 	// PEOPLE MANAGEMENT
-	if (give_acl($config["id_user"], 0, "UM") && $show_people != MENU_LIMITED){
+	if (give_acl($config["id_user"], 0, "UM") && $show_people != MENU_LIMITED && $show_people != MENU_MINIMAL){
 		echo "<div class='portlet'>";
 		echo "<h3>".__('People management')."</h3>";
 		echo "<ul class='sidemenu'>";

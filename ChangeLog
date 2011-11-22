@@ -1,5 +1,10 @@
 2011-11-22  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/side_menu.php: Add MINIMAL mode to side menu
+	visibility with the same (for moment) of LIMITED
+
+2011-11-22  Sergio Martin <sergio.martin@artica.es>
+
 	* include/config_process.php
 	include/functions.php: Added MINIMAL mode to menu visibility
 
