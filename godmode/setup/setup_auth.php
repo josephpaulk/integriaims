@@ -56,6 +56,13 @@ if ($update) {
 	update_config_token ("ldap_login_attr", $config["ldap_login_attr"]);
 }
 
+if(!isset($config['auth_methods'])) {
+	$auth_method = 'mysql';
+}
+else {
+	$auth_method = $config['auth_methods'];
+}
+
 echo "<h2>".__('Authentication configuration')."</h2>";
 
 $disabled = false;
@@ -66,7 +73,7 @@ $table->colspan = array ();
 $table->data = array ();
 
 $auth_methods = array ('mysql' => __('Local Integria'), 'ldap' => __('LDAP'));
-$table->data[0][0] = print_select ($auth_methods, "auth_methods", 'ldap', '','','',true, 0, true, "Authentication method");
+$table->data[0][0] = print_select ($auth_methods, "auth_methods", $auth_method, '','','',true, 0, true, __('Authentication method'));
 
 $table->data[1][0] = __('Autocreate remote users');
 $table->data[2][0] =  __('Yes').'&nbsp;'.print_radio_button ('autocreate_remote_users', 1, '', $config['autocreate_remote_users'], true, '', '', '').'&nbsp;&nbsp;';
@@ -136,6 +143,7 @@ echo '</form>';
 	
 $(document).ready (function () {
 	$("textarea").TextAreaResizer ();
+	config_form(<?php echo "'".$auth_method."'"; ?>);
 });
 
 $('#radiobtn0001').change (function (){
@@ -152,8 +160,11 @@ $('#radiobtn0002').change (function (){
 
 $('#auth_methods').change (function (){
 	var auth_method = $("#auth_methods").val ();
+	config_form(auth_method);
+});
+
+function config_form(auth_method) {
 	if (auth_method == 'mysql'){
-		
 		$('#table1-9-0').css('display', 'none');
 		$('#radiobtn0001').parent().css('display', 'none');
 		$('#radiobtn0001').css('display', 'none');
@@ -180,9 +191,7 @@ $('#auth_methods').change (function (){
 		$('#radiobtn0003').parent().css('display', 'none');
 		$('#radiobtn0003').css('display', 'none');
 		$('#radiobtn0004').css('display', 'none');
-		
 	} else {
-		
 		$('#table1-9-0').css('display', '');
 		$('#radiobtn0001').parent().css('display', '');
 		$('#radiobtn0001').css('display', '');
@@ -210,7 +219,6 @@ $('#auth_methods').change (function (){
 		$('#radiobtn0003').css('display', '');
 		$('#radiobtn0004').css('display', '');
 	}
-});
-
+}
 
 </script>

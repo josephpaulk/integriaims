@@ -27,7 +27,8 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('limit_size','250'),
 ('api_password',''),
 ('flash_charts','1'),
-('fontsize', 6);
+('fontsize', 6),
+('auth_methods', 'mysql');
 
 -- Default password is 'integria'
 

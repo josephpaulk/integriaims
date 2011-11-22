@@ -1,5 +1,11 @@
 2011-11-22  Sergio Martin <sergio.martin@artica.es>
 
+	* integria_dbdata.sql
+	godmode/setup/setup_auth.php: Fixed default auth mode in
+	setup editor and in default data sql script
+
+2011-11-22  Sergio Martin <sergio.martin@artica.es>
+
 	* operation/side_menu.php: Add MINIMAL mode to side menu
 	visibility with the same (for moment) of LIMITED
 
