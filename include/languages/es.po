@@ -8,15 +8,14 @@ msgstr ""
 "Project-Id-Version: index.es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-22 11:04+0200\n"
-"PO-Revision-Date: 2009-01-30 12:36+0100\n"
-"Last-Translator: Jorge Gonzalez <jorge.gonzalez@artica.es>\n"
+"PO-Revision-Date: 2011-10-10 11:53+0000\n"
+"Last-Translator: katalina rodriguez <Unknown>\n"
 "Language-Team: Español <artica@artica.es>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
-"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+"X-Launchpad-Export-Date: 2011-11-21 18:56+0000\n"
+"X-Generator: Launchpad (build 14299)\n"
 
 #: ../../operation/messages/message.php:30
 msgid "Message successfully sent"
@@ -874,33 +873,29 @@ msgid "User"
 msgstr "Usuario"
 
 #: ../../operation/download/browse.php:146
-#, fuzzy
 msgid "File releases management"
-msgstr "Gestión de hitos"
+msgstr "Gestion de ficheros liberados"
 
 #: ../../operation/download/browse.php:148
-#, fuzzy
 msgid "Create a new file release"
-msgstr "Crear un elemento de la BC nuevo"
+msgstr "Crear un nuevo la"
 
 #: ../../operation/download/browse.php:152
-#, fuzzy
 msgid "Update existing file release"
-msgstr "Actualizar un elemento de la BC existente"
+msgstr "Actualizar el lanzamiento de los ficheros existentes"
 
 #: ../../operation/download/browse.php:166
 msgid "Choose file from repository"
-msgstr ""
+msgstr "Escoge fichero del repositorio"
 
 #: ../../operation/download/browse.php:201
-#, fuzzy
 msgid "Main category"
-msgstr "Gestionar categorías"
+msgstr "Categoria principal"
 
 #: ../../operation/download/browse.php:224
 #: ../../operation/download/browse.php:295
 msgid "Downloads"
-msgstr ""
+msgstr "Descargas"
 
 #: ../../operation/download/browse.php:235 ../../operation/kb/browse.php:334
 msgid "Categories"
@@ -929,7 +924,7 @@ msgstr "Fecha"
 
 #: ../../operation/download/browse.php:298
 msgid "Admin"
-msgstr ""
+msgstr "Administrador"
 
 #: ../../operation/download/manage_perms.php:60
 #: ../../operation/incidents/incident_detail.php:450
@@ -944,19 +939,16 @@ msgstr "No se pudo borrar"
 
 #: ../../operation/download/manage_perms.php:81
 #: ../../operation/download/manage_perms.php:113
-#, fuzzy
 msgid "File release category access management"
-msgstr "Gestión de hitos"
+msgstr "Gestion de acceso de categoria de liberacion de ficheros"
 
 #: ../../operation/download/manage_perms.php:82
-#, fuzzy
 msgid "Create a new category access"
-msgstr "Crear una categoría nueva"
+msgstr "Crear un nuevo acceso de categorias"
 
 #: ../../operation/download/manage_perms.php:113
-#, fuzzy
 msgid "Assigned categories / group"
-msgstr "Categorías definidas"
+msgstr "Categorias/grupos asignados"
 
 #: ../../operation/download/manage_cat.php:79
 #: ../../operation/kb/manage_cat.php:84
@@ -965,9 +957,8 @@ msgstr "No se pudo borrar"
 
 #: ../../operation/download/manage_cat.php:97
 #: ../../operation/download/manage_cat.php:137
-#, fuzzy
 msgid "File release category management"
-msgstr "Gestión de categorías de la BC"
+msgstr "Gestion de categorias de liberacion de ficheros"
 
 #: ../../operation/download/manage_cat.php:99
 #: ../../operation/kb/manage_cat.php:108
@@ -1115,49 +1106,48 @@ msgid "Updated"
 msgstr "Actualizado hace"
 
 #: ../../operation/group/group.php:52
-#, fuzzy
 msgid "Limit of incidents reached"
-msgstr "Leer incidentes"
+msgstr "Limite de incidentes alcanzado"
 
 #: ../../operation/group/group.php:54
 msgid "You have reached the limit of incidents for this group"
-msgstr ""
+msgstr "Has llegado al limite de incidentes para este grupo"
 
 #: ../../operation/group/group.php:54
 msgid "You cannot create more incidents."
-msgstr ""
+msgstr "No puedes crear más incidentes"
 
 #: ../../operation/group/group.php:61
 msgid "Warning: Soft limit reached"
-msgstr ""
+msgstr "Atencion: alcanzado limite Software"
 
 #: ../../operation/group/group.php:63
 msgid "You have "
-msgstr ""
+msgstr "Tienes "
 
 #: ../../operation/group/group.php:63
-#, fuzzy
 msgid " opened incidents"
-msgstr "Incidentes relacionados"
+msgstr " Incidentes abiertos"
 
 #: ../../operation/group/group.php:63
 msgid "Soft limit for this group is "
-msgstr ""
+msgstr "El limite de software para este grupo es "
 
 #: ../../operation/group/group.php:63
-#, fuzzy
 msgid " incidents"
-msgstr "Todos los incidentes"
+msgstr " incidentes"
 
 #: ../../operation/group/group.php:63
 msgid "Please close some incidents before create more"
-msgstr ""
+msgstr "Por favor cierra algunos incidentes antes de crear mas"
 
 #: ../../operation/group/group.php:70
 msgid ""
 "You cannot create more incidents in this group until you close an active "
 "incident."
 msgstr ""
+"No puedes crear mas incidentes en este grupo hasta que cierres un incidente "
+"activo"
 
 #: ../../operation/contacts/contact_detail.php:114
 msgid "Contact management"
@@ -1237,15 +1227,15 @@ msgstr "SLA base"
 
 #: ../../operation/slas/sla_detail.php:162
 msgid "Fire only between week, not weekends"
-msgstr ""
+msgstr "Disparar solo entre semana, no los fines de semana"
 
 #: ../../operation/slas/sla_detail.php:165
 msgid "Start hour to compute SLA"
-msgstr ""
+msgstr "Hora de inicio para computar SLA"
 
 #: ../../operation/slas/sla_detail.php:167
 msgid "Last hour to compute SLA"
-msgstr ""
+msgstr "Ultima hora para computar SLA"
 
 #: ../../operation/slas/sla_detail.php:218
 msgid "Min.Response"
@@ -1447,7 +1437,7 @@ msgstr "Subir fichero"
 #: ../../operation/incidents/incident_files.php:53
 #: ../../godmode/setup/filemgr.php:164
 msgid "Filename"
-msgstr "Nombre del fichero"
+msgstr "Nombre del archivo"
 
 #: ../../operation/projects/task_attach_file.php:49
 #: ../../operation/incidents/incident_attach_file.php:50
@@ -1498,7 +1488,7 @@ msgstr "Sin terminar"
 
 #: ../../operation/projects/project_tree.php:44
 msgid "Done"
-msgstr "Terminado"
+msgstr "Hecho"
 
 #: ../../operation/projects/project_tree.php:50
 msgid "Defined end"
@@ -1645,19 +1635,17 @@ msgid "Charged to customer"
 msgstr "Cargado al cliente"
 
 #: ../../operation/projects/project_detail.php:229
-#, fuzzy
 msgid "Task effort "
-msgstr "Escritura de tareas"
+msgstr "Esfuerzo desempeñado en la tarea "
 
 #: ../../operation/projects/project_detail.php:233
-#, fuzzy
 msgid "People effort "
-msgstr "Personas"
+msgstr "Esfuerzo de los usuarios "
 
 #: ../../operation/projects/people_manager.php:61
 #: ../../operation/projects/people_manager.php:87
 msgid "Not created. Role already exists."
-msgstr ""
+msgstr "No creado. El rol ya existía"
 
 #: ../../operation/projects/people_manager.php:75
 #: ../../operation/projects/people_manager.php:101
@@ -1991,18 +1979,16 @@ msgid "Last update"
 msgstr "Última actualización"
 
 #: ../../operation/users/user_workunit_report.php:110
-#, fuzzy
 msgid "Workunit personal report for user"
-msgstr "Informe personal de unidades de trabajo"
+msgstr "Informe personal de unidades de trabajo por usuario"
 
 #: ../../operation/users/user_workunit_report.php:118
-#, fuzzy
 msgid "Between dates"
-msgstr "Fecha de inicio"
+msgstr "Entre fechas"
 
 #: ../../operation/users/user_workunit_report.php:121
 msgid "to"
-msgstr ""
+msgstr "a"
 
 #: ../../operation/users/user_edit.php:78
 msgid "Passwords don't match"
@@ -2040,9 +2026,8 @@ msgid "Default"
 msgstr "Predeterminado"
 
 #: ../../operation/users/user_edit.php:139
-#, fuzzy
 msgid "Total incidents opened"
-msgstr "Número total de incidentes"
+msgstr "Total de incidentes abiertos"
 
 #: ../../operation/users/user_edit.php:147
 #: ../../operation/users/user_edit.php:148
@@ -2091,9 +2076,8 @@ msgid "KB"
 msgstr "BC"
 
 #: ../../operation/main_menu.php:67
-#, fuzzy
 msgid "File Releases"
-msgstr "Fichero borrado"
+msgstr "liberacion de ficheros"
 
 #: ../../operation/main_menu.php:83
 msgid "Todo"
@@ -2153,9 +2137,8 @@ msgid "KB Category management"
 msgstr "Gestión de categorías de la BC"
 
 #: ../../operation/common/workunit_detail.php:39
-#, fuzzy
 msgid "Workunit detail for Incident #"
-msgstr "Detalles del incidente"
+msgstr "Detalle de unidades de trabajo para el incidente #"
 
 #: ../../operation/common/workunit_detail.php:64
 #: ../../include/functions_form.php:649
@@ -2227,9 +2210,8 @@ msgstr "Otro"
 
 #: ../../operation/user_report/report_annual.php:127
 #: ../../include/functions_calendar.php:506
-#, fuzzy
 msgid "Locked"
-msgstr "Bloqueado por"
+msgstr "Cerrado"
 
 #: ../../operation/user_report/monthly.php:96
 #: ../../operation/user_report/monthly_graph.php:71
@@ -2237,9 +2219,8 @@ msgid "Monthly report for"
 msgstr "Informe mensual para"
 
 #: ../../operation/user_report/monthly.php:99
-#, fuzzy
 msgid "Lock all workunits in this month"
-msgstr "Horas totales en el mes"
+msgstr "Bloquear todas las unidades de trabajo de este mes"
 
 #: ../../operation/user_report/monthly.php:118
 #: ../../operation/user_report/report_full.php:80
@@ -2319,12 +2300,11 @@ msgstr "Fechas"
 #: ../../operation/user_report/report_full.php:211
 #: ../../operation/incidents/incident_detail.php:559
 msgid "Score"
-msgstr ""
+msgstr "Puntuación"
 
 #: ../../operation/user_report/report_full.php:256
-#, fuzzy
 msgid "Incident graph report"
-msgstr "Informe de incidentes"
+msgstr "Informe de gráficas de incidentes"
 
 #: ../../operation/user_report/report_full.php:258
 #: ../../enterprise/include/functions_user_audit.php:231
@@ -2342,9 +2322,8 @@ msgstr "Informe de incidentes"
 #: ../../include/functions_incidents.php:528
 #: ../../include/functions_graph.php:77 ../../include/functions_graph.php:105
 #: ../../include/functions_graph.php:134
-#, fuzzy
 msgid "others"
-msgstr "Otro"
+msgstr "otros"
 
 #: ../../operation/user_report/monthly_graph.php:87
 msgid "Workunit by task"
@@ -2373,7 +2352,7 @@ msgstr "Cargado este mes"
 #: ../../operation/user_report/report_monthly.php:93
 #: ../../include/functions_incidents.php:399
 msgid "Avg. Scoring"
-msgstr ""
+msgstr "Puntuacion media"
 
 #: ../../operation/side_menu.php:42
 msgid "Projects overview"
@@ -2458,7 +2437,7 @@ msgstr "Crear incidente"
 
 #: ../../operation/side_menu.php:338
 msgid "Incident #"
-msgstr "Incidente nº "
+msgstr "Incidente nº"
 
 #: ../../operation/side_menu.php:381
 msgid "Details for incident"
@@ -2485,18 +2464,16 @@ msgstr "Crear objeto de inventario"
 #: ../../operation/side_menu.php:449
 #: ../../operation/inventories/inventory_reports_detail.php:99
 #: ../../operation/inventories/inventory_reports.php:34
-#, fuzzy
 msgid "Inventory reports"
-msgstr "Informe de inventario"
+msgstr "Informes de inventario"
 
 #: ../../operation/side_menu.php:452
-#, fuzzy
 msgid "Create inventory report"
-msgstr "Crear objeto de inventario"
+msgstr "Crear informe de inventario"
 
 #: ../../operation/side_menu.php:458
 msgid "Inventory #"
-msgstr "Nº de inventario "
+msgstr "Nº de inventario"
 
 #: ../../operation/side_menu.php:490
 #: ../../operation/companies/company_detail.php:173
@@ -2573,18 +2550,16 @@ msgid "Manage categories"
 msgstr "Gestionar categorías"
 
 #: ../../operation/side_menu.php:662
-#, fuzzy
 msgid "File releases"
-msgstr "Fichero borrado"
+msgstr "Liberar ficheros"
 
 #: ../../operation/side_menu.php:678
-#, fuzzy
 msgid "Create file release"
-msgstr "Crear usuario"
+msgstr "Crear file release"
 
 #: ../../operation/side_menu.php:692
 msgid "Manage access"
-msgstr "Gestión de acceso"
+msgstr "Gestion de acceso"
 
 #: ../../operation/side_menu.php:720
 msgid "To-Do another people"
@@ -2599,9 +2574,8 @@ msgid "General setup"
 msgstr "Configuración general"
 
 #: ../../operation/side_menu.php:749 ../../godmode/setup/setup_visual.php:48
-#, fuzzy
 msgid "Visual setup"
-msgstr "Configuración de correo-e"
+msgstr "Despliegue visual"
 
 #: ../../operation/side_menu.php:757
 #: ../../godmode/setup/incidents_setup.php:30
@@ -2609,9 +2583,8 @@ msgid "Incidents setup"
 msgstr "Configuración de incidentes"
 
 #: ../../operation/side_menu.php:764
-#, fuzzy
 msgid "Inventories setup"
-msgstr "Configuración de incidentes"
+msgstr "Instalar inventarios"
 
 #: ../../operation/side_menu.php:771 ../../godmode/setup/setup_mail.php:60
 msgid "Mail setup"
@@ -2619,23 +2592,20 @@ msgstr "Configuración de correo-e"
 
 #: ../../operation/side_menu.php:778
 #: ../../godmode/setup/setup_mailtemplates.php:66
-#, fuzzy
 msgid "Mail templates setup"
-msgstr "Configuración de correo-e"
+msgstr "Instalar plantillas de emails"
 
 #: ../../operation/side_menu.php:803 ../../godmode/setup/filemgr.php:64
-#, fuzzy
 msgid "File manager"
-msgstr "Nombre del fichero"
+msgstr "Gestor de ficheros"
 
 #: ../../operation/side_menu.php:810
 msgid "News board"
-msgstr ""
+msgstr "Cuadro de noticias"
 
 #: ../../operation/side_menu.php:818
-#, fuzzy
 msgid "DB Manager"
-msgstr "Gestionar"
+msgstr "Gestor de bases de datos"
 
 #: ../../operation/side_menu.php:833
 msgid "System events"
@@ -2643,33 +2613,31 @@ msgstr "Eventos del sistema"
 
 #: ../../operation/side_menu.php:840
 msgid "Audit log"
-msgstr ""
+msgstr "Log de auditoria"
 
 #: ../../operation/side_menu.php:848
 msgid "Error log"
-msgstr ""
+msgstr "Log erroneo"
 
 #: ../../operation/side_menu.php:857
 msgid "Myself"
-msgstr ""
+msgstr "Yo"
 
 #: ../../operation/side_menu.php:869
 msgid "Edit my user"
 msgstr "Editar mi usuario"
 
 #: ../../operation/side_menu.php:877
-#, fuzzy
 msgid "Add spare workunit"
-msgstr "Horas de trabajo sueltas"
+msgstr "Añadir una workunit suelta"
 
 #: ../../operation/side_menu.php:896
 msgid "My task assigments"
 msgstr "Mis tareas asignadas"
 
 #: ../../operation/side_menu.php:905
-#, fuzzy
 msgid "People reporting"
-msgstr "Informe de usuario"
+msgstr "Informes de la plantilla"
 
 #: ../../operation/side_menu.php:920
 msgid "Montly report"
@@ -2680,9 +2648,8 @@ msgid "Annual report"
 msgstr "Informe anual"
 
 #: ../../operation/side_menu.php:934
-#, fuzzy
 msgid "People management"
-msgstr "Gestión de roles"
+msgstr "Gestion de la plantilla"
 
 #: ../../operation/side_menu.php:942
 #: ../../enterprise/godmode/usuarios/profile_list.php:272
@@ -2882,12 +2849,11 @@ msgstr "Usuario asignado"
 
 #: ../../operation/incidents/incident.php:150
 msgid "Massive operations over selected items"
-msgstr ""
+msgstr "Operaciones masivas sobre objetos seleccionados"
 
 #: ../../operation/incidents/incident.php:160
-#, fuzzy
 msgid "Update selected items"
-msgstr "Actualizar un elemento de la BC existente"
+msgstr "Actualizar los items seleccionados"
 
 #: ../../operation/incidents/incident.php:242
 msgid "Unable to load incident"
@@ -2947,9 +2913,8 @@ msgid "Add to KB"
 msgstr "Añadir a la BC"
 
 #: ../../operation/incidents/incident_detail.php:532
-#, fuzzy
 msgid "Scoring"
-msgstr "Cadena de búsqueda"
+msgstr "Puntuación"
 
 #: ../../operation/incidents/incident_detail.php:547
 msgid ""
@@ -2957,35 +2922,37 @@ msgid ""
 "of this incident. People assigned to this incident will not view directly "
 "your scoring."
 msgstr ""
+"Por favor, ayudenos a mejorar el servicio y denos puntuacion para la "
+"resolucion de este incidente. Las personas asignadas a este incidente no "
+"veran directamente tu puntuacion"
 
 #: ../../operation/incidents/incident_detail.php:550
 msgid "Very good, excellent !"
-msgstr ""
+msgstr "Muy bien, excelente!"
 
 #: ../../operation/incidents/incident_detail.php:551
 msgid "Good, very satisfied."
-msgstr ""
+msgstr "Bien, muy satisfactorio"
 
 #: ../../operation/incidents/incident_detail.php:552
 msgid "It's ok, but could be better."
-msgstr ""
+msgstr "Está bien, pero podría mejorarse"
 
 #: ../../operation/incidents/incident_detail.php:553
 msgid "Average. Not bad, not good."
-msgstr ""
+msgstr "Normal, ni bueno ni malo"
 
 #: ../../operation/incidents/incident_detail.php:554
 msgid "Bad, you must to better"
-msgstr ""
+msgstr "Mal, debe mejorar"
 
 #: ../../operation/incidents/incident_detail.php:555
-#, fuzzy
 msgid "Very bad"
-msgstr "Muy baja"
+msgstr "Muy malo"
 
 #: ../../operation/incidents/incident_detail.php:556
 msgid "Horrible, you need to change it."
-msgstr ""
+msgstr "Horrible, necesita cambiarlo"
 
 #: ../../operation/incidents/incident_detail.php:606
 msgid "SLA disabled"
@@ -3098,7 +3065,7 @@ msgstr "Perfil"
 
 #: ../../operation/incidents/incident_create_work.php:61
 msgid "Sending data..."
-msgstr ""
+msgstr "Enviando datos..."
 
 #: ../../operation/incidents/incident_attach_file.php:37
 msgid "File"
@@ -3109,37 +3076,37 @@ msgid ""
 "Please note that you cannot upload .php or .pl files, as well other source "
 "code formats. Please compress that files prior to upload (using zip or gz)"
 msgstr ""
+"Por favor, observe que no puede subir ficheros .php o .pl, asi como tampoco "
+"otros formatos de codigo fuente. Por favor comprima los ficheros antes de "
+"subirlos"
 
 #: ../../operation/incidents/incident_score.php:39
-#, fuzzy
 msgid "Invalid incident ID"
-msgstr "Gestionar incidentes"
+msgstr "Identificacion de incidentes invalida"
 
 #: ../../operation/incidents/incident_score.php:46
 msgid "Non authorized incident score review"
-msgstr ""
+msgstr "Supervision de puntuacion de incidente no autorizado"
 
 #: ../../operation/incidents/incident_score.php:53
 msgid "Incident cannot be scored until be closed"
-msgstr ""
+msgstr "El incidente no puede ser puntuado hasta que no se haya cerrado"
 
 #: ../../operation/incidents/incident_score.php:63
-#, fuzzy
 msgid "Incident scoring"
-msgstr "Escribir incidentes"
+msgstr "Puntuacion de incidentes"
 
 #: ../../operation/incidents/incident_score.php:65
 msgid "Thanks for your feedback, this help us to keep improving our job"
-msgstr ""
+msgstr "Gracias por su aportacion, que nos ayudará a mejorar nuestro trabajo"
 
 #: ../../operation/incidents/incident_files.php:47
 msgid "No files were added to the incidence"
 msgstr "No se añadió ningún fichero al incidente"
 
 #: ../../operation/incidents/incident_statistics.php:27
-#, fuzzy
 msgid "Search statistics"
-msgstr "Estadísticas"
+msgstr "Buscar estadisticas"
 
 #: ../../operation/incidents/incident_statistics.php:37
 #: ../../operation/inventories/inventory_search.php:111
@@ -3148,9 +3115,8 @@ msgid "HTML report"
 msgstr "Informe HTML"
 
 #: ../../operation/incidents/incident_statistics.php:49
-#, fuzzy
 msgid "PDF report"
-msgstr "Informe completo"
+msgstr "Informe PDF"
 
 #: ../../operation/incidents/incident_inventory_detail.php:39
 msgid "There's no inventory objects associated to this incident"
@@ -3321,7 +3287,7 @@ msgstr "Hubo un error al actualizar el objeto de inventario"
 
 #: ../../operation/inventories/inventory_detail.php:107
 msgid "Click here to continue working with Object #"
-msgstr "Pulse aquí para continuar trabajando sobre el objeto nº "
+msgstr "Pulse aquí para continuar trabajando sobre el objeto nº"
 
 #: ../../operation/inventories/inventory_detail.php:167
 #: ../../operation/inventories/inventory_tree.php:45
@@ -3377,7 +3343,7 @@ msgstr "Búsqueda avanzada"
 
 #: ../../operation/inventories/inventory_reports_detail.php:108
 msgid "Report SQL sentence"
-msgstr ""
+msgstr "Enviar sentencia SQL"
 
 #: ../../operation/inventories/manage_prod.php:116
 #: ../../operation/inventories/manage_prod.php:156
@@ -3397,21 +3363,18 @@ msgid "Defined products"
 msgstr "Productos definidos"
 
 #: ../../operation/inventories/inventory_extra.php:32
-#, fuzzy
 msgid "Extra details for the inventory object"
-msgstr "Detalles del contrato acerca del objeto de inventario"
+msgstr "Detalles extra para el objeto de inventario"
 
 #: ../../operation/inventories/inventory_reports.php:30
-#, fuzzy
 msgid "No reports were found"
-msgstr "No se encontró ningún usuario"
+msgstr "No se encontraron informes"
 
 #: ../../operation/inventories/inventory_reports.php:55
 msgid "SQL sentence"
-msgstr ""
+msgstr "Consulta SQL"
 
 #: ../../operation/inventories/inventory_reports.php:72
-#, fuzzy
 msgid "Are your sure?"
 msgstr "¿Está seguro?"
 
@@ -3420,16 +3383,15 @@ msgid "There was a problem deleting object"
 msgstr "Hubo un problema al borrar el objeto"
 
 #: ../../operation/inventories/inventory.php:76
-#, fuzzy
 msgid ""
 "There was an error updating inventory \n"
 "object"
-msgstr "Hubo un error al actualizar el objeto de inventario"
+msgstr "Había un error al actualizar el objeto de inventario"
 
 #: ../../operation/inventories/inventory.php:92
 #: ../../operation/inventories/inventory.php:96
 msgid "Extra"
-msgstr ""
+msgstr "Extra"
 
 #: ../../operation/inventories/inventory.php:103
 msgid "Tree"
@@ -3481,9 +3443,8 @@ msgid "View"
 msgstr "Ver"
 
 #: ../../operation/agenda/agenda.php:87 ../../operation/agenda/agenda.php:92
-#, fuzzy
 msgid "New calendar event"
-msgstr "Evento de la agenda"
+msgstr "Nuevo evento para el calendario"
 
 #: ../../operation/agenda/agenda.php:95
 msgid "Added event to calendar"
@@ -3543,44 +3504,45 @@ msgid "Logout"
 msgstr "Finalizar sesión"
 
 #: ../../general/password_recovery.php:32
-#, fuzzy
 msgid "Password recovery"
-msgstr "Contraseña"
+msgstr "Recuperar contraseña"
 
 #: ../../general/password_recovery.php:55
 msgid ""
 "Integria IMS has sent you an email with instructions on how to change your "
 "password. "
 msgstr ""
+"Integria IMS le ha enviado un email con instrucciones sobre como cambiar su "
+"contraseña "
 
 #: ../../general/password_recovery.php:56
 msgid "Enter here the validation code you should have received by mail"
 msgstr ""
+"Meta aqui el codigo de validacion que deberia haber recibido por email"
 
 #: ../../general/password_recovery.php:60
-#, fuzzy
 msgid "Validation code"
-msgstr "Días de vacaciones"
+msgstr "Código de validación"
 
 #: ../../general/password_recovery.php:63
 msgid "Validate"
-msgstr ""
+msgstr "Validar"
 
 #: ../../general/password_recovery.php:69
-#, fuzzy
 msgid "Your new password is"
-msgstr "Cambiar contraseña"
+msgstr "Su nueva contraseña es"
 
 #: ../../general/password_recovery.php:73
 msgid "Click here to login"
-msgstr ""
+msgstr "Pinchar aqui para logarse"
 
 #: ../../general/password_recovery.php:77
 msgid "Invalid validation code"
-msgstr ""
+msgstr "Codigo de validacion invalido"
 
 #: ../../general/footer.php:31
-msgid "Integria IMS is an <b>OpenSource Project, licensed under GPL terms</b>"
+msgid ""
+"Integria IMS is an <b>OpenSource Project, licensed under GPL terms</b>"
 msgstr ""
 "Integria IMS es un <b>proyecto OpenSource, licenciado bajo los términos de "
 "la GPL</b>"
@@ -3595,7 +3557,7 @@ msgstr "Falló el inicio de sesión"
 
 #: ../../general/login_page.php:42
 msgid "If you have lost or does not remember your password"
-msgstr ""
+msgstr "Si has perdido la contraseña o no la recuerdas"
 
 #: ../../general/login_page.php:73
 msgid "Login"
@@ -3618,13 +3580,12 @@ msgstr ""
 "seguridad de la base de datos de Integria."
 
 #: ../../general/home.php:36
-#, fuzzy
 msgid "System newsboard"
-msgstr "Eventos del sistema"
+msgstr "Cuadro de noticias del sistema"
 
 #: ../../general/home.php:40
 msgid "Latest system news (30 days)"
-msgstr ""
+msgstr "Ultimas noticias del sistema (30 dias)"
 
 #: ../../general/home.php:70
 msgid "Events for next three days"
@@ -3651,9 +3612,8 @@ msgid "Incidents active you have"
 msgstr "Incidentes activos que tiene"
 
 #: ../../general/home.php:150
-#, fuzzy
 msgid "Last workunit by"
-msgstr "Último trabajo por"
+msgstr "Ultima unidad de trabajo de"
 
 #: ../../general/home.php:189
 msgid "Projects active you have"
@@ -3685,7 +3645,7 @@ msgstr "Sistema de ayuda de Integria IMS"
 
 #: ../../enterprise/operation/user_audit/startend_report.php:39
 msgid "Global startend report"
-msgstr ""
+msgstr "Informe global de inicio fin"
 
 #: ../../enterprise/operation/user_audit/startend_report.php:137
 #: ../../enterprise/operation/user_audit/document_report.php:134
@@ -3696,357 +3656,325 @@ msgstr ""
 #: ../../enterprise/operation/user_audit/app_report.php:113
 #: ../../enterprise/operation/user_audit/productivity_report.php:103
 msgid "Filter"
-msgstr ""
+msgstr "Filtro"
 
 #: ../../enterprise/operation/user_audit/startend_report.php:149
 msgid "Start hour average"
-msgstr ""
+msgstr "Media de la hora de inicio"
 
 #: ../../enterprise/operation/user_audit/startend_report.php:151
 msgid "End hour average"
-msgstr ""
+msgstr "Media de la hora de finalización"
 
 #: ../../enterprise/operation/user_audit/startend_report.php:153
 msgid "Workday time average"
-msgstr ""
+msgstr "Media del tiempo de trabajo"
 
 #: ../../enterprise/operation/user_audit/document_report.php:78
 #: ../../enterprise/operation/user_audit/user_report.php:54
 #: ../../enterprise/operation/user_audit/user_graph.php:68
 msgid "User detailed activity auditing report"
-msgstr ""
+msgstr "Informe de auditoria de al actividad del usuario detallado"
 
 #: ../../enterprise/operation/user_audit/document_report.php:163
 #: ../../enterprise/operation/user_audit/user_report.php:216
-#, fuzzy
 msgid "Date/Time"
-msgstr "Fecha"
+msgstr "Fecha/Hora"
 
 #: ../../enterprise/operation/user_audit/document_report.php:166
 #: ../../enterprise/operation/user_audit/user_report.php:219
 msgid "App"
-msgstr ""
+msgstr "Aplicaciones"
 
 #: ../../enterprise/operation/user_audit/document_report.php:169
 #: ../../enterprise/operation/user_audit/user_report.php:222
-#, fuzzy
 msgid "Usage"
-msgstr "Mensaje"
+msgstr "Uso"
 
 #: ../../enterprise/operation/user_audit/default_app_manager.php:52
 #: ../../enterprise/operation/user_audit/default_app_manager.php:76
 #: ../../enterprise/operation/user_audit/app_manager.php:108
 #: ../../enterprise/operation/user_audit/app_manager.php:137
-#, fuzzy
 msgid "Updated successfully"
-msgstr "Actualizado correctamente"
+msgstr "Actualizado satisfactoriamente"
 
 #: ../../enterprise/operation/user_audit/default_app_manager.php:55
 #: ../../enterprise/operation/user_audit/default_app_manager.php:79
 #: ../../enterprise/operation/user_audit/app_manager.php:111
 #: ../../enterprise/operation/user_audit/app_manager.php:140
-#, fuzzy
 msgid "Cannot be updated"
-msgstr "No se pudo borrar"
+msgstr "No puede ser actualizado"
 
 #: ../../enterprise/operation/user_audit/default_app_manager.php:91
 #: ../../enterprise/operation/user_audit/app_manager.php:153
-#, fuzzy
 msgid "Audit app. management"
-msgstr "Gestión de agenda"
+msgstr "Gestión de la aplicación de la auditoria"
 
 #: ../../enterprise/operation/user_audit/default_app_manager.php:139
 #: ../../enterprise/operation/user_audit/app_manager.php:206
-#, fuzzy
 msgid "App. name"
-msgstr "Nombre del SLA"
+msgstr "Nombre de la aplicacion"
 
 #: ../../enterprise/operation/user_audit/default_app_manager.php:141
 #: ../../enterprise/operation/user_audit/app_manager.php:209
 msgid "Mode"
-msgstr ""
+msgstr "Modo"
 
 #: ../../enterprise/operation/user_audit/default_app_manager.php:165
 #: ../../enterprise/operation/user_audit/app_manager.php:238
-#, fuzzy
 msgid "Auth"
-msgstr "Autor"
+msgstr "Autenticación"
 
 #: ../../enterprise/operation/user_audit/default_app_manager.php:168
 #: ../../enterprise/operation/user_audit/app_manager.php:241
-#, fuzzy
 msgid "Not auth"
-msgstr "Sin establecer"
+msgstr "No autenficado"
 
 #: ../../enterprise/operation/user_audit/default_app_manager.php:191
 #: ../../enterprise/operation/user_audit/default_app_manager.php:192
 #: ../../enterprise/operation/user_audit/app_manager.php:272
 #: ../../enterprise/operation/user_audit/app_manager.php:273
 msgid "Auth. extra substring"
-msgstr ""
+msgstr "Autenticar subcadena extra"
 
 #: ../../enterprise/operation/user_audit/default_app_manager.php:195
 #: ../../enterprise/operation/user_audit/default_app_manager.php:196
 #: ../../enterprise/operation/user_audit/app_manager.php:276
 #: ../../enterprise/operation/user_audit/app_manager.php:277
 msgid "Not auth. extra substring"
-msgstr ""
+msgstr "Subcadena extra sin autenticar"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:31
-#, fuzzy
 msgid "Category name cannot be renamed"
-msgstr "El nombre no puede estar vacío"
+msgstr "La categoría del nombre no puede renombrarse"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:35
-#, fuzzy
 msgid "Category name cannot be empty"
-msgstr "El nombre no puede estar vacío"
+msgstr "El nombre de la categoría no puede estar vacía"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:39
-#, fuzzy
 msgid "Category renamed successfully"
-msgstr "Unidad de trabajo añadida correctamente"
+msgstr "Categoría renombrada con éxito"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:53
 msgid "Default category cannot be deleted. Please, change it on setup first"
 msgstr ""
+"La categoría por defecto no puede ser borrada. Por favor, cambiela primero "
+"en la configuracion"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:62
 msgid ""
 "To delete a category with apps is necessary move the apps to another "
 "category. Please, select one before delete"
 msgstr ""
+"Para borrar una categoría con aplicaciones es necesario mover las "
+"aplicaciones a otra categoría. Por favor, seleccione una antes de borrarla"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:70
 #: ../../enterprise/operation/user_audit/category_manager.php:98
-#, fuzzy
 msgid "Category cannot be deleted"
-msgstr "No se pudo borrar"
+msgstr "La categoría no puede ser eliminada"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:77
 #: ../../enterprise/operation/user_audit/category_manager.php:95
-#, fuzzy
 msgid "Category deleted successfully"
-msgstr "Unidad de trabajo añadida correctamente"
+msgstr "Categoria eliminada con éxito"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:104
-#, fuzzy
 msgid "Audit category management"
-msgstr "Gestión de categorías de la BC"
+msgstr "Gestión de la categoría de auditoría"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:110
-#, fuzzy
 msgid "Category name"
-msgstr "Categoría"
+msgstr "Nombre de la categoría"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:111
 msgid "# Apps"
-msgstr ""
+msgstr "# Apps"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:112
-#, fuzzy
 msgid "Delete option"
-msgstr "Borrar"
+msgstr "Eliminar opción"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:131
 #: ../../enterprise/operation/user_audit/category_manager.php:163
-#, fuzzy
 msgid "Rename"
-msgstr "Nombre real"
+msgstr "Renombrar"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:134
 #: ../../enterprise/operation/user_audit/category_manager.php:167
 #: ../../enterprise/godmode/setup/setup_activityauditing.php:47
-#, fuzzy
 msgid "Default category"
-msgstr "Usuario predeterminado"
+msgstr "Categoría predeterminada"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:147
-#, fuzzy
 msgid "Select destination category"
-msgstr "Actualizar una categoría existente"
+msgstr "Seleccionar categoría de destino"
 
 #: ../../enterprise/operation/user_audit/category_manager.php:160
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: ../../enterprise/operation/user_audit/app_manager.php:37
-#, fuzzy
 msgid "App copied to default successfully"
-msgstr "Unidad de trabajo añadida correctamente"
+msgstr "Aplicación copiada por defecto con éxito"
 
 #: ../../enterprise/operation/user_audit/app_manager.php:40
 msgid "App cannot be copied to default"
-msgstr ""
+msgstr "La aplicación no puede ser copiada por defecto"
 
 #: ../../enterprise/operation/user_audit/app_manager.php:68
-#, fuzzy
 msgid "Substring exception deleted successfully"
-msgstr "Asignación eliminada correctamente"
+msgstr "La excepción de la subcadena ha sido borrada con éxito"
 
 #: ../../enterprise/operation/user_audit/app_manager.php:71
-#, fuzzy
 msgid "Substring exception cannot be deleted"
-msgstr "No se pudo actualizar el edificio"
+msgstr "La excepción de la subcadena no puede ser eliminada"
 
 #: ../../enterprise/operation/user_audit/app_manager.php:90
-#, fuzzy
 msgid "Substring exception added successfully"
-msgstr "Unidad de trabajo añadida correctamente"
+msgstr "La excepción de la subcadena ha sido añadida con éxito"
 
 #: ../../enterprise/operation/user_audit/app_manager.php:93
 msgid "Cannot be added substring exception"
-msgstr ""
+msgstr "La subcadena de excepción no se puede añadir"
 
 #: ../../enterprise/operation/user_audit/app_manager.php:169
 #: ../../enterprise/include/functions_user_audit.php:670
 #: ../../enterprise/include/functions_user_audit.php:698
 #: ../../enterprise/include/functions_user_audit.php:716
-#, fuzzy
 msgid "Filter by group"
-msgstr "Configuración de incidentes"
+msgstr "Filtrar por grupo"
 
 #: ../../enterprise/operation/user_audit/app_manager.php:251
 msgid "Copy to default apps"
-msgstr ""
+msgstr "Copiar a las aplicaciones por defecto"
 
 #: ../../enterprise/operation/user_audit/user_report.php:142
 #: ../../enterprise/operation/user_audit/user_graph.php:231
 msgid "Activity summary"
-msgstr ""
+msgstr "Resumen de actividad"
 
 #: ../../enterprise/operation/user_audit/user_report.php:151
 msgid "Distribution in time"
-msgstr ""
+msgstr "Distribución a lo largo del tiempo"
 
 #: ../../enterprise/operation/user_audit/user_report.php:159
 #: ../../enterprise/operation/user_audit/user_graph.php:143
 #: ../../enterprise/operation/user_audit/user_graph.php:144
 #: ../../enterprise/operation/user_audit/user_graph.php:192
 msgid "Not auth. soft."
-msgstr ""
+msgstr "Software sin autentificar"
 
 #: ../../enterprise/operation/user_audit/user_report.php:159
 #: ../../enterprise/operation/user_audit/user_graph.php:143
 #: ../../enterprise/operation/user_audit/user_graph.php:144
 #: ../../enterprise/operation/user_audit/user_graph.php:192
 msgid "Auth. soft."
-msgstr ""
+msgstr "Software sin autentificar"
 
 #: ../../enterprise/operation/user_audit/user_report.php:192
-#, fuzzy
 msgid "Total time for "
-msgstr "Totales para la semana"
+msgstr "Tiempo total para "
 
 #: ../../enterprise/operation/user_audit/user_graph.php:244
 #: ../../enterprise/operation/user_audit/user_graph.php:275
 msgid "Authorized software activity"
-msgstr ""
+msgstr "Actividad del software autorizado"
 
 #: ../../enterprise/operation/user_audit/user_graph.php:254
 #: ../../enterprise/operation/user_audit/user_graph.php:276
 msgid "Not authorized software activity"
-msgstr ""
+msgstr "Not authorized software activity"
 
 #: ../../enterprise/operation/user_audit/user_graph.php:265
 msgid "Software activity"
-msgstr ""
+msgstr "Software activity"
 
 #: ../../enterprise/operation/user_audit/user_graph.php:288
 msgid "Activity for "
-msgstr ""
+msgstr "Activity for "
 
 #: ../../enterprise/operation/user_audit/user_graph.php:305
-#, fuzzy
 msgid "Categories activity"
-msgstr "Categorías"
+msgstr "Categories activity"
 
 #: ../../enterprise/operation/user_audit/app_report.php:42
 msgid "People who use application"
-msgstr ""
+msgstr "Personas que utilizan la aplicación"
 
 #: ../../enterprise/operation/user_audit/app_report.php:45
 msgid "Global application usage report"
-msgstr ""
+msgstr "Global application usage report"
 
 #: ../../enterprise/operation/user_audit/app_report.php:121
 msgid "Back to apps"
-msgstr ""
+msgstr "Back to apps"
 
 #: ../../enterprise/operation/user_audit/app_report.php:134
 msgid "Activity time"
-msgstr ""
+msgstr "Activity time"
 
 #: ../../enterprise/operation/user_audit/app_report.php:136
-#, fuzzy
 msgid "Last use"
-msgstr "Última actualización"
+msgstr "Last use"
 
 #: ../../enterprise/operation/user_audit/app_report.php:159
-#, fuzzy
 msgid "Application"
-msgstr "Datos de la aplicación"
+msgstr "Application"
 
 #: ../../enterprise/operation/user_audit/app_report.php:161
-#, fuzzy
 msgid "Instances"
-msgstr "Mantenimiento"
+msgstr "Instancias"
 
 #: ../../enterprise/operation/user_audit/app_report.php:163
-#, fuzzy
 msgid "Workday time"
-msgstr "Media de horas de trabajo"
+msgstr "Jornada de trabajo"
 
 #: ../../enterprise/operation/user_audit/productivity_report.php:45
-#, fuzzy
 msgid "Global productivity report"
-msgstr "Perfil global"
+msgstr "Informe de productividad global"
 
 #: ../../enterprise/operation/user_audit/productivity_report.php:159
-#, fuzzy
 msgid "Average reported time"
-msgstr "Media de horas de trabajo"
+msgstr "Media de tiempo reportado"
 
 #: ../../enterprise/operation/user_audit/productivity_report.php:161
 msgid "Average productive time"
-msgstr ""
+msgstr "Tiempo productivo de media"
 
 #: ../../enterprise/operation/user_audit/productivity_report.php:163
 msgid "Average Non productive time"
-msgstr ""
+msgstr "Tiempo no productivo de media"
 
 #: ../../enterprise/operation/user_audit/productivity_report.php:165
 msgid "Average Ratio"
-msgstr ""
+msgstr "Rango de media"
 
 #: ../../enterprise/operation/user_audit/productivity_report.php:230
-#, fuzzy
 msgid "Reported time"
-msgstr "Informadores"
+msgstr "Tiempo documentado"
 
 #: ../../enterprise/operation/user_audit/productivity_report.php:232
-#, fuzzy
 msgid "Productive time"
-msgstr "Tipo de producto"
+msgstr "Tiempo productivo"
 
 #: ../../enterprise/operation/user_audit/productivity_report.php:234
-#, fuzzy
 msgid "Productive deviation"
-msgstr "Desviación de duración del proyecto (días)"
+msgstr "Desviación productiva"
 
 #: ../../enterprise/operation/user_audit/productivity_report.php:236
 msgid "Non productive time"
-msgstr ""
+msgstr "Tiempo no productivo"
 
 #: ../../enterprise/operation/user_audit/productivity_report.php:238
 msgid "Non productive deviation"
-msgstr ""
+msgstr "Desviación no productiva"
 
 #: ../../enterprise/operation/user_audit/productivity_report.php:240
 #: ../../enterprise/include/functions_user_audit.php:650
-#, fuzzy
 msgid "Ratio"
-msgstr "Duración"
+msgstr "Ratio"
 
 #: ../../enterprise/operation/user/user.php:35
 msgid "Defined profiles"
@@ -4054,7 +3982,7 @@ msgstr "Perfiles definidos"
 
 #: ../../enterprise/operation/user/user.php:39
 msgid "There are no profiles defined"
-msgstr "No existen perfiles definidos"
+msgstr "No hay perfiles definidos"
 
 #: ../../enterprise/operation/user/user.php:48
 #: ../../enterprise/godmode/usuarios/profile_list.php:265
@@ -4065,14 +3993,12 @@ msgid "Profiles"
 msgstr "Perfiles"
 
 #: ../../enterprise/operation/user/user.php:50
-#, fuzzy
 msgid "Incident read"
-msgstr "Informe de incidentes"
+msgstr "Leer incidente"
 
 #: ../../enterprise/operation/user/user.php:51
-#, fuzzy
 msgid "Incident write"
-msgstr "Tipo de incidentes"
+msgstr "Escribir incidente"
 
 #: ../../enterprise/operation/user/user.php:52
 msgid "Incident management"
@@ -4092,42 +4018,41 @@ msgstr "Escritura de proyectos"
 
 #: ../../enterprise/operation/user/user.php:66
 msgid "ToDo write"
-msgstr "Escribir tareas"
+msgstr "ToDo escribir"
 
 #: ../../enterprise/operation/user/user.php:67
 msgid "ToDo manage"
-msgstr "Gestión de tareas"
+msgstr "Gestionar ToDO"
 
 #: ../../enterprise/operation/user/user.php:69
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:228
 msgid "KB management"
-msgstr "Gestión de la BC"
+msgstr "Gestión de KB"
 
 #: ../../enterprise/operation/user/user.php:70
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:222
 msgid "KB read"
-msgstr "Leer de la BC"
+msgstr "Leer KB"
 
 #: ../../enterprise/operation/user/user.php:71
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:225
 msgid "KB write"
-msgstr "Escribir en la BC"
+msgstr "Escribir KB"
 
 #: ../../enterprise/operation/user/user.php:73
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:239
 msgid "Inventory management"
-msgstr "Gestión de inventario"
+msgstr "Gestión del inventario"
 
 #: ../../enterprise/operation/user/user.php:74
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:233
-#, fuzzy
 msgid "Inventory read"
-msgstr "Escribir en el inventario"
+msgstr "Leer  inventario"
 
 #: ../../enterprise/operation/user/user.php:75
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:236
 msgid "Inventory write"
-msgstr "Escribir en el inventario"
+msgstr "Escribir inventario"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:11
 msgid "Manage profiles"
@@ -4135,121 +4060,107 @@ msgstr "Gestionar perfiles"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:19
 msgid "Global task assigment"
-msgstr "Asignación de tareas globales"
+msgstr "Asignar tarea global"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:26
 msgid "Activity auditing"
-msgstr ""
+msgstr "Auditoria de actividad"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:34
 msgid "Detailed activity"
-msgstr ""
+msgstr "Actividad detallada"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:41
-#, fuzzy
 msgid "Document report"
-msgstr "Informe de incidentes"
+msgstr "Informe con documentación"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:48
-#, fuzzy
 msgid "Graph report"
-msgstr "Informe gráfico completo"
+msgstr "Informe de gráfica"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:55
-#, fuzzy
 msgid "Productivity report"
-msgstr "Informe del proyecto"
+msgstr "Informe de productividad"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:62
-#, fuzzy
 msgid "Application report"
-msgstr "Datos de la aplicación"
+msgstr "Informe de aplicación"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:69
-#, fuzzy
 msgid "Start/End report"
-msgstr "Informe del proyecto"
+msgstr "Informe de Inicio/fin"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:76
-#, fuzzy
 msgid "App. management"
-msgstr "Gestión de la BC"
+msgstr "Gestion de aplicaciones"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:83
-#, fuzzy
 msgid "Default App. management"
-msgstr "Gestión de datos de la BC"
+msgstr "Gestión de aplicaciones por defecto"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:90
-#, fuzzy
 msgid "Category management"
-msgstr "Gestión de categorías de la BC"
+msgstr "Gestión de categoría"
 
 #: ../../enterprise/include/functions_user_audit.php:214
 #: ../../enterprise/include/functions_user_audit.php:299
-#, fuzzy
 msgid "Application exceptions"
-msgstr "Datos de la aplicación"
+msgstr "Excepciones de aplicaciones"
 
 #: ../../enterprise/include/functions_user_audit.php:565
-#, fuzzy
 msgid "App. info free text search"
-msgstr "Búsqueda libre de texto"
+msgstr "Búsqueda de texto libre de aplicaciones"
 
 #: ../../enterprise/include/functions_user_audit.php:566
-#, fuzzy
 msgid "App. free text search"
-msgstr "Búsqueda libre de texto"
+msgstr "Búsqueda de aplicaciones con texto libre"
 
 #: ../../enterprise/include/functions_user_audit.php:627
-#, fuzzy
 msgid "Auth. Software"
-msgstr "Autor"
+msgstr "Software autentificado"
 
 #: ../../enterprise/include/functions_user_audit.php:635
 msgid "Not auth. Software"
-msgstr ""
+msgstr "Software no autentificado"
 
 #: ../../enterprise/include/functions_user_audit.php:641
 msgid "Authorized apps"
-msgstr ""
+msgstr "Aplicaciones autorizadas"
 
 #: ../../enterprise/include/functions_user_audit.php:646
 msgid "Not authorized apps"
-msgstr ""
+msgstr "Aplicaciones no autorizadas"
 
 #: ../../enterprise/include/functions_user_audit.php:669
 #: ../../enterprise/include/functions_user_audit.php:697
 msgid "Filter by person"
-msgstr ""
+msgstr "Filtrar por usuario"
 
 #: ../../enterprise/include/functions_user_audit.php:671
 msgid "Filter by App"
-msgstr ""
+msgstr "Filtrar por aplicación"
 
 #: ../../enterprise/include/functions_user_audit.php:699
 msgid "Filter by document type"
-msgstr ""
+msgstr "Filtrar por tipo de documento"
 
 #: ../../enterprise/include/functions_user_audit.php:734
 #: ../../enterprise/include/functions_user_audit.php:759
-#, fuzzy
 msgid "Start period"
-msgstr "Iniciado hace"
+msgstr "Periodo inicial"
 
 #: ../../enterprise/include/functions_user_audit.php:735
 #: ../../enterprise/include/functions_user_audit.php:760
 msgid "End period"
-msgstr ""
+msgstr "Periodo final"
 
 #: ../../enterprise/include/functions_user_audit.php:761
-#, fuzzy
 msgid "Filter by Category"
-msgstr "Categoría"
+msgstr "Filtrar por categoría"
 
 #: ../../enterprise/include/functions_user_audit.php:762
 msgid "Ignore inactivity"
-msgstr ""
+msgstr "Ignorar actividad"
 
 #: ../../enterprise/include/functions_user_audit.php:1238
 #: ../../include/functions_calendar.php:803
@@ -4278,22 +4189,20 @@ msgstr "días"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:191
 #: ../../godmode/setup/newsboard.php:85
-#, fuzzy
 msgid "Contents"
-msgstr "Comentarios"
+msgstr "Contenidos"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:229
 msgid "Page "
-msgstr ""
+msgstr "Página "
 
 #: ../../enterprise/include/functions_reporting_pdf.php:229
 msgid " of "
-msgstr ""
+msgstr " de "
 
 #: ../../enterprise/include/functions_reporting_pdf.php:384
-#, fuzzy
 msgid "Module graph"
-msgstr "Gráfica de proceso"
+msgstr "Gráfico de módulo"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:392
 #: ../../enterprise/include/functions_reporting_pdf.php:421
@@ -4308,166 +4217,152 @@ msgstr "Gráfica de proceso"
 #: ../../enterprise/include/functions_reporting_pdf.php:899
 #: ../../enterprise/include/functions_reporting_pdf.php:916
 msgid "Period: "
-msgstr ""
+msgstr "Periodo "
 
 #: ../../enterprise/include/functions_reporting_pdf.php:416
-#, fuzzy
 msgid "Custom graph"
-msgstr "Cliente"
+msgstr "Gráfica personalizada"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:434
 msgid "S.L.A."
-msgstr ""
+msgstr "S.L.A."
 
 #: ../../enterprise/include/functions_reporting_pdf.php:444
-#, fuzzy
 msgid "There are no SLAs defined"
-msgstr "No existen perfiles definidos"
+msgstr "No hay SLA definidos"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:447
 msgid "Info"
-msgstr ""
+msgstr "Información"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:448
-#, fuzzy
 msgid "SLA result"
-msgstr "SLA activado"
+msgstr "Resultado SLA"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:453
-#, fuzzy
 msgid "Agent"
-msgstr "Agenda"
+msgstr "Agente"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:454
 msgid "Module"
-msgstr ""
+msgstr "Módulo"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:455
 msgid "SLA Max. (value)"
-msgstr ""
+msgstr "Valor máximo para el SLA"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:456
 msgid "SLA Min. (value)"
-msgstr ""
+msgstr "Valor mínimo para el SLA"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:457
 msgid "SLA Limit"
-msgstr ""
+msgstr "Límite del SLA"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:476
 msgid "SLA final result: "
-msgstr ""
+msgstr "Resultado final del SLA: "
 
 #: ../../enterprise/include/functions_reporting_pdf.php:478
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:481
 msgid "Fail"
-msgstr ""
+msgstr "Fallo"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:492
-#, fuzzy
 msgid "Monitor report"
-msgstr "Informe mensual"
+msgstr "Informe de monitores"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:500
 msgid "Up"
-msgstr ""
+msgstr "Encima"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:502
 msgid "Down"
-msgstr ""
+msgstr "Abajo"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:509
 msgid "Avg. Value"
-msgstr ""
+msgstr "Valor promedio"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:523
 msgid "Max. Value"
-msgstr ""
+msgstr "Valor máximo"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:538
 msgid "Min. Value"
-msgstr ""
+msgstr "Valor mínimo"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:553
 msgid "Sumatory"
-msgstr ""
+msgstr "Sumatorio"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:566
 #: ../../enterprise/include/functions_reporting_pdf.php:677
-#, fuzzy
 msgid "Agents detailed event"
-msgstr "Evento de la agenda"
+msgstr "Eventos detallados de agentes"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:576
-#, fuzzy
 msgid "Event name"
-msgstr "Nombre real"
+msgstr "Nombre del evento"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:577
-#, fuzzy
 msgid "Event type"
-msgstr "Tipo de incidentes"
+msgstr "Tipo de evento"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:578
-#, fuzzy
 msgid "Criticity"
-msgstr "Participante"
+msgstr "Criticidad"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:579
 msgid "Count"
-msgstr ""
+msgstr "Contar"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:602
 msgid "Text"
-msgstr ""
+msgstr "Texto"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:613
-#, fuzzy
 msgid "SQL"
-msgstr "S.L.A."
+msgstr "SQL"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:658
-#, fuzzy
 msgid "Group detailed event"
-msgstr "Gestionar grupos"
+msgstr "Evento detallado de grupo"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:697
-#, fuzzy
 msgid "Alert report module"
-msgstr "Informe anual para el usuario"
+msgstr "Informe de alertas de un módulo"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:742
-#, fuzzy
 msgid "Alert report agent"
-msgstr "Informe de usuario"
+msgstr "Informe de alertas de un agente"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:795
 msgid "Import text from URL"
-msgstr ""
+msgstr "Importar texto de una URL"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:813
-#, fuzzy
 msgid "Serialize data"
-msgstr "Datos definidos"
+msgstr "Serializar datos"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:860
 msgid "TTRT"
-msgstr ""
+msgstr "TTRT"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:877
 msgid "TTO"
-msgstr ""
+msgstr "TTO"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:894
 msgid "MTBF"
-msgstr ""
+msgstr "MTBF"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:911
 msgid "MTTR"
-msgstr ""
+msgstr "MTTR"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:31
 msgid "There was a problem deleting the profile"
@@ -4508,7 +4403,6 @@ msgstr "Nombre del perfil"
 #: ../../enterprise/godmode/usuarios/profile_list.php:225
 #: ../../enterprise/godmode/usuarios/profile_list.php:228
 #: ../../enterprise/godmode/usuarios/profile_list.php:231
-#, fuzzy
 msgid "Manage"
 msgstr "Gestionar"
 
@@ -4523,7 +4417,7 @@ msgstr "Base de datos"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:230
 msgid "Framework"
-msgstr "Integria IMS"
+msgstr "Estructura"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:266
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:177
@@ -4538,7 +4432,6 @@ msgid "Edit incidents"
 msgstr "Editar incidentes"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:268
-#, fuzzy
 msgid "Manage incidents"
 msgstr "Gestionar incidentes"
 
@@ -4566,13 +4459,12 @@ msgid "Framework management"
 msgstr "Gestión de Integria"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:275
-#, fuzzy
 msgid "View project"
-msgstr "Editar proyectos"
+msgstr "Ver proyecto"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:276
 msgid "Edit project"
-msgstr "Editar proyectos"
+msgstr "Editar proyecto"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:277
 msgid "Manage projects"
@@ -4580,40 +4472,39 @@ msgstr "Gestionar proyectos"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:278
 msgid "Edit task"
-msgstr "Editar tareas"
+msgstr "Editar tarea"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:279
 msgid "Manage task"
-msgstr "Gestionar tareas"
+msgstr "Gestionar tarea"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:280
 msgid "View Knowledge Base"
-msgstr "Ver base de conocimientos"
+msgstr "Ver Base de ConocimientoC"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:281
 msgid "Edit Knowledge Base"
-msgstr "Editar base de conocimientos"
+msgstr "Editar Base de Conocimiento"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:282
 msgid "Manage Knowledge Base"
-msgstr "Gestionar base de conocimientos"
+msgstr "Gestionar Base del Conocimiento"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:283
 msgid "View inventory"
-msgstr "Ver inventario"
+msgstr "Ver Inventario"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:284
 msgid "Edit inventory"
 msgstr "Editar inventario"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:285
-#, fuzzy
 msgid "Manage inventory"
-msgstr "Ver inventario"
+msgstr "Gestionar inventario"
 
 #: ../../enterprise/godmode/usuarios/configurar_usuarios.php:12
 msgid "Profiles/Groups assigned to this user"
-msgstr "Perfiles/grupos asignados a este usuario"
+msgstr "Perfiles/Grupos asignados a este usuario"
 
 #: ../../enterprise/godmode/usuarios/configurar_usuarios.php:35
 msgid "Group(s) available"
@@ -4621,15 +4512,15 @@ msgstr "Grupo(s) disponible(s)"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:39
 msgid "Assigment removed succesfully"
-msgstr "Asignación eliminada correctamente"
+msgstr "Asignación eliminada con éxito"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:71
 msgid "WU"
-msgstr "UT"
+msgstr "Unidad de trabajo"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:72
 msgid "WU/Tsk"
-msgstr "UT/Tarea"
+msgstr "Unidad trabajo/Tarea"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:168
 #: ../../godmode/perfiles/lista_perfiles.php:157
@@ -4665,7 +4556,7 @@ msgstr "Gestión de usuarios"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:203
 msgid "Integria management"
-msgstr "Gestión de Integria"
+msgstr "Gestion de Integria"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:215
 #: ../../godmode/perfiles/lista_perfiles.php:202
@@ -4675,12 +4566,11 @@ msgstr "Escritura de tareas"
 #: ../../enterprise/godmode/sidemenu_activityauditing_mgmt.php:11
 #: ../../enterprise/godmode/setup/setup_activityauditing.php:39
 msgid "Activity auditing setup"
-msgstr ""
+msgstr "Instalación de actividad de auditoría"
 
 #: ../../enterprise/godmode/setup/setup_activityauditing.php:54
-#, fuzzy
 msgid "Audit data deletion days"
-msgstr "Autocompletado de UT (días)"
+msgstr "Días eliminados de los datos de auditoría"
 
 #: ../../index.php:117 ../../index.php:120
 msgid "Added"
@@ -4755,15 +4645,13 @@ msgid "Page not found"
 msgstr "No se encontró la página"
 
 #: ../../index.php:336
-#, fuzzy
 msgid "Automated Integria IMS report"
-msgstr "Sistema de ayuda de Integria IMS"
+msgstr "Informe automatico de Integria IMS"
 
 #: ../../include/functions_incidents.php:377
 #: ../../godmode/usuarios/configurar_usuarios.php:294
-#, fuzzy
 msgid "Total incidents"
-msgstr "Número total de incidentes"
+msgstr "Total de incidentes"
 
 #: ../../include/functions_incidents.php:378
 #: ../../include/functions_incidents.php:385
@@ -4774,17 +4662,15 @@ msgstr "Abierto"
 #: ../../include/functions_incidents.php:378
 #: ../../include/functions_db.php:1898
 msgid "Closed"
-msgstr "Cerrado"
+msgstr "Cerrada"
 
 #: ../../include/functions_incidents.php:388
-#, fuzzy
 msgid "Avg. life time"
-msgstr "Tiempo de vida medio"
+msgstr "Tiempo medio de vida"
 
 #: ../../include/functions_incidents.php:392
-#, fuzzy
 msgid "Avg. work time"
-msgstr "Media de horas de trabajo"
+msgstr "Tiempo medio de trabajo"
 
 #: ../../include/functions_incidents.php:395
 msgid "SLA compliance"
@@ -4795,14 +4681,12 @@ msgid "Longest closed incident"
 msgstr "Incidente cerrado más tarde"
 
 #: ../../include/functions_incidents.php:410
-#, fuzzy
 msgid "Worktime hours"
-msgstr "Horas trabajadas"
+msgstr "Horas de trabajo"
 
 #: ../../include/functions_incidents.php:411
-#, fuzzy
 msgid "Lifetime"
-msgstr "Tiempo de vida medio"
+msgstr "Tiempo de vida"
 
 #: ../../include/functions_incidents.php:430
 #: ../../include/functions_incidents.php:450
@@ -4810,32 +4694,28 @@ msgid "Hr"
 msgstr "Hr"
 
 #: ../../include/functions_incidents.php:490
-#, fuzzy
 msgid "Top 5 active users"
-msgstr "Usuarios más activos"
+msgstr "Los 5 usuarios mas activos"
 
 #: ../../include/functions_incidents.php:492
-#, fuzzy
 msgid "Top 5 active incidents"
-msgstr "Incidentes más activos"
+msgstr "Los 5 incidentes más activos"
 
 #: ../../include/functions_incidents.php:494
 msgid "Top 5 incident submitters"
-msgstr ""
+msgstr "Los 5 generadores de incidentes más activos"
 
 #: ../../include/functions_incidents.php:496
 msgid "Top 5 average scoring by user"
-msgstr ""
+msgstr "Las 5 puntuaciones medias por usuario mas empleadas"
 
 #: ../../include/functions_incidents.php:509
-#, fuzzy
 msgid "Incidents by priority"
-msgstr "Informe de incidentes"
+msgstr "Incidentes por prioridad"
 
 #: ../../include/functions_incidents.php:526
-#, fuzzy
 msgid "Incidents by group"
-msgstr "Configuración de incidentes"
+msgstr "Incidentes por grupo"
 
 #: ../../include/functions_graph.php:238
 msgid "Out of limits"
@@ -4844,18 +4724,19 @@ msgstr "Fuera de límites"
 #: ../../include/functions_graph.php:256 ../../include/functions_graph.php:320
 #: ../../include/functions_graph.php:376
 msgid "Each bar is"
-msgstr ""
+msgstr "Cada barra es"
 
 #: ../../include/functions_graph.php:431
-#, fuzzy
 msgid "Hours in project"
-msgstr "Ver proyectos"
+msgstr "Horas en el proyecto"
 
 #: ../../include/integria_cron.php:110
 msgid ""
 "This incident has been closed automatically by Integria after waiting "
 "confirmation to close this incident for "
 msgstr ""
+"Este incidente ha sido cerrado automáticamente por Integria  despues de "
+"esperar confirmacion para cerrar este incidente por "
 
 #: ../../include/functions_config.php:47
 msgid ""
@@ -4919,7 +4800,7 @@ msgstr "Nuevo"
 
 #: ../../include/functions_db.php:1893
 msgid "Unconfirmed"
-msgstr "Sin confirmar"
+msgstr "No confirmado"
 
 #: ../../include/functions_db.php:1894
 msgid "Assigned"
@@ -4927,7 +4808,7 @@ msgstr "Asignado"
 
 #: ../../include/functions_db.php:1895
 msgid "Re-opened"
-msgstr "Reabierto"
+msgstr "Re-abierto"
 
 #: ../../include/functions_db.php:1896
 msgid "Verified"
@@ -4939,7 +4820,7 @@ msgstr "Resuelto"
 
 #: ../../include/functions_db.php:1914
 msgid "Fixed"
-msgstr "Solucionado"
+msgstr "Arreglado"
 
 #: ../../include/functions_db.php:1915
 msgid "Invalid"
@@ -4947,15 +4828,15 @@ msgstr "No válido"
 
 #: ../../include/functions_db.php:1916
 msgid "Wont fix"
-msgstr "No se arreglará"
+msgstr "No será válido"
 
 #: ../../include/functions_db.php:1917
 msgid "Duplicate"
-msgstr "Duplicado"
+msgstr "Duplicar"
 
 #: ../../include/functions_db.php:1918
 msgid "Works for me"
-msgstr "Funciona para mi"
+msgstr "Me funciona"
 
 #: ../../include/functions_db.php:1919
 msgid "Incomplete"
@@ -4991,19 +4872,19 @@ msgstr "Departamento externo"
 
 #: ../../include/functions_db.php:1940
 msgid "Application data"
-msgstr "Datos de la aplicación"
+msgstr "Datos de aplicacion"
 
 #: ../../include/functions_db.php:1941
 msgid "Bug report"
-msgstr "Informe de error"
+msgstr "Informe de errores"
 
 #: ../../include/functions_db.php:1942
 msgid "Problem detected"
-msgstr "Problema detectado"
+msgstr "Detectado problema"
 
 #: ../../include/functions_db.php:1943
 msgid "Other source"
-msgstr "Otro origen"
+msgstr "Otra fuente"
 
 #: ../../include/functions.php:543
 msgid "Very low"
@@ -5045,7 +4926,7 @@ msgstr "Mantenimiento"
 
 #: ../../include/functions.php:649
 msgid "Weekly"
-msgstr "Semanal"
+msgstr "Semanalmente"
 
 #: ../../include/functions.php:650
 msgid "15 days"
@@ -5053,7 +4934,7 @@ msgstr "15 días"
 
 #: ../../include/functions.php:651
 msgid "Monthly"
-msgstr "Mensual"
+msgstr "Mensualmente"
 
 #: ../../include/functions.php:652
 msgid "60 days"
@@ -5132,9 +5013,8 @@ msgid "Week Total"
 msgstr "Total semanal"
 
 #: ../../include/functions_calendar.php:619
-#, fuzzy
 msgid "Task/projects"
-msgstr "Proyectos"
+msgstr "Tareas/Proyectos"
 
 #: ../../include/functions_calendar.php:620
 #: ../../include/functions_form.php:381 ../../include/functions_form.php:410
@@ -5142,14 +5022,12 @@ msgid "Vacations"
 msgstr "Vacaciones"
 
 #: ../../include/functions_calendar.php:622
-#, fuzzy
 msgid "Non-Justified"
-msgstr "Sin justificar"
+msgstr "No justificadas"
 
 #: ../../include/functions_calendar.php:789
-#, fuzzy
 msgid "Now"
-msgstr "No"
+msgstr "Ahora"
 
 #: ../../include/functions_calendar.php:812
 #: ../../include/functions_calendar.php:835
@@ -5198,9 +5076,8 @@ msgid "Lock workunit"
 msgstr "Bloquear unidades de trabajo"
 
 #: ../../include/functions_form.php:757
-#, fuzzy
 msgid "Not closed"
-msgstr "Sin establecer"
+msgstr "No cerrado"
 
 #: ../../include/functions_form.php:840
 msgid "Participant"
@@ -5244,12 +5121,12 @@ msgstr ""
 #: ../../godmode/updatemanager/main.php:43
 msgid ""
 "Update Manager is one of the most advanced features of Integria Enterprise "
-"version, for more information visit <a href=\"http://integria.sourceforge.net"
-"\">http://integria.sourceforge.net</a>"
+"version, for more information visit <a "
+"href=\"http://integria.sourceforge.net\">http://integria.sourceforge.net</a>"
 msgstr ""
 "El Update Manager es una de las características más avanzadas de Integria "
-"Enterprise, para obtener más información visite <a href=\"http://pandorafms."
-"com\">http://integria.sourceforge.net</a>."
+"Enterprise, para obtener más información visite <a "
+"href=\"http://pandorafms.com\">http://integria.sourceforge.net</a>."
 
 #: ../../godmode/updatemanager/main.php:45
 msgid ""
@@ -5297,15 +5174,15 @@ msgstr "Clave del cliente"
 
 #: ../../godmode/updatemanager/settings.php:56
 msgid "Update server host"
-msgstr "Servidor de actualización"
+msgstr "Actualizar servidor"
 
 #: ../../godmode/updatemanager/settings.php:59
 msgid "Update server port"
-msgstr "Puerto del servidor de actualización"
+msgstr "Actualizar puerto del servidor"
 
 #: ../../godmode/updatemanager/settings.php:62
 msgid "Update server path"
-msgstr "Ruta del servidor de actualización"
+msgstr "Actualizar ruta del servidor"
 
 #: ../../godmode/updatemanager/settings.php:65
 msgid "Input path"
@@ -5354,7 +5231,7 @@ msgstr "Directorio de código / binario"
 
 #: ../../godmode/updatemanager/load_updatemanager.php:36
 msgid "Keygen file does not exists"
-msgstr "El fichero generador de claves no existe"
+msgstr "El archivo generador de claves no existe"
 
 #: ../../godmode/updatemanager/load_updatemanager.php:43
 msgid "Keygen file is not executable"
@@ -5382,13 +5259,13 @@ msgstr "Actualizar usuario"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:200
 msgid "User cannot have Blank spaces"
-msgstr ""
+msgstr "El usuario no puede dejar espacios en blanco"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:214
 #: ../../godmode/usuarios/configurar_usuarios.php:218
 #: ../../godmode/usuarios/configurar_usuarios.php:222
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:252
 msgid "Global profile"
@@ -5412,9 +5289,8 @@ msgstr "Usuario estándar"
 #: ../../godmode/usuarios/configurar_usuarios.php:268
 #: ../../godmode/usuarios/configurar_usuarios.php:274
 #: ../../godmode/usuarios/lista_usuarios.php:106
-#, fuzzy
 msgid "External user"
-msgstr "Departamento externo"
+msgstr "Usuario externo"
 
 #: ../../godmode/usuarios/lista_usuarios.php:59
 msgid "Search text"
@@ -5426,7 +5302,7 @@ msgstr "Último contacto"
 
 #: ../../godmode/usuarios/lista_usuarios.php:84
 msgid "Level"
-msgstr ""
+msgstr "Nivel"
 
 #: ../../godmode/usuarios/role_manager.php:56
 msgid "Succcessfully updated"
@@ -5467,23 +5343,20 @@ msgid "Banner"
 msgstr "Banner"
 
 #: ../../godmode/grupos/configurar_grupo.php:101
-#, fuzzy
 msgid "Incident Soft limit"
-msgstr "Lista de incidentes"
+msgstr "Limite de incidentes software"
 
 #: ../../godmode/grupos/configurar_grupo.php:104
 msgid "Enforce soft limit"
-msgstr ""
+msgstr "Reforzar limite de incidentes"
 
 #: ../../godmode/grupos/configurar_grupo.php:106
-#, fuzzy
 msgid "Incident Hard limit"
-msgstr "Lista de incidentes"
+msgstr "Limite de incidentes hardware"
 
 #: ../../godmode/grupos/configurar_grupo.php:109
-#, fuzzy
 msgid "Default inventory object"
-msgstr "Crear objeto de inventario"
+msgstr "Ojeto de inventario por defecto"
 
 #: ../../godmode/grupos/lista_grupos.php:65
 msgid "There was a problem creating group"
@@ -5498,14 +5371,12 @@ msgid "There was a problem deleting group"
 msgstr "Ha habido un problema al borrar el grupo"
 
 #: ../../godmode/setup/dbmanager.php:74
-#, fuzzy
 msgid "Extensions"
-msgstr "Información extendida"
+msgstr "Extensiones"
 
 #: ../../godmode/setup/dbmanager.php:74
-#, fuzzy
 msgid "Database interface"
-msgstr "Gestión de la BB. DD."
+msgstr "Interfaz de base de datos"
 
 #: ../../godmode/setup/dbmanager.php:79
 msgid ""
@@ -5516,19 +5387,25 @@ msgid ""
 "extension. This extension is intended to be used <b>only by experienced "
 "users</b> with a depth knowledgue of Integria IMS."
 msgstr ""
+"Esta es una extensión avanzada para interactuar con la base de datos de "
+"Integria IMS directamente utilizando sentencias nativas SQL. Por favor, "
+"tenga en cuenta que b>puede dañar</b> su instalación de Integria IMS si no "
+"sabe </b>exactamente</b>lo que está haciendo, esto implica que podría dañar "
+"seriamente su instalación usando esta extensión. Esta extensión está "
+"destinada a ser utilizada <b>sólo por usuarios expertos</b> con un "
+"conocimiento profundo de Integria IMS."
 
 #: ../../godmode/setup/dbmanager.php:83
 msgid "Some samples of usage:"
-msgstr ""
+msgstr "Algunos ejemplos de uso:"
 
 #: ../../godmode/setup/dbmanager.php:91 ../../godmode/setup/dbmanager.php:98
 msgid "Execute SQL"
-msgstr ""
+msgstr "Ejecutar SQL"
 
 #: ../../godmode/setup/inventories_setup.php:55
-#, fuzzy
 msgid "Inventories extra fields"
-msgstr "Leer el inventario"
+msgstr "Campos extra de los inventarios"
 
 #: ../../godmode/setup/setup_mail.php:69
 msgid "Notification period"
@@ -5540,48 +5417,43 @@ msgstr "Dirección de correos desde el sistema"
 
 #: ../../godmode/setup/setup_mail.php:76
 msgid "SMTP Parameters"
-msgstr ""
+msgstr "Parametros SMTP"
 
 #: ../../godmode/setup/setup_mail.php:79
 msgid "SMTP Host"
-msgstr ""
+msgstr "Host SMTP"
 
 #: ../../godmode/setup/setup_mail.php:82
 msgid "SMTP Port"
-msgstr ""
+msgstr "Puerto SMTP"
 
 #: ../../godmode/setup/setup_mail.php:85
-#, fuzzy
 msgid "SMTP User"
-msgstr "Usuario"
+msgstr "Usuario SMTP"
 
 #: ../../godmode/setup/setup_mail.php:88
-#, fuzzy
 msgid "SMTP Password"
-msgstr "Contraseña"
+msgstr "Contraseña SMTP"
 
 #: ../../godmode/setup/setup_mail.php:91
 msgid "POP3 Parameters"
-msgstr ""
+msgstr "Parametros POP3"
 
 #: ../../godmode/setup/setup_mail.php:94
 msgid "POP3 Host"
-msgstr ""
+msgstr "Host POP3"
 
 #: ../../godmode/setup/setup_mail.php:97
-#, fuzzy
 msgid "POP3 User"
-msgstr "Usuario"
+msgstr "Usuario POP3"
 
 #: ../../godmode/setup/setup_mail.php:100
-#, fuzzy
 msgid "POP3 Password"
-msgstr "Contraseña"
+msgstr "Contraseña POP3"
 
 #: ../../godmode/setup/setup_mail.php:102
-#, fuzzy
 msgid "Mail general texts"
-msgstr "Página generada en"
+msgstr "Textos genericos para mail"
 
 #: ../../godmode/setup/setup_mail.php:107
 msgid "Email header"
@@ -5617,116 +5489,97 @@ msgstr "URL"
 
 #: ../../godmode/setup/filemgr.php:41
 msgid "attach_error"
-msgstr ""
+msgstr "error_de_adjunto"
 
 #: ../../godmode/setup/filemgr.php:53
-#, fuzzy
 msgid "Deleting file"
-msgstr "Borrar"
+msgstr "Borrando fichero"
 
 #: ../../godmode/setup/filemgr.php:59
-#, fuzzy
 msgid "Deleting"
-msgstr "Borrar"
+msgstr "Borrando"
 
 #: ../../godmode/setup/filemgr.php:92
-#, fuzzy
 msgid "Base directory"
-msgstr "Gestionar inventario"
+msgstr "Directorio base"
 
 #: ../../godmode/setup/filemgr.php:106
-#, fuzzy
 msgid "Upload new file"
-msgstr "Subir fichero"
+msgstr "Subir nuevo fichero"
 
 #: ../../godmode/setup/filemgr.php:116
-#, fuzzy
 msgid "Current directory is not writtable by HTTP Server"
-msgstr "El servidor HTTP no puede escribir en el directorio de los adjuntos"
+msgstr "El directorio habitual no puede ser escrito por el Servidor HTTP"
 
 #: ../../godmode/setup/filemgr.php:118
-#, fuzzy
 msgid "Please check that current directory has write rights for HTTP server"
 msgstr ""
-"Revise que el servidor HTTP tiene permisos de escritura en el directorio "
-"{DIRECTORIODEINICIO}/attachment"
+"Por favor compruebe que el directorio actual  tiene permisos de escritura "
+"para el servidor HTTP"
 
 #: ../../godmode/setup/filemgr.php:123
-#, fuzzy
 msgid "Current directory"
-msgstr "Progreso actual"
+msgstr "Directorio actual"
 
 #: ../../godmode/setup/filemgr.php:143
-#, fuzzy
 msgid "No files found"
-msgstr "No se encontró ningún usuario"
+msgstr "No se encontraron archivos"
 
 #: ../../godmode/setup/filemgr.php:160
-#, fuzzy
 msgid "Go prev. directory"
-msgstr "Directorio de código / binario"
+msgstr "Ir al directorio anterior"
 
 #: ../../godmode/setup/filemgr.php:166
-#, fuzzy
 msgid "Image info"
-msgstr "Información del usuario"
+msgstr "informacion sobre la imagen"
 
 #: ../../godmode/setup/filemgr.php:172
 msgid "Perms"
-msgstr ""
+msgstr "Permisos"
 
 #: ../../godmode/setup/filemgr.php:174
-#, fuzzy
 msgid "Filesize"
-msgstr "Ficheros"
+msgstr "Tamaño del fichero"
 
 #: ../../godmode/setup/filemgr.php:176
-#, fuzzy
 msgid "File type"
-msgstr "Fichero borrado"
+msgstr "Tipo de fichero"
 
 #: ../../godmode/setup/filemgr.php:178
 msgid "Directory"
-msgstr ""
+msgstr "Directorio"
 
 #: ../../godmode/setup/filemgr.php:180
-#, fuzzy
 msgid "Del"
 msgstr "Borrar"
 
 #: ../../godmode/setup/filemgr.php:236
-#, fuzzy
 msgid "Create directory"
-msgstr "Crear proyecto"
+msgstr "Crear directorio"
 
 #: ../../godmode/setup/setup_mailtemplates.php:59
-#, fuzzy
 msgid "Filesuccessfully updated"
-msgstr "Actualizado correctamente"
+msgstr "Fichero actualizado con exito"
 
 #: ../../godmode/setup/setup_mailtemplates.php:61
-#, fuzzy
 msgid "Problem updating file"
-msgstr "Hubo un problema al actualizar el perfil"
+msgstr "Problema al actualizar el fichero"
 
 #: ../../godmode/setup/setup_mailtemplates.php:82
-#, fuzzy
 msgid "Template contents"
-msgstr "Incidentes relacionados"
+msgstr "Contenidos de la plantilla"
 
 #: ../../godmode/setup/newsboard.php:23
-#, fuzzy
 msgid "No administrator access"
-msgstr "Administrador"
+msgstr "No existe acceso al administrador"
 
 #: ../../godmode/setup/newsboard.php:23
 msgid "Trying to access newsboard setup"
-msgstr ""
+msgstr "Intentando acceder a la configuracion de newsboard"
 
 #: ../../godmode/setup/newsboard.php:100
-#, fuzzy
 msgid "Newsboard management"
-msgstr "Gestión de Integria"
+msgstr "Gestion del cuadro de noticias"
 
 #: ../../godmode/setup/setup_visual.php:56
 msgid "Block size for pagination"
@@ -5738,24 +5591,23 @@ msgstr "Tamaño de la tipografía de los gráficos"
 
 #: ../../godmode/setup/setup_visual.php:94
 msgid "site_logo"
-msgstr ""
+msgstr "Logo_sitio"
 
 #: ../../godmode/setup/setup_visual.php:96
 msgid "header_logo"
-msgstr ""
+msgstr "logo_cabecera"
 
 #: ../../godmode/setup/setup_visual.php:98 ../../godmode/setup/setup.php:106
-#, fuzzy
 msgid "Enabled"
-msgstr "Desactivado"
+msgstr "Activado"
 
 #: ../../godmode/setup/setup_visual.php:98
 msgid "flash_charts"
-msgstr ""
+msgstr "Gráficas_flash"
 
 #: ../../godmode/setup/setup_visual.php:98
 msgid "Flash charts"
-msgstr ""
+msgstr "Gráficas en flash"
 
 #: ../../godmode/setup/event.php:27 ../../godmode/setup/audit.php:27
 msgid "Event history"
@@ -5766,19 +5618,16 @@ msgid "Extended info"
 msgstr "Información extendida"
 
 #: ../../godmode/setup/logviewer.php:37
-#, fuzzy
 msgid "Cannot find file"
-msgstr "No se pudo borrar"
+msgstr "Fichero no encontrado"
 
 #: ../../godmode/setup/logviewer.php:41
-#, fuzzy
 msgid "File is too large (> 500KB)"
-msgstr "El fichero es demasiado grande"
+msgstr "Fichero demasiado grande (>500KB)"
 
 #: ../../godmode/setup/logviewer.php:46
-#, fuzzy
 msgid "Delete logfile"
-msgstr "Borrar"
+msgstr "Borrar logfile"
 
 #: ../../godmode/setup/setup.php:113
 msgid "No WU completion users"
@@ -5805,50 +5654,44 @@ msgid "Currency"
 msgstr "Moneda"
 
 #: ../../godmode/setup/setup.php:136
-#, fuzzy
 msgid "Incident WU Default time"
-msgstr "Incidente borrado"
+msgstr "Tiempo por defecto para WU de un incidente"
 
 #: ../../godmode/setup/setup.php:138
-#, fuzzy
 msgid "Project WU Default time"
-msgstr "Proyecto creado"
+msgstr "Tiempo por defecto para WU de un proyecto"
 
 #: ../../godmode/setup/setup.php:151
 msgid "Timezone for integria"
-msgstr ""
+msgstr "Zona horaria de Integria"
 
 #: ../../godmode/setup/setup.php:154
-#, fuzzy
 msgid "Auto incident close"
-msgstr "Todos los incidentes"
+msgstr "Auto cerrado de incidente"
 
 #: ../../godmode/setup/setup.php:158
 msgid "List of IP with access to API"
-msgstr ""
+msgstr "listado de IPs con acceso al API"
 
 #: ../../godmode/setup/setup.php:161
-#, fuzzy
 msgid "API password"
-msgstr "Contraseña"
+msgstr "Password de la API"
 
 #: ../../godmode/setup/setup.php:165
-#, fuzzy
 msgid "Max. Upload file size"
-msgstr "Subir fichero"
+msgstr "Max. Tamaño de fichero para subir"
 
 #: ../../godmode/setup/audit.php:37
 msgid "Accion"
-msgstr ""
+msgstr "Acción"
 
 #: ../../godmode/setup/audit.php:39
 msgid "IP"
-msgstr ""
+msgstr "IP"
 
 #: ../../godmode/setup/audit.php:41
-#, fuzzy
 msgid "Extra info"
-msgstr "Información extendida"
+msgstr "Información extra"
 
 #: ../../godmode/setup/incidents_setup.php:57
 msgid "Updated successfuly"
@@ -5861,51 +5704,3 @@ msgstr "Orígenes"
 #: ../../godmode/setup/incidents_setup.php:100
 msgid "Resolutions"
 msgstr "Resoluciones"
-
-#~ msgid "Installer error"
-#~ msgstr "Error del instalador"
-
-#~ msgid "years"
-#~ msgstr "años"
-
-#~ msgid "Hours worked"
-#~ msgstr "Horas de trabajo"
-
-#~ msgid "Configure updates"
-#~ msgstr "Config. actualizaciones"
-
-#~ msgid "View users"
-#~ msgstr "Ver usuarios"
-
-#~ msgid "Weekly report"
-#~ msgstr "Informe semanal"
-
-#~ msgid "View vacations"
-#~ msgstr "Ver vacaciones"
-
-#~ msgid "Weekly report for"
-#~ msgstr "Informe semanal para"
-
-#~ msgid "Full graph report for user"
-#~ msgstr "Informe gráfico completo para el usuario"
-
-#~ msgid "Show finished"
-#~ msgstr "Mostrar finalizadas"
-
-#~ msgid "Show recurrent"
-#~ msgstr "Mostrar recurrentes"
-
-#~ msgid "Tasks assigned to"
-#~ msgstr "Tareas asignadas a"
-
-#~ msgid "Planning"
-#~ msgstr "Planificación"
-
-#~ msgid "Work reported"
-#~ msgstr "Trabajo imputado"
-
-#~ msgid "Full project"
-#~ msgstr "Proyecto completo"
-
-#~ msgid "Integria users"
-#~ msgstr "Usuarios de Integria"
