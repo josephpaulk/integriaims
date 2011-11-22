@@ -1,3 +1,8 @@
+2011-11-22  Sergio Martin <sergio.martin@artica.es>
+
+	* include/config_process.php
+	include/functions.php: Added MINIMAL mode to menu visibility
+
 2011-11-22  Sancho Lerena <slerena@artica.es>
 
 	* Updated language (Spanish)

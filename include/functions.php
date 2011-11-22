@@ -18,9 +18,13 @@
 global $config;
 
 define ('ENTERPRISE_NOT_HOOK', -1);
+
+//Important: The menu modes codes must be incremental
 define('MENU_HIDDEN', 0);
-define('MENU_LIMITED', 1);
-define('MENU_FULL',2);
+define('MENU_MINIMAL',1);
+define('MENU_LIMITED', 2);
+define('MENU_FULL',3);
+
 define('GROUP_ALL',1);
 
 /*
