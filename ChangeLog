@@ -1,3 +1,12 @@
+2011-11-23  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_config.php
+	include/config_process.php
+	index.php
+	operation/side_menu.php: Fixed menu visibility when
+	login and configure MINIMAL mode in the people section
+	to see only auditory
+
 2011-11-22  Sergio Martin <sergio.martin@artica.es>
 
 	* integria_dbdata.sql

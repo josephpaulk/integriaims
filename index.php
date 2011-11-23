@@ -200,6 +200,8 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 	$config["id_user"] = $_SESSION['id_usuario'];
 }
 
+load_menu_visibility();
+
 // Log off
 $logout = (bool) get_parameter ('logout');
 if ($logout) {

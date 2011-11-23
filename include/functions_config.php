@@ -157,4 +157,66 @@ function load_config(){
 
 }
 
+function load_menu_visibility() {
+	global $show_projects;
+	global $show_incidents;
+	global $show_inventory;
+	global $show_kb;
+	global $show_file_releases;
+	global $show_people;
+	global $show_todo;
+	global $show_agenda;
+	global $show_setup;
+	global $show_box;
+
+	// Get visibility permissions to sections
+	$show_projects = enterprise_hook ('get_menu_section_access', array ('projects'));
+	if($show_projects == ENTERPRISE_NOT_HOOK) {
+		$show_projects = MENU_FULL;
+	}
+	$show_incidents = enterprise_hook ('get_menu_section_access', array ('incidents'));
+	if($show_incidents == ENTERPRISE_NOT_HOOK) {
+		$show_incidents = MENU_FULL;
+	}
+	$show_inventory = enterprise_hook ('get_menu_section_access', array ('inventory'));
+	if($show_inventory == ENTERPRISE_NOT_HOOK) {
+		$show_inventory = MENU_FULL;
+	}
+	$show_kb = enterprise_hook ('get_menu_section_access', array ('kb'));
+	if($show_kb == ENTERPRISE_NOT_HOOK) {
+		$show_kb = MENU_FULL;
+	}
+	$show_file_releases = enterprise_hook ('get_menu_section_access', array ('file_releases'));
+	if($show_file_releases == ENTERPRISE_NOT_HOOK) {
+		$show_file_releases = MENU_FULL;
+	}
+	$show_people = enterprise_hook ('get_menu_section_access', array ('people'));
+	if($show_people == ENTERPRISE_NOT_HOOK) {
+		$show_people = MENU_FULL;
+	}
+	$show_todo = enterprise_hook ('get_menu_section_access', array ('todo'));
+	if($show_todo == ENTERPRISE_NOT_HOOK) {
+		$show_todo = MENU_FULL;
+	}
+	$show_agenda = enterprise_hook ('get_menu_section_access', array ('agenda'));
+	if($show_agenda == ENTERPRISE_NOT_HOOK) {
+		$show_agenda = MENU_FULL;
+	}
+	$show_setup = enterprise_hook ('get_menu_section_access', array ('setup'));
+	if($show_setup == ENTERPRISE_NOT_HOOK) {
+		$show_setup = MENU_FULL;
+	}
+	$sec = get_parameter('sec', '');
+
+	$show_box = ($sec == "projects" && $show_projects == MENU_FULL) || 
+				($sec == "incidents" && $show_inciedents == MENU_FULL) || 
+				($sec == "inventory" && $show_inventory == MENU_FULL) || 
+				($sec == "kb" && $show_kb == MENU_FULL) || 
+				($sec == "download" && $show_file_releases == MENU_FULL) || 
+				($sec == "users" && $show_people == MENU_FULL) || 
+				($sec == "todo" && $show_todo == MENU_FULL) || 
+				($sec == "agenda" && $show_agenda == MENU_FULL) || 
+				($sec == "godmode" && $show_setup == MENU_FULL) || dame_admin($config['id_user']);
+}
+
 ?>

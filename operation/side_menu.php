@@ -962,56 +962,54 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN){
 	}
 
 	// PEOPLE MANAGEMENT
-	if (give_acl($config["id_user"], 0, "UM") && $show_people != MENU_LIMITED && $show_people != MENU_MINIMAL){
-		echo "<div class='portlet'>";
-		echo "<h3>".__('People management')."</h3>";
-		echo "<ul class='sidemenu'>";
+	if (give_acl($config["id_user"], 0, "UM") && $show_people != MENU_LIMITED){
+		if($show_people != MENU_MINIMAL) {
+			echo "<div class='portlet'>";
+			echo "<h3>".__('People management')."</h3>";
+			echo "<ul class='sidemenu'>";
 
-		// Usermanager
-		if ($sec2 == "godmode/usuarios/lista_usuarios") 
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";
+			// Usermanager
+			if ($sec2 == "godmode/usuarios/lista_usuarios") 
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";
 
-		if ($sec2 == "godmode/usuarios/lista_usuarios") {
-			echo "<li style='margin-left: 15px; font-size: 10px;'>";
-    		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a>";
-            echo "</li>";
-            
-/*
-            echo "<li style='margin-left: 15px; font-size: 10px;'>";
-    		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/import_from_csv'>".__('Import from CSV')."</a>";
-            echo "</li>";
-*/
-        }
-		echo "<li>";       
-		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/import_from_csv'>".__('Import from CSV')."</a></li>";
-        echo "</li>";
+			if ($sec2 == "godmode/usuarios/lista_usuarios") {
+				echo "<li style='margin-left: 15px; font-size: 10px;'>";
+				echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a>";
+				echo "</li>";
+			}
+			echo "<li>";       
+			echo "<a href='index.php?sec=users&sec2=godmode/usuarios/import_from_csv'>".__('Import from CSV')."</a></li>";
+			echo "</li>";
 
-		// Rolemanager
-		if ($sec2 == "godmode/usuarios/role_manager")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=godmode/usuarios/role_manager'>".__('Manage roles')."</a></li>";
+			// Rolemanager
+			if ($sec2 == "godmode/usuarios/role_manager")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=users&sec2=godmode/usuarios/role_manager'>".__('Manage roles')."</a></li>";
 
-		// Group manager
-		if ($sec2 == "godmode/grupos/lista_grupos")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
-		
-        if ($sec2 == "godmode/grupos/lista_grupos"){
-            echo "<li style='margin-left: 15px; font-size: 10px;'>";
-            echo "<a href='index.php?sec=users&sec2=godmode/grupos/configurar_grupo'>".__("Create group")."</a></li>";
-        }
+			// Group manager
+			if ($sec2 == "godmode/grupos/lista_grupos")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>".__('Manage groups')."</a></li>";
+			
+			if ($sec2 == "godmode/grupos/lista_grupos"){
+				echo "<li style='margin-left: 15px; font-size: 10px;'>";
+				echo "<a href='index.php?sec=users&sec2=godmode/grupos/configurar_grupo'>".__("Create group")."</a></li>";
+			}
+		}
 		
 		enterprise_include ("operation/sidemenu_user_mgmt.php");
 		
-		echo "</ul>";
-		echo "</div>";
+		if($show_people != MENU_MINIMAL) {
+			echo "</ul>";
+			echo "</div>";
+		}
 	}
 }
 
