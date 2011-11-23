@@ -1,5 +1,16 @@
 2011-11-23  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/projects/people_manager.php
+	operation/users/user_spare_workunit.php
+	operation/download/browse.php
+	operation/user_report/monthly.php
+	operation/user_report/report_monthly.php: Fixed several
+	bugs like selection in monthly report, user default input in
+	spare workunit and file releases checks to show only
+	files that not in file release.
+
+2011-11-23  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_config.php
 	include/config_process.php
 	index.php

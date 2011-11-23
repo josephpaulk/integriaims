@@ -36,7 +36,6 @@
 	$working_month = get_parameter ("working_month", $now_month);
 	$working_year = get_parameter ("working_year", $now_year);
 
-
 	$begin_month = "$working_year-$working_month-01 00:00:00";
 	$end_month = "$working_year-$working_month-31 23:59:59";
 	$total_days = working_days ( $working_month, $working_year);

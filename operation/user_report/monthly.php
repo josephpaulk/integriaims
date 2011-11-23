@@ -59,7 +59,7 @@ if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo
 	exit;
 }
 
-$id = get_parameter ('id_username', $config["id_user"]);
+$id = get_parameter ('id', $config["id_user"]);
 
 if (($id != "") && ($id != $id_user)){
 	if (give_acl($id_user, 0, "PW"))

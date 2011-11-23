@@ -379,7 +379,6 @@ echo "</table></div>";
 <script type="text/javascript" >
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
-//$("#text-user_role").change(function(){alert("hola")});
 	$("#text-user").autocomplete ("ajax.php",
 		{
 			scroll: true,
@@ -398,10 +397,9 @@ $(document).ready (function () {
 					$("#text-user").css ('background-color', '');
 				if (data == "")
 					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("") ?></span>';
+				return data[0]+'<br><span class="ac_extra_field"></span>';
 			},
 			delay: 200
-
 		});
 		
 		$("#text-user_role").autocomplete ("ajax.php",
@@ -422,10 +420,9 @@ $(document).ready (function () {
 					$("#text-user_role").css ('background-color', '');
 				if (data == "")
 					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("") ?></span>';
+				return data[0]+'<br><span class="ac_extra_field"></span>';
 			},
 			delay: 200
-
 		});
 });
 </script>

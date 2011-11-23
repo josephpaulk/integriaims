@@ -235,13 +235,16 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$files_db = array();
 	}
 
+	$files_in = array();
+    foreach ($files_db as $file_db){
+        $files_in[basename($file_db['location'])] = 1;
+    }
+
     $files_not_in = array();
     $match = 0;
     foreach ($files as $file) {
-        foreach ($files_db as $file_db){
-            if ($file != basename ($file_db['location'])){
-				$files_not_in[$file] = $file;
-            }
+        if(!isset($files_in[$file])) {
+                $files_not_in[$file] = $file;
         }
     }
 
@@ -313,29 +316,28 @@ echo "</td></tr></table></form>";
 $sql_filter = "";
 
 if ($free_text != "")
-	$sql_filter .= " AND tdownload.name LIKE '%$free_text%' OR tdownload.description LIKE 
+	$sql_filter .= " AND d.name LIKE '%$free_text%' OR d.description LIKE 
 '%$free_text%'";
 
 if ($category > 0)
-	$sql_filter .= " AND tdownload.id_category = $category ";
+	$sql_filter .= " AND d.id_category = $category ";
 
 if(get_admin_user ($config['id_user']) != 1) {
-	$sql_filter = " AND tusuario_perfil.id_grupo = tdownload_category_group.id_group ";
+	$sql_filter .= " AND up.id_grupo IN (SELECT id_group FROM tdownload_category_group WHERE id_category = dc.id) ";
 }
 
 $offset = get_parameter ("offset", 0);
 
-$condition = "tusuario, tprofile, tdownload, tusuario_perfil, 
-tdownload_category_group, tdownload_category
-WHERE tusuario_perfil.id_usuario = '".$config["id_user"]."' AND 
-tusuario_perfil.id_perfil = tprofile.id  AND
-tdownload_category_group.id_category = tdownload.id_category $sql_filter";
+$condition = "tusuario u, tprofile p, tdownload d, tusuario_perfil up, tdownload_category dc
+WHERE up.id_usuario = '".$config["id_user"]."' AND 
+up.id_perfil = p.id  AND
+dc.id = d.id_category $sql_filter";
 
-$count = get_db_sql("SELECT COUNT(DISTINCT tdownload.id) FROM $condition");
+$count = get_db_sql("SELECT COUNT(DISTINCT d.id) FROM $condition");
 
 pagination ($count, "index.php?sec=download&sec2=operation/download/browse", $offset);
 
-$sql = "SELECT tdownload.* FROM $condition GROUP BY tdownload.id ORDER BY date DESC, name, id_category LIMIT
+$sql = "SELECT d.* FROM $condition GROUP BY d.id ORDER BY date DESC, name, id_category LIMIT
 $offset, ". $config["block_size"];
 
 $color =0;

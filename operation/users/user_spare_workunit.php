@@ -334,7 +334,7 @@ if (dame_admin ($config['id_user'])) {
 	/*$table->data[2][1] = combo_user_visible_for_me ($wu_user,
 		'wu_user', 0, "TW", true, __('Username'));*/
 	$src_code = print_image('images/group.png', true, false, true);
-	$table->data[2][1] = print_input_text_extended ('id_username', '', 'text-id_username', '', 15, 30, false, '',
+	$table->data[2][1] = print_input_text_extended ('id_username', $config['id_user'], 'text-id_username', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Username'))
 		. print_help_tip (__("Type at least two characters to search"), true);
 }
