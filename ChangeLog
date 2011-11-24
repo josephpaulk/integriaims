@@ -1,3 +1,17 @@
+2011-11-24  Sancho Lerena <slerena@artica.es>
+
+	* include/styles/integria.css: Some changes in styles.
+
+	* include/functions_calendar.php: Smaller calendar.
+
+	* include/languages/es.mo: Updated compiled strings, need to update
+	from Launchad the .po file
+
+	* images/arrow.gif: New image for bullet icon.
+
+	* general/footer.php,
+	general/header.php: Updated files for better style/layout.
+
 2011-11-24  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/projects/task_detail.php: Fixed the task creation for 

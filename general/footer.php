@@ -14,8 +14,8 @@
 // GNU General Public License for more details.
 
 ?>
-<p align='center'>
-
+<div id="footer">
+<center>
 <?PHP
 global $config;
 
@@ -45,4 +45,5 @@ if (isset($_SESSION['id_usuario'])) {
 	echo __('Page generated at')." ".date("D F d, Y H:i:s", $time)."<br>";
 }
 ?>
-</p>
+</center>
+</div>

@@ -437,7 +437,7 @@ form.searchform input.button {
 #sidebar {
 /*	clear: none; */
 	float: left;
-	width: 180px;
+	width: 190px;
 	margin: 0;
 	padding: 0;
 	display: inline;
@@ -457,7 +457,7 @@ form.searchform input.button {
 	font: 1.0em 'Arial', Sans-serif;
 	border-bottom: 1px solid #EFF0F1;
 	background: url(../../images/arrow.gif) no-repeat 2px 5px;
-	padding: 2px 5px 2px 20px;
+	padding: 5px 1px 2px 15px;
 }
 
 #sidebar li#sidesel a {
@@ -481,20 +481,6 @@ form.searchform input.button {
 	padding: 0;	margin: 0;
 }
 
-/* footer */
-#footer {
-	clear: both;
-	background: #FFF url(../../images/footerbg.gif) repeat left top;
-	border-top: 1px solid #F2F2F2;
-	text-align: center;
-	margin-bottom: 5px;
-	padding-bottom: 5px;
-}
-#footer a {
-	text-decoration: none;
-	font-weight: bold;
-}
-
 /* menu */
 #menu {
 	clear: both;
@@ -507,12 +493,13 @@ form.searchform input.button {
 	bottom: 4px;
 	margin: 0px 0 0 1px; padding: 0;
 	float: left;
-	text-transform: uppercase;
-	font: bold 1.1em Arial, Sans-serif;
+	text-transform: capitalize;
+	font: bold 0.9em Arial, Sans-serif;
 	width: 100%;
 	border: 1px solid #808080;
 	border-width: 0 0 4px 0;
 	list-style: none;
+	line-height: 19px;
 }
 #menu ul li{
 	display: inline;
@@ -991,29 +978,29 @@ div#login {
 	background-color:#ffffff;
 }
 
-div#foot {
-	font-size: 7pt;
+div#footer {
+	background: #FFF url(../../images/footerbg.gif) repeat left top; */
+        border-top: 1px solid #F2F2F2;
+        text-align: center;
+        margin-bottom: 5px;
+        padding-bottom: 5px;
+	font-size: 12px;
 	margin-top: solid 2px #000;
 	padding-top: 5px;
 	padding-bottom: 5px;
 	text-align: center;
-	background: #505253;
+	background: #666;
 	width: 100%;
-	width: 642px;
 	color:#FFF;
 	clear: both;
 }
 
-div#foot a{
-	color: #EAA036;
-	font-weight: bold;
-	text-decoration: none;
+div#footer a{
+	color: #aaaaaa;
 }
 
-div#foot a:hover{
+div#footer a:hover{
 	color: #FAF036;
-	font-weight: bold;
-	text-decoration: none;
 }
 
 div.pager {

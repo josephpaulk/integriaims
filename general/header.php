@@ -18,7 +18,7 @@ check_login();
 // I prefer to make the layout with tables here, it's more exact and 
 // doesnt depend of CSS interpretation. Please DO NOT TOUCH.
 
-echo "<table border=0 width=800 cellpadding=0 cellspacing=0 style='margin: 0px; padding:0px; padding-left: 5px;'>";
+echo "<table border=0 cellpadding=0 cellspacing=0 style='margin: 0px; padding:0px; padding-left: 5px;'>";
 echo "<tr>";
 echo "<td width=180>";
 

@@ -149,10 +149,10 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 	if($n) $n = '&nbsp;'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n);
 
 	$calendar = "";
-	$calendar = '<center><h2>'."\n".
+	$calendar = '<center><h3>'."\n".
 	$calendar = $calendar .$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</center>";
 	
-	$calendar = $calendar . '</h2><table class="blank" border=1 cellpadding=10 cellspacing=0>'."\n";
+	$calendar = $calendar . '</h3><table width="90%" class="blank" border=1 cellpadding=10 cellspacing=0>'."\n";
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
 		foreach($day_names as $d)
@@ -257,17 +257,16 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 	if($n) $n = '&nbsp;<span class="calendar-next">'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n).'</span>';
 
 
-	$calendar = '<table style="padding: 0px; margin: 0px;" class="blank calendar">'."\n".
-		'<caption class="calendar-month">'.$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</caption>\n<tr></tr><tr>";
+	$calendar = '<center><b>'.$title.'</b></center><table style="padding: 0px; margin: 0px;" class="blank calendar"><tr>';
 
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
 		foreach($day_names as $d)
-			$calendar .= '<th abbr="'.htmlentities($d).'">'.htmlentities($day_name_length < 4 ? substr($d,0,$day_name_length) : $d).'</th>';
+			$calendar .= '<th style="font-size: 8px" abbr="'.htmlentities($d).'">'.htmlentities($day_name_length < 4 ? substr($d,0,$day_name_length) : $d).'</th>';
 		$calendar .= "</tr>\n<tr>";
 	}
 
-	if($weekday > 0) $calendar .= '<td colspan="'.$weekday.'">&nbsp;</td>'; #initial 'empty' days
+	if($weekday > 0) $calendar .= '<td style="font-size: 8px" colspan="'.$weekday.'">&nbsp;</td>'; #initial 'empty' days
 	for($day=1,$days_in_month=gmdate('t',$first_of_month); $day<=$days_in_month; $day++,$weekday++){
 		if($weekday == 7){
 			$weekday   = 0; #start a new week
@@ -309,9 +308,9 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 		$time = time();
 		$today = date('j',$time);
 		$today_m = date('n',$time);
-		$today_style = "";
+		$today_style = "style='font-size: 9px' ";
 		if (($today == $day) && ($today_m == $month))
-			$today_style .= "style='border: 1px solid #00ff00;'";		
+			$today_style .= " style='border: 1px solid #00ff00;'";		
 
 		if(isset($days[$day]) and is_array($days[$day])){
 			@list($link, $classes, $content, $tooltip) = $days[$day];
