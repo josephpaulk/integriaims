@@ -31,6 +31,7 @@ echo "</ul></div>";
 
 
 // Banners
+/*
 echo '<div class="portlet">';
 echo "<h3 class='system'>".__('Our sponsors')."</h3>";
 echo "<p>";
@@ -40,6 +41,6 @@ echo "<img src='images/sflogo.png'>";
 echo "<br><br>";
 echo "</p>";
 echo "</div>";
-
+*/
 
 ?>

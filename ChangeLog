@@ -1,5 +1,8 @@
 2011-11-24  Sancho Lerena <slerena@artica.es>
 
+	* operation/tool_menu.php, 
+	general/home.php: Minimal cosmetic changes.
+
 	* include/styles/integria.css: Some changes in styles.
 
 	* include/functions_calendar.php: Smaller calendar.

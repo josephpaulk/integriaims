@@ -22,14 +22,14 @@ $noinfo = 1;
 if (!isset($config["id_user"]))
 	$config["id_user"] = $_SESSION['id_usuario'];
 
-	echo '<table width="100%" cellspacing=0 cellpadding=0 border=0>';
+echo '<table width="100%" cellspacing=0 cellpadding=0 border=0>';
 
 
     // ==============================================================
 	// Show Newsboard
     // ==============================================================
 
-	$sql = "SELECT * FROM tnewsboard  WHERE `date` > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 31 DAY) ORDER BY date ASC";
+	$sql = "SELECT * FROM tnewsboard  WHERE `date` > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 60 DAY) ORDER BY date ASC";
     $news = get_db_all_rows_sql ($sql);
     if ($news) {
         $noinfo = 0;
@@ -53,7 +53,6 @@ if (!isset($config["id_user"]))
     // ==============================================================
 	// Show Agenda items
     // ==============================================================
-
 	$now = date('Y-m-d', strtotime("now"));
 	$now3 = date('Y-m-d', strtotime("now + 3 days"));
 	$agenda = get_db_sql ("SELECT COUNT(*) FROM tagenda WHERE  (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3'");
@@ -201,9 +200,12 @@ if (!isset($config["id_user"]))
 	}
 	echo "</table>";
 
-    if ($noinfo == 1){
+ if (give_acl ($config["id_user"], 0, "AR")){
+    if ($noinfo == 1)
         include "operation/agenda/agenda.php";
-    }
+ } else {
+	echo "<h1>". __("Welcome to Integria")."</h1>";
+ }
 
 
 
