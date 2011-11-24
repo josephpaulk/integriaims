@@ -1,3 +1,9 @@
+2011-11-24  Sergio Martin <sergio.martin@artica.es>
+
+	* operation/projects/task_detail.php: Fixed the task creation for 
+	a project manager without higher ACLs (only project manager of the
+	task project)
+
 2011-11-23  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/projects/people_manager.php

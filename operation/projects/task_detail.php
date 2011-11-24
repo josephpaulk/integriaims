@@ -321,7 +321,7 @@ $table->data[7][0] .= print_input_hidden ('completion', $completion, true);
 $table->data[8][0] = print_textarea ('description', 8, 30, $description, '',
 	true, __('Description'));
 
-if (give_acl ($config["id_user"], $id_group, "TM") || give_acl ($config["id_user"], $id_group, "PM") || (give_acl ($config["id_user"], 0, "PW") && ($config["id_user"] == $project_manager))) {
+if (user_belong_project ($config['id_user'], $id_project) || give_acl ($config["id_user"], $id_group, "TM") || give_acl ($config["id_user"], $id_group, "PM") || (give_acl ($config["id_user"], 0, "PW") && ($config["id_user"] == $project_manager))) {
 	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 	
 	print_table ($table);
