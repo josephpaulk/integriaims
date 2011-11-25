@@ -46,7 +46,7 @@ if (isset($_GET["create2"])){ // Create group
     	}
 	$timestamp = date('Y-m-d H:i:s');
 	$name = get_parameter ("name","");
-	$location = get_parameter ("location","");
+	$location = clean_output (get_parameter ("location",""));
 	$description = get_parameter ("description","");
 	$id_category = get_parameter ("id_category","");
 
@@ -76,7 +76,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	$timestamp = date('Y-m-d H:i:s');
 
 	$name = get_parameter ("name","");
-	$location = get_parameter ("location","");
+	$location = clean_output(get_parameter ("location",""));
 	$description = get_parameter ("description","");
 	$id_category = get_parameter ("id_category","");
 

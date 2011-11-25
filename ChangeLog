@@ -1,5 +1,8 @@
 2011-11-25  Sancho Lerena <slerena@artica.es>
 
+	* operation/download/browse.php: Fixed damm problem with some downloads
+	was due blank spaces. After applying safe_output to data it's fixed!
+
 	Some changes in order to use Integria as CRM :-). Need some work
 	but it's functional.
 
