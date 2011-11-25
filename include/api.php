@@ -151,6 +151,9 @@ switch ($op){
 		echo api_get_inventories ($return_type, $user, $params);
 		break;
 	}
+	case "validate_user":
+		echo api_validate_user ($return_type, $user, $pass);
+		break;
 	default: 
 	{
 	}

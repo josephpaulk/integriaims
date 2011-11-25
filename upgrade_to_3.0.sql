@@ -78,4 +78,17 @@ CREATE TABLE `tmenu_visibility` (
 ALTER TABLE tincidencia ADD `email_copy` mediumtext not NULL;
 ALTER TABLE tusuario ADD `disabled` int default 0;
 
+-- Added 25 Nov 2011
+
+ALTER TABLE tcompany ADD `id_grupo` mediumint(8) unsigned DEFAULT 0;
+CREATE TABLE `tcompany_activity` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `id_company` mediumint(8) unsigned NOT NULL,
+  `written_by` varchar(60) NOT NULL default '',
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `description` text NULL DEFAULT NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
+      ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

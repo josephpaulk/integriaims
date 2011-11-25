@@ -275,4 +275,4 @@ $(document).ready (function () {
 });
 </script>
 
-<script type="text/javascript" src="include/js/jquery.datepicker.js"></script>
+

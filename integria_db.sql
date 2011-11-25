@@ -514,6 +514,7 @@ CREATE TABLE `tcompany` (
   `fiscal_id` varchar(250) NULL default NULL,
   `comments` text NULL default NULL,
   `id_company_role` mediumint(8) unsigned NOT NULL,
+  `id_grupo` mediumint(8) unsigned DEFAULT 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -794,4 +795,15 @@ CREATE TABLE `tmenu_visibility` (
   `id_group` int(10) unsigned NOT NULL default '0',
   `mode` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tcompany_activity` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `id_company` mediumint(8) unsigned NOT NULL,
+  `written_by` varchar(60) NOT NULL default '',
+  `date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `description` text NULL DEFAULT NULL,
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
+      ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -1,3 +1,26 @@
+2011-11-25  Sancho Lerena <slerena@artica.es>
+
+	Some changes in order to use Integria as CRM :-). Need some work
+	but it's functional.
+
+	* include/api.php, 
+	include/functions_api.php: New api call for external auth/validation on
+	user/pass.
+
+	* operation/side_menu.php: New organization, some things are now in 
+	"customers" block, added new quick links to create items.
+
+	* operation/contracts/contract_detail.php: Removed bad call to unused js
+
+	* operation/companies/company_detail.php: Implemented here the main CRM 
+	view to search from companies: contracts, contacts and the NEW activities.
+	All depends on companies now. Added group to company. Need to reevaluate
+	the group thing inside the contract and the relationship with the inventory
+	and the ACL. This is the first version, a lot work needed here.
+ 
+	* integria_db.sql,
+	upgrade_to_3.0.sql: Added group to tcompany, and created tcompany_activity
+
 2011-11-24  Sancho Lerena <slerena@artica.es>
 
 	* operation/tool_menu.php, 

@@ -508,58 +508,29 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 	echo "</div>";
 }
 
-// CONTRACTS
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
-	echo "<div class='portlet'>";
 
-	// Contract
-	echo "<h3>".__('Contracts')."</h3>";
-	echo "<ul class='sidemenu'>";
-
-	// Contact overview
-	if (($sec2=="operation/contracts/contract_detail") AND (!isset($_GET["create"])))
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail'>".__('Contract overview')."</a></li>";
-
-	echo "</ul>";
-	echo "</div>";
-}
-
-// CONTACTS
+// Customers 
 if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 
 
-	echo "<h3 class='admin'>".__('Contacts')."</h3>";
+	echo "<h3 class='admin'>".__('Customers')."</h3>";
 	echo "<ul class='sidemenu'>";
 
-	// Contact overview
-	if (($sec2=="operation/contacts/contact_detail") AND (!isset($_GET["create"])))
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail'>".__('Contact overview')."</a></li>";
 
-	echo "</ul>";
-	echo "</div>";
-}
-
-// COMPANIES
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
-	echo "<div class='portlet'>";
-
-	// Contract
-	echo "<h3 class='admin'>".__('Companies')."</h3>";
-	echo "<ul class='sidemenu'>";
-
-	// Company
 	if (($sec2=="operation/companies/company_detail") AND (!isset($_GET["create"])))
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail'>".__('Company overview')."</a></li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail'>".__('Companies')."</a></li>";
+
+
+	if ($sec2 == "operation/companies/company_detail") {
+			echo "<li style='margin-left: 15px; font-size: 10px;'>";
+			echo "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&new_company=1'>".__('New company')."</a>";
+			echo "</li>";
+		}
+
 
 	// Company roles
 	if (($sec2=="operation/companies/company_role") AND (!isset($_GET["create"])))
@@ -568,10 +539,40 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inven
 		echo "<li>";
 	echo "<a href='index.php?sec=inventory&sec2=operation/companies/company_role'>".__('Company roles')."</a></li>";
 
+
+	// Contract overview
+	if (($sec2=="operation/contracts/contract_detail") AND (!isset($_GET["create"])))
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail'>".__('Contracts')."</a></li>";
+
+	// new
+	if ($sec2 == "operation/contracts/contract_detail") {
+			echo "<li style='margin-left: 15px; font-size: 10px;'>";
+			echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&new_contract=1'>".__('New contract')."</a>";
+			echo "</li>";
+		}
+
+
+	// Contact overview
+	if (($sec2=="operation/contacts/contact_detail") AND (!isset($_GET["create"])))
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail'>".__('Contacts')."</a></li>";
+
+	if ($sec2 == "operation/contacts/contact_detail") {
+			echo "<li style='margin-left: 15px; font-size: 10px;'>";
+			echo "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail&new_contact=1'>".__('New contact')."</a>";
+			echo "</li>";
+		}
+
+
 	echo "</ul>";
 	echo "</div>";
-
 }
+
 
 // SLA's
 if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {

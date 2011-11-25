@@ -909,4 +909,8 @@ function api_get_inventories($return_type, $param){
 	return $ret;
 }
 
+function api_validate_user ($return_type, $user, $pass){
+	return get_db_sql ("select count(id_usuario) FROM tusuario WHERE id_usuario = '$user' AND password = md5('$pass')");
+}
+
 ?>
