@@ -132,6 +132,9 @@ function api_get_incidents ($return_type, $user, $params){
 		$filter['id_user_or_creator'] = $user;
 	}
 	
+	global $config;
+	$config['id_user'] = $user;
+	
 	$result = filter_incidents ($filter);
 	
 	if($result === false) {

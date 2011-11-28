@@ -1,3 +1,10 @@
+2011-11-28  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_api.php: Fixed api function of
+	that provides the incidents
+
+	* include/config_process.php: Updated build
+
 2011-11-25  Sancho Lerena <slerena@artica.es>
 
 	* operation/download/browse.php: Fixed damm problem with some downloads
