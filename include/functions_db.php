@@ -1177,6 +1177,47 @@ function get_user_groups ($id_user = 0, $permission = 'IR') {
 }
 
 /** 
+ * Get all the user ids of the projects where a user is project manager
+ * 
+ * @param integer id_user User id
+ * 
+ * @return A list of user Ids of the same project that the user is project manager.
+ */
+function get_project_manager_users($id_user = 0) {
+	global $config;
+
+	$values = array ();
+
+	if ($id_user == 0) {
+		$id_user = $config['id_user'];
+	}
+	
+	// Default project manager role id is 1
+	$project_manager_role = 1;
+	
+	$sql = sprintf('SELECT id_user FROM trole_people_project WHERE
+			id_user <> "%s" AND
+			id_project IN 
+				(SELECT id_project FROM trole_people_project WHERE 
+					id_user = "%s" AND
+					id_role = %s)', $id_user, $id_user, $project_manager_role);
+
+	
+	$users = get_db_all_rows_sql($sql);
+	
+	if($users === false) {
+		return array();
+	}
+	
+	$users_array = array();
+	foreach($users as $user) {
+		$users_array[] = $user['id_user'];
+	}
+	
+	return $users_array;
+}
+
+/** 
  * Get all the visible users for a user.
  * 
  * @param integer id_user User id
@@ -1206,9 +1247,18 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 		return get_user ($id_user, $only_name);
 	}
 		
+	$project_users = get_project_manager_users();
+
+	if(!empty($project_users)) {
+		$proj_users_condition = sprintf(' OR u.id_usuario in ("%s") ',implode('","',$project_users));
+	}
+	else {
+		$proj_users_condition = '';
+	}
+	
 	// Group All has id = 1
 	if (give_acl ($id_user, 1, $access) && $both) {
-		$users = get_db_all_rows_sql ("SELECT * FROM tusuario WHERE id_usuario LIKE '%$search%' ORDER BY id_usuario");
+		$users = get_db_all_rows_sql ("SELECT * FROM tusuario u WHERE u.id_usuario LIKE '%$search%' $proj_users_condition ORDER BY u.id_usuario");
 		if ($users === false)
 			$users = array ();
 		foreach ($users as $user) {
@@ -1233,13 +1283,16 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 			$sql = sprintf ('SELECT *
 					FROM tusuario_perfil p, tusuario u
 					WHERE p.id_usuario = u.id_usuario
-					AND id_grupo = %d', $group['id_grupo']);
+					AND id_grupo = %d %s', $group['id_grupo'], $proj_users_condition);
 			$users = get_db_all_rows_sql ($sql);
 			if ($users === false)
 				continue;
 			foreach ($users as $user) {
-				if (! give_acl ($user["id_usuario"], $group['id_grupo'], $access))
+				if (! give_acl ($user["id_usuario"], $group['id_grupo'], $access) && 
+					!in_array($user['id_usuario'], $project_users) && 
+					$id_user != $user['id_usuario']) {
 					continue;
+				}
 				if ($only_name)
 					$values[$user['id_usuario']] = $user['nombre_real'];
 				else
