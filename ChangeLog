@@ -1,5 +1,12 @@
 2011-11-29  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/users/user_workunit_report.php
+	operation/user_report/monthly.php
+	operation/user_report/monthly_graph.php: Restrict access in 
+	the monthly/annual/hours reports to only visible users
+
+2011-11-29  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_db.php: Fixed search on the function
 	that provides the visible users and clean code
 

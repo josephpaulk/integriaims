@@ -30,7 +30,10 @@ $id = get_parameter ("id");
 $id_task = get_parameter ("id_task", 0);
 
 $operation = get_parameter ("operation");
-if (($id != "") && ($id != $id_user)) {
+
+$users = get_user_visible_users();
+
+if (($id != "") && ($id != $id_user) && in_array($id, array_keys($users))) {
 	if (give_acl($id_user, 0, "PW"))
 		$id_user = $id;
 	else {

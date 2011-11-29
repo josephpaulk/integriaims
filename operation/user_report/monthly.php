@@ -60,8 +60,9 @@ if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo
 }
 
 $id = get_parameter ('id', $config["id_user"]);
+$users = get_user_visible_users();
 
-if (($id != "") && ($id != $id_user)){
+if (($id != "") && ($id != $id_user) && in_array($id, array_keys($users))){
 	if (give_acl($id_user, 0, "PW"))
 		$id_user = $id;
 	else {
@@ -140,7 +141,7 @@ echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report
 if (give_acl($config["id_user"], 0, "PM")){
     //combo_user_visible_for_me ($real_user_id, 'id', 0, 'PR');
     $src_code = print_image('images/group.png', true, false, true);
-	echo print_input_text_extended ('id_username', '', 'text-id_username', '', 15, 30, false, '',
+	echo print_input_text_extended ('id', '', 'text-id_username', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '')
 		. print_help_tip (__("Type at least two characters to search"), true);
     echo "&nbsp;";
