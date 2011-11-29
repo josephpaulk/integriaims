@@ -1,5 +1,10 @@
 2011-11-29  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions_db.php: Fixed search on the function
+	that provides the visible users and clean code
+
+2011-11-29  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_db.php: Extend get user visible users 
 	function to provide the users of the same project of a project
 	manager too
