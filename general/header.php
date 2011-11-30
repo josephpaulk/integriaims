@@ -56,11 +56,11 @@ echo '<a href="index.php?logout=1"><img src="images/lock.png"> '. __('Logout').'
 
 echo '</td><td style="padding: 0px; margin: 0px;">';
 
-echo "<form method=post action='index.php?sec=incidents&sec2=operation/incidents/incident'>";
+echo "<form method=post action='index.php?sec2=operation/search'>";
 echo "&nbsp;";
 echo "<input type=text name='search_string' size=15 value=''>";
 echo "&nbsp;";
-echo "<input class='sub search' type=submit name='submit' size=14 value='Search'>";
+echo "<input class='sub search' type=submit name='submit' size=18 value='Search'>";
 echo '</form>';
 echo '</td></tr>';
 

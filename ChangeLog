@@ -1,3 +1,12 @@
+2011-11-30  Sancho Lerena <slerena@artica.es>
+
+	* operation/search.php
+	general/header.php: First version of the main search tool.
+
+	* operation/companies/company_detail.php: Added some 
+	ACL checks.
+
+
 2011-11-29  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/users/user_workunit_report.php
