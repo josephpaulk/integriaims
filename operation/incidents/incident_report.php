@@ -23,7 +23,9 @@ $statuses = get_indicent_status ();
 $resolutions = get_incident_resolutions ();
 
 echo '<div style="width: 950px;">';
-echo '<h1>'.__("Incident #$id_incident report");
+echo '<h1>';
+echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_incident'>";
+echo __("Report for incident"). " #". $id_incident ."</a>";
 
 if ($clean_output == 0){
 	// link full screen
@@ -40,36 +42,17 @@ if ($clean_output == 0){
 echo '</h1>';
 
 $incident = get_incident ($id_incident);
-	    
-$table->class = 'listing';
-$table->width = "95%";
-$table->style = array ();
-$table->style[0] = 'font-weight: bold';
-$table->head = array ();
-$table->head[0] = __('Title');
-$table->head[1] = __('Description');
-if($incident['epilog'] != '') {
-	$table->head[1] = __('Epilog');
-}
-$table->data = array ();
 
-$table->data[0][0] = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.
-	$incident['titulo'].'</a>';
-	
-if($incident['descripcion'] != '') {
-	$table->data[0][1] = $incident['descripcion'];
-}
-else {
-	$table->data[0][1] = "<b>".__("No description")."</b>";
-}
+echo "<h3>";
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.	$incident['titulo'].'</a></h3>';
+
+echo clean_output_breaks ($incident['descripcion']);
+
 
 if($incident['epilog'] != '') {
-	$table->data[0][2] = $incident['epilog'];
+	echo "<h4>".__("Epilog")."</h4>";
+	echo clean_output_breaks ($incident['epilog']);
 }
-
-print_table ($table);
-
-unset($table);
 
 $output = '<div style="margin-left: 15px; text-align: left; width: 95%;">';
 

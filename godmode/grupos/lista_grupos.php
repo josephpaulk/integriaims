@@ -107,6 +107,18 @@ if ($delete_group) {
 
 echo '<h2>'.__('Group management').'</h2>';
 
+$offset = get_parameter ("offset", 0);
+$search_text = get_parameter ("search_text", "");
+
+echo "<table class='blank'><form name='bskd' method=post action='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>";
+echo "<td>";
+echo __('Search text');
+echo "<td>";
+print_input_text ("search_text", $search_text, '', 15, 0, false);
+echo "<td>";
+print_submit_button ('Search', '', false, '', false, false);
+echo "</table></form>";
+
 $table->width = '90%';
 $table->class = 'listing';
 $table->head = array ();
@@ -122,7 +134,7 @@ $table->style[1] = 'font-weight: bold';
 $table->size = array ();
 $table->size[3] = '40px';
 
-$groups = get_db_all_rows_in_table ('tgrupo', 'nombre');
+$groups = get_db_all_rows_sql ("SELECT * FROM tgrupo WHERE nombre LIKE '%$search_text%'");
 
 $groups = print_array_pagination ($groups, "index.php?sec=users&sec2=godmode/grupos/lista_grupos");
 

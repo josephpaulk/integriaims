@@ -187,8 +187,9 @@ function show_task_row ($table, $id_project, $task, $level) {
 	$a = round ($task["hours"]);
 	$b = round ($taskhours);
 	$mode = 2;
+
 	if ($a > 0)
-		$data[3] = histogram_2values($a, $b, "", "", $mode, 60, 18, $imghelp);
+		$data[3] = histogram_2values($a, $b, __("Planned"), __("Real"), $mode, 60, 18, $imghelp);
 	else
 		$data[3] = '--';
 
@@ -204,7 +205,8 @@ function show_task_row ($table, $id_project, $task, $level) {
 
 	// Costs (client / total)
 	$costdata = format_numeric (task_workunit_cost ($task["id"], 1));
-	$data[5] = $costdata ? $costdata.' '.$config['currency'] : '--';
+	$realdata = format_numeric (task_workunit_cost ($task["id"], 0));
+	$data[5] =  $costdata . " / ". $realdata . " " .$config['currency'];
 
 	// People
 	$data[6] = combo_users_task ($task['id'], 1, true);

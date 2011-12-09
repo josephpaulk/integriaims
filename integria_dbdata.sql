@@ -1,7 +1,6 @@
--- Integria 1.1 - http://integria.sourceforge.net
+-- Integria - http://integria.sourceforge.net
 -- ==================================================
--- Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
--- Copyright (c) 2007-2008 Artica Soluciones Tecnologicas
+-- Copyright (c) 2007-2011 Artica Soluciones Tecnologicas
 
 -- This program is free software; you can redistribute it and/or
 -- modify it under the terms of the GNU General Public License
@@ -51,7 +50,7 @@ INSERT INTO `tlanguage` VALUES ('nl','Nederlands');
 INSERT INTO `tlanguage` VALUES ('ru','Русский');
 INSERT INTO `tlanguage` VALUES ('tr','Türkçe');
 
-INSERT INTO `tlink` VALUES  (0000000001,'Integria Project','http://integria.sourceforge.net'), (0000000002,'Artica ST','http://www.artica.es'),(0000000003,'Pandora FMS Project','http://pandora.sourceforge.net'),(0000000004,'Babel Project','http://babel.sourceforge.net'),(0000000005,'Google','http://www.google.com');
+INSERT INTO `tlink` VALUES  (1,'Integria Project','http://integria.sourceforge.net'), (2,'Artica ST','http://www.artica.es'), (3, 'Report a bug', 'https://sourceforge.net/tracker/?func=add&group_id=193754&atid=946680');
 
 INSERT INTO `tproject` VALUES  (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0);
 

@@ -3,7 +3,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2010 Ártica Soluciones Tecnológicas
+// Copyright (c) 2007-2011 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -480,6 +480,22 @@ function calculate_project_progress ($id_project){
 			WHERE id_project = %d',
 			$id_project);
 	return get_db_sql ($sql);
+}
+
+/**
+* Calculate project deviation
+*
+* $id_project 	integer 	ID of project
+**/
+
+function calculate_project_deviation ($id_project){
+	global $config;
+
+	$expected_length = get_db_sql ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
+	$pr_hour = get_project_workunit_hours ($id_project, 1);
+	$deviation_percent = format_numeric(($pr_hour-$expected_length) / ($expected_length / 100));
+    //$deviation = format_numeric(($pr_hour-$expected_length)/$config["hours_perday"]);
+	return $deviation_percent;
 }
 
 /**

@@ -1,8 +1,9 @@
 <?php
-// INTEGRIA IMS - the ITIL Management System
+
+// INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// Copyright (c) 2007-2011 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -144,7 +145,7 @@ if ($operation == 'insert') {
 	$id_profile = (int) get_parameter ("id_profile");
 	$public = (bool) get_parameter ("public");
 	$split = (bool) get_parameter ("split");
-	$id_user = (string) get_parameter ("wu_user", $config['id_user']);
+	$id_user = (string) get_parameter ("id_username", $config['id_user']);
 	$wu_user = $id_user;
 	
 	// Multi-day assigment
@@ -247,7 +248,7 @@ if ($operation == 'update') {
 	$have_cost = (bool) get_parameter ("have_cost");
 	$id_profile = (int) get_parameter ("id_profile");
 	$public = (bool) get_parameter ("public");
-	$wu_user = (string) get_parameter ("wu_user", $config['id_user']);
+	$wu_user = (string) get_parameter ("id_username", $config['id_user']);
 	$id_task = (int) get_parameter ("id_task",0);
 	
 	// UPDATE WORKUNIT
@@ -334,7 +335,7 @@ if (dame_admin ($config['id_user'])) {
 	/*$table->data[2][1] = combo_user_visible_for_me ($wu_user,
 		'wu_user', 0, "TW", true, __('Username'));*/
 	$src_code = print_image('images/group.png', true, false, true);
-	$table->data[2][1] = print_input_text_extended ('id_username', $config['id_user'], 'text-id_username', '', 15, 30, false, '',
+	$table->data[2][1] = print_input_text_extended ('id_username', $wu_user, 'text-id_username', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Username'))
 		. print_help_tip (__("Type at least two characters to search"), true);
 }

@@ -13,7 +13,24 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+?>
+<html>
+<head>
+<meta http-equiv="expires" content="0" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="resource-type" content="document" />
+<meta name="distribution" content="global" />
+<meta name="author" content="Sancho Lerena <slerena@gmail.com>" />
+<meta name="website" content="http://integriaims.com" />
+<meta name="copyright" content="Artica Soluciones Tecnologicas (c) 2007-2011" />
+<meta name="keywords" content="ticketing, management, project, incident, tracking, ITIL" />
+<meta name="robots" content="index, follow" />
+<link rel="icon" href="../images/integria_mini_logo.png" type="image/png" />
+<link rel="stylesheet" href="../include/styles/integria.css" type="text/css" />
+</head>
+<body>
 
+<?php
 
 require_once ("../include/config.php");
 require_once ("../include/functions.php");
@@ -64,8 +81,8 @@ echo '<div style="font-size: 12px; margin-left: 30px; margin-right:25px;">';
 echo "<br>";
 require_once ($help_file);
 echo '</div>';
-echo '<br /><br /><hr width="100%" size="1" />';
-echo '<div style="font-family: verdana, arial; font-size: 11px;">';
+echo '<br><br>';
+
 include ('footer.php');
 ?>
 </body>

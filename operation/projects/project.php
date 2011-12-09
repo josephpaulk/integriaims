@@ -181,11 +181,12 @@ $table->head[0] = __('Name');
 // PG: Abbreviation for "Project group"
 $table->head[1] = __ ('PG');
 $table->head[2] = __('Completion');
-$table->head[3] = __('Tasks');
-$table->head[4] = __('People');
-$table->head[5] = __('Time used');
-$table->head[6] = __('Cost');
-$table->head[7] = __('Updated');
+$table->head[3] = __('Deviation');
+$table->head[4] = __('Tasks');
+$table->head[5] = __('People');
+$table->head[6] = __('Time used');
+$table->head[7] = __('Cost');
+$table->head[8] = __('Updated');
 $table->data = array ();
 
 // TODO: Needs to implement group control and ACL checking
@@ -235,21 +236,28 @@ foreach ($projects as $project) {
 		$completion = format_numeric (calculate_project_progress ($project['id']));
 		$data[2] = progress_bar($completion, 90, 20);
 	}
-	
-	// Total task / People
-	$data[3] = get_db_value ('COUNT(*)', 'ttask', 'id_project', $project['id']);
-	$data[4] = get_db_value ('COUNT(*)', 'trole_people_project', 'id_project', $project['id']);
 
-	// Time wasted
-	$data[5] = format_numeric (get_project_workunit_hours ($project['id']));
+	// Deviation
+	$deviation_percent = calculate_project_deviation ($project['id']);
+	if ($deviation_percent > 0)
+		$data[3] = $deviation_percent;
+	else
+		$data[3] = "--";
+
+	// Total task / People
+	$data[4] = get_db_value ('COUNT(*)', 'ttask', 'id_project', $project['id']);
+	$data[5] = get_db_value ('COUNT(*)', 'trole_people_project', 'id_project', $project['id']);
+
+	// Time used
+	$data[6] = format_numeric (get_project_workunit_hours ($project['id']));
 	
 	$project_wu_inc = get_incident_project_workunit_hours ($project["id"]);
 	if ($project_wu_inc  > 0 )
-		$data[5] .= " / ".$project_wu_inc;
-	$data[5] .= " ".__('hr');
+		$data[6] .= " / ".$project_wu_inc;
+	$data[6] .= " ".__('hr');
 
 	// Costs (client / total)
-	$data[6] = format_numeric (project_workunit_cost ($project['id'], 1)).' '.$config['currency'];
+	$data[7] = format_numeric (project_workunit_cost ($project['id'], 1)).' '.$config['currency'];
 	
 	// Last update time
 	$sql = sprintf ('SELECT tworkunit.timestamp
@@ -261,28 +269,28 @@ foreach ($projects as $project) {
 		$project['id']);
 	$timestamp = get_db_sql ($sql);
 	if ($timestamp != "")
-		$data[7] = human_time_comparation ($timestamp);
+		$data[8] = human_time_comparation ($timestamp);
 	else
-		$data[7] = __('Never');
+		$data[8] = __('Never');
 	
 	// Delete
 	if ($project['id'] != -1 && (give_acl ($config['id_user'], 0, "PW") || give_acl ($config['id_user'], 0, "PM"))) {
-		$table->head[8] = __('Delete');
+		$table->head[9] = __('Delete');
 		if ((give_acl ($config['id_user'], 0, "PW") && $config['id_user'] == $project["id_owner"]) || give_acl ($config['id_user'], 0, "PM")) {
 			if ($view_disabled == 0) {
-				$data[8] = '<a href="index.php?sec=projects&sec2=operation/projects/project&disable_project=1&id='.$project['id'].'" 
+				$data[9] = '<a href="index.php?sec=projects&sec2=operation/projects/project&disable_project=1&id='.$project['id'].'" 
 					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 					<img src="images/cross.png" /></a>';
 			} else {
-				$data[8] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
+				$data[9] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
 					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 					<img src="images/cross.png" /></a> ';
-				$data[8] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
+				$data[9] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
 					<img src="images/play.gif" /></a>';
 			}
 		}
 		else {
-			$data[8] = '';
+			$data[9] = '';
 		}
 	}
 	

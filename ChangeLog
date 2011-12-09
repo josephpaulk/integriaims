@@ -1,3 +1,47 @@
+2011-12-09  Sancho Lerena <slerena@artica.es>
+
+	* operation/search.php
+	general/header.php: Added search for major sections. 100% functional.
+
+	* images/*: new integria 3.0 logos, Thanks to Laura C. ! :-)
+
+	* include/styles/integria.css: Smaller font for footer.
+
+	* include/graphs/functions_gd.php: Grey definition was missing. Fixed some
+	non-functional old code.
+
+	* include/graphs/fgraph.php: Added title in histogram graphs.
+
+	* include/functions_workunits.php,
+	operation/users/user_workunit_report.php,
+	include/functions_form.php: Header update.
+ 
+	* include/functions_db.php; Added project_deviation() function.
+
+	* config_process.php: Build update.
+
+	* integria_dbdata.sql: Updated links and header.
+
+	* operation/incidents/incident_report.php: Link in the title, render of 
+	main incident text is now legible.
+
+	* operation/projects/task.php: Fixed histogram graphs.
+
+	* operation/projects/project.php: Deviation is now shown in the list view.
+
+	* operation/projects/project_detail.php: Added deviation.
+
+	* operation/users/user_spare_workunit.php: Fixed problem when adding WU
+	for other users.
+
+	* general/integria_help.php: Improved style.
+	
+	* general/header.php: Better layout.
+
+	* godmode/grupos/lista_grupos.php: Added search.
+
+	* godmode/usuarios/lista_usuarios.php: Improved search.
+
 2011-11-30  Sancho Lerena <slerena@artica.es>
 
 	* operation/search.php

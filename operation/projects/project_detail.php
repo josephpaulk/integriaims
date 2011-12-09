@@ -189,7 +189,11 @@ if ($id_project) {
 	echo "<td class='datos'>";
 	$completion =  format_numeric(calculate_project_progress ($id_project));
 	echo progress_bar($completion, 90, 20);
+	$deviation_percent = calculate_project_deviation ($id_project);
 
+	echo '<td><b>'.__('Deviation').'</b>';
+	echo "<td>";
+	echo $deviation_percent ."%";
 
 	echo '<tr>';
 	echo '<td class="datos2"><b>'.__('Total workunit (hr)').'</b>';
@@ -201,9 +205,11 @@ if ($id_project) {
 	$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
 	echo $people_inv;
 
+	$expected_length = get_db_sql ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
 	$pr_hour = get_project_workunit_hours ($id_project, 1);
+    $deviation = format_numeric(($pr_hour-$expected_length)/$config["hours_perday"]);
 	$total = project_workunit_cost ($id_project, 1);
-        $real = project_workunit_cost ($id_project, 0);
+    $real = project_workunit_cost ($id_project, 0);
 
 	if ($pr_hour > 0){
 		echo '<tr>';
@@ -226,8 +232,7 @@ if ($id_project) {
 
 	echo '<td class="datos"><b>'.__('Proyect length deviation (days)').'</b>';
         echo '<td class="datos">';
-        $expected_length = get_db_sql ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
-        $deviation = format_numeric(($pr_hour-$expected_length)/$config["hours_perday"]);
+        
         echo $deviation. " ".__('Days');
 
 

@@ -19,7 +19,6 @@ check_login ();
 
 // We need to strip HTML entities if we want to use in a sql search
 $search_string = safe_output (get_parameter ("search_string",""));
-
 echo "<h1>";
 
 echo __("Searching for");
@@ -55,7 +54,7 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
 		echo "<h3>";
 		echo __("Incident management");
 		echo "</h3>";
-
+		
 		$table->width = '80%';
 		$table->class = 'listing';
 		$table->data = array ();
@@ -89,21 +88,20 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
 if (give_acl($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN){
 
 	$sql = "SELECT tproject.id as project_id, ttask.id as task_id, tproject.name as pname, ttask.name as tname FROM tproject, ttask WHERE tproject.disabled = 0 AND ttask.id_project = tproject.id AND ttask.name LIKE '%$search_string%'";
-
 	$tasks = get_db_all_rows_sql ($sql);
 	
 	if ($tasks !== false) {
 
-
 		echo "<h3>";
 		echo __("Project management");
 		echo "</h3>";
-
+		
 		$table->width = '80%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->size = array ();
 		$table->style = array ();
+		$table->head = array();
 		$table->head[0] = __('Project');
 		$table->head[1] = __('Task');
 
@@ -122,6 +120,106 @@ if (give_acl($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN){
 		print_table ($table);
 	}
 }
+
+// Users - Only for UM
+if (give_acl($config["id_user"], 0, "UM")){
+
+	$sql = "SELECT * FROM tusuario WHERE id_usuario LIKE '%".$search_string."%' OR direccion LIKE '%".$search_string."%' OR comentarios LIKE '%".$search_string."%' ";
+	$users = get_db_all_rows_sql ($sql);
+	
+	if ($users !== false) {
+
+		echo "<h3>";
+		echo __("People");
+		echo "</h3>";
+		
+		$table->width = '80%';
+		$table->class = 'listing';
+		$table->data = array ();
+		$table->size = array ();
+		$table->style = array ();
+		$table->head[0] = __('Full name');
+		$table->head[1] = __('Full report');
+		// $table->head[2] = __('Montly report');
+		
+		foreach ($users as $user) {
+
+			$data = array ();
+			$data[0] = "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=".$user["id_usuario"]."'>".$user["nombre_real"]."</a>";
+			$data[1] = "<a href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=".$user["id_usuario"]."'>".__("Full report")."</a>";
+			array_push ($table->data, $data);
+		}
+		print_table ($table);
+	}
+}
+
+// KB
+if (give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN){
+
+	$sql = "SELECT tkb_category.name as category, tkb_product.name as product, tkb_data.title as kb_name, tkb_data.id as kb_id FROM tkb_data, tkb_product, tkb_category WHERE title LIKE '%".$search_string."%' AND tkb_data.id_category = tkb_category.id AND tkb_data.id_product = tkb_product.id";
+	$kbs = get_db_all_rows_sql ($sql);
+	
+	if ($kbs !== false) {
+		
+		echo "<h3>";
+		echo __("Knowlegue Base");
+		echo "</h3>";
+		
+		$table->width = '80%';
+		$table->class = 'listing';
+		$table->data = array ();
+		$table->size = array ();
+		$table->style = array ();
+		$table->head[0] = __('KB');
+		$table->head[1] = __('Product');
+		$table->head[2] = __('Category');
+
+		foreach ($kbs as $kb) {
+			$data = array ();
+		
+			$data[0] = "<a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$kb["kb_id"]."'>".$kb["kb_name"]."</a>";
+			$data[1] = $kb["product"];
+			$data[2] = $kb["category"];
+			array_push ($table->data, $data);
+		}
+		print_table ($table);
+	}
+}
+
+// Contact
+if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
+
+	$sql = "SELECT * FROM tcompany_contact  WHERE fullname LIKE '%".$search_string."%' OR email LIKE '%".$search_string."%'";
+	$contacs = get_db_all_rows_sql ($sql);
+	
+	if ($kbs !== false) {
+		
+		echo "<h3>";
+		echo __("Knowlegue Base");
+		echo "</h3>";
+		
+		$table->width = '80%';
+		$table->class = 'listing';
+		$table->data = array ();
+		$table->size = array ();
+		$table->style = array ();
+		$table->head[0] = __('KB');
+		$table->head[1] = __('Product');
+		$table->head[2] = __('Category');
+
+		foreach ($kbs as $kb) {
+			$data = array ();
+		
+			$data[0] = "<a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$kb["kb_id"]."'>".$kb["kb_name"]."</a>";
+			$data[1] = $kb["product"];
+			$data[2] = $kb["category"];
+			array_push ($table->data, $data);
+		}
+		print_table ($table);
+	}
+}
+
+
 
 exit;
 

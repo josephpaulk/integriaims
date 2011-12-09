@@ -432,6 +432,8 @@ function task_activity_graph ($id_task){
 	echo vbar_graph ($config['flash_charts'], $chart3, 650, 300, $colors, $legend, $xaxisname, $yaxisname, "", "", $config['font'], $config['fontsize']);
 }
 
+
+
 function histogram_2values($valuea, $valueb, $labela = "a", $labelb = "b", $mode = 1, $width = 200, $height = 30, $title = "") {
 	global $config;
 	

@@ -13,40 +13,6 @@
 $ttl = 1;
 $homeurl = '';
 
-/*function include_graphs_dependencies($home_url = '', $serialize_ttl = 1) {
-	global $ttl;
-	global $homeurl;
-	
-	$ttl = $serialize_ttl;
-	$homeurl = $home_url;
-	
-	include_once($homeurl . 'include/functions.php');
-	include_once($homeurl . 'include/functions_html.php');
-	
-	include_once($homeurl . 'include/graphs/functions_fsgraph.php');
-	include_once($homeurl . 'include/graphs/functions_gd.php');
-	include_once($homeurl . 'include/graphs/functions_utils.php');
-}*/
-/*
-// If is called from index
-if(file_exists('include/functions.php')) {
-	include_once('include/functions.php');
-	include_once('include/graphs/functions_fsgraph.php');
-	include_once('include/graphs/functions_utils.php');
-} // If is called through url
-else if(file_exists('../functions.php')) {
-	include_once('../functions.php');
-	include_once('../functions_html.php');
-	include_once('functions_fsgraph.php');
-	include_once('functions_gd.php');
-	include_once('functions_utils.php');
-}
-
-
-include_once('functions_fsgraph.php');
-include_once('functions_utils.php');
-*/
-
 if (isset($_GET['homeurl'])) {
 	$homeurl = $_GET['homeurl']; 	
 }
@@ -116,7 +82,7 @@ function histogram($chart_data, $width, $height, $font, $max, $title, $mode, $tt
 
 	$id_graph = serialize_in_temp($graph, null, $ttl);
 		
-	return "<img src='include/graphs/functions_gd.php?graph_type=histogram&ttl=".$ttl."&id_graph=".$id_graph."'>";
+	return "<img title='".$graph["title"]."' src='include/graphs/functions_gd.php?graph_type=histogram&ttl=".$ttl."&id_graph=".$id_graph."'>";
 }
 
 function progressbar($progress, $width, $height, $title, $font, $mode = 1, 

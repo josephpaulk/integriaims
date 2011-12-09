@@ -87,6 +87,7 @@ function gd_histogram ($width, $height, $mode, $data, $max_value, $font, $title,
 	$green = ImageColorAllocate($image,0,120,0);
 	$magent = ImageColorAllocate($image,179,0,255);
 	$yellow = ImageColorAllocate($image,204,255,0);
+	$grey = ImageColorAllocate($image,120,120,120);
 
 	$colors = array($blue, $red, $green, $magent, $yellow);
 	
@@ -128,18 +129,6 @@ function gd_histogram ($width, $height, $mode, $data, $max_value, $font, $title,
 		}
 	}
 	
-	if ($mode == 0) { // With strips
-		// Draw limits
-		$risk_low =  ($config_risk_low / $size_per) + 40;
-		$risk_med =  ($config_risk_med / $size_per) + 40;
-		$risk_high =  ($config_risk_high / $size_per) + 40;
-		imageline($image, $risk_low, 0, $risk_low , $height, $grey);
-		imageline($image, $risk_med , 0, $risk_med  , $height, $grey);
-		imageline($image, $risk_high, 0, $risk_high , $height, $grey);
-		ImageTTFText($image, $fontsize, 0, $risk_low-20, $height, $grey, $font, "Low");
-		ImageTTFText($image, $fontsize, 0, $risk_med-20, $height, $grey, $font, "Med.");
-		ImageTTFText($image, $fontsize, 0, $risk_high-25, $height, $grey, $font, "High");
-	}
 	imagePNG($image);
 	imagedestroy($image);
 }

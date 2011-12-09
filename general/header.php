@@ -15,6 +15,9 @@
 
 check_login();
 
+// We need to strip HTML entities if we want to use in a sql search
+$search_string = safe_output (get_parameter ("search_string",""));
+
 // I prefer to make the layout with tables here, it's more exact and 
 // doesnt depend of CSS interpretation. Please DO NOT TOUCH.
 
@@ -58,7 +61,7 @@ echo '</td><td style="padding: 0px; margin: 0px;">';
 
 echo "<form method=post action='index.php?sec2=operation/search'>";
 echo "&nbsp;";
-echo "<input type=text name='search_string' size=15 value=''>";
+echo "<input type=text name='search_string' size=15 value='$search_string'>";
 echo "&nbsp;";
 echo "<input class='sub search' type=submit name='submit' size=18 value='Search'>";
 echo '</form>';
