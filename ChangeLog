@@ -1,3 +1,21 @@
+2011-12-10  Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* integria_demo.sql: fixed the auth method by default mysql in the demo.
+	
+	Fixes: #3456757
+
+2011-12-10  Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/functions_ui.php: fixed the includes when it is call in other
+	file distint to index.php.
+	
+	* include/api.php: fixed before the pass is used to check api pass and the
+	user pass, now it is diferent.
+	 
+	* integria_demo.sql: fixed error to load the default data.
+	
+	* integria_db.sql: fixed some small warnings.
+
 2011-12-09  Sancho Lerena <slerena@artica.es>
 
 	* operation/search.php

@@ -85,7 +85,7 @@ CREATE TABLE `ttask` (
   `hours` int unsigned NOT NULL DEFAULT 0,
   `estimated_cost` float (9,2) unsigned NOT NULL DEFAULT 0.0,
   `id_group` int(10) NOT NULL default '0',
-  `periodicity` enum ('none', 'weekly', 'monthly', 'year', '15days', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none',
+  `periodicity` enum ('none', 'weekly', 'monthly', 'year', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none',
   PRIMARY KEY  (`id`),
   KEY `itask_idx_1` (`id_project`),
   FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
@@ -116,7 +116,7 @@ CREATE TABLE `tattachment` (
 CREATE TABLE `tconfig` (
   `id_config` int(10) unsigned NOT NULL auto_increment,
   `token` varchar(100) NOT NULL default '',
-  `value` text NOT NULL default '',
+  `value` text NOT NULL,
   PRIMARY KEY  (`id_config`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -232,7 +232,7 @@ CREATE TABLE `tincident_track` (
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_user` varchar(60) NOT NULL default '',
   `id_aditional` int(10) unsigned NOT NULL default '0',
-  `description` text NOT NULL default '',
+  `description` text NOT NULL,
   PRIMARY KEY  (`id_it`),
   KEY `tit_idx_1` (`id_incident`),
   FOREIGN KEY (`id_incident`) REFERENCES tincidencia(`id_incidencia`)
@@ -631,7 +631,7 @@ CREATE TABLE `tcustom_search` (
   `name` varchar(60) NOT NULL,
   `section` varchar(20) NOT NULL,
   `id_user` varchar(60) NOT NULL,
-  `form_values` text NOT NULL default '',
+  `form_values` text NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE (`id_user`, `name`, `section`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
@@ -641,10 +641,10 @@ CREATE TABLE `tcustom_search` (
 CREATE TABLE `tdownload` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(250) NOT NULL default '',
-  `location` text NOT NULL default '', 
+  `location` text NOT NULL, 
   `date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `description` text NOT NULL default '', 
-  `tag` text NOT NULL default '',
+  `description` text NOT NULL, 
+  `tag` text NOT NULL,
   `id_category` mediumint(8) unsigned NOT NULL default 0,
   `id_user` varchar(60) NOT NULL,
   PRIMARY KEY  (`id`)
@@ -676,7 +676,7 @@ CREATE TABLE `tdownload_tracking` (
 CREATE TABLE `tnewsboard` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `title` varchar(250) NOT NULL default '',
-  `content` text NOT NULL default '', 
+  `content` text NOT NULL, 
   `date` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

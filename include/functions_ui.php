@@ -15,9 +15,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 
-include_once( "include/functions.php");
-include_once ("include/functions_groups.php");
-include_once ("include/functions_html.php");
+include_once ("functions.php");
+include_once ("functions_groups.php");
+include_once ("functions_html.php");
 
 /**
  * Powerful debug function that also shows a backtrace.

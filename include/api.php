@@ -29,6 +29,7 @@ $params = get_parameter('params', '');
 $token = get_parameter('token', ',');
 $user = get_parameter('user', false);
 $pass = get_parameter('pass', '');
+$user_pass = get_parameter('user_pass', '');
 $return_type = get_parameter('return_type', 'csv');
 
 $api_password = get_db_value_filter('value', 'tconfig', array('token' => 'api_password'));
@@ -152,7 +153,7 @@ switch ($op){
 		break;
 	}
 	case "validate_user":
-		echo api_validate_user ($return_type, $user, $pass);
+		echo api_validate_user ($return_type, $user, $user_pass);
 		break;
 	default: 
 	{
