@@ -34,23 +34,26 @@ echo "<div id='upload_control'>";
 
 $table->width = '100%';
 $table->data = array ();
-$table->data[0][0] = print_input_file ('userfile', 40, false, '', true, __('File'));
-$table->data[1][0] = "<span style='font-size: 10px'>". __("Please note that you cannot upload .php or .pl files, as well other source code formats. Please compress that files prior to upload (using zip or gz)"). "</span>";
 
-$table->data[2][0] = print_textarea ('file_description', 8, 1, '', '', true, __('Description'));
+
+$table->data[0][0] = "<span style='font-size: 10px'>". __("Please note that you cannot upload .php or .pl files, as well other source code formats. Please compress that files prior to upload (using zip or gz)"). "</span>";
+
+$table->data[1][0] = print_textarea ('file_description', 8, 1, '', '', true, __('Description'));
 
 if (defined ('AJAX'))
 	$action = 'ajax.php?page=operation/incidents/incident_detail';
 else
 	$action = 'index.php?sec=incidents&sec2=operation/incidents/incident_detail';
-echo '<form method="post" action="'.$action.'" id="form-add-file" enctype="multipart/form-data">';
-print_table ($table);
 
-echo '<div class="button" style="width: '.$table->width.'">';
-print_submit_button (__('Upload'), 'upload', false, 'class="sub next"');
-echo '</div>';
-print_input_hidden ('id', $id);
-print_input_hidden ('upload_file', 1);
-echo "</form>";
+$into_form = print_table ($table, true);
+$into_form .= '<div class="button" style="width: '.$table->width.'">';
+$into_form .= print_button (__('Upload'), 'upload', false, '', 'class="sub next"', true);
+$into_form .= '</div>';
+$into_form .= print_input_hidden ('id', $id, true);
+$into_form .= print_input_hidden ('upload_file', 1, true);
+
+// Important: Set id 'form-add-file' to form. It's used from ajax control
+print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', 'button-upload');
+
 echo '</div>';
 ?>

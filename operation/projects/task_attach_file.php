@@ -41,13 +41,20 @@ echo "<div id='upload_control'>";
 echo "<table cellpadding=4 cellspacing=4 border=0 width='700' class='databox_color'>";
 echo "<tr>";
 echo '<td class="datos">'.__('Filename').'</td><td class="datos">';
-echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/task_files&id_task=$id_task&id_project=$id_project&operation=attachfile' enctype='multipart/form-data'>";
-echo '<input type="file" name="userfile" value="userfile" class="sub" size="40">';
-echo '<tr><td class="datos2">'.__('Description').'</td><td class="datos2" colspan=3><input type="text" name="file_description" size=47>';
-echo "</td></tr></table>";
-echo "<div class=button style='width:700px'>";
-echo '<input type="submit" name="upload" value="'.__('Upload').'" class="sub next">';
-echo "</form>";
+
+$action = "index.php?sec=projects&sec2=operation/projects/task_files&id_task=$id_task&id_project=$id_project&operation=attachfile";
+
+$inti_form = '';
+//~ $into_form .=  '<input type="file" name="userfile" value="userfile" class="sub" size="40">';
+$into_form .=  '<tr><td class="datos2">'.__('Description').'</td><td class="datos2" colspan=3><input type="text" name="file_description" size=47>';
+$into_form .=  "</td></tr></table>";
+$into_form .=  "<div class=button style='width:700px'>";
+$into_form .=  '<input type="button" id="button-upload" name="upload" value="'.__('Upload').'" class="sub next">';
+$into_form .= "</form>";
+
+// Important: Set id 'form-add-file' to form. It's used from ajax control
+print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', 'button-upload');
+
 echo "</div>";
 echo '</div>';
 

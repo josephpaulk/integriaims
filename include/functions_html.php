@@ -343,6 +343,61 @@ function print_input_file ($name, $size, $disabled = false, $attributes = '', $r
 }
 
 /**
+ * Render an input file element with progress bar system using jquery
+ * This function uses jQuery, the library AXuploader and the file include/file_uploader.php
+ *
+ * @param string form action where the uploading will be processed and copied the file from temp to destiny.
+ * @param string code to print into the form
+ * @param string attributes extra to form
+ * @param string default button extra class
+ * @param string button id of the submit button
+ * @param bool Whether to return an output string or echo now (optional, echo by default).
+ */
+function print_input_file_progress($form_action, $into_form = '', $attr = '', $extra_button_class = '', $button = false,  $return = false) {
+	// Layer to the input control through jquery
+	$output = "<div class='upfile'></div>";
+	
+	// Form to fill and submit from javascript
+	$output .= "<form method='post' $attr class='upfile_form' action='$form_action' enctype='multipart/form-data'>";
+	$output .= "<input type='hidden' id='upfile' name='upfile' value=''>";
+	$output .= $into_form;
+	$output .= "</form>";
+	
+	$output .= "<script type='text/javascript'>";
+
+	$output .= "$(document).ready(function(){";	
+		$output .= "$('.upfile').axuploader({";
+			$output .= "url:'include/file_uploader.php',";
+			$output .= "finish:function(x,files){";
+				$output .= "$('#upfile').val(files[0]);";
+				$output .= "$('.upfile_form').submit();";
+			$output .=  "},";
+			$output .= "enable:true,";
+			$output .= "showSize:'Kb',";
+			$output .= "remotePath:function(){";
+				$output .= "return '".sys_get_temp_dir()."/';";
+			$output .= "}";
+		$output .= "});";
+				
+		$output .= "$('.ax-clear').hide();";
+		$output .= "$('#ax-table-header').hide();";
+		$output .= "$('.ax-uploadall').val('".__('Upload')."');";
+		$output .= "$('.ax-uploadall').addClass('$extra_button_class');";
+		if($button !== false) {
+			$output .= "$('.ax-uploadall').hide();";
+			$output .= "$('#$button').click(function() { $('.ax-uploadall').trigger('click'); });";
+		}
+	$output .= "});";
+	$output .= "</script>";
+
+	if ($return) {
+		return $output;
+	}
+	
+	echo $output;
+}
+
+/**
  * Render an input password element.
  *
  * @param string Input name.

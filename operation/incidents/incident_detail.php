@@ -408,17 +408,18 @@ if ($id) {
 	}
 
 	// Upload file
-	$upload_file = (bool) get_parameter ('upload_file');
-	if (give_acl ($config['id_user'], $id_grupo, "IW") && $upload_file) {
+	$filename = get_parameter ('upfile', false);
+	if (give_acl ($config['id_user'], $id_grupo, "IW") && (bool)$filename) {
 		$result_msg = '<h3 class="error">'.__('No file was attached').'</h3>';
 		/* if file */
-		if ($_FILES['userfile']['name'] != "" && $_FILES['userfile']['error'] == 0) {
+		if ($filename != "") {
 			$file_description = get_parameter ("file_description",
 					__('No description available'));
 			
 			// Insert into database
-			$filename= $_FILES['userfile']['name'];
-			$filesize = $_FILES['userfile']['size'];
+			//~ $filename = $_FILES['userfile']['name'];
+			$file_temp = sys_get_temp_dir()."/$filename";
+			$filesize = filesize($file_temp); // In bytes
 
 			$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
 					filename, description, size)
@@ -436,31 +437,32 @@ if ($id) {
 			}
 			
 			// Copy file to directory and change name
-			$short_filename = $filename;
-			$filename = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
+			$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
 			
-			if (! copy ($_FILES['userfile']['tmp_name'], $filename)) {
+			if (! copy ($file_temp, $file_target)) {
 				$result_msg = '<h3 class="error">'.__('File cannot be saved. Please contact Integria administrator about this error').'</h3>';
 				$sql = sprintf ('DELETE FROM tattachment
 						WHERE id_attachment = %d', $id_attachment);
 				process_sql ($sql);
 			} else {
 				// Delete temporal file
-				unlink ($_FILES['userfile']['tmp_name']);
+				unlink ($file_temp);
 
-	                        // Adding a WU noticing about this
-	                        $nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $short_filename;
-         	                $public = 1;
+	            // Adding a WU noticing about this
+	            $nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $filename;
+         	    $public = 1;
 				$timestamp = print_mysql_timestamp();
 				$timeused = "0.05";
-	                        $sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public) VALUES ("%s", %.2f, "%s", "%s", %d)', $timestamp, $timeused, $config['id_user'], $nota, $public);
+	            $sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public) VALUES ("%s", %.2f, "%s", "%s", %d)', $timestamp, $timeused, $config['id_user'], $nota, $public);
 
-	                        $id_workunit = process_sql ($sql, "insert_id");
+	            $id_workunit = process_sql ($sql, "insert_id");
 				$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES (%d, %d)', $id, $id_workunit);
 				process_sql ($sql);
 			}
 		}  else {
-			switch ($_FILES['userfile']['error']) {
+			//~ $error = $_FILES['userfile']['error'];
+			$error = 4;
+			switch ($error) {
 			case 1:
 				$result_msg = '<h3 class="error">'.__('File is too big').'</h3>';
 				break;

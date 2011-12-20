@@ -27,22 +27,21 @@ if (! dame_admin ($config["id_user"])) {
 
 // Upload file
 if (isset($_GET["upload_file"])) {
-
-	if (isset($_FILES["userfile"]) && ( $_FILES['userfile']['name'] != "" )){ //if file
-		$tipo = $_FILES['userfile']['type'];
-
-		$filename= $_FILES['userfile']['name'];
-		$filesize = $_FILES['userfile']['size'];
+	
+	if (isset($_POST['upfile']) && ( $_POST['upfile'] != "" )){ //if file
+		$filename= $_POST['upfile'];
+		$file_tmp = sys_get_temp_dir().'/'.$filename;
 		$directory = get_parameter ("directory","");
 
 		// Copy file to directory and change name
-		$nombre_archivo = $config["homedir"]."/".$directory."/".$filename;
-		if (!(copy($_FILES['userfile']['tmp_name'], $nombre_archivo ))){
-			echo "<h3 class=error>".__("attach_error")."</h3>";
+		$file_target = $config["homedir"]."/".$directory."/".$filename;
+		if (!(copy($file_tmp, $file_target))){
+			echo "<h3 class=error>".__("Could not be attached")."</h3>";
 		} else {
-			echo "<h3 class=suc>".__("attach_success")."</h3>";
 			// Delete temporal file
-			unlink ($_FILES['userfile']['tmp_name']);
+			echo "<h3 class=suc>".__("Successfully attached")."</h3>";
+			$location = $file_target;
+			unlink ($file_tmp);
 		}
 		
 	}
@@ -86,7 +85,7 @@ if (preg_match("/^\//", $current_directory))
 if (preg_match("/^manager/", $current_directory))
 	$current_directory = "images";
 
-echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file' enctype='multipart/form-data'>";
+//~ echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file' enctype='multipart/form-data'>";
 echo "<table cellpadding='4' cellspacing='4' width='550' class='databox'>";
 
 echo "<tr><td class='datos'>";
@@ -100,16 +99,19 @@ $available_directory["attachment/downloads"] = "attachment/downloads";
 $available_directory[$current_directory] = $current_directory;
 
 print_select ($available_directory, 'directory', $current_directory, '', '', '',  false, false);
-echo "&nbsp;&nbsp;<input type=submit value='".__("Go")."'>";
+echo "&nbsp;&nbsp;<input type=submit class='sub next' value='".__("Go")."'>";
 
 if (is_writable($current_directory)) {
 	echo "<tr><td class='datos'>";
 	echo __("Upload new file");
-	echo "<td class='datos'>";
-	echo "<input type='file' size=25 name='userfile' value='userfile'>";
-	echo "&nbsp;&nbsp;";
-	echo "<input type=submit value='".__("Upload")."'>";
-	echo "</form>";
+	echo "<td class='datos'><br>";
+	$target_directory = 'attachment/downloads';
+	$action = 'index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file';
+	
+	$into_form = "<input type='hidden' name='directory' value='$target_directory'>";
+
+	print_input_file_progress($action,$into_form,'','sub next',false);
+
 	echo "</table>";
 } else {
 	echo "</form>";
@@ -119,7 +121,6 @@ if (is_writable($current_directory)) {
 	echo __('Please check that current directory has write rights for HTTP server');
 	echo "</p>";
 }
-
 
 echo "<h2>".__("Current directory"). " : ".$current_directory . " <a href='index.php?manager=filemgr&directory=$current_directory'><img src='images/arrow_refresh.png' border=0></a></h2>";
 // Upload form
@@ -238,7 +239,7 @@ echo "<h2>".__("Current directory"). " : ".$current_directory . " <a href='index
 			echo "&nbsp;&nbsp;";
 			echo "<input type=text size=15 name='newdir'>";
 			echo "&nbsp;&nbsp;";
-			echo "<input type=submit value='Make dir'>";
+			echo "<input type=submit value='Make dir' class='sub next'>";
 			echo "</form>";
 		}
 	}

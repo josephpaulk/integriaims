@@ -54,30 +54,32 @@ if ($id_project == -1) {
 // Upload file
 // -----------
 if ($operation == "attachfile"){
-	if ( $_FILES['userfile']['name'] != "" ){ //if file
-		$tipo = $_FILES['userfile']['type'];
+	$filename = get_parameter ('upfile', false);
+
+	if ((bool)$filename){ //if file
 		if (isset($_POST["file_description"]))
 			$description = $_POST["file_description"];
 		else
 			$description = "No description available";
+			
 		// Insert into database
-		$filename= $_FILES['userfile']['name'];
-		$filesize = $_FILES['userfile']['size'];
-
+		$file_temp = sys_get_temp_dir()."/$filename";
+		$filesize = filesize($file_temp);
+		
 		$sql = " INSERT INTO tattachment (id_task, id_usuario, filename, description, size ) VALUES (".$id_task.", '".$id_user." ','".$filename."','".$description."',".$filesize.") ";
 		$id_attachment = process_sql ($sql, 'insert_id');
 		//project_tracking ( $id_inc, $id_usuario, 3);
 		$result_output = "<h3 class='suc'>".__('File added')."</h3>";
 		// Copy file to directory and change name
-		$nombre_archivo = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
+		$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
 		
-		if (! copy($_FILES['userfile']['tmp_name'], $nombre_archivo )) {
+		if (! copy($file_temp, $file_target)) {
 				$result_output = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
 			$sql = "DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
 			process_sql ($sql);
 		} else {
 			// Delete temporal file
-			unlink ($_FILES['userfile']['tmp_name']);
+			unlink ($file_temp);
 		}
 	}
 }

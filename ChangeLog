@@ -1,3 +1,17 @@
+2011-12-20  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_html.php
+	include/styles/integria.css
+	include/js/jquery.axuploader.js
+	include/file_uploader.php
+	operation/incidents/incident_detail.php
+	operation/incidents/incident_attach_file.php
+	operation/projects/task_files.php
+	operation/projects/task_attach_file.php
+	operation/download/browse.php
+	godmode/setup/filemgr.php: Added to all the file upload control
+	a progress bar using an external jquery library modify by us
+
 2011-12-10  Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* integria_demo.sql: fixed the auth method by default mysql in the demo.

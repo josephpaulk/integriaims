@@ -1164,3 +1164,16 @@ span.ac_extra_field strong {
 	background-position: right center; 
 	-moz-background-size: auto auto;
 }
+
+/* Styles for files progress bars */
+
+.ax-file-list {
+	padding-left: 18px;
+	background: url('../../images/attach.png') left no-repeat;
+}
+
+.ax-progress-div {
+	background-color: green;
+	color: black;
+	text-align: center;
+}
