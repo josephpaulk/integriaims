@@ -1,3 +1,8 @@
+2011-12-23  Sancho Lerena <slerena@artica.es>
+
+	* index.php: Add missing javascript for file uploads in the 
+	index page.
+
 2011-12-20  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_html.php

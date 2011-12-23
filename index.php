@@ -111,6 +111,7 @@ echo "<title>" . $config["sitename"] . "</title>";
 <script type="text/javascript" src="include/js/jquery.ui.dialog.js"></script>
 <script type="text/javascript" src="include/js/jquery.form.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.textarearesizer.js"></script>
+<script type="text/javascript" src="include/js/jquery.axuploader.js"></script>
 <script type="text/javascript">
 
 var lang = {
