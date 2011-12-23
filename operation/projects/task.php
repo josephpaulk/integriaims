@@ -20,6 +20,7 @@ global $config;
 check_login ();
 
 include_once ("include/functions_graph.php");
+include_once ("include/functions_tasks.php");
 
 $id_project = (int) get_parameter ('id_project');
 
@@ -183,6 +184,7 @@ function show_task_row ($table, $id_project, $task, $level) {
 	// Estimation
 	$imghelp = "Estimated hours = ".$task["hours"];
 	$taskhours = get_task_workunit_hours ($task["id"]);
+
 	$imghelp .= ", Worked hours = $taskhours";
 	$a = round ($task["hours"]);
 	$b = round ($taskhours);
@@ -193,15 +195,20 @@ function show_task_row ($table, $id_project, $task, $level) {
 	else
 		$data[3] = '--';
 
-	// Time used
-	$timeuser = get_task_workunit_hours ( $task["id"]);
-	$data[4] = $timeuser ? $timeuser : '--';
+	// Time used on all child tasks + this task
+	$recursive_timeused = task_duration_recursive ($task["id"]);
 	
+	if ($taskhours == 0)
+		$data[4] = "--";
+	elseif ($taskhours == $recursive_timeused)
+		$data[4] = $taskhours;
+	else
+		$data[4] = $taskhours . "<span title='Subtasks WU/HR'>( ".$recursive_timeused. " )</span>";
+		
 	$wu_incidents = get_incident_task_workunit_hours ($task["id"]);
-
 	
 	if ($wu_incidents > 0)
-	$data[4] .= " (+ $wu_incidents) ";
+	$data[4] .= "($wu_incidents) ";
 
 	// Costs (client / total)
 	$costdata = format_numeric (task_workunit_cost ($task["id"], 1));

@@ -20,6 +20,7 @@ global $config;
 check_login ();
 
 include_once ("include/functions_graph.php");
+include_once ("include/functions_tasks.php");
 
 $id_project = (int) get_parameter ('id_project');
 
@@ -72,7 +73,14 @@ function render_task ($task, $parent = 0){
 		echo $task["name"];
 	
 		echo "<td><b>";
-        echo get_task_workunit_hours ($task["id"]);
+        $task_hr = get_task_workunit_hours ($task["id"]);
+		echo $task_hr;
+        
+        $subtasks = task_duration_recursive ($task["id"]);
+		if ($subtasks > $task_hr)
+			echo "<span title='Subtasks WU/Hr'> ($subtasks)</span>";
+
+        
 		echo "</b> / ".$task["hours"];
 	
 		echo "<td>";

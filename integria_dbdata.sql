@@ -15,7 +15,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('language_code','en'),
 ('block_size','25'),
 ('db_scheme_version','3.0-dev'),
-('db_scheme_build','ID110506'),
+('db_scheme_build','ID111231'),
 ('date_format', 'F j, Y, g:i a'),
 ('currency', 'eu'),
 ('sitename', 'Integria IMS - the ITIL Management System'),
@@ -84,11 +84,11 @@ INSERT INTO tincident_origin (name) VALUES ('User report'), ('Customer'), ('Inte
 
 INSERT INTO `trole` VALUES (1,'Project manager','',125),(2,'Systems engineer','',40),(3,'Junior consultant','',50),(4,'Junior programmer','',45),(5,'Senior programmer','',65),(6,'Analist','',75),(7,'Senior consultant','',75),(8,'Support engineer','',30);
 
-INSERT INTO `tprofile` VALUES (1,'Project Participant',1,1,0,0,0,0,1,1,0,1,0,0,0,0,1,0,0,1,0,0);
-INSERT INTO `tprofile` VALUES (2,'Project Manager',    1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0);
-INSERT INTO `tprofile` VALUES (3,'Incident Manager',   1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1);
-INSERT INTO `tprofile` VALUES (4,'Incident Operator',  1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,1,0,0);
-INSERT INTO `tprofile` VALUES (5,'Global Manager',     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+INSERT INTO `tprofile` VALUES (1,'Project Participant',1,1,0,0,0,0,1,1,0,1,0,0,0,0,1,0,0,1,0,0,1,1,0);
+INSERT INTO `tprofile` VALUES (2,'Project Manager',    1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1);
+INSERT INTO `tprofile` VALUES (3,'Incident Manager',   1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1,1,0,0);
+INSERT INTO `tprofile` VALUES (4,'Incident Operator',  1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0);
+INSERT INTO `tprofile` VALUES (5,'Global Manager',     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 INSERT INTO `tusuario_perfil` VALUES (2,'admin',5,1,'admin');
 

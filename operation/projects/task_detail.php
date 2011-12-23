@@ -271,11 +271,15 @@ $table->data[4][0] = print_select (get_periodicities (), 'periodicity',
 $table->data[5][0] = print_input_text ('hours', $hours, '', 5, 5, true, __('Estimated hours'));
 
 if ($id_task != -1) {
-	$table->data[5][1] = print_label (__('Worked hours'), '', '', true, get_task_workunit_hours ($id_task).' '.__('Hours'));
+	$table->data[5][1] = print_label (__('Worked hours'), '', '', true, get_task_workunit_hours ($id_task).' '.__('Hrs'));
+
+	$subtasks = task_duration_recursive ($id_task);
+	if ($subtasks > 0)
+		$table->data[5][1] .= "<span title='Subtasks WU/Hr'> ($subtasks)</span>";
 
 	$incident_wu = get_incident_task_workunit_hours ($id_task);
 	if ($incident_wu > 0)
-		$table->data[5][1] .= " ( + $incident_wu )";
+		$table->data[5][1] .= "<span title='Incident'>($incident_wu)</span>";
 }
 
 $table->data[6][0] = print_input_text ('estimated_cost', $estimated_cost, '', 7,

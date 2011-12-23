@@ -31,4 +31,26 @@ function set_task_completion ($id_task) {
 	process_sql_update ('ttask', array('completion' => $percentage_completed), array('id' => $id_task));
 }
 
+/**
+* Return total hours assigned to task and subtasks (recursive)
+*
+* $id_task	integer 	ID of task
+**/
+
+function task_duration_recursive ($id_task){
+	
+	// Get all childs for this task
+	$tasks = get_db_all_rows_sql ("SELECT id FROM ttask WHERE id_parent_task = '$id_task'");
+	if ($tasks === false) {
+		// No parents ?, break recursion and give WU/hr for this task.
+		$tasks = array();
+	}
+	
+	$sum = 0;
+	foreach ($tasks as $task) {
+		$sum += task_duration_recursive ($task[id]);
+	}
+	return $sum + get_task_workunit_hours ($id_task);
+}
+
 ?>

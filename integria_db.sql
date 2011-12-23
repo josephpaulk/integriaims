@@ -757,6 +757,9 @@ CREATE TABLE  `tprofile` (
   `vr` tinyint(1) NOT NULL default '0',
   `vw` tinyint(1) NOT NULL default '0',
   `vm` tinyint(1) NOT NULL default '0',
+  `wr` tinyint(1) NOT NULL default '0',
+  `ww` tinyint(1) NOT NULL default '0',
+  `wm` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

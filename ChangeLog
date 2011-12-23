@@ -1,5 +1,15 @@
 2011-12-23  Sancho Lerena <slerena@artica.es>
 
+	* include/functions_tasks.php: Add function to get recursive
+	task WU/hr.
+
+	* integria_db.sql,
+	integria_dbdata.sql: Suppor for profiles with WIKI perms.
+
+	* operation/projects/csvexport.php
+	operation/projects/task.php
+	operation/projects/task_detail.php: Recursive task/WU/HR shown.
+
 	* index.php: Add missing javascript for file uploads in the 
 	index page.
 
