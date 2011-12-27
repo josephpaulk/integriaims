@@ -521,11 +521,11 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-INSERT INTO `tprofile` VALUES (1,'Project Participant',1,1,0,0,0,0,1,1,0,1,0,0,0,0,1,0,0,1,0,0);
-INSERT INTO `tprofile` VALUES (2,'Project Manager',    1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0);
-INSERT INTO `tprofile` VALUES (3,'Incident Manager',   1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1);
-INSERT INTO `tprofile` VALUES (4,'Incident Operator',  1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,1,0,0);
-INSERT INTO `tprofile` VALUES (5,'Global Manager',     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+INSERT INTO `tprofile` VALUES (1,'Project Participant',1,1,0,0,0,0,1,1,0,1,0,0,0,0,1,0,0,1,0,0,1,1,1);
+INSERT INTO `tprofile` VALUES (2,'Project Manager',    1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1);
+INSERT INTO `tprofile` VALUES (3,'Incident Manager',   1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1,1,1,1);
+INSERT INTO `tprofile` VALUES (4,'Incident Operator',  1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,1,0,0,1,1,1);
+INSERT INTO `tprofile` VALUES (5,'Global Manager',     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 INSERT INTO `tusuario_perfil` VALUES (2,'admin',5,1,'admin');
 

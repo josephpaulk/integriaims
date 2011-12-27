@@ -1,5 +1,11 @@
 2011-12-27 Miguel de Dios  <miguel.dedios@artica.es>
 
+	* integria_demo.sql: added in the table "tprofile" the default values for
+	the wiki ACL, the default values need to more detail but at the moment it
+	is a good business the values.
+
+2011-12-27 Miguel de Dios  <miguel.dedios@artica.es>
+
 	* integria_demo.sql: fixed tiny bug in the filled of table "tconfig".
 
 2011-12-27  Sancho Lerena <slerena@artica.es>
