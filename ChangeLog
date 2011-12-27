@@ -1,3 +1,22 @@
+2011-12-27  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_db.php: Added get_company_roles().
+	
+	* operation/search.php: Improved search with companies and contacts.
+	
+	* operation/side_menu.php: Moved reports to a new own block.
+	
+	* operation/contracts/contract_detail.php,
+	operation/contacts/contact_detail.php
+	operation/companies/company_detail.php: Improved usability, added
+	quick links and "add new" operations between them.
+	
+	* operation/inventories/inventory_reports.php
+	operation/inventories/inventory_reports_detail.php: Added new HTML 
+	and PDF render/view.
+	
+	* images/company.png: New icon for "companies".
+
 2011-12-23  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_tasks.php: Add function to get recursive

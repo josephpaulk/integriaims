@@ -26,6 +26,7 @@ if (! dame_admin ($config['id_user'])) {
 
 $id = (int) get_parameter ('id');
 $render = get_parameter ("render",0);
+$render_html = get_parameter ("render_html",0);
 
 if ($render == 1){
 	$report = get_db_row ('tinventory_reports', 'id', $id);
@@ -42,17 +43,50 @@ if ($render == 1){
 	$rows = get_db_all_rows_sql (clean_output ($report['sql']));
 	if ($rows === false)
 		return;
-	echo implode (',', array_keys ($rows[0]))."\n";
+	// Header
+	echo safe_output (implode (',', array_keys ($rows[0])))."\n";
+	
+	// Item / data
 	foreach ($rows as $row) {
-		echo implode (',', $row)."\n";
+		echo safe_output (implode (',', $row))."\n";
 	}
     exit;
 }
 
+if ($render_html == 1){
+	$report = get_db_row ('tinventory_reports', 'id', $id);
+	if ($report === false)
+		return;
+	
+	echo "<h1>".$report['name'].' - '.date ("Y-m-d H-i")."</h1>";
+
+	$config['mysql_result_type'] = MYSQL_ASSOC;
+	$rows = get_db_all_rows_sql (clean_output ($report['sql']));
+	if ($rows === false)
+		return;
+	
+	// Get the header
+	echo "<table width=100% cellpadding=4 cellspacing=4>";
+	echo "<tr>";
+	foreach (array_keys ($rows[0]) as $header_item){
+		echo "<th>".$header_item."</th>";
+	}
+	echo "</tr>";
+	
+	// Get the data row
+	foreach ($rows as $row) {
+		echo "<tr>";
+		foreach ($row as $item) {
+			echo "<td>$item</td>";
+		}
+		echo "</tr>";
+	}
+	echo "</table>";
+    return;
+}
+
 $create = (bool) get_parameter ('create_report');
 $update = (bool) get_parameter ('update_report');
-$delete = (bool) get_parameter ('delete_report');
-
 $name = (string) get_parameter ('name');
 $sql = (string) get_parameter ('sql');
 

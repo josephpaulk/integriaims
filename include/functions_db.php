@@ -1482,6 +1482,23 @@ function get_companies ($only_names = true) {
 	return $companies;
 }
 
+function get_company_roles ($only_names = true) {
+	$companies = get_db_all_rows_in_table ('tcompany_role');
+	if ($companies === false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($companies as $company) {
+			$retval[$company['id']] = $company['name'];
+		}
+		return $retval;
+	}
+	
+	return $companies;
+}
+
+
 function get_contract ($id_contract) {
 	return get_db_row ('tcontract', 'id', $id_contract);
 }

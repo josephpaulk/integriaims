@@ -249,6 +249,8 @@ if ($id) {
 		}
 	}
 
+	// CONTRACT LISTING
+
 	elseif ($op == "contracts") {
 
 		$sql = "SELECT * FROM tcontract WHERE id_company = $id ORDER BY name";
@@ -293,8 +295,18 @@ if ($id) {
 				array_push ($table->data, $data);
 			}	
 			print_table ($table);
+			
+			echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contracts/contract_detail&id_company='.$contract["id_company"].'">';
+			echo '<div class="button" style="width: '.$table->width.'">';
+			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+			print_input_hidden ('new_contract', 1);
+			echo '</div>';
+			echo '</form>';
+			
 		}
 	}
+
+	// CONTACT LISTING
 
 	elseif ($op == "contacts") {
 		$name = get_db_value ('name', 'tcompany', 'id', $id);
@@ -304,12 +316,11 @@ if ($id) {
 		$table->width = '90%';
 		$table->head = array ();
 		$table->head[0] = __('Contact');
-		$table->head[1] = __('Position');
-		$table->head[2] = __('Details');
-		$table->head[3] = __('Edit');
+		$table->head[1] = __('Email');
+		$table->head[2] = __('Position');
+		$table->head[3] = __('Details');
+		
 		$table->size = array ();
-		$table->align[2] = 'center';
-		$table->align[3] = 'center';
 		$table->data = array ();
 		
 		$contacts = get_db_all_rows_sql ("SELECT * FROM tcompany_contact WHERE id_company = $id");
@@ -319,19 +330,26 @@ if ($id) {
 
 		foreach ($contacts as $contact) {
 			$data = array ();
-			$data[0] = $contact['fullname'];
+			$data[0] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'">'.$contact['fullname']."</a>";
+			$data[1] = $contact['email'];
 			$details = '';
 			if ($contact['phone'] != '')
 				$details .= '<strong>'.__('Phone number').'</strong>: '.$contact['phone'].'<br />';
 			if ($contact['mobile'] != '')
 				$details .= '<strong>'.__('Mobile phone').'</strong>: '.$contact['mobile'].'<br />';
-			$data[1] = $contact['position'];
-			$data[2] = print_help_tip ($details, true, 'tip_view');
-			$data[3] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'">'.
-					'<img src="images/setup.gif" /></a>';
-			array_push ($table->data, $data);
+			$data[2] = $contact['position'];
+			$data[3] = print_help_tip ($details, true, 'tip_view');
+			array_push ($table->data, $data);			
 		}
 		print_table ($table);
+		
+		echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id_company='.$id.'">';
+		echo '<div class="button" style="width: '.$table->width.'">';
+		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+		print_input_hidden ('new_contact', 1);
+		echo '</div>';
+		echo '</form>';
+		
 
 	} // end of contact view
 
@@ -411,7 +429,7 @@ if ($id) {
 	$sql = "SELECT * FROM tcompany $where_clause ORDER BY name";
 	$companies = get_db_all_rows_sql ($sql);
 	
-	$companies = print_array_pagination ($companies, "index.php?sec=inventory&sec2=operation/companies/company_detail");
+	$companies = print_array_pagination ($companies, "index.php?sec=inventory&sec2=operation/companies/company_detail&search_tect='$search_text&search_role=$search_role");
 
 	if ($companies !== false) {
 		$table->width = "90%";
@@ -433,9 +451,9 @@ if ($id) {
 			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=".
 				$company["id"]."'>".$company["name"]."</a>";
 			$data[1] = get_db_value ('name', 'tcompany_role', 'id', $company["id_company_role"]);
-			$data[2] = '<a href="index.php?sec=inventory&sec2=operation/contracts/contract_detail&search_id_company='.
+			$data[2] = '<a href="index.php?sec=inventory&sec2=operation/companies/company_detail&op=contracts&id='.
 				$company['id'].'"><img src="images/maintab.gif"></a>';
-			$data[3] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id_company='.
+			$data[3] = '<a href="index.php?sec=inventory&sec2=operation/companies/company_detail&op=contacts&id='.
 				$company['id'].'"><img src="images/group.png"></a>';
 			$data[4] = '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident">';
 			$data[4] .= print_input_hidden ('search_id_company', $company['id'], true);

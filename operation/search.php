@@ -190,12 +190,12 @@ if (give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN){
 if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
 
 	$sql = "SELECT * FROM tcompany_contact  WHERE fullname LIKE '%".$search_string."%' OR email LIKE '%".$search_string."%'";
-	$contacs = get_db_all_rows_sql ($sql);
+	$contacts = get_db_all_rows_sql ($sql);
 	
-	if ($kbs !== false) {
+	if ($contacts !== false) {
 		
 		echo "<h3>";
-		echo __("Knowlegue Base");
+		echo __("Contacts");
 		echo "</h3>";
 		
 		$table->width = '80%';
@@ -203,16 +203,19 @@ if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
 		$table->data = array ();
 		$table->size = array ();
 		$table->style = array ();
-		$table->head[0] = __('KB');
-		$table->head[1] = __('Product');
-		$table->head[2] = __('Category');
+		$table->head[0] = __('Name');
+		$table->head[1] = __('Company');
+		$table->head[2] = __('Email');
+		$table->head[3] = __('Position');
 
-		foreach ($kbs as $kb) {
+		foreach ($contacts as $contact) {
 			$data = array ();
 		
-			$data[0] = "<a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$kb["kb_id"]."'>".$kb["kb_name"]."</a>";
-			$data[1] = $kb["product"];
-			$data[2] = $kb["category"];
+			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail&id=".$contact["id"]."'>".$contact["fullname"].'</a>';
+			$data[1] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=".$contact["id_company"]."'>" . 	
+			get_db_sql ("SELECT name FROM tcompany WHERE id = " . $contact["id_company"]). "</a>";
+			$data[2] = $contact["email"];
+			$data[3] = $contact["position"];
 			array_push ($table->data, $data);
 		}
 		print_table ($table);
@@ -220,8 +223,48 @@ if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
 }
 
 
+// Companies
+if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
+
+	$sql = "SELECT * FROM tcompany WHERE name LIKE '%".$search_string."%'";
+	$companies = get_db_all_rows_sql ($sql);
+	
+	if ($companies !== false) {
+		
+		echo "<h3>";
+		echo __("Companies");
+		echo "</h3>";
+		
+		$table->width = '80%';
+		$table->class = 'listing';
+		$table->data = array ();
+		$table->size = array ();
+		$table->style = array ();
+		$table->head = array();
+		$table->head[0] = __('Company');
+		$table->head[1] = __('Role');
+		
+		foreach ($companies as $company) {
+			$data = array ();
+	
+			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=".$company["id"]."'>" . 	
+			$company["name"]. "</a>";
+			$data[1] = $company["id_company_role"];
+			
+			array_push ($table->data, $data);
+		}
+		print_table ($table);
+	}
+}
+
 
 exit;
+
+// THIS SHOULD BE DISABLED/REMOVED IN THE FUTURE:
+
+
+
+
 
 // Incidents
 if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){

@@ -157,6 +157,11 @@ if ($id || $new_contact) {
 	$table->data[3][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
 	$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
 		'id_company', $id_company, '', __('Select'), 0, true, false, false, __('Company'));
+		
+		
+	$table->data[3][1] .= "&nbsp;&nbsp;<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=$id_company'>";
+	$table->data[3][1] .= "<img src='images/company.png'></a>";
+	
 	$table->data[4][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
 	
 	echo '<form method="post" id="contact_form">';
@@ -223,7 +228,7 @@ if ($id || $new_contact) {
 			// Name
 			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail&id=".
 				$contact['id']."'>".$contact['fullname']."</a>";
-			$data[1] = get_db_value ('name', 'tcompany', 'id', $contact['id_company']);
+			$data[1] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=".$contact['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $contact['id_company'])."</a>";
 			$data[2] = $contact['email'];
 			$data[3] = '<a href="index.php?sec=inventory&
 						sec2=operation/contacts/contact_detail&

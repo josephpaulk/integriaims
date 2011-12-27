@@ -469,15 +469,6 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 			echo "<li>";
 		echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_detail'>".__('Create inventory object')."</a></li>";
 	}
-
-	if (dame_admin ($config['id_user'])) {
-		echo '<li>';
-		echo '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_reports">'.__('Inventory reports').'</a>';
-		echo '</li>';
-		echo '<li>';
-		echo '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail">'.__('Create inventory report').'</a>';
-		echo '</li>';
-	}
 	
 	if ($sec2 == 'operation/inventories/inventory') {
 		echo '<li>';
@@ -508,6 +499,25 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 	echo "</div>";
 }
 
+// Reports
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
+	echo "<div class='portlet'>";
+
+
+	echo "<h3 class='admin'>".__('Reports')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	echo '<li>';
+	echo '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_reports">'.__('Defined reports').'</a>';
+	echo '</li>';
+	echo '<li>';
+	echo '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail">'.__('Create report').'</a>';
+	echo '</li>';
+
+	echo "</ul>";
+	echo "</div>";
+	
+}
 
 // Customers 
 if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {

@@ -122,8 +122,8 @@ if ($id | $new_contract) {
 		$contract_number = "";
 		$date_begin = date('Y-m-d');
 		$date_end = $date_begin;
-		$id_company = "";
-		$id_group = "2";
+		$id_company = get_parameter("id_company", 0);
+		$id_group = "1";
 		$id_sla = "";
 		$description = "";
 	} else {
@@ -151,6 +151,10 @@ if ($id | $new_contract) {
 	$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
 	$table->data[3][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
 		'id_company', $id_company, '', '', '', true, false, false, __('Company'));
+		
+	$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=$id_company'>";
+	$table->data[3][0] .= "<img src='images/company.png'></a>";
+			
 	$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
 		'id_sla', $id_sla, '', '', '', true, false, false, __('SLA'));
 	$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
@@ -169,33 +173,45 @@ if ($id | $new_contract) {
 	echo "</div>";
 	echo "</form>";
 } else {
+	
+	// Contract listing
+	
 	$search_text = (string) get_parameter ('search_text');
-	$search_id_company = (int) get_parameter ('search_id_company');
+	$search_company_role = (int) get_parameter ('search_company_role');
+	$search_date_end = get_parameter ('search_date_end');
 	
-	$where_clause = "WHERE 1=1 ";
+	$where_clause = "WHERE tcontract.id_company = tcompany.id AND 1=1 ";
 	if ($search_text != "") {
-		$where_clause .= sprintf ('AND (name LIKE "%%%s%%" OR contract_number LIKE "%%%s%%")', $search_text, $search_text);
-	}
-	if ($search_id_company) {
-		$where_clause .= sprintf (' AND id_company = %d', $search_id_company);
+		$where_clause .= sprintf ('AND (tcompany.name LIKE "%%%s%%" OR  tcontract.name LIKE "%%%s%%" OR contract_number LIKE "%%%s%%")', $search_text, $search_text, $search_text);
 	}
 	
-	$table->width = '400px';
+	if ($search_company_role) {
+		$where_clause .= sprintf (' AND id_company_role = %d', $search_company_role);
+	}
+	
+	if ($search_date_end) {
+		$where_clause .= sprintf (' AND tcontract.date_end > "%s"', $search_date_end);
+	}
+	
+	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15,
 		100, true, __('Search'));
-	$table->data[0][1] = print_select (get_companies (), 'search_id_company',
-		$search_id_company, '', __('All'), 0, true, false, false, __('Company'));
-	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	$table->data[0][1] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Max. End date'));
+		
+	$table->data[0][2] = print_select (get_company_roles (), 'search_company_role',
+		$search_id_company, '', __('All'), 0, true, false, false, __('Company roles'));
+	
+	$table->data[0][3] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contracts/contract_detail">';
 	print_table ($table);
 	echo '</form>';
 	
-	$sql = "SELECT * FROM tcontract $where_clause ORDER BY name, id_company";
+	$sql = "SELECT tcontract.* FROM tcontract, tcompany $where_clause ORDER BY date_end DESC";
 	$contracts = get_db_all_rows_sql ($sql);
 
 	$contracts = print_array_pagination ($contracts, "index.php?sec=inventory&sec2=operation/contracts/contract_detail");
@@ -215,11 +231,9 @@ if ($id | $new_contract) {
 		$table->head[0] = __('Name');
 		$table->head[1] = __('Contract number');
 		$table->head[2] = __('Company');
-		$table->head[3] = __('SLA');
-		$table->head[4] = __('Group');
-		$table->head[5] = __('Begin');
-		$table->head[6] = __('End');
-		$table->head[7] = __('Delete');
+		$table->head[3] = __('Begin');
+		$table->head[4] = __('End');
+		$table->head[5] = __('Delete');
 		$counter = 0;
 		
 		foreach ($contracts as $contract) {
@@ -230,14 +244,15 @@ if ($id | $new_contract) {
 			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&id="
 				.$contract["id"]."'>".$contract["name"]."</a>";
 			$data[1] = $contract["contract_number"];
-			$data[2] = get_db_value ('name', 'tcompany', 'id', $contract["id_company"]);
-			$data[3] = get_db_value ('name', 'tsla', 'id', $contract["id_sla"]);
-			$data[4] = get_db_value ('nombre', 'tgrupo', 'id_grupo', $contract["id_group"]);
-			$data[5] = $contract["date_begin"];
-			$data[6] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
+			$data[2] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=".$contract["id_company"]."'>";
+			$data[2] .= get_db_value ('name', 'tcompany', 'id', $contract["id_company"]);
+			$data[2] .= "</a>";
+			
+			$data[3] = $contract["date_begin"];
+			$data[4] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
 
 			// Delete
-			$data[7] = '<a href="index.php?sec=inventory&sec2=operation/contracts/contract_detail&delete_contract=1&id='.$contract["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+			$data[5] = '<a href="index.php?sec=inventory&sec2=operation/contracts/contract_detail&delete_contract=1&id='.$contract["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
 			
 			array_push ($table->data, $data);
 		}	

@@ -25,14 +25,6 @@ if (! dame_admin ($config['id_user'])) {
 	return;
 }
 
-$reports = get_db_all_rows_in_table ('tinventory_reports');
-if ($reports === false) {
-	echo '<h2 class="error">'.__('No reports were found').'</h2>';
-	return;
-}
-
-echo '<h2>'.__('Inventory reports').'</h2>';
-
 $delete = (bool) get_parameter ('delete_report');
 
 if ($delete) {
@@ -47,19 +39,24 @@ if ($delete) {
 	}
 }
 
-$table->width = '90%';
+$reports = get_db_all_rows_in_table ('tinventory_reports');
+if ($reports === false) {
+	echo '<h2 class="error">'.__('No reports were found').'</h2>';
+	return;
+}
+
+echo '<h2>'.__('Inventory reports').'</h2>';
+
+$table->width = '80%';
 $table->class = 'listing';
 $table->data = array ();
 $table->head = array ();
-$table->head[0] = __('Name');
-$table->head[1] = __('SQL sentence');
-$table->head[2] = '';
-$table->head[3] = '';
+$table->head[0] = __('Name/Edit');
+$table->head[1] = __('View');
+$table->head[2] = __('PDF');
+$table->head[3] = __('CSV');
+$table->head[4] = __('Delete');
 $table->size = array ();
-$table->size[0] = '30%';
-$table->size[1] = '70%';
-$table->size[2] = '40px';
-$table->size[3] = '40px';
 
 foreach ($reports as $report) {
 	$data = array ();
@@ -67,13 +64,16 @@ foreach ($reports as $report) {
 	$data[0] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail&id='.$report['id'].'">';
 	$data[0] .= $report['name'];
 	$data[0] .= '</a>';
-	$data[1] = substr ($report['sql'], 0, 40);
-	$data[3] = "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail&render=1&raw_output=1&clean_output=1&id=".$report['id']."'><img src='images/datos.gif'></a>";
-	$data[4] = '<form method="post" onsubmit="return confirm (\''.__('Are your sure?').'\')">';
-	$data[4] .= print_input_hidden ('delete_report', 1, true);
-	$data[4] .= print_input_hidden ('id', $report['id'], true);
-	$data[4] .= print_input_image ('delete', 'images/cross.png', 1, '', true);
-	$data[4] .= '</form>';
+		
+		
+	
+	$data[1] = "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail&render_html=1&clean_output=0&id=".$report['id']."'><img src='images/page_white_text.png'></a>";
+	$data[2] = "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail&render_html=1&pdf_output=1&clean_output=1&id=".$report['id']."'><img src='images/page_white_acrobat.png'></a>";
+	
+	$data[3] = "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail&render=1&raw_output=1&clean_output=1&id=".$report['id']."'><img src='images/binary.gif'></a>";
+	$data[4] = "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_reports&delete_report=1&id=".$report["id"]."'>";
+	$data[4] .= '<img src="images/cross.png">';
+	$data[4] .= '</a>';
 	
 	array_push ($table->data, $data);
 }
