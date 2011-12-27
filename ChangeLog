@@ -1,3 +1,7 @@
+2011-12-27 Miguel de Dios  <miguel.dedios@artica.es>
+
+	* integria_demo.sql: fixed tiny bug in the filled of table "tconfig".
+
 2011-12-27  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_db.php: Added get_company_roles().
