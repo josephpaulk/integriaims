@@ -34,7 +34,7 @@ if ($update) {
 	$config["pdffont"] = get_parameter ("pdffont", "code.ttf");
 	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
     $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
-	$config["flash_charts"] = get_parameter ("flash_charts", 1);
+	$config["flash_charts"] = get_parameter ("flash_charts");
 
     update_config_token ("block_size", $config["block_size"]);
     update_config_token ("fontsize", $config["fontsize"]);
@@ -91,11 +91,15 @@ function get_image_files () {
 }
 
 $imagelist = get_image_files ();
-$table->data[2][0] = print_select ($imagelist, __('site_logo'), $config["site_logo"], '', '', '',  true, 0, true, "Site logo") ;
+$table->data[2][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', '', '',  true, 0, true, "Site logo") ;
 
-$table->data[2][1] = print_select ($imagelist, __('header_logo'), $config["header_logo"], '', '', '',  true, 0, true, "Header logo") ;
+$table->data[2][1] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', '', '',  true, 0, true, "Header logo") ;
 
-$table->data[3][0] = print_select (array(__('Disabled'),__('Enabled')), __("flash_charts"), $config["flash_charts"], '','','',true,0,true, __('Flash charts'));
+$flash_options = array();
+$flash_options[0]="Disabled";
+$flash_options[1]="Enabled";
+
+$table->data[3][0] = print_select ($flash_options, 'flash_charts', $config["flash_charts"], '','','',true,0,true, __('Flash charts'));
 
 echo "<form name='setup' method='post'>";
 

@@ -17,7 +17,8 @@
 // Load global vars
 
 global $config;
-
+include_once ("include/functions_tasks.php");
+include_once ("include/functions_graph.php");
 
 check_login ();
 
@@ -148,12 +149,12 @@ echo "&nbsp;&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/projec
 
 echo "</h2>";
 
-echo '<table width="90%" class="databox" >';
+echo '<table width="100%" class="databox" border=0>';
 
 // Name
 
 echo '<tr><td class="datos"><b>'.__('Name').'</b>';
-echo '<td colspan=3><input type="text" name="name" size=70 value="'.$name.'">';
+echo '<td colspan=5><input type="text" name="name" size=70 value="'.$name.'">';
 
 // start and end date
 echo '<tr><td class="datos2"><b>'.__('Start').'</b>';
@@ -164,19 +165,16 @@ echo '<td class="datos2"><b>'.__('End').'</b>';
 echo "<td class='datos2'>";
 print_input_text ('end_date', $end_date, '', 10, 20);
 
-// Owner
 
-echo '<tr>';
 $id_owner = get_db_value ( 'id_owner', 'tproject', 'id', $id_project);
 $src_code = print_image('images/group.png', true, false, true);
 echo "<td class='datos'>";
 echo "<b>".__('Project manager  ')."</b>";
 echo "<td class='datos'>";
-		
 echo print_input_text_extended ('id_owner', $owner, 'text-id_owner', '', 10, 20, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '','')
-		. print_help_tip (__("Type at least two characters to search"), true);
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '','');
 
+echo "<tr>";
 echo "<td><b>";
 echo __('Project group') . "</b>";
 echo "<td>";
@@ -185,10 +183,11 @@ echo print_select_from_sql ("SELECT * from tproject_group ORDER BY name",
 	false, false, true, false);
 
 if ($id_project) {
-	echo '<tr><td class="datos"><b>'.__('Current progress').'</b>';
+	echo '<td class="datos"><b>'.__('Current progress').'</b>';
 	echo "<td class='datos'>";
 	$completion =  format_numeric(calculate_project_progress ($id_project));
 	echo progress_bar($completion, 90, 20);
+	
 	$deviation_percent = calculate_project_deviation ($id_project);
 
 	echo '<td><b>'.__('Deviation').'</b>';
@@ -199,7 +198,13 @@ if ($id_project) {
 	echo '<td class="datos2"><b>'.__('Total workunit (hr)').'</b>';
 	echo "<td class='datos2'>";
 	$total_hr = get_project_workunit_hours ($id_project);
-	echo $total_hr;
+	echo $total_hr . "<br>(".format_numeric ($total_hr/$config["hours_perday"]). " ".__("days"). ")";
+	
+	echo '<td class="datos2"><b>'.__('Planned workunit (hr)').'</b>';
+	echo "<td class='datos2'>";
+	$total_planned = get_planned_project_workunit_hours($id_project);
+	echo $total_planned . "<br>(".format_numeric ($total_planned/$config["hours_perday"]). " ". __("days"). ")";
+		
 	echo '<td class="datos2"><b>'.__('Total people involved').'</b>';
 	echo "<td class='datos2'>";
 	$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
@@ -211,55 +216,65 @@ if ($id_project) {
 	$total = project_workunit_cost ($id_project, 1);
     $real = project_workunit_cost ($id_project, 0);
 
-	if ($pr_hour > 0){
-		echo '<tr>';
-		echo '<td class="datos"><b>'.__('Total payable workunit (hr)').'</b>';
-		echo '<td class="datos">';
-		echo $pr_hour;
+	
+	echo '<tr>';
+	echo '<td class="datos"><b>'.__('Total payable workunit (hr)').'</b>';
+	echo '<td class="datos">';
+	if ($pr_hour > 0)
+			echo $pr_hour;
+	else
+			echo __("N/A");
 
-		echo '<td class="datos"><b>'.__('Project profitability').'</b>';
-		echo '<td class="datos">';
-		if ($real > 0) {
-			echo format_numeric(($total/$real)*100);
-			echo  " %" ;
-		}
-	}
+	echo '<td class="datos"><b>'.__('Project profitability').'</b>';
+	echo '<td class="datos">';
+	if ($real > 0) {
+		echo format_numeric(($total/$real)*100);
+		echo  " %" ;
+	} else 
+		echo __("N/A");
 
+	echo '<td class="datos2"><b>'.__('Charged to customer').'</b>';
+	echo "<td class='datos2'>";
+	echo format_numeric($total) . " ". $config["currency"];
+	
+	
 	echo '<tr>';
 	echo '<td class="datos2"><b>'.__('Project costs').'</b>';
 	echo "<td class='datos2'>";
-	echo format_numeric($real). " ". $config["currency"];
+	$external = project_cost_invoices ($id_project);
+	$total_project_costs = $external + $real;
+	echo format_numeric( $total_project_costs) ." ". $config["currency"];
+	if ($external > 0)
+		echo "<span title='External costs to the project'> ($external)</span>";
+	
 
 	echo '<td class="datos"><b>'.__('Proyect length deviation (days)').'</b>';
-        echo '<td class="datos">';
-        
-        echo $deviation. " ".__('Days');
-
-
-	echo '<tr>';
-	echo '<td class="datos"><b>'.__('Charged cost per hour').'</b>';
 	echo '<td class="datos">';
-	if (($people_inv > 0) AND ($total_hr >0))
-		echo format_numeric ($total/($total_hr/$people_inv)). " ". $config["currency"];
-	else
-		echo __('N/A');
+	echo abs($deviation/8). " ".__('Days');
 
-	echo '<td class="datos2"><b>'.__('Charged to customer').'</b>';
-        echo "<td class='datos2'>";
-        echo $total." ". $config["currency"];
+
+	echo '<td class="datos"><b>'.__('Average Cost per Hour').'</b>';
+	echo '<td class="datos">';
+	if ($total_hr > 0)
+		$avg_cost_hour = format_numeric ($total_project_costs / $total_hr) . " ". $config["currency"];
+	else
+		$avg_cost_hour = __("N/A");
+		
+	echo $avg_cost_hour;
+	
 }
 
 // Description
 
-echo '<tr><td class="datos2" colspan="4"><textarea name="description" style="height: 40px;">';
+echo '<tr><td class="datos2" colspan="6"><textarea name="description" style="height: 40px;">';
 	echo $description;
 echo "</textarea>";
 
-echo "<tr><td colspan=2>";
+echo "<tr><td colspan=3>";
 echo "<b>".__("Task effort ")."</b>";;
 echo graph_workunit_project (300, 270, $id_project);
 
-echo "<td colspan=2>";
+echo "<td colspan=3>";
 echo "<b>".__("People effort ") ."</b>";
 echo graph_workunit_project_user_single (300, 270, $id_project);
 
@@ -278,6 +293,8 @@ if (give_acl ($config["id_user"], 0, "PM") || give_acl ($config["id_user"], 0, "
 }
 echo '</div>';
 echo "</form>";
+
+include ("task.php");
 
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>

@@ -1,3 +1,37 @@
+2011-12-29  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_tasks.php: Added new functions to calculate
+	external projects costs (new ttask_cost).
+	
+	* include/config_process.php: Removed blank line. Added notice
+	
+	* include/functions_db.php: Fixed formula in function 
+	calculate_project_deviation().
+	
+	* operation/projects/task_cost.php: Weah, new feature to manage
+	external costs derived from operation. Include a way to upload/see
+	the external invoices.
+	
+	* operation/projects/task.php: Changes to reflect new task amnagement
+	metrics, and including external costs.
+	
+	* operation/projects/project.php: now shows real cost.
+	
+	* operation/projects/task_detail.php: Show all costs, desglosed.
+	
+	* operation/projects/task_attach_file.php: Nice fix on typo :-)
+	
+	* operation/projects/project_detail.php: New metrics are now shown
+	in the project dashboard.
+	
+	* operation/side_menu.php: Added new task/cost options.
+	
+	* integria_db.sql,
+	upgrade_to_3.0.sql: New ttask_cost tabled, removed tcost table.
+	
+	* godmode/setup/setup_visual.php: Fixed problem switching visual
+	optiosn for flash graphs.
+
 2011-12-27 Miguel de Dios  <miguel.dedios@artica.es>
 
 	* integria_demo.sql: added in the table "tprofile" the default values for

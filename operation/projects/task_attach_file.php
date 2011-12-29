@@ -44,7 +44,7 @@ echo '<td class="datos">'.__('Filename').'</td><td class="datos">';
 
 $action = "index.php?sec=projects&sec2=operation/projects/task_files&id_task=$id_task&id_project=$id_project&operation=attachfile";
 
-$inti_form = '';
+$into_form = '';
 //~ $into_form .=  '<input type="file" name="userfile" value="userfile" class="sub" size="40">';
 $into_form .=  '<tr><td class="datos2">'.__('Description').'</td><td class="datos2" colspan=3><input type="text" name="file_description" size=47>';
 $into_form .=  "</td></tr></table>";

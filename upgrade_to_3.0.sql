@@ -92,3 +92,27 @@ CREATE TABLE `tcompany_activity` (
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Added 28 Dec 2011
+
+ALTER TABLE tprofile ADD `wr` tinyint(1) NOT NULL default '0';
+ALTER TABLE tprofile ADD `ww` tinyint(1) NOT NULL default '0';
+ALTER TABLE tprofile ADD `wm` tinyint(1) NOT NULL default '0';
+
+-- Table for bills, and externals expenses imputable to a task / project
+
+CREATE TABLE `ttask_cost` (
+  `id` int(6) unsigned NOT NULL auto_increment,
+  `id_user` varchar(60) default NULL,
+  `id_task` int(10) unsigned NULL default NULL,
+  `bill_id` varchar(50) NOT NULL default '',
+  `ammount` float(9,2) NOT NULL DEFAULT '0.0',
+  `description` mediumtext NOT NULL,
+  `id_attachment` bigint(20) unsigned NULL default NULL,
+  `locked` tinyint(3) unsigned NOT NULL DEFAULT 0,
+  `locked_id_user` varchar(60) DEFAULT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `tcost_idx_1` (`id_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Not used anymore (never used, anyway)
+DROP TABLE tcost;

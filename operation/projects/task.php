@@ -212,8 +212,22 @@ function show_task_row ($table, $id_project, $task, $level) {
 
 	// Costs (client / total)
 	$costdata = format_numeric (task_workunit_cost ($task["id"], 1));
+	if ($costdata > 0)
+		$costdata = " / <span title='".__("Charged to customer")."'> ". $costdata . "</span>";
+	else
+		$costdata = "";
+
+	// Total costs excluding external costs
 	$realdata = format_numeric (task_workunit_cost ($task["id"], 0));
-	$data[5] =  $costdata . " / ". $realdata . " " .$config['currency'];
+
+	$external_data = task_cost_invoices($task["id"]);
+	if ($external_data > 0)
+		$external_data = " / <span title='".__("Costs derived from external sources")."'> ". $external_data . "</span>";
+	else
+		$external_data = "";
+		
+		
+	$data[5] =  $realdata . $costdata . $external_data . " ".$config['currency'];
 
 	// People
 	$data[6] = combo_users_task ($task['id'], 1, true);

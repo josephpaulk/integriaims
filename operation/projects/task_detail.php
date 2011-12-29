@@ -271,7 +271,8 @@ $table->data[4][0] = print_select (get_periodicities (), 'periodicity',
 $table->data[5][0] = print_input_text ('hours', $hours, '', 5, 5, true, __('Estimated hours'));
 
 if ($id_task != -1) {
-	$table->data[5][1] = print_label (__('Worked hours'), '', '', true, get_task_workunit_hours ($id_task).' '.__('Hrs'));
+	$worked_time =  get_task_workunit_hours ($id_task);
+	$table->data[5][1] = print_label (__('Worked hours'), '', '', true, $worked_time.' '.__('Hrs'));
 
 	$subtasks = task_duration_recursive ($id_task);
 	if ($subtasks > 0)
@@ -286,11 +287,22 @@ $table->data[6][0] = print_input_text ('estimated_cost', $estimated_cost, '', 7,
 	11, true, __('Estimated cost'));
 $table->data[6][0] .= ' '.$config['currency'];
 
+$external_cost = 0;
+$external_cost = task_cost_invoices ($id_task);
+$table->data[6][0] .= print_label (__("External costs"), '', '', true);
+$table->data[6][0] .= $external_cost . " " . $config["currency"];
+
 if ($id_task != -1) {
 	$table->data[6][1] = print_label (__('Imputable costs'), '', '', true,
 		task_workunit_cost ($id_task, 1).' '.$config['currency']);
+		
+	$total_cost = $external_cost + task_workunit_cost ($id_task, 0);
 	$table->data[6][1] .= print_label (__('Total costs'), '', '', true,
-		task_workunit_cost ($id_task, 0).' '.$config['currency']);
+		$total_cost .' '.$config['currency']);
+	
+	$avg_hr_cost = format_numeric ($total_cost / $worked_time, 2);
+	$table->data[6][1] .= print_label (__('Average Cost per hour'), '', '', true,
+		$avg_hr_cost .' '.$config['currency']);
 	
 	$table->rowspan[5][2] = 5;
 	

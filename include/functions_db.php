@@ -493,8 +493,9 @@ function calculate_project_deviation ($id_project){
 
 	$expected_length = get_db_sql ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
 	$pr_hour = get_project_workunit_hours ($id_project, 1);
-	$deviation_percent = format_numeric(($pr_hour-$expected_length) / ($expected_length / 100));
-    //$deviation = format_numeric(($pr_hour-$expected_length)/$config["hours_perday"]);
+	
+	$deviation_percent = format_numeric ( 100 - (abs(($pr_hour-$expected_length) / ($expected_length / 100))));
+    
 	return $deviation_percent;
 }
 

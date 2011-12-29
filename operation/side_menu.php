@@ -242,6 +242,22 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 			else
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_attach_file&id_task=$id_task&id_project=$id_project'>".__('Add file')."</a></li>";
+						
+			// Add task cost
+			if ($sec2 == "operation/projects/task_cost")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_cost&id_project=$id_project&id_task=$id_task'>".__('Add cost unit')."</a></li>";
+
+			// Vist task costs
+			if ($sec2 == "operation/projects/task_cost")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_cost&id_project=$id_project&id_task=$id_task&operation=list'>".__('View external costs')."</a></li>";
+
+
 		}
 		
 		// Task people_manager

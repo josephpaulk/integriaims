@@ -16,6 +16,8 @@
 global $config;
 global $REMOTE_ADDR;
 
+include_once ("include/functions_tasks.php");
+
 check_login ();
 
 if (! give_acl ($config['id_user'], 0, "PR")) {
@@ -170,10 +172,10 @@ echo '</form>';
 
 unset ($table);
 
-$table->width = '90%';
+$table->width = '99%';
 $table->class = 'listing';
 $table->style = array ();
-$table->style[0] = 'font-weight: bold';
+$table->style[0] = '';
 $table->align = array ();
 $table->align[8] = 'center';
 $table->head = array ();
@@ -240,9 +242,10 @@ foreach ($projects as $project) {
 	// Deviation
 	$deviation_percent = calculate_project_deviation ($project['id']);
 	if ($deviation_percent > 0)
-		$data[3] = $deviation_percent;
+		$data[3] = $deviation_percent . "%";
 	else
 		$data[3] = "--";
+	
 
 	// Total task / People
 	$data[4] = get_db_value ('COUNT(*)', 'ttask', 'id_project', $project['id']);
@@ -257,7 +260,12 @@ foreach ($projects as $project) {
 	$data[6] .= " ".__('hr');
 
 	// Costs (client / total)
-	$data[7] = format_numeric (project_workunit_cost ($project['id'], 1)).' '.$config['currency'];
+	$real = project_workunit_cost ($project['id'], 0);
+	$external = project_cost_invoices ($project['id']);
+	
+	$total_project_costs = $external + $real;
+	
+	$data[7] = format_numeric ($total_project_costs) ." ". $config['currency'];
 	
 	// Last update time
 	$sql = sprintf ('SELECT tworkunit.timestamp

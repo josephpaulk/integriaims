@@ -97,4 +97,6 @@ include_once ($config["homedir"]."/include/functions_calendar.php");
 require_once("include_graph_dependencies.php");
 
 include_graphs_dependencies($config['homedir'].'/');
+
+// Beware: DONT LET BLANK LINES AFTER PHP END CODE MARK BELOW !!
 ?>

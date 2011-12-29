@@ -53,4 +53,48 @@ function task_duration_recursive ($id_task){
 	return $sum + get_task_workunit_hours ($id_task);
 }
 
+/**
+* Return total cost assigned to task on external costs attached
+*
+* $id_task	integer 	ID of task
+**/
+
+function task_cost_invoices ($id_task){
+	$total = get_db_sql ("SELECT SUM(ammount) FROM ttask_cost WHERE id_task = $id_task");
+	return $total;
+}
+
+/**
+* Return total cost assigned to task on external costs attached
+*
+* $id_task	integer 	ID of task
+**/
+
+function project_cost_invoices ($id_project){
+	
+	$tasks = get_db_all_rows_sql ("SELECT * FROM ttask WHERE id_project = $id_project");
+	if ($tasks === false)
+		$tasks = array ();
+	
+	$total = 0;
+	foreach ($tasks as $task) {
+		$total += task_cost_invoices ($task["id"]);
+	}	
+	return $total;
+}
+
+/**
+* Return total hours assigned to project (planned)
+*
+* $id_project	integer 	ID of project
+**/
+
+function get_planned_project_workunit_hours ($id_project){ 
+	global $config;
+	
+	$total = 0;
+	$total = (int) get_db_sql ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
+	return $total;
+}
+
 ?>
