@@ -18,6 +18,8 @@
 // GNU Lesser General Public License for more details.
 
 // If is called from index
+
+
 if (file_exists("include/config.php")) {
 	include_once ("include/config.php");
 	include_once("include/graphs/fgraph.php");

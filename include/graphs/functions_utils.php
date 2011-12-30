@@ -17,7 +17,7 @@ function serialize_in_temp($array = array(), $serial_id = null, $ttl = 1) {
 		$serial_id = uniqid();
 	}
 
-	$file_path = sys_get_temp_dir()."/pandora_serialize_".$serial_id."__1__".$ttl;
+	$file_path = sys_get_temp_dir()."/integria_serialize_".$serial_id."__1__".$ttl;
 
 	if (file_put_contents($file_path, $json) === false) {
 		return false;
@@ -34,7 +34,7 @@ function unserialize_in_temp($serial_id = null, $delete = true, $ttl = 1) {
 	$volume = -1;
 	
 	for($i = 1 ; $i <= $ttl ; $i++) {
-		$file_path = sys_get_temp_dir()."/pandora_serialize_".$serial_id."__".$i."__".$ttl;
+		$file_path = sys_get_temp_dir()."/integria_serialize_".$serial_id."__".$i."__".$ttl;
 		
 		if(file_exists($file_path)) {
 			$volume = $i;
@@ -56,7 +56,7 @@ function unserialize_in_temp($serial_id = null, $delete = true, $ttl = 1) {
 		}
 		else {
 			$next_volume = $volume + 1;
-			rename($file_path, sys_get_temp_dir()."/pandora_serialize_".$serial_id."__".$next_volume."__".$ttl);
+			rename($file_path, sys_get_temp_dir()."/integria_serialize_".$serial_id."__".$next_volume."__".$ttl);
 		}
 	}
 
@@ -68,7 +68,7 @@ function delete_unserialize_in_temp($serial_id = null) {
 		return false;
 	}
 	
-	$file_path = sys_get_temp_dir()."/pandora_serialize_".$serial_id;
+	$file_path = sys_get_temp_dir()."/integria_serialize_".$serial_id;
 		
 	return unlink($file_path);
 }

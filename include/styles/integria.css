@@ -1158,7 +1158,7 @@ span.ac_extra_field strong {
 	font-size: 9px;
 }
 .ac_input {
-	background-image: url("/pandora_console/images/group.png"); 
+	background-image: url("images/group.png"); 
 	background-repeat: no-repeat;
 	background-attachment: scroll; 
 	background-position: right center; 

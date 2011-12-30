@@ -800,11 +800,23 @@ CREATE TABLE `tmenu_visibility` (
 
 CREATE TABLE `tcompany_activity` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `id_company` mediumint(8) unsigned NOT NULL,
+  `id_company` mediumint(8) unsigned NOT NULL, 
   `written_by` varchar(60) NOT NULL default '',
   `date` datetime NOT NULL default '0000-00-00 00:00:00',
   `description` text NULL DEFAULT NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
+      ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tuser_report` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `id_user` varchar(60) NOT NULL default '',
+  `name` text default NULL,
+  `report_type` text default NULL,
+  `interval_days` integer unsigned NOT NULL default 7,
+  `last_executed` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`),
+  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -75,6 +75,7 @@ $html_header = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 // This is a clean and/or PDF output ?
 $clean_output = get_parameter ("clean_output", 0);
 $pdf_output = get_parameter ("pdf_output", 0);
+$pdf_filename = get_parameter ("pdf_filename", "");
 $raw_output = get_parameter ("raw_output", 0);
 
 if (($pdf_output == 1) OR ($raw_output == 1)) {
@@ -339,7 +340,11 @@ if ($pdf_output == 1){
 	$pdfObject->setHeaderHTML("<p align=right style='border-bottom: 1px solid #666;'> Integria IMS Report - ".date("D F d, Y H:i:s", $time).'</p>', true);
 
 	$pdfObject->addHTML($html);
-	$pdfObject->showPDF();
+	
+	if ($pdf_filename != "")
+		$pdfObject->writePDFfile ("/tmp/$pdf_filename");
+	else
+		$pdfObject->showPDF();
 
     // Dirty thing, just for testing, do not use it
     // system ("rm /tmp/integria_graph_serialize_*");

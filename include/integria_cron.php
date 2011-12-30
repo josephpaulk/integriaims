@@ -565,5 +565,9 @@ foreach ($slas as $sla) {
 	}
 }
 
+// Call enterprise crontab
+enterprise_include ("include/integria_cron_enterprise.php");
+
+
 
 ?>

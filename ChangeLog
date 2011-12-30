@@ -1,3 +1,17 @@
+2011-12-30  Sancho Lerena <slerena@artica.es>
+
+	* include/styles/integria.css: Changed bad include
+	
+	* include/graphs/functions_utils.php: tmp filename is now 
+	"integria_serial"
+	
+	* include/integria_cron.php: Added support for new enterprise cron
+	
+	* index.php: Added support to write directly to a pdf file.
+
+	* upgrade_to_3.0.sql,
+	integria_db.sql: Added new table for user programmed reporting.
+
 2011-12-29  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_tasks.php: Added new functions to calculate
