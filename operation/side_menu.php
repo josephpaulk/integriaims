@@ -25,9 +25,10 @@ global $show_people;
 global $show_todo;
 global $show_agenda;
 global $show_setup;
+global $show_wiki;
 
 // PROJECTS
-if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN) {	
+if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN) {
 	$id_project = get_parameter ('id_project', -1);
 	$id_task = get_parameter ('id_task', -1);
 	
@@ -910,7 +911,7 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	echo "</div>";
 }
 
-if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN){
+if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Myself')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -1040,7 +1041,24 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN){
 	}
 }
 
-if($show_box) {
+// Wiki
+if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
+	echo "<div class='portlet'>";
+	echo "<h3>".__('Wiki')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	// Todo overview
+	if ($sec2 == "operation/wiki/wiki")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=wiki&sec2=operation/wiki/wiki'>".__('Wiki')."</a></li>";
+	echo "</li>";
+	echo "</ul>";
+	echo "</div>";
+}
+
+if ($show_box) {
 	// Calendar box
 	$month = get_parameter ("month", date ('n'));
 	$year = get_parameter ("year", date ('y'));

@@ -93,7 +93,7 @@ echo "<title>" . $config["sitename"] . "</title>";
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="resource-type" content="document" />
 <meta name="distribution" content="global" />
-<meta name="author" content="Sancho Lerena <slerena@gmail.com>" />
+<meta name="author" content="Sancho Lerena &lt;slerena@gmail.com&gt;" />
 <meta name="website" content="http://integriaims.com" />
 <meta name="copyright" content="Artica Soluciones Tecnologicas (c) 2007-2011" />
 <meta name="keywords" content="ticketing, management, project, incident, tracking, ITIL" />
@@ -175,7 +175,8 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 		if ($sec2 == '') {
 			$sec2 = 'general/home';
 		}
-	} else {
+	}
+	else {
 		// User not known
 		unset ($_GET["sec2"]);
 		echo '</head>';
@@ -190,13 +191,15 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 		require ('general/login_page.php');
 		exit;
 	}
-} elseif (! isset ($_SESSION['id_usuario'])) {
+}
+elseif (! isset ($_SESSION['id_usuario'])) {
 	// There is no user connected
 	echo '</head>';
 	echo '<body bgcolor="#ffffff">';
 	require ('general/login_page.php');
 	exit;
-} else {
+}
+else {
 	// Create id_user variable in $config hash, of ALL pages.
 	$config["id_user"] = $_SESSION['id_usuario'];
 }

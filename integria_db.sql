@@ -800,7 +800,7 @@ CREATE TABLE `tmenu_visibility` (
 
 CREATE TABLE `tcompany_activity` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `id_company` mediumint(8) unsigned NOT NULL, 
+  `id_company` mediumint(8) unsigned NOT NULL,
   `written_by` varchar(60) NOT NULL default '',
   `date` datetime NOT NULL default '0000-00-00 00:00:00',
   `description` text NULL DEFAULT NULL,

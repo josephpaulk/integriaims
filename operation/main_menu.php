@@ -51,7 +51,7 @@ if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user
 }
 
 // KB
-if (give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN){
+if (give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN) {
 	if ($sec == "kb" )
 		echo "<li id='current' class='kb'>";
 	else
@@ -60,9 +60,9 @@ if (give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN){
 }
 
 // FILE RELEASES
-if (give_acl($config["id_user"], 0, "KR")){
+if (give_acl($config["id_user"], 0, "KR")) {
 
-	if($show_file_releases != MENU_HIDDEN) {
+	if ($show_file_releases != MENU_HIDDEN) {
 		// File Releases
 		if ($sec == "download" )
 				echo "<li id='current' class='files'>";
@@ -72,7 +72,7 @@ if (give_acl($config["id_user"], 0, "KR")){
 	}
 }
 
-if($show_people != MENU_HIDDEN) {
+if ($show_people != MENU_HIDDEN) {
 	// Users
 	if ($sec == "users" )
 		echo "<li id='current' class='people'>";
@@ -81,7 +81,7 @@ if($show_people != MENU_HIDDEN) {
 	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".__('People')."</a></li>";
 }
 
-if($show_todo != MENU_HIDDEN) {
+if ($show_todo != MENU_HIDDEN) {
 	// TODO
 	if ($sec == "todo" )
 		echo "<li id='current' class='todo'>";
@@ -91,7 +91,7 @@ if($show_todo != MENU_HIDDEN) {
 }
 
 // Agenda
-if (give_acl($config["id_user"], 0, "AR") && $show_agenda != MENU_HIDDEN){
+if (give_acl($config["id_user"], 0, "AR") && $show_agenda != MENU_HIDDEN) {
 	// Agenda
 	if ($sec == "agenda" )
 		echo "<li id='current' class='agenda'>";
@@ -100,8 +100,18 @@ if (give_acl($config["id_user"], 0, "AR") && $show_agenda != MENU_HIDDEN){
 	echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>".__('Agenda')."</a></li>";
 }
 
+// Wiki
+if (give_acl($config["id_user"], 0, "WR") && $show_wiki != MENU_HIDDEN) {
+	// Wiki
+	if ($sec == "wiki" )
+		echo "<li id='current' class='wiki'>";
+	else
+		echo "<li class='wiki'>";
+	echo "<a href='index.php?sec=wiki&sec2=operation/wiki/wiki'>" . __('Wiki') . "</a></li>";
+}
+
 // Setup
-if (isset($config["id_user"]) && dame_admin($config["id_user"]) && $show_setup != MENU_HIDDEN){
+if (isset($config["id_user"]) && dame_admin($config["id_user"]) && $show_setup != MENU_HIDDEN) {
 	// Setup
 	if ($sec == "godmode" )
 		echo "<li id='current' class='setup'>";

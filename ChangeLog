@@ -1,3 +1,14 @@
+2011-12-30 Miguel de Dios  <miguel.dedios@artica.es>
+
+	* index.php, integria_db.sql: fixed tiny html warnings and cleaned source
+	code style.
+	
+	* include/functions_config.php, include/wiki/lionwiki_lib.php,
+	operation/side_menu.php, operation/main_menu.php, operation/wiki/wiki.php:
+	added first version of wiki, now it is funtional but haven't ACL, upload
+	files and at the moment save the data in var directory in the root of
+	integria. It is a fork of gplv2 project (Lionwiki http://lionwiki.0o.cz).
+
 2011-12-30  Sancho Lerena <slerena@artica.es>
 
 	* include/styles/integria.css: Changed bad include
