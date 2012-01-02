@@ -1,3 +1,8 @@
+2012-01-02  Sancho Lerena <slerena@artica.es>
+
+	* operation/download/browse.php: Fixed problem with fileuploads/file release
+	due new ajax control.
+
 2011-12-30 Miguel de Dios  <miguel.dedios@artica.es>
 
 	* index.php, integria_db.sql: fixed tiny html warnings and cleaned source

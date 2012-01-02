@@ -52,6 +52,7 @@ if (isset($_GET["create2"])){ // Create group
 
 	$sql_insert="INSERT INTO tdownload (name, location, description, id_category, id_user, date) 
 		  		 VALUE ('$name','attachment/downloads/$location', '$description', '$id_category', '".$config["id_user"]."', '$timestamp') ";
+
 	$result=mysql_query($sql_insert);	
 	if (! $result)
 		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
@@ -193,16 +194,16 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		echo "</p>";
 	}
 	
-	echo "<form method='post' action='index.php?sec=download&sec2=operation/download/browse&create=1&upload_file' enctype='multipart/form-data'>";
+	// echo "<form method='post' action='index.php?sec=download&sec2=operation/download/browse&create=1&upload_file' enctype='multipart/form-data'>";
 	echo "<table>";
 	
 	if ($id == -1){
 		echo "<h3>".__('Create a new file release')."</a></h3>";
-		echo "<form name=prodman method='post' action='index.php?sec=download&sec2=operation/download/browse&create2'>";
+		echo "<form name=prodman method='post' action='index.php?sec=download&sec2=operation/download/browse&create2=1'>";
 	}
 	else {
 		echo "<h3>".__('Update existing file release')."</a></h3>";
-		echo "<form enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=download&sec2=operation/download/browse&update2'>";
+		echo "<form enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=download&sec2=operation/download/browse&update2=1'>";
 		echo "<input type=hidden name=id value='$id'>";
 	}
 	
