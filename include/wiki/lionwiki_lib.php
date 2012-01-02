@@ -55,7 +55,7 @@ function error_show_lionwiki($location) {
 	$page = $start_page_conf;
 }
 
-function lionwiki_show($conf = null) {
+function lionwiki_show($conf = null, $execute_actions = true) {
 	global $plugins;
 	global $TITLE;
 	global $page;
@@ -68,13 +68,15 @@ function lionwiki_show($conf = null) {
 	global $PROTECTED_READ;
 	global $content;
 	global $error;
-	global $caca;
 	global $action;
 	global $html;
 	global $preview;
 	global $HEAD;
 	global $PLUGINS_DIR;
 	global $VAR_DIR;
+	global $self;
+	global $self_form;
+	global $CON;
 	
 	//Default confs
 	$wiki_title_conf = 'My new wiki';
@@ -277,7 +279,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	//Load Plugins
 	for ($plugins = array(), $dir = @opendir($PLUGINS_DIR); $dir && $f = readdir($dir);) // load plugins
 		if (preg_match('/wkp_(.+)\.php$/', $f, $m) > 0) {
-			require $PLUGINS_DIR . $f;
+			require_once $PLUGINS_DIR . $f;
 			$plugins[$m[1]] = new $m[1]();
 	
 			if (isset($$m[1]))
@@ -296,7 +298,11 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		$page = $start_page_conf;
 	}
 	
-		
+	//Disable the action
+	if (!$execute_actions) {
+		$action = '';
+	}
+	
 	$TITLE = $page = clear_path($page);
 	$moveto = clear_path($moveto);
 	$f1 = clear_path($f1);
@@ -661,6 +667,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	
 	plugin('template'); // plugin templating
 	
+	
 	$html = preg_replace('/\{([^}]* )?plugin:.+( [^}]*)?\}/U', '', $html); // get rid of absent plugin tags
 	
 	$tpl_subs = array(
@@ -702,7 +709,8 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		$html = template_replace($tpl, $rpl, $html);
 	
 	header_lionwiki('Content-type: text/html; charset=UTF-8');
-	die($html);
+	
+	echo($html);
 }
 
 // Function library
@@ -785,11 +793,19 @@ function diff_builtin($f1, $f2) {
 }
 
 function authentified() {
+	/*
 	if(!$GLOBALS['PASSWORD'] || !strcasecmp($_COOKIE['LW_AUT'], $GLOBALS['PASSWORD']) || !strcasecmp(sha1($GLOBALS['sc']), $GLOBALS['PASSWORD'])) {
 		setsafecookie('LW_AUT', $GLOBALS['PASSWORD'], time() + ($GLOBALS['PROTECTED_READ'] ? 4 * 3600 : 365 * 86400));
 		return true;
 	} else
 		return false;
+	*/
+		
+	//BUT YOU CAN FILL WITH OTHER CODE FOR EXAMPLE GET THE CONF FROM DB
+	//foo()
+	
+	//At the moment true
+	return true;
 }
 
 function setsafecookie() { // setcookie for sensitive informations

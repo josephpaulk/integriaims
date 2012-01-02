@@ -30,27 +30,31 @@ require_once("include/wiki/lionwiki_lib.php");
 //debugPrint($config);
 
 $conf['self'] = 'index.php?sec=wiki&sec2=operation/wiki/wiki' . '&';
-$conf['fallback_template'] = '<table width="100%" cellpadding="4">
-<tr>
-	<td colspan="2">{HOME} {RECENT_CHANGES}</td>
-	<td style="text-align:right">{EDIT} {SYNTAX} {HISTORY}</td>
-</tr>
-<tr><th colspan="3"><hr/><h1 id="page-title">{PAGE_TITLE} {<span class="pageVersionsList">( plugin:VERSIONS_LIST )</span>}</h1></th></tr>
-<tr>
-	<td colspan="3">
-		{<div style="color:#F25A5A;font-weight:bold;"> ERROR </div>}
-		{CONTENT} {plugin:TAG_LIST}
-		{CONTENT_FORM} {RENAME_TEXT} {RENAME_INPUT <br/><br/>} {CONTENT_TEXTAREA}
-		<p style="float:right;margin:6px">{FORM_PASSWORD} {FORM_PASSWORD_INPUT} {plugin:CAPTCHA_QUESTION} {plugin:CAPTCHA_INPUT}
-		{EDIT_SUMMARY_TEXT} {EDIT_SUMMARY_INPUT} {CONTENT_SUBMIT} {CONTENT_PREVIEW}</p>{/CONTENT_FORM}
-	</td>
-</tr>
-<tr><td colspan="3"><hr/></td></tr>
-<tr>
-	<td><div>{SEARCH_FORM}{SEARCH_INPUT}{SEARCH_SUBMIT}{/SEARCH_FORM}</div></td>
-	<td>Powered by <a href="http://lionwiki.0o.cz/">LionWiki</a>. {LAST_CHANGED_TEXT}: {LAST_CHANGED} {COOKIE}</td>
-	<td style="text-align:right">{EDIT} {SYNTAX} {HISTORY}</td>
-</tr>
+$conf['plugin_dir'] = 'include/wiki/plugins/';
+$conf['fallback_template'] = '
+<style type="text/css">
+input[name="moveto"] {
+	width: 100%;
+}
+</style>
+<table width="100%" cellpadding="4">
+	<tr><th colspan="3"><hr/><h1 id="page-title">{PAGE_TITLE}</h1></th></tr>
+	<tr>
+		<td colspan="3">
+			{<div style="color:#F25A5A;font-weight:bold;"> ERROR </div>}
+			{CONTENT} {<div style="background: #EBEBED"> plugin:TAG_LIST </div>}
+			{plugin:TOOLBAR_TEXTAREA}
+			{CONTENT_FORM} {RENAME_INPUT <br/><br/>} {CONTENT_TEXTAREA}
+			<p style="float:right;margin:6px">{FORM_PASSWORD} {FORM_PASSWORD_INPUT} {plugin:CAPTCHA_QUESTION} {plugin:CAPTCHA_INPUT}
+			{EDIT_SUMMARY_TEXT} {EDIT_SUMMARY_INPUT} {CONTENT_SUBMIT} {CONTENT_PREVIEW}</p>{/CONTENT_FORM}
+		</td>
+	</tr>
+	<tr><td colspan="3"><hr/></td></tr>
+	<tr>
+		<td>' . __('Powered by ') . '<a href="http://lionwiki.0o.cz/">LionWiki</a>. {LAST_CHANGED_TEXT}: {LAST_CHANGED}</td>
+		<td></td>
+		<td></td>
+	</tr>
 </table>';
 lionwiki_show($conf);
 ?>

@@ -1043,6 +1043,8 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 
 // Wiki
 if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
+	require_once("include/wiki/lionwiki_lib.php");
+	
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Wiki')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -1054,6 +1056,18 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 		echo "<li>";
 	echo "<a href='index.php?sec=wiki&sec2=operation/wiki/wiki'>".__('Wiki')."</a></li>";
 	echo "</li>";
+		$conf['plugin_dir'] = 'include/wiki/plugins/';
+		$conf['self'] = 'index.php?sec=wiki&sec2=operation/wiki/wiki' . '&';
+		$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
+		<li>{plugin:UPLOAD}</li>
+		<li>{RECENT_CHANGES}</li>
+		<li>{EDIT}</li>
+		<li>{HISTORY}</li>
+		<li>{SYNTAX}</li>';
+		ob_start();
+		lionwiki_show($conf, false);
+		$form_search = ob_get_clean();
+	echo $form_search;
 	echo "</ul>";
 	echo "</div>";
 }

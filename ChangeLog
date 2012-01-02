@@ -1,3 +1,15 @@
+2012-01-02 Miguel de Dios  <miguel.dedios@artica.es>
+
+	* include/wiki/plugins/wkp_BetterEditor.php,
+	include/wiki/plugins/wkp_Tags.php, include/wiki/plugins/wkp_Upload.php,
+	include/wiki/plugins/BetterEditor/bettereditor.js: added the first plugins
+	used in the wiki, some this plugins have some modifications in the code.
+
+	* include/wiki/lionwiki_lib.php: some fixes.
+
+	* operation/side_menu.php, operation/wiki/wiki.php: some cosmetical changes
+	and fixes.
+
 2012-01-02  Sancho Lerena <slerena@artica.es>
 
 	* operation/download/browse.php: Fixed problem with fileuploads/file release
