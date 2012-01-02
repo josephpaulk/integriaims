@@ -103,6 +103,23 @@ if ($delete_company) { // if delete
 	$id = 0;
 }
 
+// Delete INVOICE
+if ($delete_invoice == 1){
+	
+	$id_invoice = get_parameter ("id_invoice", "");
+	$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id_invoice");
+	
+	// Do another security check, don't rely on information passed from URL
+	
+	if (($config["id_user"] = $invoice["id_user"]) OR ($id_task == $invoice["id_task"])){
+			// Todo: Delete file from disk
+			if ($invoice["id_attachment"] != ""){
+				process_sql ("DELETE FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
+			}
+			process_sql ("DELETE FROM tinvoice WHERE id = $id_invoice");
+	}
+}
+
 // View company details / Update
 if ($id) {
 	
@@ -110,32 +127,38 @@ if ($id) {
 	
 	echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 	echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=inventory&sec2=operation/companies/company_detail"><span>'.__("Search").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail"><span>'.__("Search").'</span></a></li>';
 
 	if ($op == "")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=inventory&sec2=operation/companies/company_detail&id='.$id.'"><span>'.__("Company").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'"><span>'.__("Company").'</span></a></li>';
 
 	if ($op == "contacts")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=inventory&sec2=operation/companies/company_detail&id='.$id.'&op=contacts"><span>'.__("Contacts").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=contacts"><span>'.__("Contacts").'</span></a></li>';
 
 	if ($op == "contracts")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=inventory&sec2=operation/companies/company_detail&id='.$id.'&op=contracts"><span>'.__("Contracts").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=contracts"><span>'.__("Contracts").'</span></a></li>';
+	
+	if ($op == "invoices")
+		echo '<li class="ui-tabs-selected">';
+	else
+		echo '<li class="ui-tabs">';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices"><span>'.__("Invoices").'</span></a></li>';
 
 /*
 	if ($op == "inventory")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=inventory&sec2=operation/companies/company_detail&id='.$id.'&op=inventory"><span>'.__("Inventory").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=inventory"><span>'.__("Inventory").'</span></a></li>';
 
 */
 
@@ -143,7 +166,7 @@ if ($id) {
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=inventory&sec2=operation/companies/company_detail&id='.$id.'&op=activities"><span>'.__("Activities").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities"><span>'.__("Activities").'</span></a></li>';
 
 	echo '</ul>';
 
@@ -152,7 +175,7 @@ if ($id) {
 
 	// View/Edit company details
 	if ($op == ""){
-		echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_detail">';
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 		echo "<h2>".__('Company details')."</h2>";
 		$company = get_db_row ('tcompany', 'id', $id);
 		$name = $company['name'];
@@ -201,12 +224,12 @@ if ($id) {
 		}
 		
 		// ADD item form
-		echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_detail&id='.$id.'&op=activities&op2=add">';
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities&op2=add">';
 		echo "<h3>".__("Add activity")."</h3><p>";
-		echo "<textarea name='comments' style='margin-left: 10px; width: 550px; height: 50px'>";
+		echo "<textarea name='comments' style='margin-left: 10px; width:94%; height: 50px'>";
 		echo "</textarea>";
 
-		echo '<div class="button" style="margin-left: 10px; width: 550px">';
+		echo '<div class="button" style="margin-left: 10px; width: 92%;">';
 		print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', false);
 		echo "</div>";
 		echo '</form>';
@@ -215,7 +238,7 @@ if ($id) {
 		$sql = "SELECT * FROM tcompany_activity WHERE id_company = $id ORDER BY date DESC";
 
 		$activities = get_db_all_rows_sql ($sql);
-		$activities = print_array_pagination ($activities, "index.php?sec=inventory&sec2=operation/companies/company_detail&id=$id&op=activities");
+		$activities = print_array_pagination ($activities, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=activities");
 
 		if ($activities !== false) {	
 			foreach ($activities as $activity) {
@@ -255,7 +278,7 @@ if ($id) {
 
 		$sql = "SELECT * FROM tcontract WHERE id_company = $id ORDER BY name";
 		$contracts = get_db_all_rows_sql ($sql);
-		$contracts = print_array_pagination ($contracts, "index.php?sec=inventory&sec2=operation/companies/company_detail&id=$id&op=contracts");
+		$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=contracts");
 
 		if ($contracts !== false) {
 		
@@ -283,7 +306,7 @@ if ($id) {
 					continue;
 				$data = array ();
 			
-				$data[0] = "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&id="
+				$data[0] = "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&id="
 					.$contract["id"]."'>".$contract["name"]."</a>";
 				$data[1] = $contract["contract_number"];
 				$data[2] = get_db_value ('name', 'tcompany', 'id', $contract["id_company"]);
@@ -296,7 +319,7 @@ if ($id) {
 			}	
 			print_table ($table);
 			
-			echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contracts/contract_detail&id_company='.$contract["id_company"].'">';
+			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$contract["id_company"].'">';
 			echo '<div class="button" style="width: '.$table->width.'">';
 			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 			print_input_hidden ('new_contract', 1);
@@ -330,7 +353,7 @@ if ($id) {
 
 		foreach ($contacts as $contact) {
 			$data = array ();
-			$data[0] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'">'.$contact['fullname']."</a>";
+			$data[0] = '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$contact['id'].'">'.$contact['fullname']."</a>";
 			$data[1] = $contact['email'];
 			$details = '';
 			if ($contact['phone'] != '')
@@ -343,7 +366,7 @@ if ($id) {
 		}
 		print_table ($table);
 		
-		echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id_company='.$id.'">';
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&id_company='.$id.'">';
 		echo '<div class="button" style="width: '.$table->width.'">';
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 		print_input_hidden ('new_contact', 1);
@@ -352,6 +375,72 @@ if ($id) {
 		
 
 	} // end of contact view
+
+	// INVOICES LISTING
+
+	elseif ($op == "invoices") {
+
+		$sql = "SELECT * FROM tinvoice WHERE id_company = $id ORDER BY invoice_create_date";
+		$invoices = get_db_all_rows_sql ($sql);
+		$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices");
+
+		if ($invoices !== false) {
+		
+			$table->width = "90%";
+			$table->class = "listing";
+			$table->cellspacing = 0;
+			$table->cellpadding = 0;
+			$table->tablealign="left";
+			$table->data = array ();
+			$table->size = array ();
+			$table->style = array ();
+			$table->style[0] = 'font-weight: bold';
+			$table->colspan = array ();
+			$table->head[0] = __('ID');
+			$table->head[1] = __('Description');
+			$table->head[2] = __('Ammount');
+			$table->head[3] = __('Creation');
+			$table->head[4] = __('Payment');
+			$table->head[5] = __('File');
+			$table->head[6] = __('Upload by');
+			$counter = 0;
+		
+			$company = get_db_row ('tcompany', 'id', $id);
+		
+			foreach ($invoices as $invoice) {
+				
+				if (! give_acl ($config["id_user"], $company["id_group"], "IR"))
+					continue;
+				$data = array ();
+			
+				$data[0] = "<a href='index.php?sec=customers&sec2=operation/invoices/invoices&id_invoice="
+					.$invoice["id"]."'>".$invoice["bill_id"]."</a>";
+				$data[1] = "<a href='index.php?sec=customers&sec2=operation/invoices/invoices&id_invoice="
+					.$invoice["id"]."'>".$invoice["description"]."</a>";
+				$data[2] = format_numeric ($invoice["ammount"]);
+				$data[3] = $invoice["invoice_create_date"];
+				$data[4] = $invoice["invoice_payment_date"];
+									
+				$filename = get_db_sql ("SELECT filename FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
+		
+				$data[5] = 	"<a href='".$config["base_url"]."/attachment/".$invoice["id_attachment"]."_".$filename."'>$filename</a>";
+				
+				$data[6] = $invoice["id_user"];
+				
+				array_push ($table->data, $data);
+			}	
+			print_table ($table);
+			
+			echo '<form method="post" action="index.php?sec=customers&sec2=operation/invoices/invoices&id_company='.$id.'">';
+			echo '<div class="button" style="width: '.$table->width.'">';
+			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+			print_input_hidden ('new_invoice', 1);
+			echo '</div>';
+			echo '</form>';
+			
+		}
+	}
+
 
 } elseif ($new_company) {
 
@@ -380,7 +469,7 @@ if ($id) {
 	$table->data[2][0] = print_textarea ('address', 3, 1, $address, '', true, __('Address'));
 	$table->data[3][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_detail">';
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 
 	print_table ($table);
 	echo '<div class="button" style="width: '.$table->width.'">';
@@ -422,14 +511,14 @@ if ($id) {
 		'search_role', $search_role, '', __('Select'), 0, true, false, false);
 	$table->data[0][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_detail">';
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	print_table ($table);
 	echo '</form>';
 
 	$sql = "SELECT * FROM tcompany $where_clause ORDER BY name";
 	$companies = get_db_all_rows_sql ($sql);
 	
-	$companies = print_array_pagination ($companies, "index.php?sec=inventory&sec2=operation/companies/company_detail&search_tect='$search_text&search_role=$search_role");
+	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail&search_tect='$search_text&search_role=$search_role");
 
 	if ($companies !== false) {
 		$table->width = "90%";
@@ -443,23 +532,36 @@ if ($id) {
 		$table->head[2] = __('Contracts');
 		$table->head[3] = __('Contacts');
 		$table->head[4] = __('Incidents');
-		$table->head[5] = __('Delete');
+		$table->head[5] = __("Invoices (totals)");
+		$table->head[6] = __('Delete');
 		
 		foreach ($companies as $company) {
 			$data = array ();
 			
-			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=".
+			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".
 				$company["id"]."'>".$company["name"]."</a>";
 			$data[1] = get_db_value ('name', 'tcompany_role', 'id', $company["id_company_role"]);
-			$data[2] = '<a href="index.php?sec=inventory&sec2=operation/companies/company_detail&op=contracts&id='.
+			$data[2] = '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&op=contracts&id='.
 				$company['id'].'"><img src="images/maintab.gif"></a>';
-			$data[3] = '<a href="index.php?sec=inventory&sec2=operation/companies/company_detail&op=contacts&id='.
+			$sum_contratos = get_db_sql ("SELECT COUNT(id) FROM tcontract WHERE id_company = ".$company["id"]);
+			if ($sum_contratos > 0)
+				$data[2] .= " ($sum_contratos)";
+				
+			$data[3] = '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&op=contacts&id='.
 				$company['id'].'"><img src="images/group.png"></a>';
+			$sum_contactos = get_db_sql ("SELECT COUNT(id) FROM tcompany_contact WHERE id_company = ".$company["id"]);
+			if ($sum_contactos > 0)
+				$data[3] .= " ($sum_contactos)";
+				
+					
 			$data[4] = '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident">';
 			$data[4] .= print_input_hidden ('search_id_company', $company['id'], true);
 			$data[4] .= print_input_image ('btn', 'images/bug.png', 1, '', true);
 			$data[4] .= '</form>';
-			$data[5] ='<a href="index.php?sec=inventory&
+			$data[5] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$company["id"]."&op=invoices'>";
+			$data[5] .= format_numeric (company_invoice_total ($company["id"]));
+			$data[5] .= "</a>";
+			$data[6] ='<a href="index.php?sec=customers&
 						sec2=operation/companies/company_detail&
 						delete_company=1&id='.$company['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
@@ -470,7 +572,7 @@ if ($id) {
 		print_table ($table);
 	}
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_detail">';
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_company', 1);

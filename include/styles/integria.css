@@ -541,6 +541,12 @@ form.searchform input.button {
     padding-left: 35px;
 }
 
+#menu li.customer a {
+    background: url(../../images/customer.png) no-repeat 9px 5px;
+    padding-left: 35px;
+}
+
+
 #menu li.kb a {
     background: url(../../images/comments.png) no-repeat 9px 5px;
     padding-left: 35px;

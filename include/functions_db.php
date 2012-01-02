@@ -2110,5 +2110,9 @@ function render_status ($sta){
 	return __($estado);
 }
 
+function company_invoice_total ($id_company){
+	$estado = get_db_sql ("SELECT SUM(ammount) FROM tinvoice WHERE id_company = $id_company");
+	return __($estado);
+}
 
 ?>

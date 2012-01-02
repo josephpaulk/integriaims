@@ -1,3 +1,36 @@
+2012-01-02  Sancho Lerena <slerena@artica.es>
+
+	* include/styles/integria.css: New customers style for menu
+	
+	* include/functions_tasks.php: New task_cost_invoices().
+	
+	* include/functions_config.php: Fixed ACL/Menu visibility issues
+	with Wiki and Customer sections.
+	
+	* include/functions_db.php: company_invoice_total() new function.
+	
+	* operation/invoices
+	operation/invoices/invoices.php: New concept: Invoices attached
+	to a customer account. Could be this the future ERP feature ? ;)
+	
+	* operation/incidents/incident_workunits.php: Now workunit view
+	also includes the "main incident" description just to facilitate
+	the operation (idea by dario).
+	
+	* operation/projects/task_cost.php: Changes due table table change.
+	
+	* operation/main_menu.php
+	operation/side_menu.php: New "customers" menu option
+	
+	* operation/contracts/contract_detail.php
+	operation/contacts/contact_detail.php
+	operation/companies/company_detail.php: Search for contract takes
+	to dates, chagnes in listing, changes in several options. Small 
+	fixes and adapted to new customer menu options.
+
+	* integria_db.sql
+	upgrade_to_3.0.sql: New tinvoice table replaces ttask_cost-
+	
 2012-01-02 Miguel de Dios  <miguel.dedios@artica.es>
 
 	* include/wiki/lionwiki_lib.php: fixed show page immediately after to save.

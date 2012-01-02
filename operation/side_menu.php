@@ -516,28 +516,8 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 	echo "</div>";
 }
 
-// Reports
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
-	echo "<div class='portlet'>";
-
-
-	echo "<h3 class='admin'>".__('Reports')."</h3>";
-	echo "<ul class='sidemenu'>";
-
-	echo '<li>';
-	echo '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_reports">'.__('Defined reports').'</a>';
-	echo '</li>';
-	echo '<li>';
-	echo '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail">'.__('Create report').'</a>';
-	echo '</li>';
-
-	echo "</ul>";
-	echo "</div>";
-	
-}
-
 // Customers 
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
+if ($sec == "customers" && give_acl ($config["id_user"], 0, "IM") && $show_customers != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 
 
@@ -549,12 +529,12 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inven
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail'>".__('Companies')."</a></li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail'>".__('Companies')."</a></li>";
 
 
 	if ($sec2 == "operation/companies/company_detail") {
 			echo "<li style='margin-left: 15px; font-size: 10px;'>";
-			echo "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&new_company=1'>".__('New company')."</a>";
+			echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&new_company=1'>".__('New company')."</a>";
 			echo "</li>";
 		}
 
@@ -564,7 +544,7 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inven
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/companies/company_role'>".__('Company roles')."</a></li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/companies/company_role'>".__('Company roles')."</a></li>";
 
 
 	// Contract overview
@@ -572,12 +552,12 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inven
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail'>".__('Contracts')."</a></li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail'>".__('Contracts')."</a></li>";
 
 	// new
 	if ($sec2 == "operation/contracts/contract_detail") {
 			echo "<li style='margin-left: 15px; font-size: 10px;'>";
-			echo "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&new_contract=1'>".__('New contract')."</a>";
+			echo "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&new_contract=1'>".__('New contract')."</a>";
 			echo "</li>";
 		}
 
@@ -587,17 +567,37 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inven
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail'>".__('Contacts')."</a></li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/contacts/contact_detail'>".__('Contacts')."</a></li>";
 
 	if ($sec2 == "operation/contacts/contact_detail") {
 			echo "<li style='margin-left: 15px; font-size: 10px;'>";
-			echo "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail&new_contact=1'>".__('New contact')."</a>";
+			echo "<a href='index.php?sec=customers&sec2=operation/contacts/contact_detail&new_contact=1'>".__('New contact')."</a>";
 			echo "</li>";
 		}
 
 
 	echo "</ul>";
 	echo "</div>";
+}
+
+// Reports
+if ($sec == "customers" && give_acl ($config["id_user"], 0, "IM") && $show_customers != MENU_HIDDEN) {
+	echo "<div class='portlet'>";
+
+
+	echo "<h3 class='admin'>".__('Reports')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	echo '<li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/inventories/inventory_reports">'.__('Defined reports').'</a>';
+	echo '</li>';
+	echo '<li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/inventories/inventory_reports_detail">'.__('Create report').'</a>';
+	echo '</li>';
+
+	echo "</ul>";
+	echo "</div>";
+	
 }
 
 

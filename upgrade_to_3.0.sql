@@ -98,20 +98,24 @@ ALTER TABLE tprofile ADD `wr` tinyint(1) NOT NULL default '0';
 ALTER TABLE tprofile ADD `ww` tinyint(1) NOT NULL default '0';
 ALTER TABLE tprofile ADD `wm` tinyint(1) NOT NULL default '0';
 
--- Table for bills, and externals expenses imputable to a task / project
+-- Table for bills, and externals expenses imputable to a task / project / company
 
-CREATE TABLE `ttask_cost` (
+CREATE TABLE `tinvoice` (
   `id` int(6) unsigned NOT NULL auto_increment,
   `id_user` varchar(60) default NULL,
   `id_task` int(10) unsigned NULL default NULL,
+  `id_company` int(10) unsigned NULL default NULL,  
   `bill_id` varchar(50) NOT NULL default '',
-  `ammount` float(9,2) NOT NULL DEFAULT '0.0',
+  `ammount` float(11,2) NOT NULL DEFAULT '0.0',
   `description` mediumtext NOT NULL,
   `id_attachment` bigint(20) unsigned NULL default NULL,
   `locked` tinyint(3) unsigned NOT NULL DEFAULT 0,
   `locked_id_user` varchar(60) DEFAULT NULL,
+  `invoice_create_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `invoice_payment_date` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`),
-  KEY `tcost_idx_1` (`id_user`)
+  KEY `tcost_idx_1` (`id_user`),
+  KEY `tcost_idx_2` (`id_company`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Not used anymore (never used, anyway)

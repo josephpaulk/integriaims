@@ -51,4 +51,9 @@ foreach ($workunits as $workunit) {
 	$workunit_data = get_workunit_data ($workunit['id_workunit']);
 	show_workunit_data ($workunit_data, $title);
 }
+echo "<h3>".__("Incident details")."</h3>";
+echo "<div style='margin-left: 10px; margin-top: 20px; width:90%; padding: 10px; border: 1px solid #ccc'><p>";
+echo clean_output_breaks ($incident["descripcion"]);
+echo "</div>";
+
 ?>

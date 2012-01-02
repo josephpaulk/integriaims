@@ -34,6 +34,24 @@ if ($id_task > 0 && ! user_belong_task ($config["id_user"], $id_task)){
 
 $operation = get_parameter ("operation", "");
 
+if ($operation == "delete"){
+	
+	$id_invoice = get_parameter ("id_invoice", "");
+	$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id_invoice");
+	
+	// Do another security check, don't rely on information passed from URL
+	
+	if (($config["id_user"] = $invoice["id_user"]) OR ($id_task == $invoice["id_task"])){
+			// Todo: Delete file from disk
+			if ($invoice["id_attachment"] != ""){
+				process_sql ("DELETE FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
+			}
+			process_sql ("DELETE FROM tinvoice WHERE id = $id_invoice");
+	}
+	
+	$operation = "list";
+}
+
 if ($operation == "add"){
 	
 	$filename = get_parameter ('upfile', false);
@@ -67,7 +85,7 @@ if ($operation == "add"){
 	}
 	
 	// Creating the cost record
-	$sql = sprintf ('INSERT INTO ttask_cost (description, id_user, id_task,
+	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_task,
 	bill_id, ammount, id_attachment) VALUES ("%s", "%s", %d, "%s", "%s", %d)',
 			$description, $user_id, $id_task, $bill_id, $ammount, $id_attachment);
 	
@@ -78,6 +96,7 @@ if ($operation == "add"){
 		echo '<h3 class="error">'.__('There was a problem creating adding the cost').'</h3>';
 	}
 	
+	$operation = "list";
 }
 
 // Show form to create a new cost
@@ -91,7 +110,7 @@ if ($operation == "list"){
 	
 	echo "<h4>".__("Total cost for this task"). " : $total</h4>";
 
-	$costs = get_db_all_rows_sql ("SELECT * FROM ttask_cost WHERE id_task = $id_task");
+	$costs = get_db_all_rows_sql ("SELECT * FROM tinvoice WHERE id_task = $id_task");
 	if ($costs === false)
 		$costs = array ();
 	
@@ -103,15 +122,22 @@ if ($operation == "list"){
 	$table->head[0] = __('Description');
 	$table->head[1] = __('Ammount');
 	$table->head[2] = __('Filename');
+	$table->head[3] = __('Delete');
 	
 	foreach ($costs as $cost) {
 		$data = array ();
 		$data[0] = $cost["description"];
 		$data[1] = $cost["ammount"];
+		$id_invoice = $cost["id"];
 		
 		$filename = get_db_sql ("SELECT filename FROM tattachment WHERE id_attachment = ". $cost["id_attachment"]);
 		
 		$data[2] = 	"<a href='".$config["base_url"]."/attachment/".$cost["id_attachment"]."_".$filename."'>$filename</a>";
+		
+		if (($config["id_user"] = $cost["id_user"]) OR (project_manager_check ($id_project))){
+			$data[3] = 	"<a href='index.php?sec=projects&sec2=operation/projects/task_cost&id_task=$id_task&id_project=$id_project&operation=delete&id_invoice=$id_invoice '><img src='images/cross.png'></a>";
+		}
+		
 		array_push ($table->data, $data);
 	}
 	print_table ($table);

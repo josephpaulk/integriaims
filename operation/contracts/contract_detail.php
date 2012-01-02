@@ -179,6 +179,7 @@ if ($id | $new_contract) {
 	$search_text = (string) get_parameter ('search_text');
 	$search_company_role = (int) get_parameter ('search_company_role');
 	$search_date_end = get_parameter ('search_date_end');
+	$search_date_begin = get_parameter ('search_date_begin');
 	
 	$where_clause = "WHERE tcontract.id_company = tcompany.id AND 1=1 ";
 	if ($search_text != "") {
@@ -189,8 +190,12 @@ if ($id | $new_contract) {
 		$where_clause .= sprintf (' AND id_company_role = %d', $search_company_role);
 	}
 	
-	if ($search_date_end) {
-		$where_clause .= sprintf (' AND tcontract.date_end > "%s"', $search_date_end);
+	if ($search_date_end != "") {
+		$where_clause .= sprintf (' AND tcontract.date_end <= "%s"', $search_date_end);
+	}
+	
+	if ($search_date_begin != "") {
+		$where_clause .= sprintf (' AND tcontract.date_end >= "%s"', $search_date_begin);
 	}
 	
 	$table->width = '100%';
@@ -200,12 +205,12 @@ if ($id | $new_contract) {
 	$table->data = array ();
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15,
 		100, true, __('Search'));
-	$table->data[0][1] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Max. End date'));
-		
-	$table->data[0][2] = print_select (get_company_roles (), 'search_company_role',
+	$table->data[0][1] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Ending from'));
+	$table->data[0][2] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Ending to'));
+	$table->data[0][3] = print_select (get_company_roles (), 'search_company_role',
 		$search_id_company, '', __('All'), 0, true, false, false, __('Company roles'));
 	
-	$table->data[0][3] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	$table->data[0][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contracts/contract_detail">';
 	print_table ($table);

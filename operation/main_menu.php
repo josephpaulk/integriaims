@@ -50,6 +50,15 @@ if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user
     echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory'>".__('Inventory')."</a></li>";
 }
 
+// Customers
+if (give_acl($config["id_user"], 0, "VR") && (get_external_user($config["id_user"]) == false) && $show_customers != MENU_HIDDEN) {
+    if ($sec == "customers" )
+	    echo "<li id='current' class='customer'>";
+    else
+	    echo "<li class='customer'>";
+    echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail'>".__('Customers')."</a></li>";
+}
+
 // KB
 if (give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN) {
 	if ($sec == "kb" )

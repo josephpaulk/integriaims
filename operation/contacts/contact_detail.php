@@ -159,7 +159,7 @@ if ($id || $new_contact) {
 		'id_company', $id_company, '', __('Select'), 0, true, false, false, __('Company'));
 		
 		
-	$table->data[3][1] .= "&nbsp;&nbsp;<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=$id_company'>";
+	$table->data[3][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 	$table->data[3][1] .= "<img src='images/company.png'></a>";
 	
 	$table->data[4][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
@@ -206,7 +206,7 @@ if ($id || $new_contact) {
 	$sql = "SELECT * FROM tcompany_contact $where_clause ORDER BY id_company, fullname";
 	$contacts = get_db_all_rows_sql ($sql);
 
-	$contacts = print_array_pagination ($contacts, "index.php?sec=inventory&sec2=operation/contacts/contact_detail");
+	$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail");
 
 	if ($contacts !== false) {
 		unset ($table);
@@ -226,11 +226,11 @@ if ($id || $new_contact) {
 		foreach ($contacts as $contact) {
 			$data = array ();
 			// Name
-			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail&id=".
+			$data[0] = "<a href='index.php?sec=customers&sec2=operation/contacts/contact_detail&id=".
 				$contact['id']."'>".$contact['fullname']."</a>";
-			$data[1] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=".$contact['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $contact['id_company'])."</a>";
+			$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$contact['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $contact['id_company'])."</a>";
 			$data[2] = $contact['email'];
-			$data[3] = '<a href="index.php?sec=inventory&
+			$data[3] = '<a href="index.php?sec=customers&
 						sec2=operation/contacts/contact_detail&
 						delete_contact=1&id='.$contact['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
@@ -241,7 +241,7 @@ if ($id || $new_contact) {
 		print_table ($table);
 	}
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contacts/contact_detail">';
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_contact', 1);

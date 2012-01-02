@@ -169,6 +169,7 @@ function load_menu_visibility() {
 	global $show_setup;
 	global $show_box;
 	global $show_wiki;
+	global $show_customers;
 
 	// Get visibility permissions to sections
 	$show_projects = enterprise_hook ('get_menu_section_access', array ('projects'));
@@ -211,10 +212,14 @@ function load_menu_visibility() {
 	if($show_wiki == ENTERPRISE_NOT_HOOK) {
 		$show_wiki = MENU_FULL;
 	}
+	$show_customers = enterprise_hook ('get_menu_section_access', array ('customers'));
+	if($show_customers == ENTERPRISE_NOT_HOOK) {
+		$show_customers = MENU_FULL;
+	}
 	$sec = get_parameter('sec', '');
 
 	$show_box = ($sec == "projects" && $show_projects == MENU_FULL) || 
-				($sec == "incidents" && $show_inciedents == MENU_FULL) || 
+				($sec == "incidents" && $show_incidents == MENU_FULL) || 
 				($sec == "inventory" && $show_inventory == MENU_FULL) || 
 				($sec == "kb" && $show_kb == MENU_FULL) || 
 				($sec == "download" && $show_file_releases == MENU_FULL) || 
@@ -222,7 +227,8 @@ function load_menu_visibility() {
 				($sec == "todo" && $show_todo == MENU_FULL) || 
 				($sec == "agenda" && $show_agenda == MENU_FULL) || 
 				($sec == "godmode" && $show_setup == MENU_FULL) ||
-				($sec == "godmode" && $show_wiki == MENU_FULL) ||
+				($sec == "wiki" && $show_wiki == MENU_FULL) ||
+				($sec == "customers" && $customers == MENU_FULL) ||
 				dame_admin($config['id_user']);
 }
 
