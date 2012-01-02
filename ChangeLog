@@ -1,5 +1,9 @@
 2012-01-02 Miguel de Dios  <miguel.dedios@artica.es>
 
+	* include/wiki/lionwiki_lib.php: fixed show page immediately after to save.
+
+2012-01-02 Miguel de Dios  <miguel.dedios@artica.es>
+
 	* include/wiki/plugins/wkp_BetterEditor.php,
 	include/wiki/plugins/wkp_Tags.php, include/wiki/plugins/wkp_Upload.php,
 	include/wiki/plugins/BetterEditor/bettereditor.js: added the first plugins

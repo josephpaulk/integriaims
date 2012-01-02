@@ -511,7 +511,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	} else
 		plugin('action', $action);
 	
-	if (!$action || $preview) { // page parsing
+	if (!$action || $action == 'save' || $preview) { // page parsing
 		if (preg_match("/(?<!\^)\{title:([^}\n]*)\}/U", $CON, $m)) { // Change page title
 			$TITLE = $m[1];
 			$CON = str_replace($m[0], "", $CON);
