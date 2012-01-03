@@ -1,3 +1,15 @@
+2012-01-03 Miguel de Dios  <miguel.dedios@artica.es>
+
+	* include/functions_db.php: added check for wiki in the function "give_acl".
+	
+	* include/wiki/lionwiki_lib.php, operation/wiki/wiki.php,
+	operation/side_menu.php: continue work in the wiki, now the new feautes is
+	the ACL, some fixes and admin pages.
+	
+	* include/wiki/plugins/wkp_Integria.php,
+	include/wiki/plugins/wkp_AdminPages.php: added own plugins, the Integria
+	plugin for check ACL and AdminPages for at the moment delete pages frontend.
+
 2012-01-02  Sancho Lerena <slerena@artica.es>
 
 	* include/styles/integria.css: New customers style for menu

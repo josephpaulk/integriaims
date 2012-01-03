@@ -55,7 +55,40 @@ function error_show_lionwiki($location) {
 	$page = $start_page_conf;
 }
 
-function lionwiki_show($conf = null, $execute_actions = true) {
+function check_no_read() {
+	global $PROTECTED_READ;
+	
+	$return = false;
+	
+	if (!plugin('check_no_read')) {
+		if ($PROTECTED_READ && !authentified()) { // does user need password to read content of site. If yes, ask for it.
+			$return = true;
+		}
+	}
+	else {
+		$return = true;
+	}
+	
+	return $return;
+}
+
+function check_no_save() {
+	if (plugin('check_no_save')) {
+		return true;
+	}
+	
+	return false;
+}
+
+function check_no_new_page() {
+	if (plugin('check_no_new_page')) {
+		return true;
+	}
+	
+	return false;
+}
+
+function lionwiki_show($conf = null, $execute_actions_param = true) {
 	global $plugins;
 	global $TITLE;
 	global $page;
@@ -77,6 +110,9 @@ function lionwiki_show($conf = null, $execute_actions = true) {
 	global $self;
 	global $self_form;
 	global $CON;
+	global $execute_actions;
+	
+	$execute_actions = $execute_actions_param;
 	
 	//Default confs
 	$wiki_title_conf = 'My new wiki';
@@ -298,11 +334,6 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		$page = $start_page_conf;
 	}
 	
-	//Disable the action
-	if (!$execute_actions) {
-		$action = '';
-	}
-	
 	$TITLE = $page = clear_path($page);
 	$moveto = clear_path($moveto);
 	$f1 = clear_path($f1);
@@ -311,18 +342,53 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	
 	plugin('actionBegin');
 	
-	if (!$action)
+	if (!$action) {
 		if (!$page) {
 			error_show_lionwiki("Location:$self" . "page=" . u($START_PAGE));
 		}
 		elseif (file_exists("$PG_DIR$page.$LANG.txt")) // language variant
 			error_show_lionwiki("Location:$self" . "page=" . u("$page.$LANG"));
-		elseif (!file_exists("$PG_DIR$page.txt"))
+		elseif (!file_exists("$PG_DIR$page.txt")) {
 			$action = 'edit'; // create page if it doesn't exist
 			
-	if ($PROTECTED_READ && !authentified()) { // does user need password to read content of site. If yes, ask for it.
-		$CON = "<form action=\"$self_form" . "page=".u($page)."\" method=\"post\"><p>$T_PROTECTED_READ <input type=\"password\" name=\"sc\"/> <input class=\"submit\" type=\"submit\"/></p></form>";
-		$action = 'view-html';
+			if (check_no_new_page()) {
+				if (!plugin('check_no_new_page')) {
+					$action = 'view-html';
+				}
+				else {
+					$action = 'view-html';
+				}
+			}
+		}
+	}
+	
+	//Disable the action
+	if (!$execute_actions) {
+		$action = '';
+	}
+	
+	//Check the create new page
+	if ($action == 'edit') {
+		if (!file_exists("$PG_DIR$page.txt")) {
+			if (check_no_new_page()) {
+				if (!plugin('show_message_no_new_page')) {
+					$action = 'view-html';
+				}
+				else {
+					$action = 'view-html';
+				}
+			}
+		}
+	}	
+	
+	if (check_no_read()) {
+		if (!plugin('show_message_no_read')) {
+			$CON = "<form action=\"$self_form" . "page=".u($page)."\" method=\"post\"><p>$T_PROTECTED_READ <input type=\"password\" name=\"sc\"/> <input class=\"submit\" type=\"submit\"/></p></form>";
+			$action = 'view-html';
+		}
+		else {
+			$action = 'view-html';
+		}
 	}
 	else {
 		if ($restore || $action == 'rev') { // Show old revision
@@ -346,69 +412,80 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		}
 	}
 	
-	if ($action == 'save' && !$preview && authentified()) { // do we have page to save?
-		if (!trim($content) && !$par) // delete empty page
-			@unlink("$PG_DIR$page.txt");
-		elseif ($last_changed < @filemtime("$PG_DIR$page.txt")) {
-			$action = 'edit';
-			$error = str_replace('{DIFF}', "<a href=\"$self" . "page=".u($page)."&amp;action=diff\">$T_DIFF</a>", $T_EDIT_CONFLICT);
+	if ($action == 'save' && check_no_save()) {
+		if (!plugin('show_message_no_save')) {
+			$action = 'view-html';
 		}
-		elseif (!plugin('writingPage')) { // are plugins OK with page? (e.g. checking for spam)
-			if ($par) {
-				$c = @file_get_contents("$PG_DIR$page.txt");
-				$content = str_replace(get_paragraph($c, $par), $content, $c);
-			}
-	
-			if (!$file = @fopen("$PG_DIR$page.txt", 'w'))
-				die("Could not write page $PG_DIR$page.txt!");
-	
-			fwrite($file, $content); fclose($file);
-	
-			// Backup old revision
-			@mkdir($HIST_DIR.$page, 0777); // Create directory if does not exist
-	
-			$rightnow = date('Ymd-Hi-s', time() + $LOCAL_HOUR * 3600);
-	
-			if (!$bak = @fopen("$HIST_DIR$page/$rightnow.bak", 'w'))
-				die("Could not write to $HIST_DIR$page!");
-	
-			fwrite($bak, $content); fclose($bak);
-	
-			$es = fopen("$HIST_DIR$page/meta.dat", 'ab');
-	
-			fwrite($es, '!' . $rightnow .
-				str_pad($_SERVER['REMOTE_ADDR'], 16, ' ', STR_PAD_LEFT) .
-				str_pad(filesize("$PG_DIR$page.txt"), 11, ' ', STR_PAD_LEFT) . ' ' .
-				str_pad(substr($esum, 0, 128), 128 + 2)) . "\n";
-	
-			fclose($es);
-	
-			if ($moveto != $page && $moveto)
-				if (file_exists("$PG_DIR$moveto.txt"))
-					die('Error: target filename already exists. Page was not moved.');
-				elseif (!rename("$PG_DIR$page.txt", "$PG_DIR$moveto.txt"))
-					die('Unknown error! Page was not moved.');
-				elseif (!rename($HIST_DIR.$page, $HIST_DIR.$moveto)) {
-					rename("$PG_DIR$moveto.txt", "$PG_DIR$page.txt"); // revert previous change
-					die('Unknown error2! Page was not moved.');
-				}
-				else
-					$page = $moveto;
-	
-			if (!plugin('pageWritten')) {
-				error_show_lionwiki("Location:$self" . "page=" . u($page) . '&redirect=no' . ($par ? "&par=$par" : '') . ($_REQUEST['ajax'] ? '&ajax=1' : ''));
-			}
-			else {
-				$action = ''; // display content ...
-			}
-		}
-		else {// there's some problem with page, give user a chance to fix it
-			$action = 'edit';
+		else {
+			$action = 'view-html';
 		}
 	}
-	elseif ($action == 'save' && !$preview) { // wrong password, give user another chance
-		$error = $T_WRONG_PASSWORD;
-		$action = 'edit';
+	else {
+		if ($action == 'save' && !$preview && authentified()) { // do we have page to save?
+			var_dump(888);
+			if (!trim($content) && !$par) // delete empty page
+				@unlink("$PG_DIR$page.txt");
+			elseif ($last_changed < @filemtime("$PG_DIR$page.txt")) {
+				$action = 'edit';
+				$error = str_replace('{DIFF}', "<a href=\"$self" . "page=".u($page)."&amp;action=diff\">$T_DIFF</a>", $T_EDIT_CONFLICT);
+			}
+			elseif (!plugin('writingPage')) { // are plugins OK with page? (e.g. checking for spam)
+				if ($par) {
+					$c = @file_get_contents("$PG_DIR$page.txt");
+					$content = str_replace(get_paragraph($c, $par), $content, $c);
+				}
+		
+				if (!$file = @fopen("$PG_DIR$page.txt", 'w'))
+					die("Could not write page $PG_DIR$page.txt!");
+		
+				fwrite($file, $content); fclose($file);
+		
+				// Backup old revision
+				@mkdir($HIST_DIR.$page, 0777); // Create directory if does not exist
+		
+				$rightnow = date('Ymd-Hi-s', time() + $LOCAL_HOUR * 3600);
+		
+				if (!$bak = @fopen("$HIST_DIR$page/$rightnow.bak", 'w'))
+					die("Could not write to $HIST_DIR$page!");
+		
+				fwrite($bak, $content); fclose($bak);
+		
+				$es = fopen("$HIST_DIR$page/meta.dat", 'ab');
+		
+				fwrite($es, '!' . $rightnow .
+					str_pad($_SERVER['REMOTE_ADDR'], 16, ' ', STR_PAD_LEFT) .
+					str_pad(filesize("$PG_DIR$page.txt"), 11, ' ', STR_PAD_LEFT) . ' ' .
+					str_pad(substr($esum, 0, 128), 128 + 2)) . "\n";
+		
+				fclose($es);
+		
+				if ($moveto != $page && $moveto)
+					if (file_exists("$PG_DIR$moveto.txt"))
+						die('Error: target filename already exists. Page was not moved.');
+					elseif (!rename("$PG_DIR$page.txt", "$PG_DIR$moveto.txt"))
+						die('Unknown error! Page was not moved.');
+					elseif (!rename($HIST_DIR.$page, $HIST_DIR.$moveto)) {
+						rename("$PG_DIR$moveto.txt", "$PG_DIR$page.txt"); // revert previous change
+						die('Unknown error2! Page was not moved.');
+					}
+					else
+						$page = $moveto;
+		
+				if (!plugin('pageWritten')) {
+					error_show_lionwiki("Location:$self" . "page=" . u($page) . '&redirect=no' . ($par ? "&par=$par" : '') . ($_REQUEST['ajax'] ? '&ajax=1' : ''));
+				}
+				else {
+					$action = ''; // display content ...
+				}
+			}
+			else {// there's some problem with page, give user a chance to fix it
+				$action = 'edit';
+			}
+		}
+		elseif ($action == 'save' && !$preview) { // wrong password, give user another chance
+			$error = $T_WRONG_PASSWORD;
+			$action = 'edit';
+		}
 	}
 	
 	if ($action == 'edit' || $preview) {
@@ -508,8 +585,20 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	
 		$CON = "<table>$recent</table>";
 		$TITLE = $T_RECENT_CHANGES;
-	} else
-		plugin('action', $action);
+	}
+	else {
+		if (!plugin('check_no_action', $action)) { //Check to block or not a action
+			plugin('action', $action);
+		}
+		else {
+			if (!plugin('show_message_no_save')) {
+				$action = 'view-html';
+			}
+			else {
+				$action = 'view-html';
+			}
+		}
+	}
 	
 	if (!$action || $action == 'save' || $preview) { // page parsing
 		if (preg_match("/(?<!\^)\{title:([^}\n]*)\}/U", $CON, $m)) { // Change page title
@@ -704,6 +793,10 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		'FORM_PASSWORD' => $FORM_PASSWORD,
 		'FORM_PASSWORD_INPUT' => $FORM_PASSWORD_INPUT
 	);
+	
+	if ($action == '') {
+		$tpl_subs['SYNTAX'] = "<a href=\"$SYNTAX_PAGE\">$T_SYNTAX</a>";
+	}
 	
 	foreach ($tpl_subs as $tpl => $rpl) // substituting values
 		$html = template_replace($tpl, $rpl, $html);

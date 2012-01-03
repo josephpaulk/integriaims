@@ -25,9 +25,14 @@ if (check_login() != 0) {
 	exit;
 }
 
+if (! give_acl ($config['id_user'], $id_grupo, "WR")) {
+ 	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access agenda of group ".$id_grupo);
+	include ("general/noaccess.php");
+	exit;
+}
+
 require_once("include/wiki/lionwiki_lib.php");
-//debugPrint($_SERVER);
-//debugPrint($config);
 
 $conf['self'] = 'index.php?sec=wiki&sec2=operation/wiki/wiki' . '&';
 $conf['plugin_dir'] = 'include/wiki/plugins/';
@@ -38,7 +43,7 @@ input[name="moveto"] {
 }
 </style>
 <table width="100%" cellpadding="4">
-	<tr><th colspan="3"><hr/><h1 id="page-title">{PAGE_TITLE}</h1></th></tr>
+	<tr><th colspan="3"><hr/><h2 id="page-title">{PAGE_TITLE}</h2></th></tr>
 	<tr>
 		<td colspan="3">
 			{<div style="color:#F25A5A;font-weight:bold;"> ERROR </div>}

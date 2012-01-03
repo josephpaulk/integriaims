@@ -1056,14 +1056,33 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 		echo "<li>";
 	echo "<a href='index.php?sec=wiki&sec2=operation/wiki/wiki'>".__('Wiki')."</a></li>";
 	echo "</li>";
+		if (!give_acl ($config['id_user'], $id_grupo, "WW")) {
+			$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
+				<li>{RECENT_CHANGES}</li>
+				<li>{HISTORY}</li>
+				<li>{SYNTAX}</li>';
+		}
+		elseif (!give_acl ($config['id_user'], $id_grupo, "WM")) {
+			$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
+				<li>{plugin:UPLOAD}</li>
+				<li>{RECENT_CHANGES}</li>
+				<li>{EDIT}</li>
+				<li>{HISTORY}</li>
+				<li>{SYNTAX}</li>';
+		}
+		else {
+			$translationAdminPages = __('Admin Pages');
+			$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
+				<li>{plugin:ADMINPAGES}</li>
+				<li>{plugin:UPLOAD}</li>
+				<li>{RECENT_CHANGES}</li>
+				<li>{EDIT}</li>
+				<li>{HISTORY}</li>
+				<li>{SYNTAX}</li>';
+		}
 		$conf['plugin_dir'] = 'include/wiki/plugins/';
 		$conf['self'] = 'index.php?sec=wiki&sec2=operation/wiki/wiki' . '&';
-		$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
-		<li>{plugin:UPLOAD}</li>
-		<li>{RECENT_CHANGES}</li>
-		<li>{EDIT}</li>
-		<li>{HISTORY}</li>
-		<li>{SYNTAX}</li>';
+		
 		ob_start();
 		lionwiki_show($conf, false);
 		$form_search = ob_get_clean();
