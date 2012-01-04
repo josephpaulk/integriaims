@@ -422,7 +422,6 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	}
 	else {
 		if ($action == 'save' && !$preview && authentified()) { // do we have page to save?
-			var_dump(888);
 			if (!trim($content) && !$par) // delete empty page
 				@unlink("$PG_DIR$page.txt");
 			elseif ($last_changed < @filemtime("$PG_DIR$page.txt")) {
@@ -550,10 +549,12 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		$CON .= diff($f1, $f2);
 	}
 	elseif ($action == 'search') {
-		for ($files = array(), $dir = opendir($PG_DIR); $f = readdir($dir);)
-			if (substr($f, -4) == '.txt' && ($c = @file_get_contents($PG_DIR . $f)))
+		for ($files = array(), $dir = opendir($PG_DIR); $f = readdir($dir);) {
+			if (substr($f, -4) == '.txt' && ($c = @file_get_contents($PG_DIR . $f)) !== false) {
 				if (!$query || stristr($f . $c, $query) !== false)
 					$files[] = substr($f, 0, -4);
+			}
+		}
 	
 		sort($files);
 	

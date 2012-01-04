@@ -1060,7 +1060,8 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 			$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
 				<li>{RECENT_CHANGES}</li>
 				<li>{HISTORY}</li>
-				<li>{SYNTAX}</li>';
+				<li>{SYNTAX}</li>
+				{plugin:SIDEMENU}';
 		}
 		elseif (!give_acl ($config['id_user'], $id_grupo, "WM")) {
 			$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
@@ -1068,7 +1069,8 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 				<li>{RECENT_CHANGES}</li>
 				<li>{EDIT}</li>
 				<li>{HISTORY}</li>
-				<li>{SYNTAX}</li>';
+				<li>{SYNTAX}</li>
+				{plugin:SIDEMENU}';
 		}
 		else {
 			$translationAdminPages = __('Admin Pages');
@@ -1078,7 +1080,8 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 				<li>{RECENT_CHANGES}</li>
 				<li>{EDIT}</li>
 				<li>{HISTORY}</li>
-				<li>{SYNTAX}</li>';
+				<li>{SYNTAX}</li>
+				{plugin:SIDEMENU}';
 		}
 		$conf['plugin_dir'] = 'include/wiki/plugins/';
 		$conf['self'] = 'index.php?sec=wiki&sec2=operation/wiki/wiki' . '&';

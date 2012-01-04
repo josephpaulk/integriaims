@@ -34,8 +34,23 @@ if (! give_acl ($config['id_user'], $id_grupo, "WR")) {
 
 require_once("include/wiki/lionwiki_lib.php");
 
+$translation_strings = array();
+$translation_strings['title_text'] = __('Admin Pages');
+$translation_strings['delete_text'] = __('Delete');
+$translation_strings['correct_text'] = __('Correct delete page ');
+$translation_strings['incorrect_text'] = __('Incorrect delete page ');
+
+$conf_plugin_dir = 'include/wiki/plugins/';
+$conf_var_dir = 'var/';
+if (isset($config['wiki_plugin_dir']))
+	$conf_plugin_dir = $config['wiki_plugin_dir'];
+if (isset($config['conf_var_dir']))
+	$conf_var_dir = $config['conf_var_dir'];
+
+$conf['wiki_title'] = 'Wiki';
 $conf['self'] = 'index.php?sec=wiki&sec2=operation/wiki/wiki' . '&';
-$conf['plugin_dir'] = 'include/wiki/plugins/';
+$conf['plugin_dir'] = $conf_plugin_dir;
+$conf['var_dir'] = $conf_var_dir;
 $conf['fallback_template'] = '
 <style type="text/css">
 input[name="moveto"] {

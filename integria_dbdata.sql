@@ -27,7 +27,9 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('api_password',''),
 ('flash_charts','1'),
 ('fontsize', 6),
-('auth_methods', 'mysql');
+('auth_methods', 'mysql'),
+('wiki_plugin_dir', 'include/wiki/plugins/'),
+('conf_var_dir', 'wiki_data/');
 
 -- Default password is 'integria'
 

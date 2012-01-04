@@ -1,3 +1,14 @@
+2012-01-04 Miguel de Dios  <miguel.dedios@artica.es>
+
+	* include/wiki/plugins/wkp_Sidemenu.php: new plugin for added page side_menu
+	that the content show in the side menu.
+	
+	* include/wiki/lionwiki_lib.php, operation/side_menu.php,
+	operation/wiki/wiki.php: some fixes and added code for the new plugin.
+
+	* integria_demo.sql, integria_dbdata.sql: added default conf for the wiki in
+	tconfig.
+
 2012-01-03 Miguel de Dios  <miguel.dedios@artica.es>
 
 	* include/functions_db.php: added check for wiki in the function "give_acl".
