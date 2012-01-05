@@ -56,25 +56,35 @@ $conf['fallback_template'] = '
 input[name="moveto"] {
 	width: 100%;
 }
+
+#wiki_view a {
+	color: red;
+}
+
+#wiki_view li {
+	list-style-type: circle;
+}
 </style>
-<table width="100%" cellpadding="4">
-	<tr><th colspan="3"><hr/><h2 id="page-title">{PAGE_TITLE}</h2></th></tr>
-	<tr>
-		<td colspan="3">
-			{<div style="color:#F25A5A;font-weight:bold;"> ERROR </div>}
-			{CONTENT} {<div style="background: #EBEBED"> plugin:TAG_LIST </div>}
-			{plugin:TOOLBAR_TEXTAREA}
-			{CONTENT_FORM} {RENAME_INPUT <br/><br/>} {CONTENT_TEXTAREA}
-			<p style="float:right;margin:6px">{FORM_PASSWORD} {FORM_PASSWORD_INPUT} {plugin:CAPTCHA_QUESTION} {plugin:CAPTCHA_INPUT}
-			{EDIT_SUMMARY_TEXT} {EDIT_SUMMARY_INPUT} {CONTENT_SUBMIT} {CONTENT_PREVIEW}</p>{/CONTENT_FORM}
-		</td>
-	</tr>
-	<tr><td colspan="3"><hr/></td></tr>
-	<tr>
-		<td>' . __('Powered by ') . '<a href="http://lionwiki.0o.cz/">LionWiki</a>. {LAST_CHANGED_TEXT}: {LAST_CHANGED}</td>
-		<td></td>
-		<td></td>
-	</tr>
-</table>';
+<div id="wiki_view">
+	<table width="100%" cellpadding="4">
+		<tr><th colspan="3"><hr/><h2 id="page-title">{PAGE_TITLE}</h2></th></tr>
+		<tr>
+			<td colspan="3">
+				{<div style="color:#F25A5A;font-weight:bold;"> ERROR </div>}
+				{CONTENT} {<div style="background: #EBEBED"> plugin:TAG_LIST </div>}
+				{plugin:TOOLBAR_TEXTAREA}
+				{CONTENT_FORM} {RENAME_INPUT <br/><br/>} {CONTENT_TEXTAREA}
+				<p style="float:right;margin:6px">{FORM_PASSWORD} {FORM_PASSWORD_INPUT} {plugin:CAPTCHA_QUESTION} {plugin:CAPTCHA_INPUT}
+				{EDIT_SUMMARY_TEXT} {EDIT_SUMMARY_INPUT} {CONTENT_SUBMIT} {CONTENT_PREVIEW}</p>{/CONTENT_FORM}
+			</td>
+		</tr>
+		<tr><td colspan="3"><hr/></td></tr>
+		<tr>
+			<td>' . __('Powered by ') . '<a href="http://lionwiki.0o.cz/">LionWiki</a>. {LAST_CHANGED_TEXT}: {LAST_CHANGED}</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+</div>';
 lionwiki_show($conf);
 ?>

@@ -111,6 +111,7 @@ function lionwiki_show($conf = null, $execute_actions_param = true) {
 	global $self_form;
 	global $CON;
 	global $execute_actions;
+	global $rightnow;
 	
 	$execute_actions = $execute_actions_param;
 	
@@ -421,6 +422,8 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		}
 	}
 	else {
+		$rightnow = date('Ymd-Hi-s', time() + $LOCAL_HOUR * 3600);
+		
 		if ($action == 'save' && !$preview && authentified()) { // do we have page to save?
 			if (!trim($content) && !$par) // delete empty page
 				@unlink("$PG_DIR$page.txt");
@@ -441,8 +444,6 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		
 				// Backup old revision
 				@mkdir($HIST_DIR.$page, 0777); // Create directory if does not exist
-		
-				$rightnow = date('Ymd-Hi-s', time() + $LOCAL_HOUR * 3600);
 		
 				if (!$bak = @fopen("$HIST_DIR$page/$rightnow.bak", 'w'))
 					die("Could not write to $HIST_DIR$page!");
@@ -524,6 +525,15 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		for ($i = 0, $mi = 1, $c = count($files); $i < $c; $i++) {
 			if (($m = meta_getline($meta, $mi)) && !strcmp(basename($files[$i], ".bak"), $m[0]))
 				$mi++;
+				
+			global $return_loadMetadata;
+			$return_loadMetadata = '';
+			plugin('loadMetadata',$page, $m);
+			
+			//Replace IP for the return of loadMetaData
+			if (!empty($return_loadMetadata)) {
+				$m[1] = $return_loadMetadata;
+			}
 	
 			$CON .= '<input type="radio" name="f1" value="'.h($files[$i]).'"/><input type="radio" name="f2" value="'.h($files[$i]).'"/>';
 			$CON .= "<a href=\"$self" . "page=".u($page)."&amp;action=rev&amp;f1=".$files[$i]."\">".rev_time($files[$i])."</a> - ($m[2] B) $m[1] <i>".h($m[3])."</i><br/>";
@@ -576,9 +586,18 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		arsort($files);
 	
 		foreach (array_slice($files, 0, 100) as $f => $ts) { // just first 100 files
-			if ($meta = @fopen($HIST_DIR . basename($f, '.txt') . '/meta.dat', 'r')) {
+			$dir_name = basename($f, '.txt');
+			if ($meta = @fopen($HIST_DIR . $dir_name . '/meta.dat', 'r')) {
 				$m = meta_getline($meta, 1);
 				fclose($meta);
+			}
+			global $return_loadMetadata;
+			$return_loadMetadata = '';
+			plugin('loadMetadata',$dir_name, $m);
+			
+			//Replace IP for the return of loadMetaData
+			if (!empty($return_loadMetadata)) {
+				$m[1] = $return_loadMetadata;
 			}
 	
 			$recent .= "<tr><td class=\"rc-diff\"><a href=\"$self" . "page=".u($f)."&amp;action=diff\">$T_DIFF</a></td><td class=\"rc-date\" nowrap>".date($DATE_FORMAT, $ts + $LOCAL_HOUR * 3600)."</td><td class=\"rc-ip\">$m[1]</td><td class=\"rc-page\"><a href=\"$self" . "page=".u($f)."&amp;redirect=no\">".h($f)."</a> <span class=\"rc-size\">($m[2] B)</span><i class=\"rc-esum\"> ".h($m[3])."</i></td></tr>";

@@ -124,5 +124,49 @@ class Integria
 		
 		return false;
 	}
+	
+	function loadMetadata($dir_name, $metadata_lionwiki) {
+		global $HIST_DIR;
+		global $return_loadMetadata;
+		
+		$es = fopen("$HIST_DIR$dir_name/meta.integria", 'r');
+		while (($serialize_data = fgets($es)) !== false) {
+			$data = unserialize($serialize_data);
+			if ($metadata_lionwiki[0] == $data['time']) {
+				$return_loadMetadata = $data['user'];
+				break;
+			}
+		}
+		fclose($es);
+		
+		return false;
+	}
+	
+	function writingPage() {
+		global $HIST_DIR;
+		global $page;
+		global $action;
+		global $rightnow;
+		global $config;
+		
+		switch ($action) {
+			case 'save':
+				// Backup old revision
+				@mkdir($HIST_DIR.$page, 0777); // Create directory if does not exist
+				
+				$es = fopen("$HIST_DIR$page/meta.integria", 'a');
+				
+				$data = array();
+				$data['time'] = $rightnow;
+				$data['user'] = $config['id_user'];
+				
+				fputs ($es, serialize($data) . "\n");
+				
+				fclose($es);
+				break;
+		}
+		
+		return false;
+	}
 }
 ?>

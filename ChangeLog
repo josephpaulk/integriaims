@@ -1,3 +1,11 @@
+2012-01-05 Miguel de Dios  <miguel.dedios@artica.es>
+
+	* include/wiki/lionwiki_lib.php, include/wiki/plugins/wkp_Integria.php:
+	added support for change the content in the list of changes in history or
+	recent activity.
+	
+	* operation/wiki/wiki.php: added div with id wiki_view for apply css style.
+
 2012-01-04 Miguel de Dios  <miguel.dedios@artica.es>
 
 	* include/wiki/plugins/wkp_Sidemenu.php: new plugin for added page side_menu
