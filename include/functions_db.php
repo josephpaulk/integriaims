@@ -2118,4 +2118,14 @@ function company_invoice_total ($id_company){
 	return __($estado);
 }
 
+function return_user_report_types ($type){
+	switch ($type){	
+		case 1: return __("Custom report");
+				break;
+		case 2: return __("User activity graph");
+				break;
+		case 3: return __("User activity detailed");
+				break;
+	}
+}
 ?>

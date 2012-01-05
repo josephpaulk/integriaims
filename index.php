@@ -155,6 +155,18 @@ if ($recover != ""){
     exit;
 }
 
+// Check request from Localhost. Special request to generate PDF on crontask
+
+if (($_SERVER['REMOTE_ADDR'] == "127.0.0.1") OR ($_SERVER['REMOTE_ADDR'] == "localhost")){
+	
+	// Only to see PDF reports!
+	if (($pdf_output == 1) AND ($pdf_filename != "")){
+		if (!isset($config["scheduled_report_user"]))
+			$config["scheduled_report_user"] = "admin";
+		$_SESSION['id_usuario'] = $config["scheduled_report_user"];
+	}
+}
+
 // Login process
 if (! isset ($_SESSION['id_usuario']) && $login) {
 	$nick = get_parameter ("nick");
@@ -345,7 +357,7 @@ if ($pdf_output == 1){
 	$pdfObject->addHTML($html);
 	
 	if ($pdf_filename != "")
-		$pdfObject->writePDFfile ("/tmp/$pdf_filename");
+		$pdfObject->writePDFfile ( $config["homedir"]."/attachment/tmp/".$pdf_filename);
 	else
 		$pdfObject->showPDF();
 

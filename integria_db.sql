@@ -391,13 +391,7 @@ CREATE TABLE `ttodo` (
   `id_task` int(10) default NULL,
   PRIMARY KEY  (`id`),
   KEY `tt_idx_1` (`assigned_user`),
-  KEY `tt_idx_2` (`created_by_user`),
-  FOREIGN KEY (`assigned_user`) REFERENCES tusuario(`id_usuario`)
-       ON DELETE CASCADE,
-  FOREIGN KEY (`created_by_user`) REFERENCES tusuario(`id_usuario`)
-       ON DELETE CASCADE,
-  FOREIGN KEY (`id_task`) REFERENCES ttask(`id`)
-       ON DELETE CASCADE
+  KEY `tt_idx_2` (`created_by_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -817,7 +811,10 @@ CREATE TABLE `tuser_report` (
   `name` text default NULL,
   `report_type` text default NULL,
   `interval_days` integer unsigned NOT NULL default 7,
+  `lenght` integer unsigned NOT NULL default 7,
   `last_executed` datetime NOT NULL default '0000-00-00 00:00:00',
+  `id_external` mediumint(8) unsigned NOT NULL,
+  `id_group` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON DELETE CASCADE

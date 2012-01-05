@@ -127,7 +127,10 @@ CREATE TABLE `tuser_report` (
   `name` text default NULL,
   `report_type` text default NULL,
   `interval_days` integer unsigned NOT NULL default 7,
+  `lenght` integer unsigned NOT NULL default 7,
   `last_executed` datetime NOT NULL default '0000-00-00 00:00:00',
+  `id_external` mediumint(8) unsigned NOT NULL,
+  `id_group` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON DELETE CASCADE

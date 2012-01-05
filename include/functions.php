@@ -959,6 +959,21 @@ function get_user_language ($id_user = false) {
 	return $config['language'];
 }
 
+// This function delete all files present in directory.
+// Is not recursive. It only delete the files
 
+function delete_all_files_in_dir ($tmp_path){
+	
+	$handle = opendir ($tmp_path); 
+	while ($tmp = readdir ($handle)){
+		if ($tmp != '..' && $tmp!='.' && $tmp != ''){
+			$myfile = $tmp_path."/".$tmp;
+			if (is_writeable ($myfile) && is_file($myfile)){
+				unlink ($myfile);
+			}
+		}
+	}
+	closedir($handle); 
+}
 
 ?>

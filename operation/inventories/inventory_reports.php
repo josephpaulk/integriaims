@@ -61,17 +61,17 @@ $table->size = array ();
 foreach ($reports as $report) {
 	$data = array ();
 	
-	$data[0] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail&id='.$report['id'].'">';
+	$data[0] = '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&id='.$report['id'].'">';
 	$data[0] .= $report['name'];
 	$data[0] .= '</a>';
 		
 		
 	
-	$data[1] = "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail&render_html=1&clean_output=0&id=".$report['id']."'><img src='images/page_white_text.png'></a>";
-	$data[2] = "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail&render_html=1&pdf_output=1&clean_output=1&id=".$report['id']."'><img src='images/page_white_acrobat.png'></a>";
+	$data[1] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&clean_output=0&id=".$report['id']."'><img src='images/page_white_text.png'></a>";
+	$data[2] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&pdf_output=1&clean_output=1&id=".$report['id']."'><img src='images/page_white_acrobat.png'></a>";
 	
-	$data[3] = "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_reports_detail&render=1&raw_output=1&clean_output=1&id=".$report['id']."'><img src='images/binary.gif'></a>";
-	$data[4] = "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_reports&delete_report=1&id=".$report["id"]."'>";
+	$data[3] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render=1&raw_output=1&clean_output=1&id=".$report['id']."'><img src='images/binary.gif'></a>";
+	$data[4] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports&delete_report=1&id=".$report["id"]."'>";
 	$data[4] .= '<img src="images/cross.png">';
 	$data[4] .= '</a>';
 	

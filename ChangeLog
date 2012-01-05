@@ -1,3 +1,29 @@
+2012-01-05  Sancho Lerena <slerena@artica.es>
+
+	* index.php: Special request on localhost will "skip" the authentication
+	used to generate automatically PDF on enterprise version.
+	
+	* *.sql: More changes on tuser_report table.
+	
+	* include/functions.php: Added function delete_all_files_in_dir()
+
+	* functions_config.php: removed menu todo from menu_visibility.
+	
+	* functions_db.php: Added function to retun user_report types by
+	numerical code.
+
+	* include/include_graph_dependencies.php: removed two files already
+	loaded.
+	
+	* include/integria_cron.php: Added support for new enterprise
+	PDF/ Emailed scheduled Reports mode. Added autoclean on tmp directory.
+	
+	* operation/main_menu.php: Todo is now inside agenda menu.
+	
+	* operation/side_menu.php: Todo menu changes, inventory (custom) 
+	reports are now under "People" main menu, and added new scheduled
+	reports.
+
 2012-01-05 Miguel de Dios  <miguel.dedios@artica.es>
 
 	* include/wiki/lionwiki_lib.php, include/wiki/plugins/wkp_Integria.php:

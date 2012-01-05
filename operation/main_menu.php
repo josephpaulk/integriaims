@@ -90,19 +90,10 @@ if ($show_people != MENU_HIDDEN) {
 	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".__('People')."</a></li>";
 }
 
-if ($show_todo != MENU_HIDDEN) {
-	// TODO
-	if ($sec == "todo" )
-		echo "<li id='current' class='todo'>";
-	else
-		echo "<li class='todo'>";
-	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>".__('Todo')."</a></li>";
-}
-
 // Agenda
 if (give_acl($config["id_user"], 0, "AR") && $show_agenda != MENU_HIDDEN) {
 	// Agenda
-	if ($sec == "agenda" )
+	if (($sec == "agenda" ) OR ($sec == "todo"))
 		echo "<li id='current' class='agenda'>";
 	else
 		echo "<li class='agenda'>";

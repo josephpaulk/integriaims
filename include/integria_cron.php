@@ -489,6 +489,10 @@ if (check_daily_task()){
 	run_daily_check ();
 }
 
+// Call enterprise crontab
+
+enterprise_include ("include/integria_cron_enterprise.php");
+
 // Execute always (POP3 processing)
 
 run_mail_check();
@@ -565,9 +569,9 @@ foreach ($slas as $sla) {
 	}
 }
 
-// Call enterprise crontab
-enterprise_include ("include/integria_cron_enterprise.php");
+// Clean temporal directory
 
-
+$temp_dir = $config["homedir"]."/attachment/tmp";
+delete_all_files_in_dir ($temp_dir);
 
 ?>

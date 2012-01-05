@@ -57,7 +57,7 @@ require_once ('include/functions_ui.php');
 // ---------------
 if ($operation == "insert") {
 	$name = (string) get_parameter ("name");
-	$assigned_user = (string) get_parameter ("id_user");
+	$assigned_user = (string) get_parameter ("id_user", $config["id_user"]);
 	$priority = (int) get_parameter ("priority");
 	$progress = (int) get_parameter ("progress");
 	$description = (string) get_parameter ("description");

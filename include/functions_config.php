@@ -196,10 +196,6 @@ function load_menu_visibility() {
 	if($show_people == ENTERPRISE_NOT_HOOK) {
 		$show_people = MENU_FULL;
 	}
-	$show_todo = enterprise_hook ('get_menu_section_access', array ('todo'));
-	if($show_todo == ENTERPRISE_NOT_HOOK) {
-		$show_todo = MENU_FULL;
-	}
 	$show_agenda = enterprise_hook ('get_menu_section_access', array ('agenda'));
 	if($show_agenda == ENTERPRISE_NOT_HOOK) {
 		$show_agenda = MENU_FULL;
@@ -224,7 +220,6 @@ function load_menu_visibility() {
 				($sec == "kb" && $show_kb == MENU_FULL) || 
 				($sec == "download" && $show_file_releases == MENU_FULL) || 
 				($sec == "users" && $show_people == MENU_FULL) || 
-				($sec == "todo" && $show_todo == MENU_FULL) || 
 				($sec == "agenda" && $show_agenda == MENU_FULL) || 
 				($sec == "godmode" && $show_setup == MENU_FULL) ||
 				($sec == "wiki" && $show_wiki == MENU_FULL) ||

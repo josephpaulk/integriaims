@@ -580,26 +580,6 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "IM") && $show_custo
 	echo "</div>";
 }
 
-// Reports
-if ($sec == "customers" && give_acl ($config["id_user"], 0, "IM") && $show_customers != MENU_HIDDEN) {
-	echo "<div class='portlet'>";
-
-
-	echo "<h3 class='admin'>".__('Reports')."</h3>";
-	echo "<ul class='sidemenu'>";
-
-	echo '<li>';
-	echo '<a href="index.php?sec=customers&sec2=operation/inventories/inventory_reports">'.__('Defined reports').'</a>';
-	echo '</li>';
-	echo '<li>';
-	echo '<a href="index.php?sec=customers&sec2=operation/inventories/inventory_reports_detail">'.__('Create report').'</a>';
-	echo '</li>';
-
-	echo "</ul>";
-	echo "</div>";
-	
-}
-
 
 // SLA's
 if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
@@ -754,7 +734,7 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "KR") && $show_file_r
 
 
 // TODO
-if ($sec == "todo" && $show_todo != MENU_HIDDEN)  {
+if ((($sec == "todo" ) OR ($sec == "agenda"))&& ($show_agenda != MENU_HIDDEN)) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('To-Do')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -764,21 +744,21 @@ if ($sec == "todo" && $show_todo != MENU_HIDDEN)  {
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>".__('To-Do')."</a></li>";
+	echo "<a href='index.php?sec=agenda&sec2=operation/todo/todo'>".__('To-Do')."</a></li>";
 
 	// Todo overview of another users
 	if (($sec2 == "operation/todo/todo") && (isset($_GET["operation"])) && ($_GET["operation"] == "notme"))
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo&operation=notme'>".__('To-Do another people')."</a></li>";
+	echo "<a href='index.php?sec=agenda&sec2=operation/todo/todo&operation=notme'>".__('To-Do another people')."</a></li>";
 
 	// Todo create
 	if (($sec2 == "operation/todo/todo") && (isset($_GET["operation"])) && ($_GET["operation"] == "create"))
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo&operation=create'>".__('Add todo')."</a></li>";
+	echo "<a href='index.php?sec=agenda&sec2=operation/todo/todo&operation=create'>".__('Add todo')."</a></li>";
 	echo "</ul>";
 	echo "</div>";
 }
@@ -986,7 +966,23 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual'>".__('Annual report')."</a></li>";
 
-		echo "</ul></div>";
+		if ($sec2 == "operation/inventories/inventory_reports")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports">'.__('Custom reports').'</a>';
+		echo '</li>';
+
+		if ($sec2 == "operation/inventories/inventory_reports_detail")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail">'.__('Create report').'</a>';
+		echo '</li>';
+
+		enterprise_hook ('show_programmed_reports', array($sec2));
+		
+		echo "</ul></div>";	
 	}
 
 	// PEOPLE MANAGEMENT
