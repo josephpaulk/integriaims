@@ -1,3 +1,8 @@
+2012-01-09  Sancho Lerena <slerena@artica.es>
+
+	* languages/es.po
+	languages/es.mo: Spanish translation update.
+
 2012-01-05  Sancho Lerena <slerena@artica.es>
 
 	* index.php: Special request on localhost will "skip" the authentication
