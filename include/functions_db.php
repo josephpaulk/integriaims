@@ -1480,6 +1480,7 @@ function get_companies ($only_names = true) {
 		foreach ($companies as $company) {
 			$retval[$company['id']] = $company['name'];
 		}
+		asort ($retval);
 		return $retval;
 	}
 	

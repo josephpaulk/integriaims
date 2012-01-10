@@ -498,7 +498,7 @@ if ($id) {
 	}
 
 
-	$table->width = '600px';
+	$table->width = '90%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';

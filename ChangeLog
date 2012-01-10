@@ -1,3 +1,10 @@
+2012-01-10  Sancho Lerena <slerena@artica.es>
+
+	* extras/contact_importer.php,
+	extras/contract_importer.php,
+	extras/company_importer.php: Added new scripts to import CRM data from 
+	Sugar CRM (Contacts, accounts and contracts).
+
 2012-01-09  Sancho Lerena <slerena@artica.es>
 
 	* languages/es.po

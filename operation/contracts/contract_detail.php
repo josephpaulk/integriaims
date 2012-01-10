@@ -152,14 +152,14 @@ if ($id | $new_contract) {
 	$table->data[3][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
 		'id_company', $id_company, '', '', '', true, false, false, __('Company'));
 		
-	$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=$id_company'>";
+	$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 	$table->data[3][0] .= "<img src='images/company.png'></a>";
 			
 	$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
 		'id_sla', $id_sla, '', '', '', true, false, false, __('SLA'));
 	$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contracts/contract_detail">';
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
 	print_table ($table);
 	echo '<div class="button" style="width: '.$table->width.'">';
 	if ($id) {
@@ -212,14 +212,14 @@ if ($id | $new_contract) {
 	
 	$table->data[0][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contracts/contract_detail">';
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
 	print_table ($table);
 	echo '</form>';
 	
 	$sql = "SELECT tcontract.* FROM tcontract, tcompany $where_clause ORDER BY date_end DESC";
 	$contracts = get_db_all_rows_sql ($sql);
 
-	$contracts = print_array_pagination ($contracts, "index.php?sec=inventory&sec2=operation/contracts/contract_detail");
+	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/contracts/contract_detail");
 
 	if ($contracts !== false) {
 		
@@ -246,10 +246,10 @@ if ($id | $new_contract) {
 				continue;
 			$data = array ();
 			
-			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/contracts/contract_detail&id="
+			$data[0] = "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&id="
 				.$contract["id"]."'>".$contract["name"]."</a>";
 			$data[1] = $contract["contract_number"];
-			$data[2] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=".$contract["id_company"]."'>";
+			$data[2] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$contract["id_company"]."'>";
 			$data[2] .= get_db_value ('name', 'tcompany', 'id', $contract["id_company"]);
 			$data[2] .= "</a>";
 			
@@ -257,14 +257,14 @@ if ($id | $new_contract) {
 			$data[4] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
 
 			// Delete
-			$data[5] = '<a href="index.php?sec=inventory&sec2=operation/contracts/contract_detail&delete_contract=1&id='.$contract["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+			$data[5] = '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&delete_contract=1&id='.$contract["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
 			
 			array_push ($table->data, $data);
 		}	
 		print_table ($table);
 	}
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contracts/contract_detail">';
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_contract', 1);

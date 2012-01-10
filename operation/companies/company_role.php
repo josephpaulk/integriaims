@@ -96,7 +96,7 @@ if ($id || $new_role) {
 	$table->data[0][0] = print_input_text ("name", $name, "", 60, 100, true, __('Role name'));
 	$table->data[1][0] = print_textarea ('description', 14, 1, $description, '', true, __('Description'));
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_role">';
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
 	print_table ($table);
 	echo '<div class="button" style="width: '.$table->width.'">';
 	if ($id) {
@@ -127,7 +127,7 @@ if ($id || $new_role) {
 	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_role">';
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
 	print_table ($table);
 	echo '</form>';
 	
@@ -149,10 +149,10 @@ if ($id || $new_role) {
 		foreach ($roles as $role) {
 			$data = array ();
 			
-			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_role&id=".
+			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_role&id=".
 				$role["id"]."'>".$role["name"]."</a>";
 			$data[1] = substr ($role["description"], 0, 70)."...";
-			$data[3] = '<a href="index.php?sec=inventory&
+			$data[3] = '<a href="index.php?sec=customers&
 						sec2=operation/companies/company_role&
 						delete_role=1&id='.$role['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
@@ -163,7 +163,7 @@ if ($id || $new_role) {
 		print_table ($table);
 	}
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/companies/company_role">';
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
 	echo '<div class="button" style="width: '.$table->width.'">';
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_role', 1);
