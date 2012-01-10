@@ -1,5 +1,10 @@
 2012-01-10  Sancho Lerena <slerena@artica.es>
 
+	* include/styles/wiki.css,
+	include/wiki/lionwiki_lib.php,
+	operation/wiki/wiki.php: Some nice changes to include a custom CSS for
+	wiki and minor details on usability.
+
 	* extras/contact_importer.php,
 	extras/contract_importer.php,
 	extras/company_importer.php: Added new scripts to import CRM data from 

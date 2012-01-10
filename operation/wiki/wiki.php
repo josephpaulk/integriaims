@@ -51,40 +51,30 @@ $conf['wiki_title'] = 'Wiki';
 $conf['self'] = 'index.php?sec=wiki&sec2=operation/wiki/wiki' . '&';
 $conf['plugin_dir'] = $conf_plugin_dir;
 $conf['var_dir'] = $conf_var_dir;
-$conf['fallback_template'] = '
-<style type="text/css">
-input[name="moveto"] {
-	width: 100%;
-}
-
-#wiki_view a {
-	color: red;
-}
-
-#wiki_view li {
-	list-style-type: circle;
-}
-</style>
+$conf['custom_style'] = file_get_contents ($config["homedir"]."/include/styles/wiki.css");
+$conf['fallback_template'] = $conf['custom_style']. '
+ 
 <div id="wiki_view">
-	<table width="100%" cellpadding="4">
-		<tr><th colspan="3"><hr/><h2 id="page-title">{PAGE_TITLE}</h2></th></tr>
+	<table width="100%" cellpadding="0">
+		<tr><td style="border-bottom: 1px solid #ccc;" colspan="3"><h2>{PAGE_TITLE}</h2></td></tr>
 		<tr>
 			<td colspan="3">
 				{<div style="color:#F25A5A;font-weight:bold;"> ERROR </div>}
 				{CONTENT} {<div style="background: #EBEBED"> plugin:TAG_LIST </div>}
 				{plugin:TOOLBAR_TEXTAREA}
 				{CONTENT_FORM} {RENAME_INPUT <br/><br/>} {CONTENT_TEXTAREA}
-				<p style="float:right;margin:6px">{FORM_PASSWORD} {FORM_PASSWORD_INPUT} {plugin:CAPTCHA_QUESTION} {plugin:CAPTCHA_INPUT}
 				{EDIT_SUMMARY_TEXT} {EDIT_SUMMARY_INPUT} {CONTENT_SUBMIT} {CONTENT_PREVIEW}</p>{/CONTENT_FORM}
 			</td>
 		</tr>
 		<tr><td colspan="3"><hr/></td></tr>
 		<tr>
-			<td>' . __('Powered by ') . '<a href="http://lionwiki.0o.cz/">LionWiki</a>. {LAST_CHANGED_TEXT}: {LAST_CHANGED}</td>
+			<td> {LAST_CHANGED_TEXT}: {LAST_CHANGED}</td>
 			<td></td>
 			<td></td>
 		</tr>
 	</table>
 </div>';
+
+// Main call to render wiki
 lionwiki_show($conf);
 ?>

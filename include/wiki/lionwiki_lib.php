@@ -186,7 +186,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 <tr><td colspan="3"><hr/></td></tr>
 <tr>
 	<td><div>{SEARCH_FORM}{SEARCH_INPUT}{SEARCH_SUBMIT}{/SEARCH_FORM}</div></td>
-	<td>Powered by <a href="http://lionwiki.0o.cz/">LionWiki</a>. {LAST_CHANGED_TEXT}: {LAST_CHANGED} {COOKIE}</td>
+	<td>{LAST_CHANGED_TEXT}: {LAST_CHANGED} {COOKIE}</td>
 	<td style="text-align:right">{EDIT} {SYNTAX} {HISTORY}</td>
 </tr>
 </table>
