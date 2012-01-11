@@ -29,6 +29,7 @@ $new_company = (bool) get_parameter ('new_company');
 $create_company = (bool) get_parameter ('create_company');
 $update_company = (bool) get_parameter ('update_company');
 $delete_company = (bool) get_parameter ('delete_company');
+$delete_invoice = get_parameter ('delete_invoice', "");
 
 // CREATE
 if ($create_company) {
@@ -403,6 +404,7 @@ if ($id) {
 			$table->head[4] = __('Payment');
 			$table->head[5] = __('File');
 			$table->head[6] = __('Upload by');
+			$table->head[7] = __('Delete');
 			$counter = 0;
 		
 			$company = get_db_row ('tcompany', 'id', $id);
@@ -426,6 +428,7 @@ if ($id) {
 				$data[5] = 	"<a href='".$config["base_url"]."/attachment/".$invoice["id_attachment"]."_".$filename."'>$filename</a>";
 				
 				$data[6] = $invoice["id_user"];
+				$data[7] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices&delete_invoice=1&id_invoice=".$invoice["id"]."'><img src='images/cross.png'></a>";
 				
 				array_push ($table->data, $data);
 			}	

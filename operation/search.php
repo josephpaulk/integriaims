@@ -18,7 +18,7 @@ global $config;
 check_login ();
 
 // We need to strip HTML entities if we want to use in a sql search
-$search_string = safe_output (get_parameter ("search_string",""));
+$search_string = get_parameter ("search_string","");
 echo "<h1>";
 
 echo __("Searching for");
@@ -211,8 +211,8 @@ if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
 		foreach ($contacts as $contact) {
 			$data = array ();
 		
-			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/contacts/contact_detail&id=".$contact["id"]."'>".$contact["fullname"].'</a>';
-			$data[1] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=".$contact["id_company"]."'>" . 	
+			$data[0] = "<a href='index.php?sec=customers&sec2=operation/contacts/contact_detail&id=".$contact["id"]."'>".$contact["fullname"].'</a>';
+			$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$contact["id_company"]."'>" . 	
 			get_db_sql ("SELECT name FROM tcompany WHERE id = " . $contact["id_company"]). "</a>";
 			$data[2] = $contact["email"];
 			$data[3] = $contact["position"];
@@ -247,24 +247,15 @@ if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
 		foreach ($companies as $company) {
 			$data = array ();
 	
-			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/companies/company_detail&id=".$company["id"]."'>" . 	
+			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$company["id"]."'>" . 	
 			$company["name"]. "</a>";
-			$data[1] = $company["id_company_role"];
+			$data[1] = get_db_sql ("SELECT name FROM tcompany_role WHERE id = ".$company["id_company_role"]);
 			
 			array_push ($table->data, $data);
 		}
 		print_table ($table);
 	}
 }
-
-
-exit;
-
-// THIS SHOULD BE DISABLED/REMOVED IN THE FUTURE:
-
-
-
-
 
 // Incidents
 if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
