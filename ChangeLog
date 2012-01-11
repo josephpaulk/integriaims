@@ -1,5 +1,8 @@
 2012-01-11  Sancho Lerena <slerena@artica.es>
 
+	* operation/companies/company_detail.php: Fixed creation of ontracts from
+	company detail.
+
 	* operation/search.php,
 	operation/companies/company_detail.php: Small fixes on searches. Invoice
 	can be erased and small fixes in links.

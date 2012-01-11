@@ -320,7 +320,7 @@ if ($id) {
 			}	
 			print_table ($table);
 			
-			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$contract["id_company"].'">';
+			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$id.'">';
 			echo '<div class="button" style="width: '.$table->width.'">';
 			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 			print_input_hidden ('new_contract', 1);
