@@ -294,7 +294,9 @@ if (give_acl ($config["id_user"], 0, "PM") || give_acl ($config["id_user"], 0, "
 echo '</div>';
 echo "</form>";
 
-include ("task.php");
+if ($id_project > 0){
+	include ("task.php");
+}
 
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>

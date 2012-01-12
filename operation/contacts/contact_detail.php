@@ -18,7 +18,7 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "IR")) {
+if (! give_acl ($config["id_user"], 0, "VR")) {
 	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access Contact");
 	require ("general/noaccess.php");
 	exit;
@@ -43,6 +43,13 @@ if ($get_contacts) {
 
 // Create
 if ($create_contact) {
+
+	if (! give_acl ($config["id_user"], 0, "VW")) {
+	       audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a new Contact");
+	        require ("general/noaccess.php");
+	        exit;
+	}
+
 	$fullname = (string) get_parameter ('fullname');
 	$phone = (string) get_parameter ('phone');
 	$mobile = (string) get_parameter ('mobile');
@@ -75,6 +82,13 @@ if ($create_contact) {
 
 // Update
 if ($update_contact) { // if modified any parameter
+
+        if (! give_acl ($config["id_user"], 0, "VW")) {
+               audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to update a Contact");
+               require ("general/noaccess.php");
+               exit;
+        }
+
 	$fullname = (string) get_parameter ('fullname');
 	$phone = (string) get_parameter ('phone');
 	$mobile = (string) get_parameter ('mobile');
@@ -103,6 +117,13 @@ if ($update_contact) { // if modified any parameter
 
 // Delete
 if ($delete_contact) {
+
+        if (! give_acl ($config["id_user"], 0, "VW")) {
+               audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to remove a Contact");
+                require ("general/noaccess.php");
+                exit;
+        }
+
 	$fullname = get_db_value  ('fullname', 'tcompany_contact', 'id', $id);
 	$sql = sprintf ('DELETE FROM tcompany_contact WHERE id = %d', $id);
 	process_sql ($sql);
@@ -166,17 +187,21 @@ if ($id || $new_contact) {
 	
 	echo '<form method="post" id="contact_form">';
 	print_table ($table);
+
+        if (give_acl ($config["id_user"], 0, "VW")) {
 	
-	echo '<div class="button" style="width: '.$table->width.'">';
-	if ($id) {
-		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', false);
-		print_input_hidden ('update_contact', 1);
-		print_input_hidden ('id', $id);
-	} else {
-		print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', false);
-		print_input_hidden ('create_contact', 1);
+		echo '<div class="button" style="width: '.$table->width.'">';
+		if ($id) {
+			print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', false);
+			print_input_hidden ('update_contact', 1);
+			print_input_hidden ('id', $id);
+		} else {
+			print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', false);
+			print_input_hidden ('create_contact', 1);
+		}
+		echo "</div>";
 	}
-	echo "</div>";
+
 	echo "</form>";
 } else {
 	$search_text = (string) get_parameter ('search_text');

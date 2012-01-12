@@ -18,7 +18,7 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "VM")) {
+if (! give_acl ($config["id_user"], 0, "VR")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
 	require ("general/noaccess.php");
 	exit;
@@ -40,7 +40,7 @@ if ($create_company) {
 	$id_company_role = (int) get_parameter ('id_company_role');
 	$id_group = (int) get_parameter ("id_group", 0);
 
-	if (! give_acl ($config["id_user"], $id_group, "VM")) {
+	if (! give_acl ($config["id_user"], $id_group, "VW")) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a company without privileges");
 		require ("general/noaccess.php");
 		exit;
@@ -69,7 +69,7 @@ if ($update_company) {
 	$id_company_role = (int) get_parameter ('id_company_role');
 	$id_group = (int) get_parameter ("id_group", 0);
 
-	if (! give_acl ($config["id_user"], $id_group, "VM")) {
+	if (! give_acl ($config["id_user"], $id_group, "VW")) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a company without privileges");
 		require ("general/noaccess.php");
 		exit;
@@ -97,6 +97,15 @@ if ($delete_company) { // if delete
 
 	$id = (int) get_parameter ('id');
 	$name = get_db_value ('name', 'tcompany', 'id', $id);
+	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id);
+
+	if (! give_acl ($config["id_user"], $id_group, "VW")) {
+                audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a company without privileges");
+                require ("general/noaccess.php");
+                exit;
+        }
+
+
 	$sql= sprintf ('DELETE FROM tcompany WHERE id = %d', $id);
 	process_sql ($sql);
 	insert_event ("COMPANY DELETED", $id, 0, $name);
@@ -106,6 +115,14 @@ if ($delete_company) { // if delete
 
 // Delete INVOICE
 if ($delete_invoice == 1){
+
+	 // TODO: Improve ACL check here.
+	if (! give_acl ($config["id_user"], 0, "VW")) {
+                audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a invoice without privileges");
+                require ("general/noaccess.php");
+                exit;
+        }
+
 	
 	$id_invoice = get_parameter ("id_invoice", "");
 	$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id_invoice");

@@ -18,7 +18,7 @@ global $config;
 
 check_login();
 
-if (! give_acl ($config["id_user"], 0, "IM")) {
+if (! give_acl ($config["id_user"], 0, "VR")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access company role management");
 	require ("general/noaccess.php");
 	exit;
@@ -32,6 +32,12 @@ $delete_role = (bool) get_parameter ('delete_role');
 
 // CREATE
 if ($create_role) {
+	if (! give_acl ($config["id_user"], 0, "VM")) {
+	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a company role management");
+	        require ("general/noaccess.php");
+	        exit;
+	}
+
 	$name = (string) get_parameter ("name");
 	$description = (string) get_parameter ("description");
 	$sql = sprintf ('INSERT INTO tcompany_role (name, description)
@@ -48,6 +54,13 @@ if ($create_role) {
 
 // UPDATE
 if ($update_role) {
+
+	if (! give_acl ($config["id_user"], 0, "VM")) {
+               audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to update a company role");
+               require ("general/noaccess.php");
+               exit;
+        }
+
 	$name = (string) get_parameter ('name');
 	$description = (string) get_parameter ('description');
 
@@ -67,6 +80,12 @@ if ($update_role) {
 
 // DELETE
 if ($delete_role) {
+        if (! give_acl ($config["id_user"], 0, "VM")) {
+                audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to delete a company role");
+                require ("general/noaccess.php");
+                exit;
+        }
+
 	$name = get_db_value ('name', 'tcompany_role', 'id', $id);
 	$sql = sprintf ('DELETE FROM tcompany_role WHERE id = %d', $id);
 	$result = process_sql ($sql);

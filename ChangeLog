@@ -1,3 +1,13 @@
+2012-01-12  Sancho Lerena <slerena@artica.es>
+
+	* operation/projects/project_detail.php: Fixed include on creation of a project.
+
+	* operation/side_menu.php,
+	operation/contracts/contract_detail.php,
+	operation/contacts/contact_detail.php,
+	operation/companies/company_role.php,
+	operation/companies/company_detail.php: Solved minor ACL problems.
+
 2012-01-11  Sancho Lerena <slerena@artica.es>
 
 	* operation/companies/company_detail.php: Fixed creation of ontracts from

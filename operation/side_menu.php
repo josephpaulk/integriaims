@@ -517,7 +517,7 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 }
 
 // Customers 
-if ($sec == "customers" && give_acl ($config["id_user"], 0, "IM") && $show_customers != MENU_HIDDEN) {
+if ($sec == "customers" && give_acl ($config["id_user"], 0, "VR") && $show_customers != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 
 

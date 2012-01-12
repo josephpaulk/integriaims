@@ -19,8 +19,8 @@ global $config;
 
 check_login();
 
-if (! give_acl ($config["id_user"], 0, "IM")) {
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+if (! give_acl ($config["id_user"], 0, "VR")) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to read a contract");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -43,6 +43,14 @@ if ($get_sla) {
 
 // CREATE
 if ($create_contract) {
+
+	$id_group = (int) get_parameter ('id_group');
+	if (! give_acl ($config["id_user"], $id_group, "VW")) {
+	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+	        require ("general/noaccess.php");
+	        exit;
+	}
+
 	$name = (string) get_parameter ('name');
 	$contract_number = (string) get_parameter ('contract_number');
 	$id_company = (int) get_parameter ('id_company');
@@ -74,6 +82,14 @@ if ($create_contract) {
 
 // UPDATE
 if ($update_contract) { // if modified any parameter
+
+	$id_group = (int) get_parameter ('id_group');
+        if (! give_acl ($config["id_user"], $id_group, "VW")) {
+                audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
+                require ("general/noaccess.php");
+                exit;
+        }
+
 	$name = (string) get_parameter ('name');
 	$contract_number = (string) get_parameter ('contract_number');
 	$id_company = (int) get_parameter ('id_company');
@@ -106,6 +122,14 @@ if ($update_contract) { // if modified any parameter
 // DELETE
 if ($delete_contract) {
 	$name = get_db_value ('name', 'tcontract', 'id', $id);
+	$id_group = get_db_value ('id_group', 'tcontract', 'id', $id);
+
+        if (! give_acl ($config["id_user"], $id_group, "VW")) {
+                audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a contract");
+                require ("general/noaccess.php");
+                exit;
+        }
+
 	$sql = sprintf ('DELETE FROM tcontract WHERE id = %d', $id);
 	process_sql ($sql);
 	insert_event ("CONTRACT DELETED", $id, 0, "$name");
@@ -223,7 +247,7 @@ if ($id | $new_contract) {
 
 	if ($contracts !== false) {
 		
-		$table->width = "90%";
+		$table->width = "95%";
 		$table->class = "listing";
 		$table->cellspacing = 0;
 		$table->cellpadding = 0;
@@ -242,7 +266,7 @@ if ($id | $new_contract) {
 		$counter = 0;
 		
 		foreach ($contracts as $contract) {
-			if (! give_acl ($config["id_user"], $contract["id_group"], "IR"))
+			if (! give_acl ($config["id_user"], $contract["id_group"], "VR"))
 				continue;
 			$data = array ();
 			
