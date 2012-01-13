@@ -1,5 +1,7 @@
 2012-01-13  Sancho Lerena <slerena@artica.es>
 
+	* operation/search.php: Fixed some data after serarch.
+
 	* include/functions_db.php: New custom scheduled report.
 	
 	* install.php: Fixed first page bad render on IE. Added more php module checks.
