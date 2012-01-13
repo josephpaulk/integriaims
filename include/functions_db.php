@@ -2127,6 +2127,9 @@ function return_user_report_types ($type){
 				break;
 		case 3: return __("User activity detailed");
 				break;
+		case 4: return __("Incident global report");
+				break;
+
 	}
 }
 ?>

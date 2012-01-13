@@ -1,3 +1,16 @@
+2012-01-13  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_db.php: New custom scheduled report.
+	
+	* install.php: Fixed first page bad render on IE. Added more php module checks.
+
+	* images/group_banners/flags.png
+	images/group_banners/users.png: Removed bad sample icons for group banner.
+
+	* images/group_banners/artica_logo.png: Added new sample icon for group banner.
+
+	* upgrade_to_3.0.sql: Missing table there.
+
 2012-01-12  Sancho Lerena <slerena@artica.es>
 
 	* operation/projects/project_detail.php: Fixed include on creation of a project.

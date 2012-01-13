@@ -39,9 +39,9 @@
 
 error_reporting(0);
 
-$integria_version = "v3.0dev Build 111004";
+$integria_version = "v3.0 Build 120113";
 
-$integria_footertext = "<div id='foot'>
+$integria_footertext = "<div id='footer'  style='width: 600px;'>
 	<i>Integria $integria_version is an OpenSource Software project 
 	<a target='_new' href='http://integriaims.com'>integriaims.com</a></i><br>
 	<a href='http://www.artica.es'>(c) Ártica Soluciones Tecnológicas</a><br>
@@ -176,9 +176,8 @@ function install_step1() {
 	global $integria_footertext;
 	global $integria_version;
 
-	echo "
-	<div align='center' '>
-	<div id='wizard' style='height: 480px;'>
+	echo "<div align='center'>
+	<div id='wizard' style='height: 550px;'>
 		<div id='install_box'>
 			<h2>Welcome to installation Wizard</h2>
 			<p>This wizard helps you to quick install Integria in your system.</p>
@@ -215,7 +214,7 @@ echo "<br><br><font size=1px>$integria_version</font>
 			echo "
 			</div>
 		</div>
-
+	
 		$integria_footertext
 	</div>";
 }
@@ -273,20 +272,21 @@ function install_step2() {
 	echo "
 	<div align='center'>
 	<div id='wizard' style='height: 515px;'>
-		<div id='install_box'>";
+		<div id='install_box'>"; 
 		echo "<h1>Checking software dependencies</h1>";
 			echo "<table border='0' width='330' cellpadding='5' cellspacing='5'>";
 			$res = 0;
 			$res += check_variable(phpversion(),"4.3","PHP version >= 4.3.x",1);
 			$res += check_extension("mysql","PHP MySQL extension");
 			$res += check_extension("gd","PHP gd extension");	
+			$res += check_extension("mcrypt","PHP mcrypt extension");
 			$res += check_extension("session","PHP session extension");
-			// $res += check_include("PEAR.php","PEAR PHP Library");
+			$res += check_extension("mbstring","PHP multibyte extension");
+			$res += check_extension("ldap","PHP ldap extension");
+			$res += check_extension("gettext","PHP gettext extension");
 			$res += check_exists ("/usr/bin/twopi","Graphviz Twopi in /usr/bin/twopi");
 			$res += check_extension("gettext","PHP gettext extension");
-		//$res += check_include("PEAR.php","PEAR PHP Library");
-			// $res += check_include("DB.php","PEAR:DB PHP Library");
-			// $res += check_include("XML/RPC.php","PEAR XML/RPC.php PHP Library");
+			//$res += check_include("PEAR.php","PEAR PHP Library");
 			$res += check_writable("./include","./include writable by HTTP server");
             $res += check_writable("./attachment/tmp","./attachment/tmp writable by HTTP server");
 			echo "</table>
@@ -323,9 +323,9 @@ function install_step3() {
 	<div align='center''>
 	<div id='wizard' style='height: 700px;'>
 		<div id='install_box'>
-			<h1>Environment and database setup</h1>
+			<h1>Database setup</h1>
 			<p>
-			This wizard will create your Integria database, and populate it with data needed to run for first time.
+			This wizard will (optionally) create your Integria IMS database, and populate it with data needed to run for first time.
 			You need a privileged user to create database schema, this is usually root user. 
 			Information about <i>root</i> user will not be used or stored in anywhere. 
 			</p>

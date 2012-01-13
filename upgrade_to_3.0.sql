@@ -1,3 +1,9 @@
+CREATE TABLE `tinventory_reports` (
+  `id` mediumint unsigned NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `sql` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tpending_mail` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -131,7 +137,5 @@ CREATE TABLE `tuser_report` (
   `last_executed` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_external` mediumint(8) unsigned NOT NULL,
   `id_group` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY  (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
-      ON DELETE CASCADE
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
