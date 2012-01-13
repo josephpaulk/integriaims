@@ -17,10 +17,10 @@ require_once ('include/functions_incidents.php');
 
 $filter = array ();
 $filter['string'] = (string) get_parameter ('search_string');
-$filter['status'] = (int) get_parameter ('status');
+$filter['status'] = (int) get_parameter ('status', -10 ); // By default, not closed
 $filter['priority'] = (int) get_parameter ('search_priority', -1);
 $filter['id_group'] = (int) get_parameter ('search_id_group', 1);
-$filter['status'] = (int) get_parameter ('search_status', 0);
+$filter['status'] = (int) get_parameter ('search_status', -10); // by default not closed
 $filter['id_product'] = (int) get_parameter ('search_id_product');
 $filter['id_company'] = (int) get_parameter ('search_id_company');
 $filter['id_inventory'] = (int) get_parameter ('search_id_inventory');

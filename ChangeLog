@@ -1,5 +1,13 @@
 2012-01-13  Sancho Lerena <slerena@artica.es>
 
+	* include/config_process.php:  Updated version!, rc1!
+
+	* index.php: Now scheduled reports uses API ACL list to grant access
+	to cron. Report is executed with the user of the report's owner.
+
+	* operation/reporting/incidents_html.php: Set filter "not closed" on
+	default.
+
 	* operation/search.php: Fixed some data after serarch.
 
 	* include/functions_db.php: New custom scheduled report.

@@ -63,6 +63,7 @@ require_once ('include/functions_form.php');
 require_once ('include/functions_calendar.php');
 require_once ('include/auth/mysql.php');
 require_once ('include/functions_db.mysql.php');
+require_once ('include/functions_api.php');
 
 /* Enterprise support */
 if (file_exists ("enterprise/load_enterprise.php")) {
@@ -155,15 +156,13 @@ if ($recover != ""){
     exit;
 }
 
-// Check request from Localhost. Special request to generate PDF on crontask
-
-if (($_SERVER['REMOTE_ADDR'] == "127.0.0.1") OR ($_SERVER['REMOTE_ADDR'] == "localhost")){
-	
+// Check request from IP's allowed in the API ACL list. Special request to generate PDF on crontask
+$ip_origin = $_SERVER['REMOTE_ADDR'];
+if (ip_acl_check ($ip_origin)) {
 	// Only to see PDF reports!
 	if (($pdf_output == 1) AND ($pdf_filename != "")){
-		if (!isset($config["scheduled_report_user"]))
-			$config["scheduled_report_user"] = "admin";
-		$_SESSION['id_usuario'] = $config["scheduled_report_user"];
+		$scheduled_report_user = get_parameter ("scheduled_report_user","");
+		$_SESSION['id_usuario'] = $scheduled_report_user;
 	}
 }
 
