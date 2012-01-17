@@ -1763,16 +1763,26 @@ function get_incident_users ($id_incident) {
 	
 	$users['owner'] = get_db_row ('tusuario', 'id_usuario', $incident['id_usuario']);
 	$users['creator'] = get_db_row ('tusuario', 'id_usuario', $incident['id_creator']);
-	$userswu  = people_involved_incident ($id_incident);
-	$users['affected'] = array();
+	$users['affected'] = people_involved_incident ($id_incident);
 
-	foreach ($userswu as $user) {
+	$final_users=array();
+
+	if ($users['affected'])
+	foreach ($users['affected'] as $user) {
 		if ($users['owner']['id_usuario'] == $user)
 			continue;
 		if ($users['creator']['id_usuario'] == $user)
 			continue;
+
+		$temp = array();
+		$temp['id_usuario'] = $user;
+		$final_users['affected'][] = $temp;
 	}
-	return $users;
+
+	$final_users["owner"] = $users['owner'];
+	$final_users["creator"] = $users['creator'];
+
+	return $final_users;
 }
 
 function check_incident_sla_min_response ($id_incident) {

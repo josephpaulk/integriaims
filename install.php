@@ -574,7 +574,6 @@ function install_step5() {
 
 	echo "
 	<div align='center' class='mt35'>
-	<h1>Integria IMS instalation wizard. Finished</h1>
 	<div id='wizard' style='height: 300px;'>
 		<div id='install_box'>
 			<h1>Installation complete</h1>

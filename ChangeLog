@@ -1,3 +1,17 @@
+2012-01-17  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_db.php,
+	include/functions_form.php: Fixed problem (at last) with participant
+	people in a incident (sidemenu)
+
+	* ugrade_to_3.0.sql: Removed some restricts on tables.
+	
+	* include/wiki/lionwiki_lib.php: HTML {html} tag was disabled.
+
+	* install.php: Fixed but title in last step.
+
+	* integria_demo.sql: Updated SQL
+
 2012-01-13  Sancho Lerena <slerena@artica.es>
 
 	* include/config_process.php:  Updated version!, rc1!

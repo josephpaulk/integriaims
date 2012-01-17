@@ -120,7 +120,7 @@ function lionwiki_show($conf = null, $execute_actions_param = true) {
 	$password_conf = '';
 	$template_conf = 'templates/dandelion.html';
 	$protected_read_conf = false;
-	$no_html_conf = true;
+	$no_html_conf = false;
 	$start_page_conf = 'Main page';
 	$syntax_page_conf = 'http://lionwiki.0o.cz/?page=Syntax+reference';
 	$date_format_conf = 'Y/m/d H:i';

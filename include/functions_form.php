@@ -818,7 +818,7 @@ function incident_users_list ($id_incident, $return = false) {
 	$output = '';
 	
 	$users = get_incident_users ($id_incident);
-	
+
 	$output .= '<ul id="incident-users-list" class="sidemenu">';
 
 	$output .= "&nbsp;&nbsp;".print_user_avatar ($users['owner']['id_usuario'], true, true);
@@ -832,7 +832,8 @@ function incident_users_list ($id_incident, $return = false) {
 	}
 	
 	if ($users['affected'])
-	foreach ($users['affected'] as $user) {
+	foreach ($users['affected'] as $user_item) {
+		$user = $user_item["id_usuario"];
 		if (!get_external_user($user)){
 			$output .= "&nbsp;&nbsp;" . print_user_avatar ($user, true, true);
 			$output .= ' <strong>'.$user.'</strong> (<em>'.__('Participant').'</em>)';

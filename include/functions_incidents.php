@@ -817,6 +817,7 @@ function people_involved_incident ($id_inc){
 				array_push ($people, $row[0]);
 		}
 	}
+
 	return $people;
 }
 
