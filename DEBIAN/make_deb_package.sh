@@ -2,8 +2,8 @@
 
 # Integria IMS
 # ==================================================
-# Copyright (c) 2005-2009 Artica Soluciones Tecnologicas
-# Please see http:#integriaims.com
+# Copyright (c) 2012 Artica Soluciones Tecnologicas
+# Please see http://integriaims.com
 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the  GNU Lesser General Public License
@@ -14,7 +14,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-integria_version="3.0dev"
+integria_version=`cat ../integria.spec | grep "define version" | awk '{ print $3 }'`
 
 for param in $@
 do
@@ -55,8 +55,13 @@ mkdir -p temp_package
 	cp -R $(ls | grep -v temp_package | grep -v DEBIAN ) temp_package/var/www/integria
 	cp -R DEBIAN temp_package
 	find temp_package/var/www/integria -name ".svn" | xargs rm -Rf 
-	rm -Rf temp_package/var/www/integria/integria.spec
+	find temp_package/var/www/integria -name "*~" | xargs rm -Rf
+	rm -Rf temp_package/var/www/integria/*.spec
 	chmod 755 -R temp_package/DEBIAN
+
+	# Special configuration file, need to be defined here
+	# later will be deleted / updated or backup on upgrade.
+
 	touch temp_package/var/www/integria/include/config.php
 
 	echo "Calculate md5sum for md5sums package control file."

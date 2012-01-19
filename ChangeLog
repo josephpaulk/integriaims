@@ -1,5 +1,9 @@
 2012-01-19  Sancho Lerena <slerena@artica.es>
 
+	* DEBIAN/control
+        DEBIAN/make_deb_package.sh
+        extras/build_deb.sh: changes for Debian packaging.
+
 	* integria.fedora.spec: New spec for RHEL/Fedora.
 
 	* integria.spec: Updated Spec for SUSE
