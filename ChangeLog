@@ -1,5 +1,10 @@
 2012-01-19  Sancho Lerena <slerena@artica.es>
 
+	* upgrade.sql: Deleted old stuff.
+
+	* integria_db.sql,
+	upgrade_to_3.0.sql: Title of incident now is a mediumtext.
+
 	* integria_update: Script to update the code.
 	
 	* upgrade_to_3.0.sql,

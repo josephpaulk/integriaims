@@ -137,3 +137,5 @@ CREATE TABLE `tuser_report` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE tinventory modify `description` mediumtext NULL default NULL;
+
+ALTER TABLE tincidencia modify `titulo` mediumtext not NULL;
