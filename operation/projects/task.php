@@ -61,6 +61,13 @@ if ($operation == 'move') {
 			id_parent_task = 0
 			WHERE id = %d', $target_project, $id_task);
 		process_sql ($sql);
+		
+		// Move subtasks of this task
+		$sql = sprintf ('UPDATE ttask
+			SET id_project = %d WHERE id_parent_task = %d', $target_project, $id_task);
+		process_sql ($sql);
+		
+		
 		task_tracking ($id_task, TASK_MOVED);
 	} else {
 		no_permission ();

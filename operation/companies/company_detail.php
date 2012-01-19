@@ -33,6 +33,12 @@ $delete_invoice = get_parameter ('delete_invoice', "");
 
 // CREATE
 if ($create_company) {
+	if (! give_acl ($config["id_user"], 0, "VW")) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a new company");
+		require ("general/noaccess.php");
+		exit;
+	}
+	
 	$name = (string) get_parameter ('name');
 	$address = (string) get_parameter ('address');
 	$fiscal_id = (string) get_parameter ('fiscal_id');
@@ -62,18 +68,19 @@ if ($create_company) {
 
 // UPDATE
 if ($update_company) {
+	
+	$id_group = (int) get_parameter ("id_group", 0);
+	if (! give_acl ($config["id_user"], $id_group, "VW")) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a company");
+		require ("general/noaccess.php");
+		exit;
+	}
+
 	$name = (string) get_parameter ('name');
 	$address = (string) get_parameter ('address');
 	$fiscal_id = (string) get_parameter ('fiscal_id');
 	$comments = (string) get_parameter ('comments');
 	$id_company_role = (int) get_parameter ('id_company_role');
-	$id_group = (int) get_parameter ("id_group", 0);
-
-	if (! give_acl ($config["id_user"], $id_group, "VW")) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a company without privileges");
-		require ("general/noaccess.php");
-		exit;
-	}
 
 	$sql = sprintf ('UPDATE tcompany SET comments = "%s", name = "%s",
 		address = "%s", fiscal_id = "%s", id_company_role = %d, id_grupo = "%s" WHERE id = %d',
@@ -93,18 +100,15 @@ if ($update_company) {
 // Delete company
 if ($delete_company) { // if delete
 
-	// TODO: Add ACL check here.
-
 	$id = (int) get_parameter ('id');
 	$name = get_db_value ('name', 'tcompany', 'id', $id);
 	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id);
 
 	if (! give_acl ($config["id_user"], $id_group, "VW")) {
-                audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a company without privileges");
-                require ("general/noaccess.php");
-                exit;
-        }
-
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a company without privileges");
+		require ("general/noaccess.php");
+		exit;
+	}
 
 	$sql= sprintf ('DELETE FROM tcompany WHERE id = %d', $id);
 	process_sql ($sql);
@@ -193,15 +197,23 @@ if ($id) {
 
 	// View/Edit company details
 	if ($op == ""){
+		$company = get_db_row ('tcompany', 'id', $id);
+		$id_group = $company['id_grupo'];		
+		
+		if (! give_acl ($config["id_user"], $id_group, "VR")) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access a company detail");
+			require ("general/noaccess.php");
+			exit;
+		}
+		
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 		echo "<h2>".__('Company details')."</h2>";
-		$company = get_db_row ('tcompany', 'id', $id);
+
 		$name = $company['name'];
 		$address = $company['address'];
 		$comments = $company['comments'];
 		$id_company_role = $company['id_company_role'];
 		$fiscal_id = $company['fiscal_id'];
-		$id_group = $company['id_grupo'];
 	
 		$table->width = '90%';
 		$table->class = "databox";
@@ -211,7 +223,10 @@ if ($id) {
 		$table->colspan[3][0] = 2;
 	
 		$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Company name'));
-		$table->data[0][1] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo WHERE id_grupo > 1 ORDER BY nombre', 'id_group', $id_group, '', '', '', true, false, false, __('Group'));
+		
+		$table->data[0][1] = combo_groups_visible_for_me ($config["id_user"], "id_group", 0, "VR", $id_group, true, true);
+		
+		
 		$table->data[1][0] = print_input_text ("fiscal_id", $fiscal_id, "", 10, 100, true, __('Fiscal ID'));
 		$table->data[1][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
 			'id_company_role', $id_company_role, '', __('Select'), 0, true, false, false, __('Company Role'));
@@ -294,7 +309,13 @@ if ($id) {
 
 	elseif ($op == "contracts") {
 
-		$sql = "SELECT * FROM tcontract WHERE id_company = $id ORDER BY name";
+		if (!get_admin_user($config["id_user"])){
+			$filter = get_user_groups_for_sql  ($config["id_user"], "VR");
+			$sql = "SELECT * FROM tcontract WHERE id_company = $id AND id_group IN $filter ORDER BY name";
+		} else {
+			$sql = "SELECT * FROM tcontract WHERE id_company = $id ORDER BY name";
+		}
+		
 		$contracts = get_db_all_rows_sql ($sql);
 		$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=contracts");
 
@@ -351,6 +372,14 @@ if ($id) {
 
 	elseif ($op == "contacts") {
 		$name = get_db_value ('name', 'tcompany', 'id', $id);
+		$id_group = get_db_sql ("SELECT id_grupo FROM tcompany WHERE id = $id");
+		
+		if (! give_acl ($config["id_user"], $id_group, "VR")) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access a contact detail");
+			require ("general/noaccess.php");
+			exit;
+		}
+		
 		echo '<h3>'.__('Contact details for company') . " : ". $name . "</h3>";
 
 		$table->class = 'listing';
@@ -397,6 +426,14 @@ if ($id) {
 	// INVOICES LISTING
 
 	elseif ($op == "invoices") {
+
+		$id_group = get_db_sql ("SELECT id_grupo FROM tcompany WHERE id = $id");
+		
+		if (! give_acl ($config["id_user"], $id_group, "VR")) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access a invoice listing");
+			require ("general/noaccess.php");
+			exit;
+		}
 
 		$sql = "SELECT * FROM tinvoice WHERE id_company = $id ORDER BY invoice_create_date";
 		$invoices = get_db_all_rows_sql ($sql);
@@ -481,7 +518,11 @@ if ($id) {
 	$table->colspan[3][0] = 2;
 	
 	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Company name'));
-	$table->data[0][1] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo WHERE id_grupo > 1 ORDER BY nombre', 'id_group', $id_group, '', '', '', true, false, false, __('Group'));
+	
+	// Todo: Show only groups with access
+	
+	$table->data[0][1] = combo_groups_visible_for_me ($config["id_user"], "id_group", 0, "VR", $id_group, true, true);
+	
 	$table->data[1][0] = print_input_text ("fiscal_id", $fiscal_id, "", 10, 100, true, __('Fiscal ID'));
 	$table->data[1][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
 		'id_company_role', $id_company_role, '', __('Select'), 0, true, false, false, __('Company Role'));
@@ -507,8 +548,15 @@ if ($id) {
 	echo "<br>";
 	$search_text = (string) get_parameter ('search_text');	
 	$search_role = (string) get_parameter ("search_role");
-
-	$where_clause = "WHERE 1=1 ";
+	
+	if (!get_admin_user($config["id_user"])){
+		$group_filter = get_user_groups_for_sql ($config["id_user"], "VR");
+		$where_clause = "WHERE 1=1 AND id_grupo IN $group_filter ";	
+	} else {
+		$where_clause = "WHERE 1=1";	
+	}
+	
+	
 	if ($search_text != "") {
 		$where_clause .= sprintf ('AND name LIKE "%%%s%%"', $search_text);
 	}

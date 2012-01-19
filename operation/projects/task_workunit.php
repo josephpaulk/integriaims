@@ -135,11 +135,24 @@ if (isset($result_output))
 
 // Specific task
 if ($id_task != 0) { 
+	
+	$pm = get_db_sql ("SELECT id_owner FROM tproject WHERE id = ".$id_project);
+
+	if (give_acl ($config["id_user"], 0, "PM") OR ($pm == $config["id_user"]) )  {
+
 	$sql= sprintf ('SELECT tworkunit.id
 			FROM tworkunit, tworkunit_task 
 			WHERE tworkunit_task.id_task = %d
 			AND tworkunit_task.id_workunit = tworkunit.id
 			ORDER BY tworkunit.timestamp DESC', $id_task);
+	} else {
+				$sql= sprintf ('SELECT tworkunit.id
+			FROM tworkunit, tworkunit_task 
+			WHERE tworkunit_task.id_task = %d
+			AND id_user = "'.$config["id_user"].'" 
+			AND tworkunit_task.id_workunit = tworkunit.id
+			ORDER BY tworkunit.timestamp DESC', $id_task);		
+	}
 	echo '<h3>'.__('Workunit resume');
 	echo ' - '.$project_name.' - '.$task_name;
 
@@ -147,12 +160,26 @@ if ($id_task != 0) {
 
 } elseif ($id_project != 0) {
 	// Whole project
-	$sql = sprintf ('SELECT tworkunit.id
-		FROM tworkunit, tworkunit_task, ttask 
-		WHERE tworkunit_task.id_task = ttask.id
-		AND ttask.id_project = %d
-		AND tworkunit_task.id_workunit = tworkunit.id
-		ORDER BY tworkunit.timestamp DESC', $id_project);
+	
+	$pm = get_db_sql ("SELECT id_owner FROM tproject WHERE id = ".$id_project);
+
+	if (give_acl ($config["id_user"], 0, "PM") OR ($pm == $config["id_user"]) )  {
+		$sql = sprintf ('SELECT tworkunit.id
+			FROM tworkunit, tworkunit_task, ttask 
+			WHERE tworkunit_task.id_task = ttask.id
+			AND ttask.id_project = %d
+			AND tworkunit_task.id_workunit = tworkunit.id
+			ORDER BY tworkunit.timestamp DESC', $id_project);
+	} else {
+		$sql = sprintf ('SELECT tworkunit.id
+			FROM tworkunit, tworkunit_task, ttask 
+			WHERE tworkunit_task.id_task = ttask.id
+			AND ttask.id_project = %d
+			AND id_user = "'.$config["id_user"].'"
+			AND tworkunit_task.id_workunit = tworkunit.id
+			ORDER BY tworkunit.timestamp DESC', $id_project);
+		
+	}
 	echo '<h3>'.__('Workunit resume');
 	echo ' - '.$project_name.' - '. __('All tasks');
 

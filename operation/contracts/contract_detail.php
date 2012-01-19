@@ -169,8 +169,9 @@ if ($id | $new_contract) {
 	$table->data = array ();
 	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Contract name'));
 	$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
-	$table->data[1][1] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo WHERE id_grupo > 1 ORDER BY nombre',
-		'id_group', $id_group, '', '', '', true, false, false, __('Group'));
+	
+	$table->data[1][1] = combo_groups_visible_for_me ($config["id_user"], "id_group", 0, "VR", $id_group, true, true);
+		
 	$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
 	$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
 	$table->data[3][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',

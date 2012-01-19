@@ -16,6 +16,229 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 
+
+function get_inventories ($only_names = true, $exclude_id = false) {
+	if ($exclude_id) {
+		$sql = sprintf ('SELECT * FROM tinventory WHERE id != %d', $exclude_id);
+		$inventories = get_db_all_rows_sql ($sql);
+	} else {
+		$inventories = get_db_all_rows_in_table ('tinventory');
+	}
+	if ($inventories == false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($inventories as $inventory) {
+			$retval[$inventory['id']] = $inventory['name'];
+		}
+		return $retval;
+	}
+	
+	return $inventories;
+}
+
+function get_inventory ($id_inventory) {
+	return get_db_row ('tinventory', 'id', $id_inventory);
+}
+
+function get_inventory_name ($id) {
+	return (string) get_db_value ('name', 'tinventory', 'id', $id);
+}
+
+function get_inventories_in_incident ($id_incident, $only_names = true) {
+	$sql = sprintf ('SELECT tinventory.* FROM tincidencia, tincident_inventory, tinventory
+			WHERE tincidencia.id_incidencia = tincident_inventory.id_incident
+			AND tinventory.id = tincident_inventory.id_inventory
+			AND tincidencia.id_incidencia = %d', $id_incident);
+	$all_inventories = get_db_all_rows_sql ($sql);
+	if ($all_inventories == false)
+		return array ();
+	
+	global $config;
+	$inventories = array ();
+	foreach ($all_inventories as $inventory) {
+		if (! give_acl ($config['id_user'], get_inventory_group ($inventory['id']), 'VR')) {
+			$inventory['name'] = $inventory['name'];
+		}
+		array_push ($inventories, $inventory);
+	}
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($inventories as $inventory) {
+			$result[$inventory['id']] = $inventory['name'];
+		}
+		return $result;
+	}
+	return $inventories;
+}
+
+function get_inventory_contracts ($id_inventory, $only_names = true) {
+	$sql = sprintf ('SELECT tcontract.* FROM tinventory, tcontract
+			WHERE tinventory.id_contract = tcontract.id
+			AND tinventory.id = %d', $id_inventory);
+	$contracts = get_db_all_rows_sql ($sql);
+	if ($contracts == false)
+		return array ();
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($contracts as $contract) {
+			$result[$contract['id']] = $contract['name'];
+		}
+		return $result;
+	}
+	return $contracts;
+}
+
+function get_inventory_group ($id_inventory, $only_id = true) {
+	$sql = sprintf ('SELECT tgrupo.%s FROM tinventory, tcontract, tgrupo
+			WHERE tinventory.id_contract = tcontract.id
+			AND tcontract.id_group = tgrupo.id_grupo
+			AND tinventory.id = %d',
+			($only_id ? "id_grupo" : "*"),
+			$id_inventory);
+	if ($only_id)
+		return (int) get_db_sql ($sql);
+	return get_db_row_sql ($sql);
+}
+
+function get_inventory_affected_companies ($id_inventory, $only_names = true) {
+	$sql = sprintf ('SELECT tcompany.* FROM tinventory, tcontract, tcompany
+			WHERE tinventory.id_contract = tcontract.id
+			AND tcontract.id_company = tcompany.id
+			AND tinventory.id = %d', $id_inventory);
+	$companies = get_db_all_rows_sql ($sql);
+	if ($companies == false)
+		return array ();
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($companies as $company) {
+			$result[$company['id']] = $company['name'];
+		}
+		return $result;
+	}
+	return $companies;
+}
+
+function get_incident ($id_incident) {
+	return get_db_row ('tincidencia', 'id_incidencia', $id_incident);
+}
+
+function get_incident_slas ($id_incident, $only_names = true) {
+	$sql = sprintf ('SELECT tsla.*
+		FROM tinventory, tsla, tincident_inventory
+		WHERE tinventory.id_sla = tsla.id
+		AND tincident_inventory.id_inventory = tinventory.id
+		AND tincident_inventory.id_incident = %d', $id_incident);
+	$slas = get_db_all_rows_sql ($sql);
+	if ($slas == false)
+		return array ();
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($slas as $sla) {
+			$result[$sla['id']] = $sla['name'];
+		}
+		return $result;
+	}
+	return $slas;
+}
+
+
+function get_company ($id_company) {
+	return get_db_row ('tcompany', 'id', $id_company);
+}
+
+function get_companies ($only_names = true) {
+	$companies = get_db_all_rows_in_table ('tcompany');
+	if ($companies === false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($companies as $company) {
+			$retval[$company['id']] = $company['name'];
+		}
+		asort ($retval);
+		return $retval;
+	}
+	
+	return $companies;
+}
+
+function get_company_roles ($only_names = true) {
+	$companies = get_db_all_rows_in_table ('tcompany_role');
+	if ($companies === false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($companies as $company) {
+			$retval[$company['id']] = $company['name'];
+		}
+		return $retval;
+	}
+	
+	return $companies;
+}
+
+
+function get_contract ($id_contract) {
+	return get_db_row ('tcontract', 'id', $id_contract);
+}
+
+function get_contracts ($only_names = true) {
+	$contracts = get_db_all_rows_in_table ('tcontract');
+	if ($contracts === false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($contracts as $contract) {
+			$retval[$contract['id']] = $contract['name'];
+		}
+		return $retval;
+	}
+	
+	return $contracts;
+}
+
+function get_products ($only_names = true) {
+	$products = get_db_all_rows_in_table ('tkb_product');
+	if ($products === false)
+		return array ();
+	
+	if ($only_names) {
+		$retval = array ();
+		foreach ($products as $product) {
+			$retval[$product['id']] = $product['name'];
+		}
+		return $retval;
+	}
+	
+	return $products;
+}
+
+function get_company_contacts ($id_company, $only_names = true) {
+	$sql = sprintf ('SELECT * FROM tcompany_contact
+			WHERE id_company = %d', $id_company);
+	$contacts = get_db_all_rows_sql ($sql);
+	if ($contacts == false)
+		return array ();
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($contacts as $contact) {
+			$result[$contact['id']] = $contact['name'];
+		}
+		return $result;
+	}
+	return $contacts;
+}
+
 /**
  * Get all the contacts relative to an inventory object.
  *

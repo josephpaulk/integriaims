@@ -244,6 +244,8 @@ if ($operation == "delete") {
 if ($operation == 'update') {
 	$duration = (float) get_parameter ("duration");
 	$timestamp = (string) get_parameter ("start_date");
+	$start_date = $timestamp;
+	
 	$description = (string) get_parameter ("description");
 	$have_cost = (bool) get_parameter ("have_cost");
 	$id_profile = (int) get_parameter ("id_profile");
@@ -303,7 +305,9 @@ $table->data = array ();
 $table->colspan = array ();
 $table->colspan[5][0] = 3;
 
-$start_date = substr ($now, 0, 10);
+if (!isset($start_date))
+	$start_date = substr ($now, 0, 10);
+
 $table->data[0][0] = print_input_text ('start_date', $start_date, '', 10, 20,
 	true, __('Date'));
 

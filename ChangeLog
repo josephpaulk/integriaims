@@ -1,3 +1,41 @@
+2012-01-19  Sancho Lerena <slerena@artica.es>
+
+	* integria_update: Script to update the code.
+	
+	* upgrade_to_3.0.sql,
+	integria_db.sql: Tinventory description was too short !!.
+	
+	* functions_db.php: Fixed get_user_groups() to put all available 
+	groups in admin users. Created get_user_groups_for_sql() to generate
+	a list of available groups for a given user_id. removed function
+	get_inventories() and move to functions_inventory.php.
+		
+	* functions_inventory. Moved here get_inventories().
+	
+	* functions_form.php: Fixed combo_task_user() to avoid html entities
+	to be displayed in the combo when use shortened fields.
+	
+	* contact_detail.php,
+	contract_detail.php, 
+	company_detail.php: Improved ACL checks.
+	
+	* inventory_detail.php: fixed small ACL check.
+	
+	* inventories/manage_prod.php: Fixed bad deletion mesg and return
+	to the list on delete.
+	
+	* operation/projects/task.php: On task move, it moves also the task
+	childs.
+	
+	* projects/task_workunit.php: Do not show tasks for other users
+	except for the project manager.
+	
+	* user_report/report_monthly.php: add link to administer from there
+	the users.
+	
+	* operation/users/user_spare_workunit.php: Fixed bug altering date
+	in the workunit.
+	
 2012-01-19  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_form.php: Fixed problem cutting the 

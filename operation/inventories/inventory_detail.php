@@ -86,7 +86,7 @@ if ($update) {
 }
 
 if ($create) {
-	if (! give_acl ($config['id_user'], 0, "IM")) {
+	if (! give_acl ($config['id_user'], 0, "VW")) {
 		// Doesn't have access to this page
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create inventory object");
 		include ("general/noaccess.php");

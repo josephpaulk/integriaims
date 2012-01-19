@@ -701,6 +701,8 @@ if ($id_parent)
 
 $table->data[2][0] = combo_incident_origin ($origen, $disabled, true);
 $table->data[2][1] = combo_incident_types ($id_incident_type, $disabled, true);
+
+// Task
 $table->data[2][2] = combo_task_user ($id_task, $config["id_user"], $disabled, false, true);
 
 if ($config['incident_reporter'] == 1){

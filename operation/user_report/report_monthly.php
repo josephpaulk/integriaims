@@ -152,6 +152,14 @@
 			}
 
 			echo "</font></span></a>";
+			
+			
+			
+			if (give_acl ($config["id_user"], 0, "IM")){
+				echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=$nombre'>";
+				echo "<img src='images/wrench.png'></a>";
+			}
+			
 			if (strlen($nombre) > 12)
 				echo " <b>".substr($nombre,0,12)."..</b>";
 			else

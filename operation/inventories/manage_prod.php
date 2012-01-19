@@ -92,10 +92,12 @@ if ($delete_product) {
 	$sql = sprintf ('DELETE FROM tkb_product WHERE id = %d', $id);
 	$result = process_sql ($sql);
 
-	if (! $result)
-		echo '<h3 class="error">'.__("Successfully deleted").'</h3>';
+	if ($result)
+		echo '<h3 class="suc">'.__("Successfully deleted").'</h3>';
 	else
-		echo '<h3 class="suc">'.__("Could not be deleted").'</h3>';
+		echo '<h3 class="error">'.__("Could not be deleted").'</h3>';
+		
+	unset ($id);
 }
 
 if ($create || $id) {

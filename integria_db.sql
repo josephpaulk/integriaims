@@ -565,7 +565,7 @@ CREATE TABLE `tmanufacturer` (
 CREATE TABLE `tinventory` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
-  `description` varchar(250) NULL default NULL,
+  `description` mediumtext NULL default NULL,
   `serial_number` varchar(250) NULL default NULL,
   `part_number` varchar(250) NULL default NULL,
   `comments` varchar(250) NULL default NULL,

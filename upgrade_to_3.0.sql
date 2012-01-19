@@ -135,3 +135,5 @@ CREATE TABLE `tuser_report` (
   `id_group` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE tinventory modify `description` mediumtext NULL default NULL;
