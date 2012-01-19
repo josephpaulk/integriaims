@@ -1,5 +1,14 @@
 2012-01-19  Sancho Lerena <slerena@artica.es>
 
+	* integria.fedora.spec: New spec for RHEL/Fedora.
+
+	* integria.spec: Updated Spec for SUSE
+
+	* integria_demo.sql: Updated SQL for demo (was broken).
+
+	* extras/build_src.sh,
+	extras/build_rpm.sh: Updated RPM build/SRC scripts.
+
 	* upgrade.sql: Deleted old stuff.
 
 	* integria_db.sql,

@@ -5,12 +5,11 @@
 %define version     3.0
 %define httpd_name      httpd
 # User and Group under which Apache is running
-%define httpd_name  apache2
-%define httpd_user  wwwrun
-%define httpd_group www
+%define httpd_name  httpd
+%define httpd_user  apache
+%define httpd_group apache
 
 # Evaluate PHP version
-%define phpver_lt_430 %(out=`rpm -q --queryformat='%{VERSION}' php` 2>&1 >/dev/null || out=0 ; out=`echo $out | tr . : | sed s/://g` ; if [ $out -lt 430 ] ; then out=1 ; else out=0; fi ; echo $out)
 
 Summary:            Integria IMS	
 Name:               %{name}
@@ -22,19 +21,19 @@ Source0:            %{name}-%{version}.tar.gz
 URL:                http://www.integriaims.com
 Group:              Productivity/Web/Utilities
 Packager:           Sancho Lerena <slerena@artica.es> 
-Prefix:             /srv/www/htdocs
+Prefix:             /var/www/html
 BuildRoot:          %{_tmppath}/%{name}
 BuildArchitectures: noarch
 AutoReq:            0
-Requires:           apache2
-Requires:           php >= 4.3.0
-Requires:           php5-gd, php5-json, php5-gettext, curl, php5-ldap, php5-imap
-Requires:           php5-mysql, php5-ldap, php5-mbstring, php5, php5-zlib
-Requires:           graphviz, xorg-x11-fonts-core
+Requires:           httpd
+Requires:           php >= 5.3.0
+Requires:           php-gd, php-gettext, php-imap, curl, php-ldap
+Requires:           php-mysql, php-ldap, php-mbstring, php, php-zlib
+Requires:           graphviz
 Provides:           %{name}-%{version}
 
 %description
-Integria IMS is a enterprise software for project management, CRM, incident ticketing system inventory, file distribution and time tracking management. Integria is multiuser, with an integrated email reporting and notification system.
+Integria IMS is a enterprise software for project management, CRM, incident ticketing system inventory, file distribution and time tracking management. Integria is multiuser, with an integrated email reporting and notification system
 
 %prep
 rm -rf $RPM_BUILD_ROOT
@@ -47,24 +46,14 @@ rm -rf $RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{prefix}/integria
 cp -aRf * $RPM_BUILD_ROOT%{prefix}/integria
-if [ -f $RPM_BUILD_ROOT%{prefix}/integria/integria.spec ] ; then
-   rm $RPM_BUILD_ROOT%{prefix}/integria/integria.spec
+if [ -f $RPM_BUILD_ROOT%{prefix}/integria/integria.fedora.spec ] ; then
+   rm $RPM_BUILD_ROOT%{prefix}/integria/integria.fedora.spec
 fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %preun
-
-if [ -f %{prefix}/integria/include/config.php ]
-then
-	export DBPASS=`cat %{prefix}/integria/include/config.php | grep "dbpass" | cut -f 2 -d "=" | cut -f 2 -d "\""  | head -1`
-        export DBUSER=`cat %{prefix}/integria/include/config.php | grep "dbuser" | cut -f 2 -d "=" | cut -f 2 -d "\""  | head -1`
-        export DBHOST=`cat %{prefix}/integria/include/config.php | grep "dbhost" | cut -f 2 -d "=" | cut -f 2 -d "\""  | head -1`
-        export DBNAME=`cat %{prefix}/integria/include/config.php | grep "dbname" | cut -f 2 -d "=" | cut -f 2 -d "\""  | head -1`
-
-	echo "drop database $DBNAME" | mysql -u $DBUSER -h $DBHOST -p$DBPASS 
-fi
 
 rm -Rf %{prefix}/integria/ 
 
