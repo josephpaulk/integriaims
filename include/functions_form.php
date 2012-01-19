@@ -388,7 +388,7 @@ function combo_task_user ($actual, $id_user, $disabled = 0, $show_vacations = 0,
 	if ($tasks === false)
 		$tasks = array ();
 	foreach ($tasks as $task) {
-		$values[$task['id']] = substr($task['pname'],0,17). " / ".substr($task['tname'],0,22);
+		$values[$task['id']] = substr($task['pname'],0,17). " / ".substr(safe_output($task['tname']),0,22);
 	}
 	$output = print_select ($values, 'task_user', $actual, '', '',
 				0, true, false, false, __('Task'));

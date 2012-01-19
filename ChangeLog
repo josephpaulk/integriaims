@@ -1,3 +1,8 @@
+2012-01-19  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_form.php: Fixed problem cutting the 
+	task name in the task combo before safe_output
+
 2012-01-17  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_db.php,
