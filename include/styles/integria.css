@@ -1178,8 +1178,16 @@ span.ac_extra_field strong {
 	background: url('../../images/attach.png') left no-repeat;
 }
 
+.ax-table-theader {
+	display:none;
+}
+
 .ax-progress-div {
 	background-color: green;
 	color: black;
 	text-align: center;
+}
+
+iframe.ax-main-frame {
+	display:none;
 }

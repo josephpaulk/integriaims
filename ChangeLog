@@ -1,3 +1,9 @@
+2012-01-20  Sergio Martin <sergio.martin@artica.es>
+
+	* include/styles/integria.css
+	include/js/jquery.axuploader.js: Fixed ugly styles
+	in the file uploader in chrome
+
 2012-01-19  Sancho Lerena <slerena@artica.es>
 
 	* DEBIAN/control

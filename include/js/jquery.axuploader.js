@@ -58,7 +58,7 @@
 				 Form for classic upload
 				\*================================================================================*/
 			    var onLoadIframe=false;
-			    var mainFrame=$('<iframe src="javascript:false;" name="ax-main-frame" />').hide().appendTo(_this).load(function(){
+			    var mainFrame=$('<iframe src="javascript:false;" class="ax-main-frame name="ax-main-frame" />').hide().appendTo(_this).load(function(){
 			    	if(onLoadIframe)
 			    	{
 			    		fileCount=1;
@@ -131,7 +131,7 @@
 				/*================================================================================*\
 				Table with the list of files and their details
 				\*================================================================================*/
-			    var fileList=$('<table class="ax-file-list" />').append('<thead><tr id="ax-table-header">'+
+			    var fileList=$('<table class="ax-file-list" />').append('<thead class="ax-table-theader"><tr id="ax-table-header">'+
 													 	'<th>File</th>'+
 													 	'<th>Size</th>'+
 													 	'<th>Progress</th>'+
