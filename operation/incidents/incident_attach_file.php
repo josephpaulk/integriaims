@@ -38,7 +38,7 @@ $table->data = array ();
 
 $table->data[0][0] = "<span style='font-size: 10px'>". __("Please note that you cannot upload .php or .pl files, as well other source code formats. Please compress that files prior to upload (using zip or gz)"). "</span>";
 
-$table->data[1][0] = print_textarea ('file_description', 8, 1, '', '', true, __('Description'));
+$table->data[1][0] = print_textarea ('file_description', 7, 1, '', '', true, __('Description'));
 
 if (defined ('AJAX'))
 	$action = 'ajax.php?page=operation/incidents/incident_detail';

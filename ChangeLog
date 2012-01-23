@@ -1,3 +1,10 @@
+2012-01-23  Sergio Martin <sergio.martin@artica.es>
+
+	* include/js/jquery.axuploader.js: Fixed IE8 ajax
+	error in the uploader for missed quote
+	* operation/incidents/incident_attach_file.php: Reduce one row
+	the textarea of file description to allow the new file loader size
+
 2012-01-20  Sergio Martin <sergio.martin@artica.es>
 
 	* include/styles/integria.css

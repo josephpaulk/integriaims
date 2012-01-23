@@ -58,7 +58,7 @@
 				 Form for classic upload
 				\*================================================================================*/
 			    var onLoadIframe=false;
-			    var mainFrame=$('<iframe src="javascript:false;" class="ax-main-frame name="ax-main-frame" />').hide().appendTo(_this).load(function(){
+			    var mainFrame=$('<iframe src="javascript:false;" class="ax-main-frame" name="ax-main-frame" />').hide().appendTo(_this).load(function(){
 			    	if(onLoadIframe)
 			    	{
 			    		fileCount=1;
