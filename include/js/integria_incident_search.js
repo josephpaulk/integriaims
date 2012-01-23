@@ -704,9 +704,9 @@ function show_add_file_dialog (id_incident) {
 		function (data, status) {
 			$("#dialog-add-file").empty ().append (data);
 			$("#dialog-add-file").dialog ({"title" : __("Upload file"),
-					minHeight: 350,
+					minHeight: 400,
 					minWidth: 200,
-					height: 350,
+					height: 400,
 					width: 600,
 					modal: true,
 					bgiframe: true

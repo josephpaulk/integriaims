@@ -1,5 +1,15 @@
 2012-01-23  Sergio Martin <sergio.martin@artica.es>
 
+	* include/styles/integria.css
+	include/js/integria_incident_search.js
+	operation/incidents/incident_attach_file.php: Fixed 
+	some style errors for IE and size of upload file dialog
+
+	* include/functions_api.php: Fixed group asignation
+	when create a incident without group
+
+2012-01-23  Sergio Martin <sergio.martin@artica.es>
+
 	* include/js/jquery.axuploader.js: Fixed IE8 ajax
 	error in the uploader for missed quote
 	* operation/incidents/incident_attach_file.php: Reduce one row

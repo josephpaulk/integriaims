@@ -48,6 +48,10 @@ function api_create_incident ($return_type, $user, $params){
 	
 	$group = $params[1];
 
+	if($group == '') {
+		$group = GROUP_ALL;
+	}
+
 	if (! give_acl ($user, $group, "IW")){
 		audit_db ($user,  $_SERVER['REMOTE_ADDR'],
 			"ACL Forbidden from API",

@@ -1173,7 +1173,7 @@ span.ac_extra_field strong {
 
 /* Styles for files progress bars */
 
-.ax-file-list {
+.ax-file-name {
 	padding-left: 18px;
 	background: url('../../images/attach.png') left no-repeat;
 }
