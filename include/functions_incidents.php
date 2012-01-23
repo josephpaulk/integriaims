@@ -567,7 +567,7 @@ function update_incident_inventories ($id_incident, $inventories) {
 		$tmp = process_sql ($sql);
 
 		if ($tmp !== false)
-			incident_tracking ($id_inventory, INCIDENT_INVENTORY_ADDED,
+			incident_tracking ($id_incident, INCIDENT_INVENTORY_ADDED,
 				$id_inventory);
 	}
 }

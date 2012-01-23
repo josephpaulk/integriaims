@@ -48,10 +48,6 @@ function api_create_incident ($return_type, $user, $params){
 	
 	$group = $params[1];
 
-	if($group == '') {
-		$group = GROUP_ALL;
-	}
-
 	if (! give_acl ($user, $group, "IW")){
 		audit_db ($user,  $_SERVER['REMOTE_ADDR'],
 			"ACL Forbidden from API",
@@ -95,7 +91,7 @@ function api_create_incident ($return_type, $user, $params){
 		/* Update inventory objects in incident */
 		update_incident_inventories ($id, $inventories);
 		
-		$result = 0;
+		$result = $id;
 
 		audit_db ($id_creator, $_SERVER['REMOTE_ADDR'],
 			"Incident created (From API)",
@@ -148,7 +144,7 @@ function api_get_incidents ($return_type, $user, $params){
 	$ret = '';
 	
 	if($return_type == 'xml') {
-		$ret = "<xml>\n";
+		$ret = "<xml version='1.0' encoding='UTF-8'>\n";
 	}
 	
 	$result = clean_numerics($result);
@@ -170,7 +166,6 @@ function api_get_incidents ($return_type, $user, $params){
 	if($return_type == 'xml') {
 		$ret .= "</xml>\n";
 	}
-
 	return $ret;
 }
 
@@ -178,7 +173,7 @@ function xml_node($node, $node_name = "data", $xml_header = true) {
 	$ret = "";
 
 	if($xml_header) {
-		$ret .= "<xml>\n";
+		$ret .= "<xml version='1.0' encoding='UTF-8'>\n";
 	}
 	
 	if($node_name !== false) {
@@ -186,7 +181,7 @@ function xml_node($node, $node_name = "data", $xml_header = true) {
 	}
 	if(is_array($node)) {
 		foreach($node as $key => $value) {
-			$ret .= "<".$key.">".$value."</".$key.">\n";
+			$ret .= "<".$key."><![CDATA[".$value."]]></".$key.">\n";
 		}
 	}
 	else {

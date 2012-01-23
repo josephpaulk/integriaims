@@ -1,5 +1,13 @@
 2012-01-23  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions_api.php
+	include/functions_incidents.php
+	include/functions_db.php: Fixed several bugs of the 
+	Web API integration with Pandora. Returning more 
+	info of the Incident creation and more fixes 
+
+2012-01-23  Sergio Martin <sergio.martin@artica.es>
+
 	* include/styles/integria.css
 	include/js/integria_incident_search.js
 	operation/incidents/incident_attach_file.php: Fixed 
