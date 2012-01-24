@@ -391,9 +391,11 @@ function print_input_file_progress($form_action, $into_form = '', $attr = '', $e
 		$output .= "$('#ax-table-header').hide();";
 		$output .= "$('.ax-uploadall').val('".__('Upload')."');";
 		$output .= "$('.ax-uploadall').addClass('$extra_button_class');";
+		// If a button is defined, hide the default button and trigger the action to the
+		// defined button. If file upload is empty, the form is sended without it
 		if($button !== false) {
 			$output .= "$('.ax-uploadall').hide();";
-			$output .= "$('#$button').click(function() { $('.ax-uploadall').trigger('click'); });";
+			$output .= "$('#$button').click(function() { $('.ax-uploadall').trigger('click');if($('.ax-file-name').html() == null)$('#form-add-file').submit();});";
 		}
 	$output .= "});";
 	$output .= "</script>";

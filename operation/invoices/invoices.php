@@ -54,8 +54,7 @@ if ($id_invoice > 0){
 	$invoice_payment_date = "2011-03-30";
 }
 
-if (($operation == "add") OR ($operation == "update")){
-	
+if ($operation == "add"){
 	$filename = get_parameter ('upfile', false);
 	$bill_id = get_parameter ("bill_id", "");
 	$description = get_parameter ("description", "");
@@ -63,7 +62,6 @@ if (($operation == "add") OR ($operation == "update")){
 	$user_id = $config["id_user"];
 	$invoice_create_date = get_parameter ("invoice_create_date");
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
-	
 	if ($filename != ""){
 		$file_temp = sys_get_temp_dir()."/$filename";
 		$filesize = filesize($file_temp);
@@ -97,7 +95,73 @@ if (($operation == "add") OR ($operation == "update")){
 	if ($ret !== false) {
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
 	} else {
-		echo '<h3 class="error">'.__('There was a problem creating adding the invoice').'</h3>';
+		echo '<h3 class="error">'.__('There was a problem creating the invoice').'</h3>';
+	}
+	
+	$operation = "";
+}
+
+if ($operation == "update"){
+	$values = array();
+	
+	$filename = get_parameter ('upfile', false);
+	$bill_id = get_parameter ("bill_id", "");
+	$description = get_parameter ("description", "");
+	$ammount = (float) get_parameter ("ammount", 0);
+	$user_id = $config["id_user"];
+	$invoice_create_date = get_parameter ("invoice_create_date");
+	$invoice_payment_date = get_parameter ("invoice_payment_date");
+	
+	// If no file input, the file doesnt change
+	if ($filename != ""){
+		$old_id_attachment = $id_attachment;
+		
+		$file_temp = sys_get_temp_dir()."/$filename";
+		$filesize = filesize($file_temp);
+		
+		// Creating the attach
+		$sql = sprintf ('INSERT INTO tattachment (id_usuario, filename, description, size) VALUES ("%s", "%s", "%s", "%s")',
+				$user_id, $filename, $description, $filesize);
+		$id_attachment = process_sql ($sql, 'insert_id');
+		
+		// Copy file to directory and change name
+		$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
+			
+		if (! copy($file_temp, $file_target)) {
+			$result_output = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";
+			$sql = "DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
+			process_sql ($sql);
+		} else {
+			// Delete temporal file
+			unlink ($file_temp);
+			$values['id_attachment'] = $id_attachment;
+			
+			// POSSIBLE FEATURE, DELETE OLD ATTACHMENT IF IS SETTED IN A CHECKBOX OR SOMETHING
+			//~ if($old_id_attachment != 0) {
+				//~ $old_filename = get_db_value('filename', 'tattachment', 'id_attachment', $old_id_attachment);
+				//~ unlink($config["homedir"]."/attachment/".$old_id_attachment."_".$old_filename);
+			//~ }
+		}
+	}
+	
+	// Updating the invoice
+	
+	$values['description'] = $description;
+	$values['id_user'] = $user_id;
+	$values['id_company'] = $id_company;
+	$values['bill_id'] = $bill_id;
+	$values['ammount'] = $ammount;
+	$values['invoice_create_date'] = $invoice_create_date;
+	$values['invoice_payment_date'] = $invoice_payment_date;
+	
+	$where = array('id' => $id_invoice);
+	
+	$ret = process_sql_update ('tinvoice', $values, $where);
+	
+	if ($ret !== false) {
+		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
+	} else {
+		echo '<h3 class="error">'.__('There was a problem updating the invoice').'</h3>';
 	}
 	
 	$operation = "";
@@ -142,16 +206,19 @@ if ($operation == ""){
 	$into_form = print_table ($table, true);
 
 	$into_form .= '<div class="button" style="width: '.$table->width.'">';
-	if ($operation == "") {
+	if ($id_invoice == -1) {
 		$into_form .= print_button (__('Add'), "crt", false, '', 'class="sub next"', true);
 		$into_form .= print_input_hidden ('operation', "add", true);
 		$button_name = "button-crt";
 	} else {
-		$into_form .= print_input_hidden ('id', $id_profile, true);
-		$into_form .= print_input_hidden ('update_profile', 1, true);
+		$into_form .= print_input_hidden ('id_invoice', $id_invoice, true);
+		$into_form .= print_input_hidden ('operation', "update", true);
 		$into_form .= print_button (__('Update'), "upd", false, '', 'class="sub upd"', true);
 		$button_name = "button-upd";
 	}
+	
+	$into_form .= print_input_hidden ('id_company', $id_company, true);
+	
 	$into_form .= "</div>";	
 	
 	print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', $button_name, false, '__UPLOAD_CONTROL__');
