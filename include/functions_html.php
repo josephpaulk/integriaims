@@ -352,10 +352,18 @@ function print_input_file ($name, $size, $disabled = false, $attributes = '', $r
  * @param string default button extra class
  * @param string button id of the submit button
  * @param bool Whether to return an output string or echo now (optional, echo by default).
+ * @param string macro to place the upload control. I will be placed at first of all with no macro (false)
  */
-function print_input_file_progress($form_action, $into_form = '', $attr = '', $extra_button_class = '', $button = false,  $return = false) {
-	// Layer to the input control through jquery
-	$output = "<div class='upfile'></div>";
+function print_input_file_progress($form_action, $into_form = '', $attr = '', $extra_button_class = '', $button = false,  $return = false, $control_macro = false) {
+	$output = "";
+	
+	$control_layer = "<div class='upfile'></div>";
+	
+	// If no control macro defined, we put the upload control fist of all
+	if($control_macro === false) {
+		// Layer to the input control through jquery
+		$output .= $control_layer;
+	}
 	
 	// Form to fill and submit from javascript
 	$output .= "<form method='post' $attr class='upfile_form' action='$form_action' enctype='multipart/form-data'>";
@@ -389,6 +397,10 @@ function print_input_file_progress($form_action, $into_form = '', $attr = '', $e
 		}
 	$output .= "});";
 	$output .= "</script>";
+
+	if($control_macro !== false) {
+		$output = str_replace($control_macro,$control_layer,$output);
+	}
 
 	if ($return) {
 		return $output;

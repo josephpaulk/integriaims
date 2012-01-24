@@ -1,3 +1,12 @@
+2012-01-24  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_html.php
+	operation/invoices/invoices.php
+	operation/projects/task_cost.php: Fixed latest upload
+	controls implementations. Improved the upload 
+	control function to allow set the control in any place
+	into de form
+
 2012-01-23  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_api.php

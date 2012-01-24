@@ -153,7 +153,6 @@ if ($operation == ""){
 	
 	$action = "index.php?sec=projects&sec2=operation/projects/task_cost&id_task=$id_task&id_project=$id_project";
 	
-	echo "<form method=post action='$action'>";
 	$table->id = 'cost_form';
 	$table->width = '90%';
 	$table->class = 'listing';
@@ -169,23 +168,26 @@ if ($operation == ""){
 	$table->data[2][0] = __('Description');
 	$table->data[2][1] = print_input_text ('description', $description, '', 60, 250, true);
 	
-	$into_form =  '<input type="button" id="button-upload" name="upload" value="'.__('Upload').'" class="sub next">';
 	$table->data[3][0] = __('Attach a file');
-	$table->data[3][1] = print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', 'button-upload', true);
+	$table->data[3][1] = '__UPLOAD_CONTROL__';
 
-	print_table ($table);
+	$into_form = print_table ($table, true);
 	
-	echo '<div class="button" style="width: '.$table->width.'">';
+	$into_form .= '<div class="button" style="width: '.$table->width.'">';
 	if ($operation == "") {
-		print_submit_button (__('Add'), "crt", false, 'class="sub next"');
-		print_input_hidden ('operation', "add");
+		$into_form .= print_button (__('Add'), "crt", false, '', 'class="sub next"', true);
+		$into_form .= print_input_hidden ('operation', "add", true);
+		$button_name = "button-crt";
 	} else {
-		print_input_hidden ('id', $id_profile);
-		print_input_hidden ('update_profile', 1);
-		print_submit_button (__('Update'), "upd", false, 'class="sub upd"');
+		$into_form .= print_input_hidden ('id', $id_profile, true);
+		$into_form .= print_input_hidden ('update_profile', 1, true);
+		$into_form .= print_button (__('Update'), "upd", false, '', 'class="sub upd"', true);
+		$button_name = "button-upd";
 	}
-	echo "</div>";
-	echo "</form></div>";
+	$into_form .= "</div>";	
+
+	print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', $button_name, false, '__UPLOAD_CONTROL__');
 	
+	echo "</div>";
 }
 ?>
