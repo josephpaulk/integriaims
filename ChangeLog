@@ -1,5 +1,13 @@
 2012-01-24  Sergio Martin <sergio.martin@artica.es>
 
+	* include/styles/integria.css: Fixed some style
+	errors in upload control
+
+	* operation/download/browse.php: Fixed search pattern
+	in the file releases combo
+
+2012-01-24  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_html.php
 	operation/invoices/invoices.php: Fixed some details in
 	the upload forms and fixed the invoices form adding 

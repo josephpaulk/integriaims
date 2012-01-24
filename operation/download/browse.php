@@ -25,7 +25,7 @@ if (give_acl($config["id_user"], 0, "KR")==0) {
 
 function get_download_files () {
 	$base_dir = 'attachment/downloads';
-	$files = list_files ($base_dir, ".", 1, 0);
+	$files = list_files ($base_dir, "", 0, false);
 	
 	$retval = array ();
 	foreach ($files as $file) {
