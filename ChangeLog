@@ -1,5 +1,10 @@
 2012-01-26  Sergio Martin <sergio.martin@artica.es>
 
+	* godmode/setup/filemgr.php: Fixed changing of base directory
+	into file mangement section
+
+2012-01-26  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_db.mysql.php
 	include/js/integria_incident_search.js
 	include/functions_inventories.php

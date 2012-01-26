@@ -85,7 +85,6 @@ if (preg_match("/^\//", $current_directory))
 if (preg_match("/^manager/", $current_directory))
 	$current_directory = "images";
 
-//~ echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file' enctype='multipart/form-data'>";
 echo "<table cellpadding='4' cellspacing='4' width='550' class='databox'>";
 
 echo "<tr><td class='datos'>";
@@ -98,23 +97,23 @@ $available_directory["attachment/downloads"] = "attachment/downloads";
 // Current directory
 $available_directory[$current_directory] = $current_directory;
 
+echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file' enctype='multipart/form-data'>";
 print_select ($available_directory, 'directory', $current_directory, '', '', '',  false, false);
 echo "&nbsp;&nbsp;<input type=submit class='sub next' value='".__("Go")."'>";
+echo "</form>";
 
 if (is_writable($current_directory)) {
 	echo "<tr><td class='datos'>";
 	echo __("Upload new file");
 	echo "<td class='datos'><br>";
-	$target_directory = 'attachment/downloads';
 	$action = 'index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file';
 	
-	$into_form = "<input type='hidden' name='directory' value='$target_directory'>";
+	$into_form = "<input type='hidden' name='directory' value='$current_directory'>";
 
 	print_input_file_progress($action,$into_form,'','sub next',false);
 
 	echo "</table>";
 } else {
-	echo "</form>";
 	echo "</table>";
 	echo "<h3 class='error'>".__('Current directory is not writtable by HTTP Server')."</h3>";
 	echo '<p>';
@@ -122,7 +121,7 @@ if (is_writable($current_directory)) {
 	echo "</p>";
 }
 
-echo "<h2>".__("Current directory"). " : ".$current_directory . " <a href='index.php?manager=filemgr&directory=$current_directory'><img src='images/arrow_refresh.png' border=0></a></h2>";
+echo "<h2>".__("Current directory"). " : ".$current_directory . " <a href='index.php?sec=godmode&sec2=godmode/setup/filemgr&directory=$current_directory'><img src='images/arrow_refresh.png' border=0></a></h2>";
 // Upload form
 
 	// List files
