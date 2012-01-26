@@ -20,6 +20,7 @@ ini_set("display_errors", 1);
 require_once ($config["homedir"].'/include/functions_calendar.php');
 require_once ($config["homedir"].'/include/functions_groups.php');
 require_once ($config["homedir"].'/include/functions_workunits.php');
+require_once ($config["homedir"].'/include/functions_inventories.php');
 
 // Activate errors. Should not be anyone, but if something happen, should be
 // shown on console.
@@ -70,6 +71,93 @@ function delete_session_data () {
     $sql = "DELETE FROM tevent where timestamp < '$limit2'";
     $res = process_sql ($sql);
 }
+ 
+/** 
+ * Interface to Integria API functionality.
+ * 
+ * @param string $url Url to Integria API with user, password and option (function to use).
+ * @param string $postparameters Additional parameters to pass.
+ *
+ * @return variant The function result called in the API.
+ */
+function call_api($url, $postparameters = false) {
+
+	$curlObj = curl_init();
+	curl_setopt($curlObj, CURLOPT_URL, $url);
+	curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
+	if($postparameters !== false) {
+		curl_setopt($curlObj, CURLOPT_POSTFIELDS, $postparameters);
+	}
+	$result = curl_exec($curlObj);
+	curl_close($curlObj);
+
+	return $result;
+}
+
+/**
+ * This function creates an inventory object for each agent of pandora with name, address, description 
+ * and extra fields if are defined as operating system and url address
+ */
+function synchronize_pandora_inventory () {
+	global $config;
+
+	$separator = ':;:';
+
+	$labels = get_inventory_generic_labels ();
+
+	$labelsk = array_keys($labels);
+
+	$url = $config['pandora_url'].'/include/api.php?op=get&pass='.$config['pandora_api_password'].'&op2=all_agents&return_type=csv&other=|||||'.$separator.'&other_mode=url_encode_separator_|';
+	
+	$return = call_api($url);
+
+	$agents_csv = explode("\n",$return);
+
+	foreach($agents_csv as $agent_csv) {
+		// Avoiding empty csv lines like latest one
+		if($agent_csv == '') {
+			continue;
+		}
+
+		$values = array();
+
+		$agent = explode($separator,$agent_csv);
+		$agent_id = $agent[0];
+		$agent_name = $agent[1];
+		$agent_name_safe = safe_input($agent_name);
+		$address = $agent[2];
+		$description = $agent[3];
+		$os_name = $agent[4];
+		$url_address = $agent[5];
+		
+		// Check if exist to avoid the creation
+		$inventory_id = get_db_value ('id', 'tinventory', 'name', $agent_name_safe);
+		
+		if($inventory_id !== false) {
+			continue;
+		}
+		
+		$values['name'] = $agent_name_safe;
+		$values['description'] = $description;
+		$values['ip_address'] = $address;
+		$values['id_contract'] = $config['default_contract'];
+		$values['id_product'] = $config['default_product_type'];
+		
+		foreach($labelsk as $lab) {
+			switch($config["pandora_$lab"]) {
+				case 'os_name':
+					$values[$lab] = $os_name;
+					break;
+				case 'url_address':
+					$values[$lab] = $url_address;
+					break;
+					
+			}
+		}
+		
+		process_sql_insert('tinventory', $values);
+	}		
+}
 
 /**
  * This function is executed once per day and do several different subtasks
@@ -90,6 +178,7 @@ function run_daily_check () {
     run_auto_incident_close();
     delete_audit_data();
     delete_session_data();
+    synchronize_pandora_inventory();
 }
 
 

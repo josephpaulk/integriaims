@@ -1,3 +1,11 @@
+2012-01-26  Sergio Martin <sergio.martin@artica.es>
+
+	* include/integria_cron.php
+	operation/side_menu.php
+	godmode/setup/setup_pandora.php: Added to the cron
+	a Pandora agents synchronization with Integria 
+	inventory objects
+
 2012-01-24  Sergio Martin <sergio.martin@artica.es>
 
 	* include/styles/integria.css: Fixed some style

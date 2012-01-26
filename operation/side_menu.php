@@ -886,6 +886,12 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_auth'>".__('Authentication')."</a></li>";
 
+	// Pandora FMS integration
+	if ($sec2 == "godmode/setup/setup_pandora")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_pandora'>".__('Pandora FMS inventory')."</a></li>";
 
 	echo "</ul>";
 	echo "</div>";
