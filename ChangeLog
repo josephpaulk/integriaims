@@ -1,5 +1,15 @@
 2012-01-26  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions_db.mysql.php
+	include/js/integria_incident_search.js
+	include/functions_inventories.php
+	operation/inventories/inventory_detail.php: Fixed 
+	several bugs for SF Bugs tracker #3479544 as 
+	inventory blank or repeated names when creates, order 
+	of combos, sla combo hidden, etc.
+
+2012-01-26  Sergio Martin <sergio.martin@artica.es>
+
 	* include/integria_cron.php
 	operation/side_menu.php
 	godmode/setup/setup_pandora.php: Added to the cron

@@ -93,14 +93,28 @@ if ($create) {
 		exit;
 	}
 	
-	$sql = sprintf ('INSERT INTO tinventory (name, description, id_product,
-			id_contract, ip_address, id_parent, id_building, serial_number,
-			part_number, id_manufacturer, id_sla, cost, confirmed)
-			VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s", %d, %d, %f, %d)',
-			$name, $description, $id_product, $id_contract, $ip_address,
-			$id_parent, $id_building, $serial_number, $part_number,
-			$id_manufacturer, $id_sla, $cost, $confirmed);
-	$id = process_sql ($sql, 'insert_id');
+	$err_message = __('Could not be created');
+	
+	$inventory_id = get_db_value ('id', 'tinventory', 'name', $name);
+
+	if($name == '') {
+		$err_message .= ". ".__('Name cannot be empty').".";
+		$id = false;
+	}
+	else if ($inventory_id !== false) {
+		$err_message .= ". ".__('Duplicate name').".";
+		$id = false;
+	}
+	else {
+		$sql = sprintf ('INSERT INTO tinventory (name, description, id_product,
+				id_contract, ip_address, id_parent, id_building, serial_number,
+				part_number, id_manufacturer, id_sla, cost, confirmed)
+				VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s", %d, %d, %f, %d)',
+				$name, $description, $id_product, $id_contract, $ip_address,
+				$id_parent, $id_building, $serial_number, $part_number,
+				$id_manufacturer, $id_sla, $cost, $confirmed);
+		$id = process_sql ($sql, 'insert_id');
+	}
 	if ($id !== false) {
 		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
 
@@ -109,7 +123,7 @@ if ($create) {
 		/* Update contacts in inventory */
 		update_inventory_contacts ($id, get_parameter ('contacts'));
 	} else {
-		$result_msg = '<h3 class="error">'.__('Could not be created').'</h3>';
+		$result_msg = '<h3 class="error">'.$err_message.'</h3>';
 	}
 	
 	if (defined ('AJAX')) {

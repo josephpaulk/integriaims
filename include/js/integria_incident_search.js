@@ -985,7 +985,7 @@ function configure_inventory_form (enable_ajax_form) {
 		jQuery.get ("ajax.php",
 			values,
 			function (data, status) {
-				$(dialog+"#id_sla").hide ().children ().each (function () {
+				$(dialog+"#id_sla").children ().each (function () {
 						if (this.value == data.id)
 							$(this).attr ("selected", "selected");
 					}).show ();

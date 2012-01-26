@@ -446,12 +446,18 @@ function get_db_all_rows_field_filter ($table, $field, $condition, $order_field 
  * 
  * @param string Database table name.
  * @param string Field of the table.
+ * @param string Condition for the where (array of values is allowed)
+ * @param string Order field
  *
  * @return mixed A matrix with all the values in the table that matches the condition in the field
  */
 function get_db_all_fields_in_table ($table, $field = '', $condition = '', $order_field = '') {
 	$sql = sprintf ("SELECT * FROM `%s`", $table);
-	if ($condition != '') {
+	
+	if(is_array($condition)) {
+		$sql .= sprintf (" WHERE `%s` IN ('%s')", $field, implode('\',\'',$condition));
+	}
+	else if ($condition != '') {
 		$sql .= sprintf (" WHERE `%s` = '%s'", $field, $condition);
 	}
 	

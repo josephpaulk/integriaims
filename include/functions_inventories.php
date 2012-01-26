@@ -191,7 +191,11 @@ function get_contract ($id_contract) {
 }
 
 function get_contracts ($only_names = true) {
-	$contracts = get_db_all_rows_in_table ('tcontract');
+	global $config;
+
+	$user_groups = array_keys(get_user_groups ($config['id_user'], 'VR'));
+	$contracts = get_db_all_fields_in_table ('tcontract', 'id_group', $user_groups, 'name');
+	
 	if ($contracts === false)
 		return array ();
 	
