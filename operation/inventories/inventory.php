@@ -213,10 +213,22 @@ function show_inventory_details (id) {
 	$("#tabs > ul").tabs ("url", 7, "ajax.php?page=operation/inventories/inventory_tree&id=" + id);
 	$("#tabs > ul").tabs ("enable", 1).tabs ("enable", 2).tabs ("enable", 3)
 		.tabs ("enable", 4).tabs ("enable", 5).tabs ("enable", 6).tabs ("enable", 7);
-	$("#tabs > ul").tabs ("select", 1);
+
+	if (tabs.data ("selected.tabs") == 1) {
+		$("#tabs > ul").tabs ("load", 1);
+	} else {
+		$("#tabs > ul").tabs ("select", 1);
+	}
+
+
 }
 
+var tabs;
+var first_search = false;
+
 $(document).ready (function () {
+	tabs = $("#tabs > ul").tabs ({"load" : tab_loaded});
+		
 	$("table#inventory_search_result_table th").click (function () {
 		$("table#inventory_search_result_table span.indent").remove ();
 	});
@@ -297,8 +309,7 @@ $(document).ready (function () {
 	$("#goto-inventory-form").submit (function () {
 		id = $("#text-id", this).attr ("value");
 		check_inventory (id);
-		if (old_inventory)
-			$("#tabs > ul").tabs ("load", 1);
+
 		return false;
 	});
 	

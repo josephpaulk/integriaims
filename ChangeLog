@@ -1,5 +1,10 @@
 2012-01-26  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/inventories/inventory.php;: Fixed inventory search by
+	side menu ID box.
+
+2012-01-26  Sergio Martin <sergio.martin@artica.es>
+
 	* godmode/setup/filemgr.php: Fixed changing of base directory
 	into file mangement section
 
