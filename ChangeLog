@@ -1,5 +1,11 @@
 2012-01-27  Sergio Martin <sergio.martin@artica.es>
 
+	* include/graphs/functions_fsgraph.php
+	include/graphs/fgraph.php: Added xaxis and yaxis name to
+	flash graphs for bug 3313902
+
+2012-01-27  Sergio Martin <sergio.martin@artica.es>
+
 	* include/js/integria_incident_search.js: Fixed the epilog
 	visibility of an incident when details charge for bug 3438764
 
