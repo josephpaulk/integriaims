@@ -335,4 +335,9 @@ $(document).ready (function () {
 		}
 	);
 });
+
+function readMoreWU(id_workunit) {
+	$('#short_wu_'+id_workunit).hide();
+	$('#long_wu_'+id_workunit).show();
+}
 </script>

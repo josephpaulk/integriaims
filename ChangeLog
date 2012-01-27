@@ -1,5 +1,15 @@
 2012-01-27  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions_form.php
+	operation/incidents/incident.php
+	operation/incidents/incident_notes.php
+	operation/incidents/incident_report.php
+	operation/inventories/inventory.php: Fixed loss
+	of navegavility when click on "Read more..." at 
+	the end of a long Workunit for bug 2941233
+
+2012-01-27  Sergio Martin <sergio.martin@artica.es>
+
 	* operation/incidents/incident_files.php: Fixed deleting file in 
 	a incident target page with missed jQuery call for bug 3438707
 

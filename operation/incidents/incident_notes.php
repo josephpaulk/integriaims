@@ -144,3 +144,10 @@ if ($res4=mysql_query($sql4)){
 	echo __('No data available');
 
 ?>
+
+<script type="text/javascript">
+function readMoreWU(id_workunit) {
+	$('#short_wu_'+id_workunit).hide();
+	$('#long_wu_'+id_workunit).show();
+}
+</script>

@@ -543,11 +543,16 @@ function show_workunit_data ($workunit, $title) {
 	// Body
 	echo "<div class='notebody'>";
 	if (strlen ($nota) > 3024) {
+		echo "<div id='short_wu_$id_workunit'>";
 		echo clean_output_breaks (substr ($nota, 0, 1024));
 		echo "<br /><br />";
-		echo "<a href='index.php?sec=incidents&sec2=operation/common/workunit_detail&id=".$id_workunit."&id_incident=$id_incident'>";
+		echo "<a href='javascript:readMoreWU($id_workunit);'>";
 		echo __('Read more...');
 		echo "</a>";
+		echo "</div>";
+		echo "<div id='long_wu_$id_workunit' style='display:none;'>";
+		echo clean_output_breaks ($nota);
+		echo "</div>";
 	} else {
 		echo clean_output_breaks ($nota);
 	}
