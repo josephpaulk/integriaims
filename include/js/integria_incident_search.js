@@ -193,14 +193,24 @@ function configure_incident_form (enable_ajax_form) {
 		show_user_search_dialog (__("User search"));
 	});
 	
+	// Check epilog visibility when load
+	checkEpilogVisibility(dialog+"#incident_status");
+
+	// Check epilog visibility when status change
 	$(dialog+"#incident_status").change (function () {
+		checkEpilogVisibility(this);
+	});
+	
+	// Only show epilog of an incident when the statis is resolved or closed
+	function checkEpilogVisibility(control){
 		/* Verified, see tincident_status table id */
-		if (this.value == 6 || this.value == 7) {
+		if (control.value == 6 || control.value == 7) {
 			$(dialog+"#incident-editor-6").css ('display', '');
 		} else {
 			$(dialog+"#incident-editor-6").css ('display', 'none');
 		}
-	});
+	}
+	
 	$(dialog+"#grupo_form").click (function () {
 		values = Array ();
 		values.push ({name: "page",

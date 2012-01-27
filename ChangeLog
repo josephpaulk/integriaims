@@ -1,5 +1,10 @@
 2012-01-27  Sergio Martin <sergio.martin@artica.es>
 
+	* include/js/integria_incident_search.js: Fixed the epilog
+	visibility of an incident when details charge for bug 3438764
+
+2012-01-27  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_form.php
 	operation/incidents/incident.php
 	operation/incidents/incident_notes.php
