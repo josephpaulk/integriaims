@@ -1,3 +1,8 @@
+2012-01-27  Sergio Martin <sergio.martin@artica.es>
+
+	* operation/incidents/incident_files.php: Fixed deleting file in 
+	a incident target page with missed jQuery call for bug 3438707
+
 2012-01-26  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/inventories/inventory.php;: Fixed inventory search by

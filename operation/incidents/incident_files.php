@@ -77,9 +77,7 @@ foreach ($files as $file) {
 
 	// Delete attachment
 	if (give_acl ($config['id_user'], $incident['id_grupo'], 'IM')) {
-		    echo "<td>". '<a class="delete" id="delete-file-'.$file["id_attachment"].'"
-			href="ajax.php?page=operation/incidents/incident_detail&id='.
-			$id_incident.'&delete_file=1&id_attachment='.$file["id_attachment"].'">
+		    echo "<td>". '<a class="delete" name="delete_file_'.$file["id_attachment"].'" href="javascript:">
 			<img src="images/cross.png"></a>';
 	}
 
@@ -88,3 +86,30 @@ foreach ($files as $file) {
 echo "</table>";
 
 ?>
+
+<script type="text/javascript">
+$('a[name^="delete_file_"]').click(function() {
+	id_attachment = $(this).attr('name').split('_')[2];
+	row = $(this).parent().parent();
+	
+	values = Array ();
+	values.push ({name: "page", value: "operation/incidents/incident_detail"});
+	values.push ({name: "delete_file", value: 1});
+	values.push ({name: "id_attachment", value: id_attachment});
+	values.push ({name: "id", value: <?php echo $id_incident; ?>});
+	
+	jQuery.get ("ajax.php",
+		values,
+		function (data, status) {
+			// If the return is succesfull we hide the deleted file row
+			if(data.search('class="error"') == -1) {
+				row.hide();
+			}
+			$(".result").html(data);
+		},
+		"html"
+	);
+	return false;
+
+});
+</script>
