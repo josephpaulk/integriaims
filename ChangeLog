@@ -1,5 +1,10 @@
 2012-01-30  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/search.php: Fixed global search trimming the search
+	to avoid errors and adding activities of the companies to search it
+
+2012-01-30  Sergio Martin <sergio.martin@artica.es>
+
 	* operation/contacts/contact_detail.php: Fixed SQL error showed
 	when try to create a contract without company and ACLs in the 
 	contracts view

@@ -19,11 +19,15 @@ check_login ();
 
 // We need to strip HTML entities if we want to use in a sql search
 $search_string = get_parameter ("search_string","");
+
+// Delete spaces from start and end of the search string
+$search_string = safe_input(trim(safe_output($search_string)));
+
 echo "<h1>";
 
 echo __("Searching for");
 echo "...";
-echo "<i>". safe_input($search_string) ."</i>";
+echo "<i> '". $search_string ."'</i>";
 echo "</h1>";
 
 /* 
@@ -226,7 +230,9 @@ if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
 // Companies
 if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
 
-	$sql = "SELECT * FROM tcompany WHERE name LIKE '%".$search_string."%'";
+	$sql = "SELECT * FROM tcompany WHERE 
+		name LIKE '%".$search_string."%'
+		OR id IN (SELECT id_company FROM tcompany_activity WHERE description LIKE '%$search_string%')";
 	$companies = get_db_all_rows_sql ($sql);
 	
 	if ($companies !== false) {
