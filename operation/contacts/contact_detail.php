@@ -55,22 +55,28 @@ if ($create_contact) {
 	        exit;
 	}
 
-	$fullname = (string) get_parameter ('fullname');
-	$phone = (string) get_parameter ('phone');
-	$mobile = (string) get_parameter ('mobile');
-	$email = (string) get_parameter ('email');
-	$position = (string) get_parameter ('position');
+	if($company === false) {
+		$id = false;
+	}
+	else {
+		$fullname = (string) get_parameter ('fullname');
+		$phone = (string) get_parameter ('phone');
+		$mobile = (string) get_parameter ('mobile');
+		$email = (string) get_parameter ('email');
+		$position = (string) get_parameter ('position');
+		
+		$disabled = (int) get_parameter ('disabled');
+		$description = (string) get_parameter ('description');
+
+		$sql = sprintf ('INSERT INTO tcompany_contact (fullname, phone, mobile,
+			email, position, id_company, disabled, description)
+			VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, "%s")',
+			$fullname, $phone, $mobile, $email, $position,
+			$id_company, $disabled, $description);
+
+		$id = process_sql ($sql, 'insert_id');
+	}
 	
-	$disabled = (int) get_parameter ('disabled');
-	$description = (string) get_parameter ('description');
-
-	$sql = sprintf ('INSERT INTO tcompany_contact (fullname, phone, mobile,
-		email, position, id_company, disabled, description)
-		VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, "%s")',
-		$fullname, $phone, $mobile, $email, $position,
-		$id_company, $disabled, $description);
-
-	$id = process_sql ($sql, 'insert_id');
 	if (defined ('AJAX')) {
 		echo json_encode ($id);
 		return;
@@ -221,12 +227,17 @@ if ($id || $new_contact) {
 	
 	// Listing of contacts
 	
-	$group_filter = get_user_groups_for_sql ($config["id_user"], "VR");
+	if (!get_admin_user($config["id_user"])){
+		$group_filter = get_user_groups_for_sql ($config["id_user"], "VR");
+		$where_group = " AND tcompany.id_grupo IN $group_filter ";	
+	} else {
+		$where_group = "";	
+	}
 	
 	$search_text = (string) get_parameter ('search_text');
 	$id_company = (int) get_parameter ('id_company');
 	
-	$where_clause = "WHERE tcompany_contact.id_company = tcompany.id AND tcompany.id_grupo IN $group_filter ";
+	$where_clause = "WHERE tcompany_contact.id_company = tcompany.id $where_group ";
 	if ($search_text != "") {
 		$where_clause .= sprintf (' AND fullname LIKE "%%%s%%"', $search_text);
 	}
@@ -241,7 +252,7 @@ if ($id || $new_contact) {
 	$table->data = array ();
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 	$table->data[0][1] = print_select (get_companies (), 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
-	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	
 	echo '<form method="post">';
 	print_table ($table);

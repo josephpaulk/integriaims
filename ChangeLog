@@ -1,5 +1,11 @@
 2012-01-30  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/contacts/contact_detail.php: Fixed SQL error showed
+	when try to create a contract without company and ACLs in the 
+	contracts view
+
+2012-01-30  Sergio Martin <sergio.martin@artica.es>
+
 	*  operation/inventories/manage_prod.php: Fixed a string
 	that was incomplete
 
