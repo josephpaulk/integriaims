@@ -379,7 +379,7 @@ function check_massive_options(page_size, row_click_callback, search_callback) {
 								value: resolution});
 					}
 					if(assigned_user != -1) {
-						values.push ({name: "usuario_form",
+						values.push ({name: "id_user",
 								value: assigned_user});
 					}
 					values.push ({name: "massive_number_loop",
