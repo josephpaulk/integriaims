@@ -113,7 +113,7 @@ $table->data[0][1] = print_input_text ("no_wu_completion", $config["no_wu_comple
 	20, 500, true, __('No WU completion users'));
 $table->data[0][1] .= integria_help ("no_wu_completion", true);
 
-$table->data[1][0] = print_select ($incident_reporter_options, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, true, "Send email on every incident update");
+$table->data[1][0] = print_select ($incident_reporter_options, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, true, __('Send email on every incident update'));
 
 $table->data[1][1] = print_input_text ("limit_size", $config["limit_size"], '',
 	5, 5, true, __('Max. data limit size'));
@@ -137,15 +137,15 @@ $table->data[4][0] = print_input_text ("iwu_defaultime", $config["iwu_defaultime
 $table->data[4][1] = print_input_text ("pwu_defaultime", $config["pwu_defaultime"], '',
 	5, 5, true, __('Project WU Default time'));
 
-$error_log_options[0] = "Disabled";
-$error_log_options[1] = "Enabled";
-$table->data[5][0] = print_select ($error_log_options, "error_log", $config["error_log"], '','','',true,0,true, "Error log");
+$error_log_options[0] = __('Disabled');
+$error_log_options[1] = __('Enabled');
+$table->data[5][0] = print_select ($error_log_options, "error_log", $config["error_log"], '','','',true,0,true, __('Error log'));
 
-$table->data[5][1] = print_select ($incident_reporter_options, "incident_reporter", $config["incident_reporter"], '','','',true,0,true, "Incident reporter");
+$table->data[5][1] = print_select ($incident_reporter_options, "incident_reporter", $config["incident_reporter"], '','','',true,0,true, __('Incident reporter'));
 
-$table->data[6][0] = print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, "Show incident owner");
+$table->data[6][0] = print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, __('Show incident owner'));
 
-$table->data[6][1] = print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, "Show incident creator");
+$table->data[6][1] = print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, __('Show incident creator'));
 
 $table->data[10][0] = print_input_text ("timezone", $config["timezone"], '',
 	15, 30, true, __('Timezone for integria'));

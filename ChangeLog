@@ -1,5 +1,16 @@
 2012-01-30  Sergio Martin <sergio.martin@artica.es>
 
+	*  operation/inventories/manage_prod.php: Fixed a string
+	that was incomplete
+
+	* godmode/setup/setup.php
+	godmode/setup/setup_mailtemplates.php
+	godmode/setup/setup_auth.php
+	godmode/setup/setup_visual.php: Fixed several strings
+	that were out of translate.
+
+2012-01-30  Sergio Martin <sergio.martin@artica.es>
+
 	* include/js/integria_incident_search.js: Fixed assigned user 
 	change from massive operations into incidents
 

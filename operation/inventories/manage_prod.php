@@ -134,7 +134,7 @@ if ($create || $id) {
 	$files = list_files ('images/products/', "png", 1, 0);
 	$table->data[1][0] = print_select ($files, 'icon', $icon, '', __('None'), "", true, false, false, __('Icon'));
 	$table->data[1][0] .= print_product_icon ($id, true);
-	$table->data[1][1] = combo_kb_products ($parent, 1, __('Product'), true);
+	$table->data[1][1] = combo_kb_products ($parent, 1, __('Product parent'), true);
 	$table->data[2][0] = print_textarea ('description', 10, 50, $description, '',
 		true, __('Description'));
 	

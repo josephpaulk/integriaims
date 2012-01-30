@@ -86,13 +86,13 @@ $profile_list = profile_get_profiles ();
 if ($profile_list === false) {
 	$profile_list = array ();
 }	
-$table->data[3][0] = print_select ($profile_list, "default_remote_profile", $config['default_remote_profile'], '','','',true, 0, true, "Autocreate profile", $disabled);
+$table->data[3][0] = print_select ($profile_list, "default_remote_profile", $config['default_remote_profile'], '','','',true, 0, true, __('Autocreate profile'), $disabled);
 
 $group_list = group_get_groups ();
 if ($group_list === false) {
 	$group_list = array ();
 }	
-$table->data[4][0] = print_select ($group_list, "default_remote_group", $config['default_remote_group'], '','','',true, 0, true, "Autocreate group", $disabled);
+$table->data[4][0] = print_select ($group_list, "default_remote_group", $config['default_remote_group'], '','','',true, 0, true, __('Autocreate group'), $disabled);
 
 $table->data[5][0] = print_input_text ("autocreate_blacklist", $config['autocreate_blacklist'], '',
 	60, 500, true, __('Autocreate blacklist'), $disabled);
@@ -105,7 +105,7 @@ $table->data[7][0] = print_input_text ("LDAP_port", $config['ldap_port'], '',
 	10, 50, true, __('LDAP port'));
 	
 $ldap_version = array (1 => 'LDAPv1', 2 => 'LDAPv2', 3 => 'LDAPv3');
-$table->data[8][0] = print_select ($ldap_version, "ldap_version", $config['ldap_version'], '','','',true, 0, true, "LDAP version");
+$table->data[8][0] = print_select ($ldap_version, "ldap_version", $config['ldap_version'], '','','',true, 0, true, __('LDAP version'));
 
 $table->data[9][0] = __('Start TLS');
 $table->data[10][0] =  __('Yes').'&nbsp;'.print_radio_button ('ldap_start_tls', 1, '', $config['ldap_start_tls'], true, '', '', '').'&nbsp;&nbsp;';

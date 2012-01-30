@@ -71,9 +71,9 @@ function get_font_files () {
 
 $fontlist = get_font_files ();
 
-$table->data[0][1] = print_select ($fontlist, 'font', $config["font"], '', '', '',  true, 0, true, "Font for graphs") ;
+$table->data[0][1] = print_select ($fontlist, 'font', $config["font"], '', '', '',  true, 0, true, __('Font for graphs')) ;
 
-$table->data[1][0] = print_select ($fontlist, 'pdffont', $config["pdffont"], '', '', '',  true, 0, true, "Font for PDF") ;
+$table->data[1][0] = print_select ($fontlist, 'pdffont', $config["pdffont"], '', '', '',  true, 0, true, __('Font for PDF')) ;
 
 $table->data[1][1] = print_input_text ("fontsize", $config["fontsize"], '',
 	3, 5, true, __('Graphics font size'));
@@ -91,9 +91,9 @@ function get_image_files () {
 }
 
 $imagelist = get_image_files ();
-$table->data[2][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', '', '',  true, 0, true, "Site logo") ;
+$table->data[2][0] = print_select ($imagelist, 'site_logo', $config["site_logo"], '', '', '',  true, 0, true, __('Site logo')) ;
 
-$table->data[2][1] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', '', '',  true, 0, true, "Header logo") ;
+$table->data[2][1] = print_select ($imagelist, 'header_logo', $config["header_logo"], '', '', '',  true, 0, true,  __('Header logo')) ;
 
 $flash_options = array();
 $flash_options[0]="Disabled";
