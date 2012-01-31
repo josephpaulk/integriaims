@@ -25,7 +25,10 @@ if (! give_acl ($config["id_user"], 0, "VR")) {
 	exit;
 }
 
+$manager = give_acl ($config["id_user"], 0, "VM");
+
 $id = (int) get_parameter ('id');
+$id_group = get_db_value ('id_group', 'tcontract', 'id', $id);
 $get_sla = (bool) get_parameter ('get_sla');
 $new_contract = (bool) get_parameter ('new_contract');
 $create_contract = (bool) get_parameter ('create_contract');
@@ -82,13 +85,12 @@ if ($create_contract) {
 
 // UPDATE
 if ($update_contract) { // if modified any parameter
-
 	$id_group = (int) get_parameter ('id_group');
-        if (! give_acl ($config["id_user"], $id_group, "VW")) {
-                audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
-                require ("general/noaccess.php");
-                exit;
-        }
+	if (! give_acl ($config["id_user"], $id_group, "VW")) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
+			require ("general/noaccess.php");
+			exit;
+	}
 
 	$name = (string) get_parameter ('name');
 	$contract_number = (string) get_parameter ('contract_number');
@@ -122,13 +124,12 @@ if ($update_contract) { // if modified any parameter
 // DELETE
 if ($delete_contract) {
 	$name = get_db_value ('name', 'tcontract', 'id', $id);
-	$id_group = get_db_value ('id_group', 'tcontract', 'id', $id);
 
-        if (! give_acl ($config["id_user"], $id_group, "VW")) {
-                audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a contract");
-                require ("general/noaccess.php");
-                exit;
-        }
+	if (! give_acl ($config["id_user"], $id_group, "VM")) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a contract");
+			require ("general/noaccess.php");
+			exit;
+	}
 
 	$sql = sprintf ('DELETE FROM tcontract WHERE id = %d', $id);
 	process_sql ($sql);
@@ -142,6 +143,11 @@ echo "<h2>".__('Contract management')."</h2>";
 // FORM (Update / Create)
 if ($id | $new_contract) {
 	if ($new_contract) {
+		if(!$manager) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+			require ("general/noaccess.php");
+			exit;
+		}
 		$name = "";
 		$contract_number = "";
 		$date_begin = date('Y-m-d');
@@ -151,6 +157,11 @@ if ($id | $new_contract) {
 		$id_sla = "";
 		$description = "";
 	} else {
+        if (!give_acl ($config["id_user"], $id_group, "VR")) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
+			require ("general/noaccess.php");
+			exit;
+		}
 		$contract = get_db_row ("tcontract", "id", $id);
 		$name = $contract["name"];
 		$contract_number = $contract["contract_number"];
@@ -167,60 +178,96 @@ if ($id | $new_contract) {
 	$table->colspan = array ();
 	$table->colspan[4][0] = 2;
 	$table->data = array ();
-	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Contract name'));
-	$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
 	
-	$table->data[1][1] = combo_groups_visible_for_me ($config["id_user"], "id_group", 0, "VR", $id_group, true, true);
+	if (give_acl ($config["id_user"], $id_group, "VW")) {
+		$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Contract name'));
+		$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
 		
-	$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
-	$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
-	$table->data[3][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
-		'id_company', $id_company, '', '', '', true, false, false, __('Company'));
-		
-	$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
-	$table->data[3][0] .= "<img src='images/company.png'></a>";
+		$table->data[1][1] = combo_groups_visible_for_me ($config["id_user"], "id_group", 0, "VR", $id_group, true, true);
 			
-	$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
-		'id_sla', $id_sla, '', '', '', true, false, false, __('SLA'));
-	$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
+		$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
+		$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
+		$table->data[3][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
+			'id_company', $id_company, '', '', '', true, false, false, __('Company'));
+			
+		$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
+		$table->data[3][0] .= "<img src='images/company.png'></a>";
+				
+		$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
+			'id_sla', $id_sla, '', '', '', true, false, false, __('SLA'));
+		$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
+	}
+	else {
+		$table->data[0][0] = "<b>".__('Contract name')."</b><br>$name<br>";
+		if($contract_number == '') {
+			$contract_number = '<i>-'.__('Empty').'-</i>';
+		}		
+		$table->data[1][0] = "<b>".__('Contract number')."</b><br>$contract_number<br>";	
+		
+		$group_name = get_db_value('nombre','tgrupo','id_grupo',$id_group);
+		
+		$table->data[1][1] = "<b>".__('Group')."</b><br>$id_group<br>";
+		$table->data[2][0] = "<b>".__('Begin date')."</b><br>$date_begin<br>";
+		$table->data[2][1] = "<b>".__('End date')."</b><br>$date_end<br>";
+
+		$company_name = get_db_value('name','tcompany','id',$id_company);
+
+		$table->data[3][0] = "<b>".__('Company')."</b><br>$company_name";
+			
+		$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
+		$table->data[3][0] .= "<img src='images/company.png'></a>";
+		
+		$sla_name = get_db_value('name','tsla','id',$id_sla);
+
+		$table->data[3][1] = "<b>".__('SLA')."</b><br>$sla_name<br>";
+		if($description == '') {
+			$description = '<i>-'.__('Empty').'-</i>';
+		}		
+		$table->data[3][1] = "<b>".__('Description')."</b><br>$description<br>";
+	}
 	
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
 	print_table ($table);
-	echo '<div class="button" style="width: '.$table->width.'">';
-	if ($id) {
-		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
-		print_input_hidden ('id', $id);
-		print_input_hidden ('update_contract', 1);
-	} else {
-		print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
-		print_input_hidden ('create_contract', 1);
+	
+	if (($id && give_acl ($config["id_user"], $id_group, "VW")) || (!$id && give_acl ($config["id_user"], $id_group, "VM"))) {
+		echo '<div class="button" style="width: '.$table->width.'">';
+		if ($id) {
+			print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
+			print_input_hidden ('id', $id);
+			print_input_hidden ('update_contract', 1);
+		} else {
+			print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
+			print_input_hidden ('create_contract', 1);
+		}
+		echo "</div>";
 	}
-	echo "</div>";
 	echo "</form>";
 } else {
 	
 	// Contract listing
-	
 	$search_text = (string) get_parameter ('search_text');
 	$search_company_role = (int) get_parameter ('search_company_role');
 	$search_date_end = get_parameter ('search_date_end');
 	$search_date_begin = get_parameter ('search_date_begin');
 	
-	$where_clause = "WHERE tcontract.id_company = tcompany.id AND 1=1 ";
+	$where_clause = " 1 = 1 ";
+	
 	if ($search_text != "") {
-		$where_clause .= sprintf ('AND (tcompany.name LIKE "%%%s%%" OR  tcontract.name LIKE "%%%s%%" OR contract_number LIKE "%%%s%%")', $search_text, $search_text, $search_text);
+		$where_clause .= sprintf ('AND (id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR 
+			name LIKE "%%%s%%" OR 
+			contract_number LIKE "%%%s%%")', $search_text, $search_text, $search_text);
 	}
 	
 	if ($search_company_role) {
-		$where_clause .= sprintf (' AND id_company_role = %d', $search_company_role);
+		$where_clause .= sprintf (' AND id_company IN (SELECT id FROM tcompany WHERE id_company_role = %d)', $search_company_role);
 	}
 	
 	if ($search_date_end != "") {
-		$where_clause .= sprintf (' AND tcontract.date_end <= "%s"', $search_date_end);
+		$where_clause .= sprintf (' AND date_end <= "%s"', $search_date_end);
 	}
 	
 	if ($search_date_begin != "") {
-		$where_clause .= sprintf (' AND tcontract.date_end >= "%s"', $search_date_begin);
+		$where_clause .= sprintf (' AND date_end >= "%s"', $search_date_begin);
 	}
 	
 	$table->width = '100%';
@@ -241,8 +288,7 @@ if ($id | $new_contract) {
 	print_table ($table);
 	echo '</form>';
 	
-	$sql = "SELECT tcontract.* FROM tcontract, tcompany $where_clause ORDER BY date_end DESC";
-	$contracts = get_db_all_rows_sql ($sql);
+	$contracts = get_contracts(false, "$where_clause ORDER BY date_end DESC");
 
 	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/contracts/contract_detail");
 
@@ -263,7 +309,9 @@ if ($id | $new_contract) {
 		$table->head[2] = __('Company');
 		$table->head[3] = __('Begin');
 		$table->head[4] = __('End');
-		$table->head[5] = __('Delete');
+		if(give_acl ($config["id_user"], $id_group, "VM")) {
+			$table->head[5] = __('Delete');
+		}
 		$counter = 0;
 		
 		foreach ($contracts as $contract) {
@@ -280,21 +328,23 @@ if ($id | $new_contract) {
 			
 			$data[3] = $contract["date_begin"];
 			$data[4] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
-
-			// Delete
-			$data[5] = '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&delete_contract=1&id='.$contract["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
-			
+			if(give_acl ($config["id_user"], $id_group, "VM")) {
+				// Delete
+				$data[5] = '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&delete_contract=1&id='.$contract["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+			}
 			array_push ($table->data, $data);
 		}	
 		print_table ($table);
 	}
 	
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
-	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-	print_input_hidden ('new_contract', 1);
-	echo '</div>';
-	echo '</form>';
+	if($manager) {
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
+		echo '<div class="button" style="width: '.$table->width.'">';
+		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+		print_input_hidden ('new_contract', 1);
+		echo '</div>';
+		echo '</form>';
+	}
 }
 ?>
 

@@ -1,3 +1,14 @@
+2012-01-31  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_inventories.php
+	include/functions_db.php
+	operation/side_menu.php
+	operation/contracts/contract_detail.php
+	operation/contacts/contact_detail.php
+	operation/companies/company_role.php
+	operation/companies/company_detail.php: Fixed several 
+	ACLs issues into the companies section
+
 2012-01-31 Dario Rodriguez <dario.rodriguez@artica.es>
 
 	* index.php: Removed developer_bypass hook.

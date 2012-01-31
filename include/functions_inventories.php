@@ -152,21 +152,36 @@ function get_company ($id_company) {
 	return get_db_row ('tcompany', 'id', $id_company);
 }
 
-function get_companies ($only_names = true) {
-	$companies = get_db_all_rows_in_table ('tcompany');
+function get_companies ($only_names = true, $filter = false) {
+	global $config;
+	
+	$companies = get_db_all_rows_filter ('tcompany', $filter);
 	if ($companies === false)
 		return array ();
-	
-	if ($only_names) {
-		$retval = array ();
-		foreach ($companies as $company) {
-			$retval[$company['id']] = $company['name'];
+
+	$names = array ();
+	foreach ($companies as $k => $company) {
+		if (!give_acl ($config["id_user"], $company['id_grupo'], "VR") && !get_admin_user ($config["id_user"])) {
+			continue;
 		}
-		asort ($retval);
-		return $retval;
+		$names[$company['id']] = $company['name'];
 	}
+
+	asort ($names);
 	
-	return $companies;
+	if($only_names) {
+		return $names;
+	}
+
+	$retval = array();
+	$company_keys = array_keys($names);
+	foreach($companies as $company) {
+		if(in_array($company['id'],$company_keys)) {
+			$retval[] = $company;
+		}
+	}
+
+	return $retval;
 }
 
 function get_company_roles ($only_names = true) {
@@ -190,24 +205,36 @@ function get_contract ($id_contract) {
 	return get_db_row ('tcontract', 'id', $id_contract);
 }
 
-function get_contracts ($only_names = true) {
+function get_contracts ($only_names = true, $filter = false) {
 	global $config;
 
-	$user_groups = array_keys(get_user_groups ($config['id_user'], 'VR'));
-	$contracts = get_db_all_fields_in_table ('tcontract', 'id_group', $user_groups, 'name');
-	
+	$contracts = get_db_all_rows_filter ('tcontract', $filter);
 	if ($contracts === false)
 		return array ();
-	
-	if ($only_names) {
-		$retval = array ();
-		foreach ($contracts as $contract) {
-			$retval[$contract['id']] = $contract['name'];
+
+	$names = array ();
+	foreach ($contracts as $k => $contract) {
+		if (!give_acl ($config["id_user"], $contract['id_group'], "VR") && !get_admin_user ($config["id_user"])) {
+			continue;
 		}
-		return $retval;
+		$names[$contract['id']] = $contract['name'];
 	}
+
+	asort ($names);
 	
-	return $contracts;
+	if($only_names) {
+		return $names;
+	}
+
+	$retval = array();
+	$contract_keys = array_keys($names);
+	foreach($contracts as $contract) {
+		if(in_array($contract['id'],$contract_keys)) {
+			$retval[] = $contract;
+		}
+	}
+
+	return $retval;
 }
 
 function get_products ($only_names = true) {

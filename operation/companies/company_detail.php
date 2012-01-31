@@ -24,6 +24,8 @@ if (! give_acl ($config["id_user"], 0, "VR")) {
 	exit;
 }
 
+$manager = give_acl ($config["id_user"], 0, "VM");
+
 $id = (int) get_parameter ('id');
 $new_company = (bool) get_parameter ('new_company');
 $create_company = (bool) get_parameter ('create_company');
@@ -33,7 +35,7 @@ $delete_invoice = get_parameter ('delete_invoice', "");
 
 // CREATE
 if ($create_company) {
-	if (! give_acl ($config["id_user"], 0, "VW")) {
+	if (!$manager) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a new company");
 		require ("general/noaccess.php");
 		exit;
@@ -68,7 +70,6 @@ if ($create_company) {
 
 // UPDATE
 if ($update_company) {
-	
 	$id_group = (int) get_parameter ("id_group", 0);
 	if (! give_acl ($config["id_user"], $id_group, "VW")) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a company");
@@ -104,7 +105,7 @@ if ($delete_company) { // if delete
 	$name = get_db_value ('name', 'tcompany', 'id', $id);
 	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id);
 
-	if (! give_acl ($config["id_user"], $id_group, "VW")) {
+	if (! give_acl ($config["id_user"], $id_group, "VM")) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a company without privileges");
 		require ("general/noaccess.php");
 		exit;
@@ -119,14 +120,13 @@ if ($delete_company) { // if delete
 
 // Delete INVOICE
 if ($delete_invoice == 1){
+	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id);
 
-	 // TODO: Improve ACL check here.
-	if (! give_acl ($config["id_user"], 0, "VW")) {
-                audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a invoice without privileges");
-                require ("general/noaccess.php");
-                exit;
-        }
-
+	if (! give_acl ($config["id_user"], $id_group, "VM")) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a invoice without privileges");
+		require ("general/noaccess.php");
+		exit;
+    }
 	
 	$id_invoice = get_parameter ("id_invoice", "");
 	$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id_invoice");
@@ -144,6 +144,7 @@ if ($delete_invoice == 1){
 
 // View company details / Update
 if ($id) {
+	$writter = give_acl ($config["id_user"], $id_group, "VW");
 	
 	$op = get_parameter ("op", "");
 	
@@ -195,17 +196,17 @@ if ($id) {
 	// Raya horizontal
 	echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: block;"></div>';
 
+	$company = get_db_row ('tcompany', 'id', $id);
+	$id_group = $company['id_grupo'];
+	
+	if (! give_acl ($config["id_user"], $id_group, "VR")) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access a company detail");
+		require ("general/noaccess.php");
+		exit;
+	}
+		
 	// View/Edit company details
 	if ($op == ""){
-		$company = get_db_row ('tcompany', 'id', $id);
-		$id_group = $company['id_grupo'];		
-		
-		if (! give_acl ($config["id_user"], $id_group, "VR")) {
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access a company detail");
-			require ("general/noaccess.php");
-			exit;
-		}
-		
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 		echo "<h2>".__('Company details')."</h2>";
 
@@ -222,25 +223,53 @@ if ($id) {
 		$table->colspan[2][0] = 2;
 		$table->colspan[3][0] = 2;
 	
-		$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Company name'));
-		
-		$table->data[0][1] = combo_groups_visible_for_me ($config["id_user"], "id_group", 0, "VR", $id_group, true, true);
-		
-		
-		$table->data[1][0] = print_input_text ("fiscal_id", $fiscal_id, "", 10, 100, true, __('Fiscal ID'));
-		$table->data[1][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
-			'id_company_role', $id_company_role, '', __('Select'), 0, true, false, false, __('Company Role'));
+		if($writter) {
+			$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Company name'));
+			
+			$table->data[0][1] = combo_groups_visible_for_me ($config["id_user"], "id_group", 0, "VR", $id_group, true, true);
+			
+			
+			$table->data[1][0] = print_input_text ("fiscal_id", $fiscal_id, "", 10, 100, true, __('Fiscal ID'));
+			$table->data[1][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
+				'id_company_role', $id_company_role, '', __('Select'), 0, true, false, false, __('Company Role'));
 
-		$table->data[2][0] = print_textarea ('address', 3, 1, $address, '', true, __('Address'));
-		$table->data[3][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
-
+			$table->data[2][0] = print_textarea ('address', 3, 1, $address, '', true, __('Address'));
+			$table->data[3][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
+		}
+		else {
+			$table->data[0][0] = "<b>".__('Company name')."</b><br>$name<br>";
+			
+			$group_name = get_db_value('nombre','tgrupo','id_grupo',$id_group);
+			$table->data[0][1] = "<b>".__('Group')."</b><br>$group_name<br>";
+			if($fiscal_id == '') {
+				$fiscal_id = '<i>-'.__('Empty').'-</i>';
+			}		
+			$table->data[1][0] = "<b>".__('Fiscal ID')."</b><br>$fiscal_id<br>";
+			$role_name = get_db_value('name','tcompany_role','id',$id_company_role);
+			if($role_name == '') {
+				$role_name = '<i>-'.__('Empty').'-</i>';
+			}
+			$table->data[1][1] = "<b>".__('Company Role')."</b><br>$role_name<br>";
+			if($address == '') {
+				$address = '<i>-'.__('Empty').'-</i>';
+			}
+			$table->data[2][0] = "<b>".__('Address')."</b><br>$address<br>";
+			if($comments == '') {
+				$comments = '<i>-'.__('Empty').'-</i>';
+			}
+			$table->data[3][0] = "<b>".__('Comments')."</b><br>$comments<br>";
+		}
+		
 		print_table ($table);
-		echo '<div class="button" style="width: '.$table->width.'">';
-		print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
-		print_input_hidden ('update_company', 1);
-		print_input_hidden ('id', $id);
-
-		echo "</div>";
+		
+		if ($writter) {
+			echo '<div class="button" style="width: '.$table->width.'">';
+			print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
+			print_input_hidden ('update_company', 1);
+			print_input_hidden ('id', $id);
+			echo "</div>";
+		}
+			
 		echo '</form>';	
 	}
 
@@ -257,16 +286,17 @@ if ($id) {
 		}
 		
 		// ADD item form
-		echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities&op2=add">';
-		echo "<h3>".__("Add activity")."</h3><p>";
-		echo "<textarea name='comments' style='margin-left: 10px; width:94%; height: 50px'>";
-		echo "</textarea>";
+		if($manager) {
+			echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities&op2=add">';
+			echo "<h3>".__("Add activity")."</h3><p>";
+			echo "<textarea name='comments' style='margin-left: 10px; width:94%; height: 50px'>";
+			echo "</textarea>";
 
-		echo '<div class="button" style="margin-left: 10px; width: 92%;">';
-		print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', false);
-		echo "</div>";
-		echo '</form>';
-	 
+			echo '<div class="button" style="margin-left: 10px; width: 92%;">';
+			print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', false);
+			echo "</div>";
+			echo '</form>';
+		}
 
 		$sql = "SELECT * FROM tcompany_activity WHERE id_company = $id ORDER BY date DESC";
 
@@ -308,15 +338,7 @@ if ($id) {
 	// CONTRACT LISTING
 
 	elseif ($op == "contracts") {
-
-		if (!get_admin_user($config["id_user"])){
-			$filter = get_user_groups_for_sql  ($config["id_user"], "VR");
-			$sql = "SELECT * FROM tcontract WHERE id_company = $id AND id_group IN $filter ORDER BY name";
-		} else {
-			$sql = "SELECT * FROM tcontract WHERE id_company = $id ORDER BY name";
-		}
-		
-		$contracts = get_db_all_rows_sql ($sql);
+		$contracts = get_contracts(false, "id_company = $id ORDER BY name");
 		$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=contracts");
 
 		if ($contracts !== false) {
@@ -357,14 +379,15 @@ if ($id) {
 				array_push ($table->data, $data);
 			}	
 			print_table ($table);
-			
-			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$id.'">';
-			echo '<div class="button" style="width: '.$table->width.'">';
-			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-			print_input_hidden ('new_contract', 1);
-			echo '</div>';
-			echo '</form>';
-			
+
+			if($manager) {
+				echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$id.'">';
+				echo '<div class="button" style="width: '.$table->width.'">';
+				print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+				print_input_hidden ('new_contract', 1);
+				echo '</div>';
+				echo '</form>';
+			}
 		}
 	}
 
@@ -413,14 +436,14 @@ if ($id) {
 		}
 		print_table ($table);
 		
-		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&id_company='.$id.'">';
-		echo '<div class="button" style="width: '.$table->width.'">';
-		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-		print_input_hidden ('new_contact', 1);
-		echo '</div>';
-		echo '</form>';
-		
-
+		if($manager) {
+			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&id_company='.$id.'">';
+			echo '<div class="button" style="width: '.$table->width.'">';
+			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+			print_input_hidden ('new_contact', 1);
+			echo '</div>';
+			echo '</form>';
+		}
 	} // end of contact view
 
 	// INVOICES LISTING
@@ -458,7 +481,9 @@ if ($id) {
 			$table->head[4] = __('Payment');
 			$table->head[5] = __('File');
 			$table->head[6] = __('Upload by');
-			$table->head[7] = __('Delete');
+			if(give_acl ($config["id_user"], $id_group, "VM")) {
+				$table->head[7] = __('Delete');
+			}
 			$counter = 0;
 		
 			$company = get_db_row ('tcompany', 'id', $id);
@@ -482,18 +507,23 @@ if ($id) {
 				$data[5] = 	"<a href='".$config["base_url"]."/attachment/".$invoice["id_attachment"]."_".$filename."'>$filename</a>";
 				
 				$data[6] = $invoice["id_user"];
+				
+				if(give_acl ($config["id_user"], $id_group, "VM")) {
 				$data[7] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices&delete_invoice=1&id_invoice=".$invoice["id"]."'><img src='images/cross.png'></a>";
+				}
 				
 				array_push ($table->data, $data);
 			}	
 			print_table ($table);
 			
-			echo '<form method="post" action="index.php?sec=customers&sec2=operation/invoices/invoices&id_company='.$id.'">';
-			echo '<div class="button" style="width: '.$table->width.'">';
-			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-			print_input_hidden ('new_invoice', 1);
-			echo '</div>';
-			echo '</form>';
+			if($manager) {
+				echo '<form method="post" action="index.php?sec=customers&sec2=operation/invoices/invoices&id_company='.$id.'">';
+				echo '<div class="button" style="width: '.$table->width.'">';
+				print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+				print_input_hidden ('new_invoice', 1);
+				echo '</div>';
+				echo '</form>';
+			}
 			
 		}
 	}
@@ -549,12 +579,12 @@ if ($id) {
 	$search_text = (string) get_parameter ('search_text');	
 	$search_role = (string) get_parameter ("search_role");
 	
-	if (!get_admin_user($config["id_user"])){
-		$group_filter = get_user_groups_for_sql ($config["id_user"], "VR");
-		$where_clause = "WHERE 1=1 AND id_grupo IN $group_filter ";	
-	} else {
-		$where_clause = "WHERE 1=1";	
-	}
+	//~ if (!get_admin_user($config["id_user"])){
+		//~ $group_filter = get_user_groups_for_sql ($config["id_user"], "VR");
+		//~ $where_clause = " 1=1 AND id_grupo IN $group_filter ";	
+	//~ } else {
+		//~ $where_clause = " 1=1";	
+	//~ }
 	
 	
 	if ($search_text != "") {
@@ -583,9 +613,13 @@ if ($id) {
 	print_table ($table);
 	echo '</form>';
 
-	$sql = "SELECT * FROM tcompany $where_clause ORDER BY name";
-	$companies = get_db_all_rows_sql ($sql);
+	//~ $sql = "SELECT * FROM tcompany $where_clause ORDER BY name";
+	//~ $companies = get_db_all_rows_sql ($sql);
+
+	//~ echo $where_clause;
 	
+	$companies = get_companies(false, $where_clause);
+
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail&search_tect='$search_text&search_role=$search_role");
 
 	if ($companies !== false) {
@@ -600,9 +634,10 @@ if ($id) {
 		$table->head[2] = __('Contracts');
 		$table->head[3] = __('Contacts');
 		$table->head[4] = __('Incidents');
-		$table->head[5] = __("Invoices (totals)");
-		$table->head[6] = __('Delete');
-		
+		$table->head[5] = __('Invoices (totals)');
+		if(give_acl ($config["id_user"], $id_group, "VM")) {
+			$table->head[6] = __('Delete');
+		}
 		foreach ($companies as $company) {
 			$data = array ();
 			
@@ -620,8 +655,7 @@ if ($id) {
 			$sum_contactos = get_db_sql ("SELECT COUNT(id) FROM tcompany_contact WHERE id_company = ".$company["id"]);
 			if ($sum_contactos > 0)
 				$data[3] .= " ($sum_contactos)";
-				
-					
+												
 			$data[4] = '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident">';
 			$data[4] .= print_input_hidden ('search_id_company', $company['id'], true);
 			$data[4] .= print_input_image ('btn', 'images/bug.png', 1, '', true);
@@ -629,23 +663,27 @@ if ($id) {
 			$data[5] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$company["id"]."&op=invoices'>";
 			$data[5] .= format_numeric (company_invoice_total ($company["id"]));
 			$data[5] .= "</a>";
-			$data[6] ='<a href="index.php?sec=customers&
-						sec2=operation/companies/company_detail&
-						delete_company=1&id='.$company['id'].'"
-						onClick="if (!confirm(\''.__('Are you sure?').'\'))
-						return false;">
-						<img src="images/cross.png"></a>';
+			if(give_acl ($config["id_user"], $id_group, "VM")) {
+				$data[6] ='<a href="index.php?sec=customers&
+							sec2=operation/companies/company_detail&
+							delete_company=1&id='.$company['id'].'"
+							onClick="if (!confirm(\''.__('Are you sure?').'\'))
+							return false;">
+							<img src="images/cross.png"></a>';
+			}
 			array_push ($table->data, $data);
 		}
 		print_table ($table);
 	}
 	
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
-	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-	print_input_hidden ('new_company', 1);
-	echo '</div>';
-	echo '</form>';
+	if($manager) {
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
+		echo '<div class="button" style="width: '.$table->width.'">';
+		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+		print_input_hidden ('new_company', 1);
+		echo '</div>';
+		echo '</form>';
+	}
 }
 
 ?>

@@ -24,7 +24,13 @@ if (! give_acl ($config["id_user"], 0, "VR")) {
 	exit;
 }
 
+$manager = give_acl ($config["id_user"], 0, "VM");
+
 $id = (int) get_parameter ('id');
+if($id != 0) {
+	$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $id);
+	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id_company);
+}
 $new_contact = (bool) get_parameter ('new_contact');
 $create_contact = (bool) get_parameter ('create_contact');
 $update_contact = (bool) get_parameter ('update_contact');
@@ -43,13 +49,10 @@ if ($get_contacts) {
 
 // Create
 if ($create_contact) {
-
-
 	$id_company = (int) get_parameter ('id_company');
-	$company = get_db_row ('tcompany', 'id', $id_company);
-	$id_group = $company['id_grupo'];
+	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id_company);
 
-	if (! give_acl ($config["id_user"], $id_group, "VW")) {
+	if (! give_acl ($config["id_user"], $id_group, "VM")) {
 	       audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a new contact in a group without access");
 	        require ("general/noaccess.php");
 	        exit;
@@ -93,12 +96,7 @@ if ($create_contact) {
 
 // Update
 if ($update_contact) { // if modified any parameter
-
-	$id_company = (int) get_parameter ('id_company');
-	$company = get_db_row ('tcompany', 'id', $id_company);
-	$id_group = $company['id_grupo'];
-
-	if (! give_acl ($config["id_user"], $id_group, "VW")) {
+	if (!give_acl ($config["id_user"], $id_group, "VW")) {
 	       audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to update a contact in a group without access");
 	        require ("general/noaccess.php");
 	        exit;
@@ -131,12 +129,7 @@ if ($update_contact) { // if modified any parameter
 
 // Delete
 if ($delete_contact) {
-
-	$contact = get_db_row ('tcompany_contact', 'id', $id);
-	$company = get_db_row ('tcompany', 'id', $contact["id_company"]);
-	$id_group = $company['id_grupo'];
-
-	if (! give_acl ($config["id_user"], $id_group, "VW")) {
+	if (! give_acl ($config["id_user"], $id_group, "VM")) {
 	       audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to delete a contact in a group without access");
 	        require ("general/noaccess.php");
 	        exit;
@@ -155,6 +148,11 @@ echo "<h2>".__('Contact management')."</h2>";
 // FORM (Update / Create)
 if ($id || $new_contact) {
 	if ($new_contact) {
+		if (! give_acl ($config["id_user"], $id_group, "VM")) {
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a contact in a group without access");
+			require ("general/noaccess.php");
+			exit;
+		}
 		$id = 0;
 		$fullname = (string) get_parameter ('fullname');
 		$phone = (string) get_parameter ('phone');
@@ -169,6 +167,11 @@ if ($id || $new_contact) {
 			$id_company = (int) get_db_value ('id_company', 'tcontract', 'id', $id_contract);
 		}
 	} else {
+		if (! give_acl ($config["id_user"], $id_group, "VR")) {
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access a contact in a group without access");
+			require ("general/noaccess.php");
+			exit;
+		}
 		$contact = get_db_row ("tcompany_contact", "id", $id);
 		$fullname = $contact['fullname'];
 		$phone = $contact['phone'];
@@ -188,26 +191,62 @@ if ($id || $new_contact) {
 	$table->colspan[1][0] = 4;
 	$table->colspan[4][0] = 4;
 	
-	$table->data[0][0] = print_input_text ("fullname", $fullname, "", 60, 100, true, __('Full name'));
-	
-	$table->data[1][0] = print_input_text ("email", $email, "", 35, 100, true, __('Email'));
-	$table->data[2][0] = print_input_text ("phone", $phone, "", 15, 60, true, __('Phone number'));
-	$table->data[2][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
-	$table->data[3][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
-	
-	// TODO: Show only companies with access to them
-	$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
-		'id_company', $id_company, '', __('Select'), 0, true, false, false, __('Company'));
+	if (give_acl ($config["id_user"], $id_group, "VW")) {
+		$table->data[0][0] = print_input_text ("fullname", $fullname, "", 60, 100, true, __('Full name'));
 		
-	$table->data[3][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
-	$table->data[3][1] .= "<img src='images/company.png'></a>";
-	
-	$table->data[4][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
+		$table->data[1][0] = print_input_text ("email", $email, "", 35, 100, true, __('Email'));
+		$table->data[2][0] = print_input_text ("phone", $phone, "", 15, 60, true, __('Phone number'));
+		$table->data[2][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
+		$table->data[3][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
+		
+		// TODO: Show only companies with access to them
+		$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
+			'id_company', $id_company, '', __('Select'), 0, true, false, false, __('Company'));
+			
+		$table->data[3][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
+		$table->data[3][1] .= "<img src='images/company.png'></a>";
+		
+		$table->data[4][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
+	}
+	else {
+		if($fullname == '') {
+			$fullname = '<i>-'.__('Empty').'-</i>';
+		}		
+		$table->data[0][0] = "<b>".__('Full name')."</b><br>$fullname<br>";
+		if($email == '') {
+			$email = '<i>-'.__('Empty').'-</i>';
+		}		
+		$table->data[1][0] = "<b>".__('Email')."</b><br>$email<br>";
+		if($phone == '') {
+			$phone = '<i>-'.__('Empty').'-</i>';
+		}		
+		$table->data[2][0] = "<b>".__('Phone number')."</b><br>$phone<br>";
+		if($mobile == '') {
+			$mobile = '<i>-'.__('Empty').'-</i>';
+		}		
+		$table->data[2][1] = "<b>".__('Mobile number')."</b><br>$mobile<br>";
+		if($position == '') {
+			$position = '<i>-'.__('Empty').'-</i>';
+		}		
+		$table->data[3][0] = "<b>".__('Position')."</b><br>$position<br>";
+		
+		$company_name = get_db_value('name','tcompany','id',$id_company);
+
+		$table->data[3][1] = "<b>".__('Company')."</b><br>$company_name";
+			
+		$table->data[3][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
+		$table->data[3][1] .= "<img src='images/company.png'></a>";
+		
+		if($description == '') {
+			$description = '<i>-'.__('Empty').'-</i>';
+		}		
+		$table->data[4][0] = "<b>".__('Description')."</b><br>$description<br>";
+	}
 	
 	echo '<form method="post" id="contact_form">';
 	print_table ($table);
 
-        if (give_acl ($config["id_user"], 0, "VW")) {
+	if (give_acl ($config["id_user"], $id_group, "VW")) {
 	
 		echo '<div class="button" style="width: '.$table->width.'">';
 		if ($id) {
@@ -224,9 +263,7 @@ if ($id || $new_contact) {
 	echo "</form>";
 	
 } else {
-	
 	// Listing of contacts
-	
 	if (!get_admin_user($config["id_user"])){
 		$group_filter = get_user_groups_for_sql ($config["id_user"], "VR");
 		$where_group = " AND tcompany.id_grupo IN $group_filter ";	
@@ -259,7 +296,7 @@ if ($id || $new_contact) {
 	echo '</form>';
 
 	$sql = "SELECT tcompany_contact.* FROM tcompany_contact, tcompany $where_clause ORDER BY id_company, fullname";
-	
+
 	$contacts = get_db_all_rows_sql ($sql);
 
 	$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail");
@@ -277,7 +314,9 @@ if ($id || $new_contact) {
 		$table->head[0] = __('Full name');
 		$table->head[1] = __('Company');
 		$table->head[2] = __('Email');
-		$table->head[3] = __('Delete');
+		if(give_acl ($config["id_user"], $id_group, "VM")) {
+			$table->head[3] = __('Delete');
+		}
 		
 		foreach ($contacts as $contact) {
 			$data = array ();
@@ -286,22 +325,26 @@ if ($id || $new_contact) {
 				$contact['id']."'>".$contact['fullname']."</a>";
 			$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$contact['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $contact['id_company'])."</a>";
 			$data[2] = $contact['email'];
-			$data[3] = '<a href="index.php?sec=customers&
-						sec2=operation/contacts/contact_detail&
-						delete_contact=1&id='.$contact['id'].'"
-						onClick="if (!confirm(\''.__('Are you sure?').'\'))
-						return false;">
-						<img src="images/cross.png"></a>';
+			if(give_acl ($config["id_user"], $id_group, "VM")) {
+				$data[3] = '<a href="index.php?sec=customers&
+							sec2=operation/contacts/contact_detail&
+							delete_contact=1&id='.$contact['id'].'"
+							onClick="if (!confirm(\''.__('Are you sure?').'\'))
+							return false;">
+							<img src="images/cross.png"></a>';
+			}
 			array_push ($table->data, $data);
 		}
 		print_table ($table);
 	}
 	
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail">';
-	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-	print_input_hidden ('new_contact', 1);
-	echo '</div>';
-	echo '</form>';
+	if($manager) {
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail">';
+		echo '<div class="button" style="width: '.$table->width.'">';
+		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+		print_input_hidden ('new_contact', 1);
+		echo '</div>';
+		echo '</form>';
+	}
 }
 ?>

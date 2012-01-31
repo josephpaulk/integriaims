@@ -1217,7 +1217,9 @@ function get_user_groups ($id_user = 0, $permission = 'IR') {
  */
 
 function get_user_groups_for_sql ($id_user, $access_profile = "VR"){
-	$groups =  get_user_groups ($config["id_user"], "VR");
+	global $config;
+	$groups =  get_user_groups ($config["id_user"], $access_profile);
+
 	$filter = "";
 	
 	foreach ($groups as $group => $group_name){
