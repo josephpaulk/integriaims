@@ -36,7 +36,7 @@ $config["version"] = "3.0";
 <body>
 
 <center>
-<div id='login_f' style='width: 500px; margin-top: 100px;'>
+<div id='login_f' style='width: 500px; margin-top: 100px; background-color: #ffffff; border: 2px solid #000000; padding: 10px;'>
 	<h1 id="log_f">Installer active</h1>
 	<div>
 		<img src="images/integria_white.png" border="0"></a><br><font size="1">

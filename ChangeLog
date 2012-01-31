@@ -1,3 +1,10 @@
+2012-01-31 Dario Rodriguez <dario.rodriguez@artica.es>
+
+	* index.php: Removed developer_bypass hook.
+	* general/error_noconfig.php,
+	general/error_install.php,
+	general/error_perms.php: Fixed some problems with error page style.
+
 2012-01-30  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/search.php: Fixed global search trimming the search

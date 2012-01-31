@@ -19,39 +19,34 @@
 // Integria shares much of it's code with project Babel Enterprise and Pandora FMS,
 // also a Free Software Project coded by some of the people who makes Integria.
 
-// Set this to 0 on production enviroments
-$develop_bypass = 1;
 
-if ($develop_bypass != 1) {
-
-	// If no config file, automatically try to install
-	if (! file_exists("include/config.php")) {
-		// Check for installer presence
-		if (! file_exists("install.php")) {
-			include "general/error_noconfig.php";
-			exit;
-		}
-		include ("install.php");
-		exit;
-	}
-
+// If no config file, automatically try to install
+if (! file_exists("include/config.php")) {
 	// Check for installer presence
-	if (file_exists ("install.php")) {
-		include "general/error_install.php";
+	if (! file_exists("install.php")) {
+		include "general/error_noconfig.php";
 		exit;
 	}
+	include ("install.php");
+	exit;
+}
 
-	if (! is_readable ("include/config.php")) {
-		include "general/error_perms.php";
-		exit;
-	}
-	// Check perms for config.php
-	$perms = fileperms ('include/config.php');
+// Check for installer presence
+if (file_exists ("install.php")) {
+	include "general/error_install.php";
+	exit;
+}
 
-	if (! ($perms & 0600) && ! ($perms & 0660) && ! ($perms & 0640)) {
-		include "general/error_perms.php";
-		exit;
-	}
+if (! is_readable ("include/config.php")) {
+	include "general/error_perms.php";
+	exit;
+}
+// Check perms for config.php
+$perms = fileperms ('include/config.php');
+
+if (! ($perms & 0600) && ! ($perms & 0660) && ! ($perms & 0640)) {
+	include "general/error_perms.php";
+	exit;
 }
 
 

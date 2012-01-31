@@ -31,7 +31,7 @@
 </head>
 <body'>
 <div align='center'>
-<div id='login_f' style='width: 500px; margin-top: 100px;'>
+<div id='login_f' style='width: 500px; margin-top: 100px; background-color: #ffffff; border: 2px solid #000000; padding: 10px;'>
 	<h1 id="log_f" class="error">Configuration file not present</h1>
 	<div>
 		<img src="images/integria_white.png" border="0"></a><br><font size="1">
