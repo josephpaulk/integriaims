@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2011 Ártica Soluciones Tecnológicas
+// Copyright (c) 2007-2012 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -144,14 +144,22 @@ if (give_acl($config["id_user"], 0, "UM")){
 		$table->style = array ();
 		$table->head[0] = __('Full name');
 		$table->head[1] = __('Full report');
-		// $table->head[2] = __('Montly report');
+		$table->head[2] = __('Montly report');
 		
 		foreach ($users as $user) {
 
 			$data = array ();
-			$data[0] = "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=".$user["id_usuario"]."'>".$user["nombre_real"]."</a>";
-			$data[1] = "<a href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=".$user["id_usuario"]."'>".__("Full report")."</a>";
-			array_push ($table->data, $data);
+
+			// CHECK ACK !!
+			if (user_visible_for_me ($config["id_usuario"], $user["id_usuario"], "")){
+				$data[0] = "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=".$user["id_usuario"]."'>".$user["nombre_real"]." ( ". $user["id_usuario"]." ) "."</a>";
+
+				$data[1] = "<a href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=".$user["id_usuario"]."'>".__("Full report")."</a>";
+
+				$data[2] = "<a href='index.php?sec=users&sec2=operation/user_report/monthly&id=".$user["id_usuario"]."'><img src='images/clock.png'></a>";
+
+				array_push ($table->data, $data);
+			}
 		}
 		print_table ($table);
 	}

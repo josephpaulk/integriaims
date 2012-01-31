@@ -1,3 +1,10 @@
+2012-01-31  Sancho Lerena <slerena@artica.es>
+
+	* operation/incidents/incident_report.php: Fixed some ugly formatting
+
+	* operation/search.php: Fixed ACLs on people search. Added link to
+	montly report from here.
+
 2012-01-31  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_inventories.php

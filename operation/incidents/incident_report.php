@@ -46,8 +46,9 @@ $incident = get_incident ($id_incident);
 echo "<h3>";
 echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.	$incident['titulo'].'</a></h3>';
 
-echo clean_output_breaks ($incident['descripcion']);
-
+echo "<div style='margin-left: 10px; margin-top: 20px; width:90%; padding: 10px; border: 1px solid #ccc'><p>";
+echo clean_output_breaks ($incident["descripcion"]);
+echo "</div>";
 
 if($incident['epilog'] != '') {
 	echo "<h4>".__("Epilog")."</h4>";
