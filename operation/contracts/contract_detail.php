@@ -30,6 +30,7 @@ $manager = give_acl ($config["id_user"], 0, "VM");
 $id = (int) get_parameter ('id');
 $id_group = get_db_value ('id_group', 'tcontract', 'id', $id);
 $get_sla = (bool) get_parameter ('get_sla');
+$get_company_name = (bool) get_parameter ('get_company_name');
 $new_contract = (bool) get_parameter ('new_contract');
 $create_contract = (bool) get_parameter ('create_contract');
 $update_contract = (bool) get_parameter ('update_contract');
@@ -40,6 +41,15 @@ if ($get_sla) {
 	
 	if (defined ('AJAX')) {
 		echo json_encode ($sla);
+		return;
+	}
+}
+
+if ($get_company_name) {
+	$company = get_contract_company ($id, true);
+
+	if (defined ('AJAX')) {
+		echo json_encode (reset($company));
 		return;
 	}
 }

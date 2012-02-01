@@ -983,8 +983,10 @@ function configure_inventory_form (enable_ajax_form) {
 		if (id_contract == 0) {
 			$(dialog+"#id_sla").hide ().children (":eq(0)").attr ("selected", "selected");
 			$(dialog+"#id_sla").show ();
+			$("#company_name").html('');
 			return;
 		}
+		
 		values = Array ();
 		values.push ({name: "page",
 					value: "operation/contracts/contract_detail"});
@@ -999,6 +1001,21 @@ function configure_inventory_form (enable_ajax_form) {
 						if (this.value == data.id)
 							$(this).attr ("selected", "selected");
 					}).show ();
+			},
+			"json"
+		);
+		
+		values = Array ();
+		values.push ({name: "page",
+					value: "operation/contracts/contract_detail"});
+		values.push ({name: "id",
+			value: id_contract});
+		values.push ({name: "get_company_name",
+			value: 1});
+		jQuery.get ("ajax.php",
+			values,
+			function (data, status) {
+				$("#company_name").html(data);
 			},
 			"json"
 		);

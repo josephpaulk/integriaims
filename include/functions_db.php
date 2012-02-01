@@ -1488,6 +1488,22 @@ function get_contract_sla ($id_contract, $only_name = true) {
 	return $sla;
 }
 
+function get_contract_company ($id_contract, $only_name = true) {
+	$sql = sprintf ('SELECT tcompany.* FROM tcontract, tcompany
+			WHERE tcontract.id_company = tcompany.id
+			AND tcontract.id = %d', $id_contract);
+	$company = get_db_row_sql ($sql);
+	if ($company == false)
+		return array ();
+	
+	if ($only_name) {
+		$result = array ();
+		$result[$company['id']] = $company['name'];
+		return $result;
+	}
+	return $company;
+}
+
 function get_incidents_on_inventory ($id_inventory, $only_names = true) {
 	$sql = sprintf ('SELECT tincidencia.*
 			FROM tincidencia, tincident_inventory

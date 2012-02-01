@@ -197,7 +197,7 @@ $table->class = 'databox';
 $table->width = '90%';
 $table->data = array ();
 $table->colspan = array ();
-$table->colspan[4][0] = 3;
+$table->colspan[4][1] = 2;
 $table->colspan[5][0] = 3;
 
 /* First row */
@@ -304,6 +304,16 @@ foreach ($contacts as $contact_id => $contact_name) {
 	$table->data[4][0] .= print_input_hidden ("contacts[]",
 						$contact_id, true, 'selected-contacts');
 }
+
+$table->data[4][1] = "<b>".__('Company')."</b><br><div id='company_name'>";
+
+if(isset ($contracts[$id_contract])) {
+	$contract_id_company = (int) get_db_value ('id_company', 'tcontract', 'id', $id_contract);
+	$contract_company = (string) get_db_value ('name', 'tcompany', 'id', $contract_id_company);
+	$table->data[4][1] .= "$contract_company";
+}
+
+$table->data[4][1] .= "</div>&nbsp;";
 
 /* Sixth row */
 $disabled_str = ! $has_permission ? 'readonly="1"' : '';
