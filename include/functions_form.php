@@ -826,23 +826,41 @@ function incident_users_list ($id_incident, $return = false) {
 
 	$output .= '<ul id="incident-users-list" class="sidemenu">';
 
+	// OWNER
+	$output .= '<div style="text-align:center;">- '.__('Responsible').' -</div>';
 	$output .= "&nbsp;&nbsp;".print_user_avatar ($users['owner']['id_usuario'], true, true);
-	$output .= ' <strong>'.$users['owner']['id_usuario'].'</strong> (<em>'.__('Responsible').'</em>)';
-	
-	if ($users['owner']['id_usuario'] != $users['creator']['id_usuario']) {
-		$output .= "<br />&nbsp;&nbsp;".print_user_avatar ($users['creator']['id_usuario'], true, true);
-		$output .= ' <strong>'.$users['creator']['id_usuario'].'</strong> (<em>'.__('Creator').'</em>)<br />';
-	} else {
-		$output .= ' (<em>'.__('Creator').'</em>)<br>';
+	$output .= ' <strong>'.$users['owner']['id_usuario'].'</strong>';
+	if($users['owner']['id_company'] != 0) {	
+		$company_owner = (string) get_db_value ('name', 'tcompany', 'id', $users['owner']['id_company']);
+		$output .= " (<em>$company_owner</em>)";
 	}
+	$output .= '<br>';
+	
+	// CREATOR
+	$output .= '<div style="text-align:center;">- '.__('Creator').' -</div>';
+	$output .= "&nbsp;&nbsp;".print_user_avatar ($users['creator']['id_usuario'], true, true);
+	$output .= ' <strong>'.$users['creator']['id_usuario'].'</strong>';
+	if($users['creator']['id_company'] != 0) {	
+		$company_creator = (string) get_db_value ('name', 'tcompany', 'id', $users['creator']['id_company']);
+		$output .= " (<em>$company_creator</em>)";
+	}
+	$output .= '<br>';
+
 	
 	if ($users['affected'])
+	// PARTICIPANTS
+	$output .= '<div style="text-align:center;">- '.__('Participants').' -</div>';
 	foreach ($users['affected'] as $user_item) {
 		$user = $user_item["id_usuario"];
 		if (!get_external_user($user)){
 			$output .= "&nbsp;&nbsp;" . print_user_avatar ($user, true, true);
-			$output .= ' <strong>'.$user.'</strong> (<em>'.__('Participant').'</em>)';
-			$output .= "<br>";
+			$output .= ' <strong>'.$user.'</strong>';
+			$id_company_participant = (string) get_db_value ('id_company', 'tusuario', 'id_usuario', $user);
+			if($id_company_participant != 0) {	
+				$company_participant = (string) get_db_value ('name', 'tcompany', 'id', $id_company_participant);
+				$output .= " (<em>$company_participant</em>)";
+			}
+			$output .= '<br>';
 		} 
 	}
 	$output .= '</ul>';

@@ -62,15 +62,16 @@ if ($create_contract) {
 	$date_end = (string) get_parameter ('date_end');
 	$id_sla = (int) get_parameter ('id_sla');
 	$id_group = (int) get_parameter ('id_group');
+	$private = (int) get_parameter ('private');
 
 	if ($id_group < 2){
 		echo "<h3 class='error'>".__('You must specify a valid group')."</h3>";
 	} else {
 		$sql = sprintf ('INSERT INTO tcontract (name, contract_number, description, date_begin,
-			date_end, id_company, id_sla, id_group)
-			VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, %d)',
+			date_end, id_company, id_sla, id_group, private)
+			VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d)',
 			$name, $contract_number, $description, $date_begin, $date_end,
-			$id_company, $id_sla, $id_group);
+			$id_company, $id_sla, $id_group, $private);
 	
 		$id = process_sql ($sql, 'insert_id');
 		if ($id === false)
@@ -100,15 +101,16 @@ if ($update_contract) { // if modified any parameter
 	$date_end = (string) get_parameter ('date_end');
 	$id_sla = (int) get_parameter ('id_sla');
 	$id_group = (int) get_parameter ('id_group');
+	$private = (int) get_parameter ('private');
 
 	if ($id_group < 2) {
 		echo "<h3 class='error'>".__('You must specify a valid group')."</h3>";
 	} else {
 		$sql = sprintf ('UPDATE tcontract SET contract_number = "%s", id_sla = %d, id_group = %d,
 			description = "%s", name = "%s", date_begin = "%s",
-			date_end = "%s", id_company = %d WHERE id = %d',
+			date_end = "%s", id_company = %d, private = %d WHERE id = %d',
 			$contract_number, $id_sla, $id_group, $description, $name, $date_begin,
-			$date_end, $id_company, $id);
+			$date_end, $id_company, $private, $id);
 	
 		$result = process_sql ($sql);
 		if ($result === false) {
@@ -156,6 +158,7 @@ if ($id | $new_contract) {
 		$id_group = "1";
 		$id_sla = "";
 		$description = "";
+		$private = 0;
 	} else {
         if (!give_acl ($config["id_user"], $id_group, "VR")) {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
@@ -171,6 +174,7 @@ if ($id | $new_contract) {
 		$date_end   = $contract["date_end"];
 		$description = $contract["description"];
 		$id_sla = $contract["id_sla"];
+		$private = $contract["private"];
 	}
 	
 	$table->width = '90%';
@@ -181,6 +185,7 @@ if ($id | $new_contract) {
 	
 	if (give_acl ($config["id_user"], $id_group, "VW")) {
 		$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Contract name'));
+		$table->data[0][1] = print_checkbox ('private', '1', $private, true, __('Private')). print_help_tip (__("Private contracts are visible only by users of the same company"), true);
 		$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
 		
 		$table->data[1][1] = combo_groups_visible_for_me ($config["id_user"], "id_group", 0, "VR", $id_group, true, true);
@@ -310,7 +315,8 @@ if ($id | $new_contract) {
 		$table->head[3] = __('Begin');
 		$table->head[4] = __('End');
 		if(give_acl ($config["id_user"], $id_group, "VM")) {
-			$table->head[5] = __('Delete');
+			$table->head[5] = __('Privacy');
+			$table->head[6] = __('Delete');
 		}
 		$counter = 0;
 		
@@ -330,7 +336,13 @@ if ($id | $new_contract) {
 			$data[4] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
 			if(give_acl ($config["id_user"], $id_group, "VM")) {
 				// Delete
-				$data[5] = '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&delete_contract=1&id='.$contract["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+				if($contract["private"]) {
+					$data[5] = __('Private');
+				}
+				else {
+					$data[5] = __('Public');
+				}
+				$data[6] = '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&delete_contract=1&id='.$contract["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
 			}
 			array_push ($table->data, $data);
 		}	

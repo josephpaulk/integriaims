@@ -89,7 +89,7 @@ if ($search_form) {
 	$table->head[1] = __('ID');
 	$table->head[2] = __('SLA');
 	$table->head[3] = __('Incident');
-	$table->head[4] = __('Group');
+	$table->head[4] = __('Group')."<br><i>".__('Company')."</i>";
 	$table->head[5] = __('Status')."<br><i>".__('Resolution')."</i>";
 	$table->head[6] = __('Priority');
 	$table->head[7] = __('Updated')."<br><i>".__('Started')."</i>";
@@ -193,7 +193,15 @@ foreach ($incidents as $incident) {
 		echo '<td></td>';
 	
 	echo '<td>'.$incident['titulo'].'</td>';
-	echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']).'</td>';
+	echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
+	if ($config["show_creator_incident"] == 1){	
+		$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);
+		if($id_creator_company != 0) {
+			$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_creator_company);	
+			echo "<br><span style='font:10px;font-style:italic'>$company_name</span>";
+		}
+	}
+	echo '</td>';
 	$resolution = isset ($resolutions[$incident['resolution']]) ? $resolutions[$incident['resolution']] : __('None');
 
 	echo '<td class="f9"><strong>'.$statuses[$incident['estado']].'</strong><br /><em>'.$resolution.'</em></td>';

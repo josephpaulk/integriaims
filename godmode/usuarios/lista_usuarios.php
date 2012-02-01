@@ -78,8 +78,9 @@ $sql1 = "$query1 LIMIT $offset, ". $config["block_size"];
 
 
 echo '<table width="90%" class="listing">';
-echo '<th>'.__('User ID').'</td>';
+echo '<th>'.__('User ID');
 echo '<th>'.__('Name');
+echo '<th>'.__('Company');
 echo '<th>'.__('Last contact');
 echo '<th>'.__('Profile');
 echo '<th>'.__('Level');
@@ -107,10 +108,13 @@ foreach($resq1 as $rowdup){
 		$nivel = __("External user");
 
     $disabled = $rowdup["disabled"];	
+    $id_company = $rowdup["id_company"];	
 
 	echo "<tr><td>";
 	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$nombre."'><b>".$nombre."</b></a>";
-	echo "<td>" . $realname;
+	echo "<td>" . $realname;	
+	$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_company);	
+	echo "<td>".$company_name."</td>";
 	echo "<td style='font-size:9px'>".$fecha_registro;
 	echo "<td>";
 	print_user_avatar ($nombre, true);

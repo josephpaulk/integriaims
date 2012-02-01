@@ -1,5 +1,16 @@
 2012-02-01  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions_form.php
+	operation/incidents/incident.php
+	operation/incidents/incident_search.php
+	operation/contracts/contract_detail.php
+	operation/user_report/report_monthly.php
+	godmode/usuarios/lista_usuarios.php: added user company
+	to search and side menu on incidents and added editor to 
+	private contacts
+
+2012-02-01  Sergio Martin <sergio.martin@artica.es>
+
 	* operation/search.php: Fix a typo
 
 	* upgrade_to_3.0.sql

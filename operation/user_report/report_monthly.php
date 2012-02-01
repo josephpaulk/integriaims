@@ -100,6 +100,7 @@
 
 	echo '<table width="99%" class="listing">';
 	echo "<th>".__('User ID');
+	echo "<th>".__('Company');
 	echo "<th>".__('Workunit report');
 	echo "<th>".__('Calendar view');
     echo "<th>".__('Graph overview');
@@ -153,10 +154,8 @@
 
 			echo "</font></span></a>";
 			
-			
-			
 			if (give_acl ($config["id_user"], 0, "IM")){
-				echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=$nombre'>";
+				echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=$nombre'>";
 				echo "<img src='images/wrench.png'></a>";
 			}
 			
@@ -165,7 +164,10 @@
 			else
 				echo " <b>".$nombre."</b>";
 			
+			$company_name = (string) get_db_value ('name', 'tcompany', 'id', $usuario['id_company']);
 			
+			echo "<td>".$company_name."</td>";
+					    
             // Workunit report (detailed)
 		    echo "<td><center>";
             echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$nombre'>";
