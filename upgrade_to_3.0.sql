@@ -139,3 +139,10 @@ CREATE TABLE `tuser_report` (
 ALTER TABLE tinventory modify `description` mediumtext NULL default NULL;
 
 ALTER TABLE tincidencia modify `titulo` mediumtext not NULL;
+
+ALTER TABLE tusuario ADD `id_company` int(10) unsigned NULL default 0;
+
+ALTER TABLE tusuario ADD `simple_mode` tinyint(2) unsigned NOT NULL DEFAULT 0;
+
+ALTER TABLE tcontract ADD `private` tinyint(2) unsigned NOT NULL DEFAULT 0;
+

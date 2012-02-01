@@ -29,6 +29,8 @@ CREATE TABLE `tusuario` (
   `lang` varchar(10) default '',
   `pwdhash` varchar(100) default '',
   `disabled` int default 0,
+  `id_company` int(10) unsigned NULL default 0,
+  `simple_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
    PRIMARY KEY  (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -547,6 +549,7 @@ CREATE TABLE `tcontract` (
   `id_company` mediumint(8) unsigned NULL default NULL,
   `id_sla` mediumint(8) unsigned NULL default NULL,
   `id_group` mediumint(8) unsigned NULL default NULL,
+  `private` tinyint(2) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY  (`id`),
   FOREIGN KEY (`id_company`) REFERENCES tcompany(`id`)
       ON DELETE CASCADE

@@ -1,3 +1,20 @@
+2012-02-01  Sergio Martin <sergio.martin@artica.es>
+
+	* operation/search.php: Fix a typo
+
+	* upgrade_to_3.0.sql
+	upgrade_to_3.0.sql: Added fields to database 
+	to assign a user to a company, active simple 
+	interface mode and private contracts
+
+	* operation/users/user_edit.php
+	integria_db.sql
+	godmode/usuarios/configurar_usuarios.php
+	godmode/usuarios/lista_usuarios.php: Added setup 
+	configuration to assign a user to a company and the
+	simple interface mode configuration. Clean the mess
+	of user edition code
+
 2012-01-31  Sancho Lerena <slerena@artica.es>
 
 	* operation/incidents/incident_report.php: Fixed some ugly formatting

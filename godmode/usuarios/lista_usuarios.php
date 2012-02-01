@@ -109,7 +109,7 @@ foreach($resq1 as $rowdup){
     $disabled = $rowdup["disabled"];	
 
 	echo "<tr><td>";
-	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&id_usuario_mio=".$nombre."'><b>".$nombre."</b></a>";
+	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$nombre."'><b>".$nombre."</b></a>";
 	echo "<td>" . $realname;
 	echo "<td style='font-size:9px'>".$fecha_registro;
 	echo "<td>";

@@ -144,7 +144,7 @@ if (give_acl($config["id_user"], 0, "UM")){
 		$table->style = array ();
 		$table->head[0] = __('Full name');
 		$table->head[1] = __('Full report');
-		$table->head[2] = __('Montly report');
+		$table->head[2] = __('Monthly report');
 		
 		foreach ($users as $user) {
 

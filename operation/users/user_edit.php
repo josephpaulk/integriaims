@@ -54,6 +54,7 @@ $real_name = $user['nombre_real'];
 $avatar = $user['avatar'];
 $comments = $user['comentarios'];
 $lang = $user['lang'];
+$id_company = $user['id_company'];
 
 // Get user ID to modify data of current user.
 if ($update_user) {
@@ -109,9 +110,9 @@ echo '<h2>'.__('User details').'</h2>';
 $table->width = '740px';
 $table->class = 'databox';
 $table->rowspan = array ();
-$table->rowspan[0][2] = 5;
+$table->rowspan[0][2] = 4;
 $table->colspan = array ();
-$table->colspan[5][0] = 2;
+$table->colspan[5][0] = 3;
 $table->style[0] = 'vertical-align: top';
 $table->style[1] = 'vertical-align: top';
 $table->style[2] = 'vertical-align: top';
@@ -120,14 +121,28 @@ $table->size[2] = '50px';
 $table->data = array ();
 
 $table->data[0][0] = print_label (__('User ID'), '', '', true, $id_user);
-$table->data[0][1] = '';
-$table->data[0][2] = print_label (__('Avatar'), '', '', true);
-$table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/'.$avatar.'.png">';
-
 if ($has_permission) {
 	$table->data[0][1] = print_input_text ('real_name', $real_name, '', 20, 125, true, __('Real name'));
 } else {
 	$table->data[0][1] = print_label (__('Real name'), '', '', true, $real_name);
+}
+$table->data[0][2] = print_label (__('Avatar'), '', '', true);
+$avatar = $avatar.".png";
+$table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/'.$avatar.'">';
+$files = list_files ('images/avatars/', "png", 1, 0, "small");
+$table->data[0][2] .= print_select ($files, "avatar", $avatar, '', '', 0, true);
+
+$company_name = get_db_value('name','tcompany','id',$id_company);
+$table->data[1][0] = "<b>".__('Company')."</b><br>$company_name";
+
+if($company_name === false) {
+	$company_name = '<i>-'.__('None').'-</i>';
+	$table->data[1][0] = "<b>".__('Company')."</b><br>$company_name";
+}
+else {
+	$table->data[1][0] = "<b>".__('Company')."</b><br>$company_name";
+	$table->data[1][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
+	$table->data[1][0] .= "<img src='images/company.png'></a>";
 }
 
 if ($has_permission) {
@@ -139,10 +154,6 @@ if ($has_permission) {
 	$table->data[4][1] = "<b>".__('Total incidents opened'). "</b><br><input type=text readonly size=5 value='". get_db_sql ("SELECT COUNT(*) FROM tincidencia WHERE id_creator = '".$id_user."'"). "'>";
 
 	$table->data[5][0] = print_textarea ('comments', 8, 55, $comments, '', true, __('Comments'));
-	
-	$files = list_files ('images/avatars/', "png", 1, 0, "small");
-	$avatar = $avatar.".png";
-	$table->data[0][2] .= print_select ($files, "avatar", $avatar, '', '', 0, true);
 } else {
 	$email = ($email != '') ? $email : __('Not provided');
 	$phone = ($phone != '') ? $phone : __('Not provided');
