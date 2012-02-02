@@ -66,6 +66,7 @@ echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.__('Search').'</
 echo '<li class="ui-tabs"><a href="index.php"><span>'.__('Statistics').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Details').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Tracking').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Incident Report').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Inventory').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Contact').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Workunits').'</span></a></li>';
@@ -251,10 +252,11 @@ function show_incident_details (id) {
 	id_incident = id;
 	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_detail&id=" + id);
 	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_tracking&id=" + id);
-	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + id);
-	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + id);
-	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_workunits&id=" + id);
-	$("#tabs > ul").tabs ("url", 7, "ajax.php?page=operation/incidents/incident_files&id=" + id);
+	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_report&id=" + id);
+	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + id);
+	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + id);
+	$("#tabs > ul").tabs ("url", 7, "ajax.php?page=operation/incidents/incident_workunits&id=" + id);
+	$("#tabs > ul").tabs ("url", 8, "ajax.php?page=operation/incidents/incident_files&id=" + id);
 	$("#tabs > ul").tabs ("enable", 2).tabs ("enable", 3).tabs ("enable", 4)
 		.tabs ("enable", 5).tabs ("enable", 6).tabs ("enable", 7);
 	if (tabs.data ("selected.tabs") == 1) {

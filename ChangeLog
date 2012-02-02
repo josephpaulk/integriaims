@@ -1,3 +1,10 @@
+2012-02-02 Dario Rodriguez <dario.rodriguez@artica.es>
+
+	* operation/incidents/incident.php,
+	operation/incidents/incident_report.php,
+	operation/side_menu.php: Incident report moved from side menu to 
+	an incident tab
+
 2012-02-02  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_db.php

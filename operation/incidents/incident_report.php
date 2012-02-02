@@ -22,7 +22,7 @@ $clean_output = get_parameter('clean_output', 0);
 $statuses = get_indicent_status ();
 $resolutions = get_incident_resolutions ();
 
-echo '<div style="width: 950px;">';
+echo '<div style="width: 90%; margin:0 auto 0 auto;">';
 echo '<h1>';
 echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_incident'>";
 echo __("Report for incident"). " #". $id_incident ."</a>";
@@ -46,23 +46,20 @@ $incident = get_incident ($id_incident);
 echo "<h3>";
 echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.	$incident['titulo'].'</a></h3>';
 
+echo "<h4>".__("Description")."</h4>";
 echo "<div style='margin-left: 10px; margin-top: 20px; width:90%; padding: 10px; border: 1px solid #ccc'><p>";
 echo clean_output_breaks ($incident["descripcion"]);
 echo "</div>";
 
 if($incident['epilog'] != '') {
 	echo "<h4>".__("Epilog")."</h4>";
+	echo "<div style='margin-left: 10px; margin-top: 20px; width:90%; padding: 10px; border: 1px solid #ccc'><p>";
 	echo clean_output_breaks ($incident['epilog']);
+	echo "</div>";
 }
 
-$output = '<div style="margin-left: 15px; text-align: left; width: 95%;">';
-
-
-$output .= '</div>';
 echo '<div class="report_info" style="text-align: left; width: 95%">';
-if ($output != '') {
-	echo $output;
-} else {
+if (!$id_incident) {
 	echo __('All incidents');
 }
 echo '</div>';
