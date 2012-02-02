@@ -86,14 +86,26 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 		if ($sort)
 			asort ($fields);
 		foreach ($fields as $value => $label) {
+			$optlabel = $label;
+			if(is_array($label)){
+				if($label['optgroup'] != $lastopttype) {
+					if($lastopttype != '') {
+						$output .=  '</optgroup>';
+					}
+					$output .=  '<optgroup label="'.$label['optgroup'].'">';
+					$lastopttype = $label['optgroup'];
+				}				
+				$optlabel = $label['name'];
+			}
+			
 			$output .= '   <option value="'. $value .'"';
 			if ($value == $selected) {
 				$output .= ' selected';
 			}
-			if ($label === '') {
+			if ($optlabel === '') {
 				$output .= '>'. $value ."</option>\n";
 			} else {
-				$output .= '>'. $label ."</option>\n";
+				$output .= '>'. $optlabel ."</option>\n";
 			}
 		}
 	}

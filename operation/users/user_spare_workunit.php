@@ -25,6 +25,7 @@ if (defined ('AJAX')) {
 	global $config;
 
 	$search_users = (bool) get_parameter ('search_users');
+	$get_task_roles = (bool) get_parameter ('get_task_roles');
 	
 	if ($search_users) {
 		require_once ('include/functions_db.php');
@@ -44,6 +45,27 @@ if (defined ('AJAX')) {
 		
 		return;
  	}
+ 	
+ 	// Get the roles assigned to user in the project of a given task
+	if ($get_task_roles) {
+		$id_user = get_parameter ('id_user');
+		$id_task = get_parameter ('id_task');
+
+		$id_project = get_db_value('id_project','ttask','id',$id_task);
+		
+		// If the user is Project Manager, all the roles are retrieved. If not, only the assigned roles
+		if(give_acl($id_user, 0, "PM")) {
+			$roles = get_db_all_rows_filter('trole',array(),'id, name');
+		}
+		else {
+			$roles = get_db_all_rows_sql('SELECT trole.id, trole.name FROM trole, trole_people_project WHERE id_role = trole.id AND id_user = "'.$id_user.'" AND id_project = '.$id_project);
+		}	
+		debugPrint('SELECT trole.id, trole.name FROM trole, trole_people_project WHERE id_role = trole.id AND id_user = "'.$id_user.'" AND id_project = '.$id_project, true);
+		debugPrint($roles, true);
+		echo json_encode($roles);
+
+		return;
+	}
 }
 require_once ('include/functions_tasks.php');
 require_once ('include/functions_workunits.php');
@@ -413,5 +435,33 @@ $(document).ready (function () {
 			delay: 200
 
 		});
+		
+	$("#id_task").change(function() {
+		id_task = $(this).val();
+		
+		values = Array ();
+		values.push ({name: "page",
+					value: "operation/users/user_spare_workunit"});
+		values.push ({name: "get_task_roles",
+			value: 1});
+		values.push ({name: "id_task",
+			value: id_task});
+		values.push ({name: "id_user",
+			value: "<?php echo $config['id_user']; ?>"});
+		jQuery.get ("ajax.php",
+			values,
+			function (data, status) {
+				$("#id_profile").hide ().empty ();
+				$("#id_profile").append ($('<option value="0"><?php echo __('N/A'); ?></option>'));
+				if(data != false) {
+					$(data).each (function () {
+						$("#id_profile").append ($('<option value="'+this.id+'">'+this.name+'</option>'));
+					});
+				}
+				$("#id_profile").show ();
+			},
+			"json"
+		);
+	});
 });
 </script>

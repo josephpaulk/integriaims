@@ -1,3 +1,16 @@
+2012-02-02  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_html.php
+	include/functions_form.php
+	operation/projects/task_detail.php
+	operation/side_menu.php
+	operation/users/user_spare_workunit.php: Fixed ACLs to 
+	create task workunits. 
+	Add ACL controls in ACLs details 
+	to hide update/create buttons when no permission. 
+	Add control over user roles when create a task workunit 
+	to show in combo only the roles of this project
+
 2012-02-01  Sergio Martin <sergio.martin@artica.es>
 
 	* include/js/integria_incident_search.js

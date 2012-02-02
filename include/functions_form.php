@@ -422,7 +422,7 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 
 	if ($tasks)
 	foreach ($tasks as $task){
-		$values[$task[0]] = $task[1]."/".$task[2];
+		$values[$task[0]] = array('optgroup' => $task[1], 'name' => '&nbsp;&nbsp;'.$task[2]);
 	}
 
 	$output .= print_select ($values, 'id_task', $actual, '', __('N/A'), '0', true,

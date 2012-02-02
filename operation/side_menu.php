@@ -229,7 +229,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_tracking&id_project=$id_project&id_task=$id_task&operation=view'>".__('Task tracking')."</a></li>";
 
 		$task_group = get_db_value ("id_group", "ttask", "id", $id_task);
-		if (give_acl($config["id_user"], $task_group, "TW") || give_acl($config["id_user"], 0, "PM") || (give_acl($config["id_user"], 0, "PW") && $project_manager == $config["id_user"])) {
+		if (give_acl($config["id_user"], $task_group, "PR") || give_acl($config["id_user"], 0, "PM") || (give_acl($config["id_user"], 0, "PW") && $project_manager == $config["id_user"])) {
 			// Add task workunit
 			if ($sec2 == "operation/users/user_spare_workunit")
 				echo "<li id='sidesel'>";
@@ -901,19 +901,18 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Myself')."</h3>";
 	echo "<ul class='sidemenu'>";
-
-		
-		// Edit my user
-		if ($sec2 == "operation/users/user_edit")
-			if (isset ($_REQUEST['id']) && $_REQUEST['id'] == $config['id_user'])
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
+	
+	// Edit my user
+	if ($sec2 == "operation/users/user_edit")
+		if (isset ($_REQUEST['id']) && $_REQUEST['id'] == $config['id_user'])
+			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=".$config['id_user']."'>".__('Edit my user')."</a></li>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=users&sec2=operation/users/user_edit&id=".$config['id_user']."'>".__('Edit my user')."</a></li>";
 
-	if (give_acl ($config["id_user"], 0, "TW") && $show_people != MENU_LIMITED && $show_people != MENU_MINIMAL) {
+	if (give_acl ($config["id_user"], 0, "PR") && $show_people != MENU_LIMITED && $show_people != MENU_MINIMAL) {
 		// Add spare workunit
 		if ($sec2 == "operation/users/user_spare_workunit")
 		echo "<li id='sidesel'>";

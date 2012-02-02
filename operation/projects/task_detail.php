@@ -342,16 +342,19 @@ if (user_belong_project ($config['id_user'], $id_project) || give_acl ($config["
 	
 	print_table ($table);
 	
-	echo '<div class="button" style="width:'.$table->width.'">';
-	if ($operation != "create") {
-		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
-		print_input_hidden ('operation', 'update');
-	} else {
-		print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"');
-		print_input_hidden ('operation', 'insert');
+	if((give_acl ($config["id_user"], $id_group, "TM") && $operation == "create") || 
+	(give_acl ($config["id_user"], $id_group, "TW") && $operation != "create")) {
+		echo '<div class="button" style="width:'.$table->width.'">';
+		if ($operation != "create") {
+			print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
+			print_input_hidden ('operation', 'update');
+		} else {
+			print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"');
+			print_input_hidden ('operation', 'insert');
+		}
+		print_input_hidden ('id_project', $id_project);
+		echo '</div>';
 	}
-	print_input_hidden ('id_project', $id_project);
-	echo '</div>';
 	echo '</form>';
 } else {
 	print_table ($table);
