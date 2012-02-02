@@ -822,3 +822,11 @@ CREATE TABLE `tuser_report` (
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tincident_sla_graph` (
+  `id_incident` int(10) NOT NULL default '0',
+  `utimestamp` int(20) unsigned NOT NULL default 0,
+  `value` int(1) unsigned NOT NULL default '0',
+    KEY `sla_graph_index1` (`id_incident`),
+  KEY `idx_utimestamp_sla_graph` USING BTREE (`utimestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

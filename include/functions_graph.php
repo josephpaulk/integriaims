@@ -171,6 +171,132 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 	}
 }
 
+// ===============================================================================
+// Draw a simple pie graph with SLA fulfillment of the incident
+// ===============================================================================
+
+function graph_incident_sla_compliance($incident, $width=200, $height=200, $ttl=1) {
+	global $config;
+		
+	$sql_ok = sprintf("SELECT COUNT(id_incident) FROM tincident_sla_graph WHERE value = 1 AND id_incident = %d", $incident);
+	$sql_fail = sprintf("SELECT COUNT(id_incident) FROM tincident_sla_graph WHERE value = 0 AND id_incident = %d", $incident);
+	
+	$num_ok = process_sql($sql_ok);
+	$num_fail = process_sql($sql_fail);
+
+	$num_ok = $num_ok[0][0];
+	$num_fail = $num_fail[0][0];
+	$total = $num_ok + $num_fail;
+	
+	$percent_ok = ($num_ok/$total)*100;
+	$percent_fail = ($num_fail/$total)*100;
+	
+	$data = array();
+	
+	$data["FAIL"] = $percent_fail;
+	$data["OK"] = $percent_ok;
+	
+	if (isset($data))
+		return pie3d_graph ($config['flash_charts'], $data, $width, $height, "", "", "", $config['font'], $config['fontsize'], $ttl);
+	else 
+		graphic_error();
+}
+
+// ===============================================================================
+// Draws a SLA slice graph for an incident
+// ===============================================================================
+
+function graph_sla_slicebar ($incident, $period, $width, $height, $ttl=1) {
+	global $config;
+	
+	//Get time and calculate start date based on period
+	$now = time();
+	$start_period = $now - $period;
+	
+	//Get all sla graph data
+	$sql = sprintf ("SELECT value as data, utimestamp FROM tincident_sla_graph 
+				WHERE id_incident = %d AND utimestamp > %d ORDER BY utimestamp ASC", 
+				$incident, $start_period);
+
+	$aux_data = get_db_all_rows_sql($sql);
+	
+	//Get max timestamp from sla graph
+	$sql2 = sprintf("SELECT MAX(utimestamp) FROM tincident_sla_graph 
+					WHERE id_incident = %d", $incident);
+		
+	$max_utimestamp = get_db_sql($sql2);
+	
+	//Set previous value and time to create sla data array ranges
+	$previous_value = $aux_data[0]["data"];
+	$previous_time = $aux_data[0]["utimestamp"];	
+	
+	//Compare period set by user with max period of data stored
+	$time_diff = ($max_utimestamp - $previous_time);
+
+	//If period of data stored is lower than the period set by user
+	//the period is stablished by the maximun period of data stored
+	if ($period > $time_diff) {
+		$period = $time_diff;
+	}
+	
+	$data = array();
+	
+	if ($aux_data == false) {
+		$aux_data = array();
+	}
+	
+	foreach ($aux_data as $aux) {
+	
+		//If sla value changes we must calculate a range
+		if ($previous_value != $aux["data"]) {
+
+			$range = $aux["utimestamp"] - $previous_time;
+			
+			array_push($data, array("data" => $previous_value, "utimestamp" => $range));
+			
+			$previous_value = $aux["data"];
+			$previous_time = $aux["utimestamp"];
+		}
+	}
+
+	//We must add the last range for sla
+	$last_value = $aux["data"];
+	$last_time = $aux["utimestamp"];
+	
+	$range = $last_time - $previous_time;
+	
+	array_push($data, array("data" => $previous_value, "utimestamp" => $range));
+			
+	//This array sets the color of sla graph
+	$colors = 	array(0 => '#FF0000', 1 => '#38B800');
+
+	//Draw the graph
+	return slicesbar_graph($data, $period, $width, $height, $colors, $config['fontpath'],
+		$config['round_corner'],'',$ttl);
+}
+
+function graph_incident_user_activity ($incident, $width=200, $height=200, $ttl=1) {
+	global $config;
+
+	$sql = sprintf("SELECT count(WU.id_user) as WU, id_user as user from tworkunit WU, tworkunit_incident WUI 
+					WHERE WUI.id_incident = %d AND WUI.id_workunit = WU.id group by id_user", $incident);
+
+	$res = process_sql($sql);
+	
+	$data = array();
+	
+	foreach ($res as $r) {
+		$user = $r["user"];
+		$wu = $r["WU"];
+		
+		$data[$user] = $wu;
+	}
+		
+	if (isset($data))
+		return pie3d_graph ($config['flash_charts'], $data, $width, $height, "", "", "", $config['font'], $config['fontsize'], $ttl);
+	else 
+		graphic_error();
+}
 
 // ===============================================================================
 // Draw a simple pie graph with reported workunits for a specific USER, per TASK/PROJECT
@@ -685,6 +811,10 @@ $percent = get_parameter ( "percent", 0);
 $days = get_parameter ( "days", 0);
 $type= get_parameter ("type", "");
 $background = get_parameter ("background", "#ffffff");
+$id_incident = get_parameter("id_incident");
+$period = get_parameter("period");
+$ajax = get_parameter("is_ajax");
+
 
 if ($type == "incident_a")
 	incident_peruser ($width, $height);
@@ -698,6 +828,12 @@ elseif ($type == "project_tree")
 	project_tree ($id_project, $id_user);
 elseif ($type == "all_project_tree")
 	all_project_tree ($id_user, $completion, $project_kind);
+elseif ($type == "sla_slicebar")
+	if ($ajax) {
+		echo graph_sla_slicebar ($id_incident, $period, $width, $height);
+	} else {
+		graph_sla_slicebar ($id_incident, $period, $width, $height);
+	}
 
 // Always at the end of the funtions_graph
 include_flash_chart_script();

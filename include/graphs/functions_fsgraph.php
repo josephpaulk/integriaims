@@ -480,7 +480,7 @@ function get_chart_code ($chart, $width, $height, $swf) {
 }
 
 // Prints a 3D pie chart
-function fs_3d_pie_chart ($data, $names, $width, $height, $background = "EEEEEE") {
+function fs_3d_pie_chart ($data, $names, $width, $height, $background = "FFFFFF") {
 	if ((sizeof ($data) != sizeof ($names)) OR (sizeof($data) == 0) ){
 		return;
 	}
@@ -500,7 +500,7 @@ function fs_3d_pie_chart ($data, $names, $width, $height, $background = "EEEEEE"
 }
 
 // Prints a 2D pie chart
-function fs_2d_pie_chart ($data, $names, $width, $height, $background = "EEEEEE") {
+function fs_2d_pie_chart ($data, $names, $width, $height, $background = "FFFFFF") {
 	if ((sizeof ($data) != sizeof ($names)) OR (sizeof($data) == 0) ){
 		return;
 	}

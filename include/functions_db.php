@@ -866,6 +866,10 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 		$description = __('Contact added');
 		$description .= ' -> '.get_db_value ('fullname', 'tcompany_contact', 'id', $aditional_data);
 		break;
+	case INCIDENT_INVENTORY_ADDED:
+		$description = __('Added inventory object: ');
+		$description .= get_db_value ('name', 'tinventory', 'id', $aditional_data);
+		break;
 	default:
 		$description = __('Unknown update');
 		break;

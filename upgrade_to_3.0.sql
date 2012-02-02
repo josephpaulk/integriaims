@@ -146,3 +146,12 @@ ALTER TABLE tusuario ADD `simple_mode` tinyint(2) unsigned NOT NULL DEFAULT 0;
 
 ALTER TABLE tcontract ADD `private` tinyint(2) unsigned NOT NULL DEFAULT 0;
 
+
+-- Added 01-02-2012
+CREATE TABLE `tincident_sla_graph` (
+  `id_incident` int(10) NOT NULL default '0',
+  `utimestamp` int(20) unsigned NOT NULL default 0,
+  `value` int(1) unsigned NOT NULL default '0',
+    KEY `sla_graph_index1` (`id_incident`),
+  KEY `idx_utimestamp_sla_graph` USING BTREE (`utimestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

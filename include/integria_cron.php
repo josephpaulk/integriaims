@@ -359,6 +359,29 @@ function check_daily_task () {
 	return true;
 }
 
+//Inserts data into SLA graph table
+function graph_sla($incident) {
+	$id_incident = $incident['id_incidencia'];
+	$utimestamp = time();
+	
+	//Get sla values for this incident
+	$sla_max = check_incident_sla_max_response($id_incident);
+	$sla_min = check_incident_sla_min_response($id_incident);
+	
+	$values['id_incident'] = $id_incident;
+	$values['utimestamp'] = $utimestamp;	
+	
+	//If SLA isn't fulfilled set value to 0
+	if ($sla_max || $sla_min) {
+		$values['value'] = 0;
+	} else {
+		$values['value'] = 1;
+	}
+	
+	//Insert SLA value in table
+	process_sql_insert('tincident_sla_graph', $values);
+}
+
 /**
  * Check an SLA min response value on an incident and send emails if needed.
  *
@@ -603,6 +626,7 @@ if ($incidents)
     foreach ($incidents as $incident) {
     	check_sla_min ($incident);
     	check_sla_max ($incident);
+    	graph_sla($incident);
     }
 
 // Check SLA for number of opened items.

@@ -158,7 +158,10 @@ if ($action == 'update') {
 		incident_tracking ($id, INCIDENT_USER_CHANGED, $user);
 		$tracked = true;
 	}
-	incident_tracking ($id, INCIDENT_UPDATED);
+	
+	if($tracked == false) {
+		incident_tracking ($id, INCIDENT_UPDATED);
+	}
 
 	if ($sla_disabled == 1)
 		$sla_man = ", sla_disabled = 1 ";
@@ -307,7 +310,7 @@ if ($action == "insert") {
 				"Incident created",
 				"User ".$config['id_user']." created incident #".$id);
 			
-			//incident_tracking ($id, INCIDENT_CREATED);
+			incident_tracking ($id, INCIDENT_CREATED);
 
 			// Email notify to all people involved in this incident
 			if ($email_notify) {

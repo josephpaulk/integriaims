@@ -1,3 +1,18 @@
+2012-02-02 Dario Rodriguez <dario.rodriguez@artica.es>
+
+	* include/functions_graph.php: Added support to get sla slice graph
+	using AJAX.
+	* include/graphs/functions_fsgraph.php: created new functions for
+	tracking report
+	* include/integria_cron.php: Added function to calculate data of sla
+	tracking
+	* include/functions_db.php: Fixed some issues related to incident
+	tracking.
+	* operation/incidents/incident_detail.php: Fixed some issues realted to
+	incident tracking.
+	* operation/incidents/incident_tracking.php
+	* integria_db.sql, upgrade_to_3.0.sql: Added table tincident_sla_graph
+
 2012-02-02  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_inventories.php
