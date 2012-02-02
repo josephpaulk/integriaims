@@ -1511,7 +1511,7 @@ function get_contract_company ($id_contract, $only_name = true) {
 function get_user_company ($id_user, $only_name = true) {
 	$sql = sprintf ('SELECT tcompany.* FROM tusuario, tcompany
 			WHERE tusuario.id_company = tcompany.id
-			AND tusuario.id_usuario = %d', $id_contract);
+			AND tusuario.id_usuario = "%s"', $id_user);
 	$company = get_db_row_sql ($sql);
 	if ($company == false)
 		return array ();

@@ -285,6 +285,13 @@ if ($id | $new_contract) {
 		$where_clause .= sprintf (' AND date_end >= "%s"', $search_date_begin);
 	}
 	
+	// Check if the contract is public or private and from user company
+	$company = get_user_company($config['id_user']);
+	if(!empty($company)) {
+		$company_id = reset(array_keys($company));
+		$where_clause .= sprintf (' AND ((id_company = %d AND private = 1) OR private = 0)', $company_id);
+	}
+	
 	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();
