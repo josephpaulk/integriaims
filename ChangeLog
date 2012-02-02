@@ -1,5 +1,13 @@
 2012-02-02  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions_inventories.php
+	include/functions_db.php
+	operation/incidents/incident_inventory_detail.php: Added related 
+	inventory objects of the creator company contracts in the
+	inventory tab into the incidents
+
+2012-02-02  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_html.php
 	include/functions_form.php
 	operation/projects/task_detail.php

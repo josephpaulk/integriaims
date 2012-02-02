@@ -31,66 +31,55 @@ $table->align[5] = 'center';
 $table->size = array ();
 $table->size[4] = '40px';
 $table->size[5] = '40px';
-$table->data = array ();
+$table->data = array();
 
 echo "<h3>".__('Incident'). " #$id_incident - ".get_incident_title ($id_incident)."</h3>";
 
 if (count ($inventories) == 0) {
-	echo '<h4>'.__('There\'s no inventory objects associated to this incident').'</h4>';
+	echo '<h3 class="error">'.__('There\'s no inventory objects associated to this incident').'</h3>';
+}
+else {
+	fill_inventories_table($inventories, $table);
+
+	print_table ($table);
+
+	unset($table);
+}
+
+$creator = get_db_value('id_creator','tincidencia','id_incidencia',$id_incident);
+$company = get_user_company($config['id_user']);
+
+echo "<br><h3>".__('Inventory objects related').print_help_tip (__('Inventory objects with a contract of the incident creator company'), true)."</h3>";
+
+if(empty($company)) {
+	echo '<h3 class="error">'.__('The incident creator has not company associated.').'</h3>';
+	exit;
+}
+
+$company_id = reset(array_keys($company));
+
+$inventories = get_inventories_in_company ($company_id, false);
+
+$table->class = 'listing';
+$table->width = '90%';
+$table->head = array ();
+$table->head[0] = __('Name');
+$table->align[4] = 'center';
+$table->align[5] = 'center';
+$table->size = array ();
+$table->size[4] = '40px';
+$table->size[5] = '40px';
+$table->data = array();
+
+if (count ($inventories) == 0) {
+	echo '<h3 class="error">'.__('There\'s no inventory objects associated to the creator company').'</h3>';
 	return;
 }
 
-foreach ($inventories as $inventory) {
-	$data = array ();
-	
-	$id_group = get_inventory_group ($inventory['id']);
-	$has_permission = true;
-	if (! give_acl ($config['id_user'], $id_group, 'VR'))
-		$has_permission = false;
-	$contract = get_contract ($inventory['id_contract']);
-	$company = get_company ($contract['id_company']);
-	$sla = get_sla ($inventory['id_sla']);
-	
-	$data[0] = $inventory['name'];
-	if ($has_permission) {
-		$table->head[1] = __('Company');
-		$table->head[2] = __('Contract');
-		$table->head[3] = __('SLA');
-		$table->head[4] = __('Details');
-		if ($inventory['description'])
-			$data[0] .= ' '.print_help_tip ($inventory['description'], true, 'tip_info');
-		$data[1] = $company['name'];
-		$data[2] = $contract['name'];
-		$data[3] = $sla['name'];
-		$sla_description = '<strong>'.__('Minimun response').'</strong>: '.$sla['min_response'].'<br />'.
-			'<strong>'.__('Maximum response').'</strong>: '.$sla['max_response'].'<br />'.
-			'<strong>'.__('Maximum incidents').'</strong>: '.$sla['max_incidents'].'<br />';
-		$data[3] .= print_help_tip ($sla_description, true);
-	
-		$details = '';
-		if ($inventory['ip_address'] != '')
-			$details .= '<strong>'.__('IP address').'</strong>: '.$inventory['ip_address'].'<br />';
-		if ($inventory['serial_number'] != '')
-			$details .= '<strong>'.__('Serial number').'</strong>: '.$inventory['serial_number'].'<br />';
-		if ($inventory['part_number'] != '')
-			$details .= '<strong>'.__('Part number').'</strong>: '.$inventory['part_number'].'<br />';
-		if ($inventory['comments'] != '')
-			$details .= '<strong>'.__('Comments').'</strong>: '.$inventory['Comments'].'<br />';
-		if ($inventory['id_building'] != 0) {
-			$building = get_building ($inventory['id_building']);
-			$details .= '<strong>'.__('Building').'</strong>: '.$building['name'].'<br />';
-		}
-		$data[4] = print_help_tip ($details, true, 'tip_view');
-	}
-	
-	if (give_acl ($config['id_user'], $id_group, "VW")) {
-		$table->head[5] = __('Edit');
-		$data[5] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$inventory['id'].'">'.
-				'<img src="images/setup.gif" /></a>';
-	}
-	array_push ($table->data, $data);
-}
+fill_inventories_table($inventories, $table);
 
 print_table ($table);
+
+unset($table);
 
 ?>
