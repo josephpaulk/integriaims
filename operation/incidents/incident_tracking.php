@@ -81,8 +81,12 @@ if ($clean_output) {
 }
 
 echo "<center>";
-echo "<table>";
+echo "<table align=center>";
 	echo "<tr>";
+		echo "<td align=center>";
+			echo '<strong>'.__('Details for incident').'</strong>';
+		echo "</td>";
+		
 		echo "<td align=center>";
 			echo '<strong>'.__('SLA history compliance for: ').'</strong>'; 
 		echo "</td>";
@@ -93,22 +97,31 @@ echo "<table>";
 				} else {
 					echo print_select ($fields, "period", $period, 'reload_sla_slice_graph(\''.$id.'\');', '', '', true, 0, false);
 				}
+		echo "</td>";	
+	echo "</tr>";
+	
+	echo "<tr>";
+		echo "<td align=center>";
+			//Print Incident detail
+			echo incident_details_list ($id,true);
 		echo "</td>";
-				
+		
+		echo "<td id=slaSlicebarField colspan=2 align=center>";
+			echo graph_sla_slicebar ($id, $period, 225, 15, $ttl);
+		echo "</td>";
+	echo "</tr>";
+
+	echo "<tr>";	
 		echo "<td align=center>";
 			echo '<strong>'.__('SLA total compliance (%)'). '</strong>';
 		echo "</td>";
 
 		echo "<td align=center>";
 			echo '<strong>'.__('Activity by user (# WU)'). '</strong>';
-		echo "</td>";		
+		echo "</td>";	
 	echo "</tr>";
-	
+
 	echo "<tr>";
-		echo "<td id=slaSlicebarField colspan=2 align=center>";
-			echo graph_sla_slicebar ($id, $period, 225, 15, $ttl);
-		echo "</td>";
-		
 		echo "<td align=center>";
 			echo graph_incident_sla_compliance ($id, 200, 200, $ttl);
 		echo "</td>";

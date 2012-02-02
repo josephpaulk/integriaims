@@ -1,5 +1,10 @@
 2012-02-02 Dario Rodriguez <dario.rodriguez@artica.es>
 
+	* operation/incidents/incident_tracking.php: Added incident details to
+	tracking report
+
+2012-02-02 Dario Rodriguez <dario.rodriguez@artica.es>
+
 	* include/functions_graph.php: Added support to get sla slice graph
 	using AJAX.
 	* include/graphs/functions_fsgraph.php: created new functions for
