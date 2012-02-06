@@ -133,7 +133,40 @@ if($create_incident) {
 
 echo '<h1>'.__('My incidents').'</h1>';
 
+$statuses = get_indicent_status ();
+$statuses[-10] = __("Not closed");
+
+
+$resolutions = get_incident_resolutions ();
+
+// FILTER
+
+// GET FILTER PARAMETERS
+$status = get_parameter('status', 0);
+
 unset($table);
+$table->class = 'result_table';
+
+$table->width = '98%';
+$table->data = array();
+$table->header = array();
+
+$table->style[0] = 'width:60px';
+$table->style[1] = 'width:150px';
+$table->style[2] = 'width:100px';
+
+$table->data[0][0] = "<b>".__('Status')."</b>";
+$table->data[0][1] = print_select($statuses,'status',$status,'',__('Any'),0,true);
+$table->data[0][2] = print_submit_button(__('Filter'), '', false, 'class="sub search"', true);
+$table->data[0][3] = '';
+
+echo '<form method="post">';
+print_table($table);
+echo '</form>';
+
+unset($table);
+
+// INCIDENT LIST
 
 $table->class = 'result_table listing';
 $table->width = '98%';
@@ -153,16 +186,26 @@ $table->style[2] = 'text-align:center; width: 70px;';
 $table->style[3] = 'text-align:center; width: 50px;';
 $table->data = array();
 
-$incidents = get_incidents(array('order' => 'actualizacion DESC'));
+$filter = '1 = 1';
+
+if($status > 0) {
+	$filter .= sprintf(' AND estado = %d',$status);
+}
+elseif($status == -10) {
+	//Not closed is special status
+	//Means not solved(6) and not closed(7)
+	$filter .= sprintf(' AND estado != 6 AND estado != 7');
+}
+
+$filter .= ' ORDER BY actualizacion DESC';
+
+$incidents = get_incidents($filter);
 
 if (empty($incidents)) {
 	$table->colspan[0][0] = 9;
 	$table->data[0][0] = __('Nothing was found');
 	$incidents = array ();
 }
-
-$statuses = get_indicent_status ();
-$resolutions = get_incident_resolutions ();
 
 $row = 0;
 foreach($incidents as $incident) {	
