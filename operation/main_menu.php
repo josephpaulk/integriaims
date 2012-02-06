@@ -16,6 +16,9 @@
 if (!isset($config["id_user"]))
 	return;
 
+// Get if the user has simple mode
+$simple_mode = get_db_value('simple_mode','tusuario','id_usuario',$config['id_user']);
+
 echo "<ul>";
 
 // Projects
@@ -37,7 +40,12 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
 	    echo "<li id='current' class='incident'>";
     else
 	    echo "<li class='incident'>";
-    echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".__('Incidents')."</a></li>";
+	if($simple_mode) {
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>".__('Incidents')."</a></li>";
+	}
+	else {
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".__('Incidents')."</a></li>";
+	}
 }
 
 // Inventory

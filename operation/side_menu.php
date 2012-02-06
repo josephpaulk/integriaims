@@ -27,6 +27,8 @@ global $show_agenda;
 global $show_setup;
 global $show_wiki;
 
+global $simple_mode;
+
 // PROJECTS
 if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN) {
 	$id_project = get_parameter ('id_project', -1);
@@ -348,100 +350,127 @@ if (give_acl ($config["id_user"], 0, "PM") && $sec == "projects" && $show_projec
 if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incidents != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Incidents')."</h3>";
-	echo "<ul class='sidemenu'>";
-
-	$id_incident = get_parameter ('id');
-
-	// Incident overview
-	if ($sec2 == "operation/incidents/incident")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".__('Incidents overview')."</a></li>";
-
-	if (give_acl ($config['id_user'], 0, "IW")) {
-		// Incident creation
-		if ($sec2 == 'operation/incidents/incident_detail')
+	if($simple_mode) {
+		echo "<ul class='sidemenu'>";
+		// My incidents
+		if ($sec2 == "operation/incidents_simple/incidents")
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail' id='link_create_incident'>".__('Create incident')."</a></li>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>".__('My incidents')."</a></li>";
+		
+		// New ticket
+		if ($sec2 == "operation/incidents_simple/incident_new")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incident_new'>".__('New ticket')."</a></li>";
+		
+		echo "</ul>";
 	}
+	else {
+		echo "<ul class='sidemenu'>";
+		$id_incident = get_parameter ('id');
 
-	if ($sec2 == 'operation/incidents/incident') {
-		echo '<li>';
-		echo '<a href="" onclick="return false">'.__('Incident #').'</a>';
-		echo '<form id="goto-incident-form">';
-		print_input_text ('id', $id_incident ? $id_incident : '', '', 3, 10);
-		echo '</form>';
-		echo '</li>';
+		// Incident overview
+		if ($sec2 == "operation/incidents/incident")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".__('Incidents overview')."</a></li>";
+
+		if (give_acl ($config['id_user'], 0, "IW")) {
+			// Incident creation
+			if ($sec2 == 'operation/incidents/incident_detail')
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail' id='link_create_incident'>".__('Create incident')."</a></li>";
+		}
+
+		if ($sec2 == 'operation/incidents/incident') {
+			echo '<li>';
+			echo '<a href="" onclick="return false">'.__('Incident #').'</a>';
+			echo '<form id="goto-incident-form">';
+			print_input_text ('id', $id_incident ? $id_incident : '', '', 3, 10);
+			echo '</form>';
+			echo '</li>';
+		}
+		echo "</ul></div>";
+
+		// Dynamic incident sub options menu
+		echo "<br>";
+
+		echo '<div class="portlet incident-menu" id="incident-menu-actions" style="display: none">';
+		echo '<h3>'.__('Incident').' # <span class="id-incident-menu">';
+		if ($id_incident)
+			echo $id_incident;
+		echo '</span></h3>';
+
+		echo "<ul class='sidemenu'>";
+
+		// Add workunit to incident
+		if ($sec2 == "operation/incidents/incident_create_work")
+			echo "<li id='sidesel'>";
+		else
+			echo '<li>';
+
+		echo "<a id='incident-create-work' href='index.php?sec=incidents&sec2=operation/incidents/incident_create_work&id=$id_incident'>".__('Add workunit')."</a>";
+		
+		echo "</li>";
+
+		// Add file to incident
+		if ($sec2 == "operation/incidents/incident_attach_file")
+			echo '<li id="sidesel">';
+		else
+			echo '<li id="incident-attach-file">';
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_attach_file&id=$id_incident'>".__('Add file')."</a>";
+		echo "</li>";	
+
+		// See incident Report
+		if ($sec2 == "operation/incidents/incident_report")
+			echo '<li id="sidesel">';
+		else
+			echo '<li id="incident-report">';
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_report'>".__('Incident Report')."</a>";
+		echo "</li>";	
+
+		// Blockend
+		echo "</ul>";
+		echo "</div>";
+
+		/* Users affected by the incident */
+		echo '<div class="portlet incident-menu" id="incident-menu-details" style="display: none">';
+		echo '<h2 onclick="toggleDiv (\'incident-details\')">'.__('Details for incident').' #<span class="id-incident-menu">';
+		if ($id_incident)
+			echo $id_incident;
+		echo "</h2>";
+
+		echo '<div id="incident-details">';
+		if ($id_incident) {
+			incident_details_list ($id_incident);
+		}
+		echo '</div></div>';
+
+		/* Users affected by the incident */
+		echo '<div class="portlet incident-menu" id="incident-menu-users" style="display: none">';
+		echo '<h2 onclick="toggleDiv (\'incident-users\')">'.__('Users in incident').' #<span class="id-incident-menu">';
+		if ($id_incident)
+			echo $id_incident;
+		echo "</h2>";
+
+		echo '<div id="incident-users">';
+
+		if ($id_incident) {
+			incident_users_list ($id_incident);
+		}
+
 	}
-	echo "</ul></div>";
-
-	// Dynamic incident sub options menu
-	echo "<br>";
-
-	echo '<div class="portlet incident-menu" id="incident-menu-actions" style="display: none">';
-	echo '<h3>'.__('Incident').' # <span class="id-incident-menu">';
-	if ($id_incident)
-		echo $id_incident;
-	echo '</span></h3>';
-
-	echo "<ul class='sidemenu'>";
-
-	// Add workunit to incident
-	if ($sec2 == "operation/incidents/incident_create_work")
-		echo "<li id='sidesel'>";
-	else
-		echo '<li>';
-
-	echo "<a id='incident-create-work' href='index.php?sec=incidents&sec2=operation/incidents/incident_create_work&id=$id_incident'>".__('Add workunit')."</a>";
-	
-	echo "</li>";
-
-	// Add file to incident
-	if ($sec2 == "operation/incidents/incident_attach_file")
-		echo '<li id="sidesel">';
-	else
-		echo '<li id="incident-attach-file">';
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_attach_file&id=$id_incident'>".__('Add file')."</a>";
-	echo "</li>";	
-
-	// Blockend
-	echo "</ul>";
-	echo "</div>";
-
-	/* Users affected by the incident */
-	echo '<div class="portlet incident-menu" id="incident-menu-details" style="display: none">';
-	echo '<h2 onclick="toggleDiv (\'incident-details\')">'.__('Details for incident').' #<span class="id-incident-menu">';
-	if ($id_incident)
-		echo $id_incident;
-	echo "</h2>";
-
-	echo '<div id="incident-details">';
-	if ($id_incident) {
-		incident_details_list ($id_incident);
-	}
-	echo '</div></div>';
-
-	/* Users affected by the incident */
-	echo '<div class="portlet incident-menu" id="incident-menu-users" style="display: none">';
-	echo '<h2 onclick="toggleDiv (\'incident-users\')">'.__('Users in incident').' #<span class="id-incident-menu">';
-	if ($id_incident)
-		echo $id_incident;
-	echo "</h2>";
-
-	echo '<div id="incident-users">';
-
-	if ($id_incident) {
-		incident_users_list ($id_incident);
-	}
-
-	echo "</div></div>";
+		echo "</div></div>";
 }
 
 // Indicent type editor
-if (give_acl ($config["id_user"], 0, "IM") && $sec == "incidents" && $show_incidents == MENU_FULL) {
+if (give_acl ($config["id_user"], 0, "IM") && $sec == "incidents" && $show_incidents == MENU_FULL && !$simple_mode) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Incident types')."</h3>";
 	echo "<ul class='sidemenu'>";

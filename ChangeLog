@@ -1,3 +1,22 @@
+2012-02-06  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_incidents.php
+	include/functions_db.php
+	include/languages/index.pot
+	operation/incidents_simple
+	operation/incidents_simple/incident.php
+	operation/incidents_simple/incident.files.php
+	operation/incidents_simple/incidents.php
+	operation/incidents_simple/incident.details.php
+	operation/incidents_simple/incident.workunits.php
+	operation/incidents_simple/incident_new.php
+	operation/main_menu.php
+	operation/side_menu.php
+	operation/contracts/contract_detail.php: Added simple mode
+	into incidents with a really simple screen to see list of the
+	own incidents, create a ticket, attach a file or add a workunit 
+	to a incident 
+
 2012-02-02 Dario Rodriguez <dario.rodriguez@artica.es>
 
 	* operation/incidents/incident.php,

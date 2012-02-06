@@ -214,6 +214,166 @@ function filter_incidents ($filters) {
 	return $result;
 }
 
+
+/**
+ * Copy and insert in database a new file into incident
+ *
+ * @param int incident id
+ * @param string file full path
+ * @param string file description
+ *
+ */
+ 
+function attach_incident_file ($id, $file_temp, $file_description) {
+	global $config;
+	
+	$filesize = filesize($file_temp); // In bytes
+	$filename = basename($file_temp);
+
+	$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
+			filename, description, size)
+			VALUES (%d, "%s", "%s", "%s", %d)',
+			$id, $config['id_user'], $filename, $file_description, $filesize);
+
+	$id_attachment = process_sql ($sql, 'insert_id');
+	
+	incident_tracking ($id, INCIDENT_FILE_ADDED);
+	
+	$result_msg = '<h3 class="suc">'.__('File added').'</h3>';
+	
+	// Email notify to all people involved in this incident
+	if ($email_notify == 1) {
+		if ($config["email_on_incident_update"] == 1){
+			mail_incident ($id, $config['id_user'], 0, 0, 2);
+		}
+	}
+	
+	// Copy file to directory and change name
+	$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
+	
+	if (! copy ($file_temp, $file_target)) {
+		$result_msg = '<h3 class="error">'.__('File cannot be saved. Please contact Integria administrator about this error').'</h3>';
+		$sql = sprintf ('DELETE FROM tattachment
+				WHERE id_attachment = %d', $id_attachment);
+		process_sql ($sql);
+	} else {
+		// Delete temporal file
+		unlink ($file_temp);
+
+		// Adding a WU noticing about this
+		$note = "Automatic WU: Added a file to this issue. Filename uploaded: ". $filename;
+		$public = 1;
+		$timeused = "0.05";
+		
+		add_workunit_incident($id, $note, $timeused, $public);
+	}
+	
+	return $result_msg;
+}
+
+/**
+ * Copy and insert in database a new file into incident
+ *
+ * @param string note of the workunit
+ * @param string timeused
+ * @param string public
+ * @param int incident id
+ *
+ */
+ 
+function add_workunit_incident($incident_id, $note, $timeused, $public = 1) {
+	global $config;
+	
+	$timestamp = print_mysql_timestamp();
+	
+	$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public) VALUES ("%s", %.2f, "%s", "%s", %d)', $timestamp, $timeused, $config['id_user'], $note, $public);
+
+	$id_workunit = process_sql ($sql, "insert_id");
+	
+	if($id_workunit === false) {
+		return false;
+	}
+	
+	$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES (%d, %d)', $incident_id, $id_workunit);
+	
+	
+	$result = process_sql ($sql);
+	
+	if($result === false) {
+		$sql = sprintf ('DELETE FROM tworkunit WHERE id = %d',$id_workunit);
+		return false;
+	}
+	
+	return true;
+}
+
+/**
+ * Return an array with the incidents with a filter
+ *
+ * @param array List of incidents to get stats.
+ * @param array/string filter for the query
+ * @param bool only names or all the incidents
+ *
+
+ */
+ 
+function get_incidents ($filter = array(), $only_names = false) {
+	$all_incidents = get_db_all_rows_filter('tincidencia',$filter,'*');
+
+	if ($all_incidents == false)
+		return array ();
+	
+	global $config;
+	$incidents = array ();
+	foreach ($all_incidents as $incident) {
+		if (give_acl ($config['id_user'], $incident['id_grupo'], 'IR')) {
+			if ($only_names) {
+				$incidents[$incident['id_incidencia']] = $incident['titulo'];
+			} else {
+				array_push ($incidents, $incident);
+			}
+		}
+	}
+	return $incidents;
+}
+
+/**
+ * Return an array with the incident details, files and workunits
+ *
+ * @param array List of incidents to get stats.
+ *
+ */
+ 
+function get_full_incident ($id_incident, $only_names = false) {
+	$full_incident['details'] = get_db_row_filter('tincidencia',array('id_incidencia' => $id_incident),'*');
+	$full_incident['files'] = get_incident_files ($id_incident, true);
+	if($full_incident['files'] === false) {
+		$full_incident['files'] = array();
+	}
+	$full_incident['workunits'] = get_incident_full_workunits ($id_incident);
+	if($full_incident['workunits'] === false) {
+		$full_incident['workunits'] = array();
+	}
+	
+	return $full_incident;
+}
+
+/**
+ * Return an array with the workunits (data included) of an incident
+ *
+ * @param array List of incidents to get stats.
+ *
+ */
+
+function get_incident_full_workunits ($id_incident) {
+	$workunits = get_db_all_rows_sql ("SELECT tworkunit.* FROM tworkunit, tworkunit_incident WHERE
+		tworkunit.id = tworkunit_incident.id_workunit AND tworkunit_incident.id_incident = $id_incident
+		ORDER BY id_workunit DESC");
+	if ($workunits === false)
+		return array ();
+	return $workunits;
+}
+
 /**
  * Return an array with statistics of a given list of incidents.
  *

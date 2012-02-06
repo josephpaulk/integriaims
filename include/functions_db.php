@@ -1600,8 +1600,15 @@ function get_custom_search ($id_search, $section) {
 	return get_db_row_sql ($sql);
 }
 
-function get_incident_files ($id_incident) {
-	return get_db_all_rows_field_filter ('tattachment', 'id_incidencia', $id_incident);
+function get_incident_files ($id_incident, $order_desc = false) {
+	if($order_desc) {
+		$order = "id_attachment DESC";
+	}
+	else {
+		$order = "";
+	}
+	
+	return get_db_all_rows_field_filter ('tattachment', 'id_incidencia', $id_incident, $order);
 }
 
 function get_incident_tracking ($id_incident) {
@@ -1794,6 +1801,16 @@ function check_incident_sla_max_response ($id_incident) {
 function get_group_default_user ($id_group) {
 	$id_user = get_db_value ('id_user_default', 'tgrupo', 'id_grupo', $id_group);
 	return get_db_row ('tusuario', 'id_usuario', $id_user);
+}
+
+function get_group_default_inventory ($id_group, $only_id = false) {
+	$id_inventory= get_db_value ('id_inventory_default', 'tgrupo', 'id_grupo', $id_group);
+	
+	if($only_id) {
+		return $id_inventory;
+	}
+	
+	return get_db_row ('tinventory', 'id', $id_inventory);
 }
 
 /** 
