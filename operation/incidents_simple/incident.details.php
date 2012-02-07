@@ -17,11 +17,22 @@
 // CHECK LOGIN AND ACLs
 check_login ();
 
+// SET VARS
+$width = '90%';
+
 if (! give_acl ($config['id_user'], 0, "IR")) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
 	require ("general/noaccess.php");
 	exit;
 }
+
+$incident_id = get_parameter('incident_id', 0);
+if($incident_id == 0) {
+	exit;
+}
+
+// GET THE DETAILS
+$incident['details'] = get_db_row_filter('tincidencia',array('id_incidencia' => $incident_id),'*');
 
 // SHOW THE DETAILS
 $table->class = 'result_table listing';
@@ -67,9 +78,7 @@ else {
 
 $table->data[5][0] = $incident['details']['descripcion'];
 
-echo '<div id="details_data" class="tab_data">';
 print_table($table);
-echo '</div>';
 
 unset($table);
 

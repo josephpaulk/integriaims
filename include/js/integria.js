@@ -127,3 +127,8 @@ function __(str) {
 		return str
 	return r;
 }
+
+function cancel_msg(id) {
+	$('#msg_'+id).fadeOut('slow');
+
+}

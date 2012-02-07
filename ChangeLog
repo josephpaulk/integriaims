@@ -1,5 +1,20 @@
 2012-02-07  Sergio Martin <sergio.martin@artica.es>
 
+	* include/js/integria.js
+	include/functions_ui.php
+	images/refresh.png: Merge message
+	functions from pandora and added valid
+	button
+
+	* operation/incidents_simple/incident.php
+	operation/incidents_simple/incident.files.php
+	operation/incidents_simple/incident.details.php
+	operation/incidents_simple/incident.workunits.php: Improve the
+	simple interface of the incidents adding ajax to refresh only
+	the needed tab and several little improvements
+
+2012-02-07  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_incidents.php
 	operation/incidents_simple/incident.php: Added uptime updation
 	when add a workunit and add a refresh button in the incident

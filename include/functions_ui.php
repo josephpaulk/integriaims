@@ -90,4 +90,84 @@ function debug ($var, $backtrace = true) {
 	return true;
 }
 
+/** 
+ * Prints a generic message between tags.
+ * 
+ * @param string The message string to be displayed
+ * @param string the class to user
+ * @param string Any other attributes to be set for the tag.
+ * @param bool Whether to output the string or return it
+ * @param string What tag to use (you could specify something else than
+ * h3 like div or h2)
+ *
+ * @return string HTML code if return parameter is true.
+ */
+function ui_print_message ($message, $class = '', $attributes = '', $return = false, $tag = 'h3') {
+	$id = uniqid();
+	$cancel_button = '<a href="javascript:cancel_msg(\''.$id.'\');"><img src="images/cancel.gif" border=0></a>';
+	
+	$output = '<'.$tag.(empty ($class) ? '' : ' id="msg_'.$id.'" class="'.$class.'" ').$attributes.'>'.$message.' '.$cancel_button.'</'.$tag.'>';
+		
+	if ($return)
+		return $output;
+	echo $output;
+}
+
+/** 
+ * Prints an error message.
+ * 
+ * @param string The error message to be displayed
+ * @param string Any other attributes to be set for the tag.
+ * @param bool Whether to output the string or return it
+ * @param string What tag to use (you could specify something else than
+ * h3 like div or h2)
+ *
+ * @return string HTML code if return parameter is true.
+ */
+function ui_print_error_message ($message, $attributes = '', $return = false, $tag = 'h3') {
+	return ui_print_message ($message, 'error', $attributes, $return, $tag);
+}
+
+/** 
+ * Prints an operation success message.
+ * 
+ * @param string The message to be displayed
+ * @param string Any other attributes to be set for the tag.
+ * @param bool Whether to output the string or return it
+ * @param string What tag to use (you could specify something else than
+ * h3 like div or h2)
+ *
+ * @return string HTML code if return parameter is true.
+ */
+function ui_print_success_message ($message, $attributes = '', $return = false, $tag = 'h3') {
+	return ui_print_message ($message, 'suc', $attributes, $return, $tag);
+}
+
+/** 
+ * Evaluates a result using empty() and then prints an error or success message
+ * 
+ * @param mixed The results to evaluate. 0, NULL, false, '' or 
+ * array() is bad, the rest is good
+ * @param string The string to be displayed if the result was good
+ * @param string The string to be displayed if the result was bad
+ * @param string Any other attributes to be set for the h3
+ * @param bool Whether to output the string or return it
+ * @param string What tag to use (you could specify something else than
+ * h3 like div or h2)
+ *
+ * @return string HTML code if return parameter is true.
+ */
+function ui_print_result_message ($result, $good = '', $bad = '', $attributes = '', $return = false, $tag = 'h3') {
+	if ($good == '' || $good === false)
+		$good = __('Request successfully processed');
+	
+	if ($bad == '' || $bad === false)
+		$bad = __('Error processing request');
+	
+	if (empty ($result)) {
+		return ui_print_error_message ($bad, $attributes, $return, $tag);
+	}
+	return ui_print_success_message ($good, $attributes, $return, $tag);
+}
+
 ?>

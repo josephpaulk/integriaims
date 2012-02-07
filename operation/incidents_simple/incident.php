@@ -17,7 +17,7 @@
 // LOAD GLOBAL VARS
 global $config;
 
-// SET GLOBAL VARS
+// SET VARS
 $width = '90%';
 
 // CHECK LOGIN AND ACLs
@@ -66,10 +66,10 @@ if($add_workunit) {
 	$result = add_workunit_incident($incident_id, $note, $timeused, $public);
 	
 	if($result) {
-		echo '<h3 class="suc">'.__('Workunit added').'</h3>';
+		ui_print_success_message(__('Workunit added'));
 	}
 	else {
-		echo '<h3 class="error">'.__('There was a problem adding workunit').'</h3>';
+		ui_print_error_message(__('There was a problem adding workunit'));
 	}
 	$active_tab = 'workunits';
 }
@@ -78,7 +78,7 @@ if($add_workunit) {
 $incident = get_full_incident($incident_id);
 
 // PRINT INCIDENT
-echo "<h1>".__('Incident')." #$incident_id - ".$incident['details']['titulo']." <a href='javascript:refresh();'><img src='images/refresh.png'></a></h1>";
+echo "<h1>".__('Incident')." #$incident_id - ".$incident['details']['titulo']." <a href='javascript:load_tab(\"current\");'><img src='images/refresh.png'></a></h1>";
 
 // TABS
 ?>
@@ -106,7 +106,7 @@ print_button (__('Add file'), 'add_file_show', false, '', 'style="margin-top:8px
 echo "</div>";
 
 // ADD WORKUNIT FORM
-echo "<div style='width:$width;display:none;' id='form_workunit'>";
+echo "<div style='width:$width;display:none;' id='form_workunit' class='form_tabs'>";
 echo "<form method='post' action=''>";
 print_textarea ('note', 5, 10, '', '', false, __('Workunit'));
 print_input_hidden ('add_workunit', 1);
@@ -118,7 +118,7 @@ echo "</form>";
 echo "</div>";
 
 // UPLOAD FILE FORM
-echo "<div style='width:$width;display:none;' id='form_file'>";
+echo "<div style='width:$width;display:none;' id='form_file' class='form_tabs'>";
 $action = '';
 $into_form = print_input_hidden ('id', $incident_id, true);
 $into_form .= print_input_hidden ('upload_file', 1, true);
@@ -130,46 +130,94 @@ echo '<b>'.__('File').'</b>';
 echo '<br>'.print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', 'button-add_file', true);
 echo "</div>";
 
-require('operation/incidents_simple/incident.details.php');
-require('operation/incidents_simple/incident.workunits.php');
-require('operation/incidents_simple/incident.files.php');
+// LOADING DIV
+echo '<div id="loading" style="width:60%;margin-top:20;display:none;">'.__('Loading').'...</div>';
+
+// DATA DIVS
+echo '<div id="details_data" class="tab_data"></div>';
+echo '<div id="workunits_data" class="tab_data"></div>';
+echo '<div id="files_data" class="tab_data"></div>';
 
 // Div with the active tab name in all moment
 echo "<div id='active_tab' style='display:none'>$active_tab</div>";
+// Div with the incident id in all moment
+echo "<div id='incident_id' style='display:none'>$incident_id</div>";
 ?>
 
 <script type="text/javascript">
 $(document).ready (function () {
+	// FORMS SHOW/HIDE
 	$('#button-add_workunit_show').click(function() {
+		tab = $('#active_tab').html();
+		if(tab != 'workunits') {
+			load_tab('workunits');
+		}
 		$('.action_btn').attr('disabled','');
 		$('#form_workunit').toggle();
 		$('#form_file').hide();
 	});
 	
 	$('#button-add_file_show').click(function() {
+		tab = $('#active_tab').html();
+		if(tab != 'files') {
+			load_tab('files');
+		}
 		$('.action_btn').attr('disabled','');
 		$('#form_file').toggle();
 		$('#form_workunit').hide();
 	});
 	
 	// MENU TABS
-	
 	$('.tab').click(function() {
-		type = $(this).attr('id').split('_')[1];
-		$('.tab_data').hide();
-		$('#'+type+'_data').show();
-		$('.ui-tabs-selected').attr('class','ui-tabs');
-		$('#li_'+type).attr('class','ui-tabs-selected');
-		$('#active_tab').html(type);
+		tab = $(this).attr('id').split('_')[1];
+		
+		// Hide all the forms
+		$('.form_tabs').hide();
+		
+		// Load tab
+		load_tab(tab);
 	});
 	
-	// Load the active tab passed by get
+	// Load the active tab
 	$('#tab_<?php echo $active_tab; ?>').trigger('click');
-	
 });
 
-function refresh() {
-	type = $('#active_tab').html();
-	location.href = 'index.php?sec=incidents&sec2=operation/incidents_simple/incident&id=91&active_tab='+type;
+function load_tab(tab) {
+	if(tab == 'current') {
+		tab = $('#active_tab').html();
+	}
+	
+	// Update tab info
+	$('#active_tab').html(tab);
+	
+	incident_id = $('#incident_id').html();
+	
+	// Change tabs style
+	$('.ui-tabs-selected').attr('class','ui-tabs');
+	$('#li_'+tab).attr('class','ui-tabs-selected');
+
+	// Delete all tabs
+	$('.tab_data').html('');
+	
+	// Show loading
+	$('#loading').show();
+		
+	var params = [];
+	params.push("incident_id=" + incident_id);
+	params.push("page=operation/incidents_simple/incident." + tab);
+	jQuery.ajax ({
+		data: params.join ("&"),
+		dataType: 'html',
+		async: false,
+		type: 'POST',
+		url: action="ajax.php",
+		success: function (data) {
+			// Fill the tab div with the updated data
+			$('#'+tab+'_data').html(data);
+		}
+	});
+	
+	// Hide loading
+	$('#loading').hide();
 }
 </script>

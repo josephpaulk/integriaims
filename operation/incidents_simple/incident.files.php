@@ -17,10 +17,27 @@
 // CHECK LOGIN AND ACLs
 check_login ();
 
+// SET VARS
+$width = '90%';
+
 if (! give_acl ($config['id_user'], 0, "IR")) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
 	require ("general/noaccess.php");
 	exit;
+}
+
+// If call is only for charge this tab
+if (defined ('AJAX')) {
+	$incident_id = get_parameter('incident_id', 0);
+	if($incident_id == 0) {
+		exit;
+	}
+}
+
+// GET THE FILES
+$incident['files'] = get_incident_files ($incident_id, true);
+if($incident['files'] === false) {
+	$incident['files'] = array();
 }
 
 // SHOW THE FILES
@@ -51,9 +68,7 @@ foreach($incident['files'] as $k => $file) {
 	$table->data[$row+$k][1] .= $file['description'];	
 }
 
-echo '<div id="files_data" class="tab_data" style="display:none">';
 print_table($table);
-echo '</div>';
 
 unset($table);
 
