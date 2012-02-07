@@ -36,7 +36,7 @@ $incident_id = (int) get_parameter('id', 0);
 $active_tab = get_parameter('active_tab', 'details');
 
 if($incident_id == 0) {
-	echo '<h3 class="error">'.__('Incident not found').'</h3>';
+	ui_print_error_message(__('Incident not found'));
 	exit;
 }
 

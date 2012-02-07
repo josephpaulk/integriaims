@@ -239,7 +239,7 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 	
 	incident_tracking ($id, INCIDENT_FILE_ADDED);
 	
-	$result_msg = '<h3 class="suc">'.__('File added').'</h3>';
+	$result_msg = ui_print_success_message(__('File added'), '', true);
 	
 	// Email notify to all people involved in this incident
 	if ($email_notify == 1) {
@@ -252,7 +252,7 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 	$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
 	
 	if (! copy ($file_temp, $file_target)) {
-		$result_msg = '<h3 class="error">'.__('File cannot be saved. Please contact Integria administrator about this error').'</h3>';
+		$result_msg = ui_print_success_message(__('File cannot be saved. Please contact Integria administrator about this error'), '', true);
 		$sql = sprintf ('DELETE FROM tattachment
 				WHERE id_attachment = %d', $id_attachment);
 		process_sql ($sql);
@@ -866,7 +866,22 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 
 	// Send email for owner and creator of this incident
 	$email_creator = get_user_email ($creator);
+	$company_creator = get_user_company ($creator, true);
+	if(empty($company_creator)) {
+		$company_creator = "";
+	}
+	else {
+		$company_creator = " (".reset($company_creator).")";
+	}
+	
 	$email_owner = get_user_email ($usuario);
+	$company_owner = get_user_company ($usuario, true);
+	if(empty($company_owner)) {
+		$company_owner = "";
+	}
+	else {
+		$company_owner = " (".reset($company_owner).")";
+	}
   
 	$MACROS["_sitename_"] = $config["sitename"];
 	$MACROS["_fullname_"] = dame_nombre_real ($usuario);
@@ -876,23 +891,27 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$MACROS["_creation_timestamp_"] = $create_timestamp;
 	$MACROS["_update_timestamp_"] = $update_timestamp;
 	$MACROS["_group_"] = $group_name ;
-	$MACROS["_author_"] = dame_nombre_real ($creator);
-	$MACROS["_owner_"] = dame_nombre_real ($usuario);
+	$MACROS["_author_"] = dame_nombre_real ($creator).$company_creator;
+	$MACROS["_owner_"] = dame_nombre_real ($usuario).$company_owner;
 	$MACROS["_priority_"] = $prioridad ;
 	$MACROS["_status_"] = $estado;
 	$MACROS["_resolution_"] = $resolution;
 	$MACROS["_time_used_"] = $timeused;
 	$MACROS["_incident_main_text_"] = $description;
-	$MACROS["_wu_user_"] = dame_nombre_real ($id_usuario);
-	$MACROS["_wu_text_"] = $nota ;
 	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_inc";
 
 	// Resolve code for its name
 	switch ($mode){
 	case 10: // Add Workunit
 		//$subject = "[".$config["sitename"]."] Incident #$id_inc ($titulo) has a new workunit from [$id_usuario]";
-
-		$MACROS["_wu_user_"] = dame_nombre_real ($id_usuario);
+		$company_wu = get_user_company ($id_usuario, true);
+		if(empty($company_wu)) {
+			$company_wu = "";
+		}
+		else {
+			$company_wu = " (".reset($company_wu).")";
+		}
+		$MACROS["_wu_user_"] = dame_nombre_real ($id_usuario).$company_wu;
 		$MACROS["_wu_text_"] = $nota ;
 		$text = template_process ($config["homedir"]."/include/mailtemplates/incident_update_wu.tpl", $MACROS);
 		$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_subject_new_wu.tpl", $MACROS);

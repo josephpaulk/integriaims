@@ -141,7 +141,12 @@ echo '<table width="100%" cellspacing=0 cellpadding=0 border=0>';
 		echo "<tr><td>";
 		echo "<h1>".__('Incidents')."</h1>";
 		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'><img src='images/incidents.png'></a></div>";
+		if($simple_mode) {
+			echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'><img src='images/incidents.png'></a></div>";
+		}
+		else {
+			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'><img src='images/incidents.png'></a></div>";
+		}
 		echo "<td valign='top'><br><b>";
 		echo __('Incidents active you have').": ".incidents_active_user ($config["id_user"]);
 		echo '<hr width="100%" size="1">';
@@ -162,7 +167,12 @@ echo '<table width="100%" cellspacing=0 cellpadding=0 border=0>';
 			echo human_time_comparation ($row_2["actualizacion"]);
 			echo "<td>";
 			echo "<i>(#".$row_2["id_incidencia"].") </i>";
-			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$idi'>";
+			if($simple_mode) {
+				echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incident&id=$idi'>";
+			}
+			else {
+				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$idi'>";
+			}
 			echo "<b>&nbsp;".$row_2["titulo"];
 			echo "</b></a>";
 			echo "</td>";

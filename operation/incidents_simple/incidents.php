@@ -93,7 +93,7 @@ if($create_incident) {
 		if ($config['incident_reporter'] == 1)
 			update_incident_contact_reporters ($id, get_parameter ('contacts'));
 		
-		$result_msg = '<h3 class="suc">'.__('Successfully created').' (id #'.$id.')</h3>';
+		$result_msg = ui_print_success_message(__('Successfully created').' (id #'.$id.')', '', true);
 		$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents_simple/incident&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
 
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"],
@@ -107,7 +107,7 @@ if($create_incident) {
 			mail_incident ($id, $usuario, "", 0, 1);
 		}
 	} else {
-		$result_msg  = '<h3 class="error">'.__('Could not be created').'</h3>';
+		$result_msg = ui_print_error_message(__('Could not be created'), '', true);
 	}
 	
 	echo $result_msg;

@@ -1,5 +1,18 @@
 2012-02-07  Sergio Martin <sergio.martin@artica.es>
 
+	* include/functions_incidents.php: Added to the
+	mail templates the company of the users
+
+	* operation/incidents_simple/incident.php
+	operation/incidents_simple/incidents.php: Change some
+	error/success messages from <h3> tags to print_message
+	function
+
+	* general/home.php: Fixed home direct link to
+	incidents
+
+2012-02-07  Sergio Martin <sergio.martin@artica.es>
+
 	* include/js/integria_incident_search.js: Fixed auto
 	update tab bugs on the incidents view when create
 	a workunit
