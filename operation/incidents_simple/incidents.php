@@ -3,7 +3,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2011 Ártica Soluciones Tecnológicas
+// Copyright (c) 2012 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -143,6 +143,7 @@ $resolutions = get_incident_resolutions ();
 
 // GET FILTER PARAMETERS
 $status = get_parameter('status', 0);
+$search = get_parameter('search', '');
 
 unset($table);
 $table->class = 'result_table';
@@ -151,14 +152,18 @@ $table->width = '98%';
 $table->data = array();
 $table->header = array();
 
-$table->style[0] = 'width:60px';
+$table->style[0] = 'width:60px;text-align:right;';
 $table->style[1] = 'width:150px';
-$table->style[2] = 'width:100px';
+$table->style[2] = 'width:60px;text-align:right;';
+$table->style[3] = 'width:150px';
+$table->style[4] = 'width:100px';
 
-$table->data[0][0] = "<b>".__('Status')."</b>";
-$table->data[0][1] = print_select($statuses,'status',$status,'',__('Any'),0,true);
-$table->data[0][2] = print_submit_button(__('Filter'), '', false, 'class="sub search"', true);
-$table->data[0][3] = '';
+$table->data[0][0] = "<b>".__('Search')."</b>";
+$table->data[0][1] = print_input_text('search',$search,'',20,0,true);
+$table->data[0][2] = "<b>".__('Status')."</b>";
+$table->data[0][3] = print_select($statuses,'status',$status,'',__('Any'),0,true);
+$table->data[0][4] = print_submit_button(__('Filter'), '', false, 'class="sub search"', true);
+$table->data[0][5] = '';
 
 echo '<form method="post">';
 print_table($table);
@@ -195,6 +200,10 @@ elseif($status == -10) {
 	//Not closed is special status
 	//Means not solved(6) and not closed(7)
 	$filter .= sprintf(' AND estado != 6 AND estado != 7');
+}
+
+if($search != '') {
+	$filter .= sprintf(' AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%")', $search, $search);
 }
 
 $filter .= ' ORDER BY actualizacion DESC';

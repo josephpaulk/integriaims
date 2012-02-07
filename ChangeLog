@@ -1,5 +1,10 @@
 2012-02-07  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/incidents_simple/incidents.php: Added search
+	filter in the simple incident list
+
+2012-02-07  Sergio Martin <sergio.martin@artica.es>
+
 	* include/js/integria.js
 	include/functions_ui.php
 	images/refresh.png: Merge message
