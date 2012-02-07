@@ -272,8 +272,22 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 }
 
 /**
- * Copy and insert in database a new file into incident
+ * Update the updatetime of a incident with the current timestamp
  *
+ * @param int incident id
+ *
+ */
+ 
+ function update_incident_updatetime($incident_id) {
+		$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s" WHERE id_incidencia = %d', print_mysql_timestamp(), $incident_id);
+
+		process_sql ($sql);
+ }
+ 
+ /**
+ * Add a workunit to an incident
+ *
+ * @param int incident id
  * @param string note of the workunit
  * @param string timeused
  * @param string public
@@ -303,6 +317,9 @@ function add_workunit_incident($incident_id, $note, $timeused, $public = 1) {
 		$sql = sprintf ('DELETE FROM tworkunit WHERE id = %d',$id_workunit);
 		return false;
 	}
+	
+	// Update the updatetime of the incident
+	update_incident_updatetime($incident_id);
 	
 	return true;
 }

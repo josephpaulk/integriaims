@@ -78,7 +78,7 @@ if($add_workunit) {
 $incident = get_full_incident($incident_id);
 
 // PRINT INCIDENT
-echo "<h1>".__('Incident')." #$incident_id - ".$incident['details']['titulo']."</h1>";
+echo "<h1>".__('Incident')." #$incident_id - ".$incident['details']['titulo']." <a href='javascript:refresh();'><img src='images/refresh.png'></a></h1>";
 
 // TABS
 ?>
@@ -134,6 +134,8 @@ require('operation/incidents_simple/incident.details.php');
 require('operation/incidents_simple/incident.workunits.php');
 require('operation/incidents_simple/incident.files.php');
 
+// Div with the active tab name in all moment
+echo "<div id='active_tab' style='display:none'>$active_tab</div>";
 ?>
 
 <script type="text/javascript">
@@ -158,9 +160,16 @@ $(document).ready (function () {
 		$('#'+type+'_data').show();
 		$('.ui-tabs-selected').attr('class','ui-tabs');
 		$('#li_'+type).attr('class','ui-tabs-selected');
+		$('#active_tab').html(type);
 	});
 	
 	// Load the active tab passed by get
 	$('#tab_<?php echo $active_tab; ?>').trigger('click');
+	
 });
+
+function refresh() {
+	type = $('#active_tab').html();
+	location.href = 'index.php?sec=incidents&sec2=operation/incidents_simple/incident&id=91&active_tab='+type;
+}
 </script>
