@@ -644,8 +644,8 @@ function configure_workunit_form () {
 				if (tabs != undefined && tabs.data ("selected.tabs") == 3)
 					$("#tabs > ul").tabs ("load", 3);
 				// If the workunits tab is selected we update it
-				if (tabs != undefined && tabs.data ("selected.tabs") == 6)
-					$("#tabs > ul").tabs ("load", 6);
+				if (tabs != undefined && tabs.data ("selected.tabs") == 7)
+					$("#tabs > ul").tabs ("load", 7);
 			},
 			"html"
 		);
@@ -691,11 +691,11 @@ function configure_file_form () {
 			if (tabs != undefined && tabs.data ("selected.tabs") == 3)
 				$("#tabs > ul").tabs ("load", 3);
 			// If the workunits tab is selected we update it
-			if (tabs != undefined && tabs.data ("selected.tabs") == 6)
-				$("#tabs > ul").tabs ("load", 6);
-			// If the files tab is selected we update it
 			if (tabs != undefined && tabs.data ("selected.tabs") == 7)
 				$("#tabs > ul").tabs ("load", 7);
+			// If the files tab is selected we update it
+			if (tabs != undefined && tabs.data ("selected.tabs") == 8)
+				$("#tabs > ul").tabs ("load", 8);
 		}
 	});
 }

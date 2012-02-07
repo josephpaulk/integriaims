@@ -1,5 +1,11 @@
 2012-02-07  Sergio Martin <sergio.martin@artica.es>
 
+	* include/js/integria_incident_search.js: Fixed auto
+	update tab bugs on the incidents view when create
+	a workunit
+
+2012-02-07  Sergio Martin <sergio.martin@artica.es>
+
 	* operation/incidents_simple/incidents.php: Added search
 	filter in the simple incident list
 
