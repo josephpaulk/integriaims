@@ -1,3 +1,7 @@
+2012-02-08  Sancho Lerena <slerena@artica.es>
+
+	* integria_demo.sql: Fixed SQL.
+
 2012-02-08  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/incidents_simple/incident.files.php
