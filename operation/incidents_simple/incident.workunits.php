@@ -26,12 +26,10 @@ if (! give_acl ($config['id_user'], 0, "IR")) {
 	exit;
 }
 
-// If call is only for charge this tab
-if (defined ('AJAX')) {
-	$incident_id = get_parameter('incident_id', 0);
-	if($incident_id == 0) {
-		exit;
-	}
+$incident_id = get_parameter('incident_id', 0);
+if($incident_id == 0) {
+	ui_print_error_message(__('Unable to load incident'));
+	exit;
 }
 
 // GET THE WORKUNITS
@@ -85,5 +83,12 @@ foreach($incident['workunits'] as $k => $workunit) {
 print_table($table);
 
 unset($table);
+
+// Add the description of the incident under the first workunit for usability
+$description = get_db_value('descripcion','tincidencia','id_incidencia',$incident_id);
+echo "<h3>".__("Incident details")."</h3>";
+echo "<div style='margin-left: 10px; margin-top: 20px; width:85%; padding: 10px; border: 1px solid #ccc'><p>";
+echo clean_output_breaks ($description);
+echo "</div>";
 
 ?>

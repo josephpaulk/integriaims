@@ -26,12 +26,10 @@ if (! give_acl ($config['id_user'], 0, "IR")) {
 	exit;
 }
 
-// If call is only for charge this tab
-if (defined ('AJAX')) {
-	$incident_id = get_parameter('incident_id', 0);
-	if($incident_id == 0) {
-		exit;
-	}
+$incident_id = get_parameter('incident_id', 0);
+if($incident_id == 0) {
+	ui_print_error_message(__('Unable to load incident'));
+	exit;
 }
 
 // GET THE FILES

@@ -1,5 +1,13 @@
 2012-02-08  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/incidents_simple/incident.files.php
+	operation/incidents_simple/incident.details.php
+	operation/incidents_simple/incident.workunits.php: Added 
+	incident details under first workunit and add some error
+	messages into the simple incident view
+
+2012-02-08  Sergio Martin <sergio.martin@artica.es>
+
 	* operation/incidents_simple/incidents.php
 	operation/incidents_simple/incident_new.php: Added 
 	soft and hard limit to the simple incidents creation
