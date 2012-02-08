@@ -40,10 +40,9 @@ if($create_incident) {
 	// Read input variables
 	$title = get_parameter('title');
 	$description = get_parameter('description');
+	$group_id = get_parameter('group_id');
 
 	// Get default variables
-	$user_groups = get_user_groups($config['id_user']);
-	$group_id = reset(array_keys($user_groups));
 	$id_creator = $config["id_user"];
 	$sla_disabled = 0;
 	$id_task = 0; // N/A
