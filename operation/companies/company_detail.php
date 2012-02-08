@@ -617,7 +617,12 @@ if ($id) {
 	//~ $companies = get_db_all_rows_sql ($sql);
 
 	//~ echo $where_clause;
-	
+
+	if ($where_clause == "")
+		$where_clause .= " 1=1 ORDER BY name";
+	else
+		$where_clause .= " ORDER BY name";
+
 	$companies = get_companies(false, $where_clause);
 
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail&search_tect='$search_text&search_role=$search_role");

@@ -2,6 +2,9 @@
 
 	* integria_demo.sql: Fixed SQL.
 
+	* operation/companies/company_detail.php: Fixed sorting of 
+	company listing.
+
 2012-02-08  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/incidents_simple/incident.files.php
