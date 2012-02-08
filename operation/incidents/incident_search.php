@@ -198,7 +198,7 @@ foreach ($incidents as $incident) {
 		$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);
 		if($id_creator_company != 0) {
 			$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_creator_company);	
-			echo "<br><span style='font:10px;font-style:italic'>$company_name</span>";
+			echo "<br><span style='font-size:11px;font-style:italic'>$company_name</span>";
 		}
 	}
 	echo '</td>';
