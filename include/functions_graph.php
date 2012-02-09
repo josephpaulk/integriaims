@@ -175,6 +175,51 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 // Draw a simple pie graph with SLA fulfillment of the incident
 // ===============================================================================
 
+function graph_incident_statistics_sla_compliance($incidents, $width=200, $height=200, $ttl=1) {
+	global $config;
+	
+	if ($incidents == false) {
+		$incidents = array();
+	}
+	
+	$incident_array = array();
+	
+	foreach ($incidents as $incident) {
+		array_push($incident_array, $incident['id_incidencia']);
+	}
+		
+	$incident_clause = implode(",", $incident_array);
+	
+	$incident_clause = "(".$incident_clause.")";
+			
+	$sql_ok = sprintf("SELECT COUNT(id_incident) FROM tincident_sla_graph WHERE value = 1 AND id_incident IN %s", $incident_clause);
+	$sql_fail = sprintf("SELECT COUNT(id_incident) FROM tincident_sla_graph WHERE value = 0 AND id_incident IN %s", $incident_clause);
+		
+	$num_ok = process_sql($sql_ok);
+	$num_fail = process_sql($sql_fail);
+
+	$num_ok = $num_ok[0][0];
+	$num_fail = $num_fail[0][0];
+	$total = $num_ok + $num_fail;
+		
+	$percent_ok = ($num_ok/$total)*100;
+	$percent_fail = ($num_fail/$total)*100;
+	
+	$data = array();
+	
+	$data["FAIL"] = $percent_fail;
+	$data["OK"] = $percent_ok;
+	
+	if (isset($data))
+		return pie3d_graph ($config['flash_charts'], $data, $width, $height, "", "", "", $config['font'], $config['fontsize'], $ttl);
+	else 
+		graphic_error();
+}
+
+// ===============================================================================
+// Draw a simple pie graph with SLA fulfillment of the incident
+// ===============================================================================
+
 function graph_incident_sla_compliance($incident, $width=200, $height=200, $ttl=1) {
 	global $config;
 		

@@ -1866,24 +1866,33 @@ function get_most_active_incidents ($lim) {
  */
 function get_sla_compliance ($incidents) {
 
-    $total = 0;
-    $sum = 0;
+	if ($incidents == false) {
+		$incidents = array();
+	}
+	
+	$incident_array = array();
+	
+	foreach ($incidents as $incident) {
+		array_push($incident_array, $incident['id_incidencia']);
+	}
+		
+	$incident_clause = implode(",", $incident_array);
+	
+	$incident_clause = "(".$incident_clause.")";
+			
+	$sql_ok = sprintf("SELECT COUNT(id_incident) FROM tincident_sla_graph WHERE value = 1 AND id_incident IN %s", $incident_clause);
+	$sql_fail = sprintf("SELECT COUNT(id_incident) FROM tincident_sla_graph WHERE value = 0 AND id_incident IN %s", $incident_clause);
+		
+	$num_ok = process_sql($sql_ok);
+	$num_fail = process_sql($sql_fail);
 
-    foreach ($incidents as $incident) {
-        $total++;
-		if ($incident['affected_sla_id'] > 0)
-            $sum = $sum + 1;
-    }
-
-    $OK = $total - $sum;
-
-    // Division by zero check
-    if ($total == 0)
-        return 100;
-
-    $sla_compliance = ( $OK / $total) * 100; 
-
-	return $sla_compliance;
+	$num_ok = $num_ok[0][0];
+	$num_fail = $num_fail[0][0];
+	$total = $num_ok + $num_fail;
+		
+	$percent_ok = ($num_ok/$total)*100;
+	
+	return $percent_ok;
 
 }
 

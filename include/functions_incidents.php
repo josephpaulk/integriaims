@@ -480,6 +480,9 @@ function get_incidents_stats ($incidents) {
 function print_incidents_stats ($incidents, $return = false) {
 
     global $config;
+    
+	require_once ($config["homedir"]."/include/functions_graph.php");    
+    
 	$pdf_output = (int)get_parameter('pdf_output', 0);
 	$ttl = $pdf_output+1;
 	
@@ -570,6 +573,8 @@ function print_incidents_stats ($incidents, $return = false) {
     $output .= "</td>";
     $output .= "<td>";
     $output .= print_label (__('SLA compliance'), '', '', true, format_numeric ($sla_compliance) .' '.__('%'));
+    $output .= "<br>";
+    $output .= graph_incident_statistics_sla_compliance($incidents, 200, 200, $ttl);
     $output .= "</td>";
     $output .= "</tr><tr>";
     $output .= "<td>";
