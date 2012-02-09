@@ -1,3 +1,8 @@
+2012-02-09  Sergio Martin <sergio.martin@artica.es>
+
+	* operation/incidents/incident.php: Fixed the files tab
+	enabling problem
+
 2012-02-09 Dario Rodriguez <dario.rodriguez@artica.es>
 	
 	* godmode/usuarios/configurar_usuarios.php: Fixed a problem that prevent

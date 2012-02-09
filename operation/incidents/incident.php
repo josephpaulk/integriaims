@@ -258,7 +258,7 @@ function show_incident_details (id) {
 	$("#tabs > ul").tabs ("url", 7, "ajax.php?page=operation/incidents/incident_workunits&id=" + id);
 	$("#tabs > ul").tabs ("url", 8, "ajax.php?page=operation/incidents/incident_files&id=" + id);
 	$("#tabs > ul").tabs ("enable", 2).tabs ("enable", 3).tabs ("enable", 4)
-		.tabs ("enable", 5).tabs ("enable", 6).tabs ("enable", 7);
+		.tabs ("enable", 5).tabs ("enable", 6).tabs ("enable", 7).tabs ("enable", 8);
 	if (tabs.data ("selected.tabs") == 1) {
 		$("#tabs > ul").tabs ("load", 2);
 	} else {
