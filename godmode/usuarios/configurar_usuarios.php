@@ -49,11 +49,12 @@ if (isset($_GET["borrar_grupo"])) {
 }
 
 $action = get_parameter("action", "edit");
+$alta = get_parameter("alta");
 
 ///////////////////////////////
 // LOAD USER VALUES
 ///////////////////////////////
-if ($action == 'edit' || $action == 'update') {
+if (($action == 'edit' || $action == 'update') && !$alta) {
 	$modo = "edicion";
 	$update_user = get_parameter ("update_user", "");
 	// Read user data to include in form
@@ -169,7 +170,8 @@ if ($action == 'create'){
 		
 	$ahora = date("Y-m-d H:i:s");
 	$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real,avatar, lang, disabled, id_company, simple_mode) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','$avatar','$lang','$disabled','$id_company','$simple_mode')";
-	$resq1 = process_sql_insert($sql_insert);
+	
+	$resq1 = process_sql($sql_insert);
 		if (! $resq1)
 			echo "<h3 class='error'>".__('Could not be created')."</h3>";
 		else {
