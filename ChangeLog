@@ -1,3 +1,11 @@
+2012-02-17  Sancho Lerena <slerena@artica.es>
+
+	* include/styles/wiki.css: Fixes.
+
+	* include/wiki/lionwiki_lib.php: Fixes for wiki code.
+
+	* operation/companies/company_detail.php: Solved two ACL problems.
+
 2012-02-09  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/incidents/incident.php: Fixed the files tab

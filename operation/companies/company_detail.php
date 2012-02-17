@@ -363,7 +363,7 @@ if ($id) {
 			$counter = 0;
 		
 			foreach ($contracts as $contract) {
-				if (! give_acl ($config["id_user"], $contract["id_group"], "IR"))
+				if (! give_acl ($config["id_user"], $contract["id_group"], "VR"))
 					continue;
 				$data = array ();
 			
@@ -588,7 +588,7 @@ if ($id) {
 	
 	
 	if ($search_text != "") {
-		$where_clause .= sprintf ('AND name LIKE "%%%s%%"', $search_text);
+		$where_clause .= sprintf ('1=1 AND name LIKE "%%%s%%"', $search_text);
 	}
 
 	if ($search_role != 0){ 

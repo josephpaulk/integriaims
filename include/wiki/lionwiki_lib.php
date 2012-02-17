@@ -228,7 +228,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	
 	$TEMPLATE = $template_conf; // presentation template
 	$PROTECTED_READ = $protected_read_conf; // if true, you need to fill password for reading pages too
-	$NO_HTML = $no_html_conf; // XSS protection
+	$NO_HTML = 0; //$no_html_conf; // XSS protection
 	
 	$START_PAGE = $start_page_conf; // Which page should be default (start page)?
 	$SYNTAX_PAGE = $syntax_page_conf;
