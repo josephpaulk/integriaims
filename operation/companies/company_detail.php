@@ -592,7 +592,7 @@ if ($id) {
 	}
 
 	if ($search_role != 0){ 
-		$where_clause .= sprintf ('AND id_company_role = %d', $search_role);
+		$where_clause .= sprintf ('1=1 AND id_company_role = %d', $search_role);
 	}
 
 
