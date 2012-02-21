@@ -41,7 +41,7 @@ if ($create_manufacturer) {
 	$sql = sprintf ('INSERT INTO tmanufacturer (`name`, `comments`, `address`,
 		`id_sla`, `id_company_role`)
 		VALUE ("%s", "%s", "%s", %d, %d)',
-		$name, $comments, $address, $id_company_role, $id_sla);
+		$name, $comments, $address, $id_sla, $id_company_role);
 
 	$id = process_sql ($sql, 'insert_id');
 	if ($id === false) {
