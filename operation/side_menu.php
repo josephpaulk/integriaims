@@ -664,7 +664,7 @@ if ($sec == "inventory" && give_acl($config["id_user"], 0, "VM") && $show_invent
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/manage_prod'>".__('Manage products')."</a></li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/manage_prod'>".__('Product types')."</a></li>";
 
 	echo "</ul>";
 	echo "</div>";
@@ -702,7 +702,7 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR") && $show_kb != MENU_H
                         echo "<li id='sidesel'>";
                 else
                         echo "<li>";
-                echo "<a href='index.php?sec=kb&sec2=operation/inventories/manage_prod'>".__('Manage products')."</a></li>";
+                echo "<a href='index.php?sec=kb&sec2=operation/inventories/manage_prod'>".__('Product types')."</a></li>";
 	}
 
 
