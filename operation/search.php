@@ -271,4 +271,12 @@ if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
 	}
 }
 
+echo "<br><br>";
+echo "<strong>";
+echo "-- ";
+echo __("End of search");
+echo " --";
+echo "</strong>";
+
+
 ?>
