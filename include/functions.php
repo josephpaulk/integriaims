@@ -95,6 +95,10 @@ function clean_output_breaks ($string) {
 	return preg_replace ('/&#x0a;/', "<br>", $string);
 }
 
+function safe_input_array ($value) {
+	return safe_input($value);
+}
+
 /** 
  * Cleans a string by decoding from UTF-8 and replacing the HTML
  * entities.

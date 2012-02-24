@@ -1,5 +1,11 @@
 2012-02-24 Dario Rodriguez <dario.rodriguez@artica.es>
 
+	* include/functions_form.php: Fixed a bug related with
+	a foreach statement.
+	* include/functions.php: Created safe_input_array function
+
+2012-02-24 Dario Rodriguez <dario.rodriguez@artica.es>
+
 	* godmode/usuarios/configurar_usuarios.php: Fixed an error
 	in manage user table style with simple mode flag.
 

@@ -850,6 +850,11 @@ function incident_users_list ($id_incident, $return = false) {
 	if ($users['affected'])
 	// PARTICIPANTS
 	$output .= '<div style="text-align:center;">- '.__('Participants').' -</div>';
+
+	if ($users['affected'] == false) {
+		$users['affected'] = array();
+	}
+
 	foreach ($users['affected'] as $user_item) {
 		$user = $user_item["id_usuario"];
 		if (!get_external_user($user)){
