@@ -327,7 +327,8 @@ else {
 echo __('Enabled').'&nbsp;<input type="radio" class="chk" name="simple_mode" value="1"'.$active_chk.'>';
 echo "&nbsp;&nbsp;";
 echo __('Disabled').'&nbsp;<input type="radio" class="chk" name="simple_mode" value="0"'.$disabled_chk.'>';
-
+echo '</tr>';
+echo '<tr>';
 if ($modo == "edicion") { // Only show groups for existing users
 	enterprise_hook ('manage_profiles');
 	echo "</table>";
