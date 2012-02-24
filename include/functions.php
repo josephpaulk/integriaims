@@ -133,7 +133,7 @@ function safe_input($value) {
 	if (! mb_check_encoding ($value, 'UTF-8'))
 		$value = utf8_encode ($value);
 	
-	$valueHtmlEncode =  htmlentities ($value, ENT_QUOTES, "UTF-8", true);
+	$valueHtmlEncode =  htmlentities ($value, ENT_QUOTES, "UTF-8");
 		
 	//Replace the character '\' for the equivalent html entitie
 	$valueHtmlEncode = str_replace('\\', "&#92;", $valueHtmlEncode);
