@@ -1,5 +1,12 @@
 2012-02-27 Dario Rodriguez <dario.rodriguez@artica.es>
 
+	* operation/incidents_simple/incident_new.php: Added form
+	validation to control incidents creation with empty title.
+	* operation/side_menu.php: Added a control to show New ticket
+	option in simple incident view only when user has IM flag.
+
+2012-02-27 Dario Rodriguez <dario.rodriguez@artica.es>
+
 	* include/js/integria_incident_search.js: Fixed a bug which
 	allow the user to create an incident without title.
 

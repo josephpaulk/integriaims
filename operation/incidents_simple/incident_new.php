@@ -34,7 +34,7 @@ $user_groups = get_user_groups($config['id_user']);
 $group_id = reset(array_keys($user_groups));
 
 echo "<h1>".__('CREATE INCIDENT')."</h1>";
-
+echo "<div id=msg-str></div>";
 // NEW INCIDENT FORM
 echo "<div style='width:$width;' id='form_file'>";
 $action = 'index.php?sec=incidents&sec2=operation/incidents_simple/incidents';
@@ -59,6 +59,33 @@ echo "</div>";
 $(document).ready (function () {
 	check_incident_limit();
 });
+
+//Validate form
+$('#form-add-file').submit(function() {
+	var title = $("#text-title").val();
+	
+	if (title.length == 0) {
+		$("#text-title").fadeOut ('normal',function () {
+			pulsate (this);
+		});
+				
+		var error_msg = js_ui_print_error_message('Empty title');
+				
+		$('#msg-str').html(error_msg);
+		return false;
+	}
+
+});
+
+function js_ui_print_error_message(msg) {		
+	var id = '<?php echo uniqid();?>';
+	
+	var cancel_button = '<a href="javascript:cancel_msg(\''+id+'\');"><img src="images/cancel.gif" border=0></a>';
+	
+	var error_msg = '<h3 id="msg_'+id+'" class="error">'+msg+' '+cancel_button+'</h3>';
+	
+	return error_msg;
+}
 
 function toggle_file_addition() {
 	$('#file_addition').toggle();
