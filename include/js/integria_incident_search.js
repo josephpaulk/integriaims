@@ -273,6 +273,16 @@ function configure_incident_form (enable_ajax_form) {
 	
 	if (enable_ajax_form) {
 		$(dialog+"#incident_status_form").submit (function () {
+			
+			var title = $("#text-titulo", this).val()
+			if (title.length == 0) {
+				$("#text-titulo").fadeOut ('normal',function () {
+					pulsate (this);
+				});
+				result_msg_error (__("Empty title"));
+				return false;
+			}
+			
 			if ($(".selected-inventories", this).length == 0) {
 				$(dialog+"#incident_inventories").fadeOut ('normal',function () {
 					pulsate (this);
@@ -281,6 +291,7 @@ function configure_incident_form (enable_ajax_form) {
 
 				return false;
 			}
+
 			values = get_form_input_values (this);
 			values.push ({name: "page",
 				value: "operation/incidents/incident_detail"});
@@ -316,12 +327,21 @@ function configure_incident_form (enable_ajax_form) {
 		});
 	} else {
 		$(dialog+"#incident_status_form").submit (function () {
+			
+			var title = $("#text-titulo", this).val()
+			if (title.length == 0) {
+				$("#text-titulo").fadeOut ('normal',function () {
+					pulsate (this);
+				});
+				result_msg_error (__("Empty title"));
+				return false;
+			}
+			
 			if ($(".selected-inventories", this).length == 0) {
 				$(dialog+"#incident_inventories").fadeOut ('normal',function () {
 					pulsate (this);
 				});
 				result_msg_error (__("There's no affected object"));
-			
 				return false;
 			}
 		});
