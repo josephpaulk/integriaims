@@ -52,6 +52,13 @@ function api_create_users ($return_type, $user, $params){
 	$description = $params[5];
 	$simplemode = $params[6];
 	$realname = $params[7];
+	$external = $params[8];
+
+	// 1 means "admin" 
+	if ($external == 1)
+		$external = -1;
+	else
+		$external = 0;
 
 	if (! give_acl ($user, $group, "UM")){
 		audit_db ($user,  $_SERVER['REMOTE_ADDR'],
@@ -64,8 +71,8 @@ function api_create_users ($return_type, $user, $params){
 
 	$sql = sprintf ('INSERT INTO tusuario
 			(nombre_real, id_usuario, password, comentarios,
-			fecha_registro, direccion, simple_mode)
-			VALUES ("%s", "%s", md5("%s"), "%s", "%s", "%s", %d)', $realname, $username, $password, $description, $timestamp, $email, $simplemode);
+			fecha_registro, direccion, simple_mode, nivel)
+			VALUES ("%s", "%s", md5("%s"), "%s", "%s", "%s", %d, %d)', $realname, $username, $password, $description, $timestamp, $email, $simplemode, $external);
 
 	$new_id = process_sql ($sql, 'insert_id');
 	if ($new_id !== false) {
