@@ -32,6 +32,67 @@ function ip_acl_check ($ip) {
 }
 
 /**
+ * Create an user
+ * @param $return_type xml or csv
+ * @param $user user who call function
+ * @param $params array (username, group_id, profile_id, email, password, description, simplemode, realname)
+ * @return unknown_type
+ */
+
+function api_create_users ($return_type, $user, $params){
+	global $config;
+	
+	$config['id_user'] = $user;
+	
+	$group = $params[1];
+	$username = $params[0];
+	$profile_id = $params[2];
+	$email = $params[3];
+	$password = $params[4];
+	$description = $params[5];
+	$simplemode = $params[6];
+	$realname = $params[7];
+
+	if (! give_acl ($user, $group, "UM")){
+		audit_db ($user,  $_SERVER['REMOTE_ADDR'],
+			"ACL Forbidden from API",
+			"User ".$user." try to create user");
+		exit;
+	}
+
+	$timestamp = print_mysql_timestamp();
+
+	$sql = sprintf ('INSERT INTO tusuario
+			(nombre_real, id_usuario, password, comentarios,
+			fecha_registro, direccion, simple_mode)
+			VALUES ("%s", "%s", md5("%s"), "%s", "%s", "%s", %d)', $realname, $username, $password, $description, $timestamp, $email, $simplemode);
+
+	$new_id = process_sql ($sql, 'insert_id');
+	if ($new_id !== false) {
+
+			$sql = sprintf ('INSERT INTO tusuario_perfil
+			(id_usuario, id_perfil, id_grupo, assigned_by)
+			VALUES ("%s", "%s", "%s", "%s")', $username, $profile_id, $group,  $user);
+
+			$new_id = process_sql ($sql, 'insert_id');
+			if ($new_id > 0)
+				$result = 1;
+
+	} else {
+		$result = 0;
+	}
+	
+	switch($return_type) {
+		case "xml": 
+				echo xml_node($result);
+				break;
+		case "csv": 
+				echo $result;
+				break;
+	}
+}
+
+/**
  * Create an incident
  * @param $return_type xml or csv
  * @param $user user who call function

@@ -1,3 +1,8 @@
+2012-03-02 Sancho Lerena <slerena@artica.es>
+
+	* include/functions_api.php
+        include/api.php: API to create users
+
 2012-02-27 Dario Rodriguez <dario.rodriguez@artica.es>
 
 	* operation/incidents_simple/incident_new.php: Added form

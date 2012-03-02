@@ -52,12 +52,21 @@ if(!$correct_login) {
 }
 
 switch ($op){
+
+	case "create_user":
+	{
+		$params = explode($token, $params);
+		echo api_create_users ($return_type, $user, $params);
+		break;
+	}
+
 	case "get_incidents":
 	{
 		$params = explode($token, $params);
 		echo api_get_incidents ($return_type, $user, $params);
 		break;
 	}
+
 	case "get_incident_details":
 	{
 		echo api_get_incident_details ($return_type, $user, $params);
