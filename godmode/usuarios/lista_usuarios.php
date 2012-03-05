@@ -3,7 +3,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// Copyright (c) 2012 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -83,8 +83,6 @@ echo '<th>'.__('Name');
 echo '<th>'.__('Company');
 echo '<th>'.__('Last contact');
 echo '<th>'.__('Profile');
-echo '<th>'.__('Level');
-echo '<th>'.__('Disabled');
 echo '<th>'.__('Delete');
 
 $resq1=process_sql($sql1);
@@ -100,19 +98,21 @@ foreach($resq1 as $rowdup){
 	$realname =$rowdup["nombre_real"];
 	$fecha_registro =$rowdup["fecha_registro"];
 	$avatar = $rowdup["avatar"];
+
 	if ($rowdup["nivel"] == 0)
-		$nivel = __("Standard user");
+		$nivel = "<img src='images/group.png' title='".__("Standard user")."'>";
 	elseif ($rowdup["nivel"] == 1)
-		$nivel = __("Administrator");
+		$nivel = "<img src='images/integria_mini_logo.png' title='".__("Administrator")."'>";
 	else
-		$nivel = __("External user");
+		$nivel = "<img src='images/user_gray.png' title='".__("External user")."'>";
 
     $disabled = $rowdup["disabled"];	
     $id_company = $rowdup["id_company"];	
 
 	echo "<tr><td>";
-	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$nombre."'><b>".$nombre."</b></a>";
-	echo "<td>" . $realname;	
+	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$nombre."'><b>".ucfirst($nombre)."</b></a>";
+
+	echo "<td style='font-size:9px'>" . $realname;	
 	$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_company);	
 	echo "<td>".$company_name."</td>";
 	echo "<td style='font-size:9px'>".$fecha_registro;
@@ -133,12 +133,14 @@ foreach($resq1 as $rowdup){
 		}
 		echo "</span></a>";
 	}
-	echo "<td>" . $nivel;
 
-    if ($disabled == 1)
-    	echo "<td><b><i>".__("Disabled")."</i></b>";
-    else
-    	echo "<td>";
+	echo $nivel;
+
+
+
+    if ($disabled == 1){
+		echo "<img src='images/lightbulb_off.png' title='".__("Disabled")."'>";
+	}
 
 	echo '<td align="center">';
 	echo '<a href="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario='.$nombre.'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';

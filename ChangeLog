@@ -1,3 +1,11 @@
+2012-03-05 Sancho Lerena <slerena@artica.es>
+
+	* include/config_process.php: Update version.
+
+	* operation/user_report/report_monthly.php,
+	godmode/usuarios/lista_usuarios.php: Some format/visual fixes.
+
+
 2012-03-02 Sancho Lerena <slerena@artica.es>
 
 	* include/functions_api.php

@@ -99,13 +99,13 @@
 	echo "</td></tr></table>";
 
 	echo '<table width="99%" class="listing">';
+	echo "<th>".__('Profile');
 	echo "<th>".__('User ID');
 	echo "<th>".__('Company');
 	echo "<th>".__('Workunit report');
 	echo "<th>".__('Calendar view');
     echo "<th>".__('Graph overview');
 	echo "<th>".__('Total hours for this month');
-    echo "<th>".__('Charged this month');
     echo "<th>".__('Avg. Scoring');
 	
 	$min = $offset;
@@ -153,20 +153,25 @@
 			}
 
 			echo "</font></span></a>";
-			
+			echo "</td>";
+			echo "<td>";
+
 			if (give_acl ($config["id_user"], 0, "IM")){
 				echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=$nombre'>";
-				echo "<img src='images/wrench.png'></a>";
 			}
-			
-			if (strlen($nombre) > 12)
-				echo " <b>".substr($nombre,0,12)."..</b>";
+
+			if (strlen(safe_output($nombre)) > 21)
+				echo "".ucfirst(substr(safe_output($nombre),0,21))."..</b>";
 			else
-				echo " <b>".$nombre."</b>";
+				echo ucfirst($nombre)."</b>";
+
+			if (give_acl ($config["id_user"], 0, "IM")){
+				echo "</a>";
+			}
 			
 			$company_name = (string) get_db_value ('name', 'tcompany', 'id', $usuario['id_company']);
 			
-			echo "<td>".$company_name."</td>";
+			echo "<td style='font-size:9px'>".$company_name."</td>";
 					    
             // Workunit report (detailed)
 		    echo "<td><center>";
@@ -185,12 +190,14 @@
 		    echo $row[0];
             
             // Total charged hours this month
+/*
             echo "<td  >";
             $tempsum = get_db_sql ("SELECT SUM(duration) FROM tworkunit WHERE have_cost = 1 AND id_user = '$nombre' AND timestamp > '$begin_month' AND timestamp <= '$end_month'");
             if ($tempsum != "")
                 echo $tempsum. " hr";
             else
                 echo "--";
+			*/
 
             // Average incident scoring
             echo "<td>";

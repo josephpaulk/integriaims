@@ -3,7 +3,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2009 Ártica Soluciones Tecnológicas
+// Copyright (c) 2012 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
 global $config;
 
 // Integria version
-$config["build"]="120113";
-$config["version"]="v3.0 rc1";
+$config["build"]="120305";
+$config["version"]="v3.0RC2";
 $config["build_version"] = $config["build"];
 
 if (!isset($_SERVER["REMOTE_ADDR"]))
