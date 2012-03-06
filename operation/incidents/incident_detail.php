@@ -113,7 +113,8 @@ if ($action == 'update') {
 
 	$old_incident = get_incident ($id);
 
-	$user = get_parameter('usuario_form');
+	$user = get_parameter('id_user');
+
  	$grupo = get_parameter ('grupo_form', $old_incident['id_grupo']);
 
 	// Only admins (manage incident) or owners can modify incidents
@@ -776,8 +777,8 @@ if ($has_manage_permission) {
 		dame_nombre_real ($assigned_user_for_this_incident));	
 
 	} else {
-		$table->data[4][1] = print_input_hidden ('usuario_form', $usuario, true, __('Assigned user'));
-		//$table->data[4][1] = print_input_hidden ('id_user', $usuario, true, __('Assigned user'));
+		//$table->data[4][1] = print_input_hidden ('usuario_form', $usuario, true, __('Assigned user'));
+		$table->data[4][1] = print_input_hidden ('id_user', $usuario, true, __('Assigned user'));
 		$table->data[4][1] .= print_label (__('Assigned user'), '', '', true,
 		dame_nombre_real ($usuario));
 	}

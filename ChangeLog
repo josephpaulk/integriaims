@@ -1,5 +1,11 @@
 2012-03-05 Dario Rodriguez <dario.rodriguez@artica.es>
 
+	* operation/incidents/incident_detail.php: Consolidate the 
+	fix for the updating error because the same field was printed
+	with different names.
+
+2012-03-05 Dario Rodriguez <dario.rodriguez@artica.es>
+
 	* operation/incidents/incident_detail.php: Fixed an error 
 	updating description field whe the user has Incident Operator
 	profile
