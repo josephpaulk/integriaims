@@ -1,5 +1,10 @@
 2012-03-06 Dario Rodriguez <dario.rodriguez@artica.es>
 
+	* operation/incidents/incident_detail.php: Fixed a bug related to
+	ACL that disabled the incident edition for incident owners.
+
+2012-03-06 Dario Rodriguez <dario.rodriguez@artica.es>
+
 	* operation/incidents/incident.php: Fixed an error that tried to
 	send an email using incident data after the incident was deleted.
 

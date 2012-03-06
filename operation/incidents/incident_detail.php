@@ -550,9 +550,9 @@ if (! $id) {
 	// if have only one group, select default user and email for this group
 	$email_notify = false;
 }
-$has_permission = (give_acl ($config['id_user'], $id_grupo, "IM")  || ($usuario == $config['id_user']));
-$has_manage_permission = give_acl ($config['id_user'], $id_grupo, "IM");
 
+//The user with IM flag or the incident owner can modify all data from the incident.
+$has_permission = (give_acl ($config['id_user'], $id_grupo, "IM")  || ($usuario == $config['id_user']));
 
 if ($id) {
 	echo "<h1>";
@@ -654,7 +654,7 @@ if ($has_permission) {
 }
 
 
-if ($has_manage_permission){
+if ($has_permission){
 	$table->data[0][1] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
 	        $disabled, '', '', true, __('SLA disabled'));
 
@@ -685,7 +685,7 @@ if ($disabled) {
 
 $table->data[1][1] .= '&nbsp;'. print_priority_flag_image ($priority, true);
 
-if ($has_manage_permission)
+if ($has_permission)
 	$table->data[1][2] = combo_incident_resolution ($resolution, $disabled, true);
 else {
 	$table->data[1][2] = print_label (__('Resolution'), '','',true, render_resolution($resolution));
@@ -762,7 +762,7 @@ if ($has_permission) {
 }
 
 // Only users with manage permission can change auto-assigned user (that information comes from group def.)
-if ($has_manage_permission) {
+if ($has_permission) {
 	$src_code = print_image('images/group.png', true, false, true);
 	$table->data[4][1] = print_input_text_extended ('id_user', $usuario, 'text-id_user', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))
