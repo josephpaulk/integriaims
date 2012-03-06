@@ -1,5 +1,11 @@
 2012-03-05 Dario Rodriguez <dario.rodriguez@artica.es>
 
+	* operation/incidents/incident_detail.php: Fixed an error 
+	updating description field whe the user has Incident Operator
+	profile
+
+2012-03-05 Dario Rodriguez <dario.rodriguez@artica.es>
+
 	* operation/side_menu.php: Fixed an ACL problem with new
 	ticket creation with IR and IW flags.
 

@@ -113,7 +113,7 @@ if ($action == 'update') {
 
 	$old_incident = get_incident ($id);
 
-	$user = get_parameter('id_user');
+	$user = get_parameter('usuario_form');
  	$grupo = get_parameter ('grupo_form', $old_incident['id_grupo']);
 
 	// Only admins (manage incident) or owners can modify incidents
