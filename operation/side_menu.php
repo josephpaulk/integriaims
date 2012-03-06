@@ -381,7 +381,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			echo "<li>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".__('Incidents overview')."</a></li>";
 
-		if (give_acl ($config['id_user'], 0, "IW")) {
+		if (give_acl ($config['id_user'], 0, "IM")) {
 			// Incident creation
 			if ($sec2 == 'operation/incidents/incident_detail')
 				echo "<li id='sidesel'>";

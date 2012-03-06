@@ -1,3 +1,8 @@
+2012-03-05 Dario Rodriguez <dario.rodriguez@artica.es>
+
+	* operation/side_menu.php: Fixed an ACL problem with new
+	ticket creation with IR and IW flags.
+
 2012-03-05 Sancho Lerena <slerena@artica.es>
 
 	* include/config_process.php: Update version.
