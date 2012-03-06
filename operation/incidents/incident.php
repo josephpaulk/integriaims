@@ -42,10 +42,6 @@ if (isset ($_POST["quick_delete"])) {
 		$email_notify = $row2["notify_email"];
 		if (give_acl ($config['id_user'], $row2["id_grupo"], "IM") || $config['id_user'] == $id_author_inc) {
 			borrar_incidencia($id_inc);
-			if ($email_notify == 1){
-				// Email notify to all people involved in this incident
-				mail_incident ($id_inc, $config['id_user'], "", 0, 3);
-			}
 
 			echo "<h3 class='suc'>".__('Incident successfully deleted')."</h3>";
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Incident deleted","User ".$config['id_user']." deleted incident #".$id_inc);
