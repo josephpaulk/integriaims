@@ -360,7 +360,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>".__('My incidents')."</a></li>";
 		
 		// New ticket
-		if (give_acl ($config['id_user'], 0, "IM")) {
+		if (give_acl ($config['id_user'], 0, "IW")) {
 			if ($sec2 == "operation/incidents_simple/incident_new")
 				echo "<li id='sidesel'>";
 			else
@@ -381,7 +381,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			echo "<li>";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".__('Incidents overview')."</a></li>";
 
-		if (give_acl ($config['id_user'], 0, "IM")) {
+		if (give_acl ($config['id_user'], 0, "IW")) {
 			// Incident creation
 			if ($sec2 == 'operation/incidents/incident_detail')
 				echo "<li id='sidesel'>";

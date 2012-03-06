@@ -29,7 +29,9 @@ if (! give_acl ($config['id_user'], 0, "IR")) {
 $create_incident = get_parameter('create_incident');
 
 if($create_incident) {
-	if (!give_acl ($config['id_user'], 0, "IM")) {
+	//Using simple interface an user with IW flag can create incidents
+	//The incidents are not editable using simple interface 
+	if (!give_acl ($config['id_user'], 0, "IW")) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],
 			"ACL Forbidden",
 			"User ".$config["id_user"]." try to create incident");
