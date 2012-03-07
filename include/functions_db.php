@@ -1814,6 +1814,35 @@ function get_group_default_inventory ($id_group, $only_id = false) {
 }
 
 /** 
+ * Returns the n most user with most open inciden assigned
+ *
+ * @param lim n, number of users to return.
+ * @param id_incident, filter to one incident. If false, show all.
+ */
+function get_most_users_assigned ($lim, $id_incident = false) {
+	
+	if($id_incident === false) {
+		$condition = '';
+	}
+	else {
+		$incident_clause = join(",", $id_incident);
+		$condition = ' AND id_incidencia IN ('.$incident_clause.')';
+	}
+	
+	$sql = "SELECT id_usuario, count(id_usuario) AS total FROM tincidencia WHERE estado NOT IN (6,7) 
+			$condition GROUP by id_usuario LIMIT ".$lim;
+
+
+	$most_active_users = get_db_all_rows_sql ($sql);
+	
+	if ($most_active_users === false) {
+		return array ();
+	}
+
+	return $most_active_users;
+}
+
+/** 
  * Returns the n most active users (users with more hours worked on incidents).
  *
  * @param lim n, number of users to return.
@@ -1824,9 +1853,10 @@ function get_most_active_users ($lim, $id_incident = false) {
 		$condition = '';
 	}
 	else {
-		$condition = " AND tworkunit_incident.id_incident = $id_incident ";
+		$incident_clause = join(",", $id_incident);
+		$condition = ' AND tworkunit_incident.id_incident IN ('.$incident_clause.')';
 	}
-	
+
 	$most_active_users = get_db_all_rows_sql ("SELECT id_user, SUM(duration) as worked_hours
 	                                          FROM tworkunit, tworkunit_incident
 	                                          WHERE tworkunit.id = tworkunit_incident.id_workunit
@@ -1845,13 +1875,22 @@ function get_most_active_users ($lim, $id_incident = false) {
  *
  * @param lim n, number of incidents to return.
  */
-function get_most_active_incidents ($lim) {
-	$most_active_incidents = get_db_all_rows_sql ('SELECT tincidencia.id_incidencia, titulo, SUM(duration) AS worked_hours
-	                                               FROM tworkunit, tworkunit_incident, tincidencia
-	                                               WHERE tworkunit.id = tworkunit_incident.id_workunit
-	                                                 AND tworkunit_incident.id_incident = tincidencia.id_incidencia
-	                                               GROUP BY tworkunit_incident.id_incident
-	                                               ORDER BY worked_hours DESC LIMIT ' . $lim);
+function get_most_active_incidents ($lim, $incident_filter = false) {
+		
+	$filter_clause = '';	
+		
+	if ($incident_filter) {
+		$filter_clause = join(",", $incident_filter);
+		
+		$filter_clause = 'AND tincidencia.id_incidencia IN ('.$filter_clause.')';
+	}
+	
+	$sql = "SELECT tincidencia.id_incidencia, titulo, SUM(duration) AS worked_hours
+	       FROM tworkunit, tworkunit_incident, tincidencia WHERE tworkunit.id = tworkunit_incident.id_workunit
+	        AND tworkunit_incident.id_incident = tincidencia.id_incidencia $filter_clause 
+	        GROUP BY tworkunit_incident.id_incident ORDER BY worked_hours DESC LIMIT ". $lim;
+
+	$most_active_incidents = get_db_all_rows_sql ($sql);
 	if ($most_active_incidents === false) {
 		return array ();
 	}

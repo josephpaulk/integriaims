@@ -507,11 +507,13 @@ function print_incidents_stats ($incidents, $return = false) {
 	if ($incidents === false)
 		$incidents = array ();
 	foreach ($incidents as $incident) {
+		
 		if ($incident['estado'] != 6 && $incident['estado'] != 7) {
 			$opened++;
 		} elseif ($incident['actualizacion'] != '0000-00-00 00:00:00') {
 			$lifetime = get_db_value ('UNIX_TIMESTAMP(actualizacion)  - UNIX_TIMESTAMP(inicio)',
 				'tincidencia', 'id_incidencia', $incident['id_incidencia']);
+
 			if ($lifetime > $max_lifetime) {
 				$oldest_incident = $incident;
 				$max_lifetime = $lifetime;
@@ -539,7 +541,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 	
 	if ($closed != 0) {
-		$mean_lifetime = (int) ($total_lifetime / $closed) / 60;
+		$mean_lifetime = (int) ($total_lifetime / $closed);
 	}
 	
     // Get avg. scoring
@@ -550,170 +552,203 @@ function print_incidents_stats ($incidents, $return = false) {
 
 	// Get incident SLA compliance
 	$sla_compliance = get_sla_compliance ($incidents);
+		
+	//Create second table
+    
+	//Get only id from incident filter array
+	//used for filter in some functions
+	$incident_id_array = array();
+	
+	foreach ($incidents as $inc) {
+		array_push($incident_id_array, $inc['id_incidencia']);
+	}
+	
+	// Find the 5 most active users (more hours worked)
+	$most_active_users = get_most_active_users (5, $incident_id_array);
+	
+	$users_label = '';
+	foreach ($most_active_users as $user) {
+		$users_data[$user['id_user']] = $user['worked_hours'];
+		$users_label .= '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.
+			$user['id_user'].'">'.$user['id_user']."</a> (".$user['worked_hours'].
+			" ".__('Hr').") <br />";
+	}
+	
+	if(empty($most_active_users)) {
+		$users_label = graphic_error(false);
+		$users_label .= "<br/>N/A";
+	}
+	else {
+		$users_label .= "<br/>".pie3d_graph ($config['flash_charts'], $users_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+	}
+	
+	// Find the 5 most active incidents (more worked hours)
+	$most_active_incidents = get_most_active_incidents (5, $incident_id_array);
+	$incidents_label = '';
+	foreach ($most_active_incidents as $incident) {
+		$incidents_data['#'.$incident['id_incidencia']] = $incident['worked_hours'];
+		$incidents_label .= '<a class="incident_link" id="incident_link_'.
+			$incident['id_incidencia'].'"
+			href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.
+			'#'.$incident['id_incidencia'].': '.$incident['titulo']."</a> (".$incident['worked_hours']." ".
+			__('Hr').") <br />";
+	}
+	
+	if(empty($most_active_incidents)) {
+		$incidents_label = graphic_error(false);
+		$incidents_label .= "<br/>N/A";
+	}
+	else {
+		$incidents_label .= "<br/>".pie3d_graph ($config['flash_charts'], $incidents_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+	}
+	
+	$submitter_label = "";
+	$top5_submitters = get_most_incident_creators(5, $incident_id_array);
+	foreach ($top5_submitters as $submitter){
+		$submitter_data[$submitter["id_creator"]] = $submitter["total"];
+		$submitter_label .= $submitter["id_creator"]." ( ".$submitter["total"]. " )<br>";
+	}
+	
+	if(empty($top5_submitters)) {
+		$submitter_label = graphic_error(false);
+		$submitter_label .= "<br/>N/A";
+	}
+	else {
+		$submitter_label .= "<br/>".pie3d_graph ($config['flash_charts'], $submitter_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+	}
+	
+	$scoring_label ="";
+	$top5_scoring = get_best_incident_scoring (5, $incident_id_array);
+	
+	foreach ($top5_scoring as $submitter){
+		$scoring_data[$submitter["id_usuario"]] = $submitter["total"];
+		$scoring_label .= $submitter["id_usuario"]." ( ".$submitter["total"]. " )<br>";
+	}
+	
+	if(empty($top5_scoring)) {
+		$scoring_label .= "<br/>N/A";
+	}
+	else {
+		$scoring_label .= "<br/>".pie3d_graph ($config['flash_charts'], $scoring_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+	}
+	
+	$most_user_assigned = get_most_users_assigned(5, $incident_id_array);
+	
+	foreach ($most_user_assigned as $submitter){
+		$user_assigned_data[$submitter["id_usuario"]] = $submitter["total"];
+		$user_assigned_label .= $submitter["id_usuario"]." ( ".$submitter["total"]. " )<br>";
+	}
+	
+	if(empty($most_user_assigned)) {
+		$user_assigned_label .= "<br/>N/A";
+	}
+	else {
+		$user_assigned_label .= "<br/>".pie3d_graph ($config['flash_charts'], $user_assigned_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+	}
+	
+	// Show graph with incident priorities
+	foreach ($incidents as $incident) {
+		if (!isset( $incident_data[render_priority($incident["prioridad"])]))
+			 $incident_data[render_priority($incident["prioridad"])] = 0;
 
-    $output = "<table class=blank width=100% cellspacing=4 cellpadding=0 border=0 >";
+		$incident_data[render_priority($incident["prioridad"])] = $incident_data[render_priority($incident["prioridad"])] + 1; 
+	}
+
+	// Show graph with incidents by group
+	foreach ($incidents as $incident) {
+			$grupo = substr(safe_output(dame_grupo($incident["id_grupo"])),0,15);
+
+	if (!isset( $incident_group_data[$grupo]))
+			 $incident_group_data[$grupo] = 0;
+
+		$incident_group_data[$grupo] = $incident_group_data[$grupo] + 1;                                 
+
+	}
+	
+	//Print first table	
+	echo "<h3>".__("Incident statistics")."</h3>";
+
+    $output = "<table class=blank width=80% cellspacing=4 cellpadding=0 border=0 >";
     $output .= "<tr>";
-    $output .= "<td>";
-    $output .= print_label (__('Total incidents'), '', '', true, $total);
-	$data = array (__('Opened') => $opened, __('Closed') => $total - $opened);
-    $output .= "</td>";
-    $output .= "<td>";
+    $output .= "<td colspan=2 valign=top align=center>";
+		$output .= "<table class=listing width=80% border=1 cellspacing=4 cellpadding=0 border=0 >";
+		$output .= "<tr>";
+		$output .= "<th align=center>".__('Total incidents')."</th>";
+		$output .= "<th align=center>".__('Avg. life time')."</th>";
+		$output .= "</tr><tr>";
+		$output .= "<td  align=center>";
+		$output .= $total;
+		$output .= "</td><td align=center>";
+		$output .= give_human_time ($mean_lifetime);
+		$output .= "</td>";
+		$output .= "<tr>";
+		$output .= "<th align=center>";
+		$output .= __('Avg. work time');
+		$output .= "</th>";
+		$output .= "<th align=center>";
+		$output .= __('Avg. Scoring');
+		$output .= "</th>";
+		$output .= "</tr><tr>";
+		$output .= "<tr>";
+		$output .= "<td align=center>".$mean_work.' '.__('Hours')."</td>";
+		$output .= "<td align=center>".$scoring_avg."</td>";
+		$output .= "</tr></table>";
+	$output .= "</td>";
+    $output .= "<td valign=top>";
+    $output .= print_label (__('Top 5 active incidents'), '', '', true, $incidents_label);
+    $output .= "</td></tr>";
+    $output .= "<tr>";
+	$output .= "<td valign=top>";
+	$data = array (__('Open') => $opened, __('Closed') => $total - $opened);
+    $output .= print_label (__('Open'), '', '', true, $opened.' ('.$opened_pct.'%)');
     $output .= pie3d_graph ($config['flash_charts'], $data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
-    $output .= "</td>";
-    $output .= "</tr><tr>";
-    $output .= "<td>";
-    $output .= print_label (__('Opened'), '', '', true, $opened.' ('.$opened_pct.'%)');
-    $output .= "</td>";
-    $output .= "<td>";
-    $output .= print_label (__('Avg. life time'), '', '', true, give_human_time ($mean_lifetime));
-    $output .= "</td>";
-    $output .= "</tr><tr>";
-    $output .= "<td>";
-    $output .= print_label (__('Avg. work time'), '', '', true, $mean_work.' '.__('Hours'));
-    $output .= "</td>";
-    $output .= "<td>";
-    $output .= print_label (__('SLA compliance'), '', '', true, format_numeric ($sla_compliance) .' '.__('%'));
-    $output .= "<br>";
-    $output .= graph_incident_statistics_sla_compliance($incidents, 200, 200, $ttl);
-    $output .= "</td>";
-    $output .= "</tr><tr>";
-    $output .= "<td>";
-    $output .= print_label (__('Avg. Scoring'), '', '', true, $scoring_avg);
-    $output .= "</td>";
-
+    $output .= "</td>";    
+	$output .= "<td valign=top>";
+	$output .= print_label (__('SLA compliance'), '', '', true, format_numeric ($sla_compliance) .' '.__('%'));
+    $output .= graph_incident_statistics_sla_compliance($incidents, 300, 150, $ttl);    
+	$output .= "</td>";
+	$output .= "<td valign=top>";
+	$output .= print_label (__('Incidents by priority'), '', '', true);
+	$output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+	$output .= "</td>";  
+    $output .= "</tr></table>";
+	echo $output;	
+	
+	//Print second table
+    echo "<h3>".__("User statistics")."</h3>";
+    
+    $output = "<table class=blank width=80% cellspacing=4 cellpadding=0 border=0 >";
+    $output .= "<tr>";	
+	$output .= "<td valign=top>";
+	$output .= print_label (__('Top 5 active users'), '', '', true, $users_label);
+	$output .= "</td>";
+	$output .= "<td>";
+	$output .= print_label (__('Top 5 user with open tickets'), '', '', true, $user_assigned_label);	
+	$output .= "</td>";
+	$output .= "<td valign=top>";
+	$output .= print_label (__('Top 5 average scoring by user'), '', '', true, $scoring_label);
+	$output .= "</td></tr>";
+	$output .= "<tr><td valign=top>";
+	$output .= print_label (__('Top 5 incident submitters'), '', '', true, $submitter_label );
+	$output .= "</td><td valign=top>";
+	$output .= print_label (__('Incidents by group'), '', '', true);
+	$output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+	$output .= "</td>";
+	
 	if ($oldest_incident) {
 
         $oldest_incident_time = get_incident_workunit_hours  ($oldest_incident["id_incidencia"]);
 		$link = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.
 			$oldest_incident['id_incidencia'].'">Incident #'.$oldest_incident['id_incidencia']. " : ".$oldest_incident['titulo']. "</a>";
-            $output .= "<td>";
+            $output .= "<td valign=top>";
             $output .= print_label (__('Longest closed incident'), '', '', true,
 			$link);
             $output .= "<br>".__("Worktime hours"). " : ".$oldest_incident_time;
             $output .= "<br>".__("Lifetime"). " : ".give_human_time($max_lifetime);
             $output .= "</td>";
 	}
-    $output .= "</tr><tr>";
-    $output .= "<td>";
-
-    //TODO: Work in most_active_XXX, with the LIST of incidents in this search
-
-    // This section is only show to ADMINS!
-
-    if (give_acl($config["id_user"], 0, "IM")){
-	    // Find the 5 most active users (more hours worked)
-	    $most_active_users = get_most_active_users (5);
 	
-	    $users_label = '';
-	    foreach ($most_active_users as $user) {
-			$users_data[$user['id_user']] = $user['worked_hours'];
-		    $users_label .= '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.
-			    $user['id_user'].'">'.$user['id_user']."</a> (".$user['worked_hours'].
-			    " ".__('Hr').") <br />";
-	    }
-	    
-		if(empty($most_active_users)) {
-			$scoring_label = graphic_error(false);
-			$scoring_label .= "<br/>N/A";
-		}
-		else {
-			$users_label .= "<br/>".pie3d_graph ($config['flash_charts'], $users_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
-		}
-		
-	    // Find the 5 most active incidents (more worked hours)
-	    $most_active_incidents = get_most_active_incidents (5);
-	    $incidents_label = '';
-	    foreach ($most_active_incidents as $incident) {
-			$incidents_data['#'.$incident['id_incidencia']] = $incident['worked_hours'];
-		    $incidents_label .= '<a class="incident_link" id="incident_link_'.
-			    $incident['id_incidencia'].'"
-			    href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.
-			    '#'.$incident['id_incidencia'].': '.$incident['titulo']."</a> (".$incident['worked_hours']." ".
-			    __('Hr').") <br />";
-	    }
-	    
-		if(empty($most_active_incidents)) {
-			$scoring_label = graphic_error(false);
-			$scoring_label .= "<br/>N/A";
-		}
-		else {
-			$incidents_label .= "<br/>".pie3d_graph ($config['flash_charts'], $incidents_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
-		}
-		
-        $submitter_label = "";
-        $top5_submitters = get_most_incident_creators(5);
-        foreach ($top5_submitters as $submitter){
-			$submitter_data[$submitter["id_creator"]] = $submitter["total"];
-            $submitter_label .= $submitter["id_creator"]." ( ".$submitter["total"]. " )<br>";
-        }
-        
-		if(empty($top5_submitters)) {
-			$scoring_label = graphic_error(false);
-			$scoring_label .= "<br/>N/A";
-		}
-		else {
-			$submitter_label .= "<br/>".pie3d_graph ($config['flash_charts'], $submitter_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
-		}
-		
-        $scoring_label ="";
-        $top5_scoring = get_best_incident_scoring (5);
-        foreach ($top5_scoring as $submitter){
-			$scoring_data[$submitter["id_usuario"]] = $submitter["total"];
-            $scoring_label .= $submitter["id_usuario"]." ( ".$submitter["total"]. " )<br>";
-        }
-
-		if(empty($top5_scoring)) {
-			$scoring_label .= "<br/>N/A";
-		}
-		else {
-			$scoring_label .= "<br/>".pie3d_graph ($config['flash_charts'], $scoring_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
-		}
-		
-        $output .= print_label (__('Top 5 active users'), '', '', true, $users_label);
-        $output .= "</td><td>";
-        $output .= print_label (__('Top 5 active incidents'), '', '', true, $incidents_label);
-        $output .= "<tr><td>";
-        $output .= print_label (__('Top 5 incident submitters'), '', '', true, $submitter_label );
-        $output .= "</td><td>";
-        $output .= print_label (__('Top 5 average scoring by user'), '', '', true, $scoring_label);
-
-        // Show graph with incident priorities
-         
-	
-	    foreach ($incidents as $incident) {
-            if (!isset( $incident_data[render_priority($incident["prioridad"])]))
-                 $incident_data[render_priority($incident["prioridad"])] = 0;
-
-            $incident_data[render_priority($incident["prioridad"])] = $incident_data[render_priority($incident["prioridad"])] + 1; 
-        }
-
-        $output .= "</td><tr><td>";
-        $output .= print_label (__('Incidents by priority'), '', '', true);
-
-        $output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
-
-
-        // Show graph with incidents by group
-        foreach ($incidents as $incident) {
-                $grupo = substr(safe_output(dame_grupo($incident["id_grupo"])),0,15);
-
-        if (!isset( $incident_group_data[$grupo]))
-                 $incident_group_data[$grupo] = 0;
-
-            $incident_group_data[$grupo] = $incident_group_data[$grupo] + 1;                                 
-
-        }
-
-        $output .= "</td><td>";
-        $output .= print_label (__('Incidents by group'), '', '', true);
-
-        $output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
-
-
-
-
-    }
-    $output .= "</td></tr></table>";
+	$output .= "</tr></table>";
 	
 	if ($return)
 		return $output;
@@ -1034,8 +1069,19 @@ function user_belong_incident ($user, $id_inc) {
  *
  * @param lim n, number of users to return.
  */
-function get_most_incident_creators ($lim) {
-	$most_creators = get_db_all_rows_sql ('select id_creator, count(*) as total from tincidencia GROUP by id_creator ORDER BY total DESC LIMIT '. $lim);
+function get_most_incident_creators ($lim, $incident_filter = false) {
+	
+	
+	$sql = 'SELECT id_creator, count(*) AS total FROM tincidencia ';
+	
+	if ($incident_filter) {
+		$filter_clause = join(",", $incident_filter);
+		$sql .= ' WHERE id_incidencia IN ('.$filter_clause.') ';
+	}
+	
+	$sql .= ' GROUP by id_creator ORDER BY total DESC LIMIT '. $lim;
+	
+	$most_creators = get_db_all_rows_sql ($sql);
 	if ($most_creators === false) {
 		return array ();
 	}
@@ -1048,9 +1094,34 @@ function get_most_incident_creators ($lim) {
  *
  * @param lim n, number of users to return.
  */
-function get_best_incident_scoring ($lim) {
-	$most_creators = get_db_all_rows_sql ('select id_usuario, AVG(score) as total from tincidencia GROUP by id_usuario ORDER BY total DESC LIMIT '. $lim);
-	if ($most_creators === false || $most_creators['total'] == 0) {
+function get_best_incident_scoring ($lim, $incident_filter=false) {
+	
+	
+	$sql = 'SELECT id_usuario, AVG(score) AS total FROM tincidencia';
+
+	$filter_clause = '';	
+		
+	if ($incident_filter) {
+		
+		$filter_clause = join(",", $incident_filter);
+		$sql .= ' WHERE id_incidencia IN ('.$filter_clause.')';
+	}
+	
+	$sql .= ' GROUP by id_usuario ORDER BY total DESC LIMIT '. $lim;
+
+	$most_creators = get_db_all_rows_sql ($sql);
+
+	$all_zero = true;
+	
+	foreach ($most_creators as $mc) {
+		if ($mc['total'] != 0) {
+			$all_zero = false;
+			break;
+		}
+	}
+	
+	if ($most_creators === false || $all_zero) {
+		
 		return array ();
 	}
 

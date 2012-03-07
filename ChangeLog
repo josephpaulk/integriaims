@@ -1,3 +1,9 @@
+2012-03-07 Dario Rodriguez <dario.rodriguez@artica.es>
+
+	*include/functions_incidents.php,
+	include/functions_db.php: Fixed search statistics report that
+	works wrong and added a better visual style.
+
 2012-03-06 Dario Rodriguez <dario.rodriguez@artica.es>
 
 	*operation/incidents_simple/incidents.php,
