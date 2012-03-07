@@ -1,5 +1,10 @@
 2012-03-07 Dario Rodriguez <dario.rodriguez@artica.es>
 
+	* godmode/setup/setup_mail.php: Added support to configure
+	POP port in mail setup form.
+
+2012-03-07 Dario Rodriguez <dario.rodriguez@artica.es>
+
 	*include/functions_incidents.php,
 	include/functions_db.php: Fixed search statistics report that
 	works wrong and added a better visual style.

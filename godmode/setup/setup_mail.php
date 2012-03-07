@@ -42,7 +42,8 @@ if ($update) {
 	$config["pop_user"] = (string) get_parameter ("pop_user");
 	$config["pop_pass"] = (string) get_parameter ("pop_pass");
 	$config["pop_host"] = (string) get_parameter ("pop_host");
-
+	$config["pop_port"] = (string) get_parameter ("pop_port");
+	
 	update_config_token ("HEADER_EMAIL", $config["HEADER_EMAIL"]);
 	update_config_token ("FOOTER_EMAIL", $config["FOOTER_EMAIL"]);
 	update_config_token ("notification_period", $config["notification_period"]);
@@ -54,6 +55,7 @@ if ($update) {
 	update_config_token ("pop_host", $config["pop_host"]);
 	update_config_token ("pop_user", $config["pop_user"]);
 	update_config_token ("pop_pass", $config["pop_pass"]);
+	update_config_token ("pop_port", $config["pop_port"]);
 }
 
 
@@ -92,6 +94,9 @@ $table->data[6][1] = "<h4>".__("POP3 Parameters")."</h4>";
 
 $table->data[7][0] = print_input_text ("pop_host", $config["pop_host"],
 	'', 15, 30, true, __('POP3 Host'));
+	
+$table->data[7][1] = print_input_text ("pop_port", $config["pop_port"],
+	'', 15, 30, true, __('POP3 Port'));	
 
 $table->data[8][0] = print_input_text ("pop_user", $config["pop_user"],
 	'', 15, 30, true, __('POP3 User'));
