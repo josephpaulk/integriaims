@@ -75,7 +75,7 @@ $table->data[2][1] = print_input_text ("mail_from", $config["mail_from"], '',
 	30, 50, true, __('System mail from address'));
 
 $table->colspan[3][0] = 2;
-$table->data[3][1] = "<h4>".__("SMTP Parameters")."</h4>";
+$table->data[3][1] = "<h4>".__("SMTP Parameters"). integria_help ("mailsetup", true). "</h4>";
 
 $table->data[4][0] = print_input_text ("smtp_host", $config["smtp_host"],
 	'', 15, 30, true, __('SMTP Host'));
