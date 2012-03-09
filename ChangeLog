@@ -1,3 +1,9 @@
+2012-03-07 Dario Rodriguez <dario.rodriguez@artica.es>
+
+	* operation/incidents/incident_detail.php: Fixed a problem
+	which hide field creator from create incident form for users
+	with IM flag.
+
 2012-03-07  Sancho Lerena <slerena@artica.es>
 
 	* godmode/setup/setup_mail.php: Added help link.
