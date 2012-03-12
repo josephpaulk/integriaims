@@ -151,7 +151,8 @@ echo '<table width="100%" cellspacing=0 cellpadding=0 border=0>';
 		echo __('Incidents active you have').": ".incidents_active_user ($config["id_user"]);
 		echo '<hr width="100%" size="1">';
 		echo "</b>";
-		 $sql_2 = "SELECT * FROM tincidencia WHERE id_creator = '".$config["id_user"]."' OR id_usuario = '".$config["id_user"]."' AND estado IN (1,2,3,4,5) ORDER BY actualizacion DESC limit 5";
+		$sql_2 = "SELECT * FROM tincidencia WHERE (id_creator = '".$config["id_user"]."' OR id_usuario = '".$config["id_user"]."') AND estado IN (1,2,3,4,5) ORDER BY actualizacion DESC limit 5";
+		
 		$result_2 = mysql_query($sql_2);
 		if ($result_2){
 			echo "<table width=100% class=listing>";

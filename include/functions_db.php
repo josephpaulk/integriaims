@@ -1087,7 +1087,7 @@ function projects_active_user ($id_user) {
 }
 
 function incidents_active_user ($id_user) {
-	$sql = "SELECT COUNT(*) FROM tincidencia WHERE id_creator = '$id_user' OR id_usuario = '$id_user' AND estado IN (1,2,3,4,5)";
+	$sql = "SELECT COUNT(id_incidencia) FROM tincidencia WHERE (id_creator = '$id_user' OR id_usuario = '$id_user') AND estado IN (1,2,3,4,5)";
 	return get_db_sql ($sql);
 }
 
