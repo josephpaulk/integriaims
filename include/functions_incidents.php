@@ -128,7 +128,9 @@ function filter_incidents ($filters) {
 
 	$result = array ();
 	foreach ($incidents as $incident) {
-		if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR'))
+		// ACL pass if IR for this group or if the user is the incident creator
+		if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
+			&& ($incident['id_creator'] != $config['id_user']) )
 			continue;
 		
 		$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
@@ -343,7 +345,10 @@ function get_incidents ($filter = array(), $only_names = false) {
 	global $config;
 	$incidents = array ();
 	foreach ($all_incidents as $incident) {
-		if (give_acl ($config['id_user'], $incident['id_grupo'], 'IR')) {
+		// ACL pass if IR for this group or if the user is the incident creator
+		if (give_acl ($config['id_user'], $incident['id_grupo'], 'IR') 
+			|| ($incident['id_creator'] == $config['id_user'])) {
+				
 			if ($only_names) {
 				$incidents[$incident['id_incidencia']] = $incident['titulo'];
 			} else {

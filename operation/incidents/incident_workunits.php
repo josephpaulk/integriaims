@@ -31,7 +31,9 @@ $incident = get_incident ($id_incident);
 
 $result_msg = '';
 
-if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR')) {
+//user with IR and incident creator see the information
+if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
+	&& ($incident['id_creator'] != $config['id_user'])) {
 	audit_db ($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to incident #".$id_incident);
 	include ("general/noaccess.php");
 	exit;

@@ -112,6 +112,7 @@ $data[6] = $incident['id_usuario'];
 
 
 // Find the 5 most active users (more hours worked)
+
 $most_active_users = get_most_active_users (5, $id_incident);
 
 $users_label = '';

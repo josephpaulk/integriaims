@@ -29,7 +29,9 @@ if (!$id_incident) {
 
 $incident = get_db_row ('tincidencia', 'id_incidencia', $id_incident);
 
-if (! give_acl ($config["id_user"], $incident['id_grupo'], "IR")) {
+//user with IR and incident creator see the information
+if (! give_acl ($config["id_user"], $incident['id_grupo'], "IR")
+	&& ($incident['id_creator'] != $config['id_user'])) {
  	// Doesn't have access to this page
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation",
 		'Trying to access files of incident #'.$id_incident." '".$titulo."'");

@@ -1853,7 +1853,11 @@ function get_most_active_users ($lim, $id_incident = false) {
 		$condition = '';
 	}
 	else {
-		$incident_clause = join(",", $id_incident);
+		if (is_array($id_incident)) {
+			$incident_clause = join(",", $id_incident);
+		} else {
+			$incident_clause = $id_incident;
+		}
 		$condition = ' AND tworkunit_incident.id_incident IN ('.$incident_clause.')';
 	}
 

@@ -60,7 +60,10 @@ if ($id) {
 $check_incident = (bool) get_parameter ('check_incident');
 
 if ($check_incident) {
-	if ($incident !== false && give_acl ($config['id_user'], $id_grupo, "IR")){
+	// IR and incident creator can see the incident
+	if ($incident !== false && (give_acl ($config['id_user'], $id_grupo, "IR")
+		|| ($incident["id_creator"] == $config["id_user"]))){
+			
 		if ((get_external_user($config["id_user"])) AND ($incident["id_creator"] != $config["id_user"]))
 			echo 0;
 		else
@@ -72,21 +75,23 @@ if ($check_incident) {
 		return;
 }
 
-if (! give_acl ($config['id_user'], $id_grupo, "IR")) 
-{
- 	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
-	include ("general/noaccess.php");
-	exit;
-}
-
-if (isset($incident))
-	if ((get_external_user($config["id_user"])) AND ($incident["id_creator"] != $config["id_user"])) {
+if (isset($incident)) {
+	
+	//Incident creators must see their incidents
+	if ((get_external_user($config["id_user"]) && ($incident["id_creator"] != $config["id_user"]))
+		|| ($incident["id_creator"] != $config["id_user"])) {
 	 	// Doesn't have access to this page
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident  (External user) ".$id);
 		include ("general/noaccess.php");
 		exit;
 	}
+} else if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
+	echo "paso<br>";
+ 	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
+	include ("general/noaccess.php");
+	exit;
+}
 
 $id_grupo = 0;
 $texto = "";
@@ -360,11 +365,12 @@ if ($id) {
     $score = $incident["score"];
 
 	// Aditional ACL check on read incident
-	if (give_acl ($config["id_user"], $id_grupo, "IR") == 0) { // Only admins
+	if ((give_acl ($config["id_user"], $id_grupo, "IR") == 0) 
+		&& ($incident['id_creator'] != $config['id_user'])) { // Only admins and incident creators allowed
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config["id_user"]." try to access to an unauthorized incident ID #id_inc");
 		no_permission ();
 	}
-	
+
 	// Workunit ADD
 	$insert_workunit = (bool) get_parameter ('insert_workunit');
 	if ($insert_workunit) {
