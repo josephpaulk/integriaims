@@ -419,8 +419,12 @@ if ($id) {
 	}
 
 	// Upload file
+	$incident_creator = get_db_value ("id_creator", "tincidencia", "id_incidencia", $id);
+	
 	$filename = get_parameter ('upfile', false);
-	if (give_acl ($config['id_user'], $id_grupo, "IW") && (bool)$filename) {
+	if ((give_acl ($config['id_user'], $id_grupo, "IW") || 
+		$config['id_user'] == $incident_creator) 
+		&& (bool)$filename) {
 		$result_msg = '<h3 class="error">'.__('No file was attached').'</h3>';
 		/* if file */
 		if ($filename != "") {

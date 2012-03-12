@@ -1,5 +1,13 @@
 2012-03-12 Dario Rodriguez <dario.rodriguez@artica.es>
 
+	*operation/incidents/incident_detail.php,
+	operation/incidents/incident_attach_file.php,
+	operation/incidents/incident_create_work.php: Fixed some
+	problems of External user when trying to create workunits
+	and upload files.
+
+2012-03-12 Dario Rodriguez <dario.rodriguez@artica.es>
+
 	* general/home.php,
 	include/functions_db.php: Fixed a problem showing active
 	incidents in home view.
