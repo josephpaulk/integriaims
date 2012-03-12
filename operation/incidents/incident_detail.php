@@ -63,7 +63,7 @@ if ($check_incident) {
 	// IR and incident creator can see the incident
 	if ($incident !== false && (give_acl ($config['id_user'], $id_grupo, "IR")
 		|| ($incident["id_creator"] == $config["id_user"]))){
-			
+	
 		if ((get_external_user($config["id_user"])) AND ($incident["id_creator"] != $config["id_user"]))
 			echo 0;
 		else
@@ -79,7 +79,8 @@ if (isset($incident)) {
 	
 	//Incident creators must see their incidents
 	if ((get_external_user($config["id_user"]) && ($incident["id_creator"] != $config["id_user"]))
-		|| ($incident["id_creator"] != $config["id_user"])) {
+		|| ($incident["id_creator"] != $config["id_user"]) && !give_acl ($config['id_user'], $id_grupo, "IR")) {
+
 	 	// Doesn't have access to this page
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident  (External user) ".$id);
 		include ("general/noaccess.php");
