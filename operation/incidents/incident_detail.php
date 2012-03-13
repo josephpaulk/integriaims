@@ -87,7 +87,7 @@ if (isset($incident)) {
 		exit;
 	}
 } else if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
-	echo "paso<br>";
+
  	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
 	include ("general/noaccess.php");
@@ -666,7 +666,7 @@ if ($has_permission) {
 }
 
 
-if ($has_permission){
+if ($has_im){
 	$table->data[0][1] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
 	        $disabled, '', '', true, __('SLA disabled'));
 
@@ -697,7 +697,7 @@ if ($disabled) {
 
 $table->data[1][1] .= '&nbsp;'. print_priority_flag_image ($priority, true);
 
-if ($has_permission)
+if ($has_im)
 	$table->data[1][2] = combo_incident_resolution ($resolution, $disabled, true);
 else {
 	$table->data[1][2] = print_label (__('Resolution'), '','',true, render_resolution($resolution));
@@ -707,9 +707,11 @@ else {
 
 $parent_name = $id_parent ? (__('Incident').' #'.$id_parent) : __('None');
 
-$table->data[1][3] = print_button ($parent_name, 'search_parent', $disabled, '',
-			'class="dialogbtn"', true, __('Parent incident'));
-$table->data[1][3] .= print_input_hidden ('id_parent', $id_parent, true);
+if ($has_im) {
+	$table->data[1][3] = print_button ($parent_name, 'search_parent', $disabled, '',
+				'class="dialogbtn"', true, __('Parent incident'));
+	$table->data[1][3] .= print_input_hidden ('id_parent', $id_parent, true);
+}
 
 // Show link to go parent incident
 if ($id_parent)
@@ -719,7 +721,11 @@ $table->data[2][0] = combo_incident_origin ($origen, $disabled, true);
 $table->data[2][1] = combo_incident_types ($id_incident_type, $disabled, true);
 
 // Task
-$table->data[2][2] = combo_task_user ($id_task, $config["id_user"], $disabled, false, true);
+if ($has_im) {
+	$table->data[2][2] = combo_task_user ($id_task, $config["id_user"], $disabled, false, true);
+} else {
+	$table->data[2][2] = combo_task_user ($id_task, $config["id_user"], true, false, true);	
+}
 
 if ($config['incident_reporter'] == 1){
 
@@ -760,15 +766,6 @@ if ($has_im){
 	$table->data[2][3] = "<input type='hidden' name=id_creator value=$id_creator>";
 }
 
-if ($has_permission) {
-	$table->data[4][0] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo, true) . "<div id='group_spinner'></div>";
-} else {
-	$table->data[4][0] = print_label (__('Group'), '', '', true, dame_nombre_grupo ($id_grupo));
-	$table->data[4][0] .= "<input type='hidden' name=grupo_form value=$id_grupo>";
-}
-
-// Only users with manage permission can change auto-assigned user (that information comes from group def.)
-
 //Get group if was not defined
 if(!$id_grupo) {
 	$id_grupo_incident = get_db_value("id_grupo", "tusuario_perfil", "id_usuario", $config['id_user']);
@@ -776,8 +773,16 @@ if(!$id_grupo) {
 	$id_grupo_incident = $id_group;
 }
 
+if ($has_im) {
+	$table->data[4][0] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo_incident, true) . "<div id='group_spinner'></div>";
+} else {
+	$table->data[4][0] = print_label (__('Group'), '', '', true, dame_nombre_grupo ($id_grupo_incident));
+	$table->data[4][0] .= "<input type='hidden' id=grupo_form name=grupo_form value=$id_grupo_incident>";
+}
 
-if ($has_permission) {
+// Only users with manage permission can change auto-assigned user (that information comes from group def.)
+
+if ($has_im) {
 	$src_code = print_image('images/group.png', true, false, true);
 	$assigned_user_for_this_incident = get_db_value("id_user_default", "tgrupo", "id_grupo", $id_grupo_incident);
 	
@@ -802,49 +807,38 @@ if ($has_permission) {
 }
 
 if ($create_incident) {
-	$id_inventory = (int) get_parameter ('id_inventory');
-	$inventories = array ();
-	
-	if ($id_inventory) {
-		if (! give_acl ($config['id_user'], $id_inventory, "VR")) {
-			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation",
-				"Trying to access inventory #".$id);
+
+		$id_inventory = (int) get_parameter ('id_inventory');
+		$inventories = array ();
+		
+		if ($id_inventory) {
+			if (! give_acl ($config['id_user'], $id_inventory, "VR")) {
+				audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation",
+					"Trying to access inventory #".$id);
+			} else {
+				$inventories[$id_inventory] = get_db_value ('name', 'tinventory',
+					'id', $id_inventory);
+			}
 		} else {
-			$inventories[$id_inventory] = get_db_value ('name', 'tinventory',
-				'id', $id_inventory);
+			$default_inventory = get_db_value ("id_inventory_default", "tgrupo", "id_grupo", $id_grupo_incident); 
+			$inventories[$default_inventory] =  get_db_value ('name', 'tinventory', 'id', $default_inventory);	
 		}
-	} else {
-	/* Default inventory items for this user:
-
-		* ONLY FOR ENTERPRISE *
-
-		- After choosing group (AJAX) get the default inventory item for that group *TODO
-		$default_inventory = get_db_sql ("SELECT id_inventory FROM tinventory WHERE name grupo WHERE id_grupo = XXX"); 
-
-		$inventories[$default_inventory] =  get_db_value ('name', 'tinventory', 'id', $default_inventory);
-	*/
-
-	}
-	
-	$table->data[4][2] = print_select ($inventories, 'incident_inventories', NULL,
-					'', '', '', true, false, false, __('Objects affected'));
-	$table->data[4][2] .= print_button (__('Add'),
-					'search_inventory', false, '', 'class="dialogbtn"', true);
-	$table->data[4][2] .= print_button (__('Remove'),
-					'delete_inventory', false, '', 'class="dialogbtn"', true);
+		
+		$table->data[4][2] = print_select ($inventories, 'incident_inventories', NULL,
+						'', '', '', true, false, false, __('Objects affected'));
+		$table->data[4][2] .= print_button (__('Add'),
+						'search_inventory', false, '', 'class="dialogbtn"', true);
+		$table->data[4][2] .= print_button (__('Remove'),
+						'delete_inventory', false, '', 'class="dialogbtn"', true);
 } else {
 	$inventories = get_inventories_in_incident ($id);
 	$table->data[4][2] = print_select ($inventories, 'incident_inventories',
 						NULL, '', '', '',
 						true, false, false, __('Objects affected'));
-	
-	if ($has_permission) {
 		$table->data[4][2] .= print_button (__('Add'),
 					'search_inventory', false, '', 'class="dialogbtn"', true);
 		$table->data[4][2] .= print_button (__('Remove'),
 					'delete_inventory', false, '', 'class="dialogbtn"', true);
-		
-	}
 }
 
 foreach ($inventories as $inventory_id => $inventory_name) {
