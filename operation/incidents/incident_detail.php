@@ -31,11 +31,11 @@ if (defined ('AJAX')) {
 		
 		$id_user = $config['id_user'];
 		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
-		
 		$users = get_user_visible_users ($config['id_user'],"IR", false);
+
 		if ($users === false)
 			return;
-		
+
 		foreach ($users as $user) {
 			if(preg_match('/'.$string.'/', $user['id_usuario']) || preg_match('/'.$string.'/', $user['nombre_real'])) {
 				echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
@@ -768,9 +768,20 @@ if ($has_permission) {
 }
 
 // Only users with manage permission can change auto-assigned user (that information comes from group def.)
+
+//Get group if was not defined
+if(!$id_grupo) {
+	$id_grupo_incident = get_db_value("id_grupo", "tusuario_perfil", "id_usuario", $config['id_user']);
+} else {
+	$id_grupo_incident = $id_group;
+}
+
+
 if ($has_permission) {
 	$src_code = print_image('images/group.png', true, false, true);
-	$table->data[4][1] = print_input_text_extended ('id_user', $usuario, 'text-id_user', '', 15, 30, false, '',
+	$assigned_user_for_this_incident = get_db_value("id_user_default", "tgrupo", "id_grupo", $id_grupo_incident);
+	
+	$table->data[4][1] = print_input_text_extended ('id_user', $assigned_user_for_this_incident, 'text-id_user', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))
 		. print_help_tip (__("User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user"), true);
 } else {
@@ -781,7 +792,7 @@ if ($has_permission) {
 		$table->data[4][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Assigned user'));
 		$table->data[4][1] .= print_label (__('Assigned user'), '', '', true,
 		dame_nombre_real ($assigned_user_for_this_incident));	
-
+		
 	} else {
 		//$table->data[4][1] = print_input_hidden ('usuario_form', $usuario, true, __('Assigned user'));
 		$table->data[4][1] = print_input_hidden ('id_user', $usuario, true, __('Assigned user'));
@@ -908,7 +919,7 @@ $(document).ready (function () {
 					$("#text-id_creator").css ('background-color', '');
 				if (data == "")
 					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre Real") ?>: '+data[1]+'</span>';
 			},
 			delay: 200
 

@@ -1305,7 +1305,7 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 
     // External user only can see himself
 	if ($level == -1){
-		return get_user ($id_user, $only_name);
+		return array(get_user ($id_user, $only_name));
 	}
 		
 	$project_users = get_project_manager_users();
