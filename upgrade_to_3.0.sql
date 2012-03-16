@@ -155,3 +155,8 @@ CREATE TABLE `tincident_sla_graph` (
     KEY `sla_graph_index1` (`id_incident`),
   KEY `idx_utimestamp_sla_graph` USING BTREE (`utimestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Added 16 march 2012
+
+ALTER TABLE tsla ADD `max_inactivity` int(11) unsigned NULL default 96;
+

@@ -40,6 +40,7 @@ if ($create_sla) {
 	$min_response = (int) get_parameter ('min_response');
 	$max_response = (int) get_parameter ('max_response');
 	$max_incidents = (int) get_parameter ('max_incidents');
+	$max_inactivity = (int) get_parameter ('max_inactivity');
 	$id_sla_base = (int) get_parameter ('id_sla_base');
 	$enforced = (int) get_parameter ('enforced');
 
@@ -48,10 +49,10 @@ if ($create_sla) {
     $time_to = (int) get_parameter ("time_to", 0);
 
 	$sql = sprintf ('INSERT INTO tsla (`name`, `description`, id_sla_base,
-		min_response, max_response, max_incidents, `enforced`, five_daysonly, time_from, time_to)
-		VALUE ("%s", "%s", %d, %d, %d, %d, %d, %d, %d, %d)',
+		min_response, max_response, max_incidents, `enforced`, five_daysonly, time_from, time_to, max_inactivity)
+		VALUE ("%s", "%s", %d, %d, %d, %d, %d, %d, %d, %d, %d)',
 		$name, $description, $id_sla_base, $min_response,
-		$max_response, $max_incidents, $enforced, $five_daysonly, $time_from, $time_to);
+		$max_response, $max_incidents, $enforced, $five_daysonly, $time_from, $time_to, $max_inactivity);
 
 	$id = process_sql ($sql);
 	if ($id === false)
@@ -78,10 +79,11 @@ if ($update_sla) {
     $five_daysonly = (int) get_parameter ("five_daysonly", 0);
     $time_from = (int) get_parameter ("time_from", 0);
     $time_to = (int) get_parameter ("time_to", 0);
+    $max_inactivity = (int) get_parameter ('max_inactivity');
 
-	$sql = sprintf ('UPDATE tsla SET enforced = %d, description = "%s",
+	$sql = sprintf ('UPDATE tsla SET max_inactivity = %d, enforced = %d, description = "%s",
 		name = "%s", max_incidents = %d, min_response = %d, max_response = %d,
-		id_sla_base = %d, five_daysonly = %d, time_from = %d, time_to = %d WHERE id = %d',
+		id_sla_base = %d, five_daysonly = %d, time_from = %d, time_to = %d WHERE id = %d', $max_inactivity, 
 		$enforced, $description, $name, $max_incidents, $min_response,
 		$max_response, $id_sla_base, $five_daysonly, $time_from, $time_to, $id);
 
@@ -120,6 +122,7 @@ if ($id || $new_sla) {
 		$min_response = 48;
 		$max_response = 480;
 		$max_incidents = 10;
+		$max_inactivity = 96;
 		$id_sla_base = 0;
 		$enforced = 1;
         $five_daysonly = 1;
@@ -133,6 +136,7 @@ if ($id || $new_sla) {
 		$min_response = $sla['min_response'];
 		$max_response = $sla['max_response'];
 		$max_incidents = $sla['max_incidents'];
+		$max_inactivity = $sla['max_inactivity'];
 		$id_sla_base = $sla['id_sla_base'];
 		$enforced = $sla['enforced'];
         $five_daysonly = $sla["five_daysonly"];
@@ -151,15 +155,20 @@ if ($id || $new_sla) {
 	$table->data[0][1] = print_checkbox ('enforced', 1 ,$enforced, true, __('Enforced'));
 	$table->data[1][0] = print_input_text ('min_response', $min_response, '',
 		5, 100, true, __('Min. response time (in hours)'));
+
 	$table->data[1][1] = print_input_text ('max_response', $max_response, '',
 		5, 100, true, __('Max. resolution time (in hours)'));
+
 	$table->data[2][0] = print_input_text ("max_incidents", $max_incidents, '',
 		5, 100, true, __('Max. incidents at the same time'));
-	$table->data[2][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
-		'id_sla_base', $id_sla_base, '', __('None'), 0, true, false, false, __('SLA Base'));
-
-
+	
+	$table->data[2][1] = print_input_text ("max_inactivity", $max_inactivity, '',
+		5, 100, true, __('Max. incident inactivity'));
+		
 	$table->data[3][0] = print_checkbox ('five_daysonly', 1 ,$five_daysonly, true, __('Fire only between week, not weekends'));
+
+	$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
+		'id_sla_base', $id_sla_base, '', __('None'), 0, true, false, false, __('SLA Base'));
 
 	$table->data[4][0] = print_input_text ('time_from', $time_from, '',
 		5, 10, true, __('Start hour to compute SLA'));
@@ -182,6 +191,7 @@ if ($id || $new_sla) {
 		print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', false);
 	}
 	echo "</div>";
+
 	echo "</form>";
 } else {
 	$search_text = (string) get_parameter ('search_text');
@@ -202,9 +212,13 @@ if ($id || $new_sla) {
 	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/contacts/contact_detail">';
+	echo "<div style='padding: 5px; padding-bottom: 15px; padding-top: 15px;'>";
+	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
 	print_table ($table);
 	echo '</form>';
+	echo "</div>";
+	
+	
 	$sql = "SELECT * FROM tsla $where_clause ORDER BY name";
 	$slas = get_db_all_rows_sql ($sql);
 	
@@ -218,20 +232,26 @@ if ($id || $new_sla) {
 		$table->head[1] = __('Min.Response');
 		$table->head[2] = __('Max.Resolution');
 		$table->head[3] = __('Max.Incidents');
-		$table->head[4] = __('Enforced');
-		$table->head[5] = __('Parent');
-		$table->head[6] = __('Delete');
+		$table->head[4] = __('Max.Inactivity');
+		$table->head[5] = __('Enforced');
+		$table->head[6] = __('Parent');
+		$table->head[7] = __('Delete');
 		
 		foreach ($slas as $sla) {
 			$data = array ();
 			
-			$data[0] = "<a href='index.php?sec=inventory&sec2=operation/slas/sla_detail&id=".$sla['id']."'>".$sla['name']."</a>";
+			$data[0] = "<a href='index.php?sec=incidents&sec2=operation/slas/sla_detail&id=".$sla['id']."'>".$sla['name']."</a>";
 			$data[1] = $sla['min_response'].' '.__('Hours');
 			$data[2] = $sla['max_response'].' '.__('Hours');
 			$data[3] = $sla['max_incidents'];
-			$data[4] = $sla['enforced'];
-			$data[5] = get_db_value ('name', 'tsla', 'id', $sla['id_sla_base']);
-			$data[6] = '<a href="index.php?sec=inventory&
+			$data[4] = $sla['max_inactivity'];
+			
+			if ($sla['enforced'] == 1)
+				$data[5] = __("Yes");
+			else
+				$data[5] = __("No");
+			$data[6] = get_db_value ('name', 'tsla', 'id', $sla['id_sla_base']);
+			$data[7] = '<a href="index.php?sec=inventory&
 						sec2=operation/slas/sla_detail&
 						delete_sla=1&id='.$sla['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
@@ -242,7 +262,7 @@ if ($id || $new_sla) {
 		print_table ($table);
 	}
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/slas/sla_detail">';
+	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_sla', 1);

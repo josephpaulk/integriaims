@@ -1742,6 +1742,62 @@ function check_incident_sla_min_response ($id_incident) {
 	return false;
 }
 
+function check_incident_sla_max_inactivity ($id_incident) {
+	$incident = get_incident ($id_incident);
+	
+	/* If closed, disable any affected SLA */
+	if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+		if ($incident['affected_sla_id']) {
+			$sql = sprintf ('UPDATE tincidencia
+				SET affected_sla_id = 0
+				WHERE id_incidencia = %d',
+				$id_incident);
+			process_sql ($sql);
+		}
+		return false;
+	}
+	
+	$slas = get_incident_slas ($id_incident, false);
+	$update = strtotime ($incident['actualizacion']);
+	$now = time ();
+	foreach ($slas as $sla) {
+
+        // Datetime/Time check when exists (version compatibility code), this
+        // was added as a 3.0 post-feature :-)
+
+        if (isset($sla["five_daysonly"])){
+
+            $dow = date("w", time());
+            $hod = date("G", time());
+
+            // Skip if we're on weekend
+            if (($sla["five_daysonly"] == 1) AND (($dow == 0) OR ($dow == 6))){
+                continue;
+            }
+
+            // Skip if we're out of job time
+            if ($sla["time_from"] != $sla["time_to"]){
+                if (($sla["time_from"] > $hod) OR ($sla["time_to"] < $hod)){
+                    continue;
+                }
+            }
+        }
+
+		if ($now < ($update + $sla['max_inactivity'] * 3600))
+			 continue;
+		$sql = sprintf ('UPDATE tincidencia
+			SET affected_sla_id = %d
+			WHERE id_incidencia = %d',
+			$sla['id'], $id_incident);
+		process_sql ($sql);
+		
+		/* SLA has expired */
+		return $sla['id'];
+	}
+	
+	return false;
+}
+
 function check_incident_sla_max_response ($id_incident) {
 	$incident = get_incident ($id_incident);
 	

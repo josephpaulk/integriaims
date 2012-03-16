@@ -41,9 +41,9 @@ error_reporting(0);
 
 $integria_version = "v3.0 Build 120113";
 
-$integria_footertext = "<div id='footer'  style='width: 600px;'>
-	<i>Integria $integria_version is an OpenSource Software project 
-	<a target='_new' href='http://integriaims.com'>integriaims.com</a></i><br>
+$integria_footertext = "<div id='footer'  style='width: 642px;'>
+	<i>Integria $integria_version is an OpenSource Software project at 
+	<a target='_new' href='http://integriaims.com'>http://integriaims.com</a></i><br>
 	<a href='http://www.artica.es'>(c) Ártica Soluciones Tecnológicas</a><br>
 	</div>";
 
@@ -578,8 +578,11 @@ function install_step5() {
 		<div id='install_box'>
 			<h1>Installation complete</h1>
 			<p>This installer will try to rename itself to 'install_renamed.php'. You should delete it  manually for security before trying to access to your Integria installation.
-			<p>Don't forget to check <a href='http://integriaims.com'>http://integriaims.com</a> for updates.
-			<p><a href='index.php'>Click here to access Integria</A>, Use the user '<b>admin</b>' with password '</b>integria</b>' to enter and change the password as soon as possible.</p>
+<br><br>
+				<b>Please don't forget to install manually the Integria Scheduler</b> (crontab)
+in order to run Integria IMS properly. Check out the documentation on how to do it.
+<br>
+			<p><a href='index.php'><b>Click here to access Integria</b></A>, Use the user '<b>admin</b>' with password '</b>integria</b>' to enter and change the password as soon as possible.</p>
 		</div>
 		<div class='box'>
 			<img src='images/integria_white.png'></a>

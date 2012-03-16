@@ -3,7 +3,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2010 Ártica Soluciones Tecnológicas
+// Copyright (c) 2007-2012 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -477,6 +477,51 @@ function check_sla_max ($incident) {
 	insert_event ('SLA_MAX_RESPONSE_NOTIFY', $incident['id_incidencia']);
 }
 
+/**
+ * Check an SLA inactivity value on an incident and send email (to incident owner) if needed.
+ *
+ * @param array Incident to check
+ */
+function check_sla_inactivity ($incident) {
+	global $compare_timestamp;
+	global $config;
+	
+	$id_sla = check_incident_sla_max_inactivity ($incident['id_incidencia']);
+	if (! $id_sla)
+		return false;
+	
+        $sla = get_db_row("tsla", "id", $id_sla);
+
+	/* Check if it was already notified in a specified time interval */
+	$sql = sprintf ('SELECT COUNT(id) FROM tevent
+		WHERE type = "SLA_MAX_INACTIVITY_NOTIFY"
+		AND id_item = %d
+		AND timestamp > "%s"',
+		$incident['id_incidencia'],
+		$compare_timestamp);
+	$notified = get_db_sql ($sql);
+
+	if ($notified > 0)
+		return true;
+	
+	/* We need to notify via email to the owner user */
+	$user = get_user ($incident['id_usuario']);
+
+    $MACROS["_sitename_"] = $config["sitename"];
+	$MACROS["_username_"] = $incident['id_usuario'];
+	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
+	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
+	$MACROS["_incident_id_"] = $incident["id_incidencia"];
+	$MACROS["_incident_title_"] = $incident['titulo'];
+	$MACROS["_data1_"] = give_human_time ($sla['max_inactivity']*3600);
+	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident['id_incidencia'];
+
+	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_inactivity_time.tpl", $MACROS);
+	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_max_inactivity_time_subject.tpl", $MACROS);
+	integria_sendmail ($user['direccion'], $subject, $text);
+	insert_event ('SLA_MAX_INACTIVITY_NOTIFY', $incident['id_incidencia']);
+}
+
 // This will send pending mail from database queue, using its defined MTA, and swiftmail functions
 
 function run_mail_queue () {
@@ -682,6 +727,7 @@ if ($incidents)
     foreach ($incidents as $incident) {
     	check_sla_min ($incident);
     	check_sla_max ($incident);
+    	check_sla_inactivity ($incident);
     	graph_sla($incident);
     }
 

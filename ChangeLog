@@ -1,3 +1,35 @@
+2012-03-16  Sancho Lerena <slerena@artica.es>
+
+	* integria_demo.sql,
+	integria_db.sql
+	upgrade_to_3.0.sql: New DB field in tsla.
+	
+	* include/js/integria_incident_search.js: Fixed problem when change GROUP
+	or add a new incident from a IM. Now choose automatically the assigned
+	user for that group.
+	
+	* include/config_process.php: Not RC anymore :(, we go back to development
+	status after reviewing needed changes to close version. We need to do more
+	DB Schema changes, cannot freeze version yet.
+	
+	* include/functions_db.php: Added check_incident_sla_max_inactivity().
+	
+	* include/integria_cron.php: Added SLA check for max inactivity (SLA).
+	
+	* include/functions_incidents.php: Fixed a lot of staff in Incident stats.
+	Now are much more accurate and reflect the current search.
+	
+	* include/mailtemplates/incident_sla_max_inactivity_time.tpl,
+	include/mailtemplates/incident_sla_max_inactivity_time_subject.tpl: new
+	templates for INACTIVITY SLA event.
+	
+	* install.php: Fixed footer and added a few text after install to remind
+	the install of the scheduler (cron script).
+	
+	* operation/side_menu.php: Moved SLA management to incident menu.
+	
+	* operation/slas/sla_detail.php: Added new parameter MAX INACTIVITY.
+
 2012-03-15 Dario Rodriguez <dario.rodriguez@artica.es>
 
 	* include/integria_cron.php, 

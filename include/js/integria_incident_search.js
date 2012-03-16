@@ -225,6 +225,10 @@ function configure_incident_form (enable_ajax_form) {
 			function (data, status) {
 				if (! data["user_real_name"])
 					return;
+
+				// This is needed, in order to force a user when you change group
+				$("#text-id_user").attr ("value", data["id_user_default"]);
+
 				$(dialog+"#hidden-usuario_form").attr ("value", data["id_user_default"]);
 				$(dialog+"#button-usuario_name").attr ("value", data["user_real_name"]);
 				if (data["forced_email"] == 1)

@@ -488,6 +488,24 @@ if (give_acl ($config["id_user"], 0, "IM") && $sec == "incidents" && $show_incid
 	echo "</div>";
 }
 
+
+// SLA's
+if ($sec == "incidents" && give_acl ($config["id_user"], 0, "IM") && $show_incidents != MENU_HIDDEN) {
+	echo "<div class='portlet'>";
+	echo "<h3 class='admin'>".__('SLA')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	// SLA Management
+	if ($sec2=="operation/slas/sla_detail")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=incidents&sec2=operation/slas/sla_detail'>".__('SLA Management')."</a></li>";
+
+	echo "</ul>";
+	echo "</div>";
+}
+
 // INVENTORY
 if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inventory != MENU_HIDDEN) {
 	$id_inventory = (int) get_parameter ('id');
@@ -603,23 +621,6 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "VR") && $show_custo
 	echo "</div>";
 }
 
-
-// SLA's
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
-	echo "<div class='portlet'>";
-	echo "<h3 class='admin'>".__('SLA')."</h3>";
-	echo "<ul class='sidemenu'>";
-
-	// Building overview
-	if ($sec2=="operation/slas/sla_detail")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/slas/sla_detail'>".__('SLA Management')."</a></li>";
-
-	echo "</ul>";
-	echo "</div>";
-}
 
 // MANUFACTURER
 if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
