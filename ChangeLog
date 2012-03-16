@@ -1,4 +1,10 @@
 2012-03-15 Dario Rodriguez <dario.rodriguez@artica.es>
+	
+	* godmode/setup/setup.php,
+	operation/incidents/incident_detail.php: Added feature to
+	support users with IW flag to change creator
+
+2012-03-15 Dario Rodriguez <dario.rodriguez@artica.es>
 
 	* include/functions_incidents.php: Fixed a problem with ACL 
 	and views of incidents in simple view. 

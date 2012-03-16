@@ -53,6 +53,7 @@ if ($update) {
 	$config["error_log"] = get_parameter ("error_log", 0);
 	$config["flash_charts"] = get_parameter ("flash_charts", 1);
     $config["max_file_size"] = get_parameter ("max_file_size", 1);
+    $config["iw_creator_enabled"] = get_parameter ("iw_creator_enabled", 0);
 	
     update_config_token ("timezone", $config["timezone"]);	
 
@@ -90,7 +91,7 @@ if ($update) {
     update_config_token ("email_on_incident_update", $config["email_on_incident_update"]);
     update_config_token ("error_log", $config["error_log"]);
 
-
+	update_config_token ("iw_creator_enabled", $config["iw_creator_enabled"]);
 }
 // Render SYSTEM language code, not current language.
 $config['language_code'] = get_db_value ('value', 'tconfig', 'token', 'language_code');
@@ -163,7 +164,9 @@ $table->data[11][1] = print_input_text ("api_password", $config["api_password"],
 
 $table->data[12][0] = print_input_text ("max_file_size", $config["max_file_size"], '',
 	10, 255, true, __('Max. Upload file size'));
-
+	
+$table->data[12][1] =  print_checkbox ("iw_creator_enabled", 1, $config["iw_creator_enabled"], 
+					true, __('Enable IW to change creator'));
 
 echo "<form name='setup' method='post'>";
 

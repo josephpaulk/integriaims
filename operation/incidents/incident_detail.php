@@ -565,6 +565,7 @@ if (! $id) {
 //The user with IM flag or the incident owner can modify all data from the incident.
 $has_permission = (give_acl ($config['id_user'], $id_grupo, "IM")  || ($usuario == $config['id_user']));
 $has_im  = give_acl ($config['id_user'], $id_grupo, "IM");
+$has_iw = give_acl ($config['id_user'], $id_grupo, "IW");
 
 if ($id) {
 	echo "<h1>";
@@ -755,9 +756,9 @@ if ($id_task > 0){
 	$table->data[2][2] .= "<img src='images/bricks.png'></a>";
 }
 
-
-// Incident creator. Only can be changed by the user with flag IM
-if ($has_im){
+//If IW creator enabled flag is up the user can change creatro also.
+if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
+	
 	$src_code = print_image('images/group.png', true, false, true);
 	$table->data[2][3] = print_input_text_extended ('id_creator', $id_creator, 'text-id_creator', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Creator'))
