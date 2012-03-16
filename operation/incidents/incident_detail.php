@@ -768,10 +768,10 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 }
 
 //Get group if was not defined
-if(!$id_grupo) {
+if($id_grupo==0) {
 	$id_grupo_incident = get_db_value("id_grupo", "tusuario_perfil", "id_usuario", $config['id_user']);
 } else {
-	$id_grupo_incident = $id_group;
+	$id_grupo_incident = $id_grupo;
 }
 
 if ($has_im) {
@@ -785,7 +785,11 @@ if ($has_im) {
 
 if ($has_im) {
 	$src_code = print_image('images/group.png', true, false, true);
-	$assigned_user_for_this_incident = get_db_value("id_user_default", "tgrupo", "id_grupo", $id_grupo_incident);
+	
+	if ($create_incident) 
+		$assigned_user_for_this_incident = get_db_value("id_user_default", "tgrupo", "id_grupo", $id_grupo_incident);
+	else
+		$assigned_user_for_this_incident = $usuario;
 	
 	$table->data[4][1] = print_input_text_extended ('id_user', $assigned_user_for_this_incident, 'text-id_user', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))

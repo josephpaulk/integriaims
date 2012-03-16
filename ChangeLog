@@ -1,5 +1,8 @@
 2012-03-16  Sancho Lerena <slerena@artica.es>
 
+	* operation/incidents/incident_detail.php: Solved problem on group view
+	on editing/viewing incidents.
+
 	* integria_demo.sql,
 	integria_db.sql
 	upgrade_to_3.0.sql: New DB field in tsla.
