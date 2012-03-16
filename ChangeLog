@@ -1,4 +1,10 @@
 2012-03-15 Dario Rodriguez <dario.rodriguez@artica.es>
+
+	* include/integria_cron.php: Changed way to get mails
+	from a mailbox, now uses imap lib from php instead of
+	the raw way.
+
+2012-03-15 Dario Rodriguez <dario.rodriguez@artica.es>
 	
 	* godmode/setup/setup.php,
 	operation/incidents/incident_detail.php: Added feature to

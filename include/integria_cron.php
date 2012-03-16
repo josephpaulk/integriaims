@@ -547,47 +547,60 @@ function run_mail_check () {
 
 	$error            = "";   //    Error string.
 	$timeout          = 90;   //    Default timeout before giving up on a network operation.
-	$Count            = -1;   //    Mailbox msg count
-	
-	$RFC1939          = true;  //    Set by noop(). See rfc1939.txt
-	$msg_list_array = array();  //    List of messages from server
 	$login            = $config["pop_user"];
 	$pass             = $config["pop_pass"];
 	$server           = $config["pop_host"];
+	$port			  = $config["pop_port"];
 
     # Check if POP3 server is defined, if not, abort
     if ($server == ""){
         return;
     }
-
-	set_time_limit($timeout);
-	$fp = connect ($server, $port = 110);
-	$Count = login($login,$pass, $fp);
-	if( (!$Count) or ($Count < 1) ){
-		return 1; 
+    
+    //Check if SSL connection was set
+    $ssl_str = substr($server, 0, 6);
+    $subfix = "pop3";
+    
+    //Convert connection string to use SSL encryption
+    if ( $ssl_str == "ssl://") {
+		$server = substr($server, 6);
+		$subfix = "pop3/ssl";
 	}
-
-	// DEBUG
-	// echo "Login OK: Inbox contains [$Count] messages<BR>\n";
-	$msg_list_array = uidl("", $fp);
-	set_time_limit($timeout);
-
-	// Loop thru the array to get each message
-	for ($i=1; $i <= $Count; $i++){
-		set_time_limit($timeout);
-		$MsgOne = get($i, $fp);
-
-		if( (!$MsgOne) or (gettype($MsgOne) != "array") ) {
-			echo "oops, Message not returned by the server.<BR>\n";
-			return 2;
-		}
-		message_parse($MsgOne, $i, $fp);
+	
+    if ($port) {
+		$port = ":$port";
+	} else {
+		$port = "";
 	}
+	
+	set_time_limit($timeout);
+	
+	//Set open timeout to 10 seconds
+	imap_timeout(IMAP_OPENTIMEOUT, 10);
+	
+	//Open mail connection
+    $mail = imap_open("{".$server.$port."/".$subfix."}", $login, $pass, NIL, 3);	
 
-	// Close the email box and delete all messages marked for deletion
-	quit($fp);
-	return 0;
-
+	//Walk the mailbox from last mail to the first
+	$last = imap_num_msg($mail);
+	
+	$i = $last;
+	for ($i; $i>0; $i--) {
+		$header = imap_header($mail, $last); 	
+	
+		$subject = imap_utf8($header->{'subject'});
+				
+		$from = $header->{'from'}[0]->{'mailbox'}."@".$header->{'from'}[0]->{'host'};
+		$body = imap_utf8(imap_body ($mail, $i));
+				
+		//Parse message	
+		message_parse($subject, $body, $from);
+	}	
+	
+	//Close mail connection
+	if ($mail) {
+		imap_close ($mail);
+	}
 }
 
 // ---------------------------------------------------------------------------
