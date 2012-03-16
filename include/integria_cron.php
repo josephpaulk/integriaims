@@ -586,13 +586,56 @@ function run_mail_check () {
 	
 	$i = $last;
 	for ($i; $i>0; $i--) {
+		
+		$struct = imap_fetchstructure($mail, $i);
+		
+		$encoding = $struct->{'encoding'};
+		
 		$header = imap_header($mail, $last); 	
 	
 		$subject = imap_utf8($header->{'subject'});
 				
 		$from = $header->{'from'}[0]->{'mailbox'}."@".$header->{'from'}[0]->{'host'};
-		$body = imap_utf8(imap_body ($mail, $i));
+		$body = (imap_fetchbody ($mail, $i, 1));
 				
+		//Check encoding and decode body
+		switch ($encoding) {
+			case 0: //7 bits
+				break;
+				
+			case 1: //8bit
+				//From 8bit to Quoted
+				$body = imap_8bit($body);
+	
+				//From quoted to text
+				$body = quoted_printable_decode($body);
+
+				break;
+				
+			case 2: //Binary
+				//From 8 bit binary to BASE64
+				$body = imap_8bit($body);
+
+				//From BASE64 a text
+				$body = imap_base64($body);
+				break;
+				
+			case 3: //Base 64
+				$body = imap_base64($body);
+				break;
+				
+			case 4: //Quoted-printable
+				$body = quoted_printable_decode($body);
+				break;
+				
+			case 5: //Other
+				break;
+							
+		}
+		
+		//Encode body to utf8
+		$body = utf8_encode($body);
+		
 		//Parse message	
 		message_parse($subject, $body, $from);
 	}	

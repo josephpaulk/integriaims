@@ -86,24 +86,24 @@ $table->data[4][1] = print_input_text ("smtp_port", $config["smtp_port"],
 $table->data[5][0] = print_input_text ("smtp_user", $config["smtp_user"],
 	'', 15, 30, true, __('SMTP User'));
 
-$table->data[5][1] = print_input_text ("smtp_pass", $config["smtp_pass"],
-	'', 15, 30, true, __('SMTP Password'));
+$table->data[5][1] = print_input_text_extended ("smtp_pass", $config["smtp_pass"], 
+				'', '', 15, 30, false, false, false, true, true, __('SMTP Password'));
 
 $table->colspan[6][0] = 2;
 $table->data[6][1] = "<h4>".__("POP3 Parameters")."</h4>";
 
 $table->data[7][0] = print_input_text ("pop_host", $config["pop_host"],
 	'', 15, 30, true, __('POP3 Host'));
-	
+
 $table->data[7][1] = print_input_text ("pop_port", $config["pop_port"],
 	'', 15, 30, true, __('POP3 Port'));	
 
 $table->data[8][0] = print_input_text ("pop_user", $config["pop_user"],
 	'', 15, 30, true, __('POP3 User'));
 
-$table->data[8][1] = print_input_text ("pop_pass", $config["pop_pass"],
-	'', 15, 30, true, __('POP3 Password'));
-
+$table->data[8][1] = print_input_text_extended ("pop_pass", $config["pop_pass"], 
+				'', '', 15, 30, false, false, false, true, true, __('POP3 Password'));
+				
 $table->data[9][1] = "<h4>".__("Mail general texts")."</h4>";
 
 $table->colspan[11][0] = 2;

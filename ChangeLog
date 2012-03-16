@@ -1,5 +1,12 @@
 2012-03-15 Dario Rodriguez <dario.rodriguez@artica.es>
 
+	* include/integria_cron.php, 
+	include/functions_pop3.php,
+	godmode/setup/setup_mail.php: Added support to create
+	tickect from email.
+
+2012-03-15 Dario Rodriguez <dario.rodriguez@artica.es>
+
 	* include/integria_cron.php: Changed way to get mails
 	from a mailbox, now uses imap lib from php instead of
 	the raw way.
