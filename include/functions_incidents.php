@@ -337,6 +337,14 @@ function add_workunit_incident($incident_id, $note, $timeused, $public = 1) {
  */
  
 function get_incidents ($filter = array(), $only_names = false) {
+	
+	// Manage external users
+	$return = enterprise_hook ('manage_external');
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		//Its required to use 1 = 1 because return variable starts with
+		//an AND in the firts place.
+		$filter = "1 = 1 ".$return." AND ".$filter;
+	
 	$all_incidents = get_db_all_rows_filter('tincidencia',$filter,'*');
 
 	if ($all_incidents == false)
@@ -346,15 +354,15 @@ function get_incidents ($filter = array(), $only_names = false) {
 	$incidents = array ();
 	foreach ($all_incidents as $incident) {
 		// ACL pass if IR for this group or if the user is the incident creator
-		if (give_acl ($config['id_user'], $incident['id_grupo'], 'IR') 
-			|| ($incident['id_creator'] == $config['id_user'])) {
-				
-			if ($only_names) {
-				$incidents[$incident['id_incidencia']] = $incident['titulo'];
-			} else {
-				array_push ($incidents, $incident);
-			}
-		}
+		if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
+			&& ($incident['id_creator'] != $config['id_user']) )
+			continue;		
+		
+		if ($only_names) {
+			$incidents[$incident['id_incidencia']] = $incident['titulo'];
+		} else {
+			array_push ($incidents, $incident);
+		}		
 	}
 	return $incidents;
 }

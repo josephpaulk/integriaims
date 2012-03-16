@@ -1,3 +1,8 @@
+2012-03-15 Dario Rodriguez <dario.rodriguez@artica.es>
+
+	* include/functions_incidents.php: Fixed a problem with ACL 
+	and views of incidents in simple view. 
+
 2012-03-13 Dario Rodriguez <dario.rodriguez@artica.es>
 
 	* operation/incidents/incident_detail.php: Fixed some problems	
