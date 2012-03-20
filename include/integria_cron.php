@@ -624,7 +624,8 @@ function run_mail_check () {
 	}
 	
 	set_time_limit($timeout);
-	
+return;
+
 	//Set open timeout to 10 seconds
 	imap_timeout(IMAP_OPENTIMEOUT, 10);
 	

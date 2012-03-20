@@ -1667,16 +1667,6 @@ function check_incident_sla_min_response ($id_incident) {
 	/* Check wheter it was updated before, so there's no need to check SLA */
 	$update = strtotime ($incident['actualizacion']);
 
-    /* Clean status of fired SLA */
-	if ($update > $start) {
-		if ($incident['affected_sla_id']) {
-			$sql = sprintf ('UPDATE tincidencia
-				SET affected_sla_id = 0
-				WHERE id_incidencia = %d',
-				$id_incident);
-			process_sql ($sql);
-		}
-	}
 
     // Check SLA here.
 	foreach ($slas as $sla) {
@@ -1687,14 +1677,7 @@ function check_incident_sla_min_response ($id_incident) {
         // Incident owner is the last workunit author ?, then SKIP
     	$last_wu = get_incident_lastworkunit ($id_incident);
 
-	    if ($last_wu["id_user"] != $incident["id_creator"]){
-                if ($incident['affected_sla_id']) {
-                        $sql = sprintf ('UPDATE tincidencia
-                               SET affected_sla_id = 0
-                               WHERE id_incidencia = %d',
-                               $id_incident);
-                                process_sql ($sql);
-                }
+	if ($last_wu["id_user"] != $incident["id_creator"]){
                 return false;
         }
 

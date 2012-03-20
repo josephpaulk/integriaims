@@ -1,3 +1,9 @@
+2012-03-20  Sancho Lerena <slerena@artica.es>
+
+	* include/integria_cron.php,
+	include/functions_db.php: Modified code in order to fix some problems
+	with the new SLA metric (inactivity).
+
 2012-03-20 Dario Rodriguez <dario.rodriguez@artica.es>
 
 	* integria.fedora.spec: Added php5-imap dependece to fedora spec
