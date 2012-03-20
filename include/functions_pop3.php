@@ -146,7 +146,7 @@ function message_parse ($subject, $body, $from) {
 		$user = $matches[3];
 		if (substr(md5($ticket_id . $config["smtp_pass"]. $user),0,5) == $ticket_id_code){
 			// echo "TICKET ID #$ticket_id VALIDATED !!<br>";
-			create_workunit ($ticket_id, $purebody, $user, 0,  0, "", 1);
+			create_workunit ($ticket_id, $body, $user, 0,  0, "", 1);
 		}
 	}
 

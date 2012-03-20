@@ -584,6 +584,11 @@ function run_mail_queue () {
 // This will check POP3 pending mail
 
 function run_mail_check () {
+	
+	//If imap module is not loaded don't executhe anything.
+	if (function_exists(imap_open)) {
+		return;
+	}
 
 	global $config;
 	include_once ($config["homedir"]."/include/functions_pop3.php");

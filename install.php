@@ -284,6 +284,7 @@ function install_step2() {
 			$res += check_extension("mbstring","PHP multibyte extension");
 			$res += check_extension("ldap","PHP ldap extension");
 			$res += check_extension("gettext","PHP gettext extension");
+			$res += check_extension("imap","PHP IMAP extension");
 			$res += check_exists ("/usr/bin/twopi","Graphviz Twopi in /usr/bin/twopi");
 			$res += check_extension("gettext","PHP gettext extension");
 			//$res += check_include("PEAR.php","PEAR PHP Library");

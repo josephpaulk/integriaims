@@ -1,3 +1,10 @@
+2012-03-15 Dario Rodriguez <dario.rodriguez@artica.es>
+
+	* integria_cron.php,
+	functions_pop3.php: Added php imap extension to installer dependences
+	and added a check statement in integria cron to avoid cron script
+	failures.
+
 2012-03-16  Sancho Lerena <slerena@artica.es>
 
 	* operation/incidents/incident_detail.php: Solved problem on group view
