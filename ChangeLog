@@ -4,7 +4,9 @@
 	values.
 
 2012-03-20  Sancho Lerena <slerena@artica.es>
-	
+
+	* operation/search.php: Fixed search for users.
+
 	* integria_db.sql: Fixed ";" in tsla.
 
 	* include/integria_cron.php,
