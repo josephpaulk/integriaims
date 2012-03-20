@@ -365,14 +365,14 @@ function graph_sla($incident) {
 	$utimestamp = time();
 	
 	//Get sla values for this incident
-	$sla_max = check_incident_sla_max_response($id_incident);
-	$sla_min = check_incident_sla_min_response($id_incident);
+	$sla_affected = get_db_value("affected_sla_id", "tincidencia", 
+						"id_incidencia", $id_incident);
 	
 	$values['id_incident'] = $id_incident;
 	$values['utimestamp'] = $utimestamp;	
 	
-	//If SLA isn't fulfilled set value to 0
-	if ($sla_max || $sla_min) {
+	//If incident is affected by SLA then the graph value is 0
+	if ($sla_affected) {
 		$values['value'] = 0;
 	} else {
 		$values['value'] = 1;
