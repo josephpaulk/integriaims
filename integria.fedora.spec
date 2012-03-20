@@ -27,7 +27,7 @@ BuildArchitectures: noarch
 AutoReq:            0
 Requires:           httpd
 Requires:           php >= 5.3.0
-Requires:           php-gd, php-gettext, php-imap, curl, php-ldap
+Requires:           php-gd, php-gettext, php-imap, curl, php-ldap, php5-imap
 Requires:           php-mysql, php-ldap, php-mbstring, php, php-zlib
 Requires:           graphviz
 Provides:           %{name}-%{version}
