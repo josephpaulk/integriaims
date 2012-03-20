@@ -1,4 +1,6 @@
 2012-03-20  Sancho Lerena <slerena@artica.es>
+	
+	* integria_db.sql: Fixed ";" in tsla.
 
 	* include/integria_cron.php,
 	include/functions_db.php: Modified code in order to fix some problems

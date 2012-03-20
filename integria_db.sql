@@ -143,7 +143,7 @@ CREATE TABLE `tsla` (
   `min_response` int(11) NULL default NULL,
   `max_response` int(11) NULL default NULL,
   `max_incidents` int(11) NULL default NULL,
-  `max_inactivity` int(11) unsigned NULL default 96;
+  `max_inactivity` int(11) unsigned NULL default 96,
   `enforced` tinyint NULL default 0,
   `five_daysonly` tinyint NULL default 0,
   `time_from` tinyint NULL default 0,
