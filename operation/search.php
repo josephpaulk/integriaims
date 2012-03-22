@@ -72,7 +72,8 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
 
 		foreach ($incidents as $incident) {
 			$data = array ();
-			if (user_belong_incident ($config["id_user"], $incident["id_incidencia"])) {
+			if ((user_belong_incident ($config["id_user"], $incident["id_incidencia"]))
+			OR (dame_admin ($config["id_user"]))) {
 
 				$data[0] = $incident["id_incidencia"];
 				$data[1] = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident["id_incidencia"]."'>".$incident["titulo"]."</a>";
