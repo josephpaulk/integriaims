@@ -223,7 +223,7 @@ if ($operation == "create") {
 	$estimated_cost = 0;
 	$priority = 0;
 	$parent = 0;
-	$hours = 0;
+	$hours = 8;
 	$start = date ("Y-m-d");
 	$end = date ("Y-m-d");
 	$periodicity = "none";
@@ -378,6 +378,7 @@ $(document).ready (function () {
 			pulsate (this);
 		} else {
 			hours = Math.floor ((end_date - start_date) / 86400000 * hours_day);
+			hours = hours + hours_day;
 			$("#text-hours").attr ("value", hours);
 		}
 	});
