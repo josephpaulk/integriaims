@@ -109,6 +109,48 @@ function graph_workunit_project ($width, $height, $id_project) {
 }
 
 // ===============================================================================
+// Draw a simple pie graph with task status for a specific PROJECT
+// ===============================================================================
+
+function graph_workunit_project_task_status ($width, $height, $id_project) {
+	global $config;
+	
+	$sql = sprintf("SELECT id, completion FROM ttask WHERE id_project = %d", $id_project);
+
+	$res = process_sql($sql);
+
+	$verified = 0;
+	$completed = 0;
+	$in_process = 0;
+	$pending = 0;
+
+	foreach ($res as $r) {
+		if ($r['completion'] < 40) {
+			$pending++;
+		} else if ($r['completion'] < 90) {
+			$in_process++;
+		} else if ($r['completion'] < 100) {
+			$completed++;
+		} else if ($r['completion'] == 100) {
+			$verified++;
+		}
+	}
+	$data = array();
+	
+	$data[__("Verified")] = $verified;
+	$data[__("Completed")] = $completed;
+	$data[__("InProcess")] = $in_process;
+	$data[__("Pending")]= $pending;
+		
+	if ($data == NULL) {
+		echo __("There is no data to show");
+	} else {
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);
+	}
+}
+
+
+// ===============================================================================
 // Draw a simple pie graph with reported workunits for a specific PROJECT, showing
 // time by each user.
 // ===============================================================================

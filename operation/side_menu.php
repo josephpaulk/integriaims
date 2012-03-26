@@ -53,8 +53,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_overview'>".__('Projects overview')."</a></li>";
-
-
+	
 	// Project detail
 	if ($sec2 == "operation/projects/project")
 		echo "<li id='sidesel'>";
@@ -111,6 +110,13 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project'>".__('Project overview')."</a></li>";
+		
+		if ($sec2 == "operation/projects/task_planning")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=$id_project'>".__('Task planning')."</a></li>";
+		
 		
 		// Project Bubble graph
 		if ($sec2 == "operation/projects/project_bubblegraph")
