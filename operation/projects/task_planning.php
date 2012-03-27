@@ -245,7 +245,7 @@ echo "<td rowspan=2 style='padding-left:20px;padding-right:20px;'>";
 	echo __("Completed").":";
 	echo "</td>";
 	echo "<td>";
-	echo "<span style='background-color:#EA9999;border: 2px solid grey;'>";
+	echo "<span style='background-color:#A4BCFA;border: 2px solid grey;'>";
 	echo "&nbsp;".$completed."&nbsp;";
 	echo "</span>";
 	echo "</td>";
@@ -549,7 +549,7 @@ function show_task_tree (&$table, $id_project, $level, $id_parent_task, $users) 
 			} else if ($task['completion'] < 90) {
 				$color = "#FFE599";
 			} else if ($task['completion'] < 100) {
-				$color = "#EA9999";
+				$color = "#A4BCFA";
 			} else if ($task['completion'] == 100) {
 				$color = "#B6D7A8";
 			}
@@ -649,7 +649,7 @@ $(document).ready (function () {
 		} else if (completion < 90) {
 			color = "#FFE599";
 		} else if (completion < 100) {
-			color = "#EA9999";
+			color = "#A4BCFA";
 		} else if (completion == 100) {
 			color = "#B6D7A8";
 		}
