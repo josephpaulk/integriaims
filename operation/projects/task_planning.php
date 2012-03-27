@@ -172,13 +172,12 @@ if ($create) {
 		
 			$sql = sprintf("SELECT id_role FROM trole_people_project 
 						WHERE id_project = %d AND id_user = '%s'", $id_project, $config['id_user']);
-						
+			
 			$id_role = process_sql($sql);
-		
-			$id_role = $id_role['id_role'];
+			$role = $id_role[0]['id_role'];
 		
 			$sql = sprintf('INSERT INTO trole_people_task (id_user, id_role, id_task)
-						VALUES ("%s", %d, %d)', $owner, $id_role, $id_task);
+						VALUES ("%s", %d, %d)', $owner, $role, $id_task);
 		
 			$result2 = process_sql($sql);	
 		}
@@ -362,7 +361,7 @@ if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "
 	//End date)
 	echo "<td>";
 	$end = date ("Y-m-d");
-	print_input_text_extended ("end_date", $end, "end_date", '', 15, 15, 0, '', "", false, false, __('Start date'));
+	print_input_text_extended ("end_date", $end, "end_date", '', 15, 15, 0, '', "", false, false, __('End date'));
 	echo "</td>";
 	
 	//Create button
