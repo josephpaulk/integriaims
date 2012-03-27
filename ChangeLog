@@ -1,3 +1,12 @@
+2012-03-27 Dario Rodriguez <dario.rodriguez@artica.es>
+
+	* include/functions_graph.php: Created new graph function to draw task 
+	per user in a project.
+	* include/functions_db.php: Fixed a problem with child task deleting
+	tasks.
+	* operation/projects/task_planning.php: Fixed some visual style bugs
+	adding new graphs and fixed the bug that deletes all users updating tasks.
+
 2012-03-26 Dario Rodriguez <dario.rodriguez@artica.es>
 
 	* operation/projects/task_detail.php: Fixed a bug in hour calc.

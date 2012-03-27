@@ -109,6 +109,47 @@ function graph_workunit_project ($width, $height, $id_project) {
 }
 
 // ===============================================================================
+// Draw a simple pie graph with the number of task per user in a specified project
+// ===============================================================================
+
+function graph_project_task_per_user ($width, $height, $id_project) {
+	global $config;
+	
+	//Get project users
+	$sql = sprintf("SELECT id_user FROM trole_people_project WHERE id_project = %d", $id_project);
+
+	$project_users = process_sql($sql);
+	
+	//Initialize the data for all users
+	$data = array();
+	
+	foreach ($project_users as $pu) {
+		
+		$data[$pu['id_user']] = 0;
+	}	
+	
+	//Get number of task per user
+	$sql = sprintf("SELECT id_user, COUNT(id_user) AS tasks FROM trole_people_task WHERE id_task IN 
+					(SELECT id FROM ttask WHERE id_project = %d) GROUP BY id_user", $id_project);
+	
+	$task_per_user = process_sql($sql);
+	
+	foreach ($task_per_user as $tpu) {
+		
+		$id_user = $tpu['id_user'];
+		$number_tasks = $tpu['tasks'];
+			
+		$data[$id_user] = $number_tasks;
+	}
+	
+	if ($data == NULL) {
+		echo __("There is no data to show");
+	} else {
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);
+	}	
+}
+
+// ===============================================================================
 // Draw a simple pie graph with task status for a specific PROJECT
 // ===============================================================================
 

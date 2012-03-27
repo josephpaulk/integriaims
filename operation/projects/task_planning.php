@@ -98,22 +98,28 @@ if ($update) {
 			$name, $completion, $start, $end, $hours, $id);
 		$result = process_sql ($sql);
 		
-		$sql = sprintf("DELETE FROM trole_people_task where id_task = %d", $id);
+		//Check owners of this tasks and update them
+		// if the task as more than one user don't update the users
+		// if the task as only one user then update it!
+		$sql = sprintf("SELECT COUNT(*) as num_users FROM trole_people_task where id_task = %d", $id);
 		
-		$result1 = process_sql($sql);
+		$result1 = process_sql($sql);		
 		
-		$sql = sprintf("SELECT id_role FROM trole_people_project 
-						WHERE id_project = %d AND id_user = '%s'", $id_project, $config['id_user']);
+		$result2 = true;//To avoid strange messages with many task users
+
+		if ($result1[0][0] == 1) {		
+			$sql = sprintf("SELECT id_role FROM trole_people_project 
+					WHERE id_project = %d AND id_user = '%s'", $id_project, $config['id_user']);
 						
-		$id_role = process_sql($sql);
+			$id_role = process_sql($sql);
+			$id_role = $id_role[0]['id_role'];
 		
-		$id_role = $id_role['id_role'];
-		
-		$sql = sprintf('INSERT INTO trole_people_task (id_user, id_role, id_task)
-						VALUES ("%s", %d, %d)', $owner, $id_role, $id);
-		
-		$result2 = process_sql($sql);
-		
+			$sql = sprintf('UPDATE trole_people_task SET id_user = "%s", id_role = %d WHERE id_task = %d', 
+							$owner, $id_role, $id);
+
+			$result2 = process_sql($sql);
+		}
+				
 		if (($result !== false) && ($result1 !== false) && ($result2 !== false)) {
 			$succ++;
 			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task updated", "Task '$name' updated to project '$id_project'");
@@ -121,6 +127,7 @@ if ($update) {
 		} else {
 			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 		}
+
 	}
 	echo '<h3 class="suc">'.sprintf(__('%d tasks successfully updated'), $succ).'</h3>';
 }
@@ -189,9 +196,11 @@ if ($create) {
 	}
 }
 
-echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
+$project_name =  get_db_value ("name", "tproject", "id", $id_project);
 
-echo "<h2>".__("Task planning")."</h2>";
+echo "<h2>".__("Task planning")." &raquo; $project_name</h2>";
+
+echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
 
 //Calculate task summary stats!
 
@@ -266,8 +275,9 @@ echo "<td rowspan=2 style='padding-left:20px;padding-right:20px;'>";
 	echo "</tr>";
 	echo "</table>";
 echo "</td>";
-echo "<td align=center><strong>".__("Workunit per user")."</strong></td>";
+echo "<td align=center><strong>".__("Hours worked")."</strong></td>";
 echo "<td align=center><strong>".__("Summary task status")."</strong></td>";
+echo "<td align=center><strong>".__("Task per user")."</strong></td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td align=center style='padding-left:20px;padding-right:20px;'>";
@@ -275,6 +285,9 @@ echo graph_workunit_project_user_single(200, 150, $id_project);
 echo"</td>";
 echo "<td align=center style='padding-left:20px;padding-right:20px;'>";
 echo graph_workunit_project_task_status(200, 150, $id_project);
+echo"</td>";
+echo "<td align=center style='padding-left:20px;padding-right:20px;'>";
+echo graph_project_task_per_user(200, 150, $id_project);
 echo"</td>";
 echo "</tr>";
 echo "</table>";
@@ -333,8 +346,7 @@ if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "
 
 	//Task parent combo
 	echo "<td>";
-	$sql = sprintf ('SELECT id, name FROM ttask WHERE id_project = %d
-		AND id != %d ORDER BY name', $id_project, $id_task, $parent);
+	$sql = sprintf ('SELECT id, name FROM ttask WHERE id_project = %d ORDER BY name', $id_project);
 	print_select_from_sql ($sql, 'parent', 0, '', __('None'), 0, false, false, false, __('Parent'));
 	echo "</td>";
 
@@ -362,20 +374,20 @@ if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "
 }
 
 //Create table and table header.
-echo "<table  id=taskplanning class=listing width=100% cellspacing=0 cellpadding=0 border=0px>";
+echo "<table class=listing width=100% cellspacing=0 cellpadding=0 border=0px>";
 echo "<thead>";
 echo "<tr>";
-echo "<th class=header>".__('Task')."</th>";
-echo "<th class=header>".__('Owner')."</th>";
-echo "<th class=header>".__('Start date')."</th>";
-echo "<th class=header>".__('End date')."</th>";
-echo "<th class=header>".__('Hours worked')."</th>";
-echo "<th class=header>".__('Delay (days)')."</th>";
-echo "<th class=header>".__('Status')."</th>";
+echo "<th class=header style='text-align:center;width:50%'>".__('Task')."</th>";
+echo "<th class=header style='text-align:center;'>".__('Owner')."</th>";
+echo "<th class=header style='text-align:center;'>".__('Start date')."</th>";
+echo "<th class=header style='text-align:center;'>".__('End date')."</th>";
+echo "<th class=header style='text-align:center;'>".__('Hours worked')."</th>";
+echo "<th class=header style='text-align:center;'>".__('Delay (days)')."</th>";
+echo "<th class=header style='text-align:center;'>".__('Status')."</th>";
 
 // Last column (Del) Only for PM flag
 if (give_acl ($config['id_user'], 0, 'PM')) {
-	echo "<th class=header>".__('Op.')."</th>";
+	echo "<th class=header style='text-align:center;'>".__('Op.')."</th>";
 }
 
 echo "</tr>";
@@ -402,12 +414,12 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	
 	echo "<td>";
 	
-	echo $prefix.print_input_text ("name_".$id_task, $task['name'], '', 30, 0, true);
+	echo $prefix.print_input_text ("name_".$id_task, $task['name'], '', 60, 0, true);
 	
 	echo"</td>";
 	
 	// Thrid column (Owner)Completion
-	echo "<td>";
+	echo "<td style='text-align:center;'>";
 
 	$owners = get_db_value ('COUNT(DISTINCT(id_user))', 'trole_people_task', 'id_task', $task['id']);
 	
@@ -424,18 +436,18 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	echo "</td>";
 	
 	// Fourth column (Start date)
-	echo "<td>";
-	print_input_text_extended ("start_".$id_task, $task['start'], "start_".$id_task, '', 15, 15, 0, '', '');
+	echo "<td style='text-align:center;'>";
+	print_input_text_extended ("start_".$id_task, $task['start'], "start_".$id_task, '', 7, 15, 0, '', '');
 	echo "</td>";
 
 	// Fifth column (End date)
-	echo "<td>";
-	print_input_text_extended ("end_".$id_task, $task['end'], "end_".$id_task, '', 15, 15, 0, '', '');
+	echo "<td style='text-align:center;'>";
+	print_input_text_extended ("end_".$id_task, $task['end'], "end_".$id_task, '', 7, 15, 0, '', '');
 	echo "</td>";
 	
 	//Worked time based on workunits
 	$worked_time = get_task_workunit_hours ($id_task);
-	echo "<td>".$worked_time."</td>";
+	echo "<td style='text-align:center;'>".$worked_time."</td>";
 	
 	// Sixth column (Delay)
 	//If task was completed delay is 0
@@ -457,7 +469,7 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 		}
 	}
 	
-	echo "<td>".$delay."</td>";
+	echo "<td style='text-align:center;'>".$delay."</td>";
 
 	// Seventh column (Delay)
 	
@@ -496,7 +508,7 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 
 	// Last Edit and del column. (Del) Only for PM flag
 	//Create new task only if PM && TM flags or PW and project manager.
-	echo "<td>";
+	echo "<td style='text-align:center;'>";
 	echo '<a href="index.php?sec=projects&sec2=operation/projects/task_detail&id_project='.$id_project.'&id_task='.$task['id'].'&operation=view">';
 	echo '<img src="images/config.gif">';
 	echo '</a>';
@@ -504,8 +516,7 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	if (give_acl ($config["id_user"], 0, "PM")) {
 		
 		echo '<a href="index.php?sec=projects&sec2=operation/projects/task_planning&id_project='.$id_project.'&delete='.$task["id"].'"
-			onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
-			<img src="images/cross.png" /></a>';
+			onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png" /></a>';
 		echo "</td>";
 	}	
 }
@@ -648,3 +659,4 @@ $(document).ready (function () {
 
 
 </script>
+
