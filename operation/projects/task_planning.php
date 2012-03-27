@@ -346,22 +346,22 @@ if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "
 	echo "</td>";
 
 	//Task parent combo
-	echo "<td>";
+	echo "<td style='width:60'>";
 	$sql = sprintf ('SELECT id, name FROM ttask WHERE id_project = %d ORDER BY name', $id_project);
-	print_select_from_sql ($sql, 'parent', 0, '', __('None'), 0, false, false, false, __('Parent'));
+	print_select_from_sql ($sql, 'parent', 0, "\"style='width:250px;'\"", __('None'), 0, false, false, false, __('Parent'));
 	echo "</td>";
 
 	//Start date
 	echo "<td>";
 	$start = date ("Y-m-d");
-	print_input_text_extended ("start_date", $start, "start_date", '', 15, 15, 0, '', "", false, false, __('Start date'));
+	print_input_text_extended ("start_date", $start, "start_date", '', 7, 15, 0, '', "", false, false, __('Start date'));
 	echo "</td>";
 
 
 	//End date)
 	echo "<td>";
 	$end = date ("Y-m-d");
-	print_input_text_extended ("end_date", $end, "end_date", '', 15, 15, 0, '', "", false, false, __('End date'));
+	print_input_text_extended ("end_date", $end, "end_date", '', 7, 15, 0, '', "", false, false, __('End date'));
 	echo "</td>";
 	
 	//Create button
