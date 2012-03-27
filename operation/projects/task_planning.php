@@ -200,8 +200,6 @@ $project_name =  get_db_value ("name", "tproject", "id", $id_project);
 
 echo "<h2>".__("Task planning")." &raquo; $project_name</h2>";
 
-echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
-
 //Calculate task summary stats!
 
 //Draw task status statistics by hand!
@@ -226,7 +224,7 @@ foreach ($res as $r) {
 	}
 }
 
-
+echo "<center>";
 echo "<table>";
 echo "<tr>";
 echo "<td rowspan=2 style='padding-left:20px;padding-right:20px;'>";
@@ -291,6 +289,10 @@ echo graph_project_task_per_user(200, 150, $id_project);
 echo"</td>";
 echo "</tr>";
 echo "</table>";
+echo "</center>";
+
+//Starting main form for this view
+echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
 
 //Create button bar
 echo "<div style='width:100%;text-align:left;border-spacing:0px;' class='button'>";
