@@ -1,3 +1,16 @@
+2012-03-28 Sancho Lerena <slerena@artica.es>
+
+	* include/styles/integria.css
+	images/artica_logo_negro.png
+	images/loginform.png
+        images/loginbutton.png
+        images/loginbacklogo.png
+        images/loginlogo.png
+        images/loginback.png
+        general/password_recovery.php
+        general/login_page.php: New login form layout. Need fix in IE and
+	popup/modal message on bad login.
+
 2012-03-27 Dario Rodriguez <dario.rodriguez@artica.es>
 
 	* operation/projects/task_planning.php: Fixed some style problem with

@@ -1678,7 +1678,7 @@
 
     document.write(
      "<!--[if IE]>" +
-        "<iframe class='scw' src='/scwblank.html' " +
+        "<iframe class='scw' src='' " +
                 "id='scwIframe' name='scwIframe' " +
                 "frameborder='0'>" +
         "</iframe>" +

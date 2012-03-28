@@ -49,7 +49,6 @@ if (! ($perms & 0600) && ! ($perms & 0660) && ! ($perms & 0640)) {
 	exit;
 }
 
-
 require_once ('include/config.php');
 require_once ('include/functions.php');
 require_once ('include/functions_db.php');
@@ -89,15 +88,15 @@ echo "<title>" . $config["sitename"] . "</title>";
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="resource-type" content="document" />
 <meta name="distribution" content="global" />
-<meta name="author" content="Sancho Lerena &lt;slerena@gmail.com&gt;" />
 <meta name="website" content="http://integriaims.com" />
-<meta name="copyright" content="Artica Soluciones Tecnologicas (c) 2007-2011" />
+<meta name="copyright" content="Artica Soluciones Tecnologicas (c) 2007-2012" />
 <meta name="keywords" content="ticketing, management, project, incident, tracking, ITIL" />
 <meta name="robots" content="index, follow" />
 <link rel="icon" href="images/integria_mini_logo.png" type="image/png" />
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
+<link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/integria_tip.css" type="text/css" />
-<link rel="stylesheet" href="include/styles/flora/flora.all.css" type="text/css" media="screen" title="Flora (Default)">
+<link rel="stylesheet" href="include/styles/dialog.css" type="text/css" />
 <script type="text/javascript" src="include/js/calendar.js"></script>
 <script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript" src="include/js/jquery.js"></script>

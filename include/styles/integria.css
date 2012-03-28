@@ -644,10 +644,6 @@ input.sub {
 }
 
 
-input.login {
-	padding-right: 15px;
-	background: #e5e5e5 url(../../images/login.png) no-repeat right 2px;
-}
 input.next {
 	padding-right: 15px;
 	background: #e5e5e5 url(../../images/go.png) no-repeat right 2px;
@@ -981,7 +977,6 @@ div#login {
 	border-bottom: solid 2px #aaa;
 	border-right: solid 2px #aaa;
 	padding-top: 20px;
-	background-color:#ffffff;
 }
 
 div#footer {
@@ -1191,3 +1186,112 @@ span.ac_extra_field strong {
 iframe.ax-main-frame {
 	display:none;
 }
+
+#login_body {
+	/* Set rules to fill background */
+	min-height: 100%;
+	min-width: 1024px;
+
+	/* Set up proportionate scaling */
+	width: 100%;
+	height: auto;
+
+	/* Set up positioning */
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -1; 
+}
+
+@media screen and (max-width: 1024px) { /* Specific to this particular image */
+	#login_body  {
+		left: 50%;
+		margin-left: -512px;   /* 50% */
+	}
+}
+
+.databox_login {
+	position: relative;
+	margin-top: 0px;
+	width: 620px !important;
+	height: 345px;
+	border: none !important; 
+	background-color: #fafafa;
+	background: url(../../images/loginform.png) no-repeat; 
+	z-index: 1;
+}
+
+.databox_login_msg {
+	padding-top: 25px;
+	padding-left: 30px;
+	margin-top: 10px;
+	margin-left: 200px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	width: 380px;
+	height: 130px;
+	font-size: 12px;
+	text-color: #777;
+	background: #fff;
+	z-index: 1;
+}
+
+#bottom_logo {
+	bottom: 0; 
+	height: 105px; 
+	margin: 0 auto 0 44%; 
+	overflow: hidden; 
+	position: absolute; left: 0px; top: 480px;
+}
+
+#ver_num {
+	bottom: 0; 
+	height: 20px; 
+	right: 0; 
+	padding-right: 20px;
+	margin: 0 auto 0 50%;  
+	overflow: hidden; 
+	position: absolute; left: 0px; top: 560px;
+	color: #696969
+}
+
+div#login {
+	margin: 0 auto;
+	padding-top: 63px;
+	width: 657px;
+	border-left: solid 1px #000;
+	border-top: solid 1px #000;
+	border-bottom: solid 2px #000;
+	border-right: solid 2px #000;
+	
+	/* IE Hack */
+	_padding-top: 70px;
+	_padding-left: 0px;
+	_margin-left: 0px;
+}
+
+#login_form_data {
+	padding-left: 55px; 
+	padding-top: 55px;
+	_padding-left: 0px;
+	_margin-left: 0px;  
+}
+
+input.login {
+	border-color: transparent;
+	background-color: transparent;
+	margin: 2px 0 8px;
+	width: 127px;
+}
+
+
+
+#image-Login {
+	width: 100px;
+	height: 33px;
+	border: 0px;
+	
+}
+
+
+

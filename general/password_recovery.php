@@ -17,11 +17,13 @@
 global $config;
 
 echo    '<center>
-        <div class="databox" id="login" style="width:500px">
-        <div>
-		<table width="500px" cellpadding=4 cellspacing=4 class="blank">
+        <div style="width:550px; padding-top: 100px;">
+        <div style="margin:15px; background: #fff;">
+		<table width="450px" cellpadding=4 cellspacing=4 class="blank">
         <tr><td>
+        <a href="index.php">
         <img src="images/integria_white.png" alt="logo">
+        </a>
 		<br />'.$config["version"].'</td>
 		<td width=50><td>';
 
