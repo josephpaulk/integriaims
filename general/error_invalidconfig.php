@@ -32,15 +32,15 @@
 </head>
 <body'>
 <div align='center'>
-<div id='login_f' style='width: 500px; margin-top: 100px;'>
-	<h1 id="log_f" class="error">Integria Error DB-002</h1>
+<div id='login_f' style='width: 500px; margin-top: 100px; padding: 50px; background: #fff;'>
+	<h1 id="log_f" class="error">Integria Error CF-003</h1>
+	<br><br>
 	<div>
 		<img src="images/integria_white.png" border="0"></a><br><font size="1">
 		</font>
 	</div>
-	<div class="msg"><br><br>Cannot load configuration variables. Please check your database setup in the
+	<div class="msg"><br><br>Cannot load configuration variables. Please check your setup in the
 <b>./include/config.php</b> file and read documentation.<i><br><br>
-Probably database schema is created but there are no data inside it or you have a problem with DB access credentials.</div>
 </div>
 </div>
 </body>

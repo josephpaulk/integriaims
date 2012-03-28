@@ -31,8 +31,9 @@
 </head>
 <body'>
 <div align='center'>
-<div id='login_f' style='width: 500px; margin-top: 100px;'>
+<div id='login_f' style='width: 500px; margin-top: 100px; background: #fff; padding: 50px;'>
 	<h1 id="log_f" class="error">Integria Error DB-002</h1>
+	<br><br>
 	<div>
 		<img src="images/integria_white.png" border="0"></a><br><font size="1">
 		</font>

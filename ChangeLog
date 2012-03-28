@@ -1,5 +1,8 @@
 2012-03-28 Sancho Lerena <slerena@artica.es>
 
+	* general/error_invalidconfig.php
+	general/error_databaseconnect.php: Fixed some messages.
+
 	* include/styles/integria.css
 	images/artica_logo_negro.png
 	images/loginform.png
