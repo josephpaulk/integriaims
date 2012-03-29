@@ -1,3 +1,8 @@
+2012-03-29  Sancho Lerena <slerena@artica.es>
+
+	* include/js/calendar.js: Fixed hack on IE which breaks
+	mozilla render :(
+
 2012-03-28 Sancho Lerena <slerena@artica.es>
 
 	* general/error_invalidconfig.php

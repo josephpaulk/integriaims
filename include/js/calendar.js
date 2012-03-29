@@ -1676,9 +1676,11 @@
 // Start of Calendar structure
 // ***************************
 
+// DO NOT DELETE thiw hack for IE or also will break Mozilla render!
+
     document.write(
      "<!--[if IE]>" +
-        "<iframe class='scw' src='' " +
+        "<iframe class='scw' src='/scwblank.html' " +
                 "id='scwIframe' name='scwIframe' " +
                 "frameborder='0'>" +
         "</iframe>" +
