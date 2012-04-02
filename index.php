@@ -97,6 +97,14 @@ echo "<title>" . $config["sitename"] . "</title>";
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/integria_tip.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/dialog.css" type="text/css" />
+<link rel="stylesheet" href="include/styles/flora/flora.accordion.css" type="text/css" />
+<link rel="stylesheet" href="include/styles/flora/flora.all.css" type="text/css" />
+<link rel="stylesheet" href="include/styles/flora/flora.css" type="text/css" />
+<link rel="stylesheet" href="include/styles/flora/flora.datepicker.css" type="text/css" />
+<link rel="stylesheet" href="include/styles/flora/flora.dialog.css" type="text/css" />
+<link rel="stylesheet" href="include/styles/flora/flora.resizable.css" type="text/css" />
+<link rel="stylesheet" href="include/styles/flora/flora.slider.css" type="text/css" />
+<link rel="stylesheet" href="include/styles/flora/flora.tabs.css" type="text/css" />
 <script type="text/javascript" src="include/js/calendar.js"></script>
 <script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript" src="include/js/jquery.js"></script>
