@@ -1,5 +1,10 @@
 2012-04-02  Dario Rodriguez <dario.rodriguez@artica.es>
 
+	* include/integria_cron.php: Fixed a mistake in code which exits 
+	check mail function before to check any mailbox.
+
+2012-04-02  Dario Rodriguez <dario.rodriguez@artica.es>
+
 	* index.php: Fixed some missing css files which caused that tabs and
 	datepicker were showed wrong.
 
