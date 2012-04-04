@@ -586,7 +586,7 @@ function run_mail_queue () {
 function run_mail_check () {
 	
 	//If imap module is not loaded don't executhe anything.
-	if (function_exists(imap_open)) {
+	if (!function_exists(imap_open)) {
 		return;
 	}
 
@@ -633,10 +633,10 @@ function run_mail_check () {
 
 	//Walk the mailbox from last mail to the first
 	$last = imap_num_msg($mail);
-	
+
 	$i = $last;
 	for ($i; $i>0; $i--) {
-		
+
 		$struct = imap_fetchstructure($mail, $i);
 		
 		$encoding = $struct->{'encoding'};

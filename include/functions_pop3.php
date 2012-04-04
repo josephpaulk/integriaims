@@ -138,7 +138,6 @@ function message_parse ($subject, $body, $from) {
 	global $config;
 	
 	$matches = array();
-	
 	// Get the TicketID code, for example: [TicketID#2/bfd5d] 
 	if (preg_match("/TicketID\#([0-9]+)\/([a-z0-9]+)\/([a-zA-Z0-9]+)/", $subject, $matches)){
 		$ticket_id = $matches[1];
@@ -146,13 +145,14 @@ function message_parse ($subject, $body, $from) {
 		$user = $matches[3];
 		if (substr(md5($ticket_id . $config["smtp_pass"]. $user),0,5) == $ticket_id_code){
 			// echo "TICKET ID #$ticket_id VALIDATED !!<br>";
+			
 			create_workunit ($ticket_id, $body, $user, 0,  0, "", 1);
 		}
 	}
 
 	// Get the NEW ticket subject, for example: [NEW/My Group] Ticket title	
 	if (preg_match("/NEW (.+)/", $subject, $matches)) { 
-
+		
 		create_incident_bymail ($from, $matches[1], $body);
 	}
 	
