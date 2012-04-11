@@ -3,7 +3,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// Copyright (c) 2012 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -104,7 +104,7 @@ if ($action == 'update')  {
 			if (isset($_POST["nivel"])) {
 				$nivel = get_parameter ("nivel");
 			}
-			$direccion = rtrim (get_parameter ("direccion"));
+			$direccion = trim (ascii_output(get_parameter ("direccion")));
 			$telefono = get_parameter ("telefono");
 			$comentarios = get_parameter ("comentarios");
 			$avatar = get_parameter ("avatar");
@@ -112,10 +112,10 @@ if ($action == 'update')  {
 
 			if (dame_password ($nombre_viejo) != $password){
 				$password = md5($password);
-				$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode' WHERE id_usuario = '$nombre_viejo'";
+				$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode' WHERE id_usuario = '$nombre_viejo'";
 			}
 			else {
-				$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion." ', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode' WHERE id_usuario = '".$nombre_viejo."'";
+				$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode' WHERE id_usuario = '".$nombre_viejo."'";
 			}
 			
 			$resq2 = process_sql($sql);
