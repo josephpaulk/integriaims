@@ -117,8 +117,8 @@
 			continue;
 		}
 		$i++;
-
-		$row0 = get_db_row ("tusuario", "id_usuario", $key);
+		
+		$row0 = get_db_row ("tusuario", "id_usuario", $id_user);
 		if ($row0){
 			$nombre = $row0["id_usuario"];
 			$avatar = $row0["avatar"];

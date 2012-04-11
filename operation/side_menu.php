@@ -974,8 +974,9 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 	
 	echo "</div>";
 	
-	// PEOPLE REPORTING
-	if  ((give_acl($config["id_user"], 0, "PR") || give_acl($config["id_user"], 0, "IR")) && $show_people != MENU_LIMITED && $show_people != MENU_MINIMAL) {
+	// PEOPLE REPORTING	
+	if  ((give_acl($config["id_user"], 0, "PR") || give_acl($config["id_user"], 0, "IR")) 
+			&& $show_people != MENU_LIMITED && $show_people != MENU_MINIMAL) {
 		echo "<div class='portlet'>";
 		echo "<h3>".__('People reporting')."</h3>";
 		echo "<ul class='sidemenu'>";
@@ -1000,22 +1001,29 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual'>".__('Annual report')."</a></li>";
+		
+		
+		$user_level = get_db_value("nivel", "tusuario", "id_usuario", $config['id_user']);
+	
+		//If user level == -1 the user is external user.
+		if ($user_level != -1) {
 
-		if ($sec2 == "operation/inventories/inventory_reports")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports">'.__('Custom reports').'</a>';
-		echo '</li>';
+			if ($sec2 == "operation/inventories/inventory_reports")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports">'.__('Custom reports').'</a>';
+			echo '</li>';
 
-		if ($sec2 == "operation/inventories/inventory_reports_detail")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail">'.__('Create report').'</a>';
-		echo '</li>';
+			if ($sec2 == "operation/inventories/inventory_reports_detail")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail">'.__('Create report').'</a>';
+			echo '</li>';
 
-		enterprise_hook ('show_programmed_reports', array($sec2));
+			enterprise_hook ('show_programmed_reports', array($sec2));
+		}
 		
 		echo "</ul></div>";	
 	}
