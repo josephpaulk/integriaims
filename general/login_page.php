@@ -19,9 +19,9 @@ if (isset ($login_failed)) {
 	
 	echo '<div class="databox_login_msg" >';
 	echo "<div style='vertical-align: top; position: relative; left: 0px; top: 0px; padding: 0px; margin: 0px; width: 320px;'>";
-	echo '<h3 class="error">';
+	echo '<h3>';
 	echo __('Login failed');
-	echo '</h3>';
+	echo '</h3><br>';
 
 	echo __("If you have lost or does not remember your password");
 	echo " <a href='index.php?recover=$nick'>";

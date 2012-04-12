@@ -1,3 +1,12 @@
+2012-04-12  Sancho Lerena <slerena@artica.es>
+
+	* include/styles/integria.css: Fixed login message.
+
+	* general/login_page.php,
+	include/auth/mysql.php: Fixed disabled user login.
+
+	* operation/search.php: Fixed link to user editor.
+
 2012-04-11  Dario Rodriguez <dario.rodriguez@artica.es>
 
 	* operation/side_menu.php

@@ -235,7 +235,7 @@ function process_user_login ($login, $pass) {
 
 	// Always authenticate admins against the local database
 	if (strtolower ($config["auth_methods"]) == 'mysql'|| dame_admin ($login)) {	
-		$sql = sprintf ("SELECT `id_usuario`, `password` FROM `tusuario` WHERE `id_usuario` = '%s'", $login);
+		$sql = sprintf ("SELECT `id_usuario`, `password` FROM `tusuario` WHERE `disabled` = 0 AND `id_usuario` = '%s'", $login);
 		
 		$row = get_db_row_sql ($sql);
 		//Check that row exists, that password is not empty and that password is the same hash
@@ -262,6 +262,16 @@ function process_user_login ($login, $pass) {
 			
 			// LDAP
 			case 'ldap':
+
+				$sql = sprintf ("SELECT `disabled` FROM `tusuario` WHERE `id_usuario` = '%s'", $login);
+				$disabled = get_db_sql ($sql);
+
+				// Check if user is disabled
+				if ($disabled == 1){
+					$config["auth_error"] = "User not found in database or incorrect password";
+					return false;
+				}
+				
 				if (ldap_process_user_login ($login, $pass) === false) {
 					$config["auth_error"] = "User not found in database or incorrect password";
 					return false;

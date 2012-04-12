@@ -1234,6 +1234,12 @@ iframe.ax-main-frame {
 	text-color: #777;
 	background: #fff;
 	z-index: 1;
+
+	-moz-border-radius:25px;
+	-webkit-border-radius:25px;
+	border-radius:25px;
+	box-shadow: 10px 10px 5px #333;
+
 }
 
 #bottom_logo {
