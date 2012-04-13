@@ -92,7 +92,10 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
 // Projects
 if (give_acl($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN){
 
-	$sql = "SELECT tproject.id as project_id, ttask.id as task_id, tproject.name as pname, ttask.name as tname FROM tproject, ttask WHERE tproject.disabled = 0 AND ttask.id_project = tproject.id AND ttask.name LIKE '%$search_string%'";
+	$sql = "SELECT tproject.id as project_id, ttask.id as task_id, tproject.name as pname, ttask.name as tname FROM 
+tproject, ttask WHERE tproject.disabled = 0 AND ttask.id_project = tproject.id AND (ttask.name LIKE '%$search_string%' 
+OR tproject.name  LIKE '%$search_string%')";
+
 	$tasks = get_db_all_rows_sql ($sql);
 	
 	if ($tasks !== false) {

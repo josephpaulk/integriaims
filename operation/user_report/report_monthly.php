@@ -87,7 +87,7 @@
 	echo "</table>";
 	
    	$values = get_user_visible_users ($config['id_user'], "UM", true, true, false, $search);
-	
+
 	if(empty($values) && $search == '') {
 		$values[$config['id_user']] = $config['id_user'];
 	}
@@ -95,30 +95,29 @@
 	$offset = get_parameter('offset', 0);
 
 	echo "<table class='blank'><tr><td>";
-    pagination (count($values), "index.php?sec=users&sec2=operation/user_report/report_monthly", $offset);
+        pagination (count($values), "index.php?sec=users&sec2=operation/user_report/report_monthly", $offset);
 	echo "</td></tr></table>";
 
 	echo '<table width="99%" class="listing">';
 	echo "<th>".__('Profile');
 	echo "<th>".__('User ID');
 	echo "<th>".__('Company');
-	echo "<th>".__('Workunit report');
-	echo "<th>".__('Calendar view');
-    echo "<th>".__('Graph overview');
+	echo "<th>".__('Reports');
 	echo "<th>".__('Total hours for this month');
-    echo "<th>".__('Avg. Scoring');
+	echo "<th>".__('Avg. Scoring');
 	
 	$min = $offset;
 	$max = $offset+$config['block_size']-1;
 	$i = 0;
 	foreach ($values as $key => $value){
+
 		if($i < $min || $i > $max) {
 			$i++;
 			continue;
 		}
 		$i++;
-		
-		$row0 = get_db_row ("tusuario", "id_usuario", $id_user);
+
+		$row0 = get_db_row ("tusuario", "id_usuario", $key);
 		if ($row0){
 			$nombre = $row0["id_usuario"];
 			$avatar = $row0["avatar"];
@@ -156,7 +155,7 @@
 			echo "</td>";
 			echo "<td>";
 
-			if (give_acl ($config["id_user"], 0, "IM")){
+			if (give_acl ($config["id_user"], 0, "UM")){
 				echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=$nombre'>";
 			}
 
@@ -173,35 +172,36 @@
 			
 			echo "<td style='font-size:9px'>".$company_name."</td>";
 					    
-            // Workunit report (detailed)
-		    echo "<td><center>";
-            echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$nombre'>";
-            echo "<img border=0 src='images/page_white_text.png'></A></center></td>";
+           		// Workunit report (detailed)
+			echo "<td>";
+			echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$nombre'>";
+			echo "<img border=0 title='".__("Workunit report")."' src='images/page_white_text.png'></A>";
 
             // Clock to calendar montly report for X user
-		    echo "<td  ><center>";
-		    echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$working_month&year=$working_year&id=$nombre'><img src='images/clock.png' border=0></a></center></td>";
+	    echo "&nbsp;&nbsp;";
+	    echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$working_month&year=$working_year&id=$nombre'><img src='images/clock.png' title='".__("Montly calendar report")."' border=0></a>";
 
             // Graph stats montly report for X user
-            echo "<td ><center>";
-            echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$nombre'><img src='images/chart_bar.png' border=0></a></center></td>";
-            // Total hours this month
-		    echo "<td  >";
-		    echo $row[0];
+	    echo "&nbsp;&nbsp;";
+            echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$nombre'><img src='images/chart_bar.png' title='".__("Montly report")."' border=0></a></center></td>";
+       
+			// Total hours this month
+			echo "<td  >";
+			echo $row[0];
             
-            // Total charged hours this month
-/*
-            echo "<td  >";
-            $tempsum = get_db_sql ("SELECT SUM(duration) FROM tworkunit WHERE have_cost = 1 AND id_user = '$nombre' AND timestamp > '$begin_month' AND timestamp <= '$end_month'");
-            if ($tempsum != "")
-                echo $tempsum. " hr";
-            else
-                echo "--";
+			// Total charged hours this month
+			/*
+		            echo "<td  >";
+		            $tempsum = get_db_sql ("SELECT SUM(duration) FROM tworkunit WHERE have_cost = 1 AND id_user = '$nombre' AND timestamp > '$begin_month' AND timestamp <= '$end_month'");
+		            if ($tempsum != "")
+		                echo $tempsum. " hr";
+		            else
+		                echo "--";
 			*/
 
-            // Average incident scoring
-            echo "<td>";
-            $tempsum = get_db_sql ("SELECT SUM(score) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND score > 0 ");
+		        // Average incident scoring
+			echo "<td>";
+			$tempsum = get_db_sql ("SELECT SUM(score) FROM tincidencia WHERE id_usuario = '$nombre' AND actualizacion > '$begin_month' AND actualizacion <= '$end_month' AND score > 0 ");
 
 
             if ($tempsum != "")

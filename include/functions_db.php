@@ -1309,9 +1309,10 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 
 	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
 
-    // External user only can see himself
+        // External user only can see himself
 	if ($level == -1){
-		return array(get_user ($id_user, $only_name));
+		$values[$id_user] = get_db_sql ("SELECT nombre_real FROM tusuario WHERE id_usuario = '$id_user'");
+		return $values;
 	}
 		
 	$project_users = get_project_manager_users();

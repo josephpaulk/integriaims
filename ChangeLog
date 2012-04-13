@@ -1,3 +1,16 @@
+2012-04-13  Sancho Lerena <slerena@artica.es>
+
+	* include/config_process.php: Updated build.
+
+	* include/functions_db.php: Fixed function to return visible users,
+	on external users return a bad formatted array and that breaks 
+	code in several places.
+
+	* operation/search.php: Now you can search by project name.
+
+	* operation/user_report/report_monthly.php: Put all links together to
+	have a better layout.
+
 2012-04-12  Sancho Lerena <slerena@artica.es>
 
 	* include/styles/integria.css: Fixed login message.
