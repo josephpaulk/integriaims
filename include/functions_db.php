@@ -1978,8 +1978,11 @@ function get_sla_compliance ($incidents) {
 	$num_ok = $num_ok[0][0];
 	$num_fail = $num_fail[0][0];
 	$total = $num_ok + $num_fail;
-		
-	$percent_ok = ($num_ok/$total)*100;
+	
+	if ($total > 0)
+		$percent_ok = ($num_ok/$total)*100;
+	else
+		$percent_ok = 100;
 	
 	return $percent_ok;
 

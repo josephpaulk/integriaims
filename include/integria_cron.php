@@ -101,6 +101,14 @@ function call_api($url, $postparameters = false) {
 function synchronize_pandora_inventory () {
 	global $config;
 
+	if (!isset($config["pandora_url"])){
+		return;
+	}
+
+	if ($config["pandora_url"] == ""){
+		return;
+	}
+
 	$separator = ':;:';
 
 	$labels = get_inventory_generic_labels ();
