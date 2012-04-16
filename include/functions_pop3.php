@@ -64,11 +64,13 @@ function create_incident_bymail ($user_mail, $title, $description) {
 	$limit_reached = incident_limits_reached ($group_id, $id_creator);
 
 	if ($limit_reached) {
+	
 		return;
 	}
 	
 	//Check user ACL
 	if (! give_acl ($id_creator, $group_id, "IW")) {
+	
 		return;
 	}
 	
@@ -152,7 +154,6 @@ function message_parse ($subject, $body, $from) {
 
 	// Get the NEW ticket subject, for example: [NEW/My Group] Ticket title	
 	if (preg_match("/NEW (.+)/", $subject, $matches)) { 
-		
 		create_incident_bymail ($from, $matches[1], $body);
 	}
 	

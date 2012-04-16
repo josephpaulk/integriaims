@@ -627,7 +627,7 @@ function run_mail_check () {
 
 	//Set open timeout to 10 seconds
 	imap_timeout(IMAP_OPENTIMEOUT, 10);
-	
+
 	//Open mail connection
     $mail = imap_open("{".$server.$port."/".$subfix."}", $login, $pass, NIL, 3);	
 
@@ -641,7 +641,7 @@ function run_mail_check () {
 		
 		$encoding = $struct->{'encoding'};
 		
-		$header = imap_header($mail, $last); 	
+		$header = imap_header($mail, $i); 	
 	
 		$subject = imap_utf8($header->{'subject'});
 				
