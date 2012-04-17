@@ -49,7 +49,7 @@ $end = date("Y-m-d");
 $start = date("Y-m-d");
 $completion = 0;
 $priority = 1;
-$id_group = 1;
+$id_group = 0;
 $result_output = "";
 $parent = 0;
 
@@ -260,7 +260,7 @@ $table->data[1][0] = print_select_from_sql ($sql, 'parent', $parent, '', __('Non
 $table->data[1][1] = print_select (get_priorities (), 'priority', $priority,
 	'', '', '', true, false, false, __('Priority'));
 
-$table->data[2][0] = combo_groups_visible_for_me ($config['id_user'], 'group', 0, 'TW', $id_group, true);
+$table->data[2][0] = combo_groups_visible_for_me ($config['id_user'], 'group', 0, 'TM', $id_group, true);
 
 $table->data[3][0] = print_input_text ('start_date', $start, '', 15, 15, true, __('Start'));
 $table->data[3][1] = print_input_text ('end_date', $end, '', 15, 15, true, __('End'));
@@ -341,7 +341,7 @@ if (user_belong_project ($config['id_user'], $id_project) || give_acl ($config["
 	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 	
 	print_table ($table);
-	
+
 	if((give_acl ($config["id_user"], $id_group, "TM") && $operation == "create") || 
 	(give_acl ($config["id_user"], $id_group, "TW") && $operation != "create")) {
 		echo '<div class="button" style="width:'.$table->width.'">';
