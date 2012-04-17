@@ -59,18 +59,16 @@ function create_incident_bymail ($user_mail, $title, $description) {
 	$id_creator = get_db_value("id_usuario", "tusuario", "direccion", $user_mail);
 	
 	$group_id = get_db_value ("id_grupo", "tusuario_perfil", "id_usuario", $id_creator);
-
+	
 	//Firt CHECK ticket LIMITS!
 	$limit_reached = incident_limits_reached ($group_id, $id_creator);
 
 	if ($limit_reached) {
-	
 		return;
 	}
 	
 	//Check user ACL
 	if (! give_acl ($id_creator, $group_id, "IW")) {
-	
 		return;
 	}
 	
@@ -87,10 +85,10 @@ function create_incident_bymail ($user_mail, $title, $description) {
 	$id_parent = 'NULL';
 	
 	$user_responsible = get_group_default_user ($group_id);
-	$id_user_responsible = $user_responsible['id_usuario'];
+	$id_user_responsible = $id_creator;
 
-	if ($id_user_responsible) {
-		$id_user_responsible = $id_creator;
+	if ($user_responsible) {
+		$id_user_responsible = $user_responsible['id_usuario'];
 	}
 	
 	$id_inventory = get_group_default_inventory($group_id, true);
@@ -154,6 +152,7 @@ function message_parse ($subject, $body, $from) {
 
 	// Get the NEW ticket subject, for example: [NEW/My Group] Ticket title	
 	if (preg_match("/NEW (.+)/", $subject, $matches)) { 
+		
 		create_incident_bymail ($from, $matches[1], $body);
 	}
 	

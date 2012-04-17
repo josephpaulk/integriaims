@@ -638,13 +638,13 @@ function run_mail_check () {
 
 	//Open mail connection
     $mail = imap_open("{".$server.$port."/".$subfix."}", $login, $pass, NIL, 3);	
-
+	
 	//Walk the mailbox from last mail to the first
 	$last = imap_num_msg($mail);
-
+	
 	$i = $last;
 	for ($i; $i>0; $i--) {
-
+		
 		$struct = imap_fetchstructure($mail, $i);
 		
 		$encoding = $struct->{'encoding'};
@@ -658,7 +658,7 @@ function run_mail_check () {
 				
 		//Check encoding and decode body
 		switch ($encoding) {
-			case 0: //7 bits
+			case 0: //7 bits		
 				break;
 				
 			case 1: //8bit
@@ -690,10 +690,7 @@ function run_mail_check () {
 				break;
 							
 		}
-		
-		//Encode body to utf8
-		$body = utf8_encode($body);
-		
+			
 		//Parse message	
 		message_parse($subject, $body, $from);
 	}	

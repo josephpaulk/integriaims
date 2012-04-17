@@ -1,3 +1,9 @@
+2012-04-17 Dario Rodriguez <dario.rodriguez@artica.es>
+
+	* include/integria_cron.php: Fixed a problem with email body encoding.
+	* include/functions_pop3.php: Fixed a probme with group responsible
+	when the incident is created by email.
+
 2012-04-16  Sancho Lerena <slerena@artica.es>
 
 	* include/integria_cron.php: Fixed call to pandora inventory
