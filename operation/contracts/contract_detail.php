@@ -304,7 +304,10 @@ if ($id | $new_contract) {
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15,
 		100, true, __('Search'));
 	$table->data[0][1] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Ending from'));
+	$table->data[0][1] .= "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
 	$table->data[0][2] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Ending to'));
+	$table->data[0][2] .= "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
+
 	$table->data[0][3] = print_select (get_company_roles (), 'search_company_role',
 		$search_id_company, '', __('All'), 0, true, false, false, __('Company roles'));
 	
