@@ -59,6 +59,11 @@ function create_incident_bymail ($user_mail, $title, $description) {
 	$id_creator = get_db_value("id_usuario", "tusuario", "direccion", $user_mail);
 	
 	$group_id = get_db_value ("id_grupo", "tusuario_perfil", "id_usuario", $id_creator);
+
+
+	if (!$id_creator) {
+		return;
+	}
 	
 	//Firt CHECK ticket LIMITS!
 	$limit_reached = incident_limits_reached ($group_id, $id_creator);

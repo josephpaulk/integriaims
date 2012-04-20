@@ -1,3 +1,9 @@
+2012-04-20 Dario Rodriguez <dario.rodriguez@artica.es>
+
+	* include/integria_cron.php,
+	include/functions_pop3.php: Fixed a problem with encoding creating
+	incidents using mails.
+
 2012-04-19  Sancho Lerena <slerena@artica.es>
 
 	* operation/contracts/contract_detail.php: Added hint with date format
