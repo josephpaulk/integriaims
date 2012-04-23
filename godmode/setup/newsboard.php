@@ -33,8 +33,12 @@ $operation = get_parameter ("operation");
 
 if ($operation == "insert") {
 	$title = (string) get_parameter ("title");
-	$content = (string) get_parameter ("content");
-	$timestamp = date ('Y-m-d H:i:s');
+	$content = (string) get_parameter ("content"); 
+	$timestamp = (string) get_parameter ("timestamp");
+	$nodate = (int) get_parameter ("nodate", 0);
+
+	if ($nodate == 1)
+		$timestamp = "0000-00-00 00:00:00";
 
 	$sql = sprintf ('INSERT INTO tnewsboard (title, content, `date`)
 		VALUES ("%s","%s","%s")',
@@ -72,17 +76,21 @@ if ($operation == "create") {
 	$table->width = '90%';
 	$table->class = 'databox';
 	$table->colspan = array ();
-	$table->colspan[0][0] = 2;
+	$table->colspan[1][0] = 2;
 	$table->colspan[2][0] = 2;
 	$table->colspan[3][0] = 2;
 	$table->colspan[4][0] = 2;
 	$table->data = array ();
 	
-	$table->data[0][0] = print_input_text ('title', $title, '', 40, 100, true,
+	$table->data[1][0] = print_input_text ('title', $title, '', 40, 100, true,
 		__('Title'));
 	
-	$table->data[1][0] = print_textarea ('content', 10, 50, $content, '', true,
+	$table->data[2][0] = print_textarea ('content', 10, 50, $content, '', true,
 		__('Contents'));
+
+	$timestamp = date ('Y-m-d H:i:s');
+	$table->data[0][0] = print_input_text ('timestamp', $timestamp, '', 20,20, true, __('Timestamp'));
+	$table->data[0][1] = print_checkbox ('nodate', 1, false, true,  __('Show always'));
 	
 	echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard">';
 	print_table ($table);
@@ -121,8 +129,7 @@ if ($operation == "") {
 		echo '<a href="index.php?sec=godmode&sec2=godmode/setup/newsboard&operation=delete&id='.$todo["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
 
         echo "<tr><td colspan=3 style='border-bottom: 1px solid #acacac'>";
-		echo $todo["content"];
-		
+	echo clean_output_breaks ($todo["content"]);
 	}
 	echo "</table>";
 

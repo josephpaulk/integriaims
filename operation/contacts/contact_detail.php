@@ -89,7 +89,7 @@ if ($create_contact) {
 		echo "<h3 class='error'>".__('Could not be created')."</h3>";
 	} else {
 		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-		insert_event ("CONTACT CREATED", $id, 0, $fullname);
+		audit_db ($config['id_user'], $REMOTE_ADDR, "Contact created", "Contact named '$fullname' has been added");
 	}
 	$id = 0;
 }
@@ -122,7 +122,7 @@ if ($update_contact) { // if modified any parameter
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 	} else {
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-		insert_event ("CONTACT", $id, 0, $fullname);
+		audit_db ($config['id_user'], $REMOTE_ADDR, "Contact updated", "Contact named '$fullname' has been updated");
 	}
 	$id = 0;
 }
@@ -138,7 +138,7 @@ if ($delete_contact) {
 	$fullname = get_db_value  ('fullname', 'tcompany_contact', 'id', $id);
 	$sql = sprintf ('DELETE FROM tcompany_contact WHERE id = %d', $id);
 	process_sql ($sql);
-	insert_event ("CONTACT DELETED", $id, 0, "$fullname");
+	audit_db ($config['id_user'], $REMOTE_ADDR, "Contact deleted", "Contact named '$fullname' has been deleted");
 	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 	$id = 0;
 }

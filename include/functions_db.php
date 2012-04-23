@@ -888,7 +888,7 @@ function task_tracking ($id_task, $state, $id_external = 0) {
 	global $REMOTE_ADDR;
 
 	$fecha = print_mysql_timestamp();
-	audit_db ($config['id_user'], $REMOTE_ADDR, "Task #$id_task tracking updated", "State #$state");
+	audit_db ($config['id_user'], $REMOTE_ADDR, "Task tracking updated", "Task #id_task Status #$state");
 	$sql = sprintf ('INSERT INTO ttask_track (id_user, id_task, timestamp,
 		state, id_external)
 		VALUES ("%s", %d, "%s", %d, %d)',
@@ -901,7 +901,7 @@ function project_tracking ($id_project, $state, $id_aditional = 0) {
 	global $REMOTE_ADDR;
 
 	$fecha = print_mysql_timestamp();
-	audit_db ($config['id_user'], $REMOTE_ADDR, "Project #$id_project tracking updated", "State #$state");
+	audit_db ($config['id_user'], $REMOTE_ADDR, "Project tracking updated", "Project #$id_project status #$state");
 	$sql = sprintf ('INSERT INTO tproject_track (id_user, id_project, timestamp,
 		state, id_aditional)
 		VALUES ("%s", %d, "%s", %d, %d)',

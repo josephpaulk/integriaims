@@ -1,3 +1,14 @@
+2012-04-23  Sancho lerena <slerena@artica.es>
+
+	* include/functions_db.php
+	operation/contracts/contract_detail.php
+	peration/contacts/contact_detail.php: Instead using events to audit
+	the user operations, uses Audit_db.
+
+	* general/home.php,
+	godmode/setup/newsboard.php: Newsboard now are better rendered (replacing
+	\n with <br>. Added a mode to show "always" a news (with date 0000-00-00).
+
 2012-04-20 Dario Rodriguez <dario.rodriguez@artica.es>
 
 	* include/integria_cron.php,

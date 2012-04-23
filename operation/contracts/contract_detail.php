@@ -88,7 +88,7 @@ if ($create_contract) {
 			echo '<h3 class="error">'.__('Could not be created').'</h3>';
 		else {
 			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
-			insert_event ("CONTRACT CREATED", $id, 0, $name);
+			audit_db ($config['id_user'], $REMOTE_ADDR, "Contract created", "Contract named '$name' has been added");
 		}
 		$id = 0;
 	}
@@ -127,7 +127,7 @@ if ($update_contract) { // if modified any parameter
 			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 		} else {
 			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-			insert_event ("CONTRACT UPDATED", $id, 0, $name);
+			audit_db ($config['id_user'], $REMOTE_ADDR, "Contract updated", "Contract named '$name' has been updated");
 		}
 	}
 	$id = 0;
@@ -145,7 +145,7 @@ if ($delete_contract) {
 
 	$sql = sprintf ('DELETE FROM tcontract WHERE id = %d', $id);
 	process_sql ($sql);
-	insert_event ("CONTRACT DELETED", $id, 0, "$name");
+	audit_db ($config['id_user'], $REMOTE_ADDR, "Contract deleted", "Contract named '$name' has been deleted");
 	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 	$id = 0;
 }

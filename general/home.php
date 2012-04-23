@@ -25,13 +25,14 @@ if (!isset($config["id_user"]))
 echo '<table width="100%" cellspacing=0 cellpadding=0 border=0>';
 
 
-    // ==============================================================
-	// Show Newsboard
-    // ==============================================================
+// ==============================================================
+// Show Newsboard
+// ==============================================================
 
-	$sql = "SELECT * FROM tnewsboard  WHERE `date` > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 60 DAY) ORDER BY date ASC";
-    $news = get_db_all_rows_sql ($sql);
-    if ($news) {
+$sql = "SELECT * FROM tnewsboard  WHERE (`date` > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 60 DAY) OR `date` = '0000-00-00 00:00:00') ORDER BY date ASC";
+
+$news = get_db_all_rows_sql ($sql);
+if ($news) {
         $noinfo = 0;
         echo "<tr><td>";
 	    echo "<h1>".__('System newsboard')."</h1>";
@@ -45,7 +46,7 @@ echo '<table width="100%" cellspacing=0 cellpadding=0 border=0>';
         foreach ($news as $news_item) {
         	echo "<b>".$news_item["title"]."</b>, <i>".$news_item["date"]."</i>";
 		    echo "<br>";
-            echo $news_item["content"];
+            	    echo clean_output_breaks ($news_item["content"]);
 		    echo "<br><br>";
 	    }
     }
