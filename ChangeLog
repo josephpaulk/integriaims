@@ -1,5 +1,11 @@
 2012-05-07 Miguel de Dios  <miguel.dedios@artica.es>
 
+	* integria_demo.sql: fixed the order of querys because before the
+	script tried to insert "trole" data and next "ttask" and there is a
+	foreing key between this tables. And cleaned source code style.
+
+2012-05-07 Miguel de Dios  <miguel.dedios@artica.es>
+
 	* install.php: fixed the style of main white box in the install
 	step 4 when you have any error that show a huge text.
 
