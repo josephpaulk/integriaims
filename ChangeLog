@@ -1,5 +1,10 @@
 2012-05-07 Miguel de Dios  <miguel.dedios@artica.es>
 
+	* include/styles/integria.css: a lot of small fixes into the css
+	code, and cleaned source code style.
+
+2012-05-07 Miguel de Dios  <miguel.dedios@artica.es>
+
 	* integria_demo.sql: fixed the order of querys because before the
 	script tried to insert "trole" data and next "ttask" and there is a
 	foreing key between this tables. And cleaned source code style.
