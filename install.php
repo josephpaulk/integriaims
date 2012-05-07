@@ -31,7 +31,7 @@
 		<link rel="icon" href="images/integria.ico" type="image/ico">
 		<link rel="stylesheet" href="include/styles/integria.css" type="text/css">
 	</head>
-	<body background='images/backgrounds/background11.jpg'>
+	<body>
 		<div style='height: 10px'>
 		</div>
 <?php
@@ -51,7 +51,7 @@ function check_extension ( $ext, $label ){
 	echo "<tr><td>";
 	echo "<img src='images/arrow.gif'> $label";
 	echo "</td><td>";
-	if (!extension_loaded($ext)){
+	if (!extension_loaded($ext)) {
 		echo "<img src='images/dot_red.gif'>";
 		return 1;
 	}
@@ -66,7 +66,7 @@ function check_include ( $ext, $label ){
 	echo "<tr><td>";
 	echo "<img src='images/arrow.gif'> $label";
 	echo "</td><td>";
-	if (!include($ext)){
+	if (!include($ext)) {
 		echo "<img src='images/dot_red.gif'>";
 		return 1;
 	}
@@ -81,11 +81,12 @@ function check_writable ($file, $label ){
 	echo "<tr><td>";
 	echo "<img src='images/arrow.gif'> $label";
 	echo "</td><td>";
-    clearstatcache;
+	clearstatcache;
 	if (!is_writable($file)) {
 		echo "<img src='images/dot_red.gif'>";
 		return 1;
-	} else {
+	}
+	else {
 		echo "<img src='images/dot_green.gif'>";
 		return 0;
 	}
@@ -96,10 +97,11 @@ function check_exists ( $file, $label ){
 	echo "<tr><td>";
 	echo "<img src='images/arrow.gif'> $label";
 	echo "</td><td>";
-	if (!file_exists ($file)){
+	if (!file_exists ($file)) {
 		echo " <img src='images/dot_red.gif'>";
 		return 1;
-	} else {
+	}
+	else {
 		echo " <img src='images/dot_green.gif'>";
 		return 0;
 	}
@@ -110,10 +112,11 @@ function check_generic ( $ok, $label ){
 	echo "<tr><td>";
 	echo "<img src='images/arrow.gif'> $label";
 	echo "</td><td>";
-	if ($ok == 0 ){
+	if ($ok == 0 ) {
 		echo " <img src='images/dot_red.gif'>";
 		return 1;
-	} else {
+	}
+	else {
 		echo " <img src='images/dot_green.gif'>";
 		return 0;
 	}
@@ -124,18 +127,21 @@ function check_variable ( $var, $value, $label, $mode ){
 	echo "<tr><td>";
 	echo "<img src='images/arrow.gif'> $label";
 	echo "</td><td>";
-	if ($mode == 1){
+	if ($mode == 1) {
 		if ($var >= $value){
 			echo " <img src='images/dot_green.gif'>";
 			return 0;
-		} else {
+		}
+		else {
 			echo " <img src='images/dot_red.gif'>";
 			return 1;
 		}
-	} elseif ($var == $value){
+	}
+	elseif ($var == $value) {
 			echo " <img src='images/dot_green.gif'>";
 			return 0;
-	} else {
+	}
+	else {
 		echo " <img src='images/dot_red.gif'>";
 		return 1;
 	}
@@ -143,11 +149,11 @@ function check_variable ( $var, $value, $label, $mode ){
 }
 
 function parse_mysql_dump($url){
-	if (file_exists($url)){
+	if (file_exists($url)) {
 		$file_content = file($url);
 		$query = "";
 		foreach($file_content as $sql_line){
-			if(trim($sql_line) != "" && strpos($sql_line, "--") === false){
+			if(trim($sql_line) != "" && strpos($sql_line, "--") === false) {
 				$query .= $sql_line;
 				if(preg_match("/;[\040]*\$/", $sql_line)){
 					if (!$result = mysql_query($query)) {
@@ -172,58 +178,57 @@ function random_name ($size){
 }
 
 function install_step1() {
-
+	
 	global $integria_footertext;
 	global $integria_version;
-
-	echo "<div align='center'>
-	<div id='wizard' style='height: 550px;'>
-		<div id='install_box'>
-			<h2>Welcome to installation Wizard</h2>
-			<p>This wizard helps you to quick install Integria in your system.</p>
-			<p>In four steps checks all dependencies and make your configuration for a quick installation.</p>";
-
-		echo "<table width=100%>";
-		$writable = check_writable ( "include", "Checking if ./include is writable");
-		if (file_exists("include/config.php"))
-			$writable += check_writable ( "include/config.php", "Checking if include/config.php is writable");
-		echo "</table>";
-
-		echo "<p>For more information, please refer to documentation.<i>Integria Development team</i><br>";
-
-		if (file_exists("include/config.php")){
-			echo "<p><br><img src='images/error.png' valign='bottom'><b> Warning</b> - You already have a config.php file. Configuracion and database would be overwritten if you continue.</b></p>";
-		}
-		echo "
-		</div>
-		<div class='box'>
-			<img src='images/integria_white.png'>
-			<br><br>
-		</div>
-		<div class='box'>
-			<img src='images/step0.png'>";
-echo "<br><br><font size=1px>$integria_version</font> 
-		</div>
-		<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'>";
-		if ($writable == 0)
-			echo "
-			<a href='install.php?step=1'><img align='right' src='images/arrow_next.png'></a>";
-		else
-			echo "<p><img src='images/info.png' valign='bottom'><b> Error</b> - You need to setup permissions to be able to write in ./include directory";
-
-			echo "
-			</div>
-		</div>
 	
-		$integria_footertext
-	</div>";
+	echo "<div align='center'>
+		<div id='wizard' style='height: 550px;'>
+			<div id='install_box'>
+				<h2>Welcome to installation Wizard</h2>
+				<p>This wizard helps you to quick install Integria in your system.</p>
+				<p>In four steps checks all dependencies and make your configuration for a quick installation.</p>";
+	
+	echo "<table width=100%>";
+	$writable = check_writable ( "include", "Checking if ./include is writable");
+	if (file_exists("include/config.php"))
+		$writable += check_writable ( "include/config.php", "Checking if include/config.php is writable");
+	echo "</table>";
+	
+	echo "<p>For more information, please refer to documentation.<i>Integria Development team</i><br>";
+	
+	if (file_exists("include/config.php")) {
+		echo "<p><br><img src='images/error.png' valign='bottom'><b> Warning</b> - You already have a config.php file. Configuracion and database would be overwritten if you continue.</b></p>";
+	}
+	echo "
+	</div>
+	<div class='box'>
+		<img src='images/integria_white.png'>
+		<br><br>
+	</div>
+	<div class='box'>
+		<img src='images/step0.png'>";
+	echo "<br><br><font size=1px>$integria_version</font> 
+	</div>
+	<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'>";
+	if ($writable == 0)
+		echo "
+		<a href='install.php?step=1'><img align='right' src='images/arrow_next.png'></a>";
+	else
+		echo "<p><img src='images/info.png' valign='bottom'><b> Error</b> - You need to setup permissions to be able to write in ./include directory";
+		
+	echo "
+				</div>
+			</div>
+			$integria_footertext
+		</div>";
 }
 
 
 function install_step1_licence() {
 	global $integria_footertext;
 	global $integria_version;
-
+	
 	echo "
 	<div align='center'>
 	<div id='wizard' style='height: 550px;'>
@@ -326,38 +331,38 @@ function install_step3() {
 		<div id='install_box'>
 			<h1>Database setup</h1>
 			<p>
-			This wizard will (optionally) create your Integria IMS database, and populate it with data needed to run for first time.
-			You need a privileged user to create database schema, this is usually root user. 
-			Information about <i>root</i> user will not be used or stored in anywhere. 
+				This wizard will (optionally) create your Integria IMS database, and populate it with data needed to run for first time.
+				You need a privileged user to create database schema, this is usually root user. 
+				Information about <i>root</i> user will not be used or stored in anywhere. 
 			</p>
 			<p>
-			<b>NOTICE</b> that database will be destroyed if already exists!.
+				<b>NOTICE</b> that database will be destroyed if already exists!.
 			</p>
 			<div style='padding-left: 30px;'>
 			<form method='post' action='install.php?step=4'>
 				<div style='padding: 8px'>DB User on MySQL to create schema<br></div>
 				<input type='text' name='user' value='root'>
-
+				
 				<div style='padding: 8px'>DB Password for this user</div>
 				<input type='password' name='pass' value=''>
 				
 				<div style='padding: 8px'>DB Hostname of MySQL</div>
 				<input type='text' name='host' value='localhost'>
-
+				
 				<div style='padding: 8px'>DB Name (<i>integria</i> by default)</div>
 				<input type='text' name='dbname' value='integria'>
 				
-		
+				
 				<div style='padding: 8px'><input type='checkbox' name='createdb' checked value='1'>  
 				Create Database <br>
 				</div>
-
+				
 				<div style='padding: 8px'><input type='checkbox' name='demodb' checked value='1'>  
 				Load demo Database (This will load a sample site)<br>
 				</div>
-		
+				
 				<div style='padding: 8px'><input type='checkbox' name='createuser' checked value='1'> Create Database user 'integria' and give privileges <br>
-				</div>		
+				</div>
 			
 				<div style='padding: 8px'>Full path to HTTP publication directory.<br>
 				<span class='f9b'>For example /var/www/integria/</span>
@@ -389,11 +394,10 @@ function install_step3() {
 
 
 function install_step4() {
-
 	$INTEGRIA_config = "include/config.php";
 	global $integria_footertext;
 	global $integria_version;
-
+	
 	if ( (! isset($_POST["user"])) || (! isset($_POST["dbname"])) || (! isset($_POST["host"])) || (! isset($_POST["pass"])) ) {
 		$dbpassword = "";
 		$dbuser = "";
@@ -404,12 +408,12 @@ function install_step4() {
 		$dbpassword = $_POST["pass"];
 		$dbuser = $_POST["user"];
 		$dbhost = $_POST["host"];
-
+		
 		if (isset($_POST["demodb"]))
 			$demodb = $_POST["demodb"];
 		else
 			$demodb = 0;
-
+		
 		if (isset($_POST["createdb"]))
 			$createdb = $_POST["createdb"];
 		else
@@ -418,7 +422,7 @@ function install_step4() {
 			$createuser = $_POST["createuser"];
 		else
 			$createuser = 0;
-
+		
 		$dbname = $_POST["dbname"];
 		if (isset($_POST["url"]))
 			$url = $_POST["url"];
@@ -428,7 +432,6 @@ function install_step4() {
 			$path = $_POST["path"];
 		else
 			$path = "/var/www/";
-		
 	}
 	$everything_ok = 0;
 	$step1=0;
@@ -440,17 +443,17 @@ function install_step4() {
 	$step7=0;
 	echo "
 	<div align='center' class='mt35'>
-	<div id='wizard' style='height: 510px;'>
-		<div id='install_box'>
+	<div id='wizard' style=''>
+		<div id='install_box' style='float: right;'>
 			<h1>Creating database and default configuration file</h1>
-			<table>";
+			<table style='background: #ffffff;'>";
 	if (! mysql_connect ($dbhost,$dbuser,$dbpassword)) {
 		check_generic ( 0, "Connection with Database");
 	}
 	else {
 		check_generic ( 1, "Connection with Database");
 		// Create schema
-		if ($createdb == 1){
+		if ($createdb == 1) {
 			$step1 = mysql_query ("CREATE DATABASE $dbname");
 			check_generic ($step1, "Creating database '$dbname'");
 		}
@@ -458,18 +461,18 @@ function install_step4() {
 		if ($step1 == 1) {
 			$step2 = mysql_select_db($dbname);
 			check_generic ($step2, "Opening database '$dbname'");
-	
+			
 			$step3 = parse_mysql_dump("integria_db.sql");
 			check_generic ($step3, "Creating schema");
-
+			
 			// populate database with a blank DB or DEMO database ?
 			if ($demodb == 1)
 				$step4 = parse_mysql_dump("integria_demo.sql");
 			else
 				$step4 = parse_mysql_dump("integria_dbdata.sql");
-
+			
 			check_generic ($step4, "Populating database");
-
+			
 			$random_password = random_name (8);
 			if ($createuser==1) {
 				$query = 
@@ -483,7 +486,7 @@ function install_step4() {
 			
 			$step6 = is_writable("include");
 			check_generic ($step6, "Write permissions to save config file in './include'");
-						
+			
 			$cfgin = fopen ("include/config.inc.php", "r");
 			$cfgout = fopen ($INTEGRIA_config, "w");
 			$config_contents = fread ($cfgin, filesize("include/config.inc.php"));
@@ -508,7 +511,7 @@ function install_step4() {
 				'// End of automatic config file' . "\n".
 				'?>';
 			//---END--- CONFIG FILE
-
+			
 			$step7 = fputs ($cfgout, $config_new);
 			$step7 = $step7 + fputs ($cfgout, $config_contents);
 			if ($step7 > 0)
@@ -537,16 +540,18 @@ function install_step4() {
 	}
 	
 	echo "</table></div>
-		<div class='box'>
+		<div class='box' style='float: left;'>
 			<img src='images/integria_white.png' alt=''>
 			<br><br>
 		</div>
 		
-		<div class='box'>
+		<div class='box' style='float: left;'>
 			<img src='images/step3.png' alt=''>
 		</div>
 		
-		<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'><p>";
+		<div id='install_box' style='clear: both; margin-bottom: 25px;margin-left: 25px;'>
+		
+		<p>";
 	
 	if ($everything_ok == 1) {
 		echo "<a href='install.php?step=5'><img align='right' src='images/arrow_next.png' class=''></a>";
@@ -561,18 +566,19 @@ function install_step4() {
 		if ($createdb == 1) {
 				mysql_query ("DROP DATABASE $dbname");
 		}
-	}		
+	}
 	
 	echo "		</div>
+			<div style='clear: both; width: 100%;'></div>
 			</div>
 			$integria_footertext
 		</div>";
 }
 
 function install_step5() {
-    	global $integria_footertext;
+	global $integria_footertext;
 	global $integria_version;
-
+	
 	echo "
 	<div align='center' class='mt35'>
 	<div id='wizard' style='height: 300px;'>

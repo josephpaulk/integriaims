@@ -1,3 +1,8 @@
+2012-05-07 Miguel de Dios  <miguel.dedios@artica.es>
+
+	* install.php: fixed the style of main white box in the install
+	step 4 when you have any error that show a huge text.
+
 2012-04-23  Sancho lerena <slerena@artica.es>
 
 	* include/functions_db.php
