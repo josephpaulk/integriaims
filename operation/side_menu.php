@@ -85,7 +85,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1'>".__('Disabled projects')."</a></li>";
 	}
-
+	
 	// end of main Project options block
 	echo "</ul>";
 	echo "</div>";
@@ -96,7 +96,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 	if ($id_project > 0) {
 		echo "<br>";
 		$project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
-
+		
 		echo "<div class='portlet'>";
 		$project_title = substr(get_db_value ("name", "tproject", "id", $id_project), 0, 25);
 		echo '<a href="javascript:;" onclick="$(\'#project\').slideToggle (); return false">';
@@ -1087,7 +1087,7 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Wiki')."</h3>";
 	echo "<ul class='sidemenu'>";
-
+	
 	// Todo overview
 	if ($sec2 == "operation/wiki/wiki")
 		echo "<li id='sidesel'>";
@@ -1124,6 +1124,12 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 		}
 		$conf['plugin_dir'] = 'include/wiki/plugins/';
 		$conf['self'] = 'index.php?sec=wiki&sec2=operation/wiki/wiki' . '&';
+		$conf_var_dir = 'var/';
+		if (isset($config['wiki_plugin_dir']))
+			$conf_plugin_dir = $config['wiki_plugin_dir'];
+		if (isset($config['conf_var_dir']))
+			$conf_var_dir = $config['conf_var_dir'];
+		$conf['var_dir'] = $conf_var_dir;
 		
 		ob_start();
 		lionwiki_show($conf, false);

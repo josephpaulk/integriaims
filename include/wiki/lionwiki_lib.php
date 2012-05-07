@@ -155,7 +155,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 #toc{border:1px dashed #060;margin:5px 0 5px 10px;padding:6px 5px 7px 0;float:right;padding-right:2em;list-style:none}
 #toc ul{list-style:none;padding:3px 0 3px 10px}
 #toc li{font-size:11px;padding-left:10px}
-#diff{padding:1em;white-space:pre-wrap;width:97%}
+#diff {padding:1em; white-space: pre-wrap; width: 97%;}
 #diff ins{color:green;font-weight:bold}
 #diff del{color:red;text-decoration:line-through}
 #diff .orig{color:#666;font-size:90%}
@@ -281,7 +281,6 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	$T_CREATE_PAGE = 'Create page';
 	$T_PROTECTED_READ = 'You need to enter password to view content of site: ';
 	$T_WRONG_PASSWORD = 'Password is incorrect.';
-	
 	
 	if ($_GET['lang']) {
 		$LANG = clear_path($_GET['lang']);
@@ -792,7 +791,10 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		'PAGE_TITLE' => h($page == $START_PAGE && $page == $TITLE ? $WIKI_TITLE : $TITLE),
 		'PAGE_TITLE_HEAD' => h($TITLE),
 		'PAGE_URL' => u($page),
-		'EDIT' => !$action ? ("<a href=\"$self" . "page=".u($page)."&amp;action=edit".(is_writable("$PG_DIR$page.txt") ? "\">$T_EDIT</a>" : "&amp;showsource=1\">$T_SHOW_SOURCE</a>")) : "",
+		'EDIT' => !$action?
+			("<a href=\"$self" . "page=".u($page)."&amp;action=edit" . 
+				(is_writable("$PG_DIR$page.txt") ? "\">$T_EDIT</a>" : "&amp;showsource=1\">$T_SHOW_SOURCE</a>"))
+			: "",
 		'WIKI_TITLE' => h($WIKI_TITLE),
 		'LAST_CHANGED_TEXT' => $last_changed_ts ? $T_LAST_CHANGED : "",
 		'LAST_CHANGED' => $last_changed_ts ? date($DATE_FORMAT, $last_changed_ts + $LOCAL_HOUR * 3600) : "",

@@ -1,5 +1,13 @@
 2012-05-07 Miguel de Dios  <miguel.dedios@artica.es>
 
+	* operation/side_menu.php: fixed the set vars when show the side
+	menu into the wiki section. Now show again the edit link.
+	
+	* include/wiki/lionwiki_lib.php, operation/wiki/wiki.php: cleaned
+	source code style.
+
+2012-05-07 Miguel de Dios  <miguel.dedios@artica.es>
+
 	* include/styles/integria.css: a lot of small fixes into the css
 	code, and cleaned source code style.
 
