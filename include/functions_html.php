@@ -23,12 +23,28 @@ global $config;
  * Prints the print_r with < pre > tags
  */
 function debugPrint ($var, $file = '') {
+	$more_info = '';
+	if (is_string($var)) {
+		$more_info = 'size: ' . strlen($var);
+	}
+	elseif (is_bool($var)) {
+		$more_info = 'val: ' . 
+			($var ? 'true' : 'false');
+	}
+	elseif (is_null($var)) {
+		$more_info = 'is null';
+	}
+	elseif (is_array($var)) {
+		$more_info = count($var);
+	}
+	
 	if ($file === true)
 		$file = '/tmp/logDebug';
+	
 	if (strlen($file) > 0) {
 		$f = fopen($file, "a");
 		ob_start();
-		echo date("Y/m/d H:i:s") . "\n";
+		echo date("Y/m/d H:i:s") . " (" . gettype($var) . ") " . $more_info . "\n";
 		print_r($var);
 		echo "\n\n";
 		$output = ob_get_clean();
@@ -36,6 +52,9 @@ function debugPrint ($var, $file = '') {
 		fclose($f);
 	}
 	else {
+		echo "<pre>" .
+			date("Y/m/d H:i:s") . " (" . gettype($var) . ") " . $more_info .
+			"</pre>";
 		echo "<pre>";print_r($var);echo "</pre>";
 	}
 }

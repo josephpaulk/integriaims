@@ -1,3 +1,10 @@
+2012-05-08 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/functions_html.php: updated "debugPrint" from the last
+	version of PandoraFMS.
+	
+	* include/wiki/lionwiki_lib.php: some fixes.
+
 2012-05-07 Miguel de Dios  <miguel.dedios@artica.es>
 
 	* operation/side_menu.php: fixed the set vars when show the side
