@@ -141,7 +141,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>".__('Task list')." ($task_number)</a></li>";
 		}
-
+		
 		if (give_acl ($config["id_user"], 0, "PM") || (give_acl ($config["id_user"], 0, "PW") && $config["id_user"] == $project_manager)) {
 			// Create task
 			if ($sec2 == "operation/projects/task_detail" && !$id_task)
@@ -150,21 +150,21 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&operation=create'>".__('New task')."</a></li>";
 		}
-
+		
 		// Gantt graph
 		if ($sec2 == "operation/projects/gantt")
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/gantt&id_project=$id_project'>".__('Gantt graph')."</a></li>";
-
-
+		
+		
 		// Export to CSV
 		if ($sec2 == "operation/projects/csvexport")
-                        echo "<li id='sidesel'>";
-                else
-                        echo "<li>";
-                echo "<a href='index.php?sec=projects&sec2=operation/projects/csvexport&id_project=$id_project'>".__('Report')."</a></li>";
+				echo "<li id='sidesel'>";
+		else
+				echo "<li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/csvexport&id_project=$id_project'>".__('Report')."</a></li>";
 		
 		// Milestones
 		if ($sec2 == "operation/projects/milestones")
@@ -172,7 +172,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/milestones&id_project=$id_project'>".__('Milestones')."</a></li>";
-
+		
 		// PROJECT - People management
 		if (give_acl ($config["id_user"], 0, "PM") || $project_manager == $config["id_user"]) {
 			if ($sec2 == "operation/projects/people_manager")
@@ -181,7 +181,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_task=-1&id_project=$id_project'>".__('People')."</a></li>";
 		}
-
+		
 		// Workunits
 		$totalhours = get_project_workunit_hours ($id_project);
 		$totalwu = get_project_count_workunits ($id_project);
@@ -1108,7 +1108,7 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 				<li>{RECENT_CHANGES}</li>
 				<li>{EDIT}</li>
 				<li>{HISTORY}</li>
-				<li>{SYNTAX}</li>
+				<li><a href="index.php?sec=wiki&sec2=operation/wiki/wiki&action=syntax">Syntax</a></li>
 				{plugin:SIDEMENU}';
 		}
 		else {
@@ -1119,7 +1119,7 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 				<li>{RECENT_CHANGES}</li>
 				<li>{EDIT}</li>
 				<li>{HISTORY}</li>
-				<li>{SYNTAX}</li>
+				<li><a href="index.php?sec=wiki&sec2=operation/wiki/wiki&action=syntax">Syntax</a></li>
 				{plugin:SIDEMENU}';
 		}
 		$conf['plugin_dir'] = 'include/wiki/plugins/';
