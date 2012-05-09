@@ -1034,14 +1034,14 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 			echo "<div class='portlet'>";
 			echo "<h3>".__('People management')."</h3>";
 			echo "<ul class='sidemenu'>";
-
+			
 			// Usermanager
 			if ($sec2 == "godmode/usuarios/lista_usuarios") 
 				echo "<li id='sidesel'>";
 			else
 				echo "<li>";
 			echo "<a href='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>".__('Manage users')."</a>";
-
+			
 			if ($sec2 == "godmode/usuarios/lista_usuarios") {
 				echo "<li style='margin-left: 15px; font-size: 10px;'>";
 				echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>".__('Create user')."</a>";
@@ -1050,14 +1050,14 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 			echo "<li>";       
 			echo "<a href='index.php?sec=users&sec2=godmode/usuarios/import_from_csv'>".__('Import from CSV')."</a></li>";
 			echo "</li>";
-
+			
 			// Rolemanager
 			if ($sec2 == "godmode/usuarios/role_manager")
 				echo "<li id='sidesel'>";
 			else
 				echo "<li>";
 			echo "<a href='index.php?sec=users&sec2=godmode/usuarios/role_manager'>".__('Manage roles')."</a></li>";
-
+			
 			// Group manager
 			if ($sec2 == "godmode/grupos/lista_grupos")
 				echo "<li id='sidesel'>";
@@ -1144,7 +1144,7 @@ if ($show_box) {
 	$month = get_parameter ("month", date ('n'));
 	$year = get_parameter ("year", date ('y'));
 
-	echo '<div class="portlet" style="border:padding: 0px; margin: 0px;">';
+	echo '<div class="portlet" style="padding: 0px; margin: 0px;">';
 	echo '<a href="javascript:;" onclick="$(\'#calendar_div\').slideToggle (); return false">';
 	echo '<h2>'.__('Calendar').'</h2>';
 	echo '</a>';
@@ -1171,7 +1171,7 @@ if ($show_box) {
 	$working_year = get_parameter ("working_year", $now_year);
 
 	echo '<div class="portlet">';
-	echo '<a href="javascript:;" onclick="$(\'#userdiv\').slideToggle (); return false">';
+	echo '<a href="" onclick="$(\'#userdiv\').slideToggle (); return false">';
 	echo '<h2>'.__('User info').'</h2>';
 	echo '</a>';
 	echo '<div class="portletBody" id="userdiv">';

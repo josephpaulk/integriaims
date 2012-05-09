@@ -237,11 +237,11 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
 	
 	if ($disabled)
 		$output .= ' disabled';
-
+	
 	if ($attributes != '')
 		$output .= ' '.$attributes;
 	$output .= ' />';
-
+	
 	if ($return)
 		return $output;
 	echo $output;
@@ -260,10 +260,10 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
  */
 function print_image ($src, $return = false, $options = false, $return_src = false) {
 	global $config;
-
+	
 	// path to image 
 	$src = $config["base_url"] . '/' . $src;
-
+	
 	// Only return src field of image
 	if ($return_src){
 		if (!$return){ 
@@ -272,7 +272,7 @@ function print_image ($src, $return = false, $options = false, $return_src = fal
 		}
 		return safe_input($src);
 	}
-
+	
 	$output = '<img src="'.safe_input ($src).'" '; //safe input necessary to strip out html entities correctly
 	$style = '';
 	
@@ -329,7 +329,7 @@ function print_image ($src, $return = false, $options = false, $return_src = fal
 	}
 	
 	$output .= 'alt="'.safe_input ($options['alt']).'" />';
-
+	
 	if (!$return) {
 		echo $output;
 	}

@@ -236,7 +236,8 @@ function check_incident (id) {
 		function (data, status) {
 			if (data == 1) {
 				show_incident_details (id);
-			} else {
+			}
+			else {
 				result_msg_error ("<?php echo __('Unable to load incident')?> #" + id);
 			}
 		},
@@ -257,14 +258,15 @@ function show_incident_details (id) {
 		.tabs ("enable", 5).tabs ("enable", 6).tabs ("enable", 7).tabs ("enable", 8);
 	if (tabs.data ("selected.tabs") == 1) {
 		$("#tabs > ul").tabs ("load", 2);
-	} else {
+	}
+	else {
 		$("#tabs > ul").tabs ("select", 2);
 	}
 }
 
 function configure_statistics_tab (values) {
 	values.push ({name: "return_filter", value: 1});
-
+	
 	jQuery.post ("ajax.php",
 		values,
 		function (data, status) {
@@ -318,7 +320,7 @@ $(document).ready (function () {
 		values.push ({name: "page", value: "operation/incidents/incident_search"});
 		values.push ({name: "get_custom_search_values", value: 1});
 		values.push ({name: "id_search", value: this.value});
-
+		
 		jQuery.get ("ajax.php",
 			values,
 			function (data, status) {
@@ -364,10 +366,10 @@ $(document).ready (function () {
 			val.push ({name: "page",
 					value: "operation/incidents/incident_search"});
 			configure_statistics_tab(val);
-
+		
 		}
 	);
-
+	
 	$("#search_status").attr ("value", -10);
 	$("#search_incident_form").submit ();
 });

@@ -21,9 +21,9 @@ check_login ();
 require_once ('include/functions_incidents.php');
 
 if (defined ('AJAX')) {
-
+	
 	global $config;
-
+	
 	$search_users = (bool) get_parameter ('search_users');
 	
 	if ($search_users) {
@@ -32,10 +32,10 @@ if (defined ('AJAX')) {
 		$id_user = $config['id_user'];
 		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
 		$users = get_user_visible_users ($config['id_user'],"IR", false);
-
+		
 		if ($users === false)
 			return;
-
+		
 		foreach ($users as $user) {
 			if(preg_match('/'.$string.'/', $user['id_usuario']) || preg_match('/'.$string.'/', $user['nombre_real'])) {
 				echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
@@ -76,19 +76,18 @@ if ($check_incident) {
 }
 
 if (isset($incident)) {
-	
 	//Incident creators must see their incidents
 	if ((get_external_user($config["id_user"]) && ($incident["id_creator"] != $config["id_user"]))
 		|| ($incident["id_creator"] != $config["id_user"]) && !give_acl ($config['id_user'], $id_grupo, "IR")) {
-
+	
 	 	// Doesn't have access to this page
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident  (External user) ".$id);
 		include ("general/noaccess.php");
 		exit;
 	}
-} else if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
-
- 	// Doesn't have access to this page
+}
+else if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
+	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
 	include ("general/noaccess.php");
 	exit;
@@ -116,13 +115,13 @@ if ($action == 'get-users-list') {
 if ($action == 'update') {
 	// Number of loop in the massive operations. No received in not massive ones
 	$massive_number_loop = get_parameter ('massive_number_loop', -1);
-
+	
 	$old_incident = get_incident ($id);
-
+	
 	$user = get_parameter('id_user');
-
- 	$grupo = get_parameter ('grupo_form', $old_incident['id_grupo']);
-
+	
+	$grupo = get_parameter ('grupo_form', $old_incident['id_grupo']);
+	
 	// Only admins (manage incident) or owners can modify incidents
 	if ((! give_acl ($config["id_user"], $grupo, "IW")) AND (! give_acl ($config["id_user"], $grupo, "IM"))) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
@@ -130,7 +129,7 @@ if ($action == 'update') {
 		no_permission ();
 		exit ();
 	}
-
+	
 	$id_author_inc = get_incident_author ($id);
 	$titulo = get_parameter ('titulo', $old_incident['titulo']);
 	$sla_disabled = (bool) get_parameter ('sla_disabled', $old_incident['sla_disabled']);
@@ -146,8 +145,8 @@ if ($action == 'update') {
 	$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
 	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
 	$email_copy = get_parameter ('email_copy', $old_incident['email_copy']);
-
-
+	
+	
 	$tracked = false;
 	if ($old_incident['prioridad'] != $priority) {
 		incident_tracking ($id, INCIDENT_PRIORITY_CHANGED, $priority);
@@ -169,12 +168,12 @@ if ($action == 'update') {
 	if($tracked == false) {
 		incident_tracking ($id, INCIDENT_UPDATED);
 	}
-
+	
 	if ($sla_disabled == 1)
 		$sla_man = ", sla_disabled = 1 ";
 	else 
 		$sla_man = "";
-		
+	
 	if ($id_parent == 0) {
 		$idParentValue = 'NULL';
 	}
@@ -182,7 +181,7 @@ if ($action == 'update') {
 		$idParentValue = sprintf ('%d', $id_parent);
 	}
 	$timestamp = print_mysql_timestamp();
-
+	
 	$sql = sprintf ('UPDATE tincidencia SET email_copy = "%s", actualizacion = "%s",
 			  id_creator = "%s",
 			titulo = "%s", origen = %d, estado = %d,
@@ -196,13 +195,13 @@ if ($action == 'update') {
 			$epilog, $id_task, $resolution, $id_incident_type,
 			$idParentValue, $sla_man, $id);
 	$result = process_sql ($sql);
-
-    // When close incident set close date to current date
-    if (($estado == 6) OR ($estado == 7)){
-        $sql = sprintf ('UPDATE tincidencia SET cierre = "%s" 
+	
+	// When close incident set close date to current date
+	if (($estado == 6) OR ($estado == 7)){
+		$sql = sprintf ('UPDATE tincidencia SET cierre = "%s" 
 			WHERE id_incidencia = %d',$timestamp, $id);
-        $result = process_sql ($sql);
-    }
+		$result = process_sql ($sql);
+	}
 
 
 	audit_db ($id_author_inc, $config["REMOTE_ADDR"], "Incident updated", "User ".$config['id_user']." incident updated #".$id);
@@ -285,12 +284,12 @@ if ($action == "insert") {
 		else {
 			$idParentValue = sprintf ('%d', $id_parent);
 		}
-
+		
 		// DONT use MySQL NOW() or UNIXTIME_NOW() because 
 		// Integria can override localtime zone by a user-specified timezone.
-
+		
 		$timestamp = print_mysql_timestamp();
-
+		
 		$sql = sprintf ('INSERT INTO tincidencia
 				(inicio, actualizacion, titulo, descripcion,
 				id_usuario, origen, estado, prioridad,

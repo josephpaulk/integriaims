@@ -1,3 +1,16 @@
+2012-05-09 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/config_process.php: fixed the old values for the
+	$config["base_url"].
+	
+	* include/functions_html.php, operation/incidents/incident.php,
+	operation/incidents/incident_detail.php: cleaned source code style.
+	
+	* include/styles/integria.css: fixed the background image for the
+	class "ac_input".
+	
+	* operation/side_menu.php: fixed the style in the calendar.
+
 2012-05-08 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* operation/side_menu.php, operation/wiki/wiki.php: added a copy of
