@@ -341,9 +341,8 @@ function users_long_polling_check_messages($global_counter) {
 			//Try to look MAX_TIMES times
 			$tries = 0;
 			$lock = true;
-			debugPrint("$uniq INIT BUCLE_FLOCK " . $global_counter, true);
+			
 			while (!flock($fp_global_counter, LOCK_EX)) {
-				debugPrint("$uniq INTO BUCLE_FLOCK " . $global_counter, true);
 				$tries++;
 				if ($tries > MAX_TIMES) {
 					$lock = false;
@@ -352,7 +351,6 @@ function users_long_polling_check_messages($global_counter) {
 				
 				sleep(1);
 			}
-			debugPrint("$uniq EXIT BUCLE_FLOCK " . $global_counter, true);
 			
 			if ($lock) {
 				@fscanf($fp_global_counter, "%d", $global_counter_file);
@@ -387,8 +385,6 @@ function users_long_polling_check_messages($global_counter) {
 			}
 			fclose($fp_global_counter);
 		}
-		
-		debugPrint("$uniq IS IN BAD PLACE " . $global_counter, true);
 		
 		sleep(3);
 		$tries_general = $tries_general + 3;

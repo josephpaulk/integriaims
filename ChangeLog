@@ -1,5 +1,9 @@
 2012-05-10 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* operation/incidents/incident_chat.ajax.php: erased lost traces.
+
+2012-05-10 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* include/js/integria_incident_search.js: cleaned source code style.
 	
 	* include/functions.php: added lost function "safe_input_htm", I
