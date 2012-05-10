@@ -89,10 +89,6 @@ if ((!isset($config["timezone"])) OR ($config["timezone"] == "")){
 
 date_default_timezone_set($config["timezone"]);
 
-//Overwrite the $config["base_url"] because sometimes change the server location.
-$config["base_url"] = "http://".$_SERVER["SERVER_NAME"].dirname ($_SERVER['PHP_SELF']);
-
-
 include_once ($config["homedir"]."/include/functions_html.php");
 include_once ($config["homedir"]."/include/functions_form.php");
 include_once ($config["homedir"]."/include/functions_calendar.php");

@@ -57,12 +57,31 @@ if (give_acl($config["id_user"], 0, "PR") != 1){
 include_once ("include/functions_graph.php");
 
 $id_user = get_parameter ("id_user", $config["id_user"]);
+$op = get_parameter ("op", "");
+$task = get_parameter ("id_task", "");
+
+if (give_acl($config["id_user"], 0, "PM")){
+
+	// FInish this task
+	if ($op == "fin"){
+		$sql = "UPDATE ttask SET completion = 100 WHERE id = $task";
+		process_sql ($sql);
+	}
+
+	// Remove this user from that task
+	if ($op == "deas"){
+		$sql = "DELETE FROM trole_people_task WHERE id_user = '$id_user' AND id_task = $task";
+		process_sql ($sql);	
+	}
+
+}
 
 if (($id_user != $config["id_user"]) AND (give_acl($config["id_user"], 0, "PM") != 1)){
 	$id_user = $config["id_user"];
 }
 
-$sql = "SELECT ttask.id, ttask.name, tproject.name, ttask.completion, tproject.id, ttask.id, ttask.priority FROM trole_people_task, ttask, tproject WHERE trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.completion < 100 ORDER BY ttask.priority DESC";
+$sql = "SELECT ttask.id, ttask.name, tproject.name, ttask.completion, tproject.id, ttask.id, ttask.priority FROM trole_people_task, ttask, tproject WHERE trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.completion < 100 ORDER BY tproject.name DESC";
+
 
 echo "<h2>".__('Global task assignment')." ".__('For user'). " '".$id_user. "' ".print_user_avatar($id_user, true,true)."</h2>";
 
@@ -89,6 +108,8 @@ echo "<th>".__('Task');
 echo "<th>".__('Progress');
 echo "<th>".__('Worked hours');
 echo "<th>".__('Last update');
+echo "<th>".__('Operation');
+
 $result=mysql_query($sql);
 
 while ($row=mysql_fetch_array($result)){
@@ -112,6 +133,13 @@ while ($row=mysql_fetch_array($result)){
 		' AND tworkunit.id = tworkunit_task.id_workunit
 		ORDER BY timestamp DESC LIMIT 1');
 	echo substr($time1, 0, 10);
+	echo "<td>";
+
+	if (give_acl ($config["id_user"], 0, "PM")) {
+		echo "<a href='index.php?sec=users&sec2=operation/users/user_task_assigment&op=fin&id_task=$id_task&id_user=$id_user'><img src='images/upd.png' title='".__("Finish this task")."'></a>";
+		echo "&nbsp;&nbsp;";
+		echo "<a href='index.php?sec=users&sec2=operation/users/user_task_assigment&op=deas&id_task=$id_task&id_user=$id_user'><img src='images/delete.png' title='".__("Deassign this task")."'></a>";
+	}
 
 }
 echo "</table>";

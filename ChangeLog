@@ -1,3 +1,13 @@
+2012-05-10 Sancho LErena <slerena@ærtica.es>
+
+	* include/help/en/help_sla.php: Updated help.
+
+	* include/config_process.php: Revert Miguel change... base_url needed
+	in crontab task.
+
+	* operation/users/user_task_assigment.php: Now a PM can do a task
+	deassigment and task completion from here. Useful.
+
 2012-05-09 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* include/config_process.php: fixed the old values for the
@@ -7,7 +17,7 @@
 	operation/incidents/incident_detail.php: cleaned source code style.
 	
 	* include/styles/integria.css: fixed the background image for the
-	class "ac_input".
+	class "ac_input"
 	
 	* operation/side_menu.php: fixed the style in the calendar.
 
