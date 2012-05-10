@@ -67,6 +67,7 @@ echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Inventory').'
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Contact').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Workunits').'</span></a></li>';
 echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Files').'</span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Chat').'</span></a></li>';
 echo '</ul>';
 
 /* Tabs first container is manually set, so it loads immediately */
@@ -254,8 +255,10 @@ function show_incident_details (id) {
 	$("#tabs > ul").tabs ("url", 6, "ajax.php?page=operation/incidents/incident_inventory_contacts&id=" + id);
 	$("#tabs > ul").tabs ("url", 7, "ajax.php?page=operation/incidents/incident_workunits&id=" + id);
 	$("#tabs > ul").tabs ("url", 8, "ajax.php?page=operation/incidents/incident_files&id=" + id);
+	$("#tabs > ul").tabs ("url", 9, "ajax.php?page=operation/incidents/incident_chat&id=" + id);
 	$("#tabs > ul").tabs ("enable", 2).tabs ("enable", 3).tabs ("enable", 4)
-		.tabs ("enable", 5).tabs ("enable", 6).tabs ("enable", 7).tabs ("enable", 8);
+		.tabs ("enable", 5).tabs ("enable", 6).tabs ("enable", 7).tabs ("enable", 8)
+		.tabs("enable", 9);
 	if (tabs.data ("selected.tabs") == 1) {
 		$("#tabs > ul").tabs ("load", 2);
 	}

@@ -1,3 +1,14 @@
+2012-05-10 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/js/integria_incident_search.js: cleaned source code style.
+	
+	* include/functions.php: added lost function "safe_input_htm", I
+	don't know when this lossed from the code.
+	
+	* operation/incidents/incident_chat.php,
+	operation/incidents/incident_chat.ajax.php,
+	operation/incidents/incident.php: added first version of chat.
+
 2012-05-10 Sancho LErena <slerena@ærtica.es>
 
 	* include/help/en/help_sla.php: Updated help.
