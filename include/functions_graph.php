@@ -61,21 +61,22 @@ function graph_workunit_task ($width, $height, $id_task) {
 	global $config;
 	$data = array();
 	$legend = array();
-
+	
 	$res = mysql_query("SELECT SUM(duration) as duration, id_user FROM tworkunit, tworkunit_task
 					WHERE tworkunit_task.id_task = $id_task AND 
 					tworkunit_task.id_workunit = tworkunit.id 
 					GROUP BY id_user ORDER BY duration DESC");
-
+	
 	$data = NULL;
-
+	
 	while ($row = mysql_fetch_array($res)) {
 		$data[$row[1]] = $row[0];
 	}
-		
+	
 	if ($data == NULL) {
 		echo __("There is no data to show");
-	} else {
+	}
+	else {
 		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);
 	}
 }
@@ -87,7 +88,7 @@ function graph_workunit_task ($width, $height, $id_task) {
 function graph_workunit_project ($width, $height, $id_project) {
 	global $config;
 	$data = array();
-
+	
 	$res = mysql_query("SELECT SUM(duration), ttask.name
 					FROM tworkunit, tworkunit_task, ttask, tproject  
 					WHERE tproject.id = '$id_project' AND 
@@ -100,10 +101,11 @@ function graph_workunit_project ($width, $height, $id_project) {
 	while ($row = mysql_fetch_array($res)) {
 		$data[$row[1]] = $row[0];
 	}
-		
+	
 	if ($data == NULL) {
 		echo __("There is no data to show");
-	} else {
+	}
+	else {
 		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);
 	}
 }
@@ -117,16 +119,15 @@ function graph_project_task_per_user ($width, $height, $id_project) {
 	
 	//Get project users
 	$sql = sprintf("SELECT id_user FROM trole_people_project WHERE id_project = %d", $id_project);
-
+	
 	$project_users = process_sql($sql);
 	
 	//Initialize the data for all users
 	$data = array();
 	
 	foreach ($project_users as $pu) {
-		
 		$data[$pu['id_user']] = 0;
-	}	
+	}
 	
 	//Get number of task per user
 	$sql = sprintf("SELECT id_user, COUNT(id_user) AS tasks FROM trole_people_task WHERE id_task IN 
@@ -135,18 +136,18 @@ function graph_project_task_per_user ($width, $height, $id_project) {
 	$task_per_user = process_sql($sql);
 	
 	foreach ($task_per_user as $tpu) {
-		
 		$id_user = $tpu['id_user'];
 		$number_tasks = $tpu['tasks'];
-			
+		
 		$data[$id_user] = $number_tasks;
 	}
 	
 	if ($data == NULL) {
 		echo __("There is no data to show");
-	} else {
+	}
+	else {
 		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);
-	}	
+	}
 }
 
 // ===============================================================================
@@ -157,22 +158,25 @@ function graph_workunit_project_task_status ($width, $height, $id_project) {
 	global $config;
 	
 	$sql = sprintf("SELECT id, completion FROM ttask WHERE id_project = %d", $id_project);
-
+	
 	$res = process_sql($sql);
-
+	
 	$verified = 0;
 	$completed = 0;
 	$in_process = 0;
 	$pending = 0;
-
+	
 	foreach ($res as $r) {
 		if ($r['completion'] < 40) {
 			$pending++;
-		} else if ($r['completion'] < 90) {
+		}
+		else if ($r['completion'] < 90) {
 			$in_process++;
-		} else if ($r['completion'] < 100) {
+		}
+		else if ($r['completion'] < 100) {
 			$completed++;
-		} else if ($r['completion'] == 100) {
+		}
+		else if ($r['completion'] == 100) {
 			$verified++;
 		}
 	}
@@ -185,7 +189,8 @@ function graph_workunit_project_task_status ($width, $height, $id_project) {
 		
 	if ($data == NULL) {
 		echo __("There is no data to show");
-	} else {
+	}
+	else {
 		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);
 	}
 }
@@ -226,11 +231,11 @@ function graph_workunit_project_user_single ($width, $height, $id_project) {
 
 function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 0, $ttl = 1) {
 	global $config;
-
+	
 	if ($date_to == 0) {
 		$date_to = date("Y-m-d", strtotime("$date_from + 30 days"));
 	}
-
+	
 	$res = mysql_query("SELECT SUM(duration), id_task, timestamp, ttask.name, tproject.name 
 					FROM tworkunit, tworkunit_task, ttask, tproject  
 					WHERE tworkunit.id_user = '$id_user' AND 
@@ -241,11 +246,11 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 					tproject.id = ttask.id_project 
 					GROUP BY id_task ORDER BY SUM(duration) DESC");
 	$data = NULL;
-
+	
 	while ($row = mysql_fetch_array($res)) {
 		$data[substr(clean_flash_string ($row[3]),0,25)]['graph'] = $row[0];
 	}
-
+	
 	if ($data == NULL) {
 		echo __("There is no data to show");
 	} else {

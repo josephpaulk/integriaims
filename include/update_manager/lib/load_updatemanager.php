@@ -26,6 +26,9 @@ if (! extension_loaded ('mysql'))
 
 require_once ('libupdate_manager.php');
 
-um_db_connect (DB_BACKEND, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+global $config;
+
+um_db_connect ('mysql', $config['dbhost'], $config['dbuser'],
+	$config['dbpass'], $config['dbname']);
 flush ();
 ?>

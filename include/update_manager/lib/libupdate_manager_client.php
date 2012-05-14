@@ -102,7 +102,7 @@ function um_client_check_latest_update ($settings, $user_key) {
 	$params = array (new xmlrpcval ($settings->customer_key, 'string'),
 				new xmlrpcval ($user_key, 'string'),
 				new xmlrpcval ($settings->current_update, 'int'));
-
+	
 	$result = um_xml_rpc_client_call ($settings->update_server_host,
 			$settings->update_server_path,
 			$settings->update_server_port,
@@ -115,15 +115,15 @@ function um_client_check_latest_update ($settings, $user_key) {
 	if ($result == false) {
 		return $result;
 	}
-
+	
 	$value = $result->value ();
-
+	
 	if ($value->kindOf () == 'scalar') {
 		/* No new updates */
 		return $value->scalarval ();
 	}
 	$package = um_xml_rpc_unpack_package ($value);
-
+	
 	return $package;
 }
 
@@ -131,7 +131,7 @@ function um_client_get_package ($settings, $user_key) {
 	$params = array (new xmlrpcval ($settings->customer_key, 'string'),
 				new xmlrpcval ($user_key, 'string'),
 				new xmlrpcval ($settings->current_update, 'int'));
-
+	
 	$result = um_xml_rpc_client_call ($settings->update_server_host,
 			$settings->update_server_path,
 			$settings->update_server_port,

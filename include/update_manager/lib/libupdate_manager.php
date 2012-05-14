@@ -27,7 +27,7 @@ function um_db_load_settings () {
 		echo '<strong>Error reading settings</strong><br />';
 		return NULL;
 	}
-
+	
 	$settings = new stdClass ();
 	$settings->proxy = '';
 	$settings->proxy_port = '';
@@ -54,7 +54,7 @@ function um_db_update_setting ($key, $value = '') {
 			$result = get_db_value('COUNT(*)', DB_PREFIX.'tupdate_settings', 'key', $key);
 			break;
 	}
-
+	
 	if ($result === false) {
 		echo '<strong>Error reading settings</strong> <br />';
 		return NULL;

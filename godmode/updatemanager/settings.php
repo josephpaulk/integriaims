@@ -30,10 +30,12 @@ if (! give_acl ($config['id_user'], 0, 'PM')) {
 	return;
 }
 
+require_once("include/functions_update_manager.php");
+
 require("include/update_manager/lib/libupdate_manager.php");
 
 $db =& um_db_connect ('mysql', $config['dbhost'], $config['dbuser'],
-			$config['dbpass'], $config['dbname']);
+	$config['dbpass'], $config['dbname']);
 
 $update_settings = (bool) get_parameter ('update_settings');
 
@@ -41,6 +43,18 @@ if ($update_settings) {
 	foreach ($_POST['keys'] as $key => $value) {
 		um_db_update_setting ($key, $value);
 	}
+	
+	if ($_POST['keys']['customer_key'] == 'INTEGRIA-FREE') {
+		global $conf_update;
+		if (empty($conf_update))
+			$conf_update = update_get_conf();
+		
+		$conf_update['download_mode'] =
+			get_parameter('download_mode', 'curl');
+		
+		update_update_conf();
+	}
+	
 	echo "<h3 class=suc>".__('Update manager settings updated')."</h3>";
 }
 
@@ -57,6 +71,22 @@ $table->data = array ();
 
 $table->data[0][0] = print_input_text ('keys[customer_key]',
 	$settings->customer_key, '', 40, 255, true, __('Customer key'));
+
+if ($settings->customer_key == 'INTEGRIA-FREE') {
+	global $conf_update;
+	if (empty($conf_update))
+		$conf_update = update_get_conf();
+	
+	$methods = array(
+		'wget' => __('WGET, no interactive, external command, fast'),
+		'curl' =>__('CURL, interactive, internal command, slow'));
+	
+	$table->data[0][1] = '<strong>' . __('Download Method') . '</strong><br />';
+	$table->data[0][1] .= print_select($methods,
+		'download_mode', $conf_update['download_mode'], '', '',
+		0, true);
+}
+
 
 $table->data[1][0] = print_input_text ('keys[update_server_host]',
 	$settings->update_server_host, '', 20, 255, true, __('Update server host'));
