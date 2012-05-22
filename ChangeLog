@@ -1,3 +1,10 @@
+2012-05-22  Sergio Martin <sergio.martin@artica.es>
+
+	* include/js/integria.js
+	godmode/usuarios/configurar_usuarios.php: Added input control
+	javascript function in javascript and use it in user id when
+	create user
+
 2012-05-22 Sancho Lerena <slerena@artica.es>
 
 	* operation/users/user_spare_workunit.php: Solved problem editing WU

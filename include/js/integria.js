@@ -132,3 +132,59 @@ function cancel_msg(id) {
 	$('#msg_'+id).fadeOut('slow');
 
 }
+
+/**
+ * Exclude in a input the not alphanumeric characters
+ *
+ * @param id identifier of the input element to control
+ * @param exceptions string with the exceptions to exclusion
+ * @param lower bool true if the lowercase are allowed, false otherwise
+ * @param upper bool true if the uppercase are allowed, false otherwise
+ * @param numbers bool true if the numbers are allowed, false otherwise
+ */
+function inputControl(id,exceptions,lower,upper,numbers) {
+	if(typeof(exceptions) == 'undefined') {
+		exceptions = '_.';
+	}
+	if(typeof(lower) == 'undefined') {
+		lower = true;
+	}
+	if(typeof(upper) == 'undefined') {
+		upper = true;
+	}
+	if(typeof(numbers) == 'undefined') {
+		numbers = true;
+	}
+	
+	var regexpStr = '';
+	
+	if(lower) {
+		regexpStr+= 'a-z';
+	}
+	if(upper) {
+		regexpStr+= 'A-Z';
+	}
+	if(numbers) {
+		regexpStr+= '0-9';
+	}
+	
+	// Scape the special chars
+	exceptions = exceptions.replace(/\./gi,"\\.");
+	exceptions = exceptions.replace(/\-/gi,"\\-");
+	exceptions = exceptions.replace(/\^/gi,"\\^");
+	exceptions = exceptions.replace(/\$/gi,"\\$");
+	exceptions = exceptions.replace(/\[/gi,"\\[");
+	exceptions = exceptions.replace(/\]/gi,"\\]");
+	exceptions = exceptions.replace(/\(/gi,"\\(");
+	exceptions = exceptions.replace(/\)/gi,"\\)");
+	exceptions = exceptions.replace(/\+/gi,"\\+");
+	exceptions = exceptions.replace(/\*/gi,"\\*");
+	
+	regexpStr+= exceptions;
+	$("#"+id).keyup(function() {
+		var text = $(this).val();
+		var regexp = new RegExp("[^"+regexpStr+"]","g");
+		text = text.replace(regexp,'');
+		$("#"+id).val(text);
+	});
+}

@@ -207,7 +207,7 @@ echo '<td class="datos">'.__('User ID');
 echo '<td class="datos" colspan=5>';
 
 if (isset($_GET["alta"])){
-    echo '<input type="text" size=15 name="nombre" value="'.$update_user.'">';
+    echo '<input type="text" size=15 name="nombre" id="nombre" value="'.$update_user.'">';
     print_help_tip (__("User cannot have Blank spaces", false));
 } else {
     echo '<i>';
@@ -363,6 +363,8 @@ $(document).ready (function () {
 			$(this).attr ("src", "images/avatars/"+icon).fadeIn ();
 		});
 	});
+	
+	inputControl("nombre");
 });
 </script>
 
