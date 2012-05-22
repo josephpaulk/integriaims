@@ -1,3 +1,8 @@
+2012-05-22 Sancho lerena <slerena@artica.es>
+
+	* include/functions_db.php: Fixed a problem with SLA stats on blank
+	argument.
+
 2012-05-14 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* include/functions_graph.php: cleaned source code style.

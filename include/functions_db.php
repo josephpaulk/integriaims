@@ -1955,8 +1955,8 @@ function get_most_active_incidents ($lim, $incident_filter = false) {
  */
 function get_sla_compliance ($incidents) {
 
-	if ($incidents == false) {
-		$incidents = array();
+	if (($incidents == false) OR ($incidents == "")) {
+		return 100;
 	}
 	
 	$incident_array = array();
