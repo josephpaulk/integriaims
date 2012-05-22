@@ -76,6 +76,7 @@ $public = (bool) get_parameter ("public", 1);
 $id_project = (int) get_parameter ("id_project");
 $id_workunit = (int) get_parameter ('id_workunit');
 $id_task = (int) get_parameter ("id_task",0);
+$id_incident = (int) get_parameter ("id_incident", 0);
 
 if ($id_task == 0){
     // Try to get id_task from tworkunit_task
@@ -87,7 +88,12 @@ if ($id_task) {
 	$id_project = get_db_value ('id_project', 'ttask', 'id', $id_task);
 }
 
-if ($id_task > 0 && ! user_belong_task ($config["id_user"], $id_task) && !give_acl($config["id_user"], 0, "UM") ){
+if ($id_incident == 0){
+	$id_incident = get_db_value ('id_incident', 'tworkunit_incident', 'id_workunit', $id_workunit);
+}
+
+
+if (! user_belong_task ($config["id_user"], $id_task) && !give_acl($config["id_user"], 0, "UM") ){
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task workunit form without permission");
 	no_permission();
@@ -117,17 +123,18 @@ if ($operation == "lock") {
 
 if ($id_workunit) {
 	$sql = sprintf ('SELECT *
-		FROM tworkunit, tworkunit_task
-		WHERE tworkunit.id = tworkunit_task.id_workunit
-		AND tworkunit.id = %d', $id_workunit);
+		FROM tworkunit
+		WHERE tworkunit.id = %d', $id_workunit);
 	$workunit = get_db_row_sql ($sql);
+
 	if ($workunit === false) {
 		require ("general/noaccess.php");
 		return;
 	}
 	
-	$id_task = $workunit['id_task'];
-	$id_project = get_db_value ('id_project', 'ttask', 'id', $id_task);
+//	$id_task = $workunit['id_task'];
+//	$id_project = get_db_value ('id_project', 'ttask', 'id', $id_task);
+
 	$id_user = $workunit['id_user'];
 	$wu_user = $id_user;
 	$duration = $workunit['duration']; 
@@ -139,11 +146,13 @@ if ($id_workunit) {
 	$now_date = substr ($now, 0, 10);
 	$now_time = substr ($now, 10, 8);
 	
-	if (!$public && $id_user != $config["id_user"] && ! project_manager_check ($id_project) ) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation",
+	if ($id_user != $config["id_user"] && ! project_manager_check ($id_project) ) {
+		if (!give_acl($config["id_user"], 0, "UM")){
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation",
 			"Trying to access non owned workunit");
-		require ("general/noaccess.php");
-		return;
+			require ("general/noaccess.php");
+			return;
+		}
 	}
 } else {
 	$id_user = $config["id_user"];
