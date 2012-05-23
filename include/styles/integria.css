@@ -681,7 +681,12 @@ input.people {
 	background: #e5e5e5 url(../../images/group.png) no-repeat right 3px;
 }
 
-td {	
+input.save {
+	padding-right: 20px;
+	background: #e5e5e5 url(../../images/disk.png) no-repeat right 3px;
+}
+
+td {
 	padding-top: 1px;
 	padding-bottom: 1px;
 	padding-left: 5px;

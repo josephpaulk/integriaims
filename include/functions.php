@@ -82,7 +82,7 @@ function clean_input ($value) {
 		array_walk ($value, 'clean_input');
 		return $value;
 	}
-	return htmlentities (utf8_decode ($value), ENT_QUOTES); 						
+	return htmlentities (utf8_decode ($value), ENT_QUOTES);
 }
 
 /**

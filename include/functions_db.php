@@ -89,50 +89,50 @@ define ('RES_INPROCESS', 9);
 
 function give_acl ($id_user, $id_group, $access) {
 	global $config;
-
-
+	
+	
 	$return = enterprise_hook ('give_acl_extra', array ($id_user, $id_group, $access));
 	if ($return !== ENTERPRISE_NOT_HOOK)
 		return $return;
-
-    // Opensource ACL implementation (not hooked to profiles / groups)
-    $admin = get_admin_user($id_user);
-
-    if (($access == "UM") AND ($admin == 0))
-        return false;
-
-    if (($access == "PM") AND ($admin == 0))
-        return false;
-
-    if (($access == "IM") AND ($admin == 0))
-        return false;
-
-    if (($access == "VM") AND ($admin == 0))
-        return false;
-
-    if (($access == "IM") AND ($admin == 0))
-        return false;
-
-    if (($access == "AM") AND ($admin == 0))
-        return false;
-
-    if (($access == "FM") AND ($admin == 0))
-        return false;
-
-    if (($access == "DM") AND ($admin == 0))
-        return false;
-
-    if (($access == "AM") AND ($admin == 0))
-        return false;
-
-    if (($access == "KM") AND ($admin == 0))
-        return false;
-
-    if (($access == "TM") AND ($admin == 0))
-        return false;
-        
-    if (($access == "WM") AND ($admin == 0))
-        return false;
+	
+	// Opensource ACL implementation (not hooked to profiles / groups)
+	$admin = get_admin_user($id_user);
+	
+	if (($access == "UM") AND ($admin == 0))
+		return false;
+	
+	if (($access == "PM") AND ($admin == 0))
+		return false;
+	
+	if (($access == "IM") AND ($admin == 0))
+		return false;
+	
+	if (($access == "VM") AND ($admin == 0))
+		return false;
+	
+	if (($access == "IM") AND ($admin == 0))
+		return false;
+	
+	if (($access == "AM") AND ($admin == 0))
+		return false;
+	
+	if (($access == "FM") AND ($admin == 0))
+		return false;
+	
+	if (($access == "DM") AND ($admin == 0))
+		return false;
+	
+	if (($access == "AM") AND ($admin == 0))
+		return false;
+	
+	if (($access == "KM") AND ($admin == 0))
+		return false;
+	
+	if (($access == "TM") AND ($admin == 0))
+		return false;
+		
+	if (($access == "WM") AND ($admin == 0))
+		return false;
 	
 	return true;
 } 
@@ -143,10 +143,9 @@ function give_acl ($id_user, $id_group, $access) {
  * NOT ENABLED IN OPENSOURCE version
  * Please visit http://integriaims.com for more information
 **/
-
 function user_visible_for_me ($id_user, $target_user, $access = "") {
 	global $config;
-
+	
 	$return = enterprise_hook ('user_visible_for_me_extra', array ($id_user, $target_user, $access));
 	if ($return !== ENTERPRISE_NOT_HOOK)
 		return $return;
@@ -161,9 +160,9 @@ function user_visible_for_me ($id_user, $target_user, $access = "") {
 function audit_db ($id, $ip, $accion, $description, $extra = "") {
 	require ("config.php");
 	$today = date('Y-m-d H:i:s');
-
-    $extra = mysql_real_escape_string ($extra);
-
+	
+	$extra = mysql_real_escape_string ($extra);
+	
 	$utimestamp = time();
 	$sql = 'INSERT INTO tsesion (ID_usuario, accion, fecha, IP_origen,descripcion, utimestamp, extra_info) VALUES ("'.$id.'","'.$accion.'","'.$today.'","'.$ip.'","'.$description.'", '.$utimestamp.', "'.$extra.'")';
 	process_sql ($sql);
@@ -297,10 +296,10 @@ function get_tasks_count_in_project ($id_project) {
 function get_incident_task_workunit_hours ($id_task) {
 	global $config;
 	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
-			FROM tworkunit, tworkunit_incident, tincidencia 
-			WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
-			AND tworkunit_incident.id_workunit = tworkunit.id
-			AND tincidencia.id_task = %d', $id_task);
+		FROM tworkunit, tworkunit_incident, tincidencia 
+		WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
+		AND tworkunit_incident.id_workunit = tworkunit.id
+		AND tincidencia.id_task = %d', $id_task);
 	return (int) get_db_sql ($sql);
 }
 
@@ -315,9 +314,9 @@ function get_incident_task_workunit_hours ($id_task) {
 function get_wu_hours_user ($id_user, $timestamp) {
 	global $config;
 	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
-			FROM tworkunit
-			WHERE tworkunit.id_user = "%s"  
-			AND tworkunit.timestamp LIKE "%s%%"', $id_user, $timestamp);
+		FROM tworkunit
+		WHERE tworkunit.id_user = "%s"
+		AND tworkunit.timestamp LIKE "%s%%"', $id_user, $timestamp);
 	return (int) get_db_sql ($sql);
 }
 
@@ -385,7 +384,7 @@ function get_project_workunit_hours ($id_project, $with_cost = 0, $start_date = 
 	$timesearch = "";
 	if ($start_date != "")
 		$timesearch = " AND tworkunit.timestamp >= '$start_date' AND tworkunit.timestamp <= '$end_date'";
-
+	
 	if ($with_cost != 0) {
 		$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task, ttask 
@@ -393,7 +392,8 @@ function get_project_workunit_hours ($id_project, $with_cost = 0, $start_date = 
 			AND ttask.id_project = %d
 			AND tworkunit_task.id_workunit = tworkunit.id
 			AND tworkunit.have_cost = 1 %s', $id_project, $timesearch);
-	} else {
+	}
+	else {
 		$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task, ttask 
 			WHERE tworkunit_task.id_task = ttask.id

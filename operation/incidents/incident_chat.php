@@ -51,14 +51,29 @@ $table->style[1] = 'text-align: right; vertical-align: top;';
 $table->data[0][0] = '<div id="chat_box" style="width: 95%;
 	height: 300px; background: #ffffff; border: 1px inset black;
 	overflow: auto; padding: 10px;"></div>';
-$table->data[0][1] = '<h4>' . __('Users Online') . '</h4>' .
+$table->data[0][1] = '';
+
+//Show the button to save only for creator user
+$exists_as_creator = get_db_row_filter('tincidencia',
+	array('id_creator' => $config['id_user'], 'id_incidencia' => $id_incident));
+$exists_as_creator = !empty($exists_as_creator);
+
+if ($exists_as_creator) {
+$table->data[0][1] = '<span id="saving_in_progress" style="display: none;"><img src="images/spinner.gif" />' . __('Saving chat') . '</span>' .
+	print_button(__("Save chat into workunit"), 'save', false, 'save_message()',
+	'class="sub save" style="width: 100%"', true);
+}
+
+$table->data[0][1] .= '<h4>' . __('Users Online') . '</h4>' .
 	'<div id="userlist_box" style="width: 75% !important; height: 200px !important;
 		height: 300px; background: #ffffff; border: 1px inset black;
 		overflow: auto; padding: 10px;"></div>';
 $table->data[1][0] = print_input_text('message_box', '', '',
 	100, 150, true);
-$table->data[1][1] = print_button('send', 'send', false, 'send_message()',
+$table->data[1][1] = print_button(__('Send'), 'send', false, 'send_message()',
 	'class="sub next" style="width: 100%"', true);
+//$table->data[1][1] .= print_button(__("Save chat into workunit"), 'save', false, 'save_message()',
+//	'class="sub next" style="width: 100%"', true);
 
 print_table($table);
 
@@ -92,6 +107,34 @@ print_table($table);
 		send_login_message();
 		long_polling_check_messages();
 		check_users();
+	}
+	
+	function save_message() {
+		var parameters = {};
+		parameters['page'] = page_ajax;
+		parameters['id'] = id_incident;
+		parameters['save_message'] = 1;
+		
+		$("#saving_in_progress").width($("#button-save").width());
+		$("#button-save").hide();
+		$("#saving_in_progress").show();
+		
+		$.ajax({
+			type: 'POST',
+			url: 'ajax.php',
+			data: parameters,
+			dataType: "json",
+			success: function(data) {
+				$("#button-save").show();
+				$("#saving_in_progress").hide();
+				if (data['correct'] == 1) {
+					alert('<?php echo __('Sucessful save the chat into workunit'); ?>');
+				}
+				else {
+					alert('<?php echo __('Unsucessful save the chat into workunit'); ?>');
+				}
+			}
+		});
 	}
 	
 	function check_users() {

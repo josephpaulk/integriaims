@@ -831,7 +831,7 @@ function update_incident_inventories ($id_incident, $inventories) {
 			VALUES (%d, %d)',
 			$id_incident, $id_inventory);
 		$tmp = process_sql ($sql);
-
+		
 		if ($tmp !== false)
 			incident_tracking ($id_incident, INCIDENT_INVENTORY_ADDED,
 				$id_inventory);
@@ -907,14 +907,14 @@ function get_incident_contact_reporters ($id_incident, $only_names = false) {
 **/
 
 function get_incident_workunit_hours ($id_incident) {
-        global $config;
-        $sql = sprintf ('SELECT SUM(tworkunit.duration) 
-                        FROM tworkunit, tworkunit_incident, tincidencia 
-                        WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
-                        AND tworkunit_incident.id_workunit = tworkunit.id
-                        AND tincidencia.id_incidencia = %d', $id_incident);
-
-        return (float) get_db_sql ($sql);
+	global $config;
+	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
+		FROM tworkunit, tworkunit_incident, tincidencia 
+		WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
+		AND tworkunit_incident.id_workunit = tworkunit.id
+		AND tincidencia.id_incidencia = %d', $id_incident);
+	
+	return (float) get_db_sql ($sql);
 }
 
 
@@ -927,17 +927,17 @@ function get_incident_workunit_hours ($id_incident) {
  */
 
 function get_incident_lastworkunit ($id_incident) {
-        $workunits = get_incident_workunits ($id_incident);
-        if (!isset($workunits[0]['id_workunit']))
-            return;
-        $workunit_data = get_workunit_data ($workunits[0]['id_workunit']);
-        return $workunit_data;
+	$workunits = get_incident_workunits ($id_incident);
+	if (!isset($workunits[0]['id_workunit']))
+		return;
+	$workunit_data = get_workunit_data ($workunits[0]['id_workunit']);
+	return $workunit_data;
 }
 
 
 function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public = 1){
 	global $config;
-
+	
 	$row = get_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$titulo =$row["titulo"];
@@ -1088,28 +1088,28 @@ function people_involved_incident ($id_inc){
 	global $config;
 	$row0 = get_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$people = array();
-
+	
 	array_push ($people, $row0["id_creator"]);
 	 if (!in_array($row0["id_usuario"], $people)) {	
 		array_push ($people, $row0["id_usuario"]);
 	}
- 
+	
 	// Take all users with workunits for this incident
 	$sql1 = "SELECT DISTINCT(tusuario.id_usuario) FROM tusuario, tworkunit, tworkunit_incident WHERE tworkunit_incident.id_incident = $id_inc AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit.id_user = tusuario.id_usuario";
-	if ($result=mysql_query($sql1)) {
-		while ($row=mysql_fetch_array($result)){
+	if ($result = mysql_query($sql1)) {
+		while ($row = mysql_fetch_array($result)){
 			if (!in_array($row[0], $people))
 				array_push ($people, $row[0]);
 		}
 	}
-
+	
 	return $people;
 }
 
 // Return TRUE if User has access to that incident
 
 function user_belong_incident ($user, $id_inc) {
-    return in_array($user, people_involved_incident ($id_inc));
+	return in_array($user, people_involved_incident ($id_inc));
 }
 
 
@@ -1119,8 +1119,6 @@ function user_belong_incident ($user, $id_inc) {
  * @param lim n, number of users to return.
  */
 function get_most_incident_creators ($lim, $incident_filter = false) {
-	
-	
 	$sql = 'SELECT id_creator, count(*) AS total FROM tincidencia ';
 	
 	if ($incident_filter) {
@@ -1134,7 +1132,7 @@ function get_most_incident_creators ($lim, $incident_filter = false) {
 	if ($most_creators === false) {
 		return array ();
 	}
-
+	
 	return $most_creators;
 }
 
@@ -1144,11 +1142,9 @@ function get_most_incident_creators ($lim, $incident_filter = false) {
  * @param lim n, number of users to return.
  */
 function get_best_incident_scoring ($lim, $incident_filter=false) {
-	
-	
 	$sql = 'SELECT id_usuario, AVG(score) AS total FROM tincidencia';
-
-	$filter_clause = '';	
+	
+	$filter_clause = '';
 		
 	if ($incident_filter) {
 		
@@ -1157,9 +1153,9 @@ function get_best_incident_scoring ($lim, $incident_filter=false) {
 	}
 	
 	$sql .= ' GROUP by id_usuario ORDER BY total DESC LIMIT '. $lim;
-
+	
 	$most_creators = get_db_all_rows_sql ($sql);
-
+	
 	$all_zero = true;
 	
 	foreach ($most_creators as $mc) {
@@ -1173,7 +1169,7 @@ function get_best_incident_scoring ($lim, $incident_filter=false) {
 		
 		return array ();
 	}
-
+	
 	return $most_creators;
 }
 

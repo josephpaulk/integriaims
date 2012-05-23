@@ -39,6 +39,8 @@ $send_logout = (bool)get_parameter('send_logout', 0);
 $long_polling_check_messages = (bool)get_parameter('long_polling_check_messages', 0);
 $get_last_global_counter = (bool)get_parameter('get_last_global_counter', 0);
 $check_users = (bool)get_parameter('check_users', 0);
+$save_message = (bool)get_parameter('save_message', 0);
+
 $id = (int)get_parameter('id', 0);
 
 if ($get_last_messages) {
@@ -65,6 +67,72 @@ if ($get_last_global_counter) {
 
 if ($check_users) {
 	users_check_users();
+}
+
+if ($save_message) {
+	save_message_workunit();
+}
+
+function save_message_workunit() {
+	global $config;
+	global $dir;
+	global $id;
+	
+	include("include/functions_workunits.php");
+	
+	$return = array('correct' => false);
+	
+	$file_global_counter_chat = $dir . '/incident.' . $id . '.global_counter.txt';
+	$log_chat_file = $dir . '/incident.' . $id . '.log.json.txt';
+	
+	//First lock the file
+	$fp_global_counter = @fopen($file_global_counter_chat, "a+");
+	if ($fp_global_counter === false) {
+		echo json_encode($return);
+		
+		return;
+	}
+	//Try to look MAX_TIMES times
+	$tries = 0;
+	while (!flock($fp_global_counter, LOCK_EX)) {
+		$tries++;
+		if ($tries > MAX_TIMES) {
+			echo json_encode($return);
+			
+			return;
+		}
+		
+		sleep(1);
+	}
+	
+	$text_encode = @file_get_contents($log_chat_file);
+	$log = json_decode($text_encode, true);//debugPrint($log);
+	
+	$txtChat = __('---------- CHAT -------------');
+	$txtChat .= "\n";
+	foreach ($log as $message) {
+		if ($message['type'] == 'notification') {
+			//Disabled at the moment
+			continue;
+			//$txtChat .= __("<<SYSTEM>>");
+		}
+		else {
+			$txtChat .= $message['user_name'];
+		}
+		$txtChat .= " :> ";
+		$txtChat .= $message['text'];
+		
+		$txtChat .= "\n";
+	}
+	
+	create_workunit ($id, safe_input($txtChat), $config['id_user']);
+	
+	fclose($fp_global_counter);
+	
+	$return['correct'] = true;
+	echo json_encode($return);
+	
+	return;
 }
 
 ////////////////////////////////////////////////////////////////////////

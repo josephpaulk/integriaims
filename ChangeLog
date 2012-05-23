@@ -1,3 +1,16 @@
+2012-05-22 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/styles/integria.css: added class save to show the disk
+	icon in button with this kind of class.
+	
+	* include/functions_db.mysql.php, include/functions_workunits.php,
+	include/functions_incidents.php, include/functions.php,
+	include/functions_db.php: cleaned source code style.
+	
+	* operation/incidents/incident_chat.php,
+	operation/incidents/incident_chat.ajax.php: added lost feature to
+	save the chat text into a workunit in the incident.
+
 2012-05-22  Sergio Martin <sergio.martin@artica.es>
 
 	* include/js/integria.js

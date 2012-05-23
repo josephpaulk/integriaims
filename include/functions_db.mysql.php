@@ -31,10 +31,12 @@ function get_db_value ($field, $table, $field_search = 1, $condition = 1) {
 	if (is_int ($condition)) {
 		$sql = sprintf ("SELECT %s FROM %s WHERE %s = %d LIMIT 1",
 				$field, $table, $field_search, $condition);
-	} else if (is_float ($condition) || is_double ($condition)) {
+	}
+	else if (is_float ($condition) || is_double ($condition)) {
 		$sql = sprintf ("SELECT %s FROM %s WHERE %s = %f LIMIT 1",
 				$field, $table, $field_search, $condition);
-	} else {
+	}
+	else {
 		$sql = sprintf ("SELECT %s FROM %s WHERE %s = '%s' LIMIT 1",
 				$field, $table, $field_search, $condition);
 	}
