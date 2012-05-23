@@ -53,9 +53,9 @@ $table->data[0][0] = '<div id="chat_box" style="width: 95%;
 	overflow: auto; padding: 10px;"></div>';
 $table->data[0][1] = '';
 
-//Show the button to save only for creator user
+//Show the button to save only for assigned user
 $exists_as_creator = get_db_row_filter('tincidencia',
-	array('id_creator' => $config['id_user'], 'id_incidencia' => $id_incident));
+	array('id_usuario' => $config['id_user'], 'id_incidencia' => $id_incident));
 $exists_as_creator = !empty($exists_as_creator);
 
 if ($exists_as_creator) {
