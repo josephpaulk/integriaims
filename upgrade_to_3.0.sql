@@ -160,3 +160,77 @@ CREATE TABLE `tincident_sla_graph` (
 
 ALTER TABLE tsla ADD `max_inactivity` int(11) unsigned NULL default 96;
 
+
+-- 23 may 2012
+
+CREATE TABLE `tnewsletter` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `name` text default NULL,
+  `id_group` mediumint(8) unsigned NOT NULL,
+  `description` text default NULL,
+  `from_desc` text default NULL,
+  `from_address` text default NULL,
+   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tnewsletter_content` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `id_newsletter` bigint(20) NOT NULL,
+  `email_subject` text default NULL,
+  `html` text default NULL,
+  `plain` text default NULL,
+  `datetime` datetime NOT NULL default '0000-00-00 00:00:00',  
+  `status` int unsigned NOT NULL default '0',
+   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- status could be 0-pending, 1-ready, 2-sent
+
+CREATE TABLE `tnewsletter_address` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `id_newsletter` bigint(20) NOT NULL,
+  `name` tinytext default NULL,
+  `email` tinytext default NULL,
+  `status` int unsigned NOT NULL default '0',
+  `datetime` datetime NOT NULL default '0000-00-00 00:00:00',  
+   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- status could be 0-ok, 1-disabled/removed
+
+CREATE TABLE `tnewsletter_tracking` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `id_newsletter` bigint(20) NOT NULL,
+  `id_newsletter_address` bigint(20) NOT NULL,
+  `datetime` datetime NOT NULL default '0000-00-00 00:00:00',  
+  `status` int unsigned NOT NULL default '0',
+   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- status could be 1-read
+
+CREATE TABLE `tnewsletter_queue` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `id_newsletter_content` bigint(20) NOT NULL,
+  `datetime` datetime NOT NULL default '0000-00-00 00:00:00',  
+  `status` int unsigned NOT NULL default '0',
+   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- status could be 0-not ready, 1-ready!, 2-in process, 3-end
+
+CREATE TABLE `tnewsletter_queue_data` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `id_queue` bigint(20) NOT NULL,
+  `id_newsletter` bigint(20) NOT NULL,
+  `id_newsletter_content` bigint(20) NOT NULL,
+  `email` tinytext default NULL,
+  `name` tinytext default NULL,
+  `datetime` datetime NOT NULL default '0000-00-00 00:00:00',  
+  `status` int unsigned NOT NULL default '0',
+   PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- status could be 0-ready, 1-sent, 2-error
+
+

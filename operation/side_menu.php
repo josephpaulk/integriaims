@@ -628,6 +628,61 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "VR") && $show_custo
 }
 
 
+// Newsletter
+
+
+if (($config["enable_newsletter"] == 1) && ($sec == "customers") && (give_acl ($config["id_user"], 0, "VR")) && ($show_customers != MENU_HIDDEN)) {
+
+	echo "<div class='portlet'>";
+
+
+	echo "<h3 class='admin'>".__('Newsletter')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+
+	if (($sec2=="operation/newsletter/newsletter_definition") AND (!isset($_GET["create"])))
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_definition'>".__('Newsletters')."</a></li>";
+
+	echo "<li style='margin-left: 15px; font-size: 10px;'>";
+	echo "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_creation&create=1'>".__('New newsletter')."</a>";
+	echo "</li>";
+	
+	if (($sec2=="operation/newsletter/issue_definition") AND (!isset($_GET["create"])))
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/newsletter/issue_definition'>".__('Issues')."</a></li>";
+
+	echo "<li style='margin-left: 15px; font-size: 10px;'>";
+	echo "<a href='index.php?sec=customers&sec2=operation/newsletter/issue_creation&create=1'>".__('New issue')."</a>";
+	echo "</li>";
+	
+	if (($sec2=="operation/newsletter/address_definition") AND (!isset($_GET["create"])))
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/newsletter/address_definition'>".__('Addresses')."</a></li>";
+
+	echo "<li style='margin-left: 15px; font-size: 10px;'>";
+	echo "<a href='index.php?sec=customers&sec2=operation/newsletter/address_creation&create=1'>".__('New address')."</a>";
+	echo "</li>";
+	
+	if (($sec2=="operation/newsletter/queue_manager") AND (!isset($_GET["create"])))
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/newsletter/queue_manager'>".__('Queue control')."</a></li>";
+	
+	echo "</ul></div>";
+		
+}
+
+
+
+
 // MANUFACTURER
 if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
 	echo "<div class='portlet'>";

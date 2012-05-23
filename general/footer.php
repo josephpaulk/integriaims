@@ -14,7 +14,7 @@
 // GNU General Public License for more details.
 
 ?>
-<div id="footer">
+
 <center>
 <?PHP
 global $config;
@@ -46,4 +46,4 @@ if (isset($_SESSION['id_usuario'])) {
 }
 ?>
 </center>
-</div>
+

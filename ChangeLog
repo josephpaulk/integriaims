@@ -1,3 +1,25 @@
+2012-05-23 Sancho Lerena <slerena@artica.es>
+
+	* operation/newsletter/address_creation.php
+	operation/newsletter/newsletter_definition.php
+	operation/newsletter/newsletter_creation.php
+	operation/newsletter/queue_manager.php
+	operation/newsletter/issue_creation.php
+	operation/newsletter/address_definition.php
+	operation/newsletter/issue_definition.php: New code for the newsletter 
+	new feature :-)
+	
+	* include/js/tiny_mce: Added tiny mce editor.
+	
+	* operation/side_menu.php: new menu entries (inside "customers").
+
+	* integria_db.sql: New schema tables.
+	
+	* general/footer.php: Fixed styles.
+	
+	* godmode/setup/setup.php: Added check for enable/disable newsletter
+	system.
+
 2012-05-23 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* operation/incidents/incident_chat.php: changed to show the save
