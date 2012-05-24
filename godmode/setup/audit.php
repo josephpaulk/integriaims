@@ -22,14 +22,30 @@ if (! give_acl ($config["id_user"], 0, "IM")) {
 	exit;
 }
 
+$text = get_parameter ("text", "");
+
 $color = 0;
 $id_user = $config["id_user"];
 echo "<h2>".__('Event history')."</h2>";
 
+echo "<form method=post>";
+echo "<table width=400 class=databox>";
+echo "<tr><td><input type=text name=text value='$text'>";
+echo "<td><input type=submit value='".__("Search")."'>";
+echo "<input type=hidden name=offset value='$offset'>";
+echo "</form></table>";
+
+
+$where = "WHERE 1=1 ";
+
+if ($text != "")
+	$where .= "AND (ID_usuario LIKE '%$text%' OR accion LIKE '%$text%' OR descripcion LIKE '%$text%')";
+	
+
 // Pagination
 $offset = (int) get_parameter ("offset");
-$total_events = get_db_sql ("SELECT COUNT(ID_sesion) FROM tsesion");
-pagination ($total_events, "index.php?sec=godmode&sec2=godmode/setup/audit", $offset);
+$total_events = get_db_sql ("SELECT COUNT(ID_sesion) FROM tsesion $where");
+pagination ($total_events, "index.php?sec=godmode&sec2=godmode/setup/audit&text=$text", $offset);
 
 $table->width = '99%';
 $table->class = 'listing';
@@ -41,16 +57,13 @@ $table->head[3] = __('Description');
 $table->head[4] = __('Extra info');
 $table->head[5] = __('Timestamp');
 $table->data = array ();
-/*
-$table->style[3] = "font-size: 9px; width: 110px;";
-$table->style[2] = "font-size: 9px; ";
-$table->style[0] = "width: 200px;";
-*/
 
-$sql = sprintf ('SELECT * FROM tsesion
+$sql = sprintf ('SELECT * FROM tsesion %s
 	ORDER by utimestamp
 	DESC LIMIT %d, %d',
-	$offset, $config["block_size"]);
+	$where, $offset, $config["block_size"]);
+	
+	
 $events = get_db_all_rows_sql ($sql);
 if ($events === false)
 	$events = array ();

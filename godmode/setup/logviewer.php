@@ -37,8 +37,8 @@ if (!file_exists($file_name)){
 	echo "<h2 class=error>".__("Cannot find file"). "(".$file_name;
 	echo ")</h1>";
 }  else {
-	if (filesize ($file_name) > 512000) {
-		echo "<h2 class=error>".__("File is too large (> 500KB)"). "(".$file_name;
+	if (filesize ($file_name) > 1120000) {
+		echo "<h2 class=error>".__("File is too large (> 1MB)"). "(".$file_name;
 		echo ")</h1>";
 	} else {
 		$data = file_get_contents ($file_name);			

@@ -32,6 +32,7 @@ $update = (bool) get_parameter ('update');
 $delete = (bool) get_parameter ('delete');
 $start = (bool) get_parameter ('start');
 $stop = (bool) get_parameter ('stop');
+$retry = (bool) get_parameter ('retry');
 
 // CREATE
 if ($create) {
@@ -98,12 +99,25 @@ if ($delete) { // if delete
 
 	$id = (int) get_parameter ('id');
 	$sql= sprintf ('DELETE FROM tnewsletter_queue WHERE id = %d', $id);
+	process_sql ($sql);
 	$sql= sprintf ('DELETE FROM tnewsletter_queue_data WHERE id_queue = %d', $id);
 	process_sql ($sql);
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER QUEUE DELETED", "Deleted newsletter queue $id");
 	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 	$id = 0;
 }
+
+// RETRY BAD
+if ($retry) { // if delete
+	$id = get_parameter("id", 0);
+	$sql = "UPDATE tnewsletter_queue SET status = 1 WHERE id = $id";
+	$result = mysql_query ($sql);
+	
+	$sql = "UPDATE tnewsletter_queue_data SET status = 0 WHERE id_queue = $id AND status = 2";
+	$result = mysql_query ($sql);
+	$id = 0;
+}
+
 
 
 // General issue listing
@@ -139,10 +153,20 @@ if ($queue !== false) {
 	$table->head[3] = __('Status');
 	$table->head[4] = __('Addresses');
 
+	$table->head[4] .= print_help_tip (__("Total / Ready / Sent / Error"), true);		
+
 	if(give_acl ($config["id_user"], $id_group, "VM")) {
 		$table->head[5] = __('Delete');
+		$table->head[5] .= print_help_tip (__("Similar to the stop operation, but will delete the queue contents. If crontask is being processed, addresses in memory will be processed"), true);			
+		
 		$table->head[6] = __('Start');
+		$table->head[6] .= print_help_tip (__("Queue will be activated and mails will be sent in next crontab execution. You will see the detailed process in the errorlog"), true);			
+
 		$table->head[7] = __('Stop');
+		$table->head[7] .= print_help_tip (__("This will mark as pending the queue, if that queue is being processed in that moment, the whole batch will be processed"), true);
+		
+		$table->head[8] = __('Retry');
+		$table->head[8] .= print_help_tip (__("This will mark as ready all email address marked as error in a previous attempt and rerun the qeue"), true);						
 
 	}
 	
@@ -170,11 +194,13 @@ if ($queue !== false) {
 		else
 			$data[3] = __("Done");	
 
-		$total = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 0 AND id_newsletter_content = $id_issue");
+
+		$total = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE id_newsletter_content = $id_issue");
+		$ready = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 0 AND id_newsletter_content = $id_issue");
 		$done = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 1 AND id_newsletter_content = $id_issue");
 		$error = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 2 AND id_newsletter_content = $id_issue");
 		
-		$data[4] = "$total / $done / $error";
+		$data[4] = "$total / $ready / $done / $error";
 	
 		if(give_acl ($config["id_user"], $id_group, "VM")) {
 			$data[5] ='<a href="index.php?sec=customers&sec2=operation/newsletter/queue_manager&
@@ -195,6 +221,14 @@ if ($queue !== false) {
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">
 						<img src="images/exclamation.png" title="stop"></a>';
+						
+			$data[8] ='<a href="index.php?sec=customers&sec2=operation/newsletter/queue_manager&
+						retry=1&id='.$items['id'].'"
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
+						return false;">
+						<img src="images/arrow_refresh.png" title="Retry"></a>';
+						
+
 									
 		}
 		array_push ($table->data, $data);

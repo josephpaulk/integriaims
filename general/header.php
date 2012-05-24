@@ -51,14 +51,9 @@ else
 	echo '<img src="images/user_green.png"> ';
 echo __('You are connected as').' <span style="font-weight: bold; color: #ffffff"">['.$config['id_user'].']</span></a>';
 
-
-
-
 echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 echo '<a href="index.php?logout=1"><img src="images/lock.png"> '. __('Logout').'</a>';
-
 echo '</td><td style="padding: 0px; margin: 0px;">';
-
 echo "<form method=post action='index.php?sec2=operation/search'>";
 echo "&nbsp;";
 echo "<input type=text name='search_string' size=15 value='$search_string'>";

@@ -156,6 +156,10 @@ function load_config(){
         $config["enable_newsletter"] = 0;
     }
 
+	if (!isset($config["batch_newsletter"])) {
+        $config["batch_newsletter"] = 15;
+    }
+
     ini_set("post_max_size",$config["max_file_size"]);
     ini_set("upload_max_filesize",$config["max_file_size"]);
 

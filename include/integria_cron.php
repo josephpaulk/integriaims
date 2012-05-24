@@ -535,7 +535,15 @@ function check_sla_inactivity ($incident) {
 function run_mail_queue () {
 
 	global $config;
+	
 	include_once ($config["homedir"]."/include/functions.php");
+	
+	// If SMTP port is not configured, abort mails directly!
+	if ($config["smtp_port"] == 0){
+		integria_logwrite ("SMTP has no port configured. Aborting mail queue processing");
+		return;		
+	}
+	
 	require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
 
    	$utimestamp = date("U");
@@ -589,17 +597,121 @@ function run_mail_queue () {
 	}
 }
 
+// This will send mails on the newsletters queue. Will have a global parameter to control how 
+// many emails can sent in a single execution, to avoid SMTP servers overload or SPAM protection
+
+function run_newsletter_queue () {
+
+	global $config;
+
+echo "DEBUG Starting newsletter processing \n";
+	
+	include_once ($config["homedir"] . "/include/functions.php");	
+	require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
+	
+	// If SMTP port is not configured, abort mails directly!
+	if ($config["smtp_port"] == 0){
+		integria_logwrite ("SMTP has no port configured. Aborting newsletter processing");
+		return;		
+	}
+
+	$total = $config["batch_newsletter"];
+	
+   	$utimestamp = date("U");
+	$current_date = date ("Y/m/d H:i:s");
+
+	// Select valid QUEUES for processing
+	
+	$queues = get_db_all_rows_sql ("SELECT * FROM tnewsletter_queue WHERE status = 1");	
+	if ($queues) foreach ($queues as $queue){
+	
+		$id_newsletter = get_db_sql ("SELECT id_newsletter FROM tnewsletter_content WHERE id = ".$queue["id_newsletter_content"]);
+		$id_queue = $queue["id"];
+		
+		// Get issue and newsletter records
+		
+		$issue = get_db_row ("tnewsletter_content", "id", $queue["id_newsletter_content"]);
+		$newsletter = get_db_row ("tnewsletter", "id", $id_newsletter);
+		
+		// TODO
+		// max block size here is 500. NO MORE, fix this in the future with a real buffered system!
+		
+		$addresses = get_db_all_rows_sql ("SELECT * FROM tnewsletter_queue_data WHERE status = 0 AND id_queue = $id_queue LIMIT 500");
+
+		if (!$addresses) 
+			process_sql ("UPDATE tnewsletter_queue SET status=3 WHERE id_queue = $id_queue");
+		else 
+		foreach ($addresses as $address){
+		
+			// Compose the mail for each valid address
+
+			$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
+			$transport->setUsername($config["smtp_user"]);
+			$transport->setPassword($config["smtp_pass"]);
+			$mailer = Swift_Mailer::newInstance($transport);
+			
+			$message = Swift_Message::newInstance(safe_output($issue["email_subject"]));
+			$message->setFrom($newsletter["from_address"]);
+			$dest_email = trim(safe_output($address['email']));
+			
+			
+			// DEBUG !
+	$DEBUG_email = "sanchonoexiste@nowhere.com";
+	
+//			$message->setTo($dest_email);
+			$message->setTo($DEBUG_email);
+			
+			// TODO: replace names on macros in the body / HTML parts.
+
+			$message->setBody(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');
+
+			$message->addPart(safe_output($issue['html']), 'text/html', 'utf-8');
+
+			if (!$mailer->send($message, $failures)) {
+				integria_logwrite ("Trouble with address ".$failures[0]);
+
+				// TODO: 
+				// Do something like error count to disable invalid addresses after a 
+				// number of invalid counts
+				// process_sql ("UPDATE tnewsletter_address SET status=1 WHERE id_newsletter = $id_newsletter AND email = '$dest_email'");
+				
+				process_sql ("UPDATE tnewsletter_queue_data SET status=2 WHERE id_queue = $id_queue AND email = '$dest_email'");
+				
+			} else {
+				process_sql ("UPDATE tnewsletter_queue_data SET status=1 WHERE id_queue = $id_queue AND email = '$dest_email'");
+			}
+			
+			$total = $total - 1;
+		
+			if ($total <= 0)
+				return;
+		
+		} // end of loop for each address in the queue		
+
+	} // end of main loop
+	
+}
+
+
 // This will check POP3 pending mail
 
 function run_mail_check () {
+
+	global $config;
 	
 	//If imap module is not loaded don't executhe anything.
 	if (!function_exists(imap_open)) {
+		integria_logwrite ("IMAP Extension not loaded, I can't continue processing mail queue");
 		return;
 	}
 
-	global $config;
 	include_once ($config["homedir"]."/include/functions_pop3.php");
+
+	// If SMTP port is not configured, abort mails directly!
+	if ($config["smtp_port"] == 0){
+		integria_logwrite ("SMTP has no port configured. Aborting mail queue check processing");
+		return;		
+	}
 
 	// Inicialization for internal variables
 
@@ -708,6 +820,17 @@ function run_mail_check () {
 /* Main code goes here */
 // ---------------------------------------------------------------------------
 
+// Crontab control on tconfig, install first run to let user know where is
+
+$installed = get_db_sql ("SELECT COUNT(*) FROM tconfig WHERE `token` = 'crontask'");
+$current_date = date ("Y/m/d H:i:s");
+
+if ($installed == 0){
+	process_sql ("INSERT INTO tconfig (`token`,`value`) VALUES ('crontask', '$current_date')");
+} else {
+	process_sql ("UPDATE tconfig SET `value` = '$current_date' WHEE `token` = 'crontask'");
+}
+
 
 // Daily check only
 
@@ -726,6 +849,11 @@ run_mail_check();
 // Execute always (Send pending mails, SMTP)
 
 run_mail_queue();
+
+// if enabled, run newsletter queue
+
+if ($config["enable_newsletter"] == 1)
+	run_newsletter_queue();
 
 // Check SLA on active incidents (max. opened time without fixing and min. response)
 

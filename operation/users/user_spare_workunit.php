@@ -53,15 +53,16 @@ if (defined ('AJAX')) {
 
 		$id_project = get_db_value('id_project','ttask','id',$id_task);
 		
-		// If the user is Project Manager, all the roles are retrieved. If not, only the assigned roles
+		// If the user is Project Manager, all the roles are retrieved. 
+		// If not, only the assigned roles
+		
 		if(give_acl($id_user, 0, "PM")) {
 			$roles = get_db_all_rows_filter('trole',array(),'id, name');
 		}
 		else {
 			$roles = get_db_all_rows_sql('SELECT trole.id, trole.name FROM trole, trole_people_project WHERE id_role = trole.id AND id_user = "'.$id_user.'" AND id_project = '.$id_project);
 		}	
-		debugPrint('SELECT trole.id, trole.name FROM trole, trole_people_project WHERE id_role = trole.id AND id_user = "'.$id_user.'" AND id_project = '.$id_project, true);
-		debugPrint($roles, true);
+
 		echo json_encode($roles);
 
 		return;
@@ -92,11 +93,13 @@ if ($id_incident == 0){
 	$id_incident = get_db_value ('id_incident', 'tworkunit_incident', 'id_workunit', $id_workunit);
 }
 
+if ($id_task != ""){
 
-if (! user_belong_task ($config["id_user"], $id_task) && !give_acl($config["id_user"], 0, "UM") ){
-	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task workunit form without permission");
-	no_permission();
+	if (! user_belong_task ($config["id_user"], $id_task) && !give_acl($config["id_user"], 0, "UM") ){
+		// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task workunit form without permission");
+		no_permission();
+	}
 }
 
 // Lock Workunit

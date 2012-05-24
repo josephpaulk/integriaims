@@ -985,17 +985,17 @@ div#login {
 }
 
 div#footer {
-	background: #FFF url(../../images/footerbg.gif) repeat left top;
 	border-top: 1px solid #F2F2F2;
 	text-align: center;
 	margin-bottom: 5px;
 	padding-bottom: 5px;
 	font-size: 10px;
 	border-top: solid 2px #000;
-	padding-top: 5px;
-	padding-bottom: 5px;
+	margin-top: 0px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	text-align: center;
-	background: #666;
+	background: #222;
 	width: 100%;
 	color:#FFF;
 	clear: both;

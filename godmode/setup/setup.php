@@ -55,7 +55,8 @@ if ($update) {
     $config["max_file_size"] = get_parameter ("max_file_size", 1);
     $config["iw_creator_enabled"] = get_parameter ("iw_creator_enabled", 0);
     $config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
-	
+    $config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
+    
     update_config_token ("timezone", $config["timezone"]);	
 
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
@@ -93,11 +94,22 @@ if ($update) {
     update_config_token ("error_log", $config["error_log"]);
 	update_config_token ("iw_creator_enabled", $config["iw_creator_enabled"]);
     update_config_token ("enable_newsletter", $config["enable_newsletter"]);
+    update_config_token ("batch_newsletter", $config["batch_newsletter"]);
+    
 }
 // Render SYSTEM language code, not current language.
 $config['language_code'] = get_db_value ('value', 'tconfig', 'token', 'language_code');
 
+$crontask = get_db_sql ("SELECT `value` FROM tconfig WHERE `token` = 'crontask'");
+
 echo "<h2>".__('General setup')."</h2>";
+
+if ($crontask == "")
+	echo "<h2 class=error>".__("Crontask not installed. Please check documentation!")."</h2>";
+else
+	echo "<h4>".__("Last execution for crontask at"). " ".$crontask."</h4>";
+
+
 
 $table->width = '90%';
 $table->class = 'databox';
@@ -116,6 +128,9 @@ $table->data[0][1] = print_input_text ("no_wu_completion", $config["no_wu_comple
 $table->data[0][1] .= integria_help ("no_wu_completion", true);
 
 $table->data[1][0] = print_select ($incident_reporter_options, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, true, __('Send email on every incident update'));
+
+
+$table->data[1][0] .= print_help_tip (__("Enabling this, you will get emails on file attachs also. If left disabled, you only get notifications only in major events on incidents"), true);
 
 $table->data[1][1] = print_input_text ("limit_size", $config["limit_size"], '',
 	5, 5, true, __('Max. data limit size'));
@@ -143,7 +158,12 @@ $error_log_options[0] = __('Disabled');
 $error_log_options[1] = __('Enabled');
 $table->data[5][0] = print_select ($error_log_options, "error_log", $config["error_log"], '','','',true,0,true, __('Error log'));
 
+$table->data[5][0] .= print_help_tip (__("This errorlog is on /integria.log"), true);
+
+
 $table->data[5][1] = print_select ($incident_reporter_options, "incident_reporter", $config["incident_reporter"], '','','',true,0,true, __('Incident reporter'));
+
+$table->data[5][1] .= print_help_tip (__("Enabling this, you will be able to add aditional contacts to each incident. These contacts will receive email notifications if email notification is enabled, but cannot do anything"), true);
 
 $table->data[6][0] = print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, __('Show incident owner'));
 
@@ -158,6 +178,8 @@ $table->data[10][1] .= integria_help ("auto_incident_close", true);
 
 $table->data[11][0] = print_input_text ("api_acl", $config["api_acl"], '',
 	30, 255, true, __('List of IP with access to API'));
+	
+$table->data[11][0] .= print_help_tip (__("List of IP (separated with commas which can access to the integria API. Use * for any address (INSECURE!)"), true);
 
 $table->data[11][1] = print_input_text ("api_password", $config["api_password"], '',
 	30, 255, true, __('API password'));
@@ -169,10 +191,19 @@ $table->data[12][0] = print_input_text ("max_file_size", $config["max_file_size"
 $table->data[12][1] =  print_checkbox ("iw_creator_enabled", 1, $config["iw_creator_enabled"], 
 					true, __('Enable IW to change creator'));
 					
-					
+$table->data[12][1] .= print_help_tip (__("Enabling this, any user with IW will be able to change the creator of an incident. This is disabled by default to be ITIL compliant"), true);			
+		
 $newsletter_options[0] = __('Disabled');
 $newsletter_options[1] = __('Enabled');
 $table->data[13][0] = print_select ($newsletter_options, "enable_newsletter", $config["enable_newsletter"], '','','',true,0,true, __('Enable newsletter'));
+
+
+$table->data[13][1] = print_input_text ("batch_newsletter", $config["batch_newsletter"], '',
+	4, 255, true, __('Max. emails sent per execution'));
+	
+$table->data[13][0] .= print_help_tip (__("Enable this option to activate the newsletter feature of Integria IMS"), true);
+
+$table->data[13][1] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
 
 
 echo "<form name='setup' method='post'>";

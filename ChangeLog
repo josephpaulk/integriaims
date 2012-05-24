@@ -1,3 +1,27 @@
+2012-05-24  Sancho Lerena <slerena@artica.es>
+
+	Newsletter feature almost complete !! :)
+
+	* include/integria_cron.php: Added task function to manage the 
+	newsletters in a separeted buffered queue.
+
+	* functions.php, 
+	functions_config.php: Some new small functions to parse 
+	emails and parsing other newsletter parameter (for queuing).
+
+	* operation/newsletter/issue_definition.php,
+	operation/newsletter/newsletter_definition.php
+	operation/newsletter/address_definition.php
+	operation/newsletter/queue_manager.php
+	operation/side_menu.php: Fixing ACL and finishing queue control.
+
+	* operation/users/user_spare_workunit.php: Fixed silly bug.
+
+	* godmode/setup/audit.php: Adding filtering option to audit view.
+
+	* godmode/setup/setup.php: Adding new hints and new queue control size
+	parameter.
+
 2012-05-23 Sancho Lerena <slerena@artica.es>
 
 	* operation/newsletter/address_creation.php
