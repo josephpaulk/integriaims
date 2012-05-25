@@ -216,6 +216,7 @@ if ($id_project) {
 	$total = project_workunit_cost ($id_project, 1);
     $real = project_workunit_cost ($id_project, 0);
 
+	$real = $real + get_incident_project_workunit_cost ($id_project);
 	
 	echo '<tr>';
 	echo '<td class="datos"><b>'.__('Total payable workunit (hr)').'</b>';

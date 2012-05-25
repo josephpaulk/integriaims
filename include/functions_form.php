@@ -495,6 +495,7 @@ function show_workunit_data ($workunit, $title) {
 	$id_workunit = $workunit["id"];
 	$public = $workunit["public"];
 	$locked = $workunit["locked"];
+	$profile = $workunit["id_profile"];
 
 	$sql = sprintf ('SELECT tincidencia.id_grupo
 			FROM tincidencia, tworkunit_incident
@@ -534,8 +535,20 @@ function show_workunit_data ($workunit, $title) {
 
 	// WU Duration 
 	echo "<span style='float:right; margin-top: -1px; margin-bottom:0px; padding-right:10px;'>";
+	
+	// Have a cost ?
+	if ($workunit["have_cost"] == 1)
+		echo "<img src='images/dollar.png' title='".__('Have a cost')."' border=0>&nbsp;";
+	
 	echo $duration;
 	echo "&nbsp; ".__('Hours');
+	
+	// Show profilename
+	$profile_name = get_db_sql ("SELECT name FROM trole WHERE id = $profile");
+	if ($profile_name != ""){
+		echo "<i>(".$profile_name.")</i>";
+	}
+	
 	echo "</span>";
 
 	echo "</div>";

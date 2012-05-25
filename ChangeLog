@@ -1,3 +1,36 @@
+2012-05-25  Sancho Lerena <slerena@artica.es>
+
+	Finished newsletter feature. 100% functional ! :)
+
+	* upgrade_to_3.0.sql: Minor changes in SQL.
+
+	* include/integria_cron.php: Final changes for newsletter sending.
+
+	* include/newsletter.php: Frontend for desubscription and newsletter
+	html visualization.
+
+	* include/functions_form.php: Workunits now shows profile and if have
+	costs associated.
+
+	* include/functions_db.php: New functions to calculate project / tasks
+	costs due related incident WU.
+
+	* operation/incidents/incident_detail.php,
+	operation/projects/task.php
+	operation/projects/task_detail.php
+	operation/projects/project_detail.php: Proper calculation of costs
+	including workunits from related incidents. ALso fixed some time calculation.
+
+	* operation/newsletter/issue_definition.php
+	operation/newsletter/newsletter_definition.php: Show ID's of newsletter to be
+	used in newsletter frontend.
+
+	* operation/newsletter/queue_manager.php: Added feature to disabled bad addresses.
+
+	* images/dollar.png: New icon.
+
+	* integria_db.sql: minor changes in ona newsletter table.
+
 2012-05-24  Sancho Lerena <slerena@artica.es>
 
 	Newsletter feature almost complete !! :)

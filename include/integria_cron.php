@@ -434,6 +434,7 @@ function check_sla_min ($incident) {
 
 	$text = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time.tpl", $MACROS);
 	$subject = template_process ($config["homedir"]."/include/mailtemplates/incident_sla_min_response_time_subject.tpl", $MACROS);
+	
 	integria_sendmail ($user['direccion'], $subject, $text);
 	insert_event ('SLA_MIN_RESPONSE_NOTIFY', $incident['id_incidencia']);
 
@@ -604,8 +605,6 @@ function run_newsletter_queue () {
 
 	global $config;
 
-echo "DEBUG Starting newsletter processing \n";
-	
 	include_once ($config["homedir"] . "/include/functions.php");	
 	require_once($config["homedir"] . "/include/swiftmailer/swift_required.php");
 	
@@ -654,18 +653,13 @@ echo "DEBUG Starting newsletter processing \n";
 			$message->setFrom($newsletter["from_address"]);
 			$dest_email = trim(safe_output($address['email']));
 			
-			
-			// DEBUG !
-	$DEBUG_email = "sanchonoexiste@nowhere.com";
-	
-//			$message->setTo($dest_email);
-			$message->setTo($DEBUG_email);
-			
+			$message->setTo($dest_email);
+
 			// TODO: replace names on macros in the body / HTML parts.
 
-			$message->setBody(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');
+			$message->setBody(safe_output($issue['html']), 'text/html', 'utf-8');
 
-			$message->addPart(safe_output($issue['html']), 'text/html', 'utf-8');
+			$message->addPart(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');
 
 			if (!$mailer->send($message, $failures)) {
 				integria_logwrite ("Trouble with address ".$failures[0]);
@@ -828,7 +822,7 @@ $current_date = date ("Y/m/d H:i:s");
 if ($installed == 0){
 	process_sql ("INSERT INTO tconfig (`token`,`value`) VALUES ('crontask', '$current_date')");
 } else {
-	process_sql ("UPDATE tconfig SET `value` = '$current_date' WHEE `token` = 'crontask'");
+	process_sql ("UPDATE tconfig SET `value` = '$current_date' WHERE `token` = 'crontask'");
 }
 
 

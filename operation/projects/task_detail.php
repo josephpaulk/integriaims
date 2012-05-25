@@ -296,9 +296,17 @@ if ($id_task != -1) {
 	$table->data[6][1] = print_label (__('Imputable costs'), '', '', true,
 		task_workunit_cost ($id_task, 1).' '.$config['currency']);
 		
-	$total_cost = $external_cost + task_workunit_cost ($id_task, 0);
+		
+	$incident_cost = get_incident_task_workunit_cost ($id_task);
+	if ($incident_cost > 0)
+		$incident_cost_label = "<span title='".__("Incident costs")."'> ($incident_cost) </span>";
+	else
+		$incident_cost_label = "";
+		
+	$total_cost = $external_cost + task_workunit_cost ($id_task, 0) + $incident_cost;
+	
 	$table->data[6][1] .= print_label (__('Total costs'), '', '', true,
-		$total_cost .' '.$config['currency']);
+		$total_cost . $incident_cost_label. $config['currency']);
 	
 	$avg_hr_cost = format_numeric ($total_cost / $worked_time, 2);
 	$table->data[6][1] .= print_label (__('Average Cost per hour'), '', '', true,

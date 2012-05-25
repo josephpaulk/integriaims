@@ -202,11 +202,11 @@ CREATE TABLE `tnewsletter_tracking` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `id_newsletter` bigint(20) NOT NULL,
   `id_newsletter_address` bigint(20) NOT NULL,
+  `id_newsletter_content` bigint(20) NOT NULL,
   `datetime` datetime NOT NULL default '0000-00-00 00:00:00',  
   `status` int unsigned NOT NULL default '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 -- status could be 1-read
 
 CREATE TABLE `tnewsletter_queue` (

@@ -395,9 +395,8 @@ if ($id) {
 		incident_tracking ($id, INCIDENT_WORKUNIT_ADDED);
 
 		// Add work unit if enabled
-		$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public)
-				VALUES ("%s", %.2f, "%s", "%s", %d)',
-				$timestamp, $timeused, $config['id_user'], $nota, $public);
+		$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public, id_profile, have_cost) VALUES ("%s", %.2f, "%s", "%s", %d, %d, %d)',
+				$timestamp, $timeused, $config['id_user'], $nota, $public, $profile, $have_cost);
 		$id_workunit = process_sql ($sql, "insert_id");
 		$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit)
 				VALUES (%d, %d)',

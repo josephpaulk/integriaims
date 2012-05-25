@@ -290,7 +290,7 @@ function get_tasks_count_in_project ($id_project) {
 /**
 * Return total hours assigned to incidents assigned to a task
 *
-* $id_task	integer 	ID of task
+* $id_task	float 	ID of task
 **/
 
 function get_incident_task_workunit_hours ($id_task) {
@@ -300,7 +300,47 @@ function get_incident_task_workunit_hours ($id_task) {
 		WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
 		AND tworkunit_incident.id_workunit = tworkunit.id
 		AND tincidencia.id_task = %d', $id_task);
-	return (int) get_db_sql ($sql);
+	return get_db_sql ($sql);
+}
+
+
+/**
+* Return total coast assigned to incidents assigned to a task
+*
+* $id_task	integer 	ID of task
+**/
+
+function get_incident_task_workunit_cost ($id_task) {
+	global $config;
+	$sql = sprintf ('SELECT SUM(tworkunit.duration * trole.cost)
+		FROM tworkunit, tworkunit_incident, tincidencia , trole
+		WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
+		AND tworkunit_incident.id_workunit = tworkunit.id
+		AND tworkunit.have_cost = 1
+        AND trole.id = tworkunit.id_profile
+		AND tincidencia.id_task  = %d', $id_task);
+	return get_db_sql ($sql);
+}
+
+
+/**
+* Return total coast assigned to incidents assigned to a task
+*
+* $id_task	integer 	ID of task
+**/
+
+function get_incident_project_workunit_cost ($id_project) {
+	global $config;
+	$sql = sprintf ('SELECT SUM(tworkunit.duration * trole.cost)
+		FROM tworkunit, tworkunit_incident, tincidencia , trole, tproject, ttask
+		WHERE tworkunit_incident.id_incident = tincidencia.id_incidencia
+		AND tworkunit_incident.id_workunit = tworkunit.id
+		AND tworkunit.have_cost = 1
+		AND tproject.id = ttask.id_project 
+        AND trole.id = tworkunit.id_profile
+		AND tincidencia.id_task = ttask.id
+		AND tproject.id = %d', $id_project);
+	return get_db_sql ($sql);
 }
 
 
@@ -1684,7 +1724,7 @@ function check_incident_sla_min_response ($id_incident) {
         // Incident owner is the last workunit author ?, then SKIP
     	$last_wu = get_incident_lastworkunit ($id_incident);
 
-	if ($last_wu["id_user"] != $incident["id_creator"]){
+		if ($last_wu["id_user"] != $incident["id_creator"]){
                 return false;
         }
 

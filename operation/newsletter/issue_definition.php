@@ -97,6 +97,13 @@ if ($delete) { // if delete
 	
 	$sql= sprintf ('DELETE FROM tnewsletter_content WHERE id = %d', $id);
 	process_sql ($sql);
+	
+	$sql= sprintf ('DELETE FROM tnewsletter_tracking WHERE id_newsletter_content = %d', $id);
+	process_sql ($sql);
+
+	$sql= sprintf ('DELETE FROM tnewsletter_queue_data WHERE id_newsletter_content = %d', $id);
+	process_sql ($sql);
+	
 	insert_event ("NEWSLETTER ISSUE DELETED", $id, 0, $name);
 	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 	$id = 0;
@@ -141,12 +148,13 @@ if ($issues !== false) {
 	$table->style[0] = 'font-weight: bold';
 	$table->colspan = array ();
 	$table->head[0] = __('Newsletter');
-	$table->head[1] = __('Subject');
-	$table->head[2] = __('Date');
-	$table->head[3] = __('Status');
-	$table->head[4] = __('Reads');
+	$table->head[1] = __('Issue #');
+	$table->head[2] = __('Subject');
+	$table->head[3] = __('Date');
+	$table->head[4] = __('Status');
+	$table->head[5] = __('Reads');
 	if(give_acl ($config["id_user"], $id_group, "VM")) {
-		$table->head[5] = __('Delete');
+		$table->head[6] = __('Delete');
 	}
 
 	
@@ -157,22 +165,24 @@ if ($issues !== false) {
 		
 		$data[0] = "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_creation&id=".$issue["id_newsletter"]."'>$newsletter_name</a>";
 		
-		$data[1] = "<a href='index.php?sec=customers&sec2=operation/newsletter/issue_creation&id=".
+		$data[1] = "<b>".$issue["id"]."</b>";
+		
+		$data[2] = "<a href='index.php?sec=customers&sec2=operation/newsletter/issue_creation&id=".
 			$issue["id"]."'>".$issue["email_subject"]."</a>";
 
-		$data[2] = $issue["datetime"];
+		$data[3] = $issue["datetime"];
 		 
 		if ($issue["status"] == 1)
-			$data[3] = __("Ready");
+			$data[4] = __("Ready");
 		elseif ($issue["status"] == 0)
-			$data[3] = __("Pending");	
+			$data[4] = __("Pending");	
 		else
-			$data[3] = __("Sent");	
+			$data[4] = __("Sent");	
 
-		$data[4] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_tracking WHERE status = 1 AND id_newsletter = ".$issue["id_newsletter"]);
+		$data[5] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_tracking WHERE status = 1 AND id_newsletter = ".$issue["id_newsletter"]);
 	
 		if(give_acl ($config["id_user"], $id_group, "VM")) {
-			$data[5] ='<a href="index.php?sec=customers&sec2=operation/newsletter/issue_definition&
+			$data[6] ='<a href="index.php?sec=customers&sec2=operation/newsletter/issue_definition&
 						delete=1&id='.$issue['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">

@@ -33,6 +33,7 @@ $delete = (bool) get_parameter ('delete');
 $start = (bool) get_parameter ('start');
 $stop = (bool) get_parameter ('stop');
 $retry = (bool) get_parameter ('retry');
+$disable_bad = (bool) get_parameter ('disable_bad');
 
 // CREATE
 if ($create) {
@@ -118,7 +119,22 @@ if ($retry) { // if delete
 	$id = 0;
 }
 
-
+// DISABLE BAD
+if ($disable_bad) { // if delete
+	$id = get_parameter("id", 0);
+	
+	$id_newsletter = get_db_sql ("SELECT id_newsletter FROM tnewsletter_content WHERE id = $id");
+	// Get all bad addresses and disable the original address in newsletter
+	$sql = "SELECT * FROM tnewsletter_queue_data WHERE status = 2 AND id_newsletter = ". $newsletter["id"];
+	$data = get_db_all_rows_sql ($sql);
+	if ($data) 
+	foreach ($data as $item) {
+		$sql = "UPDATE tnewsletter_address SET status = 1 WHERE id_newsletter = $id_newsletter AND email = '".$item["email"]."'";
+		$result = mysql_query ($sql);
+		
+	}
+	$id = 0;
+}
 
 // General issue listing
 
@@ -146,13 +162,17 @@ if ($queue !== false) {
 	$table->data = array ();
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold';
+	$table->style[2] = 'font-size: 9px';
+	$table->style[1] = 'font-size: 10px';
+	$table->style[0] = 'font-size: 10px';
+	$table->style[3] = 'font-size: 10px';
 	$table->colspan = array ();
 	$table->head[0] = __('Newsletter');
 	$table->head[1] = __('Issue');
 	$table->head[2] = __('Date');
 	$table->head[3] = __('Status');
 	$table->head[4] = __('Addresses');
-
+	
 	$table->head[4] .= print_help_tip (__("Total / Ready / Sent / Error"), true);		
 
 	if(give_acl ($config["id_user"], $id_group, "VM")) {
@@ -166,7 +186,10 @@ if ($queue !== false) {
 		$table->head[7] .= print_help_tip (__("This will mark as pending the queue, if that queue is being processed in that moment, the whole batch will be processed"), true);
 		
 		$table->head[8] = __('Retry');
-		$table->head[8] .= print_help_tip (__("This will mark as ready all email address marked as error in a previous attempt and rerun the qeue"), true);						
+		$table->head[8] .= print_help_tip (__("This will mark as ready all email address marked as error in a previous attempt and rerun the qeue"), true);
+		
+		$table->head[9] = __('Disable');
+		$table->head[9] .= print_help_tip (__("This will mark as disable all email address whioch cannot be sent. Warning, this will be done in the address associated to the newsletter."), true);												
 
 	}
 	
@@ -201,6 +224,7 @@ if ($queue !== false) {
 		$error = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_queue_data WHERE status = 2 AND id_newsletter_content = $id_issue");
 		
 		$data[4] = "$total / $ready / $done / $error";
+
 	
 		if(give_acl ($config["id_user"], $id_group, "VM")) {
 			$data[5] ='<a href="index.php?sec=customers&sec2=operation/newsletter/queue_manager&
@@ -227,6 +251,12 @@ if ($queue !== false) {
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">
 						<img src="images/arrow_refresh.png" title="Retry"></a>';
+
+			$data[9] ='<a href="index.php?sec=customers&sec2=operation/newsletter/queue_manager&
+						disabled_bad=1&id='.$items['id'].'"
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
+						return false;">
+						<img src="images/bug.png" title="Disable bad address"></a>';
 						
 
 									

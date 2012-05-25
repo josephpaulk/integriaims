@@ -110,6 +110,13 @@ if ($delete) { // if delete
 
 	$sql= sprintf ('DELETE FROM tnewsletter WHERE id = %d', $id);
 	process_sql ($sql);
+	
+	$sql= sprintf ('DELETE FROM tnewsletter_tracking WHERE id_newsletter = %d', $id);
+	process_sql ($sql);
+
+	$sql= sprintf ('DELETE FROM tnewsletter_queue_data WHERE id_newsletter = %d', $id);
+	process_sql ($sql);
+	
 	insert_event ("NEWSLETTER DELETED", $id, 0, $name);
 	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
 	$id = 0;
@@ -151,28 +158,32 @@ if ($newsletters !== false) {
 	$table->class = "listing";
 	$table->data = array ();
 	$table->style = array ();
-	$table->style[0] = 'font-weight: bold';
+	$table->style[0] = 'font-weight: bold; font-size: 14px';
+	$table->style[1] = 'font-weight: bold';
 	$table->colspan = array ();
-	$table->head[0] = __('Name');
-	$table->head[1] = __('# of editions');
-	$table->head[2] = __('Group');
-	$table->head[3] = __('Addresses');
-	$table->head[4] = __('Last edition');
+	$table->head[0] = __('ID');
+	$table->head[1] = __('Name');
+	$table->head[2] = __('# of editions');
+	$table->head[3] = __('Group');
+	$table->head[4] = __('Addresses');
+	$table->head[5] = __('Last edition');
 	if(give_acl ($config["id_user"], $id_group, "VM")) {
-		$table->head[5] = __('Delete');
+		$table->head[6] = __('Delete');
 	}
 	foreach ($newsletters as $newsletter) {
 		$data = array ();
+
+		$data[0] = $newsletter["id"];
 		
-		$data[0] = "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_creation&id=".
+		$data[1] = "<a href='index.php?sec=customers&sec2=operation/newsletter/newsletter_creation&id=".
 			$newsletter["id"]."'>".$newsletter["name"]."</a>";
 
-		$data[1] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_content WHERE id_newsletter = ".$newsletter["id"]);	
-		$data[2] = dame_nombre_grupo($newsletter["id_group"]);
+		$data[2] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_content WHERE id_newsletter = ".$newsletter["id"]);	
+		$data[3] = dame_nombre_grupo($newsletter["id_group"]);
 		
-		$data[3] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"]);
+		$data[4] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_address WHERE id_newsletter = ".$newsletter["id"]);
 	
-		$data[4] = get_db_sql ("SELECT MAX(datetime) FROM tnewsletter_content WHERE id_newsletter = ".$newsletter["id"]);
+		$data[5] = get_db_sql ("SELECT MAX(datetime) FROM tnewsletter_content WHERE id_newsletter = ".$newsletter["id"]);
 		
 		$data[5] .= "</a>";
 		if(give_acl ($config["id_user"], $id_group, "VM")) {

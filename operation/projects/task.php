@@ -214,8 +214,9 @@ function show_task_row ($table, $id_project, $task, $level) {
 		
 	$wu_incidents = get_incident_task_workunit_hours ($task["id"]);
 	
+	
 	if ($wu_incidents > 0)
-	$data[4] .= "($wu_incidents) ";
+	$data[4] .= "<span title='".__("Time spent in related incidents")."'> ($wu_incidents) </span>";
 
 	// Costs (client / total)
 	$costdata = format_numeric (task_workunit_cost ($task["id"], 1));
@@ -223,6 +224,7 @@ function show_task_row ($table, $id_project, $task, $level) {
 		$costdata = " / <span title='".__("Charged to customer")."'> ". $costdata . "</span>";
 	else
 		$costdata = "";
+
 
 	// Total costs excluding external costs
 	$realdata = format_numeric (task_workunit_cost ($task["id"], 0));
@@ -234,7 +236,15 @@ function show_task_row ($table, $id_project, $task, $level) {
 		$external_data = "";
 		
 		
-	$data[5] =  $realdata . $costdata . $external_data . " ".$config['currency'];
+	$data[5] =  $realdata . $costdata . $external_data ;
+
+	// Cost of time in incidents related
+	$incident_cost = get_incident_task_workunit_cost ($task["id"]);
+
+	if ($incident_cost > 0)
+		$data[5] .= "<span title='".__("Cost of related incidents")."'> ($incident_cost)</span>";
+
+	$data[5] .= " ".$config['currency'];
 
 	// People
 	$data[6] = combo_users_task ($task['id'], 1, true);
