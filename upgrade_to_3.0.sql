@@ -233,4 +233,20 @@ CREATE TABLE `tnewsletter_queue_data` (
 
 -- status could be 0-ready, 1-sent, 2-error
 
+-- Added 29-05-2012
 
+ALTER TABLE `tusuario` ADD COLUMN `force_change_pass` tinyint(1) DEFAULT 0;
+ALTER TABLE `tusuario` ADD COLUMN `last_pass_change` DATETIME  NOT NULL DEFAULT 0;
+ALTER TABLE `tusuario` ADD COLUMN `last_failed_login` DATETIME  NOT NULL DEFAULT 0;
+ALTER TABLE `tusuario` ADD COLUMN `failed_attempt` int(4) NOT NULL DEFAULT 0;
+ALTER TABLE `tusuario` ADD COLUMN `login_blocked` tinyint(1) DEFAULT 0;
+
+INSERT INTO `tconfig` (`token`, `value`) VALUES
+('enable_pass_policy', 0),
+('pass_size', 4),
+('pass_needs_numbers', 0),
+('pass_needs_symbols', 0),
+('pass_expire', 0),
+('first_login', 0),
+('mins_fail_pass', 5),
+('number_attempts', 5);

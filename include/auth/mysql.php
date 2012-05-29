@@ -328,4 +328,19 @@ function process_user_login ($login, $pass) {
 	return false;
 }
 
+/**
+ * Update the password in MD5 for user pass as id_user with
+ * password in plain text.
+ * 
+ * @param string user User ID
+ * @param string password Password in plain text.
+ * 
+ * @return mixed False in case of error or invalid values passed. Affected rows otherwise
+ */
+function update_user_password ($user, $password_new) {
+	return process_sql_update ('tusuario',
+		array ('password' => md5 ($password_new)),
+		array ('id_usuario' => $user));
+}
+
 ?>

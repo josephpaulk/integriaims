@@ -26,6 +26,10 @@ if (! dame_admin ($config["id_user"])) {
 	exit;
 }
 
+$is_enterprise = false;
+if (file_exists ("enterprise/load_enterprise.php")) {
+	$is_enterprise = true;
+}
 $update = (bool) get_parameter ("update");
 
 if ($update) {
@@ -56,6 +60,18 @@ if ($update) {
     $config["iw_creator_enabled"] = get_parameter ("iw_creator_enabled", 0);
     $config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
     $config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
+    
+    if ($is_enterprise) {
+		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
+		$config["pass_size"] = get_parameter ("pass_size", 4);
+		$config["pass_needs_numbers"] = get_parameter ("pass_needs_numbers", 0);
+		$config["pass_needs_symbols"] = get_parameter ("pass_needs_symbols", 0);
+		$config["pass_expire"] = get_parameter ("pass_expire", 0);
+		$config["first_login"] = get_parameter ("first_login", 1);
+		$config["mins_fail_pass"] = get_parameter ("mins_fail_pass", 5);
+		$config["number_attempts"] = get_parameter ("number_attempts", 5);
+	}
+
     
     update_config_token ("timezone", $config["timezone"]);	
 
@@ -95,6 +111,17 @@ if ($update) {
 	update_config_token ("iw_creator_enabled", $config["iw_creator_enabled"]);
     update_config_token ("enable_newsletter", $config["enable_newsletter"]);
     update_config_token ("batch_newsletter", $config["batch_newsletter"]);
+    
+    if ($is_enterprise) {
+		update_config_token ("enable_pass_policy", $config["enable_pass_policy"]);
+		update_config_token ("pass_size", $config["pass_size"]);
+		update_config_token ("pass_needs_numbers", $config["pass_needs_numbers"]);
+		update_config_token ("pass_needs_symbols", $config["pass_needs_symbols"]);
+		update_config_token ("pass_expire", $config["pass_expire"]);
+		update_config_token ("first_login", $config["first_login"]);
+		update_config_token ("mins_fail_pass", $config["mins_fail_pass"]);
+		update_config_token ("number_attempts", $config["number_attempts"]);
+	}
     
 }
 // Render SYSTEM language code, not current language.
@@ -205,7 +232,34 @@ $table->data[13][0] .= print_help_tip (__("Enable this option to activate the ne
 
 $table->data[13][1] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
 
+if ($is_enterprise) {
+	$table->data[14][1] =  print_checkbox ("enable_pass_policy", 1, $config["enable_pass_policy"], 
+			true, __('Enable password policy'));
+					
+	$table->data[15][1] = print_input_text ("pass_size", $config["pass_size"], '',
+		4, 255, true, __('Min. size password'));
 
+	$table->data[16][1] =  print_checkbox ("pass_needs_numbers", 1, $config["pass_needs_numbers"], 
+			true, __('Password must have numbers'));
+			
+	$table->data[17][1] =  print_checkbox ("pass_needs_symbols", 1, $config["pass_needs_symbols"], 
+			true, __('Password must have symbols'));
+
+	$table->data[18][1] = print_input_text ("pass_expire", $config["pass_expire"], '',
+		4, 255, true, __('Password expiration (days)'));
+	$table->data[18][1] .= print_help_tip (__("Set 0 if never expire"), true);			
+
+	$table->data[19][1] =  print_checkbox ("first_login", 1, $config["first_login"], 
+			true, __('Force change password on first login'));
+
+	$table->data[20][1] = print_input_text ("mins_fail_pass", $config["mins_fail_pass"], '',
+		4, 255, true, __('User blocked if login fails (minutes)'));
+		
+	$table->data[21][1] = print_input_text ("number_attempts", $config["number_attempts"], '',
+		4, 255, true, __('Number of failed login attempts'));
+}
+	
+				
 echo "<form name='setup' method='post'>";
 
 print_table ($table);

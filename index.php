@@ -59,10 +59,45 @@ require_once ('include/auth/mysql.php');
 require_once ('include/functions_db.mysql.php');
 require_once ('include/functions_api.php');
 
+$is_enterprise = false;
+
 /* Enterprise support */
 if (file_exists ("enterprise/load_enterprise.php")) {
-        require_once ("enterprise/load_enterprise.php");
+	require_once ("enterprise/load_enterprise.php");
+	$is_enterprise = true;
 }
+
+if (file_exists ("enterprise/include/functions_login.php")) {
+	require_once ("enterprise/include/functions_login.php");
+}
+
+// Update user password
+$change_pass = get_parameter('renew_password', 0);
+
+if ($change_pass == 1) {
+	
+	$nick = $_POST["login"];
+
+	//Checks if password has expired
+	$check_status = check_pass_status($nick);
+
+	if ($check_status != 0) {
+		
+		$password_new = (string) get_parameter ('new_password', '');
+		$password_confirm = (string) get_parameter ('confirm_new_password', '');
+		$id = (string) get_parameter ('login', '');
+
+		$changed_pass = login_update_password_check ($password_new, $password_confirm, $id);
+
+		if ($changed_pass) {
+			//$_POST['renew_password'] = 0;
+			require ("general/login_page.php");
+		} else {
+			$expired_pass = true;
+		}
+	}
+}
+
 
 $html_header = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head>';
@@ -147,7 +182,7 @@ var lang = {
 if ($clean_output == 1)
     echo '<link rel="stylesheet" href="include/styles/integria_clean.css" type="text/css" />';
 
-$login = (bool) get_parameter ('login');
+$login = get_parameter ('login');
 $sec = get_parameter ('sec');
 $sec2 = get_parameter ('sec2');
 
@@ -170,42 +205,83 @@ if (ip_acl_check ($ip_origin)) {
 
 // Login process
 if (! isset ($_SESSION['id_usuario']) && $login) {
+
 	$nick = get_parameter ("nick");
 	$pass = get_parameter ("pass");
 
 	$config["auth_error"] = "";
 
 	$nick_in_db = process_user_login ($nick, $pass);
-			
-	if ($nick_in_db !== false) {
+
+	if (($nick_in_db !== false) && ($is_admin != 1) && ($is_enterprise) && ($config['enable_pass_policy'])) {
+		$blocked = login_check_blocked($nick);
+
+		if ($blocked) {
+			require ('general/login_page.php');
+			exit;
+		}
+		//Checks if password has expired
+		$check_status = check_pass_status($nick, $pass);
+
+		switch ($check_status) {
+			case 1: //first change
+			case 2: //pass expired
+				$expired_pass = true;
+				login_change_password($nick);
+				break;
+			case 0:
+				$expired_pass = false;
+				break;
+		}
+	}
+	
+	if (($nick_in_db !== false) && $expired_pass) { //login ok and password has expired
+		require_once ('general/login_page.php');
+		exit;
+	} else if (($nick_in_db !== false) && (!$expired_pass)) { //login ok and password has not expired
 		unset ($_GET["sec2"]);
 		$_GET["sec"] = "general/home";
 		logon_db ($nick_in_db, $_SERVER['REMOTE_ADDR']);
 		$_SESSION['id_usuario'] = $nick_in_db;
 		$config['id_user'] = $nick_in_db;
-		//Remove everything that might have to do with people's passwords or logins
-		//unset ($_GET['pass'], $pass, $_POST['pass'], $_REQUEST['pass'], $login_good);
 		if ($sec2 == '') {
 			$sec2 = 'general/home';
 		}
-	}
-	else {
-		// User not known
-		unset ($_GET["sec2"]);
-		echo '</head>';
-		echo '<body bgcolor="#ffffff">';
-		$first = substr ($pass, 0, 1);
-		$last = substr ($pass, strlen ($pass) - 1, 1);
-		$pass = $first . "****" . $last;
-		audit_db ($nick, $config["REMOTE_ADDR"], "Logon Failed",
-			"Invalid username: ".$nick." / ".$pass);
+	} else { //login wrong
+		$blocked = false;
 		
-		$login_failed = true;
-		require ('general/login_page.php');
-		exit;
+		if (!$expired_pass) {	
+			
+			if ($is_admin != 1) {
+				$blocked = login_check_blocked($nick);
+			}
+			
+			if (!$blocked) {
+				login_check_failed($nick); //Checks failed attempts
+				
+				$first = substr ($pass, 0, 1);
+				$last = substr ($pass, strlen ($pass) - 1, 1);
+				$pass = $first . "****" . $last;
+				
+				if ($expired_pass == false) {
+					$login_failed = true;
+				} else {
+					unset($login_failed);
+				}
+				require_once ('general/login_page.php');
+				exit ("</html>");
+			} else {
+				require_once ('general/login_page.php');
+				exit ("</html>");
+			}
+		} else { 
+			require_once ('general/login_page.php');
+			exit ("</html>");
+		}
 	}
 }
-elseif (! isset ($_SESSION['id_usuario'])) {
+else if (! isset ($_SESSION['id_usuario'])) {
+
 	// There is no user connected
 	echo '</head>';
 	echo '<body bgcolor="#ffffff">';

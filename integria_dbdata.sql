@@ -29,7 +29,15 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('fontsize', 6),
 ('auth_methods', 'mysql'),
 ('wiki_plugin_dir', 'include/wiki/plugins/'),
-('conf_var_dir', 'wiki_data/');
+('conf_var_dir', 'wiki_data/'),
+('enable_pass_policy', 0),
+('pass_size', 4),
+('pass_needs_numbers', 0),
+('pass_needs_symbols', 0),
+('pass_expire', 0),
+('first_login', 0),
+('mins_fail_pass', 5),
+('number_attempts', 5);
 
 -- Default password is 'integria'
 

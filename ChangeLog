@@ -1,3 +1,15 @@
+2012-05-29  Vanessa Gil <vanessa.gil@artica.es>
+
+	* index.php
+	  integria_db.sql
+	  integria_dbdata.sql
+	  upgrade_to_3.0.sql
+	  godmode/setup/setup.php
+	  include/auth/mysql.php
+	  include/styles/integria.css: Added password policy.
+
+	* images/lock_license.png: add files.
+
 2012-05-25  Sancho Lerena <slerena@artica.es>
 
 	Finished newsletter feature. 100% functional ! :)

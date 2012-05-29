@@ -31,6 +31,11 @@ CREATE TABLE `tusuario` (
   `disabled` int default 0,
   `id_company` int(10) unsigned NULL default 0,
   `simple_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
+  `force_change_pass` tinyint(1) unsigned NOT NULL default 0,
+  `last_pass_change` DATETIME  NOT NULL DEFAULT 0,
+  `last_failed_login` DATETIME  NOT NULL DEFAULT 0,
+  `failed_attempt` int(4) NOT NULL DEFAULT 0,
+  `login_blocked` tinyint(1) unsigned NOT NULL DEFAULT 0,
    PRIMARY KEY  (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
