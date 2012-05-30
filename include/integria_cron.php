@@ -638,7 +638,7 @@ function run_newsletter_queue () {
 		$addresses = get_db_all_rows_sql ("SELECT * FROM tnewsletter_queue_data WHERE status = 0 AND id_queue = $id_queue LIMIT 500");
 
 		if (!$addresses) 
-			process_sql ("UPDATE tnewsletter_queue SET status=3 WHERE id_queue = $id_queue");
+			process_sql ("UPDATE tnewsletter_queue SET status=3 WHERE id = $id_queue");
 		else 
 		foreach ($addresses as $address){
 		
