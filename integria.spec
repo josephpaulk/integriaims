@@ -15,12 +15,12 @@
 Summary:            Integria IMS	
 Name:               %{name}
 Version:            %{version}
-Release:            1 
+Release:            1
 License:            GPL
 Vendor:             Artica ST <info@artica.es>
 Source0:            %{name}-%{version}.tar.gz
 URL:                http://www.integriaims.com
-Group:              Productivity/Web/Utilities
+Group:              Productivity/Other
 Packager:           Sancho Lerena <slerena@artica.es> 
 Prefix:             /srv/www/htdocs
 BuildRoot:          %{_tmppath}/%{name}
@@ -29,7 +29,7 @@ AutoReq:            0
 Requires:           apache2
 Requires:           php >= 4.3.0
 Requires:           php5-gd, php5-json, php5-gettext, curl, php5-ldap, php5-imap
-Requires:           php5-mysql, php5-ldap, php5-mbstring, php5, php5-zlib
+Requires:           php5-mysql, php5-ldap, php5-mbstring, php5
 Requires:           graphviz, xorg-x11-fonts-core
 Provides:           %{name}-%{version}
 
@@ -39,7 +39,7 @@ Integria IMS is a enterprise software for project management, CRM, incident tick
 %prep
 rm -rf $RPM_BUILD_ROOT
 
-%setup -q -n trunk
+%setup -q -n integria
 
 %build
 
@@ -75,6 +75,10 @@ rm -Rf %{prefix}/integria/
 # configuration.
 #
 
+# Install crontab each 5 min
+
+echo "01,05,10,15,20,25,30,35,40,45,50,55 * * * * root php5 /srv/www/htdocs/integria/include/integria_cron.php" > /etc/cron.d/integria
+
 if [ -f %{prefix}/integria/include/config.php ] ; then
    echo "Seems you have already an existing config.php file. Installer has been renamed to install.done"
    mv %{prefix}/integria/install.php %{prefix}/integria/install.done
@@ -85,4 +89,6 @@ fi
 %files
 %defattr(0644,%{httpd_user},%{httpd_group},0755)
 %{prefix}/integria
+
+%changelog
 

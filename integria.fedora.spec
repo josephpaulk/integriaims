@@ -28,7 +28,7 @@ AutoReq:            0
 Requires:           httpd
 Requires:           php >= 5.3.0
 Requires:           php-gd, php-gettext, php-imap, curl, php-ldap, php5-imap
-Requires:           php-mysql, php-ldap, php-mbstring, php, php-zlib
+Requires:           php-mysql, php-ldap, php-mbstring, php
 Requires:           graphviz
 Provides:           %{name}-%{version}
 
@@ -38,7 +38,7 @@ Integria IMS is a enterprise software for project management, CRM, incident tick
 %prep
 rm -rf $RPM_BUILD_ROOT
 
-%setup -q -n trunk
+%setup -q -n integria
 
 %build
 
@@ -58,6 +58,10 @@ rm -rf $RPM_BUILD_ROOT
 rm -Rf %{prefix}/integria/ 
 
 %post
+
+# Install CRON job
+
+echo "01,05,10,15,20,25,30,35,40,45,50,55 * * * * root php5 /srv/www/htdocs/integria/include/integria_cron.php" > /etc/cron.d/integria
 
 # Has an install already been done, if so we only want to update the files
 # push install.php aside so that the console works immediately using existing
