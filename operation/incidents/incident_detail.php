@@ -452,6 +452,9 @@ if ($id) {
 			// Copy file to directory and change name
 			$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
 			
+			// This avoid problems with files with blank spaces !
+			$file_temp=safe_output($file_temp);
+		
 			if (! copy ($file_temp, $file_target)) {
 				$result_msg = '<h3 class="error">'.__('File cannot be saved. Please contact Integria administrator about this error').'</h3>';
 				$sql = sprintf ('DELETE FROM tattachment
