@@ -93,9 +93,11 @@ if ($id_incident == 0){
 	$id_incident = get_db_value ('id_incident', 'tworkunit_incident', 'id_workunit', $id_workunit);
 }
 
-if ($id_task != ""){
+if ($id_task >0){ // Skip vacations, holidays etc
 
 	if (! user_belong_task ($config["id_user"], $id_task) && !give_acl($config["id_user"], 0, "UM") ){
+
+
 		// Doesn't have access to this page
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task workunit form without permission");
 		no_permission();

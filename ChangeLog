@@ -1,3 +1,8 @@
+2012-06-13  Sancho Lerena <slerena@artica.es>
+
+	* operation/users/user_spare_workunit.php: Fixed problem 
+	with vacations, holidays, etc.
+
 2012-06.07  Sancho Lerena <slerena@artica.es>
 
 	* incident_detail.php: Fixed bug with attach with blank
