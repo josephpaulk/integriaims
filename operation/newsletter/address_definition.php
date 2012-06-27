@@ -131,10 +131,16 @@ if ($delete) {
 echo "<h2>".__('Newsletter addresses management')."</h2>";
 echo "<br>";
 $search_text = (string) get_parameter ('search_text');	
+$search_newsletter = (int) get_parameter ("search_newsletter");
+
 $where_clause = "WHERE 1=1 ";
 
 if ($search_text != "") {
 	$where_clause .= sprintf ('AND email LIKE "%%%s%%" OR name LIKE "%%%s%%"', $search_text, $search_text);
+}
+
+if ($search_newsletter > 0 ){
+	$where_clause .= " AND id_newsletter = $search_newsletter ";
 }
 
 $table->width = '90%';
@@ -145,6 +151,7 @@ $table->style[2] = 'font-weight: bold;';
 $table->data = array ();
 $table->data[0][0] = __('Search');
 $table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
+$table->data[0][2] = print_select_from_sql ('SELECT id, name FROM tnewsletter', 'search_newsletter', $search_newsletter, '', '', '', true, false, false,"");
 $table->data[0][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 
 echo '<form method="post" action="">';
@@ -155,7 +162,7 @@ $sql = "SELECT * FROM tnewsletter_address $where_clause ORDER BY datetime DESC";
 
 $issues = get_db_all_rows_sql ($sql);
 
-$issues = print_array_pagination ($issues, "index.php?sec=customers&sec2=operation/newsletter/address_definition&search_text='$search_text");
+$issues = print_array_pagination ($issues, "index.php?sec=customers&sec2=operation/newsletter/address_definition&search_text=$search_text&search_newsletter=$search_newsletter");
 
 if ($issues !== false) {
 	$table->width = "90%";

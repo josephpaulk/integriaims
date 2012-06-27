@@ -1,3 +1,7 @@
+2012-06-27  Sancho Lerena <sleena@artica.es>
+
+	* operation/newsletter/address_definition.php: Added filter.
+
 2012-06-13  Sancho Lerena <slerena@artica.es>
 
 	* operation/users/user_spare_workunit.php: Fixed problem 
