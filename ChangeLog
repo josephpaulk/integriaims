@@ -1,3 +1,8 @@
+2012-08-13  Sancho Lerena <slerena@artica.es>
+
+	* operation/projects/task_planning.php: Fixed task planning layout
+	Added massive addition of tasks (new feature).
+
 2012-06-27  Sancho Lerena <sleena@artica.es>
 
 	* operation/newsletter/address_definition.php: Added filter.

@@ -134,63 +134,112 @@ if ($update) {
 
 //Create a new task
 if ($create) {
-	$name = get_parameter ('name');
-	$start = get_parameter ('start_date', date ("Y-m-d"));
-	$end = get_parameter ('end_date', date ("Y-m-d"));
-	$owner = get_parameter('owner');
-	
-	//hour fields hidden
-	$hours = ((strtotime ($end) - strtotime ($start)) / (3600*24)) * $config['hours_perday'];
-	$hours = $hours + $config['hours_perday'];
-	
-	if ($name == '') {
-		//Check name not empty
-		echo '<h3 class="error">'.__('Name cannot be empty').'</h3>';
-		
-	} elseif (strtotime ($start) > strtotime ($end)) {
-		//Check date properly set
-		echo '<h3 class="error">'.__('Begin date cannot be before end date').'</h3>';
-	} else {
-		
-		$description = '';
-		$priority = 0;
-		$completion = 0;
-		$parent = (int) get_parameter ('parent');
-		$periodicity = 'none';
-		$estimated_cost = 0;
-		$id_group = (int) get_parameter ('group', 1);
-	
-		$sql = sprintf ('INSERT INTO ttask (id_project, name, description, priority,
-			completion, start, end, id_parent_task, id_group, hours, estimated_cost,
-			periodicity)
-			VALUES (%d, "%s", "%s", %d, %d, "%s", "%s", %d, %d, %d, %f, "%s")',
-			$id_project, $name, $description, $priority, $completion, $start, $end,
-			$parent, $id_group, $hours, $estimated_cost, $periodicity);
-		$id_task = process_sql ($sql, 'insert_id');
-		
-		if ($id_task) {
-		
-			$sql = sprintf("SELECT id_role FROM trole_people_project 
-						WHERE id_project = %d AND id_user = '%s'", $id_project, $config['id_user']);
-			
-			$id_role = process_sql($sql);
-			$role = $id_role[0]['id_role'];
-		
-			$sql = sprintf('INSERT INTO trole_people_task (id_user, id_role, id_task)
-						VALUES ("%s", %d, %d)', $owner, $role, $id_task);
-		
-			$result2 = process_sql($sql);	
-		}
-		
-		//Audit the result
-		if ($id_task !== false ) {
-			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task added to project", "Task '$name' added to project '$id_project'");
+
+	$massive = get_parameter ("massive", 0);
+
+	// Massive creation of tasks
+
+	if ($massive == 1){
+
+		$tasklist = get_parameter ("tasklist");
+		$tasklist = safe_output ($tasklist);
+
+		$parent = (int) get_parameter ('padre');
+		$start = get_parameter ('start_date2', date ("Y-m-d"));
+                $end = get_parameter ('end_date2', date ("Y-m-d"));
+                $owner = get_parameter('dueno');
+
+                $id_group = (int) get_parameter ('group2', 1);
+
+		$data_array = preg_split ("/\n/", $tasklist);
+	        foreach ($data_array as $data_item){
+	                $data = trim($data_item);
+			if ($data != ""){
+				$sql = sprintf ('INSERT INTO ttask (id_project, name, id_group, id_parent_task, start, end) 
+                                VALUES (%d, "%s", %d, %d, "%s", "%s")',
+                                $id_project, $data, $id_group, $parent, $start, $end);
+
+				$id_task = process_sql ($sql, 'insert_id');
 				
-			task_tracking ($id_task, TASK_CREATED);
-			project_tracking ($id_project, PROJECT_TASK_ADDED);
+	                        if ($id_task) {
+
+        	                        $sql = sprintf("SELECT id_role FROM trole_people_project
+                                                        WHERE id_project = %d AND id_user = '%s'", $id_project, $owner);
+
+                	                $id_role = process_sql($sql);
+                        	        $role = $id_role[0]['id_role'];
+	
+        	                        $sql = sprintf('INSERT INTO trole_people_task (id_user, id_role, id_task)
+                	                                        VALUES ("%s", %d, %d)', $owner, $role, $id_task);
+
+        	                        $result2 = process_sql($sql);
+                	        }
+
+			}
+		}
+
+	// Individual creation of a task
+	
+	} else {
+
+		$name = get_parameter ('name');
+		$start = get_parameter ('start_date', date ("Y-m-d"));
+		$end = get_parameter ('end_date', date ("Y-m-d"));
+		$owner = get_parameter('owner');
+	
+		//hour fields hidden
+		$hours = ((strtotime ($end) - strtotime ($start)) / (3600*24)) * $config['hours_perday'];
+		$hours = $hours + $config['hours_perday'];
+		
+		if ($name == '') {
+			//Check name not empty
+			echo '<h3 class="error">'.__('Name cannot be empty').'</h3>';
+			
+		} elseif (strtotime ($start) > strtotime ($end)) {
+			//Check date properly set
+			echo '<h3 class="error">'.__('Begin date cannot be before end date').'</h3>';
 		} else {
-			echo "<h3 class='error'>".__('Could not be created')."</h3>";
+			
+			$description = '';
+			$priority = 0;
+			$completion = 0;
+			$parent = (int) get_parameter ('parent');
+			$periodicity = 'none';
+			$estimated_cost = 0;
+			$id_group = (int) get_parameter ('group', 1);
+			
+			$sql = sprintf ('INSERT INTO ttask (id_project, name, description, priority,
+				completion, start, end, id_parent_task, id_group, hours, estimated_cost,
+				periodicity)
+				VALUES (%d, "%s", "%s", %d, %d, "%s", "%s", %d, %d, %d, %f, "%s")',
+				$id_project, $name, $description, $priority, $completion, $start, $end,
+				$parent, $id_group, $hours, $estimated_cost, $periodicity);
+			$id_task = process_sql ($sql, 'insert_id');
+			
+			if ($id_task) {
+			
+				$sql = sprintf("SELECT id_role FROM trole_people_project 
+							WHERE id_project = %d AND id_user = '%s'", $id_project, $owner);
+				
+				$id_role = process_sql($sql);
+				$role = $id_role[0]['id_role'];
+			
+				$sql = sprintf('INSERT INTO trole_people_task (id_user, id_role, id_task)
+							VALUES ("%s", %d, %d)', $owner, $role, $id_task);
+			
+				$result2 = process_sql($sql);	
+			}
+		
+			//Audit the result
+			if ($id_task !== false ) {
+				echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+				audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task added to project", "Task '$name' added to project '$id_project'");
+				
+				task_tracking ($id_task, TASK_CREATED);
+				project_tracking ($id_project, PROJECT_TASK_ADDED);
+			} else {
+				echo "<h3 class='error'>".__('Could not be created')."</h3>";
+			}
 		}
 	}
 }
@@ -277,13 +326,13 @@ echo "<td align=center><strong>".__("Summary task status")."</strong></td>";
 echo "<td align=center><strong>".__("Task per user")."</strong></td>";
 echo "</tr>";
 echo "<tr>";
-echo "<td align=center style='padding-left:20px;padding-right:20px;'>";
+echo "<td align=center style='padding-left:10px;padding-right:10px;'>";
 echo graph_workunit_project_user_single(200, 150, $id_project);
 echo"</td>";
-echo "<td align=center style='padding-left:20px;padding-right:20px;'>";
+echo "<td align=center style='padding-left:10px;padding-right:10px;'>";
 echo graph_workunit_project_task_status(200, 150, $id_project);
 echo"</td>";
-echo "<td align=center style='padding-left:20px;padding-right:20px;'>";
+echo "<td align=center style='padding-left:10px;padding-right:10px;'>";
 echo graph_project_task_per_user(200, 150, $id_project);
 echo"</td>";
 echo "</tr>";
@@ -305,6 +354,14 @@ if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "
 	print_button (__('Add task'), 'add', false, '', 'class="sub next"');
 	echo "</td>";
 }
+
+//Create new task only if PM && TM flags or PW and project manager.
+if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "PM") || (give_acl ($config["id_user"], 0, "PW") && $config["id_user"] == $project_manager)) {
+        echo "<td>";
+        print_button (__('Add several tasks'), 'addmass', false, '', 'class="sub next"');
+        echo "</td>";
+}
+
 echo "<td>";
 print_submit_button (__('Update'), 'update', false, 'class="sub upd"');
 echo "</td>";
@@ -321,6 +378,59 @@ foreach ($users_db as $u) {
 	$users[$u['id_user']] = $u['id_user'];
 }
 
+
+//Hidden div for task creation. Only for PM flag
+//Create new task only if PM && TM flags or PW and project manager.
+if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "PM") || (give_acl ($config["id_user"], 0, "PW") && $config["id_user"] == $project_manager)) {
+        echo "<div id='createTaskmass' style='display:none;padding:5px;'>";
+	echo "<table><tr><td colspan=4>";
+        echo "<strong>".__('Put taskname in each line')."</strong><br>";
+	print_textarea ('tasklist', 5, 40);
+	print_input_hidden ('massive', 1);	
+
+
+	echo "<tr>";
+
+	//Group selecting combo
+        echo "<td>";
+        combo_groups_visible_for_me ($config['id_user'], 'group2', 0, 'TW');
+        echo "</td>";
+
+        //Task parent combo
+        echo "<td style='width:60'>";
+        $sql = sprintf ('SELECT id, name FROM ttask WHERE id_project = %d ORDER BY name', $id_project);
+        print_select_from_sql ($sql, 'padre', 0, "\"style='width:250px;'\"", __('None'), 0, false, false, false, __('Parent'));
+        echo "</td>";
+
+	echo "<tr>";
+	//Start date
+        echo "<td>";
+        $start = date ("Y-m-d");
+        print_input_text_extended ("start_date2", $start, "start_date", '', 7, 15, 0, '', "", false, false, __('Start date'));
+        echo "</td>";
+
+        //End date)
+        echo "<td>";
+        $end = date ("Y-m-d");
+        print_input_text_extended ("end_date2", $end, "end_date", '', 7, 15, 0, '', "", false, false, __('End date'));
+        echo "</td>";
+
+	echo "<tr>";
+	// User assigned by default
+        echo "<td>"; 
+        print_select ($users, "dueno", $config['id_user'], '', '', 0, false, 0, false, __("Owner"));
+        echo "</td>";
+
+
+	echo "<tr><td colspan=4 align=right>";	
+        echo "<br>";
+	//Create button
+        print_submit_button (__('Create'), 'create', false, 'class="sub create"');
+
+	echo "</table>";
+	echo "</div>";
+}
+
 //Hidden div for task creation. Only for PM flag
 //Create new task only if PM && TM flags or PW and project manager.
 if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "PM") || (give_acl ($config["id_user"], 0, "PW") && $config["id_user"] == $project_manager)) {
@@ -333,7 +443,7 @@ if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "
 	//Tex name field
 	echo "<td>"; 
 	$name = '';
-	print_input_text ('name', $name, '', 30, 240, false, __('Name'));
+	print_input_text ('name', $name, '', 50, 240, false, __('Name'));
 	echo "</td>";
 	
 	echo "<td>";
@@ -345,6 +455,7 @@ if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "
 	combo_groups_visible_for_me ($config['id_user'], 'group', 0, 'TW');
 	echo "</td>";
 
+	echo "<tr>";
 	//Task parent combo
 	echo "<td style='width:60'>";
 	$sql = sprintf ('SELECT id, name FROM ttask WHERE id_project = %d ORDER BY name', $id_project);
@@ -635,6 +746,12 @@ $(document).ready (function () {
 	$('#button-add').click(function() {
 		$('#createTask').toggle();
 	});
+
+	//Toggle create mass task menu
+        $('#button-addmass').click(function() {
+                $('#createTaskmass').toggle();
+        });
+	
 
 	//Change row color dinamically when status is changed
 	$('select[name^="status"]').change(function() {
