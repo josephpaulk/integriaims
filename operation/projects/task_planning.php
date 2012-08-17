@@ -135,13 +135,11 @@ if ($update) {
 //Create a new task
 if ($create) {
 
-	$massive = get_parameter ("massive", 0);
+	$tasklist = get_parameter ("tasklist");
 
 	// Massive creation of tasks
+	if ($tasklist != ""){
 
-	if ($massive == 1){
-
-		$tasklist = get_parameter ("tasklist");
 		$tasklist = safe_output ($tasklist);
 
 		$parent = (int) get_parameter ('padre');
@@ -186,7 +184,7 @@ if ($create) {
 		$start = get_parameter ('start_date', date ("Y-m-d"));
 		$end = get_parameter ('end_date', date ("Y-m-d"));
 		$owner = get_parameter('owner');
-	
+
 		//hour fields hidden
 		$hours = ((strtotime ($end) - strtotime ($start)) / (3600*24)) * $config['hours_perday'];
 		$hours = $hours + $config['hours_perday'];
@@ -214,6 +212,8 @@ if ($create) {
 				VALUES (%d, "%s", "%s", %d, %d, "%s", "%s", %d, %d, %d, %f, "%s")',
 				$id_project, $name, $description, $priority, $completion, $start, $end,
 				$parent, $id_group, $hours, $estimated_cost, $periodicity);
+
+echo "DEBUG $sql;";
 			$id_task = process_sql ($sql, 'insert_id');
 			
 			if ($id_task) {
@@ -386,11 +386,8 @@ if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "
 	echo "<table><tr><td colspan=4>";
         echo "<strong>".__('Put taskname in each line')."</strong><br>";
 	print_textarea ('tasklist', 5, 40);
-	print_input_hidden ('massive', 1);	
-
 
 	echo "<tr>";
-
 	//Group selecting combo
         echo "<td>";
         combo_groups_visible_for_me ($config['id_user'], 'group2', 0, 'TW');
