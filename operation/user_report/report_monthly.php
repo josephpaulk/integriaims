@@ -171,18 +171,25 @@
 			$company_name = (string) get_db_value ('name', 'tcompany', 'id', $usuario['id_company']);
 			
 			echo "<td style='font-size:9px'>".$company_name."</td>";
-					    
-           		// Workunit report (detailed)
+
 			echo "<td>";
+
+            // Full report			
+            echo "<a href='index.php?sec=users&sec2=operation/user_report/report_full&only_projects=1&wu_reporter=$nombre'>";
+            echo "<img title='".__("Full report")."' src='images/page_white_stack.png'>";
+            echo "</a>";
+		    
+            // Workunit report (detailed)
+    	    echo "&nbsp;&nbsp;";
 			echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$nombre'>";
 			echo "<img border=0 title='".__("Workunit report")."' src='images/page_white_text.png'></A>";
 
             // Clock to calendar montly report for X user
-	    echo "&nbsp;&nbsp;";
-	    echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$working_month&year=$working_year&id=$nombre'><img src='images/clock.png' title='".__("Montly calendar report")."' border=0></a>";
+	        echo "&nbsp;&nbsp;";
+    	    echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$working_month&year=$working_year&id=$nombre'><img src='images/clock.png' title='".__("Montly calendar report")."' border=0></a>";
 
             // Graph stats montly report for X user
-	    echo "&nbsp;&nbsp;";
+    	    echo "&nbsp;&nbsp;";
             echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$nombre'><img src='images/chart_bar.png' title='".__("Montly report")."' border=0></a></center></td>";
        
 			// Total hours this month

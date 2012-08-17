@@ -1,3 +1,49 @@
+2012-08-17  Sancho Lerena <slerena@artica.es>
+
+    * include/functions_html.php: Set a fixed width on all combos by CSS.
+
+    * include/styles/flora/flora.tabs.css: Minor changes, and modified
+    cursor icon.
+
+    * include/functions_form.php: minor changes on combos for tasks/projects
+
+    * include/config_process.php,
+    godmode/setup/setup.php,
+    include/functions_config.php: added option to disable chat in incidents.
+
+    * include/functions_db.php: Added functions get_project_workunits_hours_user(),
+    and get_sla_compliance_single_id (). Fixed function get_task_workunit_hours_user()
+    which was counting instead SUMming.
+
+    * index.php: In landing page, there is no "sidemenu" shown anymore.
+
+    * operation/incidents/incident.php: new tab style, only icons :)
+
+    * operation/incidents/incident_detail.php: Added incident editor.
+
+    * operation/incidents/incident_tracking.php: Incident SLA was not shown in
+    text, added.
+
+    * operation/projects/task_workunit.php: Added feature to be able search of
+    incidents per user, linked to the people manager section. Now it's possible
+    to easily search WU for a given project and user from task/project section.
+
+    * operation/projects/people_manager.php: Now show the total WU time per 
+    user in the list.
+
+    * operation/search.php: Fixed link to full report.
+
+    * operation/user_report/report_full.php: LOTS of changes here with new
+    features and fixes over old code. Now is useful to do powerful reports.
+
+    * operation/user_report/report_monthly.php: Added links to full report.
+    
+    * integria_db.sql,
+    upgrade_to_3.0.sql: New field on incidents: incident editor. Is the user
+    who WRITES the incident, different from the original author and the owner.
+
+    * godmode/usuarios/configurar_usuarios.php: Added links to most used reports.
+
 2012-08-13  Sancho Lerena <slerena@artica.es>
 
 	* operation/projects/task_planning.php: Fixed task planning layout

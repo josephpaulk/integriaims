@@ -214,6 +214,8 @@ if ($id_task != -1) {
 		echo "<table width=500 class='listing'>";
 		echo "<th>".__('User');
 		echo "<th>".__('Role');
+		echo "<th>".__('Total work time (Hrs)');
+
 		if ($config["id_user"] == get_db_value ('id_owner','tproject','id', $id_project) OR
 			give_acl ($config["id_user"], get_db_value ('id_group','ttask','id', $id_task), "TM"))
 			echo "<th>".__('Delete');
@@ -230,7 +232,13 @@ if ($id_task != -1) {
 			}
 			echo "<tr><td valign='top' class='$tdcolor'>".$row["id_user"];
 			echo "<td valign='top' class='$tdcolor'>".get_db_value('name','trole','id',$row["id_role"]);
-			if ($config["id_user"] == get_db_value('id_owner','tproject','id', $id_project) OR
+
+            echo "<td valign=top>";
+            echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_task=$id_task&id_user=".$row["id_user"]."'><b>";
+            echo get_task_workunit_hours_user ($id_task, $row["id_user"]);
+            echo "</a></b></td>";
+
+			if ($config["id_user"] == get_db_value('id_owner','tproject','id', $id_project) OR          
 			give_acl ($config["id_user"], get_db_value('id_group','ttask','id', $id_task), "TM")){
 				echo "<td valign='top' class='$tdcolor' align='center'>";
 				echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
@@ -260,6 +268,7 @@ if ($id_task != -1) {
 		echo "<table width=500 class='listing'>";
 		echo "<th>".__('User');
 		echo "<th>".__('Role');
+		echo "<th>".__('Total work time (Hrs)');
 		echo "<th>".__('Delete');
 		$color = 1;
 		while ($row=mysql_fetch_array($result)){
@@ -273,6 +282,11 @@ if ($id_task != -1) {
 			}
 			echo "<tr><td valign='top' class='$tdcolor'>".$row["id_user"];
 			echo "<td valign='top' class='$tdcolor'>".get_db_value('name','trole','id',$row["id_role"]);
+            echo "<td valign=top>";
+            echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_user=".$row["id_user"]."'><b>";
+            echo get_project_workunits_hours_user ($id_project, $row["id_user"]);
+            echo "</b></td>";
+
 			echo "<td valign='top' class='$tdcolor' align='center'>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
 		}

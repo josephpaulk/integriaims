@@ -296,7 +296,7 @@ function combo_incident_origin ($actual = -1, $disabled = 0, $return = false) {
 	}
 		
 	$output .= print_select (get_incident_origins (), 'incident_origin',
-					$actual, '', '', 0, true, false, false, __('Source'));
+					$actual, '', __("None"), 0, true, false, false, __('Source'));
 	if ($return)
 		return $output;
 	echo $output;
@@ -356,14 +356,58 @@ function combo_incident_types ($selected, $disabled = false, $return = false) {
 	echo $output;
 }
 
+
 // Returns a combo with the tasks that current user could see
 // ----------------------------------------------------------------------
 function combo_task_user ($actual, $id_user, $disabled = 0, $show_vacations = 0, $return = false) {
+        $output = '';
+
+        if ($disabled) {
+                $output .= print_label (__('Task'), '', '', true);
+                $name = get_db_value ('name', 'ttask', 'id', $actual);
+                if ($name === false)
+                        $name = __('N/A');
+                $output .= $name;
+                if ($return)
+                        return $output;
+                echo $output;
+                return;
+        }
+
+        $values = array ();
+        $values[0] = __('N/A');
+        if ($show_vacations == 1)
+                $values[-1] = __('Vacations');
+
+        $sql = sprintf ('SELECT ttask.id, ttask.name as tname, tproject.name as pname
+                        FROM tproject, ttask, trole_people_task
+                        WHERE ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.id = trole_people_task.id_task
+                        AND trole_people_task.id_user = "%s"
+                        ORDER BY pname',
+                        $id_user);
+        $tasks = get_db_all_rows_sql ($sql);
+        if ($tasks === false)
+                $tasks = array ();
+        foreach ($tasks as $task) {
+                $values[$task['id']] = $task['pname']. " / ". $task['tname'];
+        }
+        $output = print_select ($values, 'task_user', $actual, '', '',
+                                0, true, false, false, __('Task'));
+        if ($return)
+                return $output;
+        echo $output;
+        return;
+}
+
+
+// Returns a combo with the projects that current user could see
+// ----------------------------------------------------------------------
+function combo_project_user ($actual, $id_user, $disabled = 0, $return = false) {
 	$output = '';
 
 	if ($disabled) {
-		$output .= print_label (__('Task'), '', '', true);
-		$name = get_db_value ('name', 'ttask', 'id', $actual);
+		$output .= print_label (__('Project'), '', '', true);
+		$name = get_db_value ('name', 'tproject', 'id', $actual);
 		if ($name === false)
 			$name = __('N/A');
 		$output .= $name;
@@ -375,23 +419,21 @@ function combo_task_user ($actual, $id_user, $disabled = 0, $show_vacations = 0,
 
 	$values = array ();
 	$values[0] = __('N/A');
-	if ($show_vacations == 1)
-		$values[-1] = __('Vacations');
 
-	$sql = sprintf ('SELECT ttask.id, ttask.name as tname, tproject.name as pname
+	$sql = sprintf ('SELECT tproject.id, tproject.name as pname 
 			FROM tproject, ttask, trole_people_task
 			WHERE ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.id = trole_people_task.id_task
 			AND trole_people_task.id_user = "%s"
 			ORDER BY pname',
 			$id_user);
-	$tasks = get_db_all_rows_sql ($sql);
-	if ($tasks === false)
-		$tasks = array ();
-	foreach ($tasks as $task) {
-		$values[$task['id']] = substr(safe_output($task['pname']),0,17). " / ".substr(safe_output($task['tname']),0,22);
+	$projects = get_db_all_rows_sql ($sql);
+	if ($projects === false)
+		$projects = array ();
+	foreach ($projects as $project) {
+		$values[$project['id']] = $project['pname'];
 	}
-	$output = print_select ($values, 'task_user', $actual, '', '',
-				0, true, false, false, __('Task'));
+	$output = print_select ($values, 'id_project', $actual, '', '',
+				0, true, false, false, __('Project'));
 	if ($return)
 		return $output;
 	echo $output;
@@ -422,7 +464,7 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 
 	if ($tasks)
 	foreach ($tasks as $task){
-		$values[$task[0]] = array('optgroup' => $task[1], 'name' => '&nbsp;&nbsp;'.$task[2]);
+		$values[$task[0]] = array('optgroup' => $task[1], 'name' => '&nbsp;'.$task[2]);
 	}
 
 	$output .= print_select ($values, 'id_task', $actual, '', __('N/A'), '0', true,

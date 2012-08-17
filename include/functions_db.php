@@ -498,12 +498,29 @@ function get_task_count_workunits ($id_task) {
 **/
 
 function get_task_workunit_hours_user ($id_task, $id_user) {
-	$sql = sprintf ('SELECT COUNT(tworkunit.duration) 
+	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task 
 			WHERE tworkunit_task.id_task = %d
 			AND tworkunit.id_user = "%s"
 			AND tworkunit_task.id_workunit = tworkunit.id',
 			$id_task, $id_user);
+	return (int) get_db_sql ($sql);
+}
+
+/**
+* Return total wu assigned to project for a specific user
+*
+* $id_project   integer	 ID of project
+**/
+
+function get_project_workunits_hours_user ($id_project, $id_user) {
+	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
+			FROM tworkunit, tworkunit_task, ttask 
+			WHERE tworkunit_task.id_task = ttask.id
+			AND ttask.id_project = %d
+			AND tworkunit.id_user = "%s"
+			AND tworkunit_task.id_workunit = tworkunit.id',
+			$id_project, $id_user);
 	return (int) get_db_sql ($sql);
 }
 
@@ -1986,6 +2003,23 @@ function get_most_active_incidents ($lim, $incident_filter = false) {
 	}
 
 	return $most_active_incidents;
+}
+
+
+/** 
+ * Returns the incident SLA compliance percentage, from a single ID incident
+ *
+ * @param, id_incident, numeric id (PK) from an incident
+ */
+
+
+function get_sla_compliance_single_id ($id_incident) {
+
+        $temp = array();
+        $temp2 = array();
+        $temp2['id_incidencia'] = $id_incident;
+        $temp[] = $temp2;
+        return get_sla_compliance ($temp);
 }
 
 /** 

@@ -185,6 +185,7 @@ if ($clean_output == 1)
 $login = get_parameter ('login');
 $sec = get_parameter ('sec');
 $sec2 = get_parameter ('sec2');
+$not_show_menu = 0;
 
 // Password recovery
 $recover = get_parameter('recover','');
@@ -247,6 +248,7 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 		if ($sec2 == '') {
 			$sec2 = 'general/home';
 		}
+
 	} else { //login wrong
 		$blocked = false;
 		
@@ -318,9 +320,14 @@ echo '<body>';
 // Session locking concurrency speedup!
 $session_id = session_id();
 session_write_close ();
-?>
 
-<?php
+// Special pages
+
+if (($sec2 == "") OR ($sec2 == "general/home")) {
+	$not_show_menu = 1;
+}
+
+
 if ($clean_output == 0) {
 ?>
 	<div id="wrap">
@@ -328,23 +335,31 @@ if ($clean_output == 0) {
 			<?php require ("general/header.php"); ?>
 		</div>
 
-		<div id="menu">
-			<?php require ("operation/main_menu.php"); ?>
-		</div>
+
+	<div id="menu">
+	<?php require ("operation/main_menu.php"); ?>
+	</div>
+	
 
         <!-- This magic is needed to have it working in IE6.x and Firefox 4.0 -->
         <!-- DO NOT USE CSS HERE -->
 
         <table width=100% cellpadding=0 cellspacing=0 border=0>
-        <tr><td width=180 valign=top>
-			<div id="sidebar">
-			<?php 
-				require ("operation/side_menu.php"); 
-				if (give_acl ($config["id_user"], 0, "AR"))
-					require ("operation/tool_menu.php");
-			?>
-			</div>
-        </td>
+	<tr>
+
+	<?php
+
+        // Avoid render left menu for some special places (like home).
+        if ($not_show_menu == 0){
+		echo '<td width=180 valign=top>';
+		echo '<div id="sidebar">';
+		require ("operation/side_menu.php"); 
+		if (give_acl ($config["id_user"], 0, "AR"))
+			require ("operation/tool_menu.php");
+		echo '</div></td>';
+	}
+	?>
+	
         <td valign=top>
 			<div id="main">
 			<?php

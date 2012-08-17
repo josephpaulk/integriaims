@@ -58,16 +58,18 @@ echo '<div id="tabs">';
 
 /* Tabs list */
 echo '<ul style="height: 30px;" class="ui-tabs-nav">';
-echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php"><span>'.__('Statistics').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Details').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Tracking').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Incident Report').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Inventory').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Contact').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Workunits').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Files').'</span></a></li>';
-echo '<li class="ui-tabs-disabled"><a href="index.php"><span>'.__('Chat').'</span></a></li>';
+echo '<li class="ui-tabs-selected"><a href="#ui-tabs-1"><span><img style="padding-bottom: 0px; padding-top: 2px;" src="images/zoom.png" title="'.__('Search').'"></span></a></li>';
+echo '<li class="ui-tabs"><a href="index.php"><span><img style="padding-bottom: 0px; padding-top: 2px;" src="images/chart_bar.png" title="'.__('Statistics').'"></span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span valign=bottom><img src="images/bug.png" style="padding-bottom: 0px; padding-top: 2px;" title="'.__('Details').'"></span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/hourglass.png" style="padding-bottom: 0px; padding-top: 2px;" title="'.__('Tracking').'"></span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/page_white_text.png" style="padding-bottom: 0px; padding-top: 2px;" title="'.__('Incident report').'"></span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/chart_organisation.png" style="padding-bottom: 0px; padding-top: 2px;" title="'.__('Inventory').'"></span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/user_comment.png" style="padding-bottom: 0px; padding-top: 2px;" title="'.__('Contacts').'"></span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/award_star_silver_1.png" style="padding-bottom: 0px; padding-top: 2px;" title="'.__("Workunits").'"></span></a></li>';
+echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/disk.png" style="padding-bottom: 0px; padding-top: 2px;" title="'.__('Files').'"></span></a></li>';
+if ($config["want_chat"] == 1){
+	echo '<li class="ui-tabs-disabled"><a href="index.php"><span><img src="images/comments.png" title="'.__('Chat').'"></span></a></li>';
+}
 echo '</ul>';
 
 /* Tabs first container is manually set, so it loads immediately */

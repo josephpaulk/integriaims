@@ -312,6 +312,36 @@ echo '<td class="datos2"><b>';
 echo get_db_sql ("SELECT COUNT(*) FROM tincidencia WHERE id_creator = '".$update_user."'");
 echo "</b></td></tr>";
 
+echo '<tr><td class="datos2">'.__('Reports');
+echo '<td class="datos2">';
+
+$now = date("Y-m-d H:i:s");
+$now_year = date("Y");
+$now_month = date("m");
+
+$working_month = get_parameter ("working_month", $now_month);
+$working_year = get_parameter ("working_year", $now_year);
+
+// Full report			
+echo "<a href='index.php?sec=users&sec2=operation/user_report/report_full&only_projects=1&wu_reporter=$update_user'>";
+echo "<img title='".__("Full report")."' src='images/page_white_stack.png'>";
+echo "</a>";
+
+// Workunit report (detailed)
+echo "&nbsp;&nbsp;";
+echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$update_user'>";
+echo "<img border=0 title='".__("Workunit report")."' src='images/page_white_text.png'></A>";
+
+// Clock to calendar montly report for X user
+echo "&nbsp;&nbsp;";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$working_month&year=$working_year&id=$update_user'><img src='images/clock.png' title='".__("Montly calendar report")."' border=0></a>";
+
+// Graph stats montly report for X user
+echo "&nbsp;&nbsp;";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$update_user'><img src='images/chart_bar.png' title='".__("Montly report")."' border=0></a></center></td>";
+      
+
+
 echo '<tr><td class="datos2">'. __('Simple mode');
 echo '<td class="datos2">';
 

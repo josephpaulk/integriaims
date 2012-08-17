@@ -8,6 +8,7 @@ require_once ('include/functions_workunits.php');
 
 $id_project = (int) get_parameter ("id_project");
 $id_task = (int) get_parameter ("id_task");
+$id_user_filter = (string) get_parameter ("id_user", "");
 $operation = (string) get_parameter ("operation");
 
 if ($id_project > 0 && ! user_belong_project ($config["id_user"], $id_project)) {
@@ -138,17 +139,21 @@ if ($id_task != 0) {
 	
 	$pm = get_db_sql ("SELECT id_owner FROM tproject WHERE id = ".$id_project);
 
+    $sql_filter = "";
+    if ($id_user_filter != "")
+        $sql_filter = " AND tworkunit.id_user = '$id_user_filter' ";
+
 	if (give_acl ($config["id_user"], 0, "PM") OR ($pm == $config["id_user"]) )  {
 
 	$sql= sprintf ('SELECT tworkunit.id
 			FROM tworkunit, tworkunit_task 
-			WHERE tworkunit_task.id_task = %d
+			WHERE tworkunit_task.id_task = %d '. $sql_filter . '
 			AND tworkunit_task.id_workunit = tworkunit.id
 			ORDER BY tworkunit.timestamp DESC', $id_task);
 	} else {
 				$sql= sprintf ('SELECT tworkunit.id
 			FROM tworkunit, tworkunit_task 
-			WHERE tworkunit_task.id_task = %d
+			WHERE tworkunit_task.id_task = %d '. $sql_filter . '
 			AND id_user = "'.$config["id_user"].'" 
 			AND tworkunit_task.id_workunit = tworkunit.id
 			ORDER BY tworkunit.timestamp DESC', $id_task);		
@@ -163,18 +168,23 @@ if ($id_task != 0) {
 	
 	$pm = get_db_sql ("SELECT id_owner FROM tproject WHERE id = ".$id_project);
 
+    $sql_filter = "";
+    if ($id_user_filter != "")
+        $sql_filter = " AND tworkunit.id_user = '$id_user_filter' ";
+
+
 	if (give_acl ($config["id_user"], 0, "PM") OR ($pm == $config["id_user"]) )  {
 		$sql = sprintf ('SELECT tworkunit.id
 			FROM tworkunit, tworkunit_task, ttask 
 			WHERE tworkunit_task.id_task = ttask.id
-			AND ttask.id_project = %d
+			AND ttask.id_project = %d '. $sql_filter .' 
 			AND tworkunit_task.id_workunit = tworkunit.id
 			ORDER BY tworkunit.timestamp DESC', $id_project);
 	} else {
 		$sql = sprintf ('SELECT tworkunit.id
 			FROM tworkunit, tworkunit_task, ttask 
 			WHERE tworkunit_task.id_task = ttask.id
-			AND ttask.id_project = %d
+			AND ttask.id_project = %d '. $sql_filter .' 
 			AND id_user = "'.$config["id_user"].'"
 			AND tworkunit_task.id_workunit = tworkunit.id
 			ORDER BY tworkunit.timestamp DESC', $id_project);

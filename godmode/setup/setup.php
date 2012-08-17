@@ -60,7 +60,7 @@ if ($update) {
     $config["iw_creator_enabled"] = get_parameter ("iw_creator_enabled", 0);
     $config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
     $config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
-    
+	    
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
 		$config["pass_size"] = get_parameter ("pass_size", 4);
@@ -71,9 +71,10 @@ if ($update) {
 		$config["mins_fail_pass"] = get_parameter ("mins_fail_pass", 5);
 		$config["number_attempts"] = get_parameter ("number_attempts", 5);
 	}
-
+    $config["want_chat"] = get_parameter ("want_chat", 0);
     
     update_config_token ("timezone", $config["timezone"]);	
+    update_config_token ("want_chat", $config["want_chat"]);
 
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
 
@@ -231,6 +232,14 @@ $table->data[13][1] = print_input_text ("batch_newsletter", $config["batch_newsl
 $table->data[13][0] .= print_help_tip (__("Enable this option to activate the newsletter feature of Integria IMS"), true);
 
 $table->data[13][1] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
+
+
+$newsletter_options[0] = __('Disabled');
+$newsletter_options[1] = __('Enabled');
+
+$table->data[14][2] = print_select ($newsletter_options, "want_chat", $config["want_chat"], '','','',true, 0, true, __('Enable incident chat window'));
+
+
 
 if ($is_enterprise) {
 	$table->data[14][1] =  print_checkbox ("enable_pass_policy", 1, $config["enable_pass_policy"], 

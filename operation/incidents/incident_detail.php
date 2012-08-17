@@ -140,12 +140,11 @@ if ($action == 'update') {
 	$email_notify = (bool) get_parameter ('email_notify', $old_incident['notify_email']);
 	$epilog = get_parameter ('epilog', $old_incident['epilog']);
 	$resolution = get_parameter ('incident_resolution', $old_incident['resolution']);
-	$id_task = (int) get_parameter ('task_user', $old_incident['id_task']);
+	$id_task = (int) get_parameter ('id_task', $old_incident['id_task']);
 	$id_incident_type = get_parameter ('id_incident_type', $old_incident['id_incident_type']);
 	$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
 	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
 	$email_copy = get_parameter ('email_copy', $old_incident['email_copy']);
-	
 	
 	$tracked = false;
 	if ($old_incident['prioridad'] != $priority) {
@@ -259,13 +258,18 @@ if ($action == "insert") {
 	$id_creator = get_parameter ('id_creator', $config["id_user"]);
 	$estado = get_parameter ("incident_status");
 	$resolution = get_parameter ("incident_resolution");
-	$id_task = (int) get_parameter ("task_user");
+	$id_task = (int) get_parameter ("id_task");
 	$email_notify = (bool) get_parameter ('email_notify');
 	$id_incident_type = get_parameter ('id_incident_type');
 	$sla_disabled = (bool) get_parameter ("sla_disabled");
 	$id_parent = (int) get_parameter ('id_parent');
 	$email_copy = get_parameter ("email_copy", "");
+
+	// If user is not provided, is the currently logged user
 	$usuario = get_parameter ("id_user", $config['id_user']);
+
+	// Redactor user is ALWAYS the currently logged user entering the incident. Cannot change. Never.
+	$editor = $config["id_user"];
 
 	$creator_exists = get_user($id_creator);
 	$user_exists = get_user($usuario);
@@ -294,13 +298,13 @@ if ($action == "insert") {
 				(inicio, actualizacion, titulo, descripcion,
 				id_usuario, origen, estado, prioridad,
 				id_grupo, id_creator, notify_email, id_task,
-				resolution, id_incident_type, id_parent, sla_disabled, email_copy)
+				resolution, id_incident_type, id_parent, sla_disabled, email_copy, editor)
 				VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
-				"%s", %d, %d, %d, %d, %s, %d, "%s")', $timestamp, $timestamp,
+				"%s", %d, %d, %d, %d, %s, %d, "%s", "%s")', $timestamp, $timestamp,
 				$titulo, $description, $usuario,
 				$origen, $estado, $priority, $grupo, $id_creator,
 				$email_notify, $id_task, $resolution, $id_incident_type,
-				$idParentValue, $sla_disabled, $email_copy);
+				$idParentValue, $sla_disabled, $email_copy, $editor);
 		$id = process_sql ($sql, 'insert_id');
 
 		if ($id !== false) {
@@ -359,10 +363,11 @@ if ($id) {
 	$sla_disabled = $incident["sla_disabled"];
 	$affected_sla_id = $incident["affected_sla_id"];
 	$id_incident_type = $incident['id_incident_type'];
-    $email_copy = $incident["email_copy"];
+        $email_copy = $incident["email_copy"];
+	$editor = $incident["editor"];
 
 	$grupo = dame_nombre_grupo($id_grupo);
-    $score = $incident["score"];
+        $score = $incident["score"];
 
 	// Aditional ACL check on read incident
 	if ((give_acl ($config["id_user"], $id_grupo, "IR") == 0) 
@@ -542,7 +547,8 @@ if ($id) {
 	$sla_disabled = 0;
 	$id_incident_type = 0;
 	$affected_sla_id = 0;
-    $email_copy = "";
+        $email_copy = "";
+	$editor = $config["id_user"];
 
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -649,7 +655,6 @@ $table->data = array ();
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 $table->colspan = array ();
-$table->colspan[0][0] = 2;
 
 if ($config['incident_reporter'] == 0){
     $table->colspan[4][2] = 2; 
@@ -667,22 +672,26 @@ if ($has_permission) {
 	$table->data[0][0] = print_label (__('Title'), '', '', true, $titulo);
 }
 
+// Redactor of the incident. Cannot change once created, comes from the user who is logged and entering
+// the incident
+
+$table->data[0][1] = print_label (__('Editor'), '', '', true, $editor);
 
 if ($has_im){
-	$table->data[0][1] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
+	$table->data[0][2] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
 	        $disabled, '', '', true, __('SLA disabled'));
 
-	$table->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
-	                $disabled, '', '', true, __('Notify changes by email'));
+	$table->data[0][3] = print_checkbox_extended ('email_notify', 1, $email_notify,
+                $disabled, '', '', true, __('Notify changes by email'));
 
 // DEBUG
-	$table->data[0][2] .= print_input_text ('email_copy', $email_copy,"",20,500, true);
+	$table->data[0][3] .= print_input_text ('email_copy', $email_copy,"",20,500, true);
 
 	$table->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
 
 } else {
-	$table->data[0][2] = print_input_hidden ('email_notify', 1, true);
-	$table->data[0][1] = print_input_hidden ('sla_disabled', 0, true);
+	$table->data[0][3] = print_input_hidden ('email_notify', 1, true);
+	$table->data[0][3] = print_input_hidden ('sla_disabled', 0, true);
 
 	$table->data[1][0] = print_label (__('Status'), '','',true, render_status($estado));
 	$table->data[1][0] .= print_input_hidden ('incident_status', $estado, true);
@@ -723,10 +732,12 @@ $table->data[2][0] = combo_incident_origin ($origen, $disabled, true);
 $table->data[2][1] = combo_incident_types ($id_incident_type, $disabled, true);
 
 // Task
-if ($has_im) {
-	$table->data[2][2] = combo_task_user ($id_task, $config["id_user"], $disabled, false, true);
+if ($has_im) { 
+//$actual, $id_user, $disabled = 0, $show_vacations = 0, $return = false)
+        $table->data[2][2] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"));
 } else {
-	$table->data[2][2] = combo_task_user ($id_task, $config["id_user"], true, false, true);	
+	$table->data[2][2] = print_label (__("Task"), "label-id", 'text', true);
+	$table->data[2][2] .= "<i>".get_db_value ('name', 'ttask', 'id', $id_task)."</i>";
 }
 
 if ($config['incident_reporter'] == 1){

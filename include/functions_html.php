@@ -1,11 +1,10 @@
 <?php
 
-// INTEGRIA IMS v2.0
+// INTEGRIA IMS
 // http://www.integriaims.com
 // ===========================================================
-// Copyright (c) 2007-2008 Sancho Lerena, slerena@gmail.com
-// Copyright (c) 2008 Esteban Sanchez, estebans@artica.es
-// Copyright (c) 2007-2011 Artica, info@artica.es
+// Copyright (c) 2007-2012 Sancho Lerena, slerena@gmail.com
+// Copyright (c) 2007-2012 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public License
@@ -91,7 +90,10 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 		$disabledText = '';
 	}
 
-	$output .= '<select ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
+	// TODO (Sancho): Fixed width of xxx px is "hardcoded". This probably should go on CSS or other better solution. 
+	// But combos with more than 200px width, breaks the forms, so we need to "contain" the problem here.
+
+	$output .= '<select style="width: 170px" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
 
 	if ($nothing != '') {
 		$output .= '   <option value="'.$nothing_value.'"';

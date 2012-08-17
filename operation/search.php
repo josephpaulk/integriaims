@@ -158,7 +158,7 @@ if (give_acl($config["id_user"], 0, "UM")){
 			if (user_visible_for_me ($config["id_user"], $user["id_usuario"], "")){
 				$data[0] = "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$user["id_usuario"]."'>".$user["nombre_real"]." ( ". $user["id_usuario"]." ) "."</a>";
 
-				$data[1] = "<a href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=".$user["id_usuario"]."'>".__("Full report")."</a>";
+				$data[1] = "<a href='index.php?sec=users&sec2=operation/user_report/report_full&only_projects=1&wu_reporter=".$user["id_usuario"]."'>". "<img title='".__("Full report")."' src='images/page_white_stack.png'>" . "</a>";
 
 				$data[2] = "<a href='index.php?sec=users&sec2=operation/user_report/monthly&id=".$user["id_usuario"]."'><img src='images/clock.png'></a>";
 

@@ -160,6 +160,10 @@ function load_config(){
         $config["batch_newsletter"] = 15;
     }
 
+	if (!isset($config["want_chat"])){
+		$config["want_chat"] = 0;
+	}
+
     ini_set("post_max_size",$config["max_file_size"]);
     ini_set("upload_max_filesize",$config["max_file_size"]);
 

@@ -184,6 +184,8 @@ CREATE TABLE `tincidencia` (
   `id_incident_type` mediumint(8) unsigned NULL,
   `score` mediumint(8) default 0,
   `email_copy` mediumtext not NULL,
+  `editor` varchar(60) NOT NULL default '',
+
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_idx_1` (`id_usuario`),
   KEY `incident_idx_2` (`estado`),

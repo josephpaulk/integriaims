@@ -115,7 +115,10 @@ echo "<table align=center>";
 
 	echo "<tr>";	
 		echo "<td align=center>";
-			echo '<strong>'.__('SLA total compliance (%)'). '</strong>';
+			echo '<strong>'.__('SLA total compliance (%)'). '</strong><br>';
+
+        echo format_numeric (get_sla_compliance_single_id ($id));
+
 		echo "</td>";
 
 		echo "<td align=center>";

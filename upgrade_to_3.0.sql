@@ -250,3 +250,9 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('first_login', 0),
 ('mins_fail_pass', 5),
 ('number_attempts', 5);
+
+-- Added 20120814
+
+ALTER TABLE `tincidencia` ADD COLUMN `editor` varchar(60) NOT NULL default '';
+
+
