@@ -134,7 +134,7 @@ $table->style[1] = 'font-weight: bold';
 $table->size = array ();
 $table->size[3] = '40px';
 
-$groups = get_db_all_rows_sql ("SELECT * FROM tgrupo WHERE nombre LIKE '%$search_text%'");
+$groups = get_db_all_rows_sql ("SELECT * FROM tgrupo WHERE nombre LIKE '%$search_text%' ORDER BY nombre");
 
 $groups = print_array_pagination ($groups, "index.php?sec=users&sec2=godmode/grupos/lista_grupos");
 

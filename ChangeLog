@@ -1,5 +1,9 @@
 2012-08-17  Sancho Lerena <slerena@artica.es>
 
+    * godmode/grupos/lista_grupos.php: Sorted list.
+
+2012-08-16  Sancho Lerena <slerena@artica.es>
+
     * include/functions_html.php: Set a fixed width on all combos by CSS.
 
     * include/styles/flora/flora.tabs.css: Minor changes, and modified
