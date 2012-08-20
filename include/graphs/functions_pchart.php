@@ -12,7 +12,6 @@
 // GNU General Public License for more details.
 
 include_once('functions_utils.php');
-include_once('../functions_io.php');
 include_once('../functions.php');
 include_once('../functions_html.php');
 
