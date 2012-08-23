@@ -81,6 +81,9 @@ $editor = get_parameter ("editor", "");
 $status = get_parameter ("search_status", 0);
 $wu_reporter = get_parameter ("wu_reporter", "");
 $only_projects = get_parameter ("only_projects", 0);
+$only_summary = get_parameter ("only_summary", 0);
+$id_group_creator = get_parameter ("id_group_creator", 0);
+
 
 $total_time = 0;
 $total_global = 0;
@@ -91,6 +94,10 @@ $incident_time = 0;
 // for incident match (origin, resolution, group, author, editor, status, inventory object, or contract
 
 $do_search = 0;
+ 
+if ($only_summary == 1){
+    $do_search = 1;
+}
 
 if ($origen > 0){
 	$do_search = 1;
@@ -99,6 +106,11 @@ if ($origen > 0){
 if ($wu_reporter != ""){
 	$do_search = 1;
 }
+
+if ($id_group_creator > 0){
+	$do_search = 1;
+}
+
 
 if ($resolution > 0){
 	$do_search = 1;
@@ -156,10 +168,6 @@ if ($clean_output == 0){
     echo print_input_text_extended ('wu_reporter', $wu_reporter, 'text-user_id4', '', 15, 30, false, '',
 array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '')
         . print_help_tip (__("Type at least two characters to search"), true);
-
-    echo "<br>";
-
-    echo print_checkbox ('only_projects', 1, $only_projects, true, __('Project search'));
    
     echo "</td><td>"; 
     echo print_label (__("Begin date"), '', true);
@@ -168,6 +176,16 @@ array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '
     echo print_label (__("End date"), '', true);
     print_input_text ('end_date', $end_date, '', 10, 20);	
 
+
+    echo "<tr><td>";
+    echo print_checkbox ('only_projects', 1, $only_projects, true, __('Project search'));
+
+
+    echo "<td>";
+    echo print_checkbox ('only_summary', 1, $only_summary, true, __('Show only summary'));
+
+    echo "<td>";
+    echo print_select (get_user_groups (), 'id_group_creator', $id_group_creator, '', __('All'), 1, true, false, false, __('Creator group'));
 
     echo "<tr><td>";
     echo print_label (__("User"), '', true);
@@ -223,7 +241,7 @@ array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '
     echo "</table>";
 }
 
-if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
+if ($do_search  == 0){
 	echo "<h3>";
 	echo __("There is no data to show");
 	echo "</h3>";
@@ -234,12 +252,14 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
     else
     	echo "<h3>".__("Project report")."</h3>";
 
-	echo '<table width="95%" class="listing"><tr>';
-	echo "<th>".__('Project')."</th>";
-	echo "<th>".__('User hours')."</th>";
-	echo "<th>".__('Project total')."</th>";
-	echo "<th>".__('%')."</th>";
-	echo "</tr>";
+    echo '<table width="95%" class="listing"><tr>';
+    if ($only_summary == 0){
+	    echo "<th>".__('Project')."</th>";
+	    echo "<th>".__('User hours')."</th>";
+	    echo "<th>".__('Project total')."</th>";
+	    echo "<th>".__('%')."</th>";
+	    echo "</tr>";
+    }
 
 	$incident_selector = "";
 	$task_selector = "";
@@ -270,6 +290,8 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
 		if ($id_group > 1)
 			$sql = $sql . " AND id_grupo = $id_group ";
 
+		if ($id_group_creator > 1)
+			$sql = $sql . " AND id_group_creator = $id_group_creator ";
 
 		$search_incidents = get_db_all_rows_sql ($sql);
 
@@ -314,6 +336,7 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
                 $start_date, $end_date);
 
     // If it's not an incident match.... search in regular project data
+
 	} else {
 
 		if ($wu_reporter != "")
@@ -338,24 +361,27 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
 	if ($projects) {
 		foreach ($projects as $project) {
 			$total_project = get_project_workunit_hours ($project['id'], 0, $start_date, $end_date);
-			
-			echo "<tr style='border-top: 1px solid #ccc'>";
-			echo "<td>";
-			echo '<a href="index.php?sec=projects&sec2=operation/projects/task&id_project='.$project['id'].'">';
-			echo '<strong>'.$project['name'].'</strong>';
-			echo "</a>";
-			echo "</td><td>";
-			echo $project['sum'];
-			$total_time += $project['sum'];
-			echo "</td><td>";	
-			echo $total_project;
-			$total_global  += $total_project;
-			echo "</td><td>";
-			if ($total_project > 0)
-				echo format_numeric ($project['sum'] / ($total_project / 100) )."%";
-			else
-				echo '0%';
-			echo "</td></tr>";
+		    $total_time += $project['sum'];
+		    $total_global  += $total_project;		
+            if ($only_summary == 0){	
+			    echo "<tr style='border-top: 1px solid #ccc'>";
+			    echo "<td>";
+			    echo '<a href="index.php?sec=projects&sec2=operation/projects/task&id_project='.$project['id'].'">';
+			    echo '<strong>'.$project['name'].'</strong>';
+			    echo "</a>";
+			    echo "</td><td>";
+			    echo $project['sum'];
+
+			    echo "</td><td>";	
+			    echo $total_project;
+
+			    echo "</td><td>";
+			    if ($total_project > 0)
+				    echo format_numeric ($project['sum'] / ($total_project / 100) )."%";
+			    else
+				    echo '0%';
+			    echo "</td></tr>";
+            }
 			
 			$sql = sprintf ('SELECT ttask.id as id, ttask.name as name, SUM(tworkunit.duration) as sum
 				FROM tproject, ttask, tworkunit_task, tworkunit
@@ -373,25 +399,52 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
 			if ($tasks) {
 				foreach ($tasks as $task) {
 					$total_task = get_task_workunit_hours ($task['id']);
-	
-					echo "<tr>";
-					echo "<td>&nbsp;&nbsp;&nbsp;<img src='images/copy.png'>";
-                    echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$start_date&timestamp_h=$end_date&id=$user_id&id_task=".$task['id']."'>";
 
-					echo $task['name'];
-					echo "</a>";
-					echo "</td><td>";
-					echo $task['sum'];
-					echo "</td><td>";	
-					echo $total_task;
-					echo "</td><td>";
-					if ($total_task > 0)
-						echo format_numeric ($task['sum'] / ($total_task / 100))."%";
-					else
-						echo '0%';
-					echo "</td></tr>";
+                    if ($only_summary == 0){	
+					    echo "<tr>";
+					    echo "<td>&nbsp;&nbsp;&nbsp;<img src='images/copy.png'>";
+                        echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$start_date&timestamp_h=$end_date&id=$user_id&id_task=".$task['id']."'>";
+
+					    echo $task['name'];
+					    echo "</a>";
+					    echo "</td><td>";
+					    echo $task['sum'];
+					    echo "</td><td>";	
+					    echo $total_task;
+					    echo "</td><td>";
+					    if ($total_task > 0)
+						    echo format_numeric ($task['sum'] / ($total_task / 100))."%";
+					    else
+						    echo '0%';
+					    echo "</td></tr>";
+                    }
 				}
 			}
+
+            // Now get statistical data about each user work effort (when a user is not provided=
+
+            if ($user_search == ""){
+
+                $sql = sprintf ('SELECT tworkunit.id_user as user_id, SUM(tworkunit.duration) as sum
+				    FROM tproject, ttask, tworkunit_task, tworkunit
+				    WHERE tworkunit_task.id_workunit = tworkunit.id
+				    AND ttask.id_project = %d '. $user_search . '
+				    AND tworkunit_task.id_task = ttask.id
+				    AND ttask.id_project = tproject.id
+				    AND tworkunit.timestamp >= "%s"
+				    AND tworkunit.timestamp <= "%s" '. $task_selector .'
+				    GROUP BY tworkunit.id_user',
+				    $project['id'], $start_date, $end_date);
+			    $tasks = get_db_all_rows_sql ($sql);
+			    if ($tasks) {
+				    foreach ($tasks as $task) {
+                        $worker = $task["user_id"];
+                        if (!isset( $worker_data[$worker]))
+                            $worker_data[$worker] = 0;
+                		$worker_data[$worker] = $worker_data[$worker] + $task["sum"];    
+                    }
+                }
+            }
 		}
 	}
 
@@ -405,8 +458,16 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
 
 	if ($total_time > 0){
 		echo "<h3>". __("Project graph report")."</h3>";
+        echo "<div>";
 		echo graph_workunit_user (800, 350, $user_id, $start_date, $end_date, $ttl);
-		echo "<br><br>";
+		echo "</div><br>";
+
+        if ($user_search == ""){
+            echo "<h3>". __("Worktime per person")."</h3>";
+    		echo "<div>";
+            echo pie3d_graph ($config['flash_charts'], $worker_data, 500, 320, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+    		echo "</div>";
+        }
 	}
 
 	// Incident report
@@ -420,12 +481,12 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
 		$user_search = "";
 	}
 
-	$sql = sprintf ('SELECT tincidencia.score as score, tincidencia.resolution, tincidencia.id_incidencia as iid, tincidencia.estado as istatus, tincidencia.titulo as title, tincidencia.id_grupo as id_group, tincidencia.id_creator as creator, tincidencia.id_usuario as owner, tincidencia.inicio as date_start, tincidencia.cierre as date_end, tincidencia.id_task as taskid,  SUM(tworkunit.duration) as `suma`  
+	$sql = sprintf ('SELECT tincidencia.score as score, tincidencia.resolution, tincidencia.id_incidencia as iid, tincidencia.estado as istatus, tincidencia.titulo as title, tincidencia.id_grupo as id_group, tincidencia.id_group_creator as id_group_creator, tincidencia.id_creator as creator, tincidencia.id_usuario as owner, tincidencia.inicio as date_start, tincidencia.cierre as date_end, tincidencia.id_task as taskid,  SUM(tworkunit.duration) as `suma`  
 		FROM tincidencia, tworkunit_incident, tworkunit
 		WHERE tworkunit_incident.id_workunit = tworkunit.id '. $user_search .'
 		AND tworkunit_incident.id_incident = tincidencia.id_incidencia  
-		AND tworkunit.timestamp >= "%s" 
-		AND tworkunit.timestamp <= "%s 23:59:59" '. $incident_selector .'
+        AND tworkunit.timestamp >= "%s" 
+		AND tworkunit.timestamp <= "%s 23:59:59"'. $incident_selector .'
 		GROUP BY title', $start_date, $end_date);
 
 	$incidencias = get_db_all_rows_sql ($sql);
@@ -437,24 +498,44 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
 	} else {
 			
 		echo '<table width="95%" class="listing"><tr>';
-		echo "<th>".__('Incident'). "<br>".__("Task")."</th>";
-		echo "<th>".__('Group')."</th>";
-		echo "<th>".__('Creator')."<br>".__('Owner')."</th>";
-		echo "<th>".__('Status')."<br>". __("Resolution")."</th>";
-		echo "<th>".__('Date')."</th>";
-		echo "<th>".__('User'). " ".__("vs"). "<br>". __("Total hours")."</th>";
-		echo "<th>".__('Score')."</th>";
-		echo "<th>".__('SLA Compliance')."</th>";
-		echo "</tr>";
+        if ($only_summary == 0) {
+		    echo "<th>".__('Incident'). "<br>".__("Task")."</th>";
+		    echo "<th>".__('Group')."<i><br>".__("Creator group")."</i></th>";
+		    echo "<th>".__('Owner')."<i><br>".__('Creator')."</i></th>";
+		    echo "<th>".__('Status')."<br>". __("Resolution")."</th>";
+		    echo "<th>".__('Date')."</th>";
+		    echo "<th>".__('User'). " ".__("vs"). "<br>". __("Total hours")."</th>";
+		    echo "<th>".__('Score')."</th>";
+		    echo "<th>".__('SLA Compliance')."</th>";
+		    echo "</tr>";
+        }
+
 		$incident_totals = 0;
 		$incident_user = 0;
+        $incident_count = 0;
 		$incident_graph = array();
 
 		if ($incidencias) {
 			foreach ($incidencias as $incident) {
-				// $total_project = get_project_workunit_hours ($project['id'], 0, $start_date, $end_date);
 	
+    	        $incident_count++;
+
+                // Build data for graphs
 				$incident_graph[$incident["title"]] = $incident["suma"];
+
+                $grupo = substr(safe_output(dame_grupo($incident["id_group"])),0,15);
+                $grupo_src = substr(safe_output(dame_grupo($incident["id_group_creator"])),0,15);
+
+                if (!isset( $incident_group_data[$grupo]))
+                    $incident_group_data[$grupo] = 0;
+        		$incident_group_data[$grupo] = $incident_group_data[$grupo] + 1;    
+
+                if (!isset( $incident_group_data2[$grupo_src]))
+                    $incident_group_data2[$grupo_src] = 0;
+                $incident_group_data2[$grupo_src] = $incident_group_data2[$grupo_src] + 1;
+
+                if ($only_summary == 1)
+                    continue;
 
 				echo "<tr>";
 				echo "<td><b>";
@@ -462,13 +543,17 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
 
 				echo $incident["title"] . "</a><br></b><i>";
 
-                                echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=".$incident["taskid"]."&operation=view'>".get_db_sql("select name from ttask where id = ".$incident["taskid"]). "</a></i>";
-                                echo "</td>";
-			
+                echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=".$incident["taskid"]."&operation=view'>".get_db_sql("select name from ttask where id = ".$incident["taskid"]). "</a></i>";
+                echo "</td>";
 
-				echo "<td>".dame_grupo($incident["id_group"])."</td>";
-				echo "<td class=f9>".$incident["creator"]."<br>".$incident["owner"]."</td>";
+				echo "<td>".dame_grupo($incident["id_group"])."<br><i>";
+                echo dame_grupo($incident["id_group_creator"]);
+                echo "</i></td>";
 
+				echo "<td class=f9>";
+                echo $incident["owner"]."<br>";
+                echo "<i>".$incident["creator"]."</i>";
+                echo "</td>";
                 // Status and resolution
 				$status = get_indicent_status();
 				echo "<td>".$status[$incident["istatus"]];
@@ -477,7 +562,9 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
 				echo "</td>";
 
                 // Date
-				echo "<td class=datos style='font-size: 9px'>".substr($incident["date_start"],0,11). " <br>" .substr($incident["date_end"],0,11)."</td>";
+				echo "<td class=datos width=80 style='font-size: 9px'>";
+                echo substr($incident["date_start"],0,11). "<br>";
+                echo substr($incident["date_end"],0,11)."</td>";
 
                 // User vs Total wu hours
 				echo "<td>".$incident["suma"]."<br>";
@@ -489,7 +576,10 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
                 // Score
                 echo "<td>";
 				if (give_acl ($config["id_user"], 0, "IM"))
-					echo $incident["score"];
+                    if ($incident["score"] != 0)
+    					echo $incident["score"];
+                    else
+                        echo "-";
 				else
 					echo "N/A";
 				echo "</td>";
@@ -497,6 +587,7 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
                 // SLA Compliance    
                 echo "<td>";
                 echo format_numeric (get_sla_compliance_single_id ($incident["iid"]));
+                echo " %";
     			echo "</td></tr>";
 			}
 
@@ -504,8 +595,9 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
 			echo "<td><b>".__("Totals")."</b></td>";
 			echo "<td colspan=7>";
 
-			echo __('Total'). " : ". $incident_totals." ( ". format_numeric(get_working_days ($incident_totals)). " ".__("Working days").")";
-
+            echo "<b>".__("Number of incidents"). " </b>: ". $incident_count;
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>";
+			echo __('Total worktime'). " </b>: ". $incident_totals.__("hr")." ( ". format_numeric(get_working_days ($incident_totals)). " ".__("Working days").")";
 			
 		}
 		echo "</table>";
@@ -513,9 +605,20 @@ if (($do_search  == 0) OR ($only_projects == 1 AND $wu_reporter == "")){
 		if ($incident_graph){
 			echo "<h3>". __("Incident graph report")."</h3>";
 			echo "<div>";
-			echo pie3d_graph ($config['flash_charts'], $incident_graph, 500, 300, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+			echo pie3d_graph ($config['flash_charts'], $incident_graph, 500, 280, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+			echo "</div>";
+
+    		echo "<h3>". __("Incident by group")."</h3>";
+			echo "<div>";
+    	    echo pie3d_graph ($config['flash_charts'], $incident_group_data, 500, 280, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+			echo "</div>";
+
+    		echo "<h3>". __("Incident by creator group")."</h3>";
+			echo "<div>";
+            echo pie3d_graph ($config['flash_charts'], $incident_group_data2, 500, 280, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
 			echo "</div>";
 		}
+
 	}
 }
 

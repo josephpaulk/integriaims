@@ -347,7 +347,7 @@ function pie2d_graph($flash_chart, $chart_data, $width, $height,
 function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height,
 	$others_str = "other", $homedir="", $water_mark = "", $font = '', $font_size = '', $ttl = 1) {
 	// This library allows only 8 colors
-	$max_values = 8;
+	$max_values = 15;
 
 	if(count($chart_data) > $max_values) {
 		$chart_data_trunc = array();

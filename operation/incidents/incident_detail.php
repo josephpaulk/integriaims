@@ -271,9 +271,12 @@ if ($action == "insert") {
 	// Redactor user is ALWAYS the currently logged user entering the incident. Cannot change. Never.
 	$editor = $config["id_user"];
 
+    $id_group_creator = get_parameter ("id_group_creator", 0);
+
 	$creator_exists = get_user($id_creator);
 	$user_exists = get_user($usuario);
-	
+
+
 	if($creator_exists === false) {
 		$result_msg  = '<h3 class="error">'.__('Creator user does not exist').'</h3>';
 	}
@@ -298,13 +301,13 @@ if ($action == "insert") {
 				(inicio, actualizacion, titulo, descripcion,
 				id_usuario, origen, estado, prioridad,
 				id_grupo, id_creator, notify_email, id_task,
-				resolution, id_incident_type, id_parent, sla_disabled, email_copy, editor)
+				resolution, id_incident_type, id_parent, sla_disabled, email_copy, editor, id_group_creator)
 				VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
-				"%s", %d, %d, %d, %d, %s, %d, "%s", "%s")', $timestamp, $timestamp,
+				"%s", %d, %d, %d, %d, %s, %d, "%s", "%s", "%s")', $timestamp, $timestamp,
 				$titulo, $description, $usuario,
 				$origen, $estado, $priority, $grupo, $id_creator,
 				$email_notify, $id_task, $resolution, $id_incident_type,
-				$idParentValue, $sla_disabled, $email_copy, $editor);
+				$idParentValue, $sla_disabled, $email_copy, $editor, $id_group_creator);
 		$id = process_sql ($sql, 'insert_id');
 
 		if ($id !== false) {
@@ -363,8 +366,9 @@ if ($id) {
 	$sla_disabled = $incident["sla_disabled"];
 	$affected_sla_id = $incident["affected_sla_id"];
 	$id_incident_type = $incident['id_incident_type'];
-        $email_copy = $incident["email_copy"];
+    $email_copy = $incident["email_copy"];
 	$editor = $incident["editor"];
+    $id_group_creator = $incident["id_group_creator"];
 
 	$grupo = dame_nombre_grupo($id_grupo);
         $score = $incident["score"];
@@ -547,14 +551,17 @@ if ($id) {
 	$sla_disabled = 0;
 	$id_incident_type = 0;
 	$affected_sla_id = 0;
-        $email_copy = "";
+    $email_copy = "";
 	$editor = $config["id_user"];
+    $id_group_creator = 0;
 
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Show the form
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 $default_responsable = "";
+
 if (! $id) {
 	if ($config["enteprise"] == 1){
 		// How many groups has this user ?
@@ -656,12 +663,11 @@ $table->cellspacing = 2;
 $table->cellpadding = 2;
 $table->colspan = array ();
 
-if ($config['incident_reporter'] == 0){
-    $table->colspan[4][2] = 2; 
-}
-$table->colspan[5][0] = 4;
+
 $table->colspan[6][0] = 4;
 $table->colspan[7][0] = 4;
+$table->colspan[8][0] = 4;
+
 
 $disabled = !$has_permission;
 $actual_only = !$has_permission;
@@ -740,27 +746,6 @@ if ($has_im) {
 	$table->data[2][2] .= "<i>".get_db_value ('name', 'ttask', 'id', $id_task)."</i>";
 }
 
-if ($config['incident_reporter'] == 1){
-
-	if ($id) {
-		$contacts = get_incident_contact_reporters ($id, true);
-	} else {
-		$contacts = array ();
-	}
-
-	$table->data[4][3] = print_select ($contacts, 'select_contacts', NULL,
-					'', '', '', true, false, false, __('Reporters'));
-	if ($has_permission || $create_incident) {
-		$table->data[4][3] .= print_button (__('Add'),
-						'search_contact', false, '', 'class="dialogbtn"', true);
-		$table->data[4][3] .= print_button (__('Remove'),
-						'delete_contact', false, '', 'class="dialogbtn"', true);
-		foreach ($contacts as $contact_id => $contact_name) {
-			$table->data[4][3] .= print_input_hidden ("contacts[]",
-								$contact_id, true, 'selected-contacts');
-		}
-	}
-}
 
 if ($id_task > 0){
 	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
@@ -843,7 +828,7 @@ if ($create_incident) {
 		
 		$table->data[4][2] = print_select ($inventories, 'incident_inventories', NULL,
 						'', '', '', true, false, false, __('Objects affected'));
-		$table->data[4][2] .= print_button (__('Add'),
+		$table->data[4][2] .= "<br>".print_button (__('Add'),
 						'search_inventory', false, '', 'class="dialogbtn"', true);
 		$table->data[4][2] .= print_button (__('Remove'),
 						'delete_inventory', false, '', 'class="dialogbtn"', true);
@@ -863,14 +848,48 @@ foreach ($inventories as $inventory_id => $inventory_name) {
 						$inventory_id, true, 'selected-inventories');
 }
 
+
+if (($has_im) && ($create_incident)){
+    $table->data[4][3] =  print_label (__('Creator group'), '', '', true, ""); 
+	$table->data[4][3] .= combo_groups_visible_for_me ($config['id_user'], "id_group_creator", false, "IW", true, __("Creator group"), false, false);
+} else {
+	$table->data[4][3] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_group_creator));
+}
+
+
+if ($config['incident_reporter'] == 1){
+	if ($id) {
+		$contacts = get_incident_contact_reporters ($id, true);
+	} else {
+		$contacts = array ();
+	}
+
+	$table->data[5][0] = print_select ($contacts, 'select_contacts', NULL,
+					'', '', '', true, false, false, __('Reporters'));
+	if ($has_permission || $create_incident) {
+		$table->data[5][0] .= print_button (__('Add'),
+						'search_contact', false, '', 'class="dialogbtn"', true);
+		$table->data[5][0] .= print_button (__('Remove'),
+						'delete_contact', false, '', 'class="dialogbtn"', true);
+		foreach ($contacts as $contact_id => $contact_name) {
+			$table->data[5][0] .= print_input_hidden ("contacts[]",
+								$contact_id, true, 'selected-contacts');
+		}
+	}
+} else {
+
+    $table->data[5][0] = " ";
+}
+
+
 $disabled_str = $disabled ? 'readonly="1"' : '';
-$table->data[5][0] = print_textarea ('description', 9, 80, $description, $disabled_str,
+$table->data[6][0] = print_textarea ('description', 9, 80, $description, $disabled_str,
 		true, __('Description'));
 
 // This is never shown in create form
 
 if (!$create_incident){
-	$table->data[6][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,	true, __('Resolution epilog'));
+	$table->data[7][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,	true, __('Resolution epilog'));
 }
 
 

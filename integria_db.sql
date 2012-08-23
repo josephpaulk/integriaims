@@ -1,7 +1,7 @@
 -- INTEGRIA - the ITIL Management System
 -- http://integria.sourceforge.net
 -- ==================================================
--- Copyright (c) 2007-2011 Ártica Soluciones Tecnológicas
+-- Copyright (c) 2007-2012 Ártica Soluciones Tecnológicas
 -- http://www.artica.es  <info@artica.es>
 
 -- This program is free software; you can redistribute it and/or
@@ -185,6 +185,7 @@ CREATE TABLE `tincidencia` (
   `score` mediumint(8) default 0,
   `email_copy` mediumtext not NULL,
   `editor` varchar(60) NOT NULL default '',
+  `id_group_creator` mediumint(9) NOT NULL default 0,
 
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_idx_1` (`id_usuario`),

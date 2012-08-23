@@ -113,7 +113,7 @@ function lionwiki_show($conf = null, $execute_actions_param = true) {
 	global $CON;
 	global $execute_actions;
 	global $rightnow;
-	
+
 	$execute_actions = $execute_actions_param;
 	
 	//Default confs
@@ -262,7 +262,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	$T_DISCARD_CHANGES = 'Discard changes';
 	$T_PREVIEW = 'Preview';
 	$T_SEARCH = 'Search';
-	$T_SEARCH_RESULTS = 'Search results';
+	$T_SEARCH_RESULTS = 'Wiki search results';
 	$T_LIST_OF_ALL_PAGES = 'List of all pages';
 	$T_RECENT_CHANGES = 'Recent changes';
 	$T_LAST_CHANGED = 'Last changed';

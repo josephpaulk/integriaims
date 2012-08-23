@@ -698,6 +698,17 @@ function print_incidents_stats ($incidents, $return = false) {
 		$incident_group_data[$grupo] = $incident_group_data[$grupo] + 1;                                 
 
 	}
+
+    // Show graph with incidents by source group
+	foreach ($incidents as $incident) {
+			$grupo_src = substr(safe_output(dame_grupo($incident["id_group_creator"])),0,15);
+
+	if (!isset( $incident_group_data2[$grupo_src]))
+			 $incident_group_data2[$grupo_src] = 0;
+
+		$incident_group_data2[$grupo_src] = $incident_group_data2[$grupo_src] + 1;                                 
+
+	}
 	
 	//Print first table	
 	echo "<h3>".__("Incident statistics")."</h3>";
@@ -779,9 +790,15 @@ function print_incidents_stats ($incidents, $return = false) {
 	$output .= "<tr><td valign=top>";
 	$output .= print_label (__('Top incident submitters'), '', '', true, $submitter_label );
 	$output .= "</td><td valign=top>";
+
 	$output .= print_label (__('Incidents by group'), '', '', true);
 	$output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
-	$output .= "</td>";
+
+	$output .= "</td><td valign=top>";
+	$output .= print_label (__('Incidents by creator group'), '', '', true);
+	$output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data2, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+
+	$output .= "</td><tr>";
 	
 	if ($oldest_incident) {
 

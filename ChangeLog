@@ -1,3 +1,32 @@
+2012-08-23  Sancho Lerena <slerena@artica.es>
+
+    * include/graphs/fgraph.php: Removed limit of 8 items in pie graph.
+
+    * include/js/integria_incident_search.js: Text area auto hidden update
+    due change of row number.
+
+    * include/functions_incidents.php: Added graph for new "group of creator"-
+
+    * include/wiki/lionwiki_lib.php: Change title label.
+
+    * AUTHORS: Updated list of contributors.
+
+    * operation/incidents/incident_detail.php: New field: creator group.
+
+    * operation/search.php: Wiki search now integrated with global search.
+
+    * operation/user_report/report_full.php: Several changes. Added graphs
+    and "group of creator" field, and "show only totals". Some fixes and
+    added also total stats to the bottom.
+
+    * integria_db.sql.
+    upgrade_to_3.0.sql: New field on tincidencia, id_group_creator.
+
+    * general/header.php: Fixed layout.
+
+    * include/functions_html.php,
+    include/functions_form.php: Updated header
+
 2012-08-20  Sancho Lerena <slerena@artica.es>
 
     * graphs/functions_pchart.php: Removed non existant include which

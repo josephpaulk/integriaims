@@ -3,7 +3,6 @@
 // INTEGRIA IMS
 // http://www.integriaims.com
 // ===========================================================
-// Copyright (c) 2007-2012 Sancho Lerena, slerena@gmail.com
 // Copyright (c) 2007-2012 Artica, info@artica.es
 
 // This program is free software; you can redistribute it and/or

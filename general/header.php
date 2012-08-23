@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2010 Ártica Soluciones Tecnológicas
+// Copyright (c) 2007-2012 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@ if ($config["enteprise"] == 1){
 } else { 
 	echo '<a href="index.php"><img src="images/'.$config["header_logo"].'" title="'.__('Home').'"/></a>';
 }
-echo '</td><td>';
+echo '</td><td  width=300>';
 
 //// This div is necessary for javascript actions. Dont touch ///
 echo '<div style="font-size: 0px;" id="id_user">'.$config['id_user']."</div>";
@@ -49,14 +49,14 @@ if (dame_admin ($config['id_user']))
 	echo '<img src="images/user_suit.png"> ';
 else
 	echo '<img src="images/user_green.png"> ';
-echo __('You are connected as').' <span style="font-weight: bold; color: #ffffff"">['.$config['id_user'].']</span></a>';
+echo ' <span style="font-weight: bold; color: #ffffff"">['.$config['id_user'].']</span></a>';
 
 echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 echo '<a href="index.php?logout=1"><img src="images/lock.png"> '. __('Logout').'</a>';
-echo '</td><td style="padding: 0px; margin: 0px;">';
+echo '</td><td width=300 style="padding: 0px; margin: 0px;">';
 echo "<form method=post action='index.php?sec2=operation/search'>";
 echo "&nbsp;";
-echo "<input type=text name='search_string' size=15 value='$search_string'>";
+echo "<input type=text name='search_string' size=22 value='$search_string'>";
 echo "&nbsp;";
 echo "<input class='sub search' type=submit name='submit' size=18 value='Search'>";
 echo '</form>';

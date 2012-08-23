@@ -255,4 +255,5 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 
 ALTER TABLE `tincidencia` ADD COLUMN `editor` varchar(60) NOT NULL default '';
 
-
+-- Added 20120823
+ALTER TABLE `tincidencia` ADD COLUMN `id_group_creator` mediumint(9) NOT NULL default 0;

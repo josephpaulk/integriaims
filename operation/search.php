@@ -23,6 +23,14 @@ $search_string = get_parameter ("search_string","");
 // Delete spaces from start and end of the search string
 $search_string = safe_input(trim(safe_output($search_string)));
 
+if ($search_string == ""){
+
+    echo "<h1>";
+    echo __("Empty search string");
+    echo "</h1>";
+    return;
+}
+
 echo "<h1>";
 
 echo __("Searching for");
@@ -273,6 +281,52 @@ if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
 		}
 		print_table ($table);
 	}
+}
+
+// Wiki search
+if (give_acl ($config['id_user'], $id_grupo, "WR")) {
+
+	require_once("include/wiki/lionwiki_lib.php");
+
+	$conf_plugin_dir = 'include/wiki/plugins/';
+	$conf_var_dir = 'var/';
+	if (isset($config['wiki_plugin_dir']))
+	        $conf_plugin_dir = $config['wiki_plugin_dir'];
+	if (isset($config['conf_var_dir']))
+	        $conf_var_dir = $config['conf_var_dir'];
+
+	$conf['wiki_title'] = 'Wiki';
+	$conf['self'] = 'index.php?sec=wiki&sec2=operation/wiki/wiki' . '&';
+	$conf['plugin_dir'] = $conf_plugin_dir;
+	$conf['var_dir'] = $conf_var_dir;
+	$conf['custom_style'] = file_get_contents ($config["homedir"]."/include/styles/wiki.css");
+	$conf['fallback_template'] = $conf['custom_style'].  '
+
+	<div id="wiki_view">
+        <table width="100%" cellpadding="0">
+                <tr><td colspan="3"><h3>{PAGE_TITLE}</h3></td></tr>
+                <tr>
+                        <td colspan="3">
+                                {<div style="color:#F25A5A;font-weight:bold;"> ERROR </div>}
+                                {CONTENT} {<div style="background: #EBEBED"> plugin:TAG_LIST </div>}
+                                {plugin:TOOLBAR_TEXTAREA}
+                                {CONTENT_FORM} {RENAME_INPUT <br/><br/>} {CONTENT_TEXTAREA}
+                                {EDIT_SUMMARY_TEXT} {EDIT_SUMMARY_INPUT} {CONTENT_SUBMIT} {CONTENT_PREVIEW}</p>{/CONTENT_FORM}
+                        </td>
+                </tr>
+        </table>
+</div>';
+
+
+
+	// Yes, this is dirty but works like a charm :))
+
+	$action="search";
+
+	$_REQUEST["query"]=$search_string;
+	$_REQUEST["action"]="search";
+	lionwiki_show($conf);
+
 }
 
 echo "<br><br>";

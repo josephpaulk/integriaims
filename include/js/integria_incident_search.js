@@ -205,9 +205,9 @@ function configure_incident_form (enable_ajax_form) {
 	function checkEpilogVisibility(control){
 		/* Verified, see tincident_status table id */
 		if (control.value == 6 || control.value == 7) {
-			$(dialog+"#incident-editor-6").css ('display', '');
+			$(dialog+"#incident-editor-7").css ('display', '');
 		} else {
-			$(dialog+"#incident-editor-6").css ('display', 'none');
+			$(dialog+"#incident-editor-7").css ('display', 'none');
 		}
 	}
 	
