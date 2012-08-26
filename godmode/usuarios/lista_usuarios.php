@@ -110,7 +110,7 @@ foreach($resq1 as $rowdup){
     $id_company = $rowdup["id_company"];	
 
 	echo "<tr><td>";
-	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$nombre."'><b>".ucfirst($nombre)."</b></a>";
+	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$nombre."'>".ucfirst($nombre)."</a>";
 
 	echo "<td style='font-size:9px'>" . $realname;	
 	$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_company);	

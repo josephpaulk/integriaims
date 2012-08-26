@@ -1,3 +1,19 @@
+2012-08-26  SAncho Lerena <slerena@artica.es>
+
+	* operation/incidents/incident_detail.php: Fixed ugly form
+	because inventory buttons on edition. Fixed problems with
+	file upload with blank spaces. Tested and fixed once of all.
+
+	* operation/projects/task_files.php: Fixed same problem, upload
+	files with blank spaces in filename. 
+
+	* operation/kb/browse.php,
+	operation/contracts/contract_detail.php,
+	operation/download/browse.php,
+	operation/companies/company_detail.php,
+	godmode/usuarios/lista_usuarios.php: Better layout on listings.
+
+
 2012-08-23  Sancho Lerena <slerena@artica.es>
 
     * include/graphs/fgraph.php: Removed limit of 8 items in pie graph.

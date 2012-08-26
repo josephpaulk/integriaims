@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008-2010 Ártica Soluciones Tecnológicas
+// Copyright (c) 2008-2012 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -51,6 +51,8 @@ session_write_close();
 // Allow download file
 
 $fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
+
+echo "$fileLocation";
 
 $last_name = $data["filename"];
 

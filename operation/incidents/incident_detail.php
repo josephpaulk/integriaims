@@ -439,14 +439,15 @@ if ($id) {
 					__('No description available'));
 			
 			// Insert into database
-			//~ $filename = $_FILES['userfile']['name'];
-			$file_temp = sys_get_temp_dir()."/$filename";
+			$filename_real = safe_output ( $filename ); // Avoid problems with blank spaces
+			$file_temp = sys_get_temp_dir()."/$filename_real";
+			$file_new = str_replace (" ", "_", $filename_real);
 			$filesize = filesize($file_temp); // In bytes
 
 			$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
 					filename, description, size)
 					VALUES (%d, "%s", "%s", "%s", %d)',
-					$id, $config['id_user'], $filename, $file_description, $filesize);
+					$id, $config['id_user'], $file_new, $file_description, $filesize);
 
 			$id_attachment = process_sql ($sql, 'insert_id');
 			incident_tracking ($id, INCIDENT_FILE_ADDED);
@@ -459,11 +460,8 @@ if ($id) {
 			}
 			
 			// Copy file to directory and change name
-			$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
+			$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$file_new;
 			
-			// This avoid problems with files with blank spaces !
-			$file_temp=safe_output($file_temp);
-		
 			if (! copy ($file_temp, $file_target)) {
 				$result_msg = '<h3 class="error">'.__('File cannot be saved. Please contact Integria administrator about this error').'</h3>';
 				$sql = sprintf ('DELETE FROM tattachment
@@ -837,7 +835,7 @@ if ($create_incident) {
 	$table->data[4][2] = print_select ($inventories, 'incident_inventories',
 						NULL, '', '', '',
 						true, false, false, __('Objects affected'));
-		$table->data[4][2] .= print_button (__('Add'),
+		$table->data[4][2] .= "<br>".print_button (__('Add'),
 					'search_inventory', false, '', 'class="dialogbtn"', true);
 		$table->data[4][2] .= print_button (__('Remove'),
 					'delete_inventory', false, '', 'class="dialogbtn"', true);

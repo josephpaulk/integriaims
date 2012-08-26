@@ -299,7 +299,6 @@ if ($id | $new_contract) {
 	$table->width = '100%';
 	$table->class = 'search-table';
 	$table->style = array ();
-	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15,
 		100, true, __('Search'));
@@ -331,8 +330,10 @@ if ($id | $new_contract) {
 		$table->data = array ();
 		$table->size = array ();
 		$table->style = array ();
-		$table->style[0] = 'font-weight: bold';
 		$table->colspan = array ();
+		$table->style[3]= "font-size: 8px";
+		$table->style[4]= "font-size: 8px";
+		$table->style[5]= "font-size: 8px";
 		$table->head[0] = __('Name');
 		$table->head[1] = __('Contract number');
 		$table->head[2] = __('Company');

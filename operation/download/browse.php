@@ -361,8 +361,8 @@ foreach($downloads as $row){
 	echo "<tr>";
 
 	// Name
-	echo "<td><b><a title='".$row["description"]."' href='operation/download/download.php?id=".$row["id"]."'>";
-	echo $row["name"]."</a></b> ";
+	echo "<td><a title='".$row["description"]."' href='operation/download/download.php?id=".$row["id"]."'>";
+	echo $row["name"]."</a>";
 	if ($row["description"] != ""){
 		echo "<img src='images/zoom.png'>";
 	}

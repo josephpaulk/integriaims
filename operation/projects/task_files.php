@@ -55,6 +55,8 @@ if ($id_project == -1) {
 // -----------
 if ($operation == "attachfile"){
 	$filename = get_parameter ('upfile', false);
+	$filename_real = safe_output($filename);
+	$filename_safe = str_replace (" ", "_", $filename_real);
 
 	if ((bool)$filename){ //if file
 		if (isset($_POST["file_description"]))
@@ -63,15 +65,15 @@ if ($operation == "attachfile"){
 			$description = "No description available";
 			
 		// Insert into database
-		$file_temp = sys_get_temp_dir()."/$filename";
+		$file_temp = sys_get_temp_dir()."/$filename_real";
 		$filesize = filesize($file_temp);
 		
-		$sql = " INSERT INTO tattachment (id_task, id_usuario, filename, description, size ) VALUES (".$id_task.", '".$id_user." ','".$filename."','".$description."',".$filesize.") ";
+		$sql = " INSERT INTO tattachment (id_task, id_usuario, filename, description, size ) VALUES (".$id_task.", '".$id_user." ','".$filename_safe."','".$description."',".$filesize.") ";
 		$id_attachment = process_sql ($sql, 'insert_id');
 		//project_tracking ( $id_inc, $id_usuario, 3);
 		$result_output = "<h3 class='suc'>".__('File added')."</h3>";
 		// Copy file to directory and change name
-		$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename;
+		$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$filename_safe;
 		
 		if (! copy($file_temp, $file_target)) {
 				$result_output = "<h3 class=error>".__('File cannot be saved. Please contact Integria administrator about this error')."</h3>";

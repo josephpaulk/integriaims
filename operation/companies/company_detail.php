@@ -632,7 +632,6 @@ if ($id) {
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();
-		$table->style[0] = 'font-weight: bold';
 		$table->colspan = array ();
 		$table->head[0] = __('Company');
 		$table->head[1] = __('Role');

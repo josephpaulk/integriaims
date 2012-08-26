@@ -390,7 +390,7 @@ if ($result=mysql_query($sql1)){
 	while ($row=mysql_fetch_array($result)){
 		echo "<tr>";
 		// Name
-		echo "<td valign='top'><b><a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$row["id"]."'>".short_string($row["title"],124)."</a></b></td>";
+		echo "<td valign='top'><a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$row["id"]."'>".short_string($row["title"],220)."</a></td>";
 
 		// Category
 		echo "<td class=f9>";
