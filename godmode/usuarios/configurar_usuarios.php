@@ -147,7 +147,7 @@ if ($action == 'update')  {
 ///////////////////////////////
 if ($action == 'create'){
 	// Get data from POST
-	$nombre = get_parameter ("nombre");
+	$nombre = strtolower(get_parameter ("nombre"));
 	$password = get_parameter ("pass1");
 	$password2 = get_parameter ("pass2");
 	$nombre_real = get_parameter ("nombre_real");

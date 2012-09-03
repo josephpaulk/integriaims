@@ -1,3 +1,30 @@
+2012-09-03  Sancho Lerena <slerena@artica.es>
+
+	* operation/side_menu.php: Added password policy entry.
+	Removed old user-activity menus.
+	
+	* operation/user_report/report_full.php: Added ID to column.
+
+	* operation/incidents/incident_detail.php: Refactorized 
+	WU creation. Added code to insert automatically a WU from
+	the editor (if enabled in new setup option).
+
+	* godmode/usuarios/configurar_usuarios.php: userid is now
+	get always in lowercase.
+	
+	* godmode/setup/setup.php: Put password policy options in 
+	another place, put new option to autocreate WU on Incident
+	creation /by editor/
+
+	* include/functions_form.php: Put some nice formatting on 
+	incident people and put also more information (telefono, email)
+	and also editor name.
+
+	* include/functions_config.php: New tokens.
+
+	* include/styles/integria.css: nice div box for incident people
+	column information.
+
 2012-08-26  SAncho Lerena <slerena@artica.es>
 
 	* operation/incidents/incident_detail.php: Fixed ugly form

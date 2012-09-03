@@ -19,6 +19,7 @@ global $config;
 check_login ();
 
 require_once ('include/functions_incidents.php');
+require_once ('include/functions_workunits.php');
 
 if (defined ('AJAX')) {
 	
@@ -325,6 +326,13 @@ if ($action == "insert") {
 			
 			incident_tracking ($id, INCIDENT_CREATED);
 
+			// Create automatically a WU with the editor ?
+			if ($config["incident_creation_wu"] == 1){
+				$wu_text = __("WU automatically created by the editor on the incident creation.");
+				create_workunit ($id, $wu_text, $editor, $config["iwu_defaultime"], 0, "", 1);
+			}
+
+
 			// Email notify to all people involved in this incident
 			if ($email_notify) {
 				mail_incident ($id, $usuario, "", 0, 1);
@@ -401,22 +409,13 @@ if ($id) {
 
 		process_sql ($sql);
 
-		incident_tracking ($id, INCIDENT_WORKUNIT_ADDED);
+		create_workunit ($id, $nota, $config["id_user"], $timeused, $have_cost, $profile, $public);
 
-		// Add work unit if enabled
-		$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public, id_profile, have_cost) VALUES ("%s", %.2f, "%s", "%s", %d, %d, %d)',
-				$timestamp, $timeused, $config['id_user'], $nota, $public, $profile, $have_cost);
-		$id_workunit = process_sql ($sql, "insert_id");
-		$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit)
-				VALUES (%d, %d)',
-				$id, $id_workunit);
-		$res = process_sql ($sql);
-		if ($res !== false) {
-			$result_msg = '<h3 class="suc">'.__('Workunit added successfully').'</h3>';
-			// Email notify to all people involved in this incident
-			if ($email_notify == 1) {
-				mail_incident ($id, $config['id_user'], $nota, $timeused, 10, $public);
-			}
+		$result_msg = '<h3 class="suc">'.__('Workunit added successfully').'</h3>';
+
+		// Email notify to all people involved in this incident
+		if ($email_notify == 1) {
+			mail_incident ($id, $config['id_user'], $nota, $timeused, 10, $public);
 		}
 		
 		if (defined ('AJAX')) {

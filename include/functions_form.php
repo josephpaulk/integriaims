@@ -638,10 +638,10 @@ function show_workunit_user ($id_workunit, $full = 0) {
 		$id_incident = get_db_value ("id_incident", "tworkunit_incident", "id_workunit", $row["id"]);
 	$id_group = get_db_value ("id_group", "ttask", "id", $id_task);
 	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
-	$task_title = substr(get_db_value ("name", "ttask", "id", $id_task), 0, 50);
+	$task_title = get_db_value ("name", "ttask", "id", $id_task);
 	if ($id_task == "")
-		$incident_title = substr(get_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident), 0, 50);
-	$project_title = substr(get_db_value ("name", "tproject", "id", $id_project), 0, 50);
+		$incident_title = get_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident);
+	$project_title = get_db_value ("name", "tproject", "id", $id_project);
 
 	// ACL Check for visibility
 	if (!$public && $id_user != $config["id_user"] && ! give_acl ($config["id_user"], $id_group, "TM"))
@@ -875,6 +875,31 @@ function form_search_incident ($return = false) {
 }
 
 function incident_users_list ($id_incident, $return = false) {
+
+
+	function render_sidebox_user_info ($user, $label){
+
+		$output = "";
+		$output .= '<div style="text-align:center;"><b>'.__($label).' </b></div>';
+	        $output .= '<div class="user_info_sidebox">';
+	        $output .= print_user_avatar ($user, true, true);
+	        $output .= '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$user.'">';
+	        $output .= ' <strong>'.$user.'</strong></a><br>';
+	        $user_data = get_db_row ("tusuario", "id_usuario", $user);
+		if ($user_data["nombre_real"] != "")
+			$output .= $user_data["nombre_real"]."<br>";
+		if ($user_data["telefono"] != "")
+		        $output .= $user_data["telefono"]."<br>";
+		if ($user_data["direccion"] != "")
+		        $output .= $user_data["direccion"];
+	        if ($user_data["id_company"] != 0) {
+	                $company_name = (string) get_db_value ('name', 'tcompany', 'id', $user_data['id_company']);
+	                $output .= "<br>(<em>$company_name</em>)";
+	        }
+	        $output .= '</div>';
+		return $output;
+	}
+
 	$output = '';
 	
 	$users = get_incident_users ($id_incident);
@@ -882,30 +907,19 @@ function incident_users_list ($id_incident, $return = false) {
 	$output .= '<ul id="incident-users-list" class="sidemenu">';
 
 	// OWNER
-	$output .= '<div style="text-align:center;">- '.__('Responsible').' -</div>';
-	$output .= "&nbsp;&nbsp;".print_user_avatar ($users['owner']['id_usuario'], true, true);
-	$output .= ' <strong>'.$users['owner']['id_usuario'].'</strong>';
-	if($users['owner']['id_company'] != 0) {	
-		$company_owner = (string) get_db_value ('name', 'tcompany', 'id', $users['owner']['id_company']);
-		$output .= " (<em>$company_owner</em>)";
-	}
-	$output .= '<br>';
-	
-	// CREATOR
-	$output .= '<div style="text-align:center;">- '.__('Creator').' -</div>';
-	$output .= "&nbsp;&nbsp;".print_user_avatar ($users['creator']['id_usuario'], true, true);
-	$output .= ' <strong>'.$users['creator']['id_usuario'].'</strong>';
-	if($users['creator']['id_company'] != 0) {	
-		$company_creator = (string) get_db_value ('name', 'tcompany', 'id', $users['creator']['id_company']);
-		$output .= " (<em>$company_creator</em>)";
-	}
-	$output .= '<br>';
+	$output .= render_sidebox_user_info ($users['owner']['id_usuario'], "Responsible");
 
-	
+	// CREATOR
+        $output .= render_sidebox_user_info ($users['creator']['id_usuario'], "Creator");
+
+	// EDITOR (if different from CREATOR)
+	$editor = get_db_sql ("SELECT editor FROM tincidencia WHERE id_incidencia = $id_incident");
+	if (($editor != $users['creator']['id_usuario']) AND ($editor != "")){
+	       $output .= render_sidebox_user_info ($editor, "Editor");
+	}
+
 	if ($users['affected'])
 	// PARTICIPANTS
-	$output .= '<div style="text-align:center;">- '.__('Participants').' -</div>';
-
 	if ($users['affected'] == false) {
 		$users['affected'] = array();
 	}
@@ -913,14 +927,7 @@ function incident_users_list ($id_incident, $return = false) {
 	foreach ($users['affected'] as $user_item) {
 		$user = $user_item["id_usuario"];
 		if (!get_external_user($user)){
-			$output .= "&nbsp;&nbsp;" . print_user_avatar ($user, true, true);
-			$output .= ' <strong>'.$user.'</strong>';
-			$id_company_participant = (string) get_db_value ('id_company', 'tusuario', 'id_usuario', $user);
-			if($id_company_participant != 0) {	
-				$company_participant = (string) get_db_value ('name', 'tcompany', 'id', $id_company_participant);
-				$output .= " (<em>$company_participant</em>)";
-			}
-			$output .= '<br>';
+		        $output .= render_sidebox_user_info ($user, "Participant");
 		} 
 	}
 	$output .= '</ul>';

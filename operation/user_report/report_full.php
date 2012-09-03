@@ -481,7 +481,7 @@ if ($do_search  == 0){
 		$user_search = "";
 	}
 
-	$sql = sprintf ('SELECT tincidencia.score as score, tincidencia.resolution, tincidencia.id_incidencia as iid, tincidencia.estado as istatus, tincidencia.titulo as title, tincidencia.id_grupo as id_group, tincidencia.id_group_creator as id_group_creator, tincidencia.id_creator as creator, tincidencia.id_usuario as owner, tincidencia.inicio as date_start, tincidencia.cierre as date_end, tincidencia.id_task as taskid,  SUM(tworkunit.duration) as `suma`  
+	$sql = sprintf ('SELECT tincidencia.id_incidencia as id_incidencia, tincidencia.score as score, tincidencia.resolution, tincidencia.id_incidencia as iid, tincidencia.estado as istatus, tincidencia.titulo as title, tincidencia.id_grupo as id_group, tincidencia.id_group_creator as id_group_creator, tincidencia.id_creator as creator, tincidencia.id_usuario as owner, tincidencia.inicio as date_start, tincidencia.cierre as date_end, tincidencia.id_task as taskid,  SUM(tworkunit.duration) as `suma`  
 		FROM tincidencia, tworkunit_incident, tworkunit
 		WHERE tworkunit_incident.id_workunit = tworkunit.id '. $user_search .'
 		AND tworkunit_incident.id_incident = tincidencia.id_incidencia  
@@ -499,6 +499,7 @@ if ($do_search  == 0){
 			
 		echo '<table width="95%" class="listing"><tr>';
         if ($only_summary == 0) {
+		    echo "<th>".__('#')."</th>";
 		    echo "<th>".__('Incident'). "<br>".__("Task")."</th>";
 		    echo "<th>".__('Group')."<i><br>".__("Creator group")."</i></th>";
 		    echo "<th>".__('Owner')."<i><br>".__('Creator')."</i></th>";
@@ -538,6 +539,9 @@ if ($do_search  == 0){
                     continue;
 
 				echo "<tr>";
+				echo "<td>";
+
+				echo "<b>#".$incident["id_incidencia"]."</b>";
 				echo "<td><b>";
 				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident["id"]."'>";
 
@@ -593,7 +597,7 @@ if ($do_search  == 0){
 
 			echo "<tr style='border-top: 2px solid #ccc'>";
 			echo "<td><b>".__("Totals")."</b></td>";
-			echo "<td colspan=7>";
+			echo "<td colspan=8>";
 
             echo "<b>".__("Number of incidents"). " </b>: ". $incident_count;
             echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>";

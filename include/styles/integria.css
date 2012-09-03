@@ -1322,5 +1322,14 @@ input.login {
 	border: 0px;
 }
 
-
+.user_info_sidebox {
+	padding: 10px;
+	padding-left: 15px;
+	background-color: #eaeaea; 
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -khtml-border-radius: 10px;
+	font-size: 10px;
+}
 

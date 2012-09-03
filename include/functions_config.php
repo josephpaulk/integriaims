@@ -164,6 +164,10 @@ function load_config(){
 		$config["want_chat"] = 0;
 	}
 
+	if (!isset($config["incident_creation_wu"])){
+                $config["incident_creation_wu"] = 0;
+        }
+
     ini_set("post_max_size",$config["max_file_size"]);
     ini_set("upload_max_filesize",$config["max_file_size"]);
 

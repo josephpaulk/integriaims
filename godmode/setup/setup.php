@@ -71,10 +71,12 @@ if ($update) {
 		$config["mins_fail_pass"] = get_parameter ("mins_fail_pass", 5);
 		$config["number_attempts"] = get_parameter ("number_attempts", 5);
 	}
-    $config["want_chat"] = get_parameter ("want_chat", 0);
-    
+    $config["want_chat"] = get_parameter ("want_chat", 0); 
+    $config["incident_creation_wu"] = get_parameter ("incident_creation_wu", 0);
+ 
     update_config_token ("timezone", $config["timezone"]);	
     update_config_token ("want_chat", $config["want_chat"]);
+    update_config_token ("incident_creation_wu", $config["incident_creation_wu"]);
 
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
 
@@ -237,38 +239,13 @@ $table->data[13][1] .= print_help_tip (__("This means, in each execution of the 
 $newsletter_options[0] = __('Disabled');
 $newsletter_options[1] = __('Enabled');
 
-$table->data[14][2] = print_select ($newsletter_options, "want_chat", $config["want_chat"], '','','',true, 0, true, __('Enable incident chat window'));
+$table->data[14][1] = print_select ($newsletter_options, "want_chat", $config["want_chat"], '','','',true, 0, true, __('Enable incident chat window'));
+
+
+$table->data[14][0] = print_select ($newsletter_options, "incident_creation_wu", $config["incident_creation_wu"], '','','',true, 0, true, __('Editor adds a WU on incident creation'));
 
 
 
-if ($is_enterprise) {
-	$table->data[14][1] =  print_checkbox ("enable_pass_policy", 1, $config["enable_pass_policy"], 
-			true, __('Enable password policy'));
-					
-	$table->data[15][1] = print_input_text ("pass_size", $config["pass_size"], '',
-		4, 255, true, __('Min. size password'));
-
-	$table->data[16][1] =  print_checkbox ("pass_needs_numbers", 1, $config["pass_needs_numbers"], 
-			true, __('Password must have numbers'));
-			
-	$table->data[17][1] =  print_checkbox ("pass_needs_symbols", 1, $config["pass_needs_symbols"], 
-			true, __('Password must have symbols'));
-
-	$table->data[18][1] = print_input_text ("pass_expire", $config["pass_expire"], '',
-		4, 255, true, __('Password expiration (days)'));
-	$table->data[18][1] .= print_help_tip (__("Set 0 if never expire"), true);			
-
-	$table->data[19][1] =  print_checkbox ("first_login", 1, $config["first_login"], 
-			true, __('Force change password on first login'));
-
-	$table->data[20][1] = print_input_text ("mins_fail_pass", $config["mins_fail_pass"], '',
-		4, 255, true, __('User blocked if login fails (minutes)'));
-		
-	$table->data[21][1] = print_input_text ("number_attempts", $config["number_attempts"], '',
-		4, 255, true, __('Number of failed login attempts'));
-}
-	
-				
 echo "<form name='setup' method='post'>";
 
 print_table ($table);
