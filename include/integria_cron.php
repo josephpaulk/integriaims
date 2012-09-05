@@ -34,6 +34,31 @@ $compare_timestamp = date ("Y-m-d H:i:s", $now - $config["notification_period"]*
 $human_notification_period = give_human_time ($config["notification_period"]*3600);
 
 /**
+ * This function delete temp files (mostly image temporaly serialize data)
+ */
+
+function delete_tmp_files(){
+
+        $dir =  sys_get_temp_dir ();
+
+        if ($dh = opendir($dir)){
+                while(($file = readdir($dh))!== false){
+                        if (strpos("___".$file, "integria_serialize")){
+                            if (file_exists($dir."/".$file)) {
+                                $fdate = filemtime($dir."/".$file);
+                                $now = time();
+                                if ($now - $fdate > 3600){
+                                        @unlink($dir."/".$file);
+                                } 
+                            }
+                        }
+
+                }
+                closedir($dh);
+        }
+}
+
+/**
  * This function delete audit data (enterprise only) with more than XXX days
  * TODO: Define DELETE_DAYS on config
  */
@@ -187,6 +212,7 @@ function run_daily_check () {
     delete_audit_data();
     delete_session_data();
     synchronize_pandora_inventory();
+    delete_tmp_files();
 }
 
 

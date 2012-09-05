@@ -70,7 +70,8 @@ function debugPrint ($var, $file = '') {
  * $nothing_value Value when nothing is selected
  */
 
-function print_select ($fields, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = 0, $sort = true, $label = false, $disabled = false) {
+function print_select ($fields, $name, $selected = '', $script = '', $nothing = 'select', $nothing_value = '0', $return = false, $multiple = 0, $sort = true, $label = false, $disabled = false, $style='') {
+
 	$output = "\n";
 	
 	if ($label) {
@@ -89,10 +90,10 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 		$disabledText = '';
 	}
 
-	// TODO (Sancho): Fixed width of xxx px is "hardcoded". This probably should go on CSS or other better solution. 
-	// But combos with more than 200px width, breaks the forms, so we need to "contain" the problem here.
-
-	$output .= '<select style="width: 170px" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
+	if ($style == "")
+		$output .= '<select style="width: 170px" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
+	else
+		$output .= '<select style="'.$style.'" ' . $disabledText . ' id="'.$name.'" name="'.$name.'" '.$attributes.">\n";
 
 	if ($nothing != '') {
 		$output .= '   <option value="'.$nothing_value.'"';

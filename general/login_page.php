@@ -56,7 +56,7 @@ echo '<div class="databox_login" id="login">';
 	echo "<div id='login_form_data'>";
 	echo "<table border=0>";
 	echo "<tr>";
-	echo "<td style='padding-left: 15px; _padding-left: 0px; width: 250px'>";
+	echo "<td style='padding-left: 15px; _padding-left: 0px; width: 200px'>";
 	echo "<a href='index.php'>";
 	if (isset($config["site_logo"]))
 		echo '<img src="images/'.$config['site_logo'].'" alt="logo">';
@@ -64,7 +64,8 @@ echo '<div class="databox_login" id="login">';
 		echo '<img src="images/loginlogo.png" alt="logo">';
 	echo '</a>';
 	echo '</td>';
-	echo "<td valign=top style='padding-top: 18px; width: 80px; line-height: 10px;'>";
+	echo "<td valign=top style='padding-top: 14px; width: 100px; line-height: 11px;'>";
+	
 	echo print_input_text_extended ("nick", '', "nick", '', '', '', false, '', 'class="login"', true);
 	echo "<br><br>";
 	echo print_input_text_extended ("pass", '', "pass", '', '', '', false, '', 'class="login"', true, true);

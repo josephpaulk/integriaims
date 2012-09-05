@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2010 Ártica Soluciones Tecnológicas
+// Copyright (c) 2007-2012 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -18,10 +18,9 @@ global $config;
 
 echo    '<center>
         <div style="width:550px; padding-top: 100px;">
-        <div style="margin:15px; background: #fff;">
+        <div style="margin:25px; background: #fff; border: 1px solid #000;">
 		<table width="450px" cellpadding=4 cellspacing=4 class="blank">
-        <tr><td>
-        <a href="index.php">
+        <tr><td><a href="index.php">
         <img src="images/integria_white.png" alt="logo">
         </a>
 		<br />'.$config["version"].'</td>
@@ -35,8 +34,9 @@ echo __('Password recovery');
 echo    '</h3>';
 
 if (($recover == "") AND ($hash == "")){
-    // THis NEVER should happen. Anyway, a nice msg for hackers ;)
+    // This NEVER should happen. Anyway, a nice msg for hackers ;)
     echo "Don't try to hack this form. All information is sent to the user by mail";
+	insert_event ('HACK_ATTEMPT', 0,0, "Something dirty happen in password recovery");
 }
 
 elseif ($hash == ""){
@@ -46,7 +46,8 @@ elseif ($hash == ""){
     $subject ="Password recovery for ".$config["sitename"];
     $text = "Integria has received a request for password reset from IP Address ".$_SERVER['REMOTE_ADDR'].". Enter this validation code for reset your password: $randomhash";
 
-    if ($email != ""){
+    if ($email != ""){    
+	    insert_event ('PASSWD_RECOVERY', 0,0, "User: $recover");
         integria_sendmail ($email, $subject, $text);
         process_sql ("UPDATE tusuario SET pwdhash = '$randomhash' WHERE id_usuario = '$recover'");
     }

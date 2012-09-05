@@ -57,8 +57,8 @@ echo '</td><td width=300 style="padding: 0px; margin: 0px;">';
 echo "<form method=post action='index.php?sec2=operation/search'>";
 echo "&nbsp;";
 echo "<input type=text name='search_string' size=22 value='$search_string'>";
-echo "&nbsp;";
-echo "<input class='sub search' type=submit name='submit' size=18 value='Search'>";
+echo "&nbsp;&nbsp;&nbsp;";
+echo "<input class='sub search' type=submit name='submit' size=18 value='".__('Search')."'>";
 echo '</form>';
 echo '</td></tr>';
 

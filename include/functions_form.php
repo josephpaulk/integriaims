@@ -113,7 +113,10 @@ function combo_users_task ($id_task, $icon_list = false, $return = false) {
 	$output = '';
 	
 	if (! $icon_list) {
-		$output .= print_select ($users, 'user', '', '', '', '', true);
+		$output .= print_select ($users, 'user', '', '', '', '', true, 0, true, false, false, "width:100px");
+		
+		
+		
 	} else {
 		// Show also groupname
 		$sql = sprintf ('SELECT nombre FROM tgrupo, ttask

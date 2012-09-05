@@ -1,3 +1,34 @@
+2012-09-05  Sancho Lerena <slerena@artica.es>
+
+	* upgrade_to_3.0.sql,
+	integria_db.sql: removed old sql code for app audit.
+
+	* images/small_arrow_right_green.gif: New icon for child tasks.
+	
+	* images/headerbg-grey.gif,
+	  images/loginform.png
+	  images/leftnav_bg_uncollapsible.gif
+      general/footer.php
+      general/login_page.php
+      general/header.php
+      include/styles/integria.css: Aesthetic changes.
+      
+	* include/functions_form.php: combo_users_task() now have width as optional
+	parameter.
+	
+	* include/integria_cron.php: Added function to delete temp files.
+
+	* include/functions_html.php: print_select() have an optional parameter to
+	enter custom CSS style and put a default width for the control. This is used
+	by combo_users_tasks() between others.
+
+	* index.php: Added some comments and fixed problem with "1px width/horizontal
+	scrollbar always on" on fullscreen.
+
+	* operation/projects/task.php, 
+	operation/projects/task_planning.php: Minor esthetic/usability changes.
+
+
 2012-09-03  Sancho Lerena <slerena@artica.es>
 
 	* operation/side_menu.php: Added password policy entry.
@@ -25,7 +56,7 @@
 	* include/styles/integria.css: nice div box for incident people
 	column information.
 
-2012-08-26  SAncho Lerena <slerena@artica.es>
+2012-08-26  Sancho Lerena <slerena@artica.es>
 
 	* operation/incidents/incident_detail.php: Fixed ugly form
 	because inventory buttons on edition. Fixed problems with

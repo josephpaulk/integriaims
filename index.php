@@ -179,16 +179,16 @@ var lang = {
 
 <?php
 
-if ($clean_output == 1)
-    echo '<link rel="stylesheet" href="include/styles/integria_clean.css" type="text/css" />';
-
 $login = get_parameter ('login');
 $sec = get_parameter ('sec');
 $sec2 = get_parameter ('sec2');
+$recover = get_parameter('recover','');
 $not_show_menu = 0;
 
+if ($clean_output == 1)
+    echo '<link rel="stylesheet" href="include/styles/integria_clean.css" type="text/css" />';
+
 // Password recovery
-$recover = get_parameter('recover','');
 if ($recover != ""){
     require ('general/password_recovery.php');
     exit;
@@ -286,7 +286,7 @@ else if (! isset ($_SESSION['id_usuario'])) {
 
 	// There is no user connected
 	echo '</head>';
-	echo '<body bgcolor="#ffffff">';
+	echo '<body>';
 	require ('general/login_page.php');
 	exit;
 }
@@ -301,7 +301,7 @@ load_menu_visibility();
 $logout = (bool) get_parameter ('logout');
 if ($logout) {
 	echo '</head>';
-	echo '<body bgcolor="#ffffff">';
+	echo '<body>';
 	$_REQUEST = array ();
 	$_GET = array ();
 	$_POST = array ();
@@ -321,13 +321,12 @@ echo '<body>';
 $session_id = session_id();
 session_write_close ();
 
-// Special pages
-
+// Special pages, which doesn't use sidemenu
 if (($sec2 == "") OR ($sec2 == "general/home")) {
 	$not_show_menu = 1;
 }
 
-
+// Clean output (for reporting or raw output
 if ($clean_output == 0) {
 ?>
 	<div id="wrap">
@@ -344,7 +343,7 @@ if ($clean_output == 0) {
         <!-- This magic is needed to have it working in IE6.x and Firefox 4.0 -->
         <!-- DO NOT USE CSS HERE -->
 
-        <table width=100% cellpadding=0 cellspacing=0 border=0>
+        <table width=100% cellpadding=0 cellspacing=0 border=0 style='margin: 0px; padding: 0px'>
 	<tr>
 
 	<?php
@@ -459,10 +458,6 @@ if ($pdf_output == 1){
 }
 
 if (($raw_output == 0) AND ($pdf_output == 0)){
-    echo '
-    <!-- Dialog helper div -->
-    <div id="dialog" class="dialog"></div>
-    </body>
-    </html>';
+    echo '</body></html>';
 }
 ?>

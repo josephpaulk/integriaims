@@ -213,7 +213,6 @@ if ($create) {
 				$id_project, $name, $description, $priority, $completion, $start, $end,
 				$parent, $id_group, $hours, $estimated_cost, $periodicity);
 
-echo "DEBUG $sql;";
 			$id_task = process_sql ($sql, 'insert_id');
 			
 			if ($id_task) {
@@ -486,7 +485,7 @@ if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "
 echo "<table class=listing width=100% cellspacing=0 cellpadding=0 border=0px>";
 echo "<thead>";
 echo "<tr>";
-echo "<th class=header style='text-align:center;width:50%'>".__('Task')."</th>";
+echo "<th class=header style='text-align:center;'>".__('Task')."</th>";
 echo "<th class=header style='text-align:center;'>".__('Owner')."</th>";
 echo "<th class=header style='text-align:center;'>".__('Start date')."</th>";
 echo "<th class=header style='text-align:center;'>".__('End date')."</th>";
@@ -519,11 +518,11 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	// Second column (Task  name)
 	$prefix = '';
 	for ($i = 0; $i < $level; $i++)
-		$prefix .= '<img src="images/copy.png" />';
+		$prefix .= '<img src="images/small_arrow_right_green.gif" style="position: relative; top: 5px;"> ';
 	
 	echo "<td>";
 	
-	echo $prefix.print_input_text ("name_".$id_task, $task['name'], '', 60, 0, true);
+	echo $prefix.print_input_text ("name_".$id_task, $task['name'], "", 60, 0, true);
 	
 	echo"</td>";
 	
@@ -538,25 +537,25 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 		echo $owners;
 	} else {
 		$owner_id = get_db_value ('id_user', 'trole_people_task', 'id_task', $task['id']);
-
-		print_select ($users, "owner_".$id_task, $owner_id, '', '', 0);
+		print_select ($users, "owner_".$id_task, $owner_id, '', '', 0, false, 0, true, false, false, 'width: 90px');	
 	}
 	
 	echo "</td>";
 	
 	// Fourth column (Start date)
 	echo "<td style='text-align:center;'>";
-	print_input_text_extended ("start_".$id_task, $task['start'], "start_".$id_task, '', 7, 15, 0, '', '');
+	print_input_text_extended ("start_".$id_task, $task['start'], "start_".$id_task, '', 7, 15, 0, '', 'style="font-size:9px;"');
+	
 	echo "</td>";
 
 	// Fifth column (End date)
 	echo "<td style='text-align:center;'>";
-	print_input_text_extended ("end_".$id_task, $task['end'], "end_".$id_task, '', 7, 15, 0, '', '');
+	print_input_text_extended ("end_".$id_task, $task['end'], "end_".$id_task, '', 7, 15, 0, '', 'style="font-size:9px;"');
 	echo "</td>";
 	
 	//Worked time based on workunits
 	$worked_time = get_task_workunit_hours ($id_task);
-	echo "<td style='text-align:center;'>".$worked_time."</td>";
+	echo "<td style='text-align:left;'>".$worked_time."</td>";
 	
 	// Sixth column (Delay)
 	//If task was completed delay is 0
@@ -578,7 +577,7 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 		}
 	}
 	
-	echo "<td style='text-align:center;'>".$delay."</td>";
+	echo "<td style='text-align:left;'>".$delay."</td>";
 
 	// Seventh column (Delay)
 	
@@ -611,15 +610,14 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	
 	echo "<td>";	
 	
-	print_select ($fields, "status_".$id_task, $selected, '', '', 0);
-	
+	print_select  ($fields, "status_".$id_task, $selected, '', '', 0, false, 0, true, false, false, "width: 100px;");
 	echo"</td>";
 
 	// Last Edit and del column. (Del) Only for PM flag
 	//Create new task only if PM && TM flags or PW and project manager.
 	echo "<td style='text-align:center;'>";
 	echo '<a href="index.php?sec=projects&sec2=operation/projects/task_detail&id_project='.$id_project.'&id_task='.$task['id'].'&operation=view">';
-	echo '<img src="images/config.gif">';
+	echo '<img style="margin-right: 6px;" src="images/config.gif">';
 	echo '</a>';
 	
 	if (give_acl ($config["id_user"], 0, "PM")) {

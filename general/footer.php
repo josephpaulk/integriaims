@@ -14,7 +14,6 @@
 // GNU General Public License for more details.
 
 ?>
-
 <center>
 <?PHP
 global $config;
@@ -24,7 +23,7 @@ if ($config["enteprise"] == 1)
 else
 	$enterprise = "OpenSource Edition";
 
-echo 'Integria IMS '.$enterprise.' '.$config["version"].' Build '.$config["build_version"].'<br>';
+echo 'Integria IMS <b>'.$enterprise.' '.$config["version"].' Build '.$config["build_version"].'</b><br>';
 
 if (isset($_SESSION['id_usuario'])) {
 	

@@ -112,21 +112,20 @@ echo '</form>';
 
 unset ($table);
 
-$table->width = '95%';
+$table->width = '99%';
 $table->class = 'listing';
 $table->data = array ();
 $table->style = array ();
-$table->style[0] = 'font-weight: bold';
+$table->style[0] = 'font-size: 11px;';
 $table->head = array ();
-$table->head[0] = __('Pri');
-$table->head[1] = __('Name');
+$table->head[0] = __('Name');
+$table->head[1] = __('Pri');
 $table->head[2] = __('Progress');
 $table->head[3] = __('Estimation');
 $table->head[4] = __('Time used');
 $table->head[5] = __('Cost');
 $table->head[6] = __('People');
-$table->head[7] = __('Start');
-$table->head[8] = __('End');
+$table->head[7] = __('Start/End');
 $table->align = array ();
 $table->align[1] = 'left';
 $table->align[2] = 'center';
@@ -135,14 +134,11 @@ $table->align[4] = 'center';
 $table->align[9] = 'center';
 
 $table->style[7] = "font-size: 9px";
-$table->style[8] = "font-size: 9px";
 
 
 echo project_activity_graph ($id_project);
 
-// Show headers
-echo "<table width='90%' class='listing'>";
-echo "<tr>";
+
 $color = 1;
 
 show_task_tree ($table, $id_project, 0, 0, $where_clause);
@@ -172,18 +168,17 @@ function show_task_row ($table, $id_project, $task, $level) {
 	
 	$data = array ();
 
-	// Priority
-        $data[0] = print_priority_flag_image ($task['priority'], true);
-	
 	// Task  name
-	$data[1] = '';
-	for ($i = 0; $i < $level; $i++)
-		$data[1] .= '<img src="images/copy.png" />';
+	$data[0] = '';
 	
-	$data[1] .= '<a href="index.php?sec=projects&sec2=operation/projects/task_detail&id_project='.
-		$id_project.'&id_task='.$task['id'].'&operation=view">'.
-		$task['name'].'</a>';
+	for ($i = 0; $i < $level; $i++)
+		$data[0] .= '<img src="images/small_arrow_right_green.gif" style="position: relative; top: 5px;"> ';
+		
+	
+	$data[0] .= '<a href="index.php?sec=projects&sec2=operation/projects/task_detail&id_project='. $id_project.'&id_task='.$task['id'].'&operation=view">'. $task['name'].'</a>';
 
+	// Priority
+    $data[1] = print_priority_flag_image ($task['priority'], true);
 	
 	// Completion
 	$data[2] = progress_bar($task["completion"], 70, 20);
@@ -210,7 +205,7 @@ function show_task_row ($table, $id_project, $task, $level) {
 	elseif ($taskhours == $recursive_timeused)
 		$data[4] = $taskhours;
 	else
-		$data[4] = $taskhours . "<span title='Subtasks WU/HR'>( ".$recursive_timeused. " )</span>";
+		$data[4] = $taskhours . "<span title='Subtasks WU/HR'> (".$recursive_timeused. ")</span>";
 		
 	$wu_incidents = get_incident_task_workunit_hours ($task["id"]);
 	
@@ -244,7 +239,7 @@ function show_task_row ($table, $id_project, $task, $level) {
 	if ($incident_cost > 0)
 		$data[5] .= "<span title='".__("Cost of related incidents")."'> ($incident_cost)</span>";
 
-	$data[5] .= " ".$config['currency'];
+	$data[5] .= $config['currency'];
 
 	// People
 	$data[6] = combo_users_task ($task['id'], 1, true);
@@ -252,32 +247,32 @@ function show_task_row ($table, $id_project, $task, $level) {
 	$data[6] .= get_db_value ('COUNT(DISTINCT(id_user))', 'trole_people_task', 'id_task', $task['id']);
 
 	if ($task["start"] == $task["end"]){
-		$data[7] = date ('Y-m-d', strtotime ($task['start']));
-		$data[8] = __('Recurrence').': '.get_periodicity ($task['periodicity']);
+		$data[7] = date ('Y-m-d', strtotime ($task['start'])) . "<br>";
+		$data[7] .= __('Recurrence').': '.get_periodicity ($task['periodicity']);
 	} else {
 		// Start
 		$start = strtotime ($task['start']);
 		$end = strtotime ($task['end']);
 		$now = time ();
 		
-		$data[7] = date ('Y-m-d', $start);
+		$data[7] = date ('Y-m-d', $start) ."<br>";
 		
 		if ($task['completion'] == 100) {
-			$data[8] = '<span style="color: green">';
+			$data[7] .= '<span style="color: green">';
 		} else {
 			if ($now > $end)
-				$data[8] = '<span style="color: red">';
+				$data[7] .= '<span style="color: red">';
 			else
-				$data[8] = '<span>';
+				$data[7] .= '<span>';
 		}
-		$data[8] .= date ('Y-m-d', $end);
-		$data[8] .= '</span>';
+		$data[7] .= date ('Y-m-d', $end);
+		$data[7] .= '</span>';
 	}
 
 	// Delete
 	if (give_acl ($config['id_user'], 0, 'PM')) {
-		$table->head[9] = __('Delete');
-		$data[9] = '<a href="index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project='.$id_project.'&id='.$task["id"].'"
+		$table->head[8] = __('Delete');
+		$data[8] = '<a href="index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project='.$id_project.'&id='.$task["id"].'"
 			onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 			<img src="images/cross.png" /></a>';
 	}
