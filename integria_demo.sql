@@ -1,4 +1,3 @@
-INSERT INTO `tapp_category` VALUES (1,'Allowed'),(2,'Forbidden');
 
 
 INSERT INTO `tusuario` VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2012-01-17 21:36:44','admin@integria.sf.net','555-555-555',1,'people_1','','',0,0,0);

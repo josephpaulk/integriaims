@@ -1,3 +1,20 @@
+2012-09-06  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_xmlrpc.php: Removed.
+
+	* include/xmlrpc: Removed.
+
+	* include/integria_cron.php: Removed function to delete data from 
+	user audit.
+
+	* include/integria_xmlrpc_api.php: deleted.
+
+	* integria_dbdata.sql,
+	integria_demo.sql: Deleted SQL code used for user audit.
+
+	* godmode/usuarios/lista_usuarios.php: Deleted deletion on user
+	audit tables. Now user deletion doesn't give an error
+
 2012-09-05  Sancho Lerena <slerena@artica.es>
 
 	* upgrade_to_3.0.sql,

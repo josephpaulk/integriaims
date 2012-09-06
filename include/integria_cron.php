@@ -59,26 +59,6 @@ function delete_tmp_files(){
 }
 
 /**
- * This function delete audit data (enterprise only) with more than XXX days
- * TODO: Define DELETE_DAYS on config
- */
-
-function delete_audit_data () {
-    global $config;
-
-    if ($config["enteprise"] == 0) {
-        return;
-    }
-    
-    $DELETE_DAYS = $config["audit_delete_days"];
-
-    $limit = strtotime ("now") - ($DELETE_DAYS * 86400);
-
-    $query_del2 = "DELETE FROM tapp_activity_data WHERE start_timestamp < $limit ";
-	$resq2 =  process_sql ($query_del2);    
-}
-
-/**
  * This function delete tsesion and tevent data with more than XXX days
  * TODO: Define DELETE_DAYS on config
  */
@@ -208,11 +188,10 @@ function run_daily_check () {
 	run_project_check ();
 	run_task_check ();
 	run_autowu();
-    run_auto_incident_close();
-    delete_audit_data();
-    delete_session_data();
-    synchronize_pandora_inventory();
-    delete_tmp_files();
+        run_auto_incident_close();
+        delete_session_data();
+	synchronize_pandora_inventory();
+	delete_tmp_files();
 }
 
 

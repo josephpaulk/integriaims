@@ -36,13 +36,8 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 		$resq1 = mysql_query($query_del1);
 	}
 
-	if ($config["enteprise"] == 1){
-        $query_del2 = "DELETE FROM tapp_activity_data WHERE id_user = '".$nombre."'";
-		$resq2 = mysql_query($query_del2);    
-    }
-
 	$query_del2 = "DELETE FROM tusuario WHERE id_usuario = '".$nombre."'";
-	$resq1 = mysql_query($query_del2);
+	$resq2 = mysql_query($query_del2);
 
 	if ((! $resq1) OR (! $resq2))
 		echo "<h3 class='error'>".__('Could not be deleted')."</h3>";
