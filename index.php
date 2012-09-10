@@ -215,6 +215,7 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 	$nick_in_db = process_user_login ($nick, $pass);
 
 	if (($nick_in_db !== false) && ($is_admin != 1) && ($is_enterprise) && ($config['enable_pass_policy'])) {
+
 		$blocked = login_check_blocked($nick);
 
 		if ($blocked) {
@@ -255,11 +256,16 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 		if (!$expired_pass) {	
 			
 			if ($is_admin != 1) {
-				$blocked = login_check_blocked($nick);
+				if ($is_enterprise)
+					$blocked = login_check_blocked($nick);
+				else
+					$blocked = false;
 			}
 			
 			if (!$blocked) {
-				login_check_failed($nick); //Checks failed attempts
+				if ($is_enterprise){
+					login_check_failed($nick); //Checks failed attempts
+				}
 				
 				$first = substr ($pass, 0, 1);
 				$last = substr ($pass, strlen ($pass) - 1, 1);

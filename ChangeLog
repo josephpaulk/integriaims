@@ -1,3 +1,7 @@
+2012-09-10  Sancho Lerena <slerena@artica.es>
+
+	* index.php: Fixed problem with password recovery (OpenSource)
+
 2012-09-06  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_xmlrpc.php: Removed.
