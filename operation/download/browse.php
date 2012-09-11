@@ -77,13 +77,13 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	$timestamp = date('Y-m-d H:i:s');
 
 	$name = get_parameter ("name","");
-	$location = clean_output(get_parameter ("location",""));
+	// Location should not be changed never.
 	$description = get_parameter ("description","");
 	$id_category = get_parameter ("id_category","");
 
 
 	$sql_update ="UPDATE tdownload
-	SET name = '$name', location = 'attachment/downloads/$location', description = '$description', id_category = $id_category WHERE id = $id";
+	SET name = '$name', description = '$description', id_category = $id_category WHERE id = $id";
 	$result=mysql_query($sql_update);
 
 	if (! $result)
@@ -214,15 +214,17 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	echo "<input type=text size=40 name='name' value='$name'>";
 
-	echo "<tr>";
-	echo "<td>";
-	echo __('Choose file from repository');
-	echo integria_help ("choose_download", true);
+	if ($id == -1){
 
-	echo "<td>";
+		echo "<tr>";
+		echo "<td>";
+		echo __('Choose file from repository');
+		echo integria_help ("choose_download", true);
 
-    // This chunk of code is to do not show in the combo with files, files already as file downloads
-    // (slerena, Sep2011)
+		echo "<td>";
+
+		// This chunk of code is to do not show in the combo with files, files already as file downloads
+		// (slerena, Sep2011)
 
     $location = basename ($location);
     $files = get_download_files();
@@ -244,7 +246,8 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
         }
     }
 
-	print_select ($files_not_in, 'location', $location, '', '', '', false);
+		print_select ($files_not_in, 'location', $location, '', '', '', false);
+	}
 
 	echo "<tr>";
 	echo "<td class=datos2 valign=top>";
