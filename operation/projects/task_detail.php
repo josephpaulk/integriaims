@@ -155,6 +155,9 @@ if ($operation == "update") {
 		return;
 	}
 	
+	// Get current completion
+	$current_completion = get_db_value('completion', 'ttask', 'id', $id_task);
+	
 	$name = (string) get_parameter ('name');
 	$description = (string) get_parameter ('description');
 	$priority = (int) get_parameter ('priority');
@@ -176,13 +179,19 @@ if ($operation == "update") {
 			$name, $description, $priority, $completion, $start, $end,
 			$hours, $periodicity, $estimated_cost, $parent, $id_group,
 			$id_task);
+			
 	$result = process_sql ($sql);
+
 	if ($result !== false) {
 		$result_output = '<h3 class="suc">'.__('Successfully updated').'</h3>';
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task updated", "Task '$name' updated to project '$id_project'");
 		$operation = "view";
 		task_tracking ($id_task, TASK_UPDATED);
-		set_task_completion ($id_task);
+		
+		// Only recalculate task completion if the completion % has not been modified
+		if($current_completion == $completion) {
+			set_task_completion ($id_task);
+		}
 	} else {
 		$result_output = "<h3 class='error'>".__('Could not be updated')."</h3>";
 	}

@@ -1,3 +1,8 @@
+2012-09-11  Sergio Martin <sergio.martin@artica.es>
+
+	* operation/projects/task_detail.php: Fixed force percent of
+	completion of one task
+
 2012-09-10  Sancho Lerena <slerena@artica.es>
 
 	* index.php: Fixed problem with password recovery (OpenSource)
