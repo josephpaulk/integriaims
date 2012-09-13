@@ -329,7 +329,8 @@ if ($action == "insert") {
 			// Create automatically a WU with the editor ?
 			if ($config["incident_creation_wu"] == 1){
 				$wu_text = __("WU automatically created by the editor on the incident creation.");
-				create_workunit ($id, $wu_text, $editor, $config["iwu_defaultime"], 0, "", 1);
+				// Do not send mail in this WU
+				create_workunit ($id, $wu_text, $editor, $config["iwu_defaultime"], 0, "", 1, 0);
 			}
 
 

@@ -58,7 +58,7 @@ function lock_task_workunit ($id_workunit) {
 	return (bool) process_sql ($sql);
 }
 
-function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_cost = 0, $profile = "", $public = 1) {
+function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_cost = 0, $profile = "", $public = 1, $send_email = 1) {
 	$fecha = print_mysql_timestamp();
 	$sql = sprintf ('UPDATE tincidencia
 		SET affected_sla_id = 0, actualizacion = "%s"  
@@ -78,7 +78,7 @@ function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_co
 	if ($res !== false) {
 		// Email notify to all people involved in this incident
 		$email_notify = get_db_value ("notify_email", "tincidencia", "id_incidencia", $incident_id);
-		if ($email_notify == 1) {
+		if (($email_notify == 1) AND ($send_email == 1)) {
 			mail_incident ($incident_id, $user, $wu_text, $timeused, 10, $public);
 		}
 	}
