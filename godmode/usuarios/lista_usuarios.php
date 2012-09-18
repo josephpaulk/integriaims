@@ -36,6 +36,12 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 		$resq1 = mysql_query($query_del1);
 	}
 
+	// Delete trole_people_task entries 
+	mysql_query("DELETE FROM trole_people_task WHERE id_user = '$nombre'");
+
+	// Delete trole_people_project entries
+	mysql_query ("DELETE FROM trole_people_project WHERE id_user = '$nombre'");	
+
 	$query_del2 = "DELETE FROM tusuario WHERE id_usuario = '".$nombre."'";
 	$resq2 = mysql_query($query_del2);
 

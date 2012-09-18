@@ -1,4 +1,11 @@
 2012-09-18  Sancho Lerena <slerena@artica.es>
+	
+	* integria_db.sql: Removed some reference integrity, due deleted
+	users should not imply the destruction of some objets or reported
+	work, useful for metrics above existance or not of some users.
+
+	* godmode/usuarios/lista_usuarios.php: Remove project/task association
+	for deleted users.
 
 	* operation/newsletter/issue_definition.php: Added link to preview
 	the newsletter in HTML format.
