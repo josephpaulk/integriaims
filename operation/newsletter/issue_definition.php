@@ -180,9 +180,11 @@ if ($issues !== false) {
 			$data[4] = __("Sent");	
 
 		$data[5] = get_db_sql ("SELECT COUNT(id) FROM tnewsletter_tracking WHERE status = 1 AND id_newsletter = ".$issue["id_newsletter"]);
+
+		$data[6] = "<a target='_top' href='include/newsletter.php?operation=read&id=".$issue["id"]."'><img src='images/eye.png'></a> ";
 	
 		if(give_acl ($config["id_user"], $id_group, "VM")) {
-			$data[6] ='<a href="index.php?sec=customers&sec2=operation/newsletter/issue_definition&
+			$data[6] .='<a href="index.php?sec=customers&sec2=operation/newsletter/issue_definition&
 						delete=1&id='.$issue['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))
 						return false;">
