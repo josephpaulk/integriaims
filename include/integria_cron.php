@@ -39,7 +39,10 @@ $human_notification_period = give_human_time ($config["notification_period"]*360
 
 function delete_tmp_files(){
 
-        $dir =  sys_get_temp_dir ();
+	if (function_exists(sys_get_temp_dir))
+        	$dir =  sys_get_temp_dir ();
+	else
+		$dir = "/tmp";
 
         if ($dh = opendir($dir)){
                 while(($file = readdir($dh))!== false){

@@ -1,3 +1,7 @@
+2010-10-09  Sancho Leerna <slerena@artica.es>
+
+	* include/integria_cron.php: Fixed call to get_sys_tmp function
+
 2012-10-08  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_form.php,
