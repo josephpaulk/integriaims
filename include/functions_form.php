@@ -1028,7 +1028,11 @@ function combo_download_categories ($id_category, $show_any = 0){
 		echo "<option value='0' $selected>".__("Any")."</option>";
 	}	
 		
-	$sql = "SELECT * FROM tdownload_category ORDER by name";
+	$sql = "SELECT tdownload_category.* FROM tdownload_category, tdownload_category_group, tusuario_perfil WHERE
+                tusuario_perfil.id_usuario = '".$config["id_user"]."' AND    
+                tusuario_perfil.id_grupo = tdownload_category_group.id_group AND
+                tdownload_category.id =  tdownload_category_group.id_category
+		GROUP by name ORDER by name";
 	$result = process_sql($sql);
 	if($result == false) {
 		$result = array();

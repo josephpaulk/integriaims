@@ -1,3 +1,9 @@
+2012-10-08  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_form.php,
+	operation/download/browse.php: Fixed several problems with ACL
+	on file downloads.
+
 2012-09-18  Sancho Lerena <slerena@artica.es>
 	
 	* integria_db.sql: Removed some reference integrity, due deleted
