@@ -29,7 +29,7 @@ echo    '<center>
 $recover = get_parameter ("recover", "");
 $hash = get_parameter ("hash", "");
 
-echo '<h3 class="error">';
+echo '<h3 class="suc">';
 echo __('Password recovery');
 echo    '</h3>';
 
@@ -38,7 +38,6 @@ if (($recover == "") AND ($hash == "")){
     echo "Don't try to hack this form. All information is sent to the user by mail";
 	insert_event ('HACK_ATTEMPT', 0,0, "Something dirty happen in password recovery");
 }
-
 elseif ($hash == ""){
 
     $randomhash = md5($config["sitename"].rand(0,100).$recover);
@@ -47,7 +46,7 @@ elseif ($hash == ""){
     $text = "Integria has received a request for password reset from IP Address ".$_SERVER['REMOTE_ADDR'].". Enter this validation code for reset your password: $randomhash";
 
     if ($email != ""){    
-	    insert_event ('PASSWD_RECOVERY', 0,0, "User: $recover");
+	insert_event ('PASSWD_RECOVERY', 0,0, "User: $recover");
         integria_sendmail ($email, $subject, $text);
         process_sql ("UPDATE tusuario SET pwdhash = '$randomhash' WHERE id_usuario = '$recover'");
     }
@@ -55,8 +54,10 @@ elseif ($hash == ""){
     // Doesnt show a error message (not valid email or not valid user 
     // to don't give any clues on valid users
 
-    echo __("Integria IMS has sent you an email with instructions on how to change your password. ");
+    echo __("Dont close this window, you will receive an email with instructions on how to change your password.");
+    echo "<br><br>";
     echo __("Enter here the validation code you should have received by mail");
+
     echo '</tr><tr>';
     echo "<tr><td colspan=2>";
     echo "<form method=post>";
@@ -67,7 +68,8 @@ elseif ($hash == ""){
     echo "</form>";
 } else {
     $check = get_db_sql ("SELECT id_usuario FROM tusuario WHERE id_usuario = '$recover' AND pwdhash = '$hash'");
-    if ($check == $recover){
+
+    if (strtolower($check) == strtolower($recover)){
         $newpass =  substr(md5($config["sitename"].rand(0,100).$recover),0,6);
         echo __("Your new password is");
         echo " : <b>";

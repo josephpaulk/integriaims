@@ -1,6 +1,9 @@
 2010-10-09  Sancho Leerna <slerena@artica.es>
 
-	* include/integria_cron.php: Fixed call to get_sys_tmp function
+	* include/integria_cron.php: Fixed call to get_sys_tmp functiona
+
+	* general/password_recovery.php: Fixed problems on validation with 
+	Uppercase letters in login name.
 
 2012-10-08  Sancho Lerena <slerena@artica.es>
 
