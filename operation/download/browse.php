@@ -46,20 +46,24 @@ if (isset($_GET["create2"])){ // Create group
     	}
 	$timestamp = date('Y-m-d H:i:s');
 	$name = get_parameter ("name","");
-	$location = clean_output (get_parameter ("location",""));
-	$description = get_parameter ("description","");
-	$id_category = get_parameter ("id_category","");
 
-	$sql_insert="INSERT INTO tdownload (name, location, description, id_category, id_user, date) 
+	if ($name != "") {
+
+		$location = clean_output (get_parameter ("location",""));
+		$description = get_parameter ("description","");
+		$id_category = get_parameter ("id_category","");
+
+		$sql_insert="INSERT INTO tdownload (name, location, description, id_category, id_user, date) 
 		  		 VALUE ('$name','attachment/downloads/$location', '$description', '$id_category', '".$config["id_user"]."', '$timestamp') ";
 
-	$result=mysql_query($sql_insert);	
-	if (! $result)
-		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
-	else {
-		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-		$id_data = mysql_insert_id();
-		insert_event ("DOWNLOAD ITEM CREATED", $id_data, 0, $name);
+		$result=mysql_query($sql_insert);	
+		if (! $result)
+			echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
+		else {
+			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+			$id_data = mysql_insert_id();
+			insert_event ("DOWNLOAD ITEM CREATED", $id_data, 0, $name);
+		}
 	}
 }
 
@@ -108,6 +112,12 @@ if (isset($_GET["delete_data"])){ // if delete
 
 	$id = get_parameter ("delete_data",0);
 	$download_title = get_db_sql ("SELECT name FROM tdownload WHERE id = $id ");
+	$file_path = get_db_sql ("SELECT location FROM tdownload WHERE id = $id ");
+
+	$file_path = $config["homedir"]."/".$file_path;
+
+	unlink ($file_path);
+	
 	$sql_delete= "DELETE FROM tdownload WHERE id = $id";		
 	$result=mysql_query($sql_delete);
 
@@ -115,7 +125,7 @@ if (isset($_GET["delete_data"])){ // if delete
 	$result=mysql_query($sql_delete);
 
 	insert_event ("DOWNLOAD ITEM DELETED", $id, 0, "Deleted Download $download_title");
-	echo "<h3 class='error'>".__('Successfully deleted')."</h3>"; 
+	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>"; 
 }
 
 if (isset($_GET["update2"])){

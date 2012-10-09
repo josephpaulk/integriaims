@@ -1,5 +1,7 @@
 2010-10-09  Sancho Leerna <slerena@artica.es>
 
+	* operation/download/browse.php: Fixed deletion of a file download.
+
 	* include/integria_cron.php: Fixed call to get_sys_tmp functiona
 
 	* general/password_recovery.php: Fixed problems on validation with 
