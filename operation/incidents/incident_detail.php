@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008-2010 Ártica Soluciones Tecnológicas
+// Copyright (c) 2008-2012 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -545,7 +545,7 @@ if ($id) {
     $score = 0;
 	$epilog = "";
 	$id_creator = $config['id_user'];
-	$email_notify = 0;
+	$email_notify = 1;
 	$sla_disabled = 0;
 	$id_incident_type = 0;
 	$affected_sla_id = 0;
@@ -571,7 +571,7 @@ if (! $id) {
 		$number_group = 1;
 	}
 	// if have only one group, select default user and email for this group
-	$email_notify = false;
+	$email_notify = true;
 }
 
 //The user with IM flag or the incident owner can modify all data from the incident.

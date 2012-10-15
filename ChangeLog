@@ -1,4 +1,9 @@
-2010-10-09  Sancho Leerna <slerena@artica.es>
+2012-10-15  Sancho Lerena <slerena@artica.es>
+
+	* operation/incidents/incident_detail.php: by default new incidents
+	have the flag to send email, adjusted on group loading.
+
+2012-10-09  Sancho Leerna <slerena@artica.es>
 
 	* operation/download/browse.php: Fixed deletion of a file download.
 
