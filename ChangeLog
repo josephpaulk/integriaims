@@ -1,3 +1,11 @@
+2012-10-16  Sancho Lerena <slerena@artica.es>
+
+	* install.php: Updated installer version.
+
+	* integria_demo.sql: Fixed demo data.
+
+	* include/config_process.php: Updated version.
+
 2012-10-15  Sancho Lerena <slerena@artica.es>
 
 	* operation/incidents/incident_detail.php: by default new incidents

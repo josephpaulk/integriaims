@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2010 Ártica Soluciones Tecnológicas
+// Copyright (c) 2007-2012 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@
 
 error_reporting(0);
 
-$integria_version = "v3.0 Build 120113";
+$integria_version = "v3.0 Build 1201016";
 
 $integria_footertext = "<div id='footer'  style='width: 642px;'>
 	<i>Integria $integria_version is an OpenSource Software project at 
@@ -231,7 +231,7 @@ function install_step1_licence() {
 	
 	echo "
 	<div align='center'>
-	<div id='wizard' style='height: 550px;'>
+	<div id='wizard' style='height: 590px;'>
 		<div id='install_box'>";
 
 echo '
