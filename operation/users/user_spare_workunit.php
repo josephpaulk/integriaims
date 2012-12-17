@@ -20,6 +20,9 @@ global $config;
 
 check_login ();
 
+require_once ('include/functions_tasks.php');
+require_once ('include/functions_workunits.php');
+
 if (defined ('AJAX')) {
 
 	global $config;
@@ -67,9 +70,14 @@ if (defined ('AJAX')) {
 
 		return;
 	}
+	
+	if (get_parameter("get_new_mult_wu")) {
+		$number = get_parameter ("next");
+		create_new_table_multiworkunit($number);	
+		
+		return;
+	}
 }
-require_once ('include/functions_tasks.php');
-require_once ('include/functions_workunits.php');
 
 $operation = (string) get_parameter ("operation");
 $now = (string) get_parameter ("givendate", date ("Y-m-d H:i:s"));
@@ -257,7 +265,6 @@ if ($operation == 'insert') {
 	}
 	
 	insert_event ("PWU INSERT", $id_task, 0, $description);
-	echo $result_output;
 }
 
 if ($operation == "delete") {
@@ -315,6 +322,70 @@ if ($operation == 'update') {
 	}
 }
 
+$multiple_wu_report = array();
+
+if ($operation == 'multiple_wu_insert') {
+	
+	//Walk post array looking for 
+	$i = 1;
+	while(true) {
+		
+		if (!get_parameter("start_date_".$i)) {
+			break;
+		} 
+		
+		//Add single workunit
+		$res = create_single_workunit($i);
+		
+		$res['id'] = $i;
+		
+		array_push($multiple_wu_report, $res);
+		
+		//Look next item
+		$i++;
+	}
+}
+
+
+
+echo "<div id='tabs'>";
+echo "<ul class='ui-tabs-nav'>";
+
+//If the multiple_wu_insert option was sent single wu is disabled
+if ($operation == 'multiple_wu_insert') {
+	echo "<li id='tabmenu1' class='ui-tabs-disabled'>";
+} else {
+	echo "<li id='tabmenu1' class='ui-tabs-selected'>";
+}
+echo "<a href='#tab1'><span>".__("Single WU")."</span></a>";
+echo "</span></li>";
+
+//If single workunit update multiple addition is disabled
+if ($id_workunit) {
+	echo "<li id='tabmenu2' class='ui-tabs-disabled'><span>";
+} else {
+	
+	//If the multiple_wu_insert option was sent this tab is selected
+	if ($operation == 'multiple_wu_insert') {
+		echo "<li id='tabmenu2' class='ui-tabs-selected'><span>";
+	} else {
+		echo "<li id='tabmenu2' class='ui-tabs'><span>";
+	}
+}
+	echo "<a href='#tab2'><span>".__("Multiple WU")."</span></a>";
+	echo "</span></li>";
+echo "</ul>";
+
+
+//If we inserted multiple workunits then 
+if ($operation == 'multiple_wu_insert') {
+
+	echo "<div id='tab1' class='ui-tabs-panel ui-tabs-hide'>"; //Single WU
+
+} else {
+	echo "<div id='tab1' class='ui-tabs-panel'>"; //Single WU
+}
+
 echo "<h3><img src='images/award_star_silver_1.png'> ";
 
 if ($id_workunit) {
@@ -322,6 +393,7 @@ if ($id_workunit) {
 } else {
 	echo __('Add workunit');
 }
+
 if ($id_task) {
 	echo ' - ';
 	echo get_db_value ('name', 'ttask', 'id', $id_task);
@@ -334,6 +406,11 @@ if ($id_workunit) {
 }
 
 echo '</h3>';
+
+//Print result output if any
+if ($result_output) {
+	echo $result_output;
+}
 
 $table->class = 'databox';
 $table->width = '90%';
@@ -399,7 +476,7 @@ if (! $id_workunit) {
 $table->data[5][0] = print_textarea ('description', 10, 30, $description,
 	'', true, __('Description'));
 
-echo '<form method="post">';
+echo '<form id="single_task_form" method="post" onsubmit="return validate_single_form()">';
 print_table ($table);
 
 echo '<div style="width: '.$table->width.'" class="button">';
@@ -413,9 +490,62 @@ if ($id_workunit) {
 	print_submit_button (__('Add'), 'btn_add', false, 'class="sub next"');
 }
 print_input_hidden ('timestamp', $now);
+echo '</form>';	
+echo "</div>";
+
+echo "</div>";
+
+//If not workunit update then enable the multiple workunit option
+if (!$id_workunit) {
+	
+	
+	if ($operation == 'multiple_wu_insert') {
+		echo "<div id='tab2' class='ui-tabs-panel'>"; //Multiple WU
+		echo "<table>";
+		echo "<tr>";
+		echo "<td>";
+		echo "<h3><img src='images/award_star_silver_1.png'> ";
+		echo __('Add multiple workunits summary ');
+		echo '</h3>';
+		echo "</td>";
+		echo "<td>";
+		echo print_button (__('Add new parse Workunit'), 'add_link', false, 'location.href=\'index.php?sec=users&sec2=operation/users/user_spare_workunit\'', 'class="sub upd"');
+		echo "</td>";
+		echo "</table>";
+		foreach ($multiple_wu_report as $number => $mwur) {
+			print_single_workunit_report($mwur);
+		}
+
+	} else {
+		echo "<div id='tab2' class='ui-tabs-panel ui-tabs-hide'>"; //Multiple WU
+		echo '<form id="multiple_task_form" method="post" onsubmit="return validate_multiple_form()">';
+		print_input_hidden ('operation', 'multiple_wu_insert');
+		echo "<table>";
+		echo "<tr>";
+		echo "<td>";
+		echo "<h3 id='multi_task_title'><img src='images/award_star_silver_1.png'> ";
+		echo __('Add multiple workunits');
+		echo '</h3>';
+		echo "</td>";
+		echo "<td>";
+		echo print_button (__('Add'), 'add_multi_wu', false, '', 'class="sub next"');
+		echo "</td>";
+		echo "<td>";
+		echo print_submit_button (__('Save'), 'btn_upd', false, 'class="sub create"');
+		echo "</td>";
+		echo "</tr>";
+		echo "</table>";
+		
+		//Massive work unit list
+		create_new_table_multiworkunit(1);
+		echo "</div>";
+		echo '</form>';
+	}
+}
+
+echo "</div>"; // End div tabs
 
 echo '</div>';
-echo '</form>';
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
@@ -424,11 +554,13 @@ echo '</form>';
 
 
 <script type="text/javascript">
+	
+function datepicker_hook () {
+	$('input[name~="start_date"]').datepicker();
+}
 
-$(document).ready (function () {
-	$("#text-start_date").datepicker ();
-	$("#textarea-description").TextAreaResizer ();
-	$("#text-id_username").autocomplete ("ajax.php",
+function username_hook () {
+	$('input[name~="id_username"]').autocomplete ("ajax.php",
 		{
 			scroll: true,
 			minChars: 2,
@@ -448,7 +580,84 @@ $(document).ready (function () {
 			},
 			delay: 200
 
-		});
+	});	
+}
+
+//single task validation form
+function validate_single_form() {
+	var val = $("#id_task").val();
+	
+	if (val == 0) {
+		
+		var error_textbox = document.getElementById("error_task");
+	
+		if (error_textbox == null) {
+			$('#single_task_form').prepend("<h3 id='error_task' class='error'><?php echo __("Task was not selected")?></h3>");
+		}
+		
+		pulsate("#id_task");
+		pulsate("#error_task");
+		return false;  
+		
+	} 
+	
+	return true;
+}
+
+//Multiple task validation form
+function validate_multiple_form() {
+
+	var val = $("select[id~='id_task_']").val();
+	
+	if (val == 0) {
+		
+		var id_element = $("select[id~='id_task_']").attr("id");
+		
+		var number_id =  id_element.slice(8, id_element.length);
+		
+		var error_textbox = document.getElementById("error_task");
+	
+		if (error_textbox == null) {
+			$("#wu_"+number_id).before("<h3 id='error_task' class='error'><?php echo __("Task was not selected")?></h3>");
+		}
+		
+		pulsate("#"+id_element);
+		pulsate("#error_task");
+		return false;  
+		
+	} 
+	
+	return true;
+}
+
+function del_wu_button () {
+	
+	var cross1 = "<a id='del_wu_1' href='#'><img src='images/cross.png'></a>";
+	
+	$("#del_wu_1").html("");
+		
+	$("#del_wu_1").html(cross1);
+	
+	$('a[id~="del_wu"]').click(function (e) {
+		//Prevent default behavior
+		e.preventDefault();
+		var id_element = $(this).attr("id");
+		var number_id =  id_element.slice(7, id_element.length);
+		
+		$("table[id='wu_"+number_id+"']").remove();
+
+	});
+}
+
+$(document).ready (function () {
+	//Configure calendar datepicker
+	datepicker_hook();
+	
+	//Configure username selector
+	username_hook();
+	
+	$("#textarea-description").TextAreaResizer ();
+
 		
 	$("#id_task").change(function() {
 		id_task = $(this).val();
@@ -477,5 +686,84 @@ $(document).ready (function () {
 			"json"
 		);
 	});
+	
+	////////Configure menu tab interaction///////
+	$('#tabmenu1').not('.ui-tabs-disabled').click (function (e){
+		e.preventDefault();//Deletes default behavior
+		
+		//Change CSS tabs
+		//tab1 selected
+		$('#tabmenu1').addClass("ui-tabs-selected");
+		$('#tabmenu1').removeClass("ui-tabs");
+		
+		//tab2 not selecteed
+		$('#tabmenu2').addClass("ui-tabs");
+		$('#tabmenu2').removeClass("ui-tabs-selected");
+		
+		//Show/hide divs
+		$('#tab2').addClass("ui-tabs-hide");
+		$('#tab1').removeClass("ui-tabs-hide");
+	});
+
+	$('#tabmenu2').not('.ui-tabs-disabled').click (function (e){
+		e.preventDefault();//Deletes default behavior
+		
+		//Change CSS tabs
+		//tab2 selected
+		$('#tabmenu2').addClass("ui-tabs-selected");
+		$('#tabmenu2').removeClass("ui-tabs");
+		
+		//tab1 not selecteed
+		$('#tabmenu1').addClass("ui-tabs");
+		$('#tabmenu1').removeClass("ui-tabs-selected");
+
+		//Show/hide divs				
+		$('#tab1').addClass("ui-tabs-hide");
+		$('#tab2').removeClass("ui-tabs-hide");
+	});	
+	
+	/////Add new table to add a massive task/////
+	$("#button-add_multi_wu").click (function () {
+		
+		var error_textbox = document.getElementById("error_task");
+
+		if (error_textbox != null) {
+
+			$("#error_task").remove();
+		}
+		
+		var valid_form = validate_multiple_form();
+		
+		if (valid_form) {
+			
+			var number_wu = $('#wu_1').siblings().length;
+			
+			values = Array ();
+			values.push ({name: "page",
+						value: "operation/users/user_spare_workunit"});
+			values.push ({name: "get_new_mult_wu",
+				value: 1});
+			values.push ({name: "next",
+				value: number_wu});
+			jQuery.get ("ajax.php",
+				values,
+				function (data, status) {
+						
+					$("#wu_"+(number_wu-1)).before(data);
+					
+					//Reset datepicker hook function
+					datepicker_hook();
+					
+					//Reset username selector hook
+					username_hook();
+					
+					//Assign del button action
+					del_wu_button();
+				},
+				"html"
+			);		
+		}
+	});
 });
+
 </script>

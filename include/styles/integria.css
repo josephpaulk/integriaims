@@ -105,17 +105,22 @@ table.databox, table.databox_color {
 }
 
 table.search-table {
-	margin-bottom: 0px;
-	margin-top: 0px;
-	margin-left: 15px;
+	margin-bottom: 20px;
+	margin-top: 10px;
+	margin-left: 5px;
+}
+
+table.search-table td {
+	padding-top: 5px;
+	padding-left: 10px;
 }
 
 table.listing {
 	padding-top: 5px;
 	padding-left: 5px;
 	background: #fff;
-	border-top: 2px solid #2179B1;
-	border-bottom: 1px solid #2179B1;
+	border-top: 2px solid #232323;
+	border-bottom: 1px solid #232323;
 	border-collapse: collapse;
 	text-align: left;
 }
@@ -141,6 +146,7 @@ table.listing td {
 
 td {
 	padding-left: 5px;
+	font-size: 1em;
 }
 
 tr.yellow {
@@ -169,8 +175,8 @@ ul span, ol span {
 	padding-top: 5px;
 	padding-bottom: 5px;
 	padding-right: 0px;
-	border-top: 2px solid #2179B1;
-	border-bottom: 2px solid #2179B1;
+	border-top: 2px solid #232323;
+	border-bottom: 2px solid #232323;
 	background: #eee;
 	text-align: right;
 }
@@ -229,10 +235,12 @@ div.report_info label {
 input {
 
 	padding: 5px;
-	border:1px solid #A9C4D6;
-	height: 22px;
+	border:1px solid #9A9B9D;
+	height: 14px;
 	font: normal 0.9em Arial, sans-serif;
 	color:#666;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
 }
 
 textarea {
@@ -248,7 +256,7 @@ input.button {
 	padding: 2px 3px;
 	color: #333;
 	margin-left: 0px;
-	padding-left: 0px;
+	padding-left: 0px;	
 }
 
 input.dialogbtn {
@@ -311,12 +319,12 @@ form.searchform input.button {
 /* New styles for data box */
 
 .databox_color {
-	border-top: 2px solid #2179B1;
+	border-top: 2px solid #232323;
 	padding-top: 5px;
 }
 
 .databox, .databox_frame {
-	border-top: 2px solid #2179B1;
+	border-top: 2px solid #232323;
 	padding-top: 5px;
 }
 
@@ -342,8 +350,28 @@ form.searchform input.button {
 /* header */
 #header {
 	position: relative;
-	background: url(../../images/headerbg-grey.gif) repeat-x 0 0;
-	height: 50px;
+	
+	background-color: #363636;
+	
+	/* IE10 Consumer Preview */ 
+	background-image: -ms-linear-gradient(top, #363636 0%, #000000 100%);
+
+	/* Mozilla Firefox */ 
+	background-image: -moz-linear-gradient(top, #363636 0%, #000000 100%);
+
+	/* Opera */ 
+	background-image: -o-linear-gradient(top, #363636 0%, #000000 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #363636), color-stop(1, #000000));
+
+	/* Webkit (Chrome 11+) */ 
+	background-image: -webkit-linear-gradient(top, #363636 0%, #000000 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background-image: linear-gradient(to bottom, #363636 0%, #000000 100%);	
+	
+	height: 55px;
 	padding: 0px;
 	margin: 0px;
 }
@@ -367,6 +395,7 @@ form.searchform input.button {
 	/* change the values of top and Left to adjust the position of the slogan*/
 	top: 4px; left:65px;
 }
+
 #header img {
 	border: 0;
 	margin: 0px 0px 0px 0px;
@@ -374,9 +403,28 @@ form.searchform input.button {
 	top: 4px;
 }
 
+.logo {
+	border: 0;
+	margin: 0px 0px 0px 0px;
+	position: relative;
+	left: 12px;
+	top: 8px;
+}
+
+.table_header {
+	margin: 0px;
+	padding:0px;
+	margin-left: 0px;
+}
+
+.table_header td {
+	padding-top: 4px;
+}
+
 #header img.logoimage {
 	position: absolute;
-	top: 5px; left: 5px;
+	top: 5px; 
+	left: 5px;
 }
 #header a {
 	text-decoration: none;
@@ -479,98 +527,38 @@ form.searchform input.button {
 }
 #menu ul {
 	position: relative;
-	bottom: 4px;
-	margin: 0px; padding: 0;
+	bottom: 1px;
+	margin: 0px; 
+	padding: 0;
 	float: left;
-	text-transform: capitalize;
+	text-transform: uppercase;
 	font: bold 0.9em Arial, Sans-serif;
 	width: 100%;
-	border: 1px solid #808080;
-	border-width: 0 0 4px 0;
 	list-style: none;
 	line-height: 19px;
+	background-color: #000000;
 }
 #menu ul li{
 	display: inline;
-
 }
 #menu ul li a {
-	position: relative; bottom: -4px;
+	position: relative;
 	float: left;
 	color: #9999AA;
-	padding: 5px 10px;
+	padding: 6px 12px;
 	margin-top: 0px;
 	text-decoration: none;
-	/*	background: white url(../../images/menudivide.gif) repeat-y right top;*/
-	border-bottom: 4px solid #2179B1;
 }
 #menu ul li a:hover{
-	color: black;
-	background-color: #eee;
-	border-bottom: 4px solid #4D9FD4;
+	color: #ffffff;
+	background-color: #525252;	
+	text-shadow: 0 2px 0 #252525;
 }
 #menu ul li#current a{
-	color: #fff;
-	background-color: #2179B1;
-	border-bottom: 4px solid  #2179B1;
+	color: #ffffff;
+	background-color: #808080;
+	text-shadow: 0 2px 0 #252525;
 }
-
-#menu li.project a {
-	background: url(../../images/award_star_bronze_1.png) no-repeat 9px 5px;
-	padding-left: 35px;
-}
-
-#menu li.incident a {
-	background: url(../../images/bug.png) no-repeat 9px 5px;
-	padding-left: 35px;
-}
-
-#menu li.inventory a {
-	background: url(../../images/chart_organisation.png) no-repeat 9px 5px;
-	padding-left: 35px;
-}
-
-#menu li.customer a {
-	background: url(../../images/customer.png) no-repeat 9px 5px;
-	padding-left: 35px;
-}
-
-#menu li.kb a {
-	background: url(../../images/comments.png) no-repeat 9px 5px;
-	padding-left: 35px;
-}
-
-#menu li.files a {
-	background: url(../../images/disk.png) no-repeat 9px 5px;
-	padding-left: 35px;
-}
-
-#menu li.people a {
-	background: url(../../images/status_online.png) no-repeat 9px 5px;
-	padding-left: 35px;
-}
-
-#menu li.todo a {
-	background: url(../../images/page_white_stack.png) no-repeat 9px 5px;
-	padding-left: 35px;
-}
-
-#menu li.agenda a {
-	background: url(../../images/calendar_view_day.png) no-repeat 9px 5px;
-	padding-left: 35px;
-}
-
-#menu li.wiki a {
-	background: url(../../images/html.png) no-repeat 9px 5px;
-	padding-left: 35px;
-}
-
-
-#menu li.setup a {
-	background: url(../../images/wrench_orange.png) no-repeat 2px 5px;
-	padding-left: 25px;
-}
-
 
 /* Alignment classes */
 .float-left   { float: left;}
@@ -614,20 +602,29 @@ div#noaccess {
 	border-top: 1px solid #778866;
 	width: 100%;
 }
+
 input.login {
-	border-color: #778866;
+	border-color: #9A9B9D;
 	background-color: #f1f1f1;
-/*	margin: 2px 0 8px; */
-	width: 80px;
-    margin-top: 5px;
-    margin-left: 27px;
+	width: 165px;
 	font-size: 12px;
+	height: 20px;
 }
 
-
-input.sub {
-	border-bottom-color: #708090;
-	border-right-color: #708090;
+input.login:focus {
+	outline-width: 0;
+	border-color: #ff6a07;
+	background-color: #f1f1f1;
+	width: 165px;
+	font-size: 12px;
+	height: 20px;
+	-moz-box-shadow:    0px 0px 3px 2px #ff954f;
+	-webkit-box-shadow: 0px 0px 3px 2px #ff954f;
+	box-shadow:         0px 0px 3px 2px #ff954f;
+}
+ 
+input.sub {	
+	border: 1px solid #9A9B9D;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	font-size: 0.85em;
@@ -639,35 +636,565 @@ input.sub {
 	padding-right: 9px;
 	padding-top: 4px;
 	padding-bottom: 4px;
-	
 }
-
 
 input.next {
 	padding-right: 25px;
-	background: #e5e5e5 url(../../images/go.png) no-repeat right 2px;
+	
+	/* IE9 and older*/ 
+	background: url(../../images/go.png) no-repeat right 3px #FBFBFB;		
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* Opera */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #FBFBFB), color-stop(1, #E5E6E8));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+			linear-gradient(to bottom, #FBFBFB 0%, #E5E6E8 100%);			
 }
+
+input.next:hover {
+	padding-right: 25px;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Opera */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #D5D6DA), color-stop(1, #F5F5FA));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+			linear-gradient(to bottom, #D5D6DA 0%, #F5F5FA 100%);			
+}
+
+
+input.next:active {
+	padding-right: 25px;	
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Opera */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #D5D6DA), color-stop(1, #F5F5FA));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/go.png) no-repeat right 3px,
+			linear-gradient(to bottom, #D5D6DA 0%, #F5F5FA 100%);
+
+	-webkit-box-shadow: inset 0 5px 6px -6px black;
+	   -moz-box-shadow: inset 0 5px 6px -6px black;
+			box-shadow: inset 0 5px 6px -6px black;
+
+}
+
 input.report {
 	padding-right: 25px;
-	background: #e5e5e5 url(../../images/html.png) no-repeat right 2px;
+	
+	/* IE9 and older*/ 
+	background: url(../../images/html.png) no-repeat right 3px #FBFBFB;		
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* Opera */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #FBFBFB), color-stop(1, #E5E6E8));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+			linear-gradient(to bottom, #FBFBFB 0%, #E5E6E8 100%);			
 }
+
+input.report:hover {
+	padding-right: 25px;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Opera */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #D5D6DA), color-stop(1, #F5F5FA));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+			linear-gradient(to bottom, #D5D6DA 0%, #F5F5FA 100%);			
+}
+
+
+input.report:active {
+	padding-right: 25px;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Opera */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #D5D6DA), color-stop(1, #F5F5FA));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/html.png) no-repeat right 3px,
+			linear-gradient(to bottom, #D5D6DA 0%, #F5F5FA 100%);	
+
+	-webkit-box-shadow: inset 0 5px 6px -6px black;
+	   -moz-box-shadow: inset 0 5px 6px -6px black;
+			box-shadow: inset 0 5px 6px -6px black;
+
+}
+
 input.pdfreport {
 	padding-right: 25px;
-	background: #e5e5e5 url(../../images/page_white_acrobat.png) no-repeat right 2px;
+	
+	/* IE9 and older*/ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px #FBFBFB;	
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* Opera */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #FBFBFB), color-stop(1, #E5E6E8));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+			linear-gradient(to bottom, #FBFBFB 0%, #E5E6E8 100%);			
+}
+
+input.pdfreport:hover {
+	padding-right: 25px;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Opera */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #D5D6DA), color-stop(1, #F5F5FA));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+			linear-gradient(to bottom, #D5D6DA 0%, #F5F5FA 100%);			
+}
+
+
+input.pdfreport:active {
+	padding-right: 25px;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Opera */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #D5D6DA), color-stop(1, #F5F5FA));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/page_white_acrobat.png) no-repeat right 3px,
+			linear-gradient(to bottom, #D5D6DA 0%, #F5F5FA 100%);	
+
+	-webkit-box-shadow: inset 0 5px 6px -6px black;
+	   -moz-box-shadow: inset 0 5px 6px -6px black;
+			box-shadow: inset 0 5px 6px -6px black;
+
 }
 
 input.upd {
 	padding-right: 25px;
-	background: #e5e5e5 url(../../images/upd.png) no-repeat right 5px;
+	
+	/* IE9 and older*/ 
+	background: url(../../images/upd.png) no-repeat right 3px #FBFBFB;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* Opera */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #FBFBFB), color-stop(1, #E5E6E8));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+			linear-gradient(to bottom, #FBFBFB 0%, #E5E6E8 100%);			
 }
+
+input.upd:hover {
+	padding-right: 25px;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Opera */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #D5D6DA), color-stop(1, #F5F5FA));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+			linear-gradient(to bottom, #D5D6DA 0%, #F5F5FA 100%);			
+}
+
+
+input.upd:active {
+	padding-right: 25px;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Opera */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #D5D6DA), color-stop(1, #F5F5FA));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/upd.png) no-repeat right 3px,
+			linear-gradient(to bottom, #D5D6DA 0%, #F5F5FA 100%);	
+
+	-webkit-box-shadow: inset 0 5px 6px -6px black;
+	   -moz-box-shadow: inset 0 5px 6px -6px black;
+			box-shadow: inset 0 5px 6px -6px black;
+
+}
+
+
 input.create {
 	padding-right: 25px;
-	background: #e5e5e5 url(../../images/wand.png) no-repeat right 3px;
+	
+	/* IE9 and older*/ 
+	background: url(../../images/wand.png) no-repeat right 3px #FBFBFB;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* Opera */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #FBFBFB), color-stop(1, #E5E6E8));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+			linear-gradient(to bottom, #FBFBFB 0%, #E5E6E8 100%);			
+}
+
+input.create:hover {
+	padding-right: 25px;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Opera */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #D5D6DA), color-stop(1, #F5F5FA));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+			linear-gradient(to bottom, #D5D6DA 0%, #F5F5FA 100%);			
+}
+
+
+input.create:active {
+	padding-right: 25px;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Opera */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #D5D6DA), color-stop(1, #F5F5FA));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/wand.png) no-repeat right 3px,
+			linear-gradient(to bottom, #D5D6DA 0%, #F5F5FA 100%);
+			
+	-webkit-box-shadow: inset 0 5px 6px -6px black;
+	-moz-box-shadow: inset 0 5px 6px -6px black;
+	box-shadow: inset 0 5px 6px -6px black;
+
 }
 
 input.search {
 	padding-right: 25px;
-	background: #e5e5e5 url(../../images/zoom.png) no-repeat right 3px;
+	
+	/* IE9 and older*/
+	background: url(../../images/zoom.png) no-repeat right 3px #FBFBFB;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* Opera */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #FBFBFB), color-stop(1, #E5E6E8));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #FBFBFB 0%, #E5E6E8 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+			linear-gradient(to bottom, #FBFBFB 0%, #E5E6E8 100%);			
+}
+
+input.search:hover {
+	padding-right: 25px;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Opera */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #D5D6DA), color-stop(1, #F5F5FA));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+			linear-gradient(to bottom, #D5D6DA 0%, #F5F5FA 100%);			
+}
+
+
+input.search:active {
+	padding-right: 25px;
+	
+	/* IE10 Consumer Preview */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+		-ms-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+		
+	/* Mozilla Firefox */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+			-moz-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Opera */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+			 -o-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+			-webkit-gradient(linear, left top, left bottom, color-stop(0, #D5D6DA), color-stop(1, #F5F5FA));
+
+	/* Webkit (Chrome 11+) */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+		-webkit-linear-gradient(top, #D5D6DA 0%, #F5F5FA 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background: url(../../images/zoom.png) no-repeat right 3px,
+			linear-gradient(to bottom, #D5D6DA 0%, #F5F5FA 100%);
+
+	-webkit-box-shadow: inset 0 5px 6px -6px black;
+	   -moz-box-shadow: inset 0 5px 6px -6px black;
+			box-shadow: inset 0 5px 6px -6px black;
+
 }
 
 input.inventory {
@@ -742,7 +1269,7 @@ td.datosf9i, td.datos2f9i {
 
 div#wizard {
 	text-align: left;
-	border: 1px solid #999999;
+	border-radius: 10px;
 	margin-top: 3em;
 	margin-bottom: -1em;
 	padding: 20px;
@@ -755,7 +1282,20 @@ div#install_box {
 	padding-right: 20px;
 	margin-top: 10px;
 	width: 350px;
+	margin-bottom: 5px;
+	margin-left: 25px;	
 }
+
+div#install_box  td {
+	font-size: 12px;
+}
+
+
+div#install_box  input {
+	height: 25px;
+	
+}
+
 
 div.data_box {
 	border-top: 5px solid #778855;
@@ -888,11 +1428,10 @@ span.users, span.agents, span.data, span.alerts, span.time {
 	width:170px;
 	height: 23px;
 	background-color:#A0A0A0; /* gris */
-	background-image:url(../../images/leftnav_bg.gif);
 	background-repeat:no-repeat;
 	background-position:left top;
 	overflow:hidden;
-	padding:3px 10px 0px 10px;
+    padding:9px 10px 0px 10px;
 	margin:0px 0px 1px 0px;
 	color:#FFF;
 	font-size: 1.1em ;
@@ -905,25 +1444,22 @@ span.users, span.agents, span.data, span.alerts, span.time {
 	display:block;
 	width:170px;
 	height:23px;
-	background-color:#2179B1; /* azul*/
-	background-image:url(../../images/leftnav_bg_uncollapsible.gif);
+	background-color:#232323;
 	background-repeat:no-repeat;
 	background-position:left top;
 	overflow:hidden;
-    padding:3px 10px 0px 10px;
+    padding:9px 10px 0px 10px;
 	margin:0px 0px 1px 0px;
-	
-	
-
 	color:#FFF;
 	font-size: 1.1em ;
+	font-weight: bold;
 	text-transform: none;
 	text-decoration: none;
 
 }
 
 .portlet h2:hover {
-	background-color:#000;
+	background-color:#232323;
 	text-decoration: none;
 }
 
@@ -944,7 +1480,7 @@ span.users, span.agents, span.data, span.alerts, span.time {
 
 
 h3.admin {
-	background-color: #12496B;
+	background-color: #404040;
 }
 
 h3.info {
@@ -997,7 +1533,25 @@ div#footer {
 	text-align: center;
 	background-color: #363636;
 	color:#FFF;
+}
 
+div#footer_installer {
+	text-align: center;
+	margin-bottom: 10px;
+	font-size: 10px;
+	border-top: solid 6px #222;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+	background-color: #363636;
+	color:#FFF;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+div#footer_installer a {
+	color: #fff;
+	font-weight: bold;
 }
 
 div#footer a{
@@ -1217,33 +1771,38 @@ iframe.ax-main-frame {
 .databox_login {
 	position: relative;
 	margin-top: 0px;
-	width: 620px !important;
-	height: 345px;
-	border: none !important; 
-	background-color: #fafafa;
-	background: url(../../images/loginform.png) no-repeat; 
+	border: none !important;
 	z-index: 1;
+	text-align: center;
 }
 
 .databox_login_msg {
-	padding-top: 25px;
-	padding-left: 30px;
 	margin-top: 10px;
-	margin-left: 200px;
-	margin-bottom: 0px;
-	padding-bottom: 0px;
-	width: 380px;
-	height: 130px;
-	font-size: 12px;
-	color: #777;
-	background: #fff;
-	z-index: 1;
-	
-	-moz-border-radius:25px;
-	-webkit-border-radius:25px;
-	border-radius:25px;
-	box-shadow: 10px 10px 5px #333;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+	background-color: #FFEBE8;
+	border: 1px solid #DD3C10;
+	text-align: left;
+	font-size: 11px;
+}
 
+
+.databox_login_msg_green {
+	margin-top: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+	background-color: #E8FFEB;
+	border: 1px solid #10DD28;
+	text-align: left;
+	font-size: 11px;
+}
+
+.databox_login_msg h3 {
+	text-transform: none;
+	padding: 0px;
+	margin: 0px;
 }
 
 .databox_change_login_msg {
@@ -1275,20 +1834,26 @@ iframe.ax-main-frame {
 	position: absolute; left: 0px; top: 480px;
 }
 
+.login_label {
+	text-align: left;
+	padding-left: 5px;
+}
+
+.login_input{
+	padding: 0px !important;
+	margin: 0px;
+}
+
 #ver_num {
-	bottom: 0; 
-	height: 20px; 
-	right: 0; 
-	padding-right: 20px;
-	margin: 0 auto 0 50%;  
+	font-size: 10px;
 	overflow: hidden; 
-	position: absolute; left: 0px; top: 560px;
-	color: #696969
+	color: #aaa;
+	text-align: left;
 }
 
 div#login {
 	margin: 0 auto;
-	padding-top: 63px;
+	padding-top: 100px;
 	width: 657px;
 	border-left: solid 1px #000;
 	border-top: solid 1px #000;
@@ -1296,18 +1861,59 @@ div#login {
 	border-right: solid 2px #000;
 	
 	/* IE Hack */
-	_padding-top: 70px;
+	_padding-top: 100px;
 	_padding-left: 0px;
 	_margin-left: 0px;
 }
 
 #login_form_data {
-	padding-left: 55px; 
-	padding-top: 55px;
-	_padding-left: 0px;
-	_margin-left: 0px;  
+	margin: 0 auto;
+	background-color: #fff;
+	width: 280px;
+	border-radius: 10px;
+	padding: 0px;
+	padding-top: 50px;
+	padding-bottom: 20px;
+
 }
 
+#login_form_data_fail {
+	margin: 0 auto;
+	background-color: #fff;
+	width: 390px;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+
+input.login_button {
+	margin-right: 0px !important;
+}
+
+.login_table {
+	margin: 0 auto;
+	padding: 0px;
+	width: 165px;
+}
+
+.pass_validate_table {
+	margin: 0 auto;
+	padding: 0px;
+	width: 165px;
+	vertical-align: bottom;
+}
+
+.pass_validate_table td {
+	vertical-align: bottom;
+}
+
+.login_table td {
+	padding-top: 10px;
+}
+
+td.login_button {
+	text-align: right;
+}
 
 #image-Login {
 	width: 100px;
@@ -1326,3 +1932,141 @@ div#login {
 	font-size: 10px;
 }
 
+.landing_table {
+	width: 100%;
+	margin: 0 auto;
+	margin-top: 10px;
+	border-collapse:separate;
+	border-spacing:10px;	
+}
+
+.landing_table th {
+	background-color: #a0a0a0;
+	color: #fff;
+	font-weight: bold;
+	padding-left: 15px;
+	height: 30px;
+	text-align: left;
+}
+
+.landing_table td {
+	padding-left: 15px;
+	padding-right: 15px;
+	height: 130px;
+	width: 50%;
+	padding-top: 10px;
+	padding-bottom: 10px;	
+}
+
+.landing_title {
+	font-size: 1.2em;
+	text-transform: uppercase;
+	margin-left: 10px;
+	margin-top: 2px;
+	float: left;
+}
+
+.landing_subtitle {
+	margin-left: 20px;
+	font-style: italic;
+	margin-top: 2px;
+	float: left;	
+}
+
+.much_more {
+	float: right;
+	margin-top: 4px;
+	margin-right: 15px;
+}
+
+.landing_incidents {
+	padding-top: 5px;
+	padding-left: 5px;
+	background: #fff;
+	border-top: 2px solid #232323;
+	border-bottom: 1px solid #232323;
+	border-collapse: collapse;
+	text-align: left;	
+}
+
+.landing_incidents th {
+	background-color: #fff;
+	color: #000;
+}
+
+.landing_incidents td {
+	height: 28px;
+	width: 20px;
+	padding: 0px;
+	padding-left: 15px;
+}
+
+.landing_empty {
+	text-align: center;
+	font-style: italic;
+	color: #ccc;
+	font-weight: bold;
+}
+
+.landing_news {
+	height: 390px;
+	overflow-x: auto;
+	overflow-y: none;
+}
+
+.landing_text_list {
+	margin: 0px;
+	padding: 0px;
+	line-height: 30px;
+}
+
+.landing_news_title {
+	font-weight: bold;
+	font-size: 1.2em;
+	text-transform: uppercase;
+}
+
+.landing_news_note {
+	vertical-align: bottom;
+	margin-left: 10px;
+}
+
+.upfile_input {
+	heigth: 50px;
+}
+
+
+.project_overview {
+	width: 800px;
+	background-color: #ffffff;
+	border-top: 2px solid #232323;
+}
+
+.project_overview th {
+	text-align: left;
+	background-color: #EBEBED;
+	font-weight: bold;
+	font-size: 0.9em;
+	/*color: #ccc;*/
+	padding-left: 10px;
+}
+
+.project_overview td {
+	padding: 1px 2px 5px 5px;
+}
+
+
+.landing_title_logo {
+	float: left;
+	height: 16px;
+	margin-left: -5px;
+	margin-top: 5px;
+}
+
+#install_msg_box {
+	margin-top: 100px;
+	border-radius: 10px;
+	padding: 10px;
+	background: #fff;
+	width: 500px;
+}

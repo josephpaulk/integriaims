@@ -165,6 +165,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 .tagCloud{float:right;width:200px;padding:0.5em;margin:1em;border:1px dashed #060;clear:right}
 .pageVersionsList{letter-spacing:0;font-variant:normal;font-size:12px}
 .resizeTextarea a{border-bottom:none}
+
 	</style>
 	{HEAD}
 </head>

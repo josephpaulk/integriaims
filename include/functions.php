@@ -565,8 +565,26 @@ function format_for_graph ($number , $decimals = 1, $dec_point = ".", $thousands
  * 
  * @return The translated string. If not defined, the same string will be returned
  */
-function __ ($string) {
+function __ ($string) {	
 	global $l10n;
+	global $config;
+
+	if ($config['enterprise_installed']) {
+		
+		if (file_exists('enterprise/include/functions_translate_string.php')) {
+			include_once('enterprise/include/functions_translate_string.php');
+
+			$tranlateString = get_defined_translation($string);
+
+			if ($tranlateString !== false) {
+				return $tranlateString;
+			}
+		}
+	}
+ 
+	if ($string == '') {
+		return $string;
+	}
 
 	if (is_null ($l10n))
 		return $string;

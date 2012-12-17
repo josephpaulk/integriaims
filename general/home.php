@@ -22,61 +22,121 @@ $noinfo = 1;
 if (!isset($config["id_user"]))
 	$config["id_user"] = $_SESSION['id_usuario'];
 
-echo '<table width="100%" cellspacing=0 cellpadding=0 border=0>';
+///////////////
+//Get queries to know if there is info or not
+//////////////
 
-
-// ==============================================================
-// Show Newsboard
-// ==============================================================
-
+// NEWS
 $sql = "SELECT * FROM tnewsboard  WHERE (`date` > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 60 DAY) OR `date` = '0000-00-00 00:00:00') ORDER BY date ASC";
 
-$news = get_db_all_rows_sql ($sql);
-if ($news) {
-        $noinfo = 0;
-        echo "<tr><td>";
-	    echo "<h1>".__('System newsboard')."</h1>";
-	    echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-	    echo "<img src='images/warning.png'></div>";
-	    echo "<td valign='top'><br><b>";
-	    echo __('Latest system news (30 days)');
-	    echo '<hr width="100%" size="1">';
-	    echo "</b>";
+$news = get_db_all_rows_sql ($sql);	
 
-        foreach ($news as $news_item) {
-        	echo "<b>".$news_item["title"]."</b>, <i>".$news_item["date"]."</i>";
-		    echo "<br>";
-            	    echo clean_output_breaks ($news_item["content"]);
-		    echo "<br><br>";
-	    }
-    }
-    
-    // ==============================================================
+//AGENDA
+$now = date('Y-m-d', strtotime("now"));
+$now3 = date('Y-m-d', strtotime("now + 3 days"));
+$agenda = get_db_sql ("SELECT COUNT(*) FROM tagenda WHERE  (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3'");
+
+$agenda  += get_db_sql ("SELECT COUNT(tproject.name) FROM trole_people_project, tproject WHERE trole_people_project.id_user = '".$config["id_user"]."' AND trole_people_project.id_project = tproject.id AND tproject.end >= '$now' AND tproject.end <= '$now3'");
+
+$agenda += get_db_sql ("SELECT COUNT(ttask.name) FROM trole_people_task, ttask WHERE trole_people_task.id_user = '".$config["id_user"]."' AND trole_people_task.id_task = ttask.id AND ttask.end >= '$now' AND ttask.end <= '$now3'");	
+
+//TODO
+$todo = get_db_sql ("SELECT COUNT(*) FROM ttodo WHERE assigned_user = '".$config["id_user"]."'");
+
+//PROJECTS
+$projects = projects_active_user ($config["id_user"]);	
+
+//INCIDENTS
+$incidents = incidents_active_user ($config["id_user"]);
+
+$info = false;
+
+if ($news || $agenda || $todo || $projects || $incidents) {
+	$info = true;
+}
+
+if ($info) {
+
+	echo '<table class="landing_table">';
+		
+	echo "<tr>";
+	echo "<th>";
+	echo "<img class='landing_title_logo' src='images/error.png'/>";
+	echo "<span class='landing_title'>";
+	echo __('System newsboard');
+	echo "</span>";
+	echo "<span class='landing_subtitle'>";
+	echo __('News of last 30 days');
+	echo "</span>";
+	echo "</th>";
+	echo "<th>";
+	echo "<img class='landing_title_logo' src='images/time.gif'/>";
+	echo "<span class='landing_title'>";
+	echo __("Agenda");
+	echo "</span>";
+	echo "<span class='landing_subtitle'>";
+	echo __('First 5 events for next three days');
+	echo "</span>";
+	echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>";
+	echo "<img class='much_more' src='images/add.png'>";
+	echo "</a>";
+	echo "</th>";	
+	echo "</tr>";
+
+	// ==============================================================
+	// Show Newsboard
+	// ==============================================================
+
+	echo "<tr>";
+	echo "<td rowspan=3>";
+
+	if ($news) {
+		echo "<div class='landing_news landing_content'>";
+		foreach ($news as $news_item) {
+			echo "<span class='landing_news_title'>".$news_item["title"]."</span>";
+			
+			if ($news_item["date"] === "0000-00-00 00:00:00") {
+				echo "<img class='landing_news_note' src='images/nota.gif'>";
+			} else {
+				echo ", <i>".substr($news_item["date"],0,10)."</i>";
+			}
+			echo "<hr><div style='margin-right: 20px; margin-left: 10px; margin-top: 10px; text-align: justify;'>";
+			echo clean_output_breaks ($news_item["content"]);
+			echo "<br><br></div>";
+		}
+		echo "</div>";
+	} else {
+		echo "<div class='landing_empty'>";
+		echo __("There aren't news in the system");
+		echo "</div>";
+	}
+		
+	echo "</td>";
+
+	echo "<td>";
+	echo "<div class='landing_content'>";
+	// ==============================================================
 	// Show Agenda items
-    // ==============================================================
-	$now = date('Y-m-d', strtotime("now"));
-	$now3 = date('Y-m-d', strtotime("now + 3 days"));
-	$agenda = get_db_sql ("SELECT COUNT(*) FROM tagenda WHERE  (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3'");
-
-	$agenda  += get_db_sql ("SELECT COUNT(tproject.name) FROM trole_people_project, tproject WHERE trole_people_project.id_user = '".$config["id_user"]."' AND trole_people_project.id_project = tproject.id AND tproject.end >= '$now' AND tproject.end <= '$now3'");
-
-	$agenda += get_db_sql ("SELECT COUNT(ttask.name) FROM trole_people_task, ttask WHERE trole_people_task.id_user = '".$config["id_user"]."' AND trole_people_task.id_task = ttask.id AND ttask.end >= '$now' AND ttask.end <= '$now3'");
+	// ==============================================================
 
 	if ($agenda > 0){
-        $noinfo = 0;
-		echo "<tr><td>";
-		echo "<h1>".__('Agenda')."</h1>";
-		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-		echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'><img src='images/calendar.png'></a></div>";
-		echo "<td valign='top'><br><b>";
-		echo __('Events for next three days');
-		echo '<hr width="100%" size="1">';
-		echo "</b>";
+
+
+		$time_array = array();
+		$text_array = array();
+		$type_array = array();
+		$data = array();
+		$count = 0;
+		
+		//Get agenda events
 		$sql_2 = "SELECT * FROM tagenda WHERE (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3' ORDER BY timestamp ASC";
 		$result_2 = mysql_query($sql_2);
-		while ($row_2 = mysql_fetch_array($result_2)){
-			echo "<b>".__("Agenda event")." </b>(".$row_2["timestamp"].") - ".$row_2["content"];
-			echo "<br>";
+			
+		while ($r = mysql_fetch_array($result_2)) {
+			$time_array[$count] = $r["timestamp"];
+			$text_array[$count] = $r["content"];
+			$type_array[$count] = "agenda";
+			$count++;
 		}
 
 		// Search for Project end in this date
@@ -85,12 +145,13 @@ if ($news) {
 		while ($row=mysql_fetch_array ($res)){
 			$pname = $row["pname"];
 			$idp = $row["idp"];
-			$pend = $row["pend"];
-			echo "<b>".__("Project end"). "</b> (".$pend."): ";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$idp'>";
-			echo $pname;
-			echo "</a>";
-			echo "<br>";
+			
+			$content = "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$idp'>".$pname."</a>";
+			
+			$time_array[$count] = $row["pend"];
+			$text_array[$count] = $content;
+			$type_array[$count] = "project";
+			$count++;
 		}
 
 		// Search for Task end in this date
@@ -100,64 +161,173 @@ if ($news) {
 			$tname = $row["tname"];
 			$idt = $row["idt"];
 			$tend = $row["tend"];
-			echo "<b>".__("Task end"). "</b> (". $tend."): ";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view'>";
-			echo $tname;
-			echo "</a>";
-			echo "<br>";
+			
+			$content = "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view'>".$tname."</a>";
+			
+			$time_array[$count] = $row["tend"];
+			$text_array[$count] = $content;
+			$type_array[$count] = "task";
+			$count++;
 		}
-
+		
+		//Sort time array and print only first five entries :)
+		asort($time_array);
+		
+		echo "<p class='landing_text_list'>";
+		
+		$print_counter = 0;
+		foreach ($time_array as $key => $time) {
+			
+			$type_name = "";
+			switch ($type_array[$key]) {
+				case "agenda":
+					$type_name = __("Agenda event");
+					break;
+				case "project":
+					$type_name = __("Project end");
+					break;
+				case "task":
+					$type_name = __("Task end");
+					break;
+			}
+			
+			echo "<b>".$type_name."</b> - [".$time."] ".$text_array[$key]."<br>";
+			
+			$print_counter++;
+			if ($print_counter == 5) {
+				break;
+			}
+		}
+		
+		echo "</p>";
+		
+	} else {
+		echo "<div class='landing_empty'>";
+		echo __("There aren't meetings in your agenda");
+		echo "</div>";
 	}
+	echo "</div>";
+	echo "</td>";
+	echo "</tr>";
 
-
-    // ==============================================================
+	// ==============================================================
 	// Show Todo items
-    // ==============================================================
+	// ==============================================================
+	echo "<tr>";
+	echo "<th>";
+	echo "<img class='landing_title_logo' src='images/todo.png'/>";
+	echo "<span class='landing_title'>";
+	echo __('To-Do');
+	echo "</span>";
+	echo "<span class='landing_subtitle'>";
+	echo __('Total active TO-DOs').": ".todos_active_user ($config["id_user"]);
+	echo "</span>";
+	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>";
+	echo "<img class='much_more' src='images/add.png'>";
+	echo "</a>";
+	echo "</th>";
+	echo "</tr>";
 
-	$todo = get_db_sql ("SELECT COUNT(*) FROM ttodo WHERE assigned_user = '".$config["id_user"]."'");
+	echo "<tr>";
+	echo "<td>";
+	echo "<div class='landing_content'>";
 	if ($todo > 0){
-        $noinfo = 0;
-		echo "<tr><td>";
-		echo "<h1>".__('To-Do')."</h1>";
-		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-		echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'><img src='images/todo.png'></a></div>";
-		echo "<td valign='top'><br><b>";
-		echo __('Todo active you have').": ".todos_active_user ($config["id_user"])."</b><br>";
-		echo '<hr width="100%" size="1">';
+		
+		echo "<p class='landing_text_list'><ul>";
 		$sql_2 = "SELECT * FROM ttodo WHERE assigned_user = '".$config["id_user"]."' ORDER BY priority DESC limit 5";
 		$result_2 = mysql_query($sql_2);
 		while ($row_2 = mysql_fetch_array($result_2)){
-			echo $row_2["timestamp"]." - ".substr($row_2["name"],0,55);
+			echo "<a href='index.php?sec=todo&sec2=operation/todo/todo&operation=update&id=".$row_2["id"]."'>";
+			echo "<li>".substr($row_2["name"],0,55);
+			echo "</a>";
 			echo "<br>";
 		}
+		
+		echo "</ul></p>";
+	} else {
+		echo "<div class='landing_empty'>";
+		echo __("There aren't TO-DOs");
+		echo "</div>";
 	}
+	echo "</div>";
+	echo "</td>";
+	echo "</tr>";
 
-    // ==============================================================
+	echo "<tr>";
+	echo "<th>";
+	echo "<img class='landing_title_logo' src='images/reporting.png'/>";
+	echo "<span class='landing_title'>";
+	echo __('Projects');
+	echo "</span>";
+	echo "<span class='landing_subtitle'>";
+	echo __("Total active projects").": ";
+	echo projects_active_user ($config["id_user"]);
+	echo "</span>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>";
+	echo "<img class='much_more' src='images/add.png'>";
+	echo "</a>";
+	echo "</th>";
+
+	echo "<th>";
+	echo "<img class='landing_title_logo' src='images/incidents.png'/>";
+	echo "<span class='landing_title'>";
+	echo __('Incidents');
+	echo "</span>";
+	echo "<span class='landing_subtitle'>";
+	echo __('Total active incidents').": ".incidents_active_user ($config["id_user"]);
+	echo "</span>";
+	if($simple_mode) {
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>";
+		echo "<img class='much_more' src='images/add.png'>";
+		echo "</a>";
+	}
+	else {
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>";
+		echo "<img class='much_more' src='images/add.png'>";
+		echo "</a>";
+	}
+	echo "</th>";
+	echo "<tr>";
+
+
+	echo "<td>";
+	// ==============================================================
+	// Show Projects items
+	// ==============================================================
+	
+	if ($projects > 0){
+	
+		$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
+
+		$graph_result = graph_workunit_project_user (600, 200, $config["id_user"], $from_one_month,0, 1);
+
+		//If there is an error in graph the graph functions returns a string
+		echo "<div class='landing_empty'>";
+		echo $graph_result;
+		echo "</div>";		
+		
+	} else {
+	
+		echo "<div class='landing_empty'>";
+		echo __("There aren't active projects");
+		echo "</div>";	
+	}
+	echo "</td>";
+
+	// ==============================================================
 	// Show Incident items
-    // ==============================================================
+	// ==============================================================
 
-	$incidents = incidents_active_user ($config["id_user"]);
+	echo "<td>";
+	echo "<div class='landing_content'>";
 	if ($incidents > 0){
-        $noinfo = 0;
-		echo "<tr><td>";
-		echo "<h1>".__('Incidents')."</h1>";
-		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-		if($simple_mode) {
-			echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'><img src='images/incidents.png'></a></div>";
-		}
-		else {
-			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'><img src='images/incidents.png'></a></div>";
-		}
-		echo "<td valign='top'><br><b>";
-		echo __('Incidents active you have').": ".incidents_active_user ($config["id_user"]);
-		echo '<hr width="100%" size="1">';
-		echo "</b>";
+		
 		$sql_2 = "SELECT * FROM tincidencia WHERE (id_creator = '".$config["id_user"]."' OR id_usuario = '".$config["id_user"]."') AND estado IN (1,2,3,4,5) ORDER BY actualizacion DESC limit 5";
 		
 		$result_2 = mysql_query($sql_2);
 		if ($result_2){
-			echo "<table width=100% class=listing>";
-			echo "<tr><th>"._("Status")."</th><th>".__("Priority")."</th><th>".__("Updated")."</th><th>".__("Incident")."</th><th>".__("Last workunit by")."</th></tr>";
+			echo "<table width=100% class='landing_incidents'>";
+			echo "<tr><th>"._("Status")."</th><th>".__("Priority")."</th><th>".__("Updated")."</th><th>".__("Incident")."</th><th>".__("Last WU")."</th></tr>";
 		}
 		while ($row_2 = mysql_fetch_array($result_2)){
 			$idi = $row_2["id_incidencia"];
@@ -168,17 +338,16 @@ if ($news) {
 			echo "<td>";
 			echo human_time_comparation ($row_2["actualizacion"]);
 			echo "<td>";
-			echo "<i>(#".$row_2["id_incidencia"].") </i>";
 			if($simple_mode) {
 				echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incident&id=$idi'>";
 			}
 			else {
 				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$idi'>";
 			}
-			echo "<b>&nbsp;".$row_2["titulo"];
+			echo $row_2["titulo"];
 			echo "</b></a>";
 			echo "</td>";
-			echo "<td>";
+			echo "<td style='font-size: 10px'>";
 			$last_wu = get_incident_lastworkunit ($idi);
 			echo $last_wu["id_user"];
 
@@ -186,39 +355,33 @@ if ($news) {
 		}
 		if (isset($row_2))
 			echo "</table>";
+	} else {
+		echo "<div class='landing_empty'>";
+		echo __("There aren't active incidents");
+		echo "</div>";		
 	}
+	echo "</div>";
+	echo "</td>";
+	echo "</tr>";
 
-// ==============================================================
-	// Show Projects items
-    // ==============================================================
-
-	$projects = projects_active_user ($config["id_user"]);
-	if ($projects > 0){
-        $noinfo = 0;
-		echo "<tr><td>";
-		echo "<h1>".__('Projects')."</h1>";
-		echo "<div align='center' style='height: 160px; width: 130px; padding: 0 0 0 0; margin: 0 0 0 0;'>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project'><img src='images/project.png'></a></div>";
-
-
-		echo "<td valign='top'><br><b>";
-		echo __('Projects active you have').": ".projects_active_user ($config["id_user"]);
-		echo '<hr width="100%" size="1">';
-		echo "<br>";
-		$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
-
-		echo graph_workunit_project_user (600, 200, $config["id_user"], $from_one_month,0, 1);
-
-	}
 	echo "</table>";
 
- if (give_acl ($config["id_user"], 0, "AR")){
-    if ($noinfo == 1)
-        include "operation/agenda/agenda.php";
- } else {
-	echo "<h1>". __("Welcome to Integria")."</h1>";
- }
+} else {
 
+	 if (give_acl ($config["id_user"], 0, "AR")){
+		include "operation/agenda/agenda.php";
+	 } else {
+		echo "<h1>". __("Welcome to Integria")."</h1>";
+	 }
 
-
+}
 ?>
+
+
+<script>
+//Animate content
+$(document).ready(function (){
+	$(".landing_content").hide();
+	$(".landing_content").slideDown('slow');
+});
+</script>

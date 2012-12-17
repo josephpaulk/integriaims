@@ -155,7 +155,7 @@ if($return_filter) {
 $incidents = filter_incidents ($filter);
 if ($incidents === false) {
 	if (! $show_stats)
-		echo '<tr><td colspan="8">'.__('Nothing was found').'</td></tr>';
+		echo '<tr><td colspan="11">'.__('Nothing was found').'</td></tr>';
 	return;
 }
 

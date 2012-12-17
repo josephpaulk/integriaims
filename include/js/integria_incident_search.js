@@ -50,7 +50,8 @@ function show_user_search_dialog (title) {
 					height: 550,
 					width: 700,
 					modal: true,
-					bgiframe: true
+					bgiframe: true,
+					resizable: false
 					});
 			configure_user_search_form ();
 		},
@@ -519,6 +520,7 @@ function show_add_incident_dialog () {
 					width: 800,
 					modal: true,
 					bgiframe: true,
+					resizable: false,
 					open: function () {
 						parent_dialog = dialog;
 						dialog = "#dialog-incident ";
@@ -633,6 +635,7 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 					width: 900,
 					modal: true,
 					bgiframe: true,
+					resizable: false,
 					open: function () {
 						parent_dialog = dialog;
 						dialog = "#dialog-search-inventory ";
@@ -695,7 +698,8 @@ function show_add_workunit_dialog (id_incident) {
 					height: 440,
 					width: 600,
 					modal: true,
-					bgiframe: true
+					bgiframe: true,
+					resizable: false
 					});
 			configure_workunit_form ();
 		},
@@ -743,7 +747,8 @@ function show_add_file_dialog (id_incident) {
 					height: 400,
 					width: 600,
 					modal: true,
-					bgiframe: true
+					bgiframe: true,
+					resizable: false
 					});
 			configure_file_form ();
 		},
@@ -890,6 +895,7 @@ function show_contact_create_dialog (title, callback_contact_created) {
 				width: 700,
 				modal: true,
 				bgiframe: true,
+				resizable: false,
 				open: function () {
 					parent_dialog = dialog;
 					dialog = "#dialog-create-contact ";
@@ -922,6 +928,7 @@ function show_contact_search_dialog (title, callback_contact_click) {
 				width: 700,
 				modal: true,
 				bgiframe: true,
+				resizable: false,
 				open: function () {
 					parent_dialog = dialog;
 					dialog = "#dialog-search-contact ";

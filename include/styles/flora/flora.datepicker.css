@@ -9,7 +9,8 @@
 }
 #ui-datepicker-div {
 	display: none;
-	border: 1px solid #2179B1;
+	border: 1px solid #000;
+	border-radius: 10px;
 	z-index: 10;
 }
 .ui-datepicker-inline {
@@ -47,8 +48,10 @@ img.ui-datepicker-trigger {
 	color: #FFF;
 }
 .ui-datepicker-control {
-	background: #2179B1;
+	background: #000;
 	padding: 2px 0px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
 }
 .ui-datepicker-links {
 	background: #A0A0A0;
@@ -67,6 +70,7 @@ img.ui-datepicker-trigger {
 	float: left;
 	width: 34%;
 }
+
 .ui-datepicker-rtl .ui-datepicker-clear, .ui-datepicker-rtl .ui-datepicker-prev {
 	float: right;
 	text-align: right;
@@ -79,16 +83,18 @@ img.ui-datepicker-trigger {
 .ui-datepicker-close, .ui-datepicker-next {
 	float: right;
 	width: 34%;
-	text-align: right;
 }
+
+
+
 .ui-datepicker-rtl .ui-datepicker-close, .ui-datepicker-rtl .ui-datepicker-next {
 	float: left;
 	text-align: left;
 }
 .ui-datepicker-header {
-	padding: 1px 0 3px;
-	background: #80bee6;
 	text-align: center;
+	padding-left: 25px;
+	padding-top: 5px;
 	font-weight: bold;
 	height: 1.3em;
 }
@@ -108,11 +114,11 @@ img.ui-datepicker-trigger {
 	width: 100%;
 }
 .ui-datepicker-title-row {
-	background: #80BEE6;
+	background: #404040;
 	color: #000;
 }
 .ui-datepicker-title-row .ui-datepicker-week-end-cell {
-	background: #80BEE6;
+	background: #404040;
 }
 .ui-datepicker-days-row {
 	background: #FFF;
@@ -143,7 +149,7 @@ img.ui-datepicker-trigger {
 	border: 1px solid #777;
 }
 * html .ui-datepicker-title-row .ui-datepicker-week-end-cell {
-	background: #80BEE6 !important;
+	background: #404040 !important;
 }
 * html .ui-datepicker-week-end-cell {
 	background: #A0A0A0 !important;
@@ -181,14 +187,14 @@ img.ui-datepicker-trigger {
 }
 .ui-datepicker-control a, .ui-datepicker-links a {
 	padding: 2px 5px !important;
-	color: #000 !important;
+	color: #fff !important;
 }
 .ui-datepicker-title-row a {
-	color: #000 !important;
+	color: #fff !important;
 }
 .ui-datepicker-control a:hover {
 	background: #FDD !important;
-	color: #333 !important;
+	color: #404040 !important;
 }
 .ui-datepicker-links a:hover, .ui-datepicker-title-row a:hover {
 	background: #FFF !important;
@@ -214,4 +220,9 @@ img.ui-datepicker-trigger {
 	left: -4px;
 	width: 193px;
 	height: 200px;
+}
+
+
+.ui-datepicker-title-row td {
+	font-size: 0.7em;
 }

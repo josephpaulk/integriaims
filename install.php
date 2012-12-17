@@ -39,7 +39,7 @@
 
 error_reporting(0);
 
-$integria_version = "v3.0 Build 1201016";
+$integria_version = "v3.1 Build 121212";
 
 $integria_footertext = "<div id='footer'  style='width: 642px;'>
 	<i>Integria $integria_version is an OpenSource Software project at 
@@ -290,7 +290,11 @@ function install_step2() {
 			$res += check_extension("ldap","PHP ldap extension");
 			$res += check_extension("gettext","PHP gettext extension");
 			$res += check_extension("imap","PHP IMAP extension");
-			$res += check_exists ("/usr/bin/twopi","Graphviz Twopi in /usr/bin/twopi");
+			if (PHP_OS == 'WINNT') 
+				$res += check_exists ("C:/Program Files/Graphviz 2.28/bin/twopi.exe","Graphviz in C:/Program Files/Graphviz 2.28/");
+			else
+				$res += check_exists ("/usr/bin/twopi","Graphviz Twopi in /usr/bin/twopi");
+
 			$res += check_extension("gettext","PHP gettext extension");
 			//$res += check_include("PEAR.php","PEAR PHP Library");
 			$res += check_writable("./include","./include writable by HTTP server");
@@ -366,12 +370,22 @@ function install_step3() {
 			
 				<div style='padding: 8px'>Full path to HTTP publication directory.<br>
 				<span class='f9b'>For example /var/www/integria/</span>
-				</div>
-				<input type='text' name='path' style='width: 190px;' value='".dirname (__FILE__)."/'>
+				</div>";
 
+				
+				// if windows
+				if (PHP_OS == 'WINNT') {
+					$PATH = dirname (__FILE__);
+					$PATH2 = str_replace('\\','/',$PATH);
+					echo "<input type='text' name='path' style='width: 190px;' value='".$PATH2."/'>";
+				} else {
+					echo "<input type='text' name='path' style='width: 190px;' value='".dirname (__FILE__)."/'>";
+				}
+				
+				echo "
 				<div style='padding: 8px'>Full local URL to Integria<br>
 				<span class='f9b'>For example http://10.10.10.1/integria</span>
-				</div>
+				</div>				
 				<input type='text' name='url' style='width: 250px;'  value='http://".$_SERVER["SERVER_NAME"].dirname ($_SERVER['PHP_SELF']) ."'>
 				<br><br>
 				

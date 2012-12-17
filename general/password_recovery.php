@@ -16,26 +16,28 @@
 
 global $config;
 
-echo    '<center>
-        <div style="width:550px; padding-top: 100px;">
-        <div style="margin:25px; background: #fff; border: 1px solid #000;">
-		<table width="450px" cellpadding=4 cellspacing=4 class="blank">
-        <tr><td><a href="index.php">
-        <img src="images/integria_white.png" alt="logo">
-        </a>
-		<br />'.$config["version"].'</td>
-		<td width=50><td>';
+echo    '<div id="login" class="databox_login">
+        <div id="login_form_data_fail">';
+        
+echo "<a href='index.php'>";
+if (isset($config["site_logo"]))
+	echo '<img src="images/'.$config['site_logo'].'" alt="logo">';
+else
+	echo '<img src="images/loginlogo.png" alt="logo">';
 
+echo '</a>';        
+       
 $recover = get_parameter ("recover", "");
 $hash = get_parameter ("hash", "");
+$validated = false;
 
-echo '<h3 class="suc">';
+echo '<h3>';
 echo __('Password recovery');
 echo    '</h3>';
 
 if (($recover == "") AND ($hash == "")){
     // This NEVER should happen. Anyway, a nice msg for hackers ;)
-    echo "Don't try to hack this form. All information is sent to the user by mail";
+    echo __("Don't try to hack this form. All information is sent to the user by mail");
 	insert_event ('HACK_ATTEMPT', 0,0, "Something dirty happen in password recovery");
 }
 elseif ($hash == ""){
@@ -46,50 +48,58 @@ elseif ($hash == ""){
     $text = "Integria has received a request for password reset from IP Address ".$_SERVER['REMOTE_ADDR'].". Enter this validation code for reset your password: $randomhash";
 
     if ($email != ""){    
-	insert_event ('PASSWD_RECOVERY', 0,0, "User: $recover");
+		insert_event ('PASSWD_RECOVERY', 0,0, "User: $recover");
         integria_sendmail ($email, $subject, $text);
         process_sql ("UPDATE tusuario SET pwdhash = '$randomhash' WHERE id_usuario = '$recover'");
     }
 
     // Doesnt show a error message (not valid email or not valid user 
     // to don't give any clues on valid users
-
-    echo __("Dont close this window, you will receive an email with instructions on how to change your password.");
+	echo '<div class="databox_login_msg" >';
+    echo __("Don't close this window, you will receive an email with instructions on how to change your password.");
     echo "<br><br>";
     echo __("Enter here the validation code you should have received by mail");
+    echo '</div>';
 
-    echo '</tr><tr>';
-    echo "<tr><td colspan=2>";
-    echo "<form method=post>";
-    print_input_text ('hash', '', '', '', 50, false, __('Validation code'));
-    echo "<td>";
-
-    print_submit_button (__('Validate'), '', false, 'class="sub next"');
-    echo "</form>";
 } else {
     $check = get_db_sql ("SELECT id_usuario FROM tusuario WHERE id_usuario = '$recover' AND pwdhash = '$hash'");
 
     if (strtolower($check) == strtolower($recover)){
         $newpass =  substr(md5($config["sitename"].rand(0,100).$recover),0,6);
+        echo '<div class="databox_login_msg_green" >';
         echo __("Your new password is");
         echo " : <b>";
-        echo $newpass."</b><br><br>";
+        echo $newpass."</b>";
+        echo "</div>";
+        echo "<br>";
         echo "<a href='index.php'>";
         echo __("Click here to login");
         echo "</A>";
+        echo "<br>";
         process_sql ("UPDATE tusuario SET password = md5('$newpass') WHERE id_usuario = '$recover'");
+        $validated = true;
     } else {
+		echo '<div class="databox_login_msg" >';
         echo __("Invalid validation code");
+        echo '</div>';
     }
 }
 
-echo '</td>
-		</tr>	    
-		</table>
-		<div style="height:15px"> </div>
-		</form>
-	</div>
-</div>
-</center>';
+if (!$validated) {
+	echo "<br>";
+	echo "<form method=post>";
+	echo '<table class="pass_validate_table">';
+	echo "<tr><td colspan=2>";
+	print_input_text ('hash', '', '', '', 50, false, __('Validation code'));
+	echo "<td>";
+
+	print_submit_button (__('Validate'), '', false, 'class="sub next"');
+	echo "</form>";
+
+	echo '</table>';
+}
+
+echo '</div>
+</div>';
 ?>
 

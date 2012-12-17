@@ -93,6 +93,7 @@ CREATE TABLE `ttask` (
   `estimated_cost` float (9,2) unsigned NOT NULL DEFAULT 0.0,
   `id_group` int(10) NOT NULL default '0',
   `periodicity` enum ('none', 'weekly', 'monthly', 'year', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none',
+  `count_hours` TINYINT (1) DEFAULT '1',
   PRIMARY KEY  (`id`),
   KEY `itask_idx_1` (`id_project`),
   FOREIGN KEY (`id_project`) REFERENCES tproject(`id`)
@@ -853,4 +854,10 @@ CREATE TABLE `tnewsletter_queue_data` (
 
 -- status could be 0-ready, 1-sent, 2-error
 
-
+CREATE TABLE `ttranslate_string` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `lang` tinytext NOT NULL,
+  `string` text NOT NULL,
+  `translation` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

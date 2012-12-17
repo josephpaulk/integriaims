@@ -109,8 +109,8 @@ $table->data[4][0] .= "&nbsp;&nbsp;&nbsp;&nbsp;";
 $table->data[4][0] .= __('External user').'&nbsp;<input type="radio" class="chk" name="nivel" value="-1">';
 
 $table->data[5][0] = "<b>".__('Load file')."</b>";
-$table->data[6][0] = '<input name="file" type="file" /><br />';
-$table->data[6][3] = '<input type="submit" class="sub ok" value="' . __('Upload File') . '" />';
+$table->data[6][0] = '<input class="sub next" name="file" type="file" /><br />';
+$table->data[6][3] = '<input type="submit" class="sub next" value="' . __('Upload File') . '" />';
 echo '<form enctype="multipart/form-data" action="index.php?sec=users&sec2=godmode/usuarios/import_from_csv" method="POST">';
 print_input_hidden ('upload_file', 1);
 print_table ($table);

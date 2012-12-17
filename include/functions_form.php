@@ -445,7 +445,7 @@ function combo_project_user ($actual, $id_user, $disabled = 0, $return = false) 
 
 // Returns a combo with the tasks that current user is working on
 // ----------------------------------------------------------------------
-function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false) {
+function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false, $name=false) {
 	$output = '';
 	$values = array ();
 	
@@ -469,8 +469,13 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 	foreach ($tasks as $task){
 		$values[$task[0]] = array('optgroup' => $task[1], 'name' => '&nbsp;'.$task[2]);
 	}
+	
+	
+	if (!$name) {
+		$name = 'id_task';
+	}
 
-	$output .= print_select ($values, 'id_task', $actual, '', __('N/A'), '0', true,
+	$output .= print_select ($values, $name, $actual, '', __('N/A'), '0', true,
 		false, false, $label);
 
 	if ($return)

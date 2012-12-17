@@ -28,6 +28,7 @@ $types = array('histogram', 'progressbar');
 	
 $id_graph = get_parameter('id_graph', false);
 $graph_type = get_parameter('graph_type', '');
+$ttl = get_parameter("ttl", 1);
 
 if($id_graph && in_array($graph_type, $types)) {
 
@@ -35,7 +36,7 @@ if($id_graph && in_array($graph_type, $types)) {
 		exit;
 	}
 
-	$graph = unserialize_in_temp($id_graph);
+	$graph = unserialize_in_temp($id_graph, true, $ttl);
 
 	if (!isset($graph)) {
 		exit;

@@ -90,14 +90,13 @@ define ('RES_INPROCESS', 9);
 function give_acl ($id_user, $id_group, $access) {
 	global $config;
 	
-	
 	$return = enterprise_hook ('give_acl_extra', array ($id_user, $id_group, $access));
 	if ($return !== ENTERPRISE_NOT_HOOK)
 		return $return;
 	
 	// Opensource ACL implementation (not hooked to profiles / groups)
 	$admin = get_admin_user($id_user);
-	
+
 	if (($access == "UM") AND ($admin == 0))
 		return false;
 	
@@ -1357,13 +1356,13 @@ function get_project_manager_users($id_user = 0) {
  */
 function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true, $both = true, $anygroup = false, $search = '') {
 	global $config;
-
+	
 	$values = array ();
 
-	if ($id_user == 0) {
+	if ($id_user === 0) {
 		$id_user = $config['id_user'];
 	}
-
+	
 	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
 
         // External user only can see himself

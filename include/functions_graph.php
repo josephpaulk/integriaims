@@ -85,7 +85,7 @@ function graph_workunit_task ($width, $height, $id_task) {
 // Draw a simple pie graph with reported workunits for a specific PROJECT
 // ===============================================================================
 
-function graph_workunit_project ($width, $height, $id_project) {
+function graph_workunit_project ($width, $height, $id_project, $ttl=1) {
 	global $config;
 	$data = array();
 	
@@ -95,10 +95,11 @@ function graph_workunit_project ($width, $height, $id_project) {
 					tworkunit.id = tworkunit_task.id_workunit AND 
 					tworkunit_task.id_task = ttask.id AND
 					tproject.id = ttask.id_project 
-					GROUP BY ttask.name ORDER BY SUM(duration) DESC");
+					GROUP BY ttask.name ORDER BY SUM(duration) DESC LIMIT 12");
 
 	$data = NULL;
 	while ($row = mysql_fetch_array($res)) {
+		$row[1] = substr(safe_output ($row[1]),0,22);
 		$data[$row[1]] = $row[0];
 	}
 	
@@ -106,7 +107,7 @@ function graph_workunit_project ($width, $height, $id_project) {
 		echo __("There is no data to show");
 	}
 	else {
-		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 	}
 }
 
@@ -201,7 +202,7 @@ function graph_workunit_project_task_status ($width, $height, $id_project) {
 // time by each user.
 // ===============================================================================
 
-function graph_workunit_project_user_single ($width, $height, $id_project) {
+function graph_workunit_project_user_single ($width, $height, $id_project, $ttl=1) {
 	global $config;
 	$data = array();
 
@@ -221,7 +222,7 @@ function graph_workunit_project_user_single ($width, $height, $id_project) {
 	if ($data == NULL) {
 		echo __("There is no data to show");
 	} else {
-		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 	}
 }
 
@@ -492,16 +493,16 @@ function graphic_error ($flow = true) {
 // Draw a dynamic progress bar using GDlib directly
 // ***************************************************************************
 
-function progress_bar ($progress, $width, $height) {
+function progress_bar ($progress, $width, $height, $ttl=1) {
 	global $config;
 	
 	$out_of_lim_str = __("Out of limits");
 	$title = "";
 
-	return progressbar($progress, $width, $height, $title, $config['font'], 1, $out_of_lim_str);
+	return progressbar($progress, $width, $height, $title, $config['font'], 1, $out_of_lim_str, false, $ttl);
 }
 
-function project_activity_graph ($id_project){
+function project_activity_graph ($id_project, $ttl=1){
 	global $config;
 
     $incident = get_db_row ("tproject", "id", $id_project);
@@ -513,8 +514,11 @@ function project_activity_graph ($id_project){
     
 	$interval = (int) ($period / $resolution);
 
+	echo "<div style='width: 800px; text-align: center;'>";
+	echo "<span style='margin-right: 650px;'>";
 	echo __("Each bar is"). " ". human_time_description_raw($interval);
-
+	echo "</span>";
+	
 	$data = get_db_all_rows_sql ("SELECT tworkunit.duration as duration, 
             tworkunit.timestamp as timestamp  FROM tworkunit, tworkunit_task, ttask 
 			WHERE tworkunit_task.id_task = ttask.id
@@ -562,7 +566,8 @@ ORDER BY timestamp ASC");
    	$colors['graph']['border'] = "#000";
    	$colors['graph']['alpha'] = 100;
 
-	echo vbar_graph ($config['flash_charts'], $chart2, 650, 150, $colors, array(), "", "", "", "", $config['font'], $config['fontsize']);
+	echo vbar_graph ($config['flash_charts'], $chart2, 650, 150, $colors, array(), "", "", "", "", $config['font'], $config['fontsize'],true, $ttl);
+	echo "</div>";
 }
 
 function incident_activity_graph ($id_incident){
@@ -695,7 +700,7 @@ function task_activity_graph ($id_task){
 
 
 
-function histogram_2values($valuea, $valueb, $labela = "a", $labelb = "b", $mode = 1, $width = 200, $height = 30, $title = "") {
+function histogram_2values($valuea, $valueb, $labela = "a", $labelb = "b", $mode = 1, $width = 200, $height = 30, $title = "", $ttl=2) {
 	global $config;
 	
 	$data = array();
@@ -706,7 +711,7 @@ function histogram_2values($valuea, $valueb, $labela = "a", $labelb = "b", $mode
 	
 	$max = max($valuea, $valueb);
 
-	return histogram($data_json, $width, $height, $config['font'], $max, $title, $mode);
+	return histogram($data_json, $width, $height, $config['font'], $max, $title, $mode, $ttl);
 }
 
 function project_tree ($id_project, $id_user) {

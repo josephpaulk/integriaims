@@ -41,7 +41,7 @@ $table->data = array ();
 
 $table->data[0][0] = "<span style='font-size: 10px'>". __("Please note that you cannot upload .php or .pl files, as well other source code formats. Please compress that files prior to upload (using zip or gz)"). "</span>";
 
-$table->data[1][0] = print_textarea ('file_description', 8, 1, '', '', true, __('Description'));
+$table->data[1][0] = print_textarea ('file_description', 8, 1, '', "style='resize:none'", true, __('Description'));
 
 if (defined ('AJAX'))
 	$action = 'ajax.php?page=operation/incidents/incident_detail';
@@ -50,7 +50,7 @@ else
 
 $into_form = print_table ($table, true);
 $into_form .= '<div class="button" style="width: '.$table->width.'">';
-$into_form .= print_button (__('Upload'), 'upload', false, '', 'class="sub next"', true);
+$into_form .= print_button (__('Upload'), 'upload', false, '', 'class="sub upload"', true);
 $into_form .= '</div>';
 $into_form .= print_input_hidden ('id', $id, true);
 $into_form .= print_input_hidden ('upload_file', 1, true);

@@ -168,6 +168,10 @@ function load_config(){
                 $config["incident_creation_wu"] = 0;
         }
 
+	if (!isset($config["graphviz_win"])){
+                $config["graphviz_win"] = "C:\Program Files\Graphviz 2.28\bin";
+    }
+		
     ini_set("post_max_size",$config["max_file_size"]);
     ini_set("upload_max_filesize",$config["max_file_size"]);
 

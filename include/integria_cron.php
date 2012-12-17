@@ -122,8 +122,8 @@ function synchronize_pandora_inventory () {
 	$labels = get_inventory_generic_labels ();
 
 	$labelsk = array_keys($labels);
-
-	$url = $config['pandora_url'].'/include/api.php?op=get&pass='.$config['pandora_api_password'].'&op2=all_agents&return_type=csv&other=|||||'.$separator.'&other_mode=url_encode_separator_|';
+	
+	$url = $config['pandora_url'].'/include/api.php?op=get&apipass='.$config['pandora_api_password'].'&op2=all_agents&return_type=csv&user='.$config['pandora_user'].'&pass='.$config['pandora_pass'];
 	
 	$return = call_api($url);
 
@@ -137,7 +137,7 @@ function synchronize_pandora_inventory () {
 
 		$values = array();
 
-		$agent = explode($separator,$agent_csv);
+		$agent = explode(";",$agent_csv);
 		$agent_id = $agent[0];
 		$agent_name = $agent[1];
 		$agent_name_safe = safe_input($agent_name);
@@ -191,8 +191,8 @@ function run_daily_check () {
 	run_project_check ();
 	run_task_check ();
 	run_autowu();
-        run_auto_incident_close();
-        delete_session_data();
+    run_auto_incident_close();
+    delete_session_data();
 	synchronize_pandora_inventory();
 	delete_tmp_files();
 }
@@ -762,7 +762,7 @@ function run_mail_check () {
 		$struct = imap_fetchstructure($mail, $i);
 		
 		$encoding = $struct->{'encoding'};
-	 	print "Encoding => ".$encoding."\n";	
+	 
 		$header = imap_header($mail, $i); 	
 	
 		$subject = imap_utf8($header->{'subject'});

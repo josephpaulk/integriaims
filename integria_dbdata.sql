@@ -49,7 +49,7 @@ INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (2
 INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (3,'Customer #B','eye.png',0, 'admin');
 INSERT INTO `tgrupo` (id_grupo, nombre, icon, parent, id_user_default) VALUES (4,'Engineering','computer.png',0, 'admin');
 
-INSERT INTO `tlanguage` VALUES ('en','English');
+INSERT INTO `tlanguage` VALUES ('en_GB','English');
 INSERT INTO `tlanguage` VALUES ('es','Español');
 INSERT INTO `tlanguage` VALUES ('bn', 'বাংলা');
 INSERT INTO `tlanguage` VALUES ('da','Dansk');
@@ -102,3 +102,4 @@ INSERT INTO `tprofile` VALUES (5,'Global Manager',     1,1,1,1,1,1,1,1,1,1,1,1,1
 
 INSERT INTO `tusuario_perfil` VALUES (2,'admin',5,1,'admin');
 
+INSERT INTO `tinventory_reports` VALUES (1,'List&#x20;company&#x20;contacts','SELECT&#x20;C.name&#x20;AS&#x20;Name,&#x20;C.address&#x20;AS&#x20;Address,&#x20;CC.fullname&#x20;AS&#x20;Contact,&#x20;CC.position&#x20;Position,&#x20;CC.email&#x20;AS&#x20;Email,&#x20;CC.mobile&#x20;AS&#x20;Mobile&#x20;FROM&#x20;tcompany&#x20;C,&#x20;tcompany_contact&#x20;CC&#x20;WHERE&#x20;CC.id_company&#x20;=&#x20;C.id;'),(2,'Days&#x20;left&#x20;of&#x20;contracts','SELECT&#x20;C.name&#x20;AS&#x20;Name,&#x20;C.contract_number&#x20;AS&#x20;&quot;Contract&#x20;Number&quot;,&#x20;DATEDIFF&#40;C.date_end,&#x20;C.date_begin&#41;&#x20;as&#x20;&quot;Days&#x20;left&quot;,&#x20;CO.name&#x20;AS&#x20;Company&#x20;from&#x20;tcontract&#x20;C,&#x20;tcompany&#x20;CO&#x20;WHERE&#x20;C.id_company&#x20;=&#x20;CO.id;');

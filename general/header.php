@@ -21,9 +21,9 @@ $search_string = safe_output (get_parameter ("search_string",""));
 // I prefer to make the layout with tables here, it's more exact and 
 // doesnt depend of CSS interpretation. Please DO NOT TOUCH.
 
-echo "<table border=0 cellpadding=0 cellspacing=0 style='margin: 0px; padding:0px; padding-left: 5px;'>";
+echo "<table class='table_header' border=0 cellpadding=0 cellspacing=0>";
 echo "<tr>";
-echo "<td width=180>";
+echo "<td width=250>";
 
 // Custom logo per group
 if ($config["enteprise"] == 1){
@@ -52,7 +52,7 @@ else
 echo ' <span style="font-weight: bold; color: #ffffff"">['.$config['id_user'].']</span></a>';
 
 echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-echo '<a href="index.php?logout=1"><img src="images/lock.png"> '. __('Logout').'</a>';
+echo '<a href="index.php?logout=1"><img src="images/lock.png"><span style="font-weight: bold; color: #ffffff"> '. __('Logout').'</span></a>';
 echo '</td><td width=300 style="padding: 0px; margin: 0px;">';
 echo "<form method=post action='index.php?sec2=operation/search'>";
 echo "&nbsp;";

@@ -246,9 +246,45 @@ if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
 	}
 }
 
+// Contracts
+if (give_acl($config["id_user"], 0, "VR") && $show_customers != MENU_HIDDEN){
+
+        $sql = "SELECT * FROM tcontract  WHERE name LIKE '%".$search_string."%' OR description LIKE '%".$search_string."%' AND id_group in ". get_user_groups_for_sql ($config["id_user"]);
+
+        $contracts = get_db_all_rows_sql ($sql);
+
+        if ($contacts !== false) {
+
+                echo "<h3>";
+                echo __("Contracts");
+                echo "</h3>";
+
+                $table->width = '80%';
+                $table->class = 'listing';
+                $table->data = array ();
+                $table->size = array ();
+                $table->style = array ();
+                $table->head[0] = __('Name');
+                $table->head[1] = __('Company');
+                $table->head[2] = __('Date Begin');
+                $table->head[3] = __('Date End');
+
+                foreach ($contracts as $contract) {
+                        $data = array ();
+
+                        $data[0] = "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&id=".$contract["id"]."'>".$contract["name"].'</a>';
+                        $data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$contract["id_company"]."'>" .
+                        $data[2] = $contract["date_begin"];
+                        $data[3] = $contract["date_end"];
+                        array_push ($table->data, $data);
+                }
+                print_table ($table);
+        }
+}
+
 
 // Companies
-if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
+if (give_acl($config["id_user"], 0, "VR") && $show_customers != MENU_HIDDEN ){
 
 	$sql = "SELECT * FROM tcompany WHERE 
 		name LIKE '%".$search_string."%'

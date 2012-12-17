@@ -35,6 +35,7 @@ $new_contract = (bool) get_parameter ('new_contract');
 $create_contract = (bool) get_parameter ('create_contract');
 $update_contract = (bool) get_parameter ('update_contract');
 $delete_contract = (bool) get_parameter ('delete_contract');
+$get_group_combo = (bool) get_parameter('get_group_combo');
 
 if ($get_sla) {
 	$sla = get_contract_sla ($id, false);
@@ -52,6 +53,15 @@ if ($get_company_name) {
 		echo json_encode (reset($company));
 		return;
 	}
+}
+
+if ($get_group_combo) {
+	$group = get_parameter("group");
+	$ret = print_select_from_sql ('SELECT id, name FROM tcompany WHERE id_grupo = '.$group.' ORDER BY name',
+			'id_company', false, '', '', '', true, false, false);	
+			
+	echo $ret;
+	return;
 }
 
 // CREATE
@@ -187,7 +197,7 @@ if ($id | $new_contract) {
 		$private = $contract["private"];
 	}
 	
-	$table->width = '90%';
+	$table->width = '800px';
 	$table->class = 'databox';
 	$table->colspan = array ();
 	$table->colspan[4][0] = 2;
@@ -198,11 +208,23 @@ if ($id | $new_contract) {
 		$table->data[0][1] = print_checkbox ('private', '1', $private, true, __('Private')). print_help_tip (__("Private contracts are visible only by users of the same company"), true);
 		$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
 		
+		//Select a default group for group and company combo
+		if ($id_group === "1") {
+			$user_groups = get_user_groups($config["id_user"], "VR");
+			
+			$keys = array_keys($user_groups);
+					
+			//Key 0 is group All, check if key 1 exists
+			if (array_key_exists(1, $user_groups)) {
+				$id_group = $keys[1];
+			}
+		}
+		
 		$table->data[1][1] = combo_groups_visible_for_me ($config["id_user"], "id_group", 0, "VR", $id_group, true, true);
 			
 		$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
 		$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
-		$table->data[3][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
+		$table->data[3][0] = print_select_from_sql ('SELECT id, name FROM tcompany WHERE id_grupo = '.$id_group.' ORDER BY name',
 			'id_company', $id_company, '', '', '', true, false, false, __('Company'));
 			
 		$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
@@ -241,7 +263,7 @@ if ($id | $new_contract) {
 		$table->data[3][1] = "<b>".__('Description')."</b><br>$description<br>";
 	}
 	
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
+	echo '<form id="contract_form" method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail" onsubmit="return validate_contract_form()">';
 	print_table ($table);
 	
 	if (($id && give_acl ($config["id_user"], $id_group, "VW")) || (!$id && give_acl ($config["id_user"], $id_group, "VM"))) {
@@ -264,6 +286,8 @@ if ($id | $new_contract) {
 	$search_company_role = (int) get_parameter ('search_company_role');
 	$search_date_end = get_parameter ('search_date_end');
 	$search_date_begin = get_parameter ('search_date_begin');
+	$search_date_begin_beginning = get_parameter ('search_date_begin_beginning');
+	$search_date_end_beginning = get_parameter ('search_date_end_beginning');
 	
 	$where_clause = " 1 = 1 ";
 	
@@ -284,6 +308,14 @@ if ($id | $new_contract) {
 	if ($search_date_begin != "") {
 		$where_clause .= sprintf (' AND date_end >= "%s"', $search_date_begin);
 	}
+		
+	if ($search_date_end_beginning != "") {
+		$where_clause .= sprintf (' AND date_begin <= "%s"', $search_date_end_beginning);
+	}
+	
+	if ($search_date_begin_beginning != "") {
+		$where_clause .= sprintf (' AND date_begin >= "%s"', $search_date_begin_beginning);
+	}	
 	
 	$is_admin = get_admin_user ($config['id_user']);
 	
@@ -296,33 +328,63 @@ if ($id | $new_contract) {
 		}
 	}
 	
-	$table->width = '100%';
-	$table->class = 'search-table';
-	$table->style = array ();
-	$table->data = array ();
-	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15,
-		100, true, __('Search'));
-	$table->data[0][1] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Ending from'));
-	$table->data[0][1] .= "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
-	$table->data[0][2] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Ending to'));
-	$table->data[0][2] .= "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
-
-	$table->data[0][3] = print_select (get_company_roles (), 'search_company_role',
-		$search_id_company, '', __('All'), 0, true, false, false, __('Company roles'));
+	echo '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post">';
 	
-	$table->data[0][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);;
+	echo "<table class='search-table'>";
+	echo "<tr>";
 	
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
-	print_table ($table);
+	echo "<td colspan=2>";
+	echo print_input_text ("search_text", $search_text, "", 38, 100, true, __('Search'));
+	echo "</td>";
+	
+	echo "<td colspan=2>";
+	echo print_select (get_company_roles (), 'search_company_role',
+		$search_id_company, '', __('All'), 0, true, false, false, __('Company roles'));	
+	echo "</td>";
+	
+	echo "</tr>";
+	
+	echo "<tr>";
+	
+	echo "<td>";
+	echo print_input_text ('search_date_begin_beginning', $search_date_begin_beginning, '', 15, 20, true, __('Beginnig From'));
+	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
+	echo "</td>";
+	
+	echo "<td>";
+	echo print_input_text ('search_date_end_beginning', $search_date_end_beginning, '', 15, 20, true, __('Beginnig To'));
+	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
+	echo "</td>";
+	
+	echo "<td>";
+	echo print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Ending From'));
+	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
+	echo "</td>";
+	
+	echo "<td>";
+	echo print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Ending To'));
+	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";	
+	echo "</td>";
+	
+	echo "</tr>";
+	
+	echo "<tr>";
+	echo "<td colspan=4 align='right'>";
+	echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);	
+	echo "</td>";
+	echo "</tr>";
+	
+	echo "</table>";
+	
 	echo '</form>';
-	
+		
 	$contracts = get_contracts(false, "$where_clause ORDER BY date_end DESC");
 
 	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/contracts/contract_detail");
 
 	if ($contracts !== false) {
 		
-		$table->width = "95%";
+		$table->width = "800px";
 		$table->class = "listing";
 		$table->cellspacing = 0;
 		$table->cellpadding = 0;
@@ -404,7 +466,76 @@ $(document).ready (function () {
 			};
 		}
 	});
+	
+	$("#id_group").change (function() {
+	
+		refresh_company_combo();
+	});
 });
+
+function toggle_advanced_fields () {
+	
+	$("#advanced_fields").toggle();
+}
+
+function refresh_company_combo () {
+	
+	var group = $("#id_group").val();
+	
+	values = Array ();
+	values.push ({name: "page",
+		value: "operation/contracts/contract_detail"});
+	values.push ({name: "group",
+		value: group});
+	values.push ({name: "get_group_combo",
+		value: 1});
+	jQuery.get ("ajax.php",
+		values,
+		function (data, status) {
+			$("#id_company").remove();
+			$("#label-id_company").after(data);
+		},
+		"html"
+	);
+
+}
+
+function validate_contract_form() {
+	
+	var val = $("#id_company").val();
+	var name = $("#text-name").val();
+	var error_msg = "";
+
+	if (val == null || name == "") {
+		
+		var error_textbox = document.getElementById("error_text");
+		
+		
+		if (val == null) {
+			console.log("paso");
+			error_msg = "<?php echo __("Company no selected")?>";
+			pulsate("#id_company");
+		} else if (name == "") {
+			error_msg = "<?php echo __("Name can't be empty")?>";
+			pulsate("#text-name");
+		}
+		
+		if (error_textbox == null) {
+			$('#contract_form').prepend("<h3 id='error_text' class='error'>"+error_msg+"</h3>");
+		} else {
+			$("#error_text").html(error_msg);
+		}
+		
+		pulsate("#error_text");
+		
+		return false;  
+		
+	} 
+	
+	return true;
+	
+}
+
 </script>
 
 

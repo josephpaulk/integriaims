@@ -85,7 +85,7 @@ object').'</h3>';
 echo '<div id="tabs">';
 
 /* Tabs list */
-echo '<ul style="height: 30px;" class="ui-tabs-nav">';
+echo '<ul class="ui-tabs-nav">';
 if ($id) {
 	echo '<li class="ui-tabs"><a href="#ui-tabs-1"><span>'.__('Search').'</span></a></li>';
 	echo '<li class="ui-tabs-selected"><a href="ajax.php?page=operation/inventories/inventory_detail&id='.$id.'"><span>'.__('Details').'</span></a></li>';

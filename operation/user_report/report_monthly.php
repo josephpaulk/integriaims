@@ -82,7 +82,7 @@
 	
 	print_input_text ('search', $search, '', 15);
 	echo "</td><td>";
-	echo "<input type=submit class='next' value='".__('Update')."'>";
+	echo "<input type=submit class='sub next' value='".__('Update')."'>";
 	echo "</form>";
 	echo "</table>";
 	

@@ -35,7 +35,9 @@ if ($update) {
 	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
     $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
 	$config["flash_charts"] = get_parameter ("flash_charts");
-
+	$config["graphviz_win"] = get_parameter ("graphviz_win");
+	
+	update_config_token ("graphviz_win", $config["graphviz_win"]);
     update_config_token ("block_size", $config["block_size"]);
     update_config_token ("fontsize", $config["fontsize"]);
     update_config_token ("font", $config["font"]);
@@ -70,6 +72,8 @@ function get_font_files () {
 }
 
 $fontlist = get_font_files ();
+echo $config["font"];
+print_r($fontlist);
 
 $table->data[0][1] = print_select ($fontlist, 'font', $config["font"], '', '', '',  true, 0, true, __('Font for graphs')) ;
 
@@ -100,6 +104,8 @@ $flash_options[0]="Disabled";
 $flash_options[1]="Enabled";
 
 $table->data[3][0] = print_select ($flash_options, 'flash_charts', $config["flash_charts"], '','','',true,0,true, __('Flash charts'));
+
+// $table->data[3][1] = print_input_text ("graphviz_win", $config["graphviz_win"], '', 45, 225, true, __('Graphviz Path (only for Windows)'));
 
 echo "<form name='setup' method='post'>";
 

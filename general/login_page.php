@@ -13,28 +13,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-// Failed login ??
-
-if (isset ($login_failed)) {
-	
-	echo '<div class="databox_login_msg" >';
-	echo "<div style='vertical-align: top; position: relative; left: 0px; top: 0px; padding: 0px; margin: 0px; width: 320px;'>";
-	echo '<h3>';
-	echo __('Login failed');
-	echo '</h3><br>';
-
-	echo __("If you have lost or does not remember your password");
-	echo " <a href='index.php?recover=$nick'>";
-	echo "<b>click here</b>";
-	echo "</a> ";
-	echo "for sending you instructions to your mailbox on how to change your password.";
-	$nick = get_parameter ($nick);
-
-	echo '</div></div>';
-}
-
-
-
 echo '<div class="databox_login" id="login">';
 ?>
 
@@ -53,29 +31,74 @@ echo '<div class="databox_login" id="login">';
 	foreach ($_POST as $name => $value)
 		print_input_hidden ($name, $value);
 
-	echo "<div id='login_form_data'>";
-	echo "<table border=0>";
-	echo "<tr>";
-	echo "<td style='padding-left: 15px; _padding-left: 0px; width: 200px'>";
+	//Select style for global box, normal or fail
+	if (isset ($login_failed)) {
+
+		echo "<div id='login_form_data_fail'>";
+	
+	} else {
+		echo "<div id='login_form_data'>";
+	}
+	
 	echo "<a href='index.php'>";
 	if (isset($config["site_logo"]))
 		echo '<img src="images/'.$config['site_logo'].'" alt="logo">';
 	else
 		echo '<img src="images/loginlogo.png" alt="logo">';
+	
 	echo '</a>';
+
+	// Failed login ??
+
+	if (isset ($login_failed)) {
+		echo '<div class="databox_login_msg" >';
+		echo '<h3>';
+		echo __('Please re-enter your password');
+		echo '</h3><br>';
+		echo __("The password you entered is incorrect, please try again.");
+		echo "<br><br>";
+		echo __("Forgot your passowrd?");
+		echo " <a href='index.php?recover=$nick'>";
+		echo "<b>".__("Click here to reset it")."</b>";
+		echo "</a> ";
+		$nick = get_parameter ($nick);
+
+		echo '</div>';
+	}
+	
+	//Login table begins
+	echo "<table class='login_table'>";	
+	
+	echo '<tr>';
+	echo "<td colspan=2 class='login_label'>";
+	echo "<strong>".__("Username")."</strong>";
 	echo '</td>';
-	echo "<td valign=top style='padding-top: 14px; width: 100px; line-height: 11px;'>";
-	
+	echo '</tr>';
+	echo '<tr>';
+	echo "<td colspan=2 class='login_input'>";
 	echo print_input_text_extended ("nick", '', "nick", '', '', '', false, '', 'class="login"', true);
-	echo "<br><br>";
+	echo '</td>';
+	echo '</tr>';
+	echo '<tr>';
+	echo '<td colspan=2 class="login_label">';
+	echo "<strong>".__("Password")."</strong>";
+	echo '</td>';
+	echo '</tr>';
+	echo '<tr>';
+	echo "<td colspan=2 class='login_input'>";
 	echo print_input_text_extended ("pass", '', "pass", '', '', '', false, '', 'class="login"', true, true);
-
-	echo "<tr><td colspan=2 style='padding-left: 270px;'>";
-	
-	echo print_input_image ("Login", "images/loginbutton.png", 'Login');
-
+	echo '</td>';
+	echo '</tr>';
+	echo "<tr>";
+	echo "<td>";
+	echo '<div id="ver_num">';
+	echo $config["version"];
+	echo "</div>";
+	echo "</td>";
+	echo "<td class='login_button'>";
+	echo '<input class="sub next login_button" type="submit" value="LOGIN" name="Login">';
 	echo '</td></tr>';
-	echo "</table>";	
+	echo "</table>";
 	echo "</div>";
 	
 ?>
@@ -87,11 +110,6 @@ echo '<div class="databox_login" id="login">';
 echo '<div id="bottom_logo">';
 echo "<img src='images/loginbacklogo.png'>";
 echo "</div>";
-
-echo '<div id="ver_num">';
-echo $config["version"];
-echo "</div>";
-
 
 ?>
 

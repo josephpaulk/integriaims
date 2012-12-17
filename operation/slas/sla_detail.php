@@ -154,7 +154,7 @@ if ($id || $new_sla) {
 	$table->data[0][0] = print_input_text ("name", $name, "", 30, 100, true, __('SLA name'));
 	$table->data[0][1] = print_checkbox ('enforced', 1 ,$enforced, true, __('Enforced'));
 	$table->data[1][0] = print_input_text ('min_response', $min_response, '',
-		5, 100, true, __('Min. response time (in hours)'));
+		5, 100, true, __('Max. response time (in hours)'));
 
 	$table->data[1][1] = print_input_text ('max_response', $max_response, '',
 		5, 100, true, __('Max. resolution time (in hours)'));
@@ -229,7 +229,7 @@ if ($id || $new_sla) {
 		$table->style = array ();
 		$table->style[0] = 'font-weight: bold';
 		$table->head[0] = __('Name');
-		$table->head[1] = __('Min.Response');
+		$table->head[1] = __('Max.Response');
 		$table->head[2] = __('Max.Resolution');
 		$table->head[3] = __('Max.Incidents');
 		$table->head[4] = __('Max.Inactivity');

@@ -52,6 +52,7 @@ $priority = 1;
 $id_group = 0;
 $result_output = "";
 $parent = 0;
+$count_hours = 1;
 
 // ACL Check for this task
 // This user is assigned to this task ?
@@ -97,13 +98,14 @@ if ($operation == "insert") {
 		$periodicity = (string) get_parameter ('periodicity', 'none');
 		$estimated_cost = (int) get_parameter ('estimated_cost');
 		$id_group = (int) get_parameter ('group', 1);
+		$count_hours = (int) get_parameter("count_hours");
 	
 		$sql = sprintf ('INSERT INTO ttask (id_project, name, description, priority,
 			completion, start, end, id_parent_task, id_group, hours, estimated_cost,
-			periodicity)
-			VALUES (%d, "%s", "%s", %d, %d, "%s", "%s", %d, %d, %d, %f, "%s")',
+			periodicity, count_hours)
+			VALUES (%d, "%s", "%s", %d, %d, "%s", "%s", %d, %d, %d, %f, "%s", %d)',
 			$id_project, $name, $description, $priority, $completion, $start, $end,
-			$parent, $id_group, $hours, $estimated_cost, $periodicity);
+			$parent, $id_group, $hours, $estimated_cost, $periodicity, $count_hours);
 		$id_task = process_sql ($sql, 'insert_id');
 		if ($id_task !== false) {
 			$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
@@ -169,16 +171,17 @@ if ($operation == "update") {
 	$id_group = (int) get_parameter ('group', 1);
 	$start = get_parameter ('start_date', date ("Y-m-d"));
 	$end = get_parameter ('end_date', date ("Y-m-d"));
-
+	$count_hours = get_parameter("count_hours");
+	
 	$sql = sprintf ('UPDATE ttask SET name = "%s", description = "%s",
 			priority = %d, completion = %d,
 			start = "%s", end = "%s", hours = %d,
 			periodicity = "%s", estimated_cost = "%f",
-			id_parent_task = %d, id_group = %d
+			id_parent_task = %d, id_group = %d, count_hours = %d
 			WHERE id = %d',
 			$name, $description, $priority, $completion, $start, $end,
 			$hours, $periodicity, $estimated_cost, $parent, $id_group,
-			$id_task);
+			$count_hours, $id_task);
 			
 	$result = process_sql ($sql);
 
@@ -188,8 +191,9 @@ if ($operation == "update") {
 		$operation = "view";
 		task_tracking ($id_task, TASK_UPDATED);
 		
-		// Only recalculate task completion if the completion % has not been modified
-		if($current_completion == $completion) {
+		
+		// ONLY recalculate the complete if count hours flag is activated
+		if($count_hours) {
 			set_task_completion ($id_task);
 		}
 	} else {
@@ -214,6 +218,7 @@ if ($operation == "view") {
 	$parent = $task['id_parent_task'];
 	$id_group = $task['id_group'];
 	$periodicity = $task['periodicity'];
+	$count_hours = $task['count_hours'];
 		
 } 
 
@@ -276,6 +281,10 @@ $table->data[3][1] = print_input_text ('end_date', $end, '', 15, 15, true, __('E
 
 $table->data[4][0] = print_select (get_periodicities (), 'periodicity',
 	$periodicity, '', __('None'), 'none', true, false, false, __('Recurrence'));
+	
+$table->data[4][1] = print_checkbox_extended ('count_hours', 1, $count_hours,
+	        false, '', '', true, __('Completion based on hours'))
+	        .print_help_tip (__("Calculated task completion using workunits inserted by project members, if not it uses Completion field of this form"), true);
 
 $table->data[5][0] = print_input_text ('hours', $hours, '', 5, 5, true, __('Estimated hours'));
 

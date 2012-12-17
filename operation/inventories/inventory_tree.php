@@ -23,7 +23,16 @@ function print_child_tree ($id, $depth = 0) {
 	
 	foreach ($children as $child) {
 		print_inventory_object ($child['id'], $children, array (), true, true, $depth);
-		print_child_tree ($child['id'], $depth + 1);
+		
+		if ($child['id_contract']) {
+			
+			/* Only check ACLs if the inventory has a contract */
+			if (! give_acl ($config['id_user'], get_inventory_group ($child['id']), "VR")) {
+				continue;
+			} else {
+				print_child_tree ($child['id'], $depth + 1);
+			}
+		}
 	}
 }
 

@@ -234,3 +234,10 @@ if len(sys.argv) == 2:
 	<?php
 }
 ?>
+
+
+<script>
+$(document).ready (function () {
+	$("input[class='submit']").addClass("sub search");
+});
+</script>

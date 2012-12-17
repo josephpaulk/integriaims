@@ -67,6 +67,17 @@ foreach($project_groups as $group){
 			$projects = array();
 		}
 		
+		//Check project ACLs
+		$aux_projects = array();
+		foreach ($projects as $p) {
+			if (user_belong_project ($config['id_user'], $p['id'])) {
+					array_push($aux_projects, $p);
+			}
+		}
+		
+		//Set filtered projects
+		$projects = $aux_projects;
+		
 		$nprojects = count($projects);
 		
 		echo "<tr>";

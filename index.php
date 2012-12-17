@@ -98,9 +98,15 @@ if ($change_pass == 1) {
 	}
 }
 
-
-$html_header = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head>';
+$html_header = '<!--[if !IE]> -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<![endif]-->
+<!--[if IE]>																																									
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<meta http-equiv="X-UA-Compatible" content="IE=9" >
+<meta http-equiv="X-UA-Compatible" content="IE=8" >
+<html xmlns="http://www.w3.org/1999/xhtml">
+<![endif]-->';
 
 // This is a clean and/or PDF output ?
 $clean_output = get_parameter ("clean_output", 0);
@@ -451,6 +457,9 @@ if ($pdf_output == 1){
 	$pdfObject->setFooterHTML("Integria IMS Report", true);
 	$pdfObject->setHeaderHTML("<p align=right style='border-bottom: 1px solid #666;'> Integria IMS Report - ".date("D F d, Y H:i:s", $time).'</p>', true);
 
+	//Clean all html entities before render to PDF
+	$html = safe_output($html);
+	
 	$pdfObject->addHTML($html);
 	
 	if ($pdf_filename != "")

@@ -4,8 +4,8 @@
 }
 
 .dialog .ui-dialog-titlebar {
-	border-bottom: 1px solid #d8d2aa;
-	background-color: #2179B1;
+	border-bottom: 1px solid #808080;
+	background-color: #808080;
 	padding: 0px;
 	height: 28px;
 	font-weight: bold;
@@ -64,7 +64,7 @@
 /* Dialog handle styles */
 .dialog .ui-resizable-n {
 	cursor: n-resize;
-	height: 6px;
+	height: 3px;
 	width: 100%;
 	top: 0px;
 	left: 0px;
@@ -72,7 +72,7 @@
 
 .dialog .ui-resizable-s {
 	cursor: s-resize;
-	height: 8px;
+	height: 3px;
 	width: 100%;
 	bottom: 0px;
 	left: 0px;
@@ -80,7 +80,7 @@
 
 .dialog .ui-resizable-e {
 	cursor: e-resize;
-	width: 7px;
+	width: 3px;
 	right: 0px;
 	top: 0px;
 	height: 100%;
@@ -88,7 +88,7 @@
 
 .dialog .ui-resizable-w {
 	cursor: w-resize;
-	width: 7px;
+	width: 3px;
 	left: 0px;
 	top: 0px;
 	height: 100%;
@@ -124,4 +124,9 @@
 	height: 29px;
 	right: 0px;
 	top: 0px;
+}
+
+.ui-dialog {
+	border-radius: 10px;
+	border: 3px solid #DEDEDE;
 }

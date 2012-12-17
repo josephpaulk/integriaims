@@ -12,11 +12,6 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-
-$config["language_code"]="en";
-$config["build_version"] = "dev";
-$config["version"] = "3.0";
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -36,14 +31,12 @@ $config["version"] = "3.0";
 <body>
 
 <center>
-<div id='login_f' style='width: 500px; margin-top: 100px; background-color: #ffffff; border: 2px solid #000000; padding: 10px;'>
+<div id='install_msg_box'>
 	<h1 id="log_f">Installer active</h1>
 	<div>
-		<img src="images/integria_white.png" border="0"></a><br><font size="1">
-		<?php echo $config["version"].' Build '.$config["build_version"]; ?>
-		</font>
+		<img src="images/integria_white.png" border="0"></a><br>
 	</div>
-	<div class="msg"><br><br>For security reasons, normal operation is not possible until you delete installer file. Please delete <b>./install.php</b> file before running Pandora FMS Console.</div>
+	<div class="msg"><br><br>For security reasons, normal operation is not possible until you delete installer file. Please delete <b>./install.php</b> file before running Integria IMS.</div>
 </div>
 </center>
 </body>

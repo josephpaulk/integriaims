@@ -41,7 +41,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 	
 	echo "<div class='portlet' style='border:padding: 0px; margin: 0px;'>";
 	echo '<a href="javascript:;" onclick="$(\'#projects\').slideToggle (); return false">';
-	echo "<h2>".__('Projects')."</h2>";
+	echo "<h3>".__('Projects')."</h3>";
 	echo "</a>";
 	echo "<div id=projects style='padding: 0px; margin: 0px'>";
 
@@ -684,7 +684,7 @@ if (($config["enable_newsletter"] == 1) && ($sec == "customers") && (give_acl ($
 
 
 // MANUFACTURER
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "VM") && $show_inventory != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Manufacturers')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -701,7 +701,7 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inven
 }
 
 // BUILDINGS
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "IM") && $show_inventory != MENU_HIDDEN) {
+if ($sec == "inventory" && give_acl ($config["id_user"], 0, "VM") && $show_inventory != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3 class='admin'>".__('Buildings')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -747,14 +747,16 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR") && $show_kb != MENU_H
 		echo "<li>";
 	echo "<a href='index.php?sec=kb&sec2=operation/kb/browse'>".__('Browse')."</a></li>";
 
-	if  (give_acl($config["id_user"], 0, "KM")) {
+	if  (give_acl($config["id_user"], 0, "KW")) {
 		// KB Add
 		if (($sec2 == "operation/kb/browse") AND (isset($_GET["create"])))
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=kb&sec2=operation/kb/browse&create=1'>".__('Create KB item')."</a></li>";
+	}
 
+	if  (give_acl($config["id_user"], 0, "KM")) {
 		// KB Manage Cat.
 		if ($sec2 == "operation/kb/manage_cat")
 			echo "<li id='sidesel'>";
@@ -897,6 +899,8 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates'>".__('Mail templates setup')."</a></li>";
 
+/* DISABLED UNTIL WE FIX IT
+
 	// Update Manager
 	if ($sec2 == "godmode/updatemanager/main")
 		echo "<li id='sidesel'>";
@@ -910,7 +914,7 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/updatemanager/settings'>".__('Configure updates')."</a></li>";
-
+*/
 	// File/Image management
 	if ($sec2 == "godmode/setup/filemgr")
 		echo "<li id='sidesel'>";
@@ -976,6 +980,9 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_pandora'>".__('Pandora FMS inventory')."</a></li>";
+	
+	// Pandora FMS translation
+	enterprise_include("godmode/sidemenu_translate_setup.php");
 
 	echo "</ul>";
 	echo "</div>";
@@ -1055,32 +1062,27 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual'>".__('Annual report')."</a></li>";
-		
-		
-		$user_level = get_db_value("nivel", "tusuario", "id_usuario", $config['id_user']);
-	
-		//If user level == -1 the user is external user.
-		if ($user_level != -1) {
-
-			if ($sec2 == "operation/inventories/inventory_reports")
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports">'.__('Custom reports').'</a>';
-			echo '</li>';
-
-			if ($sec2 == "operation/inventories/inventory_reports_detail")
-				echo "<li id='sidesel'>";
-			else
-				echo "<li>";
-			echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail">'.__('Create report').'</a>';
-			echo '</li>';
-
-			enterprise_hook ('show_programmed_reports', array($sec2));
-		}
-		
-		echo "</ul></div>";	
 	}
+	
+	if (dame_admin ($config['id_user'])) {
+		if ($sec2 == "operation/inventories/inventory_reports")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports">'.__('Custom reports').'</a>';
+		echo '</li>';
+			
+		if ($sec2 == "operation/inventories/inventory_reports_detail")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo '<a href="index.php?sec=users&sec2=operation/inventories/inventory_reports_detail">'.__('Create report').'</a>';
+		echo '</li>';
+
+		enterprise_hook ('show_programmed_reports', array($sec2));
+	}
+		
+	echo "</ul></div>";	
 
 	// PEOPLE MANAGEMENT
 	if (give_acl($config["id_user"], 0, "UM") && $show_people != MENU_LIMITED){
@@ -1136,7 +1138,6 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 
 // Wiki
 if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
-	require_once("include/wiki/lionwiki_lib.php");
 	
 	echo "<div class='portlet'>";
 	echo "<h3>".__('Wiki')."</h3>";
@@ -1184,7 +1185,8 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 		if (isset($config['conf_var_dir']))
 			$conf_var_dir = $config['conf_var_dir'];
 		$conf['var_dir'] = $conf_var_dir;
-		
+	
+		require_once("include/wiki/lionwiki_lib.php");	
 		ob_start();
 		lionwiki_show($conf, false);
 		$form_search = ob_get_clean();

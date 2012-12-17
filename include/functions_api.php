@@ -338,16 +338,39 @@ function api_update_incident ($return_type, $user, $params){
 	$values['origen'] = $params[6];
 	$values['resolution'] = $params[7];
 	$values['estado'] = $params[8];
-	//$values['id_creator'] = $params[9];
+	$values['id_usuario'] = $params[9];
 		
-	process_sql_update ('tincidencia', $values, array('id_incidencia' => $id_incident));
+	$result = process_sql_update ('tincidencia', $values, array('id_incidencia' => $id_incident));
+		
+	switch($return_type) {
+		case "xml": 
+				echo xml_node($result);
+				break;
+		case "csv": 
+				echo $result;
+				break;
+	}
 }
 
 function api_delete_incident ($return_type, $user, $id_incident){	
 	if(!check_user_incident($user, $id_incident)) {
 		return;
 	}
-	borrar_incidencia($id_incident);
+	
+	$result = borrar_incidencia($id_incident);
+	
+	//We suppose that incident erased always work
+	//if some part of erased fails no error will be shown
+	$result = 1;
+	
+	switch($return_type) {
+		case "xml": 
+				echo xml_node($result);
+				break;
+		case "csv": 
+				echo $result;
+				break;
+	}
 }
 
 function api_get_incident_tracking ($return_type, $user, $id_incident){
@@ -464,7 +487,16 @@ function api_create_incident_workunit ($return_type, $user, $params){
 	
 	$id_workunit = process_sql_insert ('tworkunit', $values);
 
-	process_sql_insert('tworkunit_incident', array('id_incident' => $id_incident, 'id_workunit' => $id_workunit));
+	$result = process_sql_insert('tworkunit_incident', array('id_incident' => $id_incident, 'id_workunit' => $id_workunit));
+	
+	switch($return_type) {
+		case "xml": 
+				echo xml_node($result);
+				break;
+		case "csv": 
+				echo $result;
+				break;
+	}	
 }
 
 function api_get_incident_files ($return_type, $user, $id_incident){
@@ -538,7 +570,7 @@ function api_download_file ($return_type, $user, $id_file){
 
 function api_delete_file ($return_type, $user, $id_attachment){
 	global $config;
-
+	
 	if (give_acl ($user, $id_grupo, "IM")) {
 		$filename = get_db_value ('filename', 'tattachment',
 			'id_attachment', $id_attachment);
@@ -555,8 +587,8 @@ function api_delete_file ($return_type, $user, $id_attachment){
 		$result = '0';
 			
 		include_once ("config.php");
-
-		if (!unlink ($config["homedir"].'attachment/'.$id_attachment.'_'.$filename)) {
+		$error = unlink ($config["homedir"].'attachment/'.$id_attachment.'_'.$filename);
+		if (!$error) {
 			$result = '-2';
 		}
 			
@@ -759,7 +791,6 @@ function api_get_incidents_sources ($return_type, $user){
 
 function api_get_groups ($return_type, $user, $return_group_all){
 	$groups = get_user_groups($user);
-	
 	if(!$return_group_all) {
 		unset($groups[1]);
 	}
@@ -792,9 +823,10 @@ function api_get_groups ($return_type, $user, $return_group_all){
 }
 
 function api_get_users ($return_type, $user){	
+
 	$users = get_user_visible_users ($user, "IR", false);
 
-	$ret = '';
+	$ret = '';	
 	
 	if($return_type == 'xml') {
 		$ret = "<xml>\n";

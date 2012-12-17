@@ -120,7 +120,7 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 			}
 			
 			$output .= '   <option value="'. $value .'"';
-			if ($value == $selected) {
+			if (safe_output($value) == safe_output($selected)) {
 				$output .= ' selected';
 			}
 			if ($optlabel === '') {
@@ -400,7 +400,7 @@ function print_input_file_progress($form_action, $into_form = '', $attr = '', $e
 	
 	// Form to fill and submit from javascript
 	$output .= "<form method='post' $attr class='upfile_form' action='$form_action' enctype='multipart/form-data'>";
-	$output .= "<input type='hidden' id='upfile' name='upfile' value=''>";
+	$output .= "<input type='hidden' id='upfile' name='upfile' value='' class='upfile_input'>";
 	$output .= $into_form;
 	$output .= "</form>";
 	
@@ -423,7 +423,8 @@ function print_input_file_progress($form_action, $into_form = '', $attr = '', $e
 		$output .= "$('.ax-clear').hide();";
 		$output .= "$('#ax-table-header').hide();";
 		$output .= "$('.ax-uploadall').val('".__('Upload')."');";
-		$output .= "$('.ax-uploadall').addClass('$extra_button_class');";
+		$output .= "$('.ax-uploadall').addClass('".$extra_button_class."');";
+		$output .= "$('input[type=\"file\"]').addClass('".$extra_button_class."');";
 		// If a button is defined, hide the default button and trigger the action to the
 		// defined button. If file upload is empty, the form is sended without it
 		if($button !== false) {

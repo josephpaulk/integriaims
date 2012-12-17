@@ -145,7 +145,7 @@ if ($action == 'update') {
 	$id_incident_type = get_parameter ('id_incident_type', $old_incident['id_incident_type']);
 	$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
 	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
-	$email_copy = get_parameter ('email_copy', $old_incident['email_copy']);
+	$email_copy = get_parameter ('email_copy', '');
 	
 	$tracked = false;
 	if ($old_incident['prioridad'] != $priority) {
@@ -265,14 +265,19 @@ if ($action == "insert") {
 	$sla_disabled = (bool) get_parameter ("sla_disabled");
 	$id_parent = (int) get_parameter ('id_parent');
 	$email_copy = get_parameter ("email_copy", "");
-
+	
+	//Get notify flag from group if the user doesn't has IM flag
+	if (! give_acl ($config['id_user'], $id_grupo, "IM")) {
+			$email_notify = get_db_value("forced_email", "tgrupo", "id_grupo", $grupo);
+	}
+	
 	// If user is not provided, is the currently logged user
 	$usuario = get_parameter ("id_user", $config['id_user']);
 
 	// Redactor user is ALWAYS the currently logged user entering the incident. Cannot change. Never.
 	$editor = $config["id_user"];
 
-    $id_group_creator = get_parameter ("id_group_creator", 0);
+    $id_group_creator = get_parameter ("id_group_creator", $grupo);
 
 	$creator_exists = get_user($id_creator);
 	$user_exists = get_user($usuario);
@@ -410,14 +415,17 @@ if ($id) {
 
 		process_sql ($sql);
 
+	
 		create_workunit ($id, $nota, $config["id_user"], $timeused, $have_cost, $profile, $public);
 
 		$result_msg = '<h3 class="suc">'.__('Workunit added successfully').'</h3>';
 
+		//IMPORTANT!!!
+		//create_workunit function manages the mail queue itself so this lines are wrong
 		// Email notify to all people involved in this incident
-		if ($email_notify == 1) {
+		/*if ($email_notify == 1) {
 			mail_incident ($id, $config['id_user'], $nota, $timeused, 10, $public);
-		}
+		}*/
 		
 		if (defined ('AJAX')) {
 			echo $result_msg;
@@ -851,7 +859,10 @@ if (($has_im) && ($create_incident)){
     $table->data[4][3] =  print_label (__('Creator group'), '', '', true, ""); 
 	$table->data[4][3] .= combo_groups_visible_for_me ($config['id_user'], "id_group_creator", false, "IW", true, __("Creator group"), false, false);
 } else {
-	$table->data[4][3] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_group_creator));
+	//Only show if there is information to show ;)
+	if ($id_group_creator) {
+		$table->data[4][3] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_group_creator));
+	}
 }
 
 

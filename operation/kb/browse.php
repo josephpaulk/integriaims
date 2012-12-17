@@ -385,7 +385,10 @@ if ($result=mysql_query($sql1)){
 	echo "<th>".__('Product')."</th>";
 	echo "<th>".__('Language')."</th>";
 	echo "<th>".__('Timestamp')."</th>";
-	echo "<th>".__('Delete')."</th>";
+	
+	if (give_acl($config["id_user"], 0, "KW")) {
+		echo "<th>".__('Delete')."</th>";
+	}
 	
 	while ($row=mysql_fetch_array($result)){
 		echo "<tr>";
@@ -407,10 +410,12 @@ if ($result=mysql_query($sql1)){
 		// Timestamp
 		echo "<td class='f9' valign='top'>";
 		echo human_time_comparation($row["timestamp"]);
-
-		// Delete
-		echo "<td class='f9' align='center' >";
-		echo "<a href='index.php?sec=kb&sec2=operation/kb/browse&delete_data=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
+		
+		if (give_acl($config["id_user"], 0, "KW")) {
+			// Delete
+			echo "<td class='f9' align='center' >";
+			echo "<a href='index.php?sec=kb&sec2=operation/kb/browse&delete_data=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
+		}	
 
 	}
 	echo "</table>";

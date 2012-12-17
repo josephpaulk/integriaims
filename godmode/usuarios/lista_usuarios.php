@@ -62,7 +62,8 @@ echo __('Search text');
 echo "<td>";
 print_input_text ("search_text", $search_text, '', 15, 0, false);
 echo "<td>";
-print_submit_button ('Search', '', false, '', false, false);
+echo "<input type='submit' class='sub search' name='Search' value='".__('Search')."'>";
+
 echo "</table></form>";
 
 
@@ -80,6 +81,7 @@ $sql1 = "$query1 LIMIT $offset, ". $config["block_size"];
 
 echo '<table width="90%" class="listing">';
 echo '<th>'.__('User ID');
+echo '<th>';
 echo '<th>'.__('Name');
 echo '<th>'.__('Company');
 echo '<th>'.__('Last contact');
@@ -113,6 +115,11 @@ foreach($resq1 as $rowdup){
 	echo "<tr><td>";
 	echo "<a href='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user=".$nombre."'>".ucfirst($nombre)."</a>";
 
+	echo "<td>";
+	 if ($disabled == 1){
+                echo "<img src='images/lightbulb_off.png' title='".__("Disabled")."'>";
+        }
+
 	echo "<td style='font-size:9px'>" . $realname;	
 	$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_company);	
 	echo "<td>".$company_name."</td>";
@@ -136,12 +143,6 @@ foreach($resq1 as $rowdup){
 	}
 
 	echo $nivel;
-
-
-
-    if ($disabled == 1){
-		echo "<img src='images/lightbulb_off.png' title='".__("Disabled")."'>";
-	}
 
 	echo '<td align="center">';
 	echo '<a href="index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&borrar_usuario='.$nombre.'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';

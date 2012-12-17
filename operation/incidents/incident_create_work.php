@@ -54,7 +54,7 @@ $table->data[1][0] = print_input_text ("duration", $config["iwu_defaultime"], ''
 $table->data[1][1] = print_checkbox ('have_cost', 1, false, true, __('Have cost'));
 $table->data[1][2] = print_checkbox ('public', 1, true, true, __('Public'));
 
-$table->data[2][0] = print_textarea ('nota', 10, 70, '', '', true, __('Description'));
+$table->data[2][0] = print_textarea ('nota', 10, 70, '', "style='resize:none;'", true, __('Description'));
 
 echo '<form id="form-add-workunit" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
 

@@ -24,6 +24,12 @@ include_once ("include/functions_tasks.php");
 
 $id_project = (int) get_parameter ('id_project');
 
+$graph_ttl = 1;
+
+if ($pdf_output) {
+	$graph_ttl = 2;
+}
+
 if (! $id_project) {// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager without project");
 	include ("general/noaccess.php");
@@ -80,7 +86,11 @@ $search_id_group = (int) get_parameter ('search_id_group');
 $search_text = (string) get_parameter ('search_text');
 
 echo '<h2>'.$project['name'].' &raquo; '.__('Task management');
-echo "&nbsp;&nbsp;<a title='"._("Report")."'  href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project&search_id_group=$search_id_group&search_text=$search_text&clean_output=1'><img src='images/html.png'></a>";
+
+if (!$clean_output) {
+	echo "&nbsp;&nbsp;<a title='"._("Report")."'  href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project&search_id_group=$search_id_group&search_text=$search_text&clean_output=1'><img src='images/html.png'></a>";
+}
+
 echo '</h2><br>';
 
 $where_clause = ' 1=1 ';
@@ -92,7 +102,7 @@ if ($search_id_group != 0)
 	$where_clause .= sprintf (' AND id_group = %d', $search_id_group);
 
 
-$table->width = '450px';
+$table->width = '800px';
 $table->class = 'search-table';
 $table->style = array ();
 $table->style[0] = 'font-weight: bold;';
@@ -112,7 +122,7 @@ echo '</form>';
 
 unset ($table);
 
-$table->width = '99%';
+$table->width = '800px';
 $table->class = 'listing';
 $table->data = array ();
 $table->style = array ();
@@ -135,9 +145,7 @@ $table->align[9] = 'center';
 
 $table->style[7] = "font-size: 9px";
 
-
-echo project_activity_graph ($id_project);
-
+echo project_activity_graph ($id_project, $graph_ttl);
 
 $color = 1;
 
@@ -165,6 +173,7 @@ if (give_acl ($config['id_user'], 0, 'PW')) {
 
 function show_task_row ($table, $id_project, $task, $level) {
 	global $config;
+	global $graph_ttl;
 	
 	$data = array ();
 
@@ -181,7 +190,8 @@ function show_task_row ($table, $id_project, $task, $level) {
     $data[1] = print_priority_flag_image ($task['priority'], true);
 	
 	// Completion
-	$data[2] = progress_bar($task["completion"], 70, 20);
+	
+	$data[2] = progress_bar($task["completion"], 70, 20, $graph_ttl);
 	
 	// Estimation
 	$imghelp = "Estimated hours = ".$task["hours"];
@@ -193,7 +203,7 @@ function show_task_row ($table, $id_project, $task, $level) {
 	$mode = 2;
 
 	if ($a > 0)
-		$data[3] = histogram_2values($a, $b, __("Planned"), __("Real"), $mode, 60, 18, $imghelp);
+		$data[3] = histogram_2values($a, $b, __("Planned"), __("Real"), $mode, 60, 18, $imghelp, $graph_ttl);
 	else
 		$data[3] = '--';
 
