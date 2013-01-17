@@ -125,7 +125,7 @@ echo "<title>" . $config["sitename"] . "</title>";
 
 ?>
 
-<meta http-equiv="expires" content="0" />
+<meta http-equiv="expires" content="never" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <meta name="resource-type" content="document" />
 <meta name="distribution" content="global" />

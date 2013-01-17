@@ -72,8 +72,6 @@ function get_font_files () {
 }
 
 $fontlist = get_font_files ();
-echo $config["font"];
-print_r($fontlist);
 
 $table->data[0][1] = print_select ($fontlist, 'font', $config["font"], '', '', '',  true, 0, true, __('Font for graphs')) ;
 
