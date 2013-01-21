@@ -68,15 +68,13 @@ if ($create) {
 	if ($queue !== false) {	
 		foreach ($queue as $item) {
 			$sql = sprintf ('INSERT INTO tnewsletter_queue_data (id_queue, id_newsletter, id_newsletter_content, email, name, datetime, status) VALUES (%d, %d, %d, "%s", "%s", "%s", %d)', $id_queue, $newsletter["id"], $issue["id"], $item["email"], $item["name"], $datetime, 0);
-			$id = process_sql ($sql, 'insert_id');
+			process_sql ($sql);
+			echo ".";
 		}
 			
-		if ($id === false)
-			echo "<h3 class='error'>".__('Could not be created')."</h3>";
-		else {
-			echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER QUEUE CREATED", "Created newsletter queue for issue ".$issue["email_subject"]);
-		}
+		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "NEWSLETTER QUEUE CREATED", "Created newsletter queue for issue ".$issue["email_subject"]);
+		
 	}
 	$id = 0;
 }

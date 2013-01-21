@@ -1,3 +1,8 @@
+2012-01-21  Sancho Lerena <slerena@artica.es>
+
+	* operation/newsletter/queue_manager.php: Fixed problems
+	on output buffer to avoid porblems in sites like dreamhost.
+
 2012-01-17 Sancho Lerena <slerena@artica.es>
 
 	* index.php: Added expire control for static contents
