@@ -52,8 +52,6 @@ session_write_close();
 
 $fileLocation = $config["homedir"]."/attachment/".$data["id_attachment"]."_".$data["filename"];
 
-echo "$fileLocation";
-
 $last_name = $data["filename"];
 
 if (file_exists($fileLocation)){

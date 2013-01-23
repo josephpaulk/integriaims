@@ -1,3 +1,9 @@
+2013-01-23  Dario Rodriguez <dario@artica.es>
+
+	* operation/incidents/incident_download_file.php: Fixed a problem
+	with file download script which prints text before the headers and
+	brokes the page.
+
 2012-01-21  Sancho Lerena <slerena@artica.es>
 
 	* operation/newsletter/queue_manager.php: Fixed problems
