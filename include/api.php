@@ -136,11 +136,6 @@ switch ($op){
 		echo api_get_incidents_status ($return_type, $user);
 		break;
 	}
-	case "get_incidents_sources":
-	{
-		echo api_get_incidents_sources ($return_type, $user);
-		break;
-	}
 	case "get_groups":
 	{
 		echo api_get_groups ($return_type, $user, $params);

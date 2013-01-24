@@ -1,3 +1,28 @@
+2013-01-24  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  integria_dbdata.sql: Added fields in 'tincidencia',
+	drop field 'origen in 'tincidencia', added 'tincident_stats'
+	and drop 'tincident_origin'.
+
+	* extras/migrate.sql: Added migrate file.
+
+	* include/styles/dialog.css: Added css.
+
+	* godmode/setup/incidents_setup.php
+	  include/api.php
+	  include/functions_api.php
+	  include/functions_db.php
+	  include/functions_form.php
+	  include/functions_pop3.php
+	  include/js/integria_incident_search.js
+	  operation/incidents/incident_detail.php
+	  operation/incidents/incident_note.php
+	  operation/incidents_simple/incidents.php
+	  operation/user_report/report_full.php: Deleted 'origen' field,
+	changed incident status 'Resolved' by 'Pending on a third person'
+	and added field 'Closed by'.
+
 2013-01-23  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_download_file.php: Fixed a problem

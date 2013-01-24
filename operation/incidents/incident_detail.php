@@ -47,7 +47,6 @@ if (defined ('AJAX')) {
  	}
 }
 
-
 $id_grupo = (int) get_parameter ('id_grupo');
 $id = (int) get_parameter ('id');
 
@@ -135,7 +134,6 @@ if ($action == 'update') {
 	$titulo = get_parameter ('titulo', $old_incident['titulo']);
 	$sla_disabled = (bool) get_parameter ('sla_disabled', $old_incident['sla_disabled']);
 	$description = get_parameter ('description', $old_incident['descripcion']);
-	$origen = get_parameter ('incident_origin', $old_incident['origen']);
 	$priority = get_parameter ('priority_form', $old_incident['prioridad']);
 	$estado = get_parameter ('incident_status', $old_incident['estado']);
 	$email_notify = (bool) get_parameter ('email_notify', $old_incident['notify_email']);
@@ -146,6 +144,7 @@ if ($action == 'update') {
 	$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
 	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
 	$email_copy = get_parameter ('email_copy', '');
+	$closed_by = get_parameter ('closed_by', $old_incident['closed_by']);
 	
 	$tracked = false;
 	if ($old_incident['prioridad'] != $priority) {
@@ -184,20 +183,20 @@ if ($action == 'update') {
 	
 	$sql = sprintf ('UPDATE tincidencia SET email_copy = "%s", actualizacion = "%s",
 			  id_creator = "%s",
-			titulo = "%s", origen = %d, estado = %d,
-			id_grupo = %d, id_usuario = "%s",
+			titulo = "%s", estado = %d,
+			id_grupo = %d, id_usuario = "%s", closed_by = "%s",
 			notify_email = %d, prioridad = %d, descripcion = "%s",
 			epilog = "%s", id_task = %d, resolution = %d,
 			id_incident_type = %d, id_parent = %s, affected_sla_id = 0 %s 
 			WHERE id_incidencia = %d', $email_copy, $timestamp, $id_creator, 
-			$titulo, $origen, $estado, $grupo, $user,
+			$titulo, $estado, $grupo, $user, $closed_by,
 			$email_notify, $priority, $description,
 			$epilog, $id_task, $resolution, $id_incident_type,
 			$idParentValue, $sla_man, $id);
 	$result = process_sql ($sql);
 	
 	// When close incident set close date to current date
-	if (($estado == 6) OR ($estado == 7)){
+	if (($estado == 7)){
 		$sql = sprintf ('UPDATE tincidencia SET cierre = "%s" 
 			WHERE id_incidencia = %d',$timestamp, $id);
 		$result = process_sql ($sql);
@@ -221,8 +220,8 @@ if ($action == 'update') {
 
 	// Email notify to all people involved in this incident
 	if ($email_notify == 1) {
-        if (($estado == 7) OR ($estado ==6) OR ($config["email_on_incident_update"] == 1)){
-            if (($estado == 7) OR ($estado ==6))
+		if (($estado == 7) OR ($config["email_on_incident_update"] == 1)){
+            if (($estado == 7))
     			mail_incident ($id, $user, "", 0, 5);
             else
     			mail_incident ($id, $user, "", 0, 0);
@@ -254,7 +253,6 @@ if ($action == "insert") {
 	// Read input variables
 	$titulo = get_parameter ('titulo');
 	$description =  get_parameter ('description');
-	$origen = get_parameter ('incident_origin', 1);
 	$priority = get_parameter ('priority_form');
 	$id_creator = get_parameter ('id_creator', $config["id_user"]);
 	$estado = get_parameter ("incident_status");
@@ -273,6 +271,8 @@ if ($action == "insert") {
 	
 	// If user is not provided, is the currently logged user
 	$usuario = get_parameter ("id_user", $config['id_user']);
+	
+	$closed_by = get_parameter ("closed_by", '');
 
 	// Redactor user is ALWAYS the currently logged user entering the incident. Cannot change. Never.
 	$editor = $config["id_user"];
@@ -305,15 +305,16 @@ if ($action == "insert") {
 		
 		$sql = sprintf ('INSERT INTO tincidencia
 				(inicio, actualizacion, titulo, descripcion,
-				id_usuario, origen, estado, prioridad,
+				id_usuario, closed_by, estado, prioridad,
 				id_grupo, id_creator, notify_email, id_task,
 				resolution, id_incident_type, id_parent, sla_disabled, email_copy, editor, id_group_creator)
-				VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
+				VALUES ("%s", "%s", "%s", "%s", "%s", "%s", %d, %d, %d,
 				"%s", %d, %d, %d, %d, %s, %d, "%s", "%s", "%s")', $timestamp, $timestamp,
-				$titulo, $description, $usuario,
-				$origen, $estado, $priority, $grupo, $id_creator,
+				$titulo, $description, $usuario, $closed_by,
+				$estado, $priority, $grupo, $id_creator,
 				$email_notify, $id_task, $resolution, $id_incident_type,
-				$idParentValue, $sla_disabled, $email_copy, $editor, $id_group_creator);
+				$idParentValue, $sla_disabled, $email_copy, $editor, $id_group_creator);	
+
 		$id = process_sql ($sql, 'insert_id');
 
 		if ($id !== false) {
@@ -367,7 +368,6 @@ if ($id) {
 	$actualizacion = $incident["actualizacion"];
 	$estado = $incident["estado"];
 	$priority = $incident["prioridad"];
-	$origen = $incident["origen"];
 	$usuario = $incident["id_usuario"];
 	$nombre_real = dame_nombre_real($usuario);
 	$id_grupo = $incident["id_grupo"];
@@ -383,6 +383,7 @@ if ($id) {
     $email_copy = $incident["email_copy"];
 	$editor = $incident["editor"];
     $id_group_creator = $incident["id_group_creator"];
+    $closed_by = $incident["closed_by"];
 
 	$grupo = dame_nombre_grupo($id_grupo);
         $score = $incident["score"];
@@ -541,7 +542,6 @@ if ($id) {
 } else {
 	$titulo = "";
 	$description = "";
-	$origen = 0;
 	$priority = 2;
 	$id_grupo =0;
 	$grupo = dame_nombre_grupo (1);
@@ -560,6 +560,7 @@ if ($id) {
     $email_copy = "";
 	$editor = $config["id_user"];
     $id_group_creator = 0;
+    $closed_by= "";
 
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -587,7 +588,7 @@ $has_permission = (give_acl ($config['id_user'], $id_grupo, "IM")  || ($usuario 
 $has_im  = give_acl ($config['id_user'], $id_grupo, "IM");
 $has_iw = give_acl ($config['id_user'], $id_grupo, "IW");
 
-if ($id) {
+if ($id) {	
 	echo "<h1>";
 	if ($affected_sla_id != 0) {
 		echo '<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">&nbsp;&nbsp;';
@@ -604,9 +605,6 @@ if ($id) {
 	}
 	if (give_acl ($config['id_user'], $id_grupo, "KW")) {
 		echo '<form name="kb_form" ';
-		if ($estado != 6) {
-			echo 'style="display:none" ';
-		}
 		echo 'class="action" method="post" action="index.php?sec=kb&sec2=operation/kb/manage_data&create=1">';
 		print_input_hidden ('id_incident', $id, false);
 		echo '<input type="image" class="action" src="images/star.png" title="' . __('Add to KB') .'">';
@@ -624,8 +622,8 @@ if ($id) {
 
     // Score this incident  
     if ($id){
-        if (($incident["score"] == 0) AND (($incident["id_creator"] == $config["id_user"]) AND ( 
-    	($incident["estado"] ==6) OR ($incident["estado"] == 7)))) {
+		if (($incident["score"] == 0) AND (($incident["id_creator"] == $config["id_user"]) AND ( 
+    	($incident["estado"] == 7)))) {
             echo "<form method=post action=index.php?sec=incidents&sec2=operation/incidents/incident_score&id=$id>";
             echo "<table width=98% cellpadding=4 cellspacing=4><tr><td>";
             echo "<img src='images/award_star_silver_1.png' width=32>&nbsp;";
@@ -740,7 +738,6 @@ if ($has_im) {
 if ($id_parent)
 	$table->data[1][3] .= '&nbsp;<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id_parent.'"><img src="images/go.png" /></a>';
 
-$table->data[2][0] = combo_incident_origin ($origen, $disabled, true);
 $table->data[2][1] = combo_incident_types ($id_incident_type, $disabled, true);
 
 // Task
@@ -864,6 +861,10 @@ if (($has_im) && ($create_incident)){
 		$table->data[4][3] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_group_creator));
 	}
 }
+// closed by
+$table->data[2][4] = print_input_text_extended ('closed_by', $closed_by, 'text-closed_by', '', 15, 30, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Closed by'))
+		. print_help_tip (__("User assigned here is user that will be responsible to close incident."), true);
 
 
 if ($config['incident_reporter'] == 1){
@@ -942,6 +943,15 @@ $(document).ready (function () {
 	configure_incident_form (false);
 	//$("#text-id_user").change (function(){alert("hola")});
 	
+/*
+	if ($("#incident_status").val() == 7) {
+		$("#closed_by").css ('display', '');
+	} else {
+		$("#closed_by").css ('display', 'none');
+	}
+*/
+		
+	
 	$("#text-id_creator").autocomplete ("ajax.php",
 		{
 			scroll: true,
@@ -985,7 +995,40 @@ $(document).ready (function () {
 			delay: 200
 
 		});
+		
+		$("#text-closed_by").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "operation/incidents/incident_detail",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>"
+			},
+			formatItem: function (data, i, total) {
+				if (total == 0)
+					$("#text-closed_by").css ('background-color', '#cc0000');
+				else
+					$("#text-closed_by").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre real") ?>: '+data[1]+'</span>';
+			},
+			delay: 200
+
+		});
 });
+
+// Check closed_by when status change
+/*
+	$("#incident_status").change (function () {
+		if ($("#incident_status").val() == 7) {
+			$("#closed_by").css ('display', '');
+		} else {
+			$("#closed_by").css ('display', 'none');
+		}
+	});
+*/
 </script>
 
 <?php //endif; ?>

@@ -2134,27 +2134,6 @@ function get_incident_resolutions () {
 	return $retval;
 }
 
-function get_incident_origins () {
-	$retval = array ();
-	$origins = get_db_all_rows_in_table ('tincident_origin');
-	
-	/* Translators: Incident is fixed */
-	__('User report');
-	__('Customer');
-	__('Internal department');
-	__('External department');
-	__('Application data');
-	__('Bug report');
-	__('Problem detected');
-	__('Other source');
-	
-	foreach ($origins as $origin) {
-		$retval[$origin['id']] = __($origin['name']);
-	}
-	
-	return $retval;
-}
-
 function render_resolution ($res){
 	$res2 =  get_db_sql ("SELECT name FROM tincident_resolution WHERE id = ".$res);
 	if ($res2 == "")

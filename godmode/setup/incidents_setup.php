@@ -31,18 +31,10 @@ echo "<h2>".__('Incidents setup')."</h2>";
 
 if ($update) {
 	$status = (array) get_parameter ('status');
-	$origins = (array) get_parameter ('origins');
 	$resolutions = (array) get_parameter ('resolutions');
 	
 	foreach ($status as $id => $name) {
 		$sql = sprintf ('UPDATE tincident_status SET name = "%s"
-			WHERE id = %d',
-			$name, $id);
-		process_sql ($sql);
-	}
-	
-	foreach ($origins as $id => $name) {
-		$sql = sprintf ('UPDATE tincident_origin SET name = "%s"
 			WHERE id = %d',
 			$name, $id);
 		process_sql ($sql);
@@ -73,23 +65,6 @@ foreach ($status as $stat) {
 	$data = array ();
 	
 	$data[0] = print_input_text ('status['.$stat['id'].']', $stat['name'],
-		'', 35, 255, true);
-	
-	array_push ($table->data, $data); 
-}
-
-print_table ($table);
-
-echo '<h3>'.__('Origins').'</h3>';
-
-$table->data = array ();
-
-$origins = get_db_all_rows_in_table ('tincident_origin');
-
-foreach ($origins as $origin) {
-	$data = array ();
-	
-	$data[0] = print_input_text ('origins['.$origin['id'].']', $origin['name'],
 		'', 35, 255, true);
 	
 	array_push ($table->data, $data); 

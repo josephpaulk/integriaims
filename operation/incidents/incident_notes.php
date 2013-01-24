@@ -37,7 +37,6 @@ if (isset($_GET["id"])){
 	$actualizacion = $row["actualizacion"];
 	$estado = $row["estado"];
 	$prioridad = $row["prioridad"];
-	$origen = $row["origen"];
 	$usuario = $row["id_usuario"];
 	$nombre_real = dame_nombre_real($usuario);
 	$id_grupo = $row["id_grupo"];

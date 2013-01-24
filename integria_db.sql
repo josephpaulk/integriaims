@@ -167,7 +167,6 @@ CREATE TABLE `tincidencia` (
   `titulo` mediumtext DEFAULT NULL,
   `descripcion` mediumtext DEFAULT NULL,
   `id_usuario` varchar(60) NOT NULL default '',
-  `origen` tinyint unsigned NOT NULL DEFAULT 0,
   `estado` tinyint unsigned NOT NULL DEFAULT 0,
   `prioridad` tinyint unsigned NOT NULL DEFAULT 0,
   `id_grupo` mediumint(9) NOT NULL default 0,
@@ -185,6 +184,8 @@ CREATE TABLE `tincidencia` (
   `email_copy` mediumtext not NULL,
   `editor` varchar(60) NOT NULL default '',
   `id_group_creator` mediumint(9) NOT NULL default 0,
+  `last_stat_check`  bigint(20) unsigned NOT NULL default '0',
+  `closed_by` varchar(60) NOT NULL default '',
 
   PRIMARY KEY  (`id_incidencia`),
   KEY `incident_idx_1` (`id_usuario`),
@@ -333,12 +334,6 @@ CREATE TABLE `tincident_resolution` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tincident_status` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `tincident_origin` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
@@ -860,4 +855,14 @@ CREATE TABLE `ttranslate_string` (
   `string` text NOT NULL,
   `translation` text NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `tincident_stats` (
+`id_incident` bigint(20) unsigned NOT NULL auto_increment,
+  `minutes` bigint(10) unsigned NOT NULL default 0,
+  `metric` enum ('user_time', 'status_time', 'group_time', 'total_time', 'total_w_third') NOT NULL,
+  `id_user` varchar(60) NOT NULL default '',
+  `status` tinyint NOT NULL default 0,
+  `id_group` mediumint(8) NOT NULL default 0,
+PRIMARY KEY (`id_incident`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

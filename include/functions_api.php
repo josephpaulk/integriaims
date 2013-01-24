@@ -142,12 +142,12 @@ function api_create_incident ($return_type, $user, $params){
 
 	$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
-			id_usuario, origen, estado, prioridad,
+			id_usuario, estado, prioridad,
 			id_grupo, id_creator, notify_email, 
 			resolution)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
 			"%s", %d, %d)', $timestamp, $timestamp, $title, $description, $owner,
-			$source, $status, $priority, $group, $id_creator,
+			$status, $priority, $group, $id_creator,
 			$email_notify, $resolution);
 
 	$id = process_sql ($sql, 'insert_id');
@@ -335,10 +335,9 @@ function api_update_incident ($return_type, $user, $params){
 	$values['epilog'] = $params[3];
 	$values['id_grupo'] = $params[4];
 	$values['prioridad'] = $params[5];
-	$values['origen'] = $params[6];
-	$values['resolution'] = $params[7];
-	$values['estado'] = $params[8];
-	$values['id_usuario'] = $params[9];
+	$values['resolution'] = $params[6];
+	$values['estado'] = $params[7];
+	$values['id_usuario'] = $params[8];
 		
 	$result = process_sql_update ('tincidencia', $values, array('id_incidencia' => $id_incident));
 		
@@ -740,41 +739,6 @@ function api_get_incidents_status ($return_type, $user){
 					}
 				}
 				$ret .= "</status>\n";
-				break;
-			case "csv":
-				$ret .= array_to_csv($item);
-				break;
-		}
-	}
-	
-	if($return_type == 'xml') {
-		$ret .= "</xml>\n";
-	}
-	
-	return $ret;
-}
-
-function api_get_incidents_sources ($return_type, $user){
-	$sources = get_db_all_rows_in_table('tincident_origin');
-	
-	$sources = clean_numerics($sources);
-	
-	$ret = '';
-	
-	if($return_type == 'xml') {
-		$ret = "<xml>\n";
-	}
-	
-	foreach($sources as $index => $item) {
-		switch($return_type) {
-			case "xml":
-				$ret .= "<source>\n";
-				foreach($item as $key => $value) {
-					if(!is_numeric($key)) {
-						$ret .= "<".$key.">".$value."</".$key.">\n";
-					}
-				}
-				$ret .= "</source>\n";
 				break;
 			case "csv":
 				$ret .= array_to_csv($item);

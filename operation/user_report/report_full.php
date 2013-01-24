@@ -73,7 +73,6 @@ $start_date = get_parameter ("start_date", date ('Y-m-d', strtotime ("$now - 3 m
 $end_date = get_parameter ('end_date', $now);
 $user_id = get_parameter ('user_id', "");
 
-$origen = get_parameter ("incident_origin", 0);
 $resolution = get_parameter ("incident_resolution", 0);
 $id_group = get_parameter ("search_id_group", 0);
 $author = get_parameter ("author", "");
@@ -97,10 +96,6 @@ $do_search = 0;
  
 if ($only_summary == 1){
     $do_search = 1;
-}
-
-if ($origen > 0){
-	$do_search = 1;
 }
 
 if ($wu_reporter != ""){
@@ -145,12 +140,12 @@ if ($user_id != "") {
 
 if ($clean_output == 0){
     // link full screen
-    echo "&nbsp;&nbsp;<a title='Full screen' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&clean_output=1&user_id=$user_id&incident_origin=$origen&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&wu_reporter=$wu_reporter&only_projects=$only_projects'>";
+    echo "&nbsp;&nbsp;<a title='Full screen' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&clean_output=1&user_id=$user_id&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&wu_reporter=$wu_reporter&only_projects=$only_projects'>";
     echo "<img src='images/html.png'>";
     echo "</a>";
 
     // link PDF report
-    echo "&nbsp;&nbsp;<a title='PDF report' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&clean_output=1&pdf_output=1&user_id=$user_id&incident_origin=$origen&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&wu_reporter=$wu_reporter&only_projects=$only_projects'>";
+    echo "&nbsp;&nbsp;<a title='PDF report' href='index.php?sec=users&sec2=operation/user_report/report_full&user_id=$user_id&end_date=$end_date&start_date=$start_date&clean_output=1&pdf_output=1&user_id=$user_id&incident_resolution=$resolution&search_id_group=$id_group&author=$author&editor=$editor&search_status=$status&wu_reporter=$wu_reporter&only_projects=$only_projects'>";
     echo "<img src='images/page_white_acrobat.png'>";
     echo "</a>";
 }
@@ -210,9 +205,6 @@ array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '
 
     echo "<tr><td>";
     echo print_select (get_user_groups (), 'search_id_group', $id_group, '', __('All'), 1, true, false, false, __('Group'));
-  
-    echo "<td>";
-    echo combo_incident_origin ($origen, false, true);
 
     echo "<td>";
     echo combo_incident_resolution ($resolution, false, true);
@@ -271,9 +263,6 @@ if ($do_search  == 0){
 
 		if ($user_id != "")
 			$sql = $sql . " AND id_usuario = '$user_id' ";
-		
-		if ($origen > 0)
-			$sql = $sql . " AND origen = $origen ";
 
 		if ($resolution > 0)
                         $sql = $sql . " AND resolution = $resolution ";

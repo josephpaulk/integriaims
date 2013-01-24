@@ -80,7 +80,6 @@ function create_incident_bymail ($user_mail, $title, $description) {
 	// Set default variables
 	$sla_disabled = 0;
 	$id_task = 0; // N/A
-	$origen = 1; // User report
 	$estado = 1; // New
 	$priority = 2; // Medium
 	$resolution = 0; // None
@@ -105,13 +104,13 @@ function create_incident_bymail ($user_mail, $title, $description) {
 
 	$sql = sprintf ('INSERT INTO tincidencia
 			(inicio, actualizacion, titulo, descripcion,
-			id_usuario, origen, estado, prioridad,
+			id_usuario, estado, prioridad,
 			id_grupo, id_creator, notify_email, id_task,
 			resolution, id_incident_type, id_parent, sla_disabled, email_copy)
 			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
 			"%s", %d, %d, %d, %d, %s, %d, "%s")', $timestamp, $timestamp,
 			$title, $description, $id_user_responsible,
-			$origen, $estado, $priority, $group_id, $id_creator,
+			$estado, $priority, $group_id, $id_creator,
 			$email_notify, $id_task, $resolution, $id_incident_type,
 			$id_parent, $sla_disabled, $email_copy);
 			

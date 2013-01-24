@@ -87,10 +87,9 @@ INSERT INTO tincident_status (id,name) VALUES
 (3,'Assigned'), 
 (4,'Re-opened'), 
 (5,'Pending to be closed'), 
-(6,'Resolved'), 
+(6,'Pending on a third person'), 
 (7,'Closed');
 
-INSERT INTO tincident_origin (name) VALUES ('User report'), ('Customer'), ('Internal department'), ('External department'), ('Application data'), ('Bug report'), ('Problem detected'), ('Other source' );
 
 INSERT INTO `trole` VALUES (1,'Project manager','',125),(2,'Systems engineer','',40),(3,'Junior consultant','',50),(4,'Junior programmer','',45),(5,'Senior programmer','',65),(6,'Analist','',75),(7,'Senior consultant','',75),(8,'Support engineer','',30);
 
