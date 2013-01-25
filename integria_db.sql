@@ -137,6 +137,7 @@ CREATE TABLE `tincident_type` (
   `name` varchar(100) NOT NULL default '',
   `description` text NULL default NULL,
   `id_wizard` mediumint(8) unsigned NULL,
+  `id_group` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -865,4 +866,21 @@ CREATE TABLE IF NOT EXISTS `tincident_stats` (
   `status` tinyint NOT NULL default 0,
   `id_group` mediumint(8) NOT NULL default 0,
 PRIMARY KEY (`id_incident`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tincident_type_field` ( 
+  `id` mediumint(8) unsigned NOT NULL auto_increment, 
+  `id_incident_type` mediumint(8) unsigned NOT NULL, 
+  `label` varchar(100) NOT NULL default '', 
+  `type` enum ('numeric', 'text', 'combo') default 'numeric',
+  `combo_value` text default NULL,
+  PRIMARY KEY  (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tincident_field_data` ( 
+  `id` bigint(20) unsigned NOT NULL auto_increment, 
+  `id_incident` bigint(20) unsigned NOT NULL,
+  `id_incident_field` mediumint(0) unsigned NOT NULL,
+  `data` text default NULL,
+  PRIMARY KEY  (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

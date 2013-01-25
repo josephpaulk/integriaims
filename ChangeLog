@@ -1,3 +1,11 @@
+2013-01-25  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  operation/incidents/type_detail.php: Added custom fields
+	to incident type.
+
+	* operation/incidents/incident_type_field.php: Added file.
+
 2013-01-24  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql
