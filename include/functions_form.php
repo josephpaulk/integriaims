@@ -283,28 +283,6 @@ function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $
 	echo $output;
 }
 
-// Returns a combo with the incident origin
-// ----------------------------------------------------------------------
-function combo_incident_origin ($actual = -1, $disabled = 0, $return = false) {
-	$output = '';
-
-	if ($disabled) {
-		$origins = get_incident_resolutions ();
-		$origin = isset ($origins[$actual]) ? $origins[$actual] : __('None');
-		$output .= print_label (__('Source'), '', '', true, $origin);
-		if ($return)
-			return $output;
-		echo $output;
-		return;
-	}
-		
-	$output .= print_select (get_incident_origins (), 'incident_origin',
-					$actual, '', __("None"), 0, true, false, false, __('Source'));
-	if ($return)
-		return $output;
-	echo $output;
-}
-
 // Returns a combo with the incident resolution
 // ----------------------------------------------------------------------
 function combo_incident_resolution ($actual = -1, $disabled = false, $return = false, $for_massives = false) {
@@ -953,7 +931,7 @@ function incident_details_list ($id_incident, $return = false) {
 	$output .= '<ul id="incident-details-list" class="sidemenu">';
 	$output .= '&nbsp;&nbsp;<strong>'.__('Opened').'</strong>: '.human_time_comparation($incident['inicio']);
 	
-	if ($incident['estado'] == 6 || $incident['estado'] == 7) {
+	if ($incident['estado'] == 7) {
 		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Closed at').'</strong>: '.human_time_comparation($incident['cierre']);
 	}
 	if ($incident['actualizacion'] != $incident['inicio']) {
@@ -969,7 +947,6 @@ function incident_details_list ($id_incident, $return = false) {
 		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Last work at').'</strong>: '.human_time_comparation ($workunit_data['timestamp']);
 		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Workunits').'</strong>: '.$workunit_count;
 		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Time used').'</strong>: '.$work_hours;
-		;
 		$output .= '<br />&nbsp;&nbsp;<strong>'._('Done by').'</strong>: <em>'.$workunit_data['id_user'].'</em>';
 	}
 	
@@ -1032,12 +1009,18 @@ function combo_download_categories ($id_category, $show_any = 0){
 		}
 		echo "<option value='0' $selected>".__("Any")."</option>";
 	}	
-		
-	$sql = "SELECT tdownload_category.* FROM tdownload_category, tdownload_category_group, tusuario_perfil WHERE
+	
+	if (dame_admin ($config["id_user"])){
+		$sql = "SELECT * FROM tdownload_category";
+	} else {
+	
+		$sql = "SELECT tdownload_category.* FROM tdownload_category, tdownload_category_group, tusuario_perfil WHERE
                 tusuario_perfil.id_usuario = '".$config["id_user"]."' AND    
                 tusuario_perfil.id_grupo = tdownload_category_group.id_group AND
                 tdownload_category.id =  tdownload_category_group.id_category
 		GROUP by name ORDER by name";
+	}
+
 	$result = process_sql($sql);
 	if($result == false) {
 		$result = array();
