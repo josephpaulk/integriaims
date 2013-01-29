@@ -1,0 +1,1 @@
+[_sitename_] Incident _incident_id_ _incident_title_ has been DELETED.

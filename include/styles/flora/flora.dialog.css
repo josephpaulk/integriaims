@@ -1,0 +1,132 @@
+/* This file skins dialog */
+.dialog {
+	background-color: #FFFFFF;
+}
+
+.dialog .ui-dialog-titlebar {
+	border-bottom: 1px solid #808080;
+	background-color: #808080;
+	padding: 0px;
+	height: 28px;
+	font-weight: bold;
+	cursor: move;
+	font-variant: small-caps;
+}
+
+.dialog.ui-draggable .ui-dialog-titlebar {
+	cursor: move;
+}
+
+.dialog .ui-dialog-titlebar-close {
+	width: 16px;
+	height: 16px;
+	position:absolute;
+	top: 6px;
+	right: 2%;
+	cursor: default;
+	color: #fff !important;
+}
+
+.dialog .ui-dialog-title {
+	margin-left: 5px;
+	color: white;
+	font-weight: bold;
+	position: relative;
+	top: 7px;
+	left: 4px;
+}
+
+.dialog .ui-dialog-content {
+	margin: 1.2em;
+}
+
+.dialog .ui-dialog-buttonpane {
+	position: absolute;
+	bottom: 8px;
+	right: 12px;
+	width: 100%;
+	text-align: right;
+}
+
+.dialog .ui-dialog-buttonpane button {
+	margin-bottom: 6px;
+}
+
+.dialog .ui-dialog-buttonpane button {
+	border-bottom-color: #708090;
+	border-right-color: #708090;
+	-moz-border-radius: 5%;
+	font-size: 0.85em;
+	font-weight: bold;
+	height: 22px;
+}
+
+/* Dialog handle styles */
+.dialog .ui-resizable-n {
+	cursor: n-resize;
+	height: 3px;
+	width: 100%;
+	top: 0px;
+	left: 0px;
+}
+
+.dialog .ui-resizable-s {
+	cursor: s-resize;
+	height: 3px;
+	width: 100%;
+	bottom: 0px;
+	left: 0px;
+}
+
+.dialog .ui-resizable-e {
+	cursor: e-resize;
+	width: 3px;
+	right: 0px;
+	top: 0px;
+	height: 100%;
+}
+
+.dialog .ui-resizable-w {
+	cursor: w-resize;
+	width: 3px;
+	left: 0px;
+	top: 0px;
+	height: 100%;
+}
+
+.dialog .ui-resizable-se {
+	cursor: se-resize;
+	width: 9px;
+	height: 9px;
+	right: 0px;
+	bottom: 0px;
+}
+
+.dialog .ui-resizable-sw {
+	cursor: sw-resize;
+	width: 9px;
+	height: 9px;
+	left: 0px;
+	bottom: 0px;
+}
+
+.dialog .ui-resizable-nw {
+	cursor: nw-resize;
+	width: 9px;
+	height: 29px;
+	left: 0px;
+	top: 0px;
+}
+
+.dialog .ui-resizable-ne {
+	cursor: ne-resize;
+	width: 9px;
+	height: 29px;
+	right: 0px;
+	top: 0px;
+}
+
+.ui-dialog {
+	border-radius: 10px;
+	border: 3px solid #DEDEDE;
+}
