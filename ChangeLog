@@ -1,3 +1,16 @@
+2013-01-29  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_form.php: manage admin
+	differently on show product categories.
+
+	* wiki_data: Default data on wiki.
+
+	* operation/download/manage_perms.php: Function to show
+	categories manage admin in a special way.
+
+	* operation/download/browse.php: Manage admin on different
+	way.
+
 2013-01-25  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql

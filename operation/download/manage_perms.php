@@ -89,7 +89,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	echo __('Category');
 	echo "<td class=datos>";
-	combo_download_categories ($id_category, 1);
+	combo_download_categories ($id_category, 0);
 
 	echo "<tr>";
 	echo "<td class=datos2>";

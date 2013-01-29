@@ -338,6 +338,9 @@ WHERE tusuario_perfil.id_usuario = '".$config["id_user"]."' AND
 tusuario_perfil.id_grupo = tdownload_category_group.id_group AND
 tdownload_category_group.id_category = tdownload.id_category $sql_filter ";
 
+if (dame_admin($config["id_user"]))
+	$condition = " tdownload, tdownload_category_group WHERE tdownload_category_group.id_category = tdownload.id_category $sql_filter";
+
 $count = get_db_sql("SELECT COUNT(DISTINCT tdownload.id) FROM $condition");
 
 pagination ($count, "index.php?sec=download&sec2=operation/download/browse", $offset);
