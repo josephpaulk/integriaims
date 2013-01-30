@@ -1,5 +1,8 @@
 2013-01-29  Sancho Lerena <slerena@artica.es>
 
+	* integria.spec: Added php5-ctype as dependency (used
+	in wiki).
+
 	* include/functions_form.php: manage admin
 	differently on show product categories.
 
