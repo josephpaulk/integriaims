@@ -1,5 +1,8 @@
 2013-01-30  Sancho Lerena <slerena@artica.es>
 
+	* integria.centos.spec: new spec for centos/redhat. Deleted
+	the old one for fedora.
+
 	* integria.spec: Fixed problem with cron and with missing php dep.
 
 2013-01-30  Dario Rodriguez <dario@artica.es>
