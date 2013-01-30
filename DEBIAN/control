@@ -6,6 +6,6 @@ Section: admin
 Installed-Size: 42112
 Maintainer: Miguel de Dios <miguel.dedios@artica.es>
 Homepage: http://integriaims.com/
-Depends: apache2, libapache2-mod-php5, php5, php5-gd, php5-mysql, php5-xmlrpc, php-gettext, graphviz, dbconfig-common, mysql-client, php5-ldap, curl, php5-imap
+Depends: apache2, libapache2-mod-php5, php5, php5-gd, php5-mysql, php5-xmlrpc, php-gettext, graphviz, dbconfig-common, mysql-client, php5-ldap, curl, php5-imap, php5-mcrypt
 Description: Integria IMS is a enterprise software for project management, CRM, incident ticketing system inventory, file distribution and time tracking management. Integria is multiuser, with an integrated email reporting and notification system.
 

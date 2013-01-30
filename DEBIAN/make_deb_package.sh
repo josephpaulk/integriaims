@@ -54,8 +54,8 @@ mkdir -p temp_package
 	echo "Make directory system tree for package."
 	cp -R $(ls | grep -v temp_package | grep -v DEBIAN ) temp_package/var/www/integria
 	cp -R DEBIAN temp_package
-	find temp_package/var/www/integria -name ".svn" | xargs rm -Rf 
-	find temp_package/var/www/integria -name "*~" | xargs rm -Rf
+	find temp_package -name ".svn" | xargs rm -Rf 
+	find temp_package -name "*~" | xargs rm -Rf
 	rm -Rf temp_package/var/www/integria/*.spec
 	chmod 755 -R temp_package/DEBIAN
 
