@@ -29,7 +29,7 @@ AutoReq:            0
 Requires:           apache2
 Requires:           php >= 4.3.0
 Requires:           php5-gd, php5-json, php5-gettext, curl, php5-ldap, php5-imap
-Requires:           php5-mysql, php5-ldap, php5-mbstring, php5
+Requires:           php5-mysql, php5-ldap, php5-mbstring, php5, php5-ctype
 Requires:           graphviz, xorg-x11-fonts-core
 Provides:           %{name}-%{version}
 
@@ -77,7 +77,7 @@ rm -Rf %{prefix}/integria/
 
 # Install crontab each 5 min
 
-echo "01,05,10,15,20,25,30,35,40,45,50,55 * * * * root php5 /srv/www/htdocs/integria/include/integria_cron.php" > /etc/cron.d/integria
+echo "01,05,10,15,20,25,30,35,40,45,50,55 * * * * root php /srv/www/htdocs/integria/include/integria_cron.php" > /etc/cron.d/integria
 
 if [ -f %{prefix}/integria/include/config.php ] ; then
    echo "Seems you have already an existing config.php file. Installer has been renamed to install.done"
