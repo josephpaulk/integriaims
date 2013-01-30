@@ -1,3 +1,14 @@
+2013-01-30  SAncho Lerena <slerena@artica.es>
+
+	* integria.centos.spec: Added, from 3.1.
+
+	* integria.fedora.spec: Removed.
+
+	* integria.spec: updated some details.
+
+	* operation/projects/task_planning.php: Fixed problem with task 
+	planning updating.
+
 2013-01-30  Dario Rodriguez <dario@artica.es>
 
 	* DEBIAN/make_deb_package.sh: Fixed .svn delete folder command.

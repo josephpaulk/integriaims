@@ -2,7 +2,7 @@
 # Integria IMS	
 #
 %define name        IntegriaIMS
-%define version     3.1
+%define version     4.0
 %define httpd_name      httpd
 # User and Group under which Apache is running
 %define httpd_name  apache2
@@ -77,7 +77,7 @@ rm -Rf %{prefix}/integria/
 
 # Install crontab each 5 min
 
-echo "01,05,10,15,20,25,30,35,40,45,50,55 * * * * root php5 /srv/www/htdocs/integria/include/integria_cron.php" > /etc/cron.d/integria
+echo "01,05,10,15,20,25,30,35,40,45,50,55 * * * * root php /srv/www/htdocs/integria/include/integria_cron.php" > /etc/cron.d/integria
 
 if [ -f %{prefix}/integria/include/config.php ] ; then
    echo "Seems you have already an existing config.php file. Installer has been renamed to install.done"

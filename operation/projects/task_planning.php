@@ -123,7 +123,7 @@ if ($update) {
 		if (($result !== false) && ($result1 !== false) && ($result2 !== false)) {
 			$succ++;
 			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task updated", "Task '$name' updated to project '$id_project'");
-			task_tracking ($id_task, TASK_UPDATED);
+			task_tracking ($id, TASK_UPDATED);
 		} else {
 			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 		}
