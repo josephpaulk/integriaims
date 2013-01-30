@@ -39,7 +39,7 @@ Integria IMS is a enterprise software for project management, CRM, incident tick
 %prep
 rm -rf $RPM_BUILD_ROOT
 
-%setup -q -n integria
+%setup -q -n 3.1
 
 %build
 

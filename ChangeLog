@@ -1,3 +1,9 @@
+2013-01-30  Dario Rodriguez <dario@artica.es>
+
+	* DEBIAN/make_deb_package.sh: Fixed .svn delete folder command.
+	* DEBIAN/control: Added php5-mycrypt package to dependences.
+	* integria.spec: Changed version number.
+
 2013-01-29  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_form.php: manage admin
