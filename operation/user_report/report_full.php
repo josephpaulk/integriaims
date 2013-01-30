@@ -212,9 +212,6 @@ array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '
     echo print_select (get_user_groups (), 'search_id_group', $id_group, '', __('All'), 1, true, false, false, __('Group'));
   
     echo "<td>";
-    echo combo_incident_origin ($origen, false, true);
-
-    echo "<td>";
     echo combo_incident_resolution ($resolution, false, true);
 
     echo "<tr><td>";
@@ -236,7 +233,7 @@ array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '
     // TODO: Meter aqui inventario, con un control nuevo, tipo AJAX similar al de los usuarios.
 
     echo "<tr><td colspan=3 align=right>";
-    print_submit_button (__('Show'), 'show_btn', false, 'class="next sub"');
+    echo print_submit_button (__('Show'), 'show_btn', false, 'class="next sub"');
     echo "</form>";
     echo "</table>";
 }

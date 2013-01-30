@@ -1,5 +1,10 @@
 2013-01-30  Sancho Lerena <slerena@artica.es>
 
+	* operation/projects/task_planning.php,
+	operation/user_report/report_full.php: Small fixes.
+
+2013-01-30  Sancho Lerena <slerena@artica.es>
+
 	* integria.centos.spec: new spec for centos/redhat. Deleted
 	the old one for fedora.
 
