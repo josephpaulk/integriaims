@@ -170,4 +170,76 @@ function ui_print_result_message ($result, $good = '', $bad = '', $attributes = 
 	return ui_print_success_message ($good, $attributes, $return, $tag);
 }
 
+/**
+ * Print a code into a DIV and enable a toggle to show and hide it
+ * 
+ * @param string html code
+ * @param string name of the link
+ * @param string title of the link
+ * @param bool if the div will be hidden by default (default: true)
+ * @param bool Whether to return an output string or echo now (default: true)
+ * 
+ */
+
+function ui_toggle($code, $name, $title = '', $hidde_default = true, $return = false) {
+/*
+	$hack_metaconsole = '';
+	if (defined('METACONSOLE'))
+		$hack_metaconsole = '../../';
+*/
+	
+	// Generate unique Id
+	$uniqid = uniqid('');
+	
+	// Options
+	if ($hidde_default) {
+		$style = 'display:none';
+		$toggle_a = "$('#tgl_div_".$uniqid."').show();";
+		$toggle_b = "$('#tgl_div_".$uniqid."').hide();";
+		$image_a = print_image("images/go.png", true, false, true);
+		$image_b = print_image("images/down.png", true, false, true);
+		$original = "images/down.png";
+	}
+	else {
+		$style = '';
+		$toggle_a = "$('#tgl_div_".$uniqid."').hide();";
+		$toggle_b = "$('#tgl_div_".$uniqid."').show();";
+		$image_a = print_image("images/down.png", true, false, true);
+		$image_b = print_image("images/go.png", true, false, true);
+		$original = "images/go.png";
+	}
+	
+	// Link to toggle
+	$output = '';
+	$output .= '<a href="#" id="tgl_ctrl_'.$uniqid.'"><b>'.$name.'</b>&nbsp;'.print_image ($original, true, array ("title" => $title, "id" => "image_".$uniqid)).'</a>';
+	$output .= '<br /><br />';
+	
+	// Code into a div
+	$output .= "<div id='tgl_div_".$uniqid."' style='".$style."'>\n";
+	$output .= $code;
+	$output .= "</div>";
+	
+	// JQuery Toggle
+	$output .= '<script type="text/javascript">';
+	$output .= '/* <![CDATA[ */';
+	$output .= "$(document).ready (function () {";
+	$output .= "$('#tgl_ctrl_".$uniqid."').toggle(function() {";
+	$output .= $toggle_a;
+	$output .= "$('#image_".$uniqid."').attr({src: '".$image_a."'});";
+	$output .= "}, function() {";
+	$output .= $toggle_b;
+	$output .= "$('#image_".$uniqid."').attr({src: '".$image_b."'});";
+	$output .= "});";
+	$output .= "});";
+	$output .= '/* ]]> */';
+	$output .= '</script>';
+	
+	if (!$return) {
+		echo $output;
+	}
+	else {
+		return $output;
+	}
+}
+
 ?>

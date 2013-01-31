@@ -1189,4 +1189,41 @@ function get_best_incident_scoring ($lim, $incident_filter=false) {
 	return $most_creators;
 }
 
+/*
+ * Returns all incident type fields.
+ */ 
+function incidents_get_all_type_field ($id_incident_type, $id_incident) {
+	
+	global $config;
+	
+	$fields = get_db_all_rows_filter('tincident_type_field', array('id_incident_type' => $id_incident_type));
+	
+	if ($fields === false) {
+		$fields = array();
+	}
+	
+	$all_fields = array();
+	foreach ($fields as $id=>$field) {
+		foreach ($field as $key=>$f) {
+
+			if ($key == 'label') {
+				$all_fields[$id]['label_enco'] = base64_encode($f);
+			}
+			$all_fields[$id][$key] = safe_output($f);
+		}
+	}
+
+	foreach ($all_fields as $key => $field) {
+		$id_incident_field = $field['id'];
+		$data = get_db_value_filter('data', 'tincident_field_data', array('id_incident'=>$id_incident, 'id_incident_field' => $id_incident_field), 'AND');
+		if ($data === false) {
+			$all_fields[$key]['data'] = '';
+		} else {
+			$all_fields[$key]['data'] = $data;
+		}
+	}
+
+	return $all_fields;
+	
+}
 ?>

@@ -904,7 +904,7 @@ function incident_users_list ($id_incident, $return = false) {
 	       $output .= render_sidebox_user_info ($editor, "Editor");
 	}
 
-	if ($users['affected'])
+	//if ($users['affected'])
 	// PARTICIPANTS
 	if ($users['affected'] == false) {
 		$users['affected'] = array();

@@ -872,7 +872,7 @@ CREATE TABLE `tincident_type_field` (
   `id` mediumint(8) unsigned NOT NULL auto_increment, 
   `id_incident_type` mediumint(8) unsigned NOT NULL, 
   `label` varchar(100) NOT NULL default '', 
-  `type` enum ('numeric', 'text', 'combo') default 'numeric',
+  `type` enum ('textarea', 'text', 'combo') default 'text',
   `combo_value` text default NULL,
   PRIMARY KEY  (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

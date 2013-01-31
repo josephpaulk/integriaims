@@ -1,3 +1,16 @@
+2013-01-31  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  operation/incidents/type_detail.php
+	  operation/incidents/incident_type_field.php
+	  operation/incidents/incident_detail.php
+	  include/functions_form.php
+	  include/functions_incidents.php
+	  include/functions_ui.php
+	  include/js/integria_incident_search.js
+	  include/styles/integria.css: Changed layout incidents.
+
+
 2013-01-30  SAncho Lerena <slerena@artica.es>
 
 	* integria.centos.spec: Added, from 3.1.

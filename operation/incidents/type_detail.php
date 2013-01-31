@@ -96,8 +96,8 @@ if ($create_type) {
 
 	$values['name'] = (string) get_parameter ('name');
 	$values['description'] = (string) get_parameter ('description');
-	$values['id_wizard'] = (int) get_parameter ('wizard');
-	$values['id_group'] = (int) get_parameter ('id_group');
+	//$values['id_wizard'] = (int) get_parameter ('wizard');
+	//$values['id_group'] = (int) get_parameter ('id_group');
 	
 	if ($values['name'] != "") {
 
@@ -120,8 +120,8 @@ if ($update_type) {
 
 	$values['name'] = (string) get_parameter ('name');
 	$values['description'] = (string) get_parameter ('description');
-	$values['id_wizard'] = (int) get_parameter ('wizard');
-	$values['id_group'] = (int) get_parameter ('id_group');
+	//$values['id_wizard'] = (int) get_parameter ('wizard');
+	//$values['id_group'] = (int) get_parameter ('id_group');
 
 	$result = process_sql_update('tincident_type', $values, array('id', $id));
 
@@ -153,27 +153,29 @@ if ($id || $new_type) {
 		$id = 0;
 		$name = "";
 		$description = "";
-		$id_wizard = "";
-		$id_group = "";
+		//$id_wizard = "";
+		//$id_group = "";
 	} else {
 		$type = get_db_row ('tincident_type', 'id', $id);
 		$name = $type['name'];
 		$description = $type['description'];
-		$id_wizard = $type['id_wizard'];
-		$id_group = $type['id_group'];
+		//$id_wizard = $type['id_wizard'];
+		//$id_group = $type['id_group'];
 	}
 	
 	$table->width = "90%";
 	$table->class = "databox";
 	$table->data = array ();
 	$table->colspan = array ();
-	$table->colspan[2][0] = 2;
+	//$table->colspan[2][0] = 2;
 	
 	$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Type name'));
+/*
 	$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM twizard ORDER BY name',
 		'id_wizard', $id_wizard, '', 'Select', 0, true, false, false, __('Wizard'));
-		$table->data[1][0] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo ORDER BY nombre',
+	$table->data[1][0] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo ORDER BY nombre',
 		'id_group', $id_group, '', 'Select', 0, true, false, false, __('Group'));
+*/
 	$table->data[2][0] = print_textarea ('description', 3, 1, $description, '', true, __('Description'));
 	
 	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
@@ -229,8 +231,17 @@ if ($id || $new_type) {
 				$url_delete = "index.php?sec=incidents&sec2=operation/incidents/type_detail&delete_field=1&id=$id&id_field=".$field['id'];
 				$url_update = "index.php?sec=incidents&sec2=operation/incidents/incident_type_field&update_field=1&id=$id&id_field=".$field['id'];
 				
-				$data[0] = $field["label"];
-				$data[1] = $field["type"];
+				if ($field['label'] == '') {
+					$data[0] = '';
+				} else {
+					$data[0] = $field["label"];
+				}
+				
+				if ($field_type = '') {
+					$data[1] = '';
+				} else {
+					$data[1] = $field["type"];
+				}
 				
 				if ($field["type"] == "combo") {
 					$data[2] = $field["combo_value"];

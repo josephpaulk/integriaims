@@ -26,6 +26,7 @@ if (defined ('AJAX')) {
 	global $config;
 	
 	$search_users = (bool) get_parameter ('search_users');
+	$show_type_fields = (bool) get_parameter('show_type_fields', 0);
 	
 	if ($search_users) {
 		require_once ('include/functions_db.php');
@@ -45,6 +46,15 @@ if (defined ('AJAX')) {
 		
 		return;
  	}
+ 	
+ 	if ($show_type_fields) {
+		$id_incident_type = get_parameter('id_incident_type');
+		$id_incident = get_parameter('id_incident');		
+		$fields = incidents_get_all_type_field ($id_incident_type, $id_incident);
+	
+		echo json_encode($fields);
+		return;
+	}
 }
 
 $id_grupo = (int) get_parameter ('id_grupo');
@@ -145,6 +155,21 @@ if ($action == 'update') {
 	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
 	$email_copy = get_parameter ('email_copy', '');
 	$closed_by = get_parameter ('closed_by', $old_incident['closed_by']);
+
+	if ($id_incident_type != 0) {
+		$sql_label = "SELECT `label` FROM `tincident_type_field` WHERE id_incident_type = $id_incident_type";
+		$labels = get_db_all_rows_sql($sql_label);
+		
+		if ($labels === false) {
+			$labels = array();
+		}
+	
+		foreach ($labels as $label) {
+			$values['data'] = get_parameter (base64_encode($label['label']));
+			$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
+			process_sql_update('tincident_field_data', $values, array('id_incident_field' => $id_incident_field, 'id_incident' => $id), 'AND');
+		}
+	}
 	
 	$tracked = false;
 	if ($old_incident['prioridad'] != $priority) {
@@ -344,6 +369,28 @@ if ($action == "insert") {
 			if ($email_notify) {
 				mail_incident ($id, $usuario, "", 0, 1);
 			}
+			
+			//insert data to incident type fields
+			if ($id_incident_type != 0) {
+				$sql_label = "SELECT `label` FROM `tincident_type_field` WHERE id_incident_type = $id_incident_type";
+				$labels = get_db_all_rows_sql($sql_label);
+			
+				if ($labels === false) {
+					$labels = array();
+				}
+				
+				foreach ($labels as $label) {
+
+					$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
+					
+					$values_insert['id_incident'] = $id;
+					$values_insert['data'] = get_parameter (base64_encode($label['label']));
+					$values_insert['id_incident_field'] = $id_incident_field;
+					$id_incident_field = get_db_value('id', 'tincident_type_field', 'id_incident_type', $id_incident_type);
+					process_sql_insert('tincident_field_data', $values_insert);
+				}
+			}
+	
 		} else {
 			$result_msg  = '<h3 class="error">'.__('Could not be created').'</h3>';
 		}
@@ -652,7 +699,6 @@ if ($id) {
 }
 
 echo '<div class="result">'.$result_msg.'</div>';
-
 $table->width = '98%';
 $table->class = 'databox_color';
 $table->id = "incident-editor";
@@ -660,111 +706,18 @@ $table->size = array ();
 $table->size[0] = '25%';
 $table->size[1] = '25%';
 $table->size[2] = '25%';
-$table->size[3] = '25%';
-$table->style = array ();
+
+$table->style = array();
 $table->data = array ();
 $table->cellspacing = 2;
 $table->cellpadding = 2;
 $table->colspan = array ();
-
-
-$table->colspan[6][0] = 4;
-$table->colspan[7][0] = 4;
-$table->colspan[8][0] = 4;
-
-
-$disabled = !$has_permission;
-$actual_only = !$has_permission;
+$table->colspan[0][0] = 2;
 
 if ($has_permission) {
-	$table->data[0][0] = print_input_text ('titulo', $titulo, '', 40, 100, true, __('Title'));
+	$table->data[0][0] = print_input_text ('titulo', $titulo, '', 55, 100, true, __('Title'));
 } else {
 	$table->data[0][0] = print_label (__('Title'), '', '', true, $titulo);
-}
-
-// Redactor of the incident. Cannot change once created, comes from the user who is logged and entering
-// the incident
-
-$table->data[0][1] = print_label (__('Editor'), '', '', true, $editor);
-
-if ($has_im){
-	$table->data[0][2] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
-	        $disabled, '', '', true, __('SLA disabled'));
-
-	$table->data[0][3] = print_checkbox_extended ('email_notify', 1, $email_notify,
-                $disabled, '', '', true, __('Notify changes by email'));
-
-// DEBUG
-	$table->data[0][3] .= print_input_text ('email_copy', $email_copy,"",20,500, true);
-
-	$table->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
-
-} else {
-	$table->data[0][3] = print_input_hidden ('email_notify', 1, true);
-	$table->data[0][3] = print_input_hidden ('sla_disabled', 0, true);
-
-	$table->data[1][0] = print_label (__('Status'), '','',true, render_status($estado));
-	$table->data[1][0] .= print_input_hidden ('incident_status', $estado, true);
-}
-
-if ($disabled) {
-	$table->data[1][1] = print_label (__('Priority'), '', '', true,
-		render_priority ($priority));
-} else {
-	$table->data[1][1] = print_select (get_priorities (),
-		'priority_form', $priority, '', '',
-		'', true, false, false, __('Priority'));
-}
-
-$table->data[1][1] .= '&nbsp;'. print_priority_flag_image ($priority, true);
-
-if ($has_im)
-	$table->data[1][2] = combo_incident_resolution ($resolution, $disabled, true);
-else {
-	$table->data[1][2] = print_label (__('Resolution'), '','',true, render_resolution($resolution));
-	$table->data[1][2] .= print_input_hidden ('incident_resolution', $resolution, true);
-}
-
-
-$parent_name = $id_parent ? (__('Incident').' #'.$id_parent) : __('None');
-
-if ($has_im) {
-	$table->data[1][3] = print_button ($parent_name, 'search_parent', $disabled, '',
-				'class="dialogbtn"', true, __('Parent incident'));
-	$table->data[1][3] .= print_input_hidden ('id_parent', $id_parent, true);
-}
-
-// Show link to go parent incident
-if ($id_parent)
-	$table->data[1][3] .= '&nbsp;<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id_parent.'"><img src="images/go.png" /></a>';
-
-$table->data[2][1] = combo_incident_types ($id_incident_type, $disabled, true);
-
-// Task
-if ($has_im) { 
-//$actual, $id_user, $disabled = 0, $show_vacations = 0, $return = false)
-        $table->data[2][2] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"));
-} else {
-	$table->data[2][2] = print_label (__("Task"), "label-id", 'text', true);
-	$table->data[2][2] .= "<i>".get_db_value ('name', 'ttask', 'id', $id_task)."</i>";
-}
-
-
-if ($id_task > 0){
-	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
-	$table->data[2][2] .= "&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>";
-	$table->data[2][2] .= "<img src='images/bricks.png'></a>";
-}
-
-//If IW creator enabled flag is up the user can change creatro also.
-if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
-	
-	$src_code = print_image('images/group.png', true, false, true);
-	$table->data[2][3] = print_input_text_extended ('id_creator', $id_creator, 'text-id_creator', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Creator'))
-		. print_help_tip (__("Type at least two characters to search"), true);
-} else {
-	$table->data[2][3] = "<input type='hidden' name=id_creator value=$id_creator>";
 }
 
 //Get group if was not defined
@@ -775,13 +728,58 @@ if($id_grupo==0) {
 }
 
 if ($has_im) {
-	$table->data[4][0] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo_incident, true) . "<div id='group_spinner'></div>";
+	$table->data[0][2] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo_incident, true) . "<div id='group_spinner'></div>";
 } else {
-	$table->data[4][0] = print_label (__('Group'), '', '', true, dame_nombre_grupo ($id_grupo_incident));
-	$table->data[4][0] .= "<input type='hidden' id=grupo_form name=grupo_form value=$id_grupo_incident>";
+	$table->data[0][2] = print_label (__('Group'), '', '', true, dame_nombre_grupo ($id_grupo_incident));
+	$table->data[0][2] .= "<input type='hidden' id=grupo_form name=grupo_form value=$id_grupo_incident>";
 }
 
-// Only users with manage permission can change auto-assigned user (that information comes from group def.)
+if ($disabled) {
+	$table->data[1][0] = print_label (__('Priority'), '', '', true,
+		render_priority ($priority));
+} else {
+	$table->data[1][0] = print_select (get_priorities (),
+		'priority_form', $priority, '', '',
+		'', true, false, false, __('Priority'));
+}
+
+$table->data[1][0] .= '&nbsp;'. print_priority_flag_image ($priority, true);
+
+if ($has_im)
+	$table->data[1][1] = combo_incident_resolution ($resolution, $disabled, true);
+else {
+	$table->data[1][1] = print_label (__('Resolution'), '','',true, render_resolution($resolution));
+	$table->data[1][1] .= print_input_hidden ('incident_resolution', $resolution, true);
+}
+
+/*
+if (!$has_im){
+	$table->data[1][2] = print_label (__('Status'), '','',true, render_status($estado));
+	$table->data[1][2] .= print_input_hidden ('incident_status', $estado, true);
+}
+*/
+$table->data[1][2] = combo_incident_status ($estado, $disabled, $actual_only, true);
+
+//If IW creator enabled flag is up the user can change creatro also.
+if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
+	
+	$src_code = print_image('images/group.png', true, false, true);
+	$table->data[2][0] = print_input_text_extended ('id_creator', $id_creator, 'text-id_creator', '', 15, 30, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Creator'))
+		. print_help_tip (__("Type at least two characters to search"), true);
+} else {
+	$table->data[2][0] = "<input type='hidden' name=id_creator value=$id_creator>";
+}
+
+//$table_basic->data[0][1] = combo_incident_types ($id_incident_type, $disabled, true);
+$types = get_incident_types ();
+$table->data[2][1] = print_label (__('Incident type'), '','',true);
+if ($id_incident_type == 0) {
+	$disabled = false;
+} else {
+	$disabled = true;
+}
+$table->data[2][1] .= print_select($types, 'id_incident_type', $id_incident_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
 
 if ($has_im) {
 	$src_code = print_image('images/group.png', true, false, true);
@@ -791,24 +789,96 @@ if ($has_im) {
 	else
 		$assigned_user_for_this_incident = $usuario;
 	
-	$table->data[4][1] = print_input_text_extended ('id_user', $assigned_user_for_this_incident, 'text-id_user', '', 15, 30, false, '',
+	$table->data[2][2] = print_input_text_extended ('id_user', $assigned_user_for_this_incident, 'text-id_user', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))
 		. print_help_tip (__("User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user"), true);
 } else {
 	// Enterprise only
 	if (($create_incident) AND ($config["enteprise"] == 1)){
 		$assigned_user_for_this_incident = get_default_user_for_incident ($usuario);
-		//$table->data[4][1] = print_input_hidden ('usuario_form', $assigned_user_for_this_incident, true, __('Assigned user'));
-		$table->data[4][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Assigned user'));
-		$table->data[4][1] .= print_label (__('Assigned user'), '', '', true,
+		$table->data[2][2] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Assigned user'));
+		$table->data[2][2] .= print_label (__('Assigned user'), '', '', true,
 		dame_nombre_real ($assigned_user_for_this_incident));	
 		
 	} else {
-		//$table->data[4][1] = print_input_hidden ('usuario_form', $usuario, true, __('Assigned user'));
-		$table->data[4][1] = print_input_hidden ('id_user', $usuario, true, __('Assigned user'));
-		$table->data[4][1] .= print_label (__('Assigned user'), '', '', true,
+		$table->data[2][2] = print_input_hidden ('id_user', $usuario, true, __('Assigned user'));
+		$table->data[2][2] .= print_label (__('Assigned user'), '', '', true,
 		dame_nombre_real ($usuario));
 	}
+}
+
+// closed by
+$table->data[3][0] = print_input_text_extended ('closed_by', $closed_by, 'text-closed_by', '', 15, 30, false, '',
+		array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Closed by'))
+		. print_help_tip (__("User assigned here is user that will be responsible to close incident."), true);
+		
+
+//echo '</tr>';
+//$table->colspan[3][0] = 4;
+$table->data[4][0] = "<tr id='row_show_type_fields' colspan='4'></tr>";
+//$table->data['row_show_type_fields'][0] = '';
+
+$table->data[5][0] = '<a href="#" id="tgl_incident_control"><b>'.__('Advanced parameters').'</b>&nbsp;'.print_image ("images/go.png", true, array ("title" => __('Toggle parameter'), "id" => 'toggle_arrow')).'</a><br><br>';
+
+
+//////TABLA ADVANCED
+$table_advanced->width = '98%';
+$table_advanced->class = 'databox_color_without_line';
+$table_advanced->size = array ();
+$table_advanced->size[0] = '25%';
+$table_advanced->size[1] = '25%';
+$table_advanced->size[2] = '25%';
+$table_advanced->style = array();
+$table_advanced->data = array ();
+
+
+// Table for advanced controls
+$table_advanced->data[0][0] = print_label (__('Editor'), '', '', true, $editor);
+
+if ($has_im){
+	$table_advanced->data[0][1] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
+	        $disabled, '', '', true, __('SLA disabled'));
+
+	$table_advanced->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
+                $disabled, '', '', true, __('Notify changes by email'));
+
+// DEBUG
+	$table_advanced->data[0][2] .= print_input_text ('email_copy', $email_copy,"",20,500, true);
+
+/*
+	$table_advanced->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
+*/
+
+} else {
+	$table_advanced->data[1][1] = print_input_hidden ('email_notify', 1, true);
+	$table_advanced->data[1][2] = print_input_hidden ('sla_disabled', 0, true);
+}
+
+$parent_name = $id_parent ? (__('Incident').' #'.$id_parent) : __('None');
+
+if ($has_im) {
+	$table_advanced->data[2][0] = print_button ($parent_name, 'search_parent', $disabled, '',
+				'class="dialogbtn"', true, __('Parent incident'));
+	$table_advanced->data[2][0] .= print_input_hidden ('id_parent', $id_parent, true);
+}
+
+// Show link to go parent incident
+if ($id_parent)
+	$table_advanced->data[2][0] .= '&nbsp;<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id_parent.'"><img src="images/go.png" /></a>';
+
+// Task
+if ($has_im) { 
+        $table_advanced->data[2][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"));
+} else {
+	$table_advanced->data[2][1] = print_label (__("Task"), "label-id", 'text', true);
+	$table_advanced->data[2][1] .= "<i>".get_db_value ('name', 'ttask', 'id', $id_task)."</i>";
+}
+
+
+if ($id_task > 0){
+	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
+	$table_advanced->data[2][1] .= "&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>";
+	$table_advanced->data[2][1] .= "<img src='images/bricks.png'></a>";
 }
 
 if ($create_incident) {
@@ -829,77 +899,54 @@ if ($create_incident) {
 			$inventories[$default_inventory] =  get_db_value ('name', 'tinventory', 'id', $default_inventory);	
 		}
 		
-		$table->data[4][2] = print_select ($inventories, 'incident_inventories', NULL,
+		$table_advanced->data[3][1] = print_select ($inventories, 'incident_inventories', NULL,
 						'', '', '', true, false, false, __('Objects affected'));
-		$table->data[4][2] .= "<br>".print_button (__('Add'),
+		$table_advanced->data[3][1] .= "<br>".print_button (__('Add'),
 						'search_inventory', false, '', 'class="dialogbtn"', true);
-		$table->data[4][2] .= print_button (__('Remove'),
+		$table_advanced->data[3][1] .= print_button (__('Remove'),
 						'delete_inventory', false, '', 'class="dialogbtn"', true);
 } else {
 	$inventories = get_inventories_in_incident ($id);
-	$table->data[4][2] = print_select ($inventories, 'incident_inventories',
+	$table_advanced->data[3][1] = print_select ($inventories, 'incident_inventories',
 						NULL, '', '', '',
 						true, false, false, __('Objects affected'));
-		$table->data[4][2] .= "<br>".print_button (__('Add'),
+		$table_advanced->data[3][1] .= "<br>".print_button (__('Add'),
 					'search_inventory', false, '', 'class="dialogbtn"', true);
-		$table->data[4][2] .= print_button (__('Remove'),
+		$table_advanced->data[3][1] .= print_button (__('Remove'),
 					'delete_inventory', false, '', 'class="dialogbtn"', true);
 }
 
 foreach ($inventories as $inventory_id => $inventory_name) {
-	$table->data[4][2] .= print_input_hidden ("inventories[]",
+	$table_advanced->data[3][1] .= print_input_hidden ("inventories[]",
 						$inventory_id, true, 'selected-inventories');
 }
 
 
 if (($has_im) && ($create_incident)){
-    $table->data[4][3] =  print_label (__('Creator group'), '', '', true, ""); 
-	$table->data[4][3] .= combo_groups_visible_for_me ($config['id_user'], "id_group_creator", false, "IW", true, __("Creator group"), false, false);
+    $table_advanced->data[3][2] =  print_label (__('Creator group'), '', '', true, ""); 
+	$table_advanced->data[3][2] .= combo_groups_visible_for_me ($config['id_user'], "id_group_creator", false, "IW", true, __("Creator group"), false, false);
 } else {
 	//Only show if there is information to show ;)
 	if ($id_group_creator) {
-		$table->data[4][3] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_group_creator));
+		$table_advanced->data[3][2] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_group_creator));
 	}
 }
-// closed by
-$table->data[2][4] = print_input_text_extended ('closed_by', $closed_by, 'text-closed_by', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Closed by'))
-		. print_help_tip (__("User assigned here is user that will be responsible to close incident."), true);
+// END TABLE ADVANCED
+
+$table->colspan['row_advanced'][0] = 4;
+$table->data['row_advanced'][0] = print_table($table_advanced,true);
 
 
-if ($config['incident_reporter'] == 1){
-	if ($id) {
-		$contacts = get_incident_contact_reporters ($id, true);
-	} else {
-		$contacts = array ();
-	}
-
-	$table->data[5][0] = print_select ($contacts, 'select_contacts', NULL,
-					'', '', '', true, false, false, __('Reporters'));
-	if ($has_permission || $create_incident) {
-		$table->data[5][0] .= print_button (__('Add'),
-						'search_contact', false, '', 'class="dialogbtn"', true);
-		$table->data[5][0] .= print_button (__('Remove'),
-						'delete_contact', false, '', 'class="dialogbtn"', true);
-		foreach ($contacts as $contact_id => $contact_name) {
-			$table->data[5][0] .= print_input_hidden ("contacts[]",
-								$contact_id, true, 'selected-contacts');
-		}
-	}
-} else {
-
-    $table->data[5][0] = " ";
-}
-
-
+$table->colspan[9][0] = 4;
+$table->colspan[10][0] = 4;
 $disabled_str = $disabled ? 'readonly="1"' : '';
-$table->data[6][0] = print_textarea ('description', 9, 80, $description, $disabled_str,
+$table->data[9][0] = print_textarea ('description', 9, 80, $description, $disabled_str,
 		true, __('Description'));
 
 // This is never shown in create form
 
 if (!$create_incident){
-	$table->data[7][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,	true, __('Resolution epilog'));
+	$table->data[10][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,	true, __('Resolution epilog'));
 }
 
 
@@ -926,6 +973,11 @@ if ($has_permission){
 	print_table ($table);
 }
 
+//id_incident hidden
+echo '<div id="id_incident_hidden" style="display:none;">';
+	print_input_text('id_incident_hidden', $id);
+echo '</div>';
+
 /* Javascript is only shown in normal mode */
 //if (! defined ('AJAX')) :
 ?>
@@ -939,18 +991,15 @@ if ($has_permission){
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
 <script  type="text/javascript">
 $(document).ready (function () {
+	
 	/* First parameter indicates to add AJAX support to the form */
 	configure_incident_form (false);
-	//$("#text-id_user").change (function(){alert("hola")});
 	
-/*
-	if ($("#incident_status").val() == 7) {
-		$("#closed_by").css ('display', '');
-	} else {
-		$("#closed_by").css ('display', 'none');
+	$("#incident-editor-row_advanced-0").css('display', 'none');
+	
+	if ($("#id_incident_type").val() != "0") {
+		show_fields();
 	}
-*/
-		
 	
 	$("#text-id_creator").autocomplete ("ajax.php",
 		{
@@ -1017,18 +1066,148 @@ $(document).ready (function () {
 			delay: 200
 
 		});
+		
+		$("#tgl_incident_control").click(function() {
+			 fila = document.getElementById('incident-editor-row_advanced-0');
+			 //fila = document.getElementById('incident-editor-row_advanced');
+			  if (fila.style.display != "none") {
+				fila.style.display = "none"; //ocultar fila 
+			  } else {
+				fila.style.display = ""; //mostrar fila 
+			  }
+		});
 });
 
-// Check closed_by when status change
-/*
-	$("#incident_status").change (function () {
-		if ($("#incident_status").val() == 7) {
-			$("#closed_by").css ('display', '');
-		} else {
-			$("#closed_by").css ('display', 'none');
+function show_fields() {
+
+	id_incident_type = $("#id_incident_type").val();
+
+	id_incident = $("#text-id_incident_hidden").val();
+
+	//$('.new_row').remove();
+	$('#table_fields').remove();
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/incidents/incident_detail&show_type_fields=1&id_incident_type=" + id_incident_type +"&id_incident=" +id_incident,
+		dataType: "json",
+		success: function(data){
+			
+			fi=document.getElementById('row_show_type_fields');
+			var table = document.createElement("table"); //create table
+			table.id='table_fields';
+			table.className = 'databox_color_without_line';
+			table.width='98%';
+			fi.appendChild(table); //append table to row
+			
+			var i = 0;
+			var resto = 0;
+			jQuery.each (data, function (id, value) {
+				
+				resto = i % 2;
+
+				if (value['type'] == "combo") {
+					if (resto == 0) {
+						var objTr = document.createElement("tr"); //create row
+						objTr.id = 'new_row_'+i;
+						objTr.width='98%';
+						table.appendChild(objTr);
+					} else {
+						pos = i-1;
+						objTr = document.getElementById('new_row_'+pos);
+					}
+					
+					var objTd1 = document.createElement("td"); //create column for label
+					objTd1.width='50%';
+					lbl = document.createElement('label');
+					lbl.innerHTML = value['label']+' ';
+					
+					objTr.appendChild(objTd1);
+					objTd1.appendChild(lbl);
+					
+					element=document.createElement('select');
+					element.id=value['label']; 
+					element.name=value['label_enco'];
+					element.value=value['label'];
+					element.style.width="170px";
+					
+					var new_text = value['combo_value'].split(',');
+					jQuery.each (new_text, function (id, val) {
+						element.options[id] = new Option(val);
+						element.options[id].setAttribute("value",val);
+						if (value['data'] == val) {
+							element.options[id].setAttribute("selected",'');
+						}
+					});
+			
+					lbl.appendChild(element);
+					i++;
+				}
+				
+				if ((value['type'] == "text")) {
+					
+					if (resto == 0) {
+						var objTr = document.createElement("tr"); //create row
+						objTr.id = 'new_row_'+i;
+						objTr.width='98%';
+						table.appendChild(objTr);
+					} else {
+						pos = i-1;
+						objTr = document.getElementById('new_row_'+pos);
+					}
+					
+					var objTd1 = document.createElement("td"); //create column for label
+					objTd1.width='50%';
+					lbl = document.createElement('label');
+					lbl.innerHTML = value['label']+' ';
+					objTr.appendChild(objTd1);
+					objTd1.appendChild(lbl);
+					
+					element=document.createElement('input');
+					element.id=value['label'];
+					element.name=value['label_enco'];
+					element.value=value['data'];
+					element.type='text';
+					element.size=40;
+					
+					lbl.appendChild(element);
+					i++;
+				}
+				
+				if ((value['type'] == "textarea")) {
+					
+					if (resto == 0) {
+						var objTr = document.createElement("tr"); //create row
+						objTr.id = 'new_row_'+i;
+						table.appendChild(objTr);
+					} else {
+						pos = i-1;
+						objTr = document.getElementById('new_row_'+pos);
+					}
+					
+					var objTd1 = document.createElement("td"); //create column for label
+					
+					lbl = document.createElement('label');
+					lbl.innerHTML = value['label']+' ';
+					objTr.appendChild(objTd1);
+					objTd1.appendChild(lbl);
+					
+					element=document.createElement("textarea");
+					element.id=value['label'];
+					element.name=value['label_enco'];
+					element.value=value['data'];
+					element.type='text';
+					element.rows='3'
+					
+					lbl.appendChild(element);
+					i++;
+				}
+			});
 		}
 	});
-*/
+}
+
 </script>
 
 <?php //endif; ?>
