@@ -343,7 +343,7 @@ if (dame_admin($config["id_user"]))
 
 $count = get_db_sql("SELECT COUNT(DISTINCT tdownload.id) FROM $condition");
 
-pagination ($count, "index.php?sec=download&sec2=operation/download/browse", $offset);
+pagination ($count, "index.php?sec=download&sec2=operation/download/browse&id_category=$category&free_text=$free_text", $offset);
 
 $sql = "SELECT tdownload.* FROM $condition GROUP BY tdownload.id ORDER BY date DESC, name LIMIT
 $offset, ". $config["block_size"];

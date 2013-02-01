@@ -1,3 +1,7 @@
+2013-02-01  Sancho Lerena <slerena@artica.es>
+
+	* operation/download/browse.php: Fixed pagination.
+
 2013-01-30  Sancho Lerena <slerena@artica.es>
 
 	* operation/projects/task_planning.php,
