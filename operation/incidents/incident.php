@@ -73,7 +73,7 @@ if ($config["want_chat"] == 1){
 echo '</ul>';
 
 /* Tabs first container is manually set, so it loads immediately */
-echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: '.($id ? 'none' : 'block').';">';
+echo '<div id="ui-tabs-setup" class="ui-tabs-panel">';
 
 echo '<div class="result"></div>';
 

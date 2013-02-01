@@ -860,44 +860,7 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".__('General setup')."</a></li>";
-
-	// Visual Setup
-	if ($sec2 == "godmode/setup/setup_visual")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_visual'>".__('Visual setup')."</a></li>";
-
-	enterprise_include("godmode/sidemenu_password_setup.php");
-	
-	// Incident Setup
-	if ($sec2 == "godmode/setup/incidents_setup")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/incidents_setup'>".__('Incidents setup')."</a></li>";
-	
-	// Inventories Setup
-	if ($sec2 == "godmode/setup/inventories_setup")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/inventories_setup'>".__('Inventories setup')."</a></li>";
-	
-	// Mail Setup
-	if ($sec2 == "godmode/setup/setup_mail")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_mail'>".__('Mail setup')."</a></li>";
-
-	// Mail Templates Setup
-	if ($sec2 == "godmode/setup/setup_mailtemplates")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates'>".__('Mail templates setup')."</a></li>";
+	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup'>".__('Setup')."</a></li>";
 
 /* DISABLED UNTIL WE FIX IT
 

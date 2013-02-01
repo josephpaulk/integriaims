@@ -178,69 +178,7 @@ if ($create) {
 
 	// Individual creation of a task
 	
-	} else {
-
-		$name = get_parameter ('name');
-		$start = get_parameter ('start_date', date ("Y-m-d"));
-		$end = get_parameter ('end_date', date ("Y-m-d"));
-		$owner = get_parameter('owner');
-
-		//hour fields hidden
-		$hours = ((strtotime ($end) - strtotime ($start)) / (3600*24)) * $config['hours_perday'];
-		$hours = $hours + $config['hours_perday'];
-		
-		if ($name == '') {
-			//Check name not empty
-			echo '<h3 class="error">'.__('Name cannot be empty').'</h3>';
-			
-		} elseif (strtotime ($start) > strtotime ($end)) {
-			//Check date properly set
-			echo '<h3 class="error">'.__('Begin date cannot be before end date').'</h3>';
-		} else {
-			
-			$description = '';
-			$priority = 0;
-			$completion = 0;
-			$parent = (int) get_parameter ('parent');
-			$periodicity = 'none';
-			$estimated_cost = 0;
-			$id_group = (int) get_parameter ('group', 1);
-			
-			$sql = sprintf ('INSERT INTO ttask (id_project, name, description, priority,
-				completion, start, end, id_parent_task, id_group, hours, estimated_cost,
-				periodicity)
-				VALUES (%d, "%s", "%s", %d, %d, "%s", "%s", %d, %d, %d, %f, "%s")',
-				$id_project, $name, $description, $priority, $completion, $start, $end,
-				$parent, $id_group, $hours, $estimated_cost, $periodicity);
-
-			$id_task = process_sql ($sql, 'insert_id');
-			
-			if ($id_task) {
-			
-				$sql = sprintf("SELECT id_role FROM trole_people_project 
-							WHERE id_project = %d AND id_user = '%s'", $id_project, $owner);
-				
-				$id_role = process_sql($sql);
-				$role = $id_role[0]['id_role'];
-			
-				$sql = sprintf('INSERT INTO trole_people_task (id_user, id_role, id_task)
-							VALUES ("%s", %d, %d)', $owner, $role, $id_task);
-			
-				$result2 = process_sql($sql);	
-			}
-		
-			//Audit the result
-			if ($id_task !== false ) {
-				echo "<h3 class='suc'>".__('Successfully created')."</h3>";
-				audit_db ($config['id_user'], $config["REMOTE_ADDR"], "Task added to project", "Task '$name' added to project '$id_project'");
-				
-				task_tracking ($id_task, TASK_CREATED);
-				project_tracking ($id_project, PROJECT_TASK_ADDED);
-			} else {
-				echo "<h3 class='error'>".__('Could not be created')."</h3>";
-			}
-		}
-	}
+	} 
 }
 
 $project_name =  get_db_value ("name", "tproject", "id", $id_project);
@@ -347,17 +285,11 @@ echo "<div style='width:100%;text-align:left;border-spacing:0px;' class='button'
 echo "<table style='margin:0px; padding:0px;'>";
 echo "<tr>";
 
-//Create new task only if PM && TM flags or PW and project manager.
-if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "PM") || (give_acl ($config["id_user"], 0, "PW") && $config["id_user"] == $project_manager)) {
-	echo "<td>";
-	print_button (__('Add task'), 'add', false, '', 'class="sub next"');
-	echo "</td>";
-}
 
 //Create new task only if PM && TM flags or PW and project manager.
 if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "PM") || (give_acl ($config["id_user"], 0, "PW") && $config["id_user"] == $project_manager)) {
         echo "<td>";
-        print_button (__('Add several tasks'), 'addmass', false, '', 'class="sub next"');
+        print_button (__('Add tasks'), 'addmass', false, '', 'class="sub next"');
         echo "</td>";
 }
 
