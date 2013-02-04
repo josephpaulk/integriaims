@@ -767,12 +767,14 @@ function form_search_incident ($return = false) {
 	$id_group = (int) get_parameter ('search_id_group');
 	$id_inventory = (int) get_parameter ('search_id_inventory');
 	$id_company = (int) get_parameter ('search_id_company');
-	$id_product = (int) get_parameter ('search_id_product');
-	$search_serial_number = (string) get_parameter ('search_serial_number');
-	$search_id_building = (int) get_parameter ('search_id_building');
-	$search_sla_fired = (bool) get_parameter ('search_sla_fired');
+	//$id_product = (int) get_parameter ('search_id_product');
+	//$search_serial_number = (string) get_parameter ('search_serial_number');
+	//$search_id_building = (int) get_parameter ('search_id_building');
+	//$search_sla_fired = (bool) get_parameter ('search_sla_fired');
 	$search_id_user = (string) get_parameter ('search_id_user');
 	$search_id_incident_type = (int) get_parameter ('search_id_incident_type');
+	$date_end = date ('Y-m-j');
+	$date_ini = date('Y-m-j',strtotime($date_end) - 2592000);
 	
 	/* No action is set, so the form will be sent to the current page */
 	$table->width = "100%";
@@ -821,6 +823,7 @@ function form_search_incident ($return = false) {
 	$table->data[1][1] .= print_button ($name, 'inventory_name', false, '',
 		'class="dialogbtn"', true, __('Inventory'));
 	
+/*
 	$table->data[1][2] = print_select (get_products (),
 		'search_id_product', $id_product,
 		'', __('All'), 0, true, false, false,
@@ -833,12 +836,13 @@ function form_search_incident ($return = false) {
 		'', __('All'), 0, true, false, false,
 		__('Building'));
 	$table->data[2][2] = print_checkbox ('search_sla_fired', 1, $search_sla_fired, true, __('SLA fired'));
+*/
 	
 	$table->data[3][0] = print_select (get_user_visible_users ($config['id_user'], 'IR', true),
 		'search_id_user', $search_id_user,
 		'', __('Any'), 0, true, false, false, __('User'));
-	$table->data[3][1] = print_input_text ('search_first_date', '', '', 15, 15, true, __('Begin date'));
-	$table->data[3][2] = print_input_text ('search_last_date', '', '', 15, 15, true, __('End date'));
+	$table->data[3][1] = print_input_text ('search_first_date', $date_ini, '', 15, 15, true, __('Begin date'));
+	$table->data[3][2] = print_input_text ('search_last_date', $date_end, '', 15, 15, true, __('End date'));
 	
 	if (!get_external_user ($config["id_user"]))
 		$table->data[4][0] = print_select (get_companies (), 'search_id_company',

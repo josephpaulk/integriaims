@@ -1,3 +1,26 @@
+2013-02-04  Vanessa Gil <vanessa.gil@artica.es>
+
+	* godmode/setup/incidents_setup.php
+	  godmode/setup/inventories_setup.php
+	  godmode/setup/setup.php
+	  godmode/setup/setup_mail.php
+	  godmode/setup/setup_mailtemplates.php
+	  godmode/setup/setup_visual.php
+	  godmode/setup/setup_pandora.php
+	  godmode/setup/setup_auth.php
+	  operation/side_menu.php
+	  operation/incidents/incident.php: Changed links to tabs
+	and remove to menu.
+
+	* operation/incidents/incident_detail.php
+	  operation/incidents/incident.php
+	  operation/incidents/incident_type_field.php: Changed fields
+	order and fixed several bugs.
+
+	* include/languages/date_en_GB.js
+	  images/email_edit.png
+	  images/pandora.ico: Added files.
+
 2013-02-01  Sancho Lerena <slerena@artica.es>
 
 	* operation/download/browse.php: FIxed ownload

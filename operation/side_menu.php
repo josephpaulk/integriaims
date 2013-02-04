@@ -930,19 +930,6 @@ if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 		echo "<li>";
 	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/logviewer'>".__('Error log')."</a></li>";
 	
-	// Authentication
-	if ($sec2 == "godmode/setup/setup_auth")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_auth'>".__('Authentication')."</a></li>";
-
-	// Pandora FMS integration
-	if ($sec2 == "godmode/setup/setup_pandora")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=godmode&sec2=godmode/setup/setup_pandora'>".__('Pandora FMS inventory')."</a></li>";
 	
 	// Pandora FMS translation
 	enterprise_include("godmode/sidemenu_translate_setup.php");
@@ -1090,7 +1077,6 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 			}
 		}
 		
-		enterprise_include ("operation/sidemenu_user_mgmt.php");
 		
 		if($show_people != MENU_MINIMAL) {
 			echo "</ul>";

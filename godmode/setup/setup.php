@@ -45,7 +45,11 @@ echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/inci
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/inventories_setup"><span><img src="images/page_white_text.png"  title="'.__('Inventories setup').'"></span></a></li>';
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_mail"><span><img src="images/email.png"  title="'.__('Mail setup').'"></span></a></li>';
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates"><span><img src="images/email_edit.png"  title="'.__('Mail templates setup').'"></span></a></li>';
-
+if ($is_enterprise) {
+	echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=enterprise/godmode/usuarios/menu_visibility_manager"><span valign=bottom><img src="images/eye.png" title="'.__('Visibility management').'"></span></a></li>';
+}
+echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_pandora"><span><img src="images/pandora.ico"  title="'.__('Pandora FMS inventory').'"></span></a></li>';
+echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_auth"><span><img src="images/book_edit.png"  title="'.__('Authentication').'"></span></a></li>';
 echo '</ul>';
 
 echo '</div>';
@@ -80,7 +84,6 @@ if ($update) {
     $config["iw_creator_enabled"] = get_parameter ("iw_creator_enabled", 0);
     $config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
     $config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
-$config["max_incidents_by_search"] = get_parameter ("max_incidents_by_search", 1);
 	    
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
@@ -110,7 +113,6 @@ $config["max_incidents_by_search"] = get_parameter ("max_incidents_by_search", 1
     update_config_token ("limit_size", $config["limit_size"]);
     update_config_token ("max_file_size", $config["max_file_size"]);
 
-update_config_token ("max_incidents_by_search", $config["max_incidents_by_search"]);
 
 	process_sql ("DELETE FROM tconfig WHERE token = 'autowu_completion'");
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('autowu_completion', '".$config["autowu_completion"]."')");
@@ -186,7 +188,7 @@ $table->data[1][0] = print_select ($incident_reporter_options, "email_on_inciden
 $table->data[1][0] .= print_help_tip (__("Enabling this, you will get emails on file attachs also. If left disabled, you only get notifications only in major events on incidents"), true);
 
 $table->data[1][1] = print_input_text ("limit_size", $config["limit_size"], '',
-	5, 5, true, __('Max. data limit size'));
+	5, 5, true, __('Max. Incidents by search'));
 $table->data[1][1] .= integria_help ("limit_size", true);
 
 $table->data[2][0] = print_input_text ("autowu_completion", $config["autowu_completion"],
@@ -266,9 +268,6 @@ $table->data[14][1] = print_select ($newsletter_options, "want_chat", $config["w
 
 
 $table->data[14][0] = print_select ($newsletter_options, "incident_creation_wu", $config["incident_creation_wu"], '','','',true, 0, true, __('Editor adds a WU on incident creation'));
-
-$table->data[15][0] = print_input_text ("max_incidents_by_search", $config["max_incidents_by_search"], '',
-	10, 255, true, __('Max. Incidents by search'));
 
 echo "<form name='setup' method='post'>";
 

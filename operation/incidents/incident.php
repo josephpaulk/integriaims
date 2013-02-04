@@ -72,6 +72,7 @@ if ($config["want_chat"] == 1){
 }
 echo '</ul>';
 
+if (!$id) {///
 /* Tabs first container is manually set, so it loads immediately */
 echo '<div id="ui-tabs-setup" class="ui-tabs-panel">';
 
@@ -111,6 +112,9 @@ unset ($table);
 echo '<div id="loading">'.__('Loading');
 echo '... <img src="images/wait.gif" /></div>';
 
+echo '<div>'.print_image('images/tip.gif', true).__('Max incidents shown: '.$config['limit_size'].'. You can change this value in setup.').'</div>';
+
+	
 $table->class = 'hide result_table listing';
 $table->width = '100%';
 $table->id = 'incident_search_result_table';
@@ -132,6 +136,7 @@ $table->style = array ();
 $table->style[0] = '';
 
 print_table ($table);
+
 
 print_table_pager ();
 
@@ -161,11 +166,12 @@ echo "<div style='width:".$table->width."'>";
 print_submit_button (__('Update selected items'), 'massive_update', false, 'class="sub next" style="float:right;');
 echo "</div>";
 
-
 echo '<div id="incident-stats"></div>';
 
 /* End of first tab container */
 echo '</div>';
+
+}//////
 
 echo '</div>';
 /* End of tabs code */
@@ -227,6 +233,7 @@ function tab_loaded (event, tab) {
 }
 
 function check_incident (id) {
+console.log("CHECK INCIDENT");
 	values = Array ();
 	values.push ({name: "page",
 		value: "operation/incidents/incident_detail"});

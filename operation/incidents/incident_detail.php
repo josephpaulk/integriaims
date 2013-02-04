@@ -771,16 +771,6 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	$table->data[2][0] = "<input type='hidden' name=id_creator value=$id_creator>";
 }
 
-//$table_basic->data[0][1] = combo_incident_types ($id_incident_type, $disabled, true);
-$types = get_incident_types ();
-$table->data[2][1] = print_label (__('Incident type'), '','',true);
-if ($id_incident_type == 0) {
-	$disabled = false;
-} else {
-	$disabled = true;
-}
-$table->data[2][1] .= print_select($types, 'id_incident_type', $id_incident_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
-
 if ($has_im) {
 	$src_code = print_image('images/group.png', true, false, true);
 	
@@ -789,33 +779,41 @@ if ($has_im) {
 	else
 		$assigned_user_for_this_incident = $usuario;
 	
-	$table->data[2][2] = print_input_text_extended ('id_user', $assigned_user_for_this_incident, 'text-id_user', '', 15, 30, false, '',
+	$table->data[2][1] = print_input_text_extended ('id_user', $assigned_user_for_this_incident, 'text-id_user', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))
 		. print_help_tip (__("User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user"), true);
 } else {
 	// Enterprise only
 	if (($create_incident) AND ($config["enteprise"] == 1)){
 		$assigned_user_for_this_incident = get_default_user_for_incident ($usuario);
-		$table->data[2][2] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Assigned user'));
-		$table->data[2][2] .= print_label (__('Assigned user'), '', '', true,
+		$table->data[2][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Assigned user'));
+		$table->data[2][1] .= print_label (__('Assigned user'), '', '', true,
 		dame_nombre_real ($assigned_user_for_this_incident));	
 		
 	} else {
-		$table->data[2][2] = print_input_hidden ('id_user', $usuario, true, __('Assigned user'));
-		$table->data[2][2] .= print_label (__('Assigned user'), '', '', true,
+		$table->data[2][1] = print_input_hidden ('id_user', $usuario, true, __('Assigned user'));
+		$table->data[2][1] .= print_label (__('Assigned user'), '', '', true,
 		dame_nombre_real ($usuario));
 	}
 }
 
 // closed by
-$table->data[3][0] = print_input_text_extended ('closed_by', $closed_by, 'text-closed_by', '', 15, 30, false, '',
+$table->data[2][2] = print_input_text_extended ('closed_by', $closed_by, 'text-closed_by', '', 15, 30, false, '',
 		array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Closed by'))
 		. print_help_tip (__("User assigned here is user that will be responsible to close incident."), true);
 		
+$types = get_incident_types ();
+$table->data[3][0] = print_label (__('Incident type'), '','',true);
+if ($id_incident_type == 0) {
+	$disabled = false;
+} else {
+	$disabled = true;
+}
+$table->data[3][0] .= print_select($types, 'id_incident_type', $id_incident_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
 
-//echo '</tr>';
-//$table->colspan[3][0] = 4;
-$table->data[4][0] = "<tr id='row_show_type_fields' colspan='4'></tr>";
+$table->colspan[4][0] = 3;		
+//$table->data[4][0] = "<tr id='row_show_type_fields' colspan='4'></tr>";
+$table->data[4][0] = "";
 //$table->data['row_show_type_fields'][0] = '';
 
 $table->data[5][0] = '<a href="#" id="tgl_incident_control"><b>'.__('Advanced parameters').'</b>&nbsp;'.print_image ("images/go.png", true, array ("title" => __('Toggle parameter'), "id" => 'toggle_arrow')).'</a><br><br>';
@@ -1094,7 +1092,8 @@ function show_fields() {
 		dataType: "json",
 		success: function(data){
 			
-			fi=document.getElementById('row_show_type_fields');
+			//fi=document.getElementById('row_show_type_fields');
+			fi=document.getElementById('incident-editor-4-0');
 			var table = document.createElement("table"); //create table
 			table.id='table_fields';
 			table.className = 'databox_color_without_line';
@@ -1189,6 +1188,7 @@ function show_fields() {
 					var objTd1 = document.createElement("td"); //create column for label
 					
 					lbl = document.createElement('label');
+					//lbl.maxlength="35";
 					lbl.innerHTML = value['label']+' ';
 					objTr.appendChild(objTd1);
 					objTd1.appendChild(lbl);
