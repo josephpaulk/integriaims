@@ -1042,4 +1042,28 @@ function combo_download_categories ($id_category, $show_any = 0){
 }
 
 
+// Returns a combo with the incident origin
+// ----------------------------------------------------------------------
+function combo_incident_origin ($actual = -1, $disabled = 0, $return = false) {
+	$output = '';
+	if ($disabled) {
+		$origins = get_incident_resolutions ();
+		$origin = isset ($origins[$actual]) ? $origins[$actual] : __('None');
+		$output .= print_label (__('Source'), '', '', true, $origin);
+	
+		if ($return)
+			return $output;
+
+		echo $output;
+		return;
+	}
+
+	$output .= print_select (get_incident_origins (), 'incident_origin',
+				$actual, '', __("None"), 0, true, false, false, __('Source'));
+	
+	if ($return)
+		return $output;
+	echo $output;
+} 
+
 ?>
