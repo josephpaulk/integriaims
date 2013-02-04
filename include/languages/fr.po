@@ -8,34 +8,34 @@ msgstr ""
 "Project-Id-Version: integria-fr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-12-06 09:56+0100\n"
-"PO-Revision-Date: 2012-12-11 15:38+0000\n"
+"PO-Revision-Date: 2013-02-04 12:28+0000\n"
 "Last-Translator: katalina <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-12 09:24+0000\n"
-"X-Generator: Launchpad (build 16361)\n"
+"X-Launchpad-Export-Date: 2013-02-04 12:28+0000\n"
+"X-Generator: Launchpad (build 16468)\n"
 "Language: fr\n"
 
 #: ../../operation/messages/message.php:30
 msgid "Message successfully sent"
-msgstr "Message envoyé avec succès"
+msgstr "Message envoyé  avec succès"
 
 #: ../../operation/messages/message.php:32
 #: ../../operation/messages/message.php:75
 #: ../../operation/messages/message.php:77
 msgid "There was a problem sending message"
-msgstr "Il y avait un problème d'envoyer un message"
+msgstr "Il y avait un problème en envoyant le message"
 
 #: ../../operation/messages/message.php:74
 msgid "Message successfully sended"
-msgstr "Message envoyé avec succès"
+msgstr "Message envoié avec succès"
 
 #: ../../operation/messages/message.php:81
 #: ../../operation/messages/message.php:123
 msgid "New message"
-msgstr "Nouveau message"
+msgstr "Nouveau Message"
 
 #: ../../operation/messages/message.php:85
 #: ../../operation/messages/message.php:127
@@ -68,12 +68,12 @@ msgstr "Message"
 #: ../../operation/messages/message.php:119
 #: ../../operation/messages/message.php:143
 msgid "Send message"
-msgstr "Envoyer un message"
+msgstr "Envoyer le message"
 
 #: ../../operation/messages/message.php:123
 #: ../../operation/users/user_statistics.php:24
 msgid "Help"
-msgstr "Aider"
+msgstr "Aide"
 
 #: ../../operation/messages/message.php:153
 msgid "Message sucessfully deleted"
@@ -1567,7 +1567,7 @@ msgstr "état du problème"
 
 #: ../../operation/newsletter/issue_creation.php:100
 msgid "Plain ascii"
-msgstr ""
+msgstr "Plain ascii"
 
 #: ../../operation/newsletter/issue_creation.php:101
 msgid "HTML"
@@ -2533,15 +2533,15 @@ msgstr "Projet"
 
 #: ../../operation/buildings/building_detail.php:61
 msgid "Building cannot be updated"
-msgstr ""
+msgstr "Elaboration impossible de mettre á jour"
 
 #: ../../operation/buildings/building_detail.php:79
 msgid "Building management"
-msgstr ""
+msgstr "Créant gestion"
 
 #: ../../operation/buildings/building_detail.php:99
 msgid "Building name"
-msgstr ""
+msgstr "Creant nom"
 
 #: ../../operation/invoices/invoices.php:98
 msgid "There was a problem creating the invoice"
@@ -3035,7 +3035,7 @@ msgstr "Unité de travail pour les détails d'incident #"
 
 #: ../../operation/incidents/incident_chat.ajax.php:111
 msgid "---------- CHAT -------------"
-msgstr ""
+msgstr "---------- CHAT -------------"
 
 #: ../../operation/incidents/incident_chat.ajax.php:220
 #, php-format
@@ -3413,7 +3413,7 @@ msgstr "L'incident ne peut etre pas ponctue jusqu'a etre fermé"
 
 #: ../../operation/incidents/incident_score.php:63
 msgid "Incident scoring"
-msgstr ""
+msgstr "Ponctuation de l'incident"
 
 #: ../../operation/incidents/incident_score.php:65
 msgid "Thanks for your feedback, this help us to keep improving our job"
@@ -3462,11 +3462,11 @@ msgstr "Détails de l'incident"
 
 #: ../../operation/incidents/incident_tracking.php:93
 msgid "SLA history compliance for: "
-msgstr ""
+msgstr "Histoire d'accomplissement pour "
 
 #: ../../operation/incidents/incident_tracking.php:118
 msgid "SLA total compliance (%)"
-msgstr ""
+msgstr "Accomplissement (%) du total SLA"
 
 #: ../../operation/incidents/incident_tracking.php:125
 msgid "Activity by user (# WU)"
@@ -3535,7 +3535,7 @@ msgstr "Langue"
 
 #: ../../operation/kb/browse_data.php:77
 msgid "Wrote on "
-msgstr ""
+msgstr "Ecrit dans "
 
 #: ../../operation/kb/browse_data.php:80
 #: ../../operation/kb/manage_data.php:220
@@ -3558,7 +3558,7 @@ msgstr "liste des pièces jointes"
 #: ../../operation/kb/manage_data.php:64 ../../operation/kb/browse.php:73
 #: ../../operation/download/manage_data.php:64
 msgid "Attach deleted ok"
-msgstr ""
+msgstr "Adjointe effacé bien"
 
 #: ../../operation/kb/manage_data.php:181
 #: ../../operation/kb/manage_data.php:278 ../../operation/kb/browse.php:211
@@ -3576,7 +3576,7 @@ msgstr "Créer un nouveau objet de la BC"
 #: ../../operation/kb/manage_data.php:187 ../../operation/kb/browse.php:217
 #: ../../operation/download/manage_data.php:187
 msgid "Update existing KB item"
-msgstr ""
+msgstr "Mettre à jour l'objet de la BC actuelle"
 
 #: ../../operation/kb/manage_data.php:208 ../../operation/kb/browse.php:238
 #: ../../operation/download/manage_data.php:208
@@ -3591,7 +3591,7 @@ msgstr "Joindre"
 #: ../../operation/kb/manage_data.php:230 ../../operation/kb/browse.php:260
 #: ../../operation/download/manage_data.php:230
 msgid "Need to create first"
-msgstr ""
+msgstr "Besoin de créer le premier"
 
 #: ../../operation/kb/manage_data.php:235 ../../operation/kb/browse.php:265
 #: ../../operation/download/manage_data.php:235
@@ -3708,7 +3708,7 @@ msgstr "Gestion des tâches"
 
 #: ../../operation/todo/todo.php:213
 msgid "Assigned to other users"
-msgstr ""
+msgstr "Assigné à d'autres utilisateurs"
 
 #: ../../operation/todo/todo.php:235 ../../operation/side_menu.php:824
 #: ../../operation/side_menu.php:832 ../../general/home.php:220
@@ -3731,122 +3731,125 @@ msgstr "Assigné par"
 #: ../../operation/user_report/report_annual.php:209
 #: ../../operation/users/user_task_assigment.php:169
 msgid " "
-msgstr ""
+msgstr " "
 
 #: ../../operation/download/browse.php:157
 msgid "File releases management"
-msgstr ""
+msgstr "Gestion des publications des fichiers"
 
 #: ../../operation/download/browse.php:172 ../../godmode/setup/filemgr.php:39
 msgid "Could not be attached"
-msgstr ""
+msgstr "Ne peut pas etre joint"
 
 #: ../../operation/download/browse.php:175 ../../godmode/setup/filemgr.php:42
 msgid "Successfully attached"
-msgstr ""
+msgstr "Joint avec succès"
 
 #: ../../operation/download/browse.php:191
 msgid "Upload a new file"
-msgstr ""
+msgstr "Télécharger un nouveau fichier"
 
 #: ../../operation/download/browse.php:201 ../../godmode/setup/filemgr.php:118
 msgid "Current directory is not writtable by HTTP Server"
 msgstr ""
+"Répertoire courant n'est pas accessible en écriture par le serveur HTTP"
 
 #: ../../operation/download/browse.php:203 ../../godmode/setup/filemgr.php:120
 msgid "Please check that current directory has write rights for HTTP server"
 msgstr ""
+"S'il vous plaît vérifiez que le répertoire courant a les droits en écriture "
+"pour le serveur HTTP"
 
 #: ../../operation/download/browse.php:211
 msgid "Create a new file release"
-msgstr ""
+msgstr "Creer nouveau publication de fichier"
 
 #: ../../operation/download/browse.php:215
 msgid "Update existing file release"
-msgstr ""
+msgstr "Mettre à jour la publication du fichier actuel"
 
 #: ../../operation/download/browse.php:231
 msgid "Choose file from repository"
-msgstr ""
+msgstr "Choisir le fichier à partir du référentiel"
 
 #: ../../operation/download/browse.php:270
 msgid "Main category"
-msgstr ""
+msgstr "Catégorie principal"
 
 #: ../../operation/download/browse.php:293
 #: ../../operation/download/browse.php:362
 msgid "Downloads"
-msgstr ""
+msgstr "Téléchargements"
 
 #: ../../operation/download/browse.php:354
 msgid "No Downloads found"
-msgstr ""
+msgstr "Pas de téléchargements trouvçes"
 
 #: ../../operation/download/browse.php:365
 msgid "Admin"
-msgstr ""
+msgstr "Administrateur"
 
 #: ../../operation/download/manage_cat.php:97
 #: ../../operation/download/manage_cat.php:137
 msgid "File release category management"
-msgstr ""
+msgstr "Gestion des categories de publications de fichiers"
 
 #: ../../operation/download/manage_perms.php:81
 #: ../../operation/download/manage_perms.php:113
 msgid "File release category access management"
-msgstr ""
+msgstr "Gestion d'access de la categorie de sortie d'un fichier"
 
 #: ../../operation/download/manage_perms.php:82
 msgid "Create a new category access"
-msgstr ""
+msgstr "Créer une nouvelle catégorie d'accès"
 
 #: ../../operation/download/manage_perms.php:113
 msgid "Assigned categories / group"
-msgstr ""
+msgstr "Categories/groupes assignés"
 
 #: ../../operation/reporting/inventories_html.php:35
 msgid "Inventory report"
-msgstr ""
+msgstr "Rapport d'inventaire"
 
 #: ../../operation/reporting/inventories_html.php:50
 #: ../../operation/reporting/incidents_html.php:56
 msgid "Containing"
-msgstr ""
+msgstr "Contiens"
 
 #: ../../operation/reporting/inventories_html.php:84
 msgid "All inventory"
-msgstr ""
+msgstr "Tous les inventoires"
 
 #: ../../operation/reporting/inventories_html.php:110
 msgid "Inventory objects statistics"
-msgstr ""
+msgstr "Estatistiques des objets d'inventoire"
 
 #: ../../operation/reporting/inventories_html.php:115
 msgid "Inventory objects list"
-msgstr ""
+msgstr "Lsite des objets d'inventaire"
 
 #: ../../operation/reporting/incidents_html.php:41
 msgid "Incidents report"
-msgstr ""
+msgstr "Rapport d'incidents"
 
 #: ../../operation/reporting/incidents_html.php:68
 #: ../../include/functions_form.php:857
 msgid "SLA fired"
-msgstr ""
+msgstr "SLA demarré"
 
 #: ../../operation/reporting/incidents_html.php:88
 #: ../../include/functions_form.php:870
 msgid "Incident type"
-msgstr ""
+msgstr "Type d'incident"
 
 #: ../../operation/reporting/incidents_html.php:168
 msgid "Incident list"
-msgstr ""
+msgstr "Liste des incidents"
 
 #: ../../operation/user_report/monthly_graph.php:74
 #: ../../operation/user_report/monthly.php:122
 msgid "Monthly report for"
-msgstr ""
+msgstr "Rapport mensuelle pour"
 
 #: ../../operation/user_report/monthly_graph.php:78
 #: ../../operation/user_report/report_monthly.php:67
@@ -3864,31 +3867,31 @@ msgstr "Suivant"
 
 #: ../../operation/user_report/monthly_graph.php:90
 msgid "Workunit by task"
-msgstr ""
+msgstr "Unité de travail pour tâche"
 
 #: ../../operation/user_report/monthly_graph.php:96
 msgid "Workunit by project"
-msgstr ""
+msgstr "Unité de travail par projet"
 
 #: ../../operation/user_report/report_full.php:166
 msgid "Workunit Reporter"
-msgstr ""
+msgstr "Reporter unité de travail"
 
 #: ../../operation/user_report/report_full.php:181
 msgid "Project search"
-msgstr ""
+msgstr "Projet de recherche"
 
 #: ../../operation/user_report/report_full.php:185
 msgid "Show only summary"
-msgstr ""
+msgstr "Afficher le résumé seulement"
 
 #: ../../operation/user_report/report_full.php:198
 msgid "Incident creator"
-msgstr ""
+msgstr "créateur de l'incident"
 
 #: ../../operation/user_report/report_full.php:205
 msgid "Incident editor"
-msgstr ""
+msgstr "éditeur des incidents"
 
 #: ../../operation/user_report/report_full.php:239
 #: ../../operation/user_report/monthly.php:148
@@ -3902,23 +3905,23 @@ msgstr "Afficher"
 #: ../../include/functions_graph.php:223 ../../include/functions_graph.php:256
 #: ../../include/functions_graph.php:465
 msgid "There is no data to show"
-msgstr ""
+msgstr "Il n'existe aucune donnée pour montrer"
 
 #: ../../operation/user_report/report_full.php:251
 msgid "Project report on related incidents"
-msgstr ""
+msgstr "Rapport de projet sur ​​les incidents liés"
 
 #: ../../operation/user_report/report_full.php:253
 msgid "Project report"
-msgstr ""
+msgstr "Rapport de projet"
 
 #: ../../operation/user_report/report_full.php:258
 msgid "User hours"
-msgstr ""
+msgstr "Heures de l'utilisater"
 
 #: ../../operation/user_report/report_full.php:259
 msgid "Project total"
-msgstr ""
+msgstr "Project total"
 
 #: ../../operation/user_report/report_full.php:260
 #: ../../include/functions_incidents.php:766
@@ -3934,15 +3937,15 @@ msgstr "Totaux"
 #: ../../operation/user_report/report_full.php:455
 #: ../../operation/user_report/report_full.php:604
 msgid "Working days"
-msgstr ""
+msgstr "jours ouvrables"
 
 #: ../../operation/user_report/report_full.php:460
 msgid "Project graph report"
-msgstr ""
+msgstr "Rapport de la graphique du projet"
 
 #: ../../operation/user_report/report_full.php:466
 msgid "Worktime per person"
-msgstr ""
+msgstr "Temps de travail par personne"
 
 #: ../../operation/user_report/report_full.php:468
 #: ../../operation/user_report/report_full.php:612
@@ -3961,48 +3964,48 @@ msgstr ""
 #: ../../include/functions_incidents.php:795
 #: ../../include/functions_incidents.php:799
 msgid "others"
-msgstr ""
+msgstr "autres"
 
 #: ../../operation/user_report/report_full.php:502
 msgid "#"
-msgstr ""
+msgstr "#"
 
 #: ../../operation/user_report/report_full.php:508
 msgid "vs"
-msgstr ""
+msgstr "vs"
 
 #: ../../operation/user_report/report_full.php:508
 #: ../../operation/user_report/report_weekly.php:62
 msgid "Total hours"
-msgstr ""
+msgstr "Total d'heures"
 
 #: ../../operation/user_report/report_full.php:510
 msgid "SLA Compliance"
-msgstr ""
+msgstr "Réalisation SLA"
 
 #: ../../operation/user_report/report_full.php:602
 msgid "Number of incidents"
-msgstr ""
+msgstr "Nombre d'incidents"
 
 #: ../../operation/user_report/report_full.php:604
 msgid "Total worktime"
-msgstr ""
+msgstr "Temps de travail total"
 
 #: ../../operation/user_report/report_full.php:610
 msgid "Incident graph report"
-msgstr ""
+msgstr "Rapport de le graphique de l'incident"
 
 #: ../../operation/user_report/report_full.php:615
 msgid "Incident by group"
-msgstr ""
+msgstr "Incident par groupe"
 
 #: ../../operation/user_report/report_full.php:620
 msgid "Incident by creator group"
-msgstr ""
+msgstr "Incident par le créateur du groupe"
 
 #: ../../operation/user_report/report_monthly.php:61
 msgid "Totals for this month"
-msgstr ""
+msgstr "Totaux pour ce mois-ci"
 
 #: ../../operation/user_report/report_monthly.php:103
 #: ../../operation/user_report/report_weekly.php:59
@@ -4015,16 +4018,16 @@ msgstr "Identifiant de l'utilisateur"
 #: ../../operation/user_report/report_monthly.php:105
 #: ../../godmode/usuarios/configurar_usuarios.php:315
 msgid "Reports"
-msgstr ""
+msgstr "Rapports"
 
 #: ../../operation/user_report/report_monthly.php:106
 msgid "Total hours for this month"
-msgstr ""
+msgstr "Nombre total d'heures pour ce mois-ci"
 
 #: ../../operation/user_report/report_monthly.php:107
 #: ../../include/functions_incidents.php:734
 msgid "Avg. Scoring"
-msgstr ""
+msgstr "Ponctuation"
 
 #: ../../operation/user_report/report_monthly.php:150
 #: ../../operation/user_report/report_weekly.php:89
@@ -4039,22 +4042,22 @@ msgstr "Cet usager n'a aucun profil/groupe associé"
 #: ../../operation/side_menu.php:1022 ../../operation/side_menu.php:1248
 #: ../../godmode/usuarios/configurar_usuarios.php:333
 msgid "Workunit report"
-msgstr ""
+msgstr "Rapport unité de travail"
 
 #: ../../operation/user_report/report_monthly.php:189
 #: ../../godmode/usuarios/configurar_usuarios.php:337
 msgid "Montly calendar report"
-msgstr ""
+msgstr "Rapport de calendrier mensuel"
 
 #: ../../operation/user_report/report_monthly.php:193
 #: ../../operation/side_menu.php:1055
 #: ../../godmode/usuarios/configurar_usuarios.php:341
 msgid "Montly report"
-msgstr ""
+msgstr "Rapport mensuel"
 
 #: ../../operation/user_report/report_annual.php:72
 msgid "Annual report for user"
-msgstr ""
+msgstr "Rapport annuel pour l'utilisateur"
 
 #: ../../operation/user_report/report_annual.php:117
 #: ../../operation/users/user_task_assigment.php:100
@@ -4065,32 +4068,32 @@ msgstr "Aller à"
 
 #: ../../operation/user_report/report_annual.php:131
 msgid "Vacations days"
-msgstr ""
+msgstr "Jours de vacances"
 
 #: ../../operation/user_report/report_annual.php:136
 msgid "Days worked (projects)"
-msgstr ""
+msgstr "Jours de travail (projets)"
 
 #: ../../operation/user_report/report_annual.php:141
 msgid "Days worked (incidents)"
-msgstr ""
+msgstr "Jours travaillés (incidents)"
 
 #: ../../operation/user_report/report_annual.php:176
 #: ../../include/functions_calendar.php:505
 msgid "Locked"
-msgstr ""
+msgstr "Verrouillé"
 
 #: ../../operation/user_report/monthly.php:125
 msgid "Lock all workunits in this month"
-msgstr ""
+msgstr "Verrouiller toutes les unités de travail en ce mois"
 
 #: ../../operation/user_report/report_weekly.php:46
 msgid "Totals for week"
-msgstr ""
+msgstr "Totals par semaine"
 
 #: ../../operation/user_report/report_weekly.php:61
 msgid "Graph overview"
-msgstr ""
+msgstr "Vue d'ensemble du graphique"
 
 #: ../../operation/tool_menu.php:18 ../../operation/side_menu.php:944
 #: ../../general/links_menu.php:23
@@ -4100,59 +4103,59 @@ msgstr "Liens"
 #: ../../operation/users/user_task_assigment.php:86
 #: ../../enterprise/godmode/usuarios/role_user_global.php:69
 msgid "Global task assignment"
-msgstr ""
+msgstr "L'attribution des tâches globale"
 
 #: ../../operation/users/user_task_assigment.php:86
 #: ../../enterprise/godmode/usuarios/role_user_global.php:71
 msgid "For user"
-msgstr ""
+msgstr "Pour  l'utilisateur"
 
 #: ../../operation/users/user_task_assigment.php:111
 #: ../../enterprise/godmode/usuarios/menu_visibility_manager.php:103
 msgid "Operation"
-msgstr ""
+msgstr "Opération"
 
 #: ../../operation/users/user_task_assigment.php:139
 msgid "Finish this task"
-msgstr ""
+msgstr "Terminez cette tâche"
 
 #: ../../operation/users/user_task_assigment.php:141
 msgid "Deassign this task"
-msgstr ""
+msgstr "Annuler l'affectation de cette tâche"
 
 #: ../../operation/users/user_spare_workunit.php:126
 #: ../../operation/users/user_workunit_report.php:66
 msgid "Locked successfully"
-msgstr ""
+msgstr "verrouillé avec succès"
 
 #: ../../operation/users/user_spare_workunit.php:131
 #: ../../operation/users/user_workunit_report.php:71
 #: ../../include/functions_form.php:771
 msgid "Locked by"
-msgstr ""
+msgstr "verrouillé par"
 
 #: ../../operation/users/user_spare_workunit.php:227
 #: ../../operation/users/user_spare_workunit.php:231
 msgid "Problem adding workunit."
-msgstr ""
+msgstr "Problème ajoutant unité de travail"
 
 #: ../../operation/users/user_spare_workunit.php:256
 #: ../../operation/users/user_spare_workunit.php:259
 #: ../../include/functions_workunits.php:289
 msgid "Problemd adding workunit."
-msgstr ""
+msgstr "Problème ajoutant unité de travail"
 
 #: ../../operation/users/user_spare_workunit.php:360
 msgid "Single WU"
-msgstr ""
+msgstr "UT simple"
 
 #: ../../operation/users/user_spare_workunit.php:375
 msgid "Multiple WU"
-msgstr ""
+msgstr "UT multiple"
 
 #: ../../operation/users/user_spare_workunit.php:392
 msgid "Update workunit"
-msgstr ""
+msgstr "Mettre à jour unité de travail"
 
 #: ../../operation/users/user_spare_workunit.php:456
 #: ../../operation/users/user_search.php:96 ../../general/login_page.php:74
@@ -4172,11 +4175,13 @@ msgstr "Faire suivre"
 msgid ""
 "If this checkbox is activated, propagation will be forward instead backward"
 msgstr ""
+"Si cette case à cocher est activé, la propagation se produirá en avant  au "
+"lieu de a rebours"
 
 #: ../../operation/users/user_spare_workunit.php:472
 #: ../../include/functions_workunits.php:166
 msgid "Split > 1day"
-msgstr ""
+msgstr "Déplacer > 1jour"
 
 #: ../../operation/users/user_spare_workunit.php:473
 #: ../../include/functions_workunits.php:167
@@ -4184,27 +4189,30 @@ msgid ""
 "If workunit added is superior to 8 hours, it will be propagated to previous "
 "workday and deduced from the total, until deplete total hours assigned"
 msgstr ""
+"Si l'unité de travail est supérieur a 8 heures, il será propagé dans jours "
+"de travail précédents et soustrait du total, jusqu'a montrer le total des "
+"heures assignes."
 
 #: ../../operation/users/user_spare_workunit.php:508
 msgid "Add multiple workunits summary "
-msgstr ""
+msgstr "Ajoutez plusieurs unités de travail résumé "
 
 #: ../../operation/users/user_spare_workunit.php:512
 msgid "Add new parse Workunit"
-msgstr ""
+msgstr "Ajouter une nouvelle unité de travail d'analyse"
 
 #: ../../operation/users/user_spare_workunit.php:527
 msgid "Add multiple workunits"
-msgstr ""
+msgstr "Ajouter unités de travail multiple"
 
 #: ../../operation/users/user_spare_workunit.php:595
 #: ../../operation/users/user_spare_workunit.php:621
 msgid "Task was not selected"
-msgstr ""
+msgstr "Tâche n'a pas été sélectionné"
 
 #: ../../operation/users/user_statistics.php:23
 msgid "Users defined"
-msgstr ""
+msgstr "Utilisateurs définis"
 
 #: ../../operation/users/user_statistics.php:24
 msgid "User activity statistics"
@@ -4212,16 +4220,16 @@ msgstr "Statistiques de l'activité des usagers"
 
 #: ../../operation/users/user_edit.php:79
 msgid "Passwords don't match"
-msgstr ""
+msgstr "Les mots de passe ne correspondent pas"
 
 #: ../../operation/users/user_edit.php:108
 msgid "User details"
-msgstr ""
+msgstr "détails sur l'utilisateur"
 
 #: ../../operation/users/user_edit.php:129
 #: ../../godmode/usuarios/configurar_usuarios.php:253
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #: ../../operation/users/user_edit.php:150
 #: ../../operation/users/user_edit.php:162
@@ -4235,7 +4243,7 @@ msgstr "Par défaut"
 
 #: ../../operation/users/user_edit.php:154
 msgid "Total incidents opened"
-msgstr ""
+msgstr "Nombre total d'incidents ouverts"
 
 #: ../../operation/users/user_edit.php:156
 #: ../../operation/users/user_edit.php:164
@@ -4252,7 +4260,7 @@ msgstr "Commentaires"
 #: ../../operation/users/user_edit.php:158
 #: ../../operation/users/user_edit.php:159
 msgid "Not provided"
-msgstr ""
+msgstr "Pas fourni"
 
 #: ../../operation/users/user_edit.php:177
 #: ../../godmode/usuarios/configurar_usuarios.php:243
@@ -4271,19 +4279,19 @@ msgstr "Changer le mot de passe"
 
 #: ../../operation/users/user_workunit_report.php:115
 msgid "Workunit personal report for user"
-msgstr ""
+msgstr "Raport personel de unite de travail pour utilisateur"
 
 #: ../../operation/users/user_workunit_report.php:123
 msgid "Between dates"
-msgstr ""
+msgstr "Entre deux dates"
 
 #: ../../operation/users/user_workunit_report.php:126
 msgid "to"
-msgstr ""
+msgstr "à"
 
 #: ../../operation/users/user_search.php:63
 msgid "No users found"
-msgstr ""
+msgstr "Aucun utilisateur trouvé"
 
 #: ../../operation/side_menu.php:44 ../../operation/main_menu.php:33
 #: ../../general/home.php:260
@@ -4293,27 +4301,27 @@ msgstr "Projets"
 
 #: ../../operation/side_menu.php:55
 msgid "Projects overview"
-msgstr ""
+msgstr "vue d'ensemble des projets"
 
 #: ../../operation/side_menu.php:62
 msgid "Projects detail"
-msgstr ""
+msgstr "Détail des projets"
 
 #: ../../operation/side_menu.php:69
 msgid "Projects tree"
-msgstr ""
+msgstr "Arbre des projects"
 
 #: ../../operation/side_menu.php:77
 msgid "Create project"
-msgstr ""
+msgstr "Créer un projet"
 
 #: ../../operation/side_menu.php:86
 msgid "Disabled projects"
-msgstr ""
+msgstr "Project desactivée"
 
 #: ../../operation/side_menu.php:126
 msgid "Process graph"
-msgstr ""
+msgstr "Graphiqe du processus"
 
 #: ../../operation/side_menu.php:151
 msgid "New task"
@@ -4322,120 +4330,120 @@ msgstr "Nouvelle tâche"
 #: ../../operation/side_menu.php:174
 #: ../../include/graphs/functions_fsgraph.php:857
 msgid "Milestones"
-msgstr ""
+msgstr "Jalons"
 
 #: ../../operation/side_menu.php:230
 msgid "Task detail"
-msgstr ""
+msgstr "Détaille de tâche"
 
 #: ../../operation/side_menu.php:267
 msgid "View external costs"
-msgstr ""
+msgstr "Voir les coûts externes"
 
 #: ../../operation/side_menu.php:286
 msgid "Email report"
-msgstr ""
+msgstr "Rapport par email"
 
 #: ../../operation/side_menu.php:293
 msgid "Move task"
-msgstr ""
+msgstr "Déplacer tâche"
 
 #: ../../operation/side_menu.php:341 ../../operation/side_menu.php:349
 msgid "Project groups"
-msgstr ""
+msgstr "Groupes de projects"
 
 #: ../../operation/side_menu.php:374
 msgid "New ticket"
-msgstr ""
+msgstr "Nouveau ticket"
 
 #: ../../operation/side_menu.php:388
 msgid "Incidents overview"
-msgstr ""
+msgstr "Synthèse des incidents"
 
 #: ../../operation/side_menu.php:401
 msgid "Incident #"
-msgstr ""
+msgstr "Incident #"
 
 #: ../../operation/side_menu.php:443
 msgid "Incident Report"
-msgstr ""
+msgstr "Rapport de l'incident"
 
 #: ../../operation/side_menu.php:465
 msgid "Users in incident"
-msgstr ""
+msgstr "Les utilisateurs de l'incident"
 
 #: ../../operation/side_menu.php:526
 msgid "Inventory overview"
-msgstr ""
+msgstr "Vue d'ensemble d'inventaire"
 
 #: ../../operation/side_menu.php:539
 msgid "Inventory #"
-msgstr ""
+msgstr "Inventoire #"
 
 #: ../../operation/side_menu.php:571 ../../operation/main_menu.php:67
 msgid "Customers"
-msgstr ""
+msgstr "Clients"
 
 #: ../../operation/side_menu.php:584
 msgid "New company"
-msgstr ""
+msgstr "Nouvelle entreprise"
 
 #: ../../operation/side_menu.php:607
 msgid "New contract"
-msgstr ""
+msgstr "Nouveau contract"
 
 #: ../../operation/side_menu.php:621
 msgid "New contact"
-msgstr ""
+msgstr "Nouveau contact"
 
 #: ../../operation/side_menu.php:647
 msgid "Newsletters"
-msgstr ""
+msgstr "Lettres d'information"
 
 #: ../../operation/side_menu.php:650
 msgid "New newsletter"
-msgstr ""
+msgstr "Lettres d'information nouvelles"
 
 #: ../../operation/side_menu.php:657
 msgid "Issues"
-msgstr ""
+msgstr "Incidents"
 
 #: ../../operation/side_menu.php:660
 msgid "New issue"
-msgstr ""
+msgstr "Nouveau problème"
 
 #: ../../operation/side_menu.php:670
 msgid "New address"
-msgstr ""
+msgstr "Nouvelle adresse"
 
 #: ../../operation/side_menu.php:677
 msgid "Queue control"
-msgstr ""
+msgstr "contrôle de file d'attente"
 
 #: ../../operation/side_menu.php:689
 msgid "Manufacturers"
-msgstr ""
+msgstr "Fabricants"
 
 #: ../../operation/side_menu.php:697
 msgid "Manufacturer overview"
-msgstr ""
+msgstr "Vue d'ensamble du fabricant"
 
 #: ../../operation/side_menu.php:706
 msgid "Buildings"
-msgstr ""
+msgstr "Constructions"
 
 #: ../../operation/side_menu.php:714
 msgid "Building overview"
-msgstr ""
+msgstr "Vue d'ensamble des constructions"
 
 #: ../../operation/side_menu.php:723
 msgid "Products"
-msgstr ""
+msgstr "Produits"
 
 #: ../../operation/side_menu.php:740
 #: ../../enterprise/godmode/usuarios/profile_list.php:224
 msgid "Knowledge Base"
-msgstr ""
+msgstr "Base de connaissances"
 
 #: ../../operation/side_menu.php:748 ../../operation/side_menu.php:789
 msgid "Browse"
@@ -4443,31 +4451,31 @@ msgstr "Parcourir"
 
 #: ../../operation/side_menu.php:756
 msgid "Create KB item"
-msgstr ""
+msgstr "Créer item de la BC"
 
 #: ../../operation/side_menu.php:763 ../../operation/side_menu.php:804
 msgid "Manage categories"
-msgstr ""
+msgstr "Gerer les catégories"
 
 #: ../../operation/side_menu.php:781
 msgid "File releases"
-msgstr ""
+msgstr "sortie fichiers"
 
 #: ../../operation/side_menu.php:797
 msgid "Create file release"
-msgstr ""
+msgstr "Créer sortie du fichier"
 
 #: ../../operation/side_menu.php:811
 msgid "Manage access"
-msgstr ""
+msgstr "Administrer accès"
 
 #: ../../operation/side_menu.php:839
 msgid "To-Do another people"
-msgstr ""
+msgstr "Pour-Faire autres personnes"
 
 #: ../../operation/side_menu.php:846
 msgid "Add todo"
-msgstr ""
+msgstr "Ajouter pour-faire"
 
 #: ../../operation/side_menu.php:853 ../../operation/main_menu.php:128
 msgid "Setup"
@@ -4475,41 +4483,41 @@ msgstr "Configuration"
 
 #: ../../operation/side_menu.php:861 ../../godmode/setup/setup.php:135
 msgid "General setup"
-msgstr ""
+msgstr "Configuration générale"
 
 #: ../../operation/side_menu.php:868 ../../godmode/setup/setup_visual.php:50
 msgid "Visual setup"
-msgstr ""
+msgstr "Configuration visuelle"
 
 #: ../../operation/side_menu.php:877
 #: ../../godmode/setup/incidents_setup.php:30
 msgid "Incidents setup"
-msgstr ""
+msgstr "Installation des incidents"
 
 #: ../../operation/side_menu.php:884
 msgid "Inventories setup"
-msgstr ""
+msgstr "Configuration des inventaires"
 
 #: ../../operation/side_menu.php:891 ../../godmode/setup/setup_mail.php:62
 msgid "Mail setup"
-msgstr ""
+msgstr "Configuration du courrier"
 
 #: ../../operation/side_menu.php:898
 #: ../../godmode/setup/setup_mailtemplates.php:66
 msgid "Mail templates setup"
-msgstr ""
+msgstr "Configuration des modèles de courriers"
 
 #: ../../operation/side_menu.php:921 ../../godmode/setup/filemgr.php:64
 msgid "File manager"
-msgstr ""
+msgstr "Gestionnaire de fichier"
 
 #: ../../operation/side_menu.php:928
 msgid "News board"
-msgstr ""
+msgstr "Tableau des nouvelles"
 
 #: ../../operation/side_menu.php:936
 msgid "DB Manager"
-msgstr ""
+msgstr "Administrateur de BD"
 
 #: ../../operation/side_menu.php:951
 msgid "System events"
@@ -4517,23 +4525,23 @@ msgstr "Événements système"
 
 #: ../../operation/side_menu.php:958
 msgid "Audit log"
-msgstr ""
+msgstr "Registre d'audit"
 
 #: ../../operation/side_menu.php:966 ../../godmode/setup/setup.php:189
 msgid "Error log"
-msgstr ""
+msgstr "Journal des erreurs"
 
 #: ../../operation/side_menu.php:973
 msgid "Authentication"
-msgstr ""
+msgstr "Authentification"
 
 #: ../../operation/side_menu.php:980 ../../godmode/setup/setup_pandora.php:53
 msgid "Pandora FMS inventory"
-msgstr ""
+msgstr "Inventaire de Pandora FMS"
 
 #: ../../operation/side_menu.php:991
 msgid "Myself"
-msgstr ""
+msgstr "Moi-même"
 
 #: ../../operation/side_menu.php:1002
 msgid "Edit my user"
@@ -4541,31 +4549,31 @@ msgstr "Editer mon usager"
 
 #: ../../operation/side_menu.php:1010
 msgid "Add spare workunit"
-msgstr ""
+msgstr "Ajouter l'unité de travail de rechange"
 
 #: ../../operation/side_menu.php:1029
 msgid "My task assigments"
-msgstr ""
+msgstr "Mes tâches"
 
 #: ../../operation/side_menu.php:1040
 msgid "People reporting"
-msgstr ""
+msgstr "Rapport des employés"
 
 #: ../../operation/side_menu.php:1062
 msgid "Annual report"
-msgstr ""
+msgstr "Rapport annuel"
 
 #: ../../operation/side_menu.php:1074
 msgid "Custom reports"
-msgstr ""
+msgstr "Rapports des clients"
 
 #: ../../operation/side_menu.php:1081
 msgid "Create report"
-msgstr ""
+msgstr "Créer un rapport"
 
 #: ../../operation/side_menu.php:1094
 msgid "People management"
-msgstr ""
+msgstr "Gestion du personnel"
 
 #: ../../operation/side_menu.php:1102
 #: ../../enterprise/godmode/usuarios/profile_list.php:273
@@ -4579,11 +4587,11 @@ msgstr "Créer un usager"
 
 #: ../../operation/side_menu.php:1110
 msgid "Import from CSV"
-msgstr ""
+msgstr "Import du CSV"
 
 #: ../../operation/side_menu.php:1118
 msgid "Manage roles"
-msgstr ""
+msgstr "Gestioner rôles"
 
 #: ../../operation/side_menu.php:1125
 msgid "Manage groups"
@@ -4593,7 +4601,7 @@ msgstr "Gestion de groupes"
 #: ../../operation/main_menu.php:118
 #: ../../enterprise/godmode/usuarios/profile_list.php:242
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki"
 
 #: ../../operation/side_menu.php:1208
 msgid "Calendar"
@@ -4601,7 +4609,7 @@ msgstr "Calendrier"
 
 #: ../../operation/side_menu.php:1234
 msgid "User info"
-msgstr ""
+msgstr "Information de l'utilisateur"
 
 #: ../../operation/side_menu.php:1243
 msgid "Phone"
@@ -4609,45 +4617,45 @@ msgstr "Téléphone"
 
 #: ../../operation/side_menu.php:1254
 msgid "Project distribution"
-msgstr ""
+msgstr "Distribution du project"
 
 #: ../../operation/side_menu.php:1264
 msgid "Full graph report"
-msgstr ""
+msgstr "Raport complet des graphiques"
 
 #: ../../operation/side_menu.php:1278
 msgid "over"
-msgstr ""
+msgstr "plus de"
 
 #: ../../operation/side_menu.php:1280
 msgid "Week workunit time not fully justified"
-msgstr ""
+msgstr "Le temps de travail de la semaine n'et'e pas justifié"
 
 #: ../../operation/side_menu.php:1282
 msgid "Week workunit are fine"
-msgstr ""
+msgstr "Les unites de travail de la semaine sont completés avec succés"
 
 #: ../../operation/main_menu.php:88
 msgid "File Releases"
-msgstr ""
+msgstr "Sortie des fichiers"
 
 #: ../../operation/main_menu.php:108 ../../general/home.php:75
 #: ../../enterprise/godmode/usuarios/profile_list.php:214
 msgid "Agenda"
-msgstr ""
+msgstr "Agenda"
 
 #: ../../operation/manufacturers/manufacturer_detail.php:90
 msgid "Manufacturers management"
-msgstr ""
+msgstr "Gestion des fabricants"
 
 #: ../../operation/manufacturers/manufacturer_detail.php:121
 #: ../../operation/manufacturers/manufacturer_detail.php:179
 msgid "Company role"
-msgstr ""
+msgstr "Rôl de la société"
 
 #: ../../operation/manufacturers/manufacturer_detail.php:124
 msgid "Base SLA"
-msgstr ""
+msgstr "SLA base"
 
 #: ../../operation/manufacturers/manufacturer_detail.php:125
 #: ../../operation/manufacturers/manufacturer_detail.php:178
@@ -4659,228 +4667,234 @@ msgstr "Adresse"
 
 #: ../../operation/group/group.php:52
 msgid "Limit of incidents reached"
-msgstr ""
+msgstr "Limite des incidents atteint"
 
 #: ../../operation/group/group.php:54
 msgid "You have reached the limit of incidents for this group"
-msgstr ""
+msgstr "Vous avez atteint le limite des incidents pour ce groupe"
 
 #: ../../operation/group/group.php:54
 msgid "You cannot create more incidents."
-msgstr ""
+msgstr "Vous ne pouvez pas créer plus d'incidents"
 
 #: ../../operation/group/group.php:61
 msgid "Warning: Soft limit reached"
-msgstr ""
+msgstr "Attention: Limite de logiciel atteint"
 
 #: ../../operation/group/group.php:63
 msgid "You have "
-msgstr ""
+msgstr "Vous avez "
 
 #: ../../operation/group/group.php:63
 msgid " opened incidents"
-msgstr ""
+msgstr " Incidents ouverts"
 
 #: ../../operation/group/group.php:63
 msgid "Soft limit for this group is "
-msgstr ""
+msgstr "Le limit de logiciels pour ce groupe est "
 
 #: ../../operation/group/group.php:63
 msgid " incidents"
-msgstr ""
+msgstr " incidents"
 
 #: ../../operation/group/group.php:63
 msgid "Please close some incidents before create more"
-msgstr ""
+msgstr "Si vous plaît, fermer quelques incidents avant de créer plus"
 
 #: ../../operation/group/group.php:70
 msgid ""
 "You cannot create more incidents in this group until you close an active "
 "incident."
 msgstr ""
+"Vous ne pouvez pas créer plus d'incidents dans ce group jusqu'a vous fermez "
+"l'incident actif"
 
 #: ../../operation/companies/company_detail.php:177
 msgid "Invoices"
-msgstr ""
+msgstr "Factures"
 
 #: ../../operation/companies/company_detail.php:192
 msgid "Activities"
-msgstr ""
+msgstr "Activités"
 
 #: ../../operation/companies/company_detail.php:211
 msgid "Company details"
-msgstr ""
+msgstr "Details de la societé"
 
 #: ../../operation/companies/company_detail.php:227
 #: ../../operation/companies/company_detail.php:240
 #: ../../operation/companies/company_detail.php:550
 msgid "Company name"
-msgstr ""
+msgstr "Nom de la société"
 
 #: ../../operation/companies/company_detail.php:232
 #: ../../operation/companies/company_detail.php:247
 #: ../../operation/companies/company_detail.php:556
 msgid "Fiscal ID"
-msgstr ""
+msgstr "ID fiscal"
 
 #: ../../operation/companies/company_detail.php:234
 #: ../../operation/companies/company_detail.php:252
 #: ../../operation/companies/company_detail.php:558
 #: ../../operation/companies/company_detail.php:607
 msgid "Company Role"
-msgstr ""
+msgstr "Rôle de la société"
 
 #: ../../operation/companies/company_detail.php:291
 #: ../../operation/companies/company_detail.php:296
 msgid "Add activity"
-msgstr ""
+msgstr "Ajouter activité"
 
 #: ../../operation/companies/company_detail.php:406
 msgid "Contact details for company"
-msgstr ""
+msgstr "Les coordonnées de la société"
 
 #: ../../operation/companies/company_detail.php:481
 msgid "Payment"
-msgstr ""
+msgstr "Paiement"
 
 #: ../../operation/companies/company_detail.php:483
 msgid "Upload by"
-msgstr ""
+msgstr "Téléchargé par"
 
 #: ../../operation/companies/company_detail.php:535
 #: ../../operation/companies/company_detail.php:577
 msgid "Company management"
-msgstr ""
+msgstr "Gestion de la société"
 
 #: ../../operation/companies/company_detail.php:641
 msgid "Invoices (totals)"
-msgstr ""
+msgstr "Factures (au total)"
 
 #: ../../operation/companies/company_role.php:100
 msgid "Company role management"
-msgstr ""
+msgstr "Gestion du rol de la société"
 
 #: ../../operation/companies/company_role.php:129
 #: ../../operation/companies/company_role.php:133
 msgid "Role name"
-msgstr ""
+msgstr "Nom du rôle"
 
 #: ../../godmode/setup/setup_mailtemplates.php:59
 msgid "Filesuccessfully updated"
-msgstr ""
+msgstr "Fichier mis à jour avec succès"
 
 #: ../../godmode/setup/setup_mailtemplates.php:61
 msgid "Problem updating file"
-msgstr ""
+msgstr "Problème en mettant à jour le fichier"
 
 #: ../../godmode/setup/setup_mailtemplates.php:76
 msgid "Template"
-msgstr ""
+msgstr "Modèle"
 
 #: ../../godmode/setup/setup_mailtemplates.php:82
 msgid "Template contents"
-msgstr ""
+msgstr "Contenus des modèles"
 
 #: ../../godmode/setup/setup_auth.php:66
 msgid "Authentication configuration"
-msgstr ""
+msgstr "Configuration d'authentification"
 
 #: ../../godmode/setup/setup_auth.php:75
 msgid "Local Integria"
-msgstr ""
+msgstr "Integria locale"
 
 #: ../../godmode/setup/setup_auth.php:75
 msgid "LDAP"
-msgstr ""
+msgstr "LDAP"
 
 #: ../../godmode/setup/setup_auth.php:76
 msgid "Authentication method"
-msgstr ""
+msgstr "Méthode d'authentification"
 
 #: ../../godmode/setup/setup_auth.php:78
 msgid "Autocreate remote users"
-msgstr ""
+msgstr "Auto créer téléutilisateurs"
 
 #: ../../godmode/setup/setup_auth.php:89
 msgid "Autocreate profile"
-msgstr ""
+msgstr "Authocreer le profile"
 
 #: ../../godmode/setup/setup_auth.php:95
 msgid "Autocreate group"
-msgstr ""
+msgstr "Autocréer groupe"
 
 #: ../../godmode/setup/setup_auth.php:98
 msgid "Autocreate blacklist"
-msgstr ""
+msgstr "Autocreer liste noire"
 
 #: ../../godmode/setup/setup_auth.php:102
 msgid "LDAP server"
-msgstr ""
+msgstr "Serveur LDAP"
 
 #: ../../godmode/setup/setup_auth.php:105
 msgid "LDAP port"
-msgstr ""
+msgstr "Port LDAP"
 
 #: ../../godmode/setup/setup_auth.php:108
 msgid "LDAP version"
-msgstr ""
+msgstr "Version LDAP"
 
 #: ../../godmode/setup/setup_auth.php:110
 msgid "Start TLS"
-msgstr ""
+msgstr "Commencer TLS"
 
 #: ../../godmode/setup/setup_auth.php:116
 msgid "Base DN"
-msgstr ""
+msgstr "Base DN"
 
 #: ../../godmode/setup/setup_auth.php:119
 msgid "Login attribute"
-msgstr ""
+msgstr "Attribut pour ouvrir une session"
 
 #: ../../godmode/setup/setup.php:138
 msgid "Crontask not installed. Please check documentation!"
 msgstr ""
+"Crontask  n'est pas installé. S'il vous plaît consulter la documentation!"
 
 #: ../../godmode/setup/setup.php:140
 msgid "Last execution for crontask at"
-msgstr ""
+msgstr "Dernier execution pour crontask est"
 
 #: ../../godmode/setup/setup.php:150 ../../godmode/setup/setup.php:188
 #: ../../godmode/setup/setup.php:227 ../../godmode/setup/setup.php:240
 #: ../../godmode/usuarios/configurar_usuarios.php:234
 #: ../../godmode/usuarios/configurar_usuarios.php:357
 msgid "Enabled"
-msgstr ""
+msgstr "Activé"
 
 #: ../../godmode/setup/setup.php:157
 msgid "No WU completion users"
-msgstr ""
+msgstr "Pas de unites de travail completé des utilisateurs"
 
 #: ../../godmode/setup/setup.php:160
 msgid "Send email on every incident update"
-msgstr ""
+msgstr "Envoyer courriel avec chaque actualisation d'un evenement"
 
 #: ../../godmode/setup/setup.php:163
 msgid ""
 "Enabling this, you will get emails on file attachs also. If left disabled, "
 "you only get notifications only in major events on incidents"
 msgstr ""
+"Avec L'activation de cette, vous recevrez des emails sur le fichier attaché "
+"aussi. Si elle n'est pas désactivée, vous ne recevez des notifications "
+"uniquement dans les grands événements sur les incidents"
 
 #: ../../godmode/setup/setup.php:166
 msgid "Max. data limit size"
-msgstr ""
+msgstr "Max.taille limite de données"
 
 #: ../../godmode/setup/setup.php:170
 msgid "Auto WU Completion (days)"
-msgstr ""
+msgstr "Auto UT achèvement (jours)"
 
 #: ../../godmode/setup/setup.php:174
 msgid "Work hours per day"
-msgstr ""
+msgstr "Heures de travail par jour"
 
 #: ../../godmode/setup/setup.php:178
 msgid "Sitename"
-msgstr ""
+msgstr "Nom du site"
 
 #: ../../godmode/setup/setup.php:180
 msgid "Currency"
@@ -4888,19 +4902,19 @@ msgstr "Devise"
 
 #: ../../godmode/setup/setup.php:183
 msgid "Incident WU Default time"
-msgstr ""
+msgstr "Incident UT temps par défaut"
 
 #: ../../godmode/setup/setup.php:185
 msgid "Project WU Default time"
-msgstr ""
+msgstr "Projet UT temp par défaut"
 
 #: ../../godmode/setup/setup.php:191
 msgid "This errorlog is on /integria.log"
-msgstr ""
+msgstr "Cet errorlog est dans /integria.log"
 
 #: ../../godmode/setup/setup.php:194
 msgid "Incident reporter"
-msgstr ""
+msgstr "Reporter d'événement"
 
 #: ../../godmode/setup/setup.php:196
 msgid ""
@@ -4908,62 +4922,71 @@ msgid ""
 "These contacts will receive email notifications if email notification is "
 "enabled, but cannot do anything"
 msgstr ""
+"Avec l'activation de cela, vous serez en mesure d'ajouter des contacts "
+"aditional à chaque incident. Ces contacts recevront les notifications par "
+"courriel si la notification par courriel est activée, mais ne peut rien faire"
 
 #: ../../godmode/setup/setup.php:198
 msgid "Show incident owner"
-msgstr ""
+msgstr "Montrer un propietaire de l'incident"
 
 #: ../../godmode/setup/setup.php:200
 msgid "Show incident creator"
-msgstr ""
+msgstr "Montrer le createur de l'incident"
 
 #: ../../godmode/setup/setup.php:203
 msgid "Timezone for integria"
-msgstr ""
+msgstr "Fuseau horaire pour Integria"
 
 #: ../../godmode/setup/setup.php:206
 msgid "Auto incident close"
-msgstr ""
+msgstr "Auto incident fermé"
 
 #: ../../godmode/setup/setup.php:210
 msgid "List of IP with access to API"
-msgstr ""
+msgstr "Liste des IPs avec accès a API"
 
 #: ../../godmode/setup/setup.php:212
 msgid ""
 "List of IP (separated with commas which can access to the integria API. Use "
 "* for any address (INSECURE!)"
 msgstr ""
+"Liste des adresses IP (séparées par des virgules, qui peuvent accéder à "
+"l'API Integria. Utilisez * pour toute adresse (INSECURE!)"
 
 #: ../../godmode/setup/setup.php:215
 msgid "API password"
-msgstr ""
+msgstr "Mot de passe pour API"
 
 #: ../../godmode/setup/setup.php:219
 msgid "Max. Upload file size"
-msgstr ""
+msgstr "Taille max. du fichier téléchargé"
 
 #: ../../godmode/setup/setup.php:222
 msgid "Enable IW to change creator"
-msgstr ""
+msgstr "Activer IE pour changer créateur"
 
 #: ../../godmode/setup/setup.php:224
 msgid ""
 "Enabling this, any user with IW will be able to change the creator of an "
 "incident. This is disabled by default to be ITIL compliant"
 msgstr ""
+"L'activation de cette, tout utilisateur disposant IW sera en mesure de "
+"changer le créateur d'un incident. Cette option est désactivée par défaut "
+"pour être compatible ITIL"
 
 #: ../../godmode/setup/setup.php:228
 msgid "Enable newsletter"
-msgstr ""
+msgstr "Habiliter lettre d'information"
 
 #: ../../godmode/setup/setup.php:232
 msgid "Max. emails sent per execution"
-msgstr ""
+msgstr "Max. courriels envoyés par l'exécution"
 
 #: ../../godmode/setup/setup.php:234
 msgid "Enable this option to activate the newsletter feature of Integria IMS"
 msgstr ""
+"Activez cette option pour activer la fonction de bulletin de Integria IMS"
 
 #: ../../godmode/setup/setup.php:236
 msgid ""
@@ -4972,82 +4995,87 @@ msgid ""
 "will try to send this ammount of emails. If you set the cron to run each 5 "
 "min, will try this number of mails."
 msgstr ""
+"Cela signifie que, dans chaque exécution du processus de lot externe "
+"(integria_cron). Si vous réglez votre cron pour exécuter chaque heure dans "
+"chaque exécution de ce processus va essayer d'envoyer ce ammount des "
+"courriels. Si vous réglez le cron pour exécuter chaque 5 min, va tenter ce "
+"nombre de courriels."
 
 #: ../../godmode/setup/setup.php:242
 msgid "Enable incident chat window"
-msgstr ""
+msgstr "Activer fenêtre de chat incidents"
 
 #: ../../godmode/setup/setup.php:245
 msgid "Editor adds a WU on incident creation"
-msgstr ""
+msgstr "Éditeur ajoute un UT sur la création de l'incident"
 
 #: ../../godmode/setup/logviewer.php:37
 msgid "Cannot find file"
-msgstr ""
+msgstr "Ne peut trouver le fichier"
 
 #: ../../godmode/setup/logviewer.php:41
 msgid "File is too large (> 1MB)"
-msgstr ""
+msgstr "Le fichier est trop grand"
 
 #: ../../godmode/setup/logviewer.php:46
 msgid "Delete logfile"
-msgstr ""
+msgstr "Effacer journal"
 
 #: ../../godmode/setup/filemgr.php:53
 msgid "Deleting file"
-msgstr ""
+msgstr "Suppression du fichier"
 
 #: ../../godmode/setup/filemgr.php:59
 msgid "Deleting"
-msgstr ""
+msgstr "En supprimant"
 
 #: ../../godmode/setup/filemgr.php:91
 msgid "Base directory"
-msgstr ""
+msgstr "Répertoire base"
 
 #: ../../godmode/setup/filemgr.php:107
 msgid "Upload new file"
-msgstr ""
+msgstr "Envoyer un nouveau fichier."
 
 #: ../../godmode/setup/filemgr.php:124
 msgid "Current directory"
-msgstr ""
+msgstr "Répertoire courant"
 
 #: ../../godmode/setup/filemgr.php:144
 msgid "No files found"
-msgstr ""
+msgstr "Aucun fichier trouvé"
 
 #: ../../godmode/setup/filemgr.php:161
 msgid "Go prev. directory"
-msgstr ""
+msgstr "Aller au repertoire précédent"
 
 #: ../../godmode/setup/filemgr.php:167
 msgid "Image info"
-msgstr ""
+msgstr "Image info"
 
 #: ../../godmode/setup/filemgr.php:173
 msgid "Perms"
-msgstr ""
+msgstr "Perms"
 
 #: ../../godmode/setup/filemgr.php:175
 msgid "Filesize"
-msgstr ""
+msgstr "Taille du fichier"
 
 #: ../../godmode/setup/filemgr.php:177
 msgid "File type"
-msgstr ""
+msgstr "Type du fichier"
 
 #: ../../godmode/setup/filemgr.php:179
 msgid "Directory"
-msgstr ""
+msgstr "Répertoire"
 
 #: ../../godmode/setup/filemgr.php:181
 msgid "Del"
-msgstr ""
+msgstr "Suppr."
 
 #: ../../godmode/setup/filemgr.php:237
 msgid "Create directory"
-msgstr ""
+msgstr "Créer un répertoire"
 
 #: ../../godmode/setup/setup_visual.php:58
 msgid "Block size for pagination"
@@ -5055,40 +5083,40 @@ msgstr "Taille pour la pagination"
 
 #: ../../godmode/setup/setup_visual.php:78
 msgid "Font for graphs"
-msgstr ""
+msgstr "Fonts pour graphiques"
 
 #: ../../godmode/setup/setup_visual.php:80
 msgid "Font for PDF"
-msgstr ""
+msgstr "Fonts pour PDF"
 
 #: ../../godmode/setup/setup_visual.php:83
 msgid "Graphics font size"
-msgstr ""
+msgstr "Taille de la police Graphics"
 
 #: ../../godmode/setup/setup_visual.php:98
 msgid "Site logo"
-msgstr ""
+msgstr "Logo du site"
 
 #: ../../godmode/setup/setup_visual.php:100
 msgid "Header logo"
-msgstr ""
+msgstr "Logo Tête"
 
 #: ../../godmode/setup/setup_visual.php:106
 msgid "Flash charts"
-msgstr ""
+msgstr "Graphiques flash"
 
 #: ../../godmode/setup/inventories_setup.php:55
 #: ../../godmode/setup/setup_pandora.php:79
 msgid "Inventories extra fields"
-msgstr ""
+msgstr "Stocks champs supplémentaires"
 
 #: ../../godmode/setup/dbmanager.php:74
 msgid "Extensions"
-msgstr ""
+msgstr "Extensions"
 
 #: ../../godmode/setup/dbmanager.php:74
 msgid "Database interface"
-msgstr ""
+msgstr "interface de base de données"
 
 #: ../../godmode/setup/dbmanager.php:79
 msgid ""
@@ -5099,14 +5127,21 @@ msgid ""
 "extension. This extension is intended to be used <b>only by experienced "
 "users</b> with a depth knowledgue of Integria IMS."
 msgstr ""
+"Ceci est une extension avancée à l'interface avec la base de données IMS "
+"Integria directement à l'aide indigènes phrases SQL. S'il vous plaît noter "
+"que vous pouvez endommager <b> </ b> votre Integria IMS installation si vous "
+"ne savez pas </ b> exactement </ b> Que faites-vous, cela signifie que vous "
+"pouvez severily endommager votre installation en utilisant cette extension. "
+"Cette extension est destinée à être utilisée <b> que par des utilisateurs "
+"expérimentés </ b> avec une profondeur de knowledgue Integria IMS."
 
 #: ../../godmode/setup/dbmanager.php:83
 msgid "Some samples of usage:"
-msgstr ""
+msgstr "Quelques exemples d'utilisation"
 
 #: ../../godmode/setup/dbmanager.php:91 ../../godmode/setup/dbmanager.php:98
 msgid "Execute SQL"
-msgstr ""
+msgstr "Exécuter SQL"
 
 #: ../../godmode/setup/links.php:35
 msgid "There was a problem creating link"
@@ -5122,7 +5157,7 @@ msgstr "Gestion des liens"
 
 #: ../../godmode/setup/links.php:83 ../../godmode/usuarios/role_manager.php:89
 msgid "Name error"
-msgstr ""
+msgstr "Erreur de nom"
 
 #: ../../godmode/setup/links.php:101 ../../godmode/setup/links.php:115
 msgid "Link name"
@@ -5138,148 +5173,148 @@ msgstr "URL"
 
 #: ../../godmode/setup/setup_mail.php:71
 msgid "Notification period"
-msgstr ""
+msgstr "période de notification"
 
 #: ../../godmode/setup/setup_mail.php:75
 msgid "System mail from address"
-msgstr ""
+msgstr "Système de messagerie de l'adresse"
 
 #: ../../godmode/setup/setup_mail.php:78
 msgid "SMTP Parameters"
-msgstr ""
+msgstr "Parameters SMTP"
 
 #: ../../godmode/setup/setup_mail.php:81
 msgid "SMTP Host"
-msgstr ""
+msgstr "Hôte SMTP"
 
 #: ../../godmode/setup/setup_mail.php:84
 msgid "SMTP Port"
-msgstr ""
+msgstr "Port SMTP"
 
 #: ../../godmode/setup/setup_mail.php:87
 msgid "SMTP User"
-msgstr ""
+msgstr "Utilisateur SMTP"
 
 #: ../../godmode/setup/setup_mail.php:90
 msgid "SMTP Password"
-msgstr ""
+msgstr "Mot de passe SMTP"
 
 #: ../../godmode/setup/setup_mail.php:93
 msgid "POP3 Parameters"
-msgstr ""
+msgstr "Parameters POP3"
 
 #: ../../godmode/setup/setup_mail.php:96
 msgid "POP3 Host"
-msgstr ""
+msgstr "Serveur POP3"
 
 #: ../../godmode/setup/setup_mail.php:99
 msgid "POP3 Port"
-msgstr ""
+msgstr "POP3 Port"
 
 #: ../../godmode/setup/setup_mail.php:102
 msgid "POP3 User"
-msgstr ""
+msgstr "Utilisateur POP3"
 
 #: ../../godmode/setup/setup_mail.php:105
 msgid "POP3 Password"
-msgstr ""
+msgstr "Mot de passe POP3"
 
 #: ../../godmode/setup/setup_mail.php:107
 msgid "Mail general texts"
-msgstr ""
+msgstr "Envoyer textes généraux"
 
 #: ../../godmode/setup/setup_mail.php:112
 msgid "Email header"
-msgstr ""
+msgstr "En-tête Email"
 
 #: ../../godmode/setup/setup_mail.php:114
 msgid "Email footer"
-msgstr ""
+msgstr "Pied-de-page Email"
 
 #: ../../godmode/setup/audit.php:29 ../../godmode/setup/event.php:27
 msgid "Event history"
-msgstr ""
+msgstr "Historique des événements"
 
 #: ../../godmode/setup/audit.php:53
 msgid "Accion"
-msgstr ""
+msgstr "Action"
 
 #: ../../godmode/setup/audit.php:55
 msgid "IP"
-msgstr ""
+msgstr "Adresse IP"
 
 #: ../../godmode/setup/audit.php:57
 msgid "Extra info"
-msgstr ""
+msgstr "Info supplémentaire"
 
 #: ../../godmode/setup/setup_pandora.php:61
 msgid "Pandora FMS URL"
-msgstr ""
+msgstr "URL de Pandora FMS"
 
 #: ../../godmode/setup/setup_pandora.php:64
 msgid "Pandora FMS API password"
-msgstr ""
+msgstr "mot de passe API pour Pandora FMS"
 
 #: ../../godmode/setup/setup_pandora.php:67
 msgid "Pandora FMS User"
-msgstr ""
+msgstr "Utilisateur de Pandora FMS"
 
 #: ../../godmode/setup/setup_pandora.php:70
 msgid "Pandora FMS User password"
-msgstr ""
+msgstr "Mot de passe de l'utilisateur de Pandora FMS"
 
 #: ../../godmode/setup/setup_pandora.php:73
 msgid "Default Contract"
-msgstr ""
+msgstr "Contract par defaut"
 
 #: ../../godmode/setup/setup_pandora.php:76
 msgid "Default product type"
-msgstr ""
+msgstr "Type de product par defaut"
 
 #: ../../godmode/setup/setup_pandora.php:87
 msgid "Operative system"
-msgstr ""
+msgstr "Systeme operatif"
 
 #: ../../godmode/setup/setup_pandora.php:87
 msgid "URL address"
-msgstr ""
+msgstr "Adresse URL"
 
 #: ../../godmode/setup/incidents_setup.php:57
 msgid "Updated successfuly"
-msgstr ""
+msgstr "Mis à jour avec succès"
 
 #: ../../godmode/setup/incidents_setup.php:83
 msgid "Origins"
-msgstr ""
+msgstr "Origines"
 
 #: ../../godmode/setup/incidents_setup.php:100
 msgid "Resolutions"
-msgstr ""
+msgstr "Résolutions"
 
 #: ../../godmode/setup/newsboard.php:23
 msgid "No administrator access"
-msgstr ""
+msgstr "Pas d'access d'administrateur"
 
 #: ../../godmode/setup/newsboard.php:23
 msgid "Trying to access newsboard setup"
-msgstr ""
+msgstr "Essayer d'accéder à la configuration Newsboard"
 
 #: ../../godmode/setup/newsboard.php:89
 #: ../../enterprise/include/functions_reporting_pdf.php:191
 msgid "Contents"
-msgstr ""
+msgstr "Contenu"
 
 #: ../../godmode/setup/newsboard.php:93
 msgid "Show always"
-msgstr ""
+msgstr "Montrer toujours"
 
 #: ../../godmode/setup/newsboard.php:108
 msgid "Newsboard management"
-msgstr ""
+msgstr "gestion Newsboard"
 
 #: ../../godmode/setup/event.php:39
 msgid "Extended info"
-msgstr ""
+msgstr "Information étendu"
 
 #: ../../godmode/grupos/lista_grupos.php:65
 msgid "There was a problem creating group"
@@ -5301,7 +5336,7 @@ msgstr "Gestion des groupes"
 #: ../../godmode/grupos/lista_grupos.php:115
 #: ../../godmode/usuarios/lista_usuarios.php:61
 msgid "Search text"
-msgstr ""
+msgstr "Rechercher le texte"
 
 #: ../../godmode/grupos/configurar_grupo.php:86
 msgid "There was a problem loading group"
@@ -5309,31 +5344,31 @@ msgstr "Un problème est survenu pendant le chargement du groupe"
 
 #: ../../godmode/grupos/configurar_grupo.php:103
 msgid "Forced email"
-msgstr ""
+msgstr "Courriel forcé"
 
 #: ../../godmode/grupos/configurar_grupo.php:119
 msgid "Default user"
-msgstr ""
+msgstr "Utilisateur par défaut"
 
 #: ../../godmode/grupos/configurar_grupo.php:132
 msgid "Banner"
-msgstr ""
+msgstr "Bannière"
 
 #: ../../godmode/grupos/configurar_grupo.php:134
 msgid "Incident Soft limit"
-msgstr ""
+msgstr "Limite d'incidents du logiciel"
 
 #: ../../godmode/grupos/configurar_grupo.php:137
 msgid "Enforce soft limit"
-msgstr ""
+msgstr "Appliquer limite du logiciel"
 
 #: ../../godmode/grupos/configurar_grupo.php:139
 msgid "Incident Hard limit"
-msgstr ""
+msgstr "Limite de incidents hardware"
 
 #: ../../godmode/grupos/configurar_grupo.php:142
 msgid "Default inventory object"
-msgstr ""
+msgstr "Objet d'inventaire par défaut"
 
 #: ../../godmode/usuarios/lista_usuarios.php:57
 #: ../../godmode/usuarios/configurar_usuarios.php:184
@@ -5367,7 +5402,7 @@ msgstr "Administrateur"
 #: ../../godmode/usuarios/configurar_usuarios.php:289
 #: ../../godmode/usuarios/import_from_csv.php:109
 msgid "External user"
-msgstr ""
+msgstr "Utilisateur externe"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:65
 msgid "There was a problem loading user"
@@ -5375,11 +5410,11 @@ msgstr "Pandora a rencontré une erreur lors du chargement de l'usager"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:101
 msgid "Passwords don't match."
-msgstr ""
+msgstr "Les mots de passe ne correspondent pas"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:132
 msgid "There was a problem assigning user profile"
-msgstr ""
+msgstr "Il y avait un problème en assignant un profil d'utilisateur"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:141
 msgid "There was a problem updating user"
@@ -5395,16 +5430,16 @@ msgstr "Actualiser l'usager"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:211
 msgid "User cannot have Blank spaces"
-msgstr ""
+msgstr "Utilisateur ne peut pas avoir espaces vides"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:223
 msgid "Activation"
-msgstr ""
+msgstr "Activation"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:268
 #: ../../godmode/usuarios/import_from_csv.php:106
 msgid "Global profile"
-msgstr ""
+msgstr "Profile global"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:292
 msgid ""
@@ -5412,31 +5447,34 @@ msgid ""
 "Standard users works with the ACL system, and administrators have full "
 "access to everything"
 msgstr ""
+"Les utilisateurs externes ne peuvent pas travailler à l'intérieur d'un "
+"groupe, va montrer que ce n'est propres données. Les utilisateurs standard "
+"fonctionne avec le système d'ACL, et les administrateurs ont accès à tout"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:310
 #: ../../include/functions_incidents.php:721
 msgid "Total incidents"
-msgstr ""
+msgstr "Incidents au total"
 
 #: ../../godmode/usuarios/configurar_usuarios.php:345
 msgid "Simple mode"
-msgstr ""
+msgstr "Mode simple"
 
 #: ../../godmode/usuarios/import_from_csv.php:47
 msgid "User "
-msgstr ""
+msgstr "Utilisateur "
 
 #: ../../godmode/usuarios/import_from_csv.php:47
 msgid " already exists"
-msgstr ""
+msgstr " Il exists dejà"
 
 #: ../../godmode/usuarios/import_from_csv.php:72
 msgid "IMPORT USERS FROM CSV"
-msgstr ""
+msgstr "IMPORTER UTILISATEURS PROVENANT DU CSV"
 
 #: ../../godmode/usuarios/import_from_csv.php:81
 msgid "Unsupported file type"
-msgstr ""
+msgstr "Type de fichier non pris en charge"
 
 #: ../../godmode/usuarios/import_from_csv.php:97
 #: ../../godmode/perfiles/lista_perfiles.php:227
@@ -5449,72 +5487,72 @@ msgstr "Profils"
 
 #: ../../godmode/usuarios/import_from_csv.php:111
 msgid "Load file"
-msgstr ""
+msgstr "Charger fichier"
 
 #: ../../godmode/usuarios/import_from_csv.php:113
 msgid "Upload File"
-msgstr ""
+msgstr "Télécharger un fichier"
 
 #: ../../godmode/usuarios/role_manager.php:56
 msgid "Succcessfully updated"
-msgstr ""
+msgstr "Mis à jour avec succèss"
 
 #: ../../godmode/usuarios/role_manager.php:98
 #: ../../godmode/usuarios/role_manager.php:123
 msgid "Role management"
-msgstr ""
+msgstr "Gestion des roles"
 
 #: ../../godmode/usuarios/role_manager.php:98
 msgid "Add role"
-msgstr ""
+msgstr "Ajouter un rôle"
 
 #: ../../godmode/updatemanager/settings.php:58
 msgid "Update manager settings updated"
-msgstr ""
+msgstr "Mettez à jour les paramètres du gestionnaire de mise à jour"
 
 #: ../../godmode/updatemanager/settings.php:67
 msgid "Update Manager Settings"
-msgstr ""
+msgstr "Mise à jour des paramètres du Gestionnaire"
 
 #: ../../godmode/updatemanager/settings.php:73
 msgid "Customer key"
-msgstr ""
+msgstr "Clef Client"
 
 #: ../../godmode/updatemanager/settings.php:81
 msgid "WGET, no interactive, external command, fast"
-msgstr ""
+msgstr "WGET, pas interactif, commande externe, rapide"
 
 #: ../../godmode/updatemanager/settings.php:82
 msgid "CURL, interactive, internal command, slow"
-msgstr ""
+msgstr "CURL, interactif, commande interne, lent"
 
 #: ../../godmode/updatemanager/settings.php:84
 msgid "Download Method"
-msgstr ""
+msgstr "Méthode de téléchargement"
 
 #: ../../godmode/updatemanager/settings.php:92
 msgid "Update server host"
-msgstr ""
+msgstr "Mise à jour du serveur hôte"
 
 #: ../../godmode/updatemanager/settings.php:95
 msgid "Update server port"
-msgstr ""
+msgstr "Mise à jour du port du serveur"
 
 #: ../../godmode/updatemanager/settings.php:98
 msgid "Update server path"
-msgstr ""
+msgstr "Mise à jour du chemin du serveur"
 
 #: ../../godmode/updatemanager/settings.php:101
 msgid "Input path"
-msgstr ""
+msgstr "Répertoire d'entrée"
 
 #: ../../godmode/updatemanager/settings.php:104
 msgid "Keygen path"
-msgstr ""
+msgstr "Chemin du générateur de clef"
 
 #: ../../godmode/updatemanager/settings.php:107
 msgid "Proxy server"
-msgstr ""
+msgstr "Serveur Proxy"
 
 #: ../../godmode/updatemanager/settings.php:110
 msgid "Proxy port"
@@ -5522,11 +5560,11 @@ msgstr "Port du serveur mandataire"
 
 #: ../../godmode/updatemanager/settings.php:113
 msgid "Proxy user"
-msgstr ""
+msgstr "Utilisateur Proxy"
 
 #: ../../godmode/updatemanager/settings.php:115
 msgid "Proxy password"
-msgstr ""
+msgstr "Mot de passe de l'utilisateur du proxy"
 
 #: ../../godmode/updatemanager/main.php:71
 msgid "Update manager"
@@ -5544,40 +5582,42 @@ msgstr ""
 
 #: ../../godmode/updatemanager/main.php:92
 msgid "Updating"
-msgstr ""
+msgstr "Mise à jour en cours"
 
 #: ../../godmode/updatemanager/main.php:101
 #, php-format
 msgid "This is an Enterprise feature. Visit %s for more information."
 msgstr ""
+"Cet est a fonctionnalité Enterprise. Visiter %s pour plus d'information"
 
 #: ../../godmode/updatemanager/main.php:110
 msgid "Incorrect file extension"
-msgstr ""
+msgstr "Extension du fichier incorrect"
 
 #: ../../godmode/updatemanager/main.php:120
 msgid "Update cannot be opened"
-msgstr ""
+msgstr "Mise à jour ne peut etre ouverte"
 
 #: ../../godmode/updatemanager/main.php:125
 msgid "Error, the file package is empty or corrupted."
-msgstr ""
+msgstr "Erreur, le progiciel du fichier est vide ou corrompu"
 
 #: ../../godmode/updatemanager/main.php:131
 msgid "Your system version is higher or equal than the loaded package"
 msgstr ""
+"Votre version du systeme est superieur ou le même que le progiciel chargé"
 
 #: ../../godmode/updatemanager/main.php:184
 msgid "Successfully upgraded"
-msgstr ""
+msgstr "Mise à jour réussie"
 
 #: ../../godmode/updatemanager/main.php:188
 msgid "Cannot be upgraded"
-msgstr ""
+msgstr "Imposible de mettre à jour"
 
 #: ../../godmode/updatemanager/main.php:195
 msgid "File cannot be uploaded"
-msgstr ""
+msgstr "Le fichier ne peut etre pas téléchargé"
 
 #: ../../godmode/updatemanager/main.php:210
 msgid "Your system is up-to-date"
@@ -5585,7 +5625,7 @@ msgstr "Votre système est à jour"
 
 #: ../../godmode/updatemanager/main.php:213
 msgid "Server authorization rejected"
-msgstr ""
+msgstr "Authorisation serveur rejetée"
 
 #: ../../godmode/updatemanager/main.php:216
 msgid "Server connection failed"
@@ -5593,7 +5633,7 @@ msgstr "La connexion au serveur a échoué"
 
 #: ../../godmode/updatemanager/main.php:219
 msgid "There's a new update for Integria"
-msgstr ""
+msgstr "Il ya une nouveau version pour Integria"
 
 #: ../../godmode/updatemanager/main.php:224
 msgid "Id"
@@ -5601,15 +5641,15 @@ msgstr "Id"
 
 #: ../../godmode/updatemanager/main.php:236
 msgid "Overwrite local changes"
-msgstr ""
+msgstr "Ecraser les changements locales"
 
 #: ../../godmode/updatemanager/main.php:255
 msgid "Offline packages loader"
-msgstr ""
+msgstr "Chargeur de progiciels hors connexion"
 
 #: ../../godmode/updatemanager/main.php:265
 msgid "Your system version number is"
-msgstr ""
+msgstr "Le numéro de version de votre système est"
 
 #: ../../godmode/perfiles/lista_perfiles.php:70
 #: ../../enterprise/godmode/usuarios/profile_list.php:162
@@ -5626,7 +5666,7 @@ msgstr "Gestion de profil"
 #: ../../godmode/perfiles/lista_perfiles.php:157
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:168
 msgid "Profiles defined in Integria"
-msgstr ""
+msgstr "Profils définis dans Integria"
 
 #: ../../godmode/perfiles/lista_perfiles.php:164
 #: ../../enterprise/godmode/usuarios/profile_list.php:201
@@ -5654,17 +5694,17 @@ msgstr "Gérer les incidents"
 #: ../../godmode/perfiles/lista_perfiles.php:175
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:188
 msgid "Agenda read"
-msgstr ""
+msgstr "Ordre du jour lut"
 
 #: ../../godmode/perfiles/lista_perfiles.php:178
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:191
 msgid "Agenda write"
-msgstr ""
+msgstr "Ordre du jour écrit"
 
 #: ../../godmode/perfiles/lista_perfiles.php:181
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:194
 msgid "Agenda management"
-msgstr ""
+msgstr "Gestion de l'agenda"
 
 #: ../../godmode/perfiles/lista_perfiles.php:187
 #: ../../enterprise/godmode/usuarios/profile_list.php:274
@@ -5675,67 +5715,72 @@ msgstr "Gestion de la base de données"
 #: ../../godmode/perfiles/lista_perfiles.php:190
 #: ../../enterprise/godmode/usuarios/profile_list.php:275
 msgid "Framework management"
-msgstr ""
+msgstr "Gestion ordre du jour"
 
 #: ../../godmode/perfiles/lista_perfiles.php:193
 #: ../../enterprise/operation/user/user.php:62
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:206
 msgid "Project read"
-msgstr ""
+msgstr "Projet lire"
 
 #: ../../godmode/perfiles/lista_perfiles.php:196
 #: ../../enterprise/operation/user/user.php:63
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:209
 msgid "Project write"
-msgstr ""
+msgstr "Projet écrire"
 
 #: ../../godmode/perfiles/lista_perfiles.php:202
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:215
 msgid "Task write"
-msgstr ""
+msgstr "Tâche écrire"
 
 #: ../../general/password_recovery.php:35
 msgid "Password recovery"
-msgstr ""
+msgstr "récupération de mot de passe"
 
 #: ../../general/password_recovery.php:40
 msgid ""
 "Don't try to hack this form. All information is sent to the user by mail"
 msgstr ""
+"Ne pas essayer de pirater ce formulaire. Toutes les informations sont "
+"envoyées à l'utilisateur par courrier"
 
 #: ../../general/password_recovery.php:59
 msgid ""
 "Don't close this window, you will receive an email with instructions on how "
 "to change your password."
 msgstr ""
+"Ne fermez pas cette fenêtre, vous recevrez un courriel avec des instructions "
+"sur la façon de changer votre mot de passe."
 
 #: ../../general/password_recovery.php:61
 msgid "Enter here the validation code you should have received by mail"
 msgstr ""
+"Saisissez ici le code de validation vous devriez avoir reçu par courriel"
 
 #: ../../general/password_recovery.php:70
 msgid "Your new password is"
-msgstr ""
+msgstr "Votre nouveau mot de passe est"
 
 #: ../../general/password_recovery.php:76
 msgid "Click here to login"
-msgstr ""
+msgstr "Clic ici pour vous connecter"
 
 #: ../../general/password_recovery.php:83
 msgid "Invalid validation code"
-msgstr ""
+msgstr "Code de validation non valide"
 
 #: ../../general/password_recovery.php:93
 msgid "Validation code"
-msgstr ""
+msgstr "Code de validation"
 
 #: ../../general/password_recovery.php:96
 msgid "Validate"
-msgstr ""
+msgstr "Valider"
 
 #: ../../general/integria_help.php:41
 msgid "Integria IMS help system"
-msgstr ""
+msgstr "Système d'aide de Integria IMS"
 
 #: ../../general/integria_help.php:55
 msgid "Help system error"
@@ -5743,17 +5788,19 @@ msgstr "Erreur dans le système d'aide"
 
 #: ../../general/integria_help.php:59
 msgid "No help section"
-msgstr ""
+msgstr "Pas de section d'aide"
 
 #: ../../general/integria_help.php:62
 msgid ""
 "Integria IMS help system has been called with a help reference that "
 "currently don't exist. There is no help content to show."
 msgstr ""
+"Le système d'aide Integria IMS a été appelé avec une référence d'aide qui "
+"n'existe pas. Il n'y a pas de données d'aide à afficher."
 
 #: ../../general/integria_help.php:76
 msgid "Integria IMS Help System"
-msgstr ""
+msgstr "Système d'aide d'Integria IMS"
 
 #: ../../general/noaccess.php:21
 msgid "You don't have access to this page"
@@ -5766,6 +5813,11 @@ msgid ""
 "attempts to access this page are recorded in security logs of Integria "
 "System Database"
 msgstr ""
+"L'accès a cette page est restreint seulement aux utilisateurs autorisés, "
+"contactez l'administrateur du système si vous avez besoin d'assistance. "
+"<br><br>Prenez connaissance que toutes les tentatives d'accès à cette page "
+"sont enregistrés dans les journaux de sécurité de la Base de données du "
+"Système Integria"
 
 #: ../../general/header.php:35 ../../general/header.php:37
 #: ../../general/header.php:39
@@ -5779,7 +5831,7 @@ msgstr "Déconnexion"
 #: ../../general/footer.php:38
 msgid ""
 "Integria IMS is an <b>OpenSource Project, licensed under GPL terms</b>"
-msgstr ""
+msgstr "Integria IMS est un <b>Projet Open-Source, sous licence GNU/GPL</b>"
 
 #: ../../general/footer.php:44
 msgid "Page generated at"
@@ -5787,187 +5839,189 @@ msgstr "Page générée le"
 
 #: ../../general/home.php:66
 msgid "System newsboard"
-msgstr ""
+msgstr "Panneau d'information du système"
 
 #: ../../general/home.php:69
 msgid "News of last 30 days"
-msgstr ""
+msgstr "Nouvelles des 30 derniers jours"
 
 #: ../../general/home.php:78
 msgid "First 5 events for next three days"
-msgstr ""
+msgstr "Les 5 premiers événements pour les trois prochains jours"
 
 #: ../../general/home.php:110
 msgid "There aren't news in the system"
-msgstr ""
+msgstr "Il n'y a pas de nouvelles dans le systéme"
 
 #: ../../general/home.php:184
 msgid "Agenda event"
-msgstr ""
+msgstr "Evénement de l'agenda"
 
 #: ../../general/home.php:187 ../../include/functions_calendar.php:217
 msgid "Project end"
-msgstr ""
+msgstr "Fin du projet"
 
 #: ../../general/home.php:190 ../../include/functions_calendar.php:226
 msgid "Task end"
-msgstr ""
+msgstr "Fin de tâche"
 
 #: ../../general/home.php:206
 msgid "There aren't meetings in your agenda"
-msgstr ""
+msgstr "Il n'ya pas des réunions dans votre agenda"
 
 #: ../../general/home.php:223
 msgid "Total active TO-DOs"
-msgstr ""
+msgstr "Total TO-Dos actives"
 
 #: ../../general/home.php:249
 msgid "There aren't TO-DOs"
-msgstr ""
+msgstr "Il n'y a pas TO-DO"
 
 #: ../../general/home.php:263
 msgid "Total active projects"
-msgstr ""
+msgstr "Total des projets en cours"
 
 #: ../../general/home.php:277
 msgid "Total active incidents"
-msgstr ""
+msgstr "Total des actifs incidents"
 
 #: ../../general/home.php:312
 msgid "There aren't active projects"
-msgstr ""
+msgstr "Il n'y a pas de projets actifs"
 
 #: ../../general/home.php:330
 msgid "Last WU"
-msgstr ""
+msgstr "Derniere heure de travail"
 
 #: ../../general/home.php:360
 msgid "There aren't active incidents"
-msgstr ""
+msgstr "Il n'y a pas d'incidents actifs"
 
 #: ../../general/home.php:374
 msgid "Welcome to Integria"
-msgstr ""
+msgstr "Bienvenue chez Integria"
 
 #: ../../general/login_page.php:56
 msgid "Please re-enter your password"
-msgstr ""
+msgstr "S'il vous plaît entrer de nouveau votre mot de passe"
 
 #: ../../general/login_page.php:58
 msgid "The password you entered is incorrect, please try again."
 msgstr ""
+"Le mot de passe que vous avez entré est incorrect, s'il vous plaît essayez "
+"de nouveau."
 
 #: ../../general/login_page.php:60
 msgid "Forgot your passowrd?"
-msgstr ""
+msgstr "Mot de passe oublié?"
 
 #: ../../general/login_page.php:62
 msgid "Click here to reset it"
-msgstr ""
+msgstr "Cliquez ici pour le réinitialiser"
 
 #: ../../enterprise/operation/user/user.php:35
 msgid "Defined profiles"
-msgstr ""
+msgstr "Profils definis"
 
 #: ../../enterprise/operation/user/user.php:39
 msgid "There are no profiles defined"
-msgstr ""
+msgstr "Il n'y a pas de profils definis"
 
 #: ../../enterprise/operation/user/user.php:50
 msgid "Incident read"
-msgstr ""
+msgstr "Incident lu"
 
 #: ../../enterprise/operation/user/user.php:51
 msgid "Incident write"
-msgstr ""
+msgstr "Incident ecrit"
 
 #: ../../enterprise/operation/user/user.php:66
 msgid "ToDo write"
-msgstr ""
+msgstr "Tâche écrire"
 
 #: ../../enterprise/operation/user/user.php:67
 msgid "ToDo manage"
-msgstr ""
+msgstr "Gérer ToDo"
 
 #: ../../enterprise/operation/user/user.php:69
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:228
 msgid "KB management"
-msgstr ""
+msgstr "Gestion de la BC"
 
 #: ../../enterprise/operation/user/user.php:70
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:222
 msgid "KB read"
-msgstr ""
+msgstr "BC lire"
 
 #: ../../enterprise/operation/user/user.php:71
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:225
 msgid "KB write"
-msgstr ""
+msgstr "BC ecrire"
 
 #: ../../enterprise/operation/user/user.php:73
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:239
 msgid "Inventory management"
-msgstr ""
+msgstr "Gestion d'inventaire"
 
 #: ../../enterprise/operation/user/user.php:74
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:233
 msgid "Inventory read"
-msgstr ""
+msgstr "Inventaire lire"
 
 #: ../../enterprise/operation/user/user.php:75
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:236
 msgid "Inventory write"
-msgstr ""
+msgstr "Inventaire ecrire"
 
 #: ../../enterprise/operation/user/schedule_reports.php:81
 msgid "Add a new scheduled report"
-msgstr ""
+msgstr "Ajouter un nouveau rapport planifié"
 
 #: ../../enterprise/operation/user/schedule_reports.php:111
 #: ../../include/functions_db.php:2177
 msgid "Custom report"
-msgstr ""
+msgstr "Rapport personnalisé"
 
 #: ../../enterprise/operation/user/schedule_reports.php:115
 #: ../../include/functions_db.php:2183
 msgid "Incident global report"
-msgstr ""
+msgstr "Rapport globale del incident"
 
 #: ../../enterprise/operation/user/schedule_reports.php:118
 msgid "Report type"
-msgstr ""
+msgstr "type de rapport"
 
 #: ../../enterprise/operation/user/schedule_reports.php:120
 msgid "Lenght on days"
-msgstr ""
+msgstr "Duration dans jours"
 
 #: ../../enterprise/operation/user/schedule_reports.php:122
 msgid "External report"
-msgstr ""
+msgstr "Rapport externe"
 
 #: ../../enterprise/operation/user/schedule_reports.php:124
 msgid "Execute each X days"
-msgstr ""
+msgstr "Executer chaque X jours"
 
 #: ../../enterprise/operation/user/schedule_reports.php:147
 msgid "Scheduled report management"
-msgstr ""
+msgstr "Gestion de rapports programmés"
 
 #: ../../enterprise/operation/user/schedule_reports.php:163
 msgid "Interval Days"
-msgstr ""
+msgstr "Jours d'intervalle"
 
 #: ../../enterprise/operation/user/schedule_reports.php:164
 msgid "Lenght"
-msgstr ""
+msgstr "Longeur"
 
 #: ../../enterprise/operation/user/schedule_reports.php:165
 msgid "Last executed"
-msgstr ""
+msgstr "Dernière exécuté"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:13
 msgid "Menu visibility"
-msgstr ""
+msgstr "Visibilité du menú"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:21
 msgid "Manage profiles"
@@ -5975,85 +6029,85 @@ msgstr "Gestion de profils"
 
 #: ../../enterprise/operation/sidemenu_user_mgmt.php:29
 msgid "Global task assigment"
-msgstr ""
+msgstr "Attribution de la tâche globale"
 
 #: ../../enterprise/godmode/setup/translate_string.php:61
 #: ../../enterprise/godmode/sidemenu_translate_setup.php:10
 msgid "Translate strings"
-msgstr ""
+msgstr "traduire chaînes"
 
 #: ../../enterprise/godmode/setup/translate_string.php:76
 #: ../../enterprise/godmode/setup/translate_string.php:77
 msgid "Free text for search (*)"
-msgstr ""
+msgstr "Texte libre pour la recherche (*)"
 
 #: ../../enterprise/godmode/setup/translate_string.php:92
 msgid "Please search for anything text."
-msgstr ""
+msgstr "Si vous plaÎt cherchez des textes"
 
 #: ../../enterprise/godmode/setup/translate_string.php:103
 msgid "Original text"
-msgstr ""
+msgstr "Texte original"
 
 #: ../../enterprise/godmode/setup/translate_string.php:104
 msgid "Trasnlated text"
-msgstr ""
+msgstr "texte traduit"
 
 #: ../../enterprise/godmode/setup/translate_string.php:105
 msgid "Custom translation"
-msgstr ""
+msgstr "Traduction personnalisée"
 
 #: ../../enterprise/godmode/setup/setup_password.php:54
 msgid "Enterprise extended password policy setup"
-msgstr ""
+msgstr "Entreprise d'installation prolongée politique configuration"
 
 #: ../../enterprise/godmode/setup/setup_password.php:64
 msgid "Enable password policy"
-msgstr ""
+msgstr "Activer la politique de mot de passe"
 
 #: ../../enterprise/godmode/setup/setup_password.php:67
 msgid "Min. size password"
-msgstr ""
+msgstr "Min. mot de passe taille"
 
 #: ../../enterprise/godmode/setup/setup_password.php:70
 msgid "Password must have numbers"
-msgstr ""
+msgstr "Mot de passe doivent avoir des numéros"
 
 #: ../../enterprise/godmode/setup/setup_password.php:73
 msgid "Password must have symbols"
-msgstr ""
+msgstr "Mot de passe doit avoir des symboles"
 
 #: ../../enterprise/godmode/setup/setup_password.php:76
 msgid "Password expiration (days)"
-msgstr ""
+msgstr "Expiration Mot de passe (jours)"
 
 #: ../../enterprise/godmode/setup/setup_password.php:77
 msgid "Set 0 if never expire"
-msgstr ""
+msgstr "Réglez 0 si n'expirent jamais"
 
 #: ../../enterprise/godmode/setup/setup_password.php:80
 msgid "Force change password on first login"
-msgstr ""
+msgstr "Forcer changer mot de passe à la première connexion"
 
 #: ../../enterprise/godmode/setup/setup_password.php:83
 msgid "User blocked if login fails (minutes)"
-msgstr ""
+msgstr "Utilisateur bloqué si la connexion échoue (minutes)"
 
 #: ../../enterprise/godmode/setup/setup_password.php:86
 msgid "Number of failed login attempts"
-msgstr ""
+msgstr "Nombre de tentatives de connexion infructueuses"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:28
 msgid "There was a problem deleting the profile"
-msgstr ""
+msgstr "Il y avait un problem en supprimant le profil"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:79
 msgid "There was a problem updating the profile"
-msgstr ""
+msgstr "Il y avait un problem en mettant à jour le profil"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:123
 msgid "There was a problem creating the profile"
-msgstr ""
+msgstr "Il ya avait un problème en creant le profil"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:207
 #: ../../enterprise/godmode/usuarios/profile_list.php:212
@@ -6066,11 +6120,11 @@ msgstr ""
 #: ../../enterprise/godmode/usuarios/profile_list.php:240
 #: ../../enterprise/godmode/usuarios/profile_list.php:245
 msgid "Manage"
-msgstr ""
+msgstr "Gérer"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:233
 msgid "Users"
-msgstr ""
+msgstr "Utilisateurs"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:236
 #: ../../include/update_manager/lib/libupdate_manager.php:779
@@ -6079,83 +6133,83 @@ msgstr "Base de données"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:239
 msgid "Framework"
-msgstr ""
+msgstr "Cadre"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:269
 msgid "Manage incidents"
-msgstr ""
+msgstr "Gérer incidents"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:270
 msgid "Read agenda"
-msgstr ""
+msgstr "Lire agenda"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:271
 msgid "Edit agenda"
-msgstr ""
+msgstr "Editer la ordre du jour"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:272
 msgid "Manage agenda"
-msgstr ""
+msgstr "Gérer l'ordre du jour"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:276
 msgid "View project"
-msgstr ""
+msgstr "Voir le projet"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:277
 msgid "Edit project"
-msgstr ""
+msgstr "Editer projet"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:278
 msgid "Manage projects"
-msgstr ""
+msgstr "Gérer projet"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:279
 msgid "Edit task"
-msgstr ""
+msgstr "Editer la tâche"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:280
 msgid "Manage task"
-msgstr ""
+msgstr "Gérer la tâche"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:281
 msgid "View Knowledge Base"
-msgstr ""
+msgstr "Voir la base de connaissances"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:282
 msgid "Edit Knowledge Base"
-msgstr ""
+msgstr "Editer base de connaissances"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:283
 msgid "Manage Knowledge Base"
-msgstr ""
+msgstr "Gerer la base de connaissances"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:284
 msgid "View inventory"
-msgstr ""
+msgstr "Voir inventaire"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:285
 msgid "Edit inventory"
-msgstr ""
+msgstr "Editer inventaire"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:286
 msgid "Manage inventory"
-msgstr ""
+msgstr "Gerer inventaire"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:288
 msgid "View Wiki"
-msgstr ""
+msgstr "Voir Wiki"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:289
 msgid "Edit Wiki"
-msgstr ""
+msgstr "Editer Wiki"
 
 #: ../../enterprise/godmode/usuarios/profile_list.php:290
 msgid "Manage Wiki"
-msgstr ""
+msgstr "Gerer Wiki"
 
 #: ../../enterprise/godmode/usuarios/lista_perfiles.php:203
 msgid "Integria management"
-msgstr ""
+msgstr "Gestion d'Integria"
 
 #: ../../enterprise/godmode/usuarios/configurar_usuarios.php:12
 msgid "Profiles/Groups assigned to this user"
@@ -6167,69 +6221,72 @@ msgstr "Groupe(s) disponible(s)"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:65
 msgid "Assigment removed succesfully"
-msgstr ""
+msgstr "Tâche éliminé avec succès"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:100
 msgid "WU"
-msgstr ""
+msgstr "UT"
 
 #: ../../enterprise/godmode/usuarios/role_user_global.php:101
 msgid "WU/Tsk"
-msgstr ""
+msgstr "UT/tâche"
 
 #: ../../enterprise/godmode/usuarios/menu_visibility_manager.php:35
 msgid "Menu visibility mode deleted successfully"
-msgstr ""
+msgstr "Mode de visibilité du menu effacé avec succès"
 
 #: ../../enterprise/godmode/usuarios/menu_visibility_manager.php:38
 msgid "Menu visibility mode cannot be deleted"
-msgstr ""
+msgstr "Le mode de la visibilité du menu ne peut etre pas changé"
 
 #: ../../enterprise/godmode/usuarios/menu_visibility_manager.php:70
 msgid "The mode in this group already exists"
-msgstr ""
+msgstr "Le mode dans ce group exist déjà"
 
 #: ../../enterprise/godmode/usuarios/menu_visibility_manager.php:85
 msgid "Menu visibility mode created successfully"
-msgstr ""
+msgstr "Le mode de visibilité du menú a eté créé avec succès"
 
 #: ../../enterprise/godmode/usuarios/menu_visibility_manager.php:88
 msgid "Menu visibility mode cannot be created"
-msgstr ""
+msgstr "le mode de visibilité du menu ne peut etre pas changé"
 
 #: ../../enterprise/godmode/usuarios/menu_visibility_manager.php:94
 msgid "Menu visibility management"
-msgstr ""
+msgstr "Gestion de la visibilité du menu"
 
 #: ../../enterprise/godmode/usuarios/menu_visibility_manager.php:100
 msgid "Section"
-msgstr ""
+msgstr "Section"
 
 #: ../../enterprise/godmode/usuarios/menu_visibility_manager.php:102
 msgid "Mode"
-msgstr ""
+msgstr "Mode"
 
 #: ../../enterprise/godmode/usuarios/menu_visibility_manager.php:138
 msgid ""
 "Some modes exist in this section. Setting \"All\" groups, other groups "
 "configuration for this section will be deleted."
 msgstr ""
+"Aucunes modalités exist dans cette section. Avec l'activation de \"Toutes\" "
+"les groupes, la configuration de autres groupes pour cette section será "
+"supprimé."
 
 #: ../../enterprise/godmode/sidemenu_password_setup.php:11
 msgid "Password policy"
-msgstr ""
+msgstr "Politique de mot de passe"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:229
 msgid "Page "
-msgstr ""
+msgstr "Page "
 
 #: ../../enterprise/include/functions_reporting_pdf.php:229
 msgid " of "
-msgstr ""
+msgstr " de "
 
 #: ../../enterprise/include/functions_reporting_pdf.php:384
 msgid "Module graph"
-msgstr ""
+msgstr "Graphique du module"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:392
 #: ../../enterprise/include/functions_reporting_pdf.php:421
@@ -6244,296 +6301,303 @@ msgstr ""
 #: ../../enterprise/include/functions_reporting_pdf.php:899
 #: ../../enterprise/include/functions_reporting_pdf.php:916
 msgid "Period: "
-msgstr ""
+msgstr "Période "
 
 #: ../../enterprise/include/functions_reporting_pdf.php:416
 msgid "Custom graph"
-msgstr ""
+msgstr "Graphique personnalisée"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:434
 msgid "S.L.A."
-msgstr ""
+msgstr "S.L.A."
 
 #: ../../enterprise/include/functions_reporting_pdf.php:444
 msgid "There are no SLAs defined"
-msgstr ""
+msgstr "Il n'y a pas de SLAs definis"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:447
 msgid "Info"
-msgstr ""
+msgstr "Information"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:448
 msgid "SLA result"
-msgstr ""
+msgstr "Résultat de SLA"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:453
 msgid "Agent"
-msgstr ""
+msgstr "Agent"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:454
 msgid "Module"
-msgstr ""
+msgstr "Module"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:455
 msgid "SLA Max. (value)"
-msgstr ""
+msgstr "SLA Max. (valeur)"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:456
 msgid "SLA Min. (value)"
-msgstr ""
+msgstr "SLA Min. (valeur)"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:457
 msgid "SLA Limit"
-msgstr ""
+msgstr "Limite SLA"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:476
 msgid "SLA final result: "
-msgstr ""
+msgstr "Dernier résultat SLA: "
 
 #: ../../enterprise/include/functions_reporting_pdf.php:478
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:481
 msgid "Fail"
-msgstr ""
+msgstr "Erreur"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:492
 msgid "Monitor report"
-msgstr ""
+msgstr "Rapport du moniteur"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:500
 msgid "Up"
-msgstr ""
+msgstr "En haut"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:502
 msgid "Down"
-msgstr ""
+msgstr "Arrêté"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:509
 msgid "Avg. Value"
-msgstr ""
+msgstr "Valeur moyenne"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:523
 msgid "Max. Value"
-msgstr ""
+msgstr "Valeur Max."
 
 #: ../../enterprise/include/functions_reporting_pdf.php:538
 msgid "Min. Value"
-msgstr ""
+msgstr "Valeur Min."
 
 #: ../../enterprise/include/functions_reporting_pdf.php:553
 msgid "Sumatory"
-msgstr ""
+msgstr "Sommatoire"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:566
 #: ../../enterprise/include/functions_reporting_pdf.php:677
 msgid "Agents detailed event"
-msgstr ""
+msgstr "Événement détaillé des agents"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:576
 msgid "Event name"
-msgstr ""
+msgstr "Nom de l'événement"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:577
 msgid "Event type"
-msgstr ""
+msgstr "Type d'évènement"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:578
 msgid "Criticity"
-msgstr ""
+msgstr "Criticité"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:579
 msgid "Count"
-msgstr ""
+msgstr "Compter"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:602
 msgid "Text"
-msgstr ""
+msgstr "Texte"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:613
 msgid "SQL"
-msgstr ""
+msgstr "SQL"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:658
 msgid "Group detailed event"
-msgstr ""
+msgstr "Événement de groupe détaillée"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:697
 msgid "Alert report module"
-msgstr ""
+msgstr "Module de rapport d'alerte"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:742
 msgid "Alert report agent"
-msgstr ""
+msgstr "Agent de rappot de alerte"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:795
 msgid "Import text from URL"
-msgstr ""
+msgstr "Importer texte de la URL"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:813
 msgid "Serialize data"
-msgstr ""
+msgstr "Sérialiser des données"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:860
 msgid "TTRT"
-msgstr ""
+msgstr "TTRT"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:877
 msgid "TTO"
-msgstr ""
+msgstr "TTO"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:894
 msgid "MTBF"
-msgstr ""
+msgstr "MTBF"
 
 #: ../../enterprise/include/functions_reporting_pdf.php:911
 msgid "MTTR"
-msgstr ""
+msgstr "MTTR"
 
 #: ../../enterprise/include/functions_db.php:265
 msgid "Hidden"
-msgstr ""
+msgstr "Caché"
 
 #: ../../enterprise/include/functions_db.php:265
 msgid "Minimal"
-msgstr ""
+msgstr "Minimal"
 
 #: ../../enterprise/include/functions_db.php:265
 msgid "Limited"
-msgstr ""
+msgstr "Limité"
 
 #: ../../enterprise/include/functions_db.php:265
 msgid "Full"
-msgstr ""
+msgstr "Complète"
 
 #: ../../enterprise/include/functions_db.php:432
 msgid "Schedule reports"
-msgstr ""
+msgstr "Planifier des rapports"
 
 #: ../../enterprise/include/functions_login.php:65
 msgid "Login expired"
-msgstr ""
+msgstr "Connexion expirée"
 
 #: ../../enterprise/include/functions_login.php:74
 msgid "NEW PASS: "
-msgstr ""
+msgstr "NOUVEAU MOT DE PASSE "
 
 #: ../../enterprise/include/functions_login.php:76
 msgid "CONFIRM: "
-msgstr ""
+msgstr "CONFIRMER "
 
 #: ../../enterprise/include/functions_login.php:82
 msgid "Change"
-msgstr ""
+msgstr "Modifier"
 
 #: ../../enterprise/include/functions_login.php:125
 msgid "Login blocked"
-msgstr ""
+msgstr "Connexion bloqué"
 
 #: ../../enterprise/include/functions_login.php:128
 msgid "User has been blocked. Try again in "
-msgstr ""
+msgstr "L'utilisateur a été bloqué. Essayez à nouveau dans "
 
 #: ../../enterprise/include/functions_login.php:128
 msgid " minutes."
-msgstr ""
+msgstr " minutes."
 
 #: ../../enterprise/include/functions_login.php:157
 msgid "Password must be different"
-msgstr ""
+msgstr "Mot de passe doit être différent"
 
 #: ../../enterprise/include/functions_login.php:163
 msgid "Password too short"
-msgstr ""
+msgstr "Le mot de passe est trop petit"
 
 #: ../../enterprise/include/functions_login.php:171
 msgid "Password must contain numbers"
-msgstr ""
+msgstr "Mot de passe doit contenir des chiffres"
 
 #: ../../enterprise/include/functions_login.php:180
 msgid "Password must contain symbols"
-msgstr ""
+msgstr "Mot de passe doit contenir des symboles"
 
 #: ../../enterprise/include/functions_login.php:211
 msgid "User pass successfully updated"
-msgstr ""
+msgstr "Mot de passe de l'utilisateur mis à jour correctement"
 
 #: ../../enterprise/include/functions_login.php:212
 msgid "Error updating user pass (no change?)"
 msgstr ""
+"Erreur mise à jour mot de passe de l'utilisateur (pas de changement?)"
 
 #: ../../enterprise/include/functions_login.php:219
 msgid "Password confirm does not match"
-msgstr ""
+msgstr "confirmation de la mot de passe ne se corresponde pas"
 
 #: ../../enterprise/include/functions_login.php:225
 msgid "Password empty"
-msgstr ""
+msgstr "Mot de passe vide"
 
 #: ../../index.php:164 ../../index.php:167
 msgid "Added"
-msgstr ""
+msgstr "Ajouté"
 
 #: ../../index.php:165
 msgid "Search inventory object"
-msgstr ""
+msgstr "Recherche objet d'inventaire"
 
 #: ../../index.php:166
 msgid "Already added"
-msgstr ""
+msgstr "Déjà ajouté(e)"
 
 #: ../../index.php:168
 msgid "Search parent incident"
-msgstr ""
+msgstr "Chercher parent de l'incident"
 
 #: ../../index.php:169
 msgid "User search"
-msgstr ""
+msgstr "Recherche d'utilisateurs"
 
 #: ../../index.php:170
 msgid "There's no affected inventory object"
-msgstr ""
+msgstr "Il n'y a aucun objet d'inventaire concernée"
 
 #: ../../index.php:171
 msgid "There's no affected object"
-msgstr ""
+msgstr "Il n'y a pas d'objet concerné"
 
 #: ../../index.php:174
 msgid "Submitting"
-msgstr ""
+msgstr "Envoyant"
 
 #: ../../index.php:176
 msgid "Search contact"
-msgstr ""
+msgstr "Rechercher un contact"
 
 #: ../../index.php:177
 msgid "Create contact"
-msgstr ""
+msgstr "Créer un contact"
 
 #: ../../index.php:178
 msgid "Search parent inventory"
-msgstr ""
+msgstr "Chercher inventoire parent"
 
 #: ../../index.php:380
 msgid "Attachment directory is not writtable by HTTP Server"
 msgstr ""
+"Le dossier de pièce-jointe n'est pas accessible en écriture par le serveur "
+"HTTP"
 
 #: ../../index.php:382
 msgid ""
 "Please check that {HOMEDIR}/attachment directory has write rights for HTTP "
 "server"
 msgstr ""
+"Merci de vérifier que {HOMEDIR}/dossier de la pièce-jointe possède les "
+"droits en écriture pour le serveur HTTP"
 
 #: ../../index.php:387
 msgid "Temporal directory is not writtable by HTTP Server"
-msgstr ""
+msgstr "Le répertoire temporel n'est pas inscriptible par HTTP Serveur"
 
 #: ../../index.php:389
 msgid ""
 "Please check that {HOMEDIR}/attachment/tmp directory has write rights for "
 "HTTP server"
 msgstr ""
+"Si vous plaît verifier que {HOMEDIR}/attachment/tmp directory a droits "
+"d'ecriture  pour le serveur HTTP"
 
 #: ../../index.php:398 ../../index.php:423
 msgid "Page not found"
@@ -6541,11 +6605,11 @@ msgstr "Page introuvable"
 
 #: ../../index.php:455
 msgid "Automated Integria IMS report"
-msgstr ""
+msgstr "Rapport Integria IMS automatisé"
 
 #: ../../include/functions.php:604
 msgid "Very low"
-msgstr ""
+msgstr "Très faible"
 
 #: ../../include/functions.php:606 ../../include/functions.php:697
 #: ../../include/functions.php:758
@@ -6595,73 +6659,75 @@ msgstr "Mensuel"
 
 #: ../../include/functions.php:713
 msgid "60 days"
-msgstr ""
+msgstr "60 jours"
 
 #: ../../include/functions.php:714
 msgid "90 days"
-msgstr ""
+msgstr "90 jours"
 
 #: ../../include/functions.php:715
 msgid "Annual"
-msgstr ""
+msgstr "Annuel"
 
 #: ../../include/functions.php:774
 msgid "Maintance"
-msgstr ""
+msgstr "Entretien"
 
 #: ../../include/functions.php:790
 msgid "Project created"
-msgstr ""
+msgstr "Projet créé"
 
 #: ../../include/functions.php:792
 msgid "Project updated"
-msgstr ""
+msgstr "Projet mis à jour"
 
 #: ../../include/functions.php:794
 msgid "Project disabled"
-msgstr ""
+msgstr "Projet désactivé"
 
 #: ../../include/functions.php:796
 msgid "Project activated"
-msgstr ""
+msgstr "Projet activé"
 
 #: ../../include/functions.php:798
 msgid "Project deleted"
-msgstr ""
+msgstr "Projet supprimé"
 
 #: ../../include/functions_config.php:47
 msgid ""
 "Please do NOT answer this email, it has been automatically created by "
 "Integria (http://integria.sourceforge.net)."
 msgstr ""
+"Merci de NE PAS REPONDRE à cet email, il a été généré automatiquement par "
+"Integria (http://integria.sourcefourge.net)."
 
 #: ../../include/functions_inventories.php:632
 msgid "Total objects"
-msgstr ""
+msgstr "Objets au total"
 
 #: ../../include/functions_inventories.php:633
 msgid "With incidents"
-msgstr ""
+msgstr "Avec incidents"
 
 #: ../../include/functions_inventories.php:633
 msgid "Without incidents"
-msgstr ""
+msgstr "Sans incidents"
 
 #: ../../include/functions_inventories.php:635
 msgid "Total objects with incidents"
-msgstr ""
+msgstr "Objets au total avec incidents"
 
 #: ../../include/functions_inventories.php:637
 msgid "Total objects with opened incidents"
-msgstr ""
+msgstr "Objets au total avec événements ouverts"
 
 #: ../../include/functions_inventories.php:690
 msgid "Maximum response"
-msgstr ""
+msgstr "Réponse maximum"
 
 #: ../../include/functions_inventories.php:691
 msgid "Maximum incidents"
-msgstr ""
+msgstr "Maximum d'incidents"
 
 #: ../../include/functions_form.php:294 ../../include/functions_form.php:302
 msgid "Source"
@@ -6670,35 +6736,35 @@ msgstr "Source"
 #: ../../include/functions_form.php:383 ../../include/functions_form.php:453
 #: ../../include/functions_calendar.php:619
 msgid "Vacations"
-msgstr ""
+msgstr "Vacances"
 
 #: ../../include/functions_form.php:454
 msgid "Not working for disease"
-msgstr ""
+msgstr "Absent cause maladie"
 
 #: ../../include/functions_form.php:455
 msgid "Not justified"
-msgstr ""
+msgstr "Non justifié(e)"
 
 #: ../../include/functions_form.php:575
 msgid "said"
-msgstr ""
+msgstr "Dit"
 
 #: ../../include/functions_form.php:581 ../../include/functions_form.php:681
 msgid "Public Workunit"
-msgstr ""
+msgstr "Unite de travail public"
 
 #: ../../include/functions_form.php:583 ../../include/functions_form.php:683
 msgid "Non public Workunit"
-msgstr ""
+msgstr "Unité de travail pas publique"
 
 #: ../../include/functions_form.php:591
 msgid "Have a cost"
-msgstr ""
+msgstr "Il y a un coût"
 
 #: ../../include/functions_form.php:613 ../../include/functions_form.php:732
 msgid "Read more..."
-msgstr ""
+msgstr "Voir plus..."
 
 #: ../../include/functions_form.php:674
 msgid "Duration"
@@ -6706,39 +6772,39 @@ msgstr "Durée"
 
 #: ../../include/functions_form.php:759
 msgid "Edit workunit"
-msgstr ""
+msgstr "Editer unité de travail"
 
 #: ../../include/functions_form.php:767
 msgid "Lock workunit"
-msgstr ""
+msgstr "Fermer unité de travail"
 
 #: ../../include/functions_form.php:954
 msgid "Opened"
-msgstr ""
+msgstr "Ouvert"
 
 #: ../../include/functions_form.php:957
 msgid "Closed at"
-msgstr ""
+msgstr "Fermé à"
 
 #: ../../include/functions_form.php:969
 msgid "Last work at"
-msgstr ""
+msgstr "Dernier travail à"
 
 #: ../../include/functions_form.php:973
 msgid "Done by"
-msgstr ""
+msgstr "Fait par"
 
 #: ../../include/functions_form.php:996
 msgid "Items per page"
-msgstr ""
+msgstr "Eléments par page"
 
 #: ../../include/functions_ui.php:162
 msgid "Request successfully processed"
-msgstr ""
+msgstr "Requête traitée avec succès"
 
 #: ../../include/functions_ui.php:165
 msgid "Error processing request"
-msgstr ""
+msgstr "Erreur en traitant les demandes"
 
 #: ../../include/functions_db.php:881
 msgid "Created"
@@ -6746,47 +6812,47 @@ msgstr "Créé"
 
 #: ../../include/functions_db.php:893
 msgid "Note added"
-msgstr ""
+msgstr "Note ajouté"
 
 #: ../../include/functions_db.php:896
 msgid "File removed"
-msgstr ""
+msgstr "Fichier supprimé"
 
 #: ../../include/functions_db.php:899
 msgid "Priority changed"
-msgstr ""
+msgstr "Priorité modifiée"
 
 #: ../../include/functions_db.php:904
 msgid "Status changed"
-msgstr ""
+msgstr "Etat modifié"
 
 #: ../../include/functions_db.php:908
 msgid "Resolution changed"
-msgstr ""
+msgstr "la résolution a changé"
 
 #: ../../include/functions_db.php:912
 msgid "Note deleted"
-msgstr ""
+msgstr ".Annotation supprimée"
 
 #: ../../include/functions_db.php:915
 msgid "Assigned user changed"
-msgstr ""
+msgstr "L'utilisateur assigné  a changé"
 
 #: ../../include/functions_db.php:919
 msgid "Incident deleted"
-msgstr ""
+msgstr "Incident supprimé"
 
 #: ../../include/functions_db.php:922
 msgid "Contact added"
-msgstr ""
+msgstr "Contact ajouté"
 
 #: ../../include/functions_db.php:926
 msgid "Added inventory object: "
-msgstr ""
+msgstr "Objet d'inventaire ajouté "
 
 #: ../../include/functions_db.php:930
 msgid "Unknown update"
-msgstr ""
+msgstr "Mise à jour inconnue"
 
 #: ../../include/functions_db.php:2098
 msgid "New"
@@ -6794,7 +6860,7 @@ msgstr "Nouveau"
 
 #: ../../include/functions_db.php:2099
 msgid "Unconfirmed"
-msgstr ""
+msgstr "non confirmée"
 
 #: ../../include/functions_db.php:2100
 msgid "Assigned"
@@ -6802,7 +6868,7 @@ msgstr "Attribué"
 
 #: ../../include/functions_db.php:2101
 msgid "Re-opened"
-msgstr ""
+msgstr "Ré-ouverture"
 
 #: ../../include/functions_db.php:2103
 msgid "Resolved"
@@ -6831,11 +6897,11 @@ msgstr "Dupliquer"
 
 #: ../../include/functions_db.php:2124
 msgid "Works for me"
-msgstr ""
+msgstr "Fontionne pour moi"
 
 #: ../../include/functions_db.php:2125
 msgid "Incomplete"
-msgstr ""
+msgstr "Incomplet"
 
 #: ../../include/functions_db.php:2126
 msgid "Expired"
@@ -6843,63 +6909,63 @@ msgstr "Expiré"
 
 #: ../../include/functions_db.php:2127
 msgid "Moved"
-msgstr ""
+msgstr "Déplacé"
 
 #: ../../include/functions_db.php:2142
 msgid "User report"
-msgstr ""
+msgstr "Rapport de l'utilisateur"
 
 #: ../../include/functions_db.php:2143
 msgid "Customer"
-msgstr ""
+msgstr "Client"
 
 #: ../../include/functions_db.php:2144
 msgid "Internal department"
-msgstr ""
+msgstr "Département interne"
 
 #: ../../include/functions_db.php:2145
 msgid "External department"
-msgstr ""
+msgstr "Département externe"
 
 #: ../../include/functions_db.php:2146
 msgid "Application data"
-msgstr ""
+msgstr "Les données d'application"
 
 #: ../../include/functions_db.php:2147
 msgid "Bug report"
-msgstr ""
+msgstr "Rapport de bug"
 
 #: ../../include/functions_db.php:2148
 msgid "Problem detected"
-msgstr ""
+msgstr "Problème détecté"
 
 #: ../../include/functions_db.php:2149
 msgid "Other source"
-msgstr ""
+msgstr "Autre source"
 
 #: ../../include/functions_db.php:2179
 msgid "User activity graph"
-msgstr ""
+msgstr "Graphique de la activité de l'utilisateur"
 
 #: ../../include/functions_db.php:2181
 msgid "User activity detailed"
-msgstr ""
+msgstr "Activité de l'utilisateur detaillé"
 
 #: ../../include/functions_calendar.php:471
 msgid "Week Total"
-msgstr ""
+msgstr "Semaine complete"
 
 #: ../../include/functions_calendar.php:618
 msgid "Task/projects"
-msgstr ""
+msgstr "Tâche/projets"
 
 #: ../../include/functions_calendar.php:621
 msgid "Non-Justified"
-msgstr ""
+msgstr "Pas-justifié"
 
 #: ../../include/functions_calendar.php:788
 msgid "Now"
-msgstr ""
+msgstr "Maintenant"
 
 #: ../../include/functions_calendar.php:802
 #: ../../include/functions_calendar.php:816
@@ -6924,67 +6990,72 @@ msgstr "heures"
 
 #: ../../include/newsletter.php:54
 msgid "Subscription form for "
-msgstr ""
+msgstr "Formulaire d'abonnement pour "
 
 #: ../../include/newsletter.php:62
 msgid "Name (optional)"
-msgstr ""
+msgstr "Nom (facultatif)"
 
 #: ../../include/newsletter.php:72
 msgid "Subscribe me"
-msgstr ""
+msgstr "Abonnez-moi"
 
 #: ../../include/newsletter.php:91
 msgid ""
 "Thanks for your subscription. You should receive an email to confirm you "
 "have been subscribed to this newsletter"
 msgstr ""
+"Merci pour votre abonnement. Vous devriez recevoir un email de confirmation "
+"que vous avez été abonné à ce bulletin d'information"
 
 #: ../../include/newsletter.php:106
 msgid "Welcome to"
-msgstr ""
+msgstr "Bienvenue sur"
 
 #: ../../include/newsletter.php:106
 msgid "newsletter"
-msgstr ""
+msgstr "Bulletin"
 
 #: ../../include/newsletter.php:107
 msgid "Please use this URL to de-subscribe yourself from this newsletter:"
 msgstr ""
+"S'il vous plaît utiliser cette URL pour vous désinscrire de cette newsletter:"
 
 #: ../../include/newsletter.php:109
 msgid "Thank you"
-msgstr ""
+msgstr "Merci"
 
 #: ../../include/newsletter.php:132
 msgid "De-subscription form for "
-msgstr ""
+msgstr "Formulaire pour se desabonner de "
 
 #: ../../include/newsletter.php:139
 msgid ""
 "Please enter here the email address which you're registered on this "
 "newsletter"
 msgstr ""
+"S'il vous plaît entrer ici l'adresse e-mail que vous êtes inscrit sur ​​le "
+"présent bulletin"
 
 #: ../../include/newsletter.php:150
 msgid "Desubscribe me"
-msgstr ""
+msgstr "Me désabonner"
 
 #: ../../include/newsletter.php:181
 msgid "You has been desubscribed. Thanks!"
-msgstr ""
+msgstr "Vous a été désinscrit. Merci!"
 
 #: ../../include/newsletter.php:186
 msgid "There is nobody registered with that address"
-msgstr ""
+msgstr "Il n'y a personne inscrite à cette adresse"
 
 #: ../../include/graphs/functions_fsgraph.php:830
 msgid "Week"
-msgstr ""
+msgstr "Semaine"
 
 #: ../../include/graphs/functions_fsgraph.php:843
 msgid "Actual"
-msgstr ""
+msgstr "Actuel"
 
 #: ../../include/graphs/functions_fsgraph.php:865
 msgid "Today"
@@ -7000,13 +7071,13 @@ msgstr "Test"
 
 #: ../../include/update_manager/lib/libupdate_manager.php:780
 msgid "Code / binary directory"
-msgstr ""
+msgstr "Code/répertoire binaire"
 
 #: ../../include/functions_workunits.php:105
 #: ../../include/functions_workunits.php:295
 #, php-format
 msgid "Workunit  #%d"
-msgstr ""
+msgstr "Unite de travail #%d"
 
 #: ../../include/functions_workunits.php:343
 msgid "Split > 1 day"
@@ -7014,15 +7085,15 @@ msgstr ""
 
 #: ../../include/functions_update_manager.ajax.php:48
 msgid "Error download packages."
-msgstr ""
+msgstr "Erreur en télécharger les paquets"
 
 #: ../../include/functions_update_manager.ajax.php:207
 msgid "In progress..."
-msgstr ""
+msgstr "En cours ..."
 
 #: ../../include/functions_update_manager.ajax.php:215
 msgid "bytes"
-msgstr ""
+msgstr "bytes"
 
 #: ../../include/functions_update_manager.ajax.php:216
 msgid "Speed"

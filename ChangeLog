@@ -1,5 +1,9 @@
 2013-02-04  Dario Rodriguez <dario@artica.es>
 
+	* include/languages: Updated languages.
+
+2013-02-04  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_form.php: Restored combo_incident_origin function
 
 2013-02-01  Sancho Lerena <slerena@artica.es>
