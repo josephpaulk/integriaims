@@ -1,3 +1,8 @@
+2013-02-05 Juan Manuel Ramon <juanmanuel.ramon@artica.es>
+
+	* integria_demo.sql: Added fields 'num_employee' in tusuario, added
+	'last_stat_check' and 'closed_by' in tincidencia.
+
 2013-02-05  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql

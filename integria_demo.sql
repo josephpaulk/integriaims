@@ -1,9 +1,8 @@
-INSERT INTO `tusuario` VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2012-10-16 17:22:45','admin@integria.sf.net','555-555-555',1,'people_1','','',0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0);
+INSERT INTO `tusuario` (`id_usuario`, `nombre_real`, `password`, `comentarios`, `fecha_registro`, `direccion`, `telefono`, `nivel`, `avatar`, `lang`, `pwdhash`, `disabled`, `id_company`, `simple_mode`, `force_change_pass`, `last_pass_change`, `last_failed_login`, `failed_attempt`, `login_blocked`, `num_employee`) VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2012-10-16 17:22:45','admin@integria.sf.net','555-555-555',1,'people_1','','',0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0,'');
 
-INSERT INTO `tusuario` VALUES ('javi','Javier Nadie','334c4a4c42fdb79d7ebc3e73b517e6f8','Default Integria standard user. Please change password ASAP','2012-10-16 17:22:45','javi@integria.sf.net','555-555-555',1,'people_2','','',0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0);
+INSERT INTO `tusuario` (`id_usuario`, `nombre_real`, `password`, `comentarios`, `fecha_registro`, `direccion`, `telefono`, `nivel`, `avatar`, `lang`, `pwdhash`, `disabled`, `id_company`, `simple_mode`, `force_change_pass`, `last_pass_change`, `last_failed_login`, `failed_attempt`, `login_blocked`, `num_employee`) VALUES ('javi','Javier Nadie','334c4a4c42fdb79d7ebc3e73b517e6f8','Default Integria standard user. Please change password ASAP','2012-10-16 17:22:45','javi@integria.sf.net','555-555-555',1,'people_2','','',0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0,'');
 
 INSERT INTO `tagenda` VALUES (1,'2012-03-15 18:31:00','admin',0,120,1,3,'Dentist!'),(2,'2012-05-01 18:31:00','admin',0,240,2,4,'Take&#x20;my&#x20;wife&#x20;and&#x20;go&#x20;to&#x20;a&#x20;expensive&#x20;restaurant...'),(3,'2012-09-01 18:32:00','admin',0,0,0,4,'Have&#x20;a&#x20;live...&#x20;Holidays&#x20;!'),(4,'2012-10-01 18:32:00','admin',0,0,0,4,'Back&#x20;to&#x20;hell...&#x20;welcome&#x20;to&#x20;the&#x20;office&#x20;!&#x20;:&#40;');
-
 
 INSERT INTO `tattachment` VALUES (1,1,0,0,'javi','shot0000.jpg','See&#x20;how&#x20;it&#x20;works&#x20;for&#x20;me...&#x20;fast&#x20;!&#x0a;',131537);
 
@@ -42,15 +41,15 @@ INSERT INTO `tevent` VALUES (4,'COMPANY ROLE CREATED','2012-01-17 18:01:37','adm
 INSERT INTO `tgrupo` VALUES (1,'All','world.png',NULL,NULL,NULL,0,'admin',1,0,0,1,'',0),(2,'Customer #A','eye.png',NULL,NULL,NULL,0,'admin',2,0,0,1,'',0),(3,'Customer #B','eye.png',NULL,NULL,NULL,0,'admin',1,0,0,1,'',0),(4,'Engineering','computer.png',NULL,NULL,NULL,0,'admin',2,0,0,1,'',0);
 
 
-INSERT INTO `tincidencia` VALUES (1,'2012-01-17 18:07:17','0000-00-00 00:00:00','Problems&#x20;in&#x20;the&#x20;server','Server&#x20;response&#x20;too&#x20;slow.&#x20;I&#x20;cannot&#x20;work&#x20;with&#x20;that!','javi',1,3,2,4,'2012-01-17 21:38:06','javi',1,0,0,'',NULL,0,0,0,0,'','',2);
-INSERT INTO `tincidencia` VALUES (2,'2012-01-17 18:25:03','2012-01-17 18:26:28','Keyboard&#x20;broken','I&#x20;cannot&#x20;type&#x20;nothing&#x20;because&#x20;my&#x20;keyboard&#x20;is&#x20;broken.&#x0a;','support',1,6,2,4,'2012-01-17 18:26:28','javi',1,0,1,'Reconnect&#x20;again&#x20;the&#x20;device&#x20;make&#x20;it&#x20;work.&#x20;&#x0a;',NULL,0,0,0,10,'','',2);
-INSERT INTO `tincidencia` VALUES (3,'2012-01-17 18:27:01','2012-01-17 22:11:36','My&#x20;mouse&#x20;doesnt&#x20;work','I&#x20;cannot&#x20;click&#x20;with&#x20;right&#x20;button.&#x20;HELP&#x20;!','javi',1,6,2,4,'2012-01-10  22:11:36','javi',1,0,0,'Lo&#x20;pudimos&#x20;arreglar&#x20;haciendo&#x20;XXX.',NULL,0,0,0,0,'','',2);
+  
+
+
+INSERT INTO `tincidencia` (`id_incidencia`,`inicio`,`cierre`,`titulo`,`descripcion`,`id_usuario`,`estado`,`prioridad`,`id_grupo`,`actualizacion`,`id_creator`,`notify_email`,`id_task`,`resolution`,`epilog`,`id_parent`,`sla_disabled`,`affected_sla_id`,`id_incident_type`,`score`,`email_copy`,`editor`,`id_group_creator`,`last_stat_check`,`closed_by`) VALUES (1,'2012-01-17 18:07:17','0000-00-00 00:00:00','Problems&#x20;in&#x20;the&#x20;server','Server&#x20;response&#x20;too&#x20;slow.&#x20;I&#x20;cannot&#x20;work&#x20;with&#x20;that!','javi',1,3,2,'2012-01-17 21:38:06','javi',1,0,0,'',NULL,0,0,0,0,'','',2,0,'');
+INSERT INTO `tincidencia` (`id_incidencia`,`inicio`,`cierre`,`titulo`,`descripcion`,`id_usuario`,`estado`,`prioridad`,`id_grupo`,`actualizacion`,`id_creator`,`notify_email`,`id_task`,`resolution`,`epilog`,`id_parent`,`sla_disabled`,`affected_sla_id`,`id_incident_type`,`score`,`email_copy`,`editor`,`id_group_creator`,`last_stat_check`,`closed_by`) VALUES (2,'2012-01-17 18:25:03','2012-01-17 18:26:28','Keyboard&#x20;broken','I&#x20;cannot&#x20;type&#x20;nothing&#x20;because&#x20;my&#x20;keyboard&#x20;is&#x20;broken.&#x0a;','support',1,6,2,'2012-01-17 18:26:28','javi',1,0,1,'Reconnect&#x20;again&#x20;the&#x20;device&#x20;make&#x20;it&#x20;work.&#x20;&#x0a;',NULL,0,0,0,10,'','',2, 0, '');
+INSERT INTO `tincidencia` (`id_incidencia`,`inicio`,`cierre`,`titulo`,`descripcion`,`id_usuario`,`estado`,`prioridad`,`id_grupo`,`actualizacion`,`id_creator`,`notify_email`,`id_task`,`resolution`,`epilog`,`id_parent`,`sla_disabled`,`affected_sla_id`,`id_incident_type`,`score`,`email_copy`,`editor`,`id_group_creator`,`last_stat_check`,`closed_by`) VALUES (3,'2012-01-17 18:27:01','2012-01-17 22:11:36','My&#x20;mouse&#x20;doesnt&#x20;work','I&#x20;cannot&#x20;click&#x20;with&#x20;right&#x20;button.&#x20;HELP&#x20;!','javi',1,6,2,'2012-01-10  22:11:36','javi',1,0,0,'Lo&#x20;pudimos&#x20;arreglar&#x20;haciendo&#x20;XXX.',NULL,0,0,0,0,'','',2, 0, '');
 
 
 INSERT INTO `tincident_inventory` VALUES (1,1),(2,1),(3,1);
-
-
-INSERT INTO `tincident_origin` VALUES (1,'User report'),(2,'Customer'),(3,'Internal department'),(4,'External department'),(5,'Application data'),(6,'Bug report'),(7,'Problem detected'),(8,'Other source');
 
 
 INSERT INTO `tincident_resolution` VALUES (1,'Fixed'),(2,'Invalid'),(3,'Wont fix'),(4,'Duplicate'),(5,'Works for me'),(6,'Incomplete'),(7,'Expired'),(8,'Moved'),(9,'In process');
