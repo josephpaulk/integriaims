@@ -42,6 +42,7 @@ $simple_mode = 0;
 $id_company = 0;
 // Default is create mode (creacion)
 $modo = "creacion";
+$num_employee = "";
 
 if (isset($_GET["borrar_grupo"])) {
 	$grupo = get_parameter ('borrar_grupo');
@@ -79,6 +80,7 @@ if (($action == 'edit' || $action == 'update') && !$alta) {
 		$disabled = $rowdup["disabled"];
 		$simple_mode = $rowdup["simple_mode"];
 		$id_company = $rowdup["id_company"];
+		$num_employee = $rowdup["num_employee"];
 	}
 }
 
@@ -97,8 +99,32 @@ if ($action == 'update')  {
 		$disabled = get_parameter ("disabled");
 		$simple_mode = get_parameter ("simple_mode");
 		$id_company = get_parameter ("id_company");
+		$num_employee = get_parameter ("num_employee");
+		
+		//chech if exists num employee
+		$already_exists = false;
+		if (isset($num_employee) && ($num_employee != '')) {
+			$sql_num = "SELECT num_employee FROM tusuario
+							WHERE id_usuario<>'$update_user'
+							AND num_employee<>''";
+
+			$result = process_sql($sql_num);
+			if ($result === false) {
+				$already_exists = false;
+			} else {
+				foreach ($result as $res) {
+					if ($res['num_employee'] == $num_employee) {
+						$already_exists = true;
+					}
+				}
+			}
+		}
+		
 		if ($password <> $password2){
 			echo "<h3 class='error'>".__('Passwords don\'t match.')."</h3>";
+		}
+		else if ($already_exists) {
+			echo "<h3 class='error'>".__('Number employee already exists.')."</h3>";
 		}
 		else {
 			if (isset($_POST["nivel"])) {
@@ -112,10 +138,10 @@ if ($action == 'update')  {
 
 			if (dame_password ($nombre_viejo) != $password){
 				$password = md5($password);
-				$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode' WHERE id_usuario = '$nombre_viejo'";
+				$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee' WHERE id_usuario = '$nombre_viejo'";
 			}
 			else {
-				$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode' WHERE id_usuario = '".$nombre_viejo."'";
+				$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee' WHERE id_usuario = '".$nombre_viejo."'";
 			}
 			
 			$resq2 = process_sql($sql);
@@ -169,8 +195,9 @@ if ($action == 'create'){
 	$disabled = get_parameter ("disabled");
 		
 	$ahora = date("Y-m-d H:i:s");
-	$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real,avatar, lang, disabled, id_company, simple_mode) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','$avatar','$lang','$disabled','$id_company','$simple_mode')";
-	
+	$num_employee = get_parameter("num_employee");
+	$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, simple_mode) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company',$simple_mode)";
+
 	$resq1 = process_sql($sql_insert);
 		if (! $resq1)
 			echo "<h3 class='error'>".__('Could not be created')."</h3>";
@@ -237,6 +264,9 @@ echo __('Disabled').'&nbsp;<input type="radio" class="chk" name="disabled" value
     
 ?>
 
+<tr><td class="datos2"><?php echo __('Num. employee') ?>
+<td class="datos2"><input type="text" name="num_employee" value="<?php echo $num_employee ?>">
+
 <tr><td class="datos2"><?php echo __('Real name') ?>
 <td class="datos2"><input type="text" size=25 name="nombre_real" value="<?php echo $nombre_real ?>">
 
@@ -244,6 +274,7 @@ echo __('Disabled').'&nbsp;<input type="radio" class="chk" name="disabled" value
 <td class="datos"><input type="password" name="pass1" value="<?php echo $password ?>">
 <tr><td class="datos2"><?php echo __('Password confirmation') ?>
 <td class="datos2"><input type="password" name="pass2" value="<?php echo $password ?>">
+
 <tr><td class="datos"><?php echo __('Email') ?>
 <td class="datos"><input type="text" name="direccion" size="30" value="<?php echo $direccion ?>">
 

@@ -56,12 +56,8 @@ function filter_incidents ($filters) {
 	$filters['status'] = isset ($filters['status']) ? $filters['status'] : 0;
 	$filters['priority'] = isset ($filters['priority']) ? $filters['priority'] : -1;
 	$filters['id_group'] = isset ($filters['id_group']) ? $filters['id_group'] : -1;
-	$filters['id_product'] = isset ($filters['id_product']) ? $filters['id_product'] : 0;
 	$filters['id_company'] = isset ($filters['id_company']) ? $filters['id_company'] : 0;
 	$filters['id_inventory'] = isset ($filters['id_inventory']) ? $filters['id_inventory'] : 0;
-	$filters['serial_number'] = isset ($filters['serial_number']) ? $filters['serial_number'] : '';
-	$filters['id_building'] = isset ($filters['id_building']) ? $filters['id_building'] : 0;
-	$filters['sla_fired'] = isset ($filters['sla_fired']) ? $filters['sla_fired'] : false;
 	$filters['id_incident_type'] = isset ($filters['id_incident_type']) ? $filters['id_incident_type'] : 0;
 	$filters['id_user'] = isset ($filters['id_user']) ? $filters['id_user'] : '';
 	$filters['id_user_or_creator'] = isset ($filters['id_user_or_creator']) ? $filters['id_user_or_creator'] : '';
@@ -134,11 +130,6 @@ function filter_incidents ($filters) {
 		
 		$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
 		
-		/* Check aditional searching clauses */
-		if ($filters['sla_fired'] && $incident['affected_sla_id'] == 0) {
-			continue;
-		}
-	
 		if ($filters['id_inventory']) {
 			$found = false;
 			foreach ($inventories as $inventory) {
@@ -152,45 +143,7 @@ function filter_incidents ($filters) {
 				continue;
 		}
 	
-		if ($filters['serial_number'] != '') {
-			$found = false;
-			foreach ($inventories as $inventory) {
-				if (strcasecmp ($inventory['serial_number'], $filters['serial_number'])) {
-					$found = true;
-					break;
-				}
-			}
-		
-			if (! $found)
-				continue;
-		}
-	
-		if ($filters['id_building']) {
-			$found = false;
-			foreach ($inventories as $inventory) {
-				if ($inventory['id_building'] == $filters['id_building']) {
-					$found = true;
-					break;
-				}
-			}
-		
-			if (! $found)
-				continue;
-		}
-	
-		if ($filters['id_product']) {
-			$found = false;
-			foreach ($inventories as $inventory) {
-				if ($inventory['id_product'] == $filters['id_product']) {
-					$found = true;
-					break;
-				}
-			}
-		
-			if (! $found)
-				continue;
-		}
-	
+/*
 		if ($filters['id_company']) {
 			$found = false;
 			foreach ($inventories as $inventory) {
@@ -205,6 +158,19 @@ function filter_incidents ($filters) {
 					break;
 			}
 		
+			if (! $found)
+				continue;
+		}
+*/
+		if ($filters['id_company']) {
+			$found = false;
+			$user_creator = $incident['id_creator'];
+			$user_company = get_db_value('id_company', 'tusuario', 'id_user', $user_creator);
+			if ($filters['id_company'] == $user_company) {
+				$found = true;
+				break;
+			}
+			
 			if (! $found)
 				continue;
 		}

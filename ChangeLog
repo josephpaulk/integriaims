@@ -1,3 +1,11 @@
+2013-02-05  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  extras/migrate.sql
+	  godmode/usuarios/configurar_usuarios.php
+	  include/functions_incidents.php: Added field 'num_employee'
+	to 'tusuario'.
+
 2013-02-04  Vanessa Gil <vanessa.gil@artica.es>
 
 	* godmode/setup/incidents_setup.php

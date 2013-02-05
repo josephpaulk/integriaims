@@ -36,6 +36,7 @@ CREATE TABLE `tusuario` (
   `last_failed_login` DATETIME  NOT NULL DEFAULT 0,
   `failed_attempt` int(4) NOT NULL DEFAULT 0,
   `login_blocked` tinyint(1) unsigned NOT NULL DEFAULT 0,
+  `num_employee` varchar(125) NOT NULL default '',
    PRIMARY KEY  (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
