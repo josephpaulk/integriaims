@@ -1,5 +1,10 @@
 2013-02-05 Juan Manuel Ramon <juanmanuel.ramon@artica.es>
 
+	* include/config_process.php
+	 index.php: Added develop_bypass variable necessary for development.
+
+2013-02-05 Juan Manuel Ramon <juanmanuel.ramon@artica.es>
+
 	* integria_demo.sql: Added fields 'num_employee' in tusuario, added
 	'last_stat_check' and 'closed_by' in tincidencia.
 

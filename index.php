@@ -19,6 +19,9 @@
 // Integria shares much of it's code with project Babel Enterprise and Pandora FMS,
 // also a Free Software Project coded by some of the people who makes Integria.
 
+// Set to 1 to do not check for installer or config file (for development!).
+// Activate gives more error information, not useful for production sites
+$develop_bypass = 0;
 
 // If no config file, automatically try to install
 if (! file_exists("include/config.php")) {
