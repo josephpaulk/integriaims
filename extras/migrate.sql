@@ -68,3 +68,4 @@ CREATE TABLE IF NOT EXISTS `tincident_field_data` (
 -- Table `tusuario`
 -- ---------------------------------------------------
 ALTER TABLE `tusuario` ADD COLUMN `num_employee` varchar(125) NOT NULL default '';
+ALTER TABLE `tusuario` ADD COLUMN `enable_login` tinyint(1) NOT NULL default '1';

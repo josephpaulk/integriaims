@@ -43,6 +43,7 @@ $id_company = 0;
 // Default is create mode (creacion)
 $modo = "creacion";
 $num_employee = "";
+$enable_login = 1;
 
 if (isset($_GET["borrar_grupo"])) {
 	$grupo = get_parameter ('borrar_grupo');
@@ -81,6 +82,7 @@ if (($action == 'edit' || $action == 'update') && !$alta) {
 		$simple_mode = $rowdup["simple_mode"];
 		$id_company = $rowdup["id_company"];
 		$num_employee = $rowdup["num_employee"];
+		$enable_login = $rowdup["enable_login"];
 	}
 }
 
@@ -100,6 +102,7 @@ if ($action == 'update')  {
 		$simple_mode = get_parameter ("simple_mode");
 		$id_company = get_parameter ("id_company");
 		$num_employee = get_parameter ("num_employee");
+		$enable_login = get_parameter ("enable_login");
 		
 		//chech if exists num employee
 		$already_exists = false;
@@ -138,10 +141,10 @@ if ($action == 'update')  {
 
 			if (dame_password ($nombre_viejo) != $password){
 				$password = md5($password);
-				$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee' WHERE id_usuario = '$nombre_viejo'";
+				$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login WHERE id_usuario = '$nombre_viejo'";
 			}
 			else {
-				$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee' WHERE id_usuario = '".$nombre_viejo."'";
+				$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login WHERE id_usuario = '".$nombre_viejo."'";
 			}
 			
 			$resq2 = process_sql($sql);
@@ -196,7 +199,8 @@ if ($action == 'create'){
 		
 	$ahora = date("Y-m-d H:i:s");
 	$num_employee = get_parameter("num_employee");
-	$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, simple_mode) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company',$simple_mode)";
+	$enable_login = get_parameter("enable_login");
+	$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, simple_mode, enable_login) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company',$simple_mode, $enable_login)";
 
 	$resq1 = process_sql($sql_insert);
 		if (! $resq1)
@@ -261,6 +265,23 @@ else {
 echo __('Enabled').'&nbsp;<input type="radio" class="chk" name="disabled" value="0"'.$active_chk.'>';
 echo "&nbsp;&nbsp;";
 echo __('Disabled').'&nbsp;<input type="radio" class="chk" name="disabled" value="1"'.$disabled_chk.'>';
+
+if ($nivel != 1) {
+	echo '<tr><td class="datos2">'. __('Enable login');
+	echo '<td class="datos2">';
+	if($enable_login) {
+		$active_chk_login = ' checked';
+		$disabled_chk_login = '';
+	}
+	else {
+		$active_chk_login = '';
+		$disabled_chk_login = ' checked';
+	}
+
+	echo __('Enabled').'&nbsp;<input type="radio" class="chk" name="enable_login" value="1"'.$active_chk_login.'>';
+	echo "&nbsp;&nbsp;";
+	echo __('Disabled').'&nbsp;<input type="radio" class="chk" name="enable_login" value="0"'.$disabled_chk_login.'>';
+}
     
 ?>
 
