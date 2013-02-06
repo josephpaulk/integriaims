@@ -22,33 +22,15 @@ check_login ();
 
 require_once ('include/functions_tasks.php');
 require_once ('include/functions_workunits.php');
+require_once ('include/functions_user.php');
 
 if (defined ('AJAX')) {
 
 	global $config;
 
-	$search_users = (bool) get_parameter ('search_users');
 	$get_task_roles = (bool) get_parameter ('get_task_roles');
 	
-	if ($search_users) {
-		require_once ('include/functions_db.php');
-		
-		$id_user = $config['id_user'];
-		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
-		
-		$users = get_user_visible_users ($config['id_user'],"IR", false);
-		if ($users === false)
-			return;
-		
-		foreach ($users as $user) {
-			if(preg_match('/'.$string.'/', $user['id_usuario']) || preg_match('/'.$string.'/', $user['nombre_real'])) {
-				echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
-			}
-		}
-		
-		return;
- 	}
- 	
+
  	// Get the roles assigned to user in the project of a given task
 	if ($get_task_roles) {
 		$id_user = get_parameter ('id_user');
@@ -449,12 +431,16 @@ $table->data[2][0] = print_input_text ('duration', $duration, '', 7, 7,
 
 if (dame_admin ($config['id_user'])) {
 	$table->colspan[2][1] = 3;
-	/*$table->data[2][1] = combo_user_visible_for_me ($wu_user,
-		'wu_user', 0, "TW", true, __('Username'));*/
-	$src_code = print_image('images/group.png', true, false, true);
-	$table->data[2][1] = print_input_text_extended ('id_username', $wu_user, 'text-id_username', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Username'))
-		. print_help_tip (__("Type at least two characters to search"), true);
+	
+	$params = array();
+	$params['input_id'] = 'text-id_username';
+	$params['input_name'] = 'id_username';
+	$params['input_value'] = $wu_user;
+	$params['title'] = 'Username';
+	$params['return'] = true;
+	$params['return_help'] = true;
+	
+	$table->data[2][1] = user_print_autocomplete_input($params);
 }
 
 // Various checkboxes
@@ -565,7 +551,7 @@ function username_hook () {
 			scroll: true,
 			minChars: 2,
 			extraParams: {
-				page: "operation/users/user_spare_workunit",
+				page: "include/ajax/users",
 				search_users: 1,
 				id_user: "<?php echo $config['id_user'] ?>"
 			},

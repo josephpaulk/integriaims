@@ -14,36 +14,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-if (defined ('AJAX')) {
-
-	global $config;
-
-	$search_users = (bool) get_parameter ('search_users');
-	
-	if ($search_users) {
-		require_once ('include/functions_db.php');
-		
-		$id_user = $config['id_user'];
-		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
-		
-		$filter = array ();
-		
-		$filter[] = '(nombre COLLATE utf8_general_ci LIKE "%'.$string.'%" OR direccion LIKE "%'.$string.'%" OR comentarios LIKE "%'.$string.'%")';
-
-		$filter[] = 'id_usuario != '.$id_user;
-		
-		$users = get_user_visible_users ($config['id_user'],"IR", false);
-		if ($users === false)
-			return;
-		
-		foreach ($users as $user) {
-			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
-		}
-		
-		return;
- 	}
-	return;
-}
 global $config;
 $operation = get_parameter ("operation");
 $progress = 0;
@@ -51,6 +21,7 @@ $progress = 0;
 include_once ("include/functions_graph.php");
 require_once ('include/functions_db.php');
 require_once ('include/functions_ui.php');
+require_once ('include/functions_user.php');
 
 // ---------------
 // CREATE new todo
@@ -174,10 +145,17 @@ if ($operation == "create" || $operation == "update") {
 		'', '', '', true, false, false, __('Priority'));
 	
 	if ($operation == "create") {
-		$src_code = print_image('images/group.png', true, false, true);
-		$table->data[1][1] .= print_input_text_extended ('id_user', '', 'text-id_user', '', 30, 100, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))
-		. print_help_tip (__("Type at least two characters to search"), true);
+
+		$params['input_id'] = 'text-id_user';
+		$params['input_name'] = '';
+		$params['input_size'] = 30;
+		$params['input_maxlength'] = 100;
+		$params['input_value'] = $assigned_user_for_this_incident;
+		$params['title'] = 'Assigned user';
+		$params['return'] = true;
+		$params['return_help'] = true;
+		
+		$table->data[1][1] = user_print_autocomplete_input($params);
 	}
 
 	$table->data[2][0] = combo_task_user_participant ($config["id_user"],
@@ -321,7 +299,7 @@ $("#text-id_user").autocomplete ("ajax.php",
 			scroll: true,
 			minChars: 2,
 			extraParams: {
-				page: "operation/todo/todo",
+				page: "include/ajax/users",
 				search_users: 1,
 				id_user: "<?php echo $config['id_user'] ?>"
 			},

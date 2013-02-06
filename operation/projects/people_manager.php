@@ -21,58 +21,8 @@ global $config;
 
 check_login ();
 
-if (defined ('AJAX')) {
-
-	global $config;
-
-	$search_users = (bool) get_parameter ('search_users');
-	$search_users_role = (bool) get_parameter ('search_users_role');
-	
-	if ($search_users) {
-		require_once ('include/functions_db.php');
-		
-		$id_project = (int) get_parameter ('id_project');
-		$id_user = $config['id_user'];
-		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
-		
-		$users = get_user_visible_users ($id_user,"IR", false);
-		
-		if ($users === false)
-			return;
-			
-		foreach ($users as $user) {
-			if(preg_match('/'.$string.'/', $user['id_usuario'])) {
-				echo $user['id_usuario']. "\n";
-			}
-		}
-		
-		return;
- 	}
- 	
- 	if ($search_users_role) {
-		require_once ('include/functions_db.php');
-		
-		$id_project = (int) get_parameter ('id_project');
-		//debugPrint($id_project,true);
-		$id_user = $config['id_user'];
-		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
-		
-		$users = get_users_project ($id_project);
-		
-		if ($users === false)
-			return;
-
-		foreach ($users as $user) {
-			if(preg_match('/'.$string.'/', $user['id_user'])) {
-				echo $user['id_user'] . "/" . get_db_value ("name","trole","id",$user["id_role"]). "\n";
-			}
-		}
-			
-		return;
- 	}
-}
-
 require_once ('include/functions_db.php');
+require_once ('include/functions_user.php');
 
 // Get main variables and init
 $id_task = get_parameter ("id_task", -1);
@@ -342,10 +292,14 @@ if ($id_task != -1){
 
 	echo "<td valign='top' class='datos2'>";
 	echo __('User  ');
-	$src_code = print_image('images/group.png', true, false, true);
-	echo print_input_text_extended ('user', '', 'text-user', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '','')
-		. print_help_tip (__("Type at least two characters to search"), true);
+	
+	$params['input_id'] = 'text-user';
+	$params['input_name'] = 'user';
+	$params['return'] = false;
+	$params['return_help'] = false;
+	
+	user_print_autocomplete_input($params);
+	
 	echo "</table>";
 		
 	echo "<table class='button' width=500>";
@@ -398,7 +352,7 @@ $(document).ready (function () {
 			scroll: true,
 			minChars: 2,
 			extraParams: {
-				page: "operation/projects/people_manager",
+				page: "include/ajax/users",
 				search_users: 1,
 				id_user: "<?php echo $config['id_user'] ?>",
 				id_project: "<?php echo $id_project?>"
@@ -411,7 +365,7 @@ $(document).ready (function () {
 					$("#text-user").css ('background-color', '');
 				if (data == "")
 					return false;
-				return data[0]+'<br><span class="ac_extra_field"></span>';
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre real") ?>: '+data[1]+'</span>';
 			},
 			delay: 200
 		});
@@ -421,7 +375,7 @@ $(document).ready (function () {
 			scroll: true,
 			minChars: 2,
 			extraParams: {
-				page: "operation/projects/people_manager",
+				page: "include/ajax/users",
 				search_users_role: 1,
 				id_user: "<?php echo $config['id_user'] ?>",
 				id_project: "<?php echo $id_project?>"

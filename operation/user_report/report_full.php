@@ -21,36 +21,10 @@ $id_user = $config["id_user"];
 
 check_login ();
 
-if (defined ('AJAX')) {
-
-	global $config;
-
-	$search_users = (bool) get_parameter ('search_users');
-	
-	if ($search_users) {
-		require_once ('include/functions_db.php');
-		
-		$id_user = $config['id_user'];
-		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
-		
-		$users = get_user_visible_users ($config['id_user'],"IR", false);
-		
-		if ($users === false)
-			return;
-		
-		foreach ($users as $user) {
-			if(preg_match('/'.$string.'/', $user['id_usuario']) || preg_match('/'.$string.'/', $user['nombre_real'])) {
-				echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
-			}
-		}
-		
-		return;
- 	}
-}
-
 include "include/functions_graph.php";
 require_once ('include/functions_html.php');
 require_once ('include/functions_db.php');
+require_once ('include/functions_user.php');
 
 if($pdf_output == 1) {
 	$ttl = 2;
@@ -160,9 +134,12 @@ if ($clean_output == 0){
     echo "<tr><td>";
     echo print_label (__("Workunit Reporter"), '', true);
 
-    echo print_input_text_extended ('wu_reporter', $wu_reporter, 'text-user_id4', '', 15, 30, false, '',
-array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '')
-        . print_help_tip (__("Type at least two characters to search"), true);
+	$params['input_id'] = 'text-user_id4';
+	$params['input_name'] = 'wu_reporter';
+	$params['return'] = false;
+	$params['return_help'] = false;
+	
+	user_print_autocomplete_input($params);
    
     echo "</td><td>"; 
     echo print_label (__("Begin date"), '', true);
@@ -185,24 +162,33 @@ array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '
     echo "<tr><td>";
     echo print_label (__("User"), '', true);
 
-    echo print_input_text_extended ('user_id', $user_id, 'text-user_id', '', 15, 30, false, '',
-array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '')
-	. print_help_tip (__("Type at least two characters to search"), true);
+	$params_user['input_id'] = 'text-user_id';
+	$params_user['input_name'] = 'user_id';
+	$params_user['return'] = false;
+	$params_user['return_help'] = false;
+	
+	user_print_autocomplete_input($params_user);
 
     echo "<td>";
     echo print_label (__("Incident creator"), '', true);
     
-    echo print_input_text_extended ('author', $author, 'text-user_id2', '', 15, 30, false, '',
-array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '') 
-        . print_help_tip (__("Type at least two characters to search"), true);
+	$params_creator['input_id'] = 'text-user_id2';
+	$params_creator['input_name'] = 'author';
+	$params_creator['return'] = false;
+	$params_creator['return_help'] = false;
+	
+	user_print_autocomplete_input($params_creator);
 
     echo "<td>";
     echo print_label (__("Incident editor"), '', true);
 
-    echo print_input_text_extended ('editor', $editor, 'text-user_id3', '', 15, 30, false, '',
-array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '')
-        . print_help_tip (__("Type at least two characters to search"), true);
-
+	$params_editor['input_id'] = 'text-user_id3';
+	$params_editor['input_name'] = 'editor';
+	$params_editor['return'] = false;
+	$params_editor['return_help'] = false;
+	
+	user_print_autocomplete_input($params_editor);
+	
     echo "<tr><td>";
     echo print_select (get_user_groups (), 'search_id_group', $id_group, '', __('All'), 1, true, false, false, __('Group'));
 
@@ -631,7 +617,7 @@ $(document).ready (function () {
                         scroll: true,
                         minChars: 2,
                         extraParams: {
-                                page: "operation/user_report/report_full",
+                                page: "include/ajax/users",
                                 search_users: 1,
                                 id_user: "<?php echo $config['id_user'] ?>"
                         },
@@ -652,7 +638,7 @@ $(document).ready (function () {
                         scroll: true,
                         minChars: 2,
                         extraParams: {
-                                page: "operation/user_report/report_full",
+                                page: "include/ajax/users",
                                 search_users: 1,
                                 id_user: "<?php echo $config['id_user'] ?>"
                         },
@@ -673,7 +659,7 @@ $(document).ready (function () {
 			scroll: true,
 			minChars: 2,
 			extraParams: {
-				page: "operation/user_report/report_full",
+				page: "include/ajax/users",
 				search_users: 1,
 				id_user: "<?php echo $config['id_user'] ?>"
 			},
@@ -694,7 +680,7 @@ $(document).ready (function () {
                         scroll: true,
                         minChars: 2,
                         extraParams: {
-                                page: "operation/user_report/report_full",
+                                page: "include/ajax/users",
                                 search_users: 1,
                                 id_user: "<?php echo $config['id_user'] ?>"
                         },

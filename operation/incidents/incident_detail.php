@@ -20,32 +20,13 @@ check_login ();
 
 require_once ('include/functions_incidents.php');
 require_once ('include/functions_workunits.php');
+require_once ('include/functions_user.php');
 
 if (defined ('AJAX')) {
 	
 	global $config;
 	
-	$search_users = (bool) get_parameter ('search_users');
 	$show_type_fields = (bool) get_parameter('show_type_fields', 0);
-	
-	if ($search_users) {
-		require_once ('include/functions_db.php');
-		
-		$id_user = $config['id_user'];
-		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
-		$users = get_user_visible_users ($config['id_user'],"IR", false);
-		
-		if ($users === false)
-			return;
-		
-		foreach ($users as $user) {
-			if(preg_match('/'.$string.'/', $user['id_usuario']) || preg_match('/'.$string.'/', $user['nombre_real'])) {
-				echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
-			}
-		}
-		
-		return;
- 	}
  	
  	if ($show_type_fields) {
 		$id_incident_type = get_parameter('id_incident_type');
@@ -762,11 +743,15 @@ $table->data[1][2] = combo_incident_status ($estado, $disabled, $actual_only, tr
 
 //If IW creator enabled flag is up the user can change creatro also.
 if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
+
+	$params_creator['input_id'] = 'text-id_creator';
+	$params_creator['input_name'] = 'id_creator';
+	$params_creator['input_value'] = $id_creator;
+	$params_creator['title'] = 'Creator';
+	$params_creator['return'] = true;
+	$params_creator['return_help'] = true;
+	$table->data[2][0] = user_print_autocomplete_input($params_creator);
 	
-	$src_code = print_image('images/group.png', true, false, true);
-	$table->data[2][0] = print_input_text_extended ('id_creator', $id_creator, 'text-id_creator', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Creator'))
-		. print_help_tip (__("Type at least two characters to search"), true);
 } else {
 	$table->data[2][0] = "<input type='hidden' name=id_creator value=$id_creator>";
 }
@@ -779,9 +764,15 @@ if ($has_im) {
 	else
 		$assigned_user_for_this_incident = $usuario;
 	
-	$table->data[2][1] = print_input_text_extended ('id_user', $assigned_user_for_this_incident, 'text-id_user', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Assigned user'))
-		. print_help_tip (__("User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user"), true);
+	$params_assigned['input_id'] = 'text-id_user';
+	$params_assigned['input_name'] = 'id_user';
+	$params_assigned['input_value'] = $assigned_user_for_this_incident;
+	$params_assigned['title'] = 'Assigned user';
+	$params_assigned['help_message'] = "User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user";
+	$params_assigned['return'] = true;
+	$params_assigned['return_help'] = true;
+	
+	$table->data[2][1] = user_print_autocomplete_input($params_assigned);
 } else {
 	// Enterprise only
 	if (($create_incident) AND ($config["enteprise"] == 1)){
@@ -798,10 +789,17 @@ if ($has_im) {
 }
 
 // closed by
-$table->data[2][2] = print_input_text_extended ('closed_by', $closed_by, 'text-closed_by', '', 15, 30, false, '',
-		array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Closed by'))
-		. print_help_tip (__("User assigned here is user that will be responsible to close incident."), true);
-		
+$params_closed['input_id'] = 'text-closed_by';
+$params_closed['input_name'] = 'closed_by';
+$params_closed['input_value'] = $closed_by;
+$params_closed['title'] = 'Closed by';
+$params_closed['help_message'] = "User assigned here is user that will be responsible to close incident.";
+$params_closed['return'] = true;
+$params_closed['return_help'] = true;
+
+
+$table->data[2][2] = user_print_autocomplete_input($params_closed);
+	
 $types = get_incident_types ();
 $table->data[3][0] = print_label (__('Incident type'), '','',true);
 if ($id_incident_type == 0) {
@@ -814,7 +812,6 @@ $table->data[3][0] .= print_select($types, 'id_incident_type', $id_incident_type
 $table->colspan[4][0] = 3;		
 //$table->data[4][0] = "<tr id='row_show_type_fields' colspan='4'></tr>";
 $table->data[4][0] = "";
-//$table->data['row_show_type_fields'][0] = '';
 
 $table->data[5][0] = '<a href="#" id="tgl_incident_control"><b>'.__('Advanced parameters').'</b>&nbsp;'.print_image ("images/go.png", true, array ("title" => __('Toggle parameter'), "id" => 'toggle_arrow')).'</a><br><br>';
 
@@ -1004,7 +1001,7 @@ $(document).ready (function () {
 			scroll: true,
 			minChars: 2,
 			extraParams: {
-				page: "operation/incidents/incident_detail",
+				page: "include/ajax/users",
 				search_users: 1,
 				id_user: "<?php echo $config['id_user'] ?>"
 			},
@@ -1026,7 +1023,7 @@ $(document).ready (function () {
 			scroll: true,
 			minChars: 2,
 			extraParams: {
-				page: "operation/incidents/incident_detail",
+				page: "include/ajax/users",
 				search_users: 1,
 				id_user: "<?php echo $config['id_user'] ?>"
 			},
@@ -1048,7 +1045,7 @@ $(document).ready (function () {
 			scroll: true,
 			minChars: 2,
 			extraParams: {
-				page: "operation/incidents/incident_detail",
+				page: "include/ajax/users",
 				search_users: 1,
 				id_user: "<?php echo $config['id_user'] ?>"
 			},

@@ -18,32 +18,7 @@
 	global $config;
 	check_login ();
 
-if (defined ('AJAX')) {
-
-	global $config;
-
-	$search_users = (bool) get_parameter ('search_users');
-	
-	if ($search_users) {
-		require_once ('include/functions_db.php');
-		
-		$id_user = $config['id_user'];
-		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
-		
-		$users = get_user_visible_users ($config['id_user'],"IR", false);
-		
-		if ($users === false)
-			return;
-		
-		foreach ($users as $user) {
-			if(preg_match('/'.$string.'/', $user['id_usuario']) || preg_match('/'.$string.'/', $user['nombre_real'])) {
-				echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
-			}
-		}
-		
-		return;
- 	}
-}
+require_once('include/functions_user.php');
 
     $days_f = array();
     $date = date('Y-m-d');
@@ -106,11 +81,13 @@ if (defined ('AJAX')) {
         
         echo "<td>";
         // Show user
-        //combo_user_visible_for_me ($config["id_user"], "id_user", 0, "AR");
-        $src_code = print_image('images/group.png', true, false, true);
-		echo print_input_text_extended ('id_user', '', 'text-id_user', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '')
-		. print_help_tip (__("Type at least two characters to search"), true);
+		$params['input_id'] = 'text-id_user';
+		$params['input_name'] = 'id_user';
+		$params['return'] = false;
+		$params['return_help'] = false;
+		
+		user_print_autocomplete_input($params);
+		
 	    echo "</td>";	
         		
 	    echo "<td>";
@@ -195,7 +172,7 @@ $(document).ready (function () {
 			scroll: true,
 			minChars: 2,
 			extraParams: {
-				page: "operation/user_report/report_annual",
+				page: "include/ajax/users",
 				search_users: 1,
 				id_user: "<?php echo $config['id_user'] ?>"
 			},

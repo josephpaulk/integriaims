@@ -16,31 +16,8 @@
 global $config;
 require_once ('include/functions_tasks.php');
 require_once ('include/functions_workunits.php');
+require_once ('include/functions_user.php');
 
-if (defined ('AJAX')) {
-
-	global $config;
-
-	$search_users = (bool) get_parameter ('search_users');
-	
-	if ($search_users) {
-		require_once ('include/functions_db.php');
-		
-		$id_user = $config['id_user'];
-		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
-		
-		$users = get_user_visible_users ($config['id_user'],"IR", false);
-		if ($users === false)
-			return;
-		
-		foreach ($users as $user) {
-			if(preg_match('/'.$string.'/', $user['id_usuario']) || preg_match('/'.$string.'/', $user['nombre_real'])) {
-				echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
-			}
-		}
-		return;
- 	}
-}
 
 if (check_login() != 0) {
  	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
@@ -139,11 +116,14 @@ echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report
 
 
 if (give_acl($config["id_user"], 0, "PM")){
-    //combo_user_visible_for_me ($real_user_id, 'id', 0, 'PR');
-    $src_code = print_image('images/group.png', true, false, true);
-	echo print_input_text_extended ('id', '', 'text-id_username', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '')
-		. print_help_tip (__("Type at least two characters to search"), true);
+ 
+	$params['input_id'] = 'text-id_username';
+	$params['input_name'] = 'id';
+	$params['return'] = false;
+	$params['return_help'] = false;
+	
+	user_print_autocomplete_input($params);
+	
     echo "&nbsp;";
     print_submit_button (__('Show'), 'show_btn', false, 'class="next sub"');
 }
@@ -178,7 +158,7 @@ $(document).ready (function () {
 			scroll: true,
 			minChars: 2,
 			extraParams: {
-				page: "operation/user_report/monthly",
+				page: "include/ajax/users",
 				search_users: 1,
 				id_user: "<?php echo $config['id_user'] ?>"
 			},
