@@ -233,7 +233,7 @@ function tab_loaded (event, tab) {
 }
 
 function check_incident (id) {
-console.log("CHECK INCIDENT");
+//console.log("CHECK INCIDENT");
 	values = Array ();
 	values.push ({name: "page",
 		value: "operation/incidents/incident_detail"});

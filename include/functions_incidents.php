@@ -86,12 +86,14 @@ function filter_incidents ($filters) {
 		$sql_clause .= sprintf (' AND id_incident_type = %d', $filters['id_incident_type']);
 	if (! empty ($filters['first_date'])) {
 		$time = strtotime ($filters['first_date']);
-		$sql_clause .= sprintf (' AND inicio >= "%s"', date ("Y-m-d", $time));
+		//00:00:00 to set date at the beginig of the day
+		$sql_clause .= sprintf (' AND inicio >= "%s"', date ("Y-m-d 00:00:00", $time));
 	}
 	if (! empty ($filters['last_date'])) {
 		$time = strtotime ($filters['last_date']);
 		if (! empty ($filters['first_date'])) {
-			$sql_clause .= sprintf (' AND inicio <= "%s"', date ("Y-m-d", $time));
+			//23:59:59 to set date at the end of day
+			$sql_clause .= sprintf (' AND inicio <= "%s"', date ("Y-m-d 23:59:59", $time));
 		} else {
 			$time_from = strtotime ($filters['first_date']);
 			if ($time_from < $time)
@@ -115,7 +117,7 @@ function filter_incidents ($filters) {
 			$config['limit_size']);
 
     // DEBUG
-    // echo $sql ." <br>";
+    //echo $sql ." <br>";
     
 	$incidents = get_db_all_rows_sql ($sql);
 	if ($incidents === false)

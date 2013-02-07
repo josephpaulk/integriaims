@@ -1,3 +1,10 @@
+2013-02-07  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_incidents.php: Fixed date filter on
+	incident search.
+	* operation/incidents/incident.php: Deleted bug trace on
+	javascript.
+
 2013-02-06  Dario Rodriguez <dario@artica.es>
 
 	* integria_demo.sql: Updated tincident_status field
