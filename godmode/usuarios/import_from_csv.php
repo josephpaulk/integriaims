@@ -15,59 +15,7 @@
 
 check_login ();
 
-function load_file ($users_file, $group, $profile, $nivel) {
-	$file_handle = fopen($users_file, "r");
-	global $config;
-	
-	while (!feof($file_handle)) {
-		$line = fgets($file_handle);
-		
-		preg_match_all('/(.*),/',$line,$matches);
-		$values = explode(',',$line);
-		
-		$id_usuario = $values[0];
-		$pass = $values[1];
-		$pass = md5($pass);
-		$nombre_real = $values[2];
-		$mail = $values[3];
-		$tlf = $values[4];
-		$desc = $values[5];
-		
-		$value = array(
-			'id_usuario' => $id_usuario,
-			'nombre_real' => $nombre_real,
-			'password' => $pass,
-			'comentarios' => $desc,
-			'direccion' => $mail,
-			'telefono' => $tlf,
-			'nivel' => $nivel);
-			
-			if (($id_usuario!='')&&($nombre_real!='')){
-				if ($id_usuario == get_db_value ('id_usuario', 'tusuario', 'id_usuario', $id_usuario)){
-					echo "<h3 class='error'>" . __ ('User '). $id_usuario . __(' already exists') . "</h3>";
-				} else {
-					$resul = process_sql_insert('tusuario', $value);
-	
-					if ($resul==false){
-						$value2 = array(
-							'id_usuario' => $id_usuario,
-							'id_perfil' => $profile,
-							'id_grupo' => $group,
-							'assigned_by' => $config["id_user"]
-						);
-						
-						if ($id_usuario!=''){
-							process_sql_insert('tusuario_perfil', $value2);
-						}
-					}
-				}
-			}		
-	}
-
-	fclose($file_handle);
-	return;
-}
-
+require_once('include/functions_user.php');
 
 echo "<b>".__('IMPORT USERS FROM CSV')."</b>".integria_help ("import_from_csv", true);
 
@@ -75,18 +23,19 @@ $upload_file = (int) get_parameter('upload_file');
 $group = (int)get_parameter('group');
 $profile = (int)get_parameter('perfil', 1);
 $nivel = (int)get_parameter('nivel');
+$pass_policy = (int)get_parameter('pass_policy');
 if ($upload_file) {
 	if ($_FILES["file"]["error"] == 0) {
 		if ($_FILES["file"]["type"] != 'text/csv') {
 			echo "<h3 class='error'>" . __ ('Unsupported file type') . "</h3>";
 		}
 		else {
-			load_file ($_FILES["file"]["tmp_name"], $group, $profile, $nivel);
+			load_file ($_FILES["file"]["tmp_name"], $group, $profile, $nivel, $pass_policy);
 		}
 	}
 }
 
-$table->width = '60%';
+$table->width = '98%';
 $table->size = array ();
 $table->size[0] = '120px';
 $table->align[3] = "right";
@@ -108,9 +57,14 @@ $table->data[4][0] = __('Standard user').'&nbsp;<input type="radio" class="chk" 
 $table->data[4][0] .= "&nbsp;&nbsp;&nbsp;&nbsp;";
 $table->data[4][0] .= __('External user').'&nbsp;<input type="radio" class="chk" name="nivel" value="-1">';
 
-$table->data[5][0] = "<b>".__('Load file')."</b>";
-$table->data[6][0] = '<input class="sub next" name="file" type="file" /><br />';
-$table->data[6][3] = '<input type="submit" class="sub next" value="' . __('Upload File') . '" />';
+$table->data[5][0] = "<b>".__('Enable policy password')."</b>";
+$table->data[6][0] = __('Yes').'&nbsp;<input type="radio" class="chk" name="pass_policy" value="1">';
+$table->data[6][0] .= "&nbsp;&nbsp;&nbsp;&nbsp;";
+$table->data[6][0] .= __('No').'&nbsp;<input type="radio" class="chk" name="pass_policy" value="0" checked>';
+
+$table->data[7][0] = "<b>".__('Load file')."</b>";
+$table->data[8][0] = '<input class="sub next" name="file" type="file" /><br />';
+$table->data[8][3] = '<input type="submit" class="sub next" value="' . __('Upload File') . '" />';
 echo '<form enctype="multipart/form-data" action="index.php?sec=users&sec2=godmode/usuarios/import_from_csv" method="POST">';
 print_input_hidden ('upload_file', 1);
 print_table ($table);

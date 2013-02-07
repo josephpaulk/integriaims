@@ -1,3 +1,14 @@
+2013-02-07  Vanessa Gil <vanessa.gil@artica.es>
+
+	* godmode/usuarios/import_from_csv.php
+	  include/functions_user.php
+	  include/help/en/help_import_from_csv: Import users
+	from cvs file.
+
+	* extras/import_users_from_csv.php
+	  extras/config_file.conf: Added files.Script to import
+	 users from csv file.
+
 2013-02-07  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident.php: Fixed an error in ajax
