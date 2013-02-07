@@ -112,9 +112,10 @@ unset ($table);
 echo '<div id="loading">'.__('Loading');
 echo '... <img src="images/wait.gif" /></div>';
 
-echo '<div>'.print_image('images/tip.gif', true).__('Max incidents shown: '.$config['limit_size'].'. You can change this value in setup.').'</div>';
+echo "<br>";
+echo sprintf(__('Max incidents shown: %d'),$config['limit_size']);
+echo print_help_tip (sprintf(__('You can change this value by changing %s parameter in setup'),"<b>".__("Max. Incidents by search")."</b>", true));
 
-	
 $table->class = 'hide result_table listing';
 $table->width = '100%';
 $table->id = 'incident_search_result_table';
