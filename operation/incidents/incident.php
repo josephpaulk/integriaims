@@ -74,7 +74,7 @@ echo '</ul>';
 
 if (!$id) {///
 /* Tabs first container is manually set, so it loads immediately */
-echo '<div id="ui-tabs-setup" class="ui-tabs-panel">';
+echo '<div id="ui-tabs-1" class="ui-tabs-panel">';
 
 echo '<div class="result"></div>';
 
@@ -275,6 +275,7 @@ function show_incident_details (id) {
 	else {
 		$("#tabs > ul").tabs ("select", 2);
 	}
+	
 }
 
 function configure_statistics_tab (values) {

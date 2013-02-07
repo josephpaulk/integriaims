@@ -1,5 +1,10 @@
 2013-02-07  Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents/incident.php: Fixed an error in ajax
+	of incident tabs.
+
+2013-02-07  Dario Rodriguez <dario@artica.es>
+
 	* operation/incidents/incident.php: Fixed a hint showing
 	information about how to change mas incident show parameter.
 
