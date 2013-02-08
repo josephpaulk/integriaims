@@ -1,3 +1,8 @@
+2013-02-08  Vanessa Gil <vanessa.gil@artica.es>
+
+	* operation/incidents/incident_type_filed.php: Changed
+	help tip.
+
 2013-02-07  Vanessa Gil <vanessa.gil@artica.es>
 
 	* godmode/usuarios/import_from_csv.php
