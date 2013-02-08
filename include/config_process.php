@@ -65,6 +65,10 @@ if ($config["error_log"] == 1){
 	ini_set("error_log", $config["homedir"]."/integria.log");
 }
 
+$l10n = NULL;
+
+session_start();
+
 global $develop_bypass;
 /* Help to debug problems. Override global PHP configuration */
 if (!isset($develop_bypass)) $develop_bypass = 0;
@@ -83,10 +87,6 @@ if ($develop_bypass) {
 	ini_set("display_errors", 1);
 
 }
-
-$l10n = NULL;
-
-session_start();
 
 // User language selection prevails over system-wide defined language.
 

@@ -190,6 +190,7 @@ function load_menu_visibility() {
 	global $show_box;
 	global $show_wiki;
 	global $show_customers;
+	global $config;
 
 	// Get visibility permissions to sections
 	$show_projects = enterprise_hook ('get_menu_section_access', array ('projects'));

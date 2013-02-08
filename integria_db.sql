@@ -567,31 +567,23 @@ CREATE TABLE `tmanufacturer` (
 
 CREATE TABLE `tinventory` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL default '',
-  `description` mediumtext NULL default NULL,
-  `serial_number` varchar(250) NULL default NULL,
-  `part_number` varchar(250) NULL default NULL,
-  `comments` varchar(250) NULL default NULL,
-  `confirmed` tinyint(1) NULL default 0,
-  `cost` float(10,3) NULL default 0.0,
-  `ip_address` varchar(60) NULL default NULL,
+  `id_object_type` mediumint(8) unsigned,
+  `owner` varchar(60),
+  `name` TEXT default '',
+  `public` TINYINT(1) unsigned DEFAULT 1,
+  `description` TEXT default NULL,
   `id_contract` mediumint(8) unsigned default NULL,
-  `id_product` mediumint(8) unsigned default NULL,
-  `id_sla` mediumint(8) unsigned default NULL,
   `id_manufacturer` mediumint(8) unsigned default NULL,
-  `id_building` mediumint(8) unsigned default NULL,
   `id_parent` mediumint(8) unsigned default NULL,
-  `generic_1` varchar(255) default '',
-  `generic_2` varchar(255) default '',
-  `generic_3` text,
-  `generic_4` text,
-  `generic_5` varchar(255) default '',
-  `generic_6` varchar(255) default '',
-  `generic_7` varchar(255) default '',
-  `generic_8` text,
   PRIMARY KEY  (`id`),
-  KEY `tinv_idx_1` (`id_contract`),
-  KEY `tinv_idx_2` (`id_sla`)
+  KEY `tinv_idx_1` (`id_contract`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tinventory_relationship` (
+   `id_object_src` mediumint(8) unsigned NOT NULL,
+   `id_object_dst`  mediumint(8) unsigned NOT NULL,
+   KEY `tinvrsx_1` (`id_object_src`),
+   KEY `tinvrsx_2` (`id_object_dst`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tinventory_contact` (
@@ -883,6 +875,35 @@ CREATE TABLE `tincident_field_data` (
   `id` bigint(20) unsigned NOT NULL auto_increment, 
   `id_incident` bigint(20) unsigned NOT NULL,
   `id_incident_field` mediumint(0) unsigned NOT NULL,
+  `data` text default NULL,
+  PRIMARY KEY  (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tobject_type` ( 
+  `id` mediumint(8) unsigned NOT NULL auto_increment, 
+  `name` varchar(100) NOT NULL default '', 
+  `description` text NULL default NULL,
+  `icon` text null default null,
+  PRIMARY KEY  (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tobject_type_field` ( 
+  `id` mediumint(8) unsigned NOT NULL auto_increment, 
+  `id_object_type` mediumint(8) unsigned, 
+  `label` varchar(100) NOT NULL default '', 
+  `type` enum ('numeric', 'text', 'combo', 'external' ) default 'text',
+  `combo_value` text default NULL,
+  `external_table_name` text default null,
+  `external_reference_field` text default null,
+  `unique` int(1) default 0,
+  `inherit` int(1) default 0,
+  PRIMARY KEY  (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tobject_field_data` ( 
+  `id` bigint(20) unsigned NOT NULL auto_increment, 
+  `id_inventory` bigint(20) unsigned NOT NULL,
+  `id_object_type_field` mediumint(8) unsigned NOT NULL,
   `data` text default NULL,
   PRIMARY KEY  (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

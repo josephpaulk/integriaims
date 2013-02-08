@@ -1,3 +1,6 @@
+-- ---------------------------------------------------
+-- Feb 2013
+-- ---------------------------------------------------
 
 -- ---------------------------------------------------------------------
 -- Table `tincident_stats`
@@ -69,3 +72,62 @@ CREATE TABLE IF NOT EXISTS `tincident_field_data` (
 -- ---------------------------------------------------
 ALTER TABLE `tusuario` ADD COLUMN `num_employee` varchar(125) NOT NULL default '';
 ALTER TABLE `tusuario` ADD COLUMN `enable_login` tinyint(1) NOT NULL default '1';
+
+ALTER TABLE `tinventory` ADD COLUMN `id_object_type` mediumint(8) unsigned;
+ALTER TABLE `tinventory` ADD COLUMN `owner` varchar(60);
+ALTER TABLE `tinventory` CHANGE COLUMN `name` `name` TEXT default '';
+ALTER TABLE `tinventory` ADD COLUMN `public` TINYINT(1) unsigned DEFAULT 1;
+ALTER TABLE `tinventory` CHANGE COLUMN `description` `description` TEXT default NULL;
+ALTER TABLE `tinventory` DROP COLUMN `serial_number`;
+ALTER TABLE `tinventory` DROP COLUMN `part_number`;
+ALTER TABLE `tinventory` DROP COLUMN `comments`;
+ALTER TABLE `tinventory` DROP COLUMN `confirmed`;
+ALTER TABLE `tinventory` DROP COLUMN `cost`;
+ALTER TABLE `tinventory` DROP COLUMN `ip_address`;
+ALTER TABLE `tinventory` DROP COLUMN `id_product`;
+ALTER TABLE `tinventory` DROP COLUMN `id_sla`;
+ALTER TABLE `tinventory` DROP COLUMN `id_building`;
+ALTER TABLE `tinventory` DROP COLUMN `generic_1`;
+ALTER TABLE `tinventory` DROP COLUMN `generic_2`;
+ALTER TABLE `tinventory` DROP COLUMN `generic_3`;
+ALTER TABLE `tinventory` DROP COLUMN `generic_4`;
+ALTER TABLE `tinventory` DROP COLUMN `generic_5`;
+ALTER TABLE `tinventory` DROP COLUMN `generic_6`;
+ALTER TABLE `tinventory` DROP COLUMN `generic_7`;
+ALTER TABLE `tinventory` DROP COLUMN `generic_8`;
+
+CREATE TABLE `tinventory_relationship` (
+   `id_object_src` mediumint(8) unsigned NOT NULL,
+   `id_object_dst`  mediumint(8) unsigned NOT NULL,
+   KEY `tinvrsx_1` (`id_object_src`),
+   KEY `tinvrsx_2` (`id_object_dst`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tobject_type` ( 
+  `id` mediumint(8) unsigned NOT NULL auto_increment, 
+  `name` varchar(100) NOT NULL default '', 
+  `description` text NULL default NULL,
+  `icon` text null default null,
+  PRIMARY KEY  (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tobject_type_field` ( 
+  `id` mediumint(8) unsigned NOT NULL auto_increment, 
+  `id_object_type` mediumint(8) unsigned, 
+  `label` varchar(100) NOT NULL default '', 
+  `type` enum ('numeric', 'text', 'combo', 'external' ) default 'text',
+  `combo_value` text default NULL,
+  `external_table_name` text default null,
+  `external_reference_field` text default null,
+  `unique` int(1) default 0,
+  `inherit` int(1) default 0,
+  PRIMARY KEY  (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tobject_field_data` ( 
+  `id` bigint(20) unsigned NOT NULL auto_increment, 
+  `id_inventory` bigint(20) unsigned NOT NULL,
+  `id_object_type_field` mediumint(8) unsigned NOT NULL,
+  `data` text default NULL,
+  PRIMARY KEY  (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

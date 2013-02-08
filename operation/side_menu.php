@@ -718,17 +718,17 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "VM") && $show_inven
 }
 
 // Product types
-if ($sec == "inventory" && give_acl($config["id_user"], 0, "VM") && $show_inventory != MENU_HIDDEN) {
+if ($sec == "inventory" && give_acl($config["id_user"], 0, "PM") && $show_inventory != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
-	echo "<h3 class='admin'>".__('Products')."</h3>";
+	echo "<h3 class='admin'>".__('Inventory objects')."</h3>";
 	echo "<ul class='sidemenu'>";
 
 	// Building overview
-	if ($sec2=="operation/inventories/manage_prod")
+	if ($sec2=="operation/inventories/manage_objects")
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/manage_prod'>".__('Product types')."</a></li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/manage_objects'>".__('Object types')."</a></li>";
 
 	echo "</ul>";
 	echo "</div>";

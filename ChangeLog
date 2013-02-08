@@ -1,3 +1,40 @@
+2013-02-08 Juan Manuel Ramon <juanmanuel.ramon@artica.es>
+
+	* include/functions_html.php: Improved print_input_image function.
+	
+	* include/functions_config.php
+     include/config_process.php: Added development by pass var.
+	
+	* include/functions_objects.php: Function library for inventory 
+	objects.
+	
+	* index.php: Fixed non-initialized variables.
+	
+	* operation/side_menu.php: Changed menu for new object views.
+	
+	* operation/inventories/manage_objects.php
+	 operation/inventories/manage_objects_types_list.php
+	 operation/inventories/manage_objects_types_field.php: Added views
+	 for manage object and fields of inventories.
+
+	* images/objects: Added images.
+
+	* integria_db.sql
+	  integria_demo.sql
+	  extras/migrate.sql: Added objcet new tables and fields and removed
+	  inventories.
+ 
+	* godmode/setup/incidents_setup.php
+	 godmode/setup/setup.php
+	 godmode/setup/setup_mail.php
+	 godmode/setup/setup_pandora.php
+	 godmode/setup/setup_auth.php
+	 godmode/setup/setup_mailtemplates.php
+	 godmode/setup/setup_visual.php: Removed link to inventory fields old
+	 view.
+
+	* godmode/setup/inventories_setup.php: Deleted old view.
+
 2013-02-08  Vanessa Gil <vanessa.gil@artica.es>
 
 	* operation/incidents/incident_type_filed.php: Changed

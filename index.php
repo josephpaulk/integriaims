@@ -116,7 +116,7 @@ $clean_output = get_parameter ("clean_output", 0);
 $pdf_output = get_parameter ("pdf_output", 0);
 $pdf_filename = get_parameter ("pdf_filename", "");
 $raw_output = get_parameter ("raw_output", 0);
-
+$expired_pass = false;
 if (($pdf_output == 1) OR ($raw_output == 1)) {
 	// Buffer the following html with PHP so we can store it to a variable later
 	ob_start();
@@ -140,7 +140,6 @@ echo "<title>" . $config["sitename"] . "</title>";
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/integria_tip.css" type="text/css" />
-<link rel="stylesheet" href="include/styles/dialog.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/flora/flora.accordion.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/flora/flora.all.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/flora/flora.css" type="text/css" />
@@ -161,25 +160,6 @@ echo "<title>" . $config["sitename"] . "</title>";
 <script type="text/javascript" src="include/js/jquery.ui.textarearesizer.js"></script>
 <script type="text/javascript" src="include/js/jquery.axuploader.js"></script>
 <script type="text/javascript">
-
-var lang = {
-	"Are you sure?" : "<?php echo __('Are you sure?')?>",
-	"Added" : "<?php echo __('Added')?>",
-	"Search inventory object" : "<?php echo __('Search inventory object')?>",
-	"Already added" : "<?php echo __('Already added')?>",
-	"Added" : "<?php echo __('Added')?>",
-	"Search parent incident" : "<?php echo __('Search parent incident')?>",
-	"User search" : "<?php echo __('User search')?>",
-	"There's no affected inventory object" : "<?php echo __('There\'s no affected inventory object')?>",
-	"There's no affected object" : "<?php echo __('There\'s no affected object')?>",
-	"Create incident" : "<?php echo __('Create incident')?>",
-	"Add workunit" : "<?php echo __('Add workunit')?>",
-	"Submitting" : "<?php echo __('Submitting')?>",
-	"Upload file" : "<?php echo __('Upload file')?>",
-	"Search contact" : "<?php echo __('Search contact')?>",
-	"Create contact" : "<?php echo __('Create contact')?>",
-	"Search parent inventory" : "<?php echo __('Search parent inventory')?>"
-};
 </script>
 <!--[if lte IE 7]>
 <script type="text/javascript" src="include/js/jquery.bgiframe.js"></script>
@@ -222,6 +202,7 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 	$config["auth_error"] = "";
 
 	$nick_in_db = process_user_login ($nick, $pass);
+	$is_admin = get_admin_user($nick_in_db);
 
 	if (($nick_in_db !== false) && ($is_admin != 1) && ($is_enterprise) && ($config['enable_pass_policy'])) {
 
@@ -311,7 +292,24 @@ else {
 }
 
 load_menu_visibility();
-
+?><script>var lang = {
+	"Are you sure?" : "<?php echo __('Are you sure?')?>",
+	"Added" : "<?php echo __('Added')?>",
+	"Search inventory object" : "<?php echo __('Search inventory object')?>",
+	"Already added" : "<?php echo __('Already added')?>",
+	"Added" : "<?php echo __('Added')?>",
+	"Search parent incident" : "<?php echo __('Search parent incident')?>",
+	"User search" : "<?php echo __('User search')?>",
+	"There's no affected inventory object" : "<?php echo __('There\'s no affected inventory object')?>",
+	"There's no affected object" : "<?php echo __('There\'s no affected object')?>",
+	"Create incident" : "<?php echo __('Create incident')?>",
+	"Add workunit" : "<?php echo __('Add workunit')?>",
+	"Submitting" : "<?php echo __('Submitting')?>",
+	"Upload file" : "<?php echo __('Upload file')?>",
+	"Search contact" : "<?php echo __('Search contact')?>",
+	"Create contact" : "<?php echo __('Create contact')?>",
+	"Search parent inventory" : "<?php echo __('Search parent inventory')?>"
+};</script><?php
 // Log off
 $logout = (bool) get_parameter ('logout');
 if ($logout) {

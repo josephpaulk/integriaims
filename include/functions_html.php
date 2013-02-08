@@ -532,13 +532,28 @@ function print_submit_button ($value = 'OK', $name = '', $disabled = false, $att
  * @param string HTML style property.
  * @param bool Whether to return an output string or echo now (optional, echo by default).
  */
-function print_input_image ($name, $src, $value, $style = '', $return = false, $label = false) {
+function print_input_image ($name, $src, $value, $style = '', $return = false, $label = false, $options = false) {
 	$output = '';
+	
+	//Valid attributes (invalid attributes get skipped)
+	$attrs = array ("alt", "accesskey", "lang", "tabindex",
+		"title", "xml:lang", "onclick", "ondblclick", "onmousedown",
+		"onmouseup", "onmouseover", "onmousemove", "onmouseout",
+		"onkeypress", "onkeydown", "onkeyup");	
 	
 	if ($label) {
 		$output .= print_label ($label, $name, 'image', true);
 	}
-	$output .= '<input id="image-'.$name.'" src="'.$src.'" style="'.$style.'" name="'.$name.'" type="image" value="'.$value.'" />';
+	$output .= '<input id="image-'.$name.'" src="'.$src.'" style="'.$style.'" name="'.$name.'" type="image"';
+	
+	
+	foreach ($attrs as $attribute) {
+		if (isset ($options[$attribute])) {
+			$output .= ' '.$attribute.'="'.safe_input_html ($options[$attribute]).'"';
+		}
+	}	
+	
+	$output .= ' value="'.$value.'" />';
 	
 	if ($return)
 		return $output;
