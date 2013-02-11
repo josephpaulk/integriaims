@@ -1,3 +1,8 @@
+2013-02-11  Dario Rodriguez <dario@artica.es>
+
+	* operation/incidents/incident_detail.php: Added group all by default
+	for standar users without group.
+
 2013-02-04  Dario Rodriguez <dario@artica.es>
 
 	* include/languages: Updated languages.
