@@ -39,10 +39,13 @@ if ($add_field) { //add field to incident type
 	$value['id_incident_type'] = (int) get_parameter ('id', 0);
 	$value['label'] = get_parameter('label', '');
 	$value['type'] = get_parameter ('type');
-	$value['combo_value'] = get_parameter ('combo_value');
+	$value['combo_value'] = get_parameter ('combo_value', '');
 	
 	if ($value['label'] == '') {
 		echo '<h3 class="error">'.__('Empty field name').'</h3>';
+	} else if ($value['type'] == 'combo') {
+		if ($value['combo_value'] == '')
+			echo '<h3 class="error">'.__('Empty combo value').'</h3>';
 	} else {
 		$result_field = process_sql_insert('tincident_type_field', $value);
 		
@@ -71,19 +74,20 @@ if ($update_field) { //update field to incident type
 	
 	$value_update['label'] = get_parameter('label');
 	$value_update['type'] = get_parameter ('type');
+	$value_update['combo_value'] = get_parameter ('combo_value', '');
 
 	if ($value_update['type'] == "combo") {
-		$value_update['combo_value'] = get_parameter ('combo_value');
+		if ($value_update['combo_value'] == '') 
+			echo '<h3 class="error">'.__('Field could not be updated. Empty combo value').'</h3>';
 	} else {
-		$value_update['combo_value'] = "";
-	}
 	
-	$result_update = process_sql_update('tincident_type_field', $value_update, array('id' => $id_field));
-	
-	if ($result_update === false) {
-		echo '<h3 class="error">'.__('Field could not be updated').'</h3>';
-	} else {
-		echo '<h3 class="suc">'.__('Field updated successfully').'</h3>';
+		$result_update = process_sql_update('tincident_type_field', $value_update, array('id' => $id_field));
+		
+		if ($result_update === false) {
+			echo '<h3 class="error">'.__('Field could not be updated').'</h3>';
+		} else {
+			echo '<h3 class="suc">'.__('Field updated successfully').'</h3>';
+		}
 	}
 }
 

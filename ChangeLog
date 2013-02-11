@@ -1,5 +1,11 @@
 2013-02-11  Vanessa Gil <vanessa.gil@artica.es>
 
+	* operation/incidents/type_detail.php: Fixed bug: 
+	Its possible to define a custom incident field of type combo
+	without any value.
+
+2013-02-11  Vanessa Gil <vanessa.gil@artica.es>
+
 	* operation/incidents/incident_detail.php: Fixed bug: 
 	Close by field always available.
 
