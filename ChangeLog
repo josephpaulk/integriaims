@@ -1,3 +1,8 @@
+2013-02-11  Dario Rodriguez <dario@artica.es>
+
+	* godmode/usuarios/configurar_usuarios.php: Fixed an error updating
+	admin users related to enable login parameter.
+
 2013-02-11  Vanessa Gil <vanessa.gil@artica.es>
 
 	* operation/incidents/type_detail.php: Fixed bug: 

@@ -281,6 +281,8 @@ if ($nivel != 1) {
 	echo __('Enabled').'&nbsp;<input type="radio" class="chk" name="enable_login" value="1"'.$active_chk_login.'>';
 	echo "&nbsp;&nbsp;";
 	echo __('Disabled').'&nbsp;<input type="radio" class="chk" name="enable_login" value="0"'.$disabled_chk_login.'>';
+} else {
+	echo "<input type='hidden' name='enable_login' value='1'/>";
 }
     
 ?>
