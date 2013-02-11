@@ -1,3 +1,8 @@
+2013-02-11  Vanessa Gil <vanessa.gil@artica.es>
+
+	* operation/incidents/incident_detail.php: Fixed bug: 
+	Custom fields for incident types don't store its value.
+
 2013-02-11  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_db.php: Modified ACL function to enable standar user

@@ -148,7 +148,14 @@ if ($action == 'update') {
 		foreach ($labels as $label) {
 			$values['data'] = get_parameter (base64_encode($label['label']));
 			$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
-			process_sql_update('tincident_field_data', $values, array('id_incident_field' => $id_incident_field, 'id_incident' => $id), 'AND');
+			$values['id_incident_field'] = $id_incident_field;
+			$values['id_incident'] = $id;
+			
+			$exists_id = get_db_value_filter('id', 'tincident_field_data', array('id_incident' => $id, 'id_incident_field'=> $id_incident_field), 'AND');
+			if ($exists_id) 
+				process_sql_update('tincident_field_data', $values, array('id_incident_field' => $id_incident_field, 'id_incident' => $id), 'AND');
+			else
+				process_sql_insert('tincident_field_data', $values);
 		}
 	}
 	
