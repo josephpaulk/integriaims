@@ -1,5 +1,10 @@
 2013-02-11  Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents/incident_detail.php: Added default group ALL
+	to user without group.
+
+2013-02-11  Dario Rodriguez <dario@artica.es>
+
 	* godmode/usuarios/configurar_usuarios.php: Fixed an error updating
 	admin users related to enable login parameter.
 

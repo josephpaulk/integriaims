@@ -704,6 +704,12 @@ if ($has_permission) {
 //Get group if was not defined
 if($id_grupo==0) {
 	$id_grupo_incident = get_db_value("id_grupo", "tusuario_perfil", "id_usuario", $config['id_user']);
+	
+	//If no group assigned use ALL by default
+	if (!$id_grupo_incident) {
+		$id_grupo_incident = 1;
+	}
+	
 } else {
 	$id_grupo_incident = $id_grupo;
 }
