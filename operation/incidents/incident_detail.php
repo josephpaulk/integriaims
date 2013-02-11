@@ -992,6 +992,12 @@ $(document).ready (function () {
 	
 	$("#incident-editor-row_advanced-0").css('display', 'none');
 	
+	if ($("#incident_status").val() == "7") {
+		$("#incident-editor-2-2").css('display', '');
+	} else {
+		$("#incident-editor-2-2").css('display', 'none');
+	}
+	
 	if ($("#id_incident_type").val() != "0") {
 		show_fields();
 	}
@@ -1069,6 +1075,15 @@ $(document).ready (function () {
 			  } else {
 				fila.style.display = ""; //mostrar fila 
 			  }
+		});
+		
+		$("#incident_status").change(function() {
+			
+			if ($("#incident_status").val() == "7") {
+				$("#incident-editor-2-2").css('display', '');
+			} else {
+				$("#incident-editor-2-2").css('display', 'none');
+			}
 		});
 });
 

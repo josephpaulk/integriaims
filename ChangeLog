@@ -1,5 +1,10 @@
 2013-02-11  Vanessa Gil <vanessa.gil@artica.es>
 
+	* operation/incidents/incident_detail.php: Fixed bug: 
+	Close by field always available.
+
+2013-02-11  Vanessa Gil <vanessa.gil@artica.es>
+
 	* include/functions_db.php
 	  include/functions_incidents.php
 	  operation/incidents/incident_search.php: Fixed bug: 
