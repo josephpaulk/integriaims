@@ -1,5 +1,12 @@
 2013-02-11  Dario Rodriguez <dario@artica.es>
 
+	* trunk/operation/projects/task_detail.php: Fixed problem with ACL of project
+	manager to create/edit tasks. 
+
+	MERGED FROM 3.1
+
+2013-02-11  Dario Rodriguez <dario@artica.es>
+
 	* operation/incidents/incident_detail.php: Added default group ALL
 	to user without group.
 

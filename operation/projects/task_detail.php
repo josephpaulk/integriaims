@@ -151,7 +151,7 @@ if ($operation == "update") {
 		return;
 	}
 	
-	if (give_acl($config["id_user"], 0, "TM")==0) {
+	if (!give_acl($config["id_user"], 0, "TM") && ($config["id_user"] != $project_manager)) {
 		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to create task");
 		require ("general/noaccess.php");
 		return;
@@ -369,7 +369,8 @@ if (user_belong_project ($config['id_user'], $id_project) || give_acl ($config["
 	print_table ($table);
 
 	if((give_acl ($config["id_user"], $id_group, "TM") && $operation == "create") || 
-	(give_acl ($config["id_user"], $id_group, "TW") && $operation != "create")) {
+	(give_acl ($config["id_user"], $id_group, "TW") && $operation != "create") ||
+	$config["id_user"] == $project_manager) {
 		echo '<div class="button" style="width:'.$table->width.'">';
 		if ($operation != "create") {
 			print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
