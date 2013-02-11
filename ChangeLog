@@ -1,5 +1,14 @@
 2013-02-11  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_db.php: Modified ACL function to enable standar user
+	to create and update customer information.
+	* operation/contacts/contact_detail.php: Fixed a wrong default value in
+	combo.
+	* operation/companies/company_detail.php: Added ACL check to company management
+	view.
+
+2013-02-11  Dario Rodriguez <dario@artica.es>
+
 	* operation/projects/task_detail.php: Fixed problem with ACL of project
 	manager to create/edit tasks.
 

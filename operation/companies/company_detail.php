@@ -530,9 +530,14 @@ if ($id) {
 
 
 } elseif ($new_company) {
-
 	// New company
 	echo "<h2>".__('Company management')."</h2>";
+		
+	if(!$manager) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+		require ("general/noaccess.php");
+		exit;
+	}
 
 	$name = "";
 	$address = "";

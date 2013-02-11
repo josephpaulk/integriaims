@@ -106,9 +106,6 @@ function give_acl ($id_user, $id_group, $access) {
 	if (($access == "IM") AND ($admin == 0))
 		return false;
 	
-	if (($access == "VM") AND ($admin == 0))
-		return false;
-	
 	if (($access == "IM") AND ($admin == 0))
 		return false;
 	
