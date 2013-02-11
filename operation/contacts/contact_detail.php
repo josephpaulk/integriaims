@@ -201,7 +201,7 @@ if ($id || $new_contact) {
 		
 		// TODO: Show only companies with access to them
 		$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
-			'id_company', $id_company, '', __('Select'), 0, true, false, false, __('Company'));
+			'id_company', $id_company, '', '', '', true, false, false, __('Company'));
 			
 		$table->data[3][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 		$table->data[3][1] .= "<img src='images/company.png'></a>";
