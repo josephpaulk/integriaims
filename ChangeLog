@@ -1,5 +1,11 @@
 2013-02-11  Vanessa Gil <vanessa.gil@artica.es>
 
+	* operation/incidents/incident_detail.php: Fixed several
+	bug creating and updating incident types and fields.
+
+
+2013-02-11  Vanessa Gil <vanessa.gil@artica.es>
+
 	* operation/incidents/incident_detail.php: Fixed bug: 
 	Custom fields for incident types don't store its value.
 

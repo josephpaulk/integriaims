@@ -40,13 +40,19 @@ if ($add_field) { //add field to incident type
 	$value['label'] = get_parameter('label', '');
 	$value['type'] = get_parameter ('type');
 	$value['combo_value'] = get_parameter ('combo_value', '');
+	$error_combo = false;
+	
+	if ($value['type'] == 'combo') {
+		if ($value['combo_value'] == '')
+			$error_combo = true;
+	}
 	
 	if ($value['label'] == '') {
 		echo '<h3 class="error">'.__('Empty field name').'</h3>';
-	} else if ($value['type'] == 'combo') {
-		if ($value['combo_value'] == '')
-			echo '<h3 class="error">'.__('Empty combo value').'</h3>';
+	} else if ($error_combo) {
+		echo '<h3 class="error">'.__('Empty combo value').'</h3>';
 	} else {
+
 		$result_field = process_sql_insert('tincident_type_field', $value);
 		
 		if ($result_field === false) {
@@ -75,12 +81,15 @@ if ($update_field) { //update field to incident type
 	$value_update['label'] = get_parameter('label');
 	$value_update['type'] = get_parameter ('type');
 	$value_update['combo_value'] = get_parameter ('combo_value', '');
+	$error_update = false;
 
 	if ($value_update['type'] == "combo") {
 		if ($value_update['combo_value'] == '') 
-			echo '<h3 class="error">'.__('Field could not be updated. Empty combo value').'</h3>';
+			$error_update = true;
+	} 
+	if ($error_update) {
+		echo '<h3 class="error">'.__('Field could not be updated. Empty combo value').'</h3>';
 	} else {
-	
 		$result_update = process_sql_update('tincident_type_field', $value_update, array('id' => $id_field));
 		
 		if ($result_update === false) {
@@ -127,15 +136,20 @@ if ($update_type) {
 	//$values['id_wizard'] = (int) get_parameter ('wizard');
 	//$values['id_group'] = (int) get_parameter ('id_group');
 
-	$result = process_sql_update('tincident_type', $values, array('id', $id));
+	if ($values['name'] != "") {
+		$result = process_sql_update('tincident_type', $values, array('id' => $id));
 
-	if ($result === false)
-		echo '<h3 class="error">'.__('Could not be updated').'</h3>';
-	else {
-		echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
-		insert_event ("INCIDENT TYPE", $id, 0, $name);
-		$show_fields = true;
+		if ($result === false)
+			echo '<h3 class="error">'.__('Could not be updated').'</h3>';
+		else {
+			echo '<h3 class="suc">'.__('Successfully updated').'</h3>';
+			insert_event ("INCIDENT TYPE", $id, 0, $name);
+			$show_fields = true;
+		}
+	} else {
+		echo '<h3 class="error">'.__('Type name empty').'</h3>';
 	}
+	
 	//$id = 0;
 }
 
