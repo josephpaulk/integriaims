@@ -69,7 +69,7 @@ function filter_incidents ($filters) {
 	
 	// Not closed
 	if ($filters["status"] == -10)
-		$filters['status'] = "1,2,3,4,5";
+		$filters['status'] = "1,2,3,4,5,6";
 
 	$resolutions = get_incident_resolutions ();
 	

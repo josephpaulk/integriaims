@@ -2100,7 +2100,7 @@ function get_indicent_status () {
 	__('Assigned');
 	__('Re-opened');
 	__('Verified'); 
-	__('Resolved');
+	__('Pending on a third person');
 	__('Closed');
 	
 	foreach ($status as $stat) {

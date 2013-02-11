@@ -172,7 +172,7 @@ foreach ($incidents as $incident) {
 
 	if ($incident["estado"] < 3 )
 		$tr_status = 'class="red"';
-	elseif ($incident["estado"] < 6 )
+	elseif ($incident["estado"] < 7 )
 		$tr_status = 'class="yellow"';
 	else
 		$tr_status = 'class="green"';
