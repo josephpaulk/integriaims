@@ -1064,7 +1064,6 @@ $(document).ready (function () {
 		
 		$("#tgl_incident_control").click(function() {
 			 fila = document.getElementById('incident-editor-row_advanced-0');
-			 //fila = document.getElementById('incident-editor-row_advanced');
 			  if (fila.style.display != "none") {
 				fila.style.display = "none"; //ocultar fila 
 			  } else {
@@ -1089,7 +1088,6 @@ function show_fields() {
 		dataType: "json",
 		success: function(data){
 			
-			//fi=document.getElementById('row_show_type_fields');
 			fi=document.getElementById('incident-editor-4-0');
 			var table = document.createElement("table"); //create table
 			table.id='table_fields';
@@ -1122,11 +1120,15 @@ function show_fields() {
 					objTr.appendChild(objTd1);
 					objTd1.appendChild(lbl);
 					
+					txt = document.createElement('br');
+					lbl.appendChild(txt);
+					
 					element=document.createElement('select');
 					element.id=value['label']; 
 					element.name=value['label_enco'];
 					element.value=value['label'];
 					element.style.width="170px";
+					element.class="type";
 					
 					var new_text = value['combo_value'].split(',');
 					jQuery.each (new_text, function (id, val) {
@@ -1160,6 +1162,10 @@ function show_fields() {
 					objTr.appendChild(objTd1);
 					objTd1.appendChild(lbl);
 					
+					txt = document.createElement('br');
+					lbl.appendChild(txt);
+
+					
 					element=document.createElement('input');
 					element.id=value['label'];
 					element.name=value['label_enco'];
@@ -1185,7 +1191,6 @@ function show_fields() {
 					var objTd1 = document.createElement("td"); //create column for label
 					
 					lbl = document.createElement('label');
-					//lbl.maxlength="35";
 					lbl.innerHTML = value['label']+' ';
 					objTr.appendChild(objTd1);
 					objTd1.appendChild(lbl);
@@ -1195,7 +1200,7 @@ function show_fields() {
 					element.name=value['label_enco'];
 					element.value=value['data'];
 					element.type='text';
-					element.rows='3'
+					element.rows='3';
 					
 					lbl.appendChild(element);
 					i++;

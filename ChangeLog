@@ -1,3 +1,9 @@
+2013-02-11  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/styles/integria.css
+	  operation/incidents/incident_detail.php: Changed custom
+	fields style.
+
 2013-02-08 Juan Manuel Ramon <juanmanuel.ramon@artica.es>
 
 	* include/functions_html.php: Improved print_input_image function.

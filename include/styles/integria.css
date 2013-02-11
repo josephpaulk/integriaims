@@ -98,9 +98,14 @@ table.blank {
     border: none;
 }
 
-table.databox, table.databox_color, table.databox_color_without_line {
+table.databox, table.databox_color {
 	padding-top: 5px;
 	padding-bottom: 5px;
+	background: #eee;
+}
+
+table.databox_color_without_line {
+
 	background: #eee;
 }
 
@@ -278,6 +283,10 @@ select {
 	font: normal 0.9em Arial, sans-serif;
 	color:#666;
 	float: left;
+}
+
+select.type {
+	float: none;
 }
 
 select.pagesize {
