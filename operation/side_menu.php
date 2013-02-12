@@ -579,7 +579,7 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "VR") && $show_custo
 	echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail'>".__('Companies')."</a></li>";
 
 
-	if ($sec2 == "operation/companies/company_detail" && give_acl ($config["id_user"], 0, "VW")) {
+	if ($sec2 == "operation/companies/company_detail" && give_acl ($config["id_user"], 0, "VM")) {
 			echo "<li style='margin-left: 15px; font-size: 10px;'>";
 			echo "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&new_company=1'>".__('New company')."</a>";
 			echo "</li>";
@@ -602,7 +602,7 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "VR") && $show_custo
 	echo "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail'>".__('Contracts')."</a></li>";
 
 	// new
-	if ($sec2 == "operation/contracts/contract_detail" && give_acl ($config["id_user"], 0, "VW")) {
+	if ($sec2 == "operation/contracts/contract_detail" && give_acl ($config["id_user"], 0, "VM")) {
 			echo "<li style='margin-left: 15px; font-size: 10px;'>";
 			echo "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&new_contract=1'>".__('New contract')."</a>";
 			echo "</li>";
@@ -616,7 +616,7 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "VR") && $show_custo
 		echo "<li>";
 	echo "<a href='index.php?sec=customers&sec2=operation/contacts/contact_detail'>".__('Contacts')."</a></li>";
 
-	if ($sec2 == "operation/contacts/contact_detail" && give_acl ($config["id_user"], 0, "VW")) {
+	if ($sec2 == "operation/contacts/contact_detail" && give_acl ($config["id_user"], 0, "VM")) {
 			echo "<li style='margin-left: 15px; font-size: 10px;'>";
 			echo "<a href='index.php?sec=customers&sec2=operation/contacts/contact_detail&new_contact=1'>".__('New contact')."</a>";
 			echo "</li>";
