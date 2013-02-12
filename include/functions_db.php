@@ -39,6 +39,7 @@ define ('INCIDENT_INVENTORY_ADDED', 10);
 define ('INCIDENT_USER_CHANGED', 17);
 define ('INCIDENT_DELETED', 18);
 define ('INCIDENT_CONTACT_ADDED', 19);
+define ('INCIDENT_GROUP_CHANGED', 28);
 
 define ('TASK_CREATED', 11);
 define ('TASK_UPDATED', 12);
@@ -923,6 +924,10 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 		$description = __('Added inventory object: ');
 		$description .= get_db_value ('name', 'tinventory', 'id', $aditional_data);
 		break;
+	case INCIDENT_GROUP_CHANGED:
+		$description = __("Group has changed");
+		$description .= " -> ".get_db_value ("nombre", "tgrupo", "id_grupo", $aditional_data);
+		break;
 	default:
 		$description = __('Unknown update');
 		break;
@@ -931,7 +936,7 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Incident updated", $description);
 	$sql = sprintf ('INSERT INTO tincident_track (id_user, id_incident,
 		timestamp, state, id_aditional, description)
-		VALUES ("%s", %d, "%s", %d, %d, "%s")',
+		VALUES ("%s", %d, "%s", %d, "%s", "%s")',
 		$config['id_user'], $id_incident, $fecha, $state, $aditional_data, $description);
 	return process_sql ($sql, 'insert_id');
 }

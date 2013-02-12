@@ -187,7 +187,7 @@ CREATE TABLE `tincidencia` (
   `email_copy` mediumtext not NULL,
   `editor` varchar(60) NOT NULL default '',
   `id_group_creator` mediumint(9) NOT NULL default 0,
-  `last_stat_check`  bigint(20) unsigned NOT NULL default '0',
+  `last_stat_check` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `closed_by` varchar(60) NOT NULL default '',
 
   PRIMARY KEY  (`id_incidencia`),
@@ -241,7 +241,7 @@ CREATE TABLE `tincident_track` (
   `state` int(10) unsigned NOT NULL default '0',
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
   `id_user` varchar(60) NOT NULL default '',
-  `id_aditional` int(10) unsigned NOT NULL default '0',
+  `id_aditional` varchar(60) NOT NULL DEFAULT '0',
   `description` text NOT NULL,
   PRIMARY KEY  (`id_it`),
   KEY `tit_idx_1` (`id_incident`),

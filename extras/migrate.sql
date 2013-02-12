@@ -20,8 +20,13 @@ PRIMARY KEY (`id_incident`)
 -- Table `tincidencia`
 -- ---------------------------------------------------
 ALTER TABLE `tincidencia` DROP COLUMN `origen`;
-ALTER TABLE `tincidencia` ADD COLUMN `last_stat_check`  bigint(20) unsigned NOT NULL default '0';
+ALTER TABLE `tincidencia` ADD COLUMN `last_stat_check` datetime NOT NULL DEFAULT '0000-00-00 00:00:00';
 ALTER TABLE `tincidencia` ADD COLUMN `closed_by` varchar(60) NOT NULL default '';
+
+-- ---------------------------------------------------
+-- Table `tincident_track`
+-- ---------------------------------------------------
+ALTER TABLE `tincident_track` CHANGE COLUMN `id_aditional` `id_aditional` varchar(60) NOT NULL DEFAULT '0';
 
 -- ---------------------------------------------------
 -- Table `torigin`

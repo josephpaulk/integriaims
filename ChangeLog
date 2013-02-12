@@ -1,3 +1,12 @@
+2013-02-12  Dario Rodriguez <dario@artica.es>
+
+	* operation/incidents/incident_detail.php: New track status
+	on group change.
+	* integria_db.sql,
+      	extras/migrate.sql: Modified several tables to adapt to new
+        * include/functions_db.php: Added new track status for
+	group change.
+
 2013-02-12  Dario Rodruguez <dario@artica.es>
 
         * operation/side_menu.php: Modified ACL for customer section, only VM

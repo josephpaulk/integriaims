@@ -169,13 +169,18 @@ if ($action == 'update') {
 		$tracked = true;
 	}
 	if ($old_incident['resolution'] != $resolution) {
-		incident_tracking ($id, INCIDENT_RESOLUTION_CHANGED);
+		incident_tracking ($id, INCIDENT_RESOLUTION_CHANGED, $resolution);
 		$tracked = true;
 	}
 	if ($old_incident['id_usuario'] != $user) {
 		incident_tracking ($id, INCIDENT_USER_CHANGED, $user);
 		$tracked = true;
 	}
+	if ($old_incident["id_grupo"] != $grupo) {
+		incident_tracking ($id, INCIDENT_GROUP_CHANGED, $grupo);
+		$tracked = true;
+	}
+	
 	
 	if($tracked == false) {
 		incident_tracking ($id, INCIDENT_UPDATED);
