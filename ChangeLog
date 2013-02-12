@@ -1,3 +1,8 @@
+2013-02-11  Dario Rodruguez <dario@artica.es>
+
+	* operation/side_menu.php: Modified ACL for customer section, only VM
+	can create companies, contracts and contacts.
+
 2013-02-11  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_db.php: Modified ACL function to enable standar user
