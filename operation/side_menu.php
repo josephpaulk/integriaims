@@ -623,6 +623,21 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "VR") && $show_custo
 		}
 
 
+	// Lead management
+
+	if (($sec2=="operation/leads/lead_detail") AND (!isset($_GET["create"])))
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail'>".__('Leads')."</a></li>";
+
+	if ($sec2 == "operation/leads/lead_detail" && give_acl ($config["id_user"], 0, "VM")) {
+			echo "<li style='margin-left: 15px; font-size: 10px;'>";
+			echo "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&new=1'>".__('New lead')."</a>";
+			echo "</li>";
+		}
+
+
 	echo "</ul>";
 	echo "</div>";
 }

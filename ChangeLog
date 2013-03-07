@@ -1,3 +1,31 @@
+2013-03-07  Sancho Lerena <slerena@artica.es>
+ 
+	* include/functions_form.php: Added functions for lead progress.
+
+	* godmode/setup/setup.php,
+	include/functions_config.php: new token for lead company filter.
+
+	* include/api.php, 
+	include/functions_api.php: New call to create Lead.
+
+	* operation/leads/lead_activity.php,
+	operation/leads/lead_history.php,
+	operation/leads/lead_detail.php
+	operation/side_menu.php:  new lead (CRM) feature.
+
+	* operation/inventories/manage_prod.php: Show ID on listing.
+
+	* operation/companies/company_role.php: Show ID on listing.
+
+	* operation/companies/company_detail.php: Added leads as tab.
+
+	* images/icon_lead.png: New icon.
+
+	* integria_db.sql,
+	upgrade_to_3.1.sql: New tables.
+
+3.1 Modifications --> Pending to merge with trunk !!
+
 2013-02-11  Dario Rodruguez <dario@artica.es>
 
 	* operation/side_menu.php: Modified ACL for customer section, only VM

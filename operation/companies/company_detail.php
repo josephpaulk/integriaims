@@ -170,6 +170,12 @@ if ($id) {
 		echo '<li class="ui-tabs">';
 	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=contracts"><span>'.__("Contracts").'</span></a></li>';
 	
+	if ($op == "leads")
+		echo '<li class="ui-tabs-selected">';
+	else
+		echo '<li class="ui-tabs">';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=leads"><span>'.__("Leads").'</span></a></li>';
+
 	if ($op == "invoices")
 		echo '<li class="ui-tabs-selected">';
 	else
@@ -529,6 +535,67 @@ if ($id) {
 	}
 
 
+	// Leads listing
+
+	elseif ($op == "leads") {
+		
+		$sql = "SELECT * FROM tlead WHERE id_company = $id ORDER BY modification DESC";
+		$invoices = get_db_all_rows_sql ($sql);
+		$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=leads");
+
+		if ($invoices !== false) {
+		
+			$table->width = "90%";
+			$table->class = "listing";
+			$table->cellspacing = 0;
+			$table->cellpadding = 0;
+			$table->tablealign="left";
+			$table->data = array ();
+			$table->size = array ();
+			$table->style = array ();
+			$table->style[0] = 'font-weight: bold';
+			$table->colspan = array ();
+			
+			$table->head[0] = __('Fullname');
+			$table->head[1] = __('Owner');
+			$table->head[2] = __('Company');
+			$table->head[3] = __('Updated at');
+			$table->head[4] = __('Country');
+			$table->head[5] = __('Progress');
+			$table->head[6] = __('Estimated sale');
+			$counter = 0;
+				
+			foreach ($invoices as $invoice) {	
+				$data = array ();
+			
+				$data[0] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id="
+					.$invoice["id"]."'>".$invoice["fullname"]."</a>";
+
+				$data[1] = $invoice["owner"];
+				$data[2] = $invoice["company"];
+				$data[3] = $invoice["modification"];
+				$data[4] = $invoice["country"];
+				$data[5] = $invoice["progress"];		
+				$data[6] = format_numeric ($invoice["estimated_sale"]);
+				
+				array_push ($table->data, $data);
+			}	
+			print_table ($table);
+			
+			if($manager) {
+				echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail">';
+				echo '<div class="button" style="width: '.$table->width.'">';
+				print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+				print_input_hidden ('new', 1);
+				echo '</div>';
+				echo '</form>';
+			}
+			
+		}
+	}
+
+
+
 } elseif ($new_company) {
 	// New company
 	echo "<h2>".__('Company management')."</h2>";
@@ -644,8 +711,10 @@ if ($id) {
 		$table->head[3] = __('Contacts');
 		$table->head[4] = __('Incidents');
 		$table->head[5] = __('Invoices (totals)');
+		$table->head[6] = __('Leads');
+
 		if(give_acl ($config["id_user"], $id_group, "VM")) {
-			$table->head[6] = __('Delete');
+			$table->head[7] = __('Delete');
 		}
 		foreach ($companies as $company) {
 			$data = array ();
@@ -672,8 +741,17 @@ if ($id) {
 			$data[5] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$company["id"]."&op=invoices'>";
 			$data[5] .= format_numeric (company_invoice_total ($company["id"]));
 			$data[5] .= "</a>";
-			if(give_acl ($config["id_user"], $id_group, "VM")) {
-				$data[6] ='<a href="index.php?sec=customers&
+			
+			$data[6] .= "<a href=index.php?sec=customers&sec2=operation/leads/lead_detail&id_company=".$company["id"]."><img src='images/icon_lead.png'></a>";
+
+			$sum_leads = get_db_sql ("SELECT COUNT(id) FROM tlead WHERE progress < 100 AND id_company = ".$company["id"]);
+			if ($sum_leads > 0) {
+				$data[6] .= " ($sum_leads) ";
+				$data[6] .= get_db_sql ("SELECT SUM(estimated_sale) FROM tlead WHERE progress < 100 AND id_company = ".$company["id"]);
+			}
+
+			if (give_acl ($config["id_user"], $id_group, "VM")) {
+				$data[7] ='<a href="index.php?sec=customers&
 							sec2=operation/companies/company_detail&
 							delete_company=1&id='.$company['id'].'"
 							onClick="if (!confirm(\''.__('Are you sure?').'\'))

@@ -1015,4 +1015,67 @@ function api_validate_user ($return_type, $user, $pass){
 	return get_db_sql ("select count(id_usuario) FROM tusuario WHERE id_usuario = '$user' AND password = md5('$pass')");
 }
 
+/**
+ * Create a lead
+ * @param $return_type xml or csv
+ * @param $user user who call function
+ * @param $params array (fullname, company, email, country, estimated_sale, progress, phone, mobile, position, managed_by, owner, language)
+ * @return unknown_type
+ */
+
+function api_create_lead ($return_type, $user, $params){
+	global $config;
+	
+	$config['id_user'] = $user;
+	
+	$fullname = trim($params[0]);
+	$company = trim($params[1]);
+	$email = trim($params[2]);
+	$country = trim($params[3]);
+	$estimated_sale = trim($params[4]);
+	$progress = trim($params[5]);
+	$phone = trim($params[6]);
+	$mobile = trim($params[7]);
+	$position = trim($params[8]);
+	$owner = trim($params[9]);
+	$language = trim($params[10]);
+	$comments = trim($params[11]);
+	$id_category = trim($params[12]);
+	$id_company = trim($params[13]);
+
+
+	// Search if any current lead with the same email already exists
+
+	$duped_id = get_db_value('id','tlead','email',$email);
+
+	if ($duped_id != ""){
+			$result = 0;
+
+	} else {
+
+		$sql = sprintf ('INSERT INTO tlead
+				(fullname, company, email, country, estimated_sale, progress, phone, mobile, position, owner, id_language, description, id_category, id_company, creation, modification)  
+				VALUES ("%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", %d, %d, "%s", "%s")', $fullname, $company, $email, $country, $estimated_sale, $progress, $phone, $mobile, $position, $owner, $language, $comments, $id_category, $id_company, date('Y-m-d H:m:i'), date('Y-m-d H:m:i'));
+
+		$new_id = process_sql ($sql, 'insert_id');
+
+		if ($new_id !== false) {
+			$datetime =  date ("Y-m-d H:i:s");
+			$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $new_id, "API", $datetime, "Created lead via API");
+			process_sql ($sql);
+			$result = 1;			
+		} else {
+			$result = 0;
+		}
+	}
+
+	switch($return_type) {
+		case "xml": 
+				echo xml_node($result);
+				break;
+		case "csv": 
+				echo $result;
+				break;
+	}
+}
 ?>

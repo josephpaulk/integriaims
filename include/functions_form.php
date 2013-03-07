@@ -1066,4 +1066,60 @@ function combo_incident_origin ($actual = -1, $disabled = 0, $return = false) {
 	echo $output;
 } 
 
+// Returns a combo with the incident origin
+// ----------------------------------------------------------------------
+function combo_lead_progress ($actual = 0, $disabled = 0, $label = "", $return = false) {
+	$output = '';
+
+	$output .= '<div style="text-align:center;"><b>'.__($label).' </b></div>';
+
+	if ($disabled) {
+		$output = translate_lead_progress ($actual);
+		if ($return)
+			return $output;
+		echo $output;
+		return;
+	}
+
+	$output .= print_select (get_incident_origins (), 'incident_origin',
+				$actual, '', __("None"), 0, true, false, false, __('Source'));
+	
+	if ($return)
+		return $output;
+	echo $output;
+} 
+
+
+// Returns the "legend" for a given lead progress
+// ----------------------------------------------
+
+function translate_lead_progress ($progress = 0){
+
+	$lead_progress = lead_progress_array();
+
+	if (isset($lead_progress[$progress]))
+		return $lead_progress[$progress];
+	else
+		return __("Other");
+}
+
+// Return an array with current legends for lead progress
+// ------------------------------------------------------
+
+function lead_progress_array (){
+
+	$lead_progress = array();
+	$lead_progress[0] = __("First contact");
+	$lead_progress[10] = __("First reply");
+	$lead_progress[20] = __("Leads ask for more info");
+	$lead_progress[30] = __("Gived detailed info to lead");
+	$lead_progress[40] = __("Lead proposal");
+	$lead_progress[50] = __("Send commercial proposal to customer");
+	$lead_progress[60] = __("Accepted proposal. Waiting for PO");
+	$lead_progress[100] = __("Closed. Not response or dead.");
+	$lead_progress[101] = __("Closed. Lost.");
+	$lead_progress[102] = __("Closed. Success.");
+
+	return $lead_progress;
+}
 ?>
