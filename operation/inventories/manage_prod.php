@@ -167,27 +167,28 @@ if (! $id && ! $create) {
 		$table->data = array ();
 		$table->head = array ();
 		$table->head[0] = __('ID');
-		$table->head[1] = __('Name');
-		$table->head[2] = __('Parent');
-		$table->head[3] = __('Description');
-		$table->head[4] = __('Items');
-		$table->head[5] = __('Delete');
+		$table->head[1] = __('Icon');
+		$table->head[2] = __('Name');
+		$table->head[3] = __('Parent');
+		$table->head[4] = __('Description');
+		$table->head[5] = __('Items');
+		$table->head[6] = __('Delete');
 		$table->style = array ();
-		$table->style[1] = 'font-weight: bold';
+		$table->style[2] = 'font-weight: bold';
 		$table->align = array ();
-		$table->align[5] = 'center';
+		$table->align[6] = 'center';
 		
 		echo '<table width="90%" class="listing">';
 		foreach ($products as $product) {
 			$data = array ();
 			$data[0] = $product['id'];
 			$data[1] = print_product_icon ($product['id'], true);
-			$data[1] .= '&nbsp;&nbsp;<a href="index.php?sec=inventory&sec2=operation/inventories/manage_prod&id='.
+			$data[2] = '&nbsp;&nbsp;<a href="index.php?sec=inventory&sec2=operation/inventories/manage_prod&id='.
 				$product['id'].'">'.$product['name'].'</a>';
-			$data[2] = get_db_value ('name', 'tkb_product', 'id', $product["parent"]);
-			$data[3] = substr ($product["description"], 0, 200);
-			$data[4] = get_db_value ('COUNT(id)', 'tkb_data', 'id_product', $product['id']);
-			$data[5] = '<a href=index.php?sec=inventory&sec2=operation/inventories/manage_prod&delete_product=1&id='.
+			$data[3] = get_db_value ('name', 'tkb_product', 'id', $product["parent"]);
+			$data[4] = substr ($product["description"], 0, 200);
+			$data[5] = get_db_value ('COUNT(id)', 'tkb_data', 'id_product', $product['id']);
+			$data[6] = '<a href=index.php?sec=inventory&sec2=operation/inventories/manage_prod&delete_product=1&id='.
 				$product["id"].' onClick="if (!confirm(\''.__('Are you sure?').'\'))
 				return false;"><img src="images/cross.png"></a>';
 			

@@ -15,16 +15,18 @@
 
 body {
 
-	font: 0.80em  Arial, 'Trebuchet MS', Arial, Sans-serif;
+	font: 0.80em  Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
 	background: #ffffff;
-	color: #666666;
+	color: #666;
 	text-align: center;
+	font-weight: 300;
 	background: url(../../images/greyback.gif);
 }
 
 td, th {
-	font: 0.80em  Arial, 'Trebuchet MS', Arial, Sans-serif;
-	color: #555;
+	font: 0.80em  Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
+	color: #666;
+	font-weight: 300;
 	padding: 1px;
 	line-height: 22px;
 }
@@ -140,8 +142,12 @@ table.listing td {
 	padding-left: 3px;
 	padding-right: 3px;
 	padding-top: 3px;
-	padding-bottom: 3px;
+	padding-bottom: 5px;
 	margin-left: 5px;
+}
+
+table.listing tr {
+	border-bottom: 1px solid #ececec;
 }
 
 td {

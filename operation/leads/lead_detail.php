@@ -152,7 +152,7 @@ if ($delete) {
 	$id = 0;
 }
 
-echo "<h2>".__('Lead management')."</h2>";
+echo "<h2>".__('Leads management')."</h2>";
 
 // FORM (Update / Create)
 if ($id || $new) {
@@ -296,6 +296,16 @@ if ($id || $new) {
 		
 		$table->data[5][0] = print_input_text ('owner', $owner, '', 15, 15, true, __('Owner'));
 
+		// Show delete control.
+		if ($config["id_user"] == $owner){
+			$table->data[5][0] .= ' <a href="index.php?sec=customers&
+							sec2=operation/leads/lead_detail&
+							delete=1&id='.$id.'"
+							onClick="if (!confirm(\''.__('Are you sure?').'\'))
+							return false;">
+							<img src="images/cross.png"></a>';
+		}
+
 		$table->data[5][1] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
 	'id_language', $id_language, '', '', '', true, false, false,
 	__('Language'));
@@ -376,6 +386,7 @@ if ($id || $new) {
 	// Listing of contacts
 	
 	// TODO: Show only leads of my company or my company's children.
+	// TODO: Implement ACL check !
 
 	$search_text = (string) get_parameter ('search_text');
 	$id_company = (int) get_parameter ('id_company');
@@ -383,16 +394,21 @@ if ($id || $new) {
 	$end_date = (string) get_parameter ('end_date');
 	$country = (string) get_parameter ('country');
 	$id_category = (int) get_parameter ('product');
-
-	$progress_major_than = (string) get_parameter ('progress_major_than');
-	$progress_minor_than = (string) get_parameter ('progress_minor_than');
-
+	$progress_major_than = (int) get_parameter ('progress_major_than');
+	$progress_minor_than = (int) get_parameter ('progress_minor_than');
+	$owner = (string) get_parameter ("owner");
 	$show_100 = (int) get_parameter ("show_100");
+
+	$params = "&search_text=$search_text&id_company=$id_company&start_date=$start_date&end_date=$end_date&country=$country&id_category=$id_category&progress_minor_than=$progress_minor_than&progress_major_than=$progress_major_than&show_100=$show_100&owner=$owner";
 
 	if ($show_100){
 		$where_clause = "WHERE 1=1 $where_group ";
 	} else {
 		$where_clause = "WHERE progress < 100 $where_group ";
+	}
+
+	if ($owner != ""){
+		$where_clause .= sprintf (' AND owner =  "%s"', $owner);
 	}
 
 	if ($search_text != "") {
@@ -416,11 +432,11 @@ if ($id || $new) {
 	}
 
 	if ($progress_minor_than) {
-		$where_clause .= sprintf (' AND progress < %d ', $progress_minor_than);
+		$where_clause .= sprintf (' AND progress <= %d ', $progress_minor_than);
 	}
 
 	if ($progress_major_than) {
-		$where_clause .= sprintf (' AND progress < %d ', $progress_major_than);
+		$where_clause .= sprintf (' AND progress >= %d ', $progress_major_than);
 	}
 
 	if ($id_category) {
@@ -433,7 +449,6 @@ if ($id || $new) {
 	$table->data = array ();
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 	
-
 	if ($config["lead_company_filter"] != ""){
 		$sql2 = "SELECT id, name FROM tcompany WHERE id_company_role IN ('".$config["lead_company_filter"]."')";
 	} else {
@@ -445,16 +460,31 @@ if ($id || $new) {
 
 	$table->data[0][2] = print_input_text ("country", $country, "", 21, 100, true, __('Country'));
 
-	$table->data[1][0] = print_input_text ("progress_major_than", $progress_major_than, "", 3, 100, true, __('Progress > '));
-	$table->data[1][0] .= " ". print_input_text ("progress_minor_than", $progress_minor_than, "", 3, 100, true, __('Progress < '));
+	$table->data[0][3] =  print_checkbox ("show_100", 1, $show_100, true, __("Show finished leads"));
 
-	$table->data[1][1] = combo_kb_products ($id_category, true, 'Product type', true);
+	$progress_values = lead_progress_array ();	
 
-	$table->data[1][2] =  print_checkbox ("show_100", 1, $show_100, true, __("Show finished leads"));
+	$table->data[1][0] = print_select ($progress_values, 'progress_major_than', $progress_major_than, '', __("None"), 0, true, 0, false, __('Progress above') );
 
+
+	$table->data[1][1] = print_select ($progress_values, 'progress_minor_than', $progress_minor_than, '', __("None"), 0, true, 0, false, __('Progress below') );
+
+
+	$table->data[1][2] = combo_kb_products ($id_category, true, 'Product type', true);
+
+
+	$table->data[1][3] = print_input_text ("owner", $owner, "", 21, 100, true, __('Owner'));
+
+	
 	$table->data[2][0] = print_input_text ("start_date", $start_date, "", 15, 100, true, __('Start date'));
 	$table->data[2][1] = print_input_text ("end_date", $end_date, "", 15, 100, true, __('End date'));
-	$table->data[2][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+
+	$table->data[2][3] = ""; 
+
+
+	$table->data[2][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+
+	$table->data[2][4] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/leads/lead_export$params&render=1&raw_output=1&clean_output=1'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
 	
 	echo '<form action="index.php?sec=customers&sec2=operation/leads/lead_detail" method="post">';
 	print_table ($table);
@@ -464,7 +494,7 @@ if ($id || $new) {
 
 	$leads = get_db_all_rows_sql ($sql);
 
-	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead_detail");
+	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead_detail$params");
 
 	if ($leads !== false) {
 		unset ($table);
@@ -475,46 +505,40 @@ if ($id || $new) {
 		$table->style = array ();
 		$table->style[0] = 'font-weight: bold';
 		$table->head = array ();
-		$table->head[0] = __('Full name');
-		$table->head[1] = __('Product');
-		$table->head[2] = __('Managed by');
-		$table->head[3] = __('Progress');
-		$table->head[4] = __('Estimated sale');
-		$table->head[5] = __('Country');
-		$table->head[6] = __('Date');
-		$table->head[7] = __('Last update');
-
-		$table->size[4] = '100px;';
-		$table->style[6] = 'font-size: 9px;';
+		$table->head[0] = __('#');
+		$table->head[1] = __('Full name');
+		$table->head[2] = __('Product');
+		$table->head[3] = __('Managed by');
+		$table->head[4] = __('Progress');
+		$table->head[5] = __('Estimated sale');
+		$table->head[6] = __('Country');
+		$table->head[7] = __('Created/Updated');
+	
+		$table->size[5] = '100px;';
+		$table->size[4] = '130px;';
 		$table->style[7] = 'font-size: 9px;';
-
-		if(give_acl ($config["id_user"], 0, "VM")) {
-			$table->head[8] = __('Delete');
-		}
 		
+
 		foreach ($leads as $lead) {
 			$data = array ();
-			// Name
-			$data[0] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+			
+			$data[0] = "<b><a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+				$lead['id']."'>#".$lead['id']."</a></b>";
+ 			$data[1] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
 				$lead['id']."'>".$lead['fullname']."</a>";
 
-			$data[1] = get_db_value ('name', 'tkb_product', 'id', $lead['id_category']);
+			$data[2] = print_product_icon ($lead['id_category'], true);
 
-			$data[2] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$lead['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $lead['id_company'])."</a>";
-			$data[3] = translate_lead_progress ($lead['progress']) . " (".$lead['progress']. "%)";
-			$data[4] = format_numeric($lead['estimated_sale']);
-			$data[5] = $lead['country'];
-			$data[6] = human_time_comparation ($lead['creation']);
-			$data[7] = human_time_comparation ($lead['modification']);
+			$data[3] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$lead['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $lead['id_company'])."</a>";
+			if ($lead["owner"] != "")
+				$data[3] .= "<br><i>(" . $lead["owner"] . ")</i>";
 
-			if(give_acl ($config["id_user"], $id_group, "VM")) {
-				$data[8] = '<a href="index.php?sec=customers&
-							sec2=operation/leads/lead_detail&
-							delete=1&id='.$lead['id'].'"
-							onClick="if (!confirm(\''.__('Are you sure?').'\'))
-							return false;">
-							<img src="images/cross.png"></a>';
-			}
+			$data[4] = translate_lead_progress ($lead['progress']) . " <i>(".$lead['progress']. "%)</i>";
+			$data[5] = format_numeric($lead['estimated_sale']);
+			$data[6] = $lead['country'];
+			$data[7] = "<span title='". $lead['creation'] . "'>" . human_time_comparation ($lead['creation']) . "</span>";
+			$data[7] .= " / ". human_time_comparation ($lead['modification']);
+
 			array_push ($table->data, $data);
 		}
 		print_table ($table);

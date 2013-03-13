@@ -1,3 +1,22 @@
+2013-03-13  Sancho Lerena <slerena@artica.es>
+
+	* include/styles/integria.css: Some improvements on tables and body
+	font.
+
+	* include/functions_api.php: Added check to avoid empty fullname on
+	lead creation.
+
+	* operation/leads/lead_export.php,
+	operation/contacts/contact_export.php: New CSV export feature for 
+	leads and contacts.
+
+	* operation/leads/lead_detail.php: fixed and imroved search options.
+
+	* operation/inventories/manage_prod.php: Fixed ugly icon listing.
+
+	* operation/contacts/contact_detail.php: Fixed pagination and added
+	CSV export.
+
 2013-03-07  Sancho Lerena <slerena@artica.es>
  
 	* include/functions_form.php: Added functions for lead progress.

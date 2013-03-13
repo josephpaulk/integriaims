@@ -1043,12 +1043,11 @@ function api_create_lead ($return_type, $user, $params){
 	$id_category = trim($params[12]);
 	$id_company = trim($params[13]);
 
-
+	
 	// Search if any current lead with the same email already exists
-
 	$duped_id = get_db_value('id','tlead','email',$email);
 
-	if ($duped_id != ""){
+	if ( ($duped_id != "") OR ($fullname == "") OR ($email == "") ){
 			$result = 0;
 
 	} else {
