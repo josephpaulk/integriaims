@@ -106,6 +106,11 @@ table.databox, table.databox_color {
 	background: #eee;
 }
 
+table.databox td {
+	padding: 7px;
+}
+
+
 table.search-table {
 	margin-bottom: 20px;
 	margin-top: 10px;
@@ -241,7 +246,7 @@ div.report_info label {
 input {
 
 	padding: 5px;
-	border:1px solid #9A9B9D;
+	border:1px solid #cAcBcD;
 	height: 14px;
 	font: normal 0.9em Arial, sans-serif;
 	color:#666;
@@ -250,10 +255,13 @@ input {
 }
 
 textarea {
-	padding:2px;
-	font: normal 0.9em Arial, sans-serif;
-	border:1px solid #A9C4D6;
+	padding:5px;
+	font: normal 1em Courier, Arial, sans-serif;
+	border:1px solid #cAcBcD;
 	color:#666;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	width: 98%;
 }
 
 input.button {
@@ -1595,10 +1603,6 @@ div.pager input {
 
 #incident_inventories {
 	width: 230px;
-}
-
-textarea {
-	width: 99%;
 }
 
 label {

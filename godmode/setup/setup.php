@@ -61,6 +61,7 @@ if ($update) {
     $config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
     $config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
 	$config["lead_company_filter"] = get_parameter ("lead_company_filter", "");    
+	$config["lead_warning_time"] = get_parameter ("lead_warning_time", "7");    
 
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
@@ -79,7 +80,8 @@ if ($update) {
     update_config_token ("want_chat", $config["want_chat"]);
     update_config_token ("incident_creation_wu", $config["incident_creation_wu"]);
     update_config_token ("lead_company_filter", $config["lead_company_filter"]);
-    
+    update_config_token ("lead_warning_time", $config["lead_warning_time"]);
+
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
 
 	process_sql ("UPDATE tconfig SET value='".$config["language_code"]."' WHERE token='language_code'");
@@ -252,6 +254,8 @@ $table->data[15][0] = print_input_text ("lead_company_filter", $config["lead_com
 
 $table->data[15][0] .= print_help_tip (__("Use this to filter what company roles you want to show you as valid companies to attach a Lead, for example: 1,34,4 or just one, line: 12"), true);
 
+$table->data[15][1] = print_input_text ("lead_warning_time", $config["lead_warning_time"], '',
+	5, 255, true, __('Days to warn on inactive leads'));
 
 echo "<form name='setup' method='post'>";
 

@@ -32,11 +32,30 @@ if ($op2 == "add"){
 	process_sql ($sql, 'insert_id');
 }
 
+
+
+if ($op2 == "purge"){
+	$datetime =  date ("Y-m-d H:i:s");
+	$activity_id = get_parameter ("activity_id");
+
+	if ($id == 0)
+		return;
+
+	// TODO: Implement ACL
+	$sql = sprintf ('DELETE FROM tlead_activity WHERE id_lead = %d and id = %d', $id, $activity_id);
+	process_sql ($sql);
+
+	$datetime =  date ("Y-m-d H:i:s");
+	$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Deleted comments");
+	process_sql ($sql, 'insert_id');
+}
+
 // Add item form
 if($manager) {
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=activity&op2=add">';
 	echo "<h3>".__("Add activity")."</h3><p>";
-	echo "<textarea name='comments' style='margin-left: 10px; width:94%; height: 50px'>";
+
+	echo "<textarea name='comments' style='margin-left: 10px; width:92%; height: 210px'>";
 	echo "</textarea>";
 
 	echo '<div class="button" style="margin-left: 10px; width: 92%;">';
@@ -48,7 +67,7 @@ if($manager) {
 $sql = "SELECT * FROM tlead_activity WHERE id_lead = $id ORDER BY creation DESC";
 
 $activities = get_db_all_rows_sql ($sql);
-$activities = print_array_pagination ($activities, "index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=activities");
+$activities = print_array_pagination ($activities, "index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=activity");
 
 if ($activities !== false) {	
 	if (sizeof($activities) == 0){
@@ -69,6 +88,11 @@ if ($activities !== false) {
 			echo $id_usuario_nota;
 			echo "</a>";
 			echo " ".__("said on $timestamp");
+
+			// show delete activity only on owners
+			$owner = get_db_value ("owner", "tlead", "id", $id);
+			if ($owner == $config["id_user"])
+				echo "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=activity&op2=purge&activity_id=".$activity["id"]." '><img src='images/cross.png'></a>";
 			echo "</div>";
 
 			// Body

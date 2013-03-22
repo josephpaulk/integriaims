@@ -736,6 +736,7 @@ CREATE TABLE `tpending_mail` (
   `subject` text DEFAULT NULL,
   `body` text DEFAULT NULL,
   `attachment_list` text DEFAULT NULL,
+  `from` text DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -907,4 +908,12 @@ CREATE TABLE `tlead_history` (
   KEY `id_lead_idx` (`id_lead`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
+CREATE TABLE `tcrm_template` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `subject` varchar(250) DEFAULT NULL,
+  `description` mediumtext DEFAULT NULL,
+  `id_language` varchar(6) default NULL,
+  `id_company` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

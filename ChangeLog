@@ -1,3 +1,44 @@
+2013-03-22  Sancho Lerena <slerena@artica.es>
+
+	* include/styles/integria.css: Minor changes.
+
+	* include/integria_cron.php: Mail now uses optional from.
+
+	* include/functions_form.php: Added progress step (Invalid) on leads.
+
+	* include/functions_config.php: Added new token: Lead warning time.
+
+	* include/functions_calendar.php: Added new function: calendar_time_diff 
+	to show seconds passed from a given date.
+
+	* include/functions.php: integria_sendmail() now supports optional
+	parameter to do not include "global" header/footer and also an optional
+	parameter to define a different "from" address.
+
+	* operation/leads/lead_activity.php: Owners can delete activity records.
+
+	* operation/leads/template_manager.php: New CRM template manager to create
+	templates for emails.
+
+	* operation/leads/lead_detail.php: Improvements.
+
+	* operation/leads/lead_mail.php: New feature to send emails from here to leads
+	by using / editing a CRM template.
+
+	* operation/side_menu.php: Added the new CRM templates entry.
+
+	* operation/companies/company_detail.php: Delete a company from the from.
+
+	* images/products/integria_mini_logo.png,
+	images/products/artica.png: New graphs.
+
+	* integria_db.sql,
+	upgrade_to_3.1.sql: New table tcrm_template, new field "from" on tpending_mail.
+
+	* godmode/setup/setup.php: new lead warning value.
+
+	* godmode/setup/logviewer.php: Improved view.
+
 2013-03-13  Sancho Lerena <slerena@artica.es>
 
 	* include/styles/integria.css: Some improvements on tables and body

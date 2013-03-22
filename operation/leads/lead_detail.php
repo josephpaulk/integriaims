@@ -35,6 +35,7 @@ $create = (bool) get_parameter ('create');
 $update = (bool) get_parameter ('update');
 $delete = (bool) get_parameter ('delete');
 $get = (bool) get_parameter ('get');
+$make_owner = (bool) get_parameter ('make_owner');
 
 
 // Create
@@ -53,12 +54,13 @@ if ($create) {
 	$owner = (string) get_parameter ('owner');
 	$estimated_sale = (string) get_parameter ('estimated_sale');
 	$id_category = (int) get_parameter ('product');
+	$progress = (string) get_parameter ('progress');
 		
 	$sql = sprintf ('INSERT INTO tlead (modification, creation, fullname, phone, mobile,
-			email, position, id_company, description, company, country, id_language, owner, estimated_sale)
-			VALUE ("%s", "%s","%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s")',
+			email, position, id_company, description, company, country, id_language, owner, estimated_sale, id_category, progress)
+			VALUE ("%s", "%s","%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", %d, %d)',
 			date('Y-m-d H:m:i'), date('Y-m-d H:m:i'), $fullname, $phone, $mobile, $email, $position,
-			$id_company, $description, $company, $country, $id_language, $owner, $estimated_sale);
+			$id_company, $description, $company, $country, $id_language, $owner, $estimated_sale, $id_category, $Progress);
 
 	$id = process_sql ($sql, 'insert_id');
 
@@ -72,8 +74,35 @@ if ($create) {
 		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 		audit_db ($config['id_user'], $REMOTE_ADDR, "Lead created", "Lead named '$fullname' has been added");
 	}
-	$id = 0;
+	$id = false;
+	$new = false;
+	// Clean up country name
+	$country = "";
 	$create = false;
+}
+
+// Make owner
+if ($make_owner){
+
+	// Get company of current user
+	$id_company = get_db_value  ('id_company', 'tusuario', 'id_usuario', $config["id_user"]);
+	
+	if ($id_company == ""){
+		$id_company = 0;
+	}
+
+	// Update lead with current user/company to take ownership of the lead.
+	$sql = sprintf ('UPDATE tlead
+		SET id_company = %d, owner = "%s" WHERE id = %d',
+		$id_company,$config["id_user"], $id);
+	$result = process_sql ($sql);
+
+	// Add tracking info.
+	$datetime =  date ("Y-m-d H:i:s");
+	$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Take ownership of lead");
+	process_sql ($sql);
+	$make_owner = 0;
+	$id = 0;
 }
 
 // Update
@@ -236,6 +265,17 @@ if ($id || $new) {
 			echo '<li class="ui-tabs">';
 		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=history"><span>'.__("Tracking").'</span></a></li>';
 
+		// Show mail tab only on owned leads
+		$lead_owner = get_db_value ("owner", "tlead", "id", $id);
+
+		if ($lead_owner == $config["id_user"]){
+			if ($op == "mail")
+				echo '<li class="ui-tabs-selected">';
+			else
+				echo '<li class="ui-tabs">';
+			echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=mail"><span>'.__("Mail reply").'</span></a></li>';
+		}
+
 		echo '<li class="ui-tabs">';
 		echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id_company.'"><span>'.__("Company").'</span></a></li>';
 
@@ -255,6 +295,12 @@ if ($id || $new) {
 	// Load tab history/tracking
 	if ($op == "history"){
 		include "operation/leads/lead_history.php";
+		return;
+	}
+
+	// Load tab mail
+	if ($op == "mail"){
+		include "operation/leads/lead_mail.php";
 		return;
 	}
 
@@ -296,7 +342,7 @@ if ($id || $new) {
 		
 		$table->data[5][0] = print_input_text ('owner', $owner, '', 15, 15, true, __('Owner'));
 
-		// Show delete control.
+		// Show delete control if its owned by the user
 		if ($config["id_user"] == $owner){
 			$table->data[5][0] .= ' <a href="index.php?sec=customers&
 							sec2=operation/leads/lead_detail&
@@ -305,6 +351,12 @@ if ($id || $new) {
 							return false;">
 							<img src="images/cross.png"></a>';
 		}
+
+		// Show take control is owned by nobody
+		if ($owner == "")
+				$table->data[5][0] .=  "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+				$id."&make_owner=1'><img src='images/award_star_silver_1.png'></a>";
+
 
 		$table->data[5][1] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
 	'id_language', $id_language, '', '', '', true, false, false,
@@ -412,7 +464,7 @@ if ($id || $new) {
 	}
 
 	if ($search_text != "") {
-		$where_clause .= sprintf (' AND fullname LIKE "%%%s%%" OR description LIKE "%%%s%%" OR company LIKE "%%%s%%"', $search_text, $search_text, $search_text);
+		$where_clause .= sprintf (' AND fullname LIKE "%%%s%%" OR description LIKE "%%%s%%" OR company LIKE "%%%s%%" or email LIKE "%%%s%%"', $search_text, $search_text, $search_text, $search_text);
 	}
 
 	if ($id_company) {
@@ -464,10 +516,10 @@ if ($id || $new) {
 
 	$progress_values = lead_progress_array ();	
 
-	$table->data[1][0] = print_select ($progress_values, 'progress_major_than', $progress_major_than, '', __("None"), 0, true, 0, false, __('Progress above') );
+	$table->data[1][0] = print_select ($progress_values, 'progress_major_than', $progress_major_than, '', __("None"), 0, true, 0, false, __('Progress equal or above') );
 
 
-	$table->data[1][1] = print_select ($progress_values, 'progress_minor_than', $progress_minor_than, '', __("None"), 0, true, 0, false, __('Progress below') );
+	$table->data[1][1] = print_select ($progress_values, 'progress_minor_than', $progress_minor_than, '', __("None"), 0, true, 0, false, __('Progress equak or below') );
 
 
 	$table->data[1][2] = combo_kb_products ($id_category, true, 'Product type', true);
@@ -503,43 +555,65 @@ if ($id || $new) {
 		$table->data = array ();
 		$table->size = array ();
 		$table->style = array ();
+		$table->rowstyle = array ();
+
 		$table->style[0] = 'font-weight: bold';
 		$table->head = array ();
 		$table->head[0] = __('#');
-		$table->head[1] = __('Full name');
-		$table->head[2] = __('Product');
-		$table->head[3] = __('Managed by');
-		$table->head[4] = __('Progress');
-		$table->head[5] = __('Estimated sale');
-		$table->head[6] = __('Country');
-		$table->head[7] = __('Created/Updated');
-	
-		$table->size[5] = '100px;';
-		$table->size[4] = '130px;';
-		$table->style[7] = 'font-size: 9px;';
-		
+		$table->head[1] = __('Op');
+		$table->head[2] = __('Full name');
+		$table->head[3] = __('Product');
+		$table->head[4] = __('Managed by');
+		$table->head[5] = __('Progress');
+		$table->head[6] = __('Estimated sale');
+		$table->head[7] = __('Country');
+		$table->head[8] = __('Created/Updated');
+		$table->size[6] = '100px;';
+		$table->size[5] = '130px;';
+		$table->style[8] = 'font-size: 9px;';
 
 		foreach ($leads as $lead) {
 			$data = array ();
 			
+			// Detect is the lead is pretty old 
+			// Stored in $config["lead_warning_time"] in days, need to calc in secs for this
+
+			$config["lead_warning_time"]= 7; // days
+			$config["lead_warning_time"] = $config["lead_warning_time"] * 86400;
+
+			if (calendar_time_diff ($lead["modification"]) > $config["lead_warning_time"] ){
+				$style = "border: 1px dashed #ff0000; background: #ffD0D0";
+			} else {
+				$style = "";
+			}
+
 			$data[0] = "<b><a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
 				$lead['id']."'>#".$lead['id']."</a></b>";
- 			$data[1] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+
+
+			if ($lead['owner'] == "")
+				$data[1] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+				$lead['id']."&make_owner=1'><img src='images/award_star_silver_1.png'></a>";
+			else
+				$data[1] = "";
+
+ 			$data[2] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
 				$lead['id']."'>".$lead['fullname']."</a>";
 
-			$data[2] = print_product_icon ($lead['id_category'], true);
+			$data[3] = print_product_icon ($lead['id_category'], true);
 
-			$data[3] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$lead['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $lead['id_company'])."</a>";
+			$data[4] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$lead['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $lead['id_company'])."</a>";
 			if ($lead["owner"] != "")
-				$data[3] .= "<br><i>(" . $lead["owner"] . ")</i>";
+				$data[4] .= "<br><i>(" . $lead["owner"] . ")</i>";
 
-			$data[4] = translate_lead_progress ($lead['progress']) . " <i>(".$lead['progress']. "%)</i>";
-			$data[5] = format_numeric($lead['estimated_sale']);
-			$data[6] = $lead['country'];
-			$data[7] = "<span title='". $lead['creation'] . "'>" . human_time_comparation ($lead['creation']) . "</span>";
-			$data[7] .= " / ". human_time_comparation ($lead['modification']);
+			$data[5] = translate_lead_progress ($lead['progress']) . " <i>(".$lead['progress']. "%)</i>";
+			$data[6] = format_numeric($lead['estimated_sale']);
+			$data[7] = $lead['country'];
+			$data[8] = "<span title='". $lead['creation'] . "'>" . human_time_comparation ($lead['creation']) . "</span>";
+			$data[8] .= " / ". human_time_comparation ($lead['modification']);
 
 			array_push ($table->data, $data);
+			array_push ($table->rowstyle, $style);
 		}
 		print_table ($table);
 	}

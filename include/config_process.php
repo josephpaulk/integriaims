@@ -66,7 +66,6 @@ if ($config["error_log"] == 1){
 }
 
 $l10n = NULL;
-
 session_start();
 
 // User language selection prevails over system-wide defined language.

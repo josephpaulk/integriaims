@@ -761,6 +761,23 @@ function get_system_time () {
 	}
 }
 
+/*
+ 	int calendar_time_diff (utimestamp / formatted time string  
+ 	Return seconds passed since given date
+*/
+
+function calendar_time_diff ($timestamp) {
+	global $config;
+	
+	if (!is_numeric ($timestamp)) {
+		$timestamp = strtotime ($timestamp);
+	}
+	
+	$seconds = get_system_time () - $timestamp;
+
+	return $seconds;
+}
+
 function human_time_comparation ($timestamp) {
 	global $config;
 	

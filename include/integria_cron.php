@@ -570,7 +570,12 @@ function run_mail_queue () {
 			$transport->setPassword($config["smtp_pass"]);
 			$mailer = Swift_Mailer::newInstance($transport);
 			$message = Swift_Message::newInstance($email["subject"]);
-			$message->setFrom($config["mail_from"]);
+			
+			if ($email["from"] == "")
+				$message->setFrom($config["mail_from"]);
+			else
+				$message->setFrom($email["from"]);
+
 			$message->setTo(ascii_output($email['recipient']));
 			$message->setBody($email['body'], 'text/plain', 'utf-8');
 

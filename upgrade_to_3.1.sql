@@ -57,3 +57,14 @@ CREATE TABLE `tlead_history` (
   KEY `id_lead_idx` (`id_lead`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `tcrm_template` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` mediumtext DEFAULT NULL,
+  `subject` varchar(250) DEFAULT NULL,
+  `id_language` varchar(6) default NULL,
+  `id_company` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE tpending_mail ADD `from` text DEFAULT NULL;

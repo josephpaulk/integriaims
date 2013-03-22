@@ -232,6 +232,9 @@ if ($id) {
 		if($writter) {
 			$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Company name'));
 			
+			if (dame_admin($config["id_user"]))
+				$table->data[0][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&delete_company=1'><img src='images/cross.png'></a>";
+
 			$table->data[0][1] = combo_groups_visible_for_me ($config["id_user"], "id_group", 0, "VR", $id_group, true, true);
 			
 			

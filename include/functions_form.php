@@ -1119,7 +1119,8 @@ function lead_progress_array (){
 	$lead_progress[100] = __("Closed. Not response or dead.");
 	$lead_progress[101] = __("Closed. Lost.");
 	$lead_progress[102] = __("Closed. Success.");
-
+	$lead_progress[102] = __("Closed. Invalid or N/A.");
+	
 	return $lead_progress;
 }
 ?>
