@@ -45,7 +45,7 @@ if ($send) {
 		integria_sendmail ($to, $subject, $mail, false, "", $from, true);
 
 		if ($cco != "")
-		//	integria_sendmail ($cco, $subject, $mail, false, "", $from, true);
+			integria_sendmail ($cco, $subject, $mail, false, "", $from, true);
 
 		// Lead update
 		if ($lead["progress"] == 0 ){
