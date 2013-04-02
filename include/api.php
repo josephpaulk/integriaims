@@ -53,6 +53,13 @@ if(!$correct_login) {
 
 switch ($op){
 
+	case "create_lead":
+	{
+		$params = explode($token, $params);
+		echo api_create_lead ($return_type, $user, $params);
+		break;
+	}
+
 	case "create_user":
 	{
 		$params = explode($token, $params);

@@ -136,3 +136,66 @@ CREATE TABLE `tobject_field_data` (
   `data` text default NULL,
   PRIMARY KEY  (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Sancho 29 Marzo 2013
+
+
+CREATE TABLE `tlead` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `id_company` mediumint(8) unsigned NOT NULL,
+  `id_language` varchar(6) default NULL,
+  `id_category` mediumint(8) unsigned default NULL,
+  `owner` varchar(60) default NULL,
+  `fullname` varchar(150) DEFAULT NULL,
+  `email` tinytext  default NULL,
+  `phone` tinytext  default NULL,
+  `mobile` tinytext  default NULL,
+  `position` tinytext  default NULL,
+  `company` tinytext  default NULL,
+  `country` tinytext  default NULL,
+  `description` mediumtext DEFAULT NULL,
+  `creation` datetime NOT NULL default '0000-00-00 00:00:00',  
+  `modification` datetime NOT NULL default '0000-00-00 00:00:00',  
+  `progress` mediumint(5) NULL default 0,
+  `estimated_sale` mediumint NULL default 0,
+  PRIMARY KEY  (`id`),
+  KEY `id_company_idx` (`id_company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tlead_activity` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `id_lead` mediumint(8) unsigned NOT NULL,
+  `written_by` mediumtext DEFAULT NULL,
+  `description` mediumtext DEFAULT NULL,
+  `creation` datetime NOT NULL default '0000-00-00 00:00:00',  
+  PRIMARY KEY  (`id`),
+  KEY `id_lead_idx` (`id_lead`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tlead_history` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `id_lead` mediumint(8) unsigned NOT NULL,
+  `id_user` mediumtext DEFAULT NULL,
+  `description` mediumtext DEFAULT NULL,
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',  
+  PRIMARY KEY  (`id`),
+  KEY `id_lead_idx` (`id_lead`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tcrm_template` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `description` mediumtext DEFAULT NULL,
+  `subject` varchar(250) DEFAULT NULL,
+  `id_language` varchar(6) default NULL,
+  `id_company` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE tpending_mail ADD `from` text DEFAULT NULL;
+
+UPDATE tconfig set `value`= '4.0' WHERE `token` = "db_scheme_version";
+UPDATE tconfig set `value`= '130330' WHERE `token` = "db_scheme_build";
+
+ALTER TABLE tattachment ADD `id_lead` bigint(20) NOT NULL default '0';
+ALTER TABLE tattachment ADD `timestamp` date NOT NULL default '0000-00-00';

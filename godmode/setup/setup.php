@@ -83,7 +83,9 @@ if ($update) {
     $config["iw_creator_enabled"] = get_parameter ("iw_creator_enabled", 0);
     $config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
     $config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
-	    
+	$config["lead_company_filter"] = get_parameter ("lead_company_filter", "");    
+	$config["lead_warning_time"] = get_parameter ("lead_warning_time", "7");    
+
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
 		$config["pass_size"] = get_parameter ("pass_size", 4);
@@ -100,6 +102,8 @@ if ($update) {
     update_config_token ("timezone", $config["timezone"]);	
     update_config_token ("want_chat", $config["want_chat"]);
     update_config_token ("incident_creation_wu", $config["incident_creation_wu"]);
+    update_config_token ("lead_company_filter", $config["lead_company_filter"]);
+    update_config_token ("lead_warning_time", $config["lead_warning_time"]);
 
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
 
@@ -156,7 +160,7 @@ $config['language_code'] = get_db_value ('value', 'tconfig', 'token', 'language_
 
 $crontask = get_db_sql ("SELECT `value` FROM tconfig WHERE `token` = 'crontask'");
 
-echo "<h2>".__('Setup')."</h2>";
+echo "<h2>".__('General setup')."</h2>";
 
 if ($crontask == "")
 	echo "<h2 class=error>".__("Crontask not installed. Please check documentation!")."</h2>";
@@ -267,6 +271,15 @@ $table->data[14][1] = print_select ($newsletter_options, "want_chat", $config["w
 
 
 $table->data[14][0] = print_select ($newsletter_options, "incident_creation_wu", $config["incident_creation_wu"], '','','',true, 0, true, __('Editor adds a WU on incident creation'));
+
+
+$table->data[15][0] = print_input_text ("lead_company_filter", $config["lead_company_filter"], '',
+	20, 255, true, __('Lead company filter IDs'));
+
+$table->data[15][0] .= print_help_tip (__("Use this to filter what company roles you want to show you as valid companies to attach a Lead, for example: 1,34,4 or just one, line: 12"), true);
+
+$table->data[15][1] = print_input_text ("lead_warning_time", $config["lead_warning_time"], '',
+	5, 255, true, __('Days to warn on inactive leads'));
 
 echo "<form name='setup' method='post'>";
 

@@ -185,20 +185,24 @@ if ($id || $new_role) {
 		$table->size = array ();
 		$table->style = array ();
 		$table->style[0] = 'font-weight: bold';
-		$table->head[0] = __('Name');
-		$table->head[1] = __('Description');
+		$table->style[1] = 'font-weight: bold';
+		$table->head[0] = __('ID');
+		$table->head[1] = __('Name');
+		$table->head[2] = __('Description');
 		if(give_acl ($config["id_user"], $id_group, "VM")) {
-			$table->head[2] = __('Delete');
+			$table->head[3] = __('Delete');
 		}
 		
 		foreach ($roles as $role) {
 			$data = array ();
-			
-			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_role&id=".
+			$data[0] = $role["id"];
+
+ 			$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_role&id=".
 				$role["id"]."'>".$role["name"]."</a>";
-			$data[1] = substr ($role["description"], 0, 70)."...";
-			if(give_acl ($config["id_user"], $id_group, "VM")) {
-				$data[2] = '<a href="index.php?sec=customers&
+			$data[2] = substr ($role["description"], 0, 70)."...";
+
+			if (give_acl ($config["id_user"], $id_group, "VM")) {
+				$data[3] = '<a href="index.php?sec=customers&
 							sec2=operation/companies/company_role&
 							delete_role=1&id='.$role['id'].'"
 							onClick="if (!confirm(\''.__('Are you sure?').'\'))

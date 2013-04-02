@@ -15,16 +15,18 @@
 
 body {
 
-	font: 0.80em  Arial, 'Trebuchet MS', Arial, Sans-serif;
+	font: 0.80em  Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
 	background: #ffffff;
-	color: #666666;
+	color: #666;
 	text-align: center;
+	font-weight: 300;
 	background: url(../../images/greyback.gif);
 }
 
 td, th {
-	font: 0.80em  Arial, 'Trebuchet MS', Arial, Sans-serif;
-	color: #555;
+	font: 0.80em  Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
+	color: #666;
+	font-weight: 300;
 	padding: 1px;
 	line-height: 22px;
 }
@@ -104,10 +106,10 @@ table.databox, table.databox_color {
 	background: #eee;
 }
 
-table.databox_color_without_line {
-
-	background: #eee;
+table.databox td {
+	padding: 7px;
 }
+
 
 table.search-table {
 	margin-bottom: 20px;
@@ -147,6 +149,10 @@ table.listing td {
 	padding-top: 3px;
 	padding-bottom: 3px;
 	margin-left: 5px;
+}
+
+table.listing tr {
+	border-bottom: 1px solid #ececec;
 }
 
 td {
@@ -249,10 +255,13 @@ input {
 }
 
 textarea {
-	padding:2px;
-	font: normal 0.9em Arial, sans-serif;
-	border:1px solid #A9C4D6;
+	padding:5px;
+	font: normal 1em Courier, Arial, sans-serif;
+	border:1px solid #cAcBcD;
 	color:#666;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	width: 98%;
 }
 
 input.button {
@@ -2041,7 +2050,7 @@ td.login_button {
 }
 
 .upfile_input {
-	heigth: 50px;
+	heigth: 150px;
 }
 
 

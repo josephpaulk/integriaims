@@ -37,17 +37,16 @@ if (!file_exists($file_name)){
 	echo "<h2 class=error>".__("Cannot find file"). "(".$file_name;
 	echo ")</h1>";
 }  else {
-	if (filesize ($file_name) > 1120000) {
-		echo "<h2 class=error>".__("File is too large (> 1MB)"). "(".$file_name;
-		echo ")</h1>";
-	} else {
-		$data = file_get_contents ($file_name);			
-		echo "<h2>$file_name (".format_numeric(filesize ($file_name)/1024)." KB) </h2>";
-		echo "<br><a href='index.php?sec=godmode&sec2=godmode/setup/logviewer&delete=1'>".__("Delete logfile")."</a><br>";
-		echo "<textarea style='width: 100%; height: 500px;' name='$file_name'>";
-		echo $data;
-		echo "</textarea><br><br>";
-	}
+
+	$filesize = filesize($file_name);
+	$offset = ceil(($filesize / 4 ) * 3); // read only from the 3/4 part of file
+	$data = file_get_contents ($file_name, NULL, NULL, $offset);
+
+	echo "<h2>$file_name ".__("Reading from byte"). " " .$offset ."</h2>";
+	echo "<br><a href='index.php?sec=godmode&sec2=godmode/setup/logviewer&delete=1'>".__("Delete logfile")."</a><br>";
+	echo "<textarea style='width: 95%; height: 500px;' name='$file_name'>";
+	echo $data;
+	echo "</textarea><br><br>";
 }
 
 ?>

@@ -164,6 +164,14 @@ function load_config(){
 		$config["want_chat"] = 0;
 	}
 
+	if (!isset($config["lead_company_filter"])){
+		$config["lead_company_filter"] = "";
+	}
+
+	if (!isset($config["lead_warning_time"])){
+		$config["lead_warning_time"] = "7";
+	}
+
 	if (!isset($config["incident_creation_wu"])){
                 $config["incident_creation_wu"] = 0;
         }

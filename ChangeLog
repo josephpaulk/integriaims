@@ -1,3 +1,57 @@
+2013-04-02  Sancho Lerena <slerena@artica.es>
+
+	* images/lang: New icons for language.
+
+	* images/products/artica.png,
+	images/products/integria_mini_logo.png: Added a few icons for products.
+
+	* include/js/jquery-validate.js: Added validate addon for jquery (not used yet!).
+
+	* operation/contacts/contact_export.php: This allows to export to CSV a selection of contacts.
+
+	* operation/leads,
+	operation/leads/lead_activity.php,
+	operation/leads/template_manager.php,
+	operation/leads/lead_export.php,
+	operation/leads/lead_history.php,
+	operation/leads/lead_detail.php,
+	operation/leads/lead_files.php,
+	operation/leads/lead_mail.php: Lead management. New code, fully functional and operational.
+
+	* extras/migrate.sql: Updated sql.
+
+	* godmode/setup/setup.php: Added a few options for lead mangement.
+
+	* images/icon_lead.png: New icon for lead.
+
+	* include/api.php: Upgraded the api to support lead creation from api.
+
+	* include/integria_cron.php: Mail now uses optional from.
+
+	* include/functions_form.php: Added progress step (Invalid) on leads.
+
+	* include/functions_config.php: Added new token: Lead warning time.
+
+	* include/functions_calendar.php: Added new function: calendar_time_diff 
+	to show seconds passed from a given date.
+
+	* include/functions.php: integria_sendmail() now supports optional
+	parameter to do not include "global" header/footer and also an optional
+	parameter to define a different "from" address.
+
+	* include/styles/integria.css: New styles.
+
+	* operation/side_menu.php: New menu entries for lead management.
+
+	* integria_db.sql, 
+	integria_dbdata.sql: Upgraded SQL code.
+
+	* operation/companies/company_detail.php: Delete a company from the from.
+
+	* godmode/setup/logviewer.php: Improved view.
+
+	Some of this code has been merged from 3.1 branch. Has been tested and it works 100%.
+
 2013-02-12  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_detail.php: New track status

@@ -616,13 +616,15 @@ function render_priority ($pri) {
 }
 
 
-function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments = false, $code = "") {
+function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments = false, $code = "", $from = "", $remove_header_footer =0 ) {
 	global $config;
 
 	if ($to == '')
 		return false;
 
 	$to = trim(safe_output ($to));
+	$from = trim(safe_output ($from));
+
 	$config["mail_from"] = trim($config["mail_from"]);
 
 	$current_date = date ("Y/m/d H:i:s");
@@ -632,13 +634,13 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	$body = safe_output ($body);
 	$subject = ascii_output ($subject);
 
-	// Add global header and footer to mail
-
-	$body = safe_output($config["HEADER_EMAIL"]). "\r\n". $body . "\r\n". safe_output ($config["FOOTER_EMAIL"]);
+	if ($remove_header_footer == 0)
+		// Add global header and footer to mail
+		$body = safe_output($config["HEADER_EMAIL"]). "\r\n". $body . "\r\n". safe_output ($config["FOOTER_EMAIL"]);
 
 	// Add custom code to the end of message subject (to put there ID's).
 	if ($code != ""){
-		$subject = $subject . " [$code]";
+		$subject = "[$code] ".$subject;
 		// $body = $body."\r\nNOTICE: Please don't alter the SUBJECT when answer to this mail, it contains a special code who makes reference to this issue.";
 	}
 
@@ -646,8 +648,7 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	// without HTML encoding. THis is because it is not to be rendered on a browser, 
 	// it will be directly to a SMTP connection.
 
-	process_sql ("INSERT INTO tpending_mail (date, attempts, status, recipient, subject, body, attachment_list) VALUES ('".$current_date."', 0, 0, '".$to."', '".mysql_real_escape_string($subject)."', '".mysql_real_escape_string($body)."', '".$attachments."')");
-
+	process_sql ("INSERT INTO tpending_mail (date, attempts, status, recipient, subject, body, attachment_list, `from`) VALUES ('".$current_date."', 0, 0, '".$to."', '".mysql_real_escape_string($subject)."', '".mysql_real_escape_string($body)."', '".$attachments."', '".$from."')");
 }
 
 function topi_rndcode ($length = 6) {

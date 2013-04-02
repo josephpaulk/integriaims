@@ -281,8 +281,9 @@ if ($id || $new_contact) {
 	if ($id_company) {
 		$where_clause .= sprintf (' AND id_company = %d', $id_company);
 	}
+	$params = "&search_text=$search_text&id_company=$id_company";
 
-	$table->width = '400px';
+	$table->width = '550px';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
@@ -291,15 +292,18 @@ if ($id || $new_contact) {
 	$table->data[0][1] = print_select (get_companies (), 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	
+	$table->data[0][2] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/contacts/contact_export&param=$params&render=1&raw_output=1&clean_output=1'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
+
 	echo '<form method="post">';
 	print_table ($table);
 	echo '</form>';
 
 	$sql = "SELECT tcompany_contact.* FROM tcompany_contact, tcompany $where_clause ORDER BY id_company, fullname";
 
+	
 	$contacts = get_db_all_rows_sql ($sql);
 
-	$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail");
+	$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail&params=$params");
 
 	if ($contacts !== false) {
 		unset ($table);
