@@ -33,7 +33,7 @@ if ($search_users) {
 		return;
 	
 	foreach ($users as $user) {
-		if(preg_match('/'.$string.'/', $user['id_usuario']) || preg_match('/'.$string.'/', $user['nombre_real'])|| preg_match('/'.$string.'/', $user['num_employee'])) {
+		if(preg_match('/'.$string.'/i', $user['id_usuario']) || preg_match('/'.$string.'/i', $user['nombre_real'])|| preg_match('/'.$string.'/i', $user['num_employee'])) {
 			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
 		}
 	}
@@ -54,7 +54,7 @@ if ($search_users_role) {
 		return;
 
 	foreach ($users as $user) {
-		if(preg_match('/'.$string.'/', $user['id_user'])) {
+		if(preg_match('/'.$string.'/i', $user['id_user'])) {
 			echo $user['id_user'] . "/" . get_db_value ("name","trole","id",$user["id_role"]). "\n";
 		}
 	}

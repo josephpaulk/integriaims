@@ -111,6 +111,8 @@ CREATE TABLE `tattachment` (
   `id_task` int(10) NULL default 0,
   `id_kb` bigint(20) NOT NULL default '0',
   `id_lead` bigint(20) NOT NULL default '0',
+  `id_company` bigint(20) NOT NULL default '0',
+  `id_todo` bigint(20) NOT NULL default '0',
   `id_usuario` varchar(60) NOT NULL default '',
   `filename` varchar(255) NOT NULL default '',
   `description` varchar(150) default '',
@@ -382,22 +384,39 @@ CREATE TABLE `trole_people_project` (
        ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Workorder reuses old todo table
 CREATE TABLE `ttodo` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(250) default NULL,
+  `name` tinytext default NULL,
   `progress` int(11) NOT NULL,
   `assigned_user` varchar(60)  NOT NULL default '',
   `created_by_user` varchar(60)  NOT NULL default '',
   `priority` int(11) NOT NULL,
-  `timestamp` datetime NOT NULL default '2000-01-01 00:00:00',
   `description` mediumtext,
   `last_update` datetime NOT NULL default '2000-01-01 00:00:00',
   `id_task` int(10) default NULL,
+  `start_date` datetime NOT NULL default '2000-01-01 00:00:00',
+  `end_date` datetime NOT NULL default '2000-01-01 00:00:00',
+  `validation_date` datetime NOT NULL default '2000-01-01 00:00:00',
+  `need_external_validation` tinyint unsigned NOT NULL DEFAULT 0,
+  `id_wo_category` int(10) default NULL,
   PRIMARY KEY  (`id`),
   KEY `tt_idx_1` (`assigned_user`),
   KEY `tt_idx_2` (`created_by_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Progress on workorders could be:
+-- 0 pending (not started, postponed, old)
+-- 1 on progress (currently working on)
+-- 2 finished (done, for my side)
+-- 3 validated (done, for other side)
+
+CREATE TABLE `two_category` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `name` text default NULL,
+  `icon` text default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tmilestone` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -510,9 +529,13 @@ CREATE TABLE `tcompany` (
   `name` varchar(100) NOT NULL default '',
   `address` varchar(300) NOT NULL default '', 
   `fiscal_id` varchar(250) NULL default NULL,
+  `country` tinytext NULL default NULL,
+  `website` tinytext NULL default NULL,
   `comments` text NULL default NULL,
   `id_company_role` mediumint(8) unsigned NOT NULL,
   `id_grupo` mediumint(8) unsigned DEFAULT 0,
+  `id_parent` mediumint(8) unsigned default NULL,
+  `manager` varchar(150) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -699,6 +722,12 @@ CREATE TABLE  `tprofile` (
   `wr` tinyint(1) NOT NULL default '0',
   `ww` tinyint(1) NOT NULL default '0',
   `wm` tinyint(1) NOT NULL default '0',
+  `cr` tinyint(1) NOT NULL default '0',
+  `cw` tinyint(1) NOT NULL default '0',
+  `cm` tinyint(1) NOT NULL default '0',
+  `fr` tinyint(1) NOT NULL default '0',
+  `fw` tinyint(1) NOT NULL default '0',
+  `fm` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

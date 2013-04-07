@@ -312,8 +312,12 @@ if ($id_project) {
 	echo $total_planned . " (".format_numeric ($total_planned/$config["hours_perday"]). " ". __("days"). ")";
 	
 	echo '<td><b>'.__('Project costs').' </b>';
+
+	// Costs (client / total)
+	$real = project_workunit_cost ($id_project, 0);
 	$external = project_cost_invoices ($id_project);
 	$total_project_costs = $external + $real;
+
 	echo format_numeric( $total_project_costs) ." ". $config["currency"];
 	if ($external > 0)
 		echo "<span title='External costs to the project'> ($external)</span>";	

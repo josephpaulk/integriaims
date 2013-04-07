@@ -313,7 +313,7 @@ if ($id || $new_contact) {
 		$table->size = array ();
 		$table->size[3] = '40px';
 		$table->style = array ();
-		$table->style[] = 'font-weight: bold';
+		// $table->style[] = 'font-weight: bold';
 		$table->head = array ();
 		$table->head[0] = __('Full name');
 		$table->head[1] = __('Company');

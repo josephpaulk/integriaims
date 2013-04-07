@@ -101,6 +101,7 @@
 	echo '<table width="99%" class="listing">';
 	echo "<th>".__('Profile');
 	echo "<th>".__('User ID');
+	echo "<th>".__('Fullname');
 	echo "<th>".__('Company');
 	echo "<th>".__('Reports');
 	echo "<th>".__('Total hours for this month');
@@ -135,6 +136,8 @@
 			echo "<b>".$usuario["nombre_real"] . "</b><br>";
 			echo "<i>".$usuario["comentarios"] . "</i><br>";
 
+			// TODO - Move this to enterprise code.
+
 			if ($config["enteprise"] == 1){
 				echo "<font size=1px>";
 				$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
@@ -167,6 +170,9 @@
 			if (give_acl ($config["id_user"], 0, "IM")){
 				echo "</a>";
 			}
+			
+			echo "<td style='font-size:9px'>".$usuario["nombre_real"]."</td>";
+
 			
 			$company_name = (string) get_db_value ('name', 'tcompany', 'id', $usuario['id_company']);
 			

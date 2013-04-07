@@ -42,7 +42,7 @@ if (isset($_GET["upload"])) {
 		$size = filesize ($file_tmp);
 		$description = get_parameter ("description", "");
 
-		$sql = sprintf("INSERT INTO tattachment (id_lead, id_usuario, filename, description, timestamp, size) VALUES (%d, '%s', '%s', '%s', '%s', %d)", $id, $config["id_user"], $filename, $description, date('Y-m-d H:i:s'), $size);
+		$sql = sprintf("INSERT INTO tattachment (id_company, id_usuario, filename, description, timestamp, size) VALUES (%d, '%s', '%s', '%s', '%s', %d)", $id, $config["id_user"], $filename, $description, date('Y-m-d H:i:s'), $size);
 		$id_attach = process_sql ($sql, 'insert_id');
 
 		$filename_encoded = $id_attach . "_" . $filename;
@@ -68,28 +68,27 @@ if (isset($_GET["upload"])) {
 
 // Control to upload file
 
-
 echo '<a href="javascript:;" onclick="$(\'#upload_div\').slideToggle (); return false">';
 echo '<h3>'.__('Upload a new file').'</h3>';
 echo '</a>';
 echo '<div id="upload_div" style="padding: 20px; margin: 0px; display: none;">';
 $target_directory = 'attachment';
-$action = "index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=files&upload=1";				
+$action = "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=files&upload=1";				
 $into_form = "<input type='hidden' name='directory' value='$target_directory'><b>Description</b>&nbsp;<input type=text name=description size=60>";
 print_input_file_progress($action,$into_form,'','sub next');	
 echo '</div>';
 
 // List of lead attachments
 
-$sql = "SELECT * FROM tattachment WHERE id_lead = $id ORDER BY timestamp DESC";
+$sql = "SELECT * FROM tattachment WHERE id_company = $id ORDER BY timestamp DESC";
 $files = get_db_all_rows_sql ($sql);	
-$files = print_array_pagination ($files, "index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=files");
+$files = print_array_pagination ($files, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=files");
 
 echo "<br>";
 
 if ($files !== false) {
 
-	echo "<h3>". __('Current files on this lead')."</h3>";
+	echo "<h3>". __('Current files on this company')."</h3>";
 
 	unset ($table);
 	$table->width = "99%";
@@ -117,7 +116,7 @@ if ($files !== false) {
 
 		// Todo. Delete files owner of lead and admins only
 		if ( (dame_admin($config["id_user"])) || ($file["id_usuario"] == $config["id_user"]) ){
-			$data[4] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=files&deletef=".$file["id_attachment"]."'><img src='images/cross.png'></a>";
+			$data[4] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=files&deletef=".$file["id_attachment"]."'><img src='images/cross.png'></a>";
 		}
 
 		array_push ($table->data, $data);

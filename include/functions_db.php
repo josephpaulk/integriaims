@@ -1156,7 +1156,7 @@ function incidents_active_user ($id_user) {
 }
 
 function todos_active_user ($id_user) {
-	$sql = "SELECT COUNT(*) FROM ttodo WHERE assigned_user = '$id_user'";
+	$sql = "SELECT COUNT(*) FROM ttodo WHERE assigned_user = '$id_user' AND progress < 1";
 	return get_db_sql ($sql);
 }
 
@@ -1308,26 +1308,21 @@ function get_user_groups_for_sql ($id_user, $access_profile = "VR"){
  * 
  * @return A list of user Ids of the same project that the user is project manager.
  */
-function get_project_manager_users($id_user = 0) {
+function get_project_manager_users($id_user = "") {
 	global $config;
 
 	$values = array ();
 
-	if ($id_user == 0) {
+	if ($id_user == "") {
 		$id_user = $config['id_user'];
 	}
-	
-	// Default project manager role id is 1
-	$project_manager_role = 1;
 	
 	$sql = sprintf('SELECT id_user FROM trole_people_project WHERE
 			id_user <> "%s" AND
 			id_project IN 
-				(SELECT id_project FROM trole_people_project WHERE 
-					id_user = "%s" AND
-					id_role = %s)', $id_user, $id_user, $project_manager_role);
+				(SELECT id FROM tproject  WHERE 
+					id_owner = "%s")', $id_user, $id_user);
 
-	
 	$users = get_db_all_rows_sql($sql);
 	
 	if($users === false) {
@@ -1381,6 +1376,7 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 	else {
 		$proj_users_condition = '';
 	}
+
 	
 	// Group All has id = 1
 	if (give_acl ($id_user, 1, $access) && $both) {
@@ -2166,4 +2162,6 @@ function return_user_report_types ($type){
 
 	}
 }
+
+
 ?>

@@ -1102,4 +1102,32 @@ function lead_progress_array (){
 	
 	return $lead_progress;
 }
+
+// Returns the "legend" for a given WO progress
+// ----------------------------------------------
+
+function translate_wo_status ($progress = 0){
+
+	$wo_progress = wo_status_array();
+
+	if (isset($wo_progress[$progress]))
+		return $wo_progress[$progress];
+	else
+		return __("Other");
+}
+
+// Return an array with current legends for WO status
+// ------------------------------------------------------
+
+function wo_status_array ($mode = 0){
+
+	$wo_progress = array();
+	$wo_progress[0] = __("Pending");
+	$wo_progress[1] = __("Finished");
+	
+	if ($mode == 0)
+		$wo_progress[2] = __("Validated");
+	return $wo_progress;
+}
+
 ?>

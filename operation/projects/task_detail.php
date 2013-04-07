@@ -265,6 +265,9 @@ if ($id_task != -1) {
 	$table->rowspan[0][2] = 5;
 
 	$image = graph_workunit_task (200, 170, $id_task);
+
+	// Small hack to have a better graph here
+	$image = "<div style='border: 1px solid #cfcfcf; background: #ffffff'>" . $image . "</div>";
 	$table->data[0][2] = print_label (__('Workunit distribution'), '', '', true, $image);
 }
 

@@ -192,6 +192,13 @@ CREATE TABLE `tcrm_template` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `two_category` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `name` text default NULL,
+  `icon` text default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 ALTER TABLE tpending_mail ADD `from` text DEFAULT NULL;
 
 UPDATE tconfig set `value`= '4.0' WHERE `token` = "db_scheme_version";
@@ -199,3 +206,31 @@ UPDATE tconfig set `value`= '130330' WHERE `token` = "db_scheme_build";
 
 ALTER TABLE tattachment ADD `id_lead` bigint(20) NOT NULL default '0';
 ALTER TABLE tattachment ADD `timestamp` date NOT NULL default '0000-00-00';
+ALTER TABLE tattachment ADD `id_company` bigint(20) NOT NULL default '0';
+ALTER TABLE tattachment ADD `id_todo` bigint(20) NOT NULL default '0';
+ALTER TABLE ttodo ADD `start_date` datetime NOT NULL default '2000-01-01 00:00:00';
+ALTER TABLE ttodo ADD `end_date` datetime NOT NULL default '2000-01-01 00:00:00';
+ALTER TABLE ttodo ADD `validation_date` datetime NOT NULL default '2000-01-01 00:00:00';
+ALTER TABLE ttodo ADD `need_external_validation` tinyint unsigned NOT NULL DEFAULT 0;
+ALTER TABLE ttodo ADD `id_wo_category` int(10) default NULL;
+
+ALTER TABLE tcompany ADD `country` tinytext NULL default NULL;
+ALTER TABLE tcompany ADD `website` tinytext NULL default NULL;
+ALTER TABLE tcompany ADD `id_parent` mediumint(8) unsigned default NULL;
+ALTER TABLE tcompany ADD `manager` varchar(150) NOT NULL default '';
+
+CREATE TABLE `ttranslate_string` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `lang` tinytext NOT NULL,
+  `string` text NOT NULL,
+  `translation` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE tprofile ADD `cr` tinyint(1) NOT NULL default '0';
+ALTER TABLE tprofile ADD `cw` tinyint(1) NOT NULL default '0';
+ALTER TABLE tprofile ADD `cm` tinyint(1) NOT NULL default '0';
+
+ALTER TABLE tprofile ADD `fr` tinyint(1) NOT NULL default '0';
+ALTER TABLE tprofile ADD `fw` tinyint(1) NOT NULL default '0';
+ALTER TABLE tprofile ADD `fm` tinyint(1) NOT NULL default '0';

@@ -45,7 +45,7 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 	$query_del2 = "DELETE FROM tusuario WHERE id_usuario = '".$nombre."'";
 	$resq2 = mysql_query($query_del2);
 
-	if ((! $resq1) OR (! $resq2))
+	if (! $resq2) 
 		echo "<h3 class='error'>".__('Could not be deleted')."</h3>";
 	else
 		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
@@ -123,9 +123,13 @@ foreach($resq1 as $rowdup){
 	echo "<td style='font-size:9px'>" . $realname;	
 	$company_name = (string) get_db_value ('name', 'tcompany', 'id', $id_company);	
 	echo "<td>".$company_name."</td>";
-	echo "<td style='font-size:9px'>".$fecha_registro;
+
+
+	echo "<td style='font-size:9px'>".human_time_comparation($fecha_registro);
 	echo "<td>";
 	print_user_avatar ($nombre, true);
+	echo "&nbsp;";
+
 	if ($config["enteprise"] == 1){
 		$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
 		$result=mysql_query($sql1);

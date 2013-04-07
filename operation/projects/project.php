@@ -177,14 +177,14 @@ $table->class = 'listing';
 $table->style = array ();
 $table->style[0] = '';
 $table->align = array ();
-$table->align[8] = 'center';
+$table->align[7] = 'center';
 $table->head = array ();
 $table->head[0] = __('Name');
 // PG: Abbreviation for "Project group"
 $table->head[1] = __ ('PG');
-$table->head[2] = __('Completion');
-$table->head[3] = __('Deviation');
-$table->head[4] = __('Tasks');
+$table->head[2] = __('Manager');
+$table->head[3] = __('Completion');
+$table->head[4] = __('Deviation');
 $table->head[5] = __('People');
 $table->head[6] = __('Time used');
 $table->head[7] = __('Cost');
@@ -219,7 +219,7 @@ foreach ($projects as $project) {
 	$data = array ();
 	
 	// Project name
-	$data[0] = '<a href="index.php?sec=projects&sec2=operation/projects/task&id_project='.$project['id'].'">'.$project['name'].'</a>';
+	$data[0] = '<a href="index.php?sec=projects&sec2=operation/projects/project_detail&id_project='.$project['id'].'">'.$project['name'].'</a>';
 	
 	$data[1] = '';
 	// Project group
@@ -232,23 +232,24 @@ foreach ($projects as $project) {
 		$data[1] .= '</a>';
 	}
 
+	$data[2] = $project["id_owner"];
+
 	if ($project["start"] == $project["end"]) {
-		$data[2] = '<img src="images/comments.png"> '.__('Unlimited');
+		$data[3] = '<img src="images/comments.png"> '.__('Unlimited');
 	} else {
 		$completion = format_numeric (calculate_project_progress ($project['id']));
-		$data[2] = progress_bar($completion, 90, 20);
+		$data[3] = progress_bar($completion, 90, 20);
 	}
 
 	// Deviation
 	$deviation_percent = calculate_project_deviation ($project['id']);
 	if ($deviation_percent > 0)
-		$data[3] = $deviation_percent . "%";
+		$data[4] = $deviation_percent . "%";
 	else
-		$data[3] = "--";
+		$data[4] = "--";
 	
 
 	// Total task / People
-	$data[4] = get_db_value ('COUNT(*)', 'ttask', 'id_project', $project['id']);
 	$data[5] = get_db_value ('COUNT(*)', 'trole_people_project', 'id_project', $project['id']);
 
 	// Time used
@@ -277,7 +278,7 @@ foreach ($projects as $project) {
 		$project['id']);
 	$timestamp = get_db_sql ($sql);
 	if ($timestamp != "")
-		$data[8] = human_time_comparation ($timestamp);
+		$data[8] = "<span style='font-size: 10px'>".human_time_comparation ($timestamp)."</span>";
 	else
 		$data[8] = __('Never');
 	

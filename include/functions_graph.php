@@ -634,7 +634,7 @@ function task_activity_graph ($id_task){
     $start_unixdate = strtotime ($task["start"]);
     $end_unixdate = strtotime ("now");
     $period = $end_unixdate - $start_unixdate;
-    $resolution = 10;
+    $resolution = 50;
     
 	$interval = (int) ($period / $resolution);
 
@@ -695,7 +695,7 @@ function task_activity_graph ($id_task){
 	$xaxisname = __('Days');
 	$yaxisname = __('Hours in project');
 	
-	echo vbar_graph ($config['flash_charts'], $chart3, 650, 300, $colors, $legend, $xaxisname, $yaxisname, "", "", $config['font'], $config['fontsize']);
+	echo vbar_graph ($config['flash_charts'], $chart3, 900, 230, $colors, $legend, $xaxisname, $yaxisname, "", "", $config['font'], $config['fontsize']);
 }
 
 

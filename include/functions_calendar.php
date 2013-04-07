@@ -368,7 +368,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 		}
 
 		// Show SUM workunits for that day (GREEN) - standard wu
-		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task != 0 AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
 		$normal = 0;
 		$res=mysql_query($sqlquery);
 		if ($row=mysql_fetch_array($res)){
@@ -379,7 +379,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 		}
 
 		// Show SUM workunits for that day (YELLOW) - holidays
-		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task =-1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task =-1 AND  timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
 
 		$res=mysql_query($sqlquery);
 		if ($row=mysql_fetch_array($res)){
@@ -390,7 +390,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 		}
 
 		// Show SUM workunits for that day (MAGENTA) - incident wu
-		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident != -1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE id_user = '$id_user' AND tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident != -1 AND  timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
 
 		$res=mysql_query($sqlquery);
 		if ($row=mysql_fetch_array($res)){
@@ -401,9 +401,11 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 		}
 		
 		// Show SUM workunits for that day (YELLOW) - ORANGE (not justified)
-		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task <-1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE id_user = '$id_user' AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task <-1 AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
 
 		$res=mysql_query($sqlquery);
+
+		
 		if ($row=mysql_fetch_array($res)){
 			$workhours_d = $row[0];
 			if ($workhours_d > 0){

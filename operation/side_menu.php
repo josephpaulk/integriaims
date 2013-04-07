@@ -159,13 +159,6 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/gantt&id_project=$id_project'>".__('Gantt graph')."</a></li>";
 		
 		
-		// Export to CSV
-		if ($sec2 == "operation/projects/csvexport")
-				echo "<li id='sidesel'>";
-		else
-				echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/csvexport&id_project=$id_project'>".__('Report')."</a></li>";
-		
 		// Milestones
 		if ($sec2 == "operation/projects/milestones")
 			echo "<li id='sidesel'>";
@@ -853,33 +846,38 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "KR") && $show_file_r
 
 
 // TODO
-if ((($sec == "todo" ) OR ($sec == "agenda"))&& ($show_agenda != MENU_HIDDEN)) {
+if ((($sec == "workorder" ))&& ($show_agenda != MENU_HIDDEN)) {
 	echo "<div class='portlet'>";
-	echo "<h3>".__('To-Do')."</h3>";
+	echo "<h3>".__('Workorders')."</h3>";
 	echo "<ul class='sidemenu'>";
 
 	// Todo overview
-	if (($sec2 == "operation/todo/todo") && (!isset($_GET["operation"])))
+	if (($sec2 == "operation/workorders/wo") && (!isset($_GET["operation"])))
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=agenda&sec2=operation/todo/todo'>".__('To-Do')."</a></li>";
+	echo "<a href='index.php?sec=workorder&sec2=operation/workorders/wo'>".__('Workorders')."</a></li>";
 
-	// Todo overview of another users
-	if (($sec2 == "operation/todo/todo") && (isset($_GET["operation"])) && ($_GET["operation"] == "notme"))
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=agenda&sec2=operation/todo/todo&operation=notme'>".__('To-Do another people')."</a></li>";
+	if (($sec2 == "operation/workorders/wo")) {
+		echo "<li style='margin-left: 15px; font-size: 10px;'>";
+		echo "<a href='index.php?sec=workorder&sec2=operation/workorders/wo&operation=create'>".__('New WO')."</a>";
+		echo "</li>";
+	}
 
-	// Todo create
-	if (($sec2 == "operation/todo/todo") && (isset($_GET["operation"])) && ($_GET["operation"] == "create"))
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=agenda&sec2=operation/todo/todo&operation=create'>".__('Add todo')."</a></li>";
-	echo "</ul>";
-	echo "</div>";
+	if (dame_admin($config["id_user"])){
+		// WO category management
+		if (($sec2 == "operation/workorders/wo_category") && (!isset($_GET["operation"])))
+			echo "<li id='sidesel'>";
+		else 
+			echo "<li>";
+		echo "<a href='index.php?sec=workorder&sec2=operation/workorders/wo_category'>".__('WO Categories')."</a></li>";
+
+		if (($sec2 == "operation/workorders/wo_category")){
+			echo "<li style='margin-left: 15px; font-size: 10px;'>";
+			echo "<a href='iindex.php?sec=workorder&sec2=operation/workorders/wo_category&create=1'>".__('New category')."</a>";
+			echo "</li>";
+		}
+	}
 }
 
 if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
@@ -1109,6 +1107,7 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 			}
 		}
 		
+		enterprise_include ("operation/sidemenu_user_mgmt.php");
 		
 		if($show_people != MENU_MINIMAL) {
 			echo "</ul>";
@@ -1176,92 +1175,92 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 	echo "</div>";
 }
 
-if ($show_box) {
-	// Calendar box
-	$month = get_parameter ("month", date ('n'));
-	$year = get_parameter ("year", date ('y'));
 
-	echo '<div class="portlet" style="padding: 0px; margin: 0px;">';
-	echo '<a href="javascript:;" onclick="$(\'#calendar_div\').slideToggle (); return false">';
-	echo '<h2>'.__('Calendar').'</h2>';
-	echo '</a>';
-	echo '<div id="calendar_div" style="padding: 0px; margin: 0px">';
-	echo generate_calendar ($year, $month, array(), 1, NULL, $config["language_code"]);
-	echo '</div></div>';
-	// End of calendar box
+// Calendar box
+$month = get_parameter ("month", date ('n'));
+$year = get_parameter ("year", date ('y'));
+
+echo '<div class="portlet" style="padding: 0px; margin: 0px;">';
+// echo '<a href="javascript:;" onclick="$(\'#calendar_div\').slideToggle (); return false">';
+echo '<a href="index.php?sec=agenda&sec2=operation/agenda/agenda">';
+echo '<h2>'.__('Calendar').'</h2>';
+echo '</a>';
+echo '<div id="calendar_div" style="padding: 0px; margin: 0px">';
+echo generate_calendar ($year, $month, array(), 1, NULL, $config["language_code"]);
+echo '</div></div>';
+// End of calendar box
 
 
-	// Testing boxes for side menus
-	$user_row = get_db_row ("tusuario", "id_usuario", $config['id_user']);
+// Testing boxes for side menus
+$user_row = get_db_row ("tusuario", "id_usuario", $config['id_user']);
 
-	$avatar = $user_row["avatar"];
-	$realname = $user_row["nombre_real"];
-	$email = $user_row["direccion"];
-	$description = $user_row["comentarios"];
-	$userlang = $user_row["lang"];
-	$telephone = $user_row["telefono"];
+$avatar = $user_row["avatar"];
+$realname = $user_row["nombre_real"];
+$email = $user_row["direccion"];
+$description = $user_row["comentarios"];
+$userlang = $user_row["lang"];
+$telephone = $user_row["telefono"];
 
-	$now = date("Y-m-d H:i:s");
-	$now_year = date("Y");
-	$now_month = date("m");
-	$working_month = get_parameter ("working_month", $now_month);
-	$working_year = get_parameter ("working_year", $now_year);
+$now = date("Y-m-d H:i:s");
+$now_year = date("Y");
+$now_month = date("m");
+$working_month = get_parameter ("working_month", $now_month);
+$working_year = get_parameter ("working_year", $now_year);
 
-	echo '<div class="portlet">';
-	echo '<a href="" onclick="$(\'#userdiv\').slideToggle (); return false">';
-	echo '<h2>'.__('User info').'</h2>';
-	echo '</a>';
-	echo '<div class="portletBody" id="userdiv">';
+echo '<div class="portlet">';
+echo '<a href="" onclick="$(\'#userdiv\').slideToggle (); return false">';
+echo '<h2>'.__('User info').'</h2>';
+echo '</a>';
+echo '<div class="portletBody" id="userdiv">';
 
-	echo '<img src="images/avatars/'.$avatar.'_small.png" style="float: left" />';
-	echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'">';
-	echo '<strong>'.$config['id_user'].'</strong>';
-	echo '</a><br/>';
-	echo "<em>".$realname."</em><br />";
-	echo __('Phone').": $telephone <br />";
-	echo __('Email').':</strong> '.$email.'<br />';
+echo '<img src="images/avatars/'.$avatar.'_small.png" style="float: left" />';
+echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'">';
+echo '<strong>'.$config['id_user'].'</strong>';
+echo '</a><br/>';
+echo "<em>".$realname."</em><br />";
+echo __('Phone').": $telephone <br />";
+echo __('Email').':</strong> '.$email.'<br />';
 
-	// Link to workunit calendar (month)
-	echo '<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';
-	echo '<img src="images/clock.png" title="'.__('Workunit report').'" /></a>';
+// Link to workunit calendar (month)
+echo '<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';
+echo '<img src="images/clock.png" title="'.__('Workunit report').'" /></a>';
 
-	if (give_acl ($config["id_user"], 0, "PR")) {
-		// Link to project graph
-		echo "&nbsp;&nbsp;";
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$config['id_user']."'>";
-		echo '<img src="images/chart_bar.png" title="'.__('Project distribution').'"></a>';
+if (give_acl ($config["id_user"], 0, "PR")) {
+	// Link to project graph
+	echo "&nbsp;&nbsp;";
+	echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$config['id_user']."'>";
+	echo '<img src="images/chart_bar.png" title="'.__('Project distribution').'"></a>';
 
-		// Link to Work user spare inster
-		echo "&nbsp;&nbsp;";
-		echo '<a href="index.php?sec=users&sec2=operation/users/user_spare_workunit">';
-		echo '<img src="images/award_star_silver_1.png" title="'.__('Workunit').'"></a>';
+	// Link to Work user spare inster
+	echo "&nbsp;&nbsp;";
+	echo '<a href="index.php?sec=users&sec2=operation/users/user_spare_workunit">';
+	echo '<img src="images/award_star_silver_1.png" title="'.__('Workunit').'"></a>';
 
-		// Link to User detailed graph view
-		echo "&nbsp;&nbsp;";
-		echo '<a href="index.php?sec=users&sec2=operation/user_report/report_full_graph">';
-		echo '<img src="images/lightbulb.png" title="'.__('Full graph report').'"></a>';
+	// Link to User detailed graph view
+	echo "&nbsp;&nbsp;";
+	echo '<a href="index.php?sec=users&sec2=operation/user_report/report_full_graph">';
+	echo '<img src="images/lightbulb.png" title="'.__('Full graph report').'"></a>';
 
-		// Week Workunit meter
-		echo "&nbsp;&nbsp;";
-		$begin_week = week_start_day ();
-		$begin_week .= " 00:00:00";
-		$end_week = date ('Y-m-d H:i:s', strtotime ("$begin_week + 1 week"));
-		$total_hours = 5 * $config["hours_perday"];
-		$sql = sprintf ('SELECT SUM(duration)
-			FROM tworkunit WHERE timestamp > "%s"
-			AND timestamp < "%s"
-			AND id_user = "%s"',
-			$begin_week, $end_week, $config['id_user']);
-		$week_hours = get_db_sql ($sql);
-		$ratio = $week_hours." ".__('over')." ".$total_hours;
-		if ($week_hours < $total_hours)
-			echo '<img src="images/exclamation.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" />';
-		else
-			echo '<img src="images/heart.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
-	}
-
-	echo '</div></div>';
-	// End of user box
+	// Week Workunit meter
+	echo "&nbsp;&nbsp;";
+	$begin_week = week_start_day ();
+	$begin_week .= " 00:00:00";
+	$end_week = date ('Y-m-d H:i:s', strtotime ("$begin_week + 1 week"));
+	$total_hours = 5 * $config["hours_perday"];
+	$sql = sprintf ('SELECT SUM(duration)
+		FROM tworkunit WHERE timestamp > "%s"
+		AND timestamp < "%s"
+		AND id_user = "%s"',
+		$begin_week, $end_week, $config['id_user']);
+	$week_hours = get_db_sql ($sql);
+	$ratio = $week_hours." ".__('over')." ".$total_hours;
+	if ($week_hours < $total_hours)
+		echo '<img src="images/exclamation.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" />';
+	else
+		echo '<img src="images/heart.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
 }
+
+echo '</div></div>';
+
 
 ?>

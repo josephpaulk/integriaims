@@ -181,8 +181,6 @@ if ($delete) {
 	$id = 0;
 }
 
-echo "<h2>".__('Leads management')."</h2>";
-
 // FORM (Update / Create)
 if ($id || $new) {
 	if ($new) {
@@ -282,6 +280,13 @@ if ($id || $new) {
 			echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=mail"><span>'.__("Mail reply").'</span></a></li>';
 		}
 
+
+		if ($op == "forward")
+			echo '<li class="ui-tabs-selected">';
+		else
+			echo '<li class="ui-tabs">';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=forward"><span>'.__("Forward lead").'</span></a></li>';
+	
 		echo '<li class="ui-tabs">';
 		echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id_company.'"><span>'.__("Company").'</span></a></li>';
 
@@ -316,6 +321,12 @@ if ($id || $new) {
 		return;
 	}
 
+	// Load tab forward
+	if ($op == "forward"){
+		include "operation/leads/lead_forward.php";
+		return;
+	}
+
 	$table->width = "90%";
 	$table->class = "databox";
 	$table->data = array ();
@@ -323,6 +334,9 @@ if ($id || $new) {
 	$table->colspan[7][0] = 4;
 	
 	if (give_acl ($config["id_user"], 0, "VW")) {
+
+		echo "<h2>".__('Leads details')."</h2>";
+
 		$table->data[0][0] = print_input_text ("fullname", $fullname, "", 60, 100, true, __('Full name'));
 		$table->data[0][1] = print_input_text ("company", $company, "", 60, 100, true, __('Company name'));
 		$table->data[1][0] = print_input_text ("email", $email, "", 35, 100, true, __('Email'));
@@ -353,7 +367,11 @@ if ($id || $new) {
 		$table->data[4][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 		$table->data[4][1] .= "<img src='images/company.png'></a>";
 		
-		$table->data[5][0] = print_input_text ('owner', $owner, '', 15, 15, true, __('Owner'));
+		$table->data[5][0] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __("Owner") )
+
+		. print_help_tip (__("Type at least two characters to search"), true);
+
 
 		// Show delete control if its owned by the user
 		if ($config["id_user"] == $owner){
@@ -450,6 +468,8 @@ if ($id || $new) {
 
 	// Listing of contacts
 	
+	echo "<h2>".__('Lead search')."</h2>";
+
 	// TODO: Show only leads of my company or my company's children.
 	// TODO: Implement ACL check !
 
@@ -536,8 +556,10 @@ if ($id || $new) {
 	$sql2 .=  " ORDER by name";
 
 
-	$table->data[0][1] = print_input_text ("owner", $owner, "", 21, 100, true, __('Owner'));
+	$table->data[0][1] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
+			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Owner'))
 
+		. print_help_tip (__("Type at least two characters to search"), true);
 
 	$table->data[1][0] = print_input_text ("country", $country, "", 21, 100, true, __('Country'));
 
@@ -570,7 +592,7 @@ if ($id || $new) {
 	$table->data[1][1] = print_input_text ("end_date", $end_date, "", 15, 100, true, __('End date'));
 
 	$table->data[1][2] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
-	'id_language', $id_language, '', '', '', true, false, false,
+	'id_language', $id_language, '', _('Any'), '', true, false, false,
 	__('Language'));
 
 	$table->data[1][3] =  print_checkbox ("show_100", 1, $show_100, true, __("Show finished leads"));
@@ -620,7 +642,7 @@ if ($id || $new) {
 			$config["lead_warning_time"] = $config["lead_warning_time"] * 86400;
 
 			if (calendar_time_diff ($lead["modification"]) > $config["lead_warning_time"] ){
-				$style = "border: 1px dashed #ff0000; background: #ffD0D0";
+				$style = " background: #ffefef";
 			} else {
 				$style = "";
 			}
@@ -675,3 +697,31 @@ if ($id || $new) {
 }
 
 ?>
+
+<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" >
+$(document).ready (function () {
+	$("#textarea-description").TextAreaResizer ();
+	$("#text-user").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "include/ajax/users",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>",
+			},
+			formatItem: function (data, i, total) {
+				
+				if (total == 0)
+					$("#text-user").css ('background-color', '#cc0000');
+				else
+					$("#text-user").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field">('+data[1]+')</span>';
+			},
+			delay: 200
+		});
+});
+</script>

@@ -110,7 +110,6 @@ table.databox td {
 	padding: 7px;
 }
 
-
 table.search-table {
 	margin-bottom: 20px;
 	margin-top: 10px;
@@ -144,10 +143,11 @@ table.listing th {
 }
 
 table.listing td {
+
 	padding-left: 3px;
 	padding-right: 3px;
-	padding-top: 3px;
-	padding-bottom: 3px;
+	padding-top: 4px;
+	padding-bottom: 4px;
 	margin-left: 5px;
 }
 
@@ -355,7 +355,7 @@ form.searchform input.button {
    	width:100%;
 	text-align: left;
 	background: #FFF;
-	
+	padding-bottom: 110px;
 }
 #content-wrap {
 	clear:both;
@@ -363,6 +363,7 @@ form.searchform input.button {
 	padding:0px;
 	border:0px;
 	width:100%;
+
 }
 
 /* header */
@@ -433,6 +434,7 @@ form.searchform input.button {
 	margin: 0px;
 	padding:0px;
 	margin-left: 0px;
+	padding-top: 6px;
 }
 
 .table_header td {
@@ -454,7 +456,7 @@ form.searchform input.button {
 }
 #header span {
 	letter-spacing: 2px;
-	font: bolder 0.8em 'Trebuchet MS', Arial, Sans-serif;
+	font: bolder 0.8em Helvetica, 'Trebuchet MS', Arial, Sans-serif;
 	color: #AAA;
 	padding-right: 25px;
 }
@@ -466,7 +468,7 @@ form.searchform input.button {
 #header-nav span {
 	letter-spacing: 2px;
 	padding-left: 25px;
-	font: bolder 0.91em 'Trebuchet MS', Arial, Sans-serif;
+	font: bolder 0.91em Helvetica, 'Trebuchet MS', Arial, Sans-serif;
 	color: #dddddd;
 }
 
@@ -549,8 +551,7 @@ form.searchform input.button {
 	margin: 0px; 
 	padding: 0;
 	float: left;
-	text-transform: uppercase;
-	font: bold 0.9em Arial, Sans-serif;
+	font: bold 0.95em Helvetica, 'Trebuchet MS', Arial, Sans-serif;
 	width: 100%;
 	list-style: none;
 	line-height: 19px;
@@ -1469,8 +1470,8 @@ span.users, span.agents, span.data, span.alerts, span.time {
     padding:9px 10px 0px 10px;
 	margin:0px 0px 1px 0px;
 	color:#FFF;
-	font-size: 1.1em ;
-	font-weight: bold;
+	font-size: 1.05em ;
+	
 	text-transform: none;
 	text-decoration: none;
 
@@ -1551,6 +1552,7 @@ div#footer {
 	text-align: center;
 	background-color: #363636;
 	color:#FFF;
+	height: 55px;
 }
 
 div#footer_installer {

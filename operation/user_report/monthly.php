@@ -26,27 +26,24 @@ if (check_login() != 0) {
 }
 
 $id_grupo = get_parameter ("id_grupo",0);
-$id_user=$config['id_user'];
-$real_user_id = $id_user;
+$id = get_parameter ('id', $config["id_user"]);
 
-if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo, "IR") != 1)){
+$real_user_id = $config["id_user"];
+
+if ((give_acl($real_user_id, $id_grupo, "PR") != 1) AND (give_acl($$real_user_id, $id_grupo, "IR") != 1)){
  	// Doesn't have access to this page
-	audit_db($id_user,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to user monthly report without projects rights");
+	audit_db($real_user_id,$config["REMOTE_ADDR"], "ACL Violation","Trying to access to user monthly report without projects rights");
 	include ("general/noaccess.php");
 	exit;
 }
 
-$id = get_parameter ('id', $config["id_user"]);
+
 $users = get_user_visible_users();
 
-if (($id != "") && ($id != $id_user) && in_array($id, array_keys($users))){
-	if (give_acl($id_user, 0, "PW"))
-		$id_user = $id;
-	else {
+if (($id == "") || (($id != $real_user_id) && !in_array($id, array_keys($users)))) {
 		audit_db("Noauth", $config["REMOTE_ADDR"], "No permission access", "Trying to access user workunit report");
 		require ("general/noaccess.php");
 		exit;
-	}
 }
 
 // Get parameters for actual Calendar show
@@ -96,32 +93,32 @@ if ($lock_month != ""){
 	}
 }
 
-echo "<h1>".__('Monthly report for')." $id_user";
+echo "<h1>".__('Monthly report for')." $id";
 // Lock all workunits in this month
-echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&lock_month=$month&month=$month&year=$year&id=$id_user'>";
+echo " <a href='index.php?sec=users&sec2=operation/user_report/monthly&lock_month=$month&month=$month&year=$year&id=$id'>";
 echo "<img src='images/rosette.png' border=0 title='". _("Lock all workunits in this month"). "'>";
 echo "</a>";
 
-echo "&nbsp;&nbsp;<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year&id=$id_user&clean_output=1&pdf_output=1'><img src='images/page_white_acrobat.png'></A>";
+echo "&nbsp;&nbsp;<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year&id=$id&clean_output=1&pdf_output=1'><img src='images/page_white_acrobat.png'></A>";
 
 echo "</h1>";
 
 
 echo "<table width=700>";
 echo "<tr><td>";
-echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$prev_month&year=$prev_year&id=$id_user'> ".__('Prev')."</a>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$prev_month&year=$prev_year&id=$id'> ".__('Prev')."</a>";
 echo "<td width=85%>";
 
 echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year'>";
 
 
-if (give_acl($config["id_user"], 0, "PM")){
+if (give_acl($config["real_user_id"], 0, "PM")){
  
 	$params['input_id'] = 'text-id_username';
 	$params['input_name'] = 'id';
 	$params['return'] = false;
 	$params['return_help'] = false;
-	
+	$params['input_value']  = $id;
 	user_print_autocomplete_input($params);
 	
     echo "&nbsp;";
@@ -132,14 +129,14 @@ echo "</form>";
 echo "</td>";
 
 echo "<td>";
-echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$next_month&year=$next_year&id=$id_user'> ".__('Next')."</a>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$next_month&year=$next_year&id=$id'> ".__('Next')."</a>";
 echo "</td>";
 echo "</table>";
 
 // Generate calendar
 
 echo "<div>";
-echo generate_work_calendar ($year, $month, $days_f, 3, NULL, 1, "", $id_user);
+echo generate_work_calendar ($year, $month, $days_f, 3, NULL, 1, "", $id);
 echo "</div>";
 
 ?>

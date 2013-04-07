@@ -80,28 +80,23 @@ if ($create_contract) {
 	$description = (string) get_parameter ('description');
 	$date_begin = (string) get_parameter ('date_begin');
 	$date_end = (string) get_parameter ('date_end');
-	$id_sla = (int) get_parameter ('id_sla');
-	$id_group = (int) get_parameter ('id_group');
 	$private = (int) get_parameter ('private');
 
-	if ($id_group < 2){
-		echo "<h3 class='error'>".__('You must specify a valid group')."</h3>";
-	} else {
-		$sql = sprintf ('INSERT INTO tcontract (name, contract_number, description, date_begin,
-			date_end, id_company, id_sla, id_group, private)
-			VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d)',
-			$name, $contract_number, $description, $date_begin, $date_end,
-			$id_company, $id_sla, $id_group, $private);
 	
-		$id = process_sql ($sql, 'insert_id');
-		if ($id === false)
-			echo '<h3 class="error">'.__('Could not be created').'</h3>';
-		else {
-			echo '<h3 class="suc">'.__('Successfully created').'</h3>';
-			audit_db ($config['id_user'], $REMOTE_ADDR, "Contract created", "Contract named '$name' has been added");
-		}
-		$id = 0;
+	$sql = sprintf ('INSERT INTO tcontract (name, contract_number, description, date_begin,
+		date_end, id_company, private)
+		VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d)',
+		$name, $contract_number, $description, $date_begin, $date_end,
+		$id_company, $private);
+
+	$id = process_sql ($sql, 'insert_id');
+	if ($id === false)
+		echo '<h3 class="error">'.__('Could not be created').'</h3>';
+	else {
+		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
+		audit_db ($config['id_user'], $REMOTE_ADDR, "Contract created", "Contract named '$name' has been added");
 	}
+	$id = 0;
 }
 
 // UPDATE
@@ -119,27 +114,23 @@ if ($update_contract) { // if modified any parameter
 	$description = (string) get_parameter ('description');
 	$date_begin = (string) get_parameter ('date_begin');
 	$date_end = (string) get_parameter ('date_end');
-	$id_sla = (int) get_parameter ('id_sla');
-	$id_group = (int) get_parameter ('id_group');
 	$private = (int) get_parameter ('private');
 
-	if ($id_group < 2) {
-		echo "<h3 class='error'>".__('You must specify a valid group')."</h3>";
-	} else {
-		$sql = sprintf ('UPDATE tcontract SET contract_number = "%s", id_sla = %d, id_group = %d,
-			description = "%s", name = "%s", date_begin = "%s",
-			date_end = "%s", id_company = %d, private = %d WHERE id = %d',
-			$contract_number, $id_sla, $id_group, $description, $name, $date_begin,
-			$date_end, $id_company, $private, $id);
+
+	$sql = sprintf ('UPDATE tcontract SET contract_number = "%s",
+		description = "%s", name = "%s", date_begin = "%s",
+		date_end = "%s", id_company = %d, private = %d WHERE id = %d',
+		$contract_number, $description, $name, $date_begin,
+		$date_end, $id_company, $private, $id);
 	
-		$result = process_sql ($sql);
-		if ($result === false) {
-			echo "<h3 class='error'>".__('Could not be updated')."</h3>";
-		} else {
-			echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-			audit_db ($config['id_user'], $REMOTE_ADDR, "Contract updated", "Contract named '$name' has been updated");
-		}
+	$result = process_sql ($sql);
+	if ($result === false) {
+		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
+	} else {
+		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
+		audit_db ($config['id_user'], $REMOTE_ADDR, "Contract updated", "Contract named '$name' has been updated");
 	}
+
 	$id = 0;
 }
 
@@ -208,19 +199,6 @@ if ($id | $new_contract) {
 		$table->data[0][1] = print_checkbox ('private', '1', $private, true, __('Private')). print_help_tip (__("Private contracts are visible only by users of the same company"), true);
 		$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
 		
-		//Select a default group for group and company combo
-		if ($id_group === "1") {
-			$user_groups = get_user_groups($config["id_user"], "VR");
-			
-			$keys = array_keys($user_groups);
-					
-			//Key 0 is group All, check if key 1 exists
-			if (array_key_exists(1, $user_groups)) {
-				$id_group = $keys[1];
-			}
-		}
-		
-		$table->data[1][1] = combo_groups_visible_for_me ($config["id_user"], "id_group", 0, "VR", $id_group, true, true);
 			
 		$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
 		$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
@@ -229,9 +207,11 @@ if ($id | $new_contract) {
 			
 		$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 		$table->data[3][0] .= "<img src='images/company.png'></a>";
-				
-		$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
-			'id_sla', $id_sla, '', '', '', true, false, false, __('SLA'));
+		
+		// I think we should delete this, not used anymore.		
+
+		// $table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name', 'id_sla', $id_sla, '', '', '', true, false, false, __('SLA'));
+
 		$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
 	}
 	else {
@@ -243,7 +223,7 @@ if ($id | $new_contract) {
 		
 		$group_name = get_db_value('nombre','tgrupo','id_grupo',$id_group);
 		
-		$table->data[1][1] = "<b>".__('Group')."</b><br>$id_group<br>";
+		
 		$table->data[2][0] = "<b>".__('Begin date')."</b><br>$date_begin<br>";
 		$table->data[2][1] = "<b>".__('End date')."</b><br>$date_end<br>";
 
@@ -330,7 +310,7 @@ if ($id | $new_contract) {
 	
 	echo '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post">';
 	
-	echo "<table class='search-table'>";
+	echo "<table width=80% class='search-table'>";
 	echo "<tr>";
 	
 	echo "<td colspan=2>";
@@ -366,10 +346,7 @@ if ($id | $new_contract) {
 	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";	
 	echo "</td>";
 	
-	echo "</tr>";
-	
-	echo "<tr>";
-	echo "<td colspan=4 align='right'>";
+	echo "<td valign=bottom align='right'>";
 	echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);	
 	echo "</td>";
 	echo "</tr>";
@@ -384,7 +361,7 @@ if ($id | $new_contract) {
 
 	if ($contracts !== false) {
 		
-		$table->width = "800px";
+		$table->width = "90%";
 		$table->class = "listing";
 		$table->cellspacing = 0;
 		$table->cellpadding = 0;
@@ -408,8 +385,7 @@ if ($id | $new_contract) {
 		$counter = 0;
 		
 		foreach ($contracts as $contract) {
-			if (! give_acl ($config["id_user"], $contract["id_group"], "VR"))
-				continue;
+			
 			$data = array ();
 			
 			$data[0] = "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&id="
@@ -421,7 +397,9 @@ if ($id | $new_contract) {
 			
 			$data[3] = $contract["date_begin"];
 			$data[4] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
-			if(give_acl ($config["id_user"], $id_group, "VM")) {
+			
+			// TODO: Acl check here if I have access to this contract because I have access (W) to this company.
+			if( 1 == 1 ) {
 				// Delete
 				if($contract["private"]) {
 					$data[5] = __('Private');

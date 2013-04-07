@@ -122,7 +122,7 @@ echo '</form>';
 
 unset ($table);
 
-$table->width = '800px';
+$table->width = '90%x';
 $table->class = 'listing';
 $table->data = array ();
 $table->style = array ();
@@ -133,17 +133,16 @@ $table->head[1] = __('Pri');
 $table->head[2] = __('Progress');
 $table->head[3] = __('Estimation');
 $table->head[4] = __('Time used');
-$table->head[5] = __('Cost');
-$table->head[6] = __('People');
-$table->head[7] = __('Start/End');
+$table->head[5] = __('People');
+$table->head[6] = __('Start/End');
 $table->align = array ();
 $table->align[1] = 'left';
 $table->align[2] = 'center';
 $table->align[3] = 'center';
 $table->align[4] = 'center';
-$table->align[9] = 'center';
+$table->align[8] = 'center';
 
-$table->style[7] = "font-size: 9px";
+$table->style[6] = "font-size: 9px";
 
 echo project_activity_graph ($id_project, $graph_ttl);
 
@@ -223,66 +222,38 @@ function show_task_row ($table, $id_project, $task, $level) {
 	if ($wu_incidents > 0)
 	$data[4] .= "<span title='".__("Time spent in related incidents")."'> ($wu_incidents) </span>";
 
-	// Costs (client / total)
-	$costdata = format_numeric (task_workunit_cost ($task["id"], 1));
-	if ($costdata > 0)
-		$costdata = " / <span title='".__("Charged to customer")."'> ". $costdata . "</span>";
-	else
-		$costdata = "";
-
-
-	// Total costs excluding external costs
-	$realdata = format_numeric (task_workunit_cost ($task["id"], 0));
-
-	$external_data = task_cost_invoices($task["id"]);
-	if ($external_data > 0)
-		$external_data = " / <span title='".__("Costs derived from external sources")."'> ". $external_data . "</span>";
-	else
-		$external_data = "";
-		
-		
-	$data[5] =  $realdata . $costdata . $external_data ;
-
-	// Cost of time in incidents related
-	$incident_cost = get_incident_task_workunit_cost ($task["id"]);
-
-	if ($incident_cost > 0)
-		$data[5] .= "<span title='".__("Cost of related incidents")."'> ($incident_cost)</span>";
-
-	$data[5] .= $config['currency'];
-
 	// People
-	$data[6] = combo_users_task ($task['id'], 1, true);
-	$data[6] .= ' ';
-	$data[6] .= get_db_value ('COUNT(DISTINCT(id_user))', 'trole_people_task', 'id_task', $task['id']);
+	$data[5] = combo_users_task ($task['id'], 1, true);
+	$data[5] .= ' ';
+	$data[5] .= get_db_value ('COUNT(DISTINCT(id_user))', 'trole_people_task', 'id_task', $task['id']);
 
 	if ($task["start"] == $task["end"]){
-		$data[7] = date ('Y-m-d', strtotime ($task['start'])) . "<br>";
-		$data[7] .= __('Recurrence').': '.get_periodicity ($task['periodicity']);
+		$data[6] = date ('Y-m-d', strtotime ($task['start'])) . "<br>";
+		$data[6] .= __('Recurrence').': '.get_periodicity ($task['periodicity']);
 	} else {
 		// Start
 		$start = strtotime ($task['start']);
 		$end = strtotime ($task['end']);
 		$now = time ();
 		
-		$data[7] = date ('Y-m-d', $start) ."<br>";
+		$data[6] = date ('Y-m-d', $start) ."<br>";
 		
 		if ($task['completion'] == 100) {
-			$data[7] .= '<span style="color: green">';
+			$data[6] .= '<span style="color: green">';
 		} else {
 			if ($now > $end)
-				$data[7] .= '<span style="color: red">';
+				$data[6] .= '<span style="color: red">';
 			else
-				$data[7] .= '<span>';
+				$data[6] .= '<span>';
 		}
-		$data[7] .= date ('Y-m-d', $end);
-		$data[7] .= '</span>';
+		$data[6] .= date ('Y-m-d', $end);
+		$data[6] .= '</span>';
 	}
 
 	// Delete
 	if (give_acl ($config['id_user'], 0, 'PM')) {
-		$table->head[8] = __('Delete');
-		$data[8] = '<a href="index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project='.$id_project.'&id='.$task["id"].'"
+		$table->head[7] = __('Delete');
+		$data[7] = '<a href="index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project='.$id_project.'&id='.$task["id"].'"
 			onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 			<img src="images/cross.png" /></a>';
 	}

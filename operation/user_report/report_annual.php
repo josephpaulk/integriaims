@@ -18,7 +18,7 @@
 	global $config;
 	check_login ();
 
-require_once('include/functions_user.php');
+	require_once('include/functions_user.php');
 
     $days_f = array();
     $date = date('Y-m-d');
@@ -41,8 +41,20 @@ require_once('include/functions_user.php');
     	// Doesn't have access to this page
     	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to another user yearly report without proper rights");
     	include ("general/noaccess.php");
-	exit;
-}
+		exit;
+	}
+
+
+	// Extended ACL check for project manager
+	// TODO - Move to enteprrise, encapsulate in a general function
+	$users = get_user_visible_users();
+
+	if (($id_user_show == "") || (($id_user_show != $config["id_user"]) && !in_array($id_user_show, array_keys($users)))) {
+			audit_db("Noauth", $config["REMOTE_ADDR"], "No permission access", "Trying to access user workunit report");
+			require ("general/noaccess.php");
+			exit;
+	}
+
 
     echo "<h3>".__('Annual report for user')." ". $id_user_show;
     
@@ -85,7 +97,7 @@ require_once('include/functions_user.php');
 		$params['input_name'] = 'id_user';
 		$params['return'] = false;
 		$params['return_help'] = false;
-		
+		$params['input_value'] = $id_user_show;
 		user_print_autocomplete_input($params);
 		
 	    echo "</td>";	

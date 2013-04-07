@@ -1,3 +1,86 @@
+2013-04-07  Sancho Lerena <slerena@artica.es>
+
+	* extras/migrate.sql: Updated more SQL for 3.1 to 4.0 migration.
+
+	* general/header.php: Better style.
+
+	* general/home.php: Fixes issues on agenda -> workorder, and also fixed 
+	problems with agenda items.
+
+	* godmode/usuarios/lista_usuarios.php: Last conection time is better shown.
+
+	* images/ack.png
+	images/ack_bn.png
+	images/wo_category: New icons.
+
+	* include/ajax/users.php: Improved regexp to search on ANY position of the 
+	substring.
+
+	* include/functions_calendar.php: Try to improve the SQL queries on month
+	calendar, but doesnt seem to improve much :(
+
+	* include/functions_config.php: Removed "agenda" from menu visibility array.
+
+	* include/functions_db.php: todos_active_user() now returns active WO before
+	return all. Fixed get_project_manager_users() to return only users which are
+	under a user witch is project manager.
+
+	* include/functions_form.php: Added translate_wo_status() and wo_status_array().
+
+	* include/functions_graph.php: Added border/mark on specific graph to see better
+	in layout (this is a specific fix for task detail page).
+
+	* include/styles/integria.css: Minor changes in styles for main menu and header.
+
+	* integria_db.sql: Added company and todo on tattachment, tcompany has now
+	manager, parent, website and country, new fields on ttodo to implement the 
+	workorder new features, new bits on tprofile for CRM and File Releases.
+
+	* operation/companies/company_detail.php: Added new fields and remove old ones to
+	company management, improved listing.
+
+	* operation/companies/company_export.php: Added CSV export to company listing.
+
+	* operation/companies/company_files.php: Added file attach to company management.
+
+	* operation/contracts/contract_detail.php: Removed group issues in contracts. No
+	more ACL's based on contracts here. TODO: implement proper ACL management based
+	on company relationship.
+
+	* operation/leads/lead_detail.php,
+	operation/leads/lead_files.php: Several fixes and adjustments.
+	
+	* operation/leads/lead_forward.php: new feature to send lead details by mail.
+
+	* operation/main_menu.php: New layout for main menu.
+
+	* operation/projects/csvexport.php: Delete unused report file.
+
+	* operation/projects/project.php: Listing show now project manager.
+
+	* operation/projects/project_detail.php: Fixed some value calculation.
+
+	* operation/projects/task.php: Removed some info from listing.
+
+	* operation/projects/task_detail.php: Small hack to have a better pie graph
+	layout (with a frame around).
+
+	* operation/side_menu.php: Fixed missing enterprise profile management, fixed
+	missing agenda and other new options added and some (taskcsv) removed.
+
+	* operation/user_report/monthly.php,
+	operation/user_report/report_annual.php,
+	operation/user_report/report_full.php,
+	operation/user_report/report_monthly.php: Fixed lots of ACL's problems. Fixed
+	some form issues also.
+
+	* operation/workorders,
+	operation/workorders/wo.php,
+	operation/workorders/wo_category.php,
+	operation/workorders/wo_files.php: Rewrite from scratch: new Workorder feature.
+	This will replace "todo's". Implements also a new category for todos, proper file
+	management attached to todos, todos ACL's and much more features.
+
 2013-04-02  Sancho Lerena <slerena@artica.es>
 
 	* images/lang: New icons for language.

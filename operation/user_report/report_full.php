@@ -138,7 +138,7 @@ if ($clean_output == 0){
 	$params['input_name'] = 'wu_reporter';
 	$params['return'] = false;
 	$params['return_help'] = false;
-	
+	$params['input_value'] = $wu_reporter;
 	user_print_autocomplete_input($params);
    
     echo "</td><td>"; 
@@ -319,15 +319,36 @@ if ($do_search  == 0){
 		else
 			$user_search = "";
 	
-		$sql = sprintf ('SELECT tproject.id as id, tproject.name as name, SUM(tworkunit.duration) AS sum
-		FROM tproject, ttask, tworkunit_task, tworkunit
-		WHERE tworkunit_task.id_workunit = tworkunit.id '. $user_search . '
-		AND tworkunit_task.id_task = ttask.id
-		AND ttask.id_project = tproject.id
-		AND tworkunit.timestamp >= "%s"
-		AND tworkunit.timestamp <= "%s"
-		GROUP BY tproject.name',
-		$start_date, $end_date);
+		// ACL CHECK, show all info (user) or only related info for this user (current user) projects
+
+		if ((dame_admin($config["id_user"])) OR ($config["id_user"] == $wu_reporter)) {
+
+			$sql = sprintf ('SELECT tproject.id as id, tproject.name as name, SUM(tworkunit.duration) AS sum
+			FROM tproject, ttask, tworkunit_task, tworkunit
+			WHERE tworkunit_task.id_workunit = tworkunit.id '. $user_search . '
+			AND tworkunit_task.id_task = ttask.id
+			AND ttask.id_project = tproject.id
+			AND tworkunit.timestamp >= "%s"
+			AND tworkunit.timestamp <= "%s"
+			GROUP BY tproject.name',
+			$start_date, $end_date);
+		} else {
+
+			// Show only info on my projects for this user
+			// TODO: Move this to enterprise code.
+
+			$sql = sprintf ('SELECT tproject.id as id, tproject.name as name, SUM(tworkunit.duration) AS sum
+			FROM tproject, ttask, tworkunit_task, tworkunit
+			WHERE tworkunit_task.id_workunit = tworkunit.id '. $user_search . '
+			AND tworkunit_task.id_task = ttask.id
+			AND ttask.id_project = tproject.id
+			AND tworkunit.timestamp >= "%s"
+			AND tworkunit.timestamp <= "%s"
+			AND tproject.id_owner = "%s" 
+			GROUP BY tproject.name',
+			$start_date, $end_date, $config["id_user"]);
+
+		}		
 
 	}	
 

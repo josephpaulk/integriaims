@@ -249,7 +249,6 @@ function load_menu_visibility() {
 				($sec == "kb" && $show_kb == MENU_FULL) || 
 				($sec == "download" && $show_file_releases == MENU_FULL) || 
 				($sec == "users" && $show_people == MENU_FULL) || 
-				($sec == "agenda" && $show_agenda == MENU_FULL) || 
 				($sec == "godmode" && $show_setup == MENU_FULL) ||
 				($sec == "wiki" && $show_wiki == MENU_FULL) ||
 				($sec == "customers" && $customers == MENU_FULL) ||

@@ -33,12 +33,13 @@ $news = get_db_all_rows_sql ($sql);
 
 //AGENDA
 $now = date('Y-m-d', strtotime("now"));
-$now3 = date('Y-m-d', strtotime("now + 3 days"));
+$now3 = date('Y-m-d', strtotime("now + 10 days"));
 $agenda = get_db_sql ("SELECT COUNT(*) FROM tagenda WHERE  (id_user ='".$config["id_user"]."' OR public = 1) AND timestamp > '$now' AND timestamp < '$now3'");
 
 $agenda  += get_db_sql ("SELECT COUNT(tproject.name) FROM trole_people_project, tproject WHERE trole_people_project.id_user = '".$config["id_user"]."' AND trole_people_project.id_project = tproject.id AND tproject.end >= '$now' AND tproject.end <= '$now3'");
 
 $agenda += get_db_sql ("SELECT COUNT(ttask.name) FROM trole_people_task, ttask WHERE trole_people_task.id_user = '".$config["id_user"]."' AND trole_people_task.id_task = ttask.id AND ttask.end >= '$now' AND ttask.end <= '$now3'");	
+
 
 //TODO
 $todo = get_db_sql ("SELECT COUNT(*) FROM ttodo WHERE assigned_user = '".$config["id_user"]."'");
@@ -75,7 +76,7 @@ if ($info) {
 	echo __("Agenda");
 	echo "</span>";
 	echo "<span class='landing_subtitle'>";
-	echo __('First 5 events for next three days');
+	echo __('First 5 events for next ten days');
 	echo "</span>";
 	echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>";
 	echo "<img class='much_more' src='images/add.png'>";
@@ -120,7 +121,6 @@ if ($info) {
 	// ==============================================================
 
 	if ($agenda > 0){
-
 
 		$time_array = array();
 		$text_array = array();
@@ -172,9 +172,10 @@ if ($info) {
 		
 		//Sort time array and print only first five entries :)
 		asort($time_array);
-		
-		echo "<p class='landing_text_list'>";
-		
+	
+		echo "<table class='landing_incidents' width=100%>";
+		echo "<tr><th>".__("Type")."</th><th>".__("Title")."</th><th>".__("Deadline")."</th></tr>";
+
 		$print_counter = 0;
 		foreach ($time_array as $key => $time) {
 			
@@ -191,7 +192,8 @@ if ($info) {
 					break;
 			}
 			
-			echo "<b>".$type_name."</b> - [".$time."] ".$text_array[$key]."<br>";
+			echo "<tr>";
+			echo "<td>".$type_name."</td><td>.".$text_array[$key]."</td><td>".$time."</td>";
 			
 			$print_counter++;
 			if ($print_counter == 5) {
@@ -199,7 +201,7 @@ if ($info) {
 			}
 		}
 		
-		echo "</p>";
+		echo "</table>";
 		
 	} else {
 		echo "<div class='landing_empty'>";
@@ -211,18 +213,18 @@ if ($info) {
 	echo "</tr>";
 
 	// ==============================================================
-	// Show Todo items
+	// Show WorkOrder items
 	// ==============================================================
 	echo "<tr>";
 	echo "<th>";
 	echo "<img class='landing_title_logo' src='images/todo.png'/>";
 	echo "<span class='landing_title'>";
-	echo __('To-Do');
+	echo __('Work orders');
 	echo "</span>";
 	echo "<span class='landing_subtitle'>";
-	echo __('Total active TO-DOs').": ".todos_active_user ($config["id_user"]);
+	echo __('Total active WO'). ": ". todos_active_user ($config["id_user"]) . " ".__('(Showing only five)');
 	echo "</span>";
-	echo "<a href='index.php?sec=todo&sec2=operation/todo/todo'>";
+	echo "<a href='index.php?sec=workorder&sec2=operation/workorders/wo'>";
 	echo "<img class='much_more' src='images/add.png'>";
 	echo "</a>";
 	echo "</th>";
@@ -233,17 +235,49 @@ if ($info) {
 	echo "<div class='landing_content'>";
 	if ($todo > 0){
 		
-		echo "<p class='landing_text_list'><ul>";
-		$sql_2 = "SELECT * FROM ttodo WHERE assigned_user = '".$config["id_user"]."' ORDER BY priority DESC limit 5";
+		echo "<table class='landing_incidents' width=100%>";
+		echo "<tr><th>".__("Priority")."</th><th>".__("Title")."</th><th>".__("Deadline")."</th></tr>";
+
+		$sql_2 = "SELECT * FROM ttodo WHERE assigned_user = '".$config["id_user"]."' AND progress < 1 ORDER BY priority, last_update  DESC limit 5";
 		$result_2 = mysql_query($sql_2);
-		while ($row_2 = mysql_fetch_array($result_2)){
-			echo "<a href='index.php?sec=todo&sec2=operation/todo/todo&operation=update&id=".$row_2["id"]."'>";
-			echo "<li>".substr($row_2["name"],0,55);
-			echo "</a>";
-			echo "<br>";
+
+		// TODO: replace this code to our own DB functions
+
+		while ($wo = mysql_fetch_array($result_2)){
+
+			echo "<tr>";
+
+			if ($wo["priority"] == 0)
+				$data[0] = "<img src='images/pixel_blue.png' width=12 height=12 title='Informative'>";
+
+			if ($wo["priority"] == 1)
+				$data[0] = "<img src='images/pixel_yellow.png' width=12 height=12 title='Low'>";
+
+			if ($wo["priority"] == 2)
+				$data[0] = "<img src='images/pixel_orange.png' width=12 height=12 title='Medium'>";
+
+			if ($wo["priority"] == 3)
+				$data[0] = "<img src='images/pixel_red.png' width=12 height=12 title='High'>";
+
+			if ($wo["priority"] == 4)
+				$data[0] = "<img src='images/pixel_fucsia.png' width=12 height=12 title='Very High'>";
+
+			if ($wo["priority"] == 10)
+				$data[0] = "<img src='images/pixel_gray.png' width=12 height=12 title='--'>";
+
+			$data[1] = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo&operation=view&id=".$wo["id"]."'>". substr($wo["name"],0,50) . "</a>";
+
+			if ($wo["end_date"] != "0000-00-00 00:00:00"){
+				$data[2] = substr($wo["end_date"],0,11);		
+			} else {
+				$data[2] = "";
+			}
+			echo "<td>".$data[0]. "</td><td>".$data[1]."</td><td>".$data[2]."</td></tr>";
+			
+		
 		}
 		
-		echo "</ul></p>";
+		echo "</table>";
 	} else {
 		echo "<div class='landing_empty'>";
 		echo __("There aren't TO-DOs");

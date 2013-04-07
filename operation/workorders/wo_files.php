@@ -18,11 +18,13 @@ global $config;
 
 check_login ();
 
-
 // Delete file
 
 $deletef = get_parameter ("deletef", "");
 if ($deletef != ""){
+
+	// TODO - ACL Checks
+
 	$file = get_db_row ("tattachment", "id_attachment", $deletef);
 	if ( (dame_admin($config["id_user"])) || ($file["id_usuario"] == $config["id_user"]) ){
 		$sql = "DELETE FROM tattachment WHERE id_attachment = $deletef";
@@ -42,7 +44,7 @@ if (isset($_GET["upload"])) {
 		$size = filesize ($file_tmp);
 		$description = get_parameter ("description", "");
 
-		$sql = sprintf("INSERT INTO tattachment (id_lead, id_usuario, filename, description, timestamp, size) VALUES (%d, '%s', '%s', '%s', '%s', %d)", $id, $config["id_user"], $filename, $description, date('Y-m-d H:i:s'), $size);
+		$sql = sprintf("INSERT INTO tattachment (id_todo, id_usuario, filename, description, timestamp, size) VALUES (%d, '%s', '%s', '%s', '%s', %d)", $id, $config["id_user"], $filename, $description, date('Y-m-d H:i:s'), $size);
 		$id_attach = process_sql ($sql, 'insert_id');
 
 		$filename_encoded = $id_attach . "_" . $filename;
@@ -74,22 +76,21 @@ echo '<h3>'.__('Upload a new file').'</h3>';
 echo '</a>';
 echo '<div id="upload_div" style="padding: 20px; margin: 0px; display: none;">';
 $target_directory = 'attachment';
-$action = "index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=files&upload=1";				
+$action = "index.php?sec=workorder&sec2=operation/workorders/wo&id=$id&tab=files&operation=view&upload=1";				
 $into_form = "<input type='hidden' name='directory' value='$target_directory'><b>Description</b>&nbsp;<input type=text name=description size=60>";
 print_input_file_progress($action,$into_form,'','sub next');	
 echo '</div>';
 
-// List of lead attachments
+// List of WO attachments
 
-$sql = "SELECT * FROM tattachment WHERE id_lead = $id ORDER BY timestamp DESC";
+$sql = "SELECT * FROM tattachment WHERE id_todo = $id ORDER BY timestamp DESC";
 $files = get_db_all_rows_sql ($sql);	
-$files = print_array_pagination ($files, "index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=files");
-
-echo "<br>";
-
 if ($files !== false) {
 
-	echo "<h3>". __('Current files on this lead')."</h3>";
+	$files = print_array_pagination ($files, "index.php?sec=workorder&sec2=operation/workorders/wo&id=$id&tab=files&operation=view");
+
+	echo "<br>";
+	echo "<h3>". __('Current files on this workorder')."</h3>";
 
 	unset ($table);
 	$table->width = "99%";
@@ -117,7 +118,7 @@ if ($files !== false) {
 
 		// Todo. Delete files owner of lead and admins only
 		if ( (dame_admin($config["id_user"])) || ($file["id_usuario"] == $config["id_user"]) ){
-			$data[4] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=files&deletef=".$file["id_attachment"]."'><img src='images/cross.png'></a>";
+			$data[4] = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo&id=$id&tab=files&operation=view&upload=1&deletef=".$file["id_attachment"]."'><img src='images/cross.png'></a>";
 		}
 
 		array_push ($table->data, $data);
@@ -126,7 +127,7 @@ if ($files !== false) {
 	print_table ($table);
 
 } else {
-	echo "<h3>". __('There is no files attached for this lead')."</h3>";
+	echo "<h3>". __('There is no files attached for this workorder')."</h3>";
 }
 
 
