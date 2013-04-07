@@ -609,7 +609,7 @@ if ($id || $new) {
 
 	if ($leads !== false) {
 		unset ($table);
-		$table->width = "99%";
+		$table->width = "97%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();
@@ -619,15 +619,15 @@ if ($id || $new) {
 		$table->style[0] = 'font-weight: bold';
 		$table->head = array ();
 		$table->head[0] = __('#');
-		$table->head[1] = __('Op');
+		$table->head[1] = __('Product');
 		$table->head[2] = __('Full name');
-		$table->head[3] = __('Product');
-		$table->head[4] = __('Managed by');
-		$table->head[5] = __('Progress');
-		$table->head[6] = __('Est. Sale');
-		$table->head[7] = __('L.');
-		$table->head[8] = __('Country');
-		$table->head[9] = __('Created/Updated');
+		$table->head[3] = __('Managed by');
+		$table->head[4] = __('Progress');
+		$table->head[5] = __('Est. Sale');
+		$table->head[6] = __('L.');
+		$table->head[7] = __('Country');
+		$table->head[8] = __('Create')."<br>".__('Update');
+		$table->head[9] = __('Op');
 		$table->size[6] = '80px;';
 		$table->size[5] = '130px;';
 		
@@ -651,34 +651,48 @@ if ($id || $new) {
 				$lead['id']."'>#".$lead['id']."</a></b>";
 
 
-			if ($lead['owner'] == "")
-				$data[1] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
-				$lead['id']."&make_owner=1'><img src='images/award_star_silver_1.png' title='".__("Take ownership of this lead")."'></a>";
-			else
-				$data[1] = "";
+			$data[1] = print_product_icon ($lead['id_category'], true);
+
 
  			$data[2] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
 				$lead['id']."'>".$lead['fullname']."</a><br>";
 				$data[2] .= "<span style='font-size: 9px'><i>".$lead["company"]."</i></span>";
 
-			$data[3] = print_product_icon ($lead['id_category'], true);
 
-			$data[4] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$lead['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $lead['id_company'])."</a>";
+			$data[3] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$lead['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $lead['id_company'])."</a>";
 			if ($lead["owner"] != "")
-				$data[4] .= "<br><i>" . $lead["owner"] . "</i>";
+				$data[3] .= "<br><i>" . $lead["owner"] . "</i>";
 
-			$data[5] = translate_lead_progress ($lead['progress']) . " <i>(".$lead['progress']. "%)</i>";
+			$data[4] = translate_lead_progress ($lead['progress']) . " <i>(".$lead['progress']. "%)</i>";
 			
 			if ($lead['estimated_sale'] != 0)
-				$data[6] = format_numeric($lead['estimated_sale']);
+				$data[5] = format_numeric($lead['estimated_sale']);
 			else
-				$data[6] = "--";
+				$data[5] = "--";
 			
-			$data[7] = "<img src='images/lang/".$lead["id_language"].".png'>"; 
-			
-			$data[8] =  ucfirst(strtolower($lead['country']));
-			$data[9] = "<span title='". $lead['creation'] . "'>" . human_time_comparation ($lead['creation']) . "</span>";
-			$data[9] .= " / ". human_time_comparation ($lead['modification']);
+			$data[6] = "<img src='images/lang/".$lead["id_language"].".png'>"; 
+	
+			$data[7] =  ucfirst(strtolower($lead['country']));
+			$data[8] = "<span style='font-size: 9px' title='". $lead['creation'] . "'>" . human_time_comparation ($lead['creation']) . "</span>";
+			$data[8] .= "<br><span style='font-size: 9px'>". human_time_comparation ($lead['modification']). "</span>";
+
+			if ($lead['owner'] == "")
+				$data[9] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+				$lead['id']."&make_owner=1'><img src='images/award_star_silver_1.png' title='".__("Take ownership of this lead")."'></a>";
+			else
+				$data[9] = "";
+
+
+
+			// Show delete control if its owned by the user
+			if (($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"]))) {
+				$data[9] .= ' <a href="index.php?sec=customers&
+								sec2=operation/leads/lead_detail&
+								delete=1&id='.$lead["id"].'"
+								onClick="if (!confirm(\''.__('Are you sure?').'\'))
+								return false;">
+								<img src="images/cross.png"></a>';
+			}
 
 			array_push ($table->data, $data);
 			array_push ($table->rowstyle, $style);
