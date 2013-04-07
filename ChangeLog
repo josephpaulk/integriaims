@@ -1,5 +1,8 @@
 2013-04-07  Sancho Lerena <slerena@artica.es>
 
+	* operation/companies/company_detail.php: Show only active leads, sorted
+	by estimated sale.
+
 	* operation/workorders/wo.php: Fixed ACL check on admins. Added
 	search parameters to delete link for usability.
 

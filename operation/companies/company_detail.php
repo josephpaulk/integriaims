@@ -576,7 +576,7 @@ elseif ($op == "invoices") {
 
 elseif ($op == "leads") {
 	
-	$sql = "SELECT * FROM tlead WHERE id_company = $id ORDER BY modification DESC";
+	$sql = "SELECT * FROM tlead WHERE id_company = $id and progress < 100 ORDER BY estimated_sale DESC,  modification DESC";
 	$invoices = get_db_all_rows_sql ($sql);
 	$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=leads");
 
