@@ -35,6 +35,7 @@ $create = (bool) get_parameter ('create');
 $update = (bool) get_parameter ('update');
 $delete = (bool) get_parameter ('delete');
 $get = (bool) get_parameter ('get');
+$close = (bool) get_parameter('close');
 $make_owner = (bool) get_parameter ('make_owner');
 
 
@@ -166,6 +167,8 @@ if ($update) { // if modified any parameter
 // Delete
 if ($delete) {
 	
+	//TODO: ACL check here !
+
 	$fullname = get_db_value  ('fullname', 'tlead', 'id', $id);
 	$sql = sprintf ('DELETE FROM tlead WHERE id = %d', $id);
 	process_sql ($sql);
@@ -178,6 +181,21 @@ if ($delete) {
 	process_sql ($sql);
 
 	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+	$id = 0;
+}
+
+// Close
+if ($close) {
+
+	//TODO: ACL check here !
+
+	$sql = sprintf ('UPDATE tlead SET progress = 100 WHERE id = %d', $id);
+	process_sql ($sql);
+
+	$datetime =  date ("Y-m-d H:i:s");	
+	$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Lead closed");
+
+	echo "<h3 class='suc'>".__('Successfully closed')."</h3>";
 	$id = 0;
 }
 
@@ -561,6 +579,9 @@ if ($id || $new) {
 
 		. print_help_tip (__("Type at least two characters to search"), true);
 
+	$table->data[0][2] =  print_checkbox ("show_100", 1, $show_100, true, __("Show finished leads"));
+
+
 	$table->data[1][0] = print_input_text ("country", $country, "", 21, 100, true, __('Country'));
 
 	$table->data[1][1] = print_input_text ("est_sale", $est_sale, "", 21, 100, true, __('Estimated Sale >'));
@@ -595,7 +616,6 @@ if ($id || $new) {
 	'id_language', $id_language, '', _('Any'), '', true, false, false,
 	__('Language'));
 
-	$table->data[1][3] =  print_checkbox ("show_100", 1, $show_100, true, __("Show finished leads"));
 	print_table ($table);
 	
 	echo "</div>";
@@ -628,9 +648,9 @@ if ($id || $new) {
 		$table->head[7] = __('Country');
 		$table->head[8] = __('Create')."<br>".__('Update');
 		$table->head[9] = __('Op');
-		$table->size[6] = '80px;';
-		$table->size[5] = '130px;';
-		
+		$table->size[5] = '80px;';
+		$table->size[4] = '130px;';
+		$table->size[9] = '40px;';
 
 		foreach ($leads as $lead) {
 			$data = array ();
@@ -678,15 +698,21 @@ if ($id || $new) {
 
 			if ($lead['owner'] == "")
 				$data[9] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
-				$lead['id']."&make_owner=1'><img src='images/award_star_silver_1.png' title='".__("Take ownership of this lead")."'></a>";
+				$lead['id']."&make_owner=1'><img src='images/award_star_silver_1.png' title='".__("Take ownership of this lead")."'></a>&nbsp;";
 			else
 				$data[9] = "";
 
 
+			// Close that lead
+			if (($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"]))) {
+				$data[9] .= "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+				$lead['id']."&close=1'><img src='images/lock.png' title='".__("Close this lead")."'></a>";
+		
+			}
 
 			// Show delete control if its owned by the user
 			if (($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"]))) {
-				$data[9] .= ' <a href="index.php?sec=customers&
+				$data[9] .= '&nbsp;<a href="index.php?sec=customers&
 								sec2=operation/leads/lead_detail&
 								delete=1&id='.$lead["id"].'"
 								onClick="if (!confirm(\''.__('Are you sure?').'\'))

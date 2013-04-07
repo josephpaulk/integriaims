@@ -1,5 +1,8 @@
 2013-04-07  Sancho Lerena <slerena@artica.es>
 
+	* operation/leads/lead_detail.php: Improved main view, now can delete 
+	or close from the list, for better operation.
+
 	* extras/migrate.sql: Updated more SQL for 3.1 to 4.0 migration.
 
 	* general/header.php: Better style.
