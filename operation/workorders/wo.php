@@ -120,7 +120,8 @@ if ($operation == "delete") {
 	$todo = get_db_row ("ttodo", "id", $id_todo);
 
 	if (($todo["assigned_user"] != $config['id_user']) AND ($todo["created_by_user"] != $config['id_user'])){
-		no_permission();
+		if (!dame_admin($config["id_user"]))
+			no_permission();
 	}
 	
 	$sql_delete= "DELETE FROM ttodo WHERE id = $id_todo";
@@ -584,7 +585,8 @@ if ($operation == "") {
 				$can_delete = 1;				
 
 			if ($can_delete){
-				$data[10] .= '&nbsp;&nbsp;<a href="index.php?sec=workorder&sec2=operation/workorders/wo&operation=delete&id='.
+				$data[10] .= '&nbsp;&nbsp;<a 
+href="index.php?sec=workorder&sec2=operation/workorders/wo'.$params.'&operation=delete&id='.
 				$wo['id'].'""onClick="if (!confirm(\''.__('Are you sure?').'\'))
 							return false;"><img src="images/cross.png"></a>';
 			}

@@ -1,5 +1,8 @@
 2013-04-07  Sancho Lerena <slerena@artica.es>
 
+	* operation/workorders/wo.php: Fixed ACL check on admins. Added
+	search parameters to delete link for usability.
+
 	* operation/leads/lead_detail.php: Improved main view, now can delete 
 	or close from the list, for better operation.
 
