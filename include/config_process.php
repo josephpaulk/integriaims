@@ -17,8 +17,8 @@
 global $config;
 
 // Integria version
-$config["build"]="121212";
-$config["version"]="v3.1";
+$config["build"]="130408";
+$config["version"]="v4.0dev";
 $config["build_version"] = $config["build"];
 
 if (!isset($_SERVER["REMOTE_ADDR"]))
