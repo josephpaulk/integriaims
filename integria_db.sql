@@ -757,7 +757,7 @@ CREATE TABLE `tpending_mail` (
   `subject` text DEFAULT NULL,
   `body` text DEFAULT NULL,
   `attachment_list` text DEFAULT NULL,
-  `from` text DEFAULT NULL;
+  `from` text DEFAULT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

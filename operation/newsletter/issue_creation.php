@@ -97,7 +97,7 @@ $status_values[2] = __('Sent');
 
 $table->data[1][1] = print_select ($status_values, "status", $status, '','','',true,0,true, __('Issue status'));
 
-$table->data[3][0] = print_textarea ("plain", 10, 1, $plain, '', true, "<br>".__('Plain ascii'));
+//$table->data[3][0] = print_textarea ("plain", 10, 1, $plain, '', true, "<br>".__('Plain ascii'));
 $table->data[4][0] = print_textarea ("html", 10, 1, $html, '', true, "<br>".__('HTML'));
 
 echo '<form method="post" action="index.php?sec=customers&sec2=operation/newsletter/issue_definition">';

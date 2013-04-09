@@ -1,3 +1,9 @@
+2013-04-09  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql: Remove ';'
+
+	* operation/newsletter/issue_creation.php: Remove 'Plain text'.
+
 2013-04-07  Sancho Lerena <slerena@artica.es>
 
 	* operation/companies/company_detail.php: Show only active leads, sorted
