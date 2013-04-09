@@ -21,6 +21,7 @@ require_once ($config["homedir"].'/include/functions_calendar.php');
 require_once ($config["homedir"].'/include/functions_groups.php');
 require_once ($config["homedir"].'/include/functions_workunits.php');
 require_once ($config["homedir"].'/include/functions_inventories.php');
+require_once ($config["homedir"].'/include/functions_html.php');
 
 // Activate errors. Should not be anyone, but if something happen, should be
 // shown on console.
@@ -823,6 +824,20 @@ function run_mail_check () {
 	}
 }
 
+function delete_incidents () {
+	
+	global $config;
+	
+	if ($config['months_to_delete_incidents'] != 0) {
+
+		$limit = date ("Y/m/d H:i:s", (strtotime ("now")-($config['months_to_delete_incidents'] * 86400 * 30)));
+		
+		$sql_delete = "DELETE FROM tincidencia where inicio < '$limit'";
+		$result = process_sql ($sql_delete);
+		
+	}
+}
+
 // ---------------------------------------------------------------------------
 /* Main code goes here */
 // ---------------------------------------------------------------------------
@@ -936,5 +951,7 @@ foreach ($slas as $sla) {
 
 $temp_dir = $config["homedir"]."/attachment/tmp";
 delete_all_files_in_dir ($temp_dir);
+
+delete_incidents();
 
 ?>

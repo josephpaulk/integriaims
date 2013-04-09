@@ -1,5 +1,13 @@
 2013-04-09  Vanessa Gil <vanessa.gil@artica.es>
 
+	* godmode/setup/setup.php
+	  include/functions_config.php
+	  include/integria_cron.php: Added parameter
+	'months_to_delete_incidents' to setup and
+	added function 'delete_incidents' to cron.
+
+2013-04-09  Vanessa Gil <vanessa.gil@artica.es>
+
 	* integria_db.sql: Remove ';'
 
 	* operation/newsletter/issue_creation.php: Remove 'Plain text'.

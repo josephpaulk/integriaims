@@ -84,7 +84,8 @@ if ($update) {
     $config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
     $config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
 	$config["lead_company_filter"] = get_parameter ("lead_company_filter", "");    
-	$config["lead_warning_time"] = get_parameter ("lead_warning_time", "7");    
+	$config["lead_warning_time"] = get_parameter ("lead_warning_time", "7");  
+	$config["months_to_delete_incidents"] = get_parameter ("months_to_delete_incidents", 12);  
 
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
@@ -104,6 +105,7 @@ if ($update) {
     update_config_token ("incident_creation_wu", $config["incident_creation_wu"]);
     update_config_token ("lead_company_filter", $config["lead_company_filter"]);
     update_config_token ("lead_warning_time", $config["lead_warning_time"]);
+    update_config_token ("months_to_delete_incidents", $config["months_to_delete_incidents"]);
 
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
 
@@ -281,6 +283,10 @@ $table->data[15][0] .= print_help_tip (__("Use this to filter what company roles
 $table->data[15][1] = print_input_text ("lead_warning_time", $config["lead_warning_time"], '',
 	5, 255, true, __('Days to warn on inactive leads'));
 
+$table->data[16][0] = print_input_text ("months_to_delete_incidents", $config["months_to_delete_incidents"], '',
+	20, 255, true, __('Months to delete incidents'));
+$table->data[16][0] .= print_help_tip (__("Delete incidents that were opened X months ago"), true);
+	
 echo "<form name='setup' method='post'>";
 
 print_table ($table);

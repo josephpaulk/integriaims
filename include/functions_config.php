@@ -179,6 +179,10 @@ function load_config(){
 	if (!isset($config["graphviz_win"])){
                 $config["graphviz_win"] = "C:\Program Files\Graphviz 2.28\bin";
     }
+    
+    if (!isset($config["months_to_delete_incidents"])){
+		$config["months_to_delete_incidents"] = 12;
+	}
 		
     ini_set("post_max_size",$config["max_file_size"]);
     ini_set("upload_max_filesize",$config["max_file_size"]);
