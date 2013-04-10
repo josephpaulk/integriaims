@@ -1,3 +1,7 @@
+2013-04-10  Dario Rodriguez <dario@artica.es>
+
+	* integria_demo.sql: Fixed several changes in demo SQL schema.
+
 2013-04-10  Sancho Lerena <slerena@artica.es>
 
 	* extras/migrate.sql,

@@ -4,14 +4,12 @@ INSERT INTO `tusuario` (`id_usuario`, `nombre_real`, `password`, `comentarios`, 
 
 INSERT INTO `tagenda` VALUES (1,'2012-03-15 18:31:00','admin',0,120,1,3,'Dentist!'),(2,'2012-05-01 18:31:00','admin',0,240,2,4,'Take&#x20;my&#x20;wife&#x20;and&#x20;go&#x20;to&#x20;a&#x20;expensive&#x20;restaurant...'),(3,'2012-09-01 18:32:00','admin',0,0,0,4,'Have&#x20;a&#x20;live...&#x20;Holidays&#x20;!'),(4,'2012-10-01 18:32:00','admin',0,0,0,4,'Back&#x20;to&#x20;hell...&#x20;welcome&#x20;to&#x20;the&#x20;office&#x20;!&#x20;:&#40;');
 
-INSERT INTO `tattachment` VALUES (1,1,0,0,'javi','shot0000.jpg','See&#x20;how&#x20;it&#x20;works&#x20;for&#x20;me...&#x20;fast&#x20;!&#x0a;',131537);
-
+INSERT INTO `tattachment` (`id_attachment`, `id_incidencia`, `id_usuario`, `filename`, `description`, `size`) VALUES (1,1,'javi','shot0000.jpg','See&#x20;how&#x20;it&#x20;works&#x20;for&#x20;me...&#x20;fast&#x20;!&#x0a;',131537);
 
 INSERT INTO `tbuilding` VALUES (1,'Main&#x20;Office',''),(2,'Barcelona&#x20;office','');
 
 
-INSERT INTO `tcompany` VALUES (1,'Energy&#x20;Field&#x20;LTD','c/&#x20;Pito&#x20;sereno&#x20;23,&#x0d;&#x0a;23802&#x20;Madrid','3434','',3,4),(2,'Samsung&#x20;LTD','N/A','343434','',1,4);
-
+INSERT INTO `tcompany` (`id`, `name`, `address`, `fiscal_id`, `country`, `id_company_role`, `id_grupo`)VALUES (1,'Energy&#x20;Field&#x20;LTD','c/&#x20;Pito&#x20;sereno&#x20;23,&#x0d;&#x0a;23802&#x20;Madrid','3434','',3,4),(2,'Samsung&#x20;LTD','N/A','343434','',1,4);
 
 INSERT INTO `tcompany_contact` VALUES (1,2,'Federico&#x20;Piedra','fedepie@nowhere.com','234234324','34343434','Responsable&#x20;T&eacute;cnico','',0),(2,1,'Martin&#x20;Shu','shum@nothe.com','555347347','555834983','Man&#x20;for&#x20;everything','Warning:&#x20;Bad&#x20;mood&#x20;on&#x20;Tuesdays.',0);
 
@@ -26,8 +24,7 @@ INSERT INTO `tconfig` VALUES (1,'language_code','en'),(2,'block_size','25'),(3,'
 INSERT INTO `tcontract` VALUES (2,'Desarrollo&#x20;Movil','','','2012-01-17','2015-01-17',2,1,4,0);
 
 
-INSERT INTO `tdownload` VALUES (1,'Corporate&#x20;Antivirus','attachment/downloads/shot0000.jpg','2012-01-17 18:30:52','','',1,'admin');
-
+INSERT INTO `tdownload` (`id`, `name`, `location`, `date`, `description`, `tag`, `id_category`, `id_user`) VALUES (1,'Corporate&#x20;Antivirus','attachment/downloads/shot0000.jpg','2012-01-17 18:30:52','','',1,'admin');
 
 INSERT INTO `tdownload_category` VALUES (1,'Tools','babel.png');
 
@@ -94,7 +91,8 @@ INSERT INTO `tlink` VALUES (0000000001,'Integria Project','http://integriaims.co
 INSERT INTO `tmanufacturer` VALUES (1,'Samsung','','',1,0);
 
 
-INSERT INTO `tprofile` VALUES (1,'Project&#x20;Participant',1,1,0,0,0,0,1,1,0,1,0,0,1,0,1,0,0,1,0,0,1,1,0),(2,'Project Manager',1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1),(3,'Incident Manager',1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1,1,0,0),(4,'Incident&#x20;Operator',1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0),(5,'Global Manager',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+INSERT INTO `tprofile` VALUES (1,'Project&#x20;Participant',1,1,0,0,0,0,1,1,0,1,0,0,1,0,1,0,0,1,0,0,1,1,0,0,0,0,0,0,0),(2,'Project Manager',1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1,0,0,0,0,0,0),(3,'Incident Manager',1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1,1,0,0,0,0,0,0,0,0),(4,'Incident&#x20;Operator',1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0),(5,'Global Manager',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0);
+
 
 
 INSERT INTO `tproject` VALUES (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0);
@@ -131,9 +129,8 @@ INSERT INTO `tsla` VALUES (1,'SLA&#x20;base','',2,480,10,96,1,1,8,18,0);
 INSERT INTO `ttask_track` VALUES (1,1,'admin',0,11,'2012-01-17 18:18:48'),(2,2,'admin',0,11,'2012-01-17 18:19:09'),(3,3,'admin',0,11,'2012-01-17 18:19:29'),(4,4,'admin',0,11,'2012-01-17 18:19:44'),(5,5,'admin',0,11,'2012-01-17 18:20:06'),(6,6,'admin',0,11,'2012-01-17 18:20:24'),(7,7,'admin',0,11,'2012-01-17 18:20:42'),(8,8,'admin',0,11,'2012-01-17 18:20:59');
 
 
-INSERT INTO `ttodo` VALUES (1,'Revisar&#x20;documentacion&#x20;para&#x20;formato&#x20;PDF',0,'admin','admin',0,'2012-01-17 20:06:55','','2012-01-17 20:07:01',1);
-
-
+INSERT INTO `ttodo` (`id`, `name`, `progress`, `assigned_user`, `created_by_user`, `priority`, `start_date`, `end_date`, `validation_date`, `id_wo_category`) VALUES (1,'Revisar&#x20;documentacion&#x20;para&#x20;formato&#x20;PDF',0,'admin','admin',0,'2012-01-17 20:06:55','','2012-01-17 20:07:01',1);
+ 
 INSERT INTO `tusuario_perfil` VALUES (2,'admin',5,1,'admin');
 INSERT INTO `tusuario_perfil` VALUES (3,'javi',4,1,'admin'),(4,'javi',1,4,'admin'),(5,'javi',3,4,'admin');
 
