@@ -34,7 +34,9 @@ if (isset($_GET["create2"])){ // Create group
 
 	$sql_insert="INSERT INTO tdownload_category (name, icon) 
 		  		 VALUE ('$name', '$icon')";
+
 	$result=mysql_query($sql_insert);	
+
 	if (! $result)
 		echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
 	else {
@@ -140,7 +142,8 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	if ($result=mysql_query($sql1)){
 		echo '<table width="90%" class="listing">';
 		echo "<th>".__('Name')."</th>";
-		echo "<th>".__('Group')."</th>";
+		echo "<th>".__('Icon')."</th>";
+		echo "<th>".__('Groups')."</th>";
 		echo "<th>".__('Items')."</th>";
 		echo "<th>".__('Delete')."</th>";
 		while ($row=mysql_fetch_array($result)){
@@ -157,6 +160,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=download&
 					sec2=operation/download/manage_cat&update=".$row["id"]."'>".$row["name"]."</a></b></td>";
 
+			echo "<td class='$tdcolor'><img src='".$config["base_url"]."/images/download_category/".$row["icon"]."'></td>";
 			// Group
 			echo "<td class='$tdcolor' valign='top'>";
 

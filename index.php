@@ -101,6 +101,14 @@ if ($change_pass == 1) {
 	}
 }
 
+// Process external download id's
+$external_download_id = get_parameter('external_download_id', "");
+if ($external_download_id != ""){
+	include ("operation/download/download_external.php");
+	exit;
+}
+
+
 $html_header = '<!--[if !IE]> -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <![endif]-->

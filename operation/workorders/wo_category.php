@@ -151,7 +151,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 			}
 			echo "<tr>";
 			// Name
-			echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=workorder&sec2=operation/workorders/wo_category&update=".$row["id"]."'>".$row["name"]."</a></b></td>";
+			echo "<td class='$tdcolor' valign='top'><b><a href='index.php?sec=projects&sec2=operation/workorders/wo_category&update=".$row["id"]."'>".$row["name"]."</a></b></td>";
 
 			// Icon
 			echo "<td class='".$tdcolor."f9' valign=top >";
@@ -159,7 +159,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 
 			// Delete
 			echo "<td class='".$tdcolor."f9' align='center' valign='top'>";
-			echo "<a href='index.php?sec=workorder&sec2=operation/workorders/wo_category&
+			echo "<a href='index.php?sec=projects&sec2=operation/workorders/wo_category&
 						delete_cat=".$row["id"]."' 
 						onClick='if (!confirm(\' ".__('Are you sure?')."\')) 
 						return false;'>
@@ -168,7 +168,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		echo "</table>";
 	}			
 	echo '<div style="width:500px" class="button">';
-	echo "<form method=post action='index.php?sec=workorder&sec2=operation/workorders/wo_category&create=1'>";
+	echo "<form method=post action='index.php?sec=projects&sec2=operation/workorders/wo_category&create=1'>";
 	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
 	echo "</form></div>";
 } // end of list

@@ -115,7 +115,7 @@ CREATE TABLE `tattachment` (
   `id_todo` bigint(20) NOT NULL default '0',
   `id_usuario` varchar(60) NOT NULL default '',
   `filename` varchar(255) NOT NULL default '',
-  `description` varchar(150) default '',
+  `description` text default '',
   `size` bigint(20) NOT NULL default '0',
   `timestamp` date NOT NULL default '0000-00-00',
   PRIMARY KEY  (`id_attachment`)
@@ -661,6 +661,8 @@ CREATE TABLE `tdownload` (
   `tag` text NOT NULL,
   `id_category` mediumint(8) unsigned NOT NULL default 0,
   `id_user` varchar(60) NOT NULL,
+  `public` int(2) unsigned NOT NULL default 0,
+  `external_id` text NOT NULL default '', 
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -725,9 +727,9 @@ CREATE TABLE  `tprofile` (
   `cr` tinyint(1) NOT NULL default '0',
   `cw` tinyint(1) NOT NULL default '0',
   `cm` tinyint(1) NOT NULL default '0',
-  `fr` tinyint(1) NOT NULL default '0',
-  `fw` tinyint(1) NOT NULL default '0',
-  `fm` tinyint(1) NOT NULL default '0',
+  `frr` tinyint(1) NOT NULL default '0',
+  `frw` tinyint(1) NOT NULL default '0',
+  `frm` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -35,6 +35,22 @@ function get_download_files () {
 	return $retval;
 }
 
+$delete_btn = get_parameter ("delete_btn", 0);
+
+// File deletion
+// ==================
+
+if ($delete_btn){
+	$location = clean_output (get_parameter ("location",""));
+	
+	$file_path = $config["homedir"]. "/". "attachment/downloads/" . $location;
+
+	unlink ($file_path);
+	$_GET["create"]=1;
+
+}
+
+
 // Database Creation
 // ==================
 if (isset($_GET["create2"])){ // Create group
@@ -52,10 +68,11 @@ if (isset($_GET["create2"])){ // Create group
 		$location = clean_output (get_parameter ("location",""));
 		$description = get_parameter ("description","");
 		$id_category = get_parameter ("id_category","");
+		$public = (int) get_parameter ("public",0);
+		$external_id = (string) get_parameter ("external_id");
 
-		$sql_insert="INSERT INTO tdownload (name, location, description, id_category, id_user, date) 
-		  		 VALUE ('$name','attachment/downloads/$location', '$description', '$id_category', '".$config["id_user"]."', '$timestamp') ";
-
+		$sql_insert = "INSERT INTO tdownload (name, location, description, id_category, id_user, date, public, external_id) 
+		  		 VALUE ('$name','attachment/downloads/$location', '$description', '$id_category', '".$config["id_user"]."', '$timestamp', $public, '$external_id') ";
 		$result=mysql_query($sql_insert);	
 		if (! $result)
 			echo "<h3 class='error'>".__('Could not be created')."</h3>"; 
@@ -84,10 +101,11 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	// Location should not be changed never.
 	$description = get_parameter ("description","");
 	$id_category = get_parameter ("id_category","");
-
+	$public = (int) get_parameter ("public",0);
+	$external_id = (string) get_parameter ("external_id");
 
 	$sql_update ="UPDATE tdownload
-	SET name = '$name', description = '$description', id_category = $id_category WHERE id = $id";
+	SET public = $public, external_id = '$external_id', name = '$name', description = '$description', id_category = $id_category WHERE id = $id";
 	$result=mysql_query($sql_update);
 
 	if (! $result)
@@ -143,6 +161,9 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id_category = 1;
 		$id = -1;
 		$description = "";	
+		$external_id = sha1(random_string(12).date());
+		$public = 0;
+
 	} else {
 		$id = get_parameter ("update",-1);
 		$row = get_db_row ("tdownload", "id", $id);
@@ -152,9 +173,11 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id_category = $row["id_category"];
 		$timestamp = $row["date"];
 		$down_id_user = $row["id_user"];
+		$public = $row["public"];
+		$external_id = $row["external_id"];
 	}
 
-	echo "<h2>".__('File releases management')."</h2>";	
+	echo "<h1>".__('File releases management')."</h1>";	
 	
 	$current_directory = get_parameter ("directory", "/");
 
@@ -188,7 +211,14 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	if (preg_match("/^manager/", $current_directory))
 		$current_directory = "images";
 
-	echo "<h3>".__('Upload a new file')."</a></h3>";
+	echo "<br>";
+
+
+
+	echo '<a href="javascript:;" onclick="$(\'#upload_div\').slideToggle (); return false">';
+	echo '<h3>'.__('Upload a new file').'</h3>';
+	echo '</a>';
+	echo '<div id="upload_div" style="padding: 20px; margin: 0px; display: none;">';
 
 	if (is_writable($current_directory)) {
 		$target_directory = 'attachment/downloads';
@@ -204,6 +234,8 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		echo "</p>";
 	}
 	
+	echo "</div>";
+
 	// echo "<form method='post' action='index.php?sec=download&sec2=operation/download/browse&create=1&upload_file' enctype='multipart/form-data'>";
 	echo "<table>";
 	
@@ -224,6 +256,18 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	echo "<input type=text size=40 name='name' value='$name'>";
 
+	echo "<tr>";
+	echo "<td class=datos>";
+	echo __('External ID');
+	echo "<td class=datos>";
+	echo "<input type=text size=60 name='external_id' value='$external_id'>";
+
+	echo "<tr>";
+	echo "<td class=datos>";
+	echo __('Public');
+	echo "<td class=datos>";
+	echo print_checkbox ("public", 1, $public, true, '');
+
 	if ($id == -1){
 
 		echo "<tr>";
@@ -231,34 +275,40 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		echo __('Choose file from repository');
 		echo integria_help ("choose_download", true);
 
-		echo "<td>";
+		echo "<td valign=top>";
 
 		// This chunk of code is to do not show in the combo with files, files already as file downloads
 		// (slerena, Sep2011)
 
-    $location = basename ($location);
-    $files = get_download_files();
-    $files_db  = get_db_all_rows_sql ("SELECT * FROM tdownload WHERE location LIKE 'attachment/downloads/%'");
-	if($files_db == false) {
-		$files_db = array();
-	}
+	    $location = basename ($location);
+	    $files = get_download_files();
+	    $files_db  = get_db_all_rows_sql ("SELECT * FROM tdownload WHERE location LIKE 'attachment/downloads/%'");
+		if($files_db == false) {
+			$files_db = array();
+		}
 
-	$files_in = array();
-    foreach ($files_db as $file_db){
-        $files_in[basename($file_db['location'])] = 1;
-    }
+		$files_in = array();
+	    foreach ($files_db as $file_db){
+	        $files_in[basename($file_db['location'])] = 1;
+	    }
 
-    $files_not_in = array();
-    $match = 0;
-    foreach ($files as $file) {
-        if(!isset($files_in[$file])) {
-                $files_not_in[$file] = $file;
-        }
-    }
+	    $files_not_in = array();
+	    $match = 0;
+	    foreach ($files as $file) {
+	        if(!isset($files_in[$file])) {
+	                $files_not_in[$file] = $file;
+	        }
+	    }
 
 		print_select ($files_not_in, 'location', $location, '', '', '', false);
+
+		echo "&nbsp;&nbsp;"; 
+
+		print_submit_button (__('Delete file'), 'delete_btn', false, 'class="sub upd"');
+
 	}
 
+	
 	echo "<tr>";
 	echo "<td class=datos2 valign=top>";
 	echo __('Description');
@@ -363,6 +413,7 @@ else {
 	echo "<th>".__('Size')."</th>";
 	echo "<th>".__('Category')."</th>";
 	echo "<th>".__('Downloads')."</th>";
+	echo "<th>".__('Public link')."</th>";
 	echo "<th>".__('Date')."</th>";
 	if (give_acl($config["id_user"], 0, "KW")){
 		echo "<th>".__('Admin')."</th>";
@@ -395,6 +446,13 @@ foreach($downloads as $row){
 	// Downloads
 	echo "<td>";
 	echo get_db_sql ("SELECT COUNT(*) FROM tdownload_tracking where id_download = ".$row["id"]);
+
+	// Public URL
+	echo "<td>";
+	if ($row["public"]){
+		$url = $config["base_url"] . "/index.php?external_download_id=".$row["external_id"];
+		echo "<a href='$url'><img src='images/world.png'></a>";
+	}
 
 	// Timestamp
 	echo "<td class='f9'>";

@@ -98,16 +98,6 @@ if ($show_people != MENU_HIDDEN) {
 	echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly'>".__('People')."</a></li>";
 }
 
-// Workorders (before known as agenda)
-if (give_acl($config["id_user"], 0, "AR") && $show_agenda != MENU_HIDDEN) {
-	// Workorder
-	if (($sec == "workorder" ))
-		echo "<li id='current' class='workorder'>";
-	else
-		echo "<li class='workorder'>";
-	echo "<a href='index.php?sec=workorder&sec2=operation/workorders/wo'>".__('Work orders')."</a></li>";
-}
-
 // Wiki
 if (give_acl($config["id_user"], 0, "WR") && $show_wiki != MENU_HIDDEN) {
 	// Wiki

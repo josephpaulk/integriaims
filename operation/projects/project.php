@@ -184,11 +184,7 @@ $table->head[0] = __('Name');
 $table->head[1] = __ ('PG');
 $table->head[2] = __('Manager');
 $table->head[3] = __('Completion');
-$table->head[4] = __('Deviation');
-$table->head[5] = __('People');
-$table->head[6] = __('Time used');
-$table->head[7] = __('Cost');
-$table->head[8] = __('Updated');
+$table->head[4] = __('Updated');
 $table->data = array ();
 
 // TODO: Needs to implement group control and ACL checking
@@ -241,33 +237,6 @@ foreach ($projects as $project) {
 		$data[3] = progress_bar($completion, 90, 20);
 	}
 
-	// Deviation
-	$deviation_percent = calculate_project_deviation ($project['id']);
-	if ($deviation_percent > 0)
-		$data[4] = $deviation_percent . "%";
-	else
-		$data[4] = "--";
-	
-
-	// Total task / People
-	$data[5] = get_db_value ('COUNT(*)', 'trole_people_project', 'id_project', $project['id']);
-
-	// Time used
-	$data[6] = format_numeric (get_project_workunit_hours ($project['id']));
-	
-	$project_wu_inc = get_incident_project_workunit_hours ($project["id"]);
-	if ($project_wu_inc  > 0 )
-		$data[6] .= " / ".$project_wu_inc;
-	$data[6] .= " ".__('hr');
-
-	// Costs (client / total)
-	$real = project_workunit_cost ($project['id'], 0);
-	$external = project_cost_invoices ($project['id']);
-	
-	$total_project_costs = $external + $real;
-	
-	$data[7] = format_numeric ($total_project_costs) ." ". $config['currency'];
-	
 	// Last update time
 	$sql = sprintf ('SELECT tworkunit.timestamp
 		FROM ttask, tworkunit_task, tworkunit
@@ -278,23 +247,23 @@ foreach ($projects as $project) {
 		$project['id']);
 	$timestamp = get_db_sql ($sql);
 	if ($timestamp != "")
-		$data[8] = "<span style='font-size: 10px'>".human_time_comparation ($timestamp)."</span>";
+		$data[4] = "<span style='font-size: 10px'>".human_time_comparation ($timestamp)."</span>";
 	else
-		$data[8] = __('Never');
+		$data[4] = __('Never');
 	
 	// Delete
 	if ($project['id'] != -1 && (give_acl ($config['id_user'], 0, "PW") || give_acl ($config['id_user'], 0, "PM"))) {
-		$table->head[9] = __('Delete');
+		$table->head[5] = __('Archive');
 		if ((give_acl ($config['id_user'], 0, "PW") && $config['id_user'] == $project["id_owner"]) || give_acl ($config['id_user'], 0, "PM")) {
 			if ($view_disabled == 0) {
-				$data[9] = '<a href="index.php?sec=projects&sec2=operation/projects/project&disable_project=1&id='.$project['id'].'" 
+				$data[5] = '<a href="index.php?sec=projects&sec2=operation/projects/project&disable_project=1&id='.$project['id'].'" 
 					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 					<img src="images/cross.png" /></a>';
 			} else {
-				$data[9] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
+				$data[5] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
 					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 					<img src="images/cross.png" /></a> ';
-				$data[9] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
+				$data[5] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
 					<img src="images/play.gif" /></a>';
 			}
 		}

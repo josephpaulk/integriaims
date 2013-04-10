@@ -379,9 +379,7 @@ if ($id_project) {
 
 echo "</form>";
 
-if ($id_project > 0){
-	include ("task.php");
-}
+
 
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>

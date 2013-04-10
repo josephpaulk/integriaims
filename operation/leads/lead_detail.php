@@ -103,7 +103,7 @@ if ($make_owner){
 	$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Take ownership of lead");
 	process_sql ($sql);
 	$make_owner = 0;
-	$id = 0;
+	
 }
 
 // Update
@@ -157,8 +157,8 @@ if ($update) { // if modified any parameter
 		$result = process_sql ($sql);
 
 	}
-	$id = 0;
-	$update = false; // go to list screen
+	
+	$update = false; // continue editing...
 
 	// Clean up all inputs
 	unset ($_POST);
@@ -181,7 +181,7 @@ if ($delete) {
 	process_sql ($sql);
 
 	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
-	$id = 0;
+	$id = 0; // Force go listing page.
 }
 
 // Close
@@ -562,7 +562,7 @@ if ($id || $new) {
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->width = "750px";
+	$table->width = "97%";
 
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 	

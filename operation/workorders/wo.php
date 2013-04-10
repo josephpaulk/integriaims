@@ -63,26 +63,24 @@ if ($operation == "insert") {
 		// TODO: Create agenda item if end_date is defined.
 	}
 
-	$operation = "";
-	$id = 0;
-	$id_wo_category = 0;
-	$creator = "";
-	$priority = 0;
+	clean_cache_db();
+	$operation = "view"; // Keep in view/edit mode.
+
 }
 
 // ---------------
 // UPDATE new todo
 // ---------------
 if ($operation == "update2") {
-	$id_todo = get_parameter ("id");
-	$todo = get_db_row ("ttodo", "id", $id_todo);
+	$id = get_parameter ("id");
+	$todo = get_db_row ("ttodo", "id", $id);
 	
 	if (!dame_admin($config["id_user"]))
 		if (($todo["assigned_user"] != $config['id_user']) AND ($todo["created_by_user"] != $config['id_user'])){
 			no_permission();
 		}
 
-	$name = $todo["name"];
+	$name = (string) get_parameter ("name", "");
 	$id_task = get_parameter ("id_task", 0);
 	$priority = get_parameter ("priority");
 	$progress = get_parameter ("progress");
@@ -97,18 +95,19 @@ if ($operation == "update2") {
 	$id_wo_category = (int) get_parameter ("id_wo_category"); 
 
 
-	$sql_update = "UPDATE ttodo SET created_by_user = '$creator', need_external_validation = $need_external_validation, id_wo_category = $id_wo_category, start_date = '$start_date', end_date = '$end_date', assigned_user = '$assigned_user', id_task = $id_task, priority = '$priority', progress = '$progress', description = '$description', last_update = '$last_update' WHERE id = $id_todo";
+	$sql_update = "UPDATE ttodo SET created_by_user = '$creator', need_external_validation = $need_external_validation, id_wo_category = $id_wo_category, start_date = '$start_date', end_date = '$end_date', assigned_user = '$assigned_user', id_task = $id_task, priority = '$priority', progress = '$progress', description = '$description', last_update = '$last_update', name = '$name' WHERE id = $id";
 
 	$result=mysql_query($sql_update);
 	if (! $result)
 		echo "<h3 class='error'>".__('Not updated. Error updating data')."</h3>";
 	else
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-	mail_todo (1, $id_todo);
-	$operation = "";
-	$id_wo_category = 0;
-	$creator = "";
-	$priority = -1;
+	
+	mail_todo (1, $id);
+	// TODO. Review this.
+
+	$operation = "view"; // Keep in view/edit mode.
+	clean_cache_db();
 
 }
 
@@ -171,8 +170,12 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 		$validation_date = "";
 		$need_external_validation = 0;
 		$id_wo_category = 0;  
+		$owner = "";
 	} else {
-		$id = get_parameter ("id");
+
+		if (!isset($id))
+			$id = get_parameter ("id");
+
 		$todo = get_db_row ("ttodo", "id", $id);
 
 		// Basic ACL check
@@ -199,28 +202,31 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 
 	if ($operation == "view" || $operation == "update") {
 
+
+		$search_params="&owner=$assigned_user&creator=$creator";
+
 		echo '<ul style="height: 30px;" class="ui-tabs-nav">';
 		echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=workorder&sec2=operation/workorders/wo"><span>'.__("Search").'</span></a></li>';
+		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo'.$search_params.'"><span>'.__("Search").'</span></a></li>';
 
 		if ($tab == "")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=workorder&sec2=operation/workorders/wo&operation=view&id='.$id.'"><span>'.__("Workorder").'</span></a></li>';
+		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id='.$id.'"><span>'.__("Workorder").'</span></a></li>';
 
 		if ($tab == "wu")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=workorder&sec2=operation/workorders/wo&operation=view&tab=wu&id='.$id.'"><span>'.__("Add Workunit").'</span></a></li>';
+		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&tab=wu&id='.$id.'"><span>'.__("Add Workunit").'</span></a></li>';
 	
 
 		if ($tab == "files")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=workorder&sec2=operation/workorders/wo&operation=view&tab=files&id='.$id.'"><span>'.__("Files").'</span></a></li>';
+		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&tab=files&id='.$id.'"><span>'.__("Files").'</span></a></li>';
 		echo "</ul>";
 	}
 
@@ -240,7 +246,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 	// Display main form / view 
 
 	if ($tab == ""){ 
-		$table->width = '75%';
+		$table->width = '90%';
 		$table->class = 'databox';
 		$table->colspan = array ();
 		
@@ -397,13 +403,13 @@ if ($operation == "") {
 		$where_clause .= sprintf(' AND id_wo_category = %d ', $id_category);
 	}
 
-	echo '<form action="index.php?sec=workorder&sec2=operation/workorders/wo" method="post">';		
+	echo '<form action="index.php?sec=projects&sec2=operation/workorders/wo" method="post">';		
 
 	$table->class = 'databox';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->width = "750px";
+	$table->width = "94%";
 
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 
@@ -420,7 +426,7 @@ if ($operation == "") {
 
 	$wo_status_values = wo_status_array ();		
 
-	$table->data[1][0] = print_select ($wo_status_values, 'search_tatus', $search_status, '', __("Any"), -1, true, 0, false, __('WO Status') );
+	$table->data[1][0] = print_select ($wo_status_values, 'search_status', $search_status, '', __("Any"), -1, true, 0, false, __('WO Status') );
 
 	$priorities = get_priorities();
 	$table->data[1][1] = print_select ($priorities, 'search_priority', $search_priority, '', __("Any"), -1, true, 0, false, __('Priority') );
@@ -450,7 +456,7 @@ if ($operation == "") {
 
 	$wos = get_db_all_rows_sql ($sql);
 
-	$wos = print_array_pagination ($wos, "index.php?sec=workorder&sec2=operation/workorders/wo$params");
+	$wos = print_array_pagination ($wos, "index.php?sec=projects&sec2=operation/workorders/wo$params");
 
 	if ($wos !== false) {
 		unset ($table);
@@ -504,11 +510,20 @@ if ($operation == "") {
 					$style = "background: #f0f0ff";	
 
 
-			$data[0] = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo&operation=view&id=".
+			$data[0] = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=".
 				$wo['id']."'>#<b>".$wo["id"]."</b></a>";
 
-			$data[2] = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo&operation=view&id=".
-				$wo['id']."'>".$wo['name']."</a>";
+			$data[2] = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=".
+				$wo['id']."'>".short_string ($wo['name'],45)."</a>";
+
+			if ($wo["id_task"] != 0){
+
+				$id_project = get_db_value ("id_project", "ttask", "id", $wo["id_task"]);
+				$project_title = short_string (get_db_value ("name", "tproject", "id", $id_project), 35);
+				$task_title = short_string (get_db_value ("name", "ttask", "id", $wo["id_task"]), 35);
+				$buffer = "<br><span style='font-size: 9px'>" . $project_title . " / " . $task_title . "</span>";
+				$data[2] .= $buffer;
+			}
 
 			if ($wo["priority"] == 0)
 				$data[3] = "<img src='images/pixel_blue.png' width=12 height=12 title='Informative'>";
@@ -567,12 +582,12 @@ if ($operation == "") {
 			$data[10] = "";
 			if ($wo['assigned_user'] == $config["id_user"]){
 				if ($wo["progress"] == 0){
-					$data[10] .= "<a href='index.php?sec=workorder&sec2=operation/workorders/wo$params&id=". $wo['id']."&set_progress=1'><img src='images/ack.png' title='".__("Set as finished")."'></a>";
+					$data[10] .= "<a href='index.php?sec=projects&sec2=operation/workorders/wo$params&id=". $wo['id']."&set_progress=1'><img src='images/ack.png' title='".__("Set as finished")."'></a>";
 				} 
 			}
 
 			if (($wo["progress"] < 2) AND ($wo["created_by_user"] == $config["id_user"]) AND ($wo["need_external_validation"] == 1) ){	
-				$data[10] = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo$params&id=". $wo['id']."&set_progress=2'><img src='images/rosette.png' title='".__("Validate")."'></a>";
+				$data[10] = "<a href='index.php?sec=projects&sec2=operation/workorders/wo$params&id=". $wo['id']."&set_progress=2'><img src='images/rosette.png' title='".__("Validate")."'></a>";
 			}
 
 			// Evaluate different conditions to allow WO deletion
@@ -586,7 +601,7 @@ if ($operation == "") {
 
 			if ($can_delete){
 				$data[10] .= '&nbsp;&nbsp;<a 
-href="index.php?sec=workorder&sec2=operation/workorders/wo'.$params.'&operation=delete&id='.
+href="index.php?sec=projects&sec2=operation/workorders/wo'.$params.'&operation=delete&id='.
 				$wo['id'].'""onClick="if (!confirm(\''.__('Are you sure?').'\'))
 							return false;"><img src="images/cross.png"></a>';
 			}

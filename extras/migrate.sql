@@ -28,15 +28,11 @@ ALTER TABLE `tincidencia` ADD COLUMN `closed_by` varchar(60) NOT NULL default ''
 -- ---------------------------------------------------
 ALTER TABLE `tincident_track` CHANGE COLUMN `id_aditional` `id_aditional` varchar(60) NOT NULL DEFAULT '0';
 
--- ---------------------------------------------------
--- Table `torigin`
--- ---------------------------------------------------
-DROP TABLE `torigin``;
 
 -- ---------------------------------------------------
 -- Table `tincident_origin`
 -- ---------------------------------------------------
-DROP TABLE `tincident_origin``;
+DROP TABLE `tincident_origin`;
 
 -- ---------------------------------------------------------------------
 -- Table `tincident_status`
@@ -231,6 +227,15 @@ ALTER TABLE tprofile ADD `cr` tinyint(1) NOT NULL default '0';
 ALTER TABLE tprofile ADD `cw` tinyint(1) NOT NULL default '0';
 ALTER TABLE tprofile ADD `cm` tinyint(1) NOT NULL default '0';
 
-ALTER TABLE tprofile ADD `fr` tinyint(1) NOT NULL default '0';
-ALTER TABLE tprofile ADD `fw` tinyint(1) NOT NULL default '0';
-ALTER TABLE tprofile ADD `fm` tinyint(1) NOT NULL default '0';
+ALTER TABLE tprofile ADD `ffr` tinyint(1) NOT NULL default '0';
+ALTER TABLE tprofile ADD `ffw` tinyint(1) NOT NULL default '0';
+ALTER TABLE tprofile ADD `ffm` tinyint(1) NOT NULL default '0';
+
+ALTER TABLE tdownload ADD `public` int(2) unsigned NOT NULL default 0;
+ALTER TABLE tdownload ADD `external_id` text NOT NULL default '';
+
+
+ ALTER TABLE tattachment MODIFY `description` text default '';
+ ALTER TABLE tdownload_category ADD   `icon` varchar(100) NOT NULL default '';
+ ALTER TABLE tdownload ADD `id_user` varchar(60) NOT NULL;
+ 

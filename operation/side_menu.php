@@ -345,6 +345,42 @@ if (give_acl ($config["id_user"], 0, "PM") && $sec == "projects" && $show_projec
 	echo "</div>";
 }
 
+
+// Workorders
+if ((($sec == "projects" ))&& ( $show_projects != MENU_HIDDEN )) {
+	echo "<div class='portlet'>";
+	echo "<h3>".__('Workorders')."</h3>";
+	echo "<ul class='sidemenu'>";
+
+	// Todo overview
+	if (($sec2 == "operation/workorders/wo") && (!isset($_GET["operation"])))
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=projects&sec2=operation/workorders/wo'>".__('Workorders')."</a></li>";
+
+	if (($sec2 == "operation/workorders/wo")) {
+		echo "<li style='margin-left: 15px; font-size: 10px;'>";
+		echo "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=create'>".__('New WO')."</a>";
+		echo "</li>";
+	}
+
+	if (dame_admin($config["id_user"])){
+		// WO category management
+		if (($sec2 == "operation/workorders/wo_category") && (!isset($_GET["operation"])))
+			echo "<li id='sidesel'>";
+		else 
+			echo "<li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/workorders/wo_category'>".__('WO Categories')."</a></li>";
+
+		if (($sec2 == "operation/workorders/wo_category")){
+			echo "<li style='margin-left: 15px; font-size: 10px;'>";
+			echo "<a href='iindex.php?sec=projects&sec2=operation/workorders/wo_category&create=1'>".__('New category')."</a>";
+			echo "</li>";
+		}
+	}
+}
+
 // INCIDENTS
 if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incidents != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
@@ -844,41 +880,6 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "KR") && $show_file_r
 	echo "</div>";
 }
 
-
-// TODO
-if ((($sec == "workorder" ))&& ($show_agenda != MENU_HIDDEN)) {
-	echo "<div class='portlet'>";
-	echo "<h3>".__('Workorders')."</h3>";
-	echo "<ul class='sidemenu'>";
-
-	// Todo overview
-	if (($sec2 == "operation/workorders/wo") && (!isset($_GET["operation"])))
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=workorder&sec2=operation/workorders/wo'>".__('Workorders')."</a></li>";
-
-	if (($sec2 == "operation/workorders/wo")) {
-		echo "<li style='margin-left: 15px; font-size: 10px;'>";
-		echo "<a href='index.php?sec=workorder&sec2=operation/workorders/wo&operation=create'>".__('New WO')."</a>";
-		echo "</li>";
-	}
-
-	if (dame_admin($config["id_user"])){
-		// WO category management
-		if (($sec2 == "operation/workorders/wo_category") && (!isset($_GET["operation"])))
-			echo "<li id='sidesel'>";
-		else 
-			echo "<li>";
-		echo "<a href='index.php?sec=workorder&sec2=operation/workorders/wo_category'>".__('WO Categories')."</a></li>";
-
-		if (($sec2 == "operation/workorders/wo_category")){
-			echo "<li style='margin-left: 15px; font-size: 10px;'>";
-			echo "<a href='iindex.php?sec=workorder&sec2=operation/workorders/wo_category&create=1'>".__('New category')."</a>";
-			echo "</li>";
-		}
-	}
-}
 
 if ($sec == "godmode" && $show_setup != MENU_HIDDEN) {
 	echo "<div class='portlet'>";

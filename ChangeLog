@@ -1,3 +1,28 @@
+2013-04-10  Sancho Lerena <slerena@artica.es>
+
+	* extras/migrate.sql,
+	integria_db.sql: New fields on tdownload to allow external downloads.
+
+	* index.php,
+	operation/download/download_external.php: New mode for downloads, external
+	which allows to anyone to download a file release if know the link. Useful
+	to share files by mail, p.e.
+
+	* operation/side_menu.php,
+	operation/main_menu.php: Workorders now is inside the projects menu, removing
+	its own menu.
+
+	* operation/projects/project.php,
+	operation/projects/project_detail.php: Removed some detail on project listing
+	page, giving less info is helpful to show information better.
+
+	* operation/download/browse.php,
+	operation/download/manage_cat.php,
+	operation/leads/lead_detail.php,
+	operation/workorders/wo.php,
+	operation/workorders/wo_category.php,
+	operation/workorders/wo_files.php: Minor fixes and usability problems.
+
 2013-04-09  Vanessa Gil <vanessa.gil@artica.es>
 
 	* godmode/setup/setup.php

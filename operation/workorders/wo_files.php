@@ -76,7 +76,7 @@ echo '<h3>'.__('Upload a new file').'</h3>';
 echo '</a>';
 echo '<div id="upload_div" style="padding: 20px; margin: 0px; display: none;">';
 $target_directory = 'attachment';
-$action = "index.php?sec=workorder&sec2=operation/workorders/wo&id=$id&tab=files&operation=view&upload=1";				
+$action = "index.php?sec=projects&sec2=operation/workorders/wo&id=$id&tab=files&operation=view&upload=1";				
 $into_form = "<input type='hidden' name='directory' value='$target_directory'><b>Description</b>&nbsp;<input type=text name=description size=60>";
 print_input_file_progress($action,$into_form,'','sub next');	
 echo '</div>';
@@ -87,7 +87,7 @@ $sql = "SELECT * FROM tattachment WHERE id_todo = $id ORDER BY timestamp DESC";
 $files = get_db_all_rows_sql ($sql);	
 if ($files !== false) {
 
-	$files = print_array_pagination ($files, "index.php?sec=workorder&sec2=operation/workorders/wo&id=$id&tab=files&operation=view");
+	$files = print_array_pagination ($files, "index.php?sec=projects&sec2=operation/workorders/wo&id=$id&tab=files&operation=view");
 
 	echo "<br>";
 	echo "<h3>". __('Current files on this workorder')."</h3>";
@@ -118,7 +118,7 @@ if ($files !== false) {
 
 		// Todo. Delete files owner of lead and admins only
 		if ( (dame_admin($config["id_user"])) || ($file["id_usuario"] == $config["id_user"]) ){
-			$data[4] = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo&id=$id&tab=files&operation=view&upload=1&deletef=".$file["id_attachment"]."'><img src='images/cross.png'></a>";
+			$data[4] = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&id=$id&tab=files&operation=view&upload=1&deletef=".$file["id_attachment"]."'><img src='images/cross.png'></a>";
 		}
 
 		array_push ($table->data, $data);

@@ -725,12 +725,14 @@ function get_periodicity ($recurrence) {
 }
 
 function ellipsize_string ($string, $len = 25) {
+	$string = ascii_output($string);
 	return substr ($string, 0, $len).'(..)'.substr ($string, strlen ($string) - $len, $len);
 }
 
 /** Cut string if bigger than $len. Put three dots after point of cut in the string
 */
 function short_string ($string, $len = 15) {
+	$string = ascii_output($string);
 	if (strlen($string) > $len)
 		return substr ($string, 0, $len).'...';
 	else
@@ -1084,5 +1086,15 @@ function check_email_address($email) {
 
 	return true;
 }
+
+// Generate a ASCII random string (useful for hashes or similar)
+function random_string (){
+
+    for ($i = 0; $i < 25; $i++) 
+        {
+            $randstring .= chr (rand(48, 122));
+        }
+    return $randstring;
+}	
 
 ?>
