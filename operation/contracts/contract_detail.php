@@ -202,7 +202,10 @@ if ($id | $new_contract) {
 			
 		$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
 		$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
-		$table->data[3][0] = print_select_from_sql ('SELECT id, name FROM tcompany WHERE id_grupo = '.$id_group.' ORDER BY name',
+
+		// TODO: ACL check for company listing.
+
+		$table->data[3][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
 			'id_company', $id_company, '', '', '', true, false, false, __('Company'));
 			
 		$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";

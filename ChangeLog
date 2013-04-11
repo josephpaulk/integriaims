@@ -1,3 +1,16 @@
+2013-04-11  SAncho Lerena <slerena@artica.es>
+
+	* include/functions_form.php: Moved success lead to end of list.
+
+	* operation/leads/lead_detail.php: CRM W ACL can delete un-managed
+	leads directly.
+
+	* operation/side_menu.php: Minimal improvements on user menu.
+
+	* operation/contracts/contract_detail.php: Fixed problem creating crontracts
+
+	* operation/user_report/report_monthly.php: Added link to wo listing.
+
 2013-04-10  Dario Rodriguez <dario@artica.es>
 
 	* integria_demo.sql: Fixed several changes in demo SQL schema.

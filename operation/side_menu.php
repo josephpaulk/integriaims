@@ -1219,8 +1219,6 @@ echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['
 echo '<strong>'.$config['id_user'].'</strong>';
 echo '</a><br/>';
 echo "<em>".$realname."</em><br />";
-echo __('Phone').": $telephone <br />";
-echo __('Email').':</strong> '.$email.'<br />';
 
 // Link to workunit calendar (month)
 echo '<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';
@@ -1259,6 +1257,9 @@ if (give_acl ($config["id_user"], 0, "PR")) {
 		echo '<img src="images/exclamation.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" />';
 	else
 		echo '<img src="images/heart.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
+	
+	echo "&nbsp;&nbsp;<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=".$config["id_user"]."'><img src='images/paste_plain.png' title='".__("Work Orders")."' border=0></a>";
+
 }
 
 echo '</div></div>';

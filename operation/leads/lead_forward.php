@@ -43,13 +43,12 @@ if ($send) {
 		if ($cco != "")
 			integria_sendmail ($cco, $subject, $mail, false, "", $from, true);
 
-		
+		$datetime =  date ("Y-m-d H:i:s");	
 		// Update tracking
 		$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Forwarded lead by mail to $to");
 		process_sql ($sql);
 
 		// Update activity
-		$datetime =  date ("Y-m-d H:i:s");
 		$comments = __("Forwarded lead by mail to $to"). "&#x0d;&#x0a;" . $mail; // this adds &#x0d;&#x0a; 
 		$sql = sprintf ('INSERT INTO tlead_activity (id_lead, written_by, creation, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, $comments);
 		process_sql ($sql);

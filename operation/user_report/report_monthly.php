@@ -196,9 +196,13 @@
 
             // Graph stats montly report for X user
     	    echo "&nbsp;&nbsp;";
-            echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$nombre'><img src='images/chart_bar.png' title='".__("Montly report")."' border=0></a></center></td>";
-       
-			// Total hours this month
+            echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$nombre'><img src='images/chart_bar.png' title='".__("Montly report")."' border=0></a></center>";
+      
+	// WO report for X user
+            echo "&nbsp;&nbsp;";
+            echo "<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=$nombre'><img src='images/paste_plain.png' title='".__("Workorders")."' border=0></a></center></td>";
+			
+		// Total hours this month
 			echo "<td  >";
 			echo $row[0];
             

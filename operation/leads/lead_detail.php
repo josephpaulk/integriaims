@@ -401,6 +401,12 @@ if ($id || $new) {
 							<img src="images/cross.png"></a>';
 		}
 
+		// Show "close" control if it's owned by the user
+		if (($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"]))) {
+                        $table->data[5][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+                        $id."&close=1'><img src='images/lock.png' title='".__("Close this lead")."'></a>";
+                }
+
 		// Show take control is owned by nobody
 		if ($owner == "")
 				$table->data[5][0] .=  "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
@@ -718,6 +724,16 @@ if ($id || $new) {
 								onClick="if (!confirm(\''.__('Are you sure?').'\'))
 								return false;">
 								<img src="images/cross.png"></a>';
+			} else {
+				if ($lead["owner"] == ""){
+					// TODO. Check ACK for CRM Write here
+					$data[9] .= '&nbsp;<a href="index.php?sec=customers&
+                                                                sec2=operation/leads/lead_detail&
+                                                                delete=1&id='.$lead["id"].'"
+                                                                onClick="if (!confirm(\''.__('Are you sure?').'\'))
+                                                                return false;">
+                                                                <img src="images/cross.png"></a>';
+				}
 			}
 
 			array_push ($table->data, $data);

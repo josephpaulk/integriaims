@@ -1097,8 +1097,8 @@ function lead_progress_array (){
 	$lead_progress[60] = __("Accepted proposal. Waiting for PO");
 	$lead_progress[100] = __("Closed. Not response or dead.");
 	$lead_progress[101] = __("Closed. Lost.");
-	$lead_progress[102] = __("Closed. Success.");
 	$lead_progress[102] = __("Closed. Invalid or N/A.");
+	$lead_progress[200] = __("Closed. Success.");
 	
 	return $lead_progress;
 }
