@@ -324,9 +324,13 @@ elseif ($op == "activities") {
 	$manager = 1;
 
 	if($manager) {
+
+		$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
+
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities&op2=add">';
-		echo "<h3>".__("Add activity")."</h3><p>";
-		echo "<textarea name='comments' style='margin-left: 10px; width:94%; height: 150px'>";
+		echo "<h3>".__("Add activity for company"). " ". $company_name;
+		echo "</h3><p>";
+		echo "<textarea name='comments' style='margin-left: 10px; width: 92%; height: 250px'>";
 		echo "</textarea>";
 
 		echo '<div class="button" style="margin-left: 10px; width: 92%;">';
@@ -442,6 +446,8 @@ elseif ($op == "contacts") {
 		require ("general/noaccess.php");
 		exit;
 	}
+
+        echo "<h3>".__("Contacts for "). $name . "</h3>";
 	
 	$table->class = 'listing';
 	$table->width = '90%';
@@ -498,6 +504,9 @@ elseif ($op == "invoices") {
 		require ("general/noaccess.php");
 		exit;
 	}
+	
+	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
+	echo "<h3>". __("Invoices for "). $company_name. "</h3>";
 
 	$sql = "SELECT * FROM tinvoice WHERE id_company = $id ORDER BY invoice_create_date";
 	$invoices = get_db_all_rows_sql ($sql);
@@ -579,7 +588,10 @@ elseif ($op == "leads") {
 	$sql = "SELECT * FROM tlead WHERE id_company = $id and progress < 100 ORDER BY estimated_sale DESC,  modification DESC";
 	$invoices = get_db_all_rows_sql ($sql);
 	$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=leads");
-
+	
+	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
+	echo "<h3>".__("Pipeline for "). $company_name . "</h3>";
+	
 	if ($invoices !== false) {
 	
 		$table->width = "90%";
@@ -650,7 +662,7 @@ if ((!$id) AND ($new_company == 0)){
 	$where_clause = " 1 = 1 ";
 
 	if ($search_text != "") {
-		$where_clause .= sprintf (' AND name LIKE "%%%s%%" ', $search_text);
+		$where_clause .= sprintf (' AND ( name LIKE "%%%s%%" OR country LIKE "%%%s%%")  ', $search_text, $search_text);
 	}
 
 	if ($search_role != 0){ 

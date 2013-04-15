@@ -88,7 +88,10 @@ echo "<br>";
 
 if ($files !== false) {
 
-	echo "<h3>". __('Current files on this company')."</h3>";
+	echo "<h3>". __('Current files on this company');
+	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
+	echo " ( $company_name )";
+	echo "</h3>";
 
 	unset ($table);
 	$table->width = "99%";
