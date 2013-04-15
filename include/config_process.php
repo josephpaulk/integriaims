@@ -54,6 +54,7 @@ require_once ($config["homedir"].'/include/functions_db.php');
 require_once ($config["homedir"].'/include/functions_config.php');
 require_once ($config["homedir"].'/include/streams.php');
 require_once ($config["homedir"].'/include/gettext.php');
+require_once ($config["homedir"].'/include/constants.php');
 
 // Load config from database
 load_config();

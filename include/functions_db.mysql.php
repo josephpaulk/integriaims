@@ -355,7 +355,7 @@ function process_sql ($sql, $rettype = "affected_rows") {
 		return false;
 	
 	if (empty ($config['mysql_result_type']))
-		$config['mysql_result_type'] = MYSQL_BOTH;
+		$config['mysql_result_type'] = MYSQL_ASSOC;
 	
 	if (! empty ($sql_cache[$sql])) {
 		$retval = $sql_cache[$sql];

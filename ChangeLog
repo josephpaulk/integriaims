@@ -1,3 +1,10 @@
+2013-04-15  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_db.mysql.php: Changed mysql_result_type to ASSOC by default.
+	* include/config_process.php,
+	include/constants.php,
+	include/functions_db.php: Moved constants to new specific file.
+
 2013-04-15  Sancho Lerena <slerena@artica.es>
 
 	* operation/companies/company_detail.php,
