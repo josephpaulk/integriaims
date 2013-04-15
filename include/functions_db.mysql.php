@@ -354,9 +354,6 @@ function process_sql ($sql, $rettype = "affected_rows") {
 	if ($sql == '')
 		return false;
 	
-	if (empty ($config['mysql_result_type']))
-		$config['mysql_result_type'] = MYSQL_ASSOC;
-	
 	if (! empty ($sql_cache[$sql])) {
 		$retval = $sql_cache[$sql];
 		$sql_cache['saved']++;
@@ -389,7 +386,7 @@ function process_sql ($sql, $rettype = "affected_rows") {
 		} else {
 			add_database_debug_trace ($sql, 0, mysql_affected_rows (), 
 				array ('time' => $time));
-			while ($row = mysql_fetch_array ($result, $config['mysql_result_type'])) {
+			while ($row = mysql_fetch_assoc ($result) {
 				array_push ($retval, $row);
 			}
 			$sql_cache[$sql] = $retval;

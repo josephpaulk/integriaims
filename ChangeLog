@@ -1,5 +1,10 @@
 2013-04-15  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_db.mysql.php: Changed array fetch on process_sql to the same as
+	Pandora FMS. 
+
+2013-04-15  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_db.mysql.php: Changed mysql_result_type to ASSOC by default.
 	* include/config_process.php,
 	include/constants.php,
