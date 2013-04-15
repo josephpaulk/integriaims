@@ -1,5 +1,11 @@
 2013-04-15  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_db.mysql.php: Revert to old array result type because if not 
+	a lot of views will be broken (the first changes was to made easy an inventory function, we
+	will look for a workaround)
+
+2013-04-15  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_db.mysql.php: Fixed an error on return of get_db_sql function,
 	fixed a missing ).
 	* include/functions.php: Fixed an enterprise installed check, now uses isset.

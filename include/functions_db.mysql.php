@@ -356,6 +356,10 @@ function process_sql ($sql, $rettype = "affected_rows") {
 	
 	$retval = array();
 	
+	if (empty($config['mysql_result_type'])) {
+		$config['mysql_result_type'] = MYSQL_BOTH;	
+	}
+	
 	if ($sql == '')
 		return false;
 	
@@ -391,7 +395,7 @@ function process_sql ($sql, $rettype = "affected_rows") {
 		} else {
 			add_database_debug_trace ($sql, 0, mysql_affected_rows (), 
 				array ('time' => $time));
-			while ($row = mysql_fetch_assoc ($result)) {
+			while ($row = mysql_fetch_array ($result, $config['mysql_result_type'])) {
 				array_push ($retval, $row);
 			}
 			$sql_cache[$sql] = $retval;
