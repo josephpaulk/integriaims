@@ -716,5 +716,80 @@ function fill_inventories_table($inventories, &$table) {
 	}
 }
 
+/*
+ * Returns all inventory type fields.
+ */ 
+function inventories_get_all_type_field ($id_object_type, $id_inventory) {
+	
+	global $config;
+	
+	$fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type' => $id_object_type));
+	
+	if ($fields === false) {
+		$fields = array();
+	}
+	
+	$all_fields = array();
+	foreach ($fields as $id=>$field) {
+		foreach ($field as $key=>$f) {
 
+			if ($key == 'label') {
+				$all_fields[$id]['label_enco'] = base64_encode($f);
+			}
+			$all_fields[$id][$key] = safe_output($f);
+		}
+	}
+
+	foreach ($all_fields as $key => $field) {
+
+		$id_incident_field = $field['id'];
+		
+		$data = get_db_value_filter('data', 'tobject_field_data', array('id_inventory'=>$id_inventory, 'id_object_type_field' => $id_incident_field), 'AND');
+	
+		if ($data === false) {
+			$all_fields[$key]['data'] = '';
+		} else {
+			$all_fields[$key]['data'] = $data;
+		}
+	}
+	
+	return $all_fields;
+}
+
+/*
+ * Returns all external table type fields.
+ */ 
+function inventories_get_all_external_field ($external_table_name, $external_reference_field, $data_id_external_table) {
+	
+	global $config;
+
+	$sql_ext = "SHOW COLUMNS FROM ".$external_table_name;
+	$external_data = get_db_all_rows_sql($sql_ext);
+				
+	$sql = "SELECT * FROM $external_table_name WHERE $external_reference_field=$data_id_external_table";
+	$fields_ext = get_db_row_sql($sql);
+
+	if ($fields_ext === false) {
+		$fields_ext = array();
+	}
+
+	$fields = array();
+	foreach ($external_data as $key=>$ext) {
+		$fields[$ext['Field']] = $ext['Field'];
+	}
+	
+	$all_fields_ext = array();
+	$i = 0;
+	foreach ($fields_ext as $key => $val) {
+		
+		if (($key != $external_reference_field) && (array_key_exists($key, $fields))) {
+			$all_fields_ext[$i]['label_enco'] =  base64_encode($key);
+			$all_fields_ext[$i]['label'] = safe_output($key);
+			$all_fields_ext[$i]['data'] = safe_output($val);
+			$i++;
+		}
+	}
+
+	return $all_fields_ext;
+}
 ?>

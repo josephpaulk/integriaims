@@ -2106,5 +2106,19 @@ function return_user_report_types ($type){
 	}
 }
 
+function get_object_types ($only_names = true) {
+	$types = get_db_all_rows_in_table ('tobject_type');
+	if ($types == false)
+		return array ();
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($types as $type) {
+			$result[$type['id']] = $type['name'];
+		}
+		return $result;
+	}
+	return $types;
+}
 
 ?>

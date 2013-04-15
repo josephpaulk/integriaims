@@ -209,8 +209,8 @@ if (! $id && ! $create) {
 				$object['id'].'">'.$object['name'].'</a>';
 			$data[1] = substr ($object["description"], 0, 200);
 			$data[2] = objects_count_fields($object['id']);
-			$data[3] = '<a title=' . __("Types") . ' href=index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id='.
-				$object["id"].'><img src="images/square_arrow.gif"></a>';
+			$data[3] = '<a title=' . __("Fields") . ' href=index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id='.
+				$object["id"].'><img src="images/page_white_text.png"></a>';
 			$data[3] .= '&nbsp;<form style="display:inline;" method="post" onsubmit="if (!confirm(\''.__('Are you sure?').'\'))
 				return false;">';
 			$data[3] .= print_input_hidden ('delete_object', 1, true);
@@ -221,6 +221,8 @@ if (! $id && ! $create) {
 			array_push ($table->data, $data);
 		}
 		print_table ($table);
+	} else {
+		echo "<h4>".__('No objects')."</h4>";
 	}
 	
 	echo '<div class="button" style="width: '.$table->width.'">';

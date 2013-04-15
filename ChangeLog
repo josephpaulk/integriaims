@@ -1,3 +1,17 @@
+2013-04-15  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  include/functions_db.php
+	  include/functions_inventories.php
+	  operation/side_menu.php
+	  operation/inventories/inventory_detail.php
+	  operation/inventories/manage_objects.php
+	  operation/inventories/manage_objects_types_list.php: Changed
+	structure from 'tinventory' and added incidents type with
+	custom fields.
+
+	* include/ajax/inventories.php: Added file.
+
 2013-04-15  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_db.mysql.php: Revert to old array result type because if not 

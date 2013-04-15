@@ -761,22 +761,6 @@ if ($sec == "inventory" && give_acl ($config["id_user"], 0, "VM") && $show_inven
 	echo "</div>";
 }
 
-// BUILDINGS
-if ($sec == "inventory" && give_acl ($config["id_user"], 0, "VM") && $show_inventory != MENU_HIDDEN) {
-	echo "<div class='portlet'>";
-	echo "<h3 class='admin'>".__('Buildings')."</h3>";
-	echo "<ul class='sidemenu'>";
-
-	// Building overview
-	if ($sec2=="operation/buildings/building_detail")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=inventory&sec2=operation/buildings/building_detail'>".__('Building overview')."</a></li>";
-
-	echo "</ul>";
-	echo "</div>";
-}
 
 // Product types
 if ($sec == "inventory" && give_acl($config["id_user"], 0, "PM") && $show_inventory != MENU_HIDDEN) {

@@ -136,7 +136,7 @@ if ($delete_object_type_field) {
 // List fields
 //**********************************************************************
 
-echo "<h2>".__('Object management')."</h2>";
+echo "<h2>".__('List fields')."</h2>";
 $objects_type_fields = get_db_all_rows_field_filter ('tobject_type_field', 'id_object_type', $id_object_type,'label, type');
 
 $table->width = '90%';
@@ -176,6 +176,8 @@ if ($objects_type_fields !== false) {
 		array_push ($table->data, $data);
 	}
 	print_table ($table);
+} else {
+	echo "<h4>".__('No objects types fields')."</h4>";
 }
 
 echo '<div class="button" style="width: '.$table->width.'">';

@@ -18,6 +18,47 @@ global $config;
 check_login ();
 
 require_once ('include/functions_inventories.php');
+require_once ('include/functions_user.php');
+
+if (defined ('AJAX')) {
+	
+	global $config;
+	
+	$show_type_fields = (bool) get_parameter('show_type_fields', 0);
+	$show_external_data = (bool) get_parameter('show_external_data', 0);
+	$update_external_id = (bool) get_parameter('update_external_id', 0);
+ 	
+ 	if ($show_type_fields) {
+		$id_object_type = get_parameter('id_object_type');
+		$id_inventory = get_parameter('id_inventory');		
+		$fields = inventories_get_all_type_field ($id_object_type, $id_inventory);
+	
+		echo json_encode($fields);
+		return;
+	}
+	
+	if ($show_external_data) {
+
+		$external_table_name = get_parameter('external_table_name');
+		$external_reference_field = get_parameter('external_reference_field');
+		$data_id_external_table = get_parameter('id_external_table');
+		
+		$fields_ext = inventories_get_all_external_field ($external_table_name, $external_reference_field, $data_id_external_table);
+
+		echo json_encode($fields_ext);
+		return;
+	}
+	
+	if ($update_external_id) {
+		$id_object_type_field = get_parameter('id_object_type_field');
+		$id_inventory = get_parameter('id_inventory');
+		$id_value = get_parameter('id_value'); //new value for id field
+		
+		$result = process_sql_update('tobject_field_data', array('data' => $id_value), array('id_object_type_field' => $id_object_type_field, 'id_inventory'=>$id_inventory), 'AND');
+		
+		return $result;
+	}
+}
 
 $result_msg = '';
 
@@ -38,18 +79,12 @@ $update = (bool) get_parameter ('update_inventory');
 $create = (bool) get_parameter ('create_inventory');
 $name = (string) get_parameter ('name');
 $description = (string) get_parameter ('description');
-$cost = (float) get_parameter ('cost');
-$id_product = (int) get_parameter ('id_product');
-$id_grupo = (int) get_parameter ('id_grupo');
 $id_contract = (int) get_parameter ('id_contract');
-$ip_address = (string) get_parameter ('ip_address');
 $id_parent = (int) get_parameter ('id_parent');
-$id_building = (int) get_parameter ('id_building');
-$serial_number = (string) get_parameter ('serial_number');
-$part_number = (string) get_parameter ('part_number');
-$confirmed = (bool) get_parameter ('confirmed');
-$id_sla = (int) get_parameter ('id_sla');
 $id_manufacturer = (int) get_parameter ('id_manufacturer');
+$owner = (string) get_parameter ('owner');
+$public = (bool) get_parameter ('public');
+$id_object_type = (int) get_parameter('id_object_type');
 
 if ($update) {
 	if (! give_acl ($config['id_user'], get_inventory_group ($id), "VW")) {
@@ -60,18 +95,67 @@ if ($update) {
 	}
 	
 	$sql = sprintf ('UPDATE tinventory SET name = "%s", description = "%s",
-			id_product = %d, id_contract = %d, ip_address = "%s",
-			id_parent = %d, id_building = %d, serial_number = "%s",
-			part_number = "%s", id_manufacturer = %d, id_sla = %d,
-			cost = %f, confirmed = %d 
+			id_contract = %d,
+			id_parent = %d, id_manufacturer = %d, owner = "%s", public = %d, id_object_type = %d
 			WHERE id = %d',
-			$name, $description, $id_product, $id_contract, $ip_address,
-			$id_parent, $id_building, $serial_number, $part_number,
-			$id_manufacturer, $id_sla, $cost, $confirmed, $id);
+			$name, $description, $id_contract,
+			$id_parent,
+			$id_manufacturer, $owner, $public, $id_object_type, $id);
 	$result = process_sql ($sql);
 	
+	//update object type fields
+	if ($id_object_type != 0) {
+		$sql_label = "SELECT `label`, `type` FROM `tobject_type_field` WHERE id_object_type = $id_object_type";
+		$labels = get_db_all_rows_sql($sql_label);
+		
+		if ($labels === false) {
+			$labels = array();
+		}
+	
+		foreach ($labels as $label) {
+			
+			if ($label['type'] == 'external') {
+
+				$sql = "SELECT * FROM tobject_type_field WHERE id_object_type=$id_object_type AND label='".$label['label']."' AND type='external'";
+				$external = get_db_row_sql($sql);
+			
+				//$sql_ext = "DESCRIBE ".$external['external_table_name'];
+				//$external_data = mysql_process($sql_ext);
+				$sql_ext = "SHOW COLUMNS FROM ".$external['external_table_name'];
+				$external_data = get_db_all_rows_sql($sql_ext);
+
+				$values_ext = array();
+				foreach ($external_data as $k => $ext) {
+					$values_ext[$ext['Field']] = get_parameter (base64_encode($ext['Field']));
+				}
+
+				$id_external_table = get_parameter (base64_encode($label['label']));
+
+				foreach ($values_ext as $key => $val) {
+	
+					if ($key != $external['external_reference_field']) {
+						process_sql_update($external['external_table_name'], array($key => $val), array($external['external_reference_field'] => $id_external_table));
+					}
+					
+				}
+			} 
+			
+				$values['data'] = get_parameter (base64_encode($label['label']));
+				
+				$id_object_type_field = get_db_value_filter('id', 'tobject_type_field', array('id_object_type' => $id_object_type, 'label'=> $label['label']), 'AND');
+				$values['id_object_type_field'] = $id_object_type_field;
+				$values['id_inventory'] = $id;
+		
+				$exists_id = get_db_value_filter('id', 'tobject_field_data', array('id_inventory' => $id, 'id_object_type_field'=> $id_object_type_field), 'AND');
+				if ($exists_id) 
+					process_sql_update('tobject_field_data', $values, array('id_object_type_field' => $id_object_type_field, 'id_inventory' => $id), 'AND');
+				else
+					process_sql_insert('tobject_field_data', $values);
+			
+		}
+	}
+	
 	/* Update contacts in inventory */
-	update_inventory_contacts ($id, get_parameter ('contacts'));
 	
 	if ($result !== false) {
 		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
@@ -106,22 +190,43 @@ if ($create) {
 		$id = false;
 	}
 	else {
-		$sql = sprintf ('INSERT INTO tinventory (name, description, id_product,
-				id_contract, ip_address, id_parent, id_building, serial_number,
-				part_number, id_manufacturer, id_sla, cost, confirmed)
-				VALUES ("%s", "%s", %d, %d, "%s", %d, %d, "%s", "%s", %d, %d, %f, %d)',
-				$name, $description, $id_product, $id_contract, $ip_address,
-				$id_parent, $id_building, $serial_number, $part_number,
-				$id_manufacturer, $id_sla, $cost, $confirmed);
+
+		$sql = sprintf ('INSERT INTO tinventory (name, description,
+				id_contract, id_parent, id_manufacturer, owner, public, id_object_type)
+				VALUES ("%s", "%s", %d, %d, %d, "%s", %d, %d)',
+				$name, $description, $id_contract,
+				$id_parent, $id_manufacturer, $owner, $public, $id_object_type);
 		$id = process_sql ($sql, 'insert_id');
 	}
 	if ($id !== false) {
+		
+		//insert data to incident type fields
+		if ($id_object_type != 0) {
+			$sql_label = "SELECT `label` FROM `tobject_type_field` WHERE id_object_type = $id_object_type";
+			$labels = get_db_all_rows_sql($sql_label);
+		
+			if ($labels === false) {
+				$labels = array();
+			}
+			
+			foreach ($labels as $label) {
+
+				$id_object_field = get_db_value_filter('id', 'tobject_type_field', array('id_object_type' => $id_object_type, 'label'=> $label['label']), 'AND');
+				
+				$values_insert['id_inventory'] = $id;
+				$values_insert['data'] = get_parameter (base64_encode($label['label']));
+				$values_insert['id_object_type_field'] = $id_object_field;
+				$id_object_type_field = get_db_value('id', 'tobject_type_field', 'id_object_type', $id_object_type);
+				process_sql_insert('tobject_field_data', $values_insert);
+			
+			}
+		}
+			
 		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
 
-		$result_msg .= "<h3><a href='index.php?sec=inventory&sec2=operation/inventories/inventory&id=$id'>".__("Click here to continue working with Object #").$id."</a></h3>";
+		$result_msg .= "<h3><a href='index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=$id'>".__("Click here to continue working with Object #").$id."</a></h3>";
 
 		/* Update contacts in inventory */
-		update_inventory_contacts ($id, get_parameter ('contacts'));
 	} else {
 		$result_msg = '<h3 class="error">'.$err_message.'</h3>';
 	}
@@ -133,16 +238,12 @@ if ($create) {
 	$id = 0;
 	$name = "";
 	$description = "";
-	$id_product = "";
 	$id_contract = "";
-	$ip_address = "";
 	$id_parent = "";
-	$id_building = "";
-	$serial_number = "";
-	$part_number = "";
-	$confirmed = false;
-	$id_sla = 0;
 	$id_manufacturer = 0;
+	$public = false;
+	$owner = $config['id_user'];
+	$id_object_type = 0;
 }
 
 /* This is the default permission checking to create an inventory */
@@ -163,17 +264,12 @@ if ($id) {
 	$inventory = get_db_row ('tinventory', 'id', $id);
 	$name = $inventory['name'];
 	$description = $inventory['description'];
-	$id_product = $inventory['id_product'];
 	$id_contract = $inventory['id_contract'];
-	$ip_address = $inventory['ip_address'];
 	$id_parent = $inventory['id_parent'];
-	$id_building = $inventory['id_building'];
-	$serial_number = $inventory['serial_number'];
-	$part_number = $inventory['part_number'];
-	$confirmed = $inventory['confirmed'];
-	$id_sla = $inventory['id_sla'];
 	$id_manufacturer = $inventory['id_manufacturer'];
-	$cost = $inventory['cost'];
+	$owner = $inventory['owner'];
+	$public = $inventory['public'];
+	$id_object_type = $inventory['id_object_type'];
 }
 
 
@@ -207,113 +303,71 @@ if ($has_permission) {
 } else {
 	$table->data[0][0] = print_label (__('Name'), '', '', true, $name);
 }
-$table->data[0][1] = print_checkbox_extended ('confirmed', 1, $confirmed,
-	! $has_permission, '', '', true, __('Confirmed'));
 
-$products = get_products ();
-if ($has_permission) {
-	$table->data[0][2] = print_select ($products, 'id_product', $id_product,
-		'', __('None'), 0, true, false, false,
-		__('Product type'));
-} else {
-	$product = isset ($products[$id_product]) ? $products[$id_product] : __('Not set');
-	$table->data[0][2] = print_label (__('Product type'), '', '', true, $product);
-}
-$table->data[0][2] .= print_product_icon ($id_product, true);
+$params_assigned['input_id'] = 'text-owner';
+$params_assigned['input_name'] = 'owner';
+$params_assigned['input_value'] = $owner;
+$params_assigned['title'] = 'Owner';
+$params_assigned['return'] = true;
+
+$table->data[0][1] = user_print_autocomplete_input($params_assigned);
+	
+$table->data[0][2] = print_checkbox_extended ('public', 1, $public,
+	! $has_permission, '', '', true, __('Public'));
 
 /* Second row */
-$contracts = get_contracts ();
-$slas = get_slas ();
-$manufacturers = get_manufacturers ();
 if ($has_permission) {
-	$table->data[1][0] = print_select ($contracts, 'id_contract', $id_contract,
+	$parent_name = $id_parent ? get_inventory_name ($id_parent) : __('Search parent');
+	$table->data[1][0] = print_button ($parent_name,
+				'parent_search', false, '', 'class="dialogbtn"',
+				true, __('Parent object'));
+	if ($id_parent)
+		$table->data[1][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$id_parent.'"><img src="images/go.png" /></a>';
+	
+	$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
+
+} else {
+	$parent_name = $id_parent ? get_inventory_name ($id_parent) : __('Not set');
+	
+	$table->data[1][0] = print_label (__('Parent object'), '', '', true, $parent_name);
+	if ($id_parent)
+		$table->data[1][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$id_parent.'"><img src="images/go.png" /></a>';
+}
+
+$contracts = get_contracts ();
+$manufacturers = get_manufacturers ();
+
+if ($has_permission) {
+	$table->data[1][1] = print_select ($contracts, 'id_contract', $id_contract,
 		'', __('None'), 0, true, false, false, __('Contract'));
-	$table->data[1][1] = print_select ($slas, 'id_sla', $id_sla,
-		'', __('None'), 0, true, false, false, __('SLA'));
+
 	$table->data[1][2] = print_select ($manufacturers, 'id_manufacturer',
 		$id_manufacturer, '', __('None'), 0, true, false, false, __('Manufacturer'));
 } else {
 	$contract = isset ($contracts[$id_contract]) ? $contracts[$id_contract] : __('Not set');
-	$sla = isset ($slas[$id_sla]) ? $slas[$id_sla] : __('Not set');
 	$manufacturer = isset ($manufacturers[$id_manufacturer]) ? $manufacturers[$id_manufacturer] : __('Not set');
-	$table->data[1][0] = print_label (__('Contract'), '', '', true, $contract);
-	$table->data[1][1] = print_label (__('SLA'), '', '', true, $sla);
+	
+	$table->data[1][1] = print_label (__('Contract'), '', '', true, $contract);
 	$table->data[1][2] = print_label (__('Manufacturer'), '', '', true, $manufacturer);
 }
 
 /* Third row */
-$buildings = get_buildings ();
-if ($has_permission) {
-	$parent_name = $id_parent ? get_inventory_name ($id_parent) : __('Search parent');
-	$table->data[2][0] = print_button ($parent_name,
-				'parent_search', false, '', 'class="dialogbtn"',
-				true, __('Parent object'));
-	if ($id_parent)
-		$table->data[2][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$id_parent.'"><img src="images/go.png" /></a>';
-	
-	$table->data[2][0] .= print_input_hidden ('id_parent', $id_parent, true);
-	$table->data[2][1] = print_select ($buildings, 'id_building', $id_building,
-		'', __('None'), 0, true, false, false, __('Building'));
-	$table->data[2][2] = print_input_text ('cost', $cost, '', 5, 15,
-				true, __('Cost'));
+$objects_type = get_object_types ();
+$table->data[2][0] = print_label (__('Incident type'), '','',true);
+if ($id_object_type == 0) {
+	$disabled = false;
 } else {
-	$parent_name = $id_parent ? get_inventory_name ($id_parent) : __('Not set');
-	$building = isset ($buildings[$id_building]) ? $buildings[$id_building] : __('Not set');
-	
-	$table->data[2][0] = print_label (__('Parent object'), '', '', true, $parent_name);
-	if ($id_parent)
-		$table->data[2][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$id_parent.'"><img src="images/go.png" /></a>';
-	$table->data[2][1] = print_label (__('Building'), '', '', true, $building);
-	$table->data[2][2] = print_label (__('Cost'), '', '', true, $cost.' '.$config['currency']);
+	$disabled = true;
 }
+$table->data[2][0] .= print_select($objects_type, 'id_object_type', $id_object_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
 
 /* Fourth row */
-if ($has_permission) {
-	$table->data[3][0] = print_input_text ('serial_number', $serial_number, '',
-		20, 250, true, __('Serial number'));
-	$table->data[3][1] = print_input_text ('part_number', $part_number, '',
-		20, 250, true, __('Part number'));
-	$table->data[3][2] = print_input_text ('ip_address', $ip_address, '',
-		15, 60, true, __('IP address'));
-} else {
-	$serial_number = ($serial_number != '') ? $serial_number : __('Not set');
-	$part_number = ($part_number != '') ? $part_number : __('Not set');
-	$ip_address = ($ip_address != '') ? $ip_address : __('Not set');
-	
-	$table->data[3][0] = print_label (__('Serial number'), '', '', true, $serial_number);
-	$table->data[3][1] = print_label (__('Part number'), '', '', true, $part_number);
-	$table->data[3][2] = print_label (__('IP address'), '', '', true, $ip_address);
-}
+$table->colspan[3][0] = 3;		
+$table->data[3][0] = "";
+
 
 /* Fifth row */
-if ($id) {
-	$contacts = get_inventory_contacts ($id, true);
-} else {
-	$contacts = array ();
-}
-$table->data[4][0] = print_select ($contacts, 'select_contacts', NULL,
-	'', '', '', true, false, false, __('Contacts'));
-$table->data[4][0] .= print_button (__('Add'),
-	'search_contact', false, '', 'class="dialogbtn"', true);
-$table->data[4][0] .= print_button (__('Remove'),
-	'delete_contact', false, '', 'class="dialogbtn"', true);
-$table->data[4][0] .= print_button (__('Create'),
-	'create_contact', false, '', 'class="dialogbtn"', true);
-
-foreach ($contacts as $contact_id => $contact_name) {
-	$table->data[4][0] .= print_input_hidden ("contacts[]",
-						$contact_id, true, 'selected-contacts');
-}
-
-$table->data[4][1] = "<b>".__('Company')."</b><br><div id='company_name'>";
-
-if(isset ($contracts[$id_contract])) {
-	$contract_id_company = (int) get_db_value ('id_company', 'tcontract', 'id', $id_contract);
-	$contract_company = (string) get_db_value ('name', 'tcompany', 'id', $contract_id_company);
-	$table->data[4][1] .= "$contract_company";
-}
-
-$table->data[4][1] .= "</div>&nbsp;";
+$table->data[4][1] = "</div>&nbsp;";
 
 /* Sixth row */
 $disabled_str = ! $has_permission ? 'readonly="1"' : '';
@@ -330,6 +384,7 @@ if ($has_permission) {
 	if ($id) {
 		print_input_hidden ('update_inventory', 1);
 		print_input_hidden ('id', $id);
+		print_input_hidden ('id_object_type', $id_object_type);
 		print_submit_button (__('Update'), 'update', false, 'class="sub upd"');
 	} else {
 		print_input_hidden ('create_inventory', 1);
@@ -340,6 +395,14 @@ if ($has_permission) {
 } else {
 	print_table ($table);
 }
+
+//id_inventory hidden
+echo '<div id="id_inventory_hidden" style="display:none;">';
+	print_input_text('id_object_hidden', $id);
+echo '</div>';
+
+echo "<div class= 'dialog ui-dialog-content' id='external_table_window'></div>";
+
 if (! defined ('AJAX')):
 ?>
 
@@ -347,15 +410,327 @@ if (! defined ('AJAX')):
 <script type="text/javascript" src="include/js/jquery.tablesorter.js"></script>
 <script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
-
+<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.dialog"></script>
 <script type="text/javascript">
+
 $(document).ready (function () {
+	
 	configure_inventory_form (false);
+
+	if ($("#id_object_type").val() != 0) {
+		show_fields();
+	}
+	
 	$("form.delete").submit (function () {
 		if (! confirm ("<?php echo __('Are you sure?'); ?>"))
 			return false;
 	});
+	
+	$("#text-owner").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "include/ajax/users",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>"
+			},
+			formatItem: function (data, i, total) {
+				if (total == 0)
+					$("#text-owner").css ('background-color', '#cc0000');
+				else
+					$("#text-owner").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre Real") ?>: '+data[1]+'</span>';
+			},
+			delay: 200
+
+		});
+		
+		$("#img_show_external_table").click(function() {
+			alert("SI");
+		});
 });
+
+function show_fields() {
+
+	id_object_type = $("#id_object_type").val();
+
+	id_inventory = $("#text-id_object_hidden").val();
+
+	$('#table_fields').remove();
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/inventories/inventory_detail&show_type_fields=1&id_object_type=" + id_object_type +"&id_inventory=" +id_inventory,
+		dataType: "json",
+		success: function(data){
+			
+			fi=document.getElementById('table1-3-0');
+			var table = document.createElement("table"); //create table
+			table.id='table_fields';
+			table.className = 'databox_color_without_line';
+			table.width='98%';
+			fi.appendChild(table); //append table to row
+			
+			var i = 0;
+			var resto = 0;
+			jQuery.each (data, function (id, value) {
+				
+				resto = i % 2;
+
+				if (value['type'] == "combo") {
+					if (resto == 0) {
+						var objTr = document.createElement("tr"); //create row
+						objTr.id = 'new_row_'+i;
+						objTr.width='98%';
+						table.appendChild(objTr);
+					} else {
+						pos = i-1;
+						objTr = document.getElementById('new_row_'+pos);
+					}
+					
+					var objTd1 = document.createElement("td"); //create column for label
+					objTd1.width='50%';
+					lbl = document.createElement('label');
+					lbl.innerHTML = value['label']+' ';
+					
+					objTr.appendChild(objTd1);
+					objTd1.appendChild(lbl);
+					
+					txt = document.createElement('br');
+					lbl.appendChild(txt);
+					
+					element=document.createElement('select');
+					element.id=value['label']; 
+					element.name=value['label_enco'];
+					element.value=value['label'];
+					element.style.width="170px";
+					element.class="type";
+					
+					var new_text = value['combo_value'].split(',');
+					jQuery.each (new_text, function (id, val) {
+						element.options[id] = new Option(val);
+						element.options[id].setAttribute("value",val);
+						if (value['data'] == val) {
+							element.options[id].setAttribute("selected",'');
+						}
+					});
+			
+					lbl.appendChild(element);
+					i++;
+				}
+				
+				if ((value['type'] == "text") || (value['type'] == "numeric") || (value['type'] == "external")) {
+				
+					if (resto == 0) {
+						var objTr = document.createElement("tr"); //create row
+						objTr.id = 'new_row_'+i;
+						objTr.width='98%';
+						table.appendChild(objTr);
+					} else {
+						pos = i-1;
+						objTr = document.getElementById('new_row_'+pos);
+					}
+					
+					var objTd1 = document.createElement("td"); //create column for label
+					objTd1.width='50%';
+					lbl = document.createElement('label');
+					lbl.innerHTML = value['label']+' ';
+					objTr.appendChild(objTd1);
+					objTd1.appendChild(lbl);
+					
+					txt = document.createElement('br');
+					lbl.appendChild(txt);
+
+					
+					element=document.createElement('input');
+					//element.id=value['label'];
+					element.id=i;
+					element.name=value['label_enco'];
+					element.value=value['data'];
+					if ((value['type'] == 'text') || (value['type'] == 'external')) {
+						element.type='text';
+
+					} else if (value['type'] == 'numeric') {
+						element.type='number';
+					} 
+					
+					element.size=40;
+					lbl.appendChild(element);
+					
+					if (value['type'] == 'external') {
+						
+						a = document.createElement('a');
+						a.title = "Show table";
+						table_name = value['external_table_name'];
+						a.href = 'javascript: show_external_query("'+table_name+'")';
+						
+						img=document.createElement('img');
+						img.id='img_show_external_table';
+						img.height='16';
+						img.width='16';
+						img.src='images/lupa.gif';
+						
+						a.appendChild(img);
+						lbl.appendChild(a);
+						
+						id_inventory = $('#text-id_object_hidden').val();
+
+						if (id_inventory != 0) { //show refresh only updating inventory
+							id_object_type_field = value['id'];
+						
+							a = document.createElement('a');
+							a.title = "Refresh data";
+							table_name = value['external_table_name'];
+							a.href = 'javascript: refresh_external_id('+id_object_type_field+', '+id_inventory+', '+i+')';
+							
+							img=document.createElement('img');
+							img.id='img_show_external_table';
+							img.height='16';
+							img.width='16';
+							img.src='images/arrow_refresh.png';
+							
+							a.appendChild(img);
+							lbl.appendChild(a);
+						}
+					}
+					
+					i++;
+					
+					if (value['type'] == 'external') {
+						if (value['data'] != '') {
+							
+							external_table_name = value['external_table_name'];
+							external_reference_field = value['external_reference_field'];
+							id_external_table = value['data'];
+							
+							$.ajax({
+								type: "POST",
+								url: "ajax.php",
+								data: "page=operation/inventories/inventory_detail&show_external_data=1&external_table_name=" + external_table_name +"&external_reference_field=" + external_reference_field +'&id_external_table='+id_external_table, 
+								dataType: "json",
+								success: function(data_external){
+									resto_ext = 0;
+									
+									jQuery.each (data_external, function (id_ext, value_ext) {
+										resto_ext = i % 2;
+										
+										if (resto_ext == 0) {
+											var objTr = document.createElement("tr"); //create row
+											objTr.id = 'new_row_'+i;
+											objTr.width='98%';
+											table.appendChild(objTr);
+										} else {
+											pos = i-1;
+											objTr = document.getElementById('new_row_'+pos);
+										}
+										
+										var objTd1 = document.createElement("td"); //create column for label
+										objTd1.width='50%';
+										lbl = document.createElement('label');
+										lbl.innerHTML = value_ext['label']+' ';
+										objTr.appendChild(objTd1);
+										objTd1.appendChild(lbl);
+										
+										txt = document.createElement('br');
+										lbl.appendChild(txt);
+
+										
+										element=document.createElement('input');
+										element.id=value_ext['label'];
+										element.name=value_ext['label_enco'];
+										element.value=value_ext['data'];
+										element.type='text';
+										
+										element.size=40;
+										lbl.appendChild(element);
+										i++;
+									});
+								}
+							});
+						}
+					}
+				}
+				
+				if ((value['type'] == "textarea")) {
+					
+					if (resto == 0) {
+						var objTr = document.createElement("tr"); //create row
+						objTr.id = 'new_row_'+i;
+						table.appendChild(objTr);
+					} else {
+						pos = i-1;
+						objTr = document.getElementById('new_row_'+pos);
+					}
+					
+					var objTd1 = document.createElement("td"); //create column for label
+					
+					lbl = document.createElement('label');
+					lbl.innerHTML = value['label']+' ';
+					objTr.appendChild(objTd1);
+					objTd1.appendChild(lbl);
+					
+					element=document.createElement("textarea");
+					element.id=value['label'];
+					element.name=value['label_enco'];
+					element.value=value['data'];
+					element.type='text';
+					element.rows='3';
+					
+					lbl.appendChild(element);
+					i++;
+				}
+
+			});
+		}
+	});
+}
+
+// Show the modal window of external table
+function show_external_query(table_name) {
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&get_external_data=1&table_name="+table_name,
+		dataType: "html",
+		success: function(data){	
+			$("#external_table_window").hide ()
+				.empty ()
+				.append (data)
+				.dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 620,
+					height: 500
+				})
+				.show ();	
+		}
+	});
+}
+
+function refresh_external_id(id_object_type_field, id_inventory, id_value) {
+	value_id = $('#'+id_value).val();
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/inventories/inventory_detail&update_external_id=1&id_object_type_field=" + id_object_type_field +"&id_inventory=" + id_inventory+ "&id_value="+value_id, 
+		dataType: "html",
+		success: function(data){
+			show_fields();
+		}
+	});
+
+}
 
 </script>
 <?php endif; ?>
