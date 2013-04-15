@@ -1,3 +1,11 @@
+2013-04-15  Dario Rodriguez <dario@artica.es>
+
+	* integria_db.sql: Added tincident_stats table.
+	* operation/incidents/incident_detail.php: Added functions to fill incident statistics.
+	* include/functions_db.php: function borrar_incidente now deletes incident_stat for the
+	incident involved.
+	* include/functions_incidents.php: Created new function incidents_add_incident_stat
+
 2013-04-15  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql

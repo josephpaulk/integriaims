@@ -159,6 +159,7 @@ if ($action == 'update') {
 		}
 	}
 	
+	//Add traces and statistic information
 	$tracked = false;
 	if ($old_incident['prioridad'] != $priority) {
 		incident_tracking ($id, INCIDENT_PRIORITY_CHANGED, $priority);
@@ -180,11 +181,17 @@ if ($action == 'update') {
 		incident_tracking ($id, INCIDENT_GROUP_CHANGED, $grupo);
 		$tracked = true;
 	}
-	
-	
+		
 	if($tracked == false) {
 		incident_tracking ($id, INCIDENT_UPDATED);
 	}
+	
+	
+	$metric_values = array(INCIDENT_METRIC_STATUS => $estado,
+							INCIDENT_METRIC_USER => $user,
+							INCIDENT_METRIC_GROUP => $grupo);
+	
+	incidents_add_incident_stat ($id, $metric_values);
 	
 	if ($sla_disabled == 1)
 		$sla_man = ", sla_disabled = 1 ";
@@ -347,8 +354,22 @@ if ($action == "insert") {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 				"Incident created",
 				"User ".$config['id_user']." created incident #".$id);
+				
+			//Add traces and statistic information	
+			incident_tracking ($id, INCIDENT_STATUS_CHANGED, $estado);
+	
+			incident_tracking ($id, INCIDENT_USER_CHANGED, $usuario);
 			
+			incident_tracking ($id, INCIDENT_GROUP_CHANGED, $id_group_creator);
+						
 			incident_tracking ($id, INCIDENT_CREATED);
+			
+			//Add first incident statistics
+			$metric_values = array (INCIDENT_METRIC_STATUS => $estado,
+									INCIDENT_METRIC_USER => $usuario,
+									INCIDENT_METRIC_GROUP => $id_group_creator);
+	
+			incidents_add_incident_stat ($id, $metric_values);
 
 			// Create automatically a WU with the editor ?
 			if ($config["incident_creation_wu"] == 1){
@@ -733,6 +754,12 @@ if ($has_im) {
 	$table->data[0][2] .= "<input type='hidden' id=grupo_form name=grupo_form value=$id_grupo_incident>";
 }
 
+if ($id_incident_type == 0) {
+	$disabled = false;
+} else {
+	$disabled = true;
+}
+
 if ($disabled) {
 	$table->data[1][0] = print_label (__('Priority'), '', '', true,
 		render_priority ($priority));
@@ -820,11 +847,6 @@ $table->data[2][2] = user_print_autocomplete_input($params_closed);
 	
 $types = get_incident_types ();
 $table->data[3][0] = print_label (__('Incident type'), '','',true);
-if ($id_incident_type == 0) {
-	$disabled = false;
-} else {
-	$disabled = true;
-}
 $table->data[3][0] .= print_select($types, 'id_incident_type', $id_incident_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
 
 $table->colspan[4][0] = 3;		

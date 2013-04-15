@@ -551,6 +551,11 @@ function borrar_incidencia ($id_incident) {
 	$sql = sprintf ('DELETE FROM tincident_track
 			WHERE id_incident = %d', $id_incident);
 	process_sql ($sql);
+	
+	//Delete incident stats
+	$sql = sprintf ('DELETE FROM tincident_stats 
+			WHERE id_incident = %d', $id_incident);
+	process_sql ($sql);
 
 	insert_event ('INCIDENT_DELETED', 0,0, $incident_title);
 }
