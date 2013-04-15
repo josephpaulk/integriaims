@@ -1,5 +1,11 @@
 2013-04-15  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_db.mysql.php: Fixed an error on return of get_db_sql function,
+	fixed a missing ).
+	* include/functions.php: Fixed an enterprise installed check, now uses isset.
+
+2013-04-15  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_db.mysql.php: Changed array fetch on process_sql to the same as
 	Pandora FMS. 
 

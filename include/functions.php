@@ -568,8 +568,8 @@ function format_for_graph ($number , $decimals = 1, $dec_point = ".", $thousands
 function __ ($string) {	
 	global $l10n;
 	global $config;
-
-	if ($config['enterprise_installed']) {
+	
+	if (isset($config['enterprise_installed'])) {
 		
 		if (file_exists('enterprise/include/functions_translate_string.php')) {
 			include_once('enterprise/include/functions_translate_string.php');

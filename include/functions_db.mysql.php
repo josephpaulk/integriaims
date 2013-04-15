@@ -206,8 +206,13 @@ function get_db_sql ($sql, $field = 0) {
 	$result = get_db_all_rows_sql ($sql);
 	if($result === false)
 		return false;
-
-	return $result[0][$field];
+	
+	if ($field) {
+		return $result[0][$field];
+	} else {
+		foreach ($result[0] as $f)
+			return $f;
+	}
 }
 
 /**
@@ -386,7 +391,7 @@ function process_sql ($sql, $rettype = "affected_rows") {
 		} else {
 			add_database_debug_trace ($sql, 0, mysql_affected_rows (), 
 				array ('time' => $time));
-			while ($row = mysql_fetch_assoc ($result) {
+			while ($row = mysql_fetch_assoc ($result)) {
 				array_push ($retval, $row);
 			}
 			$sql_cache[$sql] = $retval;
