@@ -1,3 +1,11 @@
+2013-04-18  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_inventories.php
+	  include/styles/integria.css
+	  operation/inventories/inventory.php
+	  operation/inventories/inventory_search.php: Changed inventory
+	search. Added treeview.
+
 2013-04-15  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/ajax/inventories.php: Changed pop up

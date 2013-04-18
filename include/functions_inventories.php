@@ -792,4 +792,136 @@ function inventories_get_all_external_field ($external_table_name, $external_ref
 
 	return $all_fields_ext;
 }
+
+function inventories_print_tree ($sql_search = false) {
+	global $config;
+	
+	echo '<table class="databox" style="width:98%">';
+	echo '<tr><td style="width:60%" valign="top">';
+	
+	if ($sql_search != false) {
+		$sql = "SELECT tobject_type.* FROM tinventory, tobject_type
+			WHERE tinventory.id_object_type = tobject_type.id $sql_search
+			GROUP BY tobject_type.`name`";
+
+		$object_types = get_db_all_rows_sql($sql);
+	} else {
+		$object_types = get_object_types (false);
+	}
+
+	$sql_search = base64_encode($sql_search);
+	
+	if (empty($object_types)) {
+		echo __("No object types");
+		
+		echo '</td></tr>';
+		echo '</table>';
+	} else {
+
+		$elements_type = array();
+		foreach ($object_types as $key=>$type) {
+		
+			$elements_type[$key]['name'] = $type['name'];
+			$elements_type[$key]['img'] = print_image ("images/objects/".$type['icon'], true, array ("style" => 'vertical-align: middle;'));
+			$elements_type[$key]['id'] = $type['id'];
+
+		}
+
+		echo "<ul style='margin: 0; margin-top: 20px; padding: 0;'>\n";
+		$first = true;
+		
+		foreach ($elements_type as $element) {
+			$lessBranchs = 0;
+
+			if ($first) {
+				if ($element != end($elements_type)) {
+
+					$img = print_image ("images/tree/first_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_". $element['id'], "pos_tree" => "0"));
+					$first = false;
+				}
+				else {
+
+					$lessBranchs = 1;
+					$img = print_image ("images/tree/one_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_". $element['id'], "pos_tree" => "1"));
+				}
+			}
+			else {
+				if ($element != end($elements_type))
+					$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_". $element['id'], "pos_tree" => "2"));
+				else
+				{
+					$lessBranchs = 1;
+					$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_". $element['id'], "pos_tree" => "3"));
+				}
+			}
+
+			echo "<li style='margin: 0px 0px 0px 0px;'>
+				<a onfocus='JavaScript: this.blur()' href='javascript: loadTable(\"object_types\",\"" . $element['id'] . "\", " . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\")'>" .
+				$img . $element['img'] ."&nbsp;" . safe_output($element['name']) . "</a>";
+			
+			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view' id='tree_div_". $element['id'] . "'></div>";
+			echo "</li>\n";
+		}
+	}
+	
+	echo "</ul>\n";
+	echo '</td>';
+	echo '<td style="width:40%" valign="top">';
+	echo '<div id="cont" style="position:relative; top:10px;">&nbsp;</div>';
+	echo '</td></tr>';
+	echo '</table>';
+	
+	return;
+}
+
+function inventories_printTable($id_item, $type, $id_father) {
+	global $config;
+
+	switch ($type) {
+		
+		case 'inventory':
+			$info_inventory = get_db_row('tinventory', 'id', $id_item);
+			$info_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$id_father));
+			
+			if ($info_inventory !== false) {
+				echo '<table cellspacing="2" cellpadding="2" border="0" class="databox" style="width:50%; align:center;">';
+				
+				if ($info_inventory['owner'] != '')
+					$owner = $info_inventory['owner'];
+				else
+					$owner = '--';
+				echo '<tr><td class="datos"><b>'.__('Owner: ').'</b></td>';
+				echo '<td class="datos"><b>'.$owner.'</b></td>';
+				echo '</tr>';
+				
+				if ($info_inventory['id_manufacturer'] != 0)
+					$manufacturer = $info_inventory['id_manufacturer'];
+				else
+					$manufacturer = '--';
+				echo '<tr><td class="datos"><b>'.__('Manufacturer: ').'</b></td>';
+				echo '<td class="datos"><b>'.$manufacturer.'</b></td>';
+				echo '</tr>';
+				
+				if ($info_inventory['id_contract'] != 0)
+					$contract = $info_inventory['id_contract'];
+				else
+					$contract = '--';
+				echo '<tr><td class="datos"><b>'.__('Contract: ').'</b></td>';
+				echo '<td class="datos"><b>'.$contract.'</b></td>';
+				echo '</tr>';
+				
+				if ($info_fields !== false) {
+					foreach ($info_fields as $key=>$info) {
+						echo '<tr><td class="datos"><b>'.__('Field name: ').'</b></td>';
+						echo '<td class="datos"><b>'.$info['label'].'</b></td>';
+						echo '</tr>';
+					}
+				}
+				
+				echo '</table></div>';
+			}
+		break;
+	}
+	return;
+}
 ?>
