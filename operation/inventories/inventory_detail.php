@@ -60,9 +60,34 @@ if (defined ('AJAX')) {
 	}
 }
 
-$result_msg = '';
-
 $id = (int) get_parameter ('id');
+$inventory_name = get_db_value('name', 'tinventory', 'id', $id);
+
+if ($id) {
+	echo "<h1>".__('Object')." #$id"."&nbsp;&nbsp;-&nbsp;".$inventory_name."</h1>";
+} else {
+	if (! defined ('AJAX'))
+		echo "<h2>".__('Create inventory object')."</h2>";
+}
+
+//**********************************************************************
+// Tabs
+//**********************************************************************
+
+if ($id) {
+	echo '<div id="tabs">';
+
+	/* Tabs list */
+	echo '<ul class="ui-tabs-nav">';
+	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail"><span>'.__('Details').'</span></a></li>';
+	if (!empty($id)) {
+		echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
+	}
+	echo '</ul>';
+	echo '</div>';
+}
+
+$result_msg = '';
 
 $check_inventory = (bool) get_parameter ('check_inventory');
 if ($check_inventory) {
@@ -85,6 +110,8 @@ $id_manufacturer = (int) get_parameter ('id_manufacturer');
 $owner = (string) get_parameter ('owner');
 $public = (bool) get_parameter ('public');
 $id_object_type = (int) get_parameter('id_object_type');
+$is_unique = true;
+$msg_err = '';
 
 if ($update) {
 	if (! give_acl ($config['id_user'], get_inventory_group ($id), "VW")) {
@@ -93,6 +120,8 @@ if ($update) {
 		include ("general/noaccess.php");
 		exit;
 	}
+	
+	$old_parent = get_db_value('id_parent', 'tinventory', 'id', $id);
 	
 	$sql = sprintf ('UPDATE tinventory SET name = "%s", description = "%s",
 			id_contract = %d,
@@ -105,53 +134,63 @@ if ($update) {
 	
 	//update object type fields
 	if ($id_object_type != 0) {
-		$sql_label = "SELECT `label`, `type` FROM `tobject_type_field` WHERE id_object_type = $id_object_type";
+		$sql_label = "SELECT `label`, `type`, `unique` FROM `tobject_type_field` WHERE id_object_type = $id_object_type";
 		$labels = get_db_all_rows_sql($sql_label);
 		
 		if ($labels === false) {
 			$labels = array();
 		}
-	
+		
 		foreach ($labels as $label) {
-			
-			if ($label['type'] == 'external') {
-
-				$sql = "SELECT * FROM tobject_type_field WHERE id_object_type=$id_object_type AND label='".$label['label']."' AND type='external'";
-				$external = get_db_row_sql($sql);
-			
-				//$sql_ext = "DESCRIBE ".$external['external_table_name'];
-				//$external_data = mysql_process($sql_ext);
-				$sql_ext = "SHOW COLUMNS FROM ".$external['external_table_name'];
-				$external_data = get_db_all_rows_sql($sql_ext);
-
-				$values_ext = array();
-				foreach ($external_data as $k => $ext) {
-					$values_ext[$ext['Field']] = get_parameter (base64_encode($ext['Field']));
-				}
-
-				$id_external_table = get_parameter (base64_encode($label['label']));
-
-				foreach ($values_ext as $key => $val) {
-	
-					if ($key != $external['external_reference_field']) {
-						process_sql_update($external['external_table_name'], array($key => $val), array($external['external_reference_field'] => $id_external_table));
-					}
-					
-				}
-			} 
-			
+				
 				$values['data'] = get_parameter (base64_encode($label['label']));
 				
+				if ($label['unique']) {
+					$is_unique = inventories_check_unique_field($values['data'], $label['type']);
+					
+					if (!$is_unique) {
+						$msg_err .= '<h3 class="err">'.__(" Field '").$label['label'].__("' not updated. Value must be unique").'</h3>'; 
+					}
+				}
 				$id_object_type_field = get_db_value_filter('id', 'tobject_type_field', array('id_object_type' => $id_object_type, 'label'=> $label['label']), 'AND');
+				
+				
+				
 				$values['id_object_type_field'] = $id_object_type_field;
 				$values['id_inventory'] = $id;
-		
+				
 				$exists_id = get_db_value_filter('id', 'tobject_field_data', array('id_inventory' => $id, 'id_object_type_field'=> $id_object_type_field), 'AND');
-				if ($exists_id) 
+				if ($exists_id && $is_unique) 
 					process_sql_update('tobject_field_data', $values, array('id_object_type_field' => $id_object_type_field, 'id_inventory' => $id), 'AND');
 				else
 					process_sql_insert('tobject_field_data', $values);
-			
+		}
+	}
+	
+	//parent
+	if ($id_parent != 0) {
+		
+		//delete fields old parent
+		$old_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$old_parent, 'inherit' => 1));
+		
+		if ($old_fields === false) {
+			$old_fields = aray();
+		}
+		
+		foreach ($old_fields as $key => $old) {
+			process_sql_delete('tobject_field_data', array('id_object_type' => $id, 'id' => $old['id']));
+		}
+		
+		//add new fields
+		$inherit_fields = get_db_all_rows_filter('tobject_type_field', array('ic_object_type'=>$id_parent, 'inherit' => 1));
+		
+		if ($inherit_fields === false) {
+			$inherit_fields = aray();
+		}
+		
+		foreach ($inherit_fields as $key => $in_field) {
+			$in_field['id_object_type'] = $id;
+			process_sql_insert('tobject_field_data', $in_field);
 		}
 	}
 	
@@ -165,6 +204,7 @@ if ($update) {
 	
 	if (defined ('AJAX')) {
 		echo $result_msg;
+		echo $msg_err;
 		return;
 	}
 }
@@ -202,7 +242,7 @@ if ($create) {
 		
 		//insert data to incident type fields
 		if ($id_object_type != 0) {
-			$sql_label = "SELECT `label` FROM `tobject_type_field` WHERE id_object_type = $id_object_type";
+			$sql_label = "SELECT `label`, `unique`, `type` FROM `tobject_type_field` WHERE id_object_type = $id_object_type";
 			$labels = get_db_all_rows_sql($sql_label);
 		
 			if ($labels === false) {
@@ -215,10 +255,34 @@ if ($create) {
 				
 				$values_insert['id_inventory'] = $id;
 				$values_insert['data'] = get_parameter (base64_encode($label['label']));
+				
+				if ($label['unique']) {
+					$is_unique = inventories_check_unique_field($values_insert['data'], $label['type']);
+					
+					if (!$is_unique) {
+						$msg_err .= '<h3 class="err">'.__(" Field '").$label['label'].__("' not created. Value must be unique").'</h3>'; 
+					}
+				}
 				$values_insert['id_object_type_field'] = $id_object_field;
 				$id_object_type_field = get_db_value('id', 'tobject_type_field', 'id_object_type', $id_object_type);
-				process_sql_insert('tobject_field_data', $values_insert);
+				
+				if ($is_unique)
+					process_sql_insert('tobject_field_data', $values_insert);
 			
+			}
+		}
+		
+		//parent
+		if ($id_parent != 0) {
+			$inherit_fields = get_db_all_rows_filter('tobject_type_field', array('ic_object_type'=>$id_parent, 'inherit' => 1));
+			
+			if ($inherit_fields === false) {
+				$inherit_fields = aray();
+			}
+			
+			foreach ($inherit_fields as $key => $in_field) {
+				$in_field['id_object_type'] = $id;
+				process_sql_insert('tobject_field_data', $in_field);
 			}
 		}
 			
@@ -226,7 +290,6 @@ if ($create) {
 
 		$result_msg .= "<h3><a href='index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=$id'>".__("Click here to continue working with Object #").$id."</a></h3>";
 
-		/* Update contacts in inventory */
 	} else {
 		$result_msg = '<h3 class="error">'.$err_message.'</h3>';
 	}
@@ -273,11 +336,12 @@ if ($id) {
 }
 
 
+/*
 if ($id) {
 	echo "<h1>".__('Object')." #$id"."&nbsp;&nbsp;";
-	/* Delete incident */
+	// Delete incident 
 	if ($has_permission) {
-		/* Delete object */
+		// Delete object 
 		echo '<form name="delete_object_form" class="delete action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
 		print_input_hidden ('quick_delete', $id, false);
 		echo '<input type="image" class="action" src="images/cross.png" title="' . __('Delete') .'">';
@@ -288,6 +352,7 @@ if ($id) {
 	if (! defined ('AJAX'))
 		echo "<h2>".__('Create inventory object')."</h2>";
 }
+*/
 
 $table->class = 'databox';
 $table->width = '90%';
@@ -374,7 +439,8 @@ $disabled_str = ! $has_permission ? 'readonly="1"' : '';
 $table->data[5][0] = print_textarea ('description', 15, 100, $description,
 	$disabled_str, true, __('Description'));
 
-echo '<div class="result">'.$result_msg.'</div>';
+echo '<div class="result">'.$result_msg.$msg_err.'</div>';
+
 
 if ($has_permission) {	
 	echo '<form method="post" id="inventory_status_form">';
@@ -645,6 +711,7 @@ function show_fields() {
 										element.name=value_ext['label_enco'];
 										element.value=value_ext['data'];
 										element.type='text';
+										element.readOnly=true
 										
 										element.size=40;
 										lbl.appendChild(element);
