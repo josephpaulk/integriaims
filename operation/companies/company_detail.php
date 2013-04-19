@@ -379,6 +379,7 @@ echo "</div>";
 // CONTRACT LISTING
 
 elseif ($op == "contracts") {
+
 	$contracts = get_contracts(false, "id_company = $id ORDER BY name");
 	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=contracts");
 
@@ -497,6 +498,11 @@ elseif ($op == "contacts") {
 
 elseif ($op == "invoices") {
 
+
+	$new_invoice = get_parameter("new_invoice", 0);
+	$operation_invoices = get_parameter ("operation_invoices", "");
+	$view_invoice = get_parameter("view_invoice", 0);
+
 	$id_group = get_db_sql ("SELECT id_grupo FROM tcompany WHERE id = $id");
 	
 	if (! give_acl ($config["id_user"], $id_group, "VR")) {
@@ -508,77 +514,86 @@ elseif ($op == "invoices") {
 	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
 	echo "<h3>". __("Invoices for "). $company_name. "</h3>";
 
-	$sql = "SELECT * FROM tinvoice WHERE id_company = $id ORDER BY invoice_create_date";
-	$invoices = get_db_all_rows_sql ($sql);
-	$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices");
-
-	if ($invoices !== false) {
-	
-		$table->width = "90%";
-		$table->class = "listing";
-		$table->cellspacing = 0;
-		$table->cellpadding = 0;
-		$table->tablealign="left";
-		$table->data = array ();
-		$table->size = array ();
-		$table->style = array ();
-		$table->style[0] = 'font-weight: bold';
-		$table->colspan = array ();
-		$table->head[0] = __('ID');
-		$table->head[1] = __('Description');
-		$table->head[2] = __('Ammount');
-		$table->head[3] = __('Creation');
-		$table->head[4] = __('Payment');
-		$table->head[5] = __('File');
-		$table->head[6] = __('Upload by');
-		if(give_acl ($config["id_user"], $id_group, "VM")) {
-			$table->head[7] = __('Delete');
-		}
-		$counter = 0;
-	
-		$company = get_db_row ('tcompany', 'id', $id);
-	
-		foreach ($invoices as $invoice) {
-			
-			if (! give_acl ($config["id_user"], $company["id_group"], "IR"))
-				continue;
-			$data = array ();
-		
-			$data[0] = "<a href='index.php?sec=customers&sec2=operation/invoices/invoices&id_invoice="
-				.$invoice["id"]."'>".$invoice["bill_id"]."</a>";
-			$data[1] = "<a href='index.php?sec=customers&sec2=operation/invoices/invoices&id_invoice="
-				.$invoice["id"]."'>".$invoice["description"]."</a>";
-			$data[2] = format_numeric ($invoice["ammount"]);
-			$data[3] = $invoice["invoice_create_date"];
-			$data[4] = $invoice["invoice_payment_date"];
-								
-			$filename = get_db_sql ("SELECT filename FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
-	
-			$data[5] = 	"<a href='".$config["base_url"]."/attachment/".$invoice["id_attachment"]."_".$filename."'>$filename</a>";
-			
-			$data[6] = $invoice["id_user"];
-			
-			if(give_acl ($config["id_user"], $id_group, "VM")) {
-			$data[7] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices&delete_invoice=1&id_invoice=".$invoice["id"]."'><img src='images/cross.png'></a>";
-			}
-			
-			array_push ($table->data, $data);
-		}	
-		print_table ($table);
-		
-		// TODO. ACL CHECK
-		$manager = 1;
-
-		if($manager) {
-			echo '<form method="post" action="index.php?sec=customers&sec2=operation/invoices/invoices&id_company='.$id.'">';
-			echo '<div class="button" style="width: '.$table->width.'">';
-			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-			print_input_hidden ('new_invoice', 1);
-			echo '</div>';
-			echo '</form>';
-		}
-		
+	if (($operation_invoices != "") OR ($new_invoice != 0) OR ($view_invoice != 0 ) ){
+		// Show edit/insert invoice
+		include ("operation/invoices/invoices.php");
 	}
+
+	// Operation_invoice changes inside the previous include
+
+	if (($operation_invoices == "") AND ($new_invoice == 0) AND ($view_invoice == 0)) {
+	
+		$sql = "SELECT * FROM tinvoice WHERE id_company = $id ORDER BY invoice_create_date";
+		$invoices = get_db_all_rows_sql ($sql);
+		$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices");
+
+		if ($invoices !== false) {
+		
+			$table->width = "95%";
+			$table->class = "listing";
+			$table->cellspacing = 0;
+			$table->cellpadding = 0;
+			$table->tablealign="left";
+			$table->data = array ();
+			$table->size = array ();
+			$table->style = array ();
+			$table->style[0] = 'font-weight: bold';
+			$table->colspan = array ();
+			$table->head[0] = __('ID');
+			$table->head[1] = __('Description');
+			$table->head[2] = __('Ammount');
+			$table->head[3] = __('Status');
+			$table->head[4] = __('Creation')."/".__("Payment");
+			$table->head[5] = __('File');
+			$table->head[] = __('Upload by');
+			if(give_acl ($config["id_user"], $id_group, "VM")) {
+				$table->head[7] = __('Delete');
+			}
+			$counter = 0;
+		
+			$company = get_db_row ('tcompany', 'id', $id);
+		
+			foreach ($invoices as $invoice) {
+				
+				if (! give_acl ($config["id_user"], $company["id_group"], "IR"))
+					continue;
+				$data = array ();
+			
+				$url = "index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$id."&op=invoices&id_invoice=". $invoice["id"];
+
+				$data[0] = "<a href='$url'>".$invoice["bill_id"]."</a>";
+				$data[1] = "<a href='$url'>".$invoice["description"]."</a>";
+				$data[2] = format_numeric ($invoice["ammount"]);
+				$data[3] = __($invoice["status"]);
+				$data[4] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"] . "<br>". $invoice["invoice_payment_date"]. "</span>";
+									
+				$filename = get_db_sql ("SELECT filename FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
+		
+				$data[5] = 	"<a href='".$config["base_url"]."/attachment/".$invoice["id_attachment"]."_".$filename."'>$filename</a>";
+				
+				$data[6] = $invoice["id_user"];
+				
+				if(give_acl ($config["id_user"], $id_group, "VM")) {
+				$data[7] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices&delete_invoice=1&id_invoice=".$invoice["id"]."'><img src='images/cross.png'></a>";
+				}
+				
+				array_push ($table->data, $data);
+			}	
+			print_table ($table);
+			
+			// TODO. ACL CHECK
+			$manager = 1;
+
+			if($manager) {
+				echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices">';
+				echo '<div class="button" style="width: '.$table->width.'">';
+				print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+				print_input_hidden ('new_invoice', 1);
+				echo '</div>';
+				echo '</form>';
+			}
+		}
+	} 
 }
 
 // Leads listing

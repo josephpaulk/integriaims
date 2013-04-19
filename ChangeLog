@@ -1,3 +1,16 @@
+2013-04-19  Sancho Lerena <slerena@artica.es>
+
+	* operation/invoices/invoices.php,
+	operation/invoices/invoice_detail.php,
+	operation/side_menu.php
+	operation/contracts/contract_detail.php
+	operation/companies/company_detail.php
+	operation/companies/company_files.php: Improvements on invoices and
+	contract management.
+
+	* integria_db.sql,
+	extras/migrate.sql: new structures for invoices (tax and status).
+
 2013-04-19  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php

@@ -18,7 +18,6 @@ global $config;
 
 check_login ();
 
-
 // Delete file
 
 $deletef = get_parameter ("deletef", "");

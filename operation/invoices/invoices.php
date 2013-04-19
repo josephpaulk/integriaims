@@ -16,10 +16,10 @@
 global $config;
 check_login ();
 
-$id_company = get_parameter ("id_company", -1);
+$id_company = get_parameter ("id", -1);
 $company = get_db_row ('tcompany', 'id', $id_company);
 $id_invoice = get_parameter ("id_invoice", -1);
-$operation = get_parameter ("operation");
+$operation_invoices = get_parameter ("operation_invoices");
 
 if ($id_company > 0){
 	if (! give_acl ($config["id_user"], $company["id_group"], "IR")) {
@@ -37,6 +37,7 @@ if ($id_invoice > 0){
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to modify an invoices in a company without access");
 		no_permission();
 	}
+
 	$bill_id = $invoice["bill_id"];
 	$description = $invoice["description"];
 	$ammount = $invoice["ammount"];
@@ -44,7 +45,9 @@ if ($id_invoice > 0){
 	$invoice_create_date = $invoice["invoice_create_date"];
 	$invoice_payment_date = $invoice["invoice_payment_date"];
 	$id_company = $invoice["id_company"];
-	
+	$tax = $invoice["tax"];
+	$invoice_status = $invoice["status"];
+
 } else {
 	$bill_id = "N/A";
 	$description = "";
@@ -52,9 +55,11 @@ if ($id_invoice > 0){
 	$id_attachment = "";
 	$invoice_create_date = "2011-01-30";
 	$invoice_payment_date = "2011-03-30";
+	$tax = 0;
+	$invoice_status = "pending";
 }
 
-if ($operation == "add"){
+if ($operation_invoices == "add_invoice"){
 	$filename = get_parameter ('upfile', false);
 	$bill_id = get_parameter ("bill_id", "");
 	$description = get_parameter ("description", "");
@@ -62,6 +67,11 @@ if ($operation == "add"){
 	$user_id = $config["id_user"];
 	$invoice_create_date = get_parameter ("invoice_create_date");
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
+	$tax = get_parameter ("tax", 0);
+	$invoice_status = get_parameter ("invoice_status", 'pending');
+	
+
+
 	if ($filename != ""){
 		$file_temp = sys_get_temp_dir()."/$filename";
 		$filesize = filesize($file_temp);
@@ -88,9 +98,9 @@ if ($operation == "add"){
 	
 	// Creating the cost record
 	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_company,
-	bill_id, ammount, id_attachment, invoice_create_date, invoice_payment_date) VALUES ("%s", "%s", %d, "%s", "%s", %d, "%s", "%s")',
-			$description, $user_id, $id_company, $bill_id, $ammount, $id_attachment, $invoice_create_date, $invoice_payment_date);
-	
+	bill_id, ammount, id_attachment, invoice_create_date, invoice_payment_date, tax, status) VALUES ("%s", "%s", %d, "%s", "%s", %d, "%s", "%s", "%s", "%s")',
+			$description, $user_id, $id_company, $bill_id, $ammount, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $invoice_status);
+
 	$ret = process_sql ($sql, 'insert_id');
 	if ($ret !== false) {
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
@@ -98,10 +108,11 @@ if ($operation == "add"){
 		echo '<h3 class="error">'.__('There was a problem creating the invoice').'</h3>';
 	}
 	
-	$operation = "";
+	$operation_invoices = "";
+	return;
 }
 
-if ($operation == "update"){
+if ($operation_invoices == "update_invoice"){
 	$values = array();
 	
 	$filename = get_parameter ('upfile', false);
@@ -111,7 +122,9 @@ if ($operation == "update"){
 	$user_id = $config["id_user"];
 	$invoice_create_date = get_parameter ("invoice_create_date");
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
-	
+	$tax = get_parameter ("tax", 0);
+	$invoice_status = get_parameter ("invoice_status", 'pending');
+
 	// If no file input, the file doesnt change
 	if ($filename != ""){
 		$old_id_attachment = $id_attachment;
@@ -151,6 +164,9 @@ if ($operation == "update"){
 	$values['id_company'] = $id_company;
 	$values['bill_id'] = $bill_id;
 	$values['ammount'] = $ammount;
+	$values['status'] = $invoice_status;
+	$values['tax'] = $tax;
+
 	$values['invoice_create_date'] = $invoice_create_date;
 	$values['invoice_payment_date'] = $invoice_payment_date;
 	
@@ -164,20 +180,21 @@ if ($operation == "update"){
 		echo '<h3 class="error">'.__('There was a problem updating the invoice').'</h3>';
 	}
 	
-	$operation = "";
+	$operation_invoices = "";
+	return;
 }
 
-if ($operation == ""){
+if ($operation_invoices == ""){
 
 	echo "<h3>";
-	if ($id_invoice == "")
+	if ($id_invoice == "-1")
 		echo __('Add new invoice');
 	else
 		echo __('Update invoice'). " #$id_invoice";
 	echo "</h3>";
 	echo "<div id='upload_control'>";
 	
-	$action = "index.php?sec=customers&sec2=operation/invoices/invoices&id_company=$id_company";
+	$action = "index.php?sec=customers&sec2=operation/companies/company_detail&id=".$id_company."&op=invoices";
 	
 	$table->id = 'cost_form';
 	$table->width = '90%';
@@ -185,39 +202,57 @@ if ($operation == ""){
 	$table->size = array ();
 	$table->data = array ();
 	
-	$table->data[0][0] = __('Bill ID');
-	$table->data[0][1] = print_input_text ('bill_id', $bill_id, '', 25, 100, true);
-	
-	$table->data[1][0] = __('Ammount');
-	$table->data[1][1] = print_input_text ('ammount', $ammount, '', 10, 20, true);
-	
-	$table->data[2][0] = __('Description');
-	$table->data[2][1] = print_input_text ('description', $description, '', 60, 250, true);
-	
-	$table->data[3][0] = __('Attach a file');
-	$table->data[3][1] = '__UPLOAD_CONTROL__';
 
-	$table->data[4][0] = __('Invoice creation date');
-	$table->data[4][1] = print_input_text ('invoice_create_date', $invoice_create_date, '', 15, 50, true);
+	$table->data[0][0] = __('Company');
+	$table->data[0][1] = get_db_value ("name", "tcompany", "id", $id_company);
 
-	$table->data[5][0] = __('Invoice effective payment date');
-	$table->data[5][1] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true);
+	$table->data[1][0] = __('Bill ID');
+	$table->data[1][1] = print_input_text ('bill_id', $bill_id, '', 25, 100, true);
+	
+	$table->data[2][0] = __('Ammount');
+	$table->data[2][1] = print_input_text ('ammount', $ammount, '', 10, 20, true);
+	
+	$table->data[3][0] = __('Taxes (%)');
+	$table->data[3][1] = print_input_text ('tax', $tax, '', 5, 20, true);
+	
+	$table->data[4][0] = __('Invoice status');
+
+	$invoice_status_ar = array();
+	$invoice_status_ar['pending']= __("Pending");
+	$invoice_status_ar['paid']= __("Paid");
+	$invoice_status_ar['cancel']= __("Cancelled");
+
+	$table->data[4][1] = print_select ($invoice_status_ar, 'invoice_status',
+		$invoice_status, '','', 0, true, false, false, '');	
+
+
+	$table->data[5][0] = __('Description');
+	$table->data[5][1] = print_input_text ('description', $description, '', 60, 250, true);
+	
+	$table->data[6][0] = __('Attach a file');
+	$table->data[6][1] = '__UPLOAD_CONTROL__';
+
+	$table->data[7][0] = __('Invoice creation date');
+	$table->data[7][1] = print_input_text ('invoice_create_date', $invoice_create_date, '', 15, 50, true);
+
+	$table->data[8][0] = __('Invoice effective payment date');
+	$table->data[8][1] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true);
 
 	$into_form = print_table ($table, true);
 
 	$into_form .= '<div class="button" style="width: '.$table->width.'">';
 	if ($id_invoice == -1) {
 		$into_form .= print_button (__('Add'), "crt", false, '', 'class="sub next"', true);
-		$into_form .= print_input_hidden ('operation', "add", true);
+		$into_form .= print_input_hidden ('operation_invoices', "add_invoice", true);
 		$button_name = "button-crt";
 	} else {
 		$into_form .= print_input_hidden ('id_invoice', $id_invoice, true);
-		$into_form .= print_input_hidden ('operation', "update", true);
+		$into_form .= print_input_hidden ('operation_invoices', "update_invoice", true);
 		$into_form .= print_button (__('Update'), "upd", false, '', 'class="sub upd"', true);
 		$button_name = "button-upd";
 	}
 	
-	$into_form .= print_input_hidden ('id_company', $id_company, true);
+	$into_form .= print_input_hidden ('id', $id, true);
 	
 	$into_form .= "</div>";	
 	

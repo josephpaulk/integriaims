@@ -622,6 +622,12 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "VR") && $show_custo
 		echo "<li>";
 	echo "<a href='index.php?sec=customers&sec2=operation/companies/company_role'>".__('Company roles')."</a></li>";
 
+	// Invoices
+	if (($sec2=="operation/invoices/invoice_detail"))
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/invoices/invoice_detail'>".__('Invoices')."</a></li>";
 
 	// Contract overview
 	if (($sec2=="operation/contracts/contract_detail") AND (!isset($_GET["create"])))

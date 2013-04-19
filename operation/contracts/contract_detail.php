@@ -271,7 +271,9 @@ if ($id | $new_contract) {
 	$search_date_begin = get_parameter ('search_date_begin');
 	$search_date_begin_beginning = get_parameter ('search_date_begin_beginning');
 	$search_date_end_beginning = get_parameter ('search_date_end_beginning');
-	
+
+	$search_params = "search_text=$search_text&search_company_role=$search_company_role&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_date_begin_beginning=$search_date_begin_beginning&search_date_end_beginning=$search_date_end_beginning";
+
 	$where_clause = " 1 = 1 ";
 	
 	if ($search_text != "") {
@@ -360,7 +362,7 @@ if ($id | $new_contract) {
 		
 	$contracts = get_contracts(false, "$where_clause ORDER BY date_end DESC");
 
-	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/contracts/contract_detail");
+	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/contracts/contract_detail&$search_params");
 
 	if ($contracts !== false) {
 		
@@ -410,7 +412,7 @@ if ($id | $new_contract) {
 				else {
 					$data[5] = __('Public');
 				}
-				$data[6] = '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&delete_contract=1&id='.$contract["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+				$data[6] = '<a href="index.php?sec=customers&sec2=operation/contracts/contract_detail&'.$search_params.'&delete_contract=1&id='.$contract["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
 			}
 			array_push ($table->data, $data);
 		}	

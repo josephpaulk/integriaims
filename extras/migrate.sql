@@ -235,7 +235,9 @@ ALTER TABLE tdownload ADD `public` int(2) unsigned NOT NULL default 0;
 ALTER TABLE tdownload ADD `external_id` text NOT NULL default '';
 
 
- ALTER TABLE tattachment MODIFY `description` text default '';
- ALTER TABLE tdownload_category ADD   `icon` varchar(100) NOT NULL default '';
- ALTER TABLE tdownload ADD `id_user` varchar(60) NOT NULL;
+ALTER TABLE tattachment MODIFY `description` text default '';
+ALTER TABLE tdownload_category ADD   `icon` varchar(100) NOT NULL default '';
+ALTER TABLE tdownload ADD `id_user` varchar(60) NOT NULL;
  
+ALTER TABLE tinvoice ADD status enum ('pending', 'paid', 'canceled') default 'pending';
+ALTER TABLE tinvoice ADD `tax` float(11,2) NOT NULL DEFAULT '0.0';
