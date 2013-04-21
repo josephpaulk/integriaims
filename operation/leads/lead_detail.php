@@ -386,7 +386,7 @@ if ($id || $new) {
 		$table->data[4][1] .= "<img src='images/company.png'></a>";
 		
 		$table->data[5][0] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __("Owner") )
+			array(), true, '', __("Owner") )
 
 		. print_help_tip (__("Type at least two characters to search"), true);
 
@@ -512,6 +512,8 @@ if ($id || $new) {
 
 	$params = "&est_sale=$est_sale&id_language=$id_language&search_text=$search_text&id_company=$id_company&start_date=$start_date&end_date=$end_date&country=$country&id_category=$id_category&progress_minor_than=$progress_minor_than&progress_major_than=$progress_major_than&show_100=$show_100&owner=$owner";
 
+	$where_group = "";
+
 	if ($show_100){
 		$where_clause = "WHERE 1=1 $where_group ";
 	} else {
@@ -581,7 +583,7 @@ if ($id || $new) {
 
 
 	$table->data[0][1] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Owner'))
+			array(), true, '', __('Owner'))
 
 		. print_help_tip (__("Type at least two characters to search"), true);
 

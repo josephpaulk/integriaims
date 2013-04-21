@@ -28,6 +28,7 @@ $id = (int) get_parameter ('id');
 
 // TODO: ACL CHECK !!. Check HERE if current user have access to this company.
 
+$op = (string) get_parameter ("op", "");
 $new_company = (bool) get_parameter ('new_company');
 $create_company = (bool) get_parameter ('create_company');
 $update_company = (bool) get_parameter ('update_company');
@@ -261,8 +262,9 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		if ($id > 0)
 			$table->data[0][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&delete_company=1'><img src='images/cross.png'></a>";
 
+	
 		$table->data[0][1] = print_input_text_extended ('manager', $manager, 'text-user', '', 15, 30, false, '',
-		array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Manager'))
+		array(), true, '', __('Manager'))
 
 	. print_help_tip (__("Type at least two characters to search"), true);
 
@@ -709,12 +711,12 @@ if ((!$id) AND ($new_company == 0)){
 	$table->data[0][5] = print_input_text ("search_country", $search_country, "", 10, 100, true);
 	
 	$table->data[0][4] = __('Manager');
-	$table->data[0][5] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '',	array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', '' )	. print_help_tip (__("Type at least two characters to search"), true);
+	$table->data[0][5] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '',	array(), true, '', '' )	. print_help_tip (__("Type at least two characters to search"), true);
 
 	$table->data[0][6] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 
 	
-	$table->data[0][7] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_export$params&render=1&raw_output=1&clean_output=1'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
+	$table->data[0][7] = "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_export$params&render=1&raw_output=1&clean_output=1'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
 	
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	print_table ($table);
@@ -747,10 +749,8 @@ if ((!$id) AND ($new_company == 0)){
 		$table->head[4] = __('Manager');
 		$table->head[5] = __('Country');
 		$table->head[6] = __('Last activity');
-
-		if(give_acl ($config["id_user"], $id_group, "VM")) {
-			$table->head[7] = __('Delete');
-		}
+		$table->head[7] = __('Delete');
+		
 		foreach ($companies as $company) {
 			$data = array ();
 			
@@ -780,14 +780,13 @@ if ((!$id) AND ($new_company == 0)){
 
 			$data[6] = human_time_comparation ($last_activity);
 
-			if (give_acl ($config["id_user"], $id_group, "VM")) {
-				$data[7] ='<a href="index.php?sec=customers&
+			$data[7] ='<a href="index.php?sec=customers&
 							sec2=operation/companies/company_detail'.$params.'&
 							delete_company=1&id='.$company['id'].'"
 							onClick="if (!confirm(\''.__('Are you sure?').'\'))
 							return false;">
 							<img src="images/cross.png"></a>';
-			}
+			
 			array_push ($table->data, $data);
 		}
 		print_table ($table);

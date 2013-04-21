@@ -28,7 +28,7 @@ $company_user = get_db_sql ("select name FROM tcompany where id = ". $user["id_c
 
 $from = get_parameter ("from", $user["direccion"]);
 $to = get_parameter ("to", "");
-$subject = get_parameter ("subject", $template["subject"]);
+$subject = get_parameter ("subject", "");
 $mail = get_parameter ("mail", "");
 $send = (int) get_parameter ("send",0);
 $cco = get_parameter ("cco", "");

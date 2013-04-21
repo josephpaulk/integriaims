@@ -1,3 +1,11 @@
+2013-04-21  Sancho Lerena <slerena@artica.es>
+
+        * operation/leads/lead_forward.php
+        operation/leads/lead_detail.php
+        operation/companies/company_detail.php: Some fixes (warnings and
+        notices).
+
+
 2013-04-19  Sancho Lerena <slerena@artica.es>
 
 	* operation/invoices/invoices.php,
