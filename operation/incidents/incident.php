@@ -74,7 +74,13 @@ echo '</ul>';
 
 if (!$id) {///
 /* Tabs first container is manually set, so it loads immediately */
-echo '<div id="ui-tabs-1" class="ui-tabs-panel">';
+echo '<div id="incident-search" class="ui-tabs-panel">';
+
+echo "<h1>".__('Incident search');
+echo "<div class='button-bar-title'>";
+echo "<a href='#incident-operations' onClick='toggleDiv(\"incident-search\");toggleDiv(\"incident-stats\");'>".__("Search statistics")."</a>";
+echo "</div>";
+echo "</h1>";
 
 echo '<div class="result"></div>';
 
@@ -167,11 +173,10 @@ echo "<div style='width:".$table->width."'>";
 print_submit_button (__('Update selected items'), 'massive_update', false, 'class="sub next" style="float:right;');
 echo "</div>";
 
-echo '<div id="incident-stats"></div>';
-
 /* End of first tab container */
 echo '</div>';
 
+echo '<div id="incident-stats" style="display">TODO STATS</div>';
 }//////
 
 echo '</div>';
@@ -234,7 +239,7 @@ function tab_loaded (event, tab) {
 }
 
 function check_incident (id) {
-//console.log("CHECK INCIDENT");
+
 	values = Array ();
 	values.push ({name: "page",
 		value: "operation/incidents/incident_detail"});
@@ -258,7 +263,7 @@ function check_incident (id) {
 
 function show_incident_details (id) {
 	id_incident = id;
-	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_detail&id=" + id);
+	$("#tabs > ul").tabs ("url", 2, "ajax.php?page=operation/incidents/incident_dashboard_detail&id=" + id);
 	$("#tabs > ul").tabs ("url", 3, "ajax.php?page=operation/incidents/incident_tracking&id=" + id);
 	$("#tabs > ul").tabs ("url", 4, "ajax.php?page=operation/incidents/incident_report&id=" + id);
 	$("#tabs > ul").tabs ("url", 5, "ajax.php?page=operation/incidents/incident_inventory_detail&id=" + id);
@@ -266,6 +271,7 @@ function show_incident_details (id) {
 	$("#tabs > ul").tabs ("url", 7, "ajax.php?page=operation/incidents/incident_workunits&id=" + id);
 	$("#tabs > ul").tabs ("url", 8, "ajax.php?page=operation/incidents/incident_files&id=" + id);
 	$("#tabs > ul").tabs ("url", 9, "ajax.php?page=operation/incidents/incident_chat&id=" + id);
+	
 	$("#tabs > ul").tabs ("enable", 2).tabs ("enable", 3).tabs ("enable", 4)
 		.tabs ("enable", 5).tabs ("enable", 6).tabs ("enable", 7).tabs ("enable", 8)
 		.tabs("enable", 9);

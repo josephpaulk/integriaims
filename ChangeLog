@@ -1,3 +1,15 @@
+2013-04-22  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_config.php: Added several parameters
+	related to smtp and pop with default values.
+	*operation/incidents/incident_workunits.php,
+	operation/incidents/incident_dashboard_detail.php,
+	operation/incidents/incident.php,
+	operation/incidents/incident_search_logic.php,
+	operation/incidents/incident_detail.php,
+	operation/incidents/incident_files.php: More reimplmentation
+	of incident management views (workunits, files, and search)
+
 2013-04-22  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php

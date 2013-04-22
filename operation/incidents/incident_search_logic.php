@@ -224,7 +224,7 @@ if ($incidents == false) {
 		print_checkbox_extended ('incidentcb-'.$incident['id_incidencia'], $incident['id_incidencia'], false, '', '', 'class="cb_incident"');
 		echo '</td>';
 		echo '<td>';
-		echo '<strong><a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">#'.$incident['id_incidencia'].'</a></strong></td>';
+		echo '<strong><a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$incident['id_incidencia'].'">#'.$incident['id_incidencia'].'</a></strong></td>';
 		
 		// SLA Fired ?? 
 		if ($incident["affected_sla_id"] != 0)
@@ -232,7 +232,7 @@ if ($incidents == false) {
 		else
 			echo '<td></td>';
 		
-		echo '<td><strong><a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$incident['id_incidencia'].'">'.$incident['titulo'].'</a></strong></td>';
+		echo '<td><strong><a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$incident['id_incidencia'].'">'.$incident['titulo'].'</a></strong></td>';
 		echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
 		if ($config["show_creator_incident"] == 1){	
 			$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);

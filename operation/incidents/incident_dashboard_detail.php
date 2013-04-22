@@ -136,6 +136,8 @@ if ($email_notify) {
 
 $emails = $incident["email_copy"];
 
+$email_table ="";
+
 if ($emails) {
 	
 	$email_table = "<tr>";
@@ -228,17 +230,29 @@ $right_side .= "</tr>";
 $right_side .= "</table>";
 $right_side .= "</div>";
 
-$table->data[0][0] .= $left_side;
-$table->data[0][1] .= $right_side;
+$table->data[0][0] = $left_side;
+$table->data[0][1] = $right_side;
 
 echo "<div id='indicent-details-view'>";
 
 echo '<h1>'.__('Incident').' #'.$incident["id_incidencia"].' - '.$incident['titulo'];
+echo "<div id='button-bar-title'>";
+echo "<ul>";
+echo "<li>";
+echo '<a href="#" onclick="toggleDiv(\'indicent-details-view\');toggleDiv(\'indicent-details-edit\')">'.__("Edit").'</a>';
+echo "</li>";
+echo '<li>';
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.__('Workunits').'</a>';
+echo '</li>';
+echo '<li>';
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.__('Files').'</a>';
+echo '</li>';
+echo "</ul>";
+echo "</div>";
+echo "</h1>";
 
 echo "<div class='button-bar-title'>";
-echo '<input type="button" id="button-add_workunit_show" name="add_workunit_show" value="Edit" onclick="toggleDiv(\'indicent-details-view\');toggleDiv(\'indicent-details-edit\')" style="margin-top:8px;" class="action_btn sub next">';
-echo "<a href='#incident-operations'>".__("Workunits")."</a>";
-echo "<a href='#incident-operations'>".__("Files")."</a>";
+
 echo "</div>";
 
 echo '</h1>';
@@ -247,17 +261,41 @@ print_table($table);
 
 echo "<a name='incident-operations'></a>";
 
+echo "<div id='tab' class='ui-tabs-panel'>";
+$tab = get_parameter("tab", "workunits");
+
+//Print lower menu tab
 echo '<ul class="ui-tabs-nav">';
-echo '<li id="tabmenu1"><a href="#workunits"><span>'.__('Workunits').'</span></a></li>';
-echo '<li id="tabmenu2"><a href="#files"><span>'.__('Files').'</span></a></li>';
+
+if ($tab === "workunits") {
+	echo '<li class="ui-tabs-selected">';
+} else {
+	echo '<li>';
+}
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations"><span>'.__('Workunits').'</span></a>';
+echo '</li>';
+
+if ($tab === "files") {
+	echo '<li class="ui-tabs-selected">';
+} else {
+	echo '<li>';
+}
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations"><span>'.__('Files').'</span></a>';
+echo '</li>';
+
 echo '</ul>';
 
-echo "<div id='tab1' class='ui-tabs-panel'>";
-include("incident_workunits.php");
-echo "</div>";
-echo "<div id='tab2' class='ui-tabs-panel ui-tabs-hide'>";
-include("incident_attach_file.php");
-include("incident_files.php");
+switch ($tab) {
+	case "workunits":
+		include("incident_workunits.php");
+		break;
+	case "files":
+		include("incident_files.php");
+		break;
+	default:
+		break;
+}
+
 echo "</div>";
 
 echo "</div>";
@@ -267,44 +305,3 @@ include("incident_detail.php");
 echo "</div>";
 
 ?>
-
-<script type="text/javascript">
-
-$(document).ready (function () {	
-	
-	////////Incident dashboard tab interaction///////
-	$('#tabmenu1').click (function (e){
-		e.preventDefault();//Deletes default behavior
-		console.log("tab1");
-		//Change CSS tabs
-		//tab1 selected
-		$('#tabmenu1').addClass("ui-tabs-selected");
-		$('#tabmenu1').removeClass("ui-tabs");
-		
-		//tab2 not selecteed
-		$('#tabmenu2').addClass("ui-tabs");
-		$('#tabmenu2').removeClass("ui-tabs-selected");
-		
-		//Show/hide divs
-		$('#tab2').addClass("ui-tabs-hide");
-		$('#tab1').removeClass("ui-tabs-hide");
-	});
-
-	$('#tabmenu2').click (function (e){
-		e.preventDefault();//Deletes default behavior
-		
-		//Change CSS tabs
-		//tab2 selected
-		$('#tabmenu2').addClass("ui-tabs-selected");
-		$('#tabmenu2').removeClass("ui-tabs");
-		
-		//tab1 not selecteed
-		$('#tabmenu1').addClass("ui-tabs");
-		$('#tabmenu1').removeClass("ui-tabs-selected");
-
-		//Show/hide divs				
-		$('#tab1').addClass("ui-tabs-hide");
-		$('#tab2').removeClass("ui-tabs-hide");
-	});
-});
-</script>

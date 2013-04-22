@@ -76,6 +76,34 @@ function load_config(){
 	if (!isset ($config["smtp_host"])){
 		$config["smtp_host"] = "localhost";
 	}
+	
+	if (!isset ($config["smtp_user"])){
+		$config["smtp_user"] = "";
+	}
+	
+	if (!isset ($config["smtp_pass"])){
+		$config["smtp_pass"] = "";
+	}
+	
+	if (!isset ($config["smtp_port"])){
+		$config["smtp_port"] = 25;
+	}
+
+	if (!isset ($config["pop_host"])){
+		$config["pop_host"] = "localhost";
+	}
+	
+	if (!isset ($config["pop_port"])){
+		$config["pop_port"] = 110;
+	}
+	
+	if (!isset ($config["pop_user"])){
+		$config["pop_user"] = "";
+	}
+	
+	if (!isset ($config["pop_pass"])){
+		$config["pop_pass"] = "";
+	}
 
 	if (!isset ($config["audit_delete_days"])){
         $config["audit_delete_days"] = 45;

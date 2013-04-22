@@ -19,7 +19,6 @@ global $config;
 check_login ();
 
 require_once ('include/functions_incidents.php');
-require_once ('include/functions_workunits.php');
 require_once ('include/functions_user.php');
 
 if (defined ('AJAX')) {
@@ -351,7 +350,7 @@ if ($action == "insert") {
 				update_incident_contact_reporters ($id, get_parameter ('contacts'));
 			
 			$result_msg = '<h3 class="suc">'.__('Successfully created').' (id #'.$id.')</h3>';
-			$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
+			$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
 
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 				"Incident created",
@@ -458,150 +457,6 @@ if ($id) {
 		no_permission ();
 	}
 
-	// Workunit ADD
-	$insert_workunit = (bool) get_parameter ('insert_workunit');
-	if ($insert_workunit) {
-//		$timestamp = (string) get_parameter ("timestamp");
-		$timestamp = print_mysql_timestamp();
-		$nota = get_parameter ("nota");
-		$timeused = (float) get_parameter ('duration');
-		$have_cost = (int) get_parameter ('have_cost');
-		$profile = (int) get_parameter ('work_profile');
-		$public = (bool) get_parameter ('public');
-
-        // Adding a new workunit to a incident in NEW status
-        // Status go to "Assigned" and Owner is the writer of this Workunit
-        if (($incident["estado"] == 1) AND ($incident["id_creator"] != $config['id_user'])){
-            $sql = sprintf ('UPDATE tincidencia SET id_usuario = "%s", estado = 3,  affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $config['id_user'], $timestamp, $id);
-        } else {
-            $sql = sprintf ('UPDATE tincidencia SET affected_sla_id = 0, actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id);
-        }
-
-		process_sql ($sql);
-
-	
-		create_workunit ($id, $nota, $config["id_user"], $timeused, $have_cost, $profile, $public);
-
-		$result_msg = '<h3 class="suc">'.__('Workunit added successfully').'</h3>';
-
-		//IMPORTANT!!!
-		//create_workunit function manages the mail queue itself so this lines are wrong
-		// Email notify to all people involved in this incident
-		/*if ($email_notify == 1) {
-			mail_incident ($id, $config['id_user'], $nota, $timeused, 10, $public);
-		}*/
-		
-		if (defined ('AJAX')) {
-			echo $result_msg;
-			return;
-		}
-	}
-
-	// Upload file
-	$incident_creator = get_db_value ("id_creator", "tincidencia", "id_incidencia", $id);
-	
-	$filename = get_parameter ('upfile', false);
-	if ((give_acl ($config['id_user'], $id_grupo, "IW") || 
-		$config['id_user'] == $incident_creator) 
-		&& (bool)$filename) {
-		$result_msg = '<h3 class="error">'.__('No file was attached').'</h3>';
-		/* if file */
-		if ($filename != "") {
-			$file_description = get_parameter ("file_description",
-					__('No description available'));
-			
-			// Insert into database
-			$filename_real = safe_output ( $filename ); // Avoid problems with blank spaces
-			$file_temp = sys_get_temp_dir()."/$filename_real";
-			$file_new = str_replace (" ", "_", $filename_real);
-			$filesize = filesize($file_temp); // In bytes
-
-			$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
-					filename, description, size)
-					VALUES (%d, "%s", "%s", "%s", %d)',
-					$id, $config['id_user'], $file_new, $file_description, $filesize);
-
-			$id_attachment = process_sql ($sql, 'insert_id');
-			incident_tracking ($id, INCIDENT_FILE_ADDED);
-			$result_msg = '<h3 class="suc">'.__('File added').'</h3>';
-			// Email notify to all people involved in this incident
-			if ($email_notify == 1) {
-                if ($config["email_on_incident_update"] == 1){
-    				mail_incident ($id, $config['id_user'], 0, 0, 2);
-                }
-			}
-			
-			// Copy file to directory and change name
-			$file_target = $config["homedir"]."/attachment/".$id_attachment."_".$file_new;
-			
-			if (! copy ($file_temp, $file_target)) {
-				$result_msg = '<h3 class="error">'.__('File cannot be saved. Please contact Integria administrator about this error').'</h3>';
-				$sql = sprintf ('DELETE FROM tattachment
-						WHERE id_attachment = %d', $id_attachment);
-				process_sql ($sql);
-			} else {
-				// Delete temporal file
-				unlink ($file_temp);
-
-	            // Adding a WU noticing about this
-	            $nota = "Automatic WU: Added a file to this issue. Filename uploaded: ". $filename;
-         	    $public = 1;
-				$timestamp = print_mysql_timestamp();
-				$timeused = "0.05";
-	            $sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public) VALUES ("%s", %.2f, "%s", "%s", %d)', $timestamp, $timeused, $config['id_user'], $nota, $public);
-
-	            $id_workunit = process_sql ($sql, "insert_id");
-				$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES (%d, %d)', $id, $id_workunit);
-				process_sql ($sql);
-			}
-		}  else {
-			//~ $error = $_FILES['userfile']['error'];
-			$error = 4;
-			switch ($error) {
-			case 1:
-				$result_msg = '<h3 class="error">'.__('File is too big').'</h3>';
-				break;
-			case 3:
-				$result_msg = '<h3 class="error">'.__('File was partially uploaded. Please try again').'</h3>';
-				break;
-			case 4:
-				$result_msg = '<h3 class="error">'.__('No file was uploaded').'</h3>';
-				break;
-			default:
-				$result_msg = '<h3 class="error">'.__('Generic upload error').'(Code: '.$_FILES['userfile']['error'].')</h3>';
-			}
-		}
-		
-		if (defined ('AJAX')) {
-			echo $result_msg;
-			return;
-		}
-	}
-	
-	// Delete file
-	$delete_file = (bool) get_parameter ('delete_file');
-	if ($delete_file) {
-		if (give_acl ($config['id_user'], $id_grupo, "IM")) {
-			$id_attachment = get_parameter ('id_attachment');
-			$filename = get_db_value ('filename', 'tattachment',
-				'id_attachment', $id_attachment);
-			$sql = sprintf ('DELETE FROM tattachment WHERE id_attachment = %d',
-				$id_attachment);
-			process_sql ($sql);
-			$result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
-			if (!unlink ($config["homedir"].'attachment/'.$id_attachment.'_'.$filename))
-				$result_msg = '<h3 class="error">'.__('Could not be deleted').'</h3>';
-			incident_tracking ($id, INCIDENT_FILE_REMOVED);
-			
-		} else {
-			$result_msg = '<h3 class="error">'.__('You have no permission').'</h3>';
-		}
-		
-		if (defined ('AJAX')) {
-			echo $result_msg;
-			return;
-		}
-	}
 } else {
 	$titulo = "";
 	$description = "";
@@ -1033,7 +888,7 @@ echo '</div>';
 $(document).ready (function () {
 	
 	/* First parameter indicates to add AJAX support to the form */
-	configure_incident_form (false);
+	//configure_incident_form (false);
 	
 	$("#incident-editor-row_advanced-0").css('display', 'none');
 	
