@@ -1,3 +1,30 @@
+2013-04-22  Dario Rodriguez <dario@artica.es>
+
+	* operation/side_menu.php,
+	operation/main_menu.php,
+	operation/reporting/incidents_html.php,
+	operation/incidents/incident_search_logic.php,
+	operation/incidents/incident_dashboard.php,
+	operation/incidents/incident_statistics.php,
+	operation/incidents/incident_detail.php,
+	operation/incidents/incident_files.php,
+	operation/incidents/incident_search.php,
+	operation/incidents/incident_workunits.php,
+	operation/incidents/incident_dashboard_detail.php,
+	include/functions_form.php,
+	include/functions_incidents.php,
+	include/js/integria_incident_search.js,
+	include/js/integria_incident_search.js: Reimplementing all incidents
+	module.
+
+	* include/functions_graph.php: Fixed graph of SLA incident compliance.
+
+	* include/functions_html.php: Fixed a bug with lastopttype variable	
+	was not set.
+
+	* include/styles/integria.css: Added new style for h2 title for titles
+	that toggle divs.
+
 2013-04-22  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php: Show

@@ -1,64 +1,6 @@
 var dialog = "";
 var parent_dialog = "";
 
-function configure_user_search_form () {
-	$("#user_search_result_table").tablesorter ();
-	$("#user_search_form").submit (function () {
-		$("#user_search_result_table tbody").hide ();
-		values = get_form_input_values ("user_search_form");
-		values.push ({name: "page",
-			value: "operation/users/user_search"});
-		jQuery.post ("ajax.php",
-			values,
-			function (data, status) {
-				$("#user_search_result_table").removeClass ("hide");
-				$("#user_search_result_table tbody").empty ().append (data);
-				$("#user_search_result_table tbody tr").click (function () {
-					user_id = this.id.slice (7); /* Remove "result-" */
-					user_realname = $(this).children (":eq(1)").text ();
-					$(dialog+"#button-usuario_name").attr ("value", user_realname);
-					$(dialog+"#hidden-usuario_form").attr ("value", user_id);
-					$("#dialog-user-search").dialog ("close").empty ();
-				});
-				$("#user_search_result_table").trigger ("update")
-					.tablesorterPager ({
-						container: $("#users-pager"),
-						size: 10
-					});
-				$("#user_search_result_table tbody").show ();
-				$("#users-pager").removeClass ("hide").show ();
-			},
-			"html");
-		
-		return false;
-	});
-}
-
-function show_user_search_dialog (title) {
-	$("#dialog-user-search").remove ();
-	$("body").append ($("<div></div>").attr ("id", "dialog-user-search").addClass ("dialog"));
-	values = Array ();
-	values.push ({name: "page",
-				value: "operation/users/user_search"});
-	jQuery.get ("ajax.php",
-		values,
-		function (data, status) {
-			$("#dialog-user-search").empty ().append (data);
-			$("#dialog-user-search").dialog ({"title" : title,
-					minHeight: 300,
-					minWidth: 500,
-					height: 550,
-					width: 700,
-					modal: true,
-					bgiframe: true,
-					resizable: false
-					});
-			configure_user_search_form ();
-		},
-		"html"
-	);
-}
-
 function configure_inventory_buttons (form, dialog) {
 	$(dialog+"#button-search_inventory").click (function () {
 		show_inventory_search_dialog (__("Search inventory object"),
@@ -164,378 +106,6 @@ function incident_limit() {
 		});
 }
 
-function configure_incident_form (enable_ajax_form) {
-	//Function for change the select group, test if it's hard limit or soft.
-	$("#grupo_form").click (incident_limit);
-	
-    // Check ALWAYS the restriction limit, even if the user has not altered 
-    // anything.
-    if ($("#hidden-action").val() == 'insert') {
-        incident_limit();
-    }
-	
-	$("form.delete").submit (function () {
-		if (! confirm (__("Are you sure?")))
-			return false;
-	});
-	$(dialog+"#textarea-description").TextAreaResizer ();
-	$(dialog+"#textarea-epilog").TextAreaResizer ();
-	$(dialog+"#button-search_parent").click (function () {
-		show_incident_search_dialog (__("Search parent incident"),
-			function (id, name) {
-				$("#dialog-search-incident").dialog ("close");
-				$(dialog+"#button-search_parent").attr ("value", "Incident #"+id);
-				$(dialog+"#hidden-id_parent").attr ("value", id);
-			}
-		);
-	});
-	
-	$(dialog+"#button-usuario_name").click (function () {
-		show_user_search_dialog (__("User search"));
-	});
-	
-	// Check epilog visibility when load
-	checkEpilogVisibility(dialog+"#incident_status");
-
-	// Check epilog visibility when status change
-	$(dialog+"#incident_status").change (function () {
-		checkEpilogVisibility(this);
-	});
-	
-	// Only show epilog of an incident when the statis is resolved or closed
-	function checkEpilogVisibility(control){
-		/* Verified, see tincident_status table id */
-		if (control.value == 7) {
-			$(dialog+"#incident-editor-10-0").css ('display', '');
-		} else {
-			$(dialog+"#incident-editor-10-0").css ('display', 'none');
-		}
-	}
-	
-	$(dialog+"#grupo_form").click (function () {
-		values = Array ();
-		values.push ({name: "page",
-			value: "godmode/grupos/lista_grupos"});
-		values.push ({name: "id",
-			value: this.value});
-		values.push ({name: "get_group_details",
-			value: 1});
-		
-		jQuery.get ("ajax.php",
-			values,
-			function (data, status) {
-				if (! data["user_real_name"])
-					return;
-
-				// This is needed, in order to force a user when you change group
-				$("#text-id_user").attr ("value", data["id_user_default"]);
-
-				$(dialog+"#hidden-usuario_form").attr ("value", data["id_user_default"]);
-				$(dialog+"#button-usuario_name").attr ("value", data["user_real_name"]);
-				if (data["forced_email"] == 1)
-					$(dialog+"#checkbox-email_notify").attr ("checked", "checked");
-				else
-					$(dialog+"#checkbox-email_notify").removeAttr ("checked");
-			},
-			"json"
-		);
-	});
-	$(dialog+"#incident_status").children ().each (function () {
-		switch (this.value) {
-		case 1:
-			break;
-		}
-	});
-	
-	$(dialog+"#priority_form").change (function () {
-		switch (this.value) {
-		case "0":
-			img = "images/pixel_gray.png";
-			break;
-		case "1":
-			img = "images/pixel_green.png";
-			break;
-		case "2":
-			img = "images/pixel_yellow.png";
-			break;
-		case "3":
-			img = "images/pixel_orange.png";
-			break;
-		case "4":
-			img = "images/pixel_red.png";
-			break;
-		case "10":
-			img = "images/pixel_blue.png";
-			break;
-		default:
-			img = "images/pixel_gray.png";
-		}
-		$(dialog+".priority-color").attr ("src", img);
-	});
-	
-	configure_inventory_buttons ("incident_status_form", dialog);
-	configure_contact_buttons ("incident_status_form", dialog);
-	
-	if (enable_ajax_form) {
-		$(dialog+"#incident_status_form").submit (function () {
-			
-			var title = $("#text-titulo", this).val()
-			if (title.length == 0) {
-				$("#text-titulo").fadeOut ('normal',function () {
-					pulsate (this);
-				});
-				result_msg_error (__("Empty title"));
-				return false;
-			}
-			
-			if ($(".selected-inventories", this).length == 0) {
-				$(dialog+"#incident_inventories").fadeOut ('normal',function () {
-					pulsate (this);
-				});
-				result_msg_error (__("There's no affected inventory object"));
-
-				return false;
-			}
-
-			values = get_form_input_values (this);
-			values.push ({name: "page",
-				value: "operation/incidents/incident_detail"});
-			jQuery.post ("ajax.php",
-				values,
-				function (data, status) {
-					$(".result").slideUp ('fast', function () {
-						$(".result").empty ().append (data).slideDown ();
-						$("#dialog-incident").dialog ("close");
-						if ($("#incident_status").attr ("value") == 6) {
-							$("[name=kb_form]").show ();
-						} else {
-							// Hack to get from the paginer combo the block size value
-							configure_incident_search_form ($('#block_size').attr('value'),
-								function (id, name) {
-									check_incident (id);
-								},
-								function (form) {
-									val = get_form_input_values (form);
-									val.push ({name: "page",
-											value: "operation/incidents/incident_search"});
-									configure_statistics_tab(val);
-
-							});
-							$("#search_incident_form").submit ();
-							$("[name=kb_form]").hide ();
-						}
-					});
-				},
-				"html"
-			);
-			return false;
-		});
-	} else {
-		$(dialog+"#incident_status_form").submit (function () {
-			
-			var title = $("#text-titulo", this).val()
-			if (title.length == 0) {
-				$("#text-titulo").fadeOut ('normal',function () {
-					pulsate (this);
-				});
-				result_msg_error (__("Empty title"));
-				return false;
-			}
-			
-			if ($(".selected-inventories", this).length == 0) {
-				$(dialog+"#incident_inventories").fadeOut ('normal',function () {
-					pulsate (this);
-				});
-				result_msg_error (__("There's no affected object"));
-				return false;
-			}
-		});
-	}
-}
-
-function check_massive_options(page_size, row_click_callback, search_callback) {
-	$(".cb_incident").click(function(event) {
-		event.stopPropagation();
-	});
-	$("#submit-massive_update").click(function(event) {
-		var checked_ids = new Array();
-		var status;
-		var priority;
-		var resolution;
-		var assigned_user;
-		
-		$(".cb_incident").each(function() {
-			id = this.id.split ("-").pop ();
-			checked = $(this).attr('checked');
-			if(checked) {
-				$(this).attr('checked', false);
-				checked_ids.push(id);
-			}
-		});
-		
-		if(checked_ids.length == 0) {
-			alert(__("No items selected"));
-		}
-		else {
-			status = $("#mass_status").attr("value");
-			priority = $("#mass_priority").attr("value");
-			resolution = $("#mass_resolution").attr("value");
-			assigned_user = $("#mass_assigned_user").attr("value");
-			if(status == -1 && priority == -1 && resolution == -1 && assigned_user == -1) {
-				alert(__("Nothing to update"));
-			}
-			else {		
-				for(var i=0;i<checked_ids.length;i++){
-					values = Array ();
-					values.push ({name: "page",
-								value: "operation/incidents/incident_detail"});
-					values.push ({name: "id",
-								value: checked_ids[i]});
-					if(status != -1) {
-						values.push ({name: "incident_status",
-								value: status});
-					}
-					if(priority != -1) {
-						values.push ({name: "priority_form",
-								value: priority});
-					}
-					if(resolution != -1) {
-						values.push ({name: "incident_resolution",
-								value: resolution});
-					}
-					if(assigned_user != -1) {
-						values.push ({name: "id_user",
-								value: assigned_user});
-					}
-					values.push ({name: "massive_number_loop",
-							value: i});
-					values.push ({name: "action",
-								value: 'update'});
-					
-					jQuery.get ("ajax.php",
-						values,
-						function (data, status) {
-							// We refresh the interface in the last loop
-							if(data == (checked_ids.length - 1)) {
-								configure_incident_search_form (page_size, row_click_callback, search_callback);
-								$("#search_incident_form").submit ();
-							}
-						},
-						"html"
-					);
-				}		
-			}
-		}
-		
-	});
-}
-
-function configure_incident_search_form (page_size, row_click_callback, search_callback) {
-	$(dialog+".show_advanced_search").click (function () {
-		table = $(dialog+"#search_incident_form").children ("table");
-		$("tr", table).show ();
-		$(this).remove ();
-		return false;
-	});
-	$(dialog+"#text-search_first_date").datepicker ({
-		beforeShow: function () {
-			return {
-				maxDate: $(dialog+"#text-search_last_date").datepicker ("getDate")
-			};
-		}
-	});
-	$(dialog+"#text-search_last_date").datepicker ({
-		beforeShow: function () {
-			return {
-				minDate: $(dialog+"#text-search_first_date").datepicker ("getDate")
-			};
-		}
-	});
-	$(dialog+"#search_incident_form").submit (function () {
-		$(dialog+"div#loading").show ();
-		$(dialog+"#incident_search_result_table").removeClass ("hide");
-		values = Array ();
-		values = get_form_input_values (this);
-		values.push ({name: "page",
-				value: "operation/incidents/incident_search"});
-		$(dialog+"table#incident_search_result_table tbody").hide ().empty ();
-		jQuery.post ("ajax.php",
-			values,
-			function (data, status) {
-				$(dialog+"table#incident_search_result_table tbody").empty ().append (data);
-				check_massive_options(page_size, row_click_callback, search_callback);
-				$(dialog+"#incident_search_result_table tbody tr").click (function () {
-					id = this.id.split ("-").pop ();
-					name = $(this).children (":eq(2)").html ();
-					row_click_callback (id, name);
-				});
-				$(dialog+"table#incident_search_result_table").trigger ("update")
-					.tablesorterPager ({
-						container: $(dialog+"#pager"),
-						size: page_size,
-						headers: {
-							0: "currency"
-						}
-					});
-				$(dialog+"table#incident_search_result_table tbody").show ();
-				$(dialog+"#pager").removeClass ("hide").show ();
-				$(dialog+"div#loading").hide ();
-				if (search_callback)
-					search_callback ($(dialog+"#search_incident_form"));
-			},
-			"html"
-			);
-		
-		return false;
-	});
-	$(dialog+"#incident_search_result_table tr th :eq(0)").addClass ("{sorter: 'text'}");
-	$(dialog+"#incident_search_result_table").tablesorter ({ cancelSelection : true});
-	$(dialog+"#button-inventory_name").click (function () {
-		show_inventory_search_dialog (__("Search inventory object"),
-					function (id, name) {
-						$(parent_dialog+"#hidden-search_id_inventory").attr ("value", id);
-						$(parent_dialog+"#button-inventory_name").attr ("value", name);
-						$("#dialog-search-inventory").dialog ("close");
-					}
-		);
-	});
-}
-
-function show_add_incident_dialog () {
-	$("#dialog-incident").remove ();
-	$("body").append ($("<div></div>").attr ("id", "dialog-incident").addClass ("dialog"));
-	
-	values = Array ();
-	values.push ({name: "page",
-				value: "operation/incidents/incident_detail"});
-	
-	jQuery.get ("ajax.php",
-		values,
-		function (data, status) {
-			$("#dialog-incident").empty ().append (data);
-			$("#dialog-incident").dialog ({"title" : "Create incident",
-					minHeight: 300,
-					minWidth: 500,
-					height: 750,
-					width: 800,
-					modal: true,
-					bgiframe: true,
-					resizable: false,
-					open: function () {
-						parent_dialog = dialog;
-						dialog = "#dialog-incident ";
-					},
-					close: function () {
-						dialog = parent_dialog;
-						parent_dialog = "";
-					}
-				});
-			configure_incident_form (true);
-		},
-		"html"
-	);
-}
-
 function configure_inventory_search_form (page_size, incident_click_callback, search_callback) {
 	$(dialog+".show_advanced_search").click (function () {
 		table = $(dialog+"#inventory_search_form").children ("table");
@@ -582,40 +152,6 @@ function configure_inventory_search_form (page_size, incident_click_callback, se
 			"html");
 		return false;
 	});
-}
-
-function show_incident_search_dialog (title, callback_incident_click) {
-	$("#dialog-search-incident").remove ();
-	$("body").append ($("<div></div>").attr ("id", "dialog-search-incident").addClass ("dialog"));
-	values = Array ();
-	values.push ({name: "page",
-				value: "operation/incidents/incident_search"});
-	values.push ({name: "search_form",
-				value: 1});
-	jQuery.get ("ajax.php",
-		values,
-		function (data, status) {
-			$("#dialog-search-incident").empty ().append (data);
-			$("#dialog-search-incident").dialog ({"title" : title,
-					minHeight: 500,
-					minWidth: 600,
-					height: 600,
-					width: 750,
-					modal: true,
-					bgiframe: true,
-					open: function () {
-						parent_dialog = dialog;
-						dialog = "#dialog-search-incident ";
-					},
-					close: function () {
-						dialog = parent_dialog;
-						parent_dialog = "";
-					}
-					});
-			configure_incident_search_form (5, callback_incident_click, null);
-		},
-		"html"
-	);
 }
 
 function show_inventory_search_dialog (title, callback_incident_click) {
@@ -754,59 +290,6 @@ function show_add_file_dialog (id_incident) {
 		},
 		"html"
 	);
-}
-
-function configure_incident_side_menu (id_incident, refresh_menu) {
-	$(".id-incident-menu").empty ().append (id_incident);
-	
-	$("#incident-menu-actions #incident-create-work")
-		.attr ('href', "index.php?sec=incidents&sec2=operation/incidents/incident_create_work&id="+id_incident)
-		.unbind ("click")
-		.click (function () {
-			show_add_workunit_dialog (id_incident);
-			return false;
-		});
-	$("#incident-menu-actions #incident-attach-file")
-		.attr ('href', "index.php?sec=incidents&sec2=operation/incidents/incident_attach_file&id="+id_incident)
-		.unbind ("click")
-		.click (function () { 
-			show_add_file_dialog (id_incident);
-			return false;
-		});
-
-	$("#incident-report").children().attr ('href', "index.php?sec=incidents&sec2=operation/incidents/incident_report&id="+id_incident);
-	
-	if (refresh_menu) {
-		values = Array ();
-		values.push ({name: "page",
-					value: "operation/incidents/incident_detail"});
-		values.push ({name: "id",
-					value: id_incident});
-		values.push ({name: "action",
-					value: 'get-users-list'});
-		jQuery.get ("ajax.php",
-			values,
-			function (data, status) {
-				$("#incident-menu-users #incident-users").empty ().append (data);
-			},
-			"html"
-		);
-		
-		values = Array ();
-		values.push ({name: "page",
-					value: "operation/incidents/incident_detail"});
-		values.push ({name: "id",
-					value: id_incident});
-		values.push ({name: "action",
-					value: 'get-details-list'});
-		jQuery.get ("ajax.php",
-			values,
-			function (data, status) {
-				$("#incident-menu-details #incident-details").empty ().append (data);
-			},
-			"html"
-		);
-	}
 }
 
 function configure_inventory_side_menu (id_inventory, refresh_menu) {
@@ -1116,4 +599,76 @@ function configure_inventory_form (enable_ajax_form) {
 			return false;
 		});
 	}
+}
+
+function process_massive_updates () {
+	var checked_ids = new Array();
+	var status;
+	var priority;
+	var resolution;
+	var assigned_user;
+
+	$(".cb_incident").each(function() {
+		id = this.id.split ("-").pop ();
+		checked = $(this).attr('checked');
+		if(checked) {
+			$(this).attr('checked', false);
+			checked_ids.push(id);
+		}
+	});
+
+	if(checked_ids.length == 0) {
+		alert(__("No items selected"));
+	}
+	else {
+		status = $("#mass_status").attr("value");
+		priority = $("#mass_priority").attr("value");
+		resolution = $("#mass_resolution").attr("value");
+		assigned_user = $("#mass_assigned_user").attr("value");
+		if(status == -1 && priority == -1 && resolution == -1 && assigned_user == -1) {
+			alert(__("Nothing to update"));
+		}
+		else {		
+			for(var i=0;i<checked_ids.length;i++){
+				values = Array ();
+				values.push ({name: "page",
+							value: "operation/incidents/incident_detail"});
+				values.push ({name: "id",
+							value: checked_ids[i]});
+				if(status != -1) {
+					values.push ({name: "incident_status",
+							value: status});
+				}
+				if(priority != -1) {
+					values.push ({name: "priority_form",
+							value: priority});
+				}
+				if(resolution != -1) {
+					values.push ({name: "incident_resolution",
+							value: resolution});
+				}
+				if(assigned_user != -1) {
+					values.push ({name: "id_user",
+							value: assigned_user});
+				}
+				values.push ({name: "massive_number_loop",
+						value: i});
+				values.push ({name: "action",
+							value: 'update'});
+				
+				jQuery.get ("ajax.php",
+					values,
+					function (data, status) {
+						
+						// We refresh the interface in the last loop
+						if(data == (checked_ids.length - 1)) {
+							window.location.href="index.php?sec=incidents&sec2=operation/incidents/incident_search";
+						}
+					},
+					"html"
+				);
+			}		
+		}
+	}	
+	
 }

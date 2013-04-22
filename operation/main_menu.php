@@ -44,7 +44,7 @@ if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>".__('Incidents')."</a></li>";
 	}
 	else {
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".__('Incidents')."</a></li>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Incidents')."</a></li>";
 	}
 }
 

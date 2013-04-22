@@ -757,24 +757,40 @@ function show_workunit_user ($id_workunit, $full = 0) {
 }
 
 
-function form_search_incident ($return = false) {
+function form_search_incident ($return = false, $filter=false) {
 	global $config;
 	$output = '';
 
-	$search_string = (string) get_parameter ('search_string');
-	$status = (int) get_parameter ('search_status', -10);
-	$priority = (int) get_parameter ('search_priority', -1);
-	$id_group = (int) get_parameter ('search_id_group');
-	$id_inventory = (int) get_parameter ('search_id_inventory');
-	$id_company = (int) get_parameter ('search_id_company');
-	//$id_product = (int) get_parameter ('search_id_product');
-	//$search_serial_number = (string) get_parameter ('search_serial_number');
-	//$search_id_building = (int) get_parameter ('search_id_building');
-	//$search_sla_fired = (bool) get_parameter ('search_sla_fired');
-	$search_id_user = (string) get_parameter ('search_id_user');
-	$search_id_incident_type = (int) get_parameter ('search_id_incident_type');
-	$date_end = date ('Y-m-j');
-	$date_ini = date('Y-m-j',strtotime($date_end) - 2592000);
+	if (!$filter) {
+		$search_string = (string) get_parameter ('search_string');
+		$status = (int) get_parameter ('search_status', -10);
+		$priority = (int) get_parameter ('search_priority', -1);
+		$id_group = (int) get_parameter ('search_id_group');
+		$id_inventory = (int) get_parameter ('search_id_inventory');
+		$id_company = (int) get_parameter ('search_id_company');
+		//$id_product = (int) get_parameter ('search_id_product');
+		//$search_serial_number = (string) get_parameter ('search_serial_number');
+		//$search_id_building = (int) get_parameter ('search_id_building');
+		//$search_sla_fired = (bool) get_parameter ('search_sla_fired');
+		$search_id_user = (string) get_parameter ('search_id_user');
+		$search_id_incident_type = (int) get_parameter ('search_id_incident_type');
+		$date_end = date ('Y-m-j');
+		$date_ini = date('Y-m-j',strtotime($date_end) - 2592000);
+	} else {
+		$search_string = (string) $filter['string'];
+		$priority = (int) $filter['priority'];
+		$id_group = (int) $filter['id_group'];
+		$status = (int) $filter['status'];
+		//$id_product = (int) $filter['id_product'];
+		$id_company = (int) $filter['id_company'];
+		$id_inventory = (int) $filter['id_inventory'];
+		//$search_serial_number = (string) $filter['serial_number'];
+		//$search_sla_fired = (bool) $filter['sla_fired'];
+		$search_id_incident_type = (int) $filter['id_incident_type'];
+		$search_id_user = (string) $filter['id_user'];
+		$date_end = $filter['first_date'];
+		$date_ini = $filter['last_date'];
+	}
 	
 	/* No action is set, so the form will be sent to the current page */
 	$table->width = "100%";
@@ -853,11 +869,11 @@ function form_search_incident ($return = false) {
 	
 	$table->data[5][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
-	$output .= '<form id="search_incident_form" method="post">';
+	$output .= '<form id="search_incident_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
 	$output .= print_table ($table, true);
 	$output .= '</form>';
 	
-	$output .= '<a class="show_advanced_search" href="index.php">'.__('Advanced search').' >></a>';
+	$output .= '<a class="show_advanced_search" href="#">'.__('Advanced search').' >></a>';
 	
 	if ($return)
 		return $output;

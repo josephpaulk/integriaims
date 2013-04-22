@@ -40,8 +40,6 @@ if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
 }
 
 // Workunit view
-echo '<h3>'.__('Incident').' <a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id_incident.'">#'.$id_incident.' - '.$incident['titulo'].'</h3></a>';
-
 $workunits = get_incident_workunits ($id_incident);
 
 if ($workunits === false) {

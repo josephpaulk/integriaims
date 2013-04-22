@@ -55,9 +55,17 @@ $output = '<div style="margin-left: 15px; text-align: left; width: 95%;">';
 if (! empty ($filter['string'])) 
 	$output .= print_label (__('Containing').': ', '', '', true,
 		'"'.$filter['string'].'"').'<br />';
-if (! empty ($filter['status']))
-	$output .= print_label (__('Status').': ', '', '', true,
-		$statuses[$filter['status']]).'<br />';
+if (! empty ($filter['status'])) {
+	
+	if ($filter['status'] == -10) {
+		$status_text = __("Not closed");
+	} else {
+		$status_text = $statuses[$filter['status']];
+	}
+	
+	$output .= print_label (__('Status').': ', '', '', true, $status_text).'<br />';
+		
+}
 if ($filter['priority'] != -1)
 	$output .= print_label (__('Priority').': ', '', '', true,
 		print_priority_flag_image ($filter['priority'], true)).'<br />';

@@ -291,13 +291,17 @@ function graph_incident_statistics_sla_compliance($incidents, $width=200, $heigh
 	$num_fail = $num_fail[0][0];
 	$total = $num_ok + $num_fail;
 		
-	$percent_ok = ($num_ok/$total)*100;
-	$percent_fail = ($num_fail/$total)*100;
-	
 	$data = array();
 	
-	$data["FAIL"] = $percent_fail;
-	$data["OK"] = $percent_ok;
+	if ($total == 0) {
+		$data["OK"] = 100;
+	} else {
+		$percent_ok = ($num_ok/$total)*100;
+		$percent_fail = ($num_fail/$total)*100;
+		
+		$data["FAIL"] = $percent_fail;
+		$data["OK"] = $percent_ok;
+	}
 	
 	if (isset($data))
 		return pie3d_graph ($config['flash_charts'], $data, $width, $height, "", "", "", $config['font'], $config['fontsize'], $ttl);

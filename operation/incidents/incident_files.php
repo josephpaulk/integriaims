@@ -39,8 +39,6 @@ if (! give_acl ($config["id_user"], $incident['id_grupo'], "IR")
 	exit;
 }
 
-echo '<h3>'.__('Incident').' #'.$id_incident.' - '.$incident['titulo'].'</h3>';
-
 echo '<div class="result"></div>';
 
 // Files attached to this incident

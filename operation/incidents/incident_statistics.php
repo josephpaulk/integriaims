@@ -15,44 +15,78 @@ global $config;
 
 check_login ();
 
-$filter = json_decode(safe_output(get_parameter ('filter')), true);
+echo "<div id='incident-search-content'>";
+echo "<h1>".__('Search statistics');
+echo "<div id='button-bar-title'>";
+echo "<ul>";
+echo "<li>";
+echo "<a id='search_form_submit' href='#'>".__("Back to search")."</a>";
+echo "</li>";
+echo "<li>";
+echo "<a id='html_report_submit' href='#'>".__("HTML report")."</a>";
+echo "</li>";
+echo "<li>";
+echo "<a id='pdf_report_submit' href='#' onClick='form.submit();'>PDF report</a>";
+echo "</li>";
+echo "</ul>";
+echo "</div>";
+echo "</h1>";
 
 $incidents = filter_incidents ($filter);
-if ($incidents === false) {
-	if (! $show_stats)
-		echo '<tr><td colspan="8">'.__('Nothing was found').'</td></tr>';
+
+if ($incidents == false) {
+	echo __('Nothing was found');
 	return;
 }
 
-echo "<h1>".__('Search statistics')."</h1>";
-
-/* Add a button to generate HTML reports */
-echo '<form method="post" target="_blank" action="index.php" style="clear: both">';
+/* Add a form to carry filter between statistics and search views */
+echo '<form id="search_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search&option=search" style="clear: both">';
 foreach ($filter as $key => $value) {
-	print_input_hidden ($key, $value);
+	print_input_hidden ("search_".$key, $value);
 }
-echo '<div style="width:90%; text-align: right;">';
-print_input_hidden ('sec2', 'operation/reporting/incidents_html');
-print_input_hidden ('clean_output', 1);
-print_submit_button (__('HTML report'), 'incident_report', false,
-	'class="sub report"');
 echo "</form>";
 
-/* Add a button to generate HTML reports */
-echo '<form method="post" target="_blank" action="index.php" style="clear: both">';
+/* Add a form to generate HTML reports */
+echo '<form id="html_report_form" method="post" target="_blank" action="index.php" style="clear: both">';
 foreach ($filter as $key => $value) {
 	print_input_hidden ($key, $value);
 }
+
+print_input_hidden ('sec2', 'operation/reporting/incidents_html');
+print_input_hidden ('clean_output', 1);
+echo "</form>";
+
+/* Add a form to generate HTML reports */
+echo '<form id="pdf_report_form" method="post" target="_blank" action="index.php" style="clear: both">';
+foreach ($filter as $key => $value) {
+	print_input_hidden ($key, $value);
+}
+
 print_input_hidden ('sec2', 'operation/reporting/incidents_html');
 print_input_hidden ('clean_output', 1);
 print_input_hidden ('pdf_output', 1);
-print_submit_button (__('PDF report'), 'incident_report', false,
-	'class="sub pdfreport"');
 echo '</div></form>';
 
 print_incidents_stats ($incidents);
 
-
-
-
 ?>
+
+<script>
+//Configure some actions to send forms
+$(document).ready(function () {
+	$("#search_form_submit").click(function (event) {
+		event.preventDefault();
+		$("#search_form").submit();
+	});
+	
+	$("#html_report_submit").click(function (event) {
+		event.preventDefault();
+		$("#html_report_form").submit();
+	});
+	
+	$("#pdf_report_submit").click(function (event) {
+		event.preventDefault();
+		$("#pdf_report_form").submit();
+	});
+});
+</script>

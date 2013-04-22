@@ -490,6 +490,9 @@ function print_incidents_stats ($incidents, $return = false) {
 	$assigned_users = array();
 	$creator_users = array();
 	
+	$submitter_label = "";
+	$user_assigned_label = "";
+	
 	foreach ($incidents as $incident) {
 		if ($incident['actualizacion'] != '0000-00-00 00:00:00') {
 			$lifetime = get_db_value ('UNIX_TIMESTAMP(actualizacion)  - UNIX_TIMESTAMP(inicio)',
@@ -801,13 +804,11 @@ function update_incident_inventories ($id_incident, $inventories) {
 	if (empty ($inventories)) {
 		$inventories = array (0);
 	}
-	$where_clause = sprintf ('AND id_inventory NOT IN (%s)',
-		implode (',', $inventories));
 	
 	$sql = sprintf ('DELETE FROM tincident_inventory
-		WHERE id_incident = %d %s',
-		$id_incident, $where_clause);
-		
+		WHERE id_incident = %d',
+		$id_incident);
+	
 	process_sql ($sql);
 	
 	foreach ($inventories as $id_inventory) {
@@ -1365,6 +1366,73 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 	$update_values = array("last_stat_check" => $now_date);
 	process_sql_update("tincidencia", $update_values, 
 						array("id_incidencia" => $id_incident));
+}
+
+function incidents_get_incident_status_text ($id) {
+	$status = get_db_value ('estado', 'tincidencia', 'id_incidencia', $id);
+	
+	$name = get_db_value ('name', 'tincident_status', 'id', $status);
+	
+	return $name;
+}
+
+function incidents_get_incident_priority_text ($id) {
+	
+	
+	$priority = get_db_value ('prioridad', 'tincidencia', 'id_incidencia', $id);
+	
+	$name = render_priority($priority);
+	
+	return $name;
+}
+
+function incidents_get_incident_group_text ($id) {
+	$group = get_db_value ('id_grupo', 'tincidencia', 'id_incidencia', $id);
+	
+	$name = get_db_value ('nombre', 'tgrupo', 'id_grupo', $group);
+	
+	return $name;	
+}
+
+function incidents_get_incident_resolution_text ($id) {
+	$resolution = get_db_value ('resolution', 'tincidencia', 'id_incidencia', $id);
+	
+	if ($resolution == 0) {
+		$name = __("None");
+	} else {
+		$name = get_db_value ('name', 'tincident_resolution', 'id', $resolution);
+	}
+	
+	return $name;	
+}
+
+function incidents_get_incident_type_text ($id) {
+	$type = get_db_value ('id_incident_type', 'tincidencia', 'id_incidencia', $id);
+	
+	if ($type == 0) {
+		$name = __("None");
+	} else {
+		$name = get_db_value ('name', 'tincident_type', 'id', $type);
+	}
+	
+	return $name;	
+}
+
+function incidents_get_incident_task_text ($id) {
+	
+	$task = get_db_value ('id_task', 'tincidencia', 'id_incidencia', $id);
+		
+	if ($task) {
+		$name = get_db_value ('name', 'ttask', 'id', $task);
+	} else {
+		$name = __("None");
+	}
+	
+	return $name;
+}
+
+function incidents_get_incident_object_affected_text ($id) {
+	
 }
 
 ?>

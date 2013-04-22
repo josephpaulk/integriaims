@@ -1604,7 +1604,7 @@ div.pager input {
 }
 
 
-.image-button, .result_table tr, .pager img {
+.image-button, .pager img {
 	cursor: pointer;
 }
 
@@ -2091,3 +2091,67 @@ td.login_button {
 	background: #fff;
 	width: 500px;
 }
+
+h2.incident_dashboard {
+	cursor: pointer;
+	text-transform: none;
+	background-image: url('../../images/add.png');
+	background-repeat:no-repeat;
+	padding-left: 22px;
+	border-bottom: 1px solid black;
+	background-position: 3px 1px;
+}
+
+#button-bar-title {
+	float: right;
+	margin-right: 20px;
+	margin-top: -5px;
+}
+
+
+#button-bar-title li {
+	display: inline;
+	font-size: 12px;
+	text-decoration: none;
+	text-transform: none;
+	padding: 3px;
+	border-right: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+
+	/* IE10 Consumer Preview */ 
+	background-image: -ms-linear-gradient(top, #FCFCFC 0%, #E8E8E8 100%);
+
+	/* Mozilla Firefox */ 
+	background-image: -moz-linear-gradient(top, #FCFCFC 0%, #E8E8E8 100%);
+
+	/* Opera */ 
+	background-image: -o-linear-gradient(top, #FCFCFC 0%, #E8E8E8 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FCFCFC), color-stop(1, #E8E8E8));
+
+	/* Webkit (Chrome 11+) */ 
+	background-image: -webkit-linear-gradient(top, #FCFCFC 0%, #E8E8E8 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background-image: linear-gradient(to bottom, #FCFCFC 0%, #E8E8E8 100%);
+}
+
+#button-bar-title li:first-child {
+	border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-left: 1px solid #ccc;
+}
+
+#button-bar-title li:last-child {
+	border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+
+#button-bar-title li a {
+	text-decoration: none;
+}
+
+

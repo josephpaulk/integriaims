@@ -232,8 +232,10 @@ if ($action == 'update') {
 
 	$old_incident_inventories = array_keys(get_inventories_in_incident($id));
 	
+	$incident_inventories = get_parameter("inventories");
+		
 	/* Update inventory objects in incident */
-	update_incident_inventories ($id, get_parameter ('inventories', $old_incident_inventories));
+	update_incident_inventories ($id, get_parameter ('inventories', $incident_inventories));
 
 	if ($config['incident_reporter'] == 1)
 		update_incident_contact_reporters ($id, get_parameter ('contacts'));
@@ -650,13 +652,14 @@ $has_im  = give_acl ($config['id_user'], $id_grupo, "IM");
 $has_iw = give_acl ($config['id_user'], $id_grupo, "IW");
 
 if ($id) {	
+	
 	echo "<h1>";
 	if ($affected_sla_id != 0) {
 		echo '<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">&nbsp;&nbsp;';
 	}
 
-	echo __('Incident')." #$id"."&nbsp;&nbsp;";
-
+	echo __('Incident').' #'.$id_incident.' - '.$incident['titulo'];
+	
 	/* Delete incident */
 	if ($has_permission) {
 		echo '<form name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident">';
@@ -679,8 +682,14 @@ if ($id) {
         }
     }
 
-	echo "</h1>";
+	echo "<div class='button-bar-title'>";
+	echo '<input type="button" id="button-add_workunit_show" name="add_workunit_show" value="Close" onclick="toggleDiv(\'indicent-details-view\');toggleDiv(\'indicent-details-edit\')" style="margin-top:8px;" class="action_btn sub next">';
+	echo "</div>";
 
+	echo "</h1>";
+	
+	
+	
     // Score this incident  
     if ($id){
 		if (($incident["score"] == 0) AND (($incident["id_creator"] == $config["id_user"]) AND ( 
@@ -784,7 +793,8 @@ if (!$has_im){
 	$table->data[1][2] .= print_input_hidden ('incident_status', $estado, true);
 }
 */
-$table->data[1][2] = combo_incident_status ($estado, $disabled, $actual_only, true);
+
+$table->data[1][2] = combo_incident_status ($estado, $disabled, 0, true);
 
 //If IW creator enabled flag is up the user can change creatro also.
 if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
@@ -877,12 +887,7 @@ if ($has_im){
 	$table_advanced->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
                 $disabled, '', '', true, __('Notify changes by email'));
 
-// DEBUG
 	$table_advanced->data[0][2] .= print_input_text ('email_copy', $email_copy,"",20,500, true);
-
-/*
-	$table_advanced->data[1][0] = combo_incident_status ($estado, $disabled, $actual_only, true);
-*/
 
 } else {
 	$table_advanced->data[1][1] = print_input_hidden ('email_notify', 1, true);

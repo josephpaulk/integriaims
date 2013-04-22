@@ -109,8 +109,8 @@ function print_select ($fields, $name, $selected = '', $script = '', $nothing = 
 		foreach ($fields as $value => $label) {
 			$optlabel = $label;
 			if(is_array($label)){
-				if($label['optgroup'] != $lastopttype) {
-					if($lastopttype != '') {
+				if(!isset($lastopttype) || ($label['optgroup'] != $lastopttype)) {
+					if(isset($lastopttype) && ($lastopttype != '')) {
 						$output .=  '</optgroup>';
 					}
 					$output .=  '<optgroup label="'.$label['optgroup'].'">';

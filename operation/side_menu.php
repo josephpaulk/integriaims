@@ -410,11 +410,18 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 		$id_incident = get_parameter ('id');
 
 		// Incident overview
+		if ($sec2 == "operation/incidents/incident_dashboard")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Incidents overview')."</a></li>";
+		
+		
 		if ($sec2 == "operation/incidents/incident")
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>".__('Incidents overview')."</a></li>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__('Search incidents')."</a></li>";
 
 		if (give_acl ($config['id_user'], 0, "IW")) {
 			// Incident creation
@@ -425,7 +432,8 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail' id='link_create_incident'>".__('Create incident')."</a></li>";
 		}
 
-		if ($sec2 == 'operation/incidents/incident') {
+		if ($sec2 == 'operation/incidents/incident' || $sec2 == 'operation/incidents/incident_dashboard'
+			|| $sec2 == 'operation/incidents/incident_search') {
 			echo '<li>';
 			echo '<a href="" onclick="return false">'.__('Incident #').'</a>';
 			echo '<form id="goto-incident-form">';
@@ -475,33 +483,6 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 		// Blockend
 		echo "</ul>";
 		echo "</div>";
-
-		/* Users affected by the incident */
-		echo '<div class="portlet incident-menu" id="incident-menu-details" style="display: none">';
-		echo '<h2 onclick="toggleDiv (\'incident-details\')">'.__('Details for incident').' #<span class="id-incident-menu">';
-		if ($id_incident)
-			echo $id_incident;
-		echo "</h2>";
-
-		echo '<div id="incident-details">';
-		if ($id_incident) {
-			incident_details_list ($id_incident);
-		}
-		echo '</div></div>';
-
-		/* Users affected by the incident */
-		echo '<div class="portlet incident-menu" id="incident-menu-users" style="display: none">';
-		echo '<h2 onclick="toggleDiv (\'incident-users\')">'.__('Users in incident').' #<span class="id-incident-menu">';
-		if ($id_incident)
-			echo $id_incident;
-		echo "</h2>";
-
-		echo '<div id="incident-users">';
-
-		if ($id_incident) {
-			incident_users_list ($id_incident);
-		}
-
 	}
 		echo "</div></div>";
 }
