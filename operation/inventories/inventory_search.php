@@ -148,10 +148,10 @@ $search = get_parameter('search', 0);
 
 $search_free = get_parameter ('search_free', '');
 $id_object_type = get_parameter ('id_object_type', 0);
-$object_fields = get_parameter ('object_fields[]');
 $owner = get_parameter('owner', '');
 $id_manufacturer = get_parameter ('id_manufacturer', 0);
 $id_contract = get_parameter ('id_contract', 0);
+$object_fields = (array)get_parameter('object_fields', array());
 
 
 echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_search">';
@@ -202,6 +202,13 @@ if ($search) {
 	}
 	if ($id_object_type != 0) {
 		$sql_search .= " AND tinventory.id_object_type = $id_object_type";
+		/*
+		if ($search_free != '') {
+			if (empty($object_fields)) {
+				//$sql_search .= " AND ";
+			}
+		}
+		*/
 	}
 	if ($owner != '') {
 		$sql_search .= " AND tinventory.owner = '$owner'";

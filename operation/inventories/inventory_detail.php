@@ -57,11 +57,33 @@ if (defined ('AJAX')) {
 		$result = process_sql_update('tobject_field_data', array('data' => $id_value), array('id_object_type_field' => $id_object_type_field, 'id_inventory'=>$id_inventory), 'AND');
 		
 		return $result;
-	}
+	}	
 }
 
 $id = (int) get_parameter ('id');
 $inventory_name = get_db_value('name', 'tinventory', 'id', $id);
+
+if ($id) {
+	$inventory = get_inventory ($id);
+}
+
+$check_inventory = (bool) get_parameter ('check_inventory');
+
+if ($check_inventory) {
+	// IR and incident creator can see the incident
+	if ($inventory !== false && (give_acl ($config['id_user'], get_inventory_group ($id), "IR"))){
+		echo 1;
+		$var = 1;
+	}
+	else {
+		echo 0;
+		$var = 0;
+	}
+	if (defined ('AJAX')) {
+		//return $var;
+		return;
+	}
+}
 
 if ($id) {
 	echo "<h1>".__('Object')." #$id"."&nbsp;&nbsp;-&nbsp;".$inventory_name."</h1>";
@@ -73,7 +95,7 @@ if ($id) {
 //**********************************************************************
 // Tabs
 //**********************************************************************
-
+if (!defined ('AJAX')) {
 if ($id) {
 	echo '<div id="tabs">';
 
@@ -86,19 +108,10 @@ if ($id) {
 	echo '</ul>';
 	echo '</div>';
 }
+}
 
 $result_msg = '';
 
-$check_inventory = (bool) get_parameter ('check_inventory');
-if ($check_inventory) {
-	$inventory = get_inventory ($id);
-	if ($inventory !== false && give_acl ($config['id_user'], get_inventory_group ($id), "VR"))
-		echo 1;
-	else
-		echo 0;
-	if (defined ('AJAX'))
-		return;
-}
 
 $update = (bool) get_parameter ('update_inventory');
 $create = (bool) get_parameter ('create_inventory');
