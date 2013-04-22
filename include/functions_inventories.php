@@ -889,39 +889,62 @@ function inventories_printTable($id_item, $type, $id_father) {
 			if ($info_inventory !== false) {
 				echo '<table cellspacing="2" cellpadding="2" border="0" class="databox" style="width:50%; align:center;">';
 				
-				if ($info_inventory['owner'] != '')
+				if ($info_inventory['owner'] != '') {
 					$owner = $info_inventory['owner'];
-				else
-					$owner = '--';
+					$name_owner = get_db_value('nombre_real', 'tusuario', 'id_usuario', $owner);
+				} else {
+					$name_owner = '--';
+				}
 				echo '<tr><td class="datos"><b>'.__('Owner: ').'</b></td>';
-				echo '<td class="datos"><b>'.$owner.'</b></td>';
+				echo '<td class="datos"><b>'.$name_owner.'</b></td>';
 				echo '</tr>';
 				
-				if ($info_inventory['id_manufacturer'] != 0)
+				if ($info_inventory['id_manufacturer'] != 0) {
 					$manufacturer = $info_inventory['id_manufacturer'];
-				else
-					$manufacturer = '--';
+					$name_manufacturer = get_db_value('name', 'tmanufacturer', 'id', $info_inventory['id_manufacturer']);
+				} else {
+					$name_manufacturer = '--';
+				}
 				echo '<tr><td class="datos"><b>'.__('Manufacturer: ').'</b></td>';
-				echo '<td class="datos"><b>'.$manufacturer.'</b></td>';
+				echo '<td class="datos"><b>'.$name_manufacturer.'</b></td>';
 				echo '</tr>';
 				
-				if ($info_inventory['id_contract'] != 0)
+				if ($info_inventory['id_contract'] != 0) {
 					$contract = $info_inventory['id_contract'];
-				else
-					$contract = '--';
+					$name_contract = get_db_value('name', 'tcontract', 'id', $info_inventory['id_manufacturer']);
+				} else {
+					$name_contract = '--';
+				}
 				echo '<tr><td class="datos"><b>'.__('Contract: ').'</b></td>';
-				echo '<td class="datos"><b>'.$contract.'</b></td>';
+				echo '<td class="datos"><b>'.$name_contract.'</b></td>';
 				echo '</tr>';
 				
 				if ($info_fields !== false) {
+
 					foreach ($info_fields as $key=>$info) {
-						echo '<tr><td class="datos"><b>'.__('Field name: ').'</b></td>';
-						echo '<td class="datos"><b>'.$info['label'].'</b></td>';
+						$value = '';
+						echo '<tr><td class="datos"><b>'.$info['label'].': </b></td>';
+						
+						$sql = "SELECT `data` FROM tobject_field_data WHERE id_inventory=$id_item AND id=".$info['id'];
+				
+						$value = process_sql($sql);
+
+						echo '<td class="datos"><b>'.$value[0]['data'].'</b></td>';
 						echo '</tr>';
 					}
 				}
 				
-				echo '</table></div>';
+				//echo '</table></div>';
+				echo '</table>';
+				
+				echo '<form id="edit_tree" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$id_item.'">';
+				echo '<div style="width:50%" class="action-buttons button">';
+					print_input_hidden ('search', 1);
+					print_submit_button (__('Edit'), 'edit', false, 'class="sub next"');
+				echo '</div>';
+				echo '</form>';
+				
+				echo '</div>';
 			}
 		break;
 	}

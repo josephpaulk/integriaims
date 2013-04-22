@@ -145,6 +145,7 @@ if (! give_acl ($config['id_user'], 0, "VR")) {
 }
 
 $search = get_parameter('search', 0);
+$sql_search = '';
 
 $search_free = get_parameter ('search_free', '');
 $id_object_type = get_parameter ('id_object_type', 0);

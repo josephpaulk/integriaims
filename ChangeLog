@@ -1,3 +1,10 @@
+2013-04-22  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_inventories.php
+	  operation/inventories/inventory_detail.php
+	  operation/inventories/inventory_search.php: Added
+	button 'edit' to treeview and show names.
+
 2013-04-22  Dario Rodriguez <dario@artica.es>
 
 	* operation/side_menu.php,

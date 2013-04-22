@@ -96,18 +96,18 @@ if ($id) {
 // Tabs
 //**********************************************************************
 if (!defined ('AJAX')) {
-if ($id) {
-	echo '<div id="tabs">';
+	if ($id) {
+		echo '<div id="tabs">';
 
-	/* Tabs list */
-	echo '<ul class="ui-tabs-nav">';
-	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail"><span>'.__('Details').'</span></a></li>';
-	if (!empty($id)) {
-		echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
+		/* Tabs list */
+		echo '<ul class="ui-tabs-nav">';
+		echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail"><span>'.__('Details').'</span></a></li>';
+		if (!empty($id)) {
+			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
+		}
+		echo '</ul>';
+		echo '</div>';
 	}
-	echo '</ul>';
-	echo '</div>';
-}
 }
 
 $result_msg = '';
@@ -496,11 +496,13 @@ if (! defined ('AJAX')):
 $(document).ready (function () {
 	
 	configure_inventory_form (false);
-
+	
+	//show_fields();
+console.log($("#id_object_type").val());
 	if ($("#id_object_type").val() != 0) {
 		show_fields();
 	}
-	
+
 	$("form.delete").submit (function () {
 		if (! confirm ("<?php echo __('Are you sure?'); ?>"))
 			return false;
