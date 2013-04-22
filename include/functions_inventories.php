@@ -855,12 +855,15 @@ function inventories_print_tree ($sql_search = false) {
 				}
 			}
 
-			echo "<li style='margin: 0px 0px 0px 0px;'>
-				<a onfocus='JavaScript: this.blur()' href='javascript: loadTable(\"object_types\",\"" . $element['id'] . "\", " . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\")'>" .
-				$img . $element['img'] ."&nbsp;" . safe_output($element['name']) . "</a>";
-			
-			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view' id='tree_div_". $element['id'] . "'></div>";
-			echo "</li>\n";
+			$count_inventories = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search));
+			if ($count_inventories != 0) {
+				echo "<li style='margin: 0px 0px 0px 0px;'>
+					<a onfocus='JavaScript: this.blur()' href='javascript: loadTable(\"object_types\",\"" . $element['id'] . "\", " . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\")'>" .
+					$img . $element['img'] ."&nbsp;" . safe_output($element['name']) . "&nbsp;($count_inventories)"."</a>";
+				
+				echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view' id='tree_div_". $element['id'] . "'></div>";
+				echo "</li>\n";
+			}
 		}
 	}
 	
@@ -948,4 +951,20 @@ function inventories_link_get_name($id_inventory) {
 	
 	return $name;
 }
+
+function inventories_get_count_inventories_for_tree($id_item, $sql_search = '') {
+
+	$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory, tobject_type
+			WHERE `id_object_type`=$id_item
+			AND tinventory.id_object_type = tobject_type.id $sql_search";
+	
+	$cont = get_db_all_rows_sql($sql);
+	
+	if ($cont === false) {
+		return 0;
+	}
+	
+	return count($cont);
+}
+
 ?>

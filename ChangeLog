@@ -1,5 +1,11 @@
 2013-04-22  Vanessa Gil <vanessa.gil@artica.es>
 
+	* include/functions_inventories.php: Show
+	inventory count in treeview and don't show
+	empty elements.
+
+2013-04-22  Vanessa Gil <vanessa.gil@artica.es>
+
 	* operation/inventories/inventory_detail.php
 	  operation/inventories/inventory_search.php: Fixed
 	menu link to inventory detail.
