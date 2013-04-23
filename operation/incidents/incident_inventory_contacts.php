@@ -40,8 +40,6 @@ $table->align[3] = 'center';
 $table->align[4] = 'center';
 $table->data = array ();
 
-echo '<h3>'.__('Incident'). ' #'.$id_incident.' - '.get_incident_title ($id_incident).'</h3>';
-
 if (count ($inventories) == 0) {
 	echo '<h4>'.__('There are no contacts associated to this incident').'</h4>';
 	return;
@@ -71,7 +69,7 @@ foreach ($inventories as $inventory) {
 	}
 }
 
-echo '<h4>'.__('Contacts grouped by inventory').'</h4>';
+echo '<h3>'.__('Contacts grouped by inventory').'</h3>';
 print_table ($table);
 
 $table->data = array ();

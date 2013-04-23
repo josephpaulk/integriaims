@@ -15,6 +15,8 @@
 
 global $config;
 
+include_once ("include/functions_graph.php");
+
 $id = get_parameter("id", false);
 
 if ($id) {
@@ -218,15 +220,50 @@ $right_side .= "</table>";
 $right_side .= '</div>';
 
 
-$right_side .= '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-time-tracking\')">'.__('Statistics').'</h2>';
-$right_side .= '<div id="incident-time-tracking">';
-$right_side .= "<table width='97%'>";
-$right_side .= "<tr>";
-$right_side .= "<td>".__("Creator").":</td><td align='right'>".$long_name_creator."</td>";
+$right_side .= '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-sla\')">'.__('SLA information').'</h2>';
+$right_side .= '<div id="incident-sla">';
+$right_side .= '<table width="97%">';
+$right_side .= '<tr>';
+$right_side .= "<td style='text-align: center;'>";
+$right_side .= __('SLA history compliance for: '); 
+$right_side .= "</td>";
+$right_side .= "<td align=center>";
+
+$a_day = 24*3600;
+
+$fields = array($a_day => "1 day",
+				2*$a_day => "2 days",
+				7*$a_day => "1 week",
+				14*$a_day => "2 weeks",
+				30*$a_day => "1 month");
+
+$period = get_parameter("period", $a_day);
+$ttl = 1;
+
+if ($clean_output) {
+	$ttl = 2;
+}
+
+if ($clean_output) {
+	$right_side .= "<strong>".$fields[$period]."</strong>";
+} else {
+	$right_side .= print_select ($fields, "period", $period, 'reload_sla_slice_graph(\''.$id.'\');', '', '', true, 0, false, false, false, 'width: 75px');
+}
+
+$right_side .= "</td>";
+$right_side .= "<td colspan=2 style='text-align: center;'>";
+$right_side .= __('SLA total compliance (%)'). ': ';
+$right_side .= format_numeric (get_sla_compliance_single_id ($id));
+$right_side .= "</td>";
 $right_side .= "</tr>";
 $right_side .= "<tr>";
-$right_side .= "<td>".__("Asigned user").":</td><td align='right'>".$long_name_asigned."</td>";
-$right_side .= "</tr>";
+$right_side .= "<td id=slaSlicebarField colspan=2 style='text-align: center; padding: 1px 2px 1px 5px;'>";
+$right_side .= graph_sla_slicebar ($id, $period, 225, 15, $ttl);
+$right_side .= "</td>";
+$right_side .= "<td colspan=2 style='text-align: center;'>";
+$right_side .= graph_incident_sla_compliance ($id, 200, 200, $ttl);
+$right_side .= "</td>";	
+$right_side .= "<tr>";
 $right_side .= "</table>";
 $right_side .= "</div>";
 
@@ -283,6 +320,33 @@ if ($tab === "files") {
 echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations"><span>'.__('Files').'</span></a>';
 echo '</li>';
 
+if ($tab === "tracking") {
+	echo '<li class="ui-tabs-selected">';
+} else {
+	echo '<li>';
+}
+
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=tracking#incident-operations"><span>'.__('Tracking').'</span></a>';
+echo '</li>';
+
+if ($tab === "inventory") {
+	echo '<li class="ui-tabs-selected">';
+} else {
+	echo '<li>';
+}
+
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=inventory#incident-operations"><span>'.__('Inventory').'</span></a>';
+echo '</li>';
+
+if ($tab === "contacts") {
+	echo '<li class="ui-tabs-selected">';
+} else {
+	echo '<li>';
+}
+
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=contacts#incident-operations"><span>'.__('Contacts').'</span></a>';
+echo '</li>';
+
 echo '</ul>';
 
 switch ($tab) {
@@ -291,6 +355,15 @@ switch ($tab) {
 		break;
 	case "files":
 		include("incident_files.php");
+		break;
+	case "inventory":
+		include("incident_inventory_detail.php");
+		break;
+	case "contacts":
+		include("incident_inventory_contacts.php");
+		break;
+	case "tracking":
+		include("incident_tracking.php");
 		break;
 	default:
 		break;
@@ -305,3 +378,34 @@ include("incident_detail.php");
 echo "</div>";
 
 ?>
+
+<script type="text/javascript">
+
+function reload_sla_slice_graph(id) {
+
+	var period = $('#period').val();
+	
+	values = Array ();
+	values.push ({name: "type",
+		value: "sla_slicebar"});
+	values.push ({name: "id_incident",
+		value: id});
+	values.push ({name: "period",
+		value: period});
+	values.push ({name: "is_ajax",
+		value: 1});
+	values.push ({name: "width",
+		value: 225});		
+	values.push ({name: "height",
+		value: 15});		
+
+	jQuery.get ('include/functions_graph.php',
+		values,
+		function (data) {
+			$('#slaSlicebarField').html(data);
+		},
+		'html'
+	);
+}
+
+</script>

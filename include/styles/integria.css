@@ -13,6 +13,10 @@
 	margin: 0; padding: 0;
 }
 
+strong, b {
+	font-weight: bold;
+}
+
 body {
 
 	font: 0.80em  Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;

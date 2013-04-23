@@ -65,8 +65,6 @@ if (!$clean_output) {
 	echo '</div></form>';
 }
 
-echo '<h3>'.__('Incident'). ' #'.$id.' - '.$incident['titulo'].'</h3><br>';
-
 $a_day = 24*3600;
 
 $fields = array($a_day => "1 day",
@@ -88,17 +86,8 @@ echo "<table align=center>";
 		echo "<td align=center>";
 			echo '<strong>'.__('Details for incident').'</strong>';
 		echo "</td>";
-		
 		echo "<td align=center>";
-			echo '<strong>'.__('SLA history compliance for: ').'</strong>'; 
-		echo "</td>";
-		
-		echo "<td align=center>";
-				if ($clean_output) {
-					echo "<strong>".$fields[$period]."</strong>";
-				} else {
-					echo print_select ($fields, "period", $period, 'reload_sla_slice_graph(\''.$id.'\');', '', '', true, 0, false);
-				}
+			echo '<strong>'.__('Activity by user (# WU)'). '</strong>';
 		echo "</td>";	
 	echo "</tr>";
 	
@@ -107,30 +96,6 @@ echo "<table align=center>";
 			//Print Incident detail
 			echo incident_details_list ($id,true);
 		echo "</td>";
-		
-		echo "<td id=slaSlicebarField colspan=2 align=center>";
-			echo graph_sla_slicebar ($id, $period, 225, 15, $ttl);
-		echo "</td>";
-	echo "</tr>";
-
-	echo "<tr>";	
-		echo "<td align=center>";
-			echo '<strong>'.__('SLA total compliance (%)'). '</strong><br>';
-
-        echo format_numeric (get_sla_compliance_single_id ($id));
-
-		echo "</td>";
-
-		echo "<td align=center>";
-			echo '<strong>'.__('Activity by user (# WU)'). '</strong>';
-		echo "</td>";	
-	echo "</tr>";
-
-	echo "<tr>";
-		echo "<td align=center>";
-			echo graph_incident_sla_compliance ($id, 200, 200, $ttl);
-		echo "</td>";
-		
 		echo "<td align=center>";
 			echo graph_incident_user_activity ($id, 200, 200, $ttl);
 		echo "</td>";		
@@ -165,34 +130,3 @@ if ($trackings !== false) {
 	echo __('No data available');
 }
 ?>
-
-<script type="text/javascript">
-
-function reload_sla_slice_graph(id) {
-
-	var period = $('#period').val();
-	
-	values = Array ();
-	values.push ({name: "type",
-		value: "sla_slicebar"});
-	values.push ({name: "id_incident",
-		value: id});
-	values.push ({name: "period",
-		value: period});
-	values.push ({name: "is_ajax",
-		value: 1});
-	values.push ({name: "width",
-		value: 255});		
-	values.push ({name: "height",
-		value: 15});		
-
-	jQuery.get ('include/functions_graph.php',
-		values,
-		function (data) {
-			$('#slaSlicebarField').html(data);
-		},
-		'html'
-	);
-}
-
-</script>

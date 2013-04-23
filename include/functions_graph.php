@@ -326,8 +326,15 @@ function graph_incident_sla_compliance($incident, $width=200, $height=200, $ttl=
 	$num_fail = $num_fail[0][0];
 	$total = $num_ok + $num_fail;
 	
-	$percent_ok = ($num_ok/$total)*100;
-	$percent_fail = ($num_fail/$total)*100;
+	if ($total == 0) {
+		$percent_ok = 100;
+		$percent_fail = 0;
+	
+	} else {
+	
+		$percent_ok = ($num_ok/$total)*100;
+		$percent_fail = ($num_fail/$total)*100;
+	}
 	
 	$data = array();
 	
@@ -349,6 +356,8 @@ function graph_sla_slicebar ($incident, $period, $width, $height, $ttl=1) {
 	
 	//Get time and calculate start date based on period
 	$now = time();
+	//This array sets the color of sla graph
+	$colors = 	array(0 => '#FF0000', 1 => '#38B800');
 	$start_period = $now - $period;
 	
 	//Get all sla graph data
@@ -357,6 +366,18 @@ function graph_sla_slicebar ($incident, $period, $width, $height, $ttl=1) {
 				$incident, $start_period);
 
 	$aux_data = get_db_all_rows_sql($sql);
+	
+	//Check if we have data for this interval
+	if ($aux_data == false) {
+		//There is no data print a fake graph because there is no data
+		//We asume the SLA compliance was OK
+		
+		$data [0]= array("data" => 1, "utimestamp" => $now);
+		$data [1]= array("data" => 1, "utimestamp" => $now-$period);
+		
+		return slicesbar_graph($data, $period, $width, $height, $colors, $config['font'],
+			false,'',$ttl);
+	}
 	
 	//Get max timestamp from sla graph
 	$sql2 = sprintf("SELECT MAX(utimestamp) FROM tincident_sla_graph 
@@ -378,10 +399,6 @@ function graph_sla_slicebar ($incident, $period, $width, $height, $ttl=1) {
 	}
 	
 	$data = array();
-	
-	if ($aux_data == false) {
-		$aux_data = array();
-	}
 	
 	foreach ($aux_data as $aux) {
 	
@@ -405,12 +422,9 @@ function graph_sla_slicebar ($incident, $period, $width, $height, $ttl=1) {
 	
 	array_push($data, array("data" => $previous_value, "utimestamp" => $range));
 			
-	//This array sets the color of sla graph
-	$colors = 	array(0 => '#FF0000', 1 => '#38B800');
-
 	//Draw the graph
-	return slicesbar_graph($data, $period, $width, $height, $colors, $config['fontpath'],
-		$config['round_corner'],'',$ttl);
+	return slicesbar_graph($data, $period, $width, $height, $colors, $config['font'],
+		false,'',$ttl);
 }
 
 function graph_incident_user_activity ($incident, $width=200, $height=200, $ttl=1) {
@@ -909,7 +923,6 @@ function all_project_tree ($id_user, $completion, $project_kind) {
 //   MAIN Code
 //   parse get parameters
 // ****************************************************************************
-
 
 if (isset($_GET["id_audit"]))
 	$id_audit = $_GET["id_audit"];

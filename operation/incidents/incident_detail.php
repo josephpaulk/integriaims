@@ -513,33 +513,43 @@ if ($id) {
 		echo '<img src="images/exclamation.png" border=0 valign=top title="'.__('SLA Fired').'">&nbsp;&nbsp;';
 	}
 
-	echo __('Incident').' #'.$id_incident.' - '.$incident['titulo'];
+	echo __('Incident').' #'.$id.' - '.$incident['titulo'];
 	
-	/* Delete incident */
-	if ($has_permission) {
-		echo '<form name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident">';
-		print_input_hidden ('quick_delete', $id, false);
-		echo '<input type="image" class="action" src="images/cross.png" title="' . __('Delete') .'">';
-		echo '</form>';
-	}
-	if (give_acl ($config['id_user'], $id_grupo, "KW")) {
-		echo '<form name="kb_form" ';
-		echo 'class="action" method="post" action="index.php?sec=kb&sec2=operation/kb/manage_data&create=1">';
-		print_input_hidden ('id_incident', $id, false);
-		echo '<input type="image" class="action" src="images/star.png" title="' . __('Add to KB') .'">';
-		echo '</form>';
-	}
-
     if (give_acl($config["id_user"], 0, "IM")){
         if ($incident["score"] > 0){
             echo "( ".__("Scoring");
             echo " ". $incident["score"]. "/10 )";
         }
     }
-
-	echo "<div class='button-bar-title'>";
-	echo '<input type="button" id="button-add_workunit_show" name="add_workunit_show" value="Close" onclick="toggleDiv(\'indicent-details-view\');toggleDiv(\'indicent-details-edit\')" style="margin-top:8px;" class="action_btn sub next">';
-	echo "</div>";
+	
+	echo "<div id='button-bar-title'>";
+	echo "<ul>";
+	echo '<li>';
+	echo '<a href="#" onclick="toggleDiv(\'indicent-details-view\');toggleDiv(\'indicent-details-edit\')">'.__("Close")."</a>";
+	echo '</li>';
+	
+	/* Delete incident */
+	if ($has_permission) {
+		echo "<li>";
+		echo '<form name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident">';
+		print_input_hidden ('quick_delete', $id, false);
+		echo '<a href="#" id="detele_incident_submit_form">'.__("Delete").'</a>';
+		echo '</form>';
+		echo "</li>";
+		
+	}
+	if (give_acl ($config['id_user'], $id_grupo, "KW")) {
+		echo "<li>";
+		echo '<form name="kb_form" ';
+		echo 'class="action" method="post" action="index.php?sec=kb&sec2=operation/kb/manage_data&create=1">';
+		print_input_hidden ('id_incident', $id, false);
+		echo '<a href="#" id="kb_form_submit">'.__("Add to KB").'</a>';
+		echo '</form>';
+		echo "</li>";
+	}	
+	
+	echo "</ul>";
+	echo "</div>";	
 
 	echo "</h1>";
 	
@@ -584,7 +594,7 @@ $table->size = array ();
 $table->size[0] = '25%';
 $table->size[1] = '25%';
 $table->size[2] = '25%';
-
+$table->head = array();
 $table->style = array();
 $table->data = array ();
 $table->cellspacing = 2;
@@ -886,6 +896,16 @@ echo '</div>';
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
 <script  type="text/javascript">
 $(document).ready (function () {
+	
+	$("#kb_form_submit").click(function (event) {
+		event.preventDefault();
+		$("#kb_form").submit();
+	});
+	
+	$("#detele_incident_submit_form").click(function (event) {
+		event.preventDefault();
+		$("#delete_incident_form").submit();
+	});
 	
 	/* First parameter indicates to add AJAX support to the form */
 	//configure_incident_form (false);

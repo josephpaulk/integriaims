@@ -1,3 +1,18 @@
+2013-04-23  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_graph.php: Fixed ACL graphs where there is no
+	data of SLA calculated. 
+	* include/functions_inventories.php: Adapted to new inventori table
+	structure.
+	* include/styles/integria.css: Added a detail for strong and b html
+	tags to be weight bold.
+	* operation/incidents/incident_dashboard_detail.php,
+	operation/incidents/incident_inventory_detail.php,
+	operation/incidents/incident_inventory_contacts.php,
+	operation/incidents/incident_detail.php,
+	operation/incidents/incident_tracking.php: Created new tabs on new
+	incident dashboard view.
+
 2013-04-23  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php
