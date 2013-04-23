@@ -1,5 +1,12 @@
 2013-04-23  Vanessa Gil <vanessa.gil@artica.es>
 
+	* include/functions_inventories.php
+	  include/ajax/inventories.php
+	  operation/inventories/inventory_detail.php: Changed
+	popup to choose external fields.
+
+2013-04-23  Vanessa Gil <vanessa.gil@artica.es>
+
 	* include/functions_inventories.php: Added
 	external fields in treeview.
 

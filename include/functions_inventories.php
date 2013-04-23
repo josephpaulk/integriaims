@@ -971,7 +971,7 @@ function inventories_check_unique_field($data, $type) {
 	$all_data = get_db_all_rows_sql($sql_unique);
 	
 	foreach ($all_data as $key => $dat) {
-		if ($dat['data'] == $data) {
+		if ($dat['data'] == $data && $data != '') {
 			return false;
 		}
 	}

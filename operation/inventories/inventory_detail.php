@@ -496,9 +496,7 @@ if (! defined ('AJAX')):
 $(document).ready (function () {
 	
 	configure_inventory_form (false);
-	
-	//show_fields();
-console.log($("#id_object_type").val());
+
 	if ($("#id_object_type").val() != 0) {
 		show_fields();
 	}
@@ -629,8 +627,8 @@ function show_fields() {
 
 					
 					element=document.createElement('input');
-					//element.id=value['label'];
 					element.id=i;
+					//element.id=value['label_enco'];
 					element.name=value['label_enco'];
 					element.value=value['data'];
 					if ((value['type'] == 'text') || (value['type'] == 'external')) {
@@ -642,13 +640,18 @@ function show_fields() {
 					
 					element.size=40;
 					lbl.appendChild(element);
-					
+				
 					if (value['type'] == 'external') {
+						
+						id_object_type_field = value['id'];
 						
 						a = document.createElement('a');
 						a.title = "Show table";
 						table_name = value['external_table_name'];
-						a.href = 'javascript: show_external_query("'+table_name+'")';
+						id_table = value['external_reference_field'];
+						//element_name = value['label_enco'];
+						//a.href = 'javascript: show_external_query("'+table_name+'","'+id_table+'","'+element_name+'")';
+						a.href = 'javascript: show_external_query("'+table_name+'","'+id_table+'","'+i+'", "'+id_object_type_field+'")';
 						
 						img=document.createElement('img');
 						img.id='img_show_external_table';
@@ -660,24 +663,6 @@ function show_fields() {
 						lbl.appendChild(a);
 						
 						id_inventory = $('#text-id_object_hidden').val();
-
-						if (id_inventory != 0) { //show refresh only updating inventory
-							id_object_type_field = value['id'];
-						
-							a = document.createElement('a');
-							a.title = "Refresh data";
-							table_name = value['external_table_name'];
-							a.href = 'javascript: refresh_external_id('+id_object_type_field+', '+id_inventory+', '+i+')';
-							
-							img=document.createElement('img');
-							img.id='img_show_external_table';
-							img.height='16';
-							img.width='16';
-							img.src='images/arrow_refresh.png';
-							
-							a.appendChild(img);
-							lbl.appendChild(a);
-						}
 					}
 					
 					i++;
@@ -773,12 +758,12 @@ function show_fields() {
 }
 
 // Show the modal window of external table
-function show_external_query(table_name) {
-	
+function show_external_query(table_name, id_table, element_name, id_object_type_field) {
+
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/inventories&get_external_data=1&table_name="+table_name,
+		data: "page=include/ajax/inventories&get_external_data=1&table_name="+table_name+"&id_table="+id_table+"&element_name="+element_name+"&id_object_type_field="+id_object_type_field,
 		dataType: "html",
 		success: function(data){	
 			$("#external_table_window").hide ()
@@ -802,6 +787,7 @@ function show_external_query(table_name) {
 
 function refresh_external_id(id_object_type_field, id_inventory, id_value) {
 	value_id = $('#'+id_value).val();
+
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
@@ -813,6 +799,19 @@ function refresh_external_id(id_object_type_field, id_inventory, id_value) {
 	});
 
 }
+
+function enviar(data, element_name, id_object_type_field) {
+
+	//$('#'+element_name.id).val(data);
+	$('#'+element_name).val(data);
+	
+	id_inventory = $('#text-id_object_hidden').val();
+	
+	if (id_inventory != 0) {
+		refresh_external_id(id_object_type_field, id_inventory, element_name);
+	}
+
+} 
 
 </script>
 <?php endif; ?>
