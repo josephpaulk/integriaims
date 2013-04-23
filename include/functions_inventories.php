@@ -922,7 +922,7 @@ function inventories_printTable($id_item, $type, $id_father) {
 				if ($info_fields !== false) {
 
 					foreach ($info_fields as $key=>$info) {
-						$value = '';
+
 						echo '<tr><td class="datos"><b>'.$info['label'].': </b></td>';
 						
 						$sql = "SELECT `data` FROM tobject_field_data WHERE id_inventory=$id_item AND id=".$info['id'];
@@ -931,10 +931,20 @@ function inventories_printTable($id_item, $type, $id_father) {
 
 						echo '<td class="datos"><b>'.$value[0]['data'].'</b></td>';
 						echo '</tr>';
+						
+						if (($info['type'] == 'external') && ($value != false)) {
+							
+							$all_fields_ext = inventories_get_all_external_field ($info['external_table_name'], $info['external_reference_field'], $value[0]['data']);
+
+							foreach ($all_fields_ext as $key=>$field) {
+								echo '<tr><td class="datos"><b>'.$field['label'].': </b></td>';
+								echo '<td class="datos"><b>'.$field['data'].'</b></td>';
+								echo '</tr>';
+							}
+						}
 					}
 				}
-				
-				//echo '</table></div>';
+
 				echo '</table>';
 				
 				echo '<form id="edit_tree" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$id_item.'">';

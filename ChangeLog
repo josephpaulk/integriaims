@@ -1,3 +1,9 @@
+2013-04-23  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_inventories.php: Added
+	external fields in treeview.
+
+
 2013-04-22  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_config.php: Added several parameters
