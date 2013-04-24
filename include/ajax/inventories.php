@@ -19,7 +19,7 @@ if ($get_external_data) {
 	}
 	
 	$external_data = get_db_all_rows_in_table($table_name);
-	
+		
 	if ($external_data !== false) {
 	
 		$table->class = 'listing';
@@ -28,7 +28,7 @@ if ($get_external_data) {
 		$table->head = array ();
 		
 		$keys = array_keys($fields);
-		
+	
 		$i = 0;
 		foreach ($keys as $k=>$head) {
 			$table->head[$i] =$head;
@@ -36,18 +36,16 @@ if ($get_external_data) {
 				$pos_id = $i+1;
 			$i++;
 		}
-		
+	
 		foreach ($external_data as $key => $ext_data) {
 			$j = 0;
 			foreach ($ext_data as $k => $dat) {
-				
+
+				if ($k == $id_table) {
+					$val_id = $dat;
+				}
 				if (array_key_exists($k, $fields)) {
-					if ($j == $pos_id) {
-						$data[$j] = "<a href='javascript: enviar(" . $dat . ", " . $element_name . ", " . $id_object_type_field . ")'>".$dat."</a>";
-					} else {
-						$data[$j] = $dat;
-					}
-					
+					$data[$j] = "<a href='javascript: enviar(" . $val_id . ", " . $element_name . ", " . $id_object_type_field . ")'>".$dat."</a>";	
 				}
 				$j++;
 			}

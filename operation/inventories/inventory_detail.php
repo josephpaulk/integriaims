@@ -69,6 +69,7 @@ if ($id) {
 
 $check_inventory = (bool) get_parameter ('check_inventory');
 
+/*
 if ($check_inventory) {
 	// IR and incident creator can see the incident
 	if ($inventory !== false && (give_acl ($config['id_user'], get_inventory_group ($id), "IR"))){
@@ -84,6 +85,7 @@ if ($check_inventory) {
 		return;
 	}
 }
+*/
 
 if ($id) {
 	echo "<h1>".__('Object')." #$id"."&nbsp;&nbsp;-&nbsp;".$inventory_name."</h1>";
@@ -307,10 +309,12 @@ if ($create) {
 		$result_msg = '<h3 class="error">'.$err_message.'</h3>';
 	}
 	
+/*
 	if (defined ('AJAX')) {
 		echo $result_msg;
 		return;
 	}
+*/
 	$id = 0;
 	$name = "";
 	$description = "";
@@ -348,24 +352,6 @@ if ($id) {
 	$id_object_type = $inventory['id_object_type'];
 }
 
-
-/*
-if ($id) {
-	echo "<h1>".__('Object')." #$id"."&nbsp;&nbsp;";
-	// Delete incident 
-	if ($has_permission) {
-		// Delete object 
-		echo '<form name="delete_object_form" class="delete action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory">';
-		print_input_hidden ('quick_delete', $id, false);
-		echo '<input type="image" class="action" src="images/cross.png" title="' . __('Delete') .'">';
-		echo '</form>';	
-	}
-	echo "</h1>";
-} else {
-	if (! defined ('AJAX'))
-		echo "<h2>".__('Create inventory object')."</h2>";
-}
-*/
 
 $table->class = 'databox';
 $table->width = '90%';
@@ -482,7 +468,7 @@ echo '</div>';
 
 echo "<div class= 'dialog ui-dialog-content' id='external_table_window'></div>";
 
-if (! defined ('AJAX')):
+//if (! defined ('AJAX')):
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
@@ -766,10 +752,10 @@ function show_external_query(table_name, id_table, element_name, id_object_type_
 		data: "page=include/ajax/inventories&get_external_data=1&table_name="+table_name+"&id_table="+id_table+"&element_name="+element_name+"&id_object_type_field="+id_object_type_field,
 		dataType: "html",
 		success: function(data){	
-			$("#external_table_window").hide ()
-				.empty ()
-				.append (data)
-				.dialog ({
+			$("#external_table_window").html (data);
+			$("#external_table_window").show ();
+
+			$("#external_table_window").dialog ({
 					resizable: true,
 					draggable: true,
 					modal: true,
@@ -779,8 +765,8 @@ function show_external_query(table_name, id_table, element_name, id_object_type_
 					},
 					width: 620,
 					height: 500
-				})
-				.show ();	
+				});
+			$("#external_table_window").dialog('open');
 		}
 	});
 }
@@ -809,9 +795,10 @@ function enviar(data, element_name, id_object_type_field) {
 	
 	if (id_inventory != 0) {
 		refresh_external_id(id_object_type_field, id_inventory, element_name);
+		$("#external_table_window").dialog('close');
 	}
 
 } 
 
 </script>
-<?php endif; ?>
+<?php //endif; ?>

@@ -547,7 +547,8 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 	if ($sec2 == 'operation/inventories/inventory') {
 		echo '<li>';
 		echo '<a href="" onclick="return false">'.__('Inventory #').'</a>';
-		echo '<form id="goto-inventory-form">';
+		//echo '<form id="goto-inventory-form">';
+		echo "<form action='index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=$id_inventory&check_inventory=1' method='post'>";
 		print_input_text ('id', $id_inventory ? $id_inventory : '', '', 3, 10);
 		echo '</form>';
 		echo '</li>';
