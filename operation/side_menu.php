@@ -436,7 +436,7 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			|| $sec2 == 'operation/incidents/incident_search') {
 			echo '<li>';
 			echo '<a href="" onclick="return false">'.__('Incident #').'</a>';
-			echo '<form id="goto-incident-form">';
+			echo '<form action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail" method="POST">';
 			print_input_text ('id', $id_incident ? $id_incident : '', '', 3, 10);
 			echo '</form>';
 			echo '</li>';

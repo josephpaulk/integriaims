@@ -1,3 +1,15 @@
+2013-04-24  Dario Rodriguez <dario@artica.es>
+
+	* operation/incidents/incident_dashboard_detail.php: Fixed several links 
+	and error pages
+	* operation/incidents/incident_detail.php: Fixed incident edition view.
+	* operation/kb/manage_data.php: Fixed KB creaton from incident.
+	* operation/side_menu.php: Fixed small field to search incidents by ID
+	* include/functions_db.mysql.php: Fixed an error in clean_cache function.
+	* include/js/integria_incident_search.js: Moved functions to this file.
+	* include/mailtemplates/incident_close.tpl: Created email template for 
+	closed emails.
+
 2013-04-24  Vanessa Gil <vanessa.gil@artica.es>
 
 	* operation/side_menu.php

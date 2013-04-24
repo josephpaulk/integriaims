@@ -102,6 +102,30 @@ if ($action == 'get-users-list') {
 		return;
 }
 
+// Delete incident
+$quick_delete = get_parameter("quick_delete");
+if ($quick_delete) {
+	$id_inc = $quick_delete;
+	$sql2="SELECT * FROM tincidencia WHERE id_incidencia=".$id_inc;
+	$result2=mysql_query($sql2);
+	$row2=mysql_fetch_array($result2);
+	if ($row2) {
+		$id_author_inc = $row2["id_usuario"];
+		$email_notify = $row2["notify_email"];
+		if (give_acl ($config['id_user'], $row2["id_grupo"], "IM") || $config['id_user'] == $id_author_inc) {
+			borrar_incidencia($id_inc);
+
+			echo "<h3 class='suc'>".__('Incident successfully deleted')."</h3>";
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "Incident deleted","User ".$config['id_user']." deleted incident #".$id_inc);
+		} else {
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config['id_user']." try to delete incident");
+			echo "<h3 class='error'>".__('There was a problem deleting incident')."</h3>";
+			no_permission();
+		}
+	}
+}
+
+
 if ($action == 'update') {
 	// Number of loop in the massive operations. No received in not massive ones
 	$massive_number_loop = get_parameter ('massive_number_loop', -1);
@@ -254,15 +278,6 @@ if ($action == 'update') {
 		}
 	}
 
-	if (defined ('AJAX')) {
-		if($massive_number_loop != -1) {
-			echo $massive_number_loop;
-		}
-		else {
-			echo $result_msg;
-		}
-		return;
-	}
 }
 
 if ($action == "insert") {
@@ -422,6 +437,9 @@ if ($action == "insert") {
 if ($id) {
 	$create_incident = false;
 	
+	//We could have several problems with cache on incident update
+	clean_cache_db();
+	
 	$incident = get_db_row ('tincidencia', 'id_incidencia', $id);
 	// Get values
 	$titulo = $incident["titulo"];
@@ -525,22 +543,24 @@ if ($id) {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo '<li>';
-	echo '<a href="#" onclick="toggleDiv(\'indicent-details-view\');toggleDiv(\'indicent-details-edit\')">'.__("Close")."</a>";
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.__("Close")."</a>";
 	echo '</li>';
 	
 	/* Delete incident */
 	if ($has_permission) {
 		echo "<li>";
-		echo '<form name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident">';
+		echo '<form id="delete_incident_form" name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
 		print_input_hidden ('quick_delete', $id, false);
 		echo '<a href="#" id="detele_incident_submit_form">'.__("Delete").'</a>';
 		echo '</form>';
 		echo "</li>";
 		
 	}
-	if (give_acl ($config['id_user'], $id_grupo, "KW")) {
+	
+	//KB only appears for closed status
+	if (give_acl ($config['id_user'], $id_grupo, "KW") && ($incident["estado"] == 7)) {
 		echo "<li>";
-		echo '<form name="kb_form" ';
+		echo '<form id="kb_form" name="kb_form" ';
 		echo 'class="action" method="post" action="index.php?sec=kb&sec2=operation/kb/manage_data&create=1">';
 		print_input_hidden ('id_incident', $id, false);
 		echo '<a href="#" id="kb_form_submit">'.__("Add to KB").'</a>';
@@ -722,7 +742,7 @@ $table->data[2][2] = user_print_autocomplete_input($params_closed);
 	
 $types = get_incident_types ();
 $table->data[3][0] = print_label (__('Incident type'), '','',true);
-$table->data[3][0] .= print_select($types, 'id_incident_type', $id_incident_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
+$table->data[3][0] .= print_select($types, 'id_incident_type', $id_incident_type, 'show_incident_type_fields();', 'Select', '', true, 0, true, false, $disabled);
 
 $table->colspan[4][0] = 3;		
 //$table->data[4][0] = "<tr id='row_show_type_fields' colspan='4'></tr>";
@@ -851,7 +871,17 @@ $table->data[9][0] = print_textarea ('description', 9, 80, $description, $disabl
 // This is never shown in create form
 
 if (!$create_incident){
-	$table->data[10][0] = print_textarea ('epilog', 5, 80, $epilog, $disabled_str,	true, __('Resolution epilog'));
+
+	//Show or hidden epilog depending on incident status
+	if ($incident["estado"] != 7) {		
+		$table->data[10][0] = "<div id='epilog_wrapper' style='display: none;'>";
+	} else {
+		$table->data[10][0] = "<div id='epilog_wrapper'>";
+	}
+		
+	$table->data[10][0] .= print_textarea ('epilog', 5, 80, $epilog, $disabled_str,	true, __('Resolution epilog'));
+	
+	$table->data[10][0] .= "</div>";
 }
 
 
@@ -883,8 +913,6 @@ echo '<div id="id_incident_hidden" style="display:none;">';
 	print_input_text('id_incident_hidden', $id);
 echo '</div>';
 
-/* Javascript is only shown in normal mode */
-//if (! defined ('AJAX')) :
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
@@ -897,29 +925,42 @@ echo '</div>';
 <script  type="text/javascript">
 $(document).ready (function () {
 	
+	//JS to create KB artico from incident
 	$("#kb_form_submit").click(function (event) {
 		event.preventDefault();
 		$("#kb_form").submit();
 	});
 	
+	//JS to delete incident
 	$("#detele_incident_submit_form").click(function (event) {
 		event.preventDefault();
-		$("#delete_incident_form").submit();
+		
+		//Show confirm dialog
+		var res = confirm("<?php echo __("Are you sure?");?>");
+		if (res) {
+			$("#delete_incident_form").submit();
+		}
 	});
 	
-	/* First parameter indicates to add AJAX support to the form */
-	//configure_incident_form (false);
+	//Show hide epilog field
+	$("#incident_status").change(function () {
+		
+		var status = $(this).val();
+		console.log("STATUS => "+status);
+		if (status == 7) {
+			console.log("paos");
+			$("#epilog_wrapper").show();
+		} else {
+			console.log("paos111");
+			$("#epilog_wrapper").hide();
+		}
+	});
 	
+	//Hide advanced fields
 	$("#incident-editor-row_advanced-0").css('display', 'none');
 	
-	if ($("#incident_status").val() == "7") {
-		$("#incident-editor-2-2").css('display', '');
-	} else {
-		$("#incident-editor-2-2").css('display', 'none');
-	}
-	
 	if ($("#id_incident_type").val() != "0") {
-		show_fields();
+		show_incident_type_fields();
 	}
 	
 	$("#text-id_creator").autocomplete ("ajax.php",
@@ -997,154 +1038,7 @@ $(document).ready (function () {
 			  }
 		});
 		
-		$("#incident_status").change(function() {
-			
-			if ($("#incident_status").val() == "7") {
-				$("#incident-editor-2-2").css('display', '');
-			} else {
-				$("#incident-editor-2-2").css('display', 'none');
-			}
-		});
 });
-
-function show_fields() {
-
-	id_incident_type = $("#id_incident_type").val();
-
-	id_incident = $("#text-id_incident_hidden").val();
-
-	//$('.new_row').remove();
-	$('#table_fields').remove();
-
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=operation/incidents/incident_detail&show_type_fields=1&id_incident_type=" + id_incident_type +"&id_incident=" +id_incident,
-		dataType: "json",
-		success: function(data){
-			
-			fi=document.getElementById('incident-editor-4-0');
-			var table = document.createElement("table"); //create table
-			table.id='table_fields';
-			table.className = 'databox_color_without_line';
-			table.width='98%';
-			fi.appendChild(table); //append table to row
-			
-			var i = 0;
-			var resto = 0;
-			jQuery.each (data, function (id, value) {
-				
-				resto = i % 2;
-
-				if (value['type'] == "combo") {
-					if (resto == 0) {
-						var objTr = document.createElement("tr"); //create row
-						objTr.id = 'new_row_'+i;
-						objTr.width='98%';
-						table.appendChild(objTr);
-					} else {
-						pos = i-1;
-						objTr = document.getElementById('new_row_'+pos);
-					}
-					
-					var objTd1 = document.createElement("td"); //create column for label
-					objTd1.width='50%';
-					lbl = document.createElement('label');
-					lbl.innerHTML = value['label']+' ';
-					
-					objTr.appendChild(objTd1);
-					objTd1.appendChild(lbl);
-					
-					txt = document.createElement('br');
-					lbl.appendChild(txt);
-					
-					element=document.createElement('select');
-					element.id=value['label']; 
-					element.name=value['label_enco'];
-					element.value=value['label'];
-					element.style.width="170px";
-					element.class="type";
-					
-					var new_text = value['combo_value'].split(',');
-					jQuery.each (new_text, function (id, val) {
-						element.options[id] = new Option(val);
-						element.options[id].setAttribute("value",val);
-						if (value['data'] == val) {
-							element.options[id].setAttribute("selected",'');
-						}
-					});
-			
-					lbl.appendChild(element);
-					i++;
-				}
-				
-				if ((value['type'] == "text")) {
-					
-					if (resto == 0) {
-						var objTr = document.createElement("tr"); //create row
-						objTr.id = 'new_row_'+i;
-						objTr.width='98%';
-						table.appendChild(objTr);
-					} else {
-						pos = i-1;
-						objTr = document.getElementById('new_row_'+pos);
-					}
-					
-					var objTd1 = document.createElement("td"); //create column for label
-					objTd1.width='50%';
-					lbl = document.createElement('label');
-					lbl.innerHTML = value['label']+' ';
-					objTr.appendChild(objTd1);
-					objTd1.appendChild(lbl);
-					
-					txt = document.createElement('br');
-					lbl.appendChild(txt);
-
-					
-					element=document.createElement('input');
-					element.id=value['label'];
-					element.name=value['label_enco'];
-					element.value=value['data'];
-					element.type='text';
-					element.size=40;
-					
-					lbl.appendChild(element);
-					i++;
-				}
-				
-				if ((value['type'] == "textarea")) {
-					
-					if (resto == 0) {
-						var objTr = document.createElement("tr"); //create row
-						objTr.id = 'new_row_'+i;
-						table.appendChild(objTr);
-					} else {
-						pos = i-1;
-						objTr = document.getElementById('new_row_'+pos);
-					}
-					
-					var objTd1 = document.createElement("td"); //create column for label
-					
-					lbl = document.createElement('label');
-					lbl.innerHTML = value['label']+' ';
-					objTr.appendChild(objTd1);
-					objTd1.appendChild(lbl);
-					
-					element=document.createElement("textarea");
-					element.id=value['label'];
-					element.name=value['label_enco'];
-					element.value=value['data'];
-					element.type='text';
-					element.rows='3';
-					
-					lbl.appendChild(element);
-					i++;
-				}
-			});
-		}
-	});
-}
-
 </script>
 
 <?php //endif; ?>

@@ -54,6 +54,9 @@ function clean_cache_db() {
 	global $sql_cache;
 
 	$sql_cache = array();
+	
+	//Restore cache saved to 0
+	$sql_cache['saved'] = 0;
 }
 
 /** 

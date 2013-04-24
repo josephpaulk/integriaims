@@ -21,8 +21,15 @@ $id = get_parameter("id", false);
 
 if ($id) {
 	$incident = get_incident ($id);
+	
 	if ($incident !== false) {
 		$id_grupo = $incident['id_grupo'];
+	} else {
+		echo "<h1>".__("Incident")."</h1>";
+		echo "<h3 class='error'>".__("There is no information for this incident")."</h3>";
+		echo "<br>";
+		echo "<a style='margin-left: 90px' href='index.php?sec=incidents&sec2=operation/incidents/incident_search'>".__("Try the search form to find the incident")."</a>";
+		return;
 	}
 }
 
@@ -83,15 +90,9 @@ $left_side .= "<tr>";
 $left_side .= "<td>".__("Type").":</td><td align='right'>".$type."</td>";
 $left_side .= "</tr>";
 $left_side .= "</table>";
-
-//echo incident_details_list ($id, true);
-
 $left_side .= '</div>';
 
 /* Users affected by the incident */
-
-
-
 $left_side .= '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-description\')">'.__('Description').'</h2>';
 $left_side .= '<div id="incident-description">';
 $left_side .= $incident["descripcion"];
@@ -173,7 +174,7 @@ $left_side .= $email_table;
 $left_side .= "</table>";
 $left_side .= '</div>';
 
-/**** DASHBOAR RIGHT SIDE ****/
+/**** DASHBOARD RIGHT SIDE ****/
 
 $right_side = '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-users\')">'.__('People').'</h2>';
 $right_side .= '<div id="incident-users">';
@@ -276,7 +277,7 @@ echo '<h1>'.__('Incident').' #'.$incident["id_incidencia"].' - '.$incident['titu
 echo "<div id='button-bar-title'>";
 echo "<ul>";
 echo "<li>";
-echo '<a href="#" onclick="toggleDiv(\'indicent-details-view\');toggleDiv(\'indicent-details-edit\')">'.__("Edit").'</a>';
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.__("Edit").'</a>';
 echo "</li>";
 echo '<li>';
 echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.__('Workunits').'</a>';

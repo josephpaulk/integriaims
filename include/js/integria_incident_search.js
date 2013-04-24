@@ -672,3 +672,141 @@ function process_massive_updates () {
 	}	
 	
 }
+
+function show_incident_type_fields() {
+
+	id_incident_type = $("#id_incident_type").val();
+
+	id_incident = $("#text-id_incident_hidden").val();
+
+	//$('.new_row').remove();
+	$('#table_fields').remove();
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/incidents/incident_detail&show_type_fields=1&id_incident_type=" + id_incident_type +"&id_incident=" +id_incident,
+		dataType: "json",
+		success: function(data){
+			
+			fi=document.getElementById('incident-editor-4-0');
+			var table = document.createElement("table"); //create table
+			table.id='table_fields';
+			table.className = 'databox_color_without_line';
+			table.width='98%';
+			fi.appendChild(table); //append table to row
+			
+			var i = 0;
+			var resto = 0;
+			jQuery.each (data, function (id, value) {
+				
+				resto = i % 2;
+
+				if (value['type'] == "combo") {
+					if (resto == 0) {
+						var objTr = document.createElement("tr"); //create row
+						objTr.id = 'new_row_'+i;
+						objTr.width='98%';
+						table.appendChild(objTr);
+					} else {
+						pos = i-1;
+						objTr = document.getElementById('new_row_'+pos);
+					}
+					
+					var objTd1 = document.createElement("td"); //create column for label
+					objTd1.width='50%';
+					lbl = document.createElement('label');
+					lbl.innerHTML = value['label']+' ';
+					
+					objTr.appendChild(objTd1);
+					objTd1.appendChild(lbl);
+					
+					txt = document.createElement('br');
+					lbl.appendChild(txt);
+					
+					element=document.createElement('select');
+					element.id=value['label']; 
+					element.name=value['label_enco'];
+					element.value=value['label'];
+					element.style.width="170px";
+					element.class="type";
+					
+					var new_text = value['combo_value'].split(',');
+					jQuery.each (new_text, function (id, val) {
+						element.options[id] = new Option(val);
+						element.options[id].setAttribute("value",val);
+						if (value['data'] == val) {
+							element.options[id].setAttribute("selected",'');
+						}
+					});
+			
+					lbl.appendChild(element);
+					i++;
+				}
+				
+				if ((value['type'] == "text")) {
+					
+					if (resto == 0) {
+						var objTr = document.createElement("tr"); //create row
+						objTr.id = 'new_row_'+i;
+						objTr.width='98%';
+						table.appendChild(objTr);
+					} else {
+						pos = i-1;
+						objTr = document.getElementById('new_row_'+pos);
+					}
+					
+					var objTd1 = document.createElement("td"); //create column for label
+					objTd1.width='50%';
+					lbl = document.createElement('label');
+					lbl.innerHTML = value['label']+' ';
+					objTr.appendChild(objTd1);
+					objTd1.appendChild(lbl);
+					
+					txt = document.createElement('br');
+					lbl.appendChild(txt);
+
+					
+					element=document.createElement('input');
+					element.id=value['label'];
+					element.name=value['label_enco'];
+					element.value=value['data'];
+					element.type='text';
+					element.size=40;
+					
+					lbl.appendChild(element);
+					i++;
+				}
+				
+				if ((value['type'] == "textarea")) {
+					
+					if (resto == 0) {
+						var objTr = document.createElement("tr"); //create row
+						objTr.id = 'new_row_'+i;
+						table.appendChild(objTr);
+					} else {
+						pos = i-1;
+						objTr = document.getElementById('new_row_'+pos);
+					}
+					
+					var objTd1 = document.createElement("td"); //create column for label
+					
+					lbl = document.createElement('label');
+					lbl.innerHTML = value['label']+' ';
+					objTr.appendChild(objTd1);
+					objTd1.appendChild(lbl);
+					
+					element=document.createElement("textarea");
+					element.id=value['label'];
+					element.name=value['label_enco'];
+					element.value=value['data'];
+					element.type='text';
+					element.rows='3';
+					
+					lbl.appendChild(element);
+					i++;
+				}
+			});
+		}
+	});
+}
