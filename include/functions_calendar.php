@@ -738,6 +738,47 @@ function give_human_time ($int_seconds, $flag_hide_zero = true) {
 	return ( !empty($build)?implode(', ', $build):__('Unknown'));
 }
 
+
+// ---------------------------------------------------------------
+// Return string with time-threshold in secs, mins, days or weeks
+// This function returns the time in a clear way than give_human_time
+// This function could replace give_human_time in other views
+// ---------------------------------------------------------------
+function calendar_seconds_to_humand ($int_seconds) {
+	$key_suffix = 's';
+	$periods = array (
+		'year'   => 31556926,
+		'month'  => 2629743,
+		'day'    => 86400,
+		'hour'   => 3600,
+		'minute' => 60,
+		'second' => 1
+	);
+
+	// do the loop thang
+	foreach ($periods as $key => $length) {
+		// calculate
+		$temp = floor ($int_seconds / $length);
+
+		// determine if temp qualifies to be passed to output
+		if ($temp > 0) {
+			// store in an array
+			$build[] = $temp.' '.$key.($temp!=1?'s':null);
+		}
+
+		// get the remainder of seconds
+		$int_seconds = fmod($int_seconds, $length);
+	}
+
+	//Generate return string
+	$str_ret = __("0 seconds");
+	
+	if (!empty($build)) {	
+		$str_ret = implode(', ', $build);
+	}
+	return $str_ret;
+}
+
 /**
  * This function gets the time from either system or sql based on preference and returns it
  *

@@ -729,17 +729,25 @@ if ($has_im) {
 }
 
 // closed by
-$params_closed['input_id'] = 'text-closed_by';
-$params_closed['input_name'] = 'closed_by';
-$params_closed['input_value'] = $closed_by;
-$params_closed['title'] = 'Closed by';
-$params_closed['help_message'] = "User assigned here is user that will be responsible to close incident.";
-$params_closed['return'] = true;
-$params_closed['return_help'] = true;
+if (!$create_incident){
+	$params_closed['input_id'] = 'text-closed_by';
+	$params_closed['input_name'] = 'closed_by';
+	$params_closed['input_value'] = $closed_by;
+	$params_closed['title'] = __('Closed by');
+	$params_closed['help_message'] = __("User assigned here is user that will be responsible to close incident.");
+	$params_closed['return'] = true;
+	$params_closed['return_help'] = true;
 
+	//Only print closed by option when incident status is closed
+	if ($incident["estado"] == STATUS_CLOSED) {
+		$table->data[2][2] = "<div id='closed_by_wrapper'>";
+	} else {
+		$table->data[2][2] = "<div id='closed_by_wrapper' style='display: none'>";
+	}
+	$table->data[2][2] .= user_print_autocomplete_input($params_closed);
+	$table->data[2][2] .= "</div>";
+}
 
-$table->data[2][2] = user_print_autocomplete_input($params_closed);
-	
 $types = get_incident_types ();
 $table->data[3][0] = print_label (__('Incident type'), '','',true);
 $table->data[3][0] .= print_select($types, 'id_incident_type', $id_incident_type, 'show_incident_type_fields();', 'Select', '', true, 0, true, false, $disabled);
@@ -873,7 +881,7 @@ $table->data[9][0] = print_textarea ('description', 9, 80, $description, $disabl
 if (!$create_incident){
 
 	//Show or hidden epilog depending on incident status
-	if ($incident["estado"] != 7) {		
+	if ($incident["estado"] != STATUS_CLOSED) {		
 		$table->data[10][0] = "<div id='epilog_wrapper' style='display: none;'>";
 	} else {
 		$table->data[10][0] = "<div id='epilog_wrapper'>";
@@ -920,10 +928,63 @@ echo '</div>';
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
+<script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
 <script  type="text/javascript">
 $(document).ready (function () {
+	
+	//Validate form
+	$("#incident_status_form").submit(function () {
+		var title = $("#text-titulo").val();
+		var creator = $("#text-id_creator").val();
+		var assigned_user = $("#text-id_user").val();
+		var closed_by = $("#text-closed_by").val();
+		
+		//Restore borders color
+		$("#text-titulo").css("border-color", "#9A9B9D");
+		$("#text-id_creator").css("border-color", "#9A9B9D");
+		$("#text-id_user").css("border-color", "#9A9B9D");
+		$("#text-closed_by").css("border-color", "#9A9B9D");
+		
+		//Validate fields
+		if (title == "") {
+			$("#text-titulo").css("border-color", "red");
+			$("div.result").html("<h3 class='error'><?php echo __("Title field is empty")?></h3>");
+			window.scrollTo(0,0);
+			return false;
+		}
+		
+		if (creator == "") {
+			$("#text-id_creator").css("border-color", "red");
+			$("div.result").html("<h3 class='error'><?php echo __("Creator field is empty")?></h3>");
+			window.scrollTo(0,0);
+			return false;
+		}
+		
+		if (assigned_user == "") {
+			$("#text-id_user").css("border-color", "red");
+			$("div.result").html("<h3 class='error'><?php echo __("Assigned user field is empty")?></h3>");
+			window.scrollTo(0,0);
+			return false;
+		}
+		
+		var status = $("#incident_status").val();
+		
+		//If closed not empty closed by
+		if (status == 7) {
+			
+			if (closed_by == "") {
+				$("#text-closed_by").css("border-color", "red");
+				$("div.result").html("<h3 class='error'><?php echo __("Closed by field is empty")?></h3>");
+				window.scrollTo(0,0);
+				return false;
+			}
+		}
+				
+		return true;
+		
+	});
 	
 	//JS to create KB artico from incident
 	$("#kb_form_submit").click(function (event) {
@@ -946,13 +1007,14 @@ $(document).ready (function () {
 	$("#incident_status").change(function () {
 		
 		var status = $(this).val();
-		console.log("STATUS => "+status);
+		
+		//Display epilog and closed by field
 		if (status == 7) {
-			console.log("paos");
 			$("#epilog_wrapper").show();
+			$("#closed_by_wrapper").show();
 		} else {
-			console.log("paos111");
 			$("#epilog_wrapper").hide();
+			$("#closed_by_wrapper").hide();
 		}
 	});
 	

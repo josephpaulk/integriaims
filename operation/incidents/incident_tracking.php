@@ -44,25 +44,35 @@ if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
 
 /* Add a button to generate HTML reports */
 if (!$clean_output) {
-	echo '<form method="post" target="_blank" action="index.php" style="clear: both">';
-
-	echo '<div style="width:90%; text-align: right;">';
+	echo '<form id="create_html_report" method="post" target="_blank" action="index.php">';
 	print_input_hidden ('id', $id);
 	print_input_hidden ('sec2', 'operation/incidents/incident_tracking');
 	print_input_hidden ('clean_output', 1);
-	print_submit_button (__('HTML report'), 'incident_report', false,
-		'class="sub report"');
 	echo "</form>";
-
-	/* Add a button to generate HTML reports */
-	echo '<form method="post" target="_blank" action="index.php" style="clear: both">';
+	
+	echo '<form id="create_pdf_report" method="post" target="_blank" action="index.php">';
 	print_input_hidden ('id', $id);
 	print_input_hidden ('sec2', 'operation/incidents/incident_tracking');
 	print_input_hidden ('clean_output', 1);
 	print_input_hidden ('pdf_output', 1);
-	print_submit_button (__('PDF report'), 'incident_report', false,
-		'class="sub pdfreport"');
-	echo '</div></form>';
+	echo '</form>';	
+	
+	echo "<div style='clear: both; width: 100%; height: 50px; padding-top: 10px'>";
+	echo "<div id='button-bar-title'>";
+	echo "<ul>";
+	echo "<li>";
+	echo '<a href="#" onClick="document.getElementById(\'create_html_report\').submit();">'.__("HTML report").'</a>';
+	echo "</li>";
+	echo '<li>';
+	echo '<a href="#" onClick="document.getElementById(\'create_pdf_report\').submit();">'.__("PDF report").'</a>';
+	echo '</li>';	
+	echo "</ul>";
+	echo "</div>";
+	echo "</div>";
+} else {
+	//Clean output we need to print incident title header :)
+	
+	echo '<h1>'.__('Incident').' #'.$incident["id_incidencia"].' - '.$incident['titulo']."</h1>";
 }
 
 $a_day = 24*3600;
@@ -80,11 +90,16 @@ if ($clean_output) {
 	$ttl = 2;
 }
 
+$stats = incidents_get_incident_stats($id);
+
 echo "<center>";
-echo "<table align=center>";
+echo "<table align=center width='90%'>";
 	echo "<tr>";
 		echo "<td align=center>";
-			echo '<strong>'.__('Details for incident').'</strong>';
+			echo '<strong>'.__('General statistics').'</strong>';
+		echo "</td>";
+		echo "<td align=center>";
+			echo '<strong>'.__('Workunits statistics').'</strong>';
 		echo "</td>";
 		echo "<td align=center>";
 			echo '<strong>'.__('Activity by user (# WU)'). '</strong>';
@@ -92,13 +107,125 @@ echo "<table align=center>";
 	echo "</tr>";
 	
 	echo "<tr>";
-		echo "<td align=center>";
+		echo "<td align='center' style='vertical-align:top'>";
 			//Print Incident detail
-			echo incident_details_list ($id,true);
+			echo "<table>";
+			echo "<tr>";
+			echo "<td><strong>".__("Open")."</strong>:</td>";
+			echo "<td style='text-align:right;'>".sprintf(__("%s ago"), human_time_comparation($incident['inicio']))."</td>";
+			echo "</tr>";
+			echo "<tr>";
+			echo "<td><strong>".__("Closed")."</strong>:</td>";
+			if ($incident["estado"] == STATUS_CLOSED) {
+				echo "<td style='text-align:right;'>".sprintf(__("%s ago"), human_time_comparation($incident['cierre']))."</td>";
+			} else {
+				echo "<td style='text-align:right;'>".__("Not yet")."</td>";
+			}
+			echo "</tr>";
+			echo "<tr>";
+			echo "<td><strong>".__("Last update")."</strong>:</td>";
+			echo "<td style='text-align:right;'>".sprintf(__("%s ago"), human_time_comparation($incident['actualizacion']))."</td>";
+			echo "</tr>";	
+			echo "<tr>";
+			echo "<td><strong>".__("Total time")."</strong>:</td>";
+			echo "<td style='text-align:right;'>".calendar_seconds_to_humand($stats[INCIDENT_METRIC_TOTAL_TIME]*60)."</td>";
+			echo "</tr>";
+			echo "</table>";
+		echo "</td>";
+		echo "<td align='center' style='vertical-align:top'>";
+			$workunit_count = get_incident_count_workunits ($id);
+			echo "<table>";
+			if ($workunit_count) {
+				$work_hours = get_incident_workunit_hours ($id);
+				$workunits = get_incident_workunits ($id);	
+				$workunit_data = get_workunit_data ($workunits[0]['id_workunit']);
+				echo "<tr>";
+				echo "<td><strong>".__("Last work at")."</strong>:</td>";
+				echo "<td style='text-align:right;'>".human_time_comparation ($workunit_data['timestamp'])."</td>";
+				echo "</tr>";
+				echo "<tr>";
+				echo "<td><strong>".__("Workunits")."</strong>:</td>";
+				echo "<td style='text-align:right;'>".$workunit_count."</td>";
+				echo "</tr>";				
+				echo "<tr>";
+				echo "<td><strong>".__("Time used")."</strong>:</td>";
+				echo "<td style='text-align:right;'>".calendar_seconds_to_humand($work_hours*3600)."</td>";
+				echo "</tr>";
+				echo "<tr>";
+				echo "<td><strong>".__("Reported by")."</strong>:</td>";
+				$name = get_db_value ('nombre_real', 'tusuario', 'id_usuario', $workunit_data['id_user']);
+				echo "<td style='text-align:right;'>".$name."</td>";
+				echo "</tr>";				
+			} else {
+				echo "<tr>";
+				echo "<td>";
+				echo "<em>".__("There are not workunits")."</em>";
+				echo "</td>";
+				echo "</tr>";
+			}
+			echo "</table>";
+			echo "</td>";
+		echo "<td align='center' style='vertical-align:top'>";
+			echo "<table>";
+			echo "<tr>";
+			echo "<td>".graph_incident_user_activity ($id, 200, 150, $ttl)."</td>";
+			echo "</tr>";
+			echo "</table>";
+		echo "</td>";		
+	echo "</tr>";
+echo "</table>";
+echo "</center>";
+
+//Get incident statistics
+
+echo "<center>";
+echo "<table align=center width='90%'>";
+	echo "<tr>";
+		echo "<td align=center>";
+			echo '<strong>'.__('Statistics by status').'</strong>';
 		echo "</td>";
 		echo "<td align=center>";
-			echo graph_incident_user_activity ($id, 200, 200, $ttl);
-		echo "</td>";		
+			echo '<strong>'.__('Statistics by group').'</strong>';
+		echo "</td>";	
+		echo "<td align=center>";
+			echo '<strong>'.__('Statistics by user').'</strong>';
+		echo "</td>";	
+	echo "</tr>";
+	
+	echo "<tr>";
+		echo "<td align='center' style='vertical-align:top'>";
+			echo "<table>";
+			foreach ($stats[INCIDENT_METRIC_STATUS] as $key => $value) {
+				$name = get_db_value ('name', 'tincident_status', 'id', $key);
+				echo "<tr>";
+				echo "<td><strong>".$name."</strong>:</td>";
+				echo "<td style='text-align:right;'>".calendar_seconds_to_humand($value*60)."</td>";
+				echo "</tr>";
+			}
+			echo "</table>";
+		echo "</td>";
+		echo "<td align='center' style='vertical-align:top'>";
+			echo "<table>";
+			foreach ($stats[INCIDENT_METRIC_GROUP] as $key => $value) {
+				$name = get_db_value ('nombre', 'tgrupo', 'id_grupo', $key);
+				echo "<tr>";
+				echo "<td><strong>".$name."</strong>:</td>";
+				echo "<td style='text-align:right;'>".calendar_seconds_to_humand($value*60)."</td>";
+				echo "</tr>";
+			}
+			echo "</table>";
+		echo "</td>";	
+		echo "<td align='center' style='vertical-align:top'>";
+			echo "<table>";
+			foreach ($stats[INCIDENT_METRIC_USER] as $key => $value) {
+				$name = get_db_value ('nombre_real', 'tusuario', 'id_usuario', $key);
+				echo "<tr>";
+				echo "<td><strong>".$name."</strong>:</td>";
+				echo "<td style='text-align:right;'>".calendar_seconds_to_humand($value*60)."</td>";
+				echo "</tr>";
+			}
+			echo "</table>";
+		echo "</td>";	
 	echo "</tr>";
 echo "</table>";
 echo "</center>";

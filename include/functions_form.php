@@ -949,7 +949,7 @@ function incident_details_list ($id_incident, $return = false) {
 	$incident = get_incident ($id_incident);
 	
 	$output .= '<ul id="incident-details-list" class="sidemenu">';
-	$output .= '&nbsp;&nbsp;<strong>'.__('Opened').'</strong>: '.human_time_comparation($incident['inicio']);
+	$output .= '&nbsp;&nbsp;<strong>'.__('Open at').'</strong>: '.human_time_comparation($incident['inicio']);
 	
 	if ($incident['estado'] == 7) {
 		$output .= '<br />&nbsp;&nbsp;<strong>'.__('Closed at').'</strong>: '.human_time_comparation($incident['cierre']);

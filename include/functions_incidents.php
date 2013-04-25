@@ -1431,8 +1431,54 @@ function incidents_get_incident_task_text ($id) {
 	return $name;
 }
 
-function incidents_get_incident_object_affected_text ($id) {
+function incidents_get_incident_stats ($id) {
 	
+	//Get all incident
+	$raw_stats = get_db_all_rows_filter('tincident_stats', array('id_incident' => $id));
+	
+	//Sort incident by type and metric into a hash table :)
+	$stats = array();
+	
+	$stats[INCIDENT_METRIC_USER] = array();
+	$stats[INCIDENT_METRIC_STATUS] = array(
+							STATUS_NEW => 0,
+							STATUS_UNCONFIRMED => 0,
+							STATUS_ASSIGNED => 0,
+							STATUS_REOPENED => 0,
+							STATUS_VERIFIED => 0,
+							STATUS_RESOLVED => 0,
+							STATUS_PENDING_THIRD_PERSON => 0,
+							STATUS_CLOSED => 0);
+							
+	$stats[INCIDENT_METRIC_GROUP] = array();
+	$stats[INCIDENT_METRIC_TOTAL_TIME] = 0;
+	$stats[INCIDENT_METRIC_TOTAL_TIME_NO_THIRD] = 0;
+
+	foreach ($raw_stats as $st) {
+		
+			switch ($st["metric"]) {
+				case INCIDENT_METRIC_USER: 
+					$stats[INCIDENT_METRIC_USER][$st["id_user"]] = $st["minutes"];
+					break;
+				case INCIDENT_METRIC_STATUS:
+					$stats[INCIDENT_METRIC_STATUS][$st["status"]] = $st["minutes"];
+					break;
+				case INCIDENT_METRIC_GROUP:
+					$stats[INCIDENT_METRIC_GROUP][$st["id_group"]] =$st["minutes"];
+					break;	
+				case INCIDENT_METRIC_TOTAL_TIME_NO_THIRD: 
+					$stats[INCIDENT_METRIC_TOTAL_TIME_NO_THIRD] = $st["minutes"];
+					break;	
+				case INCIDENT_METRIC_TOTAL_TIME:
+					$stats[INCIDENT_METRIC_TOTAL_TIME] = $st["minutes"];
+					break;
+						
+				default:
+					break;
+			}
+	}
+	
+	return ($stats);
 }
 
 ?>

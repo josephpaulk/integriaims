@@ -1,3 +1,17 @@
+2013-04-25  Dario Rodriguez <dario@artica.es>
+
+	* operation/incidents/incident_tracking.php: Added new metrics 
+	for groups, status and users.
+	* operation/incidents/incident_detail.php: Added form validation
+	* operation/incidents/incident_dashboard_detail.php: Changed some 
+	field names
+	* include/functions_calendar.php: Created new function to convert
+	seconds time to human in a more fancy way
+	* include/functions_incidents.php: Created a new function to get
+	new incident statistics
+	* include/functions_form.php: Fixed an error with a string of 
+	incident_detail function.
+
 2013-04-24  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_dashboard_detail.php: Fixed several links 

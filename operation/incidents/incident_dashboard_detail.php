@@ -202,10 +202,10 @@ $right_side .= '<div id="incident-dates">';
 
 $right_side .= "<table width='97%'>";
 $right_side .= "<tr>";
-$right_side .= "<td>".__("Created").":</td><td align='right'>".$incident["inicio"]."</td>";
+$right_side .= "<td>".__("Created on").":</td><td align='right'>".$incident["inicio"]."</td>";
 $right_side .= "</tr>";
 $right_side .= "<tr>";
-$right_side .= "<td>".__("Updated").":</td><td align='right'>".$incident["actualizacion"]."</td>";
+$right_side .= "<td>".__("Updated on").":</td><td align='right'>".$incident["actualizacion"]."</td>";
 $right_side .= "</tr>";
 $right_side .= "<tr>";
 
@@ -215,7 +215,7 @@ if ($incident["cierre"] == "0000-00-00 00:00:00") {
 	$close_text = $incident["cierre"];
 }
 
-$right_side .= "<td>".__("Resolved").":</td><td align='right'>".$close_text."</td>";
+$right_side .= "<td>".__("Closed on").":</td><td align='right'>".$close_text."</td>";
 $right_side .= "</tr>";
 $right_side .= "</table>";
 $right_side .= '</div>';
@@ -288,12 +288,6 @@ echo '</li>';
 echo "</ul>";
 echo "</div>";
 echo "</h1>";
-
-echo "<div class='button-bar-title'>";
-
-echo "</div>";
-
-echo '</h1>';
 
 print_table($table);
 
