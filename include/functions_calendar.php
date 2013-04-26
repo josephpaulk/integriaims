@@ -581,7 +581,7 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
                 $border = "border: 1px dashed #AAA;";
         }
 
-        $background = "#e9e9e5";
+        $background = "#F5F5ED";
 
 		$mysql_time= "";
 		$event_string = "";
@@ -595,7 +595,11 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 
         $workhours = $workhours_a + $workhours_b + $workhours_c + $workhours_d;
         $hours = "";
-
+        
+        //Check if this days is in holidays list if but also check for working ours
+		if (!is_working_day("$year-$month-$day")) {
+			$background = "#DBDBD9";
+		}
         if ($workhours_a > 0){
             $background = '#98FF8B';
             $mydiff++;
@@ -612,6 +616,8 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
             $background = '#FFDE46';
             $mydiff++;
 		} 
+		
+
 
         $calendar .= "<td valign='top' style='$border; background: $background; height: 70px; width: 70px;' ><b><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit&givendate=$year-$month-$day'>$day</a></b>";
 
@@ -691,12 +697,32 @@ function calcdate_business_prev ($datecalc, $duedays) {
 }
 
 function is_working_day ($datecalc) {
+	global $config;
+	
+	$date_formated = $datecalc;
 	$datecalc = strtotime ($datecalc);
 	$date1 = getdate($datecalc);
+	
 	if (($date1["wday"] == 0) OR ($date1["wday"] == 6))
-		return 0;
-	else
-		return 1;
+		
+		//Check if weekends are working days or not
+		if ($config["working_weekends"]) {
+			return 1;
+		} else {
+			return 0;
+		}
+	else {
+		$date = $date_formated.' 00:00:00';
+		
+		$id = get_db_value_filter("id", "tholidays", array("day" => $date));
+		
+		//If there is in the list is holidays
+		if ($id) {
+			return 0;
+		}
+	}
+	
+	return 1;
 
 	// TODO: Add check for returning special days that are non-working
 }
@@ -1043,6 +1069,10 @@ function getWorkingDays($startDate,$endDate,$holidays){
  		=> will return 8
 	*/
 
+}
+
+function calendar_get_holidays() {
+	return get_db_all_rows_in_table ("tholidays", "day");	
 }
 
 function mysql_timestamp ($unix_time){

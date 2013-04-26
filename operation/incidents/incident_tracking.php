@@ -127,8 +127,12 @@ echo "<table align=center width='90%'>";
 			echo "<td style='text-align:right;'>".sprintf(__("%s ago"), human_time_comparation($incident['actualizacion']))."</td>";
 			echo "</tr>";	
 			echo "<tr>";
-			echo "<td><strong>".__("Total time")."</strong>:</td>";
+			echo "<td><strong>".__("Total time spent")."</strong>:</td>";
 			echo "<td style='text-align:right;'>".calendar_seconds_to_humand($stats[INCIDENT_METRIC_TOTAL_TIME]*60)."</td>";
+			echo "</tr>";
+			echo "<tr>";
+			echo "<td><strong>".__("Time no third people")."</strong>:</td>";
+			echo "<td style='text-align:right;'>".calendar_seconds_to_humand($stats[INCIDENT_METRIC_TOTAL_TIME_NO_THIRD]*60)."</td>";
 			echo "</tr>";
 			echo "</table>";
 		echo "</td>";
@@ -168,7 +172,11 @@ echo "<table align=center width='90%'>";
 		echo "<td align='center' style='vertical-align:top'>";
 			echo "<table>";
 			echo "<tr>";
-			echo "<td>".graph_incident_user_activity ($id, 200, 150, $ttl)."</td>";
+			if ($workunit_count) {
+				echo "<td>".graph_incident_user_activity ($id, 200, 150, $ttl)."</td>";
+			} else {
+				echo "<em>".__("There are not workunits")."</em>";
+			}
 			echo "</tr>";
 			echo "</table>";
 		echo "</td>";		

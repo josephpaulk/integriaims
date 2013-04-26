@@ -1,3 +1,14 @@
+2013-04-26  Dario Rodriguez <dario@artica.es>
+
+	* godmode/setup/incidents_setup.php, 
+	* include/functions_config.php,
+	* include/functions_calendar.php,
+	* integria_db.sql: New feature to add holidays and to show 
+	them in workunits calendar.
+	* operation/incidents/incident_tracking.php,
+	include/functions_incidents.php: Fixing several erros on 
+	incident stats and tracking report.
+
 2013-04-25  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_tracking.php: Added new metrics 

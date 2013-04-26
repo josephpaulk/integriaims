@@ -981,3 +981,10 @@ CREATE TABLE `tcrm_template` (
   `id_company` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tholidays` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `day` DATETIME  NOT NULL DEFAULT 0,
+   PRIMARY KEY  (`id`),
+   UNIQUE (`day`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

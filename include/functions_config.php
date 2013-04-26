@@ -77,6 +77,10 @@ function load_config(){
 		$config["smtp_host"] = "localhost";
 	}
 	
+	if (!isset($config["wokring_weekends"])) {
+		$config["wokring_weekends"] = 0;
+	}
+	
 	if (!isset ($config["smtp_user"])){
 		$config["smtp_user"] = "";
 	}
