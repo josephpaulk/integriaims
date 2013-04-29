@@ -1196,6 +1196,53 @@ function incidents_get_all_type_field ($id_incident_type, $id_incident) {
 	
 }
 
+function incidents_metric_to_state($metric) {
+	
+	$state = "";
+	
+	switch ($metric) {
+		case INCIDENT_METRIC_USER:
+			$state = INCIDENT_USER_CHANGED;
+			
+			break;
+		case INCIDENT_METRIC_GROUP:
+			$state = INCIDENT_GROUP_CHANGED;
+			
+			break;
+		case INCIDENT_METRIC_STATUS:
+			$state = INCIDENT_STATUS_CHANGED;
+			
+			break;
+		default:
+			break;
+	}
+	
+	return $state;
+}
+
+function incidents_state_to_metric($state) {
+	$metric = "";
+	
+	switch ($state) {
+		case INCIDENT_USER_CHANGED:
+			$metric = INCIDENT_METRIC_USER;
+			
+			break;
+		case INCIDENT_GROUP_CHANGED:
+			$metric = INCIDENT_METRIC_GROUP;
+			
+			break;
+		case INCIDENT_STATUS_CHANGED:
+			$metric = INCIDENT_METRIC_STATUS;
+			
+			break;
+		default:
+			break;
+	}
+		
+	return $metric;
+}
+
 /*Adds incident statistics traces*/
 function incidents_add_incident_stat ($id_incident, $metrics_values) {
 	
@@ -1205,17 +1252,22 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 	
 	//Calculate time difference
 	$now = time();
-	$diff_time = $now - strtotime($last_incident_update);
-				
-	$diff_time = ceil($diff_time / 60);
-		
-	foreach ($metrics_values as $metric => $value) {
+	$last_incident_update_time = strtotime($last_incident_update);
+	$diff_time = $now - $last_incident_update_time;
 	
-		$row_sql = sprintf("SELECT * FROM tincident_stats WHERE id_incident = %d AND metric = '%s' ORDER BY id DESC", $id_incident, $metric);
+	$holidays_seconds = incidents_get_holidays_seconds_by_timerange($last_incident_update_time, $now);
+	
+	$diff_time = $diff_time - $holidays_seconds;
+	
+	foreach ($metrics_values as $metric => $value) {
+		
+		$row_sql = sprintf("SELECT * FROM tincident_stats WHERE id_incident = %d AND metric = '%s' 
+							ORDER BY id DESC", $id_incident, $metric);
 		$row = get_db_row_sql($row_sql);
 		
-		//If there is no data just insert because is the first data
+		//If there is no data in tincident_stats table just insert because is the first data
 		if (!$row) {
+		
 			$values = array("id_incident" => $id_incident,
 							"metric" => $metric);
 							
@@ -1235,27 +1287,21 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 		
 			process_sql_insert ("tincident_stats", $values);
 		} else {
-			//There is previous statistics data we need to update it
-			switch ($metric) {
-				case INCIDENT_METRIC_USER:
-					$state = INCIDENT_USER_CHANGED;
-					
-					break;
-				case INCIDENT_METRIC_GROUP:
-					$state = INCIDENT_GROUP_CHANGED;
-					
-					break;
-				case INCIDENT_METRIC_STATUS:
-					$state = INCIDENT_STATUS_CHANGED;
-					
-					break;
-				default:
-					break;
-			}
+			//Get last timestamp from track table
+			$sql = sprintf("SELECT * FROM tincident_track WHERE id_incident = %d ORDER BY timestamp DESC", $id_incident);
+			$timestamp_row = get_db_row_sql($sql);
 			
-			$sql_track_trace = sprintf("SELECT * FROM tincident_track WHERE id_incident = %d AND state = %d ORDER BY timestamp DESC", $id_incident, $state);
+			$track_timestmap = $timestamp_row["timestamp"];
+			
+			$state = incidents_metric_to_state($metric);
+			
+			//Get previous state from track table		
+			$sql_track_trace = sprintf("SELECT * FROM tincident_track WHERE id_incident = %d AND 
+										state = %d AND timestamp < '%s' ORDER BY timestamp DESC", $id_incident, $state, $track_timestmap);
 			
 			$last_track_trace = get_db_row_sql($sql_track_trace);
+			
+			$metric = incidents_state_to_metric($last_track_trace["state"]);
 			
 			//We need to search for statistic data based on track "id_additional"
 			$previous_stats_values = array ('id_incident' => $id_incident, "metric" => $metric);
@@ -1263,15 +1309,13 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 			switch ($metric) {
 				case INCIDENT_METRIC_USER: 
 					$previous_stats_values["id_user"] = $last_track_trace["id_aditional"];
-					$prev_stat_id_additional = $row["id_user"];
 					break;
 				case INCIDENT_METRIC_STATUS:
 					$previous_stats_values["status"] = $last_track_trace["id_aditional"];
-					$prev_stat_id_additional = $row["status"];
+					$previous_status = $last_track_trace["id_aditional"];
 					break;
 				case INCIDENT_METRIC_GROUP:
 					$previous_stats_values["id_group"] = $last_track_trace["id_aditional"];
-					$prev_stat_id_additional = $row["id_group"];
 					break;	
 				default:
 					break;
@@ -1280,44 +1324,37 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 			$previous_stats_data = get_db_row_filter ("tincident_stats", $previous_stats_values);
 			
 			if ($previous_stats_data) {
+				
 				//We have previous data for this stat, so update it
-				$val_upd_time = array("minutes" => $previous_stats_data["minutes"]+$diff_time);
+				$val_upd_time = array("seconds" => $previous_stats_data["seconds"]+$diff_time);
 				$val_upd_time_where = array("id" => $previous_stats_data["id"]);
+
 				process_sql_update("tincident_stats", $val_upd_time, $val_upd_time_where);
 				
 				
 			} else {
+				
 				//There isn't previous data for this stat
-				
-				//Update time (diff + act_time) on last type metric base on incident tracking
-				$val_upd_time = array("minutes" => $row["minutes"]+$diff_time);
-				$val_upd_time_where = array("id" => $row["id"]);
-				process_sql_update("tincident_stats", $val_upd_time, $val_upd_time_where);
-				
+							
 				//Create new stat metric
 				$val_new_metric = array("id_incident" => $last_track_trace["id_incident"],
-										"minutes" => 0,
+										"seconds" => $diff_time,
 										"metric" => $metric);
 
 				switch ($metric) {
 					case INCIDENT_METRIC_USER: 
-						$val_new_metric["id_user"] = $value;
+						$val_new_metric["id_user"] = $previous_stats_values["id_user"];
 						break;
 					case INCIDENT_METRIC_STATUS:
-						$val_new_metric["status"] = $value;
+						$val_new_metric["status"] = $previous_stats_values["status"];
 						break;
 					case INCIDENT_METRIC_GROUP:
-						$val_new_metric["id_group"] = $value;
+						$val_new_metric["id_group"] = $previous_stats_values["id_group"];
 						break;	
-					case INCIDENT_METRIC_TOTAL_TIME:
-					case INCIDENT_METRIC_TOTAL_TIME_NO_THIRD:
-						$previous_stats_values["minutes"] = 0;
-						break;
 					default:
 						break;
 				}
 			
-				
 				process_sql_insert("tincident_stats", $val_new_metric);
 				
 			}		
@@ -1332,11 +1369,11 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 	
 	//Check if we have a previous stat metric to update or create it
 	if ($row) {
-		$val_upd_time = array("minutes" => $row["minutes"]+$diff_time);
+		$val_upd_time = array("seconds" => $row["seconds"]+$diff_time);
 		$val_upd_time_where = array("id" => $row["id"]);
 		process_sql_update("tincident_stats", $val_upd_time, $val_upd_time_where);	
 	} else {
-		$val_new_metric = array("minutes" => 0,
+		$val_new_metric = array("seconds" => 0,
 								"metric" => INCIDENT_METRIC_TOTAL_TIME,
 								"id_incident" => $id_incident);
 		process_sql_insert("tincident_stats", $val_new_metric);
@@ -1346,33 +1383,33 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 	$filter = array(
 				"metric" => INCIDENT_METRIC_TOTAL_TIME, 
 				"id_incident" => $id_incident);
-	$total_time = get_db_value_filter ("minutes", "tincident_stats", $filter);
+	$total_time = get_db_value_filter ("seconds", "tincident_stats", $filter);
 	
 	$filter = array(
 				"metric" => INCIDENT_METRIC_STATUS, 
 				"status" => STATUS_PENDING_THIRD_PERSON, 
 				"id_incident" => $id_incident);
-	$third_time = get_db_value_filter ("minutes", "tincident_stats", $filter);
+	$third_time = get_db_value_filter ("seconds", "tincident_stats", $filter);
 	
 	if (!$third_time) {
 		$third_time = 0;
 	}
 	
 	$diff_time = $total_time - $third_time;
-	
 	$row_sql = sprintf("SELECT * FROM tincident_stats WHERE id_incident = %d AND metric = '%s'", $id_incident, INCIDENT_METRIC_TOTAL_TIME_NO_THIRD);
 	$row = get_db_row_sql($row_sql);
 	
 	//Check if we have a previous stat metric to update or create it
 	if ($row) {
 		//Only update for status different from "PEDING ON THIRD PERSON"
-		if ($metrics_values[INCIDENT_METRIC_STATUS] != STATUS_PENDING_THIRD_PERSON) {
-			$val_upd_time = array("minutes" => $row["minutes"]+$diff_time);
+		if ($previous_status != STATUS_PENDING_THIRD_PERSON) {
+			
+			$val_upd_time = array("seconds" => $diff_time);
 			$val_upd_time_where = array("id" => $row["id"]);
 			process_sql_update("tincident_stats", $val_upd_time, $val_upd_time_where);	
 		}
 	} else {
-		$val_new_metric = array("minutes" => 0,
+		$val_new_metric = array("seconds" => 0,
 								"metric" => INCIDENT_METRIC_TOTAL_TIME_NO_THIRD,
 								"id_incident" => $id_incident);
 		process_sql_insert("tincident_stats", $val_new_metric);
@@ -1475,19 +1512,19 @@ function incidents_get_incident_stats ($id) {
 		
 			switch ($st["metric"]) {
 				case INCIDENT_METRIC_USER: 
-					$stats[INCIDENT_METRIC_USER][$st["id_user"]] = $st["minutes"];
+					$stats[INCIDENT_METRIC_USER][$st["id_user"]] = $st["seconds"];
 					break;
 				case INCIDENT_METRIC_STATUS:
-					$stats[INCIDENT_METRIC_STATUS][$st["status"]] = $st["minutes"];
+					$stats[INCIDENT_METRIC_STATUS][$st["status"]] = $st["seconds"];
 					break;
 				case INCIDENT_METRIC_GROUP:
-					$stats[INCIDENT_METRIC_GROUP][$st["id_group"]] =$st["minutes"];
+					$stats[INCIDENT_METRIC_GROUP][$st["id_group"]] =$st["seconds"];
 					break;	
 				case INCIDENT_METRIC_TOTAL_TIME_NO_THIRD: 
-					$stats[INCIDENT_METRIC_TOTAL_TIME_NO_THIRD] = $st["minutes"];
+					$stats[INCIDENT_METRIC_TOTAL_TIME_NO_THIRD] = $st["seconds"];
 					break;	
 				case INCIDENT_METRIC_TOTAL_TIME:
-					$stats[INCIDENT_METRIC_TOTAL_TIME] = $st["minutes"];
+					$stats[INCIDENT_METRIC_TOTAL_TIME] = $st["seconds"];
 					break;
 						
 				default:
@@ -1501,8 +1538,16 @@ function incidents_get_incident_stats ($id) {
 	//Get last incident update check for total time metric
 	$time_str = get_db_value_filter("last_stat_check", "tincidencia", array("id_incidencia" => $id));
 	$unix_time = strtotime($time_str);
-	$global_diff = ($now - $unix_time)/60; //Time diff in minutes
+	$global_diff = ($now - $unix_time); //Time diff in seconds
 	
+	//Get non-working days from last stat update and delete the seconds :)
+	$last_stat_check = get_db_value("last_stat_check", "tincidencia", "id_incidencia", $id);
+	$last_stat_check_time = strtotime($last_stat_check);
+	
+	$holidays_seconds = incidents_get_holidays_seconds_by_timerange($last_stat_check_time, $now);
+		
+	$global_diff = $global_diff - $holidays_seconds;
+
 	$stats[INCIDENT_METRIC_TOTAL_TIME] = $stats[INCIDENT_METRIC_TOTAL_TIME] + $global_diff;	
 	
 	//Fix last time track per metric	
@@ -1523,13 +1568,52 @@ function incidents_get_incident_stats ($id) {
 	$stats[INCIDENT_METRIC_STATUS][$last_track_status_id] = $stats[INCIDENT_METRIC_STATUS][$last_track_status_id] + $global_diff;
 	
 	//If status not equal to pending on third person add this time to metric
-	if ($last_track_status_id !== STATUS_PENDING_THIRD_PERSON) {
+	if ($last_track_status_id != STATUS_PENDING_THIRD_PERSON) {
 		$stats[INCIDENT_METRIC_TOTAL_TIME_NO_THIRD] = $stats[INCIDENT_METRIC_TOTAL_TIME_NO_THIRD] + $global_diff;
 	}
-	
-
-	
+		
 	return ($stats);
+}
+
+function incidents_get_holidays_seconds_by_timerange ($begin, $end) {
+	
+	//Get all holidays in this range and convert to seconds 
+	$holidays = calendar_get_holidays_by_timerange($begin, $end);
+	
+	$day_in_seconds = 3600*24;
+	
+	$holidays_seconds = count($holidays)*$day_in_seconds;
+	
+	//We need to tune a bit the amount of seconds calculated before
+	
+	//1.- If start date was holiday only discount seconds from creation time to next day
+	$str_date = date('Y-m-d',$begin);
+	
+	if (!is_working_day($str_date)) {
+		
+		//Calculate seconds to next day
+		$start_day = strtotime($str_date);
+		$finish_time = $start_day + $day_in_seconds;
+		
+		$aux_seconds = ($finish_time - $begin);
+		
+		$holidays_seconds = $holidays_seconds - $aux_seconds;
+	}
+	
+	//2.- If finish date was holiday only discount seconds from now to begining of the day
+	$str_date = date('Y-m-d',$end);
+	
+	if (!is_working_day($str_date)) {
+		
+		//Calculate seconds to next day
+		$begining_day = strtotime($str_date);
+		
+		$aux_seconds = ($end - $begining_day);
+		
+		$holidays_seconds = $holidays_seconds - $aux_seconds;
+	}	
+	
+	return $holidays_seconds;
 }
 
 ?>

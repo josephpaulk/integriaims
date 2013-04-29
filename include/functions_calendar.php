@@ -1079,4 +1079,31 @@ function mysql_timestamp ($unix_time){
     return date('Y-m-d H:i:s', $unix_time);
 }
 
+function calendar_get_holidays_by_timerange ($begin_unix, $end_unix) {
+	$day_in_seconds = 3600*24;
+	
+	//Normalize dates to 00:00:00
+	
+	$norm = date('Y-m-d', $begin_unix);
+	
+	$begin_unix = strtotime($norm);
+	
+	$norm = date('Y-m-d', $end_unix);
+	
+	$end_unix = strtotime($norm);
+	
+	$holidays = array();;
+		
+	for ($i=$begin_unix; $i<=$end_unix; $i=$i+$day_in_seconds) {
+		
+		$str_date = date('Y-m-d', $i);
+		
+		if (!is_working_day($str_date)) {
+			array_push($holidays, $str_date);
+		}
+	}
+	
+	return $holidays;
+}
+
 ?>

@@ -1,3 +1,13 @@
+2013-04-29  Dario Rodriguez <dario@artica.es>
+
+	* operation/incidents/incident_tracking.php,
+	integria_db.sql,
+	include/functions_calendar.php,
+	include/functions_incidents.php: Fixed an error calculating
+	incident statistics and changing statistics resolution from
+	minutes to seconds to get an accurate measure. Also developed
+	holidays condition for statistics.
+
 2013-04-26  Dario Rodriguez <dario@artica.es>
 
 	* godmode/setup/incidents_setup.php, 
