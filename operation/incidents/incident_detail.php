@@ -21,12 +21,6 @@ check_login ();
 require_once ('include/functions_incidents.php');
 require_once ('include/functions_user.php');
 
-$nivel = get_db_value('nivel', 'tusuario', 'id_usuario', $config['id_user']);
-if ($nivel == -1) {
-	include ("general/noaccess.php");
-	exit;
-}
-
 if (defined ('AJAX')) {
 	
 	global $config;
@@ -781,10 +775,10 @@ $table_advanced->data[0][0] = print_label (__('Editor'), '', '', true, $editor);
 
 if ($has_im){
 	$table_advanced->data[0][1] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
-	        $disabled, '', '', true, __('SLA disabled'));
+	        false, '', '', true, __('SLA disabled'));
 
 	$table_advanced->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
-                $disabled, '', '', true, __('Notify changes by email'));
+                false, '', '', true, __('Notify changes by email'));
 
 	$table_advanced->data[0][2] .= print_input_text ('email_copy', $email_copy,"",20,500, true);
 
