@@ -898,21 +898,20 @@ if ($incidents)
 
 $slas = get_slas (false);
 foreach ($slas as $sla) {
-	$sql = sprintf ('SELECT id FROM tinventory WHERE id_sla = %d', $sla['id']);
 	
-	$inventories = get_db_all_rows_sql ($sql);
-	if ($inventories === false)
-		$inventories = array ();
+	$sql = sprintf ('SELECT id_grupo FROM tgrupo WHERE id_grupo != 1 AND id_sla = %d', $sla['id']);
+	
+	$groups = get_db_all_rows_sql ($sql);
+	if ($groups === false)
+		$groups = array ();
 	
 	$noticed_groups = array ();
-	foreach ($inventories as $inventory) {
-		$sql = sprintf ('SELECT tincidencia.id_incidencia, tincidencia.id_grupo 
-			FROM tincidencia, tincident_inventory
-			WHERE tincidencia.id_incidencia = tincident_inventory.id_incident
-			AND tincident_inventory.id_inventory = %d
-			AND affected_sla_id = 0
-			AND sla_disabled = 0
-			AND estado NOT IN (6,7)', $inventory['id']);
+	
+	foreach ($groups as $group) {
+		$sql = sprintf ('SELECT id_incidencia, id_grupo 
+			FROM tincidencia WHERE id_grupo = %d AND affected_sla_id = 0
+			AND sla_disabled = 0 AND estado NOT IN (6,7)', $group['id_grupo']);
+			
 		$opened_incidents = get_db_all_rows_sql ($sql);
 		
 		if (sizeof ($opened_incidents) <= $sla['max_incidents']) 

@@ -1,5 +1,13 @@
 2013-04-30 Dario Rodriguez <dario@artica.es>
 
+	* include/functions_incidents.php: New function incidents_get_incident_slas, supporting
+	new way to get slas using groups.
+	* include/functions_db.php, 
+	* include/integria_cron.php: Adapted sla functions to new sla definition.
+	* include/functions_inventories.php: Remove deprecated function get_incident_slas.
+
+2013-04-30 Dario Rodriguez <dario@artica.es>
+
 	* operation/side_menu.php: Fixed an error printing side menu
 	of incidents.
 	* integria_db.sql,

@@ -155,27 +155,6 @@ function get_incident ($id_incident) {
 	return get_db_row ('tincidencia', 'id_incidencia', $id_incident);
 }
 
-function get_incident_slas ($id_incident, $only_names = true) {
-	$sql = sprintf ('SELECT tsla.*
-		FROM tinventory, tsla, tincident_inventory
-		WHERE tinventory.id_sla = tsla.id
-		AND tincident_inventory.id_inventory = tinventory.id
-		AND tincident_inventory.id_incident = %d', $id_incident);
-	$slas = get_db_all_rows_sql ($sql);
-	if ($slas == false)
-		return array ();
-	
-	if ($only_names) {
-		$result = array ();
-		foreach ($slas as $sla) {
-			$result[$sla['id']] = $sla['name'];
-		}
-		return $result;
-	}
-	return $slas;
-}
-
-
 function get_company ($id_company) {
 	return get_db_row ('tcompany', 'id', $id_company);
 }

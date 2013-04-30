@@ -16,7 +16,7 @@
 
 require_once ('functions_ui.php');
 require_once ("functions_inventories.php");
-
+require_once ("functions_incidents.php");
 require_once ("functions_db.mysql.php");
 
 // Load enterprise version functions
@@ -1668,8 +1668,8 @@ function check_incident_sla_min_response ($id_incident) {
 		return false;
 	}
 
-	$slas = get_incident_slas ($id_incident, false);
-
+	$slas = incidents_get_incident_slas ($id_incident, false);
+	
 	$start = strtotime ($incident['inicio']);
 	$now = time ();
 
@@ -1749,7 +1749,7 @@ function check_incident_sla_max_inactivity ($id_incident) {
 		return false;
 	}
 	
-	$slas = get_incident_slas ($id_incident, false);
+	$slas = incidents_get_incident_slas ($id_incident, false);
 	$update = strtotime ($incident['actualizacion']);
 	$now = time ();
 	foreach ($slas as $sla) {
@@ -1805,7 +1805,7 @@ function check_incident_sla_max_response ($id_incident) {
 		return false;
 	}
 	
-	$slas = get_incident_slas ($id_incident, false);
+	$slas = incidents_get_incident_slas ($id_incident, false);
 	$start = strtotime ($incident['inicio']);
 	$now = time ();
 	foreach ($slas as $sla) {

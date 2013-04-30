@@ -1616,4 +1616,26 @@ function incidents_get_holidays_seconds_by_timerange ($begin, $end) {
 	return $holidays_seconds;
 }
 
+//Get incident SLA
+function incidents_get_incident_slas ($id_incident, $only_names = true) {
+	
+	$id_group = get_db_value ("id_grupo", "tincidencia", "id_incidencia", $id_incident);
+	
+	$sql = sprintf ('SELECT tsla.* FROM tgrupo, tsla WHERE tgrupo.id_sla = tsla.id
+					AND tgrupo.id_grupo = %d', $id_group);
+	$slas = get_db_all_rows_sql ($sql);
+	
+	if ($slas == false)
+		return array ();
+	
+	if ($only_names) {
+		$result = array ();
+		foreach ($slas as $sla) {
+			$result[$sla['id']] = $sla['name'];
+		}
+		return $result;
+	}
+	return $slas;
+}
+
 ?>
