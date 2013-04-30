@@ -383,6 +383,9 @@ echo "</a>";
 
 // Workunit report (detailed)
 echo "&nbsp;&nbsp;";
+$end_month = urlencode($now);
+$begin_month =  urlencode($working_year."-01-01 00:00:00");
+
 echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$begin_month&timestamp_h=$end_month&id=$update_user'>";
 echo "<img border=0 title='".__("Workunit report")."' src='images/page_white_text.png'></A>";
 

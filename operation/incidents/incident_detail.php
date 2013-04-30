@@ -940,6 +940,18 @@ echo '</div>';
 <script  type="text/javascript">
 $(document).ready (function () {
 	
+	//Verify incident limit on view display and on group change
+	var id_incident = <?php echo $id?>;
+
+	//Only check incident on creation (where there is no id)
+	if (!id_incident) {
+		incident_limit();
+	}
+	
+	$("#grupo_form").change (function () {
+		incident_limit();
+	});
+	
 	//Validate form
 	$("#incident_status_form").submit(function () {
 		var title = $("#text-titulo").val();

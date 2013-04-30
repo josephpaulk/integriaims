@@ -368,10 +368,6 @@ echo "</div>";
 
 echo "</div>";
 
-echo "<div id='indicent-details-edit' style='display: none'>";
-include("incident_detail.php");
-echo "</div>";
-
 ?>
 
 <script type="text/javascript">

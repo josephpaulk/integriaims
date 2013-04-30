@@ -1,3 +1,11 @@
+2013-04-30  Dario Rodriguez <dario@artica.es>
+
+	* godmode/usuarios/configurar_usuarios.php: Fixed and error on 
+	a link to user reports.
+	* operation/incidents/incident_detail.php,
+	operation/incidents/incident_dashboard_detail.php: Implemented 
+	incident limit check for hard and soft limits
+
 2013-04-29  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php
