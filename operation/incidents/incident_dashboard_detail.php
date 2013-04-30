@@ -190,7 +190,7 @@ $right_side .= "<tr>";
 
 $long_name_asigned = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["id_usuario"]));
 
-$right_side .= "<td>".__("Asigned user").":</td><td align='right'>".$long_name_asigned."</td>";
+$right_side .= "<td>".__("Assigned user").":</td><td align='right'>".$long_name_asigned."</td>";
 $right_side .= "</tr>";
 
 $right_side .= "</table>";

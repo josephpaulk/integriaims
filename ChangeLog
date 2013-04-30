@@ -1,5 +1,12 @@
 2013-04-30 Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents/incident_dashboard_detail.php: Fixed a error
+	in a string.
+	* operation/incidents/incident_dashboard.php: Created first version
+	of incident overview.
+
+2013-04-30 Dario Rodriguez <dario@artica.es>
+
 	* operation/incidents/incident_detail.php: Fixed a bug updating
 	SLA disabled fiedl.
  	* operation/incidents/incident_dashboard_detail.php: Now sla disable
