@@ -534,6 +534,7 @@ if ($sec == "inventory" && give_acl ($config['id_user'], 0, "VR") && $show_inven
 	else
 		echo "<li>";
 	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory'>".__('Inventory overview')."</a></li>";
+	//echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_search'>".__('Inventory overview')."</a></li>";
 
 	if (give_acl ($config["id_user"], 0, "VW")) {
 		// Incident creation

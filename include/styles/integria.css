@@ -2158,4 +2158,7 @@ h2.incident_dashboard {
 	text-decoration: none;
 }
 
-
+.pagination {
+	margin-top: 4px;
+	text-align: left;
+}

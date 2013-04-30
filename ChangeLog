@@ -1,3 +1,17 @@
+2013-04-29  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_inventories.php
+	  include/ajax/inventories.php
+	  include/js/integria_incident_search.js
+	  include/styles/integria.css
+	  operation/side_menu.php
+	  operation/inventories/inventory_detail.php
+	  operation/inventories/inventory_search.php: Changed
+	inventory search and inventory search popup.
+
+	* operation/incidents/incident_detail.php: No access to
+	external user.
+
 2013-04-29  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_tracking.php,

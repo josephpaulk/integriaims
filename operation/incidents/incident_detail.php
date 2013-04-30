@@ -21,6 +21,12 @@ check_login ();
 require_once ('include/functions_incidents.php');
 require_once ('include/functions_user.php');
 
+$nivel = get_db_value('nivel', 'tusuario', 'id_usuario', $config['id_user']);
+if ($nivel == -1) {
+	include ("general/noaccess.php");
+	exit;
+}
+
 if (defined ('AJAX')) {
 	
 	global $config;

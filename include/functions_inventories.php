@@ -771,14 +771,14 @@ function inventories_get_all_external_field ($external_table_name, $external_ref
 	return $all_fields_ext;
 }
 
-function inventories_print_tree ($sql_search = false) {
+function inventories_print_tree ($sql_search = '') {
 	global $config;
 	
 	echo '<table class="databox" style="width:98%">';
 	echo '<tr><td style="width:60%" valign="top">';
 	
-	if ($sql_search != false) {
-		$sql = "SELECT tobject_type.* FROM tinventory, tobject_type
+	if ($sql_search != '') {
+		$sql = "SELECT tobject_type.* FROM tinventory, tobject_type, tobject_field_data
 			WHERE tinventory.id_object_type = tobject_type.id $sql_search
 			GROUP BY tobject_type.`name`";
 
@@ -976,6 +976,82 @@ function inventories_get_count_inventories_for_tree($id_item, $sql_search = '') 
 	}
 	
 	return count($cont);
+}
+
+
+function inventories_show_list($sql_search, $page=1) {
+	global $config;
+/*
+	$offset = (int) get_parameter("offset");
+	$block_size = (int) $config["block_size"];
+*/
+
+	
+	$table->class = 'listing';
+	$table->width = '98%';
+	$table->data = array ();
+	$table->head = array ();
+	
+	$table->head[0] = __('Id');
+	$table->head[1] = __('Name');
+	$table->head[2] = __('Owner');
+	$table->head[3] = __('Incident type');
+	$table->head[4] = __('Manufacturer');
+	$table->head[5] = __('Contract');
+	
+	$sql = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data
+			WHERE tinventory.id_object_type = tobject_type.id $sql_search
+			GROUP BY tinventory.`name`";
+	
+	$inventories_result = get_db_all_rows_sql($sql);
+
+	$count = count($inventories_result);
+
+	//$sql .= " LIMIT " . $offset . "," . $block_size;
+
+	$inventories = get_db_all_rows_sql($sql);
+
+	if ($inventories_result === false) {
+		echo __("No inventories");
+	} else {
+		foreach ($inventories as $key=>$inventory) {
+			$data = array();
+			
+			$data[0] = "<a href='javascript:loadInventory(" . $inventory['id'] . ");'>".$inventory['id'].'</a>';
+			
+			$data[1] = "<a href='javascript:loadInventory(" . $inventory['id'] . ");'>".$inventory['name'].'</a>';
+			
+			if ($inventory['owner'] != '')
+				$name_owner = get_db_value('nombre_real', 'tusuario', 'id_usuario', $inventory['owner']);
+			else 
+				$name_owner = '--';
+			$data[2] = "<a href='javascript:loadInventory(" . $inventory['id'] . ");'>".$name_owner.'</a>';
+			
+			if ($inventory['id_object_type'] != 0)
+				$name_object = get_db_value('name', 'tobject_type', 'id', $inventory['id_object_type']);
+			else 
+				$name_object = '--';
+			$data[3] = "<a href='javascript:loadInventory(" . $inventory['id'] . ");'>".$name_object.'</a>';
+			
+			if ($inventory['id_manufacturer'] != '')
+				$name_manufacturer = get_db_value('name', 'tmanufacturer', 'id', $inventory['id_manufacturer']);
+			else 
+				$name_manufacturer = '--';
+			$data[4] = "<a href='javascript:loadInventory(" . $inventory['id'] . ");'>".$name_manufacturer.'</a>';
+			
+			if ($inventory['id_contract'] != '')
+				$name_contract = get_db_value('name', 'tcontract', 'id', $inventory['id_contract']);
+			else 
+				$name_contract = '--';
+			$data[5] = "<a href='javascript:loadInventory(" . $inventory['id'] . ");'>".$name_contract.'</a>';
+			
+			array_push ($table->data, $data);
+		}
+		//ui_pagination($count, false, $offset);
+		print_table($table);
+	}
+	
+	
 }
 
 ?>

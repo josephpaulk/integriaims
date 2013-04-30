@@ -114,7 +114,6 @@ if (!defined ('AJAX')) {
 
 $result_msg = '';
 
-
 $update = (bool) get_parameter ('update_inventory');
 $create = (bool) get_parameter ('create_inventory');
 $name = (string) get_parameter ('name');
@@ -181,35 +180,46 @@ if ($update) {
 					process_sql_insert('tobject_field_data', $values);
 		}
 	}
-	
+
 	//parent
-	if ($id_parent != 0) {
-		
-		//delete fields old parent
-		$old_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$old_parent, 'inherit' => 1));
-		
-		if ($old_fields === false) {
-			$old_fields = aray();
+	if ($id_parent != 0) {	
+		if ($old_parent != false) {
+			//delete fields old parent
+			$old_id_object_type_inherit = get_db_value('id_object_type', 'tinventory', 'id', $old_parent);
+			//parent has object
+			if ($old_id_object_type_inherit !== false) {
+				$old_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$old_id_object_type_inherit, 'inherit' => 1));
+
+				if ($old_fields === false) {
+					$old_fields = array();
+				}
+				foreach ($old_fields as $key => $old) {
+					process_sql_delete('tobject_field_data', array('id_object_type_field' => $old['id'], 'id_inventory' => $id));
+				}
+			}
 		}
 		
-		foreach ($old_fields as $key => $old) {
-			process_sql_delete('tobject_field_data', array('id_object_type' => $id, 'id' => $old['id']));
-		}
+		$id_object_type_inherit = get_db_value('id_object_type', 'tinventory', 'id', $id_parent);
+
+		//parent has object
+		if ($id_object_type_inherit !== false) {
+			$inherit_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$id_object_type_inherit, 'inherit' => 1));
 		
-		//add new fields
-		$inherit_fields = get_db_all_rows_filter('tobject_type_field', array('ic_object_type'=>$id_parent, 'inherit' => 1));
-		
-		if ($inherit_fields === false) {
-			$inherit_fields = aray();
-		}
-		
-		foreach ($inherit_fields as $key => $in_field) {
-			$in_field['id_object_type'] = $id;
-			process_sql_insert('tobject_field_data', $in_field);
+			if ($inherit_fields === false) {
+				$inherit_fields = array();
+			}
+
+			foreach ($inherit_fields as $key=>$field) {
+				$values = array();
+				$values['id_object_type_field'] = $field['id'];
+				$values['id_inventory'] = $id;
+				$data = get_db_value_filter('data', 'tobject_field_data', array('id_inventory' => $id_parent, 'id_object_type_field' => $field['id']));
+				$values['data'] = $data;
+
+				process_sql_insert('tobject_field_data', $values);
+			}
 		}
 	}
-	
-	/* Update contacts in inventory */
 	
 	if ($result !== false) {
 		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
@@ -289,15 +299,25 @@ if ($create) {
 		
 		//parent
 		if ($id_parent != 0) {
-			$inherit_fields = get_db_all_rows_filter('tobject_type_field', array('ic_object_type'=>$id_parent, 'inherit' => 1));
+			$id_object_type_inherit = get_db_value('id_object_type', 'tinventory', 'id', $id_parent);
+
+			//parent has object
+			if ($id_object_type_inherit !== false) {
+				$inherit_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$id_object_type_inherit, 'inherit' => 1));
 			
-			if ($inherit_fields === false) {
-				$inherit_fields = aray();
-			}
-			
-			foreach ($inherit_fields as $key => $in_field) {
-				$in_field['id_object_type'] = $id;
-				process_sql_insert('tobject_field_data', $in_field);
+				if ($inherit_fields === false) {
+					$inherit_fields = array();
+				}
+				
+				foreach ($inherit_fields as $key=>$field) {
+					$values = array();
+					$values['id_object_type_field'] = $field['id'];
+					$values['id_inventory'] = $id;
+					$data = get_db_value_filter('data', 'tobject_field_data', array('id_inventory' => $id_parent, 'id_object_type_field' => $field['id']));
+					$values['data'] = $data;
+	
+					process_sql_insert('tobject_field_data', $values);
+				}
 			}
 		}
 			
@@ -309,12 +329,6 @@ if ($create) {
 		$result_msg = '<h3 class="error">'.$err_message.'</h3>';
 	}
 	
-/*
-	if (defined ('AJAX')) {
-		echo $result_msg;
-		return;
-	}
-*/
 	$id = 0;
 	$name = "";
 	$description = "";
@@ -379,14 +393,15 @@ $table->data[0][1] = user_print_autocomplete_input($params_assigned);
 $table->data[0][2] = print_checkbox_extended ('public', 1, $public,
 	! $has_permission, '', '', true, __('Public'));
 
-/* Second row */
+
 if ($has_permission) {
-	$parent_name = $id_parent ? get_inventory_name ($id_parent) : __('Search parent');
-	$table->data[1][0] = print_button ($parent_name,
-				'parent_search', false, '', 'class="dialogbtn"',
-				true, __('Parent object'));
+	
+	$parent_name = $id_parent ? get_inventory_name ($id_parent) : '';
+	
+	$table->data[1][0] = print_input_text ('parent_name', $parent_name,'', 7, 0, true, __('Parent object'), false);	
 	if ($id_parent)
 		$table->data[1][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$id_parent.'"><img src="images/go.png" /></a>';
+	$table->data[1][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Search parent')."</a>";
 	
 	$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
 
@@ -468,6 +483,8 @@ echo '</div>';
 
 echo "<div class= 'dialog ui-dialog-content' id='external_table_window'></div>";
 
+echo "<div class= 'dialog ui-dialog-content' id='inventory_search_window'></div>";
+
 //if (! defined ('AJAX')):
 ?>
 
@@ -482,7 +499,7 @@ echo "<div class= 'dialog ui-dialog-content' id='external_table_window'></div>";
 $(document).ready (function () {
 	
 	configure_inventory_form (false);
-
+	
 	if ($("#id_object_type").val() != 0) {
 		show_fields();
 	}
@@ -514,8 +531,26 @@ $(document).ready (function () {
 
 		});
 		
-		$("#img_show_external_table").click(function() {
-			alert("SI");
+		$("#text-owner_search").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "include/ajax/users",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>"
+			},
+			formatItem: function (data, i, total) {
+				if (total == 0)
+					$("#text-owner_search").css ('background-color', '#cc0000');
+				else
+					$("#text-owner_search").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre Real") ?>: '+data[1]+'</span>';
+			},
+			delay: 200
+
 		});
 });
 
@@ -788,7 +823,6 @@ function refresh_external_id(id_object_type_field, id_inventory, id_value) {
 
 function enviar(data, element_name, id_object_type_field) {
 
-	//$('#'+element_name.id).val(data);
 	$('#'+element_name).val(data);
 	
 	id_inventory = $('#text-id_object_hidden').val();
@@ -800,5 +834,80 @@ function enviar(data, element_name, id_object_type_field) {
 
 } 
 
+function loadInventory(id_inventory) {
+	
+	$('#hidden-id_parent').val(id_inventory);
+	$('#text-parent_name').val(id_inventory);
+
+	$("#inventory_search_window").dialog('close');
+}
+
+// Show the modal window of inventory search
+function show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search) {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
+		dataType: "html",
+		success: function(data){	
+			$("#inventory_search_window").html (data);
+			$("#inventory_search_window").show ();
+
+			$("#inventory_search_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 920,
+					height: 700
+				});
+			$("#inventory_search_window").dialog('open');
+		}
+	});
+}
+
+function loadParams() {
+
+	search_free = $('#text-search_free').val();
+	id_object_type_search = $('#id_object_type_search').val();
+	owner_search = $('#text-owner_search').val();
+	id_manufacturer_search = $('#id_manufacturer_search').val();
+	id_contract_search = $('#id_contract_search').val();
+	search = 1;
+	
+	var object_fields_search = Array();
+
+	jQuery.each ($("#object_fields_search option:selected"), function (i, val) {
+		object_fields_search.push($(val).val());
+	});
+	
+	show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search);
+}
+
+//search popup. Show custom fields
+function show_type_fields() {
+
+	id_object_type = $("#id_object_type_search").val();
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/inventories/inventory_search&select_fields=1&id_object_type=" + id_object_type,
+		dataType: "json",
+		success: function(data){
+				$("#object_fields_search").empty();
+				jQuery.each (data, function (id, value) {
+					if (value != undefined) {
+						field = value;
+						$("select[name='object_fields_search[]']").append($("<option>").val(id).html(field));
+					}
+				});	
+			}
+	});
+}
 </script>
+
 <?php //endif; ?>

@@ -31,16 +31,15 @@ if (defined ('AJAX')) {
 	if ($select_fields) {
 		$id_object_type = get_parameter('id_object_type');
 		
-		$fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$id_object_type), 'label');
+		$fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$id_object_type), 'label, id');
 		
 		if ($fields === false) {
-			$object_fields = array();
+			$fields = array();
 		}
-		
-		$i = 0;
+
+		$object_fields = array();
 		foreach ($fields as $key => $field) {
-			$object_fields[$i] = $field['label'];
-			$i++;
+			$object_fields[$field['id']] = $field['label'];
 		}
 		
 		echo json_encode($object_fields);
@@ -152,8 +151,10 @@ $id_object_type = get_parameter ('id_object_type', 0);
 $owner = get_parameter('owner', '');
 $id_manufacturer = get_parameter ('id_manufacturer', 0);
 $id_contract = get_parameter ('id_contract', 0);
-$object_fields = (array)get_parameter('object_fields', array());
 
+$fields_selected = (array)get_parameter('object_fields');
+
+$mode = get_parameter('mode', 'tree');
 
 echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_search">';
 	$table_search->class = 'databox';
@@ -167,7 +168,16 @@ echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=
 	$table_search->data[0][1] .= print_select($objects_type, 'id_object_type', $id_object_type, 'show_fields();', 'Select', '', true, 0, true, false, false, 'width: 200px;');
 	
 	$table_search->data[0][2] = print_label (__('Incident fields'), '','',true);
-	$table_search->data[0][2] .= print_select('', 'object_fields', $object_fields, '', 'Select', '', true, 4, true, false, false, 'width: 200px;');
+	
+	$object_fields = array();
+	
+	if ($fields_selected[0] != '') {
+		foreach ($fields_selected as $selected) {
+			$label_field = get_db_value('label', 'tobject_type_field', 'id', $selected);
+			$object_fields[$selected] = $label_field;
+		}
+	}
+	$table_search->data[0][2] .= print_select($object_fields, 'object_fields[]', '', '', 'Select', '', true, 4, true, false, false, 'width: 200px;');
 	
 	$params_assigned['input_id'] = 'text-owner';
 	$params_assigned['input_name'] = 'owner';
@@ -192,25 +202,49 @@ echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=
 	echo '<div style="width:'.$table_search->width.'" class="action-buttons button">';
 		print_input_hidden ('search', 1);
 		print_submit_button (__('Search'), 'search', false, 'class="sub next"');
+		
+		if ($mode == 'tree') {
+			print_input_hidden ('mode', 'list');
+			print_submit_button (__('List view'), 'listview', false, 'class="sub next"');
+		} else {
+			print_input_hidden ('mode', 'tree');
+			print_submit_button (__('Tree view'), 'treeview', false, 'class="sub next"');
+		}
+		
 	echo '</div>';
 echo '</form>';
 
 if ($search) {
 	$sql_search = '';
 	
-	if ($search_free != '') {
-		$sql_search .= " AND (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%')";
-	}
-	if ($id_object_type != 0) {
+	if ($id_object_type != 0) { //búsqueda de texto libre en nombre, descripción de inventario y en contenido de campo personalizado
 		$sql_search .= " AND tinventory.id_object_type = $id_object_type";
-		/*
-		if ($search_free != '') {
-			if (empty($object_fields)) {
-				//$sql_search .= " AND ";
+		
+		if (!empty($object_fields)) {
+			$j = 0;
+			foreach ($object_fields as $f) {
+				if ($j == 0) 
+					$string_fields = "$f";
+				else
+					$string_fields .= ",$f";
+				$j++;
 			}
+
+
+			$sql_search .= " AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`
+							AND `tobject_field_data`.`id_object_type_field` IN ($string_fields) ";
+						
+			if ($search_free != '') {
+				$sql_search .= "AND (tobject_field_data.`data`LIKE '%$search_free%' OR tinventory.name LIKE '%$search_free%'
+						OR tinventory.description LIKE '%$search_free%')";
+			}			
 		}
-		*/
+	} else { //búsqueda solo en nombre y descripción de inventario
+		if ($search_free != '') {
+			$sql_search .= " AND (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%')";
+		}
 	}
+	
 	if ($owner != '') {
 		$sql_search .= " AND tinventory.owner = '$owner'";
 	}
@@ -221,10 +255,22 @@ if ($search) {
 		$sql_search .= " AND tinventory.id_contract = $id_contract";
 	}
 	
-	inventories_print_tree($sql_search);
-} else {
-	inventories_print_tree();
+} 
+
+
+$page = (int)get_parameter('page', 1);
+switch ($mode) {
+	case 'tree':
+		inventories_print_tree($sql_search);
+		break;
+	case 'list':
+		inventories_show_list($sql_search);
+		break;
+	default:
+		inventories_print_tree($sql_search);
+		break;
 }
+	
 
 echo '<div id="sql_search_hidden" style="display:none;">';
 	print_input_text('sql_search_hidden', $sql_search);
@@ -234,8 +280,10 @@ echo '</div>';
 
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
 <script type="text/javascript">
+	
 
 function show_fields () {
+
 	id_object_type = $("#id_object_type").val();
 	$.ajax({
 		type: "POST",
@@ -246,7 +294,7 @@ function show_fields () {
 				$("#object_fields").empty();
 				jQuery.each (data, function (id, value) {
 					field = value;
-					$("select[name='object_fields']").append($("<option>").val(field).html(field));
+					$("select[name='object_fields[]']").append($("<option>").val(id).html(field));
 				});	
 			}
 	});
@@ -391,11 +439,6 @@ function loadTable(type, div_id, less_branchs, id_father, sql_search) {
 }
 
 $(document).ready (function () {
-	$("#object_fields").attr("disabled", true);
-	
-	$("#id_object_type").change(function () {
-		$("#object_fields").attr("disabled", false);
-	});
 	
 	$("#text-owner").autocomplete ("ajax.php",
 		{

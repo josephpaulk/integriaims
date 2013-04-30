@@ -160,6 +160,10 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 	values = Array ();
 	values.push ({name: "page",
 				value: "operation/inventories/inventory_search"});
+	values.push ({name: "mode",
+				value: "list"});
+	values.push ({name: "popup",
+				value: 1});
 	jQuery.get ("ajax.php",
 		values,
 		function (data, status) {
@@ -172,6 +176,7 @@ function show_inventory_search_dialog (title, callback_incident_click) {
 					modal: true,
 					bgiframe: true,
 					resizable: false,
+					scroll: true,
 					open: function () {
 						parent_dialog = dialog;
 						dialog = "#dialog-search-inventory ";
