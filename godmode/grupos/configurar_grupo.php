@@ -62,7 +62,7 @@ $forced_email = true;
 $soft_limit = 5;
 $hard_limit = 20;
 $enforce_soft_limit = 1;
-$id_inventory_default = 0;
+$id_sla = 0;
 
 $creacion_grupo = (bool) get_parameter ('creacion_grupo');
 	
@@ -78,7 +78,7 @@ if ($id) {
 		$hard_limit = $group["hard_limit"];
 		$enforce_soft_limit = (bool) $group["enforce_soft_limit"];
 		$forced_email = (bool) $group['forced_email'];
-		$id_inventory_default = $group["id_inventory_default"];
+		$id_sla = $group["id_sla"];
 		$id_user = get_db_value ('id_user_default', 'tgrupo', 'id_grupo', $id);
 
 
@@ -138,8 +138,8 @@ $table->data[4][1] = print_checkbox ('enforce_soft_limit', 1, $enforce_soft_limi
 
 $table->data[5][0] = print_input_text ('hard_limit', $hard_limit, '', 10, 0, true , __('Incident Hard limit'));
 
-$table->data[5][1] = print_select_from_sql ("SELECT id, name FROM tinventory ORDER BY name",
-	'id_inventory_default', $id_inventory_default, '', '', 0, true, false, false, __('Default inventory object'));
+$table->data[5][1] = print_select_from_sql ("SELECT id, name FROM tsla ORDER BY name",
+	'id_sla', $id_sla, '', '', 0, true, false, false, __('Incident SLA'));
 
 echo '<form method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);

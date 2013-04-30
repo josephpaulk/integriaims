@@ -50,7 +50,7 @@ CREATE TABLE `tgrupo` (
   `lang` varchar(10) default NULL,
   `parent` mediumint(8) unsigned NOT NULL default 0,
   `id_user_default` varchar(60) NOT NULL default '',
-  `id_inventory_default` mediumint(8) default NULL,
+  `id_sla` mediumint(8) unsigned default NULL,
   `soft_limit` int(5) unsigned NOT NULL default 0,
   `hard_limit` int(5) unsigned NOT NULL default 0,
   `forced_email` tinyint(1) unsigned NOT NULL DEFAULT 1,

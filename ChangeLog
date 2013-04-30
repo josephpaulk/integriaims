@@ -1,5 +1,14 @@
 2013-04-30 Dario Rodriguez <dario@artica.es>
 
+	* operation/side_menu.php: Fixed an error printing side menu
+	of incidents.
+	* integria_db.sql,
+	godmode/grupos/configurar_grupo.php,
+	godmode/grupos/lista_grupos.php: Now groups don't use inventory
+	objects, it uses directly SLA for incidents.
+
+2013-04-30 Dario Rodriguez <dario@artica.es>
+
 	* operation/incidents/incident_dashboard_detail.php: Fixed a error
 	in a string.
 	* operation/incidents/incident_dashboard.php: Created first version

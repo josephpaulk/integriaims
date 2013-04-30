@@ -483,43 +483,38 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 		// Blockend
 		echo "</ul>";
 		echo "</div>";
+		
+		// Building overview
+		echo "<div class='portlet'>";
+		echo "<h3 class='admin'>".__('Incident types')."</h3>";
+		echo "<ul class='sidemenu'>";
+
+		
+		if ($sec2=="operation/incidents/types_detail")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>".__('Incident types')."</a></li>";
+
+		echo "</ul>";
+		echo "</div>";	
+		
+		// SLA Management
+		echo "<div class='portlet'>";
+		echo "<h3 class='admin'>".__('SLA')."</h3>";
+		echo "<ul class='sidemenu'>";
+
+		
+		if ($sec2=="operation/slas/sla_detail")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=incidents&sec2=operation/slas/sla_detail'>".__('SLA Management')."</a></li>";
+
+		echo "</ul>";
+		echo "</div>";	
 	}
-		echo "</div></div>";
-}
-
-// Indicent type editor
-if (give_acl ($config["id_user"], 0, "IM") && $sec == "incidents" && $show_incidents == MENU_FULL && !$simple_mode) {
-	echo "<div class='portlet'>";
-	echo "<h3 class='admin'>".__('Incident types')."</h3>";
-	echo "<ul class='sidemenu'>";
-
-	// Building overview
-	if ($sec2=="operation/incidents/types_detail")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>".__('Incident types')."</a></li>";
-
-	echo "</ul>";
-	echo "</div>";
-}
-
-
-// SLA's
-if ($sec == "incidents" && give_acl ($config["id_user"], 0, "IM") && $show_incidents != MENU_HIDDEN) {
-	echo "<div class='portlet'>";
-	echo "<h3 class='admin'>".__('SLA')."</h3>";
-	echo "<ul class='sidemenu'>";
-
-	// SLA Management
-	if ($sec2=="operation/slas/sla_detail")
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=incidents&sec2=operation/slas/sla_detail'>".__('SLA Management')."</a></li>";
-
-	echo "</ul>";
-	echo "</div>";
+	echo "</div></div>";
 }
 
 // INVENTORY

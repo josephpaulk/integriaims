@@ -57,9 +57,9 @@ if ($create_group) {
 	$banner = (string) get_parameter ('banner');
 	$forced_email = (bool) get_parameter ('forced_email');
 	$id_user_default = (string) get_parameter ('id_user');
-	$id_inventory_default = (int) get_parameter ("id_inventory_default");
+	$id_sla = (int) get_parameter ("id_sla");
 
-	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, banner, id_user_default, soft_limit, hard_limit, enforce_soft_limit, id_inventory_default, parent) VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s", %d, %d, "%s")', $name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, $enforce_soft_limit, $id_inventory_default, $parent);
+	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, banner, id_user_default, soft_limit, hard_limit, enforce_soft_limit, id_sla, parent) VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s", %d, %d, "%s")', $name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, $enforce_soft_limit, $id_sla, $parent);
 	$id = process_sql ($sql, 'insert-id');	
 	if ($id === false)
 		echo '<h3 class="error">'.__('There was a problem creating group').'</h3>';
@@ -80,11 +80,11 @@ if ($update_group) {
 	$soft_limit = (int) get_parameter ('soft_limit');
 	$hard_limit = (int) get_parameter ('hard_limit');
 	$enforce_soft_limit = (bool) get_parameter ('enforce_soft_limit');
-	$id_inventory_default = get_parameter ("id_inventory_default");
+	$id_sla = get_parameter ("id_sla");
 
 	$sql = sprintf ('UPDATE tgrupo
 		SET parent = %d, nombre = "%s", icon = "%s", forced_email = %d, 
-		banner = "%s", id_user_default = "%s", soft_limit = %d, hard_limit = %d, enforce_soft_limit = %d, id_inventory_default = %d WHERE id_grupo = %d', $parent, $name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, $enforce_soft_limit, $id_inventory_default, $id);
+		banner = "%s", id_user_default = "%s", soft_limit = %d, hard_limit = %d, enforce_soft_limit = %d, id_sla = %d WHERE id_grupo = %d', $parent, $name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, $enforce_soft_limit, $id_sla, $id);
 
 	$result = process_sql ($sql);
 
@@ -141,22 +141,32 @@ $groups = print_array_pagination ($groups, "index.php?sec=users&sec2=godmode/gru
 if ($groups === false)
 	$groups = array ();
     foreach ($groups as $group) {
-
 	$data = array ();
 	
 	$data[0] = '';
 	if ($group['icon'] != '')
 		$data[0] = '<img src="images/groups_small/'.$group['icon'].'" />';
-	$data[1] = '<a href="index.php?sec=users&sec2=godmode/grupos/configurar_grupo&id='.
-		$group['id_grupo'].'">'.$group['nombre'].'</a>';
+		
+	if ($group["id_grupo"] != 1) {
+		$data[1] = '<a href="index.php?sec=users&sec2=godmode/grupos/configurar_grupo&id='.
+			$group['id_grupo'].'">'.$group['nombre'].'</a>';
+	} else {
+		$data[1] = $group["nombre"];
+	}
 	$data[2] = dame_nombre_grupo ($group["parent"]);
-	$data[3] = '<a href="index.php?sec=users&
-			sec2=godmode/grupos/lista_grupos&
-			id_grupo='.$group["id_grupo"].'&
-			delete_group=1&id='.$group["id_grupo"].
-			'" onClick="if (!confirm(\''.__('Are you sure?').'\')) 
-			return false;">
-			<img src="images/cross.png"></a>';
+	
+	//Group "all" is special not delete and no update
+	if ($group["id_grupo"] != 1) {
+		$data[3] = '<a href="index.php?sec=users&
+				sec2=godmode/grupos/lista_grupos&
+				id_grupo='.$group["id_grupo"].'&
+				delete_group=1&id='.$group["id_grupo"].
+				'" onClick="if (!confirm(\''.__('Are you sure?').'\')) 
+				return false;">
+				<img src="images/cross.png"></a>';
+	} else {
+		$data[3] = "";
+	}
 	array_push ($table->data, $data);
 }
 print_table ($table);
