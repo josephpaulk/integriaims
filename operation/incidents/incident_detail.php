@@ -146,7 +146,7 @@ if ($action == 'update') {
 	
 	$id_author_inc = get_incident_author ($id);
 	$titulo = get_parameter ('titulo', $old_incident['titulo']);
-	$sla_disabled = (bool) get_parameter ('sla_disabled', $old_incident['sla_disabled']);
+	$sla_disabled = (bool) get_parameter ('sla_disabled'); //Get SLA given on submit
 	$description = get_parameter ('description', $old_incident['descripcion']);
 	$priority = get_parameter ('priority_form', $old_incident['prioridad']);
 	$estado = get_parameter ('incident_status', $old_incident['estado']);
@@ -219,7 +219,7 @@ if ($action == 'update') {
 	if ($sla_disabled == 1)
 		$sla_man = ", sla_disabled = 1 ";
 	else 
-		$sla_man = "";
+		$sla_man = ", sla_disabled = 0";
 	
 	if ($id_parent == 0) {
 		$idParentValue = 'NULL';

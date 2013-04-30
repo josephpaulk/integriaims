@@ -223,49 +223,60 @@ $right_side .= '</div>';
 
 $right_side .= '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-sla\')">'.__('SLA information').'</h2>';
 $right_side .= '<div id="incident-sla">';
-$right_side .= '<table width="97%">';
-$right_side .= '<tr>';
-$right_side .= "<td style='text-align: center;'>";
-$right_side .= __('SLA history compliance for: '); 
-$right_side .= "</td>";
-$right_side .= "<td align=center>";
 
-$a_day = 24*3600;
-
-$fields = array($a_day => "1 day",
-				2*$a_day => "2 days",
-				7*$a_day => "1 week",
-				14*$a_day => "2 weeks",
-				30*$a_day => "1 month");
-
-$period = get_parameter("period", $a_day);
-$ttl = 1;
-
-if ($clean_output) {
-	$ttl = 2;
-}
-
-if ($clean_output) {
-	$right_side .= "<strong>".$fields[$period]."</strong>";
+if ($incident["sla_disabled"]) {
+	$right_side .= '<table width="97%">';
+	$right_side .= '<tr>';
+	$right_side .= "<td style='text-align: center;'>";
+	$right_side .= "<em>".__("SLA disabled")."</em>";
+	$right_side .= "</td>";
+	$right_side .= "</tr>";
+	$right_side .= "</table>";
 } else {
-	$right_side .= print_select ($fields, "period", $period, 'reload_sla_slice_graph(\''.$id.'\');', '', '', true, 0, false, false, false, 'width: 75px');
-}
+	$right_side .= '<table width="97%">';
+	$right_side .= '<tr>';
+	$right_side .= "<td style='text-align: center;'>";
+	$right_side .= __('SLA history compliance for: '); 
+	$right_side .= "</td>";
+	$right_side .= "<td align=center>";
 
-$right_side .= "</td>";
-$right_side .= "<td colspan=2 style='text-align: center;'>";
-$right_side .= __('SLA total compliance (%)'). ': ';
-$right_side .= format_numeric (get_sla_compliance_single_id ($id));
-$right_side .= "</td>";
-$right_side .= "</tr>";
-$right_side .= "<tr>";
-$right_side .= "<td id=slaSlicebarField colspan=2 style='text-align: center; padding: 1px 2px 1px 5px;'>";
-$right_side .= graph_sla_slicebar ($id, $period, 225, 15, $ttl);
-$right_side .= "</td>";
-$right_side .= "<td colspan=2 style='text-align: center;'>";
-$right_side .= graph_incident_sla_compliance ($id, 200, 200, $ttl);
-$right_side .= "</td>";	
-$right_side .= "<tr>";
-$right_side .= "</table>";
+	$a_day = 24*3600;
+
+	$fields = array($a_day => "1 day",
+					2*$a_day => "2 days",
+					7*$a_day => "1 week",
+					14*$a_day => "2 weeks",
+					30*$a_day => "1 month");
+
+	$period = get_parameter("period", $a_day);
+	$ttl = 1;
+
+	if ($clean_output) {
+		$ttl = 2;
+	}
+
+	if ($clean_output) {
+		$right_side .= "<strong>".$fields[$period]."</strong>";
+	} else {
+		$right_side .= print_select ($fields, "period", $period, 'reload_sla_slice_graph(\''.$id.'\');', '', '', true, 0, false, false, false, 'width: 75px');
+	}
+
+	$right_side .= "</td>";
+	$right_side .= "<td colspan=2 style='text-align: center;'>";
+	$right_side .= __('SLA total compliance (%)'). ': ';
+	$right_side .= format_numeric (get_sla_compliance_single_id ($id));
+	$right_side .= "</td>";
+	$right_side .= "</tr>";
+	$right_side .= "<tr>";
+	$right_side .= "<td id=slaSlicebarField colspan=2 style='text-align: center; padding: 1px 2px 1px 5px;'>";
+	$right_side .= graph_sla_slicebar ($id, $period, 225, 15, $ttl);
+	$right_side .= "</td>";
+	$right_side .= "<td colspan=2 style='text-align: center;'>";
+	$right_side .= graph_incident_sla_compliance ($id, 200, 200, $ttl);
+	$right_side .= "</td>";	
+	$right_side .= "<tr>";
+	$right_side .= "</table>";
+}
 $right_side .= "</div>";
 
 $table->data[0][0] = $left_side;
