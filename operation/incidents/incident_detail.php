@@ -834,19 +834,19 @@ if ($create_incident) {
 		
 		$table_advanced->data[3][1] = print_select ($inventories, 'incident_inventories', NULL,
 						'', '', '', true, false, false, __('Objects affected'));
-		$table_advanced->data[3][1] .= "<br>".print_button (__('Add'),
-						'search_inventory', false, '', 'class="dialogbtn"', true);
-		$table_advanced->data[3][1] .= print_button (__('Remove'),
-						'delete_inventory', false, '', 'class="dialogbtn"', true);
+
+		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Add')."</a>";
+
+		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>".__('Remove')."</a>";
 } else {
 	$inventories = get_inventories_in_incident ($id);
 	$table_advanced->data[3][1] = print_select ($inventories, 'incident_inventories',
 						NULL, '', '', '',
 						true, false, false, __('Objects affected'));
-		$table_advanced->data[3][1] .= "<br>".print_button (__('Add'),
-					'search_inventory', false, '', 'class="dialogbtn"', true);
-		$table_advanced->data[3][1] .= print_button (__('Remove'),
-					'delete_inventory', false, '', 'class="dialogbtn"', true);
+
+		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Add')."</a>";
+
+		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>".__('Remove')."</a>";
 }
 
 foreach ($inventories as $inventory_id => $inventory_name) {
@@ -920,6 +920,8 @@ if ($has_permission){
 echo '<div id="id_incident_hidden" style="display:none;">';
 	print_input_text('id_incident_hidden', $id);
 echo '</div>';
+
+echo "<div class= 'dialog ui-dialog-content' id='inventory_search_modal'></div>";
 
 ?>
 
@@ -1113,6 +1115,59 @@ $(document).ready (function () {
 		});
 		
 });
+
+// Show the modal window of inventory search
+function show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search) {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
+		dataType: "html",
+		success: function(data){	
+			$("#inventory_search_modal").html (data);
+			$("#inventory_search_modal").show ();
+
+			$("#inventory_search_modal").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 920,
+					height: 700
+				});
+			$("#inventory_search_modal").dialog('open');
+		}
+	});
+}
+
+function loadInventory(id_inventory) {
+	
+	$('#incident_status_form').append ($('<input type="hidden" value="'+id_inventory+'" class="selected-inventories" name="inventories[]" />'));
+
+	$("#inventory_search_modal").dialog('close');
+}
+
+function removeInventory() {
+
+	s= $("#incident_inventories").attr ("selectedIndex");
+
+	selected_id = $("#incident_inventories").children (":eq("+s+")").attr ("value");
+	$("#incident_inventories").children (":eq("+s+")").remove ();
+	$(".selected-inventories").each (function () {
+		if (this.value == selected_id)
+			$(this).remove ();
+	});
+		
+	//idInventory = $('#incident_inventories').val();
+	//$("#incident_inventories").find("option[value='" + idInventory + "']").remove();
+	
+	
+	
+}
 </script>
 
 <?php //endif; ?>

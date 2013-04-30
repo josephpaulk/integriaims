@@ -1,3 +1,10 @@
+2013-04-30  Vanessa Gil <vanessa.gil@artica.es>
+
+	* operation/incidents/incident_detail.php: Changed
+	inventory search.
+	
+	* include/functions_config.php: Added param 'working_weekends'.
+
 2013-04-30 Dario Rodriguez <dario@artica.es>
 
 	* include/functions_incidents.php: New function incidents_get_incident_slas, supporting
@@ -28,6 +35,13 @@
 	SLA disabled fiedl.
  	* operation/incidents/incident_dashboard_detail.php: Now sla disable
 	widget doesn't shows any information is SLA is disabled.
+
+2013-04-30  Vanessa Gil <vanessa.gil@artica.es>
+
+	* operation/incidents/incident_detail.php: Changed
+	inventory search.
+	
+	* include/functions_config.php: Added param 'working_weekends'.
 
 2013-04-30  Vanessa Gil <vanessa.gil@artica.es>
 
