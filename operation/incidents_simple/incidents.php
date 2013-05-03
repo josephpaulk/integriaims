@@ -55,6 +55,7 @@ if($create_incident) {
 	$email_copy = '';
 	$email_notify = 0;
 	$id_parent = 0;
+	$epilog = '';
 	
 	$user_responsible = get_group_default_user ($group_id);
 	$id_user_responsible = $user_responsible['id_usuario'];
@@ -77,13 +78,13 @@ if($create_incident) {
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, estado, prioridad,
 			id_grupo, id_creator, notify_email, id_task,
-			resolution, id_incident_type, id_parent, sla_disabled, email_copy)
-			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
-			"%s", %d, %d, %d, %d, %s, %d, "%s")', $timestamp, $timestamp,
+			resolution, id_incident_type, sla_disabled, email_copy, epilog)
+			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, "%s",
+			%d, %d, %d, %d, %d, "%s", "%s")', $timestamp, $timestamp,
 			$title, $description, $id_user_responsible,
 			$estado, $priority, $group_id, $id_creator,
 			$email_notify, $id_task, $resolution, $id_incident_type,
-			$idParentValue, $sla_disabled, $email_copy);
+			$sla_disabled, $email_copy, $epilog);
 			
 	$id = process_sql ($sql, 'insert_id');
 

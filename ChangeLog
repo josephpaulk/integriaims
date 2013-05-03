@@ -1,3 +1,12 @@
+2013-05-03  Vanessa Gil <vanessa.gil@artica.es>
+
+	* operation/incidents_simple/incidents.php: Fixed bug creating
+	new incident.
+	
+	* include/functions_incidents.php
+	  operation/incidents_simple/incident.php: Fixed bug uploading
+	files with blanks in name.
+
 2013-04-30  Vanessa Gil <vanessa.gil@artica.es>
 
 	* operation/incidents/incident_detail.php: Changed

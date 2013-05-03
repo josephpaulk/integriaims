@@ -51,7 +51,7 @@ if($upload_file) {
 
 	$file_temp = sys_get_temp_dir()."/$filename";
 	
-	$result = attach_incident_file ($incident_id, $file_temp, $file_description);
+	$result = attach_incident_file ($incident_id, clean_output($file_temp), $file_description);
 	
 	echo $result;
 	
