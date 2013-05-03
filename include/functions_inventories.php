@@ -757,10 +757,12 @@ function inventories_print_tree ($sql_search = '') {
 	echo '<tr><td style="width:60%" valign="top">';
 	
 	if ($sql_search != '') {
-		$sql = "SELECT tobject_type.* FROM tinventory, tobject_type, tobject_field_data
-			WHERE tinventory.id_object_type = tobject_type.id $sql_search
+		$sql = "SELECT tobject_type.* 
+			FROM `tinventory`, `tobject_type`, `tobject_field_data`
+			WHERE tinventory.id_object_type = tobject_type.id
+			AND `tobject_field_data`.`id_inventory`=`tinventory`.`id` $sql_search
 			GROUP BY tobject_type.`name`";
-
+			
 		$object_types = get_db_all_rows_sql($sql);
 	} else {
 		$object_types = get_object_types (false);
@@ -944,9 +946,10 @@ function inventories_link_get_name($id_inventory) {
 
 function inventories_get_count_inventories_for_tree($id_item, $sql_search = '') {
 
-	$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory, tobject_type
-			WHERE `id_object_type`=$id_item
-			AND tinventory.id_object_type = tobject_type.id $sql_search";
+	$sql = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data
+			WHERE `id_object_type`=$id_item 
+			AND tinventory.id_object_type = tobject_type.id $sql_search
+			GROUP BY tinventory.`id`";
 	
 	$cont = get_db_all_rows_sql($sql);
 	
@@ -980,7 +983,7 @@ function inventories_show_list($sql_search, $page=1) {
 	
 	$sql = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data
 			WHERE tinventory.id_object_type = tobject_type.id $sql_search
-			GROUP BY tinventory.`name`";
+			GROUP BY tinventory.`id`";
 	
 	$inventories_result = get_db_all_rows_sql($sql);
 

@@ -44,6 +44,10 @@ $custom .= "<table style='margin: 10px auto;'>";
 $counter = 0;
 $max_per_file = 5;
 
+if ($custom_searches === false) {
+	$custom_searches = array();
+}
+
 foreach ($custom_searches as $cs) {
 	
 	if ($counter == 0) {

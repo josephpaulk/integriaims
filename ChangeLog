@@ -1,5 +1,13 @@
 2013-05-03  Vanessa Gil <vanessa.gil@artica.es>
 
+	* include/functions_inventories.php
+	  operation/incidents/incident_dashboard.php
+	  operation/inventories/inventory_detail.php
+	  operation/inventories/inventory_search.php: Fixed bug in
+	search inventories.
+
+2013-05-03  Vanessa Gil <vanessa.gil@artica.es>
+
 	* operation/incidents_simple/incidents.php: Fixed bug creating
 	new incident.
 	

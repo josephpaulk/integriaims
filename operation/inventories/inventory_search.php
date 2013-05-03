@@ -67,9 +67,10 @@ if (defined ('AJAX')) {
 		
 			if ($type == 'object_types') {
 		
-				$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory, tobject_type
+				$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory, tobject_type, tobject_field_data
 						WHERE `id_object_type`=$id_item
-						AND tinventory.id_object_type = tobject_type.id $sql_search";
+						AND tinventory.id_object_type = tobject_type.id $sql_search
+						GROUP BY tinventory.`id`";
 				
 				$cont = get_db_all_rows_sql($sql);
 
@@ -153,7 +154,6 @@ $id_manufacturer = get_parameter ('id_manufacturer', 0);
 $id_contract = get_parameter ('id_contract', 0);
 
 $fields_selected = (array)get_parameter('object_fields');
-
 $mode = get_parameter('mode', 'tree');
 
 echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_search">';
@@ -177,6 +177,7 @@ echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=
 			$object_fields[$selected] = $label_field;
 		}
 	}
+
 	$table_search->data[0][2] .= print_select($object_fields, 'object_fields[]', '', '', 'Select', '', true, 4, true, false, false, 'width: 200px;');
 	
 	$params_assigned['input_id'] = 'text-owner';
@@ -201,13 +202,12 @@ echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=
 	
 	echo '<div style="width:'.$table_search->width.'" class="action-buttons button">';
 		print_input_hidden ('search', 1);
+		print_input_hidden ('mode', $mode);
 		print_submit_button (__('Search'), 'search', false, 'class="sub next"');
 		
 		if ($mode == 'tree') {
-			print_input_hidden ('mode', 'list');
 			print_submit_button (__('List view'), 'listview', false, 'class="sub next"');
 		} else {
-			print_input_hidden ('mode', 'tree');
 			print_submit_button (__('Tree view'), 'treeview', false, 'class="sub next"');
 		}
 		
@@ -222,11 +222,11 @@ if ($search) {
 		
 		if (!empty($object_fields)) {
 			$j = 0;
-			foreach ($object_fields as $f) {
+			foreach ($object_fields as $k=>$f) {
 				if ($j == 0) 
-					$string_fields = "$f";
+					$string_fields = "$k";
 				else
-					$string_fields .= ",$f";
+					$string_fields .= ",$k";
 				$j++;
 			}
 

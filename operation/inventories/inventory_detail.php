@@ -881,7 +881,7 @@ function loadParams() {
 	
 	var object_fields_search = Array();
 
-	jQuery.each ($("#object_fields_search option:selected"), function (i, val) {
+	jQuery.each ($("#object_fields_search[] option:selected"), function (i, val) {
 		object_fields_search.push($(val).val());
 	});
 	
@@ -890,7 +890,15 @@ function loadParams() {
 
 //search popup. Show custom fields
 function show_type_fields() {
-
+	
+/*
+console.log($("#object_fields_search"));
+$("#object_fields_search").each (function () {
+	console.log($(this));
+	$(this).remove ();
+});
+*/
+	
 	id_object_type = $("#id_object_type_search").val();
 	$.ajax({
 		type: "POST",
@@ -900,10 +908,8 @@ function show_type_fields() {
 		success: function(data){
 				$("#object_fields_search").empty();
 				jQuery.each (data, function (id, value) {
-					if (value != undefined) {
-						field = value;
-						$("select[name='object_fields_search[]']").append($("<option>").val(id).html(field));
-					}
+					field = value;
+					$("select[name='object_fields_search[]']").append($("<option>").val(id).html(field));
 				});	
 			}
 	});
