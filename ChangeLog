@@ -1,3 +1,23 @@
+2013-05-06  Dario Rodriguez <dario@artica.es>
+
+	* include/styles/integria.css: Modified menu bar style.
+	* include/graphs/functions_pchart.php: Fixed a bug related to
+	antialiasing of graphs.
+	* include/ajax/inventories.php: Added file header
+	* include/functions_incidents.php
+	include/functions.php
+	include/js/integria_incident_search.js
+	include/functions_form.php
+	include/ajax/incidents.php
+	operation/incidents/incident_search_logic.php
+	operation/incidents/incident_statistics.php
+	operation/incidents/incident_detail.php
+	operation/incidents/incident_tracking.php
+	operation/incidents/incident_dashboard_detail.php
+	operation/group/group.php: Fixed several bugs,
+	implemented incident parent search with popup. Changed menu bar
+	text to icons.
+
 2013-05-06  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php

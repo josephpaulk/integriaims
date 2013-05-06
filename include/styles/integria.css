@@ -2109,7 +2109,7 @@ h2.incident_dashboard {
 #button-bar-title {
 	float: right;
 	margin-right: 20px;
-	margin-top: -5px;
+	margin-top: -8px;
 }
 
 
@@ -2118,7 +2118,7 @@ h2.incident_dashboard {
 	font-size: 12px;
 	text-decoration: none;
 	text-transform: none;
-	padding: 3px;
+	padding: 7px;
 	border-right: 1px solid #ccc;
 	border-top: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
@@ -2156,6 +2156,10 @@ h2.incident_dashboard {
 
 #button-bar-title li a {
 	text-decoration: none;
+}
+
+#button-bar-title li a img {
+	vertical-align: bottom;
 }
 
 .pagination {

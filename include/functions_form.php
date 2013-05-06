@@ -770,8 +770,11 @@ function form_search_incident ($return = false, $filter=false) {
 		$id_company = (int) get_parameter ('search_id_company');
 		$search_id_user = (string) get_parameter ('search_id_user');
 		$search_id_incident_type = (int) get_parameter ('search_id_incident_type');
-		$date_end = date ('Y-m-j');
-		$date_ini = date('Y-m-j',strtotime($date_end) - 2592000);
+		$date_end = get_parameter("search_last_date", date ('Y-m-d'));
+		
+		$month_ago = date('Y-m-d',strtotime($date_end) - 2592000);
+		
+		$date_ini = get_parameter("search_first_date", $month_ago);
 	} else {
 		$search_string = (string) $filter['string'];
 		$priority = (int) $filter['priority'];
@@ -844,16 +847,16 @@ function form_search_incident ($return = false, $filter=false) {
 	
 	$table->data[3][0] = print_select (get_user_visible_users ($config['id_user'], 'IR', true),
 		'search_id_user', $search_id_user,
-		'', __('Any'), 0, true, false, false, __('User'));
-	$table->data[3][1] = print_input_text ('search_first_date', $date_ini, '', 15, 15, true, __('Begin date'));
-	$table->data[3][2] = print_input_text ('search_last_date', $date_end, '', 15, 15, true, __('End date'));
+		'', __('Any'), 0, true, false, false, __('Owner'));
+	$table->data[3][1] = print_input_text ('search_first_date', $date_ini, '', 15, 15, true, __('Created from'));
+	$table->data[3][2] = print_input_text ('search_last_date', $date_end, '', 15, 15, true, __('Created to'));
 	
 	if (!get_external_user ($config["id_user"]))
 		$table->data[4][0] = print_select (get_companies (), 'search_id_company',
 			$id_company, '', __('All'), 0, true, false, false, __('Company'));
 			
 	$table->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
-		$id_company, '', __('All'), 0, true, false, false, __('Incident type'));
+		$search_id_incident_type, '', __('All'), 0, true, false, false, __('Incident type'));
 	
 	$table->data[5][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	

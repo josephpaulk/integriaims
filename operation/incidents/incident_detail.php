@@ -543,7 +543,7 @@ if ($id) {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo '<li>';
-	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.__("Close")."</a>";
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.print_image("images/go-previous.png", true, array("title" => __("Back to incident")))."</a>";
 	echo '</li>';
 	
 	/* Delete incident */
@@ -551,7 +551,7 @@ if ($id) {
 		echo "<li>";
 		echo '<form id="delete_incident_form" name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
 		print_input_hidden ('quick_delete', $id, false);
-		echo '<a href="#" id="detele_incident_submit_form">'.__("Delete").'</a>';
+		echo '<a href="#" id="detele_incident_submit_form">'.print_image("images/cross.png", true, array("title" => __("Delete"))).'</a>';
 		echo '</form>';
 		echo "</li>";
 		
@@ -648,11 +648,7 @@ if ($has_im) {
 	$table->data[0][2] .= "<input type='hidden' id=grupo_form name=grupo_form value=$id_grupo_incident>";
 }
 
-if ($id_incident_type == 0) {
-	$disabled = false;
-} else {
-	$disabled = true;
-}
+$disabled = false;
 
 if ($disabled) {
 	$table->data[1][0] = print_label (__('Priority'), '', '', true,
@@ -750,7 +746,14 @@ if (!$create_incident){
 
 $types = get_incident_types ();
 $table->data[3][0] = print_label (__('Incident type'), '','',true);
-$table->data[3][0] .= print_select($types, 'id_incident_type', $id_incident_type, 'show_incident_type_fields();', 'Select', '', true, 0, true, false, $disabled);
+
+//Disabled incident type if any, type changes not allowed
+if ($id_incident_type == 0) {
+	$disabled_itype = false;
+} else {
+	$disabled_itype = true;
+}
+$table->data[3][0] .= print_select($types, 'id_incident_type', $id_incident_type, 'show_incident_type_fields();', 'Select', '', true, 0, true, false, $disabled_itype);
 
 $table->colspan[4][0] = 3;		
 //$table->data[4][0] = "<tr id='row_show_type_fields' colspan='4'></tr>";
@@ -790,14 +793,13 @@ if ($has_im){
 $parent_name = $id_parent ? (__('Incident').' #'.$id_parent) : __('None');
 
 if ($has_im) {
-	$table_advanced->data[2][0] = print_button ($parent_name, 'search_parent', $disabled, '',
-				'class="dialogbtn"', true, __('Parent incident'));
+	$table_advanced->data[2][0] = print_input_text ('search_parent', $parent_name, '', 10, 10, true, __('Parent incident'));
 	$table_advanced->data[2][0] .= print_input_hidden ('id_parent', $id_parent, true);
 }
 
 // Show link to go parent incident
 if ($id_parent)
-	$table_advanced->data[2][0] .= '&nbsp;<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.$id_parent.'"><img src="images/go.png" /></a>';
+	$table_advanced->data[2][0] .= '&nbsp;<a target="_blank" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id_parent.'"><img src="images/go.png" /></a>';
 
 // Task
 if ($has_im) { 
@@ -827,9 +829,6 @@ if ($create_incident) {
 				$inventories[$id_inventory] = get_db_value ('name', 'tinventory',
 					'id', $id_inventory);
 			}
-		} else {
-			$default_inventory = get_db_value ("id_inventory_default", "tgrupo", "id_grupo", $id_grupo_incident); 
-			$inventories[$default_inventory] =  get_db_value ('name', 'tinventory', 'id', $default_inventory);	
 		}
 		
 		$table_advanced->data[3][1] = print_select ($inventories, 'incident_inventories', NULL,
@@ -923,6 +922,7 @@ echo '</div>';
 
 echo "<div class= 'dialog ui-dialog-content' id='inventory_search_modal'></div>";
 
+echo "<div class= 'dialog ui-dialog-content' id='parent_search_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
@@ -934,6 +934,7 @@ echo "<div class= 'dialog ui-dialog-content' id='inventory_search_modal'></div>"
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
 <script  type="text/javascript">
+
 $(document).ready (function () {
 	
 	//Verify incident limit on view display and on group change
@@ -946,6 +947,11 @@ $(document).ready (function () {
 	
 	$("#grupo_form").change (function () {
 		incident_limit();
+	});
+	
+	/*Open parent search popup*/
+	$("#text-search_parent").focus(function () {
+		parent_search_form('');
 	});
 	
 	//Validate form
@@ -999,7 +1005,7 @@ $(document).ready (function () {
 		return true;
 		
 	});
-	
+		
 	//JS to create KB artico from incident
 	$("#kb_form_submit").click(function (event) {
 		event.preventDefault();

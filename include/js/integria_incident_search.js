@@ -815,3 +815,59 @@ function show_incident_type_fields() {
 		}
 	});
 }
+
+function parent_search_form(filter) {
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&get_incidents_search=1&ajax=1&"+filter,
+		dataType: "html",
+		success: function(data){	
+			$("#parent_search_window").html (data);
+			$("#parent_search_window").show ();
+
+			$("#parent_search_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 920,
+					height: 700
+				});
+			$("#parent_search_window").dialog('open');
+			
+			//JS to catch incident search submit request
+			$("#search_incident_form").submit(function (){
+				var filter = $("#search_incident_form").formSerialize();
+				parent_search_form(filter);
+				return false;
+			});
+			
+			$("a[id|='page']").click(function(e) {
+				e.preventDefault();
+				var id = $(this).attr("id");
+								
+				offset = id.substr(5,id.length);
+				
+				var filter = $("#search_incident_form").formSerialize();
+				filter = filter+"&offset="+offset;
+				parent_search_form(filter);
+			});
+		}
+	});
+}
+
+function update_parent(id_parent) {
+
+	var str_parent = __('Incident') +" #"+id_parent;
+	
+	$("#text-search_parent").attr("value", str_parent); 
+	
+	$("#hidden-id_parent").attr("value", id_parent);
+	
+	$("#parent_search_window").dialog('close');
+}

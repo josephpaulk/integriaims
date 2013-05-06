@@ -24,7 +24,7 @@ if (defined ('AJAX')) {
 		
 		$inventoryObject = get_db_row_sql('SELECT * FROM tinventory
 			WHERE id IN (
-			SELECT id_inventory_default
+			SELECT id_sla
 			FROM tgrupo
 			WHERE id_grupo = ' . $id_group . ')');
 		
@@ -77,7 +77,7 @@ if (defined ('AJAX')) {
 			
 			$inventoryObject = get_db_row_sql('SELECT * FROM tinventory
 				WHERE id IN (
-				SELECT id_inventory_default
+				SELECT id_sla
 				FROM tgrupo
 				WHERE id_grupo = ' . $id_group . ')');
 			

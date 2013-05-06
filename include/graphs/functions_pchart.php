@@ -297,7 +297,7 @@ switch($graph_type) {
 			break;
 }
 
-function pch_slicebar_graph ($graph_type, $data, $period, $width, $height, $colors, $font, $round_corner, $font_size) {
+function pch_slicebar_graph ($graph_type, $data, $period, $width, $height, $colors, $font, $round_corner, $font_size, $antialiasing=true) {
 	 /* CAT:Slicebar charts */
 
 	set_time_limit (0);

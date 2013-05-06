@@ -61,10 +61,10 @@ if (!$clean_output) {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
-	echo '<a href="#" onClick="document.getElementById(\'create_html_report\').submit();">'.__("HTML report").'</a>';
+	echo '<a href="#" onClick="document.getElementById(\'create_html_report\').submit();">'.print_image("images/html.png", true, array("title" => __("HTML report"))).'</a>';
 	echo "</li>";
 	echo '<li>';
-	echo '<a href="#" onClick="document.getElementById(\'create_pdf_report\').submit();">'.__("PDF report").'</a>';
+	echo '<a href="#" onClick="document.getElementById(\'create_pdf_report\').submit();">'.print_image("images/page_white_acrobat.png", true, array("title" => __("PDF report"))).'</a>';
 	echo '</li>';	
 	echo "</ul>";
 	echo "</div>";
