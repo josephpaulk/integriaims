@@ -961,13 +961,10 @@ function inventories_get_count_inventories_for_tree($id_item, $sql_search = '') 
 }
 
 
-function inventories_show_list($sql_search, $page=1) {
+function inventories_show_list($sql_search, $params='') {
 	global $config;
-/*
-	$offset = (int) get_parameter("offset");
-	$block_size = (int) $config["block_size"];
-*/
 
+	$params .="&mode=list";
 	
 	$table->class = 'listing';
 	$table->width = '98%';
@@ -984,18 +981,17 @@ function inventories_show_list($sql_search, $page=1) {
 	$sql = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data
 			WHERE tinventory.id_object_type = tobject_type.id $sql_search
 			GROUP BY tinventory.`id`";
-	
-	$inventories_result = get_db_all_rows_sql($sql);
-
-	$count = count($inventories_result);
-
-	//$sql .= " LIMIT " . $offset . "," . $block_size;
 
 	$inventories = get_db_all_rows_sql($sql);
 
-	if ($inventories_result === false) {
+	if ($inventories === false) {
 		echo __("No inventories");
 	} else {
+		//We need this auxiliar variable to use later for footer pagination
+		$inventories_aux = $inventories;
+
+		$inventories = print_array_pagination ($inventories_aux, "index.php?sec=inventory&sec2=operation/inventories/inventory_search".$params);
+	
 		foreach ($inventories as $key=>$inventory) {
 			$data = array();
 			if (defined ('AJAX')) {

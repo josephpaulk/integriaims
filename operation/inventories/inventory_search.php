@@ -222,9 +222,12 @@ echo '</form>';
 
 if ($search) {
 	$sql_search = '';
+	$params = '&search=1';
 	
 	if ($id_object_type != 0) { //búsqueda de texto libre en nombre, descripción de inventario y en contenido de campo personalizado
 		$sql_search .= " AND tinventory.id_object_type = $id_object_type";
+		
+		$params .= "&id_object_type=$id_object_type";
 		
 		if (!empty($object_fields)) {
 			$j = 0;
@@ -239,6 +242,8 @@ if ($search) {
 
 			$sql_search .= " AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`
 							AND `tobject_field_data`.`id_object_type_field` IN ($string_fields) ";
+							
+			$params .= "&object_fields=$object_fields";
 						
 			if ($search_free != '') {
 				$sql_search .= "AND (tobject_field_data.`data`LIKE '%$search_free%' OR tinventory.name LIKE '%$search_free%'
@@ -248,17 +253,22 @@ if ($search) {
 	} else { //búsqueda solo en nombre y descripción de inventario
 		if ($search_free != '') {
 			$sql_search .= " AND (tinventory.name LIKE '%$search_free%' OR tinventory.description LIKE '%$search_free%')";
+			
+			$params .= "&search_free=$search_free";
 		}
 	}
 	
 	if ($owner != '') {
 		$sql_search .= " AND tinventory.owner = '$owner'";
+		$params .= "&owner=$owner";
 	}
 	if ($id_manufacturer != 0) {
 		$sql_search .= " AND tinventory.id_manufacturer = $id_manufacturer";
+		$params .= "&id_manufacturer=$id_manufacturer";
 	}
 	if ($id_contract != 0) {
 		$sql_search .= " AND tinventory.id_contract = $id_contract";
+		$params .= "&id_contract=$id_contract";
 	}
 	
 } 
@@ -270,7 +280,7 @@ switch ($mode) {
 		inventories_print_tree($sql_search);
 		break;
 	case 'list':
-		inventories_show_list($sql_search);
+		inventories_show_list($sql_search, $params);
 		break;
 	default:
 		inventories_print_tree($sql_search);
@@ -290,6 +300,8 @@ echo '</div>';
 
 function show_fields () {
 
+	$("select[name='object_fields[]']").empty();
+	
 	id_object_type = $("#id_object_type").val();
 	$.ajax({
 		type: "POST",

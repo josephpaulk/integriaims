@@ -106,6 +106,8 @@ if (!defined ('AJAX')) {
 		echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail"><span>'.__('Details').'</span></a></li>';
 		if (!empty($id)) {
 			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
+			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Incidents').'</span></a></li>';
+			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '"><span>'.__('Contacts').'</span></a></li>';
 		}
 		echo '</ul>';
 		echo '</div>';
@@ -344,6 +346,7 @@ if ($create) {
 $has_permission = give_acl ($config['id_user'], 0, "VW");
 
 if ($id) {
+
 	$group = get_inventory_group ($id);
 	if (! give_acl ($config['id_user'], $group, "VR")) {
 		// Doesn't have access to this page
@@ -354,6 +357,8 @@ if ($id) {
 	
 	/* If editing, the permission checks is now specific for this object */
 	$has_permission = give_acl ($config['id_user'], $group, "VW");
+		
+	clean_cache_db();
 	
 	$inventory = get_db_row ('tinventory', 'id', $id);
 	$name = $inventory['name'];
