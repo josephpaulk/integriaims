@@ -998,34 +998,39 @@ function inventories_show_list($sql_search, $page=1) {
 	} else {
 		foreach ($inventories as $key=>$inventory) {
 			$data = array();
+			if (defined ('AJAX')) {
+				$url = "javascript:loadInventory(" . $inventory['id'] . ");";
+			} else {
+				$url = 'index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$inventory['id'];
+			} 
 			
-			$data[0] = "<a href='javascript:loadInventory(" . $inventory['id'] . ");'>".$inventory['id'].'</a>';
+			$data[0] = "<a href=".$url.">".$inventory['id']."</a>";
 			
-			$data[1] = "<a href='javascript:loadInventory(" . $inventory['id'] . ");'>".$inventory['name'].'</a>';
+			$data[1] = "<a href=".$url.">".$inventory['name'].'</a>';
 			
 			if ($inventory['owner'] != '')
 				$name_owner = get_db_value('nombre_real', 'tusuario', 'id_usuario', $inventory['owner']);
 			else 
 				$name_owner = '--';
-			$data[2] = "<a href='javascript:loadInventory(" . $inventory['id'] . ");'>".$name_owner.'</a>';
+			$data[2] = "<a href=".$url.">".$name_owner.'</a>';
 			
 			if ($inventory['id_object_type'] != 0)
 				$name_object = get_db_value('name', 'tobject_type', 'id', $inventory['id_object_type']);
 			else 
 				$name_object = '--';
-			$data[3] = "<a href='javascript:loadInventory(" . $inventory['id'] . ");'>".$name_object.'</a>';
+			$data[3] = "<a href=".$url.">".$name_object.'</a>';
 			
 			if ($inventory['id_manufacturer'] != '')
 				$name_manufacturer = get_db_value('name', 'tmanufacturer', 'id', $inventory['id_manufacturer']);
 			else 
 				$name_manufacturer = '--';
-			$data[4] = "<a href='javascript:loadInventory(" . $inventory['id'] . ");'>".$name_manufacturer.'</a>';
+			$data[4] = "<a href=".$url.">".$name_manufacturer.'</a>';
 			
 			if ($inventory['id_contract'] != '')
 				$name_contract = get_db_value('name', 'tcontract', 'id', $inventory['id_contract']);
 			else 
 				$name_contract = '--';
-			$data[5] = "<a href='javascript:loadInventory(" . $inventory['id'] . ");'>".$name_contract.'</a>';
+			$data[5] = "<a href=".$url.">".$name_contract.'</a>';
 			
 			array_push ($table->data, $data);
 		}

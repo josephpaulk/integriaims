@@ -1,3 +1,15 @@
+2013-05-06  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_form.php
+	  include/functions_form.php
+	  include/functions_inventories.php
+	  include/ajax/inventories.php
+	  operation/incidents/incident_detail.php
+	  operation/incidents/incident_search_logic.php
+	  operation/inventories/inventory_search.php
+	  operation/inventories/inventory_detail.php: Fixed several
+	bugs.
+
 2013-05-03  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php

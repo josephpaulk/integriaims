@@ -362,7 +362,6 @@ print_submit_button (__('Update selected items'), 'massive_update', false, 'clas
 echo "</div>";
 echo "</div>";
 
-
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
@@ -416,4 +415,40 @@ $(document).ready(function () {
 		process_massive_updates();
 	});	
 });
+
+function loadInventory(id_inventory) {
+	
+	$('#hidden-id_inventory').val(id_inventory);
+	$('#text-inventory_name').val(id_inventory);
+
+	$("#search_inventory_window").dialog('close');
+}
+
+// Show the modal window of inventory search
+function show_search_inventory(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search) {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
+		dataType: "html",
+		success: function(data){	
+			$("#search_inventory_window").html (data);
+			$("#search_inventory_window").show ();
+
+			$("#search_inventory_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 920,
+					height: 700
+				});
+			$("#search_inventory_window").dialog('open');
+		}
+	});
+}
 </script>

@@ -401,7 +401,8 @@ if ($has_permission) {
 	$table->data[1][0] = print_input_text ('parent_name', $parent_name,'', 7, 0, true, __('Parent object'), false);	
 	if ($id_parent)
 		$table->data[1][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$id_parent.'"><img src="images/go.png" /></a>';
-	$table->data[1][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Search parent')."</a>";
+		
+	$table->data[1][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".'&nbsp;&nbsp;'.__('Search parent')."</a>";
 	
 	$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
 
@@ -844,7 +845,7 @@ function loadInventory(id_inventory) {
 
 // Show the modal window of inventory search
 function show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search) {
-
+	
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
@@ -863,7 +864,7 @@ function show_inventory_search(search_free, id_object_type_search, owner_search,
 						background: "black"
 					},
 					width: 920,
-					height: 700
+					height: 850
 				});
 			$("#inventory_search_window").dialog('open');
 		}
@@ -879,25 +880,14 @@ function loadParams() {
 	id_contract_search = $('#id_contract_search').val();
 	search = 1;
 	
-	var object_fields_search = Array();
-
-	jQuery.each ($("#object_fields_search[] option:selected"), function (i, val) {
-		object_fields_search.push($(val).val());
-	});
-	
+	object_fields_search = $("select[name='object_fields_search[]']").val();
+		
 	show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search);
 }
 
 //search popup. Show custom fields
 function show_type_fields() {
-	
-/*
-console.log($("#object_fields_search"));
-$("#object_fields_search").each (function () {
-	console.log($(this));
-	$(this).remove ();
-});
-*/
+	$("select[name='object_fields_search[]']").empty();
 	
 	id_object_type = $("#id_object_type_search").val();
 	$.ajax({

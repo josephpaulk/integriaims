@@ -1137,7 +1137,7 @@ function show_inventory_search(search_free, id_object_type_search, owner_search,
 						background: "black"
 					},
 					width: 920,
-					height: 700
+					height: 850
 				});
 			$("#inventory_search_modal").dialog('open');
 		}

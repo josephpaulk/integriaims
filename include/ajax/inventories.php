@@ -72,7 +72,7 @@ if ($get_inventory_search) {
 	$id_manufacturer_search = get_parameter ('id_manufacturer_search', 0);
 	$id_contract_search = get_parameter ('id_contract_search', 0);
 
-	$fields_selected = (array)get_parameter('object_fields_search');
+	$fields_selected = get_parameter('object_fields_search');
 
 	$table_search->class = 'databox';
 	$table_search->width = '98%';
@@ -89,8 +89,9 @@ if ($get_inventory_search) {
 	
 	$object_fields_search = array();
 	
-	if ($fields_selected[0] != '') {
-		foreach ($fields_selected as $selected) {
+	if ($fields_selected != '') {
+		$fields = explode(',',$fields_selected);
+		foreach ($fields as $selected) {
 			$label_field = get_db_value('label', 'tobject_type_field', 'id', $selected);
 			$object_fields_search[$selected] = $label_field;
 		}
@@ -127,20 +128,11 @@ if ($get_inventory_search) {
 		
 		if ($id_object_type_search != 0) { //búsqueda de texto libre en nombre, descripción de inventario y en contenido de campo personalizado
 			$sql_search .= " AND tinventory.id_object_type = $id_object_type_search";
-			
-			if (!empty($object_fields)) {
-				$j = 0;
-				foreach ($object_fields as $f) {
-					if ($j == 0) 
-						$string_fields = "$f";
-					else
-						$string_fields .= ",$f";
-					$j++;
-				}
-
+	
+			if ($fields_selected != '') {
 
 				$sql_search .= " AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`
-								AND `tobject_field_data`.`id_object_type_field` IN ($string_fields) ";
+								AND `tobject_field_data`.`id_object_type_field` IN ($fields_selected) ";
 							
 				if ($search_free != '') {
 					$sql_search .= "AND (tobject_field_data.`data`LIKE '%$search_free%' OR tinventory.name LIKE '%$search_free%'

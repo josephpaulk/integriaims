@@ -156,6 +156,12 @@ $id_contract = get_parameter ('id_contract', 0);
 $fields_selected = (array)get_parameter('object_fields');
 $mode = get_parameter('mode', 'tree');
 
+if (isset($_POST['listview']))
+	$mode = 'list';
+if (isset($_POST['treeview']))
+	$mode = 'tree';
+
+
 echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_search">';
 	$table_search->class = 'databox';
 	$table_search->width = '98%';

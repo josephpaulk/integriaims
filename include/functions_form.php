@@ -768,10 +768,6 @@ function form_search_incident ($return = false, $filter=false) {
 		$id_group = (int) get_parameter ('search_id_group');
 		$id_inventory = (int) get_parameter ('search_id_inventory');
 		$id_company = (int) get_parameter ('search_id_company');
-		//$id_product = (int) get_parameter ('search_id_product');
-		//$search_serial_number = (string) get_parameter ('search_serial_number');
-		//$search_id_building = (int) get_parameter ('search_id_building');
-		//$search_sla_fired = (bool) get_parameter ('search_sla_fired');
 		$search_id_user = (string) get_parameter ('search_id_user');
 		$search_id_incident_type = (int) get_parameter ('search_id_incident_type');
 		$date_end = date ('Y-m-j');
@@ -781,11 +777,8 @@ function form_search_incident ($return = false, $filter=false) {
 		$priority = (int) $filter['priority'];
 		$id_group = (int) $filter['id_group'];
 		$status = (int) $filter['status'];
-		//$id_product = (int) $filter['id_product'];
 		$id_company = (int) $filter['id_company'];
 		$id_inventory = (int) $filter['id_inventory'];
-		//$search_serial_number = (string) $filter['serial_number'];
-		//$search_sla_fired = (bool) $filter['sla_fired'];
 		$search_id_incident_type = (int) $filter['id_incident_type'];
 		$search_id_user = (string) $filter['id_user'];
 		$date_end = $filter['first_date'];
@@ -832,27 +825,22 @@ function form_search_incident ($return = false, $filter=false) {
 			'search_id_group', $id_group,
 			'', __('All'), 1, true, false, false, __('Group'));
 	
+/*
 	$table->data[1][1] = print_input_hidden ('search_id_inventory', $id_inventory, true);
 	$name = __('Any');
 	if ($id_inventory)
 		$name = get_inventory_name ($id_inventory);
 	$table->data[1][1] .= print_button ($name, 'inventory_name', false, '',
 		'class="dialogbtn"', true, __('Inventory'));
-	
-/*
-	$table->data[1][2] = print_select (get_products (),
-		'search_id_product', $id_product,
-		'', __('All'), 0, true, false, false,
-		__('Product type'));
-
-	$table->data[2][0] = print_input_text ('search_serial_number', $search_serial_number,
-				'', 30, 100, true, __('Serial number'));
-	$table->data[2][1] = print_select (get_buildings (),
-		'search_id_building', $search_id_building,
-		'', __('All'), 0, true, false, false,
-		__('Building'));
-	$table->data[2][2] = print_checkbox ('search_sla_fired', 1, $search_sla_fired, true, __('SLA fired'));
 */
+	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
+	
+	$table->data[1][1] = print_input_text ('inventory_name', $name,'', 7, 0, true, __('Inventory'), false);	
+	
+	$table->data[1][1] .= "&nbsp;&nbsp;<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Search inventory')."</a>";
+	
+	$table->data[1][1] .= print_input_hidden ('id_inventory', $id_inventory, true);
+	
 	
 	$table->data[3][0] = print_select (get_user_visible_users ($config['id_user'], 'IR', true),
 		'search_id_user', $search_id_user,
@@ -874,6 +862,8 @@ function form_search_incident ($return = false, $filter=false) {
 	$output .= '</form>';
 	
 	$output .= '<a class="show_advanced_search" href="#">'.__('Advanced search').' >></a>';
+	
+	echo "<div class= 'dialog ui-dialog-content' id='search_inventory_window'></div>";
 	
 	if ($return)
 		return $output;
