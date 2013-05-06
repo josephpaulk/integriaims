@@ -1,5 +1,11 @@
 2013-05-06  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_incidents.php,
+	operation/incidents/incident_dashboard_detail.php: Displayed
+	incident type fields with values on incident detail dashboard view.
+
+2013-05-06  Dario Rodriguez <dario@artica.es>
+
 	* include/styles/integria.css: Modified menu bar style.
 	* include/graphs/functions_pchart.php: Fixed a bug related to
 	antialiasing of graphs.

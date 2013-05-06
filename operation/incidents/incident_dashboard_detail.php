@@ -89,6 +89,20 @@ $left_side .= "</tr>";
 $left_side .= "<tr>";
 $left_side .= "<td>".__("Type").":</td><td align='right'>".$type."</td>";
 $left_side .= "</tr>";
+
+if ($incident["id_incident_type"]) {
+
+$fields_data = incident_get_type_field_values($id);
+
+foreach ($fields_data as $key => $value) {
+	
+	$left_side .= "<tr>";
+	$left_side .= "<td>&nbsp&nbsp&nbsp<i>".$key.":</i></td><td align='right'>".$value."</td>";
+	$left_side .= "</tr>";	
+}
+
+}
+
 $left_side .= "</table>";
 $left_side .= '</div>';
 

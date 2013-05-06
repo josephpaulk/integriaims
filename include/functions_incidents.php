@@ -1453,6 +1453,28 @@ function incidents_get_incident_type_text ($id) {
 	return $name;	
 }
 
+function incident_get_type_field_values($id) {
+	$id_type = get_db_value ('id_incident_type', 'tincidencia', 'id_incidencia', $id);
+	
+	$sql = sprintf("SELECT TF.label, FD.data FROM tincident_field_data FD, tincident_type_field TF 
+					WHERE TF.id_incident_type = %d AND TF.id = FD.id_incident_field 
+					AND FD.id_incident = %d", $id_type, $id);
+					
+	$fields = get_db_all_rows_sql($sql);
+	
+	if (!$fields) {
+		$fields = array();
+	}
+	
+	$ret_fields = array();
+
+	foreach ($fields as $f) {
+		$ret_fields[$f["label"]] = $f["data"];
+	}
+	
+	return $ret_fields;
+}
+
 function incidents_get_incident_task_text ($id) {
 	
 	$task = get_db_value ('id_task', 'tincidencia', 'id_incidencia', $id);
