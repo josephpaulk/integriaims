@@ -731,7 +731,7 @@ function is_working_day ($datecalc) {
 // Return string with time-threshold in secs, mins, days or weeks
 // ---------------------------------------------------------------
 // $flag_hide_zero Used to hide 0's in higher periods
-function give_human_time ($int_seconds, $flag_hide_zero = true) {
+function give_human_time ($int_seconds, $flag_hide_zero = true, $brief_time=false, $empty_zeros=false) {
 	$key_suffix = 's';
 	$periods = array (
 		'year'   => 31556926,
@@ -761,7 +761,34 @@ function give_human_time ($int_seconds, $flag_hide_zero = true) {
 	}
 
 	// return output, if !empty, implode into string, else output $if_reached
-	return ( !empty($build)?implode(', ', $build):__('Unknown'));
+	
+	if (empty($build)) {
+		if (!$empty_zeros) {
+			$ret_text = __("Unknown");
+		} else {
+			$ret_text = __("0 seconds");
+		}
+	} else {
+		if (!$brief_time) {
+			$ret_text = implode(', ', $build);
+		} else {
+			$size = count($build);
+			
+			if ($size > 2) {
+				$aux_build = array();
+
+				$aux_build[0] = $build[0];
+				$aux_build[1] = $build[1];
+
+				$build = $aux_build;
+			}
+	
+			$ret_text = implode(', ', $build);
+		}
+	}
+
+
+	return $ret_text;
 }
 
 

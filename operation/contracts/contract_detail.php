@@ -324,7 +324,7 @@ if ($id | $new_contract) {
 	
 	echo "<td colspan=2>";
 	echo print_select (get_company_roles (), 'search_company_role',
-		$search_id_company, '', __('All'), 0, true, false, false, __('Company roles'));	
+		$search_company_role, '', __('All'), 0, true, false, false, __('Company roles'));	
 	echo "</td>";
 	
 	echo "</tr>";

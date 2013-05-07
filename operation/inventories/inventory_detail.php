@@ -107,7 +107,7 @@ if (!defined ('AJAX')) {
 		if (!empty($id)) {
 			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
 			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Incidents').'</span></a></li>';
-			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '"><span>'.__('Contacts').'</span></a></li>';
+		//	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '"><span>'.__('Contacts').'</span></a></li>';
 		}
 		echo '</ul>';
 		echo '</div>';
@@ -128,6 +128,10 @@ $public = (bool) get_parameter ('public');
 $id_object_type = (int) get_parameter('id_object_type');
 $is_unique = true;
 $msg_err = '';
+
+if ((isset($_POST['parent_name'])) && ($_POST['parent_name'] == '')) {
+	$id_parent = 0;
+}
 
 if ($update) {
 	if (! give_acl ($config['id_user'], get_inventory_group ($id), "VW")) {
@@ -438,7 +442,7 @@ if ($has_permission) {
 
 /* Third row */
 $objects_type = get_object_types ();
-$table->data[2][0] = print_label (__('Incident type'), '','',true);
+$table->data[2][0] = print_label (__('Object type'), '','',true);
 if ($id_object_type == 0) {
 	$disabled = false;
 } else {
@@ -673,7 +677,7 @@ function show_fields() {
 						id_object_type_field = value['id'];
 						
 						a = document.createElement('a');
-						a.title = "Show table";
+						a.title = __("Show table");
 						table_name = value['external_table_name'];
 						id_table = value['external_reference_field'];
 						//element_name = value['label_enco'];
@@ -835,9 +839,10 @@ function enviar(data, element_name, id_object_type_field) {
 	
 	if (id_inventory != 0) {
 		refresh_external_id(id_object_type_field, id_inventory, element_name);
-		$("#external_table_window").dialog('close');
+		//$("#external_table_window").dialog('close');
 	}
-
+	
+	$("#external_table_window").dialog('close');
 } 
 
 function loadInventory(id_inventory) {

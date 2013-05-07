@@ -17,6 +17,7 @@
 global $config;
 check_login();
 
+include("include/functions_user.php");
 
 if (defined ('AJAX')) {
 
@@ -56,6 +57,7 @@ $id = (int) get_parameter ('id');
 $name = "";
 $icon = "";
 $id_user_default = "";
+$id_user = "";
 $banner = "";
 $parent = "";
 $forced_email = true;
@@ -115,9 +117,17 @@ $table->data[2][0] = print_select_from_sql ('SELECT id_grupo, nombre FROM tgrupo
 
 //$table->data[2][1] = combo_user_visible_for_me ($id_user_default, "id_user_default", 0, "IR", true, __('Default user'));
 
-$table->data[2][1] = print_input_text_extended ('id_user', $id_user, 'text-id_user', '', 15, 30, false, '',
+$params_creator['input_id'] = 'text-id_user';
+$params_creator['input_name'] = 'id_user';
+$params_creator['input_value'] = $id_user;
+$params_creator['title'] = __('Default user');
+$params_creator['return'] = true;
+$params_creator['return_help'] = true;
+$table->data[2][1] = user_print_autocomplete_input($params_creator);
+
+/*$table->data[2][1] = print_input_text_extended ('id_user', $id_user, 'text-id_user', '', 15, 30, false, '',
 			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Default user'))
-		. print_help_tip (__("Type at least two characters to search"), true);
+		. print_help_tip (__("Type at least two characters to search"), true);*/
 
 
 $icons = list_files ('images/groups_small/', 'png', 0, true, '');

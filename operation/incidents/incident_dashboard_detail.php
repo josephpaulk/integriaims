@@ -109,7 +109,9 @@ $left_side .= '</div>';
 /* Users affected by the incident */
 $left_side .= '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-description\')">'.__('Description').'</h2>';
 $left_side .= '<div id="incident-description">';
-$left_side .= $incident["descripcion"];
+
+$left_side .= clean_output_breaks($incident["descripcion"]);
+
 $left_side .= '</div>';
 
 $left_side .= '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-adv-details\')">'.__('Advanced details').'</h2>';

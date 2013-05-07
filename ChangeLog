@@ -1,3 +1,25 @@
+2013-05-07  Dario Rodriguez <dario@artica.es> 
+2013-05-07  Vanessa Gil <vanessa.gil@artica.es>
+
+	* operation/inventories/inventory_relationship.php,
+	operation/inventories/inventory_detail.php,
+	operation/inventories/inventory_search.php,
+	operation/contacts/contact_detail.php,
+	operation/manufacturers/manufacturer_detail.php,
+	operation/incidents/incident_dashboard.php,
+	operation/incidents/incident_tracking.php,
+	operation/incidents/incident_detail.php,
+	operation/incidents/incident_dashboard_detail.php,
+	operation/contracts/contract_detail.php,
+	integria_demo.sql,
+	godmode/grupos/configurar_grupo.php,
+	godmode/grupos/lista_grupos.php,
+	include/ajax/inventories.php,
+	include/functions_inventories.php,
+	include/functions_calendar.php,
+	include/functions_incidents.php: Bug hunting session lot
+	of bug fixed related to inventory and incidents.
+
 2013-05-06  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_incidents.php,

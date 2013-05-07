@@ -116,7 +116,7 @@ echo __('Search text');
 echo "<td>";
 print_input_text ("search_text", $search_text, '', 15, 0, false);
 echo "<td>";
-print_submit_button ('Search', '', false, '', false, false);
+print_submit_button (__('Search'), '', false, 'class="sub next"', false, false);
 echo "</table></form>";
 
 $table->width = '90%';

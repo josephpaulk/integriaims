@@ -61,9 +61,6 @@ INSERT INTO `tincident_track` VALUES (1,1,10,'2012-01-17 18:07:17','javi',1,'Unk
 INSERT INTO `tinventory` VALUES (1,0,'javi','Servidor&#x20;NEC&#x20;2300',1,'Servidor&#x20;de&#x20;desarrollo.',2,1,0),(2,0,'javi','Samsung&#x20;XJ34&#x20;-&#x20;Pruebas',1,'Servidor&#x20;de&#x20;pruebas.',2,1,0);
 
 
-INSERT INTO `tinventory_contact` VALUES (2,1);
-
-
 INSERT INTO `tkb_category` VALUES (1,'Articles','','dialog-information.png',0);
 
 

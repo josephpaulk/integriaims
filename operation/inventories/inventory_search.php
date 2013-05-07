@@ -170,10 +170,10 @@ echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=
 	$table_search->data[0][0] = print_input_text ('search_free', $search_free, '', 60, 128, true, __('Search'));
 	
 	$objects_type = get_object_types ();
-	$table_search->data[0][1] = print_label (__('Incident type'), '','',true);
+	$table_search->data[0][1] = print_label (__('Object type'), '','',true);
 	$table_search->data[0][1] .= print_select($objects_type, 'id_object_type', $id_object_type, 'show_fields();', 'Select', '', true, 0, true, false, false, 'width: 200px;');
 	
-	$table_search->data[0][2] = print_label (__('Incident fields'), '','',true);
+	$table_search->data[0][2] = print_label (__('Object fields'), '','',true);
 	
 	$object_fields = array();
 	
@@ -246,8 +246,11 @@ if ($search) {
 			$params .= "&object_fields=$object_fields";
 						
 			if ($search_free != '') {
+				/*
 				$sql_search .= "AND (tobject_field_data.`data`LIKE '%$search_free%' OR tinventory.name LIKE '%$search_free%'
-						OR tinventory.description LIKE '%$search_free%')";
+					OR tinventory.description LIKE '%$search_free%')";
+				 */
+				$sql_search .= "AND tobject_field_data.`data` LIKE '%$search_free%'";
 			}			
 		}
 	} else { //búsqueda solo en nombre y descripción de inventario

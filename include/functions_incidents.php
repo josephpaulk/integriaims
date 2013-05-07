@@ -288,11 +288,26 @@ function get_incidents ($filter = array(), $only_names = false) {
 	
 	// Manage external users
 	$return = enterprise_hook ('manage_external');
-	if ($return !== ENTERPRISE_NOT_HOOK)
+	if ($return !== ENTERPRISE_NOT_HOOK) {
 		//Its required to use 1 = 1 because return variable starts with
 		//an AND in the firts place.
-		$filter = "1 = 1 ".$return." AND ".$filter;
-	
+		$filter_aux = "1 = 1 ".$return;
+
+		//filter is an array so we need to iterate and create the real
+		//SQL clause
+		if (is_array($filter)) {
+
+			foreach ($filter as $key => $value) {
+				$filter_aux .= " AND $key = $value";
+			}
+		} else {
+			$filter_aux .= " AND ".$filter;
+		}
+
+		//Restore filter to clause
+		$filter = $filter_aux;
+	}
+
 	$all_incidents = get_db_all_rows_filter('tincidencia',$filter,'*');
 
 	if ($all_incidents == false)
@@ -1556,19 +1571,34 @@ function incidents_get_incident_stats ($id) {
 	//Fix last time track per metric	
 	$sql = sprintf("SELECT id_aditional FROM tincident_track WHERE state = %d AND id_incident = %d ORDER BY timestamp DESC LIMIT 1", INCIDENT_USER_CHANGED,$id);
 	$last_track_user_id = get_db_sql($sql, "id_aditional");
-	
-	
-	$stats[INCIDENT_METRIC_USER][$last_track_user_id] = $stats[INCIDENT_METRIC_USER][$last_track_user_id] + $global_diff;
+
+	//If defined sum if not just assign the diff	
+	if (isset($stats[INCIDENT_METRIC_USER][$last_track_user_id])) {	
+		$stats[INCIDENT_METRIC_USER][$last_track_user_id] = $stats[INCIDENT_METRIC_USER][$last_track_user_id] + $global_diff;
+	} else {
+		$stats[INCIDENT_METRIC_USER][$last_track_user_id] = $global_diff;
+	}
 	
 	$sql = sprintf("SELECT id_aditional FROM tincident_track WHERE state = %d AND id_incident = %d ORDER BY timestamp DESC LIMIT 1", INCIDENT_GROUP_CHANGED,$id);
 	$last_track_group_id = get_db_sql($sql, "id_aditional");
-	
-	$stats[INCIDENT_METRIC_GROUP][$last_track_group_id] = $stats[INCIDENT_METRIC_GROUP][$last_track_group_id] + $global_diff;
+
+	//If defined sum if not just assign the diff
+	if (isset($stats[INCIDENT_METRIC_GROUP][$last_track_group_id])) {	
+		$stats[INCIDENT_METRIC_GROUP][$last_track_group_id] = $stats[INCIDENT_METRIC_GROUP][$last_track_group_id] + $global_diff;
+
+	} else {
+		$stats[INCIDENT_METRIC_GROUP][$last_track_group_id] = $global_diff;
+	}
 	
 	$sql = sprintf("SELECT id_aditional FROM tincident_track WHERE state = %d AND id_incident = %d ORDER BY timestamp DESC LIMIT 1", INCIDENT_STATUS_CHANGED,$id);
 	$last_track_status_id = get_db_sql($sql, "id_aditional");
 
-	$stats[INCIDENT_METRIC_STATUS][$last_track_status_id] = $stats[INCIDENT_METRIC_STATUS][$last_track_status_id] + $global_diff;
+	//If defined sum if not just assign the diff
+	if (isset($stats[INCIDENT_METRIC_STATUS][$last_track_status_id])) {
+		$stats[INCIDENT_METRIC_STATUS][$last_track_status_id] = $stats[INCIDENT_METRIC_STATUS][$last_track_status_id] + $global_diff;
+	} else {
+		$stats[INCIDENT_METRIC_STATUS][$last_track_status_id] = $global_diff;
+	}
 	
 	//If status not equal to pending on third person add this time to metric
 	if ($last_track_status_id != STATUS_PENDING_THIRD_PERSON) {

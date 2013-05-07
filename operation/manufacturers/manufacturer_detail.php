@@ -108,22 +108,22 @@ if ($id || $new_manufacturer) {
 		$id_company_role = $manufacturer["id_company_role"];
 	}
 	
-	$table->width = "90%";
+	$table->width = "70%";
 	$table->class = "databox";
 	$table->data = array ();
 	$table->colspan = array ();
-	$table->colspan[0][0] = 2;
+	$table->colspan[1][0] = 2;
 	$table->colspan[2][0] = 2;
-	$table->colspan[3][0] = 2;
 	
 	$table->data[0][0] = print_input_text ("name", $name, "", 60, 100, true, __('Name'));
-	$table->data[1][0] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
+	$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
 		'id_company_role', $id_company_role, '', __('Select'), '0', true, false, false, __('Company role'));
 	
-	$table->data[1][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
-		'id_sla', $id_sla, '', __('Select'), '0', true, false, false, __('Base SLA'));
-	$table->data[2][0] = print_textarea ("address", 4, 1, $address, '', true, __('Address'));
-	$table->data[3][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
+	/*$table->data[1][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
+		'id_sla', $id_sla, '', __('Select'), '0', true, false, false, __('Base SLA'));*/
+	
+	$table->data[1][0] = print_textarea ("address", 4, 1, $address, '', true, __('Address'));
+	$table->data[2][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
 	
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
 	print_table ($table);
@@ -168,7 +168,7 @@ if ($id || $new_manufacturer) {
 
 	if ($manufacturers !== false) {
 		unset ($table);
-		$table->width = "90%";
+		$table->width = "70%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();
@@ -177,8 +177,7 @@ if ($id || $new_manufacturer) {
 		$table->head[0] = __('Name');
 		$table->head[1] = __('Address');
 		$table->head[2] = __('Company role');
-		$table->head[3] = __('SLA');
-		$table->head[4] = __('Delete');
+		$table->head[3] = __('Delete');
 		
 		foreach ($manufacturers as $manufacturer) {
 			$data = array ();
@@ -187,8 +186,7 @@ if ($id || $new_manufacturer) {
 				$manufacturer['id'].'">'.$manufacturer['name'].'</a>';
 			$data[1] = substr ($manufacturer['address'], 0, 50). "...";
 			$data[2] = get_db_value ('name', 'tcompany_role', 'id', $manufacturer['id_company_role']);
-			$data[3] = get_db_value ('name', 'tsla', 'id', $manufacturer['id_sla']);
-			$data[4] = '<a href="index.php?sec=inventory&
+			$data[3] = '<a href="index.php?sec=inventory&
 						sec2=operation/manufacturers/manufacturer_detail&
 						delete_manufacturer=1&id='.$manufacturer['id'].'"
 						onClick="if (!confirm(\''.__('Are you sure?').'\'))

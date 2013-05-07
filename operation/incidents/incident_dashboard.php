@@ -45,24 +45,30 @@ $counter = 0;
 $max_per_file = 5;
 
 if ($custom_searches === false) {
-	$custom_searches = array();
-}
 
-foreach ($custom_searches as $cs) {
+        $custom .="<tr>";
+        $custom .="<td>";
+        $custom .="<em>".__("There aren't custom search defined")."</em>";
+        $custom .="</td>";
+        $custom .="</tr>";
+
+} else {
+	foreach ($custom_searches as $cs) {
 	
-	if ($counter == 0) {
-		$custom .="<tr>";
-	}
+		if ($counter == 0) {
+			$custom .="<tr>";
+		}
 	
-	$custom .="<td>";
-	$custom .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&saved_searches=".$cs["id"]."'>".$cs["name"]."</a><br>";
-	$custom .="</td>";
+		$custom .="<td>";
+		$custom .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&saved_searches=".$cs["id"]."'>".$cs["name"]."</a><br>";
+		$custom .="</td>";
 	
-	if ($counter == $max_per_file) {
-		$custom .= "</tr>";
-		$counter = 0;
-	} else {
-		$counter++;
+		if ($counter == $max_per_file) {
+			$custom .= "</tr>";
+			$counter = 0;
+		} else {
+			$counter++;
+		}
 	}
 }
 
@@ -111,22 +117,33 @@ $rows = get_db_all_rows_sql ("SELECT DISTINCT(id_usuario) FROM tincidencia");
 
 $aux_table = "<table>";
 
-foreach ($rows as $owners) {
+if (!$rows) {
+
+	$aux_table .="<tr>";
+	$aux_table .="<td>";
+	$aux_table .="<em>".__("There aren't owners defined");
+	$aux_table .="</td>";
+	$aux_table .="</tr>";
+
+} else {
+
+	foreach ($rows as $owners) {
 	
-	if ($key != 1) {
-		$aux_table .="<tr>";
+		if ($key != 1) {
+			$aux_table .="<tr>";
 		
-		$incidents = get_incidents(array("id_usuario" => $owners["id_usuario"]));
+			$incidents = get_incidents(array("id_usuario" => $owners["id_usuario"]));
 		
-		$aux_table .= "<td>";
-		$aux_table .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_id_user=".$owners["id_usuario"]."'>";
+			$aux_table .= "<td>";
+			$aux_table .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_id_user=".$owners["id_usuario"]."'>";
 		
-		$long_name = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $owners["id_usuario"]));
+			$long_name = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $owners["id_usuario"]));
 		
-		$aux_table .= $long_name." (".count($incidents).")";
-		$aux_table .= "</a>";
-		$aux_table .= "</td>";
-		$aux_table .="</tr>";
+			$aux_table .= $long_name." (".count($incidents).")";
+			$aux_table .= "</a>";
+			$aux_table .= "</td>";
+			$aux_table .="</tr>";
+		}
 	}
 }
 
@@ -172,22 +189,31 @@ $rows = get_db_all_rows_sql ("SELECT id, name FROM tincident_type");
 
 $aux_table = "<table>";
 
-foreach ($rows as $type) {
+if (!$rows) {
+	$aux_table .="<tr>";
+	$aux_table .="<td>";
+	$aux_table .="<em>".__("There aren't incident types defined")."</em>";
+	$aux_table .="</td>";
+	$aux_table .="</tr>";
+
+} else {
+
+	foreach ($rows as $type) {
 	
-	if ($key != 1) {
-		$aux_table .="<tr>";
+		if ($key != 1) {
+			$aux_table .="<tr>";
 		
-		$incidents = get_incidents(array("id_incident_type" => $type["id"]));
+			$incidents = get_incidents(array("id_incident_type" => $type["id"]));
 		
-		$aux_table .= "<td>";
-		$aux_table .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_status=0&search_id_incident_type=".$type["id"]."'>";
-		$aux_table .= $type["name"]." (".count($incidents).")";
-		$aux_table .= "</a>";
-		$aux_table .= "</td>";
-		$aux_table .="</tr>";
+			$aux_table .= "<td>";
+			$aux_table .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_status=0&search_id_incident_type=".$type["id"]."'>";
+			$aux_table .= $type["name"]." (".count($incidents).")";
+			$aux_table .= "</a>";
+			$aux_table .= "</td>";
+			$aux_table .="</tr>";
+		}
 	}
 }
-
 $aux_table .= "</table>";
 
 $right_side .= $aux_table;

@@ -25,10 +25,19 @@ if ($get_external_data) {
 	$id_table = (string) get_parameter('id_table');
 	$element_name = get_parameter('element_name');
 	$id_object_type_field = get_parameter('id_object_type_field');
+
+	//We use MYSQL_QUERY becase we need this to fail silently to not show
+	//SQL errors on screen
+	$exists = mysql_query("SELECT * FROM ".$table_name." LIMIT 1");
+
+	if (!$exists) {
+		echo "<h3 class='error'>".__("External table is not present")."</h3>";
+		return;
+	}
 	
 	$sql_ext = "SHOW COLUMNS FROM ".$table_name;
 	$desc_ext = get_db_all_rows_sql($sql_ext);
-	
+
 	$fields = array();
 	foreach ($desc_ext as $key=>$ext) {
 		$fields[$ext['Field']] = $ext['Field'];
@@ -142,14 +151,17 @@ if ($get_inventory_search) {
 		if ($id_object_type_search != 0) { //búsqueda de texto libre en nombre, descripción de inventario y en contenido de campo personalizado
 			$sql_search .= " AND tinventory.id_object_type = $id_object_type_search";
 	
-			if ($fields_selected != '') {
+			if (($fields_selected != null) && ($fields_selected != '') && (!isset($fields_selected))) {
 
 				$sql_search .= " AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`
 								AND `tobject_field_data`.`id_object_type_field` IN ($fields_selected) ";
 							
 				if ($search_free != '') {
+					/*
 					$sql_search .= "AND (tobject_field_data.`data`LIKE '%$search_free%' OR tinventory.name LIKE '%$search_free%'
-							OR tinventory.description LIKE '%$search_free%')";
+					OR tinventory.description LIKE '%$search_free%')";
+					 */
+					$sql_search .= "AND tobject_field_data.`data` LIKE '%$search_free%'";
 				}			
 			}
 		} else { //búsqueda solo en nombre y descripción de inventario

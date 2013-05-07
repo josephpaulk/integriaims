@@ -666,7 +666,7 @@ function fill_inventories_table($inventories, &$table) {
 		
 		if (give_acl ($config['id_user'], $id_group, "VW")) {
 			$table->head[4] = __('Edit');
-			$data[4] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$inventory['id'].'">'.
+			$data[4] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&check_inventory=1&id='.$inventory['id'].'">'.
 					'<img src="images/setup.gif" /></a>';
 		}
 		array_push ($table->data, $data);
@@ -706,7 +706,7 @@ function inventories_get_all_type_field ($id_object_type, $id_inventory) {
 		if ($data === false) {
 			$all_fields[$key]['data'] = '';
 		} else {
-			$all_fields[$key]['data'] = $data;
+			$all_fields[$key]['data'] = safe_output($data);
 		}
 	}
 	
@@ -769,13 +769,18 @@ function inventories_print_tree ($sql_search = '') {
 	}
 
 	$sql_search = base64_encode($sql_search);
-	
+
+	if (empty($object_types)) {
+		$object_types = array();
+	}	
+	/*
 	if (empty($object_types)) {
 		echo __("No object types");
 		
 		echo '</td></tr>';
 		echo '</table>';
 	} else {
+	*/
 
 		$elements_type = array();
 		foreach ($object_types as $key=>$type) {
@@ -824,7 +829,7 @@ function inventories_print_tree ($sql_search = '') {
 				echo "</li>\n";
 			}
 		}
-	}
+	//}
 	
 	echo "</ul>\n";
 	echo '</td>';
@@ -848,6 +853,10 @@ function inventories_printTable($id_item, $type, $id_father) {
 			if ($info_inventory !== false) {
 				echo '<table cellspacing="2" cellpadding="2" border="0" class="databox" style="width:50%; align:center;">';
 				
+				echo '<tr><td class="datos"><b>'.__('Name').'</b></td>';
+				echo '<td class="datos"><b>'.$info_inventory['name'].'<b></td>';
+				echo '</tr>';
+
 				if ($info_inventory['owner'] != '') {
 					$owner = $info_inventory['owner'];
 					$name_owner = get_db_value('nombre_real', 'tusuario', 'id_usuario', $owner);
@@ -857,7 +866,18 @@ function inventories_printTable($id_item, $type, $id_father) {
 				echo '<tr><td class="datos"><b>'.__('Owner: ').'</b></td>';
 				echo '<td class="datos"><b>'.$name_owner.'</b></td>';
 				echo '</tr>';
-				
+
+					
+				if ($info_inventory['id_parent'] != 0) {
+					$parent = $info_inventory['id_parent'];
+					$name_parent = get_db_value('name', 'tinventory', 'id', $parent);
+				} else {
+					$name_parent = '--';
+				}
+				echo '<tr><td class="datos"><b>'.__('Parent: ').'</b></td>';
+				echo '<td class="datos"><b>'.$name_parent.'</b></td>';
+				echo '</tr>';
+
 				if ($info_inventory['id_manufacturer'] != 0) {
 					$manufacturer = $info_inventory['id_manufacturer'];
 					$name_manufacturer = get_db_value('name', 'tmanufacturer', 'id', $info_inventory['id_manufacturer']);
@@ -884,7 +904,7 @@ function inventories_printTable($id_item, $type, $id_father) {
 
 						echo '<tr><td class="datos"><b>'.$info['label'].': </b></td>';
 						
-						$sql = "SELECT `data` FROM tobject_field_data WHERE id_inventory=$id_item AND id=".$info['id'];
+						$sql = "SELECT `data` FROM tobject_field_data WHERE id_inventory=$id_item AND id_object_type_field=".$info['id'];
 				
 						$value = process_sql($sql);
 
@@ -974,7 +994,7 @@ function inventories_show_list($sql_search, $params='') {
 	$table->head[0] = __('Id');
 	$table->head[1] = __('Name');
 	$table->head[2] = __('Owner');
-	$table->head[3] = __('Incident type');
+	$table->head[3] = __('Object type');
 	$table->head[4] = __('Manufacturer');
 	$table->head[5] = __('Contract');
 	

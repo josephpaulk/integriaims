@@ -26,6 +26,15 @@ if (defined ('AJAX')) {
 	global $config;
 	
 	$show_type_fields = (bool) get_parameter('show_type_fields', 0);
+	$get_inventory_name = (bool) get_parameter('get_inventory_name', 0);
+
+	if ($get_inventory_name) {
+		$id_inventory = get_parameter('id_inventory');
+		$name = get_db_value('name', 'tinventory', 'id', $id_inventory);
+
+		echo json_encode($name);
+		return;
+	}
  	
  	if ($show_type_fields) {
 		$id_incident_type = get_parameter('id_incident_type');
@@ -169,7 +178,7 @@ if ($action == 'update') {
 		}
 	
 		foreach ($labels as $label) {
-			$values['data'] = get_parameter (base64_encode($label['label']));
+			$values['data'] = safe_output(get_parameter (base64_encode($label['label'])));
 			$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
 			$values['id_incident_field'] = $id_incident_field;
 			$values['id_incident'] = $id;
@@ -1155,6 +1164,16 @@ function loadInventory(id_inventory) {
 	$('#incident_status_form').append ($('<input type="hidden" value="'+id_inventory+'" class="selected-inventories" name="inventories[]" />'));
 
 	$("#inventory_search_modal").dialog('close');
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/incidents/incident_detail&get_inventory_name=1&id_inventory="+ id_inventory,
+		dataType: "json",
+		success: function (name) {
+			$('#incident_inventories').append($('<option></option>').html(name).attr("value", id_inventory));
+		}
+	});
 }
 
 function removeInventory() {
