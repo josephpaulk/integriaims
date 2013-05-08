@@ -37,7 +37,7 @@ $table->style [1] = "vertical-align: top";
 $custom = '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-custom\')">'.__('Custom search').'</h2>';
 $custom .= '<div id="incident-custom">';
 
-$custom_searches = get_db_all_rows_in_table ("tcustom_search");
+$custom_searches = get_db_all_rows_filter ("tcustom_search", array("id_user" => $config["id_user"]));
 
 $custom .= "<table style='margin: 10px auto;'>";
 
@@ -48,7 +48,7 @@ if ($custom_searches === false) {
 
         $custom .="<tr>";
         $custom .="<td>";
-        $custom .="<em>".__("There aren't custom search defined")."</em>";
+        $custom .="<em>".__("There aren't custom search defined for this user")."</em>";
         $custom .="</td>";
         $custom .="</tr>";
 
