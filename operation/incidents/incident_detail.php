@@ -164,7 +164,7 @@ if ($action == 'update') {
 	$resolution = get_parameter ('incident_resolution', $old_incident['resolution']);
 	$id_task = (int) get_parameter ('id_task', $old_incident['id_task']);
 	$id_incident_type = get_parameter ('id_incident_type', $old_incident['id_incident_type']);
-	$id_parent = (int) get_parameter ('id_parent', $old_incident['id_parent']);
+	$id_parent = (int) get_parameter ('id_parent');
 	$id_creator = get_parameter ('id_creator', $old_incident['id_creator']);
 	$email_copy = get_parameter ('email_copy', '');
 	$closed_by = get_parameter ('closed_by', $old_incident['closed_by']);
@@ -804,6 +804,7 @@ $parent_name = $id_parent ? (__('Incident').' #'.$id_parent) : __('None');
 if ($has_im) {
 	$table_advanced->data[2][0] = print_input_text ('search_parent', $parent_name, '', 10, 10, true, __('Parent incident'));
 	$table_advanced->data[2][0] .= print_input_hidden ('id_parent', $id_parent, true);
+	$table_advanced->data[2][0] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
 }
 
 // Show link to go parent incident
@@ -866,6 +867,7 @@ foreach ($inventories as $inventory_id => $inventory_name) {
 if (($has_im) && ($create_incident)){
     $table_advanced->data[3][2] =  print_label (__('Creator group'), '', '', true, ""); 
 	$table_advanced->data[3][2] .= combo_groups_visible_for_me ($config['id_user'], "id_group_creator", false, "IW", true, __("Creator group"), false, false);
+	$table->colspan[1][0] = 2;
 } else {
 	//Only show if there is information to show ;)
 	if ($id_group_creator) {
