@@ -241,3 +241,17 @@ ALTER TABLE tdownload ADD `id_user` varchar(60) NOT NULL;
  
 ALTER TABLE tinvoice ADD status enum ('pending', 'paid', 'canceled') default 'pending';
 ALTER TABLE tinvoice ADD `tax` float(11,2) NOT NULL DEFAULT '0.0';
+
+CREATE TABLE `tinventory_track` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `id_inventory` bigint(20) unsigned NOT NULL default '0',
+  `id_aditional` varchar(60) NOT NULL DEFAULT '0',
+  `state` int(10) unsigned NOT NULL default '0',
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  `id_user` varchar(60) NOT NULL default '',
+  `description` text NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `tinventorytask_idx_1` (`id_inventory`),
+  FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
+      ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -2126,4 +2126,41 @@ function get_object_types ($only_names = true) {
 	return $types;
 }
 
+function inventory_tracking ($id_inventory, $state, $aditional_data = 0) {
+	global $config;
+	
+    if ($id_inventory == 0)
+        return;
+
+	switch ($state) {
+		case INVENTORY_CREATED:
+			$description = __('Created');
+			break;
+			
+		case INVENTORY_UPDATED:
+			$description = __('Updated');
+			break;
+			
+		case INVENTORY_INCIDENT_ADDED:
+			$description = __('Incident added: ');
+			$description .= " -> ".get_db_value ("titulo", "tincidecia", "id_incidencia", $aditional_data);
+			break;
+		
+		case INVENTORY_OWNER_CHANGED:
+			$description = __('Owner changed: ');
+			$description .= " -> ".get_db_value ("nombre_real", "tusuario", "id_usuario", $aditional_data);
+			break;
+			
+		default:
+			$description = __('Unknown update');
+			break;
+	}
+	$fecha = print_mysql_timestamp();	
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "Inventory updated", $description);
+	$sql = sprintf ('INSERT INTO tinventory_track (id_user, id_inventory,
+		timestamp, state, id_aditional, description)
+		VALUES ("%s", %d, "%s", %d, "%s", "%s")',
+		$config['id_user'], $id_inventory, $fecha, $state, $aditional_data, $description);
+	return process_sql ($sql, 'insert_id');
+}
 ?>

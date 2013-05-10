@@ -81,4 +81,10 @@ define ('RES_EXPIRED', 7);
 define ('RES_MOVED', 8);
 define ('RES_INPROCESS', 9);
 
+/*Inventory tracking constants*/
+define ('INVENTORY_CREATED', 0);
+define ('INVENTORY_UPDATED', 1);
+define ('INVENTORY_INCIDENT_ADDED', 2);
+define ('INVENTORY_OWNER_CHANGED', 3);
+
 ?>

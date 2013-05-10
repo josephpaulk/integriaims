@@ -108,6 +108,7 @@ if (!defined ('AJAX')) {
 			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
 			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Incidents').'</span></a></li>';
 		//	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '"><span>'.__('Contacts').'</span></a></li>';
+			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_tracking&id=' . $id . '"><span>'.__('Tracking').'</span></a></li>';
 		}
 		echo '</ul>';
 		echo '</div>';
@@ -142,6 +143,7 @@ if ($update) {
 	}
 	
 	$old_parent = get_db_value('id_parent', 'tinventory', 'id', $id);
+	$old_owner = get_db_value('owner', 'tinventory', 'id', $id);
 	
 	$sql = sprintf ('UPDATE tinventory SET name = "%s", description = "%s",
 			id_contract = %d,
@@ -151,6 +153,15 @@ if ($update) {
 			$id_parent,
 			$id_manufacturer, $owner, $public, $id_object_type, $id);
 	$result = process_sql ($sql);
+	
+	
+	if ($result !== false) {
+		inventory_tracking($id,INVENTORY_UPDATED);
+		
+		if ($owner != $old_owner) {
+			inventory_tracking($id,INVENTORY_OWNER_CHANGED, $owner);
+		}
+	}
 	
 	//update object type fields
 	if ($id_object_type != 0) {
@@ -270,6 +281,8 @@ if ($create) {
 		$id = process_sql ($sql, 'insert_id');
 	}
 	if ($id !== false) {
+		
+		inventory_tracking($id,INVENTORY_CREATED);
 		
 		//insert data to incident type fields
 		if ($id_object_type != 0) {

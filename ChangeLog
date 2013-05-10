@@ -1,3 +1,15 @@
+2013-05-10  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  extras/migrate.ql
+	  include/constants.php
+	  operation/inventories/inventory_detail.php
+	  operation/inventories/inventory_incidents.php
+	  operation/inventories/inventory_relationship.php: Added
+	inventory tracking.
+
+	* operation/inventories/inventory_tracking.php: Added file.
+
 2013-05-08  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_dashboard.php: Fixed error
