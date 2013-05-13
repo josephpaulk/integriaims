@@ -1,5 +1,10 @@
 2013-05-13  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_incidents.php: Fixed several bugs with visual styles of PDF
+	and HTML view.
+
+2013-05-13  Dario Rodriguez <dario@artica.es>
+
 	* include/functions.php: Added maintenance to priority render.
 	* include/functions_graph.php: Create new function graph_incident_priority.
 	* include/constants.php: Created constants for priority levels and colors.

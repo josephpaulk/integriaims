@@ -741,7 +741,7 @@ function print_incidents_stats ($incidents, $return = false) {
 	//Print first table
     $output = "<table class=blank width=80% cellspacing=4 cellpadding=0 border=0 >";
     $output .= "<tr>";
-    $output .= "<td valign=top align=left width=33%>";
+    $output .= "<td valign=top align=left  colspan=2>";
 		$output .= "<table width=190px border=1 cellspacing=4 cellpadding=0 border=0 >";
 		$output .= "<tr>";
 		$output .= "<th align=center>".__('Total incidents')."</th>";
@@ -779,7 +779,7 @@ function print_incidents_stats ($incidents, $return = false) {
 		
 		
 	$output .= "</td>";
-    $output .= "<td valign=top width=33%>";
+    $output .= "<td valign=top  colspan=2>";
     $output .= print_label (__('Top 5 active incidents'), '', '', true, $incidents_label);
     $output .= "</td>";
 	$output .= "<td valign=top>";
@@ -788,11 +788,11 @@ function print_incidents_stats ($incidents, $return = false) {
     $output .= "</td>";
     $output .= "</tr>";
     $output .= "<tr>";
-    $output .= "<td colspan=3>";
     
+        
     $status_aux = print_label (__('Incident by status'), '', '', true);    
     
-    $status_aux .= "<table width=90%>";
+    $status_aux .= "<table style='width: 420px; margin: 10px auto;'>";
 	$status_aux .= "<tr>";
 	$status_aux .= "<th style='text-align:center;'><strong>".__("Status")."</strong></th>";
 	$status_aux .= "<th style='text-align:center;'><strong>".__("Number")."</strong></th>";
@@ -812,8 +812,8 @@ function print_incidents_stats ($incidents, $return = false) {
     $status_aux .= "</table>";
     
 	$priority_aux = print_label (__('Incidents by priority'), '', '', true);
-	
-	$priority_aux .= "<table width=90%>";
+		
+	$priority_aux .= "<table style='width: 420px; margin: 10px auto;'>";
 	
 	$priority_aux .= "<tr>";
 	$priority_aux .= "<th style='text-align:center;'><strong>".__("Priority")."</strong></th>";
@@ -829,16 +829,11 @@ function print_incidents_stats ($incidents, $return = false) {
 
 	$priority_aux .= "</table>";
     
-    $output .= "<table width=100%>";
-    $output .= "<tr>";
-    $output .= "<td width=50% valign=top>".$status_aux."</td>";
-    $output .= "<td width=50% valign=top>".$priority_aux."</td>";
-    $output .= "</tr>";
-    $output .= "</table>";
-    $output .= "</td>";
-	
+    $output .= "<td colspan=3 valign=top>".$status_aux."</td>";
+    $output .= "<td colspan=3 valign=top>".$priority_aux."</td>";
+   
 	$output .= "<tr>";
-	$output .= "<td valign=top>";
+	$output .= "<td valign=top colspan=2>";
 	$output .= print_label (__('Longest closed incident'), '', '', true);
 	if ($oldest_incident) {
 		
@@ -853,14 +848,14 @@ function print_incidents_stats ($incidents, $return = false) {
 	}
 	$output .= "</td>"; 
 	
-	$output .= "<td valign=top width=33%>";
+	$output .= "<td valign=top colspan=2>";
 	$data = array (__('Open') => $opened, __('Closed') => $total - $opened);
 	$data = array (__('Close') => $total-$opened, __('Open') => $opened);
     $output .= print_label (__('Open'), '', '', true, $opened.' ('.$opened_pct.'%)');
     $output .= pie3d_graph ($config['flash_charts'], $data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 	$output .= "</td>";
 	
-	$output .= "<td></td>";
+	$output .= "<td colspan=2></td>";
     $output .= "</tr></table>";
  
 	$clean_output = get_parameter("clean_output");
@@ -877,85 +872,91 @@ function print_incidents_stats ($incidents, $return = false) {
 	//Print second table
     $output = "<table class=blank width=80% cellspacing=4 cellpadding=0 border=0>";
     $output .= "<tr>";	
-	$output .= "<td width=33% valign=top>";
+	$output .= "<td width=33% valign=top colspan=2>";
 	$output .= print_label (__('Top active users'), '', '', true, $users_label);
 	$output .= "</td>";
-	$output .= "<td width=33%  valign=top>";
-	
-	$output .= print_label (__('Top 5 times by user'), '', '', true);
-	$output .="<table>";
-
-	$count = 1;
-
-	arsort($users_time);
-	
-	foreach ($users_time as $key => $value) {
-		
-		//Only show first five
-		if ($count == 5) {
-			break;
-		}
-		
-		$output .= "<tr>";
-		$real_name = get_db_value ('nombre_real', 'tusuario', 'id_usuario', $key);
-		$output .= "<td>".$real_name."</td>";
-		$output .= "<td>".give_human_time($value,true,true,true)."</td>";
-		$output .= "</tr>";
-	}	
-	
-	$output .= "</table>";	
+	$output .= "<td width=33%  valign=top colspan=2>";
+	$output .= print_label (__('Top incident submitters'), '', '', true, $submitter_label );
 	
 	$output .= "</td>";
-	$output .= "<td width=33%  valign=top>";
+	$output .= "<td width=33%  valign=top colspan=2>";
 	$output .= print_label (__('Top assigned users'), '', '', true, $user_assigned_label);	
 	$output .= "</td></tr>";
-	$output .= "<tr><td valign=top>";
+	$output .= "<tr><td valign=top colspan=2>";
 	$output .= print_label (__('Incidents by group'), '', '', true);
 	$output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
-	$output .= "</td><td valign=top>";
-
-	$output .= print_label (__('Top 5 groups by user'), '', '', true);
-	$output .="<table>";
+	$output .= "</td>";
 	
-	$count = 1;
-	arsort($groups_time);
-	foreach ($groups_time as $key => $value) {
-		
-		//Only show first 5
-		if ($count == 5) {
-			break;
-		}
-		
-		$output .= "<tr>";
-		$group_name = get_db_value ('nombre', 'tgrupo', 'id_grupo', $key);
-		$output .= "<td>".$group_name."</td>";
-		$output .= "<td>".give_human_time($value,true,true,true)."</td>";
-		$output .= "</tr>";
-		$count++;
-	}	
-	
-	$output .= "</table>";
-
-	$output .= "</td><td valign=top>";
+	$output .= "<td valign=top colspan=2>";
 	$output .= print_label (__('Incidents by creator group'), '', '', true);
 	$output .= "<br/>".pie3d_graph ($config['flash_charts'], $incident_group_data2, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
-
-	$output .= "</td>";
-	
-	$output .="</tr>";
-	
-	$output .="<tr>";
-
-	$output .="<td valign=top>";
-	$output .= print_label (__('Top incident submitters'), '', '', true, $submitter_label );
 	$output .= "</td>";
 
-	$output .= "<td valign=top>";
+	$output .= "<td valign=top colspan=2>";
 	$output .= print_label (__('Top 5 average scoring by user'), '', '', true, $scoring_label);
 	$output .= "</td>";
 	
-	$output .= "<td valign=top></td>";
+	$output .= "<tr>";
+	$output .= "<td style='width: 50%' colspan=3>";
+		$output .= print_label (__('Top 5 group by time'), '', '', true);
+		$output .="<table style='width: 420px; margin: 10 auto'>";
 		
+		$output .= "<tr>";
+		$output .= "<th style='text-align:center;'><strong>".__("Group")."</strong></th>";
+		$output .= "<th style='text-align:center;'><strong>".__("Time")."</strong></th>";
+		$output .= "</tr>";
+		
+		$count = 1;
+		arsort($groups_time);
+		foreach ($groups_time as $key => $value) {
+			
+			//Only show first 5
+			if ($count == 5) {
+				break;
+			}
+			
+			$output .= "<tr>";
+			$group_name = get_db_value ('nombre', 'tgrupo', 'id_grupo', $key);
+			$output .= "<td>".$group_name."</td>";
+			$output .= "<td style='text-align: center'>".give_human_time($value,true,true,true)."</td>";
+			$output .= "</tr>";
+			$count++;
+		}	
+		
+		$output .= "</table>";
+		
+	$output .="</td>";
+
+	$output .= "<td valign=top style='width: 50%' colspan=3>";
+		$output .= print_label (__('Top 5 users by time'), '', '', true);
+		$output .="<table style='width: 420px; margin: 10px auto;'>";
+		
+		$output .= "<tr>";
+		$output .= "<th style='text-align:center;'><strong>".__("User")."</strong></th>";
+		$output .= "<th style='text-align:center;'><strong>".__("Time")."</strong></th>";
+		$output .= "</tr>";
+		
+		$count = 1;
+		arsort($groups_time);
+		foreach ($users_time as $key => $value) {
+			
+			//Only show first 5
+			if ($count == 5) {
+				break;
+			}
+			
+			$output .= "<tr>";
+			$user_real = get_db_value ('nombre_real', 'tusuario', 'id_usuario', $key);
+			$output .= "<td>".$user_real."</td>";
+			$output .= "<td style='text-align: center'>".give_human_time($value,true,true,true)."</td>";
+			$output .= "</tr>";
+			$count++;
+		}	
+		
+		$output .= "</table>";
+
+	$output .= "</td>";
+	
 	$output .= "</tr></table>";
 	
 	if ($clean_output) {
