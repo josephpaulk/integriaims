@@ -1,3 +1,11 @@
+2013-05-13  Dario Rodriguez <dario@artica.es>
+
+	* include/functions.php: Added maintenance to priority render.
+	* include/functions_graph.php: Create new function graph_incident_priority.
+	* include/constants.php: Created constants for priority levels and colors.
+	* include/functions_incidents.php: Updated incident statistic view and
+	created several new functions for this view.
+
 2013-05-13  Vanessa Gil <vanessa.gil@artica.es>
 
 	* index.php: develop_bypass=0

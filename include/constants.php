@@ -81,6 +81,22 @@ define ('RES_EXPIRED', 7);
 define ('RES_MOVED', 8);
 define ('RES_INPROCESS', 9);
 
+//Incident priority values
+define ('PRIORITY_INFORMATIVE', 0);
+define ('PRIORITY_LOW', 1);
+define ('PRIORITY_MEDIUM', 2);
+define ('PRIORITY_SERIOUS', 3);
+define ('PRIORITY_VERY_SERIOUS', 4);
+define ('PRIORITY_MAINTENANCE', 10);
+
+//Incident priority colors
+define ('PRIORITY_COLOR_INFORMATIVE', '#CBCBCB');
+define ('PRIORITY_COLOR_LOW', '#8DFF1D');
+define ('PRIORITY_COLOR_MEDIUM', '#FFE823');
+define ('PRIORITY_COLOR_SERIOUS', '#FF9523');
+define ('PRIORITY_COLOR_VERY_SERIOUS', '#FF1D1D');
+define ('PRIORITY_COLOR_MAINTENANCE', '#1D92FF');
+
 /*Inventory tracking constants*/
 define ('INVENTORY_CREATED', 0);
 define ('INVENTORY_UPDATED', 1);

@@ -294,6 +294,7 @@ function graph_incident_statistics_sla_compliance($incidents, $width=200, $heigh
 	$data = array();
 	
 	if ($total == 0) {
+		$data["FAIL"] = 0;
 		$data["OK"] = 100;
 	} else {
 		$percent_ok = ($num_ok/$total)*100;
@@ -307,6 +308,33 @@ function graph_incident_statistics_sla_compliance($incidents, $width=200, $heigh
 		return pie3d_graph ($config['flash_charts'], $data, $width, $height, "", "", "", $config['font'], $config['fontsize'], $ttl);
 	else 
 		graphic_error();
+}
+
+// ===============================================================================
+// Draw a simple pie graph with incident ditribution by priority
+// ===============================================================================
+
+function graph_incident_priority($incidents, $width=300, $height=150, $ttl=1) {
+	global $config;
+	
+	$incident_data = array();
+	$colors = array();
+	foreach ($incidents as $incident) {
+		if (!isset( $incident_data[render_priority($incident["prioridad"])]))
+			 $incident_data[render_priority($incident["prioridad"])] = 0;
+			 
+			 
+		$colors[render_priority($incident["prioridad"])] = incidents_get_priority_color($incident);
+
+		$incident_data[render_priority($incident["prioridad"])] = $incident_data[render_priority($incident["prioridad"])] + 1; 
+	}
+	
+	if (isset($incident_data))
+		return pie3d_graph ($config['flash_charts'], $incident_data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+	else 
+		graphic_error();
+	
+	
 }
 
 // ===============================================================================

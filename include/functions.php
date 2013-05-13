@@ -610,6 +610,8 @@ function render_priority ($pri) {
 		return __('High');
 	case 4:
 		return __('Very high');
+	case 10:
+		return __('Maintenance');
 	default:
 		return __('Other');
 	}
