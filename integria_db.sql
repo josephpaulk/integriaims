@@ -56,6 +56,7 @@ CREATE TABLE `tgrupo` (
   `forced_email` tinyint(1) unsigned NOT NULL DEFAULT 1,
   `email` varchar(128) default '',
   `enforce_soft_limit` int(2) unsigned NOT NULL default 0,
+  `id_inventory_default` mediumint(8) unsigned default NULL ,
   PRIMARY KEY  (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

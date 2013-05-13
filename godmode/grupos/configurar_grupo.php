@@ -82,6 +82,12 @@ if ($id) {
 		$forced_email = (bool) $group['forced_email'];
 		$id_sla = $group["id_sla"];
 		$id_user = get_db_value ('id_user_default', 'tgrupo', 'id_grupo', $id);
+		$id_inventory = $group["id_inventory_default"];
+		
+		//Inventory == zero is an empty string
+		if ($id_inventory == 0) {
+			$id_inventory = "";
+		}
 
 
 	} else {
@@ -150,6 +156,9 @@ $table->data[5][0] = print_input_text ('hard_limit', $hard_limit, '', 10, 0, tru
 
 $table->data[5][1] = print_select_from_sql ("SELECT id, name FROM tsla ORDER BY name",
 	'id_sla', $id_sla, '', '', 0, true, false, false, __('Incident SLA'));
+	
+$table->data[6][0] = print_input_text ('id_inventory', $id_inventory,'', 7, 0, true, __('Default Inventory object'), false);	
+$table->data[6][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".'&nbsp;&nbsp;'.__('Search parent')."</a>";
 
 echo '<form method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);
@@ -164,6 +173,8 @@ if ($id) {
 	print_input_hidden ('create_group', 1);
 } 
 echo '</div></form>';
+
+echo "<div class= 'dialog ui-dialog-content' id='inventory_search_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
@@ -208,4 +219,52 @@ $(document).ready (function () {
 		});
 
 });
+
+// Show the modal window of inventory search
+function show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search) {
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
+		dataType: "html",
+		success: function(data){	
+			$("#inventory_search_window").html (data);
+			$("#inventory_search_window").show ();
+
+			$("#inventory_search_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 920,
+					height: 850
+				});
+			$("#inventory_search_window").dialog('open');
+		}
+	});
+}
+
+function loadParams() {
+
+	search_free = $('#text-search_free').val();
+	id_object_type_search = $('#id_object_type_search').val();
+	owner_search = $('#text-owner_search').val();
+	id_manufacturer_search = $('#id_manufacturer_search').val();
+	id_contract_search = $('#id_contract_search').val();
+	search = 1;
+	
+	object_fields_search = $("select[name='object_fields_search[]']").val();
+		
+	show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search);
+}
+
+function loadInventory(id_inventory) {
+	
+	$('#text-id_inventory').val(id_inventory);
+	$("#inventory_search_window").dialog('close');
+}
 </script>

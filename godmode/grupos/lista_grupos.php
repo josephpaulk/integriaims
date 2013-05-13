@@ -53,13 +53,15 @@ if ($create_group) {
 	$soft_limit = (int) get_parameter ('soft_limit');
 	$hard_limit = (int) get_parameter ('hard_limit');
 	$enforce_soft_limit = (bool) get_parameter ('enforce_soft_limit');
+	$id_inventory = (int) get_parameter("id_inventory", 0);
 
 	$banner = (string) get_parameter ('banner');
 	$forced_email = (bool) get_parameter ('forced_email');
 	$id_user_default = (string) get_parameter ('id_user');
 	$id_sla = (int) get_parameter ("id_sla");
 
-	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, banner, id_user_default, soft_limit, hard_limit, enforce_soft_limit, id_sla, parent) VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s", %d, %d, "%s")', $name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, $enforce_soft_limit, $id_sla, $parent);
+	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, banner, id_user_default, soft_limit, hard_limit, enforce_soft_limit, id_sla, parent, id_inventory_default) VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s", %d, %d, "%s", %d)', 
+						$name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, $enforce_soft_limit, $id_sla, $parent, $id_inventory);
 	$id = process_sql ($sql, 'insert-id');	
 	if ($id === false)
 		echo '<h3 class="error">'.__('There was a problem creating group').'</h3>';
@@ -81,10 +83,12 @@ if ($update_group) {
 	$hard_limit = (int) get_parameter ('hard_limit');
 	$enforce_soft_limit = (bool) get_parameter ('enforce_soft_limit');
 	$id_sla = get_parameter ("id_sla");
-
+	$id_inventory = (int) get_parameter("id_inventory", 0);
+	
 	$sql = sprintf ('UPDATE tgrupo
 		SET parent = %d, nombre = "%s", icon = "%s", forced_email = %d, 
-		banner = "%s", id_user_default = "%s", soft_limit = %d, hard_limit = %d, enforce_soft_limit = %d, id_sla = %d WHERE id_grupo = %d', $parent, $name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, $enforce_soft_limit, $id_sla, $id);
+		banner = "%s", id_user_default = "%s", soft_limit = %d, hard_limit = %d, enforce_soft_limit = %d, id_sla = %d, id_inventory_default = %d WHERE id_grupo = %d',
+		 $parent, $name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, $enforce_soft_limit, $id_sla, $id_inventory, $id);
 
 	$result = process_sql ($sql);
 
