@@ -829,6 +829,7 @@ if ($id_task > 0){
 if ($create_incident) {
 
 		$id_inventory = (int) get_parameter ('id_inventory');
+		
 		$inventories = array ();
 		
 		if ($id_inventory) {
@@ -849,6 +850,7 @@ if ($create_incident) {
 		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>".__('Remove')."</a>";
 } else {
 	$inventories = get_inventories_in_incident ($id);
+	
 	$table_advanced->data[3][1] = print_select ($inventories, 'incident_inventories',
 						NULL, '', '', '',
 						true, false, false, __('Objects affected'));

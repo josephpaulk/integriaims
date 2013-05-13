@@ -21,10 +21,10 @@ if (defined ('AJAX')) {
 
 	if (($group['hard_limit'] == 0) && ($group['soft_limit'] == 0)) {
 		echo "correct"; //type
-		
+				
 		$inventoryObject = get_db_row_sql('SELECT * FROM tinventory
 			WHERE id IN (
-			SELECT id_sla
+			SELECT id_default_inventory
 			FROM tgrupo
 			WHERE id_grupo = ' . $id_group . ')');
 		
@@ -74,10 +74,10 @@ if (defined ('AJAX')) {
 		} 
 		else {
 			echo "correct";
-			
+
 			$inventoryObject = get_db_row_sql('SELECT * FROM tinventory
 				WHERE id IN (
-				SELECT id_sla
+				SELECT id_inventory_default
 				FROM tgrupo
 				WHERE id_grupo = ' . $id_group . ')');
 			
