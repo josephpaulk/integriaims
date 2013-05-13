@@ -1,5 +1,9 @@
 2013-05-13  Vanessa Gil <vanessa.gil@artica.es>
 
+	* index.php: develop_bypass=0
+
+2013-05-13  Vanessa Gil <vanessa.gil@artica.es>
+
 	* include/constants.php
 	  include/functions_db.php
 	  include/functions_incidents.php
