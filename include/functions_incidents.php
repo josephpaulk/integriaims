@@ -816,6 +816,8 @@ function update_incident_inventories ($id_incident, $inventories) {
 		if ($tmp !== false)
 			incident_tracking ($id_incident, INCIDENT_INVENTORY_ADDED,
 				$id_inventory);
+				
+			inventory_tracking ($id_inventory, INVENTORY_INCIDENT_ADDED, $id_incident);
 	}
 }
 

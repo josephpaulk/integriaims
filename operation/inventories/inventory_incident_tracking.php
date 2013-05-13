@@ -53,29 +53,19 @@ echo '</ul>';
 echo '</div>';
 
 $incidents = get_incidents_on_inventory ($id, false);
-//debugPrint($incidents);
+
 if ($incidents === false) {
 	$incidents = array();
 	echo __('No data available');
 
-} //else {
-/*
-	$table->width = "98%";
-	$table->class = 'listing';
-	$table->data = array ();
-	$table->head = array ();
-	$table->head[1] = __('Description');
-	$table->head[2] = __('User');
-	$table->head[3] = __('Date');
-*/
-//}
+} 
 
 foreach ($incidents as $key=>$incident) {
 	$trackings = get_db_all_rows_field_filter ('tincident_track', 'id_incident', $incident['id_incidencia'], 'timestamp DESC');
 
 	if ($trackings !== false) {
 		
-		echo '<h3>'.__('Incident').' #'.$incident['id_incidencia'].'</h3>';
+		echo '<h4>'.__('Incident').' #'.$incident['id_incidencia'].'</h4>';
 		
 		$table->width = "98%";
 		$table->class = 'listing';
@@ -95,9 +85,8 @@ foreach ($incidents as $key=>$incident) {
 			array_push ($table->data, $data);
 		}
 		
-		echo "<center>";
 		print_table ($table);
-		echo "</center>";
+
 	} else {
 		echo __('No data available');
 	}

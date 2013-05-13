@@ -2142,13 +2142,36 @@ function inventory_tracking ($id_inventory, $state, $aditional_data = 0) {
 			break;
 			
 		case INVENTORY_INCIDENT_ADDED:
-			$description = __('Incident added: ');
-			$description .= " -> ".get_db_value ("titulo", "tincidecia", "id_incidencia", $aditional_data);
+			$description = __('inventory object in incident');
+			$description .= " -> ".get_db_value ("titulo", "tincidencia", "id_incidencia", $aditional_data);
 			break;
 		
 		case INVENTORY_OWNER_CHANGED:
-			$description = __('Owner changed: ');
+			$description = __('Owner changed');
 			$description .= " -> ".get_db_value ("nombre_real", "tusuario", "id_usuario", $aditional_data);
+			break;
+			
+		case INVENTORY_PARENT_UPDATED:
+			$description = __('Parent changed: ');
+			$description .= " -> ".get_db_value ("name", "tinventory", "id", $aditional_data);
+			break;
+		
+		case INVENTORY_PARENT_CREATED:
+			$description = __('Parent added');
+			$description .= " -> ".get_db_value ("name", "tinventory", "id", $aditional_data);
+			break;
+			
+		case INVENTORY_OBJECT_TYPE:
+			$description = __('Inventory object type added');
+			$description .= " -> ".get_db_value ("name", "tobject_type", "id", $aditional_data);
+			break;
+			
+		case INVENTORY_PUBLIC:
+			$description = __('Inventory public');
+			break;
+			
+		case INVENTORY_PRIVATE:
+			$description = __('Inventory private');
 			break;
 			
 		default:

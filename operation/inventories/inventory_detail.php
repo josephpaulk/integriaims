@@ -106,10 +106,10 @@ if (!defined ('AJAX')) {
 		echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail"><span>'.__('Details').'</span></a></li>';
 		if (!empty($id)) {
 			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
-			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_tracking&id=' . $id . '"><span>'.__('Tracking').'</span></a></li>';
 			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Incidents').'</span></a></li>';
 		//	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '"><span>'.__('Contacts').'</span></a></li>';
-			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incident_tracking&id=' . $id . '"><span>'.__('Incidents Tracking').'</span></a></li>';
+			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_tracking&id=' . $id . '"><span>'.__('Tracking').'</span></a></li>';
+
 		}
 		echo '</ul>';
 		echo '</div>';
@@ -145,6 +145,7 @@ if ($update) {
 	
 	$old_parent = get_db_value('id_parent', 'tinventory', 'id', $id);
 	$old_owner = get_db_value('owner', 'tinventory', 'id', $id);
+	$old_public = get_db_value('public', 'tinventory', 'id', $id);
 	
 	$sql = sprintf ('UPDATE tinventory SET name = "%s", description = "%s",
 			id_contract = %d,
@@ -161,6 +162,12 @@ if ($update) {
 		
 		if ($owner != $old_owner) {
 			inventory_tracking($id,INVENTORY_OWNER_CHANGED, $owner);
+		}
+		if ($public != $old_public) {
+			if ($public)
+				inventory_tracking($id,INVENTORY_PUBLIC);
+			else 
+				inventory_tracking($id,INVENTORY_PRIVATE);
 		}
 	}
 	
@@ -197,6 +204,8 @@ if ($update) {
 				else
 					process_sql_insert('tobject_field_data', $values);
 		}
+		
+		inventory_tracking($id,INVENTORY_OBJECT_TYPE, $id_object_type);
 	}
 
 	//parent
@@ -215,7 +224,10 @@ if ($update) {
 					process_sql_delete('tobject_field_data', array('id_object_type_field' => $old['id'], 'id_inventory' => $id));
 				}
 			}
+			inventory_tracking($id,INVENTORY_PARENT_UPDATED, $id_parent);
 		}
+		
+		inventory_tracking($id,INVENTORY_PARENT_CREATED, $id_parent);
 		
 		$id_object_type_inherit = get_db_value('id_object_type', 'tinventory', 'id', $id_parent);
 
@@ -285,6 +297,11 @@ if ($create) {
 		
 		inventory_tracking($id,INVENTORY_CREATED);
 		
+		if ($public)
+				inventory_tracking($id,INVENTORY_PUBLIC);
+			else 
+				inventory_tracking($id,INVENTORY_PRIVATE);
+		
 		//insert data to incident type fields
 		if ($id_object_type != 0) {
 			$sql_label = "SELECT `label`, `unique`, `type` FROM `tobject_type_field` WHERE id_object_type = $id_object_type";
@@ -315,6 +332,8 @@ if ($create) {
 					process_sql_insert('tobject_field_data', $values_insert);
 			
 			}
+			
+			inventory_tracking($id,INVENTORY_OBJECT_TYPE, $id_object_type);
 		}
 		
 		//parent
@@ -339,6 +358,8 @@ if ($create) {
 					process_sql_insert('tobject_field_data', $values);
 				}
 			}
+			
+			inventory_tracking($id,INVENTORY_PARENT_CREATED, $id_parent);
 		}
 			
 		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
