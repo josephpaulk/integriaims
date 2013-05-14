@@ -39,7 +39,7 @@
 
 error_reporting(0);
 
-$integria_version = "v3.1 Build 121212";
+$integria_version = "v4.0 Build 130514";
 
 $integria_footertext = "<div id='footer'  style='width: 642px;'>
 	<i>Integria $integria_version is an OpenSource Software project at 
@@ -284,7 +284,6 @@ function install_step2() {
 			$res += check_variable(phpversion(),"4.3","PHP version >= 4.3.x",1);
 			$res += check_extension("mysql","PHP MySQL extension");
 			$res += check_extension("gd","PHP gd extension");	
-			$res += check_extension("mcrypt","PHP mcrypt extension");
 			$res += check_extension("session","PHP session extension");
 			$res += check_extension("mbstring","PHP multibyte extension");
 			$res += check_extension("ldap","PHP ldap extension");

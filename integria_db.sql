@@ -594,7 +594,7 @@ CREATE TABLE `tmanufacturer` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tinventory` (
-  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `id` bigint(20) unsigned NOT NULL auto_increment,
   `id_object_type` mediumint(8) unsigned,
   `owner` varchar(60),
   `name` TEXT default '',

@@ -1,3 +1,13 @@
+2013-05-14  Sancho Lerena <slerena@artica.es>
+
+	* include/config_process.php,
+	integria.centos.spec: Version updates.
+
+	* install.php: removed unused dependency (mcrypt).
+
+	* integria_db.sql: Fixed a bad definition in tinventory_track table.
+
+
 2013-05-13  Dario Rodriguez <dario@artica.es>
 
 	* operation/group/group.php,

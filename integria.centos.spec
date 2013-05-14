@@ -2,7 +2,7 @@
 # Integria IMS	
 #
 %define name        IntegriaIMS
-%define version     3.1
+%define version     4.0dev
 %define httpd_name      httpd
 # User and Group under which Apache is running
 %define httpd_name  httpd2
@@ -12,7 +12,7 @@
 Summary:            Integria IMS	
 Name:               %{name}
 Version:            %{version}
-Release:            2
+Release:            1
 License:            GPL2
 Vendor:             Artica ST <info@artica.es>
 Source0:            %{name}-%{version}.tar.gz
@@ -36,7 +36,7 @@ Integria IMS is a enterprise software for project management, CRM, incident tick
 %prep
 rm -rf $RPM_BUILD_ROOT
 
-%setup -q -n 3.1
+%setup -q -n trunk
 
 %build
 
