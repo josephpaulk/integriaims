@@ -1,5 +1,11 @@
 2013-05-14  Vanessa Gil <vanessa.gil@artica.es>
 
+	* include/functions_inventories.php
+	  operation/inventories/inventory_search.php: Fixed tree view
+	and added a new level with parent.
+
+2013-05-14  Vanessa Gil <vanessa.gil@artica.es>
+
 	* operation/incidents/incident_detail.php: comment
 	'incident_limit()'.
 

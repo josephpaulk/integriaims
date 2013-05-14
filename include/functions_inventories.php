@@ -773,63 +773,58 @@ function inventories_print_tree ($sql_search = '') {
 	if (empty($object_types)) {
 		$object_types = array();
 	}	
-	/*
-	if (empty($object_types)) {
-		echo __("No object types");
-		
-		echo '</td></tr>';
-		echo '</table>';
-	} else {
-	*/
+	
 
-		$elements_type = array();
-		foreach ($object_types as $key=>$type) {
-		
-			$elements_type[$key]['name'] = $type['name'];
-			$elements_type[$key]['img'] = print_image ("images/objects/".$type['icon'], true, array ("style" => 'vertical-align: middle;'));
-			$elements_type[$key]['id'] = $type['id'];
+	$elements_type = array();
+	foreach ($object_types as $key=>$type) {
+	
+		$elements_type[$key]['name'] = $type['name'];
+		$elements_type[$key]['img'] = print_image ("images/objects/".$type['icon'], true, array ("style" => 'vertical-align: middle;'));
+		$elements_type[$key]['id'] = $type['id'];
 
-		}
+	}
 
-		echo "<ul style='margin: 0; margin-top: 20px; padding: 0;'>\n";
-		$first = true;
-		
-		foreach ($elements_type as $element) {
-			$lessBranchs = 0;
+	echo "<ul style='margin: 0; margin-top: 20px; padding: 0;'>\n";
+	$first = true;
+	
+	foreach ($elements_type as $element) {
+		$lessBranchs = 0;
 
-			if ($first) {
-				if ($element != end($elements_type)) {
+		if ($first) {
+			if ($element != end($elements_type)) {
 
-					$img = print_image ("images/tree/first_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_". $element['id'], "pos_tree" => "0"));
-					$first = false;
-				}
-				else {
-
-					$lessBranchs = 1;
-					$img = print_image ("images/tree/one_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_". $element['id'], "pos_tree" => "1"));
-				}
+				$img = print_image ("images/tree/first_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_object_types_". $element['id'], "pos_tree" => "0"));
+				$first = false;
 			}
 			else {
-				if ($element != end($elements_type))
-					$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_". $element['id'], "pos_tree" => "2"));
-				else
-				{
-					$lessBranchs = 1;
-					$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_". $element['id'], "pos_tree" => "3"));
-				}
-			}
 
-			$count_inventories = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search));
-			if ($count_inventories != 0) {
-				echo "<li style='margin: 0px 0px 0px 0px;'>
-					<a onfocus='JavaScript: this.blur()' href='javascript: loadTable(\"object_types\",\"" . $element['id'] . "\", " . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\")'>" .
-					$img . $element['img'] ."&nbsp;" . safe_output($element['name']) . "&nbsp;($count_inventories)"."</a>";
-				
-				echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view' id='tree_div_". $element['id'] . "'></div>";
-				echo "</li>\n";
+				$lessBranchs = 1;
+				$img = print_image ("images/tree/one_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_object_types_". $element['id'], "pos_tree" => "1"));
 			}
 		}
-	//}
+		else {
+			if ($element != end($elements_type))
+				$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_object_types_". $element['id'], "pos_tree" => "2"));
+			else
+			{
+				$lessBranchs = 1;
+				$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_object_types_". $element['id'], "pos_tree" => "3"));
+			}
+		}
+
+		$count_inventories = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search));
+		if ($count_inventories != 0) {
+			$id_div = "object_types_".$element['id'];
+
+			echo "<li style='margin: 0px 0px 0px 0px;'>
+
+				<a onfocus='JavaScript: this.blur()' href='javascript: loadTable(\"object_types\",\"" . $element['id'] . "\"," . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\")'>" .
+				$img . $element['img'] ."&nbsp;" . safe_output($element['name']) . "&nbsp;($count_inventories)"."</a>";
+			
+			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view tree_div_". $element['id'] . "' id='tree_div_object_types_". $element['id'] . "'></div>";
+			echo "</li>\n";
+		}
+	}
 	
 	echo "</ul>\n";
 	echo '</td>';
@@ -847,6 +842,7 @@ function inventories_printTable($id_item, $type, $id_father) {
 	switch ($type) {
 		
 		case 'inventory':
+		case 'child':
 			$info_inventory = get_db_row('tinventory', 'id', $id_item);
 			$info_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$id_father));
 			
@@ -1053,8 +1049,6 @@ function inventories_show_list($sql_search, $params='') {
 		//ui_pagination($count, false, $offset);
 		print_table($table);
 	}
-	
-	
 }
 
 ?>
