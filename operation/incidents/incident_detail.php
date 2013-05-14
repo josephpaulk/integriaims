@@ -955,11 +955,11 @@ $(document).ready (function () {
 
 	//Only check incident on creation (where there is no id)
 	if (!id_incident) {
-		incident_limit();
+		//incident_limit();
 	}
 	
 	$("#grupo_form").change (function () {
-		incident_limit();
+		//incident_limit();
 	});
 	
 	/*Open parent search popup*/

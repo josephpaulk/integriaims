@@ -1,3 +1,8 @@
+2013-05-14  Vanessa Gil <vanessa.gil@artica.es>
+
+	* operation/incidents/incident_detail.php: comment
+	'incident_limit()'.
+
 2013-05-14  Sancho Lerena <slerena@artica.es>
 
 	* include/config_process.php,
