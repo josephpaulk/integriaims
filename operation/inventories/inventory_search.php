@@ -65,175 +65,269 @@ if (defined ('AJAX')) {
 	$sql_search = base64_decode(get_parameter('sql_search', ''));
 
 	
-		if ($type == 'object_types') {
-	
-			$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory, tobject_type, tobject_field_data
-					WHERE `id_object_type`=$id_item
-					AND tinventory.id_object_type = tobject_type.id $sql_search
-					GROUP BY tinventory.`id`";
+	if ($type == 'object_types') {
+
+		$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory, tobject_type, tobject_field_data
+				WHERE `id_object_type`=$id_item
+				AND tinventory.id_object_type = tobject_type.id $sql_search
+				GROUP BY tinventory.`id`";
+		
+		$cont = get_db_all_rows_sql($sql);
+
+		$countRows = count($cont);
+
+		//Empty Branch
+		if ($countRows == 0) {
+
+			echo "<ul style='margin: 0; padding: 0;'>\n";
+			echo "<li style='margin: 0; padding: 0;'>";
+			if ($lessBranchs == 1)
+				echo print_image ("images/tree/no_branch.png", true, array ("style" => 'vertical-align: middle;'));
+			else
+				echo print_image ("images/tree/branch.png", true, array ("style" => 'vertical-align: middle;'));
 			
-			$cont = get_db_all_rows_sql($sql);
+			echo "<i>" . __("Vacío") . "</i>";
+			echo "</li>";
+			echo "</ul>";
+			
+			return;
+		}
+		
+		//Branch with items
+		$new = true;
+		$count = 0;
+		echo "<ul style='margin: 0; padding: 0;'>\n";
+		
+		$sql_search = base64_encode($sql_search);
+		
+		while($row = get_db_all_row_by_steps_sql($new, $result, $sql)) {
 
-			$countRows = count($cont);
+			$new = false;
+			$count++;
+		
+			$less = $lessBranchs;
+			if ($count != $countRows)
+				$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_inventory_" . $row["id"], "pos_tree" => "2"));
+			else {
+				$less = $less + 2; // $less = $less or 0b10
+				$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_inventory_" . $row["id"], "pos_tree" => "3"));
+			}
+			echo "<li style='margin: 0; padding: 0;'>";
+			
+			echo "<a onfocus='JavaScript: this.blur()'
+						href='javascript: loadTable(\"inventory\",\"" . $row["id"] . "\", " . $less . ", \"" . $id_item . "\", \"" . $id_father . "\",  \"" . $sql_search . "\")'>";
+			
+			if ($lessBranchs == 1) {
+				print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+			} else {
+				print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+			}
+			echo $img;
+			
+			echo $row["name"];
+			
+			echo "</a>";
+			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view' id='tree_div" . $id_item . "_inventory_" . $row["id"] . "'></div>";
+			echo "</li>";
+			
+		} 
+	}
+	echo "</ul>\n";
+			
+	//TERCER NIVEL DEL ARBOL.
+	if ($type == 'inventory') {
 
-			//Empty Branch
-			if ($countRows == 0) {
+		$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory, tobject_type, tobject_field_data
+				WHERE `id_parent`=$id_item
+				AND tinventory.id_object_type = tobject_type.id $sql_search
+				GROUP BY tinventory.`id`";
+		
+		$cont_invent = get_db_all_rows_sql($sql);
 
-				echo "<ul style='margin: 0; padding: 0;'>\n";
-				echo "<li style='margin: 0; padding: 0;'>";
-				if ($lessBranchs == 1)
-					echo print_image ("images/tree/no_branch.png", true, array ("style" => 'vertical-align: middle;'));
-				else
-					echo print_image ("images/tree/branch.png", true, array ("style" => 'vertical-align: middle;'));
-				
-				echo "<i>" . __("Vacío") . "</i>";
-				echo "</li>";
-				echo "</ul>";
-				
-				return;
+		$countRows = count($cont_invent);
+	
+		if ($countRows === false)
+			$countRows = 0;
+	
+		if ($countRows == 0) {
+			echo "<ul style='margin: 0; padding: 0;'>\n";
+			echo "<li style='margin: 0; padding: 0;'>";
+			
+			switch ($lessBranchs) {
+				case 0:
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+				case 1:
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+				case 2:
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+				case 3:
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
 			}
 			
-			//Branch with items
-			$new = true;
-			$count = 0;
-			echo "<ul style='margin: 0; padding: 0;'>\n";
-			
-			$sql_search = base64_encode($sql_search);
-			
-			while($row = get_db_all_row_by_steps_sql($new, $result, $sql)) {
+			echo "<i>" . __("Vacío") . "</i>";
+			echo "</li>";
+			echo "</ul>";
+			return;
+		}
+	
+		//Branch with items
+		$new = true;
+		$count = 0;
+		echo "<ul style='margin: 0; padding: 0;'>\n";
 
-				$new = false;
-				$count++;
-			
-				$less = $lessBranchs;
-				if ($count != $countRows)
-					$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_inventory_" . $row["id"], "pos_tree" => "2"));
-				else {
-					$less = $less + 2; // $less = $less or 0b10
-					$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_inventory_" . $row["id"], "pos_tree" => "3"));
-				}
-				echo "<li style='margin: 0; padding: 0;'>";
-				
-				echo "<a onfocus='JavaScript: this.blur()'
-							href='javascript: loadTable(\"inventory\",\"" . $row["id"] . "\", " . $less . ", \"" . $id_item . "\", \"" . $id_father . "\",  \"" . $sql_search . "\")'>";
-				
-				if ($lessBranchs == 1) {
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-				} else {
+		while($row = get_db_all_row_by_steps_sql($new, $result, $sql)) {
+
+			$new = false;
+			$count++;
+
+			$less = $lessBranchs;
+			if ($count != $countRows) {
+				$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_child_" . $row["id"], "pos_tree" => "2"));
+			} else {
+				$less = $less + 2; // $less = $less or 0b10
+				$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_child_" . $row["id"], "pos_tree" => "3"));
+			}
+
+
+			echo "<li style='margin: 0; padding: 0;'>";
+
+			echo "<a onfocus='JavaScript: this.blur()'
+						href='javascript: loadTable(\"child\",\"" . $row["id"] . "\", " . $less . ", \"" . $id_item . "\", \"" . $id_father . "\",  \"" . $sql_search . "\")'>";
+
+			switch ($lessBranchs) {
+				case 0:
+
 					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-				}
-				echo $img;
-				
-				echo $row["name"];
-				
-				echo "</a>";
-				echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view' id='tree_div" . $id_item . "_inventory_" . $row["id"] . "'></div>";
-				echo "</li>";
-				
-			} 
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+
+					break;
+				case 1:
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+				case 2:
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+				case 3:
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+			}
+			echo $img;
+
+			echo $row["name"];
+
+			echo "</a>";
+			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view tree_div_".$id_item."' id='tree_div" . $id_item . "_child_" . $row["id"] . "'></div>";
+			echo "</li>";
 		}
 		echo "</ul>\n";
-		
-		
-		//TERCER NIVEL DEL ARBOL.
-		if ($type == 'inventory') {
 
-			$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory, tobject_type, tobject_field_data
-					WHERE `id_parent`=$id_item
-					AND tinventory.id_object_type = tobject_type.id $sql_search
-					GROUP BY tinventory.`id`";
-			
-			$cont_invent = get_db_all_rows_sql($sql);
+	}
+	
+	//CUARTO NIVEL DEL ARBOL.
+	if ($type == 'child') {
 
-			$countRows = count($cont_invent);
+		$sql = "SELECT tinventory.`id`, tinventory.`name` FROM tinventory, tobject_type, tobject_field_data
+				WHERE `id_parent`=$id_item
+				$sql_search
+				GROUP BY tinventory.`id`";
 		
-			if ($countRows === false)
-				$countRows = 0;
-		
-				if ($countRows == 0) {
-					echo "<ul style='margin: 0; padding: 0;'>\n";
-					echo "<li style='margin: 0; padding: 0;'>";
-					
-					switch ($lessBranchs) {
-						case 0:
-							print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-							print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-							break;
-						case 1:
-							print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-							print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-							break;
-						case 2:
-							print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-							print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-							break;
-						case 3:
-							print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-							print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-							break;
-					}
-					
-					echo "<i>" . __("Vacío") . "</i>";
-					echo "</li>";
-					echo "</ul>";
-					return;
-				}
-		
-			//Branch with items
-			$new = true;
-			$count = 0;
+		$cont_invent = get_db_all_rows_sql($sql);
+
+		$countRows = count($cont_invent);
+	
+		if ($countRows === false)
+			$countRows = 0;
+	
+		if ($countRows == 0) {
 			echo "<ul style='margin: 0; padding: 0;'>\n";
-
-			while($row = get_db_all_row_by_steps_sql($new, $result, $sql)) {
-
-				$new = false;
-				$count++;
-
-				$less = $lessBranchs;
-				if ($count != $countRows) {
-					$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_child_" . $row["id"], "pos_tree" => "2"));
-				} else {
-					$less = $less + 2; // $less = $less or 0b10
-					$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_child_" . $row["id"], "pos_tree" => "3"));
-				}
-
-
-				echo "<li style='margin: 0; padding: 0;'>";
-
-				echo "<a onfocus='JavaScript: this.blur()'
-							href='javascript: loadTable(\"child\",\"" . $row["id"] . "\", " . $less . ", \"" . $id_item . "\", \"" . $id_father . "\",  \"" . $sql_search . "\")'>";
-
-				switch ($lessBranchs) {
-					case 0:
-
-						print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-						print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-
-						break;
-					case 1:
-						print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-						print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-						break;
-					case 2:
-						print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-						print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-						break;
-					case 3:
-						print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-						print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-						break;
-				}
-				echo $img;
-
-				echo $row["name"];
-
-				echo "</a>";
-				echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view tree_div_".$id_item."' id='tree_div" . $id_item . "_child_" . $row["id"] . "'></div>";
-				echo "</li>";
+			echo "<li style='margin: 0; padding: 0;'>";
+			
+			switch ($lessBranchs) {
+				case 0:
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+				case 1:
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+				case 2:
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+				case 3:
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
 			}
-			echo "</ul>\n";
-
+			
+			print_image ("images/tree/last_leaf.png", false, array ("style" => 'vertical-align: middle;'));
+			echo "<i>" . __("Vacío") . "</i>";
+			echo "</li>";
+			echo "</ul>";
+			return;
 		}
+		
+		$new = true;
+		$count = 0;
+		echo "<ul style='margin: 0; padding: 0;'>\n";
+		while ($row = get_db_all_row_by_steps_sql($new, $result, $sql)) {
+
+			$new = false;
+			$count++;
+			echo "<li style='margin: 0; padding: 0;'><span style='min-width: 300px; display: inline-block;'>";
+			
+			switch ($lessBranchs) {
+				case 0:
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+				case 1:
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+				case 2:
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+				case 3:
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+					break;
+			}
+			
+			if ($countRows != $count)
+				print_image ("images/tree/leaf.png", false, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_child2_" . $row["id"], "pos_tree" => "1"));
+			else
+				print_image ("images/tree/last_leaf.png", false, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_child2_" . $row["id"], "pos_tree" => "2"));
+			
+/*
+			echo "<a onfocus='JavaScript: this.blur()'
+						href='javascript: loadTable(\"child2\",\"" . $row["id"] . "\", " . $less . ", \"" . $id_item . "\", \"" . $id_father . "\",  \"" . $sql_search . "\")'>";
+*/
+						
+			echo $row["name"];
+			
+			echo "</li>";
+			
+			echo "</a>";
+		}
+
+		echo "</ul>";
+		
+	}
+	
 return;
 }
 

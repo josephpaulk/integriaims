@@ -843,6 +843,7 @@ function inventories_printTable($id_item, $type, $id_father) {
 		
 		case 'inventory':
 		case 'child':
+		case 'child2':
 			$info_inventory = get_db_row('tinventory', 'id', $id_item);
 			$info_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$id_father));
 			
