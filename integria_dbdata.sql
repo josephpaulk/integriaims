@@ -90,15 +90,6 @@ INSERT INTO tincident_status (id,name) VALUES
 (6,'Pending on a third person'), 
 (7,'Closed');
 
-
 INSERT INTO `trole` VALUES (1,'Project manager','',125),(2,'Systems engineer','',40),(3,'Junior consultant','',50),(4,'Junior programmer','',45),(5,'Senior programmer','',65),(6,'Analist','',75),(7,'Senior consultant','',75),(8,'Support engineer','',30);
 
-INSERT INTO `tprofile` VALUES (1,'Project Participant',1,1,0,0,0,0,1,1,0,1,0,0,0,0,1,0,0,1,0,0,1,1,0);
-INSERT INTO `tprofile` VALUES (2,'Project Manager',    1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1);
-INSERT INTO `tprofile` VALUES (3,'Incident Manager',   1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1,1,0,0);
-INSERT INTO `tprofile` VALUES (4,'Incident Operator',  1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0);
-INSERT INTO `tprofile` VALUES (5,'Global Manager',     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
-
-INSERT INTO `tusuario_perfil` VALUES (2,'admin',5,1,'admin');
-
-INSERT INTO `tinventory_reports` VALUES (1,'List&#x20;company&#x20;contacts','SELECT&#x20;C.name&#x20;AS&#x20;Name,&#x20;C.address&#x20;AS&#x20;Address,&#x20;CC.fullname&#x20;AS&#x20;Contact,&#x20;CC.position&#x20;Position,&#x20;CC.email&#x20;AS&#x20;Email,&#x20;CC.mobile&#x20;AS&#x20;Mobile&#x20;FROM&#x20;tcompany&#x20;C,&#x20;tcompany_contact&#x20;CC&#x20;WHERE&#x20;CC.id_company&#x20;=&#x20;C.id;'),(2,'Days&#x20;left&#x20;of&#x20;contracts','SELECT&#x20;C.name&#x20;AS&#x20;Name,&#x20;C.contract_number&#x20;AS&#x20;&quot;Contract&#x20;Number&quot;,&#x20;DATEDIFF&#40;C.date_end,&#x20;C.date_begin&#41;&#x20;as&#x20;&quot;Days&#x20;left&quot;,&#x20;CO.name&#x20;AS&#x20;Company&#x20;from&#x20;tcontract&#x20;C,&#x20;tcompany&#x20;CO&#x20;WHERE&#x20;C.id_company&#x20;=&#x20;CO.id;');
+INSERT INTO `tprofile` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0),(2,'Regular&#x20;User',1,1,0,0,0,0,1,1,0,1,1,0,1,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0),(3,'Manager',1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0);

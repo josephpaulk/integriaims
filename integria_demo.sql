@@ -1,144 +1,782 @@
-INSERT INTO `tusuario` (`id_usuario`, `nombre_real`, `password`, `comentarios`, `fecha_registro`, `direccion`, `telefono`, `nivel`, `avatar`, `lang`, `pwdhash`, `disabled`, `id_company`, `simple_mode`, `force_change_pass`, `last_pass_change`, `last_failed_login`, `failed_attempt`, `login_blocked`, `num_employee`, `enable_login`) VALUES ('admin','Default Admin','2f62afb6e17e46f0717225bcca6225b7','Default Integria Admin superuser. Please change password ASAP','2012-10-16 17:22:45','admin@integria.sf.net','555-555-555',1,'people_1','','',0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0,'',1);
+-- MySQL dump 10.13  Distrib 5.1.66, for redhat-linux-gnu (i386)
+--
+-- Host: localhost    Database: integria
+-- ------------------------------------------------------
+-- Server version	5.1.66
 
-INSERT INTO `tusuario` (`id_usuario`, `nombre_real`, `password`, `comentarios`, `fecha_registro`, `direccion`, `telefono`, `nivel`, `avatar`, `lang`, `pwdhash`, `disabled`, `id_company`, `simple_mode`, `force_change_pass`, `last_pass_change`, `last_failed_login`, `failed_attempt`, `login_blocked`, `num_employee`, `enable_login`) VALUES ('javi','Javier Nadie','334c4a4c42fdb79d7ebc3e73b517e6f8','Default Integria standard user. Please change password ASAP','2012-10-16 17:22:45','javi@integria.sf.net','555-555-555',1,'people_2','','',0,0,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0,'',1);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-INSERT INTO `tagenda` VALUES (1,'2012-03-15 18:31:00','admin',0,120,1,3,'Dentist!'),(2,'2012-05-01 18:31:00','admin',0,240,2,4,'Take&#x20;my&#x20;wife&#x20;and&#x20;go&#x20;to&#x20;a&#x20;expensive&#x20;restaurant...'),(3,'2012-09-01 18:32:00','admin',0,0,0,4,'Have&#x20;a&#x20;live...&#x20;Holidays&#x20;!'),(4,'2012-10-01 18:32:00','admin',0,0,0,4,'Back&#x20;to&#x20;hell...&#x20;welcome&#x20;to&#x20;the&#x20;office&#x20;!&#x20;:&#40;');
+--
+-- Dumping data for table `tagenda`
+--
 
-INSERT INTO `tattachment` (`id_attachment`, `id_incidencia`, `id_usuario`, `filename`, `description`, `size`) VALUES (1,1,'javi','shot0000.jpg','See&#x20;how&#x20;it&#x20;works&#x20;for&#x20;me...&#x20;fast&#x20;!&#x0a;',131537);
+LOCK TABLES `tagenda` WRITE;
+/*!40000 ALTER TABLE `tagenda` DISABLE KEYS */;
+INSERT INTO `tagenda` VALUES (1,'2013-05-29 10:02:00','admin',0,0,0,2,'Elena&#039;s&#x20;Aniversary');
+/*!40000 ALTER TABLE `tagenda` ENABLE KEYS */;
+UNLOCK TABLES;
 
-INSERT INTO `tbuilding` VALUES (1,'Main&#x20;Office',''),(2,'Barcelona&#x20;office','');
+--
+-- Dumping data for table `tattachment`
+--
 
+LOCK TABLES `tattachment` WRITE;
+/*!40000 ALTER TABLE `tattachment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tattachment` ENABLE KEYS */;
+UNLOCK TABLES;
 
-INSERT INTO `tcompany` (`id`, `name`, `address`, `fiscal_id`, `country`, `id_company_role`, `id_grupo`)VALUES (1,'Energy&#x20;Field&#x20;LTD','c/&#x20;Pito&#x20;sereno&#x20;23,&#x0d;&#x0a;23802&#x20;Madrid','3434','',3,4),(2,'Samsung&#x20;LTD','N/A','343434','',1,4);
+--
+-- Dumping data for table `tbuilding`
+--
 
-INSERT INTO `tcompany_contact` VALUES (1,2,'Federico&#x20;Piedra','fedepie@nowhere.com','234234324','34343434','Responsable&#x20;T&eacute;cnico','',0),(2,1,'Martin&#x20;Shu','shum@nothe.com','555347347','555834983','Man&#x20;for&#x20;everything','Warning:&#x20;Bad&#x20;mood&#x20;on&#x20;Tuesdays.',0);
+LOCK TABLES `tbuilding` WRITE;
+/*!40000 ALTER TABLE `tbuilding` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbuilding` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tcompany`
+--
 
-INSERT INTO `tcompany_role` VALUES (1,'Vendor',''),(2,'Partner',''),(3,'Customer',''),(4,'Prospect',''),(5,'Other','');
+LOCK TABLES `tcompany` WRITE;
+/*!40000 ALTER TABLE `tcompany` DISABLE KEYS */;
+INSERT INTO `tcompany` VALUES (1,'Your&#x20;big&#x20;company','calle&#x20;Alberto&#x20;Aguilera&#x20;7,&#x20;3&#x0d;&#x0a;28015&#x20;Madrid&#x0d;&#x0a;Espa&ntilde;a&#x0d;&#x0a;','324234324','Spain','http://www.artica.es','',3,0,0,'admin');
+/*!40000 ALTER TABLE `tcompany` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tcompany_activity`
+--
 
-INSERT INTO `tconfig` VALUES (1,'language_code','en'),(2,'block_size','25'),(3,'db_scheme_version','3.0-dev'),(4,'db_scheme_build','ID111231'),(5,'date_format','F j, Y, g:i a'),(6,'currency','eu'),(7,'sitename','Integria IMS - the ITIL Management System'),(8,'hours_perday','8'),(9,'FOOTER_EMAIL','Please do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n'),(10,'HEADER_EMAIL','Hello, \n\nThis is an automated message coming from Integria\n\n'),(11,'notification_period','24'),(12,'limit_size','250'),(13,'api_password',''),(14,'flash_charts','1'),(15,'fontsize','6'),(16,'auth_methods','mysql'),(17,'wiki_plugin_dir','include/wiki/plugins/'),(18,'conf_var_dir','wiki_data/'),(19,'enable_pass_policy','0'),(20,'pass_size','4'),(21,'pass_needs_numbers','0'),(22,'pass_needs_symbols','0'),(23,'pass_expire','0'),(24,'first_login','0'),(25,'mins_fail_pass','5'),(26,'number_attempts','5'),(27,'enable_pass_policy','0');
+LOCK TABLES `tcompany_activity` WRITE;
+/*!40000 ALTER TABLE `tcompany_activity` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tcompany_activity` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tcompany_contact`
+--
 
+LOCK TABLES `tcompany_contact` WRITE;
+/*!40000 ALTER TABLE `tcompany_contact` DISABLE KEYS */;
+INSERT INTO `tcompany_contact` VALUES (1,1,'Sancho&#x20;Lerena','slerena@artica.es','324324343','32423434','CTO','This&#x20;guy&#x20;knows&#x20;everything&#x20;about&#x20;Integria&#x20;IMS',0);
+/*!40000 ALTER TABLE `tcompany_contact` ENABLE KEYS */;
+UNLOCK TABLES;
 
-INSERT INTO `tcontract` VALUES (2,'Desarrollo&#x20;Movil','','','2012-01-17','2015-01-17',2,1,4,0);
+--
+-- Dumping data for table `tcompany_role`
+--
 
+LOCK TABLES `tcompany_role` WRITE;
+/*!40000 ALTER TABLE `tcompany_role` DISABLE KEYS */;
+INSERT INTO `tcompany_role` VALUES (1,'Customer',''),(2,'Ex-Customer',''),(3,'Partner',''),(4,'Provider',''),(5,'Other','');
+/*!40000 ALTER TABLE `tcompany_role` ENABLE KEYS */;
+UNLOCK TABLES;
 
-INSERT INTO `tdownload` (`id`, `name`, `location`, `date`, `description`, `tag`, `id_category`, `id_user`) VALUES (1,'Corporate&#x20;Antivirus','attachment/downloads/shot0000.jpg','2012-01-17 18:30:52','','',1,'admin');
+--
+-- Dumping data for table `tconfig`
+--
 
-INSERT INTO `tdownload_category` VALUES (1,'Tools','babel.png');
+LOCK TABLES `tconfig` WRITE;
+/*!40000 ALTER TABLE `tconfig` DISABLE KEYS */;
+INSERT INTO `tconfig` VALUES (1,'language_code','en_GB'),(2,'block_size','25'),(3,'db_scheme_version','4.0'),(4,'db_scheme_build','130330'),(5,'date_format','F j, Y, g:i a'),(6,'currency','eu'),(8,'hours_perday','8'),(9,'FOOTER_EMAIL','Please do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n'),(10,'HEADER_EMAIL','Hello, \n\nThis is an automated message coming from Integria\n\n'),(11,'notification_period','24'),(14,'flash_charts','1'),(15,'fontsize','6'),(16,'auth_methods','mysql'),(17,'wiki_plugin_dir','include/wiki/plugins/'),(18,'conf_var_dir','wiki_data/'),(27,'enterprise_installed','1'),(28,'timezone','Europe/Madrid'),(29,'want_chat','0'),(30,'incident_creation_wu','0'),(31,'lead_company_filter',''),(32,'lead_warning_time','7'),(33,'months_to_delete_incidents','12'),(34,'sitename','Integria&#x20;IMS&#x20;-&#x20;the&#x20;ITIL&#x20;Management&#x20;System'),(35,'limit_size','250'),(36,'max_file_size','50M'),(37,'autowu_completion','0'),(38,'no_wu_completion',''),(39,'incident_reporter','0'),(40,'show_creator_incident','1'),(41,'show_owner_incident','1'),(42,'pwu_defaultime','4'),(43,'iwu_defaultime','0.25'),(44,'api_acl','127.0.0.1'),(45,'api_password',''),(46,'auto_incident_close','72'),(47,'email_on_incident_update','0'),(48,'error_log','1'),(49,'iw_creator_enabled','0'),(50,'enable_newsletter','0'),(51,'batch_newsletter','15'),(52,'enable_pass_policy','0'),(53,'pass_size','4'),(54,'pass_needs_numbers','0'),(55,'pass_needs_symbols','0'),(56,'pass_expire','0'),(57,'first_login','1'),(58,'mins_fail_pass','5'),(59,'number_attempts','5');
+/*!40000 ALTER TABLE `tconfig` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tcontract`
+--
 
-INSERT INTO `tdownload_category_group` VALUES (1,4);
+LOCK TABLES `tcontract` WRITE;
+/*!40000 ALTER TABLE `tcontract` DISABLE KEYS */;
+INSERT INTO `tcontract` VALUES (1,'Sample&#x20;contract','453457/12','','2013-02-12','2014-02-12',1,NULL,NULL,0);
+/*!40000 ALTER TABLE `tcontract` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tcrm_template`
+--
 
-INSERT INTO `tevent` VALUES (1,'MANUFACTURER CREATED','2012-01-17 18:01:16','admin',1,0,'Samsung'),(2,'COMPANY ROLE CREATED','2012-01-17 18:01:27','admin',1,0,'Vendor'),(3,'COMPANY ROLE CREATED','2012-01-17 18:01:32','admin',2,0,'Partner');
-INSERT INTO `tevent` VALUES (4,'COMPANY ROLE CREATED','2012-01-17 18:01:37','admin',3,0,'Customer'),(5,'COMPANY ROLE CREATED','2012-01-17 18:01:45','admin',4,0,'Prospect'),(6,'COMPANY ROLE CREATED','2012-01-17 18:01:53','admin',5,0,'Other'),(7,'COMPANY CREATED','2012-01-17 18:02:49','admin',1,0,'Energy&#x20;Field&#x20;LTD'),(8,'COMPANY CREATED','2012-01-17 18:03:01','admin',2,0,'Samsung&#x20;LTD'),(9,'CONTRACT CREATED','2012-01-17 18:03:17','admin',2,0,'Desarrollo&#x20;Movil'),(10,'CONTACT CREATED','2012-01-17 18:03:37','admin',1,0,'Federico&#x20;Piedra'),(11,'BUILDING CREATED','2012-01-17 18:04:08','admin',1,0,'Oficina&#x20;Principal'),(12,'BUILDING CREATED','2012-01-17 18:04:18','admin',1,0,'Barcelona&#x20;office'),(13,'BUILDING','2012-01-17 18:04:24','admin',1,0,'Main&#x20;Office'),(14,'PRODUCT CREATED','2012-01-17 18:04:30','admin',1,0,'Phones'),(15,'PRODUCT UPDATED','2012-01-17 18:04:54','admin',1,0,'Phones'),(16,'PRODUCT CREATED','2012-01-17 18:05:06','admin',2,0,'Computers'),(17,'PROJECT GROUP CREATED','2012-01-17 18:12:08','admin',1,0,'Development'),(18,'PROJECT GROUP CREATED','2012-01-17 18:12:21','admin',2,0,'Marketing'),(19,'KB ITEM CREATED','2012-01-17 18:28:03','admin',1,0,'General&#x20;problems&#x20;with&#x20;Samsung&#x20;LH3483'),(20,'CATEGORY CREATED','2012-01-17 18:28:15','admin',1,0,'Articles'),(21,'CONTACT CREATED','2012-01-17 18:29:15','admin',2,0,'Martin&#x20;Shu'),(22,'DOWNLOAD CATEGORY CREATED','2012-01-17 18:29:25','admin',1,0,'Tools'),(23,'DOWNLOAD ITEM CREATED','2012-01-17 18:30:52','admin',1,0,'Corporate&#x20;Antivirus'),(24,'INSERT CALENDAR EVENT','2012-01-17 18:31:28','admin',0,0,'Dentist!'),(25,'INSERT CALENDAR EVENT','2012-01-17 18:32:01','admin',0,0,'Take&#x20;my&#x20;wife&#x20;and&#x20;go&#x20;to&#x20;a&#x20;expensive&#x20;restaurant...'),(26,'INSERT CALENDAR EVENT','2012-01-17 18:32:27','admin',0,0,'Have&#x20;a&#x20;live...&#x20;Holidays&#x20;!'),(27,'INSERT CALENDAR EVENT','2012-01-17 18:32:49','admin',0,0,'Back&#x20;to&#x20;hell...&#x20;welcome&#x20;to&#x20;the&#x20;office&#x20;!&#x20;:&#40;'),(28,'PWU INSERT','2012-01-17 18:44:51','admin',5,0,'Preparing&#x20;the&#x20;development&#x20;servers.'),(29,'PWU INSERT','2012-01-17 18:49:10','javi',2,0,'Interview&#x20;with&#x20;the&#x20;customer&#x20;and&#x20;other&#x20;power-users'),(30,'PWU INSERT','2012-01-17 20:07:49','admin',1,0,'Testing');
+LOCK TABLES `tcrm_template` WRITE;
+/*!40000 ALTER TABLE `tcrm_template` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tcrm_template` ENABLE KEYS */;
+UNLOCK TABLES;
 
-INSERT INTO `tgrupo` VALUES (1,'All','world.png',NULL,NULL,NULL,0,'admin',1,0,0,1,'',0),(2,'Customer #A','eye.png',NULL,NULL,NULL,0,'admin',2,0,0,1,'',0),(3,'Customer #B','eye.png',NULL,NULL,NULL,0,'admin',1,0,0,1,'',0),(4,'Engineering','computer.png',NULL,NULL,NULL,0,'admin',2,0,0,1,'',0);
+--
+-- Dumping data for table `tcustom_search`
+--
 
+LOCK TABLES `tcustom_search` WRITE;
+/*!40000 ALTER TABLE `tcustom_search` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tcustom_search` ENABLE KEYS */;
+UNLOCK TABLES;
 
-  
+--
+-- Dumping data for table `tdownload`
+--
 
+LOCK TABLES `tdownload` WRITE;
+/*!40000 ALTER TABLE `tdownload` DISABLE KEYS */;
+INSERT INTO `tdownload` VALUES (1,'Sample&#x20;File','attachment/downloads/ejemplo.sh','2013-02-12 10:03:52','This&#x20;is&#x20;a&#x20;sample&#x20;file&#x20;for&#x20;public&#x20;file.&#x20;This&#x20;can&#x20;be&#x20;shared&#x20;by&#x20;external&#x20;HASH&#x20;URL','',1,'admin',1,'048030125bdfd9c63c4c7396b057ee118ec8c483');
+/*!40000 ALTER TABLE `tdownload` ENABLE KEYS */;
+UNLOCK TABLES;
 
-INSERT INTO `tincidencia` (`id_incidencia`,`inicio`,`cierre`,`titulo`,`descripcion`,`id_usuario`,`estado`,`prioridad`,`id_grupo`,`actualizacion`,`id_creator`,`notify_email`,`id_task`,`resolution`,`epilog`,`id_parent`,`sla_disabled`,`affected_sla_id`,`id_incident_type`,`score`,`email_copy`,`editor`,`id_group_creator`,`last_stat_check`,`closed_by`) VALUES (1,'2012-01-17 18:07:17','0000-00-00 00:00:00','Problems&#x20;in&#x20;the&#x20;server','Server&#x20;response&#x20;too&#x20;slow.&#x20;I&#x20;cannot&#x20;work&#x20;with&#x20;that!','javi',1,3,2,'2012-01-17 21:38:06','javi',1,0,0,'',NULL,0,0,0,0,'','',2,0,'');
-INSERT INTO `tincidencia` (`id_incidencia`,`inicio`,`cierre`,`titulo`,`descripcion`,`id_usuario`,`estado`,`prioridad`,`id_grupo`,`actualizacion`,`id_creator`,`notify_email`,`id_task`,`resolution`,`epilog`,`id_parent`,`sla_disabled`,`affected_sla_id`,`id_incident_type`,`score`,`email_copy`,`editor`,`id_group_creator`,`last_stat_check`,`closed_by`) VALUES (2,'2012-01-17 18:25:03','2012-01-17 18:26:28','Keyboard&#x20;broken','I&#x20;cannot&#x20;type&#x20;nothing&#x20;because&#x20;my&#x20;keyboard&#x20;is&#x20;broken.&#x0a;','support',1,6,2,'2012-01-17 18:26:28','javi',1,0,1,'Reconnect&#x20;again&#x20;the&#x20;device&#x20;make&#x20;it&#x20;work.&#x20;&#x0a;',NULL,0,0,0,10,'','',2, 0, '');
-INSERT INTO `tincidencia` (`id_incidencia`,`inicio`,`cierre`,`titulo`,`descripcion`,`id_usuario`,`estado`,`prioridad`,`id_grupo`,`actualizacion`,`id_creator`,`notify_email`,`id_task`,`resolution`,`epilog`,`id_parent`,`sla_disabled`,`affected_sla_id`,`id_incident_type`,`score`,`email_copy`,`editor`,`id_group_creator`,`last_stat_check`,`closed_by`) VALUES (3,'2012-01-17 18:27:01','2012-01-17 22:11:36','My&#x20;mouse&#x20;doesnt&#x20;work','I&#x20;cannot&#x20;click&#x20;with&#x20;right&#x20;button.&#x20;HELP&#x20;!','javi',1,6,2,'2012-01-10  22:11:36','javi',1,0,0,'Lo&#x20;pudimos&#x20;arreglar&#x20;haciendo&#x20;XXX.',NULL,0,0,0,0,'','',2, 0, '');
+--
+-- Dumping data for table `tdownload_category`
+--
 
+LOCK TABLES `tdownload_category` WRITE;
+/*!40000 ALTER TABLE `tdownload_category` DISABLE KEYS */;
+INSERT INTO `tdownload_category` VALUES (1,'Software','pandora.png');
+/*!40000 ALTER TABLE `tdownload_category` ENABLE KEYS */;
+UNLOCK TABLES;
 
-INSERT INTO `tincident_inventory` VALUES (1,1),(2,1),(3,1);
+--
+-- Dumping data for table `tdownload_category_group`
+--
 
+LOCK TABLES `tdownload_category_group` WRITE;
+/*!40000 ALTER TABLE `tdownload_category_group` DISABLE KEYS */;
+INSERT INTO `tdownload_category_group` VALUES (1,1);
+/*!40000 ALTER TABLE `tdownload_category_group` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tdownload_tracking`
+--
+
+LOCK TABLES `tdownload_tracking` WRITE;
+/*!40000 ALTER TABLE `tdownload_tracking` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tdownload_tracking` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tevent`
+--
+
+LOCK TABLES `tevent` WRITE;
+/*!40000 ALTER TABLE `tevent` DISABLE KEYS */;
+INSERT INTO `tevent` VALUES (1,'OBJECT TYPE CREATED','2013-02-12 09:24:28','admin',1,0,'Computer'),(2,'OBJECT TYPE CREATED','2013-02-12 09:24:39','admin',1,1,'Serial&#x20;Number'),(3,'OBJECT TYPE CREATED','2013-02-12 09:24:47','admin',2,1,'CPU'),(4,'OBJECT TYPE CREATED','2013-02-12 09:24:56','admin',3,1,'Memory'),(5,'OBJECT TYPE CREATED','2013-02-12 09:25:10','admin',4,1,'IP&#x20;Address'),(6,'OBJECT TYPE CREATED','2013-02-12 09:25:20','admin',5,1,'MAC&#x20;Address'),(7,'MANUFACTURER CREATED','2013-02-12 09:26:42','admin',1,0,'Arduino&#x20;Researc'),(8,'MANUFACTURER','2013-02-12 09:26:50','admin',1,0,'Arduino&#x20;Researchs'),(9,'COMPANY ROLE CREATED','2013-02-12 09:27:02','admin',1,0,'Customer'),(10,'COMPANY ROLE CREATED','2013-02-12 09:27:08','admin',2,0,'Ex-Customer'),(11,'COMPANY ROLE CREATED','2013-02-12 09:27:13','admin',3,0,'Partner'),(12,'COMPANY ROLE CREATED','2013-02-12 09:27:18','admin',4,0,'Provider'),(13,'COMPANY ROLE CREATED','2013-02-12 09:27:22','admin',5,0,'Other'),(14,'COMPANY CREATED','2013-02-12 09:29:01','admin',1,0,'Your&#x20;big&#x20;company'),(15,'INCIDENT TYPE CREATED','2013-02-12 09:31:13','admin',1,0,'Software&#x20;issues'),(16,'PWU INSERT','2013-02-12 10:00:15','admin',3,0,'lot&#039;s&#x20;of&#x20;work&#x20;done&#x20;today&#x20;:&#41;'),(17,'PWU INSERT','2013-02-12 10:01:31','admin',0,0,'days&#x20;of&#x20;holidays'),(18,'PWU INSERT','2013-02-12 10:01:31','admin',3,0,'Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;'),(19,'INSERT CALENDAR EVENT','2013-02-12 10:02:36','admin',0,0,'Elena&#039;s&#x20;Aniversary'),(20,'DOWNLOAD CATEGORY CREATED','2013-02-12 10:03:08','admin',1,0,'Software'),(21,'DOWNLOAD ITEM CREATED','2013-02-12 10:03:52','admin',1,0,'Sample&#x20;File'),(22,'CATEGORY CREATED','2013-02-12 10:04:23','admin',1,0,'Articles'),(23,'PRODUCT CREATED','2013-02-12 10:04:39','admin',1,0,'Packages'),(24,'KB ITEM CREATED','2013-02-12 10:05:25','admin',1,0,'Restart&#x20;resolution&#x20;on&#x20;vertical&#x20;upload&#x20;change');
+/*!40000 ALTER TABLE `tevent` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tgrupo`
+--
+
+LOCK TABLES `tgrupo` WRITE;
+/*!40000 ALTER TABLE `tgrupo` DISABLE KEYS */;
+INSERT INTO `tgrupo` VALUES (1,'All','world.png',NULL,NULL,NULL,0,'admin',NULL,0,0,1,'',0,NULL),(2,'Customer&#x20;#A','eye.png','',NULL,NULL,0,'admin',1,0,0,1,'',0,0),(3,'Customer #B','eye.png',NULL,NULL,NULL,0,'admin',NULL,0,0,1,'',0,NULL),(4,'Engineering','computer.png','',NULL,NULL,0,'admin',1,0,0,1,'',0,0);
+/*!40000 ALTER TABLE `tgrupo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tholidays`
+--
+
+LOCK TABLES `tholidays` WRITE;
+/*!40000 ALTER TABLE `tholidays` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tholidays` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tincidencia`
+--
+
+LOCK TABLES `tincidencia` WRITE;
+/*!40000 ALTER TABLE `tincidencia` DISABLE KEYS */;
+INSERT INTO `tincidencia` VALUES (1,'2013-02-12 09:50:27','0000-00-00 00:00:00','Something&#x20;seems&#x20;to&#x20;be&#x20;wrong&#x20;on&#x20;Mauertbe','THis&#x20;should&#x20;be&#x20;fixed&#x20;ASAP.&#x20;Seems&#x20;to&#x20;have&#x20;something&#x20;wrong&#x20;in&#x20;XXX&#x20;','demo',3,3,2,'2013-02-12 09:53:45','admin',1,0,0,'',NULL,0,0,1,0,'','admin',3,'2013-02-12 09:50:29','');
+/*!40000 ALTER TABLE `tincidencia` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tincident_contact_reporters`
+--
+
+LOCK TABLES `tincident_contact_reporters` WRITE;
+/*!40000 ALTER TABLE `tincident_contact_reporters` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tincident_contact_reporters` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tincident_field_data`
+--
+
+LOCK TABLES `tincident_field_data` WRITE;
+/*!40000 ALTER TABLE `tincident_field_data` DISABLE KEYS */;
+INSERT INTO `tincident_field_data` VALUES (1,1,1,'3.1'),(2,1,2,'Centos&#x20;6.2'),(3,1,3,'Execute&#x20;&#x0d;&#x0a;&#x0d;&#x0a;./ewiruer.sh'),(4,1,4,'Return&#x20;OK,&#x20;instead&#x20;gives&#x20;a&#x20;CRASH');
+/*!40000 ALTER TABLE `tincident_field_data` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tincident_inventory`
+--
+
+LOCK TABLES `tincident_inventory` WRITE;
+/*!40000 ALTER TABLE `tincident_inventory` DISABLE KEYS */;
+INSERT INTO `tincident_inventory` VALUES (1,2);
+/*!40000 ALTER TABLE `tincident_inventory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tincident_resolution`
+--
+
+LOCK TABLES `tincident_resolution` WRITE;
+/*!40000 ALTER TABLE `tincident_resolution` DISABLE KEYS */;
 INSERT INTO `tincident_resolution` VALUES (1,'Fixed'),(2,'Invalid'),(3,'Wont fix'),(4,'Duplicate'),(5,'Works for me'),(6,'Incomplete'),(7,'Expired'),(8,'Moved'),(9,'In process');
+/*!40000 ALTER TABLE `tincident_resolution` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tincident_sla_graph`
+--
 
+LOCK TABLES `tincident_sla_graph` WRITE;
+/*!40000 ALTER TABLE `tincident_sla_graph` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tincident_sla_graph` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tincident_stats`
+--
+
+LOCK TABLES `tincident_stats` WRITE;
+/*!40000 ALTER TABLE `tincident_stats` DISABLE KEYS */;
+INSERT INTO `tincident_stats` VALUES (1,1,0,'status_time','',1,0),(2,1,0,'user_time','admin',0,0),(3,1,0,'group_time','',0,3),(4,1,0,'total_time','',0,0),(5,1,0,'total_w_third','',0,0);
+/*!40000 ALTER TABLE `tincident_stats` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tincident_status`
+--
+
+LOCK TABLES `tincident_status` WRITE;
+/*!40000 ALTER TABLE `tincident_status` DISABLE KEYS */;
 INSERT INTO `tincident_status` VALUES (1,'New'),(2,'Unconfirmed'),(3,'Assigned'),(4,'Re-opened'),(5,'Pending to be closed'),(6,'Pending on a third person'),(7,'Closed');
+/*!40000 ALTER TABLE `tincident_status` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tincident_track`
+--
 
-INSERT INTO `tincident_track` VALUES (1,1,10,'2012-01-17 18:07:17','javi',1,'Unknown update'),(2,1,2,'2012-01-17 18:07:35','admin',0,'Workunit added'),(3,1,2,'2012-01-17 18:08:02','javi',0,'Workunit added'),(4,1,3,'2012-01-17 18:09:28','javi',0,'File added'),(5,1,2,'2012-01-17 18:10:58','admin',0,'Workunit added'),(6,1,2,'2012-01-17 18:11:01','javi',0,'Workunit added'),(7,1,10,'2012-01-17 18:25:03','javi',1,'Unknown update'),(8,2,2,'2012-01-17 18:25:20','admin',0,'Workunit added'),(9,2,2,'2012-01-17 18:25:31','javi',0,'Workunit added'),(10,2,2,'2012-01-17 18:25:49','admin',0,'Workunit added'),(11,2,2,'2012-01-17 18:26:00','javi',0,'Workunit added'),(12,2,7,'2012-01-17 18:26:28','admin',6,'Status changed -> Resolved'),(13,2,8,'2012-01-17 18:26:28','admin',0,'Resolution changed -> '),(14,2,1,'2012-01-17 18:26:28','admin',0,'Updated'),(15,1,10,'2012-01-17 18:27:01','javi',1,'Unknown update'),(16,1,17,'2012-01-17 21:38:06','admin',0,'Assigned user changed -> Javier&#x20;Nadie'),(17,1,1,'2012-01-17 21:38:06','admin',0,'Updated'),(18,3,2,'2012-01-17 21:44:23','admin',0,'Workunit added'),(19,3,2,'2012-01-17 21:47:03','luis',0,'Workunit added'),(20,3,17,'2012-01-17 21:48:33','luis',0,'Assigned user changed -> '),(21,3,1,'2012-01-17 21:48:33','luis',0,'Updated'),(22,3,17,'2012-01-17 21:51:15','luis',0,'Assigned user changed -> Javier&#x20;Nadie'),(23,3,1,'2012-01-17 21:51:16','luis',0,'Updated'),(24,3,1,'2012-01-17 21:51:16','luis',0,'Updated'),(25,3,7,'2012-01-17 22:11:36','javi',6,'Status changed -> Resolved'),(26,3,1,'2012-01-17 22:11:36','javi',0,'Updated'),(27,3,1,'2012-01-17 22:11:36','javi',0,'Updated');
+LOCK TABLES `tincident_track` WRITE;
+/*!40000 ALTER TABLE `tincident_track` DISABLE KEYS */;
+INSERT INTO `tincident_track` VALUES (1,1,10,'2013-02-12 09:50:27','admin','2','Added inventory object: Cenutrio'),(2,1,7,'2013-02-12 09:50:27','admin','1','Status changed -> New'),(3,1,17,'2013-02-12 09:50:27','admin','admin','Assigned user changed -> Default Admin'),(4,1,28,'2013-02-12 09:50:27','admin','3','Group has changed -> Customer #B'),(5,1,0,'2013-02-12 09:50:27','admin','0','Created'),(6,1,2,'2013-02-12 09:53:45','demo','0','Workunit added');
+/*!40000 ALTER TABLE `tincident_track` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tincident_type`
+--
 
-INSERT INTO `tinventory` VALUES (1,0,'javi','Servidor&#x20;NEC&#x20;2300',1,'Servidor&#x20;de&#x20;desarrollo.',2,1,0),(2,0,'javi','Samsung&#x20;XJ34&#x20;-&#x20;Pruebas',1,'Servidor&#x20;de&#x20;pruebas.',2,1,0);
+LOCK TABLES `tincident_type` WRITE;
+/*!40000 ALTER TABLE `tincident_type` DISABLE KEYS */;
+INSERT INTO `tincident_type` VALUES (1,'Software&#x20;issues','This&#x20;kind&#x20;of&#x20;incidents&#x20;are&#x20;for&#x20;software&#x20;&#40;bugs,&#x20;feature&#x20;lack&#x20;reports,&#x20;etc&#41;',NULL,0);
+/*!40000 ALTER TABLE `tincident_type` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tincident_type_field`
+--
 
-INSERT INTO `tkb_category` VALUES (1,'Articles','','dialog-information.png',0);
+LOCK TABLES `tincident_type_field` WRITE;
+/*!40000 ALTER TABLE `tincident_type_field` DISABLE KEYS */;
+INSERT INTO `tincident_type_field` VALUES (1,1,'Version','combo','3,3.1,4'),(2,1,'Base&#x20;OS','text',''),(3,1,'Way&#x20;to&#x20;reproduce','textarea',''),(4,1,'Expected&#x20;behaviour','textarea','');
+/*!40000 ALTER TABLE `tincident_type_field` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tinventory`
+--
 
-INSERT INTO `tkb_data` VALUES (1,'General&#x20;problems&#x20;with&#x20;Samsung&#x20;LH3483','Integria&#x20;IMS&#x20;es&#x20;una&#x20;aplicaci&oacute;n&#x20;PHP&#x20;que&#x20;necesita&#x20;una&#x20;base&#x20;de&#x20;datos&#x20;MySQL&#x20;para&#x20;funcionar.&#x20;Actualmente&#x20;s&oacute;lo&#x20;soporta&#x20;MySQL&#x20;y&#x20;necesita&#x20;una&#x20;versi&oacute;n&#x20;de&#x20;PHP&#x20;5.2&#x20;o&#x20;superior&#x20;&#40;debido&#x20;a&#x20;su&#x20;uso&#x20;intensivo&#x20;de&#x20;AJAX,&#x20;entre&#x20;otras&#x20;razones&#41;.&#x20;Debido&#x20;a&#x20;que&#x20;es&#x20;una&#x20;aplicaci&oacute;n&#x20;completamente&#x20;WEB,&#x20;puede&#x20;instalarla&#x20;en&#x20;un&#x20;servidor&#x20;y&#x20;acceder&#x20;a&#x20;ella&#x20;desde&#x20;cualquier&#x20;puesto&#x20;de&#x20;trabajo&#x20;con&#x20;un&#x20;navegador&#x20;moderno&#x20;&#40;Firefox,&#x20;o&#x20;Internet&#x20;Explorer&#x20;a&#x20;partir&#x20;de&#x20;la&#x20;versi&oacute;n&#x20;6&#41;.&#x20;La&#x20;resolution&#x20;minima&#x20;de&#x20;trabajo&#x20;es&#x20;800x600&#x20;aunque&#x20;se&#x20;recomienda&#x20;1024x768.&#x0d;&#x0a;&#x0d;&#x0a;Las&#x20;gr&aacute;ficas&#x20;utilizan&#x20;Flash&#x20;y&#x20;puede&#x20;que&#x20;necesite&#x20;un&#x20;complemento&#x20;para&#x20;visualizarlas.&#x20;Integria&#x20;IMS&#x20;puede&#x20;funcionar&#x20;sobre&#x20;sistemas&#x20;Windows,&#x20;Unix&#x20;o&#x20;GNU/Linux&#x20;mientras&#x20;tenga&#x20;satisfechas&#x20;sus&#x20;dependencias.&#x20;No&#x20;obstante,&#x20;nuestra&#x20;plataforma&#x20;favorita&#x20;es&#x20;SUSE&#x20;Linux&#x20;&oacute;&#x20;Ubuntu&#x20;Server&#x20;Linux.&#x0d;&#x0a;&#x0d;&#x0a;Todas&#x20;las&#x20;dependencias&#x20;necesarias&#x20;que&#x20;ha&#x20;de&#x20;tener&#x20;nuestro&#x20;sistema&#x20;para&#x20;el&#x20;correcto&#x20;funcionamiento&#x20;de&#x20;Integria&#x20;IMS&#x20;son:&#x0d;&#x0a;&#x0d;&#x0a;php5&#x20;php5-mysql&#x20;mysql-server&#x20;php5-gd&#x20;php5-mbstring&#x20;php5-ldap&#x20;php5-gettext&#x20;php5-mcrypt&#x20;curl&#x20;graphviz&#x0d;&#x0a;&#x0d;&#x0a;Opcionalmente,&#x20;y&#x20;si&#x20;se&#x20;desea&#x20;dibujar&#x20;los&#x20;gr&aacute;ficos&#x20;en&#x20;&aacute;rbol&#x20;que&#x20;genera&#x20;Integria,&#x20;a&#x20;parte&#x20;de&#x20;instalar&#x20;&#039;graphviz&#039;,&#x20;ser&aacute;&#x20;necesario&#x20;instalar&#x20;el&#x20;paquete&#x20;&#039;imap&#039;&#x20;en&#x20;Apache&#x20;y&#x20;activarlo.&#x20;Para&#x20;ello&#x20;instalaremos&#x20;el&#x20;paquete:&#x0d;&#x0a;&#x0d;&#x0a;php5-imap&#x0d;&#x0a;&#x0d;&#x0a;Y&#x20;configuraremos&#x20;Apache&#x20;de&#x20;esta&#x20;forma&#x20;&#40;ser&aacute;&#x20;necesario&#x20;reiniciar&#x20;el&#x20;servidor&#x20;de&#x20;apache&#x20;una&#x20;vez&#x20;hecho&#x20;los&#x20;cambios&#41;:&#x0d;&#x0a;&#x0d;&#x0a;/etc/apache2/mods-enabled&#x20;#&#x20;ln&#x20;-s&#x20;../mods-available/imagemap.load&#x0d;&#x0a;#&#x20;echo&#x20;&quot;AddHandler&#x20;imap-file&#x20;map&quot;&#x20;&gt;&#x20;/etc/apache2/mods-enabled/imagemap.conf&#x0d;&#x0a;&#x0d;&#x0a;La&#x20;instalaci&oacute;n&#x20;la&#x20;podremos&#x20;hacer&#x20;de&#x20;forma&#x20;manual&#x20;a&#x20;trav&eacute;s&#x20;de&#x20;las&#x20;fuentes&#x20;&#40;.tar.gz&#41;,&#x20;mediante&#x20;paquetes&#x20;.DEB&#x20;para&#x20;sistemas&#x20;basados&#x20;en&#x20;Debian&#x20;o&#x20;.RPM&#x20;para&#x20;Suse,&#x20;Red&#x20;Hat&#x20;Enterprise&#x20;Linux,&#x20;Fedora&#x20;y&#x20;CentOS,&#x20;o&#x20;bien&#x20;descarg&aacute;ndonos&#x20;el&#x20;c&oacute;digo&#x20;de&#x20;la&#x20;versi&oacute;n&#x20;de&#x20;desarrollo,&#x20;utilizando&#x20;el&#x20;SVN&#x20;&#40;Subversi&oacute;n&#41;.&#x0d;&#x0a;&#x0d;&#x0a;Integria&#x20;IMS&#x20;se&#x20;puede&#x20;instalar&#x20;tambi&eacute;n&#x20;sobre&#x20;sistemas&#x20;operativos&#x20;Microsoft&#x20;Windows,&#x20;mediante&#x20;el&#x20;paquete&#x20;WAMP&#x20;Server[1],&#x20;que&#x20;instala&#x20;Apache.&#x20;PHP&#x20;5&#x20;y&#x20;MySQL&#x20;sobre&#x20;el&#x20;sistema&#x20;operativo.&#x20;','2012-01-17 18:28:02','es','admin',1,1);
+LOCK TABLES `tinventory` WRITE;
+/*!40000 ALTER TABLE `tinventory` DISABLE KEYS */;
+INSERT INTO `tinventory` VALUES (1,0,'admin','An&#x20;object',0,'',0,0,0),(2,1,'admin','Cenutrio',0,'Sancho&#039;s&#x20;computer',0,0,0);
+/*!40000 ALTER TABLE `tinventory` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tinventory_relationship`
+--
 
-INSERT INTO `tkb_product` VALUES (1,'Phones','','battery.png',0),(2,'Computers','','computer.png',0);
+LOCK TABLES `tinventory_relationship` WRITE;
+/*!40000 ALTER TABLE `tinventory_relationship` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tinventory_relationship` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tinventory_reports`
+--
 
-INSERT INTO `tlanguage` VALUES ('en','English');
-INSERT INTO `tlanguage` VALUES ('es','Español');
-INSERT INTO `tlanguage` VALUES ('bn', 'বাংলা');
-INSERT INTO `tlanguage` VALUES ('da','Dansk');
-INSERT INTO `tlanguage` VALUES ('el','Ελληνικά');
-INSERT INTO `tlanguage` VALUES ('fr','Français');
-INSERT INTO `tlanguage` VALUES ('ko','한국어');
-INSERT INTO `tlanguage` VALUES ('nl','Nederlands');
-INSERT INTO `tlanguage` VALUES ('ru','Русский');
-INSERT INTO `tlanguage` VALUES ('tr','Türkçe');
+LOCK TABLES `tinventory_reports` WRITE;
+/*!40000 ALTER TABLE `tinventory_reports` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tinventory_reports` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tinventory_track`
+--
 
-INSERT INTO `tlink` VALUES (0000000001,'Integria Project','http://integriaims.com'),(0000000002,'Artica ST','http://www.artica.es'),(0000000003,'Report a bug','https://sourceforge.net/tracker/?func=add&group_id=193754&atid=946680');
+LOCK TABLES `tinventory_track` WRITE;
+/*!40000 ALTER TABLE `tinventory_track` DISABLE KEYS */;
+INSERT INTO `tinventory_track` VALUES (1,1,'0',0,'2013-02-12 09:24:00','admin','Created'),(2,1,'0',8,'2013-02-12 09:24:00','admin','Inventory private'),(3,2,'0',0,'2013-02-12 09:26:06','admin','Created'),(4,2,'0',8,'2013-02-12 09:26:06','admin','Inventory private'),(5,2,'1',6,'2013-02-12 09:26:06','admin','Inventory object type added -> Computer'),(6,2,'1',2,'2013-02-12 09:50:27','admin','inventory object in incident -> Something&#x20;seems&#x20;to&#x20;be&#x20;wrong&#x20;on&#x20;Mauertbe');
+/*!40000 ALTER TABLE `tinventory_track` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tinvoice`
+--
 
-INSERT INTO `tmanufacturer` VALUES (1,'Samsung','','',1,0);
+LOCK TABLES `tinvoice` WRITE;
+/*!40000 ALTER TABLE `tinvoice` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tinvoice` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tkb_category`
+--
 
-INSERT INTO `tprofile` VALUES (1,'Project&#x20;Participant',1,1,0,0,0,0,1,1,0,1,0,0,1,0,1,0,0,1,0,0,1,1,0,0,0,0,0,0,0),(2,'Project Manager',1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1,0,0,0,0,0,0),(3,'Incident Manager',1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1,1,0,0,0,0,0,0,0,0),(4,'Incident&#x20;Operator',1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0),(5,'Global Manager',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0);
+LOCK TABLES `tkb_category` WRITE;
+/*!40000 ALTER TABLE `tkb_category` DISABLE KEYS */;
+INSERT INTO `tkb_category` VALUES (1,'Articles','General&#x20;articles&#x20;about&#x20;XXX','plugin.png',0);
+/*!40000 ALTER TABLE `tkb_category` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tkb_data`
+--
 
+LOCK TABLES `tkb_data` WRITE;
+/*!40000 ALTER TABLE `tkb_data` DISABLE KEYS */;
+INSERT INTO `tkb_data` VALUES (1,'Restart&#x20;resolution&#x20;on&#x20;vertical&#x20;upload&#x20;change','This&#x20;test&#x20;may&#x20;not&#x20;meaning&#x20;anything&#x20;for&#x20;you.&#x20;For&#x20;me&#x20;either.&#x0d;&#x0a;&#x0d;&#x0a;Nihilism&#x20;was&#x20;for&#x20;us&#x20;a&#x20;window&#x20;of&#x20;clarity&#x20;in&#x20;a&#x20;munged&#x20;world.&#x20;It&rsquo;s&#x20;the&#x20;same&#x20;way&#x20;now:&#x20;the&#x20;media&#x20;can&#x20;report&#x20;well&#x20;on&#x20;incidents,&#x20;but&#x20;the&#x20;vast&#x20;majority&#x20;of&#x20;people&#x20;in&#x20;society&#x20;spend&#x20;ungodly&#x20;amounts&#x20;of&#x20;time,&#x20;effort&#x20;and&#x20;money&#x20;repeating&#x20;a&#x20;narrative&#x20;to&#x20;each&#x20;other.&#x20;Roughly,&#x20;it&rsquo;s&#x20;that&#x20;liberal&#x20;democracy&#x20;is&#x20;the&#x20;best&#x20;society&#x20;ever,&#x20;technology&#x20;will&#x20;solve&#x20;all&#x20;our&#x20;problems,&#x20;and&#x20;the&#x20;type&#x20;of&#x20;individualistic&#x20;selfishness&#x20;required&#x20;for&#x20;consumerism&#x20;is&#x20;the&#x20;best&#x20;way&#x20;to&#x20;live.&#x20;We&#x20;are&#x20;not&#x20;encouraged&#x20;to&#x20;improve&#x20;ourselves,&#x20;only&#x20;to&#x20;make&#x20;more&#x20;money&#x20;and&#x20;to&#x20;conform.&#x20;This&#x20;is&#x20;for&#x20;the&#x20;convenience&#x20;of&#x20;others,&#x20;by&#x20;the&#x20;way.&#x20;Government&#x20;didn&rsquo;t&#x20;invent&#x20;this.&#x20;It&rsquo;s&#x20;a&#x20;cultural&#x20;response&#x20;to&#x20;us&#x20;having&#x20;obliterated&#x20;culture&#x20;so&#x20;that&#x20;individuals&#x20;could&#x20;&ldquo;have&#x20;it&#x20;your&#x20;way&rdquo;&#x20;&#40;Burger&#x20;King!&#41;&#x20;and&#x20;not&#x20;be&#x20;responsible&#x20;to&#x20;any&#x20;kind&#x20;of&#x20;social&#x20;standards,&#x20;higher&#x20;order,&#x20;higher&#x20;power,&#x20;values,&#x20;culture&#x20;or&#x20;measurement&#x20;of&#x20;meaning.&#x20;Basically,&#x20;it&rsquo;s&#x20;rampant&#x20;individualism&#x20;run&#x20;amok.&#x20;Nihilism&#x20;rejects&#x20;all&#x20;of&#x20;this&#x20;by&#x20;saying&#x20;that&#x20;there&#x20;are&#x20;no&#x20;inherent&#x20;values&#x20;to&#x20;life,&#x20;and&#x20;instead,&#x20;everything&#x20;is&#x20;a&#x20;choice,&#x20;and&#x20;by&#x20;observing&#x20;reality,&#x20;we&#x20;can&#x20;tell&#x20;what&#x20;the&#x20;results&#x20;of&#x20;our&#x20;actions&#x20;will&#x20;be.&#x20;We&#x20;can&rsquo;t&#x20;hide&#x20;behind&#x20;morality,&#x20;laws&#x20;and&#x20;social&#x20;sentiments&#x20;which&#x20;allow&#x20;us&#x20;to&#x20;do&#x20;whatever&#x20;we&#x20;want&#x20;and&#x20;then&#x20;justify&#x20;it&#x20;with&#x20;nice-sounding&#x20;goals&#x20;like&#x20;ending&#x20;poverty,&#x20;civil&#x20;rights,&#x20;stopping&#x20;global&#x20;warming,&#x20;saving&#x20;the&#x20;whales,&#x20;etc.&#x20;Morality&#x20;and&#x20;those&#x20;other&#x20;human&#x20;judgments&#x20;remove&#x20;us&#x20;from&#x20;reality.&#x20;It&rsquo;s&#x20;easy&#x20;to&#x20;satisfy&#x20;the&#x20;justification,&#x20;and&#x20;avoid&#x20;breaking&#x20;the&#x20;rules,&#x20;but&#x20;also&#x20;do&#x20;something&#x20;vile,&#x20;selfish&#x20;and&#x20;stupid.&#x20;That&rsquo;s&#x20;why&#x20;people&#x20;love&#x20;rules&#x20;&mdash;&#x20;they&rsquo;re&#x20;easy&#x20;to&#x20;circumvent!&#x20;Lawmaking&#x20;is&#x20;a&#x20;constant&#x20;game&#x20;of&#x20;whack-a-mole.&#x20;We&#x20;tell&#x20;people&#x20;that&#x20;it&rsquo;s&#x20;illegal&#x20;to&#x20;shoot&#x20;each&#x20;other&#x20;in&#x20;the&#x20;head,&#x20;and&#x20;they&#x20;shoot&#x20;each&#x20;other&#x20;in&#x20;the&#x20;groin.&#x20;Up&#x20;pops&#x20;another&#x20;mole;&#x20;they&rsquo;re&#x20;shooting&#x20;each&#x20;other&#x20;in&#x20;the&#x20;gut.&#x20;Make&#x20;that&#x20;illegal,&#x20;too.&#x20;Make&#x20;it&#x20;all&#x20;illegal.&#x20;Who&#x20;will&#x20;enforce&#x20;it?&#x20;No&#x20;one&#x20;is&#x20;sure.&#x20;Nihilists&#x20;remove&#x20;all&#x20;of&#x20;this&#x20;and&#x20;look&#x20;at&#x20;life&#x20;entirely&#x20;as&#x20;choices&#x20;and&#x20;consequences.&#x20;We&#x20;know&#x20;that&#x20;if&#x20;we&#x20;pull&#x20;the&#x20;pin&#x20;from&#x20;a&#x20;hand&#x20;grenade&#x20;and&#x20;then&#x20;hold&#x20;it&#x20;for&#x20;five&#x20;seconds,&#x20;we&#x20;die.&#x20;We&#x20;also&#x20;know&#x20;that&#x20;if&#x20;we&#x20;pollute&#x20;our&#x20;planet,&#x20;we&#x20;die.&#x20;However,&#x20;we&rsquo;ve&#x20;made&#x20;these&#x20;rules&#x20;that&#x20;say&#x20;it&rsquo;s&#x20;OK&#x20;to&#x20;hold&#x20;a&#x20;hand&#x20;grenade&#x20;for&#x20;up&#x20;to&#x20;ten&#x20;seconds,&#x20;and&#x20;it&rsquo;s&#x20;OK&#x20;to&#x20;pollute&#x20;somewhat&#x20;per&#x20;person,&#x20;with&#x20;no&#x20;limit&#x20;on&#x20;the&#x20;number&#x20;of&#x20;people.&#x20;Those&#x20;rules&#x20;are&#x20;easily&#x20;evaded&#x20;and&#x20;we&#x20;still&#x20;stumble&#x20;onward&#x20;toward&#x20;our&#x20;doom,&#x20;pushed&#x20;forward&#x20;by&#x20;the&#x20;desires,&#x20;judgments&#x20;and&#x20;emotions&#x20;of&#x20;billions&#x20;of&#x20;people.&#x20;Nihilism&#x20;refutes&#x20;all&#x20;of&#x20;that.&#x20;&ndash;&#x20;Interview&#x20;with&#x20;Vijay&#x20;Prozak','2013-02-12 10:05:25','en_GB','admin',1,1);
+/*!40000 ALTER TABLE `tkb_data` ENABLE KEYS */;
+UNLOCK TABLES;
 
-INSERT INTO `tproject` VALUES (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0);
-INSERT INTO `tproject` VALUES  (1,'Super&#x20;Waporware&#x20;1.0','This&#x20;will&#x20;be&#x20;future&#x20;of&#x20;IT&#x20;management.','2012-01-01','2012-08-31','admin',0,1);
+--
+-- Dumping data for table `tkb_product`
+--
 
+LOCK TABLES `tkb_product` WRITE;
+/*!40000 ALTER TABLE `tkb_product` DISABLE KEYS */;
+INSERT INTO `tkb_product` VALUES (1,'Packages','','box.png',0);
+/*!40000 ALTER TABLE `tkb_product` ENABLE KEYS */;
+UNLOCK TABLES;
 
-INSERT INTO `tproject_group` VALUES (1,'Development','preferences-system.png'),(2,'Marketing','applications-office.png');
+--
+-- Dumping data for table `tlanguage`
+--
 
+LOCK TABLES `tlanguage` WRITE;
+/*!40000 ALTER TABLE `tlanguage` DISABLE KEYS */;
+INSERT INTO `tlanguage` VALUES ('bn','à¦¬à¦¾à¦‚à¦²à¦¾'),('da','Dansk'),('el','Î•Î»Î»Î·Î½Î¹ÎºÎ¬'),('en_GB','English'),('es','EspaÃ±ol'),('fr','FranÃ§ais'),('ko','í•œêµ­ì–´'),('nl','Nederlands'),('ru','Ð ÑƒÑÑÐºÐ¸Ð¹'),('tr','TÃ¼rkÃ§e');
+/*!40000 ALTER TABLE `tlanguage` ENABLE KEYS */;
+UNLOCK TABLES;
 
-INSERT INTO `tproject_track` VALUES (1,1,'admin',21,'2012-01-17 18:12:55',0),(2,1,'admin',26,'2012-01-17 18:18:48',0),(3,1,'admin',26,'2012-01-17 18:19:09',0),(4,1,'admin',26,'2012-01-17 18:19:29',0),(5,1,'admin',26,'2012-01-17 18:19:44',0),(6,1,'admin',26,'2012-01-17 18:20:06',0),(7,1,'admin',26,'2012-01-17 18:20:24',0),(8,1,'admin',26,'2012-01-17 18:20:42',0),(9,1,'admin',26,'2012-01-17 18:20:59',0);
+--
+-- Dumping data for table `tlead`
+--
 
+LOCK TABLES `tlead` WRITE;
+/*!40000 ALTER TABLE `tlead` DISABLE KEYS */;
+INSERT INTO `tlead` VALUES (1,0,'en_GB',0,'admin','Peter&#x20;McNee','peter@nothere.net','3434324233','3247473863','CTO','Not&#x20;There&#x20;Computer&#x20;Ltd','USA','Hi&#x20;there,&#x20;&#x0d;&#x0a;&#x0d;&#x0a;Im&#x20;interested&#x20;in&#x20;XXXXX.&#x20;Please,&#x20;give&#x20;me&#x20;more&#x20;information.&#x0d;&#x0a;','2013-02-12 09:28:27','2013-02-12 09:28:27',0,2300);
+/*!40000 ALTER TABLE `tlead` ENABLE KEYS */;
+UNLOCK TABLES;
 
-INSERT INTO `ttask` VALUES (-4,-1,0,'Workunits lost (without project/task)','',0,0,0,'0000-00-00','0000-00-00',0,0.00,0,'none',1),(-3,-1,0,'Not justified','',0,0,0,'0000-00-00','0000-00-00',0,0.00,0,'none',1),(-2,-1,0,'Health issues','',0,0,0,'0000-00-00','0000-00-00',0,0.00,0,'none',1),(-1,-1,0,'Vacations','',0,0,0,'0000-00-00','0000-00-00',0,0.00,0,'none',1);
-INSERT INTO `ttask` VALUES (1,1,0,'Planning','',0,0,0,'2012-01-23','2012-02-10',144,0.00,4,'none',1),(2,1,0,'re-Requisites&#x20;recollecting.','',0,0,0,'2012-01-01','2012-01-22',168,0.00,4,'none',1),(3,1,0,'Formal&#x20;Analysys','',0,0,0,'2012-02-01','2012-02-29',224,0.00,4,'none',1),(4,1,0,'Formal&#x20;design','',0,0,0,'2012-03-01','2012-04-01',247,0.00,4,'none',1),(5,1,1,'Pre-Development','',0,0,0,'2012-01-31','2012-02-23',184,0.00,4,'none',1),(6,1,4,'Development','',0,0,0,'2012-04-01','2012-05-31',480,0.00,4,'none',1),(7,1,4,'Testing','',0,0,0,'2012-05-01','2012-06-29',472,0.00,4,'none',1),(8,1,0,'Documentation','',0,0,0,'2012-05-31','2012-07-31',228,0.00,4,'none',1);
+--
+-- Dumping data for table `tlead_activity`
+--
 
+LOCK TABLES `tlead_activity` WRITE;
+/*!40000 ALTER TABLE `tlead_activity` DISABLE KEYS */;
+INSERT INTO `tlead_activity` VALUES (1,1,'admin','I&#x20;call&#x20;him,&#x20;but&#x20;not&#x20;reply.&#x0d;&#x0a;','2013-02-12 09:30:17');
+/*!40000 ALTER TABLE `tlead_activity` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tlead_history`
+--
 
+LOCK TABLES `tlead_history` WRITE;
+/*!40000 ALTER TABLE `tlead_history` DISABLE KEYS */;
+INSERT INTO `tlead_history` VALUES (1,1,'admin','Created lead','2013-02-12 09:28:27'),(2,1,'admin','Added comments','2013-02-12 09:30:17');
+/*!40000 ALTER TABLE `tlead_history` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tlink`
+--
+
+LOCK TABLES `tlink` WRITE;
+/*!40000 ALTER TABLE `tlink` DISABLE KEYS */;
+INSERT INTO `tlink` VALUES (0000000001,'Integria Project','http://integria.sourceforge.net'),(0000000002,'Artica ST','http://www.artica.es'),(0000000003,'Report a bug','https://sourceforge.net/tracker/?func=add&group_id=193754&atid=946680');
+/*!40000 ALTER TABLE `tlink` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tmanufacturer`
+--
+
+LOCK TABLES `tmanufacturer` WRITE;
+/*!40000 ALTER TABLE `tmanufacturer` DISABLE KEYS */;
+INSERT INTO `tmanufacturer` VALUES (1,'Arduino&#x20;Researchs','Nowhere&#x20;Street&#x20;23th&#x0d;&#x0a;23834&#x20;CA&#x0d;&#x0a;','',0,0);
+/*!40000 ALTER TABLE `tmanufacturer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tmenu_visibility`
+--
+
+LOCK TABLES `tmenu_visibility` WRITE;
+/*!40000 ALTER TABLE `tmenu_visibility` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tmenu_visibility` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tmilestone`
+--
+
+LOCK TABLES `tmilestone` WRITE;
+/*!40000 ALTER TABLE `tmilestone` DISABLE KEYS */;
+INSERT INTO `tmilestone` VALUES (1,1,'2013-04-01 00:00:00','Beta&#x20;release','');
+/*!40000 ALTER TABLE `tmilestone` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tnewsboard`
+--
+
+LOCK TABLES `tnewsboard` WRITE;
+/*!40000 ALTER TABLE `tnewsboard` DISABLE KEYS */;
+INSERT INTO `tnewsboard` VALUES (1,'Welcome&#x20;to&#x20;Integria&#x20;4.0','Remember,&#x20;this&#x20;is&#x20;a&#x20;development&#x20;version.&#x20;Some&#x20;screens&#x20;are&#x20;ugly&#x20;yet,&#x20;but&#x20;will&#x20;be&#x20;much&#x20;nicer!.&#x20;Most&#x20;features&#x20;need&#x20;to&#x20;be&#x20;improved,&#x20;but&#x20;the&#x20;base&#x20;of&#x20;the&#x20;system&#x20;is&#x20;already&#x20;done.&#x0d;&#x0a;','2013-02-12 00:00:00');
+/*!40000 ALTER TABLE `tnewsboard` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tnewsletter`
+--
+
+LOCK TABLES `tnewsletter` WRITE;
+/*!40000 ALTER TABLE `tnewsletter` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tnewsletter` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tnewsletter_address`
+--
+
+LOCK TABLES `tnewsletter_address` WRITE;
+/*!40000 ALTER TABLE `tnewsletter_address` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tnewsletter_address` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tnewsletter_content`
+--
+
+LOCK TABLES `tnewsletter_content` WRITE;
+/*!40000 ALTER TABLE `tnewsletter_content` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tnewsletter_content` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tnewsletter_queue`
+--
+
+LOCK TABLES `tnewsletter_queue` WRITE;
+/*!40000 ALTER TABLE `tnewsletter_queue` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tnewsletter_queue` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tnewsletter_queue_data`
+--
+
+LOCK TABLES `tnewsletter_queue_data` WRITE;
+/*!40000 ALTER TABLE `tnewsletter_queue_data` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tnewsletter_queue_data` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tnewsletter_tracking`
+--
+
+LOCK TABLES `tnewsletter_tracking` WRITE;
+/*!40000 ALTER TABLE `tnewsletter_tracking` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tnewsletter_tracking` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tobject_field_data`
+--
+
+LOCK TABLES `tobject_field_data` WRITE;
+/*!40000 ALTER TABLE `tobject_field_data` DISABLE KEYS */;
+INSERT INTO `tobject_field_data` VALUES (1,2,1,'2347234873'),(2,2,2,'Xeon&#x20;3.2GHZ'),(3,2,3,'4GB'),(4,2,4,'192.168.4.242'),(5,2,5,'FE:AE:C4:35:3A:4F');
+/*!40000 ALTER TABLE `tobject_field_data` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tobject_type`
+--
+
+LOCK TABLES `tobject_type` WRITE;
+/*!40000 ALTER TABLE `tobject_type` DISABLE KEYS */;
+INSERT INTO `tobject_type` VALUES (1,'Computer','','computer.png');
+/*!40000 ALTER TABLE `tobject_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tobject_type_field`
+--
+
+LOCK TABLES `tobject_type_field` WRITE;
+/*!40000 ALTER TABLE `tobject_type_field` DISABLE KEYS */;
+INSERT INTO `tobject_type_field` VALUES (1,1,'Serial&#x20;Number','numeric','','','',1,0),(2,1,'CPU','text','','','',0,0),(3,1,'Memory','text','','','',0,0),(4,1,'IP&#x20;Address','text','','','',1,0),(5,1,'MAC&#x20;Address','text','','','',1,0);
+/*!40000 ALTER TABLE `tobject_type_field` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tpending_mail`
+--
+
+LOCK TABLES `tpending_mail` WRITE;
+/*!40000 ALTER TABLE `tpending_mail` DISABLE KEYS */;
+INSERT INTO `tpending_mail` VALUES (1,'2013-02-12 09:50:29',0,0,'admin@integria.sf.net','[TicketID#1/6c5de/admin] [Integria IMS - the ITIL Management System] NEW incident #1 Something seems to be wrong on Mauertbe.','Hello, \n\nThis is an automated message coming from Integria\n\n\r\nA NEW incident has been created: #1 Something seems to be wrong on Mauertbe\n\nYou can reply to this mail to add a Workunit to this incident. You also could track this incident in the following URL (need to use your credentials):\n\n   http://192.168.70.82/integria/index.php?sec=incidents&sec2=operation/incidents/incident&id=1\n\n===================================================\n   ID          : #1 - Something seems to be wrong on Mauertbe\n   CREATED ON  : 2013-02-12 09:50:27\n   GROUP       : Customer #A\n   AUTHOR      : Default Admin\n   ASSIGNED TO : Default Admin\n   PRIORITY    : High\n===================================================\n\nTHis should be fixed ASAP. Seems to have something wrong in XXX \n\n---------------------------------------------------------------------\n\n\r\nPlease do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n','',''),(2,'2013-02-12 09:53:45',0,0,'admin@integria.sf.net','[TicketID#1/6c5de/admin] [Integria IMS - the ITIL Management System] Incident #1 Something seems to be wrong on Mauertbe has a new WORKUNIT.','Hello, \n\nThis is an automated message coming from Integria\n\n\r\nIncident #1 ((Something seems to be wrong on Mauertbe)) has been UPDATED.  \n\nYou can reply to this mail to add a Workunit to this incident. You also could track this incident in the following URL (need to use your credentials):\n\n   http://192.168.70.82/integria/index.php?sec=incidents&sec2=operation/incidents/incident&id=1\n\n===================================================\n ID          : #1 - Something seems to be wrong on Mauertbe\n CREATED ON  : 2013-02-12 09:50:27\n LAST UPDATE : 2013-02-12 09:50:27\n GROUP       : Customer #A\n AUTHOR      : Default Admin\n ASSIGNED TO : Default Admin\n PRIORITY    : High\n STATUS      : New\n RESOLUTION  : None\n TIME USED   : 0.25\n===================================================\n\nTHis should be fixed ASAP. Seems to have something wrong in XXX \n\n===================================================\nWORKUNIT added by : Mr. Demo Potato (Your big company)\n===================================================\n\nI\'ve not entered yet in this, please, give me a few days to do more tests.\n\n===================================================\n		\n\r\nPlease do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n','',''),(3,'2013-02-12 09:53:45',0,0,'demo@demo.com','[TicketID#1/11797/demo] [Integria IMS - the ITIL Management System] Incident #1 Something seems to be wrong on Mauertbe has a new WORKUNIT.','Hello, \n\nThis is an automated message coming from Integria\n\n\r\nIncident #1 ((Something seems to be wrong on Mauertbe)) has been UPDATED.  \n\nYou can reply to this mail to add a Workunit to this incident. You also could track this incident in the following URL (need to use your credentials):\n\n   http://192.168.70.82/integria/index.php?sec=incidents&sec2=operation/incidents/incident&id=1\n\n===================================================\n ID          : #1 - Something seems to be wrong on Mauertbe\n CREATED ON  : 2013-02-12 09:50:27\n LAST UPDATE : 2013-02-12 09:50:27\n GROUP       : Customer #A\n AUTHOR      : Default Admin\n ASSIGNED TO : Default Admin\n PRIORITY    : High\n STATUS      : New\n RESOLUTION  : None\n TIME USED   : 0.25\n===================================================\n\nTHis should be fixed ASAP. Seems to have something wrong in XXX \n\n===================================================\nWORKUNIT added by : Mr. Demo Potato (Your big company)\n===================================================\n\nI\'ve not entered yet in this, please, give me a few days to do more tests.\n\n===================================================\n		\n\r\nPlease do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n','',''),(4,'2013-02-12 09:59:57',0,0,'admin@integria.sf.net','[Integria IMS - the ITIL Management System] Updated TO-DO from \'admin\' : Do a public release of first version for testing','Hello, \n\nThis is an automated message coming from Integria\n\n\r\nTO-DO \'Do a public release of first version for testing\' has been UPDATED by user demo. This TO-DO was created by user admin. You could track this todo in the following URL (need to use your credentials): http://192.168.70.82/integria/index.php?sec=todo&sec2=operation/todo/todo&operation=update&id=1\n\n\n---------------------------------------------------------------------\nTO-DO NAME  : Do a public release of first version for testing\nDATE / TIME : 2013-02-12 09:58:56\nCREATED BY  : admin\nASSIGNED TO : demo\nPROGRESS    : 0%\nPRIORITY    : 2\nDESCRIPTION\n---------------------------------------------------------------------\nCreate RPM and DEB packages for testing purposes.\n\n\r\nPlease do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n','',''),(5,'2013-02-12 09:59:57',0,0,'demo@demo.com','[Integria IMS - the ITIL Management System] Updated TO-DO from \'admin\' : Do a public release of first version for testing','Hello, \n\nThis is an automated message coming from Integria\n\n\r\nTO-DO \'Do a public release of first version for testing\' has been UPDATED by user demo. This TO-DO was created by user admin. You could track this todo in the following URL (need to use your credentials): http://192.168.70.82/integria/index.php?sec=todo&sec2=operation/todo/todo&operation=update&id=1\n\n\n---------------------------------------------------------------------\nTO-DO NAME  : Do a public release of first version for testing\nDATE / TIME : 2013-02-12 09:58:56\nCREATED BY  : admin\nASSIGNED TO : demo\nPROGRESS    : 0%\nPRIORITY    : 2\nDESCRIPTION\n---------------------------------------------------------------------\nCreate RPM and DEB packages for testing purposes.\n\n\r\nPlease do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n','',''),(6,'2013-02-12 10:00:15',0,0,'admin@integria.sf.net','[Integria IMS - the ITIL Management System] Task \"Development\" has a new work report from Default Admin \n','Hello, \n\nThis is an automated message coming from Integria\n\n\r\n\n\nTask Development of project Super Vaporware v1.0 has been updated by user Default Admin and a new workunit has been added to history. You could track this workunit in the following URL (need to use your credentials):\n\n	http://192.168.70.82/integria/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=1&id_task=3\n\n============================================================\n    TASK        : Development \n    DATE        : 2013-02-12 00:00:00\n    REPORTED by : Default Admin\n    TIME USED   : 4.00 \n============================================================\n\nlot\'s of work done today :)\n\n============================================================\n\n\r\nPlease do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n','',''),(7,'2013-02-12 10:01:31',0,0,'admin@integria.sf.net','[Integria IMS - the ITIL Management System] Task \"Development\" has a new work report from Default Admin \n','Hello, \n\nThis is an automated message coming from Integria\n\n\r\nThis is part of a multi-workunit assigment of 40 hours\n\nTask Development of project Super Vaporware v1.0 has been updated by user Default Admin and a new workunit has been added to history. You could track this workunit in the following URL (need to use your credentials):\n\n	http://192.168.70.82/integria/index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=1&id_task=3\n\n============================================================\n    TASK        : Development \n    DATE        : 2013-02-26 00:00:00\n    REPORTED by : Default Admin\n    TIME USED   : 8.00 \n============================================================\n\nDoing something very weird :)\n\n============================================================\n\n\r\nPlease do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n','',''),(8,'2013-02-12 10:02:36',0,0,'admin@integria.sf.net','[Integria IMS - the ITIL Management System] New calendar event','Hello, \n\nThis is an automated message coming from Integria\n\n\r\nHello, \n\nThis is an automated message coming from Integria\n\nA new entry in calendar has been created by user admin (Default Admin)\n\n\n		Date and time: 2013-05-29 10:02\n\n		Description  : Elena\'s Aniversary\n\nPlease do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n\r\nPlease do not respond directly this email, has been automatically created by Integria (http://integria.sourceforge.net).\n\nThanks for your time and have a nice day\n\n','Array','');
+/*!40000 ALTER TABLE `tpending_mail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tprofile`
+--
+
+LOCK TABLES `tprofile` WRITE;
+/*!40000 ALTER TABLE `tprofile` DISABLE KEYS */;
+INSERT INTO `tprofile` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0),(2,'Regular&#x20;User',1,1,0,0,0,0,1,1,0,1,1,0,1,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0),(3,'Manager',1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0);
+/*!40000 ALTER TABLE `tprofile` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tproject`
+--
+
+LOCK TABLES `tproject` WRITE;
+/*!40000 ALTER TABLE `tproject` DISABLE KEYS */;
+INSERT INTO `tproject` VALUES (-1,'Non imputable hours (Special)','','0000-00-00','0000-00-00','',1,0),(1,'Super&#x20;Vaporware&#x20;v1.0','','2013-05-01','2013-05-01','admin',0,0);
+/*!40000 ALTER TABLE `tproject` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tproject_group`
+--
+
+LOCK TABLES `tproject_group` WRITE;
+/*!40000 ALTER TABLE `tproject_group` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tproject_group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tproject_track`
+--
+
+LOCK TABLES `tproject_track` WRITE;
+/*!40000 ALTER TABLE `tproject_track` DISABLE KEYS */;
+INSERT INTO `tproject_track` VALUES (1,1,'admin',21,'2013-02-12 09:54:53',0),(2,1,'admin',22,'2013-02-12 09:56:55',0);
+/*!40000 ALTER TABLE `tproject_track` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `trole`
+--
+
+LOCK TABLES `trole` WRITE;
+/*!40000 ALTER TABLE `trole` DISABLE KEYS */;
 INSERT INTO `trole` VALUES (1,'Project manager','',125),(2,'Systems engineer','',40),(3,'Junior consultant','',50),(4,'Junior programmer','',45),(5,'Senior programmer','',65),(6,'Analist','',75),(7,'Senior consultant','',75),(8,'Support engineer','',30);
+/*!40000 ALTER TABLE `trole` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `trole_people_project`
+--
 
-INSERT INTO `trole_people_project` VALUES (1,'admin',1,1),(2,'javi',3,1);
+LOCK TABLES `trole_people_project` WRITE;
+/*!40000 ALTER TABLE `trole_people_project` DISABLE KEYS */;
+INSERT INTO `trole_people_project` VALUES (1,'admin',1,1),(2,'demo',4,1);
+/*!40000 ALTER TABLE `trole_people_project` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `trole_people_task`
+--
 
-INSERT INTO `trole_people_task` VALUES (1,'admin',1,1),(2,'javi',3,1),(3,'admin',1,2),(4,'javi',3,2),(5,'admin',1,3),(6,'javi',3,3),(7,'admin',1,4),(8,'javi',3,4),(9,'admin',1,5),(10,'javi',3,5),(11,'admin',1,6),(12,'javi',3,6),(13,'admin',1,7),(14,'javi',3,7),(15,'admin',1,8),(16,'javi',3,8);
+LOCK TABLES `trole_people_task` WRITE;
+/*!40000 ALTER TABLE `trole_people_task` DISABLE KEYS */;
+INSERT INTO `trole_people_task` VALUES (1,'demo',1,1),(2,'demo',1,2),(3,'admin',1,3),(4,'admin',1,4),(5,'demo',1,5);
+/*!40000 ALTER TABLE `trole_people_task` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tsesion`
+--
 
-INSERT INTO `tsesion` VALUES (1,'admin','127.0.0.1','Logon','Logged in','','2012-01-17 17:58:36',1326819516),(2,'javi','127.0.0.1','Logon','Logged in','','2012-01-17 17:59:23',1326819563),(3,'javi','127.0.0.1','ACL Violation','Trying to access inventory search','','2012-01-17 18:00:15',1326819615),(4,'admin','127.0.0.1','SLA Created','Created a new SLA (SLA&#x20;base)','INSERT INTO tsla (`name`, `description`, id_sla_base,\n		min_response, max_response, max_incidents, `enforced`, five_daysonly, time_from, time_to)\n		VALUE (\"SLA&#x20;base\", \"\", 0, 2, 480, 10, 1, 1, 8, 18)','2012-01-17 18:01:07',1326819667),(5,'javi','127.0.0.1','ACL Violation','Trying to access inventory search','','2012-01-17 18:06:58',1326820018),(6,'javi','127.0.0.1','Incident updated','Unknown update','','2012-01-17 18:07:17',1326820037),(7,'javi','127.0.0.1','Incident created','User javi created incident #1','','2012-01-17 18:07:17',1326820037);
-INSERT INTO `tsesion` VALUES (8,'admin','127.0.0.1','Incident updated','Workunit added','','2012-01-17 18:07:35',1326820055),(9,'javi','127.0.0.1','Incident updated','Workunit added','','2012-01-17 18:08:02',1326820082),(10,'javi','127.0.0.1','Incident updated','File added','','2012-01-17 18:09:28',1326820168),(11,'admin','127.0.0.1','Incident updated','Workunit added','','2012-01-17 18:10:58',1326820258),(12,'javi','127.0.0.1','Incident updated','Workunit added','','2012-01-17 18:11:01',1326820261),(13,'admin','','Project created','User admin created project \'Super&#x20;Waporware&#x20;1.0\'','','2012-01-17 18:12:55',1326820375),(14,'admin','','Project #1 tracking updated','State #21','','2012-01-17 18:12:55',1326820375),(15,'admin','127.0.0.1','User/Role added to project','User javi added to project Super&#x20;Waporware&#x20;1.0','','2012-01-17 18:13:12',1326820392),(16,'admin','127.0.0.1','Task added to project','Task \'Planning\' added to project \'1\'','','2012-01-17 18:18:48',1326820728),(17,'admin','','Task #1 tracking updated','State #11','','2012-01-17 18:18:48',1326820728),(18,'admin','','Project #1 tracking updated','State #26','','2012-01-17 18:18:48',1326820728),(19,'admin','127.0.0.1','Task added to project','Task \'re-Requisites&#x20;recollecting.\' added to project \'1\'','','2012-01-17 18:19:09',1326820749),(20,'admin','','Task #2 tracking updated','State #11','','2012-01-17 18:19:09',1326820749),(21,'admin','','Project #1 tracking updated','State #26','','2012-01-17 18:19:09',1326820749),(22,'admin','127.0.0.1','Task added to project','Task \'Formal&#x20;Analysys\' added to project \'1\'','','2012-01-17 18:19:29',1326820769),(23,'admin','','Task #3 tracking updated','State #11','','2012-01-17 18:19:29',1326820769),(24,'admin','','Project #1 tracking updated','State #26','','2012-01-17 18:19:29',1326820769),(25,'admin','127.0.0.1','Task added to project','Task \'Formal&#x20;design\' added to project \'1\'','','2012-01-17 18:19:43',1326820783),(26,'admin','','Task #4 tracking updated','State #11','','2012-01-17 18:19:44',1326820784),(27,'admin','','Project #1 tracking updated','State #26','','2012-01-17 18:19:44',1326820784),(28,'admin','127.0.0.1','Task added to project','Task \'Pre-Development\' added to project \'1\'','','2012-01-17 18:20:05',1326820805),(29,'admin','','Task #5 tracking updated','State #11','','2012-01-17 18:20:06',1326820806),(30,'admin','','Project #1 tracking updated','State #26','','2012-01-17 18:20:06',1326820806),(31,'admin','127.0.0.1','Task added to project','Task \'Development\' added to project \'1\'','','2012-01-17 18:20:24',1326820824),(32,'admin','','Task #6 tracking updated','State #11','','2012-01-17 18:20:24',1326820824),(33,'admin','','Project #1 tracking updated','State #26','','2012-01-17 18:20:24',1326820824),(34,'admin','127.0.0.1','Task added to project','Task \'Testing\' added to project \'1\'','','2012-01-17 18:20:42',1326820842),(35,'admin','','Task #7 tracking updated','State #11','','2012-01-17 18:20:42',1326820842),(36,'admin','','Project #1 tracking updated','State #26','','2012-01-17 18:20:42',1326820842),(37,'admin','127.0.0.1','Task added to project','Task \'Documentation\' added to project \'1\'','','2012-01-17 18:20:59',1326820859),(38,'admin','','Task #8 tracking updated','State #11','','2012-01-17 18:20:59',1326820859),(39,'admin','','Project #1 tracking updated','State #26','','2012-01-17 18:20:59',1326820859),(40,'javi','127.0.0.1','Incident updated','Unknown update','','2012-01-17 18:25:03',1326821103),(41,'javi','127.0.0.1','Incident created','User javi created incident #2','','2012-01-17 18:25:03',1326821103),(42,'admin','127.0.0.1','Incident updated','Workunit added','','2012-01-17 18:25:20',1326821120),(43,'javi','127.0.0.1','Incident updated','Workunit added','','2012-01-17 18:25:31',1326821131),(44,'admin','127.0.0.1','Incident updated','Workunit added','','2012-01-17 18:25:49',1326821149),(45,'javi','127.0.0.1','Incident updated','Workunit added','','2012-01-17 18:26:00',1326821160),(46,'admin','127.0.0.1','Incident updated','Status changed -> Resolved','','2012-01-17 18:26:28',1326821188),(47,'admin','127.0.0.1','Incident updated','Resolution changed -> ','','2012-01-17 18:26:28',1326821188),(48,'admin','127.0.0.1','Incident updated','Updated','','2012-01-17 18:26:28',1326821188),(49,'admin','127.0.0.1','Incident updated','User admin incident updated #2','','2012-01-17 18:26:28',1326821188),(50,'javi','127.0.0.1','Incident updated','Unknown update','','2012-01-17 18:27:01',1326821221),(51,'javi','127.0.0.1','Incident created','User javi created incident #3','','2012-01-17 18:27:01',1326821221),(52,'javi','127.0.0.1','Logoff','Logged out','','2012-01-17 18:30:33',1326821433),(53,'admin','127.0.0.1','Logon','Logged in','','2012-01-17 18:30:37',1326821437),(54,'admin','127.0.0.1','Logoff','Logged out','','2012-01-17 18:41:53',1326822113),(55,'javi','127.0.0.1','Logon','Logged in','','2012-01-17 18:41:56',1326822116),(56,'javi','127.0.0.1','Logoff','Logged out','','2012-01-17 18:49:18',1326822558),(57,'javi','127.0.0.1','Logon','Logged in','','2012-01-17 18:49:21',1326822561),(58,'javi','127.0.0.1','Logoff','Logged out','','2012-01-17 18:54:15',1326822855),(59,'admin','127.0.0.1','Logon','Logged in','','2012-01-17 18:54:18',1326822858),(60,'admin','127.0.0.1','Spare work unit added','Workunit for admin added to Task ID #1','','2012-01-17 20:07:49',1326827269),(61,'admin','127.0.0.1','Logon','Logged in','','2012-01-17 21:14:41',1326831281),(62,'javi','127.0.0.1','Logon','Logged in','','2012-01-17 21:33:35',1326832415),(63,'javi','127.0.0.1','Logoff','Logged out','','2012-01-17 21:34:26',1326832466),(64,'admin','127.0.0.1','Logon','Logged in','','2012-01-17 21:34:28',1326832468),(65,'admin','127.0.0.1','Logoff','Logged out','','2012-01-17 21:36:27',1326832587),(66,'javi','127.0.0.1','Logon','Logged in','','2012-01-17 21:36:29',1326832589),(67,'javi','127.0.0.1','Logoff','Logged out','','2012-01-17 21:36:39',1326832599),(68,'admin','127.0.0.1','Logon Failed','Invalid username: admin / n****e','','2012-01-17 21:36:41',1326832601),(69,'admin','127.0.0.1','Logon','Logged in','','2012-01-17 21:36:44',1326832604),(70,'admin','127.0.0.1','Incident updated','Assigned user changed -> Javier&#x20;Nadie','','2012-01-17 21:38:06',1326832686),(71,'admin','127.0.0.1','Incident updated','Updated','','2012-01-17 21:38:06',1326832686),(72,'support','127.0.0.1','Incident updated','User admin incident updated #1','','2012-01-17 21:38:06',1326832686),(73,'admin','127.0.0.1','Incident updated','Workunit added','','2012-01-17 21:44:23',1326833063),(74,'admin','127.0.0.1','Logoff','Logged out','','2012-01-17 21:46:02',1326833162),(75,'luis','127.0.0.1','Logon','Logged in','','2012-01-17 21:46:05',1326833165),(76,'luis','127.0.0.1','Incident updated','Workunit added','','2012-01-17 21:47:03',1326833223),(77,'luis','127.0.0.1','Incident updated','Assigned user changed -> ','','2012-01-17 21:48:33',1326833313),(78,'luis','127.0.0.1','Incident updated','Updated','','2012-01-17 21:48:33',1326833313),(79,'admin','127.0.0.1','Incident updated','User luis incident updated #3','','2012-01-17 21:48:33',1326833313),(80,'luis','127.0.0.1','Incident updated','Assigned user changed -> Javier&#x20;Nadie','','2012-01-17 21:51:15',1326833475),(81,'luis','127.0.0.1','Incident updated','Updated','','2012-01-17 21:51:16',1326833476),(82,'luis','127.0.0.1','Incident updated','User luis incident updated #3','','2012-01-17 21:51:16',1326833476),(83,'luis','127.0.0.1','Incident updated','Updated','','2012-01-17 21:51:16',1326833476),(84,'javi','127.0.0.1','Incident updated','User luis incident updated #3','','2012-01-17 21:51:16',1326833476),(85,'luis','127.0.0.1','Logoff','Logged out','','2012-01-17 22:11:15',1326834675),(86,'javi','127.0.0.1','Logon','Logged in','','2012-01-17 22:11:19',1326834679),(87,'javi','127.0.0.1','Incident updated','Status changed -> Resolved','','2012-01-17 22:11:36',1326834696),(88,'javi','127.0.0.1','Incident updated','Updated','','2012-01-17 22:11:36',1326834696),(89,'javi','127.0.0.1','Incident updated','User javi incident updated #3','','2012-01-17 22:11:36',1326834696),(90,'javi','127.0.0.1','Incident updated','Updated','','2012-01-17 22:11:36',1326834696),(91,'javi','127.0.0.1','Incident updated','User javi incident updated #3','','2012-01-17 22:11:36',1326834696);
+LOCK TABLES `tsesion` WRITE;
+/*!40000 ALTER TABLE `tsesion` DISABLE KEYS */;
+INSERT INTO `tsesion` VALUES (1,'admin','192.168.70.101','Logon','Logged in','','2013-02-12 09:22:01',1360657321),(2,'admin','192.168.70.101','SLA Created','Created a new SLA (Regular&#x20;SLA)','INSERT INTO tsla (`name`, `description`, id_sla_base,\n		min_response, max_response, max_incidents, `enforced`, five_daysonly, time_from, time_to, max_inactivity)\n		VALUE (\"Regular&#x20;SLA\", \"\", 0, 48, 480, 10, 1, 1, 8, 18, 96)','2013-02-12 09:23:03',1360657383),(3,'admin','192.168.70.101','Inventory updated','Created','','2013-02-12 09:24:00',1360657440),(4,'admin','192.168.70.101','Inventory updated','Inventory private','','2013-02-12 09:24:00',1360657440),(5,'admin','192.168.70.101','Inventory updated','Created','','2013-02-12 09:26:06',1360657566),(6,'admin','192.168.70.101','Inventory updated','Inventory private','','2013-02-12 09:26:06',1360657566),(7,'admin','192.168.70.101','Inventory updated','Inventory object type added -> Computer','','2013-02-12 09:26:06',1360657566),(8,'admin','','Lead created','Lead named \'Peter&#x20;McNee\' has been added','','2013-02-12 09:28:27',1360657707),(9,'admin','','Contract created','Contract named \'Sample&#x20;contract\' has been added','','2013-02-12 09:29:27',1360657767),(10,'admin','','Contact created','Contact named \'Sancho&#x20;Lerena\' has been added','','2013-02-12 09:30:01',1360657801),(11,'admin','192.168.70.101','Incident updated','Added inventory object: Cenutrio','','2013-02-12 09:50:27',1360659027),(12,'admin','192.168.70.101','Inventory updated','inventory object in incident -> Something&#x20;seems&#x20;to&#x20;be&#x20;wrong&#x20;on&#x20;Mauertbe','','2013-02-12 09:50:27',1360659027),(13,'admin','192.168.70.101','Incident created','User admin created incident #1','','2013-02-12 09:50:27',1360659027),(14,'admin','192.168.70.101','Incident updated','Status changed -> New','','2013-02-12 09:50:27',1360659027),(15,'admin','192.168.70.101','Incident updated','Assigned user changed -> Default Admin','','2013-02-12 09:50:27',1360659027),(16,'admin','192.168.70.101','Incident updated','Group has changed -> Customer #B','','2013-02-12 09:50:27',1360659027),(17,'admin','192.168.70.101','Incident updated','Created','','2013-02-12 09:50:27',1360659027),(18,'admin','192.168.70.101','Logoff','Logged out','','2013-02-12 09:53:13',1360659193),(19,'demo','192.168.70.101','Logon','Logged in','','2013-02-12 09:53:17',1360659197),(20,'demo','192.168.70.101','Incident updated','Workunit added','','2013-02-12 09:53:45',1360659225),(21,'demo','192.168.70.101','Logoff','Logged out','','2013-02-12 09:54:21',1360659261),(22,'admin','192.168.70.101','Logon','Logged in','','2013-02-12 09:54:32',1360659272),(23,'admin','','Project created','User admin created project \'Super&#x20;Vaporware&#x20;v1.0\'','','2013-02-12 09:54:53',1360659293),(24,'admin','','Project tracking updated','Project #1 status #21','','2013-02-12 09:54:53',1360659293),(25,'admin','192.168.70.101','User/Role added to project','User demo added to project Super&#x20;Vaporware&#x20;v1.0','','2013-02-12 09:55:06',1360659306),(26,'admin','192.168.70.101','Task updated','Task \'Planning\' updated to project \'1\'','','2013-02-12 09:56:30',1360659390),(27,'admin','','Task tracking updated','Task #id_task Status #12','','2013-02-12 09:56:30',1360659390),(28,'admin','192.168.70.101','Task updated','Task \'Analysis\' updated to project \'1\'','','2013-02-12 09:56:30',1360659390),(29,'admin','','Task tracking updated','Task #id_task Status #12','','2013-02-12 09:56:30',1360659390),(30,'admin','192.168.70.101','Task updated','Task \'Development\' updated to project \'1\'','','2013-02-12 09:56:30',1360659390),(31,'admin','','Task tracking updated','Task #id_task Status #12','','2013-02-12 09:56:31',1360659391),(32,'admin','192.168.70.101','Task updated','Task \'Tests\' updated to project \'1\'','','2013-02-12 09:56:31',1360659391),(33,'admin','','Task tracking updated','Task #id_task Status #12','','2013-02-12 09:56:31',1360659391),(34,'admin','192.168.70.101','Task updated','Task \'Documentation\' updated to project \'1\'','','2013-02-12 09:56:31',1360659391),(35,'admin','','Task tracking updated','Task #id_task Status #12','','2013-02-12 09:56:31',1360659391),(36,'admin','192.168.70.101','Project updated','Project Super&#x20;Vaporware&#x20;v1.0','','2013-02-12 09:56:55',1360659415),(37,'admin','','Project tracking updated','Project #1 status #22','','2013-02-12 09:56:55',1360659415),(38,'admin','192.168.70.101','Spare work unit added','Workunit for admin added to Task ID #3','','2013-02-12 10:00:15',1360659615),(39,'admin','192.168.70.101','Logoff','Logged out','','2013-02-12 10:02:51',1360659771),(40,'admin','192.168.70.101','Logon','Logged in','','2013-02-12 10:02:56',1360659776),(41,'admin','192.168.70.101','Logoff','Logged out','','2013-02-12 10:05:38',1360659938),(42,'admin','192.168.70.101','Logon','Logged in','','2013-02-12 10:24:47',1360661087);
+/*!40000 ALTER TABLE `tsesion` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tsla`
+--
 
-INSERT INTO `tsla` VALUES (1,'SLA&#x20;base','',2,480,10,96,1,1,8,18,0);
+LOCK TABLES `tsla` WRITE;
+/*!40000 ALTER TABLE `tsla` DISABLE KEYS */;
+INSERT INTO `tsla` VALUES (1,'Regular&#x20;SLA','',48,480,10,96,1,1,8,18,0);
+/*!40000 ALTER TABLE `tsla` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `ttask`
+--
 
-INSERT INTO `ttask_track` VALUES (1,1,'admin',0,11,'2012-01-17 18:18:48'),(2,2,'admin',0,11,'2012-01-17 18:19:09'),(3,3,'admin',0,11,'2012-01-17 18:19:29'),(4,4,'admin',0,11,'2012-01-17 18:19:44'),(5,5,'admin',0,11,'2012-01-17 18:20:06'),(6,6,'admin',0,11,'2012-01-17 18:20:24'),(7,7,'admin',0,11,'2012-01-17 18:20:42'),(8,8,'admin',0,11,'2012-01-17 18:20:59');
+LOCK TABLES `ttask` WRITE;
+/*!40000 ALTER TABLE `ttask` DISABLE KEYS */;
+INSERT INTO `ttask` VALUES (-4,-1,0,'Workunits lost (without project/task)','',0,0,0,'0000-00-00','0000-00-00',0,0.00,0,'none',1),(-3,-1,0,'Not justified','',0,0,0,'0000-00-00','0000-00-00',0,0.00,0,'none',1),(-2,-1,0,'Health issues','',0,0,0,'0000-00-00','0000-00-00',0,0.00,0,'none',1),(-1,-1,0,'Vacations','',0,0,0,'0000-00-00','0000-00-00',0,0.00,0,'none',1),(1,1,0,'Planning','',0,0,0,'2013-01-02','2013-01-17',128,0.00,2,'none',1),(2,1,0,'Analysis','',0,0,0,'2013-02-04','2013-02-12',72,0.00,2,'none',1),(3,1,0,'Development','',6,0,0,'2013-02-20','2013-02-28',72,0.00,2,'none',1),(4,1,0,'Tests','',0,0,0,'2013-03-01','2013-03-30',240,0.00,2,'none',1),(5,1,0,'Documentation','',0,0,0,'2013-04-01','2013-04-30',240,0.00,2,'none',1);
+/*!40000 ALTER TABLE `ttask` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `ttask_inventory`
+--
 
-INSERT INTO `ttodo` (`id`, `name`, `progress`, `assigned_user`, `created_by_user`, `priority`, `start_date`, `end_date`, `validation_date`, `id_wo_category`) VALUES (1,'Revisar&#x20;documentacion&#x20;para&#x20;formato&#x20;PDF',0,'admin','admin',0,'2012-01-17 20:06:55','','2012-01-17 20:07:01',1);
- 
-INSERT INTO `tusuario_perfil` VALUES (2,'admin',5,1,'admin');
-INSERT INTO `tusuario_perfil` VALUES (3,'javi',4,1,'admin'),(4,'javi',1,4,'admin'),(5,'javi',3,4,'admin');
+LOCK TABLES `ttask_inventory` WRITE;
+/*!40000 ALTER TABLE `ttask_inventory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ttask_inventory` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `ttask_track`
+--
 
-INSERT INTO `tworkunit` VALUES (1,'2012-01-17 18:07:35',0.25,'admin','Have&#x20;you&#x20;tried&#x20;to&#x20;turn&#x20;it&#x20;off&#x20;and&#x20;on&#x20;?&#x0a;',0,0,'',1),(2,'2012-01-17 18:08:02',0.25,'javi','I&#x20;also&#x20;see&#x20;IT&#x20;Crowd...&#x20;but&#x20;not,&#x20;a&#x20;restart&#x20;doesn&#039;t&#x20;solve&#x20;the&#x20;problem,&#x20;please&#x20;ADVICE:&#x0a;',0,0,'',1),(3,'2012-01-17 18:09:28',0.05,'javi','Automatic WU: Added a file to this issue. Filename uploaded: shot0000.jpg',0,0,'',1),(4,'2012-01-17 18:10:58',0.25,'admin','Give&#x20;me&#x20;a&#x20;few&#x20;hours&#x20;to&#x20;check&#x20;it&#x20;out.',0,0,'',1),(5,'2012-01-17 18:11:01',0.25,'javi','Thx&#x0a;',0,0,'',1),(6,'2012-01-17 18:25:20',0.25,'admin','I&#x20;how&#x20;its&#x20;possible&#x20;you&#x20;type&#x20;that&#x20;?',0,0,'',1),(7,'2012-01-17 18:25:31',0.25,'javi','From&#x20;another&#x20;system...&#x20;stupid!&#x20;&#x0a;',0,0,'',1),(8,'2012-01-17 18:25:49',0.25,'admin','Have&#x20;you&#x20;tried&#x20;to&#x20;plug&#x20;off&#x20;and&#x20;plugin&#x20;in&#x20;again&#x20;the&#x20;keyboard&#x20;?&#x0a;',0,0,'',1),(9,'2012-01-17 18:26:00',0.25,'javi','OMG...&#x20;amazing&#x20;:-&#41;&#41;&#41;&#x20;it&#x20;works&#x20;!&#x0a;',0,0,'',1),(10,'2012-01-17 00:00:00',8.00,'admin','Preparing&#x20;the&#x20;development&#x20;servers.',0,5,'',1),(11,'2012-01-18 00:00:00',8.00,'admin','Preparing&#x20;the&#x20;development&#x20;servers.',0,5,'',1),(12,'2012-01-19 00:00:00',8.00,'admin','Preparing&#x20;the&#x20;development&#x20;servers.',0,5,'',1),(13,'2012-01-20 00:00:00',8.00,'admin','Preparing&#x20;the&#x20;development&#x20;servers.',0,5,'',1),(14,'2012-01-23 00:00:00',8.00,'admin','Preparing&#x20;the&#x20;development&#x20;servers.',0,5,'',1),(15,'2012-01-01 00:00:00',8.00,'javi','Interview&#x20;with&#x20;the&#x20;customer&#x20;and&#x20;other&#x20;power-users',0,3,'',1),(16,'2012-01-02 00:00:00',8.00,'javi','Interview&#x20;with&#x20;the&#x20;customer&#x20;and&#x20;other&#x20;power-users',0,3,'',1),(17,'2012-01-03 00:00:00',8.00,'javi','Interview&#x20;with&#x20;the&#x20;customer&#x20;and&#x20;other&#x20;power-users',0,3,'',1),(18,'2012-01-04 00:00:00',8.00,'javi','Interview&#x20;with&#x20;the&#x20;customer&#x20;and&#x20;other&#x20;power-users',0,3,'',1),(19,'2012-01-05 00:00:00',8.00,'javi','Interview&#x20;with&#x20;the&#x20;customer&#x20;and&#x20;other&#x20;power-users',0,3,'',1),(20,'2012-01-06 00:00:00',8.00,'javi','Interview&#x20;with&#x20;the&#x20;customer&#x20;and&#x20;other&#x20;power-users',0,3,'',1),(21,'2012-01-09 00:00:00',8.00,'javi','Interview&#x20;with&#x20;the&#x20;customer&#x20;and&#x20;other&#x20;power-users',0,3,'',1),(22,'2012-01-10 00:00:00',8.00,'javi','Interview&#x20;with&#x20;the&#x20;customer&#x20;and&#x20;other&#x20;power-users',0,3,'',1),(23,'2012-01-11 00:00:00',8.00,'javi','Interview&#x20;with&#x20;the&#x20;customer&#x20;and&#x20;other&#x20;power-users',0,3,'',1),(24,'2012-01-12 00:00:00',8.00,'javi','Interview&#x20;with&#x20;the&#x20;customer&#x20;and&#x20;other&#x20;power-users',0,3,'',1),(25,'2012-01-17 00:00:00',4.00,'admin','Testing',0,0,'',1),(26,'2012-01-17 21:44:23',0.25,'javi','&quot;Veo&#x20;lo&#x20;que&#x20;me&#x20;cuentas&#x20;y&#x20;voy&#x20;a&#x20;intentar&#x20;reproducirlo&#x20;para&#x20;determinar&#x20;el&#x20;origen&#x20;del&#x20;problema&quot;.',0,0,'',1),(27,'2012-01-17 21:47:03',0.25,'luis','Estamos&#x20;mirandolo,&#x20;el&#x20;problema&#x20;parece&#x20;complicado.',0,0,'',1);
+LOCK TABLES `ttask_track` WRITE;
+/*!40000 ALTER TABLE `ttask_track` DISABLE KEYS */;
+INSERT INTO `ttask_track` VALUES (1,1,'admin',0,12,'2013-02-12 09:56:30'),(2,2,'admin',0,12,'2013-02-12 09:56:30'),(3,3,'admin',0,12,'2013-02-12 09:56:31'),(4,4,'admin',0,12,'2013-02-12 09:56:31'),(5,5,'admin',0,12,'2013-02-12 09:56:31');
+/*!40000 ALTER TABLE `ttask_track` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `ttodo`
+--
 
-INSERT INTO `tworkunit_incident` VALUES (1,1,1),(2,1,2),(3,1,3),(4,1,4),(5,1,5),(6,2,6),(7,2,7),(8,2,8),(9,2,9),(10,3,26),(11,3,27);
+LOCK TABLES `ttodo` WRITE;
+/*!40000 ALTER TABLE `ttodo` DISABLE KEYS */;
+INSERT INTO `ttodo` VALUES (1,'Do&#x20;a&#x20;public&#x20;release&#x20;of&#x20;first&#x20;version&#x20;for&#x20;testing',0,'demo','admin',2,'Create&#x20;RPM&#x20;and&#x20;DEB&#x20;packages&#x20;for&#x20;testing&#x20;purposes.','2013-02-12 09:59:57',3,'2013-02-12 00:00:00','0000-00-00 00:00:00','2000-01-01 00:00:00',1,2),(2,'Elena&#039;s&#x20;aniversary',0,'admin','admin',4,'Dont&#x20;forget&#x20;or&#x20;I&#039;m&#x20;dead&#x20;!&#x0d;&#x0a;','2013-02-12 09:59:38',0,'2013-02-12 00:00:00','2013-05-29 00:00:00','2000-01-01 00:00:00',0,3);
+/*!40000 ALTER TABLE `ttodo` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `ttranslate_string`
+--
 
-INSERT INTO `tworkunit_task` VALUES (1,5,10),(2,5,11),(3,5,12),(4,5,13),(5,5,14),(6,2,15),(7,2,16),(8,2,17),(9,2,18),(10,2,19),(11,2,20),(12,2,21),(13,2,22),(14,2,23),(15,2,24),(16,1,25);
+LOCK TABLES `ttranslate_string` WRITE;
+/*!40000 ALTER TABLE `ttranslate_string` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ttranslate_string` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Dumping data for table `tuser_report`
+--
 
-INSERT INTO `tmilestone` VALUES (1,1,'2012-05-31 00:00:00','First&#x20;PoC',''),(2,1,'2012-06-01 00:00:00','First&#x20;Real&#x20;Scenario&#x20;Test',''),(3,1,'2012-07-16 00:00:00','Final&#x20;test','');
+LOCK TABLES `tuser_report` WRITE;
+/*!40000 ALTER TABLE `tuser_report` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tuser_report` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tusuario`
+--
+
+LOCK TABLES `tusuario` WRITE;
+/*!40000 ALTER TABLE `tusuario` DISABLE KEYS */;
+INSERT INTO `tusuario` VALUES ('admin','Default&#x20;Admin','2f62afb6e17e46f0717225bcca6225b7','Default&#x20;Integria&#x20;Admin&#x20;superuser.&#x20;Please&#x20;change&#x20;password&#x20;ASAP','2013-02-12 10:24:47','admin@integria.sf.net','555-555-555',1,'people_1','en_GB','',0,1,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0,'',1),('demo','Mr.&#x20;Demo&#x20;Potato','fe01ce2a7fbac8fafaed7c982a04e229','','2013-02-12 09:53:17','demo@demo.com','',0,'people_1','en_GB','',0,1,0,0,'0000-00-00 00:00:00','2013-02-12 09:53:15',1,0,'23928',1);
+/*!40000 ALTER TABLE `tusuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tusuario_perfil`
+--
+
+LOCK TABLES `tusuario_perfil` WRITE;
+/*!40000 ALTER TABLE `tusuario_perfil` DISABLE KEYS */;
+INSERT INTO `tusuario_perfil` VALUES (1,'demo',2,2,'admin');
+/*!40000 ALTER TABLE `tusuario_perfil` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tvacationday`
+--
+
+LOCK TABLES `tvacationday` WRITE;
+/*!40000 ALTER TABLE `tvacationday` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tvacationday` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `twizard`
+--
+
+LOCK TABLES `twizard` WRITE;
+/*!40000 ALTER TABLE `twizard` DISABLE KEYS */;
+/*!40000 ALTER TABLE `twizard` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `two_category`
+--
+
+LOCK TABLES `two_category` WRITE;
+/*!40000 ALTER TABLE `two_category` DISABLE KEYS */;
+INSERT INTO `two_category` VALUES (1,'Ideas','idea.png'),(2,'Unplanned&#x20;tasks','puzzle.png'),(3,'Personal','calendar.png');
+/*!40000 ALTER TABLE `two_category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tworkunit`
+--
+
+LOCK TABLES `tworkunit` WRITE;
+/*!40000 ALTER TABLE `tworkunit` DISABLE KEYS */;
+INSERT INTO `tworkunit` VALUES (1,'2013-02-12 09:53:45',0.25,'demo','I&#039;ve&#x20;not&#x20;entered&#x20;yet&#x20;in&#x20;this,&#x20;please,&#x20;give&#x20;me&#x20;a&#x20;few&#x20;days&#x20;to&#x20;do&#x20;more&#x20;tests.',0,0,'',1),(2,'2013-02-12 00:00:00',4.00,'admin','lot&#039;s&#x20;of&#x20;work&#x20;done&#x20;today&#x20;:&#41;',0,0,'',1),(3,'2013-04-01 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1),(4,'2013-04-02 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1),(5,'2013-04-03 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1),(6,'2013-04-04 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1),(7,'2013-04-05 00:00:00',8.00,'admin','days&#x20;of&#x20;holidays',0,0,'',1),(8,'2013-02-20 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1),(9,'2013-02-21 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1),(10,'2013-02-22 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1),(11,'2013-02-25 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1),(12,'2013-02-26 00:00:00',8.00,'admin','Doing&#x20;something&#x20;very&#x20;weird&#x20;:&#41;',0,0,'',1);
+/*!40000 ALTER TABLE `tworkunit` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tworkunit_incident`
+--
+
+LOCK TABLES `tworkunit_incident` WRITE;
+/*!40000 ALTER TABLE `tworkunit_incident` DISABLE KEYS */;
+INSERT INTO `tworkunit_incident` VALUES (1,1,1);
+/*!40000 ALTER TABLE `tworkunit_incident` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `tworkunit_task`
+--
+
+LOCK TABLES `tworkunit_task` WRITE;
+/*!40000 ALTER TABLE `tworkunit_task` DISABLE KEYS */;
+INSERT INTO `tworkunit_task` VALUES (1,3,2),(2,-1,3),(3,-1,4),(4,-1,5),(5,-1,6),(6,-1,7),(7,3,8),(8,3,9),(9,3,10),(10,3,11),(11,3,12);
+/*!40000 ALTER TABLE `tworkunit_task` ENABLE KEYS */;
+UNLOCK TABLES;
+

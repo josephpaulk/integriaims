@@ -1,3 +1,10 @@
+2013-05-14  Sancho Lerena <slerena@artica.es>
+
+        * integria_dbdata.sql,
+        integria_demo.sql,
+        integria_db.sql: Fixed load datasets for "demo" and dbscheme 
+	for small errors.
+
 2013-05-14  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php

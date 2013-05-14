@@ -864,14 +864,6 @@ CREATE TABLE `tnewsletter_queue_data` (
 
 -- status could be 0-ready, 1-sent, 2-error
 
-CREATE TABLE `ttranslate_string` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `lang` tinytext NOT NULL,
-  `string` text NOT NULL,
-  `translation` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE IF NOT EXISTS `tincident_stats` (
 	`id` bigint(20) unsigned NOT NULL auto_increment,
 	`id_incident` bigint(20) unsigned NOT NULL default 0,
@@ -1003,3 +995,19 @@ CREATE TABLE `tinventory_track` (
   FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ttranslate_string` (
+	`id` int(10) unsigned NOT NULL auto_increment,
+	`lang` TINYTEXT NOT NULL ,
+	`string` TEXT NOT NULL DEFAULT '' ,
+	`translation` TEXT NOT NULL DEFAULT '' , 
+	PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `tinventory_reports` (
+  `id` mediumint unsigned NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `sql` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
