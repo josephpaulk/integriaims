@@ -676,7 +676,7 @@ function fill_inventories_table($inventories, &$table) {
 /*
  * Returns all inventory type fields.
  */ 
-function inventories_get_all_type_field ($id_object_type, $id_inventory) {
+function inventories_get_all_type_field ($id_object_type, $id_inventory=false) {
 	
 	global $config;
 	
@@ -697,6 +697,10 @@ function inventories_get_all_type_field ($id_object_type, $id_inventory) {
 		}
 	}
 
+	if (!$id_inventory) {
+		return $all_fields;
+	}
+	
 	foreach ($all_fields as $key => $field) {
 
 		$id_incident_field = $field['id'];
@@ -1050,6 +1054,155 @@ function inventories_show_list($sql_search, $params='') {
 		//ui_pagination($count, false, $offset);
 		print_table($table);
 	}
+}
+
+/*
+ * IMPORT INVENTORIES FROM CSV. 
+ */
+function inventories_load_file ($objects_file) {
+	$file_handle = fopen($objects_file, "r");
+	global $config;
+	$create = true;
+	
+	while (!feof($file_handle)) {
+		$line = fgets($file_handle);
+		
+		if (($line == '') || (!isset($line))) {
+			continue;
+		}
+		
+		preg_match_all('/(.*),/',$line,$matches);
+		$values = explode(',',$line);
+		
+		$id_object_type = $values[0];
+		$owner = $values[1];
+		$name = $values[2];
+		$public = $values[3];
+		$description = $values[4];
+		$id_contract = $values[5];
+		$id_manufacturer = $values[6];
+		$id_parent = $values[7];
+		
+		$value = array(
+			'id_object_type' => $id_object_type,
+			'owner' => $owner,
+			'name' => $name,
+			'public' => $public,
+			'description' => $description,
+			'id_contract' => $id_contract,
+			'id_manufacturer' => $id_manufacturer,
+			'id_parent' => $id_parent);
+			
+			if ($name == '') {
+				echo "<h3 class='error'>" . __ ('Inventory name empty') ."</h3>";
+				$create = false;
+			} else {
+				$inventory_id = get_db_value ('id', 'tinventory', 'name', $name);
+				if ($inventory_id != false) {
+					echo "<h3 class='error'>" . __ ('Inventory '). $name . __(' already exists') . "</h3>";
+					$create = false;
+				}
+			}
+	
+			if (($id_contract != 0) && ($id_contract != '')) {
+				$exists = get_db_value('id', 'tcontract', 'id', $id_contract);
+				
+				if (!$exists) {
+					echo "<h3 class='error'>" . __ ('Contract ') . $id_contract . __(' doesn\'t exist')."</h3>";
+					$create = false;
+				}
+			}
+			
+			if (($id_manufacturer != 0) && ($id_manufacturer != '')) {
+				$exists = get_db_value('id', 'tmanufacturer', 'id', $id_manufacturer);
+				
+				if (!$exists) {
+					echo "<h3 class='error'>" . __ ('Manufacturer ') . $id_manufacturer . __(' doesn\'t exist')."</h3>";
+					$create = false;
+				}
+			}
+			
+			if (($id_object_type != 0) && ($id_object_type != '')) {
+				$exists_object_type = get_db_value('id', 'tobject_type', 'id', $id_object_type);
+				
+				if (!$exists_object_type) {
+					echo "<h3 class='error'>" . __ ('Object type ') . $id_object_type . __(' doesn\'t exist')."</h3>";
+					$create = false;
+				} else {
+					$all_fields = inventories_get_all_type_field ($id_object_type);
+					
+					$value2 = array();
+					$i = 8;
+					foreach ($all_fields as $key=>$field) {
+						$data = $values[$i];
+
+						switch ($field['type']) {
+							case 'combo':
+								$combo_val = explode(",", $field['combo_value']);
+								$k = array_search($data, $combo_val);
+								
+								if (!$k) {
+									echo "<h3 class='error'>" . __ ('Field ') . $field['label'] . __(' doesn\'t match. Valid values: ').$field['combo_value']."</h3>";
+									$create = false;
+								}
+								
+								break;
+							case 'numeric':
+								$res = is_numeric($data);
+								if (!$res) {
+									echo "<h3 class='error'>" . __ ('Field ') . $field['label'] . __(' must be numeric')."</h3>";
+									$create = false;
+								}
+								break;
+							case 'external':
+								$table_ext = $field['external_table_name'];
+								$exists_table = get_db_sql ("SHOW TABLES LIKE '$table_ext'");
+								
+								if (!$exists_table) {
+									echo "<h3 class='error'>" . __ ('External table ') . $table_ext . __(' doesn\'t exist')."</h3>";
+									$create = false;
+								}
+								
+								$id = $field['external_reference_field'];
+								$exists_id = get_db_sql ("SELECT $id FROM $table_ext");
+								
+								if (!$exists_id) {
+									echo "<h3 class='error'>" . __ ('Id ') . $id . __(' doesn\'t exist')."</h3>";
+									$create = false;
+								}
+								break;
+						}
+						
+						if ($field['inherit']) {
+							$ok = inventories_check_unique_field($data, $field['type']);
+							if (!$ok) {
+								echo "<h3 class='error'>" . __ ('Field ') . $field['label'] . __(' must be unique')."</h3>";
+								$create = false;
+							}
+						}
+						
+						$value2['id_object_type_field'] = $id_object_type;
+						$value2['data'] = $data;
+						$i++;
+					}
+				}
+			}
+			
+			if ($create) {
+				$result_id  = process_sql_insert('tinventory', $value);
+				
+				if ($result_id) {
+					$values2['id_inventory'] = $result_id;
+					
+					process_sql_insert('tobject_field_data', $value2);
+				}
+				
+			}
+	} //end while
+
+	fclose($file_handle);
+	echo "<h3 class='info'>" . __ ('File loaded'). "</h3>";
+	return;
 }
 
 ?>

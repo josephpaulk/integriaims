@@ -1,3 +1,16 @@
+2013-05-17  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_inventories.php
+	  operation/side_menu.php: Added import inventories
+	from csv.
+	
+	* operation/inventories/inventory_import_objects.php
+	  include/js/jquery-1.9.0.js
+	  include/js/jquery.validate.js
+	  include/js/jquery.validate.min.js: Added files.
+
+	* godmode/usuarios/configurar_usuarios.php: Validate form.
+
 2013-05-14  Sancho Lerena <slerena@artica.es>
 
         * integria_dbdata.sql,

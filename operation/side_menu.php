@@ -759,6 +759,13 @@ if ($sec == "inventory" && give_acl($config["id_user"], 0, "PM") && $show_invent
 		echo "<li>";
 	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/manage_objects'>".__('Object types')."</a></li>";
 
+	// Building overview
+	if ($sec2=="operation/inventories/import_objects")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=inventory&sec2=operation/inventories/inventory_import_objects'>".__('Import objects from CSV')."</a></li>";
+	
 	echo "</ul>";
 	echo "</div>";
 }

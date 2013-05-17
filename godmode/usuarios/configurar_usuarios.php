@@ -228,10 +228,10 @@ if (isset($_GET["update_user"]) OR isset($_GET["nuevo_usuario"])){
 <?php 
 if (isset($_GET["alta"]))
 	// Create URL
-	echo '<form name="new_user" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&nuevo_usuario=1">';
+	echo '<form name="new_user" id="id_new_user" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&nuevo_usuario=1">';
 else
 	// Update URL
-	echo '<form name="user_mod" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user='.$update_user.'">';
+	echo '<form name="user_mod" id="id_user_mod" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user='.$update_user.'">';
 
 echo '<tr>';
 echo '<td class="datos">'.__('User ID');
@@ -441,8 +441,10 @@ if (isset($_GET["alta"])){
 </form>
 </td></tr></table>
 
-
-<script  type="text/javascript">
+<script src="include/js/jquery.js"></script>
+<script src="include/js/jquery.validate.js"></script>
+<script type="text/javascript">
+	
 $(document).ready (function () {
 	$("#avatar").change (function () {
 		icon = this.value;
@@ -452,6 +454,27 @@ $(document).ready (function () {
 	});
 	
 	inputControl("nombre");
+	
+	var reglas = {
+		  nombre:{required:true},
+		  direccion: {required: true,email: true},
+		  num_employee: {required:true}
+		 };
+	var mensajes = {
+		  nombre: "Empty name",
+		  direccion : 'Mail not valid',
+		  num_employee : 'Num employee not valid'
+		 };
+
+	$("#id_new_user").validate({
+		rules:reglas,  
+		messages:mensajes  	  
+     });
+        
+	$("#id_user_mod").validate({
+		rules:reglas,  
+		messages:mensajes
+	});
 });
 </script>
 
