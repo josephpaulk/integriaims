@@ -1062,9 +1062,11 @@ function inventories_show_list($sql_search, $params='') {
 function inventories_load_file ($objects_file) {
 	$file_handle = fopen($objects_file, "r");
 	global $config;
-	$create = true;
+	
 	
 	while (!feof($file_handle)) {
+		$create = true;
+		
 		$line = fgets($file_handle);
 		
 		if (($line == '') || (!isset($line))) {
@@ -1131,8 +1133,9 @@ function inventories_load_file ($objects_file) {
 				} else {
 					$all_fields = inventories_get_all_type_field ($id_object_type);
 					
-					$value2 = array();
+					$value_data = array();
 					$i = 8;
+					$j = 0;
 					foreach ($all_fields as $key=>$field) {
 						$data = $values[$i];
 
@@ -1181,20 +1184,22 @@ function inventories_load_file ($objects_file) {
 							}
 						}
 						
-						$value2['id_object_type_field'] = $id_object_type;
-						$value2['data'] = $data;
+						$value_data[$j]['id_object_type_field'] = $field['id'];
+						$value_data[$j]['data'] = $data;
 						$i++;
+						$j++;
 					}
 				}
 			}
 			
 			if ($create) {
 				$result_id  = process_sql_insert('tinventory', $value);
-				
+			
 				if ($result_id) {
-					$values2['id_inventory'] = $result_id;
-					
-					process_sql_insert('tobject_field_data', $value2);
+					foreach ($value_data as $k => $val_data) {
+						$val_data['id_inventory'] = $result_id;
+						process_sql_insert('tobject_field_data', $val_data);
+					}
 				}
 				
 			}

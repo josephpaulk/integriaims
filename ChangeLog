@@ -1,5 +1,10 @@
 2013-05-17  Vanessa Gil <vanessa.gil@artica.es>
 
+	* include/functions_inventories.php: Changes in
+	import inventories from csv.
+
+2013-05-17  Vanessa Gil <vanessa.gil@artica.es>
+
 	* include/functions_inventories.php
 	  operation/side_menu.php: Added import inventories
 	from csv.
