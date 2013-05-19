@@ -89,7 +89,7 @@ $mail = str_replace ("_DEST_EMAIL_", $lead["email"], $mail);
 $mail = str_replace ("_SRC_NAME_", $user["nombre_real"], $mail);
 $mail = str_replace ("_SRC_EMAIL_", $user["direccion"], $mail);
 
-$sql = "SELECT id, name FROM tcrm_template WHERE (id_company = $id_company OR id_company = 0) AND id_language = '". $lead["id_language"]. "' ORDER BY name DESC";
+$sql = "SELECT id, name FROM tcrm_template WHERE id_language = '". $lead["id_language"]. "' ORDER BY name DESC";
 
 $id_template = (int) get_parameter ("id_template");
 

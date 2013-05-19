@@ -86,7 +86,7 @@ if (defined ('AJAX')) {
 			else
 				echo print_image ("images/tree/branch.png", true, array ("style" => 'vertical-align: middle;'));
 			
-			echo "<i>" . __("Vacío") . "</i>";
+			echo "<i>" . __("Empty") . "</i>";
 			echo "</li>";
 			echo "</ul>";
 			
@@ -172,7 +172,7 @@ if (defined ('AJAX')) {
 					break;
 			}
 			
-			echo "<i>" . __("Vacío") . "</i>";
+			echo "<i>" . __("Empty") . "</i>";
 			echo "</li>";
 			echo "</ul>";
 			return;
@@ -273,7 +273,7 @@ if (defined ('AJAX')) {
 			}
 			
 			print_image ("images/tree/last_leaf.png", false, array ("style" => 'vertical-align: middle;'));
-			echo "<i>" . __("Vacío") . "</i>";
+			echo "<i>" . __("Empty") . "</i>";
 			echo "</li>";
 			echo "</ul>";
 			return;

@@ -109,6 +109,7 @@ if ($update_contact) { // if modified any parameter
 	$position = (string) get_parameter ('position');
 	$disabled = (int) get_parameter ('disabled');
 	$description = (string) get_parameter ('description');
+	$id_company = (int) get_parameter ('id_company');
 
 	$sql = sprintf ('UPDATE tcompany_contact
 		SET description = "%s", fullname = "%s", phone = "%s",
@@ -122,7 +123,7 @@ if ($update_contact) { // if modified any parameter
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 	} else {
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-		audit_db ($config['id_user'], $REMOTE_ADDR, "Contact updated", "Contact named '$fullname' has been updated");
+		audit_db ($config['id_user'], '', "Contact updated", "Contact named '$fullname' has been updated");
 	}
 	$id = 0;
 }
@@ -263,20 +264,14 @@ if ($id || $new_contact) {
 	echo "</form>";
 	
 } else {
-	// Listing of contacts
-	if (!get_admin_user($config["id_user"])){
-		$group_filter = get_user_groups_for_sql ($config["id_user"], "VR");
-		$where_group = " AND tcompany.id_grupo IN $group_filter ";	
-	} else {
-		$where_group = "";	
-	}
+	$where_group = "";	
 	
 	$search_text = (string) get_parameter ('search_text');
 	$id_company = (int) get_parameter ('id_company');
 	
-	$where_clause = "WHERE tcompany_contact.id_company = tcompany.id $where_group ";
+	$where_clause = "WHERE 1=1 ";
 	if ($search_text != "") {
-		$where_clause .= sprintf (' AND fullname LIKE "%%%s%%"', $search_text);
+		$where_clause .= " AND (fullname LIKE '%$search_text%' OR email LIKE '%$search_text%') ";
 	}
 	if ($id_company) {
 		$where_clause .= sprintf (' AND id_company = %d', $id_company);
@@ -298,7 +293,7 @@ if ($id || $new_contact) {
 	print_table ($table);
 	echo '</form>';
 
-	$sql = "SELECT tcompany_contact.* FROM tcompany_contact, tcompany $where_clause ORDER BY id_company, fullname";
+	$sql = "SELECT * FROM tcompany_contact $where_clause ORDER BY id_company, fullname";
 
 	
 	$contacts = get_db_all_rows_sql ($sql);
@@ -336,7 +331,7 @@ if ($id || $new_contact) {
 							onClick="if (!confirm(\''.__('Are you sure?').'\'))
 							return false;">
 							<img src="images/cross.png"></a>';
-			}
+			
 			array_push ($table->data, $data);
 		}
 		print_table ($table);

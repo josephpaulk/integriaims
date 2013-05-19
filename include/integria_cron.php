@@ -192,8 +192,8 @@ function run_daily_check () {
 	run_project_check ();
 	run_task_check ();
 	run_autowu();
-    run_auto_incident_close();
-    delete_session_data();
+    	run_auto_incident_close();
+    	delete_session_data();
 	synchronize_pandora_inventory();
 	delete_tmp_files();
 }
@@ -206,16 +206,17 @@ function run_daily_check () {
 
 function run_auto_incident_close () {
 	global $config;
-    require_once ($config["homedir"]."/include/functions_incidents.php");
+    	require_once ($config["homedir"]."/include/functions_incidents.php");
 
-    $utimestamp = date("U");
+    	$utimestamp = date("U");
 	$limit = date ("Y-m-d H:i:s", $utimestamp - $config["auto_incident_close"] * 86400);
 
-    // For each incident
+    	// For each incident
 	$incidents = get_db_all_rows_sql ("SELECT * FROM tincidencia WHERE estado IN (1,2,3,4,5) AND actualizacion < '$limit'");
-    $mailtext = __("This incident has been closed automatically by Integria after waiting confirmation to close this incident for ").$config["auto_incident_close"]."  ".__("days");
+    	$mailtext = __("This incident has been closed automatically by Integria after waiting confirmation to close this incident for 
+").$config["auto_incident_close"]."  ".__("days");
 
-    if ($incidents)
+    	if ($incidents)
 	    foreach ($incidents as $incident){
 			
             // Set status to "Closed" (# 7) and solution to 7 (Expired)
@@ -431,7 +432,7 @@ function check_sla_min ($incident) {
 	/* We need to notify via email to the owner user */
 	$user = get_user ($incident['id_usuario']);
 
-    $MACROS["_sitename_"] = $config["sitename"];
+    	$MACROS["_sitename_"] = $config["sitename"];
 	$MACROS["_username_"] = $incident['id_usuario'];
 	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
@@ -480,7 +481,7 @@ function check_sla_max ($incident) {
 	/* We need to notify via email to the owner user */
 	$user = get_user ($incident['id_usuario']);
 
-    $MACROS["_sitename_"] = $config["sitename"];
+    	$MACROS["_sitename_"] = $config["sitename"];
 	$MACROS["_username_"] = $incident['id_usuario'];
 	$MACROS["_fullname_"] = dame_nombre_real ($incident['id_usuario']);
 	$MACROS["_group_"] = dame_nombre_grupo ($incident['id_grupo']);
@@ -565,7 +566,38 @@ function run_mail_queue () {
 	if ($mails)
 	foreach ($mails as $email){
 
-		try {
+		// Use local mailer if host not provided - Attach not supported !!
+
+		if ($config["smtp_host"] == ""){
+
+			// Use internal mail() function
+                        $headers   = array();
+                        $headers[] = "MIME-Version: 1.0";
+                        $headers[] = "Content-type: text/plain; charset=utf-8";
+
+			if ($email["from"] == "")
+                                $from = $config["mail_from"];
+                        else
+                                $from = $email["from"]; 
+
+                        $headers[] = "From: ". $from;
+                        $headers[] = "Subject: ". safe_output($email["subject"]);
+
+                        $dest_email = trim(ascii_output($email['recipient']));
+                        $body = safe_output($email['body']);
+                        $error = mail($dest_email, safe_output($email["subject"]), $body, implode("\r\n", $headers));
+                        if (!$error) {
+				process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$email["id"]);
+                        } else {
+				// no errors found
+				process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
+                        }
+
+		} else {
+		
+		// Use swift mailer library to connect to external SMTP
+
+			try {	
 			$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
 			$transport->setUsername($config["smtp_user"]);
 			$transport->setPassword($config["smtp_pass"]);
@@ -577,7 +609,9 @@ function run_mail_queue () {
 			else
 				$message->setFrom($email["from"]);
 
-			$message->setTo(ascii_output($email['recipient']));
+			$to = trim(ascii_output($email['recipient']));
+
+			$message->setTo($to);
 			$message->setBody($email['body'], 'text/plain', 'utf-8');
 
 			if ($email["attachment_list"] != ""){
@@ -596,18 +630,19 @@ function run_mail_queue () {
 			if ($mailer->send($message) == 1)
 				process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
 
-		// SMTP error management!
-		} catch (Exception $e) {
-			$retries = $email["attempts"] + 1;
-			if ($retries > 5) {
-				$status = 1;
-				insert_event ('MAIL_FAILURE', 0, 0, $email["recipient"]. " - ". $e);
+			// SMTP error management!
+			} catch (Exception $e) {
+				$retries = $email["attempts"] + 1;
+ 				if ($retries > 5) {
+					$status = 1;
+					insert_event ('MAIL_FAILURE', 0, 0, $email["recipient"]. " - ". $e);
+				}
+				else  {
+					$status = 0;
+				}
+				process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$email["id"]);
+				integria_logwrite ("SMTP error sending to $to ($e)");
 			}
-			else  {
-				$status = 0;
-			}
-			process_sql ("UPDATE tpending_mail SET status = $status, attempts = $retries WHERE id = ".$email["id"]);
-
 		}
 	}
 }
@@ -655,46 +690,71 @@ function run_newsletter_queue () {
 			process_sql ("UPDATE tnewsletter_queue SET status=3 WHERE id = $id_queue");
 		else 
 		foreach ($addresses as $address){
+
+
+			// Use external SMTP if smtp_host is defined
+			
+			if ($config["smtp_host"]!= ""){
 		
-			// Compose the mail for each valid address
+				// Compose the mail for each valid address
 
-			$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
-			$transport->setUsername($config["smtp_user"]);
-			$transport->setPassword($config["smtp_pass"]);
-			$mailer = Swift_Mailer::newInstance($transport);
+				$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
+				$transport->setUsername($config["smtp_user"]);
+				$transport->setPassword($config["smtp_pass"]);
+				$mailer = Swift_Mailer::newInstance($transport);
 			
-			$message = Swift_Message::newInstance(safe_output($issue["email_subject"]));
-			$message->setFrom($newsletter["from_address"]);
-			$dest_email = trim(safe_output($address['email']));
+				$message = Swift_Message::newInstance(safe_output($issue["email_subject"]));
+				$message->setFrom($newsletter["from_address"]);
+				$dest_email = trim(safe_output($address['email']));
 			
-			$message->setTo($dest_email);
+				$message->setTo($dest_email);
 
-			// TODO: replace names on macros in the body / HTML parts.
+				// TODO: replace names on macros in the body / HTML parts.
 
-			$message->setBody(safe_output($issue['html']), 'text/html', 'utf-8');
+				$message->setBody(safe_output($issue['html']), 'text/html', 'utf-8');
 
-			$message->addPart(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');
+				$message->addPart(replace_breaks(safe_output(safe_output($issue['plain']))), 'text/plain', 'utf-8');
 
-			if (!$mailer->send($message, $failures)) {
-				integria_logwrite ("Trouble with address ".$failures[0]);
+				if (!$mailer->send($message, $failures)) {
+					integria_logwrite ("Trouble with address ".$failures[0]);
 
-				// TODO: 
-				// Do something like error count to disable invalid addresses after a 
-				// number of invalid counts
-				// process_sql ("UPDATE tnewsletter_address SET status=1 WHERE id_newsletter = $id_newsletter AND email = '$dest_email'");
+					// TODO: 
+					// Do something like error count to disable invalid addresses after a 
+					// number of invalid counts
+					// process_sql ("UPDATE tnewsletter_address SET status=1 WHERE id_newsletter = $id_newsletter AND email = '$dest_email'");
 				
-				process_sql ("UPDATE tnewsletter_queue_data SET status=2 WHERE id_queue = $id_queue AND email = '$dest_email'");
+					process_sql ("UPDATE tnewsletter_queue_data SET status=2 WHERE id_queue = $id_queue AND email = '$dest_email'");
 				
+				} else {
+					process_sql ("UPDATE tnewsletter_queue_data SET status=1 WHERE id_queue = $id_queue AND email = '$dest_email'");
+				}
 			} else {
-				process_sql ("UPDATE tnewsletter_queue_data SET status=1 WHERE id_queue = $id_queue AND email = '$dest_email'");
-			}
-			
+
+				// Use internal mail() function
+				$headers   = array();
+				$headers[] = "MIME-Version: 1.0";
+				$headers[] = "Content-type: text/html; charset=utf-8";
+				$headers[] = "From: ".safe_output($newsletter["from_desc"]). " <".safe_output($newsletter["from_address"]).">";
+				//$headers[] = "Bcc: JJ Chong <bcc@domain2.com>";
+				$headers[] = "Subject: ". safe_output($issue["email_subject"]);
+				$headers[] = "X-Mailer: PHP/".phpversion();
+
+				$dest_email = trim(safe_output($address['email']));
+				$email = safe_output($issue['html']);
+				$error = mail($dest_email, safe_output($issue["email_subject"]), $email, implode("\r\n", $headers));
+				if (!$error) {
+					process_sql ("UPDATE tnewsletter_queue_data SET status=2 WHERE id_queue = $id_queue AND email = '$dest_email'");
+				} else {
+					process_sql ("UPDATE tnewsletter_queue_data SET status=1 WHERE id_queue = $id_queue AND email = '$dest_email'");
+				}
+			}	
+
 			$total = $total - 1;
 		
 			if ($total <= 0)
-				return;
+					return;
 		
-		} // end of loop for each address in the queue		
+			} // end of loop for each address in the queue		
 
 	} // end of main loop
 	
@@ -954,3 +1014,4 @@ delete_all_files_in_dir ($temp_dir);
 delete_incidents();
 
 ?>
+

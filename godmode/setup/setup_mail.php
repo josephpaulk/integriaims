@@ -102,6 +102,9 @@ $table->data[3][1] = "<h4>".__("SMTP Parameters"). integria_help ("mailsetup", t
 $table->data[4][0] = print_input_text ("smtp_host", $config["smtp_host"],
 	'', 15, 30, true, __('SMTP Host'));
 
+$table->data[4][0] .= print_help_tip (__("Left it blank if you want to use your local mail, instead an external SMTP host"), true);
+
+
 $table->data[4][1] = print_input_text ("smtp_port", $config["smtp_port"],
 	'', 5, 10, true, __('SMTP Port'));
 

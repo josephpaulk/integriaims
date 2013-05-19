@@ -283,6 +283,10 @@ function load_menu_visibility() {
 	}
 	$sec = get_parameter('sec', '');
 
+
+	if (!isset($customers))
+		$customers = "";
+
 	$show_box = ($sec == "projects" && $show_projects == MENU_FULL) || 
 				($sec == "incidents" && $show_incidents == MENU_FULL) || 
 				($sec == "inventory" && $show_inventory == MENU_FULL) || 

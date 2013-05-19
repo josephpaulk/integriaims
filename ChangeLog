@@ -1,3 +1,22 @@
+2013-05-19  Sancho Lerena <slerena@artica.es>
+
+	* include/integria_cron.php: Added support to local mail() delivery.
+
+	* include/functions_config.php,
+        include/config_process.php: Mino fixes.
+
+	* include/languages/index.pot: Added strings to pot index.
+
+	* operation/leads/lead_detail.php
+	operation/leads/lead_mail.php: Fixes.
+
+	* operation/inventories/inventory_search.php,
+	operation/contacts/contact_detail.php: Removed UTF chars from translatable
+	strings.
+	
+	* godmode/setup/setup_mail.php: Added hint to let user know if host is
+	in blank, will be used local mail delivery.
+
 2013-05-17  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php: Changes in

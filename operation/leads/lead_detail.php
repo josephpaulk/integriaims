@@ -140,7 +140,7 @@ if ($update) { // if modified any parameter
 		echo "<h3 class='error'>".__('Could not be updated')."</h3>";
 	} else {
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
-		audit_db ($config['id_user'], $REMOTE_ADDR, "Lead updated", "Lead named '$fullname' has been updated");
+		audit_db ($config['id_user'], '', "Lead updated", "Lead named '$fullname' has been updated");
 
 		$datetime =  date ("Y-m-d H:i:s");	
 
@@ -472,19 +472,16 @@ if ($id || $new) {
 	echo '<form method="post" id="lead_form">';
 	print_table ($table);
 
-	if (give_acl ($config["id_user"], $id_group, "VW")) {
-	
-		echo '<div class="button" style="width: '.$table->width.'">';
-		if ($id) {
-			print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', false);
-			print_input_hidden ('update', 1);
-			print_input_hidden ('id', $id);
-		} else {
-			print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', false);
-			print_input_hidden ('create', 1);
-		}
-		echo "</div>";
+	echo '<div class="button" style="width: '.$table->width.'">';
+	if ($id) {
+		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', false);
+		print_input_hidden ('update', 1);
+		print_input_hidden ('id', $id);
+	} else {
+		print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', false);
+		print_input_hidden ('create', 1);
 	}
+	echo "</div>";
 
 	echo "</form>";
 
