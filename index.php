@@ -159,6 +159,7 @@ echo "<title>" . $config["sitename"] . "</title>";
 <script type="text/javascript" src="include/js/calendar.js"></script>
 <script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript" src="include/js/jquery.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script><!-- MIGRATE OLDER JQUERY CODE (TEMPORAL)-->
 <script type="text/javascript" src="include/js/jquery.ui.core.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.tabs.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.draggable.js"></script>
@@ -371,13 +372,13 @@ if ($clean_output == 0) {
 
         // Avoid render left menu for some special places (like home).
         if ($not_show_menu == 0){
-		echo '<td width=180 valign=top>';
-		echo '<div id="sidebar">';
-		require ("operation/side_menu.php"); 
-		if (give_acl ($config["id_user"], 0, "AR"))
-			require ("operation/tool_menu.php");
-		echo '</div></td>';
-	}
+			echo '<td width=180 valign=top>';
+			echo '<div id="sidebar">';
+			require ("operation/side_menu.php"); 
+			if (give_acl ($config["id_user"], 0, "AR"))
+				require ("operation/tool_menu.php");
+			echo '</div></td>';
+		}
 	?>
 	
         <td valign=top>

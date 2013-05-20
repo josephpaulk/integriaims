@@ -1,3 +1,23 @@
+2013-05-19  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* index.php: Updated to jQuery 1.9. Also imported the migrate plugin.
+
+	* operation/projects/project: Added trim to search box.
+
+	* operation/projects/project_detail: Added trim to name of project.
+	Added validation to name of project: required and ajax check for avoid
+	duplicates. Fixed an autocompletion's bug on Project manager's box.
+	
+	* include/js/jquery.validation.functions.js: New.
+	Functions for validate form elements.
+		
+	* include/ajax/remote_validations.php: New.
+	File for ajax validations.
+	
+	* godmode/usuarios/configurar_usuarios.php: Minor fix.
+	
+	* operation/inventories/inventory_search.php: Minor fix.
+
 2013-05-19  Sancho Lerena <slerena@artica.es>
 
 	* include/integria_cron.php: Added support to local mail() delivery.

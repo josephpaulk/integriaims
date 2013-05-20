@@ -671,7 +671,7 @@ $(document).ready (function () {
 					$("#text-owner").css ('background-color', '');
 				if (data == "")
 					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre Real") ?>: '+data[1]+'</span>';
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Real name") ?>: '+data[1]+'</span>';
 			},
 			delay: 200
 

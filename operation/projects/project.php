@@ -275,7 +275,6 @@ foreach ($projects as $project) {
 	array_push ($table->data, $data);
 }
 
-
 if(empty($table->data)) {
 	echo '<h3 class="error">'.__('No projects found').'</h3>';
 }
@@ -283,3 +282,8 @@ else {
 	print_table ($table);
 }
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript">
+trim_element_on_submit("#text-search_text");
+</script>

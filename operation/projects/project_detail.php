@@ -22,6 +22,7 @@ include_once ("include/functions_graph.php");
 
 check_login ();
 
+/* include/ajax/users.php
 if (defined ('AJAX')) {
 
 	global $config;
@@ -32,7 +33,7 @@ if (defined ('AJAX')) {
 		require_once ('include/functions_db.php');
 		
 		$id_user = $config['id_user'];
-		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
+		$string = (string) get_parameter ('q'); // q is what autocomplete plugin gives
 		
 		$users = get_user_visible_users ($config['id_user'],"IR", false);
 		if ($users === false)
@@ -47,6 +48,7 @@ if (defined ('AJAX')) {
 		return;
  	}
 }
+*/
 
 include_once ("include/functions_graph.php");
 
@@ -141,9 +143,9 @@ if ($create_project) {
 } 
 
 if ($id_project)
-	echo '<form method="post">';
+	echo '<form method="post" id="form-new_project">';
 else
-	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/project&action=insert">';
+	echo '<form method="post" id="form-new_project" action="index.php?sec=projects&sec2=operation/projects/project&action=insert">';
 // Main project table
 
 echo "<h2>".__('Project management')." &raquo; ";
@@ -379,15 +381,14 @@ if ($id_project) {
 
 echo "</form>";
 
-
-
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
-
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript">
 
 $(document).ready (function () {
@@ -399,7 +400,7 @@ $(document).ready (function () {
 			scroll: true,
 			minChars: 2,
 			extraParams: {
-				page: "operation/projects/project_detail",
+				page: "include/ajax/users",
 				search_users: 1,
 				id_user: "<?php echo $config['id_user'] ?>"
 			},
@@ -416,4 +417,27 @@ $(document).ready (function () {
 
 		});
 });
+
+// Form validation
+trim_element_on_submit('input[name="name"]');
+validate_form("#form-new_project");
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+          page: "include/ajax/remote_validations",
+          search_project_name: 1,
+          project_name: function() { return $('input[name="name"]').val() },
+          project_id: <?=$id_project?>
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__("Name required")?>",
+	remote: "<?=__("This project name already exists")?>"
+};
+add_validate_form_element_rules('input[name="name"]', name_rules, name_messages);
+
 </script>
