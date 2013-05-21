@@ -1,3 +1,7 @@
+2013-05-21  Sancho Lerena <slerena@artica.es>
+
+	* integria_demo.sql: Fixed demo data.
+
 2013-05-21  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql
