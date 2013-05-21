@@ -676,7 +676,7 @@ function fill_inventories_table($inventories, &$table) {
 /*
  * Returns all inventory type fields.
  */ 
-function inventories_get_all_type_field ($id_object_type, $id_inventory=false) {
+function inventories_get_all_type_field ($id_object_type, $id_inventory=false, $only_selected = false) {
 	
 	global $config;
 	
@@ -688,12 +688,24 @@ function inventories_get_all_type_field ($id_object_type, $id_inventory=false) {
 	
 	$all_fields = array();
 	foreach ($fields as $id=>$field) {
-		foreach ($field as $key=>$f) {
-
-			if ($key == 'label') {
-				$all_fields[$id]['label_enco'] = base64_encode($f);
+		
+		if ($only_selected) {
+			if($field['show_list']) {
+				foreach ($field as $key=>$f) {
+					if ($key == 'label') {
+						$all_fields[$id]['label_enco'] = base64_encode($f);
+					}
+					$all_fields[$id][$key] = safe_output($f);
+				}
+			}	
+		} else {
+		
+			foreach ($field as $key=>$f) {
+				if ($key == 'label') {
+					$all_fields[$id]['label_enco'] = base64_encode($f);
+				}
+				$all_fields[$id][$key] = safe_output($f);
 			}
-			$all_fields[$id][$key] = safe_output($f);
 		}
 	}
 
@@ -985,19 +997,7 @@ function inventories_get_count_inventories_for_tree($id_item, $sql_search = '') 
 function inventories_show_list($sql_search, $params='') {
 	global $config;
 
-	$params .="&mode=list";
-	
-	$table->class = 'listing';
-	$table->width = '98%';
-	$table->data = array ();
-	$table->head = array ();
-	
-	$table->head[0] = __('Id');
-	$table->head[1] = __('Name');
-	$table->head[2] = __('Owner');
-	$table->head[3] = __('Object type');
-	$table->head[4] = __('Manufacturer');
-	$table->head[5] = __('Contract');
+	$params .="&mode=list";	
 	
 	$sql = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data
 			WHERE tinventory.id_object_type = tobject_type.id $sql_search
@@ -1008,11 +1008,41 @@ function inventories_show_list($sql_search, $params='') {
 	if ($inventories === false) {
 		echo __("No inventories");
 	} else {
+		$result_check = inventories_check_same_object_type_list($inventories);
+
+		$table->id = 'inventory_list';
+		$table->class = 'listing';
+		$table->width = '98%';
+		$table->data = array ();
+		$table->head = array ();
+		
+		$table->head[0] = __('Id');
+		$table->head[1] = __('Name');
+		$table->head[2] = __('Owner');
+		$table->head[3] = __('Object type');
+		$table->head[4] = __('Manufacturer');
+		$table->head[5] = __('Contract');
+		
+		if ($result_check) {
+			
+			$res_object_fields = inventories_get_all_type_field ($result_check, false, true);
+			
+			$i = 6;
+			foreach ($res_object_fields as $key => $object_field) {
+				$table->head[$i] = $object_field['label'];
+				$i++;
+			}
+		} else {
+			$table->head[6] = __('Actions');
+		}
+		
 		//We need this auxiliar variable to use later for footer pagination
 		$inventories_aux = $inventories;
 
 		$inventories = print_array_pagination ($inventories_aux, "index.php?sec=inventory&sec2=operation/inventories/inventory_search".$params);
 	
+		$idx = 0;
+		
 		foreach ($inventories as $key=>$inventory) {
 			$data = array();
 			if (defined ('AJAX')) {
@@ -1049,9 +1079,62 @@ function inventories_show_list($sql_search, $params='') {
 				$name_contract = '--';
 			$data[5] = "<a href=".$url.">".$name_contract.'</a>';
 			
+			if ($result_check) {
+				$result_object_fields = inventories_get_all_type_field ($result_check, $inventory['id'], true);
+				
+				$i = 6;
+				foreach ($result_object_fields as $k => $ob_field) {
+					$data[$i] = $ob_field['data'];
+					$i++;
+				}
+			} else {
+				$data[6] = '<a href="javascript: toggleInventoryInfo(' . $inventory['id'] . ')" id="show_info-'.$inventory["id"].'">';
+				$data[6] .= print_image ("images/information.png", true,
+					array ("title" => __('Show object type fields')));
+				$data[6] .= '</a>&nbsp;';
+				
+			}
+			$table->rowclass[$idx] = 'inventory_info_' . $inventory["id"];
+			
+			$idx++;
+			
 			array_push ($table->data, $data);
+			
+			$data_info = array();
+			
+			$table_info->width = '98%';
+			$table_info->class = 'databox_color_without_line';
+			
+			$table_info->size = array ();
+			$table_info->style = array();
+			$table_info->data = array();
+			
+			$res_obj_fields = inventories_get_all_type_field ($inventory['id_object_type'], $inventory['id'], false);
+			
+			if (empty($res_obj_fields)) {
+				$table_info->data[0][0] = '<b>'.__('No data to show').'</b>';
+			} else {
+				$j = 0;
+				foreach ($res_obj_fields as $k => $ob_field) {
+					$table_info->data[$j][$j] = '<b>'.$ob_field['label'];
+					$table_info->data[$j][$j] .= ' : '.'</b>';
+					$table_info->data[$j][$j] .= $ob_field['data'];
+					$j++;
+				}
+			}
+			
+			$data_info['row_info'] = print_table($table_info, true);
+			
+			$table_info->colspan[0][0] = 6;
+			
+			$table->rowclass[$idx] = 'inventory_more_info_' . $inventory["id"];
+			$table->rowstyle[$idx] = 'display: none;';
+			
+			array_push ($table->data, $data_info);
+			
+			$idx++;
 		}
-		//ui_pagination($count, false, $offset);
+		
 		print_table($table);
 	}
 }
@@ -1208,6 +1291,24 @@ function inventories_load_file ($objects_file) {
 	fclose($file_handle);
 	echo "<h3 class='info'>" . __ ('File loaded'). "</h3>";
 	return;
+}
+
+//check if all inventories has same object type
+function inventories_check_same_object_type_list($inventories) {
+	$i = 0;
+	foreach ($inventories as $key => $inventory) {
+		if ($i == 0) {
+			$id_object = $inventory['id_object_type'];
+		}
+		
+		if ($inventory['id_object_type'] != $id_object) {
+
+			return false;
+		}
+		$i++;	
+	}
+	
+	return $id_object;
 }
 
 ?>

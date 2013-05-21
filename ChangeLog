@@ -1,3 +1,13 @@
+2013-05-21  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  extras/migrate.sql
+	  include/functions_inventories.php
+	  operation/inventories/inventory_search.php
+	  operation/inventories/manage_objects_types_field.php
+	  operation/inventories/manage_objects_types_list.php: Changes in
+	search inventory.
+
 2013-05-19  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* index.php: Updated to jQuery 1.9. Also imported the migrate plugin.

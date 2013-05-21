@@ -603,6 +603,7 @@ CREATE TABLE `tinventory` (
   `id_contract` mediumint(8) unsigned default NULL,
   `id_manufacturer` mediumint(8) unsigned default NULL,
   `id_parent` mediumint(8) unsigned default NULL,
+  `show_list` TINYINT(1) unsigned DEFAULT 1,
   PRIMARY KEY  (`id`),
   KEY `tinv_idx_1` (`id_contract`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

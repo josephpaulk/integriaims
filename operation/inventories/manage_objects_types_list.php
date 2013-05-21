@@ -42,6 +42,7 @@ $inherit = get_parameter('inherit', 0);
 $combo_value = '';
 $external_table_name = '';
 $external_reference_field = '';
+$show_list = get_parameter('show_list', 0);	
 
 //**********************************************************************
 // Tabs
@@ -77,11 +78,11 @@ switch ($type) {
 switch ($action_db) {
 	case "insert":
 			$sql = sprintf ('INSERT INTO tobject_type_field (id_object_type, label, type, combo_value, 
-							external_table_name, external_reference_field, `unique`, inherit) 
+							external_table_name, external_reference_field, `unique`, inherit, show_list) 
 					VALUES (%d, "%s", "%s", "%s", 
 						    "%s", "%s", %d, %d)',
 					$id_object_type, $label, $type, $combo_value,
-					$external_table_name, $external_reference_field, $unique, $inherit);
+					$external_table_name, $external_reference_field, $unique, $inherit, $show_list);
 					
 			$id_object_type_field = process_sql ($sql, 'insert_id');
 			
@@ -96,11 +97,11 @@ switch ($action_db) {
 	case "update":
 			$sql = sprintf ('UPDATE tobject_type_field SET label = "%s", type = "%s",
 							combo_value = "%s", external_table_name = "%s", external_reference_field = "%s",
-							`unique` = %d, inherit = %d
+							`unique` = %d, inherit = %d, show_list = %d
 							WHERE id = %d',
 							$label, $type, 
 							$combo_value, $external_table_name, $external_reference_field, 
-							$unique, $inherit,
+							$unique, $inherit, $show_list,
 							$id_object_type_field);
 
 			$result = process_sql ($sql);
@@ -151,7 +152,8 @@ if ($objects_type_fields !== false) {
 	$table->head[1] = __('Type');
 	$table->head[2] = __('Unique');
 	$table->head[3] = __('Inherit');
-	$table->head[4] = __('Actions');
+	$table->head[4] = __('Show in list');
+	$table->head[5] = __('Actions');
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold';
 	$table->align = array ();
@@ -165,13 +167,14 @@ if ($objects_type_fields !== false) {
 		$data[1] = substr ($objects_type_field["type"], 0, 200);
 		$data[2] = ($objects_type_field['unique']? __('Yes'):__('No'));
 		$data[3] = ($objects_type_field['inherit']? __('Yes'):__('No'));
-		$data[4] = '<form style="display:inline;" method="post" onsubmit="if (!confirm(\''.__('Are you sure?').'\'))
+		$data[4] = ($objects_type_field['show_list']? __('Yes'):__('No'));
+		$data[5] = '<form style="display:inline;" method="post" onsubmit="if (!confirm(\''.__('Are you sure?').'\'))
 			return false;">';
-		$data[4] .= print_input_hidden ('delete_object_type_field', 1, true);
-		$data[4] .= print_input_hidden ('id', $id_object_type, true);
-		$data[4] .= print_input_hidden ('id_object_type_field', $objects_type_field["id"], true);
-		$data[4] .= print_input_image ('delete', 'images/cross.png', 1, '', true, '',array('title' => __('Delete')));
-		$data[4] .= '</form>';
+		$data[5] .= print_input_hidden ('delete_object_type_field', 1, true);
+		$data[5] .= print_input_hidden ('id', $id_object_type, true);
+		$data[5] .= print_input_hidden ('id_object_type_field', $objects_type_field["id"], true);
+		$data[5] .= print_input_image ('delete', 'images/cross.png', 1, '', true, '',array('title' => __('Delete')));
+		$data[5] .= '</form>';
 		
 		array_push ($table->data, $data);
 	}

@@ -255,3 +255,6 @@ CREATE TABLE `tinventory_track` (
   FOREIGN KEY (`id_inventory`) REFERENCES tinventory(`id`)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/* 20/05/2013 */
+ALTER TABLE tinventory ADD `show_list` TINYINT(1) unsigned DEFAULT 1,
