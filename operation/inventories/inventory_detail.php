@@ -539,6 +539,7 @@ echo "<div class= 'dialog ui-dialog-content' id='inventory_search_window'></div>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.dialog"></script>
+<script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript">
 
 $(document).ready (function () {

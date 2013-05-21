@@ -492,6 +492,7 @@ echo '</div>';
 ?>
 
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript">
 	
 
@@ -654,18 +655,6 @@ function loadTable(type, div_id, less_branchs, id_father, sql_search) {
 }
 
 
-function toggleInventoryInfo(id_inventory) {
-	display = $('.inventory_more_info_' + id_inventory).css('display');
-	
-	if (display != 'none') {
-		$('.inventory_more_info_' + id_inventory).css('display', 'none');
-	}
-	else {
-		$('.inventory_more_info_' + id_inventory).css('display', '');
-	}
-}
-
-	
 $(document).ready (function () {
 	
 	$("#text-owner").autocomplete ("ajax.php",

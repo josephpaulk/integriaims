@@ -188,3 +188,14 @@ function inputControl(id,exceptions,lower,upper,numbers) {
 		$("#"+id).val(text);
 	});
 }
+
+function toggleInventoryInfo(id_inventory) {
+	display = $('.inventory_more_info_' + id_inventory).css('display');
+	
+	if (display != 'none') {
+		$('.inventory_more_info_' + id_inventory).css('display', 'none');
+	}
+	else {
+		$('.inventory_more_info_' + id_inventory).css('display', '');
+	}
+}
