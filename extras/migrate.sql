@@ -258,3 +258,14 @@ CREATE TABLE `tinventory_track` (
 
 /* 20/05/2013 */
 ALTER TABLE tinventory ADD `show_list` TINYINT(1) unsigned DEFAULT 1,
+
+/* 21/05/2013 */
+INSERT INTO tobject_type (name, description, icon) VALUES 
+('Pandora agents', 'Imported agents from Pandora FMS', 'pandora.ico');
+
+/* 21/05/2013 */
+INSERT INTO tobject_type_field (id, id_object_type, label, type) VALUES 
+(1,1,'OS','text'),
+(2,1,'IP Address','text'),
+(3,1,'URL Address','text'),
+(4,1,'ID Agent','text');

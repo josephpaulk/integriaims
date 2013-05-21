@@ -62,7 +62,6 @@ if ($update) {
 	$config["pandora_user"] = get_parameter ("pandora_user");
 	$config["pandora_pass"] = get_parameter ("pandora_pass");
 	$config["default_contract"] = get_parameter ("default_contract");
-	$config["default_product_type"] = get_parameter ("default_product_type");
 
 	foreach($labels as $k => $lab) {
 		$config["pandora_$k"] = get_parameter ("pandora_$k");
@@ -74,7 +73,7 @@ if ($update) {
 	update_config_token ("pandora_user", $config["pandora_user"]);
     update_config_token ("pandora_pass", $config["pandora_pass"]); 
     update_config_token ("default_contract", $config["default_contract"]);
-    update_config_token ("default_product_type", $config["default_product_type"]);
+  
 }
 
 echo "<h2>".__('Pandora FMS inventory')."</h2>";
@@ -99,31 +98,6 @@ $table->data[1][1] = print_input_text ("pandora_pass", $config["pandora_pass"], 
 $contracts = get_contracts();
 $table->data[2][0] = print_select ($contracts, 'default_contract', $config["default_contract"], '', __('Select'), '',  true, 0, true, __('Default Contract')) ;
 
-$products = get_products ();
-$table->data[2][1] = print_select ($products, 'default_product_type', $config["default_product_type"], '', __('Select'), '',  true, 0, true, __('Default product type')) ;
-
-
-$table->data[3][0] = "<h3>".__('Inventories extra fields')."</h3>";
-$table->data[3][1] = "" ;
-
-$row = 3;
-$col = 0;
-
-$labels = get_inventory_generic_labels ();
-
-$pandora_fields = array('os_name' => __('Operative system'), 'url_address' => __('URL address'));
-
-foreach($labels as $k => $lab) {
-	$table->data[$row][$col] = print_select ($pandora_fields, "pandora_$k", $config["pandora_$k"], '', __('Empty'), '',  true, 0, true, $lab) ;
-	
-	if($col == 1) {
-		$row++;
-		$col = 0;
-	}
-	else {
-		$col = 1;
-	}
-}
 
 echo "<form name='setup' method='post'>";
 

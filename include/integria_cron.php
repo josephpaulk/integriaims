@@ -156,23 +156,40 @@ function synchronize_pandora_inventory () {
 		
 		$values['name'] = $agent_name_safe;
 		$values['description'] = $description;
-		$values['ip_address'] = $address;
 		$values['id_contract'] = $config['default_contract'];
-		$values['id_product'] = $config['default_product_type'];
 		
-		foreach($labelsk as $lab) {
-			switch($config["pandora_$lab"]) {
-				case 'os_name':
-					$values[$lab] = $os_name;
-					break;
-				case 'url_address':
-					$values[$lab] = $url_address;
-					break;
-					
-			}
+		
+		$id_inventory = process_sql_insert('tinventory', $values);
+		
+		if ($id_inventory) {
+			$value_os = array();
+			$value_os['id_inventory'] = $id_inventory;
+			$value_os['id_object_type_field'] = 1;
+			$value_os['data'] = $os_name;
+			
+			process_sql_insert('tobject_field_data', $value_os);
+			
+			$value_ip = array();
+			$value_ip['id_inventory'] = $id_inventory;
+			$value_ip['id_object_type_field'] = 2;
+			$value_ip['data'] = $address;
+			
+			process_sql_insert('tobject_field_data', $value_ip);
+			
+			$value_url = array();
+			$value_url['id_inventory'] = $id_inventory;
+			$value_url['id_object_type_field'] = 3;
+			$value_url['data'] = $url_address;
+			
+			process_sql_insert('tobject_field_data', $value_url);
+			
+			$value_id = array();
+			$value_id['id_inventory'] = $id_inventory;
+			$value_id['id_object_type_field'] = 4;
+			$value_id['data'] = $agent_id;
+			
+			process_sql_insert('tobject_field_data', $value_id);
 		}
-		
-		process_sql_insert('tinventory', $values);
 	}		
 }
 
