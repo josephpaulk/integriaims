@@ -119,10 +119,6 @@ function synchronize_pandora_inventory () {
 	}
 
 	$separator = ':;:';
-
-	$labels = get_inventory_generic_labels ();
-
-	$labelsk = array_keys($labels);
 	
 	$url = $config['pandora_url'].'/include/api.php?op=get&apipass='.$config['pandora_api_password'].'&op2=all_agents&return_type=csv&user='.$config['pandora_user'].'&pass='.$config['pandora_pass'];
 	
@@ -149,13 +145,14 @@ function synchronize_pandora_inventory () {
 		
 		// Check if exist to avoid the creation
 		$inventory_id = get_db_value ('id', 'tinventory', 'name', $agent_name_safe);
-		
+	
 		if($inventory_id !== false) {
 			continue;
 		}
 		
 		$values['name'] = $agent_name_safe;
 		$values['description'] = $description;
+		$values['id_object_type'] = 1;
 		$values['id_contract'] = $config['default_contract'];
 		
 		
@@ -209,8 +206,8 @@ function run_daily_check () {
 	run_project_check ();
 	run_task_check ();
 	run_autowu();
-    	run_auto_incident_close();
-    	delete_session_data();
+    run_auto_incident_close();
+    delete_session_data();
 	synchronize_pandora_inventory();
 	delete_tmp_files();
 }

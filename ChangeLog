@@ -1,3 +1,10 @@
+2013-05-22  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_dbdata.sql
+	  extras/migrate.sql
+	  include/integria_cron.php: Fixed synchronize pandora 
+	inventory.
+
 2013-05-22  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/projects/task_planning: Added trim to name of task.
