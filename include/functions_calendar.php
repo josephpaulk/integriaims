@@ -696,6 +696,22 @@ function calcdate_business_prev ($datecalc, $duedays) {
 	return date ("Y-m-d", $datecalc);
 }
 
+function is_holidays ($datecalc) {
+	
+	$date_formated = $datecalc;
+	
+	$date = $date_formated.' 00:00:00';
+
+	$id = get_db_value_filter("id", "tholidays", array("day" => $date));
+
+	//If there is in the list is holidays
+	if ($id) {
+		return 1;
+	}
+	
+	return 0;
+}
+
 function is_working_day ($datecalc) {
 	global $config;
 	
@@ -712,19 +728,12 @@ function is_working_day ($datecalc) {
 			return 0;
 		}
 	else {
-		$date = $date_formated.' 00:00:00';
-		
-		$id = get_db_value_filter("id", "tholidays", array("day" => $date));
-		
-		//If there is in the list is holidays
-		if ($id) {
+		if (is_holidays ($datecalc)) {
 			return 0;
 		}
 	}
 	
 	return 1;
-
-	// TODO: Add check for returning special days that are non-working
 }
 
 // ---------------------------------------------------------------

@@ -1,3 +1,12 @@
+2013-05-22  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_calendar.php: Created new function is_holidays.
+	* include/functions_db.php: Added support to quiet SLA on holidays.
+ 	* operation/slas/sla_detail.php: Added flag to SLA form to enable
+	/ disable holidays.
+	* integria_db.sql,
+	extras/migrate.sql: Added no_holidays column to tsla table.
+
 2013-05-22  Vanessa Gil <vanessa.gil@artica.es>
 
 	* operation/inventories/inventory_search.php: Changed

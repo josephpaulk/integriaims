@@ -161,6 +161,7 @@ CREATE TABLE `tsla` (
   `time_from` tinyint NULL default 0,
   `time_to` tinyint NULL default 0,
   `id_sla_base` mediumint(8) unsigned NULL default 0,
+  `no_holidays` tinyint NULL default 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

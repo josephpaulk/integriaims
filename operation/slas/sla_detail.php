@@ -47,12 +47,13 @@ if ($create_sla) {
     $five_daysonly = (int) get_parameter ("five_daysonly", 0);
     $time_from = (int) get_parameter ("time_from", 0);
     $time_to = (int) get_parameter ("time_to", 0);
-
+    $no_holidays = (int) get_parameter ('no_holidays', 0);
+   
 	$sql = sprintf ('INSERT INTO tsla (`name`, `description`, id_sla_base,
-		min_response, max_response, max_incidents, `enforced`, five_daysonly, time_from, time_to, max_inactivity)
-		VALUE ("%s", "%s", %d, %d, %d, %d, %d, %d, %d, %d, %d)',
+		min_response, max_response, max_incidents, `enforced`, five_daysonly, time_from, time_to, max_inactivity, no_holidays)
+		VALUE ("%s", "%s", %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)',
 		$name, $description, $id_sla_base, $min_response,
-		$max_response, $max_incidents, $enforced, $five_daysonly, $time_from, $time_to, $max_inactivity);
+		$max_response, $max_incidents, $enforced, $five_daysonly, $time_from, $time_to, $max_inactivity, $no_holidays);
 
 	$id = process_sql ($sql);
 	if ($id === false)
@@ -80,13 +81,14 @@ if ($update_sla) {
     $time_from = (int) get_parameter ("time_from", 0);
     $time_to = (int) get_parameter ("time_to", 0);
     $max_inactivity = (int) get_parameter ('max_inactivity');
-
+    $no_holidays = (int) get_parameter ('no_holidays', 0);
+	
 	$sql = sprintf ('UPDATE tsla SET max_inactivity = %d, enforced = %d, description = "%s",
 		name = "%s", max_incidents = %d, min_response = %d, max_response = %d,
-		id_sla_base = %d, five_daysonly = %d, time_from = %d, time_to = %d WHERE id = %d', $max_inactivity, 
+		id_sla_base = %d, five_daysonly = %d, time_from = %d, time_to = %d, no_holidays = %d WHERE id = %d', $max_inactivity, 
 		$enforced, $description, $name, $max_incidents, $min_response,
-		$max_response, $id_sla_base, $five_daysonly, $time_from, $time_to, $id);
-
+		$max_response, $id_sla_base, $five_daysonly, $time_from, $time_to, $no_holidays, $id);
+	
 	$result = process_sql ($sql);
 	if (! $result)
 		echo '<h3 class="error">'.__('Could not be updated').'</h3>';
@@ -128,7 +130,7 @@ if ($id || $new_sla) {
         $five_daysonly = 1;
         $time_from = 8;
         $time_to = 18;
-
+		$no_holidays = 1;
 	} else {
 		$sla = get_db_row ('tsla', 'id', $id);
 		$name = $sla['name'];
@@ -142,6 +144,7 @@ if ($id || $new_sla) {
         $five_daysonly = $sla["five_daysonly"];
         $time_from = $sla["time_from"];
         $time_to = $sla["time_to"];
+        $no_holidays = $sla["no_holidays"];
 
 	}
 
@@ -149,34 +152,40 @@ if ($id || $new_sla) {
 	$table->class = "databox";
 	$table->data = array ();
 	$table->colspan = array ();
-	$table->colspan[5][0] = 2;
+	$table->align = array ();
+	$table->colspan[3][0] = 4;
 	
 	$table->data[0][0] = print_input_text ("name", $name, "", 30, 100, true, __('SLA name'));
 	$table->data[0][1] = print_checkbox ('enforced', 1 ,$enforced, true, __('Enforced'));
+	
+	$table->data[0][2] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
+		'id_sla_base', $id_sla_base, '', __('None'), 0, true, false, false, __('SLA Base'));
+	
 	$table->data[1][0] = print_input_text ('min_response', $min_response, '',
 		5, 100, true, __('Max. response time (in hours)'));
 
 	$table->data[1][1] = print_input_text ('max_response', $max_response, '',
 		5, 100, true, __('Max. resolution time (in hours)'));
 
-	$table->data[2][0] = print_input_text ("max_incidents", $max_incidents, '',
+	$table->data[1][2] = print_input_text ("max_incidents", $max_incidents, '',
 		5, 100, true, __('Max. incidents at the same time'));
 	
-	$table->data[2][1] = print_input_text ("max_inactivity", $max_inactivity, '',
+	$table->data[1][3] = print_input_text ("max_inactivity", $max_inactivity, '',
 		5, 100, true, __('Max. incident inactivity'));
 		
-	$table->data[3][0] = print_checkbox ('five_daysonly', 1 ,$five_daysonly, true, __('Fire only between week, not weekends'));
 
-	$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name',
-		'id_sla_base', $id_sla_base, '', __('None'), 0, true, false, false, __('SLA Base'));
-
-	$table->data[4][0] = print_input_text ('time_from', $time_from, '',
+	$table->data[2][0] = print_input_text ('time_from', $time_from, '',
 		5, 10, true, __('Start hour to compute SLA'));
-	$table->data[4][1] = print_input_text ('time_to', $time_to, '',
-		5, 10, true, __('Last hour to compute SLA'));
+	$table->data[2][1] = print_input_text ('time_to', $time_to, '',
+		5, 10, true, __('Last hour to compute SLA'));		
+		
+	$table->data[2][2] = print_checkbox ('five_daysonly', 1 ,$five_daysonly, true, __('Disable SLA on weekends'));
+
+	$table->data[2][3] = print_checkbox ('no_holidays', 1 ,$no_holidays, true, __('Disable SLA on holidays'));
 
 
-	$table->data[5][0] = print_textarea ("description", 8, 1, $description, '', true, __('Description'));
+
+	$table->data[3][0] = print_textarea ("description", 8, 1, $description, '', true, __('Description'));
 
 	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/slas/sla_detail">';
 	print_table ($table);

@@ -242,6 +242,13 @@ ALTER TABLE tdownload ADD `id_user` varchar(60) NOT NULL;
 ALTER TABLE tinvoice ADD status enum ('pending', 'paid', 'canceled') default 'pending';
 ALTER TABLE tinvoice ADD `tax` float(11,2) NOT NULL DEFAULT '0.0';
 
+CREATE TABLE `tholidays` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `day` DATETIME  NOT NULL DEFAULT 0,
+   PRIMARY KEY  (`id`),
+   UNIQUE (`day`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `tinventory_track` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_inventory` bigint(20) unsigned NOT NULL default '0',
@@ -269,3 +276,6 @@ INSERT INTO tobject_type_field (id, id_object_type, label, type) VALUES
 (2,1,'IP Address','text'),
 (3,1,'URL Address','text'),
 (4,1,'ID Agent','text');
+
+/* 22/05/2013 */
+ALTER TABLE tsla ADD `no_holidays` tinyint NULL default 0;

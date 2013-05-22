@@ -1700,7 +1700,7 @@ function check_incident_sla_min_response ($id_incident) {
         // Datetime/Time check when exists (version compatibility code), this
         // was added as a 3.0 post-feature :-)
 
-        if (isset($sla["five_daysonly"])){
+        if (isset($sla["five_daysonly"]) || isset($sla["no_holidays"])){
 
             $dow = date("w", time());
             $hod = date("G", time());
@@ -1709,6 +1709,12 @@ function check_incident_sla_min_response ($id_incident) {
             if (($sla["five_daysonly"] == 1) AND (($dow == 0) OR ($dow == 6))){
                 continue;
             }
+            
+            //Check if holidays enabled and today is holidays
+            $datecalc = date("Y-m-d", time()).' 00:00:00';
+			if (($sla["no_holidays"] == 1) AND is_holidays ($datecalc)) {
+				continue;
+			}
 
             // Skip if we're out of job time
             if ($sla["time_from"] != $sla["time_to"]){
@@ -1757,8 +1763,8 @@ function check_incident_sla_max_inactivity ($id_incident) {
         // Datetime/Time check when exists (version compatibility code), this
         // was added as a 3.0 post-feature :-)
 
-        if (isset($sla["five_daysonly"])){
-
+        if (isset($sla["five_daysonly"]) || isset($sla["no_holidays"])){
+			
             $dow = date("w", time());
             $hod = date("G", time());
 
@@ -1766,6 +1772,12 @@ function check_incident_sla_max_inactivity ($id_incident) {
             if (($sla["five_daysonly"] == 1) AND (($dow == 0) OR ($dow == 6))){
                 continue;
             }
+            
+            //Check if holidays enabled and today is holidays
+            $datecalc = date("Y-m-d", time()).' 00:00:00';;
+			if (($sla["no_holidays"] == 1) AND is_holidays ($datecalc)) {
+				continue;
+			}
 
             // Skip if we're out of job time
             if ($sla["time_from"] != $sla["time_to"]){
@@ -1813,7 +1825,7 @@ function check_incident_sla_max_response ($id_incident) {
         // Datetime/Time check when exists (version compatibility code), this
         // was added as a 3.0 post-feature :-)
 
-        if (isset($sla["five_daysonly"])){
+        if (isset($sla["five_daysonly"]) || isset($sla["no_holidays"])){
 
             $dow = date("w", time());
             $hod = date("G", time());
@@ -1822,6 +1834,12 @@ function check_incident_sla_max_response ($id_incident) {
             if (($sla["five_daysonly"] == 1) AND (($dow == 0) OR ($dow == 6))){
                 continue;
             }
+            
+            //Check if holidays enabled and today is holidays
+            $datecalc = date("Y-m-d", time()).' 00:00:00';;
+			if (($sla["no_holidays"] == 1) AND is_holidays ($datecalc)) {
+				continue;
+			}
 
             // Skip if we're out of job time
             if ($sla["time_from"] != $sla["time_to"]){
