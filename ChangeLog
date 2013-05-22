@@ -1,3 +1,8 @@
+2013-05-22  Vanessa Gil <vanessa.gil@artica.es>
+
+	* godmode/usuarios/configurar_usuarios.php: Fixed bug
+	updating users.
+
 2013-05-22  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_detail.php,

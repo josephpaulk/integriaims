@@ -262,7 +262,7 @@ else {
 	$disabled_chk = '';
 }
 
-echo __('Enabled').'&nbsp;<input type="radio" class="chk" name="enabled" value="0"'.$active_chk.'>';
+echo __('Enabled').'&nbsp;<input type="radio" class="chk" name="disabled" value="0"'.$active_chk.'>';
 echo "&nbsp;&nbsp;";
 echo __('Disabled').'&nbsp;<input type="radio" class="chk" name="disabled" value="1"'.$disabled_chk.'>';
 
