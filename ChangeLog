@@ -1,3 +1,14 @@
+2013-05-22  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_inventories.php
+	  operation/contacts/contact_detail.php
+	  operation/inventories/inventory_contacts.php
+	  operation/inventories/inventory_detail.php
+	  operation/inventories/inventory_incidents.php
+	  operation/inventories/inventory_relationship.php
+  	  operation/inventories/inventory_tracking.php: Added 
+	'contacts' to inventory.
+
 2013-05-22  Sancho Lerena <slerena@artica.es>
 
 	* operation/workorders/wo.php,

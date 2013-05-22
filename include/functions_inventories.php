@@ -294,11 +294,15 @@ function get_inventory_contacts ($id_inventory, $only_names = false) {
 	global $config;
 	
 	/* First try to get only defined contacts */
-	$sql = sprintf ('SELECT tcompany_contact.*
-		FROM tcompany_contact, tinventory_contact
-		WHERE tcompany_contact.id = tinventory_contact.id_company_contact
-		AND tinventory_contact.id_inventory = %d',
-		$id_inventory);
+	$owner = get_db_value('owner', 'tinventory', 'id', $id_inventory);
+	
+	$sql = "SELECT tcompany_contact.*
+			FROM tcompany_contact, tinventory, tusuario
+			WHERE tusuario.id_usuario = '$owner'
+			AND tinventory.id = $id_inventory
+			AND tusuario.id_usuario = tinventory.owner
+			AND tcompany_contact.id_company = tusuario.id_company";
+			
 	$contacts = get_db_all_rows_sql ($sql);
 	if ($contacts !== false) {
 		if (! $only_names)

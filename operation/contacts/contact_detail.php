@@ -336,7 +336,7 @@ if ($id || $new_contact) {
 		}
 		print_table ($table);
 	}
-	
+}	
 	if($manager) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail">';
 		echo '<div class="button" style="width: '.$table->width.'">';
