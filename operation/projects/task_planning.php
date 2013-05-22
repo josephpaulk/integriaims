@@ -138,40 +138,39 @@ if ($create) {
 	$tasklist = get_parameter ("tasklist");
 
 	// Massive creation of tasks
-	if ($tasklist != ""){
+	if ($tasklist != "") {
 
 		$tasklist = safe_output ($tasklist);
 
 		$parent = (int) get_parameter ('padre');
 		$start = get_parameter ('start_date2', date ("Y-m-d"));
-                $end = get_parameter ('end_date2', date ("Y-m-d"));
-                $owner = get_parameter('dueno');
+		$end = get_parameter ('end_date2', date ("Y-m-d"));
+		$owner = get_parameter('dueno');
 
-                $id_group = (int) get_parameter ('group2', 1);
+		$id_group = (int) get_parameter ('group2', 1);
 
 		$data_array = preg_split ("/\n/", $tasklist);
-	        foreach ($data_array as $data_item){
-	                $data = trim($data_item);
-			if ($data != ""){
+		foreach ($data_array as $data_item){
+			$data = trim($data_item);
+			if ($data != "") {
 				$sql = sprintf ('INSERT INTO ttask (id_project, name, id_group, id_parent_task, start, end) 
-                                VALUES (%d, "%s", %d, %d, "%s", "%s")',
-                                $id_project, $data, $id_group, $parent, $start, $end);
+								VALUES (%d, "%s", %d, %d, "%s", "%s")',
+								$id_project, $data, $id_group, $parent, $start, $end);
 
 				$id_task = process_sql ($sql, 'insert_id');
 				
-	                        if ($id_task) {
+				if ($id_task) {
+					$sql = sprintf("SELECT id_role FROM trole_people_project
+									WHERE id_project = %d AND id_user = '%s'", $id_project, $owner);
 
-        	                        $sql = sprintf("SELECT id_role FROM trole_people_project
-                                                        WHERE id_project = %d AND id_user = '%s'", $id_project, $owner);
+					$id_role = process_sql($sql);
+					$role = $id_role[0]['id_role'];
 
-                	                $id_role = process_sql($sql);
-                        	        $role = $id_role[0]['id_role'];
-	
-        	                        $sql = sprintf('INSERT INTO trole_people_task (id_user, id_role, id_task)
-                	                                        VALUES ("%s", %d, %d)', $owner, $role, $id_task);
+					$sql = sprintf('INSERT INTO trole_people_task (id_user, id_role, id_task)
+									VALUES ("%s", %d, %d)', $owner, $role, $id_task);
 
-        	                        $result2 = process_sql($sql);
-                	        }
+					$result2 = process_sql($sql);
+				}
 
 			}
 		}
@@ -277,7 +276,7 @@ echo "</table>";
 echo "</center>";
 
 //Starting main form for this view
-echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
+echo "<form id='form-tasks' method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
 
 //Create button bar
 echo "<div style='width:100%;text-align:left;border-spacing:0px;' class='button'>";
@@ -604,6 +603,7 @@ function show_task_tree (&$table, $id_project, $level, $id_parent_task, $users) 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
 
 <script type="text/javascript">
 
@@ -701,6 +701,77 @@ $(document).ready (function () {
 	});
 });
 
+
+// Form validation
+$(document).ready(function() {
+    
+	var tasklist_rules = {
+		required: true,
+		remote: {
+			url: "ajax.php",
+			type: "POST",
+			data: {
+			  page: "include/ajax/remote_validations",
+			  search_existing_task: 1,
+			  type: "create",
+			  task_name: function() { return $("#textarea-tasklist").val() },
+			  project_id: <?=$id_project?>
+			}
+		},
+		messages: {
+			required: "<?=__('Task required')?>",
+			remote: "<?=__('Existing tasks are not permitted')?>"
+		}
+	};
+	// Remote validation for update tasks are not finished
+	var task_rules = {
+		required: true,
+		/*remote: {
+			url: "ajax.php",
+			type: "POST",
+			data: {
+			  page: "include/ajax/remote_validations",
+			  search_existing_task: 1,
+			  type: "view",
+			  task_name: function() { return $(this).val() },
+			  project_id: <?=$id_project?>
+			}
+		},*/
+		messages: {
+			required: "<?=__('Name required')?>"/*,
+			remote: "<?=__('This task already exists')?>"*/
+		}
+	};
+    var addRules = function() {
+		$("#textarea-tasklist").rules("add", tasklist_rules);
+		$("[id*=text-name]").each( function() {
+            $(this).rules("add", task_rules);
+        });
+	};
+    
+    $("#form-tasks").validate({
+        invalidHandler: addRules, // When validation fails, add the rules again
+        onkeyup: false
+    });        
+
+    addRules();        
+	
+	// When create is clicked, removes the rules of tasks update
+    $("#submit-create").click(function() {
+        $("[id*=text-name]").each( function() {
+            $(this).rules("remove");
+        });
+    });
+    // When update is clicked, trim all names of tasks and removes
+    // the rules of new task creation
+    $("#submit-update").click(function() {
+        $("#textarea-tasklist").rules("remove");
+        $("[id*=text-name]").each( function() {
+            $(this).val( $.trim($(this).val()) );
+        });
+    });
+
+});
 
 
 </script>

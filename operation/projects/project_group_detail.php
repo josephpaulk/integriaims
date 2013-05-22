@@ -101,7 +101,7 @@ if ($id || $new_group) {
 	$table->data[1][0] = print_select ($icons, "icon", $icon, '', '', 0, true,
 		false, false, __('Icon'));
 	
-	echo '<form method="post">';
+	echo '<form id="form-project_group_detail" method="post">';
 	print_table ($table);
 	echo '<div class="button" style="width: 90%">';
 	if ($id) {
@@ -157,3 +157,34 @@ if ($id || $new_group) {
 	echo "</form></div>";
 } // end of list
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script type="text/javascript">
+
+// Form validation
+trim_element_on_submit('#text-name');
+
+validate_form("#form-project_group_detail");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_group: 1,
+			group_name: function() { return $('#text-name').val() },
+			group_id: "<?=$id?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This group already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+
+</script>

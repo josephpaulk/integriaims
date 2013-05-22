@@ -280,3 +280,13 @@ function show_task_tree (&$table, $id_project, $level, $id_parent_task, $where_c
 	}
 }
 ?>
+
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript">
+
+// Form validation
+trim_element_on_submit("#text-search_text");
+
+</script>

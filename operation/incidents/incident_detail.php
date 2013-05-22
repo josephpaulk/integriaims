@@ -946,6 +946,9 @@ echo "<div class= 'dialog ui-dialog-content' id='parent_search_window'></div>";
 <script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
 <script  type="text/javascript">
 
 $(document).ready (function () {
@@ -1197,6 +1200,38 @@ function removeInventory() {
 	
 	
 }
+
+
+// Form validation
+trim_element_on_submit('#text-titulo');
+trim_element_on_submit('#text-email_copy');
+validate_form("#incident_status_form");
+
+// Rules: #text-titulo
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_incident: 1,
+			incident_name: function() { return $('#text-titulo').val() },
+			incident_id: "<?=$id_incident?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Title required')?>",
+	remote: "<?=__('This incident already exists')?>"
+};
+add_validate_form_element_rules('#text-titulo', name_rules, name_messages);
+
+// Rules: text-email_copy
+var name_rules = { email: true };
+var name_messages = { email: "<?=__('Incorrect email')?>" };
+add_validate_form_element_rules('#text-email_copy', name_rules, name_messages);
+
 </script>
 
 <?php //endif; ?>

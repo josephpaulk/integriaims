@@ -620,6 +620,8 @@ href="index.php?sec=projects&sec2=operation/workorders/wo'.$params.'&operation=d
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript" >
 $(document).ready (function () {
@@ -668,5 +670,9 @@ $(document).ready (function () {
 		});
 
 });
+
+// Form validation
+trim_element_on_submit('#text-search_text');
+trim_element_on_submit('#text-name');
 
 </script>

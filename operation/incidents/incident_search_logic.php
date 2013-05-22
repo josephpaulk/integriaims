@@ -262,4 +262,10 @@ function show_search_inventory(search_free, id_object_type_search, owner_search,
 		}
 	});
 }
+
+// Form validation
+trim_element_on_submit('#text-search_string');
+trim_element_on_submit('#text-search_name');
+trim_element_on_submit('#text-inventory_name');
+
 </script>

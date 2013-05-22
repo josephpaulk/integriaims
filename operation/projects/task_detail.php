@@ -242,7 +242,7 @@ if ($operation == "create") {
 	$end = date ("Y-m-d");
 	$periodicity = "none";
 } else {
-	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
+	echo '<form id="form-task_detail" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 	print_input_hidden ('id_project', $id_project);
 	print_input_hidden ('id_task', $id_task);
 	print_input_hidden ('operation', 'update');
@@ -367,7 +367,7 @@ $table->data[8][0] = print_textarea ('description', 8, 30, $description, '',
 	true, __('Description'));
 
 if (user_belong_project ($config['id_user'], $id_project) || give_acl ($config["id_user"], $id_group, "TM") || give_acl ($config["id_user"], $id_group, "PM") || (give_acl ($config["id_user"], 0, "PW") && ($config["id_user"] == $project_manager))) {
-	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
+	echo '<form id="form-task_detail" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 	
 	print_table ($table);
 
@@ -395,6 +395,8 @@ if (user_belong_project ($config['id_user'], $id_project) || give_acl ($config["
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript">
 
@@ -428,4 +430,30 @@ $(document).ready (function () {
 	echo '$("#slider").slider ("moveTo", '.$completion.');';
 ?>
 });
+
+
+// Form validation
+trim_element_on_submit('#text-name');
+validate_form("#form-task_detail");
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_task: 1,
+			type: "<?=$operation?>",
+			task_name: function() { return $('#text-name').val() },
+			task_id: <?=$id_task?>,
+			project_id: <?=$id_project?>
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This task already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+
 </script>

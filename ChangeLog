@@ -1,3 +1,42 @@
+2013-05-22  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/projects/task_planning: Added trim to name of task.
+	Added validation to name of task: required and ajax check for avoid
+	duplicates.
+	
+	* operation/projects/task: Added trim to search box.
+	
+	* task_detail: Added trim to name of task.
+	Added validation to name of task: required and ajax check for avoid
+	duplicates.
+	
+	* operation/projects/milestones: Added trim to name of milestone.
+	
+	* operation/projects/project_group_detail: Added trim to name of group.
+	Added validation to name of group: required and ajax check for avoid
+	duplicates.
+	
+	* operation/workorders/wo: Added trim to search box.
+	Added trim to name of new wo.
+	
+	* operation/workorders/wo_category: Added trim to name of category.
+	
+	* operation/incidents/incident_dashboard: Added trim to search box.
+	
+	* operation/side_menu: Added trim to side menu search box.
+	
+	* operation/incidents/incident_search_logic: Added trim to save current search,
+	search string and inventory boxes.
+	
+	* operation/incidents/incident_detail: Added trim to title and email of incident.
+	Added validation to title of incident: required and ajax check for avoid
+	duplicates.
+	Added validation to email: check for valid email syntax.
+	
+	* operation/incidents/type_detail: Added trim to search box.
+	Added validation to name of type: required and ajax check for avoid
+	duplicates.
+
 2013-05-21  Sancho Lerena <slerena@artica.es>
 
 	* integria_demo.sql: Fixed demo data.

@@ -435,8 +435,8 @@ var name_rules = {
 	}
 };
 var name_messages = {
-	required: "<?=__("Name required")?>",
-	remote: "<?=__("This project name already exists")?>"
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This project already exists')?>"
 };
 add_validate_form_element_rules('input[name="name"]', name_rules, name_messages);
 

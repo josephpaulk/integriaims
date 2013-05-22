@@ -174,3 +174,11 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 } // end of list
 
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" >
+// Form validation
+trim_element_on_submit('#text-search_text');
+trim_element_on_submit('#text-name');
+</script>

@@ -196,7 +196,7 @@ if ($id || $new_type) {
 */
 	$table->data[2][0] = print_textarea ('description', 3, 1, $description, '', true, __('Description'));
 	
-	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
+	echo '<form id="form-type_detail" method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
 	print_table ($table);
 	
 	echo '<div class="button" style="width: '.$table->width.'">';
@@ -281,7 +281,7 @@ if ($id || $new_type) {
 			echo "<h4>".__("No fields")."</h4>";
 		}
 
-		echo "<form name=dataedit method=post action='index.php?sec=incidents&sec2=operation/incidents/incident_type_field&add_field=1&id=".$id.">'";
+		echo "<form id='form-add_field' name=dataedit method=post action='index.php?sec=incidents&sec2=operation/incidents/incident_type_field&add_field=1&id=".$id.">'";
 			echo '<div class="button" style="width: '.$table->width.'">';
 				print_submit_button (__('Add field'), 'create_btn', false, 'class="sub next"', false);
 			echo '</div>';
@@ -353,3 +353,56 @@ if ($id || $new_type) {
 }
 
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" >
+// Form validation
+trim_element_on_submit('#text-search_text');
+// Form: #form-type_detail
+trim_element_on_submit('#text-name');
+validate_form("#form-type_detail");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_type: 1,
+			type_name: function() { return $('#text-name').val() },
+			type_id: "<?=$id?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This name already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+/*
+// Form: #form-type_detail FIELDS
+trim_element_on_submit('#text-name');
+validate_form("#form-type_detail");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_incident: 1,
+			type_name: function() { return $('#text-name').val() },
+			type_id: "<?=$id_type?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This name already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+*/
+</script>

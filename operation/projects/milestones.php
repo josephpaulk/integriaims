@@ -161,3 +161,14 @@ if ($operation == ""){
 
 
 ?>
+
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script type="text/javascript">
+
+// Form validation
+trim_element_on_submit('input[name="name"]');
+
+</script>
