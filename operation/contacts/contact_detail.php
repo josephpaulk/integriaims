@@ -331,7 +331,7 @@ if ($id || $new_contact) {
 							onClick="if (!confirm(\''.__('Are you sure?').'\'))
 							return false;">
 							<img src="images/cross.png"></a>';
-			
+			}	
 			array_push ($table->data, $data);
 		}
 		print_table ($table);

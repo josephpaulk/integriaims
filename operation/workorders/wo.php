@@ -359,10 +359,9 @@ if ($operation == "") {
 	// TODO: Show only leads of my company or my company's children.
 	// TODO: Implement ACL check !
 
-
 	$search_text = (string) get_parameter ('search_text');
 	$id_wo_category = (int) get_parameter ('id_wo_category');
-	$search_status = (int) get_parameter ("search_tatus",0);
+	$search_status = (int) get_parameter ("search_status",0);
 	$owner = (string) get_parameter ("owner", $config["id_user"]);
 
 	$creator = (string) get_parameter ("creator");
