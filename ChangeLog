@@ -1,3 +1,9 @@
+2013-05-22  Dario Rodriguez <dario@artica.es>
+
+	* operation/incidents/incident_detail.php,
+	operation/group/group.php: Restored and fixed an error
+	with SQL query.
+
 2013-05-22  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_dbdata.sql

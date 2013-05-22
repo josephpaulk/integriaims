@@ -24,7 +24,7 @@ if (defined ('AJAX')) {
 				
 		$inventoryObject = get_db_row_sql('SELECT * FROM tinventory
 			WHERE id IN (
-			SELECT id_default_inventory
+			SELECT id_inventory_default
 			FROM tgrupo
 			WHERE id_grupo = ' . $id_group . ')');
 		
@@ -40,12 +40,30 @@ if (defined ('AJAX')) {
 		}
 	}
 	else {
-		$countOpen = get_db_all_rows_sql('SELECT COUNT(*) AS c
-			FROM tincidencia WHERE estado IN (1,2,3,4,5) AND id_grupo = ' . $id_group . ' AND id_creator = "' . $id_user . '"');
-		$countAll = get_db_all_rows_sql('SELECT COUNT(*) AS c
-			FROM tincidencia WHERE id_grupo = ' . $id_group . ' AND id_creator = "' . $id_user . '"');
-		$countOpen = $countOpen[0]['c'];
-		$countAll = $countAll[0]['c'];
+		
+		$external = get_db_value ("nivel", "tusuario", "id_usuario", $id_user);
+		
+		//If external user check for group and user's incidents
+		if ($external == -1) {
+		
+			$countOpen = get_db_all_rows_sql('SELECT COUNT(*) AS c
+				FROM tincidencia WHERE estado IN (1,2,3,4,5) AND id_grupo = ' . $id_group . ' AND id_creator = "' . $id_user . '"');
+			$countAll = get_db_all_rows_sql('SELECT COUNT(*) AS c
+				FROM tincidencia WHERE id_grupo = ' . $id_group . ' AND id_creator = "' . $id_user . '"');
+			$countOpen = $countOpen[0]['c'];
+			$countAll = $countAll[0]['c'];
+			
+		} else {
+			//If not external check only for group's incidents
+			
+			$countOpen = get_db_all_rows_sql('SELECT COUNT(*) AS c
+				FROM tincidencia WHERE estado IN (1,2,3,4,5) AND id_grupo = ' . $id_group);
+			$countAll = get_db_all_rows_sql('SELECT COUNT(*) AS c
+				FROM tincidencia WHERE id_grupo = ' . $id_group);
+			$countOpen = $countOpen[0]['c'];
+			$countAll = $countAll[0]['c'];
+		}
+			
 		if (($group['hard_limit'] != 0) && ($group['hard_limit'] <= $countAll)) {
 			echo "incident_limit"; //type
 			echo "//";
