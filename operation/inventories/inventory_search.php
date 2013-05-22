@@ -348,7 +348,7 @@ $id_manufacturer = get_parameter ('id_manufacturer', 0);
 $id_contract = get_parameter ('id_contract', 0);
 
 $fields_selected = (array)get_parameter('object_fields');
-$mode = get_parameter('mode', 'tree');
+$mode = get_parameter('mode', 'list');
 
 if (isset($_POST['listview']))
 	$mode = 'list';
@@ -480,7 +480,7 @@ switch ($mode) {
 		inventories_show_list($sql_search, $params);
 		break;
 	default:
-		inventories_print_tree($sql_search);
+		inventories_show_list($sql_search, $params);
 		break;
 }
 	

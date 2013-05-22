@@ -1,5 +1,10 @@
 2013-05-22  Vanessa Gil <vanessa.gil@artica.es>
 
+	* operation/inventories/inventory_search.php: Changed
+	'list mode' by default.
+
+2013-05-22  Vanessa Gil <vanessa.gil@artica.es>
+
 	* include/functions_inventories.php
 	  operation/contacts/contact_detail.php
 	  operation/inventories/inventory_contacts.php
