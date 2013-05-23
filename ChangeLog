@@ -1,3 +1,9 @@
+2013-05-23  Vanessa Gil <vanessa.gil@artica.es>
+
+	* extras/migrate.sql
+	  include/integria_cron.php: Fixed synchronize pandora 
+	inventory.
+
 2013-05-22  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_calendar.php: Created new function is_holidays.

@@ -145,44 +145,52 @@ function synchronize_pandora_inventory () {
 		
 		// Check if exist to avoid the creation
 		$inventory_id = get_db_value ('id', 'tinventory', 'name', $agent_name_safe);
-	
+
 		if($inventory_id !== false) {
 			continue;
 		}
 		
+		$id_object_type = get_db_value('id', 'tobject_type', 'name', safe_input('Pandora agents'));
+	
 		$values['name'] = $agent_name_safe;
 		$values['description'] = $description;
-		$values['id_object_type'] = 1;
+		$values['id_object_type'] = $id_object_type;
 		$values['id_contract'] = $config['default_contract'];
 		
 		
 		$id_inventory = process_sql_insert('tinventory', $values);
 		
 		if ($id_inventory) {
+			
+			$id_type_field_os = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>safe_input('OS')));
+			$id_type_field_ip = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>'IP Address'));
+			$id_type_field_url = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>'URL Address'));
+			$id_type_field_id = get_db_value_filter('id', 'tobject_type_field', array('id_object_type'=>$id_object_type, 'label'=>'ID Agent'));
+
 			$value_os = array();
 			$value_os['id_inventory'] = $id_inventory;
-			$value_os['id_object_type_field'] = 1;
+			$value_os['id_object_type_field'] = $id_type_field_os;
 			$value_os['data'] = $os_name;
 			
 			process_sql_insert('tobject_field_data', $value_os);
 			
 			$value_ip = array();
 			$value_ip['id_inventory'] = $id_inventory;
-			$value_ip['id_object_type_field'] = 2;
+			$value_ip['id_object_type_field'] = $id_type_field_ip;
 			$value_ip['data'] = $address;
 			
 			process_sql_insert('tobject_field_data', $value_ip);
 			
 			$value_url = array();
 			$value_url['id_inventory'] = $id_inventory;
-			$value_url['id_object_type_field'] = 3;
+			$value_url['id_object_type_field'] = $id_type_field_url;
 			$value_url['data'] = $url_address;
 			
 			process_sql_insert('tobject_field_data', $value_url);
 			
 			$value_id = array();
 			$value_id['id_inventory'] = $id_inventory;
-			$value_id['id_object_type_field'] = 4;
+			$value_id['id_object_type_field'] = $id_type_field_id;
 			$value_id['data'] = $agent_id;
 			
 			process_sql_insert('tobject_field_data', $value_id);

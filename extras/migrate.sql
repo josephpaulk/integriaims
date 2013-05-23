@@ -264,11 +264,11 @@ CREATE TABLE `tinventory_track` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /* 20/05/2013 */
-ALTER TABLE tinventory ADD `show_list` TINYINT(1) unsigned DEFAULT 1,
+ALTER TABLE tinventory ADD `show_list` TINYINT(1) unsigned DEFAULT 1;
 
 /* 21/05/2013 */
 INSERT INTO tobject_type (name, description, icon) VALUES 
-('Pandora agents', 'Imported agents from Pandora FMS', 'pandora.png');
+(1,'Pandora agents', 'Imported agents from Pandora FMS', 'pandora.png');
 
 /* 21/05/2013 */
 INSERT INTO tobject_type_field (id, id_object_type, label, type) VALUES 
@@ -276,6 +276,3 @@ INSERT INTO tobject_type_field (id, id_object_type, label, type) VALUES
 (2,1,'IP Address','text'),
 (3,1,'URL Address','text'),
 (4,1,'ID Agent','text');
-
-/* 22/05/2013 */
-ALTER TABLE tsla ADD `no_holidays` tinyint NULL default 0;
