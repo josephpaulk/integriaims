@@ -211,11 +211,11 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<h2>".__('KB Data management')."</h2>";	
 	if ($id == -1){
 		echo "<h3>".__('Create a new KB item')."</a></h3>";
-		echo "<form name=prodman method='post' action='index.php?sec=kb&sec2=operation/kb/browse&create2'>";
+		echo "<form id='form-kb_item' name=prodman method='post' action='index.php?sec=kb&sec2=operation/kb/browse&create2'>";
 	}
 	else {
 		echo "<h3>".__('Update existing KB item')."</a></h3>";
-		echo "<form enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/browse&update2'>";
+		echo "<form id='form-kb_item' enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/browse&update2'>";
 		echo "<input type=hidden name=id value='$id'>";
 	}
 	
@@ -224,7 +224,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	echo __('Title');
 	echo "<td class=datos>";
-	echo "<input type=text size=60 name='title' value='$title'>";
+	echo "<input id='text-name' type=text size=60 name='title' value='$title'>";
 
 	echo "<tr>";
 	echo "<td>";
@@ -304,121 +304,151 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	}
 }
 
+if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 
-if ((isset($_GET["update"])) OR (isset($_GET["create"]))){
-	return;
-}
 
-// Show list of items
-// =======================
+	// Show list of items
+	// =======================
 
-echo "<h2>".__('KB Data management')." &raquo; ".__('Defined data')."</a></h2>";
+	echo "<h2>".__('KB Data management')." &raquo; ".__('Defined data')."</a></h2>";
 
-// Search parameter 
-$free_text = get_parameter ("free_text", "");
-$product = get_parameter ("product", 0);
-$category = get_parameter ("category", 0);
-$id_language = get_parameter ("id_language", '');
+	// Search parameter 
+	$free_text = get_parameter ("free_text", "");
+	$product = get_parameter ("product", 0);
+	$category = get_parameter ("category", 0);
+	$id_language = get_parameter ("id_language", '');
 
-// Search filters
-echo '<form method="post" action="?sec=kb&sec2=operation/kb/browse">';
-echo '<table width="100%" class="blank">';
-echo "<tr>";
-echo "<td>";
-echo __('Product types');
-echo "<td>";
+	// Search filters
+	echo '<form method="post" action="?sec=kb&sec2=operation/kb/browse">';
+	echo '<table width="100%" class="blank">';
+	echo "<tr>";
+	echo "<td>";
+	echo __('Product types');
+	echo "<td>";
 
-echo print_select_from_sql ('SELECT id, name FROM tkb_product ORDER BY name', 'product', $product, '', __("Any"), '', true, false, false, '');
+	echo print_select_from_sql ('SELECT id, name FROM tkb_product ORDER BY name', 'product', $product, '', __("Any"), '', true, false, false, '');
 
-echo "<td>";
-echo __('Categories');
-echo "<td>";
-combo_kb_categories ($category, 1);
+	echo "<td>";
+	echo __('Categories');
+	echo "<td>";
+	combo_kb_categories ($category, 1);
 
-echo "<tr>";
-echo "<td>";
-echo __('Search');
-echo "<td>";
-echo "<input type=text name='free_text' size=25 value='$free_text'>";
+	echo "<tr>";
+	echo "<td>";
+	echo __('Search');
+	echo "<td>";
+	echo "<input type=text name='free_text' size=25 value='$free_text'>";
 
-echo "<td>";
-echo __('Language');
-echo "<td>";
-echo print_select_from_sql ('SELECT id_language, name FROM tlanguage', 'id_language',
-					$id_language, '', __("Any"), '', true, false, false, '');
+	echo "<td>";
+	echo __('Language');
+	echo "<td>";
+	echo print_select_from_sql ('SELECT id_language, name FROM tlanguage', 'id_language',
+						$id_language, '', __("Any"), '', true, false, false, '');
 
-echo "<td >";
-echo "<input type=submit class='sub search' value='".__('Search')."'>";
+	echo "<td >";
+	echo "<input type=submit class='sub search' value='".__('Search')."'>";
 
-echo "</td></tr></table></form>";
+	echo "</td></tr></table></form>";
 
-// Search filter processing
-// ========================
+	// Search filter processing
+	// ========================
 
-$sql_filter = "WHERE 1=1 ";
+	$sql_filter = "WHERE 1=1 ";
 
-if ($free_text != "")
-	$sql_filter .= " AND (title LIKE '%$free_text%' OR data LIKE '%$free_text%')";
+	if ($free_text != "")
+		$sql_filter .= " AND (title LIKE '%$free_text%' OR data LIKE '%$free_text%')";
 
-if ($product != 0)
-	$sql_filter .= " AND id_product = $product ";
+	if ($product != 0)
+		$sql_filter .= " AND id_product = $product ";
 
-if ($category != 0)
-	$sql_filter .= " AND id_category = $category ";
+	if ($category != 0)
+		$sql_filter .= " AND id_category = $category ";
 
-if ($id_language != '')
-	$sql_filter .= " AND id_language = '$id_language' ";
+	if ($id_language != '')
+		$sql_filter .= " AND id_language = '$id_language' ";
 
-$offset = get_parameter ("offset", 0);
+	$offset = get_parameter ("offset", 0);
 
-$count = get_db_sql("SELECT COUNT(id) FROM tkb_data $sql_filter");
-pagination ($count, "index.php?sec=kb&sec2=operation/kb/browse&id_language=$id_language&free_text=$free_text&product=$product&category=$category", $offset);
+	$count = get_db_sql("SELECT COUNT(id) FROM tkb_data $sql_filter");
+	pagination ($count, "index.php?sec=kb&sec2=operation/kb/browse&id_language=$id_language&free_text=$free_text&product=$product&category=$category", $offset);
 
-$sql1 = "SELECT * FROM tkb_data $sql_filter ORDER BY title, id_category, id_product LIMIT $offset, ". $config["block_size"];
+	$sql1 = "SELECT * FROM tkb_data $sql_filter ORDER BY title, id_category, id_product LIMIT $offset, ". $config["block_size"];
 
-$color =0;
-if ($result=mysql_query($sql1)){
-	echo '<table width="100%" class="listing">';
+	$color =0;
+	if ($result=mysql_query($sql1)){
+		echo '<table width="100%" class="listing">';
 
-	echo "<th>".__('Title')."</th>";
-	echo "<th>".__('Category')."</th>";
-	echo "<th>".__('Product')."</th>";
-	echo "<th>".__('Language')."</th>";
-	echo "<th>".__('Timestamp')."</th>";
-	
-	if (give_acl($config["id_user"], 0, "KW")) {
-		echo "<th>".__('Delete')."</th>";
-	}
-	
-	while ($row=mysql_fetch_array($result)){
-		echo "<tr>";
-		// Name
-		echo "<td valign='top'><a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$row["id"]."'>".short_string($row["title"],220)."</a></td>";
-
-		// Category
-		echo "<td class=f9>";
-		echo "<img src='images/groups_small/".get_db_sql ("SELECT icon FROM tkb_category WHERE id = ".$row["id_category"]). "'>";
-
-		// Product
-		echo "<td class=f9>";
-		echo "<img src='images/products/". get_db_sql ("SELECT icon FROM tkb_product WHERE id = ".$row["id_product"]). "'>";
-
-		// Language
-		echo "<td class=f9>";
-		echo $row["id_language"];
-
-		// Timestamp
-		echo "<td class='f9' valign='top'>";
-		echo human_time_comparation($row["timestamp"]);
+		echo "<th>".__('Title')."</th>";
+		echo "<th>".__('Category')."</th>";
+		echo "<th>".__('Product')."</th>";
+		echo "<th>".__('Language')."</th>";
+		echo "<th>".__('Timestamp')."</th>";
 		
 		if (give_acl($config["id_user"], 0, "KW")) {
-			// Delete
-			echo "<td class='f9' align='center' >";
-			echo "<a href='index.php?sec=kb&sec2=operation/kb/browse&delete_data=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
-		}	
+			echo "<th>".__('Delete')."</th>";
+		}
+		
+		while ($row=mysql_fetch_array($result)){
+			echo "<tr>";
+			// Name
+			echo "<td valign='top'><a href='index.php?sec=kb&sec2=operation/kb/browse_data&view=".$row["id"]."'>".short_string($row["title"],220)."</a></td>";
 
+			// Category
+			echo "<td class=f9>";
+			echo "<img src='images/groups_small/".get_db_sql ("SELECT icon FROM tkb_category WHERE id = ".$row["id_category"]). "'>";
+
+			// Product
+			echo "<td class=f9>";
+			echo "<img src='images/products/". get_db_sql ("SELECT icon FROM tkb_product WHERE id = ".$row["id_product"]). "'>";
+
+			// Language
+			echo "<td class=f9>";
+			echo $row["id_language"];
+
+			// Timestamp
+			echo "<td class='f9' valign='top'>";
+			echo human_time_comparation($row["timestamp"]);
+			
+			if (give_acl($config["id_user"], 0, "KW")) {
+				// Delete
+				echo "<td class='f9' align='center' >";
+				echo "<a href='index.php?sec=kb&sec2=operation/kb/browse&delete_data=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
+			}	
+
+		}
+		echo "</table>";
 	}
-	echo "</table>";
-}			
+	
+}
 
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script type="text/javascript">
+
+// Form validation
+trim_element_on_submit('input[name="free_text"]');
+trim_element_on_submit('#text-name');
+validate_form("#form-kb_item");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_kb_item: 1,
+			kb_item_name: function() { return $('#text-name').val() }
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Title required')?>",
+	remote: "<?=__('This title already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+
+</script>

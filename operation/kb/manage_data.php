@@ -176,12 +176,12 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<h2>".__('KB Data management')."</h2>";	
 	if ($id == -1){
 		echo "<h3>".__('Create a new KB item')."</a></h3>";
-		echo "<form name=prodman method='post' action='index.php?sec=kb&sec2=operation/kb/manage_data&create2'>";
+		echo "<form id='form-kb_item' name=prodman method='post' action='index.php?sec=kb&sec2=operation/kb/manage_data&create2'>";
 	}
 	else {
 		echo "<h3>".__('Update existing KB item')."</a></h3>";
-		echo "<form enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/manage_data&update2'>";
-		echo "<input type=hidden name=id value='$id'>";
+		echo "<form id='form-kb_item' enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/manage_data&update2'>";
+		echo "<input id='id_kb_item' type=hidden name=id value='$id'>";
 	}
 	
 	echo '<table width="90%" class="databox">';
@@ -189,7 +189,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	echo __('Title');
 	echo "<td class=datos>";
-	echo "<input type=text size=60 name='title' value='$title'>";
+	echo "<input id='text-name' type=text size=60 name='title' value='$title'>";
 
 	echo "<tr>";
 	echo "<td>";
@@ -319,8 +319,35 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 } // end of list
 ?>
 
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
 <script  type="text/javascript">
 $(document).ready (function () {
 	$('textarea').TextAreaResizer ();
 });
+
+// Form validation
+trim_element_on_submit('#text-name');
+validate_form("#form-kb_item");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_kb_item: 1,
+			kb_item_name: function() { return $('#text-name').val() },
+			kb_item_id: function() { return $('#id_kb_item').val() }
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Title required')?>",
+	remote: "<?=__('This title already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+
 </script>

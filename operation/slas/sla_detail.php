@@ -187,7 +187,7 @@ if ($id || $new_sla) {
 
 	$table->data[3][0] = print_textarea ("description", 8, 1, $description, '', true, __('Description'));
 
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/slas/sla_detail">';
+	echo '<form id="form-sla_detail" method="post" action="index.php?sec=inventory&sec2=operation/slas/sla_detail">';
 	print_table ($table);
 	
 	echo '<div class="button" style="width: '.$table->width.'">';
@@ -271,7 +271,7 @@ if ($id || $new_sla) {
 		print_table ($table);
 	}
 	
-	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
+	echo '<form id="form-sla_detail" method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_sla', 1);
@@ -279,3 +279,35 @@ if ($id || $new_sla) {
 	echo '</form>';
 }
 ?>
+
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script  type="text/javascript">
+	
+// Form validation
+trim_element_on_submit('#text-search_text');
+trim_element_on_submit('#text-name');
+validate_form("#form-sla_detail");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_sla: 1,
+			sla_name: function() { return $('#text-name').val() },
+			sla_id: "<?=$id?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This name already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+	
+</script>

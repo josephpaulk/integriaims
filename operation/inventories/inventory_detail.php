@@ -540,6 +540,9 @@ echo "<div class= 'dialog ui-dialog-content' id='inventory_search_window'></div>
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.dialog"></script>
 <script type="text/javascript" src="include/js/integria.js"></script>
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
 <script type="text/javascript">
 
 $(document).ready (function () {
@@ -950,6 +953,31 @@ function show_type_fields() {
 			}
 	});
 }
+
+
+// Form validation
+trim_element_on_submit('#text-name');
+validate_form("#inventory_status_form");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_object: 1,
+			object_name: function() { return $('#text-name').val() },
+			object_id: "<?=$id?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This object already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+
 </script>
 
 <?php //endif; ?>

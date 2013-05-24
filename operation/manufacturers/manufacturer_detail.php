@@ -125,7 +125,7 @@ if ($id || $new_manufacturer) {
 	$table->data[1][0] = print_textarea ("address", 4, 1, $address, '', true, __('Address'));
 	$table->data[2][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
 	
-	echo '<form method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
+	echo '<form id="form-manufacturer_detail" method="post" action="index.php?sec=inventory&sec2=operation/manufacturers/manufacturer_detail">';
 	print_table ($table);
 	
 	echo '<div class="button" style="width: '.$table->width.'">';
@@ -207,3 +207,35 @@ if ($id || $new_manufacturer) {
 } // end of list
 
 ?>
+
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script type="text/javascript">
+
+// Form validation
+trim_element_on_submit('#text-search_text');
+trim_element_on_submit('#text-name');
+validate_form("#form-manufacturer_detail");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_manufacturer: 1,
+			manufacturer_name: function() { return $('#text-name').val() },
+			manufacturer_id: "<?=$id?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This manufacturer already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+
+</script>

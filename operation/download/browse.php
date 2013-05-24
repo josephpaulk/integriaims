@@ -237,16 +237,16 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "</div>";
 
 	// echo "<form method='post' action='index.php?sec=download&sec2=operation/download/browse&create=1&upload_file' enctype='multipart/form-data'>";
-	echo "<table>";
+	//echo "<table>";
 	
 	if ($id == -1){
 		echo "<h3>".__('Create a new file release')."</a></h3>";
-		echo "<form name=prodman method='post' action='index.php?sec=download&sec2=operation/download/browse&create2=1'>";
+		echo "<form id='form-file_release' name=prodman method='post' action='index.php?sec=download&sec2=operation/download/browse&create2=1'>";
 	}
 	else {
 		echo "<h3>".__('Update existing file release')."</a></h3>";
-		echo "<form enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=download&sec2=operation/download/browse&update2=1'>";
-		echo "<input type=hidden name=id value='$id'>";
+		echo "<form id='form-file_release' enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=download&sec2=operation/download/browse&update2=1'>";
+		echo "<input id='id_download' type=hidden name=id value='$id'>";
 	}
 	
 	echo '<table width="90%" class="databox">';
@@ -254,7 +254,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	echo __('Name');
 	echo "<td class=datos>";
-	echo "<input type=text size=40 name='name' value='$name'>";
+	echo "<input id='text-name' type=text size=40 name='name' value='$name'>";
 
 	echo "<tr>";
 	echo "<td class=datos>";
@@ -332,143 +332,175 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 }
 
 
-if ((isset($_GET["update"])) OR (isset($_GET["create"]))){
-	return;
-}
+if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 
-// ==================================================================
-// Show search controls
-// ==================================================================
+	// ==================================================================
+	// Show search controls
+	// ==================================================================
 
-echo "<h2>".__('Downloads')." &raquo; ".__('Defined data')."</a></h2>";
+	echo "<h2>".__('Downloads')." &raquo; ".__('Defined data')."</a></h2>";
 
-// Search parameter 
-$free_text = get_parameter ("free_text", "");
-$category = get_parameter ("id_category", 0);
+	// Search parameter 
+	$free_text = get_parameter ("free_text", "");
+	$category = get_parameter ("id_category", 0);
 
-// Search filters
-echo '<form method="post">';
-echo '<table width="90%" class="blank">';
-echo "<tr>";
-echo "<td>";
-echo __('Categories');
-echo "<td>";
-
-combo_download_categories ($category, 1);
-
-echo "<tr>";
-echo "<td>";
-echo __('Search');
-echo "<td>";
-echo "<input type=text name='free_text' size=25 value='$free_text'>";
-
-echo "<td >";
-echo "<input type=submit class='sub search' value='".__('Search')."'>";
-
-
-echo "</td></tr></table></form>";
-
-// ==================================================================
-// Download listings
-// ==================================================================
-
-$sql_filter = "";
-
-if ($free_text != "")
-	$sql_filter .= " AND tdownload.name LIKE '%$free_text%' OR tdownload.description LIKE 
-'%$free_text%'";
-
-if ($category > 0)
-	$sql_filter .= " AND tdownload.id_category = $category ";
-
-$offset = get_parameter ("offset", 0);
-
-$condition = "tdownload, tdownload_category_group, tusuario_perfil 
-WHERE tusuario_perfil.id_usuario = '".$config["id_user"]."' AND
-tusuario_perfil.id_grupo = tdownload_category_group.id_group AND
-tdownload_category_group.id_category = tdownload.id_category $sql_filter ";
-
-if (dame_admin($config["id_user"]))
-	$condition = " tdownload, tdownload_category_group WHERE tdownload_category_group.id_category = tdownload.id_category $sql_filter";
-
-$count = get_db_sql("SELECT COUNT(DISTINCT tdownload.id) FROM $condition");
-
-pagination ($count, "index.php?sec=download&sec2=operation/download/browse&id_category=$category&free_text=$free_text", $offset);
-
-$sql = "SELECT tdownload.* FROM $condition GROUP BY tdownload.id ORDER BY date DESC, name LIMIT
-$offset, ". $config["block_size"];
-
-$color =0;
-
-$downloads = process_sql($sql);
-
-if($downloads == false) {
-	$downloads = array();
-	echo "<h3 class='error'>".__('No Downloads found')."</h3>"; 
-}
-else {
-	echo '<table width="95%" class="listing" cellspacing=4 cellpading=4>';
-
-	echo "<th>".__('Name')."</th>";
-	echo "<th>".__('Size')."</th>";
-	echo "<th>".__('Category')."</th>";
-	echo "<th>".__('Downloads')."</th>";
-	echo "<th>".__('Public link')."</th>";
-	echo "<th>".__('Date')."</th>";
-	if (give_acl($config["id_user"], 0, "KW")){
-		echo "<th>".__('Admin')."</th>";
-	}
-}
-
-foreach($downloads as $row){
+	// Search filters
+	echo '<form method="post">';
+	echo '<table width="90%" class="blank">';
 	echo "<tr>";
+	echo "<td>";
+	echo __('Categories');
+	echo "<td>";
 
-	// Name
-	echo "<td><a title='".$row["description"]."' href='operation/download/download.php?id=".$row["id"]."'>";
-	echo $row["name"]."</a>";
-	if ($row["description"] != ""){
-		echo "<img src='images/zoom.png'>";
+	combo_download_categories ($category, 1);
+
+	echo "<tr>";
+	echo "<td>";
+	echo __('Search');
+	echo "<td>";
+	echo "<input type=text name='free_text' size=25 value='$free_text'>";
+
+	echo "<td >";
+	echo "<input type=submit class='sub search' value='".__('Search')."'>";
+
+
+	echo "</td></tr></table></form>";
+
+	// ==================================================================
+	// Download listings
+	// ==================================================================
+
+	$sql_filter = "";
+
+	if ($free_text != "")
+		$sql_filter .= " AND tdownload.name LIKE '%$free_text%' OR tdownload.description LIKE 
+	'%$free_text%'";
+
+	if ($category > 0)
+		$sql_filter .= " AND tdownload.id_category = $category ";
+
+	$offset = get_parameter ("offset", 0);
+
+	$condition = "tdownload, tdownload_category_group, tusuario_perfil 
+	WHERE tusuario_perfil.id_usuario = '".$config["id_user"]."' AND
+	tusuario_perfil.id_grupo = tdownload_category_group.id_group AND
+	tdownload_category_group.id_category = tdownload.id_category $sql_filter ";
+
+	if (dame_admin($config["id_user"]))
+		$condition = " tdownload, tdownload_category_group WHERE tdownload_category_group.id_category = tdownload.id_category $sql_filter";
+
+	$count = get_db_sql("SELECT COUNT(DISTINCT tdownload.id) FROM $condition");
+
+	pagination ($count, "index.php?sec=download&sec2=operation/download/browse&id_category=$category&free_text=$free_text", $offset);
+
+	$sql = "SELECT tdownload.* FROM $condition GROUP BY tdownload.id ORDER BY date DESC, name LIMIT
+	$offset, ". $config["block_size"];
+
+	$color =0;
+
+	$downloads = process_sql($sql);
+
+	if($downloads == false) {
+		$downloads = array();
+		echo "<h3 class='error'>".__('No Downloads found')."</h3>"; 
 	}
-	echo "</td>";
+	else {
+		echo '<table width="95%" class="listing" cellspacing=4 cellpading=4>';
 
-	// Size
-	echo "<td>";
-	echo format_for_graph(filesize($config["homedir"].$row["location"]),1,".",",",1024);
-	
-	// Category
-	echo "<td>";
-			echo "<img src='images/download_category/".get_db_sql ("SELECT icon FROM tdownload_category WHERE id = ".$row["id_category"]). "'>";
-
-	// Description
-	//	echo "<td class=f9>";
-	//	echo $row["description"];
-
-	// Downloads
-	echo "<td>";
-	echo get_db_sql ("SELECT COUNT(*) FROM tdownload_tracking where id_download = ".$row["id"]);
-
-	// Public URL
-	echo "<td>";
-	if ($row["public"]){
-		$url = $config["base_url"] . "/index.php?external_download_id=".$row["external_id"];
-		echo "<a href='$url'><img src='images/world.png'></a>";
+		echo "<th>".__('Name')."</th>";
+		echo "<th>".__('Size')."</th>";
+		echo "<th>".__('Category')."</th>";
+		echo "<th>".__('Downloads')."</th>";
+		echo "<th>".__('Public link')."</th>";
+		echo "<th>".__('Date')."</th>";
+		if (give_acl($config["id_user"], 0, "KW")){
+			echo "<th>".__('Admin')."</th>";
+		}
 	}
 
-	// Timestamp
-	echo "<td class='f9'>";
-	echo human_time_comparation($row["date"]);
+	foreach($downloads as $row){
+		echo "<tr>";
 
-	if (give_acl($config["id_user"], 0, "KW")){
+		// Name
+		echo "<td><a title='".$row["description"]."' href='operation/download/download.php?id=".$row["id"]."'>";
+		echo $row["name"]."</a>";
+		if ($row["description"] != ""){
+			echo "<img src='images/zoom.png'>";
+		}
+		echo "</td>";
 
-		// Editr
-		echo "<td class='f9' align='center' >";
-		echo "<a href='index.php?sec=download&sec2=operation/download/browse&update=".$row["id"]."'><img border='0' src='images/wrench.png'></a>";
-		echo "&nbsp;&nbsp;";
+		// Size
+		echo "<td>";
+		echo format_for_graph(filesize($config["homedir"].$row["location"]),1,".",",",1024);
+		
+		// Category
+		echo "<td>";
+				echo "<img src='images/download_category/".get_db_sql ("SELECT icon FROM tdownload_category WHERE id = ".$row["id_category"]). "'>";
 
-		// Delete
-		echo "<a href='index.php?sec=download&sec2=operation/download/browse&delete_data=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
+		// Description
+		//	echo "<td class=f9>";
+		//	echo $row["description"];
+
+		// Downloads
+		echo "<td>";
+		echo get_db_sql ("SELECT COUNT(*) FROM tdownload_tracking where id_download = ".$row["id"]);
+
+		// Public URL
+		echo "<td>";
+		if ($row["public"]){
+			$url = $config["base_url"] . "/index.php?external_download_id=".$row["external_id"];
+			echo "<a href='$url'><img src='images/world.png'></a>";
+		}
+
+		// Timestamp
+		echo "<td class='f9'>";
+		echo human_time_comparation($row["date"]);
+
+		if (give_acl($config["id_user"], 0, "KW")){
+
+			// Edit
+			echo "<td class='f9' align='center' >";
+			echo "<a href='index.php?sec=download&sec2=operation/download/browse&update=".$row["id"]."'><img border='0' src='images/wrench.png'></a>";
+			echo "&nbsp;&nbsp;";
+
+			// Delete
+			echo "<a href='index.php?sec=download&sec2=operation/download/browse&delete_data=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img border='0' src='images/cross.png'></a>";
+		}
+
 	}
+	echo "</table>";	
 
 }
-echo "</table>";	
+
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script type="text/javascript">
+
+// Form validation
+trim_element_on_submit('input[name="free_text"]');
+trim_element_on_submit('#text-name');
+validate_form("#form-file_release");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_download: 1,
+			download_name: function() { return $('#text-name').val() },
+			download_id: function() { return $('#id_download').val() }
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This download already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+
+</script>

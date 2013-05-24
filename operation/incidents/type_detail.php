@@ -381,28 +381,5 @@ var name_messages = {
 	remote: "<?=__('This name already exists')?>"
 };
 add_validate_form_element_rules('#text-name', name_rules, name_messages);
-/*
-// Form: #form-type_detail FIELDS
-trim_element_on_submit('#text-name');
-validate_form("#form-type_detail");
-// Rules: #text-name
-var name_rules = {
-	required: true,
-	remote: {
-		url: "ajax.php",
-        type: "POST",
-        data: {
-			page: "include/ajax/remote_validations",
-			search_existing_incident: 1,
-			type_name: function() { return $('#text-name').val() },
-			type_id: "<?=$id_type?>"
-        }
-	}
-};
-var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This name already exists')?>"
-};
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
-*/
+
 </script>

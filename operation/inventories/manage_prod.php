@@ -138,7 +138,7 @@ if ($create || $id) {
 	$table->data[2][0] = print_textarea ('description', 10, 50, $description, '',
 		true, __('Description'));
 	
-	echo '<form method="post">';
+	echo '<form id="form-product_type" method="post">';
 	print_table ($table);
 	echo '<div class="button" style="width: '.$table->width.'">';
 	if ($id == -1) {
@@ -206,6 +206,9 @@ if (! $id && ! $create) {
 
 ?>
 
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
 <script type="text/javascript">
 $(document).ready (function () {
 	$("#icon").change (function () {
@@ -215,5 +218,29 @@ $(document).ready (function () {
 		});
 	})
 });
+
+
+// Form validation
+trim_element_on_submit('#text-name');
+validate_form("#form-product_type");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_product_type: 1,
+			product_type_name: function() { return $('#text-name').val() },
+			product_type_id: "<?=$id?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This product type already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
 
 </script>

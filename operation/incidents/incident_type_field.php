@@ -76,6 +76,9 @@ echo '</form>';
 
 ?>
 
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
 <script  type="text/javascript">
 $(document).ready (function () {
 	if ($("#type").val() == "combo") {
@@ -93,4 +96,10 @@ $("#type").change (function () {
 		$("#table1-id_combo_value-0").css ('display', 'none');
 	}
 });
+
+
+// Form validation
+trim_element_on_submit('#text-label');
+trim_element_on_submit('#text-combo_value');
+
 </script>

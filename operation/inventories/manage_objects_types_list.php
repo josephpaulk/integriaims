@@ -80,7 +80,7 @@ switch ($action_db) {
 			$sql = sprintf ('INSERT INTO tobject_type_field (id_object_type, label, type, combo_value, 
 							external_table_name, external_reference_field, `unique`, inherit, show_list) 
 					VALUES (%d, "%s", "%s", "%s", 
-						    "%s", "%s", %d, %d)',
+						    "%s", "%s", %d, %d, %d)',
 					$id_object_type, $label, $type, $combo_value,
 					$external_table_name, $external_reference_field, $unique, $inherit, $show_list);
 					

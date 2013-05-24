@@ -99,7 +99,7 @@ $table->data[8][0] = print_checkbox ('inherit', 1, $inherit, __('Inherit'));
 $table->data[9][0] = '<label>' . __('Show in list') . print_help_tip(__('With this value checked this field will be displayed in search list.'), true) . '</label>';
 $table->data[10][0] = print_checkbox ('show_list', 1, $show_list, __('Show in list'));
 
-echo "<form method='post' action='index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list'>";
+echo "<form id='form-manage_objects_types_field' method='post' action='index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list'>";
 print_table ($table);
 echo "<div class='button' style='width: ".$table->width."'>";
 if (empty($id_object_type_field)) {
@@ -118,6 +118,10 @@ echo "</div></form>";
 
 
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
 <script type="text/javascript">
 $(document).ready (function () {
 	var data_default = $("#type").val();
@@ -170,5 +174,30 @@ $(document).ready (function () {
 		
 	})
 });
+
+
+// Form validation
+trim_element_on_submit('#text-label');
+validate_form("#form-manage_objects_types_field");
+// Rules: #text-label
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_object_type_field: 1,
+			object_type_field_name: function() { return $('#text-label').val() },
+			object_type_id: "<?=$id_object_type?>",
+			object_type_field_id: "<?=$id_object_type_field?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This label already exists')?>"
+};
+add_validate_form_element_rules('#text-label', name_rules, name_messages);
 
 </script>

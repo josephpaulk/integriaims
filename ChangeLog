@@ -1,3 +1,28 @@
+2013-05-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/incidents/incident_type_field: Added trim to type name and value.
+	
+	* operation/inventories/inventory_search: Added trim to search box.
+	
+	
+	* operation/inventories/manage_objects_types_field: Added trim to name.
+	Added validation to name: required and ajax check for avoid duplicates on an
+	specific object.	
+	
+	* operation/slas/sla_detail:
+	  operation/inventories/inventory_detail:
+	  operation/inventories/manage_objects:
+	  operation/manufacturers/manufacturer_detail:
+	  operation/kb/browse:
+	  operation/kb/manage_data: 
+	  operation/kb/manage_cat:
+	  operation/inventories/manage_prod:
+	  operation/download/browse:
+	  operation/download/manage_cat: Added trim to name.
+	Added validation to name: required and ajax check for avoid duplicates.
+	
+	* manage_objects_types_field: Fixed an error on insertion.
+
 2013-05-23  Vanessa Gil <vanessa.gil@artica.es>
 
 	* extras/migrate.sql

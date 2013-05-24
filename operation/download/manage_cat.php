@@ -99,14 +99,14 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<h2>".__('File release category management')."</h2>";	
 	if ($id == -1){
 		echo "<h3>".__('Create a new category')."</a></h3>";
-		echo "<form name=catman method='post' action='index.php?sec=download&
+		echo "<form id='form-file_category' name=catman method='post' action='index.php?sec=download&
 						sec2=operation/download/manage_cat&create2'>";
 	}
 	else {
 		echo "<h3>".__('Update existing category')."</a></h3>";
-		echo "<form name=catman method='post' action='index.php?sec=download&
+		echo "<form id='form-file_category' name=catman method='post' action='index.php?sec=download&
 						sec2=operation/download/manage_cat&update2'>";
-		echo "<input type=hidden name=id value='$id'>";
+		echo "<input id='id_category' type=hidden name=id value='$id'>";
 	}
 	
 	echo '<table width="90%" class="databox">';
@@ -114,7 +114,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	echo __('Name');
 	echo "<td class=datos>";
-	echo "<input type=text size=20 name=name value='$name'>";
+	echo "<input id='text-name' type=text size=20 name=name value='$name'>";
 
 	echo "<tr>";
     echo "<td class=datos>";
@@ -193,3 +193,33 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 } // end of list
 
 ?>
+
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script  type="text/javascript">	
+// Form validation
+trim_element_on_submit('#text-name');
+validate_form("#form-file_category");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_file_category: 1,
+			file_category_name: function() { return $('#text-name').val() },
+			file_category_id: function() { return $('#id_category').val() }
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This category already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+
+</script>

@@ -106,14 +106,14 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<h2>".__('KB Category management')."</h2>";	
 	if ($id == -1){
 		echo "<h3>".__('Create a new category')."</a></h3>";
-		echo "<form name=catman method='post' action='index.php?sec=kb&
+		echo "<form id='form-kb_category' name=catman method='post' action='index.php?sec=kb&
 						sec2=operation/kb/manage_cat&create2'>";
 	}
 	else {
 		echo "<h3>".__('Update existing category')."</a></h3>";
-		echo "<form name=catman method='post' action='index.php?sec=kb&
+		echo "<form id='form-kb_category' name=catman method='post' action='index.php?sec=kb&
 						sec2=operation/kb/manage_cat&update2'>";
-		echo "<input type=hidden name=id value='$id'>";
+		echo "<input id='id_kb_category' type=hidden name=id value='$id'>";
 	}
 	
 	echo '<table width="90%" class="databox">';
@@ -121,7 +121,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	echo __('Name');
 	echo "<td class=datos>";
-	echo "<input type=text size=20 name=name value='$name'>";
+	echo "<input id='text-name' type=text size=20 name=name value='$name'>";
 
 	echo "<tr>";
 	echo "<td class=datos2>";
@@ -215,3 +215,33 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 } // end of list
 
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script  type="text/javascript">
+
+// Form validation
+trim_element_on_submit('#text-name');
+validate_form("#form-kb_category");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_kb_category: 1,
+			kb_category_name: function() { return $('#text-name').val() },
+			kb_category_id: function() { return $('#id_kb_category').val() }
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This category already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+
+</script>
