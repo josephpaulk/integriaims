@@ -1432,9 +1432,16 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 	$last_incident_update = get_db_value ("last_stat_check", "tincidencia", "id_incidencia", $id_incident);
 	
 	//Calculate time difference
-	$now = time();
-	$last_incident_update_time = strtotime($last_incident_update);
-	$diff_time = $now - $last_incident_update_time;
+	if ($last_incident_update = "0000-00-00 00:00:00") {
+		//Incident created right now!
+		$now = time();
+		$last_incident_update_time = $now;
+	} else {
+		//Incident was updated at least once
+		$now = time();
+		$last_incident_update_time = strtotime($last_incident_update);
+		$diff_time = $now - $last_incident_update_time;
+	}
 	
 	$holidays_seconds = incidents_get_holidays_seconds_by_timerange($last_incident_update_time, $now);
 	
@@ -1559,7 +1566,7 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 								"id_incident" => $id_incident);
 		process_sql_insert("tincident_stats", $val_new_metric);
 	}
-	
+
 	//Calculate total time without waiting for third companies
 	$filter = array(
 				"metric" => INCIDENT_METRIC_TOTAL_TIME, 
@@ -1571,7 +1578,7 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 				"status" => STATUS_PENDING_THIRD_PERSON, 
 				"id_incident" => $id_incident);
 	$third_time = get_db_value_filter ("seconds", "tincident_stats", $filter);
-	
+
 	if (!$third_time) {
 		$third_time = 0;
 	}
@@ -1579,7 +1586,7 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 	$diff_time = $total_time - $third_time;
 	$row_sql = sprintf("SELECT * FROM tincident_stats WHERE id_incident = %d AND metric = '%s'", $id_incident, INCIDENT_METRIC_TOTAL_TIME_NO_THIRD);
 	$row = get_db_row_sql($row_sql);
-	
+
 	//Check if we have a previous stat metric to update or create it
 	if ($row) {
 		//Only update for status different from "PEDING ON THIRD PERSON"
@@ -1595,12 +1602,13 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 								"id_incident" => $id_incident);
 		process_sql_insert("tincident_stats", $val_new_metric);
 	}
-	
+
 	//Update last_incident_update field from tincidencia
 	$now_date = date("Y-m-d H:i:s", time()); 
 	$update_values = array("last_stat_check" => $now_date);
 	process_sql_update("tincidencia", $update_values, 
 						array("id_incidencia" => $id_incident));
+
 }
 
 function incidents_get_incident_status_text ($id) {
@@ -1794,10 +1802,10 @@ function incidents_get_incident_stats ($id) {
 }
 
 function incidents_get_holidays_seconds_by_timerange ($begin, $end) {
-	
+
 	//Get all holidays in this range and convert to seconds 
 	$holidays = calendar_get_holidays_by_timerange($begin, $end);
-	
+
 	$day_in_seconds = 3600*24;
 	
 	$holidays_seconds = count($holidays)*$day_in_seconds;
@@ -1806,7 +1814,7 @@ function incidents_get_holidays_seconds_by_timerange ($begin, $end) {
 	
 	//1.- If start date was holiday only discount seconds from creation time to next day
 	$str_date = date('Y-m-d',$begin);
-	
+
 	if (!is_working_day($str_date)) {
 		
 		//Calculate seconds to next day
@@ -1817,7 +1825,7 @@ function incidents_get_holidays_seconds_by_timerange ($begin, $end) {
 		
 		$holidays_seconds = $holidays_seconds - $aux_seconds;
 	}
-	
+
 	//2.- If finish date was holiday only discount seconds from now to begining of the day
 	$str_date = date('Y-m-d',$end);
 	
@@ -1830,7 +1838,7 @@ function incidents_get_holidays_seconds_by_timerange ($begin, $end) {
 		
 		$holidays_seconds = $holidays_seconds - $aux_seconds;
 	}	
-	
+
 	return $holidays_seconds;
 }
 
