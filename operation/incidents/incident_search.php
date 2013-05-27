@@ -35,8 +35,13 @@ $filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
 $filter['id_user'] = (string) get_parameter ('search_id_user', '');
 $filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
 $filter['id_user'] = (string) get_parameter ('search_id_user', '');
-$filter['first_date'] = (string) get_parameter ('search_first_date');
-$filter['last_date'] = (string) get_parameter ('search_last_date');
+
+//Calculate default dates
+$last_date = get_parameter("search_last_date", date ('Y-m-d'));
+$first_date = date('Y-m-d',strtotime($last_date) - 2592000);
+
+$filter['first_date'] = (string) get_parameter ('search_first_date', $first_date);
+$filter['last_date'] = (string) get_parameter ('search_last_date', $last_date);
 
 switch ($option) {
 

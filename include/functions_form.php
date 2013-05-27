@@ -758,9 +758,10 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 
 function form_search_incident ($return = false, $filter=false) {
+	include_once ("functions_user.php");
 	global $config;
 	$output = '';
-
+	
 	if (!$filter) {
 		$search_string = (string) get_parameter ('search_string');
 		$status = (int) get_parameter ('search_status', -10);
@@ -784,8 +785,8 @@ function form_search_incident ($return = false, $filter=false) {
 		$id_inventory = (int) $filter['id_inventory'];
 		$search_id_incident_type = (int) $filter['id_incident_type'];
 		$search_id_user = (string) $filter['id_user'];
-		$date_end = $filter['first_date'];
-		$date_ini = $filter['last_date'];
+		$date_end = $filter['last_date'];
+		$date_ini = $filter['first_date'];
 	}
 	
 	/* No action is set, so the form will be sent to the current page */
@@ -827,15 +828,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->data[0][2] = print_select (get_user_groups (),
 			'search_id_group', $id_group,
 			'', __('All'), 1, true, false, false, __('Group'));
-	
-/*
-	$table->data[1][1] = print_input_hidden ('search_id_inventory', $id_inventory, true);
-	$name = __('Any');
-	if ($id_inventory)
-		$name = get_inventory_name ($id_inventory);
-	$table->data[1][1] .= print_button ($name, 'inventory_name', false, '',
-		'class="dialogbtn"', true, __('Inventory'));
-*/
+		
 	$name = $id_inventory ? get_inventory_name ($id_inventory) : '';
 	
 	$table->data[1][1] = print_input_text ('inventory_name', $name,'', 7, 0, true, __('Inventory'), false);	
@@ -848,6 +841,16 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->data[3][0] = print_select (get_user_visible_users ($config['id_user'], 'IR', true),
 		'search_id_user', $search_id_user,
 		'', __('Any'), 0, true, false, false, __('Owner'));
+	
+	$params_owner = array();
+	$params_owner['input_id'] = 'text-search_id_user';
+	$params_owner['input_name'] = 'search_id_user';
+	$params_owner['input_value'] = $search_id_user;
+	$params_owner['title'] = __('Owner');
+	$params_owner['return'] = true;
+
+	$table->data[3][0] = user_print_autocomplete_input($params_owner);
+			
 	$table->data[3][1] = print_input_text ('search_first_date', $date_ini, '', 15, 15, true, __('Created from'));
 	$table->data[3][2] = print_input_text ('search_last_date', $date_end, '', 15, 15, true, __('Created to'));
 	

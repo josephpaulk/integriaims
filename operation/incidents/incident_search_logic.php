@@ -36,7 +36,7 @@ $delete_custom_search = (bool) get_parameter ('delete_custom_search');
 $id_search = get_parameter ('saved_searches');
 
 //Filter auxiliar array 
-$filter_form = false;
+$filter_form = $filter;
 
 /* Create a custom saved search*/
 if ($create_custom_search && !$id_search) {
@@ -179,7 +179,7 @@ echo "</div>";
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
-
+<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
 
 <script>
 //Javascript search form configuration
@@ -267,5 +267,28 @@ function show_search_inventory(search_free, id_object_type_search, owner_search,
 trim_element_on_submit('#text-search_string');
 trim_element_on_submit('#text-search_name');
 trim_element_on_submit('#text-inventory_name');
+
+//Autocomplete for owner search field
+$("#text-search_id_user").autocomplete ("ajax.php", 
+	{
+		scroll: true,
+		minChars: 2,
+		extraParams: {
+			page: "include/ajax/users",
+			search_users: 1,
+			id_user: "<?php echo $config['id_user'] ?>"
+		},
+		formatItem: function (data, i, total) {
+			if (total == 0)
+				$("#text-search_id_user").css ('background-color', '#cc0000');
+			else
+				$("#text-search_id_user").css ('background-color', '');
+			if (data == "")
+				return false;
+			return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre Real") ?>: '+data[1]+'</span>';
+		},
+		delay: 200
+
+});
 
 </script>
