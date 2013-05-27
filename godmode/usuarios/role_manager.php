@@ -58,11 +58,11 @@ if (isset($_POST["update"])){ // if update
 
 // DELETE
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if (isset($_GET["borrar"])){ // if delete
-	$id = get_parameter ('borrar');
+if (isset($_GET["delete"])){ // if delete
+	$id = get_parameter ('delete');
 	// Role 1 cannot be deleted (project manager)
-	if ($id) { 
-		$sql_delete= "DELETE FROM tprofile WHERE id = ".$id;
+	if ($id > 1) { 
+		$sql_delete= "DELETE FROM trole WHERE id = ".$id;
 		$result=mysql_query($sql_delete);
 		if (! $result)
 			echo "<h3 class='error'>".__('Not deleted. Error deleting data')."</h3>";
@@ -96,8 +96,8 @@ if ((isset($_GET["form_add"])) or (isset($_GET["form_edit"]))){
 
 	// Create link
 	echo "<h2>".__('Role management')." &raquo; ".__('Add role')."</h2>";
+	echo '<form id="form-role_manager" name="ilink" method="post" action="index.php?sec=users&sec2=godmode/usuarios/role_manager">';
 	echo '<table class="fon" cellpadding="3" cellspacing="3" width="90%" class="databox_color">';
-	echo '<form name="ilink" method="post" action="index.php?sec=users&sec2=godmode/usuarios/role_manager">';
 	if ($creation_mode == 1){
 		echo "<input type='hidden' name='create' value='1'>";
 	} else {
@@ -105,16 +105,16 @@ if ((isset($_GET["form_add"])) or (isset($_GET["form_edit"]))){
 		echo "<input type='hidden' name='id' value='$id'>";
 	}
 	
-	echo '<tr><td class="datos">'.__('Role').'<td class="datos"><input type="text" name="name" size="25" value="'.$name.'">';
+	echo '<tr><td class="datos">'.__('Role').'<td class="datos"><input id="text-role" type="text" name="name" size="25" value="'.$name.'">';
 	
 	echo '<tr><td class="datos2">'.__('Description').'<td class="datos2"><input type="text" name="description" size="55" value="'.$description.'">';
 
-	echo '<tr><td class="datos">'.__('Cost').'<td class="datos"><input type="text" name="cost" size="6" value="'.$cost.'">';
+	echo '<tr><td class="datos">'.__('Cost').'<td class="datos"><input id="text-cost" type="text" name="cost" size="6" value="'.$cost.'">';
 	echo "</table>";
 	echo '<table class="fon" cellpadding="3" cellspacing="3" width="90%">';
 	echo "<tr><td align='right'>";
 	echo "<input name='crtbutton' type='submit' class='sub next' value='".__('Update')."'>";
-	echo '</form></table>';
+	echo '</table></form>';
 }
 
 // Role viewer
@@ -155,3 +155,35 @@ else {  // Main list view for Links editor
 } // Fin bloque else
 
 ?>
+
+<script src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script type="text/javascript">
+
+// Form validation
+trim_element_on_submit('#text-role');
+trim_element_on_submit('#text-cost');
+validate_form("#form-role_manager");
+var rules, messages;
+// Rules: #text-role
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_role: 1,
+			role_name: function() { return $('#text-role').val() },
+			role_id: "<?=$id?>"
+        }
+	}
+};
+messages = {
+	required: "<?=__('Role required')?>",
+	remote: "<?=__('This role already exists')?>"
+};
+add_validate_form_element_rules('#text-role', rules, messages);
+
+</script>

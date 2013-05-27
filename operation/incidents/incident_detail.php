@@ -1217,19 +1217,19 @@ var name_rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_incident: 1,
 			incident_name: function() { return $('#text-titulo').val() },
-			incident_id: "<?=$id_incident?>"
+			incident_id: "<?php echo $id_incident?>"
         }
 	}
 };
 var name_messages = {
-	required: "<?=__('Title required')?>",
-	remote: "<?=__('This incident already exists')?>"
+	required: "<?php echo __('Title required')?>",
+	remote: "<?php echo __('This incident already exists')?>"
 };
 add_validate_form_element_rules('#text-titulo', name_rules, name_messages);
 
 // Rules: text-email_copy
 var name_rules = { email: true };
-var name_messages = { email: "<?=__('Incorrect email')?>" };
+var name_messages = { email: "<?php echo __('Invalid email')?>" };
 add_validate_form_element_rules('#text-email_copy', name_rules, name_messages);
 
 </script>

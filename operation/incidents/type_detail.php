@@ -372,13 +372,13 @@ var name_rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_type: 1,
 			type_name: function() { return $('#text-name').val() },
-			type_id: "<?=$id?>"
+			type_id: "<?php echo $id?>"
         }
 	}
 };
 var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This name already exists')?>"
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This name already exists')?>"
 };
 add_validate_form_element_rules('#text-name', name_rules, name_messages);
 

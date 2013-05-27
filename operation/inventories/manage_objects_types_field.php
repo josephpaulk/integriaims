@@ -189,14 +189,14 @@ var name_rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_object_type_field: 1,
 			object_type_field_name: function() { return $('#text-label').val() },
-			object_type_id: "<?=$id_object_type?>",
-			object_type_field_id: "<?=$id_object_type_field?>"
+			object_type_id: "<?php echo $id_object_type?>",
+			object_type_field_id: "<?php echo $id_object_type_field?>"
         }
 	}
 };
 var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This label already exists')?>"
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This label already exists')?>"
 };
 add_validate_form_element_rules('#text-label', name_rules, name_messages);
 

@@ -160,7 +160,7 @@ $table->data[5][1] = print_select_from_sql ("SELECT id, name FROM tsla ORDER BY 
 $table->data[6][0] = print_input_text ('id_inventory', $id_inventory,'', 7, 0, true, __('Default Inventory object'), false);	
 $table->data[6][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".'&nbsp;&nbsp;'.__('Search parent')."</a>";
 
-echo '<form method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
+echo '<form id="form-configurar_grupo" method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);
 echo '<div class="button" style="width: '.$table->width.'">';
 
@@ -178,6 +178,8 @@ echo "<div class= 'dialog ui-dialog-content' id='inventory_search_window'></div>
 ?>
 
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+<script src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript">
 $(document).ready (function () {
@@ -267,4 +269,29 @@ function loadInventory(id_inventory) {
 	$('#text-id_inventory').val(id_inventory);
 	$("#inventory_search_window").dialog('close');
 }
+
+// Form validation
+trim_element_on_submit('#text-name');
+validate_form("#form-configurar_grupo");
+var rules, messages;
+// Rules: #text-name
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_group: 1,
+			group_name: function() { return $('#text-name').val() },
+			group_id: "<?=$id?>"
+        }
+	}
+};
+messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This group already exists')?>"
+};
+add_validate_form_element_rules('#text-name', rules, messages);
+
 </script>

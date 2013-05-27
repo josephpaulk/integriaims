@@ -968,13 +968,13 @@ var name_rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_object: 1,
 			object_name: function() { return $('#text-name').val() },
-			object_id: "<?=$id?>"
+			object_id: "<?php echo $id?>"
         }
 	}
 };
 var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This object already exists')?>"
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This object already exists')?>"
 };
 add_validate_form_element_rules('#text-name', name_rules, name_messages);
 

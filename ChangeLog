@@ -1,4 +1,8 @@
 2013-05-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	*Incidents and inventory sections: Fixed a validation error.
+
+2013-05-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/companies/company_detail: Added trim to name and fiscal id.
 	Added validation to name and fiscal id: ajax check for avoid duplicates.

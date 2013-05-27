@@ -175,7 +175,7 @@ var name_rules = {
         type: "POST",
         data: {
 			page: "include/ajax/remote_validations",
-			search_existing_group: 1,
+			search_existing_project_group: 1,
 			group_name: function() { return $('#text-name').val() },
 			group_id: "<?=$id?>"
         }
