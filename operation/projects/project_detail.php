@@ -421,7 +421,9 @@ $(document).ready (function () {
 // Form validation
 trim_element_on_submit('input[name="name"]');
 validate_form("#form-new_project");
-var name_rules = {
+var rules, messages;
+// Rules: input[name="name"]
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -430,14 +432,14 @@ var name_rules = {
           page: "include/ajax/remote_validations",
           search_project_name: 1,
           project_name: function() { return $('input[name="name"]').val() },
-          project_id: <?=$id_project?>
+          project_id: <?php echo $id_project?>
         }
 	}
 };
-var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This project already exists')?>"
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This project already exists')?>"
 };
-add_validate_form_element_rules('input[name="name"]', name_rules, name_messages);
+add_validate_form_element_rules('input[name="name"]', rules, messages);
 
 </script>

@@ -223,8 +223,9 @@ $(document).ready (function () {
 // Form validation
 trim_element_on_submit('#text-name');
 validate_form("#form-product_type");
+var rules, messages;
 // Rules: #text-name
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -233,14 +234,14 @@ var name_rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_product_type: 1,
 			product_type_name: function() { return $('#text-name').val() },
-			product_type_id: "<?=$id?>"
+			product_type_id: "<?php echo $id?>"
         }
 	}
 };
-var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This product type already exists')?>"
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This product type already exists')?>"
 };
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
+add_validate_form_element_rules('#text-name', rules, messages);
 
 </script>

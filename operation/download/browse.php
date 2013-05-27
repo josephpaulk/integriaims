@@ -483,8 +483,9 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 trim_element_on_submit('input[name="free_text"]');
 trim_element_on_submit('#text-name');
 validate_form("#form-file_release");
+var rules, messages;
 // Rules: #text-name
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -497,10 +498,10 @@ var name_rules = {
         }
 	}
 };
-var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This download already exists')?>"
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This download already exists')?>"
 };
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
+add_validate_form_element_rules('#text-name', rules, messages);
 
 </script>

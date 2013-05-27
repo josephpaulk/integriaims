@@ -330,8 +330,9 @@ $(document).ready (function () {
 // Form validation
 trim_element_on_submit('#text-name');
 validate_form("#form-kb_item");
+var rules, messages;
 // Rules: #text-name
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -344,10 +345,10 @@ var name_rules = {
         }
 	}
 };
-var name_messages = {
-	required: "<?=__('Title required')?>",
-	remote: "<?=__('This title already exists')?>"
+messages = {
+	required: "<?php echo __('Title required')?>",
+	remote: "<?php echo __('This title already exists')?>"
 };
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
+add_validate_form_element_rules('#text-name', rules, messages);
 
 </script>

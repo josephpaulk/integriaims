@@ -230,13 +230,13 @@ rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_crm_template: 1,
 			crm_template_name: function() { return $('#text-name').val() },
-			crm_template_id: "<?=$id?>"
+			crm_template_id: "<?php echo $id?>"
         }
 	}
 };
 messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This template already exists')?>"
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This template already exists')?>"
 };
 add_validate_form_element_rules('#text-name', rules, messages);
 

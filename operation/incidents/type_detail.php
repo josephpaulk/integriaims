@@ -362,24 +362,25 @@ trim_element_on_submit('#text-search_text');
 // Form: #form-type_detail
 trim_element_on_submit('#text-name');
 validate_form("#form-type_detail");
+var rules, messages;
 // Rules: #text-name
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
         type: "POST",
         data: {
 			page: "include/ajax/remote_validations",
-			search_existing_type: 1,
+			search_existing_incident_type: 1,
 			type_name: function() { return $('#text-name').val() },
 			type_id: "<?php echo $id?>"
         }
 	}
 };
-var name_messages = {
+messages = {
 	required: "<?php echo __('Name required')?>",
 	remote: "<?php echo __('This name already exists')?>"
 };
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
+add_validate_form_element_rules('#text-name', rules, messages);
 
 </script>

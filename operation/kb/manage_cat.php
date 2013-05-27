@@ -224,8 +224,9 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 // Form validation
 trim_element_on_submit('#text-name');
 validate_form("#form-kb_category");
+var rules, messages;
 // Rules: #text-name
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -238,10 +239,10 @@ var name_rules = {
         }
 	}
 };
-var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This category already exists')?>"
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This category already exists')?>"
 };
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
+add_validate_form_element_rules('#text-name', rules, messages);
 
 </script>

@@ -284,13 +284,13 @@ rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_group: 1,
 			group_name: function() { return $('#text-name').val() },
-			group_id: "<?=$id?>"
+			group_id: "<?php echo $id?>"
         }
 	}
 };
 messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This group already exists')?>"
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This group already exists')?>"
 };
 add_validate_form_element_rules('#text-name', rules, messages);
 

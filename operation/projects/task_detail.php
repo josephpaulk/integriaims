@@ -435,7 +435,9 @@ $(document).ready (function () {
 // Form validation
 trim_element_on_submit('#text-name');
 validate_form("#form-task_detail");
-var name_rules = {
+var rules, messages;
+// Rules: #text-name
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -443,17 +445,17 @@ var name_rules = {
         data: {
 			page: "include/ajax/remote_validations",
 			search_existing_task: 1,
-			type: "<?=$operation?>",
+			type: "<?php echo $operation?>",
 			task_name: function() { return $('#text-name').val() },
-			task_id: <?=$id_task?>,
-			project_id: <?=$id_project?>
+			task_id: <?php echo $id_task?>,
+			project_id: <?php echo $id_project?>
         }
 	}
 };
-var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This task already exists')?>"
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This task already exists')?>"
 };
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
+add_validate_form_element_rules('#text-name', rules, messages);
 
 </script>

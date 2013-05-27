@@ -1,3 +1,19 @@
+2013-05-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* godmode/usuarios/role_manager: Added trim to role and cost.
+	Added validation to role: required and ajax check for avoid duplicates.
+	Fixed an error which made impossible to delete roles.
+	
+	* godmode/grupos/lista_grupos: Added trim to searchbox.
+	
+	* godmode/grupos/configurar_grupo: Added trim to name.
+	Added validation to name: required and ajax check for avoid duplicates.
+	
+	* operation/users/user_edit: Added validation to confirm password: the
+	confirm password must coincide with the password.
+	
+	* godmode/usuarios/lista_usuarios: Added trim to searchbox.
+	
 2013-05-27  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_incidents.php: Fixed an error related to

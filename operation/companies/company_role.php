@@ -234,8 +234,9 @@ if ($id || $new_role) {
 trim_element_on_submit('#text-search_text');
 trim_element_on_submit('#text-name');
 validate_form("#form-company_role");
+var rules, messages;
 // Rules: #text-name
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -244,14 +245,14 @@ var name_rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_company_role: 1,
 			company_role_name: function() { return $('#text-name').val() },
-			company_role_id: "<?=$id?>"
+			company_role_id: "<?php echo $id?>"
         }
 	}
 };
-var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This company already exists')?>"
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This company already exists')?>"
 };
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
+add_validate_form_element_rules('#text-name', rules, messages);
 
 </script>

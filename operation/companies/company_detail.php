@@ -833,8 +833,9 @@ trim_element_on_submit('#text-search_text');
 trim_element_on_submit('#text-name');
 trim_element_on_submit('#text-fiscal_id');
 validate_form("#form-company_detail");
+var rules, messages;
 // Rules: #text-name
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -843,17 +844,17 @@ var name_rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_company: 1,
 			company_name: function() { return $('#text-name').val() },
-			company_id: "<?=$id?>"
+			company_id: "<?php echo $id?>"
         }
 	}
 };
-var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This company already exists')?>"
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This company already exists')?>"
 };
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
+add_validate_form_element_rules('#text-name', rules, messages);
 // Rules: #text-fiscal_id
-var name_rules = {
+rules = {
 	//required: true,
 	remote: {
 		url: "ajax.php",
@@ -862,14 +863,14 @@ var name_rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_fiscal_id: 1,
 			fiscal_id: function() { return $('#text-fiscal_id').val() },
-			company_id: "<?=$id?>"
+			company_id: "<?php echo $id?>"
         }
 	}
 };
-var name_messages = {
-	//required: "<?=__('Fiscal ID required')?>",
-	remote: "<?=__('This fiscal id already exists')?>"
+messages = {
+	//required: "<?php echo __('Fiscal ID required')?>",
+	remote: "<?php echo __('This fiscal id already exists')?>"
 };
-add_validate_form_element_rules('#text-fiscal_id', name_rules, name_messages);
+add_validate_form_element_rules('#text-fiscal_id', rules, messages);
 
 </script>

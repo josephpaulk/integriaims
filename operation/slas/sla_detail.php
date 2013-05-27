@@ -290,8 +290,9 @@ if ($id || $new_sla) {
 trim_element_on_submit('#text-search_text');
 trim_element_on_submit('#text-name');
 validate_form("#form-sla_detail");
+var rules, messages;
 // Rules: #text-name
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -304,10 +305,10 @@ var name_rules = {
         }
 	}
 };
-var name_messages = {
+messages = {
 	required: "<?=__('Name required')?>",
 	remote: "<?=__('This name already exists')?>"
 };
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
+add_validate_form_element_rules('#text-name', rules, messages);
 	
 </script>

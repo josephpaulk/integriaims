@@ -120,8 +120,8 @@ rules = {
 	email: true
 };
 messages = {
-	required: "<?=__('Email from required')?>",
-	email: "<?=__('Invalid email')?>"
+	required: "<?php echo __('Email from required')?>",
+	email: "<?php echo __('Invalid email')?>"
 };
 add_validate_form_element_rules('#text-from', rules, messages);
 // Rules: #text-to
@@ -130,8 +130,8 @@ rules = {
 	email: true
 };
 messages = {
-	required: "<?=__('Email to required')?>",
-	email: "<?=__('Invalid email')?>"
+	required: "<?php echo __('Email to required')?>",
+	email: "<?php echo __('Invalid email')?>"
 };
 add_validate_form_element_rules('#text-to', rules, messages);
 // Rules: #text-cco
@@ -139,7 +139,7 @@ rules = {
 	email: true
 };
 messages = {
-	email: "<?=__('Invalid email')?>"
+	email: "<?php echo __('Invalid email')?>"
 };
 add_validate_form_element_rules('#text-cco', rules, messages);
 

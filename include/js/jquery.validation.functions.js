@@ -47,22 +47,12 @@ function validate_form(form) {
 // @value: Value of the rule. If the value is an string, it is needed to add
 // aditional double comas ("").
 // @message: Optional. Message to show in case of reach the rule.
-function add_validate_form_element_rule(element, type, value, message) {
-    
-	$(document).ready( function() {
-		$(element).rules("add", {
-			type: value
-		});
-	});
-	
-	if (typeof(message) != 'undefined')
-		add_validate_form_element_message(element, type, message);
-	
-}
 function add_validate_form_element_rules(element, rule, message) {
     
 	$(document).ready( function() {
-		$(element).rules("add", rule);
+		if ( $(element).length > 0 ) {
+			$(element).rules("add", rule);
+		}
 	});
 	
 	if (typeof(message) != 'undefined')
@@ -77,10 +67,10 @@ function add_validate_form_element_rules(element, rule, message) {
 function add_validate_form_element_message(element, message) {
 
 	$(document).ready( function() {
-		$(element).rules("add", {
-			messages: message
-		} );
-	} );
+		if ( $(element).length > 0 ) {
+			$(element).rules("add", { messages: message });
+		}
+	});
 	
 }
 

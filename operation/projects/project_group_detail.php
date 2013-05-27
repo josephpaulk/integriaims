@@ -167,8 +167,9 @@ if ($id || $new_group) {
 trim_element_on_submit('#text-name');
 
 validate_form("#form-project_group_detail");
+var rules,messages;
 // Rules: #text-name
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -177,14 +178,14 @@ var name_rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_project_group: 1,
 			group_name: function() { return $('#text-name').val() },
-			group_id: "<?=$id?>"
+			group_id: "<?php echo $id?>"
         }
 	}
 };
-var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This group already exists')?>"
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This group already exists')?>"
 };
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
+add_validate_form_element_rules('#text-name', rules, messages);
 
 </script>

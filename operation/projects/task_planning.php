@@ -715,12 +715,12 @@ $(document).ready(function() {
 			  search_existing_task: 1,
 			  type: "create",
 			  task_name: function() { return $("#textarea-tasklist").val() },
-			  project_id: <?=$id_project?>
+			  project_id: <?php echo $id_project?>
 			}
 		},
 		messages: {
-			required: "<?=__('Task required')?>",
-			remote: "<?=__('Existing tasks are not permitted')?>"
+			required: "<?php echo __('Task required')?>",
+			remote: "<?php echo __('Existing tasks are not permitted')?>"
 		}
 	};
 	// Remote validation for update tasks are not finished
@@ -734,24 +734,41 @@ $(document).ready(function() {
 			  search_existing_task: 1,
 			  type: "view",
 			  task_name: function() { return $(this).val() },
-			  project_id: <?=$id_project?>
+			  project_id: <?php echo $id_project?>
 			}
 		},*/
 		messages: {
-			required: "<?=__('Name required')?>"/*,
-			remote: "<?=__('This task already exists')?>"*/
+			required: "<?php echo __('Name required')?>"/*,
+			remote: "<?php echo __('This task already exists')?>"*/
 		}
 	};
     var addRules = function() {
-		$("#textarea-tasklist").rules("add", tasklist_rules);
-		$("[id*=text-name]").each( function() {
-            $(this).rules("add", task_rules);
-        });
+		if ( $("#textarea-tasklist").length > 0 ) {
+			$("#textarea-tasklist").rules("add", tasklist_rules);
+		}
+		if ( $("[id*=text-name]").length > 0 ) {
+			$("[id*=text-name]").each( function() {
+				$(this).rules("add", task_rules);
+			});
+		}
 	};
     
     $("#form-tasks").validate({
         invalidHandler: addRules, // When validation fails, add the rules again
-        onkeyup: false
+        onkeyup: false,
+        highlight: function(element, errorClass) {
+			$(element).fadeOut(function() {
+				$(element).fadeIn( function() {
+					$(element).fadeOut(function() {
+						$(element).fadeIn(function() {
+							$(element).fadeOut(function() {
+								$(element).fadeIn();
+							});
+						});
+					});
+				});
+			});
+		}
     });        
 
     addRules();        

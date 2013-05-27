@@ -470,13 +470,13 @@ rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_user_num: 1,
 			user_num: function() { return $('input[name="num_employee"]').val() },
-			user_id: "<?=$update_user?>"
+			user_id: "<?php echo $update_user?>"
         }
 	}
 };
 messages = {
-	//required: "<?=__('Number required')?>",
-	remote: "<?=__('This employee number already exists')?>"
+	//required: "<?php echo __('Number required')?>",
+	remote: "<?php echo __('This employee number already exists')?>"
 };
 add_validate_form_element_rules('input[name="num_employee"]', rules, messages);
 // Rules: input[name="nombre_real"]
@@ -489,13 +489,13 @@ rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_user_name: 1,
 			user_name: function() { return $('input[name="nombre_real"]').val() },
-			user_id: "<?=$update_user?>"
+			user_id: "<?php echo $update_user?>"
         }
 	}
 };
 messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This name already exists')?>"
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This name already exists')?>"
 };
 add_validate_form_element_rules('input[name="nombre_real"]', rules, messages);
 // Rules: input[name="direccion"]
@@ -509,14 +509,14 @@ rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_user_email: 1,
 			user_email: function() { return $('input[name="direccion"]').val() },
-			user_id: "<?=$update_user?>"
+			user_id: "<?php echo $update_user?>"
         }
 	}
 };
 messages = {
-	required: "<?=__('Email required')?>",
-	email: "<?=__('Invalid email')?>",
-	remote: "<?=__('This email already exists')?>"
+	required: "<?php echo __('Email required')?>",
+	email: "<?php echo __('Invalid email')?>",
+	remote: "<?php echo __('This email already exists')?>"
 };
 add_validate_form_element_rules('input[name="direccion"]', rules, messages);
 // Rules: input[name="pass1"]
@@ -524,7 +524,7 @@ rules = {
 	required: true
 };
 messages = {
-	required: "<?=__('Password required')?>"
+	required: "<?php echo __('Password required')?>"
 };
 add_validate_form_element_rules('input[name="pass1"]', rules, messages);
 // Rules: input[name="pass2"]
@@ -532,7 +532,7 @@ rules = {
 	equalTo: 'input[name="pass1"]'
 };
 messages = {
-	equalTo: "<?=__('The passswords must coincide')?>"
+	equalTo: "<?php echo __('The passswords must coincide')?>"
 };
 add_validate_form_element_rules('input[name="pass2"]', rules, messages);
 // Rules: input[name="nombre"]
@@ -549,8 +549,8 @@ rules = {
 	}
 };
 messages = {
-	required: "<?=__('ID required')?>",
-	remote: "<?=__('This user ID already exists')?>"
+	required: "<?php echo __('ID required')?>",
+	remote: "<?php echo __('This user ID already exists')?>"
 };
 add_validate_form_element_rules('input[name="nombre"]', rules, messages);
 

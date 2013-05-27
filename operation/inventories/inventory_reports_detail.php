@@ -175,13 +175,13 @@ rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_inventory_report: 1,
 			inventory_report_name: function() { return $('#text-name').val() },
-			inventory_report_id: "<?=$id?>"
+			inventory_report_id: "<?php echo $id?>"
         }
 	}*/
 };
 messages = {
-	required: "<?=__('Name required')?>"/*,
-	remote: "<?=__('This inventory report already exists')?>"*/
+	required: "<?php echo __('Name required')?>"/*,
+	remote: "<?php echo __('This inventory report already exists')?>"*/
 };
 add_validate_form_element_rules('#text-name', rules, messages);
 // Rules: #textarea-sql
@@ -189,7 +189,7 @@ rules = {
 	required: true
 };
 messages = {
-	required: "<?=__('SQL sentence required')?>"
+	required: "<?php echo __('SQL sentence required')?>"
 };
 add_validate_form_element_rules('#textarea-sql', rules, messages);
 

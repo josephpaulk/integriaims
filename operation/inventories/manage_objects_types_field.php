@@ -179,8 +179,9 @@ $(document).ready (function () {
 // Form validation
 trim_element_on_submit('#text-label');
 validate_form("#form-manage_objects_types_field");
+var rules, messages;
 // Rules: #text-label
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -194,10 +195,10 @@ var name_rules = {
         }
 	}
 };
-var name_messages = {
+messages = {
 	required: "<?php echo __('Name required')?>",
 	remote: "<?php echo __('This label already exists')?>"
 };
-add_validate_form_element_rules('#text-label', name_rules, name_messages);
+add_validate_form_element_rules('#text-label', rules, messages);
 
 </script>

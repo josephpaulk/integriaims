@@ -218,8 +218,9 @@ if ($id || $new_manufacturer) {
 trim_element_on_submit('#text-search_text');
 trim_element_on_submit('#text-name');
 validate_form("#form-manufacturer_detail");
+var rules, messages;
 // Rules: #text-name
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -228,14 +229,14 @@ var name_rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_manufacturer: 1,
 			manufacturer_name: function() { return $('#text-name').val() },
-			manufacturer_id: "<?=$id?>"
+			manufacturer_id: "<?php echo $id?>"
         }
 	}
 };
-var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This manufacturer already exists')?>"
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This manufacturer already exists')?>"
 };
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
+add_validate_form_element_rules('#text-name', rules, messages);
 
 </script>

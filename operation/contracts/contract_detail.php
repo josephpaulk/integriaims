@@ -332,12 +332,12 @@ if ($id | $new_contract) {
 	echo "<tr>";
 	
 	echo "<td>";
-	echo print_input_text ('search_date_begin_beginning', $search_date_begin_beginning, '', 15, 20, true, __('Beginnig From'));
+	echo print_input_text ('search_date_begin_beginning', $search_date_begin_beginning, '', 15, 20, true, __('Begining From'));
 	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
 	echo "</td>";
 	
 	echo "<td>";
-	echo print_input_text ('search_date_end_beginning', $search_date_end_beginning, '', 15, 20, true, __('Beginnig To'));
+	echo print_input_text ('search_date_end_beginning', $search_date_end_beginning, '', 15, 20, true, __('Begining To'));
 	echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span></a>";
 	echo "</td>";
 	
@@ -490,8 +490,9 @@ trim_element_on_submit('#text-search_text');
 trim_element_on_submit('#text-name');
 trim_element_on_submit('#text-contract_number');
 validate_form("#contract_form");
+var rules, messages;
 // Rules: #text-name
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -500,17 +501,17 @@ var name_rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_contract: 1,
 			contract_name: function() { return $('#text-name').val() },
-			contract_id: "<?=$id?>"
+			contract_id: "<?php echo $id?>"
         }
 	}
 };
-var name_messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This contract already exists')?>"
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This contract already exists')?>"
 };
-add_validate_form_element_rules('#text-name', name_rules, name_messages);
+add_validate_form_element_rules('#text-name', rules, messages);
 // Rules: #text-contract_number
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -519,15 +520,15 @@ var name_rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_contract_number: 1,
 			contract_number: function() { return $('#text-contract_number').val() },
-			contract_id: "<?=$id?>"
+			contract_id: "<?php echo $id?>"
         }
 	}
 };
-var name_messages = {
-	required: "<?=__('Contract number required')?>",
-	remote: "<?=__('This contract number already exists')?>"
+messages = {
+	required: "<?php echo __('Contract number required')?>",
+	remote: "<?php echo __('This contract number already exists')?>"
 };
-add_validate_form_element_rules('#text-contract_number', name_rules, name_messages);
+add_validate_form_element_rules('#text-contract_number', rules, messages);
 
 </script>
 

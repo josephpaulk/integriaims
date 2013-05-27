@@ -176,13 +176,13 @@ rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_role: 1,
 			role_name: function() { return $('#text-role').val() },
-			role_id: "<?=$id?>"
+			role_id: "<?php echo $id?>"
         }
 	}
 };
 messages = {
-	required: "<?=__('Role required')?>",
-	remote: "<?=__('This role already exists')?>"
+	required: "<?php echo __('Role required')?>",
+	remote: "<?php echo __('This role already exists')?>"
 };
 add_validate_form_element_rules('#text-role', rules, messages);
 

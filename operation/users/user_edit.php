@@ -223,13 +223,13 @@ rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_user_name: 1,
 			user_name: function() { return $('#text-real_name').val() },
-			user_id: "<?=$id_user?>"
+			user_id: "<?php echo $id_user?>"
         }
 	}
 };
 messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This name already exists')?>"
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This name already exists')?>"
 };
 add_validate_form_element_rules('#text-real_name', rules, messages);
 // Rules: #text-email
@@ -243,15 +243,19 @@ rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_user_email: 1,
 			user_email: function() { return $('#text-email').val() },
-			user_id: "<?=$id_user?>"
+			user_id: "<?php echo $id_user?>"
         }
 	}
 };
 messages = {
-	required: "<?=__('Email required')?>",
-	email: "<?=__('Invalid email')?>",
-	remote: "<?=__('This email already exists')?>"
+	required: "<?php echo __('Email required')?>",
+	email: "<?php echo __('Invalid email')?>",
+	remote: "<?php echo __('This email already exists')?>"
 };
 add_validate_form_element_rules('#text-email', rules, messages);
+// Rules: #password-password_confirmation
+rules = { equalTo: '#password-password' };
+messages = { equalTo: "<?php echo __('Passwords don\'t match')?>" };
+add_validate_form_element_rules('#password-password_confirmation', rules, messages);
 
 </script>

@@ -804,13 +804,13 @@ rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_lead: 1,
 			lead_name: function() { return $('#text-fullname').val() },
-			lead_id: "<?=$id?>"
+			lead_id: "<?php echo $id?>"
         }
 	}
 };
 messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This lead already exists')?>"
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This lead already exists')?>"
 };
 add_validate_form_element_rules('#text-fullname', rules, messages);
 // Rules: #text-email
@@ -824,14 +824,14 @@ rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_lead_email: 1,
 			lead_email: function() { return $('#text-email').val() },
-			lead_id: "<?=$id?>"
+			lead_id: "<?php echo $id?>"
         }
 	}
 };
 messages = {
-	required: "<?=__('Email required')?>",
-	email: "<?=__('Invalid email')?>",
-	remote: "<?=__('This lead email already exists')?>"
+	required: "<?php echo __('Email required')?>",
+	email: "<?php echo __('Invalid email')?>",
+	remote: "<?php echo __('This lead email already exists')?>"
 };
 add_validate_form_element_rules('#text-email', rules, messages);
 

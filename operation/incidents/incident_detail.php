@@ -1206,9 +1206,9 @@ function removeInventory() {
 trim_element_on_submit('#text-titulo');
 trim_element_on_submit('#text-email_copy');
 validate_form("#incident_status_form");
-
+var rules, messages;
 // Rules: #text-titulo
-var name_rules = {
+rules = {
 	required: true,
 	remote: {
 		url: "ajax.php",
@@ -1221,15 +1221,15 @@ var name_rules = {
         }
 	}
 };
-var name_messages = {
+messages = {
 	required: "<?php echo __('Title required')?>",
 	remote: "<?php echo __('This incident already exists')?>"
 };
-add_validate_form_element_rules('#text-titulo', name_rules, name_messages);
+add_validate_form_element_rules('#text-titulo', rules, messages);
 
 // Rules: text-email_copy
-var name_rules = { email: true };
-var name_messages = { email: "<?php echo __('Invalid email')?>" };
+rules = { email: true };
+messages = { email: "<?php echo __('Invalid email')?>" };
 add_validate_form_element_rules('#text-email_copy', name_rules, name_messages);
 
 </script>

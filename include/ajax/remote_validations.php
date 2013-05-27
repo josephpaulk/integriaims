@@ -65,18 +65,18 @@ if ($search_existing_project) {
 	if ( $query_result = get_db_value("name", "tproject", "name", $project_name) ) {
 		if ($old_project_name == $query_result) {
 			// Exists, but is in edition mode
-			$result = true;
+			echo json_encode(true);
+			return;
 		} else {
 			// Exists. Validation error
-			$result = false;
+			echo json_encode(false);
+			return;
 		}
 	} else {
 		// Does not exist
-		$result = true;
+		echo json_encode(true);
+		return;
 	}
-	
-	echo json_encode($result);
-	return;
 	
 } elseif ($search_existing_task) {
 	require_once ('include/functions_db.php');
