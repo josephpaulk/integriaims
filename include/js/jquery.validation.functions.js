@@ -22,7 +22,20 @@ function validate_form(form) {
 	
 	$(document).ready( function() {
 		$(form).validate( {
-			onkeyup: false
+			onkeyup: false,
+			highlight: function(element, errorClass) {
+				$(element).fadeOut(function() {
+					$(element).fadeIn( function() {
+						$(element).fadeOut(function() {
+							$(element).fadeIn(function() {
+								$(element).fadeOut(function() {
+									$(element).fadeIn();
+								});
+							});
+						});
+					});
+				});
+			}
 		});
 	});
 	

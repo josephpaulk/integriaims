@@ -165,7 +165,7 @@ if ($has_permission) {
 }
 
 if ($has_permission) {
-	echo '<form method="post" action="index.php?sec=users&sec2=operation/users/user_edit">';
+	echo '<form id="form-user_edit" method="post" action="index.php?sec=users&sec2=operation/users/user_edit">';
 	print_table ($table);
 	
 	echo '<div class="button" style="width: '.$table->width.'">';
@@ -189,8 +189,14 @@ if ($has_permission) {
 } else {
 	print_table ($table);
 }
+
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
 <script  type="text/javascript">
+	
 $(document).ready (function () {
 	$("#avatar").change (function () {
 		icon = this.value.substr (0, this.value.length - 4);
@@ -201,4 +207,51 @@ $(document).ready (function () {
 	});
 	$('textarea').TextAreaResizer ();
 });
+
+// Form validation
+trim_element_on_submit('#text-real_name');
+trim_element_on_submit('#text-email');
+validate_form("#form-user_edit");
+var rules, messages;
+// Rules: #text-real_name
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_user_name: 1,
+			user_name: function() { return $('#text-real_name').val() },
+			user_id: "<?=$id_user?>"
+        }
+	}
+};
+messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This name already exists')?>"
+};
+add_validate_form_element_rules('#text-real_name', rules, messages);
+// Rules: #text-email
+rules = {
+	required: true,
+	email: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_user_email: 1,
+			user_email: function() { return $('#text-email').val() },
+			user_id: "<?=$id_user?>"
+        }
+	}
+};
+messages = {
+	required: "<?=__('Email required')?>",
+	email: "<?=__('Invalid email')?>",
+	remote: "<?=__('This email already exists')?>"
+};
+add_validate_form_element_rules('#text-email', rules, messages);
+
 </script>

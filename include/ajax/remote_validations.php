@@ -26,11 +26,26 @@ $search_existing_object = (bool) get_parameter ('search_existing_object');
 $search_existing_object_type = (bool) get_parameter ('search_existing_object_type');
 $search_existing_object_type_field = (bool) get_parameter ('search_existing_object_type_field');
 $search_existing_manufacturer = (bool) get_parameter ('search_existing_manufacturer');
+$search_existing_company = (bool) get_parameter ('search_existing_company');
+$search_existing_fiscal_id = (bool) get_parameter ('search_existing_fiscal_id');
+$search_existing_company_role = (bool) get_parameter ('search_existing_company_role');
+
+$search_existing_contract = (bool) get_parameter ('search_existing_contract');
+$search_existing_contract_number = (bool) get_parameter ('search_existing_contract_number');
+
+$search_existing_lead = (bool) get_parameter ('search_existing_lead');
+$search_existing_lead_email = (bool) get_parameter ('search_existing_lead_email');
+$search_existing_crm_template = (bool) get_parameter ('search_existing_crm_template');
+
 $search_existing_kb_item = (bool) get_parameter ('search_existing_kb_item');
 $search_existing_kb_category = (bool) get_parameter ('search_existing_kb_category');
 $search_existing_product_type = (bool) get_parameter ('search_existing_product_type');
 $search_existing_download = (bool) get_parameter ('search_existing_download');
 $search_existing_file_category = (bool) get_parameter ('search_existing_file_category');
+$search_existing_user_id = (bool) get_parameter ('search_existing_user_id');
+$search_existing_user_name = (bool) get_parameter ('search_existing_user_name');
+$search_existing_user_num = (bool) get_parameter ('search_existing_user_num');
+$search_existing_user_email = (bool) get_parameter ('search_existing_user_email');
 
 if ($search_existing_project) {
 	require_once ('include/functions_db.php');
@@ -298,6 +313,198 @@ if ($search_existing_project) {
 	echo json_encode(true);
 	return;
 	
+} elseif ($search_existing_company) {
+	require_once ('include/functions_db.php');
+	$company_name = get_parameter ('company_name');
+	$company_id = get_parameter ('company_id', 0);
+	$old_company_name = "";
+	
+	if ($company_id) {
+		$old_company_name = get_db_value("name", "tcompany", "id", $company_id);
+	}
+	
+	// Checks if the company is in the db
+	$query_result = get_db_value("name", "tcompany", "name", $company_name);
+	if ($query_result) {
+		if ($company_name != $old_company_name) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_fiscal_id) {
+	require_once ('include/functions_db.php');
+	$fiscal_id = get_parameter ('fiscal_id');
+	$company_id = get_parameter ('company_id', 0);
+	$old_fiscal_id = -1;
+	
+	if ($company_id) {
+		$old_fiscal_id = get_db_value("fiscal_id", "tcompany", "id", $company_id);
+	}
+	
+	// Checks if the fiscal id is in the db
+	$query_result = get_db_value("fiscal_id", "tcompany", "fiscal_id", $fiscal_id);
+	if ($query_result) {
+		if ($fiscal_id != $old_fiscal_id) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_company_role) {
+	require_once ('include/functions_db.php');
+	$company_role_name = get_parameter ('company_role_name');
+	$company_role_id = get_parameter ('company_role_id', 0);
+	$old_company_role_name = "";
+	
+	if ($company_role_id) {
+		$old_company_role_name = get_db_value("name", "tcompany_role", "id", $company_role_id);
+	}
+	
+	// Checks if the company role is in the db
+	$query_result = get_db_value("name", "tcompany_role", "name", $company_role_name);
+	if ($query_result) {
+		if ($company_role_name != $old_company_role_name) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_contract) {
+	require_once ('include/functions_db.php');
+	$contract_name = get_parameter ('contract_name');
+	$contract_id = get_parameter ('contract_id', 0);
+	$old_contract_name = "";
+	
+	if ($contract_id) {
+		$old_contract_name = get_db_value("name", "tcontract", "id", $contract_id);
+	}
+	
+	// Checks if the contract is in the db
+	$query_result = get_db_value("name", "tcontract", "name", $contract_name);
+	if ($query_result) {
+		if ($contract_name != $old_contract_name) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_contract_number) {
+	require_once ('include/functions_db.php');
+	$contract_number = get_parameter ('contract_number');
+	$contract_id = get_parameter ('contract_id', 0);
+	$old_contract_number = -1;
+	
+	if ($contract_id) {
+		$old_contract_number = get_db_value("contract_number",
+			"tcontract", "id", $contract_id);
+	}
+	
+	// Checks if the contract number is in the db
+	$query_result = get_db_value("contract_number", "tcontract",
+		"contract_number", $contract_number);
+	if ($query_result) {
+		if ($contract_number != $old_contract_number) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_lead) {
+	require_once ('include/functions_db.php');
+	$lead_name = get_parameter ('lead_name');
+	$lead_id = get_parameter ('lead_id', 0);
+	$old_lead_name = -1;
+	
+	if ($contract_id) {
+		$old_lead_name = get_db_value("fullname",
+			"tlead", "id", $lead_id);
+	}
+	
+	// Checks if the lead is in the db
+	$query_result = get_db_value("fullname", "tlead",
+		"fullname", $lead_name);
+	if ($query_result) {
+		if ($lead_name != $old_lead_name) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_lead_email) {
+	require_once ('include/functions_db.php');
+	$lead_email = get_parameter ('lead_email');
+	$lead_id = get_parameter ('lead_id', 0);
+	$old_lead_email = -1;
+	
+	if ($contract_id) {
+		$old_lead_email = get_db_value("email",
+			"tlead", "id", $lead_id);
+	}
+	
+	// Checks if the lead email is in the db
+	$query_result = get_db_value("email", "tlead",
+		"email", $lead_email);
+	if ($query_result) {
+		if ($lead_email != $old_lead_email) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_crm_template) {
+	require_once ('include/functions_db.php');
+	$crm_template_name = get_parameter ('crm_template_name');
+	$crm_template_id = get_parameter ('crm_template_id', 0);
+	$old_crm_template_name = -1;
+	
+	if ($crm_template_id) {
+		$old_crm_template_name = get_db_value("name",
+			"tcrm_template", "id", $crm_template_id);
+	}
+	
+	// Checks if the crm template is in the db
+	$query_result = get_db_value("name", "tcrm_template",
+		"name", $crm_template_name);
+	if ($query_result) {
+		if ($crm_template_name != $old_crm_template_name) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
 } elseif ($search_existing_kb_item) {
 	require_once ('include/functions_db.php');
 	$kb_item_name = get_parameter ('kb_item_name');
@@ -404,6 +611,90 @@ if ($search_existing_project) {
 	$query_result = get_db_value("name", "tdownload_category", "name", $file_category_name);
 	if ($query_result) {
 		if ($file_category_name != $old_file_category_name) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_user_id) {
+	require_once ('include/functions_db.php');
+	$user_id = get_parameter ('user_id');
+	
+	// Checks if the id is in the db
+	$query_result = get_db_value("id_usuario", "tusuario", "id_usuario", $user_id);
+	if ($query_result) {
+		// Exists. Validation error
+		echo json_encode(false);
+		return;
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_user_name) {
+	require_once ('include/functions_db.php');
+	$user_name = get_parameter ('user_name');
+	$user_id = get_parameter ('user_id', 0);
+	$old_user_name = "";
+	
+	if ($user_id) {
+		$old_user_name = get_db_value("nombre_real", "tusuario", "id_usuario", $user_id);
+	}
+	
+	// Checks if the user is in the db
+	$query_result = get_db_value("nombre_real", "tusuario", "nombre_real", $user_name);
+	if ($query_result) {
+		if ($user_name != $old_user_name) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_user_num) {
+	require_once ('include/functions_db.php');
+	$user_num = get_parameter ('user_num');
+	$user_id = get_parameter ('user_id', 0);
+	$old_user_num = -1;
+	
+	if ($user_id) {
+		$old_user_num = get_db_value("num_employee", "tusuario", "id_usuario", $user_id);
+	}
+	
+	// Checks if the employee number is in the db
+	$query_result = get_db_value("num_employee", "tusuario", "num_employee", $user_num);
+	if ($query_result) {
+		if ($user_num != $old_user_num) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_user_email) {
+	require_once ('include/functions_db.php');
+	$user_email = get_parameter ('user_email');
+	$user_id = get_parameter ('user_id', 0);
+	$old_user_email = "";
+	
+	if ($user_id) {
+		$old_user_email = get_db_value("direccion", "tusuario", "id_usuario", $user_id);
+	}
+	
+	// Checks if the user email is in the db
+	$query_result = get_db_value("direccion", "tusuario", "direccion", $user_email);
+	if ($query_result) {
+		if ($user_email != $old_user_email) {
 			// Exists. Validation error
 			echo json_encode(false);
 			return;

@@ -131,3 +131,40 @@ print_input_hidden ('send', 1);
 echo "</div></form>";
 
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script type="text/javascript" >
+
+validate_form("#lead_mail_go");
+// Rules: #text-from
+rules = {
+	required: true,
+	email: true
+};
+messages = {
+	required: "<?=__('Email from required')?>",
+	email: "<?=__('Invalid email')?>"
+};
+add_validate_form_element_rules('#text-from', rules, messages);
+// Rules: #text-to
+rules = {
+	required: true,
+	email: true
+};
+messages = {
+	required: "<?=__('Email to required')?>",
+	email: "<?=__('Invalid email')?>"
+};
+add_validate_form_element_rules('#text-to', rules, messages);
+// Rules: #text-cco
+rules = {
+	email: true
+};
+messages = {
+	email: "<?=__('Invalid email')?>"
+};
+add_validate_form_element_rules('#text-cco', rules, messages);
+
+</script>

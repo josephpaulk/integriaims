@@ -1,3 +1,44 @@
+2013-05-27  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/companies/company_detail: Added trim to name and fiscal id.
+	Added validation to name and fiscal id: ajax check for avoid duplicates.
+	Added validation to name: required.
+	
+	* operation/companies/company_role:
+	  operation/leads/template_manager: Added trim to name.
+	Added validation to name: required and ajax check for avoid duplicates.
+	
+	* operation/contracts/contract_detail: Added trim to name and contract number.
+	Added validation to name and contract number: required and ajax check for
+	avoid duplicates.
+	
+	* operation/leads/lead_detail: Added trim to searchbox, name and email.
+	Added validation to name and email: required and ajax check for avoid
+	duplicates.
+	
+	* operation/leads/lead_detail (Mail reply & forward lead): Added validation
+	to email from, to and cco: check for valid email syntax.
+	Added validation to email from and email to: required.
+	
+	* operation/users/user_edit: Added trim to name and email.
+	Added validation to name and email: required and ajax check for avoid
+	duplicates.
+	Added validation to email: check for valid email syntax.
+	
+	* operation/user_report/report_monthly: Added trim to searchbox.
+	
+	* operation/inventories/inventory_reports_detail: Added trim to name.
+	Added validation to name and SQL query: required.
+	
+	* godmode/usuarios/lista_usuarios: Added trim to id, employee number,
+	real name and email.
+	Added validation to id, employee number, real name and email: ajax check
+	for avoid duplicates.
+	Added validation to id, real name, password and email: required.
+	Added validation to email: check for valid email syntax.
+	Added validation to confirm password: the value must be the same as password.
+	
+	
 2013-05-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/incidents/incident_type_field: Added trim to type name and value.

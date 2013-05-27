@@ -246,7 +246,7 @@ if ($id | $new_contract) {
 		$table->data[3][1] = "<b>".__('Description')."</b><br>$description<br>";
 	}
 	
-	echo '<form id="contract_form" method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail" onsubmit="return validate_contract_form()">';
+	echo '<form id="contract_form" method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
 	print_table ($table);
 	
 	if (($id && give_acl ($config["id_user"], $id_group, "VW")) || (!$id && give_acl ($config["id_user"], $id_group, "VM"))) {
@@ -432,6 +432,8 @@ if ($id | $new_contract) {
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript">
 $(document).ready (function () {
@@ -483,41 +485,49 @@ function refresh_company_combo () {
 
 }
 
-function validate_contract_form() {
-	
-	var val = $("#id_company").val();
-	var name = $("#text-name").val();
-	var error_msg = "";
-
-	if (val == null || name == "") {
-		
-		var error_textbox = document.getElementById("error_text");
-		
-		
-		if (val == null) {
-			console.log("paso");
-			error_msg = "<?php echo __("Company no selected")?>";
-			pulsate("#id_company");
-		} else if (name == "") {
-			error_msg = "<?php echo __("Name can't be empty")?>";
-			pulsate("#text-name");
-		}
-		
-		if (error_textbox == null) {
-			$('#contract_form').prepend("<h3 id='error_text' class='error'>"+error_msg+"</h3>");
-		} else {
-			$("#error_text").html(error_msg);
-		}
-		
-		pulsate("#error_text");
-		
-		return false;  
-		
-	} 
-	
-	return true;
-	
-}
+// Form validation
+trim_element_on_submit('#text-search_text');
+trim_element_on_submit('#text-name');
+trim_element_on_submit('#text-contract_number');
+validate_form("#contract_form");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_contract: 1,
+			contract_name: function() { return $('#text-name').val() },
+			contract_id: "<?=$id?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This contract already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+// Rules: #text-contract_number
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_contract_number: 1,
+			contract_number: function() { return $('#text-contract_number').val() },
+			contract_id: "<?=$id?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Contract number required')?>",
+	remote: "<?=__('This contract number already exists')?>"
+};
+add_validate_form_element_rules('#text-contract_number', name_rules, name_messages);
 
 </script>
 

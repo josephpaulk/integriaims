@@ -140,7 +140,7 @@ if (($operation == "create") || ($operation == "edit")){
 	$table->data[3][0] = print_textarea ('description', 20, 60, $description, '', true,
 		__('Contents'));
 	
-	echo '<form method="post" action="index.php?sec=leads&sec2=operation/leads/template_manager">';
+	echo '<form id="form-template_manager" method="post" action="index.php?sec=leads&sec2=operation/leads/template_manager">';
 	print_table ($table);
 
 	echo '<div class="button" style="width: '.$table->width.'">';
@@ -210,3 +210,34 @@ if ($operation == "") {
 } // Fin bloque else
 
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script type="text/javascript">
+	
+// Form validation
+trim_element_on_submit('#text-name');
+validate_form("#form-template_manager");
+var rules, messages;
+// Rules: #text-name
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_crm_template: 1,
+			crm_template_name: function() { return $('#text-name').val() },
+			crm_template_id: "<?=$id?>"
+        }
+	}
+};
+messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This template already exists')?>"
+};
+add_validate_form_element_rules('#text-name', rules, messages);
+
+</script>

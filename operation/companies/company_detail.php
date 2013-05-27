@@ -213,7 +213,7 @@ if ($id) {
 // EDIT / CREATE FORM
 
 if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
+	echo '<form id="form-company_detail" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	
 	echo "<h2>".__('Company details')."</h2>";
 
@@ -797,7 +797,11 @@ if ((!$id) AND ($new_company == 0)){
 ?>
 
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
 <script type="text/javascript" >
+	
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
 	$("#text-user").autocomplete ("ajax.php",
@@ -822,4 +826,50 @@ $(document).ready (function () {
 			delay: 200
 		});
 });
+
+
+// Form validation
+trim_element_on_submit('#text-search_text');
+trim_element_on_submit('#text-name');
+trim_element_on_submit('#text-fiscal_id');
+validate_form("#form-company_detail");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_company: 1,
+			company_name: function() { return $('#text-name').val() },
+			company_id: "<?=$id?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This company already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+// Rules: #text-fiscal_id
+var name_rules = {
+	//required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_fiscal_id: 1,
+			fiscal_id: function() { return $('#text-fiscal_id').val() },
+			company_id: "<?=$id?>"
+        }
+	}
+};
+var name_messages = {
+	//required: "<?=__('Fiscal ID required')?>",
+	remote: "<?=__('This fiscal id already exists')?>"
+};
+add_validate_form_element_rules('#text-fiscal_id', name_rules, name_messages);
+
 </script>

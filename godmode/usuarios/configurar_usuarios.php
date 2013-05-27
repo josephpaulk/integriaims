@@ -223,15 +223,14 @@ if (isset($_GET["update_user"]) OR isset($_GET["nuevo_usuario"])){
 	echo '<h3>'.__('Update user').'</h3>';
 }
 
-?> 
-<table width='720' class='databox'>
-<?php 
 if (isset($_GET["alta"]))
 	// Create URL
-	echo '<form name="new_user" id="id_new_user" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&nuevo_usuario=1">';
+	echo '<form name="new_user" id="form-user_config" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&nuevo_usuario=1">';
 else
 	// Update URL
-	echo '<form name="user_mod" id="id_user_mod" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user='.$update_user.'">';
+	echo '<form name="user_mod" id="form-user_config" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user='.$update_user.'">';
+
+echo "<table width='720' class='databox'>";
 
 echo '<tr>';
 echo '<td class="datos">'.__('User ID');
@@ -360,7 +359,6 @@ print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', 
 
 <?php
 
-
 echo '<tr><td class="datos2">'.__('Total incidents');
 echo '<td class="datos2"><b>';
 echo get_db_sql ("SELECT COUNT(*) FROM tincidencia WHERE id_creator = '".$update_user."'");
@@ -396,7 +394,6 @@ echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$wor
 // Graph stats montly report for X user
 echo "&nbsp;&nbsp;";
 echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=$update_user'><img src='images/chart_bar.png' title='".__("Montly report")."' border=0></a></center></td>";
-      
 
 
 echo '<tr><td class="datos2">'. __('Simple mode');
@@ -436,15 +433,17 @@ if (isset($_GET["alta"])){
 	echo '</div>';
 } 
 
-	
+echo "</td></tr>";
+echo "</table>";
+echo "</form>";
 ?> 
-</form>
-</td></tr></table>
 
 <script src="include/js/jquery.js"></script>
 <script src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
 <script type="text/javascript">
-	
+
 $(document).ready (function () {
 	$("#avatar").change (function () {
 		icon = this.value;
@@ -452,30 +451,109 @@ $(document).ready (function () {
 			$(this).attr ("src", "images/avatars/"+icon).fadeIn ();
 		});
 	});
-	
-	inputControl("nombre");
-	
-	var reglas = {
-		  nombre:{required:true},
-		  direccion: {required: true,email: true},
-		  num_employee: {required:true}
-		 };
-	var mensajes = {
-		  nombre: "Empty name",
-		  direccion : 'Mail not valid',
-		  num_employee : 'Num employee not valid'
-		 };
-
-	$("#id_new_user").validate({
-		rules:reglas,  
-		messages:mensajes  	  
-     });
-        
-	$("#id_user_mod").validate({
-		rules:reglas,  
-		messages:mensajes
-	});
 });
+
+// Form validation
+trim_element_on_submit('input[name="nombre"]');
+trim_element_on_submit('input[name="num_employee"]');
+trim_element_on_submit('input[name="nombre_real"]');
+trim_element_on_submit('input[name="direccion"]');
+validate_form("#form-user_config");
+var rules, messages;
+// Rules: input[name="num_employee"]
+rules = {
+	//required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_user_num: 1,
+			user_num: function() { return $('input[name="num_employee"]').val() },
+			user_id: "<?=$update_user?>"
+        }
+	}
+};
+messages = {
+	//required: "<?=__('Number required')?>",
+	remote: "<?=__('This employee number already exists')?>"
+};
+add_validate_form_element_rules('input[name="num_employee"]', rules, messages);
+// Rules: input[name="nombre_real"]
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_user_name: 1,
+			user_name: function() { return $('input[name="nombre_real"]').val() },
+			user_id: "<?=$update_user?>"
+        }
+	}
+};
+messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This name already exists')?>"
+};
+add_validate_form_element_rules('input[name="nombre_real"]', rules, messages);
+// Rules: input[name="direccion"]
+rules = {
+	required: true,
+	email: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_user_email: 1,
+			user_email: function() { return $('input[name="direccion"]').val() },
+			user_id: "<?=$update_user?>"
+        }
+	}
+};
+messages = {
+	required: "<?=__('Email required')?>",
+	email: "<?=__('Invalid email')?>",
+	remote: "<?=__('This email already exists')?>"
+};
+add_validate_form_element_rules('input[name="direccion"]', rules, messages);
+// Rules: input[name="pass1"]
+rules = {
+	required: true
+};
+messages = {
+	required: "<?=__('Password required')?>"
+};
+add_validate_form_element_rules('input[name="pass1"]', rules, messages);
+// Rules: input[name="pass2"]
+rules = {
+	equalTo: 'input[name="pass1"]'
+};
+messages = {
+	equalTo: "<?=__('The passswords must coincide')?>"
+};
+add_validate_form_element_rules('input[name="pass2"]', rules, messages);
+// Rules: input[name="nombre"]
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_user_id: 1,
+			user_id: function() { return $('input[name="nombre"]').val() }
+        }
+	}
+};
+messages = {
+	required: "<?=__('ID required')?>",
+	remote: "<?=__('This user ID already exists')?>"
+};
+add_validate_form_element_rules('input[name="nombre"]', rules, messages);
+
 </script>
 
 

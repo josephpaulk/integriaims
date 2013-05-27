@@ -137,7 +137,7 @@ if ($id || $new_role) {
 		$table->data[1][0] = "<b>".__('Description')."</b><br>$description<br>";
 	}
 	
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
+	echo '<form id="form-company_role" method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
 		print_table ($table);
 		if (($id && give_acl ($config["id_user"], $id_group, "VW")) || (!$id && give_acl ($config["id_user"], $id_group, "VM"))) {
 			echo '<div class="button" style="width: '.$table->width.'">';
@@ -224,3 +224,34 @@ if ($id || $new_role) {
 	}
 }
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script type="text/javascript">
+
+// Form validation
+trim_element_on_submit('#text-search_text');
+trim_element_on_submit('#text-name');
+validate_form("#form-company_role");
+// Rules: #text-name
+var name_rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_company_role: 1,
+			company_role_name: function() { return $('#text-name').val() },
+			company_role_id: "<?=$id?>"
+        }
+	}
+};
+var name_messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This company already exists')?>"
+};
+add_validate_form_element_rules('#text-name', name_rules, name_messages);
+
+</script>

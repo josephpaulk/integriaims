@@ -141,7 +141,7 @@ $table->data[0][0] = print_input_text ('name', $name, '', 40, 255, true, __('Nam
 
 $table->data[1][0] = print_textarea ('sql', 10, 100, $sql, '', true, __('Report SQL sentence'));
 
-echo '<form method="post">';
+echo '<form id="form-inventory_report" method="post">';
 print_table ($table);
 echo '<div style="width:'.$table->width.'" class="action-buttons button">';
 if ($id) {
@@ -155,3 +155,42 @@ if ($id) {
 echo '</div>';
 echo '</form>';
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script type="text/javascript">
+	
+// Form validation
+trim_element_on_submit('#text-name');
+validate_form("#form-inventory_report");
+var rules, messages;
+// Rules: #text-name
+rules = {
+	required: true/*,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_inventory_report: 1,
+			inventory_report_name: function() { return $('#text-name').val() },
+			inventory_report_id: "<?=$id?>"
+        }
+	}*/
+};
+messages = {
+	required: "<?=__('Name required')?>"/*,
+	remote: "<?=__('This inventory report already exists')?>"*/
+};
+add_validate_form_element_rules('#text-name', rules, messages);
+// Rules: #textarea-sql
+rules = {
+	required: true
+};
+messages = {
+	required: "<?=__('SQL sentence required')?>"
+};
+add_validate_form_element_rules('#textarea-sql', rules, messages);
+
+</script>

@@ -754,7 +754,11 @@ if ($id || $new) {
 ?>
 
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
 <script type="text/javascript" >
+	
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
 	$("#text-user").autocomplete ("ajax.php",
@@ -779,4 +783,56 @@ $(document).ready (function () {
 			delay: 200
 		});
 });
+
+// Form validation
+trim_element_on_submit('#text-search_text');
+trim_element_on_submit('#text-fullname');
+trim_element_on_submit('#text-email');
+trim_element_on_submit('#text-from');
+trim_element_on_submit('#text-to');
+trim_element_on_submit('#text-cco');
+trim_element_on_submit('#text-contract_number');
+validate_form("#lead_form");
+var rules, messages;
+// Rules: #text-fullname
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_lead: 1,
+			lead_name: function() { return $('#text-fullname').val() },
+			lead_id: "<?=$id?>"
+        }
+	}
+};
+messages = {
+	required: "<?=__('Name required')?>",
+	remote: "<?=__('This lead already exists')?>"
+};
+add_validate_form_element_rules('#text-fullname', rules, messages);
+// Rules: #text-email
+rules = {
+	required: true,
+	email: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_lead_email: 1,
+			lead_email: function() { return $('#text-email').val() },
+			lead_id: "<?=$id?>"
+        }
+	}
+};
+messages = {
+	required: "<?=__('Email required')?>",
+	email: "<?=__('Invalid email')?>",
+	remote: "<?=__('This lead email already exists')?>"
+};
+add_validate_form_element_rules('#text-email', rules, messages);
+
 </script>
