@@ -145,17 +145,27 @@ if ($invoices !== false) {
 
 <script type="text/javascript">
 $(document).ready (function () {
-	$("#text-date_begin").datepicker ({
+	$("#text-search_date_begin").datepicker ({
 		beforeShow: function () {
+			maxdate = null;
+			if ($("#text-search_date_end").datepicker ("getDate") > $(this).datepicker ("getDate"))
+				maxdate = $("#text-search_date_end").datepicker ("getDate");
 			return {
-				maxDate: $("#text-date_end").datepicker ("getDate")
+				maxDate: maxdate
 			};
+		},
+		onSelect: function (datetext) {
+			end = $("#text-search_date_end").datepicker ("getDate");
+			start = $(this).datepicker ("getDate");
+			if (end <= start) {
+				pulsate ($("#text-search_date_end"));
+			}
 		}
 	});
-	$("#text-date_end").datepicker ({
+	$("#text-search_date_end").datepicker ({
 		beforeShow: function () {
 			return {
-				minDate: $("#text-date_begin").datepicker ("getDate")
+				minDate: $("#text-search_date_begin").datepicker ("getDate")
 			};
 		}
 	});

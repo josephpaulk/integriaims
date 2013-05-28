@@ -430,15 +430,15 @@ rules = {
         type: "POST",
         data: {
           page: "include/ajax/remote_validations",
-          search_project_name: 1,
+          search_existing_project: 1,
           project_name: function() { return $('input[name="name"]').val() },
-          project_id: <?php echo $id_project?>
+          project_id: <?php echo $id_project; ?>
         }
 	}
 };
 messages = {
-	required: "<?php echo __('Name required')?>",
-	remote: "<?php echo __('This project already exists')?>"
+	required: "<?php echo __('Name required'); ?>",
+	remote: "<?php echo __('This project already exists'); ?>"
 };
 add_validate_form_element_rules('input[name="name"]', rules, messages);
 

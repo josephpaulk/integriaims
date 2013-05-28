@@ -53,8 +53,10 @@ if ($id_invoice > 0){
 	$description = "";
 	$ammount = "0.00";
 	$id_attachment = "";
-	$invoice_create_date = "2011-01-30";
-	$invoice_payment_date = "2011-03-30";
+	//$invoice_create_date = "2011-01-30";
+	//$invoice_payment_date = "2011-03-30";
+	$invoice_create_date = "";
+	$invoice_payment_date = "";
 	$tax = 0;
 	$invoice_status = "pending";
 }
@@ -262,3 +264,62 @@ if ($operation_invoices == ""){
 	
 }
 ?>
+
+<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script type="text/javascript">
+
+$("#text-invoice_create_date").datepicker ({
+	beforeShow: function () {
+		maxdate = null;
+		if ($("#text-invoice_payment_date").datepicker ("getDate") > $(this).datepicker ("getDate"))
+			maxdate = $("#text-invoice_payment_date").datepicker ("getDate");
+		return {
+			maxDate: maxdate
+		};
+	},
+	onSelect: function (datetext) {
+		end = $("#text-invoice_payment_date").datepicker ("getDate");
+		start = $(this).datepicker ("getDate");
+		if (end <= start) {
+			pulsate ($("#text-invoice_payment_date"));
+		}
+	}
+});
+$("#text-invoice_payment_date").datepicker ({
+	beforeShow: function () {
+		return {
+			minDate: $("#text-invoice_create_date").datepicker ("getDate")
+		};
+	}
+});
+
+
+// Form validation
+trim_element_on_submit('#text-bill_id');
+validate_form("#form-new_project");
+var rules, messages;
+// Rules: #text-bill_id
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+          page: "include/ajax/remote_validations",
+          search_existing_name: 1,
+          project_name: function() { return $('#text-bill_id').val() },
+          project_id: <?php echo $id; ?>
+        }
+	}
+};
+messages = {
+	required: "<?php echo __('Name required'); ?>",
+	remote: "<?php echo __('This project already exists'); ?>"
+};
+add_validate_form_element_rules('#text-bill_id', rules, messages);
+
+</script>

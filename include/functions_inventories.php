@@ -986,6 +986,24 @@ function inventories_check_unique_field($data, $type) {
 	return true;
 }
 
+// Checks if $data exists on an unique field
+function inventories_check_no_unique_field($data, $type) {
+	
+	$sql_unique = "SELECT data FROM tobject_field_data 
+				WHERE id_object_type_field IN (
+					SELECT id FROM tobject_type_field
+					WHERE type='$type' AND unique=1)";
+					
+	$all_data = get_db_all_rows_sql($sql_unique);
+	
+	foreach ($all_data as $key => $dat) {
+		if ($dat['data'] == $data && $data != '') {
+			return false;
+		}
+	}
+	return true;
+}
+
 function inventories_link_get_name($id_inventory) {
 	
 	$name = get_db_value('name', 'tinventory', 'id', $id_inventory);

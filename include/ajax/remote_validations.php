@@ -25,6 +25,7 @@ $search_existing_sla = (bool) get_parameter ('search_existing_sla');
 $search_existing_object = (bool) get_parameter ('search_existing_object');
 $search_existing_object_type = (bool) get_parameter ('search_existing_object_type');
 $search_existing_object_type_field = (bool) get_parameter ('search_existing_object_type_field');
+$search_existing_object_type_field_data = (bool) get_parameter ('search_existing_object_type_field_data');
 $search_existing_manufacturer = (bool) get_parameter ('search_existing_manufacturer');
 $search_existing_company = (bool) get_parameter ('search_existing_company');
 $search_existing_fiscal_id = (bool) get_parameter ('search_existing_fiscal_id');
@@ -36,7 +37,6 @@ $search_existing_contract_number = (bool) get_parameter ('search_existing_contra
 $search_existing_lead = (bool) get_parameter ('search_existing_lead');
 $search_existing_lead_email = (bool) get_parameter ('search_existing_lead_email');
 $search_existing_crm_template = (bool) get_parameter ('search_existing_crm_template');
-
 $search_existing_kb_item = (bool) get_parameter ('search_existing_kb_item');
 $search_existing_kb_category = (bool) get_parameter ('search_existing_kb_category');
 $search_existing_product_type = (bool) get_parameter ('search_existing_product_type');
@@ -62,21 +62,17 @@ if ($search_existing_project) {
 	}
 	
 	// Checks if the project is in the db
-	if ( $query_result = get_db_value("name", "tproject", "name", $project_name) ) {
-		if ($old_project_name == $query_result) {
-			// Exists, but is in edition mode
-			echo json_encode(true);
-			return;
-		} else {
+	$query_result = get_db_value("name", "tproject", "name", $project_name);
+	if ($query_result) {
+		if ($project_name != $old_project_name) {
 			// Exists. Validation error
 			echo json_encode(false);
 			return;
 		}
-	} else {
-		// Does not exist
-		echo json_encode(true);
-		return;
 	}
+	// Does not exist
+	echo json_encode(true);
+	return;
 	
 } elseif ($search_existing_task) {
 	require_once ('include/functions_db.php');
@@ -283,6 +279,46 @@ if ($search_existing_project) {
 			array('label' => $object_type_field_name, 'id_object_type' => $object_type_id));
 	if ($query_result) {
 		if ($object_type_field_name != $old_object_type_field_name) {
+			// Exists. Validation error
+			echo json_encode(false);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(true);
+	return;
+	
+} elseif ($search_existing_object_type_field_data) {
+	require_once ('include/functions_db.php');
+	require_once ('include/functions_inventories.php');
+	$object_type_field_data = get_parameter ('object_type_field_data');
+	$object_type_field_id = get_parameter ('object_type_field_id');
+	$object_type_field_type = get_parameter ('object_type_field_type');
+	$inventory_id = get_parameter ('inventory_id', 0);
+	$unique = get_db_value("unique", "tobject_type_field", "id", $object_type_field_id);
+	
+	// Checks if the object type field data brokes any unique constraint in the db
+	if ($unique) {
+		if (!inventories_check_unique_field($object_type_field_data,
+				$object_type_field_type)) {
+			if ($inventory_id) {
+				$query_result = get_db_value_filter ("id", "from tobject_field_data",
+						array('id_inventory' => $inventory_id,
+							'data' => $object_type_field_data));
+				if (!$query_result) {
+					// Exists. Validation error
+					echo json_encode(false);
+					return;
+				}
+			} else {
+				// Exists. Validation error
+				echo json_encode(false);
+				return;
+			}
+		}
+	} else {
+		if (!inventories_check_no_unique_field($object_type_field_data,
+				$object_type_field_type)) {
 			// Exists. Validation error
 			echo json_encode(false);
 			return;

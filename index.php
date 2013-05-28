@@ -159,7 +159,7 @@ echo "<title>" . $config["sitename"] . "</title>";
 <script type="text/javascript" src="include/js/calendar.js"></script>
 <script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript" src="include/js/jquery.js"></script>
-<script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script><!-- MIGRATE OLDER JQUERY CODE (TEMPORAL)-->
+<script type="text/javascript" src="include/js/jquery-migrate-1.2.1.js"></script><!-- MIGRATE OLDER JQUERY CODE (TEMPORAL)-->
 <script type="text/javascript" src="include/js/jquery.ui.core.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.tabs.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.draggable.js"></script>

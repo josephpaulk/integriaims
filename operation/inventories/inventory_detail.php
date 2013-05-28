@@ -830,7 +830,9 @@ function show_fields() {
 
 					
 					element=document.createElement('input');
-					element.id=i;
+					element.id=value['id'];
+					element.className="object_type_field";
+					//element.id=i;
 					//element.id=value['label_enco'];
 					element.name=value['label_enco'];
 					element.value=value['data'];
@@ -1233,6 +1235,37 @@ messages = {
 };
 add_validate_form_element_rules('#text-name', rules, messages);
 
+/*
+function add_field_validation() {
+	$('#text-name').val($(".object_type_field").size());
+	$(".object_type_field").each( function() {
+		$('#text-name').val("asfafva");
+		var id = $(this).attr("id");
+		var rules, messages;
+		
+		trim_element_on_submit('#'+id);
+		// Rules: .object_type_field
+		rules = {
+			remote: {
+				url: "ajax.php",
+				type: "POST",
+				data: {
+					page: "include/ajax/remote_validations",
+					search_existing_object_type_field_data: 1,
+					object_type_field_data: function() { return $(this).val() },
+					object_type_field_id: function() { return $(this).attr("id") },
+					object_type_field_type: function() { return $(this).attr("type") },
+					inventory_id: "<?php echo $id; ?>"
+				}
+			}
+		};
+		messages = {
+			remote: "<?php echo __('This data can not be repeated')?>"
+		};
+		add_validate_form_element_rules('#'+id, rules, messages);
+	});
+}
+*/
 
 </script>
 

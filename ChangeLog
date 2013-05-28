@@ -1,3 +1,16 @@
+2013-05-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_inventory: Added a function that check if a value
+	coincide with any unique value.
+	
+	* operation/projects/project_detail: Fixed a validation error.
+	
+	* operation/invoices/invoices: Added date picker.
+	
+	* operation/invoices/invoice_detail: Fixed date picker.
+	
+	* include/js: Added the migrate plugin temporarily
+
 2013-05-28  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php
