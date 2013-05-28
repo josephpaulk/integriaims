@@ -20,6 +20,27 @@ check_login ();
 require_once ('include/functions_inventories.php');
 require_once ('include/functions_user.php');
 
+$id = (int) get_parameter ('id');
+
+$is_enterprise = false;
+
+if (file_exists ("enterprise/include/functions_inventory.php")) {
+	require_once ("enterprise/include/functions_inventory.php");
+	$is_enterprise = true;
+}
+
+$write_permission = true;
+
+if ($is_enterprise) {
+	$read_permission = inventory_check_acl($config['id_user'], $id);
+	$write_permission = inventory_check_acl($config['id_user'], $id, true);
+	
+	if (!$read_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
+}
+
 if (defined ('AJAX')) {
 	
 	global $config;
@@ -27,6 +48,8 @@ if (defined ('AJAX')) {
 	$show_type_fields = (bool) get_parameter('show_type_fields', 0);
 	$show_external_data = (bool) get_parameter('show_external_data', 0);
 	$update_external_id = (bool) get_parameter('update_external_id', 0);
+	$get_company_name = (bool) get_parameter('get_company_name', 0);
+	$get_user_name = (bool) get_parameter('get_user_name', 0);
  	
  	if ($show_type_fields) {
 		$id_object_type = get_parameter('id_object_type');
@@ -57,10 +80,25 @@ if (defined ('AJAX')) {
 		$result = process_sql_update('tobject_field_data', array('data' => $id_value), array('id_object_type_field' => $id_object_type_field, 'id_inventory'=>$id_inventory), 'AND');
 		
 		return $result;
-	}	
+	}
+	
+	if ($get_company_name) {
+		$id_company = get_parameter('id_company');
+		$name = get_db_value('name', 'tcompany', 'id', $id_company);
+
+		echo json_encode($name);
+		return;
+	}
+	
+	if ($get_user_name) {
+		$id_user = get_parameter('id_user');
+		$name = get_db_value('nombre_real', 'tusuario', 'id_usuario', $id_user);
+
+		echo json_encode($name);
+		return;
+	}
 }
 
-$id = (int) get_parameter ('id');
 $inventory_name = get_db_value('name', 'tinventory', 'id', $id);
 
 if ($id) {
@@ -136,11 +174,13 @@ if ((isset($_POST['parent_name'])) && ($_POST['parent_name'] == '')) {
 }
 
 if ($update) {
-	if (! give_acl ($config['id_user'], get_inventory_group ($id), "VW")) {
-		// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update inventory #".$id);
-		include ("general/noaccess.php");
-		exit;
+	
+	if ($is_enterprise) {
+		if (!$write_permission) {
+			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update inventory #".$id);
+			include ("general/noaccess.php");
+			exit;
+		}
 	}
 	
 	$old_parent = get_db_value('id_parent', 'tinventory', 'id', $id);
@@ -251,6 +291,18 @@ if ($update) {
 		}
 	}
 	
+	if ($is_enterprise) {
+		$inventory_companies = get_parameter("companies");
+		
+		/* Update companies in inventory */
+		inventory_update_companies ($id, get_parameter ('companies', $inventory_companies), true);
+		
+		$inventory_users = get_parameter("users");
+			
+		/* Update users in inventory */
+		inventory_update_users ($id, get_parameter ('users', $inventory_users), true);
+	}
+	
 	if ($result !== false) {
 		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
 	} else {
@@ -265,11 +317,13 @@ if ($update) {
 }
 
 if ($create) {
-	if (! give_acl ($config['id_user'], 0, "VW")) {
-		// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create inventory object");
-		include ("general/noaccess.php");
-		exit;
+	
+	if ($is_enterprise) {
+		if (!$write_permission) {
+			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create inventory #".$id);
+			include ("general/noaccess.php");
+			exit;
+		}
 	}
 	
 	$err_message = __('Could not be created');
@@ -296,7 +350,7 @@ if ($create) {
 	if ($id !== false) {
 		
 		inventory_tracking($id,INVENTORY_CREATED);
-		
+				
 		if ($public)
 				inventory_tracking($id,INVENTORY_PUBLIC);
 			else 
@@ -361,7 +415,15 @@ if ($create) {
 			
 			inventory_tracking($id,INVENTORY_PARENT_CREATED, $id_parent);
 		}
+		
+		if ($is_enterprise) {
+			/* Update companies in inventory */
+			inventory_update_companies ($id, get_parameter ('companies'));
 			
+			/* Update users in inventory */
+			inventory_update_users ($id, get_parameter ('users'));
+		}
+		
 		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
 
 		$result_msg .= "<h3><a href='index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=$id'>".__("Click here to continue working with Object #").$id."</a></h3>";
@@ -381,21 +443,16 @@ if ($create) {
 	$id_object_type = 0;
 }
 
-/* This is the default permission checking to create an inventory */
-$has_permission = give_acl ($config['id_user'], 0, "VW");
 
 if ($id) {
 
-	$group = get_inventory_group ($id);
-	if (! give_acl ($config['id_user'], $group, "VR")) {
-		// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access inventory #".$id);
-		include ("general/noaccess.php");
-		exit;
+	if ($is_enterprise) {
+		if (!$read_permission) {
+			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access inventory #".$id);
+			include ("general/noaccess.php");
+			exit;
+		}
 	}
-	
-	/* If editing, the permission checks is now specific for this object */
-	$has_permission = give_acl ($config['id_user'], $group, "VW");
 		
 	clean_cache_db();
 	
@@ -419,7 +476,8 @@ $table->colspan[4][1] = 2;
 $table->colspan[5][0] = 3;
 
 /* First row */
-if ($has_permission) {
+
+if ($write_permission) {
 	$table->data[0][0] = print_input_text ('name', $name, '', 40, 128, true,
 		__('Name'));
 } else {
@@ -432,13 +490,17 @@ $params_assigned['input_value'] = $owner;
 $params_assigned['title'] = 'Owner';
 $params_assigned['return'] = true;
 
-$table->data[0][1] = user_print_autocomplete_input($params_assigned);
+if ($write_permission) {
+	$table->data[0][1] = user_print_autocomplete_input($params_assigned);
+} else {
+	$table->data[0][1] = print_label (__('Owner'), '', '', true, $owner);
+}
 	
 $table->data[0][2] = print_checkbox_extended ('public', 1, $public,
-	! $has_permission, '', '', true, __('Public'));
+	! $write_permission, '', '', true, __('Public'));
 
 
-if ($has_permission) {
+if ($write_permission) {
 	
 	$parent_name = $id_parent ? get_inventory_name ($id_parent) : '';
 	
@@ -461,7 +523,7 @@ if ($has_permission) {
 $contracts = get_contracts ();
 $manufacturers = get_manufacturers ();
 
-if ($has_permission) {
+if ($write_permission) {
 	$table->data[1][1] = print_select ($contracts, 'id_contract', $id_contract,
 		'', __('None'), 0, true, false, false, __('Contract'));
 
@@ -475,15 +537,60 @@ if ($has_permission) {
 	$table->data[1][2] = print_label (__('Manufacturer'), '', '', true, $manufacturer);
 }
 
+
 /* Third row */
 $objects_type = get_object_types ();
-$table->data[2][0] = print_label (__('Object type'), '','',true);
+
 if ($id_object_type == 0) {
 	$disabled = false;
 } else {
 	$disabled = true;
 }
-$table->data[2][0] .= print_select($objects_type, 'id_object_type', $id_object_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
+
+if ($write_permission) {
+	$table->data[2][0] = print_label (__('Object type'), '','',true);
+	$table->data[2][0] .= print_select($objects_type, 'id_object_type', $id_object_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
+} else {
+	$table->data[2][0] = print_label (__('Object type'), '', '', true, $id_object_type);
+}
+
+if ($is_enterprise) {
+	if ($id) {
+		$companies = inventory_get_companies ($id);
+		$users = inventory_get_users ($id);
+	} else {
+		$companies = array();
+		$users = array();
+	}
+
+	if ($write_permission) {
+		$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,
+								'', '', '', true, false, false, __('Associated company'));
+		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_company_associated();'>".__('Add')."</a>";
+		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: removeCompany();'>".__('Remove')."</a>";
+
+		$table->data[2][2] = print_select ($users, 'inventory_users', NULL,
+								'', '', '', true, false, false, __('Associated user'));
+		$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: show_user_associated(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Add')."</a>";
+		$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: removeUser();'>".__('Remove')."</a>";
+
+		foreach ($companies as $company_id => $company_name) {
+			$table->data[2][1] .= print_input_hidden ("companies[]",
+								$company_id, true, 'selected-companies');
+		}
+
+		foreach ($users as $user_id => $user_name) {
+			$table->data[2][2] .= print_input_hidden ("users[]",
+								$user_id, true, 'selected-users');
+		}
+	} else {
+		$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,
+								'', '', '', true, false, false, __('Associated company'));
+								
+		$table->data[2][2] = print_select ($users, 'inventory_users', NULL,
+								'', '', '', true, false, false, __('Associated user'));
+	}
+}
 
 /* Fourth row */
 $table->colspan[3][0] = 3;		
@@ -494,14 +601,13 @@ $table->data[3][0] = "";
 $table->data[4][1] = "</div>&nbsp;";
 
 /* Sixth row */
-$disabled_str = ! $has_permission ? 'readonly="1"' : '';
+$disabled_str = ! $write_permission ? 'readonly="1"' : '';
 $table->data[5][0] = print_textarea ('description', 15, 100, $description,
 	$disabled_str, true, __('Description'));
 
 echo '<div class="result">'.$result_msg.$msg_err.'</div>';
 
-
-if ($has_permission) {	
+if ($write_permission) {
 	echo '<form method="post" id="inventory_status_form">';
 	print_table ($table);
 
@@ -529,6 +635,11 @@ echo '</div>';
 echo "<div class= 'dialog ui-dialog-content' id='external_table_window'></div>";
 
 echo "<div class= 'dialog ui-dialog-content' id='inventory_search_window'></div>";
+
+echo "<div class= 'dialog ui-dialog-content' id='company_search_modal'></div>";
+
+echo "<div class= 'dialog ui-dialog-content' id='user_search_modal'></div>";
+
 
 //if (! defined ('AJAX')):
 ?>
@@ -594,6 +705,28 @@ $(document).ready (function () {
 					$("#text-owner_search").css ('background-color', '#cc0000');
 				else
 					$("#text-owner_search").css ('background-color', '');
+				if (data == "")
+					return false;
+				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre Real") ?>: '+data[1]+'</span>';
+			},
+			delay: 200
+
+		});
+		
+		$("#text-inventory_user").autocomplete ("ajax.php",
+		{
+			scroll: true,
+			minChars: 2,
+			extraParams: {
+				page: "include/ajax/users",
+				search_users: 1,
+				id_user: "<?php echo $config['id_user'] ?>"
+			},
+			formatItem: function (data, i, total) {
+				if (total == 0)
+					$("#text-inventory_user").css ('background-color', '#cc0000');
+				else
+					$("#text-inventory_user").css ('background-color', '');
 				if (data == "")
 					return false;
 				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre Real") ?>: '+data[1]+'</span>';
@@ -955,6 +1088,127 @@ function show_type_fields() {
 }
 
 
+// Show the modal window of company associated
+function show_company_associated() {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&get_company_associated=1",
+		dataType: "html",
+		success: function(data){	
+			$("#company_search_modal").html (data);
+			$("#company_search_modal").show ();
+
+			$("#company_search_modal").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 520,
+					height: 350
+				});
+			$("#company_search_modal").dialog('open');
+		}
+	});
+}
+
+function loadCompany() {
+
+	id_company = $('#id_company').val();
+	$('#inventory_status_form').append ($('<input type="hidden" value="'+id_company+'" class="selected-companies" name="companies[]" />'));
+
+	$("#company_search_modal").dialog('close');
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/inventories/inventory_detail&get_company_name=1&id_company="+ id_company,
+		dataType: "json",
+		success: function (name) {
+			$('#inventory_companies').append($('<option></option>').html(name).attr("value", id_company));
+		}
+	});
+}
+
+function removeCompany() {
+
+	s= $("#inventory_companies").attr ("selectedIndex");
+
+	selected_id = $("#inventory_companies").children (":eq("+s+")").attr ("value");
+
+	$("#inventory_companies").children (":eq("+s+")").remove ();
+	$(".selected-companies").each (function () {
+		if (this.value == selected_id)
+			$(this).remove();
+	});
+}
+
+// Show the modal window of company associated
+function show_user_associated() {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&get_user_associated=1",
+		dataType: "html",
+		success: function(data){	
+			$("#user_search_modal").html (data);
+			$("#user_search_modal").show ();
+
+			$("#user_search_modal").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 520,
+					height: 350
+				});
+			$("#user_search_modal").dialog('open');
+		}
+	});
+}
+
+function loadUser() {
+
+	id_user = $('#text-inventory_user').val();
+
+	$('#inventory_status_form').append ($('<input type="hidden" value="'+id_user+'" class="selected-users" name="users[]" />'));
+
+	$("#user_search_modal").dialog('close');
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=operation/inventories/inventory_detail&get_user_name=1&id_user="+ id_user,
+		dataType: "json",
+		success: function (name) {
+			$('#inventory_users').append($('<option></option>').html(name).attr("value", id_user));
+		}
+	});
+}
+
+function removeUser() {
+
+	s= $("#inventory_users").attr ("selectedIndex");
+
+	selected_id = $("#inventory_users").children (":eq("+s+")").attr ("value");
+
+	$("#inventory_users").children (":eq("+s+")").remove ();
+	$(".selected-users").each (function () {
+		if (this.value == selected_id)
+			$(this).remove();
+	});
+}
+
+
+
 // Form validation
 trim_element_on_submit('#text-name');
 validate_form("#inventory_status_form");
@@ -978,6 +1232,7 @@ messages = {
 	remote: "<?php echo __('This object already exists')?>"
 };
 add_validate_form_element_rules('#text-name', rules, messages);
+
 
 </script>
 

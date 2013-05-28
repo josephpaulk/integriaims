@@ -773,6 +773,12 @@ function inventories_get_all_external_field ($external_table_name, $external_ref
 function inventories_print_tree ($sql_search = '') {
 	global $config;
 	
+	$is_enterprise = false;
+	if (file_exists ("enterprise/include/functions_inventory.php")) {
+		require_once ("enterprise/include/functions_inventory.php");
+		$is_enterprise = true;
+	}
+	
 	echo '<table class="databox" style="width:98%">';
 	echo '<tr><td style="width:60%" valign="top">';
 	
@@ -831,8 +837,13 @@ function inventories_print_tree ($sql_search = '') {
 				$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image_object_types_". $element['id'], "pos_tree" => "3"));
 			}
 		}
-
-		$count_inventories = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search));
+		
+		if ($is_enterprise) {
+			$count_inventories = inventory_get_count_inventories($element['id'], base64_decode($sql_search), $config['id_user']);
+		} else {
+			$count_inventories = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search));
+		}
+		
 		if ($count_inventories != 0) {
 			$id_div = "object_types_".$element['id'];
 
@@ -865,6 +876,7 @@ function inventories_printTable($id_item, $type, $id_father) {
 		case 'child':
 		case 'child2':
 			$info_inventory = get_db_row('tinventory', 'id', $id_item);
+
 			$info_fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$id_father));
 			
 			if ($info_inventory !== false) {
@@ -1001,13 +1013,25 @@ function inventories_get_count_inventories_for_tree($id_item, $sql_search = '') 
 function inventories_show_list($sql_search, $params='') {
 	global $config;
 
+	$is_enterprise = false;
+	if (file_exists ("enterprise/include/functions_inventory.php")) {
+		require_once ("enterprise/include/functions_inventory.php");
+		$is_enterprise = true;
+	}
+
 	$params .="&mode=list";	
 	
 	$sql = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data
 			WHERE tinventory.id_object_type = tobject_type.id $sql_search
 			GROUP BY tinventory.`id`";
 
-	$inventories = get_db_all_rows_sql($sql);
+	$inventories_aux = get_db_all_rows_sql($sql);
+	
+	if ($is_enterprise) {
+		$inventories = inventory_get_user_inventories($config['id_user'], $inventories_aux);
+	} else {
+		$inventories = $inventories_aux;
+	}
 
 	if ($inventories === false) {
 		echo __("No inventories");
@@ -1314,5 +1338,6 @@ function inventories_check_same_object_type_list($inventories) {
 	
 	return $id_object;
 }
+
 
 ?>

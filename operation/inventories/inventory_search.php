@@ -20,6 +20,13 @@ check_login ();
 require_once ('include/functions_inventories.php');
 require_once ('include/functions_user.php');
 
+$is_enterprise = false;
+
+if (file_exists ("enterprise/include/functions_inventory.php")) {
+	require_once ("enterprise/include/functions_inventory.php");
+	$is_enterprise = true;
+}
+
 if (defined ('AJAX')) {
 	
 	global $config;
@@ -56,8 +63,6 @@ if (defined ('AJAX')) {
 		return;
 	}
 	
-	
-	
 	$id_item = get_parameter ('id_item');
 	$lessBranchs = get_parameter('less_branchs');
 	$type = get_parameter('type');
@@ -72,9 +77,9 @@ if (defined ('AJAX')) {
 				AND tinventory.id_object_type = tobject_type.id $sql_search
 				GROUP BY tinventory.`id`";
 		
-		$cont = get_db_all_rows_sql($sql);
+		$cont_aux = get_db_all_rows_sql($sql);
 
-		$countRows = count($cont);
+		$countRows = count($cont_aux);
 
 		//Empty Branch
 		if ($countRows == 0) {
@@ -100,7 +105,13 @@ if (defined ('AJAX')) {
 		
 		$sql_search = base64_encode($sql_search);
 		
-		while($row = get_db_all_row_by_steps_sql($new, $result, $sql)) {
+		if ($is_enterprise) {
+			$cont = inventory_get_user_inventories($config['id_user'], $cont_aux);
+		} else {
+			$cont = $cont_aux;
+		}
+	
+		foreach ($cont as $key => $row) {
 
 			$new = false;
 			$count++;
@@ -183,7 +194,13 @@ if (defined ('AJAX')) {
 		$count = 0;
 		echo "<ul style='margin: 0; padding: 0;'>\n";
 
-		while($row = get_db_all_row_by_steps_sql($new, $result, $sql)) {
+		if ($is_enterprise) {
+			$cont = inventory_get_user_inventories($config['id_user'], $cont_invent);
+		} else {
+			$cont = $cont_invent;
+		}
+	
+		foreach ($cont as $key => $row) {
 
 			$new = false;
 			$count++;
@@ -282,7 +299,14 @@ if (defined ('AJAX')) {
 		$new = true;
 		$count = 0;
 		echo "<ul style='margin: 0; padding: 0;'>\n";
-		while ($row = get_db_all_row_by_steps_sql($new, $result, $sql)) {
+		
+		if ($is_enterprise) {
+			$cont = inventory_get_user_inventories($config['id_user'], $cont_invent);
+		} else {
+			$cont = $cont_invent;
+		}
+	
+		foreach ($cont as $key => $row) {
 
 			$new = false;
 			$count++;
@@ -331,12 +355,6 @@ if (defined ('AJAX')) {
 return;
 }
 
-if (! give_acl ($config['id_user'], 0, "VR")) {
-	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access inventory search");
-	include ("general/noaccess.php");
-	exit;
-}
 
 $search = get_parameter('search', 0);
 $sql_search = '';

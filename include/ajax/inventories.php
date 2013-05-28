@@ -19,6 +19,8 @@ include_once('include/functions_user.php');
 
 $get_external_data = get_parameter('get_external_data', 0);
 $get_inventory_search = get_parameter('get_inventory_search', 0);
+$get_company_associated = get_parameter('get_company_associated', 0);
+$get_user_associated = get_parameter('get_user_associated', 0);
 
 if ($get_external_data) {
 	$table_name = get_parameter('table_name');
@@ -122,7 +124,7 @@ if ($get_inventory_search) {
 	
 	$params_assigned['input_id'] = 'text-owner_search';
 	$params_assigned['input_name'] = 'owner_search';
-	$params_assigned['input_value'] = $owner;
+	$params_assigned['input_value'] = $owner_search;
 	$params_assigned['title'] = 'Owner';
 	$params_assigned['return'] = true;
 
@@ -184,6 +186,50 @@ if ($get_inventory_search) {
 	
 	inventories_show_list($sql_search);
 		
+	return;
+}
+
+if ($get_company_associated) {
+	
+	$table_company->class = 'databox';
+	$table_company->width = '98%';
+	$table_company->data = array ();
+	
+	$companies = get_companies();
+	$table_company->data[0][0] = print_label (__('Company'), '','',true);
+	$table_company->data[0][1] = print_select ($companies, 'id_company', '',
+		'', '', 0, true, false, false, '', '', 'width: 200px;');
+	
+	print_table($table_company);
+	
+	echo '<div style="width:'.$table_company->width.'" class="action-buttons button">';
+		echo "<a href='javascript: loadCompany();'>".__('Add')."<img src='images/go.png' /></a>";
+	echo '</div>';
+	
+	return;
+}
+
+if ($get_user_associated) {
+	
+	$inventory_user = get_parameter('inventory_user', '');
+	$table_user->class = 'databox';
+	$table_user->width = '98%';
+	$table_user->data = array ();
+	
+	$params_user['input_id'] = 'text-inventory_user';
+	$params_user['input_name'] = 'inventory_user';
+	$params_user['input_value'] = $inventory_user;
+	$params_user['return'] = true;
+
+	$table_user->data[0][0] = print_label (__('User'), '','',true);
+	$table_user->data[0][1] = user_print_autocomplete_input($params_user);
+	
+	print_table($table_user);
+	
+	echo '<div style="width:'.$table_user->width.'" class="action-buttons button">';
+	echo "<a href='javascript: loadUser();'>".__('Add')."<img src='images/go.png' /></a>";
+	echo '</div>';
+	
 	return;
 }
 

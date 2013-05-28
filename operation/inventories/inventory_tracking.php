@@ -6,6 +6,23 @@ check_login ();
 
 $id = (int) get_parameter ('id');
 
+$is_enterprise = false;
+
+if (file_exists ("enterprise/include/functions_inventory.php")) {
+	require_once ("enterprise/include/functions_inventory.php");
+	$is_enterprise = true;
+}
+
+if ($is_enterprise) {
+	$read_permission = inventory_check_acl($config['id_user'], $id);
+	
+	if (!$read_permission) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to inventory ".$id);
+		include "general/error_perms.php";
+		exit;
+	}
+}
+
 echo '<h3>'.__('Inventory object tracking').' #'.$id.'</h3>';
 
 //**********************************************************************

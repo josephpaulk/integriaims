@@ -19,10 +19,26 @@ check_login ();
 
 $id = (int) get_parameter ('id');
 
-if (! give_acl ($config['id_user'], get_inventory_group ($id), 'VR')) {
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to inventory ".$id);
-	include ("general/noaccess.php");
-	return;
+$is_enterprise = false;
+
+if (file_exists ("enterprise/include/functions_inventory.php")) {
+	require_once ("enterprise/include/functions_inventory.php");
+	$is_enterprise = true;
+}
+
+$write_permission = true;
+
+if ($is_enterprise) {
+	$read_permission = inventory_check_acl($config['id_user'], $id);
+
+	$write_permission = inventory_check_acl($config['id_user'], $id, true);
+
+	
+	if (!$read_permission) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to inventory ".$id);
+		include ("general/noaccess.php");
+		exit;
+	}
 }
 
 require_once ('include/functions_inventories.php');
@@ -51,19 +67,30 @@ echo '</div>';
 $table->class = 'listing';
 $table->width = '90%';
 $table->head = array ();
+$table->size = array ();
+
 $table->head[0] = __('Company');
 $table->head[1] = __('Contact');
 $table->head[2] = __('Position');
 $table->head[3] = __('Details');
-$table->head[4] = __('Edit');
-$table->size = array ();
+
+if ($write_permission) {
+	$table->head[4] = __('Edit');
+	$table->size[4] = '40px';
+	$table->align[4] = 'center';
+}
+
 $table->size[3] = '40px';
-$table->size[4] = '40px';
 $table->align[3] = 'center';
-$table->align[4] = 'center';
+
 $table->data = array ();
 
-$contacts = get_inventory_contacts ($id, false);
+if ($is_enterprise) {
+	$contacts = inventory_get_contacts ($id, false);
+} else {
+	$contacts = get_inventory_contacts ($id, false);
+}
+
 if ($contacts === false)
 	$contacts = array ();
 
@@ -81,8 +108,10 @@ foreach ($contacts as $contact) {
 		$details .= '<strong>'.__('Mobile phone').'</strong>: '.$contact['mobile'].'<br />';
 	$data[2] = $contact['position'];
 	$data[3] = print_help_tip ($details, true, 'tip_view');
-	$data[4] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'&id_inventory='.$id.'">'.
-			'<img src="images/setup.gif" /></a>';
+	if ($write_permission) {
+		$data[4] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'&id_inventory='.$id.'">'.
+				'<img src="images/setup.gif" /></a>';
+	}
 	array_push ($table->data, $data);
 }
 print_table ($table);

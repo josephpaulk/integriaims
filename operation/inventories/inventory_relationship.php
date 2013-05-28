@@ -22,6 +22,29 @@ require_once ('include/functions_user.php');
 $id = (int) get_parameter ('id');
 $inventory_name = get_db_value('name', 'tinventory', 'id', $id);
 
+
+$is_enterprise = false;
+
+if (file_exists ("enterprise/include/functions_inventory.php")) {
+	require_once ("enterprise/include/functions_inventory.php");
+	$is_enterprise = true;
+}
+
+$write_permission = true;
+
+if ($is_enterprise) {
+	$read_permission = inventory_check_acl($config['id_user'], $id);
+
+	$write_permission = inventory_check_acl($config['id_user'], $id, true);
+
+	
+	if (!$read_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
+}
+
+
 echo "<h3>".__('Object')." #$id"."&nbsp;&nbsp;-&nbsp;".$inventory_name."</h3>";
 
 //**********************************************************************
@@ -134,17 +157,19 @@ foreach ($available_links as $key => $inventory) {
 	$available_inventory[$inventory['id']] = $inventory['name'];
 }
 
-$url = "index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&add_link=1&id_src=$id&id=$id";
+if ($write_permission) {
+	$url = "index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&add_link=1&id_src=$id&id=$id";
 
-$data[0] = "<form name=dataedit method=post action='" . $url . "'>";
-$data[0] .= print_select($available_inventory, "link", '', '', __("Select inventory"), 0, true);
+	$data[0] = "<form name=dataedit method=post action='" . $url . "'>";
+	$data[0] .= print_select($available_inventory, "link", '', '', __("Select inventory"), 0, true);
 
-$data[1] = "";
+	$data[1] = "";
 
-$data[2] = print_input_image("add_link", "images/add.png", 1, '', true);
-$data[2] .= "</form>";
+	$data[2] = print_input_image("add_link", "images/add.png", 1, '', true);
+	$data[2] .= "</form>";
 
-array_push ($table->data, $data);
+	array_push ($table->data, $data);
+}
 
 print_table($table);
 ?>
