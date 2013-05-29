@@ -847,8 +847,6 @@ function run_mail_check () {
 	$i = $last;
 	for ($i; $i>0; $i--) {
 	
-echo "DEBUG: Navegando por los mails...\n";
-	
 		$struct = imap_fetchstructure($mail, $i);
 		
 		$encoding = $struct->{'encoding'};
@@ -900,10 +898,14 @@ echo "DEBUG: Navegando por los mails...\n";
 
 		//Parse message	
 		message_parse($subject, $body, $from);
+
+		// Deleted processed message
+		imap_delete ($mail, $i);
 	}	
 	
 	//Close mail connection
 	if ($mail) {
+		imap_expunge ($mail);
 		imap_close ($mail);
 	}
 }

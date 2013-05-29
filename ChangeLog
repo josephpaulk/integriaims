@@ -5,6 +5,7 @@
 	* godmode/usuarios/lista_usuarios.php: Fixed a SQL search syntax.
 
 	* include/integria_cron.php: Fixed bad call to imap connect method.
+	Now processed message are deleted.
 
 	* include/functions_pop3.php: Fixed SQL insertion to create incident.
 
