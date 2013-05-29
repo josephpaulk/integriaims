@@ -268,7 +268,7 @@ ALTER TABLE tinventory ADD `show_list` TINYINT(1) unsigned DEFAULT 1;
 
 /* 21/05/2013 */
 INSERT INTO tobject_type (name, description, icon) VALUES 
-(1,'Pandora agents', 'Imported agents from Pandora FMS', 'pandora.png');
+('Pandora agents', 'Imported agents from Pandora FMS', 'pandora.png');
 
 /* 21/05/2013 */
 INSERT INTO tobject_type_field (id, id_object_type, label, type) VALUES 
@@ -276,3 +276,4 @@ INSERT INTO tobject_type_field (id, id_object_type, label, type) VALUES
 (2,1,'IP Address','text'),
 (3,1,'URL Address','text'),
 (4,1,'ID Agent','text');
+
