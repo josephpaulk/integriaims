@@ -552,7 +552,18 @@ if ($write_permission) {
 	$table->data[2][0] = print_label (__('Object type'), '','',true);
 	$table->data[2][0] .= print_select($objects_type, 'id_object_type', $id_object_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
 } else {
-	$table->data[2][0] = print_label (__('Object type'), '', '', true, $id_object_type);
+	$object_name = get_db_value('name', 'tobject_type', 'id', $id_object_type);
+	$table->data[2][0] = print_label (__('Object type'), '', '', true, $object_name);
+	
+	//show object hidden
+	echo '<div id="show_object_fields_hidden" style="display:none;">';
+		print_input_text('show_object_hidden', 1);
+	echo '</div>';
+	
+	//id_object_type hidden
+	echo '<div id="id_object_type_hidden" style="display:none;">';
+		print_input_text('id_object_type_hidden', $id_object_type);
+	echo '</div>';
 }
 
 if ($is_enterprise) {
@@ -660,9 +671,13 @@ echo "<div class= 'dialog ui-dialog-content' id='user_search_modal'></div>";
 $(document).ready (function () {
 	
 	configure_inventory_form (false);
-	
-	if ($("#id_object_type").val() != 0) {
+
+	if ($("#text-show_object_hidden").val() == 1) { //user with only read permissions
 		show_fields();
+	} else {
+		if ($("#id_object_type").val() != 0) {
+			show_fields();
+		}
 	}
 
 	$("form.delete").submit (function () {
@@ -739,7 +754,14 @@ $(document).ready (function () {
 
 function show_fields() {
 
-	id_object_type = $("#id_object_type").val();
+	only_read = 0;
+	
+	if ($("#text-show_object_hidden").val() == 1) { //users with only read permissions
+		only_read = 1;
+		id_object_type = $("#text-id_object_type_hidden").val();
+	} else { //users with write permissions
+		id_object_type = $("#id_object_type").val();
+	}
 
 	id_inventory = $("#text-id_object_hidden").val();
 
@@ -794,6 +816,10 @@ function show_fields() {
 					element.style.width="170px";
 					element.class="type";
 					
+					if (only_read) {
+						element.disabled = true;
+					}
+					
 					var new_text = value['combo_value'].split(',');
 					jQuery.each (new_text, function (id, val) {
 						element.options[id] = new Option(val);
@@ -843,6 +869,10 @@ function show_fields() {
 					} else if (value['type'] == 'numeric') {
 						element.type='number';
 					} 
+					
+					if (only_read) {
+						element.disabled = true;
+					}
 					
 					element.size=40;
 					lbl.appendChild(element);
@@ -953,6 +983,10 @@ function show_fields() {
 					element.value=value['data'];
 					element.type='text';
 					element.rows='3';
+					
+					if (only_read) {
+						element.disabled = true;
+					}
 					
 					lbl.appendChild(element);
 					i++;
