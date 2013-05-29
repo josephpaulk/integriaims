@@ -337,13 +337,15 @@ if ($id || $new_contact) {
 		print_table ($table);
 	}
 }	
-	if($manager) {
-		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail">';
-		echo '<div class="button" style="width: '.$table->width.'">';
-		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-		print_input_hidden ('new_contact', 1);
-		echo '</div>';
-		echo '</form>';
-	}
+
+//Show create button only when contact list is displayed
+if($manager && !$id && !$new_contact) {
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail">';
+	echo '<div class="button" style="width: '.$table->width.'">';
+	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+	print_input_hidden ('new_contact', 1);
+	echo '</div>';
+	echo '</form>';
 }
+
 ?>
