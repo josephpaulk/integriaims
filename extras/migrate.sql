@@ -266,6 +266,7 @@ CREATE TABLE `tinventory_track` (
 /* 20/05/2013 */
 ALTER TABLE tinventory ADD `show_list` TINYINT(1) unsigned DEFAULT 1;
 
+ALTER TABLE tobject_type_field ADD `show_list` TINYINT(1) unsigned DEFAULT 1;
 /* 21/05/2013 */
 INSERT INTO tobject_type (name, description, icon) VALUES 
 ('Pandora agents', 'Imported agents from Pandora FMS', 'pandora.png');
