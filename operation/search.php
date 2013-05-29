@@ -319,6 +319,45 @@ if (give_acl($config["id_user"], 0, "VR") && $show_customers != MENU_HIDDEN ){
 	}
 }
 
+// Leads
+if (give_acl($config["id_user"], 0, "VR") && $show_customers != MENU_HIDDEN ){
+
+        $sql = "SELECT * FROM tlead WHERE fullname LIKE '%".$search_string."%'
+		OR email LIKE '%".$search_string."%'
+                OR company LIKE '%".$search_string."%'";
+        $companies = get_db_all_rows_sql ($sql);
+
+        if ($companies !== false) {
+
+                echo "<h3>";
+                echo __("Leads");
+                echo "</h3>";
+
+                $table->width = '80%';
+                $table->class = 'listing';
+                $table->data = array ();
+                $table->size = array ();
+                $table->style = array ();
+                $table->head = array();
+                $table->head[0] = __('Name');
+		$table->head[1] = __('Email');
+                $table->head[1] = __('Company');
+
+                foreach ($companies as $company) {
+                        $data = array ();
+
+                        $data[0] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".$company["id"]."'>" .
+                        $company["fullname"]. "</a>";
+                        $data[1] = $company["email"];
+			$data[1] = $company["company"];
+
+                        array_push ($table->data, $data);
+                }
+                print_table ($table);
+        }
+}
+
+
 // Wiki search
 if (give_acl ($config['id_user'], $id_grupo, "WR")) {
 
