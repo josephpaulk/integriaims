@@ -1185,7 +1185,7 @@ function loadInventory(id_inventory) {
 
 function removeInventory() {
 
-	s= $("#incident_inventories").attr ("selectedIndex");
+	s= $("#incident_inventories").prop ("selectedIndex");
 
 	selected_id = $("#incident_inventories").children (":eq("+s+")").attr ("value");
 	$("#incident_inventories").children (":eq("+s+")").remove ();

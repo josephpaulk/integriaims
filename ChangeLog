@@ -1,5 +1,11 @@
 2013-05-29  Vanessa Gil <vanessa.gil@artica.es>
 
+	* operation/inventories/inventory_detail.php
+	  operation/incidents/incident_detail.php: Changed 'attr' for
+	'prop' in remove functions.
+
+2013-05-29  Vanessa Gil <vanessa.gil@artica.es>
+
 	* operation/inventories/inventory_detail.php: Fixed bug in link
 	to parent object.
 

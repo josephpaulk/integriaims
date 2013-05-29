@@ -1173,7 +1173,7 @@ function loadCompany() {
 
 function removeCompany() {
 
-	s= $("#inventory_companies").attr ("selectedIndex");
+	s= $("#inventory_companies").prop ("selectedIndex");
 
 	selected_id = $("#inventory_companies").children (":eq("+s+")").attr ("value");
 
@@ -1233,7 +1233,7 @@ function loadUser() {
 
 function removeUser() {
 
-	s= $("#inventory_users").attr ("selectedIndex");
+	s= $("#inventory_users").prop ("selectedIndex");
 
 	selected_id = $("#inventory_users").children (":eq("+s+")").attr ("value");
 
