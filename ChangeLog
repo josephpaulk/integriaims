@@ -1,3 +1,8 @@
+2013-05-29  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/leads/lead_detail: Fixed a bug on duplicates validation of
+	name and email.
+
 2013-05-29  Vanessa Gil <vanessa.gil@artica.es>
 
 	* operation/inventories/inventory_detail.php: Fixed bug: show

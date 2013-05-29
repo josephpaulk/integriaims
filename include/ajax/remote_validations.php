@@ -474,7 +474,7 @@ if ($search_existing_project) {
 	$lead_id = get_parameter ('lead_id', 0);
 	$old_lead_name = -1;
 	
-	if ($contract_id) {
+	if ($lead_id) {
 		$old_lead_name = get_db_value("fullname",
 			"tlead", "id", $lead_id);
 	}
@@ -499,7 +499,7 @@ if ($search_existing_project) {
 	$lead_id = get_parameter ('lead_id', 0);
 	$old_lead_email = -1;
 	
-	if ($contract_id) {
+	if ($lead_id) {
 		$old_lead_email = get_db_value("email",
 			"tlead", "id", $lead_id);
 	}
