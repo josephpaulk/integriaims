@@ -22,25 +22,6 @@ require_once ('include/functions_user.php');
 
 $id = (int) get_parameter ('id');
 
-$is_enterprise = false;
-
-if (file_exists ("enterprise/include/functions_inventory.php")) {
-	require_once ("enterprise/include/functions_inventory.php");
-	$is_enterprise = true;
-}
-
-$write_permission = true;
-
-if ($is_enterprise) {
-	$read_permission = inventory_check_acl($config['id_user'], $id);
-	$write_permission = inventory_check_acl($config['id_user'], $id, true);
-	
-	if (!$read_permission) {
-		include ("general/noaccess.php");
-		exit;
-	}
-}
-
 if (defined ('AJAX')) {
 	
 	global $config;
@@ -98,6 +79,26 @@ if (defined ('AJAX')) {
 		return;
 	}
 }
+
+$is_enterprise = false;
+
+if (file_exists ("enterprise/include/functions_inventory.php")) {
+	require_once ("enterprise/include/functions_inventory.php");
+	$is_enterprise = true;
+}
+
+$write_permission = true;
+
+if ($is_enterprise) {
+	$read_permission = inventory_check_acl($config['id_user'], $id);
+	$write_permission = inventory_check_acl($config['id_user'], $id, true);
+	
+	if (!$read_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
+}
+
 
 $inventory_name = get_db_value('name', 'tinventory', 'id', $id);
 

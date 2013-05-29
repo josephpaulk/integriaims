@@ -1,3 +1,8 @@
+2013-05-29  Vanessa Gil <vanessa.gil@artica.es>
+
+	* operation/inventories/inventory_detail.php: Fixed bug: show
+	custom fields when user only has read permissions.
+
 2013-05-29  Sancho Lerena <slerena@artica.es>
 
 	* godmode/setup/setup_mail.php: Added a few hints on server setup.
