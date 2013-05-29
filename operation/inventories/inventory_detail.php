@@ -507,7 +507,7 @@ if ($write_permission) {
 	
 	$table->data[1][0] = print_input_text ('parent_name', $parent_name,'', 7, 0, true, __('Parent object'), false);	
 	if ($id_parent)
-		$table->data[1][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$id_parent.'"><img src="images/go.png" /></a>';
+		$table->data[1][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$id_parent.'"><img src="images/go.png" /></a>';
 		
 	$table->data[1][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".'&nbsp;&nbsp;'.__('Search parent')."</a>";
 	
@@ -518,7 +518,7 @@ if ($write_permission) {
 	
 	$table->data[1][0] = print_label (__('Parent object'), '', '', true, $parent_name);
 	if ($id_parent)
-		$table->data[1][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory&id='.$id_parent.'"><img src="images/go.png" /></a>';
+		$table->data[1][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$id_parent.'"><img src="images/go.png" /></a>';
 }
 
 $contracts = get_contracts ();
