@@ -1,3 +1,13 @@
+2013-05-29  Sancho Lerena <slerena@artica.es>
+
+	* godmode/setup/setup_mail.php: Added a few hints on server setup.
+
+	* godmode/usuarios/lista_usuarios.php: Fixed a SQL search syntax.
+
+	* include/integria_cron.php: Fixed bad call to imap connect method.
+
+	* include/functions_pop3.php: Fixed SQL insertion to create incident.
+
 2013-05-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_inventory: Added a function that check if a value

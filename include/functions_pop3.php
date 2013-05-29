@@ -55,8 +55,12 @@ function incident_limits_reached ($id_group, $id_user) {
 }
 
 function create_incident_bymail ($user_mail, $title, $description) {
+
 	//Get some important variables	
 	$id_creator = get_db_value("id_usuario", "tusuario", "direccion", $user_mail);
+
+	// get the FIRST group for that user. If that user have several, it's impossible to
+	// decide what use is it.
 	
 	$group_id = get_db_value ("id_grupo", "tusuario_perfil", "id_usuario", $id_creator);
 
@@ -106,13 +110,13 @@ function create_incident_bymail ($user_mail, $title, $description) {
 			(inicio, actualizacion, titulo, descripcion,
 			id_usuario, estado, prioridad,
 			id_grupo, id_creator, notify_email, id_task,
-			resolution, id_incident_type, id_parent, sla_disabled, email_copy)
-			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, %d,
-			"%s", %d, %d, %d, %d, %s, %d, "%s")', $timestamp, $timestamp,
+			resolution, id_incident_type, id_parent, sla_disabled)
+			VALUES ("%s", "%s", "%s", "%s", "%s", %d, %d, %d, 
+			"%s", %d, %d, %d, %d, %s, %d )', $timestamp, $timestamp,
 			$title, $description, $id_user_responsible,
 			$estado, $priority, $group_id, $id_creator,
 			$email_notify, $id_task, $resolution, $id_incident_type,
-			$id_parent, $sla_disabled, $email_copy);
+			$id_parent, $sla_disabled);
 			
 	$id = process_sql ($sql, 'insert_id');
 

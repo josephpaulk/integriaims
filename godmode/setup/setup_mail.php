@@ -100,7 +100,7 @@ $table->colspan[3][0] = 2;
 $table->data[3][1] = "<h4>".__("SMTP Parameters"). integria_help ("mailsetup", true). "</h4>";
 
 $table->data[4][0] = print_input_text ("smtp_host", $config["smtp_host"],
-	'', 15, 30, true, __('SMTP Host'));
+	'', 25, 30, true, __('SMTP Host'));
 
 $table->data[4][0] .= print_help_tip (__("Left it blank if you want to use your local mail, instead an external SMTP host"), true);
 
@@ -118,10 +118,15 @@ $table->colspan[6][0] = 2;
 $table->data[6][1] = "<h4>".__("POP3 Parameters")."</h4>";
 
 $table->data[7][0] = print_input_text ("pop_host", $config["pop_host"],
-	'', 15, 30, true, __('POP3 Host'));
+	'', 25, 30, true, __('POP3 Host'));
+
+$table->data[7][0] .= print_help_tip (__("Use ssl://host.domain.com if want to use POP3 with SSL"), true);
+
 
 $table->data[7][1] = print_input_text ("pop_port", $config["pop_port"],
 	'', 15, 30, true, __('POP3 Port'));	
+
+$table->data[7][1] .= print_help_tip (__("993 for SSL, 110 for unencrypted standard port"), true);
 
 $table->data[8][0] = print_input_text ("pop_user", $config["pop_user"],
 	'', 15, 30, true, __('POP3 User'));

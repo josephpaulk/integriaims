@@ -810,7 +810,7 @@ function run_mail_check () {
 	$login            = $config["pop_user"];
 	$pass             = $config["pop_pass"];
 	$server           = $config["pop_host"];
-	$port			  = $config["pop_port"];
+	$port      	  = $config["pop_port"];
 
     # Check if POP3 server is defined, if not, abort
     if ($server == ""){
@@ -824,7 +824,7 @@ function run_mail_check () {
     //Convert connection string to use SSL encryption
     if ( $ssl_str == "ssl://") {
 		$server = substr($server, 6);
-		$subfix = "pop3/ssl";
+		$subfix = "ssl/novalidate-cert";
 	}
 	
     if ($port) {
@@ -835,8 +835,8 @@ function run_mail_check () {
 	
 	set_time_limit($timeout);
 
-	//Set open timeout to 10 seconds
-	imap_timeout(IMAP_OPENTIMEOUT, 10);
+	//Set open timeout to 30 seconds
+	imap_timeout(IMAP_OPENTIMEOUT, 30);
 
 	//Open mail connection
 	$mail = imap_open("{".$server.$port."/".$subfix."}", $login, $pass, NIL, 3);	
@@ -846,7 +846,9 @@ function run_mail_check () {
 	
 	$i = $last;
 	for ($i; $i>0; $i--) {
-		
+	
+echo "DEBUG: Navegando por los mails...\n";
+	
 		$struct = imap_fetchstructure($mail, $i);
 		
 		$encoding = $struct->{'encoding'};
