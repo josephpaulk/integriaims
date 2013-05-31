@@ -604,7 +604,6 @@ CREATE TABLE `tinventory` (
   `id_contract` mediumint(8) unsigned default NULL,
   `id_manufacturer` mediumint(8) unsigned default NULL,
   `id_parent` mediumint(8) unsigned default NULL,
-  `show_list` TINYINT(1) unsigned DEFAULT 1,
   PRIMARY KEY  (`id`),
   KEY `tinv_idx_1` (`id_contract`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -913,6 +912,7 @@ CREATE TABLE `tobject_type_field` (
   `external_reference_field` text default null,
   `unique` int(1) default 0,
   `inherit` int(1) default 0,
+  `show_list` TINYINT(1) unsigned DEFAULT 1,
   PRIMARY KEY  (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
