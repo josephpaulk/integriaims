@@ -20,10 +20,14 @@ class AsyncUpload
 	    {
 	    	$flag =($_GET['start']==0) ? 0:FILE_APPEND;
 	    	$file_part=file_get_contents('php://input');//REMEMBER php::/input can be read only one in the same script execution, so better mem it in a var
-	    	while(@file_put_contents($remotePath.$add.$file_name, $file_part,$flag)===FALSE)//strange bug
-	    	{
-	    		usleep(50);
-	    	}
+	    	
+	    	//Delete aux file if exists to avoid problems with file_put_contents function
+	    	if (file_exists($remotePath.$add.$file_name)) {
+				@unlink($remotePath.$add.$file_name);
+			}
+			
+			@file_put_contents($remotePath.$add.$file_name, $file_part,$flag);
+				
 	        return true;
 	    }
 	    return $file_info['extension'].' extension not allowed to upload!';
