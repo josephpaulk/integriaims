@@ -1649,6 +1649,21 @@ function incidents_get_incident_resolution_text ($id) {
 	return $name;	
 }
 
+function incident_create_attachment ($id_incident, $user, $filename, $path, $description) {
+	
+	$filesize = filesize($path); // In bytes
+	$now = date ("Y-m-d H:i:s", time());
+	
+	$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
+			filename, description, size, `timestamp`)
+			VALUES (%d, "%s", "%s", "%s", %d, "%s")',
+			$id_incident, $user, $filename, $description, $filesize, $now);
+	
+	$id = process_sql ($sql, 'insert_id');
+	
+	return $id;
+}
+
 function incidents_get_incident_type_text ($id) {
 	$type = get_db_value ('id_incident_type', 'tincidencia', 'id_incidencia', $id);
 	

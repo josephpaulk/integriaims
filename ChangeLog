@@ -1,5 +1,14 @@
 2013-06-04  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_config.php: Added attachment_store variable.
+	* include/functions_incidents.php: New function incident_create_attachment.
+	* include/functions_pop3.php: Fixed some problems with enconding and
+	feature to add files on new incidents by email.
+	* include/integria_cron.php: Support to gather attachment of new emails.
+	* godmode/setup/setup_mail.php: Change POP letterbox to IMAP.
+
+2013-06-04  Dario Rodriguez <dario@artica.es>
+
 	* include/file_uploader.php: Fixed a bug trying to upload files
 	because it raises an error if there is a file with the same
 	name in the folder.

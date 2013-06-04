@@ -54,10 +54,7 @@ function incident_limits_reached ($id_group, $id_user) {
 	}
 }
 
-function create_incident_bymail ($user_mail, $title, $description) {
-
-	//Get some important variables	
-	$id_creator = get_db_value("id_usuario", "tusuario", "direccion", $user_mail);
+function create_incident_bymail ($id_creator, $title, $description) {
 
 	// get the FIRST group for that user. If that user have several, it's impossible to
 	// decide what use is it.
@@ -119,7 +116,7 @@ function create_incident_bymail ($user_mail, $title, $description) {
 			$id_parent, $sla_disabled);
 			
 	$id = process_sql ($sql, 'insert_id');
-
+	
 	if ($id !== false) {
 		// Update inventory objects in incident
 		update_incident_inventories ($id, array($id_inventory));
@@ -137,14 +134,57 @@ function create_incident_bymail ($user_mail, $title, $description) {
 			mail_incident ($id, $usuario, "", 0, 1);
 		}
 	}
+	
+	return $id;
+}
+
+//Decodes body content
+function pop3_decode_body($body, $encoding) {
+	//Check encoding and decode body
+	switch ($encoding) {
+		case 0: //7 bits		
+			$body = imap_qprint($body);
+			break;
+			
+		case 1: //8bit
+			//From 8bit to Quoted
+			$body = imap_8bit($body);
+
+			//From quoted to text
+			$body = imap_qprint($body);
+
+			break;
+			
+		case 2: //Binary
+			//From 8 bit binary to BASE64
+			$body = imap_8bit($body);
+
+			//From BASE64 a text
+			$body = imap_base64($body);
+			break;
+			
+		case 3: //Base 64
+			$body = imap_base64($body);
+			break;
+			
+		case 4: //Quoted-printable
+			$body = imap_qprint($body);
+			break;
+			
+		case 5: //Other
+			break;
+						
+	}
+	
+	return $body;
 }
 
 // **************************************************************
 //  message_parse : Do the Integria processing POP mail
 // **************************************************************
-function message_parse ($subject, $body, $from) {
+function message_parse ($subject, $body, $from, $attachments) {
 	global $config;
-	
+		
 	$matches = array();
 	// Get the TicketID code, for example: [TicketID#2/bfd5d] 
 	if (preg_match("/TicketID\#([0-9]+)\/([a-z0-9]+)\/([a-zA-Z0-9]+)/", $subject, $matches)){
@@ -155,19 +195,34 @@ function message_parse ($subject, $body, $from) {
 			// echo "TICKET ID #$ticket_id VALIDATED !!<br>";
 			
 			create_workunit ($ticket_id, $body, $user, 0,  0, "", 1);
+			
+			
+			//Add attachments
+			foreach ($attachments as $at) {
+				
+				incident_create_attachment ($ticket_id, $user, $at, __("File attached to an email"));
+				incident_tracking ($ticket_id, INCIDENT_FILE_ADDED);	
+			}
 		}
 	}
 
-	// Get the NEW ticket subject, for example: [NEW/My Group] Ticket title	
-	if (preg_match("/NEW (.+)/", $subject, $matches)) { 
-		
-		create_incident_bymail ($from, $matches[1], $body);
-	}
+	//All emails that didn't match the conditions above will create a new incident
+	$id_creator = get_db_value("id_usuario", "tusuario", "direccion", $from);
 	
-	$result = array();
-	$result["subject"] = $subject;
-	$result["body"] = $body;
-	return ($result);
+	//Check there is an user with this mail associated
+	if ($id_creator) {
+		$ticket_id = create_incident_bymail ($id_creator, $subject, $body);
+		
+		foreach ($attachments as $at) {
+			$name = $at[0];
+			$path = $at[1];
+			
+			$attach_id = incident_create_attachment ($ticket_id, $id_creator, $name, $path, __("This file was attached to an email"));
+			
+			rename($path, $config["attachment_store"]."/".$attach_id."_".$name);
+			incident_tracking ($ticket_id , INCIDENT_FILE_ADDED);	
+		}
+	}
 } 
 
 ?>

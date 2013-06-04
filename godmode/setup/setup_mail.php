@@ -115,24 +115,24 @@ $table->data[5][1] = print_input_text_extended ("smtp_pass", $config["smtp_pass"
 				'', '', 15, 30, false, false, false, true, true, __('SMTP Password'));
 
 $table->colspan[6][0] = 2;
-$table->data[6][1] = "<h4>".__("POP3 Parameters")."</h4>";
+$table->data[6][1] = "<h4>".__("IMAP Parameters")."</h4>";
 
 $table->data[7][0] = print_input_text ("pop_host", $config["pop_host"],
-	'', 25, 30, true, __('POP3 Host'));
+	'', 25, 30, true, __('IMAP Host'));
 
-$table->data[7][0] .= print_help_tip (__("Use ssl://host.domain.com if want to use POP3 with SSL"), true);
+$table->data[7][0] .= print_help_tip (__("Use ssl://host.domain.com if want to use IMAP with SSL"), true);
 
 
 $table->data[7][1] = print_input_text ("pop_port", $config["pop_port"],
-	'', 15, 30, true, __('POP3 Port'));	
+	'', 15, 30, true, __('IMAP Port'));	
 
 $table->data[7][1] .= print_help_tip (__("993 for SSL, 110 for unencrypted standard port"), true);
 
 $table->data[8][0] = print_input_text ("pop_user", $config["pop_user"],
-	'', 15, 30, true, __('POP3 User'));
+	'', 15, 30, true, __('IMAP User'));
 
 $table->data[8][1] = print_input_text_extended ("pop_pass", $config["pop_pass"], 
-				'', '', 15, 30, false, false, false, true, true, __('POP3 Password'));
+				'', '', 15, 30, false, false, false, true, true, __('IMAP Password'));
 				
 $table->data[9][1] = "<h4>".__("Mail general texts")."</h4>";
 

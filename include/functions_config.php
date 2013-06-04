@@ -219,6 +219,10 @@ function load_config(){
 	if (!isset ($config["working_weekends"])){
 		$config["working_weekends"] = 0;
 	}
+	
+	if (!isset ($config['attachment_store'])) {
+		$config['attachment_store'] = $config['homedir'].'attachment';
+	}	
 		
     ini_set("post_max_size",$config["max_file_size"]);
     ini_set("upload_max_filesize",$config["max_file_size"]);

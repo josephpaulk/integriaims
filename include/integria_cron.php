@@ -782,7 +782,6 @@ function run_newsletter_queue () {
 	
 }
 
-
 // This will check POP3 pending mail
 
 function run_mail_check () {
@@ -844,60 +843,77 @@ function run_mail_check () {
 	//Walk the mailbox from last mail to the first
 	$last = imap_num_msg($mail);
 	
+	
 	$i = $last;
 	for ($i; $i>0; $i--) {
 	
 		$struct = imap_fetchstructure($mail, $i);
 		
-		$encoding = $struct->{'encoding'};
-	 
+		//Parse header
 		$header = imap_header($mail, $i); 	
 	
 		$subject = imap_utf8($header->{'subject'});
 				
-		$from = $header->{'from'}[0]->{'mailbox'}."@".$header->{'from'}[0]->{'host'};
-		$body = (imap_fetchbody ($mail, $i, 1));
-				
-		//Check encoding and decode body
-		switch ($encoding) {
-			case 0: //7 bits		
-				$body = quoted_printable_decode($body);
-				break;
-				
-			case 1: //8bit
-				//From 8bit to Quoted
-				$body = imap_8bit($body);
-	
-				//From quoted to text
-				$body = quoted_printable_decode($body);
-
-				break;
-				
-			case 2: //Binary
-				//From 8 bit binary to BASE64
-				$body = imap_8bit($body);
-
-				//From BASE64 a text
-				$body = imap_base64($body);
-				break;
-				
-			case 3: //Base 64
-				$body = imap_base64($body);
-				break;
-				
-			case 4: //Quoted-printable
-				$body = quoted_printable_decode($body);
-				break;
-				
-			case 5: //Other
-				break;
-							
+		$from = $header->{'from'}[0]->{'mailbox'}."@".$header->{'from'}[0]->{'host'};		
+		
+		//Parse body
+		$body_struct = imap_bodystruct ($mail , $i , 1);
+		
+		$encoding = $body_struct->{"encoding"};
+		
+		//"1.1" is very important to get only plain text part of email
+		//first try to get email body on plain text
+		$body = imap_fetchbody ($mail, $i, "1.1");
+		
+		if (!$body) {
+			//if there is no plain just text get email body
+			$body = imap_fetchbody ($mail, $i, "1");	
 		}
 		
-		$body = utf8_encode($body);
+		$body = pop3_decode_body($body, $encoding);		
+		
+		//Msg are stored with entities :)
+		$body = safe_input($body);		
+		
+		//Process attachment to create files in existings or new tickets
+		$email_parts = $struct->parts;
+		$num_parts = count($email_parts);
+		$attachments = array();
+		
+		$mail_section = 2;
+		for($p = 0; $p < $num_parts; $p++) {
+		
+			$part = $email_parts[$p];
+			
+			if($part->disposition == "ATTACHMENT") {
+				$type = $part->type;
+				$filename = $part->dparameters[0]->value;
+				$data = imap_fetchbody ($mail, $i, $p+1);
+				
+				$rnd = time();
+				
+				$dst_path = $config["attachment_store"]."/".$rnd."_".$filename;
+				
+				$fp = fopen($dst_path, 'w');
+				
+				if (!$fp) {
+					integria_logwrite ("There was a problem creating file ".$dst_path.". Ensure permissions are fine");
+				}
+				
+                $data = imap_base64($data);
 
-		//Parse message	
-		message_parse($subject, $body, $from);
+                fputs($fp, $data);
+				
+                fclose($fp);
+                
+                array_push($attachments, array($filename, $dst_path));
+			}
+			
+			$mail_section++;
+		}
+		
+		//Parse message
+		message_parse($subject, $body, $from, $attachments);
 
 		// Deleted processed message
 		imap_delete ($mail, $i);
