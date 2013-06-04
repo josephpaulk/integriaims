@@ -349,3 +349,57 @@ if($manager && !$id && !$new_contact) {
 }
 
 ?>
+
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+
+<script type="text/javascript">
+
+// Form validation
+trim_element_on_submit('#text-search_text');
+trim_element_on_submit('#text-fullname');
+trim_element_on_submit('#text-email');
+validate_form("#contact_form");
+var rules, messages;
+// Rules: #text-fullname
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_contact: 1,
+			contact_name: function() { return $('#text-fullname').val() },
+			contact_id: "<?php echo $id?>"
+        }
+	}
+};
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This contact already exists')?>"
+};
+add_validate_form_element_rules('#text-fullname', rules, messages);
+// Rules: #text-email
+rules = {
+	required: true,
+	email: true,
+	remote: {
+		url: "ajax.php",
+        type: "POST",
+        data: {
+			page: "include/ajax/remote_validations",
+			search_existing_contact_email: 1,
+			contact_email: function() { return $('#text-email').val() },
+			contact_id: "<?php echo $id?>"
+        }
+	}
+};
+messages = {
+	required: "<?php echo __('Email required')?>",
+	email: "<?php echo __('Invalid email')?>",
+	remote: "<?php echo __('This contact email already exists')?>"
+};
+add_validate_form_element_rules('#text-email', rules, messages);
+
+</script>

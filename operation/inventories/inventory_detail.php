@@ -34,7 +34,7 @@ if (defined ('AJAX')) {
  	
  	if ($show_type_fields) {
 		$id_object_type = get_parameter('id_object_type');
-		$id_inventory = get_parameter('id_inventory');		
+		$id_inventory = get_parameter('id_inventory');
 		$fields = inventories_get_all_type_field ($id_object_type, $id_inventory);
 	
 		echo json_encode($fields);

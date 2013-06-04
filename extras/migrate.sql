@@ -278,3 +278,9 @@ INSERT INTO tobject_type_field (id, id_object_type, label, type) VALUES
 (3,1,'URL Address','text'),
 (4,1,'ID Agent','text');
 
+/*  30/05/2013 */
+CREATE TABLE `tkb_product_group` (
+  `id_product` mediumint(8) unsigned NOT NULL,
+  `id_group` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (id_product, id_group)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

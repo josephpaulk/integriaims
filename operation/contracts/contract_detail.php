@@ -452,6 +452,36 @@ $(document).ready (function () {
 		}
 	});
 	
+	$("#text-search_date_begin_beginning").datepicker ({
+		beforeShow: function () {
+			return {
+				maxDate: $("#text-search_date_begin").datepicker ("getDate")
+			};
+		}
+	});
+	$("#text-search_date_begin").datepicker ({
+		beforeShow: function () {
+			return {
+				minDate: $("#text-search_date_begin_beginning").datepicker ("getDate")
+			};
+		}
+	});
+	
+	$("#text-search_date_end_beginning").datepicker ({
+		beforeShow: function () {
+			return {
+				maxDate: $("#text-search_date_end").datepicker ("getDate")
+			};
+		}
+	});
+	$("#text-search_date_end").datepicker ({
+		beforeShow: function () {
+			return {
+				minDate: $("#text-search_date_end_beginning").datepicker ("getDate")
+			};
+		}
+	});
+	
 	$("#id_group").change (function() {
 	
 		refresh_company_combo();

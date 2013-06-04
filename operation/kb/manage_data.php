@@ -18,14 +18,13 @@ global $config;
 
 check_login();
 
-if (give_acl($config["id_user"], 0, "KM")==0) {
+if (give_acl($config["id_user"], 0, "KW")==0) {
 	audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access KB Management");
 	require ("general/noaccess.php");
 	exit;
 }
 
 $id_user = $config["id_user"];
-
 
 // Database Creation
 // ==================
@@ -56,7 +55,14 @@ if (isset($_GET["delete_attach"])){
 	$id_attachment = get_parameter ("delete_attach", 0);
 	$id_kb = get_parameter ("update", 0);
 	$attach_row = get_db_row ("tattachment", "id_attachment", $id_attachment);
-	$nombre_archivo = $config["homedir"]."attachment/".$id_attachment."_".$attach_row["filename"];	
+	$nombre_archivo = $config["homedir"]."attachment/".$id_attachment."_".$attach_row["filename"];
+	
+	if ($id_kb && ! check_kb_item_accesibility($id_user, $id_kb)) {
+		audit_db ($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to KB forbidden item");
+		require ("general/noaccess.php");
+		exit;
+	}
+	
 	$sql = " DELETE FROM tattachment WHERE id_attachment =".$id_attachment;
 	mysql_query($sql);
 	unlink ($nombre_archivo);
@@ -76,6 +82,12 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	$id_category = get_parameter ("category","");
 	$id_user = $config["id_user"];
 	$id_language = get_parameter ("id_language", "");
+	
+	if ($id != "" && ! check_kb_item_accessibility($id_user, $id)) {
+		audit_db ($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to KB forbidden item");
+		require ("general/noaccess.php");
+		exit;
+	}
 
 	$sql_update ="UPDATE tkb_data
 	SET title = '$title', data = '$data', id_language = '$id_language', timestamp = '$timestamp', id_user = '$id_user',
@@ -124,6 +136,12 @@ if (isset($_GET["update2"])){ // if modified any parameter
 if (isset($_GET["delete_data"])){ // if delete
 	$id = get_parameter ("delete_data",0);
 	$kb_title = get_db_sql ("SELECT title FROM tkb_data WHERE id = $id ");
+	
+	if ($id && ! check_kb_item_accessibility($id_user, $id)) {
+		audit_db ($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to KB forbidden item");
+		require ("general/noaccess.php");
+		exit;
+	}
 
 	$sql_delete= "DELETE FROM tkb_data WHERE id = $id";		
 	$result=mysql_query($sql_delete);
@@ -171,6 +189,12 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id_product = $row["id_product"];
 		$id_language = $row["id_language"];
 		$id_category = $row["id_category"];
+		
+		if ($id != -1 && ! check_kb_item_accessibility($id_user, $id)) {
+			audit_db ($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to KB forbidden item");
+			require ("general/noaccess.php");
+			exit;
+		}
 	}
 
 	echo "<h2>".__('KB Data management')."</h2>";	
@@ -208,7 +232,8 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos2>";
 	echo __('Product');
 	echo "<td class=datos2>";
-	combo_kb_products ($id_product);
+	//combo_kb_products ($id_product);
+	combo_product_types($product, 0);
 
 	echo "<tr>";
 	echo "<td class=datos>";
@@ -271,7 +296,10 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 // =======================
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	echo "<h2>".__('KB Data management')." &raquo; ".__('Defined data')."</h2>";
-	$sql1='SELECT * FROM tkb_data ORDER BY title, id_category, id_product';
+	
+	$condition = get_filter_by_kb_product_accessibility();
+	$sql1='SELECT * FROM tkb_data '.$condition.' ORDER BY title, id_category, id_product';
+	
 	$kb = get_db_all_rows_sql ($sql1);
 	if (sizeof($kb) > 0){
 		echo '<table width="90%" class="listing">';

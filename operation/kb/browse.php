@@ -33,6 +33,7 @@ if (isset($_GET["create2"])){ // Create group
 	    require ("general/noaccess.php");
     	exit;
     }
+    
 	$timestamp = date('Y-m-d H:i:s');
 	$title = get_parameter ("title","Untitled article");
 	$data = get_parameter ("data","");
@@ -83,7 +84,6 @@ if (isset($_GET["update2"])){ // if modified any parameter
 	    require ("general/noaccess.php");
     	exit;
     }
-
 
 	$id = get_parameter ("id","");
 	$timestamp = date('Y-m-d H:i:s');
@@ -140,7 +140,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 // ==================
 if (isset($_GET["delete_data"])){ // if delete
 
-	if (give_acl($config["id_user"], 0, "KM") != 1){
+	if (give_acl($config["id_user"], 0, "KW") != 1){
 		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to delete a KB without privileges");
 	    require ("general/noaccess.php");
     	exit;
@@ -171,13 +171,13 @@ if (isset($_GET["update2"])){
 
 if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	if (isset($_GET["create"])){
-
-	// CREATE form
-	if  (!give_acl($config["id_user"], 0, "KW")) {
-	        return;
-	}
-
-
+		
+		// CREATE form
+		if  (!give_acl($config["id_user"], 0, "KW")) {
+			return;
+		}
+		
+	
 		$data = "";
 		$title = "";
 		$id = -1;
@@ -243,7 +243,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos2>";
 	echo __('Product');
 	echo "<td class=datos2>";
-	combo_kb_products ($id_product);
+	combo_product_types($product, 0);
 
 	echo "<tr>";
 	echo "<td class=datos>";
@@ -325,9 +325,8 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	echo "<td>";
 	echo __('Product types');
 	echo "<td>";
-
-	echo print_select_from_sql ('SELECT id, name FROM tkb_product ORDER BY name', 'product', $product, '', __("Any"), '', true, false, false, '');
-
+	combo_product_types($product, 1);
+	
 	echo "<td>";
 	echo __('Categories');
 	echo "<td>";
@@ -353,7 +352,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	// Search filter processing
 	// ========================
 
-	$sql_filter = "WHERE 1=1 ";
+	$sql_filter = "";
 
 	if ($free_text != "")
 		$sql_filter .= " AND (title LIKE '%$free_text%' OR data LIKE '%$free_text%')";
@@ -366,14 +365,16 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 
 	if ($id_language != '')
 		$sql_filter .= " AND id_language = '$id_language' ";
-
+	
 	$offset = get_parameter ("offset", 0);
-
-	$count = get_db_sql("SELECT COUNT(id) FROM tkb_data $sql_filter");
+	
+	$condition = get_filter_by_kb_product_accessibility();
+	
+	$count = get_db_sql("SELECT COUNT(id) FROM tkb_data $condition $sql_filter");
 	pagination ($count, "index.php?sec=kb&sec2=operation/kb/browse&id_language=$id_language&free_text=$free_text&product=$product&category=$category", $offset);
-
-	$sql1 = "SELECT * FROM tkb_data $sql_filter ORDER BY title, id_category, id_product LIMIT $offset, ". $config["block_size"];
-
+	
+	$sql1 = "SELECT * FROM tkb_data $condition $sql_filter ORDER BY title, id_category, id_product LIMIT $offset, ". $config["block_size"];
+	
 	$color =0;
 	if ($result=mysql_query($sql1)){
 		echo '<table width="100%" class="listing">';
@@ -417,6 +418,9 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 
 		}
 		echo "</table>";
+	} else {
+		$downloads = array();
+		echo "<h3 class='error'>".__('No items found')."</h3>"; 
 	}
 	
 }

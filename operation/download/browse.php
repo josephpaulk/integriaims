@@ -13,7 +13,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
 global $config;
 check_login();
 
@@ -56,10 +55,11 @@ if ($delete_btn){
 if (isset($_GET["create2"])){ // Create group
 
 	if (give_acl($config["id_user"], 0, "KW") != 1){
-		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to crete a new Download file without privileges");
-	    	require ("general/noaccess.php");
-    		exit;
-    	}
+		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to create a new Download file without privileges");
+		require ("general/noaccess.php");
+		exit;
+	}
+	
 	$timestamp = date('Y-m-d H:i:s');
 	$name = get_parameter ("name","");
 
@@ -95,6 +95,15 @@ if (isset($_GET["update2"])){ // if modified any parameter
     }
 
 	$id = get_parameter ("id","");
+	
+		
+	if ($id != "" && ! check_fr_item_accessibility($config["id_user"], $id)) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a File Releases forbidden item");
+		require ("general/noaccess.php");
+		exit;
+	}
+	
+
 	$timestamp = date('Y-m-d H:i:s');
 
 	$name = get_parameter ("name","");
@@ -129,6 +138,13 @@ if (isset($_GET["delete_data"])){ // if delete
 	}
 
 	$id = get_parameter ("delete_data",0);
+	
+	if ($id && ! check_fr_item_accessibility($config["id_user"], $id)) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a File Releases forbidden item");
+		require ("general/noaccess.php");
+		exit;
+	}
+	
 	$download_title = get_db_sql ("SELECT name FROM tdownload WHERE id = $id ");
 	$file_path = get_db_sql ("SELECT location FROM tdownload WHERE id = $id ");
 
@@ -166,6 +182,13 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	} else {
 		$id = get_parameter ("update",-1);
+		
+		if ($id != -1 && ! check_fr_item_accessibility($config["id_user"], $id)) {
+			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a File Releases forbidden item");
+			require ("general/noaccess.php");
+			exit;
+		}
+		
 		$row = get_db_row ("tdownload", "id", $id);
 		$name = $row["name"];
 		$description =$row["description"];
@@ -176,10 +199,10 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$public = $row["public"];
 		$external_id = $row["external_id"];
 	}
-
+	
 	echo "<h1>".__('File releases management')."</h1>";	
 	
-	$current_directory = get_parameter ("directory", "/");
+	$current_directory = $config["homedir"]. "/attachment/downloads";
 
 	// Upload file
 	if (isset($_GET["upload_file"])) {
@@ -202,16 +225,6 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			
 		}
 	}
-
-	// A miminal security check to avoid directory traversal
-	if (preg_match("/\.\./", $current_directory))
-		$current_directory = "images";
-	if (preg_match("/^\//", $current_directory))
-		$current_directory = "images";
-	if (preg_match("/^manager/", $current_directory))
-		$current_directory = "images";
-
-	echo "<br>";
 
 
 
@@ -333,17 +346,17 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-
+	
 	// ==================================================================
 	// Show search controls
 	// ==================================================================
-
+	
 	echo "<h2>".__('Downloads')." &raquo; ".__('Defined data')."</a></h2>";
-
+	
 	// Search parameter 
 	$free_text = get_parameter ("free_text", "");
 	$category = get_parameter ("id_category", 0);
-
+	
 	// Search filters
 	echo '<form method="post">';
 	echo '<table width="90%" class="blank">';
@@ -351,53 +364,43 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	echo "<td>";
 	echo __('Categories');
 	echo "<td>";
-
+	
 	combo_download_categories ($category, 1);
-
+	
 	echo "<tr>";
 	echo "<td>";
 	echo __('Search');
 	echo "<td>";
 	echo "<input type=text name='free_text' size=25 value='$free_text'>";
-
+	
 	echo "<td >";
 	echo "<input type=submit class='sub search' value='".__('Search')."'>";
-
-
+	
+	
 	echo "</td></tr></table></form>";
-
+	
 	// ==================================================================
 	// Download listings
 	// ==================================================================
-
+	
 	$sql_filter = "";
-
+	
 	if ($free_text != "")
-		$sql_filter .= " AND tdownload.name LIKE '%$free_text%' OR tdownload.description LIKE 
+		$sql_filter .= " AND name LIKE '%$free_text%' OR description LIKE 
 	'%$free_text%'";
-
+	
 	if ($category > 0)
-		$sql_filter .= " AND tdownload.id_category = $category ";
-
+		$sql_filter .= " AND id_category = $category ";
+	
 	$offset = get_parameter ("offset", 0);
-
-	$condition = "tdownload, tdownload_category_group, tusuario_perfil 
-	WHERE tusuario_perfil.id_usuario = '".$config["id_user"]."' AND
-	tusuario_perfil.id_grupo = tdownload_category_group.id_group AND
-	tdownload_category_group.id_category = tdownload.id_category $sql_filter ";
-
-	if (dame_admin($config["id_user"]))
-		$condition = " tdownload, tdownload_category_group WHERE tdownload_category_group.id_category = tdownload.id_category $sql_filter";
-
-	$count = get_db_sql("SELECT COUNT(DISTINCT tdownload.id) FROM $condition");
-
+	$condition = get_filter_by_fr_category_accessibility();
+	$count = get_db_sql("SELECT COUNT(id) FROM tdownload $condition $sql_filter");
 	pagination ($count, "index.php?sec=download&sec2=operation/download/browse&id_category=$category&free_text=$free_text", $offset);
-
-	$sql = "SELECT tdownload.* FROM $condition GROUP BY tdownload.id ORDER BY date DESC, name LIMIT
-	$offset, ". $config["block_size"];
-
+	
+	$sql = "SELECT * FROM tdownload $condition $sql_filter ORDER BY date DESC, name LIMIT $offset, ". $config["block_size"];
+	
 	$color =0;
-
+	
 	$downloads = process_sql($sql);
 
 	if($downloads == false) {

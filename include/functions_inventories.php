@@ -700,6 +700,7 @@ function inventories_get_all_type_field ($id_object_type, $id_inventory=false, $
 						$all_fields[$id]['label_enco'] = base64_encode($f);
 					}
 					$all_fields[$id][$key] = safe_output($f);
+					$all_fields[$key]['data'] = "";
 				}
 			}	
 		} else {
@@ -709,6 +710,7 @@ function inventories_get_all_type_field ($id_object_type, $id_inventory=false, $
 					$all_fields[$id]['label_enco'] = base64_encode($f);
 				}
 				$all_fields[$id][$key] = safe_output($f);
+				$all_fields[$key]['data'] = "";
 			}
 		}
 	}

@@ -27,7 +27,7 @@ enterprise_include ('include/functions_db.php');
 
 /**
  * Function to check user permissions in a group.
- * NOT FILLY IMPLEMENTED IN OPENSOURCE version
+ * NOT FULLY IMPLEMENTED IN OPENSOURCE version
  * Please visit http://integriaims.com for more information
 */
 
@@ -75,7 +75,7 @@ function give_acl ($id_user, $id_group, $access) {
 		return false;
 	
 	return true;
-} 
+}
 
 /**
  This function return 1 if target_user is visible for a user (id_user)
@@ -2204,4 +2204,64 @@ function inventory_tracking ($id_inventory, $state, $aditional_data = 0) {
 		$config['id_user'], $id_inventory, $fecha, $state, $aditional_data, $description);
 	return process_sql ($sql, 'insert_id');
 }
+
+
+/**
+ * Function to check if an user can access to a kb item.
+ * NOT ENABLED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+*/
+function check_kb_item_accessibility($id_user, $id_kb) {
+	global $config;
+	
+	$return = enterprise_hook ('check_kb_item_accessibility_extra', array ($id_user, $id_kb));
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	return true;
+}
+
+/**
+ * Function to get the where clause for tkb_data to filter results
+ * by kb product accessibility.
+ * NOT FULLY IMPLEMENTED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+*/
+function get_filter_by_kb_product_accessibility() {
+	global $config;
+	
+	$return = enterprise_hook ('get_filter_by_kb_product_accessibility_extra');
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	return "WHERE 1=1";
+}
+
+/**
+ * Function to check if an user can access to a fr item.
+ * NOT ENABLED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+*/
+function check_fr_item_accessibility($id_user, $id_fr) {
+	global $config;
+	
+	$return = enterprise_hook ('check_fr_item_accessibility_extra', array ($id_user, $id_fr));
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	return true;
+}
+
+/**
+ * Function to get the where clause for tdownload to filter results
+ * by fr category accessibility.
+ * NOT FULLY IMPLEMENTED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+*/
+function get_filter_by_fr_category_accessibility() {
+	global $config;
+	
+	$return = enterprise_hook ('get_filter_by_fr_category_accessibility_extra');
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	return "WHERE 1=1";
+}
+
 ?>

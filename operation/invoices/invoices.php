@@ -239,9 +239,9 @@ if ($operation_invoices == ""){
 
 	$table->data[8][0] = __('Invoice effective payment date');
 	$table->data[8][1] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true);
-
+	
 	$into_form = print_table ($table, true);
-
+		
 	$into_form .= '<div class="button" style="width: '.$table->width.'">';
 	if ($id_invoice == -1) {
 		$into_form .= print_button (__('Add'), "crt", false, '', 'class="sub next"', true);
@@ -256,10 +256,10 @@ if ($operation_invoices == ""){
 	
 	$into_form .= print_input_hidden ('id', $id, true);
 	
-	$into_form .= "</div>";	
+	$into_form .= "</div>";
 	
 	print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', $button_name, false, '__UPLOAD_CONTROL__');
-
+	
 	echo "</div>";
 	
 }
@@ -300,7 +300,8 @@ $("#text-invoice_payment_date").datepicker ({
 
 // Form validation
 trim_element_on_submit('#text-bill_id');
-validate_form("#form-new_project");
+/*
+validate_form("#form-add-file");
 var rules, messages;
 // Rules: #text-bill_id
 rules = {
@@ -310,16 +311,20 @@ rules = {
         type: "POST",
         data: {
           page: "include/ajax/remote_validations",
-          search_existing_name: 1,
-          project_name: function() { return $('#text-bill_id').val() },
-          project_id: <?php echo $id; ?>
+          search_existing_invoice: 1,
+          bill_id: function() { return $('#text-bill_id').val() },
+          invoice_id: <?php echo $id_invoice; ?>
         }
 	}
 };
 messages = {
-	required: "<?php echo __('Name required'); ?>",
-	remote: "<?php echo __('This project already exists'); ?>"
+	required: "<?php echo __('Bill ID required'); ?>",
+	remote: "<?php echo __('This bill ID already exists'); ?>"
 };
 add_validate_form_element_rules('#text-bill_id', rules, messages);
-
+// Rules: #text-ammount
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('#text-ammount', rules, messages);
+*/
 </script>

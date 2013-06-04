@@ -29,6 +29,13 @@ if (! isset ($_GET["view"])) {
 }
 
 $id = (int) get_parameter ('view');
+
+if ($id && ! check_kb_item_accessibility($config["id_user"], $id)) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to KB forbidden item");
+	require ("general/noaccess.php");
+	exit;
+}
+
 $kb_data = get_db_row ("tkb_data", "id", $id);
 $data = $kb_data["data"];
 $title = $kb_data["title"];
@@ -83,7 +90,7 @@ echo $category;
 
 
 echo "<td align=right>";
-if (give_acl ($config["id_user"], 0, "KM")){
+if (give_acl ($config["id_user"], 0, "KW")){
 	echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_data&update=".$kb_data['id']."'><img border=0 title='".__('Edit')."' src='images/page_white_text.png'></a>";
 }
 
@@ -101,7 +108,7 @@ echo "</div>";
 
 // Show list of attachments
 $attachments = get_db_all_rows_field_filter ('tattachment', 'id_kb', $id, 'description');
-if ($attachments !== false) {
+if ($attachments !== false && $id) {
 	echo '<h3>'.__('Attachment list').'</h3>';
 	
 	$table->width = '735';

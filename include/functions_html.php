@@ -392,7 +392,7 @@ function print_input_file_progress($form_action, $into_form = '', $attr = '', $e
 	
 	$control_layer = "<div class='upfile'></div>";
 	
-	// If no control macro defined, we put the upload control fist of all
+	// If no control macro defined, we put the upload control first of all
 	if($control_macro === false) {
 		// Layer to the input control through jquery
 		$output .= $control_layer;

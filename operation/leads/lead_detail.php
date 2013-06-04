@@ -834,5 +834,9 @@ messages = {
 	remote: "<?php echo __('This lead email already exists')?>"
 };
 add_validate_form_element_rules('#text-email', rules, messages);
+// Rules: #text-estimated_sale
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('#text-estimated_sale', rules, messages);
 
 </script>

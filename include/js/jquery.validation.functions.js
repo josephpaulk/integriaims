@@ -24,17 +24,7 @@ function validate_form(form) {
 		$(form).validate( {
 			onkeyup: false,
 			highlight: function(element, errorClass) {
-				$(element).fadeOut(function() {
-					$(element).fadeIn( function() {
-						$(element).fadeOut(function() {
-							$(element).fadeIn(function() {
-								$(element).fadeOut(function() {
-									$(element).fadeIn();
-								});
-							});
-						});
-					});
-				});
+				pulsate(element);
 			}
 		});
 	});

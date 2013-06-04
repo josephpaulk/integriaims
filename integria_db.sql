@@ -1013,3 +1013,9 @@ CREATE TABLE `tinventory_reports` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/*  30/05/2013 */
+CREATE TABLE `tkb_product_group` (
+  `id_product` mediumint(8) unsigned NOT NULL,
+  `id_group` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (id_product, id_group)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

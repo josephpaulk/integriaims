@@ -1009,52 +1009,95 @@ function print_table_pager ($id = 'pager', $hidden = true, $return = false) {
 	echo $output;
 }
 
+/**
+ * Returns a combo with product types
+ * NOT FULLY IMPLEMENTED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+*/
+function combo_product_types ($id_product, $show_any = 0) {
+	global $config;
+	
+	enterprise_include('include/functions_form.php');
+	$return = enterprise_hook ('combo_product_types_extra', array ($id_product, $show_any));
+	if ($return !== ENTERPRISE_NOT_HOOK) {
+		echo $return;
+	} else {
+		echo "<select name='product' style='width: 180px;'>";
+		if ($show_any == 1){
+			if($id_product == 0) {
+				$selected = "selected='selected'";
+			}
+			else {
+				$selected = "";
+			}
+			echo "<option value='0' $selected>".__("Any")."</option>";
+		}	
+		
+		$sql = "SELECT * FROM tkb_product ORDER BY 2";
+
+		$result = process_sql($sql);
+		if($result == false) {
+			$result = array();
+		}
+
+		$debug = "";
+		foreach ($result as $row){
+			if (give_acl($config["id_user"], $row["id_group"], "KR")){
+				if($row["id"] == $id_product) {
+					$selected = "selected='selected'";
+				}
+				else {
+					$selected = "";
+				}
+				echo "<option value='".$row["id"]."' $selected>".$row["name"]."</option>";
+			}
+		}
+		echo "</select>";
+	}
+}
 
 // Returns a combo with download categories
 // ----------------------------------------------------------------------
 function combo_download_categories ($id_category, $show_any = 0){
 	global $config;
 
-	echo "<select name='id_category' style='width: 180px;'>";
-	if ($show_any == 1){
-		if($id_category == 0) {
-			$selected = "selected='selected'";
-		}
-		else {
-			$selected = "";
-		}
-		echo "<option value='0' $selected>".__("Any")."</option>";
-	}	
-	
-	if (dame_admin ($config["id_user"])){
-		$sql = "SELECT * FROM tdownload_category";
+	enterprise_include('include/functions_form.php');
+	$return = enterprise_hook ('combo_download_categories_extra', array ($id_category, $show_any));
+	if ($return !== ENTERPRISE_NOT_HOOK) {
+		echo $return;
 	} else {
-	
-		$sql = "SELECT tdownload_category.* FROM tdownload_category, tdownload_category_group, tusuario_perfil WHERE
-                tusuario_perfil.id_usuario = '".$config["id_user"]."' AND    
-                tusuario_perfil.id_grupo = tdownload_category_group.id_group AND
-                tdownload_category.id =  tdownload_category_group.id_category
-		GROUP by name ORDER by name";
-	}
-
-	$result = process_sql($sql);
-	if($result == false) {
-		$result = array();
-	}
-
-	$debug = "";
-	foreach ($result as $row){
-		if (give_acl($config["id_user"], $row["id_group"], "KR")){
-			if($row["id"] == $id_category) {
+		echo "<select name='id_category' style='width: 180px;'>";
+		if ($show_any == 1){
+			if($id_category == 0) {
 				$selected = "selected='selected'";
 			}
 			else {
 				$selected = "";
 			}
-			echo "<option value='".$row["id"]."' $selected>".$row["name"]."</option>";
+			echo "<option value='0' $selected>".__("Any")."</option>";
+		}	
+		
+		$sql = "SELECT * FROM tdownload_category ORDER BY 2";
+		
+		$result = process_sql($sql);
+		if($result == false) {
+			$result = array();
 		}
+
+		$debug = "";
+		foreach ($result as $row){
+			if (give_acl($config["id_user"], $row["id_group"], "KR")){
+				if($row["id"] == $id_category) {
+					$selected = "selected='selected'";
+				}
+				else {
+					$selected = "";
+				}
+				echo "<option value='".$row["id"]."' $selected>".$row["name"]."</option>";
+			}
+		}
+		echo "</select>";
 	}
-	echo "</select>";
 }
 
 // Returns a combo with the lead progress

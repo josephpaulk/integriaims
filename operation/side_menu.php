@@ -801,10 +801,16 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR") && $show_kb != MENU_H
 		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_cat'>".__('Manage categories')."</a></li>";
 		// KB Product Cat.
 		if ($sec2 == "operation/inventories/manage_prod")
-                        echo "<li id='sidesel'>";
-                else
-                        echo "<li>";
-                echo "<a href='index.php?sec=kb&sec2=operation/inventories/manage_prod'>".__('Product types')."</a></li>";
+				echo "<li id='sidesel'>";
+		else
+				echo "<li>";
+		echo "<a href='index.php?sec=kb&sec2=operation/inventories/manage_prod'>".__('Product types')."</a></li>";
+        // KB Manage access
+		if ($sec2 == "operation/inventories/manage_perms")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=kb&sec2=operation/kb/manage_perms'>".__('Manage access')."</a></li>";
 	}
 
 
@@ -826,14 +832,15 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "KR") && $show_file_r
 		echo "<li>";
 	echo "<a href='index.php?sec=download&sec2=operation/download/browse'>".__('Browse')."</a></li>";
 
-	if  (give_acl($config["id_user"], 0, "KM")) {
+	if  (give_acl($config["id_user"], 0, "KW")) {
 		// Create / Manage downloads
 		if (($sec2 == "operation/download/browse") AND (isset($_GET["create"])))
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=download&sec2=operation/download/browse&create=1'>".__('Create file release')."</a></li>";
-
+	}
+	if  (give_acl($config["id_user"], 0, "KM")) {
 		// FR Manage Cat.
 		if ($sec2 == "operation/download/manage_cat")
 			echo "<li id='sidesel'>";

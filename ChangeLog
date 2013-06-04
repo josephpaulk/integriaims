@@ -1,3 +1,53 @@
+2013-06-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/incidents/incident_detail.php: Bug fixes.
+	Fixed a bug on email validation.
+	
+	* operation/invoices/invoices.php: Added trim to bill id.
+	Added validation to role: required and ajax check for avoid duplicates.
+	
+	* operation/download/browse.php: Fixed a bug on upload a new file section.
+	
+	* operation/contracts/contract_detail.php: Added datepicker to Begining From,
+	Ending From, Begining To and Ending To.
+	
+	* operation/contacts/contact_detail.php: Added trim to searchbox, name and
+	email. Added validation to name and email: required and check
+	for avoid duplicates.
+	
+	* operation/users/user_task_assigment.php: Fixed bug on autocomplete.
+	
+	* operation/inventories/manage_prod.php: Parent for product types deleted.
+	
+	* operation/leads/lead_detail.php,
+	operation/invoices/invoices.php: Added number validation.
+	
+	* include/functions_inventories.php: Fixed a bug in
+	inventories_get_all_type_field(), that setted to 'undefined'
+	the data of the inputs.
+	
+	* operation/side_menu.php: Added link to "Manage access".
+	
+	* operation/kb/manage_perms.php: New section where define rules for
+	filter kb objects by product.
+	
+	* operation/kb/browse.php:
+	operation/kb/browse_data.php:
+	operation/kb/manage_cat.php:
+	operation/inventories/manage_prod.php:
+	operation/kb/manage_perms.php:
+	operation/download/browse.php:
+	operation/download/manage_cat.php:
+	operation/download/manage_perms.php: Added acls.
+	
+	* include/functions_form.php: Added function combo_product_types ().
+	Modified function combo_download_categories().
+	
+	* include/functions_db.php: Added function check_kb_item_accesibility().
+	Added function get_filter_by_kb_product_accessibility().
+	Added function check_fr_item_accessibility().
+	Added function get_filter_by_fr_category_accessibility().
+
 2013-06-04  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_config.php: Added attachment_store variable.
