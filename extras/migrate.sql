@@ -284,3 +284,11 @@ CREATE TABLE `tkb_product_group` (
   `id_group` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (id_product, id_group)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*  05/06/2013 */
+UPDATE tprofile SET `cr` = 1;
+UPDATE tprofile SET `cw` = 1 WHERE `id` IN (1, 3);
+UPDATE tprofile SET `cm` = 1 WHERE `id` IN (1, 3);
+UPDATE tprofile SET `frr` = 1;
+UPDATE tprofile SET `frw` = 1 WHERE `id` IN (1, 3);
+UPDATE tprofile SET `frm` = 1 WHERE `id` IN (1, 3);

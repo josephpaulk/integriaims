@@ -1,4 +1,12 @@
 2013-06-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* integria_dbdata.sql: Insert on 'tprofile' updated with new values
+	for the CR, CW, CM, FRR, FRW and FRM flags.
+
+	* extras/migrate.sql: Added UPDATES on 'tprofile' with the new values
+	for the CR, CW, CM, FRR, FRW and FRM flags.
+
+2013-06-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/incidents/incident_detail.php: Bug fixes.
 	Fixed a bug on email validation.
