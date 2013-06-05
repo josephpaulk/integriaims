@@ -1,4 +1,4 @@
-2013-06-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
+2013-06-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* integria_dbdata.sql: Insert on 'tprofile' updated with new values
 	for the CR, CW, CM, FRR, FRW and FRM flags.

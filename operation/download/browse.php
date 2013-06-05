@@ -16,7 +16,7 @@
 global $config;
 check_login();
 
-if (give_acl($config["id_user"], 0, "KR")==0) {
+if (give_acl($config["id_user"], 0, "FRR")==0) {
     audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access Downloads browser");
     require ("general/noaccess.php");
     exit;
@@ -54,7 +54,7 @@ if ($delete_btn){
 // ==================
 if (isset($_GET["create2"])){ // Create group
 
-	if (give_acl($config["id_user"], 0, "KW") != 1){
+	if (give_acl($config["id_user"], 0, "FRW") != 1){
 		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to create a new Download file without privileges");
 		require ("general/noaccess.php");
 		exit;
@@ -88,7 +88,7 @@ if (isset($_GET["create2"])){ // Create group
 // ==================
 if (isset($_GET["update2"])){ // if modified any parameter
 
-	if (give_acl($config["id_user"], 0, "KW") != 1){
+	if (give_acl($config["id_user"], 0, "FRW") != 1){
 		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to update a download without privileges");
 	    require ("general/noaccess.php");
     	exit;
@@ -131,7 +131,7 @@ if (isset($_GET["update2"])){ // if modified any parameter
 
 if (isset($_GET["delete_data"])){ // if delete
 
-	if (give_acl($config["id_user"], 0, "KW") != 1){
+	if (give_acl($config["id_user"], 0, "FRW") != 1){
 		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to delete a Download without privileges");
 		require ("general/noaccess.php");
 		exit;
@@ -416,7 +416,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		echo "<th>".__('Downloads')."</th>";
 		echo "<th>".__('Public link')."</th>";
 		echo "<th>".__('Date')."</th>";
-		if (give_acl($config["id_user"], 0, "KW")){
+		if (give_acl($config["id_user"], 0, "FRW")){
 			echo "<th>".__('Admin')."</th>";
 		}
 	}
@@ -459,7 +459,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		echo "<td class='f9'>";
 		echo human_time_comparation($row["date"]);
 
-		if (give_acl($config["id_user"], 0, "KW")){
+		if (give_acl($config["id_user"], 0, "FRW")){
 
 			// Edit
 			echo "<td class='f9' align='center' >";

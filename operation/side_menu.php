@@ -820,7 +820,7 @@ if ($sec == "kb" && give_acl ($config["id_user"], 0, "KR") && $show_kb != MENU_H
 
 
 // Downloads (FR)
-if ($sec == "download" && give_acl ($config["id_user"], 0, "KR") && $show_file_releases != MENU_HIDDEN) {
+if ($sec == "download" && give_acl ($config["id_user"], 0, "FRR") && $show_file_releases != MENU_HIDDEN) {
 	echo "<div class='portlet'>";
 	echo "<h3>".__('File releases')."</h3>";
 	echo "<ul class='sidemenu'>";
@@ -832,7 +832,7 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "KR") && $show_file_r
 		echo "<li>";
 	echo "<a href='index.php?sec=download&sec2=operation/download/browse'>".__('Browse')."</a></li>";
 
-	if  (give_acl($config["id_user"], 0, "KW")) {
+	if  (give_acl($config["id_user"], 0, "FRW")) {
 		// Create / Manage downloads
 		if (($sec2 == "operation/download/browse") AND (isset($_GET["create"])))
 			echo "<li id='sidesel'>";
@@ -840,7 +840,7 @@ if ($sec == "download" && give_acl ($config["id_user"], 0, "KR") && $show_file_r
 			echo "<li>";
 		echo "<a href='index.php?sec=download&sec2=operation/download/browse&create=1'>".__('Create file release')."</a></li>";
 	}
-	if  (give_acl($config["id_user"], 0, "KM")) {
+	if  (give_acl($config["id_user"], 0, "FRM")) {
 		// FR Manage Cat.
 		if ($sec2 == "operation/download/manage_cat")
 			echo "<li id='sidesel'>";
