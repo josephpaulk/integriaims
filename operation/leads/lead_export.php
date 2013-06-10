@@ -14,11 +14,17 @@
 	global $config;
 
 	check_login ();
+	
+	$id_company = (int) get_parameter ('id_company');
 
-	// TODO: Implement ACL check !
+	// Check if current user have access to this company.
+	if ($id_company && ! check_company_acl ($config["id_user"], $id_company, "CR")) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to lead export");
+		require ("general/noaccess.php");
+		exit;
+	}
 
 	$search_text = (string) get_parameter ('search_text');
-	$id_company = (int) get_parameter ('id_company');
 	$start_date = (string) get_parameter ('start_date');
 	$end_date = (string) get_parameter ('end_date');
 	$country = (string) get_parameter ('country');

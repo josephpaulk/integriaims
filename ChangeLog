@@ -1,3 +1,40 @@
+2013-06-10  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/invoices/invoice_detail: Fixed a bug on invoice deletion.
+	Added ACL: Now the users can only see and access to the invoices
+	that belong to its company and its descendants (Enterprise).
+
+	* include/functions_db.php: Added function get_company_parent().
+	Added function check_company_acl().
+	Added function get_company_descendants().
+	Added function get_filter_by_company_accessibility().
+	
+	* operation/contacts/contact_export.php: Added ACL: Now the users
+	can only export the users that belong to its company and
+	its descendants (Enterprise).
+	
+	* operation/contracts/contract_detail: Added ACL: Now the users
+	can only see in the list and access the contracts that belong to
+	its company and its descendants (Enterprise).
+	
+	* operation/companies/company_export.php: Added ACL: Now the users
+	can only export its companies and its descendants (Enterprise).
+	
+	* operation/companies/company_role.php: Added ACL: Now the roles
+	can only be accessible by a manager (Enterprise).
+	
+	* operation/companies/company_detail: Added ACL. Now the users can
+	only see and access to its company and its descendants (Enterprise).
+
+2013-06-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/download/browse.php,
+	operation/download/manage_cat.php,
+	operation/download/manage_perms.php: Changed the flags from K to FR.
+	
+	* operation/side_menu.php: Changed the flags from K to FR in
+	File Releases section.
+
 2013-06-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* integria_dbdata.sql: Insert on 'tprofile' updated with new values

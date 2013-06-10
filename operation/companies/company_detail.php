@@ -18,7 +18,7 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "VR")) {
+if (! give_acl ($config["id_user"], 0, "CR")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
 	require ("general/noaccess.php");
 	exit;
@@ -26,7 +26,12 @@ if (! give_acl ($config["id_user"], 0, "VR")) {
 
 $id = (int) get_parameter ('id');
 
-// TODO: ACL CHECK !!. Check HERE if current user have access to this company.
+// Check if current user have access to this company.
+if ($id && ! check_company_acl ($config["id_user"], $id, "CR")) {
+	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
+	require ("general/noaccess.php");
+	exit;
+}
 
 $op = (string) get_parameter ("op", "");
 $new_company = (bool) get_parameter ('new_company');
@@ -203,7 +208,7 @@ if ($id) {
 	$company = get_db_row ('tcompany', 'id', $id);
 	$id_group = $company['id_grupo'];
 	
-	if (! give_acl ($config["id_user"], $id_group, "VR")) {
+	if (! give_acl ($config["id_user"], $id_group, "CR")) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access a company detail");
 		require ("general/noaccess.php");
 		exit;
@@ -350,30 +355,26 @@ elseif ($op == "activities") {
 		foreach ($activities as $activity) {
 //				if (! give_acl ($config["id_user"], $company["id_group"], "IR"))
 //					continue;
+			echo "<div class='notetitle'>"; // titulo
 
+			$timestamp = $activity["date"];
+			$nota = $activity["description"];
+			$id_usuario_nota = $activity["written_by"];
 
-echo "<div class='notetitle'>"; // titulo
+			$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $id_usuario_nota);
 
-$timestamp = $activity["date"];
-$nota = $activity["description"];
-$id_usuario_nota = $activity["written_by"];
+			// Show data
+			echo "<img src='images/avatars/".$avatar."_small.png'>&nbsp;";
+			echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_usuario_nota'>";
+			echo $id_usuario_nota;
+			echo "</a>";
+			echo " ".__("said on $timestamp");
+			echo "</div>";
 
-$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $id_usuario_nota);
-
-// Show data
-echo "<img src='images/avatars/".$avatar."_small.png'>&nbsp;";
-echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_usuario_nota'>";
-echo $id_usuario_nota;
-echo "</a>";
-echo " ".__("said on $timestamp");
-echo "</div>";
-
-// Body
-echo "<div class='notebody'>";
-echo clean_output_breaks($nota);
-echo "</div>";
-
-
+			// Body
+			echo "<div class='notebody'>";
+			echo clean_output_breaks($nota);
+			echo "</div>";
 		}
 	}
 }
@@ -407,7 +408,7 @@ elseif ($op == "contracts") {
 		$counter = 0;
 	
 		foreach ($contracts as $contract) {
-			if (! give_acl ($config["id_user"], $contract["id_group"], "VR"))
+			if (! give_acl ($config["id_user"], $contract["id_group"], "CR"))
 				continue;
 			$data = array ();
 		
@@ -507,12 +508,6 @@ elseif ($op == "invoices") {
 
 	$id_group = get_db_sql ("SELECT id_grupo FROM tcompany WHERE id = $id");
 	
-	if (! give_acl ($config["id_user"], $id_group, "VR")) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access a invoice listing");
-		require ("general/noaccess.php");
-		exit;
-	}
-	
 	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
 	echo "<h3>". __("Invoices for "). $company_name. "</h3>";
 
@@ -557,7 +552,7 @@ elseif ($op == "invoices") {
 		
 			foreach ($invoices as $invoice) {
 				
-				if (! give_acl ($config["id_user"], $company["id_group"], "IR"))
+				if (! give_acl ($config["id_user"], $company["id_group"], "CM"))
 					continue;
 				$data = array ();
 			
@@ -676,7 +671,7 @@ if ((!$id) AND ($new_company == 0)){
 	$search_country = (string) get_parameter ("search_country");
 	$search_manager = (string) get_parameter ("search_manager");
 
-	$where_clause = " 1 = 1 ";
+	$where_clause = " 1 = 1 AND id " . get_filter_by_company_accessibility($config["id_user"]);
 
 	if ($search_text != "") {
 		$where_clause .= sprintf (' AND ( name LIKE "%%%s%%" OR country LIKE "%%%s%%")  ', $search_text, $search_text);

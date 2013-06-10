@@ -22,11 +22,13 @@ $id_invoice = get_parameter ("id_invoice", -1);
 $operation_invoices = get_parameter ("operation_invoices");
 
 if ($id_company > 0){
-	if (! give_acl ($config["id_user"], $company["id_group"], "IR")) {
-		// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to add invoices in a company without access");
+	// Check if current user have access to this company invoice.
+	if (! check_company_acl ($config["id_user"], $id_company, "CM")) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to invoice section");
 		no_permission();
 	}
+} else {
+	return;
 }
 
 if ($id_invoice > 0){

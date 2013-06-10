@@ -18,18 +18,26 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "VR")) {
+if (! give_acl ($config["id_user"], 0, "CR")) {
 	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access Contact");
 	require ("general/noaccess.php");
 	exit;
 }
 
-$manager = give_acl ($config["id_user"], 0, "VM");
+$manager = give_acl ($config["id_user"], 0, "CM");
 
 $id = (int) get_parameter ('id');
 if($id != 0) {
 	$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $id);
 	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id_company);
+	
+	// Check if current user have access to this company.
+	if ($id_company && ! check_company_acl ($config["id_user"], $id_company)) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access contact section");
+		require ("general/noaccess.php");
+		exit;
+	}
+	
 }
 $new_contact = (bool) get_parameter ('new_contact');
 $create_contact = (bool) get_parameter ('create_contact');
@@ -269,7 +277,7 @@ if ($id || $new_contact) {
 	$search_text = (string) get_parameter ('search_text');
 	$id_company = (int) get_parameter ('id_company');
 	
-	$where_clause = "WHERE 1=1 ";
+	$where_clause = "WHERE 1=1 AND id_company " .get_filter_by_company_accessibility($config["id_user"]);
 	if ($search_text != "") {
 		$where_clause .= " AND (fullname LIKE '%$search_text%' OR email LIKE '%$search_text%') ";
 	}

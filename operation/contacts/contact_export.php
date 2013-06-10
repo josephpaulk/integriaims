@@ -15,12 +15,18 @@
 
 	check_login ();
 
-	// TODO: Implement ACL check !
-
 	$search_text = (string) get_parameter ('search_text');
 	$id_company = (int) get_parameter ('id_company');
 	
-	$where_clause = "WHERE tcompany_contact.id_company = tcompany.id $where_group ";
+	// Check if current user have access to this company.
+	if ($id_company && ! check_company_acl ($config["id_user"], $id_company, "CR")) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to contact export");
+		require ("general/noaccess.php");
+		exit;
+	}
+	
+	$where_clause = "WHERE tcompany_contact.id_company = tcompany.id $where_group "
+		. "AND tcompany_contact.id_company ". get_filter_by_company_accessibility($config["id_user"]);
 	if ($search_text != "") {
 		$where_clause .= sprintf (' AND fullname LIKE "%%%s%%"', $search_text);
 	}
@@ -28,7 +34,10 @@
 		$where_clause .= sprintf (' AND id_company = %d', $id_company);
 	}
 
-	$sql = "SELECT tcompany_contact.fullname, tcompany.name as company_name, tcompany_contact.email, tcompany_contact.phone, tcompany_contact.mobile, tcompany_contact.position, tcompany_contact.description FROM tcompany_contact, tcompany $where_clause ORDER BY id_company, fullname";
+	$sql = "SELECT tcompany_contact.fullname, tcompany.name as company_name, 
+	tcompany_contact.email, tcompany_contact.phone, tcompany_contact.mobile, 
+	tcompany_contact.position, tcompany_contact.description FROM tcompany_contact, 
+	tcompany $where_clause ORDER BY id_company, fullname";
 
 	$filename = clean_output ('contacts_export').'-'.date ("YmdHi");
 

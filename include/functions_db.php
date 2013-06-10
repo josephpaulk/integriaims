@@ -2211,7 +2211,7 @@ function inventory_tracking ($id_inventory, $state, $aditional_data = 0) {
  * NOT ENABLED IN OPENSOURCE version
  * Please visit http://integriaims.com for more information
 */
-function check_kb_item_accessibility($id_user, $id_kb) {
+function check_kb_item_accessibility ($id_user, $id_kb) {
 	global $config;
 	
 	$return = enterprise_hook ('check_kb_item_accessibility_extra', array ($id_user, $id_kb));
@@ -2226,7 +2226,7 @@ function check_kb_item_accessibility($id_user, $id_kb) {
  * NOT FULLY IMPLEMENTED IN OPENSOURCE version
  * Please visit http://integriaims.com for more information
 */
-function get_filter_by_kb_product_accessibility() {
+function get_filter_by_kb_product_accessibility () {
 	global $config;
 	
 	$return = enterprise_hook ('get_filter_by_kb_product_accessibility_extra');
@@ -2240,7 +2240,7 @@ function get_filter_by_kb_product_accessibility() {
  * NOT ENABLED IN OPENSOURCE version
  * Please visit http://integriaims.com for more information
 */
-function check_fr_item_accessibility($id_user, $id_fr) {
+function check_fr_item_accessibility ($id_user, $id_fr) {
 	global $config;
 	
 	$return = enterprise_hook ('check_fr_item_accessibility_extra', array ($id_user, $id_fr));
@@ -2255,13 +2255,95 @@ function check_fr_item_accessibility($id_user, $id_fr) {
  * NOT FULLY IMPLEMENTED IN OPENSOURCE version
  * Please visit http://integriaims.com for more information
 */
-function get_filter_by_fr_category_accessibility() {
+function get_filter_by_fr_category_accessibility () {
 	global $config;
 	
 	$return = enterprise_hook ('get_filter_by_fr_category_accessibility_extra');
 	if ($return !== ENTERPRISE_NOT_HOOK)
 		return $return;
 	return "WHERE 1=1";
+}
+
+/**
+ * Function to get the parent to a company
+ */
+function get_company_parent ($id_company) {
+	global $config;
+	
+	return get_db_value ("id_parent", "tcompany", "id", $id_company);
+}
+
+/**
+ * Function to get the access permissions to a company
+ * NOT FULLY IMPLEMENTED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+*/
+function check_company_acl ($id_user, $id_company, $flag) {
+	global $config;
+	
+	if (dame_admin($id_user)) {
+		return true;
+	}
+	$external = get_external_user ($id_user);
+	$return = enterprise_hook ('check_company_acl_extra', array ($id_user, $id_company, $flag, $external));
+		
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	if ($external) {
+		$company = get_user_company ($id_user, false);
+		// External users only can see the company which belongs
+		if ($company['id'] != $id_company)
+			return false;
+	}
+}
+
+/**
+ * This function returns an array with the descendants ids of the
+ * company id passed as an argument.
+ */
+function get_company_descendants ($id_company) {
+	global $config;
+	
+	$text_id_companies = "";
+	$id_companies = array();
+	if (is_array($id_company)) {
+		for ($i = 0 ; $i < count($id_company) ; $i++) {
+			$text_id_companies .= $id_company[$i];
+			if ($i < count($id_company)-1) {
+				$text_id_companies .= ", ";
+			}
+		}
+	} else {
+		$text_id_companies .= $id_company;
+	}
+	$sql = "SELECT id FROM tcompany WHERE id_parent IN (".$text_id_companies.")";
+	$result = process_sql($sql);
+	
+	foreach ($result as $row){
+		$id_companies[] = $row['id'];
+	}
+	if (count($id_companies) >= 1) {
+		$id_companies = array_merge($id_companies, get_company_descendants($id_companies));
+	}
+	return $id_companies;
+}
+
+/**
+ * Function to get a where filter to filter results
+ * by accessible companies.
+ * NOT FULLY IMPLEMENTED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+*/
+function get_filter_by_company_accessibility ($id_user) {
+	global $config;
+	
+	$company = get_user_company ($id_user, false);
+	if (get_external_user ($id_user))
+		return "IN (".$company['id'].")";
+	$return = enterprise_hook ('get_filter_by_company_accessibility_extra', array($company['id']));
+	if ($return !== ENTERPRISE_NOT_HOOK && !dame_admin($id_user))
+		return $return;
+	return "";
 }
 
 ?>

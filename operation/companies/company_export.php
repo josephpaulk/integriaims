@@ -21,7 +21,7 @@
 	$search_country = (string) get_parameter ("search_country");
 	$search_manager = (string) get_parameter ("search_manager");
 
-	$where_clause = " 1 = 1 ";
+	$where_clause = " 1 = 1 AND tcompany.id " . get_filter_by_company_accessibility($config["id_user"]);
 
 	if ($search_text != "") {
 		$where_clause .= sprintf (' AND name LIKE "%%%s%%" ', $search_text);

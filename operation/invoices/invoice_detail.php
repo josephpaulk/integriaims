@@ -19,13 +19,11 @@ global $config;
 
 check_login();
 
-if (! give_acl ($config["id_user"], 0, "VR")) {
+if (! give_acl ($config["id_user"], 0, "CR")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to read a contract");
 	require ("general/noaccess.php");
 	exit;
 }
-
-$manager = give_acl ($config["id_user"], 0, "VM");
 
 $id = (int) get_parameter ('id');
 $get_company_name = (bool) get_parameter ('get_company_name');
@@ -42,7 +40,7 @@ $search_date_begin = get_parameter ('search_date_begin');
 
 $search_params = "search_text=$search_text&search_date_end=$search_date_end&search_date_begin=$search_date_begin";
 
-$where_clause = " 1 = 1 ";
+$where_clause = " 1 = 1 AND id_company " . get_filter_by_company_accessibility($config["id_user"]);
 
 if ($search_text != "") {
 	$where_clause .= sprintf ('AND (id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR 
@@ -130,7 +128,7 @@ if ($invoices !== false) {
 		$data[5] = __($invoice["description"]);
 
 		
-		$data[6] = '<a href="&delete_invoice=1&id='.$invoice["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+		$data[6] = '<a href="?sec=customers&sec2=operation/companies/company_detail&delete_invoice=1&id='.$invoice["id_company"].'&op=invoices&id_invoice='.$invoice["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
 		
 		array_push ($table->data, $data);
 	}	

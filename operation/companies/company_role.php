@@ -18,13 +18,11 @@ global $config;
 
 check_login();
 
-if (! give_acl ($config["id_user"], 0, "VR")) {
+if (! give_acl ($config["id_user"], 0, "CM")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access company role management");
 	require ("general/noaccess.php");
 	exit;
 }
-
-$manager = give_acl ($config["id_user"], 0, "VM");
 
 $id = (int) get_parameter ('id');
 $company = get_db_row ('tcompany', 'id', $id);
@@ -36,12 +34,6 @@ $delete_role = (bool) get_parameter ('delete_role');
 
 // CREATE
 if ($create_role) {
-	if (! give_acl ($config["id_user"], 0, "VM")) {
-	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a company role management");
-	        require ("general/noaccess.php");
-	        exit;
-	}
-
 	$name = (string) get_parameter ("name");
 	$description = (string) get_parameter ("description");
 	$sql = sprintf ('INSERT INTO tcompany_role (name, description)
@@ -58,12 +50,6 @@ if ($create_role) {
 
 // UPDATE
 if ($update_role) {
-	if (! give_acl ($config["id_user"], $id_group, "VW")) {
-               audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to update a company role");
-               require ("general/noaccess.php");
-               exit;
-    }
-
 	$name = (string) get_parameter ('name');
 	$description = (string) get_parameter ('description');
 
@@ -83,12 +69,6 @@ if ($update_role) {
 
 // DELETE
 if ($delete_role) {
-	if (! give_acl ($config["id_user"], $id_group, "VM")) {
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to delete a company role");
-			require ("general/noaccess.php");
-			exit;
-	}
-
 	$name = get_db_value ('name', 'tcompany_role', 'id', $id);
 	$sql = sprintf ('DELETE FROM tcompany_role WHERE id = %d', $id);
 	$result = process_sql ($sql);
@@ -102,19 +82,9 @@ echo "<h2>".__('Company role management')."</h2>";
 // FORM (Update / Create)
 if ($id || $new_role) {
 	if ($new_role) {
-		if(!$manager) {
-			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to add a company role");
-			require ("general/noaccess.php");
-			exit;
-		}
 		$name = '';
 		$description = '';
 	} else {
-		if (! give_acl ($config["id_user"], $id_group, "VR")) {
-				   audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to update a company role");
-				   require ("general/noaccess.php");
-				   exit;
-		}
 		$role = get_db_row ('tcompany_role', 'id', $id);
 		$name = $role['name'];
 		$description = $role['description'];
@@ -125,32 +95,21 @@ if ($id || $new_role) {
 	$table->data = array ();
 	$table->colspan = array ();
 	
-	if (give_acl ($config["id_user"], $id_group, "VW")) {
-		$table->data[0][0] = print_input_text ("name", $name, "", 60, 100, true, __('Role name'));
-		$table->data[1][0] = print_textarea ('description', 14, 1, $description, '', true, __('Description'));
-	}
-	else {
-		$table->data[0][0] = "<b>".__('Role name')."</b><br>$name<br>";
-		if($description == '') {
-			$description = '<i>-'.__('Empty').'-</i>';
-		}		
-		$table->data[1][0] = "<b>".__('Description')."</b><br>$description<br>";
-	}
+	$table->data[0][0] = print_input_text ("name", $name, "", 60, 100, true, __('Role name'));
+	$table->data[1][0] = print_textarea ('description', 14, 1, $description, '', true, __('Description'));
 	
 	echo '<form id="form-company_role" method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
 		print_table ($table);
-		if (($id && give_acl ($config["id_user"], $id_group, "VW")) || (!$id && give_acl ($config["id_user"], $id_group, "VM"))) {
-			echo '<div class="button" style="width: '.$table->width.'">';
-			if ($id) {
-				print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
-				print_input_hidden ('update_role', 1);
-				print_input_hidden ('id', $id);
-			} else {
-				print_input_hidden ('create_role', 1);
-				print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', false);
-			}
-			echo "</div>";
+		echo '<div class="button" style="width: '.$table->width.'">';
+		if ($id) {
+			print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
+			print_input_hidden ('update_role', 1);
+			print_input_hidden ('id', $id);
+		} else {
+			print_input_hidden ('create_role', 1);
+			print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', false);
 		}
+		echo "</div>";
 	echo '</form>';
 } else {
 	$search_text = (string) get_parameter ('search_text');
@@ -189,9 +148,7 @@ if ($id || $new_role) {
 		$table->head[0] = __('ID');
 		$table->head[1] = __('Name');
 		$table->head[2] = __('Description');
-		if(give_acl ($config["id_user"], $id_group, "VM")) {
-			$table->head[3] = __('Delete');
-		}
+		$table->head[3] = __('Delete');
 		
 		foreach ($roles as $role) {
 			$data = array ();
@@ -200,28 +157,23 @@ if ($id || $new_role) {
  			$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_role&id=".
 				$role["id"]."'>".$role["name"]."</a>";
 			$data[2] = substr ($role["description"], 0, 70)."...";
-
-			if (give_acl ($config["id_user"], $id_group, "VM")) {
-				$data[3] = '<a href="index.php?sec=customers&
-							sec2=operation/companies/company_role&
-							delete_role=1&id='.$role['id'].'"
-							onClick="if (!confirm(\''.__('Are you sure?').'\'))
-							return false;">
-							<img src="images/cross.png"></a>';
-			}
+			$data[3] = '<a href="index.php?sec=customers&
+						sec2=operation/companies/company_role&
+						delete_role=1&id='.$role['id'].'"
+						onClick="if (!confirm(\''.__('Are you sure?').'\'))
+						return false;">
+						<img src="images/cross.png"></a>';
 			array_push ($table->data, $data);
 		}
 		print_table ($table);
 	}
 	
-	if($manager) {
-		echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
-		echo '<div class="button" style="width: '.$table->width.'">';
-		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
-		print_input_hidden ('new_role', 1);
-		echo '</div>';
-		echo '</form>';
-	}
+	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
+	echo '<div class="button" style="width: '.$table->width.'">';
+	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+	print_input_hidden ('new_role', 1);
+	echo '</div>';
+	echo '</form>';
 }
 ?>
 
