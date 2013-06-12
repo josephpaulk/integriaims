@@ -1,5 +1,9 @@
 2013-06-11  Dario Rodriguez <dario@artica.es>
 
+	* index.php: Added new CSS and JS files of new jquery UI.
+
+2013-06-11  Dario Rodriguez <dario@artica.es>
+
 	* include/styles/flora/flora.theme.css
 	* include/styles/flora/flora.core.css
 	* include/styles/flora/flora.dialog.css
