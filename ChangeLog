@@ -1,3 +1,17 @@
+2013-06-11  Dario Rodriguez <dario@artica.es>
+
+	* include/js/jquery.ui.widget.js
+	* include/js/jquery.ui.dialog.js
+	* include/js/jquery.ui.draggable.js
+	* include/js/jquery.ui.datepicker.js
+	* include/js/jquery.ui.resizable.js
+	* include/js/jquery.ui.slider.js
+	* include/js/jquery.ui.core.js
+	* include/js/jquery.ui.tabs.js
+	* include/js/jquery-ui.js
+	* include/js/jquery.ui.position.js: Changed new jquery ui
+	library.
+
 2013-06-10  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/invoices/invoice_detail: Fixed a bug on invoice deletion.

@@ -1,1 +1,644 @@
-(function(A){A.fn.unwrap=A.fn.unwrap||function(B){return this.each(function(){A(this).parents(B).eq(0).after(this).remove()})};A.widget("ui.slider",{plugins:{},ui:function(B){return{options:this.options,handle:this.currentHandle,value:this.options.axis!="both"||!this.options.axis?Math.round(this.value(null,this.options.axis=="vertical"?"y":"x")):{x:Math.round(this.value(null,"x")),y:Math.round(this.value(null,"y"))},range:this._getRange()}},_propagate:function(C,B){A.ui.plugin.call(this,C,[B,this.ui()]);this.element.triggerHandler(C=="slide"?C:"slide"+C,[B,this.ui()],this.options[C])},destroy:function(){this.element.removeClass("ui-slider ui-slider-disabled").removeData("slider").unbind(".slider");if(this.handle&&this.handle.length){this.handle.unwrap("a");this.handle.each(function(){A(this).data("mouse")._mouseDestroy()})}this.generated&&this.generated.remove()},_setData:function(B,C){A.widget.prototype._setData.apply(this,arguments);if(/min|max|steps/.test(B)){this._initBoundaries()}if(B=="range"){C?this.handle.length==2&&this._createRange():this._removeRange()}},_init:function(){var B=this;this.element.addClass("ui-slider");this._initBoundaries();this.handle=A(this.options.handle,this.element);if(!this.handle.length){B.handle=B.generated=A(B.options.handles||[0]).map(function(){var D=A("<div/>").addClass("ui-slider-handle").appendTo(B.element);if(this.id){D.attr("id",this.id)}return D[0]})}var C=function(D){this.element=A(D);this.element.data("mouse",this);this.options=B.options;this.element.bind("mousedown",function(){if(B.currentHandle){this.blur(B.currentHandle)}B._focus(this,true)});this._mouseInit()};A.extend(C.prototype,A.ui.mouse,{_mouseStart:function(D){return B._start.call(B,D,this.element[0])},_mouseStop:function(D){return B._stop.call(B,D,this.element[0])},_mouseDrag:function(D){return B._drag.call(B,D,this.element[0])},_mouseCapture:function(){return true},trigger:function(D){this._mouseDown(D)}});A(this.handle).each(function(){new C(this)}).wrap('<a href="#" style="outline:none;border:none;"></a>').parent().bind("click",function(){return false}).bind("focus",function(D){B._focus(this.firstChild)}).bind("blur",function(D){B._blur(this.firstChild)}).bind("keydown",function(D){if(!B.options.noKeyboard){return B._keydown(D.keyCode,this.firstChild)}});this.element.bind("mousedown.slider",function(D){B._click.apply(B,[D]);B.currentHandle.data("mouse").trigger(D);B.firstValue=B.firstValue+1});A.each(this.options.handles||[],function(D,E){B.moveTo(E.start,D,true)});if(!isNaN(this.options.startValue)){this.moveTo(this.options.startValue,0,true)}this.previousHandle=A(this.handle[0]);if(this.handle.length==2&&this.options.range){this._createRange()}},_initBoundaries:function(){var B=this.element[0],C=this.options;this.actualSize={width:this.element.outerWidth(),height:this.element.outerHeight()};A.extend(C,{axis:C.axis||(B.offsetWidth<B.offsetHeight?"vertical":"horizontal"),max:!isNaN(parseInt(C.max,10))?{x:parseInt(C.max,10),y:parseInt(C.max,10)}:({x:C.max&&C.max.x||100,y:C.max&&C.max.y||100}),min:!isNaN(parseInt(C.min,10))?{x:parseInt(C.min,10),y:parseInt(C.min,10)}:({x:C.min&&C.min.x||0,y:C.min&&C.min.y||0})});C.realMax={x:C.max.x-C.min.x,y:C.max.y-C.min.y};C.stepping={x:C.stepping&&C.stepping.x||parseInt(C.stepping,10)||(C.steps?C.realMax.x/(C.steps.x||parseInt(C.steps,10)||C.realMax.x):0),y:C.stepping&&C.stepping.y||parseInt(C.stepping,10)||(C.steps?C.realMax.y/(C.steps.y||parseInt(C.steps,10)||C.realMax.y):0)}},_keydown:function(F,E){var C=F;if(/(33|34|35|36|37|38|39|40)/.test(C)){var G=this.options,B,I;if(/(35|36)/.test(C)){B=(C==35)?G.max.x:G.min.x;I=(C==35)?G.max.y:G.min.y}else{var H=/(34|37|40)/.test(C)?"-=":"+=";var D=/(37|38|39|40)/.test(C)?"_oneStep":"_pageStep";B=H+this[D]("x");I=H+this[D]("y")}this.moveTo({x:B,y:I},E);return false}return true},_focus:function(B,C){this.currentHandle=A(B).addClass("ui-slider-handle-active");if(C){this.currentHandle.parent()[0].focus()}},_blur:function(B){A(B).removeClass("ui-slider-handle-active");if(this.currentHandle&&this.currentHandle[0]==B){this.previousHandle=this.currentHandle;this.currentHandle=null}},_click:function(C){var D=[C.pageX,C.pageY];var B=false;this.handle.each(function(){if(this==C.target){B=true}});if(B||this.options.disabled||!(this.currentHandle||this.previousHandle)){return }if(!this.currentHandle&&this.previousHandle){this._focus(this.previousHandle,true)}this.offset=this.element.offset();this.moveTo({y:this._convertValue(C.pageY-this.offset.top-this.currentHandle[0].offsetHeight/2,"y"),x:this._convertValue(C.pageX-this.offset.left-this.currentHandle[0].offsetWidth/2,"x")},null,!this.options.distance)},_createRange:function(){if(this.rangeElement){return }this.rangeElement=A("<div></div>").addClass("ui-slider-range").css({position:"absolute"}).appendTo(this.element);this._updateRange()},_removeRange:function(){this.rangeElement.remove();this.rangeElement=null},_updateRange:function(){var C=this.options.axis=="vertical"?"top":"left";var B=this.options.axis=="vertical"?"height":"width";this.rangeElement.css(C,(parseInt(A(this.handle[0]).css(C),10)||0)+this._handleSize(0,this.options.axis=="vertical"?"y":"x")/2);this.rangeElement.css(B,(parseInt(A(this.handle[1]).css(C),10)||0)-(parseInt(A(this.handle[0]).css(C),10)||0))},_getRange:function(){return this.rangeElement?this._convertValue(parseInt(this.rangeElement.css(this.options.axis=="vertical"?"height":"width"),10),this.options.axis=="vertical"?"y":"x"):null},_handleIndex:function(){return this.handle.index(this.currentHandle[0])},value:function(D,B){if(this.handle.length==1){this.currentHandle=this.handle}if(!B){B=this.options.axis=="vertical"?"y":"x"}var C=A(D!=undefined&&D!==null?this.handle[D]||D:this.currentHandle);if(C.data("mouse").sliderValue){return parseInt(C.data("mouse").sliderValue[B],10)}else{return parseInt(((parseInt(C.css(B=="x"?"left":"top"),10)/(this.actualSize[B=="x"?"width":"height"]-this._handleSize(D,B)))*this.options.realMax[B])+this.options.min[B],10)}},_convertValue:function(C,B){return this.options.min[B]+(C/(this.actualSize[B=="x"?"width":"height"]-this._handleSize(null,B)))*this.options.realMax[B]},_translateValue:function(C,B){return((C-this.options.min[B])/this.options.realMax[B])*(this.actualSize[B=="x"?"width":"height"]-this._handleSize(null,B))},_translateRange:function(D,B){if(this.rangeElement){if(this.currentHandle[0]==this.handle[0]&&D>=this._translateValue(this.value(1),B)){D=this._translateValue(this.value(1,B)-this._oneStep(B),B)}if(this.currentHandle[0]==this.handle[1]&&D<=this._translateValue(this.value(0),B)){D=this._translateValue(this.value(0,B)+this._oneStep(B),B)}}if(this.options.handles){var C=this.options.handles[this._handleIndex()];if(D<this._translateValue(C.min,B)){D=this._translateValue(C.min,B)}else{if(D>this._translateValue(C.max,B)){D=this._translateValue(C.max,B)}}}return D},_translateLimits:function(C,B){if(C>=this.actualSize[B=="x"?"width":"height"]-this._handleSize(null,B)){C=this.actualSize[B=="x"?"width":"height"]-this._handleSize(null,B)}if(C<=0){C=0}return C},_handleSize:function(C,B){return A(C!=undefined&&C!==null?this.handle[C]:this.currentHandle)[0]["offset"+(B=="x"?"Width":"Height")]},_oneStep:function(B){return this.options.stepping[B]||1},_pageStep:function(B){return 10},_start:function(C,B){var D=this.options;if(D.disabled){return false}this.actualSize={width:this.element.outerWidth(),height:this.element.outerHeight()};if(!this.currentHandle){this._focus(this.previousHandle,true)}this.offset=this.element.offset();this.handleOffset=this.currentHandle.offset();this.clickOffset={top:C.pageY-this.handleOffset.top,left:C.pageX-this.handleOffset.left};this.firstValue=this.value();this._propagate("start",C);this._drag(C,B);return true},_stop:function(B){this._propagate("stop",B);if(this.firstValue!=this.value()){this._propagate("change",B)}this._focus(this.currentHandle,true);return false},_drag:function(E,D){var F=this.options;var B={top:E.pageY-this.offset.top-this.clickOffset.top,left:E.pageX-this.offset.left-this.clickOffset.left};if(!this.currentHandle){this._focus(this.previousHandle,true)}B.left=this._translateLimits(B.left,"x");B.top=this._translateLimits(B.top,"y");if(F.stepping.x){var C=this._convertValue(B.left,"x");C=Math.round(C/F.stepping.x)*F.stepping.x;B.left=this._translateValue(C,"x")}if(F.stepping.y){var C=this._convertValue(B.top,"y");C=Math.round(C/F.stepping.y)*F.stepping.y;B.top=this._translateValue(C,"y")}B.left=this._translateRange(B.left,"x");B.top=this._translateRange(B.top,"y");if(F.axis!="vertical"){this.currentHandle.css({left:B.left})}if(F.axis!="horizontal"){this.currentHandle.css({top:B.top})}this.currentHandle.data("mouse").sliderValue={x:Math.round(this._convertValue(B.left,"x"))||0,y:Math.round(this._convertValue(B.top,"y"))||0};if(this.rangeElement){this._updateRange()}this._propagate("slide",E);return false},moveTo:function(F,E,G){var H=this.options;this.actualSize={width:this.element.outerWidth(),height:this.element.outerHeight()};if(E==undefined&&!this.currentHandle&&this.handle.length!=1){return false}if(E==undefined&&!this.currentHandle){E=0}if(E!=undefined){this.currentHandle=this.previousHandle=A(this.handle[E]||E)}if(F.x!==undefined&&F.y!==undefined){var B=F.x,I=F.y}else{var B=F,I=F}if(B!==undefined&&B.constructor!=Number){var D=/^\-\=/.test(B),C=/^\+\=/.test(B);if(D||C){B=this.value(null,"x")+parseInt(B.replace(D?"=":"+=",""),10)}else{B=isNaN(parseInt(B,10))?undefined:parseInt(B,10)}}if(I!==undefined&&I.constructor!=Number){var D=/^\-\=/.test(I),C=/^\+\=/.test(I);if(D||C){I=this.value(null,"y")+parseInt(I.replace(D?"=":"+=",""),10)}else{I=isNaN(parseInt(I,10))?undefined:parseInt(I,10)}}if(H.axis!="vertical"&&B!==undefined){if(H.stepping.x){B=Math.round(B/H.stepping.x)*H.stepping.x}B=this._translateValue(B,"x");B=this._translateLimits(B,"x");B=this._translateRange(B,"x");H.animate?this.currentHandle.stop().animate({left:B},(Math.abs(parseInt(this.currentHandle.css("left"))-B))*(!isNaN(parseInt(H.animate))?H.animate:5)):this.currentHandle.css({left:B})}if(H.axis!="horizontal"&&I!==undefined){if(H.stepping.y){I=Math.round(I/H.stepping.y)*H.stepping.y}I=this._translateValue(I,"y");I=this._translateLimits(I,"y");I=this._translateRange(I,"y");H.animate?this.currentHandle.stop().animate({top:I},(Math.abs(parseInt(this.currentHandle.css("top"))-I))*(!isNaN(parseInt(H.animate))?H.animate:5)):this.currentHandle.css({top:I})}if(this.rangeElement){this._updateRange()}this.currentHandle.data("mouse").sliderValue={x:Math.round(this._convertValue(B,"x"))||0,y:Math.round(this._convertValue(I,"y"))||0};if(!G){this._propagate("start",null);this._propagate("stop",null);this._propagate("change",null);this._propagate("slide",null)}}});A.ui.slider.getter="value";A.ui.slider.defaults={handle:".ui-slider-handle",distance:1,animate:false}})(jQuery)
+/*!
+ * jQuery UI Slider 1.9.2
+ * http://jqueryui.com
+ *
+ * Copyright 2012 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/slider/
+ *
+ * Depends:
+ *	jquery.ui.core.js
+ *	jquery.ui.mouse.js
+ *	jquery.ui.widget.js
+ */
+(function( $, undefined ) {
+
+// number of pages in a slider
+// (how many times can you page up/down to go through the whole range)
+var numPages = 5;
+
+$.widget( "ui.slider", $.ui.mouse, {
+	version: "1.9.2",
+	widgetEventPrefix: "slide",
+
+	options: {
+		animate: false,
+		distance: 0,
+		max: 100,
+		min: 0,
+		orientation: "horizontal",
+		range: false,
+		step: 1,
+		value: 0,
+		values: null
+	},
+
+	_create: function() {
+		var i, handleCount,
+			o = this.options,
+			existingHandles = this.element.find( ".ui-slider-handle" ).addClass( "ui-state-default ui-corner-all" ),
+			handle = "<a class='ui-slider-handle ui-state-default ui-corner-all' href='#'></a>",
+			handles = [];
+
+		this._keySliding = false;
+		this._mouseSliding = false;
+		this._animateOff = true;
+		this._handleIndex = null;
+		this._detectOrientation();
+		this._mouseInit();
+
+		this.element
+			.addClass( "ui-slider" +
+				" ui-slider-" + this.orientation +
+				" ui-widget" +
+				" ui-widget-content" +
+				" ui-corner-all" +
+				( o.disabled ? " ui-slider-disabled ui-disabled" : "" ) );
+
+		this.range = $([]);
+
+		if ( o.range ) {
+			if ( o.range === true ) {
+				if ( !o.values ) {
+					o.values = [ this._valueMin(), this._valueMin() ];
+				}
+				if ( o.values.length && o.values.length !== 2 ) {
+					o.values = [ o.values[0], o.values[0] ];
+				}
+			}
+
+			this.range = $( "<div></div>" )
+				.appendTo( this.element )
+				.addClass( "ui-slider-range" +
+				// note: this isn't the most fittingly semantic framework class for this element,
+				// but worked best visually with a variety of themes
+				" ui-widget-header" +
+				( ( o.range === "min" || o.range === "max" ) ? " ui-slider-range-" + o.range : "" ) );
+		}
+
+		handleCount = ( o.values && o.values.length ) || 1;
+
+		for ( i = existingHandles.length; i < handleCount; i++ ) {
+			handles.push( handle );
+		}
+
+		this.handles = existingHandles.add( $( handles.join( "" ) ).appendTo( this.element ) );
+
+		this.handle = this.handles.eq( 0 );
+
+		this.handles.add( this.range ).filter( "a" )
+			.click(function( event ) {
+				event.preventDefault();
+			})
+			.mouseenter(function() {
+				if ( !o.disabled ) {
+					$( this ).addClass( "ui-state-hover" );
+				}
+			})
+			.mouseleave(function() {
+				$( this ).removeClass( "ui-state-hover" );
+			})
+			.focus(function() {
+				if ( !o.disabled ) {
+					$( ".ui-slider .ui-state-focus" ).removeClass( "ui-state-focus" );
+					$( this ).addClass( "ui-state-focus" );
+				} else {
+					$( this ).blur();
+				}
+			})
+			.blur(function() {
+				$( this ).removeClass( "ui-state-focus" );
+			});
+
+		this.handles.each(function( i ) {
+			$( this ).data( "ui-slider-handle-index", i );
+		});
+
+		this._on( this.handles, {
+			keydown: function( event ) {
+				var allowed, curVal, newVal, step,
+					index = $( event.target ).data( "ui-slider-handle-index" );
+
+				switch ( event.keyCode ) {
+					case $.ui.keyCode.HOME:
+					case $.ui.keyCode.END:
+					case $.ui.keyCode.PAGE_UP:
+					case $.ui.keyCode.PAGE_DOWN:
+					case $.ui.keyCode.UP:
+					case $.ui.keyCode.RIGHT:
+					case $.ui.keyCode.DOWN:
+					case $.ui.keyCode.LEFT:
+						event.preventDefault();
+						if ( !this._keySliding ) {
+							this._keySliding = true;
+							$( event.target ).addClass( "ui-state-active" );
+							allowed = this._start( event, index );
+							if ( allowed === false ) {
+								return;
+							}
+						}
+						break;
+				}
+
+				step = this.options.step;
+				if ( this.options.values && this.options.values.length ) {
+					curVal = newVal = this.values( index );
+				} else {
+					curVal = newVal = this.value();
+				}
+
+				switch ( event.keyCode ) {
+					case $.ui.keyCode.HOME:
+						newVal = this._valueMin();
+						break;
+					case $.ui.keyCode.END:
+						newVal = this._valueMax();
+						break;
+					case $.ui.keyCode.PAGE_UP:
+						newVal = this._trimAlignValue( curVal + ( (this._valueMax() - this._valueMin()) / numPages ) );
+						break;
+					case $.ui.keyCode.PAGE_DOWN:
+						newVal = this._trimAlignValue( curVal - ( (this._valueMax() - this._valueMin()) / numPages ) );
+						break;
+					case $.ui.keyCode.UP:
+					case $.ui.keyCode.RIGHT:
+						if ( curVal === this._valueMax() ) {
+							return;
+						}
+						newVal = this._trimAlignValue( curVal + step );
+						break;
+					case $.ui.keyCode.DOWN:
+					case $.ui.keyCode.LEFT:
+						if ( curVal === this._valueMin() ) {
+							return;
+						}
+						newVal = this._trimAlignValue( curVal - step );
+						break;
+				}
+
+				this._slide( event, index, newVal );
+			},
+			keyup: function( event ) {
+				var index = $( event.target ).data( "ui-slider-handle-index" );
+
+				if ( this._keySliding ) {
+					this._keySliding = false;
+					this._stop( event, index );
+					this._change( event, index );
+					$( event.target ).removeClass( "ui-state-active" );
+				}
+			}
+		});
+
+		this._refreshValue();
+
+		this._animateOff = false;
+	},
+
+	_destroy: function() {
+		this.handles.remove();
+		this.range.remove();
+
+		this.element
+			.removeClass( "ui-slider" +
+				" ui-slider-horizontal" +
+				" ui-slider-vertical" +
+				" ui-slider-disabled" +
+				" ui-widget" +
+				" ui-widget-content" +
+				" ui-corner-all" );
+
+		this._mouseDestroy();
+	},
+
+	_mouseCapture: function( event ) {
+		var position, normValue, distance, closestHandle, index, allowed, offset, mouseOverHandle,
+			that = this,
+			o = this.options;
+
+		if ( o.disabled ) {
+			return false;
+		}
+
+		this.elementSize = {
+			width: this.element.outerWidth(),
+			height: this.element.outerHeight()
+		};
+		this.elementOffset = this.element.offset();
+
+		position = { x: event.pageX, y: event.pageY };
+		normValue = this._normValueFromMouse( position );
+		distance = this._valueMax() - this._valueMin() + 1;
+		this.handles.each(function( i ) {
+			var thisDistance = Math.abs( normValue - that.values(i) );
+			if ( distance > thisDistance ) {
+				distance = thisDistance;
+				closestHandle = $( this );
+				index = i;
+			}
+		});
+
+		// workaround for bug #3736 (if both handles of a range are at 0,
+		// the first is always used as the one with least distance,
+		// and moving it is obviously prevented by preventing negative ranges)
+		if( o.range === true && this.values(1) === o.min ) {
+			index += 1;
+			closestHandle = $( this.handles[index] );
+		}
+
+		allowed = this._start( event, index );
+		if ( allowed === false ) {
+			return false;
+		}
+		this._mouseSliding = true;
+
+		this._handleIndex = index;
+
+		closestHandle
+			.addClass( "ui-state-active" )
+			.focus();
+
+		offset = closestHandle.offset();
+		mouseOverHandle = !$( event.target ).parents().andSelf().is( ".ui-slider-handle" );
+		this._clickOffset = mouseOverHandle ? { left: 0, top: 0 } : {
+			left: event.pageX - offset.left - ( closestHandle.width() / 2 ),
+			top: event.pageY - offset.top -
+				( closestHandle.height() / 2 ) -
+				( parseInt( closestHandle.css("borderTopWidth"), 10 ) || 0 ) -
+				( parseInt( closestHandle.css("borderBottomWidth"), 10 ) || 0) +
+				( parseInt( closestHandle.css("marginTop"), 10 ) || 0)
+		};
+
+		if ( !this.handles.hasClass( "ui-state-hover" ) ) {
+			this._slide( event, index, normValue );
+		}
+		this._animateOff = true;
+		return true;
+	},
+
+	_mouseStart: function() {
+		return true;
+	},
+
+	_mouseDrag: function( event ) {
+		var position = { x: event.pageX, y: event.pageY },
+			normValue = this._normValueFromMouse( position );
+
+		this._slide( event, this._handleIndex, normValue );
+
+		return false;
+	},
+
+	_mouseStop: function( event ) {
+		this.handles.removeClass( "ui-state-active" );
+		this._mouseSliding = false;
+
+		this._stop( event, this._handleIndex );
+		this._change( event, this._handleIndex );
+
+		this._handleIndex = null;
+		this._clickOffset = null;
+		this._animateOff = false;
+
+		return false;
+	},
+
+	_detectOrientation: function() {
+		this.orientation = ( this.options.orientation === "vertical" ) ? "vertical" : "horizontal";
+	},
+
+	_normValueFromMouse: function( position ) {
+		var pixelTotal,
+			pixelMouse,
+			percentMouse,
+			valueTotal,
+			valueMouse;
+
+		if ( this.orientation === "horizontal" ) {
+			pixelTotal = this.elementSize.width;
+			pixelMouse = position.x - this.elementOffset.left - ( this._clickOffset ? this._clickOffset.left : 0 );
+		} else {
+			pixelTotal = this.elementSize.height;
+			pixelMouse = position.y - this.elementOffset.top - ( this._clickOffset ? this._clickOffset.top : 0 );
+		}
+
+		percentMouse = ( pixelMouse / pixelTotal );
+		if ( percentMouse > 1 ) {
+			percentMouse = 1;
+		}
+		if ( percentMouse < 0 ) {
+			percentMouse = 0;
+		}
+		if ( this.orientation === "vertical" ) {
+			percentMouse = 1 - percentMouse;
+		}
+
+		valueTotal = this._valueMax() - this._valueMin();
+		valueMouse = this._valueMin() + percentMouse * valueTotal;
+
+		return this._trimAlignValue( valueMouse );
+	},
+
+	_start: function( event, index ) {
+		var uiHash = {
+			handle: this.handles[ index ],
+			value: this.value()
+		};
+		if ( this.options.values && this.options.values.length ) {
+			uiHash.value = this.values( index );
+			uiHash.values = this.values();
+		}
+		return this._trigger( "start", event, uiHash );
+	},
+
+	_slide: function( event, index, newVal ) {
+		var otherVal,
+			newValues,
+			allowed;
+
+		if ( this.options.values && this.options.values.length ) {
+			otherVal = this.values( index ? 0 : 1 );
+
+			if ( ( this.options.values.length === 2 && this.options.range === true ) &&
+					( ( index === 0 && newVal > otherVal) || ( index === 1 && newVal < otherVal ) )
+				) {
+				newVal = otherVal;
+			}
+
+			if ( newVal !== this.values( index ) ) {
+				newValues = this.values();
+				newValues[ index ] = newVal;
+				// A slide can be canceled by returning false from the slide callback
+				allowed = this._trigger( "slide", event, {
+					handle: this.handles[ index ],
+					value: newVal,
+					values: newValues
+				} );
+				otherVal = this.values( index ? 0 : 1 );
+				if ( allowed !== false ) {
+					this.values( index, newVal, true );
+				}
+			}
+		} else {
+			if ( newVal !== this.value() ) {
+				// A slide can be canceled by returning false from the slide callback
+				allowed = this._trigger( "slide", event, {
+					handle: this.handles[ index ],
+					value: newVal
+				} );
+				if ( allowed !== false ) {
+					this.value( newVal );
+				}
+			}
+		}
+	},
+
+	_stop: function( event, index ) {
+		var uiHash = {
+			handle: this.handles[ index ],
+			value: this.value()
+		};
+		if ( this.options.values && this.options.values.length ) {
+			uiHash.value = this.values( index );
+			uiHash.values = this.values();
+		}
+
+		this._trigger( "stop", event, uiHash );
+	},
+
+	_change: function( event, index ) {
+		if ( !this._keySliding && !this._mouseSliding ) {
+			var uiHash = {
+				handle: this.handles[ index ],
+				value: this.value()
+			};
+			if ( this.options.values && this.options.values.length ) {
+				uiHash.value = this.values( index );
+				uiHash.values = this.values();
+			}
+
+			this._trigger( "change", event, uiHash );
+		}
+	},
+
+	value: function( newValue ) {
+		if ( arguments.length ) {
+			this.options.value = this._trimAlignValue( newValue );
+			this._refreshValue();
+			this._change( null, 0 );
+			return;
+		}
+
+		return this._value();
+	},
+
+	values: function( index, newValue ) {
+		var vals,
+			newValues,
+			i;
+
+		if ( arguments.length > 1 ) {
+			this.options.values[ index ] = this._trimAlignValue( newValue );
+			this._refreshValue();
+			this._change( null, index );
+			return;
+		}
+
+		if ( arguments.length ) {
+			if ( $.isArray( arguments[ 0 ] ) ) {
+				vals = this.options.values;
+				newValues = arguments[ 0 ];
+				for ( i = 0; i < vals.length; i += 1 ) {
+					vals[ i ] = this._trimAlignValue( newValues[ i ] );
+					this._change( null, i );
+				}
+				this._refreshValue();
+			} else {
+				if ( this.options.values && this.options.values.length ) {
+					return this._values( index );
+				} else {
+					return this.value();
+				}
+			}
+		} else {
+			return this._values();
+		}
+	},
+
+	_setOption: function( key, value ) {
+		var i,
+			valsLength = 0;
+
+		if ( $.isArray( this.options.values ) ) {
+			valsLength = this.options.values.length;
+		}
+
+		$.Widget.prototype._setOption.apply( this, arguments );
+
+		switch ( key ) {
+			case "disabled":
+				if ( value ) {
+					this.handles.filter( ".ui-state-focus" ).blur();
+					this.handles.removeClass( "ui-state-hover" );
+					this.handles.prop( "disabled", true );
+					this.element.addClass( "ui-disabled" );
+				} else {
+					this.handles.prop( "disabled", false );
+					this.element.removeClass( "ui-disabled" );
+				}
+				break;
+			case "orientation":
+				this._detectOrientation();
+				this.element
+					.removeClass( "ui-slider-horizontal ui-slider-vertical" )
+					.addClass( "ui-slider-" + this.orientation );
+				this._refreshValue();
+				break;
+			case "value":
+				this._animateOff = true;
+				this._refreshValue();
+				this._change( null, 0 );
+				this._animateOff = false;
+				break;
+			case "values":
+				this._animateOff = true;
+				this._refreshValue();
+				for ( i = 0; i < valsLength; i += 1 ) {
+					this._change( null, i );
+				}
+				this._animateOff = false;
+				break;
+			case "min":
+			case "max":
+				this._animateOff = true;
+				this._refreshValue();
+				this._animateOff = false;
+				break;
+		}
+	},
+
+	//internal value getter
+	// _value() returns value trimmed by min and max, aligned by step
+	_value: function() {
+		var val = this.options.value;
+		val = this._trimAlignValue( val );
+
+		return val;
+	},
+
+	//internal values getter
+	// _values() returns array of values trimmed by min and max, aligned by step
+	// _values( index ) returns single value trimmed by min and max, aligned by step
+	_values: function( index ) {
+		var val,
+			vals,
+			i;
+
+		if ( arguments.length ) {
+			val = this.options.values[ index ];
+			val = this._trimAlignValue( val );
+
+			return val;
+		} else {
+			// .slice() creates a copy of the array
+			// this copy gets trimmed by min and max and then returned
+			vals = this.options.values.slice();
+			for ( i = 0; i < vals.length; i+= 1) {
+				vals[ i ] = this._trimAlignValue( vals[ i ] );
+			}
+
+			return vals;
+		}
+	},
+
+	// returns the step-aligned value that val is closest to, between (inclusive) min and max
+	_trimAlignValue: function( val ) {
+		if ( val <= this._valueMin() ) {
+			return this._valueMin();
+		}
+		if ( val >= this._valueMax() ) {
+			return this._valueMax();
+		}
+		var step = ( this.options.step > 0 ) ? this.options.step : 1,
+			valModStep = (val - this._valueMin()) % step,
+			alignValue = val - valModStep;
+
+		if ( Math.abs(valModStep) * 2 >= step ) {
+			alignValue += ( valModStep > 0 ) ? step : ( -step );
+		}
+
+		// Since JavaScript has problems with large floats, round
+		// the final value to 5 digits after the decimal point (see #4124)
+		return parseFloat( alignValue.toFixed(5) );
+	},
+
+	_valueMin: function() {
+		return this.options.min;
+	},
+
+	_valueMax: function() {
+		return this.options.max;
+	},
+
+	_refreshValue: function() {
+		var lastValPercent, valPercent, value, valueMin, valueMax,
+			oRange = this.options.range,
+			o = this.options,
+			that = this,
+			animate = ( !this._animateOff ) ? o.animate : false,
+			_set = {};
+
+		if ( this.options.values && this.options.values.length ) {
+			this.handles.each(function( i ) {
+				valPercent = ( that.values(i) - that._valueMin() ) / ( that._valueMax() - that._valueMin() ) * 100;
+				_set[ that.orientation === "horizontal" ? "left" : "bottom" ] = valPercent + "%";
+				$( this ).stop( 1, 1 )[ animate ? "animate" : "css" ]( _set, o.animate );
+				if ( that.options.range === true ) {
+					if ( that.orientation === "horizontal" ) {
+						if ( i === 0 ) {
+							that.range.stop( 1, 1 )[ animate ? "animate" : "css" ]( { left: valPercent + "%" }, o.animate );
+						}
+						if ( i === 1 ) {
+							that.range[ animate ? "animate" : "css" ]( { width: ( valPercent - lastValPercent ) + "%" }, { queue: false, duration: o.animate } );
+						}
+					} else {
+						if ( i === 0 ) {
+							that.range.stop( 1, 1 )[ animate ? "animate" : "css" ]( { bottom: ( valPercent ) + "%" }, o.animate );
+						}
+						if ( i === 1 ) {
+							that.range[ animate ? "animate" : "css" ]( { height: ( valPercent - lastValPercent ) + "%" }, { queue: false, duration: o.animate } );
+						}
+					}
+				}
+				lastValPercent = valPercent;
+			});
+		} else {
+			value = this.value();
+			valueMin = this._valueMin();
+			valueMax = this._valueMax();
+			valPercent = ( valueMax !== valueMin ) ?
+					( value - valueMin ) / ( valueMax - valueMin ) * 100 :
+					0;
+			_set[ this.orientation === "horizontal" ? "left" : "bottom" ] = valPercent + "%";
+			this.handle.stop( 1, 1 )[ animate ? "animate" : "css" ]( _set, o.animate );
+
+			if ( oRange === "min" && this.orientation === "horizontal" ) {
+				this.range.stop( 1, 1 )[ animate ? "animate" : "css" ]( { width: valPercent + "%" }, o.animate );
+			}
+			if ( oRange === "max" && this.orientation === "horizontal" ) {
+				this.range[ animate ? "animate" : "css" ]( { width: ( 100 - valPercent ) + "%" }, { queue: false, duration: o.animate } );
+			}
+			if ( oRange === "min" && this.orientation === "vertical" ) {
+				this.range.stop( 1, 1 )[ animate ? "animate" : "css" ]( { height: valPercent + "%" }, o.animate );
+			}
+			if ( oRange === "max" && this.orientation === "vertical" ) {
+				this.range[ animate ? "animate" : "css" ]( { height: ( 100 - valPercent ) + "%" }, { queue: false, duration: o.animate } );
+			}
+		}
+	}
+
+});
+
+}(jQuery));
