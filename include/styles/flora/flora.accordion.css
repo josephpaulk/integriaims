@@ -1,28 +1,16 @@
-.ui-accordion { margin: 0; padding: 0; list-style-type: none; }
-.ui-accordion li { margin: 0; margin-bottom: 2px; padding: 0; }
-.ui-accordion li .ui-accordion-header {
-	display: block;
-	padding-left: 5px;
-	margin-right: 3px;
-	height: 28px;
-	color: #000;
-	text-decoration: none;
-	line-height: 28px;
-	position: relative;
-	left: 3px;
-}
-.ui-accordion li .ui-accordion-right {
-	display: block;
-	position: absolute;
-	top: 0px;
-	right: -3px;
-	height: 28px;
-	width: 3px;
-}
-.ui-accordion li .ui-accordion-left {
-	display: block;
-	background-repeat: no-repeat;
-	position: absolute;
-	height: 28px;
-	width: 3px;
-}
+/*!
+ * jQuery UI Accordion 1.9.2
+ * http://jqueryui.com
+ *
+ * Copyright 2012 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Accordion#theming
+ */
+.ui-accordion .ui-accordion-header { display: block; cursor: pointer; position: relative; margin-top: 2px; padding: .5em .5em .5em .7em; zoom: 1; }
+.ui-accordion .ui-accordion-icons { padding-left: 2.2em; }
+.ui-accordion .ui-accordion-noicons { padding-left: .7em; }
+.ui-accordion .ui-accordion-icons .ui-accordion-icons { padding-left: 2.2em; }
+.ui-accordion .ui-accordion-header .ui-accordion-header-icon { position: absolute; left: .5em; top: 50%; margin-top: -8px; }
+.ui-accordion .ui-accordion-content { padding: 1em 2.2em; border-top: 0; overflow: auto; zoom: 1; }

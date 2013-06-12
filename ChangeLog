@@ -1,5 +1,31 @@
 2013-06-11  Dario Rodriguez <dario@artica.es>
 
+	* include/styles/flora/flora.theme.css
+	* include/styles/flora/flora.core.css
+	* include/styles/flora/flora.dialog.css
+	* include/styles/flora/flora.accordion.css
+	* include/styles/flora/flora.css
+	* include/styles/flora/flora.slider.css
+	* include/styles/flora/flora.all.css
+	* include/styles/flora/flora.tabs.css
+	* include/styles/flora/flora.datepicker.css
+	* include/styles/flora/images
+	* include/styles/flora/images/ui-bg_flat_0_aaaaaa_40x100.png
+	* include/styles/flora/images/ui-icons_222222_256x240.png
+	* include/styles/flora/images/ui-bg_highlight-soft_75_cccccc_1x100.png
+	* include/styles/flora/images/ui-bg_glass_75_dadada_1x400.png
+	* include/styles/flora/images/ui-icons_454545_256x240.png
+	* include/styles/flora/images/ui-icons_2e83ff_256x240.png
+	* include/styles/flora/images/ui-bg_glass_65_ffffff_1x400.png
+	* include/styles/flora/images/ui-bg_glass_75_e6e6e6_1x400.png
+	* include/styles/flora/images/ui-icons_cd0a0a_256x240.png
+	* include/styles/flora/images/ui-bg_flat_75_ffffff_40x100.png
+	* include/styles/flora/images/ui-bg_glass_95_fef1ec_1x400.png
+	* include/styles/flora/images/ui-bg_glass_55_fbf9ee_1x400.png
+	* include/styles/flora/images/ui-icons_888888_256x240.png: Changed new CSS.
+
+2013-06-11  Dario Rodriguez <dario@artica.es>
+
 	* include/js/jquery.ui.widget.js
 	* include/js/jquery.ui.dialog.js
 	* include/js/jquery.ui.draggable.js
