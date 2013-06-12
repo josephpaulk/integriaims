@@ -379,7 +379,7 @@ echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=
 	$table_search->width = '98%';
 	$table_search->data = array ();
 	
-	$table_search->data[0][0] = print_input_text ('search_free', $search_free, '', 60, 128, true, __('Search'));
+	$table_search->data[0][0] = print_input_text ('search_free', $search_free, '', 40, 128, true, __('Search'));
 	
 	$objects_type = get_object_types ();
 	$table_search->data[0][1] = print_label (__('Object type'), '','',true);
@@ -609,14 +609,8 @@ function loadSubTree(type, div_id, less_branchs, id_father, sql_search) {
 	}
 	else {
 
-		<?php
-		if (! defined ('METACONSOLE')) {
-			echo 'var icon_path = \'images/tree\';';
-		}
-		else {
-			echo 'var icon_path = \'../../images/tree\';';
-		}
-		?>
+		var icon_path = 'images/tree\';
+		
 		if (hiddenDiv == 0) {
 
 			$('#tree_div'+id_father+'_'+type+'_'+div_id).hide('normal');

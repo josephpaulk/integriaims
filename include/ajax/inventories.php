@@ -102,7 +102,7 @@ if ($get_inventory_search) {
 	$table_search->width = '98%';
 	$table_search->data = array ();
 	
-	$table_search->data[0][0] = print_input_text ('search_free', $search_free, '', 60, 128, true, __('Search'));
+	$table_search->data[0][0] = print_input_text ('search_free', $search_free, '', 40, 128, true, __('Search'));
 	
 	$objects_type = get_object_types ();
 	$table_search->data[0][1] = print_label (__('Incident type'), '','',true);
@@ -143,7 +143,7 @@ if ($get_inventory_search) {
 	print_table($table_search);
 	
 	echo '<div style="width:'.$table_search->width.'" class="action-buttons button">';
-		echo "<a href='javascript: loadParams(\".$search_free.\");'>".__('Search')."<img src='images/go.png' /></a>";
+	echo "<input type='button' class='sub next' onClick='javascript: loadParams(\".$search_free.\");' value='".__("Search")."''>";
 	echo '</div>';
 
 	if ($search) {

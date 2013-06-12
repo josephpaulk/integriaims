@@ -661,7 +661,7 @@ echo "<div class= 'dialog ui-dialog-content' id='user_search_modal'></div>";
 <script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 <script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
-<script type="text/javascript" src="include/js/jquery.ui.dialog"></script>
+<script type="text/javascript" src="include/js/jquery.ui.dialog.js"></script>
 <script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
@@ -1017,6 +1017,7 @@ function show_external_query(table_name, id_table, element_name, id_object_type_
 						opacity: 0.5,
 						background: "black"
 					},
+					position: "center top",
 					width: 620,
 					height: 500
 				});
@@ -1071,6 +1072,7 @@ function show_inventory_search(search_free, id_object_type_search, owner_search,
 		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
 		dataType: "html",
 		success: function(data){	
+			
 			$("#inventory_search_window").html (data);
 			$("#inventory_search_window").show ();
 
@@ -1083,7 +1085,7 @@ function show_inventory_search(search_free, id_object_type_search, owner_search,
 						background: "black"
 					},
 					width: 920,
-					height: 850
+					height: 600
 				});
 			$("#inventory_search_window").dialog('open');
 		}
@@ -1091,7 +1093,7 @@ function show_inventory_search(search_free, id_object_type_search, owner_search,
 }
 
 function loadParams() {
-
+	
 	search_free = $('#text-search_free').val();
 	id_object_type_search = $('#id_object_type_search').val();
 	owner_search = $('#text-owner_search').val();
