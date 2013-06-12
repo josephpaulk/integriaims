@@ -1,5 +1,9 @@
 2013-06-11  Dario Rodriguez <dario@artica.es>
 
+	* include/styles/flora/flora.tabs.css: Fixed a lost style of tabs
+
+2013-06-11  Dario Rodriguez <dario@artica.es>
+
 	* operation/inventories/inventory_detail.php: Changed behaviour of parent object
 	selector.
 	* operation/incidents/incident_detail.php: Changed inventory name function now
