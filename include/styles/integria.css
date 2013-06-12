@@ -2166,3 +2166,10 @@ h2.incident_dashboard {
 	margin-top: 4px;
 	text-align: left;
 }
+
+input.inventory_obj_search {
+	background-image: url("../../images/zoom.png");
+	background-repeat: no-repeat;
+	background-position-x: 97%;
+	background-position-y: 50%;
+}

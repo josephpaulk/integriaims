@@ -503,14 +503,10 @@ $table->data[0][2] = print_checkbox_extended ('public', 1, $public,
 
 if ($write_permission) {
 	
-	$parent_name = $id_parent ? get_inventory_name ($id_parent) : '';
+	$parent_name = $id_parent ? get_inventory_name ($id_parent) : __("None");
 	
-	$table->data[1][0] = print_input_text ('parent_name', $parent_name,'', 7, 0, true, __('Parent object'), false);	
-	if ($id_parent)
-		$table->data[1][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$id_parent.'"><img src="images/go.png" /></a>';
-		
-	$table->data[1][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".'&nbsp;&nbsp;'.__('Search parent')."</a>";
-	
+	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','')", "class='inventory_obj_search'", true, false,  __('Parent object'));
+	$table->data[1][0] .= print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
 	$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
 
 } else {
@@ -1058,7 +1054,16 @@ function enviar(data, element_name, id_object_type_field) {
 function loadInventory(id_inventory) {
 	
 	$('#hidden-id_parent').val(id_inventory);
-	$('#text-parent_name').val(id_inventory);
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&get_inventory_name=1&id_inventory="+ id_inventory,
+		dataType: "text",
+		success: function (name) {
+			$('#text-parent_name').val(name);
+		}
+	});	
 
 	$("#inventory_search_window").dialog('close');
 }
@@ -1153,6 +1158,11 @@ function show_company_associated() {
 			$("#company_search_modal").dialog('open');
 		}
 	});
+}
+
+function cleanParentInventory() {
+	$("#text-parent_name").val(__("None"));
+	$("#hidden-id_parent").attr("value", "");	
 }
 
 function loadCompany() {

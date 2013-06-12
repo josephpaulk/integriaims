@@ -21,6 +21,15 @@ $get_external_data = get_parameter('get_external_data', 0);
 $get_inventory_search = get_parameter('get_inventory_search', 0);
 $get_company_associated = get_parameter('get_company_associated', 0);
 $get_user_associated = get_parameter('get_user_associated', 0);
+	$get_inventory_name = (bool) get_parameter('get_inventory_name', 0);
+
+if ($get_inventory_name) {
+	$id_inventory = get_parameter('id_inventory');
+	$name = get_db_value('name', 'tinventory', 'id', $id_inventory);
+
+	echo safe_output($name);
+	return;
+}
 
 if ($get_external_data) {
 	$table_name = get_parameter('table_name');

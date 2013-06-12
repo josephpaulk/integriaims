@@ -26,15 +26,6 @@ if (defined ('AJAX')) {
 	global $config;
 	
 	$show_type_fields = (bool) get_parameter('show_type_fields', 0);
-	$get_inventory_name = (bool) get_parameter('get_inventory_name', 0);
-
-	if ($get_inventory_name) {
-		$id_inventory = get_parameter('id_inventory');
-		$name = get_db_value('name', 'tinventory', 'id', $id_inventory);
-
-		echo json_encode($name);
-		return;
-	}
  	
  	if ($show_type_fields) {
 		$id_incident_type = get_parameter('id_incident_type');
@@ -337,7 +328,7 @@ if ($action == "insert") {
 		$result_msg  = '<h3 class="error">'.__('Creator user does not exist').'</h3>';
 	}
 	else if($user_exists === false) {
-		$result_msg  = '<h3 class="error">'.__('Assigned user does not exist').'</h3>';
+		$result_msg  = '<h3 class="error">'.__('Owner user does not exist').'</h3>';
 	}
 	else {
 	
@@ -712,7 +703,7 @@ if ($has_im) {
 	$params_assigned['input_id'] = 'text-id_user';
 	$params_assigned['input_name'] = 'id_user';
 	$params_assigned['input_value'] = $assigned_user_for_this_incident;
-	$params_assigned['title'] = 'Assigned user';
+	$params_assigned['title'] = 'Owner';
 	$params_assigned['help_message'] = "User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user";
 	$params_assigned['return'] = true;
 	$params_assigned['return_help'] = true;
@@ -722,13 +713,13 @@ if ($has_im) {
 	// Enterprise only
 	if (($create_incident) AND ($config["enteprise"] == 1)){
 		$assigned_user_for_this_incident = get_default_user_for_incident ($usuario);
-		$table->data[2][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Assigned user'));
-		$table->data[2][1] .= print_label (__('Assigned user'), '', '', true,
+		$table->data[2][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Owner'));
+		$table->data[2][1] .= print_label (__('Owner'), '', '', true,
 		dame_nombre_real ($assigned_user_for_this_incident));	
 		
 	} else {
-		$table->data[2][1] = print_input_hidden ('id_user', $usuario, true, __('Assigned user'));
-		$table->data[2][1] .= print_label (__('Assigned user'), '', '', true,
+		$table->data[2][1] = print_input_hidden ('id_user', $usuario, true, __('Owner'));
+		$table->data[2][1] .= print_label (__('Owner'), '', '', true,
 		dame_nombre_real ($usuario));
 	}
 }
@@ -1000,7 +991,7 @@ $(document).ready (function () {
 		
 		if (assigned_user == "") {
 			$("#text-id_user").css("border-color", "red");
-			$("div.result").html("<h3 class='error'><?php echo __("Assigned user field is empty")?></h3>");
+			$("div.result").html("<h3 class='error'><?php echo __("Owner field is empty")?></h3>");
 			window.scrollTo(0,0);
 			return false;
 		}
@@ -1175,8 +1166,8 @@ function loadInventory(id_inventory) {
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=operation/incidents/incident_detail&get_inventory_name=1&id_inventory="+ id_inventory,
-		dataType: "json",
+		data: "page=include/ajax/inventories&get_inventory_name=1&id_inventory="+ id_inventory,
+		dataType: "text",
 		success: function (name) {
 			$('#incident_inventories').append($('<option></option>').html(name).attr("value", id_inventory));
 		}

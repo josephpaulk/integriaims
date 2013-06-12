@@ -874,8 +874,6 @@ function update_parent(id_parent) {
 }
 
 function clean_parent_field () {
-	console.log("paso");
 	$("#text-search_parent").val(__("None"));
 	$("#hidden-id_parent").attr("value", "");	
-
 }
