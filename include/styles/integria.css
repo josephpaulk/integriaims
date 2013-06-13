@@ -2174,7 +2174,8 @@ input.inventory_obj_search {
 	background-position-y: 50%;
 }
 
-input.ac_input {
+input.ui-autocomplete-input {
+	background-image: url("../../images/group.png");
 	background-repeat: no-repeat;
 	background-position-x: 97%;
 	background-position-y: 50%;

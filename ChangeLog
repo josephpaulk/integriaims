@@ -1,5 +1,10 @@
 2013-06-13 Dario Rodriguez <dario@artica.es>
 
+	* include/styles/integria.css,
+	include/functions_user.php: Modified style of new autocomplete plugin.
+
+2013-06-13 Dario Rodriguez <dario@artica.es>
+
 	* operation/leads/lead_detail.php,
 	operation/projects/people_manager.php,
 	operation/projects/project_detail.php,
