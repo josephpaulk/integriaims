@@ -1,8 +1,12 @@
-2013-06-11  Dario Rodriguez <dario@artica.es>
+2013-06-13 Dario Rodriguez <dario@artica.es>
+
+	* index.php: Fixed an error loading JQuery libraries in wrong order.
+
+2013-06-12  Dario Rodriguez <dario@artica.es>
 
 	* include/styles/flora/flora.tabs.css: Fixed a lost style of tabs
 
-2013-06-11  Dario Rodriguez <dario@artica.es>
+2013-06-12  Dario Rodriguez <dario@artica.es>
 
 	* operation/inventories/inventory_detail.php: Changed behaviour of parent object
 	selector.
@@ -12,18 +16,18 @@
 	* include/ajax/inventories.php: New function to get inventory name.
 	* include/styles/integria.css: Added new style for inventory object selectors.
 
-2013-06-11  Dario Rodriguez <dario@artica.es>
+2013-06-12  Dario Rodriguez <dario@artica.es>
 
 	* operation/inventories/inventory_detail.php,
 	* operation/inventories/inventory_search.php,
 	* include/ajax/inventories.php: Fixed several bug related to 
 	inventory search dialog.
 
-2013-06-11  Dario Rodriguez <dario@artica.es>
+2013-06-12  Dario Rodriguez <dario@artica.es>
 
 	* index.php: Added new CSS and JS files of new jquery UI.
 
-2013-06-11  Dario Rodriguez <dario@artica.es>
+2013-06-12  Dario Rodriguez <dario@artica.es>
 
 	* include/styles/flora/flora.theme.css
 	* include/styles/flora/flora.core.css
@@ -49,7 +53,7 @@
 	* include/styles/flora/images/ui-bg_glass_55_fbf9ee_1x400.png
 	* include/styles/flora/images/ui-icons_888888_256x240.png: Changed new CSS.
 
-2013-06-11  Dario Rodriguez <dario@artica.es>
+2013-06-12  Dario Rodriguez <dario@artica.es>
 
 	* include/js/jquery.ui.widget.js
 	* include/js/jquery.ui.dialog.js
