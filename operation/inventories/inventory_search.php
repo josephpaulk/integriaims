@@ -578,13 +578,9 @@ function loadSubTree(type, div_id, less_branchs, id_father, sql_search) {
 					$('#tree_div'+id_father+'_'+type+'_'+div_id).show('normal');
 					
 					//change image of tree [+] to [-]
-					<?php if (! defined ('METACONSOLE')) {
-						echo 'var icon_path = \'images/tree\';';
-					}
-					else {
-						echo 'var icon_path = \'../../images/tree\';';
-					}
-					?>
+					
+					var icon_path = 'images/tree';
+					
 					switch (pos) {
 						case 0:
 							$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/first_expanded.png');
@@ -609,7 +605,7 @@ function loadSubTree(type, div_id, less_branchs, id_father, sql_search) {
 	}
 	else {
 
-		var icon_path = 'images/tree\';
+		var icon_path = 'images/tree';
 		
 		if (hiddenDiv == 0) {
 

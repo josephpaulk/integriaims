@@ -1,5 +1,10 @@
 2013-06-13 Dario Rodriguez <dario@artica.es>
 
+	* operation/inventories/inventory_search.php: Fixed some JS errors.
+	* include/functions_update_manager.php: Removed deprecated function jQuery.browser.
+
+2013-06-13 Dario Rodriguez <dario@artica.es>
+
 	* index.php: Fixed an error loading JQuery libraries in wrong order.
 
 2013-06-12  Dario Rodriguez <dario@artica.es>

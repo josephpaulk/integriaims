@@ -276,7 +276,6 @@ function update_print_javascript_admin() {
 							opacity: 0.5,
 							background: "black"
 						},
-					bgiframe: jQuery.browser.msie
 				});
 			$(".ui-dialog-titlebar-close").hide();
 			$("#dialog_download").show();
