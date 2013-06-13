@@ -1,5 +1,10 @@
 2013-06-13 Dario Rodriguez <dario@artica.es>
 
+	* include/functions_html.php: Added support to set onclick callbacks to
+	print_input_extended function.
+
+2013-06-13 Dario Rodriguez <dario@artica.es>
+
 	* include/styles/integria.css,
 	include/functions_user.php: Modified style of new autocomplete plugin.
 

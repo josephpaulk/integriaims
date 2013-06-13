@@ -233,8 +233,12 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
 	if (! empty ($maxlength)) {
 		$maxlength = ' maxlength="'.$maxlength.'" ';
 	}
+	
+	if (! empty ($script)) {
+		$script = ' onClick="'.$script.'" ';
+	}
 
-	$output .= '<input name="'.$name.'" type="'.$type.'" value="'.$value.'" size="'.$size.'" '.$maxlength.' alt="'.$alt.'" ';
+	$output .= '<input name="'.$name.'" type="'.$type.'" value="'.$value.'" size="'.$size.'" '.$maxlength.' alt="'.$alt.'" '.$script;
 	$output .= ' id="'.$id.'"';
 	
 	if ($disabled)
