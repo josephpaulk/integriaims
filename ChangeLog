@@ -1,5 +1,11 @@
 2013-06-13 Dario Rodriguez <dario@artica.es>
 
+	* godmode/usuarios/configurar_usuarios.php,
+	operation/companies/company_detail.php: Modified to use new autocomplete plugin.
+	* include/js/jquery.autocomplete.js: Deleted old autocomplete library.
+
+2013-06-13 Dario Rodriguez <dario@artica.es>
+
 	* index.php: Loading jquery validate and validate functions in index page
 	* include/js/jquery.ui.autocomplete.js: Changed autocomplete library for jquery 
 	ui plugin.

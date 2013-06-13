@@ -438,7 +438,6 @@ echo "</table>";
 echo "</form>";
 ?> 
 
-<script src="include/js/jquery.js"></script>
 <script src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
