@@ -365,27 +365,10 @@ $(document).ready (function () {
 	configure_range_dates (null);
 	$("textarea").TextAreaResizer ();
 	
-	$("#text-id_owner").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
-			},
-			formatItem: function (data, i, total) {
-				if (total == 0)
-					$("#text-id_owner").css ('background-color', '#cc0000');
-				else
-					$("#text-id_owner").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Real name") ?>: '+data[1]+'</span>';
-			},
-			delay: 200
-
-		});
+	var idUser = "<?php echo $config['id_user'] ?>";
+	
+	bindAutocomplete ("#text-id_owner", idUser);	
+	
 });
 
 // Form validation

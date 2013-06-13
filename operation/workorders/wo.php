@@ -623,52 +623,16 @@ href="index.php?sec=projects&sec2=operation/workorders/wo'.$params.'&operation=d
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
 	configure_range_dates (null);
-	$("#text-user").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
-			},
-			formatItem: function (data, i, total) {
-				if (total == 0)
-					$("#text-id_user").css ('background-color', '#cc0000');
-				else
-					$("#text-id_user").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field">('+data[1]+')</span>';
-			},
-			delay: 200
-
-		});
-	$("#text-user2").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
-			},
-			formatItem: function (data, i, total) {
-				if (total == 0)
-					$("#text-id_user").css ('background-color', '#cc0000');
-				else
-					$("#text-id_user").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field">('+data[1]+')</span>';
-			},
-			delay: 200
-		});
-
+	
+	var idUser = "<?php echo $config['id_user'] ?>";
+	
+	bindAutocomplete ("#text-user", idUser);
+	bindAutocomplete ("#text-user2", idUser);
+	
+	// Form validation
+	trim_element_on_submit('#text-search_text');
+	trim_element_on_submit('#text-name');	
+	
 });
-
-// Form validation
-trim_element_on_submit('#text-search_text');
-trim_element_on_submit('#text-name');
 
 </script>

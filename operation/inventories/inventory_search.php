@@ -665,31 +665,16 @@ function loadTable(type, div_id, less_branchs, id_father, sql_search) {
 
 $(document).ready (function () {
 	
-	$("#text-owner").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
-			},
-			formatItem: function (data, i, total) {
-				if (total == 0)
-					$("#text-owner").css ('background-color', '#cc0000');
-				else
-					$("#text-owner").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Real name") ?>: '+data[1]+'</span>';
-			},
-			delay: 200
+	var idUser = "<?php echo $config['id_user'] ?>";
+	
+	bindAutocomplete ("#text-owner", idUser);
+	
+	// Form validation
+	trim_element_on_submit('#text-search_free');	
 
-		});
 });
 
 
-// Form validation
-trim_element_on_submit('#text-search_free');
+
 
 </script>

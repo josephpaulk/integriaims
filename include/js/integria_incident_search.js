@@ -876,14 +876,3 @@ function clean_parent_field () {
 	$("#text-search_parent").val(__("None"));
 	$("#hidden-id_parent").attr("value", "");	
 }
-
-function bindAutocomplete (idTag, idUser) {
-	var ajaxUrl = "ajax.php?page=include/ajax/users&search_users=1&id_user="+idUser;
-	
-	$(idTag).autocomplete (
-		{
-			source: ajaxUrl,
-			minLength: 2,
-			delay: 200
-		});
-}

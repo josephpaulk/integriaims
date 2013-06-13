@@ -633,90 +633,13 @@ if ($do_search  == 0){
 
 $(document).ready (function () {
 	configure_range_dates (null);
-	$("#text-user_id").autocomplete ("ajax.php",
-                {
-                        scroll: true,
-                        minChars: 2,
-                        extraParams: {
-                                page: "include/ajax/users",
-                                search_users: 1,
-                                id_user: "<?php echo $config['id_user'] ?>"
-                        },
-                        formatItem: function (data, i, total) {
-                                if (total == 0)
-                                        $("#text-user_id").css ('background-color', '#cc0000');
-                                else
-                                        $("#text-user_id").css ('background-color', '');
-                                if (data == "")
-                                        return false;
-                                return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
-                        },
-                        delay: 200
 
-                });
-	$("#text-user_id2").autocomplete ("ajax.php",
-                {
-                        scroll: true,
-                        minChars: 2,
-                        extraParams: {
-                                page: "include/ajax/users",
-                                search_users: 1,
-                                id_user: "<?php echo $config['id_user'] ?>"
-                        },
-                        formatItem: function (data, i, total) {
-                                if (total == 0)
-                                        $("#text-user_id2").css ('background-color', '#cc0000');
-                                else
-                                        $("#text-user_id2").css ('background-color', '');
-                                if (data == "")
-                                        return false;
-                                return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
-                        },
-                        delay: 200
-
-                });
-	$("#text-user_id3").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
-			},
-			formatItem: function (data, i, total) {
-				if (total == 0)
-					$("#text-user_id3").css ('background-color', '#cc0000');
-				else
-					$("#text-user_id3").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
-			},
-			delay: 200
-
-		});
-	$("#text-user_id4").autocomplete ("ajax.php",
-                {
-                        scroll: true,
-                        minChars: 2,
-                        extraParams: {
-                                page: "include/ajax/users",
-                                search_users: 1,
-                                id_user: "<?php echo $config['id_user'] ?>"
-                        },
-                        formatItem: function (data, i, total) {
-                                if (total == 0)
-                                        $("#text-user_id3").css ('background-color', '#cc0000');
-                                else
-                                        $("#text-user_id3").css ('background-color', '');
-                                if (data == "")
-                                        return false;
-                                return data[0]+'<br><span class="ac_extra_field"><?php echo __(" ") ?>: '+data[1]+'</span>';
-                        },
-                        delay: 200
-
-                });
-
+	var idUser = "<?php echo $config['id_user'] ?>";
+	
+	bindAutocomplete ("#text-user_id", idUser);
+	bindAutocomplete ("#text-user_id2", idUser);
+	bindAutocomplete ("#text-user_id3", idUser);
+	bindAutocomplete ("#text-user_id4", idUser);
+	
 });
 </script>

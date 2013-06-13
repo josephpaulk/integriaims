@@ -224,6 +224,17 @@ $(document).ready(function () {
 	$("#submit-massive_update").click(function(event) {
 		process_massive_updates();
 	});	
+	
+	// Form validation
+	trim_element_on_submit('#text-search_string');
+	trim_element_on_submit('#text-search_name');
+	trim_element_on_submit('#text-inventory_name');
+
+	//Autocomplete for owner search field
+	var idUser = "<?php echo $config['id_user'] ?>";
+		
+	bindAutocomplete ("#text-search_id_user", idUser);
+	
 });
 
 function loadInventory(id_inventory) {
@@ -262,32 +273,5 @@ function show_search_inventory(search_free, id_object_type_search, owner_search,
 	});
 }
 
-// Form validation
-trim_element_on_submit('#text-search_string');
-trim_element_on_submit('#text-search_name');
-trim_element_on_submit('#text-inventory_name');
-
-//Autocomplete for owner search field
-$("#text-search_id_user").autocomplete ("ajax.php", 
-	{
-		scroll: true,
-		minChars: 2,
-		extraParams: {
-			page: "include/ajax/users",
-			search_users: 1,
-			id_user: "<?php echo $config['id_user'] ?>"
-		},
-		formatItem: function (data, i, total) {
-			if (total == 0)
-				$("#text-search_id_user").css ('background-color', '#cc0000');
-			else
-				$("#text-search_id_user").css ('background-color', '');
-			if (data == "")
-				return false;
-			return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre Real") ?>: '+data[1]+'</span>';
-		},
-		delay: 200
-
-});
 
 </script>

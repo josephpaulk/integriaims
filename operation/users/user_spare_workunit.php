@@ -545,27 +545,10 @@ function datepicker_hook () {
 }
 
 function username_hook () {
-	$('input[name~="id_username"]').autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
-			},
-			formatItem: function (data, i, total) {
-				if (total == 0)
-					$("#text-id_username").css ('background-color', '#cc0000');
-				else
-					$("#text-id_username").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre real") ?>: '+data[1]+'</span>';
-			},
-			delay: 200
+	var idUser = "<?php echo $config['id_user'] ?>";
+	
+	bindAutocomplete ('input[name~="id_username"]', idUser);
 
-	});	
 }
 
 //single task validation form

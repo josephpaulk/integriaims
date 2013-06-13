@@ -759,82 +759,67 @@ if ($id || $new) {
 	
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
-	$("#text-user").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>",
-			},
-			formatItem: function (data, i, total) {
-				
-				if (total == 0)
-					$("#text-user").css ('background-color', '#cc0000');
-				else
-					$("#text-user").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field">('+data[1]+')</span>';
-			},
-			delay: 200
-		});
+	
+	var idUser = "<?php echo $config['id_user'] ?>";
+	
+	bindAutocomplete ("#text-user", idUser);
+	
+	// Form validation
+	trim_element_on_submit('#text-search_text');
+	trim_element_on_submit('#text-fullname');
+	trim_element_on_submit('#text-email');
+	trim_element_on_submit('#text-from');
+	trim_element_on_submit('#text-to');
+	trim_element_on_submit('#text-cco');
+	trim_element_on_submit('#text-contract_number');
+	validate_form("#lead_form");
+	var rules, messages;
+	// Rules: #text-fullname
+	rules = {
+		required: true,
+		remote: {
+			url: "ajax.php",
+			type: "POST",
+			data: {
+				page: "include/ajax/remote_validations",
+				search_existing_lead: 1,
+				lead_name: function() { return $('#text-fullname').val() },
+				lead_id: "<?php echo $id?>"
+			}
+		}
+	};
+	messages = {
+		required: "<?php echo __('Name required')?>",
+		remote: "<?php echo __('This lead already exists')?>"
+	};
+	add_validate_form_element_rules('#text-fullname', rules, messages);
+	// Rules: #text-email
+	rules = {
+		required: true,
+		email: true,
+		remote: {
+			url: "ajax.php",
+			type: "POST",
+			data: {
+				page: "include/ajax/remote_validations",
+				search_existing_lead_email: 1,
+				lead_email: function() { return $('#text-email').val() },
+				lead_id: "<?php echo $id?>"
+			}
+		}
+	};
+	messages = {
+		required: "<?php echo __('Email required')?>",
+		email: "<?php echo __('Invalid email')?>",
+		remote: "<?php echo __('This lead email already exists')?>"
+	};
+	add_validate_form_element_rules('#text-email', rules, messages);
+	// Rules: #text-estimated_sale
+	rules = { number: true };
+	messages = { number: "<?php echo __('Invalid number')?>" };
+	add_validate_form_element_rules('#text-estimated_sale', rules, messages);	
+
 });
 
-// Form validation
-trim_element_on_submit('#text-search_text');
-trim_element_on_submit('#text-fullname');
-trim_element_on_submit('#text-email');
-trim_element_on_submit('#text-from');
-trim_element_on_submit('#text-to');
-trim_element_on_submit('#text-cco');
-trim_element_on_submit('#text-contract_number');
-validate_form("#lead_form");
-var rules, messages;
-// Rules: #text-fullname
-rules = {
-	required: true,
-	remote: {
-		url: "ajax.php",
-        type: "POST",
-        data: {
-			page: "include/ajax/remote_validations",
-			search_existing_lead: 1,
-			lead_name: function() { return $('#text-fullname').val() },
-			lead_id: "<?php echo $id?>"
-        }
-	}
-};
-messages = {
-	required: "<?php echo __('Name required')?>",
-	remote: "<?php echo __('This lead already exists')?>"
-};
-add_validate_form_element_rules('#text-fullname', rules, messages);
-// Rules: #text-email
-rules = {
-	required: true,
-	email: true,
-	remote: {
-		url: "ajax.php",
-        type: "POST",
-        data: {
-			page: "include/ajax/remote_validations",
-			search_existing_lead_email: 1,
-			lead_email: function() { return $('#text-email').val() },
-			lead_id: "<?php echo $id?>"
-        }
-	}
-};
-messages = {
-	required: "<?php echo __('Email required')?>",
-	email: "<?php echo __('Invalid email')?>",
-	remote: "<?php echo __('This lead email already exists')?>"
-};
-add_validate_form_element_rules('#text-email', rules, messages);
-// Rules: #text-estimated_sale
-rules = { number: true };
-messages = { number: "<?php echo __('Invalid number')?>" };
-add_validate_form_element_rules('#text-estimated_sale', rules, messages);
 
 </script>

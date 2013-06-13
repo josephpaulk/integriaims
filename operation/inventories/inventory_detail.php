@@ -675,71 +675,11 @@ $(document).ready (function () {
 			return false;
 	});
 	
-	$("#text-owner").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
-			},
-			formatItem: function (data, i, total) {
-				if (total == 0)
-					$("#text-owner").css ('background-color', '#cc0000');
-				else
-					$("#text-owner").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre Real") ?>: '+data[1]+'</span>';
-			},
-			delay: 200
-
-		});
-		
-		$("#text-owner_search").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
-			},
-			formatItem: function (data, i, total) {
-				if (total == 0)
-					$("#text-owner_search").css ('background-color', '#cc0000');
-				else
-					$("#text-owner_search").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre Real") ?>: '+data[1]+'</span>';
-			},
-			delay: 200
-
-		});
-		
-		$("#text-inventory_user").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
-			},
-			formatItem: function (data, i, total) {
-				if (total == 0)
-					$("#text-inventory_user").css ('background-color', '#cc0000');
-				else
-					$("#text-inventory_user").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre Real") ?>: '+data[1]+'</span>';
-			},
-			delay: 200
-
-		});
+	var idUser = "<?php echo $config['id_user'] ?>";
+	
+	bindAutocomplete ("#text-owner", idUser);	
+	bindAutocomplete ("#text-owner_search", idUser);
+	
 });
 
 function show_fields() {
@@ -1214,6 +1154,10 @@ function show_user_associated() {
 					height: 350
 				});
 			$("#user_search_modal").dialog('open');
+			
+			var idUser = "<?php echo $config['id_user'] ?>";
+		
+			bindAutocomplete ("#text-inventory_user", idUser);
 		}
 	});
 }

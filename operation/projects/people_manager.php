@@ -343,54 +343,15 @@ echo "</table></div>";
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 
-
 <script type="text/javascript" >
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
-	$("#text-user").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>",
-				id_project: "<?php echo $id_project?>"
-			},
-			formatItem: function (data, i, total) {
-				
-				if (total == 0)
-					$("#text-user").css ('background-color', '#cc0000');
-				else
-					$("#text-user").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre real") ?>: '+data[1]+'</span>';
-			},
-			delay: 200
-		});
+	
+	var idUser = "<?php echo $config['id_user'] ?>";
+	var idProject = "<?php echo $id_project?>";
+	
+	bindAutocomplete ("#text-user", idUser);
+	bindAutocomplete ("#text-user_role", idUser, idProject);
 		
-		$("#text-user_role").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users_role: 1,
-				id_user: "<?php echo $config['id_user'] ?>",
-				id_project: "<?php echo $id_project?>"
-			},
-			formatItem: function (data, i, total) {
-				
-				if (total == 0)
-					$("#text-user_role").css ('background-color', '#cc0000');
-				else
-					$("#text-user_role").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field"></span>';
-			},
-			delay: 200
-		});
 });
 </script>
