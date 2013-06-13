@@ -653,14 +653,8 @@ echo "<div class= 'dialog ui-dialog-content' id='user_search_modal'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
-<script type="text/javascript" src="include/js/jquery.tablesorter.js"></script>
-<script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
-<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
-<script type="text/javascript" src="include/js/jquery.ui.dialog.js"></script>
-<script type="text/javascript" src="include/js/integria.js"></script>
-<script type="text/javascript" src="include/js/jquery.validate.js"></script>
-<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 
 <script type="text/javascript">
 

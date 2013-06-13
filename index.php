@@ -172,6 +172,8 @@ echo "<title>" . $config["sitename"] . "</title>";
 <script type="text/javascript" src="include/js/jquery.ui.dialog.js"></script>
 <script type="text/javascript" src="include/js/jquery.form.js"></script>
 <script type="text/javascript" src="include/js/jquery.axuploader.js"></script>
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript">
 </script>

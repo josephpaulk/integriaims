@@ -20,33 +20,6 @@ global $config;
 
 check_login ();
 
-if (defined ('AJAX')) {
-
-	global $config;
-
-	$search_users = (bool) get_parameter ('search_users');
-	
-	if ($search_users) {
-		require_once ('include/functions_db.php');
-		
-		$id_user = $config['id_user'];
-		$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
-		
-		$users = get_user_visible_users ($config['id_user'],"IR", false);
-		if ($users === false)
-			return;
-		
-		foreach ($users as $user) {
-			if(preg_match('/'.$string.'/', $user['id_usuario']) || preg_match('/'.$string.'/', $user['nombre_real'])) {
-				echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
-			}
-		}
-		
-		return;
- 	}
-}
-
-
 if (give_acl($config["id_user"], 0, "PR") != 1){
 	// Doesn't have access to this page
 	audit_db ($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
@@ -146,7 +119,7 @@ echo "</table>";
 
 
 ?>
-<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 
 <script  type="text/javascript">
 $(document).ready (function () {

@@ -509,10 +509,7 @@ echo '</div>';
 
 ?>
 
-<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
-<script type="text/javascript" src="include/js/integria.js"></script>
-<script type="text/javascript" src="include/js/jquery.validate.js"></script>
-<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 
 <script type="text/javascript">
 	

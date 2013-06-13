@@ -341,7 +341,7 @@ while ($row=mysql_fetch_array($result)){
 echo "</table></div>";
 ?>
 
-<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 
 
 <script type="text/javascript" >

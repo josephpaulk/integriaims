@@ -67,7 +67,7 @@ function incident_limit() {
 					$("#alert_limits").empty().append('<img src="images/spinner.gif">');
 					$("#alert_limits").dialog({"title": dataUnserialize[1],
 						position: ['center', 100],
-						resizable: true,
+						resizable: false,
 						height: 150,
 						width: 380,
 						beforeclose: function(event, ui) { return false; }
@@ -83,7 +83,6 @@ function incident_limit() {
 					
 					$("#alert_limits").empty().append(dataUnserialize[2]);
 				
-					$("#alert_limits").dialog('close');
 					$("#alert_limits").bind('dialogbeforeclose', function(event, ui) {
 						$("#alert_limits").dialog('destroy'); $("#alert_limits").remove();
 					});
@@ -876,4 +875,15 @@ function update_parent(id_parent) {
 function clean_parent_field () {
 	$("#text-search_parent").val(__("None"));
 	$("#hidden-id_parent").attr("value", "");	
+}
+
+function bindAutocomplete (idTag, idUser) {
+	var ajaxUrl = "ajax.php?page=include/ajax/users&search_users=1&id_user="+idUser;
+	
+	$(idTag).autocomplete (
+		{
+			source: ajaxUrl,
+			minLength: 2,
+			delay: 200
+		});
 }

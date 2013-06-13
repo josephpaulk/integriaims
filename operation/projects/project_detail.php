@@ -22,34 +22,6 @@ include_once ("include/functions_graph.php");
 
 check_login ();
 
-/* include/ajax/users.php
-if (defined ('AJAX')) {
-
-	global $config;
-
-	$search_users = (bool) get_parameter ('search_users');
-
-	if ($search_users) {
-		require_once ('include/functions_db.php');
-		
-		$id_user = $config['id_user'];
-		$string = (string) get_parameter ('q'); // q is what autocomplete plugin gives
-		
-		$users = get_user_visible_users ($config['id_user'],"IR", false);
-		if ($users === false)
-			return;
-		
-		foreach ($users as $user) {
-			if(preg_match('/'.$string.'/', $user['id_usuario']) || preg_match('/'.$string.'/', $user['nombre_real'])) {
-				echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
-			}
-		}
-		
-		return;
- 	}
-}
-*/
-
 include_once ("include/functions_graph.php");
 
 $create_mode = 0;
@@ -383,12 +355,10 @@ echo "</form>";
 
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>
-<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
-<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
-<script type="text/javascript" src="include/js/jquery.validate.js"></script>
-<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+
 <script type="text/javascript">
 
 $(document).ready (function () {

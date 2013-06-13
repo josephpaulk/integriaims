@@ -2173,3 +2173,9 @@ input.inventory_obj_search {
 	background-position-x: 97%;
 	background-position-y: 50%;
 }
+
+input.ac_input {
+	background-repeat: no-repeat;
+	background-position-x: 97%;
+	background-position-y: 50%;
+}

@@ -930,15 +930,10 @@ echo "<div class= 'dialog ui-dialog-content' id='parent_search_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
-<script type="text/javascript" src="include/js/jquery.tablesorter.js"></script>
-<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
-<script type="text/javascript" src="include/js/jquery.tablesorter.pager.js"></script>
-<script type="text/javascript" src="include/js/integria.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
-<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
-<script type="text/javascript" src="include/js/jquery.validate.js"></script>
-<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+
 
 <script  type="text/javascript">
 
@@ -1051,81 +1046,23 @@ $(document).ready (function () {
 	if ($("#id_incident_type").val() != "0") {
 		show_incident_type_fields();
 	}
+			
+	var idUser = "<?php echo $config['id_user'] ?>";
 	
-	$("#text-id_creator").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
-			},
-			formatItem: function (data, i, total) {
-				if (total == 0)
-					$("#text-id_creator").css ('background-color', '#cc0000');
-				else
-					$("#text-id_creator").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre Real") ?>: '+data[1]+'</span>';
-			},
-			delay: 200
-
-		});
-		
-		$("#text-id_user").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
-			},
-			formatItem: function (data, i, total) {
-				if (total == 0)
-					$("#text-id_user").css ('background-color', '#cc0000');
-				else
-					$("#text-id_user").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre real") ?>: '+data[1]+'</span>';
-			},
-			delay: 200
-
-		});
-		
-		$("#text-closed_by").autocomplete ("ajax.php",
-		{
-			scroll: true,
-			minChars: 2,
-			extraParams: {
-				page: "include/ajax/users",
-				search_users: 1,
-				id_user: "<?php echo $config['id_user'] ?>"
-			},
-			formatItem: function (data, i, total) {
-				if (total == 0)
-					$("#text-closed_by").css ('background-color', '#cc0000');
-				else
-					$("#text-closed_by").css ('background-color', '');
-				if (data == "")
-					return false;
-				return data[0]+'<br><span class="ac_extra_field"><?php echo __("Nombre real") ?>: '+data[1]+'</span>';
-			},
-			delay: 200
-
-		});
-		
-		$("#tgl_incident_control").click(function() {
-			 fila = document.getElementById('incident-editor-row_advanced-0');
-			  if (fila.style.display != "none") {
-				fila.style.display = "none"; //ocultar fila 
-			  } else {
-				fila.style.display = ""; //mostrar fila 
-			  }
-		});
+	bindAutocomplete("#text-id_creator", idUser);
+	
+	bindAutocomplete("#text-id_user", idUser);
+	
+	bindAutocomplete("#text-closed_by", idUser);
+	
+	$("#tgl_incident_control").click(function() {
+		 fila = document.getElementById('incident-editor-row_advanced-0');
+		  if (fila.style.display != "none") {
+			fila.style.display = "none"; //ocultar fila 
+		  } else {
+			fila.style.display = ""; //mostrar fila 
+		  }
+	});
 		
 });
 

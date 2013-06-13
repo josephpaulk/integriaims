@@ -50,7 +50,7 @@ function user_print_autocomplete_input($parameters) {
 		$return_help = $parameters['return_help'];
 	}
 
-	$attributes = array('style' => 'background: url(' . $src_code . ') no-repeat right;');
+	$attributes = array('style' => 'background: url(' . $src_code . ') no-repeat;');
 		
 	return print_input_text_extended ($input_name, $input_value, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, $return, '', __($title)). print_help_tip (__($help_message), $return_help);
 	

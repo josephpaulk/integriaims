@@ -169,9 +169,9 @@
     echo "</table>";
 
 ?>
-<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
+
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
-<script type="text/javascript" src="include/js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 
 
 <script type="text/javascript">
