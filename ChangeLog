@@ -1,5 +1,10 @@
 2013-06-13 Dario Rodriguez <dario@artica.es>
 
+	* include/ajax/users.php: Upload missed file related to jquery autocomplete
+	modification.
+
+2013-06-13 Dario Rodriguez <dario@artica.es>
+
 	* godmode/usuarios/configurar_usuarios.php,
 	operation/companies/company_detail.php: Modified to use new autocomplete plugin.
 	* include/js/jquery.autocomplete.js: Deleted old autocomplete library.

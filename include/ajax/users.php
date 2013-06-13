@@ -24,19 +24,23 @@ $search_users_role = (bool) get_parameter ('search_users_role');
 
 if ($search_users) {
 	require_once ('include/functions_db.php');
-	
+
 	$id_user = $config['id_user'];
-	$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
+	$string = (string) get_parameter ('term'); /* term is what autocomplete plugin gives */
 	$users = get_user_visible_users ($config['id_user'],"IR", false);
 	
 	if ($users === false)
 		return;
+		
+	$res = array();
 	
 	foreach ($users as $user) {
 		if(preg_match('/'.$string.'/i', $user['id_usuario']) || preg_match('/'.$string.'/i', $user['nombre_real'])|| preg_match('/'.$string.'/i', $user['num_employee'])) {
-			echo $user['id_usuario'] . "|" . $user['nombre_real']  . "\n";
+			array_push($res, array("label" => safe_output($user['nombre_real'])." (".$user['id_usuario'].")", "value" => $user['id_usuario']));
 		}
 	}
+	
+	echo json_encode($res);
 	
 	return;
 }
@@ -46,19 +50,23 @@ if ($search_users_role) {
 	
 	$id_project = (int) get_parameter ('id_project');
 	$id_user = $config['id_user'];
-	$string = (string) get_parameter ('q'); /* q is what autocomplete plugin gives */
+	$string = (string) get_parameter ('term'); /* term is what autocomplete plugin gives */
 	
 	$users = get_users_project ($id_project);
 	
 	if ($users === false)
 		return;
 
+	$res = array();
+	
 	foreach ($users as $user) {
-		if(preg_match('/'.$string.'/i', $user['id_user'])) {
-			echo $user['id_user'] . "/" . get_db_value ("name","trole","id",$user["id_role"]). "\n";
+		if(preg_match('/'.$string.'/i', $user['id_usuario']) || preg_match('/'.$string.'/i', $user['nombre_real'])|| preg_match('/'.$string.'/i', $user['num_employee'])) {
+			array_push($res, array("label" => safe_output($user['nombre_real'])." (".$user['id_usuario'].")", "value" => $user['id_usuario']));
 		}
 	}
-		
+	
+	echo json_encode($res);
+	
 	return;
 }
 
