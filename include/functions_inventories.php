@@ -1164,10 +1164,12 @@ function inventories_show_list($sql_search, $params='') {
 			} else {
 				$j = 0;
 				foreach ($res_obj_fields as $k => $ob_field) {
-					$table_info->data[$j][$j] = '<b>'.$ob_field['label'];
-					$table_info->data[$j][$j] .= ' : '.'</b>';
-					$table_info->data[$j][$j] .= $ob_field['data'];
-					$j++;
+					if (isset($ob_field['label'])) {
+						$table_info->data[$j][$j] = '<b>'.$ob_field['label'];
+						$table_info->data[$j][$j] .= ' : '.'</b>';
+						$table_info->data[$j][$j] .= $ob_field['data'];
+						$j++;
+					}
 				}
 			}
 			
