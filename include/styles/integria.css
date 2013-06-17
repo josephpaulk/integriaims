@@ -2170,13 +2170,11 @@ h2.incident_dashboard {
 input.inventory_obj_search {
 	background-image: url("../../images/zoom.png");
 	background-repeat: no-repeat;
-	background-position-x: 97%;
-	background-position-y: 50%;
+	background-position: 97% 50%;
 }
 
 input.ui-autocomplete-input {
 	background-image: url("../../images/group.png");
 	background-repeat: no-repeat;
-	background-position-x: 97%;
-	background-position-y: 50%;
+	background-position: 97% 50%;
 }

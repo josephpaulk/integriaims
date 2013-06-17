@@ -1,3 +1,8 @@
+2013-06-13 Dario Rodriguez <dario@artica.es>
+
+	* include/styles/integria.css: Fixed a cross browser bug
+	with a few background positions.
+
 2013-06-17  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php: Fixed info about
