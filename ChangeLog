@@ -1,4 +1,10 @@
-2013-06-13 Dario Rodriguez <dario@artica.es>
+2013-06-17 Dario Rodriguez <dario@artica.es>
+
+	* include/integria_cron.php,
+	include/functions_pop3.php: Email process feature moved
+	to Enterprise version.
+
+2013-06-17 Dario Rodriguez <dario@artica.es>
 
 	* include/styles/integria.css: Fixed a cross browser bug
 	with a few background positions.
