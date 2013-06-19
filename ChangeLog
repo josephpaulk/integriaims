@@ -1,4 +1,9 @@
 2013-06-19 Dario Rodriguez <dario@artica.es>
+
+	* include/functions_incidents.php: New ACLs implemented and moved to
+	a new function called incidents_check_incident_acl.
+
+2013-06-19 Dario Rodriguez <dario@artica.es>
 	
 	* godmode/setup/setup.php: Deleted flag to enable Incident reporters because
 	this feature was removed.

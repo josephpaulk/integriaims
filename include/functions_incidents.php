@@ -49,6 +49,18 @@ if(defined ('AJAX')) {
 include_once ($config["homedir"]."/include/graphs/fgraph.php");
 enterprise_include("include/functions_users.php");
 
+function incidents_check_incident_acl($incident) {
+	global $config;
+	
+	$check_acl = give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
+				|| ($incident['id_creator'] == $config['id_user'])
+				|| ($incident['id_usuario'] == $config['id_user'])
+				|| has_workunits($config["id_user"], $incident["id_incidencia"]
+				|| ($incident['editor'] == $config['id_user']));	
+				
+	return $check_acl;
+}
+
 function filter_incidents ($filters) {
 	global $config;
 	
@@ -132,11 +144,8 @@ function filter_incidents ($filters) {
 			//Normal ACL pass if IR for this group or if the user is the incident creator
 			//or if the user is the owner or if the user has workunits
 			
-			$check_acl = give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
-						|| ($incident['id_creator'] == $config['id_user'])
-						|| ($incident['id_usuario'] == $config['id_user'])
-						|| has_workunits($config["id_user"], $incident["id_incidencia"]);
-
+			$check_acl = incidents_check_incident_acl($incident);
+			
 			if (!$check_acl)
 				continue;		
 				
@@ -317,11 +326,8 @@ function get_incidents ($filter = array(), $only_names = false) {
 			//Normal ACL pass if IR for this group or if the user is the incident creator
 			//or if the user is the owner or if the user has workunits
 			
-			$check_acl = give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
-						|| ($incident['id_creator'] == $config['id_user'])
-						|| ($incident['id_usuario'] == $config['id_user'])
-						|| has_workunits($config["id_user"], $incident["id_incidencia"]);
-
+			$check_acl = incidents_check_incident_acl($incident);
+			
 			if (!$check_acl)
 				continue;		
 				
