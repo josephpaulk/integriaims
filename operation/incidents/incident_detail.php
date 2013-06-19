@@ -137,7 +137,7 @@ if ($action == 'update') {
 	$grupo = get_parameter ('grupo_form', $old_incident['id_grupo']);
 	
 	// Only admins (manage incident) or owners can modify incidents
-	if ((! give_acl ($config["id_user"], $grupo, "IW")) AND (! give_acl ($config["id_user"], $grupo, "IM"))) {
+	if ((! give_acl ($config["id_user"], $grupo, "IW")) AND (! give_acl ($config["id_user"], $grupo, "IW"))) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
 		echo "<h3 class='error'>".__('There was a problem updating incident')."</h3>";
 		no_permission ();
@@ -306,7 +306,7 @@ if ($action == "insert") {
 	$email_copy = get_parameter ("email_copy", "");
 	
 	//Get notify flag from group if the user doesn't has IM flag
-	if (! give_acl ($config['id_user'], $id_grupo, "IM")) {
+	if (! give_acl ($config['id_user'], $id_grupo, "IW")) {
 			$email_notify = get_db_value("forced_email", "tgrupo", "id_grupo", $grupo);
 	}
 	
@@ -519,8 +519,8 @@ if (! $id) {
 	$email_notify = true;
 }
 
-//The user with IM flag or the incident owner can modify all data from the incident.
-$has_permission = (give_acl ($config['id_user'], $id_grupo, "IM")  || ($usuario == $config['id_user']));
+//The user with IW flag or the incident owner can modify all data from the incident.
+$has_permission = (give_acl ($config['id_user'], $id_grupo, "IW")  || ($usuario == $config['id_user']));
 $has_im  = give_acl ($config['id_user'], $id_grupo, "IM");
 $has_iw = give_acl ($config['id_user'], $id_grupo, "IW");
 
@@ -547,7 +547,7 @@ if ($id) {
 	echo '</li>';
 	
 	/* Delete incident */
-	if ($has_permission) {
+	if ($has_im) {
 		echo "<li>";
 		echo '<form id="delete_incident_form" name="delete_incident_form" class="delete action" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_detail">';
 		print_input_hidden ('quick_delete', $id, false);

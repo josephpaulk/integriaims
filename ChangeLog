@@ -1,3 +1,14 @@
+2013-06-19 Dario Rodriguez <dario@artica.es>
+
+	* include/functions_incidents.php: New function has_workunits,
+	modified functions get_incidents and filter_incidents to fit
+	new ACLs.
+	* operation/incidents/incident_files.php,
+	* operation/incidents/incident_detail.php,
+	* operation/incidents/incident_dashboard_detail.php,
+	* operation/side_menu.php: Fixed some problems with ACLs
+	to fit the new ACL model for incidents.
+
 2013-06-17 Dario Rodriguez <dario@artica.es>
 
 	* include/integria_cron.php,

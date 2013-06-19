@@ -47,6 +47,7 @@ if(defined ('AJAX')) {
 }
 
 include_once ($config["homedir"]."/include/graphs/fgraph.php");
+enterprise_include("include/functions_users.php");
 
 function filter_incidents ($filters) {
 	global $config;
@@ -101,12 +102,7 @@ function filter_incidents ($filters) {
 					date ("Y-m-d", $time));
 		}
 	}
-
-	// Manage external users
-	$return = enterprise_hook ('manage_external');
-	if ($return !== ENTERPRISE_NOT_HOOK)
-		$sql_clause .= $return;
-	
+		
 	$sql = sprintf ('SELECT * FROM tincidencia
 			WHERE estado IN (%s)
 			%s
@@ -125,10 +121,26 @@ function filter_incidents ($filters) {
 
 	$result = array ();
 	foreach ($incidents as $incident) {
-		// ACL pass if IR for this group or if the user is the incident creator
-		if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
-			&& ($incident['id_creator'] != $config['id_user']) )
+		
+		//Check external users ACLs
+		$external_check = enterprise_hook("manage_external", array($incident));
+
+		if ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check) {
 			continue;
+		} else {
+		
+			//Normal ACL pass if IR for this group or if the user is the incident creator
+			//or if the user is the owner or if the user has workunits
+			
+			$check_acl = give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
+						|| ($incident['id_creator'] == $config['id_user'])
+						|| ($incident['id_usuario'] == $config['id_user'])
+						|| has_workunits($config["id_user"], $incident["id_incidencia"]);
+
+			if (!$check_acl)
+				continue;		
+				
+		}
 		
 		$inventories = get_inventories_in_incident ($incident['id_incidencia'], false);
 		
@@ -285,42 +297,36 @@ function add_workunit_incident($incident_id, $note, $timeused, $public = 1) {
  */
  
 function get_incidents ($filter = array(), $only_names = false) {
-	
-	// Manage external users
-	$return = enterprise_hook ('manage_external');
-	if ($return !== ENTERPRISE_NOT_HOOK) {
-		//Its required to use 1 = 1 because return variable starts with
-		//an AND in the firts place.
-		$filter_aux = "1 = 1 ".$return;
-
-		//filter is an array so we need to iterate and create the real
-		//SQL clause
-		if (is_array($filter)) {
-
-			foreach ($filter as $key => $value) {
-				$filter_aux .= " AND $key = $value";
-			}
-		} else {
-			$filter_aux .= " AND ".$filter;
-		}
-
-		//Restore filter to clause
-		$filter = $filter_aux;
-	}
-
-	$all_incidents = get_db_all_rows_filter('tincidencia',$filter,'*');
+		
+	$all_incidents = get_db_all_rows_filter('tincidencia', $filter, '*');
 
 	if ($all_incidents == false)
 		return array ();
 	
 	global $config;
 	$incidents = array ();
+	
 	foreach ($all_incidents as $incident) {
-		// ACL pass if IR for this group or if the user is the incident creator
-		if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
-			&& ($incident['id_creator'] != $config['id_user']) )
-			continue;		
+		//Check external users ACLs
+		$external_check = enterprise_hook("manage_external", array($incident));
+
+		if ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check) {
+			continue;
+		} else {
 		
+			//Normal ACL pass if IR for this group or if the user is the incident creator
+			//or if the user is the owner or if the user has workunits
+			
+			$check_acl = give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
+						|| ($incident['id_creator'] == $config['id_user'])
+						|| ($incident['id_usuario'] == $config['id_user'])
+						|| has_workunits($config["id_user"], $incident["id_incidencia"]);
+
+			if (!$check_acl)
+				continue;		
+				
+		}
+			
 		if ($only_names) {
 			$incidents[$incident['id_incidencia']] = $incident['titulo'];
 		} else {
@@ -328,6 +334,19 @@ function get_incidents ($filter = array(), $only_names = false) {
 		}		
 	}
 	return $incidents;
+}
+
+function has_workunits($id_user, $id_incident) {
+	
+	
+	$sql = sprintf("SELECT COUNT(W.id) AS wu FROM tworkunit W, tworkunit_incident WI WHERE 
+					WI.id_workunit = W.id AND WI.id_incident = %d AND W.id_user = '%s'", 
+					$id_incident, $id_user);
+	
+	$res = get_db_row_sql ($sql);
+	
+	return $res["wu"];
+	
 }
 
 /**

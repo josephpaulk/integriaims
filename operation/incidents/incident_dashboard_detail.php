@@ -206,7 +206,7 @@ $right_side .= "<tr>";
 
 $long_name_asigned = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["id_usuario"]));
 
-$right_side .= "<td>".__("Assigned user").":</td><td align='right'>".$long_name_asigned."</td>";
+$right_side .= "<td>".__("Owner").":</td><td align='right'>".$long_name_asigned."</td>";
 $right_side .= "</tr>";
 
 $right_side .= "</table>";
@@ -303,9 +303,14 @@ echo "<div id='indicent-details-view'>";
 echo '<h1>'.__('Incident').' #'.$incident["id_incidencia"].' - '.$incident['titulo'];
 echo "<div id='button-bar-title'>";
 echo "<ul>";
-echo "<li>";
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
-echo "</li>";
+
+//Only incident manager and user with IR flag which are owners and admin can edit incidents
+if (get_admin_user($config['id_user']) || (give_acl ($config['id_user'], $id_grupo, "IW") 
+	&& ($incident["id_usuario"] == $config["id_user"])) || give_acl ($config['id_user'], $id_grupo, "IM")) {
+	echo "<li>";
+	echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
+	echo "</li>";
+}
 echo '<li>';
 echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.print_image("images/award_star_silver_1.png", true, array("title" => __('Workunits'))).'</a>';
 echo '</li>';

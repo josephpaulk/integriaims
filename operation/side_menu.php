@@ -442,77 +442,38 @@ if ($sec == "incidents" && give_acl ($config['id_user'], 0, "IR") && $show_incid
 			echo '</li>';
 		}
 		echo "</ul></div>";
-
-		// Dynamic incident sub options menu
-		echo "<br>";
-
-		echo '<div class="portlet incident-menu" id="incident-menu-actions" style="display: none">';
-		echo '<h3>'.__('Incident').' # <span class="id-incident-menu">';
-		if ($id_incident)
-			echo $id_incident;
-		echo '</span></h3>';
-
-		echo "<ul class='sidemenu'>";
-
-		// Add workunit to incident
-		if ($sec2 == "operation/incidents/incident_create_work")
-			echo "<li id='sidesel'>";
-		else
-			echo '<li>';
-
-		echo "<a id='incident-create-work' href='index.php?sec=incidents&sec2=operation/incidents/incident_create_work&id=$id_incident'>".__('Add workunit')."</a>";
 		
-		echo "</li>";
-
-		// Add file to incident
-		if ($sec2 == "operation/incidents/incident_attach_file")
-			echo '<li id="sidesel">';
-		else
-			echo '<li id="incident-attach-file">';
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_attach_file&id=$id_incident'>".__('Add file')."</a>";
-		echo "</li>";	
-
-		// See incident Report
-		if ($sec2 == "operation/incidents/incident_report")
-			echo '<li id="sidesel">';
-		else
-			echo '<li id="incident-report">';
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_report'>".__('Incident Report')."</a>";
-		echo "</li>";	
-
-		// Blockend
-		echo "</ul>";
-		echo "</div>";
-		
-		// Building overview
-		echo "<div class='portlet'>";
-		echo "<h3 class='admin'>".__('Incident types')."</h3>";
-		echo "<ul class='sidemenu'>";
+		// Incident type and SLA management only PM
+		if (give_acl ($config['id_user'], 0, "IM")) {
+			echo "<div class='portlet'>";
+			echo "<h3 class='admin'>".__('Incident types')."</h3>";
+			echo "<ul class='sidemenu'>";
 
 		
-		if ($sec2=="operation/incidents/types_detail")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>".__('Incident types')."</a></li>";
+			if ($sec2=="operation/incidents/types_detail")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=incidents&sec2=operation/incidents/type_detail'>".__('Incident types')."</a></li>";
 
-		echo "</ul>";
-		echo "</div>";	
+			echo "</ul>";
+			echo "</div>";	
 		
-		// SLA Management
-		echo "<div class='portlet'>";
-		echo "<h3 class='admin'>".__('SLA')."</h3>";
-		echo "<ul class='sidemenu'>";
+			// SLA Management
+			echo "<div class='portlet'>";
+			echo "<h3 class='admin'>".__('SLA')."</h3>";
+			echo "<ul class='sidemenu'>";
 
-		
-		if ($sec2=="operation/slas/sla_detail")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=incidents&sec2=operation/slas/sla_detail'>".__('SLA Management')."</a></li>";
+			
+			if ($sec2=="operation/slas/sla_detail")
+				echo "<li id='sidesel'>";
+			else
+				echo "<li>";
+			echo "<a href='index.php?sec=incidents&sec2=operation/slas/sla_detail'>".__('SLA Management')."</a></li>";
 
-		echo "</ul>";
-		echo "</div>";	
+			echo "</ul>";
+			echo "</div>";
+		}
 	}
 	echo "</div></div>";
 }

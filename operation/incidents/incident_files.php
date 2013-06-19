@@ -41,7 +41,7 @@ if (!$id) {
 
 //Upload new file
 $filename = get_parameter ('upfile', false);
-if ((give_acl ($config['id_user'], $id_grupo, "IW") || 
+if ((give_acl ($config['id_user'], $id_grupo, "IR") || 
 	$config['id_user'] == $incident_creator) 
 	&& (bool)$filename) {
 	$result_msg = '<h3 class="error">'.__('No file was attached').'</h3>';
