@@ -220,10 +220,9 @@ $table->data[5][0] = print_select ($error_log_options, "error_log", $config["err
 
 $table->data[5][0] .= print_help_tip (__("This errorlog is on /integria.log"), true);
 
-
-$table->data[5][1] = print_select ($incident_reporter_options, "incident_reporter", $config["incident_reporter"], '','','',true,0,true, __('Incident reporter'));
-
-$table->data[5][1] .= print_help_tip (__("Enabling this, you will be able to add aditional contacts to each incident. These contacts will receive email notifications if email notification is enabled, but cannot do anything"), true);
+$table->data[5][1] = print_input_text ("months_to_delete_incidents", $config["months_to_delete_incidents"], '',
+	20, 255, true, __('Months to delete incidents'));
+$table->data[5][1] .= print_help_tip (__("Delete incidents that were opened X months ago"), true);
 
 $table->data[6][0] = print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, __('Show incident owner'));
 
@@ -282,10 +281,6 @@ $table->data[15][0] .= print_help_tip (__("Use this to filter what company roles
 
 $table->data[15][1] = print_input_text ("lead_warning_time", $config["lead_warning_time"], '',
 	5, 255, true, __('Days to warn on inactive leads'));
-
-$table->data[16][0] = print_input_text ("months_to_delete_incidents", $config["months_to_delete_incidents"], '',
-	20, 255, true, __('Months to delete incidents'));
-$table->data[16][0] .= print_help_tip (__("Delete incidents that were opened X months ago"), true);
 	
 echo "<form name='setup' method='post'>";
 

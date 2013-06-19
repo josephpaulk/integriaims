@@ -1024,37 +1024,6 @@ function update_incident_inventories ($id_incident, $inventories) {
 }
 
 /**
- * Update contact reporters in an incident.
- *
- * @param int Incident id to update.
- * @param array List of contacts ids.
- */
-function update_incident_contact_reporters ($id_incident, $contacts) {
-	error_reporting (0);
-	$where_clause = '';
-	
-	if (empty ($contacts)) {
-		$contacts = array (0);
-	}
-	$where_clause = sprintf ('AND id_contact NOT IN (%s)',
-		implode (',', $contacts));
-	
-	$sql = sprintf ('DELETE FROM tincident_contact_reporters
-		WHERE id_incident = %d %s',
-		$id_incident, $where_clause);
-	process_sql ($sql);
-	foreach ($contacts as $id_contact) {
-		$sql = sprintf ('INSERT INTO tincident_contact_reporters
-			VALUES (%d, %d)',
-			$id_incident, $id_contact);
-		$tmp = process_sql ($sql);
-		if ($tmp !== false)
-			incident_tracking ($id_incident, INCIDENT_CONTACT_ADDED,
-				$id_contact);
-	}
-}
-
-/**
  * Get all the contacts who reported a incident
  *
  * @param int Incident id.

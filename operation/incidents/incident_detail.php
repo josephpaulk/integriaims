@@ -259,9 +259,6 @@ if ($action == 'update') {
 		
 	/* Update inventory objects in incident */
 	update_incident_inventories ($id, get_parameter ('inventories', $incident_inventories));
-
-	if ($config['incident_reporter'] == 1)
-		update_incident_contact_reporters ($id, get_parameter ('contacts'));
 	
 	if ($result === false)
 		$result_msg = "<h3 class='error'>".__('There was a problem updating incident')."</h3>";
@@ -361,8 +358,6 @@ if ($action == "insert") {
 		if ($id !== false) {
 			/* Update inventory objects in incident */
 			update_incident_inventories ($id, get_parameter ('inventories'));
-			if ($config['incident_reporter'] == 1)
-				update_incident_contact_reporters ($id, get_parameter ('contacts'));
 			
 			$result_msg = '<h3 class="suc">'.__('Successfully created').' (id #'.$id.')</h3>';
 			$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";

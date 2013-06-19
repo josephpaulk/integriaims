@@ -1,3 +1,12 @@
+2013-06-19 Dario Rodriguez <dario@artica.es>
+	
+	* godmode/setup/setup.php: Deleted flag to enable Incident reporters because
+	this feature was removed.
+	* include/js/integria_incident_search.js,
+	operation/incidents/incident_detail.php,
+	operation/incidents_simple/incidents.php: Deleted some code and functions related
+	to Incident reporters feature that was removed.
+
 2013-06-19  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql

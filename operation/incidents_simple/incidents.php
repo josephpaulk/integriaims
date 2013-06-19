@@ -91,8 +91,6 @@ if($create_incident) {
 	if ($id !== false) {
 		/* Update inventory objects in incident */
 		update_incident_inventories ($id, array($id_inventory));
-		if ($config['incident_reporter'] == 1)
-			update_incident_contact_reporters ($id, get_parameter ('contacts'));
 		
 		$result_msg = ui_print_success_message(__('Successfully created').' (id #'.$id.')', '', true);
 		$result_msg .= '<h4><a href="index.php?sec=incidents&sec2=operation/incidents_simple/incident&id='.$id.'">'.__('Please click here to continue working with incident #').$id."</a></h4>";
