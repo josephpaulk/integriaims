@@ -48,6 +48,13 @@ class AdminPages
 		global $PG_DIR, $HIST_DIR;
 		global $self;
 		global $page;
+		global $config;
+		
+		$is_enterprise = false;
+		if (file_exists ("enterprise/include/functions_wiki.php")) {
+			require_once ("enterprise/include/functions_wiki.php");
+			$is_enterprise = true;
+		}
 		
 		if (!isset($translation_strings)) {
 			$title_text = 'Admin Pages';
@@ -87,8 +94,31 @@ class AdminPages
 					sort($files);
 				
 					foreach ($files as $f) {
-						$list .= "<li><a href=\"$self" . "page=".u($f).'&amp;redirect=no">'.h($f)."</a>";
+						
+						$has_permission_read = true;
+						if ($is_enterprise) {
+							$has_permission_read =  wiki_get_write_acl ($config['id_user'], $f);
+							if (!$has_permission_read) {
+								$has_permission_read =  wiki_get_read_acl ($config['id_user'], $f);
+							}
+							if ($has_permission_read) {
+								$list .= "<li><a href=\"$self" . "page=".u($f).'&amp;redirect=no">'.h($f)."</a>";
+							}
+						} else {
+							$list .= "<li><a href=\"$self" . "page=".u($f).'&amp;redirect=no">'.h($f)."</a>";
+						}
+						
+						$has_permission_write = true;
+						if ($is_enterprise) {
+							$has_permission_write =  wiki_get_write_acl ($config['id_user'], $f);
+							
+							if ($has_permission_write) {
+								$list .= " (<a href='$self" . "page=".u($f)."&action=delete_page'>$delete_text</a>)</li>";
+							}
+						} else {
 							$list .= " (<a href='$self" . "page=".u($f)."&action=delete_page'>$delete_text</a>)</li>";
+						}
+							
 					}
 				
 					$CON .= "<ul>$list</ul>";

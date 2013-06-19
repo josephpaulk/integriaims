@@ -1019,3 +1019,19 @@ CREATE TABLE `tkb_product_group` (
   `id_group` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (id_product, id_group)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tinventory_acl` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `id_inventory` bigint(20) unsigned NOT NULL,
+  `id_reference` varchar(60) NOT NULL default '',
+  `type` enum ('user', 'company') default 'user',
+  PRIMARY KEY (`id`),
+  KEY `id_inventory_idx` (`id_inventory`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `twiki_acl` (
+  `page` varchar(200) NOT NULL default '',
+  `read_page` varchar(200) NOT NULL default '',
+  `write_page` varchar(200) NOT NULL default '',
+  PRIMARY KEY (`page`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

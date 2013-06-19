@@ -113,8 +113,15 @@ function lionwiki_show($conf = null, $execute_actions_param = true) {
 	global $CON;
 	global $execute_actions;
 	global $rightnow;
+	global $config;
 
 	$execute_actions = $execute_actions_param;
+	
+	$is_enterprise = false;
+	if (file_exists ("enterprise/include/functions_wiki.php")) {
+		require_once ("enterprise/include/functions_wiki.php");
+		$is_enterprise = true;
+	}
 	
 	//Default confs
 	$wiki_title_conf = 'My new wiki';
@@ -345,12 +352,16 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	plugin('actionBegin');
 	
 	if (!$action) {
+
 		if (!$page) {
+
 			error_show_lionwiki("Location:$self" . "page=" . u($START_PAGE));
 		}
-		elseif (file_exists("$PG_DIR$page.$LANG.txt")) // language variant
+		elseif (file_exists("$PG_DIR$page.$LANG.txt")) { // language variant
+
 			error_show_lionwiki("Location:$self" . "page=" . u("$page.$LANG"));
-		elseif (!file_exists("$PG_DIR$page.txt")) {
+		} elseif (!file_exists("$PG_DIR$page.txt")) {
+
 			$action = 'edit'; // create page if it doesn't exist
 			
 			if (check_no_new_page()) {
@@ -368,7 +379,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	if (!$execute_actions) {
 		$action = '';
 	}
-	
+
 	//Check the create new page
 	if ($action == 'edit') {
 		if (!file_exists("$PG_DIR$page.txt")) {
@@ -496,29 +507,40 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	}
 	
 	if ($action == 'edit' || $preview) {
-		$CON_FORM_BEGIN = "<form action=\"$self_form\" method=\"post\"><input type=\"hidden\" name=\"action\" value=\"save\"/><input type=\"hidden\" name=\"last_changed\" value=\"$last_changed_ts\"/><input type=\"hidden\" name=\"showsource\" value=\"$showsource\"/><input type=\"hidden\" name=\"par\" value=\"".h($par)."\"/><input type=\"hidden\" name=\"page\" value=\"".h($page)."\"/>";
-		$CON_FORM_END = '</form>';
-		$CON_TEXTAREA = '<textarea class="contentTextarea" name="content" style="width:100%" cols="100" rows="30">'.h($CON).'</textarea>';
-		$CON_PREVIEW = '<input class="submit" type="submit" name="preview" value="'.$T_PREVIEW.'"/>';
-		
-		if (!$showsource) {
-			$CON_SUBMIT = '<input class="submit" type="submit" value="'.$T_DONE.'"/>';
-			$EDIT_SUMMARY_TEXT = $T_EDIT_SUMMARY;
-			$EDIT_SUMMARY = '<input type="text" name="esum" value="'.h($esum).'"/>';
-			
-			if (!authentified()) { // if not logged on, require password
-				$FORM_PASSWORD = $T_PASSWORD;
-				$FORM_PASSWORD_INPUT = '<input type="password" name="sc"/>';
-			}
-			
-			if (!$par) {
-				$RENAME_TEXT = $T_MOVE_TEXT;
-				$RENAME_INPUT = '<input type="text" name="moveto" value="'.h($page).'"/>';
-			}
+
+		$has_permission = true;
+		if ($is_enterprise) {
+			$has_permission = wiki_get_write_acl($config['id_user'], $page);
+
 		}
-		
-		if ($preview)
-			$TITLE = "$T_PREVIEW: $page";
+		if ($has_permission) {
+			$CON_FORM_BEGIN = "<form action=\"$self_form\" method=\"post\"><input type=\"hidden\" name=\"action\" value=\"save\"/><input type=\"hidden\" name=\"last_changed\" value=\"$last_changed_ts\"/><input type=\"hidden\" name=\"showsource\" value=\"$showsource\"/><input type=\"hidden\" name=\"par\" value=\"".h($par)."\"/><input type=\"hidden\" name=\"page\" value=\"".h($page)."\"/>";
+			$CON_FORM_END = '</form>';
+			$CON_TEXTAREA = '<textarea class="contentTextarea" name="content" style="width:100%" cols="100" rows="30">'.h($CON).'</textarea>';
+			$CON_PREVIEW = '<input class="submit" type="submit" name="preview" value="'.$T_PREVIEW.'"/>';
+			
+			if (!$showsource) {
+				$CON_SUBMIT = '<input class="submit" type="submit" value="'.$T_DONE.'"/>';
+				$EDIT_SUMMARY_TEXT = $T_EDIT_SUMMARY;
+				$EDIT_SUMMARY = '<input type="text" name="esum" value="'.h($esum).'"/>';
+				
+				if (!authentified()) { // if not logged on, require password
+					$FORM_PASSWORD = $T_PASSWORD;
+					$FORM_PASSWORD_INPUT = '<input type="password" name="sc"/>';
+				}
+				
+				if (!$par) {
+					$RENAME_TEXT = $T_MOVE_TEXT;
+					$RENAME_INPUT = '<input type="text" name="moveto" value="'.h($page).'"/>';
+				}
+			}
+			
+			if ($preview)
+				$TITLE = "$T_PREVIEW: $page";
+		} else {
+			include "general/noaccess.php";
+			exit;
+		}
 	}
 	elseif ($action == 'history') { // show whole history of page
 		for ($files = array(), $dir = @opendir("$HIST_DIR$page/"); $f = @readdir($dir);)
@@ -612,6 +634,234 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		
 		$CON = "<table>$recent</table>";
 		$TITLE = $T_RECENT_CHANGES;
+	}
+	
+	elseif ($action == 'read_acl') { 
+
+		$page_acl = get_parameter('page');
+
+		$delete_acl_read = get_parameter('delete_acl_read', 0);
+		$add_acl_read = get_parameter('add_acl_read', 0);
+		
+		$acl = '';
+		
+		if ($add_acl_read) {
+
+			$new_user = get_parameter('new_user');
+			
+			$values = array();
+			
+			$exists = wiki_exists_page($page_acl);
+		
+			if ($exists) {
+
+				$update = wiki_update_wiki($page_acl, $new_user, 'read');
+				if ($update === false) {
+					$acl .= "<h4>Error updating user</h4>";
+				} else {
+					$acl .= "<h4>User succesfully added</h4>";
+				}
+			} else {
+
+				$insert = wiki_insert_wiki($page_acl, $new_user, 'read');
+				if ($insert === false) {
+					$acl .= "<h4>Error adding user</h4>";
+				} else {
+					$acl .= "<h4>User succesfully created</h4>";
+				}
+			}
+		}
+		
+		if ($delete_acl_read) {
+			
+			$id_user = get_parameter('id_user');
+	
+			$result = wiki_delete_acl($id_user, $page_acl, 'read');
+			
+			if ($result === false) {
+				$acl .= "<h4>Error deleting user</h4>";
+			} else {
+				$acl .= "<h4>User succesfully deleted</h4>";
+			}
+		}	
+		
+		$acl .= "<h3>$page_acl</h3>";
+		include_once('include/functions_db.php');
+		include_once('include/functions_html.php');
+		include_once('include/functions_user.php');
+		
+		$acls = wiki_get_acls ($page_acl);
+		
+		$table->id = 'acl_list';
+		$table->class = 'listing';
+		$table->width = '98%';
+		$table->data = array ();
+		$table->head = array ();
+		
+		$table->size[1] = '80px';
+		
+		$table->head[0] = __('Read');
+		$table->head[1] = __('Operation');
+			
+		if ($acls === false) {
+			$acl .= "<h4>No acls</h4>";
+		} 
+			
+		$read = $acls['read_page'];
+		
+		if (!empty($read)) {
+			$users_read = explode(',', $read);
+			
+			foreach ($users_read as $key=>$user) {
+				$data = array();
+				$data[0] = $user;
+				$data[1] = '<a href="index.php?sec=wiki&
+							sec2=operation/wiki/wiki&action=read_acl&
+							delete_acl_read=1&page='.$page_acl.'&id_user='.$user.'"
+							onClick="if (!confirm(\''.__('Are you sure?').'\'))
+							return false;">
+							<img src="images/cross.png" /></a>';
+				array_push ($table->data, $data);
+			}
+		}
+		
+		$data = array();
+		
+		$params_assigned['input_id'] = 'text-new_user';
+		$params_assigned['input_name'] = 'new_user';
+		$params_assigned['input_value'] = '';
+		$params_assigned['title'] = 'New user';
+		$params_assigned['return'] = true;
+
+		$url = "index.php?sec=wiki&sec2=operation/wiki/wiki&action=read_acl&add_acl_read=1&page=$page_acl";
+
+		$data[0] = "<form name=adduser method=post action='" . $url . "'>";
+		$data[0] .= user_print_autocomplete_input($params_assigned);
+		$data[1] = print_input_image("add_user", "images/add.png", 1, '', true);
+		$data[1] .= "</form>";
+						
+		array_push ($table->data, $data);
+		
+		$acl .= print_table($table, true);
+			
+
+		$CON = "<table>$acl</table>";
+		$TITLE = "READ ACL";
+	}
+	elseif ($action == 'write_acl') { 
+
+		$page_acl = get_parameter('page');
+
+		$delete_acl_write = get_parameter('delete_acl_write', 0);
+		$add_acl_write = get_parameter('add_acl_write', 0);
+
+		$new_user = get_parameter('new_user', '');
+		
+		$acl = '';
+		
+		if ($add_acl_write) {
+
+			$new_user = get_parameter('new_user');
+			
+			$values = array();
+			
+			$exists = wiki_exists_page($page_acl);
+		
+			if ($exists) {
+
+				$update = wiki_update_wiki($page_acl, $new_user, 'write');
+				
+				if ($update === false) {
+					$acl .= "<h4>Error updating user</h4>";
+				} else {
+					$acl .= "<h4>User succesfully added</h4>";
+				}
+			} else {
+
+				$insert = wiki_insert_wiki($page_acl, $new_user, 'write');
+				
+				if ($insert === false) {
+					$acl .= "<h4>Error adding user</h4>";
+				} else {
+					$acl .= "<h4>User succesfully created</h4>";
+				}
+			}
+		}
+		
+		if ($delete_acl_write) {
+			
+			$id_user = get_parameter('id_user');
+
+			$result = wiki_delete_acl($id_user, $page_acl, 'write');
+			
+			if ($result === false) {
+				$acl .= "<h4>Error deleting user</h4>";
+			} else {
+				$acl .= "<h4>User succesfully deleted</h4>";
+			}
+		}	
+		
+		$acl .= "<h3>$page_acl</h3>";
+		include_once('include/functions_db.php');
+		include_once('include/functions_html.php');
+		include_once('include/functions_user.php');
+		
+		$acls = wiki_get_acls ($page_acl);
+		
+		$table->id = 'acl_list';
+		$table->class = 'listing';
+		$table->width = '98%';
+		$table->data = array ();
+		$table->head = array ();
+		
+		$table->size[1] = '80px';
+		
+		$table->head[0] = __('Write');
+		$table->head[1] = __('Operation');
+			
+		if ($acls === false) {
+			$acl .= "<h4>No acls</h4>";
+		} 
+			
+		$read = $acls['write_page'];
+		
+		if (!empty($read)) {
+			$users_read = explode(',', $read);
+			
+			foreach ($users_read as $key=>$user) {
+				$data = array();
+				$data[0] = $user;
+				$data[1] = '<a href="index.php?sec=wiki&
+							sec2=operation/wiki/wiki&action=write_acl&
+							delete_acl_write=1&page='.$page_acl.'&id_user='.$user.'"
+							onClick="if (!confirm(\''.__('Are you sure?').'\'))
+							return false;">
+							<img src="images/cross.png" /></a>';
+				array_push ($table->data, $data);
+			}
+		}
+
+		$data = array();
+		$params_assigned['input_id'] = 'text-new_user';
+		$params_assigned['input_name'] = 'new_user';
+		$params_assigned['input_value'] = '';
+		$params_assigned['title'] = 'New user';
+		$params_assigned['return'] = true;
+
+		$url = "index.php?sec=wiki&sec2=operation/wiki/wiki&action=write_acl&add_acl_write=1&page=$page_acl";
+
+		$data[0] = "<form name=adduser method=post action='" . $url . "'>";
+		$data[0] .= user_print_autocomplete_input($params_assigned);
+		$data[1] = print_input_image("add_user", "images/add.png", 1, '', true);
+		$data[1] .= "</form>";
+						
+		array_push ($table->data, $data);
+		
+		$acl .= print_table($table, true);
+			
+
+		$CON = "<table>$acl</table>";
+		$TITLE = "WRITE ACL";
 	}
 	else {
 		if (!plugin('check_no_action', $action)) { //Check to block or not a action
@@ -787,6 +1037,18 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 	
 	$html = preg_replace('/\{([^}]* )?plugin:.+( [^}]*)?\}/U', '', $html); // get rid of absent plugin tags
 	
+	$has_perm = true;
+	if ($is_enterprise) {
+		$has_perm = wiki_get_write_acl($config['id_user'], $page); //if user has write permissions, he can read
+		if (!$has_perm) {
+			$has_perm = wiki_get_read_acl($config['id_user'], $page);
+		}
+	}
+	
+	if (!$has_perm) {
+		$CON = __("You can't access this page");
+	}
+	
 	$tpl_subs = array(
 		'HEAD' => $HEAD . ($action ? '<meta name="robots" content="noindex, nofollow"/>' : ''),
 		'SEARCH_FORM' => '<form action="'.$self_form.'" method="post"><span><input type="hidden" name="action" value="search"/><input type="submit" style="display:none;"/>',
@@ -795,6 +1057,8 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		'SEARCH_SUBMIT' => "<input class=\"submit\" type=\"submit\" value=\"$T_SEARCH\"/>",
 		'HOME' => "<a href=\"$self" . "page=".u($START_PAGE)."\">$T_HOME</a>",
 		'RECENT_CHANGES' => "<a href=\"$self" . "action=recent\">$T_RECENT_CHANGES</a>",
+		'READ' => "<a href=\"$self" . "page=".u($page). "&amp;action=read_acl\">Read ACL</a>",
+		'WRITE' => "<a href=\"$self" . "page=".u($page). "&amp;action=write_acl\">Write ACL</a>",
 		'ERROR' => $error,
 		'HISTORY' => $page ? "<a href=\"$self" . "page=".u($page)."&amp;action=history\">$T_HISTORY</a>" : "",
 		'PAGE_TITLE' => h($page == $START_PAGE && $page == $TITLE ? $WIKI_TITLE : $TITLE),
@@ -829,12 +1093,15 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		$tpl_subs['SYNTAX'] = "<a href=\"$SYNTAX_PAGE\">$T_SYNTAX</a>";
 	}
 	
+	
 	foreach ($tpl_subs as $tpl => $rpl) // substituting values
+
 		$html = template_replace($tpl, $rpl, $html);
 	
 	header_lionwiki('Content-type: text/html; charset=UTF-8');
 	
 	echo($html);
+
 }
 
 // Function library
@@ -973,3 +1240,14 @@ function plugin($method) {
 	return $ret; // returns true if treated by a plugin
 }
 ?>
+
+<script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+
+<script type="text/javascript">
+	
+	var idUser = "<?php echo $config['id_user'] ?>";
+	
+	$(document).ready (function () {
+		bindAutocomplete ("#text-new_user", idUser);	
+	});
+</script>

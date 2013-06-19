@@ -1074,25 +1074,43 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 		echo "<li>";
 	echo "<a href='index.php?sec=wiki&sec2=operation/wiki/wiki'>".__('Wiki')."</a></li>";
 	echo "</li>";
+		$is_enterprise = false;
+		if (file_exists ("enterprise/include/functions_wiki.php")) {
+			require_once ("enterprise/include/functions_wiki.php");
+			$is_enterprise = true;
+		}
+		
 		if (!give_acl ($config['id_user'], $id_grupo, "WW")) {
+
 			$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
+				<li>{plugin:UPLOAD}</li>
 				<li>{RECENT_CHANGES}</li>
-				<li>{HISTORY}</li>
 				<li>{SYNTAX}</li>
 				{plugin:SIDEMENU}';
 		}
 		elseif (!give_acl ($config['id_user'], $id_grupo, "WM")) {
+
 			$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
 				<li>{plugin:UPLOAD}</li>
 				<li>{RECENT_CHANGES}</li>
-				<li>{EDIT}</li>
-				<li>{HISTORY}</li>
 				<li><a href="index.php?sec=wiki&sec2=operation/wiki/wiki&action=syntax">Syntax</a></li>
 				{plugin:SIDEMENU}';
 		}
 		else {
 			$translationAdminPages = __('Admin Pages');
-			$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
+			if ($is_enterprise) {
+				$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
+					<li>{plugin:ADMINPAGES}</li>
+					<li>{plugin:UPLOAD}</li>
+					<li>{RECENT_CHANGES}</li>
+					<li>{EDIT}</li>
+					<li>{HISTORY}</li>
+					<li>{READ}</li>
+					<li>{WRITE}</li>
+					<li><a href="index.php?sec=wiki&sec2=operation/wiki/wiki&action=syntax">Syntax</a></li>
+					{plugin:SIDEMENU}';
+			} else {
+				$conf['fallback_template'] = '<li>{SEARCH_FORM}{SEARCH_INPUT}<br />{SEARCH_SUBMIT}{/SEARCH_FORM}</li>
 				<li>{plugin:ADMINPAGES}</li>
 				<li>{plugin:UPLOAD}</li>
 				<li>{RECENT_CHANGES}</li>
@@ -1100,6 +1118,7 @@ if ($sec == "wiki" && $show_wiki != MENU_HIDDEN)  {
 				<li>{HISTORY}</li>
 				<li><a href="index.php?sec=wiki&sec2=operation/wiki/wiki&action=syntax">Syntax</a></li>
 				{plugin:SIDEMENU}';
+			}
 		}
 		$conf['plugin_dir'] = 'include/wiki/plugins/';
 		$conf['self'] = 'index.php?sec=wiki&sec2=operation/wiki/wiki' . '&';
