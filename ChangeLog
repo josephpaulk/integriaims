@@ -1,5 +1,11 @@
 2013-06-20 Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents_simple/incident.php: Fixed an error with JS
+	code of "Add workunit" and "Add file" buttons of incident simple
+	view.
+
+2013-06-20 Dario Rodriguez <dario@artica.es>
+
 	* operation/incidents/incident_detail.php,
 	operation/incidents_simple/incident_new.php,
 	include/js/integria_incident_search.js: Refactorized incident_limit

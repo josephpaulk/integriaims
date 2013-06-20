@@ -148,21 +148,23 @@ echo "<div id='incident_id' style='display:none'>$incident_id</div>";
 $(document).ready (function () {
 	// FORMS SHOW/HIDE
 	$('#button-add_workunit_show').click(function() {
+		
 		tab = $('#active_tab').html();
 		if(tab != 'workunits') {
 			load_tab('workunits');
 		}
-		$('.action_btn').attr('disabled','');
+		
 		$('#form_workunit').toggle();
 		$('#form_file').hide();
 	});
 	
 	$('#button-add_file_show').click(function() {
+		
 		tab = $('#active_tab').html();
 		if(tab != 'files') {
 			load_tab('files');
 		}
-		$('.action_btn').attr('disabled','');
+		
 		$('#form_file').toggle();
 		$('#form_workunit').hide();
 	});
