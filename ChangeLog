@@ -1,5 +1,11 @@
 2013-06-20 Dario Rodriguez <dario@artica.es>
 
+	* include/functions_incidents.php: Fixed an error in function
+	"incidents_get_incident_stats" related to holidays calculation
+	which ends in a bad performance	of incident search statistic view.
+
+2013-06-20 Dario Rodriguez <dario@artica.es>
+
 	* include/functions_incidents.php: Now text search match with
 	custom fields of incident field.
 

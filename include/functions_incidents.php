@@ -1764,7 +1764,13 @@ function incidents_get_incident_stats ($id) {
 	
 	//Get non-working days from last stat update and delete the seconds :)
 	$last_stat_check = get_db_value("last_stat_check", "tincidencia", "id_incidencia", $id);
-	$last_stat_check_time = strtotime($last_stat_check);
+	
+	//Avoid to check for holidays since the begining of the time!
+	if ($last_stat_check !== "0000-00-00 00:00:00") {
+		$last_stat_check_time = strtotime($last_stat_check);
+	} else {
+		$last_stat_check_time = $now;
+	}
 	
 	$holidays_seconds = incidents_get_holidays_seconds_by_timerange($last_stat_check_time, $now);
 		
