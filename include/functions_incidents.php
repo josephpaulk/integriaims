@@ -115,14 +115,16 @@ function filter_incidents ($filters) {
 		}
 	}
 		
-	$sql = sprintf ('SELECT * FROM tincidencia
+	$sql = sprintf ('SELECT * FROM tincidencia FD
 			WHERE estado IN (%s)
 			%s
-			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%")
+			AND (titulo LIKE "%%%s%%" OR descripcion LIKE "%%%s%%" 
+			OR id_creator LIKE "%%%s%%" OR id_usuario LIKE "%%%s%%" 
+			OR id_incidencia IN (SELECT id_incident FROM tincident_field_data WHERE data LIKE "%%%s%%"))
 			ORDER BY actualizacion DESC
 			LIMIT %d',
-			$filters['status'], $sql_clause, $filters['string'], $filters['string'], $filters['string'],$filters['string'],
-			$config['limit_size']);
+			$filters['status'], $sql_clause, $filters['string'], $filters['string'], 
+			$filters['string'],$filters['string'], $filters['string'], $config['limit_size']);
 
     // DEBUG
     //echo $sql ." <br>";

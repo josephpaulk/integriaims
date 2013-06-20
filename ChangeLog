@@ -1,3 +1,8 @@
+2013-06-20 Dario Rodriguez <dario@artica.es>
+
+	* include/functions_incidents.php: Now text search match with
+	custom fields of incident field.
+
 2013-06-20  Vanessa Gil <vanessa.gil@artica.es>
 
 	* operation/incidents/incident_detail.php
