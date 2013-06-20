@@ -73,7 +73,7 @@ foreach ($incidents as $incident) {
 	$user_avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $incident['id_usuario']);
 	$data[4] = print_user_avatar ($incident['id_usuario'], true, true);
 	$data[4] .= " ".$incident['id_usuario'];
-	$data[5] = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident&id='.
+	$data[5] = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.
 		$incident['id_incidencia'].'"><img src="images/zoom.png" /></a>';
 	
 	array_push ($table->data, $data);

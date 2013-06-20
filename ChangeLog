@@ -1,5 +1,12 @@
 2013-06-20 Dario Rodriguez <dario@artica.es>
 
+	* operation/inventories/inventory_incidents.php: Fixed a wrong
+	link to incident view.
+	* include/js/integria_incident_search.js: Removed a call to 
+	configure_contact_buttons which is deprecated.
+
+2013-06-20 Dario Rodriguez <dario@artica.es>
+
 	*operation/inventories/inventory.php,
 	operation/incidents/incident_notes.php,
 	operation/incidents/incident_dashboard_detail.php,

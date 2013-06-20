@@ -408,9 +408,7 @@ function configure_inventory_form (enable_ajax_form) {
 		);;
 		
 	});
-	
-	configure_contact_buttons ("inventory_status_form", dialog);
-	
+		
 	if (enable_ajax_form) {
 		$(dialog+"#inventory_status_form").submit (function () {
 			values = get_form_input_values (this);
