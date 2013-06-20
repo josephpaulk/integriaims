@@ -936,14 +936,17 @@ $(document).ready (function () {
 	
 	//Verify incident limit on view display and on group change
 	var id_incident = <?php echo $id?>;
+	var id_user = $("#id_user").html();
+	var id_group = $("#grupo_form").val();
 
 	//Only check incident on creation (where there is no id)
 	if (!id_incident) {
-		incident_limit();
+		
+		incident_limit("#submit-accion", id_user, id_group);
 	}
 	
 	$("#grupo_form").change (function () {
-		incident_limit();
+		incident_limit("#submit-accion", id_user, id_group);
 	});
 	
 	/*Open parent search popup*/

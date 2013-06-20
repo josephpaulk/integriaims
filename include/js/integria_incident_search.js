@@ -39,14 +39,12 @@ function configure_inventory_buttons (form, dialog) {
 	});
 }
 
-function incident_limit() {
+function incident_limit(button_id, id_user, id_group) {
 		$("#group_spinner").empty().append('<img src="images/spinner.gif" />');
-		
-		id_user = $("#id_user").html();
 		
 		values = Array();
 		values.push ({name: "page", value: "operation/group/group"});
-		values.push ({name: "id_group", value: $("#grupo_form").val()});
+		values.push ({name: "id_group", value: id_group});
 		values.push ({name: "id_user", value: id_user});
 	
 		//Check the limits of incidents, and show div popup with error message.
@@ -79,7 +77,7 @@ function incident_limit() {
 			//window.alert(enableButtonParam);
 					
 					if (enableButtonParam != 'enable_button')
-						$("#submit-accion").attr("disabled", "disabled");
+						$(button_id).attr("disabled", "disabled");
 					
 					$("#alert_limits").empty().append(dataUnserialize[2]);
 				
@@ -89,7 +87,7 @@ function incident_limit() {
 				}
 				else {
 					//Correct
-					$("#submit-accion").removeAttr("disabled");
+					$(button_id).removeAttr("disabled");
 					idInventory = dataUnserialize[1];
 
 					if (idInventory != 'null') {

@@ -55,9 +55,15 @@ echo "</div>";
 
 ?>
 
+<script type="text/javascript" src="include/js/integria_incident_search.js"></script>
+
 <script type="text/javascript">
 $(document).ready (function () {
-	check_incident_limit();
+
+	var id_group = '<?php echo $group_id; ?>';
+	var id_user = '<?php echo $config['id_user']; ?>';	
+	
+	incident_limit("#button-create_incident", id_user, id_group);
 });
 
 //Validate form
@@ -97,63 +103,4 @@ function toggle_file_addition() {
 	}
 }
 
-// Function copied from the old code. Maybe some code is not necessary 
-function check_incident_limit() {
-		$("#group_spinner").empty().append('<img src="images/spinner.gif" />');
-		
-		id_group = '<?php echo $group_id; ?>';
-		id_user = '<?php echo $config['id_user']; ?>';
-
-		values = Array();
-		values.push ({name: "page", value: "operation/group/group"});
-		values.push ({name: "id_group", value: id_group});
-		values.push ({name: "id_user", value: id_user});
-	
-		//Check the limits of incidents, and show div popup with error message.
-		jQuery.ajax({
-			type: "POST",
-			url: "ajax.php",
-			data: values,
-			async: false,
-			success: function (data, status) {
-				//un serialize data as type//title_window//message_window
-				dataUnserialize = data.split('//');
-				$("#group_spinner").empty();
-				status = dataUnserialize[0];
-				
-				if (status != "correct") {
-					$("body").append ($("<div></div>").attr("id", "alert_limits").addClass ("dialog"));
-					
-					$("#alert_limits").empty().append('<img src="images/spinner.gif">');
-					$("#alert_limits").dialog({"title": dataUnserialize[1],
-						position: ['center', 100],
-						resizable: true,
-						height: 150,
-						width: 380,
-						beforeclose: function(event, ui) { return false; }
-					});
-					
-					enableButtonParam = dataUnserialize[3];
-
-            // DEBUG
-            //window.alert(enableButtonParam);
-
-					if (enableButtonParam != 'enable_button')
-                		$("#button-create_incident").attr("disabled", "disabled");
-					
-					$("#alert_limits").empty().append(dataUnserialize[2]);
-				
-					$("#alert_limits").dialog('close');
-					$("#alert_limits").bind('dialogbeforeclose', function(event, ui) {
-						$("#alert_limits").dialog('destroy'); $("#alert_limits").remove();
-					});
-				}
-				else {
-					//Correct
-				}
-				
-			},
-			dataType: "text"
-		});
-}
 </script>
