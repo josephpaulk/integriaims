@@ -162,6 +162,8 @@ $generated_str .= '</div>';
 echo $generated_str;
 ?>
 
+<script type="text/javascript" src="include/js/integria_incident_search.js"></script>
+
 <script type="text/javascript">
 // Receive workunit ids from PHP to call read more function
 var workunit_ids = '<?php echo $workunit_ids;?>';
@@ -170,8 +172,4 @@ for (var i = 0; i < workunit_ids.length; i++) {
 	readMoreWU(workunit_ids[i]);
 } 
 
-function readMoreWU(id_workunit) {
-	$('#short_wu_'+id_workunit).hide();
-	$('#long_wu_'+id_workunit).show();
-}
 </script>

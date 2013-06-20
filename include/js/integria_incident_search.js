@@ -700,3 +700,35 @@ function clean_parent_field () {
 	$("#text-search_parent").val(__("None"));
 	$("#hidden-id_parent").attr("value", "");	
 }
+
+function readMoreWU(id_workunit) {
+	$('#short_wu_'+id_workunit).hide();
+	$('#long_wu_'+id_workunit).show();
+}
+
+function reload_sla_slice_graph(id) {
+
+	var period = $('#period').val();
+	
+	values = Array ();
+	values.push ({name: "type",
+		value: "sla_slicebar"});
+	values.push ({name: "id_incident",
+		value: id});
+	values.push ({name: "period",
+		value: period});
+	values.push ({name: "is_ajax",
+		value: 1});
+	values.push ({name: "width",
+		value: 225});		
+	values.push ({name: "height",
+		value: 15});		
+
+	jQuery.get ('include/functions_graph.php',
+		values,
+		function (data) {
+			$('#slaSlicebarField').html(data);
+		},
+		'html'
+	);
+}

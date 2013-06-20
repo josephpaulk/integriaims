@@ -144,9 +144,4 @@ if ($res4=mysql_query($sql4)){
 
 ?>
 
-<script type="text/javascript">
-function readMoreWU(id_workunit) {
-	$('#short_wu_'+id_workunit).hide();
-	$('#long_wu_'+id_workunit).show();
-}
-</script>
+<script type="text/javascript" src="include/js/integria_incident_search.js"></script>
