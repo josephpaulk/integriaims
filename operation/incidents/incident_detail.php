@@ -831,7 +831,7 @@ if ($create_incident) {
 		$table_advanced->data[3][1] = print_select ($inventories, 'incident_inventories', NULL,
 						'', '', '', true, false, false, __('Objects affected'));
 
-		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Add')."</a>";
+		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Add')."</a>";
 
 		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>".__('Remove')."</a>";
 } else {
@@ -841,7 +841,7 @@ if ($create_incident) {
 						NULL, '', '', '',
 						true, false, false, __('Objects affected'));
 
-		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Add')."</a>";
+		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Add')."</a>";
 
 		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>".__('Remove')."</a>";
 }
@@ -927,6 +927,7 @@ echo "<div class= 'dialog ui-dialog-content' id='parent_search_window'></div>";
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
+<script type="text/javascript" src="include/js/integria_inventory.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 
 
@@ -1064,33 +1065,6 @@ $(document).ready (function () {
 		
 });
 
-// Show the modal window of inventory search
-function show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search) {
-
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
-		dataType: "html",
-		success: function(data){	
-			$("#inventory_search_modal").html (data);
-			$("#inventory_search_modal").show ();
-
-			$("#inventory_search_modal").dialog ({
-					resizable: true,
-					draggable: true,
-					modal: true,
-					overlay: {
-						opacity: 0.5,
-						background: "black"
-					},
-					width: 920,
-					height: 850
-				});
-			$("#inventory_search_modal").dialog('open');
-		}
-	});
-}
 
 function loadInventory(id_inventory) {
 	

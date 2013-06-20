@@ -1,3 +1,10 @@
+2013-06-20  Vanessa Gil <vanessa.gil@artica.es>
+
+	* operation/incidents/incident_detail.php
+	  operation/inventories/inventory_detail.php: Clean javascript.
+	
+	* include/js/integria_inventory.js: Added file.
+
 2013-06-20 Dario Rodriguez <dario@artica.es>
 
 	* include/js/integria_incident_search.js: Fixed and error with 
