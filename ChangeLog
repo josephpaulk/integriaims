@@ -1,5 +1,10 @@
 2013-06-20 Dario Rodriguez <dario@artica.es>
 
+	* include/js/integria_incident_search.js: Fixed and error with 
+	pagination in parent incident dialog
+
+2013-06-20 Dario Rodriguez <dario@artica.es>
+
 	* operation/incidents_simple/incident.php: Fixed an error with JS
 	code of "Add workunit" and "Add file" buttons of incident simple
 	view.

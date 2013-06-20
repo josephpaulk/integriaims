@@ -666,8 +666,9 @@ function parent_search_form(filter) {
 				parent_search_form(filter);
 				return false;
 			});
-			
-			$("a[id|='page']").click(function(e) {
+						
+			$("a[id^='page']").click(function(e) {
+
 				e.preventDefault();
 				var id = $(this).attr("id");
 								
