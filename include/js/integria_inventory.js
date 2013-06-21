@@ -375,16 +375,17 @@ function loadParams() {
 	show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search);
 }
 
-//search popup. Show custom fields
+//Show custom fields
 function show_type_fields() {
 
 	$("select[name='object_fields_search[]']").empty();
 	
 	id_object_type = $("#id_object_type_search").val();
+
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=operation/inventories/inventory_search&select_fields=1&id_object_type=" + id_object_type,
+		data: "page=include/ajax/inventories&select_fields=1&id_object_type=" + id_object_type,
 		dataType: "json",
 		success: function(data){
 				$("#object_fields_search").empty();
@@ -555,4 +556,132 @@ function incident_show_inventory_search(search_free, id_object_type_search, owne
 			bindAutocomplete ("#text-owner_search", idUser);
 		}
 	});
+}
+
+/**
+ * loadSubTree asincronous load ajax the agents or modules (pass type, id to search and binary structure of branch),
+ * change the [+] or [-] image (with same more or less div id) of tree and anime (for show or hide)
+ * the div with id "div[id_father]_[type]_[div_id]"
+ *
+ * type string use in js and ajax php
+ * div_id int use in js and ajax php
+ * less_branchs int use in ajax php as binary structure 0b00, 0b01, 0b10 and 0b11
+ * id_father int use in js and ajax php, its useful when you have a two subtrees with same agent for diferent each one
+ */
+function loadSubTree(type, div_id, less_branchs, id_father, sql_search) {
+
+	hiddenDiv = $('#tree_div'+id_father+'_'+type+'_'+div_id).attr('hiddenDiv');
+	loadDiv = $('#tree_div'+id_father+'_'+type+'_'+div_id).attr('loadDiv');
+	pos = parseInt($('#tree_image'+id_father+'_'+type+'_'+div_id).attr('pos_tree'));
+
+	//If has yet ajax request running
+	if (loadDiv == 2)
+		return;
+	
+	if (loadDiv == 0) {
+
+		//Put an spinner to simulate loading process
+
+		$('#tree_div'+id_father+'_'+type+'_'+div_id).html("<img style='padding-top:10px;padding-bottom:10px;padding-left:20px;' src=images/spinner.gif>");
+		$('#tree_div'+id_father+'_'+type+'_'+div_id).show('normal');
+		$('#tree_div'+id_father+'_'+type+'_'+div_id).attr('loadDiv', 2);
+	
+		$.ajax({
+			type: "POST",
+			url: "ajax.php",
+			data: "page=operation/inventories/inventory_search&print_subtree=1&type=" + 
+				type + "&id_item=" + div_id + "&less_branchs=" + less_branchs+ "&sql_search=" + sql_search,
+			success: function(msg){
+				if (msg.length != 0) {
+					
+					$('#tree_div'+id_father+'_'+type+'_'+div_id).hide();
+					$('#tree_div'+id_father+'_'+type+'_'+div_id).html(msg);
+					$('#tree_div'+id_father+'_'+type+'_'+div_id).show('normal');
+					
+					//change image of tree [+] to [-]
+					
+					var icon_path = 'images/tree';
+					
+					switch (pos) {
+						case 0:
+							$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/first_expanded.png');
+							break;
+						case 1:
+							$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/one_expanded.png');
+							break;
+						case 2:
+							$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/expanded.png');
+							break;
+						case 3:
+							$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/last_expanded.png');
+							break;
+					}
+
+					$('#tree_div'+id_father+'_'+type+'_'+div_id).attr('hiddendiv',0);
+					$('#tree_div'+id_father+'_'+type+'_'+div_id).attr('loadDiv', 1);
+				}
+				
+			}
+		});
+	}
+	else {
+
+		var icon_path = 'images/tree';
+		
+		if (hiddenDiv == 0) {
+
+			$('#tree_div'+id_father+'_'+type+'_'+div_id).hide('normal');
+			$('#tree_div'+id_father+'_'+type+'_'+div_id).attr('hiddenDiv',1);
+			
+			//change image of tree [-] to [+]
+			switch (pos) {
+				case 0:
+					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/first_closed.png');
+					break;
+				case 1:
+					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/one_closed.png');
+					break;
+				case 2:
+					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/closed.png');
+					break;
+				case 3:
+					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/last_closed.png');
+					break;
+			}
+		}
+		else {
+			//change image of tree [+] to [-]
+			switch (pos) {
+				case 0:
+					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/first_expanded.png');
+					break;
+				case 1:
+					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/one_expanded.png');
+					break;
+				case 2:
+					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/expanded.png');
+					break;
+				case 3:
+					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/last_expanded.png');
+					break;
+			}
+
+			$('#tree_div'+id_father+'_'+type+'_'+div_id).show('normal');
+			$('#tree_div'+id_father+'_'+type+'_'+div_id).attr('hiddenDiv',0);
+		}
+	}
+}
+
+function loadTable(type, div_id, less_branchs, id_father, sql_search) {
+	id_item = div_id;
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/inventories&id_item=" + id_item + "&printTable=1&type="+ type+"&id_father=" + id_father +"&sql_search="+sql_search,
+		success: function(data){
+			$('#cont').html(data);
+		}
+	});
+	loadSubTree(type, div_id, less_branchs, id_father, sql_search);		
 }

@@ -21,7 +21,37 @@ $get_external_data = get_parameter('get_external_data', 0);
 $get_inventory_search = get_parameter('get_inventory_search', 0);
 $get_company_associated = get_parameter('get_company_associated', 0);
 $get_user_associated = get_parameter('get_user_associated', 0);
-	$get_inventory_name = (bool) get_parameter('get_inventory_name', 0);
+$get_inventory_name = (bool) get_parameter('get_inventory_name', 0);
+$select_fields = get_parameter('select_fields', 0);
+$printTable = get_parameter('printTable', 0);
+	
+if ($select_fields) {
+	$id_object_type = get_parameter('id_object_type');
+	
+	$fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$id_object_type), 'label, id');
+	
+	if ($fields === false) {
+		$fields = array();
+	}
+
+	$object_fields = array();
+	foreach ($fields as $key => $field) {
+		$object_fields[$field['id']] = $field['label'];
+	}
+	
+	echo json_encode($object_fields);
+	return;
+}
+
+if ($printTable) {
+	$id_item = get_parameter('id_item');
+	$type = get_parameter('type');
+	$id_father = get_parameter('id_father');
+	$sql_search = base64_decode(get_parameter('sql_search', ''));
+
+	inventories_printTable($id_item, $type, $id_father);
+	return;
+}
 
 if ($get_inventory_name) {
 	$id_inventory = get_parameter('id_inventory');

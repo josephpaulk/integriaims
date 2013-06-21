@@ -1,5 +1,12 @@
 2013-06-21  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* include/ajax/inventories.php
+	  include/js/integria_inventory.js
+	  operation/inventories/inventory_search.php: Clean javascript
+	code and fixed errors.
+
+2013-06-21  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* include/js/integria_inventory.js: Fixed pagination.
 
 2013-06-20 Dario Rodriguez <dario@artica.es>

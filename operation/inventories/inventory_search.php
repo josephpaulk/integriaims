@@ -31,37 +31,7 @@ if (defined ('AJAX')) {
 	
 	global $config;
 	
-	$select_fields = get_parameter('select_fields', 0);
 	$print_subtree = get_parameter('print_subtree', 0);
-	$printTable = get_parameter('printTable', 0);
-	
-	if ($select_fields) {
-		$id_object_type = get_parameter('id_object_type');
-		
-		$fields = get_db_all_rows_filter('tobject_type_field', array('id_object_type'=>$id_object_type), 'label, id');
-		
-		if ($fields === false) {
-			$fields = array();
-		}
-
-		$object_fields = array();
-		foreach ($fields as $key => $field) {
-			$object_fields[$field['id']] = $field['label'];
-		}
-		
-		echo json_encode($object_fields);
-		return;
-	}
-	
-	if ($printTable) {
-		$id_item = get_parameter('id_item');
-		$type = get_parameter('type');
-		$id_father = get_parameter('id_father');
-		$sql_search = base64_decode(get_parameter('sql_search', ''));
-	
-		inventories_printTable($id_item, $type, $id_father);
-		return;
-	}
 	
 	$id_item = get_parameter ('id_item');
 	$lessBranchs = get_parameter('less_branchs');
@@ -360,12 +330,11 @@ $search = get_parameter('search', 0);
 $sql_search = '';
 
 $search_free = get_parameter ('search_free', '');
-$id_object_type = get_parameter ('id_object_type', 0);
+$id_object_type = get_parameter ('id_object_type_search', 0);
 $owner = get_parameter('owner', '');
 $id_manufacturer = get_parameter ('id_manufacturer', 0);
 $id_contract = get_parameter ('id_contract', 0);
-
-$fields_selected = (array)get_parameter('object_fields');
+$fields_selected = (array)get_parameter('object_fields_search');
 $mode = get_parameter('mode', 'list');
 
 if (isset($_POST['listview']))
@@ -383,7 +352,7 @@ echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=
 	
 	$objects_type = get_object_types ();
 	$table_search->data[0][1] = print_label (__('Object type'), '','',true);
-	$table_search->data[0][1] .= print_select($objects_type, 'id_object_type', $id_object_type, 'show_fields();', 'Select', '', true, 0, true, false, false, 'width: 200px;');
+	$table_search->data[0][1] .= print_select($objects_type, 'id_object_type_search', $id_object_type, 'show_type_fields();', 'Select', '', true, 0, true, false, false, 'width: 200px;');
 	
 	$table_search->data[0][2] = print_label (__('Object fields'), '','',true);
 	
@@ -396,7 +365,7 @@ echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=
 		}
 	}
 
-	$table_search->data[0][2] .= print_select($object_fields, 'object_fields[]', '', '', 'Select', '', true, 4, true, false, false, 'width: 200px;');
+	$table_search->data[0][2] .= print_select($object_fields, 'object_fields_search[]', '', '', 'Select', '', true, 4, true, false, false, 'width: 200px;');
 	
 	$params_assigned['input_id'] = 'text-owner';
 	$params_assigned['input_name'] = 'owner';
@@ -439,7 +408,7 @@ if ($search) {
 	if ($id_object_type != 0) { //búsqueda de texto libre en nombre, descripción de inventario y en contenido de campo personalizado
 		$sql_search .= " AND tinventory.id_object_type = $id_object_type";
 		
-		$params .= "&id_object_type=$id_object_type";
+		$params .= "&id_object_type_search=$id_object_type";
 		
 		if (!empty($object_fields)) {
 			$j = 0;
@@ -455,7 +424,7 @@ if ($search) {
 			$sql_search .= " AND `tobject_field_data`.`id_inventory`=`tinventory`.`id`
 							AND `tobject_field_data`.`id_object_type_field` IN ($string_fields) ";
 							
-			$params .= "&object_fields=$object_fields";
+			$params .= "&object_fields_search=$string_fields";
 						
 			if ($search_free != '') {
 				/*
@@ -463,6 +432,8 @@ if ($search) {
 					OR tinventory.description LIKE '%$search_free%')";
 				 */
 				$sql_search .= "AND tobject_field_data.`data` LIKE '%$search_free%'";
+				
+				$params .= "&search_free=$search_free";
 			}			
 		}
 	} else { //búsqueda solo en nombre y descripción de inventario
@@ -488,7 +459,6 @@ if ($search) {
 	
 } 
 
-
 $page = (int)get_parameter('page', 1);
 switch ($mode) {
 	case 'tree':
@@ -510,158 +480,9 @@ echo '</div>';
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/integria_inventory.js"></script>
 
 <script type="text/javascript">
-	
-
-function show_fields () {
-
-	$("select[name='object_fields[]']").empty();
-	
-	id_object_type = $("#id_object_type").val();
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=operation/inventories/inventory_search&select_fields=1&id_object_type=" + id_object_type,
-		dataType: "json",
-		success: function(data){
-				$("#object_fields").empty();
-				jQuery.each (data, function (id, value) {
-					field = value;
-					$("select[name='object_fields[]']").append($("<option>").val(id).html(field));
-				});	
-			}
-	});
-}
-
-/**
- * loadSubTree asincronous load ajax the agents or modules (pass type, id to search and binary structure of branch),
- * change the [+] or [-] image (with same more or less div id) of tree and anime (for show or hide)
- * the div with id "div[id_father]_[type]_[div_id]"
- *
- * type string use in js and ajax php
- * div_id int use in js and ajax php
- * less_branchs int use in ajax php as binary structure 0b00, 0b01, 0b10 and 0b11
- * id_father int use in js and ajax php, its useful when you have a two subtrees with same agent for diferent each one
- */
-function loadSubTree(type, div_id, less_branchs, id_father, sql_search) {
-
-	hiddenDiv = $('#tree_div'+id_father+'_'+type+'_'+div_id).attr('hiddenDiv');
-	loadDiv = $('#tree_div'+id_father+'_'+type+'_'+div_id).attr('loadDiv');
-	pos = parseInt($('#tree_image'+id_father+'_'+type+'_'+div_id).attr('pos_tree'));
-
-	//If has yet ajax request running
-	if (loadDiv == 2)
-		return;
-	
-	if (loadDiv == 0) {
-
-		//Put an spinner to simulate loading process
-
-		$('#tree_div'+id_father+'_'+type+'_'+div_id).html("<img style='padding-top:10px;padding-bottom:10px;padding-left:20px;' src=images/spinner.gif>");
-		$('#tree_div'+id_father+'_'+type+'_'+div_id).show('normal');
-		$('#tree_div'+id_father+'_'+type+'_'+div_id).attr('loadDiv', 2);
-	
-		$.ajax({
-			type: "POST",
-			url: "ajax.php",
-			data: "page=operation/inventories/inventory_search&print_subtree=1&type=" + 
-				type + "&id_item=" + div_id + "&less_branchs=" + less_branchs+ "&sql_search=" + sql_search,
-			success: function(msg){
-				if (msg.length != 0) {
-					
-					$('#tree_div'+id_father+'_'+type+'_'+div_id).hide();
-					$('#tree_div'+id_father+'_'+type+'_'+div_id).html(msg);
-					$('#tree_div'+id_father+'_'+type+'_'+div_id).show('normal');
-					
-					//change image of tree [+] to [-]
-					
-					var icon_path = 'images/tree';
-					
-					switch (pos) {
-						case 0:
-							$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/first_expanded.png');
-							break;
-						case 1:
-							$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/one_expanded.png');
-							break;
-						case 2:
-							$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/expanded.png');
-							break;
-						case 3:
-							$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/last_expanded.png');
-							break;
-					}
-
-					$('#tree_div'+id_father+'_'+type+'_'+div_id).attr('hiddendiv',0);
-					$('#tree_div'+id_father+'_'+type+'_'+div_id).attr('loadDiv', 1);
-				}
-				
-			}
-		});
-	}
-	else {
-
-		var icon_path = 'images/tree';
-		
-		if (hiddenDiv == 0) {
-
-			$('#tree_div'+id_father+'_'+type+'_'+div_id).hide('normal');
-			$('#tree_div'+id_father+'_'+type+'_'+div_id).attr('hiddenDiv',1);
-			
-			//change image of tree [-] to [+]
-			switch (pos) {
-				case 0:
-					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/first_closed.png');
-					break;
-				case 1:
-					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/one_closed.png');
-					break;
-				case 2:
-					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/closed.png');
-					break;
-				case 3:
-					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/last_closed.png');
-					break;
-			}
-		}
-		else {
-			//change image of tree [+] to [-]
-			switch (pos) {
-				case 0:
-					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/first_expanded.png');
-					break;
-				case 1:
-					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/one_expanded.png');
-					break;
-				case 2:
-					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/expanded.png');
-					break;
-				case 3:
-					$('#tree_image'+id_father+'_'+type+'_'+div_id).attr('src',icon_path+'/last_expanded.png');
-					break;
-			}
-
-			$('#tree_div'+id_father+'_'+type+'_'+div_id).show('normal');
-			$('#tree_div'+id_father+'_'+type+'_'+div_id).attr('hiddenDiv',0);
-		}
-	}
-}
-
-function loadTable(type, div_id, less_branchs, id_father, sql_search) {
-	id_item = div_id;
-
-	$.ajax({
-		type: "POST",
-		url: "ajax.php",
-		data: "page=operation/inventories/inventory_search&id_item=" + id_item + "&printTable=1&type="+ type+"&id_father=" + id_father +"&sql_search="+sql_search,
-		success: function(data){
-			$('#cont').html(data);
-		}
-	});
-	loadSubTree(type, div_id, less_branchs, id_father, sql_search);		
-}
-
 
 $(document).ready (function () {
 	
