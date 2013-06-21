@@ -43,6 +43,7 @@ if ($is_enterprise) {
 }
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_pandora"><span><img src="images/pandora.ico"  title="'.__('Pandora FMS inventory').'"></span></a></li>';
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_auth"><span><img src="images/book_edit.png"  title="'.__('Authentication').'"></span></a></li>';
+echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_calendar"><span><img src="images/calendar_edit.png"  title="'.__('Calendar').'"></span></a></li>';
 echo '</ul>';
 
 echo '</div>';
@@ -55,18 +56,18 @@ if ($update) {
 	$config["font"] = get_parameter ("font", "smallfont.ttf");
 	$config["pdffont"] = get_parameter ("pdffont", "code.ttf");
 	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
-    $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
+	$config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
 	$config["flash_charts"] = get_parameter ("flash_charts");
 	$config["graphviz_win"] = get_parameter ("graphviz_win");
 	
 	update_config_token ("graphviz_win", $config["graphviz_win"]);
-    update_config_token ("block_size", $config["block_size"]);
-    update_config_token ("fontsize", $config["fontsize"]);
-    update_config_token ("font", $config["font"]);
-    update_config_token ("pdffont", $config["pdffont"]);
-    update_config_token ("site_logo", $config["site_logo"]);
-    update_config_token ("header_logo", $config["header_logo"]);
-    update_config_token ("flash_charts", $config["flash_charts"]);
+	update_config_token ("block_size", $config["block_size"]);
+	update_config_token ("fontsize", $config["fontsize"]);
+	update_config_token ("font", $config["font"]);
+	update_config_token ("pdffont", $config["pdffont"]);
+	update_config_token ("site_logo", $config["site_logo"]);
+	update_config_token ("header_logo", $config["header_logo"]);
+	update_config_token ("flash_charts", $config["flash_charts"]);
 }
 
 echo "<h2>".__('Visual setup')."</h2>";

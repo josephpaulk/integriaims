@@ -38,11 +38,11 @@ function print_timestamp ($unixtime = 0){
 
 function print_mysql_timestamp ($unixtime = 0){
 	if ($unixtime == 0){
-                $unixtime = time();
-        }
-        if (!is_numeric ($unixtime)) {
-                $unixtime = strtotime ($unixtime);
-        }
+				$unixtime = time();
+		}
+		if (!is_numeric ($unixtime)) {
+				$unixtime = strtotime ($unixtime);
+		}
 	return date ("Y-m-d H:i:s", $unixtime);
 
 }
@@ -127,7 +127,7 @@ function get_task_end_date ($now, $days_margin = 0, $id_user = ""){
 
 
 function generate_calendar_agenda ($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array(), $id_user = "" ){
-    global $config;
+	global $config;
 
 	$first_of_month = gmmktime(0,0,0,$month,1,$year);
 	#remember that mktime will automatically correct if invalid dates are entered
@@ -200,15 +200,15 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 			$event_public = $row["public"];
 			$event_alarm = $row["alarm"];
 			$event_user = $row["id_user"];
-            if (($event_user == $config["id_user"]) OR ($event_public == 1)){
-			    $calendar .= $mysql_time."&nbsp;";
-			    if ($event_alarm > 0)
-				    $calendar .= "<img src='images/bell.png'>";
-			    if ($event_public > 0)
-				    $calendar .= "<img src='images/user_comment.png'>";
-			    $calendar .= "<A href='index.php?sec=agenda&sec2=operation/agenda/agenda&delete_event=".$row[0]."'><img src='images/cancel.gif' border=0></A>";
-			    $calendar .= "<br><hr width=110><font size='1pt'>[$event_user] ".$event_string."</font><br><br>";
-            }
+			if (($event_user == $config["id_user"]) OR ($event_public == 1)){
+				$calendar .= $mysql_time."&nbsp;";
+				if ($event_alarm > 0)
+					$calendar .= "<img src='images/bell.png'>";
+				if ($event_public > 0)
+					$calendar .= "<img src='images/user_comment.png'>";
+				$calendar .= "<A href='index.php?sec=agenda&sec2=operation/agenda/agenda&delete_event=".$row[0]."'><img src='images/cancel.gif' border=0></A>";
+				$calendar .= "<br><hr width=110><font size='1pt'>[$event_user] ".$event_string."</font><br><br>";
+			}
 		}
 
 		$agenda_project = get_project_end_date ($mysql_date);
@@ -375,7 +375,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 			$workhours_a = $row[0];
 			if ($workhours_a > 0){
 				$normal = 1;
-            }
+			}
 		}
 
 		// Show SUM workunits for that day (YELLOW) - holidays
@@ -386,7 +386,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 			$workhours_b = $row[0];
 			if ($workhours_b > 0){
 				$normal = 2;
-            }
+			}
 		}
 
 		// Show SUM workunits for that day (MAGENTA) - incident wu
@@ -397,7 +397,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 			$workhours_c = $row[0];
 			if ($workhours_c > 0){
 				$normal = 3;
-            }
+			}
 		}
 		
 		// Show SUM workunits for that day (YELLOW) - ORANGE (not justified)
@@ -410,29 +410,29 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 			$workhours_d = $row[0];
 			if ($workhours_d > 0){
 				$normal = 4;
-            }
+			}
 		}
 
 		$mylink = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user&timestamp_l=$year-$month-$day 00:00:00&timestamp_h=$year-$month-$day 23:59:59";
 
-	    if ($normal == 0)
-    		$calendar .= "<td class='calendar'>$day</td>";
-        elseif ($normal == 1){
+		if ($normal == 0)
+			$calendar .= "<td class='calendar'>$day</td>";
+		elseif ($normal == 1){
 			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar' style='background-color: #98FF8B;'><a href='$mylink' title='$total_wu'>$day</a></td>";
+			$calendar .= "<td class='calendar' style='background-color: #98FF8B;'><a href='$mylink' title='$total_wu'>$day</a></td>";
 		} 
-        elseif ($normal == 2) {
+		elseif ($normal == 2) {
 			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar' style='background-color: #FFFF80;'><a href='$mylink' title='$total_wu'>$day</a></td>";
+			$calendar .= "<td class='calendar' style='background-color: #FFFF80;'><a href='$mylink' title='$total_wu'>$day</a></td>";
 		}
-        elseif ($normal == 3) {
-            $total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar' style='background-color: #FF7BFE;'><a href='$mylink' title='$total_wu'>$day</a></td>";
+		elseif ($normal == 3) {
+			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
+			$calendar .= "<td class='calendar' style='background-color: #FF7BFE;'><a href='$mylink' title='$total_wu'>$day</a></td>";
 		}
 		elseif ($normal == 4) {
-            $total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar' style='background-color: #FFDE46;'><a href='$mylink' title='$total_wu'>$day</a></td>";
-        }
+			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
+			$calendar .= "<td class='calendar' style='background-color: #FFDE46;'><a href='$mylink' title='$total_wu'>$day</a></td>";
+		}
 	}
 	if($weekday != 7) $calendar .= '<td class="calendar" colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
 
@@ -523,117 +523,117 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 		}
 
 
-        $workhours_d = 0; 
-        $workhours_c = 0; 
-        $workhours_b = 0;
-        $workhours_a = 0;
+		$workhours_d = 0; 
+		$workhours_c = 0; 
+		$workhours_b = 0;
+		$workhours_a = 0;
 
-        // Show SUM workunits for that day (GREEN) - standard wu
-        $sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
-        $normal = 0;
-        $res=mysql_query($sqlquery);
-        if ($row=mysql_fetch_array($res)){
-            $workhours_a = $row[0];
-            if ($workhours_a > 0){
-                $normal = 1;
-            }
-        }
+		// Show SUM workunits for that day (GREEN) - standard wu
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task > 0 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+		$normal = 0;
+		$res=mysql_query($sqlquery);
+		if ($row=mysql_fetch_array($res)){
+			$workhours_a = $row[0];
+			if ($workhours_a > 0){
+				$normal = 1;
+			}
+		}
 
-        // Show SUM workunits for that day (YELLOW) - holidays
-        $sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task =-1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+		// Show SUM workunits for that day (YELLOW) - holidays
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task =-1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
 
-        $res=mysql_query($sqlquery);
-        if ($row=mysql_fetch_array($res)){
-            $workhours_b = $row[0];
-            if ($workhours_b > 0){
-                $normal = 2;
-            }
-        }
+		$res=mysql_query($sqlquery);
+		if ($row=mysql_fetch_array($res)){
+			$workhours_b = $row[0];
+			if ($workhours_b > 0){
+				$normal = 2;
+			}
+		}
 
-        // Show SUM workunits for that day (MAGENTA) - incident wu
-        $sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident != -1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+		// Show SUM workunits for that day (MAGENTA) - incident wu
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_incident WHERE tworkunit_incident.id_workunit = tworkunit.id AND tworkunit_incident.id_incident != -1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
 
-        $res=mysql_query($sqlquery);
-        if ($row=mysql_fetch_array($res)){
-            $workhours_c = $row[0];
-            if ($workhours_c > 0){
-                $normal = 3;
-            }
-        }
+		$res=mysql_query($sqlquery);
+		if ($row=mysql_fetch_array($res)){
+			$workhours_c = $row[0];
+			if ($workhours_c > 0){
+				$normal = 3;
+			}
+		}
 
-        // Show SUM workunits for that day (YELLOW) - ORANGE (not justified)
-        $sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task <-1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
+		// Show SUM workunits for that day (YELLOW) - ORANGE (not justified)
+		$sqlquery = "SELECT SUM(tworkunit.duration) FROM tworkunit, tworkunit_task WHERE tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task <-1 AND id_user = '$id_user' AND timestamp >= '$year-$month-$day 00:00:00' AND timestamp <= '$year-$month-$day 23:59:59' ";
 
-        $res=mysql_query($sqlquery);
-        if ($row=mysql_fetch_array($res)){
-            $workhours_d = $row[0];
-            if ($workhours_d > 0){
-                $normal = 4;
-            }
-        }
+		$res=mysql_query($sqlquery);
+		if ($row=mysql_fetch_array($res)){
+			$workhours_d = $row[0];
+			if ($workhours_d > 0){
+				$normal = 4;
+			}
+		}
 
 		if (($day == $today) && ($today_m == $month))
-            $border = "border: 2px dotted #000";
-        else {
-            if (is_working_day("$year-$month-$day") == 1)
-                $border = "border: 1px solid #AAA;";
-            else
-                $border = "border: 1px dashed #AAA;";
-        }
+			$border = "border: 2px dotted #000";
+		else {
+			if (is_working_day("$year-$month-$day") == 1)
+				$border = "border: 1px solid #AAA;";
+			else
+				$border = "border: 1px dashed #AAA;";
+		}
 
-        $background = "#F5F5ED";
+		$background = "#F5F5ED";
 
 		$mysql_time= "";
 		$event_string = "";
 		$event_privacy = 0;
 		$event_alarm = 0;
-        $mydiff = 0;
+		$mydiff = 0;
 
 		if ($day < 10)
 			$day = "0".$day;
 		$mysql_date = "$year-$month-$day";
 
-        $workhours = $workhours_a + $workhours_b + $workhours_c + $workhours_d;
-        $hours = "";
-        
-        //Check if this days is in holidays list if but also check for working ours
+		$workhours = $workhours_a + $workhours_b + $workhours_c + $workhours_d;
+		$hours = "";
+		
+		//Check if this days is in holidays list if but also check for working ours
 		if (!is_working_day("$year-$month-$day")) {
 			$background = "#DBDBD9";
 		}
-        if ($workhours_a > 0){
-            $background = '#98FF8B';
-            $mydiff++;
-        } 
-        if ($workhours_b > 0){
-            $background = '#FFFF80';
-            $mydiff++;
-        } 
-        if ($workhours_c > 0){
-            $background = '#FF7BFE';
-            $mydiff++;
+		if ($workhours_a > 0){
+			$background = '#98FF8B';
+			$mydiff++;
 		} 
-        if ($workhours_d > 0){
-            $background = '#FFDE46';
-            $mydiff++;
+		if ($workhours_b > 0){
+			$background = '#FFFF80';
+			$mydiff++;
+		} 
+		if ($workhours_c > 0){
+			$background = '#FF7BFE';
+			$mydiff++;
+		} 
+		if ($workhours_d > 0){
+			$background = '#FFDE46';
+			$mydiff++;
 		} 
 		
 
 
-        $calendar .= "<td valign='top' style='$border; background: $background; height: 70px; width: 70px;' ><b><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit&givendate=$year-$month-$day'>$day</a></b>";
+		$calendar .= "<td valign='top' style='$border; background: $background; height: 70px; width: 70px;' ><b><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit&givendate=$year-$month-$day'>$day</a></b>";
 
-        if ($mydiff > 1){
-            $calendar .= "<a href='#' class='tip'>&nbsp;<span>";
-            $calendar .= __("Task/projects"). " : ". $workhours_a . "<br>";
-            $calendar .= __("Vacations"). " : ". $workhours_b . "<br>";
-            $calendar .= __("Incidents"). " : ". $workhours_c . "<br>";
-            $calendar .= __("Non-Justified"). " : ". $workhours_d . "<br>";
-            $calendar .= "</a>";
-        }
-        $calendar .= "<br><br>";
+		if ($mydiff > 1){
+			$calendar .= "<a href='#' class='tip'>&nbsp;<span>";
+			$calendar .= __("Task/projects"). " : ". $workhours_a . "<br>";
+			$calendar .= __("Vacations"). " : ". $workhours_b . "<br>";
+			$calendar .= __("Incidents"). " : ". $workhours_c . "<br>";
+			$calendar .= __("Non-Justified"). " : ". $workhours_d . "<br>";
+			$calendar .= "</a>";
+		}
+		$calendar .= "<br><br>";
 
 		$calendar .= "<center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$mysql_date. " 00:00:00"."&timestamp_h=".$mysql_date."  23:59:59'><i>".$workhours."</i></a></center></td>";
 
-        
+		
 
 	}
 	if($weekday != 7) { // remaining "empty" days
@@ -664,18 +664,18 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 // First parameter is entered in YYYY-MM-DD, and second is hours
 
 function calcdate_business ($datecalc, $duedays) {
-    $datecalc = strtotime ($datecalc);
-    $i = 1;
-    while ($i <= $duedays) {
-        $datecalc += 86400; // Add a day.
-        $date_info  = getdate( $datecalc );
-        if (($date_info["wday"] == 0) or ($date_info["wday"] == 6) )  {
-            $datecalc += 86400; // Add a day.
-            continue;
-        }
-        $i++;
-    }
-    return date ("Y-m-d", $datecalc);
+	$datecalc = strtotime ($datecalc);
+	$i = 1;
+	while ($i <= $duedays) {
+		$datecalc += 86400; // Add a day.
+		$date_info  = getdate( $datecalc );
+		if (($date_info["wday"] == 0) or ($date_info["wday"] == 6) )  {
+			$datecalc += 86400; // Add a day.
+			continue;
+		}
+		$i++;
+	}
+	return date ("Y-m-d", $datecalc);
 }
 
 // This functions calculates the previous date only using business days
@@ -696,18 +696,71 @@ function calcdate_business_prev ($datecalc, $duedays) {
 	return date ("Y-m-d", $datecalc);
 }
 
+/**
+ * Get amount of days before or after of Easter for a given date
+ *
+ * @param string $date contain a textual datetime description
+ * @return int representing offset in days
+ **/
+
+function get_easter_offset($date) {
+	$ts = strtotime ($date);
+	$ts_info = getdate($ts);	
+	$days  = easter_days($ts_info["year"]);
+	$easter_date = mktime(0,0,0,3, 21 + $days, $ts_info["year"]);
+	$offset = ($ts - $easter_date) / (60 * 60 * 24);
+	return $offset;
+}
+
+/**
+ * Get a date related to Easter for a given year and offset 
+ *
+ * @param int $year the year for which you want to calculate the date 
+ * @return int representing offset in days from Easter
+ * 
+ * See http://php.net/manual/en/function.easter-days.php
+ **/
+
+function get_easter_related_date($year, $offset) {
+	$days  = easter_days($year);
+	$date = mktime(0,0,0,3, 21 + $days + $offset, $year);	
+	return $date;  
+}
+
 function is_holidays ($datecalc) {
 	
 	$date_formated = $datecalc;
-	
-	$date = $date_formated.' 00:00:00';
 
-	$id = get_db_value_filter("id", "tholidays", array("day" => $date));
-
-	//If there is in the list is holidays
+	$id = get_db_value_filter("id", "tholidays", 
+									array("day" => $date_formated, 
+										  "yearly" => 0,
+										  "easter_related" => 0));
 	if ($id) {
 		return 1;
 	}
+		
+	$ts = strtotime ($date_formated);
+	$ts_info = getdate($ts);
+		
+		$sql = "SELECT id FROM tholidays WHERE MONTH(day)=" . $ts_info["mon"].
+				" AND DAYOFMONTH(day)=".$ts_info["mday"] . " AND yearly=1";
+		$id = get_db_row_sql($sql);
+
+	if ($id) {
+		return 1;
+	}
+		
+		$sql = "SELECT easter_offset FROM tholidays WHERE easter_related=1";
+		$offsets = get_db_all_rows_sql($sql);
+		integria_logwrite("yearly easter: " . " " . $datecalc . " ".$sql);
+		foreach($offsets as $offset){
+			$easter_related_day = get_easter_related_date($ts_info["year"], $offset["easter_offset"]);
+			if ($ts == $easter_related_day)
+			{
+				return 1;
+			}
+
+		}
 	
 	return 0;
 }
@@ -728,7 +781,7 @@ function is_working_day ($datecalc) {
 			return 0;
 		}
 	else {
-		if (is_holidays ($datecalc)) {
+		if (is_holidays ($date_formated)) {
 			return 0;
 		}
 	}
@@ -745,7 +798,7 @@ function give_human_time ($int_seconds, $flag_hide_zero = true, $brief_time=fals
 	$periods = array (
 		'year'   => 31556926,
 		'month'  => 2629743,
-		'day'    => 86400,
+		'day'	=> 86400,
 		'hour'   => 3600,
 		'minute' => 60,
 		'second' => 1
@@ -811,7 +864,7 @@ function calendar_seconds_to_humand ($int_seconds) {
 	$periods = array (
 		'year'   => 31556926,
 		'month'  => 2629743,
-		'day'    => 86400,
+		'day'	=> 86400,
 		'hour'   => 3600,
 		'minute' => 60,
 		'second' => 1
@@ -981,7 +1034,7 @@ function working_weeks_combo () {
 
 	$d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
 	$full_weeks = ceil ($d_daysinmonth / 7);
-	$d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));     // FIRST falls on what day of week (0-6)
+	$d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));	 // FIRST falls on what day of week (0-6)
 	$ajuste = $d_firstdow -1;
 	if ($ajuste >= 0)
 		$new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
@@ -1005,7 +1058,7 @@ function first_working_week (){
 	$day = substr($date, 8, 2);
 	$d_daysinmonth = date('t', mktime(0,0,0,$month,1,$year));  // how many days in month
 	$full_weeks = ceil ($d_daysinmonth / 7);
-	$d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));     // FIRST falls on what day of week (0-6)
+	$d_firstdow = date('w', mktime(0,0,0,$month,'1',$year));	 // FIRST falls on what day of week (0-6)
 	$ajuste = $d_firstdow -1;
 	if ($ajuste >= 0)
 		$new_date = date('Y-m-d', strtotime("$year-$month-01 - $ajuste days"));
@@ -1043,9 +1096,9 @@ function get_working_days ( $hours ) {
 */
 
 function unixToiCal($uStamp = 0, $tzone = 0.0) {
-	$uStampUTC = $uStamp + ($tzone * 3600);       
+	$uStampUTC = $uStamp + ($tzone * 3600);	   
 	$stamp  = date("Ymd\THis\Z", $uStampUTC);	
-	return $stamp;       
+	return $stamp;	   
 }
 
 /**
@@ -1058,46 +1111,46 @@ function unixToiCal($uStamp = 0, $tzone = 0.0) {
 **/
 
 function getWorkingDays($startDate,$endDate,$holidays){
-    //The total number of days between the two dates. We compute the no. of seconds and divide it to 60*60*24
-    //We add one to inlude both dates in the interval.
-    $days = (strtotime($endDate) - strtotime($startDate)) / 86400 + 1;
+	//The total number of days between the two dates. We compute the no. of seconds and divide it to 60*60*24
+	//We add one to inlude both dates in the interval.
+	$days = (strtotime($endDate) - strtotime($startDate)) / 86400 + 1;
 
-    $no_full_weeks = floor($days / 7);
-    $no_remaining_days = fmod($days, 7);
+	$no_full_weeks = floor($days / 7);
+	$no_remaining_days = fmod($days, 7);
 
-    //It will return 1 if it's Monday,.. ,7 for Sunday
-    $the_first_day_of_week = date("N",strtotime($startDate));
-    $the_last_day_of_week = date("N",strtotime($endDate));
+	//It will return 1 if it's Monday,.. ,7 for Sunday
+	$the_first_day_of_week = date("N",strtotime($startDate));
+	$the_last_day_of_week = date("N",strtotime($endDate));
 
-    //---->The two can be equal in leap years when february has 29 days, the equal sign is added here
-    //In the first case the whole interval is within a week, in the second case the interval falls in two weeks.
-    if ($the_first_day_of_week <= $the_last_day_of_week){
-        if ($the_first_day_of_week <= 6 && 6 <= $the_last_day_of_week) $no_remaining_days--;
-        if ($the_first_day_of_week <= 7 && 7 <= $the_last_day_of_week) $no_remaining_days--;
-    }
-    else{
-        if ($the_first_day_of_week <= 6) $no_remaining_days--;
-        //In the case when the interval falls in two weeks, there will be a Sunday for sure
-        $no_remaining_days--;
-    }
+	//---->The two can be equal in leap years when february has 29 days, the equal sign is added here
+	//In the first case the whole interval is within a week, in the second case the interval falls in two weeks.
+	if ($the_first_day_of_week <= $the_last_day_of_week){
+		if ($the_first_day_of_week <= 6 && 6 <= $the_last_day_of_week) $no_remaining_days--;
+		if ($the_first_day_of_week <= 7 && 7 <= $the_last_day_of_week) $no_remaining_days--;
+	}
+	else{
+		if ($the_first_day_of_week <= 6) $no_remaining_days--;
+		//In the case when the interval falls in two weeks, there will be a Sunday for sure
+		$no_remaining_days--;
+	}
 
-    //The no. of business days is: (number of weeks between the two dates) * (5 working days) + the remainder
+	//The no. of business days is: (number of weeks between the two dates) * (5 working days) + the remainder
 //---->february in none leap years gave a remainder of 0 but still calculated weekends between first and last day, this is one way to fix it
    $workingDays = $no_full_weeks * 5;
-    if ($no_remaining_days > 0 )
-    {
-      $workingDays += $no_remaining_days;
-    }
+	if ($no_remaining_days > 0 )
+	{
+	  $workingDays += $no_remaining_days;
+	}
 
-    //We subtract the holidays
-    foreach($holidays as $holiday){
-        $time_stamp=strtotime($holiday);
-        //If the holiday doesn't fall in weekend
-        if (strtotime($startDate) <= $time_stamp && $time_stamp <= strtotime($endDate) && date("N",$time_stamp) != 6 && date("N",$time_stamp) != 7)
-            $workingDays--;
-    }
+	//We subtract the holidays
+	foreach($holidays as $holiday){
+		$time_stamp=strtotime($holiday);
+		//If the holiday doesn't fall in weekend
+		if (strtotime($startDate) <= $time_stamp && $time_stamp <= strtotime($endDate) && date("N",$time_stamp) != 6 && date("N",$time_stamp) != 7)
+			$workingDays--;
+	}
 
-    return $workingDays;
+	return $workingDays;
 
 	/* Samples: 
 		$holidays=array("2006-12-25","2006-12-26","2007-01-01");
@@ -1112,7 +1165,7 @@ function calendar_get_holidays() {
 }
 
 function mysql_timestamp ($unix_time){
-    return date('Y-m-d H:i:s', $unix_time);
+	return date('Y-m-d H:i:s', $unix_time);
 }
 
 function calendar_get_holidays_by_timerange ($begin_unix, $end_unix) {

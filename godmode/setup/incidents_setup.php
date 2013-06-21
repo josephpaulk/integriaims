@@ -43,6 +43,7 @@ if ($is_enterprise) {
 }
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_pandora"><span><img src="images/pandora.ico"  title="'.__('Pandora FMS inventory').'"></span></a></li>';
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_auth"><span><img src="images/book_edit.png"  title="'.__('Authentication').'"></span></a></li>';
+echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_calendar"><span><img src="images/calendar_edit.png"  title="'.__('Calendar').'"></span></a></li>';
 echo '</ul>';
 
 echo '</div>';
@@ -52,27 +53,6 @@ $add_day = (bool) get_parameter ("add_day");
 $del_day = (bool) get_parameter ("del_day");
 
 echo "<h2>".__('Incidents setup')."</h2>";
-
-if ($add_day) {
-	
-	$new_day = get_parameter("new_day");
-	
-	//If new day added then add to list
-	if ($new_day) { 
-	
-		$sql = sprintf("INSERT INTO tholidays (`day`) VALUES ('%s')", $new_day);
-	
-		process_sql($sql);
-	}
-}
-
-if ($del_day) {
-	$day = get_parameter("day");
-	
-	$sql = sprintf("DELETE FROM tholidays WHERE `id` = '".$day."'");
-	
-	process_sql ($sql);
-}
 
 if ($update) {
 	$status = (array) get_parameter ('status');
@@ -133,65 +113,14 @@ foreach ($resolutions as $resolution) {
 
 $table_resolutions = print_table ($table, true);
 
-$table->width = '100%';
-$table->class = 'databox';
-$table->colspan = array ();
-$table->data = array ();
-
-$date_table = "<table>";
-$date_table .= "<tr>";
-$date_table .= "<td>";
-$date_table .= "<input id='new_day' type='text' class='hasDatepicker' name='new_day' width='15' size='15'>";
-$date_table .= "</td>";
-$date_table .= "<td>";
-$date_table .= "<input type='submit' class='sub next' name='add_day' value='".__("Add")."'>";
-$date_table .= "</td>";
-$date_table .= "</tr>";
-$date_table .= "</table>";
-
-$table->data[0][0] = "";
-$table->data[0][1] = "<strong>".__("Holidays")."</strong>";
-
-$table->data[1][0] =print_checkbox ("working_weekends", 1, $config["working_weekends"], 
-					true, __("Weekends are working days"));
-$table->data[1][1] = $date_table;
-
-$holidays_array = calendar_get_holidays();
-
-if ($holidays_array == false) {
-	$holidays = "<center><em>".__("No holidays defined")."</em></center>";
-} else {
-	
-	$holidays = "<table>";
-	
-	foreach ($holidays_array as $ha) {
-		$holidays .= "<tr>";
-		$holidays .= "<td>";
-		$holidays .= $ha["day"];
-		$holidays .= "</td>";
-		$holidays .= "<td>";
-		$holidays .= "<a href='index.php?sec=godmode&sec2=godmode/setup/incidents_setup&del_day=1&day=".$ha["id"]."'><img src='images/cross.png'></a>";
-		$holidays .= "</td>";
-		$holidays .= "</tr>";
-	}
-	
-	$holidays .= "</table>";
-}
-
-$table->data[1][1] .= $holidays;
-
-$holidays_table = print_table($table, true);
-
 echo "<table width='90%'>";
 echo "<tr>";
 echo "<td><h3>".__('Status')."</h3></td>";
 echo "<td><h3>".__('Resolutions')."</h3></td>";
-echo "<td><h3>".__("Non-working days")."</h3></td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td style='vertical-align: top; width: 280px'>".$table_status."</td>";
 echo "<td style='vertical-align: top; width: 280px'>".$table_resolutions."</td>";
-echo "<td style='vertical-align: top;'>".$holidays_table."</td>";
 echo "</tr>";
 echo "</table>";
 

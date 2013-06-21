@@ -1,3 +1,21 @@
+2013-06-21  Richard Santaella  <richard.santaella@gmail.com>
+
+        * godmode/setup/setup_calendar.php: Addes especific tab for non-working 
+	days management, support for non-working days annually recurring.
+        * godmode/setup/incidents_setup.php: Removed non-working days management
+        * godmode/setup/incidents_setup.php,
+	godmode/setup/setup,
+	godmode/setup/setup_auth,
+	godmode/setup/setup_mail,
+	godmode/setup/setup_mailtemplates,
+	godmode/setup/setup_pandora,
+	godmode/setup/setup_visual: Modified to show setup_calendar tab
+	* include/function_calendar.php: Modified for calculate non-working days
+	annually recurring.
+	* integria_db.sql: Added columns to tholidays to support 
+	for non-working days annually recurring. 
+	* images/calendar_edit.png
+
 2013-06-21  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/ajax/inventories.php
