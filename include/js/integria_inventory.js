@@ -1,11 +1,11 @@
 
 // Show the modal window of inventory search
-function show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search) {
+function show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search, offset) {
 	
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
-		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
+		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1&offset="+offset,
 		dataType: "html",
 		success: function(data){	
 			
@@ -24,6 +24,16 @@ function show_inventory_search(search_free, id_object_type_search, owner_search,
 					height: 600
 				});
 			$("#inventory_search_window").dialog('open');
+			
+			$("a[id^='page']").click(function(e) {
+
+				e.preventDefault();
+				var id = $(this).attr("id");
+								
+				offset = id.substr(5,id.length);
+
+				show_inventory_search(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search, offset)
+			});
 			
 			var idUser = "<?php echo $config['id_user'] ?>";
 		

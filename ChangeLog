@@ -1,3 +1,7 @@
+2013-06-21  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/js/integria_inventory.js: Fixed pagination.
+
 2013-06-20 Dario Rodriguez <dario@artica.es>
 
 	* include/functions_incidents.php: Fixed an error in function
