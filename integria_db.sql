@@ -980,10 +980,6 @@ CREATE TABLE `tcrm_template` (
 CREATE TABLE `tholidays` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `day` DATETIME  NOT NULL DEFAULT 0,
-  `description` varchar(250) NOT NULL default '',
-  `yearly` bit(1) default b'0',
-  `easter_related` bit(1) NOT NULL default b'0',
-  `easter_offset` int(11) NOT NULL default '0',
    PRIMARY KEY  (`id`),
    UNIQUE (`day`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -49,7 +49,6 @@ if ($is_enterprise) {
 }
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_pandora"><span><img src="images/pandora.ico"  title="'.__('Pandora FMS inventory').'"></span></a></li>';
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_auth"><span><img src="images/book_edit.png"  title="'.__('Authentication').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_calendar"><span><img src="images/calendar_edit.png"  title="'.__('Calendar').'"></span></a></li>';
 echo '</ul>';
 
 echo '</div>';
@@ -77,18 +76,18 @@ if ($update) {
 	$config["auto_incident_close"] = get_parameter ("auto_incident_close", "72");
 	$config["email_on_incident_update"] = get_parameter ("email_on_incident_update", 0);
 	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
-	$config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
+    $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
 	$config["error_log"] = get_parameter ("error_log", 0);
 	$config["flash_charts"] = get_parameter ("flash_charts", 1);
-	$config["max_file_size"] = get_parameter ("max_file_size", 1);
-	$config["iw_creator_enabled"] = get_parameter ("iw_creator_enabled", 0);
-	$config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
-	$config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
-	$config["lead_company_filter"] = get_parameter ("lead_company_filter", "");	
+    $config["max_file_size"] = get_parameter ("max_file_size", 1);
+    $config["iw_creator_enabled"] = get_parameter ("iw_creator_enabled", 0);
+    $config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
+    $config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
+	$config["lead_company_filter"] = get_parameter ("lead_company_filter", "");    
 	$config["lead_warning_time"] = get_parameter ("lead_warning_time", "7");  
 	$config["months_to_delete_incidents"] = get_parameter ("months_to_delete_incidents", 12);  
 
-	if ($is_enterprise) {
+    if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
 		$config["pass_size"] = get_parameter ("pass_size", 4);
 		$config["pass_needs_numbers"] = get_parameter ("pass_needs_numbers", 0);
@@ -98,26 +97,26 @@ if ($update) {
 		$config["mins_fail_pass"] = get_parameter ("mins_fail_pass", 5);
 		$config["number_attempts"] = get_parameter ("number_attempts", 5);
 	}
-	$config["want_chat"] = get_parameter ("want_chat", 0); 
-	$config["incident_creation_wu"] = get_parameter ("incident_creation_wu", 0);
+    $config["want_chat"] = get_parameter ("want_chat", 0); 
+    $config["incident_creation_wu"] = get_parameter ("incident_creation_wu", 0);
  
-	update_config_token ("timezone", $config["timezone"]);	
-	update_config_token ("want_chat", $config["want_chat"]);
-	update_config_token ("incident_creation_wu", $config["incident_creation_wu"]);
-	update_config_token ("lead_company_filter", $config["lead_company_filter"]);
-	update_config_token ("lead_warning_time", $config["lead_warning_time"]);
-	update_config_token ("months_to_delete_incidents", $config["months_to_delete_incidents"]);
+    update_config_token ("timezone", $config["timezone"]);	
+    update_config_token ("want_chat", $config["want_chat"]);
+    update_config_token ("incident_creation_wu", $config["incident_creation_wu"]);
+    update_config_token ("lead_company_filter", $config["lead_company_filter"]);
+    update_config_token ("lead_warning_time", $config["lead_warning_time"]);
+    update_config_token ("months_to_delete_incidents", $config["months_to_delete_incidents"]);
 
-	//TODO: Change all "process_sqlxxx" for update_config_token in following code:
+    //TODO: Change all "process_sqlxxx" for update_config_token in following code:
 
 	process_sql ("UPDATE tconfig SET value='".$config["language_code"]."' WHERE token='language_code'");
 	
 	process_sql ("UPDATE tconfig SET value='".$config["hours_perday"]."' WHERE token='hours_perday'");
 	process_sql ("UPDATE tconfig SET value='".$config["currency"]."' WHERE token='currency'");
 	
-	update_config_token ("sitename", $config["sitename"]);
-	update_config_token ("limit_size", $config["limit_size"]);
-	update_config_token ("max_file_size", $config["max_file_size"]);
+    update_config_token ("sitename", $config["sitename"]);
+    update_config_token ("limit_size", $config["limit_size"]);
+    update_config_token ("max_file_size", $config["max_file_size"]);
 
 
 	process_sql ("DELETE FROM tconfig WHERE token = 'autowu_completion'");
@@ -139,14 +138,14 @@ if ($update) {
 	update_config_token ("iwu_defaultime", $config["iwu_defaultime"]);
 	update_config_token ("api_acl", $config["api_acl"]);
 	update_config_token ("api_password", $config["api_password"]);
-	update_config_token ("auto_incident_close", $config["auto_incident_close"]);
-	update_config_token ("email_on_incident_update", $config["email_on_incident_update"]);
-	update_config_token ("error_log", $config["error_log"]);
+    update_config_token ("auto_incident_close", $config["auto_incident_close"]);
+    update_config_token ("email_on_incident_update", $config["email_on_incident_update"]);
+    update_config_token ("error_log", $config["error_log"]);
 	update_config_token ("iw_creator_enabled", $config["iw_creator_enabled"]);
-	update_config_token ("enable_newsletter", $config["enable_newsletter"]);
-	update_config_token ("batch_newsletter", $config["batch_newsletter"]);
-	
-	if ($is_enterprise) {
+    update_config_token ("enable_newsletter", $config["enable_newsletter"]);
+    update_config_token ("batch_newsletter", $config["batch_newsletter"]);
+    
+    if ($is_enterprise) {
 		update_config_token ("enable_pass_policy", $config["enable_pass_policy"]);
 		update_config_token ("pass_size", $config["pass_size"]);
 		update_config_token ("pass_needs_numbers", $config["pass_needs_numbers"]);
@@ -156,7 +155,7 @@ if ($update) {
 		update_config_token ("mins_fail_pass", $config["mins_fail_pass"]);
 		update_config_token ("number_attempts", $config["number_attempts"]);
 	}
-	
+    
 }
 // Render SYSTEM language code, not current language.
 $config['language_code'] = get_db_value ('value', 'tconfig', 'token', 'language_code');

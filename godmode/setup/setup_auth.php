@@ -50,7 +50,6 @@ if ($is_enterprise) {
 }
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_pandora"><span><img src="images/pandora.ico"  title="'.__('Pandora FMS inventory').'"></span></a></li>';
 echo '<li class="ui-tabs-selected"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_auth"><span><img src="images/book_edit.png"  title="'.__('Authentication').'"></span></a></li>';
-echo '<li class="ui-tabs-selected"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_calendar"><span><img src="images/calendar_edit.png"  title="'.__('Calendar').'"></span></a></li>';
 echo '</ul>';
 
 echo '</div>';

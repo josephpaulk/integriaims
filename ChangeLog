@@ -1,3 +1,18 @@
+2013-06-24  Dario Rodriguez <dario@artica.es>
+
+	* integria_db.sql,
+	images/calendar_edit.png,
+	godmode/setup/setup_mailtemplates.php,
+	godmode/setup/setup_auth.php,
+	godmode/setup/setup_visual.php,
+	godmode/setup/setup_calendar.php,
+	godmode/setup/setup.php,
+	godmode/setup/incidents_setup.php,
+	godmode/setup/setup_mail.php,
+	godmode/setup/setup_pandora.php,
+	include/functions_calendar.php: Reverted commit due to
+	some issues. The developer was noticed to fix the problems.
+
 2013-06-24  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/inventories/inventory_detail.php
