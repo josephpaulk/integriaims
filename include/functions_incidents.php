@@ -237,8 +237,7 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 		$note = "Automatic WU: Added a file to this issue. Filename uploaded: ". $filename;
 		$public = 1;
 		$timeused = "0.05";
-		
-		add_workunit_incident($id, $note, $timeused, $public);
+		create_workunit ($id, $note, $config["id_user"], $timeused, 0, "", $public);
 	}
 	
 	return $result_msg;
@@ -256,46 +255,6 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 
 		process_sql ($sql);
  }
- 
- /**
- * Add a workunit to an incident
- *
- * @param int incident id
- * @param string note of the workunit
- * @param string timeused
- * @param string public
- * @param int incident id
- *
- */
- 
-function add_workunit_incident($incident_id, $note, $timeused, $public = 1) {
-	global $config;
-	
-	$timestamp = print_mysql_timestamp();
-	
-	$sql = sprintf ('INSERT INTO tworkunit (timestamp, duration, id_user, description, public) VALUES ("%s", %.2f, "%s", "%s", %d)', $timestamp, $timeused, $config['id_user'], $note, $public);
-
-	$id_workunit = process_sql ($sql, "insert_id");
-	
-	if($id_workunit === false) {
-		return false;
-	}
-	
-	$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES (%d, %d)', $incident_id, $id_workunit);
-	
-	
-	$result = process_sql ($sql);
-	
-	if($result === false) {
-		$sql = sprintf ('DELETE FROM tworkunit WHERE id = %d',$id_workunit);
-		return false;
-	}
-	
-	// Update the updatetime of the incident
-	update_incident_updatetime($incident_id);
-	
-	return true;
-}
 
 /**
  * Return an array with the incidents with a filter
@@ -1197,7 +1156,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$msg_code = "TicketID#$id_inc";
 	$msg_code .= "/".substr(md5($id_inc . $config["smtp_pass"] . $row["id_usuario"]),0,5);
 	$msg_code .= "/" . $row["id_usuario"];;
-
+	
 	integria_sendmail ($email_owner, $subject, $text, false, $msg_code);
 
     // Send a copy to each address in "email_copy"

@@ -778,8 +778,6 @@ if ($has_im){
 	$table_advanced->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
                 false, '', '', true, __('Notify changes by email'));
 
-	$table_advanced->data[0][2] .= print_input_text ('email_copy', $email_copy,"",20,500, true);
-
 } else {
 	$table_advanced->data[1][1] = print_input_hidden ('email_notify', 1, true);
 	$table_advanced->data[1][2] = print_input_hidden ('sla_disabled', 0, true);
@@ -811,6 +809,8 @@ if ($id_task > 0){
 	$table_advanced->data[2][1] .= "&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>";
 	$table_advanced->data[2][1] .= "<img src='images/bricks.png'></a>";
 }
+
+$table_advanced->data[2][2] = print_input_text ('email_copy', $email_copy,"",20,500, true, __("Additional email addresses"));
 
 if ($create_incident) {
 

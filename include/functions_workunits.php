@@ -75,13 +75,20 @@ function create_workunit ($incident_id, $wu_text, $user, $timeused = 0, $have_co
 			VALUES (%d, %d)',
 			$incident_id, $id_workunit);
 	$res = process_sql ($sql);
+	
 	if ($res !== false) {
 		// Email notify to all people involved in this incident
 		$email_notify = get_db_value ("notify_email", "tincidencia", "id_incidencia", $incident_id);
 		if (($email_notify == 1) AND ($send_email == 1)) {
 			mail_incident ($incident_id, $user, $wu_text, $timeused, 10, $public);
 		}
+	} else {
+		//Delete workunit
+		$sql = sprintf ('DELETE FROM tworkunit WHERE id = %d',$id_workunit);
+		return false;
 	}
+	
+	return true;
 }
 
 function create_new_table_multiworkunit ($number=false) {

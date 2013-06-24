@@ -17,6 +17,8 @@
 // LOAD GLOBAL VARS
 global $config;
 
+include("include/functions_workunits.php");
+
 // SET VARS
 $width = '90%';
 
@@ -63,7 +65,7 @@ if($add_workunit) {
 	$public = 1;
 	$timeused = "0.05";
 	
-	$result = add_workunit_incident($incident_id, $note, $timeused, $public);
+	$result = create_workunit ($incident_id, $note, $config["id_user"], $timeused, 0, "", $public);
 	
 	if($result) {
 		ui_print_success_message(__('Workunit added'));

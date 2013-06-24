@@ -1,5 +1,17 @@
 2013-06-24  Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents/incident_detail.php: Notify email checkbox and
+	additional emails split in two fields
+	* include/functions_workunits.php: Improved create_workunit function.
+	* include/functions_incidents.php,
+	operation/incidents_simple/incident.php: Remove "add_workunit_incident" function 
+	which is deprecateed replaced by "create_workunit" function.
+	* operation/slas/sla_detail.php,
+	operation/manufacturers/manufacturer_detail.php,
+	operation/buildings/building_detail.php: Restored missed files from rever.
+
+2013-06-24  Dario Rodriguez <dario@artica.es>
+
 	* integria_db.sql,
 	images/calendar_edit.png,
 	godmode/setup/setup_mailtemplates.php,
