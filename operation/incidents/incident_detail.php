@@ -484,7 +484,15 @@ if ($id) {
     $score = 0;
 	$epilog = "";
 	$id_creator = $config['id_user'];
-	$email_notify = 1;
+	
+	//Email notify default value is the same that forced_email group field
+	$email_notify = get_db_value("forced_email", "tgrupo", "id_grupo", $id_group);
+	
+	if($email_notify) {
+		$email_notify = 1;
+	} else {
+		$email_notify = 0;
+	}
 	$sla_disabled = 0;
 	$id_incident_type = 0;
 	$affected_sla_id = 0;
@@ -510,8 +518,6 @@ if (! $id) {
 		$default_id_group = 1;
 		$number_group = 1;
 	}
-	// if have only one group, select default user and email for this group
-	$email_notify = true;
 }
 
 //The user with IW flag or the incident owner can modify all data from the incident.
@@ -948,6 +954,17 @@ $(document).ready (function () {
 	
 	$("#grupo_form").change (function () {
 		incident_limit("#submit-accion", id_user, id_group);
+		
+		var group = $("#grupo_form").val();
+		
+		var group_info = get_group_info(group);
+		
+		if (group_info.forced_email != "0") {
+			$("#checkbox-email_notify").prop("checked", true);
+		} else {
+			$("#checkbox-email_notify").prop("checked", false);
+		}
+		
 	});
 	
 	/*Open parent search popup*/

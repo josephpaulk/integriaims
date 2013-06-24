@@ -21,6 +21,7 @@ global $config;
 
 $search_users = (bool) get_parameter ('search_users');
 $search_users_role = (bool) get_parameter ('search_users_role');
+$get_group_info = (bool) get_parameter ('get_group_info');
 
 if ($search_users) {
 	require_once ('include/functions_db.php');
@@ -68,6 +69,14 @@ if ($search_users_role) {
 	echo json_encode($res);
 	
 	return;
+}
+
+if ($get_group_info) {
+	$group = get_parameter("group");
+	
+	$res = get_db_row ("tgrupo", "id_grupo", $group);
+	
+	echo json_encode($res);
 }
 
 ?>

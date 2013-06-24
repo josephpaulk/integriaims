@@ -729,3 +729,21 @@ function reload_sla_slice_graph(id) {
 		'html'
 	);
 }
+
+function get_group_info (group) {
+	
+	var result;
+	
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/users&get_group_info=1&ajax=1&group="+group,
+		dataType: "json",
+		async: false, //Important if not you cannot handle responseText!
+		success: function(data){	
+			result = data;
+		}
+	});	
+
+	return result;
+}

@@ -1,5 +1,13 @@
 2013-06-24  Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents/incident_detail.php,
+	include/js/integria_incident_search.js,
+	include/ajax/users.php: Added support to get default value for
+	notify email field from "forced_email" field of group configuration,
+	also changes the user change group combo.
+
+2013-06-24  Dario Rodriguez <dario@artica.es>
+
 	* operation/incidents/incident_detail.php: Notify email checkbox and
 	additional emails split in two fields
 	* include/functions_workunits.php: Improved create_workunit function.
