@@ -20,13 +20,8 @@ check_login ();
 require_once ('include/functions_inventories.php');
 require_once ('include/functions_user.php');
 
-$is_enterprise = false;
-
-if (file_exists ("enterprise/include/functions_inventory.php")) {
-	require_once ("enterprise/include/functions_inventory.php");
-	$is_enterprise = true;
-}
-
+enterprise_include('include/functions_inventory.php');
+	
 if (defined ('AJAX')) {
 	
 	global $config;
@@ -75,12 +70,11 @@ if (defined ('AJAX')) {
 		
 		$sql_search = base64_encode($sql_search);
 		
-		if ($is_enterprise) {
-			$cont = inventory_get_user_inventories($config['id_user'], $cont_aux);
-		} else {
+		$cont = enterprise_hook ('inventory_get_user_inventories', array ($config['id_user'], $cont_aux));
+		if ($cont === ENTERPRISE_NOT_HOOK) {
 			$cont = $cont_aux;
 		}
-	
+			
 		foreach ($cont as $key => $row) {
 
 			$new = false;
@@ -164,12 +158,11 @@ if (defined ('AJAX')) {
 		$count = 0;
 		echo "<ul style='margin: 0; padding: 0;'>\n";
 
-		if ($is_enterprise) {
-			$cont = inventory_get_user_inventories($config['id_user'], $cont_invent);
-		} else {
+		$cont = enterprise_hook ('inventory_get_user_inventories', array ($config['id_user'], $cont_invent));
+		if ($cont === ENTERPRISE_NOT_HOOK) {
 			$cont = $cont_invent;
 		}
-	
+		
 		foreach ($cont as $key => $row) {
 
 			$new = false;
@@ -270,11 +263,17 @@ if (defined ('AJAX')) {
 		$count = 0;
 		echo "<ul style='margin: 0; padding: 0;'>\n";
 		
+		$cont = enterprise_hook ('inventory_get_user_inventories', array ($config['id_user'], $cont_invent));
+		if ($cont === ENTERPRISE_NOT_HOOK) {
+			$cont = $cont_invent;
+		}
+/*
 		if ($is_enterprise) {
 			$cont = inventory_get_user_inventories($config['id_user'], $cont_invent);
 		} else {
 			$cont = $cont_invent;
 		}
+*/
 	
 		foreach ($cont as $key => $row) {
 
@@ -489,9 +488,9 @@ $(document).ready (function () {
 	var idUser = "<?php echo $config['id_user'] ?>";
 	
 	bindAutocomplete ("#text-owner", idUser);
-	
+
 	// Form validation
-	trim_element_on_submit('#text-search_free');	
+	trim_element_on_submit('#text-search_free');
 
 });
 

@@ -80,25 +80,20 @@ if (defined ('AJAX')) {
 	}
 }
 
-$is_enterprise = false;
+enterprise_include('include/functions_inventory.php');
 
-if (file_exists ("enterprise/include/functions_inventory.php")) {
-	require_once ("enterprise/include/functions_inventory.php");
-	$is_enterprise = true;
-}
+$read_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id));
+$write_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id, true));
 
-$write_permission = true;
-
-if ($is_enterprise) {
-	$read_permission = inventory_check_acl($config['id_user'], $id);
-	$write_permission = inventory_check_acl($config['id_user'], $id, true);
-	
+if ($read_permission === ENTERPRISE_NOT_HOOK) {
+	$read_permission = true;
+	$write_permission = true;
+} else {
 	if (!$read_permission) {
 		include ("general/noaccess.php");
 		exit;
 	}
 }
-
 
 $inventory_name = get_db_value('name', 'tinventory', 'id', $id);
 
@@ -176,12 +171,10 @@ if ((isset($_POST['parent_name'])) && ($_POST['parent_name'] == '')) {
 
 if ($update) {
 	
-	if ($is_enterprise) {
-		if (!$write_permission) {
-			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update inventory #".$id);
-			include ("general/noaccess.php");
-			exit;
-		}
+	if (!$write_permission) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update inventory #".$id);
+		include ("general/noaccess.php");
+		exit;
 	}
 	
 	$old_parent = get_db_value('id_parent', 'tinventory', 'id', $id);
@@ -292,16 +285,14 @@ if ($update) {
 		}
 	}
 	
-	if ($is_enterprise) {
-		$inventory_companies = get_parameter("companies");
-		
-		/* Update companies in inventory */
-		inventory_update_companies ($id, get_parameter ('companies', $inventory_companies), true);
-		
+	$inventory_companies = get_parameter("companies");
+	$result_hook = enterprise_hook ('inventory_get_user_inventories', array (get_parameter ('companies', $inventory_companies), true));
+	
+	if ($result_hook !== ENTERPRISE_NOT_HOOK) {
 		$inventory_users = get_parameter("users");
 			
-		/* Update users in inventory */
-		inventory_update_users ($id, get_parameter ('users', $inventory_users), true);
+		// Update users in inventory 
+		enterprise_hook ('inventory_update_users', array ($id, get_parameter ('users', $inventory_users), true));
 	}
 	
 	if ($result !== false) {
@@ -319,12 +310,10 @@ if ($update) {
 
 if ($create) {
 	
-	if ($is_enterprise) {
-		if (!$write_permission) {
-			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create inventory #".$id);
-			include ("general/noaccess.php");
-			exit;
-		}
+	if (!$write_permission) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create inventory #".$id);
+		include ("general/noaccess.php");
+		exit;
 	}
 	
 	$err_message = __('Could not be created');
@@ -417,13 +406,9 @@ if ($create) {
 			inventory_tracking($id,INVENTORY_PARENT_CREATED, $id_parent);
 		}
 		
-		if ($is_enterprise) {
-			/* Update companies in inventory */
-			inventory_update_companies ($id, get_parameter ('companies'));
-			
-			/* Update users in inventory */
-			inventory_update_users ($id, get_parameter ('users'));
-		}
+		$result_companies = enterprise_hook ('inventory_update_companies', array ($id, get_parameter ('companies')));
+		$result_users = enterprise_hook ('inventory_update_users', array ($id, get_parameter ('users')));
+
 		
 		$result_msg = '<h3 class="suc">'.__('Successfully created').'</h3>';
 
@@ -447,14 +432,12 @@ if ($create) {
 
 if ($id) {
 
-	if ($is_enterprise) {
-		if (!$read_permission) {
-			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access inventory #".$id);
-			include ("general/noaccess.php");
-			exit;
-		}
+	if (!$read_permission) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access inventory #".$id);
+		include ("general/noaccess.php");
+		exit;
 	}
-		
+	
 	clean_cache_db();
 	
 	$inventory = get_db_row ('tinventory', 'id', $id);
@@ -562,16 +545,18 @@ if ($write_permission) {
 	echo '</div>';
 }
 
-if ($is_enterprise) {
-	if ($id) {
-		$companies = inventory_get_companies ($id);
-		$users = inventory_get_users ($id);
-	} else {
-		$companies = array();
-		$users = array();
-	}
+$companies = array();
+$users = array();
 
-	if ($write_permission) {
+if ($id) {
+	$companies = enterprise_hook ('inventory_get_companies', array ($id));
+	
+	if ($companies !== ENTERPRISE_NOT_HOOK) {
+		$users = enterprise_hook ('inventory_get_users', array ($id, get_parameter ('users')));
+	}
+}
+
+if ($write_permission) {
 		$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,
 								'', '', '', true, false, false, __('Associated company'));
 		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_company_associated();'>".__('Add')."</a>";
@@ -598,8 +583,7 @@ if ($is_enterprise) {
 		$table->data[2][2] = print_select ($users, 'inventory_users', NULL,
 								'', '', '', true, false, false, __('Associated user'));
 	}
-}
-
+	
 /* Fourth row */
 $table->colspan[3][0] = 3;		
 $table->data[3][0] = "";
