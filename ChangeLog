@@ -1,4 +1,9 @@
 2013-06-25  Dario Rodriguez <dario@artica.es>
+
+	* godmode/usuarios/configurar_usuarios.php: Removed email validation,
+	this field is optional.
+
+2013-06-25  Dario Rodriguez <dario@artica.es>
 	
 	* operation/incidents_simple/incidents.php: Fixed email notify flag
 	on incident creation.

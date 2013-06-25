@@ -497,27 +497,6 @@ messages = {
 	remote: "<?php echo __('This name already exists')?>"
 };
 add_validate_form_element_rules('input[name="nombre_real"]', rules, messages);
-// Rules: input[name="direccion"]
-rules = {
-	required: true,
-	email: true,
-	remote: {
-		url: "ajax.php",
-        type: "POST",
-        data: {
-			page: "include/ajax/remote_validations",
-			search_existing_user_email: 1,
-			user_email: function() { return $('input[name="direccion"]').val() },
-			user_id: "<?php echo $update_user?>"
-        }
-	}
-};
-messages = {
-	required: "<?php echo __('Email required')?>",
-	email: "<?php echo __('Invalid email')?>",
-	remote: "<?php echo __('This email already exists')?>"
-};
-add_validate_form_element_rules('input[name="direccion"]', rules, messages);
 // Rules: input[name="pass1"]
 rules = {
 	required: true
