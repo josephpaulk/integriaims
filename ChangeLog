@@ -1,3 +1,8 @@
+2013-06-25  Dario Rodriguez <dario@artica.es>
+	
+	* operation/incidents_simple/incidents.php: Fixed email notify flag
+	on incident creation.
+
 2013-06-24  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_detail.php,

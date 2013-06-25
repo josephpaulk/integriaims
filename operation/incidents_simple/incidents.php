@@ -53,7 +53,7 @@ if($create_incident) {
 	$resolution = 0; // None
 	$id_incident_type = 0; // None
 	$email_copy = '';
-	$email_notify = 0;
+	$email_notify = get_db_value ("forced_email", "tgrupo", "id_grupo", $group_id);
 	$id_parent = 0;
 	$epilog = '';
 	
