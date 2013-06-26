@@ -1,5 +1,10 @@
 2013-06-26  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* include/ajax/crm.php: Deleted 'contracts' and
+	'leads' fields.
+
+2013-06-26  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* operation/companies/company_detail.php: Fixed bug
 	updating company.
 
