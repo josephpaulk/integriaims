@@ -352,8 +352,12 @@ if ($id || $new) {
 	$table->colspan[7][0] = 4;
 	
 	if (give_acl ($config["id_user"], 0, "VW")) {
-
-		echo "<h2>".__('Leads details')."</h2>";
+		
+		if ($id != 0) {
+			echo "<h2>".__('Lead details').": #".$id."</h2>";
+		} else {
+			echo "<h2>".__('Create lead')."</h2>";
+		}
 
 		$table->data[0][0] = print_input_text ("fullname", $fullname, "", 60, 100, true, __('Full name'));
 		$table->data[0][1] = print_input_text ("company", $company, "", 60, 100, true, __('Company name'));

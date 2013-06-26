@@ -292,3 +292,6 @@ UPDATE tprofile SET `cm` = 1 WHERE `id` IN (1, 3);
 UPDATE tprofile SET `frr` = 1;
 UPDATE tprofile SET `frw` = 1 WHERE `id` IN (1, 3);
 UPDATE tprofile SET `frm` = 1 WHERE `id` IN (1, 3);
+
+/* 25/06/2013 */
+ALTER TABLE tcompany ADD `last_update` datetime NOT NULL default '0000-00-00 00:00:00';

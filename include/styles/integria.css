@@ -2178,3 +2178,9 @@ input.ui-autocomplete-input {
 	background-repeat: no-repeat;
 	background-position: 97% 50%;
 }
+
+input.company_search {
+	background-image: url("../../images/zoom.png");
+	background-repeat: no-repeat;
+	background-position: 97% 50%;
+}

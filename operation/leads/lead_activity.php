@@ -30,6 +30,9 @@ if ($op2 == "add"){
 	$datetime =  date ("Y-m-d H:i:s");
 	$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Added comments");
 	process_sql ($sql, 'insert_id');
+	
+	$sql = "UPDATE tlead SET modification = '$datetime' WHERE id = $id";
+	process_sql ($sql);
 }
 
 

@@ -105,6 +105,17 @@ print_input_hidden ('id', $id);
 echo "</td></tr></table>";
 echo "</form>";
 
+$sql = "SELECT `description` FROM tlead_activity 
+			WHERE id_lead = $id
+			ORDER BY creation DESC LIMIT 1";
+			
+$result = process_sql ($sql);
+
+if ($result !== false) {
+	$last_email = $result[0]['description'];
+} else {
+	$last_email = "";
+}
 
 $table->width = "75%";
 $table->class = "databox";
@@ -115,17 +126,26 @@ $table->style[0] = 'font-weight: bold';
 
 $table->colspan[2][0] = 3;
 $table->colspan[1][0] = 3;
+$table->colspan[3][0] = 3;
 
 $table->data[0][0] = print_input_text ("from", $from, "", 30, 100, true, __('From'));
 $table->data[0][1] = print_input_text ("to", $to, "", 30, 100, true, __('To'));
 $table->data[0][2] = print_input_text ("cco", $cco, "", 30, 100, true, __('Send a copy to'));
 $table->data[1][0] = print_input_text ("subject", $subject, "", 80, 100, true, __('Subject'));
 $table->data[2][0] = print_textarea ("mail", 10, 1, $mail, 'style="height:350px;"', true, __('E-mail'));
+$table->data[3][0] = print_textarea ("last_mail", 10, 1, $last_email, 'style="height:350px;"', true, __('Last E-mail'));
 
 echo '<form method="post" id="lead_mail_go">';
 print_table ($table);
 echo '<div class="button" style="width: '.$table->width.'">';
 print_submit_button (__('Send email'), 'apply_btn', false, 'class="sub upd"', false);
+/*
+echo '<input type="button" class="sub upd" onClick="if (!confirm(\''.__('Are you sure?').'\'))
+				return false;" value="'.__("Send email").'">';
+*/
+
+
+
 print_input_hidden ('id', $id);
 print_input_hidden ('send', 1);
 echo "</div></form>";

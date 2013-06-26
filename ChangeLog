@@ -1,3 +1,18 @@
+2013-06-26  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_db.sql
+	  extras/migrate.sql
+	  operation/companies/company_detail.php
+	  include/styles/integria.css: Added fields in edit
+	and search forms.
+
+	* include/functions_crm.php: Added file.
+
+	* operation/leads/lead_activity.php
+	  operation/leads/lead_detail.php
+	  operation/leads/lead_mail.php: Added several
+	improvements in leads.
+
 2013-06-25  Dario Rodriguez <dario@artica.es>
 
 	* godmode/usuarios/configurar_usuarios.php: Removed email validation,

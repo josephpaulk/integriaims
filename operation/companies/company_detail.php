@@ -33,6 +33,8 @@ if ($id && ! check_company_acl ($config["id_user"], $id, "CR")) {
 	exit;
 }
 
+require_once('include/functions_crm.php');
+
 $op = (string) get_parameter ("op", "");
 $new_company = (bool) get_parameter ('new_company');
 $create_company = (bool) get_parameter ('create_company');
@@ -74,10 +76,18 @@ if (($create_company) OR ($update_company)) {
 	} else {
 
 		// Update company
+		
+		$sql = "SELECT `date` FROM tcompany_activity WHERE id_company=$id ORDER BY `date` DESC LIMIT 1";
+		$last_update = process_sql ($sql);
+
+		if ($last_update == false) {
+			$last_update = '';
+		}
+		
 		$sql = sprintf ('UPDATE tcompany SET manager="%s", id_parent = %d, comments = "%s", name = "%s",
-		address = "%s", fiscal_id = "%s", id_company_role = %d, id_grupo = "%s", country = "%s", website = "%s" WHERE id = %d',
+		address = "%s", fiscal_id = "%s", id_company_role = %d, id_grupo = "%s", country = "%s", website = "%s" last_update = "%s" WHERE id = %d',
 		$manager, $id_parent, $comments, $name, $address,
-		$fiscal_id, $id_company_role, $id_group, $country, $website, $id);
+		$fiscal_id, $id_company_role, $id_group, $country, $website, $last_update, $id);
 
 		$result = mysql_query ($sql);
 		if ($result === false)
@@ -234,6 +244,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		$fiscal_id = $company['fiscal_id'];
 		$id_parent = $company["id_parent"];
 		$manager = $company["manager"];
+		$last_update = $company["last_update"];
 	} else {
 		$name = "";
 		$address = "";
@@ -244,6 +255,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		$website = "";
 		$manager = $config["id_user"];
 		$id_parent = 0;
+		$last_update = '';
 	}
 
 	// TODO: Make ACL check here. 
@@ -276,7 +288,8 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		// TODO: Replace this for a function to get visible compenies for this user
 		$sql2 = "SELECT id, name FROM tcompany";
 
-		$table->data[1][0] = print_select_from_sql ($sql2, 'id_parent', $id_parent, '', __("None"), 0, true, false, true, __("Parent company"));
+		$table->data[1][0] = print_input_text_extended ("id_parent", $id_parent, "text-id_parent", '', 20, 0, false, "show_company_search('','','','','','')", "class='company_search'", true, false,  __('Parent company'));
+		$table->data[1][1] = print_input_text ("last_update", $last_update, "", 15, 100, true, __('Last update'));
 		
 		$table->data[2][0] = print_input_text ("fiscal_id", $fiscal_id, "", 15, 100, true, __('Fiscal ID'));
 		$table->data[2][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
@@ -670,8 +683,12 @@ if ((!$id) AND ($new_company == 0)){
 	$search_role = (int) get_parameter ("search_role");
 	$search_country = (string) get_parameter ("search_country");
 	$search_manager = (string) get_parameter ("search_manager");
+	$search_parent = get_parameter ("search_parent");
+	$search_date_begin = get_parameter('search_date_begin');
+	$search_date_end = get_parameter('search_date_end');
+	$date = false;
 
-	$where_clause = " 1 = 1 AND id " . get_filter_by_company_accessibility($config["id_user"]);
+	//$where_clause = " 1 = 1 AND id " . get_filter_by_company_accessibility($config["id_user"]);
 
 	if ($search_text != "") {
 		$where_clause .= sprintf (' AND ( name LIKE "%%%s%%" OR country LIKE "%%%s%%")  ', $search_text, $search_text);
@@ -688,14 +705,29 @@ if ((!$id) AND ($new_company == 0)){
 	if ($search_manager != ""){ 
 		$where_clause .= sprintf (' AND manager = "%s" ', $search_manager);
 	}
+	
+	if ($search_parent != 0){ 
+		$where_clause .= sprintf (' AND id_parent = %d ', $search_parent);
+	}
+	
+	if ($search_date_begin != "") { 
+		$where_clause .= " AND `date` >= $search_date_begin";
+		$date = true;
+	}
 
-	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country";
+	if ($search_date_end != ""){ 
+		$where_clause .= " AND `date` <= $search_date_end";
+		$date = true;
+	}
 
-	$table->width = '80%';
-	$table->class = 'search-table';
+	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end";
+
+	$table->width = '98%';
+	$table->class = 'databox';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->style[2] = 'font-weight: bold;';
+	$table->style[4] = 'font-weight: bold;';
 	$table->data = array ();
 	$table->data[0][0] = __('Search');
 	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 15, 100, true);
@@ -708,31 +740,37 @@ if ((!$id) AND ($new_company == 0)){
 	$table->data[0][4] = __('Manager');
 	$table->data[0][5] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '',	array(), true, '', '' )	. print_help_tip (__("Type at least two characters to search"), true);
 
-	$table->data[0][6] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-
+	$table->data[1][0] = __('Parent');
+	$table->data[1][1] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
+		'search_parent', $search_parent, '', __('Select'), 0, true, false, false);
 	
-	$table->data[0][7] = "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_export$params&render=1&raw_output=1&clean_output=1'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
+	$table->data[1][2] = __('Date from');
+	$table->data[1][3] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true);
+	
+	$table->data[1][4] = __('Date to');
+	$table->data[1][5] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true);
+		
 	
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	print_table ($table);
+	
+	echo '<div style="width:'.$table->width.'" class="action-buttons button">';
+	print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', false);
+
+	
+	echo "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_export$params&render=1&raw_output=1&clean_output=1'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
+	echo '</div>';
 	echo '</form>';
 
-	//~ $sql = "SELECT * FROM tcompany $where_clause ORDER BY name";
-	//~ $companies = get_db_all_rows_sql ($sql);
 
-	//~ echo $where_clause;
 
-	if ($where_clause == "")
-		$where_clause .= " 1=1 ORDER BY name";
-	else
-		$where_clause .= " ORDER BY name";
 
-	$companies = get_companies(false, $where_clause);
+	$companies = crm_get_companies_list($where_clause, $date);
 
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params");
 
 	if ($companies !== false) {
-		$table->width = "90%";
+		$table->width = "98%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();
@@ -789,9 +827,13 @@ if ((!$id) AND ($new_company == 0)){
 	
 }
 
+echo "<div class= 'dialog ui-dialog-content' id='company_search_window'></div>";
+
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 
 <script type="text/javascript" >
 	
@@ -802,6 +844,22 @@ $(document).ready (function () {
 	
 	bindAutocomplete ('#text-user', idUser);
 
+	$("#text-search_date_begin").datepicker ({
+		beforeShow: function () {
+			return {
+				maxDate: $("#text-search_date_begin").datepicker ("getDate")
+			};
+		}
+	});
+	
+	$("#text-search_date_end").datepicker ({
+		beforeShow: function () {
+			return {
+				maxDate: $("#text-search_date_end").datepicker ("getDate")
+			};
+		}
+	});
+	
 	// Form validation
 	trim_element_on_submit('#text-search_text');
 	trim_element_on_submit('#text-name');
