@@ -27,7 +27,7 @@ function crm_get_companies_list ($sql_search, $date = false) {
 				WHERE 1=1 $sql_search
 				";
 	}
-				
+			
 	$companies = get_db_all_rows_sql($sql);
 	
 	if ($companies === false) {
@@ -35,6 +35,13 @@ function crm_get_companies_list ($sql_search, $date = false) {
 	}
 	
 	return $companies;
+}
+
+function crm_get_company_name ($id_company) {
+	
+	$name = get_db_value('name', 'tcompany', 'id', $id_company);
+	
+	return $name;
 }
 
 ?>

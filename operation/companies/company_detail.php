@@ -59,6 +59,7 @@ if (($create_company) OR ($update_company)) {
 	$website = (string) get_parameter ("website");
 	$manager = (string) get_parameter ("manager");
 	$id_parent = (int) get_parameter ("id_parent", 0);
+	$id_parent_company = (int) get_parameter ("id_parent_company", 0);
 
 	if ($create_company){
 		$sql = sprintf ('INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, id_grupo, website, country, manager, id_parent)
@@ -288,7 +289,11 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		// TODO: Replace this for a function to get visible compenies for this user
 		$sql2 = "SELECT id, name FROM tcompany";
 
-		$table->data[1][0] = print_input_text_extended ("id_parent", $id_parent, "text-id_parent", '', 20, 0, false, "show_company_search('','','','','','')", "class='company_search'", true, false,  __('Parent company'));
+		$parent_name = $id_parent ? crm_get_company_name($id_parent) : __("None");
+		
+		$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_company_search('','','','','','')", "class='company_search'", true, false,  __('Parent company'));
+		$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
+		
 		$table->data[1][1] = print_input_text ("last_update", $last_update, "", 15, 100, true, __('Last update'));
 		
 		$table->data[2][0] = print_input_text ("fiscal_id", $fiscal_id, "", 15, 100, true, __('Fiscal ID'));
@@ -762,9 +767,6 @@ if ((!$id) AND ($new_company == 0)){
 	echo '</div>';
 	echo '</form>';
 
-
-
-
 	$companies = crm_get_companies_list($where_clause, $date);
 
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params");
@@ -834,6 +836,7 @@ echo "<div class= 'dialog ui-dialog-content' id='company_search_window'></div>";
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/integria_crm.js"></script>
 
 <script type="text/javascript" >
 	

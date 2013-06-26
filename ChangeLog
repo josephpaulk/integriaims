@@ -1,5 +1,15 @@
 2013-06-26  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* include/functions_crm.php
+	  operation/companies/company_detail.php: Added company
+	parent search window.
+
+	* include/ajax/crm.php
+	  include/js/integria_crm.js: Added files.
+
+
+2013-06-26  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* integria_db.sql
 	  extras/migrate.sql
 	  operation/companies/company_detail.php
