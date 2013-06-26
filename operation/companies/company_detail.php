@@ -59,7 +59,7 @@ if (($create_company) OR ($update_company)) {
 	$website = (string) get_parameter ("website");
 	$manager = (string) get_parameter ("manager");
 	$id_parent = (int) get_parameter ("id_parent", 0);
-	$id_parent_company = (int) get_parameter ("id_parent_company", 0);
+
 
 	if ($create_company){
 		$sql = sprintf ('INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, id_grupo, website, country, manager, id_parent)
@@ -86,7 +86,7 @@ if (($create_company) OR ($update_company)) {
 		}
 		
 		$sql = sprintf ('UPDATE tcompany SET manager="%s", id_parent = %d, comments = "%s", name = "%s",
-		address = "%s", fiscal_id = "%s", id_company_role = %d, id_grupo = "%s", country = "%s", website = "%s" last_update = "%s" WHERE id = %d',
+		address = "%s", fiscal_id = "%s", id_company_role = %d, id_grupo = "%s", country = "%s", website = "%s", last_update = "%s" WHERE id = %d',
 		$manager, $id_parent, $comments, $name, $address,
 		$fiscal_id, $id_company_role, $id_group, $country, $website, $last_update, $id);
 
