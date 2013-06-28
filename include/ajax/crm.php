@@ -16,6 +16,8 @@
 global $config;
 
 include_once('include/functions_crm.php');
+enterprise_include('include/functions_crm.php');
+
 
 $get_company_search = get_parameter ('get_company_search', 0);
 $get_company_name = get_parameter ('get_company_name', 0);
@@ -118,6 +120,12 @@ if ($get_company_search) {
 	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end";
 	
 	$companies = crm_get_companies_list($where_clause, $date);
+	
+	$companies_aux = enterprise_hook ('crm_get_user_companies', array ($config['id_user'], $companies));
+
+	if ($manage_permission !== ENTERPRISE_NOT_HOOK) {	
+		$companies = $companies_aux;	
+	}
 
 	if ($companies !== false) {
 		$table_list->width = "98%";
@@ -127,10 +135,6 @@ if ($get_company_search) {
 		$table_list->colspan = array ();
 		$table_list->head[0] = __('Company');
 		$table_list->head[1] = __('Role');
-/*
-		$table_list->head[2] = __('Contracts');
-		$table_list->head[3] = __('Leads');
-*/
 		$table_list->head[4] = __('Manager');
 		$table_list->head[5] = __('Country');
 		$table_list->head[6] = __('Last activity');
@@ -142,16 +146,6 @@ if ($get_company_search) {
 			
 			$data[0] = "<a href='javascript:loadCompany(" . $company['id'] . ");'>".$company["name"]."</a>";
 			$data[1] = get_db_value ('name', 'tcompany_role', 'id', $company["id_company_role"]);
-/*
-			$data[2] = '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&op=contracts&id='.
-				$company['id'].'"><img src="images/maintab.gif"></a>';
-			$sum_contratos = get_db_sql ("SELECT COUNT(id) FROM tcontract WHERE id_company = ".$company["id"]);
-			if ($sum_contratos > 0)
-				$data[2] .= " ($sum_contratos)";
-				
-											
-			$data[3] = "<a href=index.php?sec=customers&sec2=operation/leads/lead_detail&id_company=".$company["id"]."><img src='images/icon_lead.png'></a>";
-*/
 
 			$sum_leads = get_db_sql ("SELECT COUNT(id) FROM tlead WHERE progress < 100 AND id_company = ".$company["id"]);
 			if ($sum_leads > 0) {

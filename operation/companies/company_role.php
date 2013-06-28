@@ -18,14 +18,24 @@ global $config;
 
 check_login();
 
-if (! give_acl ($config["id_user"], 0, "CM")) {
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access company role management");
-	require ("general/noaccess.php");
-	exit;
-}
+enterprise_include('include/functions_crm.php');
+
 
 $id = (int) get_parameter ('id');
+
 $company = get_db_row ('tcompany', 'id', $id);
+
+$manage_permission = enterprise_hook ('crm_check_acl_company', array ($config['id_user'], $company, false, false, true));
+
+if ($manage_permission === ENTERPRISE_NOT_HOOK) {	
+	$manage_permission = true;	
+} else {
+	if (!$manage_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
+}
+
 $id_group = $company['id_grupo'];	
 $new_role = (bool) get_parameter ('new_role');
 $create_role = (bool) get_parameter ('create_role');

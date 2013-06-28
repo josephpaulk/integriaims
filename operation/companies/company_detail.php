@@ -18,19 +18,51 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "CR")) {
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
-	require ("general/noaccess.php");
-	exit;
-}
+include_once('include/functions_crm.php');
+include_once('include/functions_user.php');
+enterprise_include('include/functions_crm.php');
 
 $id = (int) get_parameter ('id');
 
-// Check if current user have access to this company.
-if ($id && ! check_company_acl ($config["id_user"], $id, "CR")) {
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
-	require ("general/noaccess.php");
-	exit;
+$read_permission = enterprise_hook ('crm_check_acl_company', array ($config['id_user'], $id));
+$write_permission = enterprise_hook ('crm_check_acl_company', array ($config['id_user'], $id, true));
+$manage_permission = enterprise_hook ('crm_check_acl_company', array ($config['id_user'], $id, false, false, true));
+$other_read_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id));
+$other_write_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id, true));
+$other_manage_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id, false, false, true));
+$invoice_permission = enterprise_hook ('crm_check_acl_invoice', array ($config['id_user'], $id));
+
+if ($read_permission === ENTERPRISE_NOT_HOOK) {
+	$read_permission = true;
+	$write_permission = true;
+	$manage_permission = true;
+	$other_read_permission = true;
+	$other_write_permission = true;
+	$other_manage_permission = true;
+	$invoice_permission = true;
+	
+} else {
+	if (!$read_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
+}
+
+//ACL EXTERNAL USER (OPEN AND ENTERPRISE)
+if (user_is_external($config['id_user'])) {
+	$check_external_user = crm_check_acl_external_user($config['id_user'], $id);
+	if ($check_external_user) {
+		$read_permission = true;
+	} else {
+		$read_permission = false;
+	}
+	
+	$write_permission = false;
+	$manage_permission = false;
+	$other_read_permission = false;
+	$other_write_permission = false;
+	$other_manage_permission = false;
+	$invoice_permission = false;
 }
 
 require_once('include/functions_crm.php');
@@ -62,6 +94,12 @@ if (($create_company) OR ($update_company)) {
 
 
 	if ($create_company){
+		
+		if (!$manage_permission) {
+			include ("general/noaccess.php");
+			exit;
+		}
+		
 		$sql = sprintf ('INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, id_grupo, website, country, manager, id_parent)
 			 VALUES ("%s", "%s", "%s", "%s", %d, %d, "%s", "%s", "%s", %d)',
 			 $name, $address, $comments, $fiscal_id, $id_company_role, $id_group, $website, $country, $manager, $id_parent);
@@ -77,6 +115,10 @@ if (($create_company) OR ($update_company)) {
 	} else {
 
 		// Update company
+		if (!$write_permission) {
+			include ("general/noaccess.php");
+			exit;
+		}
 		
 		$sql = "SELECT `date` FROM tcompany_activity WHERE id_company=$id ORDER BY `date` DESC LIMIT 1";
 		$last_update = process_sql ($sql);
@@ -106,7 +148,10 @@ if (($create_company) OR ($update_company)) {
 
 if ($delete_company) { // if delete
 
-	// TODO: ACL CHECK !!
+	if (!$manage_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
 
 	$id = (int) get_parameter ('id');
 	$name = get_db_value ('name', 'tcompany', 'id', $id);
@@ -133,7 +178,10 @@ if ($delete_company) { // if delete
 
 if ($delete_invoice == 1){
 
-	// TODO: ACL CHECK !!
+	if (!$manage_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
 	
 	$id_invoice = get_parameter ("id_invoice", "");
 	$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id_invoice");
@@ -219,16 +267,27 @@ if ($id) {
 	$company = get_db_row ('tcompany', 'id', $id);
 	$id_group = $company['id_grupo'];
 	
-	if (! give_acl ($config["id_user"], $id_group, "CR")) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access a company detail");
-		require ("general/noaccess.php");
-		exit;
-	}
 }
 
 // EDIT / CREATE FORM
 
 if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
+	
+	if ($new_company == 1) {
+		if (!$manage_permission) {
+			include ("general/noaccess.php");
+			exit;
+		}
+	}
+	
+	$disabled_write = false;
+	
+	if (($id > 0) AND ($op=="")) {
+		if (!$write_permission && $read_permission) {
+			$disabled_write = true;
+		}
+	}
+	
 	echo '<form id="form-company_detail" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	
 	echo "<h2>".__('Company details')."</h2>";
@@ -274,14 +333,14 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	$table->colspan[5][0] = 2;
 
 	if ($writter) {
-		$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Company name'));
+		$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Company name'), $disabled_write);
 		
 
 		if ($id > 0)
 			$table->data[0][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&delete_company=1'><img src='images/cross.png'></a>";
 
 	
-		$table->data[0][1] = print_input_text_extended ('manager', $manager, 'text-user', '', 15, 30, false, '',
+		$table->data[0][1] = print_input_text_extended ('manager', $manager, 'text-user', '', 15, 30, $disabled_write, '',
 		array(), true, '', __('Manager'))
 
 	. print_help_tip (__("Type at least two characters to search"), true);
@@ -291,17 +350,17 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 
 		$parent_name = $id_parent ? crm_get_company_name($id_parent) : __("None");
 		
-		$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_company_search('','','','','','')", "class='company_search'", true, false,  __('Parent company'));
+		$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, $disabled_write, "show_company_search('','','','','','')", "class='company_search'", true, false,  __('Parent company'));
 		$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
 		
-		$table->data[1][1] = print_input_text ("last_update", $last_update, "", 15, 100, true, __('Last update'));
+		$table->data[1][1] = print_input_text ("last_update", $last_update, "", 15, 100, true, __('Last update'), $disabled_write);
 		
 		$table->data[2][0] = print_input_text ("fiscal_id", $fiscal_id, "", 15, 100, true, __('Fiscal ID'));
 		$table->data[2][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
-			'id_company_role', $id_company_role, '', __('Select'), 0, true, false, false, __('Company Role'));
+			'id_company_role', $id_company_role, '', __('Select'), 0, true, false, false, __('Company Role'), $disabled_write);
 
-		$table->data[3][0] = print_input_text ("website", $website, "", 30, 100, true, __('Website'));
-		$table->data[3][1] = print_input_text ("country", $country, "", 20, 100, true, __('Country'));
+		$table->data[3][0] = print_input_text ("website", $website, "", 30, 100, true, __('Website'), $disabled_write);
+		$table->data[3][1] = print_input_text ("country", $country, "", 20, 100, true, __('Country'), $disabled_write);
 
 		$table->data[4][0] = print_textarea ('address', 3, 1, $address, '', true, __('Address'));
 		$table->data[5][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
@@ -310,16 +369,20 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	print_table ($table);
 	
 	if ($id > 0) {
-		echo '<div class="button" style="width: '.$table->width.'">';
-		print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
-		print_input_hidden ('update_company', 1);
-		print_input_hidden ('id', $id);
-		echo "</div>";
+		if ($write_permission) {
+			echo '<div class="button" style="width: '.$table->width.'">';
+			print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
+			print_input_hidden ('update_company', 1);
+			print_input_hidden ('id', $id);
+			echo "</div>";
+		}
 	} else {
-		echo '<div class="button" style="width: '.$table->width.'">';
-		print_submit_button (__('Create'), "create_btn", false, 'class="sub upd"', false);
-		echo "</div>";
-		print_input_hidden ('create_company', 1);
+		if ($manage_permission) {
+			echo '<div class="button" style="width: '.$table->width.'">';
+			print_submit_button (__('Create'), "create_btn", false, 'class="sub upd"', false);
+			echo "</div>";
+			print_input_hidden ('create_company', 1);
+		}
 	}
 		
 	echo '</form>';	
@@ -335,6 +398,11 @@ elseif ($op == "files") {
 // ~~~~~~~~~
 elseif ($op == "activities") {
 
+	if (!$other_write_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
+	
 	$op2 = get_parameter ("op2", "");
 	if ($op2 == "add"){
 		$datetime =  date ("Y-m-d H:i:s");
@@ -346,9 +414,7 @@ elseif ($op == "activities") {
 	// ADD item form
 	// TODO: ACL Check
 
-	$manager = 1;
-
-	if($manager) {
+	if (!$other_write_permission) {
 
 		$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
 
@@ -400,7 +466,12 @@ elseif ($op == "activities") {
 // CONTRACT LISTING
 
 elseif ($op == "contracts") {
-
+	
+	if (!$other_read_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
+	
 	$contracts = get_contracts(false, "id_company = $id ORDER BY name");
 	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=contracts");
 
@@ -443,10 +514,9 @@ elseif ($op == "contracts") {
 		}	
 		print_table ($table);
 
-		// TODO. ACL CHECK
-		$manager = 1;
 
-		if ($manager) {
+		if ($other_write_permission) {
+			
 			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$id.'">';
 			echo '<div class="button" style="width: '.$table->width.'">';
 			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
@@ -460,14 +530,15 @@ elseif ($op == "contracts") {
 // CONTACT LISTING
 
 elseif ($op == "contacts") {
+	
+	if (!$other_read_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
+	
 	$name = get_db_value ('name', 'tcompany', 'id', $id);
 	$id_group = get_db_sql ("SELECT id_grupo FROM tcompany WHERE id = $id");
 	
-	if (! give_acl ($config["id_user"], $id_group, "VR")) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access a contact detail");
-		require ("general/noaccess.php");
-		exit;
-	}
 
         echo "<h3>".__("Contacts for "). $name . "</h3>";
 	
@@ -502,10 +573,7 @@ elseif ($op == "contacts") {
 	}
 	print_table ($table);
 	
-	// TODO. ACL CHECK
-	$manager = 1;
-
-	if($manager) {
+	if ($other_write_permission) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&id_company='.$id.'">';
 		echo '<div class="button" style="width: '.$table->width.'">';
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
@@ -519,7 +587,11 @@ elseif ($op == "contacts") {
 
 elseif ($op == "invoices") {
 
-
+	if (!$invoice_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
+	
 	$new_invoice = get_parameter("new_invoice", 0);
 	$operation_invoices = get_parameter ("operation_invoices", "");
 	$view_invoice = get_parameter("view_invoice", 0);
@@ -596,10 +668,9 @@ elseif ($op == "invoices") {
 			}	
 			print_table ($table);
 			
-			// TODO. ACL CHECK
-			$manager = 1;
 
-			if($manager) {
+			if ($invoice_permission) {
+		
 				echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices">';
 				echo '<div class="button" style="width: '.$table->width.'">';
 				print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
@@ -614,6 +685,11 @@ elseif ($op == "invoices") {
 // Leads listing
 
 elseif ($op == "leads") {
+	
+	if (!$other_read_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
 	
 	$sql = "SELECT * FROM tlead WHERE id_company = $id and progress < 100 ORDER BY estimated_sale DESC,  modification DESC";
 	$invoices = get_db_all_rows_sql ($sql);
@@ -661,10 +737,7 @@ elseif ($op == "leads") {
 		}	
 		print_table ($table);
 		
-		// TODO. ACL CHECK
-		$manager = 1;
-
-		if($manager) {
+		if ($other_write_permission) {
 			echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail">';
 			echo '<div class="button" style="width: '.$table->width.'">';
 			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
@@ -679,6 +752,11 @@ elseif ($op == "leads") {
 // No id passed as parameter
 	
 if ((!$id) AND ($new_company == 0)){
+	
+	if (!$read_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
 
 	// Search // General Company listing
 
@@ -768,6 +846,10 @@ if ((!$id) AND ($new_company == 0)){
 	echo '</form>';
 
 	$companies = crm_get_companies_list($where_clause, $date);
+	
+	if ($read_permission) {
+		$companies = crm_get_user_companies($config['id_user'], $companies);
+	}
 
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params");
 

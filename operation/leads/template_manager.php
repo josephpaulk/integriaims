@@ -18,12 +18,18 @@
 global $config;
 
 check_login ();
-	
-if (! dame_admin ($config["id_user"])) {
-	audit_db ("ACL Violation", $config["REMOTE_ADDR"], __("No administrator access"), __("Trying to access CRM Template manager"));
-	require ("general/noaccess.php");
-	exit;
+
+$manage_permission = enterprise_hook ('crm_check_acl_company', array ($config['id_user'], $company, false, false, true));
+
+if ($manage_permission === ENTERPRISE_NOT_HOOK) {	
+	$manage_permission = true;	
+} else {
+	if (!$manage_permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
 }
+
 
 $operation = get_parameter ("operation");
 $id = get_parameter ("id");

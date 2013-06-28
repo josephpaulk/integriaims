@@ -1,3 +1,15 @@
+2013-06-28  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_db.sql
+	  extras/migrate.sql
+	  include/functions_crm.php
+	  include/functions_user.php
+	  include/ajax/crm.php
+	  operation/companies/company_role.php
+	  operation/companies/company_detail.php
+	  operation/leads/template_manager.php: Added ACLs
+	to CRM.
+
 2013-06-26  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/ajax/crm.php: Deleted 'contracts' and

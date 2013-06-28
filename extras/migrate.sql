@@ -295,3 +295,10 @@ UPDATE tprofile SET `frm` = 1 WHERE `id` IN (1, 3);
 
 /* 25/06/2013 */
 ALTER TABLE tcompany ADD `last_update` datetime NOT NULL default '0000-00-00 00:00:00';
+
+/* 27/06/2013 */
+ALTER TABLE tprofile ADD `cn` tinyint(1) NOT NULL default '0';
+
+UPDATE tprofile SET `cn` = 1;
+
+ALTER TABLE `tcompany` DROP COLUMN `id_grupo`;

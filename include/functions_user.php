@@ -129,5 +129,13 @@ function load_file ($users_file, $group, $profile, $nivel, $pass_policy) {
 	return;
 }
 
-
+function user_is_external ($id_user) {
+	$nivel = get_db_value('nivel', 'tusuario', 'id_usuario', $id_user);
+	
+	if ($nivel == -1) {
+		return true;
+	}
+	
+	return false;
+}
 ?>

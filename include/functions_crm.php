@@ -44,4 +44,15 @@ function crm_get_company_name ($id_company) {
 	return $name;
 }
 
+//CHECK ACLS EXTERNAL USER
+function crm_check_acl_external_user ($user, $id_company) {
+	
+	$user_data = get_db_row ('tusuario', 'id_usuario', $user);
+	
+	if ($user_data['id_company'] == $id_company) {
+		return true;
+	}
+	return false;
+}
+
 ?>
