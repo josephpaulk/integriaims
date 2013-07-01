@@ -1,3 +1,15 @@
+2013-07-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* integria_db.sql: Added 'show_list' into 'tinventory' 
+	in the database creation script.
+
+	* integria_demo.sql: Added values for 'show_list' 
+	into 'tobject_type_field' insert.
+	Added values for 'cn' into 'tprofile' insert.
+	
+	* integria_dbdata.sql: Added values for 'cn' 
+	into 'tprofile'.
+
 2013-06-28  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* integria_db.sql

@@ -542,7 +542,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tobject_type_field` WRITE;
 /*!40000 ALTER TABLE `tobject_type_field` DISABLE KEYS */;
-INSERT INTO `tobject_type_field` VALUES (1,1,'Serial&#x20;Number','numeric','','','',1,0),(2,1,'CPU','text','','','',0,0),(3,1,'Memory','text','','','',0,0),(4,1,'IP&#x20;Address','text','','','',1,0),(5,1,'MAC&#x20;Address','text','','','',1,0);
+INSERT INTO `tobject_type_field` VALUES (1,1,'Serial&#x20;Number','numeric','','','',1,0,1),(2,1,'CPU','text','','','',0,0,1),(3,1,'Memory','text','','','',0,0,1),(4,1,'IP&#x20;Address','text','','','',1,0,1),(5,1,'MAC&#x20;Address','text','','','',1,0,1);
 /*!40000 ALTER TABLE `tobject_type_field` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -562,7 +562,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tprofile` WRITE;
 /*!40000 ALTER TABLE `tprofile` DISABLE KEYS */;
-INSERT INTO `tprofile` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0),(2,'Regular&#x20;User',1,1,0,0,0,0,1,1,0,1,1,0,1,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0),(3,'Manager',1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0);
+INSERT INTO `tprofile` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'Regular&#x20;User',1,1,0,0,0,0,1,1,0,1,1,0,1,0,1,0,0,1,0,0,1,0,0,1,0,0,0,1,0,0),(3,'Manager',1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 /*!40000 ALTER TABLE `tprofile` ENABLE KEYS */;
 UNLOCK TABLES;
 
