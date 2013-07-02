@@ -44,6 +44,17 @@ echo '</td><td  width=300>';
 echo '<div style="font-size: 0px;" id="id_user">'.$config['id_user']."</div>";
 /////////////////////////////////////////////////////////////////
 
+$pending_mail = get_db_sql ("SELECT COUNT(*) FROM tpending_mail");
+$alert_text = "";
+if (!isset($config["mail_queue_alert"]))
+	$config["mail_queue_alert"] = 15;
+
+if ($pending_mail > $config["mail_queue_alert"])
+	$alert_text = "Too many pending mail in mail queue: $pending_mail";
+
+if ($alert_text != "")
+	echo "<img src='images/error.png' title='".$alert_text."'>&nbsp;&nbsp;";
+
 echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'" >';
 if (dame_admin ($config['id_user']))
 	echo '<img src="images/user_suit.png"> ';

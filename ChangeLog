@@ -1,3 +1,14 @@
+2013-07-02  Sancho Lerena <slerena@artica.es>
+
+	* general/header.php: Implemented a quickfix to warn if
+	queue is flooded with pending mails. Need to do a proper
+	implementation in the next future.
+2013-07-02  Sancho Lerena <slerena@artica.es>
+
+	* general/header.php: Implemented a quickfix to warn if
+	queue is flooded with pending mails. Need to do a proper
+	implementation in the next future.
+
 2013-07-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* integria_db.sql: Added 'show_list' into 'tinventory' 
