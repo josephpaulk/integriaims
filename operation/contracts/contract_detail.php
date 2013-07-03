@@ -19,15 +19,59 @@ global $config;
 
 check_login();
 
-if (! give_acl ($config["id_user"], 0, "VR")) {
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to read a contract");
-	require ("general/noaccess.php");
-	exit;
-}
-
-$manager = give_acl ($config["id_user"], 0, "VM");
+enterprise_include('include/functions_crm.php');
 
 $id = (int) get_parameter ('id');
+
+$read = true;
+$write = true;
+$manage = true;
+$write_permission = true;
+$manage_permission = true;
+$read_permission = true;
+	
+$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
+$write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw'));
+$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
+$enterprise = false;
+
+if ($result !== ENTERPRISE_NOT_HOOK) {
+	$enterprise = true;
+	if (!$read) {
+		include ("general/noaccess.php");
+		exit;
+	}
+} 
+
+if ($id != 0) {
+	
+	$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $id);
+	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id_company);
+	
+	$read_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company));
+	$write_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company, true));
+	$manage_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company, false, false, true));
+
+	$enterprise = false;
+
+	if ($read_permission === ENTERPRISE_NOT_HOOK) {
+		
+		$read_permission = true;
+		$write_permission = true;
+		$manage_permission = true;
+		
+	} else {
+		
+		$enterprise = true;
+		
+		if (!$read_permission) {
+			include ("general/noaccess.php");
+			exit;
+		}
+		
+	}	
+}
+
 $id_group = get_db_value ('id_group', 'tcontract', 'id', $id);
 $get_sla = (bool) get_parameter ('get_sla');
 $get_company_name = (bool) get_parameter ('get_company_name');
@@ -68,7 +112,7 @@ if ($get_group_combo) {
 if ($create_contract) {
 
 	$id_group = (int) get_parameter ('id_group');
-	if (! give_acl ($config["id_user"], $id_group, "VW")) {
+	if (! $manage_permission) {
 	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
 	        require ("general/noaccess.php");
 	        exit;
@@ -102,7 +146,7 @@ if ($create_contract) {
 // UPDATE
 if ($update_contract) { // if modified any parameter
 	$id_group = (int) get_parameter ('id_group');
-	if (! give_acl ($config["id_user"], $id_group, "VW")) {
+	if (! $write_permission) {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
 			require ("general/noaccess.php");
 			exit;
@@ -138,7 +182,7 @@ if ($update_contract) { // if modified any parameter
 if ($delete_contract) {
 	$name = get_db_value ('name', 'tcontract', 'id', $id);
 
-	if (! give_acl ($config["id_user"], $id_group, "VM")) {
+	if (! $manage_permission) {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a contract");
 			require ("general/noaccess.php");
 			exit;
@@ -151,12 +195,17 @@ if ($delete_contract) {
 	$id = 0;
 }
 
+if (!read_permission) {
+	include ("general/noaccess.php");
+	exit;
+}
+	
 echo "<h2>".__('Contract management')."</h2>";
 
 // FORM (Update / Create)
 if ($id | $new_contract) {
 	if ($new_contract) {
-		if(!$manager) {
+		if(!$manage_permission) {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
 			require ("general/noaccess.php");
 			exit;
@@ -171,7 +220,7 @@ if ($id | $new_contract) {
 		$description = "";
 		$private = 0;
 	} else {
-        if (!give_acl ($config["id_user"], $id_group, "VR")) {
+        if (!$write_permission) {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
 			require ("general/noaccess.php");
 			exit;
@@ -194,7 +243,7 @@ if ($id | $new_contract) {
 	$table->colspan[4][0] = 2;
 	$table->data = array ();
 	
-	if (give_acl ($config["id_user"], $id_group, "VW")) {
+	if ($write_permission) {
 		$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Contract name'));
 		$table->data[0][1] = print_checkbox ('private', '1', $private, true, __('Private')). print_help_tip (__("Private contracts are visible only by users of the same company"), true);
 		$table->data[1][0] = print_input_text ('contract_number', $contract_number, '', 40, 100, true, __('Contract number'));
@@ -203,10 +252,15 @@ if ($id | $new_contract) {
 		$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
 		$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
 
-		// TODO: ACL check for company listing.
+		$sql = "SELECT * FROM tcompany ORDER BY name";
 
-		$table->data[3][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
-			'id_company', $id_company, '', '', '', true, false, false, __('Company'));
+		$companies = get_db_all_rows_sql ($sql);
+
+		if ($read && $enterprise) {
+			$companies = crm_get_user_companies($config['id_user'], $companies);
+		}
+	
+		$table->data[3][0] =  print_select ($companies, 'id_company', $id_company, '', '', $nothing_value = '0', true, 0, false,  __('Company'));
 			
 		$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 		$table->data[3][0] .= "<img src='images/company.png'></a>";
@@ -249,7 +303,7 @@ if ($id | $new_contract) {
 	echo '<form id="contract_form" method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
 	print_table ($table);
 	
-	if (($id && give_acl ($config["id_user"], $id_group, "VW")) || (!$id && give_acl ($config["id_user"], $id_group, "VM"))) {
+	if (($id && $write_permission) || (!$id && $manage_permission)) {
 		echo '<div class="button" style="width: '.$table->width.'">';
 		if ($id) {
 			print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
@@ -362,6 +416,10 @@ if ($id | $new_contract) {
 		
 	$contracts = get_contracts(false, "$where_clause ORDER BY date_end DESC");
 
+	if ($read_permission && $enterprise) {
+		$contracts = crm_get_user_contracts($config['id_user'], $contracts);
+	}
+	
 	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/contracts/contract_detail&$search_params");
 
 	if ($contracts !== false) {
@@ -404,7 +462,7 @@ if ($id | $new_contract) {
 			$data[4] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
 			
 			// TODO: Acl check here if I have access to this contract because I have access (W) to this company.
-			if( 1 == 1 ) {
+			if ($write_permission) {
 				// Delete
 				if($contract["private"]) {
 					$data[5] = __('Private');
@@ -419,7 +477,7 @@ if ($id | $new_contract) {
 		print_table ($table);
 	}
 	
-	if($manager) {
+	if($manage_permission) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
 		echo '<div class="button" style="width: '.$table->width.'">';
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');

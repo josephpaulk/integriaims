@@ -18,27 +18,58 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "CR")) {
-	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access Contact");
-	require ("general/noaccess.php");
-	exit;
-}
-
-$manager = give_acl ($config["id_user"], 0, "CM");
+enterprise_include('include/functions_crm.php');
 
 $id = (int) get_parameter ('id');
+
+$read = true;
+$write = true;
+$manage = true;
+$write_permission = true;
+$manage_permission = true;
+$read_permission = true;
+	
+$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
+$write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw'));
+$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
+$enterprise = false;
+
+if ($result !== ENTERPRISE_NOT_HOOK) {
+	$enterprise = true;
+	if (!$read) {
+		include ("general/noaccess.php");
+		exit;
+	}
+} 
+
 if($id != 0) {
 	$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $id);
 	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id_company);
 	
-	// Check if current user have access to this company.
-	if ($id_company && ! check_company_acl ($config["id_user"], $id_company)) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access contact section");
-		require ("general/noaccess.php");
-		exit;
-	}
-	
+	$read_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company));
+	$write_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company, true));
+	$manage_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company, false, false, true));
+
+	$enterprise = false;
+
+	if ($read_permission === ENTERPRISE_NOT_HOOK) {
+		
+		$read_permission = true;
+		$write_permission = true;
+		$manage_permission = true;
+		
+	} else {
+		
+		$enterprise = true;
+		
+		if (!$read_permission) {
+			include ("general/noaccess.php");
+			exit;
+		}
+		
+	}	
 }
+
 $new_contact = (bool) get_parameter ('new_contact');
 $create_contact = (bool) get_parameter ('create_contact');
 $update_contact = (bool) get_parameter ('update_contact');
@@ -60,7 +91,7 @@ if ($create_contact) {
 	$id_company = (int) get_parameter ('id_company');
 	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id_company);
 
-	if (! give_acl ($config["id_user"], $id_group, "VM")) {
+	if (!$manage_permission) {
 	       audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a new contact in a group without access");
 	        require ("general/noaccess.php");
 	        exit;
@@ -104,10 +135,10 @@ if ($create_contact) {
 
 // Update
 if ($update_contact) { // if modified any parameter
-	if (!give_acl ($config["id_user"], $id_group, "VW")) {
-	       audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to update a contact in a group without access");
-	        require ("general/noaccess.php");
-	        exit;
+	if (!$write_permission) {
+       audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to update a contact in a group without access");
+       require ("general/noaccess.php");
+       exit;
 	}
 
 	$fullname = (string) get_parameter ('fullname');
@@ -138,7 +169,7 @@ if ($update_contact) { // if modified any parameter
 
 // Delete
 if ($delete_contact) {
-	if (! give_acl ($config["id_user"], $id_group, "VM")) {
+	if (!$manage_permission) {
 	       audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to delete a contact in a group without access");
 	        require ("general/noaccess.php");
 	        exit;
@@ -157,7 +188,7 @@ echo "<h2>".__('Contact management')."</h2>";
 // FORM (Update / Create)
 if ($id || $new_contact) {
 	if ($new_contact) {
-		if (! give_acl ($config["id_user"], $id_group, "VM")) {
+		if (! $manage_permission) {
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a contact in a group without access");
 			require ("general/noaccess.php");
 			exit;
@@ -176,7 +207,7 @@ if ($id || $new_contact) {
 			$id_company = (int) get_db_value ('id_company', 'tcontract', 'id', $id_contract);
 		}
 	} else {
-		if (! give_acl ($config["id_user"], $id_group, "VR")) {
+		if (!$read_permission) {
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access a contact in a group without access");
 			require ("general/noaccess.php");
 			exit;
@@ -200,7 +231,7 @@ if ($id || $new_contact) {
 	$table->colspan[1][0] = 4;
 	$table->colspan[4][0] = 4;
 	
-	if (give_acl ($config["id_user"], $id_group, "VW")) {
+	if ($write_permission) {
 		$table->data[0][0] = print_input_text ("fullname", $fullname, "", 60, 100, true, __('Full name'));
 		
 		$table->data[1][0] = print_input_text ("email", $email, "", 35, 100, true, __('Email'));
@@ -208,9 +239,16 @@ if ($id || $new_contact) {
 		$table->data[2][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
 		$table->data[3][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
 		
-		// TODO: Show only companies with access to them
-		$table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
-			'id_company', $id_company, '', '', '', true, false, false, __('Company'));
+	
+		$sql = "SELECT * FROM tcompany ORDER BY name";
+
+		$companies = get_db_all_rows_sql ($sql);
+
+		if ($read && $enterprise) {
+			$companies = crm_get_user_companies($config['id_user'], $companies);
+		}
+	
+		$table->data[3][1] =  print_select ($companies, 'id_company', $id_company, '', '', $nothing_value = '0', true, 0, false,  __('Company'));
 			
 		$table->data[3][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 		$table->data[3][1] .= "<img src='images/company.png'></a>";
@@ -255,7 +293,7 @@ if ($id || $new_contact) {
 	echo '<form method="post" id="contact_form">';
 	print_table ($table);
 
-	if (give_acl ($config["id_user"], $id_group, "VW")) {
+	if ($write_permission) {
 	
 		echo '<div class="button" style="width: '.$table->width.'">';
 		if ($id) {
@@ -272,6 +310,12 @@ if ($id || $new_contact) {
 	echo "</form>";
 	
 } else {
+	
+	if (!$read) {
+		include ("general/noaccess.php");
+		exit;
+	}
+	
 	$where_group = "";	
 	
 	$search_text = (string) get_parameter ('search_text');
@@ -305,6 +349,10 @@ if ($id || $new_contact) {
 
 	
 	$contacts = get_db_all_rows_sql ($sql);
+
+	if ($read && $enterprise) {
+		$contacts = crm_get_user_contacts($config['id_user'], $contacts);
+	}
 
 	$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail&params=$params");
 
@@ -347,7 +395,7 @@ if ($id || $new_contact) {
 }	
 
 //Show create button only when contact list is displayed
-if($manager && !$id && !$new_contact) {
+if($manage_permission && !$id && !$new_contact) {
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');

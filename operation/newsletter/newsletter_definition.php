@@ -18,13 +18,19 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "VM")) {
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
-	require ("general/noaccess.php");
-	exit;
+enterprise_include('include/functions_crm.php');
+
+$manager = enterprise_hook ('crm_check_acl_news', array ($config['id_user']));
+
+if ($manager === ENTERPRISE_NOT_HOOK) {	
+	$manager = true;	
+} else {
+	if (!$manager) {
+		include ("general/noaccess.php");
+		exit;
+	}
 }
 
-$manager = give_acl ($config["id_user"], 0, "VM");
 
 $id = (int) get_parameter ('id');
 $create = (bool) get_parameter ('create');
@@ -45,7 +51,7 @@ if ($create) {
 	$from_address = get_parameter("from_address");
 	$description = get_parameter("description");
 	
-	if (! give_acl ($config["id_user"], $id_group, "VM")) {
+	if (! $manager) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a newsletter");
 		require ("general/noaccess.php");
 		exit;
@@ -68,7 +74,7 @@ if ($create) {
 // UPDATE
 if ($update) {
 	$id_group = (int) get_parameter ("id_group", 0);
-	if (! give_acl ($config["id_user"], $id_group, "VM")) {
+	if (! $manager) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a newsletter");
 		require ("general/noaccess.php");
 		exit;
@@ -102,7 +108,7 @@ if ($delete) { // if delete
 	$name = get_db_value ('name', 'tnewsletter', 'id', $id);
 	$id_group = get_db_value ('id_group', 'tnewsletter', 'id', $id);
 
-	if (! give_acl ($config["id_user"], $id_group, "VM")) {
+	if (! $manager) {
 		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a company without privileges");
 		require ("general/noaccess.php");
 		exit;

@@ -18,10 +18,17 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "VM")) {
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access newsletter management");
-	require ("general/noaccess.php");
-	exit;
+enterprise_include('include/functions_crm.php');
+
+$permission = enterprise_hook ('crm_check_acl_news', array ($config['id_user']));
+
+if ($permission === ENTERPRISE_NOT_HOOK) {	
+	$permission = true;	
+} else {
+	if (!$permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
 }
 
 $create = get_parameter("create", 0);
@@ -29,21 +36,28 @@ $id = get_parameter ("id", 0);
 
 
 if ($create == 1) {
-		$name = "";
-		$id_group = "1";
-		$from_desc = "";
-		$from_address = "";
-		$description = "";
-		echo "<h2>".__("Newsletter creation")."</h2>";
-	} else {
-		echo "<h2>".__("Newsletter update")."</h2>";
-		$newsletter = get_db_row ("tnewsletter", "id", $id);
-		$name = $newsletter["name"];
-		$id_group = $newsletter["id_group"];
-		$from_desc = $newsletter["from_desc"];
-		$from_address = $newsletter["from_address"];
-		$description = $newsletter["description"];
+	
+	if (!$permission) {
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a new newsletter");
+		require ("general/noaccess.php");
+		exit;
 	}
+	
+	$name = "";
+	$id_group = "1";
+	$from_desc = "";
+	$from_address = "";
+	$description = "";
+	echo "<h2>".__("Newsletter creation")."</h2>";
+} else {
+	echo "<h2>".__("Newsletter update")."</h2>";
+	$newsletter = get_db_row ("tnewsletter", "id", $id);
+	$name = $newsletter["name"];
+	$id_group = $newsletter["id_group"];
+	$from_desc = $newsletter["from_desc"];
+	$from_address = $newsletter["from_address"];
+	$description = $newsletter["description"];
+}
 	
 $table->width = '90%';
 $table->class = 'databox';
@@ -64,15 +78,17 @@ echo '<form method="post" action="index.php?sec=customers&sec2=operation/newslet
 print_table ($table);
 
 
-echo '<div class="button" style="width: '.$table->width.'">';
-if ($id) {
-		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
-		print_input_hidden ('id', $id);
-		print_input_hidden ('update', 1);
+if ($permission) {
+	echo '<div class="button" style="width: '.$table->width.'">';
+
+	if ($id) {
+			print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
+			print_input_hidden ('id', $id);
+			print_input_hidden ('update', 1);
 	} else {
 		print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
 		print_input_hidden ('create', 1);
 	}
 	echo "</div>";
-
+}
 echo "</form>";

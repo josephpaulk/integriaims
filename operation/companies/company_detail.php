@@ -24,29 +24,26 @@ enterprise_include('include/functions_crm.php');
 
 $id = (int) get_parameter ('id');
 
-$read_permission = enterprise_hook ('crm_check_acl_company', array ($config['id_user'], $id));
-$write_permission = enterprise_hook ('crm_check_acl_company', array ($config['id_user'], $id, true));
-$manage_permission = enterprise_hook ('crm_check_acl_company', array ($config['id_user'], $id, false, false, true));
-$other_read_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id));
-$other_write_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id, true));
-$other_manage_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id, false, false, true));
-$invoice_permission = enterprise_hook ('crm_check_acl_invoice', array ($config['id_user'], $id));
+$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
+$write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw'));
+$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
+$enterprise = false;
 
-if ($read_permission === ENTERPRISE_NOT_HOOK) {
-	$read_permission = true;
+if ($result === ENTERPRISE_NOT_HOOK) {
+	$read = true;
+	$write = true;
+	$manage = true;
 	$write_permission = true;
 	$manage_permission = true;
-	$other_read_permission = true;
-	$other_write_permission = true;
-	$other_manage_permission = true;
-	$invoice_permission = true;
-	
+	$read_permission = true;
 } else {
-	if (!$read_permission) {
+	$enterprise = true;
+	if (!$read) {
 		include ("general/noaccess.php");
 		exit;
 	}
 }
+
 
 //ACL EXTERNAL USER (OPEN AND ENTERPRISE)
 if (user_is_external($config['id_user'])) {
@@ -78,8 +75,6 @@ $delete_invoice = get_parameter ('delete_invoice', "");
 // ----------------
 
 if (($create_company) OR ($update_company)) {
-
-	// TODO: ACL CHECK !!
 	
 	$name = (string) get_parameter ('name');
 	$address = (string) get_parameter ('address');
@@ -95,9 +90,20 @@ if (($create_company) OR ($update_company)) {
 
 	if ($create_company){
 		
-		if (!$manage_permission) {
+		if (!$manage && $enterprise) {
 			include ("general/noaccess.php");
 			exit;
+		}
+
+		if ($manage && $enterprise) {
+			$check_acl = crm_check_acl_hierarchy($config['id_user'], $id);
+			
+			if ($check_acl) {
+				$manage_permission = true;
+			} else {
+				include ("general/noaccess.php");
+				exit;
+			}
 		}
 		
 		$sql = sprintf ('INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, id_grupo, website, country, manager, id_parent)
@@ -115,9 +121,21 @@ if (($create_company) OR ($update_company)) {
 	} else {
 
 		// Update company
-		if (!$write_permission) {
+
+		if (!$write && $enterprise) {
 			include ("general/noaccess.php");
 			exit;
+		}
+
+		if ($write && $enterprise) {
+			$check_acl = crm_check_acl_hierarchy($config['id_user'], $id);
+			
+			if ($check_acl) {
+				$write_permission = true;
+			} else {
+				include ("general/noaccess.php");
+				exit;
+			}
 		}
 		
 		$sql = "SELECT `date` FROM tcompany_activity WHERE id_company=$id ORDER BY `date` DESC LIMIT 1";
@@ -148,16 +166,27 @@ if (($create_company) OR ($update_company)) {
 
 if ($delete_company) { // if delete
 
-	if (!$manage_permission) {
+	$id = (int) get_parameter ('id');
+	$name = get_db_value ('name', 'tcompany', 'id', $id);
+
+	if (!$manage && $enterprise) {
 		include ("general/noaccess.php");
 		exit;
 	}
 
-	$id = (int) get_parameter ('id');
-	$name = get_db_value ('name', 'tcompany', 'id', $id);
-	
+	if ($manage && $enterprise) {
+		$check_acl = crm_check_acl_hierarchy($config['id_user'], $id);
+		
+		if ($check_acl) {
+			$manage_permission = true;
+		} else {
+			include ("general/noaccess.php");
+			exit;
+		}
+	}
 
 	$sql= sprintf ('DELETE FROM tcompany WHERE id = %d', $id);
+
 	process_sql ($sql);
 	insert_event ("COMPANY DELETED", $id, 0, $name);
 	echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
@@ -177,11 +206,6 @@ if ($delete_company) { // if delete
 // ----------------
 
 if ($delete_invoice == 1){
-
-	if (!$manage_permission) {
-		include ("general/noaccess.php");
-		exit;
-	}
 	
 	$id_invoice = get_parameter ("id_invoice", "");
 	$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id_invoice");
@@ -272,17 +296,52 @@ if ($id) {
 // EDIT / CREATE FORM
 
 if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
+
+	$check_acl = enterprise_hook ('crm_check_acl_hierarchy', array ($config['id_user'], $id));
 	
-	if ($new_company == 1) {
-		if (!$manage_permission) {
-			include ("general/noaccess.php");
-			exit;
+	if ($check_acl !== ENTERPRISE_NOT_HOOK) {
+		if ($new_company == 1) {
+			if ($check_acl) {
+				if ($manage) {
+					$manage_permission = true;
+				} else {
+					$manage_permission = false;
+				}
+			} else {
+				include ("general/noaccess.php");
+				exit;
+			}
+		} else {
+			if ($check_acl) {
+				if ($read) {
+					$read_permission = true;
+				} else {
+					$read_permission = false;
+				}
+				if ($manage) {
+					$manage_permission = true;
+				} else {
+					$manage_permission = false;
+				}
+				if ($write) {
+					$write_permission = true;
+				} else {
+					$write_permission = false;
+				}
+			} else {
+				include ("general/noaccess.php");
+				exit;
+			}
 		}
+	} else {
+		$read_permission = true;
+		$write_permission = true;
+		$manage_permission = true;
 	}
 	
 	$disabled_write = false;
 	
-	if (($id > 0) AND ($op=="")) {
+	if (($id > 0) AND ($op=="") AND $enterprise) {
 		if (!$write_permission && $read_permission) {
 			$disabled_write = true;
 		}
@@ -336,8 +395,9 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		$table->data[0][0] = print_input_text ('name', $name, '', 40, 100, true, __('Company name'), $disabled_write);
 		
 
-		if ($id > 0)
+		if ($id > 0 && $manage_permission) {
 			$table->data[0][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&delete_company=1'><img src='images/cross.png'></a>";
+		}
 
 	
 		$table->data[0][1] = print_input_text_extended ('manager', $manager, 'text-user', '', 15, 30, $disabled_write, '',
@@ -398,10 +458,12 @@ elseif ($op == "files") {
 // ~~~~~~~~~
 elseif ($op == "activities") {
 
+/*
 	if (!$other_write_permission) {
 		include ("general/noaccess.php");
 		exit;
 	}
+*/
 	
 	$op2 = get_parameter ("op2", "");
 	if ($op2 == "add"){
@@ -467,10 +529,12 @@ elseif ($op == "activities") {
 
 elseif ($op == "contracts") {
 	
+/*
 	if (!$other_read_permission) {
 		include ("general/noaccess.php");
 		exit;
 	}
+*/
 	
 	$contracts = get_contracts(false, "id_company = $id ORDER BY name");
 	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=contracts");
@@ -497,8 +561,7 @@ elseif ($op == "contracts") {
 		$counter = 0;
 	
 		foreach ($contracts as $contract) {
-			if (! give_acl ($config["id_user"], $contract["id_group"], "CR"))
-				continue;
+			
 			$data = array ();
 		
 			$data[0] = "<a href='index.php?sec=customers&sec2=operation/contracts/contract_detail&id="
@@ -686,10 +749,12 @@ elseif ($op == "invoices") {
 
 elseif ($op == "leads") {
 	
+/*
 	if (!$other_read_permission) {
 		include ("general/noaccess.php");
 		exit;
 	}
+*/
 	
 	$sql = "SELECT * FROM tlead WHERE id_company = $id and progress < 100 ORDER BY estimated_sale DESC,  modification DESC";
 	$invoices = get_db_all_rows_sql ($sql);
@@ -753,7 +818,7 @@ elseif ($op == "leads") {
 	
 if ((!$id) AND ($new_company == 0)){
 	
-	if (!$read_permission) {
+	if (!$read) {
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -846,8 +911,8 @@ if ((!$id) AND ($new_company == 0)){
 	echo '</form>';
 
 	$companies = crm_get_companies_list($where_clause, $date);
-	
-	if ($read_permission) {
+
+	if ($read && $enterprise) {
 		$companies = crm_get_user_companies($config['id_user'], $companies);
 	}
 
@@ -869,6 +934,35 @@ if ((!$id) AND ($new_company == 0)){
 		$table->head[7] = __('Delete');
 		
 		foreach ($companies as $company) {
+			
+			$check_acl = enterprise_hook ('crm_check_acl_hierarchy', array ($config['id_user'], $company['id']));
+	
+			if ($check_acl !== ENTERPRISE_NOT_HOOK) {
+		
+				if ($check_acl) {
+					if ($read) {
+						$read_permission = true;
+					} else {
+						$read_permission = false;
+					}
+					if ($manage) {
+						$manage_permission = true;
+					} else {
+						$manage_permission = false;
+					}
+					if ($write) {
+						$write_permission = true;
+					} else {
+						$write_permission = false;
+					}
+				}
+		
+			} else {
+				$read_permission = true;
+				$write_permission = true;
+				$manage_permission = true;
+			}
+	
 			$data = array ();
 			
 			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".
@@ -897,12 +991,16 @@ if ((!$id) AND ($new_company == 0)){
 
 			$data[6] = human_time_comparation ($last_activity);
 
-			$data[7] ='<a href="index.php?sec=customers&
-							sec2=operation/companies/company_detail'.$params.'&
-							delete_company=1&id='.$company['id'].'"
-							onClick="if (!confirm(\''.__('Are you sure?').'\'))
-							return false;">
-							<img src="images/cross.png"></a>';
+			if ($manage_permission) {
+				$data[7] ='<a href="index.php?sec=customers&
+								sec2=operation/companies/company_detail'.$params.'&
+								delete_company=1&id='.$company['id'].'"
+								onClick="if (!confirm(\''.__('Are you sure?').'\'))
+								return false;">
+								<img src="images/cross.png"></a>';
+			} else {
+				$data[7] = '';
+			}
 			
 			array_push ($table->data, $data);
 		}

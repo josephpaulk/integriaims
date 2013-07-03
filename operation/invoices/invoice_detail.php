@@ -19,13 +19,31 @@ global $config;
 
 check_login();
 
-if (! give_acl ($config["id_user"], 0, "CR")) {
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to read a contract");
-	require ("general/noaccess.php");
-	exit;
-}
 
 $id = (int) get_parameter ('id');
+
+enterprise_include('include/functions_crm.php');
+
+$id_company = get_db_value('id_company', 'tinvoice', 'id', $id);
+
+$permission = enterprise_hook ('crm_check_acl_invoice', array ($config['id_user'], $id_company));
+
+$enterprise = false;
+
+if ($read_permission === ENTERPRISE_NOT_HOOK) {
+	
+	$permission = true;
+	
+} else {
+	
+	$enterprise = true;
+	if (!$permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
+	
+}
+
 $get_company_name = (bool) get_parameter ('get_company_name');
 $new_contract = (bool) get_parameter ('new_contract');
 $delete_contract = (bool) get_parameter ('delete_contract');
@@ -88,6 +106,10 @@ echo '</form>';
 	
 $invoices =  get_db_all_rows_sql  ("SELECT * FROM tinvoice WHERE $where_clause ORDER BY invoice_create_date DESC", "");
 
+if ($permission && $enterprise) {
+	$invoices = crm_get_user_invoices($config['id_user'], $invoices);
+}
+	
 $invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/invoices/invoice_detail&$search_params");
 
 if ($invoices !== false) {

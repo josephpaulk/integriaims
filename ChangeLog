@@ -1,3 +1,13 @@
+2013-07-03  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_crm.php
+	  operation/contacts/contact_detail.php
+	  operation/companies/company_detail.php
+	  operation/contracts/contract_detail.php
+	  operation/invoices/invoice_detail.php
+	  oepration/newsletter/newsletter_creation.php
+	  oepration/newsletter/newsletter_definition.php: Modified CRM ACLs.
+
 2013-07-02  Sancho Lerena <slerena@artica.es>
 
 	* general/header.php: Implemented a quickfix to warn if
