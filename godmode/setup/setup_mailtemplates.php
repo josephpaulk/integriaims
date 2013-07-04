@@ -43,6 +43,7 @@ if ($is_enterprise) {
 }
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_pandora"><span><img src="images/pandora.ico"  title="'.__('Pandora FMS inventory').'"></span></a></li>';
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_auth"><span><img src="images/book_edit.png"  title="'.__('Authentication').'"></span></a></li>';
+echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_crm"><span><img src="images/page_white_text.png"  title="'.__('CRM setup').'"></span></a></li>';
 echo '</ul>';
 
 echo '</div>';
@@ -76,7 +77,7 @@ if ($update != "none") {
 	$file = "include/mailtemplates/".$template;
 	$fileh = fopen ($file, "wb");
 	if (fwrite ($fileh, $data))
-    	echo "<h3 class='suc'>".lang_string (__('Filesuccessfully updated'))."</h3>";
+    	echo "<h3 class='suc'>".lang_string (__('File successfully updated'))."</h3>";
     else    
     	echo "<h3 class='error'>".lang_string (__('Problem updating file'))." ($file) </h3>";
 	fclose ($file);

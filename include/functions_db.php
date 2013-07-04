@@ -2346,4 +2346,84 @@ function get_filter_by_company_accessibility ($id_user) {
 	return "";
 }
 
+// Returns the task of an invoice
+function get_invoice_tax ($id_invoice) {
+	$tax = get_db_value ('tax', 'tinvoice', 'id', $id_invoice);
+	
+	return $tax;
+}
+
+// Returns the sum of the ammounts of an invoice, with or without taxes
+function get_invoice_ammount ($id_invoice, $with_taxes = false) {
+	$field = "amount1+amount2+amount3+amount4+amount5";
+	$sum = get_db_value ($field, 'tinvoice', 'id', $id_invoice);
+	
+	if ($with_taxes && $sum) {
+		$tax = get_invoice_tax ($id_invoice);
+		if ($tax == false)
+			return __('ERROR');
+		$sum += $sum * $tax;
+	}
+	if ($sum == false)
+		return __('ERROR');
+	return $sum;
+}
+
+// Checks if an invoice is locked. Returns 1 if is locked, 0 if not
+// and false in case of error in the query.
+function is_invoice_locked ($id_invoice) {
+	$locked = get_db_value('locked', 'tinvoice', 'id', $id_invoice);
+	
+	return $locked;
+}
+
+// Checks the id of the user that locked the invoice. Returns the id
+// of the user in case of success or false in the case of the invoice
+// does not exist or is not locked.
+function get_invoice_locked_id_user ($id_invoice) {
+	if (is_invoice_locked ($id_invoice))
+		return false;
+	$user = get_db_value('locked_id_user', 'tinvoice', 'id', $id_invoice);
+	
+	return $user;
+}
+
+/**
+ * Function to check if the user can lock the invoice.
+ * NOT FULLY IMPLEMENTED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+*/
+function check_lock_permission ($id_user, $id_invoice) {
+	
+	$return = enterprise_hook ('check_lock_permission_extra', array ($id_user, $id_invoice));
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	return true;
+}
+
+// Changes the lock state of an invoice. Returns -1 if the user have
+// not permission to do this or the new lock state in case of success.
+function change_invoice_lock ($id_user, $id_invoice) {
+	
+	if (check_lock_permission ($id_user, $id_invoice)) {
+		
+		$lock_status = crm_is_invoice_locked ($id_invoice);
+		if ($lock_status === 1) {
+			$values = array ('locked' => 0, 'locked_id_user' => NULL);
+			$where = array ('id' => $id_invoice);
+			if (process_sql_update ('tinvoice', $values, $where))
+				return 0;
+			return 1;
+		} elseif ($lock_status === 0) {
+			$values = array ('locked' => 1, 'locked_id_user' => $id_user);
+			$where = array ('id' => $id_invoice);
+			if (process_sql_update ('tinvoice', $values, $where))
+				return 1;
+			return 0;
+		}
+	}
+	
+	return -1;
+}
+
 ?>

@@ -103,13 +103,13 @@ echo "</tr>";
 echo "</table>";
 
 echo '</form>';
-	
+
 $invoices =  get_db_all_rows_sql  ("SELECT * FROM tinvoice WHERE $where_clause ORDER BY invoice_create_date DESC", "");
 
 if ($permission && $enterprise) {
 	$invoices = crm_get_user_invoices($config['id_user'], $invoices);
 }
-	
+
 $invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/invoices/invoice_detail&$search_params");
 
 if ($invoices !== false) {

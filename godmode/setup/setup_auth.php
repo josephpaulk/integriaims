@@ -1,4 +1,5 @@
 <?php
+
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
@@ -14,7 +15,6 @@
 // GNU General Public License for more details.
 
 // Load global vars
-
 global $config;
 
 include_once("include/functions_profile.php");
@@ -50,6 +50,7 @@ if ($is_enterprise) {
 }
 echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_pandora"><span><img src="images/pandora.ico"  title="'.__('Pandora FMS inventory').'"></span></a></li>';
 echo '<li class="ui-tabs-selected"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_auth"><span><img src="images/book_edit.png"  title="'.__('Authentication').'"></span></a></li>';
+echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_crm"><span><img src="images/page_white_text.png"  title="'.__('CRM setup').'"></span></a></li>';
 echo '</ul>';
 
 echo '</div>';

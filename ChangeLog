@@ -1,3 +1,33 @@
+2013-07-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* index.php: Added a way to change the metadata,
+	header and footer of the pdf output by parameters.
+
+	* godmode/setup/incidents_setup.php
+	  godmode/setup/setup.php
+	  godmode/setup/setup_auth.php
+	  godmode/setup/setup_mail.php
+	  godmode/setup/setup_mailtemplates.php
+	  godmode/setup/setup_pandora.php
+	  godmode/setup/setup_visual.php: Added an icon to access
+	  to "CRM Setup".
+	  
+	* godmode/setup/setup_crm.php: New. Setup section for CRM.
+	
+	* include/functions_db.php: Added the functions:
+	-get_invoice_tax ($id_invoice)
+	-get_invoice_ammount ($id_invoice, $with_taxes = false)
+	-is_invoice_locked ($id_invoice)
+	-get_invoice_locked_id_user ($id_invoice)
+	-check_lock_permission ($id_user, $id_invoice)
+	-change_invoice_lock ($id_user, $id_invoice)
+	
+	* operation/invoices/invoice_view.php: New. Loader of the
+	templates and its values.
+	
+	* operation/invoices/invoice_template.php: New. Template
+	for the invoices output.
+
 2013-07-03  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_crm.php

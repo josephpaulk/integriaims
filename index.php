@@ -466,15 +466,26 @@ if ($pdf_output == 1){
 	include("include/pdf_translator.php");
 
 	$pdfObject = new PDFTranslator();
-
-  // Set font from font defined in report
+	
+	// Set font from font defined in report
 	$pdfObject->custom_font = $config["pdffont"];
-	$pdfObject->setMetadata(safe_output("Integria IMS PDF Report", 'Integria IMS Report', 'Integria IMS', __("Automated Integria IMS report")));
 
-	$pdfObject->setFooterHTML("Integria IMS Report", true);
-	$pdfObject->setHeaderHTML("<p align=right style='border-bottom: 1px solid #666;'> Integria IMS Report - ".date("D F d, Y H:i:s", $time).'</p>', true);
+	if ($custom_pdf) {
+		$pdfObject->setMetadata(safe_output("Invoice", 'Integria IMS', 'Integria IMS', __("Integria IMS invoice")));
+		
+		$header = '<div align="'.$header_logo_alignment.'"><img src="'.$config["homedir"]."/images/".$header_logo.'"></div>';
+		$header .= '<br><p align="center">'.$header_text.'</p>';
+		
+		$pdfObject->setHeaderHTML($header, true);
+		$pdfObject->setFooterHTML($footer_text, true);
+	} else {
+		$pdfObject->setMetadata(safe_output("Integria IMS PDF Report", 'Integria IMS Report', 'Integria IMS', __("Automated Integria IMS report")));
 
-	//Clean all html entities before render to PDF
+		$pdfObject->setFooterHTML("Integria IMS Report", true);
+		$pdfObject->setHeaderHTML("<p align=right style='border-bottom: 1px solid #666;'> Integria IMS Report - ".date("D F d, Y H:i:s", $time).'</p>', true);
+	}
+	
+	// Clean all html entities before render to PDF
 	$html = safe_output($html);
 	
 	$pdfObject->addHTML($html);
