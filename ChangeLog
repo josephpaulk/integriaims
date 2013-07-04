@@ -1,3 +1,11 @@
+2013-07-04  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* integria_demo.sql: Remove 'id_group' from
+	'tcompany';
+	  
+	* operation/companies/company_detail.php: Fixed bug
+	in CRM.
+
 2013-07-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* index.php: Added a way to change the metadata,

@@ -62,6 +62,21 @@ if (user_is_external($config['id_user'])) {
 	$invoice_permission = false;
 }
 
+if ($id > 0) {
+	$other_read_permission = enterprise_hook('crm_check_acl_other', array($config['id_user'], $id));
+	
+	if ($other_read_permission === ENTERPRISE_NOT_HOOK) {
+		$other_read_permission = true;
+		$other_write_permission = true;
+		$other_manage_permission = true;
+		$invoice_permission = true;
+	} else {
+		$other_write_permission = enterprise_hook('crm_check_acl_other', array($config['id_user'], $id, true));
+		$other_manage_permission = enterprise_hook('crm_check_acl_other', array($config['id_user'], $id, false, false, true));
+		$invoice_permission = enterprise_hook('crm_check_acl_invoice', array($config['id_user'], $id));
+	}
+}
+
 require_once('include/functions_crm.php');
 
 $op = (string) get_parameter ("op", "");
@@ -81,7 +96,6 @@ if (($create_company) OR ($update_company)) {
 	$fiscal_id = (string) get_parameter ('fiscal_id');
 	$comments = (string) get_parameter ('comments');
 	$id_company_role = (int) get_parameter ('id_company_role');
-	$id_group = (int) get_parameter ("id_group", 0);
 	$country = (string) get_parameter ("country");
 	$website = (string) get_parameter ("website");
 	$manager = (string) get_parameter ("manager");
@@ -106,9 +120,9 @@ if (($create_company) OR ($update_company)) {
 			}
 		}
 		
-		$sql = sprintf ('INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, id_grupo, website, country, manager, id_parent)
+		$sql = sprintf ('INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, website, country, manager, id_parent)
 			 VALUES ("%s", "%s", "%s", "%s", %d, %d, "%s", "%s", "%s", %d)',
-			 $name, $address, $comments, $fiscal_id, $id_company_role, $id_group, $website, $country, $manager, $id_parent);
+			 $name, $address, $comments, $fiscal_id, $id_company_role, $website, $country, $manager, $id_parent);
 
 		$id = process_sql ($sql, 'insert_id');
 		if ($id === false)
@@ -146,9 +160,9 @@ if (($create_company) OR ($update_company)) {
 		}
 		
 		$sql = sprintf ('UPDATE tcompany SET manager="%s", id_parent = %d, comments = "%s", name = "%s",
-		address = "%s", fiscal_id = "%s", id_company_role = %d, id_grupo = "%s", country = "%s", website = "%s", last_update = "%s" WHERE id = %d',
+		address = "%s", fiscal_id = "%s", id_company_role = %d, country = "%s", website = "%s", last_update = "%s" WHERE id = %d',
 		$manager, $id_parent, $comments, $name, $address,
-		$fiscal_id, $id_company_role, $id_group, $country, $website, $last_update, $id);
+		$fiscal_id, $id_company_role, $country, $website, $last_update, $id);
 
 		$result = mysql_query ($sql);
 		if ($result === false)
@@ -206,6 +220,11 @@ if ($delete_company) { // if delete
 // ----------------
 
 if ($delete_invoice == 1){
+	
+	if (!$invoice_permission && $enterprise) {
+		include ("general/noaccess.php");
+		exit;
+	}
 	
 	$id_invoice = get_parameter ("id_invoice", "");
 	$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id_invoice");
@@ -289,7 +308,6 @@ if ($id) {
 	echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: block;"></div>';
 
 	$company = get_db_row ('tcompany', 'id', $id);
-	$id_group = $company['id_grupo'];
 	
 }
 
@@ -458,15 +476,19 @@ elseif ($op == "files") {
 // ~~~~~~~~~
 elseif ($op == "activities") {
 
-/*
-	if (!$other_write_permission) {
+	if (!$other_read_permission) {
 		include ("general/noaccess.php");
 		exit;
 	}
-*/
 	
 	$op2 = get_parameter ("op2", "");
 	if ($op2 == "add"){
+		
+		if (!$other_write_permission) {
+			include ("general/noaccess.php");
+			exit;
+		}
+	
 		$datetime =  date ("Y-m-d H:i:s");
 		$comments = get_parameter ("comments", "");
 		$sql = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, $comments);
@@ -476,7 +498,7 @@ elseif ($op == "activities") {
 	// ADD item form
 	// TODO: ACL Check
 
-	if (!$other_write_permission) {
+	if ($other_write_permission) {
 
 		$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
 
@@ -529,14 +551,17 @@ elseif ($op == "activities") {
 
 elseif ($op == "contracts") {
 	
-/*
 	if (!$other_read_permission) {
 		include ("general/noaccess.php");
 		exit;
 	}
-*/
 	
 	$contracts = get_contracts(false, "id_company = $id ORDER BY name");
+	
+	if ($other_read_permission && $enterprise) {
+		$contracts = crm_get_user_contracts($config['id_user'], $contracts);
+	}
+	
 	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=contracts");
 
 	if ($contracts !== false) {
@@ -578,7 +603,7 @@ elseif ($op == "contracts") {
 		print_table ($table);
 
 
-		if ($other_write_permission) {
+		if ($other_manage_permission) {
 			
 			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$id.'">';
 			echo '<div class="button" style="width: '.$table->width.'">';
@@ -600,7 +625,6 @@ elseif ($op == "contacts") {
 	}
 	
 	$name = get_db_value ('name', 'tcompany', 'id', $id);
-	$id_group = get_db_sql ("SELECT id_grupo FROM tcompany WHERE id = $id");
 	
 
         echo "<h3>".__("Contacts for "). $name . "</h3>";
@@ -620,6 +644,10 @@ elseif ($op == "contacts") {
 
 	if ($contacts === false)
 		$contacts = array ();
+		
+	if ($other_read_permission && $enterprise) {
+		$contacts = crm_get_user_contacts($config['id_user'], $contacts);
+	}
 
 	foreach ($contacts as $contact) {
 		$data = array ();
@@ -636,7 +664,7 @@ elseif ($op == "contacts") {
 	}
 	print_table ($table);
 	
-	if ($other_write_permission) {
+	if ($other_manage_permission) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&id_company='.$id.'">';
 		echo '<div class="button" style="width: '.$table->width.'">';
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
@@ -658,8 +686,6 @@ elseif ($op == "invoices") {
 	$new_invoice = get_parameter("new_invoice", 0);
 	$operation_invoices = get_parameter ("operation_invoices", "");
 	$view_invoice = get_parameter("view_invoice", 0);
-
-	$id_group = get_db_sql ("SELECT id_grupo FROM tcompany WHERE id = $id");
 	
 	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
 	echo "<h3>". __("Invoices for "). $company_name. "</h3>";
@@ -675,6 +701,11 @@ elseif ($op == "invoices") {
 	
 		$sql = "SELECT * FROM tinvoice WHERE id_company = $id ORDER BY invoice_create_date";
 		$invoices = get_db_all_rows_sql ($sql);
+		
+		if ($invoice_permission && $enterprise) {
+			$invoices = crm_get_user_invoices($config['id_user'], $invoices);
+		}
+	
 		$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices");
 
 		if ($invoices !== false) {
@@ -696,17 +727,17 @@ elseif ($op == "invoices") {
 			$table->head[4] = __('Creation')."/".__("Payment");
 			$table->head[5] = __('File');
 			$table->head[] = __('Upload by');
-			if(give_acl ($config["id_user"], $id_group, "VM")) {
+
+			if($invoice_permission) {
 				$table->head[7] = __('Delete');
 			}
+			
 			$counter = 0;
 		
 			$company = get_db_row ('tcompany', 'id', $id);
 		
 			foreach ($invoices as $invoice) {
 				
-				if (! give_acl ($config["id_user"], $company["id_group"], "CM"))
-					continue;
 				$data = array ();
 			
 				$url = "index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$id."&op=invoices&id_invoice=". $invoice["id"];
@@ -723,8 +754,8 @@ elseif ($op == "invoices") {
 				
 				$data[6] = $invoice["id_user"];
 				
-				if(give_acl ($config["id_user"], $id_group, "VM")) {
-				$data[7] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices&delete_invoice=1&id_invoice=".$invoice["id"]."'><img src='images/cross.png'></a>";
+				if($invoice_permission) {
+					$data[7] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices&delete_invoice=1&id_invoice=".$invoice["id"]."'><img src='images/cross.png'></a>";
 				}
 				
 				array_push ($table->data, $data);
@@ -749,15 +780,18 @@ elseif ($op == "invoices") {
 
 elseif ($op == "leads") {
 	
-/*
 	if (!$other_read_permission) {
 		include ("general/noaccess.php");
 		exit;
 	}
-*/
 	
 	$sql = "SELECT * FROM tlead WHERE id_company = $id and progress < 100 ORDER BY estimated_sale DESC,  modification DESC";
 	$invoices = get_db_all_rows_sql ($sql);
+	
+	if ($other_read_permission && $enterprise) {
+		$invoices = crm_get_user_leads($config['id_user'], $invoices);
+	}
+		
 	$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=leads");
 	
 	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
@@ -802,7 +836,7 @@ elseif ($op == "leads") {
 		}	
 		print_table ($table);
 		
-		if ($other_write_permission) {
+		if ($other_manage_permission) {
 			echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail">';
 			echo '<div class="button" style="width: '.$table->width.'">';
 			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');

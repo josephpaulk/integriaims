@@ -49,7 +49,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tcompany` WRITE;
 /*!40000 ALTER TABLE `tcompany` DISABLE KEYS */;
-INSERT INTO `tcompany` VALUES (1,'Your&#x20;big&#x20;company','calle&#x20;Alberto&#x20;Aguilera&#x20;7,&#x20;3&#x0d;&#x0a;28015&#x20;Madrid&#x0d;&#x0a;Espa&ntilde;a&#x0d;&#x0a;','324234324','Spain','http://www.artica.es','',3,0,0,'admin');
+INSERT INTO `tcompany` VALUES (1,'Your&#x20;big&#x20;company','calle&#x20;Alberto&#x20;Aguilera&#x20;7,&#x20;3&#x0d;&#x0a;28015&#x20;Madrid&#x0d;&#x0a;Espa&ntilde;a&#x0d;&#x0a;','324234324','Spain','http://www.artica.es','',0,0,'admin');
 /*!40000 ALTER TABLE `tcompany` ENABLE KEYS */;
 UNLOCK TABLES;
 
