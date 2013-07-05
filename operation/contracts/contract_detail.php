@@ -46,7 +46,6 @@ if ($result !== ENTERPRISE_NOT_HOOK) {
 if ($id != 0) {
 	
 	$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $id);
-	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id_company);
 	
 	$read_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company));
 	$write_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company, true));
@@ -79,7 +78,6 @@ $new_contract = (bool) get_parameter ('new_contract');
 $create_contract = (bool) get_parameter ('create_contract');
 $update_contract = (bool) get_parameter ('update_contract');
 $delete_contract = (bool) get_parameter ('delete_contract');
-$get_group_combo = (bool) get_parameter('get_group_combo');
 
 if ($get_sla) {
 	$sla = get_contract_sla ($id, false);
@@ -97,15 +95,6 @@ if ($get_company_name) {
 		echo json_encode (reset($company));
 		return;
 	}
-}
-
-if ($get_group_combo) {
-	$group = get_parameter("group");
-	$ret = print_select_from_sql ('SELECT id, name FROM tcompany WHERE id_grupo = '.$group.' ORDER BY name',
-			'id_company', false, '', '', '', true, false, false);	
-			
-	echo $ret;
-	return;
 }
 
 // CREATE
@@ -277,9 +266,6 @@ if ($id | $new_contract) {
 			$contract_number = '<i>-'.__('Empty').'-</i>';
 		}		
 		$table->data[1][0] = "<b>".__('Contract number')."</b><br>$contract_number<br>";	
-		
-		$group_name = get_db_value('nombre','tgrupo','id_grupo',$id_group);
-		
 		
 		$table->data[2][0] = "<b>".__('Begin date')."</b><br>$date_begin<br>";
 		$table->data[2][1] = "<b>".__('End date')."</b><br>$date_end<br>";

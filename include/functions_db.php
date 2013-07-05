@@ -2353,8 +2353,8 @@ function get_invoice_tax ($id_invoice) {
 	return $tax;
 }
 
-// Returns the sum of the ammounts of an invoice, with or without taxes
-function get_invoice_ammount ($id_invoice, $with_taxes = false) {
+// Returns the sum of the amounts of an invoice, with or without taxes
+function get_invoice_amount ($id_invoice, $with_taxes = false) {
 	$field = "amount1+amount2+amount3+amount4+amount5";
 	$sum = get_db_value ($field, 'tinvoice', 'id', $id_invoice);
 	

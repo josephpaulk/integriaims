@@ -23,6 +23,7 @@ check_login();
 $id = (int) get_parameter ('id');
 
 enterprise_include('include/functions_crm.php');
+include_once('include/functions_crm.php');
 
 $id_company = get_db_value('id_company', 'tinvoice', 'id', $id);
 
@@ -127,10 +128,11 @@ if ($invoices !== false) {
 	$table->style[5]= "font-size: 8px";
 	$table->head[0] = __('Company');
 	$table->head[1] = __('#ID');
-	$table->head[2] = __('Ammount');
+	$table->head[2] = __('Amount');
 	$table->head[3] = __('Date');
 	$table->head[4] = __('Status');
 	$table->head[5] = __('Description');
+	$table->head[6] = __('Options');
 	$counter = 0;
 	
 	foreach ($invoices as $invoice) {
@@ -141,22 +143,39 @@ if ($invoices !== false) {
 			$data[0] = get_db_value ("name", "tcompany", "id", $invoice["id_company"]);
 		} else 
 			$data[0] = __("N/A");
-
+		
 		$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$invoice["id_company"]."&op=invoices&id_invoice=".$invoice["id"]."'>".$invoice["bill_id"]."</a>";
-
-		$data[2] = $invoice["ammount"];
+		
+		$data[2] = get_invoice_amount ($invoice["id"]);
 		$data[3] = $invoice["invoice_create_date"];
 		$data[4] = __($invoice["status"]);
 		$data[5] = __($invoice["description"]);
-
-		
-		$data[6] = '<a href="?sec=customers&sec2=operation/companies/company_detail&delete_invoice=1&id='.$invoice["id_company"].'&op=invoices&id_invoice='.$invoice["id"].'" onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+		$data[6] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
+			&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1">
+			<img src="images/page_white_acrobat.png" title="PDF"></a>';
+		if (crm_check_lock_permission ($config["id_user"], $invoice["id"])) {
+			
+			if (crm_is_invoice_locked ($invoice["id"])) {
+				$lock_image = 'lock.png';
+				$title = 'Unlock';
+			} else {
+				$lock_image = __('lock_open.png');
+				$title = __('Lock');
+			}
+			$data[6] .= ' <a href="?sec=customers&sec2=operation/companies/company_detail
+				&delete_invoice=1&id='.$invoice["id_company"].'&op=invoices &id_invoice='.$invoice["id"].'" 
+				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+				<img src="images/'.$lock_image.'" title="'.$title.'"></a>';
+		}
+		$data[6] .= ' <a href="?sec=customers&sec2=operation/companies/company_detail
+			&delete_invoice=1&id='.$invoice["id_company"].'&op=invoices&id_invoice='.$invoice["id"].'" 
+			onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+			<img src="images/cross.png" title="'.__('Delete').'"></a>';
 		
 		array_push ($table->data, $data);
-	}	
+	}
 	print_table ($table);
 }
-	
 
 ?>
 

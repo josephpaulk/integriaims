@@ -44,7 +44,6 @@ if ($result !== ENTERPRISE_NOT_HOOK) {
 
 if($id != 0) {
 	$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $id);
-	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id_company);
 	
 	$read_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company));
 	$write_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id_company, true));
@@ -89,7 +88,6 @@ if ($get_contacts) {
 // Create
 if ($create_contact) {
 	$id_company = (int) get_parameter ('id_company');
-	$id_group = get_db_value ('id_grupo', 'tcompany', 'id', $id_company);
 
 	if (!$manage_permission) {
 	       audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a new contact in a group without access");
@@ -315,8 +313,6 @@ if ($id || $new_contact) {
 		include ("general/noaccess.php");
 		exit;
 	}
-	
-	$where_group = "";	
 	
 	$search_text = (string) get_parameter ('search_text');
 	$id_company = (int) get_parameter ('id_company');

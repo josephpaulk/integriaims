@@ -36,7 +36,6 @@ if ($manage_permission === ENTERPRISE_NOT_HOOK) {
 	}
 }
 
-$id_group = $company['id_grupo'];	
 $new_role = (bool) get_parameter ('new_role');
 $create_role = (bool) get_parameter ('create_role');
 $update_role = (bool) get_parameter ('update_role');

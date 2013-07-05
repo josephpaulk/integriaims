@@ -16,9 +16,9 @@ if ($company_from == array())
 	exit;
 $company_to = get_db_row ("tcompany", "id", $invoice["id_company"]);
 
-$subtotal = get_invoice_ammount ($id_invoice);
+$subtotal = get_invoice_amount ($id_invoice);
 $tax = get_invoice_tax ($id_invoice);
-//$total = round(get_invoice_ammount ($id_invoice, $with_taxes = true), 2);
+//$total = round(get_invoice_amount ($id_invoice, $with_taxes = true), 2);
 $total = round($subtotal + ($subtotal * $tax), 2);
 
 // The template of the invoice view can be changed here

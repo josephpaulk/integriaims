@@ -42,7 +42,7 @@ if ($id_invoice > 0){
 
 	$bill_id = $invoice["bill_id"];
 	$description = $invoice["description"];
-	$ammount = $invoice["ammount"];
+	$amount = get_invoice_amount ($invoice["id"]);
 	$id_attachment = $invoice["id_attachment"];
 	$invoice_create_date = $invoice["invoice_create_date"];
 	$invoice_payment_date = $invoice["invoice_payment_date"];
@@ -53,7 +53,7 @@ if ($id_invoice > 0){
 } else {
 	$bill_id = "N/A";
 	$description = "";
-	$ammount = "0.00";
+	$amount = "0.00";
 	$id_attachment = "";
 	//$invoice_create_date = "2011-01-30";
 	//$invoice_payment_date = "2011-03-30";
@@ -67,7 +67,7 @@ if ($operation_invoices == "add_invoice"){
 	$filename = get_parameter ('upfile', false);
 	$bill_id = get_parameter ("bill_id", "");
 	$description = get_parameter ("description", "");
-	$ammount = (float) get_parameter ("ammount", 0);
+	$amount = (float) get_parameter ("amount", 0);
 	$user_id = $config["id_user"];
 	$invoice_create_date = get_parameter ("invoice_create_date");
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
@@ -102,8 +102,8 @@ if ($operation_invoices == "add_invoice"){
 	
 	// Creating the cost record
 	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_company,
-	bill_id, ammount, id_attachment, invoice_create_date, invoice_payment_date, tax, status) VALUES ("%s", "%s", %d, "%s", "%s", %d, "%s", "%s", "%s", "%s")',
-			$description, $user_id, $id_company, $bill_id, $ammount, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $invoice_status);
+	bill_id, amount, id_attachment, invoice_create_date, invoice_payment_date, tax, status) VALUES ("%s", "%s", %d, "%s", "%s", %d, "%s", "%s", "%s", "%s")',
+			$description, $user_id, $id_company, $bill_id, $amount, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $invoice_status);
 
 	$ret = process_sql ($sql, 'insert_id');
 	if ($ret !== false) {
@@ -122,7 +122,7 @@ if ($operation_invoices == "update_invoice"){
 	$filename = get_parameter ('upfile', false);
 	$bill_id = get_parameter ("bill_id", "");
 	$description = get_parameter ("description", "");
-	$ammount = (float) get_parameter ("ammount", 0);
+	$amount = (float) get_parameter ("amount", 0);
 	$user_id = $config["id_user"];
 	$invoice_create_date = get_parameter ("invoice_create_date");
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
@@ -167,7 +167,7 @@ if ($operation_invoices == "update_invoice"){
 	$values['id_user'] = $user_id;
 	$values['id_company'] = $id_company;
 	$values['bill_id'] = $bill_id;
-	$values['ammount'] = $ammount;
+	$values['amount'] = $amount;
 	$values['status'] = $invoice_status;
 	$values['tax'] = $tax;
 
@@ -213,8 +213,8 @@ if ($operation_invoices == ""){
 	$table->data[1][0] = __('Bill ID');
 	$table->data[1][1] = print_input_text ('bill_id', $bill_id, '', 25, 100, true);
 	
-	$table->data[2][0] = __('Ammount');
-	$table->data[2][1] = print_input_text ('ammount', $ammount, '', 10, 20, true);
+	$table->data[2][0] = __('Amount');
+	$table->data[2][1] = print_input_text ('amount', $amount, '', 10, 20, true);
 	
 	$table->data[3][0] = __('Taxes (%)');
 	$table->data[3][1] = print_input_text ('tax', $tax, '', 5, 20, true);
@@ -324,9 +324,9 @@ messages = {
 	remote: "<?php echo __('This bill ID already exists'); ?>"
 };
 add_validate_form_element_rules('#text-bill_id', rules, messages);
-// Rules: #text-ammount
+// Rules: #text-amount
 rules = { number: true };
 messages = { number: "<?php echo __('Invalid number')?>" };
-add_validate_form_element_rules('#text-ammount', rules, messages);
+add_validate_form_element_rules('#text-amount', rules, messages);
 */
 </script>

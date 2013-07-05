@@ -95,12 +95,14 @@ function crm_change_invoice_lock ($id_user, $id_invoice) {
 		
 		$lock_status = crm_is_invoice_locked ($id_invoice);
 		if ($lock_status === 1) {
+			
 			$values = array ('locked' => 0, 'locked_id_user' => NULL);
 			$where = array ('id' => $id_invoice);
 			if (process_sql_update ('tinvoice', $values, $where))
 				return 0;
 			return 1;
 		} elseif ($lock_status === 0) {
+			
 			$values = array ('locked' => 1, 'locked_id_user' => $id_user);
 			$where = array ('id' => $id_invoice);
 			if (process_sql_update ('tinvoice', $values, $where))

@@ -1,3 +1,17 @@
+2013-07-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/companies/company_detail.php: Little fix on ACL.
+	
+	* operation/invoices/invoice_detail.php: Added options to
+	export to PDF or lock an invoice.
+	
+	* operation/companies/company_detail.php
+	  operation/companies/company_role.php
+	  operation/contacts/contact_detail.php
+	  operation/contracts/contract_detail.php
+	  operation/invoices/invoice_detail.php: Deleted almost
+	  all traces of the old column "id_grupo".
+
 2013-07-04  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* integria_demo.sql: Remove 'id_group' from
