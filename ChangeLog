@@ -1,3 +1,10 @@
+2013-07-05  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* operation/company_detail.php: Fixed bug creating
+	company.
+
+	* operation/lead_detail.php: Added ACL.
+
 2013-07-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/companies/company_detail.php: Little fix on ACL.

@@ -18,15 +18,56 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "VR")) {
-	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access leads");
-	require ("general/noaccess.php");
-	exit;
-}
+enterprise_include('include/functions_crm.php');
 
-$manager = give_acl ($config["id_user"], 0, "VM");
+$read = true;
+$write = true;
+$manage = true;
+$write_permission = true;
+$manage_permission = true;
+$read_permission = true;
+	
+$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
+$write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw'));
+$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
+$enterprise = false;
+
+if ($result !== ENTERPRISE_NOT_HOOK) {
+	$enterprise = true;
+	if (!$read) {
+		include ("general/noaccess.php");
+		exit;
+	}
+} 
 
 $id = (int) get_parameter ('id');
+
+
+if ($id != 0) {
+	
+	$read_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id));
+	$write_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id, true));
+	$manage_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id, false, false, true));
+
+	$enterprise = false;
+
+	if ($read_permission === ENTERPRISE_NOT_HOOK) {
+		
+		$read_permission = true;
+		$write_permission = true;
+		$manage_permission = true;
+		
+	} else {
+		
+		$enterprise = true;
+		
+		if (!$read_permission) {
+			include ("general/noaccess.php");
+			exit;
+		}
+		
+	}	
+}
 
 //TODO (sancho): Implement ACL system depending on company
 
@@ -42,6 +83,12 @@ $make_owner = (bool) get_parameter ('make_owner');
 // Create
 if ($create) {
 
+	if (!$manage_permission) {
+	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+	        require ("general/noaccess.php");
+	        exit;
+	}
+	
 	$id_company = (int) get_parameter ('id_company');
 	$fullname = (string) get_parameter ('fullname');
 	$phone = (string) get_parameter ('phone');
@@ -85,6 +132,12 @@ if ($create) {
 // Make owner
 if ($make_owner){
 
+	if (!$write_permission) {
+	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+	        require ("general/noaccess.php");
+	        exit;
+	}
+	
 	// Get company of current user
 	$id_company = get_db_value  ('id_company', 'tusuario', 'id_usuario', $config["id_user"]);
 	
@@ -108,7 +161,13 @@ if ($make_owner){
 
 // Update
 if ($update) { // if modified any parameter
-
+	
+	if (!$write_permission) {
+	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+	        require ("general/noaccess.php");
+	        exit;
+	}
+	
 	$id_company = (int) get_parameter ('id_company');
 	$fullname = (string) get_parameter ('fullname');
 	$phone = (string) get_parameter ('phone');
@@ -168,6 +227,11 @@ if ($update) { // if modified any parameter
 if ($delete) {
 	
 	//TODO: ACL check here !
+	if (!$manage_permission) {
+	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+	        require ("general/noaccess.php");
+	        exit;
+	}
 
 	$fullname = get_db_value  ('fullname', 'tlead', 'id', $id);
 	$sql = sprintf ('DELETE FROM tlead WHERE id = %d', $id);
@@ -188,6 +252,11 @@ if ($delete) {
 if ($close) {
 
 	//TODO: ACL check here !
+	if (!$write_permission) {
+	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+	        require ("general/noaccess.php");
+	        exit;
+	}
 
 	$sql = sprintf ('UPDATE tlead SET progress = 100 WHERE id = %d', $id);
 	process_sql ($sql);
@@ -202,11 +271,13 @@ if ($close) {
 // FORM (Update / Create)
 if ($id || $new) {
 	if ($new) {
-		if (! give_acl ($config["id_user"], 0, "VM")) {
-			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a lead without access");
-			require ("general/noaccess.php");
-			exit;
+
+		if (!$manage_permission) {
+	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+	        require ("general/noaccess.php");
+	        exit;
 		}
+		
 		$id = 0;
 
 		$id_company = (int) get_parameter ('id_company');
@@ -227,11 +298,10 @@ if ($id || $new) {
 	} else {
 
 		// TODO (slerena): implement ACL here based on company or something :)
-
-		if (! give_acl ($config["id_user"], 0, "VR")) {
-			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access a contact in a group without access");
-			require ("general/noaccess.php");
-			exit;
+		if (!$write_permission) {
+	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+	        require ("general/noaccess.php");
+	        exit;
 		}
 
 		$lead = get_db_row ("tlead", "id", $id);
@@ -384,7 +454,13 @@ if ($id || $new) {
 		}
 		$sql2 .=  " ORDER by name";
 
-		$table->data[4][1] = print_select_from_sql ($sql2, 'id_company', $id_company, '', __("None"), 0, true, false, true, __("Managed by"));
+		$companies = process_sql($sql2);
+		
+		if ($read && $enterprise) {
+			$companies = crm_get_user_companies($config['id_user'], $companies);
+		}
+		
+		$table->data[4][1] =  print_select ($companies, 'id_company', $id_company, '', '', $nothing_value = '0', true, 0, false,  __('Managed by'));
 
 		$table->data[4][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 		$table->data[4][1] .= "<img src='images/company.png'></a>";
@@ -634,6 +710,10 @@ if ($id || $new) {
 
 	$leads = get_db_all_rows_sql ($sql);
 
+	if ($read && $enterprise) {
+		$leads = crm_get_user_leads($config['id_user'], $leads);
+	}
+	
 	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead_detail$params");
 
 	if ($leads !== false) {
@@ -730,12 +810,14 @@ if ($id || $new) {
 			} else {
 				if ($lead["owner"] == ""){
 					// TODO. Check ACK for CRM Write here
-					$data[9] .= '&nbsp;<a href="index.php?sec=customers&
-                                                                sec2=operation/leads/lead_detail&
-                                                                delete=1&id='.$lead["id"].'"
-                                                                onClick="if (!confirm(\''.__('Are you sure?').'\'))
-                                                                return false;">
-                                                                <img src="images/cross.png"></a>';
+					if ($manage_permission) {
+						$data[9] .= '&nbsp;<a href="index.php?sec=customers&
+																	sec2=operation/leads/lead_detail&
+																	delete=1&id='.$lead["id"].'"
+																	onClick="if (!confirm(\''.__('Are you sure?').'\'))
+																	return false;">
+																	<img src="images/cross.png"></a>';
+					}
 				}
 			}
 
@@ -745,7 +827,7 @@ if ($id || $new) {
 		print_table ($table);
 	}
 	
-	if ($manager) {
+	if ($manage_permission) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail">';
 		echo '<div class="button" style="width: '.$table->width.'">';
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');

@@ -93,7 +93,7 @@ if (($create_company) OR ($update_company)) {
 	
 	$name = (string) get_parameter ('name');
 	$address = (string) get_parameter ('address');
-	$fiscal_id = (string) get_parameter ('fiscal_id');
+	$fiscal_id = (string) get_parameter ('fiscal_id', 0);
 	$comments = (string) get_parameter ('comments');
 	$id_company_role = (int) get_parameter ('id_company_role');
 	$country = (string) get_parameter ("country");
@@ -120,11 +120,11 @@ if (($create_company) OR ($update_company)) {
 			}
 		}
 		
-		$sql = sprintf ('INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, website, country, manager, id_parent)
-			 VALUES ("%s", "%s", "%s", "%s", %d, %d, "%s", "%s", "%s", %d)',
-			 $name, $address, $comments, $fiscal_id, $id_company_role, $website, $country, $manager, $id_parent);
+		$sql = "INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, website, country, manager, id_parent)
+					 VALUES ('$name', '$address', '$comments',  $fiscal_id, $id_company_role, '$website', '$country', '$manager', $id_parent)";
 
 		$id = process_sql ($sql, 'insert_id');
+
 		if ($id === false)
 			echo "<h3 class='error'>".__('Could not be created')."</h3>";
 		else {
@@ -868,6 +868,7 @@ if ((!$id) AND ($new_company == 0)){
 	$search_parent = get_parameter ("search_parent");
 	$search_date_begin = get_parameter('search_date_begin');
 	$search_date_end = get_parameter('search_date_end');
+	
 	$date = false;
 
 	//$where_clause = " 1 = 1 AND id " . get_filter_by_company_accessibility($config["id_user"]);
@@ -953,6 +954,7 @@ if ((!$id) AND ($new_company == 0)){
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params");
 
 	if ($companies !== false) {
+
 		$table->width = "98%";
 		$table->class = "listing";
 		$table->data = array ();
@@ -1028,7 +1030,7 @@ if ((!$id) AND ($new_company == 0)){
 			if ($manage_permission) {
 				$data[7] ='<a href="index.php?sec=customers&
 								sec2=operation/companies/company_detail'.$params.'&
-								delete_company=1&id='.$company['id'].'"
+								delete_company=1&id='.$company['id'].'&page='.$page.'"
 								onClick="if (!confirm(\''.__('Are you sure?').'\'))
 								return false;">
 								<img src="images/cross.png"></a>';
