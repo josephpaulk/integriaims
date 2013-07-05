@@ -71,7 +71,6 @@ if ($id != 0) {
 	}	
 }
 
-$id_group = get_db_value ('id_group', 'tcontract', 'id', $id);
 $get_sla = (bool) get_parameter ('get_sla');
 $get_company_name = (bool) get_parameter ('get_company_name');
 $new_contract = (bool) get_parameter ('new_contract');
@@ -100,7 +99,6 @@ if ($get_company_name) {
 // CREATE
 if ($create_contract) {
 
-	$id_group = (int) get_parameter ('id_group');
 	if (! $manage_permission) {
 	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
 	        require ("general/noaccess.php");
@@ -134,7 +132,7 @@ if ($create_contract) {
 
 // UPDATE
 if ($update_contract) { // if modified any parameter
-	$id_group = (int) get_parameter ('id_group');
+	
 	if (! $write_permission) {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
 			require ("general/noaccess.php");
@@ -204,7 +202,6 @@ if ($id | $new_contract) {
 		$date_begin = date('Y-m-d');
 		$date_end = $date_begin;
 		$id_company = get_parameter("id_company", 0);
-		$id_group = "1";
 		$id_sla = "";
 		$description = "";
 		$private = 0;
@@ -219,7 +216,6 @@ if ($id | $new_contract) {
 		$contract_number = $contract["contract_number"];
 		$id_company = $contract["id_company"];
 		$date_begin = $contract["date_begin"];
-		$id_group = $contract["id_group"];
 		$date_end   = $contract["date_end"];
 		$description = $contract["description"];
 		$id_sla = $contract["id_sla"];
@@ -427,7 +423,7 @@ if ($id | $new_contract) {
 		$table->head[2] = __('Company');
 		$table->head[3] = __('Begin');
 		$table->head[4] = __('End');
-		if(give_acl ($config["id_user"], $id_group, "VM")) {
+		if(give_acl ($config["id_user"], 0, "VM")) {
 			$table->head[5] = __('Privacy');
 			$table->head[6] = __('Delete');
 		}

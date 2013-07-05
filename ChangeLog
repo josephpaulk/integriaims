@@ -1,3 +1,27 @@
+2013-07-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_crm.php: Fixed the functions
+	"crm_get_invoice_locked_id_user" and
+	"crm_change_invoice_lock".
+	
+	* operation/invoices/invoice_detail.php: Now the user
+	is not redirected to "company_detail.php" when deletes
+	an invoice.
+	
+	* operation/companies/company_detail.php
+	  operation/invoices/invoice_detail.php: Now an invoice
+	  locked can not be deleted. Now the creation and payment
+	  date of the invoices are showed in two separated columns.
+	  "Amount" column in the invoice list fixed. Changes in the
+	  columns of the invoice list.
+	  Now the "delete" column in the invoice list is the
+	  "options" column. This column shows the "Export to PDF",
+	  "Lock/Unlock", "Locked by X" and "Delete" icons
+	  depending on permissions.
+	  
+	 * operation/contracts/contract_detail.php: Deleted almost
+	  all traces of the old column "id_grupo".
+
 2013-07-05  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* operation/company_detail.php: Fixed bug creating

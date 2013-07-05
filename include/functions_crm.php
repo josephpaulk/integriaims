@@ -67,7 +67,8 @@ function crm_is_invoice_locked ($id_invoice) {
 // of the user in case of success or false in the case of the invoice
 // does not exist or is not locked.
 function crm_get_invoice_locked_id_user ($id_invoice) {
-	if (is_invoice_locked ($id_invoice))
+	
+	if (!crm_is_invoice_locked ($id_invoice))
 		return false;
 	$user = get_db_value('locked_id_user', 'tinvoice', 'id', $id_invoice);
 	
@@ -91,7 +92,7 @@ function crm_check_lock_permission ($id_user, $id_invoice) {
 // not permission to do this or the new lock state in case of success.
 function crm_change_invoice_lock ($id_user, $id_invoice) {
 	
-	if (check_lock_permission ($id_user, $id_invoice)) {
+	if (crm_check_lock_permission ($id_user, $id_invoice)) {
 		
 		$lock_status = crm_is_invoice_locked ($id_invoice);
 		if ($lock_status === 1) {

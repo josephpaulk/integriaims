@@ -231,7 +231,8 @@ if ($delete_invoice == 1){
 	
 	// Do another security check, don't rely on information passed from URL
 	
-	if (($config["id_user"] = $invoice["id_user"]) OR ($id_task == $invoice["id_task"])){
+	if ($invoice["id"] && !crm_is_invoice_locked ($invoice["id"])) {
+	//if (($config["id_user"] = $invoice["id_user"]) OR ($id_task == $invoice["id_task"])){ // TODO: Check this
 			// Todo: Delete file from disk
 			if ($invoice["id_attachment"] != ""){
 				process_sql ("DELETE FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
@@ -724,13 +725,11 @@ elseif ($op == "invoices") {
 			$table->head[1] = __('Description');
 			$table->head[2] = __('Ammount');
 			$table->head[3] = __('Status');
-			$table->head[4] = __('Creation')."/".__("Payment");
-			$table->head[5] = __('File');
-			$table->head[] = __('Upload by');
-
-			if($invoice_permission) {
-				$table->head[7] = __('Delete');
-			}
+			$table->head[4] = __('Creation');
+			$table->head[5] = __('Payment');
+			//$table->head[] = __('File');
+			//$table->head[] = __('Upload by');
+			$table->head[6] = __('Options');
 			
 			$counter = 0;
 		
@@ -738,24 +737,58 @@ elseif ($op == "invoices") {
 		
 			foreach ($invoices as $invoice) {
 				
+				$lock_permission = crm_check_lock_permission ($config["id_user"], $invoice["id"]);
+				$is_locked = crm_is_invoice_locked ($invoice["id"]);
+				$locked_id_user = false;
+				if ($is_locked) {
+					$locked_id_user = crm_get_invoice_locked_id_user ($invoice["id"]);
+				}
+				
 				$data = array ();
 			
 				$url = "index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$id."&op=invoices&id_invoice=". $invoice["id"];
 
 				$data[0] = "<a href='$url'>".$invoice["bill_id"]."</a>";
 				$data[1] = "<a href='$url'>".$invoice["description"]."</a>";
-				$data[2] = format_numeric ($invoice["ammount"]);
+				$data[2] = get_invoice_amount ($invoice["id"]);
 				$data[3] = __($invoice["status"]);
-				$data[4] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"] . "<br>". $invoice["invoice_payment_date"]. "</span>";
-									
-				$filename = get_db_sql ("SELECT filename FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
-		
-				$data[5] = 	"<a href='".$config["base_url"]."/attachment/".$invoice["id_attachment"]."_".$filename."'>$filename</a>";
+				$data[4] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"]. "</span>";
+				if ($invoice["status"] == "paid") {
+					$data[5] = "<span style='font-size: 10px'>". $invoice["invoice_payment_date"]. "</span>";
+				} else {
+					$data[5] = __("Not paid");
+				}
 				
-				$data[6] = $invoice["id_user"];
+				//$filename = get_db_sql ("SELECT filename FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
+				//$data[] = "<a href='".$config["base_url"]."/attachment/".$invoice["id_attachment"]."_".$filename."'>$filename</a>";
+				//$data[] = $invoice["id_user"];
 				
-				if($invoice_permission) {
-					$data[7] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices&delete_invoice=1&id_invoice=".$invoice["id"]."'><img src='images/cross.png'></a>";
+				$data[6] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
+					&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1">
+					<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
+				if ($lock_permission) {
+					
+					if ($is_locked) {
+						$lock_image = 'lock.png';
+						$title = __('Unlock');
+					} else {
+						$lock_image = 'lock_open.png';
+						$title = __('Lock');
+					}
+					$data[6] .= ' <a href="?sec=customers&sec2=operation/companies/company_detail
+						&delete_invoice=1&id='.$invoice["id_company"].'&op=invoices &id_invoice='.$invoice["id"].'" 
+						onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+						<img src="images/'.$lock_image.'" title="'.$title.'"></a>';
+				}
+				if (!$is_locked) {
+					$data[6] .= ' <a href="?sec=customers&sec2=operation/companies/company_detail
+						&delete_invoice=1&id='.$id.'&op=invoices&id_invoice='.$invoice["id"].'" 
+						onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+						<img src="images/cross.png" title="'.__('Delete').'"></a>';
+				} else {
+					if ($locked_id_user) {
+						$data[6] .= ' <img src="images/lock.png" title="'.__('Locked by '.$locked_id_user).'">'; // TODO: Change the icon
+					}
 				}
 				
 				array_push ($table->data, $data);
