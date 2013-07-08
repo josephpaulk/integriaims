@@ -78,6 +78,7 @@ $delete = (bool) get_parameter ('delete');
 $get = (bool) get_parameter ('get');
 $close = (bool) get_parameter('close');
 $make_owner = (bool) get_parameter ('make_owner');
+$offset = get_parameter('offset', 0);
 
 
 // Create
@@ -421,7 +422,7 @@ if ($id || $new) {
 	$table->colspan = array ();
 	$table->colspan[7][0] = 4;
 	
-	if (give_acl ($config["id_user"], 0, "VW")) {
+	if ($write_permission) {
 		
 		if ($id != 0) {
 			echo "<h2>".__('Lead details').": #".$id."</h2>";
@@ -475,7 +476,7 @@ if ($id || $new) {
 		if ($config["id_user"] == $owner){
 			$table->data[5][0] .= ' <a href="index.php?sec=customers&
 							sec2=operation/leads/lead_detail&
-							delete=1&id='.$id.'"
+							delete=1&id='.$id.'&offset='.$offset.'"
 							onClick="if (!confirm(\''.__('Are you sure?').'\'))
 							return false;">
 							<img src="images/cross.png"></a>';
@@ -714,7 +715,7 @@ if ($id || $new) {
 		$leads = crm_get_user_leads($config['id_user'], $leads);
 	}
 	
-	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead_detail$params");
+	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead_detail$params", $offset);
 
 	if ($leads !== false) {
 		unset ($table);
@@ -803,7 +804,7 @@ if ($id || $new) {
 			if (($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"]))) {
 				$data[9] .= '&nbsp;<a href="index.php?sec=customers&
 								sec2=operation/leads/lead_detail&
-								delete=1&id='.$lead["id"].'"
+								delete=1&id='.$lead["id"].'&offset='.$offset.'"
 								onClick="if (!confirm(\''.__('Are you sure?').'\'))
 								return false;">
 								<img src="images/cross.png"></a>';

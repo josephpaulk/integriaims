@@ -74,6 +74,7 @@ $create_contact = (bool) get_parameter ('create_contact');
 $update_contact = (bool) get_parameter ('update_contact');
 $delete_contact = (bool) get_parameter ('delete_contact');
 $get_contacts = (bool) get_parameter ('get_contacts');
+$offset = get_parameter ('offset', 0);
 
 if ($get_contacts) {
 	$contract = get_contract ($id);
@@ -350,7 +351,7 @@ if ($id || $new_contact) {
 		$contacts = crm_get_user_contacts($config['id_user'], $contacts);
 	}
 
-	$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail&params=$params");
+	$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail&params=$params", $offset);
 
 	if ($contacts !== false) {
 		unset ($table);
@@ -376,10 +377,10 @@ if ($id || $new_contact) {
 				$contact['id']."'>".$contact['fullname']."</a>";
 			$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$contact['id_company']."'>".get_db_value ('name', 'tcompany', 'id', $contact['id_company'])."</a>";
 			$data[2] = $contact['email'];
-			if(give_acl ($config["id_user"], 0, "VM")) {
+			if($manage_permission) {
 				$data[3] = '<a href="index.php?sec=customers&
 							sec2=operation/contacts/contact_detail&
-							delete_contact=1&id='.$contact['id'].'"
+							delete_contact=1&id='.$contact['id'].'&offset='.$offset.'"
 							onClick="if (!confirm(\''.__('Are you sure?').'\'))
 							return false;">
 							<img src="images/cross.png"></a>';

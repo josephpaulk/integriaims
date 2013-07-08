@@ -85,6 +85,7 @@ $create_company = (bool) get_parameter ('create_company');
 $update_company = (bool) get_parameter ('update_company');
 $delete_company = (bool) get_parameter ('delete_company');
 $delete_invoice = get_parameter ('delete_invoice', "");
+$offset = get_parameter ('offset', 0);
 
 // Create OR Update
 // ----------------
@@ -983,8 +984,8 @@ if ((!$id) AND ($new_company == 0)){
 	if ($read && $enterprise) {
 		$companies = crm_get_user_companies($config['id_user'], $companies);
 	}
-
-	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params");
+	
+	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params", $offset);
 
 	if ($companies !== false) {
 
@@ -1063,7 +1064,7 @@ if ((!$id) AND ($new_company == 0)){
 			if ($manage_permission) {
 				$data[7] ='<a href="index.php?sec=customers&
 								sec2=operation/companies/company_detail'.$params.'&
-								delete_company=1&id='.$company['id'].'&page='.$page.'"
+								delete_company=1&id='.$company['id'].'&offset='.$offset.'"
 								onClick="if (!confirm(\''.__('Are you sure?').'\'))
 								return false;">
 								<img src="images/cross.png"></a>';
