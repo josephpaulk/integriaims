@@ -599,7 +599,18 @@ function lang_string ($string) {
 function render_priority ($pri) {
 	global $config;
 	
-	switch ($pri) {
+	switch($pri) {
+		//10 priority is "Maintenance so its priority 0"
+		case 10:
+			return 0;
+		default:
+			//Other priorities need to sum one!
+			return $pri+1;
+	}
+	
+	/**OLD WAY TO RENDER PRIORITY!!!**/
+	/**DON'T REMOVE IS A COMMENT!!!**/
+	/*switch ($pri) {
 	case 0:
 		return __('Very low');
 	case 1:
@@ -614,7 +625,7 @@ function render_priority ($pri) {
 		return __('Maintenance');
 	default:
 		return __('Other');
-	}
+	}*/
 }
 
 
@@ -695,13 +706,22 @@ function return_value ($var) {
 
 function get_priorities () {
 	$incidents = array ();
+	
+	$incidents[10] = 0;
+	$incidents[0] = 1;
+	$incidents[1] = 2;
+	$incidents[2] = 3;
+	$incidents[3] = 4;
+	$incidents[4] = 5;
+	
 
-	$incidents[0] = __('Informative');
+	/**OLD ARRAY!**/
+	/*$incidents[0] = __('Informative');
 	$incidents[1] = __('Low');
 	$incidents[2] = __('Medium');
 	$incidents[3] = __('Serious');
 	$incidents[4] = __('Very serious');
-	$incidents[10] = __('Maintenance');
+	$incidents[10] = __('Maintenance');*/
 
 	return $incidents;
 }

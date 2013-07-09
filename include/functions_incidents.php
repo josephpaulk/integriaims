@@ -1584,6 +1584,24 @@ function incidents_get_incident_priority_text ($id) {
 	return $name;
 }
 
+//This function is the opossite of render_priority, gets priority rendered and
+//converts it to the original value
+function incident_convert_priority($prior) {
+		switch($prior) {
+		
+		case 0:
+			return 10;
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+			return $prior-1;
+		default:
+			return false;
+	}
+}
+
 function incidents_get_incident_group_text ($id) {
 	$group = get_db_value ('id_grupo', 'tincidencia', 'id_incidencia', $id);
 	

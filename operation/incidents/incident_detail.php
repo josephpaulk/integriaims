@@ -653,7 +653,7 @@ $disabled = false;
 
 if ($disabled) {
 	$table->data[1][0] = print_label (__('Priority'), '', '', true,
-		render_priority ($priority));
+		$priority);
 } else {
 	$table->data[1][0] = print_select (get_priorities (),
 		'priority_form', $priority, '', '',

@@ -1,3 +1,14 @@
+2013-07-09  Dario Rodriguez <dario@artica.es>
+
+	* include/functions.php: Modified functions to render
+	incident priority, now uses number instead of text strings.
+  	* include/functions_incidents.php: Add function to deal with
+	new way to render priority using numbers.
+	* include/functions_pop3.php: Delete, functions moved to
+	enterprise version.
+	* operation/incidents/incident_detail.php: Changed way to
+	show priority of incidents.
+
 2013-07-09  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_crm.php
