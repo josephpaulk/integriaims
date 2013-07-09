@@ -31,7 +31,7 @@ $permission = enterprise_hook ('crm_check_acl_invoice', array ($config['id_user'
 
 $enterprise = false;
 
-if ($read_permission === ENTERPRISE_NOT_HOOK) {
+if ($permission === ENTERPRISE_NOT_HOOK) {
 	
 	$permission = true;
 	
@@ -84,7 +84,8 @@ $search_date_begin = get_parameter ('search_date_begin');
 
 $search_params = "search_text=$search_text&search_date_end=$search_date_end&search_date_begin=$search_date_begin";
 
-$where_clause = " 1 = 1 AND id_company " . get_filter_by_company_accessibility($config["id_user"]);
+//$where_clause = " 1 = 1 AND id_company " . get_filter_by_company_accessibility($config["id_user"]);
+$where_clause = " 1 = 1 ";
 
 if ($search_text != "") {
 	$where_clause .= sprintf ('AND (id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR 
@@ -122,7 +123,8 @@ echo "<a href='#' class='tip'><span>". __('Date format is YYYY-MM-DD')."</span><
 echo "</td>";
 
 echo "<td valign=bottom align='right'>";
-echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);	
+echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+echo "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_invoices=1&where_clause=$where_clause'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
 echo "</td>";
 echo "</tr>";
 
@@ -130,7 +132,7 @@ echo "</table>";
 
 echo '</form>';
 
-$invoices =  get_db_all_rows_sql ("SELECT * FROM tinvoice WHERE $where_clause ORDER BY invoice_create_date DESC", "");
+$invoices = crm_get_all_invoices ($where_clause);
 
 if ($permission && $enterprise) {
 	$invoices = crm_get_user_invoices($config['id_user'], $invoices);

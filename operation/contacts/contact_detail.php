@@ -19,6 +19,7 @@ global $config;
 check_login ();
 
 enterprise_include('include/functions_crm.php');
+include_once('include/functions_crm.php');
 
 $id = (int) get_parameter ('id');
 
@@ -34,7 +35,7 @@ $write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw
 $manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
 $enterprise = false;
 
-if ($result !== ENTERPRISE_NOT_HOOK) {
+if ($read !== ENTERPRISE_NOT_HOOK) {
 	$enterprise = true;
 	if (!$read) {
 		include ("general/noaccess.php");
@@ -318,11 +319,13 @@ if ($id || $new_contact) {
 	$search_text = (string) get_parameter ('search_text');
 	$id_company = (int) get_parameter ('id_company');
 	
-	$where_clause = "WHERE 1=1 AND id_company " .get_filter_by_company_accessibility($config["id_user"]);
+	//$where_clause = "WHERE 1=1 AND id_company " .get_filter_by_company_accessibility($config["id_user"]);
 	if ($search_text != "") {
 		$where_clause .= " AND (fullname LIKE '%$search_text%' OR email LIKE '%$search_text%') ";
 	}
+
 	if ($id_company) {
+
 		$where_clause .= sprintf (' AND id_company = %d', $id_company);
 	}
 	$params = "&search_text=$search_text&id_company=$id_company";
@@ -335,17 +338,13 @@ if ($id || $new_contact) {
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 	$table->data[0][1] = print_select (get_companies (), 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	
-	$table->data[0][2] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/contacts/contact_export&param=$params&render=1&raw_output=1&clean_output=1'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
+	$table->data[0][2] .= "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_contacts=1&where_clause=$where_clause'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
 
 	echo '<form method="post">';
 	print_table ($table);
 	echo '</form>';
 
-	$sql = "SELECT * FROM tcompany_contact $where_clause ORDER BY id_company, fullname";
-
-	
-	$contacts = get_db_all_rows_sql ($sql);
+	$contacts = crm_get_all_contacts ($where_clause);
 
 	if ($read && $enterprise) {
 		$contacts = crm_get_user_contacts($config['id_user'], $contacts);

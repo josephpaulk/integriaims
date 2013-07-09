@@ -20,6 +20,7 @@ global $config;
 check_login();
 
 enterprise_include('include/functions_crm.php');
+include_once('include/functions_crm.php');
 
 $id = (int) get_parameter ('id');
 
@@ -35,7 +36,7 @@ $write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw
 $manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
 $enterprise = false;
 
-if ($result !== ENTERPRISE_NOT_HOOK) {
+if ($read !== ENTERPRISE_NOT_HOOK) {
 	$enterprise = true;
 	if (!$read) {
 		include ("general/noaccess.php");
@@ -310,7 +311,7 @@ if ($id | $new_contract) {
 
 	$search_params = "search_text=$search_text&search_company_role=$search_company_role&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_date_begin_beginning=$search_date_begin_beginning&search_date_end_beginning=$search_date_end_beginning";
 
-	$where_clause = " 1 = 1 AND id_company " . get_filter_by_company_accessibility($config['id_user']);
+	//$where_clause = " 1 = 1 AND id_company " . get_filter_by_company_accessibility($config['id_user']);
 	
 	if ($search_text != "") {
 		$where_clause .= sprintf ('AND (id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR 
@@ -388,7 +389,8 @@ if ($id | $new_contract) {
 	echo "</td>";
 	
 	echo "<td valign=bottom align='right'>";
-	echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);	
+	echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+	echo "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_contracts=1&where_clause=$where_clause'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
 	echo "</td>";
 	echo "</tr>";
 	
@@ -396,7 +398,7 @@ if ($id | $new_contract) {
 	
 	echo '</form>';
 		
-	$contracts = get_contracts(false, "$where_clause ORDER BY date_end DESC");
+	$contracts = crm_get_all_contracts ($where_clause);
 
 	if ($read_permission && $enterprise) {
 		$contracts = crm_get_user_contracts($config['id_user'], $contracts);

@@ -115,4 +115,58 @@ function crm_change_invoice_lock ($id_user, $id_invoice) {
 	return -1;
 }
 
+function crm_get_all_leads ($where_clause) {
+	
+	$sql = "SELECT * FROM tlead $where_clause ORDER BY creation DESC";
+	$leads = get_db_all_rows_sql ($sql);
+	
+	return $leads;
+}
+
+function crm_get_all_contacts ($where_clause) {
+	
+	$sql = "SELECT * FROM tcompany_contact $where_clause ORDER BY id_company, fullname";
+
+	$contacts = get_db_all_rows_sql ($sql);
+	
+	return $contacts;
+}
+
+function crm_get_all_contracts ($where_clause) {
+	$sql = "SELECT * FROM tcontract $where_clause ORDER BY date_end DESC";
+
+	$contracts = get_db_all_rows_sql ($sql);
+	
+	return $contracts;
+}
+
+function crm_get_all_invoices ($where_clause) {
+	
+	$sql = "SELECT * FROM tinvoice WHERE $where_clause ORDER BY invoice_create_date DESC";
+	$invoices_aux =  get_db_all_rows_sql ($sql);
+	
+	if ($invoices_aux === false) {
+		$invoices_aux = array();
+		$invoices = false;
+	}
+
+	foreach ($invoices_aux as $key=>$invoice) {
+		$invoices[$key]['id'] = $invoice['id'];
+		$invoices[$key]['id_user'] = $invoice['id_user'];
+		$invoices[$key]['id_task'] = $invoice['id_task'];
+		$invoices[$key]['id_company'] = $invoice['id_company'];
+		$invoices[$key]['bill_id'] = $invoice['bill_id'];
+		$invoices[$key]['ammount'] = $invoice['ammount'];
+		$invoices[$key]['tax'] = $invoice['tax'];
+		$invoices[$key]['description'] = $invoice['description'];
+		$invoices[$key]['locked'] = $invoice['locked'];
+		$invoices[$key]['locked_id_user'] = $invoice['locked_id_user'];
+		$invoices[$key]['invoice_create_date'] = $invoice['invoice_create_date'];
+		$invoices[$key]['invoice_payment_date'] = $invoice['invoice_payment_date'];
+		$invoices[$key]['status'] = $invoice['status'];
+	
+	}
+	return $invoices;
+
+}
 ?>

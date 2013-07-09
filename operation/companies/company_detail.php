@@ -974,8 +974,7 @@ if ((!$id) AND ($new_company == 0)){
 	echo '<div style="width:'.$table->width.'" class="action-buttons button">';
 	print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', false);
 
-	
-	echo "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_export$params&render=1&raw_output=1&clean_output=1'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
+	echo "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_companies=1&where_clause=$where_clause'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
 	echo '</div>';
 	echo '</form>';
 

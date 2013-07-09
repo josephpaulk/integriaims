@@ -19,6 +19,7 @@ global $config;
 check_login ();
 
 enterprise_include('include/functions_crm.php');
+include_once('include/functions_crm.php');
 
 $read = true;
 $write = true;
@@ -32,7 +33,7 @@ $write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw
 $manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
 $enterprise = false;
 
-if ($result !== ENTERPRISE_NOT_HOOK) {
+if ($read !== ENTERPRISE_NOT_HOOK) {
 	$enterprise = true;
 	if (!$read) {
 		include ("general/noaccess.php");
@@ -673,7 +674,7 @@ if ($id || $new) {
 	$table->data[1][1] = print_input_text ("est_sale", $est_sale, "", 21, 100, true, __('Estimated Sale >'));
 	
 	$table->data[1][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-    $table->data[1][2] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/leads/lead_export$params&render=1&raw_output=1&clean_output=1'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
+    $table->data[1][2] .= "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_leads=1&where_clause=$where_clause'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
 	
 	print_table ($table);
 	$table->data = array ();
@@ -707,9 +708,7 @@ if ($id || $new) {
 	echo "</div>";
 	echo '</form>';
 
-	$sql = "SELECT * FROM tlead $where_clause ORDER BY creation DESC";
-
-	$leads = get_db_all_rows_sql ($sql);
+	$leads = crm_get_all_leads ($where_clause);
 
 	if ($read && $enterprise) {
 		$leads = crm_get_user_leads($config['id_user'], $leads);
