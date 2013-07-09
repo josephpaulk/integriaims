@@ -1,5 +1,11 @@
 2013-07-09  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_config.php,
+	godmode/setup/incidents_setup.php: Added support for new flag to
+	anonnimize emails.
+
+2013-07-09  Dario Rodriguez <dario@artica.es>
+
 	* integria_db.sql: Fixed a mistake in tinventory_track table.
 	* include/functions_incidents.php: Moved "incidents_check_incident_acl"
 	function to enterprise and adapted other funciton to new ubication.

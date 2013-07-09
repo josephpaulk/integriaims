@@ -220,6 +220,10 @@ function load_config(){
 		$config["working_weekends"] = 0;
 	}
 	
+	if (!isset ($config["mask_emails"])){
+		$config["mask_emails"] = 0;
+	}	
+	
 	if (!isset ($config['attachment_store'])) {
 		$config['attachment_store'] = $config['homedir'].'attachment';
 	}	

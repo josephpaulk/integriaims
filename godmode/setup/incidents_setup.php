@@ -17,6 +17,8 @@
 // Load global vars
 global $config;
 
+enterprise_include("include/functions_setup.php");
+
 check_login ();
 	
 if (! dame_admin ($config["id_user"])) {
@@ -79,8 +81,11 @@ if ($update) {
 	$status = (array) get_parameter ('status');
 	$resolutions = (array) get_parameter ('resolutions');
 	$config["working_weekends"] = (int) get_parameter("working_weekends", 0);
+	$config["mask_emails"] = (int) get_parameter("mask_emails", 0);
 	
 	update_config_token ("working_weekends", $config["working_weekends"]);	
+	
+	update_config_token ("mask_emails", $config["mask_emails"]);	
 	
 	foreach ($status as $id => $name) {
 		$sql = sprintf ('UPDATE tincident_status SET name = "%s"
@@ -183,6 +188,13 @@ $table->data[1][1] .= $holidays;
 
 $holidays_table = print_table($table, true);
 
+
+$table_anonym = enterprise_hook('setup_print_incident_anonymize');
+
+if ($table_anonym === ENTERPRISE_NOT_HOOK) {
+	$table_anonym = "";
+}
+
 echo "<table width='90%'>";
 echo "<tr>";
 echo "<td><h3>".__('Status')."</h3></td>";
@@ -192,11 +204,11 @@ echo "</tr>";
 echo "<tr>";
 echo "<td style='vertical-align: top; width: 280px'>".$table_status."</td>";
 echo "<td style='vertical-align: top; width: 280px'>".$table_resolutions."</td>";
-echo "<td style='vertical-align: top;'>".$holidays_table."</td>";
+echo "<td style='vertical-align: top;'>".$holidays_table;
+echo $table_anonym;
+echo "</td>";
 echo "</tr>";
 echo "</table>";
-
-
 
 echo '<div style="width: 90%" class="button">';
 print_input_hidden ('update', 1);
