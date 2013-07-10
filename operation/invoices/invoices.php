@@ -89,7 +89,6 @@ if ($operation_invoices == "add_invoice"){
 		$bill_id = get_db_value ("MAX(bill_id)+1", "tinvoice", "1", "1");
 	}
 	$description = get_parameter ("description", "");
-	$amount = (float) get_parameter ("amount", 0);
 	$concept[0] = get_parameter ("concept1", "");
 	$concept[1] = get_parameter ("concept2", "");
 	$concept[2] = get_parameter ("concept3", "");

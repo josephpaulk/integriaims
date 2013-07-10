@@ -15,6 +15,7 @@
 
 // Global variables
 require ("include/functions_tasks.php");
+include_once ("include/functions_db.php");
 
 global $config;
 check_login ();
@@ -57,7 +58,7 @@ if ($operation == "add"){
 	$filename = get_parameter ('upfile', false);
 	$bill_id = get_parameter ("bill_id", "");
 	$description = get_parameter ("description", "");
-	$ammount = (float) get_parameter ("ammount", 0);
+	$amount = (float) get_parameter ("amount", 0);
 	$user_id = $config["id_user"];
 
 	if ($filename != ""){
@@ -86,8 +87,8 @@ if ($operation == "add"){
 	
 	// Creating the cost record
 	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_task,
-	bill_id, ammount, id_attachment) VALUES ("%s", "%s", %d, "%s", "%s", %d)',
-			$description, $user_id, $id_task, $bill_id, $ammount, $id_attachment);
+	bill_id, concept1, amount1, id_attachment) VALUES ("%s", "%s", %d, "%s", "%s", "%s", %d)',
+			$description, $user_id, $id_task, $bill_id, 'Task cost', $amount, $id_attachment);//Check
 	
 	$ret = process_sql ($sql, 'insert_id');
 	if ($ret !== false) {
@@ -120,14 +121,14 @@ if ($operation == "list"){
 	
 	$table->head = array ();
 	$table->head[0] = __('Description');
-	$table->head[1] = __('Ammount');
+	$table->head[1] = __('Amount');
 	$table->head[2] = __('Filename');
 	$table->head[3] = __('Delete');
 	
 	foreach ($costs as $cost) {
 		$data = array ();
 		$data[0] = $cost["description"];
-		$data[1] = $cost["ammount"];
+		$data[1] = get_invoice_amount($cost["id"]);// Check
 		$id_invoice = $cost["id"];
 		
 		$filename = get_db_sql ("SELECT filename FROM tattachment WHERE id_attachment = ". $cost["id_attachment"]);
@@ -162,8 +163,8 @@ if ($operation == ""){
 	$table->data[0][0] = __('Bill ID');
 	$table->data[0][1] = print_input_text ('bill_id', $bill_id, '', 15, 50, true);
 	
-	$table->data[1][0] = __('Ammount');
-	$table->data[1][1] = print_input_text ('ammount', $ammount, '', 10, 20, true);
+	$table->data[1][0] = __('Amount');
+	$table->data[1][1] = print_input_text ('amount', $amount, '', 10, 20, true);//Check
 	
 	$table->data[2][0] = __('Description');
 	$table->data[2][1] = print_input_text ('description', $description, '', 60, 250, true);

@@ -1,9 +1,15 @@
-2013-07-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+2013-07-10  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/projects/task_cost.php: Fixed the adding and the
+	listing of the cost units with the changes of the table
+	'tinvoice'.
+
+2013-07-10  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* images/administrator_lock.png: Added a new icon for locked
 	invoices.
 
-2013-07-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+2013-07-10  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* index.php: Some changes on pdf output.
 	
