@@ -1054,6 +1054,7 @@ function api_get_last_cron_execution ($return_type, $user, $params) {
 		$unix = strtotime($last_exec);
 		
 		$minutes = ($now - $unix) / 60;
+		$minutes = round($minutes, 0);
 	}
 
 	$return = '';

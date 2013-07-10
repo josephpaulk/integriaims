@@ -1,5 +1,10 @@
 2013-07-10  Vanessa Gil <vanessa.gil@artica.es>
 	
+	* include/functions_api.php: Changed 
+	'api_get_last_cron_execution' function: rounded minutes.
+
+2013-07-10  Vanessa Gil <vanessa.gil@artica.es>
+	
 	* general/header.php
 	  godmode/setup/setup.php
 	  include/api.php
