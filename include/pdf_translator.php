@@ -143,10 +143,13 @@ class PDFTranslator {
 		$this->header = array('html' => $html, 'firstPage' => $firstPage);
 	}
 	
-	public function setFooterHTML($html, $firstPage = false, $showLines = true) {
+	public function setFooterHTML($html, $firstPage = false, $showLines = true, $customHtmlFooter = false) {
 		$htmlFooter = '<table style="width: 100%; border-top: 1px solid black;">
-			<tr>
-				<td>' . $html . '</td><td align="right">{PAGENO}</td></tr></table>';
+			<tr><td>' . $html . '</td><td align="right">{PAGENO}</td></tr></table>';
+			
+		if ($customHtmlFooter) {
+			$htmlFooter = $html;
+		}
 		
 		$this->footer = array('html' => $htmlFooter, 'firstPage' => $firstPage, 'showLines' => $showLines);
 	}

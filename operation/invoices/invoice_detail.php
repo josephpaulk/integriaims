@@ -21,6 +21,7 @@ check_login();
 
 
 $id = (int) get_parameter ('id');
+$id_invoice = get_parameter ("id_invoice", "");
 
 enterprise_include('include/functions_crm.php');
 include_once('include/functions_crm.php');
@@ -42,24 +43,23 @@ if ($permission === ENTERPRISE_NOT_HOOK) {
 		include ("general/noaccess.php");
 		exit;
 	}
-	
 }
 
 $get_company_name = (bool) get_parameter ('get_company_name');
 $new_contract = (bool) get_parameter ('new_contract');
 $delete_contract = (bool) get_parameter ('delete_contract');
 $delete_invoice = get_parameter ('delete_invoice', "");
+$lock_invoice = get_parameter ('lock_invoice', "");
 
 // Delete INVOICE
 // ----------------
-if ($delete_invoice == 1){
+if ($delete_invoice == 1 && $id_invoice){
 	
 	if (!$permission && $enterprise) {
 		include ("general/noaccess.php");
 		exit;
 	}
 	
-	$id_invoice = get_parameter ("id_invoice", "");
 	$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id_invoice");
 	
 	// Do another security check, don't rely on information passed from URL
@@ -72,6 +72,19 @@ if ($delete_invoice == 1){
 			}
 			process_sql ("DELETE FROM tinvoice WHERE id = $id_invoice");
 	}
+}
+
+// Lock/Unlock INVOICE
+// ----------------
+if ($lock_invoice == 1 && $id_invoice){
+	
+	if (!crm_check_lock_permission ($config["id_user"], $id_invoice)) {
+		include ("general/noaccess.php");
+		exit;
+	}
+	
+	crm_change_invoice_lock ($config["id_user"], $id_invoice);
+	clean_cache_db();
 }
 
 echo "<h2>".__('Invoice listing')."</h2>";
@@ -163,8 +176,8 @@ if ($invoices !== false) {
 	
 	foreach ($invoices as $invoice) {
 		
-		$lock_permission = crm_check_lock_permission ($config["id_user"], $invoice["id"]);
 		$is_locked = crm_is_invoice_locked ($invoice["id"]);
+		$lock_permission = crm_check_lock_permission ($config["id_user"], $invoice["id"]);
 		$locked_id_user = false;
 		if ($is_locked) {
 			$locked_id_user = crm_get_invoice_locked_id_user ($invoice["id"]);
@@ -173,7 +186,9 @@ if ($invoices !== false) {
 		$data = array ();
 		
 		if ($invoice["id_company"] != 0){
-			$data[0] = get_db_value ("name", "tcompany", "id", $invoice["id_company"]);
+			$company_name = get_db_value ("name", "tcompany", "id", $invoice["id_company"]);
+			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail
+				&id=".$invoice["id_company"]."'>".$company_name."</a>";
 		} else {
 			$data[0] = __("N/A");
 		}
@@ -212,7 +227,8 @@ if ($invoices !== false) {
 				<img src="images/cross.png" title="'.__('Delete').'"></a>';
 		} else {
 			if ($locked_id_user) {
-				$data[7] .= ' <img src="images/lock.png" title="'.__('Locked by '.$locked_id_user).'">'; // TODO: Change the icon
+				$data[7] .= ' <img src="images/administrator_lock.png" width="18" height="18" 
+				title="'.__('Locked by '.$locked_id_user).'">';
 			}
 		}
 		

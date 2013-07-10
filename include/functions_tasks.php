@@ -60,7 +60,7 @@ function task_duration_recursive ($id_task){
 **/
 
 function task_cost_invoices ($id_task){
-	$total = get_db_sql ("SELECT SUM(ammount) FROM tinvoice WHERE id_task = $id_task");
+	$total = get_db_sql ("SELECT amount1+amount2+amount3+amount4+amount5 FROM tinvoice WHERE id_task = $id_task");
 	return $total;
 }
 

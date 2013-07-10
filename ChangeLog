@@ -1,3 +1,52 @@
+2013-07-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* index.php: Some changes on pdf output.
+	
+	* integria_db.sql: Table 'tinvoice' updated. "ammount" column
+	replaced for "amount1", "amount2", "amount3", "amount4",
+	"amount5" columns. Added "concept1", "concept2", "concept3",
+	"concept4", "concept5" columns. "bill_id" has now an int type.
+	"invoice_create_date" and "invoice_payment_date" has now date
+	type.
+	
+	* extras/migrate.sql: Added the changes of 'tinvoice';
+	  
+	* include/functions_crm.php: Function "crm_change_invoice_lock"
+	now works properly.
+	
+	* include/functions_db.php: Functions "company_invoice_total"
+	and "get_invoice_amount" fixed with the amount changes.
+	
+	* include/functions_tasks.php: Function "task_cost_invoices"
+	fixed with the amount changes.
+	
+	* include/pdf_translator.php: Now is possible to set the entire
+	html code of the footer of the pdf output.
+	
+	* include/ajax/remote_validations.php: Added a new check in
+	"search_existing_invoice". Now search if the "bill_id" is
+	larger or smaller than the larger "bill_id" in the database.
+	
+	* operation/companies/company_detail.php: Now an invoice can
+	be locked in the invoices section of the company. Now the
+	invoices listing shows the new invoices options.
+	
+	* operation/invoices/invoice_detail.php: Fixed an error related
+	to delete an invoice with a non existant id. Added a link
+	to the company of every invoice in the invoice section.
+	
+	* operation/invoices/invoice_template.php: Finished the
+	invoice template.
+	
+	* operation/invoices/invoice_view.php: Little fixes. Added ACL.
+	
+	* operation/invoices/invoices.php: Now shows a read version
+	of the invoice if it is locked. Fixed the create and update of
+	an invoice with the changes of the table 'tinvoice'. Now an
+	invoice can be locked or deleted from its edit or read view.
+	Changed the invoices form. Added new rules of validation to
+	"bill_id", "tax" and the amount columns.
+
 2013-07-09  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_config.php,
@@ -61,8 +110,8 @@
 	  "Lock/Unlock", "Locked by X" and "Delete" icons
 	  depending on permissions.
 	  
-	 * operation/contracts/contract_detail.php: Deleted almost
-	  all traces of the old column "id_grupo".
+	* operation/contracts/contract_detail.php: Deleted almost
+	all traces of the old column "id_grupo".
 
 2013-07-05  Vanessa Gil <vanessa.gil@artica.es>
 	

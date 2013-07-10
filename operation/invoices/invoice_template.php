@@ -1,99 +1,116 @@
-<?php
-
-?>
-<div></div>
-<div>
-	<table>
+<table align="center"><tr><td>
+	<div style="width:620px; color:black; text-align:right;" align="right">
+	<?php if ($pdf_output == 1) { echo '<br><br><br><h1 style="color:black; font-size:20px;">'.__('Invoice').'</h1>'; } ?>
+	</div>
+	<table style="border-top:2px solid black; width:620px; text-align:center;">
 		<tr>
-			<td>
-				<table border="1">
-					<tr><td><?php echo $company_from['name'] ?></td></tr>
-					<tr><td><?php echo $company_from['fiscal_id'] ?></td></tr>
-					<tr><td><?php echo $company_from['address'] ?></td></tr>
-					<tr><td><?php echo $company_from['country'] ?></td></tr>
-				</table>
+			<td style="text-align:left; font-size:16px; color:black;">
+				<?php echo '<b>'.__('Invoice ID'). ':</b> '.$invoice['bill_id'] ?>
 			</td>
-			<td>
-				<table border="1">
-					<tr><td><?php echo $company_to['name'] ?></td></tr>
-					<tr><td><?php echo $company_to['fiscal_id'] ?></td></tr>
-					<tr><td><?php echo $company_to['address'] ?></td></tr>
-					<tr><td><?php echo $company_to['country'] ?></td></tr>
-				</table>
+			<td style="font-size:16px; color:black;">
+				<?php echo '<b>'.__('Issue date'). ':</b> '.$invoice['invoice_create_date'] ?>
+			</td>
+			<td style="font-size:16px; color:black;">
+				<?php
+				if ($invoice["status"] == "paid") {
+					echo '<b>'.__('Payment date'). ':</b> ' ?> <?php echo $invoice['invoice_payment_date'];
+				}
+				?>
 			</td>
 		</tr>
 	</table>
-	<table border="1">
+	<table style="padding-left:20px; width:575px;">
 		<tr>
-			<td><?php echo __('Bill id') ?>: <?php echo $invoice['bill_id'] ?></td>
-			<td><?php echo __('Date') ?>: <?php echo $invoice['invoice_create_date'] ?></td>
-			<td><?php echo __('Payment date') ?>: <?php echo $invoice['invoice_payment_date'] ?></td>
+			<td>
+				<div style="padding-left:4px; padding-right:4px;">
+					<?php echo '<div align="center"><b style="font-size:16px; color:white;">C</b><br><br></div>' ?>
+					<?php echo '<div style="font-size:16px;padding-top:4px; padding-bottom:4px;">'.$company_from['name'].'</div>' ?>
+					<?php echo '<div style="font-size:16px; padding-top:4px; padding-bottom:4px;">'.$company_from['fiscal_id'].'</div>' ?>
+					<?php echo '<div style="font-size:16px; padding-top:4px; padding-bottom:4px;">'.$company_from['address'].'</div>' ?>
+					<?php echo '<div style="font-size:16px; padding-top:4px; padding-bottom:4px;">'.$company_from['country'].'</div>' ?>
+				</div>
+			</td>
+			<td>
+				<div style="padding-left:4px; padding-right:4px;">
+					<?php echo '<div align="center"><b style="font-size:16px; color:black;">'.__('Customer').'</b><br><br></div>' ?>
+					<?php echo '<div style="font-size:16px; padding-top:4px; padding-bottom:4px;">'.$company_to['name'].'</div>' ?>
+					<?php echo '<div style="font-size:16px; padding-top:4px; padding-bottom:4px;">'.$company_to['fiscal_id'].'</div>' ?>
+					<?php echo '<div style="font-size:16px; padding-top:4px; padding-bottom:4px;">'.$company_to['address'].'</div>' ?>
+					<?php echo '<div style="font-size:16px; padding-top:4px; padding-bottom:4px;">'.$company_to['country'].'</div>' ?>
+				</div>
+			</td>
 		</tr>
 	</table>
-</div>
-<div>
-	<table border="1">
+	<table style="border-top: 2px solid black; border-bottom:1px solid black; width:620px;">
 		<tr>
-			<th><?php echo __('Concept') ?></th>
-			<th><?php echo __('Amount') ?></th>
+			<td style="padding:15px; text-align:left; font-size:16px; color:black;">
+				<?php echo '<b>'.__('Concept').'</b>' ?>
+			</td>
+			<td style="padding:15px; text-align:right; font-size:16px; color:black;">
+				<?php echo '<b>'.__('Amount').'</b>' ?>
+			</td>
 		</tr>
 		<?php
 		
-		if ($invoice['concept1'] != "N/A" || $invoice['amount1'] != 0.00) {
+		if ($invoice['concept1'] != "") {
 			echo '<tr>';
-				echo '<td>'.$invoice['concept1'].'</td>';
-				echo '<td>'.$invoice['amount1'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:left;">'.$invoice['concept1'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'.$invoice['amount1'].'</td>';
 			echo '</tr>';
 		}
-		if ($invoice['concept2'] != "N/A" || $invoice['amount2'] != 0.00) {
+		if ($invoice['concept2'] != "") {
 			echo '<tr>';
-				echo '<td>'.$invoice['concept2'].'</td>';
-				echo '<td>'.$invoice['amount2'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:left;">'.$invoice['concept2'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'.$invoice['amount2'].'</td>';
 			echo '</tr>';
 		}
-		if ($invoice['concept3'] != "N/A" || $invoice['amount3'] != 0.00) {
+		if ($invoice['concept3'] != "") {
 			echo '<tr>';
-				echo '<td>'.$invoice['concept3'].'</td>';
-				echo '<td>'.$invoice['amount3'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:left;">'.$invoice['concept3'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'.$invoice['amount3'].'</td>';
 			echo '</tr>';
 		}
-		if ($invoice['concept4'] != "N/A" || $invoice['amount4'] != 0.00) {
+		if ($invoice['concept4'] != "") {
 			echo '<tr>';
-				echo '<td>'.$invoice['concept4'].'</td>';
-				echo '<td>'.$invoice['amount4'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:left;">'.$invoice['concept4'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'.$invoice['amount4'].'</td>';
 			echo '</tr>';
 		}
-		if ($invoice['concept5'] != "N/A" || $invoice['amount5'] != 0.00) {
+		if ($invoice['concept5'] != "") {
 			echo '<tr>';
-				echo '<td>'.$invoice['concept5'].'</td>';
-				echo '<td>'.$invoice['amount5'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:left;">'.$invoice['concept5'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'.$invoice['amount5'].'</td>';
 			echo '</tr>';
 		}
 		?>
 	</table>
-</div>
-<div>
-	<table border="1">
-		<tr>
-			<th><?php echo __('Description') ?></th>
-		</tr>
+	<table style="padding-top:15px; padding-bottom:15px; width:620px;">
 		<tr>
 			<td><?php echo $invoice['description'] ?></td>
 		</tr>
 	</table>
-</div>
-<div>
-	<table border="1">
+	<table style="border-top:2px solid black; border-bottom:1px solid black; width:620px; text-align:right;">
 		<tr>
-			<th><?php echo __('Subtotal') ?></th>
-			<th><?php echo __($config["invoice_tax_name"]) ?></th>
-			<th><?php echo __('Total') ?></th>
+			<td style="padding:15px; font-size:16px; color:black;">
+				<?php echo '<b>'.__('Total amount without taxes').'</b>' ?>
+			</td>
+			<td style="padding:15px; font-size:16px; color:black;">
+				<?php echo '<b>'.__($config["invoice_tax_name"]). ' ('.$tax.'%)'.'</b>' ?>
+			</td>
+			<td style="padding:15px; font-size:16px; color:black;">
+				<?php echo '<b>'.__('Total amount').'</b>' ?>
+			</td>
 		</tr>
 		<tr>
-			<td><?php echo $subtotal ?></td>
-			<td><?php echo $tax ?></td>
-			<td><?php echo $total ?></td>
+			<td style="padding:15px; font-size:18px;">
+				<?php echo '<b>'.$amount.'</b>' ?>
+			</td>
+			<td style="padding:15px; font-size:18px;">
+				<?php echo '<b>'.$tax_amount.'</b>' ?>
+			</td>
+			<td style="padding:15px; font-size:18px;">
+				<?php echo '<b>'.$total.'</b>' ?>
+			</td>
 		</tr>
 	</table>
-</div>
-
+</td></tr></table>

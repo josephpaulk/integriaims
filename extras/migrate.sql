@@ -302,3 +302,19 @@ ALTER TABLE tprofile ADD `cn` tinyint(1) NOT NULL default '0';
 UPDATE tprofile SET `cn` = 1;
 
 ALTER TABLE `tcompany` DROP COLUMN `id_grupo`;
+
+/* 09/07/2013 */
+ALTER TABLE tinvoice MODIFY `bill_id` int(10) unsigned NOT NULL;
+ALTER TABLE tinvoice MODIFY `invoice_create_date` date NOT NULL DEFAULT '0000-00-00';
+ALTER TABLE tinvoice MODIFY `invoice_payment_date` date DEFAULT NULL;
+ALTER TABLE tinvoice DROP COLUMN `ammount`;
+ALTER TABLE tinvoice ADD COLUMN `concept1` mediumtext DEFAULT NULL;
+ALTER TABLE tinvoice ADD COLUMN `concept2` mediumtext DEFAULT NULL;
+ALTER TABLE tinvoice ADD COLUMN `concept3` mediumtext DEFAULT NULL;
+ALTER TABLE tinvoice ADD COLUMN `concept4` mediumtext DEFAULT NULL;
+ALTER TABLE tinvoice ADD COLUMN `concept5` mediumtext DEFAULT NULL;
+ALTER TABLE tinvoice ADD COLUMN `amount1` float(11,2) NOT NULL DEFAULT 0.00;
+ALTER TABLE tinvoice ADD COLUMN `amount2` float(11,2) NOT NULL DEFAULT 0.00;
+ALTER TABLE tinvoice ADD COLUMN `amount3` float(11,2) NOT NULL DEFAULT 0.00;
+ALTER TABLE tinvoice ADD COLUMN `amount4` float(11,2) NOT NULL DEFAULT 0.00;
+ALTER TABLE tinvoice ADD COLUMN `amount5` float(11,2) NOT NULL DEFAULT 0.00;

@@ -39,10 +39,29 @@ if ($id_invoice > 0){
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to modify an invoices in a company without access");
 		no_permission();
 	}
+	
+	if (crm_is_invoice_locked ($invoice["id"])) {
+		require ("operation/invoices/invoice_view.php");
+	}
+	
+	if (! give_acl ($config["id_user"], $invoice ["id_group"], "IW")) {
+		// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to modify an invoices in a company without access");
+		no_permission();
+	}
 
 	$bill_id = $invoice["bill_id"];
 	$description = $invoice["description"];
-	$amount = get_invoice_amount ($invoice["id"]);
+	$concept[0] = $invoice["concept1"];
+	$concept[1] = $invoice["concept2"];
+	$concept[2] = $invoice["concept3"];
+	$concept[3] = $invoice["concept4"];
+	$concept[4] = $invoice["concept5"];
+	$amount[0] = $invoice["amount1"];
+	$amount[1] = $invoice["amount2"];
+	$amount[2] = $invoice["amount3"];
+	$amount[3] = $invoice["amount4"];
+	$amount[4] = $invoice["amount5"];
 	$id_attachment = $invoice["id_attachment"];
 	$invoice_create_date = $invoice["invoice_create_date"];
 	$invoice_payment_date = $invoice["invoice_payment_date"];
@@ -53,7 +72,6 @@ if ($id_invoice > 0){
 } else {
 	$bill_id = "N/A";
 	$description = "";
-	$amount = "0.00";
 	$id_attachment = "";
 	//$invoice_create_date = "2011-01-30";
 	//$invoice_payment_date = "2011-03-30";
@@ -64,18 +82,30 @@ if ($id_invoice > 0){
 }
 
 if ($operation_invoices == "add_invoice"){
+	
 	$filename = get_parameter ('upfile', false);
-	$bill_id = get_parameter ("bill_id", "");
+	$bill_id = get_parameter ("bill_id", 0);
+	if (!$bill_id) {
+		$bill_id = get_db_value ("MAX(bill_id)+1", "tinvoice", "1", "1");
+	}
 	$description = get_parameter ("description", "");
 	$amount = (float) get_parameter ("amount", 0);
+	$concept[0] = get_parameter ("concept1", "");
+	$concept[1] = get_parameter ("concept2", "");
+	$concept[2] = get_parameter ("concept3", "");
+	$concept[3] = get_parameter ("concept4", "");
+	$concept[4] = get_parameter ("concept5", "");
+	$amount[0] = (float) get_parameter ("amount1", 0);
+	$amount[1] = (float) get_parameter ("amount2", 0);
+	$amount[2] = (float) get_parameter ("amount3", 0);
+	$amount[3] = (float) get_parameter ("amount4", 0);
+	$amount[4] = (float) get_parameter ("amount5", 0);
 	$user_id = $config["id_user"];
 	$invoice_create_date = get_parameter ("invoice_create_date");
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
-	$tax = get_parameter ("tax", 0);
+	$tax = get_parameter ("tax", 0.00);
 	$invoice_status = get_parameter ("invoice_status", 'pending');
 	
-
-
 	if ($filename != ""){
 		$file_temp = sys_get_temp_dir()."/$filename";
 		$filesize = filesize($file_temp);
@@ -102,9 +132,14 @@ if ($operation_invoices == "add_invoice"){
 	
 	// Creating the cost record
 	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_company,
-	bill_id, amount, id_attachment, invoice_create_date, invoice_payment_date, tax, status) VALUES ("%s", "%s", %d, "%s", "%s", %d, "%s", "%s", "%s", "%s")',
-			$description, $user_id, $id_company, $bill_id, $amount, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $invoice_status);
-
+	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, status,
+	concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
+	amount4, amount5) VALUES ("%s", "%s", "%d", "%d", "%d", "%s", "%s", "%s", "%s", "%s",
+	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
+	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax,
+	$invoice_status, $concept1, $concept2, $concept3, $concept4, $concept5, $amount1, $amount2,
+	$amount3, $amount4, $amount5);
+	
 	$ret = process_sql ($sql, 'insert_id');
 	if ($ret !== false) {
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
@@ -120,13 +155,23 @@ if ($operation_invoices == "update_invoice"){
 	$values = array();
 	
 	$filename = get_parameter ('upfile', false);
-	$bill_id = get_parameter ("bill_id", "");
+	$bill_id = get_parameter ("bill_id", 0);
 	$description = get_parameter ("description", "");
-	$amount = (float) get_parameter ("amount", 0);
+	$concept[0] = get_parameter ("concept1", "");
+	$concept[1] = get_parameter ("concept2", "");
+	$concept[2] = get_parameter ("concept3", "");
+	$concept[3] = get_parameter ("concept4", "");
+	$concept[4] = get_parameter ("concept5", "");
+	$amount[0] = (float) get_parameter ("amount1", 0);
+	$amount[1] = (float) get_parameter ("amount2", 0);
+	$amount[2] = (float) get_parameter ("amount3", 0);
+	$amount[3] = (float) get_parameter ("amount4", 0);
+	$amount[4] = (float) get_parameter ("amount5", 0);
+	echo $amount[4];// Debug
 	$user_id = $config["id_user"];
 	$invoice_create_date = get_parameter ("invoice_create_date");
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
-	$tax = get_parameter ("tax", 0);
+	$tax = get_parameter ("tax", 0.00);
 	$invoice_status = get_parameter ("invoice_status", 'pending');
 
 	// If no file input, the file doesnt change
@@ -167,7 +212,16 @@ if ($operation_invoices == "update_invoice"){
 	$values['id_user'] = $user_id;
 	$values['id_company'] = $id_company;
 	$values['bill_id'] = $bill_id;
-	$values['amount'] = $amount;
+	$values['concept1'] = $concept[0];
+	$values['concept2'] = $concept[1];
+	$values['concept3'] = $concept[2];
+	$values['concept4'] = $concept[3];
+	$values['concept5'] = $concept[4];
+	$values['amount1'] = $amount[0];
+	$values['amount2'] = $amount[1];
+	$values['amount3'] = $amount[2];
+	$values['amount4'] = $amount[3];
+	$values['amount5'] = $amount[4];
 	$values['status'] = $invoice_status;
 	$values['tax'] = $tax;
 
@@ -191,78 +245,89 @@ if ($operation_invoices == "update_invoice"){
 if ($operation_invoices == ""){
 
 	echo "<h3>";
-	if ($id_invoice == "-1")
+	if ($id_invoice == "-1") {
 		echo __('Add new invoice');
-	else
+	}
+	else {
 		echo __('Update invoice'). " #$id_invoice";
+		echo ' <a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
+					&amp;id_invoice='.$id_invoice.'&amp;clean_output=1&amp;pdf_output=1">
+					<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
+		if ($lock_permission) {
+			echo ' <a href="?sec=customers&sec2=operation/companies/company_detail
+				&lock_invoice=1&id='.$id_company.'&op=invoices&id_invoice='.$id_invoice.'" 
+				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+				<img src="images/lock_open.png" title="'.__('Lock').'"></a>';
+		}
+		echo ' <a href="?sec=customers&sec2=operation/companies/company_detail
+			&delete_invoice=1&id='.$id_company.'&op=invoices&id_invoice='.$id_invoice.'" 
+			onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+			<img src="images/cross.png" title="'.__('Delete').'"></a>';
+	}
 	echo "</h3>";
-	echo "<div id='upload_control'>";
-	
-	$action = "index.php?sec=customers&sec2=operation/companies/company_detail&id=".$id_company."&op=invoices";
 	
 	$table->id = 'cost_form';
-	$table->width = '90%';
-	$table->class = 'listing';
+	$table->width = '60%';
+	$table->class = 'databox';
+	$table->colspan = array ();
 	$table->size = array ();
 	$table->data = array ();
-	
 
-	$table->data[0][0] = __('Company');
-	$table->data[0][1] = get_db_value ("name", "tcompany", "id", $id_company);
+	$company_name = get_db_value ("name", "tcompany", "id", $id_company);
+	$table->colspan[0][0] = 2;
+	$table->data[0][0] = print_input_text ('company_name', $company_name, '', 100, 100, true, __('Company'), true);
 
-	$table->data[1][0] = __('Bill ID');
-	$table->data[1][1] = print_input_text ('bill_id', $bill_id, '', 25, 100, true);
+	$table->colspan[1][0] = 2;
+	$table->data[1][0] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
 	
-	$table->data[2][0] = __('Amount');
-	$table->data[2][1] = print_input_text ('amount', $amount, '', 10, 20, true);
+	$table->data[2][0] = print_input_text ('tax', $tax, '', 5, 20, true, __('Taxes (%)'));
 	
-	$table->data[3][0] = __('Taxes (%)');
-	$table->data[3][1] = print_input_text ('tax', $tax, '', 5, 20, true);
-	
-	$table->data[4][0] = __('Invoice status');
-
 	$invoice_status_ar = array();
 	$invoice_status_ar['pending']= __("Pending");
 	$invoice_status_ar['paid']= __("Paid");
 	$invoice_status_ar['cancel']= __("Cancelled");
 
-	$table->data[4][1] = print_select ($invoice_status_ar, 'invoice_status',
-		$invoice_status, '','', 0, true, false, false, '');	
-
-
-	$table->data[5][0] = __('Description');
-	$table->data[5][1] = print_input_text ('description', $description, '', 60, 250, true);
-	
-	$table->data[6][0] = __('Attach a file');
-	$table->data[6][1] = '__UPLOAD_CONTROL__';
-
-	$table->data[7][0] = __('Invoice creation date');
-	$table->data[7][1] = print_input_text ('invoice_create_date', $invoice_create_date, '', 15, 50, true);
-
-	$table->data[8][0] = __('Invoice effective payment date');
-	$table->data[8][1] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true);
-	
-	$into_form = print_table ($table, true);
+	$table->data[2][1] = print_select ($invoice_status_ar, 'invoice_status',
+		$invoice_status, '','', 0, true, false, false, __('Invoice status'));
 		
-	$into_form .= '<div class="button" style="width: '.$table->width.'">';
-	if ($id_invoice == -1) {
-		$into_form .= print_button (__('Add'), "crt", false, '', 'class="sub next"', true);
-		$into_form .= print_input_hidden ('operation_invoices', "add_invoice", true);
-		$button_name = "button-crt";
+	$table->data[3][0] = print_input_text ('invoice_create_date', $invoice_create_date, '', 15, 50, true, __('Invoice creation date'));
+	$table->data[3][1] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true,__('Invoice effective payment date'));
+	
+	$table->data[4][0] = "<h4>".__('Concept')."</h4>";
+	$table->data[4][1] = "<h4>".__('Amount')."</h4>";
+	$table->data[5][0] = print_input_text ('concept1', $concept[0], '', 60, 250, true);
+	$table->data[5][1] = print_input_text ('amount1', $amount[0], '', 10, 20, true);
+	$table->data[6][0] = print_input_text ('concept2', $concept[1], '', 60, 250, true);
+	$table->data[6][1] = print_input_text ('amount2', $amount[1], '', 10, 20, true);
+	$table->data[7][0] = print_input_text ('concept3', $concept[2], '', 60, 250, true);
+	$table->data[7][1] = print_input_text ('amount3', $amount[2], '', 10, 20, true);
+	$table->data[8][0] = print_input_text ('concept4', $concept[3], '', 60, 250, true);
+	$table->data[8][1] = print_input_text ('amount4', $amount[3], '', 10, 20, true);
+	$table->data[9][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
+	$table->data[9][1] = print_input_text ('amount5', $amount[4], '', 10, 20, true);
+	
+	$table->colspan[10][0] = 2;
+	$table->data[10][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
+	
+	$table->colspan[11][0] = 2;
+	$table->data[11][0] = print_input_file ('upfile', 20, false, '', true, __('Attachment'));
+	
+	echo '<form id="form-invoice" method="post" enctype="multipart/form-data"
+	action="index.php?sec=customers&sec2=operation/companies/company_detail
+	&id='.$id_company.'&op=invoices&id_invoice='.$id_invoice.'">';
+
+	print_table ($table);
+	echo '<div class="button" style="width:'.$table->width.';">';
+	if ($id_invoice != -1) {
+		print_submit_button (__('Update'), 'button-upd', false, 'class="sub upd"');
+		print_input_hidden ('id', $id);
+		print_input_hidden ('operation_invoices', "update_invoice");
 	} else {
-		$into_form .= print_input_hidden ('id_invoice', $id_invoice, true);
-		$into_form .= print_input_hidden ('operation_invoices', "update_invoice", true);
-		$into_form .= print_button (__('Update'), "upd", false, '', 'class="sub upd"', true);
-		$button_name = "button-upd";
+		print_submit_button (__('Add'), 'button-crt', false, 'class="sub next"');
+		print_input_hidden ('operation_invoices', "add_invoice");
 	}
-	
-	$into_form .= print_input_hidden ('id', $id, true);
-	
-	$into_form .= "</div>";
-	
-	print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', $button_name, false, '__UPLOAD_CONTROL__');
-	
-	echo "</div>";
+	echo '</div>';
+	echo '</form>';
 	
 }
 ?>
@@ -274,40 +339,45 @@ if ($operation_invoices == ""){
 
 <script type="text/javascript">
 
-$("#text-invoice_create_date").datepicker ({
-	beforeShow: function () {
-		maxdate = null;
-		if ($("#text-invoice_payment_date").datepicker ("getDate") > $(this).datepicker ("getDate"))
-			maxdate = $("#text-invoice_payment_date").datepicker ("getDate");
-		return {
-			maxDate: maxdate
-		};
-	},
-	onSelect: function (datetext) {
-		end = $("#text-invoice_payment_date").datepicker ("getDate");
-		start = $(this).datepicker ("getDate");
-		if (end <= start) {
-			pulsate ($("#text-invoice_payment_date"));
-		}
-	}
-});
-$("#text-invoice_payment_date").datepicker ({
-	beforeShow: function () {
-		return {
-			minDate: $("#text-invoice_create_date").datepicker ("getDate")
-		};
-	}
-});
+$(document).ready(function () {
+	
+	$("#text-invoice_create_date").datepicker ({
 
+		beforeShow: function () {
+			maxdate = null;
+			if ($("#text-invoice_payment_date").datepicker ("getDate") > $(this).datepicker ("getDate"))
+				maxdate = $("#text-invoice_payment_date").datepicker ("getDate");
+			return {
+				maxDate: maxdate
+			};
+		},
+		onSelect: function (datetext) {
+			end = $("#text-invoice_payment_date").datepicker ("getDate");
+			start = $(this).datepicker ("getDate");
+			if (end <= start) {
+				pulsate ($("#text-invoice_payment_date"));
+			}
+		}
+	});
+	$("#text-invoice_payment_date").datepicker ({
+
+		beforeShow: function () {
+			return {
+				minDate: $("#text-invoice_create_date").datepicker ("getDate")
+			};
+		}
+	});
+});
 
 // Form validation
 trim_element_on_submit('#text-bill_id');
-/*
-validate_form("#form-add-file");
+
+validate_form("#form-invoice");
 var rules, messages;
 // Rules: #text-bill_id
 rules = {
 	required: true,
+	number: true,
 	remote: {
 		url: "ajax.php",
         type: "POST",
@@ -321,12 +391,33 @@ rules = {
 };
 messages = {
 	required: "<?php echo __('Bill ID required'); ?>",
-	remote: "<?php echo __('This bill ID already exists'); ?>"
+	number: "<?php echo __('Bill ID should be numeric'); ?>",
+	remote: "<?php echo __('This bill ID already exists or should be larger'); ?>"
 };
 add_validate_form_element_rules('#text-bill_id', rules, messages);
-// Rules: #text-amount
+// Rules: #text-tax
 rules = { number: true };
 messages = { number: "<?php echo __('Invalid number')?>" };
-add_validate_form_element_rules('#text-amount', rules, messages);
-*/
+add_validate_form_element_rules('#text-tax', rules, messages);
+// Rules: input[name="amount1"]
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('input[name="amount1"]', rules, messages);
+// Rules: input[name="amount2"]
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('input[name="amount2"]', rules, messages);
+// Rules: input[name="amount3"]
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('input[name="amount3"]', rules, messages);
+// Rules: input[name="amount4"]
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('input[name="amount4"]', rules, messages);
+// Rules: input[name="amount5"]
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('input[name="amount5"]', rules, messages);
+
 </script>

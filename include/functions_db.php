@@ -2111,7 +2111,7 @@ function render_status ($sta){
 }
 
 function company_invoice_total ($id_company){
-	$estado = get_db_sql ("SELECT SUM(ammount) FROM tinvoice WHERE id_company = $id_company");
+	$estado = get_db_sql ("SELECT amount1+amount2+amount3+amount4+amount5 FROM tinvoice WHERE id_company = $id_company");
 	return __($estado);
 }
 
@@ -2356,13 +2356,13 @@ function get_invoice_tax ($id_invoice) {
 // Returns the sum of the amounts of an invoice, with or without taxes
 function get_invoice_amount ($id_invoice, $with_taxes = false) {
 
-	$sum = get_db_value ('ammount', 'tinvoice', 'id', $id_invoice);
+	$sum = get_db_value ('amount1+amount2+amount3+amount4+amount5', 'tinvoice', 'id', $id_invoice);
 	
 	if ($with_taxes && $sum) {
 		$tax = get_invoice_tax ($id_invoice);
 		if ($tax == false)
 			return __('ERROR');
-		$sum += $sum * $tax;
+		$sum += $sum * ($tax / 100);
 	}
 	if ($sum == false)
 		return __('ERROR');

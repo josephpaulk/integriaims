@@ -146,7 +146,6 @@ echo "<title>" . $config["sitename"] . "</title>";
 <meta name="robots" content="index, follow" />
 <link rel="icon" href="images/integria_mini_logo.png" type="image/png" />
 <link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
-<link rel="stylesheet" href="include/styles/integria.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/integria_tip.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/flora/flora.accordion.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/flora/flora.css" type="text/css" />
@@ -477,7 +476,7 @@ if ($pdf_output == 1){
 		$header .= '<br><p align="center">'.$header_text.'</p>';
 		
 		$pdfObject->setHeaderHTML($header, true);
-		$pdfObject->setFooterHTML($footer_text, true);
+		$pdfObject->setFooterHTML($footer_text, true, true, true);
 	} else {
 		$pdfObject->setMetadata(safe_output("Integria IMS PDF Report", 'Integria IMS Report', 'Integria IMS', __("Automated Integria IMS report")));
 

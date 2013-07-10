@@ -84,7 +84,8 @@ $new_company = (bool) get_parameter ('new_company');
 $create_company = (bool) get_parameter ('create_company');
 $update_company = (bool) get_parameter ('update_company');
 $delete_company = (bool) get_parameter ('delete_company');
-$delete_invoice = get_parameter ('delete_invoice', "");
+$delete_invoice = get_parameter ('delete_invoice', 0);
+$lock_invoice = get_parameter ('lock_invoice', 0);
 $offset = get_parameter ('offset', 0);
 
 // Create OR Update
@@ -234,11 +235,28 @@ if ($delete_invoice == 1){
 	
 	if ($invoice["id"] && !crm_is_invoice_locked ($invoice["id"])) {
 	//if (($config["id_user"] = $invoice["id_user"]) OR ($id_task == $invoice["id_task"])){ // TODO: Check this
-			// Todo: Delete file from disk
-			if ($invoice["id_attachment"] != ""){
-				process_sql ("DELETE FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
-			}
-			process_sql ("DELETE FROM tinvoice WHERE id = $id_invoice");
+		// Todo: Delete file from disk
+		if ($invoice["id_attachment"] != ""){
+			process_sql ("DELETE FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
+		}
+		process_sql ("DELETE FROM tinvoice WHERE id = $id_invoice");
+	}
+}
+
+// Lock/Unlock INVOICE
+// ----------------
+if ($lock_invoice == 1){
+	
+	$id_invoice = get_parameter ("id_invoice", "");
+	
+	if ($id_invoice) {
+		if (!crm_check_lock_permission ($config["id_user"], $id_invoice)) {
+			include ("general/noaccess.php");
+			exit;
+		}
+		
+		crm_change_invoice_lock ($config["id_user"], $id_invoice);
+		clean_cache_db();
 	}
 }
 
@@ -693,8 +711,43 @@ elseif ($op == "invoices") {
 	echo "<h3>". __("Invoices for "). $company_name. "</h3>";
 
 	if (($operation_invoices != "") OR ($new_invoice != 0) OR ($view_invoice != 0 ) ){
-		// Show edit/insert invoice
-		include ("operation/invoices/invoices.php");
+				
+		$id_invoice = get_parameter ("id_invoice", -1);
+		if ($id_invoice) {
+			$is_locked = crm_is_invoice_locked ($id_invoice);
+			$lock_permission = crm_check_lock_permission ($config["id_user"], $id_invoice);
+		}
+		
+		if ($new_invoice == 0 && $is_locked) {
+			
+			$locked_id_user = crm_get_invoice_locked_id_user ($id_invoice);
+			// Show an only readable invoice
+			echo "<h3>". __("Invoice #"). $id_invoice;
+			echo ' ('.__('Locked by ').$locked_id_user.')';
+			echo ' <a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
+					&amp;id_invoice='.$id_invoice.'&amp;clean_output=1&amp;pdf_output=1">
+					<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';
+			if ($lock_permission) {
+				
+				if ($is_locked) {
+					$lock_image = 'lock.png';
+					$title = __('Unlock');
+				} else {
+					$lock_image = 'lock_open.png';
+					$title = __('Lock');
+				}
+				echo ' <a href="?sec=customers&sec2=operation/companies/company_detail
+					&lock_invoice=1&id='.$id.'&op=invoices&id_invoice='.$id_invoice.'" 
+					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+					<img src="images/'.$lock_image.'" title="'.$title.'"></a>';
+			}
+			echo "</h3>";
+			include ("operation/invoices/invoice_view.php");
+		}
+		else {
+			// Show edit/insert invoice
+			include ("operation/invoices/invoices.php");
+		}
 	}
 
 	// Operation_invoice changes inside the previous include
@@ -707,9 +760,9 @@ elseif ($op == "invoices") {
 		if ($invoice_permission && $enterprise) {
 			$invoices = crm_get_user_invoices($config['id_user'], $invoices);
 		}
-	
+		
 		$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices");
-
+		
 		if ($invoices !== false) {
 		
 			$table->width = "95%";
@@ -724,7 +777,7 @@ elseif ($op == "invoices") {
 			$table->colspan = array ();
 			$table->head[0] = __('ID');
 			$table->head[1] = __('Description');
-			$table->head[2] = __('Ammount');
+			$table->head[2] = __('Amount');
 			$table->head[3] = __('Status');
 			$table->head[4] = __('Creation');
 			$table->head[5] = __('Payment');
@@ -777,7 +830,7 @@ elseif ($op == "invoices") {
 						$title = __('Lock');
 					}
 					$data[6] .= ' <a href="?sec=customers&sec2=operation/companies/company_detail
-						&delete_invoice=1&id='.$invoice["id_company"].'&op=invoices &id_invoice='.$invoice["id"].'" 
+						&lock_invoice=1&id='.$invoice["id_company"].'&op=invoices&id_invoice='.$invoice["id"].'" 
 						onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 						<img src="images/'.$lock_image.'" title="'.$title.'"></a>';
 				}
@@ -788,7 +841,8 @@ elseif ($op == "invoices") {
 						<img src="images/cross.png" title="'.__('Delete').'"></a>';
 				} else {
 					if ($locked_id_user) {
-						$data[6] .= ' <img src="images/lock.png" title="'.__('Locked by '.$locked_id_user).'">'; // TODO: Change the icon
+						$data[6] .= ' <img src="images/administrator_lock.png" width="18" height="18"
+						title="'.__('Locked by '.$locked_id_user).'">';
 					}
 				}
 				
