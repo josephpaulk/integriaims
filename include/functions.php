@@ -1119,4 +1119,55 @@ function random_string (){
     return $randstring;
 }	
 
+function check_last_cron_execution($get_mins = false) {
+	
+	$now = strtotime(date('Y/m/d H:i:s'));
+	
+	$last_exec = get_db_value('value', 'tconfig', 'token', 'crontask');
+	
+	if (($last_exec === false) || ($last_exec == '')){
+		$last_exec = '';
+	}
+
+	$unix = strtotime($last_exec);
+	
+	if ($last_exec == 0) {
+		$minutes = '';
+	} else {
+		$minutes = ($now - $unix) / 60;
+	}
+	
+	if ($get_mins) {
+		return $minutes;
+	}
+	
+	if (($minutes) < 10) {
+		return true;
+	}	
+	
+	return false;
+}
+
+function check_email_queue ($get_count = false) {
+	
+	$sql = "SELECT COUNT(*) FROM tpending_mail";
+	
+	$count_aux = process_sql ($sql);
+	
+	$count = $count_aux[0][0];
+	
+	if ($get_count) {
+		return $count;
+	}
+	
+	if (!isset($config['max_pending_mail'])) {
+		$config['max_pending_mail'] = 15;
+	}
+	
+	if ($count < $config['max_pending_mail']) {
+		return true;
+	}
+	return false;
+}
+
 ?>

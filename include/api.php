@@ -166,6 +166,16 @@ switch ($op){
 	case "validate_user":
 		echo api_validate_user ($return_type, $user, $user_pass);
 		break;
+	case "get_last_cron_execution":
+	{
+		echo api_get_last_cron_execution ($return_type, $user, $params);
+		break;
+	}
+	case "get_num_queued_emails":
+	{
+		echo get_num_queued_emails ($return_type, $user, $params);
+		break;
+	}
 	default: 
 	{
 	}

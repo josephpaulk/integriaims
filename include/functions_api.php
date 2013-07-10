@@ -1041,4 +1041,56 @@ function api_create_lead ($return_type, $user, $params){
 				break;
 	}
 }
+
+function api_get_last_cron_execution ($return_type, $user, $params) {
+
+	$now = strtotime(date('Y/m/d H:i:s'));
+	
+	$last_exec = get_db_value('value', 'tconfig', 'token', 'crontask');
+	
+	if (($last_exec === false) || ($last_exec == '')){
+		$minutes = -1;
+	} else {
+		$unix = strtotime($last_exec);
+		
+		$minutes = ($now - $unix) / 60;
+	}
+
+	$return = '';
+	
+	if($return_type == 'xml') {
+		$return = "<xml>\n";
+		$return .= "<cronjob>\n";
+		$return .= "<last_exec>".$minutes."</last_exec>\n";
+		$return .= "</cronjob>\n";
+		$return .= "</xml>\n";
+	} else {
+		$return = $minutes;
+	}
+	
+	return $return;
+	
+}
+
+function get_num_queued_emails ($return_type, $user, $params) {
+
+	$sql = "SELECT COUNT(*) FROM tpending_mail";
+	
+	$count_aux = process_sql ($sql);
+	
+	$count = $count_aux[0][0];
+	
+	if($return_type == 'xml') {
+		$return = "<xml>\n";
+		$return .= "<pending_mail>\n";
+		$return .= "<num>".$count."</num>\n";
+		$return .= "</pending_mail>\n";
+		$return .= "</xml>\n";
+	} else {
+		$return = $count;
+	}
+	
+	return $return;
+}
+
 ?>

@@ -1,3 +1,14 @@
+2013-07-10  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* general/header.php
+	  godmode/setup/setup.php
+	  include/api.php
+	  include/functions.php
+	  include/functions_api.php: Added system alerts.
+
+	* include/ajax/header.php
+	  include/js/integria_header.js: Added files.
+
 2013-07-10  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/projects/task_cost.php: Fixed the adding and the

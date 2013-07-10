@@ -86,7 +86,8 @@ if ($update) {
     $config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
 	$config["lead_company_filter"] = get_parameter ("lead_company_filter", "");    
 	$config["lead_warning_time"] = get_parameter ("lead_warning_time", "7");  
-	$config["months_to_delete_incidents"] = get_parameter ("months_to_delete_incidents", 12);  
+	$config["months_to_delete_incidents"] = get_parameter ("months_to_delete_incidents", 12);
+	$config["max_pending_mail"] = get_parameter ("max_pending_mail", 15);
 
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
@@ -107,6 +108,7 @@ if ($update) {
     update_config_token ("lead_company_filter", $config["lead_company_filter"]);
     update_config_token ("lead_warning_time", $config["lead_warning_time"]);
     update_config_token ("months_to_delete_incidents", $config["months_to_delete_incidents"]);
+	update_config_token ("max_pending_mail", $config["max_pending_mail"]);
 
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
 
@@ -161,16 +163,7 @@ if ($update) {
 // Render SYSTEM language code, not current language.
 $config['language_code'] = get_db_value ('value', 'tconfig', 'token', 'language_code');
 
-$crontask = get_db_sql ("SELECT `value` FROM tconfig WHERE `token` = 'crontask'");
-
 echo "<h2>".__('General setup')."</h2>";
-
-if ($crontask == "")
-	echo "<h2 class=error>".__("Crontask not installed. Please check documentation!")."</h2>";
-else
-	echo "<h4>".__("Last execution for crontask at"). " ".$crontask."</h4>";
-
-
 
 $table->width = '90%';
 $table->class = 'databox';
@@ -282,6 +275,10 @@ $table->data[15][0] .= print_help_tip (__("Use this to filter what company roles
 
 $table->data[15][1] = print_input_text ("lead_warning_time", $config["lead_warning_time"], '',
 	5, 255, true, __('Days to warn on inactive leads'));
+
+$table->data[16][0] = print_input_text ("max_pending_mail", $config["max_pending_mail"], '',
+	10, 255, true, __('Max pending mail'));
+$table->data[16][0] .= print_help_tip (__("Maximum number of queued emails. When this number is exceeded, an alert is activated"), true);
 	
 echo "<form name='setup' method='post'>";
 
