@@ -1,4 +1,9 @@
 2013-07-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* images/administrator_lock.png: Added a new icon for locked
+	invoices.
+
+2013-07-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* index.php: Some changes on pdf output.
 	
