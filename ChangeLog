@@ -1,3 +1,45 @@
+2013-07-10  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* integria_db.sql
+	   extras/migrate.sql: Added column "currency" to table
+	   'tinvoice'.
+	   
+	* operation/invoices/invoices.php
+	  operation/invoices/invoice_template.php
+	  operation/invoices/invoice_detail.php
+	  operation/companies/company_detail.php: Added the new
+	  "currency" column to all view and creation process.
+	  
+	* operation/invoices/invoice_detail.php
+	  operation/companies/company_detail.php: Now the page
+	  does not change when you deletes an invoice.
+	  
+	* include/js/integria_date.js: Deleted the function
+	"configure_range_dates". Added the functions
+	"add_datepicker", "add_ranged_datepicker" and
+	"add_task_planning_datepicker".
+	
+	* godmode/setup/incidents_setup.php
+	  operation/companies/company_detail.php
+	  operation/invoices/invoices.php
+	  operation/invoices/invoice_detail.php
+	  operation/agenda/agenda.php
+	  operation/contracts/contract_detail.php
+	  operation/incidents/incident_search_logic.php
+	  operation/projects/project_detail.php
+	  operation/projects/task_detail.php
+	  operation/projects/task_planning.php
+	  operation/user_report/monthly.php
+	  operation/user_report/report_annual.php
+	  operation/user_report/report_full.php
+	  operation/users/user_spare_workunit.php
+	  operation/workorders/wo.php: Unified all the
+	  datepickers. Now are used the functions defined
+	  in "include/integria_date.js".
+	  
+	* godmode/setup/setup_crm.php: Added a jQuery textarea
+	resizer.
+
 2013-07-10  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_api.php: Changed 

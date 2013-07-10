@@ -225,12 +225,8 @@ echo '</form>';
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
 
 <script type="text/javascript">
-
-$(document).ready (function () {
-	$("#text-start_date").datepicker ({
-		minDate: 0
-	})
-});
+add_datepicker ("#text-start_date", 0);
 </script>

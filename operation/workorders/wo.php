@@ -620,12 +620,14 @@ href="index.php?sec=projects&sec2=operation/workorders/wo'.$params.'&operation=d
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 
 <script type="text/javascript" >
+
+// Datepicker
+add_ranged_datepicker ("#text-start_date", "#text-end_date", null);
+
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
-	configure_range_dates (null);
 	
 	var idUser = "<?php echo $config['id_user'] ?>";
-	
 	bindAutocomplete ("#text-user", idUser);
 	bindAutocomplete ("#text-user2", idUser);
 	

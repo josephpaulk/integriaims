@@ -67,6 +67,7 @@ if ($id_invoice > 0){
 	$invoice_payment_date = $invoice["invoice_payment_date"];
 	$id_company = $invoice["id_company"];
 	$tax = $invoice["tax"];
+	$currency = $invoice["currency"];
 	$invoice_status = $invoice["status"];
 
 } else {
@@ -78,6 +79,7 @@ if ($id_invoice > 0){
 	$invoice_create_date = "";
 	$invoice_payment_date = "";
 	$tax = 0;
+	$currency = "EUR";
 	$invoice_status = "pending";
 }
 
@@ -103,6 +105,7 @@ if ($operation_invoices == "add_invoice"){
 	$invoice_create_date = get_parameter ("invoice_create_date");
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
 	$tax = get_parameter ("tax", 0.00);
+	$currency = get_parameter ("currency", "EUR");
 	$invoice_status = get_parameter ("invoice_status", 'pending');
 	
 	if ($filename != ""){
@@ -133,9 +136,9 @@ if ($operation_invoices == "add_invoice"){
 	$sql = sprintf ('INSERT INTO tinvoice (description, id_user, id_company,
 	bill_id, id_attachment, invoice_create_date, invoice_payment_date, tax, status,
 	concept1, concept2, concept3, concept4, concept5, amount1, amount2, amount3,
-	amount4, amount5) VALUES ("%s", "%s", "%d", "%d", "%d", "%s", "%s", "%s", "%s", "%s",
+	amount4, amount5) VALUES ("%s", "%s", "%d", "%d", "%d", "%s", "%s", "%s", "%s", "%s", "%s",
 	"%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")', $description, $user_id, $id_company,
-	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax,
+	$bill_id, $id_attachment, $invoice_create_date, $invoice_payment_date, $tax, $currency,
 	$invoice_status, $concept1, $concept2, $concept3, $concept4, $concept5, $amount1, $amount2,
 	$amount3, $amount4, $amount5);
 	
@@ -171,6 +174,7 @@ if ($operation_invoices == "update_invoice"){
 	$invoice_create_date = get_parameter ("invoice_create_date");
 	$invoice_payment_date = get_parameter ("invoice_payment_date");
 	$tax = get_parameter ("tax", 0.00);
+	$currency = get_parameter ("currency", "EUR");
 	$invoice_status = get_parameter ("invoice_status", 'pending');
 
 	// If no file input, the file doesnt change
@@ -223,6 +227,7 @@ if ($operation_invoices == "update_invoice"){
 	$values['amount5'] = $amount[4];
 	$values['status'] = $invoice_status;
 	$values['tax'] = $tax;
+	$values['currency'] = $currency;
 
 	$values['invoice_create_date'] = $invoice_create_date;
 	$values['invoice_payment_date'] = $invoice_payment_date;
@@ -276,34 +281,34 @@ if ($operation_invoices == ""){
 	$table->colspan[0][0] = 2;
 	$table->data[0][0] = print_input_text ('company_name', $company_name, '', 100, 100, true, __('Company'), true);
 
-	$table->colspan[1][0] = 2;
+	//$table->colspan[1][0] = 2;
 	$table->data[1][0] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
-	
-	$table->data[2][0] = print_input_text ('tax', $tax, '', 5, 20, true, __('Taxes (%)'));
 	
 	$invoice_status_ar = array();
 	$invoice_status_ar['pending']= __("Pending");
 	$invoice_status_ar['paid']= __("Paid");
 	$invoice_status_ar['cancel']= __("Cancelled");
-
-	$table->data[2][1] = print_select ($invoice_status_ar, 'invoice_status',
+	$table->data[1][1] = print_select ($invoice_status_ar, 'invoice_status',
 		$invoice_status, '','', 0, true, false, false, __('Invoice status'));
-		
-	$table->data[3][0] = print_input_text ('invoice_create_date', $invoice_create_date, '', 15, 50, true, __('Invoice creation date'));
-	$table->data[3][1] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true,__('Invoice effective payment date'));
 	
-	$table->data[4][0] = "<h4>".__('Concept')."</h4>";
-	$table->data[4][1] = "<h4>".__('Amount')."</h4>";
-	$table->data[5][0] = print_input_text ('concept1', $concept[0], '', 60, 250, true);
-	$table->data[5][1] = print_input_text ('amount1', $amount[0], '', 10, 20, true);
-	$table->data[6][0] = print_input_text ('concept2', $concept[1], '', 60, 250, true);
-	$table->data[6][1] = print_input_text ('amount2', $amount[1], '', 10, 20, true);
-	$table->data[7][0] = print_input_text ('concept3', $concept[2], '', 60, 250, true);
-	$table->data[7][1] = print_input_text ('amount3', $amount[2], '', 10, 20, true);
-	$table->data[8][0] = print_input_text ('concept4', $concept[3], '', 60, 250, true);
-	$table->data[8][1] = print_input_text ('amount4', $amount[3], '', 10, 20, true);
-	$table->data[9][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
-	$table->data[9][1] = print_input_text ('amount5', $amount[4], '', 10, 20, true);
+	$table->data[2][0] = print_input_text ('invoice_create_date', $invoice_create_date, '', 15, 50, true, __('Invoice creation date'));
+	$table->data[2][1] = print_input_text ('invoice_payment_date', $invoice_payment_date, '', 15, 50, true,__('Invoice effective payment date'));
+	
+	$table->data[3][0] = "<h4>".__('Concept')."</h4>";
+	$table->data[3][1] = "<h4>".__('Amount')."</h4>";
+	$table->data[4][0] = print_input_text ('concept1', $concept[0], '', 60, 250, true);
+	$table->data[4][1] = print_input_text ('amount1', $amount[0], '', 10, 20, true);
+	$table->data[5][0] = print_input_text ('concept2', $concept[1], '', 60, 250, true);
+	$table->data[5][1] = print_input_text ('amount2', $amount[1], '', 10, 20, true);
+	$table->data[6][0] = print_input_text ('concept3', $concept[2], '', 60, 250, true);
+	$table->data[6][1] = print_input_text ('amount3', $amount[2], '', 10, 20, true);
+	$table->data[7][0] = print_input_text ('concept4', $concept[3], '', 60, 250, true);
+	$table->data[7][1] = print_input_text ('amount4', $amount[3], '', 10, 20, true);
+	$table->data[8][0] = print_input_text ('concept5', $concept[4], '', 60, 250, true);
+	$table->data[8][1] = print_input_text ('amount5', $amount[4], '', 10, 20, true);
+	
+	$table->data[9][0] = print_input_text ('tax', $tax, '', 5, 20, true, __('Taxes (%)'));
+	$table->data[9][1] = print_input_text ('currency', $currency, '', 3, 3, true, __('Currency'));
 	
 	$table->colspan[10][0] = 2;
 	$table->data[10][0] = print_textarea ('description', 5, 40, $description, '', true, __('Description'));
@@ -335,38 +340,12 @@ if ($operation_invoices == ""){
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
 
 <script type="text/javascript">
-
-$(document).ready(function () {
 	
-	$("#text-invoice_create_date").datepicker ({
-
-		beforeShow: function () {
-			maxdate = null;
-			if ($("#text-invoice_payment_date").datepicker ("getDate") > $(this).datepicker ("getDate"))
-				maxdate = $("#text-invoice_payment_date").datepicker ("getDate");
-			return {
-				maxDate: maxdate
-			};
-		},
-		onSelect: function (datetext) {
-			end = $("#text-invoice_payment_date").datepicker ("getDate");
-			start = $(this).datepicker ("getDate");
-			if (end <= start) {
-				pulsate ($("#text-invoice_payment_date"));
-			}
-		}
-	});
-	$("#text-invoice_payment_date").datepicker ({
-
-		beforeShow: function () {
-			return {
-				minDate: $("#text-invoice_create_date").datepicker ("getDate")
-			};
-		}
-	});
-});
+// Datepicker
+add_ranged_datepicker ("#text-invoice_create_date", "#text-invoice_payment_date", null);
 
 // Form validation
 trim_element_on_submit('#text-bill_id');

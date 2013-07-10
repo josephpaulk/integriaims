@@ -631,8 +631,9 @@ if ($do_search  == 0){
 
 <script type="text/javascript">
 
+add_ranged_datepicker ("#text-start_date", "#text-end_date", null);
+
 $(document).ready (function () {
-	configure_range_dates (null);
 
 	var idUser = "<?php echo $config['id_user'] ?>";
 	

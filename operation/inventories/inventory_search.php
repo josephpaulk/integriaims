@@ -494,7 +494,4 @@ $(document).ready (function () {
 
 });
 
-
-
-
 </script>

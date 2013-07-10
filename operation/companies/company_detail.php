@@ -804,7 +804,7 @@ elseif ($op == "invoices") {
 
 				$data[0] = "<a href='$url'>".$invoice["bill_id"]."</a>";
 				$data[1] = "<a href='$url'>".$invoice["description"]."</a>";
-				$data[2] = get_invoice_amount ($invoice["id"]);
+				$data[2] = get_invoice_amount ($invoice["id"]) ." ". strtoupper ($invoice["currency"]);
 				$data[3] = __($invoice["status"]);
 				$data[4] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"]. "</span>";
 				if ($invoice["status"] == "paid") {
@@ -836,9 +836,9 @@ elseif ($op == "invoices") {
 				}
 				if (!$is_locked) {
 					$data[6] .= ' <a href="?sec=customers&sec2=operation/companies/company_detail
-						&delete_invoice=1&id='.$id.'&op=invoices&id_invoice='.$invoice["id"].'" 
-						onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
-						<img src="images/cross.png" title="'.__('Delete').'"></a>';
+						&delete_invoice=1&id='.$id.'&op=invoices&id_invoice='.$invoice["id"].'
+						&offset='.$offset.'" onClick="if (!confirm(\''.__('Are you sure?').'\'))
+						return false;"><img src="images/cross.png" title="'.__('Delete').'"></a>';
 				} else {
 					if ($locked_id_user) {
 						$data[6] .= ' <img src="images/administrator_lock.png" width="18" height="18"
@@ -1140,8 +1140,11 @@ echo "<div class= 'dialog ui-dialog-content' id='company_search_window'></div>";
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_crm.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
 
 <script type="text/javascript" >
+	
+add_ranged_datepicker ("#text-search_date_begin", "#text-search_date_end", null);
 	
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
@@ -1149,22 +1152,6 @@ $(document).ready (function () {
 	var idUser = "<?php echo $config['id_user'] ?>";
 	
 	bindAutocomplete ('#text-user', idUser);
-
-	$("#text-search_date_begin").datepicker ({
-		beforeShow: function () {
-			return {
-				maxDate: $("#text-search_date_begin").datepicker ("getDate")
-			};
-		}
-	});
-	
-	$("#text-search_date_end").datepicker ({
-		beforeShow: function () {
-			return {
-				maxDate: $("#text-search_date_end").datepicker ("getDate")
-			};
-		}
-	});
 	
 	// Form validation
 	trim_element_on_submit('#text-search_text');

@@ -49,3 +49,4 @@ print_input_hidden ('create', 1);
 echo "</div>";
 echo "</form>";
 
+?>

@@ -361,14 +361,13 @@ echo "</form>";
 
 <script type="text/javascript">
 
+add_ranged_datepicker ("#text-start_date", "#text-end_date", null);
+
 $(document).ready (function () {
-	configure_range_dates (null);
 	$("textarea").TextAreaResizer ();
 	
 	var idUser = "<?php echo $config['id_user'] ?>";
-	
 	bindAutocomplete ("#text-id_owner", idUser);	
-	
 });
 
 // Form validation

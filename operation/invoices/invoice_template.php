@@ -55,31 +55,36 @@
 		if ($invoice['concept1'] != "") {
 			echo '<tr>';
 				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:left;">'.$invoice['concept1'].'</td>';
-				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'.$invoice['amount1'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'
+					.$invoice['amount1'].' '.$invoice['currency'].'</td>';
 			echo '</tr>';
 		}
 		if ($invoice['concept2'] != "") {
 			echo '<tr>';
 				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:left;">'.$invoice['concept2'].'</td>';
-				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'.$invoice['amount2'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'
+					.$invoice['amount2'].' '.$invoice['currency'].'</td>';
 			echo '</tr>';
 		}
 		if ($invoice['concept3'] != "") {
 			echo '<tr>';
 				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:left;">'.$invoice['concept3'].'</td>';
-				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'.$invoice['amount3'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'
+					.$invoice['amount3'].' '.$invoice['currency'].'</td>';
 			echo '</tr>';
 		}
 		if ($invoice['concept4'] != "") {
 			echo '<tr>';
 				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:left;">'.$invoice['concept4'].'</td>';
-				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'.$invoice['amount4'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'
+					.$invoice['amount4'].' '.$invoice['currency'].'</td>';
 			echo '</tr>';
 		}
 		if ($invoice['concept5'] != "") {
 			echo '<tr>';
 				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:left;">'.$invoice['concept5'].'</td>';
-				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'.$invoice['amount5'].'</td>';
+				echo '<td style="padding:5px 15px 15px 15px; font-size:16px; text-align:right;">'
+					.$invoice['amount5'].' '.$invoice['currency'].'</td>';
 			echo '</tr>';
 		}
 		?>
@@ -103,13 +108,13 @@
 		</tr>
 		<tr>
 			<td style="padding:15px; font-size:18px;">
-				<?php echo '<b>'.$amount.'</b>' ?>
+				<?php echo '<b>'.$amount.' '.$invoice['currency'].'</b>' ?>
 			</td>
 			<td style="padding:15px; font-size:18px;">
-				<?php echo '<b>'.$tax_amount.'</b>' ?>
+				<?php echo '<b>'.$tax_amount.' '.$invoice['currency'].'</b>' ?>
 			</td>
 			<td style="padding:15px; font-size:18px;">
-				<?php echo '<b>'.$total.'</b>' ?>
+				<?php echo '<b>'.$total.' '.$invoice['currency'].'</b>' ?>
 			</td>
 		</tr>
 	</table>

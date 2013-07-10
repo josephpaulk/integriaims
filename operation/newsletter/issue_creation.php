@@ -116,3 +116,5 @@ if ($id) {
 	echo "</div>";
 
 echo "</form>";
+
+?>

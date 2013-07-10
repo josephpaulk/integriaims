@@ -476,53 +476,15 @@ if ($id | $new_contract) {
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
 
 <script type="text/javascript">
+	
+add_ranged_datepicker ("#text-date_begin", "#text-date_end", null);
+add_ranged_datepicker ("#text-search_date_begin_beginning", "#text-search_date_end_beginning", null);
+add_ranged_datepicker ("#text-search_date_begin", "#text-search_date_end", null);
+
 $(document).ready (function () {
-	$("#text-date_begin").datepicker ({
-		beforeShow: function () {
-			return {
-				maxDate: $("#text-date_end").datepicker ("getDate")
-			};
-		}
-	});
-	$("#text-date_end").datepicker ({
-		beforeShow: function () {
-			return {
-				minDate: $("#text-date_begin").datepicker ("getDate")
-			};
-		}
-	});
-	
-	$("#text-search_date_begin_beginning").datepicker ({
-		beforeShow: function () {
-			return {
-				maxDate: $("#text-search_date_begin").datepicker ("getDate")
-			};
-		}
-	});
-	$("#text-search_date_begin").datepicker ({
-		beforeShow: function () {
-			return {
-				minDate: $("#text-search_date_begin_beginning").datepicker ("getDate")
-			};
-		}
-	});
-	
-	$("#text-search_date_end_beginning").datepicker ({
-		beforeShow: function () {
-			return {
-				maxDate: $("#text-search_date_end").datepicker ("getDate")
-			};
-		}
-	});
-	$("#text-search_date_end").datepicker ({
-		beforeShow: function () {
-			return {
-				minDate: $("#text-search_date_end_beginning").datepicker ("getDate")
-			};
-		}
-	});
 	
 	$("#id_group").change (function() {
 	

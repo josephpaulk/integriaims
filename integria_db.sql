@@ -459,6 +459,7 @@ CREATE TABLE `tinvoice` (
   `amount4` float(11,2) NOT NULL DEFAULT 0.0,
   `amount5` float(11,2) NOT NULL DEFAULT 0.0,
   `tax` float(11,2) NOT NULL DEFAULT '0.0',
+  `currency` VARCHAR(3) NOT NULL DEFAULT 'EUR',
   `description` mediumtext NOT NULL,
   `id_attachment` bigint(20) unsigned NULL default NULL,
   `locked` tinyint(3) unsigned NOT NULL DEFAULT 0,

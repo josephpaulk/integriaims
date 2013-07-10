@@ -22,6 +22,7 @@ check_login();
 
 $id = (int) get_parameter ('id');
 $id_invoice = get_parameter ("id_invoice", "");
+$offset = get_parameter ('offset', 0);
 
 enterprise_include('include/functions_crm.php');
 include_once('include/functions_crm.php');
@@ -194,7 +195,7 @@ if ($invoices !== false) {
 		}
 		
 		$data[1] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$invoice["id_company"]."&op=invoices&id_invoice=".$invoice["id"]."'>".$invoice["bill_id"]."</a>";
-		$data[2] = get_invoice_amount ($invoice["id"]);
+		$data[2] = get_invoice_amount ($invoice["id"]) ." ". strtoupper ($invoice["currency"]);
 		$data[3] = __($invoice["status"]);
 		$data[4] = "<span style='font-size: 10px'>".$invoice["invoice_create_date"] . "</span>";
 		if ($invoice["status"] == "paid") {
@@ -222,9 +223,9 @@ if ($invoices !== false) {
 		}
 		if (!$is_locked) {
 			$data[7] .= ' <a href="?sec=customers&sec2=operation/invoices/invoice_detail
-				&delete_invoice=1&id='.$invoice["id_company"].'&id_invoice='.$invoice["id"].'" 
-				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
-				<img src="images/cross.png" title="'.__('Delete').'"></a>';
+				&delete_invoice=1&id='.$invoice["id_company"].'&id_invoice='.$invoice["id"].'
+				&offset='.$offset.'" onClick="if (!confirm(\''.__('Are you sure?').'\'))
+				return false;"><img src="images/cross.png" title="'.__('Delete').'"></a>';
 		} else {
 			if ($locked_id_user) {
 				$data[7] .= ' <img src="images/administrator_lock.png" width="18" height="18" 
@@ -241,34 +242,13 @@ if ($invoices !== false) {
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
 
 <script type="text/javascript">
-$(document).ready (function () {
-	$("#text-search_date_begin").datepicker ({
-		beforeShow: function () {
-			maxdate = null;
-			if ($("#text-search_date_end").datepicker ("getDate") > $(this).datepicker ("getDate"))
-				maxdate = $("#text-search_date_end").datepicker ("getDate");
-			return {
-				maxDate: maxdate
-			};
-		},
-		onSelect: function (datetext) {
-			end = $("#text-search_date_end").datepicker ("getDate");
-			start = $(this).datepicker ("getDate");
-			if (end <= start) {
-				pulsate ($("#text-search_date_end"));
-			}
-		}
-	});
-	$("#text-search_date_end").datepicker ({
-		beforeShow: function () {
-			return {
-				minDate: $("#text-search_date_begin").datepicker ("getDate")
-			};
-		}
-	});
+
+add_ranged_datepicker ("#text-search_date_begin", "#text-search_date_end", null);
 	
+$(document).ready (function () {
 	$("#id_group").change (function() {
 	
 		refresh_company_combo();

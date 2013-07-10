@@ -147,7 +147,7 @@ $table->data = array ();
 $date_table = "<table>";
 $date_table .= "<tr>";
 $date_table .= "<td>";
-$date_table .= "<input id='new_day' type='text' class='hasDatepicker' name='new_day' width='15' size='15'>";
+$date_table .= "<input id='new_day' type='text' name='new_day' width='15' size='15'>";
 $date_table .= "</td>";
 $date_table .= "<td>";
 $date_table .= "<input type='submit' class='sub next' name='add_day' value='".__("Add")."'>";
@@ -219,10 +219,8 @@ echo '</form>';
 
 <script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
 
 <script>
-$(document).ready(function (){
-	
-	$("#new_day").datepicker ();
-});
+add_datepicker ("#new_day", null);
 </script>

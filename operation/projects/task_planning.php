@@ -607,67 +607,10 @@ function show_task_tree (&$table, $id_project, $level, $id_parent_task, $users) 
 
 <script type="text/javascript">
 
+//Configure calendar dates
+add_task_planning_datepicker();
+
 $(document).ready (function () {
-	//Configure calendar dates
-	$('input[name^="start"]').datepicker({
-		beforeShow: function () {
-			maxdate = null;
-			name = $(this).attr('name');
-			id = name.substr(6);
-		
-			if ($('input[name^="end_'+id+'"]').datepicker ("getDate") > $(this).datepicker ("getDate"))
-				maxdate = $('input[name^="end_'+id+'"]').datepicker ("getDate");
-			return {
-				maxDate: maxdate
-			};
-		},
-		onSelect: function (datetext) {
-			name = $(this).attr('name');
-			id = name.substr(6);
-			end = $('input[name~="end_'+id+'"]').datepicker ("getDate");
-			start = $(this).datepicker ("getDate");
-			if (end <= start) {
-				pulsate ($('input[name~="end_'+id+'"]'));
-			} else {
-				console.log("paso1");
-				hours_day = <?php echo $config['hours_perday'];?>;
-				hours = Math.floor ((end - start) / 86400000 * hours_day);
-				
-				//Add one day more because the last equations deletes one day
-				hours = hours+hours_day;
-				
-				console.log("hours => "+hours);
-				//$("#text-hours").attr ("value", hours);
-			}
-		}
-	});
-	
-	$('input[name^="end"]').datepicker ({
-		
-		beforeShow: function () {
-			name = $(this).attr('name');
-			id = name.substr(4);
-			
-			return {
-				minDate: $('input[name~="start_'+id+'"]').datepicker ("getDate")
-			};
-		},
-		onSelect: function() {
-			console.log("paso2");
-			name = $(this).attr('name');
-			id = name.substr(4);
-			end = $(this).datepicker ("getDate");
-			start = $('input[name~="start_'+id+'"]').datepicker ("getDate");
-			hours_day = <?php echo $config['hours_perday'];?>;
-			hours = Math.floor ((end - start) / 86400000 * hours_day);
-			
-			//Add one day more because the last equations deletes one day
-			hours = hours+hours_day;
-			
-			console.log("hours => "+hours);
-			//$("#text-hours").attr ("value", hours);
-		}
-	});	
 	
    	//Toggle create task menu
 	$('#button-add').click(function() {

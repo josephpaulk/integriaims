@@ -179,10 +179,14 @@ echo "</div>";
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
 
 <script>
-//Javascript search form configuration
 
+// Datepicker
+add_ranged_datepicker ("#text-search_first_date", "#text-search_last_date", null);
+
+//Javascript search form configuration
 $(document).ready(function () {
 	$("#stats_form_submit").click(function (event) {
 		event.preventDefault();
@@ -194,22 +198,6 @@ $(document).ready(function () {
 		$("tr", table).show ();
 		$(this).remove ();
 		return false;
-	});
-	
-	$("#text-search_first_date").datepicker ({
-		beforeShow: function () {
-			return {
-				maxDate: $("#text-search_last_date").datepicker ("getDate")
-			};
-		}
-	});
-	
-	$("#text-search_last_date").datepicker ({
-		beforeShow: function () {
-			return {
-				minDate: $("#text-search_first_date").datepicker ("getDate")
-			};
-		}
 	});
 	
 	$("#saved_searches").change(function() {

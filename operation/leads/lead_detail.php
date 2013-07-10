@@ -812,11 +812,11 @@ if ($id || $new) {
 					// TODO. Check ACK for CRM Write here
 					if ($manage_permission) {
 						$data[9] .= '&nbsp;<a href="index.php?sec=customers&
-																	sec2=operation/leads/lead_detail&
-																	delete=1&id='.$lead["id"].'"
-																	onClick="if (!confirm(\''.__('Are you sure?').'\'))
-																	return false;">
-																	<img src="images/cross.png"></a>';
+										sec2=operation/leads/lead_detail&
+										delete=1&id='.$lead["id"].'"
+										onClick="if (!confirm(\''.__('Are you sure?').'\'))
+										return false;">
+										<img src="images/cross.png"></a>';
 					}
 				}
 			}

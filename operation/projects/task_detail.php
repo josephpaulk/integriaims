@@ -400,20 +400,22 @@ if (user_belong_project ($config['id_user'], $id_project) || give_acl ($config["
 
 <script type="text/javascript">
 
+// Datepicker
+add_ranged_datepicker ("#text-start_date", "#text-end_date", function (datetext) {
+	hours_day = <?php echo $config['hours_perday'];?>;
+	start_date = $("#text-start_date").datepicker ("getDate"); 
+	end_date = $(this).datepicker ("getDate");
+	if (end_date < start_date) {
+		pulsate (this);
+	} else {
+		hours = Math.floor ((end_date - start_date) / 86400000 * hours_day);
+		hours = hours + hours_day;
+		$("#text-hours").attr ("value", hours);
+	}
+});
+
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
-	configure_range_dates (function (datetext) {
-		hours_day = <?php echo $config['hours_perday'];?>;
-		start_date = $("#text-start_date").datepicker ("getDate"); 
-		end_date = $(this).datepicker ("getDate");
-		if (end_date < start_date) {
-			pulsate (this);
-		} else {
-			hours = Math.floor ((end_date - start_date) / 86400000 * hours_day);
-			hours = hours + hours_day;
-			$("#text-hours").attr ("value", hours);
-		}
-	});
 	
 	$("#slider").slider ({
 		min: 0,

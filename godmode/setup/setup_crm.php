@@ -119,3 +119,9 @@ echo '</div>';
 echo '</form>';
 
 ?>
+
+<script type="text/javascript">
+$(document).ready (function () {
+	$("textarea").TextAreaResizer ();
+});
+</script>

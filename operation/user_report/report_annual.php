@@ -172,12 +172,14 @@
 
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
-
+<script type="text/javascript" src="include/js/integria_date.js"></script>
 
 <script type="text/javascript">
 
+// Datepicker
+add_datepicker ("#text-start_date", null);
+
 $(document).ready (function () {
-	$("#text-start_date").datepicker ();
 	$("#textarea-description").TextAreaResizer ();
 	
 	var idUser = "<?php echo $config['id_user'] ?>";
