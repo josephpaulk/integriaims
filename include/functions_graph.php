@@ -18,8 +18,6 @@
 // GNU Lesser General Public License for more details.
 
 // If is called from index
-
-
 if (file_exists("include/config.php")) {
 	include_once ("include/config.php");
 	include_once("include/graphs/fgraph.php");
@@ -671,7 +669,6 @@ function incident_activity_graph ($id_incident){
 	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300, array(), "", "", "", "", "", $config['font'], $config['fontsize']);
 }
 
-// TODO: Move to functions_graph.php
 function task_activity_graph ($id_task){
 	global $config;
 
@@ -945,6 +942,38 @@ function all_project_tree ($id_user, $completion, $project_kind) {
 	require ($mapfilename);
 	//unlink ($pngfilename);
 	unlink ($dotfilename);
+}
+
+// ===============================================================================
+// Draw a simple pie graph with the number of workorders, by owner
+// ===============================================================================
+
+function graph_workorder_num ($width, $height, $type = "owner", $where_clause = "WHERE 1=1", $ttl=1) {
+	global $config;
+	$data = array();
+	
+	if ($type == "submitter")
+		$sql = "SELECT COUNT(id), created_by_user FROM ttodo $where_clause GROUP BY created_by_user ORDER BY 2";
+	else
+		$sql = "SELECT COUNT(id), assigned_user FROM ttodo $where_clause GROUP BY assigned_user ORDER BY 2";
+	
+	$wos = get_db_all_rows_sql ($sql);
+	$data = NULL;
+	
+	if ($wos !== false) {
+		foreach ($wos as $wo) {
+			if ($type == "submitter")
+				$data[$wo['created_by_user']] = $wo['COUNT(id)'];
+			else
+				$data[$wo['assigned_user']] = $wo['COUNT(id)'];
+		}
+	}
+	
+	if ($data == NULL) {
+		return __("There is no data to show");
+	} else {
+		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
+	}
 }
 
 // ****************************************************************************

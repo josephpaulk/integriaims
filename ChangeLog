@@ -1,3 +1,18 @@
+2013-07-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_graph.php: Added the function
+	"graph_workorder_num".
+	   
+	* operation/workorders/wo.php: Some fixes on the
+	pagination and the search. Now is possible to search
+	all the user accesible work orders. Added two icons for
+	direct access to the user work orders and the user
+	delegated work orders. Added direct access to the
+	owner and submitter work orders by clicking on its
+	names. Added a graph on the right of the search form.
+	This graph shows the percentage of the work orders or
+	the delegated work orders of every user.
+
 2013-07-10  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* integria_db.sql

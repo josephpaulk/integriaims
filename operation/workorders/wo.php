@@ -25,6 +25,7 @@ require_once ('include/functions_ui.php');
 require_once ('include/functions_user.php');
 
 $id = (int) get_parameter ("id");
+$offset = get_parameter ("offset", 0);
 
 // ---------------
 // CREATE new todo
@@ -315,7 +316,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 			$table->data[4][0] .= $start_date;
 			$table->data[4][0] .= print_input_hidden ("start_date", $start_date, true);
 		} else
-		$table->data[4][0] = print_input_text ('start_date', $start_date , '', 25, 25, true, __('Start date'));
+			$table->data[4][0] = print_input_text ('start_date', $start_date , '', 25, 25, true, __('Start date'));
 		
 		if ($end_date == "0000-00-00 00:00:00"){
 				$end_date = '';
@@ -362,14 +363,14 @@ if ($operation == "") {
 	$search_text = (string) get_parameter ('search_text');
 	$id_wo_category = (int) get_parameter ('id_wo_category');
 	$search_status = (int) get_parameter ("search_status",0);
-	$owner = (string) get_parameter ("owner", $config["id_user"]);
+	$owner = (string) get_parameter ("owner");
 
 	$creator = (string) get_parameter ("creator");
 	$id_category = get_parameter ("id_category");
 	$search_priority = get_parameter ("search_priority", -1);
 	$need_validation =get_parameter("need_validation",0);
 
-	$params = "&search_priority=$search_priority&search_tatus=$search_tatus&search_text=$search_text&id_category=$id_category&owner=$owner&creator=$creator&need_validation=$need_validation";
+	$params = "&search_priority=$search_priority&search_tatus=$search_status&search_text=$search_text&id_category=$id_category&owner=$owner&creator=$creator&need_validation=$need_validation";
 
 	$where_clause = "WHERE 1=1 ";
 
@@ -382,18 +383,17 @@ if ($operation == "") {
 	}
 
 	if ($search_priority > -1){
-		$where_clause .= " AND priority >= $search_priority ";
+		$where_clause .= " AND priority = $search_priority ";
 	}
 
-
-	if ($owner != "*") {
+	if ($owner != "") {
 		$where_clause .= sprintf (' AND assigned_user =  "%s"', $owner);
 	}
 
 	if ($search_text != "") {
-		$where_clause .= sprintf (' AND name LIKE "%%%s%%" OR description LIKE "%%%s%%"', $search_text,$search_text);
+		$where_clause .= sprintf (' AND (name LIKE "%%%s%%" OR description LIKE "%%%s%%")', $search_text, $search_text);
 	}
-
+	
 	if ($search_status > -1) {
 		$where_clause .= sprintf (' AND progress = %d ', $search_status);
 	}
@@ -432,7 +432,22 @@ if ($operation == "") {
 
 
 	$table->data[1][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+	$table->data[1][2] .= ' <a href="index.php?sec=projects&sec2=operation/workorders/wo&owner='
+		.$config["id_user"].'"><img src="images/user.png" title="'.__('My WO\'s').'"></a>';
+	$table->data[1][2] .= ' <a href="index.php?sec=projects&sec2=operation/workorders/wo&creator='
+		.$config["id_user"].'"><img src="images/user.png" title="'.__('My delegated WO\'s').'"></a>';
+	
+	$table->rowspan[0][3] = 3;
+	
+	if ($owner != "") {
+		$table->data[0][3] = '<b>'.__('Submitters') .'</b>';
+		$table->data[0][3] .= '<br>'. graph_workorder_num ('200', '100', 'submitter',$where_clause);
+	} else {
+		$table->data[0][3] = '<b>'.__('Owners') .'</b>';
+		$table->data[0][3] .= '<br>'. graph_workorder_num ('200', '100', 'owner',$where_clause);
 
+	}
+	
 	print_table ($table);
 	$table->data = array ();
 
@@ -551,17 +566,28 @@ if ($operation == "") {
 			if ($wo["progress"] == 2)
 				$data[4] = __("Validated");
 			
-			if ($wo["assigned_user"] == $config["id_user"])
-				$data[5] = __("Me");
-			else	
-				$data[5] = $wo["assigned_user"];
+			if ($wo["assigned_user"] == $config["id_user"]) {
+				$data[5] = '<a href="index.php?sec=projects&sec2=operation/workorders/wo&owner='.$wo["assigned_user"].'">'.__("Me").'</a>';
+			}
+			else {
+				$data[5] = '<a href="index.php?sec=projects&sec2=operation/workorders/wo&owner='.$wo["assigned_user"].'">'.$wo["assigned_user"].'</a>';
+			}
 			
-			if ($wo["assigned_user"] != $wo["created_by_user"]){
-				$data[6] = $wo["created_by_user"];
+			if ($wo["assigned_user"] != $wo["created_by_user"]) {
+				if ($wo["created_by_user"] == $config["id_user"]) {
+					$data[6] = '<a href="index.php?sec=projects&sec2=operation/workorders/wo&creator='.$wo["created_by_user"].'">'.__("Me").'</a>';
+				} else {
+					$data[6] = '<a href="index.php?sec=projects&sec2=operation/workorders/wo&creator='.$wo["created_by_user"].'">'.$wo["created_by_user"].'</a>';
+				}
 				if ($wo["need_external_validation"] == 1)
 					$data[6] .= "<img src='images/bullet_delete.png' title='".__("Requires validation") . "'>";
-			} else
-				$data[6] = "";
+			} else {
+				if ($wo["created_by_user"] == $config["id_user"]) {
+					$data[6] = '<a href="index.php?sec=projects&sec2=operation/workorders/wo&creator='.$wo["created_by_user"].'">'.__("Me").'</a>';
+				} else {
+					$data[6] = '<a href="index.php?sec=projects&sec2=operation/workorders/wo&creator='.$wo["created_by_user"].'">'.$wo["created_by_user"].'</a>';
+				}
+			}
 
 			
 			if ($wo["id_wo_category"]){
@@ -586,7 +612,8 @@ if ($operation == "") {
 			}
 
 			if (($wo["progress"] < 2) AND ($wo["created_by_user"] == $config["id_user"]) AND ($wo["need_external_validation"] == 1) ){	
-				$data[10] = "<a href='index.php?sec=projects&sec2=operation/workorders/wo$params&id=". $wo['id']."&set_progress=2'><img src='images/rosette.png' title='".__("Validate")."'></a>";
+				$data[10] = "<a href='index.php?sec=projects&sec2=operation/workorders/wo$params&id="
+					. $wo['id']."&set_progress=2&offset=$offset'><img src='images/rosette.png' title='".__("Validate")."'></a>";
 			}
 
 			// Evaluate different conditions to allow WO deletion
@@ -599,10 +626,9 @@ if ($operation == "") {
 				$can_delete = 1;				
 
 			if ($can_delete){
-				$data[10] .= '&nbsp;&nbsp;<a 
-href="index.php?sec=projects&sec2=operation/workorders/wo'.$params.'&operation=delete&id='.
-				$wo['id'].'""onClick="if (!confirm(\''.__('Are you sure?').'\'))
-							return false;"><img src="images/cross.png"></a>';
+				$data[10] .= '&nbsp;&nbsp;<a href="index.php?sec=projects&sec2=operation/workorders/wo'
+					.$params.'&operation=delete&id='.$wo['id'].'&offset='.$offset.'""onClick="if (!confirm(\''
+					.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
 			}
 
 			array_push ($table->data, $data);
