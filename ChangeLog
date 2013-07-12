@@ -1,5 +1,42 @@
 2013-07-12  Sancho Lerena <slerena@artica.es>
 
+	* include/languages/cs.po,
+        include/languages/pt_BR.po,
+        include/languages/pl.mo,
+        include/languages/it.mo,
+        include/languages/sl.mo,
+        include/languages/sk.po,
+        include/languages/pt.mo,
+        include/languages/ar.po,
+        include/languages/cs.mo,
+        include/languages/pt_BR.mo,
+        include/languages/sk.mo,
+        include/languages/de.po,
+        include/languages/sv.po,
+        include/languages/ja.po,
+        include/languages/zh_TW.po,
+        include/languages/he.po,
+        include/languages/fi.po,
+        include/languages/ar.mo,
+        include/languages/hi.po,
+        include/languages/zh_CN.po,
+        include/languages/sv.mo,
+        include/languages/de.mo,
+        include/languages/ja.mo,
+        include/languages/zh_TW.mo,
+        include/languages/he.mo,
+        include/languages/fi.mo,
+        include/languages/hi.mo,
+        include/languages/zh_CN.mo,
+        include/languages/gl.po,
+        include/languages/pl.po,
+        include/languages/it.po,
+        include/languages/sl.po,
+        include/languages/pt.po,
+        include/languages/gl.mo,
+        include/languages/index.pot,
+        include/languages/Makefile: Added new language templates.
+	
 	* include/languages/index.pot: Language update.
 
 2013-07-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
