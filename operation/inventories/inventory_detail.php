@@ -488,7 +488,7 @@ if ($write_permission) {
 	
 	$parent_name = $id_parent ? get_inventory_name ($id_parent) : __("None");
 	
-	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','')", "class='inventory_obj_search'", true, false,  __('Parent object'));
+	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','','','')", "class='inventory_obj_search'", true, false,  __('Parent object'));
 	$table->data[1][0] .= print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
 	$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
 

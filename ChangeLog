@@ -1,3 +1,8 @@
+2013-07-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/inventories/inventory_detail.php: Fixed a
+	bug on the parent object search.
+
 2013-07-12  Dario Rodriguez <dario@artica.es>
 
 	* integria_demo.sql,
