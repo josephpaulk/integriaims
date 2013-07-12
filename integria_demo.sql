@@ -175,8 +175,8 @@ UNLOCK TABLES;
 
 LOCK TABLES `tgrupo` WRITE;
 /*!40000 ALTER TABLE `tgrupo` DISABLE KEYS */;
-INSERT INTO `tgrupo` VALUES (1,'All','world.png',NULL,NULL,NULL,0,'admin',NULL,0,0,1,'',0,NULL),(2,'Customer&#x20;#A','eye.png','',NULL,NULL,0,'admin',1,0,0,1,'',0,0),(3,'Customer #B','eye.png',NULL,NULL,NULL,0,'admin',NULL,0,0,1,'',0,NULL),(4,'Engineering','computer.png','',NULL,NULL,0,'admin',1,0,0,1,'',0,0);
-/*!40000 ALTER TABLE `tgrupo` ENABLE KEYS */;
+INSERT INTO `tgrupo` VALUES (1,'All','world.png',NULL,NULL,NULL,0,'admin',NULL,0,0,1,'',0,NULL,0,0,0,0,"",""),(2,'Customer&#x20;#A','eye.png','',NULL,NULL,0,'admin',1,0,0,1,'',0,0,0,0,0,0,"",""),(3,'Customer #B','eye.png',NULL,NULL,NULL,0,'admin',NULL,0,0,1,'',0,NULL,0,0,0,0,"",""),(4,'Engineering','computer.png','',NULL,NULL,0,'admin',1,0,0,1,'',0,0,0,0,0,0,"","");
+/*!40000 ALTER TABLE `tgrupo` ENABLE KEYS */;  
 UNLOCK TABLES;
 
 --

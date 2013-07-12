@@ -1,3 +1,12 @@
+2013-07-12  Dario Rodriguez <dario@artica.es>
+
+	* integria_demo.sql,
+	integria_db.sql,
+	extras/migrate.sql,
+	godmode/grupos/configurar_grupo.php,
+	godmode/grupos/lista_grupos.php: Added support 
+	for mail queues in groups.
+
 2013-07-12  Sancho Lerena <slerena@artica.es>
 
 	* include/languages/cs.po,

@@ -18,6 +18,7 @@ global $config;
 check_login();
 
 include("include/functions_user.php");
+enterprise_include("include/functions_groups.php");
 
 if (! give_acl ($config["id_user"], 0, "UM")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access group management");
@@ -57,6 +58,12 @@ if ($id) {
 		$id_sla = $group["id_sla"];
 		$id_user = get_db_value ('id_user_default', 'tgrupo', 'id_grupo', $id);
 		$id_inventory = $group["id_inventory_default"];
+		$autocreate_user = $group["autocreate_user"];
+		$grant_access = $group["grant_access"];
+		$send_welcome = $group["send_welcome"];
+		$default_company = $group["default_company"];
+		$welcome_email = $group["welcome_email"];
+		$email_queue = $group["email_queue"];
 		
 		//Inventory == zero is an empty string
 		if ($id_inventory == 0) {
@@ -136,6 +143,9 @@ $table->data[6][0] .= "<a href='javascript: show_inventory_search(\"\",\"\",\"\"
 
 echo '<form id="form-configurar_grupo" method="post" action="index.php?sec=users&sec2=godmode/grupos/lista_grupos">';
 print_table ($table);
+
+enterprise_hook("groups_email_queue_form", array($autocreate_user, $grant_access, $send_welcome, $default_company, $welcome_email, $email_queue));
+
 echo '<div class="button" style="width: '.$table->width.'">';
 
 if ($id) {

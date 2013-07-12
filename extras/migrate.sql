@@ -321,3 +321,12 @@ ALTER TABLE tinvoice ADD COLUMN `amount5` float(11,2) NOT NULL DEFAULT 0.00;
 
 /* 10/07/2013 */
 ALTER TABLE tinvoice ADD COLUMN `currency` VARCHAR(3) NOT NULL DEFAULT 'EUR';
+
+
+/* 12/07/2013 */
+ALTER TABLE `tgrupo` ADD `autocreate_user` int(5) unsigned NOT NULL default 0;
+ALTER TABLE `tgrupo` ADD `grant_access` int(5) unsigned NOT NULL default 0;
+ALTER TABLE `tgrupo` ADD `send_welcome` int(5) unsigned NOT NULL default 0;
+ALTER TABLE `tgrupo` ADD `default_company` mediumint(8) unsigned NOT NULL default 0;
+ALTER TABLE `tgrupo` ADD `email_queue` text;
+ALTER TABLE `tgrupo` ADD `welcome_email` text;

@@ -57,6 +57,12 @@ CREATE TABLE `tgrupo` (
   `email` varchar(128) default '',
   `enforce_soft_limit` int(2) unsigned NOT NULL default 0,
   `id_inventory_default` mediumint(8) unsigned default NULL ,
+  `autocreate_user` int(5) unsigned NOT NULL default 0,
+  `grant_access` int(5) unsigned NOT NULL default 0,
+  `send_welcome` int(5) unsigned NOT NULL default 0,
+  `default_company` mediumint(8) unsigned NOT NULL default 0,
+  `email_queue` text,
+  `welcome_email` text
   PRIMARY KEY  (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

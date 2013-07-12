@@ -54,14 +54,25 @@ if ($create_group) {
 	$hard_limit = (int) get_parameter ('hard_limit');
 	$enforce_soft_limit = (bool) get_parameter ('enforce_soft_limit');
 	$id_inventory = (int) get_parameter("id_inventory", 0);
-
 	$banner = (string) get_parameter ('banner');
 	$forced_email = (bool) get_parameter ('forced_email');
 	$id_user_default = (string) get_parameter ('id_user');
 	$id_sla = (int) get_parameter ("id_sla");
+	$autocreate_user = (int) get_parameter("autocreate_user", 0);
+	$grant_access = (int) get_parameter("grant_access", 0);
+	$send_welcome = (int) get_parameter("send_welcome", 0);
+	$default_company = (int) get_parameter("default_company", 0);
+	$welcome_email = (string) get_parameter ('welcome_email', "");
+	$email_queue = (string) get_parameter ('email_queue', "");
 
-	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, banner, id_user_default, soft_limit, hard_limit, enforce_soft_limit, id_sla, parent, id_inventory_default) VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s", %d, %d, "%s", %d)', 
-						$name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, $enforce_soft_limit, $id_sla, $parent, $id_inventory);
+	$sql = sprintf ('INSERT INTO tgrupo (nombre, icon, forced_email, banner, id_user_default, 
+					soft_limit, hard_limit, enforce_soft_limit, id_sla, parent, id_inventory_default,
+					autocreate_user, grant_access, send_welcome, default_company, welcome_email, email_queue) 
+					VALUES ("%s", "%s", %d, "%s", "%s", "%s", "%s", %d, %d, "%s", %d, %d, %d, %d, %d, "%s", "%s")', 
+						$name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, 
+						$enforce_soft_limit, $id_sla, $parent, $id_inventory, $autocreate_user, $grant_access,
+						$send_welcome, $default_company, $welcome_email, $email_queue);
+						
 	$id = process_sql ($sql, 'insert-id');	
 	if ($id === false)
 		echo '<h3 class="error">'.__('There was a problem creating group').'</h3>';
@@ -84,11 +95,24 @@ if ($update_group) {
 	$enforce_soft_limit = (bool) get_parameter ('enforce_soft_limit');
 	$id_sla = get_parameter ("id_sla");
 	$id_inventory = (int) get_parameter("id_inventory", 0);
+	$autocreate_user = (int) get_parameter("autocreate_user", 0);
+	$grant_access = (int) get_parameter("grant_access", 0);
+	$send_welcome = (int) get_parameter("send_welcome", 0);
+	$default_company = (int) get_parameter("default_company", 0);
+	$welcome_email = (string) get_parameter ('welcome_email', "");
+	$email_queue = (string) get_parameter ('email_queue', "");	
 	
 	$sql = sprintf ('UPDATE tgrupo
 		SET parent = %d, nombre = "%s", icon = "%s", forced_email = %d, 
-		banner = "%s", id_user_default = "%s", soft_limit = %d, hard_limit = %d, enforce_soft_limit = %d, id_sla = %d, id_inventory_default = %d WHERE id_grupo = %d',
-		 $parent, $name, $icon, $forced_email, $banner, $id_user_default, $soft_limit, $hard_limit, $enforce_soft_limit, $id_sla, $id_inventory, $id);
+		banner = "%s", id_user_default = "%s", soft_limit = %d, hard_limit = %d, 
+		enforce_soft_limit = %d, id_sla = %d, id_inventory_default = %d, 
+		autocreate_user = %d, grant_access = %d, send_welcome = %d,
+		default_company = %d, welcome_email = "%s", email_queue = "%s"
+		WHERE id_grupo = %d',
+		 $parent, $name, $icon, $forced_email, $banner, $id_user_default, 
+		 $soft_limit, $hard_limit, $enforce_soft_limit, $id_sla, $id_inventory, 
+		 $autocreate_user, $grant_access, $send_welcome, $default_company, 
+		 $welcome_email, $email_queue, $id);
 
 	$result = process_sql ($sql);
 
