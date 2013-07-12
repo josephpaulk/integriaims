@@ -1,3 +1,7 @@
+2013-07-12  Sancho Lerena <slerena@artica.es>
+
+	* include/languages/index.pot: Language update.
+
 2013-07-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/functions_graph.php: Added the function
