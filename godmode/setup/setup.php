@@ -88,6 +88,7 @@ if ($update) {
 	$config["lead_warning_time"] = get_parameter ("lead_warning_time", "7");  
 	$config["months_to_delete_incidents"] = get_parameter ("months_to_delete_incidents", 12);
 	$config["max_pending_mail"] = get_parameter ("max_pending_mail", 15);
+	
 
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);

@@ -174,8 +174,6 @@ function load_config(){
 		$config["font"] = $config["homedir"]."/include/fonts/smallfont.ttf";
 	}
 	
-	// Activity auditing setup
-	
 	if (!isset ($config["audit_category_default"])) {
 		$config["audit_category_default"] = 1;
 	}
@@ -227,10 +225,28 @@ function load_config(){
 	if (!isset ($config['attachment_store'])) {
 		$config['attachment_store'] = $config['homedir'].'attachment';
 	}	
-		
+	
+	if (!isset ($config['session_timeout'])) {
+		$config['session_timeout'] = 90;
+	}	
+}
+
+function config_prepare_session() {
+	global $config;
+
+
+	// Change the session timeout value to session_timeout minutes  // 8*60*60 = 8 hours
+	$sessionCookieExpireTime = $config["session_timeout"] * 60;
+	ini_set(’session.gc_maxlifetime’, $sessionCookieExpireTime);
+	session_set_cookie_params ($sessionCookieExpireTime);
+
+	// Reset the expiration time upon page load //session_name() is default name of session PHPSESSID
+
+	if (isset($_COOKIE[session_name()]))
+    	setcookie(session_name(), $_COOKIE[session_name()], time() + $sessionCookieExpireTime, "/");
+ 
     ini_set("post_max_size",$config["max_file_size"]);
     ini_set("upload_max_filesize",$config["max_file_size"]);
-
 }
 
 function load_menu_visibility() {

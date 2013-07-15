@@ -68,6 +68,8 @@ if ($config["error_log"] == 1){
 
 $l10n = NULL;
 
+config_prepare_session();
+
 session_start();
 
 global $develop_bypass;

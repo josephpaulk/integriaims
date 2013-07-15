@@ -70,7 +70,8 @@ if ($update) {
 	$config['ldap_start_tls'] = (int) get_parameter ("start_tls", 0);
 	$config['ldap_base_dn'] = get_parameter ("ldap_base_dn", "ou=People,dc=example,dc=com");
 	$config['ldap_login_attr'] = (string) get_parameter ("ldap_login_attr", "uid");
-	
+	$config["session_timeout"] = get_parameter ("session_timeout", 90);
+
 	update_config_token ("auth_methods", $config["auth_methods"]);
 	update_config_token ("autocreate_remote_users", $config["autocreate_remote_users"]);
 	update_config_token ("default_remote_profile", $config["default_remote_profile"]);
@@ -82,6 +83,8 @@ if ($update) {
 	update_config_token ("ldap_start_tls", $config["ldap_start_tls"]);
 	update_config_token ("ldap_base_dn", $config["ldap_base_dn"]);
 	update_config_token ("ldap_login_attr", $config["ldap_login_attr"]);
+
+    update_config_token ("session_timeout", $config["session_timeout"]);
 }
 
 if(!isset($config['auth_methods'])) {
@@ -102,6 +105,12 @@ $table->data = array ();
 
 $auth_methods = array ('mysql' => __('Local Integria'), 'ldap' => __('LDAP'));
 $table->data[0][0] = print_select ($auth_methods, "auth_methods", $auth_method, '','','',true, 0, true, __('Authentication method'));
+
+$table->data[0][1] = print_input_text ("session_timeout", $config['session_timeout'], '',
+	10, 10, true, __('Session timeout (secs)'));
+
+$table->data[0][1] .= print_help_tip (__("This is defined in seconds. "), true);
+
 
 $table->data[1][0] = __('Autocreate remote users');
 $table->data[2][0] =  __('Yes').'&nbsp;'.print_radio_button ('autocreate_remote_users', 1, '', $config['autocreate_remote_users'], true, '', '', '').'&nbsp;&nbsp;';
@@ -145,6 +154,7 @@ $table->data[11][0] = print_input_text ("ldap_base_dn", $config['ldap_base_dn'],
 	
 $table->data[12][0] = print_input_text ("ldap_login_attr", $config['ldap_login_attr'], '',
 	60, 50, true, __('Login attribute'));
+
 
 
 

@@ -1,3 +1,15 @@
+2013-07-15  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_config.php,
+	include/config_process.php: Added code to force session
+	timeout to parameters in setup.
+
+	* integria_demo.sql: Fixed minor problem with demo data.
+
+	* godmode/setup/setup.php,
+	godmode/setup/setup_auth.php: Added new setup parameter
+	to define session timeout.
+
 2013-07-15  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* include/functions_crm.php
