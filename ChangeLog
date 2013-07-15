@@ -1,3 +1,11 @@
+2013-07-15  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_crm.php
+	  operation/companies/company_detail.php: Added
+	company statistics.
+
+	* operation/companies/company_statistics.php: Added file.
+
 2013-07-13  Dario Rodriguez <dario@artica.es>
 
 	*integria_demo.sql,

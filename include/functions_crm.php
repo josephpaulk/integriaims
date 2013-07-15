@@ -167,6 +167,200 @@ function crm_get_all_invoices ($where_clause) {
 	
 	}
 	return $invoices;
+}
 
+// sum total invoices
+function crm_get_total_invoiced($where_clause = false) {
+	
+	if ($where_clause) {
+		$sql = "SELECT id_company as id, sum(ammount) as total_ammount FROM tinvoice
+			WHERE id_company IN (SELECT id FROM tcompany
+					WHERE 1=1 $where_clause)
+			GROUP BY id_company
+			ORDER BY total_ammount DESC
+			";
+	} else {
+		$sql = "SELECT id_company as id, sum(ammount) as total_ammount FROM tinvoice
+			GROUP BY id_company
+			ORDER BY total_ammount DESC
+			";
+	}
+	
+	
+	$total = process_sql ($sql);
+
+	return $total;
+}
+
+//print top 10 invoices
+function crm_print_most_invoicing_companies($companies) {
+	
+	$table->id = 'company_list';
+	$table->class = 'listing';
+	$table->width = '90%';
+	$table->data = array ();
+	$table->head = array ();
+	$table->style = array ();
+	
+	$table->head[0] = __('Company');
+	$table->head[1] = __('Invoiced');
+	
+	$i = 0;
+	foreach ($companies as $key=>$company) {
+	
+		if ($i < 10) {
+			$data = array();
+			$data[0] = crm_get_company_name ($company['id']);
+
+			$data[1] = $company['total_ammount'];
+
+			array_push ($table->data, $data);
+		}
+		$i++;
+	}
+	
+	return $table;
+}
+
+// count total activity
+function crm_get_total_activity($where_clause = false) {
+	
+	if ($where_clause) {
+		$sql = "SELECT id_company as id, count(id) as total_activity FROM tcompany_activity
+			WHERE id_company IN (SELECT id FROM tcompany
+					WHERE 1=1 $where_clause)
+			GROUP BY id_company
+			ORDER BY total_activity DESC
+			";
+	} else {
+		$sql = "SELECT id_company as id, count(id) as total_activity FROM tcompany_activity
+			GROUP BY id_company
+			ORDER BY total_activity DESC
+			";
+	}
+
+	$activity_total = process_sql ($sql);
+
+	return $activity_total;
+}
+
+//print top 10 activities
+function crm_print_most_activity_companies($companies) {
+	
+	$table->id = 'company_list';
+	$table->class = 'listing';
+	$table->width = '90%';
+	$table->data = array ();
+	$table->head = array ();
+	$table->style = array ();
+	
+	$table->head[0] = __('Company');
+	$table->head[1] = __('Number');
+	
+	$i = 0;
+	foreach ($companies as $key=>$company) {
+	
+		if ($i < 10) {
+			$data = array();
+			$data[0] = crm_get_company_name ($company['id']);
+
+			$data[1] = $company['total_activity'];
+
+			array_push ($table->data, $data);
+		}
+		$i++;
+	}
+	
+	//print_table($table);
+	return $table;
+}
+
+// count companies per country
+function crm_get_total_country($where_clause = false) {
+	
+	if ($where_clause) {
+		$sql = "SELECT country, count(id) as total_companies FROM tcompany
+			WHERE id IN (SELECT id FROM tcompany
+					WHERE 1=1 $where_clause)
+			AND country<>''
+			GROUP BY country
+			ORDER BY total_companies DESC
+			";
+	} else {
+		$sql = "SELECT country, count(id) as total_companies FROM tcompany
+			WHERE country<>''
+			GROUP BY country
+			ORDER BY total_companies DESC
+			";
+	}
+		
+	$total = process_sql ($sql);
+
+	return $total;
+}
+
+function crm_get_data_country_graph($companies) {
+	
+	global $config;
+	
+	if ($companies === false) {
+		return false;
+	}
+    
+	require_once ("include/functions_graph.php");  
+	
+	$company_country = array();
+	$i = 0;
+	foreach ($companies as $key=>$company) {
+		if ($i < 10) {
+			$company_country[$company['country']] = $company['total_companies'];
+		}
+	}
+
+	return $company_country;
+}
+
+// count users per company
+function crm_get_total_user($where_clause = false) {
+	
+	if ($where_clause) {
+		$sql = "SELECT id_company, count(id_company) as total_users FROM tusuario
+			WHERE id_company IN (SELECT id FROM tcompany
+					WHERE 1=1 $where_clause)
+			AND id_company<>0
+			GROUP BY id_company
+			ORDER BY total_users DESC
+			";
+	} else {
+		$sql = "SELECT id_company, count(id_company) as total_users FROM tusuario
+			WHERE id_company<>0
+			GROUP BY id_company
+			ORDER BY total_users DESC
+			";
+	}
+		
+	$total = process_sql ($sql);
+
+	return $total;
+}
+
+function crm_get_data_user_graph($companies) {	
+	global $config;
+    
+    if ($companies === false) {
+		return false;
+	}
+	
+	require_once ("include/functions_graph.php");  
+	
+	$company_user = array();
+	$i = 0;
+	foreach ($companies as $key=>$company) {
+		if ($i < 10) {
+			$company_name = crm_get_company_name($company['id_company']);
+			$company_user[$company_name] = $company['total_users'];
+		}
+	}
+	return $company_user;
 }
 ?>

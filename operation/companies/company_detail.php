@@ -44,7 +44,6 @@ if ($result === ENTERPRISE_NOT_HOOK) {
 	}
 }
 
-
 //ACL EXTERNAL USER (OPEN AND ENTERPRISE)
 if (user_is_external($config['id_user'])) {
 	$check_external_user = crm_check_acl_external_user($config['id_user'], $id);
@@ -946,8 +945,17 @@ if ((!$id) AND ($new_company == 0)){
 	}
 
 	// Search // General Company listing
+	echo "<div id='inventory-search-content'>";
+	echo "<h2>".__('Company management');
+	echo "<div id='button-bar-title'>";
+	echo "<ul>";
+	echo "<li>";
+	echo "<a id='company_stats_form_submit' href='javascript: changeAction();'>".print_image ("images/chart_bar.png", true, array("title" => __("Search statistics")))."</a>";
+	echo "</li>";
+	echo "</ul>";
+	echo "</div>";
+	echo "</h2>";
 
-	echo "<h2>".__('Company management')."</h2>";
 	echo "<br>";
 	$search_text = (string) get_parameter ('search_text');	
 	$search_role = (int) get_parameter ("search_role");
@@ -1021,8 +1029,7 @@ if ((!$id) AND ($new_company == 0)){
 	$table->data[1][4] = __('Date to');
 	$table->data[1][5] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true);
 		
-	
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
+	echo '<form method="post" id="company_stats_form" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	print_table ($table);
 	
 	echo '<div style="width:'.$table->width.'" class="action-buttons button">';
@@ -1196,8 +1203,16 @@ $(document).ready (function () {
 		//required: "<?php echo __('Fiscal ID required')?>",
 		remote: "<?php echo __('This fiscal id already exists')?>"
 	};
-	add_validate_form_element_rules('#text-fiscal_id', rules, messages);		
+	add_validate_form_element_rules('#text-fiscal_id', rules, messages);
 	
 });
+
+function changeAction() {
+	
+	var f = document.forms.company_stats_form;
+
+	f.action = "index.php?sec=customers&sec2=operation/companies/company_statistics";
+	$("#company_stats_form").submit();
+}
 
 </script>
