@@ -62,7 +62,11 @@ CREATE TABLE `tgrupo` (
   `send_welcome` int(5) unsigned NOT NULL default 0,
   `default_company` mediumint(8) unsigned NOT NULL default 0,
   `email_queue` text,
-  `welcome_email` text
+  `welcome_email` text,
+  `default_profile` int(10) unsigned NOT NULL default 0,
+  `nivel` tinyint(1) NOT NULL default '0',
+  `simple_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
+  `id_incident_type` mediumint(8) unsigned NULL
   PRIMARY KEY  (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

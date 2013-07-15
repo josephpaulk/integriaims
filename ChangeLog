@@ -1,3 +1,12 @@
+2013-07-13  Dario Rodriguez <dario@artica.es>
+
+	*integria_demo.sql,
+	integria_db.sql,
+	extras/migrate.sql,
+	godmode/grupos/configurar_grupo.php,
+	godmode/grupos/lista_grupos.php: Added support for new
+	variables on user creation for emails.
+
 2013-07-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/inventories/inventory_detail.php: Fixed a
