@@ -66,7 +66,7 @@ CREATE TABLE `tgrupo` (
   `default_profile` int(10) unsigned NOT NULL default 0,
   `nivel` tinyint(1) NOT NULL default '0',
   `simple_mode` tinyint(2) unsigned NOT NULL DEFAULT 0,
-  `id_incident_type` mediumint(8) unsigned NULL
+  `id_incident_type` mediumint(8) unsigned NULL,
   PRIMARY KEY  (`id_grupo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1008,7 +1008,7 @@ CREATE TABLE `tholidays` (
 
 CREATE TABLE `tinventory_track` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `id_inventory` mediumint(8) unsigned NOT NULL default '0',
+  `id_inventory` bigint(20) unsigned NOT NULL default '0',
   `id_aditional` varchar(60) NOT NULL DEFAULT '0',
   `state` int(10) unsigned NOT NULL default '0',
   `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',

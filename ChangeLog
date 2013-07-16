@@ -1,3 +1,8 @@
+2013-07-16  Dario Rodriguez <dario@artica.es>
+
+	* integria_db.sql: Fixed some problems creating
+	database.
+
 2013-07-16  Vanessa Gil <vanessa.gil@artica.es>
 	
 	* integria_db.sql
