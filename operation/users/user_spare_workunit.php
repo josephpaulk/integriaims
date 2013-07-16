@@ -541,7 +541,7 @@ echo '</div>';
 <script type="text/javascript">
 	
 function datepicker_hook () {
-	add_datepicker ('input[name~="start_date"]', null);
+	add_datepicker ('input[name*="start_date"]', null);
 }
 
 function username_hook () {

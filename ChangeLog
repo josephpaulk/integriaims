@@ -1,3 +1,24 @@
+2013-07-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_tasks.php: Added the function
+	"tasks_print_tree", that prints the base of the
+	tree of the new tasks tree view.
+	
+	* include/js/integria_projects.js: New file. Added
+	the function "loadTasksSubTree", that makes possible
+	the use of the tasks tree view.
+	
+	* integria/operation/projects/task.php: Added a tree
+	view of tasks. The old tasks view can be showed with
+	"clean_output=1".
+	
+	* operation/users/user_spare_workunit.php: Fixed a
+	bug related with the datepicker.
+	
+	* operation/workorders/wo.php: Changed the icons of
+	"My WO's" and "My Delegated WO's". Some improvements
+	on the validation.
+
 2013-07-16  Dario Rodriguez <dario@artica.es>
 
 	* integria_db.sql: Fixed some problems creating

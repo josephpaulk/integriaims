@@ -97,4 +97,158 @@ function get_planned_project_workunit_hours ($id_project){
 	return $total;
 }
 
+function tasks_print_tree ($id_project, $sql_search = '') {
+	global $config;
+	global $pdf_output;
+	
+	if ($pdf_output) {
+		$graph_ttl = 2;
+	} else {
+		$graph_ttl = 1;
+	}
+	
+	echo "<table class='databox' style='width:98%'>";
+	echo "<tr><td style='width:60%' valign='top'>";
+	
+	$sql = "SELECT t.*
+			FROM ttask t
+			WHERE t.id_parent_task=0
+				AND t.id>0
+				AND t.id_project=$id_project
+				$sql_search
+			ORDER BY t.name";
+	
+	//$sql_search = base64_encode($sql_search);
+
+	$sql_count = "SELECT COUNT(*)
+			FROM ttask t
+			WHERE t.id_parent_task=0
+				AND t.id>0
+				AND t.id_project=$id_project
+				$sql_search";
+			
+	$countRows = process_sql ($sql_count);
+	
+	if ($countRows === false)
+		$countRows = 0;
+	else
+		$countRows = (int) $countRows[0][0];
+	
+	if ($countRows == 0) {
+		echo '<h3 class="error">'.__('No tasks found').'</h3>';
+		return;
+	}
+	
+	$new = true;
+	$count = 0;
+	
+	echo "<ul style='margin: 0; margin-top: 20px; padding: 0;'>\n";
+	$first = true;
+	
+	while ($task = get_db_all_row_by_steps_sql($new, $result, $sql)) {
+		
+		$new = false;
+		$count++;
+		echo "<li style='margin: 0; padding: 0;'>";
+		echo "<span style='display: inline-block;'>";
+		
+		$branches = array ();
+		
+		if ($first) {
+			if ($count != $countRows) {
+				$branches[] = true;
+				$img = print_image ("images/tree/first_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image".$task['id']."_task_". $task['id'], "pos_tree" => "0"));
+				$first = false;
+			}
+			else {
+				$branches[] = false;
+				$img = print_image ("images/tree/one_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image".$task['id']."_task_". $task['id'], "pos_tree" => "1"));
+			}
+		}
+		else {
+			if ($count != $countRows) {
+				$branches[] = true;
+				$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image".$task['id']."_task_". $task['id'], "pos_tree" => "2"));
+			} else {
+				$branches[] = false;
+				$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image".$task['id']."_task_". $task['id'], "pos_tree" => "3"));
+			}
+		}
+		
+		// Priority
+		$priority = print_priority_flag_image ($task['priority'], true);
+		
+		// Task name
+		$name = safe_output($task['name']);
+		
+		if (strlen($name) > 25) {
+			$name = substr ($name, 0, 25) . "...";
+			$name = "<a title='".safe_output($task['name'])."' href='index.php?sec=projects&sec2=operation/projects/task_detail
+				&id_project=".$task['id_project']."&id_task=".$task['id']."&operation=view'>".$name."</a>";
+		} else {
+			$name = "<a href='index.php?sec=projects&sec2=operation/projects/task_detail
+				&id_project=".$task['id_project']."&id_task=".$task['id']."&operation=view'>".$name."</a>";
+		}
+		
+		// Completion
+		$progress = progress_bar($task['completion'], 70, 20, $graph_ttl);
+		
+		// Estimation
+		$imghelp = "Estimated hours = ".$task['hours'];
+		$taskhours = get_task_workunit_hours ($task['id']);
+		$imghelp .= ", Worked hours = $taskhours";
+		$a = round ($task["hours"]);
+		$b = round ($taskhours);
+		$mode = 2;
+		
+		if ($a > 0)
+			$estimation = histogram_2values($a, $b, __("Planned"), __("Real"), $mode, 60, 18, $imghelp, $graph_ttl);
+		else
+			$estimation = "--";
+		
+		// Time used on all child tasks + this task
+		$recursive_timeused = task_duration_recursive ($task["id"]);
+		
+		$time_used = _('Time used') . ": ";
+		
+		if ($taskhours == 0)
+			$time_used .= "--";
+		elseif ($taskhours == $recursive_timeused)
+			$time_used .= $taskhours;
+		else
+			$time_used .= $taskhours . "<span title='Subtasks WU/HR'> (".$recursive_timeused. ")</span>";
+			
+		$wu_incidents = get_incident_task_workunit_hours ($task["id"]);
+	
+		if ($wu_incidents > 0)
+		$time_used .= "<span title='".__("Time spent in related incidents")."'> ($wu_incidents)</span>";
+		
+		// People
+		$people = combo_users_task ($task['id'], 1, true);
+		$people .= ' ';
+		$people .= get_db_value ('COUNT(DISTINCT(id_user))', 'trole_people_task', 'id_task', $task['id']);
+		
+		// Branches
+		$branches_json = json_encode ($branches);
+		
+		echo "<a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
+		echo $img;
+		echo "</a>";
+		echo "<span style='vertical-align:middle; display: inline-block;'>".$priority."</span>";
+		echo "<span style='margin-left: 15px; min-width: 190px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+		echo "<span title='" . __('Progress') . "' style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$progress."</span>";
+		echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
+		echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$people."</span>";
+		echo "<span style='margin-left: 15px; display: inline-block;'>".$time_used."</span>";
+		echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view tree_div_".$task['id']."' id='tree_div".$task['id']."_task_".$task['id']."'></div>";
+		echo "</li>";
+	}
+	
+	echo "</ul>";
+	echo "</td></tr>";
+	echo "</table>";
+	
+	return;
+}
+
 ?>

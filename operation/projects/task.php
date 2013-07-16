@@ -22,13 +22,271 @@ check_login ();
 include_once ("include/functions_graph.php");
 include_once ("include/functions_tasks.php");
 
-$id_project = (int) get_parameter ('id_project');
-
 $graph_ttl = 1;
 
 if ($pdf_output) {
 	$graph_ttl = 2;
 }
+
+if (defined ('AJAX')) {
+	
+	global $config;
+	
+	$print_subtree = get_parameter('print_subtree', 0);
+	
+	$id_project = get_parameter ('id_project');
+	$id_item = get_parameter ('id_item');
+	$branches_json = get_parameter('branches_json');
+	$branches = json_decode ($branches_json, true);
+	$id_father = get_parameter('id_father');
+	$sql_search = base64_decode(get_parameter('sql_search', ''));
+	
+	if ($print_subtree) {
+		
+		$sql_tasks = "SELECT t.*
+					  FROM ttask t
+					  WHERE t.id_parent_task=$id_item
+						  AND t.id>0
+						  AND t.id_project=$id_project
+						  $sql_search
+					  ORDER BY t.name";
+		
+		$sql_tasks_count = "SELECT COUNT(*)
+							FROM ttask t
+							WHERE t.id_parent_task=$id_item
+								AND t.id>0
+								AND t.id_project=$id_project
+								$sql_search";
+		
+		if (dame_admin($config['id_user'])) {
+			$sql_wo = "SELECT *
+					   FROM ttodo
+					   WHERE id_task=$id_item
+					   ORDER BY name";
+			$sql_wo_count = "SELECT COUNT(*)
+							 FROM ttodo
+							 WHERE id_task=$id_item";
+		} else {
+			$sql_wo = "SELECT *
+					   FROM ttodo
+					   WHERE id_task=$id_item
+						  AND (assigned_user=".$config['id_user']."
+							  OR created_by_user=".$config['id_user'].")
+					   ORDER BY name";
+			$sql_wo_count = "SELECT COUNT(*)
+							 FROM ttodo
+							 WHERE id_task=$id_item
+								AND (assigned_user=".$config['id_user']."
+								OR created_by_user=".$config['id_user'].")";
+		}
+		
+		$countRows = process_sql ($sql_tasks_count);
+		$countWOs = process_sql ($sql_wo_count);
+		
+		if ($countRows === false)
+			$countRows = 0;
+		else
+			$countRows = (int) $countRows[0][0];
+		
+		if ($countWOs === false)
+			$countWOs = 0;
+		else
+			$countWOs = (int) $countWOs[0][0];
+		
+		if ($countRows == 0 && $countWOs == 0) {
+			echo "<ul style='margin: 0; padding: 0;'>\n";
+			echo "<li style='margin: 0; padding: 0;'>";
+			
+			foreach ($branches as $branch) {
+				if ($branch) {
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+				} else {
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+				}
+			}
+			
+			print_image ("images/tree/last_leaf.png", false, array ("style" => 'vertical-align: middle;'));
+			echo "<i>" . __("Empty") . "</i>";
+			echo "</li>";
+			echo "</ul>";
+			return;
+		}
+		
+		$new = true;
+		$count = 0;
+		echo "<ul style='margin: 0; padding: 0;'>\n";
+		
+		while ($task = get_db_all_row_by_steps_sql($new, $result, $sql_tasks)) {
+			
+			$new = false;
+			$count++;
+			echo "<li style='margin: 0; padding: 0;'>";
+			echo "<span style='display: inline-block;'>";
+			
+			$branches_aux = $branches;
+			
+			foreach ($branches as $branch) {
+				if ($branch) {
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+				} else {
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+				}
+			}
+			
+			if ($count < $countRows || $countWOs > 0) {
+				$branches_aux[] = true;
+				$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "2"));
+			} else {
+				$branches_aux[] = false;
+				$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "3"));
+			}
+			
+			// Priority
+			$priority = print_priority_flag_image ($task['priority'], true);
+			
+			// Task name
+			$name = safe_output($task['name']);
+			
+			if (strlen($name) > 25) {
+				$name = substr ($name, 0, 25) . "...";
+				$name = "<a title='".safe_output($task['name'])."' href='index.php?sec=projects&sec2=operation/projects/task_detail
+					&id_project=".$task['id_project']."&id_task=".$task['id']."&operation=view'>".$name."</a>";
+			} else {
+				$name = "<a href='index.php?sec=projects&sec2=operation/projects/task_detail
+					&id_project=".$task['id_project']."&id_task=".$task['id']."&operation=view'>".$name."</a>";
+			}
+			
+			// Completion
+			$progress = progress_bar($task['completion'], 70, 20, $graph_ttl);
+			
+			// Estimation
+			$imghelp = "Estimated hours = ".$task['hours'];
+			$taskhours = get_task_workunit_hours ($task['id']);
+			$imghelp .= ", Worked hours = $taskhours";
+			$a = round ($task["hours"]);
+			$b = round ($taskhours);
+			$mode = 2;
+			
+			if ($a > 0)
+				$estimation = histogram_2values($a, $b, __("Planned"), __("Real"), $mode, 60, 18, $imghelp, $graph_ttl);
+			else
+				$estimation = "--";
+			
+			// Time used on all child tasks + this task
+			$recursive_timeused = task_duration_recursive ($task["id"]);
+			
+			$time_used = _('Time used') . ": ";
+			
+			if ($taskhours == 0)
+				$time_used .= "--";
+			elseif ($taskhours == $recursive_timeused)
+				$time_used .= $taskhours;
+			else
+				$time_used .= $taskhours . "<span title='Subtasks WU/HR'> (".$recursive_timeused. ")</span>";
+				
+			$wu_incidents = get_incident_task_workunit_hours ($task["id"]);
+		
+			if ($wu_incidents > 0)
+			$time_used .= "<span title='".__("Time spent in related incidents")."'> ($wu_incidents)</span>";
+			
+			// People
+			$people = combo_users_task ($task['id'], 1, true);
+			$people .= ' ';
+			$people .= get_db_value ('COUNT(DISTINCT(id_user))', 'trole_people_task', 'id_task', $task['id']);
+			
+			// Branches
+			$branches_json = json_encode ($branches_aux);
+			
+			echo "<a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$id_item.",\"".$sql_search."\")'>";
+			echo $img;
+			echo "</a>";
+			echo "<span style='vertical-align:middle; display: inline-block;'>".$priority."</span>";
+			echo "<span style='margin-left: 15px; min-width: 190px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span title='" . __('Progress') . "' style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$progress."</span>";
+			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
+			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$people."</span>";
+			echo "<span style='margin-left: 15px; display: inline-block;'>".$time_used."</span>";
+			echo "</span>";
+			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view tree_div_".$task['id']."' id='tree_div".$id_item."_task_".$task['id']."'></div>";
+			echo "</li>";
+		}
+		
+		$new = true;
+		$count = 0;
+		
+		while ($wo = get_db_all_row_by_steps_sql($new, $result, $sql_wo)) {
+			
+			$new = false;
+			$count++;
+			echo "<li style='margin: 0; padding: 0;'>";
+			echo "<span style='display: inline-block;'>";
+			
+			foreach ($branches as $branch) {
+				if ($branch) {
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+				} else {
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+				}
+			}
+			
+			if ($count < $countWOs) {
+				$img = print_image ("images/tree/leaf.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "2"));
+			} else {
+				$img = print_image ("images/tree/last_leaf.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "3"));
+			}
+			
+			// WO icon
+			$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work order')));
+			
+			// Priority
+			$priority = print_priority_flag_image ($wo['priority'], true);
+			
+			// WO name
+			$name = safe_output($wo['name']);
+			
+			if (strlen($name) > 45) {
+				$name = substr ($name, 0, 45) . "...";
+				$name = "<a title='".safe_output($wo['name'])."'
+					href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=".$wo['id']."'>".$name."</a>";
+			} else {
+				$name = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=".$wo['id']."'>".$name."</a>";
+			}
+			
+			// Owner
+			$avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $config["id_user"]);
+			if (!$avatar)
+				$avatar = "avatar1";
+			$owner_icon = "<img src='images/avatars/".$avatar."_small.png' title='".__('My WO\'s')."'>";
+			$owner = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner="
+				.$wo['assigned_user']."'>".$wo['assigned_user']."</a>";
+			
+			// Submitter
+			$submitter_icon = "<img src='images/user_comment.png' title='".__('My delegated WO\'s')."'>";
+			$submitter = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&creator="
+				.$wo['assigned_user']."'>".$wo['created_by_user']."</a>";
+			
+			echo $img;
+			echo "<span style='vertical-align:middle; display: inline-block;'>".$wo_icon."</span>";
+			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
+			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$owner_icon."</span>";
+			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$owner."</span>";
+			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$submitter_icon."</span>";
+			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$submitter."</span>";
+			
+			echo "</span>";
+			echo "</li>";
+		}
+
+		echo "</ul>";
+		
+	}
+	
+	return;
+}
+
+
+$id_project = (int) get_parameter ('id_project');
 
 if (! $id_project) {// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager without project");
@@ -120,43 +378,48 @@ if ($clean_output == 0)
     print_table ($table);
 echo '</form>';
 
-unset ($table);
+if ($clean_output == 1) {
+	
+	unset ($table);
 
-$table->width = '90%x';
-$table->class = 'listing';
-$table->data = array ();
-$table->style = array ();
-$table->style[0] = 'font-size: 11px;';
-$table->head = array ();
-$table->head[0] = __('Name');
-$table->head[1] = __('Pri');
-$table->head[2] = __('Progress');
-$table->head[3] = __('Estimation');
-$table->head[4] = __('Time used');
-$table->head[5] = __('People');
-$table->head[6] = __('Start/End');
-$table->align = array ();
-$table->align[1] = 'left';
-$table->align[2] = 'center';
-$table->align[3] = 'center';
-$table->align[4] = 'center';
-$table->align[8] = 'center';
+	$table->width = '90%x';
+	$table->class = 'listing';
+	$table->data = array ();
+	$table->style = array ();
+	$table->style[0] = 'font-size: 11px;';
+	$table->head = array ();
+	$table->head[0] = __('Name');
+	$table->head[1] = __('Pri');
+	$table->head[2] = __('Progress');
+	$table->head[3] = __('Estimation');
+	$table->head[4] = __('Time used');
+	$table->head[5] = __('People');
+	$table->head[6] = __('Start/End');
+	$table->align = array ();
+	$table->align[1] = 'left';
+	$table->align[2] = 'center';
+	$table->align[3] = 'center';
+	$table->align[4] = 'center';
+	$table->align[8] = 'center';
 
-$table->style[6] = "font-size: 9px";
+	$table->style[6] = "font-size: 9px";
 
-echo project_activity_graph ($id_project, $graph_ttl);
+	echo project_activity_graph ($id_project, $graph_ttl);
 
-$color = 1;
+	$color = 1;
 
-show_task_tree ($table, $id_project, 0, 0, $where_clause);
+	show_task_tree ($table, $id_project, 0, 0, $where_clause);
 
-if(empty($table->data)) {
-	echo '<h3 class="error">'.__('No tasks found').'</h3>';
+	if(empty($table->data)) {
+		echo '<h3 class="error">'.__('No tasks found').'</h3>';
+	}
+	else {
+		print_table ($table);
+	}
+	
+} else {
+	tasks_print_tree ($id_project);
 }
-else {
-	print_table ($table);
-}
-
 
 /*
 if (give_acl ($config['id_user'], 0, 'PW')) {
@@ -279,9 +542,10 @@ function show_task_tree (&$table, $id_project, $level, $id_parent_task, $where_c
 		show_task_tree ($table, $id_project, $level + 1, $task['id'], $where_clause);
 	}
 }
+
 ?>
 
-
+<script type="text/javascript" src="include/js/integria_projects.js"></script>
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript">

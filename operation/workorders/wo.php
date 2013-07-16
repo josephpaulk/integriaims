@@ -316,7 +316,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 			$table->data[4][0] .= $start_date;
 			$table->data[4][0] .= print_input_hidden ("start_date", $start_date, true);
 		} else
-			$table->data[4][0] = print_input_text ('start_date', $start_date , '', 25, 25, true, __('Start date'));
+			$table->data[4][0] = print_input_text ('start__date', $start_date , '', 25, 25, true, __('Start date'));
 		
 		if ($end_date == "0000-00-00 00:00:00"){
 				$end_date = '';
@@ -334,7 +334,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 
 		$table->data[5][0] = print_textarea ('description', 12, 50, $description, '', true, __('Description'));
 
-		echo '<form method="post">';
+		echo '<form id="form-wo" method="post">';
 		print_table ($table);
 
 		echo '<div class="button" style="width: '.$table->width.'">';
@@ -429,13 +429,16 @@ if ($operation == "") {
 
 	$priorities = get_priorities();
 	$table->data[1][1] = print_select ($priorities, 'search_priority', $search_priority, '', __("Any"), -1, true, 0, false, __('Priority') );
-
+	
+	$avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $config["id_user"]);
+	if (!$avatar)
+		$avatar = "avatar1";
 
 	$table->data[1][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	$table->data[1][2] .= ' <a href="index.php?sec=projects&sec2=operation/workorders/wo&owner='
-		.$config["id_user"].'"><img src="images/user.png" title="'.__('My WO\'s').'"></a>';
+		.$config["id_user"].'"><img src="images/avatars/'.$avatar.'_small.png" title="'.__('My WO\'s').'"></a>';
 	$table->data[1][2] .= ' <a href="index.php?sec=projects&sec2=operation/workorders/wo&creator='
-		.$config["id_user"].'"><img src="images/user.png" title="'.__('My delegated WO\'s').'"></a>';
+		.$config["id_user"].'"><img src="images/user_comment.png" title="'.__('My delegated WO\'s').'"></a>';
 	
 	$table->rowspan[0][3] = 3;
 	
@@ -644,11 +647,23 @@ if ($operation == "") {
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript" >
 
 // Datepicker
-add_ranged_datepicker ("#text-start_date", "#text-end_date", null);
+add_ranged_datepicker ("#text-start__date", "#text-end_date", null);
+
+// Form validation
+trim_element_on_submit('#text-search_text');
+trim_element_on_submit('#text-name');
+validate_form("#form-wo");
+var rules, messages;
+// Rules: #text-name
+rules = { required: true };
+messages = { required: "<?php echo __('Name required')?>" };
+add_validate_form_element_rules('#text-name', rules, messages);
 
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
@@ -656,10 +671,6 @@ $(document).ready (function () {
 	var idUser = "<?php echo $config['id_user'] ?>";
 	bindAutocomplete ("#text-user", idUser);
 	bindAutocomplete ("#text-user2", idUser);
-	
-	// Form validation
-	trim_element_on_submit('#text-search_text');
-	trim_element_on_submit('#text-name');	
 	
 });
 

@@ -223,9 +223,9 @@ if (defined ('AJAX')) {
 				GROUP BY tinventory.`id`";
 		
 		$cont_invent = get_db_all_rows_sql($sql);
-
+		
 		$countRows = count($cont_invent);
-	
+		
 		if ($countRows === false)
 			$countRows = 0;
 	
