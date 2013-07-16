@@ -1057,3 +1057,10 @@ CREATE TABLE `twiki_acl` (
   `write_page` varchar(200) NOT NULL default '',
   PRIMARY KEY (`page`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE tsessions_php (
+	`id_session` CHAR(32) NOT NULL,
+	`last_active` INTEGER NOT NULL,
+	`data` TEXT,
+	PRIMARY KEY (`id_session`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
