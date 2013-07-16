@@ -571,7 +571,20 @@ if ($id || $new) {
 
 	// Listing of contacts
 	
-	echo "<h2>".__('Lead search')."</h2>";
+	//echo "<h2>".__('Lead search')."</h2>";
+	
+	echo "<div id='lead-search-content'>";
+	echo "<h2>".__('Lead search');
+	echo "<div id='button-bar-title'>";
+	echo "<ul>";
+	echo "<li>";
+	echo "<a id='lead_stats_form_submit' href='javascript: changeAction();'>".print_image ("images/chart_bar.png", true, array("title" => __("Search statistics")))."</a>";
+	echo "</li>";
+	echo "</ul>";
+	echo "</div>";
+	echo "</h2>";
+
+	echo "<br>";
 
 	// TODO: Show only leads of my company or my company's children.
 	// TODO: Implement ACL check !
@@ -643,7 +656,7 @@ if ($id || $new) {
 		$where_clause .= sprintf(' AND id_category = %d ', $id_category);
 	}
 
-	echo '<form action="index.php?sec=customers&sec2=operation/leads/lead_detail" method="post">';		
+	echo '<form id="lead_stats_form" action="index.php?sec=customers&sec2=operation/leads/lead_detail" method="post">';		
 
 	$table->class = 'databox';
 	$table->style = array ();
@@ -903,9 +916,16 @@ $(document).ready (function () {
 	// Rules: #text-estimated_sale
 	rules = { number: true };
 	messages = { number: "<?php echo __('Invalid number')?>" };
-	add_validate_form_element_rules('#text-estimated_sale', rules, messages);	
+	add_validate_form_element_rules('#text-estimated_sale', rules, messages);
 
 });
 
+function changeAction() {
+	
+	var f = document.forms.lead_stats_form;
+
+	f.action = "index.php?sec=customers&sec2=operation/leads/lead_statistics";
+	$("#lead_stats_form").submit();
+}
 
 </script>

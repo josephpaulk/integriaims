@@ -363,4 +363,215 @@ function crm_get_data_user_graph($companies) {
 	}
 	return $company_user;
 }
+
+// count leads per country
+function crm_get_total_leads_country($where_clause = false) {
+	
+	if ($where_clause) {
+		$sql = "SELECT country, count(id) as total_leads FROM tlead
+			WHERE id IN (SELECT id FROM tlead
+					 $where_clause)
+			AND country<>''
+			GROUP BY country
+			ORDER BY total_leads DESC
+			";
+	} else {
+		$sql = "SELECT country, count(id) as total_leads FROM tlead
+			WHERE country<>''
+			GROUP BY country
+			ORDER BY total_leads DESC
+			";
+	}
+		
+	$total = process_sql ($sql);
+
+	return $total;
+}
+
+function crm_get_data_lead_country_graph($leads) {
+	
+	global $config;
+	
+	if ($leads === false) {
+		return false;
+	}
+    
+	require_once ("include/functions_graph.php");  
+	
+	$lead_country = array();
+	$i = 0;
+	foreach ($leads as $key=>$lead) {
+		if ($i < 10) {
+			$lead_country[$lead['country']] = $lead['total_leads'];
+		}
+	}
+	return $lead_country;
+}
+
+// count users per lead
+function crm_get_total_leads_user($where_clause = false) {
+	
+	if ($where_clause) {
+		$sql = "SELECT owner, count(id) as total_users FROM tlead
+			WHERE id IN (SELECT id FROM tlead
+					 $where_clause)
+			AND owner<>''
+			GROUP BY owner
+			ORDER BY total_users DESC
+			";
+	} else {
+		$sql = "SELECT owner, count(id) as total_users FROM tlead
+			WHERE owner<>''
+			GROUP BY owner
+			ORDER BY total_users DESC
+			";
+	}
+	
+	$total = process_sql ($sql);
+
+	return $total;
+}
+
+function crm_get_data_lead_user_graph($leads) {	
+	global $config;
+    
+    if ($leads === false) {
+		return false;
+	}
+
+	require_once ("include/functions_graph.php");  
+	
+	$lead_user = array();
+	$i = 0;
+	foreach ($leads as $key=>$lead) {
+		if ($i < 10) {
+			$lead_user[$lead['owner']] = $lead['total_users'];
+		}
+	}
+
+	return $lead_user;
+}
+
+// sum estimated sales
+function crm_get_total_sales_lead($where_clause = false) {
+	
+	if ($where_clause) {
+		$sql = "SELECT company, country, estimated_sale FROM tlead
+			WHERE id IN (SELECT id FROM tlead
+					$where_clause)
+			AND estimated_sale<>0
+			ORDER BY estimated_sale DESC
+			";
+	} else {
+		$sql = "SELECT company, country, estimated_sale FROM tlead
+			WHERE estimated_sale<>0
+			ORDER BY estimated_sale DESC
+			";
+	}
+	
+	$total = process_sql ($sql);
+
+	return $total;
+}
+
+function crm_print_estimated_sales_leads($leads) {
+	$table->id = 'lead_list';
+	$table->class = 'listing';
+	$table->width = '90%';
+	$table->data = array ();
+	$table->head = array ();
+	$table->style = array ();
+	
+	$table->head[0] = __('Company');
+	$table->head[1] = __('Country');
+	$table->head[2] = __('Total');
+	
+	$i = 0;
+	foreach ($leads as $key=>$lead) {
+	
+		if ($i < 10) {
+			$data = array();
+			$data[0] = $lead['company'];
+			$data[1] = $lead['country'];
+			$data[2] = $lead['estimated_sale'];
+
+			array_push ($table->data, $data);
+		}
+		$i++;
+	}
+
+	return $table;
+}
+
+// all leads by creation date
+function crm_get_total_leads_creation($where_clause = false) {
+	
+	if ($where_clause) {
+		$sql = "SELECT id, creation FROM tlead
+			WHERE id IN (SELECT id FROM tlead
+					$where_clause)
+			ORDER BY creation 
+			";
+	} else {
+		$sql = "SELECT id, creation FROM tlead
+			ORDER BY creation
+			";
+	}
+	
+	$total = process_sql ($sql);
+
+	return $total;
+}
+
+function crm_get_data_lead_creation_graph($data) {	
+	global $config;
+
+    if ($data === false) {
+		return false;
+	}
+
+	require_once ("include/functions_graph.php");  
+	
+	$start_unixdate = strtotime ($data[0]["creation"]);
+    $end_unixdate = strtotime ("now");
+    $period = $end_unixdate - $start_unixdate;
+    $resolution = 10;
+    
+	$interval = (int) ($period / $resolution);
+
+   	$min_necessary = 1;
+
+	// Check available data
+	if (count ($data) < $min_necessary) {
+		return;
+	}
+
+	// Set initial conditions
+	$chart = array();
+	$names = array();
+	$chart2 = array();
+
+	// Calculate chart data
+	for ($i = 0; $i < $resolution; $i++) {
+		$timestamp = $start_unixdate + ($interval * $i);
+		$total = 0;
+		$j = 0;
+
+		while (isset ($data[$j])){
+            $dftime = strtotime($data[$j]['creation']);
+
+			if ($dftime >= $timestamp && $dftime < ($timestamp + $interval)) {
+				$total += 1;
+			}
+			$j++;
+		} 
+
+    	$time_format = "M d H:i";
+        $timestamp_human = clean_flash_string (date($time_format, $timestamp));
+		$chart2[$timestamp_human]['leads'] = $total;
+   	}
+   	
+   	return $chart2;
+}
+
 ?>

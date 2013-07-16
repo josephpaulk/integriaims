@@ -1,3 +1,11 @@
+2013-07-16  Vanessa Gil <vanessa.gil@artica.es>
+	
+	* include/functions_crm.php
+	  operation/leads/lead_detail.php: Added
+	lead statistics.
+
+	* operation/leads/lead_statistics.php: Added file.
+
 2013-07-15  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_config.php,
