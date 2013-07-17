@@ -42,7 +42,9 @@ if ($send) {
 	if (($subject != "") AND ($from != "") AND ($to != "")) {
 		echo "<h3 class='suc'>".__('Mail queued')."</h3>";
 
-		integria_sendmail ($to, $subject, $mail, false, "", $from, true);
+		$cc = $config["mail_from"];
+
+		integria_sendmail ($to, $subject, $mail, false, "", $from, true, $cc);
 
 		if ($cco != "")
 			integria_sendmail ($cco, $subject, $mail, false, "", $from, true);
@@ -75,7 +77,7 @@ if ($send) {
 
 
 // Mark with case ID
-$subject = "[#$id] " . $subject;
+$subject = "[Lead#$id] " . $subject;
 
 // Replace mail macros
 /*_DEST_NAME_ -> Lead fullname

@@ -629,7 +629,7 @@ function render_priority ($pri) {
 }
 
 
-function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments = false, $code = "", $from = "", $remove_header_footer =0 ) {
+function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments = false, $code = "", $from = "", $remove_header_footer =0, $cc="") {
 	global $config;
 
 	if ($to == '')
@@ -637,6 +637,7 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 
 	$to = trim(safe_output ($to));
 	$from = trim(safe_output ($from));
+	$cc = trim(safe_output($cc));
 
 	$config["mail_from"] = trim($config["mail_from"]);
 
@@ -661,7 +662,7 @@ function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments =
 	// without HTML encoding. THis is because it is not to be rendered on a browser, 
 	// it will be directly to a SMTP connection.
 
-	process_sql ("INSERT INTO tpending_mail (date, attempts, status, recipient, subject, body, attachment_list, `from`) VALUES ('".$current_date."', 0, 0, '".$to."', '".mysql_real_escape_string($subject)."', '".mysql_real_escape_string($body)."', '".$attachments."', '".$from."')");
+	process_sql ("INSERT INTO tpending_mail (date, attempts, status, recipient, subject, body, attachment_list, `from`, cc) VALUES ('".$current_date."', 0, 0, '".$to."', '".mysql_real_escape_string($subject)."', '".mysql_real_escape_string($body)."', '".$attachments."', '".$from."', '".$cc."')");
 }
 
 function topi_rndcode ($length = 6) {

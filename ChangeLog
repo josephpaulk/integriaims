@@ -1,3 +1,13 @@
+2013-07-17  Dario Rodriguez <dario@artica.es>
+
+        * include/integria_cron.php,
+        include/functions.php,
+        operation/leads/lead_mail.php,
+        integria_db.sql,
+        extras/migrate.sql: Added CC parameter to pending
+        mail queue, and modified lead email to send a
+        specific subject to manage them like incident emails.
+
 2013-07-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/functions_tasks.php: Added the function

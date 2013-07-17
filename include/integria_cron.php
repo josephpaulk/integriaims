@@ -631,7 +631,12 @@ function run_mail_queue () {
 			else
 				$message->setFrom($email["from"]);
 
+			if ($email["cc"]) {
+				$message->setCc($email["cc"]);
+			}
+
 			$to = trim(ascii_output($email['recipient']));
+
 
 			$message->setTo($to);
 			$message->setBody($email['body'], 'text/plain', 'utf-8');

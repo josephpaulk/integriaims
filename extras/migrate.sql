@@ -344,3 +344,6 @@ CREATE TABLE tsessions_php (
 	`data` TEXT,
 	PRIMARY KEY (`id_session`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*16/07/2013*/
+ALTER TABLE `tpending_mail`ADD `cc` text DEFAULT NULL;
