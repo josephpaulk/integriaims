@@ -1,5 +1,14 @@
 2013-07-17  Dario Rodriguez <dario@artica.es>
 
+	* include/integria_cron.php: Now email send supports
+	CC addresses and fixed a bug checking if mail was sent.
+	* operation/leads/lead_activity.php: Fixed some bugs
+	checking ACLs and showing information.
+	* operation/leads/lead_mail.php: Adapting lead email to
+	support email handling using an external inbox.
+
+2013-07-17  Dario Rodriguez <dario@artica.es>
+
         * include/integria_cron.php,
         include/functions.php,
         operation/leads/lead_mail.php,

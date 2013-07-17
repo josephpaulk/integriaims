@@ -584,10 +584,10 @@ function run_mail_queue () {
 
 	// get pending mails 
 	$mails = get_db_all_rows_sql ("SELECT * FROM tpending_mail WHERE status = 0");
-
+	
 	if ($mails)
 	foreach ($mails as $email){
-
+		
 		// Use local mailer if host not provided - Attach not supported !!
 
 		if ($config["smtp_host"] == ""){
@@ -604,6 +604,11 @@ function run_mail_queue () {
 
                         $headers[] = "From: ". $from;
                         $headers[] = "Subject: ". safe_output($email["subject"]);
+                        
+                        if ($email["cc"]) {
+							$aux_cc = implode(",",$email["cc"]);
+							$headers[] = "Cc: ".$aux_cc;
+						}
 
                         $dest_email = trim(ascii_output($email['recipient']));
                         $body = safe_output($email['body']);
@@ -626,11 +631,12 @@ function run_mail_queue () {
 			$mailer = Swift_Mailer::newInstance($transport);
 			$message = Swift_Message::newInstance($email["subject"]);
 			
-			if ($email["from"] == "")
+			if ($email["from"] == "") {
 				$message->setFrom($config["mail_from"]);
-			else
+			} else {
 				$message->setFrom($email["from"]);
-
+			}
+			
 			if ($email["cc"]) {
 				$message->setCc($email["cc"]);
 			}
@@ -653,8 +659,9 @@ function run_mail_queue () {
 				return;
 
 			$message->setContentType("text/plain");
-
-			if ($mailer->send($message) == 1)
+			
+			//Check if the email was sent at least once
+			if ($mailer->send($message) >= 1)
 				process_sql ("DELETE FROM tpending_mail WHERE id = ".$email["id"]);
 
 			// SMTP error management!

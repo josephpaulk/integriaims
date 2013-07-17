@@ -23,11 +23,11 @@ $op2 = get_parameter ("op2", "");
 
 if ($op2 == "add"){
 	$datetime =  date ("Y-m-d H:i:s");
+	
 	$comments = get_parameter ("comments", "");
 	$sql = sprintf ('INSERT INTO tlead_activity (id_lead, written_by, creation, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, $comments);
 	process_sql ($sql, 'insert_id');
 
-	$datetime =  date ("Y-m-d H:i:s");
 	$sql = sprintf ('INSERT INTO tlead_history (id_lead, id_user, timestamp, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, "Added comments");
 	process_sql ($sql, 'insert_id');
 	
@@ -54,7 +54,7 @@ if ($op2 == "purge"){
 }
 
 // Add item form
-if($manager) {
+if($manage) {
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=activity&op2=add">';
 	echo "<h3>".__("Add activity")."</h3><p>";
 
@@ -80,7 +80,7 @@ if ($activities !== false) {
 			echo "<div class='notetitle'>"; // titulo
 
 			$timestamp = $activity["creation"];
-			$nota = $activity["description"];
+			$nota = clean_output_breaks($activity["description"]);
 			$id_usuario_nota = $activity["written_by"];
 
 			$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $id_usuario_nota);
