@@ -1,9 +1,9 @@
 <?   
 
-function mysql_session_open ($save_path, $session_name) {  
+function mysql_session_open ($save_path, $session_name) {
 	
 	global $config;     
-	mysql_pconnect($config['dbhost'],$config['dbuser'],$config['dbpass']);
+	mysql_connect($config['dbhost'],$config['dbuser'],$config['dbpass']);
 	mysql_select_db($config['dbname']);   
 	return true;
 } 
@@ -14,57 +14,68 @@ function mysql_session_close() {
 
 function mysql_session_read ($SessionID) {        
 
-    $SessionID = addslashes($SessionID); 
+	$SessionID = addslashes($SessionID); 
     
-	 $session_data = mysql_query("SELECT data FROM tsessions_php                   
-		WHERE id_session = '$SessionID'") or die(db_error_message());
+    $sql = "SELECT data FROM tsessions_php                   
+		WHERE id_session = '$SessionID'";
 	
-	if (mysql_numrows($session_data) == 1) {             
-		return mysql_result($session_data, 0);         
+	$session_data = process_sql($sql);
+
+	if (count($session_data) == 1) {           
+		return $session_data[0]['data'];
 	} else {             
 		return false;         
 	}     
 } 
 
-function mysql_session_write ($SessionID, $val) {     
+function mysql_session_write ($SessionID, $val) {
 
-    $SessionID = addslashes($SessionID);         
+	$SessionID = addslashes($SessionID);         
     $val = addslashes($val); 
 
-    $SessionExists = mysql_result(mysql_query("SELECT COUNT(*) FROM tsessions_php
-										WHERE id_session = '$SessionID'"), 0); 
+	$sql = "SELECT COUNT(*) FROM tsessions_php
+		WHERE id_session = '$SessionID'";
+		
+	$SessionExists = process_sql ($sql); 
 
-    if ($SessionExists == 0) {             
-		$retval = mysql_query("INSERT INTO tsessions_php   
-							(id_session, last_active, Data) 
-							VALUES ('$SessionID', UNIX_TIMESTAMP(NOW()), '$val')") 
-					or die(db_error_message());         
-	} else {          
-		$retval = mysql_query("UPDATE tsessions_php SET data = '$val', last_active = UNIX_TIMESTAMP(NOW()) 
-					WHERE id_session = '$SessionID'") or die(db_error_message());             
-		if (mysql_affected_rows() == 0) {
-			error_log("unable to update session data for session $SessionID");             
-		}
+	$session_exists = $SessionExists[0]['COUNT(*)'];
+
+	if ($session_exists == 0) {
+		$sql_ret = "INSERT INTO tsessions_php   
+							(id_session, last_active, data) 
+							VALUES ('$SessionID', UNIX_TIMESTAMP(NOW()), '$val')";          
+		$retval = process_sql($sql);         
+	} else {
+		$sql_ret = "UPDATE tsessions_php SET data = '$val', last_active = UNIX_TIMESTAMP(NOW()) 
+					WHERE id_session = '$SessionID'";
+		
+		$retval = process_sql($sql_ret);
 	} 
 
 	return $retval;     
 } 
 
-function mysql_session_destroy ($SessionID) {        
-
+function mysql_session_destroy ($SessionID) {   
 
     $SessionID = addslashes($SessionID); 
 
-    $retval = mysql_query("DELETE FROM tsessions_php 
-				WHERE id_session = '$SessionID'") or die(db_error_message());
+    $retval = process_sql ("DELETE FROM tsessions_php 
+				WHERE id_session = '$SessionID'");
 	return $retval;
 } 
 
 function mysql_session_gc ($maxlifetime = 300) {
+
+	global $config;
+	
+	if (isset($config['session_timeout'])) {
+		$maxlifetime = $config['session_timeout'];
+	}
+ 
+	$CutoffTime = time() - $maxlifetime;
 	        
-	$CutoffTime = time() - $maxlifetime;         
-	$retval = mysql_query("DELETE FROM tsessions_php 
-			WHERE last_active < $CutoffTime") or die(db_error_message());         
+	$retval = process_sql("DELETE FROM tsessions_php 
+			WHERE last_active < $CutoffTime");         
 	return $retval;     
 } 
 

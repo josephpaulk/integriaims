@@ -1,3 +1,8 @@
+2013-07-17  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/config_process.php
+	  include/load_session.php: Changed sessions functions.
+
 2013-07-17  Dario Rodriguez <dario@artica.es>
 
 	* include/integria_cron.php: Now email send supports

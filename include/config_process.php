@@ -69,7 +69,7 @@ if ($config["error_log"] == 1){
 $l10n = NULL;
 
 config_prepare_session();
-
+include_once('load_session.php');
 session_start();
 
 global $develop_bypass;
