@@ -41,18 +41,14 @@ function mysql_session_write ($SessionID, $val) {
 	$session_exists = $SessionExists[0]['COUNT(*)'];
 
 	if ($session_exists == 0) {
-		$sql_ret = "INSERT INTO tsessions_php   
-							(id_session, last_active, data) 
-							VALUES ('$SessionID', UNIX_TIMESTAMP(NOW()), '$val')";          
-		$retval = process_sql($sql);         
+		$now = time();
+		$retval_write = process_sql_insert ('tsessions_php', array('id_session'=>$SessionID, 'last_active'=>$now, 'data'=>$val));
 	} else {
-		$sql_ret = "UPDATE tsessions_php SET data = '$val', last_active = UNIX_TIMESTAMP(NOW()) 
-					WHERE id_session = '$SessionID'";
-		
-		$retval = process_sql($sql_ret);
+		$now = time();
+		$retval_write = process_sql_update ('tsessions_php', array('last_active'=>$now, 'data'=>$val), array('id_session'=>$SessionID));
 	} 
 
-	return $retval;     
+	return $retval_write;     
 } 
 
 function mysql_session_destroy ($SessionID) {   
