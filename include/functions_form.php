@@ -423,7 +423,7 @@ function combo_project_user ($actual, $id_user, $disabled = 0, $return = false) 
 
 // Returns a combo with the tasks that current user is working on
 // ----------------------------------------------------------------------
-function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false, $name=false) {
+function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false, $name=false, $nothing = true, $multiple = false) {
 	$output = '';
 	$values = array ();
 	
@@ -433,13 +433,21 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 		$values[-3] = "(*) ".__('Not justified');
 	}
 	
-	$sql = sprintf ('SELECT ttask.id, tproject.name,ttask.name 
-			FROM ttask, trole_people_task, tproject
-			WHERE ttask.id_project = tproject.id
-			AND tproject.disabled = 0
-			AND ttask.id = trole_people_task.id_task
-			AND trole_people_task.id_user = "%s" 
-			ORDER BY tproject.name', $id_user);
+	$sql = sprintf ('SELECT ttask.id, tproject.name, ttask.name 
+					FROM ttask, trole_people_task, tproject
+					WHERE ttask.id_project = tproject.id
+					AND tproject.disabled = 0
+					AND ttask.id = trole_people_task.id_task
+					AND trole_people_task.id_user = "%s" 
+					ORDER BY tproject.name, ttask.name', $id_user);
+	
+	if (dame_admin ($id_user) && $multiple) {
+		$sql = 'SELECT ttask.id, tproject.name, ttask.name 
+				FROM ttask, trole_people_task, tproject
+				WHERE ttask.id_project = tproject.id
+					AND tproject.disabled = 0
+				ORDER BY tproject.name, ttask.name';
+	}
 	
 	$tasks = get_db_all_rows_sql ($sql);
 
@@ -452,9 +460,15 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 	if (!$name) {
 		$name = 'id_task';
 	}
+	
+	if ($nothing) {
+		$nothing = __('N/A');
+	} else {
+		$nothing = '';
+	}
 
-	$output .= print_select ($values, $name, $actual, '', __('N/A'), '0', true,
-		false, false, $label);
+	$output .= print_select ($values, $name, $actual, '', $nothing, '0', true,
+		$multiple, false, $label);
 
 	if ($return)
 		return $output;

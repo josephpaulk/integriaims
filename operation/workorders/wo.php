@@ -363,9 +363,9 @@ if ($operation == "") {
 	$search_text = (string) get_parameter ('search_text');
 	$id_wo_category = (int) get_parameter ('id_wo_category');
 	$search_status = (int) get_parameter ("search_status",0);
-	$owner = (string) get_parameter ("owner");
+	$owner = (string) get_parameter ("owner", "");
 
-	$creator = (string) get_parameter ("creator");
+	$creator = (string) get_parameter ("creator", "");
 	$id_category = get_parameter ("id_category");
 	$search_priority = get_parameter ("search_priority", -1);
 	$need_validation =get_parameter("need_validation",0);
@@ -433,7 +433,7 @@ if ($operation == "") {
 	$avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $config["id_user"]);
 	if (!$avatar)
 		$avatar = "avatar1";
-
+	
 	$table->data[1][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	$table->data[1][2] .= ' <a href="index.php?sec=projects&sec2=operation/workorders/wo&owner='
 		.$config["id_user"].'"><img src="images/avatars/'.$avatar.'_small.png" title="'.__('My WO\'s').'"></a>';
@@ -468,9 +468,17 @@ if ($operation == "") {
 	
 	echo "</div>";
 	echo '</form>';
-
-	$sql = "SELECT * FROM ttodo $where_clause ORDER BY priority, last_update DESC";
-
+	
+	if ($owner == $config['id_user'] && $creator == "") {
+		$order_by = "ORDER BY created_by_user, priority, last_update DESC";
+	} elseif ($creator == $config['id_user'] && $owner == "") {
+		$order_by = "ORDER BY assigned_user, priority, last_update DESC";
+	} else {
+		$order_by = "ORDER BY priority, last_update DESC";
+	}
+	
+	$sql = "SELECT * FROM ttodo ".$where_clause." ".$order_by;
+	
 	$wos = get_db_all_rows_sql ($sql);
 
 	$wos = print_array_pagination ($wos, "index.php?sec=projects&sec2=operation/workorders/wo$params");

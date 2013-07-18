@@ -227,7 +227,7 @@ function load_config(){
 	}	
 	
 	if (!isset ($config['session_timeout'])) {
-		$config['session_timeout'] = 90;
+		$config['session_timeout'] = 9000;
 	}	
 }
 

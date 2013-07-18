@@ -875,7 +875,7 @@ $(document).ready (function () {
 	var rules, messages;
 	// Rules: #text-fullname
 	rules = {
-		required: true,
+		required: true/*,
 		remote: {
 			url: "ajax.php",
 			type: "POST",
@@ -885,11 +885,11 @@ $(document).ready (function () {
 				lead_name: function() { return $('#text-fullname').val() },
 				lead_id: "<?php echo $id?>"
 			}
-		}
+		}*/
 	};
 	messages = {
-		required: "<?php echo __('Name required')?>",
-		remote: "<?php echo __('This lead already exists')?>"
+		required: "<?php echo __('Name required')?>"/*,
+		remote: "<?php echo __('This lead already exists')?>"*/
 	};
 	add_validate_form_element_rules('#text-fullname', rules, messages);
 	// Rules: #text-email

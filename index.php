@@ -156,6 +156,7 @@ echo "<title>" . $config["sitename"] . "</title>";
 <link rel="stylesheet" href="include/styles/flora/flora.tabs.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/flora/flora.core.css" type="text/css" />
 <link rel="stylesheet" href="include/styles/flora/flora.theme.css" type="text/css" />
+<link rel="stylesheet" href="include/styles/flora/flora.multiselect.css" type="text/css" />
 <script type="text/javascript" src="include/js/jquery.js"></script>
 <script type="text/javascript" src="include/js/calendar.js"></script>
 <script type="text/javascript" src="include/js/integria.js"></script>

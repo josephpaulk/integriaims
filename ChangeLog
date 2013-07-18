@@ -1,3 +1,31 @@
+2013-07-18  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* index.php: Added an import to a css file for the
+	multiselect.
+	
+	* general/header.php: Changed the icon of the user.
+	
+	* include/functions_form.php: Added new options to
+	the function "combo_task_user_participant".
+	
+	* operation/side_menu.php: Fixed an small error.
+	Added the section "Global assignment" to the side
+	menu.
+	
+	* operation/leads/lead_detail.php: Removed the
+	check for duplicates of the lead's name.
+	
+	* operation/projects/task.php: Fixed a bug. Visual
+	changes on the task tree view.
+	
+	* operation/workorders/wo.php: Changes on the order
+	of the searches.
+	
+	* operation/projects/role_user_global.php: Moved
+	file from the enterprise version. Now is possible
+	to add an user to a multiple tasks or change multiple
+	roles at once.
+
 2013-07-18  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/load_session.php: Fixed bug.

@@ -54,10 +54,17 @@ if (!$check_cron_exec || !$check_email_queue) {
 }
 
 echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'" >';
-if (dame_admin ($config['id_user']))
-	echo '<img src="images/user_suit.png"> ';
-else
-	echo '<img src="images/user_green.png"> ';
+
+$avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $config["id_user"]);
+if (!$avatar) {
+	if (dame_admin ($config['id_user']))
+		echo '<img src="images/user_suit.png"> ';
+	else
+		echo '<img src="images/user_green.png"> ';
+} else {
+	echo '<img src="images/avatars/'.$avatar.'_small.png">';
+}
+
 echo ' <span style="font-weight: bold; color: #ffffff"">['.$config['id_user'].']</span></a>';
 
 echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';

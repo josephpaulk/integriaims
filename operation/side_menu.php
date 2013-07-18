@@ -55,7 +55,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_overview'>".__('Projects overview')."</a></li>";
 	
 	// Project detail
-	if ($sec2 == "operation/projects/project")
+	if (($sec2 == "operation/projects/project") AND (!isset($_REQUEST["view_disabled"])) )
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
@@ -85,6 +85,15 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1'>".__('Disabled projects')."</a></li>";
 	}
+	
+	
+	// Global user/role/task assigment
+	if ($sec2 == "operation/projects/role_user_global")
+		echo "<li id='sidesel'>";
+	else
+		echo "<li>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/role_user_global'>".__('Global assigment')."</a>";
+	echo "</li>";
 	
 	// end of main Project options block
 	echo "</ul>";
