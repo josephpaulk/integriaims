@@ -1,3 +1,18 @@
+2013-07-18  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/load_session.php: Fixed bug.
+
+	* integria_db.sql
+	  integria_demo.sql
+	  extras/migrate.sql
+	  operation/workorders/wo.php
+
+	* include/functions_workorders.php
+	  include/mailtemplates/wo_create.tpl
+	  include/mailtemplates/wo_subject_create.tpl
+	  include/mailtemplates/wo_update.tpl
+	  include/mailtemplates/wo_subject_update.tpl: Added files.
+
 2013-07-18  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* index.php: Added an import to a css file for the

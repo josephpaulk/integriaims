@@ -47,23 +47,29 @@ if ($operation == "insert") {
 	$validation_date = "";
 	$need_external_validation = (int) get_parameter ("need_external_validation");
 	$id_wo_category = (int) get_parameter ("id_wo_category"); 
+	$email_notify = (int) get_parameter ('email_notify');
 
 	$sql = sprintf ('INSERT INTO ttodo (name, priority, assigned_user,
-		created_by_user, progress, start_date, last_update, description, id_task, end_date, need_external_validation, id_wo_category)
-		VALUES ("%s", %d, "%s", "%s", %d, "%s", "%s", "%s", %d, "%s", %d, %d)',
+		created_by_user, progress, start_date, last_update, description, id_task, end_date, need_external_validation, id_wo_category, email_notify)
+		VALUES ("%s", %d, "%s", "%s", %d, "%s", "%s", "%s", %d, "%s", %d, %d, %d)',
 		$name, $priority, $assigned_user, $creator,
-		$progress, $start_date, $last_updated, $description, $id_task, $end_date, $need_external_validation, $id_wo_category);
+		$progress, $start_date, $last_updated, $description, $id_task, $end_date, $need_external_validation, $id_wo_category, $email_notify);
+	
 	$id = process_sql ($sql, 'insert_id');
 	if (! $id)
 		echo '<h3 class="error">'.__('Not created. Error inserting data').'</h3>';
 	else {
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>'; 
 		
-		mail_todo (0, $id);
+		//mail_todo (0, $id);
 
 		// TODO: Create agenda item if end_date is defined.
 	}
 
+	if ($email_notify) {
+		mail_workorder ($id, 1);
+	}
+	
 	clean_cache_db();
 	$operation = "view"; // Keep in view/edit mode.
 
@@ -93,10 +99,11 @@ if ($operation == "update2") {
 	$end_date = (string) get_parameter ("end_date");
 	$validation_date = "";
 	$need_external_validation = (int) get_parameter ("need_external_validation");
-	$id_wo_category = (int) get_parameter ("id_wo_category"); 
+	$id_wo_category = (int) get_parameter ("id_wo_category");
+	$email_notify = (int) get_parameter ('email_notify');
 
 
-	$sql_update = "UPDATE ttodo SET created_by_user = '$creator', need_external_validation = $need_external_validation, id_wo_category = $id_wo_category, start_date = '$start_date', end_date = '$end_date', assigned_user = '$assigned_user', id_task = $id_task, priority = '$priority', progress = '$progress', description = '$description', last_update = '$last_update', name = '$name' WHERE id = $id";
+	$sql_update = "UPDATE ttodo SET created_by_user = '$creator', need_external_validation = $need_external_validation, id_wo_category = $id_wo_category, start_date = '$start_date', end_date = '$end_date', assigned_user = '$assigned_user', id_task = $id_task, priority = '$priority', progress = '$progress', description = '$description', last_update = '$last_update', name = '$name', email_notify = $email_notify WHERE id = $id";
 
 	$result=mysql_query($sql_update);
 	if (! $result)
@@ -104,8 +111,12 @@ if ($operation == "update2") {
 	else
 		echo "<h3 class='suc'>".__('Successfully updated')."</h3>";
 	
-	mail_todo (1, $id);
+	//mail_todo (1, $id);
 	// TODO. Review this.
+	
+	if ($email_notify) {
+		mail_workorder ($id, 0);
+	}
 
 	$operation = "view"; // Keep in view/edit mode.
 	clean_cache_db();
@@ -172,6 +183,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 		$need_external_validation = 0;
 		$id_wo_category = 0;  
 		$owner = "";
+		$email_notify = 0;
 	} else {
 
 		if (!isset($id))
@@ -197,6 +209,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 		$validation_date = $todo["validation_date"];
 		$need_external_validation = $todo["need_external_validation"];
 		$id_wo_category = $todo["id_wo_category"];
+		$email_notify = $todo['email_notify'];
 	}
 
 	$tab = get_parameter ("tab", "");	
@@ -251,7 +264,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 		$table->class = 'databox';
 		$table->colspan = array ();
 		
-		$table->colspan[5][0] = 2;
+		$table->colspan[6][0] = 2;
 		$table->data = array ();
 		
 		$table->data[0][0] = print_input_text ('name', $name, '', 80, 120, true,
@@ -332,7 +345,10 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 		} else 
 			$table->data[4][1] = print_input_text ('end_date', $end_date , '', 25, 25, true, __('Deadline'));
 
-		$table->data[5][0] = print_textarea ('description', 12, 50, $description, '', true, __('Description'));
+		$table->data[5][0] = print_checkbox_extended ('email_notify', 1, $email_notify,
+                false, '', '', true, __('Notify changes by email'));
+                
+		$table->data[6][0] = print_textarea ('description', 12, 50, $description, '', true, __('Description'));
 
 		echo '<form id="form-wo" method="post">';
 		print_table ($table);

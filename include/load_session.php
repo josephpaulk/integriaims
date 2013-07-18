@@ -1,10 +1,7 @@
 <?   
 
 function mysql_session_open ($save_path, $session_name) {
-	
-	global $config;     
-	mysql_connect($config['dbhost'],$config['dbuser'],$config['dbpass']);
-	mysql_select_db($config['dbname']);   
+
 	return true;
 } 
 

@@ -347,3 +347,6 @@ CREATE TABLE tsessions_php (
 
 /*16/07/2013*/
 ALTER TABLE `tpending_mail`ADD `cc` text DEFAULT NULL;
+
+/* 18/07/2013 */
+ALTER TABLE `ttodo` ADD `email_notify` tinyint unsigned NOT NULL DEFAULT 0;

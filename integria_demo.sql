@@ -682,7 +682,8 @@ UNLOCK TABLES;
 
 LOCK TABLES `ttodo` WRITE;
 /*!40000 ALTER TABLE `ttodo` DISABLE KEYS */;
-INSERT INTO `ttodo` VALUES (1,'Do&#x20;a&#x20;public&#x20;release&#x20;of&#x20;first&#x20;version&#x20;for&#x20;testing',0,'demo','admin',2,'Create&#x20;RPM&#x20;and&#x20;DEB&#x20;packages&#x20;for&#x20;testing&#x20;purposes.','2013-02-12 09:59:57',3,'2013-02-12 00:00:00','0000-00-00 00:00:00','2000-01-01 00:00:00',1,2),(2,'Elena&#039;s&#x20;aniversary',0,'admin','admin',4,'Dont&#x20;forget&#x20;or&#x20;I&#039;m&#x20;dead&#x20;!&#x0d;&#x0a;','2013-02-12 09:59:38',0,'2013-02-12 00:00:00','2013-05-29 00:00:00','2000-01-01 00:00:00',0,3);
+INSERT INTO `ttodo` VALUES (1,'Do&#x20;a&#x20;public&#x20;release&#x20;of&#x20;first&#x20;version&#x20;for&#x20;testing',0,'demo','admin',2,'Create&#x20;RPM&#x20;and&#x20;DEB&#x20;packages&#x20;for&#x20;testing&#x20;purposes.','2013-02-12 09:59:57',3,'2013-02-12 00:00:00','0000-00-00 00:00:00','2000-01-01 00:00:00',1,2,0),
+(2,'Elena&#039;s&#x20;aniversary',0,'admin','admin',4,'Dont&#x20;forget&#x20;or&#x20;I&#039;m&#x20;dead&#x20;!&#x0d;&#x0a;','2013-02-12 09:59:38',0,'2013-02-12 00:00:00','2013-05-29 00:00:00','2000-01-01 00:00:00',0,3,0);
 /*!40000 ALTER TABLE `ttodo` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -412,6 +412,7 @@ CREATE TABLE `ttodo` (
   `validation_date` datetime NOT NULL default '2000-01-01 00:00:00',
   `need_external_validation` tinyint unsigned NOT NULL DEFAULT 0,
   `id_wo_category` int(10) default NULL,
+  `email_notify` tinyint unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY  (`id`),
   KEY `tt_idx_1` (`assigned_user`),
   KEY `tt_idx_2` (`created_by_user`)
