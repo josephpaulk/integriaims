@@ -727,10 +727,10 @@ function user_belong_task ($id_user, $id_task, $real=0){
 	global $config;
 
 	if ($real == 0){
-	   if (dame_admin ($id_user) != 0)
+		if (dame_admin ($id_user) != 0)
 			return 1;
 	}
-
+	
 	$id_project = get_db_sql ("SELECT id_project FROM ttask WHERE id = $id_task");
 	// Project manager always has access to all tasks of his project
 	if (project_manager_check ($id_project) == 1 )
@@ -807,11 +807,18 @@ function get_user_email ($id_user) {
 	return (string) get_db_value ('direccion', 'tusuario', 'id_usuario', $id_user);
 }
 
-function project_manager_check ($id_project) {
+function project_manager_check ($id_project, $id_user = false) {
 	global $config;
-
-	$manager = get_db_value ('id_owner', 'tproject', 'id', $id_project);
-	if ($manager == $config['id_user'])
+	
+	if ($id_user) {
+		$filter['id_user'] = $id_user;
+	} else {
+		$filter['id_user'] = $config['id_user'];
+	}
+	$filter['id_project'] = $id_project;
+	
+	$role = get_db_value_filter ('MIN(id_role)', 'trole_people_project', $filter);
+	if ($role == 1)
 		return true;
 	return false;
 }

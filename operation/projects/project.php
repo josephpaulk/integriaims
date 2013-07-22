@@ -16,12 +16,15 @@
 global $config;
 global $REMOTE_ADDR;
 
-include_once ("include/functions_tasks.php");
-
 check_login ();
 
-if (! give_acl ($config['id_user'], 0, "PR")) {
-	audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Violation", "Trying to access incident viewer");
+include_once ("include/functions_projects.php");
+include_once ("include/functions_tasks.php");
+
+$section_permission = get_project_access ($config['id_user']);
+
+if (!$section_permission['read']) {
+	audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Violation", "Trying to access project detail");
 	require ("general/noaccess.php");
 	exit;
 }
@@ -30,7 +33,7 @@ include_once ("include/functions_graph.php");
 
 $id_project = (int) get_parameter ('id');
 $delete_project = (bool) get_parameter ('delete_project');
-$view_disabled = (bool) get_parameter ('view_disabled');
+$view_disabled = (int) get_parameter ('view_disabled');
 $disable_project = (bool) get_parameter ('disable_project');
 $delete_project = (bool) get_parameter ('delete_project');
 $activate_project = (bool) get_parameter ('activate_project');
@@ -38,62 +41,65 @@ $action = (string) get_parameter ('action');
 $search_id_project_group = (int) get_parameter ('search_id_project_group');
 $search_text = (string) get_parameter ('search_text');
 
+if ($id_project) {
+	$project_permission = get_project_access ($config['id_user'], $id_project);
+}
+
 // Disable project
 // ======================
-
 if ($disable_project) {
-	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
-	if ($id_owner == $config['id_user'] || dame_admin ($config['id_user'])) {
-		// delete_project ($id_project);
-		$sql = sprintf ('UPDATE tproject SET disabled = 1 WHERE id = %d', $id_project);
-		process_sql ($sql);
-		echo '<h3 class="suc">'.__('Project successfully disabled').'</h3>';
-		audit_db ($config['id_user'], $REMOTE_ADDR, "Project disabled", "User ".$config['id_user']." disabled project #".$id_project);
-		project_tracking ($id_project, PROJECT_DISABLED);
-	} else {
+	
+	if (!$project_permission['manage']) {
 		audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Forbidden", "User ".$config['id_user']." try to disable project #$id_project");
-		echo '<h3 class="error">'.__('There was a problem').'</h3>';
-		no_permission ();
+		require ("general/noaccess.php");
+		exit;
 	}
+	
+	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
+	$sql = sprintf ('UPDATE tproject SET disabled = 1 WHERE id = %d', $id_project);
+	process_sql ($sql);
+	echo '<h3 class="suc">'.__('Project successfully disabled').'</h3>';
+	audit_db ($config['id_user'], $REMOTE_ADDR, "Project disabled", "User ".$config['id_user']." disabled project #".$id_project);
+	project_tracking ($id_project, PROJECT_DISABLED);
 }
 
 // Reactivate project
 // ==================
-
 if ($activate_project) {
-	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
-	if ($id_owner == $config['id_user'] || dame_admin ($config['id_user'])) {
-		$sql = sprintf ('UPDATE tproject SET disabled = 0 WHERE id = %d', $id_project);
-		process_sql ($sql);
-		echo '<h3 class="suc">'.__('Successfully reactivated').'</h3>';
-		audit_db ($config['id_user'], $REMOTE_ADDR, "Project activated", "User ".$config['id_user']." activated project #".$id_project);
-		project_tracking ($id_project, PROJECT_ACTIVATED);
-	} else {
-		audit_db ($config['id_user'], $REMOTE_ADDR,"ACL Forbidden", "User ".$config['id_user']." try to activate project #$id_project");
-		echo '<h3 class="error">'.__('There was a problem').'</h3>';
-		no_permission ();
+	
+	if (!$project_permission['manage']) {
+		audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Forbidden", "User ".$config['id_user']." try to activate project #$id_project");
+		require ("general/noaccess.php");
+		exit;
 	}
+	
+	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
+	$sql = sprintf ('UPDATE tproject SET disabled = 0 WHERE id = %d', $id_project);
+	process_sql ($sql);
+	echo '<h3 class="suc">'.__('Successfully reactivated').'</h3>';
+	audit_db ($config['id_user'], $REMOTE_ADDR, "Project activated", "User ".$config['id_user']." activated project #".$id_project);
+	project_tracking ($id_project, PROJECT_ACTIVATED);
 }
 
 // Delete
 // -----------
-
 if ($delete_project) {
-	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
-	if ($id_owner == $config['id_user'] || dame_admin ($config['id_user'])) {
-		// delete_project ($id_project);
-		delete_project ($id_project);
-		echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
-	} else {
+	
+	if (!$project_permission['manage']) {
 		audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Forbidden", "User ".$config['id_user']." try to delete project #$id_project");
-		echo '<h3 class="error">'.__('There was a problem').'</h3>';
-		no_permission ();
+		require ("general/noaccess.php");
+		exit;
 	}
+	
+	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
+	delete_project ($id_project);
+	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
 }
 
 // INSERT PROJECT
 if ($action == 'insert') {
-	if (! give_acl ($config['id_user'], 0, "PW")) {
+	
+	if (!$project_permission['write']) {
 		audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Forbidden", "User ".$id_user. " try to create project");
 		return;
 	}
@@ -185,33 +191,25 @@ $table->head[1] = __ ('PG');
 $table->head[2] = __('Manager');
 $table->head[3] = __('Completion');
 $table->head[4] = __('Updated');
+$table->head[5] = '';
 $table->data = array ();
 
-// TODO: Needs to implement group control and ACL checking
-
-$where_clause = ' 1=1';
+$where_clause = "";
 if ($search_text != "")
-	$where_clause .= sprintf (' AND (tproject.name LIKE "%%%s%%" OR tproject.description LIKE "%%%s%%" OR ttask.id_project = tproject.id AND ttask.name LIKE "%%%s%%" )',
-		$search_text, $search_text, $search_text);
+	$where_clause .= sprintf (" AND (tproject.name LIKE '%%%s%%' OR tproject.description LIKE '%%%s%%')",
+		$search_text, $search_text);
 
-if ($search_id_project_group)
-	$where_clause .= sprintf (' AND id_project_group = %d', $search_id_project_group);
-		
-$sql = sprintf ('SELECT tproject.id, tproject.name, tproject.description, tproject.start, tproject.end, tproject.id_owner, tproject.disabled, tproject.id_project_group  FROM tproject, ttask 
-	WHERE (%s) 
-	AND tproject.disabled = %d
-	GROUP BY tproject.id ORDER by tproject.name',
-	$where_clause, $view_disabled); 
+$sql = get_projects_query ($config['id_user'], $where_clause, $view_disabled);
+$new = true;
 
-$projects = get_db_all_rows_sql ($sql);
-if ($projects === false)
-	$projects = array ();
-
-foreach ($projects as $project) {
+while ($project = get_db_all_row_by_steps_sql ($new, $result, $sql)) {
 	
-	if (! user_belong_project ($config['id_user'], $project['id']))
+	$new = false;
+	
+	$project_permission = get_project_access ($config['id_user'], $project['id']);
+	if (!$project_permission['read']) {
 		continue;
-	
+	}
 	$data = array ();
 	
 	// Project name
@@ -222,7 +220,7 @@ foreach ($projects as $project) {
 	if ($project['id_project_group']) {
 		$icon = get_db_value ('icon', 'tproject_group', 'id', $project['id_project_group']);
 		$name = get_db_value ('name', 'tproject_group', 'id', $project['id_project_group']);
-
+		
 		$data[1] = '<a href=index.php?sec=projects&sec2=operation/projects/project&filter_id_project_group='.$project["id_project_group"].'">';
 		$data[1] .= '<img src="images/project_groups_small/'.$icon.'" title="'.$name.'">';
 		$data[1] .= '</a>';
@@ -251,24 +249,21 @@ foreach ($projects as $project) {
 	else
 		$data[4] = __('Never');
 	
-	// Delete
-	if ($project['id'] != -1 && (give_acl ($config['id_user'], 0, "PW") || give_acl ($config['id_user'], 0, "PM"))) {
-		$table->head[5] = __('Archive');
-		if ((give_acl ($config['id_user'], 0, "PW") && $config['id_user'] == $project["id_owner"]) || give_acl ($config['id_user'], 0, "PM")) {
-			if ($view_disabled == 0) {
-				$data[5] = '<a href="index.php?sec=projects&sec2=operation/projects/project&disable_project=1&id='.$project['id'].'" 
-					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
-					<img src="images/cross.png" /></a>';
-			} else {
-				$data[5] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
-					onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
-					<img src="images/cross.png" /></a> ';
-				$data[5] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
-					<img src="images/play.gif" /></a>';
-			}
-		}
-		else {
-			$data[9] = '';
+	$data[5] = '';
+	// Disable or delete
+	if ($project['id'] != -1 && $project_permission['manage']) {
+		if ($view_disabled == 0) {
+			$table->head[5] = __('Archive');
+			$data[5] = '<a href="index.php?sec=projects&sec2=operation/projects/project&disable_project=1&id='.$project['id'].'" 
+				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+				<img src="images/cross.png" /></a>';
+		} elseif ($project['disabled'] && $project_permission['manage']) {
+			$table->head[5] = __('Delete/Unarchive');
+			$data[5] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
+				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
+				<img src="images/cross.png" /></a> ';
+			$data[5] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
+				<img src="images/play.gif" /></a>';
 		}
 	}
 	

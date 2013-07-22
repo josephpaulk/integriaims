@@ -18,6 +18,7 @@
 global $config;
 check_login ();
 
+include_once ("include/functions_projects.php");
 include_once ("include/functions_graph.php");
 include_once ("include/functions_tasks.php");
 
@@ -29,6 +30,36 @@ $operation = (string) get_parameter ('operation');
 
 $hours = 0;
 $estimated_cost = 0;
+
+
+// ACL Check for this task
+$project_permission = get_project_access ($config["id_user"], $id_project);
+$task_permission = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
+if ($operation == "") {
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task detail without operation");
+	no_permission();
+}// elseif ($operation == "create" && no es TM en ninguna tarea) {
+	// Doesn't have access to this page
+//	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a task without access");
+//	no_permission();
+} elseif ($operation == "insert") {
+	$id_parent = (int) get_parameter ('parent');
+	$task_permission = get_project_access ($config["id_user"], $id_project, $id_parent, false, true);
+	if (!$task_permission['manage']) {
+		// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to insert a task without access");
+		no_permission();
+	}
+} elseif ( ($operation == "update" || $operation == "view") && !$task_permission['manage']) {
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task detail without access");
+	no_permission();
+} elseif ($operation == "update" && $id_task = -1) {
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a task without task id");
+	no_permission();
+}
 
 // Get names
 if ($id_project)
@@ -54,31 +85,9 @@ $result_output = "";
 $parent = 0;
 $count_hours = 1;
 
-// ACL Check for this task
-// This user is assigned to this task ?
-
-if ( $operation != "create" && $id_task != -1 && ! user_belong_task ($config["id_user"], $id_task)){
-	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager without project");
-	no_permission();
-}
-
-
-if ($operation == "") {
-	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager without project");
-	no_permission();
-}
-
 
 // Create task
 if ($operation == "insert") {
-	if (!give_acl ($config["id_user"], 0, "TM") && !give_acl ($config["id_user"], 0, "PM") && (!give_acl ($config["id_user"], 0, "PW") || !$config["id_user"] == $project_manager)) {
-		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to create task");
-		require ("general/noaccess.php");
-		return;
-	}
-	
 	$name = get_parameter ('name');
 	$start = get_parameter ('start_date', date ("Y-m-d"));
 	$end = get_parameter ('end_date', date ("Y-m-d"));
@@ -145,18 +154,6 @@ if ($operation == "insert") {
 // Update task
 // -----------
 if ($operation == "update") {
-	if ($id_task == -1) {
-		audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to update invalid Task");
-		include ("general/noaccess.php");
-		return;
-	}
-	
-	if (!give_acl($config["id_user"], 0, "TM") && ($config["id_user"] != $project_manager)) {
-		audit_db($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to create task");
-		require ("general/noaccess.php");
-		return;
-	}
-	
 	// Get current completion
 	$current_completion = get_db_value('completion', 'ttask', 'id', $id_task);
 	
@@ -366,28 +363,22 @@ $table->data[7][0] .= print_input_hidden ('completion', $completion, true);
 $table->data[8][0] = print_textarea ('description', 8, 30, $description, '',
 	true, __('Description'));
 
-if (user_belong_project ($config['id_user'], $id_project) || give_acl ($config["id_user"], $id_group, "TM") || give_acl ($config["id_user"], $id_group, "PM") || (give_acl ($config["id_user"], 0, "PW") && ($config["id_user"] == $project_manager))) {
-	echo '<form id="form-task_detail" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
-	
-	print_table ($table);
+print_table ($table);
 
-	if((give_acl ($config["id_user"], $id_group, "TM") && $operation == "create") || 
-	(give_acl ($config["id_user"], $id_group, "TW") && $operation != "create") ||
-	$config["id_user"] == $project_manager) {
-		echo '<div class="button" style="width:'.$table->width.'">';
-		if ($operation != "create") {
-			print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
-			print_input_hidden ('operation', 'update');
-		} else {
-			print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"');
-			print_input_hidden ('operation', 'insert');
-		}
-		print_input_hidden ('id_project', $id_project);
-		echo '</div>';
+if (($operation != "create" && $task_permission['manage']) || $operation == "create") {
+	
+	echo '<form id="form-task_detail" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
+	echo '<div class="button" style="width:'.$table->width.'">';
+	if ($operation != "create") {
+		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
+		print_input_hidden ('operation', 'update');
+	} else {
+		print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"');
+		print_input_hidden ('operation', 'insert');
 	}
+	print_input_hidden ('id_project', $id_project);
+	echo '</div>';
 	echo '</form>';
-} else {
-	print_table ($table);
 }
 
 ?>

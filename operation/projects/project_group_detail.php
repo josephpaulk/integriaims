@@ -16,14 +16,17 @@
 
 global $config;
 
+include_once ("include/functions_projects.php");
+
 check_login ();
 
-if (give_acl($config["id_user"], 0, "PM")==0) {
-	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access project group management");
+$id_user = $config["id_user"];
+
+$section_permission = get_project_access ($id_user);
+if (!$section_permission["write"]) {
+	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to project group management");
 	no_permission();
 }
-
-$id_user = $config["id_user"];
 
 $id = (int) get_parameter ('id');
 $new_group = (bool) get_parameter ('new_group');

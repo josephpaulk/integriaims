@@ -312,9 +312,10 @@ if ($id | $new_contract) {
 	$search_params = "search_text=$search_text&search_company_role=$search_company_role&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_date_begin_beginning=$search_date_begin_beginning&search_date_end_beginning=$search_date_end_beginning";
 
 	//$where_clause = " 1 = 1 AND id_company " . get_filter_by_company_accessibility($config['id_user']);
+	$where_clause = "WHERE 1=1";
 	
 	if ($search_text != "") {
-		$where_clause .= sprintf ('AND (id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR 
+		$where_clause .= sprintf (' AND (id_company IN (SELECT id FROM tcompany WHERE name LIKE "%%%s%%") OR 
 			name LIKE "%%%s%%" OR 
 			contract_number LIKE "%%%s%%")', $search_text, $search_text, $search_text);
 	}

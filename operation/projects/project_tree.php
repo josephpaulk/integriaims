@@ -21,11 +21,13 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "PR")) {
-	// Doesn't have access to this page
-	audit_db ($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
-	include ("general/noaccess.php");
-	exit;
+include_once ("include/functions_projects.php");
+
+$section_access = get_project_access ($config['id_user']);
+// ACL - To access to this section, the required permission is PR
+if (!$section_access['read']) {
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to project tree section");
+	no_permission();
 }
 
 $id_user = get_parameter ("user_form", $config["id_user"]);

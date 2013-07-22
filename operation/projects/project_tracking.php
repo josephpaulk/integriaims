@@ -14,10 +14,14 @@
 
 check_login ();
 
+include_once ("include/functions_projects.php");
+
 $id = (int) get_parameter ('id_project');
 $project = get_db_row ('tproject', 'id', $id);
 
-if ($project === false || ! user_belong_project ($config["id_user"], $id)) {
+$project_access = get_project_access ($config['id_user'], $project);
+// ACL - To see the project, you should have read access
+if ($project === false || ! $project_access['read']) {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access project ".$id);
 	no_permission();

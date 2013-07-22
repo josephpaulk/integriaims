@@ -1,0 +1,87 @@
+<?php
+
+global $config;
+enterprise_include ('include/functions_projects.php');
+
+ /**
+ * Get an SQL query with the accessible projects
+ * by accessible companies.
+ * NOT FULLY IMPLEMENTED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+ * 
+ * @param id_user User ID
+ * @param where_clause More filters for the WHERE clause of the query
+ * @param disabled 1 to return the disabled projects
+ * @param real Flag for use or not the admin permissions
+ * 
+ * @return string SQL query
+*/
+function get_projects_query ($id_user, $where_clause = "", $disabled = 0, $real = false) {
+	
+	$return = enterprise_hook ('get_projects_query_extra', array($id_user, $where_clause, $disabled, $real));
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	return "SELECT *
+			FROM tproject
+			WHERE disabled=$disabled
+				$where_clause
+			ORDER BY name";
+}
+
+/**
+ * Get an SQL query with the accessible tasks
+ * NOT FULLY IMPLEMENTED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+ * 
+ * @param id_user User ID
+ * @param id_project Project Id
+ * @param where_clause More filters for the WHERE clause of the query
+ * @param disabled 1 to return the tasks of disabled projects
+ * @param real Flag for use or not the admin and project manager permissions
+ * 
+ * @return string SQL query
+*/
+function get_tasks_query ($id_user, $id_project, $where_clause = "", $disabled = 0, $real = false) {
+	
+	$return = enterprise_hook ('get_tasks_query_extra', array($id_user, $id_project, $where_clause, $disabled, $real));
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	return "SELECT *
+			FROM ttask
+			WHERE id_project=$id_project
+				AND id_project IN(SELECT id
+								  FROM tproject
+								  WHERE disabled=$disabled)
+				$where_clause
+			ORDER BY name";
+}
+
+/**
+ * Get the project or task accessibility
+ *
+ * @param id_user User ID
+ * @param id_project Project Id. If false, only check the read flag
+ * @param id_task Task Id. If true, check the project accessibitity
+ * @param real Flag for use or not the admin and project manager permissions
+ * @param search_in_hierarchy Flag for search inherited permissions
+ * 
+ * @return string SQL query
+ * 
+ * NOT FULLY IMPLEMENTED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+*/
+function get_project_access ($id_user, $id_project = false, $id_task = false, $real = false, $search_in_hierarchy = false) {
+	
+	$permission = array();
+	$permission['read'] = true;
+	$permission['write'] = true;
+	$permission['manage'] = true;
+	
+	$return = enterprise_hook ('get_project_access_extra', array($id_user, $id_project, $id_task, $real, $search_in_hierarchy));
+	
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	return $permission;
+}
+
+?>

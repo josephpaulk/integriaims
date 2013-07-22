@@ -18,17 +18,18 @@
 
 global $config;
 
+include_once ("include/functions_projects.php");
+
 check_login ();
 
 $id_project = (int) get_parameter ('id_project');
 $id_user = $config["id_user"];
 
-if (!user_belong_project ($id_user, $id_project, $real = 0))
-	no_permission ();
-	
-if (! give_acl ($config["id_user"], 0, "PR")) {
+// ACL
+$project_access = get_project_access ($id_user, $id_project);
+if (! $project_access["read"]) {
  	// Doesn't have access to this page
-	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
+	audit_db ($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project graph page");
 	no_permission ();
 }
 

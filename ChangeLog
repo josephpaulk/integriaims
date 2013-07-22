@@ -1,3 +1,52 @@
+2013-07-22  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_db.php: Changes on function
+	"project_manager_check".
+	
+	* include/functions_form.php: Added an option in the
+	function "combo_roles" to decide if show the manager.
+	Added the function "combo_task_user_manager" wich shows
+	a multiselect with the tasks with manage permission by
+	the user.
+	
+	* include/functions_projects.php: New file. Added
+	functions "get_projects_query", "get_tasks_query"
+	and "get_project_access".
+	
+	* include/functions_tasks.php: Now the background of
+	the tree is white.
+	
+	* include/help/en/help_project_roles.php
+	  include/help/en/help_project_roles.php: New help files.
+	  
+	* include/js/jquery.multiselect.js: New file.
+	JQuery widget for multiselect elements.
+	
+	* include/styles/flora/flora.multiselect.css: New file.
+	Styles for the jquery.multiselect widget.
+	
+	* operation/contacts/contact_detail.php: Fixed a little
+	error on the search query and on the acl.
+	
+	* operation/contracts/contract_detail.php: Fixed a
+	little error on the search query.
+	
+	* operation/projects/gantt.php
+	  operation/projects/milestones.php
+	  operation/projects/people_manager.php
+	  operation/projects/project.php
+	  operation/projects/project_bubblegraph.php
+	  operation/projects/project_detail.php
+	  operation/projects/project_group_detail.php
+	  operation/projects/project_tracking.php
+	  operation/projects/project_tree.php
+	  operation/projects/role_user_global.php
+	  operation/projects/task.php
+	  operation/projects/task_detail.php
+	  operation/projects/task_workunit.php: Added or
+	  updated the ACL. Minor fixes and changes on the
+	  queries.
+
 2013-07-18  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/load_session.php: Fixed bug.

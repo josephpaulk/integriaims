@@ -13,28 +13,42 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+// Load global vars
+global $config;
+
 if (check_login() != 0) {
 	audit_db("Noauth", $config["REMOTE_ADDR"], "No authenticated access", "Trying to access event viewer");
 	require ("general/noaccess.php");
 	exit;
 }
 
+include_once ("include/functions_projects.php");
+
+
 $id_user = $config["id_user"];
 $operation = get_parameter ("operation");
 $id_project = get_parameter ("id_project", -1);
+
+$project_access = get_project_access ($id_user, $id_project);
+
 if ($id_project != 1)
 	$project_name = get_db_value ("name", "tproject", "id", $id_project);
 else
 	$project_name = "";
 
-if ( $id_project == -1 ){
+if ($id_project == -1){
 	// Doesn't have access to this page
 	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to milestone manager without project");
 	no_permission();
 }
-
-if (! user_belong_project ($config["id_user"], $id_project)) {
+// ACL - To see the project milestones, you should have read access
+if (! $project_access["read"]) {
 	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to milestone manager without permissions");
+	no_permission();
+}
+// ACL - To manage a project milestone, you should have PM access
+if ($operation != "" && !$project_access["write"]) {
+	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to create or delete a milestone without permissions");
 	no_permission();
 }
 
@@ -115,7 +129,9 @@ if ($operation == ""){
 	echo "<th>".__('Milestone');
 	echo "<th>".__('Description');
 	echo "<th>".__('Timestamp');
-	echo "<th>".__('Delete');
+	if ($project_access['write']) {
+		echo "<th>".__('Delete');
+	}
 	$color=1;
 	$sql1="SELECT * FROM tmilestone WHERE id_project = $id_project";
 	if ($result=mysql_query($sql1))
@@ -140,15 +156,17 @@ if ($operation == ""){
 			echo $row["timestamp"];
 			
 			// DELETE
-			echo '<td class="'.$tdcolor.'" align="center">';
-			echo '<a href="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=delete&id='.$row["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
+			if ($project_access['write']) {
+				echo '<td class="'.$tdcolor.'" align="center">';
+				echo '<a href="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=delete&id='.$row["id"].'" onClick="if (!confirm(\' '.__('Are you sure?').'\')) return false;"><img border=0 src="images/cross.png"></a>';
+			}
 			
 		}
 	echo "</table>";
 
     $project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
-    if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
+    if ($project_access['write']) {
 	    echo "<table class='button' width=90%>";
 	    echo "<tr><td align=right>";
     

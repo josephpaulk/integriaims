@@ -14,6 +14,7 @@
 // GNU General Public License for more details.
 
 include_once ("include/functions_graph.php");
+include_once ("include/functions_projects.php");
 
 // Returns 'date' in the format 'dd/mm/yyyy'
 function fix_date ($date, $default='') {
@@ -107,8 +108,10 @@ else
 	$project_name = "";
 $clean_output = get_parameter ("clean_output", 0);
 
-if (user_belong_project ($id_user, $id_project) == 0){
-	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
+$project_access = get_project_access ($config['id_user'], $id_project);
+// ACL - To see the project, you should have read access
+if ($id_project != -1 && !$project_access['read']) {
+	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to the gant graph of the project $project_name");
 	no_permission();
 }
 

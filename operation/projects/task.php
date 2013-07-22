@@ -21,6 +21,7 @@ check_login ();
 
 include_once ("include/functions_graph.php");
 include_once ("include/functions_tasks.php");
+include_once ("include/functions_projects.php");
 
 $graph_ttl = 1;
 
@@ -62,22 +63,30 @@ if (defined ('AJAX')) {
 			$sql_wo = "SELECT *
 					   FROM ttodo
 					   WHERE id_task=$id_item
+						   AND progress<>1
+						   AND progress<>2
 					   ORDER BY name";
 			$sql_wo_count = "SELECT COUNT(*)
 							 FROM ttodo
-							 WHERE id_task=$id_item";
+							 WHERE id_task=$id_item
+								 AND progress<>1
+								 AND progress<>2";
 		} else {
 			$sql_wo = "SELECT *
 					   FROM ttodo
 					   WHERE id_task=$id_item
 						  AND (assigned_user='".$config['id_user']."'
 							  OR created_by_user='".$config['id_user']."')
+						  AND progress<>1
+						  AND progress<>2
 					   ORDER BY name";
 			$sql_wo_count = "SELECT COUNT(*)
 							 FROM ttodo
 							 WHERE id_task=$id_item
 								AND (assigned_user='".$config['id_user']."'
-								OR created_by_user='".$config['id_user']."')";
+									OR created_by_user='".$config['id_user']."')
+								AND progress<>1
+								AND progress<>2";
 		}
 		
 		$countRows = process_sql ($sql_tasks_count);
@@ -240,6 +249,16 @@ if (defined ('AJAX')) {
 				if ($wo["end_date"] < date('Y-m-d H:i:s')) {
 					$background_color = "background: #fff0f0;";
 				}
+			} else {
+				$background_color = "";
+			}
+
+			/*
+			// Background color
+			if ($wo["end_date"] != "0000-00-00 00:00:00") {
+				if ($wo["end_date"] < date('Y-m-d H:i:s')) {
+					$background_color = "background: #fff0f0;";
+				}
 			} elseif ($wo["progress"] == 1) {
 				$background_color = "background: #f0fff0;";	
 			} elseif ($wo["progress"] == 2) {
@@ -247,6 +266,7 @@ if (defined ('AJAX')) {
 			} else {
 				$background_color = "";
 			}
+			*/
 			
 			// WO icon
 			$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work order')));
@@ -257,8 +277,8 @@ if (defined ('AJAX')) {
 			// WO name
 			$name = safe_output($wo['name']);
 			
-			if (strlen($name) > 30) {
-				$name = substr ($name, 0, 30) . "...";
+			if (strlen($name) > 50) {
+				$name = substr ($name, 0, 50) . "...";
 				$name = "<a title='".safe_output($wo['name'])."'
 					href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=".$wo['id']."'>".$name."</a>";
 			} else {
@@ -266,7 +286,7 @@ if (defined ('AJAX')) {
 			}
 			
 			// Owner
-			$avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $config["id_user"]);
+			$avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $wo['assigned_user']);
 			if (!$avatar)
 				$avatar = "avatar1";
 			$owner_icon = "<img src='images/avatars/".$avatar."_small.png' title='".__('Assigned user')."'>";
@@ -282,7 +302,11 @@ if (defined ('AJAX')) {
 			}
 			
 			// Submitter
-			$submitter_icon = "<img src='images/user_comment.png' title='".__('Creator')."'>";
+			$avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $wo['created_by_user']);
+			if (!$avatar)
+				$submitter_icon = "<img src='images/user_comment.png' title='".__('Creator')."'>";
+			else
+				$submitter_icon = "<img src='images/avatars/".$avatar."_small.png' title='".__('Creator')."'>";
 			
 			$submitter = safe_output($wo['created_by_user']);
 			if (strlen($submitter) > 10) {
@@ -298,7 +322,7 @@ if (defined ('AJAX')) {
 			echo "<span style='".$background_color." padding: 5px;'>";
 			echo "<span style='vertical-align:middle; display: inline-block;'>".$wo_icon."</span>";
 			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
-			echo "<span style='margin-left: 15px; min-width: 190px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='margin-left: 15px; min-width: 300px; vertical-align:middle; display: inline-block;'>".$name."</span>";
 			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$owner_icon."</span>";
 			echo "<span style='margin-left: 3px; min-width: 80px; vertical-align:middle; display: inline-block;'>".$owner."</span>";
 			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$submitter_icon."</span>";

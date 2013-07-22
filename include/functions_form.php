@@ -16,6 +16,7 @@
 
 global $config;
 include_once ("functions_incidents.php");
+include_once ("functions_projects.php");
 
 function combo_user_visible_for_me ($id_user, $form_name ="user_form", $any = false, $access = "IR", $return = false, $label = false, $both = true, $anygroup = false) {
 	global $config;
@@ -423,7 +424,7 @@ function combo_project_user ($actual, $id_user, $disabled = 0, $return = false) 
 
 // Returns a combo with the tasks that current user is working on
 // ----------------------------------------------------------------------
-function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false, $name=false, $nothing = true, $multiple = false) {
+function combo_task_user_participant ($id_user, $show_vacations = false, $actual = 0, $return = false, $label = false, $name = false, $nothing = true, $multiple = false) {
 	$output = '';
 	$values = array ();
 	
@@ -475,9 +476,65 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 	echo $output;
 }
 
+// Returns a combo with the tasks with manage permission from the user
+// ----------------------------------------------------------------------
+function combo_task_user_manager ($id_user, $actual = 0, $return = false, $label = false, $name = false, $nothing = true, $multiple = false) {
+	$output = '';
+	$values = array ();
+	
+	$sql = get_projects_query ($id_user);
+	$new = true;
+	
+	while ($project = get_db_all_row_by_steps_sql($new, $result_project, $sql)) {
+		
+		$sql = "SELECT *
+				FROM ttask
+				WHERE id_project=".$project['id']."
+					AND id_project IN(SELECT id
+									  FROM tproject
+									  WHERE disabled=0)
+				ORDER BY name";
+		$new = true;
+		
+		$project_access = get_project_access ($id_user, $project['id']);
+		// ACL - To continue, the user should have read access
+		if ($project_access['read']) {
+			
+			while ($task = get_db_all_row_by_steps_sql($new, $result_task, $sql)) {
+				$new = false;
+				
+				$task_access = get_project_access ($id_user, $project['id'], $task['id'], false, true);
+				// ACL - To show the task, the user should have manage access
+				if ($task_access['manage']) {
+					$values[$task['id']] = array('optgroup' => $project['name'], 'name' => '&nbsp;'.$task['name']);
+				}
+			}
+		} else {
+			$new = false;
+		}
+	}
+	
+	if (!$name) {
+		$name = 'id_task';
+	}
+	
+	if ($nothing) {
+		$nothing = __('N/A');
+	} else {
+		$nothing = '';
+	}
+
+	$output .= print_select ($values, $name, $actual, '', $nothing, '0', true,
+		$multiple, false, $label);
+
+	if ($return)
+		return $output;
+	echo $output;
+}
+
 // Returns a combo with the available roles
 // ----------------------------------------------------------------------
-function combo_roles ($include_na = false, $name = 'role', $label = '', $return = false) {
+function combo_roles ($include_na = false, $name = 'role', $label = '', $return = false, $manager = true) {
 	global $config;
 	
 	$output = '';
@@ -488,8 +545,13 @@ function combo_roles ($include_na = false, $name = 'role', $label = '', $return 
 		$nothing = __('N/A');
 		$nothing_value = 0;
 	}
-	$output .= print_select_from_sql ('SELECT id, name FROM trole',
-		$name, '', '', $nothing, $nothing_value, true, false, false, $label);
+	if ($manager) {
+		$output .= print_select_from_sql ('SELECT id, name FROM trole',
+			$name, '', '', $nothing, $nothing_value, true, false, false, $label);
+	} else {
+		$output .= print_select_from_sql ('SELECT id, name FROM trole WHERE id<>1',
+			$name, '', '', $nothing, $nothing_value, true, false, false, $label);
+	}
 	
 	if ($return)
 		return $output;

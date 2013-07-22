@@ -15,13 +15,12 @@
 // GNU General Public License for more details.
 
 // Load global vars
-
 global $config;
-include_once ("include/functions_tasks.php");
-include_once ("include/functions_graph.php");
 
 check_login ();
 
+include_once ("include/functions_projects.php");
+include_once ("include/functions_tasks.php");
 include_once ("include/functions_graph.php");
 
 $create_mode = 0;
@@ -45,19 +44,34 @@ if ($pdf_output) {
 	$graph_ttl = 2;
 }
 
-if (!$create_project && ! user_belong_project ($config["id_user"], $id_project)) {
-	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access project ".$id_project);
+$section_access = get_project_access ($config['id_user']);
+if ($id_project) {
+	$project_access = get_project_access ($config['id_user'], $id_project);
+}
+
+// ACL - To access to this section, the required permission is PR
+if (!$section_access['read']) {
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to project detail section");
+	no_permission();
+}
+// ACL - If creating, the required permission is PM
+if ($create_project && !$section_access['write']) {
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a project");
+	no_permission();
+}
+// ACL - To view an existing project, belong to it is required
+if ($id_project && !$project_access['read']) {
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to view a project");
 	no_permission();
 }
 
+
 // Update project
 if ($action == 'update') {
-	$id_owner = get_db_value ('id_owner', 'tproject', 'id', $id_project);
-	if (! give_acl ($config["id_user"], 0, "PW") && $config["id_user"] != $id_owner) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update an unauthorized Project");
-		include ("general/noaccess.php");
-		exit;
+	// ACL - To update an existing project, project manager permission is required
+	if ($id_project && !$project_access['manage']) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update the project $id_project");
+		no_permission();
 	}
 	$user = get_parameter('id_owner');
 	$name = get_parameter ("name");
@@ -188,21 +202,19 @@ echo "</textarea></td></tr>";
 echo "</table>";
 
 if (!$clean_output)  {
-
-	echo '<div style="width:800px;" class="button">';
-
-	if (give_acl ($config["id_user"], 0, "PM") || give_acl ($config["id_user"], 0, "PW") || $config["id_user"] == $id_owner) {
-		if ($id_project) {
-			print_input_hidden ('id_project', $id_project);
-			print_input_hidden ('action', 'update');
-			print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-		} else {
-			print_input_hidden ('action', 'insert');
-			print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"');
-		}
+	
+	if ($id_project && $project_access['manage']) {
+		echo '<div style="width:800px;" class="button">';
+		print_input_hidden ('id_project', $id_project);
+		print_input_hidden ('action', 'update');
+		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
+		echo '</div>';
+	} elseif (!$id_project) {
+		echo '<div style="width:800px;" class="button">';
+		print_input_hidden ('action', 'insert');
+		print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"');
+		echo '</div>';
 	}
-	echo '</div>';
-
 }
 
 if ($id_project) {
@@ -325,7 +337,7 @@ if ($id_project) {
 
 	echo '<td><b>'.__('Average Cost per Hour').' </b>';
 	if ($total_hr > 0)
-		$avg_cost_hour = format_numeric ($total_project_costs / $total_hr) . " ". $config["currency"];
+		$avg_cost_hour = format_numeric ($total_project_costs / $total_hr) . " " . $config["currency"];
 	else
 		$avg_cost_hour = __("N/A");
 		

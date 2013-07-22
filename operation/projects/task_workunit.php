@@ -5,29 +5,36 @@ global $config;
 check_login ();
 
 require_once ('include/functions_workunits.php');
+include_once ("include/functions_projects.php");
 
 $id_project = (int) get_parameter ("id_project");
 $id_task = (int) get_parameter ("id_task");
 $id_user_filter = (string) get_parameter ("id_user", "");
 $operation = (string) get_parameter ("operation");
 
-if ($id_project > 0 && ! user_belong_project ($config["id_user"], $id_project)) {
-	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to view workunit not in this access range");
-	no_permission();
-}
-
-if ($id_task > 0 && ! user_belong_task ($config["id_user"], $id_task)){
-	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to view workunit not in this access range");
-	no_permission();
-}
-
+// ACL
 if (! $id_project) {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager without project");
 	no_permission();
 }
+if ($id_project > 0) {
+	$project_permission = get_project_access ($config["id_user"], $id_project);
+	if (!$project_permission["read"]) {
+		// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to view workunit not in this access range");
+		no_permission();
+	}
+}
+if ($id_task > 0) {
+	$task_permission = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
+	if (!$task_permission["read"]){
+		// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to view workunit not in this access range");
+		no_permission();
+	}
+}
+
 
 // Get names
 $project_name = get_db_value ("name", "tproject", "id", $id_project);
@@ -137,7 +144,7 @@ if (isset($result_output))
 // Specific task
 if ($id_task != 0) { 
 	
-	$pm = get_db_sql ("SELECT id_owner FROM tproject WHERE id = ".$id_project);
+	$pm = get_db_sql ("SELECT id_owner FROM tproject WHERE id = ".$id_project);//////////
 
     $sql_filter = "";
     if ($id_user_filter != "")
@@ -166,7 +173,7 @@ if ($id_task != 0) {
 } elseif ($id_project != 0) {
 	// Whole project
 	
-	$pm = get_db_sql ("SELECT id_owner FROM tproject WHERE id = ".$id_project);
+	$pm = get_db_sql ("SELECT id_owner FROM tproject WHERE id = ".$id_project);/////
 
     $sql_filter = "";
     if ($id_user_filter != "")

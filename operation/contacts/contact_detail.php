@@ -320,6 +320,7 @@ if ($id || $new_contact) {
 	$id_company = (int) get_parameter ('id_company');
 	
 	//$where_clause = "WHERE 1=1 AND id_company " .get_filter_by_company_accessibility($config["id_user"]);
+	$where_clause = "WHERE 1=1";
 	if ($search_text != "") {
 		$where_clause .= " AND (fullname LIKE '%$search_text%' OR email LIKE '%$search_text%') ";
 	}
@@ -365,7 +366,7 @@ if ($id || $new_contact) {
 		$table->head[0] = __('Full name');
 		$table->head[1] = __('Company');
 		$table->head[2] = __('Email');
-		if(give_acl ($config["id_user"], 0, "VM")) {
+		if($manage_permission) {
 			$table->head[3] = __('Delete');
 		}
 		

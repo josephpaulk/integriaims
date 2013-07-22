@@ -14,14 +14,12 @@
 // GNU General Public License for more details.
 
 // Load global vars
-
 global $config;
 
-if (check_login() != 0) {
-	audit_db("Noauth",$config["REMOTE_ADDR"], "No authenticated access","Trying to access event viewer");
-	exit;
-}
-	
+check_login ();
+
+include_once ("include/functions_projects.php");
+
 //~ if (give_acl($config["id_user"], 0, "PM") != 1){
 	//~ // Doesn't have access to this page
 	//~ audit_db ($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
@@ -29,16 +27,27 @@ if (check_login() != 0) {
 	//~ exit;
 //~ }
 
+//$section_access = get_project_access ($config['id_user']);
+
 $id_user = get_parameter ("id_user", $config["id_user"]);
 $id_role = get_parameter ("roles", 0);
 $tasks = (array) $_POST["tasks"];
 
 $delete = get_parameter ("delete", 0);
-if ($delete){
-	$id_task = $delete;
-	$sql = "DELETE FROM trole_people_task WHERE id_task = $id_task AND id_user = '$id_user'";
-	$resq1=mysql_query($sql);
-	echo "<h3 class='suc'>".__ ("Assigment removed succesfully")."</h3>";
+if ($delete) {
+	$id_project = get_db_value ('id_project', 'ttask', 'id', $delete);
+	$project_access = get_project_access ($config['id_user'], $id_project);
+	$task_access = get_project_access ($config['id_user'], $id_project, $delete);
+	// ACL - To delete a task, you should have TW permission and belong to the task or be project manager
+	if ($project_access['manage'] || $task_access['manage']) {
+		$id_task = $delete;
+		$sql = "DELETE FROM trole_people_task WHERE id_task = $id_task AND id_user = '$id_user'";
+		$resq1=mysql_query($sql);
+		echo "<h3 class='suc'>".__ ("Assigment removed succesfully")."</h3>";
+	} else {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete the task $delete");
+		echo "<h3 class='error'>".__ ("You do not have permission to delete this task")."</h3>";
+	}
 }
 
 $add = get_parameter ("add", 0);
@@ -47,16 +56,33 @@ if ($add && $id_role) {
 	foreach ($tasks as $id_task) {
 		
 		$id_project = get_db_value ('id_project', 'ttask', 'id', $id_task);
+		$task = get_db_value ('name', 'ttask', 'id', $id_task);
 		if (!$id_project) {
-			$task = get_db_value ('name', 'ttask', 'id', $id_task);
 			echo "<h3 class='error'>".__('Error. Task '.$task.' is not assigned to a project.')."</h3>";
 			continue; // Does not insert the project and the task
 		}
 		
-		// Project
+		$project_access = get_project_access ($config['id_user'], $id_project);
+		$task_access = get_project_access ($config['id_user'], $id_project, $id_task);
+		
+		// ACL - To add an user to a task, you should be project manager
+		if (!$project_access['manage'] && !$task_access['manage']) {
+			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to add an user to the task $task");
+			echo "<h3 class='error'>".__ ("You don't have permission to add an user to the task $task")."</h3>";
+			continue; // Does not insert the project and the task
+		}
+		
+		// ACL - To add the project manager role to an user, you should be project manager
+		if ($id_role == 1 && !$project_access['manage']) {
+			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to add the task $task");
+			echo "<h3 class='error'>".__ ("You do not have permission to add the project manager role to an user")."</h3>";
+			continue; // Does not insert the project and the task
+		}
+		
+		// User->Project insert
 		$filter = array();
-		$filter['id_user']= $id_user;
-		$filter['id_project']= $id_project;
+		$filter['id_user'] = $id_user;
+		$filter['id_project'] = $id_project;
 		
 		$result_sql = get_db_value_filter ('MIN(id_role)', 'trole_people_project', $filter);
 		if ($result_sql == false){
@@ -65,7 +91,7 @@ if ($add && $id_role) {
 					($id_project, '$id_user', '$id_role')";
 			
 			$result_sql = process_sql ($sql, 'insert_id');
-		
+			
 			if ($result_sql !== false) {
 				$project = get_db_value ('name', 'tproject', 'id', $id_project);
 				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to project", "User $id_user added to project $project");
@@ -76,7 +102,7 @@ if ($add && $id_role) {
 			}
 		}
 		
-		// Task
+		// User->Task insert
 		$filter = array();
 		$filter['id_user']= $id_user;
 		$filter['id_task']= $id_task;
@@ -148,22 +174,16 @@ $table->id = "cost_form";
 $table->width = "90%";
 $table->class = "databox";
 $table->data = array ();
-
-$table->data[0][0] = combo_task_user_participant ($config['id_user'], false, '', true, __('Tasks'), 'tasks[]', '', true);
-$table->data[0][1] = combo_roles (false, "roles", __('Role'), true);
+$table->data[0][0] = combo_task_user_manager ($config['id_user'], 0, true, __('Tasks'), 'tasks[]', '', true);
+if (dame_admin($config['id_user']))
+	$table->data[0][1] = combo_roles (false, "roles", __('Role'), true);
+else
+	$table->data[0][1] = combo_roles (false, "roles", __('Role'), true, false);
+$table->data[0][1] .= integria_help ("project_roles", true);
 $table->data[0][2] = print_submit_button (__('Add'), 'sub_btn', false, 'class="upd sub"', true);
 
 print_table ($table);
 echo "</form>";
-
-$sql = "SELECT ttask.id as tid, ttask.name as tname, tproject.name as pname, trole_people_task.id_role as id_role, tproject.id as pid
-		FROM trole_people_task, ttask, tproject
-		WHERE trole_people_task.id_user = '$id_user'
-			AND trole_people_task.id_task = ttask.id
-			AND ttask.id_project = tproject.id
-			AND tproject.disabled = 0
-		ORDER BY tproject.name, ttask.name";
-
 
 echo "<table class='listing' width='90%'>";
 echo "<th>".__("Project");
@@ -171,19 +191,57 @@ echo "<th>".__("Task");
 echo "<th>".__("Role");
 echo "<th>".__("WU");
 echo "<th>".__("WU/Tsk");
-echo "<th>".__("Delete");
+echo "<th align='center'>".__("Delete");
+
+$sql = get_projects_query ($id_user);
 $new = true;
 $color=1;
-while ($row = get_db_all_row_by_steps_sql($new, $result, $sql)) {
-	$new = false;
-	echo "<tr>";
-	echo "<td>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=".$row['pid']."'>".$row["pname"]."</a>";
-	echo "<td><b><a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=".$row['pid']."&id_task=".$row['tid']."&operation=view'>".$row['tname']."</a></b>";
-	echo "<td>".get_db_sql ("SELECT name FROM trole WHERE id = ".$row["id_role"]);
-	echo "<td>".get_task_workunit_hours_user ($row["tid"], $id_user);
-	echo "<td>".get_task_workunit_hours ($row["tid"]);
-	echo "<td align='center'><a href='index.php?sec=projects&sec2=operation/projects/role_user_global&id_user=".$id_user."&delete=".$row['tid']."' onClick='if (!confirm('".__('Are you sure?')."')) return false;'><img border=0 src='images/cross.png'></a>";
+while ($project = get_db_all_row_by_steps_sql($new, $result_project, $sql)) {
+	
+	$sql = get_tasks_query ($id_user, $project['id']);
+	$new = true;
+	
+	$project_access = get_project_access ($config['id_user'], $project['id']);
+	// ACL - To see the project, you should have read access
+	if (!$project_access['read']) {
+		$new = false;
+		continue; // Does not show this project tasks
+	}
+	
+	while ($task = get_db_all_row_by_steps_sql($new, $result_task, $sql)) {
+		$new = false;
+		
+		$belong_task = user_belong_task ($id_user, $task['id'], true);
+		$task_access = get_project_access ($config['id_user'], $project['id'], $task['id'], false, true);
+		// ACL - To see the task, you should have read access
+		if (!$task_access['read']) {
+			continue; // Does not show this task
+		}
+		
+		$role = get_db_sql ("SELECT name
+							 FROM trole
+							 WHERE id IN(SELECT id_role
+										 FROM trole_people_task
+										 WHERE id_user='$id_user'
+											AND id_task=".$task['id'].")");
+		echo "<tr>";
+		echo "<td>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=".$project['id']."'>".$project['name']."</a>";
+		echo "<td><b><a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=".$project['id']."&id_task=".$task['id']."&operation=view'>".$task['name']."</a></b>";
+		echo "<td>".$role;
+		if ($belong_task) {
+			echo "<td>".get_task_workunit_hours_user ($task["id"], $id_user);
+			echo "<td>".get_task_workunit_hours ($task["id"]);
+		} else {
+			echo "<td>";
+			echo "<td>";
+		}
+		if ($task_access['manage'] && $belong_task) {
+			echo "<td align='center'><a href='index.php?sec=projects&sec2=operation/projects/role_user_global&id_user=".$id_user."&delete=".$task['id']."' onClick='if (!confirm('".__('Are you sure?')."')) return false;'><img border=0 src='images/cross.png'></a>";
+		} else {
+			echo "<td align='center'>";
+		}
+	}
 }
 echo "</table>";
 

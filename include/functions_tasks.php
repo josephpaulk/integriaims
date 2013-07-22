@@ -107,7 +107,7 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 		$graph_ttl = 1;
 	}
 	
-	echo "<table class='databox' style='width:98%'>";
+	echo "<table class='blank' style='width:98%'>";
 	echo "<tr><td style='width:60%' valign='top'>";
 	
 	$sql = "SELECT t.*

@@ -23,6 +23,7 @@ check_login ();
 
 require_once ('include/functions_db.php');
 require_once ('include/functions_user.php');
+include_once ("include/functions_projects.php");
 
 // Get main variables and init
 $id_task = get_parameter ("id_task", -1);
@@ -32,20 +33,38 @@ $id_project = get_parameter ("id_project", 0);
 $operation = get_parameter ("action");
 $result_output = "";
 
-if (! user_belong_project ($config["id_user"], $id_project)) {
-	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project people manager without permissions");
-	no_permission();
-}
-
-if (($id_task > 0) AND (! user_belong_task ($config["id_user"], $id_task))) {
-	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task people manager without permissions");
-	no_permission();
+// ACL
+if ($id_task == -1) {
+	$project_permission = get_project_access ($config["id_user"], $id_project);
+	if (!$project_permission["read"]) {
+		audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project people manager without permissions");
+		no_permission();
+	}
+} else {
+	$task_permission = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
+	if (!$task_permission["read"]) {
+		audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project people manager without permissions");
+		no_permission();
+	}
 }
 
 // -----------
 // Add user for this task
 // -----------
 if ($operation == "insert"){
+	
+	if (isset($task_permission)) {
+		if (!$task_permission["manage"]) {
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project people manager without permissions");
+			no_permission();
+		}
+	} else {
+		if (!$project_permission["manage"]) {
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project people manager without permissions");
+			no_permission();
+		}
+	}
+	
 	$role = get_parameter ("role",0);
 	$user = get_parameter ("user");
 	$user_role = get_parameter("user_role");
@@ -123,6 +142,19 @@ if(preg_match('/\/.*/', $user_role, $match)) {
 // DELETE Users from this project / task
 
 if ($operation == "delete"){
+	
+	if (isset($task_permission)) {
+		if (!$task_permission["manage"]) {
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project people manager without permissions");
+			no_permission();
+		}
+	} else {
+		if (!$project_permission["manage"]) {
+			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project people manager without permissions");
+			no_permission();
+		}
+	}
+	
 	$id = get_parameter ("id",-1);
 
 	// People delete for TASK
@@ -166,10 +198,10 @@ if ($id_task != -1) {
 		echo "<th>".__('Role');
 		echo "<th>".__('Total work time (Hrs)');
 
-		if ($config["id_user"] == get_db_value ('id_owner','tproject','id', $id_project) OR
-			give_acl ($config["id_user"], get_db_value ('id_group','ttask','id', $id_task), "TM"))
+		if ($task_permission["manage"]) {
 			echo "<th>".__('Delete');
-			
+		}
+		
 		$color = 1;
 		while ($row=mysql_fetch_array($result)){
 			if ($color == 1){
@@ -188,8 +220,7 @@ if ($id_task != -1) {
             echo get_task_workunit_hours_user ($id_task, $row["id_user"]);
             echo "</a></b></td>";
 
-			if ($config["id_user"] == get_db_value('id_owner','tproject','id', $id_project) OR          
-			give_acl ($config["id_user"], get_db_value('id_group','ttask','id', $id_task), "TM")){
+			if ($task_permission["manage"]) {
 				echo "<td valign='top' class='$tdcolor' align='center'>";
 				echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
 			}
@@ -198,16 +229,9 @@ if ($id_task != -1) {
 	}
 } else {
 
-// MAIN PROJECT PEOPLE LIST
+	// MAIN PROJECT PEOPLE LIST
 	echo "<h2>".__('Project people management')." &raquo; ".get_db_value('name', 'tproject','id',$id_project)."</h2>";
-
-	if ($config["id_user"] != get_db_value('id_owner','tproject','id', $id_project) AND
-		give_acl ($config["id_user"], get_db_value('id_group','ttask','id', $id_task), "PM")!=1){
-		audit_db("Project People Management", $config["REMOTE_ADDR"], "Unauthorized access", "Try to access people project management");
-		require ("general/noaccess.php");
-		exit;
-	}
-
+	
 	$sql = "SELECT COUNT(*) FROM trole_people_project WHERE id_project = $id_project";
 	$result = mysql_query($sql);
 	$row=mysql_fetch_array($result);
@@ -219,7 +243,9 @@ if ($id_task != -1) {
 		echo "<th>".__('User');
 		echo "<th>".__('Role');
 		echo "<th>".__('Total work time (Hrs)');
-		echo "<th>".__('Delete');
+		if ($project_permission["manage"]) {
+			echo "<th>".__('Delete');
+		}
 		$color = 1;
 		while ($row=mysql_fetch_array($result)){
 			if ($color == 1){
@@ -236,9 +262,11 @@ if ($id_task != -1) {
             echo "<a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&id_user=".$row["id_user"]."'><b>";
             echo get_project_workunits_hours_user ($id_project, $row["id_user"]);
             echo "</b></td>";
-
-			echo "<td valign='top' class='$tdcolor' align='center'>";
-			echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
+			
+			if ($project_permission["manage"]) {
+				echo "<td valign='top' class='$tdcolor' align='center'>";
+				echo "<a href='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=delete&id=".$row["id"]."' onClick='if (!confirm(\' ".__('Are you sure?')."\')) return false;'><img src='images/cross.png' border='0'></a>";
+			}
 		}
 		echo "</table>";
 	}
@@ -248,8 +276,7 @@ if ($id_task != -1) {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Only project owner or Project ADMIN could modify
 if ($id_task != -1){
-	if ($config["id_user"] == get_db_value('id_owner','tproject','id', $id_project) OR
-		give_acl ($config["id_user"], get_db_value('id_group','ttask','id', $id_task), "TM")){
+	if ($task_permission["manage"]) {
 		
 		// Task people manager editor
 		// ===============================
@@ -274,38 +301,33 @@ if ($id_task != -1){
 } else {
 	// PROYECT PEOPLE MANAGER editor
 	// ===============================
-	if ($config["id_user"] != get_db_value('id_owner','tproject','id', $id_project) AND
-		give_acl ($config["id_user"], get_db_value('id_group','ttask','id', $id_task), "PM")!=1){
-		audit_db("Project People Management", $config["REMOTE_ADDR"], "Unauthorized access", "Try to access people project management");
-		require ("general/noaccess.php");
-		exit;
-	}
+	if ($project_permission["manage"]) {
+		echo "<h3>".__('Project role assignment')."</h3>";
+		echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
+		echo "<table width=500 class='databox_color'>";
 
-	echo "<h3>".__('Project role assignment')."</h3>";
-	echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
-	echo "<table width=500 class='databox_color'>";
+		echo "<tr><td valign='top' class='datos2'>";
+		echo __('Role');
+		echo "<td valign='top' class='datos2'>";
+		echo combo_roles ();
 
-	echo "<tr><td valign='top' class='datos2'>";
-	echo __('Role');
-	echo "<td valign='top' class='datos2'>";
-	echo combo_roles ();
-
-	echo "<td valign='top' class='datos2'>";
-	echo __('User  ');
-	
-	$params['input_id'] = 'text-user';
-	$params['input_name'] = 'user';
-	$params['return'] = false;
-	$params['return_help'] = false;
-	
-	user_print_autocomplete_input($params);
-	
-	echo "</table>";
+		echo "<td valign='top' class='datos2'>";
+		echo __('User  ');
 		
-	echo "<table class='button' width=500>";
-	echo "<tr><td align='right'>";
-	echo "<input type=submit class='sub next' value='".__('Update')."'>";
-	echo "</table>";
+		$params['input_id'] = 'text-user';
+		$params['input_name'] = 'user';
+		$params['return'] = false;
+		$params['return_help'] = false;
+		
+		user_print_autocomplete_input($params);
+		
+		echo "</table>";
+			
+		echo "<table class='button' width=500>";
+		echo "<tr><td align='right'>";
+		echo "<input type=submit class='sub next' value='".__('Update')."'>";
+		echo "</table>";
+	}
 }
 
 // Role informational table
