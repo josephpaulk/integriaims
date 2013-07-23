@@ -103,8 +103,9 @@ $table->valign[1] = "top";
 $companies_country = crm_get_total_country($where_clause);
 
 if ($read && $enterprise) {
-	$companies_country = crm_get_user_companies($config['id_user'], $companies_country);
+	$companies_country = crm_get_total_country_acl($where_clause);
 }
+
 $companies_country = crm_get_data_country_graph($companies_country);
 
 $table->data[0][0] = "<br><h3>".__('Companies per country')."</h3>";
