@@ -334,21 +334,25 @@ if ($id) {
 // EDIT / CREATE FORM
 
 if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
+/*
 	$check_acl = enterprise_hook ('crm_check_acl_hierarchy', array ($config['id_user'], $id));
-
-	if ($check_acl !== ENTERPRISE_NOT_HOOK) {
-		if ($new_company == 1) {
-			if ($check_acl) {
-				if ($manage) {
-					$manage_permission = true;
-				} else {
-					$manage_permission = false;
-				}
+*/
+	$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
+	$manage_permission = true;
+	
+	if ($new_company == 1) {
+		if ($manage !== ENTERPRISE_NOT_HOOK) {
+			if ($manage) {
+				$manage_permission = true;
 			} else {
-				include ("general/noaccess.php");
-				exit;
+
+				$manage_permission = false;
 			}
-		} else {
+		} 	
+	} else {
+		$check_acl = enterprise_hook ('crm_check_acl_company', array ($config['id_user'], $id));
+		
+		if ($check_acl !== ENTERPRISE_NOT_HOOK) {
 			if ($check_acl) {
 				if ($read) {
 					$read_permission = true;
@@ -370,10 +374,6 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 				exit;
 			}
 		}
-	} else {
-		$read_permission = true;
-		$write_permission = true;
-		$manage_permission = true;
 	}
 	
 	$disabled_write = false;
