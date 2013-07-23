@@ -1,5 +1,10 @@
 2013-07-23  Vanessa Gil <vanessa.gil@artica.es>
 
+	* operation/companies/company_detail.php
+	  operation/leads/lead_detail.php: Fixed bug.
+
+2013-07-23  Vanessa Gil <vanessa.gil@artica.es>
+
 	* operation/inventories/inventory_search.php: Added link
 	to inventory data.
 

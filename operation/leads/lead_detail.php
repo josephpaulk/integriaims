@@ -46,9 +46,9 @@ $id = (int) get_parameter ('id');
 
 if ($id != 0) {
 	
-	$read_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id));
-	$write_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id, true));
-	$manage_permission = enterprise_hook ('crm_check_acl_other', array ($config['id_user'], $id, false, false, true));
+	$read_permission = enterprise_hook ('crm_check_acl_lead', array ($config['id_user'], $id));
+	$write_permission = enterprise_hook ('crm_check_acl_lead', array ($config['id_user'], $id, true));
+	$manage_permission = enterprise_hook ('crm_check_acl_lead', array ($config['id_user'], $id, false, false, true));
 
 	$enterprise = false;
 
@@ -63,6 +63,7 @@ if ($id != 0) {
 		$enterprise = true;
 		
 		if (!$read_permission) {
+
 			include ("general/noaccess.php");
 			exit;
 		}
@@ -726,7 +727,7 @@ if ($id || $new) {
 	if ($read && $enterprise) {
 		$leads = crm_get_user_leads($config['id_user'], $leads);
 	}
-	
+
 	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead_detail$params", $offset);
 
 	if ($leads !== false) {

@@ -29,7 +29,7 @@ $write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw
 $manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
 $enterprise = false;
 
-if ($result === ENTERPRISE_NOT_HOOK) {
+if ($read === ENTERPRISE_NOT_HOOK) {
 	$read = true;
 	$write = true;
 	$manage = true;
@@ -63,6 +63,7 @@ if (user_is_external($config['id_user'])) {
 
 if ($id > 0) {
 	$other_read_permission = enterprise_hook('crm_check_acl_other', array($config['id_user'], $id));
+	//$other_read_permission = enterprise_hook('crm_check_acl_company', array($config['id_user'], $id));
 	
 	if ($other_read_permission === ENTERPRISE_NOT_HOOK) {
 		$other_read_permission = true;
@@ -333,9 +334,8 @@ if ($id) {
 // EDIT / CREATE FORM
 
 if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
-
 	$check_acl = enterprise_hook ('crm_check_acl_hierarchy', array ($config['id_user'], $id));
-	
+
 	if ($check_acl !== ENTERPRISE_NOT_HOOK) {
 		if ($new_company == 1) {
 			if ($check_acl) {
@@ -1043,6 +1043,7 @@ if ((!$id) AND ($new_company == 0)){
 
 	if ($read && $enterprise) {
 		$companies = crm_get_user_companies($config['id_user'], $companies);
+
 	}
 	
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params", $offset);
