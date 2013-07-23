@@ -99,7 +99,7 @@ if (defined ('AJAX')) {
 			}
 			echo $img;
 			
-			echo $row["name"];
+			echo $row["name"]. '&nbsp;&nbsp;<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$row['id'].'">'.print_image ("images/edit.png", true, array ("style" => 'vertical-align: middle;')).'</a>';
 			
 			echo "</a>";
 			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view' id='tree_div" . $id_item . "_inventory_" . $row["id"] . "'></div>";
@@ -204,7 +204,7 @@ if (defined ('AJAX')) {
 			}
 			echo $img;
 
-			echo $row["name"];
+			echo $row["name"]. '&nbsp;&nbsp;'.'<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$row['id'].'">'.print_image ("images/edit.png", true, array ("style" => 'vertical-align: middle;')).'</a>';
 
 			echo "</a>";
 			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view tree_div_".$id_item."' id='tree_div" . $id_item . "_child_" . $row["id"] . "'></div>";
@@ -310,7 +310,7 @@ if (defined ('AJAX')) {
 						href='javascript: loadTable(\"child2\",\"" . $row["id"] . "\", " . $less . ", \"" . $id_item . "\", \"" . $id_father . "\",  \"" . $sql_search . "\")'>";
 */
 						
-			echo $row["name"];
+			echo $row["name"]. '&nbsp;&nbsp;<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$row['id'].'">'.print_image ("images/edit.png", true, array ("style" => 'vertical-align: middle;')).'</a>';
 			
 			echo "</li>";
 			

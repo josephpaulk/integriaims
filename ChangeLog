@@ -1,5 +1,10 @@
 2013-07-23  Vanessa Gil <vanessa.gil@artica.es>
 
+	* operation/inventories/inventory_search.php: Added link
+	to inventory data.
+
+2013-07-23  Vanessa Gil <vanessa.gil@artica.es>
+
 	* include/functions_crm.php
 	  operation/companies/company_statistics.php: Fixed bug: 
 	acls.
