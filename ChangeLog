@@ -1,5 +1,18 @@
 2013-07-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/functions_calendar.php: Changed the title
+	of the note's icon that creates new entries.
+	
+	* include/js/integria.js: Added a new parameter to
+	the function "bindAutocomplete" to handle the change
+	event.
+	
+	* operation/workorders/wo.php: Added ajax and js code
+	to change the "user participant combo" when a new user
+	is introduced.
+
+2013-07-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* extras/migrate.sql
 	  integria_demo.sql
 	  integria_db.sql: Added the last changes of

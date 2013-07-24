@@ -210,7 +210,7 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 		$mysql_date = "$year-$month-$day";
 		
 		if (($day >= $today) && ($today_m >= $month))
-			$calendar .= "<div style='float:right;'><img src='images/note.png' title='".__('Note')."' onClick='show_agenda_entry(-1, \"$mysql_date\", 0, true)'></div>";
+			$calendar .= "<div style='float:right;'><img src='images/note.png' title='".__('New entry')."' onClick='show_agenda_entry(-1, \"$mysql_date\", 0, true)'></div>";
 		$calendar .= "<br><br>";
 		$mysql_time= "";
 		$event_string = "";

@@ -27,6 +27,23 @@ require_once ('include/functions_user.php');
 $id = (int) get_parameter ("id");
 $offset = get_parameter ("offset", 0);
 
+if (defined ('AJAX')) {
+	
+	$change_combo_task = get_parameter ("change_combo_task", 0);
+	
+	if ($change_combo_task) {
+		$id_user = get_parameter ("id_user", 0);
+		$real_id_user = get_db_value ("id_usuario", "tusuario", "id_usuario", $id_user);
+		
+		if ($real_id_user) {
+			echo combo_task_user_participant ($real_id_user, false, 0, true, __('Task'));
+		} else {
+			echo "<b>The user $id_user does not exist</b>";
+		}
+		return;
+	}
+}
+
 // ---------------
 // CREATE new todo
 // ---------------
@@ -691,13 +708,26 @@ add_validate_form_element_rules('#text-name', rules, messages);
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
 	
+	var owner;
+	var changeHandler = function ( event, ui ) {
+		owner = $("#text-user").val();
+		$.ajax({
+			type: "POST",
+			url: "ajax.php",
+			data: {
+				page: "operation/workorders/wo",
+				change_combo_task: 1,
+				id_user: owner
+			},
+			dataType: "html",
+			success: function(data) {	
+				$("#table1-3-0").html(data);
+			}
+		});
+	};
 	var idUser = "<?php echo $config['id_user'] ?>";
-	bindAutocomplete ("#text-user", idUser);
+	bindAutocomplete ("#text-user", idUser, false, changeHandler);
 	bindAutocomplete ("#text-user2", idUser);
-	//$("#text-user").on("autocompleteresponse", function ( event, ui ) {
-	//	val user = $("#text-user").val();
-		
-	//} );
 	
 });
 
