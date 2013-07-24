@@ -63,7 +63,6 @@ if (user_is_external($config['id_user'])) {
 
 if ($id > 0) {
 	$other_read_permission = enterprise_hook('crm_check_acl_other', array($config['id_user'], $id));
-	//$other_read_permission = enterprise_hook('crm_check_acl_company', array($config['id_user'], $id));
 	
 	if ($other_read_permission === ENTERPRISE_NOT_HOOK) {
 		$other_read_permission = true;
@@ -334,9 +333,7 @@ if ($id) {
 // EDIT / CREATE FORM
 
 if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
-/*
-	$check_acl = enterprise_hook ('crm_check_acl_hierarchy', array ($config['id_user'], $id));
-*/
+
 	$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
 	$manage_permission = true;
 	

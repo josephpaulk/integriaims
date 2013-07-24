@@ -23,13 +23,6 @@ include_once('include/functions_crm.php');
 
 $id = (int) get_parameter ('id');
 
-$read = true;
-$write = true;
-$manage = true;
-$write_permission = true;
-$manage_permission = true;
-$read_permission = true;
-	
 $read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
 $write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw'));
 $manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
@@ -41,7 +34,11 @@ if ($read !== ENTERPRISE_NOT_HOOK) {
 		include ("general/noaccess.php");
 		exit;
 	}
-} 
+} else {
+	$read = true;
+	$write = true;
+	$manage = true;
+}
 
 if($id != 0) {
 	$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $id);
@@ -91,7 +88,7 @@ if ($get_contacts) {
 if ($create_contact) {
 	$id_company = (int) get_parameter ('id_company');
 
-	if (!$manage_permission) {
+	if (!$manage) {
 	       audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a new contact in a group without access");
 	        require ("general/noaccess.php");
 	        exit;
@@ -188,7 +185,7 @@ echo "<h2>".__('Contact management')."</h2>";
 // FORM (Update / Create)
 if ($id || $new_contact) {
 	if ($new_contact) {
-		if (! $manage_permission) {
+		if (! $manage) {
 			audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation","Trying to create a contact in a group without access");
 			require ("general/noaccess.php");
 			exit;
@@ -231,7 +228,8 @@ if ($id || $new_contact) {
 	$table->colspan[1][0] = 4;
 	$table->colspan[4][0] = 4;
 	
-	if ($write_permission) {
+	if (($new_contact && $write) || ($id && $write_permission)) {
+	
 		$table->data[0][0] = print_input_text ("fullname", $fullname, "", 60, 100, true, __('Full name'));
 		
 		$table->data[1][0] = print_input_text ("email", $email, "", 35, 100, true, __('Email'));
@@ -292,20 +290,20 @@ if ($id || $new_contact) {
 	
 	echo '<form method="post" id="contact_form">';
 	print_table ($table);
-
-	if ($write_permission) {
 	
 		echo '<div class="button" style="width: '.$table->width.'">';
-		if ($id) {
+		
+		if ($id && $write_permission) {
 			print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', false);
 			print_input_hidden ('update_contact', 1);
 			print_input_hidden ('id', $id);
 		} else {
-			print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', false);
-			print_input_hidden ('create_contact', 1);
+			if ($manage) {
+				print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', false);
+				print_input_hidden ('create_contact', 1);
+			}
 		}
 		echo "</div>";
-	}
 
 	echo "</form>";
 	
@@ -392,7 +390,7 @@ if ($id || $new_contact) {
 }	
 
 //Show create button only when contact list is displayed
-if($manage_permission && !$id && !$new_contact) {
+if($manage && !$id && !$new_contact) {
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail">';
 	echo '<div class="button" style="width: '.$table->width.'">';
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');

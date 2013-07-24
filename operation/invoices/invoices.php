@@ -16,39 +16,43 @@
 global $config;
 check_login ();
 
+$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
+
+if ($manage !== ENTERPRISE_NOT_HOOK) {
+	if (!$manage) {
+		include ("general/noaccess.php");
+		exit;
+	}
+}
+
 $id_company = get_parameter ("id", -1);
 $company = get_db_row ('tcompany', 'id', $id_company);
 $id_invoice = get_parameter ("id_invoice", -1);
 $operation_invoices = get_parameter ("operation_invoices");
 
-if ($id_company > 0){
-	// Check if current user have access to this company invoice.
-	if (! check_company_acl ($config["id_user"], $id_company, "CM")) {
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to invoice section");
-		no_permission();
-	}
-} else {
-	return;
-}
 
 if ($id_invoice > 0){
-	$invoice = get_db_row ('tinvoice', 'id', $id_invoice);
-	
-	if (! give_acl ($config["id_user"], $invoice ["id_group"], "IW")) {
-		// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to modify an invoices in a company without access");
-		no_permission();
+
+	$permission = enterprise_hook ('crm_check_acl_invoice', array ($config['id_user'], $id_company));
+
+	$enterprise = false;
+	$permission = true;
+
+	if ($permission !== ENTERPRISE_NOT_HOOK) {
+		$enterprise = true;
+		if (!$permission) {
+			include ("general/noaccess.php");
+			exit;
+		}
 	}
+	
+	$invoice = get_db_row ('tinvoice', 'id', $id_invoice);
+
 	
 	if (crm_is_invoice_locked ($invoice["id"])) {
 		require ("operation/invoices/invoice_view.php");
 	}
 	
-	if (! give_acl ($config["id_user"], $invoice ["id_group"], "IW")) {
-		// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to modify an invoices in a company without access");
-		no_permission();
-	}
 
 	$bill_id = $invoice["bill_id"];
 	$description = $invoice["description"];

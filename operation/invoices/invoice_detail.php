@@ -27,22 +27,29 @@ $offset = get_parameter ('offset', 0);
 enterprise_include('include/functions_crm.php');
 include_once('include/functions_crm.php');
 
-$id_company = get_db_value('id_company', 'tinvoice', 'id', $id);
+$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
 
-$permission = enterprise_hook ('crm_check_acl_invoice', array ($config['id_user'], $id_company));
-
-$enterprise = false;
-
-if ($permission === ENTERPRISE_NOT_HOOK) {
-	
-	$permission = true;
-	
-} else {
-	
-	$enterprise = true;
-	if (!$permission) {
+if ($manage !== ENTERPRISE_NOT_HOOK) {
+	if (!$manage) {
 		include ("general/noaccess.php");
 		exit;
+	}
+}
+
+if ($id_invoice) {
+	$id_company = get_db_value('id_company', 'tinvoice', 'id', $id);
+
+	$permission = enterprise_hook ('crm_check_acl_invoice', array ($config['id_user'], $id_company));
+
+	$enterprise = false;
+	$permission = true;
+
+	if ($permission !== ENTERPRISE_NOT_HOOK) {
+		$enterprise = true;
+		if (!$permission) {
+			include ("general/noaccess.php");
+			exit;
+		}
 	}
 }
 

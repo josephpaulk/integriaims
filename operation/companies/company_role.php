@@ -20,21 +20,16 @@ check_login();
 
 enterprise_include('include/functions_crm.php');
 
+$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
 
-$id = (int) get_parameter ('id');
-
-$company = get_db_row ('tcompany', 'id', $id);
-
-$manage_permission = enterprise_hook ('crm_check_acl_company', array ($config['id_user'], $company, false, false, true));
-
-if ($manage_permission === ENTERPRISE_NOT_HOOK) {	
-	$manage_permission = true;	
-} else {
-	if (!$manage_permission) {
+if ($manage !== ENTERPRISE_NOT_HOOK) {
+	if (!$manage) {
 		include ("general/noaccess.php");
 		exit;
 	}
 }
+
+$id = (int) get_parameter ('id');
 
 $new_role = (bool) get_parameter ('new_role');
 $create_role = (bool) get_parameter ('create_role');
