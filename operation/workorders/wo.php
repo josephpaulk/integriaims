@@ -82,11 +82,11 @@ if ($operation == "update2") {
 	$id = get_parameter ("id");
 	$todo = get_db_row ("ttodo", "id", $id);
 	
-	if (!dame_admin($config["id_user"]))
-		if (($todo["assigned_user"] != $config['id_user']) AND ($todo["created_by_user"] != $config['id_user'])){
+	if (($todo["assigned_user"] != $config['id_user']) AND ($todo["created_by_user"] != $config['id_user'])){
+		if (!dame_admin($config["id_user"]))
 			no_permission();
-		}
-
+	}
+	
 	$name = (string) get_parameter ("name", "");
 	$id_task = get_parameter ("id_task", 0);
 	$priority = get_parameter ("priority");
@@ -311,8 +311,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 			
 		$table->data[2][1] = user_print_autocomplete_input($params);
 
-		$table->data[3][0] = combo_task_user_participant ($config["id_user"],
-			false, $id_task, true, __('Task'));
+		$table->data[3][0] = combo_task_user_participant ($config["id_user"], false, $id_task, true, __('Task'));
 		
 
 		// Remove validated user if current user is not the creator OR this doesnt need to be validated
@@ -567,19 +566,19 @@ if ($operation == "") {
 			}
 
 			if ($wo["priority"] == 0)
-				$data[3] = "<img src='images/pixel_blue.png' width=12 height=12 title='Informative'>";
+				$data[3] = "<img src='images/pixel_blue.png' width=12 height=12 title='".__('Informative')."'>";
 
 			if ($wo["priority"] == 1)
-				$data[3] = "<img src='images/pixel_yellow.png' width=12 height=12 title='Low'>";
+				$data[3] = "<img src='images/pixel_yellow.png' width=12 height=12 title='".__('Low')."'>";
 
 			if ($wo["priority"] == 2)
-				$data[3] = "<img src='images/pixel_orange.png' width=12 height=12 title='Medium'>";
+				$data[3] = "<img src='images/pixel_orange.png' width=12 height=12 title='".__('Medium')."'>";
 
 			if ($wo["priority"] == 3)
-				$data[3] = "<img src='images/pixel_red.png' width=12 height=12 title='High'>";
+				$data[3] = "<img src='images/pixel_red.png' width=12 height=12 title='".__('High')."'>";
 
 			if ($wo["priority"] == 4)
-				$data[3] = "<img src='images/pixel_fucsia.png' width=12 height=12 title='Very High'>";
+				$data[3] = "<img src='images/pixel_fucsia.png' width=12 height=12 title='".__('Very High')."'>";
 
 			if ($wo["priority"] == 10)
 				$data[3] = "<img src='images/pixel_gray.png' width=12 height=12 title='--'>";
@@ -695,6 +694,10 @@ $(document).ready (function () {
 	var idUser = "<?php echo $config['id_user'] ?>";
 	bindAutocomplete ("#text-user", idUser);
 	bindAutocomplete ("#text-user2", idUser);
+	//$("#text-user").on("autocompleteresponse", function ( event, ui ) {
+	//	val user = $("#text-user").val();
+		
+	//} );
 	
 });
 

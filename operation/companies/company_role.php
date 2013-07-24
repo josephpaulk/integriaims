@@ -118,10 +118,10 @@ if ($id || $new_role) {
 } else {
 	$search_text = (string) get_parameter ('search_text');
 	
-	$where_clause = "";
+	$where_clause = " WHERE 1=1 ";
 	if ($search_text != "") {
-		$where_clause = sprintf ('WHERE name LIKE "%%%s%%"
-			OR description LIKE "%%%s%%"', $search_text, $search_text);
+		$where_clause = sprintf (' AND (name LIKE "%%%s%%"
+			OR description LIKE "%%%s%%")', $search_text, $search_text);
 	}
 
 	$table->width = '400px';

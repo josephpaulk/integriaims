@@ -417,7 +417,7 @@ if ($id | $new_contract) {
 		$table->head[2] = __('Company');
 		$table->head[3] = __('Begin');
 		$table->head[4] = __('End');
-		if(give_acl ($config["id_user"], 0, "VM")) {
+		if($write_permission) {
 			$table->head[5] = __('Privacy');
 			$table->head[6] = __('Delete');
 		}
@@ -437,7 +437,6 @@ if ($id | $new_contract) {
 			$data[3] = $contract["date_begin"];
 			$data[4] = $contract["date_end"] != '0000-00-00' ? $contract["date_end"] : "-";
 			
-			// TODO: Acl check here if I have access to this contract because I have access (W) to this company.
 			if ($write_permission) {
 				// Delete
 				if($contract["private"]) {

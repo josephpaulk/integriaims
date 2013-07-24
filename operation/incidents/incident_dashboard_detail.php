@@ -196,18 +196,42 @@ $right_side = '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-use
 $right_side .= '<div id="incident-users">';
 
 $right_side .= "<table width='97%'>";
-$right_side .= "<tr>";
 
 $long_name_creator = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["id_creator"]));
-
+$right_side .= "<tr>";
 $right_side .= "<td>".__("Creator").":</td><td align='right'>".$long_name_creator."</td>";
 $right_side .= "</tr>";
-$right_side .= "<tr>";
+
+$creator_num_emp = get_db_value ("num_employee", "tusuario", "id_usuario", $incident["id_creator"]);
+if ($creator_num_emp) {
+	$right_side .= "<tr>";
+	$right_side .= "<td>&nbsp&nbsp&nbsp<i>".__('Employee number').":</i></td><td align='right'>".$creator_num_emp."</td>";
+	$right_side .= "</tr>";
+}
+$creator_location = get_db_value ("location", "tusuario", "id_usuario", $incident["id_creator"]);
+if ($creator_location) {
+	$right_side .= "<tr>";
+	$right_side .= "<td>&nbsp&nbsp&nbsp<i>".__('Location').":</i></td><td align='right'>".$creator_location."</td>";
+	$right_side .= "</tr>";
+}
 
 $long_name_asigned = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["id_usuario"]));
-
+$right_side .= "<tr>";
 $right_side .= "<td>".__("Owner").":</td><td align='right'>".$long_name_asigned."</td>";
 $right_side .= "</tr>";
+
+$owner_num_emp = get_db_value ("num_employee", "tusuario", "id_usuario", $incident["id_usuario"]);
+if ($owner_num_emp) {
+	$right_side .= "<tr>";
+	$right_side .= "<td>&nbsp&nbsp&nbsp<i>".__('Employee number').":</i></td><td align='right'>".$owner_num_emp."</td>";
+	$right_side .= "</tr>";
+}
+$owner_location = get_db_value ("location", "tusuario", "id_usuario", $incident["id_usuario"]);
+if ($owner_location) {
+	$right_side .= "<tr>";
+	$right_side .= "<td>&nbsp&nbsp&nbsp<i>".__('Location').":</i></td><td align='right'>".$owner_location."</td>";
+	$right_side .= "</tr>";
+}
 
 $right_side .= "</table>";
 //echo incident_users_list ($id, true);

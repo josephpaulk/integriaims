@@ -40,6 +40,7 @@ $nivel = 0;
 $disabled = 0;
 $simple_mode = 0;
 $id_company = 0;
+$location = "";
 // Default is create mode (creacion)
 $modo = "creacion";
 $num_employee = "";
@@ -83,6 +84,7 @@ if (($action == 'edit' || $action == 'update') && !$alta) {
 		$id_company = $rowdup["id_company"];
 		$num_employee = $rowdup["num_employee"];
 		$enable_login = $rowdup["enable_login"];
+		$location = $rowdup["location"];
 	}
 }
 
@@ -103,6 +105,7 @@ if ($action == 'update')  {
 		$id_company = get_parameter ("id_company");
 		$num_employee = get_parameter ("num_employee");
 		$enable_login = get_parameter ("enable_login");
+		$location = get_parameter ("location", "");
 		
 		//chech if exists num employee
 		$already_exists = false;
@@ -141,10 +144,10 @@ if ($action == 'update')  {
 
 			if (dame_password ($nombre_viejo) != $password){
 				$password = md5($password);
-				$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login WHERE id_usuario = '$nombre_viejo'";
+				$sql = "UPDATE tusuario SET disabled= $disabled, `lang` = '$lang', nombre_real ='".$nombre_real."', password = '".$password."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '$nivel', comentarios = '$comentarios', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '$nombre_viejo'";
 			}
 			else {
-				$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login WHERE id_usuario = '".$nombre_viejo."'";
+				$sql = "UPDATE tusuario SET disabled= $disabled, lang = '$lang', nombre_real ='".$nombre_real."', telefono ='".$telefono."', direccion ='".$direccion."', nivel = '".$nivel."', comentarios = '".$comentarios."', avatar = '$avatar', id_company = '$id_company', simple_mode = '$simple_mode', num_employee = '$num_employee', enable_login = $enable_login, location = '$location' WHERE id_usuario = '".$nombre_viejo."'";
 			}
 			
 			$resq2 = process_sql($sql);
@@ -200,7 +203,8 @@ if ($action == 'create'){
 	$ahora = date("Y-m-d H:i:s");
 	$num_employee = get_parameter("num_employee");
 	$enable_login = get_parameter("enable_login");
-	$sql_insert = "INSERT INTO tusuario (id_usuario,direccion,password,telefono,fecha_registro,nivel,comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, simple_mode, enable_login) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company',$simple_mode, $enable_login)";
+	$location = get_parameter ("location", "");
+	$sql_insert = "INSERT INTO tusuario (id_usuario, direccion, password, telefono, fecha_registro, nivel, comentarios, nombre_real, num_employee, avatar, lang, disabled, id_company, simple_mode, enable_login, location) VALUES ('".$nombre."','".$direccion."','".$password."','".$telefono."','".$ahora."','".$nivel."','".$comentarios."','".$nombre_real."','".$num_employee."','$avatar','$lang','$disabled','$id_company',$simple_mode, $enable_login, '$location')";
 
 	$resq1 = process_sql($sql_insert);
 		if (! $resq1)
@@ -317,6 +321,9 @@ echo print_select ($ficheros, "avatar", $avatar_forlist, '', '', 0, true, 0, fal
 
 <tr><td class="datos"><?php echo __('Company') ?>
 <td class="datos" colspan=2><?php print_select (get_companies (), 'id_company', $id_company, '', __('None'), 0, false); ?>
+
+<tr><td class="datos"><?php echo __('Location') ?>
+<td class="datos" colspan=2><input type="text" name="location" value="<?php echo $location ?>">
 
 <tr><td class="datos2"><?php echo __('Global profile') ?>
 

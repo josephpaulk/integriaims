@@ -350,3 +350,10 @@ ALTER TABLE `tpending_mail`ADD `cc` text DEFAULT NULL;
 
 /* 18/07/2013 */
 ALTER TABLE `ttodo` ADD `email_notify` tinyint unsigned NOT NULL DEFAULT 0;
+
+/* 24/07/2013 */
+ALTER TABLE `tusuario` ADD `location` tinytext NOT NULL DEFAULT '';
+ALTER TABLE `tagenda` ADD `title` varchar(255) NOT NULL DEFAULT 'N/A';
+ALTER TABLE `tagenda` ADD `description` mediumtext NOT NULL DEFAULT '';
+ALTER TABLE `tagenda` DROP `id_group`;
+ALTER TABLE `tagenda` DROP `content`;

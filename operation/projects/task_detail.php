@@ -35,11 +35,12 @@ $estimated_cost = 0;
 // ACL Check for this task
 $project_permission = get_project_access ($config["id_user"], $id_project);
 $task_permission = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
+
 if ($operation == "") {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task detail without operation");
 	no_permission();
-}// elseif ($operation == "create" && no es TM en ninguna tarea) {
+//} elseif ($operation == "create" && no es TM en ninguna tarea) {
 	// Doesn't have access to this page
 //	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a task without access");
 //	no_permission();

@@ -1161,6 +1161,15 @@ echo '<div id="calendar_div" style="padding: 0px; margin: 0px">';
 echo generate_calendar ($year, $month, array(), 1, NULL, $config["language_code"]);
 echo '</div></div>';
 // End of calendar box
+if ($sec == 'agenda')
+	echo "<div class='portlet' style='padding: 0px; margin: 0px;' onClick='show_agenda_entry(-1, \"\", 0, true)'>
+				<h2>".__('Add calendar entry')."</h2>
+		  </div>";
+else
+	echo "<div class='portlet' style='padding: 0px; margin: 0px;' onClick='show_agenda_entry(-1, \"\", 0, false)'>
+				  <h2>".__('Add calendar entry')."</h2>
+		  </div>";
+// End of calendar box
 
 
 // Testing boxes for side menus
@@ -1235,9 +1244,15 @@ if (give_acl ($config["id_user"], 0, "PR")) {
 
 echo '</div></div>';
 
-
+// Div for the calendar entry
+echo "<div class='dialog ui-dialog-content' id='agenda_entry'></div>";
 ?>
 
+<script type="text/javascript" src="include/js/agenda.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript" >

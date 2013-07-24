@@ -18,7 +18,7 @@ global $config;
 
 check_login ();
 
-include_once('include/functions_crm.php');
+require_once('include/functions_crm.php');
 include_once('include/functions_user.php');
 enterprise_include('include/functions_crm.php');
 
@@ -75,8 +75,6 @@ if ($id > 0) {
 		$invoice_permission = enterprise_hook('crm_check_acl_invoice', array($config['id_user'], $id));
 	}
 }
-
-require_once('include/functions_crm.php');
 
 $op = (string) get_parameter ("op", "");
 $new_company = (bool) get_parameter ('new_company');
@@ -1037,7 +1035,7 @@ if ((!$id) AND ($new_company == 0)){
 	echo '</form>';
 
 	$companies = crm_get_companies_list($where_clause, $date);
-
+	
 	if ($read && $enterprise) {
 		$companies = crm_get_user_companies($config['id_user'], $companies);
 

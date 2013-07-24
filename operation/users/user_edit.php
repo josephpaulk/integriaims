@@ -55,6 +55,7 @@ $avatar = $user['avatar'];
 $comments = $user['comentarios'];
 $lang = $user['lang'];
 $id_company = $user['id_company'];
+$location = $user['location'];
 
 // Get user ID to modify data of current user.
 if ($update_user) {
@@ -72,6 +73,7 @@ if ($update_user) {
 	$avatar = substr ($avatar, 0, strlen ($avatar) - 4);
 	$comments = (string) get_parameter ('comments');
 	$lang = (string) get_parameter ('language_code');
+	$location = (string) get_parameter ('location');
 	
 	$error = false;
 	if ($password != '' && md5 ($password) != $user['password']) {
@@ -88,10 +90,10 @@ if ($update_user) {
 	} else {
 		$sql = sprintf ('UPDATE tusuario
 			SET nombre_real = "%s", telefono = "%s", direccion = "%s",
-			avatar = "%s", comentarios = "%s", lang = "%s"
+			avatar = "%s", comentarios = "%s", lang = "%s", location = "%s"
 			WHERE id_usuario = "%s"',
 			$real_name, $phone, $email, $avatar,
-			$comments, $lang, $id_user);
+			$comments, $lang, $location, $id_user);
 	}
 	
 	if (! $error) {
@@ -144,6 +146,8 @@ else {
 	$table->data[1][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 	$table->data[1][0] .= "<img src='images/company.png'></a>";
 }
+
+$table->data[1][1] = print_input_text ('location', $location, '', 20, 250, true, __('Location'));
 
 if ($has_permission) {
 	$table->data[2][0] = print_input_text ('email', $email, '', 20, 60, true, __('Email'));

@@ -1,3 +1,50 @@
+2013-07-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* extras/migrate.sql
+	  integria_demo.sql
+	  integria_db.sql: Added the last changes of
+	  the data structure.
+	
+	* godmode/usuarios/configurar_usuarios.php
+	  operation/users/user_edit.php: Added the new column
+	  "location".
+	
+	* include/functions_calendar.php: Now is possible to
+	edit an entry. Now the work orders appear in the calendar.
+	Changes and improvements on many items.
+	
+	* include/js/agenda.js: New file. Added a function
+	that shows a modal form to insert or update a calendar
+	entry via ajax.
+	
+	* include/styles/calendar.css: Added a rule for the
+	class "workorder".
+	
+	* operation/side_menu.php: Added an option in the side
+	menu ("Add calendar entry") that shows a modal form to
+	insert or update a calendar entry via ajax from any
+	place in integria.
+	
+	* operation/agenda/agenda.php: Deleted some code.
+	Now the admin can see any calendar entry.
+	
+	* operation/agenda/entry.php: New file. Added code
+	that show, insert and update calendar entries by
+	ajax calls.
+	
+	* operation/companies/company_role.php
+	  operation/contracts/contract_detail.php
+	  operation/workorders/wo.php
+	  operation/projects/task_detail.php: Fixed bugs.
+	
+	* operation/incidents/incident_dashboard_detail.php:
+	Now the employee number and the location of the creator
+	and the owner of an incident is displayed in this view.
+	
+	* operation/projects/people_manager.php: Now the ACL
+	is more restrictive. Fixed a bug on task permission
+	management.
+
 2013-07-24  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_crm.php: Changed number of

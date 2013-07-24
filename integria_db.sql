@@ -338,8 +338,8 @@ CREATE TABLE `tagenda` (
   `public` tinyint unsigned NOT NULL DEFAULT 0,
   `alarm` int(10) unsigned NOT NULL DEFAULT 0,
   `duration` int(10) unsigned NOT NULL DEFAULT 0,
-  `id_group` int(10) NOT NULL default '0',
-  `content` varchar(255) DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT 'N/A',
+  `description` mediumtext NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`),
   KEY `ta_idx_1` (`id_user`),
   FOREIGN KEY (`id_user`) REFERENCES tusuario(`id_usuario`)

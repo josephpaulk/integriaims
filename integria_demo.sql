@@ -21,7 +21,7 @@
 
 LOCK TABLES `tagenda` WRITE;
 /*!40000 ALTER TABLE `tagenda` DISABLE KEYS */;
-INSERT INTO `tagenda` VALUES (1,'2013-05-29 10:02:00','admin',0,0,0,2,'Elena&#039;s&#x20;Aniversary');
+INSERT INTO `tagenda` VALUES (1,'2013-05-29 10:02:00','admin',0,0,0,'Elena&#039;s&#x20;Aniversary','I need to search something cool for her');
 /*!40000 ALTER TABLE `tagenda` ENABLE KEYS */;
 UNLOCK TABLES;
 
