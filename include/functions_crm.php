@@ -401,9 +401,10 @@ function crm_get_data_lead_country_graph($leads) {
 	$lead_country = array();
 	$i = 0;
 	foreach ($leads as $key=>$lead) {
-		if ($i < 10) {
+		if ($i < 7) {
 			$lead_country[$lead['country']] = $lead['total_leads'];
 		}
+		$i++;
 	}
 	return $lead_country;
 }
@@ -444,9 +445,10 @@ function crm_get_data_lead_user_graph($leads) {
 	$lead_user = array();
 	$i = 0;
 	foreach ($leads as $key=>$lead) {
-		if ($i < 10) {
+		if ($i < 7) {
 			$lead_user[$lead['owner']] = $lead['total_users'];
 		}
+		$i++;
 	}
 
 	return $lead_user;
