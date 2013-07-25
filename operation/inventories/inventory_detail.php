@@ -181,15 +181,17 @@ if ($update) {
 	$old_owner = get_db_value('owner', 'tinventory', 'id', $id);
 	$old_public = get_db_value('public', 'tinventory', 'id', $id);
 	
+	$last_update = date ("Y/m/d", get_system_time());
+	
 	$sql = sprintf ('UPDATE tinventory SET name = "%s", description = "%s",
 			id_contract = %d,
-			id_parent = %d, id_manufacturer = %d, owner = "%s", public = %d, id_object_type = %d
+			id_parent = %d, id_manufacturer = %d, owner = "%s", public = %d, id_object_type = %d, last_update = "%s"
 			WHERE id = %d',
 			$name, $description, $id_contract,
 			$id_parent,
-			$id_manufacturer, $owner, $public, $id_object_type, $id);
-	$result = process_sql ($sql);
-	
+			$id_manufacturer, $owner, $public, $id_object_type, $last_update, $id);
+
+	$result = process_sql ($sql);	
 	
 	if ($result !== false) {
 		inventory_tracking($id,INVENTORY_UPDATED);
@@ -318,6 +320,8 @@ if ($create) {
 	
 	$err_message = __('Could not be created');
 	
+	$last_update = date ("Y/m/d", get_system_time());
+		
 	$inventory_id = get_db_value ('id', 'tinventory', 'name', $name);
 
 	if($name == '') {
@@ -331,10 +335,10 @@ if ($create) {
 	else {
 
 		$sql = sprintf ('INSERT INTO tinventory (name, description,
-				id_contract, id_parent, id_manufacturer, owner, public, id_object_type)
-				VALUES ("%s", "%s", %d, %d, %d, "%s", %d, %d)',
+				id_contract, id_parent, id_manufacturer, owner, public, id_object_type, last_update)
+				VALUES ("%s", "%s", %d, %d, %d, "%s", %d, %d, "%s")',
 				$name, $description, $id_contract,
-				$id_parent, $id_manufacturer, $owner, $public, $id_object_type);
+				$id_parent, $id_manufacturer, $owner, $public, $id_object_type, $last_update);
 		$id = process_sql ($sql, 'insert_id');
 	}
 	if ($id !== false) {
@@ -488,7 +492,7 @@ if ($write_permission) {
 	
 	$parent_name = $id_parent ? get_inventory_name ($id_parent) : __("None");
 	
-	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','','','')", "class='inventory_obj_search'", true, false,  __('Parent object'));
+	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','','','','','')", "class='inventory_obj_search'", true, false,  __('Parent object'));
 	$table->data[1][0] .= print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
 	$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
 

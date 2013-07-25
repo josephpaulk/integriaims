@@ -1030,7 +1030,7 @@ function inventories_get_count_inventories_for_tree($id_item, $sql_search = '') 
 }
 
 
-function inventories_show_list($sql_search, $params='') {
+function inventories_show_list($sql_search, $params='', $last_update = 0) {
 	global $config;
 
 	$is_enterprise = false;
@@ -1044,6 +1044,10 @@ function inventories_show_list($sql_search, $params='') {
 	$sql = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data
 			WHERE tinventory.id_object_type = tobject_type.id $sql_search
 			GROUP BY tinventory.`id`";
+			
+	if ($last_update) {
+		$sql .= " ORDER BY last_update DESC";
+	}
 
 	$inventories_aux = get_db_all_rows_sql($sql);
 	
@@ -1088,9 +1092,9 @@ function inventories_show_list($sql_search, $params='') {
 		$inventories_aux = $inventories;
 
 		$inventories = print_array_pagination ($inventories_aux, "index.php?sec=inventory&sec2=operation/inventories/inventory_search".$params);
-	
+
 		$idx = 0;
-		
+
 		foreach ($inventories as $key=>$inventory) {
 			$data = array();
 			if (defined ('AJAX')) {
@@ -1226,7 +1230,8 @@ function inventories_load_file ($objects_file) {
 			'description' => $description,
 			'id_contract' => $id_contract,
 			'id_manufacturer' => $id_manufacturer,
-			'id_parent' => $id_parent);
+			'id_parent' => $id_parent,
+			'last_update' => date ("Y/m/d", get_system_time()));
 			
 			if ($name == '') {
 				echo "<h3 class='error'>" . __ ('Inventory name empty') ."</h3>";

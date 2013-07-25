@@ -357,3 +357,7 @@ ALTER TABLE `tagenda` ADD `title` varchar(255) NOT NULL DEFAULT 'N/A';
 ALTER TABLE `tagenda` ADD `description` mediumtext NOT NULL DEFAULT '';
 ALTER TABLE `tagenda` DROP `id_group`;
 ALTER TABLE `tagenda` DROP `content`;
+
+/* 24/07/2013 */
+ALTER TABLE `tinventory` ADD COLUMN `last_update` date NOT NULL default '0000-00-00';
+

@@ -1,3 +1,15 @@
+2013-07-25  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  integria_demo.sql
+	  extras/migrate.sql
+	  include/functions_inventories.php
+	  include/ajax/inventories.php
+	  include/js/integria_inventory.php
+	  operation/inventories/inventory_detail.php
+	  operation/inventories/inventory_search.php: Added 'last update' 
+	field in inventory objects.
+
 2013-07-24  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_calendar.php: Changed the title

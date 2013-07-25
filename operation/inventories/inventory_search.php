@@ -335,6 +335,7 @@ $id_manufacturer = get_parameter ('id_manufacturer', 0);
 $id_contract = get_parameter ('id_contract', 0);
 $fields_selected = (array)get_parameter('object_fields_search');
 $mode = get_parameter('mode', 'list');
+$last_update = (bool) get_parameter ('last_update');
 
 if (isset($_POST['listview']))
 	$mode = 'list';
@@ -383,6 +384,8 @@ echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=
 	$table_search->data[1][2] = print_select ($manufacturers, 'id_manufacturer',
 		$id_manufacturer, '', __('None'), 0, true, false, false, __('Manufacturer'), '','width: 200px;');
 	
+	$table_search->data[1][3] = print_checkbox_extended ('last_update', 1, $last_update,
+	false, '', '', true, __('Last updated'));
 	
 	print_table($table_search);
 	
@@ -464,10 +467,10 @@ switch ($mode) {
 		inventories_print_tree($sql_search);
 		break;
 	case 'list':
-		inventories_show_list($sql_search, $params);
+		inventories_show_list($sql_search, $params, $last_update);
 		break;
 	default:
-		inventories_show_list($sql_search, $params);
+		inventories_show_list($sql_search, $params, $last_update);
 		break;
 }
 	

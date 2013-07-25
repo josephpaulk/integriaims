@@ -626,6 +626,7 @@ CREATE TABLE `tinventory` (
   `id_manufacturer` mediumint(8) unsigned default NULL,
   `id_parent` mediumint(8) unsigned default NULL,
   `show_list` TINYINT(1) unsigned DEFAULT 1,
+  `last_update` date NOT NULL default '0000-00-00',
   PRIMARY KEY  (`id`),
   KEY `tinv_idx_1` (`id_contract`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

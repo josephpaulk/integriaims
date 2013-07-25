@@ -304,7 +304,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tinventory` WRITE;
 /*!40000 ALTER TABLE `tinventory` DISABLE KEYS */;
-INSERT INTO `tinventory` VALUES (1,0,'admin','An&#x20;object',0,'',0,0,0,0),(2,1,'admin','Cenutrio',0,'Sancho&#039;s&#x20;computer',0,0,0,0);
+INSERT INTO `tinventory` VALUES (1,0,'admin','An&#x20;object',0,'',0,0,0,0, '0000-00-00 00:00:00'),(2,1,'admin','Cenutrio',0,'Sancho&#039;s&#x20;computer',0,0,0,0,'0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `tinventory` ENABLE KEYS */;
 UNLOCK TABLES;
 

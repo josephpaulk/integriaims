@@ -126,7 +126,7 @@ if ($get_external_data) {
 }
 
 if ($get_inventory_search) {
-	
+
 	$sql_search = '';
 	$search = get_parameter('search', 0);
 	$search_free = get_parameter ('search_free', '');
@@ -134,6 +134,8 @@ if ($get_inventory_search) {
 	$owner_search = get_parameter('owner_search', '');
 	$id_manufacturer_search = get_parameter ('id_manufacturer_search', 0);
 	$id_contract_search = get_parameter ('id_contract_search', 0);
+	$last_update_search = get_parameter ('last_update_search');
+	$offset = get_parameter('offset', 0);
 
 	$fields_selected = get_parameter('object_fields_search');
 
@@ -178,6 +180,8 @@ if ($get_inventory_search) {
 	$table_search->data[1][2] = print_select ($manufacturers, 'id_manufacturer_search',
 		$id_manufacturer_search, '', __('None'), 0, true, false, false, __('Manufacturer'), '','width: 200px;');
 	
+	$table_search->data[1][3] = print_checkbox_extended ('last_update_search', 1, $last_update_search,
+		false, '', '', true, __('Last updated'));
 	
 	print_table($table_search);
 	
@@ -223,7 +227,7 @@ if ($get_inventory_search) {
 		
 	}
 	
-	inventories_show_list($sql_search);
+	inventories_show_list($sql_search, '', $last_update_search);
 		
 	return;
 }
