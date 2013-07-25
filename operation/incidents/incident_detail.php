@@ -39,6 +39,7 @@ if (defined ('AJAX')) {
 
 $id_grupo = (int) get_parameter ('id_grupo');
 $id = (int) get_parameter ('id');
+$id_task = (int) get_parameter ('id_task');
 
 if ($id) {
 	$incident = get_incident ($id);
@@ -480,7 +481,6 @@ if ($id) {
 	$usuario= $config["id_user"];
 	$estado = 1;
 	$resolution = 0;
-	$id_task = 0;
     $score = 0;
 	$epilog = "";
 	$id_creator = $config['id_user'];

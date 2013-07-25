@@ -1,4 +1,14 @@
 2013-07-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/js/integria_projects.js: Improved the
+	animations of the task tree view.
+	
+	* operation/incidents/incident_detail.php
+	  operation/workorders/wo.php: Now the task passed
+	  as a parameter appear as selected in the task combo
+	  in the creation form.
+
+2013-07-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/leads/lead_detail.php: Now is posible to
 	activate or deactivate the ajax search of names and

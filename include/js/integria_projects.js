@@ -22,7 +22,7 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 		//Put an spinner to simulate loading process
 		
 		$('#tree_div'+id_father+'_task_'+div_id).html("<img style='padding-top:10px;padding-bottom:10px;padding-left:20px;' src=images/spinner.gif>");
-		$('#tree_div'+id_father+'_task_'+div_id).show('normal');
+		$('#tree_div'+id_father+'_task_'+div_id).slideDown();
 		$('#tree_div'+id_father+'_task_'+div_id).attr('loadDiv', 2);
 		
 		$.ajax({
@@ -35,7 +35,7 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 					
 					$('#tree_div'+id_father+'_task_'+div_id).hide();
 					$('#tree_div'+id_father+'_task_'+div_id).html(msg);
-					$('#tree_div'+id_father+'_task_'+div_id).show('normal');
+					$('#tree_div'+id_father+'_task_'+div_id).slideDown();
 					
 					//change image of tree [+] to [-]
 					
@@ -78,7 +78,7 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 					}
 					
 					$('#tree_div'+id_father+'_task_'+div_id).html("");
-					$('#tree_div'+id_father+'_task_'+div_id).hide('normal');
+					$('#tree_div'+id_father+'_task_'+div_id).slideUp();
 					$('#tree_div'+id_father+'_task_'+div_id).attr('hiddendiv', 1);
 					$('#tree_div'+id_father+'_task_'+div_id).attr('loadDiv', 2);
 				}
@@ -92,7 +92,7 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 		
 		if (hiddenDiv == 0) {
 
-			$('#tree_div'+id_father+'_task_'+div_id).hide('normal');
+			$('#tree_div'+id_father+'_task_'+div_id).slideUp()
 			$('#tree_div'+id_father+'_task_'+div_id).attr('hiddenDiv',1);
 			
 			//change image of tree [-] to [+]
@@ -128,8 +128,8 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 					break;
 			}
 
-			$('#tree_div'+id_father+'_task_'+div_id).show('normal');
 			$('#tree_div'+id_father+'_task_'+div_id).attr('hiddenDiv',0);
+			$('#tree_div'+id_father+'_task_'+div_id).slideDown();
 		}
 	}
 }

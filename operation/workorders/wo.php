@@ -25,6 +25,7 @@ require_once ('include/functions_ui.php');
 require_once ('include/functions_user.php');
 
 $id = (int) get_parameter ("id");
+$id_task = (int) get_parameter ("id_task");
 $offset = get_parameter ("offset", 0);
 
 if (defined ('AJAX')) {
@@ -191,7 +192,6 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 		$priority = 2;
 		$name = '';
 		$description = '';
-		$id_task = 0;
 		$creator = $config["id_user"];
 		$assigned_user = $config["id_user"];
 		$start_date = date('Y-m-d');
@@ -209,10 +209,11 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 		$todo = get_db_row ("ttodo", "id", $id);
 
 		// Basic ACL check
-		if (!dame_admin($config["id_user"]))
+		if (!dame_admin($config["id_user"])) {
 			if ($todo["assigned_user"] != $config['id_user'] && $todo["created_by_user"] != $config['id_user']) {
 				no_permission ();
 			}
+		}
 
 		$creator = $todo["created_by_user"];
 		$assigned_user = $todo["assigned_user"];
