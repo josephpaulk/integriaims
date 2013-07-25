@@ -30,7 +30,7 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 			url: "ajax.php",
 			data: "page=operation/projects/task&print_subtree=1&id_project=" + id_project
 			+ "&id_item=" + div_id + "&branches_json=" + branches_json + "&sql_search=" + sql_search,
-			success: function(msg){
+			success: function(msg) {
 				if (msg.length != 0) {
 					
 					$('#tree_div'+id_father+'_task_'+div_id).hide();
@@ -58,6 +58,29 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 
 					$('#tree_div'+id_father+'_task_'+div_id).attr('hiddendiv',0);
 					$('#tree_div'+id_father+'_task_'+div_id).attr('loadDiv', 1);
+				} else {
+					
+					var icon_path = 'images/tree';
+					
+					switch (pos) {
+						case 0:
+							$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/first_leaf.png');
+							break;
+						case 1:
+							$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/no_branch.png');
+							break;
+						case 2:
+							$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/leaf.png');
+							break;
+						case 3:
+							$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/last_leaf.png');
+							break;
+					}
+					
+					$('#tree_div'+id_father+'_task_'+div_id).html("");
+					$('#tree_div'+id_father+'_task_'+div_id).hide('normal');
+					$('#tree_div'+id_father+'_task_'+div_id).attr('hiddendiv', 1);
+					$('#tree_div'+id_father+'_task_'+div_id).attr('loadDiv', 2);
 				}
 				
 			}

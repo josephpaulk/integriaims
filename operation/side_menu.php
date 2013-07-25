@@ -1169,7 +1169,6 @@ else
 	echo "<div class='portlet' style='padding: 0px; margin: 0px;' onClick='show_agenda_entry(-1, \"\", 0, false)'>
 				  <h2>".__('Add calendar entry')."</h2>
 		  </div>";
-// End of calendar box
 
 
 // Testing boxes for side menus

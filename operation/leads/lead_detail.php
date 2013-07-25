@@ -422,7 +422,7 @@ if ($id || $new) {
 	$table->class = "databox";
 	$table->data = array ();
 	$table->colspan = array ();
-	$table->colspan[7][0] = 4;
+	$table->colspan[8][0] = 4;
 	
 	if ($write_permission) {
 		
@@ -432,20 +432,21 @@ if ($id || $new) {
 			echo "<h2>".__('Create lead')."</h2>";
 		}
 
-		$table->data[0][0] = print_input_text ("fullname", $fullname, "", 60, 100, true, __('Full name'));
-		$table->data[0][1] = print_input_text ("company", $company, "", 60, 100, true, __('Company name'));
-		$table->data[1][0] = print_input_text ("email", $email, "", 35, 100, true, __('Email'));
-		$table->data[1][1] = print_input_text ("country", $country, "", 35, 100, true, __('Country'));
-		$table->data[2][0] = print_input_text ("estimated_sale", $estimated_sale, "", 12, 100, true, __('Estimated sale'));
-		$table->data[2][0] .= print_help_tip (__("Use only integer values, p.e: 23000 instead 23,000 or 23,000.00"), true);
+		$table->data[0][0] = print_checkbox ("duplicated_leads", 0, false, true, __('Allow duplicated leads'));
+		$table->data[1][0] = print_input_text ("fullname", $fullname, "", 60, 100, true, __('Full name'));
+		$table->data[1][1] = print_input_text ("company", $company, "", 60, 100, true, __('Company name'));
+		$table->data[2][0] = print_input_text ("email", $email, "", 35, 100, true, __('Email'));
+		$table->data[2][1] = print_input_text ("country", $country, "", 35, 100, true, __('Country'));
+		$table->data[3][0] = print_input_text ("estimated_sale", $estimated_sale, "", 12, 100, true, __('Estimated sale'));
+		$table->data[3][0] .= print_help_tip (__("Use only integer values, p.e: 23000 instead 23,000 or 23,000.00"), true);
 
 		$progress_values = lead_progress_array ();
 
-		$table->data[2][1] = print_select ($progress_values, 'progress', $progress, '', __("None"), 0, true, 0, false, __('Lead progress') );
+		$table->data[3][1] = print_select ($progress_values, 'progress', $progress, '', __("None"), 0, true, 0, false, __('Lead progress') );
 
-		$table->data[3][0] = print_input_text ("phone", $phone, "", 15, 60, true, __('Phone number'));
-		$table->data[3][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
-		$table->data[4][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
+		$table->data[4][0] = print_input_text ("phone", $phone, "", 15, 60, true, __('Phone number'));
+		$table->data[4][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
+		$table->data[5][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
 		
 		// TODO: Show only companies with access to them
 
@@ -463,12 +464,12 @@ if ($id || $new) {
 			$companies = crm_get_user_companies($config['id_user'], $companies);
 		}
 		
-		$table->data[4][1] =  print_select ($companies, 'id_company', $id_company, '', '', $nothing_value = '0', true, 0, false,  __('Managed by'));
+		$table->data[5][1] =  print_select ($companies, 'id_company', $id_company, '', '', $nothing_value = '0', true, 0, false,  __('Managed by'));
 
-		$table->data[4][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
-		$table->data[4][1] .= "<img src='images/company.png'></a>";
+		$table->data[5][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
+		$table->data[5][1] .= "<img src='images/company.png'></a>";
 		
-		$table->data[5][0] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
+		$table->data[6][0] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
 			array(), true, '', __("Owner") )
 
 		. print_help_tip (__("Type at least two characters to search"), true);
@@ -476,7 +477,7 @@ if ($id || $new) {
 
 		// Show delete control if its owned by the user
 		if ($config["id_user"] == $owner){
-			$table->data[5][0] .= ' <a href="index.php?sec=customers&
+			$table->data[6][0] .= ' <a href="index.php?sec=customers&
 							sec2=operation/leads/lead_detail&
 							delete=1&id='.$id.'&offset='.$offset.'"
 							onClick="if (!confirm(\''.__('Are you sure?').'\'))
@@ -486,26 +487,26 @@ if ($id || $new) {
 
 		// Show "close" control if it's owned by the user
 		if (($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"]))) {
-                        $table->data[5][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+                        $table->data[6][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
                         $id."&close=1'><img src='images/lock.png' title='".__("Close this lead")."'></a>";
                 }
 
 		// Show take control is owned by nobody
 		if ($owner == "")
-				$table->data[5][0] .=  "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+				$table->data[6][0] .=  "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
 				$id."&make_owner=1'><img src='images/award_star_silver_1.png'></a>";
 
 
-		$table->data[5][1] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
+		$table->data[6][1] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
 	'id_language', $id_language, '', '', '', true, false, false,
 	__('Language'));
 
-		$table->data[6][0] = "<b>". __("Creation / Last update"). "</b><br><span style='font-size: 10px'>";
-		$table->data[6][0] .=  "$creation / $modification </span>";
+		$table->data[7][0] = "<b>". __("Creation / Last update"). "</b><br><span style='font-size: 10px'>";
+		$table->data[7][0] .=  "$creation / $modification </span>";
 
-		$table->data[6][1] = combo_kb_products ($id_category, true, 'Product type', true);
+		$table->data[7][1] = combo_kb_products ($id_category, true, 'Product type', true);
 
-		$table->data[7][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
+		$table->data[8][0] = print_textarea ("description", 10, 1, $description, '', true, __('Description'));
 	}
 	else {
 		if($fullname == '') {
@@ -856,69 +857,76 @@ if ($id || $new) {
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 
 <script type="text/javascript" >
-	
+
+// Form validation
+trim_element_on_submit('#text-search_text');
+trim_element_on_submit('#text-fullname');
+trim_element_on_submit('#text-email');
+trim_element_on_submit('#text-from');
+trim_element_on_submit('#text-to');
+trim_element_on_submit('#text-cco');
+trim_element_on_submit('#text-contract_number');
+validate_form("#lead_form");
+var rules, messages;
+
+// Rules: #text-fullname
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+		type: "POST",
+		data: {
+			page: "include/ajax/remote_validations",
+			search_existing_lead: 1,
+			lead_name: function() { return $('#text-fullname').val() },
+			lead_id: "<?php echo $id?>"
+		}
+	}
+};
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This name already exists')?>"
+};
+add_validate_form_element_rules('#text-fullname', rules, messages);
+
+// Rules: #text-email
+rules = {
+	required: true,
+	email: true,
+	remote: {
+		url: "ajax.php",
+		type: "POST",
+		data: {
+			page: "include/ajax/remote_validations",
+			search_existing_lead_email: 1,
+			lead_email: function() { return $('#text-email').val() },
+			lead_id: "<?php echo $id?>"
+		}
+	}
+};
+messages = {
+	required: "<?php echo __('Email required')?>",
+	email: "<?php echo __('Invalid email')?>",
+	remote: "<?php echo __('This lead email already exists')?>"
+};
+add_validate_form_element_rules('#text-email', rules, messages);
+
+// Rules: #text-estimated_sale
+rules = { number: true };
+messages = { number: "<?php echo __('Invalid number')?>" };
+add_validate_form_element_rules('#text-estimated_sale', rules, messages);
+
 $(document).ready (function () {
+	
 	$("#textarea-description").TextAreaResizer ();
 	
 	var idUser = "<?php echo $config['id_user'] ?>";
 	
 	bindAutocomplete ("#text-user", idUser);
 	
-	// Form validation
-	trim_element_on_submit('#text-search_text');
-	trim_element_on_submit('#text-fullname');
-	trim_element_on_submit('#text-email');
-	trim_element_on_submit('#text-from');
-	trim_element_on_submit('#text-to');
-	trim_element_on_submit('#text-cco');
-	trim_element_on_submit('#text-contract_number');
-	validate_form("#lead_form");
-	var rules, messages;
-	// Rules: #text-fullname
-	rules = {
-		required: true/*,
-		remote: {
-			url: "ajax.php",
-			type: "POST",
-			data: {
-				page: "include/ajax/remote_validations",
-				search_existing_lead: 1,
-				lead_name: function() { return $('#text-fullname').val() },
-				lead_id: "<?php echo $id?>"
-			}
-		}*/
-	};
-	messages = {
-		required: "<?php echo __('Name required')?>"/*,
-		remote: "<?php echo __('This lead already exists')?>"*/
-	};
-	add_validate_form_element_rules('#text-fullname', rules, messages);
-	// Rules: #text-email
-	rules = {
-		required: true,
-		email: true,
-		remote: {
-			url: "ajax.php",
-			type: "POST",
-			data: {
-				page: "include/ajax/remote_validations",
-				search_existing_lead_email: 1,
-				lead_email: function() { return $('#text-email').val() },
-				lead_id: "<?php echo $id?>"
-			}
-		}
-	};
-	messages = {
-		required: "<?php echo __('Email required')?>",
-		email: "<?php echo __('Invalid email')?>",
-		remote: "<?php echo __('This lead email already exists')?>"
-	};
-	add_validate_form_element_rules('#text-email', rules, messages);
-	// Rules: #text-estimated_sale
-	rules = { number: true };
-	messages = { number: "<?php echo __('Invalid number')?>" };
-	add_validate_form_element_rules('#text-estimated_sale', rules, messages);
-
+	$("#checkbox-duplicated_leads").click(function () {
+		changeAllowDuplicatedLeads ();
+	});
 });
 
 function changeAction() {
@@ -927,6 +935,40 @@ function changeAction() {
 
 	f.action = "index.php?sec=customers&sec2=operation/leads/lead_statistics";
 	$("#lead_stats_form").submit();
+}
+
+// Add or remove the search of duplicated lead names and emails
+function changeAllowDuplicatedLeads () {
+	
+	var checked = $("#checkbox-duplicated_leads").is(":checked");
+	
+	if (checked) {
+		$('#text-fullname').rules("remove", "remote");
+		$('#text-email').rules("remove", "remote");
+	} else {
+		$('#text-fullname').rules("add", { remote: {
+				url: "ajax.php",
+				type: "POST",
+				data: {
+					page: "include/ajax/remote_validations",
+					search_existing_lead: 1,
+					lead_name: function() { return $('#text-fullname').val() },
+					lead_id: "<?php echo $id?>"
+				}
+			}
+		});
+		$('#text-email').rules("add", { remote: {
+				url: "ajax.php",
+				type: "POST",
+				data: {
+					page: "include/ajax/remote_validations",
+					search_existing_lead_email: 1,
+					lead_email: function() { return $('#text-email').val() },
+					lead_id: "<?php echo $id?>"
+				}
+			}
+		});
+	}
 }
 
 </script>

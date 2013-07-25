@@ -948,24 +948,34 @@ function all_project_tree ($id_user, $completion, $project_kind) {
 // Draw a simple pie graph with the number of workorders, by owner
 // ===============================================================================
 
-function graph_workorder_num ($width, $height, $type = "owner", $where_clause = "WHERE 1=1", $ttl=1) {
+function graph_workorder_num ($width, $height, $type = "owner", $where_clause = "WHERE 1=1", $max = 5, $ttl=1) {
 	global $config;
 	$data = array();
 	
 	if ($type == "submitter")
-		$sql = "SELECT COUNT(id), created_by_user FROM ttodo $where_clause GROUP BY created_by_user ORDER BY 2";
+		$sql = "SELECT COUNT(id), created_by_user FROM ttodo $where_clause GROUP BY created_by_user ORDER BY 1 DESC, 2";
 	else
-		$sql = "SELECT COUNT(id), assigned_user FROM ttodo $where_clause GROUP BY assigned_user ORDER BY 2";
+		$sql = "SELECT COUNT(id), assigned_user FROM ttodo $where_clause GROUP BY assigned_user ORDER BY 1 DESC, 2";
 	
 	$wos = get_db_all_rows_sql ($sql);
 	$data = NULL;
-	
+	$count = 0;
 	if ($wos !== false) {
 		foreach ($wos as $wo) {
-			if ($type == "submitter")
-				$data[$wo['created_by_user']] = $wo['COUNT(id)'];
-			else
-				$data[$wo['assigned_user']] = $wo['COUNT(id)'];
+			if ($type == "submitter") {
+				if ($count < $max) {
+					$data[$wo['created_by_user']] = $wo['COUNT(id)'];
+				} else {
+					$data[__('Others')] += $wo['COUNT(id)'];
+				}
+			} else {
+				if ($count < $max) {
+					$data[$wo['assigned_user']] = $wo['COUNT(id)'];
+				} else {
+					$data[__('Others')] += $wo['COUNT(id)'];
+				}
+			}
+			$count++;
 		}
 	}
 	

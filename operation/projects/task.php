@@ -63,34 +63,53 @@ if (defined ('AJAX')) {
 			$sql_wo = "SELECT *
 					   FROM ttodo
 					   WHERE id_task=$id_item
-						   AND progress<>1
-						   AND progress<>2
 					   ORDER BY name";
 			$sql_wo_count = "SELECT COUNT(*)
 							 FROM ttodo
-							 WHERE id_task=$id_item
-								 AND progress<>1
-								 AND progress<>2";
+							 WHERE id_task=$id_item";
 		} else {
 			$sql_wo = "SELECT *
 					   FROM ttodo
 					   WHERE id_task=$id_item
 						  AND (assigned_user='".$config['id_user']."'
 							  OR created_by_user='".$config['id_user']."')
-						  AND progress<>1
-						  AND progress<>2
 					   ORDER BY name";
 			$sql_wo_count = "SELECT COUNT(*)
 							 FROM ttodo
 							 WHERE id_task=$id_item
 								AND (assigned_user='".$config['id_user']."'
-									OR created_by_user='".$config['id_user']."')
-								AND progress<>1
-								AND progress<>2";
+									OR created_by_user='".$config['id_user']."')";
+		}
+		
+		if (dame_admin($config['id_user'])) {
+			$sql_incidents = "SELECT *
+							  FROM tincidencia
+							  WHERE id_task=$id_item
+								  AND estado<>(SELECT id FROM tincident_status WHERE LOWER(name) LIKE 'closed')
+							  ORDER BY titulo";
+			$sql_incidents_count = "SELECT COUNT(*)
+									FROM tincidencia
+									WHERE id_task=$id_item
+										AND estado<>(SELECT id FROM tincident_status WHERE LOWER(name) LIKE 'closed')";
+		} else {
+			$sql_incidents = "SELECT *
+							  FROM tincidencia
+							  WHERE id_task=$id_item
+								 AND estado<>(SELECT id FROM tincident_status WHERE LOWER(name) LIKE 'closed')
+								 AND (id_usuario='".$config['id_user']."'
+									 OR id_creator='".$config['id_user']."')
+							  ORDER BY titulo";
+			$sql_incidents_count = "SELECT COUNT(*)
+									FROM tincidencia
+									WHERE id_task=$id_item
+										AND estado<>(SELECT id FROM tincident_status WHERE LOWER(name) LIKE 'closed')
+										AND (id_usuario='".$config['id_user']."'
+											OR id_creator='".$config['id_user']."')";
 		}
 		
 		$countRows = process_sql ($sql_tasks_count);
 		$countWOs = process_sql ($sql_wo_count);
+		$countIncidents = process_sql ($sql_incidents_count);
 		
 		if ($countRows === false)
 			$countRows = 0;
@@ -101,26 +120,18 @@ if (defined ('AJAX')) {
 			$countWOs = 0;
 		else
 			$countWOs = (int) $countWOs[0][0];
+			
+		if ($countIncidents === false)
+			$countIncidents = 0;
+		else
+			$countIncidents = (int) $countIncidents[0][0];
 		
-		if ($countRows == 0 && $countWOs == 0) {
-			echo "<ul style='margin: 0; padding: 0;'>\n";
-			echo "<li style='margin: 0; padding: 0;'>";
-			
-			foreach ($branches as $branch) {
-				if ($branch) {
-					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
-				} else {
-					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
-				}
-			}
-			
-			print_image ("images/tree/last_leaf.png", false, array ("style" => 'vertical-align: middle;'));
-			echo "<i>" . __("Empty") . "</i>";
-			echo "</li>";
-			echo "</ul>";
+		if ($countRows == 0 && $countWOs == 0 && $countIncidents == 0) {
+			ob_clean();
 			return;
 		}
 		
+		// TASKS
 		$new = true;
 		$count = 0;
 		echo "<ul style='margin: 0; padding: 0;'>\n";
@@ -142,12 +153,25 @@ if (defined ('AJAX')) {
 				}
 			}
 			
-			if ($count < $countRows || $countWOs > 0) {
+			if ($count < $countRows || $countWOs > 0 || $countIncidents > 0) {
 				$branches_aux[] = true;
 				$img = print_image ("images/tree/closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "2"));
 			} else {
 				$branches_aux[] = false;
 				$img = print_image ("images/tree/last_closed.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "3"));
+			}
+			
+			// Background color
+			if ($task["completion"] < 40) {
+				$background_color = "background: #FFFFFF;";
+			} else if ($task["completion"] < 90) {
+				$background_color = "background: #FFE599;";
+			} else if ($task["completion"] < 100) {
+				$background_color = "background: #A4BCFA;";
+			} else if ($task["completion"] == 100) {
+				$background_color = "background: #B6D7A8;";
+			} else {
+				$background_color = "";
 			}
 			
 			// Priority
@@ -156,13 +180,16 @@ if (defined ('AJAX')) {
 			// Task name
 			$name = safe_output($task['name']);
 			
-			if (strlen($name) > 25) {
-				$name = substr ($name, 0, 25) . "...";
+			if (strlen($name) > 60) {
+				$name = substr ($name, 0, 60) . "...";
 				$name = "<a title='".safe_output($task['name'])."' href='index.php?sec=projects&sec2=operation/projects/task_detail
 					&id_project=".$task['id_project']."&id_task=".$task['id']."&operation=view'>".$name."</a>";
 			} else {
 				$name = "<a href='index.php?sec=projects&sec2=operation/projects/task_detail
 					&id_project=".$task['id_project']."&id_task=".$task['id']."&operation=view'>".$name."</a>";
+			}
+			if ($task["completion"] == 100) {
+				$name = "<s>$name</s>";
 			}
 			
 			// Completion
@@ -206,20 +233,30 @@ if (defined ('AJAX')) {
 			// Branches
 			$branches_json = json_encode ($branches_aux);
 			
+			// New WO / Incident
+			$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work order')));
+			$incident_icon = print_image ("images/incidents.png", true, array ("style" => 'vertical-align: middle; height:19px; width:20px;', "id" => "incident_icon", "title" => __('Incident')));;
+			$wo_icon = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=create&id_task=".$task['id']."'>$wo_icon</a>";
+			$incident_icon = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_task=".$task['id']."'>$incident_icon</a>";
+			$launch_icons = $wo_icon . "&nbsp;" . $incident_icon;
+			
 			echo "<a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$id_item.",\"".$sql_search."\")'>";
 			echo $img;
 			echo "</a>";
-			echo "<span style='vertical-align:middle; display: inline-block;'>".$priority."</span>";
-			echo "<span style='margin-left: 15px; min-width: 190px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='".$background_color." padding-top: 5px; padding-bottom: 5px; padding-right: 4px;'>";
+			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
+			echo "<span style='margin-left: 5px; min-width: 380px; vertical-align:middle; display: inline-block;'>".$name."</span>";
 			echo "<span title='" . __('Progress') . "' style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$progress."</span>";
 			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
 			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$people."</span>";
-			echo "<span style='margin-left: 15px; display: inline-block;'>".$time_used."</span>";
+			echo "<span style='margin-left: 15px; min-width: 200px; display: inline-block;'>".$time_used."</span>";
+			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".__('New').": ".$launch_icons."</span>";
 			echo "</span>";
 			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view tree_div_".$task['id']."' id='tree_div".$id_item."_task_".$task['id']."'></div>";
 			echo "</li>";
 		}
 		
+		// WORK ORDERS
 		$new = true;
 		$count = 0;
 		
@@ -238,35 +275,24 @@ if (defined ('AJAX')) {
 				}
 			}
 			
-			if ($count < $countWOs) {
+			if ($count < $countWOs || $countIncidents > 0) {
 				$img = print_image ("images/tree/leaf.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "2"));
 			} else {
 				$img = print_image ("images/tree/last_leaf.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "3"));
 			}
 			
 			// Background color
-			if ($wo["end_date"] != "0000-00-00 00:00:00") {
-				if ($wo["end_date"] < date('Y-m-d H:i:s')) {
-					$background_color = "background: #fff0f0;";
-				}
-			} else {
-				$background_color = "";
-			}
-
-			/*
-			// Background color
-			if ($wo["end_date"] != "0000-00-00 00:00:00") {
+			if ($wo["progress"] == 0 && $wo["end_date"] != "0000-00-00 00:00:00") {
 				if ($wo["end_date"] < date('Y-m-d H:i:s')) {
 					$background_color = "background: #fff0f0;";
 				}
 			} elseif ($wo["progress"] == 1) {
-				$background_color = "background: #f0fff0;";	
+				$background_color = "background: #f0fff0;";
 			} elseif ($wo["progress"] == 2) {
-				$background_color = "background: #f0f0ff;";	
+				$background_color = "background: #f0f0ff;";
 			} else {
 				$background_color = "";
 			}
-			*/
 			
 			// WO icon
 			$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work order')));
@@ -277,20 +303,18 @@ if (defined ('AJAX')) {
 			// WO name
 			$name = safe_output($wo['name']);
 			
-			if (strlen($name) > 50) {
-				$name = substr ($name, 0, 50) . "...";
+			if (strlen($name) > 60) {
+				$name = substr ($name, 0, 60) . "...";
 				$name = "<a title='".safe_output($wo['name'])."'
 					href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=".$wo['id']."'>".$name."</a>";
 			} else {
 				$name = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=".$wo['id']."'>".$name."</a>";
 			}
+			if ($wo["progress"] > 0) {
+				$name = "<s>$name</s>";
+			}
 			
 			// Owner
-			$avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $wo['assigned_user']);
-			if (!$avatar)
-				$avatar = "avatar1";
-			$owner_icon = "<img src='images/avatars/".$avatar."_small.png' title='".__('Assigned user')."'>";
-			
 			$owner = safe_output($wo['assigned_user']);
 			if (strlen($owner) > 10) {
 				$owner = "<a title='".safe_output($wo['assigned_user'])."'
@@ -302,12 +326,6 @@ if (defined ('AJAX')) {
 			}
 			
 			// Submitter
-			$avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $wo['created_by_user']);
-			if (!$avatar)
-				$submitter_icon = "<img src='images/user_comment.png' title='".__('Creator')."'>";
-			else
-				$submitter_icon = "<img src='images/avatars/".$avatar."_small.png' title='".__('Creator')."'>";
-			
 			$submitter = safe_output($wo['created_by_user']);
 			if (strlen($submitter) > 10) {
 				$submitter = "<a title='".safe_output($wo['created_by_user'])."'
@@ -319,14 +337,103 @@ if (defined ('AJAX')) {
 			}
 			
 			echo $img;
-			echo "<span style='".$background_color." padding: 5px;'>";
+			echo "<span style='".$background_color." padding: 4px;'>";
 			echo "<span style='vertical-align:middle; display: inline-block;'>".$wo_icon."</span>";
 			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
-			echo "<span style='margin-left: 15px; min-width: 300px; vertical-align:middle; display: inline-block;'>".$name."</span>";
-			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$owner_icon."</span>";
-			echo "<span style='margin-left: 3px; min-width: 80px; vertical-align:middle; display: inline-block;'>".$owner."</span>";
-			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$submitter_icon."</span>";
-			echo "<span style='margin-left: 3px; min-width: 80px; vertical-align:middle; display: inline-block;'>".$submitter."</span>";
+			echo "<span style='margin-left: 15px; min-width: 380px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'>"
+				.__('Owner').": <b>".$owner."</b></span>";
+			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'>"
+				.__('Creator').": <b>".$submitter."</b></span>";
+			echo "</span>";
+			echo "</li>";
+		}
+		
+		// INCIDENTS
+		$new = true;
+		$count = 0;
+		
+		while ($incident = get_db_all_row_by_steps_sql($new, $result, $sql_incidents)) {
+			
+			$new = false;
+			$count++;
+			echo "<li style='margin: 0; padding: 0;'>";
+			echo "<span style='display: inline-block;'>";
+			
+			foreach ($branches as $branch) {
+				if ($branch) {
+					print_image ("images/tree/branch.png", false, array ("style" => 'vertical-align: middle;'));
+				} else {
+					print_image ("images/tree/no_branch.png", false, array ("style" => 'vertical-align: middle;'));
+				}
+			}
+			
+			if ($count < $countIncidents) {
+				$img = print_image ("images/tree/leaf.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "2"));
+			} else {
+				$img = print_image ("images/tree/last_leaf.png", true, array ("style" => 'vertical-align: middle;', "id" => "tree_image" . $id_item. "_task_" . $task["id"], "pos_tree" => "3"));
+			}
+			
+			// Background color
+			if ($incident["estado"] < 3) {
+				$background_color = "background: #FFDAD3;";
+			} elseif ($incident["estado"] < 7) {
+				$background_color = "background: #FFFCA0;";
+			} elseif ($incident["estado"] == 7) {
+				$background_color = "background: #DAFFCC;";
+			} else {
+				$background_color = "";
+			}
+			
+			// Incident icon
+			$incident_icon = print_image ("images/incidents.png", true, 
+				array ("style" => 'vertical-align: middle; height:19px; width:20px;', "id" => "incident_icon", "title" => __('Incident')));
+			
+			// Priority / Criticity
+			$priority = print_priority_flag_image ($incident['prioridad'], true);
+			
+			// Incident name
+			$name = safe_output($incident['titulo']);
+			
+			if (strlen($name) > 60) {
+				$name = substr ($name, 0, 60) . "...";
+				$name = "<a title='".safe_output($incident['titulo'])."'
+					href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident['id_incidencia']."'>".$name."</a>";
+			} else {
+				$name = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident['id_incidencia']."'>".$name."</a>";
+			}
+			if ($incident["estado"] == 7) {
+				$name = "<s>$name</s>";
+			}
+			
+			// Owner
+			$owner = safe_output($incident['id_usuario']);
+			if (strlen($owner) > 10) {
+				$owner = "<div title='".safe_output($incident['id_usuario'])."'>".substr ($owner, 0, 10)."...</div>";
+			}
+			
+			// Submitter
+			$submitter = safe_output($incident['id_creator']);
+			if (strlen($submitter) > 10) {
+				$submitter = "<div title='".safe_output($incident['id_creator'])."'>".substr ($submitter, 0, 10)."...</div>";
+			}
+			
+			// Status
+			$status = get_db_value("name", "tincident_status", "id", $incident['estado']);
+			
+			echo $img;
+			echo "<span style='".$background_color." padding-top: 4px; padding-bottom: 4px; padding-right: 4px;' class='red'>";
+			echo "<span style='vertical-align:middle; display: inline-block;'>".$incident_icon."</span>";
+			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
+			echo "<span style='margin-left: 15px; min-width: 380px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'>"
+				.__('Owner').": <b>".$owner."</b></span>";
+			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'>"
+				.__('Creator').": <b>".$submitter."</b></span>";
+			if ($status) {
+				echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>"
+					.__('Status').": <b>".$status."</b></span>";
+			}
 			echo "</span>";
 			echo "</span>";
 			echo "</li>";
@@ -334,9 +441,8 @@ if (defined ('AJAX')) {
 
 		echo "</ul>";
 		
+		return;
 	}
-	
-	return;
 }
 
 

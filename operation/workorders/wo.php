@@ -476,10 +476,10 @@ if ($operation == "") {
 	
 	if ($owner != "") {
 		$table->data[0][3] = '<b>'.__('Submitters') .'</b>';
-		$table->data[0][3] .= '<br>'. graph_workorder_num ('200', '100', 'submitter',$where_clause);
+		$table->data[0][3] .= '<br>'. graph_workorder_num ('200', '100', 'submitter', $where_clause, 5);
 	} else {
 		$table->data[0][3] = '<b>'.__('Owners') .'</b>';
-		$table->data[0][3] .= '<br>'. graph_workorder_num ('200', '100', 'owner',$where_clause);
+		$table->data[0][3] .= '<br>'. graph_workorder_num ('200', '100', 'owner', $where_clause, 5);
 
 	}
 	

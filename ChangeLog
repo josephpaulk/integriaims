@@ -1,3 +1,34 @@
+2013-07-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/leads/lead_detail.php: Now is posible to
+	activate or deactivate the ajax search of names and
+	emails duplicated in a lead by clicking in the new
+	checkbox.
+	
+	* include/functions_graph.php: Modified the function
+	"graph_workorder_num" to show a max number of items
+	and move the rest to the item "others".
+	
+	* operation/workorders/wo.php: Max users to show in
+	the submitter or owner graph are setted to 5+Ohers.
+	
+	* images/tree/first_leaf.png: New image for the first
+	element of a tree with items in its level but without
+	items in its sublevel.
+	
+	* include/js/integria_projects.js: Now the + icon of a
+	task in the task tree view transforms into a leaf icon
+	if the task does not have subitems.
+	
+	* include/functions_tasks.php
+	  operation/projects/task.php: Visual changes in the task
+	  tree like the background color of the items or the length
+	  of the names. Added new icons to create a work order or
+	  an incident on an specific task.
+	
+	* operation/projects/task.php: Added incidents to the task
+	tree.
+	
 2013-07-25  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql
