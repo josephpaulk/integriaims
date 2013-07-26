@@ -12,6 +12,9 @@
 // GNU General Public License for more details.
 
 if (defined ('AJAX')) {
+	
+	ob_clean();
+	
 	$id_group = get_parameter('id_group');
 	$id_user = get_parameter('id_user');
 

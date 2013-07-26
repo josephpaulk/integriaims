@@ -89,7 +89,7 @@ function incident_limit(button_id, id_user, id_group) {
 					//Correct
 					$(button_id).removeAttr("disabled");
 					idInventory = dataUnserialize[1];
-
+					
 					if (idInventory != 'null') {
 						nameInventory = dataUnserialize[2];
 						$(parent_dialog+"#incident_inventories").empty();

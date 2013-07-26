@@ -792,7 +792,7 @@ if ($has_im){
 $parent_name = $id_parent ? (__('Incident').' #'.$id_parent) : __('None');
 
 if ($has_im) {
-	$table_advanced->data[2][0] = print_input_text ('search_parent', $parent_name, '', 10, 10, true, __('Parent incident'));
+	$table_advanced->data[2][0] = print_input_text ('search_parent', $parent_name, '', 10, 100, true, __('Parent incident'));
 	$table_advanced->data[2][0] .= print_input_hidden ('id_parent', $id_parent, true);
 	$table_advanced->data[2][0] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
 }
@@ -943,11 +943,10 @@ $(document).ready (function () {
 	
 	//Verify incident limit on view display and on group change
 	var id_incident = <?php echo $id?>;
-	var id_user = $("#id_user").html();
+	var id_user = $("#text-id_user").val();
 	var id_group = $("#grupo_form").val();
-
 	//Only check incident on creation (where there is no id)
-	if (!id_incident) {
+	if (id_incident != 0) {
 		
 		incident_limit("#submit-accion", id_user, id_group);
 	}
@@ -1078,6 +1077,37 @@ $(document).ready (function () {
 		  } else {
 			fila.style.display = ""; //mostrar fila 
 		  }
+	});
+	
+	$("#priority_form").change (function () {
+		var level = this.value;
+		var color;
+		
+		switch (level) {
+			case "10":
+				color = "blue";
+				break;
+			case "0":
+				color = "gray";
+				break;
+			case "1":
+				color = "green";
+				break;
+			case "2":
+				color = "yellow";
+				break;
+			case "3":
+				color = "orange";
+				break;
+			case "4":
+				color = "red";
+				break;
+			default:
+				color = "blue";
+		}
+		$(".priority-color").fadeOut('normal', function () {
+			$(this).attr ("src", "images/pixel_"+color+".png").fadeIn();
+		});
 	});
 		
 });

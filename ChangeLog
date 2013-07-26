@@ -1,3 +1,12 @@
+2013-07-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/operation/group/group.php: Added "ob_clean"
+	to discard the undesired output before the ajax call.
+	
+	* operation/incidents/incident_detail.php: Fixed bugs.
+	Now the priority icon changes when selecting a diferent
+	priority in the combo.
+
 2013-07-25  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/js/integria_projects.js: Improved the
