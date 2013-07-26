@@ -1,5 +1,11 @@
 2013-07-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* operation/invoices/invoice_template.php: Description
+	id now a tooltip of an icon on the right of "Invoice ID".
+	Visual changes.
+
+2013-07-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* operation/operation/group/group.php: Added "ob_clean"
 	to discard the undesired output before the ajax call.
 	
