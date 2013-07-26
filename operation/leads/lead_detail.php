@@ -220,10 +220,13 @@ if ($update) { // if modified any parameter
 
 	}
 	
+/*
 	$update = false; // continue editing...
 
 	// Clean up all inputs
 	unset ($_POST);
+*/
+	$id = 0;
 }
 
 // Delete
@@ -461,9 +464,9 @@ if ($id || $new) {
 		$companies = process_sql($sql2);
 		
 		if ($read && $enterprise) {
-			$companies = crm_get_user_companies($config['id_user'], $companies);
+			$companies = crm_get_user_companies($config['id_user'], $companies, true);
 		}
-		
+	
 		$table->data[5][1] =  print_select ($companies, 'id_company', $id_company, '', '', $nothing_value = '0', true, 0, false,  __('Managed by'));
 
 		$table->data[5][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
@@ -496,10 +499,8 @@ if ($id || $new) {
 				$table->data[6][0] .=  "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
 				$id."&make_owner=1'><img src='images/award_star_silver_1.png'></a>";
 
-
-		$table->data[6][1] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
-	'id_language', $id_language, '', '', '', true, false, false,
-	__('Language'));
+		$languages = crm_get_all_languages();
+		$table->data[6][1] = print_select ($languages, 'id_language', $id_language, '', '', $nothing_value = '0', true, 0, false,  __('Language'));
 
 		$table->data[7][0] = "<b>". __("Creation / Last update"). "</b><br><span style='font-size: 10px'>";
 		$table->data[7][0] .=  "$creation / $modification </span>";
@@ -793,7 +794,7 @@ if ($id || $new) {
 				$data[5] = format_numeric($lead['estimated_sale']);
 			else
 				$data[5] = "--";
-			
+		
 			$data[6] = "<img src='images/lang/".$lead["id_language"].".png'>"; 
 	
 			$data[7] =  ucfirst(strtolower($lead['country']));

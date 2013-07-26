@@ -576,4 +576,19 @@ function crm_get_data_lead_creation_graph($data) {
    	return $chart2;
 }
 
+function crm_get_all_languages () {
+
+	$languages = process_sql('SELECT id_language, name FROM tlanguage ORDER BY name');
+	
+	if ($languages === false) {
+		$languages = array();
+	}
+	
+	$all_languages = array();
+	foreach ($languages as $key=>$language) {
+		$all_languages[$language['id_language']] = $language['name'];
+	}
+	
+	return $all_languages;
+}
 ?>
