@@ -1,4 +1,4 @@
-<?   
+<?php   
 
 function mysql_session_open ($save_path, $session_name) {
 
@@ -75,4 +75,3 @@ function mysql_session_gc ($maxlifetime = 300) {
 session_set_save_handler ('mysql_session_open', 'mysql_session_close', 'mysql_session_read', 'mysql_session_write', 'mysql_session_destroy', 'mysql_session_gc'); 
 
 ?>
-
