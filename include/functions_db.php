@@ -98,7 +98,7 @@ function user_visible_for_me ($id_user, $target_user, $access = "") {
 // --------------------------------------------------------------- 
 
 function audit_db ($id, $ip, $accion, $description, $extra = "") {
-	require ("config.php");
+	require_once ("config.php");
 	$today = date('Y-m-d H:i:s');
 	
 	$extra = mysql_real_escape_string ($extra);

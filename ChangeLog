@@ -1,5 +1,11 @@
 2013-07-29  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_db.php: Fixed an error loading confi.php file
+	inside audit_db function which results in a wrong behaviour of
+	create/edit incident view.
+
+2013-07-29  Dario Rodriguez <dario@artica.es>
+
 	* include/js/integria_incident_search.js: Fixed an error
 	with incident limit javascript function which didn't compare
 	the ajax output properly.	
