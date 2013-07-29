@@ -1,22 +1,23 @@
-/* Inicializaci�n en espa�ol para la extensi�n 'UI date picker' para jQuery. */
-/* Traducido por Vester (xvester@gmail.com). */
+/* Galician localization for 'UI date picker' jQuery extension. */
+/* Translated by Jorge Barreiro <yortx.barry@gmail.com>. */
 jQuery(function($){
-	$.datepicker.regional['es'] = {clearText: 'Limpiar', clearStatus: '',
-		closeText: 'Cerrar', closeStatus: '',
-		prevText: '&lt;Ant', prevStatus: '',
-		nextText: 'Sig&gt;', nextStatus: '',
-		currentText: 'Hoy', currentStatus: '',
-		monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-		'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
-		monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
-		'Jul','Ago','Sep','Oct','Nov','Dic'],
-		monthStatus: '', yearStatus: '',
-		weekHeader: 'Sm', weekStatus: '',
-		dayNames: ['Domingo','Lunes','Martes','Mi&eacute;rcoles','Jueves','Viernes','S&aacute;dabo'],
-		dayNamesShort: ['Dom','Lun','Mar','Mi&eacute;','Juv','Vie','S&aacute;b'],
-		dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
-		dayStatus: 'DD', dateStatus: 'D, M d',
-		dateFormat: 'yy-mm-dd', firstDay: 1, 
-		initStatus: '', isRTL: false};
-	$.datepicker.setDefaults($.datepicker.regional['es']);
+	$.datepicker.regional['gl'] = {
+		closeText: 'Pechar',
+		prevText: '&#x3C;Ant',
+		nextText: 'Seg&#x3E;',
+		currentText: 'Hoxe',
+		monthNames: ['Xaneiro','Febreiro','Marzo','Abril','Maio','Xuño',
+		'Xullo','Agosto','Setembro','Outubro','Novembro','Decembro'],
+		monthNamesShort: ['Xan','Feb','Mar','Abr','Mai','Xuñ',
+		'Xul','Ago','Set','Out','Nov','Dec'],
+		dayNames: ['Domingo','Luns','Martes','Mércores','Xoves','Venres','Sábado'],
+		dayNamesShort: ['Dom','Lun','Mar','Mér','Xov','Ven','Sáb'],
+		dayNamesMin: ['Do','Lu','Ma','Mé','Xo','Ve','Sá'],
+		weekHeader: 'Sm',
+		dateFormat: 'dd/mm/yy',
+		firstDay: 1,
+		isRTL: false,
+		showMonthAfterYear: false,
+		yearSuffix: ''};
+	$.datepicker.setDefaults($.datepicker.regional['gl']);
 });

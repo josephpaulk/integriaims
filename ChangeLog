@@ -1,4 +1,22 @@
-2913-07-29  Dario Rodriguez <dario@artica.es>
+2013-07-29  Dario Rodriguez <dario@artica.es>
+
+	* include/config.php,
+	include/languages/date_fr.js,
+	include/languages/date_en_GB.js,
+	include/languages/date_ca.js,
+	include/languages/date_de.js,
+	include/languages/date_es_la.js,
+	include/languages/date_gl.js,
+	include/languages/date_it.js,
+	include/languages/date_es.js,
+	include/languages/date_zh_TW.js,
+	include/languages/date_zh_CN.js,
+	include/languages/date_en.js,
+	include/languages/date_pt_br.js: Updated new language
+	files for datepicker, some deprecated functions cause
+	a wrong behaviour in datepicker.
+
+2013-07-29  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_db.php: Fixed 2 bugs related to
 	config.php load on functions used to craete items
