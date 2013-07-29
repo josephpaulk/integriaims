@@ -58,8 +58,9 @@ function incident_limit(button_id, id_user, id_group) {
 				dataUnserialize = data.split('//');
 				$("#group_spinner").empty();
 				status = dataUnserialize[0];
-				
+				status = status.trim();//Important I don't no why but if you don't trim the string it has a blank and doesn't match
 				if (status != "correct") {
+					
 					$("body").append ($("<div></div>").attr("id", "alert_limits").addClass ("dialog"));
 					
 					$("#alert_limits").empty().append('<img src="images/spinner.gif">');
