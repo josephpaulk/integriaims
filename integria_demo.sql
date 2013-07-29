@@ -711,7 +711,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `tusuario` WRITE;
 /*!40000 ALTER TABLE `tusuario` DISABLE KEYS */;
-INSERT INTO `tusuario` VALUES ('admin','Default&#x20;Admin','2f62afb6e17e46f0717225bcca6225b7','Default&#x20;Integria&#x20;Admin&#x20;superuser.&#x20;Please&#x20;change&#x20;password&#x20;ASAP','2013-02-12 10:24:47','admin@integria.sf.net','555-555-555',1,'people_1','en_GB','',0,1,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0,'',1),('demo','Mr.&#x20;Demo&#x20;Potato','fe01ce2a7fbac8fafaed7c982a04e229','','2013-02-12 09:53:17','demo@demo.com','',0,'people_1','en_GB','',0,1,0,0,'0000-00-00 00:00:00','2013-02-12 09:53:15',1,0,'23928',1);
+INSERT INTO `tusuario` VALUES ('admin','Default&#x20;Admin','2f62afb6e17e46f0717225bcca6225b7','Default&#x20;Integria&#x20;Admin&#x20;superuser.&#x20;Please&#x20;change&#x20;password&#x20;ASAP','2013-02-12 10:24:47','admin@integria.sf.net','555-555-555',1,'people_1','en_GB','',0,1,0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00',0,0,'',1,"Madrid"),('demo','Mr.&#x20;Demo&#x20;Potato','fe01ce2a7fbac8fafaed7c982a04e229','','2013-02-12 09:53:17','demo@demo.com','',0,'people_1','en_GB','',0,1,0,0,'0000-00-00 00:00:00','2013-02-12 09:53:15',1,0,'23928',1,"Paris");
 /*!40000 ALTER TABLE `tusuario` ENABLE KEYS */;
 UNLOCK TABLES;
 

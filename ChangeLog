@@ -1,5 +1,11 @@
 2013-07-29  Dario Rodriguez <dario@artica.es>
 
+	* integria_demo.sql,
+	integria_db.sql: Fixed DB struct and demo data to support
+	new location field in tusuario table.
+
+2013-07-29  Dario Rodriguez <dario@artica.es>
+
 	* include/load_session.php: Fixed a problem with a blank
 	line at the end of load_session file which prevents
 	seding headers so sessions don't work properly.

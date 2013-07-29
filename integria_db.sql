@@ -38,6 +38,7 @@ CREATE TABLE `tusuario` (
   `login_blocked` tinyint(1) unsigned NOT NULL DEFAULT 0,
   `num_employee` varchar(125) NOT NULL default '',
   `enable_login` tinyint(1) NOT NULL default '1',
+  `location` tinytext NOT NULL DEFAULT '',
    PRIMARY KEY  (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
