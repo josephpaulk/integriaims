@@ -762,6 +762,10 @@ if ($search_existing_project) {
 	// Checks if the user is in the db
 	$query_result = get_db_value("nombre_real", "tusuario", "nombre_real", $user_name);
 	if ($query_result) {
+		//Use str to lower to allow an user to change it's 
+		//fullname letters from upper to lower case and viceversa
+		$user_name = strtolower($user_name);
+		$old_user_name = strtolower($old_user_name);
 		if ($user_name != $old_user_name) {
 			// Exists. Validation error
 			echo json_encode(false);

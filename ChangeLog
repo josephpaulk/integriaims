@@ -1,3 +1,9 @@
+2013-07-29  Dario Rodriguez <dario@artica.es>
+
+	* include/ajax/remote_validations.php: Improved user fullname
+	validation now is possible to correct mistakes with uppercase/lowercase
+	letters in user's fullname.
+
 2013-07-29  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/functions_form.php: Now the function
