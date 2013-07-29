@@ -1,5 +1,10 @@
 2013-07-29  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_incidents.php: Fixed a problem calculating 
+	incident statisticts.
+
+2013-07-29  Dario Rodriguez <dario@artica.es>
+
 	* include/ajax/remote_validations.php: Improved user fullname
 	validation now is possible to correct mistakes with uppercase/lowercase
 	letters in user's fullname.

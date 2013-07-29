@@ -1376,7 +1376,7 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 	$last_incident_update = get_db_value ("last_stat_check", "tincidencia", "id_incidencia", $id_incident);
 	
 	//Calculate time difference
-	if ($last_incident_update = "0000-00-00 00:00:00") {
+	if ($last_incident_update == "0000-00-00 00:00:00") {
 		//Incident created right now!
 		$now = time();
 		$last_incident_update_time = $now;
