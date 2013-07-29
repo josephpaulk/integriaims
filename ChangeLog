@@ -1,3 +1,9 @@
+2913-07-29  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_db.php: Fixed 2 bugs related to
+	config.php load on functions used to craete items
+	for calendar.
+
 2013-07-29  Dario Rodriguez <dario@artica.es>
 
 	* integria_demo.sql,

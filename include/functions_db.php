@@ -1140,7 +1140,7 @@ function get_user_other ($id_user, $year){
 }
 
 function create_ical ( $date_from, $duration, $id_user, $title, $description ){
-	require("config.php");
+	require_once("config.php");
 
 	$date_from_date = date('Ymd', strtotime("$date_from"));
 	$date_from_time = date('His', strtotime("$date_from"));
@@ -1176,7 +1176,7 @@ function create_ical ( $date_from, $duration, $id_user, $title, $description ){
 
 
 function insert_event ($type, $id1 = 0, $id2 = 0, $id3 = ''){
-   	require("config.php");
+   	require_once("config.php");
 	$timestamp = date('Y-m-d H:i:s');
 
 	$sql = "INSERT INTO tevent (type, id_user, timestamp, id_item, id_item2, id_item3) VALUES 
