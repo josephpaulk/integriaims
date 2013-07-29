@@ -36,6 +36,7 @@ function add_ranged_datepicker (element_start, element_end, range_callback) {
 		});
 	});
 }
+
 function add_task_planning_datepicker () {
 	$(document).ready (function () {
 		$('input[name^="start"]').datepicker({

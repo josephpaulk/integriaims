@@ -40,10 +40,10 @@ if ($operation == "") {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task detail without operation");
 	no_permission();
-//} elseif ($operation == "create" && no es TM en ninguna tarea) {
+} elseif ($operation == "create" && !manage_any_task($config['id_user'], $id_project)) {
 	// Doesn't have access to this page
-//	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a task without access");
-//	no_permission();
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a task without access");
+	no_permission();
 } elseif ($operation == "insert") {
 	$id_parent = (int) get_parameter ('parent');
 	$task_permission = get_project_access ($config["id_user"], $id_project, $id_parent, false, true);
@@ -52,11 +52,15 @@ if ($operation == "") {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to insert a task without access");
 		no_permission();
 	}
-} elseif ( ($operation == "update" || $operation == "view") && !$task_permission['manage']) {
+} elseif ($operation == "update" && !$task_permission['manage']) {
 	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task detail without access");
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a task without access");
 	no_permission();
-} elseif ($operation == "update" && $id_task = -1) {
+} elseif ($operation == "view" && !$task_permission['read']) {
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to view a task without access");
+	no_permission();
+}  elseif ($operation == "update" && $id_task == -1) {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a task without task id");
 	no_permission();
@@ -180,8 +184,12 @@ if ($operation == "update") {
 			$name, $description, $priority, $completion, $start, $end,
 			$hours, $periodicity, $estimated_cost, $parent, $id_group,
 			$count_hours, $id_task);
-			
-	$result = process_sql ($sql);
+	
+	if ($id_task != $parent) {
+		$result = process_sql ($sql);
+	} else {
+		$result = false;
+	}
 
 	if ($result !== false) {
 		$result_output = '<h3 class="suc">'.__('Successfully updated').'</h3>';
@@ -239,11 +247,6 @@ if ($operation == "create") {
 	$start = date ("Y-m-d");
 	$end = date ("Y-m-d");
 	$periodicity = "none";
-} else {
-	echo '<form id="form-task_detail" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
-	print_input_hidden ('id_project', $id_project);
-	print_input_hidden ('id_task', $id_task);
-	print_input_hidden ('operation', 'update');
 }
 
 $table->width = '90%';
@@ -269,9 +272,7 @@ if ($id_task != -1) {
 	$table->data[0][2] = print_label (__('Workunit distribution'), '', '', true, $image);
 }
 
-$sql = sprintf ('SELECT id, name FROM ttask WHERE id_project = %d
-	AND id != %d ORDER BY name', $id_project, $id_task, $parent);
-$table->data[1][0] = print_select_from_sql ($sql, 'parent', $parent, '', __('None'), 0, true, false, false, __('Parent'));
+$table->data[1][0] = combo_task_user_manager ($config['id_user'], $parent, true, __('Parent'), 'parent', __('None'), false, $id_project, $id_task);
 $table->data[1][1] = print_select (get_priorities (), 'priority', $priority,
 	'', '', '', true, false, false, __('Priority'));
 
@@ -364,11 +365,11 @@ $table->data[7][0] .= print_input_hidden ('completion', $completion, true);
 $table->data[8][0] = print_textarea ('description', 8, 30, $description, '',
 	true, __('Description'));
 
+echo '<form id="form-task_detail" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 print_table ($table);
 
 if (($operation != "create" && $task_permission['manage']) || $operation == "create") {
 	
-	echo '<form id="form-task_detail" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 	echo '<div class="button" style="width:'.$table->width.'">';
 	if ($operation != "create") {
 		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
@@ -378,9 +379,11 @@ if (($operation != "create" && $task_permission['manage']) || $operation == "cre
 		print_input_hidden ('operation', 'insert');
 	}
 	print_input_hidden ('id_project', $id_project);
+	print_input_hidden ('id_task', $id_task);
 	echo '</div>';
-	echo '</form>';
 }
+
+echo '</form>';
 
 ?>
 <script type="text/javascript" src="include/js/jquery.ui.slider.js"></script>

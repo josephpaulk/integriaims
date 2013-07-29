@@ -22,14 +22,27 @@ global $config;
 check_login ();
 
 $id_task = get_parameter ("id_task", -1);
-if ($id_task != -1)
-	$task_name = get_db_value ("name", "ttask", "id", $id_task);
-else
-	$task_name = "";
+$task_name = get_db_value ("name", "ttask", "id", $id_task);
 $id_project = get_parameter ("id_project", -1);
-	
-if ($id_task > 0 && ! user_belong_task ($config["id_user"], $id_task)){
-	// Doesn't have access to this page
+
+// ACL
+if ($id_task == -1){
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task tracking without task id");
+	no_permission();
+}
+
+if ($id_project == -1) {
+	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
+}
+// ACL
+if (! $id_project) {
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task tracking without project id");
+	no_permission();
+}
+
+// ACL
+$task_permission = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
+if (! $task_permission["write"]) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task tracking without permission");
 	no_permission();
 }

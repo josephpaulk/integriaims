@@ -478,11 +478,24 @@ function combo_task_user_participant ($id_user, $show_vacations = false, $actual
 
 // Returns a combo with the tasks with manage permission from the user
 // ----------------------------------------------------------------------
-function combo_task_user_manager ($id_user, $actual = 0, $return = false, $label = false, $name = false, $nothing = true, $multiple = false) {
+function combo_task_user_manager ($id_user, $actual = 0, $return = false, $label = false, $name = false,
+									$nothing = true, $multiple = false, $id_project = false, $id_task_out = false) {
 	$output = '';
 	$values = array ();
 	
-	$sql = get_projects_query ($id_user);
+	if ($id_project) {
+		$where = "AND id=$id_project";
+	} else {
+		$where = "";
+	}
+	
+	if ($id_task_out) {
+		$task_out = "AND id<>$id_task_out";
+	} else {
+		$task_out = "";
+	}
+	
+	$sql = get_projects_query ($id_user, $where);
 	$new = true;
 	
 	while ($project = get_db_all_row_by_steps_sql($new, $result_project, $sql)) {
@@ -493,6 +506,7 @@ function combo_task_user_manager ($id_user, $actual = 0, $return = false, $label
 					AND id_project IN(SELECT id
 									  FROM tproject
 									  WHERE disabled=0)
+					$task_out
 				ORDER BY name";
 		$new = true;
 		
@@ -518,7 +532,9 @@ function combo_task_user_manager ($id_user, $actual = 0, $return = false, $label
 		$name = 'id_task';
 	}
 	
-	if ($nothing) {
+	if ($nothing && $nothing !== true) {
+		$nothing = $nothing;
+	} elseif ($nothing) {
 		$nothing = __('N/A');
 	} else {
 		$nothing = '';
@@ -706,6 +722,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	$project_title = get_db_value ("name", "tproject", "id", $id_project);
 
 	// ACL Check for visibility
+	//$task_access = get_project_access_extra ($config["id_user"], false, $id_task, false, true);
 	if (!$public && $id_user != $config["id_user"] && ! give_acl ($config["id_user"], $id_group, "TM"))
 		return;
 
@@ -724,19 +741,19 @@ function show_workunit_user ($id_workunit, $full = 0) {
 		echo __('Incident')." </b> : ";
 		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_incident'>$incident_title</A>";
 	}
-	echo "<td width='13%'><b>";
-	echo __('Duration')."</b>";
+	echo "<td width='13%'>";
+	echo "<b>".__('Duration')."</b>";
 
 	echo "<td width='20%'>";
 	echo " : ".format_numeric($duration);
 	// Public WU ?
-	echo "<span style='float:right; margin-top: -15px; margin-bottom:0px; padding-right:10px;'>";
+	echo "<span style='float:right; margin-top: 15px; margin-bottom:0px; padding-right:10px;'>";
 	if ($public == 1)
 		echo "<img src='images/group.png' title='".__('Public Workunit')."' />";
 	else
 		echo "<img src='images/delete.png' title='".__('Non public Workunit')."' />";
 	echo "</span>";
-
+	
 	echo "<tr>";
 	echo "<td><b>";
 	if ($id_task != "") {

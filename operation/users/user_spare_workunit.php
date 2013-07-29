@@ -420,9 +420,9 @@ if (! $id_task) {
 	$table->data[1][0] = combo_task_user_participant ($wu_user,
 		true, 0, true, __('Task'));
 } else {
-    	$table->colspan[1][0] = 3;
-    	$table->data[1][0] = combo_task_user_participant ($wu_user,
-		true, $id_task, true, __('Task'));
+	$table->colspan[1][0] = 3;
+	$table->data[1][0] = combo_task_user_participant ($wu_user,
+	true, $id_task, true, __('Task'));
 }
 
 // Time used

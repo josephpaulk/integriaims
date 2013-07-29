@@ -49,7 +49,7 @@ function get_tasks_query ($id_user, $id_project, $where_clause = "", $disabled =
 	return "SELECT *
 			FROM ttask
 			WHERE id_project=$id_project
-				AND id_project IN(SELECT id
+				AND id_project=ANY(SELECT id
 								  FROM tproject
 								  WHERE disabled=$disabled)
 				$where_clause
@@ -82,6 +82,63 @@ function get_project_access ($id_user, $id_project = false, $id_task = false, $r
 	if ($return !== ENTERPRISE_NOT_HOOK)
 		return $return;
 	return $permission;
+}
+
+/**
+ * Get the number of readable tasks of a project for an user
+ *
+ * @param id_user User ID
+ * @param id_project Project Id
+ * @param id_parent Only count the tasks with that parent
+ * 
+ * @return int Count of tasks
+*/
+function get_accesible_task_count ($id_user, $id_project, $id_parent = false) {
+	
+	if ($id_parent !== false) {
+		$parent = "id_parent_task=$id_parent";
+	} else {
+		$parent = "1=1";
+	}
+	
+	$sql = "SELECT id
+			FROM ttask
+			WHERE $parent
+				AND id_project=$id_project";
+	$count = 0;
+	$new = true;
+	while ($task = get_db_all_row_by_steps_sql($new, $result_project, $sql)) {
+		$new = false;
+		
+		$task_access = get_project_access ($id_user, $id_project, $task['id'], false, true);
+		if ($task_access['read']) {
+			$count++;
+		}
+		
+	}
+	return $count;
+}
+
+
+/**
+ * Get the if the user can manage almost one task
+ *
+ * @param id_user User ID
+ * @param id_project Project Id. Check the tasks of one or all projects
+ * 
+ * @return boolean
+ * 
+ * NOT FULLY IMPLEMENTED IN OPENSOURCE version
+ * Please visit http://integriaims.com for more information
+*/
+function manage_any_task ($id_user, $id_project = false, $permission_type = "manage") {
+	
+	$return = enterprise_hook ('manage_any_task_extra', array($id_user, $id_project, $permission_type));
+	
+	if ($return !== ENTERPRISE_NOT_HOOK)
+		return $return;
+	return true;
+	
 }
 
 ?>

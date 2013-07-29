@@ -27,36 +27,47 @@ $id_project = (int) get_parameter ('id_project');
 
 if (! $id_project) {// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager without project");
-	include ("general/noaccess.php");
-	exit;
+	no_permission ();
 }
 
-if (! user_belong_project ($config['id_user'], $id_project)) {
+$project_access = get_project_access_extra ($config["id_user"], $id_project);
+
+if (!$project_access["read"]) {
 	audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
-	include ("general/noaccess.php");
-	exit;
+	no_permission ();
 }
 
 $project = get_db_row ('tproject', 'id', $id_project);
-$project_manager = get_db_value ('id_owner', 'tproject', 'id', $id_project);
+//$project_manager = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 $update = get_parameter("update");
 $create = get_parameter("create");
 $delete = get_parameter("delete");
 
+if (!$update && !$create && !$delete) {
+	if (! manage_any_task($config["id_user"], $id_project)) {
+		audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
+		no_permission ();
+	}
+}
+
 //Delete task
 if($delete) {
+	
+	$task_access = get_project_access_extra ($config["id_user"], $id_project, $delete);
 	//Check if admin or project manager before delete the task
-	if (dame_admin ($config['id_user']) || project_manager_check ($id_project)) {
-		delete_task ($delete);
-		echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
-		project_tracking ($id_project, PROJECT_TASK_DELETED);
-	} else {
+	if (! $task_access["manage"]) {
+		audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to delete a task without permission");
 		no_permission ();
-	}	
+	}
+	
+	delete_task ($delete);
+	echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+	project_tracking ($id_project, PROJECT_TASK_DELETED);
 }
 
 //Update tasks
 if ($update) {
+	
 	//Get all task from DB to know the ids
 	$sql = sprintf("SELECT id FROM ttask WHERE id_project = %d", $id_project);
 	$task = get_db_all_rows_sql ($sql);
@@ -65,6 +76,11 @@ if ($update) {
 		
 		//Get all post parameters for this task
 		$id = $t['id'];
+		
+		$task_access = get_project_access_extra ($config["id_user"], $id_project, $id);
+		if (! $task_access["manage"]) {
+			continue;
+		}
 		
 		$name = get_parameter("name_$id");
 		$owner = get_parameter ("owner_$id");
@@ -146,6 +162,23 @@ if ($create) {
 		$start = get_parameter ('start_date2', date ("Y-m-d"));
 		$end = get_parameter ('end_date2', date ("Y-m-d"));
 		$owner = get_parameter('dueno');
+		
+		if ($parent) {
+			$project_access = get_project_access_extra ($config["id_user"], $id_project);
+			if (!$project_access["manage"]) {
+				$task_access = get_project_access_extra ($config["id_user"], $id_project, $parent);
+				if (!$task_access["manage"]) {
+					audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to create tasks in an unauthorized project");
+					no_permission ();
+				}
+			}
+		} else {
+			$project_access = get_project_access_extra ($config["id_user"], $id_project);
+			if (!$project_access["manage"]) {
+				audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to create tasks in an unauthorized project");
+				no_permission ();
+			}
+		}
 
 		$id_group = (int) get_parameter ('group2', 1);
 
@@ -174,8 +207,6 @@ if ($create) {
 
 			}
 		}
-
-	// Individual creation of a task
 	
 	} 
 }
@@ -284,13 +315,9 @@ echo "<div style='width:100%;text-align:left;border-spacing:0px;' class='button'
 echo "<table style='margin:0px; padding:0px;'>";
 echo "<tr>";
 
-
-//Create new task only if PM && TM flags or PW and project manager.
-if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "PM") || (give_acl ($config["id_user"], 0, "PW") && $config["id_user"] == $project_manager)) {
-        echo "<td>";
-        print_button (__('Add tasks'), 'addmass', false, '', 'class="sub next"');
-        echo "</td>";
-}
+echo "<td>";
+print_button (__('Add tasks'), 'addmass', false, '', 'class="sub next"');
+echo "</td>";
 
 echo "<td>";
 print_submit_button (__('Update'), 'update', false, 'class="sub upd"');
@@ -310,107 +337,103 @@ foreach ($users_db as $u) {
 
 
 //Hidden div for task creation. Only for PM flag
-//Create new task only if PM && TM flags or PW and project manager.
-if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "PM") || (give_acl ($config["id_user"], 0, "PW") && $config["id_user"] == $project_manager)) {
-        echo "<div id='createTaskmass' style='display:none;padding:5px;'>";
-	echo "<table><tr><td colspan=4>";
-        echo "<strong>".__('Put taskname in each line')."</strong><br>";
-	print_textarea ('tasklist', 5, 40);
+echo "<div id='createTaskmass' style='display:none;padding:5px;'>";
+echo "<table><tr><td colspan=4>";
+echo "<strong>".__('Put taskname in each line')."</strong><br>";
+print_textarea ('tasklist', 5, 40);
 
-	echo "<tr>";
-	//Group selecting combo
-        echo "<td>";
-        combo_groups_visible_for_me ($config['id_user'], 'group2', 0, 'TW');
-        echo "</td>";
-
-        //Task parent combo
-        echo "<td style='width:60'>";
-        $sql = sprintf ('SELECT id, name FROM ttask WHERE id_project = %d ORDER BY name', $id_project);
-        print_select_from_sql ($sql, 'padre', 0, "\"style='width:250px;'\"", __('None'), 0, false, false, false, __('Parent'));
-        echo "</td>";
-
-	echo "<tr>";
-	//Start date
-        echo "<td>";
-        $start = date ("Y-m-d");
-        print_input_text_extended ("start_date2", $start, "start_date", '', 7, 15, 0, '', "", false, false, __('Start date'));
-        echo "</td>";
-
-        //End date)
-        echo "<td>";
-        $end = date ("Y-m-d");
-        print_input_text_extended ("end_date2", $end, "end_date", '', 7, 15, 0, '', "", false, false, __('End date'));
-        echo "</td>";
-
-	echo "<tr>";
-	// User assigned by default
-        echo "<td>"; 
-        print_select ($users, "dueno", $config['id_user'], '', '', 0, false, 0, false, __("Owner"));
-        echo "</td>";
-
-
-	echo "<tr><td colspan=4 align=right>";	
-        echo "<br>";
-	//Create button
-        print_submit_button (__('Create'), 'create', false, 'class="sub create"');
-
-	echo "</table>";
-	echo "</div>";
-}
-
-//Hidden div for task creation. Only for PM flag
-//Create new task only if PM && TM flags or PW and project manager.
-if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "PM") || (give_acl ($config["id_user"], 0, "PW") && $config["id_user"] == $project_manager)) {
-	echo "<div id='createTask' style='display:none;padding:5px;'>";
-	echo "<strong>".__('Create new task')."</strong><br>";
-
-	echo "<table>";
-	echo "<tr>";
-
-	//Tex name field
-	echo "<td>"; 
-	$name = '';
-	print_input_text ('name', $name, '', 50, 240, false, __('Name'));
-	echo "</td>";
-	
+echo "<tr>";
+//Group selecting combo
 	echo "<td>";
-	print_select ($users, "owner", $config['id_user'], '', '', 0, false, 0, false, __("Owner"));
+	combo_groups_visible_for_me ($config['id_user'], 'group2', 0, 'TW');
 	echo "</td>";
 
-	//Group selecting combo
-	echo "<td>";
-	combo_groups_visible_for_me ($config['id_user'], 'group', 0, 'TW');
-	echo "</td>";
-
-	echo "<tr>";
 	//Task parent combo
 	echo "<td style='width:60'>";
-	$sql = sprintf ('SELECT id, name FROM ttask WHERE id_project = %d ORDER BY name', $id_project);
-	print_select_from_sql ($sql, 'parent', 0, "\"style='width:250px;'\"", __('None'), 0, false, false, false, __('Parent'));
+	combo_task_user_manager ($config['id_user'], 0, false, __('Parent'), 'padre', __('None'), false, $id_project);
 	echo "</td>";
 
-	//Start date
+echo "<tr>";
+//Start date
 	echo "<td>";
 	$start = date ("Y-m-d");
-	print_input_text_extended ("start_date", $start, "start_date", '', 7, 15, 0, '', "", false, false, __('Start date'));
+	print_input_text_extended ("start_date2", $start, "start_date", '', 7, 15, 0, '', "", false, false, __('Start date'));
 	echo "</td>";
-
 
 	//End date)
 	echo "<td>";
 	$end = date ("Y-m-d");
-	print_input_text_extended ("end_date", $end, "end_date", '', 7, 15, 0, '', "", false, false, __('End date'));
-	echo "</td>";
-	
-	//Create button
-	echo "<td valign=bottom>";
-	print_submit_button (__('Create'), 'create', false, 'class="sub create"');
+	print_input_text_extended ("end_date2", $end, "end_date", '', 7, 15, 0, '', "", false, false, __('End date'));
 	echo "</td>";
 
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
-}
+echo "<tr>";
+// User assigned by default
+	echo "<td>"; 
+	print_select ($users, "dueno", $config['id_user'], '', '', 0, false, 0, false, __("Owner"));
+	echo "</td>";
+
+
+echo "<tr><td colspan=4 align=right>";	
+	echo "<br>";
+//Create button
+	print_submit_button (__('Create'), 'create', false, 'class="sub create"');
+
+echo "</table>";
+echo "</div>";
+
+//Hidden div for task creation. Only for PM flag
+//Create new task only if PM && TM flags or PW and project manager.
+//~ if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "PM") || (give_acl ($config["id_user"], 0, "PW") && $config["id_user"] == $project_manager)) {
+	//~ echo "<div id='createTask' style='display:none;padding:5px;'>";
+	//~ echo "<strong>".__('Create new task')."</strong><br>";
+//~ 
+	//~ echo "<table>";
+	//~ echo "<tr>";
+//~ 
+	//~ //Tex name field
+	//~ echo "<td>"; 
+	//~ $name = '';
+	//~ print_input_text ('name', $name, '', 50, 240, false, __('Name'));
+	//~ echo "</td>";
+//~ 
+	//~ echo "<td>";
+	//~ print_select ($users, "owner", $config['id_user'], '', '', 0, false, 0, false, __("Owner"));
+	//~ echo "</td>";
+//~ 
+	//~ //Group selecting combo
+	//~ echo "<td>";
+	//~ combo_groups_visible_for_me ($config['id_user'], 'group', 0, 'TW');
+	//~ echo "</td>";
+//~ 
+	//~ echo "<tr>";
+	//~ //Task parent combo
+	//~ echo "<td style='width:60'>";
+	//~ $sql = sprintf ('SELECT id, name FROM ttask WHERE id_project = %d ORDER BY name', $id_project);
+	//~ print_select_from_sql ($sql, 'parent', 0, "\"style='width:250px;'\"", __('None'), 0, false, false, false, __('Parent'));
+	//~ echo "</td>";
+//~ 
+	//~ //Start date
+	//~ echo "<td>";
+	//~ $start = date ("Y-m-d");
+	//~ print_input_text_extended ("start_date", $start, "start_date", '', 7, 15, 0, '', "", false, false, __('Start date'));
+	//~ echo "</td>";
+//~ 
+//~ 
+	//~ //End date)
+	//~ echo "<td>";
+	//~ $end = date ("Y-m-d");
+	//~ print_input_text_extended ("end_date", $end, "end_date", '', 7, 15, 0, '', "", false, false, __('End date'));
+	//~ echo "</td>";
+//~ 
+	//~ //Create button
+	//~ echo "<td valign=bottom>";
+	//~ print_submit_button (__('Create'), 'create', false, 'class="sub create"');
+	//~ echo "</td>";
+//~ 
+	//~ echo "</tr>";
+	//~ echo "</table>";
+	//~ echo "</div>";
+//~ }
 
 //Create table and table header.
 echo "<table class=listing width=100% cellspacing=0 cellpadding=0 border=0px>";
@@ -424,10 +447,8 @@ echo "<th class=header style='text-align:center;'>".__('Hours worked')."</th>";
 echo "<th class=header style='text-align:center;'>".__('Delay (days)')."</th>";
 echo "<th class=header style='text-align:center;'>".__('Status')."</th>";
 
-// Last column (Del) Only for PM flag
-if (give_acl ($config['id_user'], 0, 'PM')) {
-	echo "<th class=header style='text-align:center;'>".__('Op.')."</th>";
-}
+// Last column (Del)
+echo "<th class=header style='text-align:center;'>".__('Op.')."</th>";
 
 echo "</tr>";
 echo "</thead>";
@@ -516,7 +537,7 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	/*
 	 * 0%-40% = Pending
 	 * 41%-90% = In process
-	 * 91%-100% = Completed
+	 * 91%-99% = Completed
 	 * 100% = Verified
 	 * 
 	 */
@@ -551,32 +572,27 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	echo '<img style="margin-right: 6px;" src="images/config.gif">';
 	echo '</a>';
 	
-	if (give_acl ($config["id_user"], 0, "PM")) {
-		
-		echo '<a href="index.php?sec=projects&sec2=operation/projects/task_planning&id_project='.$id_project.'&delete='.$task["id"].'"
-			onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png" /></a>';
-		echo "</td>";
-	}	
+	echo '<a href="index.php?sec=projects&sec2=operation/projects/task_planning&id_project='.$id_project.'&delete='.$task["id"].'"
+		onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;"><img src="images/cross.png" /></a>';
+	echo "</td>";
 }
 
 function show_task_tree (&$table, $id_project, $level, $id_parent_task, $users) {
 	global $config;
 	
-	// Simple query, needs to implement group control and ACL checking
 	$sql = sprintf ('SELECT * FROM ttask
 		WHERE id_project = %d
 		AND id_parent_task = %d
 		ORDER BY name', $id_project, $id_parent_task);
-	$tasks = get_db_all_rows_sql ($sql);
+	$new = true;
 	
-	if ($tasks === false)
-		return;
-
-	
-
-	foreach ($tasks as $task) {
+	while ($task = get_db_all_row_by_steps_sql($new, $result, $sql)) {
+		$new = false;
+		
 		//If user belong to task then create a new row in the table
-		if (user_belong_task ($config['id_user'], $task['id'])) {
+		$task_access = get_project_access ($config['id_user'], $id_project, $task['id'], false, true);
+		
+		if ($task_access['manage']) {
 			//Each tr has the task id as the html id object!
 			//Check completion for tr background color
 			
@@ -618,9 +634,9 @@ $(document).ready (function () {
 	});
 
 	//Toggle create mass task menu
-        $('#button-addmass').click(function() {
-                $('#createTaskmass').toggle();
-        });
+	$('#button-addmass').click(function() {
+		$('#createTaskmass').toggle();
+	});
 	
 
 	//Change row color dinamically when status is changed
@@ -669,7 +685,7 @@ $(document).ready(function() {
 	// Remote validation for update tasks are not finished
 	var task_rules = {
 		required: true,
-		/*remote: {
+		remote: {
 			url: "ajax.php",
 			type: "POST",
 			data: {
@@ -679,21 +695,19 @@ $(document).ready(function() {
 			  task_name: function() { return $(this).val() },
 			  project_id: <?php echo $id_project?>
 			}
-		},*/
+		},
 		messages: {
-			required: "<?php echo __('Name required')?>"/*,
-			remote: "<?php echo __('This task already exists')?>"*/
+			required: "<?php echo __('Name required')?>",
+			remote: "<?php echo __('This task already exists')?>"
 		}
 	};
     var addRules = function() {
 		if ( $("#textarea-tasklist").length > 0 ) {
 			$("#textarea-tasklist").rules("add", tasklist_rules);
 		}
-		if ( $("[id*=text-name]").length > 0 ) {
-			$("[id*=text-name]").each( function() {
-				$(this).rules("add", task_rules);
-			});
-		}
+		$("[id*='text-name']").each( function() {
+			$(this).rules("add", task_rules);
+		});
 	};
     
     $("#form-tasks").validate({
@@ -718,7 +732,7 @@ $(document).ready(function() {
 	
 	// When create is clicked, removes the rules of tasks update
     $("#submit-create").click(function() {
-        $("[id*=text-name]").each( function() {
+        $("[id*='text-name']").each( function() {
             $(this).rules("remove");
         });
     });
@@ -726,7 +740,7 @@ $(document).ready(function() {
     // the rules of new task creation
     $("#submit-update").click(function() {
         $("#textarea-tasklist").rules("remove");
-        $("[id*=text-name]").each( function() {
+        $("[id*='text-name']").each( function() {
             $(this).val( $.trim($(this).val()) );
         });
     });

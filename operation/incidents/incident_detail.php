@@ -945,6 +945,7 @@ $(document).ready (function () {
 	var id_incident = <?php echo $id?>;
 	var id_user = $("#text-id_user").val();
 	var id_group = $("#grupo_form").val();
+	
 	//Only check incident on creation (where there is no id)
 	if (id_incident != 0) {
 		

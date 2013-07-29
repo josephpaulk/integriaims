@@ -682,6 +682,7 @@ function task_activity_graph ($id_task){
 	$interval = (int) ($period / $resolution);
 
 	echo __("Each bar is"). " ". human_time_description_raw($interval);
+	echo "<br>";
 
 	$data = get_db_all_rows_sql ("SELECT tworkunit.duration as duration, 
             tworkunit.timestamp as timestamp  FROM tworkunit, tworkunit_task, ttask 

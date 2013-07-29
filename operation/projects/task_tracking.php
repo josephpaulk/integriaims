@@ -22,8 +22,9 @@ check_login ();
 
 $id_task = get_parameter ("id_task", -1);
 
-if ( ! user_belong_task ($config["id_user"], $id_task)){
-	// Doesn't have access to this page
+// ACL
+$task_permission = get_project_access ($config["id_user"], false, $id_task, false, true);
+if (! $task_permission["read"]){
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task tracking without permission");
 	no_permission();
 }

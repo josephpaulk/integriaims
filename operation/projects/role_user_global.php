@@ -191,9 +191,10 @@ echo "<th>".__("Task");
 echo "<th>".__("Role");
 echo "<th>".__("WU");
 echo "<th>".__("WU/Tsk");
-echo "<th align='center'>".__("Delete");
+echo "<th align='center'>".__("Delete")."</th>";
 
 $sql = get_projects_query ($id_user);
+
 $new = true;
 $color=1;
 while ($project = get_db_all_row_by_steps_sql($new, $result_project, $sql)) {
@@ -242,6 +243,7 @@ while ($project = get_db_all_row_by_steps_sql($new, $result_project, $sql)) {
 			echo "<td align='center'>";
 		}
 	}
+	$new = false;
 }
 echo "</table>";
 

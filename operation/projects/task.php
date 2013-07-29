@@ -581,18 +581,6 @@ if ($clean_output == 1) {
 	tasks_print_tree ($id_project);
 }
 
-/*
-if (give_acl ($config['id_user'], 0, 'PW')) {
-	echo '<form method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
-	echo '<div class="button" style="width: '.$table->width.'">';
-	print_input_hidden ('id_project', $id_project);
-	print_input_hidden ('operation', 'create');
-	print_submit_button (__('New task'), 'crt_btn', false, 'class="sub next"');
-	echo '</div>';
-	echo '</form>';
-}*/
-
-
 function show_task_row ($table, $id_project, $task, $level) {
 	global $config;
 	global $graph_ttl;
