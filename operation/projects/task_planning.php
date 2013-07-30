@@ -37,7 +37,6 @@ if (!$project_access["read"]) {
 }
 
 $project = get_db_row ('tproject', 'id', $id_project);
-//$project_manager = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 $update = get_parameter("update");
 $create = get_parameter("create");
 $delete = get_parameter("delete");

@@ -25,7 +25,6 @@ include_once ("include/functions_tasks.php");
 // Get our main stuff
 $id_project = get_parameter ('id_project', -1);
 $id_task = get_parameter ('id_task', -1);
-$project_manager = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 $operation = (string) get_parameter ('operation');
 
 $hours = 0;
@@ -46,6 +45,13 @@ if ($operation == "") {
 	no_permission();
 } elseif ($operation == "insert") {
 	$id_parent = (int) get_parameter ('parent');
+	if ($id_parent == 0) {
+		if (!$project_permission['manage']) {
+			// Doesn't have access to this page
+			audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to insert a task without access");
+			no_permission();
+		}
+	}
 	$task_permission = get_project_access ($config["id_user"], $id_project, $id_parent, false, true);
 	if (!$task_permission['manage']) {
 		// Doesn't have access to this page
@@ -268,7 +274,12 @@ if ($id_task != -1) {
 	$table->data[0][2] = print_label (__('Workunit distribution'), '', '', true, $image);
 }
 
-$table->data[1][0] = combo_task_user_manager ($config['id_user'], $parent, true, __('Parent'), 'parent', __('None'), false, $id_project, $id_task);
+if ($project_permission['manage'] || $operation == "view") {
+	$combo_none = __('None');
+} else {
+	$combo_none = false;
+}
+$table->data[1][0] = combo_task_user_manager ($config['id_user'], $parent, true, __('Parent'), 'parent', $combo_none, false, $id_project, $id_task);
 $table->data[1][1] = print_select (get_priorities (), 'priority', $priority,
 	'', '', '', true, false, false, __('Priority'));
 

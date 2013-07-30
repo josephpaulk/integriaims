@@ -115,19 +115,15 @@ function combo_users_task ($id_task, $icon_list = false, $return = false) {
 	
 	if (! $icon_list) {
 		$output .= print_select ($users, 'user', '', '', '', '', true, 0, true, false, false, "width:100px");
-		
-		
-		
 	} else {
-		// Show also groupname
-		$sql = sprintf ('SELECT nombre FROM tgrupo, ttask
-			WHERE ttask.id_group = tgrupo.id_grupo
-			AND ttask.id = %d', $id_task);
-		$group_name = get_db_sql ($sql);
-		$text = __('Group').' <strong>'.$group_name.'</strong><br />';
+		$text = __('Users').':<br />';
+		$users_size = count($users);
 		foreach ($users as $user) {
+			$count++;
 			$text .= $user["id_user"];
-			$text .= ", ";
+			if ($count < $users_size) {
+				$text .= ", ";
+			}
 		}
 		$output .= print_help_tip ($text, true, 'tip_people');
 	}
@@ -715,7 +711,6 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	if (! $id_task) {
 		$id_incident = get_db_value ("id_incident", "tworkunit_incident", "id_workunit", $row["id"]);
 	}
-	$id_group = get_db_value ("id_group", "ttask", "id", $id_task);
 	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
 	$task_title = get_db_value ("name", "ttask", "id", $id_task);
 	if (! $id_task) {
@@ -730,7 +725,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 			if (! $task_access["manage"]) {
 				return;
 			}
-		} elseif (! give_acl ($config["id_user"], $id_group, "TM")) {
+		} elseif (! give_acl ($config["id_user"], 0, "TM")) {
 			return;
 		}
 	}
@@ -826,14 +821,14 @@ function show_workunit_user ($id_workunit, $full = 0) {
 			$myurl = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user";
 	}
 	
-	if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"]) OR  (give_acl($config["id_user"], $id_group, "TM")) ) {
+	if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"]) OR  (give_acl($config["id_user"], 0, "TM")) ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
 		echo "<a class='delete-workunit' id='delete-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=delete' onclick='if (!confirm(\"".__('Are you sure?')."\")) return false;'><img src='images/cross.png' /></a>";
 	}
 
 	// Edit workunit
-	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "") OR (give_acl($config["id_user"], $id_group, "UM")) )) {
+	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], 0, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "") OR (give_acl($config["id_user"], 0, "UM")) )) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
 		echo "<a class='edit-workunit' id='edit-$id_workunit' href='index.php?sec=projects&sec2=operation/users/user_spare_workunit&id_project=$id_project&id_task=$id_task&id_workunit=$id_workunit'><img border=0 src='images/page_white_text.png' title='".__('Edit workunit')."'></a>";
@@ -841,7 +836,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	}
 
 	// Lock workunit
-	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], $id_group, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "")  )) {
+	if (((project_manager_check($id_project) == 1) OR (give_acl($config["id_user"], 0, "TM")) OR ($id_user == $config["id_user"])) AND (($locked == "")  )) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
 		echo "<a class='lock_workunit' id='lock-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=lock'><img src='images/lock.png' title='".__('Lock workunit')."'></a>";

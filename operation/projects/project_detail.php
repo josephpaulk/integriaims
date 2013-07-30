@@ -54,7 +54,7 @@ if (!$section_access['read']) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to project detail section");
 	no_permission();
 }
-// ACL - If creating, the required permission is PM
+// ACL - If creating, the required permission is PW
 if ($create_project && !$section_access['write']) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a project");
 	no_permission();

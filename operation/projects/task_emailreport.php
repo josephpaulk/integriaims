@@ -28,7 +28,7 @@ $description = get_parameter ("description", "");
 
 // ACL
 $task_permission = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
-if (!$task_permission["write"]) {
+if (!$task_permission["manage"]) {
 	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task email report  without permission");
 	no_permission();
 }
