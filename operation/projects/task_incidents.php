@@ -41,6 +41,13 @@ if ($id_project == -1) {
 	include ("general/noaccess.php");
 	exit;
 }
+// ACL
+$task_access = get_project_access_extra ($config["id_user"], $id_project, $id_task, false, true);
+if (! $task_access["read"]) {
+	// Doesn't have access to this page
+	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task information without task permission");
+	no_permission();
+}
 
 // Specific task
 if ($id_task != -1){ 
@@ -55,8 +62,6 @@ echo "<tr><th>";
 echo __('Incident');
 echo "<th>"; 
 echo __('Title');
-echo "<th>";
-echo __('Group');
 echo "<th>";  
 echo __('WU Hours');
 echo "<th>"; 
@@ -76,9 +81,6 @@ foreach ($incidents as $incident){
 	echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=".$incident["id_incidencia"]."'>";
 	echo $incident["titulo"];
 	echo "</a>";
-
-	echo "<td class='f9'>";
-	echo dame_grupo($incident["id_grupo"]);
 
 	echo "<td>";
 	echo get_incident_workunit_hours ($incident["id_incidencia"]);

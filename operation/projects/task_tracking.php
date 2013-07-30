@@ -24,7 +24,7 @@ $id_task = get_parameter ("id_task", -1);
 
 // ACL
 $task_permission = get_project_access ($config["id_user"], false, $id_task, false, true);
-if (! $task_permission["read"]){
+if (! $task_permission["read"]) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task tracking without permission");
 	no_permission();
 }
@@ -41,7 +41,7 @@ echo "<table class='listing' width=630>";
 
 if ($res4=mysql_query($sql4)){
 	echo "<tr><th>".__('Status')."<th>".__('User')."<th>".__('Timestamp');
-	while ($row2=mysql_fetch_array($res4)){
+	while ($row2=mysql_fetch_array($res4)) {
 		$timestamp = $row2["timestamp"];
 		$state = $row2["state"];
 		$user = $row2["id_user"];

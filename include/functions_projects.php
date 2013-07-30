@@ -119,7 +119,6 @@ function get_accesible_task_count ($id_user, $id_project, $id_parent = false) {
 	return $count;
 }
 
-
 /**
  * Get the if the user can manage almost one task
  *

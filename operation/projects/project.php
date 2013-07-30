@@ -195,9 +195,12 @@ $table->head[5] = '';
 $table->data = array ();
 
 $where_clause = "";
-if ($search_text != "")
-	$where_clause .= sprintf (" AND (tproject.name LIKE '%%%s%%' OR tproject.description LIKE '%%%s%%')",
-		$search_text, $search_text);
+if ($search_text != "") {
+	$where_clause .= sprintf (" AND (tproject.name LIKE '%%%s%%' OR tproject.description LIKE '%%%s%%')", $search_text, $search_text);
+}
+if ($search_id_project_group != 0) {
+	$where_clause .= sprintf (" AND tproject.id_project_group=$search_id_project_group ");
+}
 
 $sql = get_projects_query ($config['id_user'], $where_clause, $view_disabled);
 $new = true;

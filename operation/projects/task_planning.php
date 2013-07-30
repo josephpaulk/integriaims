@@ -31,7 +31,6 @@ if (! $id_project) {// Doesn't have access to this page
 }
 
 $project_access = get_project_access_extra ($config["id_user"], $id_project);
-
 if (!$project_access["read"]) {
 	audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
 	no_permission ();
@@ -179,9 +178,9 @@ if ($create) {
 				no_permission ();
 			}
 		}
-
+		
 		$id_group = (int) get_parameter ('group2', 1);
-
+		
 		$data_array = preg_split ("/\n/", $tasklist);
 		foreach ($data_array as $data_item){
 			$data = trim($data_item);

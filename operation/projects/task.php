@@ -85,24 +85,24 @@ if (defined ('AJAX')) {
 			$sql_incidents = "SELECT *
 							  FROM tincidencia
 							  WHERE id_task=$id_item
-								  AND estado<>(SELECT id FROM tincident_status WHERE LOWER(name) LIKE 'closed')
+								  AND estado<>7
 							  ORDER BY titulo";
 			$sql_incidents_count = "SELECT COUNT(*)
 									FROM tincidencia
 									WHERE id_task=$id_item
-										AND estado<>(SELECT id FROM tincident_status WHERE LOWER(name) LIKE 'closed')";
+										AND estado<>7";
 		} else {
 			$sql_incidents = "SELECT *
 							  FROM tincidencia
 							  WHERE id_task=$id_item
-								 AND estado<>(SELECT id FROM tincident_status WHERE LOWER(name) LIKE 'closed')
+								 AND estado<>7
 								 AND (id_usuario='".$config['id_user']."'
 									 OR id_creator='".$config['id_user']."')
 							  ORDER BY titulo";
 			$sql_incidents_count = "SELECT COUNT(*)
 									FROM tincidencia
 									WHERE id_task=$id_item
-										AND estado<>(SELECT id FROM tincident_status WHERE LOWER(name) LIKE 'closed')
+										AND estado<>7
 										AND (id_usuario='".$config['id_user']."'
 											OR id_creator='".$config['id_user']."')";
 		}

@@ -237,7 +237,10 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 					onClick='if (!confirm(\"".__('Are you sure?')."\")) return false;'><img src='images/cancel.gif' title='".__('Delete')."' border=0></A>";
 			    $calendar .= "<br><hr width=115><font size='1pt'>[$event_user] ".$event_string."</font>";
 			    if ($row["description"]) {
+					// Common html title
 					$calendar .= "<br><font size='1pt'>".__('Description').": <img src='images/page_white_text.png' title='".$row["description"]."'></font><br><br>";
+					// Integria tip
+					//$calendar .= "<br><font size='1pt'>".__('Description').": ".print_help_tip ($row["description"], true)."</font><br><br>";
 				} else {
 					$calendar .= "<br><br>";
 				}

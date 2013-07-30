@@ -18,19 +18,17 @@ if (! $id_project) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager without project");
 	no_permission();
 }
-if ($id_project > 0) {
-	$project_permission = get_project_access ($config["id_user"], $id_project);
-	if (!$project_permission["read"]) {
-		// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to view workunit not in this access range");
-		no_permission();
-	}
+$project_permission = get_project_access ($config["id_user"], $id_project);
+if (!$project_permission["read"]) {
+	// Doesn't have access to this page
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to view workunit without permission");
+	no_permission();
 }
 if ($id_task > 0) {
 	$task_permission = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
 	if (!$task_permission["read"]){
 		// Doesn't have access to this page
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to view workunit not in this access range");
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to view workunit without task permission");
 		no_permission();
 	}
 }
@@ -50,6 +48,14 @@ if ($operation == "lock") {
 
 // ADD / UPDATE Workunit
 if ($operation == "workunit") {
+	
+	// ACL
+	if (! $task_permission["write"]){
+		// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to add/update a workunit in a task without permission");
+		no_permission();
+	}
+	
 	$id_workunit = (int) get_parameter ('id_workunit');
 	$insert = false;
 	if ($id_workunit == 0) {
@@ -125,6 +131,14 @@ if ($operation == "workunit") {
 
 // DELETE Workunit
 if ($operation == "delete") {
+	
+	// ACL
+	if (! $task_permission["write"]){
+		// Doesn't have access to this page
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a workunit in a task without permission");
+		no_permission();
+	}
+	
 	$success = delete_task_workunit ($id_workunit);
 	if (! $success) {
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation",
@@ -144,13 +158,11 @@ if (isset($result_output))
 // Specific task
 if ($id_task != 0) { 
 	
-	$pm = get_db_sql ("SELECT id_owner FROM tproject WHERE id = ".$id_project);//////////
-
-    $sql_filter = "";
+	$sql_filter = "";
     if ($id_user_filter != "")
         $sql_filter = " AND tworkunit.id_user = '$id_user_filter' ";
 
-	if (give_acl ($config["id_user"], 0, "PM") OR ($pm == $config["id_user"]) )  {
+	if ($task_permission["manage"])  {
 
 	$sql= sprintf ('SELECT tworkunit.id
 			FROM tworkunit, tworkunit_task 
@@ -173,14 +185,12 @@ if ($id_task != 0) {
 } elseif ($id_project != 0) {
 	// Whole project
 	
-	$pm = get_db_sql ("SELECT id_owner FROM tproject WHERE id = ".$id_project);/////
-
-    $sql_filter = "";
+	$sql_filter = "";
     if ($id_user_filter != "")
         $sql_filter = " AND tworkunit.id_user = '$id_user_filter' ";
 
 
-	if (give_acl ($config["id_user"], 0, "PM") OR ($pm == $config["id_user"]) )  {
+	if ($project_permission["manage"])  {
 		$sql = sprintf ('SELECT tworkunit.id
 			FROM tworkunit, tworkunit_task, ttask 
 			WHERE tworkunit_task.id_task = ttask.id

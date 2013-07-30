@@ -18,6 +18,14 @@ global $config;
 
 check_login ();
 
+// ACL
+$section_access = get_project_access_extra ($config["id_user"]);
+if (! $section_access["read"]) {
+	// Doesn't have access to this page
+	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project overview without permission");
+	no_permission();
+}
+
 // MAIN LIST OF PROJECTS GROUPS
 echo "<h2>".__("Project overview")."</h2>";
 
@@ -48,77 +56,77 @@ $nogroup["icon"] = '../group.png';
 $project_groups[] = $nogroup;
 $first = true;
 
-foreach($project_groups as $group){
-	if (give_acl($config["id_user"], 0, "PR")){
-		if($group['id'] == 0) {
-			$prefix = 'last_';
+foreach($project_groups as $group) {
+	
+	if($group['id'] == 0) {
+		$prefix = 'last_';
+	}
+	elseif($first) {
+		$prefix = 'first_';
+		$first = false;
+	}
+	else {
+		$prefix = '';
+	}
+	
+	// Get projects info
+	$projects = get_db_all_rows_sql ("SELECT id, name FROM tproject WHERE disabled = 0 AND id_project_group = ".$group["id"]);
+	if($projects === false) {
+		$projects = array();
+	}
+	
+	//Check project ACLs
+	$aux_projects = array();
+	foreach ($projects as $p) {
+		$project_access = get_project_access_extra ($config["id_user"], $p['id']);
+		if ($project_access["read"]) {
+			array_push($aux_projects, $p);
 		}
-		elseif($first) {
-			$prefix = 'first_';
-			$first = false;
-		}
-		else {
-			$prefix = '';
-		}
+	}
+	
+	//Set filtered projects
+	$projects = $aux_projects;
+	
+	$nprojects = count($projects);
+	
+	echo "<tr>";
+	// Project group name
+	echo "<td style='text-align:left; padding-bottom:0px; padding-top:0px;'>";
+	echo "<a href='javascript:'><img id='btn_".$group["id"]."' class='btn_tree' src='images/".$prefix."closed.png' style='float:left'></a>";
+	echo "<b><a href='index.php?sec=projects&sec2=operation/projects/project&search_id_project_group=".$group["id"]."'>".$group["name"]."</a></b>";
+	echo "</td>";	
+	
+	// Project group
+	echo "<td>";
+	echo "<img src='images/project_groups_small/".$group["icon"]."'>";
+	echo "</td>";	
 		
-		// Get projects info
-		$projects = get_db_all_rows_sql ("SELECT id, name FROM tproject WHERE disabled = 0 AND id_project_group = ".$group["id"]);
-		if($projects === false) {
-			$projects = array();
-		}
-		
-		//Check project ACLs
-		$aux_projects = array();
-		foreach ($projects as $p) {
-			if (user_belong_project ($config['id_user'], $p['id'])) {
-					array_push($aux_projects, $p);
-			}
-		}
-		
-		//Set filtered projects
-		$projects = $aux_projects;
-		
-		$nprojects = count($projects);
-		
-		echo "<tr>";
-		// Project group name
-		echo "<td style='text-align:left; padding-bottom:0px; padding-top:0px;'>";
-		echo "<a href='javascript:'><img id='btn_".$group["id"]."' class='btn_tree' src='images/".$prefix."closed.png' style='float:left'></a>";
-		echo "<b><a href='index.php?sec=projects&sec2=operation/projects/project&search_id_project_group=".$group["id"]."'>".$group["name"]."</a></b>";
-		echo "</td>";	
-		
-		// Project group
-		echo "<td>";
-		echo "<img src='images/project_groups_small/".$group["icon"]."'>";
-		echo "</td>";	
-			
-		// Number of projects inside
-		echo "<td id='nproj_".$group["id"]."'>";
-		echo $nprojects;
+	// Number of projects inside
+	echo "<td id='nproj_".$group["id"]."'>";
+	echo $nprojects;
+	echo "</td>";
+	echo "</tr>";
+	
+	// Projects inside
+	foreach($projects as $project) {
+		echo "<tr class='prj_".$group["id"]."' style='display:none'>";
+		// Project name
+		echo "<td style='text-align:left; padding-bottom:0px; padding-top:0px;' colspan='3'>";
+		echo "<img src='images/branch.png' style='float:left'>";
+		echo "<img src='images/award_star_bronze_1.png' style='float:left'>";
+		echo "&nbsp;<b><a href='index.php?sec=projects&sec2=operation/projects/task&id_project=".$project["id"]."'>".$project["name"]."</a></b></td>";
 		echo "</td>";
 		echo "</tr>";
-		
-		// Projects inside
-		foreach($projects as $project) {
-			echo "<tr class='prj_".$group["id"]."' style='display:none'>";
-			// Project name
-			echo "<td style='text-align:left; padding-bottom:0px; padding-top:0px;' colspan='3'>";
-			echo "<img src='images/branch.png' style='float:left'>";
-			echo "<img src='images/award_star_bronze_1.png' style='float:left'>";
-			echo "&nbsp;<b><a href='index.php?sec=projects&sec2=operation/projects/task&id_project=".$project["id"]."'>".$project["name"]."</a></b></td>";
-			echo "</td>";	
-			echo "</tr>";
-		}
-		
-		if($nprojects == 0) {
-			echo "<tr class='prj_".$group["id"]."' style='display:none'>";
-			// Project name
-			echo "<td style='text-align:left; padding-bottom:0px; padding-top:0px;' colspan='3'>";
-			echo "<img src='images/branch.png' style='float:left'>";
-			echo "&nbsp;".__('empty')."</td>";
-			echo "</td>";	
-			echo "</tr>";
-		}
+	}
+	
+	if($nprojects == 0) {
+		echo "<tr class='prj_".$group["id"]."' style='display:none'>";
+		// Project name
+		echo "<td style='text-align:left; padding-bottom:0px; padding-top:0px;' colspan='3'>";
+		echo "<img src='images/branch.png' style='float:left'>";
+		echo "&nbsp;".__('empty')."</td>";
+		echo "</td>";	
+		echo "</tr>";
 	}
 }
 

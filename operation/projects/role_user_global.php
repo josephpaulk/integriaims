@@ -20,14 +20,18 @@ check_login ();
 
 include_once ("include/functions_projects.php");
 
-//~ if (give_acl($config["id_user"], 0, "PM") != 1){
-	//~ // Doesn't have access to this page
-	//~ audit_db ($config["id_user"],$config["REMOTE_ADDR"], "ACL Violation","Trying to access to project detail page");
-	//~ include ("general/noaccess.php");
-	//~ exit;
+// ACL
+$section_access = get_project_access ($config['id_user']);
+if (! $section_access['read']) {
+	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to global assignment");
+	no_permission();
+}
+// If the user don't manage any task, he can't do anything in this section.
+// The check below can restrict their access if is needed.
+//~ if (! manage_any_task ($config["id_user"])) {
+	//~ audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to global assignment");
+	//~ no_permission();
 //~ }
-
-//$section_access = get_project_access ($config['id_user']);
 
 $id_user = get_parameter ("id_user", $config["id_user"]);
 $id_role = get_parameter ("roles", 0);

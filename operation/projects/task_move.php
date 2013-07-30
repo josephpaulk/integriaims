@@ -21,28 +21,23 @@ check_login ();
 $id_project = get_parameter ("id_project", -1);
 $id_task = get_parameter ("id_task", -1);
 
-if (! user_belong_task ($config["id_user"], $id_task)){
-	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task move without permission");
+
+// ACL
+$task_permission = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
+if (!$task_permission["manage"]) {
+	audit_db($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task move without permission");
 	no_permission();
 }
 
-
 //TASK MOVE Operation
-// PROJECT - People management
-$project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
-if (give_acl($config["id_user"], 0, "PM") || (give_acl($config["id_user"], 0, "PW") && $project_manager == $config["id_user"])) {
+echo "<form name='project_move' method='POST' action='index.php?sec=projects&sec2=operation/projects/task&operation=move&id_project=$id_project&id_task=$id_task'>";
+echo "<h3>".__('Move this task to other project')."</h3>";
+echo '<table width="600" class="databox_color" cellpadding=4 cellspacing=4>';
 
-    echo "<form name='project_move' method='POST' action='index.php?sec=projects&sec2=operation/projects/task&operation=move&id_project=$id_project&id_task=$id_task'>";
-    echo "<h3>".__('Move this task to other project')."</h3>";
-    echo '<table width="600" class="databox_color" cellpadding=4 cellspacing=4>';
-    
-    // Project combo
-    echo '<tr><td class="datos"><b>'.__('Destination project').'</b>';
-    echo '</td><td class="datos">';
-    combo_projects_user ($config["id_user"], 'target_project');
-    echo '</td><td class="datos">';
-    echo '<input type="submit" class="sub create" name="accion" value="'.__('Move').'" border="0">';
-    echo "</form></td></tr></table>";
-
-}
+// Project combo
+echo '<tr><td class="datos"><b>'.__('Destination project').'</b>';
+echo '</td><td class="datos">';
+combo_projects_user ($config["id_user"], 'target_project');
+echo '</td><td class="datos">';
+echo '<input type="submit" class="sub create" name="accion" value="'.__('Move').'" border="0">';
+echo "</form></td></tr></table>";

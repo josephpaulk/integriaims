@@ -712,19 +712,28 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	$public = $row["public"];
 	$locked = $row["locked"];
 	$id_task = get_db_value ("id_task", "tworkunit_task", "id_workunit", $row["id"]);
-	if ($id_task == "")
+	if (! $id_task) {
 		$id_incident = get_db_value ("id_incident", "tworkunit_incident", "id_workunit", $row["id"]);
+	}
 	$id_group = get_db_value ("id_group", "ttask", "id", $id_task);
 	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
 	$task_title = get_db_value ("name", "ttask", "id", $id_task);
-	if ($id_task == "")
+	if (! $id_task) {
 		$incident_title = get_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident);
+	}
 	$project_title = get_db_value ("name", "tproject", "id", $id_project);
 
 	// ACL Check for visibility
-	//$task_access = get_project_access_extra ($config["id_user"], false, $id_task, false, true);
-	if (!$public && $id_user != $config["id_user"] && ! give_acl ($config["id_user"], $id_group, "TM"))
-		return;
+	if (!$public && $id_user != $config["id_user"]) {
+		if ($id_task) {
+			$task_access = get_project_access_extra ($config["id_user"], false, $id_task, false, true);
+			if (! $task_access["manage"]) {
+				return;
+			}
+		} elseif (! give_acl ($config["id_user"], $id_group, "TM")) {
+			return;
+		}
+	}
 
 
 	// Show data
@@ -734,7 +743,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	print_user_avatar ($id_user, true);
 
 	echo "<td width='60%'><b>";
-	if ($id_task != ""){
+	if ($id_task){
 		echo __('Task')." </b> : ";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$id_task&operation=view'>$task_title</A>";
 	} else  {
@@ -756,7 +765,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	
 	echo "<tr>";
 	echo "<td><b>";
-	if ($id_task != "") {
+	if ($id_task) {
 		echo __('Project')." </b> : ";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project'>$project_title</A>";
 	} else {

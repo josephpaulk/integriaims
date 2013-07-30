@@ -37,9 +37,12 @@ if (!isset($data)){
 
 $id_task = $data["id_task"];
 
-if (!user_belong_task ($id_user, $id_task)){ 
-    echo "You dont have access to that file";
-    exit;
+// ACL
+$task_access = get_project_access_extra ($config["id_user"], 0, $id_task, false, true);
+if (! $task_access["read"]) {
+	// Doesn't have access to this page
+	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to pro without task permission");
+	no_permission();
 }
 
 // Allow download file

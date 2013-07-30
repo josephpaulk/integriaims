@@ -1,3 +1,20 @@
+2013-07-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/projects/project.php: Fixed a bug on
+	group filtering.
+	
+	* include/functions_form.php
+	  operation/projects/gantt.php
+	  operation/projects/project_download_file.php
+	  operation/projects/project_overview.php
+	  operation/projects/role_user_global.php
+	  operation/projects/task_cost.php
+	  operation/projects/task_emailreport.php
+	  operation/projects/task_files.php
+	  operation/projects/task_incidents.php
+	  operation/projects/task_move.php
+	  operation/projects/task_workunit.php: ACL improved.
+
 2013-07-29  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_incidents.php: Fixed a problem calculating 
