@@ -249,6 +249,11 @@ CREATE TABLE `tholidays` (
    UNIQUE (`day`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE tinventory_contact;
+ALTER TABLE tinventory MODIFY `id` mediumint(8) unsigned;
+ALTER TABLE tinventory DROP PRIMARY KEY;
+ALTER TABLE tinventory MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY;
+
 CREATE TABLE `tinventory_track` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_inventory` bigint(20) unsigned NOT NULL default '0',
@@ -271,12 +276,14 @@ ALTER TABLE tobject_type_field ADD `show_list` TINYINT(1) unsigned DEFAULT 1;
 INSERT INTO tobject_type (name, description, icon) VALUES 
 ('Pandora agents', 'Imported agents from Pandora FMS', 'pandora.png');
 
-/* 21/05/2013 */
-INSERT INTO tobject_type_field (id, id_object_type, label, type) VALUES 
-(1,1,'OS','text'),
-(2,1,'IP Address','text'),
-(3,1,'URL Address','text'),
-(4,1,'ID Agent','text');
+/*Get ID to insert new fields*/
+SELECT `id` FROM tobject_type WHERE name = 'Pandora agents' LIMIT 1 INTO @pandora_id;
+
+INSERT INTO tobject_type_field (id_object_type, label, type) VALUES 
+(@pandora_id,'OS','text'),
+(@pandora_id,'IP Address','text'),
+(@pandora_id,'URL Address','text'),
+(@pandora_id,'ID Agent','text');
 
 /*  30/05/2013 */
 CREATE TABLE `tkb_product_group` (
@@ -339,10 +346,10 @@ ALTER TABLE `tgrupo` ADD `id_incident_type` mediumint(8) unsigned NULL;
 
 /* 16/07/2013 */
 CREATE TABLE tsessions_php (
-	`id_session` CHAR(32) NOT NULL,
-	`last_active` INTEGER NOT NULL,
-	`data` TEXT,
-	PRIMARY KEY (`id_session`)
+  `id_session` CHAR(52) NOT NULL,
+  `last_active` INTEGER NOT NULL,
+  `data` TEXT,
+  PRIMARY KEY (`id_session`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*16/07/2013*/
@@ -362,4 +369,13 @@ ALTER TABLE `tagenda` DROP `content`;
 ALTER TABLE `tinventory` ADD COLUMN `last_update` date NOT NULL default '0000-00-00';
 
 /* 30/07/2013 */
+CREATE TABLE `tinventory_acl` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `id_inventory` bigint(20) unsigned NOT NULL,
+  `id_reference` varchar(60) NOT NULL default '',
+  `type` enum ('user', 'company') default 'user',
+  PRIMARY KEY (`id`),
+  KEY `id_inventory_idx` (`id_inventory`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 ALTER TABLE `ttask` DROP `id_group`;

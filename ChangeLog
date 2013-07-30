@@ -1,3 +1,10 @@
+2013-07-30  Dario Rodriguez <dario@artica.es>
+
+	* integria_db.sql: Change size for cookie string in 
+	tsession_php table.
+	* extras/migrate.sql: Fixed several bugs in migrate 
+	to be compatible with the last update for one client.
+
 2013-07-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* integria_db.sql

@@ -1062,7 +1062,7 @@ CREATE TABLE `twiki_acl` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE tsessions_php (
-	`id_session` CHAR(32) NOT NULL,
+	`id_session` CHAR(52) NOT NULL,
 	`last_active` INTEGER NOT NULL,
 	`data` TEXT,
 	PRIMARY KEY (`id_session`)
