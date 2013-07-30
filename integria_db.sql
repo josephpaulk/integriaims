@@ -57,7 +57,7 @@ CREATE TABLE `tgrupo` (
   `forced_email` tinyint(1) unsigned NOT NULL DEFAULT 1,
   `email` varchar(128) default '',
   `enforce_soft_limit` int(2) unsigned NOT NULL default 0,
-  `id_inventory_default` mediumint(8) unsigned default NULL ,
+  `id_inventory_default` bigint(20) unsigned NOT NULL,
   `autocreate_user` int(5) unsigned NOT NULL default 0,
   `grant_access` int(5) unsigned NOT NULL default 0,
   `send_welcome` int(5) unsigned NOT NULL default 0,

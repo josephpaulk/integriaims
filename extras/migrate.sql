@@ -379,3 +379,5 @@ CREATE TABLE `tinventory_acl` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `ttask` DROP `id_group`;
+
+ALTER TABLE `tgrupo` ADD `id_inventory_default` bigint(20) unsigned NOT NULL;

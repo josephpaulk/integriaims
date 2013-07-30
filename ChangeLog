@@ -1,5 +1,12 @@
 2013-07-30  Dario Rodriguez <dario@artica.es>
 
+	* integria_db.sql: Change type to tinventory_default 
+	to match id of tinventory.
+	* extras/migrate.sql: Improved to add tinventory_default
+	to tgrupo which was missed.
+		
+2013-07-30  Dario Rodriguez <dario@artica.es>
+
 	* integria_db.sql: Change size for cookie string in 
 	tsession_php table.
 	* extras/migrate.sql: Fixed several bugs in migrate 
