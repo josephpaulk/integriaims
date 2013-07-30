@@ -85,7 +85,6 @@ $end = date("Y-m-d");
 $start = date("Y-m-d");
 $completion = 0;
 $priority = 1;
-$id_group = 0;
 $result_output = "";
 $parent = 0;
 $count_hours = 1;
@@ -111,15 +110,14 @@ if ($operation == "insert") {
 		$hours = (int) get_parameter ('hours');
 		$periodicity = (string) get_parameter ('periodicity', 'none');
 		$estimated_cost = (int) get_parameter ('estimated_cost');
-		$id_group = (int) get_parameter ('group', 1);
 		$count_hours = (int) get_parameter("count_hours");
 	
 		$sql = sprintf ('INSERT INTO ttask (id_project, name, description, priority,
-			completion, start, end, id_parent_task, id_group, hours, estimated_cost,
+			completion, start, end, id_parent_task, hours, estimated_cost,
 			periodicity, count_hours)
-			VALUES (%d, "%s", "%s", %d, %d, "%s", "%s", %d, %d, %d, %f, "%s", %d)',
+			VALUES (%d, "%s", "%s", %d, %d, "%s", "%s", %d, %d, %f, "%s", %d)',
 			$id_project, $name, $description, $priority, $completion, $start, $end,
-			$parent, $id_group, $hours, $estimated_cost, $periodicity, $count_hours);
+			$parent, $hours, $estimated_cost, $periodicity, $count_hours);
 		$id_task = process_sql ($sql, 'insert_id');
 		if ($id_task !== false) {
 			$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
@@ -170,7 +168,6 @@ if ($operation == "update") {
 	$hours = (int) get_parameter ('hours');
 	$periodicity = (string) get_parameter ('periodicity', 'none');
 	$estimated_cost = (int) get_parameter ('estimated_cost');
-	$id_group = (int) get_parameter ('group', 1);
 	$start = get_parameter ('start_date', date ("Y-m-d"));
 	$end = get_parameter ('end_date', date ("Y-m-d"));
 	$count_hours = get_parameter("count_hours");
@@ -179,11 +176,11 @@ if ($operation == "update") {
 			priority = %d, completion = %d,
 			start = "%s", end = "%s", hours = %d,
 			periodicity = "%s", estimated_cost = "%f",
-			id_parent_task = %d, id_group = %d, count_hours = %d
+			id_parent_task = %d, count_hours = %d
 			WHERE id = %d',
 			$name, $description, $priority, $completion, $start, $end,
-			$hours, $periodicity, $estimated_cost, $parent, $id_group,
-			$count_hours, $id_task);
+			$hours, $periodicity, $estimated_cost, $parent, $count_hours,
+			$id_task);
 	
 	if ($id_task != $parent) {
 		$result = process_sql ($sql);
@@ -222,7 +219,6 @@ if ($operation == "view") {
 	$estimated_cost = $task['estimated_cost'];
 	$hours = $task['hours'];
 	$parent = $task['id_parent_task'];
-	$id_group = $task['id_group'];
 	$periodicity = $task['periodicity'];
 	$count_hours = $task['count_hours'];
 		
@@ -263,7 +259,7 @@ $table->data = array ();
 $table->data[0][0] = print_input_text ('name', $name, '', 50, 240, true, __('Name'));
 
 if ($id_task != -1) {
-	$table->rowspan[0][2] = 5;
+	$table->rowspan[0][2] = 4;
 
 	$image = graph_workunit_task (200, 170, $id_task);
 
@@ -275,8 +271,6 @@ if ($id_task != -1) {
 $table->data[1][0] = combo_task_user_manager ($config['id_user'], $parent, true, __('Parent'), 'parent', __('None'), false, $id_project, $id_task);
 $table->data[1][1] = print_select (get_priorities (), 'priority', $priority,
 	'', '', '', true, false, false, __('Priority'));
-
-$table->data[2][0] = combo_groups_visible_for_me ($config['id_user'], 'group', 0, 'TM', $id_group, true);
 
 $table->data[3][0] = print_input_text ('start_date', $start, '', 15, 15, true, __('Start'));
 $table->data[3][1] = print_input_text ('end_date', $end, '', 15, 15, true, __('End'));

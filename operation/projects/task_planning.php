@@ -179,15 +179,13 @@ if ($create) {
 			}
 		}
 		
-		$id_group = (int) get_parameter ('group2', 1);
-		
 		$data_array = preg_split ("/\n/", $tasklist);
 		foreach ($data_array as $data_item){
 			$data = trim($data_item);
 			if ($data != "") {
-				$sql = sprintf ('INSERT INTO ttask (id_project, name, id_group, id_parent_task, start, end) 
-								VALUES (%d, "%s", %d, %d, "%s", "%s")',
-								$id_project, $data, $id_group, $parent, $start, $end);
+				$sql = sprintf ('INSERT INTO ttask (id_project, name, id_parent_task, start, end) 
+								VALUES (%d, "%s", %d, "%s", "%s")',
+								$id_project, $data, $parent, $start, $end);
 
 				$id_task = process_sql ($sql, 'insert_id');
 				
@@ -342,9 +340,9 @@ echo "<strong>".__('Put taskname in each line')."</strong><br>";
 print_textarea ('tasklist', 5, 40);
 
 echo "<tr>";
-//Group selecting combo
-	echo "<td>";
-	combo_groups_visible_for_me ($config['id_user'], 'group2', 0, 'TW');
+	// User assigned by default
+	echo "<td>"; 
+	print_select ($users, "dueno", $config['id_user'], '', '', 0, false, 0, false, __("Owner"));
 	echo "</td>";
 
 	//Task parent combo
@@ -353,7 +351,7 @@ echo "<tr>";
 	echo "</td>";
 
 echo "<tr>";
-//Start date
+	//Start date
 	echo "<td>";
 	$start = date ("Y-m-d");
 	print_input_text_extended ("start_date2", $start, "start_date", '', 7, 15, 0, '', "", false, false, __('Start date'));
@@ -365,16 +363,9 @@ echo "<tr>";
 	print_input_text_extended ("end_date2", $end, "end_date", '', 7, 15, 0, '', "", false, false, __('End date'));
 	echo "</td>";
 
-echo "<tr>";
-// User assigned by default
-	echo "<td>"; 
-	print_select ($users, "dueno", $config['id_user'], '', '', 0, false, 0, false, __("Owner"));
-	echo "</td>";
-
-
 echo "<tr><td colspan=4 align=right>";	
 	echo "<br>";
-//Create button
+	//Create button
 	print_submit_button (__('Create'), 'create', false, 'class="sub create"');
 
 echo "</table>";
@@ -397,11 +388,6 @@ echo "</div>";
 //~ 
 	//~ echo "<td>";
 	//~ print_select ($users, "owner", $config['id_user'], '', '', 0, false, 0, false, __("Owner"));
-	//~ echo "</td>";
-//~ 
-	//~ //Group selecting combo
-	//~ echo "<td>";
-	//~ combo_groups_visible_for_me ($config['id_user'], 'group', 0, 'TW');
 	//~ echo "</td>";
 //~ 
 	//~ echo "<tr>";

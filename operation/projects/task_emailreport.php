@@ -23,7 +23,6 @@ $id_project = get_parameter ('id_project');
 $id_task = get_parameter ('id_task', -1);
 $project_manager = get_db_value ('id_owner', 'tproject', 'id', $id_project);
 $operation = (string) get_parameter ('operation');
-$id_group = get_db_value ('id_group', 'ttask', 'id', $id_task);
 $title = get_parameter ("title", "");
 $description = get_parameter ("description", "");
 

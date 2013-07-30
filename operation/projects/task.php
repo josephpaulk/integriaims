@@ -500,43 +500,36 @@ if ($operation == 'move') {
 
 // MAIN LIST OF TASKS
 
-$search_id_group = (int) get_parameter ('search_id_group');
 $search_text = (string) get_parameter ('search_text');
 
 echo '<h2>'.$project['name'].' &raquo; '.__('Task management');
 
 if (!$clean_output) {
-	echo "&nbsp;&nbsp;<a title='"._("Report")."'  href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project&search_id_group=$search_id_group&search_text=$search_text&clean_output=1'><img src='images/html.png'></a>";
+	echo "&nbsp;&nbsp;<a title='"._("Report")."'  href='index.php?sec=projects&sec2=operation/projects/task&id_project=$id_project&search_text=$search_text&clean_output=1'><img src='images/html.png'></a>";
 }
 
 echo '</h2><br>';
 
-$where_clause = ' 1=1 ';
-if ($search_text != "")
-	$where_clause .= sprintf (' AND name LIKE "%%%s%%" OR description LIKE "%%%s%%"',
-		$search_text, $search_text);
-
-if ($search_id_group != 0)
-	$where_clause .= sprintf (' AND id_group = %d', $search_id_group);
-
-
-$table->width = '800px';
-$table->class = 'search-table';
-$table->style = array ();
-$table->style[0] = 'font-weight: bold;';
-$table->style[2] = 'font-weight: bold;';
-$table->data = array ();
-$table->data[0][0] = __('Search');
-$table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
-$table->data[0][2] = __('Group');
-$table->data[0][3] = print_select (get_user_groups (),
-	'search_id_group', $search_id_group, '', __('Any'), '0', true);
-$table->data[0][4] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-
-echo '<form method="post">';
-if ($clean_output == 0)
-    print_table ($table);
-echo '</form>';
+// DON'T DELETE THIS YET - TEMPORARILY COMMENTED
+//~ $where_clause = ' 1=1 ';
+//~ if ($search_text != "")
+	//~ $where_clause .= sprintf (' AND name LIKE "%%%s%%" OR description LIKE "%%%s%%"',
+		//~ $search_text, $search_text);
+//~ 
+//~ $table->width = '400px';
+//~ $table->class = 'search-table';
+//~ $table->style = array ();
+//~ $table->style[0] = 'font-weight: bold;';
+//~ $table->style[2] = 'font-weight: bold;';
+//~ $table->data = array ();
+//~ $table->data[0][0] = __('Search');
+//~ $table->data[0][1] = print_input_text ("search_text", $search_text, "", 25, 100, true);
+//~ $table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+//~ 
+//~ echo '<form method="post">';
+//~ if ($clean_output == 0)
+    //~ print_table ($table);
+//~ echo '</form>';
 
 if ($clean_output == 1) {
 	
@@ -674,7 +667,6 @@ function show_task_row ($table, $id_project, $task, $level) {
 function show_task_tree (&$table, $id_project, $level, $id_parent_task, $where_clause) {
 	global $config;
 	
-	// Simple query, needs to implement group control and ACL checking
 	$sql = sprintf ('SELECT * FROM ttask
 		WHERE %s
 		AND id_project = %d

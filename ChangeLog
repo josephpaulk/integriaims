@@ -1,5 +1,21 @@
 2013-07-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* integria_db.sql
+	  integria_demo.sql
+	  extras/migrate.sql: Deleted the column 'id_grupo'
+	  from the "ttask" table.
+
+	* operation/projects/task.php
+	  operation/projects/task_detail.php
+	  operation/projects/task_emailreport.php
+	  operation/projects/task_planning.php: Deleted
+	  traces of the old "ttask" column 'id_grupo'.
+	  
+	* operation/projects/task.php: Commented some code
+	temporarily.
+
+2013-07-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* operation/projects/project.php: Fixed a bug on
 	group filtering.
 	

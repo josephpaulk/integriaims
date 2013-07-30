@@ -361,3 +361,5 @@ ALTER TABLE `tagenda` DROP `content`;
 /* 24/07/2013 */
 ALTER TABLE `tinventory` ADD COLUMN `last_update` date NOT NULL default '0000-00-00';
 
+/* 30/07/2013 */
+ALTER TABLE `ttask` DROP `id_group`;

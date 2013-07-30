@@ -105,7 +105,6 @@ CREATE TABLE `ttask` (
   `end` date NOT NULL default '0000-00-00',
   `hours` int unsigned NOT NULL DEFAULT 0,
   `estimated_cost` float (9,2) unsigned NOT NULL DEFAULT 0.0,
-  `id_group` int(10) NOT NULL default '0',
   `periodicity` enum ('none', 'weekly', 'monthly', 'year', '21days', '10days', '15days', '60days', '90days', '120days', '180days') default 'none',
   `count_hours` TINYINT (1) DEFAULT '1',
   PRIMARY KEY  (`id`),
