@@ -23,6 +23,8 @@ include_once ("include/functions_graph.php");
 include_once ("include/functions_tasks.php");
 include_once ("include/functions_projects.php");
 
+
+
 $graph_ttl = 1;
 
 if ($pdf_output) {
@@ -36,6 +38,14 @@ if (defined ('AJAX')) {
 	$print_subtree = get_parameter('print_subtree', 0);
 	
 	$id_project = get_parameter ('id_project');
+	
+	// ACL
+	$project_access = get_project_access ($config["id_user"], $id_project);
+	if (! $project_access["read"]) {
+		// Doesn't have access to this page
+		return;
+	}
+	
 	$id_item = get_parameter ('id_item');
 	$branches_json = get_parameter('branches_json');
 	$branches = json_decode ($branches_json, true);
@@ -247,7 +257,7 @@ if (defined ('AJAX')) {
 			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
 			echo "<span style='margin-left: 5px; min-width: 380px; vertical-align:middle; display: inline-block;'>".$name."</span>";
 			echo "<span title='" . __('Progress') . "' style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$progress."</span>";
-			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
+			echo "<span style='margin-left: 15px; min-width: 70px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
 			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$people."</span>";
 			echo "<span style='margin-left: 15px; min-width: 200px; display: inline-block;'>".$time_used."</span>";
 			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".__('New').": ".$launch_icons."</span>";
@@ -446,37 +456,57 @@ if (defined ('AJAX')) {
 }
 
 
-$id_project = (int) get_parameter ('id_project');
+$id_project = (int) get_parameter ("id_project");
 
-if (! $id_project) {// Doesn't have access to this page
+// ACL
+if (! $id_project) {
+	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager without project");
-	include ("general/noaccess.php");
-	exit;
+	no_permission ();
+}
+$project_access = get_project_access ($config["id_user"], $id_project);
+if (! $project_access["read"]) {
+	// Doesn't have access to this page
+	audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task manager of unauthorized project");
+	no_permission ();
 }
 
 $project = get_db_row ('tproject', 'id', $id_project);
 
-if (! user_belong_project ($config['id_user'], $id_project)) {
-	audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
-	include ("general/noaccess.php");
-	exit;
-}
-
 $id_task = (int) get_parameter ('id');
 $operation = (string) get_parameter ('operation');
 
-if ($operation == 'delete') {
-	if (dame_admin ($config['id_user']) || project_manager_check ($id_project)) {
-		delete_task ($id_task);
-		echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
-		$operation = '';
-		project_tracking ($id_project, PROJECT_TASK_DELETED);
-	} else {
-		no_permission ();
-	}
-}
+// Not used now. Potential delete
+//~ if ($operation == 'delete') {
+	//~ 
+	//~ // ACL
+	//~ $task_access = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
+	//~ if (! $task_access["manage"]) {
+		//~ // Doesn't have access to this page
+		//~ audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a task without permission");
+		//~ no_permission ();
+	//~ }
+	//~ 
+	//~ if (dame_admin ($config['id_user']) || project_manager_check ($id_project)) {
+		//~ delete_task ($id_task);
+		//~ echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+		//~ $operation = '';
+		//~ project_tracking ($id_project, PROJECT_TASK_DELETED);
+	//~ } else {
+		//~ no_permission ();
+	//~ }
+//~ }
 
 if ($operation == 'move') {
+	
+	// ACL
+	$task_access = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
+	if (! $task_access["manage"]) {
+		// Doesn't have access to this page
+		audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to move a task without permission");
+		no_permission ();
+	}
+	
 	$target_project = get_parameter ("target_project");
 	$id_task = get_parameter ("id_task");
 	if ((dame_admin($config['id_user'])==1) OR (project_manager_check ($id_project) == 1)){
@@ -500,8 +530,6 @@ if ($operation == 'move') {
 
 // MAIN LIST OF TASKS
 
-$search_text = (string) get_parameter ('search_text');
-
 echo '<h2>'.$project['name'].' &raquo; '.__('Task management');
 
 if (!$clean_output) {
@@ -510,12 +538,15 @@ if (!$clean_output) {
 
 echo '</h2><br>';
 
+
+$search_text = (string) get_parameter ('search_text');
+
+$where_clause = ' 1=1 ';
+if ($search_text != "")
+	$where_clause .= sprintf (' AND name LIKE "%%%s%%" OR description LIKE "%%%s%%"',
+		$search_text, $search_text);
+
 // DON'T DELETE THIS YET - TEMPORARILY COMMENTED
-//~ $where_clause = ' 1=1 ';
-//~ if ($search_text != "")
-	//~ $where_clause .= sprintf (' AND name LIKE "%%%s%%" OR description LIKE "%%%s%%"',
-		//~ $search_text, $search_text);
-//~ 
 //~ $table->width = '400px';
 //~ $table->class = 'search-table';
 //~ $table->style = array ();

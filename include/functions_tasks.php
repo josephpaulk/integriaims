@@ -261,7 +261,7 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 		echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
 		echo "<span style='margin-left: 5px; min-width: 380px; vertical-align:middle; display: inline-block;'>".$name."</span>";
 		echo "<span title='" . __('Progress') . "' style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$progress."</span>";
-		echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
+		echo "<span style='margin-left: 15px; min-width: 70px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
 		echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$people."</span>";
 		echo "<span style='margin-left: 15px; min-width: 200px; display: inline-block;'>".$time_used."</span>";
 		echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".__('New').": ".$launch_icons."</span>";

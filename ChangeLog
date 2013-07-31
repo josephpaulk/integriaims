@@ -1,3 +1,11 @@
+2013-07-31  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions_tasks.php: Visual changes
+	on the task tree view.
+	
+	* operation/projects/task.php: Visual changes
+	on the task tree view. ACL improved. Fixed a bug.
+
 2013-07-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/functions_form.php: Deleted traces of
@@ -5,7 +13,7 @@
 	"combo_users_task" and "show_workunit_user".
 	
 	* operation/projects/task_detail.php: Fixed a
-	bug that appear when creating a task without
+	bug that appears when creating a task without
 	parent. Now the only users that can create a
 	task without parent are the project managers.
 	
