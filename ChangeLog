@@ -1,5 +1,28 @@
 2013-07-31  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* include/integria_cron.php: Changed a deprecated
+	function.
+	
+	* integria_dbdata.sql
+	  integria_demo.sql: Added the default values for
+	the new maintenance config tokens.
+	
+	* godmode/setup/setup_maintenance.php: New file.
+	Setup section where config the days to delete
+	some old data.
+	
+	* godmode/setup/incidents_setup.php
+	  godmode/setup/setup.php
+	  godmode/setup/setup_auth.php
+	  godmode/setup/setup_crm.php
+	  godmode/setup/setup_mail.php
+	  godmode/setup/setup_mailtemplates.php
+	  godmode/setup/setup_pandora.php
+	  godmode/setup/setup_visual.php: Added the tab
+	of the new maintenance setup section.
+
+2013-07-31  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* include/functions_tasks.php: Visual changes
 	on the task tree view.
 	

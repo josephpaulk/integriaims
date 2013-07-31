@@ -648,7 +648,7 @@ function run_mail_queue () {
 			$message->setBody($email['body'], 'text/plain', 'utf-8');
 
 			if ($email["attachment_list"] != ""){
-				$attachments = split ( ",",$email["attachment_list"]);
+				$attachments = explode ( ",",$email["attachment_list"]);
 				foreach ($attachments as $attachment)
 				        if (is_file($attachment))
 				                $message->attach(Swift_Attachment::fromPath($attachment));

@@ -37,7 +37,13 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('pass_expire', 0),
 ('first_login', 0),
 ('mins_fail_pass', 5),
-('number_attempts', 5);
+('number_attempts', 5),
+('max_days_events', 30),
+('max_days_incidents', 15),
+('max_days_wu', 365),
+('max_days_wo', 365),
+('max_days_audit', 15),
+('max_days_session', 7);
 
 -- Default password is 'integria'
 
