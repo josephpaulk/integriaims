@@ -1,5 +1,9 @@
 2013-08-01  Vanessa Gil <vanessa.gil@artica.es>
 
+	* include/functions_inventories.php: Removed sql errors.
+
+2013-08-01  Vanessa Gil <vanessa.gil@artica.es>
+
 	* include/ajax/license.php: Added file.
 
 2013-08-01  Vanessa Gil <vanessa.gil@artica.es>

@@ -742,10 +742,22 @@ function inventories_get_all_external_field ($external_table_name, $external_ref
 	
 	global $config;
 
+	if (empty($external_table_name)) {
+		return false;
+	}
+	
+	$sql_check = "SHOW TABLES LIKE '$external_table_name'";
+	$exists = process_sql($sql_check);
+	if (!$exists) {
+		return false;
+	}
+	
+	
 	$sql_ext = "SHOW COLUMNS FROM ".$external_table_name;
 	$external_data = get_db_all_rows_sql($sql_ext);
 				
 	$sql = "SELECT * FROM $external_table_name WHERE $external_reference_field=$data_id_external_table";
+
 	$fields_ext = get_db_row_sql($sql);
 
 	if ($fields_ext === false) {
@@ -944,7 +956,7 @@ function inventories_printTable($id_item, $type, $id_father) {
 						
 						if (($info['type'] == 'external') && ($value != false)) {
 							
-							$all_fields_ext = inventories_get_all_external_field ($info['external_table_name'], $info['external_reference_field'], $value[0]['data']);
+							$all_fields_ext = inventories_get_all_external_field ($info['external_table_name'], $info['external_reference_field'], $info['id']);
 
 							foreach ($all_fields_ext as $key=>$field) {
 								echo '<tr><td class="datos"><b>'.$field['label'].': </b></td>';
