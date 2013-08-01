@@ -340,13 +340,17 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 
 
 		$table->data[3][1] = print_select ($wo_status_values, 'progress', $progress, 0, '', -1, true, 0, false, __('Status') );
-
+		
+		if ($start_date == "0000-00-00 00:00:00") {
+			$start_date = '';
+		}
+		
 		if ($creator != $config["id_user"]){
 			$table->data[4][0] = print_label (__("Start date"), '', 'input', true);
 			$table->data[4][0] .= $start_date;
 			$table->data[4][0] .= print_input_hidden ("start_date", $start_date, true);
 		} else
-			$table->data[4][0] = print_input_text ('start__date', $start_date , '', 25, 25, true, __('Start date'));
+			$table->data[4][0] = print_input_text ('start_date', $start_date , '', 25, 25, true, __('Start date'));
 		
 		if ($end_date == "0000-00-00 00:00:00"){
 				$end_date = '';
@@ -694,7 +698,7 @@ if ($operation == "") {
 <script type="text/javascript" >
 
 // Datepicker
-add_ranged_datepicker ("#text-start__date", "#text-end_date", null);
+add_ranged_datepicker ("#text-start_date", "#text-end_date", null);
 
 // Form validation
 trim_element_on_submit('#text-search_text');

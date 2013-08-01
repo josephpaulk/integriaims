@@ -1,4 +1,12 @@
 2013-08-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/workorders/wo.php: Fixed a bug on
+	"start date", that makes impossible create or
+	update that workorder value. Now the "start date"
+	box appears as empty if the date is
+	"0000-00-00 00:00:00".
+
+2013-08-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/integria_cron.php: New functions:
 	"delete_old_sessions_data", "delete_old_wo_data",
