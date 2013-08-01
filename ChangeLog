@@ -1,5 +1,9 @@
 2013-08-01  Vanessa Gil <vanessa.gil@artica.es>
 
+	* include/ajax/license.php: Added file.
+
+2013-08-01  Vanessa Gil <vanessa.gil@artica.es>
+
 	* integria_db.sql
 	  integria_dbdata.sql
 	  extras/migrate.sql
