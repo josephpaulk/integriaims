@@ -61,25 +61,6 @@ function delete_tmp_files(){
                 closedir($dh);
         }
 }
-
-/**
- * This function delete tsesion and tevent data with more than XXX days
- * TODO: Define DELETE_DAYS on config
- */
-
-function delete_session_data () {
-    global $config;
-   
-    $DELETE_DAYS = 90;
-    $limit = strtotime ("now") - ($DELETE_DAYS * 86400);
-
-    $query_del2 = "DELETE FROM tsesion WHERE utimestamp < $limit ";
-	$resq2 =  process_sql ($query_del2);    
-
-    $limit2 = date ("Y/m/d H:i:s", strtotime ("now") - ($DELETE_DAYS * 86400));
-    $sql = "DELETE FROM tevent where timestamp < '$limit2'";
-    $res = process_sql ($sql);
-}
  
 /** 
  * Interface to Integria API functionality.
@@ -215,9 +196,14 @@ function run_daily_check () {
 	run_task_check ();
 	run_autowu();
     run_auto_incident_close();
-    delete_session_data();
 	synchronize_pandora_inventory();
 	delete_tmp_files();
+	delete_old_audit_data();
+    delete_old_event_data();
+	delete_old_incidents();
+	delete_old_wu_data();
+	delete_old_wo_data();
+	delete_old_sessions_data();
 }
 
 
@@ -794,17 +780,165 @@ function run_newsletter_queue () {
 	
 }
 
-function delete_incidents () {
-	
+/**
+ * This function deletes tsesion data with more than X days
+ */
+function delete_old_audit_data () {
+    global $config;
+   
+    $DELETE_DAYS = (int) $config["max_days_audit"];
+    
+    if ($DELETE_DAYS > 0) {
+		$limit = strtotime ("now") - ($DELETE_DAYS * 86400);
+		$sql = "DELETE FROM tsesion WHERE utimestamp < $limit";
+		process_sql ($sql);
+	}
+}
+
+/**
+ * This function deletes tevent data with more than X days
+ */
+function delete_old_event_data () {
+    global $config;
+   
+    $DELETE_DAYS = (int) $config["max_days_events"];
+    
+    if ($DELETE_DAYS > 0) {
+		$limit = date ("Y/m/d H:i:s", strtotime ("now") - ($DELETE_DAYS * 86400));
+		$sql = "DELETE FROM tevent WHERE timestamp < '$limit'";
+		process_sql ($sql);
+	}
+}
+
+/**
+ * This function deletes incidents data with more than X days and closed.
+ * Also deletes the data related to the deleted incidents.
+ */
+function delete_old_incidents () {
 	global $config;
 	
-	if ($config['months_to_delete_incidents'] != 0) {
+	//$config['months_to_delete_incidents'] DELETE FROM OTHER PLACES
+	$DELETE_DAYS = (int) $config["max_days_incidents"];
+	
+	if ($DELETE_DAYS > 0) {
+		$limit = date ("Y/m/d H:i:s", strtotime ("now") - $DELETE_DAYS * 86400);
+		
+		$sql_select = "SELECT id_incidencia
+					   FROM tincidencia
+					   WHERE cierre < '$limit'
+						   AND cierre > '0000-00-00 00:00:00'
+						   AND estado = 7";
+		
+		$new = true;
+		while ($incident = get_db_all_row_by_steps_sql($new, $result, $sql_select)) {
+			$new = false;
+			
+			// tincident_contact_reporters
+			$sql_delete = "DELETE FROM tincident_contact_reporters
+						   WHERE id_incident = ".$incident["id_incidencia"];
+			process_sql ($sql_delete);
+			
+			// tincident_field_data
+			$sql_delete = "DELETE FROM tincident_field_data
+						   WHERE id_incident = ".$incident["id_incidencia"];
+			process_sql ($sql_delete);
+			
+			// tincident_inventory
+			$sql_delete = "DELETE FROM tincident_inventory
+						   WHERE id_incident = ".$incident["id_incidencia"];
+			process_sql ($sql_delete);
+			
+			// tincident_sla_graph
+			$sql_delete = "DELETE FROM tincident_sla_graph
+						   WHERE id_incident = ".$incident["id_incidencia"];
+			process_sql ($sql_delete);
+			
+			// tincident_stats
+			$sql_delete = "DELETE FROM tincident_stats
+						   WHERE id_incident = ".$incident["id_incidencia"];
+			process_sql ($sql_delete);
+			
+			// tincident_track
+			$sql_delete = "DELETE FROM tincident_track
+						   WHERE id_incident = ".$incident["id_incidencia"];
+			process_sql ($sql_delete);
+			
+			// tworkunit
+			$sql_delete = "DELETE FROM tworkunit
+						   WHERE id = ANY(SELECT id_workunit
+										  FROM tworkunit_incident
+										  WHERE id_incident = ".$incident["id_incidencia"].")";
+			process_sql ($sql_delete);
+			
+			// tattachment
+			$sql_delete = "DELETE FROM tattachment
+						   WHERE id_incidencia = ".$incident["id_incidencia"];
+			process_sql ($sql_delete);
+			
+			// tincidencia
+			$sql_delete = "DELETE FROM tincidencia
+						   WHERE id_incidencia = ".$incident["id_incidencia"];
+			process_sql ($sql_delete);
+		}
+	}
+}
 
-		$limit = date ("Y/m/d H:i:s", (strtotime ("now")-($config['months_to_delete_incidents'] * 86400 * 30)));
-		
-		$sql_delete = "DELETE FROM tincidencia where inicio < '$limit'";
-		$result = process_sql ($sql_delete);
-		
+/**
+ * This function deletes tworkunit data with more than X days that
+ * belong to tasks that belong to disabled projects.
+ */
+function delete_old_wu_data () {
+    global $config;
+   
+    $DELETE_DAYS = (int) $config["max_days_wu"];
+    
+    if ($DELETE_DAYS > 0) {
+		$limit = date ("Y/m/d H:i:s", strtotime ("now") - ($DELETE_DAYS * 86400));
+		$sql = "DELETE FROM tworkunit
+				WHERE timestamp < '$limit'
+					AND timestamp > '0000-00-00 00:00:00'
+					AND id = ANY(SELECT id_workunit
+								 FROM tworkunit_task
+								 WHERE id_task = ANY(SELECT id
+													 FROM ttask
+													 WHERE id_project = ANY(SELECT id
+																			FROM tproject
+																			WHERE disabled = 1
+																				AND id > 0)))";
+		process_sql ($sql);
+	}
+}
+
+/**
+ * This function deletes ttodo data with more than X days and closed.
+ */
+function delete_old_wo_data () {
+    global $config;
+   
+    $DELETE_DAYS = (int) $config["max_days_wo"];
+    
+    if ($DELETE_DAYS > 0) {
+		$limit = date ("Y/m/d H:i:s", strtotime ("now") - ($DELETE_DAYS * 86400));
+		$sql = "DELETE FROM ttodo
+				WHERE last_update < '$limit'
+					AND last_update > '2000-01-01 00:00:00'
+					AND progress > 0";
+		process_sql ($sql);
+	}
+}
+
+/**
+ * This function deletes tsessions_php data with more than X days
+ */
+function delete_old_sessions_data () {
+    global $config;
+   
+    $DELETE_DAYS = (int) $config["max_days_session"];
+    
+    if ($DELETE_DAYS > 0) {
+		$limit = strtotime ("now") - ($DELETE_DAYS * 86400);
+		$sql = "DELETE FROM tsessions_php WHERE last_active < $limit";
+		process_sql ($sql);
 	}
 }
 
@@ -916,8 +1050,6 @@ foreach ($slas as $sla) {
 
 $temp_dir = $config["homedir"]."/attachment/tmp";
 delete_all_files_in_dir ($temp_dir);
-
-delete_incidents();
 
 ?>
 

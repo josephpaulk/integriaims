@@ -1,3 +1,32 @@
+2013-08-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/integria_cron.php: New functions:
+	"delete_old_sessions_data", "delete_old_wo_data",
+	"delete_old_wu_data", "delete_old_event_data" and
+	"delete_old_audit_data". Improved the function
+	"delete_old_incidents".
+	
+	* operation/projects/task.php
+	  include/functions_tasks.php: Now the task tree
+	only shows the name with grey background for the
+	tasks without read permission by the user.
+	
+	* godmode/setup/setup_maintenance.php: Now all the
+	parameters of this setup section have help files.
+	
+	* include/help/en/help_old_audit.php
+	  include/help/es/help_old_audit.php
+	  include/help/en/help_old_events.php
+	  include/help/es/help_old_events.php
+	  include/help/en/help_old_incidents.php
+	  include/help/es/help_old_incidents.php
+	  include/help/en/help_old_sessions.php
+	  include/help/es/help_old_sessions.php
+	  include/help/en/help_old_wo.php
+	  include/help/es/help_old_wo.php
+	  include/help/en/help_old_wu.php
+	  include/help/es/help_old_wu.php: Added help files.
+
 2013-08-01  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php: Removed sql errors.

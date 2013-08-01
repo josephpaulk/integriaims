@@ -73,19 +73,19 @@ $table->colspan = array ();
 $table->data = array ();
 
 $table->data[0][0] = print_input_text ("max_days_events", $config["max_days_events"], '', 4, 4, true, __('Days to delete events'));
-$table->data[0][0] .= integria_help ("", true);
+$table->data[0][0] .= integria_help ("old_events", true);
 $table->data[0][1] = print_input_text ("max_days_incidents", $config["max_days_incidents"], '', 4, 4, true, __('Days to delete  incidents'));
-$table->data[0][1] .= integria_help ("", true);
+$table->data[0][1] .= integria_help ("old_incidents", true);
 
 $table->data[1][0] = print_input_text ("max_days_wu", $config["max_days_wu"], '', 4, 4, true, __('Days to delete work units'));
-$table->data[1][0] .= integria_help ("", true);
+$table->data[1][0] .= integria_help ("old_wu", true);
 $table->data[1][1] = print_input_text ("max_days_wo", $config["max_days_wo"], '', 4, 4, true, __('Days to delete work orders'));
-$table->data[1][1] .= integria_help ("", true);
+$table->data[1][1] .= integria_help ("old_wo", true);
 
 $table->data[2][0] = print_input_text ("max_days_audit", $config["max_days_audit"], '', 4, 4, true, __('Days to delete audit data'));
-$table->data[2][0] .= integria_help ("", true);
-$table->data[2][1] = print_input_text ("max_days_session", $config["max_days_session"], '', 4, 4, true, __('Days to delete session data'));
-$table->data[2][1] .= integria_help ("", true);
+$table->data[2][0] .= integria_help ("old_audit", true);
+$table->data[2][1] = print_input_text ("max_days_session", $config["max_days_session"], '', 4, 4, true, __('Days to delete sessions'));
+$table->data[2][1] .= integria_help ("old_sessions", true);
 
 echo '<form id="setup_maintenance" name="setup" method="post">';
 

@@ -175,97 +175,124 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			}
 		}
 		
-		// Background color
-		if ($task["completion"] < 40) {
-			$background_color = "background: #FFFFFF;";
-		} else if ($task["completion"] < 90) {
-			$background_color = "background: #FFE599;";
-		} else if ($task["completion"] < 100) {
-			$background_color = "background: #A4BCFA;";
-		} else if ($task["completion"] == 100) {
-			$background_color = "background: #B6D7A8;";
-		} else {
-			$background_color = "";
-		}
-		
-		// Priority
-		$priority = print_priority_flag_image ($task['priority'], true);
-		
-		// Task name
-		$name = safe_output($task['name']);
-		
-		if (strlen($name) > 60) {
-			$name = substr ($name, 0, 60) . "...";
-			$name = "<a title='".safe_output($task['name'])."' href='index.php?sec=projects&sec2=operation/projects/task_detail
-				&id_project=".$task['id_project']."&id_task=".$task['id']."&operation=view'>".$name."</a>";
-		} else {
-			$name = "<a href='index.php?sec=projects&sec2=operation/projects/task_detail
-				&id_project=".$task['id_project']."&id_task=".$task['id']."&operation=view'>".$name."</a>";
-		}
-		if ($task["completion"] == 100) {
-			$name = "<s>$name</s>";
-		}
-		
-		// Completion
-		$progress = progress_bar($task['completion'], 70, 20, $graph_ttl);
-		
-		// Estimation
-		$imghelp = "Estimated hours = ".$task['hours'];
-		$taskhours = get_task_workunit_hours ($task['id']);
-		$imghelp .= ", Worked hours = $taskhours";
-		$a = round ($task["hours"]);
-		$b = round ($taskhours);
-		$mode = 2;
-		
-		if ($a > 0)
-			$estimation = histogram_2values($a, $b, __("Planned"), __("Real"), $mode, 60, 18, $imghelp, $graph_ttl);
-		else
-			$estimation = "--";
-		
-		// Time used on all child tasks + this task
-		$recursive_timeused = task_duration_recursive ($task["id"]);
-		
-		$time_used = _('Time used') . ": ";
-		
-		if ($taskhours == 0)
-			$time_used .= "--";
-		elseif ($taskhours == $recursive_timeused)
-			$time_used .= $taskhours;
-		else
-			$time_used .= $taskhours . "<span title='Subtasks WU/HR'> (".$recursive_timeused. ")</span>";
+		$task_access = get_project_access ($config["id_user"], $id_project, $task["id"], false, true);
+		if ($task_access["read"]) {
 			
-		$wu_incidents = get_incident_task_workunit_hours ($task["id"]);
-	
-		if ($wu_incidents > 0)
-		$time_used .= "<span title='".__("Time spent in related incidents")."'> ($wu_incidents)</span>";
+			// Background color
+			if ($task["completion"] < 40) {
+				$background_color = "background: #FFFFFF;";
+			} else if ($task["completion"] < 90) {
+				$background_color = "background: #FFE599;";
+			} else if ($task["completion"] < 100) {
+				$background_color = "background: #A4BCFA;";
+			} else if ($task["completion"] == 100) {
+				$background_color = "background: #B6D7A8;";
+			} else {
+				$background_color = "";
+			}
+			
+			// Priority
+			$priority = print_priority_flag_image ($task['priority'], true);
+			
+			// Task name
+			$name = safe_output($task['name']);
+			
+			if (strlen($name) > 60) {
+				$name = substr ($name, 0, 60) . "...";
+				$name = "<a title='".safe_output($task['name'])."' href='index.php?sec=projects&sec2=operation/projects/task_detail
+					&id_project=".$task['id_project']."&id_task=".$task['id']."&operation=view'>".$name."</a>";
+			} else {
+				$name = "<a href='index.php?sec=projects&sec2=operation/projects/task_detail
+					&id_project=".$task['id_project']."&id_task=".$task['id']."&operation=view'>".$name."</a>";
+			}
+			if ($task["completion"] == 100) {
+				$name = "<s>$name</s>";
+			}
+			
+			// Completion
+			$progress = progress_bar($task['completion'], 70, 20, $graph_ttl);
+			
+			// Estimation
+			$imghelp = "Estimated hours = ".$task['hours'];
+			$taskhours = get_task_workunit_hours ($task['id']);
+			$imghelp .= ", Worked hours = $taskhours";
+			$a = round ($task["hours"]);
+			$b = round ($taskhours);
+			$mode = 2;
+			
+			if ($a > 0)
+				$estimation = histogram_2values($a, $b, __("Planned"), __("Real"), $mode, 60, 18, $imghelp, $graph_ttl);
+			else
+				$estimation = "--";
+			
+			// Time used on all child tasks + this task
+			$recursive_timeused = task_duration_recursive ($task["id"]);
+			
+			$time_used = _('Time used') . ": ";
+			
+			if ($taskhours == 0)
+				$time_used .= "--";
+			elseif ($taskhours == $recursive_timeused)
+				$time_used .= $taskhours;
+			else
+				$time_used .= $taskhours . "<span title='Subtasks WU/HR'> (".$recursive_timeused. ")</span>";
+				
+			$wu_incidents = get_incident_task_workunit_hours ($task["id"]);
 		
-		// People
-		$people = combo_users_task ($task['id'], 1, true);
-		$people .= ' ';
-		$people .= get_db_value ('COUNT(DISTINCT(id_user))', 'trole_people_task', 'id_task', $task['id']);
+			if ($wu_incidents > 0)
+			$time_used .= "<span title='".__("Time spent in related incidents")."'> ($wu_incidents)</span>";
+			
+			// People
+			$people = combo_users_task ($task['id'], 1, true);
+			$people .= ' ';
+			$people .= get_db_value ('COUNT(DISTINCT(id_user))', 'trole_people_task', 'id_task', $task['id']);
+			
+			// Branches
+			$branches_json = json_encode ($branches);
+			
+			// New WO / Incident
+			$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work order')));
+			$incident_icon = print_image ("images/incidents.png", true, array ("style" => 'vertical-align: middle; height:19px; width:20px;', "id" => "incident_icon", "title" => __('Incident')));;
+			$wo_icon = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=create&id_task=".$task['id']."'>$wo_icon</a>";
+			$incident_icon = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_task=".$task['id']."'>$incident_icon</a>";
+			$launch_icons = $wo_icon . "&nbsp;" . $incident_icon;
+			
+			echo "<a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
+			echo $img;
+			echo "</a>";
+			echo "<span style='".$background_color." padding-top: 5px; padding-bottom: 5px; padding-right: 4px;'>";
+			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
+			echo "<span style='margin-left: 5px; min-width: 380px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span title='" . __('Progress') . "' style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$progress."</span>";
+			echo "<span style='margin-left: 15px; min-width: 70px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
+			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$people."</span>";
+			echo "<span style='margin-left: 15px; min-width: 200px; display: inline-block;'>".$time_used."</span>";
+			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".__('New').": ".$launch_icons."</span>";
+			echo "</span>";
+		} else {
+			
+			// Task name
+			$name = safe_output($task['name']);
+			
+			if (strlen($name) > 60) {
+				$name = substr ($name, 0, 60) . "...";
+				$name = "<div title='".safe_output($task['name'])."'>".$name."</a>";
+			}
+			if ($task["completion"] == 100) {
+				$name = "<s>$name</s>";
+			}
+			
+			// Branches
+			$branches_json = json_encode ($branches);
+			
+			echo "<a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
+			echo $img;
+			echo "</a>";
+			echo "<span style='background: #D8D8D8; padding-top: 5px; padding-bottom: 5px; padding-right: 4px;'>";
+			echo "<span style='margin-left: 5px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "</span>";
+		}
 		
-		// Branches
-		$branches_json = json_encode ($branches);
-		
-		// New WO / Incident
-		$wo_icon = print_image ("images/paste_plain.png", true, array ("style" => 'vertical-align: middle;', "id" => "wo_icon", "title" => __('Work order')));
-		$incident_icon = print_image ("images/incidents.png", true, array ("style" => 'vertical-align: middle; height:19px; width:20px;', "id" => "incident_icon", "title" => __('Incident')));;
-		$wo_icon = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=create&id_task=".$task['id']."'>$wo_icon</a>";
-		$incident_icon = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_detail&id_task=".$task['id']."'>$incident_icon</a>";
-		$launch_icons = $wo_icon . "&nbsp;" . $incident_icon;
-		
-		echo "<a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
-		echo $img;
-		echo "</a>";
-		echo "<span style='".$background_color." padding-top: 5px; padding-bottom: 5px; padding-right: 4px;'>";
-		echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
-		echo "<span style='margin-left: 5px; min-width: 380px; vertical-align:middle; display: inline-block;'>".$name."</span>";
-		echo "<span title='" . __('Progress') . "' style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$progress."</span>";
-		echo "<span style='margin-left: 15px; min-width: 70px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
-		echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$people."</span>";
-		echo "<span style='margin-left: 15px; min-width: 200px; display: inline-block;'>".$time_used."</span>";
-		echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".__('New').": ".$launch_icons."</span>";
-		echo "</span>";
 		echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view tree_div_".$task['id']."' id='tree_div".$task['id']."_task_".$task['id']."'></div>";
 		echo "</li>";
 	}
