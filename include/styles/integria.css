@@ -2184,3 +2184,15 @@ input.company_search {
 	background-repeat: no-repeat;
 	background-position: 97% 50%;
 }
+
+div#error_login {
+	#margin: 0 auto;
+	#margin-top: -10px; 
+	text-align: center;
+	margin-top: 5px;
+	margin-left: 5px;
+	width: 80%;
+	float: right;
+	text-align: left;
+	top: 100px;
+}

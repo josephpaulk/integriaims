@@ -160,6 +160,18 @@ if ($update) {
 		update_config_token ("mins_fail_pass", $config["mins_fail_pass"]);
 		update_config_token ("number_attempts", $config["number_attempts"]);
 	}
+	
+	# Update of Integria license 
+	$update_manager_installed = get_db_value('value', 'tconfig', 'token', 'update_manager_installed');
+	
+	if ($update_manager_installed == 1) {
+		$license_info_key = get_parameter('license_info_key', '');
+		if (!empty($license_info_key)) {
+			$sql_update = "UPDATE tupdate_settings SET `value`='$license_info_key'
+					WHERE `key`='customer_key'";
+			$update_manage_settings_result = process_sql($sql_update);
+		}
+	}
     
 }
 // Render SYSTEM language code, not current language.
@@ -281,7 +293,15 @@ $table->data[15][1] = print_input_text ("lead_warning_time", $config["lead_warni
 $table->data[16][0] = print_input_text ("max_pending_mail", $config["max_pending_mail"], '',
 	10, 255, true, __('Max pending mail'));
 $table->data[16][0] .= print_help_tip (__("Maximum number of queued emails. When this number is exceeded, an alert is activated"), true);
-	
+
+$table->data[16][1] = __('License information');
+$license_info = get_db_value ('value', 'tupdate_settings', '`key`', 'customer_key');
+if ($license_info === false)
+	$license_info = '';
+$table->data[16][1] = print_input_text ('license_info_key', $license_info, '', 40, 255, true, __('License key'));
+$table->data[16][1] .= '&nbsp;<a id="dialog_license_info" title="'.__("License Info").'" href="javascript: show_license_info()">'.print_image('images/lock.png', true, array('class' => 'bot', 'title' => __('License info'))).'</a>';
+$table->data[16][1] .= '<div id="dialog_show_license" style="display:none"></div>';	
+
 echo "<form name='setup' method='post'>";
 
 print_table ($table);
@@ -292,6 +312,8 @@ print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"');
 echo '</div>';
 echo '</form>';
 ?>
+
+<script type="text/javascript" src="include/js/integria.js"></script>
 
 <script type="text/javascript">
 $(document).ready (function () {

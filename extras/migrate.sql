@@ -381,3 +381,9 @@ CREATE TABLE `tinventory_acl` (
 ALTER TABLE `ttask` DROP `id_group`;
 
 ALTER TABLE `tgrupo` ADD `id_inventory_default` bigint(20) unsigned NOT NULL;
+
+/*31/07/2013 */
+CREATE TABLE IF NOT EXISTS `tupdate_settings` ( 
+	`key` varchar(255) default '', 
+	`value` varchar(255) default '', PRIMARY KEY (`key`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

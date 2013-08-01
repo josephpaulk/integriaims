@@ -224,3 +224,58 @@ function bindAutocomplete (idTag, idUser, idProject, onChange) {
 		change: onChange
 	});
 }
+
+// Show the modal window of license info
+function show_license_info() {
+
+	$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/license&get_license_info=1",
+		dataType: "html",
+		success: function(data){	
+			$("#dialog_show_license").html (data);
+			$("#dialog_show_license").show ();
+
+			$("#dialog_show_license").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 500,
+					height: 350
+				});
+			$("#dialog_show_license").dialog('open');
+			
+		}
+	});
+}
+
+$(document).ready (function () {
+	
+
+	if ($('#license_error_msg_dialog').length) {
+
+		$( "#license_error_msg_dialog" ).dialog({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					height: 290,
+					width: 800,
+					overlay: {
+								opacity: 0.5,
+								background: "black"
+							}
+		});
+		
+		$("#submit-hide-license-error-msg").click (function () {
+			$("#license_error_msg_dialog" ).dialog('close')
+		});
+	
+	}
+	
+});
+

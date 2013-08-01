@@ -1,3 +1,18 @@
+2013-08-01  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  integria_dbdata.sql
+	  extras/migrate.sql
+	  godmode/setup/setup.php
+	  include/functions_db.mysql.php
+	  include/js/integria.js
+	  include/styles/integria.css: Added keygen.
+	
+	* images/license_key.png
+	  include/js/jquery.jquery-ui-1.1.0.custom.js
+	  include/styles/jquery-ui-1.10.0.custom.css: Added files.
+
+
 2013-07-31  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* include/integria_cron.php: Changed a deprecated

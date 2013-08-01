@@ -1067,3 +1067,8 @@ CREATE TABLE tsessions_php (
 	`data` TEXT,
 	PRIMARY KEY (`id_session`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `tupdate_settings` ( 
+	`key` varchar(255) default '', 
+	`value` varchar(255) default '', PRIMARY KEY (`key`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

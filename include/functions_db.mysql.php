@@ -825,5 +825,421 @@ function get_db_all_row_by_steps_sql($new = true, &$result, $sql = null) {
 	return mysql_fetch_assoc($result);
 }
 
+/**
+ * Get the first value of the first row of a table result from query.
+ *
+ * @param string SQL select statement to execute.
+ *
+ * @return the first value of the first row of a table result from query.
+ *
+ */
+function get_db_value_sql($sql, $dbconnection = false) {
+	$sql .= " LIMIT 1";
+	$result = get_db_all_rows_sql ($sql, false, true, $dbconnection);
+	
+	if($result === false)
+		return false;
+	
+	foreach ($result[0] as $f)
+		return $f;
+}
+
+/**
+ * Formats an array of values into a SQL where clause string.
+ *
+ * This function is useful to generate a WHERE clause for a SQL sentence from
+ * a list of values. Example code:
+ <code>
+ $values = array ();
+ $values['name'] = "Name";
+ $values['description'] = "Long description";
+ $values['limit'] = $config['block_size']; // Assume it's 20
+ $sql = 'SELECT * FROM table WHERE '.db_format_array_where_clause_sql ($values);
+ echo $sql;
+ </code>
+ * Will return:
+ * <code>
+ * SELECT * FROM table WHERE `name` = "Name" AND `description` = "Long description" LIMIT 20
+ * </code>
+ *
+ * @param array Values to be formatted in an array indexed by the field name.
+ * There are special parameters such as 'limit' and 'offset' that will be used
+ * as ORDER, LIMIT and OFFSET clauses respectively. Since LIMIT and OFFSET are
+ * numerics, ORDER can receive a field name or a SQL function and a the ASC or
+ * DESC clause. Examples:
+ <code>
+ $values = array ();
+ $values['value'] = 10;
+ $sql = 'SELECT * FROM table WHERE '.db_format_array_where_clause_sql ($values);
+ // SELECT * FROM table WHERE VALUE = 10
+
+ $values = array ();
+ $values['value'] = 10;
+ $values['order'] = 'name DESC';
+ $sql = 'SELECT * FROM table WHERE '.db_format_array_where_clause_sql ($values);
+ // SELECT * FROM table WHERE VALUE = 10 ORDER BY name DESC
+
+ </code>
+ * @param string Join operator. AND by default.
+ * @param string A prefix to be added to the string. It's useful when limit and
+ * offset could be given to avoid this cases:
+ <code>
+ $values = array ();
+ $values['limit'] = 10;
+ $values['offset'] = 20;
+ $sql = 'SELECT * FROM table WHERE '.db_format_array_where_clause_sql ($values);
+ // Wrong SQL: SELECT * FROM table WHERE LIMIT 10 OFFSET 20
+
+ $values = array ();
+ $values['limit'] = 10;
+ $values['offset'] = 20;
+ $sql = 'SELECT * FROM table WHERE '.db_format_array_where_clause_sql ($values, 'AND', 'WHERE');
+ // Good SQL: SELECT * FROM table LIMIT 10 OFFSET 20
+
+ $values = array ();
+ $values['value'] = 5;
+ $values['limit'] = 10;
+ $values['offset'] = 20;
+ $sql = 'SELECT * FROM table WHERE '.db_format_array_where_clause_sql ($values, 'AND', 'WHERE');
+ // Good SQL: SELECT * FROM table WHERE value = 5 LIMIT 10 OFFSET 20
+ </code>
+ *
+ * @return string Values joined into an SQL string that can fits into the WHERE
+ * clause of an SQL sentence.
+ */
+function db_format_array_where_clause_sql ($values, $join = 'AND', $prefix = false) {
+	
+	$fields = array ();
+	
+	if (! is_array ($values)) {
+		return '';
+	}
+	
+	$query = '';
+	$limit = '';
+	$offset = '';
+	$order = '';
+	$group = '';
+	if (isset ($values['limit'])) {
+		$limit = sprintf (' LIMIT %d', $values['limit']);
+		unset ($values['limit']);
+	}
+	
+	if (isset ($values['offset'])) {
+		$offset = sprintf (' OFFSET %d', $values['offset']);
+		unset ($values['offset']);
+	}
+	
+	if (isset ($values['order'])) {
+		if (is_array($values['order'])) {
+			if (!isset($values['order']['order'])) {
+				$orderTexts = array();
+				foreach ($values['order'] as $orderItem) {
+					$orderTexts[] = $orderItem['field'] . ' ' . $orderItem['order'];
+				}
+				$order = ' ORDER BY ' . implode(', ', $orderTexts);
+			}
+			else {
+				$order = sprintf (' ORDER BY %s %s', $values['order']['field'], $values['order']['order']);
+			}
+		}
+		else {
+			$order = sprintf (' ORDER BY %s', $values['order']);
+		}
+		unset ($values['order']);
+	}
+	
+	if (isset ($values['group'])) {
+		$group = sprintf (' GROUP BY %s', $values['group']);
+		unset ($values['group']);
+	}
+	
+	$i = 1;
+	$max = count ($values);
+	foreach ($values as $field => $value) {
+		if (is_numeric ($field)) {
+			/* User provide the exact operation to do */
+			$query .= $value;
+			
+			if ($i < $max) {
+				$query .= ' '.$join.' ';
+			}
+			$i++;
+			continue;
+		}
+		
+		if ($field[0] != "`") {
+			//If the field is as <table>.<field>, don't scape.
+			if (strstr($field, '.') === false)
+				$field = "`".$field."`";
+		}
+		
+		if (is_null ($value)) {
+			$query .= sprintf ("%s IS NULL", $field);
+		}
+		elseif (is_int ($value) || is_bool ($value)) {
+			$query .= sprintf ("%s = %d", $field, $value);
+		}
+		else if (is_float ($value) || is_double ($value)) {
+			$query .= sprintf ("%s = %f", $field, $value);
+		}
+		elseif (is_array ($value)) {
+			$query .= sprintf ('%s IN ("%s")', $field, implode ('", "', $value));
+		}
+		else {
+			if (empty($value)) {
+				//Search empty string
+				$query .= sprintf ("%s = ''", $field);
+			}
+			else if ($value[0] == ">") {
+				$value = substr($value,1,strlen($value)-1);
+				$query .= sprintf ("%s > '%s'", $field, $value);
+			}
+			else if ($value[0] == "<") {
+				if ($value[1] == ">") {
+					$value = substr($value,2,strlen($value)-2);
+					$query .= sprintf ("%s <> '%s'", $field, $value);
+				}
+				else {
+					$value = substr($value,1,strlen($value)-1);
+					$query .= sprintf ("%s < '%s'", $field, $value);
+				}
+			}
+			else if ($value[0] == '%') {
+				$query .= sprintf ("%s LIKE '%s'", $field, $value);
+			}
+			else {
+				$query .= sprintf ("%s = '%s'", $field, $value);
+			}
+		}
+		
+		if ($i < $max) {
+			$query .= ' '.$join.' ';
+		}
+		$i++;
+	}
+	
+	return (! empty ($query) ? $prefix: '').$query.$group.$order.$limit.$offset;
+}
+
+
+/**
+ * Formats an array of values into a SQL string.
+ *
+ * This function is useful to generate an UPDATE SQL sentence from a list of
+ * values. Example code:
+ *
+ * <code>
+ * $values = array ();
+ * $values['name'] = "Name";
+ * $values['description'] = "Long description";
+ * $sql = 'UPDATE table SET '.format_array_to_update_sql ($values).' WHERE id=1';
+ * echo $sql;
+ * </code>
+ * Will return:
+ * <code>
+ * UPDATE table SET `name` = "Name", `description` = "Long description" WHERE id=1
+ * </code>
+ *
+ * @param array Values to be formatted in an array indexed by the field name.
+ *
+ * @return string Values joined into an SQL string that can fits into an UPDATE
+ * sentence.
+ */
+function db_format_array_to_update_sql ($values) {
+	$fields = array ();
+	
+	foreach ($values as $field => $value) {
+		if (is_numeric ($field)) {
+			array_push ($fields, $value);
+			continue;
+		}
+		else if ($field[0] == "`") {
+			$field = str_replace('`', '', $field);
+		}
+		
+		if ($value === NULL) {
+			$sql = sprintf ("`%s` = NULL", $field);
+		}
+		elseif (is_int ($value) || is_bool ($value)) {
+			$sql = sprintf ("`%s` = %d", $field, $value);
+		}
+		elseif (is_float ($value) || is_double ($value)) {
+			$sql = sprintf ("`%s` = %f", $field, $value);
+		}
+		else {
+			/* String */
+			if (isset ($value[0]) && $value[0] == '`')
+			/* Don't round with quotes if it references a field */
+			$sql = sprintf ("`%s` = %s", $field, $value);
+			else
+			$sql = sprintf ("`%s` = '%s'", $field, $value);
+		}
+		array_push ($fields, $sql);
+	}
+	
+	return implode (", ", $fields);
+}
+
+/**
+ * Updates a database record.
+ *
+ * All values should be cleaned before passing. Quoting isn't necessary.
+ * Examples:
+ *
+ * <code>
+ * db_process_sql_update ('table', array ('field' => 1), array ('id' => $id));
+ * db_process_sql_update ('table', array ('field' => 1), array ('id' => $id, 'name' => $name));
+ * db_process_sql_update ('table', array ('field' => 1), array ('id' => $id, 'name' => $name), 'OR');
+ * db_process_sql_update ('table', array ('field' => 2), 'id in (1, 2, 3) OR id > 10');
+ * </code>
+ *
+ * @param string Table to insert into
+ * @param array An associative array of values to update
+ * @param mixed An associative array of field and value matches. Will be joined
+ * with operator specified by $where_join. A custom string can also be provided.
+ * If nothing is provided, the update will affect all rows.
+ * @param string When a $where parameter is given, this will work as the glue
+ * between the fields. "AND" operator will be use by default. Other values might
+ * be "OR", "AND NOT", "XOR"
+ *
+ * @return mixed False in case of error or invalid values passed. Affected rows otherwise
+ */
+function db_process_sql_update($table, $values, $where = false, $where_join = 'AND') {
+	$query = sprintf ("UPDATE `%s` SET %s",
+		$table,
+		db_format_array_to_update_sql ($values));
+	
+	if ($where) {
+		if (is_string ($where)) {
+			// No clean, the caller should make sure all input is clean, this is a raw function
+			$query .= " WHERE " . $where;
+		}
+		else if (is_array ($where)) {
+			$query .= db_format_array_where_clause_sql ($where, $where_join, ' WHERE ');
+		}
+	}
+
+	return process_sql ($query);
+}
+
+/**
+ * Add a database query to the debug trace.
+ *
+ * This functions does nothing if the config['debug'] flag is not set. If a
+ * sentence was repeated, then the 'saved' counter is incremented.
+ *
+ * @param string SQL sentence.
+ * @param mixed Query result. On error, error string should be given.
+ * @param int Affected rows after running the query.
+ * @param mixed Extra parameter for future values.
+ */
+function db_add_database_debug_trace ($sql, $result = false, $affected = false, $extra = false) {
+	global $config;
+
+	if (! isset ($config['debug']))
+	return false;
+
+	if (! isset ($config['db_debug']))
+	$config['db_debug'] = array ();
+
+	if (isset ($config['db_debug'][$sql])) {
+		$config['db_debug'][$sql]['saved']++;
+		return;
+	}
+
+	$var = array ();
+	$var['sql'] = $sql;
+	$var['result'] = $result;
+	$var['affected'] = $affected;
+	$var['saved'] = 0;
+	$var['extra'] = $extra;
+
+	$config['db_debug'][$sql] = $var;
+}
+
+/**
+ * This function comes back with an array in case of SELECT
+ * in case of UPDATE, DELETE etc. with affected rows
+ * an empty array in case of SELECT without results
+ * Queries that return data will be cached so queries don't get repeated
+ *
+ * @param string SQL statement to execute
+ *
+ * @param string What type of info to return in case of INSERT/UPDATE.
+ *		'affected_rows' will return mysql_affected_rows (default value)
+ *		'insert_id' will return the ID of an autoincrement value
+ *		'info' will return the full (debug) information of a query
+ *
+ * @return mixed An array with the rows, columns and values in a multidimensional array or false in error
+ */
+function db_process_sql($sql, $rettype = "affected_rows", $dbconnection = '', $cache = true) {
+	global $config;
+	global $sql_cache;
+	
+	$retval = array();
+	
+	if ($sql == '')
+		return false;
+	
+	if ($cache && ! empty ($sql_cache[$sql])) {
+		$retval = $sql_cache[$sql];
+		$sql_cache['saved']++;
+		db_add_database_debug_trace ($sql);
+	}
+	else {
+		$start = microtime (true);
+		
+		if ($dbconnection == '') { 
+			$dbconnection = $config['dbconnection'];
+		}
+		
+		$result = mysql_query ($sql, $dbconnection);
+		
+		$time = microtime (true) - $start;
+		if ($result === false) {
+			$backtrace = debug_backtrace ();
+			$error = sprintf ('%s (\'%s\') in <strong>%s</strong> on line %d',
+				mysql_error (), $sql, $backtrace[0]['file'], $backtrace[0]['line']);
+			db_add_database_debug_trace ($sql, mysql_error ($dbconnection));
+			set_error_handler ('db_sql_error_handler');
+			trigger_error ($error);
+			restore_error_handler ();
+			return false;
+		}
+		elseif ($result === true) {
+			if ($rettype == "insert_id") {
+				$result = mysql_insert_id ($dbconnection);
+			}
+			elseif ($rettype == "info") {
+				$result = mysql_info ($dbconnection);
+			}
+			else {
+				$result = mysql_affected_rows ($dbconnection);
+			}
+			
+			db_add_database_debug_trace ($sql, $result, mysql_affected_rows ($dbconnection),
+				array ('time' => $time));
+			return $result;
+		}
+		else {
+			db_add_database_debug_trace ($sql, 0, mysql_affected_rows ($dbconnection), 
+				array ('time' => $time));
+			while ($row = mysql_fetch_assoc ($result)) {
+				array_push ($retval, $row);
+			}
+			
+			if ($cache === true)
+				$sql_cache[$sql] = $retval;
+			mysql_free_result ($result);
+		}
+	}
+	
+	if (! empty ($retval))
+		return $retval;
+	//Return false, check with === or !==
+	return false;
+}
+
 
 ?>
