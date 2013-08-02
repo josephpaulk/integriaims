@@ -1,3 +1,15 @@
+2013-08-02  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/expor_csv.php
+	  include/functions_crm.php
+	  operation/companies/company_detail.php
+	  operation/companies/company_role.php
+	  operation/contract/contract_detail.php
+	  operation/contact/contact_detail.php
+	  operation/invoices/invoices.php
+	  operation/leads/lead_detail.php
+	  operation/leads/template_manager.php: Fixed several bugs.
+
 2013-08-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/projects/task.php: Deleted unused code.

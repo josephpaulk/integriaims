@@ -21,10 +21,12 @@ function crm_get_companies_list ($sql_search, $date = false) {
 	if ($date) {
 		$sql = "SELECT tcompany.* FROM tcompany, tcompany_activity
 				WHERE tcompany.id = tcompany_activity.id_company $sql_search
+				GROUP BY tcompany.id
 				";
 	} else {
 		$sql = "SELECT tcompany.* FROM tcompany
 				WHERE 1=1 $sql_search
+				GROUP BY tcompany.id
 				";
 	}
 		
@@ -590,5 +592,25 @@ function crm_get_all_languages () {
 	}
 	
 	return $all_languages;
+}
+
+function crm_get_all_companies ($only_name = false) {
+	
+	$sql = "SELECT * FROM tcompany ORDER BY name";
+
+	$companies = get_db_all_rows_sql ($sql);
+	
+	if ($only_name) {
+		if ($companies === false) {
+			return false;
+		} else {
+			$all_companies = array();
+			foreach ($companies as $key=>$company) {
+				$all_companies[$company['id']] = $company['name'];
+			}
+		}
+		return $all_companies;
+	}
+	return $companies;
 }
 ?>

@@ -275,7 +275,7 @@ if ($operation_invoices == ""){
 	echo "</h3>";
 	
 	$table->id = 'cost_form';
-	$table->width = '60%';
+	$table->width = '98%';
 	$table->class = 'databox';
 	$table->colspan = array ();
 	$table->size = array ();

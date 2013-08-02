@@ -236,11 +236,8 @@ if ($id || $new_contact) {
 		$table->data[2][0] = print_input_text ("phone", $phone, "", 15, 60, true, __('Phone number'));
 		$table->data[2][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
 		$table->data[3][0] = print_input_text ('position', $position, '', 25, 50, true, __('Position'));
-		
-	
-		$sql = "SELECT * FROM tcompany ORDER BY name";
 
-		$companies = get_db_all_rows_sql ($sql);
+		$companies = crm_get_all_companies(true);
 
 		if ($read && $enterprise) {
 			$companies = crm_get_user_companies($config['id_user'], $companies);

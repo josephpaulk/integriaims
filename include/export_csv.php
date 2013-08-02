@@ -148,7 +148,7 @@ if ($export_csv_companies) {
 	} 
 	
 	$where_clause = get_parameter('where_clause');
-	
+	$date = get_parameter('date');	
 	
 	$filename = clean_output ('company_export').'-'.date ("YmdHi");
 
@@ -160,7 +160,7 @@ if ($export_csv_companies) {
 
 	$config['mysql_result_type'] = MYSQL_ASSOC;
 	
-	$rows = crm_get_companies_list(clean_output($where_clause));
+	$rows = crm_get_companies_list(clean_output($where_clause), $date);
 	
 	if ($read && $enterprise) {
 		$rows = crm_get_user_companies($config['id_user'], $rows);

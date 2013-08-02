@@ -120,11 +120,11 @@ if ($id || $new_role) {
 	
 	$where_clause = " WHERE 1=1 ";
 	if ($search_text != "") {
-		$where_clause = sprintf (' AND (name LIKE "%%%s%%"
+		$where_clause .= sprintf (' AND (name LIKE "%%%s%%"
 			OR description LIKE "%%%s%%")', $search_text, $search_text);
 	}
 
-	$table->width = '400px';
+	$table->width = '75%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
@@ -138,11 +138,12 @@ if ($id || $new_role) {
 	echo '</form>';
 	
 	$sql = "SELECT * FROM tcompany_role $where_clause ORDER BY name";
+
 	$roles = get_db_all_rows_sql ($sql);
 
 	if ($roles !== false) {
 
-		$table->width = "90%";
+		$table->width = "98%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();

@@ -178,7 +178,7 @@ if ($operation == "") {
 	if ($todos === false)
 		$todos = array ();
 
-	echo '<table class="listing" width="70%">';
+	echo '<table class="listing" width="98%">';
 	echo "<th>".__('Name');
 	echo "<th>".__('Language');
 	echo "<th>".__('Company');
@@ -208,7 +208,7 @@ if ($operation == "") {
 
 
     echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/template_manager">';
-	echo '<div class="button" style="width: 70%;">';
+	echo '<div class="button" style="width: 98%;">';
 	print_submit_button (__('Create'), 'crt', false, 'class="sub next"');
 	print_input_hidden ('operation', 'create');
 	echo '</form></div>';

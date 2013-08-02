@@ -228,9 +228,7 @@ if ($id | $new_contract) {
 		$table->data[2][0] = print_input_text ('date_begin', $date_begin, '', 15, 20, true, __('Begin date'));
 		$table->data[2][1] = print_input_text ('date_end', $date_end, '', 15, 20, true, __('End date'));
 
-		$sql = "SELECT * FROM tcompany ORDER BY name";
-
-		$companies = get_db_all_rows_sql ($sql);
+		$companies = crm_get_all_companies(true);
 
 		if ($read && $enterprise) {
 			$companies = crm_get_user_companies($config['id_user'], $companies);

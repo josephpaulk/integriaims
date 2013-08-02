@@ -593,19 +593,19 @@ if ($id || $new) {
 	// TODO: Implement ACL check !
 
 	$search_text = (string) get_parameter ('search_text');
-	$id_company = (int) get_parameter ('id_company');
-	$start_date = (string) get_parameter ('start_date');
-	$end_date = (string) get_parameter ('end_date');
-	$country = (string) get_parameter ('country');
-	$id_category = (int) get_parameter ('product');
-	$progress_major_than = (int) get_parameter ('progress_major_than');
-	$progress_minor_than = (int) get_parameter ('progress_minor_than');
-	$owner = (string) get_parameter ("owner");
-	$show_100 = (int) get_parameter ("show_100");
-	$id_language = (string) get_parameter ("id_language", "");
-	$est_sale = (string) get_parameter ("est_sale", "");
+	$id_company = (int) get_parameter ('id_company_search');
+	$start_date = (string) get_parameter ('start_date_search');
+	$end_date = (string) get_parameter ('end_date_search');
+	$country = (string) get_parameter ('country_search');
+	$id_category = (int) get_parameter ('product_search');
+	$progress_major_than = (int) get_parameter ('progress_major_than_search');
+	$progress_minor_than = (int) get_parameter ('progress_minor_than_search');
+	$owner = (string) get_parameter ("owner_search");
+	$show_100 = (int) get_parameter ("show_100_search");
+	$id_language = (string) get_parameter ("id_language_search", "");
+	$est_sale = (string) get_parameter ("est_sale_search", "");
 
-	$params = "&est_sale=$est_sale&id_language=$id_language&search_text=$search_text&id_company=$id_company&start_date=$start_date&end_date=$end_date&country=$country&id_category=$id_category&progress_minor_than=$progress_minor_than&progress_major_than=$progress_major_than&show_100=$show_100&owner=$owner";
+	$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&id_category_search=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
 	$where_group = "";
 
@@ -677,17 +677,17 @@ if ($id || $new) {
 	$sql2 .=  " ORDER by name";
 
 
-	$table->data[0][1] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
+	$table->data[0][1] = print_input_text_extended ('owner_search', $owner, 'text-user', '', 15, 30, false, '',
 			array(), true, '', __('Owner'))
 
 		. print_help_tip (__("Type at least two characters to search"), true);
 
-	$table->data[0][2] =  print_checkbox ("show_100", 1, $show_100, true, __("Show finished leads"));
+	$table->data[0][2] =  print_checkbox ("show_100_search", 1, $show_100, true, __("Show finished leads"));
 
 
-	$table->data[1][0] = print_input_text ("country", $country, "", 21, 100, true, __('Country'));
+	$table->data[1][0] = print_input_text ("country_search", $country, "", 21, 100, true, __('Country'));
 
-	$table->data[1][1] = print_input_text ("est_sale", $est_sale, "", 21, 100, true, __('Estimated Sale >'));
+	$table->data[1][1] = print_input_text ("est_sale_search", $est_sale, "", 21, 100, true, __('Estimated Sale >'));
 	
 	$table->data[1][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
     $table->data[1][2] .= "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_leads=1&where_clause=$where_clause'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
@@ -702,21 +702,21 @@ if ($id || $new) {
 
 	$progress_values = lead_progress_array ();	
 
-	$table->data[0][0] = print_select ($progress_values, 'progress_major_than', $progress_major_than, '', __("None"), 0, true, 0, false, __('Progress equal or above') );
+	$table->data[0][0] = print_select ($progress_values, 'progress_major_than_search', $progress_major_than, '', __("None"), 0, true, 0, false, __('Progress equal or above') );
 
 
-	$table->data[0][1] = print_select ($progress_values, 'progress_minor_than', $progress_minor_than, '', __("None"), 0, true, 0, false, __('Progress equal or below') );
+	$table->data[0][1] = print_select ($progress_values, 'progress_minor_than_search', $progress_minor_than, '', __("None"), 0, true, 0, false, __('Progress equal or below') );
 
 
 	$table->data[0][2] = combo_kb_products ($id_category, true, 'Product type', true);
 
-	$table->data[0][3] = print_select_from_sql ($sql2, 'id_company', $id_company, '', __("None"), 0, true, false, true, __("Managed by"));
+	$table->data[0][3] = print_select_from_sql ($sql2, 'id_company_search', $id_company, '', __("None"), 0, true, false, true, __("Managed by"));
 	
-	$table->data[1][0] = print_input_text ("start_date", $start_date, "", 15, 100, true, __('Start date'));
-	$table->data[1][1] = print_input_text ("end_date", $end_date, "", 15, 100, true, __('End date'));
+	$table->data[1][0] = print_input_text ("start_date_search", $start_date, "", 15, 100, true, __('Start date'));
+	$table->data[1][1] = print_input_text ("end_date_search", $end_date, "", 15, 100, true, __('End date'));
 
 	$table->data[1][2] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
-	'id_language', $id_language, '', _('Any'), '', true, false, false,
+	'id_language', $id_language, '', __('Any'), '', true, false, false,
 	__('Language'));
 
 	print_table ($table);

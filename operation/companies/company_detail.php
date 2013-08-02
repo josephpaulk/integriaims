@@ -505,8 +505,13 @@ elseif ($op == "activities") {
 	
 		$datetime =  date ("Y-m-d H:i:s");
 		$comments = get_parameter ("comments", "");
-		$sql = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, $comments);
-		process_sql ($sql, 'insert_id');
+		
+		if ($comments != "") {
+			$sql = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, $comments);
+			process_sql ($sql, 'insert_id');
+		} else {
+			echo "<h3 class='error'>".__('Error adding activity. Empty activity')."</h3>";
+		}
 	}
 	
 	// ADD item form
@@ -759,7 +764,7 @@ elseif ($op == "invoices") {
 		
 		if ($invoices !== false) {
 		
-			$table->width = "95%";
+			$table->width = "98%";
 			$table->class = "listing";
 			$table->cellspacing = 0;
 			$table->cellpadding = 0;
@@ -1030,7 +1035,7 @@ if ((!$id) AND ($new_company == 0)){
 	echo '<div style="width:'.$table->width.'" class="action-buttons button">';
 	print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', false);
 
-	echo "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_companies=1&where_clause=$where_clause'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
+	echo "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_companies=1&where_clause=$where_clause&date=$date'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
 	echo '</div>';
 	echo '</form>';
 
@@ -1038,7 +1043,6 @@ if ((!$id) AND ($new_company == 0)){
 	
 	if ($read && $enterprise) {
 		$companies = crm_get_user_companies($config['id_user'], $companies);
-
 	}
 	
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params", $offset);
