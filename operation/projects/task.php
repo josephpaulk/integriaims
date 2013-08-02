@@ -713,13 +713,6 @@ function show_task_row ($table, $id_project, $task, $level) {
 		$data[6] .= '</span>';
 	}
 
-	// Delete
-	if (give_acl ($config['id_user'], 0, 'PM')) {
-		$table->head[7] = __('Delete');
-		$data[7] = '<a href="index.php?sec=projects&sec2=operation/projects/task&operation=delete&id_project='.$id_project.'&id='.$task["id"].'"
-			onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
-			<img src="images/cross.png" /></a>';
-	}
 	array_push ($table->data, $data);
 }
 

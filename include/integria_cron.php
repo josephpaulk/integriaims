@@ -833,52 +833,88 @@ function delete_old_incidents () {
 		while ($incident = get_db_all_row_by_steps_sql($new, $result, $sql_select)) {
 			$new = false;
 			
+			$error = false;
+			
 			// tincident_contact_reporters
 			$sql_delete = "DELETE FROM tincident_contact_reporters
 						   WHERE id_incident = ".$incident["id_incidencia"];
-			process_sql ($sql_delete);
+			$res = process_sql ($sql_delete);
+			
+			if ($res === false) {
+				$error = true;
+			}
 			
 			// tincident_field_data
-			$sql_delete = "DELETE FROM tincident_field_data
+			$res = $sql_delete = "DELETE FROM tincident_field_data
 						   WHERE id_incident = ".$incident["id_incidencia"];
-			process_sql ($sql_delete);
+			$res = process_sql ($sql_delete);
+			
+			if ($res === false) {
+				$error = true;
+			}
 			
 			// tincident_inventory
 			$sql_delete = "DELETE FROM tincident_inventory
 						   WHERE id_incident = ".$incident["id_incidencia"];
-			process_sql ($sql_delete);
+			$res = process_sql ($sql_delete);
+			
+			if ($res === false) {
+				$error = true;
+			}
 			
 			// tincident_sla_graph
 			$sql_delete = "DELETE FROM tincident_sla_graph
 						   WHERE id_incident = ".$incident["id_incidencia"];
-			process_sql ($sql_delete);
+			$res = process_sql ($sql_delete);
+			
+			if ($res === false) {
+				$error = true;
+			}
 			
 			// tincident_stats
 			$sql_delete = "DELETE FROM tincident_stats
 						   WHERE id_incident = ".$incident["id_incidencia"];
-			process_sql ($sql_delete);
+			$res = process_sql ($sql_delete);
+			
+			if ($res === false) {
+				$error = true;
+			}
 			
 			// tincident_track
 			$sql_delete = "DELETE FROM tincident_track
 						   WHERE id_incident = ".$incident["id_incidencia"];
-			process_sql ($sql_delete);
+			$res = process_sql ($sql_delete);
+			
+			if ($res === false) {
+				$error = true;
+			}
 			
 			// tworkunit
 			$sql_delete = "DELETE FROM tworkunit
 						   WHERE id = ANY(SELECT id_workunit
 										  FROM tworkunit_incident
 										  WHERE id_incident = ".$incident["id_incidencia"].")";
-			process_sql ($sql_delete);
+			$res = process_sql ($sql_delete);
+			
+			if ($res === false) {
+				$error = true;
+			}
 			
 			// tattachment
 			$sql_delete = "DELETE FROM tattachment
 						   WHERE id_incidencia = ".$incident["id_incidencia"];
-			process_sql ($sql_delete);
+			$res = process_sql ($sql_delete);
 			
-			// tincidencia
-			$sql_delete = "DELETE FROM tincidencia
-						   WHERE id_incidencia = ".$incident["id_incidencia"];
-			process_sql ($sql_delete);
+			if ($res === false) {
+				$error = true;
+			}
+			
+			if (! $error) {
+				// tincidencia
+				$sql_delete = "DELETE FROM tincidencia
+							   WHERE id_incidencia = ".$incident["id_incidencia"];
+				process_sql ($sql_delete);
+			}
 		}
 	}
 }

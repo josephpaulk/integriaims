@@ -1,5 +1,13 @@
 2013-08-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* operation/projects/task.php: Deleted unused code.
+	
+	* include/integria_cron.php: Changed the function
+	"delete_old_incidents". Now the incident is not
+	deleted if the deletion of any related row fails.
+
+2013-08-01  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* operation/workorders/wo.php: Fixed a bug on
 	"start date", that makes impossible create or
 	update that workorder value. Now the "start date"
