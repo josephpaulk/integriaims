@@ -253,7 +253,12 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 			echo '<li class="ui-tabs">';
 		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&tab=wu&id='.$id.'"><span>'.__("Add Workunit").'</span></a></li>';
 	
-
+		if ($tab == "notes")
+			echo '<li class="ui-tabs-selected">';
+		else
+			echo '<li class="ui-tabs">';
+		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&tab=notes&id='.$id.'"><span>'.__("Notes").'</span></a></li>';
+		
 		if ($tab == "files")
 			echo '<li class="ui-tabs-selected">';
 		else
@@ -271,9 +276,14 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 
 	// Files
 	if ($tab == "files"){
-		$_POST["id_task"]=$id_task;
+		$id_task = get_parameter("id_task");
 		include "operation/workorders/wo_files.php";
 	}
+
+	// Files
+	if ($tab == "notes"){
+		include "operation/workorders/wo_notes.php";
+	}	
 
 	// Display main form / view 
 

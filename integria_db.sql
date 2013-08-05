@@ -1072,3 +1072,13 @@ CREATE TABLE IF NOT EXISTS `tupdate_settings` (
 	`key` varchar(255) default '', 
 	`value` varchar(255) default '', PRIMARY KEY (`key`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ttodo_notes` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `id_todo` int(11) unsigned NOT NULL,
+  `written_by` mediumtext DEFAULT NULL,
+  `description` mediumtext DEFAULT NULL,
+  `creation` datetime NOT NULL default '0000-00-00 00:00:00',  
+  PRIMARY KEY  (`id`),
+  KEY `id_todo_idx` (`id_todo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

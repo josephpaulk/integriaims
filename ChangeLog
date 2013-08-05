@@ -1,3 +1,12 @@
+2013-08-05  Dario Rodriguez <dario@artica.es>
+
+	* operation/workorders/wo_notes.php,
+	operation/workorders/wo.php: New feature to add
+	notes to workorders.
+	* integria_db.sql,
+	extras/migrate.sql: Created db struct for workorder
+	notes.
+
 2013-08-05  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_config.php: Initialize parameter
