@@ -1,3 +1,10 @@
+2013-08-05  Dario Rodriguez <dario@artica.es>
+	
+	* operation/workorders/wo.php: Improved usage of
+	clean_cache_db now WO emails sends the correct data. 
+	* include/functions_workorders.php: Fixed the macro
+	_wo_title_ which was not implemented.
+
 2013-08-05  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_dbdata.sql

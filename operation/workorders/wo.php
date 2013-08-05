@@ -23,6 +23,7 @@ include_once ("include/functions_graph.php");
 require_once ('include/functions_db.php');
 require_once ('include/functions_ui.php');
 require_once ('include/functions_user.php');
+include_once ('include/functions_workorders.php');
 
 $id = (int) get_parameter ("id");
 $id_task = (int) get_parameter ("id_task");
@@ -84,11 +85,11 @@ if ($operation == "insert") {
 		// TODO: Create agenda item if end_date is defined.
 	}
 
+	clean_cache_db();
 	if ($email_notify) {
 		mail_workorder ($id, 1);
 	}
 	
-	clean_cache_db();
 	$operation = "view"; // Keep in view/edit mode.
 
 }
@@ -132,13 +133,12 @@ if ($operation == "update2") {
 	//mail_todo (1, $id);
 	// TODO. Review this.
 	
+	clean_cache_db();
 	if ($email_notify) {
 		mail_workorder ($id, 0);
 	}
 
 	$operation = "view"; // Keep in view/edit mode.
-	clean_cache_db();
-
 }
 
 // ---------------

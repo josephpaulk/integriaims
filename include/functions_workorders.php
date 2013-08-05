@@ -19,6 +19,7 @@ function mail_workorder ($id_wo, $mode){
 	$MACROS["_wo_priority_"] = $wo['priority'];
 	$MACROS["_wo_description_"] = wordwrap($wo["description"], 70, "\n");
 	$MACROS["_wo_url_"] = $config["base_url"]."/index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=$id_wo";
+	$MACROS["_wo_title_"] = $wo['title'];
 
 	// Send email for assigned and creator of this workorder
 	$email_creator = get_user_email ($wo['created_by_user']);
