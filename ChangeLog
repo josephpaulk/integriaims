@@ -1,3 +1,12 @@
+2013-08-05  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_dbdata.sql
+	  extras/migrate.sql
+	  include/fuctions_workunits.php
+	  include/styles/flora.tabs.css
+	  operation/users/user_spare_workunit.php: Fixed several
+	bugs in 'Add spare workunit'.
+
 2013-08-05  Dario Rodriguez <dario@artica.es>
 
 	* operation/workorders/wo_notes.php,

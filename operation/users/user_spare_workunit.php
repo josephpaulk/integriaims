@@ -575,11 +575,11 @@ function validate_single_form() {
 //Multiple task validation form
 function validate_multiple_form() {
 
-	var val = $("select[id~='id_task_']").val();
-	
+	var val = $("select[id^='id_task_']").val();
+
 	if (val == 0) {
 		
-		var id_element = $("select[id~='id_task_']").attr("id");
+		var id_element = $("select[id^='id_task_']").attr("id");
 		
 		var number_id =  id_element.slice(8, id_element.length);
 		
@@ -606,7 +606,7 @@ function del_wu_button () {
 		
 	$("#del_wu_1").html(cross1);
 	
-	$('a[id~="del_wu"]').click(function (e) {
+	$('a[id^="del_wu"]').click(function (e) {
 		//Prevent default behavior
 		e.preventDefault();
 		var id_element = $(this).attr("id");
@@ -658,7 +658,7 @@ $(document).ready (function () {
 	////////Configure menu tab interaction///////
 	$('#tabmenu1').not('.ui-tabs-disabled').click (function (e){
 		e.preventDefault();//Deletes default behavior
-		
+	
 		//Change CSS tabs
 		//tab1 selected
 		$('#tabmenu1').addClass("ui-tabs-selected");
@@ -675,7 +675,7 @@ $(document).ready (function () {
 
 	$('#tabmenu2').not('.ui-tabs-disabled').click (function (e){
 		e.preventDefault();//Deletes default behavior
-		
+	
 		//Change CSS tabs
 		//tab2 selected
 		$('#tabmenu2').addClass("ui-tabs-selected");
@@ -692,7 +692,7 @@ $(document).ready (function () {
 	
 	/////Add new table to add a massive task/////
 	$("#button-add_multi_wu").click (function () {
-		
+
 		var error_textbox = document.getElementById("error_task");
 
 		if (error_textbox != null) {

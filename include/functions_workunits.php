@@ -141,10 +141,15 @@ function create_new_table_multiworkunit ($number=false) {
 	echo "<td>";
 	if (dame_admin ($config['id_user'])) {
 	
-		$src_code = print_image('images/group.png', true, false, true);
-		echo print_input_text_extended ('id_username_'.$number, $wu_user, 'text-id_username', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '',__('Username'))
-		. print_help_tip (__("Type at least two characters to search"), true);
+		$params = array();
+		$params['input_id'] = 'text-id_username_'.$number;
+		$params['input_name'] = 'id_username';
+		$params['input_value'] = $wu_user;
+		$params['title'] = 'Username';
+		$params['return'] = true;
+		$params['return_help'] = true;
+		
+		echo user_print_autocomplete_input($params);
 	}	
 	echo "</td>";
 	
@@ -165,7 +170,7 @@ function create_new_table_multiworkunit ($number=false) {
 	echo "</td>";
 	
 	echo "<td>";
-	echo print_checkbox ('forward_'.$number, 1, false, true, __('Forward'));
+	echo print_checkbox ('forward_'.$number, 1, false, true, __('Forward')).
 	print_help_tip (__('If this checkbox is activated, propagation will be forward instead backward'), true);
 	echo "</td>";
  

@@ -43,7 +43,8 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('max_days_wu', 365),
 ('max_days_wo', 365),
 ('max_days_audit', 15),
-('max_days_session', 7);
+('max_days_session', 7)
+('update_manager_installed', 1);
 
 -- Default password is 'integria'
 
