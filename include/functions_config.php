@@ -228,6 +228,10 @@ function load_config(){
 	
 	if (!isset ($config['session_timeout'])) {
 		$config['session_timeout'] = 9000;
+	}
+	
+	if (!isset ($config['update_manager_installed'])) {
+		$config['update_manager_installed'] = 1;
 	}	
 }
 

@@ -1,3 +1,8 @@
+2013-08-05  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_config.php: Initialize parameter
+	'update_manager_installed'.
+
 2013-08-02  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/expor_csv.php
