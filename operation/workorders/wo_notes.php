@@ -22,6 +22,7 @@ check_login ();
 $id = get_parameter("id");
 
 $add_note = get_parameter("addnote");
+$delete = get_parameter("delete");
 
 if ($add_note) {
 
@@ -29,16 +30,28 @@ if ($add_note) {
 
 	$now = print_mysql_timestamp();
 
-	$sql = sprintf('INSERT INTO ttodo_notes (`id_todo`,`written_by`,`description`, `creation`) 
-					VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $note, $now);
-
-	$res = process_sql ($sql, 'insert_id');
-
+	$res = workorders_insert_note ($id, $config["id_user"], $note, $now);
+	
 	if (! $res)
 		echo '<h3 class="error">'.__('There was a problem creating the note').'</h3>';
 	else
 		echo '<h3 class="suc">'.__('Note was added successfully').'</h3>'; 
 
+}
+
+if ($delete) {
+	$id_note = get_parameter("id_note");
+
+	$sql = sprintf("DELETE FROM ttodo_notes WHERE id = %d", $id_note);
+
+	$res = process_sql($sql);
+
+	if (! $res)
+                echo '<h3 class="error">'.__('There was a problem deleting the note').'</h3>';
+        else
+                echo '<h3 class="suc">'.__('Note was deleted successfully').'</h3>';
+	
+	mail_workorder ($id, 5, $res);
 }
 
 
@@ -70,7 +83,7 @@ echo "</div>";
 $sql = "SELECT * FROM ttodo_notes WHERE id_todo = $id ORDER BY `creation` DESC";
 $notes = get_db_all_rows_sql ($sql);	
 if ($notes !== false) {
-	echo "<h3>". __('Notes for this workorder')."</h3>";
+	echo "<h3>". __('Notes of this workorder')."</h3>";
 
 	foreach ($notes as $note) {
 			echo "<div class='notetitle'>"; // titulo
@@ -89,9 +102,9 @@ if ($notes !== false) {
 			echo " ".__("said on $timestamp");
 
 			// show delete activity only on owners
-			$owner = get_db_value ("owner", "tlead", "id", $id);
+			$owner = get_db_value ("assigned_user", "ttodo", "id", $id);
 			if ($owner == $config["id_user"])
-				echo "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=activity&op2=purge&activity_id=".$note["id"]." '><img src='images/cross.png'></a>";
+				echo "&nbsp;&nbsp;<a href='index.php?sec=projects&sec2=operation/workorders/wo&id=$id&operation=view&tab=notes&delete=1&id_note=".$note["id"]." '><img src='images/cross.png'></a>";
 			echo "</div>";
 
 			// Body

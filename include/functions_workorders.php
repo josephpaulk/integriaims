@@ -1,8 +1,8 @@
 <?php
 
-function mail_workorder ($id_wo, $mode){
+function mail_workorder ($id_wo, $mode, $id_note = false){
 	global $config;
-	
+		
 	$wo = get_db_row ("ttodo", "id", $id_wo);
 	
 	// Only send mails when creator is different than owner
@@ -20,6 +20,16 @@ function mail_workorder ($id_wo, $mode){
 	$MACROS["_wo_description_"] = wordwrap($wo["description"], 70, "\n");
 	$MACROS["_wo_url_"] = $config["base_url"]."/index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=$id_wo";
 	$MACROS["_wo_title_"] = $wo['title'];
+
+	//Replace note macros if needed
+	if ($id_note) {
+		$note_info = get_db_row ('ttodo_notes', 'id', $id_note);
+		
+		$MACROS["_wo_note_created_by_user_"] = $note_info["written_by"];
+		$MACROS["_wo_notes_url_"] = $config["base_url"]."/index.php?sec=projects&sec2=operation/workorders/wo&operation=view&tab=notes&id=$id_wo";
+		$MACROS["_wo_note_info_"] = $note_info["description"];
+		$MACROS["_wo_note_delete_user_"] = $config["id_user"];
+	}
 
 	// Send email for assigned and creator of this workorder
 	$email_creator = get_user_email ($wo['created_by_user']);
@@ -42,6 +52,16 @@ function mail_workorder ($id_wo, $mode){
 			$subject = template_process ($config["homedir"]."/include/mailtemplates/wo_subject_delete.tpl", $MACROS);
 			break;
 */
+
+		case 4: //New note
+			$text = template_process ($config["homedir"]."/include/mailtemplates/wo_new_note.tpl", $MACROS);
+                        $subject = template_process ($config["homedir"]."/include/mailtemplates/wo_subject_new_note.tpl", $MACROS);
+			break;
+
+                case 5: //Delete note
+                        $text = template_process ($config["homedir"]."/include/mailtemplates/wo_delete_note.tpl", $MACROS);
+                        $subject = template_process ($config["homedir"]."/include/mailtemplates/wo_subject_delete_note.tpl", $MACROS);
+                        break;
 	}
 
 	$msg_code = "WO#$id_wo";
@@ -56,6 +76,17 @@ function mail_workorder ($id_wo, $mode){
 
 	integria_sendmail ($email_creator, $subject, $text, false, $msg_code);
 
+}
+
+function workorders_insert_note ($id, $user, $note, $date) {
+	$sql = sprintf('INSERT INTO ttodo_notes (`id_todo`,`written_by`,`description`, `creation`)
+                                        VALUES (%d, "%s", "%s", "%s")', $id, $user, $note, $date);
+
+        $res = process_sql ($sql, 'insert_id');
+	
+	mail_workorder ($id, 4, $res);
+
+	return $res;
 }
 
 ?>
