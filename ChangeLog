@@ -1,5 +1,15 @@
 2013-08-06  Dario Rodriguez <dario@artica.es>
 
+	* include/load_session.php: Added header.
+	* include/config_process.php: Fixed a require
+	once function.
+	
+	#This commit was made from internal site 
+	# and I do not own the propety or any
+	# attribution from it.
+
+2013-08-06  Dario Rodriguez <dario@artica.es>
+
 	* include/mailtemplates/wo_new_note.tpl,
 	include/mailtemplates/wo_subject_delete.tpl,
 	include/mailtemplates/wo_delete_note.tpl,
