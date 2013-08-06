@@ -332,7 +332,9 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 	if($n) $n = '&nbsp;<span class="calendar-next">'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n).'</span>';
 
 
-	$calendar = '<center><b>'.$title.'</b></center><table style="padding: 0px; margin: 0px;" class="blank calendar"><tr>';
+	$calendar = '<table style="padding: 0px; margin: 0px auto;" class="calendar"><tr>';
+
+	$calendar .= '<th colspan=7 class="calendar-month"><center><b>'.$title.'</b></center></th></tr><tr>';
 
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed

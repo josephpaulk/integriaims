@@ -23,7 +23,7 @@ $search_string = safe_output (get_parameter ("search_string",""));
 
 echo "<table class='table_header' border=0 cellpadding=0 cellspacing=0>";
 echo "<tr>";
-echo "<td width=250>";
+echo "<td id='logo_container'>";
 
 // Custom logo per group
 if ($config["enteprise"] == 1){
@@ -38,10 +38,20 @@ if ($config["enteprise"] == 1){
 } else { 
 	echo '<a href="index.php"><img src="images/'.$config["header_logo"].'" title="'.__('Home').'"/></a>';
 }
-echo '</td><td  width=300>';
+echo '</td><td class="header_menu">';
+echo '<div id="menu">';
+require ("operation/main_menu.php");
+echo '</div>';
+echo '</td>';
+
+echo '<td class="header_search">';
+echo "<form method=post action='index.php?sec2=operation/search'>";
+echo "<input id='global_search' type=text name='search_string' size=20 value='$search_string'>";
+echo '</form>';
+echo '</td><td class="header_icons">';
 
 //// This div is necessary for javascript actions. Dont touch ///
-echo '<div style="font-size: 0px;" id="id_user">'.$config['id_user']."</div>";
+echo '<div style="font-size: 0px; display: inline;" id="id_user">'.$config['id_user']."</div>";
 /////////////////////////////////////////////////////////////////
 
 $got_alerts = 0;
@@ -50,7 +60,7 @@ $check_email_queue = check_email_queue();
 
 if (!$check_cron_exec || !$check_email_queue) {
 	$got_alerts = 1;
-	echo '<a href: >'.print_image('images/error.png', true, array("onclick" => "openAlerts()","alt" => 'Warning', "id" => "alerts", 'title' => __('Warning'))).'</a>';
+	echo '<a href: >'.print_image('images/header_warning.png', true, array("onclick" => "openAlerts()","alt" => __('Warning'), "id" => "alerts", 'title' => __('Warning'))).'</a>';
 }
 
 echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'" >';
@@ -58,24 +68,22 @@ echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['
 $avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $config["id_user"]);
 if (!$avatar) {
 	if (dame_admin ($config['id_user']))
-		echo '<img src="images/user_suit.png"> ';
+		echo print_image('images/header_suit.png', true, array("alt" => $config['id_user'], 'title' => $config['id_user']));
 	else
-		echo '<img src="images/user_green.png"> ';
+		echo print_image('images/header_user.png', true, array("alt" => $config['id_user'], 'title' => $config['id_user']));
 } else {
-	echo '<img src="images/avatars/'.$avatar.'_small.png">';
+	echo print_image('images/avatars/'.$avatar.'_small.png', true, array("alt" => $config['id_user'], 'title' => $config['id_user']));
 }
 
-echo ' <span style="font-weight: bold; color: #ffffff"">['.$config['id_user'].']</span></a>';
+echo '</a>';
 
-echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-echo '<a href="index.php?logout=1"><img src="images/lock.png"><span style="font-weight: bold; color: #ffffff"> '. __('Logout').'</span></a>';
-echo '</td><td width=300 style="padding: 0px; margin: 0px;">';
-echo "<form method=post action='index.php?sec2=operation/search'>";
-echo "&nbsp;";
-echo "<input style='height: 11px; font-size: 11px;' type=text name='search_string' size=20 value='$search_string'>";
-echo "&nbsp;&nbsp;&nbsp;";
-echo "<input class='sub search' style='height: 23px;' type=submit name='submit' size=45 value='".__('Search')."'>";
-echo '</form>';
+echo '<a href="index.php?logout=1">' . print_image('images/header_logout.png', true, array("alt" => __('Logout'), 'title' => __('Logout'))) . '</a>';
+
+if (isset($config["id_user"]) && dame_admin($config["id_user"]) && $show_setup != MENU_HIDDEN) {
+
+	echo '<a href="index.php?sec=godmode&sec2=godmode/setup/setup" id="setup_link"><img src="images/header_setup.png" title="' . __('Setup') . '"></a>';
+}
+
 echo '</td></tr>';
 
 echo '</table>';

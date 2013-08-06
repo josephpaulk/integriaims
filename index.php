@@ -363,10 +363,11 @@ if ($clean_output == 0) {
 			<?php require ("general/header.php"); ?>
 		</div>
 
-
+	<!--
 	<div id="menu">
 	<?php require ("operation/main_menu.php"); ?>
 	</div>
+	-->
 	
 
         <!-- This magic is needed to have it working in IE6.x and Firefox 4.0 -->

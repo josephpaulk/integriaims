@@ -40,14 +40,14 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 	}
 	
 	// ACL Permissions
-	$section_permission = get_project_access_extra ($config["id_user"]);
+	$section_permission = get_project_access ($config["id_user"]);
 	$manage_any_task = manage_any_task ($config["id_user"]);
 	if ($id_project > 0) {
-		$project_permission = get_project_access_extra ($config["id_user"], $id_project);
+		$project_permission = get_project_access ($config["id_user"], $id_project);
 		$manage_any_task_in_project = manage_any_task ($config["id_user"], $id_project);
 	}
 	if ($id_task > 0) {
-		$task_permission = get_project_access_extra ($config["id_user"], $id_project, $id_task, false, true);
+		$task_permission = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
 	}
 	
 	
@@ -400,6 +400,7 @@ if ((($sec == "projects" ))&& ( $show_projects != MENU_HIDDEN )) {
 			echo "</li>";
 		}
 	}
+	echo "</ul>";
 }
 
 // INCIDENTS
@@ -1169,7 +1170,7 @@ echo '<div class="portlet" style="padding: 0px; margin: 0px;">';
 echo '<a href="index.php?sec=agenda&sec2=operation/agenda/agenda">';
 echo '<h2>'.__('Calendar').'</h2>';
 echo '</a>';
-echo '<div id="calendar_div" style="padding: 0px; margin: 0px">';
+echo '<div id="calendar_div">';
 echo generate_calendar ($year, $month, array(), 1, NULL, $config["language_code"]);
 echo '</div></div>';
 // End of calendar box

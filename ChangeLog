@@ -1,3 +1,29 @@
+2013-08-06  Sergio Martin <sergio.martin@artica.es>
+
+	* include/styles/calendar.css
+	include/styles/integria.css
+	include/functions_calendar.php
+	index.php
+	operation/side_menu.php
+	operation/main_menu.php
+	images/input_zoom.png
+	images/lightbulb.png
+	images/header_user.png
+	images/header_setup.png
+	images/clock.png
+	images/header_warning.png
+	images/award_star_silver_1.png
+	images/exclamation.png
+	images/chart_bar.png
+	images/header_logout.png
+	images/darkgrey_bg.png
+	images/integria_logo_header.png
+	images/header_suit.png
+	images/paste_plain.png
+	images/orange_bg.png
+	general/header.php: Change the styles of the header
+	and side menu to new appearence
+
 2013-08-06  Dario Rodriguez <dario@artica.es>
 
 	* include/load_session.php: Added header.

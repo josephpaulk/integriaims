@@ -20,11 +20,10 @@ strong, b {
 body {
 
 	font: 0.80em  Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
-	background: #ffffff;
+	background: #f3f3f3;
 	color: #666;
 	text-align: center;
 	font-weight: 300;
-	background: url(../../images/greyback.gif);
 }
 
 td, th {
@@ -37,11 +36,12 @@ td, th {
 
 /* links */
 a {
-	color: #2179B1;
+	color: #909090;
+	text-decoration: none;
 }
 a:hover {
-	text-decoration: none;
-	color: #806B4D;
+	color: #FF9933;
+	text-decoration: underline;
 }
 
 /* headers */
@@ -59,10 +59,11 @@ h5 { font-size: 0.7em; }
 h6 { font-size: 0.5em; }
 
 #main h1, #rightbar h1 {
-	padding: 10px 0 5px 0px;
+	padding: 10px 0 3px 0px;
 	margin: 0 0 0 0px;
 	text-transform: uppercase;
-	border-bottom: 1px solid #f2f2f2;
+	border-bottom: 2px solid #404040;
+	margin-right: 4%;
 }
 
 #sidebar h1 {
@@ -177,7 +178,6 @@ tr.green {
 }
 
 ul, ol {
-	margin: 10px 30px;
 	padding: 0 15px;
 	list-style: none outside none;
 }
@@ -252,7 +252,7 @@ input {
 
 	padding: 5px;
 	border:1px solid #9A9B9D;
-	height: 14px;
+	height: 8px;
 	font: normal 0.9em Arial, sans-serif;
 	color:#666;
 	-moz-border-radius: 5px;
@@ -355,9 +355,11 @@ form.searchform input.button {
 /* Layout        */
 /*****************/
 #wrap {
-	margin:0px;
+	margin:0px auto;
 	padding:0px;
    	width:100%;
+   	min-width: 1000px;
+   	max-width: 1200px;
 	text-align: left;
 	background: #FFF;
 	padding-bottom: 110px;
@@ -375,25 +377,9 @@ form.searchform input.button {
 #header {
 	position: relative;
 	
-	background-color: #363636;
-	
-	/* IE10 Consumer Preview */ 
-	background-image: -ms-linear-gradient(top, #363636 0%, #000000 100%);
-
-	/* Mozilla Firefox */ 
-	background-image: -moz-linear-gradient(top, #363636 0%, #000000 100%);
-
-	/* Opera */ 
-	background-image: -o-linear-gradient(top, #363636 0%, #000000 100%);
-
-	/* Webkit (Safari/Chrome 10) */ 
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #363636), color-stop(1, #000000));
-
-	/* Webkit (Chrome 11+) */ 
-	background-image: -webkit-linear-gradient(top, #363636 0%, #000000 100%);
-
-	/* W3C Markup, IE10 Release Preview */ 
-	background-image: linear-gradient(to bottom, #363636 0%, #000000 100%);	
+	background-color: #404040;
+	background-image: url('../../images/darkgrey_bg.png');
+	color: #ffffff;
 	
 	height: 55px;
 	padding: 0px;
@@ -427,6 +413,90 @@ form.searchform input.button {
 	top: 4px;
 }
 
+#header #logo_container {
+	width: 200px;
+	padding-left: 25px;
+	padding-bottom: 10px;
+}
+
+
+.header_icons {
+	width: 160px;
+	min-width: 160px;
+	padding-left: 20px;
+	text-align: right;
+}
+.header_icons img{
+	margin-left: 9px !important;
+}
+
+.header_menu {
+	width: 100%;
+	padding-left: 25px;
+	vertical-align: bottom;
+	min-width: 500px;
+}
+
+.header_search {
+	padding: 0px; 
+	margin: 0px;
+}
+
+div.submenu {
+	display: none;
+	position: absolute;
+	background: #FF9933;
+	left: 0px;
+	top: 0px;
+	min-width: 120px;
+	background: url('../../images/orange_bg.png');
+}
+
+div.submenu li {
+	display: list-item !important;
+	float: none !important;
+	font-weight: normal;
+}
+
+div.submenu li a:hover {
+	background: none;
+	font-weight: bold;
+}
+
+
+#setup_link {
+	display: inline-block;
+	text-align: center;
+	margin-left: 15px;
+	border-left: 1px solid #777;
+	padding-left: 4px;
+	padding-right: 15px;
+	height: 30px;
+}
+
+input#global_search {
+	height: 7px;
+	width: 85px;
+	font-size: 11px;
+	
+	/* Browser without multibackground support */
+	background: #efefef url(../../images/input_zoom.png) no-repeat 96% 2px #ffffff !important;
+    /* Safari 4-5, Chrome 1-9 */
+    background: url(../../images/input_zoom.png) no-repeat 96% 2px #ffffff !important;
+    /* Safari 5.1+, Chrome 10+ */
+	background: url(../../images/input_zoom.png) no-repeat 96% 2px #ffffff !important;
+    /* Firefox 3.6+ */
+    background: url(../../images/input_zoom.png) no-repeat 96% 2px #ffffff !important;
+    /* Opera 11.10+ */
+    background: url(../../images/input_zoom.png) no-repeat 96% 2px #ffffff !important;
+    /* IE 10 */
+    background: url(../../images/input_zoom.png) no-repeat 96% 2px #ffffff !important;
+    /* estándar */
+    background: url(../../images/input_zoom.png) no-repeat 96% 2px #ffffff !important;
+
+	padding-right: 20px;
+}
+
 .logo {
 	border: 0;
 	margin: 0px 0px 0px 0px;
@@ -443,7 +513,7 @@ form.searchform input.button {
 }
 
 .table_header td {
-	padding-top: 4px;
+	padding-top: 8px;
 }
 
 #header img.logoimage {
@@ -456,8 +526,8 @@ form.searchform input.button {
 	color: #AAAAAA;
 }
 #header div {
-	position: absolute;
-	top: 20px; right:10px;
+	#position: absolute;
+	#top: 20px; #right:10px;
 }
 #header span {
 	letter-spacing: 2px;
@@ -503,6 +573,7 @@ form.searchform input.button {
 	margin: 0;
 	padding: 0;
 	display: inline;
+	padding: 10px 0 0 0;
 }
 #sidebar form {
 	display: inline;
@@ -513,17 +584,17 @@ form.searchform input.button {
 	text-align: left;
 	margin: 0 0 0px 0;
 	text-decoration: none;
-	padding: 0px 0px 0px 0px;
+	padding-top: 5px;
+	padding-bottom: 10px;
 }
 #sidebar ul.sidemenu li {
 	font-size: 11px;
 	line-height: 18px;
-	border-bottom: 1px solid #EFF0F1;
-	padding: 5px 1px 2px 15px;
+	padding-top: 2px;
 }
 
 #sidebar li#sidesel a {
-	color: #2179B1;
+	color: #FF9933;
 	text-decoration: none;
 }
 
@@ -557,31 +628,40 @@ form.searchform input.button {
 	padding: 0;
 	float: left;
 	font: bold 0.95em Helvetica, 'Trebuchet MS', Arial, Sans-serif;
-	width: 100%;
 	list-style: none;
 	line-height: 19px;
-	background-color: #000000;
+	#background-color: #000000;
 }
-#menu ul li{
+#menu ul li, #menu ul li div{
 	display: inline;
+	color: #FFFFFF;
+	position: relative;
+	float: left;
+}
+#menu ul li div {
+	padding-top: 5px;
+	color: #777;
+	font-size: large;
+	font-weight: normal;
 }
 #menu ul li a {
 	position: relative;
 	float: left;
-	color: #9999AA;
+	color: #FFFFFF;
 	padding: 6px 12px;
 	margin-top: 0px;
 	text-decoration: none;
+	height: 22px;
+	letter-spacing: 1px;
 }
 #menu ul li a:hover{
 	color: #ffffff;
-	background-color: #525252;	
-	text-shadow: 0 2px 0 #252525;
+	background: url('../../images/orange_bg.png') bottom repeat-x;
 }
 #menu ul li#current a{
 	color: #ffffff;
 	background-color: #808080;
-	text-shadow: 0 2px 0 #252525;
+	background: url('../../images/orange_bg.png') bottom repeat-x;
 }
 
 /* Alignment classes */
@@ -601,14 +681,7 @@ form.searchform input.button {
 /*  */
 /* Old styles */
 
-a {
-	color: #444;
-	text-decoration: none;
-}
-a:hover {
-	color: #2179B1;
-	text-decoration: underline;
-}
+
 
 div#db_f {
 	text-align: center;
@@ -1439,23 +1512,22 @@ span.users, span.agents, span.data, span.alerts, span.time {
 .portlet {
 	clear:both;
 	float:left;
-	padding: 10px 0 0 0;
 	width: 170px;
 	overflow:hidden;
-	margin:0 0 0.5em 0;
 	list-style:none;
 	font-size:11px;
+	background: #f3f3f3;
 }
 
 .portlet h2 { 
 	display:block;
 	width:170px;
-	height: 23px;
-	background-color:#A0A0A0; /* gris */
-	background-repeat:no-repeat;
+	height: 20px;
+	background-color:#FF9933; /* orange */
+	background-image: url('../../images/orange_bg.png');
 	background-position:left top;
 	overflow:hidden;
-    padding:9px 10px 0px 10px;
+    padding:4px 10px 0px 10px;
 	margin:0px 0px 1px 0px;
 	color:#FFF;
 	font-size: 1.1em ;
@@ -1467,12 +1539,12 @@ span.users, span.agents, span.data, span.alerts, span.time {
 .portlet h3 {
 	display:block;
 	width:170px;
-	height:23px;
-	background-color:#232323;
-	background-repeat:no-repeat;
+	height:20px;
+	background-color:#404040;
 	background-position:left top;
+	background-image: url('../../images/darkgrey_bg.png');
 	overflow:hidden;
-    padding:9px 10px 0px 10px;
+    padding:4px 10px 0px 10px;
 	margin:0px 0px 1px 0px;
 	color:#FFF;
 	font-size: 1.05em ;
@@ -1505,6 +1577,7 @@ span.users, span.agents, span.data, span.alerts, span.time {
 
 h3.admin {
 	background-color: #404040;
+	background-image: url('../../images/darkgrey_bg.png');
 }
 
 h3.info {
@@ -1549,15 +1622,20 @@ div#login {
 
 div#footer {
 	text-align: center;
-	margin: 0px;
+	margin: 0px auto;
 	font-size: 10px;
-	border-top: solid 6px #222;
+	border-top: solid 6px #FF9933;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	text-align: center;
-	background-color: #363636;
+	background-color: #404040;
+	background-image: url('../../images/darkgrey_bg.png');
 	color:#FFF;
 	height: 55px;
+	
+   	width:100%;
+   	min-width: 1000px;
+   	max-width: 1200px;
 }
 
 div#footer_installer {
