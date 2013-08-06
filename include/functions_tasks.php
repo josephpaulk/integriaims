@@ -197,8 +197,8 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			// Task name
 			$name = safe_output($task['name']);
 			
-			if (strlen($name) > 60) {
-				$name = substr ($name, 0, 60) . "...";
+			if (strlen($name) > 30) {
+				$name = substr ($name, 0, 30) . "...";
 				$name = "<a title='".safe_output($task['name'])."' href='index.php?sec=projects&sec2=operation/projects/task_detail
 					&id_project=".$task['id_project']."&id_task=".$task['id']."&operation=view'>".$name."</a>";
 			} else {
@@ -262,7 +262,7 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			echo "</a>";
 			echo "<span style='".$background_color." padding-top: 5px; padding-bottom: 5px; padding-right: 4px;'>";
 			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
-			echo "<span style='margin-left: 5px; min-width: 380px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='margin-left: 5px; min-width: 200px; vertical-align:middle; display: inline-block;'>".$name."</span>";
 			echo "<span title='" . __('Progress') . "' style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$progress."</span>";
 			echo "<span style='margin-left: 15px; min-width: 70px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
 			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$people."</span>";

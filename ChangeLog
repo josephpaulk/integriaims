@@ -1,5 +1,12 @@
 2013-08-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* include/functions_tasks.php
+	  operation/projects/task.php: Visual changes
+	  in the task tree view to adapt it to the new
+	  width of Integria.
+
+2013-08-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* include/functions.php
 	  include/functions_form.php
 	  operation/projects/gantt.php
