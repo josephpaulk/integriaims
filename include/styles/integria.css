@@ -18,12 +18,15 @@ strong, b {
 }
 
 body {
-
 	font: 0.80em  Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
 	background: #f3f3f3;
 	color: #666;
 	text-align: center;
 	font-weight: 300;
+}
+
+body.login {
+	background: url(../../images/greyback.gif);
 }
 
 td, th {

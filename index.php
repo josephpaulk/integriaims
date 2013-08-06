@@ -225,6 +225,7 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 		$blocked = login_check_blocked($nick);
 
 		if ($blocked) {
+			echo '<body class="login">';
 			require ('general/login_page.php');
 			exit;
 		}
@@ -244,6 +245,7 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 	}
 	
 	if (($nick_in_db !== false) && $expired_pass) { //login ok and password has expired
+		echo '<body class="login">';
 		require_once ('general/login_page.php');
 		exit;
 	} else if (($nick_in_db !== false) && (!$expired_pass)) { //login ok and password has not expired
@@ -282,13 +284,16 @@ if (! isset ($_SESSION['id_usuario']) && $login) {
 				} else {
 					unset($login_failed);
 				}
+				echo '<body class="login">';
 				require_once ('general/login_page.php');
 				exit ("</html>");
 			} else {
+				echo '<body class="login">';
 				require_once ('general/login_page.php');
 				exit ("</html>");
 			}
 		} else { 
+			echo '<body class="login">';
 			require_once ('general/login_page.php');
 			exit ("</html>");
 		}
@@ -298,7 +303,7 @@ else if (! isset ($_SESSION['id_usuario'])) {
 
 	// There is no user connected
 	echo '</head>';
-	echo '<body>';
+	echo '<body class="login">';
 	require ('general/login_page.php');
 	exit;
 }
@@ -334,6 +339,7 @@ if ($logout) {
 	$_REQUEST = array ();
 	$_GET = array ();
 	$_POST = array ();
+	echo '<body class="login">';
 	require ('general/login_page.php');
 	$iduser = $_SESSION["id_usuario"];
 	logoff_db ($iduser, $config["REMOTE_ADDR"]);
