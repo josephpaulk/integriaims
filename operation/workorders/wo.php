@@ -163,6 +163,15 @@ if ($operation == "delete") {
 		echo "<h3 class='error'>".__('Not deleted. Error deleting data')."</h3>";
 	else
 		echo "<h3 class='suc'>".__('Successfully deleted')."</h3>";
+
+	clean_cache_db();
+	
+	$email_notify = $todo["email_notify"];
+	
+        if ($email_notify) {
+                mail_workorder ($id, 3, false, $todo);
+        }
+
 	$operation = "";
 }
 

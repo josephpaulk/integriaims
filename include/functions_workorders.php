@@ -1,9 +1,13 @@
 <?php
 
-function mail_workorder ($id_wo, $mode, $id_note = false){
+function mail_workorder ($id_wo, $mode, $id_note = false, $wo_info = false, $note_info = false){
 	global $config;
-		
-	$wo = get_db_row ("ttodo", "id", $id_wo);
+
+	$wo = $wo_info;
+
+	if (!$wo_info) {	
+		$wo = get_db_row ("ttodo", "id", $id_wo);
+	}
 	
 	// Only send mails when creator is different than owner
 	if ($wo['assigned_user'] == $wo['created_by_user'])
@@ -19,12 +23,16 @@ function mail_workorder ($id_wo, $mode, $id_note = false){
 	$MACROS["_wo_priority_"] = $wo['priority'];
 	$MACROS["_wo_description_"] = wordwrap($wo["description"], 70, "\n");
 	$MACROS["_wo_url_"] = $config["base_url"]."/index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=$id_wo";
-	$MACROS["_wo_title_"] = $wo['title'];
+	$MACROS["_wo_title_"] = $wo['name'];
+	$MACROS["_wo_delete_user_"] = $config["id_user"];
 
 	//Replace note macros if needed
 	if ($id_note) {
-		$note_info = get_db_row ('ttodo_notes', 'id', $id_note);
-		
+
+		if (!$note_info) {
+			$note_info = get_db_row ('ttodo_notes', 'id', $id_note);
+		}
+	
 		$MACROS["_wo_note_created_by_user_"] = $note_info["written_by"];
 		$MACROS["_wo_notes_url_"] = $config["base_url"]."/index.php?sec=projects&sec2=operation/workorders/wo&operation=view&tab=notes&id=$id_wo";
 		$MACROS["_wo_note_info_"] = $note_info["description"];
@@ -46,12 +54,10 @@ function mail_workorder ($id_wo, $mode, $id_note = false){
 			$subject = template_process ($config["homedir"]."/include/mailtemplates/wo_subject_create.tpl", $MACROS);
 			break;
 			
-/*
 		case 3: // WO deleted 
 			$text = template_process ($config["homedir"]."/include/mailtemplates/wo_delete.tpl", $MACROS);
 			$subject = template_process ($config["homedir"]."/include/mailtemplates/wo_subject_delete.tpl", $MACROS);
 			break;
-*/
 
 		case 4: //New note
 			$text = template_process ($config["homedir"]."/include/mailtemplates/wo_new_note.tpl", $MACROS);

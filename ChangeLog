@@ -1,3 +1,17 @@
+2013-08-06  Dario Rodriguez <dario@artica.es>
+
+	* include/mailtemplates/wo_new_note.tpl,
+	include/mailtemplates/wo_subject_delete.tpl,
+	include/mailtemplates/wo_delete_note.tpl,
+	include/mailtemplates/wo_subject_new_note.tpl,
+	include/mailtemplates/wo_delete.tpl,
+	include/mailtemplates/wo_subject_delete_note.tpl: New templates
+	for WO emails.
+	* operation/workorders/wo_notes.php,
+	operation/workorders/wo.php,
+	include/functions_workorders.php: Improved email interaction and
+	management of WO.
+
 2013-08-05  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_workorders.php,

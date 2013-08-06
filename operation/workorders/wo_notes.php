@@ -42,6 +42,8 @@ if ($add_note) {
 if ($delete) {
 	$id_note = get_parameter("id_note");
 
+	$note = get_db_row ("ttodo_notes", "id", $id_note); 
+
 	$sql = sprintf("DELETE FROM ttodo_notes WHERE id = %d", $id_note);
 
 	$res = process_sql($sql);
@@ -51,7 +53,7 @@ if ($delete) {
         else
                 echo '<h3 class="suc">'.__('Note was deleted successfully').'</h3>';
 	
-	mail_workorder ($id, 5, $res);
+	mail_workorder ($id, 5, $res, false, $note);
 }
 
 
