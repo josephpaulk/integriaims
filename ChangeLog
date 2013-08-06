@@ -1,3 +1,12 @@
+2013-08-06  Vanessa Gil <vanessa.gil@artica.es>
+
+	* extras/migrate.sql
+	  include/fuctions_form.php
+	  operation/incidents/incident_search.php
+	  operation/incidents/incident_statistics.php
+	  operation/users/user_spare_workunit.php: Fixed bug
+	reporting incidents and adding workunits.
+
 2013-08-06  Sergio Martin <sergio.martin@artica.es>
 
 	* include/styles/integria.css

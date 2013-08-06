@@ -26,7 +26,7 @@ echo "<li>";
 echo "<a id='html_report_submit' href='#'>".print_image("images/html.png", true, array("title" => __("HTML report")))."</a>";
 echo "</li>";
 echo "<li>";
-echo "<a id='pdf_report_submit' href='#' onClick='form.submit();'>".print_image("images/page_white_acrobat.png", true, array("title" => __("PDF report")))."</a>";
+echo "<a id='pdf_report_submit' href='javascript:submit_form()'>".print_image("images/page_white_acrobat.png", true, array( "title" => __("PDF report"), 'id'=>'img-click'))."</a>";
 echo "</li>";
 echo "</ul>";
 echo "</div>";
@@ -70,23 +70,3 @@ echo '</div></form>';
 print_incidents_stats ($incidents);
 
 ?>
-
-<script>
-//Configure some actions to send forms
-$(document).ready(function () {
-	$("#search_form_submit").click(function (event) {
-		event.preventDefault();
-		$("#search_form").submit();
-	});
-	
-	$("#html_report_submit").click(function (event) {
-		event.preventDefault();
-		$("#html_report_form").submit();
-	});
-	
-	$("#pdf_report_submit").click(function (event) {
-		event.preventDefault();
-		$("#pdf_report_form").submit();
-	});
-});
-</script>

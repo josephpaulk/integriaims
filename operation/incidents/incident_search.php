@@ -57,3 +57,27 @@ switch ($option) {
 echo "</div>";
 
 ?>
+
+<script>
+
+//Configure some actions to send forms stats
+$(document).ready(function () {
+	$("#search_form_submit").click(function (event) {
+		event.preventDefault();
+		$("#search_form").submit();
+	});
+	
+	$("#html_report_submit").click(function (event) {
+		event.preventDefault();
+		$("#html_report_form").submit();
+	});
+	
+	$("#pdf_report_submit").click(function (event) {
+		event.preventDefault();
+		$("#pdf_report_form").submit();
+	});
+	
+});
+
+
+</script>

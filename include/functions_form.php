@@ -1282,4 +1282,22 @@ function wo_status_array ($mode = 0){
 	return $wo_progress;
 }
 
+function combo_roles_people_task ($id_task, $id_user, $label = '', $return = false) {
+		
+	$roles = get_db_all_rows_filter('trole_people_task', array('id_task'=>$id_task, 'id_user'=>$id_user), 'id_role');
+	
+	$user_roles = array();
+	$output = '';
+	
+	if ($roles !== false) {
+		foreach ($roles as $key=>$rol) {
+			$rol_name = get_db_value('name', 'trole', 'id', $rol['id_role']);
+			$user_roles[$rol['id_role']] = $rol_name;
+		
+		}
+	}
+	
+	return print_select ($user_roles, 'id_profile', '', '', 0, 0,true, 0, false, $label);
+	
+}
 ?>

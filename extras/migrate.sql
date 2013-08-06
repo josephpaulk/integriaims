@@ -398,3 +398,6 @@ CREATE TABLE `ttodo_notes` (
   PRIMARY KEY  (`id`),
   KEY `id_todo_idx` (`id_todo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `tconfig` (`token`, `value`) VALUES
+('update_manager_installed', 1);

@@ -409,6 +409,7 @@ $table->data[0][0] = print_input_text ('start_date', $start_date, '', 10, 20,
 // Profile or role
 if (dame_admin ($config['id_user'])) {
 	$table->data[0][1] = combo_roles (true, 'id_profile', __('Role'), true);
+	//$table->data[0][1] = combo_roles_people_task ($id_task, $config['id_user'], __('Role'));
 } else {
 	$table->data[0][1] = combo_user_task_profile ($id_task, 'id_profile',
 		$id_profile, false, true);
