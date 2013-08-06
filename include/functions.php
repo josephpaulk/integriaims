@@ -1028,10 +1028,10 @@ function get_user_language ($id_user = false) {
 		$id_user = $config['id_user'];
 	}
 	
-	if($id_user !== false) {
-		$userinfo = get_user_info ($id_user);
-		if ($userinfo['language'] != 'default'){
-			return $userinfo['language'];
+	if($id_user != false) {
+		$language = get_db_value ("lang", "tusuario", "id_usuario", $id_user);
+		if ($language != 'default'){
+			return $language;
 		}
 	}
 	

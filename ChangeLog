@@ -1,3 +1,18 @@
+2013-08-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/functions.php
+	  include/functions_form.php
+	  operation/projects/gantt.php
+	  operation/projects/project_download_file.php
+	  operation/projects/project_overview.php
+	  operation/projects/task_files.php
+	  operation/projects/task_incidents.php
+	  operation/projects/task_planning.php: Fixed the
+	  calls to the function "get_project_access".
+	  
+	* include/auth/mysql.php: Fixed the function
+	"get_user_info".
+
 2013-08-06  Sergio Martin <sergio.martin@artica.es>
 
 	* include/styles/calendar.css

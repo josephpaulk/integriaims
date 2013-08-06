@@ -19,7 +19,7 @@ global $config;
 check_login ();
 
 // ACL
-$section_access = get_project_access_extra ($config["id_user"]);
+$section_access = get_project_access ($config["id_user"]);
 if (! $section_access["read"]) {
 	// Doesn't have access to this page
 	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to project overview without permission");
@@ -78,7 +78,7 @@ foreach($project_groups as $group) {
 	//Check project ACLs
 	$aux_projects = array();
 	foreach ($projects as $p) {
-		$project_access = get_project_access_extra ($config["id_user"], $p['id']);
+		$project_access = get_project_access ($config["id_user"], $p['id']);
 		if ($project_access["read"]) {
 			array_push($aux_projects, $p);
 		}

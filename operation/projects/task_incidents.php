@@ -42,7 +42,7 @@ if ($id_project == -1) {
 	exit;
 }
 // ACL
-$task_access = get_project_access_extra ($config["id_user"], $id_project, $id_task, false, true);
+$task_access = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
 if (! $task_access["read"]) {
 	// Doesn't have access to this page
 	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task information without task permission");

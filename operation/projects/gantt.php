@@ -51,7 +51,7 @@ function get_tasks (&$tasks, $project_id, $project_start, $project_end, $parent_
 		
 		// ACL Check for this task
 		// This user can see this task?	
-		$task_access = get_project_access_extra ($config["id_user"], $project_id, $row['id'], false, true);
+		$task_access = get_project_access ($config["id_user"], $project_id, $row['id'], false, true);
 		if ($task_access["read"]) {
 			
 			$task['id'] = $row['id'];

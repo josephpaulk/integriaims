@@ -32,14 +32,14 @@ if ($id_project == -1) {
 	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task files without project");
 	no_permission();
 }
-$project_access = get_project_access_extra ($config["id_user"], $id_project);
+$project_access = get_project_access ($config["id_user"], $id_project);
 if (! $project_access["read"]) {
 	// Doesn't have access to this page
 	audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task files without permission");
 	no_permission();
 }
 if ($id_task > 0) {
-	$task_access = get_project_access_extra ($config["id_user"], $id_project, $id_task, false, true);
+	$task_access = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
 	if (! $task_access["read"]) {
 		// Doesn't have access to this page
 		audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to task files without permission");
@@ -61,7 +61,7 @@ else
 if ($operation == "attachfile") {
 	
 	// ACL
-	$task_access = get_project_access_extra ($config["id_user"], $id_project, $id_task, false, true);
+	$task_access = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
 	if (!$task_access["write"]) {
 		// Doesn't have access to this page
 		audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to attach a file to a task without permission");
@@ -106,7 +106,7 @@ if ($operation == "attachfile") {
 if ($operation == "delete") {
 	
 	// ACL
-	$task_access = get_project_access_extra ($config["id_user"], $id_project, $id_task, false, true);
+	$task_access = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
 	if (!$task_access["write"]) {
 		// Doesn't have access to this page
 		audit_db($id_user, $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a file ofy a task without permission");
@@ -195,7 +195,7 @@ if ($res = mysql_query($sql)) {
 			$task_id = $row["task_id"];
 			
 			// ACL
-			$task_access = get_project_access_extra ($config["id_user"], $id_project, $task_id, false, true);
+			$task_access = get_project_access ($config["id_user"], $id_project, $task_id, false, true);
 			if (! $task_access["read"]) {
 				continue;
 			}

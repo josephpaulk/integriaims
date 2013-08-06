@@ -102,7 +102,7 @@ function get_user_id ($user) {
  * @return mixed An array of users
  */
 function get_user_info ($user) {
-	return db_get_row ("tusuario", "id_user", get_user_id ($user));
+	return get_db_row ("tusuario", "id_usuario", get_user_id ($user));
 }
 
 

@@ -721,7 +721,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	// ACL Check for visibility
 	if (!$public && $id_user != $config["id_user"]) {
 		if ($id_task) {
-			$task_access = get_project_access_extra ($config["id_user"], false, $id_task, false, true);
+			$task_access = get_project_access ($config["id_user"], false, $id_task, false, true);
 			if (! $task_access["manage"]) {
 				return;
 			}

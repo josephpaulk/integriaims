@@ -30,7 +30,7 @@ if (! $id_project) {// Doesn't have access to this page
 	no_permission ();
 }
 
-$project_access = get_project_access_extra ($config["id_user"], $id_project);
+$project_access = get_project_access ($config["id_user"], $id_project);
 if (!$project_access["read"]) {
 	audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to access to task manager of unauthorized project");
 	no_permission ();
@@ -51,7 +51,7 @@ if (!$update && !$create && !$delete) {
 //Delete task
 if($delete) {
 	
-	$task_access = get_project_access_extra ($config["id_user"], $id_project, $delete);
+	$task_access = get_project_access ($config["id_user"], $id_project, $delete);
 	//Check if admin or project manager before delete the task
 	if (! $task_access["manage"]) {
 		audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to delete a task without permission");
@@ -75,7 +75,7 @@ if ($update) {
 		//Get all post parameters for this task
 		$id = $t['id'];
 		
-		$task_access = get_project_access_extra ($config["id_user"], $id_project, $id);
+		$task_access = get_project_access ($config["id_user"], $id_project, $id);
 		if (! $task_access["manage"]) {
 			continue;
 		}
@@ -162,16 +162,16 @@ if ($create) {
 		$owner = get_parameter('dueno');
 		
 		if ($parent) {
-			$project_access = get_project_access_extra ($config["id_user"], $id_project);
+			$project_access = get_project_access ($config["id_user"], $id_project);
 			if (!$project_access["manage"]) {
-				$task_access = get_project_access_extra ($config["id_user"], $id_project, $parent);
+				$task_access = get_project_access ($config["id_user"], $id_project, $parent);
 				if (!$task_access["manage"]) {
 					audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to create tasks in an unauthorized project");
 					no_permission ();
 				}
 			}
 		} else {
-			$project_access = get_project_access_extra ($config["id_user"], $id_project);
+			$project_access = get_project_access ($config["id_user"], $id_project);
 			if (!$project_access["manage"]) {
 				audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation","Trying to create tasks in an unauthorized project");
 				no_permission ();
