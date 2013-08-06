@@ -65,15 +65,10 @@ if (!$check_cron_exec || !$check_email_queue) {
 
 echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'" >';
 
-$avatar = get_db_value ('avatar', 'tusuario', 'id_usuario', $config["id_user"]);
-if (!$avatar) {
-	if (dame_admin ($config['id_user']))
-		echo print_image('images/header_suit.png', true, array("alt" => $config['id_user'], 'title' => $config['id_user']));
-	else
-		echo print_image('images/header_user.png', true, array("alt" => $config['id_user'], 'title' => $config['id_user']));
-} else {
-	echo print_image('images/avatars/'.$avatar.'_small.png', true, array("alt" => $config['id_user'], 'title' => $config['id_user']));
-}
+if (dame_admin ($config['id_user']))
+	echo print_image('images/header_suit.png', true, array("alt" => $config['id_user'], 'title' => $config['id_user']));
+else
+	echo print_image('images/header_user.png', true, array("alt" => $config['id_user'], 'title' => $config['id_user']));
 
 echo '</a>';
 

@@ -19,7 +19,9 @@ strong, b {
 
 body {
 	font: 0.80em  Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
-	background: #f3f3f3;
+	background-image: url(../../images/darkgrey_bg.png);
+	background-color: #ffffff;
+	background-repeat: repeat-x;
 	color: #666;
 	text-align: center;
 	font-weight: 300;
@@ -63,10 +65,10 @@ h6 { font-size: 0.5em; }
 
 #main h1, #rightbar h1 {
 	padding: 10px 0 3px 0px;
-	margin: 0 0 0 0px;
+	margin: 0 0 0 6px;
 	text-transform: uppercase;
 	border-bottom: 2px solid #404040;
-	margin-right: 4%;
+	width: 97%;
 }
 
 #sidebar h1 {
@@ -252,14 +254,16 @@ div.report_info label {
 }
 
 input {
-
 	padding: 5px;
 	border:1px solid #9A9B9D;
-	height: 8px;
 	font: normal 0.9em Arial, sans-serif;
 	color:#666;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
+}
+
+input[type="text"] {
+	height: 8px;
 }
 
 textarea {
@@ -1637,8 +1641,6 @@ div#footer {
 	height: 55px;
 	
    	width:100%;
-   	min-width: 1000px;
-   	max-width: 1200px;
 }
 
 div#footer_installer {
@@ -2180,11 +2182,59 @@ td.login_button {
 h2.incident_dashboard {
 	cursor: pointer;
 	text-transform: none;
-	background-image: url('../../images/add.png');
 	background-repeat:no-repeat;
-	padding-left: 22px;
-	border-bottom: 1px solid black;
+	padding-left: 52px;
 	background-position: 3px 1px;
+	height: 36px;
+}
+
+h2.incident_custom_search {
+	background-image: url('../../images/custom_search.png');
+}
+
+h2.incident_search_by_group {
+	background-image: url('../../images/search_by_group.png');
+}
+
+h2.incident_search_by_owner {
+	background-image: url('../../images/search_by_owner.png');
+}
+
+h2.incident_search_by_type {
+	background-image: url('../../images/search_by_type.png');
+}
+
+h2.incident_search_by_priority {
+	background-image: url('../../images/search_by_priority.png');
+}
+
+h2.incident_search_by_status {
+	background-image: url('../../images/search_by_status.png');
+}
+
+table.search_by_priority {
+	border-spacing: 10px;
+}
+
+table.search_by_priority td a {
+	color: #ffffff !important;
+	text-shadow: 1px 1px #999;
+}
+
+table.search_by_priority td {
+	background: pink;
+	text-align: center;
+	height: 30px;
+	width: 50px;
+	margin-right: 6px;
+	font-weight: bold;
+	border-bottom-right-radius: 10px;
+}
+
+div.incident_container {
+	background: #f3f3f3;
+	padding: 2px 0px 2px 6px;
+	margin-bottom: 17px;
 }
 
 #button-bar-title {
@@ -2276,4 +2326,8 @@ div#error_login {
 	float: right;
 	text-align: left;
 	top: 100px;
+}
+
+img.avatar_small {
+	height: 22px;
 }

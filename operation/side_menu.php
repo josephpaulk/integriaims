@@ -1208,11 +1208,18 @@ echo '<h2>'.__('User info').'</h2>';
 echo '</a>';
 echo '<div class="portletBody" id="userdiv">';
 
-echo '<img src="images/avatars/'.$avatar.'_small.png" style="float: left" />';
+echo '<div style="float: left; padding: 7px 7px 0px 0px; ">';
+echo '<img src="images/avatars/'.$avatar.'.png" style="height: 30px;" />';
+echo '</div>';
+
+echo '<div style="float: left;">';
 echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'">';
 echo '<strong>'.$config['id_user'].'</strong>';
 echo '</a><br/>';
-echo "<em>".$realname."</em><br />";
+echo '<em>'.$realname.'</em><br />';
+echo '</div>';
+
+echo "<div style='clear:both; margin-bottom: 10px;'></div>";
 
 // Link to workunit calendar (month)
 echo '<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$now_month.'&year='.$now_year.'&id='.$config['id_user'].'" />';

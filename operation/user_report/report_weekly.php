@@ -75,7 +75,7 @@ if ($res0 = mysql_query($sql0)) {
 			}
 		   
 			echo "<tr><td>";
-			echo "<img src='images/avatars/".$avatar."_small.png'> ";
+			echo "<img src='images/avatars/".$avatar.".png' class='avatar_small'> ";
 			if ($config["enteprise"] == 1){
 				$sql1='SELECT * FROM tusuario_perfil WHERE id_usuario = "'.$nombre.'"';
 				$result1=mysql_query($sql1);

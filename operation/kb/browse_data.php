@@ -63,7 +63,7 @@ echo "<p><b>$title</b>";
 echo "<div class='notetitle' style='height: 50px;'>"; 
 echo "<table class='blank' border=0 width='100%' cellspacing=0 cellpadding=0 style='background: transparent; line-height: 12px; border: 0px; margin-left: 0px;margin-top: 0px;'>";
 echo "<tr><td rowspan=3 width='7%'>";
-echo "<img src='images/avatars/".$avatar."_small.png'>";
+echo "<img src='images/avatars/".$avatar.".png' class='avatar_small'>";
 
 echo "<td width='50%'><b>";
 echo __('Author')." </b> : ";

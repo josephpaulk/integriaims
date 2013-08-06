@@ -86,7 +86,7 @@ if ($activities !== false) {
 			$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $id_usuario_nota);
 
 			// Show data
-			echo "<img src='images/avatars/".$avatar."_small.png'>&nbsp;";
+			echo "<img src='images/avatars/".$avatar.".png' class='avatar_small'>&nbsp;";
 			echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_usuario_nota'>";
 			echo $id_usuario_nota;
 			echo "</a>";

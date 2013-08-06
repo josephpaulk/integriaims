@@ -492,7 +492,7 @@ if ($operation == "") {
 	
 	$table->data[1][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	$table->data[1][2] .= ' <a href="index.php?sec=projects&sec2=operation/workorders/wo&owner='
-		.$config["id_user"].'"><img src="images/avatars/'.$avatar.'_small.png" title="'.__('My WO\'s').'"></a>';
+		.$config["id_user"].'"><img src="images/avatars/'.$avatar.'.png" class="avatar_small" title="'.__('My WO\'s').'"></a>';
 	$table->data[1][2] .= ' <a href="index.php?sec=projects&sec2=operation/workorders/wo&creator='
 		.$config["id_user"].'"><img src="images/user_comment.png" title="'.__('My delegated WO\'s').'"></a>';
 	

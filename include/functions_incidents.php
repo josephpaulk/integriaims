@@ -1564,8 +1564,6 @@ function incidents_get_incident_status_text ($id) {
 }
 
 function incidents_get_incident_priority_text ($id) {
-	
-	
 	$priority = get_db_value ('prioridad', 'tincidencia', 'id_incidencia', $id);
 	
 	$name = render_priority($priority);

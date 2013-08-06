@@ -1,3 +1,52 @@
+2013-08-06  Sergio Martin <sergio.martin@artica.es>
+
+	* include/styles/integria.css
+	include/functions_incidents.php
+	include/functions_db.php
+	operation/incidents/incident_dashboard.php
+	operation/incidents/incident_notes_detail.php
+	operation/leads/lead_activity.php
+	operation/common/workunit_detail.php
+	operation/incidents_simple/incident.workunits.php
+	operation/kb/browse_data.php
+	operation/side_menu.php
+	operation/workorders/wo_notes.php
+	operation/workorders/wo.php
+	operation/user_report/report_weekly.php
+	operation/companies/company_detail.php
+	images/search_by_group.png
+	images/custom_search.png
+	images/search_by_owner.png
+	images/search_by_priority.png
+	images/darkgrey_bg.png
+	images/search_by_status.png
+	images/search_by_type.png
+	images/avatars/people_1_small.png
+	images/avatars/people_2_small.png
+	images/avatars/people_3_small.png
+	images/avatars/avatar10_small.png
+	images/avatars/avatar11_small.png
+	images/avatars/avatar12_small.png
+	images/avatars/avatar13_small.png
+	images/avatars/avatar14_small.png
+	images/avatars/avatar15_small.png
+	images/avatars/avatar16_small.png
+	images/avatars/avatar17_small.png
+	images/avatars/avatar18_small.png
+	images/avatars/avatar19_small.png
+	images/avatars/avatar1_small.png
+	images/avatars/avatar2_small.png
+	images/avatars/avatar3_small.png
+	images/avatars/avatar4_small.png
+	images/avatars/avatar5_small.png
+	images/avatars/avatar6_small.png
+	images/avatars/avatar8_small.png
+	images/avatars/avatar9_small.png
+	images/avatars/avatar20_small.png
+	images/avatars/avatar21_small.png
+	images/avatars/avatar22_small.png
+	images/avatars/avatar23_small.png
+	general/header.php: More visual fixes
 2013-08-06  Vanessa Gil <vanessa.gil@artica.es>
 
 	* extras/migrate.sql

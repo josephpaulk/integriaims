@@ -29,12 +29,11 @@ $table->size[0] = '50%';
 $table->size[1] = '50%';
 $table->style = array();
 $table->data = array ();
-$table->cellspacing = 2;
-$table->cellpadding = 2;
 $table->style [0] = "vertical-align: top;";
 $table->style [1] = "vertical-align: top";
 
-$custom = '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-custom\')">'.__('Custom search').'</h2>';
+$custom = '<div class="incident_container">';
+$custom .= '<h2 class="incident_dashboard incident_custom_search" onclick="toggleDiv (\'incident-custom\')">'.__('Custom search').'</h2>';
 $custom .= '<div id="incident-custom">';
 
 $custom_searches = get_db_all_rows_filter ("tcustom_search", array("id_user" => $config["id_user"]));
@@ -75,12 +74,13 @@ if ($custom_searches === false) {
 $custom .= "</table>";
 
 $custom .= "</div>";
+$custom .= "</div>"; // container
 
 $table->colspan[0][0] = 2;
 $table->data[0][0] = $custom;
 
-
-$left_side = '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-group\')">'.__('Search by group').'</h2>';
+$left_side = '<div class="incident_container">';
+$left_side .= '<h2 class="incident_dashboard incident_search_by_group" onclick="toggleDiv (\'incident-group\')">'.__('Search by group').'</h2>';
 $left_side .= '<div id="incident-group">';
 
 
@@ -109,8 +109,10 @@ $aux_table .= "</table>";
 $left_side .= $aux_table;
 
 $left_side .= '</div>';
+$left_side .= '</div>'; // container
 
-$left_side .= '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-owner\')">'.__('Search by assigned user').'</h2>';
+$left_side .= '<div class="incident_container">';
+$left_side .= '<h2 class="incident_dashboard incident_search_by_owner" onclick="toggleDiv (\'incident-owner\')">'.__('Search by owner').'</h2>';
 $left_side .= '<div id="incident-owner">';
 
 $rows = get_db_all_rows_sql ("SELECT DISTINCT(id_usuario) FROM tincidencia");
@@ -151,10 +153,39 @@ $aux_table .= "</table>";
 
 $left_side .= $aux_table;
 $left_side .= '</div>';
+$left_side .= '</div>'; // container
+
+$left_side .= '<div class="incident_container">';
+$left_side .= '<h2 class="incident_dashboard incident_search_by_priority" onclick="toggleDiv (\'incident-priority\')">'.__('Search by priority').'</h2>';
+$left_side .= '<div id="incident-priority">';
+
+$rows = get_db_all_rows_sql ("SELECT DISTINCT(prioridad) as priority, count(*) as count FROM tincidencia");
+
+$aux_table = "<table class='search_by_priority'>";
+
+$aux_table .="<tr>";
+
+for ($i = 0; $i<=5; $i++) {		
+	$aux_table .= "<td style='background: " . incidents_get_priority_color(array("prioridad" => $i)) . ";'>";
+	$aux_table .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_priority=".$priorities["priority"]."'>";
+		
+	$aux_table .= $i;
+	$aux_table .= "</a>";
+	$aux_table .= "</td>";
+}
+
+$aux_table .="</tr>";
+
+$aux_table .= "</table>";
+
+$left_side .= $aux_table;
+$left_side .= '</div>';
+$left_side .= '</div>'; // container
 
 /**** DASHBOAR RIGHT SIDE ****/
 
-$right_side = '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-status\')">'.__('Search by status').'</h2>';
+$right_side = '<div class="incident_container">';
+$right_side .= '<h2 class="incident_dashboard incident_search_by_status" onclick="toggleDiv (\'incident-status\')">'.__('Search by status').'</h2>';
 $right_side .= '<div id="incident-status">';
 
 $rows = get_db_all_rows_sql ("SELECT id, name FROM tincident_status");
@@ -181,8 +212,10 @@ $aux_table .= "</table>";
 
 $right_side .= $aux_table;
 $right_side .= "</div>";
+$right_side .= "</div>"; // container
 
-$right_side .= '<h2 class="incident_dashboard" onclick="toggleDiv (\'incident-type\')">'.__('Search by type').'</h2>';
+$right_side .= '<div class="incident_container">';
+$right_side .= '<h2 class="incident_dashboard incident_search_by_type" onclick="toggleDiv (\'incident-type\')">'.__('Search by type').'</h2>';
 $right_side .= '<div id="incident-type">';
 
 $rows = get_db_all_rows_sql ("SELECT id, name FROM tincident_type");
@@ -218,6 +251,7 @@ $aux_table .= "</table>";
 
 $right_side .= $aux_table;
 $right_side .= "</div>";
+$right_side .= "</div>"; // container
 
 $table->data[1][0] = $left_side;
 $table->data[1][1] = $right_side;

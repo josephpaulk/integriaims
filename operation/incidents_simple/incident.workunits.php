@@ -65,7 +65,7 @@ foreach($incident['workunits'] as $k => $workunit) {
 	$wu = '';
 	$wu = "<div class='notetitle' style='width:95%'>"; // titulo
 	// Show data
-	$wu .= "<img src='images/avatars/".$avatar."_small.png'>&nbsp;";
+	$wu .= "<img src='images/avatars/".$avatar.".png' class='avatar_small'>&nbsp;";
 	$wu .= " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=".$workunit['id_user']."'>";
 	$wu .= $workunit['id_user'];
 	$wu .= "</a>";

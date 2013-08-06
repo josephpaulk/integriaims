@@ -57,7 +57,7 @@ if ($row3=mysql_fetch_array($res4)){
 	$description = $row3["description"];
 
 	// Show data
-	echo "<img src='images/avatars/".$avatar."_small.png'>&nbsp;";
+	echo "<img src='images/avatars/".$avatar.".png' class='avatar_small'>&nbsp;";
 	echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_user'>";
 	echo $id_user;
 	echo "</a>";

@@ -1588,7 +1588,7 @@ function print_user_avatar ($id_user = "", $small = false, $return = false) {
 	$avatar =  get_db_value ('avatar', 'tusuario', 'id_usuario', $id_user);
 	$output = '';
 	if ($avatar != '') 
-		$output .= '<img src="images/avatars/'.$avatar.($small ? '_small' : '').'.png" />';
+		$output .= '<img src="images/avatars/'.$avatar.'.png" class="avatar_small"/>';
 	
 	if ($return)
 		return $output;
