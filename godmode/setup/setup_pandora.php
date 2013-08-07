@@ -18,6 +18,8 @@
 global $config;
 
 check_login ();
+
+enterprise_include("include/functions_setup.php");
 	
 if (! dame_admin ($config["id_user"])) {
 	audit_db ("ACL Violation", $config["REMOTE_ADDR"], "No administrator access", "Trying to access visual setup");
@@ -65,6 +67,10 @@ if ($update) {
 	$config["pandora_pass"] = get_parameter ("pandora_pass");
 	$config["default_contract"] = get_parameter ("default_contract");
 
+        $config["remote_inventory_type"] = (int) get_parameter("remote_inventory_type", 0);
+
+        update_config_token ("remote_inventory_type", $config["remote_inventory_type"]);
+
 	foreach($labels as $k => $lab) {
 		$config["pandora_$k"] = get_parameter ("pandora_$k");
 		update_config_token ("pandora_$k", $config["pandora_$k"]);
@@ -104,6 +110,14 @@ $table->data[2][0] = print_select ($contracts, 'default_contract', $config["defa
 echo "<form name='setup' method='post'>";
 
 print_table ($table);
+
+$table_remote_inventory = enterprise_hook('setup_print_remote_inventory_type');
+
+if ($table_remote_inventory === ENTERPRISE_NOT_HOOK) {
+        $table_remote_inventory = "";
+}
+
+echo $table_remote_inventory;
 
 echo '<div style="width: '.$table->width.'" class="button">';
 print_input_hidden ('update', 1);

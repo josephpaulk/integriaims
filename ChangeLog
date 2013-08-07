@@ -1,3 +1,9 @@
+2013-08-07  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_config.php,
+	godmode/setup/setup_pandora.php: Support to manage
+	variables of remote inventory configuration.
+
 2013-08-07  Sergio Martin <sergio.martin@artica.es>
 
 	* include/styles/integria.css: Center uncentered
