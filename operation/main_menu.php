@@ -32,20 +32,41 @@ if (give_acl($config["id_user"], 0, "PR") && $show_projects != MENU_HIDDEN){
     echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".__('Projects')."</a></li>";
 }
 
+// Support submenus ACLs
+$incidents_acl = give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN;
+$kb_acl = give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN;
+$download_acl = give_acl($config["id_user"], 0, "KR");
+
+// Support submenus links
+if($simple_mode) {
+	$incidents_link = 'index.php?sec=incidents&sec2=operation/incidents_simple/incidents';
+}
+else {
+	$incidents_link = 'index.php?sec=incidents&sec2=operation/incidents/incident_dashboard';
+}
+$kb_link = 'index.php?sec=kb&sec2=operation/kb/browse';
+$download_link = 'index.php?sec=download&sec2=operation/download/browse';
+
+$support_link = 'javascript:';
+if ($incidents_acl) {
+	$support_link = $incidents_link;
+}
+else if ($kb_acl) {
+	$support_link = $kb_link;
+}
+else if ($download_acl) {
+	$support_link = $download_link;
+}
+
 // Support
-if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
+if ($incidents_acl || $kb_acl || $download_acl) {
     // Incident
     if ($sec == "incidents" || $sec == "download" || $sec == "kb")
 	    echo "<li id='current' class='support'>";
     else
 	    echo "<li class='support'>";
 	echo "<div>|</div>";
-	if($simple_mode) {
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>".__('Support')."</a></li>";
-	}
-	else {
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Support')."</a></li>";
-	}
+	echo "<a href='" . $support_link . "'>".__('Support')."</a></li>";
 }
 
 // Inventory
@@ -109,39 +130,34 @@ echo '<div class="submenu support_submenu">';
 echo '<ul class="submenu">';
 
 // Incidents
-if (give_acl($config["id_user"], 0, "IR") && $show_incidents != MENU_HIDDEN){
+if ($incidents_acl){
     // Incident
     if ($sec == "incidents" )
 	    echo "<li id='current' class='incident'>";
     else
 	    echo "<li class='incident'>";
-	if($simple_mode) {
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>".__('Incidents')."</a></li>";
-	}
-	else {
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>".__('Incidents')."</a></li>";
-	}
+		
+	echo "<a href='" . $incidents_link . "'>".__('Incidents')."</a></li>";
 }
 
 // KB
-if (give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN) {
+if ($kb_acl) {
 	if ($sec == "kb" )
 		echo "<li id='current' class='kb'>";
 	else
 		echo "<li class='kb'>";
-	echo "<a href='index.php?sec=kb&sec2=operation/kb/browse'>".__('KB')."</a></li>";
+	echo "<a href='" . $kb_link . "'>".__('KB')."</a></li>";
 }
 
 // FILE RELEASES
-if (give_acl($config["id_user"], 0, "KR")) {
-
+if ($download_acl) {
 	if ($show_file_releases != MENU_HIDDEN) {
 		// File Releases
 		if ($sec == "download" )
 				echo "<li id='current' class='files'>";
 		else
 				echo "<li class='files'>";
-		echo "<a href='index.php?sec=download&sec2=operation/download/browse'>".__('File Releases')."</a></li>";
+		echo "<a href='" . $download_link . "'>".__('File Releases')."</a></li>";
 	}
 }
 

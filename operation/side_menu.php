@@ -52,9 +52,9 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 	
 	
 	echo "<div class='portlet' style='border:padding: 0px; margin: 0px;'>";
-	echo '<a href="javascript:;" onclick="$(\'#projects\').slideToggle (); return false">';
+	//echo '<a href="javascript:;" onclick="$(\'#projects\').slideToggle (); return false">';
 	echo "<h3>".__('Projects')."</h3>";
-	echo "</a>";
+	//echo "</a>";
 	echo "<div id=projects style='padding: 0px; margin: 0px'>";
 
 	echo "<ul class='sidemenu'>";
@@ -120,7 +120,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 		echo "<div class='portlet'>";
 		$project_title = substr(get_db_value ("name", "tproject", "id", $id_project), 0, 25);
 		echo '<a href="javascript:;" onclick="$(\'#project\').slideToggle (); return false">';
-		echo "<h2>$project_title</h2>";
+		echo "<h2>" . __('Project management') . "</h2>";
 		echo "</a>";
 		echo "<div id=project>";
 		echo "<ul class='sidemenu'>";
@@ -1167,24 +1167,31 @@ $year = get_parameter ("year", date ('y'));
 
 echo '<div class="portlet" style="padding: 0px; margin: 0px;">';
 // echo '<a href="javascript:;" onclick="$(\'#calendar_div\').slideToggle (); return false">';
-echo '<a href="index.php?sec=agenda&sec2=operation/agenda/agenda">';
-echo '<h2>'.__('Calendar').'</h2>';
-echo '</a>';
+echo '<h3>'.__('Calendar').'</h3>';
 echo '<div id="calendar_div">';
 echo generate_calendar ($year, $month, array(), 1, NULL, $config["language_code"]);
-echo '</div></div>';
-// End of calendar box
+echo '</div>';
+
+echo "<ul class='sidemenu'>";
+echo "<li>";
+echo '<a href="index.php?sec=agenda&sec2=operation/agenda/agenda">';
+echo __('Full calendar');
+echo '</a>';
+echo "</li>";
+
+echo "<li>";
 if ($sec == 'agenda') {
-	echo "<a href='javascript:;' onClick='show_agenda_entry(-1, \"\", 0, true)'><div class='portlet' style='padding: 0px; margin: 0px;'>
-			<h2>".__('Add calendar entry')."</h2>
-	  </div></a>";
+	echo "<a href='javascript:;' onClick='show_agenda_entry(-1, \"\", 0, true)'>"
+		.__('Add calendar entry')."</a>";
 } else {
-	echo "<a href='javascript:;' onClick='show_agenda_entry(-1, \"\", 0, false)'><div class='portlet' style='padding: 0px; margin: 0px;'>
-			<h2>".__('Add calendar entry')."</h2>
-	  </div></a>";
+	echo "<a href='javascript:;' onClick='show_agenda_entry(-1, \"\", 0, false)'>"
+		.__('Add calendar entry')."</a>";
 }
+echo "</li>";
+echo "</ul>";
 
-
+echo "</div>";
+// End of calendar box
 
 // Testing boxes for side menus
 $user_row = get_db_row ("tusuario", "id_usuario", $config['id_user']);
@@ -1203,9 +1210,9 @@ $working_month = get_parameter ("working_month", $now_month);
 $working_year = get_parameter ("working_year", $now_year);
 
 echo '<div class="portlet">';
-echo '<a href="" onclick="$(\'#userdiv\').slideToggle (); return false">';
-echo '<h2>'.__('User info').'</h2>';
-echo '</a>';
+//echo '<a href="" onclick="$(\'#userdiv\').slideToggle (); return false">';
+echo '<h3>'.__('User info').'</h3>';
+//echo '</a>';
 echo '<div class="portletBody" id="userdiv">';
 
 echo '<div style="float: left; padding: 7px 7px 0px 0px; ">';
@@ -1215,8 +1222,8 @@ echo '</div>';
 echo '<div style="float: left;">';
 echo '<a href="index.php?sec=users&sec2=operation/users/user_edit&id='.$config['id_user'].'">';
 echo '<strong>'.$config['id_user'].'</strong>';
-echo '</a><br/>';
-echo '<em>'.$realname.'</em><br />';
+echo '</a>';
+echo '<em style="display: block; margin-top: -2px;">'.$realname.'</em>';
 echo '</div>';
 
 echo "<div style='clear:both; margin-bottom: 10px;'></div>";

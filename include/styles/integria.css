@@ -18,7 +18,7 @@ strong, b {
 }
 
 body {
-	font: 0.80em  Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
+	font: 0.80em  Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
 	background-image: url(../../images/darkgrey_bg.png);
 	background-color: #ffffff;
 	background-repeat: repeat-x;
@@ -32,7 +32,7 @@ body.login {
 }
 
 td, th {
-	font: 0.80em  Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
+	font: 0.80em  Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
 	color: #666;
 	font-weight: 300;
 	padding: 1px;
@@ -51,15 +51,15 @@ a:hover {
 
 /* headers */
 h1, h2, h3 {
-	font: bold 1em 'Trebuchet MS', Tahoma, Sans-serif;
+	font: bold 1em Verdana, Arial, 'Trebuchet MS', Tahoma, Sans-serif;
 	text-transform: uppercase;
 	color: #555;
 }
 
-h1 { font-size: 1.5em; }
-h2 { font-size: 1.3em; }
-h3 { font-size: 1.1em; }
-h4 { font-size: 0.9em; }
+h1 { font-size: 1.3em; }
+h2 { font-size: 1.0em; }
+h3 { font-size: 0.9em; }
+h4 { font-size: 0.8em; }
 h5 { font-size: 0.7em; }
 h6 { font-size: 0.5em; }
 
@@ -68,7 +68,7 @@ h6 { font-size: 0.5em; }
 	margin: 0 0 0 6px;
 	text-transform: uppercase;
 	border-bottom: 2px solid #404040;
-	width: 97%;
+	width: 96%;
 }
 
 #sidebar h1 {
@@ -384,8 +384,9 @@ form.searchform input.button {
 #header {
 	position: relative;
 	
-	background-color: #404040;
+	#background-color: #404040;
 	background-image: url('../../images/darkgrey_bg.png');
+	background-repeat: repeat-x;
 	color: #ffffff;
 	
 	height: 55px;
@@ -591,13 +592,16 @@ input#global_search {
 	text-align: left;
 	margin: 0 0 0px 0;
 	text-decoration: none;
-	padding-top: 5px;
-	padding-bottom: 10px;
 }
 #sidebar ul.sidemenu li {
 	font-size: 11px;
 	line-height: 18px;
 	padding-top: 2px;
+}
+
+ul.sidemenu {	
+	padding-top: 5px;
+	padding-bottom: 10px;
 }
 
 #sidebar li#sidesel a {
@@ -1571,8 +1575,6 @@ span.users, span.agents, span.data, span.alerts, span.time {
 }
 
 .portletBody{
-	border-left:4px solid #ebebeb;
-	border-right:4px solid #ebebeb;
 	background-color:#eeeeee;
 	padding:10px 10px 10px 8px !important;color:#717171;
 	margin-top: 0px;
@@ -1697,6 +1699,19 @@ div.pager input {
 
 #incident_inventories {
 	width: 230px;
+}
+
+#incident-owner {
+	text-align: center;
+}
+
+#incident-owner a {
+	line-height: 1.6;
+}
+
+#incident-owner table {
+	margin-top: 2px;
+	width: auto;
 }
 
 textarea {
@@ -2218,23 +2233,38 @@ table.search_by_priority {
 
 table.search_by_priority td a {
 	color: #ffffff !important;
-	text-shadow: 1px 1px #999;
+	display: block;
+	width:35px;
 }
 
+
 table.search_by_priority td {
-	background: pink;
 	text-align: center;
 	height: 30px;
-	width: 50px;
 	margin-right: 6px;
 	font-weight: bold;
+	border-radius: 2px;
 	border-bottom-right-radius: 10px;
 }
 
 div.incident_container {
 	background: #f3f3f3;
-	padding: 2px 0px 2px 6px;
+	padding: 2px 0px 6px 12px;
 	margin-bottom: 17px;
+	margin-right: 10px;
+	
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+}
+
+div.incident_container * {
+	font-size: 0.97em;
+}
+
+div.incident_container table {
+	width: 100%;
+	margin-left: -5px;
 }
 
 #button-bar-title {
@@ -2330,4 +2360,64 @@ div#error_login {
 
 img.avatar_small {
 	height: 22px;
+}
+
+/* Bubbles with user avatar inside */
+.bubble img {
+	width: 75px;
+	margin-top: 15px;
+}
+
+.bubble {
+	width: 111px;
+	max-width: 111px;
+	height: 111px;
+	max-height: 111px;
+	background-image: url('../../images/bubble.png');
+	text-align: center;
+	margin: 0px auto;
+}
+
+.bubble_little img {
+	width: 48px;
+	margin-top: 11px;
+}
+
+.bubble_little {
+	width: 74px;
+	max-width: 74px;
+	height: 74px;
+	max-height: 74px;
+	background-image: url('../../images/bubble_little.png');
+	text-align: center;
+	margin: 8px auto 0px;
+}
+
+/* Custom search squares */
+
+.custom_search {
+	text-align: center;
+	float: left;
+	height: 25px;
+	font-weight: bold;
+	
+	border-radius: 2px;
+	
+	background: #BBBBBB;
+	padding: 5px 8px 0px 8px;
+	
+	margin-right: 12px;
+	margin-bottom: 8px;
+}
+
+.custom_search a {
+	color: #FFFFFF;
+	height: 100%;
+	font-size: 0.95em;
+}
+
+#incident-custom {
+	padding-top: 18px;
+	padding-left: 8px;
+	padding-bottom: 15px;
 }

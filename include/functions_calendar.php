@@ -324,7 +324,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 
 	list($month, $year, $month_name, $weekday) = explode(',',gmstrftime('%m,%Y,%B,%w',$first_of_month));
 	$weekday = ($weekday + 7 - $first_day) % 7; #adjust for $first_day
-	$title   = htmlentities(ucfirst($month_name)).'&nbsp;'.$year;  #note that some locales don't capitalize month and day names
+	$title   = strtoupper(htmlentities(ucfirst($month_name))).'&nbsp;'.$year;  #note that some locales don't capitalize month and day names
 
 	#Begin calendar. Uses a real <caption>. See http://diveintomark.org/archives/2002/07/03
 	@list($p, $pl) = each($pn); @list($n, $nl) = each($pn); #previous and next links, if applicable
@@ -334,12 +334,10 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 
 	$calendar = '<table style="padding: 0px; margin: 0px auto;" class="calendar"><tr>';
 
-	$calendar .= '<th colspan=7 class="calendar-month"><center><b>'.$title.'</b></center></th></tr><tr>';
-
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
 		foreach($day_names as $d)
-			$calendar .= '<th style="font-size: 8px" abbr="'.htmlentities($d).'">'.htmlentities($day_name_length < 4 ? substr($d,0,$day_name_length) : $d).'</th>';
+			$calendar .= '<th abbr="'.htmlentities($d).'">'.htmlentities($day_name_length < 4 ? substr($d,0,$day_name_length) : $d).'</th>';
 		$calendar .= "</tr>\n<tr>";
 	}
 
@@ -394,9 +392,9 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 		$time = time();
 		$today = date('j',$time);
 		$today_m = date('n',$time);
-		$today_style = "style='font-size: 9px' ";
+		$today_style = "";
 		if (($today == $day) && ($today_m == $month))
-			$today_style .= " style='border: 1px solid #00ff00;'";		
+			$today_style .= " style='border: 1px solid #FF9933; font-weight: bold; color: #FF9933;'";		
 
 		if(isset($days[$day]) and is_array($days[$day])){
 			@list($link, $classes, $content, $tooltip) = $days[$day];
@@ -412,7 +410,12 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 	}
 	if($weekday != 7) $calendar .= '<td colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
 
-	return $calendar."</tr>\n</table>\n";
+
+	$calendar_outer = '<table style="padding: 0px; margin: 0px auto;" class="calendar_outer"><tr>';
+	$calendar_outer .= '<th colspan=7 class="calendar-month"><center><b>'.$title.'</b></center></th></tr><tr>';
+	$calendar_outer .= '<td>' . $calendar . '</td></tr></table>';
+
+	return $calendar_outer."</tr>\n</table>\n";
 }
 
 

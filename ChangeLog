@@ -1,3 +1,57 @@
+2013-08-07  Sergio Martin <sergio.martin@artica.es>
+
+	* include/styles/calendar.css
+	include/styles/integria.css
+	include/functions_calendar.php
+	include/constants.php
+	integria_dbdata.sql
+	operation/incidents/incident_dashboard.php
+	operation/side_menu.php
+	operation/main_menu.php
+	integria_demo.sql
+	images/bubble_little.png
+	images/bubble.png
+	images/arrow_right.png
+	images/darkgrey_bg.png
+	images/paste_plain.png
+	images/arrow_down.png
+	images/avatars/people_1.png
+	images/avatars/people_2.png
+	images/avatars/people_3.png
+	images/avatars/avatar10.png
+	images/avatars/avatar11.png
+	images/avatars/avatar12.png
+	images/avatars/avatar13.png
+	images/avatars/avatar14.png
+	images/avatars/avatar15.png
+	images/avatars/avatar16.png
+	images/avatars/avatar17.png
+	images/avatars/avatar18.png
+	images/avatars/avatar19.png
+	images/avatars/avatar1.png
+	images/avatars/avatar2.png
+	images/avatars/avatar3.png
+	images/avatars/avatar4.png
+	images/avatars/avatar5.png
+	images/avatars/avatar6.png
+	images/avatars/avatar8.png
+	images/avatars/avatar9.png
+	images/avatars/moustache1.png
+	images/avatars/moustache2.png
+	images/avatars/moustache3.png
+	images/avatars/moustache4.png
+	images/avatars/moustache5.png
+	images/avatars/moustache6.png
+	images/avatars/moustache7.png
+	images/avatars/moustache8.png
+	images/avatars/avatar20.png
+	images/avatars/avatar21.png
+	images/avatars/moustache9.png
+	images/avatars/avatar22.png
+	images/avatars/avatar23.png: Change the avatars
+	by the new ones, fix little bugs of the previous
+	days work, and finish the incident overview section
+
 2013-08-07  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/ajax/crm.php
