@@ -135,10 +135,11 @@ if ($get_company_search) {
 		$table_list->colspan = array ();
 		$table_list->head[0] = __('Company');
 		$table_list->head[1] = __('Role');
-		$table_list->head[4] = __('Manager');
-		$table_list->head[5] = __('Country');
-		$table_list->head[6] = __('Last activity');
-		$table_list->head[7] = __('Delete');
+		$table_list->head[2] = __('Estimated sale');
+		$table_list->head[3] = __('Manager');
+		$table_list->head[4] = __('Country');
+		$table_list->head[5] = __('Last activity');
+		$table_list->head[6] = __('Delete');
 		
 		foreach ($companies as $company) {
 
@@ -149,19 +150,21 @@ if ($get_company_search) {
 
 			$sum_leads = get_db_sql ("SELECT COUNT(id) FROM tlead WHERE progress < 100 AND id_company = ".$company["id"]);
 			if ($sum_leads > 0) {
-				$data[3] .= " ($sum_leads) ";
-				$data[3] .= get_db_sql ("SELECT SUM(estimated_sale) FROM tlead WHERE progress < 100 AND id_company = ".$company["id"]);
+				$data[2] .= " ($sum_leads) ";
+				$data[2] .= get_db_sql ("SELECT SUM(estimated_sale) FROM tlead WHERE progress < 100 AND id_company = ".$company["id"]);
+			} else {
+				$data[2] = '';
 			}
 
-			$data[4] = $company["manager"];
-			$data[5] = $company["country"];
+			$data[3] = $company["manager"];
+			$data[4] = $company["country"];
 			
 			// get last activity date for this company record
 			$last_activity = get_db_sql ("SELECT date FROM tcompany_activity WHERE id_company = ". $company["id"]);
 
-			$data[6] = human_time_comparation ($last_activity);
+			$data[5] = human_time_comparation ($last_activity);
 
-			$data[7] ='<a href="index.php?sec=customers&
+			$data[6] ='<a href="index.php?sec=customers&
 							sec2=operation/companies/company_detail'.$params.'&
 							delete_company=1&id='.$company['id'].'"
 							onClick="if (!confirm(\''.__('Are you sure?').'\'))

@@ -603,7 +603,7 @@ if ($id || $new) {
 	$owner = (string) get_parameter ("owner_search");
 	$show_100 = (int) get_parameter ("show_100_search");
 	$id_language = (string) get_parameter ("id_language_search", "");
-	$est_sale = (string) get_parameter ("est_sale_search", "");
+	$est_sale = (int) get_parameter ("est_sale_search", 0);
 
 	$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&id_category_search=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
