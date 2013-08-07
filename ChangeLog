@@ -1,5 +1,11 @@
 2013-08-07  Sergio Martin <sergio.martin@artica.es>
 
+	* include/styles/integria.css: Center uncentered
+	contain of the priority boxes in search incidents by
+	priority in incidents overview section
+
+2013-08-07  Sergio Martin <sergio.martin@artica.es>
+
 	* include/styles/calendar.css
 	include/styles/integria.css
 	include/functions_calendar.php
