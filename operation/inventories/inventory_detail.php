@@ -84,6 +84,7 @@ enterprise_include('include/functions_inventory.php');
 
 $read_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id));
 $write_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id, true));
+$manage_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id, false, false, true));
 
 if ($read_permission === ENTERPRISE_NOT_HOOK) {
 	$read_permission = true;
@@ -99,6 +100,18 @@ $inventory_name = get_db_value('name', 'tinventory', 'id', $id);
 
 if ($id) {
 	$inventory = get_inventory ($id);
+	
+	if ($manage_permission) {
+		echo "<div id='button-bar-title'>";
+		echo "<ul>";	
+		echo "<li>";
+		echo '<form id="delete_inventory_form" name="delete_inventory_form" class="delete action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_detail">';
+		print_input_hidden ('quick_delete', $id);
+		echo "<a href='#' id='detele_inventory_submit_form'>".print_image("images/cross.png", true, array("title" => __("Delete")))."</a>";
+		echo '</form>';
+		echo "</li>";
+		echo "</div>";
+	}
 }
 
 $check_inventory = (bool) get_parameter ('check_inventory');
@@ -164,9 +177,32 @@ $public = (bool) get_parameter ('public');
 $id_object_type = (int) get_parameter('id_object_type');
 $is_unique = true;
 $msg_err = '';
+$inventory_status = get_parameter('inventory_status');
 
 if ((isset($_POST['parent_name'])) && ($_POST['parent_name'] == '')) {
 	$id_parent = 0;
+}
+
+// Delete inventory
+$quick_delete = get_parameter("quick_delete");
+
+if ($quick_delete) {
+
+	$id_inv = $quick_delete;
+	if (!$manage_permission) {
+		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete inventory #".$id_inv);
+		include ("general/noaccess.php");
+		exit;
+	}
+	$sql = "DELETE FROM tinventory WHERE id=$id_inv";
+	
+	$result = process_sql ($sql);	
+	
+	if ($result !== false) {
+		inventory_tracking($id_inv, INVENTORY_DELETED);
+	}
+	
+	$id = 0;
 }
 
 if ($update) {
@@ -185,11 +221,11 @@ if ($update) {
 	
 	$sql = sprintf ('UPDATE tinventory SET name = "%s", description = "%s",
 			id_contract = %d,
-			id_parent = %d, id_manufacturer = %d, owner = "%s", public = %d, id_object_type = %d, last_update = "%s"
+			id_parent = %d, id_manufacturer = %d, owner = "%s", public = %d, id_object_type = %d, last_update = "%s", inventory_status="%s"
 			WHERE id = %d',
 			$name, $description, $id_contract,
 			$id_parent,
-			$id_manufacturer, $owner, $public, $id_object_type, $last_update, $id);
+			$id_manufacturer, $owner, $public, $id_object_type, $last_update, $inventory_status, $id);
 
 	$result = process_sql ($sql);	
 	
@@ -335,11 +371,12 @@ if ($create) {
 	else {
 
 		$sql = sprintf ('INSERT INTO tinventory (name, description,
-				id_contract, id_parent, id_manufacturer, owner, public, id_object_type, last_update)
-				VALUES ("%s", "%s", %d, %d, %d, "%s", %d, %d, "%s")',
+				id_contract, id_parent, id_manufacturer, owner, public, id_object_type, last_update, status)
+				VALUES ("%s", "%s", %d, %d, %d, "%s", %d, %d, "%s", "%s")',
 				$name, $description, $id_contract,
-				$id_parent, $id_manufacturer, $owner, $public, $id_object_type, $last_update);
+				$id_parent, $id_manufacturer, $owner, $public, $id_object_type, $last_update, $inventory_status);
 		$id = process_sql ($sql, 'insert_id');
+
 	}
 	if ($id !== false) {
 		
@@ -431,6 +468,7 @@ if ($create) {
 	$public = false;
 	$owner = $config['id_user'];
 	$id_object_type = 0;
+	$inventory_status = '';
 }
 
 
@@ -453,6 +491,7 @@ if ($id) {
 	$owner = $inventory['owner'];
 	$public = $inventory['public'];
 	$id_object_type = $inventory['id_object_type'];
+	$inventory_status = $inventory['status'];
 }
 
 
@@ -587,18 +626,22 @@ if ($write_permission) {
 		$table->data[2][2] = print_select ($users, 'inventory_users', NULL,
 								'', '', '', true, false, false, __('Associated user'));
 	}
+
+$all_inventory_status = inventories_get_inventory_status ();
+$table->data[3][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status, '', '', '', true, false, false, __('Status'));
 	
 /* Fourth row */
-$table->colspan[3][0] = 3;		
-$table->data[3][0] = "";
+$table->colspan[4][0] = 3;		
+$table->data[4][0] = "";
 
 
 /* Fifth row */
-$table->data[4][1] = "</div>&nbsp;";
+$table->data[5][1] = "</div>&nbsp;";
 
+$table->colspan[6][0] = 3;	
 /* Sixth row */
 $disabled_str = ! $write_permission ? 'readonly="1"' : '';
-$table->data[5][0] = print_textarea ('description', 15, 100, $description,
+$table->data[6][0] = print_textarea ('description', 15, 100, $description,
 	$disabled_str, true, __('Description'));
 
 echo '<div class="result">'.$result_msg.$msg_err.'</div>';
@@ -659,16 +702,23 @@ $(document).ready (function () {
 		}
 	}
 
+/*
 	$("form.delete").submit (function () {
 		if (! confirm ("<?php echo __('Are you sure?'); ?>"))
 			return false;
 	});
+*/
 	
 	var idUser = "<?php echo $config['id_user'] ?>";
 	
 	bindAutocomplete ("#text-owner", idUser);	
-	//bindAutocomplete ("#text-owner_search", idUser);
 	
+	$("#detele_inventory_submit_form").click(function (event) {
+		event.preventDefault();
+
+		$("#delete_inventory_form").submit();
+	});
+
 });
 
 // Form validation

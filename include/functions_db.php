@@ -572,7 +572,8 @@ function borrar_incidencia ($id_incident) {
 // --------------------------------------------------------------- 
 function borrar_objeto ($id) {
 	$sql = sprintf ('DELETE FROM tinventory WHERE id = %d', $id);
-	process_sql ($sql);
+	
+	return process_sql ($sql);
 }
 
 // --------------------------------------------------------------- 
@@ -2198,7 +2199,11 @@ function inventory_tracking ($id_inventory, $state, $aditional_data = 0) {
 		case INVENTORY_PRIVATE:
 			$description = __('Inventory private');
 			break;
-			
+		
+		case INVENTORY_DELETED:
+			$description = __('Deleted');
+			break;
+				
 		default:
 			$description = __('Unknown update');
 			break;

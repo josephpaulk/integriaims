@@ -1,3 +1,13 @@
+2013-08-08  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  extras/migrate.sql
+	  include/functions_db.php
+	  include/functions_inventories.php
+	  include/js/integria_inventory.js
+	  operation/inventories/inventory_detail.php: Added
+	delete action and added field 'status' in inventory form.
+
 2013-08-07  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_config.php,

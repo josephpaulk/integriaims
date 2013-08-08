@@ -1378,5 +1378,19 @@ function inventories_check_same_object_type_list($inventories) {
 	return $id_object;
 }
 
-
+/**
+ * Get all types of objects
+ *
+ */
+ 
+function inventories_get_inventory_status () {	
+	$inventory_status = array();
+	
+	$inventory_status['new'] = __('New');
+	$inventory_status['inuse'] = __('In use');
+	$inventory_status['unused'] = __('Unused');
+	$inventory_status['issued'] = __('Issued');
+	
+	return $inventory_status;
+}
 ?>

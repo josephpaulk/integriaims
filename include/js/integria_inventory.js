@@ -139,7 +139,7 @@ function show_fields() {
 		dataType: "json",
 		success: function(data){
 			
-			fi=document.getElementById('table1-3-0');
+			fi=document.getElementById('table1-4-0');
 			var table = document.createElement("table"); //create table
 			table.id='table_fields';
 			table.className = 'databox_color_without_line';

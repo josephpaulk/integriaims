@@ -401,3 +401,8 @@ CREATE TABLE `ttodo_notes` (
 
 INSERT INTO `tconfig` (`token`, `value`) VALUES
 ('update_manager_installed', 1);
+
+
+/* 07/08/2013 */
+ALTER TABLE `tinventory` ADD `status` enum ('new', 'inuse', 'unused', 'issued') default 'new';
+ALTER TABLE `tobject_type` ADD `min_stock` int(5) NOT NULL default 0;
