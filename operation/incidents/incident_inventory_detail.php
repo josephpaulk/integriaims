@@ -33,7 +33,7 @@ $table->size[4] = '40px';
 $table->size[5] = '40px';
 $table->data = array();
 
-echo "<h3>".__('Inventory objects')."</h3>";
+//echo "<h3>".__('Inventory objects')."</h3>";
 
 if (count ($inventories) == 0) {
 	echo '<h3 class="error">'.__('There\'s no inventory objects associated to this incident').'</h3>';

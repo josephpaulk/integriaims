@@ -787,35 +787,35 @@ function clean_flash_string ($string) {
 function print_priority_flag_image ($priority, $return = false) {
 	$output = '';
 	
-	$output .= '<img class="priority-color" height="15" width="15" ';
+	$output .= '<img class="priority-color" ';
 	switch ($priority) {
-		case 0:
-			// Informative
-			$output .= 'src="images/pixel_gray.png" title="'.__('Informative').'" ';
-			break;
-		case 1:
-			// Low
-			$output .= 'src="images/pixel_green.png" title="'.__('Low').'" ';
-			break;
-		case 2:
-			// Medium
-			$output .= 'src="images/pixel_yellow.png" title="'.__('Medium').'" ';
-			break;
-		case 3:
-			// Serious
-			$output .= 'src="images/pixel_orange.png" title="'.__('Serious').'" ';
-			break;
-		case 4:
-			// Very serious
-			$output .= 'src="images/pixel_red.png" title="'.__('Very serious').'" ';
-			break;
-		case 10:
-			// Maintance
-			$output .= 'src="images/pixel_blue.png" title="'.__('Maintance').'" ';
-			break;
-		default:
-			// Default
-			$output .= 'src="images/pixel_gray.png" title="'.__('Unknown').'" ';
+	case 0:
+		// Informative
+		$output .= 'src="images/priority_informative.png" title="'.__('Informative').'" ';
+		break;
+	case 1:
+		// Low
+		$output .= 'src="images/priority_low.png" title="'.__('Low').'" ';
+		break;
+	case 2:
+		// Medium
+		$output .= 'src="images/priority_medium.png" title="'.__('Medium').'" ';
+		break;
+	case 3:
+		// Serious
+		$output .= 'src="images/priority_serious.png" title="'.__('Serious').'" ';
+		break;
+	case 4:
+		// Very serious
+		$output .= 'src="images/priority_critical.png" title="'.__('Very serious').'" ';
+		break;
+	case 10:
+		// Maintance
+		$output .= 'src="images/priority_maintenance.png" title="'.__('Maintance').'" ';
+		break;
+	default:
+		// Default
+		$output .= 'src="images/pixel_gray.png" title="'.__('Unknown').'" ';
 	}
 	
 	$output .= ' />';

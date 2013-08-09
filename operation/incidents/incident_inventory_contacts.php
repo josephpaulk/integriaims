@@ -69,7 +69,7 @@ foreach ($inventories as $inventory) {
 	}
 }
 
-echo '<h3>'.__('Contacts grouped by inventory').'</h3>';
+//echo '<h3>'.__('Contacts grouped by inventory').'</h3>';
 print_table ($table);
 
 $table->data = array ();

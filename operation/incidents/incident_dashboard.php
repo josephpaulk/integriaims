@@ -29,7 +29,7 @@ echo __("Incident overview");
 echo "</h1>";
 
 /* Users affected by the incident */
-$table->width = '98%';
+$table->width = '100%';
 $table->class = "none";
 $table->size = array ();
 $table->size[0] = '50%';
@@ -282,7 +282,7 @@ print_table($table);
 
 ?>
 
-<script>
+<script type="text/javascript">
 $('.incident_container h2').click(function() {
 	var arrow = $('#' + $(this).attr('id') + ' img').attr('src');
 	var arrow_class = $('#' + $(this).attr('id') + ' img').attr('class');

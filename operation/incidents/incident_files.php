@@ -139,7 +139,7 @@ if ($delete_file) {
 
 echo '<div id="upload_result"></div>';
 
-echo "<h3>".__('Add file')."</h3>";
+//echo "<h3>".__('Add file')."</h3>";
 
 echo "<div id='upload_control' style='width: 80%;margin: 0 auto;'>";
 

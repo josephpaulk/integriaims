@@ -70,40 +70,53 @@ if ($insert_workunit) {
 }
 
 //Add workunit form
-echo "<h3>".__('Add workunit')."</h3>";
-
-$now =  print_mysql_timestamp();
+//echo "<h3>".__('Add workunit')."</h3>";
 
 $table->width = '100%';
+$table->class = 'integria_form';
 $table->colspan = array ();
-$table->colspan[1][0] = 5;
+$table->colspan[1][0] = 6;
+$table->colspan[2][0] = 6;
 $table->data = array ();
 $table->size = array();
 $table->style = array();
-$table->data[0][0] = "<i>$now</i>";
-$table->data[0][1] = combo_roles (1, 'work_profile', __('Profile'), true);
-$table->data[0][2] = print_input_text ("duration", $config["iwu_defaultime"], '', 7,  10, true, __('Time used'));
-$table->data[0][3] = print_checkbox ('have_cost', 1, false, true, __('Have cost'));
-$table->data[0][4] = print_checkbox ('public', 1, true, true, __('Public'));
+$table->style[0] = 'vertical-align: top; padding-top: 10px;';
+$table->style[1] = 'vertical-align: top; padding-top: 10px;';
+$table->style[2] = 'vertical-align: top;';
+$table->style[3] = 'vertical-align: top;';
+$table->style[4] = 'vertical-align: top;';
+$table->style[5] = 'vertical-align: top;';
+$table->data[0][0] = print_image('images/calendar_orange.png', true) . '&nbsp' . print_mysql_timestamp(0, "Y-m-d");
+$table->data[0][1] = print_image('images/clock_orange.png', true) . '&nbsp' . print_mysql_timestamp(0, "H:i:s");
+$table->data[0][2] = combo_roles (1, 'work_profile', __('Profile'), true);
+$table->data[0][3] = print_input_text ("duration", $config["iwu_defaultime"], '', 7,  10, true, __('Time used'));
+$table->data[0][4] = print_checkbox ('have_cost', 1, false, true, __('Have cost'));
+$table->data[0][5] = print_checkbox ('public', 1, true, true, __('Public'));
 
 $table->data[1][0] = print_textarea ('nota', 10, 70, '', "style='resize:none;'", true, __('Description'));
 
+$button = '<div style="width: 100%; text-align: right;">';
+$button .= '<span id="sending_data" style="display: none;">' . __('Sending data...') . '<img src="images/spinner.gif" /></span>';
+$button .= print_submit_button (__('Add'), 'addnote', false, 'class="sub create"', true);
+$button .= print_input_hidden ('insert_workunit', 1, true);
+$button .= print_input_hidden ('id', $id, true);
+$button .= '</div>';
+
+$table->data[2][0] = $button;
+
 echo '<form id="form-add-workunit" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">';
 
-echo "<div style='width: 80%;margin: 0 auto;'>";
+echo "<div style='width: 98%;'>";
 print_table ($table);
-
-echo '<div style="width: 100%" class="button">';
-echo '<span id="sending_data" style="display: none;">' . __('Sending data...') . '<img src="images/spinner.gif" /></span>';
-print_submit_button (__('Add'), 'addnote', false, 'class="sub next"');
-print_input_hidden ('insert_workunit', 1);
-print_input_hidden ('id', $id);
-echo '</div>';
-echo "</form>";
-
 echo "</div>";
 
-echo "<h3>".__('Workunits')."</h3>";
+echo "</form>";
+
+echo '<ul class="ui-tabs-nav">';
+echo '<li class="ui-tabs-title">';
+echo "<h2>".__('Workunits')."</h2>";
+echo '</li>';
+echo '</ul>';
 
 // Workunit view
 $workunits = get_incident_workunits ($id_incident);
@@ -117,8 +130,14 @@ foreach ($workunits as $workunit) {
 	$workunit_data = get_workunit_data ($workunit['id_workunit']);
 	show_workunit_data ($workunit_data, $title);
 }
-echo "<h3>".__("Incident details")."</h3>";
-echo "<div style='margin-left: 10px; margin-top: 20px; width:90%; padding: 10px; border: 1px solid #ccc'><p>";
+
+echo '<ul class="ui-tabs-nav">';
+echo '<li class="ui-tabs-title">';
+echo "<h2>".__('Incident details')."</h2>";
+echo '</li>';
+echo '</ul>';
+
+echo "<div style='margin-left: 00px; margin-top: 20px; width:96%; padding: 10px; border: 1px solid #ccc'><p>";
 echo clean_output_breaks ($incident["descripcion"]);
 echo "</div>";
 

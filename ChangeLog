@@ -1,3 +1,61 @@
+2013-08-09  Sergio Martin <sergio.martin@artica.es>
+
+	* include/styles/calendar.css
+	include/styles/flora/flora.tabs.css
+	include/styles/integria.css
+	include/js/integria_incident_search.js
+	include/functions_calendar.php
+	include/functions.php
+	include/constants.php
+	include/languages/en_GB.po
+	include/languages/en_GB.mo
+	index.php
+	operation/incidents/incident_inventory_detail.php
+	operation/incidents/incident_dashboard.php
+	operation/incidents/incident_inventory_contacts.php
+	operation/incidents/incident_files.php
+	operation/incidents/incident_detail.php
+	operation/incidents/incident_search.php
+	operation/incidents/incident_workunits.php
+	operation/incidents/incident_dashboard_detail.php
+	operation/side_menu.php
+	operation/workorders/wo.php
+	images/incident_sla.png
+	images/incident.png
+	images/incident_users.png
+	images/input_create.png
+	images/object.png
+	images/priority_serious.png
+	images/cal_clock_orange.png
+	images/incident_dates.png
+	images/avatar_unknown.png
+	images/avatar_notyet.png
+	images/priority_maintenance.png
+	images/priority_low.png
+	images/status_new.png
+	images/status_pending.png
+	images/priority_critical.png
+	images/incident_adv_details.png
+	images/cal_clock_grey.png
+	images/incident_description.png
+	images/incident_details.png
+	images/email.png
+	images/input_delete.png
+	images/input_update.png
+	images/resolution.png
+	images/group.png
+	images/cal_clock_darkgrey.png
+	images/task.png
+	images/clock_orange.png
+	images/editor.png
+	images/calendar_orange.png
+	images/status_closed.png
+	images/sla.png
+	images/priority_medium.png
+	images/priority_informative.png
+	general/home.php: Change the incident view and
+	more visual improvements
+
 2013-08-09 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* include/functions_config.php: fixed the set

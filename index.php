@@ -386,7 +386,7 @@ if ($clean_output == 0) {
 
         // Avoid render left menu for some special places (like home).
         if ($not_show_menu == 0){
-			echo '<td width=180 valign=top>';
+			echo '<td valign=top style="width: 150px;">';
 			echo '<div id="sidebar">';
 			require ("operation/side_menu.php"); 
 			if (give_acl ($config["id_user"], 0, "AR"))

@@ -1083,31 +1083,38 @@ $(document).ready (function () {
 	$("#priority_form").change (function () {
 		var level = this.value;
 		var color;
+		var name;
 		
 		switch (level) {
 			case "10":
 				color = "blue";
+				name = "maintenance";
 				break;
 			case "0":
 				color = "gray";
+				name = "informative";
 				break;
 			case "1":
 				color = "green";
+				name = "low";
 				break;
 			case "2":
 				color = "yellow";
+				name = "medium";
 				break;
 			case "3":
 				color = "orange";
+				name = "serious";
 				break;
 			case "4":
 				color = "red";
+				name = "critical";
 				break;
 			default:
 				color = "blue";
 		}
 		$(".priority-color").fadeOut('normal', function () {
-			$(this).attr ("src", "images/pixel_"+color+".png").fadeIn();
+			$(this).attr ("src", "images/priority_"+name+".png").fadeIn();
 		});
 	});
 		

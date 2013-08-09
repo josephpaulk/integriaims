@@ -3453,7 +3453,7 @@ msgstr "Details for incident"
 
 #: ../../operation/incidents/incident_tracking.php:93
 msgid "SLA history compliance for: "
-msgstr "Copy text \t SLA history compliance for: "
+msgstr "SLA history compliance for: "
 
 #: ../../operation/incidents/incident_tracking.php:118
 msgid "SLA total compliance (%)"

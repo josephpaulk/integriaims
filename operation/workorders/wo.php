@@ -606,24 +606,8 @@ if ($operation == "") {
 				$data[2] .= $buffer;
 			}
 
-			if ($wo["priority"] == 0)
-				$data[3] = "<img src='images/pixel_blue.png' width=12 height=12 title='".__('Informative')."'>";
-
-			if ($wo["priority"] == 1)
-				$data[3] = "<img src='images/pixel_yellow.png' width=12 height=12 title='".__('Low')."'>";
-
-			if ($wo["priority"] == 2)
-				$data[3] = "<img src='images/pixel_orange.png' width=12 height=12 title='".__('Medium')."'>";
-
-			if ($wo["priority"] == 3)
-				$data[3] = "<img src='images/pixel_red.png' width=12 height=12 title='".__('High')."'>";
-
-			if ($wo["priority"] == 4)
-				$data[3] = "<img src='images/pixel_fucsia.png' width=12 height=12 title='".__('Very High')."'>";
-
-			if ($wo["priority"] == 10)
-				$data[3] = "<img src='images/pixel_gray.png' width=12 height=12 title='--'>";
-
+			$data[3] = print_priority_flag_image ($wo["priority"], true);
+			
 			if ($wo["progress"] == 0)
 				$data[4] = __("Pending");
 			

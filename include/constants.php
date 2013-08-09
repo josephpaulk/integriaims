@@ -70,6 +70,11 @@ define ('STATUS_RESOLVED', 6);
 define ('STATUS_PENDING_THIRD_PERSON', 6);
 define ('STATUS_CLOSED', 7);
 
+// Incident status colors constants
+define ('STATUS_COLOR_NEW', '#FF3333');
+define ('STATUS_COLOR_PENDING', '#FFCC33');
+define ('STATUS_COLOR_CLOSED', '#66CC00');
+
 // Incident resolution constants
 define ('RES_FIXED', 1);
 define ('RES_INVALID', 2);

@@ -718,7 +718,7 @@ function reload_sla_slice_graph(id) {
 	values.push ({name: "is_ajax",
 		value: 1});
 	values.push ({name: "width",
-		value: 225});		
+		value: 155});		
 	values.push ({name: "height",
 		value: 15});		
 

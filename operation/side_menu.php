@@ -1234,22 +1234,19 @@ echo '<img src="images/clock.png" title="'.__('Workunit report').'" /></a>';
 
 if (give_acl ($config["id_user"], 0, "PR")) {
 	// Link to project graph
-	echo "&nbsp;&nbsp;";
+	echo "&nbsp;";
 	echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$working_month&year=$working_year&id=".$config['id_user']."'>";
 	echo '<img src="images/chart_bar.png" title="'.__('Project distribution').'"></a>';
 
 	// Link to Work user spare inster
-	echo "&nbsp;&nbsp;";
 	echo '<a href="index.php?sec=users&sec2=operation/users/user_spare_workunit">';
 	echo '<img src="images/award_star_silver_1.png" title="'.__('Workunit').'"></a>';
 
 	// Link to User detailed graph view
-	echo "&nbsp;&nbsp;";
 	echo '<a href="index.php?sec=users&sec2=operation/user_report/report_full_graph">';
 	echo '<img src="images/lightbulb.png" title="'.__('Full graph report').'"></a>';
 
 	// Week Workunit meter
-	echo "&nbsp;&nbsp;";
 	$begin_week = week_start_day ();
 	$begin_week .= " 00:00:00";
 	$end_week = date ('Y-m-d H:i:s', strtotime ("$begin_week + 1 week"));
@@ -1266,7 +1263,7 @@ if (give_acl ($config["id_user"], 0, "PR")) {
 	else
 		echo '<img src="images/heart.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
 	
-	echo "&nbsp;&nbsp;<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=".$config["id_user"]."'><img src='images/paste_plain.png' title='".__("Work Orders")."' border=0></a>";
+	echo "&nbsp;<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=".$config["id_user"]."'><img src='images/paste_plain.png' title='".__("Work Orders")."' border=0></a>";
 
 }
 

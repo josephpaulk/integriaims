@@ -246,25 +246,8 @@ if ($info) {
 		while ($wo = mysql_fetch_array($result_2)){
 
 			echo "<tr>";
-
-			if ($wo["priority"] == 0)
-				$data[0] = "<img src='images/pixel_blue.png' width=12 height=12 title='Informative'>";
-
-			if ($wo["priority"] == 1)
-				$data[0] = "<img src='images/pixel_yellow.png' width=12 height=12 title='Low'>";
-
-			if ($wo["priority"] == 2)
-				$data[0] = "<img src='images/pixel_orange.png' width=12 height=12 title='Medium'>";
-
-			if ($wo["priority"] == 3)
-				$data[0] = "<img src='images/pixel_red.png' width=12 height=12 title='High'>";
-
-			if ($wo["priority"] == 4)
-				$data[0] = "<img src='images/pixel_fucsia.png' width=12 height=12 title='Very High'>";
-
-			if ($wo["priority"] == 10)
-				$data[0] = "<img src='images/pixel_gray.png' width=12 height=12 title='--'>";
-
+			
+			$data[0] = print_priority_flag_image ($wo["priority"], true);
 			$data[1] = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo&operation=view&id=".$wo["id"]."'>". substr($wo["name"],0,50) . "</a>";
 
 			if ($wo["end_date"] != "0000-00-00 00:00:00"){

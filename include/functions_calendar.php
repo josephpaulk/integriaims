@@ -36,14 +36,14 @@ function print_timestamp ($unixtime = 0){
 	return date ($config["date_format"], $unixtime);
 }
 
-function print_mysql_timestamp ($unixtime = 0){
+function print_mysql_timestamp ($unixtime = 0, $format = "Y-m-d H:i:s"){
 	if ($unixtime == 0){
                 $unixtime = time();
         }
         if (!is_numeric ($unixtime)) {
                 $unixtime = strtotime ($unixtime);
         }
-	return date ("Y-m-d H:i:s", $unixtime);
+	return date ($format, $unixtime);
 
 }
 
@@ -274,26 +274,9 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 		foreach ($agenda_wo as $agenda_woitem){
 			list ($idwo, $woname, $woowner, $wocreator, $wopriority, $woend) = explode ("|", $agenda_woitem);
 			$woend = substr($woend,11,5);
-			$wopriority_img = "";
-			switch ($wopriority) {
-				case 0:
-					$wopriority_img = "<img src='images/pixel_blue.png' width=12 height=12 title='".__('Informative')."'>";
-					break;
-				case 1:
-					$wopriority_img = "<img src='images/pixel_yellow.png' width=12 height=12 title='".__('Low')."'>";
-					break;
-				case 2:
-					$wopriority_img = "<img src='images/pixel_orange.png' width=12 height=12 title='".__('Medium')."'>";
-					break;
-				case 3:
-					$wopriority_img = "<img src='images/pixel_red.png' width=12 height=12 title='".__('High')."'>";
-					break;
-				case 4:
-					$wopriority_img = "<img src='images/pixel_fucsia.png' width=12 height=12 title='".__('Very High')."'>";
-					break;
-				default:
-					$wopriority_img = "<img src='images/pixel_gray.png' width=12 height=12 title='--'>";
-			}	
+
+			$wopriority_img = print_priority_flag_image ($wopriority, true);
+
 			$calendar .= __("WO end"). ":&nbsp;$woend&nbsp;&nbsp;<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=$idwo'>";
 			$calendar .= "<img src='images/paste_plain.png' title='".__('Work Order')."'>";
 			$calendar .= "</A>";
