@@ -628,6 +628,8 @@ CREATE TABLE `tinventory` (
   `show_list` TINYINT(1) unsigned DEFAULT 1,
   `last_update` date NOT NULL default '0000-00-00',
   `status` enum ('new', 'inuse', 'unused', 'issued') default 'new',
+  `receipt_date` date NOT NULL default '0000-00-00',
+  `issue_date` date NOT NULL default '0000-00-00',
   PRIMARY KEY  (`id`),
   KEY `tinv_idx_1` (`id_contract`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

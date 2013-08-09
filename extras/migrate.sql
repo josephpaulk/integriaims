@@ -406,3 +406,7 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 /* 07/08/2013 */
 ALTER TABLE `tinventory` ADD `status` enum ('new', 'inuse', 'unused', 'issued') default 'new';
 ALTER TABLE `tobject_type` ADD `min_stock` int(5) NOT NULL default 0;
+
+/* 08/08/2013 */
+ALTER TABLE `tinventory` ADD `receipt_date` date NOT NULL default '0000-00-00';
+ALTER TABLE `tinventory` ADD `issue_date` date NOT NULL default '0000-00-00';

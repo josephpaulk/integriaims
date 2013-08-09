@@ -1,3 +1,12 @@
+2013-08-09  Vanessa Gil <vanessa.gil@artica.es>
+
+	* integria_db.sql
+	  extras/migrate.sql
+	  include/js/integria_inventory.js
+	  operation/inventories/inventory_detail.php
+	  operation/inventories/manage_objects.php: Added 'min_stock',
+	'receipt_date', 'issue_date' fields.
+
 2013-08-08  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql

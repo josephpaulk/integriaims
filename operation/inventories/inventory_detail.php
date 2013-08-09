@@ -178,6 +178,8 @@ $id_object_type = (int) get_parameter('id_object_type');
 $is_unique = true;
 $msg_err = '';
 $inventory_status = get_parameter('inventory_status');
+$receipt_date = get_parameter('receipt_date', date ('Y-m-d'));
+$issue_date = get_parameter('issue_date', date ('Y-m-d'));
 
 if ((isset($_POST['parent_name'])) && ($_POST['parent_name'] == '')) {
 	$id_parent = 0;
@@ -219,13 +221,20 @@ if ($update) {
 	
 	$last_update = date ("Y/m/d", get_system_time());
 	
+	if ($inventory_status == 'issued') {
+		$issue_date = date ('Y-m-d');
+	} else {
+		$issue_date = '';
+	}
+	
 	$sql = sprintf ('UPDATE tinventory SET name = "%s", description = "%s",
 			id_contract = %d,
-			id_parent = %d, id_manufacturer = %d, owner = "%s", public = %d, id_object_type = %d, last_update = "%s", inventory_status="%s"
+			id_parent = %d, id_manufacturer = %d, owner = "%s", public = %d, id_object_type = %d, last_update = "%s",
+			status="%s", receipt_date = "%s", issue_date = "%s"
 			WHERE id = %d',
 			$name, $description, $id_contract,
 			$id_parent,
-			$id_manufacturer, $owner, $public, $id_object_type, $last_update, $inventory_status, $id);
+			$id_manufacturer, $owner, $public, $id_object_type, $last_update, $inventory_status, $receipt_date, $issue_date, $id);
 
 	$result = process_sql ($sql);	
 	
@@ -357,7 +366,13 @@ if ($create) {
 	$err_message = __('Could not be created');
 	
 	$last_update = date ("Y/m/d", get_system_time());
-		
+	
+	if ($inventory_status == 'issued') {
+		$issue_date = date ('Y-m-d');
+	} else {
+		$issue_date = '';
+	}
+	
 	$inventory_id = get_db_value ('id', 'tinventory', 'name', $name);
 
 	if($name == '') {
@@ -371,10 +386,10 @@ if ($create) {
 	else {
 
 		$sql = sprintf ('INSERT INTO tinventory (name, description,
-				id_contract, id_parent, id_manufacturer, owner, public, id_object_type, last_update, status)
-				VALUES ("%s", "%s", %d, %d, %d, "%s", %d, %d, "%s", "%s")',
+				id_contract, id_parent, id_manufacturer, owner, public, id_object_type, last_update, status, receipt_date, issue_date)
+				VALUES ("%s", "%s", %d, %d, %d, "%s", %d, %d, "%s", "%s", "%s", "%s")',
 				$name, $description, $id_contract,
-				$id_parent, $id_manufacturer, $owner, $public, $id_object_type, $last_update, $inventory_status);
+				$id_parent, $id_manufacturer, $owner, $public, $id_object_type, $last_update, $inventory_status, $receipt_date, $issue_date);
 		$id = process_sql ($sql, 'insert_id');
 
 	}
@@ -469,6 +484,8 @@ if ($create) {
 	$owner = $config['id_user'];
 	$id_object_type = 0;
 	$inventory_status = '';
+	$receipt_date = date ('Y-m-d');
+	$issue_date = date ('Y-m-d');
 }
 
 
@@ -492,6 +509,13 @@ if ($id) {
 	$public = $inventory['public'];
 	$id_object_type = $inventory['id_object_type'];
 	$inventory_status = $inventory['status'];
+	$receipt_date = $inventory['receipt_date'];
+	
+	if ($inventory_status == 'issue') {
+		$issue_date = $inventory['issue_date'];
+	} else {
+		$issue_date = date ('Y-m-d');
+	}
 }
 
 
@@ -628,8 +652,12 @@ if ($write_permission) {
 	}
 
 $all_inventory_status = inventories_get_inventory_status ();
-$table->data[3][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status, '', '', '', true, false, false, __('Status'));
-	
+$table->data[3][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status, 'show_issue_date();', '', '', true, false, false, __('Status'));
+
+$table->data[3][1] = print_input_text ('receipt_date', $receipt_date, '', 15, 15, true, __('Receipt date'));
+
+$table->data[3][2] = print_input_text ('issue_date', $issue_date, '', 15, 15, true, __('Issue date'));
+
 /* Fourth row */
 $table->colspan[4][0] = 3;		
 $table->data[4][0] = "";
@@ -687,13 +715,18 @@ echo "<div class= 'dialog ui-dialog-content' id='user_search_modal'></div>";
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 <script type="text/javascript" src="include/js/integria_inventory.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/jquery.ui.datepicker.js"></script>
 
 <script type="text/javascript">
+
+add_ranged_datepicker ("#text-receipt_date", "#text-issue_date", null);
 
 $(document).ready (function () {
 	
 	configure_inventory_form (false);
-
+	
+	show_issue_date();
+	
 	if ($("#text-show_object_hidden").val() == 1) { //user with only read permissions
 		show_fields();
 	} else {

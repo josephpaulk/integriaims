@@ -693,3 +693,15 @@ function loadTable(type, div_id, less_branchs, id_father, sql_search) {
 	});
 	loadSubTree(type, div_id, less_branchs, id_father, sql_search);		
 }
+
+function show_issue_date() {
+	
+	if ($("#inventory_status option:selected").val() === 'issued') {
+		$("#label-text-issue_date").css("display", "block");
+		$("#text-issue_date").css("display", "block");
+	} else {
+		$("#label-text-issue_date").css("display", "none");
+		$("#text-issue_date").css("display", "none");
+		
+	}
+}

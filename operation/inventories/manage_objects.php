@@ -73,11 +73,12 @@ echo '</div>';
 if ($insert_object) {
 	$name = (string) get_parameter ("name");
 	$icon = (string) get_parameter ("icon");
+	$min_stock = (int) get_parameter ("min_stock");
 	$description = (string) get_parameter ("description");
 	
-	$sql = sprintf ('INSERT INTO tobject_type (name, description, icon) 
-			VALUES ("%s", "%s", "%s")',
-			$name, $description, $icon);
+	$sql = sprintf ('INSERT INTO tobject_type (name, description, icon, min_stock) 
+			VALUES ("%s", "%s", "%s", %d)',
+			$name, $description, $icon, $min_stock);
 	$id = process_sql ($sql, 'insert_id');
 	if (! $id) {
 		echo '<h3 class="error">'.__('Could not be created').'</h3>';
@@ -92,12 +93,13 @@ if ($insert_object) {
 if ($update_object) {
 	$name = (string) get_parameter ("name");
 	$icon = (string) get_parameter ("icon");
+	$min_stock = (int) get_parameter ("min_stock");
 	$description = (string) get_parameter ("description");
 	
-	$sql = sprintf ('UPDATE tobject_type SET name = "%s", icon = "%s",
+	$sql = sprintf ('UPDATE tobject_type SET name = "%s", icon = "%s", min_stock = %d,
 		description = "%s"
 		WHERE id = %s',
-		$name, $icon, $description, $id);
+		$name, $icon, $min_stock, $description, $id);
 		
 	$result = process_sql ($sql);
 	if (! $result) {
@@ -134,11 +136,13 @@ if ($create || $id) {
 		$description = "";
 		$name = "";
 		$id = -1;
+		$min_stock = 0;
 	} else {
 		$object = get_db_row ("tobject_type", "id", $id);
 		$description = $object["description"];
 		$name = $object["name"];
 		$icon = $object["icon"];
+		$min_stock = $object["min_stock"];
 	}
 
 	echo "<h2>".__('Object management')."</h2>";
@@ -152,7 +156,7 @@ if ($create || $id) {
 	$table->class = 'databox';
 	$table->colspan = array ();
 	$table->colspan[0][0] = 2;
-	$table->colspan[2][0] = 2;
+	$table->colspan[3][0] = 2;
 	$table->data = array ();
 	
 	$table->data[0][0] = print_input_text ('name', $name, '', 45, 100, true, __('Name'));
@@ -160,7 +164,8 @@ if ($create || $id) {
 	$files = list_files ('images/objects/', "png", 1, 0);
 	$table->data[1][0] = print_select ($files, 'icon', $icon, '', __('None'), "", true, false, false, __('Icon'));
 	$table->data[1][0] .= objects_get_icon ($id, true);
-	$table->data[2][0] = print_textarea ('description', 10, 50, $description, '',
+	$table->data[2][0] = print_input_text ('min_stock', $min_stock, '', 45, 100, true, __('Min. stock'));
+	$table->data[3][0] = print_textarea ('description', 10, 50, $description, '',
 		true, __('Description'));
 	
 	echo '<form id="form-manage_objects" method="post">';
