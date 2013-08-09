@@ -1,3 +1,14 @@
+2013-08-09 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/functions_config.php: fixed the set
+	"session.gc_maxlifetime" with the correct quote character.
+	
+	* include/functions.php, include/functions_db.php: improved the
+	source code style.
+	
+	* include/gettext.php: fixed PHP warnings about the pass
+	reference vars.
+
 2013-08-09  Vanessa Gil <vanessa.gil@artica.es>
 
 	* integria_db.sql

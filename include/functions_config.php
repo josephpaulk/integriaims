@@ -15,64 +15,64 @@
 
 
 
-function load_config(){
-
+function load_config() {
 	global $config;
+	
 	require_once ($config["homedir"].'/include/functions_db.php');
-
+	
 	$configs = get_db_all_rows_in_table ('tconfig');
-
+	
 	if ($configs === false) {
 		include ($config["homedir"]."/general/error_invalidconfig.php");
 		exit;
 	}
-
+	
 	foreach ($configs as $c) {
 		$config[$c["token"]] = $c["value"];
 	}
-
+	
 	if (!isset ($config["block_size"]))
 		$config["block_size"] = 25;
-
+	
 	if (!isset($config["notification_period"]))
 		$config["notification_period"] = "86400";
-
+	
 	if (!isset ($config["autowu_completion"]))
 		$config["autowu_completion"] = "0";
-
+	
 	if (!isset ($config["no_wu_completion"]))
 		$config["no_wu_completion"] = "";
-
+	
 	if (!isset ($config["FOOTER_EMAIL"]))
 		$config["FOOTER_EMAIL"] = __('Please do NOT answer this email, it has been automatically created by Integria (http://integria.sourceforge.net).');
-
+	
 	if (!isset ($config["HEADER_EMAIL"]))
 		$config["HEADER_EMAIL"] = "Hello, \n\nThis is an automated message coming from Integria\n\n";
-
+	
 	if (!isset ($config["currency"]))
 		$config["currency"] = "€";
-
+	
 	if (!isset ($config["hours_perday"]))
 		$config["hours_perday"] = 8;
-
+	
 	if (!isset ($config["limit_size"]))
 		$config["limit_size"] = 1000;
-
+	
 	if (!isset ($config["sitename"])) 
 		$config["sitename"] = "INTEGRIA";
-
+	
 	if (!isset ($config["fontsize"]))
 		$config['fontsize'] = 7;
-
+	
 	if (!isset ($config["incident_reporter"]))
 		$config['incident_reporter'] = 0;
-
+	
 	if (!isset ($config["show_owner_incident"]))
 		$config["show_owner_incident"] = 1;
 	
 	if (!isset ($config["show_creator_incident"]))
 		$config["show_creator_incident"] = 1;
-
+	
 	if (!isset ($config["smtp_host"])){
 		$config["smtp_host"] = "localhost";
 	}
@@ -92,7 +92,7 @@ function load_config(){
 	if (!isset ($config["smtp_port"])){
 		$config["smtp_port"] = 25;
 	}
-
+	
 	if (!isset ($config["pop_host"])){
 		$config["pop_host"] = "localhost";
 	}
@@ -108,38 +108,38 @@ function load_config(){
 	if (!isset ($config["pop_pass"])){
 		$config["pop_pass"] = "";
 	}
-
+	
 	if (!isset ($config["audit_delete_days"])){
-        $config["audit_delete_days"] = 45;
-    }
-
+		$config["audit_delete_days"] = 45;
+	}
+	
 	if (!isset ($config["iwu_defaultime"])){
 		$config["iwu_defaultime"] = "0.25";
 	}
-
+	
 	if (!isset ($config["pwu_defaultime"])){
 		$config["pwu_defaultime"] = "4";
 	}
-
+	
 	if (!isset ($config["timezone"])){
 		$config["timezone"] = "Europe/Madrid";
 	}
-
+	
 	if (!isset ($config["api_acl"])){
 		$config["api_acl"] = "127.0.0.1";
 	}
-
+	
 	if (!isset ($config["auto_incident_close"])){
 		$config["auto_incident_close"] = "72";
 	}
-
+	
 	if (empty ($config["language_code"])) {
 		$config['language_code'] = get_db_value ('value', 'tconfig', 'token', 'language_code');
-	
+		
 		if (isset ($_POST['language_code']))
 			$config['language_code'] = $_POST['language_code'];
-	}	
-
+	}
+	
 	if (!isset ($config["flash_charts"])) {
 		$config["flash_charts"] = true;
 	}
@@ -147,29 +147,29 @@ function load_config(){
 	// Mail address used to send mails
 	if (!isset ($config["mail_from"]))
 		$config["mail_from"] = "integria@localhost";
-
-    if (!isset ($config["site_logo"])){
-         $config["site_logo"] = "integria_logo.png";
-    }
-
-    if (!isset ($config["header_logo"])){
-         $config["header_logo"] = "integria_logo_header.png";
-    }
-
-    if (!isset ($config["email_on_incident_update"])){
+	
+	if (!isset ($config["site_logo"])){
+		$config["site_logo"] = "integria_logo.png";
+	}
+	
+	if (!isset ($config["header_logo"])){
+		$config["header_logo"] = "integria_logo_header.png";
+	}
+	
+	if (!isset ($config["email_on_incident_update"])){
 		$config["email_on_incident_update"] = 0;
-    }
-
+	}
+	
 	if (!isset ($config["error_log"])){
 		$config["error_log"] = 1;
-    }
+	}
 	
 	if (!isset ($config["sql_query_limit"]))
 		$config["sql_query_limit"] = 1500;
-
+	
 	if (!isset ($config["pdffont"]))
 		$config["pdffont"] = $config["homedir"]."/include/fonts/FreeSans.ttf";
-
+	
 	if (!isset ($config["font"])){
 		$config["font"] = $config["homedir"]."/include/fonts/smallfont.ttf";
 	}
@@ -177,40 +177,40 @@ function load_config(){
 	if (!isset ($config["audit_category_default"])) {
 		$config["audit_category_default"] = 1;
 	}
-
-    if (!isset($config["max_file_size"])) {
-        $config["max_file_size"] = "50M";
-    }
-
+	
+	if (!isset($config["max_file_size"])) {
+		$config["max_file_size"] = "50M";
+	}
+	
 	if (!isset($config["enable_newsletter"])) {
-        $config["enable_newsletter"] = 0;
-    }
-
+		$config["enable_newsletter"] = 0;
+	}
+	
 	if (!isset($config["batch_newsletter"])) {
-        $config["batch_newsletter"] = 15;
-    }
-
+		$config["batch_newsletter"] = 15;
+	}
+	
 	if (!isset($config["want_chat"])){
 		$config["want_chat"] = 0;
 	}
-
+	
 	if (!isset($config["lead_company_filter"])){
 		$config["lead_company_filter"] = "";
 	}
-
+	
 	if (!isset($config["lead_warning_time"])){
 		$config["lead_warning_time"] = "7";
 	}
-
+	
 	if (!isset($config["incident_creation_wu"])){
-                $config["incident_creation_wu"] = 0;
-        }
-
+		$config["incident_creation_wu"] = 0;
+	}
+	
 	if (!isset($config["graphviz_win"])){
-                $config["graphviz_win"] = "C:\Program Files\Graphviz 2.28\bin";
-    }
-    
-    if (!isset($config["months_to_delete_incidents"])){
+		$config["graphviz_win"] = "C:\Program Files\Graphviz 2.28\bin";
+	}
+	
+	if (!isset($config["months_to_delete_incidents"])){
 		$config["months_to_delete_incidents"] = 12;
 	}
 	
@@ -220,11 +220,11 @@ function load_config(){
 	
 	if (!isset ($config["mask_emails"])){
 		$config["mask_emails"] = 0;
-	}	
+	}
 	
 	if (!isset ($config['attachment_store'])) {
 		$config['attachment_store'] = $config['homedir'].'attachment';
-	}	
+	}
 	
 	if (!isset ($config['session_timeout'])) {
 		$config['session_timeout'] = 9000;
@@ -233,32 +233,32 @@ function load_config(){
 	if (!isset ($config['update_manager_installed'])) {
 		$config['update_manager_installed'] = 1;
 	}
-
+	
 	if (!isset ($config["inventory_path"])) {
 		$config["inventory_path"] = "/var/spool/pandora/data_in";
 	}
-
+	
 	if (!isset ($config["remote_inventory_type"])) {
 		$config["remote_inventory_type"] = 0;
-	}	
+	}
 }
 
 function config_prepare_session() {
 	global $config;
-
-
+	
+	
 	// Change the session timeout value to session_timeout minutes  // 8*60*60 = 8 hours
 	$sessionCookieExpireTime = $config["session_timeout"] * 60;
-	ini_set(’session.gc_maxlifetime’, $sessionCookieExpireTime);
+	ini_set('session.gc_maxlifetime', $sessionCookieExpireTime);
 	session_set_cookie_params ($sessionCookieExpireTime);
-
+	
 	// Reset the expiration time upon page load //session_name() is default name of session PHPSESSID
-
+	
 	if (isset($_COOKIE[session_name()]))
-    	setcookie(session_name(), $_COOKIE[session_name()], time() + $sessionCookieExpireTime, "/");
- 
-    ini_set("post_max_size",$config["max_file_size"]);
-    ini_set("upload_max_filesize",$config["max_file_size"]);
+		setcookie(session_name(), $_COOKIE[session_name()], time() + $sessionCookieExpireTime, "/");
+	
+	ini_set("post_max_size",$config["max_file_size"]);
+	ini_set("upload_max_filesize",$config["max_file_size"]);
 }
 
 function load_menu_visibility() {
@@ -275,7 +275,7 @@ function load_menu_visibility() {
 	global $show_wiki;
 	global $show_customers;
 	global $config;
-
+	
 	// Get visibility permissions to sections
 	$show_projects = enterprise_hook ('get_menu_section_access', array ('projects'));
 	if($show_projects == ENTERPRISE_NOT_HOOK) {
@@ -318,11 +318,11 @@ function load_menu_visibility() {
 		$show_customers = MENU_FULL;
 	}
 	$sec = get_parameter('sec', '');
-
-
+	
+	
 	if (!isset($customers))
 		$customers = "";
-
+	
 	$show_box = ($sec == "projects" && $show_projects == MENU_FULL) || 
 				($sec == "incidents" && $show_incidents == MENU_FULL) || 
 				($sec == "inventory" && $show_inventory == MENU_FULL) || 

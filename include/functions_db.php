@@ -412,6 +412,7 @@ function get_task_workunit_hours ($id_task) {
 			WHERE tworkunit_task.id_task = %d
 			AND tworkunit_task.id_workunit = tworkunit.id',
 			$id_task);
+	
 	return (int) get_db_sql ($sql);
 }
 
@@ -1311,28 +1312,28 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 	global $config;
 	
 	$values = array ();
-
+	
 	if ($id_user === 0) {
 		$id_user = $config['id_user'];
 	}
 	
 	$level = get_db_sql("SELECT nivel FROM tusuario WHERE id_usuario = '$id_user'");
-
-        // External user only can see himself
+	
+	// External user only can see himself
 	if ($level == -1){
 		$values[$id_user] = get_db_sql ("SELECT nombre_real FROM tusuario WHERE id_usuario = '$id_user'");
 		return $values;
 	}
-		
+	
 	$project_users = get_project_manager_users();
-
-	if(!empty($project_users)) {
+	
+	if (!empty($project_users)) {
 		$proj_users_condition = sprintf(' OR u.id_usuario in ("%s") ',implode('","',$project_users));
 	}
 	else {
 		$proj_users_condition = '';
 	}
-
+	
 	
 	// Group All has id = 1
 	if (give_acl ($id_user, 1, $access) && $both) {
@@ -1346,7 +1347,8 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 			else
 				$values[$user['id_usuario']] = $user;
 		}
-	} else {
+	}
+	else {
 		if($anygroup) {
 			$groups = get_groups_id();
 		}
@@ -1386,11 +1388,13 @@ function get_user_visible_users ($id_user = 0, $access = "IR", $only_name = true
 
 // Returns array with the users that belongs to a project
 // ----------------------------------------------------------------------
-function get_users_project ($id_project){
+function get_users_project ($id_project) {
 	// Show only users assigned to this project
-	$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project ORDER by id_user";
+	$sql = "SELECT *
+		FROM trole_people_project
+		WHERE id_project = $id_project ORDER by id_user";
 	$result = get_db_all_rows_sql ($sql);
-
+	
 	return $result;
 }
 

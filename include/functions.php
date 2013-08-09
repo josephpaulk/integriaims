@@ -116,13 +116,13 @@ function safe_input_array ($value) {
  * @return The cleaned string.
  */
  
- function safe_input_html($value) {
+function safe_input_html($value) {
 	//Stop!! Are you sure to modify this critical code? Because the older
 	//versions are serius headache in many places of Pandora.
 	
 	if (is_numeric($value))
 		return $value;
-		
+	
 	if (is_array($value)) {
 		array_walk($value, "safe_input");
 		return $value;
@@ -154,7 +154,7 @@ function safe_input($value) {
 	
 	if (is_numeric($value))
 		return $value;
-		
+	
 	if (is_array($value)) {
 		array_walk($value, "safe_input_array");
 		return $value;
@@ -204,7 +204,8 @@ function ascii_to_html($num) {
 	
 	if ($num <= 15) {
 		return "&#x0".dechex($num).";";
-	} else {
+	}
+	else {
 		return "&#x".dechex($num).";";
 	}
 }
@@ -217,7 +218,7 @@ function ascii_to_html($num) {
  * @return string String with char
  */
 function html_to_ascii($hex) {
-		
+	
 	$dec = hexdec($hex);
 	
 	return chr($dec);
@@ -239,7 +240,7 @@ function safe_output($value, $utf8 = true)
 {
 	if (is_numeric($value))
 		return $value;
-		
+	
 	if (is_array($value)) {
 		array_walk($value, "safe_output");
 		return $value;
@@ -259,14 +260,14 @@ function safe_output($value, $utf8 = true)
 	$valueHtmlEncode = str_replace("&#40;", '(', $valueHtmlEncode);
 	
 	//Replace the html entitie of ) for the char
-	$valueHtmlEncode = str_replace("&#41;", ')', $valueHtmlEncode);		
+	$valueHtmlEncode = str_replace("&#41;", ')', $valueHtmlEncode);
 	
 	//Revert html entities to chars
 	for ($i=0;$i<33;$i++) {
-		$valueHtmlEncode = str_ireplace("&#x".dechex($i).";",html_to_ascii(dechex($i)), $valueHtmlEncode);			
-	}	
+		$valueHtmlEncode = str_ireplace("&#x".dechex($i).";",html_to_ascii(dechex($i)), $valueHtmlEncode);
+	}
 	
-	return $valueHtmlEncode;	
+	return $valueHtmlEncode;
 }
 
 
@@ -281,7 +282,7 @@ function safe_output($value, $utf8 = true)
 function get_parameter_get ($name, $default = "") {
 	if ((isset ($_GET[$name])) && ($_GET[$name] != ""))
 		return safe_input ($_GET[$name]);
-
+	
 	return $default;
 }
 
@@ -296,7 +297,7 @@ function get_parameter_get ($name, $default = "") {
 function get_parameter_post ($name, $default = "") {
 	if ((isset ($_POST[$name])) && ($_POST[$name] != ""))
 		return safe_input ($_POST[$name]);
-
+	
 	return $default;
 }
 
@@ -315,10 +316,10 @@ function get_parameter ($name, $default = '') {
 	// POST has precedence
 	if (isset($_POST[$name]))
 		return get_parameter_post ($name, $default);
-
+	
 	if (isset($_GET[$name]))
 		return get_parameter_get ($name, $default);
-
+	
 	return $default;
 }
 
@@ -329,7 +330,9 @@ function get_parameter ($name, $default = '') {
 
 function no_permission () {
 	global $config;
+	
 	include $config["homedir"]."/general/noaccess.php";
+	
 	exit;
 }
 
@@ -359,7 +362,7 @@ function list_files ($directory, $stringSearch, $searchHandler, $return = true, 
 		}
 	}
 	if ($searchHandler == 1) {
-		while(false !== ($fileName = @readdir ($directoryHandler))) {
+		while (false !== ($fileName = @readdir ($directoryHandler))) {
 			if (is_dir ($directory.'/'.$fileName))
 				continue;
 			if(@substr_count ($fileName, $stringSearch) > 0) {
@@ -367,7 +370,8 @@ function list_files ($directory, $stringSearch, $searchHandler, $return = true, 
 					if (strpos($fileName, $inverse_filter) == 0)
 						if ($fileName[0] != ".")
 							$result[$fileName] = $fileName;
-				} else {
+				}
+				else {
 					 if ($fileName[0] != ".")
 						$result[$fileName] = $fileName;
 				}
@@ -375,9 +379,11 @@ function list_files ($directory, $stringSearch, $searchHandler, $return = true, 
 			}
 		}
 	}
+	
 	if (($errorHandler == true) &&  (@count ($result) === 0)) {
 		echo ("<pre>\nerror: no filetype \"$fileExtension\" found!\n</pre>\n");
-	} else {
+	}
+	else {
 		asort ($result);
 		return $result;
 	}
@@ -400,21 +406,21 @@ function byte_convert ($bytes) {
 		$exp = floor (log ($bytes) / log (1024));
 		$converted_value = ($bytes / pow(1024, floor ($exp)));
 	}
-
+	
 	return sprintf ('%.2f '.$symbol[$exp], $converted_value );
 }
 
 function pagination ($count, $url, $offset ) {
 	global $config;
-
+	
 	$block_size = $config["block_size"];
-
+	
 	/* 	URL passed render links with some parameter
 			&offset - Offset records passed to next page
 	  		&counter - Number of items to be blocked
 	   	Pagination needs $url to build the base URL to render links, its a base url, like
 	   " http://pandora/index.php?sec=godmode&sec2=godmode/admin_access_logs "
-
+	
 	*/
 	$block_limit = 15; // Visualize only $block_limit blocks
 	if ($count > $block_size){
@@ -423,19 +429,19 @@ function pagination ($count, $url, $offset ) {
 		$index_page = ceil($offset/$block_size)-(ceil($block_limit/2)); // block to begin to show data;
 		if ($index_page < 0)
 			$index_page = 0;
-
+		
 		// This calculate index_limit, block limit for this search.
 		if (($index_page + $block_limit) > $index_counter)
 			$index_limit = $index_counter;
 		else
 			$index_limit = $index_page + $block_limit;
-
+		
 		// This calculate if there are more blocks than visible (more than $block_limit blocks)
 		if ($index_counter > $block_limit )
 			$paginacion_maxima = 1; // If maximum blocks ($block_limit), show only 10 and "...."
 		else
 			$paginacion_maxima = 0;
-
+		
 		// This setup first block of query
 		if ( $paginacion_maxima == 1)
 			if ($index_page == 0)
@@ -444,7 +450,7 @@ function pagination ($count, $url, $offset ) {
 				$inicio_pag = $index_page;
 		else
 			$inicio_pag = 0;
-
+		
 		echo "<div><p>";
 		// Show GOTO FIRST button
 		echo '<a id="page_0" href="'.$url.'&offset=0">';
@@ -468,7 +474,7 @@ function pagination ($count, $url, $offset ) {
 				$final_bloque = ($i-1)*$block_size + $count-(($i-1) * $block_size);
 			}
 			echo "<span>";
-
+			
 			$inicio_bloque_fake = $inicio_bloque + 1;
 			// To Calculate last block (doesnt end with round data,
 			// it must be shown if not round to block limit)
@@ -508,14 +514,15 @@ function pagination ($count, $url, $offset ) {
 
 function print_array_pagination ($array, $url, $offset = 0){
 	global $config;
-
+	
 	if (!is_array($array))
 		return array();
-
+	
 	$count = sizeof($array);
 	$offset = get_parameter ("offset", 0);	
 	$output =  pagination ($count, $url, $offset );
 	$array = array_slice ($array, $offset, $config["block_size"]);
+	
 	return $array;
 }
 
@@ -529,8 +536,9 @@ function format_numeric ( $number, $decimals=1, $dec_point=".", $thousands_sep="
 			return number_format ($number, $decimals, $dec_point, $thousands_sep);
 		else
 			return number_format ($number, 0, $dec_point, $thousands_sep);
-	} else
- 	return 0;
+	}
+	else
+		return 0;
 }
 
 /** 
@@ -547,14 +555,14 @@ function format_numeric ( $number, $decimals=1, $dec_point=".", $thousands_sep="
  * @return string A string with the number and the multiplier
  */
 function format_for_graph ($number , $decimals = 1, $dec_point = ".", $thousands_sep = ",", $divisor = 1000) {
-        $shorts = array ("","K","M","G","T","P");
-        $pos = 0;
-        while ($number >= $divisor) { //as long as the number can be divided by divisor
-                $pos++; //Position in array starting with 0
-                $number = $number / $divisor;
-        }
-
-        return format_numeric ($number, $decimals). $shorts[$pos]; //This will actually do the rounding and the decimals
+	$shorts = array ("","K","M","G","T","P");
+	$pos = 0;
+	while ($number >= $divisor) { //as long as the number can be divided by divisor
+		$pos++; //Position in array starting with 0
+		$number = $number / $divisor;
+	}
+	
+	return format_numeric ($number, $decimals). $shorts[$pos]; //This will actually do the rounding and the decimals
 }
 
 
@@ -573,22 +581,22 @@ function __ ($string) {
 		
 		if (file_exists('enterprise/include/functions_translate_string.php')) {
 			include_once('enterprise/include/functions_translate_string.php');
-
+			
 			$tranlateString = get_defined_translation($string);
-
+			
 			if ($tranlateString !== false) {
 				return $tranlateString;
 			}
 		}
 	}
- 
+	
 	if ($string == '') {
 		return $string;
 	}
-
+	
 	if (is_null ($l10n))
 		return $string;
-
+	
 	return $l10n->translate ($string);
 }
 
@@ -631,37 +639,37 @@ function render_priority ($pri) {
 
 function integria_sendmail ($to, $subject = "[INTEGRIA]", $body,  $attachments = false, $code = "", $from = "", $remove_header_footer =0, $cc="") {
 	global $config;
-
+	
 	if ($to == '')
 		return false;
-
+	
 	$to = trim(safe_output ($to));
 	$from = trim(safe_output ($from));
 	$cc = trim(safe_output($cc));
-
+	
 	$config["mail_from"] = trim($config["mail_from"]);
-
+	
 	$current_date = date ("Y/m/d H:i:s");
-
+	
 	// We need to convert to pure ASCII here to use carriage returns
-
+	
 	$body = safe_output ($body);
 	$subject = ascii_output ($subject);
-
+	
 	if ($remove_header_footer == 0)
 		// Add global header and footer to mail
 		$body = safe_output($config["HEADER_EMAIL"]). "\r\n". $body . "\r\n". safe_output ($config["FOOTER_EMAIL"]);
-
+	
 	// Add custom code to the end of message subject (to put there ID's).
-	if ($code != ""){
+	if ($code != "") {
 		$subject = "[$code] ".$subject;
 		// $body = $body."\r\nNOTICE: Please don't alter the SUBJECT when answer to this mail, it contains a special code who makes reference to this issue.";
 	}
-
+	
 	// This is a special scenario... we store all the information "ready" in the database, 
 	// without HTML encoding. THis is because it is not to be rendered on a browser, 
 	// it will be directly to a SMTP connection.
-
+	
 	process_sql ("INSERT INTO tpending_mail (date, attempts, status, recipient, subject, body, attachment_list, `from`, cc) VALUES ('".$current_date."', 0, 0, '".$to."', '".mysql_real_escape_string($subject)."', '".mysql_real_escape_string($body)."', '".$attachments."', '".$from."', '".$cc."')");
 }
 
@@ -672,6 +680,7 @@ function topi_rndcode ($length = 6) {
 	while (strlen ($code) < $length) {
 		$code .= $chars[mt_rand (0, $clen)];  //mt_rand's range is inclusive - this is why we need 0 to n-1
 	}
+	
 	return $code;
 }
 
@@ -683,7 +692,7 @@ function topi_quicksession ($url, $id_user = "") {
 	if ($id_user == "")
 		$id_user = $config["id_user"];
 	$today = date ('Y-m-d H:i:s');
-
+	
 	// Build quicksession data and URL
 	$id_user = $config["id_user"];
 	$cadena = topi_rndcode (16).$id_user.$today;
@@ -695,6 +704,7 @@ function topi_quicksession ($url, $id_user = "") {
 		VALUES ("%s", "%s", "%s")',
 		$id_user, $today, $cadena_md5);
 	process_sql ($sql);
+	
 	return $myurl;
 }
 
@@ -702,6 +712,7 @@ function topi_quicksession ($url, $id_user = "") {
 function return_value ($var) {
 	if (isset ($var))
 		return $var;
+	
 	return "";
 }
 
@@ -715,7 +726,7 @@ function get_priorities () {
 	$incidents[3] = 4;
 	$incidents[4] = 5;
 	
-
+	
 	/**OLD ARRAY!**/
 	/*$incidents[0] = __('Informative');
 	$incidents[1] = __('Low');
@@ -723,7 +734,7 @@ function get_priorities () {
 	$incidents[3] = __('Serious');
 	$incidents[4] = __('Very serious');
 	$incidents[10] = __('Maintenance');*/
-
+	
 	return $incidents;
 }
 
@@ -749,6 +760,7 @@ function get_periodicity ($recurrence) {
 
 function ellipsize_string ($string, $len = 25) {
 	$string = ascii_output($string);
+	
 	return substr ($string, 0, $len).'(..)'.substr ($string, strlen ($string) - $len, $len);
 }
 
@@ -756,6 +768,7 @@ function ellipsize_string ($string, $len = 25) {
 */
 function short_string ($string, $len = 15) {
 	$string = ascii_output($string);
+	
 	if (strlen($string) > $len)
 		return substr ($string, 0, $len).'...';
 	else
@@ -767,6 +780,7 @@ function short_string ($string, $len = 15) {
 function clean_flash_string ($string) {
 	$string = ascii_output($string);
 	$temp =  str_replace("&", "", $string);
+	
 	return str_replace ("\"", "", $temp);
 }
 
@@ -775,59 +789,61 @@ function print_priority_flag_image ($priority, $return = false) {
 	
 	$output .= '<img class="priority-color" height="15" width="15" ';
 	switch ($priority) {
-	case 0:
-		// Informative
-		$output .= 'src="images/pixel_gray.png" title="'.__('Informative').'" ';
-		break;
-	case 1:
-		// Low
-		$output .= 'src="images/pixel_green.png" title="'.__('Low').'" ';
-		break;
-	case 2:
-		// Medium
-		$output .= 'src="images/pixel_yellow.png" title="'.__('Medium').'" ';
-		break;
-	case 3:
-		// Serious
-		$output .= 'src="images/pixel_orange.png" title="'.__('Serious').'" ';
-		break;
-	case 4:
-		// Very serious
-		$output .= 'src="images/pixel_red.png" title="'.__('Very serious').'" ';
-		break;
-	case 10:
-		// Maintance
-		$output .= 'src="images/pixel_blue.png" title="'.__('Maintance').'" ';
-		break;
-	default:
-		// Default
-		$output .= 'src="images/pixel_gray.png" title="'.__('Unknown').'" ';
+		case 0:
+			// Informative
+			$output .= 'src="images/pixel_gray.png" title="'.__('Informative').'" ';
+			break;
+		case 1:
+			// Low
+			$output .= 'src="images/pixel_green.png" title="'.__('Low').'" ';
+			break;
+		case 2:
+			// Medium
+			$output .= 'src="images/pixel_yellow.png" title="'.__('Medium').'" ';
+			break;
+		case 3:
+			// Serious
+			$output .= 'src="images/pixel_orange.png" title="'.__('Serious').'" ';
+			break;
+		case 4:
+			// Very serious
+			$output .= 'src="images/pixel_red.png" title="'.__('Very serious').'" ';
+			break;
+		case 10:
+			// Maintance
+			$output .= 'src="images/pixel_blue.png" title="'.__('Maintance').'" ';
+			break;
+		default:
+			// Default
+			$output .= 'src="images/pixel_gray.png" title="'.__('Unknown').'" ';
 	}
-
+	
 	$output .= ' />';
+	
 	if ($return)
 		return $output;
+	
 	echo $output;
 }
 
 function get_project_tracking_state ($state) {
 	switch ($state) {
-	case PROJECT_CREATED:
-		return __('Project created');
-	case PROJECT_UPDATED:
-		return __('Project updated');
-	case PROJECT_DISABLED:
-		return __('Project disabled');
-	case PROJECT_ACTIVATED:
-		return __('Project activated');
-	case PROJECT_DELETED:
-		return __('Project deleted');
-	case PROJECT_TASK_ADDED:
-		return __('Task added');
-	case PROJECT_TASK_DELETED:
-		return __('Task deleted');
-	default:
-		return __('Unknown');
+		case PROJECT_CREATED:
+			return __('Project created');
+		case PROJECT_UPDATED:
+			return __('Project updated');
+		case PROJECT_DISABLED:
+			return __('Project disabled');
+		case PROJECT_ACTIVATED:
+			return __('Project activated');
+		case PROJECT_DELETED:
+			return __('Project deleted');
+		case PROJECT_TASK_ADDED:
+			return __('Task added');
+		case PROJECT_TASK_DELETED:
+			return __('Task deleted');
+		default:
+			return __('Unknown');
 	}
 }
 
@@ -859,34 +875,35 @@ function round_number ($number, $rounder = 5) {
 }
 
 function template_process ($filename, $macroarray) {
+	
+	/* USAGE:
+	
+	$MACROS["_fullname_"] = "My taylor is rich";
+	$msg = template_process ( "messages/mytemplate.tpl", $MACROS);
+	
+	Will replace all _fullname_ with "My taylor is rich" in the template and return the template
+	contents altered on function return
+	
+	*/
+	$fh = fopen ($filename, "r");
+	
+	// Empty string
+	if (! $fh) {
+		return "";
+	}
 
-/* USAGE:
-
-$MACROS["_fullname_"] = "My taylor is rich";
-$msg = template_process ( "messages/mytemplate.tpl", $MACROS);
-
-Will replace all _fullname_ with "My taylor is rich" in the template and return the template
-contents altered on function return
-
-*/
-        $fh = fopen ($filename, "r");
-
-        // Empty string
-        if (! $fh){
-                return "";
-        }
-
-        $contents = fread($fh, filesize($filename));
-        fclose ($fh);
-
-        foreach ($macroarray as $key => $value) {
-                $contents = str_replace($key, $value, $contents);
-        }
-        return $contents;
+	$contents = fread($fh, filesize($filename));
+	fclose ($fh);
+	
+	foreach ($macroarray as $key => $value) {
+		$contents = str_replace($key, $value, $contents);
+	}
+	return $contents;
 }
 
 function update_config_token ($cfgtoken, $cfgvalue) {
 	global $config;
+	
 	process_sql ("DELETE FROM tconfig WHERE token = '$cfgtoken'");
 	process_sql ("INSERT INTO tconfig (token, value) VALUES ('$cfgtoken', '$cfgvalue')");
 }
@@ -904,121 +921,124 @@ function unsafe_string ($string){
 }
 
 function returnMIMEType($filename){
-
-        preg_match("|\.([a-z0-9]{2,4})$|i", $filename, $fileSuffix);
-
-        if(!isset($fileSuffix[1]))
-                $fileSuffix[1]="";
-        if(!isset($fileSuffix[0]))
-                $fileSuffix[0]="";
-
-        switch(strtolower($fileSuffix[1]))
-        {
-            case "js" :
-                return "application/x-javascript";
-
-            case "json" :
-                return "application/json";
-
-            case "jpg" :
-            case "jpeg" :
-            case "jpe" :
-                return "image/jpg";
-
-            case "png" :
-            case "gif" :
-            case "bmp" :
-            case "tiff" :
-                return "image/".strtolower($fileSuffix[1]);
-
-            case "css" :
-                return "text/css";
-
-            case "xml" :
-                return "application/xml";
-
-case "doc" :
-            case "docx" :
-                return "application/msword";
-
-            case "xls" :
-            case "xlt" :
-            case "xlm" :
-            case "xld" :
-            case "xla" :
-            case "xlc" :
-            case "xlw" :
-            case "xll" :
-                return "application/vnd.ms-excel";
-
-            case "ppt" :
-            case "pps" :
-                return "application/vnd.ms-powerpoint";
-
-            case "rtf" :
-                return "application/rtf";
-
-            case "pdf" :
-                return "application/pdf";
-
-            case "html" :
-            case "htm" :
-            case "php" :
-                return "text/html";
-
-            case "txt" :
-                return "text/plain";
-
-            case "mpeg" :
-            case "mpg" :
-            case "mpe" :
-                return "video/mpeg";
-
-            case "mp3" :
-                return "audio/mpeg3";
-
-            case "wav" :
-                return "audio/wav";
-
-            case "aiff" :
-            case "aif" :
-                return "audio/aiff";
-
-            case "avi" :
-                return "video/msvideo";
-
-            case "wmv" :
-                return "video/x-ms-wmv";
-            case "mov" :
-                return "video/quicktime";
-
-            case "zip" :
-                return "application/zip";
-
-            case "tar" :
-                return "application/x-tar";
-
-            case "swf" :
-                return "application/x-shockwave-flash";
-
-            default :
-                return "text/plain";
-        }
-        return "text/plain";
+	
+	preg_match("|\.([a-z0-9]{2,4})$|i", $filename, $fileSuffix);
+	
+	if (!isset($fileSuffix[1]))
+		$fileSuffix[1]="";
+	if (!isset($fileSuffix[0]))
+		$fileSuffix[0]="";
+	
+	switch(strtolower($fileSuffix[1]))
+	{
+		case "js" :
+			return "application/x-javascript";
+			break;
+		case "json" :
+			return "application/json";
+			break;
+		case "jpg" :
+		case "jpeg" :
+		case "jpe" :
+			return "image/jpg";
+			break;
+		case "png" :
+		case "gif" :
+		case "bmp" :
+		case "tiff" :
+			return "image/".strtolower($fileSuffix[1]);
+			break;
+		case "css" :
+			return "text/css";
+			break;
+		case "xml" :
+			return "application/xml";
+			break;
+		case "doc" :
+		case "docx" :
+			return "application/msword";
+			break;
+		case "xls" :
+		case "xlt" :
+		case "xlm" :
+		case "xld" :
+		case "xla" :
+		case "xlc" :
+		case "xlw" :
+		case "xll" :
+			return "application/vnd.ms-excel";
+			break;
+		case "ppt" :
+		case "pps" :
+			return "application/vnd.ms-powerpoint";
+			break;
+		case "rtf" :
+			return "application/rtf";
+			break;
+		case "pdf" :
+			return "application/pdf";
+			break;
+		case "html" :
+		case "htm" :
+		case "php" :
+			return "text/html";
+			break;
+		case "txt" :
+			return "text/plain";
+			break;
+		case "mpeg" :
+		case "mpg" :
+		case "mpe" :
+			return "video/mpeg";
+			break;
+		case "mp3" :
+			return "audio/mpeg3";
+			break;
+		case "wav" :
+			return "audio/wav";
+			break;
+		case "aiff" :
+		case "aif" :
+			return "audio/aiff";
+			break;
+		case "avi" :
+			return "video/msvideo";
+			break;
+		case "wmv" :
+			return "video/x-ms-wmv";
+			break;
+		case "mov" :
+			return "video/quicktime";
+			break;
+		case "zip" :
+			return "application/zip";
+			break;
+		case "tar" :
+			return "application/x-tar";
+			break;
+		case "swf" :
+			return "application/x-shockwave-flash";
+			break;
+		default :
+			return "text/plain";
+			break;
+	}
+	
+	return "text/plain";
 }
 
 function get_user_language ($id_user = false) {
 	global $config;
-
+	
 	$quick_language = get_parameter('quick_language_change', 0);
-
+	
 	if($quick_language) {
 		$language = get_parameter('language', 0);
 		
 		if($language === 'default') {
 			return $config['language'];
 		}
-
+		
 		if($language !== 0) {
 			return $language;
 		}
@@ -1061,32 +1081,31 @@ function integria_logwrite ($string){
 	global $config;
 	
 	$current_date = date ("Y/m/d H:i:s");
-
+	
 	$logfile = $config["homedir"]."/integria.log";
 	file_put_contents ( $logfile, "$current_date ".safe_output($string) ."\n", FILE_APPEND);
-	
 }
 
 // Check using regexp if a given string is a valid email address
 
 function check_email_address($email) {
-
+	
 	// First, we check that there's one @ symbol, 
 	// and that the lengths are right.
 	
 	if (!ereg("^[^@]{1,64}@[^@]{1,255}$", $email)) {
 		// Email invalid because wrong number of characters 
 		// in one section or wrong number of @ symbols.
-    	return false;  	
-  	}
-  	
+		return false;  	
+	}
+	
 	// Split it into sections to make life easier
 	
 	$email_array = explode("@", $email);
 	$local_array = explode(".", $email_array[0]);
 	
 	for ($i = 0; $i < sizeof($local_array); $i++) {
-    	if (!ereg("^(([A-Za-z0-9!#$%&'*+/=?^_`{|}~-][A-Za-z0-9!#$%&'*+/=?^_`{|}~\.-]{0,63})|(\"[^(\\|\")]{0,62}\"))$", $local_array[$i])) {
+		if (!ereg("^(([A-Za-z0-9!#$%&'*+/=?^_`{|}~-][A-Za-z0-9!#$%&'*+/=?^_`{|}~\.-]{0,63})|(\"[^(\\|\")]{0,62}\"))$", $local_array[$i])) {
 			return false;
 		}
 	}
@@ -1099,26 +1118,26 @@ function check_email_address($email) {
 		if (sizeof($domain_array) < 2) {
 			return false; // Not enough parts to domain
 		}
-
+		
 		for ($i = 0; $i < sizeof($domain_array); $i++) {
 			if 	(!ereg("^(([A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9])|([A-Za-z0-9]+))$",$domain_array[$i])) {
 				return false;
 			}
 		}
 	}
-
+	
 	return true;
 }
 
 // Generate a ASCII random string (useful for hashes or similar)
 function random_string (){
-
-    for ($i = 0; $i < 25; $i++) 
-        {
-            $randstring .= chr (rand(48, 122));
-        }
-    return $randstring;
-}	
+	
+	for ($i = 0; $i < 25; $i++) {
+		$randstring .= chr (rand(48, 122));
+	}
+	
+	return $randstring;
+}
 
 function check_last_cron_execution($get_mins = false) {
 	
@@ -1129,12 +1148,13 @@ function check_last_cron_execution($get_mins = false) {
 	if (($last_exec === false) || ($last_exec == '')){
 		$last_exec = '';
 	}
-
+	
 	$unix = strtotime($last_exec);
 	
 	if ($last_exec == 0) {
 		$minutes = '';
-	} else {
+	}
+	else {
 		$minutes = ($now - $unix) / 60;
 	}
 	
@@ -1144,7 +1164,7 @@ function check_last_cron_execution($get_mins = false) {
 	
 	if (($minutes) < 10) {
 		return true;
-	}	
+	}
 	
 	return false;
 }
