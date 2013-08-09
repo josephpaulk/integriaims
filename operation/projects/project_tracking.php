@@ -19,7 +19,7 @@ include_once ("include/functions_projects.php");
 $id = (int) get_parameter ('id_project');
 $project = get_db_row ('tproject', 'id', $id);
 
-$project_access = get_project_access ($config['id_user'], $project);
+$project_access = get_project_access ($config['id_user'], $project['id']);
 // ACL - To see the project, you should have read access
 if ($project === false || ! $project_access['read']) {
 	// Doesn't have access to this page

@@ -1,3 +1,49 @@
+2013-08-09  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* extras/migrate.sql: Changes on some column names.
+	
+	* include/functions.php: Improved the function
+	"print_priority_flag_image".
+	
+	* operation/projects/project_tracking.php: Fixed a
+	bug in the acl.
+	
+	* mobile/index.php
+	  mobile/images/ajax-loader.gif
+	  mobile/images/bricks.png
+	  mobile/images/circle_blue.png
+	  mobile/images/circle_brown.png
+	  mobile/images/circle_green.png
+	  mobile/images/circle_gray.png
+	  mobile/images/circle_pink.png
+	  mobile/images/circle_red.png
+	  mobile/images/circle_yellow.png
+	  mobile/images/down.png
+	  mobile/images/key.gif
+	  mobile/images/transparent_pixel.gif
+	  mobile/images/up.png
+	  mobile/images/zoom.png
+	  mobile/include/db.class.php
+	  mobile/include/system.class.php
+	  mobile/include/ui.class.php
+	  mobile/include/user.class.php
+	  mobile/include/javascript/jquery.js
+	  mobile/include/javascript/jquery.mobile-1.3.2.js
+	  mobile/include/style/jquery.mobile-1.3.2.css
+	  mobile/include/style/main.css
+	  mobile/include/style/images/ajax-loader.gif
+	  mobile/include/style/images/icons-18-black.png
+	  mobile/include/style/images/icons-18-white.png
+	  mobile/include/style/images/icons-36-black.png
+	  mobile/include/style/images/icons-36-white.png
+	  mobile/operation/home.php
+	  mobile/operation/incident.php
+	  mobile/operation/workorder.php
+	  mobile/operation/workorders.php
+	  mobile/operation/workunit.php : New files.
+	  Added a mobile version for Integria IMS.
+	  Added workunits and workorders sections.
+	
 2013-08-09  Sergio Martin <sergio.martin@artica.es>
 
 	* include/styles/calendar.css
