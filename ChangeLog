@@ -1,3 +1,9 @@
+2013-08-12  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_inventories.php
+	  include/styles/integria.css: Added info about stock
+	in inventory search.
+
 2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* index.php: fixed call to unexist function "session_unregister"

@@ -2590,3 +2590,10 @@ table.alternate tr:nth-child(even) td{
 	background-color: #CCCCCC;
 	color: #ffffff;
 }
+
+.error_stock {
+	color:  #FF0000;
+	/*pointer-events: none;*/
+
+}
+

@@ -853,18 +853,33 @@ function inventories_print_tree ($sql_search = '') {
 		}
 		
 		if ($is_enterprise) {
-			$count_inventories = inventory_get_count_inventories($element['id'], base64_decode($sql_search), $config['id_user']);
+			$count_inventories = inventory_get_count_inventories($element['id'], base64_decode($sql_search), $config['id_user']); //count
+			$inventories_stock = inventory_get_count_inventories($element['id'], base64_decode($sql_search), $config['id_user'], true); //all inventories to calculate stock
 		} else {
-			$count_inventories = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search));
+			$count_inventories = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search)); //count
+			$inventories_stock = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search), true); //all inventories to calculate stock
 		}
 		
 		if ($count_inventories != 0) {
+			
+			// STOCK
+			$total_stock = inventories_get_total_stock($inventories_stock);
+			$unused_stock = inventories_get_stock($inventories_stock, 'unused');
+			$new_stock = inventories_get_stock($inventories_stock, 'new');
+			$min_stock = get_db_value('min_stock', 'tobject_type', 'id', $element['id']);
+			
+			$color_div = 'no_error_stock';
+			if ($total_stock < $min_stock) {
+				$color_div = 'error_stock'; 
+			}
+			
 			$id_div = "object_types_".$element['id'];
 
 			echo "<li style='margin: 0px 0px 0px 0px;'>
 
 				<a onfocus='JavaScript: this.blur()' href='javascript: loadTable(\"object_types\",\"" . $element['id'] . "\"," . $lessBranchs . ", \"\" ,\"" . $sql_search .  "\")'>" .
-				$img . $element['img'] ."&nbsp;" . safe_output($element['name']) . "&nbsp;($count_inventories)"."</a>";
+				$img . $element['img'] ."&nbsp;" . safe_output($element['name'])."</a>"."&nbsp;&nbsp;" ."<a href='#' class='$color_div' title='".__("Total").':'.__("New").':'.__("Unused").':'.__("Min. stock")."'>($total_stock:$new_stock:$unused_stock:$min_stock)</a>";
+
 			
 			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view tree_div_". $element['id'] . "' id='tree_div_object_types_". $element['id'] . "'></div>";
 			echo "</li>\n";
@@ -1025,7 +1040,7 @@ function inventories_link_get_name($id_inventory) {
 	return $name;
 }
 
-function inventories_get_count_inventories_for_tree($id_item, $sql_search = '') {
+function inventories_get_count_inventories_for_tree($id_item, $sql_search = '', $get_inventories = false) {
 
 	$sql = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data
 			WHERE `id_object_type`=$id_item 
@@ -1036,6 +1051,10 @@ function inventories_get_count_inventories_for_tree($id_item, $sql_search = '') 
 	
 	if ($cont === false) {
 		return 0;
+	}
+	
+	if ($get_inventories) {
+		return $cont;
 	}
 	
 	return count($cont);
@@ -1392,5 +1411,30 @@ function inventories_get_inventory_status () {
 	$inventory_status['issued'] = __('Issued');
 	
 	return $inventory_status;
+}
+
+/*
+ * Total stock = new + in use + unused
+ */
+function inventories_get_total_stock ($inventories) {
+	$count = 0;
+	foreach ($inventories as $key=>$inventory) {
+		$inv_status = get_db_value('status', 'tinventory', 'id', $inventory['id']);
+		if ($inv_status != 'issued') {
+			$count++;
+		}
+	}
+	return $count;
+}
+
+function inventories_get_stock ($inventories, $status='new') {
+	$count = 0;
+	foreach ($inventories as $key=>$inventory) {
+		$inv_status = get_db_value('status', 'tinventory', 'id', $inventory['id']);
+		if ($inv_status == $status) {
+			$count++;
+		}
+	}
+	return $count;
 }
 ?>
