@@ -244,8 +244,15 @@ function print_input_text_extended ($name, $value, $id, $alt, $size, $maxlength,
 	if ($disabled)
 		$output .= ' disabled';
 	
-	if ($attributes != '')
-		$output .= ' '.$attributes;
+	if (is_array($attributes)) {
+		foreach ($attributes as $name => $value) {
+			$output .= ' ' . $name . '="' . $value . '"';
+		}
+	}
+	else {
+		if ($attributes != '')
+			$output .= ' '.  $attributes;
+	}
 	$output .= ' />';
 	
 	if ($return)

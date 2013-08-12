@@ -1,3 +1,11 @@
+2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/functions_html.php: fixed into the function
+	"print_input_text_extended" the attributes as array.
+	
+	* operation/projects/project_detail.php,
+	operation/projects/project.php: fixed PHP warnings.
+
 2013-08-12  Vanessa Gil <vanessa.gil@artica.es>
 
 	* operation/incidents/incident_detail.php: When changing 

@@ -233,10 +233,15 @@ if ($id_project) {
 	echo $people_inv;
 	
 	echo '<td><b>'.__('Project profitability').' </b>';
+	
+	if (!isset($real))
+		$real = 0;
+	
 	if ($real > 0) {
 		echo format_numeric(($total/$real)*100);
 		echo  " %" ;
-	} else 
+	}
+	else 
 		echo __("N/A");
 	
 	$users_involved = array();

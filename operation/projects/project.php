@@ -103,7 +103,7 @@ if ($action == 'insert') {
 		audit_db ($config['id_user'], $REMOTE_ADDR, "ACL Forbidden", "User ".$id_user. " try to create project");
 		return;
 	}
-
+	
 	// Read input variables
 	$id_owner = get_parameter ("id_owner", "");
 	$name = (string) get_parameter ("name");
@@ -160,6 +160,7 @@ if ($action == 'insert') {
 
 echo '<h2>'.__('Project management').'</h2>';
 
+$table = new stdClass;
 $table->width = '90%';
 $table->class = 'search-table';
 $table->style = array ();
@@ -178,6 +179,7 @@ echo '</form>';
 
 unset ($table);
 
+$table = new stdClass;
 $table->width = '99%';
 $table->class = 'listing';
 $table->style = array ();
