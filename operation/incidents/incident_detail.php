@@ -965,6 +965,8 @@ $(document).ready (function () {
 			$("#checkbox-email_notify").prop("checked", false);
 		}
 		
+		$("#text-id_user").val(group_info.id_user_default);
+		
 	});
 	
 	/*Open parent search popup*/
