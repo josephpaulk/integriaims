@@ -1,5 +1,10 @@
 2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* index.php: fixed call to unexist function "session_unregister"
+	that makes PHP error.
+
+2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* operation/projects/people_manager.php: fixed the PHP warnings.
 
 2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>

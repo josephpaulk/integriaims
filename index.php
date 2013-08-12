@@ -330,7 +330,10 @@ load_menu_visibility();
 	"Search contact" : "<?php echo __('Search contact')?>",
 	"Create contact" : "<?php echo __('Create contact')?>",
 	"Search parent inventory" : "<?php echo __('Search parent inventory')?>"
-};</script><?php
+};
+</script>
+
+<?php
 // Log off
 $logout = (bool) get_parameter ('logout');
 if ($logout) {
@@ -343,7 +346,7 @@ if ($logout) {
 	require ('general/login_page.php');
 	$iduser = $_SESSION["id_usuario"];
 	logoff_db ($iduser, $config["REMOTE_ADDR"]);
-	session_unregister ("id_usuario");
+	unset($_SESSION["id_usuario"]);
 	exit;
 }
 
