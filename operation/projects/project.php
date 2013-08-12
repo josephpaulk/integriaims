@@ -41,9 +41,8 @@ $action = (string) get_parameter ('action');
 $search_id_project_group = (int) get_parameter ('search_id_project_group');
 $search_text = (string) get_parameter ('search_text');
 
-if ($id_project) {
-	$project_permission = get_project_access ($config['id_user'], $id_project);
-}
+
+$project_permission = get_project_access ($config['id_user'], $id_project);
 
 // Disable project
 // ======================
@@ -111,12 +110,12 @@ if ($action == 'insert') {
 	$start_date = (string) get_parameter ('start_date');
 	$end_date = (string) get_parameter ('end_date');
 	$id_project_group = (int) get_parameter ('id_project_group');
-
+	
 	$error_msg = "";
 	
 	if($id_owner == "") {
 		$id_owner = $config['id_user'];
-		$owner_exists = true;	
+		$owner_exists = true;
 	}
 	else {
 		$owner_exists = get_user($id_owner);
@@ -132,7 +131,8 @@ if ($action == 'insert') {
 			$name, $description, $start_date, $end_date, $id_owner,
 			$id_project_group);
 		$id_project = process_sql ($sql, 'insert_id');
-	}	
+	}
+	
 	if ($id_project === false) {
 		echo '<h3 class="error">'.__('Project cannot be created, problem found.').'</h3>'.$error_msg;
 	} else {

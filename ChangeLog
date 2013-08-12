@@ -1,5 +1,10 @@
 2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* include/functions_projects.php, operation/projects/project.php,
+	ajax.php: fixed PHP warnings.
+
+2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* include/functions_html.php: fixed into the function
 	"print_input_text_extended" the attributes as array.
 	

@@ -81,6 +81,7 @@ function get_project_access ($id_user, $id_project = false, $id_task = false, $r
 	
 	if ($return !== ENTERPRISE_NOT_HOOK)
 		return $return;
+	
 	return $permission;
 }
 

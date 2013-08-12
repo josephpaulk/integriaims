@@ -25,7 +25,9 @@ require_once ('include/functions_form.php');
 require_once ('include/functions_calendar.php');
 
 // Real start
-session_start();
+if (session_id() == '') {
+	session_start();
+}
 
 // Check user
 check_login ();
