@@ -34,6 +34,9 @@ $filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
 $filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
 $filter['id_user'] = (string) get_parameter ('search_id_user', '');
 $filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
+$filter['id_creator'] = (string) get_parameter ('search_creator', '');
+$filter['editor'] = (string) get_parameter ('search_editor', '');
+$filter['closed_by'] = (string) get_parameter ('search_closed_by', '');
 
 //Calculate default dates
 $last_date = get_parameter("search_last_date", date ('Y-m-d'));

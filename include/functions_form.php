@@ -869,6 +869,9 @@ function form_search_incident ($return = false, $filter=false) {
 		$search_id_user = (string) get_parameter ('search_id_user');
 		$search_id_incident_type = (int) get_parameter ('search_id_incident_type');
 		$date_end = get_parameter("search_last_date", date ('Y-m-d'));
+		$search_creator = (string) get_parameter ('search_creator');
+		$search_editor = (string) get_parameter ('search_creator');
+		$search_closed_by = (string) get_parameter ('search_creator');
 		
 		$month_ago = date('Y-m-d',strtotime($date_end) - 2592000);
 		
@@ -884,6 +887,9 @@ function form_search_incident ($return = false, $filter=false) {
 		$search_id_user = (string) $filter['id_user'];
 		$date_end = $filter['last_date'];
 		$date_ini = $filter['first_date'];
+		$search_creator = (string) $filter['creator'];
+		$search_editor = (string) $filter['editor'];
+		$search_closed_by = (string) $filter['closed_by'];
 	}
 	
 	/* No action is set, so the form will be sent to the current page */
@@ -902,9 +908,10 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->rowstyle[2] = 'display: none';
 	$table->rowstyle[3] = 'display: none';
 	$table->rowstyle[4] = 'display: none';
-	$table->rowstyle[5] = 'text-align: right';
+	$table->rowstyle[5] = 'display: none';
+	$table->rowstyle[6] = 'text-align: right';
 	$table->colspan = array ();
-	$table->colspan[5][0] = 3;
+	$table->colspan[6][0] = 3;
 	
 	$table->data[0][0] = print_input_text ('search_string', $search_string,
 		'', 30, 100, true, __('Search string'));
@@ -958,7 +965,34 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
 		$search_id_incident_type, '', __('All'), 0, true, false, false, __('Incident type'));
 	
-	$table->data[5][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$params_creator = array();
+	$params_creator['input_id'] = 'text-search_creator';
+	$params_creator['input_name'] = 'search_creator';
+	$params_creator['input_value'] = $search_creator;
+	$params_creator['title'] = __('Creator');
+	$params_creator['return'] = true;
+
+	$table->data[4][2] = user_print_autocomplete_input($params_creator);
+	
+	$params_editor = array();
+	$params_editor['input_id'] = 'text-search_editor';
+	$params_editor['input_name'] = 'search_editor';
+	$params_editor['input_value'] = $search_editor;
+	$params_editor['title'] = __('Editor');
+	$params_editor['return'] = true;
+
+	$table->data[5][0] = user_print_autocomplete_input($params_editor);
+	
+	$params_closed_by = array();
+	$params_closed_by['input_id'] = 'text-search_closed_by';
+	$params_closed_by['input_name'] = 'search_closed_by';
+	$params_closed_by['input_value'] = $search_closed_by;
+	$params_closed_by['title'] = __('Closed by');
+	$params_closed_by['return'] = true;
+
+	$table->data[5][1] = user_print_autocomplete_input($params_closed_by);
+	
+	$table->data[6][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= '<form id="search_incident_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
 	$output .= print_table ($table, true);

@@ -222,6 +222,9 @@ $(document).ready(function () {
 	var idUser = "<?php echo $config['id_user'] ?>";
 		
 	bindAutocomplete ("#text-search_id_user", idUser);
+	bindAutocomplete ("#text-search_creator", idUser);
+	bindAutocomplete ("#text-search_editor", idUser);
+	bindAutocomplete ("#text-search_closed_by", idUser);
 	
 });
 

@@ -64,7 +64,10 @@ function filter_incidents ($filters) {
 	$filters['id_user'] = isset ($filters['id_user']) ? $filters['id_user'] : '';
 	$filters['id_user_or_creator'] = isset ($filters['id_user_or_creator']) ? $filters['id_user_or_creator'] : '';
 	$filters['first_date'] = isset ($filters['first_date']) ? $filters['first_date'] : '';
-	$filters['last_date'] = isset ($filters['last_date']) ? $filters['last_date'] : '';
+	$filters['last_date'] = isset ($filters['last_date']) ? $filters['last_date'] : '';	
+	$filters['id_creator'] = isset ($filters['id_creator']) ? $filters['id_creator'] : '';
+	$filters['editor'] = isset ($filters['editor']) ? $filters['editor'] : '';
+	$filters['closed_by'] = isset ($filters['closed_by']) ? $filters['closed_by'] : '';
 	
 	if (empty ($filters['status']))
 		$filters['status'] = implode (',', array_keys (get_indicent_status ()));
@@ -103,6 +106,15 @@ function filter_incidents ($filters) {
 					date ("Y-m-d", $time));
 		}
 	}
+	
+	if (! empty ($filters['id_creator']))
+		$sql_clause .= sprintf (' AND id_creator = "%s"', $filters['id_creator']);
+		
+	if (! empty ($filters['editor']))
+		$sql_clause .= sprintf (' AND editor = "%s"', $filters['editor']);
+		
+	if (! empty ($filters['closed_by']))
+		$sql_clause .= sprintf (' AND closed_by = "%s"', $filters['closed_by']);
 		
 	$sql = sprintf ('SELECT * FROM tincidencia FD
 			WHERE estado IN (%s)
