@@ -96,28 +96,33 @@ function combo_user_task_profile ($id_task, $form_name = "work_profile", $select
 // ----------------------------------------------------------------------
 function combo_users_task ($id_task, $icon_list = false, $return = false) {
 	global $config;
-
+	
 	// Show only users assigned to this project
 	$task_users = get_db_all_rows_field_filter ('trole_people_task', 'id_task', $id_task);
 	$visible_users = get_user_visible_users ($config["id_user"], 'PR', true);
 	$users = array ();
-
-	if ($task_users)	
-	foreach ($task_users as $user) {
-		if (isset ($visible_users[$user['id_user']]))
-			if ($icon_list)
-				array_push ($users, $user);
-			else
-				$users[$user['id_user']] = $user['id_user'];
+	
+	if ($task_users) {
+		foreach ($task_users as $user) {
+			if (isset ($visible_users[$user['id_user']]))
+				if ($icon_list)
+					array_push ($users, $user);
+				else
+					$users[$user['id_user']] = $user['id_user'];
+		}
 	}
 	
 	$output = '';
 	
 	if (! $icon_list) {
-		$output .= print_select ($users, 'user', '', '', '', '', true, 0, true, false, false, "width:100px");
-	} else {
+		$output .= print_select ($users, 'user', '', '', '', '', true,
+		0, true, false, false, "width:100px");
+	}
+	else {
 		$text = __('Users').':<br />';
 		$users_size = count($users);
+		
+		$count = 0;
 		foreach ($users as $user) {
 			$count++;
 			$text .= $user["id_user"];
