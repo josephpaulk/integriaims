@@ -250,9 +250,14 @@ if ($id_project) {
 	$users_involved[] = $id_owner;
 	
 	//Get users with tasks
-	$sql = sprintf("SELECT DISTINCT id_user FROM trole_people_task, ttask WHERE ttask.id_project= %d AND ttask.id = trole_people_task.id_task", $id_project);
+	$sql = sprintf("SELECT DISTINCT id_user
+		FROM trole_people_task, ttask
+		WHERE ttask.id_project= %d
+			AND ttask.id = trole_people_task.id_task", $id_project);
 	
 	$users_aux = get_db_all_rows_sql($sql);
+	if (empty($users_aux))
+		$users_aux = array();
 	
 	foreach ($users_aux as $ua) {
 		$users_involved[] = $ua['id_user'];

@@ -217,6 +217,9 @@ echo "<h2>".__("Task planning")." &raquo; $project_name</h2>";
 $sql = sprintf("SELECT id, completion FROM ttask WHERE id_project = %d", $id_project);
 
 $res = process_sql($sql);
+if (empty($res)) {
+	$res = array();
+}
 
 $verified = 0;
 $completed = 0;
@@ -226,11 +229,14 @@ $pending = 0;
 foreach ($res as $r) {
 	if ($r['completion'] < 40) {
 		$pending++;
-	} else if ($r['completion'] < 90) {
+	}
+	else if ($r['completion'] < 90) {
 		$in_process++;
-	} else if ($r['completion'] < 100) {
+	}
+	else if ($r['completion'] < 100) {
 		$completed++;
-	} else if ($r['completion'] == 100) {
+	}
+	else if ($r['completion'] == 100) {
 		$verified++;
 	}
 }
@@ -261,7 +267,7 @@ echo "<td rowspan=2 style='padding-left:20px;padding-right:20px;'>";
 	echo "</span>";
 	echo "</td>";
 	echo "</tr>";
-	echo "<tr>";	
+	echo "<tr>";
 	echo "<td>";
 	echo __("In process").":";
 	echo "</td>";

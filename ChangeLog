@@ -1,5 +1,12 @@
 2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* operation/projects/task_planning.php,
+	operation/projects/project_detail.php, include/functions_graph.php:
+	fixed the PHP warnings when try to iterate a not array var in
+	some foreachs.
+
+2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* include/functions_db.php: fixed the function
 	"calculate_project_deviation" when have 0 hours.
 

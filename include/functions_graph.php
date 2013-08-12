@@ -117,7 +117,9 @@ function graph_project_task_per_user ($width, $height, $id_project) {
 	global $config;
 	
 	//Get project users
-	$sql = sprintf("SELECT id_user FROM trole_people_project WHERE id_project = %d", $id_project);
+	$sql = sprintf("SELECT id_user
+		FROM trole_people_project
+		WHERE id_project = %d", $id_project);
 	
 	$project_users = process_sql($sql);
 	
@@ -129,10 +131,17 @@ function graph_project_task_per_user ($width, $height, $id_project) {
 	}
 	
 	//Get number of task per user
-	$sql = sprintf("SELECT id_user, COUNT(id_user) AS tasks FROM trole_people_task WHERE id_task IN 
-					(SELECT id FROM ttask WHERE id_project = %d) GROUP BY id_user", $id_project);
+	$sql = sprintf("SELECT id_user, COUNT(id_user) AS tasks
+		FROM trole_people_task
+		WHERE id_task IN 
+			(SELECT id
+			FROM ttask
+			WHERE id_project = %d)
+		GROUP BY id_user", $id_project);
 	
 	$task_per_user = process_sql($sql);
+	if (empty($task_per_user))
+		$task_per_user = array();
 	
 	foreach ($task_per_user as $tpu) {
 		$id_user = $tpu['id_user'];
@@ -156,9 +165,13 @@ function graph_project_task_per_user ($width, $height, $id_project) {
 function graph_workunit_project_task_status ($width, $height, $id_project) {
 	global $config;
 	
-	$sql = sprintf("SELECT id, completion FROM ttask WHERE id_project = %d", $id_project);
+	$sql = sprintf("SELECT id, completion
+		FROM ttask
+		WHERE id_project = %d", $id_project);
 	
 	$res = process_sql($sql);
+	if (empty($res))
+		$res = array();
 	
 	$verified = 0;
 	$completed = 0;
@@ -185,7 +198,7 @@ function graph_workunit_project_task_status ($width, $height, $id_project) {
 	$data[__("Completed")] = $completed;
 	$data[__("InProcess")] = $in_process;
 	$data[__("Pending")]= $pending;
-		
+	
 	if ($data == NULL) {
 		echo __("There is no data to show");
 	}
@@ -203,7 +216,7 @@ function graph_workunit_project_task_status ($width, $height, $id_project) {
 function graph_workunit_project_user_single ($width, $height, $id_project, $ttl=1) {
 	global $config;
 	$data = array();
-
+	
 	$res = mysql_query("SELECT SUM(duration), tworkunit.id_user 
 					FROM tworkunit, tworkunit_task, ttask, tproject  
 					WHERE tproject.id = $id_project AND 
