@@ -361,10 +361,11 @@ echo "</ul>";
 
 //If we inserted multiple workunits then 
 if ($operation == 'multiple_wu_insert') {
-
+	
 	echo "<div id='tab1' class='ui-tabs-panel ui-tabs-hide'>"; //Single WU
-
-} else {
+	
+}
+else {
 	echo "<div id='tab1' class='ui-tabs-panel'>"; //Single WU
 }
 
@@ -372,7 +373,8 @@ echo "<h3><img src='images/award_star_silver_1.png'> ";
 
 if ($id_workunit) {
 	echo __('Update workunit');
-} else {
+}
+else {
 	echo __('Add workunit');
 }
 
@@ -383,17 +385,19 @@ if ($id_task) {
 
 if ($id_workunit) {
 	$wu_user = get_db_value ('id_user', 'tworkunit', 'id', $id_workunit);
-} else {
+}
+else {
 	$wu_user = $config["id_user"];
 }
 
 echo '</h3>';
 
 //Print result output if any
-if ($result_output) {
+if (isset($result_output)) {
 	echo $result_output;
 }
 
+$table = new StdClass;
 $table->class = 'databox';
 $table->width = '90%';
 $table->data = array ();
@@ -410,7 +414,8 @@ $table->data[0][0] = print_input_text ('start_date', $start_date, '', 10, 20,
 if (dame_admin ($config['id_user'])) {
 	$table->data[0][1] = combo_roles (true, 'id_profile', __('Role'), true);
 	//$table->data[0][1] = combo_roles_people_task ($id_task, $config['id_user'], __('Role'));
-} else {
+}
+else {
 	$table->data[0][1] = combo_user_task_profile ($id_task, 'id_profile',
 		$id_profile, false, true);
 }
@@ -420,7 +425,8 @@ if (! $id_task) {
 	$table->colspan[1][0] = 3;
 	$table->data[1][0] = combo_task_user_participant ($wu_user,
 		true, 0, true, __('Task'));
-} else {
+}
+else {
 	$table->colspan[1][0] = 3;
 	$table->data[1][0] = combo_task_user_participant ($wu_user,
 	true, $id_task, true, __('Task'));
@@ -454,7 +460,7 @@ if (! $id_workunit) {
 		__('Forward'));
 	$table->data[4][0] .= print_help_tip (__('If this checkbox is activated, propagation will be forward instead backward'),
 		true);
-
+	
 	$table->data[4][1] = print_checkbox ('split', 1, false, true,
 		__('Split > 1day'));
 	$table->data[4][1] .= print_help_tip (__('If workunit added is superior to 8 hours, it will be propagated to previous workday and deduced from the total, until deplete total hours assigned'),
@@ -472,7 +478,8 @@ if ($id_workunit) {
 	print_input_hidden ('id_workunit', $id_workunit);
 	print_input_hidden ("wu_user", $wu_user);
 	print_submit_button (__('Update'), 'btn_upd', false, 'class="sub upd"');
-} else {
+}
+else {
 	print_input_hidden ('operation', 'insert');
 	print_submit_button (__('Add'), 'btn_add', false, 'class="sub next"');
 }
@@ -502,8 +509,9 @@ if (!$id_workunit) {
 		foreach ($multiple_wu_report as $number => $mwur) {
 			print_single_workunit_report($mwur);
 		}
-
-	} else {
+		
+	}
+	else {
 		echo "<div id='tab2' class='ui-tabs-panel ui-tabs-hide'>"; //Multiple WU
 		echo '<form id="multiple_task_form" method="post" onsubmit="return validate_multiple_form()">';
 		print_input_hidden ('operation', 'multiple_wu_insert');
@@ -540,7 +548,7 @@ echo '</div>';
 <script type="text/javascript" src="include/js/integria_date.js"></script>
 
 <script type="text/javascript">
-	
+
 function datepicker_hook () {
 	add_datepicker ('input[name*="start_date"]', null);
 }

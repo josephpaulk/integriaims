@@ -1,5 +1,9 @@
 2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* operation/users/user_spare_workunit.php: fixed PHP warnings.
+
+2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* operation/projects/task_planning.php,
 	operation/projects/project_detail.php, include/functions_graph.php:
 	fixed the PHP warnings when try to iterate a not array var in
