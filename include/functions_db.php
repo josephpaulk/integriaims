@@ -490,14 +490,21 @@ function calculate_project_progress ($id_project){
 * $id_project 	integer 	ID of project
 **/
 
-function calculate_project_deviation ($id_project){
+function calculate_project_deviation ($id_project) {
 	global $config;
-
-	$expected_length = get_db_sql ("SELECT SUM(hours) FROM ttask WHERE id_project = $id_project");
+	
+	$expected_length = get_db_sql ("SELECT SUM(hours)
+		FROM ttask
+		WHERE id_project = $id_project");
+	
+	if (empty($expected_length))
+		return 0;
+	
 	$pr_hour = get_project_workunit_hours ($id_project, 1);
 	
-	$deviation_percent = format_numeric ( 100 - (abs(($pr_hour-$expected_length) / ($expected_length / 100))));
-    
+	$deviation_percent = format_numeric(100 -
+		(abs(($pr_hour - $expected_length) / ($expected_length / 100))));
+	
 	return $deviation_percent;
 }
 
@@ -510,7 +517,7 @@ function calculate_project_deviation ($id_project){
  
 function borrar_incidencia ($id_incident) {
 	global $config;
-
+	
 	$incident_title = get_db_value ("titulo", "tincidencia", "id_incidencia", $id_incident);
 	$sql = sprintf ('DELETE FROM tincidencia
 			WHERE id_incidencia = %d', $id_incident);

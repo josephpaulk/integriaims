@@ -1,5 +1,10 @@
 2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* include/functions_db.php: fixed the function
+	"calculate_project_deviation" when have 0 hours.
+
+2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* include/functions_projects.php, operation/projects/project.php,
 	ajax.php: fixed PHP warnings.
 
