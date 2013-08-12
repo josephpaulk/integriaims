@@ -57,19 +57,20 @@ if ($operation == "insert"){
 	$id_user = get_parameter ("user");
 	
 	// People add for TASK
-	if ($id_task != -1){
+	if ($id_task != -1) {
 		$temp_id_user = get_db_value ("id_user", "trole_people_project", "id_user", $id_user);
 		$temp_id_role = get_db_value('id', 'trole', 'id', $id_role);
 		
 		$filter['id_role']= $temp_id_role;
 		$filter['id_user']= $temp_id_user;
 		$filter['id_task']= $id_task;
-
-		$result_sql = get_db_value_filter('id_user', 'trole_people_task', $filter);		
+		
+		$result_sql = get_db_value_filter('id_user', 'trole_people_task', $filter);
 		
 		if ( $result_sql !== false) {
 			echo "<h3 class='error'>".__('Not created. Role already exists.')."</h3>";
-		} else {
+		}
+		else {
 			$sql = "INSERT INTO trole_people_task
 				(id_task, id_user, id_role) VALUES
 				($id_task, '$temp_id_user', '$temp_id_role')";
@@ -78,24 +79,28 @@ if ($operation == "insert"){
 			
 			if ($id_task_inserted !== false) {
 				$result_output = "<h3 class='suc'>".__('Successfully created')."</h3>";
-				audit_db ($config["id_user"], $config["REMOTE_ADDR"], "User/Role added to task", "User $user added to task ".get_db_value ("name", "ttask", "id", $id_task));
-			} else {
+				audit_db ($config["id_user"], $config["REMOTE_ADDR"],
+					"User/Role added to task", "User $id_user added to task " . get_db_value ("name", "ttask", "id", $id_task));
+			}
+			else {
 				$update_mode = 0;
 				$create_mode = 1;
 				$result_output = "<h3 class='error'>".__('Not created. Error inserting data.')."</h3>";
 			}
 		}
-
+		
 	// People add for whole PROJECT
-	} else {
+	}
+	else {
 		$filter['id_role']= $id_role;
 		$filter['id_user']= $id_user;
 		$filter['id_project']= $id_project;
-
+		
 		$result_sql = get_db_value_filter('id_user', 'trole_people_project', $filter);
 		if ($result_sql !== false){
 			echo "<h3 class='error'>".__('Not created. Role already exists.')."</h3>";
-		} else {
+		}
+		else {
 			$sql = "INSERT INTO trole_people_project
 				(id_project, id_user, id_role) VALUES
 				($id_project, '$id_user', '$id_role')";

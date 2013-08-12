@@ -1,5 +1,9 @@
 2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* operation/projects/people_manager.php: fixed the PHP warnings.
+
+2013-08-12 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* operation/projects/task.php, include/functions_form.php: fixed the
 	PHP warnings.
 
