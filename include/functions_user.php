@@ -37,6 +37,7 @@ function user_print_autocomplete_input($parameters) {
 		$src_code = print_image($parameters['image'], true, false, true);
 	}
 	
+	$title = '';
 	if (isset($parameters['title'])) {
 		$title = $parameters['title'];
 	}
@@ -49,6 +50,8 @@ function user_print_autocomplete_input($parameters) {
 	if (isset($parameters['return_help'])) {
 		$return_help = $parameters['return_help'];
 	}
+	
+	$attributes = '';
 	
 	return print_input_text_extended ($input_name, $input_value, $input_id, '', $input_size, $input_maxlength, false, '', $attributes, $return, '', __($title)). print_help_tip (__($help_message), $return_help);
 	
@@ -102,12 +105,13 @@ function load_file ($users_file, $group, $profile, $nivel, $pass_policy) {
 			'enable_login' => $enable_login,
 			'force_change_pass' => $force_change_pass);
 			
-			if (($id_usuario!='')&&($nombre_real!='')){
+			if (($id_usuario!='')&&($nombre_real!='')) {
 				if ($id_usuario == get_db_value ('id_usuario', 'tusuario', 'id_usuario', $id_usuario)){
 					echo "<h3 class='error'>" . __ ('User '). $id_usuario . __(' already exists') . "</h3>";
-				} else {
+				}
+				else {
 					$resul = process_sql_insert('tusuario', $value);
-	
+					
 					if ($resul==false){
 						$value2 = array(
 							'id_usuario' => $id_usuario,
@@ -116,16 +120,17 @@ function load_file ($users_file, $group, $profile, $nivel, $pass_policy) {
 							'assigned_by' => $config["id_user"]
 						);
 						
-						if ($id_usuario!=''){
+						if ($id_usuario!='') {
 							process_sql_insert('tusuario_perfil', $value2);
 						}
 					}
 				}
-			}		
+			}
 	}
-
+	
 	fclose($file_handle);
 	echo "<h3 class='info'>" . __ ('File loaded'). "</h3>";
+	
 	return;
 }
 
