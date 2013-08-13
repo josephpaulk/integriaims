@@ -30,6 +30,51 @@ elseif (file_exists("config.php")) {
 }
 
 // =====================================================================
+// Draw a time graph for user with the projects
+// =====================================================================
+function print_project_user_timegraph($id_user, $start_date = false, $end_date = false) {
+	include_once ("include/functions_user.php");
+	
+	$projects = user_get_projects($id_user);
+	
+	$data = array();
+	
+	$user_name = get_db_value('nombre_real', 'tusuario',
+		'id_usuario', $id_user);
+	
+	foreach ($projects as $project) {
+		$tasks = get_db_all_rows_field_filter('ttask', 'id_project',
+			$project['id_project']);
+		$project_name = get_db_value('name', 'tproject',
+			'id', $project['id_project']);
+		
+		foreach ($tasks as $task) {
+			$hours = get_task_workunit_hours_user ($task['id'],
+				$id_user, 0, $start_date, $end_date);
+			
+			if (empty($hours))
+				continue;
+			
+			$data[$project['id_project']][$task['id']] = array(
+				'parent_name' => safe_output($project_name),
+				'name' => safe_output($task['name']),
+				'value' => $hours,
+				'tooltip' => "<b>" . __('Project:') . "</b> " . $user_name . "<br />" .
+					"<b>" . __('Task:') . "</b> " . $task['name'] . "<br />" .
+					"<b>" . __('Hours:') . "</b> " . $hours,
+				'id' => $project['id_project'] . "_" . $task['id']);
+		}
+	}
+	
+	if (empty($data)) {
+		ui_print_error_message(__('There are not tasks with hours in this period.'));
+		return;
+	}
+	
+	graph_print_d3js_treemap($data);
+}
+
+// =====================================================================
 // Draw a time graph for project
 // =====================================================================
 function print_project_timegraph($id_project, $start_date = false, $end_date = false) {
@@ -50,9 +95,9 @@ function print_project_timegraph($id_project, $start_date = false, $end_date = f
 				continue;
 			
 			$data[$task['id']][$user['id_user']] = array(
-				'task' => $task['name'],
-				'user' => $user_name,
-				'hours' => $hours,
+				'parent_name' => safe_output($task['name']),
+				'name' => safe_output($user_name),
+				'value' => $hours,
 				'tooltip' => "<b>" . __('Task:') . "</b> " . $task['name'] . "<br />" .
 					"<b>" . __('User:') . "</b> " . $user_name . "<br />" .
 					"<b>" . __('Hours:') . "</b> " . $hours,
@@ -65,10 +110,14 @@ function print_project_timegraph($id_project, $start_date = false, $end_date = f
 		return;
 	}
 	
+	graph_print_d3js_treemap($data);
+}
+
+function graph_print_d3js_treemap($data) {
 	?>
 	<script type="text/javascript">
-		var time_graph_data = {
-			"name": "time_graph_data",
+		var treemap_data = {
+			"name": "treemap_data",
 			"children" : [
 				<?php
 				$f = true;
@@ -81,7 +130,7 @@ function print_project_timegraph($id_project, $start_date = false, $end_date = f
 					$first = true;
 					foreach($task as $user) {
 						if ($first) {
-							echo "{'name' : '" .$user['task'] . "',\n";
+							echo "{'name' : '" .$user['parent_name'] . "',\n";
 							echo "'task': 1,\n";
 							echo "'children' : [\n";
 						}
@@ -90,10 +139,10 @@ function print_project_timegraph($id_project, $start_date = false, $end_date = f
 						}
 						$first = false;
 						
-						echo "{'name': '" . $user['user'] . "',\n" .
+						echo "{'name': '" . $user['name'] . "',\n" .
 							"'id' : 'id_" . $user['id'] . "',\n" .
 							"'tooltip_content' : '" . $user['tooltip'] . "',\n" .
-							"'hours' : " . $user['hours'] . "}\n";
+							"'value' : " . $user['value'] . "}\n";
 					}
 					echo "]\n";
 					echo "}\n";
@@ -123,7 +172,7 @@ function print_project_timegraph($id_project, $start_date = false, $end_date = f
 	var treemap = d3.layout.treemap()
 		.size([width, height])
 		.sticky(true)
-		.value(function(d) { return d.hours; });
+		.value(function(d) { return d.value; });
 	
 	var div = d3.select("#time_graph").append("div")
 		.style("position", "relative")
@@ -133,7 +182,7 @@ function print_project_timegraph($id_project, $start_date = false, $end_date = f
 		.style("top", margin.top + "px");
 	
 	
-	var node = div.datum(time_graph_data).selectAll(".node")
+	var node = div.datum(treemap_data).selectAll(".node")
 		.data(treemap.nodes)
 		.enter().append("div")
 		.attr("id", function(d) {return d.id;})

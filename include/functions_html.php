@@ -986,7 +986,7 @@ function print_checkbox ($name, $value, $checked = false, $return = false, $labe
  */
 function print_help_tip ($text, $return = false, $tip_class = 'tip') {
 	$output = '<a href="#" class="'.$tip_class.'">&nbsp;<span>'.$text.'</span></a>';
-
+	
 	if ($return)
 		return $output;
 	echo $output;

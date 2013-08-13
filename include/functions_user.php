@@ -143,4 +143,13 @@ function user_is_external ($id_user) {
 	
 	return false;
 }
+
+function user_get_projects($id_user) {
+	$return = get_db_all_rows_field_filter('trole_people_project', 'id_user', $id_user);
+	
+	if (empty($return))
+		return array();
+	else
+		return $return;
+}
 ?>

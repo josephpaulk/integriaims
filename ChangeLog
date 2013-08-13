@@ -1,5 +1,21 @@
 2013-08-13 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* operation/side_menu.php,
+	operation/user_report/user_project_timegraph.php: added the graph
+	of times in each project and task for filtered user.
+	
+	* include/functions_user.php: added function "user_get_projects".
+	
+	* include/functions_graph.php: added function
+	"print_project_user_timegraph" for the user project graph, and
+	added common function "print_project_timegraph". Changed the
+	code of function "print_project_user_timegraph" to use the previos
+	new function.
+	
+	* include/functions_html.php: improved the source code style.
+
+2013-08-13 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* include/functions_db.php: into the function
 	"get_task_workunit_hours_user" added parameters for extract the
 	workunit hours from a period.

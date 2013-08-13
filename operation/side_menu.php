@@ -1015,6 +1015,13 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 		else
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual'>".__('Annual report')."</a></li>";
+		
+		// Basic report (annual)
+		if ($sec2 == "operation/user_report/user_project_timegraph")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/user_project_timegraph'>".__('Time per project')."</a></li>";
 	}
 	
 	if (dame_admin ($config['id_user'])) {
