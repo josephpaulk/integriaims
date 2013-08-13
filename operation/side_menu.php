@@ -147,6 +147,13 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 			echo "<li>";
 		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_bubblegraph&id_project=$id_project'>".__('Process graph')."</a></li>";
 		
+		// Timegraph d3.js treemap project
+		if ($sec2 == "operation/projects/project_timegraph")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_timegraph&id_project=$id_project'>".__('Time graph')."</a></li>";
+		
 		// Project tracking
 		if ($sec2 == "operation/projects/project_tracking")
 			echo "<li id='sidesel'>";

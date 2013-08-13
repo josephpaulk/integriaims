@@ -29,9 +29,208 @@ elseif (file_exists("config.php")) {
 	include_once ("functions_calendar.php");
 }
 
-// ===============================================================================
+// =====================================================================
+// Draw a time graph for project
+// =====================================================================
+function print_project_timegraph($id_project, $start_date = false, $end_date = false) {
+	
+	$users = get_users_project($id_project);
+	$tasks = get_db_all_rows_field_filter('ttask', 'id_project', $id_project);
+	
+	$data = array();
+	foreach ($tasks as $task) {
+		foreach($users as $user) {
+			$user_name = get_db_value('nombre_real', 'tusuario',
+				'id_usuario', $user['id_user']);
+			
+			$hours = get_task_workunit_hours_user ($task['id'],
+				$user['id_user'], 0, $start_date, $end_date);
+			
+			if (empty($hours))
+				continue;
+			
+			$data[$task['id']][$user['id_user']] = array(
+				'task' => $task['name'],
+				'user' => $user_name,
+				'hours' => $hours,
+				'tooltip' => "<b>" . __('Task:') . "</b> " . $task['name'] . "<br />" .
+					"<b>" . __('User:') . "</b> " . $user_name . "<br />" .
+					"<b>" . __('Hours:') . "</b> " . $hours,
+				'id' => $task['id'] . "_" . $user['id_user']);
+		}
+	}
+	
+	if (empty($data)) {
+		ui_print_error_message(__('There are not tasks with hours in this period.'));
+		return;
+	}
+	
+	?>
+	<script type="text/javascript">
+		var time_graph_data = {
+			"name": "time_graph_data",
+			"children" : [
+				<?php
+				$f = true;
+				foreach ($data as $task) {
+					if (!$f) {
+						echo ",";
+					}
+					$f = false;
+					
+					$first = true;
+					foreach($task as $user) {
+						if ($first) {
+							echo "{'name' : '" .$user['task'] . "',\n";
+							echo "'task': 1,\n";
+							echo "'children' : [\n";
+						}
+						else {
+							echo ",\n";
+						}
+						$first = false;
+						
+						echo "{'name': '" . $user['user'] . "',\n" .
+							"'id' : 'id_" . $user['id'] . "',\n" .
+							"'tooltip_content' : '" . $user['tooltip'] . "',\n" .
+							"'hours' : " . $user['hours'] . "}\n";
+					}
+					echo "]\n";
+					echo "}\n";
+				}
+				?>
+			]
+		};
+	</script>
+<style>
+.node {
+	border: solid 1px white;
+	font: 10px sans-serif;
+	color: #000000;
+	line-height: 12px;
+	overflow: hidden;
+	position: absolute;
+	text-align: center;
+}
+</style>
+<script>
+	var margin = {top: 40, right: 10, bottom: 10, left: 10},
+		width = 800 - margin.left - margin.right,
+		height = 500 - margin.top - margin.bottom;
+	
+	var color = d3.scale.category20();
+	
+	var treemap = d3.layout.treemap()
+		.size([width, height])
+		.sticky(true)
+		.value(function(d) { return d.hours; });
+	
+	var div = d3.select("#time_graph").append("div")
+		.style("position", "relative")
+		.style("width", (width + margin.left + margin.right) + "px")
+		.style("height", (height + margin.top + margin.bottom) + "px")
+		.style("left", margin.left + "px")
+		.style("top", margin.top + "px");
+	
+	
+	var node = div.datum(time_graph_data).selectAll(".node")
+		.data(treemap.nodes)
+		.enter().append("div")
+		.attr("id", function(d) {return d.id;})
+		.attr("data-task", function(d) { if (d.task) return d.name; })
+		.on("mouseover", over_user)
+		.on("mouseout", out_user)
+		.on("mousemove", move_tooltip)
+		.attr("class", "node")
+		.call(position)
+		.style("background", function(d) { return d.children ? color(d.name) : null; })
+		.style("line-height", "50px")
+		.append("span")
+		.text(function(d) {
+				if (d.children) {
+					return null;
+				}
+				else {
+					return d.name;
+				}
+			});
+	
+	function position() {
+		this.style("left", function(d) { return d.x + "px"; })
+			.style("top", function(d) { return d.y + "px"; })
+			.style("width", function(d) { return Math.max(0, d.dx - 1) + "px"; })
+			.style("height", function(d) { return Math.max(0, d.dy - 1) + "px"; });
+	}
+	
+	function move_tooltip(d) {
+		x = d3.event.clientX + 10;
+		y = d3.event.clientY + 10;
+		
+		$("#tooltip").css('left', x + 'px');
+		$("#tooltip").css('top', y + 'px');
+	}
+	
+	function over_user(d) {
+		id = d.id;
+		
+		$("#" + id).css('border', '1px solid black');
+		$("#" + id).css('z-index', '1');
+		
+		show_tooltip(d);
+	}
+	
+	function out_user(d) {
+		id = d.id;
+		
+		$("#" + id).css('border', '');
+		$("#" + id).css('z-index', '');
+		
+		hide_tooltip();
+	}
+	
+	function create_tooltip(d, x, y) {
+		if ($("#tooltip").length == 0) {
+			$("body")
+				.append($("<div></div>")
+				.attr('id', 'tooltip')
+				.html(d.tooltip_content));
+		}
+		else {
+			$("#tooltip").html(d.tooltip_content);
+		}
+		
+		$("#tooltip").attr('style', 'background: #fff;' + 
+			'position: absolute;' + 
+			'display: block;' + 
+			'width: 200px;' + 
+			'text-align: left;' + 
+			'padding: 10px 10px 10px 10px;' + 
+			'z-index: 2;' + 
+			"-webkit-box-shadow: 7px 7px 5px rgba(50, 50, 50, 0.75);" +
+			"-moz-box-shadow:    7px 7px 5px rgba(50, 50, 50, 0.75);" +
+			"box-shadow:         7px 7px 5px rgba(50, 50, 50, 0.75);" +
+			'left: ' + x + 'px;' + 
+			'top: ' + y + 'px;');
+	}
+	
+	
+	function show_tooltip(d) {
+		x = d3.event.clientX + 10;
+		y = d3.event.clientY + 10;
+		
+		create_tooltip(d, x, y);
+	}
+	
+	function hide_tooltip() {
+		$("#tooltip").hide();
+	}
+</script>
+	<?php
+}
+
+// =====================================================================
 // Draw a simple pie graph with incidents, by assigned user
-// ===============================================================================
+// =====================================================================
 
 function incident_peruser ($width, $height) {
 	require_once ("../include/config.php");
@@ -51,19 +250,21 @@ function incident_peruser ($width, $height) {
 		graphic_error();
 }
 
-// ===============================================================================
+// =====================================================================
 // Draw a simple pie graph with reported workunits for a specific TASK
-// ===============================================================================
+// =====================================================================
 
 function graph_workunit_task ($width, $height, $id_task) {
 	global $config;
 	$data = array();
 	$legend = array();
 	
-	$res = mysql_query("SELECT SUM(duration) as duration, id_user FROM tworkunit, tworkunit_task
-					WHERE tworkunit_task.id_task = $id_task AND 
-					tworkunit_task.id_workunit = tworkunit.id 
-					GROUP BY id_user ORDER BY duration DESC");
+	$res = mysql_query("SELECT SUM(duration) as duration, id_user
+		FROM tworkunit, tworkunit_task
+		WHERE tworkunit_task.id_task = $id_task AND 
+			tworkunit_task.id_workunit = tworkunit.id 
+		GROUP BY id_user
+		ORDER BY duration DESC");
 	
 	$data = NULL;
 	
@@ -88,12 +289,14 @@ function graph_workunit_project ($width, $height, $id_project, $ttl=1) {
 	$data = array();
 	
 	$res = mysql_query("SELECT SUM(duration), ttask.name
-					FROM tworkunit, tworkunit_task, ttask, tproject  
-					WHERE tproject.id = '$id_project' AND 
-					tworkunit.id = tworkunit_task.id_workunit AND 
-					tworkunit_task.id_task = ttask.id AND
-					tproject.id = ttask.id_project 
-					GROUP BY ttask.name ORDER BY SUM(duration) DESC LIMIT 12");
+		FROM tworkunit, tworkunit_task, ttask, tproject  
+		WHERE tproject.id = '$id_project' AND 
+			tworkunit.id = tworkunit_task.id_workunit AND 
+			tworkunit_task.id_task = ttask.id AND
+			tproject.id = ttask.id_project 
+		GROUP BY ttask.name
+		ORDER BY SUM(duration) DESC
+		LIMIT 12");
 
 	$data = NULL;
 	while ($row = mysql_fetch_array($res)) {

@@ -1,3 +1,14 @@
+2013-08-13 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/functions_db.php: into the function
+	"get_task_workunit_hours_user" added parameters for extract the
+	workunit hours from a period.
+	
+	* include/js/d3.v3.js, include/functions_graph.php, index.php,
+	operation/projects/project_timegraph.php, operation/side_menu.php:
+	added first of time graph that group the task of project and each
+	cell is the user hours and size in hours.
+
 2013-08-12  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_inventories.php

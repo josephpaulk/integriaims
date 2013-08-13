@@ -438,14 +438,46 @@ function get_task_count_workunits ($id_task) {
 * $id_user  string	  ID of user
 **/
 
-function get_task_workunit_hours_user ($id_task, $id_user) {
-	$sql = sprintf ('SELECT SUM(tworkunit.duration) 
+function get_task_workunit_hours_user ($id_task, $id_user, $with_cost = 0, $start_date = false, $end_date = false) {
+	if (($with_cost = 0) && (!$start_date) && (!$end_date)) {
+		//Old code for old call of this function.
+		$sql = sprintf ('SELECT SUM(tworkunit.duration) 
 			FROM tworkunit, tworkunit_task 
 			WHERE tworkunit_task.id_task = %d
-			AND tworkunit.id_user = "%s"
-			AND tworkunit_task.id_workunit = tworkunit.id',
+				AND tworkunit.id_user = "%s"
+				AND tworkunit_task.id_workunit = tworkunit.id',
 			$id_task, $id_user);
-	return (int) get_db_sql ($sql);
+		
+		return (int) get_db_sql ($sql);
+	}
+	else {
+		$timesearch = "";
+		if ($start_date)
+			$timesearch .= " AND tworkunit.timestamp >= '$start_date' ";
+		if ($end_date)
+			$timesearch .= " AND tworkunit.timestamp <= '$end_date'";
+		
+		if ($with_cost != 0) {
+			$sql = sprintf ('SELECT SUM(tworkunit.duration) 
+				FROM tworkunit, tworkunit_task
+				WHERE tworkunit_task.id_workunit = tworkunit.id
+					AND tworkunit_task.id_task = %d
+					AND tworkunit.id_user = "%s"
+					AND tworkunit.have_cost = 1 %s',
+				$id_task, $id_user, $timesearch);
+		}
+		else {
+			$sql = sprintf ('SELECT SUM(tworkunit.duration) 
+				FROM tworkunit, tworkunit_task
+				WHERE tworkunit_task.id_workunit = tworkunit.id
+					AND tworkunit_task.id_task = %d
+					AND tworkunit.id_user = "%s"
+					%s',
+				$id_task, $id_user, $timesearch);
+		}
+		
+		return (int) get_db_sql ($sql);
+	}
 }
 
 /**
