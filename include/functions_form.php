@@ -881,7 +881,8 @@ function form_search_incident ($return = false, $filter=false) {
 		$month_ago = date('Y-m-d',strtotime($date_end) - 2592000);
 		
 		$date_ini = get_parameter("search_first_date", $month_ago);
-	} else {
+	}
+	else {
 		$search_string = (string) $filter['string'];
 		$priority = (int) $filter['priority'];
 		$id_group = (int) $filter['id_group'];
@@ -892,12 +893,13 @@ function form_search_incident ($return = false, $filter=false) {
 		$search_id_user = (string) $filter['id_user'];
 		$date_end = $filter['last_date'];
 		$date_ini = $filter['first_date'];
-		$search_creator = (string) $filter['creator'];
+		$search_creator = (string) $filter['id_creator'];
 		$search_editor = (string) $filter['editor'];
 		$search_closed_by = (string) $filter['closed_by'];
 	}
 	
 	/* No action is set, so the form will be sent to the current page */
+	$table = new stdclass;
 	$table->width = "100%";
 	$table->class = "databox_color";
 	$table->cellspacing = 2;

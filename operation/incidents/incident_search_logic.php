@@ -58,24 +58,26 @@ if ($id_search && !$delete_custom_search) {
 	$search = get_custom_search ($id_search, 'incidents');
 	
 	if ($search) { 
-	
+		
 		if ($search["form_values"]) {
-	
+			
 			$filter = unserialize($search["form_values"]);
 			$filter_form = $filter;
 			
 			echo '<h3 class="suc">'.sprintf(__('Custom search "%s" loaded'), $search["name"]).'</h3>';
-		} else {
+		}
+		else {
 			echo '<h3 class="error">'.sprintf(__('Could not load "%s" custom search'), $search["name"]).'</h3>';	
 		}
-	} else {
+	}
+	else {
 		echo '<h3 class="error">'.__('Could not load custom search').'</h3>';
 	}
 }
 
 /* Delete a custom saved search via AJAX */
 if ($delete_custom_search) {
-
+	
 	$sql = sprintf ('DELETE FROM tcustom_search
 		WHERE id_user = "%s"
 		AND id = %d',
@@ -83,12 +85,14 @@ if ($delete_custom_search) {
 	$result = process_sql ($sql);
 	if ($result === false) {
 		echo '<h3 class="error">'.__('Could not delete custom search').'</h3>';
-	} else {
+	}
+	else {
 		echo '<h3 class="suc">'.__('Custom search deleted').'</h3>';
 	}
 }
 
 //FORM AND TABLE TO MANAGE CUSTOM SEARCHES
+$table = new stdClass;
 $table->id = 'saved_searches_table';
 $table->width = '90%';
 $table->class = 'search-table';

@@ -1,3 +1,9 @@
+2013-08-14 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/functions_form.php,
+	operation/incidents/incident_search_logic.php: fixed PHP warnings
+	and fixed lost creator in the filter of incidents.
+
 2013-08-13 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* operation/side_menu.php,
