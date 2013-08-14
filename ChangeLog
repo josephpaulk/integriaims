@@ -1,5 +1,10 @@
 2013-08-14 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* include/functions_inventories.php: fixed into the function
+	"get_companies" when there is not a group.
+
+2013-08-14 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* include/functions_form.php,
 	operation/incidents/incident_search_logic.php: fixed PHP warnings
 	and fixed lost creator in the filter of incidents.

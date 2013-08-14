@@ -163,23 +163,27 @@ function get_companies ($only_names = true, $filter = false) {
 	global $config;
 	
 	$companies = get_db_all_rows_filter ('tcompany', $filter);
+	
 	if ($companies === false)
 		return array ();
-
+	
 	$names = array ();
 	foreach ($companies as $k => $company) {
-		if (!give_acl ($config["id_user"], $company['id_grupo'], "VR") && !get_admin_user ($config["id_user"])) {
+		$id_group = 0;
+		if (isset($company['id_grupo']))
+			$id_group = $company['id_grupo'];
+		if (!give_acl ($config["id_user"], $id_group, "VR") && !get_admin_user ($config["id_user"])) {
 			continue;
 		}
 		$names[$company['id']] = $company['name'];
 	}
-
+	
 	asort ($names);
 	
 	if($only_names) {
 		return $names;
 	}
-
+	
 	$retval = array();
 	$company_keys = array_keys($names);
 	foreach($companies as $company) {
@@ -187,7 +191,7 @@ function get_companies ($only_names = true, $filter = false) {
 			$retval[] = $company;
 		}
 	}
-
+	
 	return $retval;
 }
 
