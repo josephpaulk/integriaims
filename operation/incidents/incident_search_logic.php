@@ -20,11 +20,18 @@ check_login ();
 require_once ('include/functions_incidents.php');
 
 echo "<div id='incident-search-content'>";
-echo "<h1>".__('Incident search');
+echo "<h1>" .__('Incident search') . '</h1>';
 echo "<div id='button-bar-title'>";
 echo "<ul>";
 echo "<li>";
-echo "<a id='stats_form_submit' href='#'>".print_image ("images/chart_bar.png", true, array("title" => __("Search statistics")))."</a>";
+echo "<a id='stats_form_submit' href='#'>" .
+	print_image ("images/chart_bar.png", true, array("title" => __("Search statistics"))) .
+	"</a>";
+echo "</li>";
+echo "<li>";
+echo "<a id='graph_incidents' href='#'>" .
+	print_image ("images/chart_pie.png", true, array("title" => __("Graph incidents"))) .
+	"</a>";
 echo "</li>";
 echo "</ul>";
 echo "</div>";
@@ -47,7 +54,8 @@ if ($create_custom_search && !$id_search) {
 	
 	if ($result === false) {
 		echo '<h3 class="error">'.__('Could not create custom search').'</h3>';
-	} else {
+	}
+	else {
 		echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
 	}
 }
@@ -143,10 +151,17 @@ echo '</select>';
 echo '</form>';
 echo '</div>';
 
-incidents_search_result($filter);	
+incidents_search_result($filter);
 
 /* Add a form to carry filter between statistics and search views */
 echo '<form id="stats_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search&option=stats" style="clear: both">';
+foreach ($filter as $key => $value) {
+	print_input_hidden ("search_".$key, $value);
+}
+echo "</form>";
+
+/* Add a form to carry filter between graphs and search views */
+echo '<form id="graph_incidents_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search&option=graph" style="clear: both">';
 foreach ($filter as $key => $value) {
 	print_input_hidden ("search_".$key, $value);
 }
@@ -185,7 +200,7 @@ echo "</div>";
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
 
-<script>
+<script type="text/javascript">
 
 // Datepicker
 add_ranged_datepicker ("#text-search_first_date", "#text-search_last_date", null);
@@ -195,6 +210,11 @@ $(document).ready(function () {
 	$("#stats_form_submit").click(function (event) {
 		event.preventDefault();
 		$("#stats_form").submit();
+	});
+	
+	$("#graph_incidents").click(function (event) {
+		event.preventDefault();
+		$("#graph_incidents_form").submit();
 	});
 	
 	$("a.show_advanced_search").click (function () {
@@ -211,20 +231,20 @@ $(document).ready(function () {
 	//JS for massive operations
 	$(".cb_incident").click(function(event) {
 		event.stopPropagation();
-	});	
+	});
 	
 	$("#submit-massive_update").click(function(event) {
 		process_massive_updates();
-	});	
+	});
 	
 	// Form validation
 	trim_element_on_submit('#text-search_string');
 	trim_element_on_submit('#text-search_name');
 	trim_element_on_submit('#text-inventory_name');
-
+	
 	//Autocomplete for owner search field
 	var idUser = "<?php echo $config['id_user'] ?>";
-		
+	
 	bindAutocomplete ("#text-search_id_user", idUser);
 	bindAutocomplete ("#text-search_creator", idUser);
 	bindAutocomplete ("#text-search_editor", idUser);
@@ -236,22 +256,22 @@ function loadInventory(id_inventory) {
 	
 	$('#hidden-id_inventory').val(id_inventory);
 	$('#text-inventory_name').val(id_inventory);
-
+	
 	$("#search_inventory_window").dialog('close');
 }
 
 // Show the modal window of inventory search
 function show_search_inventory(search_free, id_object_type_search, owner_search, id_manufacturer_search, id_contract_search, search, object_fields_search) {
-
+	
 	$.ajax({
 		type: "POST",
 		url: "ajax.php",
 		data: "page=include/ajax/inventories&get_inventory_search=1&search_free="+search_free+"&id_object_type_search="+id_object_type_search+"&owner_search="+owner_search+"&id_manufacturer_search="+id_manufacturer_search+"&id_contract_search="+id_contract_search+"&object_fields_search="+object_fields_search+"&search=1",
 		dataType: "html",
-		success: function(data){	
+		success: function(data) {
 			$("#search_inventory_window").html (data);
 			$("#search_inventory_window").show ();
-
+			
 			$("#search_inventory_window").dialog ({
 					resizable: true,
 					draggable: true,

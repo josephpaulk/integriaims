@@ -46,12 +46,14 @@ $filter['first_date'] = (string) get_parameter ('search_first_date', $first_date
 $filter['last_date'] = (string) get_parameter ('search_last_date', $last_date);
 
 switch ($option) {
-
 	case "search":
 		include("incident_search_logic.php");
 		break;
 	case "stats":
 		include("incident_statistics.php");
+		break;
+	case 'graph':
+		include("incident_graph.php");
 		break;
 	default:
 		break;

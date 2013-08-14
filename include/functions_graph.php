@@ -30,6 +30,276 @@ elseif (file_exists("config.php")) {
 }
 
 // =====================================================================
+// Draw a the bubbles incidents per user
+// =====================================================================
+function print_bubble_incidents_per_user_graph($incidents_by_user) {
+	$max_radius = 0;
+	
+	$data = array();
+	//debugPrint($incidents_by_user);
+	$id = 0;
+	foreach ($incidents_by_user as $incident) {
+		$radius = $incident['hours'] + (0.1 * $incident['files']);
+		
+		$content = '<b>' . __('User') . ':</b> ' . $incident['user_name'] . '<br>' .
+			'<b>' . __('Incident') . ':</b> ' . $incident['incident_name'] . '<br>' .
+			'<b>' . __('Hours') . ':</b> ' . $incident['hours'] . '<br>' .
+			'<b>' . __('Files') . ':</b> ' . $incident['files'];
+		
+		if ($radius > $max_radius) {
+			$max_radius = $radius;
+		}
+		
+		$row = array();
+		$row['radius'] = $radius;
+		$row['id_creator'] = $incident['id_creator'];
+		$row['content'] = $content;
+		$row['link'] = 'index.php?' .
+			'sec=incidents&' .
+			'sec2=operation/incidents/incident_dashboard_detail&' .
+			'id=' . $incident['id_incident'];
+		$row['id'] = $id;
+		
+		$data[$id] = $row;
+		$id++;
+	}
+	
+	?>
+	<script type="text/javascript">
+		var nodes = [
+			<?php
+			$first = true;
+			foreach ($data as $node) {
+				if (!$first)
+					echo ",\n";
+				$first = false;
+				
+				echo "{
+					'radius': " . $node['radius'] . ",
+					'id_creator': '" . $node['id_creator'] . "',
+					'content': '" . $node['content'] . "',
+					'link': '" . $node['link'] . "',
+					'id': " . $node['id'] . ",
+					}\n";
+			}
+			?>
+		];
+	</script>
+	<?php
+	?>
+	<div id="graph_container"></div>
+	<style type="text/css">
+		circle {
+		  stroke: #fff;
+		}
+		
+		circle.over {
+			stroke: #999;
+		}
+		
+		circle.mouse_down {
+			stroke: #000;
+		}
+	</style>
+	<script type="text/javascript">
+		var margin = {top: 0, right: 0, bottom: 0, left: 0},
+			width = 960 - margin.left - margin.right,
+			height = 500 - margin.top - margin.bottom;
+		
+		var padding = 6;
+		var radius = d3.scale.sqrt().range([0, <?php echo $max_radius; ?>]);
+		var color = d3.scale.category20();
+		
+		var svg = d3.select("#graph_container").append("svg")
+			.attr("width", width + margin.left + margin.right)
+			.attr("height", height + margin.top + margin.bottom)
+			.append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		
+		var force = d3.layout.force()
+			.nodes(nodes)
+			.size([width, height])
+			.gravity(.02)
+			.charge(0)
+			.on("tick", tick)
+			.start();
+		
+		
+		var circle = svg.selectAll("circle")
+			.data(nodes)
+			.enter().append("circle")
+			.attr("id", function(d) { return "node_" + d.id;})
+			.attr("r", function(d) { return radius(d.radius); })
+			.style("fill", function(d) { return color(d.id_creator); })
+			.on("mouseover", over)
+			.on("mouseout", out)
+			.on("mousemove", move_tooltip)
+			.on("mousedown", mouse_down)
+			.on("mouseup", mouse_up)
+			.call(force.drag);
+		
+		function tick(e) {
+			circle
+				.each(cluster(10 * e.alpha * e.alpha))
+				.each(collide(0.5))
+				.attr("cx", function(d) { return d.x; })
+				.attr("cy", function(d) { return d.y; });
+		}
+		
+		// Move d to be adjacent to the cluster node.
+		function cluster(alpha) {
+			var max = {};
+			
+			// Find the largest node for each cluster.
+			nodes.forEach(function(d) {
+				if (!(color(d.color) in max)
+					|| (radius(d.radius) > radius(max[color(d.color)].radius))) {
+					max[color(d.color)] = d;
+				}
+			});
+			
+			return function(d) {
+				var node = max[color(d.color)],
+				l,
+				r,
+				x,
+				y,
+				i = -1;
+				
+				if (node == d) return;
+				
+				x = d.x - node.x;
+				y = d.y - node.y;
+				l = Math.sqrt(x * x + y * y);
+				r = radius(d.radius) + radius(node.radius);
+				if (l != r) {
+					l = (l - r) / l * alpha;
+					d.x -= x *= l;
+					d.y -= y *= l;
+					node.x += x;
+					node.y += y;
+				}
+			};
+		}
+		
+		// Resolves collisions between d and all other circles.
+		function collide(alpha) {
+			var quadtree = d3.geom.quadtree(nodes);
+			return function(d) {
+				var r = radius(d.radius) + radius.domain()[1] + padding,
+					nx1 = d.x - r,
+					nx2 = d.x + r,
+					ny1 = d.y - r,
+					ny2 = d.y + r;
+					
+				quadtree.visit(function(quad, x1, y1, x2, y2) {
+					if (quad.point && (quad.point !== d)) {
+						var x = d.x - quad.point.x,
+							y = d.y - quad.point.y,
+							l = Math.sqrt(x * x + y * y),
+							r = radius(d.radius) + quad.point.radius
+								+ (color(d.color) !== quad.point.color) * padding;
+						
+						if (l < r) {
+							l = (l - r) / l * alpha;
+							d.x -= x *= l;
+							d.y -= y *= l;
+							quad.point.x += x;
+							quad.point.y += y;
+						}
+					}
+					return x1 > nx2
+						|| x2 < nx1
+						|| y1 > ny2
+						|| y2 < ny1;
+				});
+			};
+		}
+		
+		var mouse_click_x;
+		var mouse_click_y;
+		
+		function mouse_up(d) {
+			x = d3.event.clientX;
+			y = d3.event.clientY;
+			
+			if ((x == mouse_click_x) && 
+				(y == mouse_click_y)) {
+				window.location = d.link;
+			}
+		}
+		
+		function mouse_down(d) {
+			svg.select("#node_" + d.id)
+				.attr("class", "mouse_down");
+			
+			mouse_click_x = d3.event.clientX;
+			mouse_click_y = d3.event.clientY;
+		}
+		
+		function over(d) {
+			svg.select("#node_" + d.id)
+				.attr("class", "over");
+			
+			show_tooltip(d);
+		}
+		
+		function out(d) {
+			svg.select("#node_" + d.id)
+				.attr("class", "");
+			
+			hide_tooltip();
+		}
+		
+		function move_tooltip(d) {
+			x = d3.event.clientX + 10;
+			y = d3.event.clientY + 10;
+			
+			$("#tooltip").css('left', x + 'px');
+			$("#tooltip").css('top', y + 'px');
+		}
+		
+		function create_tooltip(d, x, y) {
+			if ($("#tooltip").length == 0) {
+				$("body")
+					.append($("<div></div>")
+					.attr('id', 'tooltip')
+					.html(d.content));
+			}
+			else {
+				$("#tooltip").html(d.content);
+			}
+			
+			$("#tooltip").attr('style', 'background: #fff;' + 
+				'position: absolute;' + 
+				'display: block;' + 
+				'width: 200px;' + 
+				'text-align: left;' + 
+				'padding: 10px 10px 10px 10px;' + 
+				'z-index: 2;' + 
+				"-webkit-box-shadow: 7px 7px 5px rgba(50, 50, 50, 0.75);" +
+				"-moz-box-shadow:    7px 7px 5px rgba(50, 50, 50, 0.75);" +
+				"box-shadow:         7px 7px 5px rgba(50, 50, 50, 0.75);" +
+				'left: ' + x + 'px;' + 
+				'top: ' + y + 'px;');
+		}
+		
+		
+		function show_tooltip(d) {
+			x = d3.event.clientX + 10;
+			y = d3.event.clientY + 10;
+			
+			create_tooltip(d, x, y);
+		}
+		
+		function hide_tooltip() {
+			$("#tooltip").hide();
+		}
+	</script>
+	<?php
+}
+
+// =====================================================================
 // Draw a time graph for user with the projects
 // =====================================================================
 function print_project_user_timegraph($id_user, $start_date = false, $end_date = false) {

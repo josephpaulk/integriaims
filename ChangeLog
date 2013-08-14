@@ -1,5 +1,13 @@
 2013-08-14 Miguel de Dios  <miguel.dedios@artica.es>
 	
+	* include/functions_graph.php,
+	operation/incidents/incident_search_logic.php,
+	operation/incidents/incident_graph.php,
+	operation/incidents/incident_search.php: added bubble graph for
+	incidents per user in the incident search.
+
+2013-08-14 Miguel de Dios  <miguel.dedios@artica.es>
+	
 	* include/functions_inventories.php: fixed into the function
 	"get_companies" when there is not a group.
 
