@@ -1,15 +1,15 @@
 #!/bin/sh
 
-# Pandora FMS Console Installer (c) 2008-2011 Artica ST
+# Integria IMS Console Installer (c) 2008-2013 Artica ST
 # Linux/FreeBSD Version (generic), for SuSe, Debian/Ubuntu, RHEL/CentOS,
 # Fedora and FreeBSD only
 # other Linux distros could not work properly without modifications
-# Please see http://www.pandorafms.org
-# v4.0dev Build 110203
+# Please see http://www.integriaims.com
+# v4.0dev
 # This code is licensed under GPL 2.0 license.
 # **********************************************************************
 
-PI_VERSION=4.0
+PI_VERSION=4.0dev
 FORCE=0
 LOG_TIMESTAMP=`date +"%Y/%m/%d %H:%M:%S"`
 MODE=$1
@@ -72,25 +72,25 @@ uninstall () {
 
 	if [ "$DISTRO" = "UBUNTU" ]
 	then
-		PANDORA_HOME=/var/www/pandora_console
+		INTEGRIA_HOME=/var/www/integria
 	else
 		if [ "$DISTRO" = "RHEL_CENTOS" ]
 		then
-			PANDORA_HOME=/var/www/html/pandora_console
+			INTEGRIA_HOME=/var/www/html/integria
 		else
 			if [ "$DISTRO" = "FEDORA" ]
 			then
-				PANDORA_HOME=/var/www/html/pandora_console
+				INTEGRIA_HOME=/var/www/html/integria
 			else
 				if [ "$DISTRO" = "FreeBSD" ]
 				then
-					PANDORA_HOME="/usr/local/www/data/pandora_console /usr/local/www/apache22/data/pandora_console"
+					INTEGRIA_HOME="/usr/local/www/data/integria /usr/local/www/apache22/data/integria"
 				else
 					if [ "$DISTRO" = "NetBSD" ]
 					then
-						PANDORA_HOME="/usr/pkg/share/httpd/htdocs/pandora_console"
+						INTEGRIA_HOME="/usr/pkg/share/httpd/htdocs/integria"
 					else
-						PANDORA_HOME=/srv/www/htdocs/pandora_console
+						INTEGRIA_HOME=/srv/www/htdocs/integria
 					fi
 				fi
 			fi
@@ -98,7 +98,7 @@ uninstall () {
 	fi
 
 	echo "Removing Pandora FMS Console"
-	rm -Rf $PANDORA_HOME
+	rm -Rf $INTEGRIA_HOME
 	echo "You need to drop manually pandora database from your Database server"
 	echo "Done"
 }
@@ -110,36 +110,36 @@ install () {
 	
 	if [ "$DISTRO" = "UBUNTU" ]
 	then
-		PANDORA_HOME=/var/www/pandora_console
-		PANDORA_CONF=$PANDORA_HOME/include/config.php
+		INTEGRIA_HOME=/var/www/integria
+		PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 	else
 		if [ "$DISTRO" = "RHEL_CENTOS" ]
 		then
-			PANDORA_HOME=/var/www/html/pandora_console
-			PANDORA_CONF=$PANDORA_HOME/include/config.php
+			INTEGRIA_HOME=/var/www/html/integria
+			PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 		else
 			if [ "$DISTRO" = "FEDORA" ]
 			then
-				PANDORA_HOME=/var/www/html/pandora_console
-				PANDORA_CONF=$PANDORA_HOME/include/config.php
+				INTEGRIA_HOME=/var/www/html/integria
+				PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 			else
 				if [ "$DISTRO" = "FreeBSD" ]
 				then
 					if [ -d /usr/local/www/apache22 ]
 					then
-						PANDORA_HOME=/usr/local/www/apache22/data/pandora_console
+						INTEGRIA_HOME=/usr/local/www/apache22/data/integria
 					else
-						PANDORA_HOME=/usr/local/www/data/pandora_console
+						INTEGRIA_HOME=/usr/local/www/data/integria
 					fi
-					PANDORA_CONF=$PANDORA_HOME/include/config.php
+					PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 				else
 					if [ "$DISTRO" = "NetBSD" ]
 					then
-						PANDORA_HOME=/usr/pkg/share/httpd/htdocs/pandora_console
-						PANDORA_CONF=$PANDORA_HOME/include/config.php
+						INTEGRIA_HOME=/usr/pkg/share/httpd/htdocs/integria
+						PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 					else
-						PANDORA_HOME=/srv/www/htdocs/pandora_console
-						PANDORA_CONF=$PANDORA_HOME/include/config.php
+						INTEGRIA_HOME=/srv/www/htdocs/integria
+						PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 					fi
 				fi
 			fi
@@ -148,102 +148,103 @@ install () {
 
 	echo "Detecting operating system: $DISTRO"
 	
-	if [ -f $PANDORA_HOME ] && [ "$FORCE" = "0" ]
+	if [ -f $INTEGRIA_HOME ] && [ "$FORCE" = "0" ]
 	then
 		echo "Seems that default dir already exists. Please use --force to"
-		echo "force installer to install on $PANDORA_HOME"
+		echo "force installer to install on $INTEGRIA_HOME"
 		exit
 	else
-		echo "Checking default dir $PANDORA_HOME..."
+		echo "Checking default dir $INTEGRIA_HOME..."
 	fi
 
 	# Create directories
-	echo "Creating Pandora FMS Console home directory at $PANDORA_HOME ..."
-	mkdir -p $PANDORA_HOME 2> /dev/null
+	echo "Creating Integria IMS home directory at $INTEGRIA_HOME ..."
+	mkdir -p $INTEGRIA_HOME 2> /dev/null
 
-	# Copying Pandora FMS console
-	echo "Copying Pandora FMS Console to $PANDORA_HOME.."
-	cp -R * $PANDORA_HOME
-	chmod -R u+rwX,g+rX,g-w,o-rwx $PANDORA_HOME
+	# Copying Integria IMS
+	echo "Copying Integria IMS to $INTEGRIA_HOME.."
+	cp -R * $INTEGRIA_HOME
+	chmod -R u+rwX,g+rX,g-w,o-rwx $INTEGRIA_HOME
 
 
-	# Creating 'pandora' user
-	id pandora 2> /dev/null
+	# Creating 'integria' user
+	id integria 2> /dev/null
 	if [ $? -eq 0 ]; then
 		echo " "
-		echo "User pandora does exist, skipping this step"
+		echo "User integria does exist, skipping this step"
 	else
-		echo "Creating 'pandora' user"
+		echo "Creating 'integria' user"
 		if [ "$DISTRO" = "FreeBSD" ]
 		then
-			echo "pandora:41121:::::Pandora FMS:/home/pandora:/usr/sbin/nologin:" | adduser -f - -w no 2> /dev/null
+			echo "integria:41121:::::Integria IMS:/home/integria:/usr/sbin/nologin:" | adduser -f - -w no 2> /dev/null
 		else
-			useradd pandora 
+			useradd integria
 			mkdir /home/pandora 2> /dev/null
 			mkdir /home/pandora/.ssh 2> /dev/null
-			chown -R pandora /home/pandora 
+			chown -R integria /home/integria 
 		fi
 	fi
 
-	if [ ! -d /var/spool/pandora ]
+	if [ ! -d /var/spool/integria ]
 	then
-		mkdir -p /var/spool/pandora
+		mkdir -p /var/spool/integria
+		mkdir -p /var/spool/integria/data_in
 	fi
 
 	#Ownership
 	if [ "$DISTRO" = "UBUNTU" ]
 	then
-		chown -R www-data:root $PANDORA_HOME
-		chown -R pandora:www-data /var/spool/pandora/
+		chown -R www-data:root $INTEGRIA_HOME
+		chown -R integria:www-data /var/spool/integria/
 	else 
 		if [ "$DISTRO" = "RHEL_CENTOS" ]
 		then
-			chown -R apache:apache $PANDORA_HOME
-			chown -R pandora:apache /var/spool/pandora/	
+			chown -R apache:apache $INTEGRIA_HOME
+			chown -R integria:apache /var/spool/integria/	
 		else 
 			if [ "$DISTRO" = "FEDORA" ]
 			then
-				chown -R apache:apache $PANDORA_HOME
-				chown -R pandora:apache /var/spool/pandora/	
+				chown -R apache:apache $INTEGRIA_HOME
+				chown -R integria:apache /var/spool/integria/	
 			else
 				if [ "$DISTRO" = "FreeBSD" -o "$DISTRO" = "NetBSD" ]
 				then
-					chown -R www:www $PANDORA_HOME
-					chown -R pandora:www /var/spool/pandora/
+					chown -R www:www $INTEGRIA_HOME
+					chown -R integria:www /var/spool/integria/
 				else
 					# Assuming SUSE
-					chown -R wwwrun:root $PANDORA_HOME
-					chown -R pandora:www /var/spool/pandora/
+					chown -R wwwrun:root $INTEGRIA_HOME
+					chown -R integria:www /var/spool/integria/
 				fi
 			fi
 		fi
 	fi
 
-	echo "Setting secure permissions for Pandora FMS spool dir..."
-	chmod -R u+rwX,g+rwX,o-rwx /var/spool/pandora/
+	echo "Setting secure permissions for Intengria IMS' spool dir..."
+	chmod -R u+rwX,g+rwX,o-rwx /var/spool/integria/
 
 	echo "Done."
 	echo " "
-	echo "You have your Pandora FMS console installed on $PANDORA_HOME."
+	echo "You have your Integria IMS installed on $INTEGRIA_HOME."
 	echo " "
-	echo "Now you can setup your Pandora FMS console and install"
+	echo "Now you can setup your Integria IMS  and install"
 	echo "database using a browser and point to: "
 	echo " " 
-	echo "	http://ip_address_of_this_server/pandora_console/install.php"
+	echo "	http://ip_address_of_this_server/integria/install.php"
 	echo " "
 	echo " "
 }
 
 help () {
 	echo "    --force-install     To force installation if already installed on this system"
-	echo "    --install           To install Pandora FMS Console on this system"
+	echo "    --install           To install Integria IMS on this system"
 	echo " "
 }
 
 # Script banner at start
 echo " "
-echo "Pandora FMS Console Installer $PI_VERSION (c) 2008-2011 ArticaST"
-echo "This program is licensed under GPL2 Terms. http://pandorafms.com"
+echo "Integria IMS Installer $PI_VERSION (c) 2008-2013 ArticaST"
+echo "This program is licensed under GPL2 Terms. http://integriaims.com"
 echo " "
 
 case "$MODE" in
