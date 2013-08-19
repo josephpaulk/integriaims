@@ -1,3 +1,15 @@
+2013-08-19 Dario Rodriguez <dario@artica.es>
+
+	* integria_installer,
+	extras/tentacle_server,
+	extras/tentacle_serverd: Prepared scripts to add tentacle_server
+	to Integria.
+	* include/functions_config.php,
+	godmode/setup/setup_pandora.php: Added a new configuration field
+	to define remote inventory path, by default /var/spool/integria/data_in
+	* operation/leads/lead_detail.php: Added option "None" to field
+	"Managed by" of leads.
+
 2013-08-14 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* include/functions_graph.php,

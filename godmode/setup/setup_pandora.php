@@ -68,8 +68,10 @@ if ($update) {
 	$config["default_contract"] = get_parameter ("default_contract");
 
         $config["remote_inventory_type"] = (int) get_parameter("remote_inventory_type", 0);
+	$config["inventory_path"] = (string) get_parameter("inventory_path", "");
 
         update_config_token ("remote_inventory_type", $config["remote_inventory_type"]);
+	update_config_token ("inventory_path", $config["inventory_path"]);
 
 	foreach($labels as $k => $lab) {
 		$config["pandora_$k"] = get_parameter ("pandora_$k");

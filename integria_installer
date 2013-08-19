@@ -1,0 +1,270 @@
+#!/bin/sh
+
+# Pandora FMS Console Installer (c) 2008-2011 Artica ST
+# Linux/FreeBSD Version (generic), for SuSe, Debian/Ubuntu, RHEL/CentOS,
+# Fedora and FreeBSD only
+# other Linux distros could not work properly without modifications
+# Please see http://www.pandorafms.org
+# v4.0dev Build 110203
+# This code is licensed under GPL 2.0 license.
+# **********************************************************************
+
+PI_VERSION=4.0
+FORCE=0
+LOG_TIMESTAMP=`date +"%Y/%m/%d %H:%M:%S"`
+MODE=$1
+
+
+get_distro () {
+
+	OS_NAME=`uname -s`
+
+	# Get Linux Distro type and version
+	if [ -f "/etc/SuSE-release" ]
+	then
+		OS_VERSION=`cat /etc/SuSE-release | grep VERSION | cut -f 3 -d " "`
+		LINUX_DISTRO=SUSE
+	else
+		if [ -f "/etc/lsb-release" ] && [ ! -f "/etc/redhat-release" ]
+		then
+			OS_VERSION=`cat /etc/lsb-release | grep DISTRIB_RELEASE | cut -f 2 -d "="`
+			LINUX_DISTRO=UBUNTU
+			OS_VERSION="UBUNTU $OS_VERSION"
+		else
+			if [ -f "/etc/debian_version" ]
+			then
+				OS_VERSION=`cat /etc/debian_version`
+				OS_VERSION="DEBIAN $OS_VERSION"
+				LINUX_DISTRO=DEBIAN
+			else
+				if [ -f "/etc/fedora-release" ]
+				then
+					OS_VERSION=`cat /etc/fedora-release | cut -f 4 -d " "`
+					OS_VERSION="FEDORA $OS_VERSION"
+					LINUX_DISTRO=FEDORA
+				else
+					if [ -f "/etc/redhat-release" ]
+					then
+						LINUX_DISTRO=RHEL_CENTOS
+					else
+						if [ "$OS_NAME" = "FreeBSD" ]
+						then
+							LINUX_DISTRO=FreeBSD
+						else
+							if [ "$OS_NAME" = "NetBSD" ]
+							then
+								LINUX_DISTRO=NetBSD
+							else
+								LINUX_DISTRO=GENERIC
+							fi
+						fi
+						OS_VERSION=`uname -r`
+					fi
+				fi
+			fi
+		fi
+	fi
+	echo $LINUX_DISTRO
+}
+
+uninstall () {
+	DISTRO=`get_distro`
+
+	if [ "$DISTRO" = "UBUNTU" ]
+	then
+		PANDORA_HOME=/var/www/pandora_console
+	else
+		if [ "$DISTRO" = "RHEL_CENTOS" ]
+		then
+			PANDORA_HOME=/var/www/html/pandora_console
+		else
+			if [ "$DISTRO" = "FEDORA" ]
+			then
+				PANDORA_HOME=/var/www/html/pandora_console
+			else
+				if [ "$DISTRO" = "FreeBSD" ]
+				then
+					PANDORA_HOME="/usr/local/www/data/pandora_console /usr/local/www/apache22/data/pandora_console"
+				else
+					if [ "$DISTRO" = "NetBSD" ]
+					then
+						PANDORA_HOME="/usr/pkg/share/httpd/htdocs/pandora_console"
+					else
+						PANDORA_HOME=/srv/www/htdocs/pandora_console
+					fi
+				fi
+			fi
+		fi
+	fi
+
+	echo "Removing Pandora FMS Console"
+	rm -Rf $PANDORA_HOME
+	echo "You need to drop manually pandora database from your Database server"
+	echo "Done"
+}
+
+install () {
+
+	DISTRO=`get_distro`
+	OLDFILENAMETMP=`date +"%Y-%m-%d"`
+	
+	if [ "$DISTRO" = "UBUNTU" ]
+	then
+		PANDORA_HOME=/var/www/pandora_console
+		PANDORA_CONF=$PANDORA_HOME/include/config.php
+	else
+		if [ "$DISTRO" = "RHEL_CENTOS" ]
+		then
+			PANDORA_HOME=/var/www/html/pandora_console
+			PANDORA_CONF=$PANDORA_HOME/include/config.php
+		else
+			if [ "$DISTRO" = "FEDORA" ]
+			then
+				PANDORA_HOME=/var/www/html/pandora_console
+				PANDORA_CONF=$PANDORA_HOME/include/config.php
+			else
+				if [ "$DISTRO" = "FreeBSD" ]
+				then
+					if [ -d /usr/local/www/apache22 ]
+					then
+						PANDORA_HOME=/usr/local/www/apache22/data/pandora_console
+					else
+						PANDORA_HOME=/usr/local/www/data/pandora_console
+					fi
+					PANDORA_CONF=$PANDORA_HOME/include/config.php
+				else
+					if [ "$DISTRO" = "NetBSD" ]
+					then
+						PANDORA_HOME=/usr/pkg/share/httpd/htdocs/pandora_console
+						PANDORA_CONF=$PANDORA_HOME/include/config.php
+					else
+						PANDORA_HOME=/srv/www/htdocs/pandora_console
+						PANDORA_CONF=$PANDORA_HOME/include/config.php
+					fi
+				fi
+			fi
+		fi
+	fi
+
+	echo "Detecting operating system: $DISTRO"
+	
+	if [ -f $PANDORA_HOME ] && [ "$FORCE" = "0" ]
+	then
+		echo "Seems that default dir already exists. Please use --force to"
+		echo "force installer to install on $PANDORA_HOME"
+		exit
+	else
+		echo "Checking default dir $PANDORA_HOME..."
+	fi
+
+	# Create directories
+	echo "Creating Pandora FMS Console home directory at $PANDORA_HOME ..."
+	mkdir -p $PANDORA_HOME 2> /dev/null
+
+	# Copying Pandora FMS console
+	echo "Copying Pandora FMS Console to $PANDORA_HOME.."
+	cp -R * $PANDORA_HOME
+	chmod -R u+rwX,g+rX,g-w,o-rwx $PANDORA_HOME
+
+
+	# Creating 'pandora' user
+	id pandora 2> /dev/null
+	if [ $? -eq 0 ]; then
+		echo " "
+		echo "User pandora does exist, skipping this step"
+	else
+		echo "Creating 'pandora' user"
+		if [ "$DISTRO" = "FreeBSD" ]
+		then
+			echo "pandora:41121:::::Pandora FMS:/home/pandora:/usr/sbin/nologin:" | adduser -f - -w no 2> /dev/null
+		else
+			useradd pandora 
+			mkdir /home/pandora 2> /dev/null
+			mkdir /home/pandora/.ssh 2> /dev/null
+			chown -R pandora /home/pandora 
+		fi
+	fi
+
+	if [ ! -d /var/spool/pandora ]
+	then
+		mkdir -p /var/spool/pandora
+	fi
+
+	#Ownership
+	if [ "$DISTRO" = "UBUNTU" ]
+	then
+		chown -R www-data:root $PANDORA_HOME
+		chown -R pandora:www-data /var/spool/pandora/
+	else 
+		if [ "$DISTRO" = "RHEL_CENTOS" ]
+		then
+			chown -R apache:apache $PANDORA_HOME
+			chown -R pandora:apache /var/spool/pandora/	
+		else 
+			if [ "$DISTRO" = "FEDORA" ]
+			then
+				chown -R apache:apache $PANDORA_HOME
+				chown -R pandora:apache /var/spool/pandora/	
+			else
+				if [ "$DISTRO" = "FreeBSD" -o "$DISTRO" = "NetBSD" ]
+				then
+					chown -R www:www $PANDORA_HOME
+					chown -R pandora:www /var/spool/pandora/
+				else
+					# Assuming SUSE
+					chown -R wwwrun:root $PANDORA_HOME
+					chown -R pandora:www /var/spool/pandora/
+				fi
+			fi
+		fi
+	fi
+
+	echo "Setting secure permissions for Pandora FMS spool dir..."
+	chmod -R u+rwX,g+rwX,o-rwx /var/spool/pandora/
+
+	echo "Done."
+	echo " "
+	echo "You have your Pandora FMS console installed on $PANDORA_HOME."
+	echo " "
+	echo "Now you can setup your Pandora FMS console and install"
+	echo "database using a browser and point to: "
+	echo " " 
+	echo "	http://ip_address_of_this_server/pandora_console/install.php"
+	echo " "
+	echo " "
+}
+
+help () {
+	echo "    --force-install     To force installation if already installed on this system"
+	echo "    --install           To install Pandora FMS Console on this system"
+	echo " "
+}
+
+# Script banner at start
+echo " "
+echo "Pandora FMS Console Installer $PI_VERSION (c) 2008-2011 ArticaST"
+echo "This program is licensed under GPL2 Terms. http://pandorafms.com"
+echo " "
+
+case "$MODE" in
+
+'--force-install')
+	FORCE=1
+	install
+	exit
+	;;
+
+'--install')
+	install
+	exit
+	;;
+
+'--uninstall')
+	uninstall
+	exit
+	;;
+
+*)
+	help
+esac
+

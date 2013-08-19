@@ -235,7 +235,7 @@ function load_config() {
 	}
 	
 	if (!isset ($config["inventory_path"])) {
-		$config["inventory_path"] = "/var/spool/pandora/data_in";
+		$config["inventory_path"] = "/var/spool/integria/data_in";
 	}
 	
 	if (!isset ($config["remote_inventory_type"])) {

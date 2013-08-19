@@ -467,7 +467,7 @@ if ($id || $new) {
 			$companies = crm_get_user_companies($config['id_user'], $companies, true);
 		}
 	
-		$table->data[5][1] =  print_select ($companies, 'id_company', $id_company, '', '', $nothing_value = '0', true, 0, false,  __('Managed by'));
+		$table->data[5][1] =  print_select ($companies, 'id_company', $id_company, '', __("None"), 0, true, 0, false,  __('Managed by'));
 
 		$table->data[5][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 		$table->data[5][1] .= "<img src='images/company.png'></a>";
