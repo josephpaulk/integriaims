@@ -108,6 +108,8 @@ INSERT INTO tobject_type_field (id, id_object_type, label, type) VALUES
 (1,1,'OS','text'),
 (2,1,'IP Address','text'),
 (3,1,'URL Address','text'),
-(4,1,'ID Agent','text');
+(4,1,'ID Agent','text'),
+(6,1,'Users','text'),
+(7,1,'File&#x20;system','text');
 
 INSERT INTO `tupdate_settings` VALUES ('customer_key', 'INTEGRIA-FREE'), ('updating_binary_path', 'Path where the updated binary files will be stored'), ('updating_code_path', 'Path where the updated code is stored'), ('dbname', ''), ('dbhost', ''), ('dbpass', ''), ('dbuser', ''), ('dbport', ''), ('proxy', ''), ('proxy_port', ''), ('proxy_user', ''), ('proxy_pass', '');
