@@ -1,5 +1,10 @@
 2013-08-19 Dario Rodriguez <dario@artica.es>
 
+	* integria_dbdata.sql: Fixed a wrong insert statement in SQL
+	script.
+
+2013-08-19 Dario Rodriguez <dario@artica.es>
+
 	* integria_dbdata.sql,
 	integria_demo.sql: Updated sql script to add new default fields to
 	inventory objects in order to match with default Pandora FMS inventory

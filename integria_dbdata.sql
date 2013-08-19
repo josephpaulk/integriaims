@@ -73,7 +73,7 @@ INSERT INTO `tproject` VALUES  (-1,'Non imputable hours (Special)','','0000-00-0
 
 ALTER TABLE tproject AUTO_INCREMENT = 1;
 
-INSERT INTO `ttask` (`id`, `id_project`, `id_parent_task`, `name`, `description`, `completion`, `priority`, `dep_type`, `start`, `id_group`) VALUES (-1,-1,0,'Vacations','',0,0,0,'0000-00-00',0),(-2,-1,0,'Health issues','',0,0,0,'0000-00-00',0),(-3,-1,0,'Not justified','',0,0,0,'0000-00-00',0), (-4,-1,0,'Workunits lost (without project/task)','',0,0,0,'0000-00-00',0);
+INSERT INTO `ttask` (`id`, `id_project`, `id_parent_task`, `name`, `description`, `completion`, `priority`, `dep_type`, `start`) VALUES (-1,-1,0,'Vacations','',0,0,0,'0000-00-00'),(-2,-1,0,'Health issues','',0,0,0,'0000-00-00'),(-3,-1,0,'Not justified','',0,0,0,'0000-00-00'), (-4,-1,0,'Workunits lost (without project/task)','',0,0,0,'0000-00-00');
 
 ALTER TABLE ttask AUTO_INCREMENT = 1;
 
