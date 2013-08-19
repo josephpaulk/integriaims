@@ -68,8 +68,10 @@ if ($update) {
 	$config["default_contract"] = get_parameter ("default_contract");
 
         $config["remote_inventory_type"] = (int) get_parameter("remote_inventory_type", 0);
+	$config["inventory_default_owner"] = (string) get_parameter("inventory_default_owner", "");
 
         update_config_token ("remote_inventory_type", $config["remote_inventory_type"]);
+	update_config_token ("inventory_default_owner", $config["inventory_default_owner"]);
 
 	foreach($labels as $k => $lab) {
 		$config["pandora_$k"] = get_parameter ("pandora_$k");
@@ -129,5 +131,10 @@ echo '</form>';
 <script type="text/javascript">
 $(document).ready (function () {
 	$("textarea").TextAreaResizer ();
+
+        var idUser = "<?php echo $config['id_user'] ?>";
+
+        bindAutocomplete ("#text-inventory_default_owner", idUser);
+
 });
 </script>

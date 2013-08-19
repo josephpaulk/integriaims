@@ -241,6 +241,11 @@ function load_config() {
 	if (!isset ($config["remote_inventory_type"])) {
 		$config["remote_inventory_type"] = 0;
 	}
+	
+	if (!isset ($config["inventory_default_owner"])) {
+		$config["inventory_default_owner"] = "";
+	}
+
 }
 
 function config_prepare_session() {

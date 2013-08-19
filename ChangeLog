@@ -1,5 +1,11 @@
 2013-08-19 Dario Rodriguez <dario@artica.es>
 
+	* include/functions_config.php,
+	godmode/setup/setup_pandora.php: Added new option to configure
+	default user for inventory objects created using XMLs files.
+
+2013-08-19 Dario Rodriguez <dario@artica.es>
+
 	* integria_dbdata.sql: Fixed a wrong insert statement in SQL
 	script.
 
