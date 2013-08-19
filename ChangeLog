@@ -1,5 +1,11 @@
 2013-08-19 Dario Rodriguez <dario@artica.es>
 
+	* integria_installer: Now installs tentacle server and it's launcher.
+	* extras/tentacle_serverd: Tentacle server launcher adapted to
+	Integria IMS.
+
+2013-08-19 Dario Rodriguez <dario@artica.es>
+
 	* integria_installer: Modified installer script to create folders and
 	users properly.
 	* integria_dbdata.sql,

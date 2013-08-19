@@ -14,6 +14,7 @@ FORCE=0
 LOG_TIMESTAMP=`date +"%Y/%m/%d %H:%M:%S"`
 MODE=$1
 
+TENTACLE_SERVER=/etc/init.d/tentacle_serverd
 
 get_distro () {
 
@@ -132,6 +133,7 @@ install () {
 						INTEGRIA_HOME=/usr/local/www/data/integria
 					fi
 					PANDORA_CONF=$INTEGRIA_HOME/include/config.php
+					TENTACLE_SERVER=/usr/local/etc/rc.d/tentacle_server
 				else
 					if [ "$DISTRO" = "NetBSD" ]
 					then
@@ -141,6 +143,7 @@ install () {
 						INTEGRIA_HOME=/srv/www/htdocs/integria
 						PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 					fi
+					TENTACLE_SERVER=/etc/rc.d/tentacle_server
 				fi
 			fi
 		fi
@@ -168,7 +171,7 @@ install () {
 
 
 	# Creating 'integria' user
-	id integria 2> /dev/null
+	id integria 1>&2> /dev/null
 	if [ $? -eq 0 ]; then
 		echo " "
 		echo "User integria does exist, skipping this step"
@@ -190,6 +193,30 @@ install () {
 		mkdir -p /var/spool/integria
 		mkdir -p /var/spool/integria/data_in
 	fi
+
+	echo "Installing Tentacle Server..."
+	if [ "$DISTRO" = "UBUNTU" ] || [ "$DISTRO" = "DEBIAN" ]
+        	then
+                	# Tentacle server install (Ubuntu)
+                        cp extras/tentacle_server /usr/bin
+                        chown integria /usr/bin/tentacle_server
+                        cp extras/tentacle_serverd $TENTACLE_SERVER
+                        update-rc.d tentacle_serverd defaults
+                else
+                	if [ "$DISTRO" = "SUSE" ]
+                        	then
+                                        cp extras/tentacle_server /usr/bin
+                                        chown integria /usr/bin/tentacle_server
+                                        cp extras/tentacle_serverd /etc/init.d/tentacle_serverd
+                                        insserv tentacle_serverd
+                                else
+                                        # Tentacle server install (Other Distros)
+                                        cp extras/tentacle_server /usr/bin
+                                        chown integria /usr/bin/tentacle_server
+                                        cp extras/tentacle_serverd /etc/init.d/tentacle_serverd
+                                        ln -s $TENTACLE_SERVER /etc/rc.d/rc2.d/S80tentacle_serverd
+                        fi
+        fi	
 
 	#Ownership
 	if [ "$DISTRO" = "UBUNTU" ]
