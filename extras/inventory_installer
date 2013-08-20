@@ -68,41 +68,6 @@ get_distro () {
 	echo $LINUX_DISTRO
 }
 
-uninstall () {
-	DISTRO=`get_distro`
-
-	if [ "$DISTRO" = "UBUNTU" ]
-	then
-		INTEGRIA_HOME=/var/www/integria
-	else
-		if [ "$DISTRO" = "RHEL_CENTOS" ]
-		then
-			INTEGRIA_HOME=/var/www/html/integria
-		else
-			if [ "$DISTRO" = "FEDORA" ]
-			then
-				INTEGRIA_HOME=/var/www/html/integria
-			else
-				if [ "$DISTRO" = "FreeBSD" ]
-				then
-					INTEGRIA_HOME="/usr/local/www/data/integria /usr/local/www/apache22/data/integria"
-				else
-					if [ "$DISTRO" = "NetBSD" ]
-					then
-						INTEGRIA_HOME="/usr/pkg/share/httpd/htdocs/integria"
-					else
-						INTEGRIA_HOME=/srv/www/htdocs/integria
-					fi
-				fi
-			fi
-		fi
-	fi
-
-	echo "Removing Pandora FMS Console"
-	rm -Rf $INTEGRIA_HOME
-	echo "You need to drop manually pandora database from your Database server"
-	echo "Done"
-}
 
 install () {
 
@@ -111,36 +76,36 @@ install () {
 	
 	if [ "$DISTRO" = "UBUNTU" ]
 	then
-		INTEGRIA_HOME=/var/www/integria
+		INTEGRIA_HOME=/var/www/integria/attachment/inventory
 		PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 	else
 		if [ "$DISTRO" = "RHEL_CENTOS" ]
 		then
-			INTEGRIA_HOME=/var/www/html/integria
+			INTEGRIA_HOME=/var/www/html/integria/attachment/inventory
 			PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 		else
 			if [ "$DISTRO" = "FEDORA" ]
 			then
-				INTEGRIA_HOME=/var/www/html/integria
+				INTEGRIA_HOME=/var/www/html/integria/attachment/inventory
 				PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 			else
 				if [ "$DISTRO" = "FreeBSD" ]
 				then
 					if [ -d /usr/local/www/apache22 ]
 					then
-						INTEGRIA_HOME=/usr/local/www/apache22/data/integria
+						INTEGRIA_HOME=/usr/local/www/apache22/data/integria/attachment/inventory
 					else
-						INTEGRIA_HOME=/usr/local/www/data/integria
+						INTEGRIA_HOME=/usr/local/www/data/integria/attachment/inventory
 					fi
 					PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 					TENTACLE_SERVER=/usr/local/etc/rc.d/tentacle_server
 				else
 					if [ "$DISTRO" = "NetBSD" ]
 					then
-						INTEGRIA_HOME=/usr/pkg/share/httpd/htdocs/integria
+						INTEGRIA_HOME=/usr/pkg/share/httpd/htdocs/integria/attachment/inventory
 						PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 					else
-						INTEGRIA_HOME=/srv/www/htdocs/integria
+						INTEGRIA_HOME=/srv/www/htdocs/integria/attachment/inventory
 						PANDORA_CONF=$INTEGRIA_HOME/include/config.php
 					fi
 					TENTACLE_SERVER=/etc/rc.d/tentacle_server
@@ -151,25 +116,6 @@ install () {
 
 	echo "Detecting operating system: $DISTRO"
 	
-	if [ -f $INTEGRIA_HOME ] && [ "$FORCE" = "0" ]
-	then
-		echo "Seems that default dir already exists. Please use --force to"
-		echo "force installer to install on $INTEGRIA_HOME"
-		exit
-	else
-		echo "Checking default dir $INTEGRIA_HOME..."
-	fi
-
-	# Create directories
-	echo "Creating Integria IMS home directory at $INTEGRIA_HOME ..."
-	mkdir -p $INTEGRIA_HOME 2> /dev/null
-
-	# Copying Integria IMS
-	echo "Copying Integria IMS to $INTEGRIA_HOME.."
-	cp -R * $INTEGRIA_HOME
-	chmod -R u+rwX,g+rX,g-w,o-rwx $INTEGRIA_HOME
-
-
 	# Creating 'integria' user
 	id integria 1>&2> /dev/null
 	if [ $? -eq 0 ]; then
@@ -188,32 +134,30 @@ install () {
 		fi
 	fi
 
-	if [ ! -d /var/spool/integria ]
-	then
-		mkdir -p /var/spool/integria
-		mkdir -p /var/spool/integria/data_in
-	fi
+        echo "Configuring tentacle server launcher..."
+
+        sed -i s!INTEGRIA_SERVER_PATH=.*data_in.*!INTEGRIA_SERVER_PATH=\"$INTEGRIA_HOME\"!1 tentacle_serverd 
 
 	echo "Installing Tentacle Server..."
 	if [ "$DISTRO" = "UBUNTU" ] || [ "$DISTRO" = "DEBIAN" ]
         	then
                 	# Tentacle server install (Ubuntu)
-                        cp extras/tentacle_server /usr/bin
+                        cp tentacle_server /usr/bin
                         chown integria /usr/bin/tentacle_server
-                        cp extras/tentacle_serverd $TENTACLE_SERVER
+                        cp tentacle_serverd $TENTACLE_SERVER
                         update-rc.d tentacle_serverd defaults
                 else
                 	if [ "$DISTRO" = "SUSE" ]
                         	then
-                                        cp extras/tentacle_server /usr/bin
+                                        cp tentacle_server /usr/bin
                                         chown integria /usr/bin/tentacle_server
-                                        cp extras/tentacle_serverd /etc/init.d/tentacle_serverd
+                                        cp tentacle_serverd /etc/init.d/tentacle_serverd
                                         insserv tentacle_serverd
                                 else
                                         # Tentacle server install (Other Distros)
-                                        cp extras/tentacle_server /usr/bin
+                                        cp tentacle_server /usr/bin
                                         chown integria /usr/bin/tentacle_server
-                                        cp extras/tentacle_serverd /etc/init.d/tentacle_serverd
+                                        cp tentacle_serverd /etc/init.d/tentacle_serverd
                                         ln -s $TENTACLE_SERVER /etc/rc.d/rc2.d/S80tentacle_serverd
                         fi
         fi	
@@ -221,78 +165,36 @@ install () {
 	#Ownership
 	if [ "$DISTRO" = "UBUNTU" ]
 	then
-		chown -R www-data:root $INTEGRIA_HOME
-		chown -R integria:www-data /var/spool/integria/
+		chown -R integria:www-data $INTEGRIA_HOME
 	else 
 		if [ "$DISTRO" = "RHEL_CENTOS" ]
 		then
-			chown -R apache:apache $INTEGRIA_HOME
-			chown -R integria:apache /var/spool/integria/	
+			chown -R integria:apache $INTEGRIA_HOME
 		else 
 			if [ "$DISTRO" = "FEDORA" ]
 			then
-				chown -R apache:apache $INTEGRIA_HOME
-				chown -R integria:apache /var/spool/integria/	
+				chown -R integria:apache $INTEGRIA_HOME
 			else
 				if [ "$DISTRO" = "FreeBSD" -o "$DISTRO" = "NetBSD" ]
 				then
-					chown -R www:www $INTEGRIA_HOME
-					chown -R integria:www /var/spool/integria/
+					chown -R integria:www $INTEGRIA_HOME
 				else
 					# Assuming SUSE
-					chown -R wwwrun:root $INTEGRIA_HOME
-					chown -R integria:www /var/spool/integria/
+					chown -R integria:www $INTEGRIA_HOME
 				fi
 			fi
 		fi
 	fi
 
-	echo "Setting secure permissions for Intengria IMS' spool dir..."
-	chmod -R u+rwX,g+rwX,o-rwx /var/spool/integria/
-
 	echo "Done."
-	echo " "
-	echo "You have your Integria IMS installed on $INTEGRIA_HOME."
-	echo " "
-	echo "Now you can setup your Integria IMS  and install"
-	echo "database using a browser and point to: "
-	echo " " 
-	echo "	http://ip_address_of_this_server/integria/install.php"
-	echo " "
-	echo " "
-}
-
-help () {
-	echo "    --force-install     To force installation if already installed on this system"
-	echo "    --install           To install Integria IMS on this system"
-	echo " "
 }
 
 # Script banner at start
 echo " "
-echo "Integria IMS Installer $PI_VERSION (c) 2008-2013 ArticaST"
+echo "Integria IMS Remote Inventory Installer $PI_VERSION (c) 2008-2013 ArticaST"
 echo "This program is licensed under GPL2 Terms. http://integriaims.com"
 echo " "
 
-case "$MODE" in
-
-'--force-install')
-	FORCE=1
-	install
-	exit
-	;;
-
-'--install')
-	install
-	exit
-	;;
-
-'--uninstall')
-	uninstall
-	exit
-	;;
-
-*)
-	help
-esac
+install
+exit
 
