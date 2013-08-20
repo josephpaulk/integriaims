@@ -87,7 +87,7 @@ unset($table);
 // Add the description of the incident under the first workunit for usability
 $description = get_db_value('descripcion','tincidencia','id_incidencia',$incident_id);
 echo "<h3>".__("Incident details")."</h3>";
-echo "<div style='margin-left: 10px; margin-top: 20px; width:85%; padding: 10px; border: 1px solid #ccc'><p>";
+echo "<div class='incident_details'><p>";
 echo clean_output_breaks ($description);
 echo "</div>";
 

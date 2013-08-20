@@ -344,7 +344,7 @@ if (isset($_POST['treeview']))
 
 
 echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_search">';
-	$table_search->class = 'databox';
+	$table_search->class = 'search-table';
 	$table_search->width = '98%';
 	$table_search->data = array ();
 	
@@ -386,21 +386,24 @@ echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=
 	
 	$table_search->data[1][3] = print_checkbox_extended ('last_update', 1, $last_update,
 	false, '', '', true, __('Last updated'));
+
+	$buttons = '<div style=" text-align: right;">';
+	$buttons .= print_input_hidden ('search', 1, true);
+	$buttons .= print_input_hidden ('mode', $mode, true);
+	$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub next"', true);
+		
+	if ($mode == 'tree') {
+		$buttons .= print_submit_button (__('List view'), 'listview', false, 'class="sub next"', true);
+	} else {
+		$buttons .= print_submit_button (__('Tree view'), 'treeview', false, 'class="sub next"', true);
+	}
+		
+	$buttons .= '</div>';
+	
+	$table_search->data[2][0] = $buttons;
+	$table_search->colspan[2][0] = 4;
 	
 	print_table($table_search);
-	
-	echo '<div style="width:'.$table_search->width.'" class="action-buttons button">';
-		print_input_hidden ('search', 1);
-		print_input_hidden ('mode', $mode);
-		print_submit_button (__('Search'), 'search', false, 'class="sub next"');
-		
-		if ($mode == 'tree') {
-			print_submit_button (__('List view'), 'listview', false, 'class="sub next"');
-		} else {
-			print_submit_button (__('Tree view'), 'treeview', false, 'class="sub next"');
-		}
-		
-	echo '</div>';
 echo '</form>';
 
 if ($search) {

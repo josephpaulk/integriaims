@@ -1008,4 +1008,43 @@ function integria_help ($help_id, $return = false) {
 	echo $output;
 }
 
+
+function print_container($id, $title, $content, $open = 'open', $return = true) {
+	$style = '';
+	$arrow = '';
+	$onclick = 'toggleDiv (\'' . $id . '_div\')';
+	$h2_style = '';
+
+	switch($open) {
+		case 'open':
+			$arrow = '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
+			break;
+		case 'closed':
+			$arrow = '&nbsp;&nbsp;' . print_image('images/arrow_right.png', true, array('class' => 'arrow_right')) . '</h2>';
+			$style = 'display: none;';
+			break;
+		case 'no':
+		default:
+			$onclick = '';
+			$h2_style = 'cursor: auto;';
+			break;
+	}
+	
+	$container = '<div class="container">';
+	$container .= '<h2 id="' . $id . '" class="dashboard_h2" onclick="' . $onclick . '" style="' . $h2_style . '">' . $title;
+	$container .= $arrow;
+	$container .= '</h2>';
+	$container .= '<div id="' . $id . '_div" style="' . $style . '">';
+	$container .= $content;
+	$container .= '</div>';
+	$container .= '</div>'; // container
+	
+	if ($return) {
+		return $container;
+	}
+	else {
+		echo $container;
+	}
+}
+
 ?>

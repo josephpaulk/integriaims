@@ -158,10 +158,10 @@ if ($action == 'insert') {
 	}
 }
 
-echo '<h2>'.__('Project management').'</h2>';
+echo '<h1>'.__('Project management').'</h1>';
 
 $table = new stdClass;
-$table->width = '90%';
+$table->width = '99%';
 $table->class = 'search-table';
 $table->style = array ();
 $table->style[0] = 'font-weight: bold;';

@@ -64,10 +64,6 @@ $table->cellpadding = 0;
 $table->style [0] = "vertical-align: top";
 $table->style [1] = "vertical-align: top";
 
-$left_side = '<div class="incident_container">';
-$left_side .= '<h2 id="incident_details" class="incident_dashboard incident_details" onclick="toggleDiv (\'incident-details\')">' . __('Details') . '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
-$left_side .= '<div id="incident-details">';
-
 $resolution = incidents_get_incident_resolution_text($id);
 $priority = incidents_get_incident_priority_text($id);
 $priority_image = print_priority_flag_image ($incident['prioridad'], true);
@@ -89,47 +85,39 @@ else {
 	$status_icon = 'status_closed';
 }
 
-$left_side .= "<table width='97%' id='details_table'>";
-$left_side .= "<tr>";
-$left_side .= "<td style='color:" . $status_color . ";'>".__("Status")."</td>";
-$left_side .= "<td>".__("Group")."</td>";
-$left_side .= "<td style='color:" . incidents_get_priority_color($incident) . ";'>".__("Priority")."</td>";
-$left_side .= "<td>".__("Resolution")."</td>";
-$left_side .= "<td>".__("Type")."</td>";
-$left_side .= "</tr>";
-$left_side .= "<tr>";
-$left_side .= "<td>" . print_image('images/' . $status_icon . '.png', true) . "</td>";
-$left_side .= "<td>" . print_image('images/group.png', true) . "</td>";
-$left_side .= "<td>" . $priority_image . "</td>";
-$left_side .= "<td>" . print_image('images/resolution.png', true) . "</td>";
-$left_side .= "<td>" . print_image('images/incident.png', true) . "</td>";
-$left_side .= "</tr>";
-$left_side .= "<tr class='bold incident_details_bottom'>";
-$left_side .= "<td style='color:" . $status_color . ";'>".$status."</td>";
-$left_side .= "<td>".$group."</td>";
-$left_side .= "<td style='color:" . incidents_get_priority_color($incident) . ";'>".$priority."</td>";
-$left_side .= "<td>".$resolution."</td>";
-$left_side .= "<td>".$type."</td>";
-$left_side .= "</tr>";
-$left_side .= "</table>";
+// Details
+$incident_details = "<table width='97%' id='details_table'>";
+$incident_details .= "<tr>";
+$incident_details .= "<td style='color:" . $status_color . ";'>".__("Status")."</td>";
+$incident_details .= "<td>".__("Group")."</td>";
+$incident_details .= "<td style='color:" . incidents_get_priority_color($incident) . ";'>".__("Priority")."</td>";
+$incident_details .= "<td>".__("Resolution")."</td>";
+$incident_details .= "<td>".__("Type")."</td>";
+$incident_details .= "</tr>";
+$incident_details .= "<tr>";
+$incident_details .= "<td>" . print_image('images/' . $status_icon . '.png', true) . "</td>";
+$incident_details .= "<td>" . print_image('images/group.png', true) . "</td>";
+$incident_details .= "<td>" . $priority_image . "</td>";
+$incident_details .= "<td>" . print_image('images/resolution.png', true) . "</td>";
+$incident_details .= "<td>" . print_image('images/incident.png', true) . "</td>";
+$incident_details .= "</tr>";
+$incident_details .= "<tr class='bold incident_details_bottom'>";
+$incident_details .= "<td style='color:" . $status_color . ";'>".$status."</td>";
+$incident_details .= "<td>".$group."</td>";
+$incident_details .= "<td style='color:" . incidents_get_priority_color($incident) . ";'>".$priority."</td>";
+$incident_details .= "<td>".$resolution."</td>";
+$incident_details .= "<td>".$type."</td>";
+$incident_details .= "</tr>";
+$incident_details .= "</table>";
 
-$left_side .= '</div>';
-$left_side .= "</div>"; // container
+$left_side = print_container('incident_details', __('Details'), $incident_details, 'no');
 
-/* Users affected by the incident */
-$left_side .= '<div class="incident_container">';
-$left_side .= '<h2 id="incident_description" class="incident_dashboard incident_description" onclick="toggleDiv (\'incident-description\')">' . __('Description') . '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
-$left_side .= '<div id="incident-description">';
+/* Description */
+$incident_description = clean_output_breaks($incident["descripcion"]);
 
-$left_side .= clean_output_breaks($incident["descripcion"]);
+$left_side .= print_container('incident_description', __('Description'), $incident_description);
 
-$left_side .= '</div>';
-$left_side .= "</div>"; // container
-
-$left_side .= '<div class="incident_container">';
-$left_side .= '<h2 id="incident_adv_details" class="incident_dashboard incident_adv_details" onclick="toggleDiv (\'incident-adv-details\')">' . __('Advanced details') . '&nbsp;&nbsp;' . print_image('images/arrow_right.png', true, array('class' => 'arrow_right')) . '</h2>';
-$left_side .= '<div id="incident-adv-details" style="display: none">';
-
+// Advanced details
 $editor = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["editor"]));
 $creator_group = get_db_value_filter ("nombre", "tgrupo", array("id_grupo" => $incident["id_group_creator"]));
 
@@ -179,125 +167,118 @@ if ($emails) {
 	
 }
 
-$left_side .= "<table class='advanced_details_table alternate'>";
-$left_side .= "<tr>";
-$left_side .= "<td class='advanced_details_icons'>".print_image('images/editor.png', true)."</td>";
-$left_side .= "<td><table><tr><td>".__("Editor").":</td><td align='right'><b>".$editor."</b></td></tr></table></td>";
-$left_side .= "</tr>";
-$left_side .= "<tr>";
-$left_side .= "<td class='advanced_details_icons'>".print_image('images/group.png', true)."</td>";
-$left_side .= "<td><table><tr><td>".__("Creator group").":</td><td align='right'><b>".$creator_group."</b></td></tr></table></td>";
-$left_side .= "</tr>";
-$left_side .= "<tr>";
-$left_side .= "<td class='advanced_details_icons'>".print_image('images/incident.png', true)."</td>";
-$left_side .= "<td><table><tr><td>".__("Parent incident").":</td><td align='right'><b>".$parent."</b></td></tr></table></td>";
-$left_side .= "</tr>";
-$left_side .= "<tr>";
-$left_side .= "<td class='advanced_details_icons'>".print_image('images/task.png', true)."</td>";
-$left_side .= "<td><table><tr><td>".__("Task").":</td><td align='right'><b>".$task."</b></td></tr></table></td>";
-$left_side .= "</tr>";
-$left_side .= "<tr>";
-$left_side .= "<td class='advanced_details_icons'>".print_image('images/sla.png', true)."</td>";
-$left_side .= "<td><table><tr><td>".__("SLA disabled").":</td><td align='right'><b>".$sla."</b></td></tr></table></td>";
-$left_side .= "</tr>";
-$left_side .= "<tr>";
-$left_side .= $obj_table;
-$left_side .= "<tr>";
-$left_side .= "<td class='advanced_details_icons'>".print_image('images/email.png', true)."</td>";
-$left_side .= "<td><table><tr><td>".__("Nofify changes by email").":</td><td align='right'><b>".$email_notify_text."</b></td></tr></table></td>";
-$left_side .= "</tr>";
-$left_side .= $email_table;
-$left_side .= "</table>";
-$left_side .= '</div>';
-$left_side .= "</div>"; // container
+$incident_adv_details .= "<table class='advanced_details_table alternate'>";
+$incident_adv_details .= "<tr>";
+$incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/editor.png', true)."</td>";
+$incident_adv_details .= "<td><table><tr><td>".__("Editor").":</td><td align='right'><b>".$editor."</b></td></tr></table></td>";
+$incident_adv_details .= "</tr>";
+$incident_adv_details .= "<tr>";
+$incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/group.png', true)."</td>";
+$incident_adv_details .= "<td><table><tr><td>".__("Creator group").":</td><td align='right'><b>".$creator_group."</b></td></tr></table></td>";
+$incident_adv_details .= "</tr>";
+$incident_adv_details .= "<tr>";
+$incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/incident.png', true)."</td>";
+$incident_adv_details .= "<td><table><tr><td>".__("Parent incident").":</td><td align='right'><b>".$parent."</b></td></tr></table></td>";
+$incident_adv_details .= "</tr>";
+$incident_adv_details .= "<tr>";
+$incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/task.png', true)."</td>";
+$incident_adv_details .= "<td><table><tr><td>".__("Task").":</td><td align='right'><b>".$task."</b></td></tr></table></td>";
+$incident_adv_details .= "</tr>";
+$incident_adv_details .= "<tr>";
+$incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/sla.png', true)."</td>";
+$incident_adv_details .= "<td><table><tr><td>".__("SLA disabled").":</td><td align='right'><b>".$sla."</b></td></tr></table></td>";
+$incident_adv_details .= "</tr>";
+$incident_adv_details .= "<tr>";
+$incident_adv_details .= $obj_table;
+$incident_adv_details .= "<tr>";
+$incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/email.png', true)."</td>";
+$incident_adv_details .= "<td><table><tr><td>".__("Nofify changes by email").":</td><td align='right'><b>".$email_notify_text."</b></td></tr></table></td>";
+$incident_adv_details .= "</tr>";
+$incident_adv_details .= $email_table;
+$incident_adv_details .= "</table>";
+
+$left_side .= print_container('incident_adv_details', __('Advanced details'), $incident_adv_details);
 
 /**** DASHBOARD RIGHT SIDE ****/
 
-$right_side = '<div class="incident_container">';
-$right_side .= '<h2 id="incident_users" class="incident_dashboard incident_users" onclick="toggleDiv (\'incident-users\')">' . __('People') . '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
-$right_side .= '<div id="incident-users">';
-
-$right_side .= "<table style='width: 100%;'>";
-$right_side .= "<tr>";
+// People
+$incident_users .= "<table style='width: 100%;'>";
+$incident_users .= "<tr>";
 
 $long_name_creator = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["id_creator"]));
 $avatar_creator = get_db_value_filter ("avatar", "tusuario", array("id_usuario" => $incident["id_creator"]));
-$right_side .= "<td>";
-$right_side .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_creator . '.png', true) . '</div>';
-$right_side .= '<span>' . __('Created by') . ':</span><br>' . $long_name_creator;
-$right_side .= "</td>";
+$incident_users .= "<td>";
+$incident_users .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_creator . '.png', true) . '</div>';
+$incident_users .= '<span>' . __('Created by') . ':</span><br>' . $long_name_creator;
+$incident_users .= "</td>";
 
 $long_name_asigned = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["id_usuario"]));
 $avatar_asigned = get_db_value_filter ("avatar", "tusuario", array("id_usuario" => $incident["id_usuario"]));
 
-$right_side .= "<td>";
-$right_side .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_asigned . '.png', true) . '</div>';
-$right_side .= '<span>' . __('Owned by') . ':</span><br>' . $long_name_asigned;
-$right_side .= "</td>";
+$incident_users .= "<td>";
+$incident_users .= '<div class="bubble">' . print_image('images/avatars/' . $avatar_asigned . '.png', true) . '</div>';
+$incident_users .= '<span>' . __('Owned by') . ':</span><br>' . $long_name_asigned;
+$incident_users .= "</td>";
 
 $avatar_closer = get_db_value_filter ("avatar", "tusuario", array("id_usuario" => $incident["closed_by"]));
 
-$right_side .= "<td>";
-$right_side .= '<div class="bubble">';
+$incident_users .= "<td>";
+$incident_users .= '<div class="bubble">';
 if ($incident["estado"] != STATUS_CLOSED) {
 	$long_name_closer = '<em>' . __('Not closed yet') . '</em>';
-	$right_side .= print_image('images/avatar_notyet.png', true);
+	$incident_users .= print_image('images/avatar_notyet.png', true);
 }
 else if (empty($incident["closed_by"])) {
 	$long_name_closer = '<em>' . __('Unknown') . '</em>';
-	$right_side .= print_image('images/avatar_unknown.png', true);
+	$incident_users .= print_image('images/avatar_unknown.png', true);
 }
 else {
 	$long_name_closer = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident["closed_by"]));
-	$right_side .= print_image('images/avatars/' . $avatar_closer  . '.png', true);
+	$incident_users .= print_image('images/avatars/' . $avatar_closer  . '.png', true);
 }
-$right_side .= '</div>';
-$right_side .= '<span>' . __('Closed by') . ':</span><br>' . $long_name_closer;
-$right_side .= "</td>";
+$incident_users .= '</div>';
+$incident_users .= '<span>' . __('Closed by') . ':</span><br>' . $long_name_closer;
+$incident_users .= "</td>";
 
 
-$right_side .= "</tr>";
+$incident_users .= "</tr>";
 
-$right_side .= "</table>";
-//echo incident_users_list ($id, true);
-$right_side .= "</div>";
-$right_side .= "</div>"; // container
+$incident_users .= "</table>";
 
-$right_side .= '<div class="incident_container">';
-$right_side .= '<h2 id="incident_dates" class="incident_dashboard incident_dates" onclick="toggleDiv (\'incident-dates\')">' . __('Dates') . '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
-$right_side .= '<div id="incident-dates">';
+$right_side = print_container('incident_users', __('People'), $incident_users);
 
+// Incident dates
 if ($incident["cierre"] == "0000-00-00 00:00:00") {
 	$close_text = __("Not yet");
 } else {
 	$close_text = $incident["cierre"];
 }
 
-$right_side .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
-$right_side .= "<tr>";
-$right_side .= "<td>".__("Created on").":</td>";
-$right_side .= "<td>".__("Updated on").":</td>";
-$right_side .= "<td>".__("Closed on").":</td>";
-$right_side .= "</tr>";
-$right_side .= "<tr>";
-$right_side .= "<td id='created_on' class='mini_calendar'>";
+$incident_dates .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
+$incident_dates .= "<tr>";
+$incident_dates .= "<td>".__("Created on").":</td>";
+$incident_dates .= "<td>".__("Updated on").":</td>";
+$incident_dates .= "<td>".__("Closed on").":</td>";
+$incident_dates .= "</tr>";
+$incident_dates .= "<tr>";
+$incident_dates .= "<td id='created_on' class='mini_calendar'>";
 
 $created_timestamp = strtotime($incident["inicio"]);
 $created_on = "<table><tr><th>" . strtoupper(date('M\' y', $created_timestamp)) . "</th></tr>";
 $created_on .= "<tr><td class='day'>" . date('d', $created_timestamp) . "</td></tr>";
 $created_on .= "<tr><td class='time'>" . print_image('images/cal_clock_grey.png', true) . ' ' . date('H:i:s', $created_timestamp) . "</td></tr></table>";
 
-$right_side .= $created_on . "</td>";
-$right_side .= "<td id='updated_on' class='mini_calendar'>";
+$incident_dates .= $created_on . "</td>";
+$incident_dates .= "<td id='updated_on' class='mini_calendar'>";
 
 $updated_timestamp = strtotime($incident["actualizacion"]);
 $updated_on = "<table><tr><th>" . strtoupper(date('M\' y', $updated_timestamp)) . "</th></tr>";
 $updated_on .= "<tr><td class='day'>" . date('d', $updated_timestamp) . "</td></tr>";
 $updated_on .= "<tr><td class='time'>" . print_image('images/cal_clock_orange.png', true) . ' ' . date('H:i:s', $updated_timestamp) . "</td></tr></table>";
 
-$right_side .= $updated_on . "</td>";
-$right_side .= "</td>";
-$right_side .= "<td id='closed_on' class='mini_calendar'>";
+$incident_dates .= $updated_on . "</td>";
+$incident_dates .= "</td>";
+$incident_dates .= "<td id='closed_on' class='mini_calendar'>";
 
 if ($incident["estado"] == STATUS_CLOSED) {
 	$closed_timestamp = strtotime($incident["cierre"]);
@@ -311,33 +292,29 @@ else {
 	$closed_on .= "</table>";
 }
 
-$right_side .= $closed_on . "</td>";
-$right_side .= "</td>";
-$right_side .= "</tr>";
-$right_side .= "</table>";
+$incident_dates .= $closed_on . "</td>";
+$incident_dates .= "</td>";
+$incident_dates .= "</tr>";
+$incident_dates .= "</table>";
 
-$right_side .= '</div>';
-$right_side .= "</div>"; // container
+$right_side .= print_container('incident_dates', __('Dates'), $incident_dates);
 
-$right_side .= '<div class="incident_container">';
-$right_side .= '<h2 id="incident_sla" class="incident_dashboard incident_sla" onclick="toggleDiv (\'incident-sla\')">' . __('SLA information') . '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
-$right_side .= '<div id="incident-sla">';
-
+// SLA information
 if ($incident["sla_disabled"]) {
-	$right_side .= '<table width="97%">';
-	$right_side .= '<tr>';
-	$right_side .= "<td style='text-align: center;'>";
-	$right_side .= "<em>".__("SLA disabled")."</em>";
-	$right_side .= "</td>";
-	$right_side .= "</tr>";
-	$right_side .= "</table>";
+	$incident_sla .= '<table width="97%">';
+	$incident_sla .= '<tr>';
+	$incident_sla .= "<td style='text-align: center;'>";
+	$incident_sla .= "<em>".__("SLA disabled")."</em>";
+	$incident_sla .= "</td>";
+	$incident_sla .= "</tr>";
+	$incident_sla .= "</table>";
 } else {
-	$right_side .= '<table width="97%" style="border-spacing: 10px;">';
-	$right_side .= '<tr>';
-	$right_side .= "<td>";
-	$right_side .= __('SLA history compliance for: '); 
-	$right_side .= "</td>";
-	$right_side .= "<td style='vertical-align: bottom;'>";
+	$incident_sla .= '<table width="97%" style="border-spacing: 10px;">';
+	$incident_sla .= '<tr>';
+	$incident_sla .= "<td>";
+	$incident_sla .= __('SLA history compliance for: '); 
+	$incident_sla .= "</td>";
+	$incident_sla .= "<td style='vertical-align: bottom;'>";
 
 	$a_day = 24*3600;
 
@@ -355,29 +332,29 @@ if ($incident["sla_disabled"]) {
 	}
 
 	if ($clean_output) {
-		$right_side .= "<strong>".$fields[$period]."</strong>";
+		$incident_sla .= "<strong>".$fields[$period]."</strong>";
 	} else {
-		$right_side .= print_select ($fields, "period", $period, 'reload_sla_slice_graph(\''.$id.'\');', '', '', true, 0, false, false, false, 'width: 75px');
+		$incident_sla .= print_select ($fields, "period", $period, 'reload_sla_slice_graph(\''.$id.'\');', '', '', true, 0, false, false, false, 'width: 75px');
 	}
 
-	$right_side .= "</td>";
-	$right_side .= "<td colspan=2 style='text-align: center; width: 50%;'>";
-	$right_side .= __('SLA total compliance (%)'). ': ';
-	$right_side .= format_numeric (get_sla_compliance_single_id ($id));
-	$right_side .= "</td>";
-	$right_side .= "</tr>";
-	$right_side .= "<tr>";
-	$right_side .= "<td id=slaSlicebarField colspan=2 style='text-align: center; padding: 1px 2px 1px 5px;'>";
-	$right_side .= graph_sla_slicebar ($id, $period, 155, 15, $ttl);
-	$right_side .= "</td>";
-	$right_side .= "<td colspan=2 style='text-align: center;' class='pie_frame'>";
-	$right_side .= graph_incident_sla_compliance ($id, 155, 170, $ttl);
-	$right_side .= "</td>";	
-	$right_side .= "<tr>";
-	$right_side .= "</table>";
+	$incident_sla .= "</td>";
+	$incident_sla .= "<td colspan=2 style='text-align: center; width: 50%;'>";
+	$incident_sla .= __('SLA total compliance (%)'). ': ';
+	$incident_sla .= format_numeric (get_sla_compliance_single_id ($id));
+	$incident_sla .= "</td>";
+	$incident_sla .= "</tr>";
+	$incident_sla .= "<tr>";
+	$incident_sla .= "<td id=slaSlicebarField colspan=2 style='text-align: center; padding: 1px 2px 1px 5px;'>";
+	$incident_sla .= graph_sla_slicebar ($id, $period, 155, 15, $ttl);
+	$incident_sla .= "</td>";
+	$incident_sla .= "<td colspan=2 style='text-align: center;' class='pie_frame'>";
+	$incident_sla .= graph_incident_sla_compliance ($id, 155, 170, $ttl);
+	$incident_sla .= "</td>";	
+	$incident_sla .= "<tr>";
+	$incident_sla .= "</table>";
 }
-$right_side .= "</div>";
-$right_side .= "</div>"; // container
+
+$right_side .= print_container('incident_sla', __('SLA information'), $incident_sla);
 
 $table->data[0][0] = $left_side;
 $table->data[0][1] = $right_side;

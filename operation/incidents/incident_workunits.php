@@ -137,7 +137,7 @@ echo "<h2>".__('Incident details')."</h2>";
 echo '</li>';
 echo '</ul>';
 
-echo "<div style='margin-left: 00px; margin-top: 20px; width:96%; padding: 10px; border: 1px solid #ccc'><p>";
+echo "<div class='incident_details'><p>";
 echo clean_output_breaks ($incident["descripcion"]);
 echo "</div>";
 

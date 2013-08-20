@@ -381,7 +381,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 	echo '<form id="form-company_detail" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	
-	echo "<h2>".__('Company details')."</h2>";
+	echo "<h1>".__('Company details')."</h1>";
 
 
 	if ($op == "") { 
@@ -946,7 +946,7 @@ if ((!$id) AND ($new_company == 0)){
 
 	// Search // General Company listing
 	echo "<div id='inventory-search-content'>";
-	echo "<h2>".__('Company management');
+	echo "<h1>".__('Company management');
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
@@ -954,7 +954,7 @@ if ((!$id) AND ($new_company == 0)){
 	echo "</li>";
 	echo "</ul>";
 	echo "</div>";
-	echo "</h2>";
+	echo "</h1>";
 
 	echo "<br>";
 	$search_text = (string) get_parameter ('search_text');	
@@ -1002,7 +1002,7 @@ if ((!$id) AND ($new_company == 0)){
 	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end";
 
 	$table->width = '98%';
-	$table->class = 'databox';
+	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->style[2] = 'font-weight: bold;';
@@ -1029,14 +1029,16 @@ if ((!$id) AND ($new_company == 0)){
 	$table->data[1][4] = __('Date to');
 	$table->data[1][5] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true);
 		
+	$buttons = '<div style="width:100%; text-align: right;">';
+	$buttons .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+	$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . "include/export_csv.php?export_csv_companies=1&where_clause=$where_clause&date=$date" . '\')', 'class="sub csv"', true);
+	$buttons .= '</div>';
+		
+	$table->data[2][0] = $buttons;
+	$table->colspan[2][0] = 6;
+
 	echo '<form method="post" id="company_stats_form" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	print_table ($table);
-	
-	echo '<div style="width:'.$table->width.'" class="action-buttons button">';
-	print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', false);
-
-	echo "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_companies=1&where_clause=$where_clause&date=$date'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
-	echo '</div>';
 	echo '</form>';
 
 	$companies = crm_get_companies_list($where_clause, $date);

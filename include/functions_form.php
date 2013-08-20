@@ -647,7 +647,7 @@ function show_workunit_data ($workunit, $title) {
 	echo "</span>";
 
 	// Public WU ?
-	echo "<span style='float:right; margin-top: -1px; margin-bottom:0px; padding-right:10px;'>";
+	echo "<span style='float:right; margin-top: 7px; margin-bottom:0px; padding-right:10px;'>";
 	if ($public == 1)
 		echo "<img src='images/group.png' title='".__('Public Workunit')."' border=0>";
 	else
@@ -655,7 +655,7 @@ function show_workunit_data ($workunit, $title) {
 	echo "</span>";
 
 	// WU Duration 
-	echo "<span style='float:right; margin-top: -1px; margin-bottom:0px; padding-right:10px;'>";
+	echo "<span style='float:right; margin-top: 12px; margin-bottom:0px; padding-right:10px;'>";
 	
 	// Have a cost ?
 	if ($workunit["have_cost"] == 1)

@@ -39,9 +39,7 @@ $table->data = array ();
 $table->style [0] = "vertical-align: top;";
 $table->style [1] = "vertical-align: top";
 
-$custom = '<div class="incident_container">';
-$custom .= '<h2 id="incident_custom_search" class="incident_dashboard incident_custom_search" onclick="toggleDiv (\'incident-custom\')">' . __('Custom search') . '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
-$custom .= '<div id="incident-custom">';
+$custom = '';
 
 $custom_searches = get_db_all_rows_filter ("tcustom_search", array("id_user" => $config["id_user"]));
 
@@ -65,22 +63,14 @@ if ($custom_searches === false) {
 	$custom .= "<div style='clear:both;'></div>";
 }
 
-$custom .= "</div>";
-$custom .= "</div>"; // container
-
 $table->colspan[0][0] = 2;
-$table->data[0][0] = $custom;
-
-$left_side = '<div class="incident_container">';
-$left_side .= '<h2 id="incident_search_by_group" class="incident_dashboard incident_search_by_group" onclick="toggleDiv (\'incident-group\')">' . __('Search by group') . '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
-$left_side .= '<div id="incident-group">';
-
+$table->data[0][0] = print_container('incident_custom_search', __('Custom search'), $custom);
 
 $groups = get_user_groups();
 
 asort($groups);
 
-$aux_table = "<table>";
+$search_by_group = "<table>";
 
 // Remove group All for this filter
 unset($groups[1]);
@@ -89,90 +79,77 @@ $count = 0;
 foreach ($groups as $key => $grp) {
 	
 	if ($count % 2 == 0) {
-		$aux_table .= "<tr>";
+		$search_by_group .= "<tr>";
 	}
 		
 	$incidents = get_incidents(array("id_grupo" => $key));
 	
-	$aux_table .= "<td>";
-	$aux_table .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_status=0&search_first_date=" . $first_start . "&search_id_group=".$key."'>";
-	$aux_table .= $grp." (".count($incidents).")";
-	$aux_table .= "</a>";
-	$aux_table .= "</td>";
+	$search_by_group .= "<td>";
+	$search_by_group .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_status=0&search_first_date=" . $first_start . "&search_id_group=".$key."'>";
+	$search_by_group .= $grp." (".count($incidents).")";
+	$search_by_group .= "</a>";
+	$search_by_group .= "</td>";
 		
 	if ($count % 2 != 0) {
-		$aux_table .= "</tr>";
+		$search_by_group .= "</tr>";
 	}
 	
 	$count++;
 }
 
-$aux_table .= "</table>";
+$search_by_group .= "</table>";
 
-$left_side .= $aux_table;
-
-$left_side .= '</div>';
-$left_side .= '</div>'; // container
-
-$left_side .= '<div class="incident_container">';
-$left_side .= '<h2 id="incident_search_by_owner" class="incident_dashboard incident_search_by_owner" onclick="toggleDiv (\'incident-owner\')">' . __('Search by owner') . '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
-$left_side .= '<div id="incident-owner">';
+$left_side = print_container('incident_search_by_group', __('Search by group'), $search_by_group);
 
 $rows = get_db_all_rows_sql ("SELECT DISTINCT(ti.id_usuario), tu.avatar 
 								FROM tincidencia ti, tusuario tu 
 								WHERE tu.id_usuario = ti.id_usuario 
 								ORDER BY ti.id_usuario ASC");
 
-$aux_table = "<table>";
+$search_by_owner = "<table>";
 
 if (!$rows) {
 
-	$aux_table .="<tr>";
-	$aux_table .="<td>";
-	$aux_table .="<em>".__("There aren't owners defined");
-	$aux_table .="</td>";
-	$aux_table .="</tr>";
+	$search_by_owner .="<tr>";
+	$search_by_owner .="<td>";
+	$search_by_owner .="<em>".__("There aren't owners defined");
+	$search_by_owner .="</td>";
+	$search_by_owner .="</tr>";
 
 } else {
 	foreach ($rows as $key => $owners) {
 	
 		if ($key % 4 == 0) {
-			$aux_table .= "<tr>";
+			$search_by_owner .= "<tr>";
 		}
 		
 		$incidents = get_incidents(array("id_usuario" => $owners["id_usuario"]));
 	
-		$aux_table .= "<td>";
-		$aux_table .= '<div class="bubble_little">' . print_image('images/avatars/' . $owners["avatar"] . '.png', true) . '</div>';
-		$aux_table .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_id_user=".$owners["id_usuario"]."'>";
+		$search_by_owner .= "<td>";
+		$search_by_owner .= '<div class="bubble_little">' . print_image('images/avatars/' . $owners["avatar"] . '.png', true) . '</div>';
+		$search_by_owner .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_id_user=".$owners["id_usuario"]."'>";
 	
 		$long_name = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $owners["id_usuario"]));
 	
-		$aux_table .= $long_name." (".count($incidents).")";
-		$aux_table .= "</a>";
-		$aux_table .= "</td>";
+		$search_by_owner .= $long_name." (".count($incidents).")";
+		$search_by_owner .= "</a>";
+		$search_by_owner .= "</td>";
 		
 		if ($key % 4 == 3) {
-			$aux_table .= "</tr>";
+			$search_by_owner .= "</tr>";
 		}
 	}
 }
 
-$aux_table .= "</table>";
+$search_by_owner .= "</table>";
 
-$left_side .= $aux_table;
-$left_side .= '</div>';
-$left_side .= '</div>'; // container
-
-$left_side .= '<div class="incident_container">';
-$left_side .= '<h2 id="incident_search_by_priority" class="incident_dashboard incident_search_by_priority" onclick="toggleDiv (\'incident-priority\')">' . __('Search by priority') . '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
-$left_side .= '<div id="incident-priority">';
+$left_side .= print_container('incident_search_by_owner', __('Search by owner'), $search_by_owner);
 
 $rows = get_db_all_rows_sql ("SELECT DISTINCT(prioridad) as priority, count(*) as count FROM tincidencia");
 
-$aux_table = "<table class='search_by_priority'>";
+$search_by_priority = "<table class='search_by_priority'>";
 
-$aux_table .="<tr>";
+$search_by_priority .="<tr>";
 
 for ($i = 0; $i<=5; $i++) {
 	// Change the priority code to database code
@@ -183,97 +160,83 @@ for ($i = 0; $i<=5; $i++) {
 		$db_priority = $i-1;
 	}
 	
-	$aux_table .= "<td style='background: " . incidents_get_priority_color(array("prioridad" => $i)) . ";'>";
-	$aux_table .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_priority=".$db_priority."'>";
+	$search_by_priority .= "<td style='background: " . incidents_get_priority_color(array("prioridad" => $i)) . ";'>";
+	$search_by_priority .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_priority=".$db_priority."'>";
 		
-	$aux_table .= $i;
-	$aux_table .= "</a>";
-	$aux_table .= "</td>";
+	$search_by_priority .= $i;
+	$search_by_priority .= "</a>";
+	$search_by_priority .= "</td>";
 }
 
-$aux_table .="</tr>";
+$search_by_priority .="</tr>";
 
-$aux_table .= "</table>";
+$search_by_priority .= "</table>";
 
-$left_side .= $aux_table;
-$left_side .= '</div>';
-$left_side .= '</div>'; // container
+$left_side .= print_container('incident_search_by_priority', __('Search by priority'), $search_by_priority);
 
 /**** DASHBOAR RIGHT SIDE ****/
 
-$right_side = '<div class="incident_container">';
-$right_side .= '<h2 id="incident_search_by_status" class="incident_dashboard incident_search_by_status" onclick="toggleDiv (\'incident-status\')">' . __('Search by status') . '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
-$right_side .= '<div id="incident-status">';
-
 $rows = get_db_all_rows_sql ("SELECT id, name FROM tincident_status");
 
-$aux_table = "<table>";
+$search_by_status = "<table>";
 
 foreach ($rows as $key => $status) {
 	
 	if ($key % 2 == 0) {
-		$aux_table .= "<tr>";
+		$search_by_status .= "<tr>";
 	}
 		$incidents = get_incidents(array("estado" => $status["id"]));
 		
-		$aux_table .= "<td>";
-		$aux_table .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_status=".$status["id"]."'>";
-		$aux_table .= __($status["name"])." (".count($incidents).")";
-		$aux_table .= "</a>";
-		$aux_table .= "</td>";
+		$search_by_status .= "<td>";
+		$search_by_status .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_status=".$status["id"]."'>";
+		$search_by_status .= __($status["name"])." (".count($incidents).")";
+		$search_by_status .= "</a>";
+		$search_by_status .= "</td>";
 		
 	if ($key % 2 != 0) {
-		$aux_table .= "</tr>";
+		$search_by_status .= "</tr>";
 	}
 }
 
-$aux_table .= "</table>";
+$search_by_status .= "</table>";
 
-$right_side .= $aux_table;
-$right_side .= "</div>";
-$right_side .= "</div>"; // container
-
-$right_side .= '<div class="incident_container">';
-$right_side .= '<h2 id="incident_search_by_type" class="incident_dashboard incident_search_by_type" onclick="toggleDiv (\'incident-type\')">' . __('Search by type') . '&nbsp;&nbsp;' . print_image('images/arrow_down.png', true, array('class' => 'arrow_down')) . '</h2>';
-$right_side .= '<div id="incident-type">';
+$right_side = print_container('incident_search_by_status', __('Search by status'), $search_by_status);
 
 $rows = get_db_all_rows_sql ("SELECT id, name FROM tincident_type ORDER BY name ASC");
 
-$aux_table = "<table>";
+$search_by_type = "<table>";
 
 if (!$rows) {
-	$aux_table .="<tr>";
-	$aux_table .="<td>";
-	$aux_table .="<em>".__("There aren't incident types defined")."</em>";
-	$aux_table .="</td>";
-	$aux_table .="</tr>";
+	$search_by_type .="<tr>";
+	$search_by_type .="<td>";
+	$search_by_type .="<em>".__("There aren't incident types defined")."</em>";
+	$search_by_type .="</td>";
+	$search_by_type .="</tr>";
 
 } else {
 	$count = 0;
 	foreach ($rows as $type) {
 		if ($count % 2 == 0) {
-			$aux_table .= "<tr>";
+			$search_by_type .= "<tr>";
 		}
 				
 		$incidents = get_incidents(array("id_incident_type" => $type["id"]));
 	
-		$aux_table .= "<td>";
-		$aux_table .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_status=0&search_first_date=" . $first_start . "&search_id_incident_type=".$type["id"]."'>";
-		$aux_table .= $type["name"]." (".count($incidents).")";
-		$aux_table .= "</a>";
-		$aux_table .= "</td>";
+		$search_by_type .= "<td>";
+		$search_by_type .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_status=0&search_first_date=" . $first_start . "&search_id_incident_type=".$type["id"]."'>";
+		$search_by_type .= $type["name"]." (".count($incidents).")";
+		$search_by_type .= "</a>";
+		$search_by_type .= "</td>";
 		
 		if ($count % 2 != 0) {
-			$aux_table .= "</tr>";
+			$search_by_type .= "</tr>";
 		}		
 		$count++;
 	}
 }
-$aux_table .= "</table>";
+$search_by_type .= "</table>";
 
-$right_side .= $aux_table;
-$right_side .= "</div>";
-$right_side .= "</div>"; // container
+$right_side .= print_container('incident_search_by_type', __('Search by type'), $search_by_type);
 
 $table->data[1][0] = $left_side;
 $table->data[1][1] = $right_side;

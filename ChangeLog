@@ -1,3 +1,31 @@
+2013-08-20  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_graph.php
+	include/functions_html.php
+	include/styles/integria.css
+	include/js/integria.js
+	include/functions_form.php
+	include/functions.php
+	index.php
+	operation/incidents/incident_dashboard.php
+	operation/incidents/incident_workunits.php
+	operation/incidents/incident_dashboard_detail.php
+	operation/projects/project.php
+	operation/projects/project_detail.php
+	operation/incidents_simple/incident.workunits.php
+	operation/inventories/inventory.php
+	operation/inventories/inventory_search.php
+	operation/companies/company_detail.php
+	images/budget.png
+	images/task_distribution.png
+	images/workload_distribution.png
+	images/labour.png
+	images/page_white_acrobat.png
+	images/involved_people.png
+	images/project_information.png
+	extras/migrate.sql: Change several visual styles as 
+	list tables, project view, encapsulate containers, etc.
+
 2013-08-20 Miguel de Dios  <miguel.dedios@artica.es>
 	
 	* include/functions_graph.php: tiny fixes about the new graphs.

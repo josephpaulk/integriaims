@@ -279,3 +279,22 @@ $(document).ready (function () {
 	
 });
 
+$(document).ready(function() {
+	// Containers open/close logic
+	$('.container h2').click(function() {
+		var arrow = $('#' + $(this).attr('id') + ' img').attr('src');
+		var arrow_class = $('#' + $(this).attr('id') + ' img').attr('class');
+		var new_arrow = '';
+		
+		if($('#' + $(this).attr('id') + '_div').css('display') == 'none') {
+			new_arrow = arrow.replace(/_down/gi, "_right");
+			$('#' + $(this).attr('id') + ' img').attr('class', 'arrow_right');
+		}
+		else {
+			new_arrow = arrow.replace(/_right/gi, "_down");
+			$('#' + $(this).attr('id') + ' img').attr('class', 'arrow_down');
+		}
+		
+		$('#' + $(this).attr('id') + ' img').attr('src', new_arrow);
+	});
+});

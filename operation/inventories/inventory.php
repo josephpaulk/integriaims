@@ -110,39 +110,6 @@ echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: '.($id ? 'none' 
 
 echo '<div class="result"></div>';
 
-$table->id = 'saved_searches_table';
-$table->width = '90%';
-$table->class = 'search-table';
-$table->size = array ();
-$table->size[0] = '120px';
-$table->style = array ();
-$table->style[0] = 'font-weight: bold';
-$table->style[2] = 'display: none; font-weight: bold';
-$table->style[3] = 'display: none';
-$table->style[4] = 'display: none';
-$table->data = array ();
-/*
-$table->data[0][0] = __('Custom searches');
-$sql = sprintf ('SELECT id, name FROM tcustom_search
-	WHERE id_user = "%s"
-	AND section = "inventories"
-	ORDER BY name',
-	$config['id_user']);
-
-$table->data[0][1] = print_select_from_sql ($sql, 'saved_searches', 0, '', __('Select'), 0, true);
-$table->data[0][1] .= '<a href="ajax.php" style="display:none" id="delete_custom_search">';
-$table->data[0][1] .= '<img src="images/cross.png" /></a>';
-*/
-$table->data[0][2] = __('Save current search');
-$table->data[0][2] = __('Save current search');
-$table->data[0][3] = print_input_text ('search_name', '', '', 10, 20, true);
-$table->data[0][4] = print_submit_button (__('Save'), 'save-search', false, 'class="sub next"', true);
-
-echo '<form id="saved-searches-form">';
-print_table ($table);
-echo '</form>';
-unset ($table);
-
 require_once ('inventory_search.php');
 
 echo '<div id="inventories-stats"></div>';

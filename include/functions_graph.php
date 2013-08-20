@@ -624,7 +624,7 @@ function graph_workunit_project ($width, $height, $id_project, $ttl=1) {
 	}
 	
 	if ($data == NULL) {
-		echo __("There is no data to show");
+		return __("There is no data to show");
 	}
 	else {
 		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
@@ -753,7 +753,7 @@ function graph_workunit_project_user_single ($width, $height, $id_project, $ttl=
 	}
 		
 	if ($data == NULL) {
-		echo __("There is no data to show");
+		return __("There is no data to show");
 	} else {
 		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize'], $ttl);
 	}

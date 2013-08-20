@@ -227,6 +227,10 @@ ALTER TABLE tprofile ADD `cr` tinyint(1) NOT NULL default '0';
 ALTER TABLE tprofile ADD `cw` tinyint(1) NOT NULL default '0';
 ALTER TABLE tprofile ADD `cm` tinyint(1) NOT NULL default '0';
 
+ALTER TABLE tprofile ADD `ffr` tinyint(1) NOT NULL default '0';
+ALTER TABLE tprofile ADD `ffw` tinyint(1) NOT NULL default '0';
+ALTER TABLE tprofile ADD `ffm` tinyint(1) NOT NULL default '0';
+
 ALTER TABLE tdownload ADD `public` int(2) unsigned NOT NULL default 0;
 ALTER TABLE tdownload ADD `external_id` text NOT NULL default '';
 
@@ -402,14 +406,6 @@ INSERT INTO `tconfig` (`token`, `value`) VALUES
 /* 07/08/2013 */
 ALTER TABLE `tinventory` ADD `status` enum ('new', 'inuse', 'unused', 'issued') default 'new';
 ALTER TABLE `tobject_type` ADD `min_stock` int(5) NOT NULL default 0;
-
-/*08/08/2013*/
-ALTER TABLE tprofile DROP `ffr`;
-ALTER TABLE tprofile DROP `ffw`;
-ALTER TABLE tprofile DROP `ffm`;
-ALTER TABLE tprofile ADD `frr` tinyint(1) NOT NULL default '0';
-ALTER TABLE tprofile ADD `frw` tinyint(1) NOT NULL default '0';
-ALTER TABLE tprofile ADD `frm` tinyint(1) NOT NULL default '0';
 
 /* 08/08/2013 */
 ALTER TABLE `tinventory` ADD `receipt_date` date NOT NULL default '0000-00-00';
