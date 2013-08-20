@@ -1,3 +1,7 @@
+2013-08-20 Miguel de Dios  <miguel.dedios@artica.es>
+	
+	* include/functions_graph.php: tiny fixes about the new graphs.
+
 2013-08-19 Dario Rodriguez <dario@artica.es>
 
 	* include/functions_config.php,

@@ -41,7 +41,7 @@ function print_bubble_incidents_per_user_graph($incidents_by_user) {
 	foreach ($incidents_by_user as $incident) {
 		$radius = $incident['hours'] + (0.1 * $incident['files']);
 		
-		$content = '<b>' . __('User') . ':</b> ' . $incident['user_name'] . '<br>' .
+		$content = '<b>' . __('Creator') . ':</b> ' . $incident['user_name'] . '<br>' .
 			'<b>' . __('Incident') . ':</b> ' . $incident['incident_name'] . '<br>' .
 			'<b>' . __('Hours') . ':</b> ' . $incident['hours'] . '<br>' .
 			'<b>' . __('Files') . ':</b> ' . $incident['files'];
@@ -329,7 +329,7 @@ function print_project_user_timegraph($id_user, $start_date = false, $end_date =
 				'parent_name' => safe_output($project_name),
 				'name' => safe_output($task['name']),
 				'value' => $hours,
-				'tooltip' => "<b>" . __('Project:') . "</b> " . $user_name . "<br />" .
+				'tooltip' => "<b>" . __('Project:') . "</b> " . $project_name . "<br />" .
 					"<b>" . __('Task:') . "</b> " . $task['name'] . "<br />" .
 					"<b>" . __('Hours:') . "</b> " . $hours,
 				'id' => $project['id_project'] . "_" . $task['id']);
