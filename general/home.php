@@ -59,67 +59,79 @@ if ($news || $agenda || $todo || $projects || $incidents) {
 if ($info) {
 
 	echo '<table class="landing_table">';
-		
 	echo "<tr>";
-	echo "<th>";
-	echo "<img class='landing_title_logo' src='images/error.png'/>";
-	echo "<span class='landing_title'>";
-	echo __('System newsboard');
-	echo "</span>";
-	echo "<span class='landing_subtitle'>";
-	echo __('News of last 30 days');
-	echo "</span>";
-	echo "</th>";
-	echo "<th>";
-	echo "<img class='landing_title_logo' src='images/time.gif'/>";
-	echo "<span class='landing_title'>";
-	echo __("Agenda");
-	echo "</span>";
-	echo "<span class='landing_subtitle'>";
-	echo __('First 5 events for next ten days');
-	echo "</span>";
-	echo "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>";
-	echo "<img class='much_more' src='images/add.png'>";
-	echo "</a>";
-	echo "</th>";	
-	echo "</tr>";
+	// LEFT SIDE
+	echo "<td>";
 
 	// ==============================================================
 	// Show Newsboard
 	// ==============================================================
-
-	echo "<tr>";
-	echo "<td rowspan=3>";
-
+	$system_dashboard = '';
 	if ($news) {
-		echo "<div class='landing_news landing_content'>";
+		$system_dashboard_home .= "<div class='landing_news landing_content'>";
 		foreach ($news as $news_item) {
-			echo "<span class='landing_news_title'>".$news_item["title"]."</span>";
+			$system_dashboard_home .= "<span class='landing_news_title'>".$news_item["title"]."</span>";
 			
 			if ($news_item["date"] === "0000-00-00 00:00:00") {
-				echo "<img class='landing_news_note' src='images/nota.gif'>";
+				$system_dashboard_home .= "<img class='landing_news_note' src='images/nota.gif'>";
 			} else {
-				echo ", <i>".substr($news_item["date"],0,10)."</i>";
+				$system_dashboard_home .= ", <i>".substr($news_item["date"],0,10)."</i>";
 			}
-			echo "<hr><div style='margin-right: 20px; margin-left: 10px; margin-top: 10px; text-align: justify;'>";
-			echo clean_output_breaks ($news_item["content"]);
-			echo "<br><br></div>";
+			$system_dashboard_home .= "<hr><div style='margin-right: 20px; margin-left: 10px; margin-top: 10px; text-align: justify;'>";
+			$system_dashboard_home .= clean_output_breaks ($news_item["content"]);
+			$system_dashboard_home .= "<br><br></div>";
 		}
-		echo "</div>";
+		$system_dashboard_home .= "</div>";
 	} else {
-		echo "<div class='landing_empty'>";
-		echo __("There aren't news in the system");
-		echo "</div>";
+		$system_dashboard_home .= "<div class='landing_empty'>";
+		$system_dashboard_home .= __("There aren't news in the system");
+		$system_dashboard_home .= "</div>";
 	}
-		
+	
+	echo print_container('system_dashboard_home', __('System newsboard') . "<span class='landing_subtitle'>" . __('News of last 30 days') . "</span>", $system_dashboard_home, 'no');
+	
+	// ==============================================================
+	// Show Projects items
+	// ==============================================================
+	
+	$projects_home = '';
+	
+	if ($projects > 0){
+		$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
+
+		$graph_result = graph_workunit_project_user (500, 200, $config["id_user"], $from_one_month, 0, true);
+
+		//If there is an error in graph the graph functions returns a string
+		$projects_home .= "<div class='landing_empty'>";
+		$projects_home .= "<div class='graph_frame'>" . $graph_result . "</div>";
+		$projects_home .= "</div>";		
+	} else {
+		$projects_home .= "<div class='landing_empty'>";
+		$projects_home .= __("There aren't active projects");
+		$projects_home .= "</div>";	
+	}
+	
+	$much_more = "<a href='index.php?sec=projects&sec2=operation/projects/project'>";
+	$much_more .= "<img class='much_more' src='images/add.png' title='" . __('See more') . "'>";
+	$much_more .= "</a>";
+	
+	$subtitle = "<span class='landing_subtitle'>";
+	$subtitle .= __("Total active projects") . ": ";
+	$subtitle .= projects_active_user ($config["id_user"]);
+	$subtitle .= "</span>";
+	
+	echo print_container('projects_home', __('Projects') . $subtitle . $much_more, $projects_home, 'no');
+	
 	echo "</td>";
 
+	// RIGHT SIDE
 	echo "<td>";
 	echo "<div class='landing_content'>";
 	// ==============================================================
 	// Show Agenda items
 	// ==============================================================
 
+	$agenda_home = '';
 	if ($agenda > 0){
 
 		$time_array = array();
@@ -173,8 +185,8 @@ if ($info) {
 		//Sort time array and print only first five entries :)
 		asort($time_array);
 	
-		echo "<table class='landing_incidents' width=100%>";
-		echo "<tr><th>".__("Type")."</th><th>".__("Title")."</th><th>".__("Deadline")."</th></tr>";
+		$agenda_home .= "<table class='landing_incidents' width=100%>";
+		$agenda_home .= "<tr><th>".__("Type")."</th><th>".__("Title")."</th><th>".__("Deadline")."</th></tr>";
 
 		$print_counter = 0;
 		foreach ($time_array as $key => $time) {
@@ -192,8 +204,8 @@ if ($info) {
 					break;
 			}
 			
-			echo "<tr>";
-			echo "<td>".$type_name."</td><td>.".$text_array[$key]."</td><td>".$time."</td>";
+			$agenda_home .= "<tr>";
+			$agenda_home .= "<td>".$type_name."</td><td>.".$text_array[$key]."</td><td>".$time."</td>";
 			
 			$print_counter++;
 			if ($print_counter == 5) {
@@ -201,42 +213,33 @@ if ($info) {
 			}
 		}
 		
-		echo "</table>";
+		$agenda_home .= "</table>";
 		
 	} else {
-		echo "<div class='landing_empty'>";
-		echo __("There aren't meetings in your agenda");
-		echo "</div>";
+		$agenda_home .= "<div class='landing_empty'>";
+		$agenda_home .= __("There aren't meetings in your agenda");
+		$agenda_home .= "</div>";
 	}
-	echo "</div>";
-	echo "</td>";
-	echo "</tr>";
-
+	$agenda_home .= "</div>";
+	
+	$much_more = "<a href='index.php?sec=agenda&sec2=operation/agenda/agenda'>";
+	$much_more .= "<img class='much_more' src='images/add.png' title='" . __('See more') . "'>";
+	$much_more .= "</a>";
+	
+	$subtitle = "<span class='landing_subtitle'>";
+	$subtitle .= __('First 5 events for next ten days');
+	$subtitle .= "</span>";
+	
+	echo print_container('agenda_home', __('Agenda') . $subtitle . $much_more, $agenda_home, 'no');
+	
 	// ==============================================================
 	// Show WorkOrder items
 	// ==============================================================
-	echo "<tr>";
-	echo "<th>";
-	echo "<img class='landing_title_logo' src='images/todo.png'/>";
-	echo "<span class='landing_title'>";
-	echo __('Work orders');
-	echo "</span>";
-	echo "<span class='landing_subtitle'>";
-	echo __('Total active WO'). ": ". todos_active_user ($config["id_user"]) . " ".__('(Showing only five)');
-	echo "</span>";
-	echo "<a href='index.php?sec=workorder&sec2=operation/workorders/wo'>";
-	echo "<img class='much_more' src='images/add.png'>";
-	echo "</a>";
-	echo "</th>";
-	echo "</tr>";
-
-	echo "<tr>";
-	echo "<td>";
-	echo "<div class='landing_content'>";
+	
+	$workorders_home = '';
 	if ($todo > 0){
-		
-		echo "<table class='landing_incidents' width=100%>";
-		echo "<tr><th>".__("Priority")."</th><th>".__("Title")."</th><th>".__("Deadline")."</th></tr>";
+		$workorders_home .= "<table class='landing_incidents listing' width=100%>";
+		$workorders_home .= "<tr><th>".__("Priority")."</th><th>".__("Title")."</th><th>".__("Deadline")."</th></tr>";
 
 		$sql_2 = "SELECT * FROM ttodo WHERE assigned_user = '".$config["id_user"]."' AND progress < 1 ORDER BY priority, last_update  DESC limit 5";
 		$result_2 = mysql_query($sql_2);
@@ -244,8 +247,7 @@ if ($info) {
 		// TODO: replace this code to our own DB functions
 
 		while ($wo = mysql_fetch_array($result_2)){
-
-			echo "<tr>";
+			$workorders_home .= "<tr>";
 			
 			$data[0] = print_priority_flag_image ($wo["priority"], true);
 			$data[1] = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo&operation=view&id=".$wo["id"]."'>". substr($wo["name"],0,50) . "</a>";
@@ -255,142 +257,96 @@ if ($info) {
 			} else {
 				$data[2] = "";
 			}
-			echo "<td>".$data[0]. "</td><td>".$data[1]."</td><td>".$data[2]."</td></tr>";
-			
-		
+			$workorders_home .= "<td>".$data[0]. "</td><td>".$data[1]."</td><td>".$data[2]."</td></tr>";
 		}
 		
-		echo "</table>";
+		$workorders_home .= "</table>";
 	} else {
-		echo "<div class='landing_empty'>";
-		echo __("There aren't TO-DOs");
-		echo "</div>";
+		$workorders_home .= "<div class='landing_empty'>";
+		$workorders_home .= __("There aren't TO-DOs");
+		$workorders_home .= "</div>";
 	}
-	echo "</div>";
-	echo "</td>";
-	echo "</tr>";
-
-	echo "<tr>";
-	echo "<th>";
-	echo "<img class='landing_title_logo' src='images/reporting.png'/>";
-	echo "<span class='landing_title'>";
-	echo __('Projects');
-	echo "</span>";
-	echo "<span class='landing_subtitle'>";
-	echo __("Total active projects").": ";
-	echo projects_active_user ($config["id_user"]);
-	echo "</span>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>";
-	echo "<img class='much_more' src='images/add.png'>";
-	echo "</a>";
-	echo "</th>";
-
-	echo "<th>";
-	echo "<img class='landing_title_logo' src='images/incidents.png'/>";
-	echo "<span class='landing_title'>";
-	echo __('Incidents');
-	echo "</span>";
-	echo "<span class='landing_subtitle'>";
-	echo __('Total active incidents').": ".incidents_active_user ($config["id_user"]);
-	echo "</span>";
-	if($simple_mode) {
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>";
-		echo "<img class='much_more' src='images/add.png'>";
-		echo "</a>";
-	}
-	else {
-		echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident'>";
-		echo "<img class='much_more' src='images/add.png'>";
-		echo "</a>";
-	}
-	echo "</th>";
-	echo "<tr>";
-
-
-	echo "<td>";
-	// ==============================================================
-	// Show Projects items
-	// ==============================================================
 	
-	if ($projects > 0){
+	$much_more = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo'>";
+	$much_more .= "<img class='much_more' src='images/add.png' title='" . __('See more') . "'>";
+	$much_more .= "</a>";
 	
-		$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
-
-		$graph_result = graph_workunit_project_user (600, 200, $config["id_user"], $from_one_month,0, 1);
-
-		//If there is an error in graph the graph functions returns a string
-		echo "<div class='landing_empty'>";
-		echo $graph_result;
-		echo "</div>";		
-		
-	} else {
+	$subtitle = "<span class='landing_subtitle'>";
+	$subtitle .= __('Total active WO'). ": ". todos_active_user ($config["id_user"]) . " ".__('(Showing only five)');
+	$subtitle .= "</span>";
 	
-		echo "<div class='landing_empty'>";
-		echo __("There aren't active projects");
-		echo "</div>";	
-	}
-	echo "</td>";
-
+	echo print_container('workorders_home', __('Work orders') . $subtitle . $much_more, $workorders_home, 'no');
+	
 	// ==============================================================
 	// Show Incident items
 	// ==============================================================
 
-	echo "<td>";
-	echo "<div class='landing_content'>";
+	$incidents_home = '';
 	if ($incidents > 0){
-		
 		$sql_2 = "SELECT * FROM tincidencia WHERE (id_creator = '".$config["id_user"]."' OR id_usuario = '".$config["id_user"]."') AND estado IN (1,2,3,4,5) ORDER BY actualizacion DESC limit 5";
 		
 		$result_2 = mysql_query($sql_2);
 		if ($result_2){
-			echo "<table width=100% class='landing_incidents'>";
-			echo "<tr><th>"._("Status")."</th><th>".__("Priority")."</th><th>".__("Updated")."</th><th>".__("Incident")."</th><th>".__("Last WU")."</th></tr>";
+			$incidents_home .= "<table width=100% class='landing_incidents listing'>";
+			$incidents_home .= "<tr><th>"._("Status")."</th><th>".__("Priority")."</th><th>".__("Updated")."</th><th>".__("Incident")."</th><th>".__("Last WU")."</th></tr>";
 		}
 		while ($row_2 = mysql_fetch_array($result_2)){
 			$idi = $row_2["id_incidencia"];
-			echo "<tr><td>";
-			echo render_status($row_2["estado"]);
-			echo "<td>";
-			print_priority_flag_image ($row_2['prioridad']);
-			echo "<td>";
-			echo human_time_comparation ($row_2["actualizacion"]);
-			echo "<td>";
+			$incidents_home .= "<tr><td>";
+			$incidents_home .= render_status($row_2["estado"]);
+			$incidents_home .= "<td>";
+			$incidents_home .=print_priority_flag_image ($row_2['prioridad'], true);
+			$incidents_home .= "<td>";
+			$incidents_home .= human_time_comparation ($row_2["actualizacion"]);
+			$incidents_home .= "<td>";
 			if($simple_mode) {
-				echo "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incident&id=$idi'>";
+				$incidents_home .= "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incident&id=$idi'>";
 			}
 			else {
-				echo "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$idi'>";
+				$incidents_home .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$idi'>";
 			}
-			echo $row_2["titulo"];
-			echo "</b></a>";
-			echo "</td>";
-			echo "<td style='font-size: 10px'>";
+			$incidents_home .= $row_2["titulo"];
+			$incidents_home .= "</b></a>";
+			$incidents_home .= "</td>";
+			$incidents_home .= "<td style='font-size: 10px'>";
 			$last_wu = get_incident_lastworkunit ($idi);
-			echo $last_wu["id_user"];
+			$incidents_home .= $last_wu["id_user"];
 
-			echo "</td></tr>";
+			$incidents_home .= "</td></tr>";
 		}
 		if (isset($row_2))
-			echo "</table>";
+			$incidents_home .= "</table>";
 	} else {
-		echo "<div class='landing_empty'>";
-		echo __("There aren't active incidents");
-		echo "</div>";		
+		$incidents_home .= "<div class='landing_empty'>";
+		$incidents_home .= __("There aren't active incidents");
+		$incidents_home .= "</div>";		
 	}
-	echo "</div>";
+	
+	if($simple_mode) {
+		$much_more = "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incidents'>";
+	}
+	else {
+		$much_more = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard'>";
+	}
+	$much_more .= "<img class='much_more' src='images/add.png' title='" . __('Incidents') . "'>";
+	$much_more .= "</a>";
+	
+	$subtitle = "<span class='landing_subtitle'>";
+	$subtitle .= __('Total active incidents').": ".incidents_active_user ($config["id_user"]);
+	$subtitle .= "</span>";
+	
+	echo print_container('incidents_home', __('Incidents') . $subtitle . $much_more, $incidents_home, 'no');
+	
 	echo "</td>";
 	echo "</tr>";
-
 	echo "</table>";
 
 } else {
-
 	 if (give_acl ($config["id_user"], 0, "AR")){
 		include "operation/agenda/agenda.php";
 	 } else {
 		echo "<h1>". __("Welcome to Integria")."</h1>";
 	 }
-
 }
 ?>
 

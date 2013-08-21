@@ -149,10 +149,10 @@ if ($add && $id_role) {
 }
 
 // Title
-echo "<h2>".__("Global assignment");
+echo "<h1>".__("Global assignment");
 if ($id_user != "")
 	echo " &raquo; ".__("For user"). " ".$id_user;
-echo "</h2><br>";
+echo "</h1><br>";
 
 // Controls
 echo "<form name='xx' method=post action='index.php?sec=projects&sec2=operation/projects/role_user_global'>";
@@ -160,23 +160,23 @@ echo "<form name='xx' method=post action='index.php?sec=projects&sec2=operation/
 // Select user
 $table->id = "cost_form";
 $table->width = "250px";
-$table->class = "blank";
+$table->class = "search-table";
 $table->data = array ();
 
 $table->data[0][0] = print_input_text_extended ('id_user', $id_user, 'text-id_user', '', 15, 30, false, '',
-		array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '')
+		'', true, '')
 		. print_help_tip (__("Type at least two characters to search"), true);
-$table->data[0][1] = print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"', true);
+$table->data[0][1] = print_submit_button (__('Go'), 'sub_btn', false, 'class="next sub"', true);
 
 print_table ($table);
-
+unset($table);
 echo "</form>";
 
 // Form to give project/task access
 echo "<form name='form-access' method=post action='index.php?sec=projects&sec2=operation/projects/role_user_global&add=1&id_user=$id_user'>";
 $table->id = "cost_form";
-$table->width = "90%";
-$table->class = "databox";
+$table->width = "99%";
+$table->class = "search-table";
 $table->data = array ();
 $table->data[0][0] = combo_task_user_manager ($config['id_user'], 0, true, __('Tasks'), 'tasks[]', '', true);
 if (dame_admin($config['id_user']))
@@ -184,12 +184,12 @@ if (dame_admin($config['id_user']))
 else
 	$table->data[0][1] = combo_roles (false, "roles", __('Role'), true, false);
 $table->data[0][1] .= integria_help ("project_roles", true);
-$table->data[0][2] = print_submit_button (__('Add'), 'sub_btn', false, 'class="upd sub"', true);
+$table->data[0][2] = print_submit_button (__('Add'), 'sub_btn', false, 'class="create sub"', true);
 
 print_table ($table);
 echo "</form>";
 
-echo "<table class='listing' width='90%'>";
+echo "<table class='listing' width='99%'>";
 echo "<th>".__("Project");
 echo "<th>".__("Task");
 echo "<th>".__("Role");

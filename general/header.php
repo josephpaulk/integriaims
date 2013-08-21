@@ -97,7 +97,7 @@ $(document).ready (function () {
 	<?php
 		if ($got_alerts) {
 	?>
-			pulsate ($("#alerts"));
+			$("#alerts").effect("pulsate", {times:6}, 5000);
 	<?php
 		}
 	?>

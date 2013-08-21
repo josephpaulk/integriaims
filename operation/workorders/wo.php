@@ -197,6 +197,8 @@ if ($set_progress > -1 ) {
 
 if ($operation == "create" || $operation == "update" || $operation == "view")  {
 	if ($operation == "create") {
+		echo "<h1>".__('New Work order')."</h1>";
+
 		$progress = 0;
 		$priority = 2;
 		$name = '';
@@ -223,7 +225,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 				no_permission ();
 			}
 		}
-
+		
 		$creator = $todo["created_by_user"];
 		$assigned_user = $todo["assigned_user"];
 		$progress = $todo["progress"];
@@ -243,10 +245,10 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 
 	if ($operation == "view" || $operation == "update") {
 
-
 		$search_params="&owner=$assigned_user&creator=$creator";
 
-		echo '<ul style="height: 30px;" class="ui-tabs-nav">';
+		echo '<ul class="ui-tabs-nav">';
+		echo '<li class="ui-tabs-title h1">' . __('Work order management') . '</li>';
 		echo '<li class="ui-tabs">';
 		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo'.$search_params.'"><span>'.__("Search").'</span></a></li>';
 
@@ -297,8 +299,8 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 	// Display main form / view 
 
 	if ($tab == ""){ 
-		$table->width = '90%';
-		$table->class = 'databox';
+		$table->width = '99%';
+		$table->class = 'search-table-button';
 		$table->colspan = array ();
 		
 		$table->colspan[6][0] = 2;
@@ -332,7 +334,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 			$table->data[2][0] .= print_input_hidden ("creator", $creator, true);
 		} else {
 			$table->data[2][0] = print_input_text_extended ('creator', $creator, 'text-user2', '', 15, 30, false, '',
-				array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Submitter'))
+				'', true, '', __('Submitter'))
 
 			. print_help_tip (__("Type at least two characters to search"), true);
 		}
@@ -390,19 +392,21 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
                 
 		$table->data[6][0] = print_textarea ('description', 12, 50, $description, '', true, __('Description'));
 
+		if ($operation == 'create') {
+			$button = print_submit_button (__('Create'), 'crt', false, 'class="sub create"', true);
+			$button .= print_input_hidden ('operation', 'insert', true);
+		} else {
+			$button .= print_submit_button (__('Update'), 'upd', false, 'class="sub upd"', true);
+			$button .= print_input_hidden ('operation', 'update2', true);
+			$button .= print_input_hidden ('id', $id, true);
+		}
+		
+		$table->data[7][0] = $button;
+		$table->colspan[7][0] = 2;
+		
 		echo '<form id="form-wo" method="post">';
 		print_table ($table);
-
-		echo '<div class="button" style="width: '.$table->width.'">';
-		if ($operation == 'create') {
-			print_submit_button (__('Create'), 'crt', false, 'class="sub next"');
-			print_input_hidden ('operation', 'insert');
-		} else {
-			print_submit_button (__('Update'), 'upd', false, 'class="sub upd"');
-			print_input_hidden ('operation', 'update2');
-			print_input_hidden ('id', $id);
-		}
-		echo '</form></div>';
+		echo '</form>';
 	}
 }
 
@@ -460,21 +464,21 @@ if ($operation == "") {
 
 	echo '<form action="index.php?sec=projects&sec2=operation/workorders/wo" method="post">';		
 
-	$table->class = 'databox';
+	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->width = "94%";
+	$table->width = "99%";
 
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 
 	$table->data[0][1] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Owner'))
+			'', true, '', __('Owner'))
 
 		. print_help_tip (__("Type at least two characters to search"). ". " . __("Use '*' for get all values"), true);
 
 	$table->data[0][2] = print_input_text_extended ('creator', $creator, 'text-user2', '', 15, 30, false, '',
-			array('style' => 'background: url(' . $src_code . ') no-repeat right;'), true, '', __('Submitter'))
+			'', true, '', __('Submitter'))
 
 		. print_help_tip (__("Type at least two characters to search"), true);
 
@@ -503,7 +507,7 @@ if ($operation == "") {
 		$table->data[0][3] .= '<br>'. graph_workorder_num ('200', '100', 'submitter', $where_clause, 5);
 	} else {
 		$table->data[0][3] = '<b>'.__('Owners') .'</b>';
-		$table->data[0][3] .= '<br>'. graph_workorder_num ('200', '100', 'owner', $where_clause, 5);
+		$table->data[0][3] .= '<br><div class="pie_frame">'. graph_workorder_num ('200', '100', 'owner', $where_clause, 5) . '</div>';
 
 	}
 	
@@ -541,7 +545,7 @@ if ($operation == "") {
 
 	if ($wos !== false) {
 		unset ($table);
-		$table->width = "94%";
+		$table->width = "99%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();
@@ -679,7 +683,7 @@ if ($operation == "") {
 			if ($can_delete){
 				$data[10] .= '&nbsp;&nbsp;<a href="index.php?sec=projects&sec2=operation/workorders/wo'
 					.$params.'&operation=delete&id='.$wo['id'].'&offset='.$offset.'""onClick="if (!confirm(\''
-					.__('Are you sure?').'\')) return false;"><img src="images/cross.png"></a>';
+					.__('Are you sure?').'\')) return false;"><img src="images/cross.png" title="' . __('Delete') . '"></a>';
 			}
 
 			array_push ($table->data, $data);

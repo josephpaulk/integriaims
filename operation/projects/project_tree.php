@@ -30,13 +30,15 @@ if (!$section_access['read']) {
 	no_permission();
 }
 
+echo "<h1>".__("Projects tree")."</h1>";
+
 $id_user = get_parameter ("user_form", $config["id_user"]);
 $completion = get_parameter ("completion", 100);
 $project_kind = get_parameter ("project_kind", "defined_end");
 
 // Show user
-$table->width = '90%';
-$table->class = 'blank';
+$table->width = '99%';
+$table->class = 'search-table-button';
 $table->data = array ();
 $table->data[0][0] = combo_user_visible_for_me ($id_user, "user_form", 0, "PR", true, __('User'));
 
@@ -53,18 +55,19 @@ $types['defined_end'] = __('Defined end');
 $table->data[0][2] = print_select ($types, 'project_kind', '', $project_kind,
 	'', '', true, false, false, __('Type'));
 
+$table->data[1][0] = print_submit_button (__('Update'), '', false, 'class="sub upd"', true);
+$table->colspan[1][0] = 3;
+
 echo '<form method="post">';
 print_table ($table);
-echo "<br>";
-echo '<div class="button" style="width: '.$table->width.'">';
-print_submit_button (__('Update'), '', false, 'class="sub upd"');
-echo '</div>';
 echo '</form>';
 
 if ($id_user != ""){
 	$mapfilename = $config["homedir"]. "/attachment/tmp/$id_user.projectall.map";
 
+	echo "<div style='width: 100%; text-align: center;'>";
 	echo "<img src='include/functions_graph.php?type=all_project_tree&project_kind=$project_kind&id_user=$id_user&completion=$completion' usemap='#Integria'>";
+	echo "</div>";
 	require ($mapfilename);
 }
 

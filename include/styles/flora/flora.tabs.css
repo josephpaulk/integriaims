@@ -24,9 +24,10 @@
 	margin: 0;
 	padding: 0 0 0 3px;
 	margin-top: 8px;
-	border-bottom: 2px solid #404040;
+	border-bottom: 2px solid #505050;
 	height: 30px;
 	width: 98%;
+	margin-left: 6px;
 }
 .ui-tabs-nav:after { /* clearing without presentational markup, IE gets extra treatment */
 	display: block;
@@ -37,13 +38,20 @@
 	float: right;
 	margin: 0 0 -3px 3px;
 	font-weight: bold;
-	background-color: #404040;	
+	background-color: #505050;	
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 	padding-top: 3px;
 	padding-left: 12px;
 	padding-right: 12px;
 	height: 27px;
+}
+
+.ui-tabs-nav li.h1 {
+	font: bold 17px Verdana, Arial, 'Trebuchet MS', Tahoma, Sans-serif;
+	letter-spacing: -0.9px;
+	text-transform: uppercase;
+	color: #555;
 }
 
 .ui-tabs-selected, .ui-tabs-nav li.ui-tabs:hover {
@@ -53,8 +61,8 @@
 .ui-tabs-title, .ui-tabs-title:hover {
 	float: left !important;
 	background-color: transparent !important;
-	color: #404040;
-	margin-left: 0px !important;
+	color: #505050;
+	margin-left: -3px !important;
 	padding-left: 0px !important;
 }
 

@@ -134,15 +134,19 @@ else
 	echo '<form method="post" id="form-new_project" action="index.php?sec=projects&sec2=operation/projects/project&action=insert">';
 // Main project table
 
-echo "<h1>".__('Project management')." &raquo; ";
 if ($create_mode == 0){
-	echo get_db_value ("name", "tproject", "id", $id_project);
+	echo "<h1>".__('Project management')." &raquo; " . get_db_value ("name", "tproject", "id", $id_project);
+
+	if (!$clean_output) {
+		echo "&nbsp;&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project&clean_output=1&pdf_output=1'><img src='images/page_white_acrobat.png'></A>";
+	}
+	echo "</h1>";
+}
+else {
+	echo "<h1>".__('Create project')."</h1>";
 }
 
-if (!$clean_output) {
-	echo "&nbsp;&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$id_project&clean_output=1&pdf_output=1'><img src='images/page_white_acrobat.png'></A>";
-}
-echo "</h1>";
+
 
 // Right/Left Tables
 $table->width = '100%';
@@ -156,7 +160,7 @@ $table->style [0] = "vertical-align: top;";
 $table->style [1] = "vertical-align: top";
 
 // Project info
-$project_info = '<table>';
+$project_info = '<table class="search-table-button" style="margin-top: 0px;">';
 
 // Name
 $project_info .= '<tr><td class="datos" colspan=3><b>'.__('Name').' </b><br>';

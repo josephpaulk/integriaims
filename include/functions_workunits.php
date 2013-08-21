@@ -104,7 +104,7 @@ function create_new_table_multiworkunit ($number=false) {
 	$start_date = substr ($now, 0, 10);
 	$wu_user = $config["id_user"];	
 	
-	echo "<table id='wu_".$number."' class='databox' width='90%'>";
+	echo "<table id='wu_".$number."' class='search-table' width='99%'>";
 	
 	echo "<tr>";
 	
@@ -301,7 +301,7 @@ function print_single_workunit_report ($mwur) {
 		echo '<h3 class="error">'.__('Problemd adding workunit.').'</h3>';
 	}
 
-	echo "<table class='databox' width='90%'>";
+	echo "<table class='search-table' width='99%'>";
 	echo "<tr>";
 	echo "<td>";
 	echo "<strong>".sprintf(__("Workunit  #%d"),$mwur['id'])."</strong>";

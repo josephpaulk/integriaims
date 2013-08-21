@@ -333,6 +333,24 @@ if ($operation == 'multiple_wu_insert') {
 echo "<div id='tabs'>";
 echo "<ul class='ui-tabs-nav'>";
 
+echo "<li class='ui-tabs-title h1'>";
+echo "<img src='images/award_star_silver_1.png'> ";
+
+if ($id_workunit) {
+	echo __('Update workunit');
+}
+else {
+	echo __('Add workunit');
+}
+
+if ($id_task) {
+	echo ' - ';
+	echo get_db_value ('name', 'ttask', 'id', $id_task);
+}
+
+echo '</h3>';
+echo "</li>";
+	
 //If the multiple_wu_insert option was sent single wu is disabled
 if ($operation == 'multiple_wu_insert') {
 	echo "<li id='tabmenu1' class='ui-tabs-disabled'>";
@@ -369,20 +387,6 @@ else {
 	echo "<div id='tab1' class='ui-tabs-panel'>"; //Single WU
 }
 
-echo "<h3><img src='images/award_star_silver_1.png'> ";
-
-if ($id_workunit) {
-	echo __('Update workunit');
-}
-else {
-	echo __('Add workunit');
-}
-
-if ($id_task) {
-	echo ' - ';
-	echo get_db_value ('name', 'ttask', 'id', $id_task);
-}
-
 if ($id_workunit) {
 	$wu_user = get_db_value ('id_user', 'tworkunit', 'id', $id_workunit);
 }
@@ -390,16 +394,14 @@ else {
 	$wu_user = $config["id_user"];
 }
 
-echo '</h3>';
-
 //Print result output if any
 if (isset($result_output)) {
 	echo $result_output;
 }
 
 $table = new StdClass;
-$table->class = 'databox';
-$table->width = '90%';
+$table->class = 'search-table-button';
+$table->width = '99%';
 $table->data = array ();
 $table->colspan = array ();
 $table->colspan[5][0] = 3;
@@ -468,24 +470,25 @@ if (! $id_workunit) {
 }
 $table->data[5][0] = print_textarea ('description', 10, 30, $description,
 	'', true, __('Description'));
+	
+if ($id_workunit) {
+	$button = print_input_hidden ('operation', 'update', true);
+	$button .= print_input_hidden ('id_workunit', $id_workunit, true);
+	$button .= print_input_hidden ("wu_user", $wu_user, true);
+	$button .= print_submit_button (__('Update'), 'btn_upd', false, 'class="sub upd"', true);
+}
+else {
+	$button .= print_input_hidden ('operation', 'insert', true);
+	$button .= print_submit_button (__('Add'), 'btn_add', false, 'class="sub create"', true);
+}
+$button .= print_input_hidden ('timestamp', $now, true);
+
+$table->data[6][0] = $button;
+$table->colspan[6][0] = 2;
 
 echo '<form id="single_task_form" method="post" onsubmit="return validate_single_form()">';
 print_table ($table);
-
-echo '<div style="width: '.$table->width.'" class="button">';
-if ($id_workunit) {
-	print_input_hidden ('operation', 'update');
-	print_input_hidden ('id_workunit', $id_workunit);
-	print_input_hidden ("wu_user", $wu_user);
-	print_submit_button (__('Update'), 'btn_upd', false, 'class="sub upd"');
-}
-else {
-	print_input_hidden ('operation', 'insert');
-	print_submit_button (__('Add'), 'btn_add', false, 'class="sub next"');
-}
-print_input_hidden ('timestamp', $now);
 echo '</form>';	
-echo "</div>";
 
 echo "</div>";
 
@@ -495,15 +498,10 @@ if (!$id_workunit) {
 	
 	if ($operation == 'multiple_wu_insert') {
 		echo "<div id='tab2' class='ui-tabs-panel'>"; //Multiple WU
-		echo "<table>";
+		echo "<table width='99%'>";
 		echo "<tr>";
-		echo "<td>";
-		echo "<h3><img src='images/award_star_silver_1.png'> ";
-		echo __('Add multiple workunits summary ');
-		echo '</h3>';
-		echo "</td>";
-		echo "<td>";
-		echo print_button (__('Add new parse Workunit'), 'add_link', false, 'location.href=\'index.php?sec=users&sec2=operation/users/user_spare_workunit\'', 'class="sub upd"');
+		echo "<td style='text-align: right;'>";
+		echo print_button (__('Add new parse Workunit'), 'add_link', false, 'location.href=\'index.php?sec=users&sec2=operation/users/user_spare_workunit\'', 'class="sub create"');
 		echo "</td>";
 		echo "</table>";
 		foreach ($multiple_wu_report as $number => $mwur) {
@@ -515,18 +513,15 @@ if (!$id_workunit) {
 		echo "<div id='tab2' class='ui-tabs-panel ui-tabs-hide'>"; //Multiple WU
 		echo '<form id="multiple_task_form" method="post" onsubmit="return validate_multiple_form()">';
 		print_input_hidden ('operation', 'multiple_wu_insert');
-		echo "<table>";
+		echo "<table width='99%'>";
 		echo "<tr>";
-		echo "<td>";
-		echo "<h3 id='multi_task_title'><img src='images/award_star_silver_1.png'> ";
-		echo __('Add multiple workunits');
-		echo '</h3>';
+		echo "<td style='width: 90%;'>";
 		echo "</td>";
 		echo "<td>";
-		echo print_button (__('Add'), 'add_multi_wu', false, '', 'class="sub next"');
+		echo print_button (__('Add'), 'add_multi_wu', false, '', 'class="sub create"');
 		echo "</td>";
 		echo "<td>";
-		echo print_submit_button (__('Save'), 'btn_upd', false, 'class="sub create"');
+		echo print_submit_button (__('Save'), 'btn_upd', false, 'class="sub save"');
 		echo "</td>";
 		echo "</tr>";
 		echo "</table>";

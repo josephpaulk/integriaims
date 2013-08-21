@@ -158,7 +158,12 @@ if ($action == 'insert') {
 	}
 }
 
-echo '<h1>'.__('Project management').'</h1>';
+if ($view_disabled) {
+	echo '<h1>'.__('Archived projects').'</h1>';
+}
+else {
+	echo '<h1>'.__('Project management').'</h1>';
+}
 
 $table = new stdClass;
 $table->width = '99%';
@@ -261,14 +266,14 @@ while ($project = get_db_all_row_by_steps_sql ($new, $result, $sql)) {
 			$table->head[5] = __('Archive');
 			$data[5] = '<a href="index.php?sec=projects&sec2=operation/projects/project&disable_project=1&id='.$project['id'].'" 
 				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
-				<img src="images/cross.png" /></a>';
+				<img src="images/archive.png" /></a>';
 		} elseif ($project['disabled'] && $project_permission['manage']) {
 			$table->head[5] = __('Delete/Unarchive');
 			$data[5] = '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&delete_project=1&id='.$project['id'].'"
 				onClick="if (!confirm(\''.__('Are you sure?').'\')) return false;">
 				<img src="images/cross.png" /></a> ';
 			$data[5] .= '<a href="index.php?sec=projects&sec2=operation/projects/project&view_disabled=1&activate_project=1&id='.$project['id'].'">
-				<img src="images/play.gif" /></a>';
+				<img src="images/unarchive.png" /></a>';
 		}
 	}
 	

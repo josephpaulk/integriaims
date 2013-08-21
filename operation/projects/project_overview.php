@@ -27,7 +27,7 @@ if (! $section_access["read"]) {
 }
 
 // MAIN LIST OF PROJECTS GROUPS
-echo "<h2>".__("Project overview")."</h2>";
+echo "<h1>".__("Projects overview")."</h1>";
 
 // -------------
 // Show headers

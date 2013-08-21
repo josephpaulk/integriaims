@@ -1,6 +1,6 @@
 a.tip, a.tip2, a.tipp {
 	cursor: help;
-	background: url(../../images/tip.gif) no-repeat;
+	background: url(../../images/tip.png) no-repeat;
 }
 
 a.tip_people {
@@ -42,7 +42,6 @@ a.tip, a.tip2, a.tipp, a.help , a.info, a.info2, a.tip_people, a.tip_info, a.tip
 }
 a.tip:hover  {
 	text-decoration: none;
-	background-color: #f9f9f9;
 }
 a.tip2:hover {
 	text-decoration: none;
@@ -68,9 +67,10 @@ a.info2:hover span, a.help:hover span, a.tip_info:hover span, a.tip_view:hover s
 	left: 6px;
 	width: 150px;
 	border: 1px solid #708090;
-	background-color: #d4ddc6;
-	color: #000;
+	background-color: #505050;
+	color: #FFFFFF;
 	padding: 2px;
+	font-size: 0.9em;
 }
 
 a.tip_people:hover span {

@@ -95,7 +95,7 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 			echo "<li id='sidesel'>";
 		else
 			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1'>".__('Disabled projects')."</a></li>";
+		echo "<a href='index.php?sec=projects&sec2=operation/projects/project&view_disabled=1'>".__('Archived projects')."</a></li>";
 	}
 	
 	if ($manage_any_task) {
@@ -1275,7 +1275,7 @@ if (give_acl ($config["id_user"], 0, "PR")) {
 	if ($week_hours < $total_hours)
 		echo '<img src="images/exclamation.png" title="'.__('Week workunit time not fully justified').' - '.$ratio.'" />';
 	else
-		echo '<img src="images/heart.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
+		echo '<img src="images/accept.png" title="'.__('Week workunit are fine').' - '.$ratio.'">';
 	
 	echo "&nbsp;<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=".$config["id_user"]."'><img src='images/paste_plain.png' title='".__("Work Orders")."' border=0></a>";
 

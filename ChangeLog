@@ -1,3 +1,77 @@
+2013-08-21  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_graph.php
+	include/functions_html.php
+	include/styles/flora/flora.tabs.css
+	include/styles/flora/flora.css
+	include/styles/flora/flora.theme.css
+	include/styles/integria_tip.css
+	include/styles/integria.css
+	include/graphs/fgraph.php
+	include/functions_workunits.php
+	operation/projects/project_overview.php
+	operation/projects/project_group_detail.php
+	operation/projects/project.php
+	operation/projects/role_user_global.php
+	operation/projects/project_tree.php
+	operation/projects/project_detail.php
+	operation/side_menu.php
+	operation/workorders/wo_notes.php
+	operation/workorders/wo.php
+	operation/workorders/wo_files.php
+	operation/users/user_spare_workunit.php
+	images/tip.png
+	images/input_file.png
+	images/system_dashboard_home.png
+	images/project_groups_small/applications-internet.png
+	images/project_groups_small/applications-multimedia.png
+	images/project_groups_small/applications-office.png
+	images/project_groups_small/applications-games.png
+	images/project_groups_small/preferences-system.png
+	images/project_groups_small/applications-graphics.png
+	images/project_groups_small/preferences-desktop-peripherals.png
+	images/project_groups_small/applications-other.png
+	images/project_groups_small/applications-development.png
+	images/project_groups_small/applications-accessories.png
+	images/project_groups_small/applications-system.png
+	images/project_groups_small/preferences-desktop.png
+	images/rosette.png
+	images/incidents_home.png
+	images/wo_category/bug.png
+	images/wo_category/customer.png
+	images/wo_category/clean.png
+	images/wo_category/idea.png
+	images/wo_category/box.png
+	images/wo_category/calendar.png
+	images/wo_category/puzzle.png
+	images/help.png
+	images/wrench_orange.png
+	images/input_upload.png
+	images/extensions.png
+	images/award_star_bronze_1.png
+	images/add.png
+	images/control_rewind_blue.png
+	images/input_csv.png
+	images/header_warning.png
+	images/control_fastforward_blue.png
+	images/input_next.png
+	images/workorders_home.png
+	images/comments.png
+	images/control_start_blue.png
+	images/accept.png
+	images/unarchive.png
+	images/input_save.png
+	images/ack.png
+	images/archive.png
+	images/search_by_type.png
+	images/control_end_blue.png
+	images/input_xml.png
+	images/cross.png
+	general/header.php
+	general/home.php: Change several icons and
+	screens to new visual style
+
+
 2013-08-21  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* mobile/include/ui.class.php: Now the function

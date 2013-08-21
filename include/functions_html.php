@@ -435,7 +435,7 @@ function print_input_file_progress($form_action, $into_form = '', $attr = '', $e
 		$output .= "$('#ax-table-header').hide();";
 		$output .= "$('.ax-uploadall').val('".__('Upload')."');";
 		$output .= "$('.ax-uploadall').addClass('".$extra_button_class."');";
-		$output .= "$('input[type=\"file\"]').addClass('".$extra_button_class."');";
+		$output .= "$('input[type=\"file\"]').addClass('sub file');";
 		// If a button is defined, hide the default button and trigger the action to the
 		// defined button. If file upload is empty, the form is sended without it
 		if($button !== false) {
@@ -1030,7 +1030,7 @@ function print_container($id, $title, $content, $open = 'open', $return = true) 
 			break;
 	}
 	
-	$container = '<div class="container">';
+	$container = '<div class="container ' . $id . '_container">';
 	$container .= '<h2 id="' . $id . '" class="dashboard_h2" onclick="' . $onclick . '" style="' . $h2_style . '">' . $title;
 	$container .= $arrow;
 	$container .= '</h2>';

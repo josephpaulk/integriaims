@@ -71,14 +71,15 @@ if (isset($_GET["upload"])) {
 // Control to upload file
 
 
-echo '<a href="javascript:;" onclick="$(\'#upload_div\').slideToggle (); return false">';
-echo '<h3>'.__('Upload a new file').'</h3>';
-echo '</a>';
-echo '<div id="upload_div" style="padding: 20px; margin: 0px; display: none;">';
+echo '<div style="width: 99%; text-align: right; margin-top: 10px; margin-bottom: 10px;">';
+echo print_button (__('Upload a new file'), 'add_link', false, '$(\'#upload_div\').slideToggle (); return false', 'class="sub upload"');
+echo '</div>';
+
+echo '<div id="upload_div" style="width: 95%; padding: 20px; margin: 0px; display: none;" class="integria_form">';
 $target_directory = 'attachment';
 $action = "index.php?sec=projects&sec2=operation/workorders/wo&id=$id&tab=files&operation=view&upload=1";				
 $into_form = "<input type='hidden' name='directory' value='$target_directory'><b>Description</b>&nbsp;<input type=text name=description size=60>";
-print_input_file_progress($action,$into_form,'','sub next');	
+print_input_file_progress($action,$into_form,'','sub upload');	
 echo '</div>';
 
 // List of WO attachments

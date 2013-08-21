@@ -24,6 +24,8 @@ $id = get_parameter("id");
 $add_note = get_parameter("addnote");
 $delete = get_parameter("delete");
 
+echo '<h1>'.__('Add a note').'</h1>';
+
 if ($add_note) {
 
 	$note = get_parameter("note");
@@ -56,29 +58,21 @@ if ($delete) {
 	mail_workorder ($id, 5, $res, false, $note);
 }
 
-
-echo '<h3>'.__('Add a note').'</h3>';
-
-$table->width = '100%';
+$table->width = '99%';
+$table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();
 $table->size = array();
 $table->style = array();
-$table->class = "none";
 
 $table->data[0][0] = print_textarea ('note', 10, 70, '', "style='resize:none;'", true, __('Note'));
+$table->data[1][0] = print_submit_button (__('Add'), 'addnote', false, 'class="sub next"', true);
 
 echo '<form method="post" action="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&tab=notes&addnote=1&id='.$id.'">';
 
-echo "<div style='width: 80%;margin: 0 auto;'>";
 print_table ($table);
 
-echo '<div style="width: 100%" class="button">';
-print_submit_button (__('Add'), 'addnote', false, 'class="sub next"');
-echo '</div>';
 echo "</form>";
-
-echo "</div>";
 
 // List of WO attachments
 

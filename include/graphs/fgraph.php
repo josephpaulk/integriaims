@@ -309,7 +309,7 @@ function hbar_graph($flash_chart, $chart_data, $width, $height, $color = array()
 	$legend = array(), $xaxisname = "", $yaxisname = "", $force_height = true,
 	$homedir="", $water_mark = '', $font = '', $font_size = '', $force_steps = true, $ttl = 1) {
 	if($flash_chart) {
-		echo fs_2d_hcolumn_chart ($chart_data, $width, $height);
+		return fs_2d_hcolumn_chart ($chart_data, $width, $height);
 	}
 	else {
 		$graph = array();

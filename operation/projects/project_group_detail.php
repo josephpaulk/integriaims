@@ -28,6 +28,8 @@ if (!$section_permission["write"]) {
 	no_permission();
 }
 
+echo "<h1>".__('Project group management')."</h1>";
+
 $id = (int) get_parameter ('id');
 $new_group = (bool) get_parameter ('new_group');
 $insert_group = (bool) get_parameter ('insert_group');
@@ -79,8 +81,6 @@ if ($delete_group) {
 	$id = 0;
 }
 
-echo "<h2>".__('Project group management')."</h2>";
-
 // FORM (Update / Create)
 if ($id || $new_group) {
 	if ($new_group) {
@@ -93,8 +93,8 @@ if ($id || $new_group) {
 		$icon = $group["icon"];
 	}
 	
-	$table->width = '90%';
-	$table->class = 'databox';
+	$table->width = '99%';
+	$table->class = 'search-table';
 	$table->data = array ();
 	
 	$table->data[0][0] = print_input_text ('name', $name, '', 60, 100, true,
@@ -103,24 +103,26 @@ if ($id || $new_group) {
 	$icons = list_files ('images/project_groups_small/', "png", 1, 0, 'svn');
 	$table->data[1][0] = print_select ($icons, "icon", $icon, '', '', 0, true,
 		false, false, __('Icon'));
+		
+		
+	if ($id) {
+		$button = print_submit_button (__('Update'), "enviar", false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('update_group', 1, true);
+		$button .= print_input_hidden ('id', $id, true);
+	} else {
+		$button .= print_submit_button (__('Create'), "enviar", false, 'class="sub next"', true);
+		$button .= print_input_hidden ('insert_group', 1, true);
+	}
+	
+	$table->data[2][0] = $button;
 	
 	echo '<form id="form-project_group_detail" method="post">';
 	print_table ($table);
-	echo '<div class="button" style="width: 90%">';
-	if ($id) {
-		print_submit_button (__('Update'), "enviar", false, 'class="sub upd"');
-		print_input_hidden ('update_group', 1);
-		print_input_hidden ('id', $id);
-	} else {
-		print_submit_button (__('Create'), "enviar", false, 'class="sub next"');
-		print_input_hidden ('insert_group', 1);
-	}
-	echo "</div>";
 	echo "</form>";
 } else {
 	$groups = get_db_all_rows_in_table ('tproject_group', 'name');
 	
-	$table->width = "90%";
+	$table->width = "99%";
 	
 	if ($groups !== false) {
 		$table->class = "listing";
@@ -153,7 +155,7 @@ if ($id || $new_group) {
 		print_table ($table);
 	}
 	
-	echo '<div style="width:'.$table->width.'" class="button">';
+	echo '<div style="width:'.$table->width.'; text-align: right;">';
 	echo '<form method="post">';
 	print_submit_button (__('Create group'), "crt", false, 'class="sub next"');
 	print_input_hidden ('new_group', 1);
