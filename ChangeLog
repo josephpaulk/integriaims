@@ -1,4 +1,10 @@
 2013-08-21  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* operation/projects/task.php,
+	  include/functions_tasks.php: Chaged the incidents
+	  icon. Visual changes.
+
+2013-08-21  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* mobile/index.php: Changed the name of some variables.
 	Added the case 'user' to the ajax action.
