@@ -946,7 +946,7 @@ if ((!$id) AND ($new_company == 0)){
 
 	// Search // General Company listing
 	echo "<div id='inventory-search-content'>";
-	echo "<h1>".__('Company management');
+	echo "<h2>".__('Company management');
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
@@ -954,7 +954,7 @@ if ((!$id) AND ($new_company == 0)){
 	echo "</li>";
 	echo "</ul>";
 	echo "</div>";
-	echo "</h1>";
+	echo "</h2>";
 
 	echo "<br>";
 	$search_text = (string) get_parameter ('search_text');	
@@ -1004,9 +1004,6 @@ if ((!$id) AND ($new_company == 0)){
 	$table->width = '98%';
 	$table->class = 'search-table';
 	$table->style = array ();
-	$table->style[0] = 'font-weight: bold;';
-	$table->style[2] = 'font-weight: bold;';
-	$table->style[4] = 'font-weight: bold;';
 	$table->data = array ();
 	$table->data[0][0] = __('Search');
 	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 15, 100, true);

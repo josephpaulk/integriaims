@@ -615,7 +615,7 @@ function graph_workunit_project ($width, $height, $id_project, $ttl=1) {
 			tproject.id = ttask.id_project 
 		GROUP BY ttask.name
 		ORDER BY SUM(duration) DESC
-		LIMIT 12");
+		LIMIT 7");
 
 	$data = NULL;
 	while ($row = mysql_fetch_array($res)) {

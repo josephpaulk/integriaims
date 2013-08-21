@@ -322,7 +322,7 @@ if ($id_project) {
 	$left_side .= print_container('project_involved_people', __('People involved'), $people_involved);
 	
 	// Task distribution
-	$task_distribution = '<div class="pie_frame">' . graph_workunit_project (300, 250, $id_project, $graph_ttl) . '</div>';
+	$task_distribution = '<div class="pie_frame">' . graph_workunit_project (350, 150, $id_project, $graph_ttl) . '</div>';
 	
 	$left_side .= print_container('project_task_distribution', __('Task distribution'), $task_distribution);
 	
@@ -379,7 +379,7 @@ if ($id_project) {
 	$right_side .= print_container('project_budget', __('Budget'), $budget);
 	
 	// Workload distribution
-	$workload_distribution = '<div class="pie_frame">' . graph_workunit_project_user_single (300, 250, $id_project, $graph_ttl) . '</div>';
+	$workload_distribution = '<div class="pie_frame">' . graph_workunit_project_user_single (350, 150, $id_project, $graph_ttl) . '</div>';
 	
 	$right_side .= print_container('project_workload_distribution', __('Workload distribution'), $workload_distribution);
 	

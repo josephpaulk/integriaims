@@ -88,9 +88,9 @@ else {
 // Details
 $incident_details = "<table width='97%' id='details_table'>";
 $incident_details .= "<tr>";
-$incident_details .= "<td style='color:" . $status_color . ";'>".__("Status")."</td>";
+$incident_details .= "<td>".__("Status")."</td>";
 $incident_details .= "<td>".__("Group")."</td>";
-$incident_details .= "<td style='color:" . incidents_get_priority_color($incident) . ";'>".__("Priority")."</td>";
+$incident_details .= "<td>".__("Priority")."</td>";
 $incident_details .= "<td>".__("Resolution")."</td>";
 $incident_details .= "<td>".__("Type")."</td>";
 $incident_details .= "</tr>";
@@ -102,9 +102,9 @@ $incident_details .= "<td>" . print_image('images/resolution.png', true) . "</td
 $incident_details .= "<td>" . print_image('images/incident.png', true) . "</td>";
 $incident_details .= "</tr>";
 $incident_details .= "<tr class='bold incident_details_bottom'>";
-$incident_details .= "<td style='color:" . $status_color . ";'>".$status."</td>";
+$incident_details .= "<td>".$status."</td>";
 $incident_details .= "<td>".$group."</td>";
-$incident_details .= "<td style='color:" . incidents_get_priority_color($incident) . ";'>".$priority."</td>";
+$incident_details .= "<td>".$priority."</td>";
 $incident_details .= "<td>".$resolution."</td>";
 $incident_details .= "<td>".$type."</td>";
 $incident_details .= "</tr>";
@@ -137,14 +137,13 @@ if ($objects) {
 	$obj_table = "<td class='advanced_details_icons'>".print_image('images/object.png', true)."</td>";
 	$obj_table .= "<td>".__("Objects affected").":</td>";
 	$obj_table .= "</tr>";
-	$obj_table .= "<tr>";
-	$obj_table .= "<td class='advanced_details_icons'></td><td align='right'><b>".$objects."</b></td>";
+	$obj_table .= "<tr><td></td>";
+	$obj_table .= "<td><table><tr><td class='advanced_details_icons'></td><td align='right'><b>".$objects."</b></td></tr></table></td>";
 	$obj_table .= "</tr>";
 } else {
 	$objects = __("None");
-	$obj_table = "<td>".__("Objects affected").":</td>";
-	$obj_table .= "<td align='right'>".$objects."</td>";
-	$obj_table .= "</tr>";	
+	$obj_table = "<td class='advanced_details_icons'>".print_image('images/object.png', true)."</td>";
+	$obj_table .= "<td><table><tr><td>".__("There is no objects affected")."</td></tr></table></td>";
 }
 
 $email_notify = $incident["notify_email"];
@@ -192,7 +191,7 @@ $incident_adv_details .= "<tr>";
 $incident_adv_details .= $obj_table;
 $incident_adv_details .= "<tr>";
 $incident_adv_details .= "<td class='advanced_details_icons'>".print_image('images/email.png', true)."</td>";
-$incident_adv_details .= "<td><table><tr><td>".__("Nofify changes by email").":</td><td align='right'><b>".$email_notify_text."</b></td></tr></table></td>";
+$incident_adv_details .= "<td><table><tr><td>".__("Notify changes by email").":</td><td align='right'><b>".$email_notify_text."</b></td></tr></table></td>";
 $incident_adv_details .= "</tr>";
 $incident_adv_details .= $email_table;
 $incident_adv_details .= "</table>";
@@ -347,8 +346,8 @@ if ($incident["sla_disabled"]) {
 	$incident_sla .= "<td id=slaSlicebarField colspan=2 style='text-align: center; padding: 1px 2px 1px 5px;'>";
 	$incident_sla .= graph_sla_slicebar ($id, $period, 155, 15, $ttl);
 	$incident_sla .= "</td>";
-	$incident_sla .= "<td colspan=2 style='text-align: center;' class='pie_frame'>";
-	$incident_sla .= graph_incident_sla_compliance ($id, 155, 170, $ttl);
+	$incident_sla .= "<td colspan=2 style='text-align: center;' >";
+	$incident_sla .= graph_incident_sla_compliance ($id, 155, 80, $ttl);
 	$incident_sla .= "</td>";	
 	$incident_sla .= "<tr>";
 	$incident_sla .= "</table>";

@@ -11,6 +11,7 @@
 /* top elements */
 * {
 	margin: 0; padding: 0;
+	-webkit-font-smoothing: antialiased; 
 }
 
 strong, b, .bold * {
@@ -18,13 +19,13 @@ strong, b, .bold * {
 }
 
 body {
-	font: 0.80em  Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
+	font: 0.93em  Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
 	background-image: url(../../images/darkgrey_bg.png);
 	background-color: #ffffff;
 	background-repeat: repeat-x;
-	color: #909090;
+	color: #606060;
 	text-align: center;
-	font-weight: 300;
+	-webkit-font-smoothing: antialiased; 
 }
 
 body.login {
@@ -32,16 +33,16 @@ body.login {
 }
 
 td, th {
-	font: 0.80em  Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
-	color: #505050;
-	font-weight: 300;
+	font: 0.93em  Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
+	color: #606060;
 	padding: 1px;
 	line-height: 22px;
+	-webkit-font-smoothing: antialiased; 
 }
 
 /* links */
 a {
-	color: #909090;
+	color: #606060;;
 	text-decoration: none;
 }
 a:hover {
@@ -56,9 +57,9 @@ h1, h2, h3 {
 	color: #555;
 }
 
-h1 { font-size: 1.3em; }
-h2 { font-size: 1.0em; }
-h3 { font-size: 0.9em; }
+h1 { font-size: 1.2em; }
+h2 { font-size: 1.05em; }
+h3 { font-size: 0.95em; }
 h4 { font-size: 0.8em; }
 h5 { font-size: 0.7em; }
 h6 { font-size: 0.5em; }
@@ -153,7 +154,6 @@ table.listing tr:nth-child(even) td{
 }
 
 table.listing th {
-	font-size: 11px;
 	padding-left: 15px;
 	padding-right: 5px;
 	padding-top: 3px;
@@ -177,7 +177,6 @@ table.listing tr {
 
 td {
 	padding-left: 5px;
-	font-size: 1em;
 }
 
 tr.yellow {
@@ -253,10 +252,10 @@ blockquote {
 /* form elements */
 
 label {
+	font: 0.90em  Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
 	display:block;
 	font-weight:bold;
 	margin:2px 0;
-	font: normal 0.9em Arial, sans-serif;
 }
 
 div.report_info label {
@@ -264,23 +263,23 @@ div.report_info label {
 }
 
 input {
-	padding: 5px;
+	padding: 3px;
 	border:1px solid #CCCCCC;
-	font: normal 0.9em Arial, sans-serif;
-	color:#909090;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+	color: #606060;
+	-webkit-font-smoothing: subpixel-antialiased; /* It is the default and looks bolder */
 }
 
 input[type="text"] {
-	height: 8px;
+	height: 13px;
 }
 
 textarea {
 	padding:5px;
+	color: #606060;
 	font: normal 1em Courier, Arial, sans-serif;
 	border:1px solid #CCCCCC;
-	color:#666;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	width: 98%;
@@ -310,9 +309,8 @@ input.dialogbtn {
 
 select {
 	padding: 0px;
+	color: #606060;
 	border:1px solid #CCCCCC;
-	font: normal 0.9em Arial, sans-serif;
-	color:#909090;
 	float: left;
 	background-color: #FFF;
 	-moz-border-radius: 3px;
@@ -509,9 +507,10 @@ div.submenu li a:hover {
 }
 
 input#global_search {
-	height: 7px;
+	height: 12px;
 	width: 85px;
 	font-size: 11px;
+        padding: 3px;
 	
 	/* Browser without multibackground support */
 	background: #efefef url(../../images/input_zoom.png) no-repeat 96% 2px #ffffff !important;
@@ -622,7 +621,7 @@ input#global_search {
 #sidebar ul.sidemenu li {
 	font-size: 11px;
 	line-height: 18px;
-	padding-top: 2px;
+	padding-top: 3px;
 }
 
 ul.sidemenu {	
@@ -876,7 +875,7 @@ thead tr .headerSortDown {
 
 .f9, .f9i, .f9b, td.f9, td.f9i, td.datosf9, td.datos2f9,
 td.datosf9i, td.datos2f9i {
-	font-size: 11px;
+	font-size: 0.85em;
 }
 
 .error {
@@ -1144,7 +1143,7 @@ h3.system {
 	background-color:#ffffff;
 	color:#666666;
 	width:96%;
-	font-size: 1em;
+	font-size: 0.95em;
 	border-bottom-right-radius: 10px;
 	-moz-border-bottom-right-radius: 10px;
     -webkit-border-bottom-right-radius: 10px;
@@ -1724,7 +1723,7 @@ h2.dashboard_h2 {
 	background-repeat:no-repeat;
 	padding-left: 52px;
 	background-position: 3px 1px;
-	height: 36px;
+	height: 34px;
 }
 
 h2#incident_custom_search {
@@ -1971,15 +1970,15 @@ img.avatar_small {
 
 /* Bubbles with user avatar inside */
 .bubble img {
-	width: 75px;
-	margin-top: 15px;
+	width: 63px;
+	margin-top: 12px;
 }
 
 .bubble {
-	width: 111px;
-	max-width: 111px;
-	height: 111px;
-	max-height: 111px;
+	width: 90px;
+	max-width: 90px;
+	height: 90px;
+	max-height: 90px;
 	background-image: url('../../images/bubble.png');
 	text-align: center;
 	margin: 8px auto 0px;
@@ -2100,7 +2099,7 @@ table#details_table, .pie_frame, .graph_frame {
 	margin: 10px auto;
 	padding: 5px;
 	background: #FFFFFF;
-	border: #909090 dotted 2px;
+	border: #606060 dashed 2px;
 	
 	-moz-border-radius:6px;
 	-webkit-border-radius:6px;
@@ -2112,7 +2111,7 @@ table#details_table, .pie_frame, .graph_frame {
 }
 
 table#details_table * {
-	color:#FF9933; /* orange */
+	color:#606060; 
 }
 
 tr.incident_details_bottom td {
@@ -2135,8 +2134,9 @@ tr.incident_details_bottom td {
 	-moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     -khtml-border-radius: 5px;
-    padding: 0px 10px 0px 10px;
+    padding: 0px 15px 0px 15px;1
     line-height: 20px;
+    margin: 15px;
 }
 
 td.advanced_details_icons {
@@ -2146,10 +2146,8 @@ td.advanced_details_icons {
 }
 
 table.alternate tr:nth-child(odd) td{
-	background-color: #B3B3B3;
-	color: #ffffff;
+	background-color: #eaeaea;
 }
 table.alternate tr:nth-child(even) td{
-	background-color: #CCCCCC;
-	color: #ffffff;
+	background-color: #d8d8d8;
 }

@@ -1,3 +1,21 @@
+2013-08-21  Sancho Lerena <slerena@artica.es>
+
+	* operation/incidents/incident_dashboard_detail.php: Fixed some minor 
+	issues (sizes, positions, padding) on items.
+
+	* operation/projects/project_detail.php: Fixed graph sizes.
+
+	* operation/companies/company_detail.php: Fixed title (h1 -> h2).
+
+	* images/bubble.png: Smaller bubble background.
+
+	* include/functions_graph.php: Fixed number of displayed items in 
+	project graph, limited to 7 (previously was 12 and was unusable).
+
+	* include/styles/integria.css: Several of changes trying to fight 
+	back problems on big screens and mac bold problems.
+	
+
 2013-08-21  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/projects/task.php,
