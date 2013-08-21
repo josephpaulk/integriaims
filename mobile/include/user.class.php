@@ -173,15 +173,6 @@ class User {
 	public function getIdUser() {
 		return $this->user; //Oldies methods
 	}
-	////////////////
-	public function isInGroup($access = "AR", $id_group = 0, $name_group = false) {
-		//return (bool)check_acl($this->user, $id_group, $access);
-		return true;
-	}
-	////////////
-	public function getIdGroups($access = "AR", $all = false) {
-		//return array_keys(users_get_groups($this->user, $access, $all));
-		return true;
-	}
+	
 }
 ?>

@@ -557,6 +557,17 @@ class Ui {
 		if (empty($options['items']))
 			$options['items'] = array();
 		foreach ($options['items'] as $id => $item) {
+			if(is_array($item)){
+				if(!isset($lastopttype) || ($item['optgroup'] != $lastopttype)) {
+					if(isset($lastopttype) && ($lastopttype != '')) {
+						$html .= '</optgroup>';
+					}
+					$html .= '<optgroup label="'.$item['optgroup'].'">';
+					$lastopttype = $item['optgroup'];
+				}				
+				$item = $item['name'];
+			}
+			
 			if (!empty($options['item_id'])) {
 				$item_id = $item[$options['item_id']];
 			}
@@ -668,12 +679,116 @@ class Ui {
 		$this->dialogs[$type][] = $dialogHtml;
 	}
 	
+	public function getPopupHTML ($options) {
+		
+		$popup_id = uniqid('popup_');
+		$popup_class = '';
+		$popup_content = '';
+		
+		if (is_array($options)) {
+			if (isset($options['popup_id']))
+				$popup_id = $options['popup_id'];
+			if (isset($options['popup_class']))
+				$popup_class = $options['popup_class'];
+			if (isset($options['popup_content']))
+				$popup_content = $options['popup_content'];
+			if (! isset($options['data-transition']))
+				$options['data-transition'] = 'slidedown';
+				
+			unset($options['popup_id']);
+			unset($options['popup_class']);
+			unset($options['popup_content']);
+		}
+		
+		$popupHtml = "<div id='" . $popup_id . "' class='" . $popup_class . "' data-role='popup'";
+		foreach ($options as $option => $value) {
+			$popupHtml .= " " . $option  . "='" . $value . "' ";
+		}
+		$popupHtml .= ">\n";
+		$popupHtml .= $popup_content;
+		$popupHtml .= "</div>\n";
+		
+		return $popupHtml;
+	}
+	
+	public function getDeletePopupHTML ($options) {
+		
+		if (isset($options['dialog_title'])) {
+			$title = $options['dialog_title'];
+		} else {
+			$title = __('Delete item?');
+		}
+		if (isset($options['dialog_content'])) {
+			$content = $options['dialog_content'];
+		} else {
+			$content = "<h3>".__('Are you sure you want to delete this item?')."</h3>";
+			$content .= "<p>".__('This action cannot be undone.')."<p>";
+		}
+		if (isset($options['delete_href'])) {
+			$delete_href = $options['delete_href'];
+			unset($options['delete_href']);
+		} else {
+			$delete_href = "#";
+		}
+		$options['data-position-to'] = 'window';
+		$options['data-transition'] = 'pop';
+		
+		$options['popup_content'] = "<div data-role=\"header\" data-theme=\"a\">\n
+										<h1>$title</h1>\n
+									</div>\n
+									<div data-role=\"content\" data-theme=\"d\">\n
+										$content
+										<a href=\"#\" data-role=\"button\" data-inline=\"true\" data-rel=\"back\" data-theme=\"c\" data-corners=\"true\" data-shadow=\"true\" data-iconshadow=\"true\" data-wrapperels=\"span\">".__('Cancel')."</a>
+										<a href=\"$delete_href\" data-role=\"button\" data-inline=\"true\" data-rel=\"back\" data-transition=\"flow\" data-theme=\"b\" data-corners=\"true\" data-shadow=\"true\" data-iconshadow=\"true\" data-wrapperels=\"span\">".__('Delete')."</a>
+									</div>\n";
+		
+		return $this->getPopupHTML($options);
+	}
+	
+	public function getPriorityFlagImage ($priority) {
+		
+		$output .= '<img class="icon-priority ui-li-icon" ';
+		switch ($priority) {
+		case 0:
+			// Informative
+			$output .= 'src="../images/pixel_gray.png" title="'.__('Informative').'" ';
+			break;
+		case 1:
+			// Low
+			$output .= 'src="../images/pixel_green.png" title="'.__('Low').'" ';
+			break;
+		case 2:
+			// Medium
+			$output .= 'src="../images/pixel_yellow.png" title="'.__('Medium').'" ';
+			break;
+		case 3:
+			// Serious
+			$output .= 'src="../images/pixel_orange.png" title="'.__('Serious').'" ';
+			break;
+		case 4:
+			// Very serious
+			$output .= 'src="../images/pixel_red.png" title="'.__('Very serious').'" ';
+			break;
+		case 10:
+			// Maintance
+			$output .= 'src="../images/pixel_blue.png" title="'.__('Maintance').'" ';
+			break;
+		default:
+			// Default
+			$output .= 'src="../images/pixel_gray.png" title="'.__('Unknown').'" ';
+		}
+		
+		$output .= ' />';
+		
+		return $output;
+	}
+	
 	public function showError($msg) {
 		echo $msg;
 	}
 	
-	
 	public function showPage() {
+		
 		if (!$this->endHeader) {
 			$this->showError(__('Header not found.'));
 		}
@@ -745,20 +860,19 @@ class Ui {
 				}
 			}
 		}
-		echo "<script type='text/javascript'>
-			$(document).bind('mobileinit', function(){
-				//Disable ajax link
-				$('.disable-ajax').click(function(event){
-					$.mobile.ajaxFormsEnabled = false;
-				});
-			});
-			</script>";
+		//~ echo "<script type='text/javascript'>
+			//~ $(document).bind('mobileinit', function(){
+				//~ //Disable ajax link
+				//~ $('.disable-ajax').click(function(event){
+					//~ $.mobile.ajaxFormsEnabled = false;
+				//~ });
+			//~ });
+			//~ </script>";
 		echo "	</body>\n";
 		echo "</html>";
 		ob_end_flush();
 	}
-	//
-	//
+	
 }
 
 

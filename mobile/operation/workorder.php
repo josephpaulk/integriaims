@@ -146,9 +146,19 @@ class Workorder {
 					'href' => $back_href)));
 		$ui->beginContent();
 			
-			// Message
+			// Message popup
 			if ($message != "") {
-				$ui->contentAddHtml($message);
+				$options = array(
+					'popup_id' => 'message_popup',
+					'popup_content' => $message
+					);
+				
+				$ui->contentAddHtml($ui->getPopupHTML($options));
+				$ui->contentAddHtml("<script type=\"text/javascript\">
+										$(document).on('pageshow', function() {
+											$(\"#message_popup\").popup(\"open\");
+										});
+									</script>");
 			}
 			
 			$ui->beginForm("index.php?page=workorder", "post", "form_wo");
@@ -239,6 +249,10 @@ class Workorder {
 						);
 					$ui->formAddInput($options);
 				}
+			$options = array(
+					'text' => 'Submit'
+					);
+			$ui->formAddSubmitButton($options);
 			$ui->endForm();
 		$ui->endContent();
 		// Foooter buttons

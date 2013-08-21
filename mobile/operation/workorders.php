@@ -123,6 +123,7 @@ class Workorders {
 	
 	public function getWorkOrdersList () {
 		$system = System::getInstance();
+		$ui = Ui::getInstance();
 		
 		$html = "<ul class='ui-itemlistview' data-role='listview'>";
 		$sql = $this->getWorkOrdersQuery();
@@ -131,13 +132,19 @@ class Workorders {
 			$new = false;
 			$html .= "<li>";
 			$html .= "<a href='index.php?page=workorder&operation=view&id=".$workorder['id']."' class='ui-link-inherit'>";
-				$html .= print_priority_flag_image($workorder['priority'], true, "ui-li-icon", "../");
+				$html .= $ui->getPriorityFlagImage($workorder['priority']);
 				$html .= "<h3 class='ui-li-heading'>".$workorder['name']."</h3>";
 				$html .= "<p class='ui-li-desc'>".__('Owner').": ".$workorder['created_by_user'];
 				$html .= "&nbsp;&nbsp;-&nbsp;&nbsp;".__('Creator').": ".$workorder['assigned_user']."</p>";
 			$html .= "</a>";
-			$html .= "<a data-icon='delete' href='index.php?page=workorders&operation=delete&id=".$workorder['id']."
-											&filter_status=0&filter_owner=".$system->getConfig('id_user')."'></a>";
+			
+			$options = array(
+				'popup_id' => 'delete_popup_'.$workorder['id'],
+				'delete_href' => 'index.php?page=workorders&operation=delete&id='.$workorder['id'].'
+									&filter_status=0&filter_owner='.$system->getConfig('id_user')
+				);
+			$html .= $ui->getDeletePopupHTML($options);
+			$html .= "<a data-icon=\"delete\" data-rel=\"popup\" href=\"#delete_popup_".$workorder['id']."\"></a>";
 			$html .= "</li>";
 		}
 		$html .= "</ul>";
@@ -158,10 +165,21 @@ class Workorders {
 					'text' => __('Back'),
 					'href' => $back_href)));
 		$ui->beginContent();
-			// Message
+			
+			// Message popup
 			if ($message != "") {
-				$ui->contentAddHtml($message);
+				$options = array(
+					'popup_id' => 'message_popup',
+					'popup_content' => $message
+					);
+				$ui->contentAddHtml($ui->getPopupHTML($options));
+				$ui->contentAddHtml("<script type=\"text/javascript\">
+										$(document).on('pageshow', function() {
+											$(\"#message_popup\").popup(\"open\");
+										});
+									</script>");
 			}
+			
 			$ui->contentBeginCollapsible(__('Filter'));
 				$ui->beginForm("index.php?page=workorders", "post", "form_wo");
 					// Filter owner
@@ -210,7 +228,11 @@ class Workorders {
 			$ui->contentCollapsibleAddItem($form_html);
 			$ui->contentEndCollapsible();
 			// Workorder listing
-			$html = $this->getWorkOrdersList();
+			if ($this->getCountWorkorders() > 0) { 
+				$html = $this->getWorkOrdersList();
+			} else {
+				$html .= "<h3 class='error'>".__('The list is empty for this search')."</h3>";
+			}
 			$ui->contentAddHtml($html);
 		$ui->endContent();
 		// Foooter buttons
@@ -291,7 +313,7 @@ class Workorders {
 		$system = System::getInstance();
 		
 		audit_db ($system->getConfig('id_user'), $REMOTE_ADDR, "ACL Violation",
-			"Trying to access to workorder section");
+			"Trying to access to workorders section");
 		$error['title_text'] = __('You don\'t have access to this page');
 		$error['content_text'] = __('Access to this page is restricted to 
 			authorized users only, please contact to system administrator 

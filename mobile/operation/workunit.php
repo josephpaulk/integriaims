@@ -221,7 +221,7 @@ class Workunit {
 		return false;
 	}
 	
-	public function showWorkUnit ($message = "", $error = null) {
+	public function showWorkUnit ($message = "") {
 		$system = System::getInstance();
 		$ui = Ui::getInstance();
 		
@@ -240,9 +240,19 @@ class Workunit {
 					'href' => $back_href)));
 		$ui->beginContent();
 			
-			// Message
+			// Message popup
 			if ($message != "") {
-				$ui->contentAddHtml($message);
+				$options = array(
+					'popup_id' => 'message_popup',
+					'popup_content' => $message
+					);
+				
+				$ui->contentAddHtml($ui->getPopupHTML($options));
+				$ui->contentAddHtml("<script type=\"text/javascript\">
+										$(document).on('pageshow', function() {
+											$(\"#message_popup\").popup(\"open\");
+										});
+									</script>");
 			}
 			
 			$ui->beginForm("index.php?page=workunit", "post", "form_wu");
@@ -291,7 +301,7 @@ class Workunit {
 					$values[0] =  __('N/A');
 					if ($tasks) {
 						foreach ($tasks as $task){
-							$values[$task[0]] = $task[2];
+							$values[$task[0]] = array('optgroup' => $task[1], 'name' => $task[2]);
 						}
 					}
 					$selected = ($this->id_task === false) ? 0 : $this->id_task;
@@ -341,22 +351,6 @@ class Workunit {
 					$ui->formAddInput($options);
 				}
 			$ui->endForm();
-			//~ // Error dialog
-			if (! empty($error)) {
-				$options = array(
-					'dialog_id' => 'error_dialog',
-					'title_close_button' => true,
-					'title_text' => $error['title_text'],
-					'content_text' => $error['content_text']
-					);
-				$ui->addDialog($options);
-				$ui->contentAddHtml("<a id='error_dialog_hook' href='#error_dialog' style='display:none;'>home_error_hook</a>");
-				$ui->contentAddHtml("<script type=\"text/javascript\">
-										$(document).bind('pageinit', function(e, data) {
-											$(\"#error_dialog_hook\").click();
-										});
-									</script>");
-			}
 		$ui->endContent();
 		// Foooter buttons
 		// Add
@@ -377,7 +371,7 @@ class Workunit {
 		$ui->showPage();
 	}
 	
-	public function show ($error = null) {
+	public function show () {
 		$system = System::getInstance();
 		
 		if ($this->permission) {
@@ -431,7 +425,7 @@ class Workunit {
 								$workunit['duration'], $workunit['description'], 'view');
 					}
 			}
-			$this->showWorkUnit($message, $error);
+			$this->showWorkUnit($message);
 		}
 		else {
 			switch ($this->operation) {
@@ -443,10 +437,6 @@ class Workunit {
 						if you need assistance. <br><br>Please know that all attempts 
 						to access this page are recorded in security logs of Integria 
 						System Database');
-					//$workunit = new self();
-					//$this->showNoPermission($workunit, $error);
-					$home = new Home();
-					$this->showNoPermission($home, $error);
 					break;
 				case 'update':
 					$error['title_text'] = __('You can\'t update this workunit');
@@ -456,10 +446,6 @@ class Workunit {
 						if you need assistance. <br><br>Please know that all attempts 
 						to access this page are recorded in security logs of Integria 
 						System Database');
-					//$workunit = new self();
-					//$this->showNoPermission($workunit, $error);
-					$home = new Home();
-					$this->showNoPermission($home, $error);
 					break;
 				case 'delete':
 					$error['title_text'] = __('You can\'t delete this workunit');
@@ -468,19 +454,13 @@ class Workunit {
 						if you need assistance. <br><br>Please know that all attempts 
 						to access this page are recorded in security logs of Integria 
 						System Database');
-					//$workunit = new self();
-					//$this->showNoPermission($workunit, $error);
-					$home = new Home();
-					$this->showNoPermission($home, $error);
 					break;
-				default:
-					$home = new Home();
-					$this->showNoPermission($home);
 			}
+			$this->showNoPermission($error);
 		}
 	}
 	
-	public function showNoPermission ($page_object, $error = false) {
+	public function showNoPermission ($error = false) {
 		$system = System::getInstance();
 		
 		audit_db ($system->getConfig('id_user'), $REMOTE_ADDR, "ACL Violation",
@@ -493,7 +473,8 @@ class Workunit {
 				to access this page are recorded in security logs of Integria 
 				System Database');
 		}
-		$page_object->show($error);
+		$home = new Home();
+		$home->show($error);
 	}
 	
 	public function ajax ($parameter2 = false) {

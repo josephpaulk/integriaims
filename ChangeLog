@@ -1,3 +1,29 @@
+2013-08-21  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* mobile/include/ui.class.php: Now the function
+	"formAddSelectBox" can show optgroups. Added the
+	functions "getPopupHTML", "getDeletePopupHTML" and
+	"getPriorityFlagImage". Enabled the "ajaxFormsEnabled".
+	
+	* mobile/include/user.class.php: Deleted some code.
+	
+	* mobile/include/style/main.css: Deleted some code.
+	Visual changes.
+	
+	* mobile/operation/workorder.php: Added another submit
+	button. Now the success or error messages are showed as
+	a popup.
+	
+	* mobile/operation/workorders.php: Changes on the
+	priority icon. Added a popup dialog to confirm the
+	deletion of an item. Now the success or error messages
+	are showed as a popup. Now a message appears if there
+	are no items.
+	
+	* mobile/operation/workunit.php: Now the success or
+	error messages are showed as a popup. Added optgroups
+	to the task selection. Deleted some code.
+
 2013-08-21  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_config.php: Fixed a typo in inventory
