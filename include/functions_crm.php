@@ -314,9 +314,10 @@ function crm_get_data_country_graph($companies) {
 	$company_country = array();
 	$i = 0;
 	foreach ($companies as $key=>$company) {
-		if ($i < 10) {
+		if ($i < 7) {
 			$company_country[$company['country']] = $company['total_companies'];
 		}
+		$i++;
 	}
 
 	return $company_country;

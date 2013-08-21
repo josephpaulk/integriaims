@@ -46,7 +46,7 @@ switch($graph_type) {
 		$width = get_parameter('width');
 		$height = get_parameter('height');
 		$font = get_parameter('font');
-		$data = json_decode(io_safe_output(get_parameter('data')), true);
+		$data = json_decode(safe_output(get_parameter('data')), true);
 
 		$max = get_parameter('max');
 		$title = get_parameter('title');
@@ -347,7 +347,14 @@ function pie2d_graph($flash_chart, $chart_data, $width, $height,
 function pie_graph($graph_type, $flash_chart, $chart_data, $width, $height,
 	$others_str = "other", $homedir="", $water_mark = "", $font = '', $font_size = '', $ttl = 1) {
 	// This library allows only 8 colors
-	$max_values = 15;
+	$max_values = 8;
+
+	// Process data and decode it from HTML encoding
+	$data_temp = array();
+	foreach($chart_data as $key => $value) {
+		$data_temp[safe_output($key)]=safe_output($value);
+	}
+	$chart_data = $data_temp;
 
 	if(count($chart_data) > $max_values) {
 		$chart_data_trunc = array();

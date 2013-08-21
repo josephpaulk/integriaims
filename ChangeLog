@@ -1,5 +1,11 @@
 2013-08-21  Sancho Lerena <slerena@artica.es>
 
+	* include/graphs/fgraph.php: Pie graphs will translate HTML entities
+	to proper UTF-8 symbol.
+
+	* include/functions_crm.php: Companies PIE graph reduced number of 
+	companies displayed to 8.
+
 	* operation/incidents/incident_dashboard_detail.php: Fixed some minor 
 	issues (sizes, positions, padding) on items.
 
