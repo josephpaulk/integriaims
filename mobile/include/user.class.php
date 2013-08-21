@@ -174,5 +174,52 @@ class User {
 		return $this->user; //Oldies methods
 	}
 	
+	public function ajax ($method = false) {
+		
+		if (! $this->isLogged()) {
+			return;
+		}
+		
+		switch ($method) {
+			case 'search_users':
+				$string = (string) get_parameter ('term'); /* term is what autocomplete plugin gives */
+				$users = get_user_visible_users ($this->getIdUser(),"IR", false);
+				
+				if ($users === false)
+					return;
+					
+				$res = array();
+				
+				foreach ($users as $user) {
+					if(preg_match('/'.$string.'/i', $user['id_usuario']) || preg_match('/'.$string.'/i', $user['nombre_real'])|| preg_match('/'.$string.'/i', $user['num_employee'])) {
+						array_push($res, array("label" => safe_output($user['nombre_real'])." (".$user['id_usuario'].")", "value" => $user['id_usuario']));
+					}
+				}
+				
+				echo json_encode($res);
+				break;
+			case 'search_users_role':
+				$id_project = (int) get_parameter ('id_project');
+				$string = (string) get_parameter ('term'); /* term is what autocomplete plugin gives */
+				
+				$users = get_users_project ($id_project);
+				
+				if ($users === false)
+					return;
+
+				$res = array();
+				
+				foreach ($users as $user) {
+					if(preg_match('/'.$string.'/i', $user['id_usuario']) || preg_match('/'.$string.'/i', $user['nombre_real'])|| preg_match('/'.$string.'/i', $user['num_employee'])) {
+						array_push($res, array("label" => safe_output($user['nombre_real'])." (".$user['id_usuario'].")", "value" => $user['id_usuario']));
+					}
+				}
+				
+				echo json_encode($res);
+				break;
+		} 
+		
+	}
+	
 }
 ?>

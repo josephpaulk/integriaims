@@ -1,3 +1,24 @@
+2013-08-21  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* mobile/index.php: Changed the name of some variables.
+	Added the case 'user' to the ajax action.
+	
+	* mobile/include/ui.class.php: Added the function
+	"bindMobileAutocomplete".
+	
+	* mobile/include/user.class.php: Added the function
+	"ajax" to return the result of users searches.
+	
+	* mobile/include/javascript/jqm.autoComplete-1.5.2.js:
+	Added file.
+	
+	* mobile/operation/home.php: Commented the global
+	search temporarily.
+	
+	* mobile/operation/workorder.php,
+	  mobile/operation/workorders.php: Added user
+	  autocompletion on some text inputs.
+	
 2013-08-21  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_graph.php

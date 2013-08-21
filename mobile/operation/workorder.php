@@ -173,11 +173,18 @@ class Workorder {
 				// Assigned user
 				$options = array(
 					'name' => 'assigned_user',
+					'id' => 'text-assigned_user',
 					'label' => __('Assigned user'),
 					'value' => $this->assigned_user,
-					'placeholder' => __('Assigned user')
+					'placeholder' => __('Assigned user'),
+					'autocomplete' => 'off'
 					);
 				$ui->formAddInputText($options);
+					// Assigned user autocompletion
+					// List
+					$ui->formAddHtml("<ul id=\"ul-autocomplete\" data-role=\"listview\" data-inset=\"true\"></ul>");
+					// Autocomplete binding
+					$ui->bindMobileAutocomplete("#text-assigned_user", "#ul-autocomplete");
 				// Status
 				$values = array();
 				if (get_db_value("need_external_validation", "ttodo", "id", $this->id)) {
@@ -235,6 +242,11 @@ class Workorder {
 						'value' => 'insert'
 						);
 					$ui->formAddInput($options);
+					// Submit button
+					$options = array(
+							'text' => __('Submit')
+							);
+					$ui->formAddSubmitButton($options);
 				} else {
 					$options = array(
 						'type' => 'hidden',
@@ -248,11 +260,12 @@ class Workorder {
 						'value' => $this->id
 						);
 					$ui->formAddInput($options);
+					// Submit button
+					$options = array(
+							'text' => __('Update')
+							);
+					$ui->formAddSubmitButton($options);
 				}
-			$options = array(
-					'text' => 'Submit'
-					);
-			$ui->formAddSubmitButton($options);
 			$ui->endForm();
 		$ui->endContent();
 		// Foooter buttons

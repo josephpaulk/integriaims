@@ -716,7 +716,7 @@ class Ui {
 		if (isset($options['dialog_title'])) {
 			$title = $options['dialog_title'];
 		} else {
-			$title = __('Delete item?');
+			$title = __('Delete item');
 		}
 		if (isset($options['dialog_content'])) {
 			$content = $options['dialog_content'];
@@ -781,6 +781,52 @@ class Ui {
 		$output .= ' />';
 		
 		return $output;
+	}
+	
+	public function bindMobileAutocomplete ($idInput, $idListview, $idProject = false) {
+		
+		//~ if ($idProject) {
+			//~ $ajaxUrl = "../ajax.php?page=include/ajax/users&search_users_role=1&id_user=$idUser&id_project=$idProject";
+		//~ } else {
+			//~ $ajaxUrl = "../ajax.php?page=include/ajax/users&search_users=1&id_user=$idUser";
+		//~ }
+		if ($idProject) {
+			$ajaxUrl = "index.php?action=ajax&page=user&method=search_users_role&id_project=$idProject";
+		} else {
+			$ajaxUrl = "index.php?action=ajax&page=user&method=search_users";
+		}
+		
+		$html = "<script type=\"text/javascript\" src=\"include/javascript/jqm.autoComplete-1.5.2.js\"></script>";
+		$html .= "<script type=\"text/javascript\">
+					$(document).on(\"pageshow\", function() {
+						$(\"$idInput\").autocomplete({
+							method: \"GET\",
+							target: $(\"$idListview\"),
+							source: \"$ajaxUrl\",
+							minLength: 2,
+							callback: function(e) {
+								var a = $(e.currentTarget);
+								$(\"$idInput\").val(a.data(\"autocomplete\").value);
+								$(\"$idListview\").html(\"\");
+							}
+						});
+						$(\"$idInput\").bind(\"targetUpdated.autocomplete\", function(e) {
+							$.mobile.silentScroll($(e.currentTarget).offset().top);
+						});
+						$(\"$idInput\").focus(function() {
+							if ($(\"$idListview\").html().length > 0) {
+								$(\"$idListview\").slideDown();
+							}
+						});
+						$(\"$idInput\").blur(function() {
+							if ($(\"$idListview\").html().length > 0) {
+								$(\"$idListview\").slideUp();
+							}
+						});
+					});
+				</script>";
+		
+		$this->contentAddHtml($html);
 	}
 	
 	public function showError($msg) {

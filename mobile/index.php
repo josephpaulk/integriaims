@@ -59,29 +59,32 @@ if ($user->isLogged() && $action != "ajax") {
 
 switch ($action) {
 	case 'ajax':
-		$parameter1 = $system->getRequest('parameter1', false);
-		$parameter2 = $system->getRequest('parameter2', false);
+		$page = $system->getRequest('page', false);
+		$method = $system->getRequest('method', false);
 		
-		switch ($parameter1) {
+		switch ($page) {
+			case 'user':
+				$user->ajax($method);
+				break;
 			case 'workunit':
 				$workunit = new Workunit();
-				$workunit->ajax($parameter2);
+				$workunit->ajax($method);
 				break;
 			case 'workorders':
 				$workorders = new Workorders();
-				$workorders->ajax($parameter2);
+				$workorders->ajax($method);
 				break;
 			case 'workorder':
 				$workorder = new Workorder();
-				$workorder->ajax($parameter2);
+				$workorder->ajax($method);
 				break;
 			case 'incidents':
 				$incidents = new Incidents();
-				$incidents->ajax($parameter2);
+				$incidents->ajax($method);
 				break;
 			case 'incident':
 				$incident = new Incident();
-				$incident->ajax($parameter2);
+				$incident->ajax($method);
 				break;
 		}
 		return;

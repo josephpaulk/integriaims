@@ -153,6 +153,7 @@ class Workorders {
 	}
 	
 	private function showWorkOrders ($message = "") {
+		$system = System::getInstance();
 		$ui = Ui::getInstance();
 		
 		$ui->createPage();
@@ -182,7 +183,7 @@ class Workorders {
 			
 			$ui->contentBeginCollapsible(__('Filter'));
 				$ui->beginForm("index.php?page=workorders", "post", "form_wo");
-					// Filter owner
+					// Filter search
 					$options = array(
 						'name' => 'filter_search',
 						'label' => __('Search'),
@@ -192,19 +193,33 @@ class Workorders {
 					// Filter owner
 					$options = array(
 						'name' => 'filter_owner',
+						'id' => 'text-filter_owner',
 						'label' => __('Owner'),
 						'value' => $this->filter_owner,
-						'placeholder' => __('Owner')
+						'placeholder' => __('Owner'),
+						'autocomplete' => 'off'
 						);
 					$ui->formAddInputText($options);
+						// Owner autocompletion
+						// List
+						$ui->formAddHtml("<ul id=\"ul-autocomplete_owner\" data-role=\"listview\" data-inset=\"true\"></ul>");
+						// Autocomplete binding
+						$ui->bindMobileAutocomplete("#text-filter_owner", "#ul-autocomplete_owner");
 					// Filter creator
 					$options = array(
 						'name' => 'filter_creator',
+						'id' => 'text-filter_creator',
 						'label' => __('Creator'),
 						'value' => $this->filter_creator,
-						'placeholder' => __('Creator')
+						'placeholder' => __('Creator'),
+						'autocomplete' => 'off'
 						);
 					$ui->formAddInputText($options);
+						// Creator autocompletion
+						// List
+						$ui->formAddHtml("<ul id=\"ul-autocomplete_creator\" data-role=\"listview\" data-inset=\"true\"></ul>");
+						// Autocomplete binding
+						$ui->bindMobileAutocomplete("#text-filter_creator", "#ul-autocomplete_creator");
 					// Filter status
 					$values = array();
 					$values[-1] = __('Any');

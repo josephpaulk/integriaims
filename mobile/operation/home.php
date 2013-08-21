@@ -29,15 +29,16 @@ class Home {
 		$ui->createDefaultHeader("<div style='text-align:center;'>$logo</div>", false, "logo");
 		$ui->showFooter();
 		$ui->beginContent();
-		
-			$ui->beginForm("index.php?page=search");
-			$options = array(
-				'name' => 'free_search',
-				'value' => $this->global_search,
-				'placeholder' => __('Search')
-				);
-			$ui->formAddInputSearch($options);
-			$ui->endForm();
+			
+			// Global search
+			//~ $ui->beginForm("index.php?page=search");
+			//~ $options = array(
+				//~ 'name' => 'free_search',
+				//~ 'value' => $this->global_search,
+				//~ 'placeholder' => __('Search')
+				//~ );
+			//~ $ui->formAddInputSearch($options);
+			//~ $ui->endForm();
 			
 			//List of buttons
 			// Workunit
