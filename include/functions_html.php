@@ -1034,7 +1034,7 @@ function print_container($id, $title, $content, $open = 'open', $return = true) 
 	$container .= '<h2 id="' . $id . '" class="dashboard_h2" onclick="' . $onclick . '" style="' . $h2_style . '">' . $title;
 	$container .= $arrow;
 	$container .= '</h2>';
-	$container .= '<div id="' . $id . '_div" style="' . $style . '">';
+	$container .= '<div id="' . $id . '_div" class="container_div" style="' . $style . '">';
 	$container .= $content;
 	$container .= '</div>';
 	$container .= '</div>'; // container

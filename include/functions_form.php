@@ -900,8 +900,8 @@ function form_search_incident ($return = false, $filter=false) {
 	
 	/* No action is set, so the form will be sent to the current page */
 	$table = new stdclass;
-	$table->width = "100%";
-	$table->class = "databox_color";
+	$table->width = "99%";
+	$table->class = "search-table";
 	$table->cellspacing = 2;
 	$table->cellpadding = 2;
 	$table->data = array ();

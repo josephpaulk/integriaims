@@ -1,6 +1,7 @@
 a.tip, a.tip2, a.tipp {
 	cursor: help;
 	background: url(../../images/tip.png) no-repeat;
+	margin-left: 3px;
 }
 
 a.tip_people {

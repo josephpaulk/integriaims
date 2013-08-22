@@ -1,5 +1,4 @@
 .calendar-month {
-	color: #5a8629;
 	font-weight: bold;
 	margin-top: 2px;
 	font-size: 10px;
@@ -42,6 +41,7 @@ table.calendar {
 	margin-left: 0px;
 	padding-left: 0px;
 	border-spacing: 4px;
+	margin-top: 0px;
 	background: #FFF;
 	font-family: Verdana, sans-serif, Arial, Helvetica;
 
@@ -73,15 +73,35 @@ td.calendar {
 	line-height: 15px;
 }
 
-table.calendar_outer tr th {
-	background-color:#FF9933; /* orange */
+table.calendar_outer_grey tr th, table.calendar_outer_grey tr th a {
+	background-color: #505050; /* dark grey */
+	background-image: url('../../images/grey_bg.png');
+}
+
+table.calendar_outer_orange tr th, table.calendar_outer_orange tr th a {
+	background-color: #FF9933; /* orange */
 	background-image: url('../../images/orange_bg.png');
+}
+
+table.calendar_outer_orange tr th, table.calendar_outer_orange tr th a, 
+table.calendar_outer_grey tr th, table.calendar_outer_grey tr th a {
 	height: 20px;
 	color: #ffffff;
 	font-weight: bold;
 	text-align: center;
-	border-bottom: solid #FFF 2px;
 	padding: 0px;
+	text-decoration: none !important;
+}
+
+.calendar_annual_header {
+	background-color:#505050; /* dark grey */
+	padding: 5px;
+	-moz-border-top-right-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
 }
 
 table.calendar tr th {

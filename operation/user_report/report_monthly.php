@@ -57,9 +57,9 @@
 	    $next_year = $next_year +1;
     }
 
-	echo "<h2>";
+	echo "<h1>";
 	echo getmonth($working_month). " / ". $working_year. " &raquo; ".__('Totals for this month'). " &raquo; ($total_hours)";
-	echo "</h2>";
+	echo "</h1>";
 
     echo "<br>";
 	echo "<table class='blank'>";

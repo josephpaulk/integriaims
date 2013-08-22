@@ -1,3 +1,35 @@
+2013-08-22  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_html.php
+	include/styles/calendar.css
+	include/styles/flora/flora.tabs.css
+	include/styles/integria_tip.css
+	include/styles/integria.css
+	include/functions_form.php
+	include/functions_calendar.php
+	operation/incidents/incident_search_logic.php
+	operation/users/user_edit.php
+	operation/user_report/report_annual.php
+	operation/user_report/report_full.php
+	operation/user_report/report_monthly.php
+	images/icon_lead.png
+	images/html.png
+	images/header_user.png
+	images/tip.png
+	images/header_setup.png
+	images/invoice.png
+	images/mail.gif
+	images/company.png
+	images/chart_bar_dark.png
+	images/lock_open.png
+	images/lock.png
+	images/header_logout.png
+	images/darkgrey_bg.png
+	images/header_suit.png
+	images/maintab.gif
+	godmode/setup/setup.php: Change icons and several visual
+	styles
+
 2013-08-22  Dario Rodriguez <dario@artica.es>
 
 	* operation/inventories/inventory_detail.php: Fixed a bug handling

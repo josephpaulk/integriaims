@@ -36,7 +36,7 @@
 }
 .ui-tabs-nav li {
 	float: right;
-	margin: 0 0 -3px 3px;
+	margin: 4px 0 -5px 3px;
 	font-weight: bold;
 	background-color: #505050;	
 	border-top-left-radius: 5px;
@@ -44,7 +44,7 @@
 	padding-top: 3px;
 	padding-left: 12px;
 	padding-right: 12px;
-	height: 27px;
+	height: 23px;
 }
 
 .ui-tabs-nav li.h1 {
@@ -64,6 +64,7 @@
 	color: #505050;
 	margin-left: -3px !important;
 	padding-left: 0px !important;
+	font-size: 17px;
 }
 
 .ui-tabs-title h2 {

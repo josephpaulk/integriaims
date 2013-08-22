@@ -32,6 +32,8 @@ if (! user_visible_for_me ($config["id_user"], $id_user)) {
 	no_permission ();
 }
 
+echo '<h1>'.__('User details').'</h1>';
+
 $update_user = (bool) get_parameter ('update_user');
 
 $has_permission = false;
@@ -107,10 +109,8 @@ if ($update_user) {
 	}
 } 
 
-echo '<h2>'.__('User details').'</h2>';
-
-$table->width = '740px';
-$table->class = 'databox';
+$table->width = '99%';
+$table->class = 'search-table-button';
 $table->rowspan = array ();
 $table->rowspan[0][2] = 4;
 $table->colspan = array ();
@@ -170,25 +170,30 @@ if ($has_permission) {
 
 if ($has_permission) {
 	echo '<form id="form-user_edit" method="post" action="index.php?sec=users&sec2=operation/users/user_edit">';
-	print_table ($table);
 	
-	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Update'), 'upd_btn', false, 'class="upd sub"');
-	print_input_hidden ('update_user', 1);
-	echo '</div>';
+	$data = print_submit_button (__('Update'), 'upd_btn', false, 'class="upd sub"', true);
+	$data .= print_input_hidden ('update_user', 1, true);
+	
+	$table->colspan[count($table->data)+1][0] = 3;
+	$table->data[count($table->data)+1][0] = $data;
+	
+	print_table ($table);
 	
 	$table->data = array ();
 	$table->data[0][0] = print_input_password ('password', '', '', 20, 20, true, __('Password'));
 	$table->data[0][1] = print_input_password ('password_confirmation', '', '', 20, 20, true, __('Password confirmation'));
 	
-	echo '<h3>'.__('Change password').'</h3>';
-	print_table ($table);
+	echo '<h1>'.__('Change password').'</h1>';
 	
-	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Update'), 'upd_btn', false, 'class="upd sub"');
-	print_input_hidden ('update_user', 1);
-	print_input_hidden ('id', $user["id_usuario"]);
-	echo '</div>';
+	$data = print_submit_button (__('Update'), 'upd_btn', false, 'class="upd sub"', true);
+	$data .= print_input_hidden ('update_user', 1, true);
+	$data .= print_input_hidden ('id', $user["id_usuario"], true);
+	
+	$table->colspan[count($table->data)+1][0] = 2;
+	$table->data[count($table->data)+1][0] = $data;
+	
+	print_table ($table);
+
 	echo '</form>';
 } else {
 	print_table ($table);

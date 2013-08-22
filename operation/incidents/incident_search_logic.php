@@ -20,12 +20,12 @@ check_login ();
 require_once ('include/functions_incidents.php');
 
 echo "<div id='incident-search-content'>";
-echo "<h1>" .__('Incident search') . '</h1>';
+echo "<h1>" .__('Incident search');
 echo "<div id='button-bar-title'>";
 echo "<ul>";
 echo "<li>";
 echo "<a id='stats_form_submit' href='#'>" .
-	print_image ("images/chart_bar.png", true, array("title" => __("Search statistics"))) .
+	print_image ("images/chart_bar_dark.png", true, array("title" => __("Search statistics"))) .
 	"</a>";
 echo "</li>";
 echo "<li>";
@@ -102,30 +102,27 @@ if ($delete_custom_search) {
 //FORM AND TABLE TO MANAGE CUSTOM SEARCHES
 $table = new stdClass;
 $table->id = 'saved_searches_table';
-$table->width = '90%';
+$table->width = '99%';
 $table->class = 'search-table';
 $table->size = array ();
-$table->size[0] = '120px';
 $table->style = array ();
 $table->style[0] = 'font-weight: bold';
-$table->style[2] = 'font-weight: bold';
+$table->style[1] = 'font-weight: bold';
 $table->data = array ();
-$table->data[0][0] = __('Custom searches');
 $sql = sprintf ('SELECT id, name FROM tcustom_search
 	WHERE id_user = "%s"
 	AND section = "incidents"
 	ORDER BY name',
 	$config['id_user']);
-$table->data[0][1] = print_select_from_sql ($sql, 'saved_searches', $id_search, '', __('Select'), 0, true);
+$table->data[0][0] = print_select_from_sql ($sql, 'saved_searches', $id_search, '', __('Select'), 0, true, false, true, __('Custom searches'));
 
 //If a custom search was selected display cross
 if ($id_search) {
-	$table->data[0][1] .= '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_search&delete_custom_search=1&saved_searches='.$id_search.'">';
-	$table->data[0][1] .= '<img src="images/cross.png" /></a>';
+	$table->data[0][0] .= '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_search&delete_custom_search=1&saved_searches='.$id_search.'">';
+	$table->data[0][0] .= '<img src="images/cross.png" /></a>';
 }
-$table->data[0][2] = __('Save current search');
-$table->data[0][3] = print_input_text ('search_name', '', '', 10, 20, true);
-$table->data[0][4] = print_submit_button (__('Save'), 'save-search', false, 'class="sub next"', true);
+$table->data[0][1] = '<br>' . print_input_text ('search_name', '', '', 10, 20, true, __('Save current search'));
+$table->data[0][2] = print_submit_button (__('Save'), 'save-search', false, 'class="sub next"', true);
 
 echo '<form id="saved-searches-form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
 foreach ($filter as $key => $value) {
@@ -167,11 +164,10 @@ foreach ($filter as $key => $value) {
 }
 echo "</form>";
 
-echo '<br><h2 class="incident_dashboard" onclick="toggleDiv (\'massive-oper-incidents\')">'.__('Massive operations over selected items').'</h2>';
-echo "<div id='massive-oper-incidents' style='display:none'>";
+echo '<br>';
 
 $table->class = 'result_table listing';
-$table->width = '100%';
+$table->width = '99%';
 $table->id = 'incident_massive';
 $table->data = array();
 $table->style = array ();
@@ -185,12 +181,13 @@ $table->data[0][1] = print_select (get_priorities (),'mass_priority', -1, '', __
 $table->data[0][2] = combo_incident_resolution ($resolution, false, true, true);
 $table->data[0][3] = print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'mass_assigned_user', '0', '', __('Select'), -1, true);
 
-print_table ($table);
+$massive_oper_incidents = print_table ($table, true);
 
-echo "<div style='width:".$table->width."'>";
-print_submit_button (__('Update selected items'), 'massive_update', false, 'class="sub next" style="float:right;');
-echo "</div>";
-echo "</div>";
+$massive_oper_incidents .= "<div style='width:".$table->width."; text-align: right;'>";
+$massive_oper_incidents .= print_submit_button (__('Update selected items'), 'massive_update', false, 'class="sub next"', true);
+$massive_oper_incidents .= "</div>";
+
+echo print_container('massive_oper_incidents', __('Massive operations over selected items'), $massive_oper_incidents, 'closed');
 
 ?>
 

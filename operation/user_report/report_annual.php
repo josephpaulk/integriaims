@@ -56,7 +56,7 @@
 	}
 
 
-    echo "<h3>".__('Annual report for user')." ". $id_user_show;
+    echo "<h1>".__('Annual report for user')." ". $id_user_show;
     
 	if ($clean_output == 0){
 		// link full screen
@@ -70,20 +70,44 @@
 		echo "</a>";
 	}
 	
-	echo "</h3>";
+	echo "</h1>";
 
-	echo "<table cellpadding=4 cellspacing=4 class='blank' style='margin-left: 10px'>";
+    echo "<table class='search-table' width=99% style='text-align:right;'><tr>";
+    echo "<td>".__('Vacations days');
+    echo "<td style='background-color: #FFFF80;text-align:center;'>";
+    echo get_user_vacations ($id_user_show, $year). "</td>";
+    
+    echo "<td>";
+    echo __('Days worked (projects)');
+    echo "<td style='background-color: #98FF8B;text-align:center;'>";
+    echo get_user_worked_days ($id_user_show, $year). "</td>";
+
+    echo "<td>";
+    echo __('Days worked (incidents)');
+    echo "<td style='background-color: #FF7BFE;text-align:center;'>";
+    echo get_user_incident_worked_days ($id_user_show, $year). "</td>";
+
+
+    echo "<td>";
+    echo __('Other');
+	echo "<td style='background-color: #FFE053;text-align:center;'>";
+    echo get_user_other ($id_user_show, $year);
+
+    echo "</table>";
+    
+    echo "<table style='margin: 0px auto; text-align: center; padding: 0px;' class='search-table'>";
+    echo "<tr><td colspan=4 class='calendar_annual_header'>";
+	echo "<span class='calendar-month' style='font-size: 17px; color: #FFFFFF;'>$year</span>";
+    echo "</td></tr>";
+    echo "<tr><td colspan=4>";
+    echo "<table cellpadding=4 cellspacing=4 style='margin: 0px auto;'>";
 	echo "<tr><td>";
 
 	if($pdf_output == 0) {
 		// Prev. year
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$prev_year&id_user=$id_user_show&clean_output=$clean_output'> ".__('Prev')."</a>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$prev_year&id_user=$id_user_show&clean_output=$clean_output'><img src='images/control_rewind_blue.png'></a>";
 		echo "</td>";
 	}
-			
-	echo "<td>";
-	echo "<h2>$year</h2>";
-	echo "</td>";
 
 	if (give_acl($config["id_user"], 0, "PM") && $pdf_output == 0){		
 	
@@ -110,41 +134,17 @@
 	if($pdf_output == 0) {
 		// Next. year
 		echo "<td>";
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$next_year&id_user=$id_user_show&clean_output=$clean_output'> ".__('Next')."</a>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$next_year&id_user=$id_user_show&clean_output=$clean_output'><img src='images/control_fastforward_blue.png'></a>";
 		echo "</td>";	
 	}
     echo "</form></table>";
-
-
-    echo "<table class='button' width=100%><tr>";
-    echo "<td>".__('Vacations days');
-    echo "<td style='background-color: #FFFF80;'>";
-    echo get_user_vacations ($id_user_show, $year). "</td>";
     
-    echo "<td>";
-    echo __('Days worked (projects)');
-    echo "<td style='background-color: #98FF8B;'>";
-    echo get_user_worked_days ($id_user_show, $year). "</td>";
-
-    echo "<td>";
-    echo __('Days worked (incidents)');
-    echo "<td style='background-color: #FF7BFE;'>";
-    echo get_user_incident_worked_days ($id_user_show, $year). "</td>";
-
-
-    echo "<td>";
-    echo __('Other');
-	echo "<td style='background-color: #FFE053;'>";
-    echo get_user_other ($id_user_show, $year);
-
-    echo "</table>";
-    
-    echo "<table>";
+    echo "</td></tr>";
     echo "<tr>";
     for ($ax = 1; $ax < 13; $ax++){
-        if (fmod($ax-1,3) == 0)
+        if (fmod($ax-1,4) == 0)
             echo "<tr>";
-        echo "<td valign=top>";
+        echo "<td valign=top style='font-size: 10px; padding-right: 10px; padding-left: 10px; padding-bottom: 10px;'>";
         
         $this_month = date('Y-m-d H:i:s',strtotime("$year-$ax-01"));
 		$this_month_limit = date('Y-m-d H:i:s',strtotime("$year-$ax-31"));

@@ -105,7 +105,7 @@ if ($user_id != ""){
 	$do_search = 1;
 }
 
-echo "<h3>";
+echo "<h1>";
 echo __("Full report");
 if ($user_id != "") {
 	echo " &raquo; ";
@@ -124,7 +124,7 @@ if ($clean_output == 0){
     echo "</a>";
 }
 
-echo  "</h3>";
+echo  "</h1>";
 
 if ($clean_output == 0){
     echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/report_full'>";

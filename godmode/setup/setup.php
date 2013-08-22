@@ -179,8 +179,8 @@ $config['language_code'] = get_db_value ('value', 'tconfig', 'token', 'language_
 
 echo "<h2>".__('General setup')."</h2>";
 
-$table->width = '90%';
-$table->class = 'databox';
+$table->width = '99%';
+$table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();
 
@@ -302,14 +302,13 @@ $table->data[16][1] = print_input_text ('license_info_key', $license_info, '', 4
 $table->data[16][1] .= '&nbsp;<a id="dialog_license_info" title="'.__("License Info").'" href="javascript: show_license_info()">'.print_image('images/lock.png', true, array('class' => 'bot', 'title' => __('License info'))).'</a>';
 $table->data[16][1] .= '<div id="dialog_show_license" style="display:none"></div>';	
 
+$table->data[17][0] = print_input_hidden ('update', 1, true);
+$table->data[17][0] .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
+$table->colspan[17][0] = 2;
+
 echo "<form name='setup' method='post'>";
 
 print_table ($table);
-
-echo '<div style="width: '.$table->width.'" class="button">';
-print_input_hidden ('update', 1);
-print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"');
-echo '</div>';
 echo '</form>';
 ?>
 

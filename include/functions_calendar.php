@@ -394,7 +394,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 	if($weekday != 7) $calendar .= '<td colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
 
 
-	$calendar_outer = '<table style="padding: 0px; margin: 0px auto;" class="calendar_outer"><tr>';
+	$calendar_outer = '<table style="padding: 0px; margin: 0px auto;" class="calendar_outer_orange"><tr>';
 	$calendar_outer .= '<th colspan=7 class="calendar-month"><center><b>'.$title.'</b></center></th></tr><tr>';
 	$calendar_outer .= '<td>' . $calendar . '</td></tr></table>';
 
@@ -405,6 +405,8 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 
 // Original function
 function generate_small_work_calendar ($year, $month, $days = array(), $day_name_length = 3, $first_day = 0, $pn = array(), $id_user = ""){
+	$current_month = date('m', time());
+
 	$first_of_month = gmmktime(0,0,0,$month,1,$year);
 	#remember that mktime will automatically correct if invalid dates are entered
 	# for instance, mktime(0,0,0,12,32,1997) will be the date for Jan 1, 1998
@@ -422,13 +424,21 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 	@list($p, $pl) = each($pn); @list($n, $nl) = each($pn); #previous and next links, if applicable
 	if($p) $p = '<span class="calendar-prev">'.($pl ? '<a href="'.htmlspecialchars($pl).'">'.$p.'</a>' : $p).'</span>&nbsp;';
 	if($n) $n = '&nbsp;<span class="calendar-next">'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n).'</span>';
-	$calendar = '<table class="calendar">'."\n".
-		'<tr><th class="calendar-month" colspan="7" style="background: #fff;">'.$p.'<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$month.'&year='.$year.'&id='.$id_user.'">'.$title.'</a>'.$n."</th></tr>\n<tr>";
+	
+	if ($month == $current_month) {
+		$calendar_outer_class = "calendar_outer_orange";
+	}
+	else {
+		$calendar_outer_class = "calendar_outer_grey";
+	}
+	$calendar =  '<table class="' . $calendar_outer_class . '" style="margin: 0px auto;"><tr><th class="calendar-month">'.$p.'<a href="index.php?sec=users&sec2=operation/user_report/monthly&month='.$month.'&year='.$year.'&id='.$id_user.'">'.strtoupper(safe_output($title)).'</a>'.$n.'</th></tr><tr><td>';
+	$calendar .= '<table class="calendar">'."\n<tr>";
 
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
 		foreach($day_names as $d)
-			$calendar .= '<th abbr="'.htmlentities($d).'">'.htmlentities($day_name_length < 4 ? substr($d,0,$day_name_length) : $d).'</th>';
+			$calendar .= '<th abbr="'.htmlentities($d).'">'.substr($d,0,1).'</th>';
+			//$calendar .= '<th abbr="'.htmlentities($d).'">'.htmlentities($day_name_length < 4 ? substr($d,0,$day_name_length) : $d).'</th>';
 		$calendar .= "</tr>\n<tr>";
 	}
 
@@ -508,6 +518,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 	}
 	if($weekday != 7) $calendar .= '<td class="calendar" colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
 
+	$calendar .= '</td></tr></table>'; // Calendar_outer
 	return $calendar."</tr>\n</table>\n";
 }
 
