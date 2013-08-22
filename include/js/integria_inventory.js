@@ -468,6 +468,8 @@ function removeCompany() {
 		if (this.value == selected_id)
 			$(this).remove();
 	});
+	
+	$('input[name^="companies"][value="'+selected_id+'"]').remove();
 }
 
 // Show the modal window of company associated
@@ -532,6 +534,8 @@ function removeUser() {
 		if (this.value == selected_id)
 			$(this).remove();
 	});
+
+	$('input[name^="users"][value="'+selected_id+'"]').remove();
 }
 
 // Show the modal window of inventory search in incident detail

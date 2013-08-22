@@ -1,3 +1,11 @@
+2013-08-22  Dario Rodriguez <dario@artica.es>
+
+	* include/js/integria_inventory.js: Fixed a bug in some
+	functions which support inventory associated user and
+	companies.
+	* godmode/setup/setup_pandora.php: Added support for two
+	new fields of remote inventory setup.
+
 2013-08-22  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/leads/lead_forward.php

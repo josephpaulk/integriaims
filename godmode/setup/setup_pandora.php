@@ -69,9 +69,20 @@ if ($update) {
 
         $config["remote_inventory_type"] = (int) get_parameter("remote_inventory_type", 0);
 	$config["inventory_default_owner"] = (string) get_parameter("inventory_default_owner", "");
+	
+	$companies = get_parameter("companies", explode(',',$config["inventory_default_companies"]));
+
+	$config["inventory_default_companies"] = join(',',$companies);
+		
+	$users = get_parameter("users", explode(',',$config["inventory_default_users"])); 
+
+	$config["inventory_default_users"] = join(',', $users);
 
         update_config_token ("remote_inventory_type", $config["remote_inventory_type"]);
 	update_config_token ("inventory_default_owner", $config["inventory_default_owner"]);
+
+	update_config_token ("inventory_default_companies", $config["inventory_default_companies"]);
+	update_config_token ("inventory_default_users", $config["inventory_default_users"]);
 
 	foreach($labels as $k => $lab) {
 		$config["pandora_$k"] = get_parameter ("pandora_$k");
@@ -109,7 +120,7 @@ $contracts = get_contracts();
 $table->data[2][0] = print_select ($contracts, 'default_contract', $config["default_contract"], '', __('Select'), '',  true, 0, true, __('Default Contract')) ;
 
 
-echo "<form name='setup' method='post'>";
+echo "<form name='setup' method='post' id='inventory_status_form'>";
 
 print_table ($table);
 
@@ -128,6 +139,7 @@ echo '</div>';
 echo '</form>';
 ?>
 
+<script type="text/javascript" src="include/js/integria_inventory.js"></script>
 <script type="text/javascript">
 $(document).ready (function () {
 	$("textarea").TextAreaResizer ();
