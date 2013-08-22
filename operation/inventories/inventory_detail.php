@@ -336,12 +336,16 @@ if ($update) {
 	$result_hook = enterprise_hook ('inventory_get_user_inventories', array (get_parameter ('companies', $inventory_companies), true));
 	
 	if ($result_hook !== ENTERPRISE_NOT_HOOK) {
-		$inventory_users = get_parameter("users");
-			
+		$inventory_users = get_parameter("users");		
 		// Update users in inventory 
 		enterprise_hook ('inventory_update_users', array ($id, get_parameter ('users', $inventory_users), true));
 	}
-	
+
+	if ($result_hook !== ENTERPRISE_NOT_HOOK) {
+		$inventory_companies = get_parameter("companies");
+		enterprise_hook ('inventory_update_companies', array($id, $inventory_companies, true));
+	}	
+
 	if ($result !== false) {
 		$result_msg = '<h3 class="suc">'.__('Successfully updated').'</h3>';
 	} else {
@@ -617,10 +621,14 @@ $users = array();
 
 if ($id) {
 	$companies = enterprise_hook ('inventory_get_companies', array ($id));
-	
-	if ($companies !== ENTERPRISE_NOT_HOOK) {
-		$users = enterprise_hook ('inventory_get_users', array ($id, get_parameter ('users')));
-	}
+
+	if ($companies_aux !== ENTEPRRISE_NOT_HOOK) {
+		//foreach($companies_aux as $c) {
+		//	$companies[$c["id"]] = $c["name"];
+		//}
+	}	
+
+	$users = enterprise_hook ('inventory_get_users', array ($id));
 }
 
 if ($write_permission) {
@@ -689,6 +697,7 @@ if ($write_permission) {
 		print_submit_button (__('Create'), 'create', false, 'class="sub next"');
 	}
 	echo '</div>';
+
 	echo '</form>';
 } else {
 	print_table ($table);
