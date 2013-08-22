@@ -2,7 +2,7 @@
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2007-2012 Ártica Soluciones Tecnológicas
+// Copyright (c) 2007-2013 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -13,8 +13,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -24,28 +22,21 @@
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<meta name="resource-type" content="document">
 		<meta name="distribution" content="global">
-		<meta name="author" content="Sancho Lerena">
-		<meta name="copyright" content="This is GPL software. Created by Sancho Lerena">
+		<meta name="author" content="Artica Soluciones Tecnológicas ">
+		<meta name="copyright" content="This is GPL software. Created by Artica ST">
 		<meta name="keywords" content="network, system, GPL, software">
 		<meta name="robots" content="index, follow">
 		<link rel="icon" href="images/integria.ico" type="image/ico">
-		<link rel="stylesheet" href="include/styles/integria.css" type="text/css">
+		<link rel="stylesheet" href="include/styles/integria_install.css" type="text/css">
 	</head>
 	<body>
-		<div style='height: 10px'>
-		</div>
+	<div style='height: 10px'>
+	</div>
 <?php
 
 
 error_reporting(0);
-
-$integria_version = "v4.0 Build 130514";
-
-$integria_footertext = "<div id='footer'  style='width: 642px;'>
-	<i>Integria $integria_version is an OpenSource Software project at 
-	<a target='_new' href='http://integriaims.com'>http://integriaims.com</a></i><br>
-	<a href='http://www.artica.es'>(c) Ártica Soluciones Tecnológicas</a><br>
-	</div>";
+$integria_version = "v4.0 Build 130822";
 
 function check_extension ( $ext, $label ){
 	echo "<tr><td>";
@@ -179,15 +170,14 @@ function random_name ($size){
 
 function install_step1() {
 	
-	global $integria_footertext;
 	global $integria_version;
 	
 	echo "<div align='center'>
-		<div id='wizard' style='height: 550px;'>
-			<div id='install_box'>
-				<h2>Welcome to installation Wizard</h2>
-				<p>This wizard helps you to quick install Integria in your system.</p>
-				<p>In four steps checks all dependencies and make your configuration for a quick installation.</p>";
+		<div id='wizard' style='height: 400px'> <!-- This has an special height due its minimal size -->
+		<div id='install_box'>
+		<h2>Welcome to installation Wizard</h2>
+		<p>This wizard helps you to quick install Integria in your system.</p>
+		<p>In four steps checks all dependencies and make your configuration for a quick installation.</p>";
 	
 	echo "<table width=100%>";
 	$writable = check_writable ( "include", "Checking if ./include is writable");
@@ -195,13 +185,12 @@ function install_step1() {
 		$writable += check_writable ( "include/config.php", "Checking if include/config.php is writable");
 	echo "</table>";
 	
-	echo "<p>For more information, please refer to documentation.<i>Integria Development team</i><br>";
+	echo "<p>For more information, please refer to documentation or visit our free forums at <a href='http://integriaims.com/forums'>http://integriaims.com/forums</a>.<br><br><i>Integria Development team</i><br>";
 	
 	if (file_exists("include/config.php")) {
 		echo "<p><br><img src='images/error.png' valign='bottom'><b> Warning</b> - You already have a config.php file. Configuracion and database would be overwritten if you continue.</b></p>";
 	}
-	echo "
-	</div>
+	echo "</div>
 	<div class='box'>
 		<img src='images/integria_white.png'>
 		<br><br>
@@ -212,26 +201,20 @@ function install_step1() {
 	</div>
 	<div id='install_box' style='margin-bottom: 25px;margin-left: 25px;'>";
 	if ($writable == 0)
-		echo "
-		<a href='install.php?step=1'><img align='right' src='images/arrow_next.png'></a>";
+		echo "<a href='install.php?step=1'><img align='right' src='images/arrow_next.png'></a>";
 	else
 		echo "<p><img src='images/info.png' valign='bottom'><b> Error</b> - You need to setup permissions to be able to write in ./include directory";
 		
-	echo "
-				</div>
-			</div>
-			$integria_footertext
-		</div>";
+	echo "</div></div>";
 }
 
 
 function install_step1_licence() {
-	global $integria_footertext;
 	global $integria_version;
 	
 	echo "
 	<div align='center'>
-	<div id='wizard' style='height: 590px;'>
+	<div id='wizard'>
 		<div id='install_box'>";
 
 echo '
@@ -244,30 +227,25 @@ if (!file_exists("COPYING")){
 		echo "<div class='warn'><b>Licence file 'COPYING' is not present in your distribution. This means you have some 'partial' Pandora FMS distribution. We cannot continue without accepting the licence file.";
 		echo "</div>";
 	} else {
-
+		echo "<br>";
 		echo "<form method=post action='install.php?step=2'>";
 		echo "<textarea name='gpl2' cols=60 rows=19>";
 		echo file_get_contents ("COPYING");
 		echo "</textarea>";
 		echo "<p>";
 		echo "<input type=submit value='Yes, I accept licence terms'>";
-		}
+	}
     echo "</div>";
-    echo "
-		<div class='box'>
+    echo "<div class='box'>
 			<img src='images/integria_white.png' alt=''>
 			<br><br>
+			<font size=1px>".$integria_version."</font>
 		</div>
 		<div class='box'>
 			<img src='images/step1.png' alt=''>
 		</div>
 		<div id='install_box' style='margin-bottom: 0px;margin-left: 25px; '>";
-
-			echo "
-		</div>
-		</div>
-		$integria_footertext
-        </div>";
+		echo "</div></div>";
 }
 
 function install_step2() {
@@ -276,7 +254,7 @@ function install_step2() {
 
 	echo "
 	<div align='center'>
-	<div id='wizard' style='height: 515px;'>
+	<div id='wizard' >
 		<div id='install_box'>"; 
 		echo "<h1>Checking software dependencies</h1>";
 			echo "<table border='0' width='330' cellpadding='5' cellspacing='5'>";
@@ -289,11 +267,6 @@ function install_step2() {
 			$res += check_extension("ldap","PHP ldap extension");
 			$res += check_extension("gettext","PHP gettext extension");
 			$res += check_extension("imap","PHP IMAP extension");
-			if (PHP_OS == 'WINNT') 
-				$res += check_exists ("C:/Program Files/Graphviz 2.28/bin/twopi.exe","Graphviz in C:/Program Files/Graphviz 2.28/");
-			else
-				$res += check_exists ("/usr/bin/twopi","Graphviz Twopi in /usr/bin/twopi");
-
 			$res += check_extension("gettext","PHP gettext extension");
 			//$res += check_include("PEAR.php","PEAR PHP Library");
 			$res += check_writable("./include","./include writable by HTTP server");
@@ -303,6 +276,7 @@ function install_step2() {
 		<div class='box'>
 			<img src='images/integria_white.png' alt=''>
 			<br><br>
+			<font size=1px>".$integria_version."</font>
 		</div>
 		<div class='box'>
 			<img src='images/step1.png' alt=''>
@@ -317,20 +291,15 @@ function install_step2() {
 			} else {
 				echo "<a href='install.php?step=3'><img align='right' src='images/arrow_next.png' alt=''></a>";
 			}
-			echo "
-		</div>
-		</div>
-		$integria_footertext
-        </div>";
+			echo "</div></div>";
 }
 
 function install_step3() {
-	global $integria_footertext;
 	global $integria_version;
 
 	echo "
-	<div align='center''>
-	<div id='wizard' style='height: 700px;'>
+	<div align='center'>
+	<div id='wizard'>
 		<div id='install_box'>
 			<h1>Database setup</h1>
 			<p>
@@ -339,24 +308,24 @@ function install_step3() {
 				Information about <i>root</i> user will not be used or stored in anywhere. 
 			</p>
 			<p>
-				<b>NOTICE</b> that database will be destroyed if already exists!.
+				Please <b>notice</b> that database will be destroyed if already exists!.<br><br>
 			</p>
 			<div style='padding-left: 30px;'>
 			<form method='post' action='install.php?step=4'>
-				<div style='padding: 8px'>DB User on MySQL to create schema<br></div>
+				<div style='margin: 10px; margin-left: 0px;'>MySQL user to create database schema<br></div>
 				<input type='text' name='user' value='root'>
 				
-				<div style='padding: 8px'>DB Password for this user</div>
+				<div style='margin: 10px; margin-left: 0px;'>DB Password for this user</div>
 				<input type='password' name='pass' value=''>
 				
-				<div style='padding: 8px'>DB Hostname of MySQL</div>
+				<div style='margin: 10px; margin-left: 0px;'>DB Hostname of MySQL</div>
 				<input type='text' name='host' value='localhost'>
 				
-				<div style='padding: 8px'>DB Name (<i>integria</i> by default)</div>
+				<div style='margin: 10px; margin-left: 0px;'>DB Name (<i>integria</i> by default)</div>
 				<input type='text' name='dbname' value='integria'>
 				
 				
-				<div style='padding: 8px'><input type='checkbox' name='createdb' checked value='1'>  
+				<div style='padding: 8px;'><input type='checkbox' name='createdb' checked value='1'>  
 				Create Database <br>
 				</div>
 				
@@ -367,7 +336,7 @@ function install_step3() {
 				<div style='padding: 8px'><input type='checkbox' name='createuser' checked value='1'> Create Database user 'integria' and give privileges <br>
 				</div>
 			
-				<div style='padding: 8px'>Full path to HTTP publication directory.<br>
+				<div style='margin: 10px; margin-left: 0px;'>Full path to HTTP publication directory.<br>
 				<span class='f9b'>For example /var/www/integria/</span>
 				</div>";
 
@@ -382,26 +351,25 @@ function install_step3() {
 				}
 				
 				echo "
-				<div style='padding: 8px'>Full local URL to Integria<br>
+				<div style='margin: 10px; margin-left: 0px;'>Full local URL to Integria<br>
 				<span class='f9b'>For example http://10.10.10.1/integria</span>
 				</div>				
 				<input type='text' name='url' style='width: 250px;'  value='http://".$_SERVER["SERVER_NAME"].dirname ($_SERVER['PHP_SELF']) ."'>
 				<br><br>
 				
-				<div style='padding: 8px'><input align='right' style='align: right; width:70px; height: 16px;' type='image' src='images/arrow_next.png'  value='Step #4'></div>
+				<div style='margin: 10px; margin-left: 0px;'><input align='right' style='align: right; width:70px; height: 16px;' type='image' src='images/arrow_next.png'  value='Step #4'></div>
 			</form>
 			</div>
 			</div>
 			<div class='box'>
-					<img src='images/integria_white.png' alt=''>
+				<img src='images/integria_white.png' alt=''>
 				<br><br>
+				<font size=1px>". $integria_version ."</font>
 			</div>
 			<div class='box'>
 				<img src='images/step2.png' alt=''>
 			</div>
-		</div>
-		$integria_footertext
-	</div>";
+		</div>";
 }
 
 
@@ -556,6 +524,7 @@ function install_step4() {
 		<div class='box' style='float: left;'>
 			<img src='images/integria_white.png' alt=''>
 			<br><br>
+			<font size=1px>".$integria_version."</font>
 		</div>
 		
 		<div class='box' style='float: left;'>
@@ -581,15 +550,12 @@ function install_step4() {
 		}
 	}
 	
-	echo "		</div>
-			<div style='clear: both; width: 100%;'></div>
-			</div>
-			$integria_footertext
-		</div>";
+	echo "</div>
+		<div style='clear: both; width: 100%;'></div>
+		</div></div>";
 }
 
 function install_step5() {
-	global $integria_footertext;
 	global $integria_version;
 	
 	echo "
@@ -607,17 +573,15 @@ in order to run Integria IMS properly. Check out the documentation on how to do 
 		<div class='box'>
 			<img src='images/integria_white.png'></a>
 			<br><br>			
+			<font size=1px>".$integria_version."</font>
 		</div>
 		<div class='box'>
 			<img src='images/step4.png'><br>
 		</div>
-	</div>
-	$integria_footertext
-</div>";
+	</div></div>";
 	chmod ('include/config.php', 0600);
 	rename ('install.php', 'install_renamed.php');
 }
-
 
 // ---------------
 // Main page code
@@ -629,9 +593,9 @@ if (! isset ($_GET["step"])){
 else {
 	$step = (int) $_GET["step"];
 	switch ($step) {
-    case 1: 
-        install_step1_licence();
-        break;
+    	case 1: 
+        	install_step1_licence();
+        	break;
 	case 2:
 		install_step2();
 		break;
@@ -647,4 +611,12 @@ else {
 	}
 }
 
-?>	
+// Show footer
+?>
+
+<div id='footer' style='width: 100%;'>
+       <i>Integria IMS <?php echo $integria_version; ?> <br> This is an OpenSource Software project at
+       <a target='_new' href='http://integriaims.com'>http://integriaims.com</a></i><br>
+       <a href='http://www.artica.es'>(c) Ártica Soluciones Tecnológicas</a><br>
+</div>
+</div></body></html>
