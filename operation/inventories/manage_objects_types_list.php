@@ -52,8 +52,9 @@ echo '<div id="tabs">';
 
 /* Tabs list */
 echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects"><span>'.__('Objects').'</span></a></li>';
+echo '<li class="ui-tabs-title">' . strtoupper(__('Field list')) . '</li>';
 if (!empty($id_object_type)) {
+	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id=' . $id_object_type . '"><span>'.__('Object details').'</span></a></li>';
 	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id=' . $id_object_type . '"><span>'.__('Fields').'</span></a></li>';
 }
 echo '</ul>';
@@ -137,10 +138,9 @@ if ($delete_object_type_field) {
 // List fields
 //**********************************************************************
 
-echo "<h2>".__('List fields')."</h2>";
 $objects_type_fields = get_db_all_rows_field_filter ('tobject_type_field', 'id_object_type', $id_object_type,'label, type');
 
-$table->width = '90%';
+$table->width = '99%';
 
 if ($objects_type_fields !== false) {
 	//echo "<h3>".__('Defined objects types fields')."</h3>";
@@ -183,7 +183,7 @@ if ($objects_type_fields !== false) {
 	echo "<h4>".__('No objects types fields')."</h4>";
 }
 
-echo '<div class="button" style="width: '.$table->width.'">';
+echo '<div style="width: '.$table->width.'; text-align: right;">';
 echo '<form method="post" action="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_field">';
 print_input_hidden ('action', 'create');
 print_input_hidden ('id', $id_object_type);

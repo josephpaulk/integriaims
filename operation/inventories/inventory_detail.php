@@ -98,22 +98,6 @@ if ($read_permission === ENTERPRISE_NOT_HOOK) {
 
 $inventory_name = get_db_value('name', 'tinventory', 'id', $id);
 
-if ($id) {
-	$inventory = get_inventory ($id);
-	
-	if ($manage_permission) {
-		echo "<div id='button-bar-title'>";
-		echo "<ul>";	
-		echo "<li>";
-		echo '<form id="delete_inventory_form" name="delete_inventory_form" class="delete action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_detail">';
-		print_input_hidden ('quick_delete', $id);
-		echo "<a href='#' id='detele_inventory_submit_form'>".print_image("images/cross.png", true, array("title" => __("Delete")))."</a>";
-		echo '</form>';
-		echo "</li>";
-		echo "</div>";
-	}
-}
-
 $check_inventory = (bool) get_parameter ('check_inventory');
 
 /*
@@ -134,32 +118,31 @@ if ($check_inventory) {
 }
 */
 
-if ($id) {
-	echo "<h3>".__('Object')." #$id"."&nbsp;&nbsp;-&nbsp;".$inventory_name."</h3>";
-} else {
-	if (! defined ('AJAX'))
-		echo "<h2>".__('Create inventory object')."</h2>";
+if (!$id && ! defined ('AJAX')) {
+	echo "<h1>".__('Create inventory object')."</h1>";
 }
 
 //**********************************************************************
 // Tabs
 //**********************************************************************
-if (!defined ('AJAX')) {
+if (!defined ('AJAX') && $id) {
+	/* Tabs list */
+	print_inventory_tabs('details', $id, $inventory_name);
+	
 	if ($id) {
-		echo '<div id="tabs">';
-
-		/* Tabs list */
-		echo '<ul class="ui-tabs-nav">';
-		echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail"><span>'.__('Details').'</span></a></li>';
-		if (!empty($id)) {
-			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
-			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Incidents').'</span></a></li>';
-			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '"><span>'.__('Contacts').'</span></a></li>';
-			echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_tracking&id=' . $id . '"><span>'.__('Tracking').'</span></a></li>';
-
+		$inventory = get_inventory ($id);
+		
+		if ($manage_permission) {
+			echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px;'>";
+			echo "<ul>";	
+			echo "<li style='padding: 3px;'>";
+			echo '<form id="delete_inventory_form" name="delete_inventory_form" class="delete action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_detail">';
+			print_input_hidden ('quick_delete', $id);
+			echo "<a href='#' id='detele_inventory_submit_form'>".print_image("images/cross.png", true, array("title" => __("Delete inventory object")))."</a>";
+			echo '</form>';
+			echo "</li>";
+			echo "</div>";
 		}
-		echo '</ul>';
-		echo '</div>';
 	}
 }
 
@@ -523,8 +506,8 @@ if ($id) {
 }
 
 
-$table->class = 'databox';
-$table->width = '90%';
+$table->class = 'search-table-button';
+$table->width = '99%';
 $table->data = array ();
 $table->colspan = array ();
 $table->colspan[4][1] = 2;
@@ -634,13 +617,13 @@ if ($id) {
 if ($write_permission) {
 		$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,
 								'', '', '', true, false, false, __('Associated company'));
-		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_company_associated();'>".__('Add')."</a>";
-		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: removeCompany();'>".__('Remove')."</a>";
+		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_company_associated();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: removeCompany();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 
 		$table->data[2][2] = print_select ($users, 'inventory_users', NULL,
 								'', '', '', true, false, false, __('Associated user'));
-		$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: show_user_associated(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Add')."</a>";
-		$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: removeUser();'>".__('Remove')."</a>";
+		$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: show_user_associated(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+		$table->data[2][2] .= "&nbsp;&nbsp;<a href='javascript: removeUser();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 
 		foreach ($companies as $company_id => $company_name) {
 			$table->data[2][1] .= print_input_hidden ("companies[]",
@@ -683,21 +666,21 @@ $table->data[6][0] = print_textarea ('description', 15, 100, $description,
 echo '<div class="result">'.$result_msg.$msg_err.'</div>';
 
 if ($write_permission) {
+	if ($id) {
+		$button = print_input_hidden ('update_inventory', 1, true);
+		$button .= print_input_hidden ('id', $id, true);
+		$button .= print_input_hidden ('id_object_type', $id_object_type, true);
+		$button .= print_submit_button (__('Update'), 'update', false, 'class="sub upd"', true);
+	} else {
+		$button = print_input_hidden ('create_inventory', 1, true);
+		$button .= print_submit_button (__('Create'), 'create', false, 'class="sub create"', true);
+	}
+	
+	$table->data[7][0] = $button;
+	$table->colspan[7][0] = 3;
+	
 	echo '<form method="post" id="inventory_status_form">';
 	print_table ($table);
-
-	echo '<div style="width:'.$table->width.'" class="action-buttons button">';
-	if ($id) {
-		print_input_hidden ('update_inventory', 1);
-		print_input_hidden ('id', $id);
-		print_input_hidden ('id_object_type', $id_object_type);
-		print_submit_button (__('Update'), 'update', false, 'class="sub upd"');
-	} else {
-		print_input_hidden ('create_inventory', 1);
-		print_submit_button (__('Create'), 'create', false, 'class="sub next"');
-	}
-	echo '</div>';
-
 	echo '</form>';
 } else {
 	print_table ($table);

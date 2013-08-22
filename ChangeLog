@@ -1,3 +1,19 @@
+2013-08-22  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_inventories.php
+	operation/manufacturers/manufacturer_detail.php
+	operation/inventories/inventory_contacts.php
+	operation/inventories/inventory_incidents.php
+	operation/inventories/inventory_import_objects.php
+	operation/inventories/manage_objects.php
+	operation/inventories/inventory_relationship.php
+	operation/inventories/inventory_tracking.php
+	operation/inventories/inventory_detail.php
+	operation/inventories/manage_objects_types_list.php
+	operation/inventories/inventory_search.php
+	operation/inventories/manage_objects_types_field.php
+	images/zoom.png: Fix styles on inventory sections
+
 2013-08-22  Sancho Lerena <slerena@artica.es>
 
 	* include/styles/integria_install.css, 

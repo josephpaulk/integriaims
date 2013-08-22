@@ -58,8 +58,9 @@ echo '<div id="tabs">';
 
 /* Tabs list */
 echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects"><span>'.__('Objects').'</span></a></li>';
+echo '<li class="ui-tabs-title">' . strtoupper(__('Object management')) . '</li>';
 if (!empty($id)) {
+	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id=' . $id . '"><span>'.__('Object details').'</span></a></li>';
 	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id=' . $id . '"><span>'.__('Fields').'</span></a></li>';
 }
 echo '</ul>';
@@ -145,15 +146,14 @@ if ($create || $id) {
 		$min_stock = $object["min_stock"];
 	}
 
-	echo "<h2>".__('Object management')."</h2>";
 	/*if ($id == -1) {
 		echo "<h3>".__('Create a new object')."</h3>";
 	} else {
 		echo "<h3>".__('Update existing object')."</h3>";
 	}*/
 	
-	$table->width = '90%';
-	$table->class = 'databox';
+	$table->width = '99%';
+	$table->class = 'search-table-button';
 	$table->colspan = array ();
 	$table->colspan[0][0] = 2;
 	$table->colspan[3][0] = 2;
@@ -168,32 +168,31 @@ if ($create || $id) {
 	$table->data[3][0] = print_textarea ('description', 10, 50, $description, '',
 		true, __('Description'));
 	
+	if ($id == -1) {
+		$button = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"', true);
+		$button .= print_input_hidden ('insert_object', 1, true);
+	} else {
+		$button = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('id', $id, true);
+		$button .= print_input_hidden ('update_object', 1, true);
+	}
+	
+	$table->data[4][0] = $button;
+	
 	echo '<form id="form-manage_objects" method="post">';
 	print_table ($table);
-	echo '<div class="button" style="width: '.$table->width.'">';
-	if ($id == -1) {
-		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
-		print_input_hidden ('insert_object', 1);
-	} else {
-		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-		print_input_hidden ('id', $id);
-		print_input_hidden ('update_object', 1);
-	}
-	echo "</div></form>";
+	echo '</form>';
 }
 
 //**********************************************************************
 // List objects
 //**********************************************************************
 if (! $id && ! $create) {
-	echo "<h2>".__('Object management')."</h2>";
 	$objects = get_db_all_rows_in_table ('tobject_type', 'name');
 	
-	$table->width = '90%';
+	$table->width = '99%';
 	
-	if ($objects !== false) {
-		echo "<h3>".__('Defined objects')."</h3>";
-		
+	if ($objects !== false) {		
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->head = array ();
@@ -230,7 +229,7 @@ if (! $id && ! $create) {
 		echo "<h4>".__('No objects')."</h4>";
 	}
 	
-	echo '<div class="button" style="width: '.$table->width.'">';
+	echo '<div style="width: '.$table->width.'; text-align: right;">';
 	echo '<form method="post">';
 	print_input_hidden ('create', 1);
 	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');

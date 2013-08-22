@@ -66,9 +66,11 @@ echo '<div id="tabs">';
 
 /* Tabs list */
 echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects"><span>'.__('Objects').'</span></a></li>';
+	echo '<li class="ui-tabs-title">' . strtoupper(__('Object types management')) . '</li>';
 if (!empty($id_object_type)) {
-	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id=' . $id_object_type . '"><span>'.__('Fields').'</span></a></li>';
+	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects&id=' . $id_object_type . '"><span>'.__('Object details').'</span></a></li>';
+	echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id=' . $id_object_type . '"><span>'.__('Fields').'</span></a></li>';
+	echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_field&action=update&id_object_type_field=' . $id_object_type_field . '&id= ' . $id_object_type . '"><span>'.__('Field management').'</span></a></li>';
 }
 echo '</ul>';
 echo '</div>';
@@ -77,10 +79,8 @@ echo '</div>';
 // Field update form
 //**********************************************************************
 
-echo "<h2>".__('Object types management')."</h2>";
-
-$table->width = '90%';
-$table->class = 'databox';
+$table->width = '99%';
+$table->class = 'search-table-button';
 $table->colspan = array ();
 $table->colspan[0][0] = 2;
 $table->colspan[2][0] = 2;
@@ -99,23 +99,23 @@ $table->data[8][0] = print_checkbox ('inherit', 1, $inherit, __('Inherit'));
 $table->data[9][0] = '<label>' . __('Show in list') . print_help_tip(__('With this value checked this field will be displayed in search list.'), true) . '</label>';
 $table->data[10][0] = print_checkbox ('show_list', 1, $show_list, __('Show in list'));
 
+if (empty($id_object_type_field)) {
+	$button = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true);
+	$button .= print_input_hidden ('id', $id_object_type, true);
+	$button .= print_input_hidden ('action_db', 'insert', true);
+	$button .= print_input_hidden ('action', 'update', true);
+} else {
+	$button = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
+	$button .= print_input_hidden ('id', $id_object_type, true);
+	$button .= print_input_hidden ('id_object_type_field', $id_object_type_field, true);
+	$button .= print_input_hidden ('action_db', 'update', true);
+	$button .= print_input_hidden ('action', 'update', true);
+}
+
+$table->data[11][0] = $button;
+
 echo "<form id='form-manage_objects_types_field' method='post' action='index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list'>";
 print_table ($table);
-echo "<div class='button' style='width: ".$table->width."'>";
-if (empty($id_object_type_field)) {
-	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
-	print_input_hidden ('id', $id_object_type);
-	print_input_hidden ('action_db', 'insert');
-	print_input_hidden ('action', 'update');
-} else {
-	print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-	print_input_hidden ('id', $id_object_type);
-	print_input_hidden ('id_object_type_field', $id_object_type_field);
-	print_input_hidden ('action_db', 'update');
-	print_input_hidden ('action', 'update');
-}
-echo "</div></form>";
-
 
 ?>
 

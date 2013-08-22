@@ -1441,4 +1441,42 @@ function inventories_get_stock ($inventories, $status='new') {
 	}
 	return $count;
 }
+
+function print_inventory_tabs($selected_tab, $id, $inventory_name) {
+	$details_class = $tracking_class = $contacts_class = $incidents_class = $relationship_class = "ui-tabs";
+	
+	switch ($selected_tab) {
+		case 'details':
+			$details_class = 'ui-tabs-selected';
+			$title = strtoupper(__('Inventory object details'));
+			break;
+		case 'tracking':
+			$tracking_class = 'ui-tabs-selected';
+			$title = strtoupper(__('Tracking'));
+			break;
+		case 'contacts':
+			$contacts_class = 'ui-tabs-selected';
+			$title = strtoupper(__('Contacts'));
+			break;
+		case 'incidents':
+			$incidents_class = 'ui-tabs-selected';
+			$title = strtoupper(__('Incidents'));
+			break;
+		case 'relationships':
+			$relationship_class = 'ui-tabs-selected';
+			$title = strtoupper(__('Relationships'));
+			break;
+	}
+	
+	echo '<ul class="ui-tabs-nav">';
+	echo '<li class="' . $tracking_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_tracking&id=' . $id . '"><span>'.__('Tracking').'</span></a></li>';
+	echo '<li class="' . $contacts_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '"><span>'.__('Contacts').'</span></a></li>';
+	echo '<li class="' . $incidents_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Incidents').'</span></a></li>';
+	echo '<li class="' . $relationship_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
+	echo '<li class="' . $details_class . '"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=' . $id . '"><span>'.__('Details').'</span></a></li>';
+	echo '<li class="ui-tabs-title">' . $title . '</h1></li>';
+	echo '</ul>';
+	
+	echo '<div class="under_tabs_info">' . sprintf(__('Inventory object #%s: %s'), $id, $inventory_name) . '</div>';
+}
 ?>

@@ -390,7 +390,7 @@ echo '<form id="tree_search" method="post" action="index.php?sec=inventory&sec2=
 	$buttons = '<div style=" text-align: right;">';
 	$buttons .= print_input_hidden ('search', 1, true);
 	$buttons .= print_input_hidden ('mode', $mode, true);
-	$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub next"', true);
+	$buttons .= print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 		
 	if ($mode == 'tree') {
 		$buttons .= print_submit_button (__('List view'), 'listview', false, 'class="sub next"', true);

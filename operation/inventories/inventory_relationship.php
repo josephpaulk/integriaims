@@ -44,25 +44,11 @@ if ($is_enterprise) {
 	}
 }
 
-
-echo "<h3>".__('Object')." #$id"."&nbsp;&nbsp;-&nbsp;".$inventory_name."</h3>";
-
 //**********************************************************************
 // Tabs
 //**********************************************************************
 
-echo '<div id="tabs">';
-
-/* Tabs list */
-echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id=' . $id . '"><span>'.__('Details').'</span></a></li>';
-echo '<li class="ui-tabs-selected"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_relationship&id=' . $id . '"><span>'.__('Relationships').'</span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_incidents&id=' . $id . '"><span>'.__('Incidents').'</span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_contacts&id=' . $id . '"><span>'.__('Contacts').'</span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=inventory&sec2=operation/inventories/inventory_tracking&id=' . $id . '"><span>'.__('Tracking').'</span></a></li>';
-
-echo '</ul>';
-echo '</div>';
+print_inventory_tabs('relationships', $id, $inventory_name);
 
 $delete_link = get_parameter ('delete_link', 0);
 $add_link = get_parameter ('add_link', 0);
@@ -104,7 +90,8 @@ if ($all_links == false) {
 	$all_links = array();
 }
 
-$table->width = '100%';
+$table->width = '99%';
+$table->class = 'search-table';
 $table->data = array ();
 $table->head = array();
 $table->style = array();
