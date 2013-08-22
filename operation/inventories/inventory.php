@@ -24,6 +24,8 @@ if (! give_acl ($config['id_user'], 0, "VR")) {
 	exit;
 }
 
+echo '<h1>' . __('Inventory overview') . '</h1>';
+
 $id = (int) get_parameter ('id');
 
 // Delete oject

@@ -246,36 +246,41 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 	if ($operation == "view" || $operation == "update") {
 
 		$search_params="&owner=$assigned_user&creator=$creator";
-
 		echo '<ul class="ui-tabs-nav">';
-		echo '<li class="ui-tabs-title h1">' . __('Work order management') . '</li>';
-		echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo'.$search_params.'"><span>'.__("Search").'</span></a></li>';
 
-		if ($tab == "")
+		if ($tab == "files")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id='.$id.'"><span>'.__("Workorder").'</span></a></li>';
-
-		if ($tab == "wu")
-			echo '<li class="ui-tabs-selected">';
-		else
-			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&tab=wu&id='.$id.'"><span>'.__("Add Workunit").'</span></a></li>';
-	
+		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&tab=files&id='.$id.'"><span>'.__("Files").'</span></a></li>';
+		
 		if ($tab == "notes")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
 		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&tab=notes&id='.$id.'"><span>'.__("Notes").'</span></a></li>';
 		
-		if ($tab == "files")
+		if ($tab == "wu")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&tab=files&id='.$id.'"><span>'.__("Files").'</span></a></li>';
+		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&tab=wu&id='.$id.'"><span>'.__("Add Workunit").'</span></a></li>';
+		
+		if ($tab == "")
+			echo '<li class="ui-tabs-selected">';
+		else
+			echo '<li class="ui-tabs">';
+		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id='.$id.'"><span>'.__("Workorder details").'</span></a></li>';
+		
+		echo '<li class="ui-tabs-title h1">' . __('Workorder details') . '</li>';
+		echo '<li class="ui-tabs">';
+		echo '<a href="index.php?sec=projects&sec2=operation/workorders/wo'.$search_params.'"><span>'.__("Search").'</span></a></li>';
+		
 		echo "</ul>";
+		
+		$name = get_db_value ('name', 'ttodo', 'id', $id);
+		
+		echo '<div class="under_tabs_info">' . sprintf(__('Workorder #%s: %s'), $id, $name) . '</div>';
 	}
 
 	// Create WU

@@ -82,8 +82,8 @@ $mail .= "\n\t".$user["direccion"];
 $mail .= "\n\t".$company_user;
 
 
-$table->width = "75%";
-$table->class = "databox";
+$table->width = "99%";
+$table->class = "search-table-button";
 $table->data = array ();
 $table->size = array ();
 $table->style = array ();
@@ -95,16 +95,18 @@ $table->colspan[1][0] = 3;
 $table->data[0][0] = print_input_text ("from", $from, "", 30, 100, true, __('From'));
 $table->data[0][1] = print_input_text ("to", $to, "", 30, 100, true, __('To'));
 $table->data[0][2] = print_input_text ("cco", $cco, "", 30, 100, true, __('Send a copy to'));
-$table->data[1][0] = print_input_text ("subject", $subject, "", 140, 100, true, __('Subject'));
+$table->data[1][0] = print_input_text ("subject", $subject, "", 130, 100, true, __('Subject'));
 $table->data[2][0] = print_textarea ("mail", 10, 1, $mail, 'style="height:350px;"', true, __('E-mail'));
+
+$table->data[3][0] = print_submit_button (__('Send email'), 'apply_btn', false, 'class="sub upd"', true);
+$table->data[3][0] .= print_input_hidden ('id', $id, true);
+$table->data[3][0] .= print_input_hidden ('send', 1, true);
+
+$table->colspan[3][0] = 3;
 
 echo '<form method="post" id="lead_mail_go">';
 print_table ($table);
-echo '<div class="button" style="width: '.$table->width.'">';
-print_submit_button (__('Send email'), 'apply_btn', false, 'class="sub upd"', false);
-print_input_hidden ('id', $id);
-print_input_hidden ('send', 1);
-echo "</div></form>";
+echo "</form>";
 
 ?>
 

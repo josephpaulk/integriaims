@@ -265,67 +265,90 @@ if ($id) {
 	$op = get_parameter ("op", "");
 	
 	echo '<ul style="height: 30px;" class="ui-tabs-nav">';
-	echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail"><span>'.__("Search").'</span></a></li>';
-
-	if ($op == "")
+	if ($op == "files")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'"><span>'.__("Company").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=files"><span>'.__("Files").'</span></a></li>';
+	
+	/*
+		if ($op == "inventory")
+			echo '<li class="ui-tabs-selected">';
+		else
+			echo '<li class="ui-tabs">';
+		echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=inventory"><span>'.__("Inventory").'</span></a></li>';
 
-	if ($op == "contacts")
+	*/
+	
+	if ($op == "invoices")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=contacts"><span>'.__("Contacts").'</span></a></li>';
-
-	if ($op == "contracts")
-		echo '<li class="ui-tabs-selected">';
-	else
-		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=contracts"><span>'.__("Contracts").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices"><span>'.__("Invoices").'</span></a></li>';
 	
 	if ($op == "leads")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
 	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=leads"><span>'.__("Leads").'</span></a></li>';
-
-	if ($op == "invoices")
+	
+	if ($op == "contracts")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices"><span>'.__("Invoices").'</span></a></li>';
-
-	if ($op == "files")
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=contracts"><span>'.__("Contracts").'</span></a></li>';
+	
+	if ($op == "contacts")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=files"><span>'.__("Files").'</span></a></li>';
-
-/*
-	if ($op == "inventory")
-		echo '<li class="ui-tabs-selected">';
-	else
-		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=inventory"><span>'.__("Inventory").'</span></a></li>';
-
-*/
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=contacts"><span>'.__("Contacts").'</span></a></li>';
 
 	if ($op == "activities")
 		echo '<li class="ui-tabs-selected">';
 	else
 		echo '<li class="ui-tabs">';
-	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities"><span>'.__("Activities").'</span></a></li>';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities"><span>'.__("Activity").'</span></a></li>';
+	
+	if ($op == "")
+		echo '<li class="ui-tabs-selected">';
+	else
+		echo '<li class="ui-tabs">';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'"><span>'.__("Company details").'</span></a></li>';
+	
+	echo '<li class="ui-tabs">';
+	echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail"><span>'.__("Search").'</span></a></li>';
 
+	echo '<li class="ui-tabs-title">';
+	switch ($op) {
+		case "activities":
+			echo strtoupper(__('Activities'));
+			break;
+		case "files":
+			echo strtoupper(__('Files'));
+			break;
+		case "invoices":
+			echo strtoupper(__('Invoices'));
+			break;
+		case "leads":
+			echo strtoupper(__('Leads'));
+			break;
+		case "contracts":
+			echo strtoupper(__('Contracts'));
+			break;
+		case "contacts":
+			echo strtoupper(__('Contacts'));
+			break;
+		default:
+			echo strtoupper(__('Company details'));
+	}
+	echo '</li>';
+		
 	echo '</ul>';
-
-	// Raya horizontal
-	echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: block;"></div>';
 
 	$company = get_db_row ('tcompany', 'id', $id);
 	
+	echo '<div class="under_tabs_info">' . sprintf(__('Company: %s'), $company['name']) . '</div>';
 }
 
 // EDIT / CREATE FORM
@@ -381,8 +404,9 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	
 	echo '<form id="form-company_detail" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	
-	echo "<h1>".__('Company details')."</h1>";
-
+	if($new_company) {
+		echo "<h1>".__('New company')."</h1>";
+	}
 
 	if ($op == "") { 
 		$name = $company['name'];
@@ -416,8 +440,8 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 
 	$writter = 1;
 
-	$table->width = '90%';
-	$table->class = "databox";
+	$table->width = '99%';
+	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
 	$table->colspan[4][0] = 2;
@@ -458,25 +482,23 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 		$table->data[5][0] = print_textarea ("comments", 10, 1, $comments, '', true, __('Comments'));
 	}
 	
-	print_table ($table);
-	
 	if ($id > 0) {
 		if ($write_permission) {
-			echo '<div class="button" style="width: '.$table->width.'">';
-			print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
-			print_input_hidden ('update_company', 1);
-			print_input_hidden ('id', $id);
-			echo "</div>";
+			$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
+			$button .= print_input_hidden ('update_company', 1, true);
+			$button .= print_input_hidden ('id', $id, true);
 		}
 	} else {
 		if ($manage_permission) {
-			echo '<div class="button" style="width: '.$table->width.'">';
-			print_submit_button (__('Create'), "create_btn", false, 'class="sub upd"', false);
-			echo "</div>";
-			print_input_hidden ('create_company', 1);
+			$button = print_submit_button (__('Create'), "create_btn", false, 'class="sub upd"', true);
+			$button .= print_input_hidden ('create_company', 1, true);
 		}
 	}
-		
+	
+	$table->data[6][0] = $button;
+	$table->colspan[6][0] = 2;
+	
+	print_table ($table);
 	echo '</form>';	
 }
 
@@ -521,15 +543,18 @@ elseif ($op == "activities") {
 
 		$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
 
+		$table->width = "99%";
+		$table->class = "search-table-button";
+		$table->data = array ();
+		$table->size = array ();
+		$table->style = array ();
+		
+		$table->data[0][0] = "<h3>".__("Add activity")."</h3>";
+		$table->data[1][0] = "<textarea name='comments' style='width:98%; height: 210px'></textarea>";
+		$table->data[2][0] = print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', true);
+	
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=activities&op2=add">';
-		echo "<h3>".__("Add activity for company"). " ". $company_name;
-		echo "</h3><p>";
-		echo "<textarea name='comments' style='margin-left: 10px; width: 92%; height: 250px'>";
-		echo "</textarea>";
-
-		echo '<div class="button" style="margin-left: 10px; width: 92%;">';
-		print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', false);
-		echo "</div>";
+		print_table($table);
 		echo '</form>';
 	}
 
@@ -585,7 +610,7 @@ elseif ($op == "contracts") {
 
 	if ($contracts !== false) {
 	
-		$table->width = "90%";
+		$table->width = "99%";
 		$table->class = "listing";
 		$table->cellspacing = 0;
 		$table->cellpadding = 0;
@@ -625,7 +650,7 @@ elseif ($op == "contracts") {
 		if ($other_manage_permission) {
 			
 			echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail&id_company='.$id.'">';
-			echo '<div class="button" style="width: '.$table->width.'">';
+			echo '<div style="width: '.$table->width.'; text-align: right;">';
 			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 			print_input_hidden ('new_contract', 1);
 			echo '</div>';
@@ -644,12 +669,9 @@ elseif ($op == "contacts") {
 	}
 	
 	$name = get_db_value ('name', 'tcompany', 'id', $id);
-	
-
-        echo "<h3>".__("Contacts for "). $name . "</h3>";
-	
+		
 	$table->class = 'listing';
-	$table->width = '90%';
+	$table->width = '99%';
 	$table->head = array ();
 	$table->head[0] = __('Contact');
 	$table->head[1] = __('Email');
@@ -685,7 +707,7 @@ elseif ($op == "contacts") {
 	
 	if ($other_manage_permission) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail&id_company='.$id.'">';
-		echo '<div class="button" style="width: '.$table->width.'">';
+		echo '<div style="width: '.$table->width.'; text-align: right;">';
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 		print_input_hidden ('new_contact', 1);
 		echo '</div>';
@@ -707,7 +729,6 @@ elseif ($op == "invoices") {
 	$view_invoice = get_parameter("view_invoice", 0);
 	
 	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
-	echo "<h3>". __("Invoices for "). $company_name. "</h3>";
 
 	if (($operation_invoices != "") OR ($new_invoice != 0) OR ($view_invoice != 0 ) ){
 				
@@ -882,11 +903,10 @@ elseif ($op == "leads") {
 	$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=leads");
 	
 	$company_name = get_db_sql ("SELECT name FROM tcompany WHERE id = $id");
-	echo "<h3>".__("Pipeline for "). $company_name . "</h3>";
 	
 	if ($invoices !== false) {
 	
-		$table->width = "90%";
+		$table->width = "99%";
 		$table->class = "listing";
 		$table->cellspacing = 0;
 		$table->cellpadding = 0;
@@ -925,7 +945,7 @@ elseif ($op == "leads") {
 		
 		if ($other_manage_permission) {
 			echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail">';
-			echo '<div class="button" style="width: '.$table->width.'">';
+			echo '<div style="width: '.$table->width.'; text-align: right;">';
 			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 			print_input_hidden ('new', 1);
 			echo '</div>';
@@ -946,17 +966,16 @@ if ((!$id) AND ($new_company == 0)){
 
 	// Search // General Company listing
 	echo "<div id='inventory-search-content'>";
-	echo "<h2>".__('Company management');
+	echo "<h1>".__('Company management');
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
-	echo "<a id='company_stats_form_submit' href='javascript: changeAction();'>".print_image ("images/chart_bar.png", true, array("title" => __("Search statistics")))."</a>";
+	echo "<a id='company_stats_form_submit' href='javascript: changeAction();'>".print_image ("images/chart_bar_dark.png", true, array("title" => __("Search statistics")))."</a>";
 	echo "</li>";
 	echo "</ul>";
 	echo "</div>";
-	echo "</h2>";
+	echo "</h1>";
 
-	echo "<br>";
 	$search_text = (string) get_parameter ('search_text');	
 	$search_role = (int) get_parameter ("search_role");
 	$search_country = (string) get_parameter ("search_country");
@@ -1001,38 +1020,26 @@ if ((!$id) AND ($new_company == 0)){
 
 	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end";
 
-	$table->width = '98%';
-	$table->class = 'search-table';
+	$table->width = '99%';
+	$table->class = 'search-table-button';
 	$table->style = array ();
 	$table->data = array ();
-	$table->data[0][0] = __('Search');
-	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 15, 100, true);
-	$table->data[0][2] = __('Company Role');
-	$table->data[0][3] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
-		'search_role', $search_role, '', __('Select'), 0, true, false, false);
-	$table->data[0][4] = __('Country');
-	$table->data[0][5] = print_input_text ("search_country", $search_country, "", 10, 100, true);
-	
-	$table->data[0][4] = __('Manager');
-	$table->data[0][5] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '',	array(), true, '', '' )	. print_help_tip (__("Type at least two characters to search"), true);
+	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
+	$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
+		'search_role', $search_role, '', __('Select'), 0, true, false, false, __('Company Role'));
+	$table->data[0][2] = print_input_text ("search_country", $search_country, "", 10, 100, true, __('Country'));
+	$table->data[0][3] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '',	array(), true, '', __('Manager'))	. print_help_tip (__("Type at least two characters to search"), true);
 
-	$table->data[1][0] = __('Parent');
-	$table->data[1][1] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
-		'search_parent', $search_parent, '', __('Select'), 0, true, false, false);
-	
-	$table->data[1][2] = __('Date from');
-	$table->data[1][3] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true);
-	
-	$table->data[1][4] = __('Date to');
-	$table->data[1][5] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true);
+	$table->data[1][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
+		'search_parent', $search_parent, '', __('Select'), 0, true, false, false, __('Parent'));
+	$table->data[1][1] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Date from'));
+	$table->data[1][2] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Date to'));
 		
-	$buttons = '<div style="width:100%; text-align: right;">';
-	$buttons .= print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . "include/export_csv.php?export_csv_companies=1&where_clause=$where_clause&date=$date" . '\')', 'class="sub csv"', true);
-	$buttons .= '</div>';
+	$buttons = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+	$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_companies=1&where_clause=' . str_replace('"', "'", $where_clause) . '&date=' . $date . '\')', 'class="sub csv"', true);
 		
 	$table->data[2][0] = $buttons;
-	$table->colspan[2][0] = 6;
+	$table->colspan[2][0] = 4;
 
 	echo '<form method="post" id="company_stats_form" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	print_table ($table);
@@ -1048,7 +1055,7 @@ if ((!$id) AND ($new_company == 0)){
 
 	if ($companies !== false) {
 
-		$table->width = "98%";
+		$table->width = "99%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();
@@ -1098,7 +1105,7 @@ if ((!$id) AND ($new_company == 0)){
 				$company["id"]."'>".$company["name"]."</a>";
 			$data[1] = get_db_value ('name', 'tcompany_role', 'id', $company["id_company_role"]);
 			$data[2] = '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&op=contracts&id='.
-				$company['id'].'"><img src="images/maintab.gif"></a>';
+				$company['id'].'"><img src="images/invoice.png"></a>';
 			$sum_contratos = get_db_sql ("SELECT COUNT(id) FROM tcontract WHERE id_company = ".$company["id"]);
 			if ($sum_contratos > 0)
 				$data[2] .= " ($sum_contratos)";

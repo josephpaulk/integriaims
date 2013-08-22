@@ -69,14 +69,14 @@ if (isset($_GET["upload"])) {
 // Control to upload file
 
 
-echo '<a href="javascript:;" onclick="$(\'#upload_div\').slideToggle (); return false">';
-echo '<h3>'.__('Upload a new file').'</h3>';
-echo '</a>';
-echo '<div id="upload_div" style="padding: 20px; margin: 0px; display: none;">';
+echo '<div style="width: 99%; text-align: right; margin-bottom: 5px;">';
+echo print_button (__('Upload a new file'), 'add_link', false, '$(\'#upload_div\').slideToggle (); return false', 'class="sub upload"');
+echo '</div>';
+echo '<div id="upload_div" style="width: 95%; padding: 20px; margin: 0px; display: none;" class="integria_form">';
 $target_directory = 'attachment';
 $action = "index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=files&upload=1";				
 $into_form = "<input type='hidden' name='directory' value='$target_directory'><b>Description</b>&nbsp;<input type=text name=description size=60>";
-print_input_file_progress($action,$into_form,'','sub next');	
+print_input_file_progress($action,$into_form,'','sub upload');	
 echo '</div>';
 
 // List of lead attachments
@@ -85,12 +85,7 @@ $sql = "SELECT * FROM tattachment WHERE id_lead = $id ORDER BY timestamp DESC";
 $files = get_db_all_rows_sql ($sql);	
 $files = print_array_pagination ($files, "index.php?sec=customers&sec2=operation/leads/lead_detail&id=$id&op=files");
 
-echo "<br>";
-
 if ($files !== false) {
-
-	echo "<h3>". __('Current files on this lead')."</h3>";
-
 	unset ($table);
 	$table->width = "99%";
 	$table->class = "listing";

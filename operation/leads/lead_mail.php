@@ -99,7 +99,7 @@ $id_template = (int) get_parameter ("id_template");
 
 // Show form with available templates for this useraco
 echo '<form method="post" id="lead_mail_filter">';
-echo "<table width=300px>";
+echo "<table width=99% class='search-table'>";
 echo "<tr><td valign=top> ";
 echo print_select_from_sql ($sql, 'id_template', $id_template, '', __("None"), 0, true, false, true, __("CRM Template to use"));
 echo "</td><td valign=bottom>";
@@ -120,8 +120,8 @@ if ($result !== false) {
 	$last_email = "";
 }
 
-$table->width = "75%";
-$table->class = "databox";
+$table->width = "99%";
+$table->class = "search-table-button";
 $table->data = array ();
 $table->size = array ();
 $table->style = array ();
@@ -142,20 +142,15 @@ $table->data[1][0] = '<label id="label-text-subject" for="text-subject">'.__("Su
 $table->data[2][0] = print_textarea ("mail", 10, 1, $mail, 'style="height:350px;"', true, __('E-mail'));
 $table->data[3][0] = print_textarea ("last_mail", 10, 1, $last_email, 'style="height:350px;"', true, __('Last E-mail'));
 
+$table->data[4][0] = print_submit_button (__('Send email'), 'apply_btn', false, 'class="sub upd"', true);
+$table->data[4][0] .= print_input_hidden ('id', $id, true);
+$table->data[4][0] .= print_input_hidden ('send', 1, true);
+
+$table->colspan[4][0] = 3;
+
 echo '<form method="post" id="lead_mail_go">';
 print_table ($table);
-echo '<div class="button" style="width: '.$table->width.'">';
-print_submit_button (__('Send email'), 'apply_btn', false, 'class="sub upd"', false);
-/*
-echo '<input type="button" class="sub upd" onClick="if (!confirm(\''.__('Are you sure?').'\'))
-				return false;" value="'.__("Send email").'">';
-*/
-
-
-
-print_input_hidden ('id', $id);
-print_input_hidden ('send', 1);
-echo "</div></form>";
+echo "</form>";
 
 ?>
 

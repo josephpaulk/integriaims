@@ -55,15 +55,18 @@ if ($op2 == "purge"){
 
 // Add item form
 if($manage) {
+	$table->width = "99%";
+	$table->class = "search-table-button";
+	$table->data = array ();
+	$table->size = array ();
+	$table->style = array ();
+	
+	$table->data[0][0] = "<h3>".__("Add activity")."</h3>";
+	$table->data[1][0] = "<textarea name='comments' style='width:98%; height: 210px'></textarea>";
+	$table->data[2][0] = print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', true);
+	
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=activity&op2=add">';
-	echo "<h3>".__("Add activity")."</h3><p>";
-
-	echo "<textarea name='comments' style='margin-left: 10px; width:92%; height: 210px'>";
-	echo "</textarea>";
-
-	echo '<div class="button" style="margin-left: 10px; width: 92%;">';
-	print_submit_button (__('Add activity'), "create_btn", false, 'class="sub next"', false);
-	echo "</div>";
+	print_table($table);
 	echo '</form>';
 }
 

@@ -71,7 +71,7 @@ if (isset($_GET["upload"])) {
 // Control to upload file
 
 
-echo '<div style="width: 99%; text-align: right; margin-top: 10px; margin-bottom: 10px;">';
+echo '<div style="width: 99%; text-align: right; margin-bottom: 5px;">';
 echo print_button (__('Upload a new file'), 'add_link', false, '$(\'#upload_div\').slideToggle (); return false', 'class="sub upload"');
 echo '</div>';
 

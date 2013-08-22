@@ -336,33 +336,21 @@ if ($id || $new) {
 		$op = get_parameter ("op", "");
 		
 		echo '<ul style="height: 30px;" class="ui-tabs-nav">';
-		echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail"><span>'.__("Search").'</span></a></li>';
-
-		if ($op == "")
-			echo '<li class="ui-tabs-selected">';
-		else
-			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'"><span>'.__("Lead").'</span></a></li>';
-
-		if ($op == "activity")
-			echo '<li class="ui-tabs-selected">';
-		else
-			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=activity"><span>'.__("Activity").'</span></a></li>';
-
-		if ($op == "history")
-			echo '<li class="ui-tabs-selected">';
-		else
-			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=history"><span>'.__("Tracking").'</span></a></li>';
-
 		if ($op == "files")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
 		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=files"><span>'.__("Files").'</span></a></li>';
-
+		
+		echo '<li class="ui-tabs">';
+		echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id_company.'"><span>'.__("Company").'</span></a></li>';
+		
+		if ($op == "forward")
+			echo '<li class="ui-tabs-selected">';
+		else
+			echo '<li class="ui-tabs">';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=forward"><span>'.__("Forward lead").'</span></a></li>';
+		
 		// Show mail tab only on owned leads
 		$lead_owner = get_db_value ("owner", "tlead", "id", $id);
 
@@ -373,66 +361,90 @@ if ($id || $new) {
 				echo '<li class="ui-tabs">';
 			echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=mail"><span>'.__("Mail reply").'</span></a></li>';
 		}
-
-
-		if ($op == "forward")
+		
+		if ($op == "history")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=forward"><span>'.__("Forward lead").'</span></a></li>';
-	
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=history"><span>'.__("Tracking").'</span></a></li>';
+
+		if ($op == "activity")
+			echo '<li class="ui-tabs-selected">';
+		else
+			echo '<li class="ui-tabs">';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=activity"><span>'.__("Activity").'</span></a></li>';
+		
+		if ($op == "")
+			echo '<li class="ui-tabs-selected">';
+		else
+			echo '<li class="ui-tabs">';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'"><span>'.__("Lead details").'</span></a></li>';
+
 		echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id_company.'"><span>'.__("Company").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail"><span>'.__("Search").'</span></a></li>';
 
-
+		echo '<li class="ui-tabs-title">';
+		switch ($op) {
+			case "activity":
+				echo strtoupper(__('Activity'));
+				break;
+			case "history":
+				echo strtoupper(__('Tracking'));
+				break;
+			case "mail":
+				echo strtoupper(__('Mail reply'));
+				break;
+			case "files":
+				echo strtoupper(__('Files'));
+				break;
+			case "forward":
+				echo strtoupper(__('Forward lead'));
+				break;
+			default:
+				echo strtoupper(__('Lead details'));
+		}
+		echo '</li>';
+		
 		echo '</ul>';
-
-		// Raya horizontal
-		echo '<div id="ui-tabs-1" class="ui-tabs-panel" style="display: block;"></div>';
+		
+		$name = get_db_value ('fullname', 'tlead', 'id', $id);
+		
+		echo '<div class="under_tabs_info">' . sprintf(__('Lead #%s: %s'), $id, $name) . '</div>';
 	}
 
-	// Load tab activity
-	if ($op == "activity"){
-		include "operation/leads/lead_activity.php";
-		return;
+	switch ($op) {
+		case "activity":
+			// Load tab activity
+			include "operation/leads/lead_activity.php";
+			return;
+		case "history":
+			// Load tab history/tracking
+			include "operation/leads/lead_history.php";
+			return;
+		case "mail":
+			// Load tab mail
+			include "operation/leads/lead_mail.php";
+			return;
+		case "files":
+			// Load tab files
+			include "operation/leads/lead_files.php";
+			return;
+		case "forward":
+			// Load tab forward
+			include "operation/leads/lead_forward.php";
+			return;
 	}
 
-	// Load tab history/tracking
-	if ($op == "history"){
-		include "operation/leads/lead_history.php";
-		return;
-	}
-
-	// Load tab mail
-	if ($op == "mail"){
-		include "operation/leads/lead_mail.php";
-		return;
-	}
-
-	// Load tab files
-	if ($op == "files"){
-		include "operation/leads/lead_files.php";
-		return;
-	}
-
-	// Load tab forward
-	if ($op == "forward"){
-		include "operation/leads/lead_forward.php";
-		return;
-	}
-
-	$table->width = "90%";
-	$table->class = "databox";
+	$table->width = "99%";
+	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
 	$table->colspan[8][0] = 4;
 	
 	if ($write_permission) {
 		
-		if ($id != 0) {
-			echo "<h2>".__('Lead details').": #".$id."</h2>";
-		} else {
-			echo "<h2>".__('Create lead')."</h2>";
+		if ($id == 0) {
+			echo "<h1>".__('Create lead')."</h1>";
 		}
 
 		$table->data[0][0] = print_checkbox ("duplicated_leads", 0, false, true, __('Allow duplicated leads'));
@@ -554,20 +566,20 @@ if ($id || $new) {
 		$table->data[6][0] = "<b>".__('Description')."</b><br>$description<br>";
 	}
 	
+	if ($id) {
+		$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('update', 1, true);
+		$button .= print_input_hidden ('id', $id, true);
+	} else {
+		$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
+		$button .= print_input_hidden ('create', 1, true);
+	}
+	
+	$table->colspan[count($table->data) + 1][0] = 4;
+	$table->data[count($table->data) + 1][0] = $button;
+	
 	echo '<form method="post" id="lead_form">';
 	print_table ($table);
-
-	echo '<div class="button" style="width: '.$table->width.'">';
-	if ($id) {
-		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', false);
-		print_input_hidden ('update', 1);
-		print_input_hidden ('id', $id);
-	} else {
-		print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', false);
-		print_input_hidden ('create', 1);
-	}
-	echo "</div>";
-
 	echo "</form>";
 
 } else {
@@ -577,17 +589,15 @@ if ($id || $new) {
 	//echo "<h2>".__('Lead search')."</h2>";
 	
 	echo "<div id='lead-search-content'>";
-	echo "<h2>".__('Lead search');
+	echo "<h1>".__('Lead search');
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
-	echo "<a id='lead_stats_form_submit' href='javascript: changeAction();'>".print_image ("images/chart_bar.png", true, array("title" => __("Search statistics")))."</a>";
+	echo "<a id='lead_stats_form_submit' href='javascript: changeAction();'>".print_image ("images/chart_bar_dark.png", true, array("title" => __("Search statistics")))."</a>";
 	echo "</li>";
 	echo "</ul>";
 	echo "</div>";
-	echo "</h2>";
-
-	echo "<br>";
+	echo "</h1>";
 
 	// TODO: Show only leads of my company or my company's children.
 	// TODO: Implement ACL check !
@@ -661,11 +671,11 @@ if ($id || $new) {
 
 	echo '<form id="lead_stats_form" action="index.php?sec=customers&sec2=operation/leads/lead_detail" method="post">';		
 
-	$table->class = 'databox';
+	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
-	$table->width = "97%";
+	$table->width = "99%";
 
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 	
@@ -687,11 +697,11 @@ if ($id || $new) {
 
 	$table->data[1][0] = print_input_text ("country_search", $country, "", 21, 100, true, __('Country'));
 
-	$table->data[1][1] = print_input_text ("est_sale_search", $est_sale, "", 21, 100, true, __('Estimated Sale >'));
+	$table->data[1][1] = print_input_text ("est_sale_search", $est_sale, "", 21, 100, true, __('Estimated Sale'));
 	
 	$table->data[1][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-    $table->data[1][2] .= "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_leads=1&where_clause=$where_clause'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
-	
+	$table->data[1][2] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . str_replace('"', "'", $where_clause) . '\')', 'class="sub csv"', true);
+
 	print_table ($table);
 	$table->data = array ();
 
@@ -734,7 +744,7 @@ if ($id || $new) {
 
 	if ($leads !== false) {
 		unset ($table);
-		$table->width = "97%";
+		$table->width = "99%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();
