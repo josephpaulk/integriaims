@@ -347,9 +347,17 @@ function print_project_user_timegraph($id_user, $start_date = false, $end_date =
 // =====================================================================
 // Draw a time graph for project
 // =====================================================================
-function print_project_timegraph($id_project, $start_date = false, $end_date = false) {
+function print_project_timegraph($id_project, $start_date = false, $end_date = false, $id_user_filter = "") {
 	
-	$users = get_users_project($id_project);
+	if ($id_user_filter == "") {
+		$users = get_users_project ($id_project);
+	} else {
+		$sql = "SELECT *
+                FROM trole_people_project
+                WHERE id_project = $id_project AND id_user = '$id_user_filter'";
+        	$users = get_db_all_rows_sql ($sql);
+	}
+
 	$tasks = get_db_all_rows_field_filter('ttask', 'id_project', $id_project);
 	
 	$data = array();

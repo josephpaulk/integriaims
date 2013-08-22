@@ -74,11 +74,11 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 	echo "<a href='index.php?sec=projects&sec2=operation/projects/project'>".__('Projects detail')."</a></li>";
 
 	// Project tree
-	if ($sec2 == "operation/projects/project_tree")
+	if ($sec2 == "operation/projects/user_project_timegraph")
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=projects&sec2=operation/projects/project_tree'>".__('Projects tree')."</a></li>";
+	echo "<a href='index.php?sec=projects&sec2=operation/projects/user_project_timegraph'>".__('Project timemap')."</a></li>";
 
 	// Project create
 	if ($section_permission['write']) {
@@ -139,13 +139,6 @@ if ($sec == "projects" && give_acl ($config["id_user"], 0, "PR") && $show_projec
 				echo "<li>";
 			echo "<a href='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=$id_project'>".__('Task planning')."</a></li>";
 		}
-		
-		// Project Bubble graph
-		if ($sec2 == "operation/projects/project_bubblegraph")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=projects&sec2=operation/projects/project_bubblegraph&id_project=$id_project'>".__('Process graph')."</a></li>";
 		
 		// Timegraph d3.js treemap project
 		if ($sec2 == "operation/projects/project_timegraph")
@@ -1016,12 +1009,6 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual'>".__('Annual report')."</a></li>";
 		
-		// Basic report (annual)
-		if ($sec2 == "operation/user_report/user_project_timegraph")
-			echo "<li id='sidesel'>";
-		else
-			echo "<li>";
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/user_project_timegraph'>".__('Time per project')."</a></li>";
 	}
 	
 	if (dame_admin ($config['id_user'])) {

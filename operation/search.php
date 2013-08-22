@@ -35,7 +35,7 @@ echo "<h1>";
 
 echo __("Searching for");
 echo "...";
-echo "<i> '". $search_string ."'</i>";
+echo "<i> '". safe_output($search_string) ."'</i>";
 echo "</h1>";
 
 /* 
@@ -140,7 +140,7 @@ OR tproject.name  LIKE '%$search_string%')";
 // Users - Only for UM
 if (give_acl($config["id_user"], 0, "UM")){
 
-	$sql = "SELECT * FROM tusuario WHERE id_usuario LIKE '%".$search_string."%' OR direccion LIKE '%".$search_string."%' OR comentarios LIKE '%".$search_string."%' ";
+	$sql = "SELECT * FROM tusuario WHERE nombre_real LIKE '%".$search_string."%' OR id_usuario LIKE '%".$search_string."%' OR direccion LIKE '%".$search_string."%' OR comentarios LIKE '%".$search_string."%' ";
 	$users = get_db_all_rows_sql ($sql);
 	
 	if ($users !== false) {
@@ -374,7 +374,7 @@ if (give_acl ($config['id_user'], $id_grupo, "WR")) {
 	$conf['self'] = 'index.php?sec=wiki&sec2=operation/wiki/wiki' . '&';
 	$conf['plugin_dir'] = $conf_plugin_dir;
 	$conf['var_dir'] = $conf_var_dir;
-	$conf['custom_style'] = file_get_contents ($config["homedir"]."/include/styles/wiki.css");
+//	$conf['custom_style'] = file_get_contents ($config["homedir"]."/include/styles/wiki.css");
 	$conf['fallback_template'] = $conf['custom_style'].  '
 
 	<div id="wiki_view">
@@ -398,7 +398,7 @@ if (give_acl ($config['id_user'], $id_grupo, "WR")) {
 
 	$action="search";
 
-	$_REQUEST["query"]=$search_string;
+	$_REQUEST["query"]=safe_output($search_string);
 	$_REQUEST["action"]="search";
 	lionwiki_show($conf);
 

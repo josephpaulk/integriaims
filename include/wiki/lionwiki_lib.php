@@ -516,7 +516,7 @@ input,select,textarea{border:1px solid #AAA;padding:2px;font-size:12px}
 		if ($has_permission) {
 			$CON_FORM_BEGIN = "<form action=\"$self_form\" method=\"post\"><input type=\"hidden\" name=\"action\" value=\"save\"/><input type=\"hidden\" name=\"last_changed\" value=\"$last_changed_ts\"/><input type=\"hidden\" name=\"showsource\" value=\"$showsource\"/><input type=\"hidden\" name=\"par\" value=\"".h($par)."\"/><input type=\"hidden\" name=\"page\" value=\"".h($page)."\"/>";
 			$CON_FORM_END = '</form>';
-			$CON_TEXTAREA = '<textarea class="contentTextarea" name="content" style="width:100%" cols="100" rows="30">'.h($CON).'</textarea>';
+			$CON_TEXTAREA = '<textarea class="contentTextarea" name="content" rows="27">'.h($CON).'</textarea>';
 			$CON_PREVIEW = '<input class="submit" type="submit" name="preview" value="'.$T_PREVIEW.'"/>';
 			
 			if (!$showsource) {

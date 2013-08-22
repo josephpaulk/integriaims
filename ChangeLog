@@ -1,3 +1,34 @@
+2013-08-22  Sancho Lerena <slerena@artica.es>
+
+	* include/functions_graph.php: Improved new D3 graph
+	for displaying project data on a single user.
+
+	* include/styles/wiki.css: Fixed old wiki CSS to match
+	current Integria style.
+
+	* iinclude/styles/jquery-ui-1.10.0.custom.css,
+	include/styles/integria_tip.css: Small fixes on the enterprise keygen message.
+
+	* include/wiki/lionwiki_lib.php: Fixed "hardcoded" textarea width.
+
+	* operation/projects/project_bubblegraph.php: Removed the old graphviz
+	project graphs. 
+
+	* operation/projects/user_project_timegraph.php: Added the new view here.
+
+	* operation/projects/project_timegraph.php: Added new field here.
+
+	* operation/projects/project_tree.php: Removed old graphviz code.
+
+	* operation/search.php: Fixed some problems with HTML encoded searches. Added
+	fullname search for user search.
+
+	* operation/side_menu.php: Updated option menus.
+
+	* operation/user_report/user_project_timegraph.php: Moved miguel's code to
+	proper place (operation/projects), under a new menu entry (project timemap).
+
+
 2013-08-22  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_inventories.php

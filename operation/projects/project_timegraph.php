@@ -20,6 +20,7 @@ global $config;
 
 include_once ("include/functions_projects.php");
 include_once ("include/functions_graph.php");
+include_once ("include/functions_user.php");
 
 check_login ();
 
@@ -28,6 +29,10 @@ $id_user = $config["id_user"];
 
 $start_date = get_parameter('start_date');
 $end_date = get_parameter('end_date');
+
+$id_user_filter = get_parameter('user', "");
+$start_date = get_parameter('start_date', strftime("%F",strtotime("-1 year")));
+$end_date = get_parameter('end_date', strftime("%F",strtotime("now")));
 
 // ACL
 $project_access = get_project_access ($id_user, $id_project);
@@ -45,6 +50,21 @@ if ($id_project) {
 	
 	echo '<table class="project_overview" border=0>';
 	echo '<tr>';
+
+
+	echo '<td width="25%"><b>'.__('User ').' </b>';
+	echo '<br>';
+	$params = array();
+
+	$params['input_value'] = $id_user_filter;
+	$params['input_id'] = 'text-user';
+	$params['input_name'] = 'user';
+	$params['return'] = false;
+	$params['return_help'] = false;
+
+	user_print_autocomplete_input($params);
+	echo '</td>';
+
 	echo '<td width="25%"><b>'.__('Start').' </b>';
 	print_help_tip(__('Empty date is all range time of project'));
 	echo '<br>';
@@ -79,6 +99,21 @@ if ($id_project) {
 	if (empty($end_date)) {
 		$end_date = false;
 	}
+
+?>
+<script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+<script type="text/javascript">
+        add_ranged_datepicker ("#text-start_date", "#text-end_date", null);
+
+
+        $(document).ready (function () {
+                var idUser = "<?php echo $config['id_user'] ?>";
+
+                bindAutocomplete ("#text-user", idUser);
+        });
+</script>
+
+<?php
 	
-	print_project_timegraph($id_project, $start_date, $end_date);
+	print_project_timegraph($id_project, $start_date, $end_date, $id_user_filter);
 }

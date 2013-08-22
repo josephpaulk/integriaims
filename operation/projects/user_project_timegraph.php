@@ -26,9 +26,9 @@ check_login ();
 
 $id_user = $config["id_user"];
 
-$id_user_filter = get_parameter('user', '');
-$start_date = get_parameter('start_date');
-$end_date = get_parameter('end_date');
+$id_user_filter = get_parameter('user', $config["id_user"]);
+$start_date = get_parameter('start_date', strftime("%F",strtotime("-1 month")));
+$end_date = get_parameter('end_date', strftime("%F",strtotime("now")));
 
 // ACL
 $id_grupo = get_parameter ("id_grupo", 0);
@@ -43,7 +43,7 @@ if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo
 
 echo "<h3>" . __('Time per project graph') . "</h3>";
 
-echo "<form action='index.php?sec=users&sec2=operation/user_report/user_project_timegraph' method='post'>";
+echo "<form method='post'>";
 
 echo '<table class="project_overview" border=0>';
 echo '<tr>';
