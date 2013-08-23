@@ -63,13 +63,22 @@ foreach ($inventories as $inventory) {
 		if ($contact['position'] != '')
 			$details .= '<strong>'.__('Position').'</strong>: '.$contact['position'].'<br />';
 		$data[3] = print_help_tip ($details, true, 'tip_view');
-		$data[4] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'">'.
+
+		if ($contact["type"] == "user") {
+			$data[4] = '<a href="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user='.$contact['id'].'">'.
+                                '<img src="images/setup.gif" /></a>';
+		} else {
+			$data[4] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$contact['id'].'">'.
 				'<img src="images/setup.gif" /></a>';
+		}
+		
 		array_push ($table->data, $data);
 	}
 }
 
-//echo '<h3>'.__('Contacts grouped by inventory').'</h3>';
+//Add editor, creator, closed by, owner
+
+
 print_table ($table);
 
 $table->data = array ();

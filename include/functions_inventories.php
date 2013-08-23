@@ -296,35 +296,76 @@ function get_company_contacts ($id_company, $only_names = true) {
  */
 function get_inventory_contacts ($id_inventory, $only_names = false) {
 	global $config;
+
+	include_once("include/functions_crm.php");
 	
 	/* First try to get only defined contacts */
 	$owner = get_db_value('owner', 'tinventory', 'id', $id_inventory);
 	
-	$sql = "SELECT tcompany_contact.*
-			FROM tcompany_contact, tinventory, tusuario
-			WHERE tusuario.id_usuario = '$owner'
-			AND tinventory.id = $id_inventory
-			AND tusuario.id_usuario = tinventory.owner
-			AND tcompany_contact.id_company = tusuario.id_company";
-			
-	$contacts = get_db_all_rows_sql ($sql);
-	if ($contacts !== false) {
-		if (! $only_names)
-			return $contacts;
-		
-		$retval = array ();
-		foreach ($contacts as $contact) {
-			$retval[$contact['id']] = $contact['fullname'];
-		}
-		return $retval;
+	$owner_info = get_db_row ("tusuario", "id_usuario", $owner);
+
+	$all_contacts = array();
+
+	$contact = array("id" => $owner,
+			"type" => "user",
+			"id_company" => $owner_info["id_company"],
+			"fullname" => $owner_info["nombre_real"],
+			"email" => $owner_info["direccion"],
+			"phone" => $owner_info["telefono"],
+			"mobile" => __("N/A"),
+			"position" => __("N/A"),
+			"description" => $owner_info["comentarios"],
+			"disabled" => $owner_info["disabled"]);
+
+	$all_contacts[$contact["id"]] = $contact;  
+
+	//Get all users associated to the inventory object
+	//enterprise_include_once("include/functions_inventory.php");
+
+	$inv_users = inventory_get_users($id_inventory, false);		
+
+	if ($inv_users === ENTERPRISE_NOT_HOOK) {
+		$inv_users = array();
+	}
+
+	foreach ($inv_users as $user) {
+       		$contact = array("id" => $user["id_usuario"],
+                        "type" => "user",
+                        "id_company" => $user["id_company"],
+                        "fullname" => $user["nombre_real"],
+                        "email" => $user["direccion"],
+                        "phone" => $user["telefono"],
+                        "mobile" => __("N/A"),
+                        "position" => __("N/A"),
+                        "description" => $user["comentarios"],
+                        "disabled" => $user["disabled"]);
+
+        	$all_contacts[$contact["id"]] = $contact;
+	}
+
+	$inv_companies = inventory_get_companies($id_inventory, false);
+	
+	if ($inv_companies === ENTERPRISE_NOT_HOOK) {
+		$inv_companies = array();
 	}
 	
+	foreach ($inv_companies as $comp) {
+		$where_clause = sprintf("WHERE id_company = %d", $comp["id"]);
+		$contacts = crm_get_all_contacts ($where_clause);	
+		
+		if (!$contacts) {
+			$contacts = array();
+		}
+
+		foreach ($contacts as $contact) {
+                        $all_contacts[$contact['id']] = $contact;
+                }				
+	}
+
 	$contracts = get_inventory_contracts ($id_inventory, false);
 	if ($contracts === false)
 		return array ();
-	
-	$all_contacts = array ();
-	
+		
 	foreach ($contracts as $contract) {
 		$company = get_company ($contract['id_company']);
 		if ($company === false)
@@ -348,6 +389,7 @@ function get_inventory_contacts ($id_inventory, $only_names = false) {
 	foreach ($all_contacts as $contact) {
 		$retval[$contact['id']] = $contact['fullname'];
 	}
+	
 	return $retval;
 }
 
@@ -1478,5 +1520,60 @@ function print_inventory_tabs($selected_tab, $id, $inventory_name) {
 	echo '</ul>';
 	
 	echo '<div class="under_tabs_info">' . sprintf(__('Inventory object #%s: %s'), $id, $inventory_name) . '</div>';
+}
+
+function inventory_get_companies ($id_inventory, $only_names = true) {
+
+        $sql = sprintf ("SELECT tcompany.* FROM tcompany, tinventory_acl
+                        WHERE tcompany.id = tinventory_acl.id_reference
+                        AND tinventory_acl.type = 'company'
+                        AND tinventory_acl.id_inventory = %d", $id_inventory);
+
+
+        $all_companies = get_db_all_rows_sql ($sql);
+        if ($all_companies == false)
+                return array ();
+
+        global $config;
+        $companies = array ();
+        foreach ($all_companies as $company) {
+                array_push ($companies, $company);
+        }
+
+        if ($only_names) {
+                $result = array ();
+                foreach ($companies as $company) {
+                        $result[$company['id']] = $company['name'];
+                }
+                return $result;
+        }
+        return $companies;
+}
+
+function inventory_get_users ($id_inventory, $only_names = true) {
+
+        $sql = sprintf ("SELECT tusuario.* FROM tusuario, tinventory_acl
+                        WHERE tusuario.id_usuario = tinventory_acl.id_reference
+                        AND tinventory_acl.type = 'user'
+                        AND tinventory_acl.id_inventory = %d", $id_inventory);
+
+        $all_users = get_db_all_rows_sql ($sql);
+        if ($all_users == false)
+                return array ();
+
+        global $config;
+        $users = array ();
+        foreach ($all_users as $user) {
+                array_push ($users, $user);
+        }
+
+        if ($only_names) {
+                $result = array ();
+                foreach ($users as $user) {
+                        $result[$user['id_usuario']] = $user['nombre_real'];
+                }
+                return $result;
+        }
+        return $users;
 }
 ?>

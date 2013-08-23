@@ -1,3 +1,11 @@
+2013-08-23  Dario Rodriguez <dario@artica.es>
+
+	* operation/incidents/incident_inventory_contacts.php,
+	operation/incidents/incident_dashboard_detail.php,
+	operation/inventories/inventory_contacts.php: Fixed 
+	inventory contact information on incidents and
+	inventory views. 
+
 2013-08-23  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_html.php

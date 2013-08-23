@@ -446,7 +446,7 @@ switch ($tab) {
 		echo "<h2>".__('Inventory objects')."</h2>";
 		break;
 	case "contacts":
-		echo "<h2>".__('Contacts grouped by inventory')."</h2>";
+		echo "<h2>".__('Contacts')."</h2>";
 		break;
 	case "tracking":
 		echo "<h2>".__('Tracking')."</h2>";

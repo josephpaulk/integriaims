@@ -72,11 +72,7 @@ $table->align[3] = 'center';
 
 $table->data = array ();
 
-if ($is_enterprise) {
-	$contacts = inventory_get_contacts ($id, false);
-} else {
-	$contacts = get_inventory_contacts ($id, false);
-}
+$contacts = get_inventory_contacts ($id, false);
 
 if ($contacts === false)
 	$contacts = array ();
