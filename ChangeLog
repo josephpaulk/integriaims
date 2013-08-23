@@ -1,5 +1,10 @@
 2013-08-23  Sergio Martin <sergio.martin@artica.es>
 
+	* godmode/setup/setup_pandora.php: Fix Pandora FMS inventory
+	screen broken by the last enterprise merge
+
+2013-08-23  Sergio Martin <sergio.martin@artica.es>
+
 	* include/styles/integria.css
 	include/functions_setup.php
 	images/email_dark.png

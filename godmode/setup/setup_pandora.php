@@ -103,10 +103,8 @@ $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub u
 $table_remote_inventory = enterprise_hook('setup_print_remote_inventory_type');
 
 if ($table_remote_inventory !== ENTERPRISE_NOT_HOOK) {
-	$table->data[3][0] = "<br><h3>".__('Remote inventory')."</h3><br>";
+	$table->data[3][0] = $table_remote_inventory;
 	$table->colspan[3][0] = 2;
-
-	$table->data = array_merge($table->data, $table_remote_inventory);
 }
 
 $table->data['button'][0] = $button;
