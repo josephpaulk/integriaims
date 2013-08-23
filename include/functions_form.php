@@ -273,7 +273,7 @@ function combo_incident_status ($actual = -1, $disabled = 0, $actual_only = 0, $
 
 	if($for_massives) {
 	$output .= print_select ($values, 'mass_status', $actual, '', __('Select'), -1,
-		true);
+		true, false, false, __('Status'));
 	}
 	else {
 	$output .= print_select ($values, 'incident_status', $actual, '', '', 0,
@@ -304,7 +304,7 @@ function combo_incident_resolution ($actual = -1, $disabled = false, $return = f
 	if($for_massives) {
 		$output .= print_select (get_incident_resolutions (),
 						'mass_resolution', $actual, '', __('Select'),
-						-1, true);
+						-1, true, false, false, __('Resolution'));
 	}
 	else {
 		$output .= print_select (get_incident_resolutions (),
@@ -901,15 +901,16 @@ function form_search_incident ($return = false, $filter=false) {
 	/* No action is set, so the form will be sent to the current page */
 	$table = new stdclass;
 	$table->width = "99%";
-	$table->class = "search-table";
+	$table->class = "search-table-button";
 	$table->cellspacing = 2;
 	$table->cellpadding = 2;
 	$table->data = array ();
 	$table->size = array ();
 	$table->style = array ();
-	$table->style[0] = 'width: 30%';
-	$table->style[1] = 'width: 20%';
-	$table->style[2] = 'width: 30%';
+	$table->style[0] = 'width: 25%';
+	$table->style[1] = 'width: 25%';
+	$table->style[2] = 'width: 25%';
+	$table->style[3] = 'width: 25%';
 	$table->rowstyle = array ();
 	$table->rowstyle[1] = 'display: none';
 	$table->rowstyle[2] = 'display: none';
@@ -918,10 +919,11 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->rowstyle[5] = 'display: none';
 	$table->rowstyle[6] = 'text-align: right';
 	$table->colspan = array ();
-	$table->colspan[6][0] = 3;
+	$table->colspan[0][0] = 2;
+	$table->colspan[6][1] = 3;
 	
 	$table->data[0][0] = print_input_text ('search_string', $search_string,
-		'', 30, 100, true, __('Search string'));
+		'', 50, 100, true, __('Search string'));
 	
 	$available_status = get_indicent_status();
 	$available_status[-10] = __("Not closed");
@@ -934,7 +936,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$table->data[1][0] = print_select (get_priorities (),
 			'search_priority', $priority,
 			'', __('Any'), -1, true, false, false,
-			__('Priority'));
+			__('Priority'), false, 'width: 70px;');
 
 	$table->data[0][2] = print_select (get_user_groups (),
 			'search_id_group', $id_group,
@@ -944,10 +946,13 @@ function form_search_incident ($return = false, $filter=false) {
 	
 	$table->data[1][1] = print_input_text ('inventory_name', $name,'', 7, 0, true, __('Inventory'), false);	
 	
-	$table->data[1][1] .= "&nbsp;&nbsp;<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Search inventory')."</a>";
+	$table->data[1][1] .= "&nbsp;&nbsp;<a href='javascript: show_search_inventory(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/zoom.png', true, array('title' => __('Search inventory'))) . "</a>";
 	
 	$table->data[1][1] .= print_input_hidden ('id_inventory', $id_inventory, true);
 	
+			
+	$table->data[1][2] = print_input_text ('search_first_date', $date_ini, '', 15, 15, true, __('Created from'));
+	$table->data[1][3] = print_input_text ('search_last_date', $date_end, '', 15, 15, true, __('Created to'));
 	
 	$table->data[3][0] = print_select (get_user_visible_users ($config['id_user'], 'IR', true),
 		'search_id_user', $search_id_user,
@@ -961,25 +966,6 @@ function form_search_incident ($return = false, $filter=false) {
 	$params_owner['return'] = true;
 
 	$table->data[3][0] = user_print_autocomplete_input($params_owner);
-			
-	$table->data[3][1] = print_input_text ('search_first_date', $date_ini, '', 15, 15, true, __('Created from'));
-	$table->data[3][2] = print_input_text ('search_last_date', $date_end, '', 15, 15, true, __('Created to'));
-	
-	if (!get_external_user ($config["id_user"]))
-		$table->data[4][0] = print_select (get_companies (), 'search_id_company',
-			$id_company, '', __('All'), 0, true, false, false, __('Company'));
-			
-	$table->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
-		$search_id_incident_type, '', __('All'), 0, true, false, false, __('Incident type'));
-	
-	$params_creator = array();
-	$params_creator['input_id'] = 'text-search_creator';
-	$params_creator['input_name'] = 'search_creator';
-	$params_creator['input_value'] = $search_creator;
-	$params_creator['title'] = __('Creator');
-	$params_creator['return'] = true;
-
-	$table->data[4][2] = user_print_autocomplete_input($params_creator);
 	
 	$params_editor = array();
 	$params_editor['input_id'] = 'text-search_editor';
@@ -988,7 +974,7 @@ function form_search_incident ($return = false, $filter=false) {
 	$params_editor['title'] = __('Editor');
 	$params_editor['return'] = true;
 
-	$table->data[5][0] = user_print_autocomplete_input($params_editor);
+	$table->data[3][1] = user_print_autocomplete_input($params_editor);
 	
 	$params_closed_by = array();
 	$params_closed_by['input_id'] = 'text-search_closed_by';
@@ -997,16 +983,31 @@ function form_search_incident ($return = false, $filter=false) {
 	$params_closed_by['title'] = __('Closed by');
 	$params_closed_by['return'] = true;
 
-	$table->data[5][1] = user_print_autocomplete_input($params_closed_by);
+	$table->data[3][2] = user_print_autocomplete_input($params_closed_by);
 	
-	$table->data[6][0] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
+	$params_creator = array();
+	$params_creator['input_id'] = 'text-search_creator';
+	$params_creator['input_name'] = 'search_creator';
+	$params_creator['input_value'] = $search_creator;
+	$params_creator['title'] = __('Creator');
+	$params_creator['return'] = true;
+
+	$table->data[3][3] = user_print_autocomplete_input($params_creator);
+	
+	if (!get_external_user ($config["id_user"]))
+		$table->data[4][0] = print_select (get_companies (), 'search_id_company',
+			$id_company, '', __('All'), 0, true, false, false, __('Company'));
+			
+	$table->data[4][1] = print_select (get_incident_types (), 'search_id_incident_type',
+		$search_id_incident_type, '', __('All'), 0, true, false, false, __('Incident type'));
+	
+	$table->data[6][0] = '<div style="width: 100%; text-align: left; height: 20px;"><a class="show_advanced_search" href="#">'.__('Advanced search').' >></a></div>';
+	$table->data[6][1] = print_submit_button (__('Search'), 'search', false, 'class="sub search"', true);
 	
 	$output .= '<form id="search_incident_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
 	$output .= print_table ($table, true);
 	$output .= '</form>';
-	
-	$output .= '<a class="show_advanced_search" href="#">'.__('Advanced search').' >></a>';
-	
+		
 	echo "<div class= 'dialog ui-dialog-content' id='search_inventory_window'></div>";
 	
 	if ($return)

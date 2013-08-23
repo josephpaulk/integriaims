@@ -1880,7 +1880,7 @@ function incidents_search_result ($filter, $ajax=false) {
 	// ----------------------------------------
 	// Here we print the result of the search
 	// ----------------------------------------
-	echo '<table width="100%" cellpadding="0" cellspacing="0" border="0px" class="result_table listing" id="incident_search_result_table">';
+	echo '<table width="99%" cellpadding="0" cellspacing="0" border="0px" class="result_table listing" id="incident_search_result_table">';
 
 	echo '<thead>';
 	echo "<tr>";
@@ -2059,11 +2059,6 @@ function incidents_search_result ($filter, $ajax=false) {
 	echo "</table>";
 
 	$incidents = print_array_pagination ($incidents_aux, "index.php?sec=incidents&sec2=operation/incidents/incident_search".$params);
-
-	echo "<br>";
-	echo sprintf(__('Max incidents shown: %d'),$config['limit_size']);
-	echo print_help_tip (sprintf(__('You can change this value by changing %s parameter in setup'),"<b>".__("Max. Incidents by search")."</b>", true));
-
 }
 
 //Returns color value (hex) for incident priority

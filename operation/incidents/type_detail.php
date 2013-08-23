@@ -163,7 +163,7 @@ if ($delete_type) {
 	$id = 0;
 }
 
-echo '<h2>'.__('Incident types').'</h2>';
+echo '<h1>'.__('Incident types').'</h1>';
 
 // FORM (Update / Create)
 if ($id || $new_type) {
@@ -181,8 +181,8 @@ if ($id || $new_type) {
 		//$id_group = $type['id_group'];
 	}
 	
-	$table->width = "90%";
-	$table->class = "databox";
+	$table->width = "99%";
+	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
 	//$table->colspan[2][0] = 2;
@@ -196,25 +196,25 @@ if ($id || $new_type) {
 */
 	$table->data[2][0] = print_textarea ('description', 3, 1, $description, '', true, __('Description'));
 	
+	if ($id) {
+		$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('update_type', 1, true);
+		$button .= print_input_hidden ('id', $id, true);
+	} else {
+		$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
+		$button .= print_input_hidden ('create_type', 1, true);
+	}
+	
+	$table->data[3][0] = $button;
+	
 	echo '<form id="form-type_detail" method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
 	print_table ($table);
-	
-	echo '<div class="button" style="width: '.$table->width.'">';
-	if ($id) {
-		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', false);
-		print_input_hidden ('update_type', 1);
-		print_input_hidden ('id', $id);
-	} else {
-		print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', false);
-		print_input_hidden ('create_type', 1);
-	}
-	echo '</div>';
 	echo '</form>';
+	unset($table);
 	
-	echo '<br>';
 	if ($show_fields) {
 		//FIELD MANAGEMENT
-		echo "<h2>".__("Incident fields")."</h2>";
+		echo "<h1>".__("Incident fields")."</h1>";
 		
 		//INCIDENT FIELDS
 		$incident_fields = get_db_all_rows_filter ("tincident_type_field", array("id_incident_type" => $id));
@@ -228,7 +228,8 @@ if ($id || $new_type) {
 			$all_fields[$field['id']] = $field['label'];
 		}
 
-		$table->width = '90%';
+		$table->width = '99%';
+		$table->class = 'listing';
 		$table->data = array ();
 		$table->head = array();
 		$table->style = array();
@@ -269,7 +270,7 @@ if ($id || $new_type) {
 				
 				$data[3] = "<a
 				href='" . $url_update . "'>
-				<img src='images/config.gif' border=0 /></a>";
+				<img src='images/wrench.png' border=0 /></a>";
 				$data[3] .= "<a
 				onclick=\"if (!confirm('" . __('Are you sure?') . "')) return false;\" href='" . $url_delete . "'>
 				<img src='images/cross.png' border=0 /></a>";
@@ -282,8 +283,8 @@ if ($id || $new_type) {
 		}
 
 		echo "<form id='form-add_field' name=dataedit method=post action='index.php?sec=incidents&sec2=operation/incidents/incident_type_field&add_field=1&id=".$id.">'";
-			echo '<div class="button" style="width: '.$table->width.'">';
-				print_submit_button (__('Add field'), 'create_btn', false, 'class="sub next"', false);
+			echo '<div style="width: '.$table->width.'; text-align: right;">';
+				print_submit_button (__('Add field'), 'create_btn', false, 'class="sub create"', false);
 			echo '</div>';
 		echo "</form>";
 		
@@ -297,7 +298,7 @@ if ($id || $new_type) {
 		$where_clause .= sprintf ('WHERE name LIKE "%%%s%%"', $search_text);
 	}
 
-	$table->width = '90%';
+	$table->width = '99%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
@@ -314,7 +315,7 @@ if ($id || $new_type) {
 	$types = get_db_all_rows_sql ($sql);
 	
 	if ($types !== false) {
-		$table->width = '90%';
+		$table->width = '99%';
 		$table->class = 'listing';
 		$table->data = array ();
 		$table->size = array ();
@@ -345,7 +346,7 @@ if ($id || $new_type) {
 	}
 	
 	echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail">';
-	echo '<div class="button" style="width: '.$table->width.'">';
+	echo '<div style="width: '.$table->width.'; text-align: right;">';
 	print_submit_button (__('Create type'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_type', 1);
 	echo '</div>';

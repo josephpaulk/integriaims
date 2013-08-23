@@ -123,7 +123,7 @@ echo sprintf(__('Max incidents shown: %d'),$config['limit_size']);
 echo print_help_tip (sprintf(__('You can change this value by changing %s parameter in setup'),"<b>".__("Max. Incidents by search")."</b>", true));
 
 $table->class = 'hide result_table listing';
-$table->width = '100%';
+$table->width = '99%';
 $table->id = 'incident_search_result_table';
 $table->head = array ();
 $table->head[0] = '';
@@ -150,7 +150,7 @@ print_table_pager ();
 unset($table);
 
 $table->class = 'result_table listing';
-$table->width = '100%';
+$table->width = '99%';
 $table->id = 'incident_massive';
 
 $table->style = array ();

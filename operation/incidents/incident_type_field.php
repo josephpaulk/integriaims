@@ -44,10 +44,10 @@ if ($id_field) {
 
 }
 
-echo '<h2>'.__('Incident fields management').'</h2>';
+echo '<h1>'.__('Incident fields management').'</h1>';
 
-$table->width = "90%";
-$table->class = "databox";
+$table->width = "99%";
+$table->class = "search-table-button";
 $table->data = array ();
 
 $table->data[0][0] = print_input_text ('label', $label, '', 45, 100, true, __('Field name'));
@@ -58,20 +58,21 @@ $table->data[0][1] .= print_select ($types, 'type', $type, '', __('Select type')
 
 $table->data['id_combo_value'][0] = print_input_text ('combo_value', $combo_value, '', 45, 100, true, __('Combo value')).print_help_tip (__("Set values separated by comma"), true);
 
+if ($add_field) {
+	$button = print_input_hidden('add_field', 1, true);
+	$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
+} else if ($update_field) {
+	$button = print_input_hidden('update_field', 1, true);
+	$button .= print_input_hidden('add_field', 0, true);
+	$button .= print_input_hidden('id_field', $id_field, true);
+	$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+}
+
+$table->data['button'][0] = $button;
+$table->colspan['button'][0] = 2;
+
 echo '<form method="post" action="index.php?sec=incidents&sec2=operation/incidents/type_detail&id='.$id_incident_type.'&add_field=1">';
 print_table ($table);
-
-echo '<div class="button" style="width: '.$table->width.'">';
-	if ($add_field) {
-		print_input_hidden('add_field', 1);
-		print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', false);
-	} else if ($update_field) {
-		print_input_hidden('update_field', 1);
-		print_input_hidden('add_field', 0);
-		print_input_hidden('id_field', $id_field);
-		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', false);
-	}
-echo '</div>';
 echo '</form>';
 
 ?>

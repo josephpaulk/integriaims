@@ -270,6 +270,10 @@ input[type="text"] {
 	height: 13px;
 }
 
+input[type="file"] {
+	background: #FFF;
+}
+
 textarea {
 	padding:5px;
 	color: #606060;
@@ -1850,11 +1854,16 @@ div.incident_container, .integria_form, .container, table.search-table, table.se
 
 table.search-table, table.search-table-button {
 	padding: 12px 10px 16px 12px;
+	margin-left: 5px;
 }
 
 table.search-table-button tr:last-child td {
 	padding-top: 15px;
 	text-align: right;
+}
+
+table.search-table tr:last-child td {
+	text-align: left;
 }
 
 .integria_form {
@@ -2144,6 +2153,7 @@ table.alternate tr:nth-child(even) td{
 .under_tabs_info {
 	font-size: 0.8em;
 	margin-left: 6px;
-	width: 98%;
+	float: left;
 	text-align: left;
+	margin-top: 3px;
 }

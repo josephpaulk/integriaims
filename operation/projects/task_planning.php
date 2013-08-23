@@ -318,7 +318,7 @@ echo "<table style='margin:0px; padding:0px;'>";
 echo "<tr>";
 
 echo "<td>";
-print_button (__('Add tasks'), 'addmass', false, '', 'class="sub next"');
+print_button (__('Add tasks'), 'addmass', false, '', 'class="sub create"');
 echo "</td>";
 
 echo "<td>";
@@ -559,7 +559,7 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	//Create new task only if PM && TM flags or PW and project manager.
 	echo "<td style='text-align:center;'>";
 	echo '<a href="index.php?sec=projects&sec2=operation/projects/task_detail&id_project='.$id_project.'&id_task='.$task['id'].'&operation=view">';
-	echo '<img style="margin-right: 6px;" src="images/config.gif">';
+	echo '<img style="margin-right: 6px;" src="images/wrench.png">';
 	echo '</a>';
 	
 	echo '<a href="index.php?sec=projects&sec2=operation/projects/task_planning&id_project='.$id_project.'&delete='.$task["id"].'"

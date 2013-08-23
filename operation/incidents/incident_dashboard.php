@@ -25,7 +25,7 @@ if (!empty($first_start)) {
 }
 
 echo "<h1>";
-echo __("Incident overview");
+echo __("Incidents overview");
 echo "</h1>";
 
 /* Users affected by the incident */

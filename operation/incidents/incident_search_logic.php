@@ -37,6 +37,18 @@ echo "</ul>";
 echo "</div>";
 echo "</h1>";
 
+echo "<div class='under_tabs_info'>";
+echo sprintf(__('Max incidents shown: %d'),$config['limit_size']);
+echo print_help_tip (sprintf(__('You can change this value by changing %s parameter in setup'),"<b>".__("Max. Incidents by search")."</b>", true));
+echo "</div>";
+
+echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px; margin-top: 5px;'>";
+echo "<ul>";	
+echo "<li style='padding: 3px;'>";
+echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."</a>";
+echo "</li>";
+echo "</div>";
+
 $search_form = (bool) get_parameter ('search_form');
 $create_custom_search = (bool) get_parameter ('save-search');
 $delete_custom_search = (bool) get_parameter ('delete_custom_search');
@@ -119,17 +131,19 @@ $table->data[0][0] = print_select_from_sql ($sql, 'saved_searches', $id_search, 
 //If a custom search was selected display cross
 if ($id_search) {
 	$table->data[0][0] .= '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_search&delete_custom_search=1&saved_searches='.$id_search.'">';
-	$table->data[0][0] .= '<img src="images/cross.png" /></a>';
+	$table->data[0][0] .= '<img src="images/cross.png" title="' . __('Delete') . '"/></a>';
 }
-$table->data[0][1] = '<br>' . print_input_text ('search_name', '', '', 10, 20, true, __('Save current search'));
-$table->data[0][2] = print_submit_button (__('Save'), 'save-search', false, 'class="sub next"', true);
+$table->data[0][1] = print_input_text ('search_name', '', '', 10, 20, true, __('Save current search'));
+$table->data[0][2] = print_submit_button (__('Save'), 'save-search', false, 'class="sub save" style="margin-top: 13px;"', true);
 
+echo '<div id="custom_search" style="display: none;">';
 echo '<form id="saved-searches-form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search">';
 foreach ($filter as $key => $value) {
 	print_input_hidden ("search_".$key, $value);
 }
 print_table ($table);
 echo '</form>';
+echo '</div>';
 
 /* Show search form via AJAX */
 
@@ -166,28 +180,23 @@ echo "</form>";
 
 echo '<br>';
 
-$table->class = 'result_table listing';
+$table->class = 'search-table-button';
 $table->width = '99%';
 $table->id = 'incident_massive';
 $table->data = array();
 $table->style = array ();
 
-$table->head[0] = __('Status');
-$table->head[1] = __('Priority');
-$table->head[2] = __('Resolution');
-$table->head[3] = __('Assigned user');
 $table->data[0][0] = combo_incident_status (-1, 0, 0, true, true);
-$table->data[0][1] = print_select (get_priorities (),'mass_priority', -1, '', __('Select'), -1, true);
+$table->data[0][1] = print_select (get_priorities (),'mass_priority', -1, '', __('Select'), -1, true, 0, true, __('Priority'), false, 'width: 70px;');
 $table->data[0][2] = combo_incident_resolution ($resolution, false, true, true);
-$table->data[0][3] = print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'mass_assigned_user', '0', '', __('Select'), -1, true);
+$table->data[0][3] = print_select_from_sql('SELECT id_usuario, nombre_real FROM tusuario;', 'mass_assigned_user', '0', '', __('Select'), -1, true, false, true, __('Assigned user'));
+
+$table->data[1][0] = print_submit_button (__('Update'), 'massive_update', false, 'class="sub next"', true);
+$table->colspan[1][0] = 4;
 
 $massive_oper_incidents = print_table ($table, true);
 
-$massive_oper_incidents .= "<div style='width:".$table->width."; text-align: right;'>";
-$massive_oper_incidents .= print_submit_button (__('Update selected items'), 'massive_update', false, 'class="sub next"', true);
-$massive_oper_incidents .= "</div>";
-
-echo print_container('massive_oper_incidents', __('Massive operations over selected items'), $massive_oper_incidents, 'closed');
+echo print_container('massive_oper_incidents', __('Massive operations over selected items'), $massive_oper_incidents, 'closed', true, '20px');
 
 ?>
 

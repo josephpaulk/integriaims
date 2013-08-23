@@ -27,6 +27,10 @@ if (! give_acl ($config["id_user"], 0, "IM")) {
 	exit;
 }
 
+echo "<h1>".__('SLA Management');
+echo integria_help ("sla", true);
+echo "</h1>";
+
 $id = (int) get_parameter ('id');
 $new_sla = (bool) get_parameter ('new_sla');
 $create_sla = (bool) get_parameter ('create_sla');
@@ -112,10 +116,6 @@ if ($delete_sla) {
 	$id = 0;
 }
 
-echo "<h2>".__('SLA Management');
-echo integria_help ("sla", true);
-echo "</h2>";
-
 // FORM (Update / Create)
 if ($id || $new_sla) {
 	if ($new_sla) {
@@ -148,8 +148,8 @@ if ($id || $new_sla) {
 
 	}
 
-	$table->width = "90%";
-	$table->class = "databox";
+	$table->width = "99%";
+	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
 	$table->align = array ();
@@ -187,20 +187,20 @@ if ($id || $new_sla) {
 
 	$table->data[3][0] = print_textarea ("description", 8, 1, $description, '', true, __('Description'));
 
+	if ($id) {
+		$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('update_sla', 1, true);
+		$button .= print_input_hidden ("id", $id, true);
+	} else {
+		$button = print_input_hidden ('create_sla', 1, true);
+		$button .= print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', true);
+	}
+	
+	$table->data[4][0] = $button;
+	$table->colspan[4][0] = 4;
+	
 	echo '<form id="form-sla_detail" method="post" action="index.php?sec=inventory&sec2=operation/slas/sla_detail">';
 	print_table ($table);
-	
-	echo '<div class="button" style="width: '.$table->width.'">';
-	if ($id) {
-		print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
-		print_input_hidden ('update_sla', 1);
-		print_input_hidden ("id", $id);
-	} else {
-		print_input_hidden ('create_sla', 1);
-		print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', false);
-	}
-	echo "</div>";
-
 	echo "</form>";
 } else {
 	$search_text = (string) get_parameter ('search_text');
@@ -212,7 +212,7 @@ if ($id || $new_sla) {
 			$search_text, $search_text);
 	}
 
-	$table->width = '400px';
+	$table->width = '99%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
@@ -232,7 +232,7 @@ if ($id || $new_sla) {
 	$slas = get_db_all_rows_sql ($sql);
 	
 	if ($slas !== false) {
-		$table->width = "90%";
+		$table->width = "99%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->style = array ();
@@ -272,8 +272,8 @@ if ($id || $new_sla) {
 	}
 	
 	echo '<form id="form-sla_detail" method="post" action="index.php?sec=incidents&sec2=operation/slas/sla_detail">';
-	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+	echo '<div style="width: '.$table->width.'; text-align: right;">';
+	print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
 	print_input_hidden ('new_sla', 1);
 	echo '</div>';
 	echo '</form>';

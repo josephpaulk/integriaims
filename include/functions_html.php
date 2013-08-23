@@ -1009,11 +1009,12 @@ function integria_help ($help_id, $return = false) {
 }
 
 
-function print_container($id, $title, $content, $open = 'open', $return = true) {
-	$style = '';
+function print_container($id, $title, $content, $open = 'open', $return = true, $margin = true) {
+	$container_div_style = '';
+	$container_style = '';
+	$h2_style = '';
 	$arrow = '';
 	$onclick = 'toggleDiv (\'' . $id . '_div\')';
-	$h2_style = '';
 
 	switch($open) {
 		case 'open':
@@ -1021,7 +1022,7 @@ function print_container($id, $title, $content, $open = 'open', $return = true) 
 			break;
 		case 'closed':
 			$arrow = '&nbsp;&nbsp;' . print_image('images/arrow_right.png', true, array('class' => 'arrow_right')) . '</h2>';
-			$style = 'display: none;';
+			$container_div_style = 'display: none;';
 			break;
 		case 'no':
 		default:
@@ -1030,11 +1031,18 @@ function print_container($id, $title, $content, $open = 'open', $return = true) 
 			break;
 	}
 	
-	$container = '<div class="container ' . $id . '_container">';
+	if ($margin !== true) {
+		$margin = (int) $margin;
+		$h2_style .= 'padding-left: ' . $margin . 'px; height: 22px;';
+		$container_style = 'padding-left: 0px; padding-bottom: 3px; font-size: 0.90em;';
+		$container_div_style .= 'padding-left: ' . $margin . 'px;';
+	}
+	
+	$container = '<div class="container ' . $id . '_container" style="' . $container_style . '">';
 	$container .= '<h2 id="' . $id . '" class="dashboard_h2" onclick="' . $onclick . '" style="' . $h2_style . '">' . $title;
 	$container .= $arrow;
 	$container .= '</h2>';
-	$container .= '<div id="' . $id . '_div" class="container_div" style="' . $style . '">';
+	$container .= '<div id="' . $id . '_div" class="container_div" style="' . $container_div_style . '">';
 	$container .= $content;
 	$container .= '</div>';
 	$container .= '</div>'; // container

@@ -215,7 +215,7 @@ if (! $id && ! $create) {
 			$data[2] = objects_count_fields($object['id']);
 			$data[3] = '<a title=' . __("Fields") . ' href=index.php?sec=inventory&sec2=operation/inventories/manage_objects_types_list&id='.
 				$object["id"].'><img src="images/page_white_text.png"></a>';
-			$data[3] .= '&nbsp;<form style="display:inline;" method="post" onsubmit="if (!confirm(\''.__('Are you sure?').'\'))
+			$data[3] .= '<form style="display:inline;" method="post" onsubmit="if (!confirm(\''.__('Are you sure?').'\'))
 				return false;">';
 			$data[3] .= print_input_hidden ('delete_object', 1, true);
 			$data[3] .= print_input_hidden ('id', $object["id"], true);

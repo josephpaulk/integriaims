@@ -1,3 +1,29 @@
+2013-08-23  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_html.php
+	include/styles/integria.css
+	include/functions_form.php
+	include/functions_incidents.php
+	operation/incidents/incident.php
+	operation/incidents/incident_search_logic.php
+	operation/incidents/incident_type_field.php
+	operation/incidents/type_detail.php
+	operation/incidents/incident_dashboard.php
+	operation/incidents/incident_detail.php
+	operation/projects/task_planning.php
+	operation/side_menu.php
+	operation/slas/sla_detail.php
+	operation/inventories/manage_objects.php
+	images/page_white_text.png
+	images/config.gif
+	images/page_white_stack.png
+	images/go.png
+	images/tip.gif
+	images/wrench.png
+	images/world.png
+	images/editor.png: Visual changes on incidents and other 
+	parts of integria
+
 2013-08-23  Dario Rodriguez <dario@artica.es>
 
 	* operation/inventories/inventory.php: Remove access to

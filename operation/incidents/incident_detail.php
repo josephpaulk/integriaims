@@ -604,12 +604,12 @@ if ($id) {
 
 } else {
 	if (! defined ('AJAX'))
-		echo "<h2>".__('Create incident')."</h2>";
+		echo "<h1>".__('Create incident')."</h1>";
 }
 
 echo '<div class="result">'.$result_msg.'</div>';
 $table->width = '98%';
-$table->class = 'databox_color';
+$table->class = 'search-table-button';
 $table->id = "incident-editor";
 $table->size = array ();
 $table->size[0] = '25%';
@@ -760,12 +760,9 @@ $table->colspan[4][0] = 3;
 //$table->data[4][0] = "<tr id='row_show_type_fields' colspan='4'></tr>";
 $table->data[4][0] = "";
 
-$table->data[5][0] = '<a href="#" id="tgl_incident_control"><b>'.__('Advanced parameters').'</b>&nbsp;'.print_image ("images/go.png", true, array ("title" => __('Toggle parameter'), "id" => 'toggle_arrow')).'</a><br><br>';
-
-
 //////TABLA ADVANCED
 $table_advanced->width = '98%';
-$table_advanced->class = 'databox_color_without_line';
+$table_advanced->class = 'search-table';
 $table_advanced->size = array ();
 $table_advanced->size[0] = '25%';
 $table_advanced->size[1] = '25%';
@@ -837,9 +834,9 @@ if ($create_incident) {
 		$table_advanced->data[3][1] = print_select ($inventories, 'incident_inventories', NULL,
 						'', '', '', true, false, false, __('Objects affected'));
 
-		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Add')."</a>";
+		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 
-		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>".__('Remove')."</a>";
+		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 } else {
 	$inventories = get_inventories_in_incident ($id);
 	
@@ -847,9 +844,9 @@ if ($create_incident) {
 						NULL, '', '', '',
 						true, false, false, __('Objects affected'));
 
-		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>".__('Add')."</a>";
+		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 
-		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>".__('Remove')."</a>";
+		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 }
 
 foreach ($inventories as $inventory_id => $inventory_name) {
@@ -871,7 +868,7 @@ if (($has_im) && ($create_incident)){
 // END TABLE ADVANCED
 
 $table->colspan['row_advanced'][0] = 4;
-$table->data['row_advanced'][0] = print_table($table_advanced,true);
+$table->data['row_advanced'][0] = print_container('advanced_parameters_incidents_form', __('Advanced parameters'), print_table($table_advanced, true), 'closed', true, false);
 
 
 $table->colspan[9][0] = 4;
@@ -896,25 +893,25 @@ if (!$create_incident){
 	$table->data[10][0] .= "</div>";
 }
 
+if ($create_incident) {
+	$button = print_input_hidden ('action', 'insert', true);
+	if (give_acl ($config["id_user"], 0, "IW")) {
+		$button .= print_submit_button (__('Create'), 'accion', false, 'class="sub create"', true);
+	}
+} else {
+	$button = print_input_hidden ('id', $id, true);
+	$button .= print_input_hidden ('action', 'update', true);
+	if ($has_permission) {
+		$button .= print_submit_button (__('Update'), 'accion', false, 'class="sub upd"', true);
+	}
+}
+
+$table->colspan[count($table->data)+1][0] = 4;
+$table->data[count($table->data)+1][0] = $button;
 
 if ($has_permission){
 	echo '<form id="incident_status_form" method="post">';
 	print_table ($table);
-
-	echo '<div style="width:'.$table->width.'" class="button">';
-	if ($create_incident) {
-		print_input_hidden ('action', 'insert');
-		if (give_acl ($config["id_user"], 0, "IW")) {
-			print_submit_button (__('Create'), 'accion', false, 'class="sub next"');
-		}
-	} else {
-		print_input_hidden ('id', $id);
-		print_input_hidden ('action', 'update');
-		if ($has_permission) {
-			print_submit_button (__('Update'), 'accion', false, 'class="sub upd"');
-		}
-	}
-	echo '</div>';
 	echo "</form>";
 } else {
 	print_table ($table);
@@ -1057,9 +1054,6 @@ $(document).ready (function () {
 			$("#closed_by_wrapper").hide();
 		}
 	});
-	
-	//Hide advanced fields
-	$("#incident-editor-row_advanced-0").css('display', 'none');
 	
 	if ($("#id_incident_type").val() != "0") {
 		show_incident_type_fields();
