@@ -1,3 +1,11 @@
+2013-08-23  Dario Rodriguez <dario@artica.es>
+
+	* operation/inventories/inventory.php: Remove access to
+	$_POST, now use get_parameter.
+	* operation/inventories/inventory_detail.php: Fixed a bug
+	which show an sql error trying to insert tracking info
+	on a deleted inventory object.
+
 2013-08-22  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_graph.php: Improved new D3 graph

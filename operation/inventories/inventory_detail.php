@@ -182,10 +182,12 @@ if ($quick_delete) {
 	$sql = "DELETE FROM tinventory WHERE id=$id_inv";
 	
 	$result = process_sql ($sql);	
-	
-	if ($result !== false) {
-		inventory_tracking($id_inv, INVENTORY_DELETED);
-	}
+
+        if ($result !== false) {
+                $result_msg = '<h3 class="suc">'.__('Successfully deleted').'</h3>';
+        } else {
+                $result_msg = '<h3 class="error">'.__('There was an error deleting inventory object').'</h3>';
+        }
 	
 	$id = 0;
 }

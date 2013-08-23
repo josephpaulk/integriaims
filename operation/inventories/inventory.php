@@ -29,8 +29,8 @@ echo '<h1>' . __('Inventory overview') . '</h1>';
 $id = (int) get_parameter ('id');
 
 // Delete oject
-if (isset ($_POST["quick_delete"])) {
-	$id_inv = $_POST["quick_delete"];
+if (get_parameter("quick_delete")) {
+	$id_inv = get_parameter("quick_delete");
 	
 	if (give_acl ($config['id_user'], 0, "VW")) {
 		borrar_objeto ($id_inv);
