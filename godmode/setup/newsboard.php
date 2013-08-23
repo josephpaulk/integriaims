@@ -25,6 +25,8 @@ if (! dame_admin ($config["id_user"])) {
 	exit;
 }
 
+echo "<h1>".__('Newsboard management')."</h1>";
+
 $operation = get_parameter ("operation");
 
 // ---------------
@@ -73,8 +75,8 @@ if ($operation == "create") {
     $title = "";
     $content = "";
 
-	$table->width = '90%';
-	$table->class = 'databox';
+	$table->width = '99%';
+	$table->class = 'search-table-button';
 	$table->colspan = array ();
 	$table->colspan[1][0] = 2;
 	$table->colspan[2][0] = 2;
@@ -92,27 +94,27 @@ if ($operation == "create") {
 	$table->data[0][0] = print_input_text ('timestamp', $timestamp, '', 20,20, true, __('Timestamp'));
 	$table->data[0][1] = print_checkbox ('nodate', 1, false, true,  __('Show always'));
 	
+	$button = print_submit_button (__('Create'), 'crt', false, 'class="sub next"', true);
+	$button .= print_input_hidden ('operation', 'insert', true);
+	
+	$table->data['button'][0] = $button;
+	$table->colspan['button'][0] = 2;
+	
 	echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard">';
 	print_table ($table);
-
-	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Create'), 'crt', false, 'class="sub next"');
-	print_input_hidden ('operation', 'insert');
-	echo '</form></div>';
+	echo '</form>';
 }
 
 // -------------------------
 // TODO VIEW of my OWN items
 // -------------------------
 if ($operation == "") {
-	echo "<h1>".__('Newsboard management')."</h1>";
-
 	$sql = sprintf ('SELECT * FROM tnewsboard');
 	$todos = get_db_all_rows_sql ($sql);
 	if ($todos === false)
 		$todos = array ();
 
-	echo '<table class="listing" width="90%">';
+	echo '<table class="listing" width="99%">';
 	echo "<th>".__('Title');
 	echo "<th>".__('Date');
 	echo "<th>".__('Delete');
@@ -135,7 +137,7 @@ if ($operation == "") {
 
 
     echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard">';
-	echo '<div class="button" style="width: 90%;">';
+	echo '<div style="width: 99%; text-align: right;">';
 	print_submit_button (__('Create'), 'crt', false, 'class="sub next"');
 	print_input_hidden ('operation', 'create');
 	echo '</form></div>';

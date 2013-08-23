@@ -85,11 +85,9 @@ if (preg_match("/^\//", $current_directory))
 if (preg_match("/^manager/", $current_directory))
 	$current_directory = "images";
 
-echo "<table cellpadding='4' cellspacing='4' width='550' class='databox'>";
+echo "<table cellpadding='4' cellspacing='4' width='99%' class='search-table'>";
 
 echo "<tr><td class='datos'>";
-echo __("Base directory");
-echo "<td class='datos'>";
 
 $available_directory["images"] = "images";
 $available_directory["attachment"] = "attachment";
@@ -98,13 +96,11 @@ $available_directory["attachment/downloads"] = "attachment/downloads";
 $available_directory[$current_directory] = $current_directory;
 
 echo "<form method='post' action='index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file' enctype='multipart/form-data'>";
-print_select ($available_directory, 'directory', $current_directory, '', '', '',  false, false);
+print_select ($available_directory, 'directory', $current_directory, '', '', '',  false, false, 0, __("Base directory"));
 echo "&nbsp;&nbsp;<input type=submit class='sub next' value='".__("Go")."'>";
 echo "</form>";
 
 if (is_writable($current_directory)) {
-	echo "<tr><td class='datos'>";
-	echo __("Upload new file");
 	echo "<td class='datos'><br>";
 	$action = 'index.php?sec=godmode&sec2=godmode/setup/filemgr&upload_file';
 	
@@ -121,7 +117,7 @@ if (is_writable($current_directory)) {
 	echo "</p>";
 }
 
-echo "<h2>".__("Current directory"). " : ".$current_directory . " <a href='index.php?sec=godmode&sec2=godmode/setup/filemgr&directory=$current_directory'><img src='images/arrow_refresh.png' border=0></a></h2>";
+echo "<h1>".__("Current directory"). " : ".$current_directory . " <a href='index.php?sec=godmode&sec2=godmode/setup/filemgr&directory=$current_directory'><img src='images/arrow_refresh.png' border=0 title='" . __('Refresh') . "'></a></h1>";
 // Upload form
 
 	// List files
@@ -145,7 +141,7 @@ echo "<h2>".__("Current directory"). " : ".$current_directory . " <a href='index
 	} else {
 		asort ($result);
 		
-		echo "<table width='750' class='listing'>";
+		echo "<table width='99%' class='listing'>";
 		
 		$prev_dir = explode( "/", $current_directory );
 		$prev_dir_str = "";

@@ -33,18 +33,21 @@ if ($delete == 1){
 	}
 }
 
+echo "<h1>" . __("Error log") . "</h1>";
+
 if (!file_exists($file_name)){
-	echo "<h2 class=error>".__("Cannot find file"). "(".$file_name;
-	echo ")</h1>";
+	echo "<div class='under_tabs_info'>".__("Cannot find file"). "(".$file_name.")</div>";
 }  else {
 
 	$filesize = filesize($file_name);
 	$offset = ceil(($filesize / 4 ) * 3); // read only from the 3/4 part of file
 	$data = file_get_contents ($file_name, NULL, NULL, $offset);
 
-	echo "<h2>$file_name ".__("Reading from byte"). " " .$offset ."</h2>";
-	echo "<br><a href='index.php?sec=godmode&sec2=godmode/setup/logviewer&delete=1'>".__("Delete logfile")."</a><br>";
-	echo "<textarea style='width: 95%; height: 500px;' name='$file_name'>";
+	echo "<div class='under_tabs_info'>$file_name ".__("Reading from byte"). " " .$offset ."</div><br>";
+	echo "<div style='width: 99%; text-align: right;'>";
+	print_button(__("Delete logfile"), '', false, 'window.open(\'index.php?sec=godmode&sec2=godmode/setup/logviewer&delete=1\')', 'class="sub delete"');
+	echo "</div>";
+	echo "</br><textarea style='width: 99%; height: 500px;' name='$file_name'>";
 	echo $data;
 	echo "</textarea><br><br>";
 }

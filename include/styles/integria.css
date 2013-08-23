@@ -69,7 +69,7 @@ h6 { font-size: 0.5em; }
 	margin: 0 0 0 6px;
 	text-transform: uppercase;
 	border-bottom: 2px solid #505050;
-	width: 98%;
+	width: 99%;
 }
 
 #sidebar h1 {
@@ -761,7 +761,6 @@ input.sub {
 	font-weight: bold;
 	height: 26px;
 	margin-right: 5px;
-	margin-top: 2px;
 	padding-left: 5px;
 	padding-right: 9px;
 	padding-top: 4px;
@@ -771,6 +770,11 @@ input.sub {
 input.next {
 	padding-right: 25px;
 	background: url(../../images/input_next.png) no-repeat 90% 7px #FFFFFF;
+}
+
+input.delete {
+	padding-right: 25px;
+	background: url(../../images/cross.png) no-repeat 95% 2px #FFFFFF;
 }
 
 input.file {
@@ -876,13 +880,14 @@ td.datosf9i, td.datos2f9i {
 }
 
 .error {
-	background: url(../../images/error.gif) no-repeat;
+	color: #FF3333;
+	background: url(../../images/fail.png) no-repeat;
 	padding: 4px 1px 6px 30px;
 }
 
 .suc {
 	color: #5a8629;
-	background: url(../../images/suc.gif) no-repeat 1px;
+	background: url(../../images/success.png) no-repeat 1px;
 	padding: 4px 1px 6px 30px;
 }
 
@@ -1151,7 +1156,7 @@ h3.system {
     -khtml-border-bottom-left-radius: 10px;
 }
 
-.incident_details {
+.incident_details, .note_simple {
 	margin-left: 0px; 
 	margin-top: 20px; 
 	width:97%; 
@@ -1273,6 +1278,7 @@ textarea {
 
 label {
 	font-weight: bold;
+	margin-top: 5px;
 }
 
 .img_help, #alerts {
@@ -1863,7 +1869,9 @@ table.search-table-button tr:last-child td {
 }
 
 table.search-table tr:last-child td {
+	padding-top: 1px;
 	text-align: left;
+	
 }
 
 .integria_form {
@@ -1873,6 +1881,7 @@ table.search-table tr:last-child td {
 
 div.incident_container *, .container {
 	font-size: 11px;
+	min-height: 55px;
 }
 
 div.incident_container table, .container table {
@@ -1904,6 +1913,10 @@ div.incident_container>div, .container>div {
 	border-bottom: 1px solid #ccc;
 
 	background-color: #e6e6e6;
+}
+
+#button-bar-title li.button-bar-selected {
+	background-color: #ccc;
 }
 
 #button-bar-title li:first-child {

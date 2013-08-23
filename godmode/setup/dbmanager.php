@@ -71,11 +71,11 @@ function dbmgr_main () {
     $clean_output = get_parameter("clean_output", 0);
 
     if ($clean_output == 0){
-	    echo "<h2>".__('Extensions'). " &raquo; ".__('Database interface');
+	    echo "<h1>".__('Extensions'). " &raquo; ".__('Database interface');
         echo "&nbsp;&nbsp;<a title='".__("Report")."'  href='index.php?sec=godmode&sec2=godmode/setup/dbmanager&sql=$sql&clean_output=1'><img src='images/html.png'></a>";
 
-        echo "</h2>";
-	    echo '<div class="notify">';
+        echo "</h1>";
+	    echo '<div class="note_simple">';
 	    echo __("This is an advanced extension to interface with Integria IMS database directly using native SQL sentences. Please note that <b>you can damage</b> your Integria IMS installation if you don't know </b>exactly</b> what are you doing, this means that you can severily damage your setup using this extension. This extension is intended to be used <b>only by experienced users</b> with a depth knowledgue of Integria IMS.");
 	    echo '</div>';
 
@@ -86,16 +86,16 @@ function dbmgr_main () {
 	    echo "<br /><br />";
 	    echo "<form method='post' action=''>";
 	    print_textarea ('sql', 5, 50, html_entity_decode($sql, ENT_QUOTES));
-	    echo '<br />';
-	    echo '<div class="action-buttons" style="width: 100%">';
+        echo "<div style='width: 99%; text-align: right; margin-top: 6px;'>";
 	    print_submit_button (__('Execute SQL'), '', false, 'class="sub next"');
-	    echo '</div>';
+	    echo "</div>";
 	    echo "</form>";
     } else {
         echo "<form method='post' action=''>";
 	    print_textarea ('sql', 2, 40, html_entity_decode($sql, ENT_QUOTES));
-        echo "&nbsp;";
+        echo "<div style='width: 99%; text-align: right; margin-top: 6px;'>";
 	    print_submit_button (__('Execute SQL'), '', false, 'class="sub next"');
+	    echo "</div>";
 	    echo "</form>";
     }
 

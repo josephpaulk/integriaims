@@ -26,6 +26,8 @@ if (give_acl($config["id_user"], 0, "FM")==0) {
 	no_permission();
 }
 
+echo "<h1>".__('Link management')."</h1>";
+
 if (isset($_POST["create"])){ // If create
 	$name = clean_input ($_POST["name"]);
 	$link = clean_input ($_POST["link"]);
@@ -66,9 +68,6 @@ if ($delete != 0){
 $add = (bool) get_parameter ('add');
 $edit = (bool) get_parameter ('edit');
 
-
-echo "<h2>".__('Link management')."</h2>";
-
 // Main form view for Links edit
 if ($add || $edit) {
 	if ($edit) {
@@ -89,22 +88,22 @@ if ($add || $edit) {
 	}
 
 	// Create link
-	echo '<table class="fon" cellpadding="4" cellspacing="4" width="500" class="databox_color">';   
-	echo '<form name="ilink" method="post" action="index.php?sec=godmode&sec2=godmode/setup/links">';
+	echo '<table class="search-table-button" cellpadding="4" cellspacing="4" width="99%">';   
+	echo '<form name="ilink" method="post" action="index.php?sec=godmode&sec2=godmode/setup/links">';	
+	echo '<tr><td class="datos">'.__('Link name').'<td class="datos"><input type="text" name="name"  value="'.$nombre.'">';
+	echo '<tr><td class="datos2">'.__('Link').'<td class="datos2"><input type="text" name="link"  value="'.$link.'">';
 	if ($creation_mode == 1) {
 		print_input_hidden ('create', 1);
+		echo "<tr><td colspan='3' align='right'><input name='crtbutton' type='submit' class='sub create' value='".__('Create')."'>";
 	} else {
 		print_input_hidden ('update', 1);
 		print_input_hidden ('id_link', $id_link);
+		echo "<tr><td colspan='3' align='right'><input name='crtbutton' type='submit' class='sub upd' value='".__('Update')."'>";
 	}
-	
-	echo '<tr><td class="datos">'.__('Link name').'<td class="datos"><input type="text" name="name"  value="'.$nombre.'">';
-	echo '<tr><td class="datos2">'.__('Link').'<td class="datos2"><input type="text" name="link"  value="'.$link.'">';
-	echo "<tr><td colspan='3' align='right'><input name='crtbutton' type='submit' class='sub' value='".__('Update')."'>";
 	echo '</form></table>';
 } else {
 	// Main list view for Links editor
-	$table->width = '90%';
+	$table->width = '99%';
 	$table->class = 'listing';
 	$table->data = array ();
 	$table->style = array ();
@@ -132,10 +131,10 @@ if ($add || $edit) {
 	}
 	
 	print_table ($table);
-	echo '<div class="button" style="width: '.$table->width.'">';
+	echo '<div style="width: '.$table->width.'; text-align: right;">';
 	echo '<form method="post">';
 	print_input_hidden ('add', 1);
-	print_submit_button (__('Add'), 'add_btn', false, 'class="sub next"');
+	print_submit_button (__('Add'), 'add_btn', false, 'class="sub create"');
 	echo "</form>";
 }
 ?>

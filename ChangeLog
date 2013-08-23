@@ -1,3 +1,42 @@
+2013-08-23  Sergio Martin <sergio.martin@artica.es>
+
+	* include/styles/integria.css
+	include/functions_setup.php
+	images/email_dark.png
+	images/email_edit.png
+	images/error.gif
+	images/chart_pie.png
+	images/invoice_dark.png
+	images/incident_dark.png
+	images/cog.png
+	images/lock_dark.png
+	images/trash.png
+	images/inventory_dark.png
+	images/success.png
+	images/eye.png
+	images/key.png
+	images/suc.gif
+	images/fail.png
+	images/bug.png
+	godmode/setup/incidents_setup.php
+	godmode/setup/setup.php
+	godmode/setup/setup_crm.php
+	godmode/setup/setup_mail.php
+	godmode/setup/setup_maintenance.php
+	godmode/setup/logviewer.php
+	godmode/setup/setup_pandora.php
+	godmode/setup/audit.php
+	godmode/setup/dbmanager.php
+	godmode/setup/links.php
+	godmode/setup/event.php
+	godmode/setup/setup_auth.php
+	godmode/setup/setup_mailtemplates.php
+	godmode/setup/setup_visual.php
+	godmode/setup/newsboard.php
+	godmode/setup/filemgr.php: Encapsulate and
+	change the style of the setup tabs menu. Change
+	styles in whole setup section
+
 2013-08-23  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_inventory_contacts.php,

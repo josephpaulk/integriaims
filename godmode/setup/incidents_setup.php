@@ -16,6 +16,7 @@
 
 // Load global vars
 global $config;
+include_once('include/functions_setup.php');
 
 enterprise_include("include/functions_setup.php");
 
@@ -27,35 +28,17 @@ if (! dame_admin ($config["id_user"])) {
 	exit;
 }
 
-/* Tabs code */
-echo '<div id="tabs">';
-
+$is_enterprise = false;
+if (file_exists ("enterprise/load_enterprise.php")) {
+	$is_enterprise = true;
+}
+	
 /* Tabs list */
-echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup"><span><img src="images/cog.png" title="'.__('Setup').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_visual"><span><img src="images/chart_bar.png" title="'.__('Visual setup').'"></span></a></li>';
-if ($is_enterprise) {
-	echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=enterprise/godmode/setup/setup_password"><span valign=bottom><img src="images/lock.png" title="'.__('Password policy').'"></span></a></li>';
-}
-echo '<li class="ui-tabs-selected"><a href="index.php?sec=godmode&sec2=godmode/setup/incidents_setup"><span><img src="images/bug.png" title="'.__('Incidents setup').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_mail"><span><img src="images/email.png"  title="'.__('Mail setup').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates"><span><img src="images/email_edit.png"  title="'.__('Mail templates setup').'"></span></a></li>';
-if ($is_enterprise) {
-	echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=enterprise/godmode/usuarios/menu_visibility_manager"><span valign=bottom><img src="images/eye.png" title="'.__('Visibility management').'"></span></a></li>';
-}
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_pandora"><span><img src="images/pandora.ico"  title="'.__('Pandora FMS inventory').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_auth"><span><img src="images/book_edit.png"  title="'.__('Authentication').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_crm"><span><img src="images/page_white_text.png"  title="'.__('CRM setup').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_maintenance"><span><img src="images/objects/trash.png"  title="'.__('Old data maintenance').'"></span></a></li>';
-echo '</ul>';
-
-echo '</div>';
+print_setup_tabs('incidents', $is_enterprise);
 
 $update = (bool) get_parameter ("update");
 $add_day = (bool) get_parameter ("add_day");
 $del_day = (bool) get_parameter ("del_day");
-
-echo "<h2>".__('Incidents setup')."</h2>";
 
 if ($add_day) {
 	
@@ -107,8 +90,8 @@ if ($update) {
 
 echo '<form method="post">';
 
-$table->width = '100%';
-$table->class = 'databox';
+$table->width = '99%';
+$table->class = 'search-table';
 $table->colspan = array ();
 $table->data = array ();
 
@@ -140,8 +123,8 @@ foreach ($resolutions as $resolution) {
 
 $table_resolutions = print_table ($table, true);
 
-$table->width = '100%';
-$table->class = 'databox';
+$table->width = '99%';
+$table->class = 'search-table listing';
 $table->colspan = array ();
 $table->data = array ();
 
@@ -151,7 +134,7 @@ $date_table .= "<td>";
 $date_table .= "<input id='new_day' type='text' name='new_day' width='15' size='15'>";
 $date_table .= "</td>";
 $date_table .= "<td>";
-$date_table .= "<input type='submit' class='sub next' name='add_day' value='".__("Add")."'>";
+$date_table .= "<input type='submit' class='sub create' name='add_day' value='".__("Add")."'>";
 $date_table .= "</td>";
 $date_table .= "</tr>";
 $date_table .= "</table>";
@@ -196,7 +179,8 @@ if ($table_anonym === ENTERPRISE_NOT_HOOK) {
 	$table_anonym = "";
 }
 
-echo "<table width='90%'>";
+echo "<table width='99%' class='search-table-button
+'>";
 echo "<tr>";
 echo "<td><h3>".__('Status')."</h3></td>";
 echo "<td><h3>".__('Resolutions')."</h3></td>";
@@ -209,12 +193,11 @@ echo "<td style='vertical-align: top;'>".$holidays_table;
 echo $table_anonym;
 echo "</td>";
 echo "</tr>";
-echo "</table>";
-
-echo '<div style="width: 90%" class="button">';
+echo "<tr><td colspan=3>";
 print_input_hidden ('update', 1);
 print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"');
-echo '</div>';
+echo "</td></tr>";
+echo "</table>";
 echo '</form>';
 ?>
 

@@ -26,15 +26,14 @@ $text = get_parameter ("text", "");
 
 $color = 0;
 $id_user = $config["id_user"];
-echo "<h2>".__('Event history')."</h2>";
+echo "<h1>".__('Audit log')."</h1>";
 
 echo "<form method=post>";
-echo "<table width=400 class=databox>";
-echo "<tr><td><input type=text name=text value='$text'>";
-echo "<td><input type=submit value='".__("Search")."'>";
+echo "<table width=99% class='search-table'>";
+echo "<tr><td><input type=text name=text value='$text' style='width: 70%'>";
+echo "<td><input type=submit value='".__("Search")."' class='sub search'>";
 echo "<input type=hidden name=offset value='$offset'>";
 echo "</form></table>";
-
 
 $where = "WHERE 1=1 ";
 

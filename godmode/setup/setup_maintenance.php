@@ -16,6 +16,7 @@
 
 // Load global vars
 global $config;
+include_once('include/functions_setup.php');
 
 check_login ();
 	
@@ -25,27 +26,13 @@ if (! dame_admin ($config["id_user"])) {
 	exit;
 }
 
-/* Tabs code */
-echo '<div id="tabs">';
-
+$is_enterprise = false;
+if (file_exists ("enterprise/load_enterprise.php")) {
+	$is_enterprise = true;
+}
+	
 /* Tabs list */
-echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup"><span><img src="images/cog.png" title="'.__('Setup').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_visual"><span><img src="images/chart_bar.png" title="'.__('Visual setup').'"></span></a></li>';
-if ($is_enterprise) {
-	echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=enterprise/godmode/setup/setup_password"><span valign=bottom><img src="images/lock.png" title="'.__('Password policy').'"></span></a></li>';
-}
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/incidents_setup"><span><img src="images/bug.png" title="'.__('Incident setup').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_mail"><span><img src="images/email.png"  title="'.__('Mail setup').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates"><span><img src="images/email_edit.png"  title="'.__('Mail templates setup').'"></span></a></li>';
-if ($is_enterprise) {
-	echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=enterprise/godmode/usuarios/menu_visibility_manager"><span valign=bottom><img src="images/eye.png" title="'.__('Visibility management').'"></span></a></li>';
-}
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_pandora"><span><img src="images/pandora.ico"  title="'.__('Pandora FMS inventory').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_auth"><span><img src="images/book_edit.png"  title="'.__('Authentication').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_crm"><span><img src="images/page_white_text.png"  title="'.__('CRM setup').'"></span></a></li>';
-echo '<li class="ui-tabs-selected"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_maintenance"><span><img src="images/objects/trash.png"  title="'.__('Old data maintenance').'"></span></a></li>';
-echo '</ul>';
+print_setup_tabs('maintenance', $is_enterprise);
 
 $update = (bool) get_parameter ("update");
 
@@ -65,10 +52,8 @@ if ($update) {
 	update_config_token ("max_days_session", $config["max_days_session"]);
 }
 
-echo "<h2>".__('Old data maintenance')."</h2>";
-
-$table->width = '90%';
-$table->class = 'databox';
+$table->width = '99%';
+$table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();
 
@@ -87,15 +72,15 @@ $table->data[2][0] .= integria_help ("old_audit", true);
 $table->data[2][1] = print_input_text ("max_days_session", $config["max_days_session"], '', 4, 4, true, __('Days to delete sessions'));
 $table->data[2][1] .= integria_help ("old_sessions", true);
 
+$button = print_input_hidden ('update', 1, true);
+$button .= print_submit_button (__('Reset to default'), 'reset_button', false, 'class="sub upd"', true);
+$button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
+
+$table->data['button'][0] = $button;
+$table->colspan['button'][0] = 2;
+
 echo '<form id="setup_maintenance" name="setup" method="post">';
-
 print_table ($table);
-
-echo '<div style="width: '.$table->width.'" class="button">';
-print_input_hidden ('update', 1);
-print_submit_button (__('Reset to default'), 'reset_button', false, 'class="sub upd"');
-print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"');
-echo '</div>';
 echo '</form>';
 
 ?>

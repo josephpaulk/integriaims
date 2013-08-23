@@ -16,6 +16,7 @@
 
 // Load global vars
 global $config;
+include_once('include/functions_setup.php');
 
 check_login ();
 
@@ -31,30 +32,9 @@ $is_enterprise = false;
 if (file_exists ("enterprise/load_enterprise.php")) {
 	$is_enterprise = true;
 }
-
-/* Tabs code */
-echo '<div id="tabs">';
-
+	
 /* Tabs list */
-echo '<ul class="ui-tabs-nav">';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup"><span><img src="images/cog.png" title="'.__('Setup').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_visual"><span><img src="images/chart_bar.png" title="'.__('Visual setup').'"></span></a></li>';
-if ($is_enterprise) {
-	echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=enterprise/godmode/setup/setup_password"><span valign=bottom><img src="images/lock.png" title="'.__('Password policy').'"></span></a></li>';
-}
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/incidents_setup"><span><img src="images/bug.png" title="'.__('Incident setup').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_mail"><span><img src="images/email.png"  title="'.__('Mail setup').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_mailtemplates"><span><img src="images/email_edit.png"  title="'.__('Mail templates setup').'"></span></a></li>';
-if ($is_enterprise) {
-	echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=enterprise/godmode/usuarios/menu_visibility_manager"><span valign=bottom><img src="images/eye.png" title="'.__('Visibility management').'"></span></a></li>';
-}
-echo '<li class="ui-tabs-selected"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_pandora"><span><img src="images/pandora.ico"  title="'.__('Pandora FMS inventory').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_auth"><span><img src="images/book_edit.png"  title="'.__('Authentication').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_crm"><span><img src="images/page_white_text.png"  title="'.__('CRM setup').'"></span></a></li>';
-echo '<li class="ui-tabs"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_maintenance"><span><img src="images/objects/trash.png"  title="'.__('Old data maintenance').'"></span></a></li>';
-echo '</ul>';
-
-echo '</div>';
+print_setup_tabs('inventory', $is_enterprise);
 
 $labels = get_inventory_generic_labels ();
 
@@ -97,10 +77,8 @@ if ($update) {
   
 }
 
-echo "<h2>".__('Pandora FMS inventory')."</h2>";
-
-$table->width = '90%';
-$table->class = 'databox';
+$table->width = '99%';
+$table->class = 'search-table-button';
 $table->colspan = array ();
 $table->data = array ();
 
@@ -119,23 +97,23 @@ $table->data[1][1] = print_input_text ("pandora_pass", $config["pandora_pass"], 
 $contracts = get_contracts();
 $table->data[2][0] = print_select ($contracts, 'default_contract', $config["default_contract"], '', __('Select'), '',  true, 0, true, __('Default Contract')) ;
 
-
-echo "<form name='setup' method='post' id='inventory_status_form'>";
-
-print_table ($table);
+$button = print_input_hidden ('update', 1, true);
+$button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
 
 $table_remote_inventory = enterprise_hook('setup_print_remote_inventory_type');
 
-if ($table_remote_inventory === ENTERPRISE_NOT_HOOK) {
-        $table_remote_inventory = "";
+if ($table_remote_inventory !== ENTERPRISE_NOT_HOOK) {
+	$table->data[3][0] = "<br><h3>".__('Remote inventory')."</h3><br>";
+	$table->colspan[3][0] = 2;
+
+	$table->data = array_merge($table->data, $table_remote_inventory);
 }
 
-echo $table_remote_inventory;
+$table->data['button'][0] = $button;
+$table->colspan['button'][0] = 2;
 
-echo '<div style="width: '.$table->width.'" class="button">';
-print_input_hidden ('update', 1);
-print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"');
-echo '</div>';
+echo "<form name='setup' method='post' id='inventory_status_form'>";
+print_table ($table);
 echo '</form>';
 ?>
 
