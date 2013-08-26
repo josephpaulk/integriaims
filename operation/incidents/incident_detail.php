@@ -1178,11 +1178,6 @@ messages = {
 };
 add_validate_form_element_rules('#text-titulo', rules, messages);
 
-// Rules: text-email_copy
-rules = { email: true };
-messages = { email: "<?php echo __('Invalid email')?>" };
-add_validate_form_element_rules('#text-email_copy', rules, messages);
-
 </script>
 
 <?php //endif; ?>

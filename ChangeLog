@@ -1,3 +1,11 @@
+2013-08-26  Dario Rodriguez <dario@artica.es>
+
+	* operation/incidents/incident_inventory_contacts.php: Fixed
+	incident contacts section. 
+	* operation/incidents/incident_detail.php: Fixed a bug
+	validatign input on field "Notify changes by email", it
+	should support several email addresses.
+
 2013-08-26  Sergio Martin <sergio.martin@artica.es>
 
 	* include/functions_html.php
