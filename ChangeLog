@@ -1,3 +1,37 @@
+2013-08-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions.php: Modified the function
+	"print_priority_flag_image" to accept other paths
+	and classes.
+	
+	* include/functions_incidents.php: Fixed a function
+	call and improved the security on an insert statement.
+	
+	* mobile/index.php: Added a require for the "incidents"
+	file.
+	
+	* mobile/include/ui.class.php: Improved the functions
+	"beginFooter", "beginForm" and "getEndForm" to accept
+	an array of options to set its properties.
+	
+	* mobile/include/style/main.css: Style changes.
+	
+	* mobile/operation/home.php: Added an "Incidents" button
+	to the home menu.
+	
+	* mobile/operation/workorder.php: Now the title shows
+	the workorder id. Minor changes.
+	
+	* mobile/operation/workorders.php: Improved the priority
+	icon of the items. Minor changes.
+	
+	* mobile/operation/workunit.php: Minor changes on the forms.
+	
+	* mobile/operation/incident.php: Added the class properties.
+	Added the functions "insertIncident", "deleteIncident",
+	"showIncidentSimpleForm", "incidentContent", "workunitContent",
+	"fileContent", "showIncident" and "show".
+	
 2013-08-23  Sergio Martin <sergio.martin@artica.es>
 
 	* godmode/setup/setup_pandora.php: Fix Pandora FMS inventory

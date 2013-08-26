@@ -138,6 +138,11 @@ class Workorder {
 		$ui->createPage();
 		
 		$back_href = "index.php?page=workorders&filter_status=0&filter_owner=".$system->getConfig('id_user');
+		if ($this->id < 0) {
+			$title = __("Workorder");
+		} else {
+			$title = __("Workorder")."&nbsp;#".$this->id;
+		}
 		$ui->createDefaultHeader(__("Workorder"),
 			$ui->createHeaderButton(
 				array('icon' => 'back',
@@ -160,8 +165,12 @@ class Workorder {
 										});
 									</script>");
 			}
-			
-			$ui->beginForm("index.php?page=workorder", "post", "form_wo");
+			$options = array (
+				'id' => 'form-wo',
+				'action' => "index.php?page=workorder",
+				'method' => 'POST'
+				);
+			$ui->beginForm($options);
 				// Title
 				$options = array(
 					'name' => 'title',
@@ -244,8 +253,9 @@ class Workorder {
 					$ui->formAddInput($options);
 					// Submit button
 					$options = array(
-							'text' => __('Submit')
-							);
+						'text' => __('Add'),
+						'data-icon' => 'plus'
+						);
 					$ui->formAddSubmitButton($options);
 				} else {
 					$options = array(
@@ -262,8 +272,9 @@ class Workorder {
 					$ui->formAddInput($options);
 					// Submit button
 					$options = array(
-							'text' => __('Update')
-							);
+						'text' => __('Update'),
+						'data-icon' => 'refresh'
+						);
 					$ui->formAddSubmitButton($options);
 				}
 			$ui->endForm();
@@ -271,10 +282,10 @@ class Workorder {
 		// Foooter buttons
 		// Add
 		if ($this->id < 0) {
-			$button_add = "<a onClick=\"$('#form_wo').submit();\" data-role='button' data-icon='plus'>"
+			$button_add = "<a onClick=\"$('#form-wo').submit();\" data-role='button' data-icon='plus'>"
 							.__('Add')."</a>\n";
 		} else {
-			$button_add = "<a onClick=\"$('#form_wo').submit();\" data-role='button' data-icon='refresh'>"
+			$button_add = "<a onClick=\"$('#form-wo').submit();\" data-role='button' data-icon='refresh'>"
 							.__('Update')."</a>\n";
 		}
 		// Delete

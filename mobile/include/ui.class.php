@@ -225,8 +225,11 @@ class Ui {
 		return $return;
 	}
 	
-	public function beginFooter() {
+	public function beginFooter($options = null) {
 		$this->footer = array();
+		if (isset($options)) {
+			$this->footer['options'] = $options;
+		}
 		$this->endFooter = false;
 	}
 	
@@ -369,26 +372,32 @@ class Ui {
 		$this->collapsible = array();
 	}
 	
-	public function beginForm($action = "index.php", $method = "post", $id = "") {
+	public function beginForm($options = null) {
 		$this->form = array();
 		$this->endForm = false;
 		
-		$this->form['action'] = $action;
-		$this->form['method'] = $method;
-		$this->form['id'] = $id;
+		if (isset($options)) {
+			$this->form['options'] = $options;
+		}
 	}
 	
 	public function endForm() {
 		$this->contentAddHtml($this->getEndForm());
-		
 	}
 	
 	public function getEndForm() {
 		$this->endForm = true;
 		
-		$html = "<form data-ajax='false' id='". $this->form['id'] ."' " .
-			"action='" . $this->form['action'] . "' " .
-			"method='" . $this->form['method'] . "'>\n";
+		if (isset($this->form['options'])) {
+			$html = "<form";
+			foreach ($this->form['options'] as $label => $value) {
+				$html .= " $label=\"$value\"";
+			}
+			$html .= ">\n";
+		} else {
+			$html = "<form data-ajax=\"false\" action=\"".$_SERVER['PHP_SELF']."\" method=\"POST\">\n";
+		}
+		
 		foreach ($this->form['fields'] as $field) {
 			$html .= $field . "\n";
 		}
@@ -785,11 +794,6 @@ class Ui {
 	
 	public function bindMobileAutocomplete ($idInput, $idListview, $idProject = false) {
 		
-		//~ if ($idProject) {
-			//~ $ajaxUrl = "../ajax.php?page=include/ajax/users&search_users_role=1&id_user=$idUser&id_project=$idProject";
-		//~ } else {
-			//~ $ajaxUrl = "../ajax.php?page=include/ajax/users&search_users=1&id_user=$idUser";
-		//~ }
 		if ($idProject) {
 			$ajaxUrl = "index.php?action=ajax&page=user&method=search_users_role&id_project=$idProject";
 		} else {
@@ -889,7 +893,15 @@ class Ui {
 		}
 		echo "			</div>\n";
 		if (!$this->noFooter) {
-			echo "			<div class='ui-bar' data-role='footer' data-position='fixed' role='contentinfo'>\n";
+			if (isset($this->footer['options'])) {
+				echo "		<div data-role='footer'";
+				foreach ($this->footer['options'] as $key => $value) {
+					echo " $key='$value'";
+				}
+				echo "		>\n";
+			} else {
+				echo "		<div data-role='footer' class='ui-bar' data-position='fixed' role='contentinfo'>\n";
+			}
 			if (!empty($this->footer['text'])) {
 				echo "				" . $this->footer['text'] . "\n";
 			}

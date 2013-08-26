@@ -32,7 +32,7 @@ require_once('operation/home.php');
 require_once('operation/workunit.php');
 require_once('operation/workorders.php');
 require_once('operation/workorder.php');
-//require_once('operation/incidents.php');
+require_once('operation/incidents.php');
 require_once('operation/incident.php');
 
 

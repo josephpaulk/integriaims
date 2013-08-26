@@ -254,8 +254,12 @@ class Workunit {
 										});
 									</script>");
 			}
-			
-			$ui->beginForm("index.php?page=workunit", "post", "form_wu");
+			$options = array (
+				'id' => 'form-wu',
+				'action' => "index.php?page=workunit",
+				'method' => 'POST'
+				);
+			$ui->beginForm($options);
 				// Date
 				$options = array(
 					'name' => 'date',
@@ -298,7 +302,7 @@ class Workunit {
 					$values[-3] = "(*) ".__('Not justified');
 					$values[-2] = "(*) ".__('Not working for disease');
 					$values[-1] = "(*) ".__('Vacations');
-					$values[0] =  __('N/A');
+					//$values[0] =  __('N/A');
 					if ($tasks) {
 						foreach ($tasks as $task){
 							$values[$task[0]] = array('optgroup' => $task[1], 'name' => $task[2]);
@@ -355,10 +359,10 @@ class Workunit {
 		// Foooter buttons
 		// Add
 		if ($this->id < 0) {
-			$button_add = "<a onClick=\"$('#form_wu').submit();\" data-role='button' data-icon='plus'>"
+			$button_add = "<a onClick=\"$('#form-wu').submit();\" data-role='button' data-icon='plus'>"
 							.__('Add')."</a>\n";
 		} else {
-			$button_add = "<a onClick=\"$('#form_wu').submit();\" data-role='button' data-icon='refresh'>"
+			$button_add = "<a onClick=\"$('#form-wu').submit();\" data-role='button' data-icon='refresh'>"
 							.__('Update')."</a>\n";
 		}
 		// Delete

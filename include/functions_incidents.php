@@ -226,7 +226,7 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 	$file_target = $config["homedir"]."attachment/".$id_attachment."_".$filename;
 
 	if (! copy ($file_temp, $file_target)) {
-		$result_msg = ui_print_success_message(__('File cannot be saved. Please contact Integria administrator about this error'), '', true);
+		$result_msg = ui_print_error_message(__('File cannot be saved. Please contact Integria administrator about this error'), '', true);
 		$sql = sprintf ('DELETE FROM tattachment
 				WHERE id_attachment = %d', $id_attachment);
 		process_sql ($sql);
@@ -235,7 +235,7 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 		unlink ($file_temp);
 
 		// Adding a WU noticing about this
-		$note = "Automatic WU: Added a file to this issue. Filename uploaded: ". $filename;
+		$note = "Automatic WU: Added a file to this issue. Filename uploaded: ". clean_input($filename);
 		$public = 1;
 		$timeused = "0.05";
 		create_workunit ($id, $note, $config["id_user"], $timeused, 0, "", $public);

@@ -54,11 +54,11 @@ class Home {
 					'href' => 'index.php?page=workorders&filter_status=0&filter_owner='.$system->getConfig('id_user'));
 			$ui->contentAddHtml($ui->createButton($options));
 			// Incidents
-			//~ $options = array('icon' => 'alert',
-					//~ 'pos' => 'right',
-					//~ 'text' => __('Incidents'),
-					//~ 'href' => 'index.php?page=incident');
-			//~ $ui->contentAddHtml($ui->createButton($options));
+			$options = array('icon' => 'alert',
+					'pos' => 'right',
+					'text' => __('Incidents'),
+					'href' => 'index.php?page=incidents');
+			$ui->contentAddHtml($ui->createButton($options));
 			
 			if (! empty($error)) {
 				$options = array(

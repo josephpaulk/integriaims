@@ -132,7 +132,8 @@ class Workorders {
 			$new = false;
 			$html .= "<li>";
 			$html .= "<a href='index.php?page=workorder&operation=view&id=".$workorder['id']."' class='ui-link-inherit'>";
-				$html .= $ui->getPriorityFlagImage($workorder['priority']);
+				//$html .= $ui->getPriorityFlagImage($workorder['priority']);
+				$html .= print_priority_flag_image ($workorder['priority'], true, "../", "priority-list ui-li-icon");
 				$html .= "<h3 class='ui-li-heading'>".$workorder['name']."</h3>";
 				$html .= "<p class='ui-li-desc'>".__('Owner').": ".$workorder['created_by_user'];
 				$html .= "&nbsp;&nbsp;-&nbsp;&nbsp;".__('Creator').": ".$workorder['assigned_user']."</p>";
@@ -182,7 +183,11 @@ class Workorders {
 			}
 			
 			$ui->contentBeginCollapsible(__('Filter'));
-				$ui->beginForm("index.php?page=workorders", "post", "form_wo");
+				$options = array(
+					'action' => "index.php?page=workorders",
+					'method' => 'POST'
+					);
+				$ui->beginForm($options);
 					// Filter search
 					$options = array(
 						'name' => 'filter_search',
@@ -236,7 +241,8 @@ class Workorders {
 					$ui->formAddSelectBox($options);
 					$options = array(
 						'name' => 'submit_button',
-						'text' => __('Apply filter')
+						'text' => __('Apply filter'),
+							 'data-icon' => 'search'
 						);
 					$ui->formAddSubmitButton($options);
 				$form_html = $ui->getEndForm();
@@ -309,6 +315,7 @@ class Workorders {
 				case 'delete':
 					$workorder = new Workorder();
 					$result = $workorder->deleteWorkOrder($this->id);
+					unset($workorder);
 					if ($result) {
 						$this->id = -1;
 						$message = "<h2 class='suc'>".__('Successfully deleted')."</h2>";

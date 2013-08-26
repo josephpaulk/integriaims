@@ -11,7 +11,7 @@ body {
 	font-size: 12px !important;
 	margin: 0;
 	text-align: left;
-	vertical-align: top;
+	vertical-align: center;
 }
 
 .small {
@@ -26,8 +26,13 @@ body {
 	min-height: 38px !important;
 }
 
-label, input, textarea, .ui-btn-inner {
+label, input, .ui-btn-inner {
 	font-size: 12px !important;
+}
+
+textarea {
+	font-size: 12px !important;
+	min-height: 75px !important;
 }
 
 .red, .error {
@@ -38,13 +43,25 @@ label, input, textarea, .ui-btn-inner {
 	color: #5A8629;
 }
 
+.light-red-background {
+	background: #FFDAD3 !important;
+}
+
+.light-yellow-background {
+	background: #FFFCA0 !important;
+}
+
+.light-green-background {
+	background: #DAFFCC !important;
+}
+
 .error {
-	background: url(../../../images/error.gif) no-repeat;
+	background: url(../../../images/fail.png) no-repeat 1px;
 	padding: 4px 1px 4px 30px;
 }
 
 .suc {
-	background: url(../../../images/suc.gif) no-repeat 1px;
+	background: url(../../../images/success.png) no-repeat 1px;
 	padding: 4px 1px 4px 30px;
 }
 
@@ -63,15 +80,16 @@ label, input, textarea, .ui-btn-inner {
 }
 /*END----------Fix the square border in search input------------------*/
 
-
-img.ui-li-icon {
-	vertical-align: middle;
+img.priority-list {
+	padding-top: 19px;
 }
 
+/*
 img.icon-priority {
 	max-height: 55px !important;
 	height: 55px !important;
 }
+*/
 
 ul.ui-listview li.ui-btn div.ui-btn-inner div.ui-btn-text {
 	padding-top: 5px;
@@ -81,14 +99,6 @@ ul.ui-listview li.ui-btn div.ui-btn-inner div.ui-btn-text {
 ul.ui-itemlistview {
 	padding-top: 30px;
 }
-
-/*
-li.ui-btn {
-	margin-bottom: 4px !important;
-	margin-top: 4px !important;
-}
-*/
-
 
 /*INIT---------Fix the tons of air between the rows in small table----*/
 .head_vertical {
