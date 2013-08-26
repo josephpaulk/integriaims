@@ -36,6 +36,8 @@ if ($manage !== ENTERPRISE_NOT_HOOK) {
 	}
 }
 
+echo "<h1>".__('Invoice listing')."</h1>";
+
 if ($id_invoice) {
 	$id_company = get_db_value('id_company', 'tinvoice', 'id', $id);
 
@@ -94,9 +96,6 @@ if ($lock_invoice == 1 && $id_invoice){
 	crm_change_invoice_lock ($config["id_user"], $id_invoice);
 	clean_cache_db();
 }
-
-echo "<h2>".__('Invoice listing')."</h2>";
-
 	
 // Invoice listing
 $search_text = (string) get_parameter ('search_text');
@@ -126,7 +125,7 @@ if ($search_date_begin != "") {
 
 echo '<form method="post">';
 
-echo "<table width=80% class='search-table'>";
+echo "<table width=99% class='search-table'>";
 echo "<tr>";
 
 echo "<td colspan=2>";
@@ -145,7 +144,7 @@ echo "</td>";
 
 echo "<td valign=bottom align='right'>";
 echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-echo "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_invoices=1&where_clause=$where_clause'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
+echo print_button(__('Export to CSV'), '', false, 'window.open(\'' . "include/export_csv.php?export_csv_invoices=1&where_clause=$where_clause" . '\')', 'class="sub csv"', true);
 echo "</td>";
 echo "</tr>";
 
@@ -163,7 +162,7 @@ $invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=ope
 
 if ($invoices !== false) {
 	
-	$table->width = "95%";
+	$table->width = "99%";
 	$table->class = "listing";
 	$table->cellspacing = 0;
 	$table->cellpadding = 0;

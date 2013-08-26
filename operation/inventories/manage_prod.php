@@ -106,18 +106,15 @@ if ($create || $id) {
 		$icon = $product["icon"];
 	}
 
-	echo "<h2>".__('Product management')."</h2>";
 	if ($id == -1) {
-		echo "<h3>".__('Create a new product')."</h3>";
+		echo "<h1>".__('Create a new product')."</h1>";
 	} else {
-		echo "<h3>".__('Update existing product')."</h3>";
+		echo "<h1>".__('Update existing product')."</h1>";
 	}
 	
-	$table->width = '90%';
-	$table->class = 'databox';
+	$table->width = '99%';
+	$table->class = 'search-table-button';
 	$table->colspan = array ();
-	$table->colspan[0][0] = 2;
-	$table->colspan[2][0] = 2;
 	$table->data = array ();
 	
 	$table->data[0][0] = print_input_text ('name', $name, '', 45, 100, true, __('Name'));
@@ -127,31 +124,32 @@ if ($create || $id) {
 	$table->data[1][0] .= print_product_icon ($id, true);
 	$table->data[2][0] = print_textarea ('description', 10, 50, $description, '',
 		true, __('Description'));
+		
+	if ($id == -1) {
+		$button = print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true);
+		$button .= print_input_hidden ('insert_product', 1, true);
+	} else {
+		$button = print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('id', $id, true);
+		$button .= print_input_hidden ('update_product', 1, true);
+	}
+	
+	$table->data['button'][0] = $button;
 	
 	echo '<form id="form-product_type" method="post">';
 	print_table ($table);
-	echo '<div class="button" style="width: '.$table->width.'">';
-	if ($id == -1) {
-		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
-		print_input_hidden ('insert_product', 1);
-	} else {
-		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-		print_input_hidden ('id', $id);
-		print_input_hidden ('update_product', 1);
-	}
-	echo "</div></form>";
+	echo "</form>";
 }
 
 // Show list of product
 // =======================
 if (! $id && ! $create) {
-	echo "<h2>".__('Product management')."</h2>";
 	$products = get_db_all_rows_in_table ('tkb_product', 'name');
 	
-	$table->width = '90%';
+	$table->width = '99%';
 	
+	echo "<h1>".__('Defined products')."</h1>";
 	if ($products !== false) {
-		echo "<h3>".__('Defined products')."</h3>";
 		
 		$table->class = 'listing';
 		$table->data = array ();
@@ -167,16 +165,16 @@ if (! $id && ! $create) {
 		$table->align = array ();
 		$table->align[5] = 'center';
 		
-		echo '<table width="90%" class="listing">';
+		echo '<table width="99%" class="listing">';
 		foreach ($products as $product) {
 			$data = array ();
 			$data[0] = $product['id'];
 			$data[1] = print_product_icon ($product['id'], true);
-			$data[2] = '&nbsp;&nbsp;<a href="index.php?sec=inventory&sec2=operation/inventories/manage_prod&id='.
+			$data[2] = '&nbsp;&nbsp;<a href="index.php?sec=kb&sec2=operation/inventories/manage_prod&id='.
 				$product['id'].'">'.$product['name'].'</a>';
 			$data[3] = substr ($product["description"], 0, 200);
 			$data[4] = get_db_value ('COUNT(id)', 'tkb_data', 'id_product', $product['id']);
-			$data[5] = '<a href=index.php?sec=inventory&sec2=operation/inventories/manage_prod&delete_product=1&id='.
+			$data[5] = '<a href=index.php?sec=kb&sec2=operation/inventories/manage_prod&delete_product=1&id='.
 				$product["id"].' onClick="if (!confirm(\''.__('Are you sure?').'\'))
 				return false;"><img src="images/cross.png"></a>';
 			
@@ -185,7 +183,7 @@ if (! $id && ! $create) {
 		print_table ($table);
 	}
 	
-	echo '<div class="button" style="width: '.$table->width.'">';
+	echo '<div style="width: '.$table->width.'; text-align: right;">';
 	echo '<form method="post">';
 	print_input_hidden ('create', 1);
 	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');

@@ -906,8 +906,8 @@ if ($create_incident) {
 	}
 }
 
-$table->colspan[count($table->data)+1][0] = 4;
-$table->data[count($table->data)+1][0] = $button;
+$table->colspan['button'][0] = 4;
+$table->data['button'][0] = $button;
 
 if ($has_permission){
 	echo '<form id="incident_status_form" method="post">';

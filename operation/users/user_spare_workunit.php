@@ -350,16 +350,6 @@ if ($id_task) {
 
 echo '</h3>';
 echo "</li>";
-	
-//If the multiple_wu_insert option was sent single wu is disabled
-if ($operation == 'multiple_wu_insert') {
-	echo "<li id='tabmenu1' class='ui-tabs-disabled'>";
-} else {
-	echo "<li id='tabmenu1' class='ui-tabs-selected'>";
-}
-echo "<a href='#tab1'><span>".__("Single WU")."</span></a>";
-echo "</span></li>";
-
 //If single workunit update multiple addition is disabled
 if ($id_workunit) {
 	echo "<li id='tabmenu2' class='ui-tabs-disabled'><span>";
@@ -374,8 +364,16 @@ if ($id_workunit) {
 }
 	echo "<a href='#tab2'><span>".__("Multiple WU")."</span></a>";
 	echo "</span></li>";
+	
+//If the multiple_wu_insert option was sent single wu is disabled
+if ($operation == 'multiple_wu_insert') {
+	echo "<li id='tabmenu1' class='ui-tabs-disabled'>";
+} else {
+	echo "<li id='tabmenu1' class='ui-tabs-selected'>";
+}
+echo "<a href='#tab1'><span>".__("Single WU")."</span></a>";
+echo "</span></li>";
 echo "</ul>";
-
 
 //If we inserted multiple workunits then 
 if ($operation == 'multiple_wu_insert') {

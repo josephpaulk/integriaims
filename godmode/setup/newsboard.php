@@ -94,7 +94,7 @@ if ($operation == "create") {
 	$table->data[0][0] = print_input_text ('timestamp', $timestamp, '', 20,20, true, __('Timestamp'));
 	$table->data[0][1] = print_checkbox ('nodate', 1, false, true,  __('Show always'));
 	
-	$button = print_submit_button (__('Create'), 'crt', false, 'class="sub next"', true);
+	$button = print_submit_button (__('Create'), 'crt', false, 'class="sub create"', true);
 	$button .= print_input_hidden ('operation', 'insert', true);
 	
 	$table->data['button'][0] = $button;
@@ -138,7 +138,7 @@ if ($operation == "") {
 
     echo '<form method="post" action="index.php?sec=godmode&sec2=godmode/setup/newsboard">';
 	echo '<div style="width: 99%; text-align: right;">';
-	print_submit_button (__('Create'), 'crt', false, 'class="sub next"');
+	print_submit_button (__('Create'), 'crt', false, 'class="sub create');
 	print_input_hidden ('operation', 'create');
 	echo '</form></div>';
 

@@ -25,6 +25,8 @@ if (! dame_admin ($config['id_user'])) {
 	return;
 }
 
+echo '<h1>'.__('Inventory reports').'</h1>';
+
 $delete = (bool) get_parameter ('delete_report');
 
 if ($delete) {
@@ -45,9 +47,7 @@ if ($reports === false) {
 	return;
 }
 
-echo '<h2>'.__('Inventory reports').'</h2>';
-
-$table->width = '80%';
+$table->width = '99%';
 $table->class = 'listing';
 $table->data = array ();
 $table->head = array ();
@@ -70,7 +70,7 @@ foreach ($reports as $report) {
 	$data[1] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&clean_output=0&id=".$report['id']."'><img src='images/page_white_text.png'></a>";
 	$data[2] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render_html=1&pdf_output=1&clean_output=1&id=".$report['id']."'><img src='images/page_white_acrobat.png'></a>";
 	
-	$data[3] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render=1&raw_output=1&clean_output=1&id=".$report['id']."'><img src='images/binary.gif'></a>";
+	$data[3] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports_detail&render=1&raw_output=1&clean_output=1&id=".$report['id']."'><img src='images/binary.png'></a>";
 	$data[4] = "<a href='index.php?sec=users&sec2=operation/inventories/inventory_reports&delete_report=1&id=".$report["id"]."'>";
 	$data[4] .= '<img src="images/cross.png">';
 	$data[4] .= '</a>';

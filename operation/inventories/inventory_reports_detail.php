@@ -130,29 +130,31 @@ if ($id) {
 	$sql = $report['sql'];
 }
 
-echo "<h2>".__('Inventory reports')."</h2>";
+echo "<h1>".__('Inventory reports')."</h1>";
 
 echo $result_msg;
 
-$table->width = '90%';
+$table->width = '99%';
+$table->class = 'search-table-button';
 $table->data = array ();
 
 $table->data[0][0] = print_input_text ('name', $name, '', 40, 255, true, __('Name'));
 
 $table->data[1][0] = print_textarea ('sql', 10, 100, $sql, '', true, __('Report SQL sentence'));
 
+if ($id) {
+	$button = print_input_hidden ('update_report', 1, true);
+	$button .= print_input_hidden ('id', $id, true);
+	$button .= print_submit_button (__('Update'), 'update', false, 'class="sub upd"', true);
+} else {
+	$button = print_input_hidden ('create_report', 1, true);
+	$button .= print_submit_button (__('Create'), 'create', false, 'class="sub create"', true);
+}
+
+$table->data[2][0] = $button;
+
 echo '<form id="form-inventory_report" method="post">';
 print_table ($table);
-echo '<div style="width:'.$table->width.'" class="action-buttons button">';
-if ($id) {
-	print_input_hidden ('update_report', 1);
-	print_input_hidden ('id', $id);
-	print_submit_button (__('Update'), 'update', false, 'class="sub upd"');
-} else {
-	print_input_hidden ('create_report', 1);
-	print_submit_button (__('Create'), 'create', false, 'class="sub next"');
-}
-echo '</div>';
 echo '</form>';
 ?>
 

@@ -78,13 +78,12 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 	}
 
-	echo "<h2>".__('File release category access management')."</h2>";	
-	echo "<h3>".__('Create a new category access')."</a></h3>";
+	echo "<h1>".__('Create a new category access')."</h1>";
 	echo "<form name=catman method='post' action='index.php?sec=download&
 						sec2=operation/download/manage_perms&create2'>";
 	
 	
-	echo '<table width="90%" class="databox">';
+	echo '<table width="99%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
 	echo __('Category');
@@ -96,25 +95,23 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo __('Group');
 	echo "<td class=datos2>";
 	combo_groups_visible_for_me ($config["id_user"], 'id_group', 1, 'KR', $id_group, false, 0 );
-
-	echo "</table>";
-	echo '<div class="button" style="width:90%">';
 	if ($id == -1)
-		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+		echo "<tr><td colspan=2>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
 	else
-		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-	echo "</div></form>";
+		echo "<tr><td colspan=2>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
+	echo "</table>";
+	echo "</form>";
 
 }
 
 // Show list of categories
 // =======================
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h2>".__('File release category access management')." &raquo; ".__('Assigned categories / group')."</h2>";
+	echo "<h1>".__('File release category access management')." &raquo; ".__('Assigned categories / group')."</h1>";
 	$sql1='SELECT tdownload_category.name as category, tgrupo.nombre as grupo, id_category, tdownload_category_group.id_group FROM tdownload_category_group, tdownload_category, tgrupo WHERE tdownload_category_group.id_category = tdownload_category.id AND tgrupo.id_grupo = tdownload_category_group.id_group';
 	$color =0;
 	if ($result=mysql_query($sql1)){
-		echo '<table width="90%" class="listing">';
+		echo '<table width="99%" class="listing">';
 		echo "<th>".__('Category')."</th>";
 		echo "<th>".__('Group')."</th>";
 		echo "<th>".__('Delete')."</th>";
@@ -147,7 +144,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		}
 		echo "</table>";
 	}			
-	echo '<div style="width:90%" class="button">';
+	echo '<div style="width:99%; text-align: right;">';
 	echo "<form method=post action='index.php?sec=download&sec2=operation/download/manage_perms&create=1'>";
 	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
 	echo "</form></div>";

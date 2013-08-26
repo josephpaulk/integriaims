@@ -119,7 +119,7 @@ $table->style[0] = 'vertical-align: top';
 $table->style[1] = 'vertical-align: top';
 $table->style[2] = 'vertical-align: top';
 $table->size = array ();
-$table->size[2] = '50px';
+$table->size[2] = '100px';
 $table->data = array ();
 
 $table->data[0][0] = print_label (__('User ID'), '', '', true, $id_user);
@@ -132,7 +132,7 @@ $table->data[0][2] = print_label (__('Avatar'), '', '', true);
 $avatar = $avatar.".png";
 $table->data[0][2] .= '<img id="avatar-preview" src="images/avatars/'.$avatar.'">';
 $files = list_files ('images/avatars/', "png", 1, 0, "small");
-$table->data[0][2] .= print_select ($files, "avatar", $avatar, '', '', 0, true);
+$table->data[0][2] .= print_select ($files, "avatar", $avatar, '', '', 0, true, 0, true, false, false, 'margin-top: 10px;');
 
 $company_name = get_db_value('name','tcompany','id',$id_company);
 $table->data[1][0] = "<b>".__('Company')."</b><br>$company_name";

@@ -199,9 +199,7 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$public = $row["public"];
 		$external_id = $row["external_id"];
 	}
-	
-	echo "<h1>".__('File releases management')."</h1>";	
-	
+		
 	$current_directory = $config["homedir"]. "/attachment/downloads";
 
 	// Upload file
@@ -229,7 +227,6 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 
 
 	echo '<a href="javascript:;" onclick="$(\'#upload_div\').slideToggle (); return false">';
-	echo '<h3>'.__('Upload a new file').'</h3>';
 	echo '</a>';
 	echo '<div id="upload_div" style="padding: 20px; margin: 0px; display: none;">';
 
@@ -253,16 +250,16 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	//echo "<table>";
 	
 	if ($id == -1){
-		echo "<h3>".__('Create a new file release')."</a></h3>";
+		echo "<h1>".__('Create a new file release')."</h1>";
 		echo "<form id='form-file_release' name=prodman method='post' action='index.php?sec=download&sec2=operation/download/browse&create2=1'>";
 	}
 	else {
-		echo "<h3>".__('Update existing file release')."</a></h3>";
+		echo "<h1>".__('Update existing file release')."</h1>";
 		echo "<form id='form-file_release' enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=download&sec2=operation/download/browse&update2=1'>";
 		echo "<input id='id_download' type=hidden name=id value='$id'>";
 	}
 	
-	echo '<table width="90%" class="databox">';
+	echo '<table width="99%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
 	echo __('Name');
@@ -333,14 +330,11 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo __('Main category');
 	echo "<td class=datos>";
 	combo_download_categories ($id_category, 0);
-	echo "</table>";
-	
-	echo '<div class="button" style="width:90%">';
 	if ($id == -1)
-		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+		echo "<tr><td colspan=2>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
 	else
-		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-	echo "</div>";
+		echo "<tr><td colspan=2>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
+	echo "</table>";
 	echo "</form>";
 }
 
@@ -351,7 +345,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	// Show search controls
 	// ==================================================================
 	
-	echo "<h2>".__('Downloads')." &raquo; ".__('Defined data')."</a></h2>";
+	echo "<h1>".__('Downloads')." &raquo; ".__('Defined data')."</h1>";
 	
 	// Search parameter 
 	$free_text = get_parameter ("free_text", "");
@@ -359,7 +353,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	
 	// Search filters
 	echo '<form method="post">';
-	echo '<table width="90%" class="blank">';
+	echo '<table width="99%" class="search-table">';
 	echo "<tr>";
 	echo "<td>";
 	echo __('Categories');
@@ -408,7 +402,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		echo "<h3 class='error'>".__('No Downloads found')."</h3>"; 
 	}
 	else {
-		echo '<table width="95%" class="listing" cellspacing=4 cellpading=4>';
+		echo '<table width="99%" class="listing" cellspacing=4 cellpading=4>';
 
 		echo "<th>".__('Name')."</th>";
 		echo "<th>".__('Size')."</th>";

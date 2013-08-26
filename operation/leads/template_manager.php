@@ -113,8 +113,8 @@ if (($operation == "create") || ($operation == "edit")){
 		$subject = $template["subject"];
     }
 
-	$table->width = '90%';
-	$table->class = 'databox';
+	$table->width = '99%';
+	$table->class = 'search-table-button';
 	$table->colspan = array ();
 	$table->colspan[3][0] = 2;
 	$table->data = array ();
@@ -145,20 +145,22 @@ if (($operation == "create") || ($operation == "edit")){
 	
 	$table->data[3][0] = print_textarea ('description', 20, 60, $description, '', true,
 		__('Contents'));
+		
+	if ($operation == "create"){
+		$button = print_submit_button (__('Create'), 'crt', false, 'class="sub create"', true);
+		$button .= print_input_hidden ('operation', 'insert', true);
+	} else {
+		$button = print_submit_button (__('Update'), 'crt', false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('operation', 'update', true);
+		$button .= print_input_hidden ('id', $id, true);
+	}
+	
+	$table->data['button'][0] = $button;
+	$table->colspan['button'][0] = 2;
 	
 	echo '<form id="form-template_manager" method="post" action="index.php?sec=leads&sec2=operation/leads/template_manager">';
 	print_table ($table);
-
-	echo '<div class="button" style="width: '.$table->width.'">';
-	if ($operation == "create"){
-		print_submit_button (__('Create'), 'crt', false, 'class="sub next"');
-		print_input_hidden ('operation', 'insert');
-	} else {
-		print_submit_button (__('Update'), 'crt', false, 'class="sub next"');
-		print_input_hidden ('operation', 'update');
-		print_input_hidden ('id', $id);
-	}
-	echo '</form></div>';
+	echo '</form>';
 }
 
 // -------------------------
@@ -178,7 +180,7 @@ if ($operation == "") {
 	if ($todos === false)
 		$todos = array ();
 
-	echo '<table class="listing" width="98%">';
+	echo '<table class="listing" width="99%">';
 	echo "<th>".__('Name');
 	echo "<th>".__('Language');
 	echo "<th>".__('Company');
@@ -208,8 +210,8 @@ if ($operation == "") {
 
 
     echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/template_manager">';
-	echo '<div class="button" style="width: 98%;">';
-	print_submit_button (__('Create'), 'crt', false, 'class="sub next"');
+	echo '<div style="width: 99%; text-align: right;">';
+	print_submit_button (__('Create'), 'crt', false, 'class="sub create"');
 	print_input_hidden ('operation', 'create');
 	echo '</form></div>';
 

@@ -48,7 +48,7 @@ $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
 
 echo "<div id='incident-search-content'>";
-echo "<h2>".__('Search statistics');
+echo "<h1>".__('Search statistics');
 echo "<div id='button-bar-title'>";
 echo "<ul>";
 echo "<li>";
@@ -56,7 +56,7 @@ echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/co
 echo "</li>";
 echo "</ul>";
 echo "</div>";
-echo "</h2>";
+echo "</h1>";
 
 $where_clause = '';
 
@@ -92,7 +92,7 @@ if ($search_date_end != "") {
 
 
 $table->class = 'blank';
-$table->width = '98%';
+$table->width = '99%';
 $table->data = array ();
 $table->style = array ();
 $table->valign = array ();
@@ -108,12 +108,15 @@ if ($read && $enterprise) {
 
 $companies_country = crm_get_data_country_graph($companies_country);
 
-$table->data[0][0] = "<br><h3>".__('Companies per country')."</h3>";
 if ($companies_country !== false) {
-	$table->data[0][0] .= pie3d_graph ($config['flash_charts'], $companies_country, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+	$companies_country_content = pie3d_graph ($config['flash_charts'], $companies_country, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
 } else {
-	$table->data[0][0] .= __('No data to show');
+	$companies_country_content = __('No data to show');
 }
+
+$companies_country_content = '<br><div class="pie_frame">' . $companies_country_content . '</div>';
+
+$table->data[0][0] = print_container('companies_per_county', __('Companies per country'), $companies_country_content, 'no', true, '10px');
 
 //USERS
 $companies_user = crm_get_total_user($where_clause);
@@ -124,12 +127,15 @@ if ($read && $enterprise) {
 
 $companies_user = crm_get_data_user_graph($companies_user);
 
-$table->data[0][1] = "<br><h3>".__('Users per company')."</h3>";
 if ($companies_user !== false) {
-	$table->data[0][1] .= pie3d_graph ($config['flash_charts'], $companies_user, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+	$companies_user_content = pie3d_graph ($config['flash_charts'], $companies_user, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
 } else {
-	$table->data[0][1] .= __('No data to show');
+	$companies_user_content = __('No data to show');
 }
+
+$companies_user_content = '<br><div class="pie_frame">' . $companies_user_content . '</div>';
+
+$table->data[0][1] = print_container('companies_per_user', __('Users per company'), $companies_user_content, 'no', true, '10px');
 
 //TOP 10 INVOICING
 $companies_invoincing = crm_get_total_invoiced($where_clause);
@@ -138,12 +144,13 @@ if ($read && $enterprise) {
 	$companies_invoincing = crm_get_user_companies($config['id_user'], $companies_invoincing);
 }
 
-$table->data[1][0] = "<br><h3>".__('Top 10 invoicing')."</h3>";
 if ($companies_invoincing !== false) {
-	$table->data[1][0] .= print_table(crm_print_most_invoicing_companies($companies_invoincing), true);
+	$companies_invoincing_content = print_table(crm_print_most_invoicing_companies($companies_invoincing), true);
 } else {
-	$table->data[1][0] .= __('No data to show');
+	$companies_invoincing_content = '<br><div>' . __('No data to show') . '</div>';
 }
+
+$table->data[1][0] = print_container('top_10_invoicing', __('Top 10 invoicing'), $companies_invoincing_content, 'no', true, '10px');
 
 //TOP 10 ACTIVITY
 $companies_activity = crm_get_total_activity($where_clause);
@@ -152,13 +159,15 @@ if ($read && $enterprise) {
 	$companies_activity = crm_get_user_companies($config['id_user'], $companies_activity);
 }
 
-$table->data[1][1] = "<br><h3>".__('Top 10 activity')."</h3>";
 if ($companies_activity !== false) {
-	$table->data[1][1] .= print_table(crm_print_most_activity_companies($companies_activity), true);
+	$companies_activity_content = print_table(crm_print_most_activity_companies($companies_activity), true);
 } else {
-	$table->data[1][1] .= __('No data to show');
+	$companies_activity_content = '<br><div>' . __('No data to show') . '</div>';
 }
 
+$table->data[1][1] = print_container('top_10_activity', __('Top 10 activity'), $companies_activity_content, 'no', true, '10px');
+
+echo '<br>';
 print_table($table);
 
 ?>

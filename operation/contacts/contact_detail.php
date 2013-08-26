@@ -40,6 +40,8 @@ if ($read !== ENTERPRISE_NOT_HOOK) {
 	$manage = true;
 }
 
+echo "<h1>".__('Contact management')."</h1>";
+
 if($id != 0) {
 	$id_company = get_db_value ('id_company', 'tcompany_contact', 'id', $id);
 	
@@ -180,8 +182,6 @@ if ($delete_contact) {
 	$id = 0;
 }
 
-echo "<h2>".__('Contact management')."</h2>";
-
 // FORM (Update / Create)
 if ($id || $new_contact) {
 	if ($new_contact) {
@@ -220,8 +220,8 @@ if ($id || $new_contact) {
 		$description = $contact['description'];
 	}
 	
-	$table->width = "90%";
-	$table->class = "databox";
+	$table->width = "99%";
+	$table->class = "search-table-button";
 	$table->data = array ();
 	$table->colspan = array ();
 	$table->colspan[0][0] = 4;
@@ -285,23 +285,22 @@ if ($id || $new_contact) {
 		$table->data[4][0] = "<b>".__('Description')."</b><br>$description<br>";
 	}
 	
+	if ($id && $write_permission) {
+		$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('update_contact', 1, true);
+		$button .= print_input_hidden ('id', $id, true);
+	} else {
+		if ($manage) {
+			$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+			$button .= print_input_hidden ('create_contact', 1, true);
+		}
+	}
+	
+	$table->data['button'][0] = $button;
+	$table->colspan['button'][0] = 2;
+	
 	echo '<form method="post" id="contact_form">';
 	print_table ($table);
-	
-		echo '<div class="button" style="width: '.$table->width.'">';
-		
-		if ($id && $write_permission) {
-			print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', false);
-			print_input_hidden ('update_contact', 1);
-			print_input_hidden ('id', $id);
-		} else {
-			if ($manage) {
-				print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', false);
-				print_input_hidden ('create_contact', 1);
-			}
-		}
-		echo "</div>";
-
 	echo "</form>";
 	
 } else {
@@ -326,7 +325,7 @@ if ($id || $new_contact) {
 	}
 	$params = "&search_text=$search_text&id_company=$id_company";
 
-	$table->width = '550px';
+	$table->width = '99%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
@@ -334,8 +333,7 @@ if ($id || $new_contact) {
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
 	$table->data[0][1] = print_select (get_companies (), 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	$table->data[0][2] .= "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_contacts=1&where_clause=$where_clause'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
-
+	$table->data[0][3] = print_button(__('Export to CSV'), '', false, 'window.open(\'' . "include/export_csv.php?export_csv_contacts=1&where_clause=$where_clause" . '\')', 'class="sub csv"', true);
 	echo '<form method="post">';
 	print_table ($table);
 	echo '</form>';
@@ -350,7 +348,7 @@ if ($id || $new_contact) {
 
 	if ($contacts !== false) {
 		unset ($table);
-		$table->width = "90%";
+		$table->width = "99%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();
@@ -389,8 +387,8 @@ if ($id || $new_contact) {
 //Show create button only when contact list is displayed
 if($manage && !$id && !$new_contact) {
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/contacts/contact_detail">';
-	echo '<div class="button" style="width: '.$table->width.'">';
-	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+	echo '<div style="width: '.$table->width.'; text-align: right;">';
+	print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
 	print_input_hidden ('new_contact', 1);
 	echo '</div>';
 	echo '</form>';

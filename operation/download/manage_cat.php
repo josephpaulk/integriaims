@@ -96,20 +96,19 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$icon = $row["icon"];
 	}
 
-	echo "<h2>".__('File release category management')."</h2>";	
 	if ($id == -1){
-		echo "<h3>".__('Create a new category')."</a></h3>";
+		echo "<h1>".__('Create a new category')."</h1>";
 		echo "<form id='form-file_category' name=catman method='post' action='index.php?sec=download&
 						sec2=operation/download/manage_cat&create2'>";
 	}
 	else {
-		echo "<h3>".__('Update existing category')."</a></h3>";
+		echo "<h1>".__('Update existing category')."</h1>";
 		echo "<form id='form-file_category' name=catman method='post' action='index.php?sec=download&
 						sec2=operation/download/manage_cat&update2'>";
 		echo "<input id='id_category' type=hidden name=id value='$id'>";
 	}
 	
-	echo '<table width="90%" class="databox">';
+	echo '<table width="99%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
 	echo __('Name');
@@ -122,25 +121,25 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 	echo "<td class=datos>";
 	$files = list_files ('images/download_category/', "png", 1, 0);
 	print_select ($files, 'icon', $icon, '', __('None'), "");
-
-	echo "</table>";
-	echo '<div class="button" style="width:90%">';
+	
 	if ($id == -1)
-		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+		echo "<tr><td colspan=2>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
 	else
-		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-	echo "</div></form>";
+		echo "<tr><td colspan=2>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
+		
+	echo "</table>";
+	echo "</form>";
 
 }
 
 // Show list of categories
 // =======================
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h2>".__('File release category management')." &raquo; ".__('Defined categories')."</h2>";
+	echo "<h1>".__('File release category management')." &raquo; ".__('Defined categories')."</h1>";
 	$sql1='SELECT * FROM tdownload_category ORDER BY name';
 	$color =0;
 	if ($result=mysql_query($sql1)){
-		echo '<table width="90%" class="listing">';
+		echo '<table width="99%" class="listing">';
 		echo "<th>".__('Name')."</th>";
 		echo "<th>".__('Icon')."</th>";
 		echo "<th>".__('Groups')."</th>";
@@ -186,9 +185,9 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		}
 		echo "</table>";
 	}			
-	echo '<div style="width:90%" class="button">';
+	echo '<div style="width:99%; text-align: right;">';
 	echo "<form method=post action='index.php?sec=download&sec2=operation/download/manage_cat&create=1'>";
-	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"');
 	echo "</form></div>";
 } // end of list
 

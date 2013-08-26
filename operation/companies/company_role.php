@@ -29,6 +29,8 @@ if ($manage !== ENTERPRISE_NOT_HOOK) {
 	}
 }
 
+echo "<h1>".__('Company role management')."</h1>";
+
 $id = (int) get_parameter ('id');
 
 $new_role = (bool) get_parameter ('new_role');
@@ -81,8 +83,6 @@ if ($delete_role) {
 	$id = 0;
 }
 
-echo "<h2>".__('Company role management')."</h2>";
-
 // FORM (Update / Create)
 if ($id || $new_role) {
 	if ($new_role) {
@@ -94,26 +94,27 @@ if ($id || $new_role) {
 		$description = $role['description'];
 	}
 	
-	$table->width = '90%';
-	$table->class = 'databox';
+	$table->width = '99%';
+	$table->class = 'search-table-button';
 	$table->data = array ();
 	$table->colspan = array ();
 	
 	$table->data[0][0] = print_input_text ("name", $name, "", 60, 100, true, __('Role name'));
 	$table->data[1][0] = print_textarea ('description', 14, 1, $description, '', true, __('Description'));
 	
+	if ($id) {
+		$button = print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('update_role', 1, true);
+		$button .= print_input_hidden ('id', $id, true);
+	} else {
+		$button = print_input_hidden ('create_role', 1, true);
+		$button .= print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', true);
+	}
+	
+	$table->data['button'][0] = $button;
+		
 	echo '<form id="form-company_role" method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
 		print_table ($table);
-		echo '<div class="button" style="width: '.$table->width.'">';
-		if ($id) {
-			print_submit_button (__('Update'), "update_btn", false, 'class="sub upd"', false);
-			print_input_hidden ('update_role', 1);
-			print_input_hidden ('id', $id);
-		} else {
-			print_input_hidden ('create_role', 1);
-			print_submit_button (__('Create'), "create_btn", false, 'class="sub next"', false);
-		}
-		echo "</div>";
 	echo '</form>';
 } else {
 	$search_text = (string) get_parameter ('search_text');
@@ -124,7 +125,7 @@ if ($id || $new_role) {
 			OR description LIKE "%%%s%%")', $search_text, $search_text);
 	}
 
-	$table->width = '75%';
+	$table->width = '99%';
 	$table->class = 'search-table';
 	$table->style = array ();
 	$table->style[0] = 'font-weight: bold;';
@@ -143,7 +144,7 @@ if ($id || $new_role) {
 
 	if ($roles !== false) {
 
-		$table->width = "98%";
+		$table->width = "99%";
 		$table->class = "listing";
 		$table->data = array ();
 		$table->size = array ();
@@ -174,7 +175,7 @@ if ($id || $new_role) {
 	}
 	
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_role">';
-	echo '<div class="button" style="width: '.$table->width.'">';
+	echo '<div style="width: '.$table->width.'; text-align: right;">';
 	print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 	print_input_hidden ('new_role', 1);
 	echo '</div>';

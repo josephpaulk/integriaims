@@ -103,20 +103,19 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$parent = $row["parent"];
 	}
 
-	echo "<h2>".__('KB Category management')."</h2>";	
 	if ($id == -1){
-		echo "<h3>".__('Create a new category')."</a></h3>";
+		echo "<h1>".__('Create a new category')."</h1>";
 		echo "<form id='form-kb_category' name=catman method='post' action='index.php?sec=kb&
 						sec2=operation/kb/manage_cat&create2'>";
 	}
 	else {
-		echo "<h3>".__('Update existing category')."</a></h3>";
+		echo "<h1>".__('Update existing category')."</h1>";
 		echo "<form id='form-kb_category' name=catman method='post' action='index.php?sec=kb&
 						sec2=operation/kb/manage_cat&update2'>";
 		echo "<input id='id_kb_category' type=hidden name=id value='$id'>";
 	}
 	
-	echo '<table width="90%" class="databox">';
+	echo '<table width="99%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
 	echo __('Name');
@@ -141,25 +140,23 @@ print_select ($files, 'icon', $icon, '', __('None'), "");
 	echo __('Parent');
 	echo "<td class=datos2>";
 	combo_kb_categories ( $parent);
-
-	echo "</table>";
-	echo '<div class="button" style="width:90%">';
 	if ($id == -1)
-		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+		echo "<tr><td colspan=2>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
 	else
-		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-	echo "</div></form>";
+		echo "<tr><td colspan=2>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
+	echo "</table>";
+	echo "</form>";
 
 }
 
 // Show list of categories
 // =======================
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h2>".__('KB Category management')." &raquo; ".__('Defined categories')."</h2>";
+	echo "<h1>".__('KB Category management')." &raquo; ".__('Defined categories')."</h1>";
 	$sql1='SELECT * FROM tkb_category ORDER BY parent, name';
 	$color =0;
 	if ($result=mysql_query($sql1)){
-		echo '<table width="90%" class="listing">';
+		echo '<table width="99%" class="listing">';
 		echo "<th>".__('Icon')."</th>";
 		echo "<th>".__('Name')."</th>";
 		echo "<th>".__('Parent')."</th>";
@@ -208,7 +205,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		}
 		echo "</table>";
 	}			
-	echo '<div style="width:90%" class="button">';
+	echo '<div style="width:99%; text-align: right;">';
 	echo "<form method=post action='index.php?sec=kb&sec2=operation/kb/manage_cat&create=1'>";
 	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
 	echo "</form></div>";

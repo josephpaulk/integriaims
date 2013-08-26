@@ -347,7 +347,9 @@ if ($incident["sla_disabled"]) {
 	$incident_sla .= graph_sla_slicebar ($id, $period, 155, 15, $ttl);
 	$incident_sla .= "</td>";
 	$incident_sla .= "<td colspan=2 style='text-align: center;' >";
+	$incident_sla .= "<div class='pie_frame'>";
 	$incident_sla .= graph_incident_sla_compliance ($id, 155, 80, $ttl);
+	$incident_sla .= "</div>";	
 	$incident_sla .= "</td>";	
 	$incident_sla .= "<tr>";
 	$incident_sla .= "</table>";
@@ -372,7 +374,7 @@ if (get_admin_user($config['id_user']) || (give_acl ($config['id_user'], $id_gru
 	echo "</li>";
 }
 echo '<li>';
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.print_image("images/award_star_silver_1.png", true, array("title" => __('Workunits'))).'</a>';
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations">'.print_image("images/star_dark.png", true, array("title" => __('Workunits'))).'</a>';
 echo '</li>';
 echo '<li>';
 echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations">'.print_image("images/disk.png", true, array("title" => __('Files'))).'</a>';
@@ -391,29 +393,13 @@ $tab = get_parameter("tab", "workunits");
 //Print lower menu tab
 echo '<ul class="ui-tabs-nav">';
 
-if ($tab === "workunits") {
-	echo '<li class="ui-tabs-selected">';
-} else {
-	echo '<li class="ui-tabs">';
-}
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations"><span>'.__('Workunits').'</span></a>';
-echo '</li>';
-
-if ($tab === "files") {
-	echo '<li class="ui-tabs-selected">';
-} else {
-	echo '<li class="ui-tabs">';
-}
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations"><span>'.__('Files').'</span></a>';
-echo '</li>';
-
-if ($tab === "tracking") {
+if ($tab === "contacts") {
 	echo '<li class="ui-tabs-selected">';
 } else {
 	echo '<li class="ui-tabs">';
 }
 
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=tracking#incident-operations"><span>'.__('Tracking').'</span></a>';
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=contacts#incident-operations"><span>'.__('Contacts').'</span></a>';
 echo '</li>';
 
 if ($tab === "inventory") {
@@ -425,13 +411,29 @@ if ($tab === "inventory") {
 echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=inventory#incident-operations"><span>'.__('Inventory').'</span></a>';
 echo '</li>';
 
-if ($tab === "contacts") {
+if ($tab === "tracking") {
 	echo '<li class="ui-tabs-selected">';
 } else {
 	echo '<li class="ui-tabs">';
 }
 
-echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=contacts#incident-operations"><span>'.__('Contacts').'</span></a>';
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=tracking#incident-operations"><span>'.__('Tracking').'</span></a>';
+echo '</li>';
+
+if ($tab === "files") {
+	echo '<li class="ui-tabs-selected">';
+} else {
+	echo '<li class="ui-tabs">';
+}
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=files#incident-operations"><span>'.__('Files').'</span></a>';
+echo '</li>';
+
+if ($tab === "workunits") {
+	echo '<li class="ui-tabs-selected">';
+} else {
+	echo '<li class="ui-tabs">';
+}
+echo '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id.'&tab=workunits#incident-operations"><span>'.__('Workunits').'</span></a>';
 echo '</li>';
 
 echo '<li class="ui-tabs-title">';

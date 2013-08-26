@@ -53,7 +53,7 @@ $id_language = (string) get_parameter ("id_language", "");
 $est_sale = (string) get_parameter ("est_sale", "");
 	
 echo "<div id='incident-search-content'>";
-echo "<h2>".__('Search statistics');
+echo "<h1>".__('Search statistics');
 echo "<div id='button-bar-title'>";
 echo "<ul>";
 echo "<li>";
@@ -61,7 +61,7 @@ echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/le
 echo "</li>";
 echo "</ul>";
 echo "</div>";
-echo "</h2>";
+echo "</h1>";
 
 $where_clause = '';
 
@@ -116,7 +116,7 @@ if ($id_category) {
 }
 
 $table->class = 'blank';
-$table->width = '98%';
+$table->width = '99%';
 $table->data = array ();
 $table->style = array ();
 $table->valign = array ();
@@ -131,12 +131,15 @@ if ($read && $enterprise) {
 }
 $leads_country = crm_get_data_lead_country_graph($leads_country);
 
-$table->data[0][0] = "<br><h3>".__('Leads per country')."</h3>";
 if ($leads_country !== false) {
-	$table->data[0][0] .= pie3d_graph ($config['flash_charts'], $leads_country, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+	$leads_country_content = pie3d_graph ($config['flash_charts'], $leads_country, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
 } else {
-	$table->data[0][0] .= __('No data to show');
+	$leads_country_content = __('No data to show');
 }
+
+$leads_country_content = '<br><div class="pie_frame">' . $leads_country_content . '</div>';
+
+$table->data[0][0] = print_container('leads_per_country', __('Leads per country'), $leads_country_content, 'no', true, '10px');
 
 //USERS
 $leads_user = crm_get_total_leads_user($where_clause);
@@ -146,12 +149,15 @@ if ($read && $enterprise) {
 }
 $leads_user = crm_get_data_lead_user_graph($leads_user);
 
-$table->data[0][1] = "<br><h3>".__('Users per lead')."</h3>";
 if ($leads_user !== false) {
-	$table->data[0][1] .= pie3d_graph ($config['flash_charts'], $leads_user, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+	$leads_user_content = pie3d_graph ($config['flash_charts'], $leads_user, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
 } else {
-	$table->data[0][1] .= __('No data to show');
+	$leads_user_content = __('No data to show');
 }
+
+$leads_user_content = '<br><div class="pie_frame">' . $leads_user_content . '</div>';
+
+$table->data[0][1] = print_container('users_per_lead', __('Users per lead'), $leads_user_content, 'no', true, '10px');
 
 //TOP 10 ESTIMATED SALES
 $leads_sales = crm_get_total_sales_lead($where_clause);
@@ -160,12 +166,13 @@ if ($read && $enterprise) {
 	$leads_sales = crm_get_user_leads($config['id_user'], $leads_sales);
 }
 
-$table->data[1][0] = "<br><h3>".__('Top 10 estimated sales')."</h3>";
 if ($leads_sales !== false) {
-	$table->data[1][0] .= print_table(crm_print_estimated_sales_leads($leads_sales), true);
+	$leads_sales_content = print_table(crm_print_estimated_sales_leads($leads_sales), true);
 } else {
-	$table->data[1][0] .= __('No data to show');
+	$companies_activity_content = '<br><div>' . __('No data to show') . '</div>';
 }
+
+$table->data[1][0] = print_container('top_10_sales', __('Top 10 estimated sales'), $leads_sales_content, 'no', true, '10px');
 
 //NEW LEADS
 $leads_creation = crm_get_total_leads_creation($where_clause);
@@ -176,13 +183,17 @@ if ($read && $enterprise) {
 
 $leads_creation = crm_get_data_lead_creation_graph($leads_creation);
 
-$table->data[1][1] = "<br><h3>".__('New leads')."</h3><br>";
 if ($leads_creation !== false) {
-	$table->data[1][1] .= area_graph(false, $leads_creation, 500, 300, "#2179B1", '', '', '');
+	$leads_creation_content = area_graph(false, $leads_creation, 400, 250, "#2179B1", '', '', '');
 } else {
-	$table->data[1][1] .= __('No data to show');
+	$leads_creation_content = __('No data to show');
 }
 
+$leads_creation_content = '<br><div class="pie_frame"><br>' . $leads_creation_content . '</div>';
+
+$table->data[1][1] = print_container('new_leads', __('New leads'), $leads_creation_content, 'no', true, '10px');
+
+echo '<br>';
 print_table($table);
 
 ?>

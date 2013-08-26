@@ -571,7 +571,7 @@ if ($id || $new) {
 		$button .= print_input_hidden ('update', 1, true);
 		$button .= print_input_hidden ('id', $id, true);
 	} else {
-		$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"', true);
+		$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
 		$button .= print_input_hidden ('create', 1, true);
 	}
 	
@@ -612,7 +612,7 @@ if ($id || $new) {
 	$progress_minor_than = (int) get_parameter ('progress_minor_than_search');
 	$owner = (string) get_parameter ("owner_search");
 	$show_100 = (int) get_parameter ("show_100_search");
-	$id_language = (string) get_parameter ("id_language_search", "");
+	$id_language = (string) get_parameter ("id_language", "");
 	$est_sale = (int) get_parameter ("est_sale_search", 0);
 
 	$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&id_category_search=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
@@ -701,37 +701,36 @@ if ($id || $new) {
 	
 	$table->data[1][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	$table->data[1][2] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . str_replace('"', "'", $where_clause) . '\')', 'class="sub csv"', true);
-
-	print_table ($table);
-	$table->data = array ();
-
-	echo '<a href="javascript:;" onclick="$(\'#advanced_div\').slideToggle (); return false">';
-	echo __('Advanced search &gt;&gt;');
-	echo '</a>';
-	echo '<div id="advanced_div" style="padding: 0px; margin: 0px; display: none;">';
-
-	$progress_values = lead_progress_array ();	
-
-	$table->data[0][0] = print_select ($progress_values, 'progress_major_than_search', $progress_major_than, '', __("None"), 0, true, 0, false, __('Progress equal or above') );
-
-
-	$table->data[0][1] = print_select ($progress_values, 'progress_minor_than_search', $progress_minor_than, '', __("None"), 0, true, 0, false, __('Progress equal or below') );
-
-
-	$table->data[0][2] = combo_kb_products ($id_category, true, 'Product type', true);
-
-	$table->data[0][3] = print_select_from_sql ($sql2, 'id_company_search', $id_company, '', __("None"), 0, true, false, true, __("Managed by"));
 	
-	$table->data[1][0] = print_input_text ("start_date_search", $start_date, "", 15, 100, true, __('Start date'));
-	$table->data[1][1] = print_input_text ("end_date_search", $end_date, "", 15, 100, true, __('End date'));
+	$table_advanced->class = 'search-table';
+	$table_advanced->style = array ();
+	$table_advanced->style[0] = 'font-weight: bold;';
+	$table_advanced->data = array ();
+	$table_advanced->width = "99%";
+	
+	$table_advanced->data[0][0] = print_select ($progress_values, 'progress_major_than_search', $progress_major_than, '', __("None"), 0, true, 0, false, __('Progress equal or above') );
 
-	$table->data[1][2] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
+
+	$table_advanced->data[0][1] = print_select ($progress_values, 'progress_minor_than_search', $progress_minor_than, '', __("None"), 0, true, 0, false, __('Progress equal or below') );
+
+
+	$table_advanced->data[0][2] = combo_kb_products ($id_category, true, 'Product type', true);
+
+	$table_advanced->data[0][3] = print_select_from_sql ($sql2, 'id_company_search', $id_company, '', __("None"), 0, true, false, true, __("Managed by"));
+	
+	$table_advanced->data[1][0] = print_input_text ("start_date_search", $start_date, "", 15, 100, true, __('Start date'));
+	$table_advanced->data[1][1] = print_input_text ("end_date_search", $end_date, "", 15, 100, true, __('End date'));
+
+	$table_advanced->data[1][2] = print_select_from_sql ('SELECT id_language, name FROM tlanguage ORDER BY name',
 	'id_language', $id_language, '', __('Any'), '', true, false, false,
 	__('Language'));
-
-	print_table ($table);
 	
-	echo "</div>";
+	$table->data['advanced'][2] = print_container('lead_search_advanced', __('Advanced search'), print_table($table_advanced, true), 'closed', true, false);
+	$table->colspan['advanced'][2] = 3;
+	
+	print_table ($table);
+	$table->data = array ();
+	
 	echo '</form>';
 
 	$leads = crm_get_all_leads ($where_clause);
@@ -855,8 +854,8 @@ if ($id || $new) {
 	
 	if ($manage_permission) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail">';
-		echo '<div class="button" style="width: '.$table->width.'">';
-		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+		echo '<div style="width: '.$table->width.'; text-align: right;">';
+		print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
 		print_input_hidden ('new', 1);
 		echo '</div>';
 		echo '</form>';

@@ -60,32 +60,41 @@
 	echo "<h1>";
 	echo getmonth($working_month). " / ". $working_year. " &raquo; ".__('Totals for this month'). " &raquo; ($total_hours)";
 	echo "</h1>";
-
-    echo "<br>";
-	echo "<table class='blank'>";
-	echo "<tr><td>";
-    echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$prev_month&working_year=$prev_year'><img src='images/control_rewind_blue.png'> ".__('Prev')."</a> ";
-	echo "</td><td>";
+		
 	echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/report_monthly'>";
-	echo "<select name='working_month'>";
-	echo "<option value='$working_month'>".getmonth($working_month);
-	for ($ax=1; $ax <= $now_month; $ax++){
-                echo "<option value='$ax'>".getmonth($ax);
-    }
-	echo "</select>";
-	echo "</td><td>";
-    echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$next_month&working_year=$next_year'>".__('Next')." <img src='images/control_fastforward_blue.png'></a> ";
-	echo "</td><td>";
-	echo __('Filter');
-	echo "</td><td>";
-	$search = get_parameter ("search", '');
+	echo "<table class='search-table' style='width:99%'><tr><td style='width: 200px;'>";
+		echo "<table text-align: center;'>";
+		echo "<tr><td>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$prev_month&working_year=$prev_year'><img src='images/control_rewind_blue.png' title='" . __('Prev') . "'></a> ";
+		echo "</td><td>";
+		echo "<select name='working_month' style='width: 100%;'>";
+		echo "<option value='$working_month'>".getmonth($working_month);
+		for ($ax=1; $ax <= $now_month; $ax++){
+					echo "<option value='$ax'>".getmonth($ax);
+		}
+		echo "</select>";
+		echo "</td><td>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_monthly&working_month=$next_month&working_year=$next_year'><img src='images/control_fastforward_blue.png' title='" . __('Next') . "'></a> ";
+		echo "</table>";
+		
+		echo "</td><td>";
+		
+		echo "<table>";
+		echo "<tr><td>";
+		echo __('Filter');
+		echo "</td><td>";
+		$search = get_parameter ("search", '');
+		
+		print_input_text ('search', $search, '', 25);
+		echo "</table>";
 	
-	print_input_text ('search', $search, '', 15);
-	echo "</td><td>";
-	echo "<input type=submit class='sub next' value='".__('Update')."'>";
+		echo "</td><td style='text-align: right;'>";
+			
+		echo "<input type=submit class='sub search' value='".__('Search')."'>";
+
+	echo "</td></tr></table>";
 	echo "</form>";
-	echo "</table>";
-	
+
    	$values = get_user_visible_users ($config['id_user'], "UM", true, true, false, $search);
 
 	if(empty($values) && $search == '') {

@@ -1013,6 +1013,7 @@ function print_container($id, $title, $content, $open = 'open', $return = true, 
 	$container_div_style = '';
 	$container_style = '';
 	$h2_style = '';
+	$h2_class_extra = ' clickable';
 	$arrow = '';
 	$onclick = 'toggleDiv (\'' . $id . '_div\')';
 
@@ -1028,18 +1029,19 @@ function print_container($id, $title, $content, $open = 'open', $return = true, 
 		default:
 			$onclick = '';
 			$h2_style = 'cursor: auto;';
+			$h2_class_extra = '';
 			break;
 	}
 	
 	if ($margin !== true) {
 		$margin = (int) $margin;
 		$h2_style .= 'padding-left: ' . $margin . 'px; height: 22px;';
-		$container_style = 'padding-left: 0px; padding-bottom: 3px; font-size: 0.90em;';
+		$container_style = 'padding-left: 0px; padding-bottom: 3px; font-size: 0.90em; min-height: 0px;';
 		$container_div_style .= 'padding-left: ' . $margin . 'px;';
 	}
 	
 	$container = '<div class="container ' . $id . '_container" style="' . $container_style . '">';
-	$container .= '<h2 id="' . $id . '" class="dashboard_h2" onclick="' . $onclick . '" style="' . $h2_style . '">' . $title;
+	$container .= '<h2 id="' . $id . '" class="dashboard_h2 ' . $h2_class_extra . '" onclick="' . $onclick . '" style="' . $h2_style . '">' . $title;
 	$container .= $arrow;
 	$container .= '</h2>';
 	$container .= '<div id="' . $id . '_div" class="container_div" style="' . $container_div_style . '">';

@@ -2110,7 +2110,7 @@ table#details_table, .pie_frame, .graph_frame {
 	margin: 10px auto;
 	padding: 5px;
 	background: #FFFFFF;
-	border: #707070 dashed 2px;
+	border: #c0c0c0 dashed 1px;
 	
 	-moz-border-radius:6px;
 	-webkit-border-radius:6px;
@@ -2135,12 +2135,12 @@ tr.incident_details_bottom td {
 	width: 95% !important;
 }
 
-.advanced_details_table table{
+.advanced_details_table table, .details_table table{
 	margin-top: 0px;
 	margin-bottom: 0px;
 }
 
-.advanced_details_table td{
+.advanced_details_table td, .details_table td{
 	border-radius: 5px;
 	-moz-border-radius: 5px;
     -webkit-border-radius: 5px;

@@ -207,19 +207,18 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$id_language = $row["id_language"];
 		$id_category = $row["id_category"];
 	}
-
-	echo "<h2>".__('KB Data management')."</h2>";	
+	
 	if ($id == -1){
-		echo "<h3>".__('Create a new KB item')."</a></h3>";
+		echo "<h1>".__('Create a new KB item')."</h1>";
 		echo "<form id='form-kb_item' name=prodman method='post' action='index.php?sec=kb&sec2=operation/kb/browse&create2'>";
 	}
 	else {
-		echo "<h3>".__('Update existing KB item')."</a></h3>";
+		echo "<h1>".__('Update existing KB item')."</h1>";
 		echo "<form id='form-kb_item' enctype='multipart/form-data' name=prodman2 method='post' action='index.php?sec=kb&sec2=operation/kb/browse&update2'>";
 		echo "<input type=hidden name=id value='$id'>";
 	}
 	
-	echo '<table width="90%" class="databox">';
+	echo '<table width="99%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
 	echo __('Title');
@@ -267,15 +266,12 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 			echo "<input type=text size=60 name='attach_description' value=''>";
 		}
 	}
+	if ($id == -1)
+		echo "<tr><td colspan=2>" . print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"', true) . "</td></tr>";
+	else
+		echo "<tr><td colspan=2>" . print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"', true) . "</td></tr>";
 
 	echo "</table>";
-	
-	echo '<div class="button" style="width:90%">';
-	if ($id == -1)
-		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
-	else
-		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-	echo "</div>";
 	echo "</form>";
 
 	// Show list of attachments
@@ -310,7 +306,7 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 	// Show list of items
 	// =======================
 
-	echo "<h2>".__('KB Data management')." &raquo; ".__('Defined data')."</a></h2>";
+	echo "<h1>".__('KB Data management')." &raquo; ".__('Defined data')."</a></h1>";
 
 	// Search parameter 
 	$free_text = get_parameter ("free_text", "");
@@ -320,27 +316,23 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 
 	// Search filters
 	echo '<form method="post" action="?sec=kb&sec2=operation/kb/browse">';
-	echo '<table width="100%" class="blank">';
+	echo '<table width="100%" class="search-table">';
 	echo "<tr>";
 	echo "<td>";
-	echo __('Product types');
-	echo "<td>";
+	echo "<label>" . __('Product types') . "</label>";
 	combo_product_types($product, 1);
 	
 	echo "<td>";
-	echo __('Categories');
-	echo "<td>";
+	echo "<label>" . __('Categories') . "</label>";
 	combo_kb_categories ($category, 1);
 
 	echo "<tr>";
 	echo "<td>";
-	echo __('Search');
-	echo "<td>";
+	echo "<label>" . __('Search') . "</label>";
 	echo "<input type=text name='free_text' size=25 value='$free_text'>";
 
 	echo "<td>";
-	echo __('Language');
-	echo "<td>";
+	echo "<label>" . __('Language') . "</label>";
 	echo print_select_from_sql ('SELECT id_language, name FROM tlanguage', 'id_language',
 						$id_language, '', __("Any"), '', true, false, false, '');
 

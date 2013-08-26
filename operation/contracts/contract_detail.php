@@ -41,6 +41,8 @@ if ($read !== ENTERPRISE_NOT_HOOK) {
 	$manage = true;
 }
 
+echo "<h1>".__('Contract management')."</h1>";
+
 if ($id != 0) {
 	
 	$id_company = get_db_value('id_company', 'tcontract', 'id', $id);
@@ -176,9 +178,6 @@ if ($delete_contract) {
 	$id = 0;
 }
 
-	
-echo "<h2>".__('Contract management')."</h2>";
-
 // FORM (Update / Create)
 if ($id | $new_contract) {
 	if ($new_contract) {
@@ -212,8 +211,8 @@ if ($id | $new_contract) {
 		$private = $contract["private"];
 	}
 	
-	$table->width = '800px';
-	$table->class = 'databox';
+	$table->width = '99%';
+	$table->class = 'search-table-button';
 	$table->colspan = array ();
 	$table->colspan[4][0] = 2;
 	$table->data = array ();
@@ -272,21 +271,22 @@ if ($id | $new_contract) {
 		$table->data[3][1] = "<b>".__('Description')."</b><br>$description<br>";
 	}
 	
+	if (($id && $write_permission) || (!$id && $manage)) {
+		if ($id) {
+			$button = print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+			$button .= print_input_hidden ('id', $id, true);
+			$button .= print_input_hidden ('update_contract', 1, true);
+		} else {
+			$button = print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+			$button .= print_input_hidden ('create_contract', 1, true);
+		}
+		
+		$table->data['button'][1] = $button;
+		$table->colspan['button'][1] = 2;
+	}
+	
 	echo '<form id="contract_form" method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
 	print_table ($table);
-	
-	if (($id && $write_permission) || (!$id && $manage)) {
-		echo '<div class="button" style="width: '.$table->width.'">';
-		if ($id) {
-			print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
-			print_input_hidden ('id', $id);
-			print_input_hidden ('update_contract', 1);
-		} else {
-			print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
-			print_input_hidden ('create_contract', 1);
-		}
-		echo "</div>";
-	}
 	echo "</form>";
 } else {
 	
@@ -342,7 +342,7 @@ if ($id | $new_contract) {
 	
 	echo '<form action="index.php?sec=customers&sec2=operation/contracts/contract_detail" method="post">';
 	
-	echo "<table width=80% class='search-table'>";
+	echo "<table width=99% class='search-table'>";
 	echo "<tr>";
 	
 	echo "<td colspan=2>";
@@ -380,7 +380,7 @@ if ($id | $new_contract) {
 	
 	echo "<td valign=bottom align='right'>";
 	echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	echo "&nbsp;&nbsp;<a href='include/export_csv.php?export_csv_contracts=1&where_clause=$where_clause'><img title='".__("Export to CSV")."' src='images/binary.gif'></a>";
+	echo print_button(__('Export to CSV'), '', false, 'window.open(\'' . "include/export_csv.php?export_csv_contracts=1&where_clause=$where_clause" . '\')', 'class="sub csv"', true);
 	echo "</td>";
 	echo "</tr>";
 	
@@ -398,7 +398,7 @@ if ($id | $new_contract) {
 
 	if ($contracts !== false) {
 		
-		$table->width = "90%";
+		$table->width = "99%";
 		$table->class = "listing";
 		$table->cellspacing = 0;
 		$table->cellpadding = 0;
@@ -452,8 +452,8 @@ if ($id | $new_contract) {
 	
 	if($manage) {
 		echo '<form method="post" action="index.php?sec=customers&sec2=operation/contracts/contract_detail">';
-		echo '<div class="button" style="width: '.$table->width.'">';
-		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+		echo '<div style="width: '.$table->width.'; text-align: right;">';
+		print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
 		print_input_hidden ('new_contract', 1);
 		echo '</div>';
 		echo '</form>';

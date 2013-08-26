@@ -1,3 +1,57 @@
+2013-08-26  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_html.php
+	include/styles/integria.css
+	include/styles/wiki.css
+	include/js/integria.js
+	operation/invoices/invoice_detail.php
+	operation/incidents/incident_tracking.php
+	operation/incidents/incident_detail.php
+	operation/incidents/incident_dashboard_detail.php
+	operation/leads/lead_statistics.php
+	operation/leads/template_manager.php
+	operation/leads/lead_detail.php
+	operation/kb/manage_perms.php
+	operation/kb/manage_cat.php
+	operation/kb/browse.php
+	operation/contracts/contract_detail.php
+	operation/users/user_spare_workunit.php
+	operation/users/user_edit.php
+	operation/inventories/inventory_reports_detail.php
+	operation/inventories/inventory_reports.php
+	operation/inventories/manage_prod.php
+	operation/download/manage_perms.php
+	operation/download/manage_cat.php
+	operation/download/browse.php
+	operation/user_report/report_monthly.php
+	operation/contacts/contact_detail.php
+	operation/companies/company_statistics.php
+	operation/companies/company_role.php
+	images/binary.gif
+	images/application_edit.png
+	images/statistics.png
+	images/go-previous.png
+	images/binary.png
+	images/objects/id.png
+	images/objects/audio.png
+	images/objects/battery.png
+	images/objects/camera-photo.png
+	images/objects/network-wireless.png
+	images/objects/box.png
+	images/objects/computer.png
+	images/objects/cd-dvd.png
+	images/objects/babel.png
+	images/objects/engine.png
+	images/objects/floppy.png
+	images/objects/calendar.png
+	images/objects/address-book.png
+	images/objects/certificate.png
+	images/objects/email.png
+	images/star_dark.png
+	images/disk.png
+	godmode/setup/newsboard.php: Visual changes in several 
+	sections
+
 2013-08-26  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions.php: Modified the function
