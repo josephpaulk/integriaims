@@ -794,7 +794,7 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 	}
 	
 	if ($data == NULL) {
-		echo __("There is no data to show");
+		return __("There is no data to show");
 	} else {
 		$colors['graph']['fine'] = true;
 		return hbar_graph($config['flash_charts'], $data, $width, $height, $colors, array(), "", "", true, "", "", $config['font'], $config['fontsize'], true, $ttl);

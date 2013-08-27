@@ -110,7 +110,7 @@ if ($operation == "delete"){
 $ahora = date("Y-m-d H:i:s");
 if ($timestamp_h == "")
 	$timestamp_h == $ahora ;
-echo "<h3>";
+echo "<h1>";
 
 echo __('Workunit personal report for user');
 echo " '". dame_nombre_real($id_user). "'.";
@@ -118,8 +118,9 @@ echo " '". dame_nombre_real($id_user). "'.";
 echo "<a href='index.php?sec=users&sec2=operation/users/user_workunit_report&timestamp_l=$timestamp_l&timestamp_h=$timestamp_h&id=$id_user&id_task=$id_task&clean_output=1'>";
 echo "<img src='images/html.png'>";
 echo "</A>";
+echo "</h1>";
 
-echo "<br>";
+echo "<div class='under_tabs_info'>";
 echo __("Between dates");
 echo ": ";
 if ($timestamp_l != "" AND $timestamp_h != "")
@@ -127,8 +128,8 @@ if ($timestamp_l != "" AND $timestamp_h != "")
 
 if ($id_task != 0)
     echo "<br>".__("Task"). " : ".get_db_sql("SELECT name FROM ttask WHERE id = $id_task");
+echo "</div><br>";
 
-echo "</h3>";
 if ($id_workunit != -1){
 	$sql= "SELECT * FROM tworkunit WHERE tworkunit.id = $id_workunit";
 } else {

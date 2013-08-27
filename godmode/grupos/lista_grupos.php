@@ -41,6 +41,8 @@ if (! give_acl ($config["id_user"], 0, "UM")) {
 	exit;
 }
 
+echo '<h1>'.__('Group management').'</h1>';
+
 $create_group = (bool) get_parameter ('create_group');
 $update_group = (bool) get_parameter ('update_group');
 $delete_group = (bool) get_parameter ('delete_group');
@@ -146,21 +148,21 @@ if ($delete_group) {
 	}
 }
 
-echo '<h2>'.__('Group management').'</h2>';
-
 $offset = get_parameter ("offset", 0);
 $search_text = get_parameter ("search_text", "");
 
-echo "<table class='blank'><form name='bskd' method=post action='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>";
-echo "<td>";
+echo "<table class='search-table' style='width: 99%;'><form name='bskd' method=post action='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>";
+echo "<td style='width: 300px;'>";
+echo "<label>";
 echo __('Search text');
-echo "<td>";
-print_input_text ("search_text", $search_text, '', 15, 0, false);
+echo "</label>";
+print_input_text ("search_text", $search_text, '', 40, 0, false);
 echo "<td>";
 print_submit_button (__('Search'), '', false, 'class="sub next"', false, false);
+echo "<td>";
 echo "</table></form>";
 
-$table->width = '90%';
+$table->width = '99%';
 $table->class = 'listing';
 $table->head = array ();
 $table->head[0] = __('Icon');

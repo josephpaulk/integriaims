@@ -54,16 +54,14 @@ if (isset($_GET["borrar_usuario"])){ // if delete user
 $offset = get_parameter ("offset", 0);
 $search_text = get_parameter ("search_text", "");
 
-echo '<h2>'.__('User management') . '</h2>';
+echo '<h1>'.__('User management') . '</h1>';
 
-echo "<table class='blank'><form name='bskd' method=post action='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>";
+echo "<table class='search-table' style='width: 99%;'><form name='bskd' method=post action='index.php?sec=users&sec2=godmode/usuarios/lista_usuarios'>";
 echo "<td>";
-echo __('Search text');
-echo "<td>";
-print_input_text ("search_text", $search_text, '', 15, 0, false);
+print_input_text ("search_text", $search_text, '', 15, 0, false, __('Search text'));
 echo "<td>";
 echo "<input type='submit' class='sub search' name='Search' value='".__('Search')."'>";
-
+echo "<td>";
 echo "</table></form>";
 
 
@@ -80,7 +78,7 @@ pagination ($count, "index.php?sec=users&sec2=godmode/usuarios/lista_usuarios&se
 $sql1 = "$query1 LIMIT $offset, ". $config["block_size"];
 
 
-echo '<table width="90%" class="listing">';
+echo '<table width="99%" class="listing">';
 echo '<th>'.__('User ID');
 echo '<th>';
 echo '<th>'.__('Name');
@@ -155,7 +153,7 @@ foreach($resq1 as $rowdup){
 }
 echo "</table>";
 
-echo "<div style='width:90%' class='button'>";
+echo "<div style='width:99%' class='button'>";
 
 echo "<form method=post action='index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&alta=1'>";
 echo "<input type='submit' class='sub create' name='crt' value='".__('Create')."'>";

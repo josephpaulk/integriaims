@@ -95,9 +95,9 @@ if ((isset($_GET["form_add"])) or (isset($_GET["form_edit"]))){
 	}
 
 	// Create link
-	echo "<h2>".__('Role management')." &raquo; ".__('Add role')."</h2>";
+	echo "<h1>".__('Role management')." &raquo; ".__('Add role')."</h1>";
 	echo '<form id="form-role_manager" name="ilink" method="post" action="index.php?sec=users&sec2=godmode/usuarios/role_manager">';
-	echo '<table class="fon" cellpadding="3" cellspacing="3" width="90%" class="databox_color">';
+	echo '<table class="search-table-button" cellpadding="3" cellspacing="3" width="99%">';
 	if ($creation_mode == 1){
 		echo "<input type='hidden' name='create' value='1'>";
 	} else {
@@ -105,23 +105,21 @@ if ((isset($_GET["form_add"])) or (isset($_GET["form_edit"]))){
 		echo "<input type='hidden' name='id' value='$id'>";
 	}
 	
-	echo '<tr><td class="datos">'.__('Role').'<td class="datos"><input id="text-role" type="text" name="name" size="25" value="'.$name.'">';
+	echo '<tr><td class="datos"><label>'.__('Role').'</label><td class="datos"><input id="text-role" type="text" name="name" size="25" value="'.$name.'">';
 	
-	echo '<tr><td class="datos2">'.__('Description').'<td class="datos2"><input type="text" name="description" size="55" value="'.$description.'">';
+	echo '<tr><td class="datos2"><label>'.__('Description').'</label><td class="datos2"><input type="text" name="description" size="55" value="'.$description.'">';
 
-	echo '<tr><td class="datos">'.__('Cost').'<td class="datos"><input id="text-cost" type="text" name="cost" size="6" value="'.$cost.'">';
+	echo '<tr><td class="datos"><label>'.__('Cost').'</label><td class="datos"><input id="text-cost" type="text" name="cost" size="6" value="'.$cost.'">';
+	
+	echo "<tr><td colspan=2><input name='crtbutton' type='submit' class='sub next' value='".__('Update')."'>";
 	echo "</table>";
-	echo '<table class="fon" cellpadding="3" cellspacing="3" width="90%">';
-	echo "<tr><td align='right'>";
-	echo "<input name='crtbutton' type='submit' class='sub next' value='".__('Update')."'>";
-	echo '</table></form>';
 }
 
 // Role viewer
 // ~~~~~~~~~~~~~~~~~~~~~~~4
 else {  // Main list view for Links editor
-	echo "<h2>".__('Role management')."</h2>";
-	echo "<table cellpadding='4' cellspacing='4' width='90%' class='listing'>";
+	echo "<h1>".__('Role management')."</h1>";
+	echo "<table cellpadding='4' cellspacing='4' width='99%' class='listing'>";
 	echo "<th>".__('Name');
 	echo "<th>".__('Description');
 	echo "<th>".__('Cost');
@@ -147,7 +145,7 @@ else {  // Main list view for Links editor
 		}
 	}
 	echo "</table>";
-	echo "<table cellpadding='4' cellspacing='4' width='90%'>";
+	echo "<table cellpadding='4' cellspacing='4' width='99%'>";
 	echo "<tr><td align='right'>";
 	echo "<form method='post' action='index.php?sec=users&sec2=godmode/usuarios/role_manager&form_add=1'>";
 	echo "<input type='submit' class='sub create' name='form_add' value='".__('Add')."'>";

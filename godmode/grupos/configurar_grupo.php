@@ -82,10 +82,10 @@ if ($id) {
 	}
 }
 
-echo '<h2>'.__('Group management').'</h2>';
+echo '<h1>'.__('Group management').'</h1>';
 
-$table->width = '600px';
-$table->class = 'databox';
+$table->width = '99%';
+$table->class = 'search-table';
 $table->colspan = array ();
 $table->rowspan = array ();
 $table->rowspan[0][2] = 5;

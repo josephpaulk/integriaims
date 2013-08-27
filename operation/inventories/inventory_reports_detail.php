@@ -66,7 +66,7 @@ if ($render_html == 1){
 		return;
 	
 	// Get the header
-	echo "<table width=100% cellpadding=4 cellspacing=4>";
+	echo "<table width=99% cellpadding=4 cellspacing=4 class=listing>";
 	echo "<tr>";
 	foreach (array_keys ($rows[0]) as $header_item){
 		echo "<th>".$header_item."</th>";

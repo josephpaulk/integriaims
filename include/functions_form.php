@@ -737,7 +737,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 
 	// Show data
-	echo "<div class='notetitle' style='height: 75px;'>"; // titulo
+	echo "<div class='notetitle'>"; // titulo
 	echo "<table class='blank' border=0 width='100%' cellspacing=0 cellpadding=0 style='margin-left: 0px;margin-top: 0px; background: transparent;'>";
 	echo "<tr><td rowspan=3 width='7%'>";
 	print_user_avatar ($id_user, true);

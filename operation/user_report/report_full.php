@@ -128,7 +128,7 @@ echo  "</h1>";
 
 if ($clean_output == 0){
     echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/report_full'>";
-    echo "<table class='databox_color' style='margin-left: 10px' width='90%'>";
+    echo "<table class='search-table-button' style='margin-left: 10px' width='99%'>";
 
 
     echo "<tr><td>";
@@ -214,7 +214,7 @@ if ($clean_output == 0){
     // TODO: Meter aqui inventario, con un control nuevo, tipo AJAX similar al de los usuarios.
 
     echo "<tr><td colspan=3 align=right>";
-    print_submit_button (__('Show'), 'show_btn', false, 'class="next sub"');
+    print_submit_button (__('Show'), 'show_btn', false, 'class="sub zoom"');
     echo "</form>";
     echo "</table>";
 }
@@ -230,7 +230,7 @@ if ($do_search  == 0){
     else
     	echo "<h3>".__("Project report")."</h3>";
 
-    echo '<table width="95%" class="listing"><tr>';
+    echo '<table width="99%" class="listing"><tr>';
     if ($only_summary == 0){
 	    echo "<th>".__('Project')."</th>";
 	    echo "<th>".__('User hours')."</th>";
@@ -493,7 +493,7 @@ if ($do_search  == 0){
 		echo "</h3>";
 	} else {
 			
-		echo '<table width="95%" class="listing"><tr>';
+		echo '<table width="99%" class="listing"><tr>';
         if ($only_summary == 0) {
 		    echo "<th>".__('#')."</th>";
 		    echo "<th>".__('Incident'). "<br>".__("Task")."</th>";

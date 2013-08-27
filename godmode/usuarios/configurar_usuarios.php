@@ -216,15 +216,14 @@ if ($action == 'create'){
 	$modo ="edicion";
 }
 
-echo "<h2>".__('User management')."</h2>";
 if (isset($_GET["alta"])){
 	if ($_GET["alta"]==1){
-		echo '<h3>'.__('Create user').'</h3>';
+		echo '<h1>'.__('Create user').'</h1>';
 	}
 }
 
 if (isset($_GET["update_user"]) OR isset($_GET["nuevo_usuario"])){
-	echo '<h3>'.__('Update user').'</h3>';
+	echo '<h1>'.__('Update user').'</h1>';
 }
 
 if (isset($_GET["alta"]))
@@ -234,7 +233,7 @@ else
 	// Update URL
 	echo '<form name="user_mod" id="form-user_config" method="post" action="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user='.$update_user.'">';
 
-echo "<table width='720' class='databox'>";
+echo "<table width='99%' class='search-table'>";
 
 echo '<tr>';
 echo '<td class="datos">'.__('User ID');
@@ -434,7 +433,7 @@ enterprise_hook ('show_delete_profiles');
 
 if (isset($_GET["alta"])){
 	echo "</table>";
-	echo "<div class='button' style='width: 720px' >";
+	echo "<div class='button' style='width: 99%' >";
 	echo '<input name="crtbutton" type="submit" class="sub create" value="'.__('Create').'">';
 	print_input_hidden ('action', 'create');
 	echo '</div>';

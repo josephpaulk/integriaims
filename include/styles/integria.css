@@ -197,12 +197,6 @@ ul span, ol span {
 /* images */
 
 .button {
-	padding-top: 5px;
-	padding-bottom: 5px;
-	padding-right: 0px;
-	border-top: 2px solid #232323;
-	border-bottom: 2px solid #232323;
-	background: #eee;
 	text-align: right;
 }
 
@@ -804,6 +798,11 @@ input.search {
 input.csv {
 	padding-right: 25px;
 	background: url(../../images/input_csv.png) no-repeat 90% 8px #FFFFFF;			
+}
+
+input.zoom {
+	padding-right: 25px;
+	background: url(../../images/input_zoom.png) no-repeat 90% 4px #FFFFFF;			
 }
 
 input.pdfreport {
@@ -1954,6 +1953,7 @@ input.ui-autocomplete-input {
 	background-image: url("../../images/group.png");
 	background-repeat: no-repeat;
 	background-position: 97% 50%;
+	background-color: #FFFFFF !important;
 }
 
 input.company_search {

@@ -236,7 +236,7 @@ echo $result_output;
 // Show forms
 // ********************************************************************************************************
 
-echo '<h2>'.__('Task management').'</h2>';
+echo '<h1>'.__('Task management').'</h1>';
 
 if ($id_task > 0)
     echo task_activity_graph ($id_task);
@@ -251,8 +251,8 @@ if ($operation == "create") {
 	$periodicity = "none";
 }
 
-$table->width = '90%';
-$table->class = 'databox';
+$table->width = '99%';
+$table->class = 'search-table-button';
 $table->rowspan = array ();
 $table->colspan = array ();
 $table->colspan[0][0] = 2;
@@ -369,25 +369,26 @@ $table->data[7][0] = print_label (__('Completion'), '', '', true,
 $table->data[7][0] .= print_input_hidden ('completion', $completion, true);
 $table->data[8][0] = print_textarea ('description', 8, 30, $description, '',
 	true, __('Description'));
+	
+$button = '';
+
+if (($operation != "create" && $task_permission['manage']) || $operation == "create") {
+	if ($operation != "create") {
+		$button .= print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"', true);
+		$button .= print_input_hidden ('operation', 'update', true);
+	} else {
+		$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
+		$button .= print_input_hidden ('operation', 'insert', true);
+	}
+	$button .= print_input_hidden ('id_project', $id_project, true);
+	$button .= print_input_hidden ('id_task', $id_task, true);
+}
+
+$table->data['button'][0] = $button;
+$table->colspan['button'][0] = 3;
 
 echo '<form id="form-task_detail" method="post" action="index.php?sec=projects&sec2=operation/projects/task_detail">';
 print_table ($table);
-
-if (($operation != "create" && $task_permission['manage']) || $operation == "create") {
-	
-	echo '<div class="button" style="width:'.$table->width.'">';
-	if ($operation != "create") {
-		print_submit_button (__('Update'), 'update_btn', false, 'class="sub upd"');
-		print_input_hidden ('operation', 'update');
-	} else {
-		print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"');
-		print_input_hidden ('operation', 'insert');
-	}
-	print_input_hidden ('id_project', $id_project);
-	print_input_hidden ('id_task', $id_task);
-	echo '</div>';
-}
-
 echo '</form>';
 
 ?>

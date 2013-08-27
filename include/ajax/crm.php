@@ -46,40 +46,30 @@ if ($get_company_search) {
 		$search_date_end = '';
 	}
 	
-	$table->width = '98%';
-	$table->class = 'databox';
+	$table->width = '99%';
+	$table->class = 'search-table-button';
 	$table->style = array ();
-	$table->style[0] = 'font-weight: bold;';
-	$table->style[2] = 'font-weight: bold;';
-	$table->style[4] = 'font-weight: bold;';
+	
 	$table->data = array ();
-	$table->data[0][0] = __('Search');
-	$table->data[0][1] = print_input_text ("search_text", $search_text, "", 15, 100, true);
-	$table->data[0][2] = __('Company Role');
-	$table->data[0][3] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
-		'search_role', $search_role, '', __('Select'), 0, true, false, false);
-	$table->data[0][4] = __('Country');
-	$table->data[0][5] = print_input_text ("search_country", $search_country, "", 10, 100, true);
-	
-	$table->data[0][4] = __('Manager');
-	$table->data[0][5] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '',	array(), true, '', '' )	. print_help_tip (__("Type at least two characters to search"), true);
+	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
+	$table->data[0][1] = print_select_from_sql ('SELECT id, name FROM tcompany_role ORDER BY name',
+		'search_role', $search_role, '', __('Select'), 0, true, false, false, __('Company Role'));
+	$table->data[0][2] = print_input_text ("search_country", $search_country, "", 10, 100, true, __('Country'));
+	$table->data[0][3] = print_input_text_extended ('search_manager', $search_manager, 'text-user', '', 15, 30, false, '',	array(), true, '', __('Manager'))	. print_help_tip (__("Type at least two characters to search"), true);
 
-	$table->data[1][0] = __('Parent');
-	$table->data[1][1] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
-		'search_parent', $search_parent, '', __('Select'), 0, true, false, false);
+	$table->data[1][0] = print_select_from_sql ('SELECT id, name FROM tcompany ORDER BY name',
+		'search_parent', $search_parent, '', __('Select'), 0, true, false, false, __('Parent'));
+	$table->colspan[1][0] = 2;
 	
-	$table->data[1][2] = __('Date from');
-	$table->data[1][3] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true);
+	$table->data[1][2] = print_input_text ('search_date_begin', $search_date_begin, '', 15, 20, true, __('Date from'));
 	
-	$table->data[1][4] = __('Date to');
-	$table->data[1][5] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true);
+	$table->data[1][3] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Date to'));
+	
+	$table->data['button'][0] = "<input type='button' class='sub search' onClick='javascript: loadParamsCompany(\".$search_text.\");' value='".__("Search")."''>";
+	$table->colspan['button'][0] = 4;
 	
 	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 		print_table ($table);
-	
-	echo '<div style="width:'.$table->width.'" class="action-buttons button">';
-		echo "<input type='button' class='sub next' onClick='javascript: loadParamsCompany(\".$search_text.\");' value='".__("Search")."''>";
-	echo '</div>';
 	echo '</form>';
 	
 	$where_clause = '';

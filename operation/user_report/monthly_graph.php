@@ -50,7 +50,7 @@ $year = get_parameter ( "year", date('y', $time));
 $today = date('j',$time);
 $days_f = array();
 $first_of_month = gmmktime(0,0,0,$month,1,$year);
-$days_in_month=gmdate('t',$first_of_month);
+$days_in_month= gmdate('t',$first_of_month);
 $locale = $config["language_code"];
 
 $prev_month = $month -1;
@@ -72,33 +72,26 @@ $from_one_month = "$prev_year-$prev_month-$day";
 $next_one_month = "$next_year-$next_month-$day";
 
 echo "<h1>".__('Monthly report for')." $id_user</h1>";
-echo "<h3>".$year."/".$month."</h3>";
-echo "<table class=blank width=700>";
-echo "<tr><td>";
-echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$prev_month&year=$prev_year&id=$id_user'> ".__('Prev')."</a>";
-echo "<td width=85%>";
-echo "&nbsp;";
-echo "<td>";
-echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$next_month&year=$next_year&id=$id_user'> ".__('Next')."</a>";
+echo "<table class=search-table width=99%>";
+echo "<tr><td style='text-align: center;'>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$prev_month&year=$prev_year&id=$id_user'><img src='images/control_rewind_blue.png' title='" . __('Prev') . "'> </a>";
+echo "<span style='font-size: 18px;'>".$year."/".$month."</span>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly_graph&month=$next_month&year=$next_year&id=$id_user'> <img src='images/control_fastforward_blue.png' title='" . __('Next') . "'></a>";
 echo "</table>";
 
 // Show graphs
 //$from_one_month = date('Y-m-d', strtotime("now - 1 month"));
-echo "<div>";
-echo "<table width=750 class='blank'>";
+echo "<table style='width: 100%; padding: 0px'>";
 echo "<tr><td class=datos>";
-echo "<h3>".__('Workunit by task')."</h3>";
-echo "<tr><td class=datos>";
+$workunit_by_task = '<br><div class="pie_frame">' . graph_workunit_user (750, 270, $id_user, $from_one_month, 0) . '</div>';
 
-echo graph_workunit_user (750, 270, $id_user, $from_one_month, 0);
+echo print_container('month_report_workunit_by_task', __('Workunit by task'), $workunit_by_task, 'no', true, '10px');
 
 echo "<tr><td class=datos>";
-echo "<h3>".__('Workunit by project')."</h3>";
-echo "<tr><td class=datos>";
 
-echo graph_workunit_project_user (750, 270, $id_user, $from_one_month, 0); 
+$workunit_by_project = '<br><div class="pie_frame">' . graph_workunit_project_user (750, 270, $id_user, $from_one_month, 0, true) . '</div>'; 
+echo print_container('month_report_workunit_by_project', __('Workunit by project'), $workunit_by_project, 'no', true, '10px');
 
 echo "</table>";
-echo "</div>";
 
 ?>

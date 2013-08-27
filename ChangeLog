@@ -1,3 +1,24 @@
+2013-08-27  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_graph.php
+	include/styles/integria.css
+	include/functions_form.php
+	include/ajax/crm.php
+	operation/projects/task_detail.php
+	operation/users/user_task_assigment.php
+	operation/users/user_workunit_report.php
+	operation/inventories/inventory_reports_detail.php
+	operation/user_report/monthly_graph.php
+	operation/user_report/report_full.php
+	images/objects/id.png
+	godmode/grupos/configurar_grupo.php
+	godmode/grupos/lista_grupos.php
+	godmode/usuarios/configurar_usuarios.php
+	godmode/usuarios/role_manager.php
+	godmode/usuarios/lista_usuarios.php
+	godmode/usuarios/import_from_csv.php: Improve a lot of
+	styles. Specially in People section
+
 2013-08-27  Dario Rodriguez <dario@artica.es>
 
         * include/styles/integria.css: Added new class red_row

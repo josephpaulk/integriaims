@@ -56,13 +56,13 @@ if (($id_user != $config["id_user"]) AND (give_acl($config["id_user"], 0, "PM") 
 $sql = "SELECT ttask.id, ttask.name, tproject.name, ttask.completion, tproject.id, ttask.id, ttask.priority FROM trole_people_task, ttask, tproject WHERE trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.id_project = tproject.id AND tproject.disabled = 0 AND ttask.completion < 100 ORDER BY tproject.name DESC";
 
 
-echo "<h2>".__('Global task assignment')." ".__('For user'). " '".$id_user. "' ".print_user_avatar($id_user, true,true)."</h2>";
+echo "<h1>".__('Global task assignment')." ".__('For user'). " '".$id_user. "' ".print_user_avatar($id_user, true,true)."</h1>";
 
 if (give_acl ($config["id_user"], 0, "PM")) {
 	echo "<form name='xx' method=post action='index.php?sec=users&sec2=operation/users/user_task_assigment'>";
 	
-	echo "<table style='margin-left: 15px;' class=blank>";
-	echo "<tr><td>";
+	echo "<table style='width: 99%;' class=search-table>";
+	echo "<tr><td style='width: 150px;'>";
 	// Show user
 	//combo_user_visible_for_me ($config["id_user"], "id_user", 0, "PR");
 	$src_code = print_image('images/group.png', true, false, true);
@@ -71,10 +71,11 @@ if (give_acl ($config["id_user"], 0, "PM")) {
 		. print_help_tip (__("Type at least two characters to search"), true);
 	echo "<td>";
 	print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"');
+	echo "<td>";
 	echo "</form></table>";
 }
 
-echo "<table  class='listing' width=90%>";
+echo "<table  class='listing' width=99%>";
 echo "<th>".__('Pri');
 echo "<th>".__('Project');
 echo "<th>".__('Task');
