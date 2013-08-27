@@ -110,7 +110,7 @@ if ($id || $new_group) {
 		$button .= print_input_hidden ('update_group', 1, true);
 		$button .= print_input_hidden ('id', $id, true);
 	} else {
-		$button .= print_submit_button (__('Create'), "enviar", false, 'class="sub next"', true);
+		$button .= print_submit_button (__('Create'), "enviar", false, 'class="sub create"', true);
 		$button .= print_input_hidden ('insert_group', 1, true);
 	}
 	

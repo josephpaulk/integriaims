@@ -1,5 +1,10 @@
 2013-08-27  Sergio Martin <sergio.martin@artica.es>
 
+	* operation/projects/project_group_detail.php: Add missed change
+	in previous commit
+
+2013-08-27  Sergio Martin <sergio.martin@artica.es>
+
 	* include/functions_graph.php
 	include/styles/integria.css
 	include/styles/calendar.css
