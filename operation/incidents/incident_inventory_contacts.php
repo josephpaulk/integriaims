@@ -26,7 +26,7 @@ $id_incident = (int) get_parameter ('id');
 $inventories = get_inventories_in_incident ($id_incident, false);
 
 $table->class = 'listing';
-$table->width = '90%';
+$table->width = '99%';
 $table->head = array ();
 $table->head[0] = __('Relationship');
 $table->head[1] = __('Company');
@@ -230,14 +230,16 @@ foreach ($incident_contacts as $ic) {
 	}
         $details .= '<strong>'.__('Email').'</strong>: '.$ic['email'].'<br />';
         
-	$data[3] = print_help_tip ($details, true, 'tip_view');
-
+	//$data[3] = print_help_tip ($details, true, 'tip_view');
+	$data[3] = '<a href="#incident-operations" onClick="inventory_contact_details(\''.$ic["phone"].'\', \''.$ic["mobile"].'\', \''.$ic["email"].'\')">';
+	$data[3] .= "<img src=images/zoom.png>";	
+	$data[3] .= '</a>';
 	if ($ic["type"] == "user") {
                 $data[4] = '<a href="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user='.$ic['id'].'">'.
-                                '<img src="images/setup.gif" /></a>';
+                                '<img src="images/wrench.png" /></a>';
         } else if($ic["type"] == "contact") {
         	$data[4] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$ic['id'].'">'.
-                                '<img src="images/setup.gif" /></a>';
+                                '<img src="images/wrench.png" /></a>';
         } else {
 		$data[4] = "";
 	}
@@ -248,6 +250,9 @@ foreach ($incident_contacts as $ic) {
 
 print_table ($table);
 
+echo '<div id="detail_info" title="'.__("Contact details").'"></div>';
+
+$table->width = "99%";
 $table->data = array ();
 $table->head = array ();
 $table->head[0] = __('Company');

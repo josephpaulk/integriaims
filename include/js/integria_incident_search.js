@@ -748,3 +748,39 @@ function get_group_info (group) {
 
 	return result;
 }
+
+function inventory_contact_details(phone, mobile, email) {
+	console.log("PHONE "+phone+" ;; MOBILE "+mobile+" ;; EMAIL "+email);
+	var content = "";
+
+	content = "<table class='advanced_details_table alternate'>";
+	content += "<tr>";
+	content += "<td>";
+	content += __("Phone");
+	content += "</td>";
+	content += "<td>";
+	content += phone;
+	content += "</td>";
+	content += "</tr>";
+	content += "<tr>";
+	content += "<td>";
+	content += __("Mobile");
+	content += "</td>";
+	content += "<td>";
+	content += mobile;
+	content += "</td>";
+	content += "</tr>";
+        content += "<tr>";
+        content += "<td>"; 
+        content += __("Email");
+        content += "</td>";
+        content += "<td>";
+        content += email;
+        content += "</td>";
+        content += "</tr>";
+	content += "</table>";
+
+	$("#detail_info").html(content);
+
+	$("#detail_info").dialog();
+}

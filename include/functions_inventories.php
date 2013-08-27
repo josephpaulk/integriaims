@@ -693,7 +693,7 @@ function get_inventory_generic_labels () {
 
 function fill_inventories_table($inventories, &$table) {
 	global $config;
-	
+	$table->width = "99%";	
 	foreach ($inventories as $inventory) {
 		$data = array ();
 		
@@ -717,7 +717,7 @@ function fill_inventories_table($inventories, &$table) {
 		if (give_acl ($config['id_user'], $id_group, "VW")) {
 			$table->head[4] = __('Edit');
 			$data[4] = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&check_inventory=1&id='.$inventory['id'].'">'.
-					'<img src="images/setup.gif" /></a>';
+					'<img src="images/wrench.png" /></a>';
 		}
 		array_push ($table->data, $data);
 	}

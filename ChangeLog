@@ -1,5 +1,16 @@
 2013-08-27  Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents/incident_inventory_detail.php: Fixed some style
+	issues with table.
+	* operation/incidents/incident_inventory_contacts.php: Now contact details
+	appear in a dialog. 
+	* include/js/integria_incident_search.js: New function to display contact
+	details in a dialog.
+	* include/functions_inventories.php: Fixed a style issue with inventory
+	object table.
+
+2013-08-27  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_config.php,
 	godmode/setup/setup.php: Fixed a setup problem updating
 	language.
