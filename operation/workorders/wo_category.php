@@ -92,51 +92,46 @@ if ((isset($_GET["create"]) OR (isset($_GET["update"])))) {
 		$icon = $row["icon"];
 	}
 
-	echo "<h2>".__('Workorders category management')."</h2>";	
 	if ($id == -1){
-		echo "<h3>".__('Create a new category')."</a></h3>";
+		echo "<h1>".__('Create a new category')."</a></h1>";
 		echo "<form name=catman method='post'>";
 		echo "<input type=hidden name='create2' value=1>";
 	}
 	else {
-		echo "<h3>".__('Update existing category')."</a></h3>";
+		echo "<h1>".__('Update existing category')."</a></h1>";
 		echo "<form name=catman method='post'>";
 		echo "<input type=hidden name=id value='$id'>";
 		echo "<input type=hidden name='update2' value=1>";
 	}
 	
-	echo '<table width="90%" class="databox">';
+	echo '<table width="99%" class="search-table-button">';
 	echo "<tr>";
 	echo "<td class=datos>";
-	echo __('Name');
-	echo "<td class=datos>";
+	echo "<label>" . __('Name') . "</label>";
 	echo "<input type=text size=20 name=name value='$name'>";
 
-	echo "<tr>";
     echo "<td class=datos>";
-	echo __('Icon');
-	echo "<td class=datos>";
+	echo "<label>" . __('Icon') . "</label>";
 	$files = list_files ('images/wo_category/', "png", 1, 0);
 	print_select ($files, 'icon', $icon, '', __('None'), "");
-
-	echo "</table>";
-	echo '<div class="button" style="width:90%">';
+	echo "<tr><td colspan=2>";
 	if ($id == -1)
-		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+		print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"');
 	else
 		print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-	echo "</div></form>";
+	echo "</table>";
+	echo "</form>";
 
 }
 
 // Show list of categories
 // =======================
 if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
-	echo "<h2>".__('Workorder category management')." &raquo; ".__('Defined categories')."</h2>";
+	echo "<h1>".__('Workorder category management')." &raquo; ".__('Defined categories')."</h1>";
 	$sql1='SELECT * FROM two_category ORDER BY name';
 	$color =0;
 	if ($result=mysql_query($sql1)){
-		echo '<table width="500" class="listing">';
+		echo '<table width="99%" class="listing">';
 		echo "<th>".__('Name')."</th>";
 		echo "<th>".__('Icon')."</th>";
 		echo "<th>".__('Delete')."</th>";
@@ -167,9 +162,9 @@ if ((!isset($_GET["update"])) AND (!isset($_GET["create"]))){
 		}
 		echo "</table>";
 	}			
-	echo '<div style="width:500px" class="button">';
+	echo '<div style="width: 99%;" class="button">';
 	echo "<form method=post action='index.php?sec=projects&sec2=operation/workorders/wo_category&create=1'>";
-	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub next"');
+	print_submit_button (__('Create'), 'crt_btn', false, 'class="sub create"');
 	echo "</form></div>";
 } // end of list
 

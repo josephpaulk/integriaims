@@ -117,7 +117,7 @@ if ($id_project != -1 && !$project_access['read']) {
 	no_permission();
 }
 
-echo "<h2>".$project_name." &raquo; ".__('Gantt graph')."</h2>";
+echo "<h1>".$project_name." &raquo; ".__('Gantt graph')."</h1>";
 
 $tasks = array ();
 $milestones = array ();
@@ -186,8 +186,9 @@ if ($num_tasks > 20) {
 }
 
 // Print the Gantt chart
-
-print fs_gantt_chart ($project_name, $from, $to, $tasks, $milestones, $width, $height);
+echo '<div style="margin: 0px auto; width: '. $width . 'px">';
+echo fs_gantt_chart ($project_name, $from, $to, $tasks, $milestones, $width, $height);
+echo '</div>';
 
 //print gantt_graph ($project_name, $from, $to, $tasks, $milestones, $width, $height);
 

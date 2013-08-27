@@ -560,7 +560,7 @@ if ($operation == 'move') {
 // MAIN LIST OF TASKS
 $search_text = (string) get_parameter ('search_text', '');
 
-echo '<h2>'.$project['name'].' &raquo; '.__('Task management');
+echo '<h1>'.$project['name'].' &raquo; '.__('Task management');
 
 if (!$clean_output) {
 	echo "&nbsp;&nbsp;<a title='" . _("Report") . "'" .
@@ -572,7 +572,7 @@ if (!$clean_output) {
 		"clean_output=1'><img src='images/html.png'></a>";
 }
 
-echo '</h2><br>';
+echo '</h1>';
 
 
 

@@ -177,10 +177,10 @@ if ($id_task != 0) {
 			AND tworkunit_task.id_workunit = tworkunit.id
 			ORDER BY tworkunit.timestamp DESC', $id_task);		
 	}
-	echo '<h3>'.__('Workunit resume');
+	echo '<h1>'.__('Workunit resume');
 	echo ' - '.$project_name.' - '.$task_name;
 
-    echo " <a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_task=$id_task&id_project=$id_project&pdf_output=1&clean_output=1'><img src='images/page_white_acrobat.png'></a></h3>";
+    echo " <a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_task=$id_task&id_project=$id_project&pdf_output=1&clean_output=1'><img src='images/page_white_acrobat.png'></a></h1>";
 
 } elseif ($id_project != 0) {
 	// Whole project
@@ -207,10 +207,10 @@ if ($id_task != 0) {
 			ORDER BY tworkunit.timestamp DESC', $id_project);
 		
 	}
-	echo '<h3>'.__('Workunit resume');
+	echo '<h1>'.__('Workunit resume');
 	echo ' - '.$project_name.' - '. __('All tasks');
 
-    echo " <a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&pdf_output=1&clean_output=1'><img src='images/page_white_acrobat.png'></a></h3>";
+    echo " <a href='index.php?sec=projects&sec2=operation/projects/task_workunit&id_project=$id_project&pdf_output=1&clean_output=1'><img src='images/page_white_acrobat.png'></a></h1>";
 
 }
 

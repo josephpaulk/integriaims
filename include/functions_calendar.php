@@ -350,7 +350,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 		foreach ($agenda_eventt as $agenda_event){
 			list ($timestamp, $event) = explode ("|", $agenda_event);
 			$days[$day][1] = "agenda";
-			$days[$day][2] = "$day"."A";
+			$days[$day][2] = "$day";
 			$days[$day][0] = "index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month&year=$year"; 
 			$days[$day][3] = $event;
 		}
@@ -359,7 +359,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 		foreach ($agenda_wo as $agenda_woitem){
 			list ($idwo, $woname) = explode ("|", $agenda_woitem);
 			$days[$day][1] = "workorder";
-			$days[$day][2] = "$day"."W";
+			$days[$day][2] = "$day";
 			$days[$day][0] = "index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=$idwo";
 			$days[$day][3] = $woname;
 		}
@@ -368,7 +368,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 		foreach ($agenda_task as $agenda_titem){
 			list ($tname, $idt, $tend, $pname) = explode ("|", $agenda_titem);
 			$days[$day][1] = "task";
-			$days[$day][2] = "$day"."T";
+			$days[$day][2] = "$day";
 			$days[$day][0] = "index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view";
 			$days[$day][3] = $pname . " / ". $tname;
 		}
@@ -377,7 +377,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 		foreach ($agenda_project as $agenda_pitem){
 			list ($pname, $idp, $pend) = explode ("|", $agenda_pitem);
 			$days[$day][1] = "project";
-			$days[$day][2] = "$day"."P";
+			$days[$day][2] = "$day";
 			$days[$day][0] = "index.php?sec=projects&sec2=operation/projects/task&id_project=$idp";
 //			$project_name = $pname; // get_db_sql ("SELECT name FROM tproject WHERE id = $idp");
 			$days[$day][3] = $pname;
@@ -417,6 +417,7 @@ function generate_calendar ($year, $month, $days = array(), $day_name_length = 3
 // Original function
 function generate_small_work_calendar ($year, $month, $days = array(), $day_name_length = 3, $first_day = 0, $pn = array(), $id_user = ""){
 	$current_month = date('m', time());
+	$current_year = date('Y', time());
 
 	$first_of_month = gmmktime(0,0,0,$month,1,$year);
 	#remember that mktime will automatically correct if invalid dates are entered
@@ -436,7 +437,7 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 	if($p) $p = '<span class="calendar-prev">'.($pl ? '<a href="'.htmlspecialchars($pl).'">'.$p.'</a>' : $p).'</span>&nbsp;';
 	if($n) $n = '&nbsp;<span class="calendar-next">'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n).'</span>';
 	
-	if ($month == $current_month) {
+	if ($month == $current_month && $year == $current_year) {
 		$calendar_outer_class = "calendar_outer_orange";
 	}
 	else {
@@ -1230,4 +1231,52 @@ function calendar_get_holidays_by_timerange ($begin_unix, $end_unix) {
 	return $holidays;
 }
 
+function get_non_working_days ($year) {
+	$defined_non_working_days = (int) get_db_value ('COUNT(*)', 'tholidays');
+	$weekend_days = 0;
+	
+	if ($config['working_weekends'] == 0) {
+		$start = strtotime($year . '-1-1 00:00:00');
+		$end = strtotime($year . '-12-31 23:59:59');
+		
+		// Obtain number of saturdays & sundays on this year.
+		
+		// First: search first monday of the year and count sat&sun from day 1 to this day
+		while (1) {
+			$week_day = date('w', $start);
+			
+			switch($week_day){
+				case 0:
+				case 6:
+					$weekend_days++;
+					break;
+				case 1:
+					break 2; // Go out from while
+			}
+			
+			$start += 86400;
+		}
+		
+		// Second: search last sunday of the year and count sat from this day to day 31
+		while (1) {
+			$week_day = date('w', $end);
+			
+			switch($week_day){
+				case 6:
+					$weekend_days++;
+					break;
+				case 0:
+					break 2; // Go out from while
+			}
+			
+			$end -= 86400;
+		}
+		
+		// Third: obtain number of weeks from these two dates and multiply by 2
+		$weeks = ceil(($end - $start) / 86400 / 7);
+		$weekend_days += $weeks * 2;
+	}
+	
+	return $defined_non_working_days + $weekend_days;
+}
 ?>

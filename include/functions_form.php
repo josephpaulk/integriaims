@@ -755,8 +755,9 @@ function show_workunit_user ($id_workunit, $full = 0) {
 
 	echo "<td width='20%'>";
 	echo " : ".format_numeric($duration);
+	echo "<td>";
 	// Public WU ?
-	echo "<span style='float:right; margin-top: 15px; margin-bottom:0px; padding-right:10px;'>";
+	echo "<span style='margin-bottom:0px; padding-right:10px;'>";
 	if ($public == 1)
 		echo "<img src='images/group.png' title='".__('Public Workunit')."' />";
 	else
@@ -829,7 +830,7 @@ function show_workunit_user ($id_workunit, $full = 0) {
 	if ((project_manager_check($id_project) == 1) OR ($id_user == $config["id_user"]) OR  (give_acl($config["id_user"], 0, "TM")) ) {
 		echo "<tr><td align='right'>";
 		echo "<br>";
-		echo "<a class='delete-workunit' id='delete-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=delete' onclick='if (!confirm(\"".__('Are you sure?')."\")) return false;'><img src='images/cross.png' /></a>";
+		echo "<a class='delete-workunit' id='delete-$id_workunit' href='$myurl&id_workunit=$id_workunit&operation=delete' onclick='if (!confirm(\"".__('Are you sure?')."\")) return false;'><img src='images/cross.png'  title='".__('Delete workunit')."'/></a>";
 	}
 
 	// Edit workunit

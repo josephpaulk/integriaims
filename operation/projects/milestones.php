@@ -91,8 +91,8 @@ if ($operation == "delete") {
 // CREATE new todo (form)
 // ---------------
 if ($operation == "create") {
-	echo "<h2>".__('Milestone creation')."</h2>";
-	echo '<table class="databox"  width="90%">';
+	echo "<h1>".__('Milestone creation')."</h1>";
+	echo '<table class="search-table-button"  width="99%">';
 	echo '<form name="ilink" method="post" action="index.php?sec=projects&sec2=operation/projects/milestones&id_project='.$id_project.'&operation=create2">';
 
 	echo "<tr><td class='datos'>".__('Name');
@@ -106,26 +106,27 @@ if ($operation == "create") {
 	echo "<tr><td class='datos' valign='top'>".__('Description');
 	echo "<td class='datos'><textarea name='description' style='width:100%; height:100px'>";
 	echo "</textarea>";
-	echo "</table>";
-	echo '<table class="button" width="90%">';
-    
     $project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
     if ((give_acl($config["id_user"], 0, "PM")==1) OR ($project_manager == $config["id_user"])) {
-	    echo "<tr><td align='right'>";
+	    echo "<tr><td align='right' colspan=2>";
 
 	    echo "<input type=hidden name='id_project' value='$id_project'>";
-	    echo "<input name='crtbutton' type='submit' class='sub wizard' value='".__('Create')."'>";
+	    echo "<input name='crtbutton' type='submit' class='sub create' value='".__('Create')."'>";
     }
-	echo '</form></table>';
+    else {
+		echo "<tr><td></td></tr>";
+	}
+	echo "</table>";
+	echo '</form>';
 }
 
 // -------------------------
 // Milestone view
 // -------------------------
 if ($operation == ""){
-	echo "<h2>".__('Milestones management')."</h2>";
-	echo "<table class='listing' width=90%>";
+	echo "<h1>".__('Milestones management')."</h1>";
+	echo "<table class='listing' width=99%>";
 	echo "<th>".__('Milestone');
 	echo "<th>".__('Description');
 	echo "<th>".__('Timestamp');
@@ -167,11 +168,11 @@ if ($operation == ""){
     $project_manager = get_db_value ("id_owner", "tproject", "id", $id_project);
     // milestone creation
     if ($project_access['write']) {
-	    echo "<table class='button' width=90%>";
+	    echo "<table class='button' width=99%>";
 	    echo "<tr><td align=right>";
     
 	    echo "<form name='ms' method='POST'  action='index.php?sec=projects&sec2=operation/projects/milestones&operation=create&id_project=$id_project'>";
-	    echo "<input type='submit' class='sub next' name='crt' value='".__('Create')."'>";
+	    echo "<input type='submit' class='sub create' name='crt' value='".__('Create')."'>";
 	    echo "</form>";
 	    echo "</table>";
     }

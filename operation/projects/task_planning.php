@@ -209,7 +209,7 @@ if ($create) {
 
 $project_name =  get_db_value ("name", "tproject", "id", $id_project);
 
-echo "<h2>".__("Task planning")." &raquo; $project_name</h2>";
+echo "<h1>".__("Task planning")." &raquo; $project_name</h1>";
 
 //Calculate task summary stats!
 
@@ -244,7 +244,7 @@ foreach ($res as $r) {
 echo "<center>";
 echo "<table>";
 echo "<tr>";
-echo "<td rowspan=2 style='padding-left:20px;padding-right:20px;'>";
+echo "<td>";
 	echo "<table>";
 	echo "<tr>";
 	echo "<strong>";
@@ -290,20 +290,18 @@ echo "<td rowspan=2 style='padding-left:20px;padding-right:20px;'>";
 	echo "</tr>";
 	echo "</table>";
 echo "</td>";
-echo "<td align=center><strong>".__("Hours worked")."</strong></td>";
-echo "<td align=center><strong>".__("Summary task status")."</strong></td>";
-echo "<td align=center><strong>".__("Task per user")."</strong></td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td align=center style='padding-left:10px;padding-right:10px;'>";
-echo graph_workunit_project_user_single(200, 150, $id_project);
-echo"</td>";
-echo "<td align=center style='padding-left:10px;padding-right:10px;'>";
-echo graph_workunit_project_task_status(200, 150, $id_project);
-echo"</td>";
-echo "<td align=center style='padding-left:10px;padding-right:10px;'>";
-echo graph_project_task_per_user(200, 150, $id_project);
-echo"</td>";
+echo "<td>";
+$content = '<div class="pie_frame">' . graph_workunit_project_user_single(180, 150, $id_project) . '</div>';
+print_container('planning_hours_worked', __("Hours worked"), $content, 'no', false, '10px');
+echo "</td>";
+echo "<td>";
+$content = '<div class="pie_frame">' . graph_workunit_project_task_status(180, 150, $id_project) . '</div>';
+print_container('planning_hours_summary_task', __("Summary task status"), $content, 'no', false, '10px');
+echo "</td>";
+echo "<td>";
+$content = '<div class="pie_frame">' . graph_project_task_per_user(180, 150, $id_project) . '</div>';
+print_container('planning_hours_task_user', __("Task per user"), $content, 'no', false, '10px');
+echo "</td>";
 echo "</tr>";
 echo "</table>";
 echo "</center>";
@@ -312,21 +310,9 @@ echo "</center>";
 echo "<form id='form-tasks' method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
 
 //Create button bar
-echo "<div style='width:100%;text-align:left;border-spacing:0px;' class='button'>";
-
-echo "<table style='margin:0px; padding:0px;'>";
-echo "<tr>";
-
-echo "<td>";
+echo "<div style='width:100%; border-spacing:0px;' class='button'>";
 print_button (__('Add tasks'), 'addmass', false, '', 'class="sub create"');
-echo "</td>";
-
-echo "<td>";
 print_submit_button (__('Update'), 'update', false, 'class="sub upd"');
-echo "</td>";
-echo "</tr>";
-echo "</table>";
-
 echo "</div>";
 
 //Get project users
@@ -340,7 +326,7 @@ foreach ($users_db as $u) {
 
 //Hidden div for task creation. Only for PM flag
 echo "<div id='createTaskmass' style='display:none;padding:5px;'>";
-echo "<table><tr><td colspan=4>";
+echo "<table class='search-table-button' style='width: 99%'><tr><td colspan=4>";
 echo "<strong>".__('Put taskname in each line')."</strong><br>";
 print_textarea ('tasklist', 5, 40);
 
@@ -464,7 +450,7 @@ function show_task_row ($table, $id_project, $task, $level, $users) {
 	
 	echo "<td>";
 	
-	echo $prefix.print_input_text ("name_".$id_task, $task['name'], "", 60, 0, true);
+	echo $prefix.print_input_text ("name_".$id_task, $task['name'], "", 40, 0, true);
 	
 	echo"</td>";
 	

@@ -94,14 +94,14 @@ if ($id || $new_group) {
 	}
 	
 	$table->width = '99%';
-	$table->class = 'search-table';
+	$table->class = 'search-table-button';
 	$table->data = array ();
 	
 	$table->data[0][0] = print_input_text ('name', $name, '', 60, 100, true,
 		__('Project group name'));
 
 	$icons = list_files ('images/project_groups_small/', "png", 1, 0, 'svn');
-	$table->data[1][0] = print_select ($icons, "icon", $icon, '', '', 0, true,
+	$table->data[0][1] = print_select ($icons, "icon", $icon, '', '', 0, true,
 		false, false, __('Icon'));
 		
 		
@@ -114,7 +114,8 @@ if ($id || $new_group) {
 		$button .= print_input_hidden ('insert_group', 1, true);
 	}
 	
-	$table->data[2][0] = $button;
+	$table->data['button'][0] = $button;
+	$table->colspan['button'][0] = 2;
 	
 	echo '<form id="form-project_group_detail" method="post">';
 	print_table ($table);

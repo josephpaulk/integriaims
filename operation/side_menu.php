@@ -396,7 +396,7 @@ if ((($sec == "projects" ))&& ( $show_projects != MENU_HIDDEN )) {
 
 		if (($sec2 == "operation/workorders/wo_category")){
 			echo "<li style='margin-left: 15px; font-size: 10px;'>";
-			echo "<a href='iindex.php?sec=projects&sec2=operation/workorders/wo_category&create=1'>".__('New category')."</a>";
+			echo "<a href='index.php?sec=projects&sec2=operation/workorders/wo_category&create=1'>".__('New category')."</a>";
 			echo "</li>";
 		}
 	}

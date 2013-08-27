@@ -152,7 +152,7 @@ echo $result_output;
 // --------------------
 
 if ($id_task != -1) {
-	echo "<h2>".__('Task human resources management')." &raquo; ".get_db_value('name', 'ttask','id',$id_task)."</h2>";
+	echo "<h1>".__('Task human resources management')." &raquo; ".get_db_value('name', 'ttask','id',$id_task)."</h1>";
 
 	$sql = "SELECT COUNT(*) FROM trole_people_task where id_task = $id_task";
 	$result = mysql_query($sql);
@@ -198,7 +198,7 @@ if ($id_task != -1) {
 } else {
 
 	// MAIN PROJECT PEOPLE LIST
-	echo "<h2>".__('Project people management')." &raquo; ".get_db_value('name', 'tproject','id',$id_project)."</h2>";
+	echo "<h1>".__('Project people management')." &raquo; ".get_db_value('name', 'tproject','id',$id_project)."</h1>";
 	
 	$sql = "SELECT COUNT(*) FROM trole_people_project WHERE id_project = $id_project";
 	$result = mysql_query($sql);
@@ -207,7 +207,7 @@ if ($id_task != -1) {
 		echo "<h3>".__('Assigned roles')."</h3>";
 		$sql = "SELECT * FROM trole_people_project WHERE id_project = $id_project";
 		$result = mysql_query($sql);
-		echo "<table width=500 class='listing'>";
+		echo "<table width=99% class='listing'>";
 		echo "<th>".__('User');
 		echo "<th>".__('Role');
 		echo "<th>".__('Total work time (Hrs)');
@@ -249,7 +249,7 @@ if ($id_task != -1){
 	// ===============================
 	echo "<h3>".__('Role/Group assignment')."</h3>";
 	echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
-	echo "<table cellpadding=4 cellspacing=4 width=500 class='databox_color'>";
+	echo "<table cellpadding=4 cellspacing=4 width=99% class='search-table-button'>";
 
 	echo "<tr><td valign='top' class='datos2'>";
 	echo __('Role');
@@ -265,18 +265,16 @@ if ($id_task != -1){
 	$params['return_help'] = false;
 	
 	user_print_autocomplete_input($params);
-	
-	echo "</table>";
-	echo "<table class='button' width=510>";
-	echo "<tr><td align='right'>";
+	echo "<tr><td colspan=2>";
 	echo "<input type=submit class='sub next' value='".__('Update')."'>";
+
 	echo "</table>";
 } else {
 	// PROYECT PEOPLE MANAGER editor
 	// ===============================
 	echo "<h3>".__('Project role assignment')."</h3>";
 	echo "<form method='post' action='index.php?sec=projects&sec2=operation/projects/people_manager&id_project=$id_project&id_task=$id_task&action=insert'>";
-	echo "<table width=500 class='databox_color'>";
+	echo "<table width=99% class='search-table-button'>";
 
 	echo "<tr><td valign='top' class='datos2'>";
 	echo __('Role');
@@ -292,29 +290,19 @@ if ($id_task != -1){
 	$params['return_help'] = false;
 	
 	user_print_autocomplete_input($params);
-	
-	echo "</table>";
-		
-	echo "<table class='button' width=500>";
-	echo "<tr><td align='right'>";
+	echo "<tr><td colspan=2>";
 	echo "<input type=submit class='sub next' value='".__('Update')."'>";
+
 	echo "</table>";
 }
 
 // Role informational table
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-?>
-		<h3><img src='images/award_star_silver_1.png'>&nbsp;&nbsp;
-		<a href="javascript:;" onmousedown="toggleDiv('arole');">
-	<?PHP
-
-echo " ".__('Available roles')."</a></h3>";
-echo "<div id='arole' style='display:none'>";
-echo "<table cellpadding=4 cellspacing=4 width=700 class='databox_color'>";
-echo "<th>".__('Name');
-echo "<th>".__('Description');
-echo "<th>".__('Cost');
+$roles = "<table cellpadding=0 cellspacing=0 width=99% class='listing'>";
+$roles .= "<th>".__('Name');
+$roles .= "<th>".__('Description');
+$roles .= "<th>".__('Cost');
 $sql1='SELECT * FROM trole ORDER BY name';
 $result=mysql_query($sql1);
 $color=1;
@@ -327,11 +315,13 @@ while ($row=mysql_fetch_array($result)){
 		$tdcolor = "datos2";
 		$color = 1;
 	}
-	echo "<tr><td valign='top' class='$tdcolor'><b>".$row["name"]."</b>";
-	echo '<td valign="top" class="'.$tdcolor.'">'.$row["description"];
-	echo '<td valign="top" class="'.$tdcolor.'" align="center">'.$row["cost"];
+	$roles .= "<tr><td valign='top' class='$tdcolor'><b>".$row["name"]."</b>";
+	$roles .= '<td valign="top" class="'.$tdcolor.'">'.$row["description"];
+	$roles .= '<td valign="top" class="'.$tdcolor.'" align="center">'.$row["cost"];
 }
-echo "</table></div>";
+$roles .= "</table>";
+
+print_container('people_roles', __('Available roles'), $roles, 'closed', false, '10px');
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>

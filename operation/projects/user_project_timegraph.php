@@ -41,11 +41,11 @@ if ((give_acl($id_user, $id_grupo, "PR") != 1) AND (give_acl($id_user, $id_grupo
 	exit;
 }
 
-echo "<h3>" . __('Time per project graph') . "</h3>";
+echo "<h1>" . __('Time per project graph') . "</h1>";
 
 echo "<form method='post'>";
 
-echo '<table class="project_overview" border=0>';
+echo '<table class="search-table-button" style="width: 99%;">';
 echo '<tr>';
 
 echo '<td width="25%"><b>'.__('User ').' </b>';
@@ -76,12 +76,11 @@ echo '</td>';
 
 
 echo '</tr>';
-echo "</table>";
-
-echo '<div style="width:800px;" class="button">';
+echo '<tr><td colspan=3>';
 print_input_hidden ('action', 'update');
 print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-echo '</div>';
+echo '</td></tr>';
+echo "</table>";
 
 echo "</form>";
 ?>

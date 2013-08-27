@@ -13,25 +13,25 @@
 	border-top-left-radius: 5px;
 }
 
-table.calendar td.project a {
+table.calendar td.project, table.calendar td.project * {
 	background-color: #aa3333;
 	color: #fff;
 	font-weight: bold;
 }
 
-table.calendar td.workorder a {
+table.calendar td.workorder, table.calendar td.workorder * {
 	background-color: #3a3a3a;
 	color: #fff;
 	font-weight: bold;
 }
 
-table.calendar td.task a {
+table.calendar td.task, table.calendar td.task * {
 	background-color: #33aa33;
 	color: #fff;
 	font-weight: bold;
 }
 
-table.calendar td.agenda a {
+table.calendar td.agenda, table.calendar td.agenda *  {
 	background-color: #3333aa;
 	color: #fff;
 	font-weight: bold;

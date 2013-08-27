@@ -441,7 +441,7 @@ function graph_print_d3js_treemap($data) {
 }
 </style>
 <script>
-	var margin = {top: 40, right: 10, bottom: 10, left: 10},
+	var margin = {top: 10, right: 10, bottom: 10, left: 10},
 		width = 800 - margin.left - margin.right,
 		height = 500 - margin.top - margin.bottom;
 	
@@ -681,7 +681,7 @@ function graph_project_task_per_user ($width, $height, $id_project) {
 	}
 	
 	if ($data == NULL) {
-		echo __("There is no data to show");
+		return __("There is no data to show");
 	}
 	else {
 		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);
@@ -730,7 +730,7 @@ function graph_workunit_project_task_status ($width, $height, $id_project) {
 	$data[__("Pending")]= $pending;
 	
 	if ($data == NULL) {
-		echo __("There is no data to show");
+		return __("There is no data to show");
 	}
 	else {
 		return pie3d_graph($config['flash_charts'], $data, $width, $height, __('others'), "", "", $config['font'], $config['fontsize']);

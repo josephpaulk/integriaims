@@ -1860,6 +1860,7 @@ table.search-table, table.search-table-button {
 	padding: 12px 10px 16px 12px;
 	margin-left: 5px;
 	text-align: left;
+	width: 99%;
 }
 
 table.search-table-button tr:last-child td {
@@ -2169,8 +2170,4 @@ table.alternate tr:nth-child(even) td{
 	float: left;
 	text-align: left;
 	margin-top: 3px;
-}
-
-tr.red_row > td{
-	background-color: #ffefef !important;
 }

@@ -27,12 +27,12 @@ if ($project === false || ! $project_access['read']) {
 	no_permission();
 }
 
-echo '<h2>'.__('Project tracking').' &raquo; '.$project['name'].'</h2>';
+echo '<h1>'.__('Project tracking').' &raquo; '.$project['name'].'</h1>';
 
 $trackings = get_db_all_rows_field_filter ('tproject_track', 'id_project', $id);
 
 if ($trackings !== false) {
-	$table->width = "90%";
+	$table->width = "99%";
 	$table->class = 'listing';
 	$table->data = array ();
 	$table->head = array ();

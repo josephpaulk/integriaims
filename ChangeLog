@@ -2,6 +2,30 @@
 
 	* include/functions_graph.php
 	include/styles/integria.css
+	include/styles/calendar.css
+	include/functions_form.php
+	include/functions_calendar.php
+	include/functions_db.php
+	operation/leads/lead_detail.php
+	operation/projects/project_overview.php
+	operation/projects/task.php
+	operation/projects/task_workunit.php
+	operation/projects/project_group_detail.php
+	operation/projects/user_project_timegraph.php
+	operation/projects/project_timegraph.php
+	operation/projects/gantt.php
+	operation/projects/people_manager.php
+	operation/projects/milestones.php
+	operation/projects/project_tracking.php
+	operation/projects/task_planning.php
+	operation/side_menu.php
+	operation/workorders/wo_category.php: Change visual styles
+	in several screens and fix some bugs
+
+2013-08-27  Sergio Martin <sergio.martin@artica.es>
+
+	* include/functions_graph.php
+	include/styles/integria.css
 	include/functions_form.php
 	include/ajax/crm.php
 	operation/projects/task_detail.php

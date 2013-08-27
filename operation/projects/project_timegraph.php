@@ -43,17 +43,17 @@ if (! $project_access["read"]) {
 	no_permission ();
 }
 
+echo "<h1>" . __('Time graph') . "</h1>";
+
 if ($id_project) {
-	echo "<h3>" . __('Time graph') . "</h3>";
 	
 	echo "<form action='index.php?sec=projects&sec2=operation/projects/project_timegraph&id_project=" . $id_project . "' method='post'>";
 	
-	echo '<table class="project_overview" border=0>';
+	echo '<table class="search-table-button" style="width: 99%;" border=0>';
 	echo '<tr>';
 
 
 	echo '<td width="25%"><b>'.__('User ').' </b>';
-	echo '<br>';
 	$params = array();
 
 	$params['input_value'] = $id_user_filter;
@@ -67,21 +67,19 @@ if ($id_project) {
 
 	echo '<td width="25%"><b>'.__('Start').' </b>';
 	print_help_tip(__('Empty date is all range time of project'));
-	echo '<br>';
 	print_input_text ('start_date', $start_date, '', 10, 20);
 	
 	echo '<td width="25%"><b>'.__('End').' </b>';
 	print_help_tip(__('Empty date is all range time of project'));
-	echo '<br>';
 	print_input_text ('end_date', $end_date, '', 10, 20);
 	echo '</tr>';
-	echo "</table>";
-	
-	echo '<div style="width:800px;" class="button">';
+	echo '<tr><td colspan=3>';
 	print_input_hidden ('id_project', $id_project);
 	print_input_hidden ('action', 'update');
 	print_submit_button (__('Update'), 'upd_btn', false, 'class="sub upd"');
-	echo '</div>';
+	echo '</td></tr>';
+	echo "</table>";
+
 	
 	echo "</form>";
 	?>
@@ -90,7 +88,7 @@ if ($id_project) {
 	</script>
 	<?php
 	
-	echo "<div id='time_graph'></div>";
+	echo "<div id='time_graph' style='margin: 0px auto; width: 800px;'></div>";
 	
 	if (empty($start_date)) {
 		$start_date = false;

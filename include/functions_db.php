@@ -1180,55 +1180,6 @@ function get_user_other ($id_user, $year){
 	return format_numeric ($hours/$config["hours_perday"]);
 }
 
-function get_non_working_days ($year) {
-	$defined_non_working_days = (int) get_db_value ('COUNT(*)', 'tholidays');
-	$weekend_days = 0;
-	
-	if ($config['working_weekends'] == 0) {
-		$start = strtotime($year . '-1-1 00:00:00');
-		$end = strtotime($year . '-12-31 23:59:59');
-		
-		// Obtain number of saturdays & sundays on this year.
-		
-		// First: search first monday of the year and count sat&sun from day 1 to this day
-		while (1) {
-			$week_day = date('w', $start);
-			
-			switch($week_day){
-				case 0:
-				case 6:
-					$weekend_days++;
-					break;
-				case 1:
-					break 2; // Go out from while
-			}
-			
-			$start += 86400;
-		}
-		
-		// Second: search last sunday of the year and count sat from this day to day 31
-		while (1) {
-			$week_day = date('w', $end);
-			
-			switch($week_day){
-				case 6:
-					$weekend_days++;
-					break;
-				case 0:
-					break 2; // Go out from while
-			}
-			
-			$end -= 86400;
-		}
-		
-		// Third: obtain number of weeks from these two dates and multiply by 2
-		$weeks = ceil(($end - $start) / 86400 / 7);
-		$weekend_days += $weeks * 2;
-	}
-	
-	return $defined_non_working_days + $weekend_days;
-}
-
 function create_ical ( $date_from, $duration, $id_user, $title, $description ){
 	require_once("config.php");
 
