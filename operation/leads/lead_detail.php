@@ -748,7 +748,7 @@ if ($id || $new) {
 		$table->data = array ();
 		$table->size = array ();
 		$table->style = array ();
-		$table->rowstyle = array ();
+		$table->rowclass = array ();
 
 		$table->style[0] = 'font-weight: bold';
 		$table->head = array ();
@@ -766,19 +766,19 @@ if ($id || $new) {
 		$table->size[4] = '130px;';
 		$table->size[9] = '40px;';
 
+		//Convert lead warning time to minutes
+		$config["lead_warning_time"] = $config["lead_warning_time"] * 86400;
+
 		foreach ($leads as $lead) {
 			$data = array ();
 			
 			// Detect is the lead is pretty old 
 			// Stored in $config["lead_warning_time"] in days, need to calc in secs for this
 
-			$config["lead_warning_time"]= 7; // days
-			$config["lead_warning_time"] = $config["lead_warning_time"] * 86400;
-
 			if (calendar_time_diff ($lead["modification"]) > $config["lead_warning_time"] ){
-				$style = " background: #ffefef";
+				$table->rowclass[] = "red_row";
 			} else {
-				$style = "";
+				$table->rowclass[] = "";
 			}
 
 			$data[0] = "<b><a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
@@ -847,7 +847,6 @@ if ($id || $new) {
 			}
 
 			array_push ($table->data, $data);
-			array_push ($table->rowstyle, $style);
 		}
 		print_table ($table);
 	}

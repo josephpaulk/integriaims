@@ -2170,3 +2170,7 @@ table.alternate tr:nth-child(even) td{
 	text-align: left;
 	margin-top: 3px;
 }
+
+tr.red_row > td{
+	background-color: #ffefef !important;
+}

@@ -1,3 +1,9 @@
+2013-08-27  Dario Rodriguez <dario@artica.es>
+
+        * include/styles/integria.css: Added new class red_row
+        * operation/leads/lead_detail.php: Fixed a bug detecting old
+        leads to highlight them in red.
+
 2013-08-27  Sergio Martin <sergio.martin@artica.es>
 
 	* include/styles/integria.css
