@@ -1965,8 +1965,10 @@ function incidents_search_result ($filter, $ajax=false) {
 			
 			echo '<td>';
 							
-			echo '<strong><a href="'.$link.'">'.$incident['titulo'].'</a></strong>';
-			echo '</td>';
+			echo '<strong><a href="'.$link.'">'.$incident['titulo'].'</a></strong><br>';
+			echo "<span style='font-size:11px;font-style:italic'>";
+			echo incidents_get_incident_type_text($incident["id_incidencia"]); // Added by slerena 26Ago2013
+			echo '</span></td>';
 			echo '<td>'.get_db_value ("nombre", "tgrupo", "id_grupo", $incident['id_grupo']);
 			if ($config["show_creator_incident"] == 1){	
 				$id_creator_company = get_db_value ("id_company", "tusuario", "id_usuario", $incident["id_creator"]);

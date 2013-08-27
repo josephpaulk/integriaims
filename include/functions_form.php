@@ -164,7 +164,7 @@ function combo_kb_categories ($id_category, $show_any = 0){
 	echo "<select name='category' style='width: 180px;'>";
 	if ($show_any != 0){
 		$id_category = -1;
-		echo "<option value=''>".__("Any");
+		echo "<option value='-1'>".__("Any");
 	}	
 	$sql = "SELECT * FROM tkb_category WHERE id != $id_category ORDER by parent, name";
 	$result = mysql_query($sql);

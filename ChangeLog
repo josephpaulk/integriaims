@@ -1,3 +1,15 @@
+2013-08-27  SAncho Lerena <slerena@artica.es>
+
+	* include/functions_form.php: Fixed a typo.
+
+	* include/functions_incidents.php: Added incident type on
+	the incident listings.
+
+	* operation/kb/browse.php: Added hint to product/category
+	icons.
+
+	* general/home.php: Fixed some table styles and old links
+
 2013-08-27  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_incidents.php: New function to filter

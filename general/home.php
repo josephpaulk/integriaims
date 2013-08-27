@@ -185,7 +185,7 @@ if ($info) {
 		//Sort time array and print only first five entries :)
 		asort($time_array);
 	
-		$agenda_home .= "<table class='landing_incidents' width=100%>";
+		$agenda_home .= "<table class='landing_incidents listing' width=100%>";
 		$agenda_home .= "<tr><th>".__("Type")."</th><th>".__("Title")."</th><th>".__("Deadline")."</th></tr>";
 
 		$print_counter = 0;
@@ -235,7 +235,6 @@ if ($info) {
 	// ==============================================================
 	// Show WorkOrder items
 	// ==============================================================
-	
 	$workorders_home = '';
 	if ($todo > 0){
 		$workorders_home .= "<table class='landing_incidents listing' width=100%>";
@@ -250,7 +249,7 @@ if ($info) {
 			$workorders_home .= "<tr>";
 			
 			$data[0] = print_priority_flag_image ($wo["priority"], true);
-			$data[1] = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo&operation=view&id=".$wo["id"]."'>". substr($wo["name"],0,50) . "</a>";
+			$data[1] = "<a href='index.php?sec=workorder&sec2=operation/workorders/wo&operation=view&id=".$wo["id"]."'>". $wo["name"] . "</a>";
 
 			if ($wo["end_date"] != "0000-00-00 00:00:00"){
 				$data[2] = substr($wo["end_date"],0,11);		
@@ -300,10 +299,11 @@ if ($info) {
 			$incidents_home .= human_time_comparation ($row_2["actualizacion"]);
 			$incidents_home .= "<td>";
 			if($simple_mode) {
+				// TODO: Check this link.
 				$incidents_home .= "<a href='index.php?sec=incidents&sec2=operation/incidents_simple/incident&id=$idi'>";
 			}
 			else {
-				$incidents_home .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident&id=$idi'>";
+				$incidents_home .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$idi'>";
 			}
 			$incidents_home .= $row_2["titulo"];
 			$incidents_home .= "</b></a>";
