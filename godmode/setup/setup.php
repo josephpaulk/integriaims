@@ -39,7 +39,7 @@ $update = (bool) get_parameter ("update");
 
 if ($update) {
 	$config["block_size"] = (int) get_parameter ("block_size", 20);
-	$config["language_code"] = (string) get_parameter ("language_code", "en");
+	$config["language_code"] = (string) get_parameter ("language_code", "en_GB");
 	$config["no_wu_completion"] = (string) get_parameter ("no_wu_completion", "");
 	$config["currency"] = (string) get_parameter ("currency", "€");
 	$config["hours_perday"] = (int) get_parameter ("hours_perday", "8");
@@ -94,8 +94,8 @@ if ($update) {
 
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
 
-	process_sql ("UPDATE tconfig SET value='".$config["language_code"]."' WHERE token='language_code'");
-	
+	update_config_token("language_code", $config["language_code"]);
+
 	process_sql ("UPDATE tconfig SET value='".$config["hours_perday"]."' WHERE token='hours_perday'");
 	process_sql ("UPDATE tconfig SET value='".$config["currency"]."' WHERE token='currency'");
 	
@@ -155,8 +155,6 @@ if ($update) {
     
 }
 // Render SYSTEM language code, not current language.
-$config['language_code'] = get_db_value ('value', 'tconfig', 'token', 'language_code');
-
 $table->width = '99%';
 $table->class = 'search-table-button';
 $table->colspan = array ();

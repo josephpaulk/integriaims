@@ -132,12 +132,9 @@ function load_config() {
 	if (!isset ($config["auto_incident_close"])){
 		$config["auto_incident_close"] = "72";
 	}
-	
-	if (empty ($config["language_code"])) {
-		$config['language_code'] = get_db_value ('value', 'tconfig', 'token', 'language_code');
-		
-		if (isset ($_POST['language_code']))
-			$config['language_code'] = $_POST['language_code'];
+
+	if (!isset ($config["language_code"])) {
+		$config["language_code"] = "en_GB";
 	}
 	
 	if (!isset ($config["flash_charts"])) {
