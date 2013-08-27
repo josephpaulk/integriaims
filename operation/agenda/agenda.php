@@ -14,6 +14,8 @@
 // GNU General Public License for more details.
 
 global $config;
+require_once ('include/functions_user.php');
+
 $result_msg = "";
 
 check_login ();
@@ -26,6 +28,8 @@ if (! give_acl ($config['id_user'], $id_grupo, "AR")) {
 	include ("general/noaccess.php");
 	exit;
 }
+
+echo '<h1>' . __('Agenda') . '</h1>';
 
 $create_item = (bool) get_parameter ('create_item');
 $delete_event = (bool) get_parameter ('delete_event');
@@ -75,9 +79,9 @@ if ($month == 12){
 
 $start_date = $mydate_sql = date("Y-m-d", time());
 
-$pn = array('&laquo;'=>"index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month_p&year=$year_p", '&raquo;'=>"index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month_n&year=$year_n");
+$pn = array("<img src='images/control_rewind_blue.png' title='" . __('Prev') . "' class='calendar_arrow'>"=>"index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month_p&year=$year_p", "<img src='images/control_fastforward_blue.png' title='" . __('Next') . "' class='calendar_arrow'>"=>"index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month_n&year=$year_n");
 
-echo '<div align="center">';
+echo '<div align="center" style="padding-top: 10px;">';
 echo generate_calendar_agenda ($year, $month, $days_f, 3, NULL, $locale, $pn, $config['id_user']);
 echo '</div>';
 

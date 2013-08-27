@@ -172,14 +172,19 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 	if($n) $n = '&nbsp;'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n);
 
 	$calendar = "";
-	$calendar = '<center><h3>'."\n".
-	$calendar = $calendar .$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</center>";
+	//$calendar = '<center><h3>'."\n".
+	//$calendar = $calendar .$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</center>";
 	
-	$calendar = $calendar . '</h3><table width="90%" class="blank" border=1 cellpadding=10 cellspacing=0>'."\n";
+	$calendar .= '<table width="90%" class="month_calendar_outer">'."\n";
+	$calendar .= '<tr><td class="calendar_month_header" colspan=7>' . $p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n . '</td></tr>';
+	$calendar .= "<tr><td>\n";
+	$calendar .= '<table width="90%" class="month_calendar">'."\n";
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
-		foreach($day_names as $d)
+		foreach($day_names as $d) {
+			$d = strtoupper($d);
 			$calendar .= '<th width=110 abbr="'.htmlentities($d).'">'.htmlentities($day_name_length < 4 ? substr($d,0,$day_name_length) : $d).'</th>';
+		}
 		$calendar .= "</tr>\n<tr>";
 	}
 	$time = time();
@@ -200,18 +205,18 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 		}
 		
 		if (($day == $today) && ($today_m == $month))
-			$calendar .= "<td valign='top' style='background: #eeb; width: 110px; height: 90px;' >";				
+			$calendar .= "<td valign='top' style='background: #ffe4c7; width: 110px; height: 60px;' >";				
 		else 
-			$calendar .= "<td valign='top' style='background: #f9f9f5; height: 90px; width: 110px;' >";
-		$calendar .= "<div style='float:left;'><b>$day</b></div>";
+			$calendar .= "<td valign='top' style='background: #f9f9f5; height: 60px; width: 110px;' >";
+		$calendar .= "<div style='float:right;'><b>$day</b></div>";
 		
 		if ($day < 10)
 			$day = "0".$day;
 		$mysql_date = "$year-$month-$day";
 		
 		if (($day >= $today) && ($today_m >= $month))
-			$calendar .= "<div style='float:right;'><img src='images/note.png' title='".__('New entry')."' onClick='show_agenda_entry(-1, \"$mysql_date\", 0, true)'></div>";
-		$calendar .= "<br><br>";
+			$calendar .= "<div style='float:left;'><img src='images/note.png' title='".__('New entry')."' onClick='show_agenda_entry(-1, \"$mysql_date\", 0, true)' style='cursor: pointer;'></div>";
+		$calendar .= "<br>";
 		$mysql_time= "";
 		$event_string = "";
 		$event_privacy = 0;
@@ -227,23 +232,29 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 			$event_alarm = $row["alarm"];
 			$event_user = $row["id_user"];
             if (($event_user == $config["id_user"]) OR ($event_public == 1) OR dame_admin($config["id_user"])){
-			    $calendar .= $mysql_time."&nbsp;";
-			    if ($event_alarm > 0)
-				    $calendar .= "&nbsp;<img src='images/bell.png' title='".__('Alert')."'>";
-			    if ($event_public > 0)
-				    $calendar .= "&nbsp;<img src='images/user_comment.png' title='".__('Public')."'>";
-			    $calendar .= "&nbsp;<img src='images/book_edit.png' title='".__('Edit')."'  onClick='show_agenda_entry(".$row["id"].", \"$mysql_date\", \"$mysql_date\", true)'>";
-			    $calendar .= "&nbsp;<A href='index.php?sec=agenda&sec2=operation/agenda/agenda&delete_event=".$row[0]."' 
-					onClick='if (!confirm(\"".__('Are you sure?')."\")) return false;'><img src='images/cancel.gif' title='".__('Delete')."' border=0></A>";
-			    $calendar .= "<br><hr width=115><font size='1pt'>[$event_user] ".$event_string."</font>";
+			    $calendar .= '<table style="margin: 0px auto; width: 80%;"><tr><td>';
+			    $calendar .= $mysql_time;
+			    $cols = 3;
+			    if ($event_alarm > 0) {
+				    $calendar .= "</td><td><img src='images/bell.png' title='".__('Alert')."'>";
+				    $cols++;
+				}
+			    if ($event_public > 0) {
+				    $calendar .= "</td><td><img src='images/group.png' title='".__('Public')."'>";
+				    $cols++;
+				}
+			    $calendar .= "</td><td><img src='images/editor.png' title='".__('Edit')."'  onClick='show_agenda_entry(".$row["id"].", \"$mysql_date\", \"$mysql_date\", true)' style='cursor: pointer;'>";
+			    $calendar .= "</td><td><a href='index.php?sec=agenda&sec2=operation/agenda/agenda&delete_event=".$row[0]."' 
+					onClick='if (!confirm(\"".__('Are you sure?')."\")) return false;'><img src='images/cross.png' title='".__('Delete')."' border=0></a>";
+			    $calendar .= "</td></tr><tr><td colspan=" . $cols . " style='border-top: 1px #707070 dotted;'><font size='1pt'>[$event_user] ".$event_string."</font>";
 			    if ($row["description"]) {
 					// Common html title
-					$calendar .= "<br><font size='1pt'>".__('Description').": <img src='images/page_white_text.png' title='".$row["description"]."'></font><br><br>";
+					$calendar .= "</td></tr><tr><td colspan=" . $cols . ">";
+					$calendar .= "<font size='1pt'>".__('Description').": <img src='images/zoom.png' title='".$row["description"]."'></font>";
 					// Integria tip
 					//$calendar .= "<br><font size='1pt'>".__('Description').": ".print_help_tip ($row["description"], true)."</font><br><br>";
-				} else {
-					$calendar .= "<br><br>";
 				}
+				$calendar .= '</td></tr></table>';
             }
 		}
 
@@ -290,7 +301,7 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 	}
 	if($weekday != 7) 
 		$calendar .= '<td colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
-	return $calendar."</tr>\n</table>\n";
+	return $calendar."</tr>\n</table>\n</td></tr></table>";
 }
 
 // Original function
@@ -497,23 +508,27 @@ function generate_small_work_calendar ($year, $month, $days = array(), $day_name
 
 		$mylink = "index.php?sec=users&sec2=operation/users/user_workunit_report&id=$id_user&timestamp_l=$year-$month-$day 00:00:00&timestamp_h=$year-$month-$day 23:59:59";
 
-	    if ($normal == 0)
+		if (!is_working_day("$year-$month-$day")) {
+			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
+            $calendar .= "<td class='calendar day_holiday'><a href='$mylink' title='$total_wu'>$day</a></td>";
+   		}
+	    elseif ($normal == 0)
     		$calendar .= "<td class='calendar'>$day</td>";
         elseif ($normal == 1){
 			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar' style='background-color: #98FF8B;'><a href='$mylink' title='$total_wu'>$day</a></td>";
+            $calendar .= "<td class='calendar day_worked_projects'><a href='$mylink' title='$total_wu'>$day</a></td>";
 		} 
         elseif ($normal == 2) {
 			$total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar' style='background-color: #FFFF80;'><a href='$mylink' title='$total_wu'>$day</a></td>";
+            $calendar .= "<td class='calendar day_vacation'><a href='$mylink' title='$total_wu'>$day</a></td>";
 		}
         elseif ($normal == 3) {
             $total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar' style='background-color: #FF7BFE;'><a href='$mylink' title='$total_wu'>$day</a></td>";
+            $calendar .= "<td class='calendar day_worked_incidents'><a href='$mylink' title='$total_wu'>$day</a></td>";
 		}
 		elseif ($normal == 4) {
             $total_wu = $workhours_a + $workhours_c + $workhours_b + $workhours_d;
-            $calendar .= "<td class='calendar' style='background-color: #FFDE46;'><a href='$mylink' title='$total_wu'>$day</a></td>";
+            $calendar .= "<td class='calendar day_other'><a href='$mylink' title='$total_wu'>$day</a></td>";
         }
 	}
 	if($weekday != 7) $calendar .= '<td class="calendar" colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
@@ -536,24 +551,20 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
 
 	list($month, $year, $month_name, $weekday) = explode(',',gmstrftime('%m,%Y,%B,%w',$first_of_month));
 	$weekday = ($weekday + 7 - $first_day) % 7; #adjust for $first_day
-	$title   = htmlentities(ucfirst($month_name)).'&nbsp;'.$year;
-
 
 	#Begin calendar. Uses a real <caption>. See http://diveintomark.org/archives/2002/07/03
 	@list($p, $pl) = each($pn); @list($n, $nl) = each($pn); #previous and next links, if applicable
 	if($p) $p = ''.($pl ? '<a href="'.htmlspecialchars($pl).'">'.$p.'</a>' : $p).'&nbsp;';
 	if($n) $n = '&nbsp;'.($nl ? '<a href="'.htmlspecialchars($nl).'">'.$n.'</a>' : $n);
 
-	$calendar = "";
-	$calendar = '<center><h2>'."\n".
-	$calendar = $calendar .$p.($month_href ? '<a href="'.htmlspecialchars($month_href).'">'.$title.'</a>' : $title).$n."</center></h2><br>";
-	
-	$calendar = $calendar . '<table class="blank" border=1 cellpadding=10 cellspacing=0><tr>'."\n";
+	$calendar = '<table cellpadding=10 cellspacing=0 class="month_calendar"><tr>'."\n";
 	if($day_name_length){ #if the day names should be shown ($day_name_length > 0)
 		#if day_name_length is >3, the full name of the day will be printed
-		foreach($day_names as $d)
+		foreach($day_names as $d) {
+			$d = strtoupper($d);
 			$calendar .= '<th width=70 abbr="'.htmlentities($d).'">'.htmlentities($day_name_length < 4 ? substr($d,0,$day_name_length) : $d).'</th>';
-		$calendar .= '<th width=70>'.__('Week Total').'</th>';
+		}
+		$calendar .= '<th width=70>'.strtoupper(__('Week Total')).'</th>';
 		$calendar .= "</tr>\n<tr>";
 	}
 	$time = time();
@@ -656,16 +667,14 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
         }
 
 		if (($day == $today) && ($today_m == $month))
-            $border = "border: 2px dotted #000";
+            $border = "border: 2px dotted #707070";
         else {
             if (is_working_day("$year-$month-$day") == 1)
-                $border = "border: 1px solid #AAA;";
+                $border = "";
             else
-                $border = "border: 1px dashed #AAA;";
+                $border = "border: 1px dashed #aBaBa9;";
         }
-
-        $background = "#F5F5ED";
-
+		
 		$mysql_time= "";
 		$event_string = "";
 		$event_privacy = 0;
@@ -680,29 +689,28 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
         $hours = "";
         
         //Check if this days is in holidays list if but also check for working ours
+        $class = 'day_empty';
 		if (!is_working_day("$year-$month-$day")) {
-			$background = "#DBDBD9";
+			$class = 'day_holiday';
 		}
         if ($workhours_a > 0){
-            $background = '#98FF8B';
+            $class = 'day_worked_projects';
             $mydiff++;
         } 
         if ($workhours_b > 0){
-            $background = '#FFFF80';
+            $class = 'day_vacation';
             $mydiff++;
         } 
         if ($workhours_c > 0){
-            $background = '#FF7BFE';
+            $class = 'day_worked_incidents';
             $mydiff++;
 		} 
         if ($workhours_d > 0){
-            $background = '#FFDE46';
+            $class = 'day_other';
             $mydiff++;
 		} 
 		
-
-
-        $calendar .= "<td valign='top' style='$border; background: $background; height: 70px; width: 70px;' ><b><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit&givendate=$year-$month-$day'>$day</a></b>";
+        $calendar .= "<td valign='top' class='$class' style='$border; height: 70px; width: 70px;' ><b><a href='index.php?sec=users&sec2=operation/users/user_spare_workunit&givendate=$year-$month-$day'>$day</a></b>";
 
         if ($mydiff > 1){
             $calendar .= "<a href='#' class='tip'>&nbsp;<span>";
@@ -715,8 +723,6 @@ function generate_work_calendar ($year, $month, $days = array(), $day_name_lengt
         $calendar .= "<br><br>";
 
 		$calendar .= "<center><a  href='index.php?sec=users&sec2=operation/users/user_workunit_report&id=".$id_user."&timestamp_l=".$mysql_date. " 00:00:00"."&timestamp_h=".$mysql_date."  23:59:59'><i>".$workhours."</i></a></center></td>";
-
-        
 
 	}
 	if($weekday != 7) { // remaining "empty" days
@@ -784,7 +790,7 @@ function is_holidays ($datecalc) {
 	$date_formated = $datecalc;
 	
 	$date = $date_formated.' 00:00:00';
-
+	
 	$id = get_db_value_filter("id", "tholidays", array("day" => $date));
 
 	//If there is in the list is holidays
@@ -803,7 +809,6 @@ function is_working_day ($datecalc) {
 	$date1 = getdate($datecalc);
 	
 	if (($date1["wday"] == 0) OR ($date1["wday"] == 6))
-		
 		//Check if weekends are working days or not
 		if ($config["working_weekends"]) {
 			return 1;
@@ -811,7 +816,7 @@ function is_working_day ($datecalc) {
 			return 0;
 		}
 	else {
-		if (is_holidays ($datecalc)) {
+		if (is_holidays ($date_formated)) {
 			return 0;
 		}
 	}

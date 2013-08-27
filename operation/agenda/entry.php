@@ -30,7 +30,7 @@ if ($show_agenda_entry) {
 	echo "<div id='calendar_entry'>";
 
 	$table->width = '100%';
-	$table->class = 'databox';
+	$table->class = 'search-table-button';
 	$table->colspan = array ();
 	$table->data = array ();
 	
@@ -68,18 +68,19 @@ if ($show_agenda_entry) {
 	$table->colspan[3][0] = 3;
 	$table->data[3][0] = print_textarea ('entry_description', 4, 50, $entry['description'], '', true, __('Description'));
 	
-	echo '<form method="post">';
-	print_table ($table);
-	echo '<div class="button" style="width: '.$table->width.'">';
-	print_button (__('Cancel'), 'cancel', false, '', 'style="box-sizing:content-box; -moz-box-sizing:content-box; -ms-box-sizing:content-box; -webkit-box-sizing:content-box;"');
+	$button = print_button (__('Cancel'), 'cancel', false, '', 'class="sub delete" style="box-sizing:content-box; -moz-box-sizing:content-box; -ms-box-sizing:content-box; -webkit-box-sizing:content-box;"', true);
 	echo '&nbsp;';
 	if ($id == -1) {
-		print_submit_button (__('Create'), 'create_btn', false, 'class="sub next"');
+		$button .= print_submit_button (__('Create'), 'create_btn', false, 'class="sub create"', true);
 	} else {
-		print_submit_button (__('Update'), 'create_btn', false, 'class="sub upd"');
+		$button .= print_submit_button (__('Update'), 'create_btn', false, 'class="sub upd"', true);
 	}
 	
-	echo '</div>';
+	$table->data['button'][0] = $button;
+	$table->colspan['button'][0] = 3;
+	
+	echo '<form method="post">';
+	print_table ($table);
 	echo '</form>';
 	echo "</div>";
 	

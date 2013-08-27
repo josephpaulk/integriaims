@@ -103,17 +103,22 @@ echo "&nbsp;&nbsp;<a href='index.php?sec=users&sec2=operation/user_report/monthl
 
 echo "</h1>";
 
+$first_of_month = gmmktime(0,0,0,$month,1,$year);
 
-echo "<table width=700>";
+list($year, $month_name) = explode(',',gmstrftime('%Y,%B',$first_of_month));
+
+echo "<table width=99% class='search-table' style='padding: 0px; border-spacing: 0px;'>";
+echo "<tr><td colspan=4 class='calendar_annual_header' style='text-align: center;'>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$prev_month&year=$prev_year&id=$id'><img src='images/control_rewind_blue.png' title='" . __('Prev') . "' class='calendar_arrow'></a>";
+echo "<span class='calendar-month' style='font-size: 0.93em; color: #FFFFFF; padding: 3px;'>" . strtoupper(htmlentities(ucfirst($month_name))) . " $year</span>";
+echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$next_month&year=$next_year&id=$id'><img src='images/control_fastforward_blue.png' title='" . __('Next') . "' class='calendar_arrow'></a>";
+echo "</td></tr>";
 echo "<tr><td>";
-echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$prev_month&year=$prev_year&id=$id'> ".__('Prev')."</a>";
-echo "<td width=85%>";
 
-echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year'>";
-
-
-if (give_acl($config["real_user_id"], 0, "PM")){
- 
+if (give_acl($config["id_user"], 0, "PM")){
+	echo "<td colspan=3 style='text-align: center; padding-top: 5px;'>";
+	echo "<form method='post' action='index.php?sec=users&sec2=operation/user_report/monthly&month=$month&year=$year'>";
+	
 	$params['input_id'] = 'text-id_username';
 	$params['input_name'] = 'id';
 	$params['return'] = false;
@@ -123,21 +128,14 @@ if (give_acl($config["real_user_id"], 0, "PM")){
 	
     echo "&nbsp;";
     print_submit_button (__('Show'), 'show_btn', false, 'class="next sub"');
+    echo "</form>";
+	echo "</td>";
 }
-
-echo "</form>";
-echo "</td>";
-
-echo "<td>";
-echo "<a href='index.php?sec=users&sec2=operation/user_report/monthly&month=$next_month&year=$next_year&id=$id'> ".__('Next')."</a>";
-echo "</td>";
-echo "</table>";
-
+echo "</tr><tr><td colspan=3 style='padding-bottom: 20px;'>";
 // Generate calendar
-
-echo "<div>";
 echo generate_work_calendar ($year, $month, $days_f, 3, NULL, 1, "", $id);
-echo "</div>";
+echo "</td></tr>";
+echo "</table>";
 
 ?>
 

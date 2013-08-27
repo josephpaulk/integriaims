@@ -72,42 +72,52 @@
 	
 	echo "</h1>";
 
-    echo "<table class='search-table' width=99% style='text-align:right;'><tr>";
-    echo "<td>".__('Vacations days');
-    echo "<td style='background-color: #FFFF80;text-align:center;'>";
+    echo "<table class='search-table' width=99% style='text-align:right;'><tr><td>";
+    echo "<table style='margin: 0px auto; '><tr>";
+    echo "<td style='text-align:right;'>".__('Vacations days');
+    echo "<td class='day_vacation day_legend'>";
     echo get_user_vacations ($id_user_show, $year). "</td>";
     
-    echo "<td>";
+    echo "<td style='text-align:right; padding-left: 35px;'>";
     echo __('Days worked (projects)');
-    echo "<td style='background-color: #98FF8B;text-align:center;'>";
+    echo "<td class='day_worked_projects day_legend'>";
     echo get_user_worked_days ($id_user_show, $year). "</td>";
 
-    echo "<td>";
+    echo "<td style='text-align:right; padding-left: 35px;'>";
     echo __('Days worked (incidents)');
-    echo "<td style='background-color: #FF7BFE;text-align:center;'>";
+    echo "<td class='day_worked_incidents day_legend' day_legend'>";
     echo get_user_incident_worked_days ($id_user_show, $year). "</td>";
 
 
-    echo "<td>";
+    echo "<td style='text-align:right; padding-left: 35px;'>";
     echo __('Other');
-	echo "<td style='background-color: #FFE053;text-align:center;'>";
+	echo "<td class='day_other day_legend'>";
     echo get_user_other ($id_user_show, $year);
-
+    
+    echo "<td style='text-align:right; padding-left: 35px;'>";
+    echo __('Non-working days');
+	echo "<td class='day_holiday day_legend'>";
+    echo get_non_working_days ($year);
+	
     echo "</table>";
     
-    echo "<table style='margin: 0px auto; text-align: center; padding: 0px;' class='search-table'>";
+    echo "</td></tr></table>";
+    
+    echo "<table style='margin: 0px auto; text-align: center; padding: 0px; width: 99%; border-spacing: 0px;' class='search-table'>";
     echo "<tr><td colspan=4 class='calendar_annual_header'>";
-	echo "<span class='calendar-month' style='font-size: 17px; color: #FFFFFF;'>$year</span>";
+	if($pdf_output == 0) {
+		// Prev. year
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$prev_year&id_user=$id_user_show&clean_output=$clean_output'><img src='images/control_rewind_blue.png' title='" . __('Previous year') . "' class='calendar_arrow'></a>";
+	}
+	echo "<span class='calendar-month' style='font-size: 0.93em; color: #FFFFFF; padding: 3px;'>$year</span>";
+	if($pdf_output == 0) {
+		// Next. year
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$next_year&id_user=$id_user_show&clean_output=$clean_output'><img src='images/control_fastforward_blue.png' title='" . __('Next year') . "' class='calendar_arrow'></a>";
+	}
     echo "</td></tr>";
     echo "<tr><td colspan=4>";
     echo "<table cellpadding=4 cellspacing=4 style='margin: 0px auto;'>";
 	echo "<tr><td>";
-
-	if($pdf_output == 0) {
-		// Prev. year
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$prev_year&id_user=$id_user_show&clean_output=$clean_output'><img src='images/control_rewind_blue.png'></a>";
-		echo "</td>";
-	}
 
 	if (give_acl($config["id_user"], 0, "PM") && $pdf_output == 0){		
 	
@@ -130,13 +140,6 @@
 	    print_submit_button (__('Go'), 'sub_btn', false, 'class="upd sub"');
 	    echo "</td>";	
 	}
-	
-	if($pdf_output == 0) {
-		// Next. year
-		echo "<td>";
-		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual&year=$next_year&id_user=$id_user_show&clean_output=$clean_output'><img src='images/control_fastforward_blue.png'></a>";
-		echo "</td>";	
-	}
     echo "</form></table>";
     
     echo "</td></tr>";
@@ -144,7 +147,7 @@
     for ($ax = 1; $ax < 13; $ax++){
         if (fmod($ax-1,4) == 0)
             echo "<tr>";
-        echo "<td valign=top style='font-size: 10px; padding-right: 10px; padding-left: 10px; padding-bottom: 10px;'>";
+        echo "<td valign=top style='font-size: 10px; padding-right: 10px; padding-left: 10px; padding-bottom: 10px; text-align: center;'>";
         
         $this_month = date('Y-m-d H:i:s',strtotime("$year-$ax-01"));
 		$this_month_limit = date('Y-m-d H:i:s',strtotime("$year-$ax-31"));

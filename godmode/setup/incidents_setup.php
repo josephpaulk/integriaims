@@ -139,12 +139,9 @@ $date_table .= "</td>";
 $date_table .= "</tr>";
 $date_table .= "</table>";
 
-$table->data[0][0] = "";
-$table->data[0][1] = "<strong>".__("Holidays")."</strong>";
-
-$table->data[1][0] =print_checkbox ("working_weekends", 1, $config["working_weekends"], 
+$table->data[0][0] =print_checkbox ("working_weekends", 1, $config["working_weekends"], 
 					true, __("Weekends are working days"));
-$table->data[1][1] = $date_table;
+$table->data[0][1] = $date_table;
 
 $holidays_array = calendar_get_holidays();
 
@@ -168,7 +165,7 @@ if ($holidays_array == false) {
 	$holidays .= "</table>";
 }
 
-$table->data[1][1] .= $holidays;
+$table->data[0][1] .= $holidays;
 
 $holidays_table = print_table($table, true);
 
