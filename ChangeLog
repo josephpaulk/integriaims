@@ -1,5 +1,12 @@
 2013-08-28  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_inventories.php
+	operation/contacts/contact_inventory.php: Fixed
+	some calls to enterprise functions without 
+	"enterprise_hook" wrapper.
+
+2013-08-28  Dario Rodriguez <dario@artica.es>
+
 	* include/styles/integria.css: Fixed style for
 	sucess and error titles.
  	* operation/inventories/inventory_detail.php,

@@ -321,9 +321,8 @@ function get_inventory_contacts ($id_inventory, $only_names = false) {
 	$all_contacts[$contact["id"]] = $contact;  
 
 	//Get all users associated to the inventory object
-	//enterprise_include_once("include/functions_inventory.php");
 
-	$inv_users = inventory_get_users($id_inventory, false);		
+	$inv_users = enterprise_hook('inventory_get_users', array($id_inventory, false));	
 
 	if ($inv_users === ENTERPRISE_NOT_HOOK) {
 		$inv_users = array();
@@ -344,7 +343,7 @@ function get_inventory_contacts ($id_inventory, $only_names = false) {
         	$all_contacts[$contact["id"]] = $contact;
 	}
 
-	$inv_companies = inventory_get_companies($id_inventory, false);
+	$inv_companies = enterprise_hook('inventory_get_companies', array($id_inventory, false));
 	
 	if ($inv_companies === ENTERPRISE_NOT_HOOK) {
 		$inv_companies = array();

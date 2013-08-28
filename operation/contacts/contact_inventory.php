@@ -24,7 +24,7 @@ $id = (int) get_parameter ('id');
 
 $contact = get_db_row ('tcompany_contact', 'id', $id);
 
-$inv_obj = inventory_get_objects_by_contact ($contact["id"]);
+$inv_obj = enterprise_hook('inventory_get_objects_by_contact', array($contact["id"]));
 
 if (!$inv_obj) {
 	echo '<h3 class="error">'.__("This contact doesn't have any inventory objects").'</h3>';
