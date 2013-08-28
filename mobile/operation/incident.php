@@ -15,7 +15,7 @@
 
 class Incident {
 	
-	private $id;
+	private $id_incident;
 	private $title;
 	private $description;
 	private $group_id;
@@ -41,7 +41,7 @@ class Incident {
 	function __construct () {
 		$system = System::getInstance();
 		
-		$this->id = (int) $system->getRequest('id', 0);
+		$this->id_incident = (int) $system->getRequest('id_incident', 0);
 		$this->title = (string) $system->getRequest('title', "");
 		$this->description = (string) $system->getRequest('description', "");
 		$this->group_id = (int) $system->getRequest('group_id', -1);
@@ -80,8 +80,8 @@ class Incident {
 		
 	}
 	
-	public function setId ($id) {
-		$this->id = $id;
+	public function setId ($id_incident) {
+		$this->id_incident = $id_incident;
 	}
 	
 	public function insertIncident ($title, $description, $group_id, $id_creator = "", $status = 1, $priority = 2, $resolution = 0, $id_task = 0, $sla_disabled = 0, $id_incident_type = 0, $email_copy = "", $email_notify = -1, $id_parent = 0, $epilog = "") {
@@ -118,27 +118,27 @@ class Incident {
 				$email_notify, $id_task, $resolution, $id_incident_type, $sla_disabled,
 				'$email_copy', '$epilog')";
 				
-		$id = process_sql ($sql, 'insert_id');
+		$id_incident = process_sql ($sql, 'insert_id');
 		
-		if ($id !== false) {
+		if ($id_incident !== false) {
 			
 			if ( include_once ($system->getConfig('homedir')."/include/functions_incidents.php") ) {
 				/* Update inventory objects in incident */
-				update_incident_inventories ($id, array($id_inventory));
+				update_incident_inventories ($id_incident, array($id_inventory));
 			}
 			
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"],
 				"Incident created",
-				"User ".$config['id_user']." created incident #".$id);
+				"User ".$config['id_user']." created incident #".$id_incident);
 			
-			incident_tracking ($id, INCIDENT_CREATED);
+			incident_tracking ($id_incident, INCIDENT_CREATED);
 
 			// Email notify to all people involved in this incident
 			if ($email_notify) {
-				mail_incident ($id, $usuario, "", 0, 1);
+				mail_incident ($id_incident, $usuario, "", 0, 1);
 			}
 			
-			return $id;
+			return $id_incident;
 		}
 	}
 	
@@ -146,13 +146,13 @@ class Incident {
 		
 	}
 	
-	public function deleteIncident ($id) {
+	public function deleteIncident ($id_incident) {
 		
 		$error = false;
 		
 		// tincident_contact_reporters
 		$sql_delete = "DELETE FROM tincident_contact_reporters
-					   WHERE id_incident = $id";
+					   WHERE id_incident = $id_incident";
 		$res = process_sql ($sql_delete);
 		
 		if ($res === false) {
@@ -161,7 +161,7 @@ class Incident {
 		
 		// tincident_field_data
 		$res = $sql_delete = "DELETE FROM tincident_field_data
-					   WHERE id_incident = $id";
+					   WHERE id_incident = $id_incident";
 		$res = process_sql ($sql_delete);
 		
 		if ($res === false) {
@@ -170,7 +170,7 @@ class Incident {
 		
 		// tincident_inventory
 		$sql_delete = "DELETE FROM tincident_inventory
-					   WHERE id_incident = $id";
+					   WHERE id_incident = $id_incident";
 		$res = process_sql ($sql_delete);
 		
 		if ($res === false) {
@@ -179,7 +179,7 @@ class Incident {
 		
 		// tincident_sla_graph
 		$sql_delete = "DELETE FROM tincident_sla_graph
-					   WHERE id_incident = $id";
+					   WHERE id_incident = $id_incident";
 		$res = process_sql ($sql_delete);
 		
 		if ($res === false) {
@@ -188,7 +188,7 @@ class Incident {
 		
 		// tincident_stats
 		$sql_delete = "DELETE FROM tincident_stats
-					   WHERE id_incident = $id";
+					   WHERE id_incident = $id_incident";
 		$res = process_sql ($sql_delete);
 		
 		if ($res === false) {
@@ -197,7 +197,7 @@ class Incident {
 		
 		// tincident_track
 		$sql_delete = "DELETE FROM tincident_track
-					   WHERE id_incident = $id";
+					   WHERE id_incident = $id_incident";
 		$res = process_sql ($sql_delete);
 		
 		if ($res === false) {
@@ -208,7 +208,7 @@ class Incident {
 		$sql_delete = "DELETE FROM tworkunit
 					   WHERE id = ANY(SELECT id_workunit
 									  FROM tworkunit_incident
-									  WHERE id_incident = $id)";
+									  WHERE id_incident = $id_incident)";
 		$res = process_sql ($sql_delete);
 		
 		if ($res === false) {
@@ -217,7 +217,7 @@ class Incident {
 		
 		// tattachment
 		$sql_delete = "DELETE FROM tattachment
-					   WHERE id_incidencia = $id";
+					   WHERE id_incidencia = $id_incident";
 		$res = process_sql ($sql_delete);
 		
 		if ($res === false) {
@@ -234,8 +234,69 @@ class Incident {
 		return !$error;
 	}
 	
-	private function showIncidentSimpleForm ($message = "") {
+	public function getIncidentSimpleForm ($action = "index.php?page=incident", $method = "POST") {
+		$ui = Ui::getInstance();
 		
+		$options = array (
+			'id' => 'form-incident',
+			'action' => $action,
+			'method' => $method
+			);
+		$ui->beginForm($options);
+		// Title
+		$options = array(
+			'name' => 'title',
+			'label' => __('Title'),
+			'value' => $this->title,
+			'placeholder' => __('Title')
+			);
+		$ui->formAddInputText($options);
+		// Description
+		$options = array(
+				'name' => 'description',
+				'label' => __('Description'),
+				'value' => $this->description
+				);
+		$ui->formAddHtml($ui->getTextarea($options));
+		// Hidden operation (insert or update+id)
+		if ($this->id_incident <= 0) {
+			$options = array(
+				'type' => 'hidden',
+				'name' => 'operation',
+				'value' => 'insert_incident'
+				);
+			$ui->formAddInput($options);
+			// Submit button
+			$options = array(
+					'text' => __('Add'),
+					'data-icon' => 'plus'
+					);
+			$ui->formAddSubmitButton($options);
+		} else {
+			$options = array(
+				'type' => 'hidden',
+				'name' => 'operation',
+				'value' => 'update_incident'
+				);
+			$ui->formAddInput($options);
+			$options = array(
+				'type' => 'hidden',
+				'name' => 'id',
+				'value' => $this->id_incident
+				);
+			$ui->formAddInput($options);
+			// Submit button
+			$options = array(
+					'text' => __('Update'),
+					'data-icon' => 'refresh'
+					);
+			$ui->formAddSubmitButton($options);
+		}
+		
+		return $ui->getEndForm();
+	}
+	
+	private function showIncidentSimpleForm ($message = "") {
 		$ui = Ui::getInstance();
 		
 		$ui->createPage();
@@ -263,67 +324,13 @@ class Incident {
 										});
 									</script>");
 			}
-			$options = array (
-				'id' => 'form-incident',
-				'action' => "index.php?page=incident",
-				'method' => 'POST'
-				);
-			$ui->beginForm($options);
-				// Title
-				$options = array(
-					'name' => 'title',
-					'label' => __('Title'),
-					'value' => $this->title,
-					'placeholder' => __('Title')
-					);
-				$ui->formAddInputText($options);
-				// Description
-				$options = array(
-						'name' => 'description',
-						'label' => __('Description'),
-						'value' => $this->description
-						);
-				$ui->formAddHtml($ui->getTextarea($options));
-				// Hidden operation (insert or update+id)
-				if ($this->id <= 0) {
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'operation',
-						'value' => 'insert'
-						);
-					$ui->formAddInput($options);
-					// Submit button
-					$options = array(
-							'text' => __('Add'),
-							'data-icon' => 'plus'
-							);
-					$ui->formAddSubmitButton($options);
-				} else {
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'operation',
-						'value' => 'update'
-						);
-					$ui->formAddInput($options);
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'id',
-						'value' => $this->id
-						);
-					$ui->formAddInput($options);
-					// Submit button
-					$options = array(
-							'text' => __('Update'),
-							'data-icon' => 'refresh'
-							);
-					$ui->formAddSubmitButton($options);
-				}
-			$ui->endForm();
+			// Form
+			$ui->contentAddHtml($this->getIncidentSimpleForm());
 			
 		$ui->endContent();
 		// Foooter buttons
 		// Add
-		if ($this->id <= 0) {
+		if ($this->id_incident <= 0) {
 			$button_add = "<a onClick=\"$('#form-incident').submit();\" data-role='button' data-icon='plus'>"
 							.__('Add')."</a>\n";
 		} else {
@@ -331,8 +338,8 @@ class Incident {
 							.__('Update')."</a>\n";
 		}
 		// Delete
-		if ($this->id > 0) {
-			$button_delete = "<a href='index.php?page=incidents&operation=delete&id=".$this->id."'
+		if ($this->id_incident > 0) {
+			$button_delete = "<a href='index.php?page=incidents&operation=delete_incident&id_incident=".$this->id_incident."'
 									data-role='button' data-icon='delete'>".__('Delete')."</a>\n";
 		}
 		$ui->createFooter("<div data-type='horizontal' data-role='controlgroup'>$button_add"."$button_delete</div>");
@@ -340,306 +347,327 @@ class Incident {
 		$ui->showPage();
 	}
 	
-	private function incidentContent ($id, $message = "") {
+	private function getIncidentDetail () {
 		$system = System::getInstance();
 		$ui = Ui::getInstance();
 		
-		$ui->beginContent();
-			
-			// Message popup
-			if ($message != "") {
-				$options = array(
-					'popup_id' => 'message_popup',
-					'popup_content' => $message
-					);
-				
-				$ui->contentAddHtml($ui->getPopupHTML($options));
-				$ui->contentAddHtml("<script type=\"text/javascript\">
-										$(document).on('pageshow', function() {
-											$(\"#message_popup\").popup(\"open\");
-										});
-									</script>");
-			}
-			
-			$incident = get_db_row ("tincidencia", "id_incidencia", $id);
-			if (! $incident) {
-				$ui->contentAddHtml("<h2 class=\"error\">".__('Incident not found')."</h2>");
+		$incident = get_db_row ("tincidencia", "id_incidencia", $this->id_incident);
+		if (! $incident) {
+			$ui->contentAddHtml("<h2 class=\"error\">".__('Incident not found')."</h2>");
+		} else {
+			if ( include_once ($system->getConfig('homedir')."/include/functions_incidents.php") ) {
+				$resolution = incidents_get_incident_resolution_text($incident['id_incidencia']);
+				$priority = incidents_get_incident_priority_text($incident['id_incidencia']);
+				//$priority_image = print_priority_flag_image ($incident['prioridad'], true);
+				$group = incidents_get_incident_group_text($incident['id_incidencia']);
+				$status = incidents_get_incident_status_text($incident['id_incidencia']);
+				$type = incidents_get_incident_type_text($incident['id_incidencia']);
+				$description = $incident['descripcion'];
 			} else {
-				if ( include_once ($system->getConfig('homedir')."/include/functions_incidents.php") ) {
-					$resolution = incidents_get_incident_resolution_text($id);
-					$priority = incidents_get_incident_priority_text($id);
-					//$priority_image = print_priority_flag_image ($incident['prioridad'], true);
-					$group = incidents_get_incident_group_text($id);
-					$status = incidents_get_incident_status_text($id);
-					$type = incidents_get_incident_type_text($id);
-				} else {
-					$resolution = $incident['resolution'];
-					$priority = $incident['prioridad'];
-					$group = $incident['id_grupo'];
-					$status = $incident['estado'];
-					$type = $incident['id_incident_type'];
-				}
-				$ui->contentAddHtml("<h3>".__('Status')."</h3>");
-				$ui->contentAddHtml("<p>".$status."</p>");
-				$ui->contentAddHtml("<h3>".__('Group')."</h3>");
-				$ui->contentAddHtml("<p>".$group."</p>");
-				$ui->contentAddHtml("<h3>".__('Priority')."</h3>");
-				$ui->contentAddHtml("<p>".$priority."</p>");
-				$ui->contentAddHtml("<h3>".__('Resolution')."</h3>");
-				$ui->contentAddHtml("<p>".$resolution."</p>");
-				$ui->contentAddHtml("<h3>".__('Type')."</h3>");
-				$ui->contentAddHtml("<p>".$type."</p>");
+				$resolution = $incident['resolution'];
+				$priority = $incident['prioridad'];
+				$group = $incident['id_grupo'];
+				$status = $incident['estado'];
+				$type = $incident['id_incident_type'];
+				$description = $incident['descripcion'];
 			}
-		$ui->endContent();
+			$html = "<h3>".__('Status')."</h3>";
+			$html .= "<p>".$status."</p>";
+			$html .= "<h3>".__('Group')."</h3>";
+			$html .= "<p>".$group."</p>";
+			$html .= "<h3>".__('Priority')."</h3>";
+			$html .= "<p>".$priority."</p>";
+			$html .= "<h3>".__('Resolution')."</h3>";
+			$html .= "<p>".$resolution."</p>";
+			$html .= "<h3>".__('Type')."</h3>";
+			$html .= "<p>".$type."</p>";
+			if ($description != "") { 
+				$html .= "<h3>".__('Description')."</h3>";
+				$html .= "<p>".$description."</p>";
+			}
+		}
+		
+		return $html;
 	}
 	
-	private function workunitContent($id, $message = "") {
+	private function getFilesQuery ($columns = "*", $order_by = "timestamp, id_usuario, filename") {
+		$system = System::getInstance();
+		
+		$sql = "SELECT $columns
+				FROM tattachment
+				WHERE id_incidencia = '".$this->id_incident."'
+				ORDER BY $order_by";
+		
+		return $sql;
+	}
+	
+	private function getFilesList ($href = "", $delete_button = true, $delete_href = "") {
 		$system = System::getInstance();
 		$ui = Ui::getInstance();
 		
-		$ui->beginContent();
+		if ($href == "") {
+			$href = "index.php?page=incident&tab=file&id_incident=".$this->id_incident;
+		}
+		
+		$html = "<ul class='ui-itemlistview' data-role='listview' data-count-theme='e'>";
+		$sql = $this->getFilesQuery();
+		$new = true;
+		while ( $file = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
+			$new = false;
+			$html .= "<li>";
+			$html .= "<a href='../operation/incidents/incident_download_file.php?id_attachment=".$file['id_attachment']."' class='ui-link-inherit' target='_blank'>";
+				$html .= "<h3 class='ui-li-heading'><img src='../images/attach.png'>&nbsp;".$file['filename']."</img></h3>";
+				$html .= "<p class='ui-li-desc'>".$file['description']."</p>";
+				$html .= "<span class=\"ui-li-aside\">".round($file['size']/1024,2)."&nbsp;KB</span>";
+			$html .= "</a>";
 			
-			// Message popup
-			if ($message != "") {
-				$options = array(
-					'popup_id' => 'message_popup',
-					'popup_content' => $message
-					);
-				
-				$ui->contentAddHtml($ui->getPopupHTML($options));
-				$ui->contentAddHtml("<script type=\"text/javascript\">
-										$(document).on('pageshow', function() {
-											$(\"#message_popup\").popup(\"open\");
-										});
-									</script>");
-			}
-			$options = array (
-				'id' => 'form-incident_wu',
-				'action' => "index.php?page=incident&id=$id&tab=workunit",
-				'method' => 'POST'
-				);
-			$ui->beginForm($options);
-				// Date
-				$options = array(
-					'name' => 'date_wu',
-					'label' => __('Date'),
-					'value' => date ("Y-m-d")
-					);
-				$ui->formAddInputDate($options);
-				// Hours
-				$options = array(
-					'name' => 'duration_wu',
-					'label' => __('Hours'),
-					'type' => 'number',
-					'step' => 'any',
-					'min' => '0.01',
-					'value' => $system->getConfig('iwu_defaultime'),
-					'placeholder' => __('Hours')
-					);
-				$ui->formAddInput($options);
-				
-				// Hidden id_incident
-				$options = array(
-					'type' => 'hidden',
-					'name' => 'id_incident',
-					'value' => $id
-					);
-				$ui->formAddInput($options);
-				// Description
-				$options = array(
-						'name' => 'description_wu',
-						'label' => __('Description'),
-						'value' => $this->description_wu
-						);
-				$ui->formAddHtml($ui->getTextarea($options));
-				// Hidden operation (insert or update+id)
-				if ($this->id_wu < 0 || !isset($this->id_wu)) {
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'operation',
-						'value' => 'insert_wu'
-						);
-					$ui->formAddInput($options);
-					// Submit button
-					$options = array(
-							'text' => __('Add'),
-							 'data-icon' => 'plus'
-							);
-					$ui->formAddSubmitButton($options);
-				} else {
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'operation',
-						'value' => 'update_wu'
-						);
-					$ui->formAddInput($options);
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'id_wu',
-						'value' => ''
-						);
-					$ui->formAddInput($options);
-					// Submit button
-					$options = array(
-							'text' => __('Update'),
-							 'data-icon' => 'refresh'
-							);
-					$ui->formAddSubmitButton($options);
+			if ($delete_button) {
+				if ($delete_href == "") {
+					$delete_href = "index.php?page=incident&tab=files&operation=delete_file";
+					$delete_href .= "&id_incident=".$this->id_incident;
 				}
-			$ui->endForm();
-		$ui->endContent();
+				$options = array(
+					'popup_id' => 'delete_popup_'.$file['id_attachment'],
+					'delete_href' => $delete_href."&id_file=".$file['id_attachment']
+					);
+				$html .= $ui->getDeletePopupHTML($options);
+				$html .= "<a data-icon=\"delete\" data-rel=\"popup\" href=\"#delete_popup_".$file['id_attachment']."\"></a>";
+			}
+			$html .= "</li>";
+		}
+		$html .= "</ul>";
+		
+		return $html;
 	}
 	
-	private function fileContent ($id, $message = "") {
+	private function getFileForm ($action = "index.php?page=incident&tab=file", $method = "POST") {
 		$system = System::getInstance();
 		$ui = Ui::getInstance();
 		
-		$ui->beginContent();
-			
-			// Message popup
-			if ($message != "") {
-				$options = array(
-					'popup_id' => 'message_popup',
-					'popup_content' => $message
-					);
-				
-				$ui->contentAddHtml($ui->getPopupHTML($options));
-				$ui->contentAddHtml("<script type=\"text/javascript\">
-										$(document).on('pageshow', function() {
-											$(\"#message_popup\").popup(\"open\");
-										});
-									</script>");
-			}
-			
-			$options = array (
-				'id' => 'form-incident_file',
-				'action' => "index.php?page=incident&id=$id&tab=file",
-				'method' => 'POST',
-				'enctype' => 'multipart/form-data',
-				//'size' => '40',
-				'data-ajax' => 'false'
+		$options = array (
+			'id' => 'form-incident_file',
+			'action' => $action,
+			'method' => $method,
+			'enctype' => 'multipart/form-data',
+			//'size' => '40',
+			'data-ajax' => 'false'
+			);
+		$ui->beginForm($options);
+			// Hidden id_incident
+			$options = array(
+				'type' => 'hidden',
+				'name' => 'id_incident',
+				'value' => $this->id_incident
 				);
-			$ui->beginForm($options);
-				// Hidden id_incident
+			$ui->formAddInput($options);
+			// File
+			$options = array(
+				'type' => 'file',
+				'name' => 'file',
+				'label' => __('File')
+				);
+			$ui->formAddInput($options);
+			// Description
+			$options = array(
+					'name' => 'description_file',
+					'label' => __('Description'),
+					'value' => $this->description_file
+					);
+			$ui->formAddHtml($ui->getTextarea($options));
+			// Hidden operation (insert or update+id)
+			if ($this->id_file < 0 || !isset($this->id_file)) {
 				$options = array(
 					'type' => 'hidden',
-					'name' => 'id_incident',
-					'value' => $id
+					'name' => 'operation',
+					'value' => 'insert_file'
 					);
 				$ui->formAddInput($options);
-				// File
+				// Submit button
 				$options = array(
-					'type' => 'file',
-					'name' => 'file',
-					'label' => __('File')
+					'text' => __('Add'),
+					'data-icon' => 'plus'
+					);
+				$ui->formAddSubmitButton($options);
+			} else {
+				$options = array(
+					'type' => 'hidden',
+					'name' => 'operation',
+					'value' => 'update_file'
 					);
 				$ui->formAddInput($options);
-				// Description
 				$options = array(
-						'name' => 'description_file',
-						'label' => __('Description'),
-						'value' => $this->description_wu
-						);
-				$ui->formAddHtml($ui->getTextarea($options));
-				// Hidden operation (insert or update+id)
-				if ($this->id_file < 0 || !isset($this->id_file)) {
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'operation',
-						'value' => 'insert_file'
-						);
-					$ui->formAddInput($options);
-					// Submit button
-					$options = array(
-						'text' => __('Add'),
-						'data-icon' => 'plus'
-						);
-					$ui->formAddSubmitButton($options);
-				} else {
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'operation',
-						'value' => 'update_file'
-						);
-					$ui->formAddInput($options);
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'id_file',
-						'value' => ''
-						);
-					$ui->formAddInput($options);
-					// Submit button
-					$options = array(
-						'text' => __('Update'),
-						'data-icon' => 'refresh'
-						);
-					$ui->formAddSubmitButton($options);
-				}
-			$ui->endForm();
-		$ui->endContent();
+					'type' => 'hidden',
+					'name' => 'id_file',
+					'value' => ''
+					);
+				$ui->formAddInput($options);
+				// Submit button
+				$options = array(
+					'text' => __('Update'),
+					'data-icon' => 'refresh'
+					);
+				$ui->formAddSubmitButton($options);
+			}
+			
+		return $ui->getEndForm();
 	}
 	
 	private function showIncident ($tab = "view", $message = "") {
+		$system = System::getInstance();
 		$ui = Ui::getInstance();
 		
 		$ui->createPage();
 		
-		// Header
-		$back_href = "index.php?page=incidents";
-		$ui->createDefaultHeader(__("Incident")."&nbsp;#".$this->id,
-			$ui->createHeaderButton(
+		// Header options
+		$header_title = __("Incident")."&nbsp;#".$this->id_incident;
+		$left_href = "index.php?page=incidents";
+		$header_left_button = $ui->createHeaderButton(
 				array('icon' => 'back',
 					'pos' => 'left',
 					'text' => __('Back'),
-					'href' => $back_href)));
+					'href' => $left_href
+					)
+			);
+		$right_href = "index.php?page=home";
+		$header_right_button = $ui->createHeaderButton(
+				array('icon' => 'home',
+					'pos' => 'right',
+					'text' => __('Home'),
+					'href' => $right_href
+					)
+			);
 		
 		// Content
 		$selected_tab_detail = "";
 		$selected_tab_workunit = "";
 		$selected_tab_file = "";
-		switch ($tab) {
-			case 'view':
-				$selected_tab_detail = "class=\"ui-btn-active ui-state-persist\"";
-				$this->incidentContent($this->id, $message);
-				break;
-			case 'workunit':
-				$selected_tab_workunit = "class=\"ui-btn-active ui-state-persist\"";
-				$this->workunitContent($this->id, $message);
-				break;
-			case 'file':
-				$selected_tab_file = "class=\"ui-btn-active ui-state-persist\"";
-				$this->fileContent($this->id, $message);
-				break;
-			default:
-				$tab = 'view';
-				$selected_tab_detail = "class=\"ui-btn-active ui-state-persist\"";
-				$this->incidentContent($this->id, $message);
-		}
 		
+		$ui->beginContent();
+			// Message popup
+			if ($message != "") {
+				$options = array(
+					'popup_id' => 'message_popup',
+					'popup_content' => $message
+					);
+				$ui->addPopup($options);
+				$ui->contentAddHtml("<script type=\"text/javascript\">
+										$(document).on('pageshow', function() {
+											$(\"#message_popup\").popup(\"open\");
+										});
+									</script>");
+			}
+			switch ($tab) {
+				case 'detail':
+					$selected_tab_detail = "class=\"ui-btn-active ui-state-persist\"";
+					$ui->contentAddHtml($this->getIncidentDetail());
+					
+					// Header options
+					$right_href = "index.php?page=home"; // Edit in the future
+					$header_right_button = $ui->createHeaderButton(
+							array('icon' => 'home',
+								'pos' => 'right',
+								'text' => __('Home'),
+								'href' => $right_href
+								)
+						);
+					break;
+				case 'edit':
+					break;
+				case 'workunits':
+					$selected_tab_workunit = "class=\"ui-btn-active ui-state-persist\"";
+					$workunits = new Workunits();
+					$href = "index.php?page=incident&tab=workunit&id_incident=".$this->id_incident;
+					$delete_button = false;
+					$delete_href = "";
+					
+					// Workunits listing
+					if ($workunits->getCountWorkUnits() > 0) { 
+						$html = $workunits->getWorkUnitsList($href, $delete_button, $delete_href);
+					} else {
+						$html = "<h3 class='error'>".__('The list is empty')."</h3>";
+					}
+					$ui->contentAddHtml($html);
+					unset($workunits);
+					
+					// Header options
+					$right_href = "index.php?page=incident&tab=workunit&id_incident=".$this->id_incident;
+					$header_right_button = $ui->createHeaderButton(
+							array('icon' => 'add',
+								'pos' => 'right',
+								'text' => __('New'),
+								'href' => $right_href
+								)
+						);
+					break;
+				case 'workunit':
+					$selected_tab_workunit = "class=\"ui-btn-active ui-state-persist\"";
+					$workunit = new Workunit();
+					$action = "index.php?page=incident&tab=workunit";
+					$ui->contentAddHtml($workunit->getWorkUnitForm($action, "POST"));
+					unset($workunit);
+					
+					// Header options
+					if ($id_workunit = $system->getRequest('id_workunit', false)) {
+						$header_title = __("Workunit")."&nbsp;#".$id_workunit;
+					} else {
+						$header_title = __("Workunit");
+					}
+					$right_href = "index.php?page=incident&tab=workunits&id_incident=".$this->id_incident;
+					$header_right_button = $ui->createHeaderButton(
+							array('icon' => 'grid',
+								'pos' => 'right',
+								'text' => __('List'),
+								'href' => $right_href
+								)
+						);
+					break;
+				case 'files':
+					$selected_tab_file = "class=\"ui-btn-active ui-state-persist\"";
+					$ui->contentAddHtml($this->getFilesList());
+					
+					// Header options
+					$right_href = "index.php?page=incident&tab=file&id_incident=".$this->id_incident;
+					$header_right_button = $ui->createHeaderButton(
+							array('icon' => 'add',
+								'pos' => 'right',
+								'text' => __('New'),
+								'href' => $right_href
+								)
+						);
+					break;
+				case 'file':
+					$selected_tab_file = "class=\"ui-btn-active ui-state-persist\"";
+					$ui->contentAddHtml($this->getFileForm());
+					
+					// Header options
+					$header_title = __("File");
+					$right_href = "index.php?page=incident&tab=files&id_incident=".$this->id_incident;
+					$header_right_button = $ui->createHeaderButton(
+							array('icon' => 'grid',
+								'pos' => 'right',
+								'text' => __('List'),
+								'href' => $right_href
+								)
+						);
+					break;
+				default:
+					$tab = 'detail';
+					$selected_tab_detail = "class=\"ui-btn-active ui-state-persist\"";
+					$ui->contentAddHtml($this->getIncidentDetail());
+			}
+		$ui->endContent();
+		
+		// Header
+		$ui->createHeader($header_title, $header_left_button, $header_right_button);
 		// Navigation bar
-		$tab_detail = "<a href='index.php?page=incident&tab=view&id=".$this->id."' $selected_tab_detail data-role='button' data-icon='info'>"
+		$tab_detail = "<a href='index.php?page=incident&tab=view&id_incident=".$this->id_incident."' $selected_tab_detail data-role='button' data-icon='info'>"
 			.__('Info')."</a>\n";
-		$tab_workunit = "<a href='index.php?page=incident&tab=workunit&id=".$this->id."' $selected_tab_workunit data-role='button' data-icon='star'>"
+		$tab_workunit = "<a href='index.php?page=incident&tab=workunits&id_incident=".$this->id_incident."' $selected_tab_workunit data-role='button' data-icon='star'>"
 			.__('Workunit')."</a>\n";
-		$tab_file = "<a href='index.php?page=incident&tab=file&id=".$this->id."' $selected_tab_file data-role='button' data-icon='plus'>"
-			.__('File upload')."</a>\n";
-		$options = array (
-			'class' => 'ui-bar',
-			'data-position' => 'fixed',
-			'role' => 'contentinfo',
-			'data-id' => 'incident-tabs',
-			'style' => 'padding: 0px;'
-			);
-		$ui->beginFooter($options);
-		$ui->createFooter("<div data-role='navbar'>\n
-								<ul>
-									<li>$tab_detail</li>
-									<li>$tab_workunit</li>
-									<li>$tab_file</li>
-								</ul>
-							</div>\n");
-		$ui->endFooter();
-		$ui->showFooter();
+		$tab_file = "<a href='index.php?page=incident&tab=files&id_incident=".$this->id_incident."' $selected_tab_file data-role='button' data-icon='plus'>"
+			.__('Files')."</a>\n";
+		$buttons = array ($tab_detail, $tab_workunit, $tab_file);
+		$ui->addNavBar($buttons);
 		$ui->showPage();
 	}
 	
@@ -649,14 +677,14 @@ class Incident {
 			
 			$message = "";
 			switch ($this->operation) {
-				case 'insert':
+				case 'insert_incident':
 					$result = $this->insertIncident($this->title, $this->description, $this->group_id,
 													$this->id_creator, $this->status, $this->priority,
 													$this->resolution, $this->id_task, $this->sla_disabled,
 													$this->id_incident_type, $this->email_copy,
 													$this->email_notify, $this->id_parent, $this->epilog);
 					if ($result) {
-						$this->id = $result;
+						$this->id_incident = $result;
 						$message = "<h2 class='suc'>".__('Successfully created')."</h2>";
 					} else {
 						$message = "<h2 class='error'>".__('An error ocurred while creating the incident')."</h2>";
@@ -665,14 +693,14 @@ class Incident {
 					$incidents->show($message);
 					//$this->showIncidentSimpleForm($message);
 					break;
-				case 'insert_wu':
-					if ($this->id > 0) {
-						$date_wu = (string) $system->getRequest('date_wu', date ("Y-m-d"));
-						$duration_wu = (float) $system->getRequest('duration_wu', $system->getConfig('iwu_defaultime'));
-						$description_wu = (string) $system->getRequest('description_wu', "");
+				case 'insert_workunit':
+					if ($this->id_incident > 0) {
+						$date_workunit = (string) $system->getRequest('date_workunit', date ("Y-m-d"));
+						$duration_workunit = (float) $system->getRequest('duration_workunit', $system->getConfig('iwu_defaultime'));
+						$description_workunit = (string) $system->getRequest('description_workunit', "");
 						$workunit = new Workunit();
-						$result = $workunit->insertWorkUnit($system->getConfig('id_user'), $date_wu,
-															$duration_wu, $description_wu, false, $this->id);
+						$result = $workunit->insertWorkUnit($system->getConfig('id_user'), $date_workunit,
+															$duration_workunit, $description_workunit, false, $this->id_incident);
 						unset($workunit);
 						if ($result) {
 							$message = "<h2 class='suc'>".__('Successfully created')."</h2>";
@@ -683,7 +711,7 @@ class Incident {
 					}
 					break;
 				case 'insert_file':
-					if ($this->id > 0) {
+					if ($this->id_incident > 0) {
 						
 						switch ($_FILES['file']['error']) {
 							case UPLOAD_ERR_OK:
@@ -701,7 +729,7 @@ class Incident {
 									}
 									$description_file = (string) $system->getRequest('description_file', '');
 									
-									$result = attach_incident_file ($this->id, $file_path, $description_file);
+									$result = attach_incident_file ($this->id_incident, $file_path, $description_file);
 									
 									if (preg_match("/".__('File added')."/i", $result)) {
 										$message = "<h2 class='suc'>".__('File added')."</h2>";
@@ -738,29 +766,45 @@ class Incident {
 								$message = "<h2 class='error'>".__('Unknown upload error')."</h2>";
 								break;
 						}
-						
 						$this->showIncident($this->tab, $message);
 					}
 					break;
-				case 'update':
+				case 'update_incident':
 					$this->showIncidentSimpleForm();
 					break;
-				case 'update_wu':
+				case 'update_workunit':
+					if ($this->id_incident > 0) {
+						$id_workunit = (int) $system->getRequest('id_workunit', -1);
+						$date_workunit = (string) $system->getRequest('date_workunit', date ("Y-m-d"));
+						$duration_workunit = (float) $system->getRequest('duration_workunit', $system->getConfig('iwu_defaultime'));
+						$description_workunit = (string) $system->getRequest('description_workunit', "");
+						$workunit = new Workunit();
+						$result = $workunit->updateWorkUnit($id_workunit, $system->getConfig('id_user'), $date_workunit,
+															$duration_workunit, $description_workunit, false, $this->id_incident);
+						unset($workunit);
+						if ($result) {
+							$message = "<h2 class='suc'>".__('Successfully updated')."</h2>";
+						} else {
+							$message = "<h2 class='error'>".__('An error ocurred while updating the workunit')."</h2>";
+						}
+						$this->showIncident($this->tab, $message);
+					}
 					break;
-				case 'update_file':
-					break;
-				case 'delete':
-					$result = $this->deleteIncident($this->id);
+				case 'delete_incident':
+					$result = $this->deleteIncident($this->id_incident);
 					if ($result) {
-						$this->id = -1;
+						$this->id_incident = -1;
 						$message = "<h2 class='suc'>".__('Successfully deleted')."</h2>";
 					} else {
 						$message = "<h2 class='error'>".__('An error ocurred while deleting the incident')."</h2>";
 					}
 					break;
 					$this->showIncidentSimpleForm($message);
+				case 'delete_file':
+					$this->showIncident($this->tab, $message);
+					break;
 				default:
-					if ($this->id > 0) {
+					if ($this->id_incident > 0) {
 						$this->showIncident($this->tab);
 					} else {
 						$this->showIncidentSimpleForm();

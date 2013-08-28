@@ -214,7 +214,10 @@ class Ui {
 			$return .= 'href="#" ';
 		}
 		
-		$return .= ' data-ajax="false">';
+		if (isset($options['data-ajax'])) {
+			$return .= ' data-ajax="' . $options['data-ajax'] . '" ';
+		}
+		$return .= '>';
 		
 		if (isset($options['text'])) {
 			$return .= $options['text'];
@@ -350,10 +353,10 @@ class Ui {
 		$this->collapsible['items'][] = $html;
 	}
 	
-	public function contentEndCollapsible() {
+	public function contentEndCollapsible($class = "") {
 		$this->endCollapsible = true;
 		
-		$html = "<div data-role='collapsible' " .
+		$html = "<div class='$class' data-role='collapsible' " .
 			" data-collapsed-icon='arrow-d' " .
 			" data-expanded-icon='arrow-u' data-mini='true' ".
 			" data-theme='a' data-content-theme='c'>\n";
@@ -720,6 +723,10 @@ class Ui {
 		return $popupHtml;
 	}
 	
+	public function addPopup ($options) {
+		$this->contentAddHtml($this->getPopupHTML($options));
+	}
+	
 	public function getDeletePopupHTML ($options) {
 		
 		if (isset($options['dialog_title'])) {
@@ -752,6 +759,10 @@ class Ui {
 									</div>\n";
 		
 		return $this->getPopupHTML($options);
+	}
+	
+	public function addDeletePopup () {
+		$this->contentAddHtml($this->getDeletePopupHTML($options));
 	}
 	
 	public function getPriorityFlagImage ($priority) {
@@ -831,6 +842,60 @@ class Ui {
 				</script>";
 		
 		$this->contentAddHtml($html);
+	}
+	
+	public function getPaginationControgroup ($page, $offset = 1, $numPages = 1) {
+		
+		if ($offset <= 1) {
+			$button_first = "<a class='ui-disabled' data-role='button'
+							data-icon='back' data-theme='b' data-iconpos='notext'>".__('First')."</a>\n";
+			$button_back = "<a class='ui-disabled' data-role='button'
+							data-icon='arrow-l' data-theme='b' data-iconpos='notext'>".__('Back')."</a>\n";
+		} else {
+			$button_first = "<a href='index.php?page=$page&offset=1' data-role='button'
+							data-icon='back' data-theme='b' data-iconpos='notext'>".__('First')."</a>\n";
+			$button_back = "<a href='index.php?page=$page&offset=".($offset -1)."' data-role='button'
+							data-icon='arrow-l' data-theme='b' data-iconpos='notext'>".__('Back')."</a>\n";
+		}
+		if ($offset >= $numPages) {
+			$button_last = "<a class='ui-disabled' data-role='button'
+							data-icon='forward' data-theme='b' data-iconpos='notext'>".__('Last')."</a>\n";
+			$button_forward = "<a class='ui-disabled' data-role='button'
+								data-icon='arrow-r' data-theme='b' data-iconpos='notext'>".__('Forward')."</a>\n";
+		} else {
+			$button_last = "<a href='index.php?page=$page&offset=".$numPages."' data-role='button'
+							data-icon='forward' data-theme='b' data-iconpos='notext'>".__('Last')."</a>\n";
+			$button_forward = "<a href='index.php?page=$page&offset=".($offset +1)."' data-role='button'
+								data-icon='arrow-r' data-theme='b' data-iconpos='notext'>".__('Forward')."</a>\n";
+		}
+		
+		return "<div style='float:right; padding-right:25px;' data-type='horizontal' data-role='controlgroup'>
+					$button_first
+					$button_back
+					$button_forward
+					$button_last
+				</div>";
+	}
+	
+	public function addNavBar ($buttons) {
+		$options = array (
+			'class' => 'ui-bar',
+			'data-position' => 'fixed',
+			'role' => 'contentinfo',
+			'data-id' => 'incident-tabs',
+			'style' => 'padding: 0px;'
+			);
+		$this->beginFooter($options);
+		$html = "<div data-role='navbar'>\n
+					<ul>\n";
+		foreach ($buttons as $button) {
+			$html .= "	<li>$button</li>\n";
+		}
+		$html .= "	</ul>
+				 </div>\n";
+		$this->createFooter($html);
+		$this->endFooter();
+		$this->showFooter();
 	}
 	
 	public function showError($msg) {

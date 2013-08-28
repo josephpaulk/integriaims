@@ -15,12 +15,12 @@
 
 class Workunit {
 	
-	private $id;
+	private $id_workunit;
 	private $id_task;
 	private $id_incident;
-	private $date;
-	private $duration;
-	private $description;
+	private $date_workunit;
+	private $duration_workunit;
+	private $description_workunit;
 	private $operation;
 	
 	private $acl = 'PR';
@@ -29,23 +29,27 @@ class Workunit {
 	function __construct () {
 		$system = System::getInstance();
 		
-		$this->id = (int) $system->getRequest('id', -1);
+		$this->id_workunit = (int) $system->getRequest('id_workunit', -1);
 		$this->id_task = $system->getRequest('id_task', false);
 		$this->id_incident = (int) $system->getRequest('id_incident', -1);
-		$this->date = (string) $system->getRequest('date', date ("Y-m-d"));
-		$this->duration = (float) $system->getRequest('duration', $system->getConfig('pwu_defaultime'));
-		$this->description = (string) $system->getRequest('description', "");
+		$this->date_workunit = (string) $system->getRequest('date_workunit', date ("Y-m-d"));
+		$this->duration_workunit = (float) $system->getRequest('duration_workunit', $system->getConfig('pwu_defaultime'));
+		$this->description_workunit = (string) $system->getRequest('description_workunit', "");
 		// insert, update, delete, view or ""
 		$this->operation = (string) $system->getRequest('operation', "");
 		
 		// ACL
 		$this->permission = $this->checkPermission($system->getConfig('id_user'), $this->acl,
-											$this->operation, $this->id, $this->id_task,
+											$this->operation, $this->id_workunit, $this->id_task,
 											$this->id_incident);
 		//$this->permission = false;
 	}
 	
-	public function checkPermission ($id_user, $acl = 'PR', $operation = '', $id = -1, $id_task = -1, $id_incident = -1) {
+	public function getPermission () {
+		return $this->permission;
+	}
+	
+	public function checkPermission ($id_user, $acl = 'PR', $operation = '', $id_workunit = -1, $id_task = -1, $id_incident = -1) {
 		$system = System::getInstance();
 		
 		$permission = false;
@@ -55,16 +59,16 @@ class Workunit {
 		} else {
 			// Section access
 			if ($system->checkACL($acl)) {
-				// WU for task
+				// workunit for task
 				if ($id_task !== false && $id_task > 0) {
 					if ( include_once ($system->getConfig('homedir')."/include/functions_projects.php") ) {
 						$task_access = get_project_access ($id_user, 0, $id_task, false, true);
 						// Task access
 						if ($task_access["write"]) {
-							// If the WU exists, should belong to the user
-							if ($operation != "" && $operation != "insert") {
-								$user_wu = get_db_value("id_user", "tworkunit", "id", $id);
-								if ($user_wu == $id_user) {
+							// If the workunit exists, should belong to the user
+							if ($operation != "" && $operation != "insert_workunit") {
+								$user_workunit = get_db_value("id_user", "tworkunit", "id", $id_workunit);
+								if ($user_workunit == $id_user) {
 									$permission = true;
 								}
 							} else {
@@ -72,14 +76,14 @@ class Workunit {
 							}
 						}
 					}
-				// WU for incident
+				// workunit for incident
 				} elseif ($id_incident > 0) {
 					// Incident access
 					if ($system->checkACL('IW') || $system->checkACL('IM')) {
-						// If the WU exists, should belong to the user
-						if ($operation != "" && $operation != "insert") {
-							$user_wu = get_db_value("id_user", "tworkunit", "id", $id);
-							if ($user_wu == $id_user) {
+						// If the workunit exists, should belong to the user
+						if ($operation != "" && $operation != "insert_workunit") {
+							$user_workunit = get_db_value("id_user", "tworkunit", "id", $id_workunit);
+							if ($user_workunit == $id_user) {
 								$permission = true;
 							}
 						} else {
@@ -91,36 +95,36 @@ class Workunit {
 				}
 			}
 		}
-		// With this operations, the WU should have id
-		if ( ($operation == "view" || $operation == "update" || $operation == "delete")
-				&& $id < 0) {
+		// With this operations, the workunit should have id
+		if ( ($operation == "view" || $operation == "update_workunit" || $operation == "delete_workunit")
+				&& $id_workunit < 0) {
 			$permission = false;
 		}
 		
 		return $permission;
 	}
 	
-	public function setId ($id) {
-		$this->id = $id;
+	public function setId ($id_workunit) {
+		$this->id_workunit = $id_workunit;
 	}
 	
-	private function setValues ($id, $id_task, $id_incident, $date, $duration, $description, $operation) {
-		$this->id = $id;
+	private function setValues ($id_workunit, $id_task, $id_incident, $date_workunit, $duration_workunit, $description_workunit, $operation) {
+		$this->id_workunit = $id_workunit;
 		$this->id_task = $id_task;
 		$this->id_incident = $id_incident;
-		$this->date = $date;
-		$this->duration = $duration;
-		$this->description = $description;
+		$this->date_workunit = $date_workunit;
+		$this->duration_workunit = $duration_workunit;
+		$this->description_workunit = $description_workunit;
 		$this->operation = $operation;
 	}
 	
-	public function insertWorkUnit ($id_user, $date, $duration = 4, $description = "", $id_task = false, $id_incident = -1) {
+	public function insertWorkUnit ($id_user, $date_workunit, $duration_workunit = 4, $description_workunit = "", $id_task = false, $id_incident = -1) {
 		$system = System::getInstance();
 		
 		$sql = sprintf ("INSERT INTO tworkunit 
 				(timestamp, duration, id_user, description) 
 				VALUES ('%s', %.2f, '%s', '%s')",
-				$date, $duration, $id_user, $description);
+				$date_workunit, $duration_workunit, $id_user, $description_workunit);
 		$id_workunit = process_sql ($sql, "insert_id");
 		
 		if ($id_workunit) {
@@ -150,29 +154,29 @@ class Workunit {
 		return false;
 	}
 	
-	public function updateWorkUnit ($id, $id_user, $date, $duration = 4, $description = "", $id_task = false, $id_incident = -1) {
+	public function updateWorkUnit ($id_workunit, $id_user, $date_workunit, $duration_workunit = 4, $description_workunit = "", $id_task = false, $id_incident = -1) {
 		$system = System::getInstance();
 		
 		$sql = sprintf ("UPDATE tworkunit
 			SET timestamp = '%s', duration = %.2f, description = '%s',
 			id_user = '%s' WHERE id = %d",
-			$date, $duration, $description,
-			$id_user, $id);
+			$date_workunit, $duration_workunit, $description_workunit,
+			$id_user, $id_workunit);
 		$result = process_sql ($sql);
 		
-		$old_id_task = get_db_value("id_task", "tworkunit_task", "id_workunit", $id);
+		$old_id_task = get_db_value("id_task", "tworkunit_task", "id_workunit", $id_workunit);
 		if ($old_id_task !== false && $old_id_task != $id_task) {
-			process_sql ("DELETE FROM tworkunit_task WHERE id_workunit = ".$id);
+			process_sql ("DELETE FROM tworkunit_task WHERE id_workunit = ".$id_workunit);
 		}
-		$old_id_incident = get_db_value("id_incident", "tworkunit_incident", "id_workunit", $id);
+		$old_id_incident = get_db_value("id_incident", "tworkunit_incident", "id_workunit", $id_workunit);
 		if ($old_id_incident && $old_id_incident != $id_incident) {
-			process_sql ("DELETE FROM tworkunit_incident WHERE id_workunit = ".$id);
+			process_sql ("DELETE FROM tworkunit_incident WHERE id_workunit = ".$id_workunit);
 		}
 		
 		if ($id_task !== false && $id_task !== 0) {
 			$sql = sprintf ("INSERT INTO tworkunit_task 
 					(id_task, id_workunit) VALUES (%d, %d)",
-					$id_task, $id);
+					$id_task, $id_workunit);
 			$result = process_sql ($sql, 'insert_id');
 			if ($result) {
 				include_once ($system->getConfig('homedir')."/include/functions_tasks.php");
@@ -182,7 +186,7 @@ class Workunit {
 		} elseif ($id_incident > 0) {
 			$sql = sprintf ("INSERT INTO tworkunit_incident 
 					(id_incident, id_workunit) VALUES (%d, %d)",
-					$id_incident, $id);
+					$id_incident, $id_workunit);
 			$result = process_sql ($sql, 'insert_id');
 			if ($result) {
 				return true;
@@ -194,14 +198,14 @@ class Workunit {
 		return false;
 	}
 	
-	public function deleteWorkUnit ($id) {
+	public function deleteWorkUnit ($id_workunit) {
 		
-		$result = process_sql ("DELETE FROM tworkunit WHERE id = ".$id);
+		$result = process_sql ("DELETE FROM tworkunit WHERE id = ".$id_workunit);
 		if ($result) {
-			$id_task = get_db_value("id_task", "tworkunit_task", "id_workunit", $id);
-			$id_incident = get_db_value("id_incident", "tworkunit_incident", "id_workunit", $id);
+			$id_task = get_db_value("id_task", "tworkunit_task", "id_workunit", $id_workunit);
+			$id_incident = get_db_value("id_incident", "tworkunit_incident", "id_workunit", $id_workunit);
 			if ($id_task) {
-				$result = process_sql ("DELETE FROM tworkunit_task WHERE id_workunit = ".$id);
+				$result = process_sql ("DELETE FROM tworkunit_task WHERE id_workunit = ".$id_workunit);
 				if ($result) {
 					$system = System::getInstance();
 					include_once ($system->getConfig('homedir')."/include/functions_tasks.php");
@@ -209,7 +213,7 @@ class Workunit {
 					return true;
 				}
 			} elseif ($id_incident) {
-				$result = process_sql ("DELETE FROM tworkunit_incident WHERE id_workunit = ".$id);
+				$result = process_sql ("DELETE FROM tworkunit_incident WHERE id_workunit = ".$id_workunit);
 				if ($result) {
 					return true;
 				}
@@ -221,23 +225,170 @@ class Workunit {
 		return false;
 	}
 	
+	public function getWorkUnitForm ($action = "index.php?page=workunit", $method = "POST") {
+		$system = System::getInstance();
+		$ui = Ui::getInstance();
+		
+		if ($this->id_workunit > 0) {
+			$workunit = get_db_row ("tworkunit", "id", $this->id_workunit);
+			if ($workunit) {
+				$id_task = get_db_value ("id_task", "tworkunit_task", "id_workunit", $workunit['id']);
+				$id_incident = get_db_value ("id_incident", "tworkunit_incident", "id_workunit", $workunit['id']);
+				if ($id_incident == false) {
+					$id_incident = -1;
+				}
+				$this->setValues ($workunit['id'], $id_task, $id_incident, date ("Y-m-d", $workunit['timestamp']),
+						$workunit['duration'], $workunit['description'], 'view');
+			}
+		}
+		
+		$options = array (
+			'id' => 'form-workunit',
+			'action' => $action,
+			'method' => $method
+			);
+		$ui->beginForm($options);
+			// Date
+			$options = array(
+				'name' => 'date_workunit',
+				'label' => __('Date'),
+				'value' => $this->date_workunit,
+				'placeholder' => __('Date')
+				);
+			$ui->formAddInputDate($options);
+			// Hours
+			$options = array(
+				'name' => 'duration_workunit',
+				'label' => __('Hours'),
+				'type' => 'number',
+				'step' => 'any',
+				'min' => '0.01',
+				'value' => $this->duration_workunit,
+				'placeholder' => __('Hours')
+				);
+			$ui->formAddInput($options);
+			
+			// Tasks combo or hidden id_incident
+			if ($this->id_incident < 0) {
+				
+				$sql = "SELECT ttask.id, tproject.name, ttask.name
+						FROM ttask, trole_people_task, tproject
+						WHERE ttask.id_project = tproject.id
+							AND tproject.disabled = 0
+							AND ttask.id = trole_people_task.id_task
+							AND trole_people_task.id_user = '".$system->getConfig('id_user')."'
+						ORDER BY tproject.name, ttask.name";
+				if (dame_admin ($system->getConfig('id_user'))) {
+					$sql = "SELECT ttask.id, tproject.name, ttask.name 
+							FROM ttask, trole_people_task, tproject
+							WHERE ttask.id_project = tproject.id
+								AND tproject.disabled = 0
+							ORDER BY tproject.name, ttask.name";
+				}
+				$tasks = get_db_all_rows_sql ($sql);
+				
+				$values[-3] = "(*) ".__('Not justified');
+				$values[-2] = "(*) ".__('Not working for disease');
+				$values[-1] = "(*) ".__('Vacations');
+				//$values[0] =  __('N/A');
+				if ($tasks) {
+					foreach ($tasks as $task) {
+						$values[$task[0]] = array('optgroup' => $task[1], 'name' => $task[2]);
+					}
+				}
+				$selected = ($this->id_task === false) ? 0 : $this->id_task;
+				$options = array(
+					'name' => 'id_task',
+					'title' => __('Task'),
+					'label' => __('Task'),
+					'items' => $values,
+					'selected' => $selected
+					);
+				$ui->formAddSelectBox($options);
+			} else {
+				$options = array(
+					'type' => 'hidden',
+					'name' => 'id_incident',
+					'value' => $this->id_incident
+					);
+				$ui->formAddInput($options);
+			}
+			// Description
+			$options = array(
+					'name' => 'description_workunit',
+					'label' => __('Description'),
+					'value' => $this->description_workunit
+					);
+			$ui->formAddHtml($ui->getTextarea($options));
+			// Hidden operation (insert or update+id)
+			if ($this->id_workunit < 0) {
+				$options = array(
+					'type' => 'hidden',
+					'name' => 'operation',
+					'value' => 'insert_workunit'
+					);
+				$ui->formAddInput($options);
+				// Submit button
+				$options = array(
+					'text' => __('Add'),
+					'data-icon' => 'plus'
+					);
+				$ui->formAddSubmitButton($options);
+			} else {
+				$options = array(
+					'type' => 'hidden',
+					'name' => 'operation',
+					'value' => 'update_workunit'
+					);
+				$ui->formAddInput($options);
+				$options = array(
+					'type' => 'hidden',
+					'name' => 'id_workunit',
+					'value' => $this->id_workunit
+					);
+				$ui->formAddInput($options);
+				// Submit button
+				$options = array(
+					'text' => __('Update'),
+					'data-icon' => 'refresh'
+					);
+				$ui->formAddSubmitButton($options);
+			}
+			
+		return $ui->getEndForm();
+	}
+	
 	public function showWorkUnit ($message = "") {
 		$system = System::getInstance();
 		$ui = Ui::getInstance();
 		
 		$ui->createPage();
 		
-		if ($this->id_incident > 0) {
-			$back_href = 'index.php?page=incidents&id_incident='.$this->id_incident;
+		// Header
+		$back_href = "index.php?page=home";
+		$right_href = "index.php?page=workunits";
+		if ($this->id_workunit < 0) {
+			$title = __("Workunit");
 		} else {
-			$back_href = 'index.php';
+			$title = __("Workunit")."&nbsp;#".$this->id_workunit;
 		}
-		$ui->createDefaultHeader(__("Workunit"),
+		$ui->createHeader($title,
 			$ui->createHeaderButton(
 				array('icon' => 'back',
 					'pos' => 'left',
 					'text' => __('Back'),
-					'href' => $back_href)));
+					'href' => $back_href
+					)
+				),
+			$ui->createHeaderButton(
+				array('icon' => 'grid',
+					'pos' => 'right',
+					'text' => __('List'),
+					'href' => $right_href
+					)
+				)
+			);
+		// Content
 		$ui->beginContent();
 			
 			// Message popup
@@ -247,127 +398,28 @@ class Workunit {
 					'popup_content' => $message
 					);
 				
-				$ui->contentAddHtml($ui->getPopupHTML($options));
+				$ui->addPopup($options);
 				$ui->contentAddHtml("<script type=\"text/javascript\">
 										$(document).on('pageshow', function() {
 											$(\"#message_popup\").popup(\"open\");
 										});
 									</script>");
 			}
-			$options = array (
-				'id' => 'form-wu',
-				'action' => "index.php?page=workunit",
-				'method' => 'POST'
-				);
-			$ui->beginForm($options);
-				// Date
-				$options = array(
-					'name' => 'date',
-					'label' => __('Date'),
-					'value' => $this->date,
-					'placeholder' => __('Date')
-					);
-				$ui->formAddInputDate($options);
-				// Hours
-				$options = array(
-					'name' => 'duration',
-					'label' => __('Hours'),
-					'type' => 'number',
-					'step' => 'any',
-					'min' => '0.01',
-					'value' => $this->duration,
-					'placeholder' => __('Hours')
-					);
-				$ui->formAddInput($options);
-				
-				// Tasks combo or hidden id_incident
-				if ($this->id_incident < 0) {
-					
-					$sql = "SELECT ttask.id, tproject.name, ttask.name
-							FROM ttask, trole_people_task, tproject
-							WHERE ttask.id_project = tproject.id
-								AND tproject.disabled = 0
-								AND ttask.id = trole_people_task.id_task
-								AND trole_people_task.id_user = '".$system->getConfig('id_user')."'
-							ORDER BY tproject.name, ttask.name";
-					if (dame_admin ($system->getConfig('id_user'))) {
-						$sql = "SELECT ttask.id, tproject.name, ttask.name 
-								FROM ttask, trole_people_task, tproject
-								WHERE ttask.id_project = tproject.id
-									AND tproject.disabled = 0
-								ORDER BY tproject.name, ttask.name";
-					}
-					$tasks = get_db_all_rows_sql ($sql);
-					
-					$values[-3] = "(*) ".__('Not justified');
-					$values[-2] = "(*) ".__('Not working for disease');
-					$values[-1] = "(*) ".__('Vacations');
-					//$values[0] =  __('N/A');
-					if ($tasks) {
-						foreach ($tasks as $task){
-							$values[$task[0]] = array('optgroup' => $task[1], 'name' => $task[2]);
-						}
-					}
-					$selected = ($this->id_task === false) ? 0 : $this->id_task;
-					$options = array(
-						'name' => 'id_task',
-						'title' => __('Task'),
-						'label' => __('Task'),
-						'items' => $values,
-						'selected' => $selected
-						);
-					$ui->formAddSelectBox($options);
-				} else {
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'id_incident',
-						'value' => $this->id_incident
-						);
-					$ui->formAddInput($options);
-				}
-				// Description
-				$options = array(
-						'name' => 'description',
-						'label' => __('Description'),
-						'value' => $this->description
-						);
-				$ui->formAddHtml($ui->getTextarea($options));
-				// Hidden operation (insert or update+id)
-				if ($this->id < 0) {
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'operation',
-						'value' => 'insert'
-						);
-					$ui->formAddInput($options);
-				} else {
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'operation',
-						'value' => 'update'
-						);
-					$ui->formAddInput($options);
-					$options = array(
-						'type' => 'hidden',
-						'name' => 'id',
-						'value' => $this->id
-						);
-					$ui->formAddInput($options);
-				}
-			$ui->endForm();
+			$html = $this->getWorkUnitForm();
+			$ui->contentAddHtml($html);
 		$ui->endContent();
 		// Foooter buttons
 		// Add
-		if ($this->id < 0) {
-			$button_add = "<a onClick=\"$('#form-wu').submit();\" data-role='button' data-icon='plus'>"
+		if ($this->id_workunit < 0) {
+			$button_add = "<a onClick=\"$('#form-workunit').submit();\" data-role='button' data-icon='plus'>"
 							.__('Add')."</a>\n";
 		} else {
-			$button_add = "<a onClick=\"$('#form-wu').submit();\" data-role='button' data-icon='refresh'>"
+			$button_add = "<a onClick=\"$('#form-workunit').submit();\" data-role='button' data-icon='refresh'>"
 							.__('Update')."</a>\n";
 		}
 		// Delete
-		if ($this->id > 0) {
-			$button_delete = "<a href='index.php?page=workunit&operation=delete&id=".$this->id."' 
+		if ($this->id_workunit > 0) {
+			$button_delete = "<a href='index.php?page=workunits&operation=delete_workunit&id_workunit=".$this->id_workunit."' 
 									data-role='button' data-icon='delete'>".__('Delete')."</a>\n";
 		}
 		$ui->createFooter("<div data-type='horizontal' data-role='controlgroup'>$button_add"."$button_delete</div>");
@@ -381,59 +433,47 @@ class Workunit {
 		if ($this->permission) {
 			$message = "";
 			switch ($this->operation) {
-				case 'insert':
+				case 'insert_workunit':
 					$result = $this->insertWorkUnit($system->getConfig('id_user'),
-													$this->date, $this->duration,
-													$this->description, $this->id_task,
+													$this->date_workunit, $this->duration_workunit,
+													$this->description_workunit, $this->id_task,
 													$this->id_incident);
 					if ($result) {
-						$this->id = $result;
+						$this->id_workunit = $result;
 						$message = "<h2 class='suc'>".__('Successfully created')."</h2>";
 					} else {
-						$message = "<h2 class='error'>".__('An error ocurred while creating the workorder')."</h2>";
+						$message = "<h2 class='error'>".__('An error ocurred while creating the workunit')."</h2>";
 					}
 					break;
-				case 'update':
-					$result = $this->updateWorkUnit($this->id, $system->getConfig('id_user'),
-													$this->date, $this->duration,
-													$this->description, $this->id_task,
+				case 'update_workunit':
+					$result = $this->updateWorkUnit($this->id_workunit, $system->getConfig('id_user'),
+													$this->date_workunit, $this->duration_workunit,
+													$this->description_workunit, $this->id_task,
 													$this->id_incident);
 					if ($result) {
 						$message = "<h2 class='suc'>".__('Successfully updated')."</h2>";
 					} else {
-						$message = "<h2 class='error'>".__('An error ocurred while updating the workorder')."</h2>";
+						$message = "<h2 class='error'>".__('An error ocurred while updating the workunit')."</h2>";
 					}
 					break;
-				case 'delete':
-					$result = $this->deleteWorkUnit($this->id);
+				case 'delete_workunit':
+					$result = $this->deleteWorkUnit($this->id_workunit);
 					if ($result) {
-						$this->id = -1;
+						$this->id_workunit = -1;
 						$message = "<h2 class='suc'>".__('Successfully deleted')."</h2>";
 					} else {
 						$message = "<h2 class='error'>".__('An error ocurred while deleting the workunit')."</h2>";
 					}
 					break;
 				case 'view':
-					$workunit = get_db_row ("tworkorder", "id", $this->id);
-					$id_task = get_db_value ("id_task", "tworkorder_task", "id_workorder", $this->id);
-					$id_incident = get_db_value ("id_incident", "tworkorder_incident", "id_workorder", $this->id);
-					$this->setValues ($this->id, $id_task, $id_incident, $workunit['timestamp'],
-							$workunit['duration'], $workunit['description'], 'view');
 					break;
 				default:
-					if ($this->id > 0) {
-						$workunit = get_db_row ("tworkorder", "id", $this->id);
-						$id_task = get_db_value ("id_task", "tworkorder_task", "id_workorder", $this->id);
-						$id_incident = get_db_value ("id_incident", "tworkorder_incident", "id_workorder", $this->id);
-						$this->setValues ($this->id, $id_task, $id_incident, $workunit['timestamp'],
-								$workunit['duration'], $workunit['description'], 'view');
-					}
 			}
 			$this->showWorkUnit($message);
 		}
 		else {
 			switch ($this->operation) {
-				case 'insert':
+				case 'insert_workunit':
 					$error['title_text'] = __('You can\'t insert this workunit');
 					$error['content_text'] = __('You have done an operation that
 						surpass your permissions. Is possible that you can\'t add a
@@ -442,7 +482,7 @@ class Workunit {
 						to access this page are recorded in security logs of Integria 
 						System Database');
 					break;
-				case 'update':
+				case 'update_workunit':
 					$error['title_text'] = __('You can\'t update this workunit');
 					$error['content_text'] = __('You have done an operation that
 						surpass your permissions. Is possible that you can\'t add a
@@ -451,7 +491,7 @@ class Workunit {
 						to access this page are recorded in security logs of Integria 
 						System Database');
 					break;
-				case 'delete':
+				case 'delete_workunit':
 					$error['title_text'] = __('You can\'t delete this workunit');
 					$error['content_text'] = __('You have done an operation that surpass
 						your permissions. Please contact to system administrator 

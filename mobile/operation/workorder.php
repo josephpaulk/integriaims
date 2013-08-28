@@ -15,7 +15,7 @@
 
 class Workorder {
 	
-	private $id;
+	private $id_workorder;
 	private $title;
 	private $assigned_user;
 	private $priority;
@@ -30,7 +30,7 @@ class Workorder {
 	function __construct () {
 		$system = System::getInstance();
 		
-		$this->id = (int) $system->getRequest('id', -1);
+		$this->id_workorder = (int) $system->getRequest('id_workorder', -1);
 		$this->title = (string) $system->getRequest('title', "");
 		$this->assigned_user = (string) $system->getRequest('assigned_user', $system->getConfig('id_user'));
 		$this->priority = (int) $system->getRequest('priority', 2);
@@ -41,10 +41,10 @@ class Workorder {
 		$this->operation = (string) $system->getRequest('operation', "");
 		
 		// ACL
-		$this->permission = $this->checkPermission ($system->getConfig('id_user'), $this->acl, $this->operation, $this->id);
+		$this->permission = $this->checkPermission ($system->getConfig('id_user'), $this->acl, $this->operation, $this->id_workorder);
 	}
 	
-	public function checkPermission ($id_user, $acl = 'PR', $operation = '', $id = -1) {
+	public function checkPermission ($id_user, $acl = 'PR', $operation = '', $id_workorder = -1) {
 		$system = System::getInstance();
 		
 		$permission = false;
@@ -55,8 +55,8 @@ class Workorder {
 			if ($system->checkACL($acl)) {
 				// With this operations, the WU should have id
 				if ( ($operation == "view" || $operation == "update" || $operation == "delete")
-						&& $id > 0) {
-					$workorder = get_db_row("ttodo", "id", $this->id);
+						&& $id_workorder > 0) {
+					$workorder = get_db_row("ttodo", "id", $this->id_workorder);
 					// The user should be the owner or the creator
 					if ($system->getConfig('id_user') == $workorder['created_by_user']
 							|| $system->getConfig('id_user') == $workorder['assigned_user']) {
@@ -68,19 +68,19 @@ class Workorder {
 			}
 		}
 		if ( ($operation == "view" || $operation == "update" || $operation == "delete")
-				&& $id < 0) {
+				&& $id_workorder < 0) {
 			$permission = false;
 		}
 		
 		return $permission;
 	}
 	
-	public function setId ($id) {
-		$this->id = $id;
+	public function setId ($id_workorder) {
+		$this->id_workorder = $id_workorder;
 	}
 	
-	private function setValues ($id, $title, $assigned_user, $priority, $status, $category, $description, $operation) {
-		$this->id = $id;
+	private function setValues ($id_workorder, $title, $assigned_user, $priority, $status, $category, $description, $operation) {
+		$this->id_workorder = $id_workorder;
 		$this->title = $title;
 		$this->assigned_user = $assigned_user;
 		$this->priority = $priority;
@@ -106,25 +106,25 @@ class Workorder {
 		return false;
 	}
 	
-	public function updateWorkOrder ($id, $assigned_user, $title = "",$priority = 2, $status = 0,$category = 0, $description = "") {
+	public function updateWorkOrder ($id_workorder, $assigned_user, $title = "",$priority = 2, $status = 0,$category = 0, $description = "") {
 										
 		$result = process_sql ("UPDATE ttodo SET id_wo_category = $category, assigned_user = '$assigned_user',
 								priority = $priority, progress = $status, description = '$description',
-								last_update = '".date("Y-m-d")."', name = '$title' WHERE id = $id");
+								last_update = '".date("Y-m-d")."', name = '$title' WHERE id = $id_workorder");
 		
 		if ($result) {
-			$email_notify = get_db_value ("email_notify", "ttodo", "id", $id);
+			$email_notify = get_db_value ("email_notify", "ttodo", "id", $id_workorder);
 			clean_cache_db();
 			if ($email_notify) {
-				mail_workorder ($id, 0);
+				mail_workorder ($id_workorder, 0);
 			}
 			return true;
 		}
 		return false;
 	}
 	
-	public function deleteWorkOrder ($id) {
-		$result = process_sql ("DELETE FROM ttodo WHERE id = $id");
+	public function deleteWorkOrder ($id_workorder) {
+		$result = process_sql ("DELETE FROM ttodo WHERE id = $id_workorder");
 		if ($result) {
 			return true;
 		}
@@ -138,12 +138,12 @@ class Workorder {
 		$ui->createPage();
 		
 		$back_href = "index.php?page=workorders&filter_status=0&filter_owner=".$system->getConfig('id_user');
-		if ($this->id < 0) {
+		if ($this->id_workorder < 0) {
 			$title = __("Workorder");
 		} else {
-			$title = __("Workorder")."&nbsp;#".$this->id;
+			$title = __("Workorder")."&nbsp;#".$this->id_workorder;
 		}
-		$ui->createDefaultHeader(__("Workorder"),
+		$ui->createDefaultHeader($title,
 			$ui->createHeaderButton(
 				array('icon' => 'back',
 					'pos' => 'left',
@@ -166,7 +166,7 @@ class Workorder {
 									</script>");
 			}
 			$options = array (
-				'id' => 'form-wo',
+				'id' => 'form-workorder',
 				'action' => "index.php?page=workorder",
 				'method' => 'POST'
 				);
@@ -196,7 +196,7 @@ class Workorder {
 					$ui->bindMobileAutocomplete("#text-assigned_user", "#ul-autocomplete");
 				// Status
 				$values = array();
-				if (get_db_value("need_external_validation", "ttodo", "id", $this->id)) {
+				if (get_db_value("need_external_validation", "ttodo", "id", $this->id_workorder)) {
 					$values = wo_status_array (0);
 				} else {
 					$values = wo_status_array (1);
@@ -221,11 +221,11 @@ class Workorder {
 					);
 				$ui->formAddSelectBox($options);
 				// Category
-				$wos = get_db_all_rows_sql ("SELECT id, name FROM two_category ORDER BY name");
+				$workorders = get_db_all_rows_sql ("SELECT id, name FROM two_category ORDER BY name");
 				$values = array();
-				if ($wos)
-				foreach ($wos as $wo){
-					$values[$wo[0]] = $wo[1];
+				if ($workorders)
+				foreach ($workorders as $workorder){
+					$values[$workorder[0]] = $workorder[1];
 				}
 				array_unshift($values, __('Any'));
 				$options = array(
@@ -244,7 +244,7 @@ class Workorder {
 						);
 				$ui->formAddHtml($ui->getTextarea($options));
 				// Hidden operation (insert or update+id)
-				if ($this->id < 0) {
+				if ($this->id_workorder < 0) {
 					$options = array(
 						'type' => 'hidden',
 						'name' => 'operation',
@@ -266,8 +266,8 @@ class Workorder {
 					$ui->formAddInput($options);
 					$options = array(
 						'type' => 'hidden',
-						'name' => 'id',
-						'value' => $this->id
+						'name' => 'id_workorder',
+						'value' => $this->id_workorder
 						);
 					$ui->formAddInput($options);
 					// Submit button
@@ -281,16 +281,16 @@ class Workorder {
 		$ui->endContent();
 		// Foooter buttons
 		// Add
-		if ($this->id < 0) {
-			$button_add = "<a onClick=\"$('#form-wo').submit();\" data-role='button' data-icon='plus'>"
+		if ($this->id_workorder < 0) {
+			$button_add = "<a onClick=\"$('#form-workorder').submit();\" data-role='button' data-icon='plus'>"
 							.__('Add')."</a>\n";
 		} else {
-			$button_add = "<a onClick=\"$('#form-wo').submit();\" data-role='button' data-icon='refresh'>"
+			$button_add = "<a onClick=\"$('#form-workorder').submit();\" data-role='button' data-icon='refresh'>"
 							.__('Update')."</a>\n";
 		}
 		// Delete
-		if ($this->id > 0) {
-			$button_delete = "<a href='index.php?page=workorders&operation=delete&id=".$this->id."
+		if ($this->id_workorder > 0) {
+			$button_delete = "<a href='index.php?page=workorders&operation=delete&id_workorder=".$this->id_workorder."
 									&filter_status=0&filter_owner=".$system->getConfig('id_user')."'
 									data-role='button' data-icon='delete'>".__('Delete')."</a>\n";
 		}
@@ -310,14 +310,14 @@ class Workorder {
 													$this->title, $this->priority, $this->status,
 													$this->category, $this->description);
 					if ($result) {
-						$this->id = $result;
+						$this->id_workorder = $result;
 						$message = "<h2 class='suc'>".__('Successfully created')."</h2>";
 					} else {
 						$message = "<h2 class='error'>".__('An error ocurred while creating the workorder')."</h2>";
 					}
 					break;
 				case 'update':
-					$result = $this->updateWorkOrder($this->id, $this->assigned_user, $this->title,
+					$result = $this->updateWorkOrder($this->id_workorder, $this->assigned_user, $this->title,
 													$this->priority, $this->status,$this->category,
 													$this->description);
 					if ($result) {
@@ -327,23 +327,23 @@ class Workorder {
 					}
 					break;
 				case 'delete':
-					$result = $this->deleteWorkOrder($this->id);
+					$result = $this->deleteWorkOrder($this->id_workorder);
 					if ($result) {
-						$this->id = -1;
+						$this->id_workorder = -1;
 						$message = "<h2 class='suc'>".__('Successfully deleted')."</h2>";
 					} else {
 						$message = "<h2 class='error'>".__('An error ocurred while deleting the workorder')."</h2>";
 					}
 					break;
 				case 'view':
-					$workorder = get_db_row ("ttodo", "id", $this->id);
-					$this->setValues ($this->id, $workorder['name'], $workorder['assigned_user'], $workorder['priority'],
+					$workorder = get_db_row ("ttodo", "id", $this->id_workorder);
+					$this->setValues ($this->id_workorder, $workorder['name'], $workorder['assigned_user'], $workorder['priority'],
 							$workorder['progress'], $workorder['id_wo_category'], $workorder['description'], 'view');
 					break;
 				default:
-					if ($this->id > 0) {
-						$workorder = get_db_row ("ttodo", "id", $this->id);
-						$this->setValues ($this->id, $workorder['name'], $workorder['assigned_user'], $workorder['priority'],
+					if ($this->id_workorder > 0) {
+						$workorder = get_db_row ("ttodo", "id", $this->id_workorder);
+						$this->setValues ($this->id_workorder, $workorder['name'], $workorder['assigned_user'], $workorder['priority'],
 								$workorder['progress'], $workorder['id_wo_category'], $workorder['description'], 'view');
 					}
 			}

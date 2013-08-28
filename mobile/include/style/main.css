@@ -96,8 +96,8 @@ ul.ui-listview li.ui-btn div.ui-btn-inner div.ui-btn-text {
 	padding-left: 5px;
 }
 
-ul.ui-itemlistview {
-	padding-top: 30px;
+.collapsible-filter {
+	padding-bottom: 30px;
 }
 
 /*INIT---------Fix the tons of air between the rows in small table----*/

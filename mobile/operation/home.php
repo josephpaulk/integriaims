@@ -25,26 +25,25 @@ class Home {
 		$ui = Ui::getInstance();
 		
 		$ui->createPage();
+		
+		// Header
 		$logo = "<img src='../images/integria_logo_header.png' style='border:0px;' alt='Home' >";
-		$ui->createDefaultHeader("<div style='text-align:center;'>$logo</div>", false, "logo");
+		$title = "<div style='text-align:center;'>$logo</div>";
+		$left_button = $ui->createHeaderButton(
+				array('icon' => 'back',
+					'pos' => 'left',
+					'text' => __('Exit'),
+					'href' => 'index.php?action=logout'
+					)
+				);
+		$ui->createHeader($title, $left_button, null, "logo");
 		$ui->showFooter();
 		$ui->beginContent();
-			
-			// Global search
-			//~ $ui->beginForm("index.php?page=search");
-			//~ $options = array(
-				//~ 'name' => 'free_search',
-				//~ 'value' => $this->global_search,
-				//~ 'placeholder' => __('Search')
-				//~ );
-			//~ $ui->formAddInputSearch($options);
-			//~ $ui->endForm();
-			
 			//List of buttons
-			// Workunit
+			// Workunits
 			$options = array('icon' => 'star',
 					'pos' => 'right',
-					'text' => __('Add workunit'),
+					'text' => __('Workunits'),
 					'href' => 'index.php?page=workunit');
 			$ui->contentAddHtml($ui->createButton($options));
 			// Workorders

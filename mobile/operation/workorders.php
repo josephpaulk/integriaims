@@ -15,7 +15,7 @@
 
 class Workorders {
 	
-	private $id;
+	private $id_workorder;
 	private $offset;
 	private $operation;
 	private $filter_search;
@@ -29,7 +29,7 @@ class Workorders {
 	function __construct () {
 		$system = System::getInstance();
 		
-		$this->id = (int) $system->getRequest('id', -1);
+		$this->id_workorder = (int) $system->getRequest('id_workorder', -1);
 		$this->offset = (int) $system->getRequest('offset', 1);
 		$this->operation = (string) $system->getRequest('operation', '');
 		$this->filter_search = (string) $system->getRequest('filter_search', '');
@@ -62,7 +62,7 @@ class Workorders {
 			}
 		}
 		// With this operations, the WU should have id
-		if ($operation == "delete" && $id < 0) {
+		if ($operation == "delete" && $id_workorder < 0) {
 			$permission = false;
 		}
 		
@@ -131,7 +131,7 @@ class Workorders {
 		while ( $workorder = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
 			$new = false;
 			$html .= "<li>";
-			$html .= "<a href='index.php?page=workorder&operation=view&id=".$workorder['id']."' class='ui-link-inherit'>";
+			$html .= "<a href='index.php?page=workorder&operation=view&id_workorder=".$workorder['id']."' class='ui-link-inherit'>";
 				//$html .= $ui->getPriorityFlagImage($workorder['priority']);
 				$html .= print_priority_flag_image ($workorder['priority'], true, "../", "priority-list ui-li-icon");
 				$html .= "<h3 class='ui-li-heading'>".$workorder['name']."</h3>";
@@ -141,7 +141,7 @@ class Workorders {
 			
 			$options = array(
 				'popup_id' => 'delete_popup_'.$workorder['id'],
-				'delete_href' => 'index.php?page=workorders&operation=delete&id='.$workorder['id'].'
+				'delete_href' => 'index.php?page=workorders&operation=delete&id_workorder='.$workorder['id'].'
 									&filter_status=0&filter_owner='.$system->getConfig('id_user')
 				);
 			$html .= $ui->getDeletePopupHTML($options);
@@ -247,7 +247,7 @@ class Workorders {
 					$ui->formAddSubmitButton($options);
 				$form_html = $ui->getEndForm();
 			$ui->contentCollapsibleAddItem($form_html);
-			$ui->contentEndCollapsible();
+			$ui->contentEndCollapsible("collapsible-filter");
 			// Workorder listing
 			if ($this->getCountWorkorders() > 0) { 
 				$html = $this->getWorkOrdersList();
@@ -274,37 +274,11 @@ class Workorders {
 		if ($this->filter_status) {
 			$filter .= "&filter_status=".$this->filter_status;
 		}
-		if ($this->offset <= 1) {
-			$button_first = "<a class='ui-disabled' data-role='button'
-							data-icon='back' data-theme='b' data-iconpos='notext'>".__('First')."</a>\n";
-			$button_back = "<a class='ui-disabled' data-role='button'
-							data-icon='arrow-l' data-theme='b' data-iconpos='notext'>".__('Back')."</a>\n";
-		} else {
-			$button_first = "<a href='index.php?page=workorders$filter&offset=1' data-role='button'
-							data-icon='back' data-theme='b' data-iconpos='notext'>".__('First')."</a>\n";
-			$button_back = "<a href='index.php?page=workorders$filter&offset=".($this->offset -1)."' data-role='button'
-							data-icon='arrow-l' data-theme='b' data-iconpos='notext'>".__('Back')."</a>\n";
-		}
-		if ($this->offset >= $this->getNumPages()) {
-			$button_last = "<a class='ui-disabled' data-role='button'
-							data-icon='forward' data-theme='b' data-iconpos='notext'>".__('Last')."</a>\n";
-			$button_forward = "<a class='ui-disabled' data-role='button'
-								data-icon='arrow-r' data-theme='b' data-iconpos='notext'>".__('Forward')."</a>\n";
-		} else {
-			$button_last = "<a href='index.php?page=workorders$filter&offset=".$this->getNumPages()."' data-role='button'
-							data-icon='forward' data-theme='b' data-iconpos='notext'>".__('Last')."</a>\n";
-			$button_forward = "<a href='index.php?page=workorders$filter&offset=".($this->offset +1)."' data-role='button'
-								data-icon='arrow-r' data-theme='b' data-iconpos='notext'>".__('Forward')."</a>\n";
-		}
-		$ui->createFooter("$button_new<div  style='float:right; padding-right:25px;' data-type='horizontal' data-role='controlgroup'>
-								$button_first
-								$button_back
-								$button_forward
-								$button_last
-							</div>");
+		// Pagination
+		$paginationCG = $ui->getPaginationControgroup("workorders$filter", $this->offset, $this->getNumPages());
+		$ui->createFooter($button_new.$paginationCG);
 		$ui->showFooter();
 		$ui->showPage();
-		
 	}
 	
 	public function show () {
@@ -314,10 +288,10 @@ class Workorders {
 			switch ($this->operation) {
 				case 'delete':
 					$workorder = new Workorder();
-					$result = $workorder->deleteWorkOrder($this->id);
+					$result = $workorder->deleteWorkOrder($this->id_workorder);
 					unset($workorder);
 					if ($result) {
-						$this->id = -1;
+						$this->id_workorder = -1;
 						$message = "<h2 class='suc'>".__('Successfully deleted')."</h2>";
 					} else {
 						$message = "<h2 class='error'>".__('An error ocurred while deleting the workorder')."</h2>";

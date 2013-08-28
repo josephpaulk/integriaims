@@ -29,6 +29,7 @@ require_once("include/user.class.php");
 
 // /operation
 require_once('operation/home.php');
+require_once('operation/workunits.php');
 require_once('operation/workunit.php');
 require_once('operation/workorders.php');
 require_once('operation/workorder.php');
@@ -65,6 +66,10 @@ switch ($action) {
 		switch ($page) {
 			case 'user':
 				$user->ajax($method);
+				break;
+			case 'workunits':
+				$workunits = new Workunits();
+				$workunits->ajax($method);
 				break;
 			case 'workunit':
 				$workunit = new Workunit();
@@ -118,6 +123,10 @@ switch ($action) {
 			case 'home':
 				$home = new Home();
 				$home->show();
+				break;
+			case 'workunits':
+				$workunits = new Workunits();
+				$workunits->show();
 				break;
 			case 'workunit':
 				$workunit = new Workunit();

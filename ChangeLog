@@ -1,3 +1,48 @@
+2013-08-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* mobile/index.php: Added calls to the workunits class.
+	
+	* mobile/include/ui.class.php: Improved the functions
+	"createButton" and "contentEndCollapsible". Added the
+	functions "addPopup", "addDeletePopup",
+	"getPaginationControgroup" and "addNavBar".
+	
+	* mobile/include/style/main.css: Fixed some styles.
+	
+	* mobile/operation/home.php: Some code improvements.
+	
+	* mobile/operation/incident.php: Added the functions
+	"getIncidentSimpleForm", "getFilesQuery", "getFilesList"
+	and "getFileForm". Changed the header. Improved the
+	function "incidentContent", which now is called
+	"getIncidentDetail". A lot of code improvements.
+	
+	* mobile/operation/incidents.php: Added file. Added the
+	functions "getIncidentsQuery", "getCountIncidents",
+	"getNumPages", "getIncidentsList", "showIncidents",
+	"show" and "showNoPermission".
+	
+	* mobile/operation/workorder.php
+	  mobile/operation/workorders.php: Code improvements.
+	
+	* mobile/operation/workunit.php: Added the functions
+	"getPermission", "getWorkUnitForm". A lot of code
+	improvements.
+	
+	* mobile/operation/workunits.php: Added file. Added
+	the functions "getPermission", "checkPermission",
+	"getWorkUnitsQuery", "getCountWorkUnits", "getNumPages",
+	"getWorkUnitsList", "showWorkUnits", "show" and
+	"showNoPermission".
+	
+	* mobile/images/pixel_blue,
+	  mobile/images/pixel_fucsia,
+	  mobile/images/pixel_gray,
+	  mobile/images/pixel_green,
+	  mobile/images/pixel_orange,
+	  mobile/images/pixel_red,
+	  mobile/images/pixel_yellow: Added files.
+	
 2013-08-27  SAncho Lerena <slerena@artica.es>
 
 	* include/functions_form.php: Fixed a typo.
