@@ -102,7 +102,7 @@ class Workunits {
 		return $num_pages;
 	}
 	
-	public function getWorkUnitsList ($href = "", $delete_button = true, $delete_href = "") {
+	public function getWorkUnitsList ($href = "", $delete_button = true, $delete_href = "", $ajax = false) {
 		$system = System::getInstance();
 		$ui = Ui::getInstance();
 		
@@ -110,7 +110,9 @@ class Workunits {
 			$href = "index.php?page=workunit";
 		}
 		
-		$html = "<ul class='ui-itemlistview' data-role='listview' data-count-theme='e'>";
+		if (! $ajax) {
+			$html = "<ul id='listview' class='ui-itemlistview' data-role='listview' data-count-theme='e'>";
+		}
 		if ($this->getCountWorkUnits() > 0) {
 			$sql = $this->getWorkUnitsQuery();
 			$new = true;
@@ -142,9 +144,54 @@ class Workunits {
 			$html .= "<h3 class='error'>".__('There is no workunits')."</h3>";
 			$html .= "</li>";
 		}
-		$html .= "</ul>";
+		if (! $ajax) {
+			$html .= "</ul>";
+		}
 		
 		return $html;
+	}
+	
+	public function addWorkUnitsLoader($href = "") {
+		$ui = Ui::getInstance();
+		
+		$script = "<script type=\"text/javascript\">
+						var load_more_rows = 1;
+						var page = 2;
+						$(document).ready(function() {
+							$(window).bind(\"scroll\", function () {
+								
+								if (load_more_rows) {
+									if ($(this).scrollTop() + $(this).height()
+										>= ($(document).height() - 100)) {
+										
+										load_more_rows = 0;
+										
+										postvars = {};
+										postvars[\"action\"] = \"ajax\";
+										postvars[\"page\"] = \"workunits\";
+										postvars[\"method\"] = \"load_more_workunits\";
+										postvars[\"offset\"] = page;
+										postvars[\"href\"] = \"$href\";
+										page++;
+										
+										$.post(\"index.php\",
+											postvars,
+											function (data) {
+												if (data.length < 10) {
+													$(\"#loading_rows\").hide();
+												} else {
+													$(\"#listview\").append(data).listview('refresh');
+													load_more_rows = 1;
+												}
+											},
+											\"html\");
+									}
+								}
+							});
+						});
+					</script>";
+		
+		$ui->contentAddHtml($script);
 	}
 	
 	public function showWorkUnits ($message = "") {
@@ -178,16 +225,24 @@ class Workunits {
 									</script>");
 			}
 			// Workunits listing
-			$html = $this->getWorkUnitsList();
+			$html = $this->getWorkUnitsList("", false);
 			$ui->contentAddHtml($html);
+			if ($this->getCountWorkUnits() > $system->getPageSize()) {
+				$ui->contentAddHtml('<div style="text-align:center;" id="loading_rows">
+										<img src="../images/spinner.gif">&nbsp;'
+											. __('Loading...') .
+										'</img>
+									</div>');
+				$this->addWorkUnitsLoader();
+			}
 		$ui->endContent();
 		// Foooter buttons
 		// New
 		$button_new = "<a href='index.php?page=workunit' data-role='button'
 							data-icon='plus'>".__('New')."</a>\n";
 		// Pagination
-		$paginationCG = $ui->getPaginationControgroup("workunits", $this->offset, $this->getNumPages());
-		$ui->createFooter($button_new.$paginationCG);
+		//$paginationCG = $ui->getPaginationControgroup("workunits", $this->offset, $this->getNumPages());
+		$ui->createFooter($button_new);
 		$ui->showFooter();
 		$ui->showPage();
 	}
@@ -236,8 +291,24 @@ class Workunits {
 		$home->show($error);
 	}
 	
-	public function ajax ($parameter2 = false) {
-		// Fill me in the future
+	public function ajax ($method = false) {
+		$system = System::getInstance();
+		
+		if (!$this->permission) {
+			return;
+		}
+		else {
+			switch ($method) {
+				case 'load_more_workunits':
+					if ($this->offset == 1 || $this->offset > $this->getNumPages()) {
+						return;
+					} else {
+						$href = $system->getRequest('href', '');
+						echo $this->getWorkUnitsList($href, false, "", true);
+					}
+					break;
+			}
+		}
 	}
 	
 }

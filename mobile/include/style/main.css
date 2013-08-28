@@ -100,6 +100,11 @@ ul.ui-listview li.ui-btn div.ui-btn-inner div.ui-btn-text {
 	padding-bottom: 30px;
 }
 
+#loading_rows {
+	padding-top: 40px;
+	padding-bottom: 10px;
+}
+
 /*INIT---------Fix the tons of air between the rows in small table----*/
 .head_vertical {
 	margin-top: 0px !important;

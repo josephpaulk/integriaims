@@ -598,6 +598,15 @@ class Incident {
 					// Workunits listing
 					$html = $workunits->getWorkUnitsList($href, $delete_button, $delete_href);
 					$ui->contentAddHtml($html);
+					if ($workunits->getCountWorkUnits() > $system->getPageSize()) {
+						$ui->contentAddHtml('<div style="text-align:center;" id="loading_rows">
+												<img src="../images/spinner.gif">&nbsp;'
+													. __('Loading...') .
+												'</img>
+											</div>');
+						
+						$workunits->addWorkUnitsLoader($href);
+					}
 					unset($workunits);
 					
 					// Header options

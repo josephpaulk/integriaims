@@ -121,32 +121,42 @@ class Workorders {
 		return $num_pages;
 	}
 	
-	public function getWorkOrdersList () {
+	public function getWorkOrdersList ($href = "", $delete_button = true, $delete_href = "", $ajax = false) {
 		$system = System::getInstance();
 		$ui = Ui::getInstance();
 		
-		$html = "<ul class='ui-itemlistview' data-role='listview'>";
+		if ($href == "") {
+			$href = "index.php?page=workorder&operation=view";
+		}
+		
+		if (! $ajax) {
+			$html = "<ul id='listview' class='ui-itemlistview' data-role='listview'>";
+		}
 		if ($this->getCountWorkorders() > 0) {
 			$sql = $this->getWorkOrdersQuery();
 			$new = true;
 			while ( $workorder = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
 				$new = false;
 				$html .= "<li>";
-				$html .= "<a href='index.php?page=workorder&operation=view&id_workorder=".$workorder['id']."' class='ui-link-inherit'>";
+				$html .= "<a href='$href&id_workorder=".$workorder['id']."' class='ui-link-inherit'>";
 					//$html .= $ui->getPriorityFlagImage($workorder['priority']);
 					$html .= print_priority_flag_image ($workorder['priority'], true, "../", "priority-list ui-li-icon");
 					$html .= "<h3 class='ui-li-heading'>".$workorder['name']."</h3>";
-					$html .= "<p class='ui-li-desc'>".__('Owner').": ".$workorder['created_by_user'];
-					$html .= "&nbsp;&nbsp;-&nbsp;&nbsp;".__('Creator').": ".$workorder['assigned_user']."</p>";
+					$html .= "<p class='ui-li-desc'>".__('Owner').": ".$workorder['assigned_user'];
+					$html .= "&nbsp;&nbsp;-&nbsp;&nbsp;".__('Creator').": ".$workorder['created_by_user']."</p>";
 				$html .= "</a>";
 				
-				$options = array(
-					'popup_id' => 'delete_popup_'.$workorder['id'],
-					'delete_href' => 'index.php?page=workorders&operation=delete&id_workorder='.$workorder['id'].'
-										&filter_status=0&filter_owner='.$system->getConfig('id_user')
-					);
-				$html .= $ui->getDeletePopupHTML($options);
-				$html .= "<a data-icon=\"delete\" data-rel=\"popup\" href=\"#delete_popup_".$workorder['id']."\"></a>";
+				if ($delete_button) {
+					if ($delete_href == "") {
+						$delete_href = "index.php?page=workorders&operation=delete&filter_status=0&filter_owner=".$system->getConfig('id_user');
+					}
+					$options = array(
+						'popup_id' => 'delete_popup_'.$workorder['id'],
+						'delete_href' => "$delete_href&id_workorder=".$workorder['id']
+						);
+					$html .= $ui->getDeletePopupHTML($options);
+					$html .= "<a data-icon=\"delete\" data-rel=\"popup\" href=\"#delete_popup_".$workorder['id']."\"></a>";
+				}
 				$html .= "</li>";
 			}
 		} else {
@@ -154,9 +164,58 @@ class Workorders {
 			$html .= "<h3 class='error'>".__('There is no workorders')."</h3>";
 			$html .= "</li>";
 		}
-		$html .= "</ul>";
+		if (! $ajax) {
+			$html .= "</ul>";
+		}
 		
 		return $html;
+	}
+	
+	public function addWorkOrdersLoader ($href = "") {
+		$ui = Ui::getInstance();
+		
+		$script = "<script type=\"text/javascript\">
+						var load_more_rows = 1;
+						var page = 2;
+						$(document).ready(function() {
+							$(window).bind(\"scroll\", function () {
+								
+								if (load_more_rows) {
+									if ($(this).scrollTop() + $(this).height()
+										>= ($(document).height() - 100)) {
+										
+										load_more_rows = 0;
+										
+										postvars = {};
+										postvars[\"action\"] = \"ajax\";
+										postvars[\"page\"] = \"workorders\";
+										postvars[\"method\"] = \"load_more_workorders\";
+										postvars[\"offset\"] = page;
+										postvars[\"href\"] = \"$href\";
+										postvars[\"filter_search\"] = \"".$this->filter_search."\";
+										postvars[\"filter_owner\"] = \"".$this->filter_owner."\";
+										postvars[\"filter_creator\"] = \"".$this->filter_creator."\";
+										postvars[\"filter_status\"] = ".$this->filter_status.";
+										page++;
+										
+										$.post(\"index.php\",
+											postvars,
+											function (data) {
+												if (data.length < 1) {
+													$(\"#loading_rows\").hide();
+												} else {
+													$(\"#listview\").append(data).listview('refresh');
+													load_more_rows = 1;
+												}
+											},
+											\"html\");
+									}
+								}
+							});
+						});
+					</script>";
+		
+		$ui->contentAddHtml($script);
 	}
 	
 	private function showWorkOrders ($message = "") {
@@ -191,7 +250,8 @@ class Workorders {
 			$ui->contentBeginCollapsible(__('Filter'));
 				$options = array(
 					'action' => "index.php?page=workorders",
-					'method' => 'POST'
+					'method' => 'POST',
+					'data-ajax' => 'false'
 					);
 				$ui->beginForm($options);
 					// Filter search
@@ -255,30 +315,37 @@ class Workorders {
 			$ui->contentCollapsibleAddItem($form_html);
 			$ui->contentEndCollapsible("collapsible-filter");
 			// Workorder listing
-			$html = $this->getWorkOrdersList();
+			$html = $this->getWorkOrdersList("", false);
 			$ui->contentAddHtml($html);
+			if ($this->getCountWorkorders() > $system->getPageSize()) {
+				$ui->contentAddHtml('<div style="text-align:center;" id="loading_rows">
+										<img src="../images/spinner.gif">&nbsp;'
+											. __('Loading...') .
+										'</img>
+									</div>');
+				$this->addWorkOrdersLoader();
+			}
 		$ui->endContent();
 		// Foooter buttons
 		// New
 		$button_new = "<a href='index.php?page=workorder' data-role='button'
 							data-icon='plus'>".__('New')."</a>\n";
 		// Pagination
-		$filter = "";
-		if ($this->filter_search != '') {
-			$filter .= "&filter_search=".$this->filter_search;
-		}
-		if ($this->filter_owner != '') {
-			$filter .= "&filter_owner=".$this->filter_owner;
-		}
-		if  ($this->filter_creator != '') {
-			$filter .= "&filter_creator=".$this->filter_creator;
-		}
-		if ($this->filter_status) {
-			$filter .= "&filter_status=".$this->filter_status;
-		}
-		// Pagination
-		$paginationCG = $ui->getPaginationControgroup("workorders$filter", $this->offset, $this->getNumPages());
-		$ui->createFooter($button_new.$paginationCG);
+		//~ $filter = "";
+		//~ if ($this->filter_search != '') {
+			//~ $filter .= "&filter_search=".$this->filter_search;
+		//~ }
+		//~ if ($this->filter_owner != '') {
+			//~ $filter .= "&filter_owner=".$this->filter_owner;
+		//~ }
+		//~ if  ($this->filter_creator != '') {
+			//~ $filter .= "&filter_creator=".$this->filter_creator;
+		//~ }
+		//~ if ($this->filter_status) {
+			//~ $filter .= "&filter_status=".$this->filter_status;
+		//~ }
+		//~ $paginationCG = $ui->getPaginationControgroup("workorders$filter", $this->offset, $this->getNumPages());
+		$ui->createFooter($button_new);
 		$ui->showFooter();
 		$ui->showPage();
 	}
@@ -322,8 +389,24 @@ class Workorders {
 		$home->show($error);
 	}
 	
-	public function ajax ($parameter2 = false) {
-		// Fill me in the future
+	public function ajax ($method = false) {
+		$system = System::getInstance();
+		
+		if (!$this->permission) {
+			return;
+		}
+		else {
+			switch ($method) {
+				case 'load_more_workorders':
+					if ($this->offset == 1 || $this->offset > $this->getNumPages()) {
+						return;
+					} else {
+						$href = $system->getRequest('href', '');
+						echo $this->getWorkOrdersList($href, false, "", true);
+					}
+					break;
+			}
+		}
 	}
 	
 }

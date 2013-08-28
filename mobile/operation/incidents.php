@@ -175,7 +175,8 @@ class Incidents {
 			$ui->contentBeginCollapsible(__('Filter'));
 				$options = array(
 					'action' => "index.php?page=incidents",
-					'method' => 'POST'
+					'method' => 'POST',
+					'data-ajax' => 'false'
 					);
 				$ui->beginForm($options);
 					// Filter search
@@ -187,10 +188,12 @@ class Incidents {
 					$ui->formAddInputSearch($options);
 					// Filter status
 					$values = array();
-					$values[-1] = __('Any');
-					$values[0] = __('Pending');
-					$values[1] = __('Finished');
-					/////////////////////////////////////////// Ampliar
+					$values[0] = __('Any');
+					$status_table = process_sql ("select * from tincident_status");
+					foreach ($status_table as $status) {
+						$values[$status['id']] = __($status['name']);
+					} 
+					
 					$options = array(
 						'name' => 'filter_status',
 						'title' => __('Status'),

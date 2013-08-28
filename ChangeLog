@@ -1,3 +1,25 @@
+2013-08-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* mobile/include/style/main.css: Added style to the
+	listview load message.
+	
+	* mobile/operation/incident.php: Now the workunits
+	list of an incident loads more rows via ajax.
+	
+	* mobile/operation/incidents.php: Improved the status
+	filter.
+	
+	* mobile/operation/workorders.php: Added the function
+	"addWorkOrdersLoader". Added code to the function "ajax"
+	to return workorders rows. Fixed a bug in the filter 
+	form. Commented some code. Now the workorders list loads
+	more rows via ajax.
+	
+	* mobile/operation/workunits.php: Added the function
+	"addWorkUnitsLoader". Added code to the function "ajax"
+	to return workunits rows. Commented some code. Now the
+	workunits list loads more rows via ajax.
+	
 2013-08-28 Dario Rodriguez <dario@artica.es>
 
 	* include/functions_inventories.php: Fixed a bug
