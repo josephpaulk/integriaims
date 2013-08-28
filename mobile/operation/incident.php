@@ -142,10 +142,6 @@ class Incident {
 		}
 	}
 	
-	public function updateIncident () {
-		
-	}
-	
 	public function deleteIncident ($id_incident) {
 		
 		$error = false;

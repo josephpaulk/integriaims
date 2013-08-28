@@ -1,5 +1,10 @@
 2013-08-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* mobile/operation/workunit.php: Fixed a bug on
+	the date of the workunit form.
+
+2013-08-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* mobile/include/style/main.css: Added style to the
 	listview load message.
 	

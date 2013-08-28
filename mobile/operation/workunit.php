@@ -237,8 +237,9 @@ class Workunit {
 				if ($id_incident == false) {
 					$id_incident = -1;
 				}
-				$this->setValues ($workunit['id'], $id_task, $id_incident, date ("Y-m-d", $workunit['timestamp']),
-						$workunit['duration'], $workunit['description'], 'view');
+				$date = strtotime($workunit['timestamp']);
+				$this->setValues ($workunit['id'], $id_task, $id_incident, date ("Y-m-d", $date),
+									$workunit['duration'], $workunit['description'], 'view');
 			}
 		}
 		
