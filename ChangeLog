@@ -1,3 +1,8 @@
+2013-08-28  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_inventories.php: Functions moved
+	to enterprise again
+
 2013-08-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* mobile/operation/incident.php: Fixed the function

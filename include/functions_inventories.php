@@ -16,6 +16,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
 
+enterprise_include("include/functions_inventory.php");
 
 function get_inventories ($only_names = true, $exclude_id = false) {
 	if ($exclude_id) {
@@ -1520,60 +1521,5 @@ function print_inventory_tabs($selected_tab, $id, $inventory_name) {
 	echo '</ul>';
 	
 	echo '<div class="under_tabs_info">' . sprintf(__('Inventory object #%s: %s'), $id, $inventory_name) . '</div>';
-}
-
-function inventory_get_companies ($id_inventory, $only_names = true) {
-
-        $sql = sprintf ("SELECT tcompany.* FROM tcompany, tinventory_acl
-                        WHERE tcompany.id = tinventory_acl.id_reference
-                        AND tinventory_acl.type = 'company'
-                        AND tinventory_acl.id_inventory = %d", $id_inventory);
-
-
-        $all_companies = get_db_all_rows_sql ($sql);
-        if ($all_companies == false)
-                return array ();
-
-        global $config;
-        $companies = array ();
-        foreach ($all_companies as $company) {
-                array_push ($companies, $company);
-        }
-
-        if ($only_names) {
-                $result = array ();
-                foreach ($companies as $company) {
-                        $result[$company['id']] = $company['name'];
-                }
-                return $result;
-        }
-        return $companies;
-}
-
-function inventory_get_users ($id_inventory, $only_names = true) {
-
-        $sql = sprintf ("SELECT tusuario.* FROM tusuario, tinventory_acl
-                        WHERE tusuario.id_usuario = tinventory_acl.id_reference
-                        AND tinventory_acl.type = 'user'
-                        AND tinventory_acl.id_inventory = %d", $id_inventory);
-
-        $all_users = get_db_all_rows_sql ($sql);
-        if ($all_users == false)
-                return array ();
-
-        global $config;
-        $users = array ();
-        foreach ($all_users as $user) {
-                array_push ($users, $user);
-        }
-
-        if ($only_names) {
-                $result = array ();
-                foreach ($users as $user) {
-                        $result[$user['id_usuario']] = $user['nombre_real'];
-                }
-                return $result;
-        }
-        return $users;
 }
 ?>
