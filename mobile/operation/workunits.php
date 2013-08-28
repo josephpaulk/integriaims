@@ -16,11 +16,7 @@
 class Workunits {
 	
 	private $offset;
-	
 	private $id_workunit;
-	private $id_task;
-	private $id_incident;
-	
 	private $operation;
 	
 	private $acl = 'PR';
@@ -30,62 +26,32 @@ class Workunits {
 		$system = System::getInstance();
 		
 		$this->offset = (int) $system->getRequest('offset', 1);
-		
 		$this->id_workunit = (int) $system->getRequest('id_workunit', -1);
-		$this->id_task = $system->getRequest('id_task', false);
-		$this->id_incident = (int) $system->getRequest('id_incident', -1);
-		
 		$this->operation = (string) $system->getRequest('operation', "");
 		
 		// ACL
 		$this->permission = $this->checkPermission($system->getConfig('id_user'), $this->acl,
-											$this->operation, $this->id_workunit, $this->id_task,
-											$this->id_incident);
-		//$this->permission = false;
+											$this->operation, $this->id_workunit);
 	}
 	
 	public function getPermission () {
 		return $this->permission;
 	}
 	
-	public function checkPermission ($id_user, $acl = 'PR', $operation = '', $id_workunit = -1, $id_task = -1, $id_incident = -1) {
+	public function checkPermission ($id_user, $acl = 'PR', $operation = '', $id_workunit = -1) {
 		$system = System::getInstance();
 		
 		$permission = false;
 		if (dame_admin($id_user)) {
 			$permission = true;
-			
 		} else {
 			// Section access
 			if ($system->checkACL($acl)) {
-				// workunit for task
-				if ($id_task !== false && $id_task > 0) {
-					if ( include_once ($system->getConfig('homedir')."/include/functions_projects.php") ) {
-						$task_access = get_project_access ($id_user, 0, $id_task, false, true);
-						// Task access
-						if ($task_access["write"]) {
-							// If the workunit exists, should belong to the user
-							if ($operation != "" && $operation != "insert") {
-								$user_workunit = get_db_value("id_user", "tworkunit", "id", $id_workunit);
-								if ($user_workunit == $id_user) {
-									$permission = true;
-								}
-							} else {
-								$permission = true;
-							}
-						}
-					}
-				// workunit for incident
-				} elseif ($id_incident > 0) {
-					// Incident access
-					if ($system->checkACL('IW') || $system->checkACL('IM')) {
-						// If the workunit exists, should belong to the user
-						if ($operation != "" && $operation != "insert") {
-							$user_workunit = get_db_value("id_user", "tworkunit", "id", $id_workunit);
-							if ($user_workunit == $id_user) {
-								$permission = true;
-							}
-						} else {
+				// If the workunit exists, should belong to the user
+				if ($operation == "delete_workunit") {
+					if ($id_workunit > 0) {
+						$user_workunit = get_db_value("id_user", "tworkunit", "id", $id_workunit);
+						if ($user_workunit == $id_user) {
 							$permission = true;
 						}
 					}
@@ -94,11 +60,6 @@ class Workunits {
 				}
 			}
 		}
-		// With this operations, the workunit should have id
-		if ( ($operation == "view" || $operation == "update" || $operation == "delete_workunit")
-				&& $id_workunit < 0) {
-			$permission = false;
-		}
 		
 		return $permission;
 	}
@@ -106,22 +67,15 @@ class Workunits {
 	private function getWorkUnitsQuery ($columns = "*", $order_by = "timestamp DESC, id", $limit = true) {
 		$system = System::getInstance();
 		
-		if ($this->id_task !== false) {
-			$filter .= " AND id = ANY(SELECT id_workunit FROM tworkunit_task WHERE id_task = ".$this->id_task.")";
-		} elseif ($this->id_incident > 0) {
-			$filter .= " AND id = ANY(SELECT id_workunit FROM tworkunit_incident WHERE id_incident = ".$this->id_incident.")";
-		}
-		
 		if (dame_admin($system->getConfig('id_user'))) {
 			$sql = "SELECT $columns
 					FROM tworkunit
 					WHERE 1=1
-					$filter";
+						$filter";
 		} else {
 			$sql = "SELECT $columns
 					FROM tworkunit
-					WHERE (assigned_user = '".$system->getConfig('id_user')."'
-						OR created_by_user = '".$system->getConfig('id_user')."')
+					WHERE id_user = '".$system->getConfig('id_user')."'
 						$filter";
 		}
 		if ($order_by != "") {
@@ -157,29 +111,35 @@ class Workunits {
 		}
 		
 		$html = "<ul class='ui-itemlistview' data-role='listview' data-count-theme='e'>";
-		$sql = $this->getWorkUnitsQuery();
-		$new = true;
-		while ( $workunit = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
-			$new = false;
-			$html .= "<li>";
-			$html .= "<a href='$href&id_workunit=".$workunit['id']."' class='ui-link-inherit'>";
-				$html .= "<h3 class='ui-li-heading'>".$workunit['timestamp']."</h3>";
-				$html .= "<p class='ui-li-desc'><strong>".$workunit['id_user']."</strong></p>";
-				$html .= "<p class='ui-li-desc'>".$workunit['description']."</p>";
-				$html .= "<span class=\"ui-li-count\">".$workunit['duration']."&nbsp;".__('hours')."</span>";
-			$html .= "</a>";
-			
-			if ($delete_button) {
-				if ($delete_href == "") {
-					$delete_href = 'index.php?page=workunits&operation=delete_workunit';
+		if ($this->getCountWorkUnits() > 0) {
+			$sql = $this->getWorkUnitsQuery();
+			$new = true;
+			while ( $workunit = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
+				$new = false;
+				$html .= "<li>";
+				$html .= "<a href='$href&id_workunit=".$workunit['id']."' class='ui-link-inherit'>";
+					$html .= "<h3 class='ui-li-heading'>".$workunit['timestamp']."</h3>";
+					$html .= "<p class='ui-li-desc'><strong>".$workunit['id_user']."</strong></p>";
+					$html .= "<p class='ui-li-desc'>".$workunit['description']."</p>";
+					$html .= "<span class=\"ui-li-count\">".$workunit['duration']."&nbsp;".__('hours')."</span>";
+				$html .= "</a>";
+				
+				if ($delete_button) {
+					if ($delete_href == "") {
+						$delete_href = 'index.php?page=workunits&operation=delete_workunit';
+					}
+					$options = array(
+						'popup_id' => 'delete_popup_'.$workunit['id'],
+						'delete_href' => $delete_href. '&id_workunit='.$workunit['id']
+						);
+					$html .= $ui->getDeletePopupHTML($options);
+					$html .= "<a data-icon=\"delete\" data-rel=\"popup\" href=\"#delete_popup_".$workunit['id']."\"></a>";
 				}
-				$options = array(
-					'popup_id' => 'delete_popup_'.$workunit['id'],
-					'delete_href' => $delete_href. '&id_workunit='.$workunit['id']
-					);
-				$html .= $ui->getDeletePopupHTML($options);
-				$html .= "<a data-icon=\"delete\" data-rel=\"popup\" href=\"#delete_popup_".$workunit['id']."\"></a>";
+				$html .= "</li>";
 			}
+		} else {
+			$html .= "<li>";
+			$html .= "<h3 class='error'>".__('There is no workunits')."</h3>";
 			$html .= "</li>";
 		}
 		$html .= "</ul>";
@@ -218,11 +178,7 @@ class Workunits {
 									</script>");
 			}
 			// Workunits listing
-			if ($this->getCountWorkUnits() > 0) { 
-				$html = $this->getWorkUnitsList();
-			} else {
-				$html = "<h3 class='error'>".__('The list is empty')."</h3>";
-			}
+			$html = $this->getWorkUnitsList();
 			$ui->contentAddHtml($html);
 		$ui->endContent();
 		// Foooter buttons

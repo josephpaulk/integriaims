@@ -95,40 +95,46 @@ class Incidents {
 		$ui = Ui::getInstance();
 		
 		$html = "<ul class='ui-itemlistview' data-role='listview'>";
-		$sql = $this->getIncidentsQuery();
-		$new = true;
-		while ( $incident = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
-			$new = false;
-			// Background color
-			if ($incident["estado"] < 3) {
-				$background_color = "light-red-background";
-			} elseif ($incident["estado"] < 7) {
-				$background_color = "light-yellow-background";
-			} elseif ($incident["estado"] == 7) {
-				$background_color = "light-green-background";
-			} else {
-				$background_color = "";
-			}
-			$html .= "<li class=\"$background_color\">";
-			$html .= "<a href='index.php?page=incident&id_incident=".$incident['id_incidencia']."' class='ui-link-inherit'>";
-				//$html .= $ui->getPriorityFlagImage($incident['prioridad']);
-				$html .= print_priority_flag_image ($incident['prioridad'], true, "../", "priority-list ui-li-icon");
-				$html .= "<h3 class='ui-li-heading'>#".$incident['id_incidencia'];
-				$html .= "&nbsp;&nbsp;-&nbsp;&nbsp;".$incident['titulo']."</h3>";
-				$html .= "<p class='ui-li-desc'>".__('Owner').": ".$incident['id_usuario'];
-				if ( include_once ($system->getConfig('homedir')."/include/functions_calendar.php") ) {
-					$html .= "&nbsp;&nbsp;-&nbsp;&nbsp;".human_time_comparation($incident["actualizacion"])."&nbsp;".__('since the last update')."</p>";
+		if ($this->getCountIncidents() > 0) {
+			$sql = $this->getIncidentsQuery();
+			$new = true;
+			while ( $incident = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
+				$new = false;
+				// Background color
+				if ($incident["estado"] < 3) {
+					$background_color = "light-red-background";
+				} elseif ($incident["estado"] < 7) {
+					$background_color = "light-yellow-background";
+				} elseif ($incident["estado"] == 7) {
+					$background_color = "light-green-background";
 				} else {
-					$html .= "&nbsp;&nbsp;-&nbsp;&nbsp;".__('Last update').": ".$incident['actualizacion']."</p>";
+					$background_color = "";
 				}
-			$html .= "</a>";
-			
-			//~ $options = array(
-				//~ 'popup_id' => 'delete_popup_'.$incident['id_incidencia'],
-				//~ 'delete_href' => 'index.php?page=incidents&operation=delete&id_incident='.$incident['id_incidencia']
-				//~ );
-			//~ $html .= $ui->getDeletePopupHTML($options);
-			//~ $html .= "<a data-icon=\"delete\" data-rel=\"popup\" href=\"#delete_popup_".$incident['id_incidencia']."\"></a>";
+				$html .= "<li class=\"$background_color\">";
+				$html .= "<a href='index.php?page=incident&id_incident=".$incident['id_incidencia']."' class='ui-link-inherit'>";
+					//$html .= $ui->getPriorityFlagImage($incident['prioridad']);
+					$html .= print_priority_flag_image ($incident['prioridad'], true, "../", "priority-list ui-li-icon");
+					$html .= "<h3 class='ui-li-heading'>#".$incident['id_incidencia'];
+					$html .= "&nbsp;&nbsp;-&nbsp;&nbsp;".$incident['titulo']."</h3>";
+					$html .= "<p class='ui-li-desc'>".__('Owner').": ".$incident['id_usuario'];
+					if ( include_once ($system->getConfig('homedir')."/include/functions_calendar.php") ) {
+						$html .= "&nbsp;&nbsp;-&nbsp;&nbsp;".human_time_comparation($incident["actualizacion"])."&nbsp;".__('since the last update')."</p>";
+					} else {
+						$html .= "&nbsp;&nbsp;-&nbsp;&nbsp;".__('Last update').": ".$incident['actualizacion']."</p>";
+					}
+				$html .= "</a>";
+				
+				//~ $options = array(
+					//~ 'popup_id' => 'delete_popup_'.$incident['id_incidencia'],
+					//~ 'delete_href' => 'index.php?page=incidents&operation=delete&id_incident='.$incident['id_incidencia']
+					//~ );
+				//~ $html .= $ui->getDeletePopupHTML($options);
+				//~ $html .= "<a data-icon=\"delete\" data-rel=\"popup\" href=\"#delete_popup_".$incident['id_incidencia']."\"></a>";
+				$html .= "</li>";
+			}
+		} else {
+			$html .= "<li>";
+			$html .= "<h3 class='error'>".__('There is no incidents')."</h3>";
 			$html .= "</li>";
 		}
 		$html .= "</ul>";
@@ -218,11 +224,7 @@ class Incidents {
 			$ui->contentCollapsibleAddItem($form_html);
 			$ui->contentEndCollapsible("collapsible-filter");
 			// Incidents listing
-			if ($this->getCountIncidents() > 0) { 
-				$html = $this->getIncidentsList();
-			} else {
-				$html .= "<h3 class='error'>".__('The list is empty for this search')."</h3>";
-			}
+			$html = $this->getIncidentsList();
 			$ui->contentAddHtml($html);
 		$ui->endContent();
 		// Foooter buttons

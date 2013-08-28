@@ -126,26 +126,32 @@ class Workorders {
 		$ui = Ui::getInstance();
 		
 		$html = "<ul class='ui-itemlistview' data-role='listview'>";
-		$sql = $this->getWorkOrdersQuery();
-		$new = true;
-		while ( $workorder = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
-			$new = false;
+		if ($this->getCountWorkorders() > 0) {
+			$sql = $this->getWorkOrdersQuery();
+			$new = true;
+			while ( $workorder = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
+				$new = false;
+				$html .= "<li>";
+				$html .= "<a href='index.php?page=workorder&operation=view&id_workorder=".$workorder['id']."' class='ui-link-inherit'>";
+					//$html .= $ui->getPriorityFlagImage($workorder['priority']);
+					$html .= print_priority_flag_image ($workorder['priority'], true, "../", "priority-list ui-li-icon");
+					$html .= "<h3 class='ui-li-heading'>".$workorder['name']."</h3>";
+					$html .= "<p class='ui-li-desc'>".__('Owner').": ".$workorder['created_by_user'];
+					$html .= "&nbsp;&nbsp;-&nbsp;&nbsp;".__('Creator').": ".$workorder['assigned_user']."</p>";
+				$html .= "</a>";
+				
+				$options = array(
+					'popup_id' => 'delete_popup_'.$workorder['id'],
+					'delete_href' => 'index.php?page=workorders&operation=delete&id_workorder='.$workorder['id'].'
+										&filter_status=0&filter_owner='.$system->getConfig('id_user')
+					);
+				$html .= $ui->getDeletePopupHTML($options);
+				$html .= "<a data-icon=\"delete\" data-rel=\"popup\" href=\"#delete_popup_".$workorder['id']."\"></a>";
+				$html .= "</li>";
+			}
+		} else {
 			$html .= "<li>";
-			$html .= "<a href='index.php?page=workorder&operation=view&id_workorder=".$workorder['id']."' class='ui-link-inherit'>";
-				//$html .= $ui->getPriorityFlagImage($workorder['priority']);
-				$html .= print_priority_flag_image ($workorder['priority'], true, "../", "priority-list ui-li-icon");
-				$html .= "<h3 class='ui-li-heading'>".$workorder['name']."</h3>";
-				$html .= "<p class='ui-li-desc'>".__('Owner').": ".$workorder['created_by_user'];
-				$html .= "&nbsp;&nbsp;-&nbsp;&nbsp;".__('Creator').": ".$workorder['assigned_user']."</p>";
-			$html .= "</a>";
-			
-			$options = array(
-				'popup_id' => 'delete_popup_'.$workorder['id'],
-				'delete_href' => 'index.php?page=workorders&operation=delete&id_workorder='.$workorder['id'].'
-									&filter_status=0&filter_owner='.$system->getConfig('id_user')
-				);
-			$html .= $ui->getDeletePopupHTML($options);
-			$html .= "<a data-icon=\"delete\" data-rel=\"popup\" href=\"#delete_popup_".$workorder['id']."\"></a>";
+			$html .= "<h3 class='error'>".__('There is no workorders')."</h3>";
 			$html .= "</li>";
 		}
 		$html .= "</ul>";
@@ -249,11 +255,7 @@ class Workorders {
 			$ui->contentCollapsibleAddItem($form_html);
 			$ui->contentEndCollapsible("collapsible-filter");
 			// Workorder listing
-			if ($this->getCountWorkorders() > 0) { 
-				$html = $this->getWorkOrdersList();
-			} else {
-				$html .= "<h3 class='error'>".__('The list is empty for this search')."</h3>";
-			}
+			$html = $this->getWorkOrdersList();
 			$ui->contentAddHtml($html);
 		$ui->endContent();
 		// Foooter buttons

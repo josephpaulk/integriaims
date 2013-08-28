@@ -1,5 +1,27 @@
 2013-08-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* mobile/operation/incident.php: Fixed the function
+	"getFilesQuery". Added the function "getCountFiles".
+	Now a message appears if there are no files in the
+	icident files list.
+	
+	* mobile/operation/incidents.php: Now the function
+	"getIncidentsList" returns a message if there are
+	no incidents in the list.
+	
+	* mobile/operation/workorders.php: Now the function
+	"getWorkOrdersList" returns a message if there are
+	no workorders in the list.
+	
+	* mobile/operation/workunits.php: Deleted some unused
+	code. Improved the function "checkPermission". Fixed
+	the function "getWorkUnitsQuery", that was not showing
+	any workunit in the list. Now the function
+	"getWorkUnitsList" returns a message if there are no
+	workunits in the list.
+
+2013-08-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* mobile/index.php: Added calls to the workunits class.
 	
 	* mobile/include/ui.class.php: Improved the functions

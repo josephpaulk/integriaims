@@ -395,10 +395,19 @@ class Incident {
 		
 		$sql = "SELECT $columns
 				FROM tattachment
-				WHERE id_incidencia = '".$this->id_incident."'
-				ORDER BY $order_by";
+				WHERE id_incidencia = '".$this->id_incident."'";
+		if ($order_by != "") {
+			$sql .= " ORDER BY $order_by";
+		}
 		
 		return $sql;
+	}
+	
+	private function getCountFiles () {
+		$sql = $this->getFilesQuery("COUNT(id_attachment)", "");
+		$count = get_db_sql($sql);
+		
+		return $count;
 	}
 	
 	private function getFilesList ($href = "", $delete_button = true, $delete_href = "") {
@@ -410,29 +419,35 @@ class Incident {
 		}
 		
 		$html = "<ul class='ui-itemlistview' data-role='listview' data-count-theme='e'>";
-		$sql = $this->getFilesQuery();
-		$new = true;
-		while ( $file = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
-			$new = false;
-			$html .= "<li>";
-			$html .= "<a href='../operation/incidents/incident_download_file.php?id_attachment=".$file['id_attachment']."' class='ui-link-inherit' target='_blank'>";
-				$html .= "<h3 class='ui-li-heading'><img src='../images/attach.png'>&nbsp;".$file['filename']."</img></h3>";
-				$html .= "<p class='ui-li-desc'>".$file['description']."</p>";
-				$html .= "<span class=\"ui-li-aside\">".round($file['size']/1024,2)."&nbsp;KB</span>";
-			$html .= "</a>";
-			
-			if ($delete_button) {
-				if ($delete_href == "") {
-					$delete_href = "index.php?page=incident&tab=files&operation=delete_file";
-					$delete_href .= "&id_incident=".$this->id_incident;
+		if ($this->getCountFiles() > 0) {
+			$sql = $this->getFilesQuery();
+			$new = true;
+			while ( $file = get_db_all_row_by_steps_sql($new, $result_query, $sql) ) {
+				$new = false;
+				$html .= "<li>";
+				$html .= "<a href='../operation/incidents/incident_download_file.php?id_attachment=".$file['id_attachment']."' class='ui-link-inherit' target='_blank'>";
+					$html .= "<h3 class='ui-li-heading'><img src='../images/attach.png'>&nbsp;".$file['filename']."</img></h3>";
+					$html .= "<p class='ui-li-desc'>".$file['description']."</p>";
+					$html .= "<span class=\"ui-li-aside\">".round($file['size']/1024,2)."&nbsp;KB</span>";
+				$html .= "</a>";
+				
+				if ($delete_button) {
+					if ($delete_href == "") {
+						$delete_href = "index.php?page=incident&tab=files&operation=delete_file";
+						$delete_href .= "&id_incident=".$this->id_incident;
+					}
+					$options = array(
+						'popup_id' => 'delete_popup_'.$file['id_attachment'],
+						'delete_href' => $delete_href."&id_file=".$file['id_attachment']
+						);
+					$html .= $ui->getDeletePopupHTML($options);
+					$html .= "<a data-icon=\"delete\" data-rel=\"popup\" href=\"#delete_popup_".$file['id_attachment']."\"></a>";
 				}
-				$options = array(
-					'popup_id' => 'delete_popup_'.$file['id_attachment'],
-					'delete_href' => $delete_href."&id_file=".$file['id_attachment']
-					);
-				$html .= $ui->getDeletePopupHTML($options);
-				$html .= "<a data-icon=\"delete\" data-rel=\"popup\" href=\"#delete_popup_".$file['id_attachment']."\"></a>";
+				$html .= "</li>";
 			}
+		} else {
+			$html .= "<li>";
+			$html .= "<h3 class='error'>".__('There is no files')."</h3>";
 			$html .= "</li>";
 		}
 		$html .= "</ul>";
@@ -581,11 +596,7 @@ class Incident {
 					$delete_href = "";
 					
 					// Workunits listing
-					if ($workunits->getCountWorkUnits() > 0) { 
-						$html = $workunits->getWorkUnitsList($href, $delete_button, $delete_href);
-					} else {
-						$html = "<h3 class='error'>".__('The list is empty')."</h3>";
-					}
+					$html = $workunits->getWorkUnitsList($href, $delete_button, $delete_href);
 					$ui->contentAddHtml($html);
 					unset($workunits);
 					
