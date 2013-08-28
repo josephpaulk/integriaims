@@ -860,10 +860,9 @@ function inventories_print_tree ($sql_search = '') {
 		$object_types = array();
 	}	
 	
-
 	$elements_type = array();
+
 	foreach ($object_types as $key=>$type) {
-	
 		$elements_type[$key]['name'] = $type['name'];
 		$elements_type[$key]['img'] = print_image ("images/objects/".$type['icon'], true, array ("style" => 'vertical-align: middle;'));
 		$elements_type[$key]['id'] = $type['id'];
@@ -875,7 +874,6 @@ function inventories_print_tree ($sql_search = '') {
 	
 	foreach ($elements_type as $element) {
 		$lessBranchs = 0;
-
 		if ($first) {
 			if ($element != end($elements_type)) {
 
@@ -905,7 +903,6 @@ function inventories_print_tree ($sql_search = '') {
 			$count_inventories = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search)); //count
 			$inventories_stock = inventories_get_count_inventories_for_tree($element['id'], base64_decode($sql_search), true); //all inventories to calculate stock
 		}
-		
 		if ($count_inventories != 0) {
 			
 			// STOCK
@@ -1118,9 +1115,13 @@ function inventories_show_list($sql_search, $params='', $last_update = 0) {
 
 	$params .="&mode=list";	
 	
-	$sql = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data
-			WHERE tinventory.id_object_type = tobject_type.id $sql_search
-			GROUP BY tinventory.`id`";
+	$sql = "SELECT tinventory.* FROM tinventory, tobject_type, tobject_field_data";
+		
+	if ($sql_search) {	
+		$sql .= " WHERE 1=1 $sql_search";
+	}
+
+	$sql .= " GROUP BY tinventory.`id`";
 			
 	if ($last_update) {
 		$sql .= " ORDER BY last_update DESC";
