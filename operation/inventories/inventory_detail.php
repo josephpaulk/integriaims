@@ -96,50 +96,30 @@ if ($read_permission === ENTERPRISE_NOT_HOOK) {
 
 $inventory_name = get_db_value('name', 'tinventory', 'id', $id);
 
-$check_inventory = (bool) get_parameter ('check_inventory');
-
-/*
-if ($check_inventory) {
-	// IR and incident creator can see the incident
-	if ($inventory !== false && (give_acl ($config['id_user'], get_inventory_group ($id), "IR"))){
-		echo 1;
-		$var = 1;
-	}
-	else {
-		echo 0;
-		$var = 0;
-	}
-	if (defined ('AJAX')) {
-		//return $var;
-		return;
-	}
-}
-*/
-
-if (!$id && ! defined ('AJAX')) {
-	echo "<h1>".__('Create inventory object')."</h1>";
-}
-
-//**********************************************************************
-// Tabs
-//**********************************************************************
-if (!defined ('AJAX') && $id) {
-	/* Tabs list */
-	print_inventory_tabs('details', $id, $inventory_name);
+if (!defined ('AJAX')) {
+	if (!$id) {
+		echo "<h1>".__('Create inventory object')."</h1>";
+	} else if ($inventory_name) {
+		//**********************************************************************
+		// Tabs
+		//**********************************************************************
+		/* Tabs list */
+		print_inventory_tabs('details', $id, $inventory_name);
 	
-	if ($id) {
-		$inventory = get_inventory ($id);
+		if ($id) {
+			$inventory = get_inventory ($id);
 		
-		if ($manage_permission) {
-			echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px;'>";
-			echo "<ul>";	
-			echo "<li style='padding: 3px;'>";
-			echo '<form id="delete_inventory_form" name="delete_inventory_form" class="delete action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_detail">';
-			print_input_hidden ('quick_delete', $id);
-			echo "<a href='#' id='detele_inventory_submit_form'>".print_image("images/cross.png", true, array("title" => __("Delete inventory object")))."</a>";
-			echo '</form>';
-			echo "</li>";
-			echo "</div>";
+			if ($manage_permission) {
+				echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px;'>";
+				echo "<ul>";	
+				echo "<li style='padding: 3px;'>";
+				echo '<form id="delete_inventory_form" name="delete_inventory_form" class="delete action" method="post" action="index.php?sec=inventory&sec2=operation/inventories/inventory_detail">';
+				print_input_hidden ('quick_delete', $id);
+				echo "<a href='#' id='detele_inventory_submit_form'>".print_image("images/cross.png", true, array("title" => __("Delete inventory object")))."</a>";
+				echo '</form>';
+				echo "</li>";
+				echo "</div>";
+			}
 		}
 	}
 }
@@ -505,116 +485,120 @@ if ($id) {
 	}
 }
 
-
-$table->class = 'search-table-button';
-$table->width = '99%';
-$table->data = array ();
-$table->colspan = array ();
-$table->colspan[4][1] = 2;
-$table->colspan[5][0] = 3;
-
-/* First row */
-
-if ($write_permission) {
-	$table->data[0][0] = print_input_text ('name', $name, '', 40, 128, true,
-		__('Name'));
+if ($id && !$inventory_name) {
+        echo '<h3 class="error">'.__("The inventory object doesn't exist")."</h3>";
 } else {
-	$table->data[0][0] = print_label (__('Name'), '', '', true, $name);
-}
 
-$params_assigned['input_id'] = 'text-owner';
-$params_assigned['input_name'] = 'owner';
-$params_assigned['input_value'] = $owner;
-$params_assigned['title'] = 'Owner';
-$params_assigned['return'] = true;
+	$table->class = 'search-table-button';
+	$table->width = '99%';
+	$table->data = array ();
+	$table->colspan = array ();
+	$table->colspan[4][1] = 2;
+	$table->colspan[5][0] = 3;
 
-if ($write_permission) {
-	$table->data[0][1] = user_print_autocomplete_input($params_assigned);
-} else {
-	$table->data[0][1] = print_label (__('Owner'), '', '', true, $owner);
-}
+	/* First row */
+
+	if ($write_permission) {
+		$table->data[0][0] = print_input_text ('name', $name, '', 40, 128, true,
+			__('Name'));
+	} else {
+		$table->data[0][0] = print_label (__('Name'), '', '', true, $name);
+	}
+
+	$params_assigned['input_id'] = 'text-owner';
+	$params_assigned['input_name'] = 'owner';
+	$params_assigned['input_value'] = $owner;
+	$params_assigned['title'] = 'Owner';
+	$params_assigned['return'] = true;
+
+	if ($write_permission) {
+		$table->data[0][1] = user_print_autocomplete_input($params_assigned);
+	} else {
+		$table->data[0][1] = print_label (__('Owner'), '', '', true, $owner);
+	}
 	
-$table->data[0][2] = print_checkbox_extended ('public', 1, $public,
+	$table->data[0][2] = print_checkbox_extended ('public', 1, $public,
 	! $write_permission, '', '', true, __('Public'));
 
 
-if ($write_permission) {
+	if ($write_permission) {
 	
-	$parent_name = $id_parent ? get_inventory_name ($id_parent) : __("None");
+		$parent_name = $id_parent ? get_inventory_name ($id_parent) : __("None");
 	
-	$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','','','','','')", "class='inventory_obj_search'", true, false,  __('Parent object'));
-	$table->data[1][0] .= print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
-	$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
+		$table->data[1][0] = print_input_text_extended ("parent_name", $parent_name, "text-parent_name", '', 20, 0, false, "show_inventory_search('','','','','','','','','','')", "class='inventory_obj_search'", true, false,  __('Parent object'));
+		$table->data[1][0] .= print_image("images/cross.png", true, array("onclick" => "cleanParentInventory()", "style" => "cursor: pointer"));	
+		$table->data[1][0] .= print_input_hidden ('id_parent', $id_parent, true);
 
-} else {
-	$parent_name = $id_parent ? get_inventory_name ($id_parent) : __('Not set');
+	} else {
+		$parent_name = $id_parent ? get_inventory_name ($id_parent) : __('Not set');
 	
-	$table->data[1][0] = print_label (__('Parent object'), '', '', true, $parent_name);
-	if ($id_parent)
-		$table->data[1][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$id_parent.'"><img src="images/go.png" /></a>';
-}
+		$table->data[1][0] = print_label (__('Parent object'), '', '', true, $parent_name);
+		
+		if ($id_parent)
+			$table->data[1][0] .= '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$id_parent.'"><img src="images/go.png" /></a>';
+	}
 
-$contracts = get_contracts ();
-$manufacturers = get_manufacturers ();
+	$contracts = get_contracts ();
+	$manufacturers = get_manufacturers ();
 
-if ($write_permission) {
-	$table->data[1][1] = print_select ($contracts, 'id_contract', $id_contract,
+	if ($write_permission) {
+		$table->data[1][1] = print_select ($contracts, 'id_contract', $id_contract,
 		'', __('None'), 0, true, false, false, __('Contract'));
 
-	$table->data[1][2] = print_select ($manufacturers, 'id_manufacturer',
+		$table->data[1][2] = print_select ($manufacturers, 'id_manufacturer',
 		$id_manufacturer, '', __('None'), 0, true, false, false, __('Manufacturer'));
-} else {
-	$contract = isset ($contracts[$id_contract]) ? $contracts[$id_contract] : __('Not set');
-	$manufacturer = isset ($manufacturers[$id_manufacturer]) ? $manufacturers[$id_manufacturer] : __('Not set');
+	} else {
+		$contract = isset ($contracts[$id_contract]) ? $contracts[$id_contract] : __('Not set');
+		$manufacturer = isset ($manufacturers[$id_manufacturer]) ? $manufacturers[$id_manufacturer] : __('Not set');
 	
-	$table->data[1][1] = print_label (__('Contract'), '', '', true, $contract);
-	$table->data[1][2] = print_label (__('Manufacturer'), '', '', true, $manufacturer);
-}
+		$table->data[1][1] = print_label (__('Contract'), '', '', true, $contract);
+		$table->data[1][2] = print_label (__('Manufacturer'), '', '', true, $manufacturer);
+	}
 
 
-/* Third row */
-$objects_type = get_object_types ();
+	/* Third row */
+	$objects_type = get_object_types ();
 
-if ($id_object_type == 0) {
-	$disabled = false;
-} else {
-	$disabled = true;
-}
+	if ($id_object_type == 0) {
+		$disabled = false;
+	} else {
+		$disabled = true;
+	}
 
-if ($write_permission) {
-	$table->data[2][0] = print_label (__('Object type'), '','',true);
-	$table->data[2][0] .= print_select($objects_type, 'id_object_type', $id_object_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
-} else {
-	$object_name = get_db_value('name', 'tobject_type', 'id', $id_object_type);
-	$table->data[2][0] = print_label (__('Object type'), '', '', true, $object_name);
+	if ($write_permission) {
+		$table->data[2][0] = print_label (__('Object type'), '','',true);
+		$table->data[2][0] .= print_select($objects_type, 'id_object_type', $id_object_type, 'show_fields();', 'Select', '', true, 0, true, false, $disabled);
+	} else {
+		$object_name = get_db_value('name', 'tobject_type', 'id', $id_object_type);
+		$table->data[2][0] = print_label (__('Object type'), '', '', true, $object_name);
 	
-	//show object hidden
-	echo '<div id="show_object_fields_hidden" style="display:none;">';
+		//show object hidden
+		echo '<div id="show_object_fields_hidden" style="display:none;">';
 		print_input_text('show_object_hidden', 1);
-	echo '</div>';
+		echo '</div>';
 	
-	//id_object_type hidden
-	echo '<div id="id_object_type_hidden" style="display:none;">';
+		//id_object_type hidden
+		echo '<div id="id_object_type_hidden" style="display:none;">';
 		print_input_text('id_object_type_hidden', $id_object_type);
-	echo '</div>';
-}
+		echo '</div>';
+	}
 
-$companies = array();
-$users = array();
+	$companies = array();
+	$users = array();
 
-if ($id) {
-	$companies = enterprise_hook ('inventory_get_companies', array ($id));
+	if ($id) {
+		$companies = enterprise_hook ('inventory_get_companies', array ($id));
 
-	if ($companies_aux !== ENTEPRRISE_NOT_HOOK) {
-		//foreach($companies_aux as $c) {
-		//	$companies[$c["id"]] = $c["name"];
-		//}
-	}	
+		if ($companies_aux !== ENTEPRRISE_NOT_HOOK) {
+			//foreach($companies_aux as $c) {
+			//$companies[$c["id"]] = $c["name"];
+			//}
+		}	
 
-	$users = enterprise_hook ('inventory_get_users', array ($id));
-}
+		$users = enterprise_hook ('inventory_get_users', array ($id));
+	}
 
-if ($write_permission) {
+	if ($write_permission) {
 		$table->data[2][1] = print_select ($companies, 'inventory_companies', NULL,
 								'', '', '', true, false, false, __('Associated company'));
 		$table->data[2][1] .= "&nbsp;&nbsp;<a href='javascript: show_company_associated();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
@@ -642,65 +626,64 @@ if ($write_permission) {
 								'', '', '', true, false, false, __('Associated user'));
 	}
 
-$all_inventory_status = inventories_get_inventory_status ();
-$table->data[3][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status, 'show_issue_date();', '', '', true, false, false, __('Status'));
+	$all_inventory_status = inventories_get_inventory_status ();
+	$table->data[3][0] = print_select ($all_inventory_status, 'inventory_status', $inventory_status, 'show_issue_date();', '', '', true, false, false, __('Status'));
 
-$table->data[3][1] = print_input_text ('receipt_date', $receipt_date, '', 15, 15, true, __('Receipt date'));
+	$table->data[3][1] = print_input_text ('receipt_date', $receipt_date, '', 15, 15, true, __('Receipt date'));
 
-$table->data[3][2] = print_input_text ('issue_date', $issue_date, '', 15, 15, true, __('Issue date'));
+	$table->data[3][2] = print_input_text ('issue_date', $issue_date, '', 15, 15, true, __('Issue date'));
 
-/* Fourth row */
-$table->colspan[4][0] = 3;		
-$table->data[4][0] = "";
+	/* Fourth row */
+	$table->colspan[4][0] = 3;		
+	$table->data[4][0] = "";
 
 
-/* Fifth row */
-$table->data[5][1] = "</div>&nbsp;";
+	/* Fifth row */
+	$table->data[5][1] = "</div>&nbsp;";
 
-$table->colspan[6][0] = 3;	
-/* Sixth row */
-$disabled_str = ! $write_permission ? 'readonly="1"' : '';
-$table->data[6][0] = print_textarea ('description', 15, 100, $description,
+	$table->colspan[6][0] = 3;	
+	/* Sixth row */
+	$disabled_str = ! $write_permission ? 'readonly="1"' : '';
+	$table->data[6][0] = print_textarea ('description', 15, 100, $description,
 	$disabled_str, true, __('Description'));
 
-echo '<div class="result">'.$result_msg.$msg_err.'</div>';
+	echo '<div class="result">'.$result_msg.$msg_err.'</div>';
 
-if ($write_permission) {
-	if ($id) {
-		$button = print_input_hidden ('update_inventory', 1, true);
-		$button .= print_input_hidden ('id', $id, true);
-		$button .= print_input_hidden ('id_object_type', $id_object_type, true);
-		$button .= print_submit_button (__('Update'), 'update', false, 'class="sub upd"', true);
+	if ($write_permission) {
+		if ($id) {
+			$button = print_input_hidden ('update_inventory', 1, true);
+			$button .= print_input_hidden ('id', $id, true);
+			$button .= print_input_hidden ('id_object_type', $id_object_type, true);
+			$button .= print_submit_button (__('Update'), 'update', false, 'class="sub upd"', true);
+		} else {
+			$button = print_input_hidden ('create_inventory', 1, true);
+			$button .= print_submit_button (__('Create'), 'create', false, 'class="sub create"', true);
+		}
+	
+		$table->data[7][0] = $button;
+		$table->colspan[7][0] = 3;
+	
+		echo '<form method="post" id="inventory_status_form">';
+		print_table ($table);
+		echo '</form>';
 	} else {
-		$button = print_input_hidden ('create_inventory', 1, true);
-		$button .= print_submit_button (__('Create'), 'create', false, 'class="sub create"', true);
+		print_table ($table);
 	}
-	
-	$table->data[7][0] = $button;
-	$table->colspan[7][0] = 3;
-	
-	echo '<form method="post" id="inventory_status_form">';
-	print_table ($table);
-	echo '</form>';
-} else {
-	print_table ($table);
-}
 
-//id_inventory hidden
-echo '<div id="id_inventory_hidden" style="display:none;">';
+	//id_inventory hidden
+	echo '<div id="id_inventory_hidden" style="display:none;">';
 	print_input_text('id_object_hidden', $id);
-echo '</div>';
+	echo '</div>';
 
-echo "<div class= 'dialog ui-dialog-content' id='external_table_window'></div>";
+	echo "<div class= 'dialog ui-dialog-content' id='external_table_window'></div>";
 
-echo "<div class= 'dialog ui-dialog-content' id='inventory_search_window'></div>";
+	echo "<div class= 'dialog ui-dialog-content' id='inventory_search_window'></div>";
 
-echo "<div class= 'dialog ui-dialog-content' id='company_search_modal'></div>";
+	echo "<div class= 'dialog ui-dialog-content' id='company_search_modal'></div>";
 
-echo "<div class= 'dialog ui-dialog-content' id='user_search_modal'></div>";
+	echo "<div class= 'dialog ui-dialog-content' id='user_search_modal'></div>";
 
-
-//if (! defined ('AJAX')):
+}
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>

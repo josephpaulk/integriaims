@@ -1,5 +1,10 @@
 2013-08-28  Dario Rodriguez <dario@artica.es>
 
+	* operation/inventories/inventory_detail.php: Fixed 
+	a bug on inventory quick search form.
+
+2013-08-28  Dario Rodriguez <dario@artica.es>
+
 	* include/functions_inventories.php
 	operation/contacts/contact_inventory.php: Fixed
 	some calls to enterprise functions without 
