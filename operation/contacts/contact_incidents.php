@@ -32,38 +32,42 @@ $email = safe_input($email);
 
 $incidents = incidents_get_by_notified_email ($contact["email"]);
 
-$table->class = "listing";
-$table->width = "99%";
-$table->head[0] = __("ID");
-$table->head[1] = __("Incident");
-$table->head[2] = __("Status");
-$table->head[3] = __("Priority");
-$table->head[4] = __("Updated");
-$table->data = array();
+if (!$incidents) {
+        echo '<h3 class="error">'.__("This contact doesn't have any incident associated").'</h3>';
+} else {
 
-foreach ($incidents as $inc) {
-	$data = array();
+	$table->class = "listing";
+	$table->width = "99%";
+	$table->head[0] = __("ID");
+	$table->head[1] = __("Incident");
+	$table->head[2] = __("Status");
+	$table->head[3] = __("Priority");
+	$table->head[4] = __("Updated");
+	$table->data = array();
 
-	if (give_acl($config["id_user"], 0, "IR")) {
-		$link_start = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$inc["id_incidencia"].'">';
-		$link_end = '</a>';
-	} else {
-		$link_start = "";
-		$link_end = "";
+	foreach ($incidents as $inc) {
+		$data = array();
+
+		if (give_acl($config["id_user"], 0, "IR")) {
+			$link_start = '<a href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$inc["id_incidencia"].'">';
+			$link_end = '</a>';
+		} else {
+			$link_start = "";
+			$link_end = "";
+		}
+
+		$data[0] = $link_start."#".$inc["id_incidencia"].$link_end;
+		$data[1] = $link_start.$inc["titulo"].$link_end;
+	
+		$status = get_db_value("name", "tincident_status", "id", $inc["estado"]);
+
+		$data[2] = $status;
+		$data[3] = print_priority_flag_image ($inc['prioridad'], true);
+		$data[4] = human_time_comparation ($inc["actualizacion"]); 
+	
+		array_push($table->data, $data);
 	}
 
-	$data[0] = $link_start."#".$inc["id_incidencia"].$link_end;
-	$data[1] = $link_start.$inc["titulo"].$link_end;
-	
-	$status = get_db_value("name", "tincident_status", "id", $inc["estado"]);
-
-	$data[2] = $status;
-	$data[3] = print_priority_flag_image ($inc['prioridad'], true);
-	$data[4] = human_time_comparation ($inc["actualizacion"]); 
-
-	array_push($table->data, $data);
+	print_table($table);
 }
-
-print_table($table);
-
 ?>

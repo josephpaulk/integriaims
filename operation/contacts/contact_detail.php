@@ -88,7 +88,6 @@ if ($id != 0) {
 
         echo '<div class="under_tabs_info">' . sprintf(__('Contact: %s'), $contact['fullname']) . '</div>';
 
-	echo '</ul>';
 }
 
 switch ($op) {

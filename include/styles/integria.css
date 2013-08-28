@@ -881,12 +881,14 @@ td.datosf9i, td.datos2f9i {
 	color: #FF3333;
 	background: url(../../images/fail.png) no-repeat;
 	padding: 4px 1px 6px 30px;
+	clear: both;
 }
 
 .suc {
 	color: #5a8629;
 	background: url(../../images/success.png) no-repeat 1px;
 	padding: 4px 1px 6px 30px;
+	clear: both;
 }
 
 div#wizard {

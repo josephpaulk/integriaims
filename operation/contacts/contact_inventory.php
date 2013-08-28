@@ -1,0 +1,85 @@
+<?php
+// INTEGRIA - the ITIL Management System
+// http://integria.sourceforge.net
+// ==================================================
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
+// http://www.artica.es  <info@artica.es>
+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+global $config;
+
+check_login ();
+
+enterprise_include('include/functions_crm.php');
+include_once('include/functions_crm.php');
+
+$id = (int) get_parameter ('id');
+
+$contact = get_db_row ('tcompany_contact', 'id', $id);
+
+$inv_obj = inventory_get_objects_by_contact ($contact["id"]);
+
+if (!$inv_obj) {
+	echo '<h3 class="error">'.__("This contact doesn't have any inventory objects").'</h3>';
+} else {
+
+	$table->class = "listing";
+	$table->width = "99%";
+	$table->head[0] = __("Id");
+	$table->head[1] = __("Name");
+	$table->head[2] = __("Object type");
+	$table->head[3] = __("Owner");
+	$table->head[4] = __("Manufacturer");
+	$table->data = array();
+
+	foreach ($inv_obj as $inv) {
+		$data = array();
+
+		if (give_acl($config["id_user"], 0, "VR")) {
+			$link_start = '<a href="index.php?sec=inventory&sec2=operation/inventories/inventory_detail&id='.$inv["id"].'">';
+			$link_end = '</a>';
+		} else {
+			$link_start = "";
+			$link_end = "";
+		}
+
+		$data[0] = $link_start."#".$inv["id"].$link_end;
+		$data[1] = $link_start.$inv["name"].$link_end;
+
+		$obj_type = get_db_value("name", "tobject_type", "id", $inv["id_object_type"]);
+
+		if (!$obj_type) {
+			$obj_type = __("N/A");
+		}
+
+		$data[2] = $obj_type;
+
+		$owner = get_db_value("nombre_real", "tusuario", "id_usuario", $inv["owner"]);
+	
+		if (!$owner) {
+			$owner = __("N/A");
+		}	
+	
+		$data[3] = $owner;
+
+		$manufacturer = get_db_value("name", "tmanufacturer", "id", $inv["id_manufacturer"]);
+	
+		if (!$manufacturer) {
+			$manufacturer = __("N/A");
+		}
+	
+		$data[4] = $manufacturer; 
+
+		array_push($table->data, $data);
+	}
+
+	print_table($table);
+}
+?>

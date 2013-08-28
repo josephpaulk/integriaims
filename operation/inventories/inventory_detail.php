@@ -80,8 +80,6 @@ if (defined ('AJAX')) {
 	}
 }
 
-enterprise_include('include/functions_inventory.php');
-
 $read_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id));
 $write_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id, true));
 $manage_permission = enterprise_hook ('inventory_check_acl', array ($config['id_user'], $id, false, false, true));

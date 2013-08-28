@@ -20,8 +20,6 @@ check_login ();
 require_once ('include/functions_inventories.php');
 require_once ('include/functions_user.php');
 
-enterprise_include('include/functions_inventory.php');
-	
 if (defined ('AJAX')) {
 	
 	global $config;
