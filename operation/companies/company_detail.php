@@ -558,29 +558,66 @@ elseif ($op == "activities") {
 		echo '</form>';
 	}
 
+	$contacts = crm_get_all_contacts (sprintf(" WHERE id_company = %d", $id));
+
+	$sql = "SELECT * FROM tcompany_contact CC, tcontact_activity C WHERE CC.id_company = $id AND CC.id = C.id_contact ORDER BY C.creation DESC";
+
+	$act_contacts = get_db_all_rows_sql($sql);
+
 	$sql = "SELECT * FROM tcompany_activity WHERE id_company = $id ORDER BY date DESC";
 
 	$activities = get_db_all_rows_sql ($sql);
+
+	$activities = array_merge($activities, $act_contacts);
+	
 	$activities = print_array_pagination ($activities, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=activities");
 
 	if ($activities !== false) {	
-		foreach ($activities as $activity) {
-//				if (! give_acl ($config["id_user"], $company["id_group"], "IR"))
-//					continue;
+
+		$aux_activities = array();
+
+		foreach ($activities as $key => $act) {
+
+			if (isset($act["date"])) {
+				$aux_activities[$key] = $act["date"];
+			} else {
+				$aux_activities[$key] = $act["creation"];
+			}
+		}
+
+		arsort($aux_activities);
+
+		foreach ($aux_activities as $key=>$date) {
+
+			$activity = $activities[$key];
+
 			echo "<div class='notetitle'>"; // titulo
 
-			$timestamp = $activity["date"];
+			if (isset($activity["id_contact"])) {
+				$type = "group";
+				$title = __("Contact");
+				$timestamp = $activity["creation"];
+				$contact_name = "&nbsp;&nbsp;".__("on contact").":&nbsp;".get_db_value("fullname", "tcompany_contact", "id", $activity["id_contact"]);
+			} else {
+				$type = "company";
+				$title = __("Company");
+				$timestamp = $activity["date"];
+				$contact_name = "";
+			}
+
 			$nota = $activity["description"];
 			$id_usuario_nota = $activity["written_by"];
 
 			$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $id_usuario_nota);
 
 			// Show data
+			echo '<img src="images/'.$type.'.png"/ width="22px" title="'.$title.'">';
 			echo "<img src='images/avatars/".$avatar.".png' class='avatar_small'>&nbsp;";
 			echo " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=$id_usuario_nota'>";
 			echo $id_usuario_nota;
 			echo "</a>";
 			echo " ".__("said on $timestamp");
+			echo $contact_name;
 			echo "</div>";
 
 			// Body

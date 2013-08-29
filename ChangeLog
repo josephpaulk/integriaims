@@ -1,3 +1,9 @@
+2013-08-29  Dario Rodriguez <dario@artica.es>
+
+	* operation/companies/company_detail.php: Modified company
+	activity to show activity from company and contacts in the
+	same view.
+
 2013-08-29  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_api.php: Allow to enter dupes via API
