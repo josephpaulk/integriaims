@@ -1011,10 +1011,22 @@ function api_create_lead ($return_type, $user, $params){
 	// Search if any current lead with the same email already exists
 	$duped_id = get_db_value('id','tlead','email',$email);
 
-	if ( ($duped_id != "") OR ($fullname == "") OR ($email == "") ){
-			$result = 0;
-
+	// Duped	
+	if ($duped_id != ""){
+		$duped = 1;
 	} else {
+		$duped = 0;
+	}
+
+	// Invalid lead information, abort
+	if (($fullname == "") OR ($email == "") ){
+			$result = 0;
+	} 
+
+		if ($duped == 1){
+			$fullname = $fullname . " (DUPED LEAD!)";
+			$comments = $comments . " (DUPED LEAD!)";
+		}
 
 		$sql = sprintf ('INSERT INTO tlead
 				(fullname, company, email, country, estimated_sale, progress, phone, mobile, position, owner, id_language, description, id_category, id_company, creation, modification)  
@@ -1030,7 +1042,7 @@ function api_create_lead ($return_type, $user, $params){
 		} else {
 			$result = 0;
 		}
-	}
+	
 
 	switch($return_type) {
 		case "xml": 
