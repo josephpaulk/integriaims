@@ -413,3 +413,14 @@ ALTER TABLE `tinventory` ADD `issue_date` date NOT NULL default '0000-00-00';
 
 /* 28/08/2013 */
 ALTER TABLE tattachment ADD `id_contact` mediumint(8) NOT NULL default '0';
+
+/* 29/08/2013 */
+CREATE TABLE `tcontact_activity` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT, 
+  `id_contact` mediumint(8) unsigned NOT NULL, 
+  `written_by` mediumtext, 
+  `description` mediumtext, 
+  `creation` datetime NOT NULL DEFAULT '0000-00-00 00:00:00', 
+  PRIMARY KEY (`id`), 
+  KEY `id_contact_idx` (`id_contact`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

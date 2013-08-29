@@ -1,3 +1,10 @@
+2013-08-29  Dario Rodriguez <dario@artica.es>
+
+	* operation/contacts/contact_activity.php,
+	integria_db.sql,
+ 	extras/migrate.sql: Developed new feature to add activity
+ 	to contacts.
+
 2013-08-29  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* mobile/include/ui.class.php: Fixed the function
