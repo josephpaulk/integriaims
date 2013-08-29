@@ -62,7 +62,7 @@ $initial_showed_files = 3;
 foreach($incident['files'] as $k => $file) {
 	$table->data[$row+$k][0] = "";
 	$table->data[$row+$k][1] = "";
-	$table->data[$row+$k][0] .= "<a href='operation/incidents/incident_download_file.php?id_attachment=".$file['id_attachment']."' target='_blank'><img src='images/attach.png' border=0> ".$file['filename']."</a> (".round($file['size']/1024,2)." KB)<br>";
+	$table->data[$row+$k][0] .= "<a href='operation/common/download_file.php?id_attachment=".$file['id_attachment']."&type=incident' target='_blank'><img src='images/attach.png' border=0> ".$file['filename']."</a> (".round($file['size']/1024,2)." KB)<br>";
 	$table->data[$row+$k][1] .= $file['description'];	
 }
 

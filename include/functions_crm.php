@@ -35,7 +35,7 @@ function crm_get_companies_list ($sql_search, $date = false) {
 	if ($companies === false) {
 		$companies = array();
 	}
-	
+
 	return $companies;
 }
 
@@ -614,4 +614,16 @@ function crm_get_all_companies ($only_name = false) {
 	}
 	return $companies;
 }
+
+function crm_get_contact_files ($id_contact, $order_desc = false) {
+        if($order_desc) {
+                $order = "id_attachment DESC";
+        }
+        else { 
+                $order = "";
+        }
+
+        return get_db_all_rows_field_filter ('tattachment', 'id_contact', $id_contact, $order);
+}
+
 ?>

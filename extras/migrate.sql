@@ -410,3 +410,6 @@ ALTER TABLE `tobject_type` ADD `min_stock` int(5) NOT NULL default 0;
 /* 08/08/2013 */
 ALTER TABLE `tinventory` ADD `receipt_date` date NOT NULL default '0000-00-00';
 ALTER TABLE `tinventory` ADD `issue_date` date NOT NULL default '0000-00-00';
+
+/* 28/08/2013 */
+ALTER TABLE tattachment ADD `id_contact` mediumint(8) NOT NULL default '0';

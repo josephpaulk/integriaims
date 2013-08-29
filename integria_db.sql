@@ -125,6 +125,7 @@ CREATE TABLE `tattachment` (
   `id_company` bigint(20) NOT NULL default '0',
   `id_todo` bigint(20) NOT NULL default '0',
   `id_usuario` varchar(60) NOT NULL default '',
+  `id_contact` mediumint(8) NOT NULL default '0',
   `filename` varchar(255) NOT NULL default '',
   `description` text default '',
   `size` bigint(20) NOT NULL default '0',

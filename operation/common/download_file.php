@@ -1,8 +1,9 @@
 <?php
+
 // INTEGRIA - the ITIL Management System
 // http://integria.sourceforge.net
 // ==================================================
-// Copyright (c) 2008-2012 Ártica Soluciones Tecnológicas
+// Copyright (c) 2008 Ártica Soluciones Tecnológicas
 // http://www.artica.es  <info@artica.es>
 
 // This program is free software; you can redistribute it and/or
@@ -17,35 +18,49 @@
 require_once ('../../include/config.php');
 require_once ('../../include/functions.php');
 require_once ('../../include/functions_db.php');
-require_once ('../../include/functions_incidents.php');
 
 session_start();
 
+check_login();
+
 global $config;
 
-$config["id_user"] = $_SESSION['id_usuario'];
+$config["id_user"] = $_SESSION["id_usuario"];
 
 $id_user = $config["id_user"];
 $id_attachment = get_parameter ("id_attachment", 0);
-
-check_login();
+$type = get_parameter("type");
 
 $data = get_db_row ("tattachment", "id_attachment", $id_attachment);
 
 if (!isset($data)){
-    echo "No valid attach id";
+    echo __("No valid attach id");
     exit;
 }
+var_dump($id_user);
+//Check ACLs restriction based on type parameter
+switch ($type) {
 
-$id_incident =  $data["id_incidencia"];
 
-$id_group = get_db_sql ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident");
+	case "contact":
+		if (! give_acl ($config['id_user'], 0, "CR")){
+    		echo "You dont have access to that file - Code #".$data["id_attachment"];
+    		exit;	
+		}
+	break;
+	case "incident":
+		$id_incident =  $data["id_incidencia"];
 
-if (! give_acl ($config['id_user'], $id_group, "IR")){
-    echo "You dont have access to that file - Code #$id_incident";
-    exit;
+		$id_group = get_db_sql ("SELECT id_grupo FROM tincidencia WHERE id_incidencia = $id_incident");
+
+		if (! give_acl ($config['id_user'], $id_group, "IR")){
+    		echo "You dont have access to that file - Code #$id_incident";
+    		exit;
+		}
+		break;
+	default:
 }
-
+	
 session_write_close();
 
 // Allow download file
@@ -65,6 +80,5 @@ if (file_exists($fileLocation)){
 	echo "File is missing in disk storage. Please contact the administrator";
 	exit;
 }
-
 
 ?>

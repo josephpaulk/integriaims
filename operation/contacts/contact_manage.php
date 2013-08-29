@@ -241,7 +241,15 @@ if ($id || $new_contact) {
 			$companies = crm_get_user_companies($config['id_user'], $companies);
 		}
 	
-		$table->data[3][1] =  print_select ($companies, 'id_company', $id_company, '', '', $nothing_value = '0', true, 0, false,  __('Company'));
+        	$select_comp = array();
+
+        	foreach($companies as $id => $name) {
+                	$select_comp[$id] = $name;
+        	}
+			
+        	$table->data[3][1] = print_select ($select_comp, 'id_company', $id_company, '', __("None"), 0, true, false, false, __('Company'));
+
+		//$table->data[3][1] =  print_select ($companies, 'id_company', $id_company, '', '', $nothing_value = '0', true, 0, false,  __('Company'));
 			
 		$table->data[3][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 		$table->data[3][1] .= "<img src='images/company.png'></a>";

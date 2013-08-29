@@ -47,6 +47,13 @@ if ($id == 0) {
 
 if ($id != 0) {
 	echo '<ul style="height: 30px;" class="ui-tabs-nav">';
+
+	if ($op == "files")
+                echo '<li class="ui-tabs-selected">';
+        else   
+                echo '<li class="ui-tabs">';
+        echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=files"><span>'.__("Files").'</span></a></li>';
+
         if ($op == "inventory")
                 echo '<li class="ui-tabs-selected">';
         else
@@ -59,6 +66,12 @@ if ($id != 0) {
                 echo '<li class="ui-tabs">';
         echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=incidents"><span>'.__("Incidents").'</span></a></li>';
 
+	if ($op == "activity")
+                echo '<li class="ui-tabs-selected">';
+        else   
+                echo '<li class="ui-tabs">';
+        echo '<a href="index.php?sec=customers&sec2=operation/contacts/contact_detail&id='.$id.'&op=activity"><span>'.__("Activity").'</span></a></li>';
+
         if ($op == "details")
                 echo '<li class="ui-tabs-selected">';
         else   
@@ -67,6 +80,12 @@ if ($id != 0) {
 
         echo '<li class="ui-tabs-title">';
         switch ($op) {
+		case "files":
+			echo strtoupper(__("Files"));
+			break;
+		case "activity":
+			echo strtoupper(__("Activity"));
+			break;
                 case "details":
                         echo strtoupper(__('Contact details'));
                         break;
@@ -99,19 +118,26 @@ switch ($op) {
 		break;
 	case "details":
 		include("contact_manage.php");
+		break;
+	case "files":
+		include("contact_files.php");
+		break;
+	case "activity": 
+		include("contact_activity.php");
 		break;	
 	default:
+		include("contact_manage.php");
 }
 
 
-if ($id == 0) {
+if ($id == 0 && !$new_contact) {
 	if (!$read) {
 		include ("general/noaccess.php");
 		exit;
 	}
 	
 	$search_text = (string) get_parameter ('search_text');
-	$id_company = (int) get_parameter ('id_company');
+	$id_company = (int) get_parameter ('id_company', 0);
 	
 	//$where_clause = "WHERE 1=1 AND id_company " .get_filter_by_company_accessibility($config["id_user"]);
 	$where_clause = "WHERE 1=1";
@@ -131,7 +157,20 @@ if ($id == 0) {
 	$table->style[0] = 'font-weight: bold;';
 	$table->data = array ();
 	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
-	$table->data[0][1] = print_select (get_companies (), 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
+	
+        $companies = crm_get_all_companies(true);
+
+        if ($read && $enterprise) {
+        	$companies = crm_get_user_companies($config['id_user'], $companies);
+        }
+
+        $select_comp = array();
+                
+        foreach($companies as $id => $name) {
+        	$select_comp[$id] = $name;
+	}	
+
+	$table->data[0][1] = print_select ($select_comp, 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	$table->data[0][3] = print_button(__('Export to CSV'), '', false, 'window.open(\'' . "include/export_csv.php?export_csv_contacts=1&where_clause=$where_clause" . '\')', 'class="sub csv"', true);
 	echo '<form method="post">';

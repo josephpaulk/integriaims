@@ -1,3 +1,23 @@
+2013-08-29  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_crm.php: New function to get files
+	of a contact.
+	* operation/incidents/incident_files.php,
+	operation/incidents/incident_download_file.php,
+	operation/incidents_simple/incident.files.php: Modified 
+	to use new way to download files.
+	* operation/contacts/contact_detail.php,
+	operation/contacts/contact_files.php,
+	operation/contacts/contact_activity.php: Created two new
+	sections for contact's files and activity.
+	* operation/contacts/contact_manage.php: Fixed a bug 
+	printing company combo.
+	* integria_db.sql,
+	extras/migrate.sql: New row in attachment table to handle
+	contact files.
+	* operation/common/download_file.php: New file to centralize
+	file download.
+
 2013-08-28  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* mobile/operation/workunit.php: Fixed a bug on
