@@ -53,7 +53,7 @@ class Workorder {
 		} else {
 			// Section access
 			if ($system->checkACL($acl)) {
-				// With this operations, the WU should have id
+				// With this operations, the WO should have id
 				if ( ($operation == "view" || $operation == "update" || $operation == "delete")
 						&& $id_workorder > 0) {
 					$workorder = get_db_row("ttodo", "id", $this->id_workorder);
@@ -158,7 +158,7 @@ class Workorder {
 					'popup_content' => $message
 					);
 				
-				$ui->contentAddHtml($ui->getPopupHTML($options));
+				$ui->addPopup($options);
 				$ui->contentAddHtml("<script type=\"text/javascript\">
 										$(document).on('pageshow', function() {
 											$(\"#message_popup\").popup(\"open\");

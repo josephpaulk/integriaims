@@ -67,6 +67,13 @@ class Workunits {
 	private function getWorkUnitsQuery ($columns = "*", $order_by = "timestamp DESC, id", $limit = true) {
 		$system = System::getInstance();
 		
+		$id_incident = $system->getRequest('id_incident', -1);
+		
+		if ($id_incident > 0) {
+			$filter = " AND id = ANY(SELECT id_workunit
+									 FROM tworkunit_incident
+									 WHERE id_incident = $id_incident)";
+		}
 		if (dame_admin($system->getConfig('id_user'))) {
 			$sql = "SELECT $columns
 					FROM tworkunit
@@ -120,7 +127,8 @@ class Workunits {
 				$new = false;
 				$html .= "<li>";
 				$html .= "<a href='$href&id_workunit=".$workunit['id']."' class='ui-link-inherit'>";
-					$html .= "<h3 class='ui-li-heading'>".$workunit['timestamp']."</h3>";
+					$date = strtotime($workunit['timestamp']);
+					$html .= "<h3 class='ui-li-heading'>".date ("Y-m-d", $date)."</h3>";
 					$html .= "<p class='ui-li-desc'><strong>".$workunit['id_user']."</strong></p>";
 					$html .= "<p class='ui-li-desc'>".$workunit['description']."</p>";
 					$html .= "<span class=\"ui-li-count\">".$workunit['duration']."&nbsp;".__('hours')."</span>";

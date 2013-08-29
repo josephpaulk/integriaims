@@ -738,7 +738,7 @@ class Ui {
 			$content = $options['dialog_content'];
 		} else {
 			$content = "<h3>".__('Are you sure you want to delete this item?')."</h3>";
-			$content .= "<p>".__('This action cannot be undone.')."<p>";
+			$content .= "<p>".__('This action cannot be undone.')."</p>";
 		}
 		if (isset($options['delete_href'])) {
 			$delete_href = $options['delete_href'];
@@ -761,8 +761,41 @@ class Ui {
 		return $this->getPopupHTML($options);
 	}
 	
-	public function addDeletePopup () {
+	public function addDeletePopup ($options) {
 		$this->contentAddHtml($this->getDeletePopupHTML($options));
+	}
+	
+	public function getWarningPopupHTML ($options) {
+		
+		if (isset($options['dialog_title'])) {
+			$title = $options['dialog_title'];
+		} else {
+			$title = __('You don\'t have access to this page');
+		}
+		if (isset($options['dialog_content'])) {
+			$content = $options['dialog_content'];
+		} else {
+			$content = "<h2>".__('You don\'t have access to this page')."</h2>";
+			$content .= "<p>".__('Access to this page is restricted to authorized users only,
+								please contact to system administrator if you need assistance.
+								<br><br>Please know that all attempts to access this page are
+								recorded in security logs of Integria System Database')."</p>";
+		}
+		
+		$options['data-position-to'] = 'window';
+		$options['data-transition'] = 'pop';
+		
+		$options['popup_content'] = "
+									<div style=\"text-align:center;\" data-role=\"content\" data-theme=\"d\">\n
+										$content
+										<a href=\"#\" data-role=\"button\" data-inline=\"true\" data-rel=\"back\" data-transition=\"flow\" data-theme=\"b\" data-corners=\"true\" data-shadow=\"true\" data-iconshadow=\"true\" data-wrapperels=\"span\">".__('OK')."</a>
+									</div>\n";
+		
+		return $this->getPopupHTML($options);
+	}
+	
+	public function addWarningPopup ($options) {
+		$this->contentAddHtml($this->getWarningPopupHTML($options));
 	}
 	
 	public function getPriorityFlagImage ($priority) {

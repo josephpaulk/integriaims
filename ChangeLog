@@ -1,3 +1,18 @@
+2013-08-29  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* mobile/include/ui.class.php: Fixed the function
+	"addDeletePopup". Added the functions "getWarningPopupHTML"
+	and "addWarningPopup".
+	
+	* mobile/operation/home.php: Fixed the not permission
+	dialog.
+	
+	* mobile/operation/workorder.php: Changed a function call.
+	
+	* mobile/operation/workunits.php: Visual change in the list.
+	Fixed an error related with the workunits list in the
+	incidents.
+
 2013-08-29  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_crm.php: New function to get files

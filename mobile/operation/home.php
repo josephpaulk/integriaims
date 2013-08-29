@@ -61,18 +61,28 @@ class Home {
 			
 			if (! empty($error)) {
 				$options = array(
-					'dialog_id' => 'error_dialog',
-					'title_close_button' => true,
-					'title_text' => $error['title_text'],
-					'content_text' => $error['content_text']
+					'popup_id' => 'error_popup'
 					);
-				$ui->addDialog($options);
-				$ui->contentAddHtml("<a id='error_dialog_hook' href='#error_dialog' style='display:none;'>home_error_hook</a>");
+				$ui->addWarningPopup($options);
 				$ui->contentAddHtml("<script type=\"text/javascript\">
-										$(document).bind('pageinit', function(e, data) {
-											$(\"#error_dialog_hook\").click();
+										$(document).on('pageshow', function() {
+											$(\"#error_popup\").popup(\"open\");
 										});
 									</script>");
+				//~ $options = array(
+					//~ 'dialog_id' => 'error_dialog',
+					//~ 'title_close_button' => true,
+					//~ 'title_text' => $error['title_text'],
+					//~ 'content_text' => $error['content_text']
+					//~ );
+				//~ $ui->addDialog($options);
+				//~ $ui->contentAddHtml("<a id='error_dialog_hook' href='#error_dialog' style='display:none;'>home_error_hook</a>");
+				//~ $ui->contentAddHtml("<script type=\"text/javascript\">
+										//~ $(document).bind('pageshow', function(e, data) {
+											//~ $(\"#error_dialog_hook\").click();
+											//~ $(\"#error_dialog_hook\").attr('href','javascript:void(0)');
+										//~ });
+									//~ </script>");
 			}
 			
 		$ui->endContent();
