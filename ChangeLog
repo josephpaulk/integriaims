@@ -1,5 +1,11 @@
 2013-08-29  Dario Rodriguez <dario@artica.es>
 
+	* operation/search.php,
+	general/header.php: Added mobile and phone search for 
+	contacts for general search.
+
+2013-08-29  Dario Rodriguez <dario@artica.es>
+
 	* operation/contacts/contact_detail.php: Added mobile and
 	phone to contact search fields.
 

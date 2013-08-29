@@ -211,9 +211,9 @@ if (give_acl($config["id_user"], 0, "KR") && $show_kb != MENU_HIDDEN){
 }
 
 // Contact
-if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
+if (give_acl($config["id_user"], 0, "CR") && $show_inventory != MENU_HIDDEN){
 
-	$sql = "SELECT * FROM tcompany_contact  WHERE fullname LIKE '%".$search_string."%' OR email LIKE '%".$search_string."%'";
+	$sql = "SELECT * FROM tcompany_contact  WHERE fullname LIKE '%".$search_string."%' OR email LIKE '%".$search_string."%' OR phone LIKE '%".$search_string."%' OR mobile LIKE '%".$search_string."%'";
 	$contacts = get_db_all_rows_sql ($sql);
 	
 	if ($contacts !== false) {
@@ -247,13 +247,13 @@ if (give_acl($config["id_user"], 0, "VR") && $show_inventory != MENU_HIDDEN){
 }
 
 // Contracts
-if (give_acl($config["id_user"], 0, "VR") && $show_customers != MENU_HIDDEN){
+if (give_acl($config["id_user"], 0, "CR") && $show_customers != MENU_HIDDEN){
 
         $sql = "SELECT * FROM tcontract  WHERE name LIKE '%".$search_string."%' OR description LIKE '%".$search_string."%' AND id_group in ". get_user_groups_for_sql ($config["id_user"]);
 
         $contracts = get_db_all_rows_sql ($sql);
-
-        if ($contacts !== false) {
+        
+        if ($contracts !== false) {
 
                 echo "<h3>";
                 echo __("Contracts");

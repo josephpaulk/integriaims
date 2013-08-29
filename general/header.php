@@ -101,6 +101,14 @@ $(document).ready (function () {
 	<?php
 		}
 	?>
+
+	$("#global_search").focusin(function () {
+		$("#global_search").animate({width: "200px"}, 500);
+	});
+
+	$("#global_search").focusout(function () {
+		$("#global_search").animate({width: "85px"}, 500);
+	});
 		
 });
 </script>
