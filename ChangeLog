@@ -1,5 +1,10 @@
 2013-08-29  Dario Rodriguez <dario@artica.es>
 
+	* operation/contacts/contact_detail.php: Added mobile and
+	phone to contact search fields.
+
+2013-08-29  Dario Rodriguez <dario@artica.es>
+
 	* operation/companies/company_detail.php: Modified company
 	activity to show activity from company and contacts in the
 	same view.

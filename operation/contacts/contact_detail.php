@@ -142,7 +142,8 @@ if ($id == 0 && !$new_contact) {
 	//$where_clause = "WHERE 1=1 AND id_company " .get_filter_by_company_accessibility($config["id_user"]);
 	$where_clause = "WHERE 1=1";
 	if ($search_text != "") {
-		$where_clause .= " AND (fullname LIKE '%$search_text%' OR email LIKE '%$search_text%') ";
+		$where_clause .= " AND (fullname LIKE '%$search_text%' OR email LIKE '%$search_text%'
+					OR phone LIKE '%$search_text%' OR mobile LIKE '%$search_text%') ";
 	}
 
 	if ($id_company) {
