@@ -231,6 +231,12 @@ $table->colspan[0][0] = 2;
 $table->data[0][0] = print_container('project_info', __('Project info'), $project_info, 'no');
 
 if ($id_project) {
+	// Project activity graph
+	$project_activity = project_activity_graph ($id_project, 650, 150, true, 1, 50, true);
+	if ($project_activity) {
+		$project_activity = '<div class="graph_frame">' . $project_activity . '</div>';
+		$table->data[0][0] .= print_container('project_activity', __('Project activity'), $project_activity, 'closed');
+	}
 	// Calculation
 	$people_inv = get_db_sql ("SELECT COUNT(DISTINCT id_user) FROM trole_people_task, ttask WHERE ttask.id_project=$id_project AND ttask.id = trole_people_task.id_task;");
 	$total_hr = get_project_workunit_hours ($id_project);

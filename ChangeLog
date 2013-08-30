@@ -1,3 +1,43 @@
+2013-08-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_crm.php: Fixed a query error in the
+	function "crm_get_total_invoiced";
+	
+	* include/functions_graph.php: Improved the functions
+	"task_activity_graph" and "project_activity_graph".
+	
+	* include/js/integria_incident_search.js: Fixed an error
+	in the function "process_massive_updates", now reloads
+	the page when the updates end.
+	
+	* operation/incidents/incident_detail.php: Added some
+	code that complement the ajax function
+	"process_massive_updates".
+	
+	* include/styles/integria.css: Added a rule for the
+	task and project activity graph containers.
+	
+	* operation/companies/company_detail.php: Fixed an error
+	in the search by country.
+	
+	* operation/leads/lead_detail.php: Fixed the csv export.
+	Fixed the call to the lead statistics.
+	
+	* operation/leads/lead_statistics.php: Fixed the parameter
+	getters and the call to the lead search page.
+	
+	* operation/projects/project_detail.php: Added an area
+	graph that shows the hours worked in a project by days.
+	
+	* operation/projects/task.php: Visual changes in the task
+	tree view to align the elements of the incidents and the
+	workorders when their name was too long.
+	
+	* operation/projects/task_detail.php: Added an area graph
+	that shows the hours worked in a task by days. Changed the
+	function "moveTo" of the slider, that does not exist now,
+	for the setter function "value".
+	
 2013-08-29  Dario Rodriguez <dario@artica.es>
 
 	* operation/search.php,

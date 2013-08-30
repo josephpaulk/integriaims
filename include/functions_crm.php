@@ -175,14 +175,14 @@ function crm_get_all_invoices ($where_clause) {
 function crm_get_total_invoiced($where_clause = false) {
 	
 	if ($where_clause) {
-		$sql = "SELECT id_company as id, sum(amount1, amount2, amount3, amount4, amount5) as total_ammount FROM tinvoice
+		$sql = "SELECT id_company as id, SUM(amount1+amount2+amount3+amount4+amount5) as total_ammount FROM tinvoice
 			WHERE id_company IN (SELECT id FROM tcompany
 					WHERE 1=1 $where_clause)
 			GROUP BY id_company
 			ORDER BY total_ammount DESC
 			";
 	} else {
-		$sql = "SELECT id_company as id, sum(amount1+amount2+amount3+amount4+amount5) as total_ammount FROM tinvoice
+		$sql = "SELECT id_company as id, SUM(amount1+amount2+amount3+amount4+amount5) as total_ammount FROM tinvoice
 			GROUP BY id_company
 			ORDER BY total_ammount DESC
 			";

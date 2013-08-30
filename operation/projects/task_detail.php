@@ -238,8 +238,20 @@ echo $result_output;
 
 echo '<h1>'.__('Task management').'</h1>';
 
-if ($id_task > 0)
-    echo task_activity_graph ($id_task);
+if ($id_task > 0) {
+    // Task activity graph
+	$task_activity = task_activity_graph ($id_task, 600, 150, true, true);
+	if ($task_activity) {
+		$table->width = '100%';
+		$table->class = 'none';
+		$table->style[0] = 'padding-left: 5px';
+		$table->colspan = array();
+		$table->data = array ();
+		$task_activity = '<div class="graph_frame">' . $task_activity . '</div>';
+		$table->data[0][0] = print_container('task_activity', __('Task activity'), $task_activity, 'closed');
+		print_table ($table);
+	}
+}
 
 if ($operation == "create") {
 	$estimated_cost = 0;
@@ -251,7 +263,7 @@ if ($operation == "create") {
 	$periodicity = "none";
 }
 
-$table->width = '99%';
+$table->width = '100%';
 $table->class = 'search-table-button';
 $table->rowspan = array ();
 $table->colspan = array ();
@@ -422,6 +434,7 @@ $(document).ready (function () {
 		min: 0,
 		max: 100,
 		stepping: 1,
+		value: <?php echo $completion?>,
 		slide: function (event, ui) {
 			$("#completion").empty ().append (ui.value+"%");
 		},
@@ -429,9 +442,6 @@ $(document).ready (function () {
 			$("#hidden-completion").attr ("value", ui.value);
 		}
 	});
-<?php if ($completion)
-	echo '$("#slider").slider ("moveTo", '.$completion.');';
-?>
 });
 
 

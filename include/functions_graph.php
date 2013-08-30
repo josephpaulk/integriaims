@@ -1096,29 +1096,31 @@ function progress_bar ($progress, $width, $height, $ttl=1) {
 	return progressbar($progress, $width, $height, $title, $config['font'], 1, $out_of_lim_str, false, $ttl);
 }
 
-function project_activity_graph ($id_project, $ttl=1){
+function project_activity_graph ($id_project, $width = 650, $height = 150, $area = false, $ttl = 1, $resolution = 10, $return = false) {
 	global $config;
 
+	$output = "";
     $incident = get_db_row ("tproject", "id", $id_project);
-
+	
     $start_unixdate = strtotime ($incident["start"]);
     $end_unixdate = strtotime ("now");
     $period = $end_unixdate - $start_unixdate;
-    $resolution = 10;
     
 	$interval = (int) ($period / $resolution);
-
-	echo "<div style='width: 800px; text-align: center;'>";
-	echo "<span style='margin-right: 650px;'>";
-	echo __("Each bar is"). " ". human_time_description_raw($interval);
-	echo "</span>";
+	
+	if (! $area)  {
+		$output .= "<div style='width: 800px; text-align: center;'>";
+		$output .= "<span style='margin-right: 650px;'>";
+		$output .= __("Each bar is"). " ". human_time_description_raw($interval);
+		$output .= "</span>";
+	}
 	
 	$data = get_db_all_rows_sql ("SELECT tworkunit.duration as duration, 
             tworkunit.timestamp as timestamp  FROM tworkunit, tworkunit_task, ttask 
 			WHERE tworkunit_task.id_task = ttask.id
 			AND ttask.id_project = $id_project
 			AND tworkunit_task.id_workunit = tworkunit.id
-ORDER BY timestamp ASC");
+			ORDER BY timestamp ASC");
 
 	if ($data === false) {
 		$data = array ();
@@ -1151,7 +1153,7 @@ ORDER BY timestamp ASC");
 			$j++;
 		} 
 
-    	$time_format = "M d H:i";
+    	$time_format = "M d";
         $timestamp_human = clean_flash_string (date($time_format, $timestamp));
 		$chart2[$timestamp_human]['graph'] = $total;
    	}
@@ -1159,9 +1161,19 @@ ORDER BY timestamp ASC");
    	$colors['graph']['color'] = "#2179B1";
    	$colors['graph']['border'] = "#000";
    	$colors['graph']['alpha'] = 100;
-
-	echo vbar_graph ($config['flash_charts'], $chart2, 650, 150, $colors, array(), "", "", "", "", $config['font'], $config['fontsize'],true, $ttl);
-	echo "</div>";
+	
+	if ($area) {
+		$output .= area_graph($config['flash_charts'], $chart2, $width, $height, $colors, array(), '', '', '', __('Hours'), '', '', $config['font'], $config['fontsize'], '', $ttl);
+	} else {
+		$output .= vbar_graph ($config['flash_charts'], $chart2, $width, $height, $colors, array(), "", "", "", "", $config['font'], $config['fontsize'],true, $ttl);
+		$output .= "</div>";
+	}
+	
+	if ($return) {
+		return $output;
+	} else {
+		echo $output;
+	}
 }
 
 function incident_activity_graph ($id_incident){
@@ -1219,20 +1231,24 @@ function incident_activity_graph ($id_incident){
 	echo vbar_graph ($config['flash_charts'], $chart2, 650, 300, array(), "", "", "", "", "", $config['font'], $config['fontsize']);
 }
 
-function task_activity_graph ($id_task){
+function task_activity_graph ($id_task, $width = 900, $height = 230, $area = false, $return = false){
 	global $config;
 
     $task = get_db_row ("ttask", "id", $id_task);
-
+	
+	$output = "";
+	
     $start_unixdate = strtotime ($task["start"]);
     $end_unixdate = strtotime ("now");
     $period = $end_unixdate - $start_unixdate;
     $resolution = 50;
     
 	$interval = (int) ($period / $resolution);
-
-	echo __("Each bar is"). " ". human_time_description_raw($interval);
-	echo "<br>";
+	
+	if (! $area) {
+		$output .= __("Each bar is"). " ". human_time_description_raw($interval);
+		$output .= "<br>";
+	}
 
 	$data = get_db_all_rows_sql ("SELECT tworkunit.duration as duration, 
             tworkunit.timestamp as timestamp  FROM tworkunit, tworkunit_task, ttask 
@@ -1287,11 +1303,20 @@ function task_activity_graph ($id_task){
 	$legend = array();
 		
 	$xaxisname = __('Days');
-	$yaxisname = __('Hours in project');
+	$yaxisname = __('Hours');
 	
-	echo vbar_graph ($config['flash_charts'], $chart3, 900, 230, $colors, $legend, $xaxisname, $yaxisname, "", "", $config['font'], $config['fontsize']);
+	if ($area) {
+		$output .= area_graph($config['flash_charts'], $chart3, $width, $height, $colors, $legend, '', '', '', $yaxisname, '', '', $config['font'], $config['fontsize']);
+	} else {
+		$output .= vbar_graph ($config['flash_charts'], $chart3, $width, $height, $colors, $legend, $xaxisname, $yaxisname, "", "", $config['font'], $config['fontsize']);
+	}
+	
+	if ($return) {
+		return $output;
+	} else {
+		echo $output;
+	}
 }
-
 
 
 function histogram_2values($valuea, $valueb, $labela = "a", $labelb = "b", $mode = 1, $width = 200, $height = 30, $title = "", $ttl=2) {

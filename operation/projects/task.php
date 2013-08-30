@@ -341,8 +341,8 @@ if (defined ('AJAX')) {
 			// WO name
 			$name = safe_output($wo['name']);
 			
-			if (strlen($name) > 60) {
-				$name = substr ($name, 0, 60) . "...";
+			if (strlen($name) > 48) {
+				$name = substr ($name, 0, 48) . "...";
 				$name = "<a title='".safe_output($wo['name'])."'
 					href='index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=".$wo['id']."'>".$name."</a>";
 			} else {
@@ -378,11 +378,11 @@ if (defined ('AJAX')) {
 			echo "<span style='".$background_color." padding: 4px;'>";
 			echo "<span style='vertical-align:middle; display: inline-block;'>".$wo_icon."</span>";
 			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
-			echo "<span style='margin-left: 15px; min-width: 380px; vertical-align:middle; display: inline-block;'>".$name."</span>";
-			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'>"
-				.__('Owner').": <b>".$owner."</b></span>";
-			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'>"
-				.__('Creator').": <b>".$submitter."</b></span>";
+			echo "<span style='margin-left: 15px; min-width: 400px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'><small>"
+				.__('Owner').":</small> <b>".$owner."</b></span>";
+			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'><small>"
+				.__('Creator').":</small> <b>".$submitter."</b></span>";
 			echo "</span>";
 			echo "</li>";
 		}
@@ -433,8 +433,8 @@ if (defined ('AJAX')) {
 			// Incident name
 			$name = safe_output($incident['titulo']);
 			
-			if (strlen($name) > 60) {
-				$name = substr ($name, 0, 60) . "...";
+			if (strlen($name) > 48) {
+				$name = substr ($name, 0, 48) . "...";
 				$name = "<a title='".safe_output($incident['titulo'])."'
 					href='index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=".$incident['id_incidencia']."'>".$name."</a>";
 			} else {
@@ -463,14 +463,14 @@ if (defined ('AJAX')) {
 			echo "<span style='".$background_color." padding: 4px;' class='red'>";
 			echo "<span style='vertical-align:middle; display: inline-block;'>".$incident_icon."</span>";
 			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
-			echo "<span style='margin-left: 15px; min-width: 380px; vertical-align:middle; display: inline-block;'>".$name."</span>";
-			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'>"
-				.__('Owner').": <b>".$owner."</b></span>";
-			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'>"
-				.__('Creator').": <b>".$submitter."</b></span>";
+			echo "<span style='margin-left: 15px; min-width: 400px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'><small>"
+				.__('Owner').":</small> <b>".$owner."</b></span>";
+			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'><small>"
+				.__('Creator').":</small> <b>".$submitter."</b></span>";
 			if ($status) {
-				echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>"
-					.__('Status').": <b>".$status."</b></span>";
+				echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'><small>"
+					.__('Status').":</small> <b>".$status."</b></span>";
 			}
 			echo "</span>";
 			echo "</span>";
@@ -623,7 +623,7 @@ if ($clean_output == 1) {
 
 	$table->style[6] = "font-size: 9px";
 
-	echo project_activity_graph ($id_project, $graph_ttl);
+	echo project_activity_graph ($id_project, 650, 150, false, $graph_ttl);
 
 	$color = 1;
 

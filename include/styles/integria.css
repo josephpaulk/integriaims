@@ -1802,6 +1802,10 @@ h2#project_involved_people {
 	background-image: url('../../images/involved_people.png');
 }
 
+h2#project_activity, h2#task_activity {
+	background-image: url('../../images/statistics.png');
+}
+
 h2#project_budget {
 	background-image: url('../../images/budget.png');
 }

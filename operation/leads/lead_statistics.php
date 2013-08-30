@@ -40,24 +40,26 @@ if ($result === ENTERPRISE_NOT_HOOK) {
 }
 
 $search_text = (string) get_parameter ('search_text');
-$id_company = (int) get_parameter ('id_company');
-$start_date = (string) get_parameter ('start_date');
-$end_date = (string) get_parameter ('end_date');
-$country = (string) get_parameter ('country');
-$id_category = (int) get_parameter ('product');
-$progress_major_than = (int) get_parameter ('progress_major_than');
-$progress_minor_than = (int) get_parameter ('progress_minor_than');
-$owner = (string) get_parameter ("owner");
-$show_100 = (int) get_parameter ("show_100");
+$id_company = (int) get_parameter ('id_company_search');
+$start_date = (string) get_parameter ('start_date_search');
+$end_date = (string) get_parameter ('end_date_search');
+$country = (string) get_parameter ('country_search');
+$id_category = (int) get_parameter ('product_search');
+$progress_major_than = (int) get_parameter ('progress_major_than_search');
+$progress_minor_than = (int) get_parameter ('progress_minor_than_search');
+$owner = (string) get_parameter ("owner_search");
+$show_100 = (int) get_parameter ("show_100_search");
 $id_language = (string) get_parameter ("id_language", "");
-$est_sale = (string) get_parameter ("est_sale", "");
-	
+$est_sale = (int) get_parameter ("est_sale_search", 0);
+
+$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&id_category_search=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
+
 echo "<div id='incident-search-content'>";
 echo "<h1>".__('Search statistics');
 echo "<div id='button-bar-title'>";
 echo "<ul>";
 echo "<li>";
-echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/leads/lead_detail&search_text=$search_text&id_company=$id_company&start_date=$start_date&end_date=$end_date&country=$country&id_category=$id_category&progress_major_than=$progress_major_than&progress_minor_than=$progress_minor_than&owner=$owner&show_100=$show_100&id_language=$id_language&est_sale=$est_sale'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
+echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/leads/lead_detail&$params'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
 echo "</li>";
 echo "</ul>";
 echo "</div>";

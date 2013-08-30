@@ -1013,18 +1013,16 @@ if ((!$id) AND ($new_company == 0)){
 	echo "</div>";
 	echo "</h1>";
 
-	$search_text = (string) get_parameter ('search_text');	
+	$search_text = (string) get_parameter ("search_text");	
 	$search_role = (int) get_parameter ("search_role");
 	$search_country = (string) get_parameter ("search_country");
 	$search_manager = (string) get_parameter ("search_manager");
-	$search_parent = get_parameter ("search_parent");
-	$search_date_begin = get_parameter('search_date_begin');
-	$search_date_end = get_parameter('search_date_end');
+	$search_parent = (int) get_parameter ("search_parent");
+	$search_date_begin = (string) get_parameter("search_date_begin");
+	$search_date_end = (string) get_parameter("search_date_end");
 	
 	$date = false;
-
-	//$where_clause = " 1 = 1 AND id " . get_filter_by_company_accessibility($config["id_user"]);
-
+	
 	if ($search_text != "") {
 		$where_clause .= sprintf (' AND ( name LIKE "%%%s%%" OR country LIKE "%%%s%%")  ', $search_text, $search_text);
 	}
@@ -1034,7 +1032,7 @@ if ((!$id) AND ($new_company == 0)){
 	}
 
 	if ($search_country != ""){ 
-		$where_clause .= sprintf (' AND country LIKE "%%s%%" ', $search_country);
+		$where_clause .= sprintf (' AND country LIKE "%%%s%%" ', $search_country);
 	}
 
 	if ($search_manager != ""){ 

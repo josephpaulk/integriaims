@@ -700,7 +700,7 @@ if ($id || $new) {
 	$table->data[1][1] = print_input_text ("est_sale_search", $est_sale, "", 21, 100, true, __('Estimated Sale'));
 	
 	$table->data[1][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	$table->data[1][2] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . str_replace('"', "'", $where_clause) . '\')', 'class="sub csv"', true);
+	$table->data[1][2] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
 	
 	$table_advanced->class = 'search-table';
 	$table_advanced->style = array ();
@@ -943,7 +943,7 @@ function changeAction() {
 	
 	var f = document.forms.lead_stats_form;
 
-	f.action = "index.php?sec=customers&sec2=operation/leads/lead_statistics";
+	f.action = "index.php?sec=customers&sec2=operation/leads/lead_statistics<?php echo $params ?>";
 	$("#lead_stats_form").submit();
 }
 

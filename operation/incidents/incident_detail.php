@@ -275,7 +275,14 @@ if ($action == 'update') {
     			mail_incident ($id, $user, "", 0, 0);
 		}
 	}
-
+	
+	// AJAX (Massive operations)
+	if ($massive_number_loop > -1) {
+		ob_clean();
+		echo json_encode($massive_number_loop);
+		return;
+	}
+	
 }
 
 if ($action == "insert") {
