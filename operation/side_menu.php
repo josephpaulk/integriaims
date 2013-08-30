@@ -1176,17 +1176,17 @@ echo '</div>';
 echo "<ul class='sidemenu'>";
 echo "<li>";
 echo '<a href="index.php?sec=agenda&sec2=operation/agenda/agenda">';
-echo __('Full calendar');
+echo "<img style='vertical-align:middle' width='20px' src='images/calendar_orange.png'>&nbsp;".__('Full calendar');
 echo '</a>';
 echo "</li>";
 
 echo "<li>";
 if ($sec == 'agenda') {
-	echo "<a href='javascript:;' onClick='show_agenda_entry(-1, \"\", 0, true)'>"
-		.__('Add calendar entry')."</a>";
+	echo "<a href='javascript:;' onClick='show_agenda_entry(-1, \"\", 0, true)'>
+		<img src='images/add.png'>&nbsp;".__('Add entry')."</a>";
 } else {
-	echo "<a href='javascript:;' onClick='show_agenda_entry(-1, \"\", 0, false)'>"
-		.__('Add calendar entry')."</a>";
+	echo "<a href='javascript:;' onClick='show_agenda_entry(-1, \"\", 0, false)'>
+		<img style='vertical-align:middle' src='images/add.png'>&nbsp;".__('Add entry')."</a>";
 }
 echo "</li>";
 echo "</ul>";

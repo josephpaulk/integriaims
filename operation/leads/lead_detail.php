@@ -479,19 +479,16 @@ if ($id || $new) {
 			$companies = crm_get_user_companies($config['id_user'], $companies, true);
 		}
 	
-		$table->data[5][1] =  print_select ($companies, 'id_company', $id_company, '', __("None"), 0, true, 0, false,  __('Managed by'));
-
-		$table->data[5][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
-		$table->data[5][1] .= "<img src='images/company.png'></a>";
+		$languages = crm_get_all_languages();
+		$table->data[5][1] = print_select ($languages, 'id_language', $id_language, '', __('Select'), '', true, 0, false,  __('Language'));
 		
 		$table->data[6][0] = print_input_text_extended ('owner', $owner, 'text-user', '', 15, 30, false, '',
 			array(), true, '', __("Owner") )
-
 		. print_help_tip (__("Type at least two characters to search"), true);
 
 
 		// Show delete control if its owned by the user
-		if ($config["id_user"] == $owner){
+		if ($id && $config["id_user"] == $owner){
 			$table->data[6][0] .= ' <a href="index.php?sec=customers&
 							sec2=operation/leads/lead_detail&
 							delete=1&id='.$id.'&offset='.$offset.'"
@@ -501,18 +498,21 @@ if ($id || $new) {
 		}
 
 		// Show "close" control if it's owned by the user
-		if (($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"]))) {
+		if ($id && ( ($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"])) ) ) {
                         $table->data[6][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
                         $id."&close=1'><img src='images/lock.png' title='".__("Close this lead")."'></a>";
                 }
 
 		// Show take control is owned by nobody
-		if ($owner == "")
+		if ($owner == "" && $id)
 				$table->data[6][0] .=  "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
 				$id."&make_owner=1'><img src='images/award_star_silver_1.png'></a>";
 
-		$languages = crm_get_all_languages();
-		$table->data[6][1] = print_select ($languages, 'id_language', $id_language, '', '', $nothing_value = '0', true, 0, false,  __('Language'));
+		$table->data[6][1] =  print_select ($companies, 'id_company', $id_company, '', __("None"), 0, true, 0, false,  __('Managed by'));
+		if ($id_company) {
+			$table->data[6][1] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
+			$table->data[6][1] .= "<img src='images/company.png'></a>";
+		}
 
 		$table->data[7][0] = "<b>". __("Creation / Last update"). "</b><br><span style='font-size: 10px'>";
 		$table->data[7][0] .=  "$creation / $modification </span>";
@@ -925,6 +925,16 @@ add_validate_form_element_rules('#text-email', rules, messages);
 rules = { number: true };
 messages = { number: "<?php echo __('Invalid number')?>" };
 add_validate_form_element_rules('#text-estimated_sale', rules, messages);
+
+// Rules: #text-user
+rules = { required: true };
+messages = { required: "<?php echo __('Please, select an user')?>" };
+add_validate_form_element_rules('#text-user', rules, messages);
+
+// Rules: #id_language
+rules = { required: true };
+messages = { required: "<?php echo __('Please, select a language')?>" };
+add_validate_form_element_rules('#id_language', rules, messages);
 
 $(document).ready (function () {
 	

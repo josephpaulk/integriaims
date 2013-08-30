@@ -261,7 +261,7 @@ $table->data[14][0] = print_select ($newsletter_options, "incident_creation_wu",
 $table->data[15][0] = print_input_text ("lead_company_filter", $config["lead_company_filter"], '',
 	20, 255, true, __('Lead company filter IDs'));
 
-$table->data[15][0] .= print_help_tip (__("Use this to filter what company roles you want to show you as valid companies to attach a Lead, for example: 1,34,4 or just one, line: 12"), true);
+$table->data[15][0] .= print_help_tip (__("Filter by roles the companies that can be attached to a lead as managers. The ids of the roles should be divided whith commas. Example: 1, 34, 4"), true);
 
 $table->data[15][1] = print_input_text ("lead_warning_time", $config["lead_warning_time"], '',
 	5, 255, true, __('Days to warn on inactive leads'));

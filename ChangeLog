@@ -1,3 +1,22 @@
+2013-08-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* godmode/setup/setup.php: Improved the description of the
+	config token "lead_company_filter".
+	
+	* godmode/usuarios/configurar_usuarios.php: Added translation
+	function for the 'none' value of the language select.
+	
+	* include/functions_calendar.php: Changed the task icon.
+	Fixed an error on the add entry button of the calendar days
+	and changed its icon.
+	
+	* operation/side_menu.php: Added icons to the links below
+	the mini calendar.
+	
+	* operation/leads/lead_detail.php: Fixed some errors in the
+	lead form. Added validation to the language select and the
+	owner input. Now those elements are required.
+	
 2013-08-30  Dario Rodriguez <dario@artica.es>
 
 	* include/styles/integria.css: New style for custom field

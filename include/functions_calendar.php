@@ -214,8 +214,8 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 			$day = "0".$day;
 		$mysql_date = "$year-$month-$day";
 		
-		if (($day >= $today) && ($today_m >= $month))
-			$calendar .= "<div style='float:left;'><img src='images/note.png' title='".__('New entry')."' onClick='show_agenda_entry(-1, \"$mysql_date\", 0, true)' style='cursor: pointer;'></div>";
+		if (($month > $today_m) || (($month == $today_m) && ($day >= $today)) )
+			$calendar .= "<div style='float:left;'><img src='images/add.png' title='".__('New entry')."' onClick='show_agenda_entry(-1, \"$mysql_date\", 0, true)' style='cursor: pointer;'></div>";
 		$calendar .= "<br>";
 		$mysql_time= "";
 		$event_string = "";
@@ -272,7 +272,7 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 		foreach ($agenda_task as $agenda_titem){
 			list ($tname, $idt, $tend, $pname, $idp) = explode ("|", $agenda_titem);
 			$calendar .= __("Task end"). "&nbsp;&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_task=$idt&operation=view'>";
-			$calendar .= "<img src='images/brick.png' title='".__('Task')."'>";
+			$calendar .= "<img src='images/task.png' title='".__('Task')."'>";
 			$calendar .= "</A> ";
  			$calendar .= "<br><hr width=110><font size='1pt'>";
  			$calendar .= "<a href='index.php?sec=projects&sec2=operation/projects/project_detail&id_project=$idp'>$pname</a>";

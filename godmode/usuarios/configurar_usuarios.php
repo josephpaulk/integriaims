@@ -354,7 +354,7 @@ echo "<tr>";
 echo "<td>";
 echo __('Language');
 echo "<td>";
-print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', 'Default', '', false, false, true, false);
+print_select_from_sql ("SELECT * FROM tlanguage", "lang", $lang, '', __('Default'), '', false, false, true, false);
 
 ?>
 
