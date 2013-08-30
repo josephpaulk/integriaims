@@ -1,3 +1,14 @@
+2013-08-30  Dario Rodriguez <dario@artica.es>
+
+	* include/styles/integria.css: New style for custom field
+	table used in incidents and inventory.
+	* include/js/integria_incident_search.js,
+	operation/incidents/incident_detail.php: Fixed some layout
+	errors and another one related to html entities which appear
+	in custom fields.
+	* operation/incidents/incident_dashboard_detail.php: Now custom
+	fields are show in incident dashboard detail.
+
 2013-08-30  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_crm.php: Fixed a query error in the

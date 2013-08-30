@@ -521,38 +521,57 @@ function show_incident_type_fields() {
 			fi=document.getElementById('incident-editor-4-0');
 			var table = document.createElement("table"); //create table
 			table.id='table_fields';
-			table.className = 'databox_color_without_line';
+			table.className = 'custom-fields-table';
 			table.width='98%';
 			fi.appendChild(table); //append table to row
 			
 			var i = 0;
 			var resto = 0;
-			jQuery.each (data, function (id, value) {
-				
-				resto = i % 2;
+			var row = -1;
+			var textarea_elements = new Array();
 
+			jQuery.each (data, function (id, value) {
+				var trWidth = "";	
+				//This loops prints combos and text fields
+				//textare fields are printed later.
+				if (value["type"] == "textarea") {
+					textarea_elements.push(value);
+					return true; //Skip this iteration;
+				} 
+
+				resto = i % 3;
+
+				//Check if we need to create a new row or not
+				if (resto == 0) {
+					row++;
+					var objTr = document.createElement("tr"); //create row
+					objTr.id = 'new_row_'+row;
+					objTr.width='98%';
+					table.appendChild(objTr);
+					trWidth = "430px";
+				} else {
+					pos = i-1;
+					objTr = document.getElementById('new_row_'+row);
+				}
+				
+				//Create td and label elements
+				var objTd1 = document.createElement("td"); //create column for label
+
+
+				objTd1.width=trWidth;
+
+				//Create label and only add content if the element is not a texarea
+				lbl = document.createElement('label');
+				lbl.innerHTML = value['label']+' ';
+					
+				objTr.appendChild(objTd1);
+				objTd1.appendChild(lbl);
+
+				txt = document.createElement('br');
+				lbl.appendChild(txt);
+				
 				if (value['type'] == "combo") {
-					if (resto == 0) {
-						var objTr = document.createElement("tr"); //create row
-						objTr.id = 'new_row_'+i;
-						objTr.width='98%';
-						table.appendChild(objTr);
-					} else {
-						pos = i-1;
-						objTr = document.getElementById('new_row_'+pos);
-					}
-					
-					var objTd1 = document.createElement("td"); //create column for label
-					objTd1.width='50%';
-					lbl = document.createElement('label');
-					lbl.innerHTML = value['label']+' ';
-					
-					objTr.appendChild(objTd1);
-					objTd1.appendChild(lbl);
-					
-					txt = document.createElement('br');
-					lbl.appendChild(txt);
-					
+								
 					element=document.createElement('select');
 					element.id=value['label']; 
 					element.name=value['label_enco'];
@@ -569,33 +588,10 @@ function show_incident_type_fields() {
 						}
 					});
 			
-					lbl.appendChild(element);
-					i++;
 				}
 				
 				if ((value['type'] == "text")) {
-					
-					if (resto == 0) {
-						var objTr = document.createElement("tr"); //create row
-						objTr.id = 'new_row_'+i;
-						objTr.width='98%';
-						table.appendChild(objTr);
-					} else {
-						pos = i-1;
-						objTr = document.getElementById('new_row_'+pos);
-					}
-					
-					var objTd1 = document.createElement("td"); //create column for label
-					objTd1.width='50%';
-					lbl = document.createElement('label');
-					lbl.innerHTML = value['label']+' ';
-					objTr.appendChild(objTd1);
-					objTd1.appendChild(lbl);
-					
-					txt = document.createElement('br');
-					lbl.appendChild(txt);
-
-					
+				
 					element=document.createElement('input');
 					element.id=value['label'];
 					element.name=value['label_enco'];
@@ -603,38 +599,43 @@ function show_incident_type_fields() {
 					element.type='text';
 					element.size=40;
 					
-					lbl.appendChild(element);
-					i++;
 				}
 				
-				if ((value['type'] == "textarea")) {
+				lbl.appendChild(element);
+
+				i++;
+			});
+			
+			//Now we print text areas
+			jQuery.each (textarea_elements, function (id, value) {
+				
+				//Create row
+				var objTr = document.createElement("tr"); //create row
+				objTr.id = 'new_row_'+row;
+				table.appendChild(objTr);
+
+				//Create cell
+				var objTd1 = document.createElement("td"); //create column for label
+				objTd1.colSpan = 3;
 					
-					if (resto == 0) {
-						var objTr = document.createElement("tr"); //create row
-						objTr.id = 'new_row_'+i;
-						table.appendChild(objTr);
-					} else {
-						pos = i-1;
-						objTr = document.getElementById('new_row_'+pos);
-					}
-					
-					var objTd1 = document.createElement("td"); //create column for label
-					
-					lbl = document.createElement('label');
-					lbl.innerHTML = value['label']+' ';
-					objTr.appendChild(objTd1);
-					objTd1.appendChild(lbl);
-					
-					element=document.createElement("textarea");
-					element.id=value['label'];
-					element.name=value['label_enco'];
-					element.value=value['data'];
-					element.type='text';
-					element.rows='3';
-					
-					lbl.appendChild(element);
-					i++;
-				}
+				//Create label
+				lbl = document.createElement('label');
+				lbl.innerHTML = value['label']+' ';
+				objTr.appendChild(objTd1);
+				objTd1.appendChild(lbl);
+				
+				//Create text area element
+				element=document.createElement("textarea");
+				element.id=value['label'];
+				element.name=value['label_enco'];
+				element.value=value['data'];
+				element.type='text';
+				element.rows='7';
+				element.cols='80';
+				
+				lbl.appendChild(element);
+
+				row++;
 			});
 		}
 	});

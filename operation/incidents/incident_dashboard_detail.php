@@ -198,6 +198,57 @@ $incident_adv_details .= "</table>";
 
 $left_side .= print_container('incident_adv_details', __('Advanced details'), $incident_adv_details);
 
+if ($incident["id_incident_type"]) {
+
+	$type_name = get_db_value("name", "tincident_type", "id", $incident["id_incident_type"]);
+
+	$incident_custom_fields = "<table class='advanced_details_table alternate'>";
+	$incident_custom_fields .= "<tr>";
+	$incident_custom_fields .= "<td><table><tr><td><b>".$type_name."</b></td></tr></table></td>";
+	$incident_custom_fields .= "</tr>";
+
+	$fields = incidents_get_all_type_field ($incident["id_incident_type"], $id);
+
+	foreach ($fields as $f) {
+
+		if ($f["type"] != "textarea") {
+			$incident_custom_fields .= "<tr>";
+			$incident_custom_fields .= "<td>";
+				$incident_custom_fields .= "<table>";
+				$incident_custom_fields .= "<tr>";
+				$incident_custom_fields .= "<td>".$f["label"].":</td><td align='right'><b>".$f["data"]."</b></td>";
+				$incident_custom_fields .= "</tr>";
+				$incident_custom_fields .= "</table>";
+			$incident_custom_fields .= "</td>";
+			$incident_custom_fields .= "</tr>";	
+		} else {
+			$incident_custom_fields .= "<tr>";
+			$incident_custom_fields .= "<td>";
+				$incident_custom_fields .= "<table>";
+				$incident_custom_fields .= "<tr>";
+				$incident_custom_fields .= "<td>".$f["label"].":"."</td>";
+				$incident_custom_fields .= "</tr>";
+				$incident_custom_fields .= "</table>";
+			$incident_custom_fields .= "</td>";
+			$incident_custom_fields .= "</tr>";	
+			$incident_custom_fields .= "<tr>";
+			$incident_custom_fields .= "<td>";	
+				$incident_custom_fields .= "<table>";
+				$incident_custom_fields .= "<tr>";
+				$incident_custom_fields .= "<td align='right'><b>".clean_output_breaks($f["data"])."</b></td>";
+				$incident_custom_fields .= "</tr>";
+				$incident_custom_fields .= "</table>";
+			$incident_custom_fields .= "</td>";
+			$incident_custom_fields .= "</tr>";	
+		}
+
+	}
+
+	$incident_custom_fields .= "</table>";
+
+	$left_side .= print_container('incident_custom_fields', __('Custom fields'), $incident_custom_fields);
+}
+
 /**** DASHBOARD RIGHT SIDE ****/
 
 // People

@@ -32,7 +32,15 @@ if (defined ('AJAX')) {
 		$id_incident = get_parameter('id_incident');		
 		$fields = incidents_get_all_type_field ($id_incident_type, $id_incident);
 	
-		echo json_encode($fields);
+
+		$fields_final = array();
+		foreach ($fields as $f) {
+			$f["data"] = safe_output($f["data"]);
+
+			array_push($fields_final, $f);
+		}
+
+		echo json_encode($fields_final);
 		return;
 	}
 }
@@ -170,7 +178,7 @@ if ($action == 'update') {
 		}
 	
 		foreach ($labels as $label) {
-			$values['data'] = safe_output(get_parameter (base64_encode($label['label'])));
+			$values['data'] = get_parameter (base64_encode($label['label']));
 			$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
 			$values['id_incident_field'] = $id_incident_field;
 			$values['id_incident'] = $id;
@@ -413,7 +421,6 @@ if ($action == "insert") {
 				}
 				
 				foreach ($labels as $label) {
-
 					$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
 					
 					$values_insert['id_incident'] = $id;
@@ -619,16 +626,14 @@ $table->width = '98%';
 $table->class = 'search-table-button';
 $table->id = "incident-editor";
 $table->size = array ();
-$table->size[0] = '25%';
-$table->size[1] = '25%';
-$table->size[2] = '25%';
+$table->size[0] = '430px';
+$table->size[1] = '';
+$table->size[2] = '';
 $table->head = array();
 $table->style = array();
 $table->data = array ();
 $table->cellspacing = 2;
 $table->cellpadding = 2;
-$table->colspan = array ();
-$table->colspan[0][0] = 2;
 
 if ($has_permission) {
 	$table->data[0][0] = print_input_text ('titulo', $titulo, '', 55, 100, true, __('Title'));
@@ -650,11 +655,22 @@ if($id_grupo==0) {
 }
 
 if ($has_im) {
-	$table->data[0][2] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo_incident, true) . "<div id='group_spinner'></div>";
+	$table->data[0][1] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo_incident, true) . "<div id='group_spinner'></div>";
 } else {
-	$table->data[0][2] = print_label (__('Group'), '', '', true, dame_nombre_grupo ($id_grupo_incident));
-	$table->data[0][2] .= "<input type='hidden' id=grupo_form name=grupo_form value=$id_grupo_incident>";
+	$table->data[0][1] = print_label (__('Group'), '', '', true, dame_nombre_grupo ($id_grupo_incident));
+	$table->data[0][1] .= "<input type='hidden' id=grupo_form name=grupo_form value=$id_grupo_incident>";
 }
+
+$types = get_incident_types ();
+$table->data[0][2] = print_label (__('Incident type'), '','',true);
+
+//Disabled incident type if any, type changes not allowed
+if ($id_incident_type == 0) {
+	$disabled_itype = false;
+} else {
+	$disabled_itype = true;
+}
+$table->data[0][2] .= print_select($types, 'id_incident_type', $id_incident_type, 'show_incident_type_fields();', 'Select', '', true, 0, true, false, $disabled_itype);
 
 $disabled = false;
 
@@ -751,17 +767,6 @@ if (!$create_incident){
 	$table->data[2][2] .= user_print_autocomplete_input($params_closed);
 	$table->data[2][2] .= "</div>";
 }
-
-$types = get_incident_types ();
-$table->data[3][0] = print_label (__('Incident type'), '','',true);
-
-//Disabled incident type if any, type changes not allowed
-if ($id_incident_type == 0) {
-	$disabled_itype = false;
-} else {
-	$disabled_itype = true;
-}
-$table->data[3][0] .= print_select($types, 'id_incident_type', $id_incident_type, 'show_incident_type_fields();', 'Select', '', true, 0, true, false, $disabled_itype);
 
 $table->colspan[4][0] = 3;		
 //$table->data[4][0] = "<tr id='row_show_type_fields' colspan='4'></tr>";
@@ -865,7 +870,6 @@ foreach ($inventories as $inventory_id => $inventory_name) {
 if (($has_im) && ($create_incident)){
     $table_advanced->data[3][2] =  print_label (__('Creator group'), '', '', true, ""); 
 	$table_advanced->data[3][2] .= combo_groups_visible_for_me ($config['id_user'], "id_group_creator", false, "IW", true, __("Creator group"), false, false);
-	$table->colspan[1][0] = 2;
 } else {
 	//Only show if there is information to show ;)
 	if ($id_group_creator) {
@@ -1185,6 +1189,6 @@ messages = {
 };
 add_validate_form_element_rules('#text-titulo', rules, messages);
 
-</script>
+</script>*/
 
 <?php //endif; ?>

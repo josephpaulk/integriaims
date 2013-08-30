@@ -2177,3 +2177,19 @@ table.alternate tr:nth-child(even) td{
 	text-align: left;
 	margin-top: 3px;
 }
+
+
+table.custom-fields-table {
+	width: 100%;
+	margin-top: 0px;
+	margin-left: -3px;
+}
+
+table.custom-fields-table tr td {
+	padding-top: 1px !important;
+	font-size: 1em;
+}
+
+table.custom-fields-table tr:last-child td {
+	text-align: left;
+}
