@@ -517,21 +517,21 @@ function show_incident_type_fields() {
 		data: "page=operation/incidents/incident_detail&show_type_fields=1&id_incident_type=" + id_incident_type +"&id_incident=" +id_incident,
 		dataType: "json",
 		success: function(data){
-			
-			fi=document.getElementById('incident-editor-4-0');
-			var table = document.createElement("table"); //create table
-			table.id='table_fields';
-			table.className = 'custom-fields-table';
-			table.width='98%';
-			fi.appendChild(table); //append table to row
+
+			//FIRST DELETE OLD ROWS CREATED BY THIS FUNCTION BEFORE
+			$("[id^='new_row']").remove();
+
+			//Now create new elements
+			table = document.getElementById("incident-editor");
 			
 			var i = 0;
 			var resto = 0;
-			var row = -1;
+			var row = 3;
 			var textarea_elements = new Array();
-
+			var objTr;
+			var pos = 0;
 			jQuery.each (data, function (id, value) {
-				var trWidth = "";	
+				
 				//This loops prints combos and text fields
 				//textare fields are printed later.
 				if (value["type"] == "textarea") {
@@ -544,28 +544,19 @@ function show_incident_type_fields() {
 				//Check if we need to create a new row or not
 				if (resto == 0) {
 					row++;
-					var objTr = document.createElement("tr"); //create row
+					objTr = table.insertRow(row); //create row
 					objTr.id = 'new_row_'+row;
-					objTr.width='98%';
-					table.appendChild(objTr);
-					trWidth = "430px";
+					pos = 0;
 				} else {
-					pos = i-1;
-					objTr = document.getElementById('new_row_'+row);
+					pos++;
 				}
 				
 				//Create td and label elements
-				var objTd1 = document.createElement("td"); //create column for label
-
-
-				objTd1.width=trWidth;
+				var objTd = objTr.insertCell(pos); //create column for label
 
 				//Create label and only add content if the element is not a texarea
 				lbl = document.createElement('label');
 				lbl.innerHTML = value['label']+' ';
-					
-				objTr.appendChild(objTd1);
-				objTd1.appendChild(lbl);
 
 				txt = document.createElement('br');
 				lbl.appendChild(txt);
@@ -603,26 +594,17 @@ function show_incident_type_fields() {
 				
 				lbl.appendChild(element);
 
+				objTd.appendChild(lbl);
+
 				i++;
 			});
 			
 			//Now we print text areas
 			jQuery.each (textarea_elements, function (id, value) {
-				
-				//Create row
-				var objTr = document.createElement("tr"); //create row
-				objTr.id = 'new_row_'+row;
-				table.appendChild(objTr);
-
-				//Create cell
-				var objTd1 = document.createElement("td"); //create column for label
-				objTd1.colSpan = 3;
-					
+						
 				//Create label
 				lbl = document.createElement('label');
 				lbl.innerHTML = value['label']+' ';
-				objTr.appendChild(objTd1);
-				objTd1.appendChild(lbl);
 				
 				//Create text area element
 				element=document.createElement("textarea");
@@ -634,6 +616,17 @@ function show_incident_type_fields() {
 				element.cols='80';
 				
 				lbl.appendChild(element);
+
+				//Create new row for the table and then add the element
+				//Row+1 to insert after last row of elements
+				objTr = table.insertRow(row+1);
+				objTr.id = 'new_row_'+row;
+
+				objTd = objTr.insertCell();
+
+				objTd.colSpan=3;
+
+				objTd.appendChild(lbl);
 
 				row++;
 			});

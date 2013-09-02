@@ -1189,6 +1189,6 @@ messages = {
 };
 add_validate_form_element_rules('#text-titulo', rules, messages);
 
-</script>*/
+</script>
 
 <?php //endif; ?>
