@@ -20,6 +20,7 @@ include_once("include/functions_incidents.php");
 
 $get_incidents_search = get_parameter('get_incidents_search', 0);
 $get_incident_name = get_parameter('get_incident_name', 0);
+$get_contact_search = get_parameter('get_contact_search',0);
 
 if ($get_incidents_search) {
 	
@@ -55,6 +56,108 @@ if ($get_incident_name) {
 	$name = get_db_value ("titulo", "tincidencia", "id_incidencia", $id);
 	
 	echo $name;
+}
+
+if ($get_contact_search) {
+
+	include_once("include/functions_crm.php");
+
+	$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
+
+	if ($read !== ENTERPRISE_NOT_HOOK) {
+		$enterprise = true;
+	}
+
+	if (!$read) {
+		include ("general/noaccess.php");
+		exit;
+	}
+	
+	$search_text = (string) get_parameter ('search_text');
+	$id_company = (int) get_parameter ('id_company', 0);
+	
+	//$where_clause = "WHERE 1=1 AND id_company " .get_filter_by_company_accessibility($config["id_user"]);
+	$where_clause = "WHERE 1=1";
+	if ($search_text != "") {
+		$where_clause .= " AND (fullname LIKE '%$search_text%' OR email LIKE '%$search_text%'
+					OR phone LIKE '%$search_text%' OR mobile LIKE '%$search_text%') ";
+	}
+
+	if ($id_company) {
+
+		$where_clause .= sprintf (' AND id_company = %d', $id_company);
+	}
+	$params = "&search_text=$search_text&id_company=$id_company";
+
+	$table->width = '99%';
+	$table->class = 'search-table';
+	$table->style = array ();
+	$table->style[0] = 'font-weight: bold;';
+	$table->data = array ();
+	$table->data[0][0] = print_input_text ("search_text", $search_text, "", 15, 100, true, __('Search'));
+	
+        $companies = crm_get_all_companies(true);
+
+        if ($read && $enterprise) {
+        	$companies = crm_get_user_companies($config['id_user'], $companies);
+        }
+
+        $select_comp = array();
+                
+        foreach($companies as $id => $name) {
+        	$select_comp[$id] = $name;
+	}	
+
+	$table->data[0][1] = print_select ($select_comp, 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
+	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+	echo '<form id="contact_search_form" method="post">';
+	print_table ($table);
+	echo '</form>';
+
+	$contacts = crm_get_all_contacts ($where_clause);
+
+	if ($read && $enterprise) {
+		$contacts = crm_get_user_contacts($config['id_user'], $contacts);
+	}
+
+	$contacts = print_array_pagination ($contacts, "index.php?sec=customers&sec2=operation/contacts/contact_detail&params=$params", $offset);
+
+	if ($contacts !== false) {
+		unset ($table);
+		$table->width = "99%";
+		$table->class = "listing";
+		$table->data = array ();
+		$table->size = array ();
+		$table->size[3] = '40px';
+		$table->style = array ();
+		// $table->style[] = 'font-weight: bold';
+		$table->head = array ();
+		$table->head[0] = __('Full name');
+		$table->head[1] = __('Company');
+		$table->head[2] = __('Email');
+		if($manage_permission) {
+			$table->head[3] = __('Delete');
+		}
+		
+		foreach ($contacts as $contact) {
+			$data = array ();
+			// Nameif (defined ('AJAX')) {
+			$url = "javascript:loadContactEmail(\"".$contact['email']."\");";
+			$data[0] = "<a href='".$url."'>".$contact['fullname']."</a>";
+			$data[1] = "<a href='".$url."'>".get_db_value ('name', 'tcompany', 'id', $contact['id_company'])."</a>";
+			$data[2] = $contact['email'];
+			if($manage_permission) {
+				$data[3] = '<a href="index.php?sec=customers&
+							sec2=operation/contacts/contact_detail&
+							delete_contact=1&id='.$contact['id'].'&offset='.$offset.'"
+							onClick="if (!confirm(\''.__('Are you sure?').'\'))
+							return false;">
+							<img src="images/cross.png"></a>';
+			}	
+			array_push ($table->data, $data);
+		}
+		print_table ($table);
+	}		
 }
 
 ?>

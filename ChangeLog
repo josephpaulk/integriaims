@@ -1,5 +1,15 @@
 2013-09-02  Dario Rodriguez <dario@artica.es>
 
+	* include/js/integria_incident_search.js,
+	* include/ajax/incidents.php: Added function to select 
+	contact on incident view.
+	* operation/incidents/incident_detail.php: Change layout of 
+	advanced detail form. Added new feature to select contact email
+	using a popup.
+	* operation/contacts/contact_detail.php: Added id to form.
+
+2013-09-02  Dario Rodriguez <dario@artica.es>
+
 	* operation/incidents/incident_detail.php: Deleted a wrong
 	comment which appear in html view.
 	* include/js/integria_incident_search.js: Fixed some problems

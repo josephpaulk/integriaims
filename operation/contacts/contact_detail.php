@@ -174,7 +174,7 @@ if ($id == 0 && !$new_contact) {
 	$table->data[0][1] = print_select ($select_comp, 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
 	$table->data[0][3] = print_button(__('Export to CSV'), '', false, 'window.open(\'' . "include/export_csv.php?export_csv_contacts=1&where_clause=$where_clause" . '\')', 'class="sub csv"', true);
-	echo '<form method="post">';
+	echo '<form id="contact_search_form" method="post">';
 	print_table ($table);
 	echo '</form>';
 

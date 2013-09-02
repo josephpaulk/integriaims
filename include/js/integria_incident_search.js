@@ -781,3 +781,62 @@ function inventory_contact_details(phone, mobile, email) {
 
 	$("#detail_info").dialog();
 }
+
+function incident_show_contact_search (filter) {
+$.ajax({
+		type: "POST",
+		url: "ajax.php",
+		data: "page=include/ajax/incidents&get_contact_search=1&ajax=1&"+filter,
+		dataType: "html",
+		success: function(data){	
+			$("#contact_search_window").html (data);
+			$("#contact_search_window").show ();
+
+			$("#contact_search_window").dialog ({
+					resizable: true,
+					draggable: true,
+					modal: true,
+					overlay: {
+						opacity: 0.5,
+						background: "black"
+					},
+					width: 920,
+					height: 700
+				});
+			$("#contact_search_window").dialog('open');
+			
+			//JS to catch incident search submit request
+			$("#contact_search_form").submit(function (){
+				var filter = $("#contact_search_form").formSerialize();
+				incident_show_contact_search(filter);
+				return false;
+			});
+						
+			$("a[id^='page']").click(function(e) {
+
+				e.preventDefault();
+				var id = $(this).attr("id");
+								
+				offset = id.substr(5,id.length);
+				
+				var filter = $("#contact_search_form").formSerialize();
+				filter = filter+"&offset="+offset;
+				incident_show_contact_search(filter);
+			});
+		}
+	});	
+}
+
+function loadContactEmail(email) {
+	var content = $("#text-email_copy").val();
+
+	if (!content) {
+		content = email;
+	} else {
+		content += ", "+email;
+	}
+
+	$("#text-email_copy").val(content);
+
+	$("#contact_search_window").dialog("close");
+}

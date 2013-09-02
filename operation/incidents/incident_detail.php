@@ -776,56 +776,68 @@ $table->data[4][0] = "";
 $table_advanced->width = '98%';
 $table_advanced->class = 'search-table';
 $table_advanced->size = array ();
-$table_advanced->size[0] = '25%';
-$table_advanced->size[1] = '25%';
-$table_advanced->size[2] = '25%';
+$table_advanced->size[0] = '33%';
+$table_advanced->size[1] = '33%';
+$table_advanced->size[2] = '33%';
 $table_advanced->style = array();
 $table_advanced->data = array ();
+$table_advanced->colspan[1][1] = 2;
 
 
 // Table for advanced controls
 $table_advanced->data[0][0] = print_label (__('Editor'), '', '', true, $editor);
 
+if (($has_im) && ($create_incident)){
+    $table_advanced->data[0][1] =  print_label (__('Creator group'), '', '', true, ""); 
+	$table_advanced->data[0][1] .= combo_groups_visible_for_me ($config['id_user'], "id_group_creator", false, "IW", true, __("Creator group"), false, false);
+} else {
+	//Only show if there is information to show ;)
+	if ($id_group_creator) {
+		$table_advanced->data[0][1] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_group_creator));
+	}
+}
+
 if ($has_im){
-	$table_advanced->data[0][1] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
+	$table_advanced->data[0][2] = print_checkbox_extended ('sla_disabled', 1, $sla_disabled,
 	        false, '', '', true, __('SLA disabled'));
 
-	$table_advanced->data[0][2] = print_checkbox_extended ('email_notify', 1, $email_notify,
+	$table_advanced->data[1][0] = print_checkbox_extended ('email_notify', 1, $email_notify,
                 false, '', '', true, __('Notify changes by email'));
 
 } else {
-	$table_advanced->data[1][1] = print_input_hidden ('email_notify', 1, true);
-	$table_advanced->data[1][2] = print_input_hidden ('sla_disabled', 0, true);
+	$table_advanced->data[1][0] = print_input_hidden ('email_notify', 1, true);
+	$table_advanced->data[0][2] = print_input_hidden ('sla_disabled', 0, true);
 }
 
 $parent_name = $id_parent ? (__('Incident').' #'.$id_parent) : __('None');
 
 if ($has_im) {
-	$table_advanced->data[2][0] = print_input_text ('search_parent', $parent_name, '', 10, 100, true, __('Parent incident'));
-	$table_advanced->data[2][0] .= print_input_hidden ('id_parent', $id_parent, true);
-	$table_advanced->data[2][0] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
+	$table_advanced->data[3][0] = print_input_text ('search_parent', $parent_name, '', 10, 100, true, __('Parent incident'));
+	$table_advanced->data[3][0] .= print_input_hidden ('id_parent', $id_parent, true);
+	$table_advanced->data[3][0] .= print_image("images/cross.png", true, array("onclick" => "clean_parent_field()", "style" => "cursor: pointer"));
 }
 
 // Show link to go parent incident
 if ($id_parent)
-	$table_advanced->data[2][0] .= '&nbsp;<a target="_blank" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id_parent.'"><img src="images/go.png" /></a>';
+	$table_advanced->data[3][0] .= '&nbsp;<a target="_blank" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id_parent.'"><img src="images/go.png" /></a>';
 
 // Task
 if ($has_im) { 
-        $table_advanced->data[2][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"));
+        $table_advanced->data[3][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"));
 } else {
-	$table_advanced->data[2][1] = print_label (__("Task"), "label-id", 'text', true);
-	$table_advanced->data[2][1] .= "<i>".get_db_value ('name', 'ttask', 'id', $id_task)."</i>";
+	$table_advanced->data[3][1] = print_label (__("Task"), "label-id", 'text', true);
+	$table_advanced->data[3][1] .= "<i>".get_db_value ('name', 'ttask', 'id', $id_task)."</i>";
 }
 
 
 if ($id_task > 0){
 	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
-	$table_advanced->data[2][1] .= "&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>";
-	$table_advanced->data[2][1] .= "<img src='images/bricks.png'></a>";
+	$table_advanced->data[3][1] .= "&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>";
+	$table_advanced->data[3][1] .= "<img src='images/bricks.png'></a>";
 }
 
-$table_advanced->data[2][2] = print_input_text ('email_copy', $email_copy,"",20,500, true, __("Additional email addresses"));
+$table_advanced->data[1][1] = print_input_text ('email_copy', $email_copy,"",70,500, true, __("Additional email addresses"));
+$table_advanced->data[1][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_contact_search();'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 
 if ($create_incident) {
 
@@ -843,39 +855,29 @@ if ($create_incident) {
 			}
 		}
 		
-		$table_advanced->data[3][1] = print_select ($inventories, 'incident_inventories', NULL,
+		$table_advanced->data[3][2] = print_select ($inventories, 'incident_inventories', NULL,
 						'', '', '', true, false, false, __('Objects affected'));
 
-		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 
-		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 } else {
 	$inventories = get_inventories_in_incident ($id);
 	
-	$table_advanced->data[3][1] = print_select ($inventories, 'incident_inventories',
+	$table_advanced->data[3][2] = print_select ($inventories, 'incident_inventories',
 						NULL, '', '', '',
 						true, false, false, __('Objects affected'));
 
-		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
+		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: incident_show_inventory_search(\"\",\"\",\"\",\"\",\"\",\"\");'>" . print_image('images/add.png', true, array('title' => __('Add'))) . "</a>";
 
-		$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
+		$table_advanced->data[3][2] .= "&nbsp;&nbsp;<a href='javascript: removeInventory();'>" . print_image('images/cross.png', true, array('title' => __('Remove'))) . "</a>";
 }
 
 foreach ($inventories as $inventory_id => $inventory_name) {
-	$table_advanced->data[3][1] .= print_input_hidden ("inventories[]",
+	$table_advanced->data[3][2] .= print_input_hidden ("inventories[]",
 						$inventory_id, true, 'selected-inventories');
 }
 
-
-if (($has_im) && ($create_incident)){
-    $table_advanced->data[3][2] =  print_label (__('Creator group'), '', '', true, ""); 
-	$table_advanced->data[3][2] .= combo_groups_visible_for_me ($config['id_user'], "id_group_creator", false, "IW", true, __("Creator group"), false, false);
-} else {
-	//Only show if there is information to show ;)
-	if ($id_group_creator) {
-		$table_advanced->data[3][2] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_group_creator));
-	}
-}
 // END TABLE ADVANCED
 
 $table->colspan['row_advanced'][0] = 4;
@@ -933,9 +935,11 @@ echo '<div id="id_incident_hidden" style="display:none;">';
 	print_input_text('id_incident_hidden', $id);
 echo '</div>';
 
-echo "<div class= 'dialog ui-dialog-content' id='inventory_search_modal'></div>";
+echo "<div class= 'dialog ui-dialog-content' title='".__("Inventory objects")."' id='inventory_search_modal'></div>";
 
-echo "<div class= 'dialog ui-dialog-content' id='parent_search_window'></div>";
+echo "<div class= 'dialog ui-dialog-content' title='".__("Incidents")."' id='parent_search_window'></div>";
+
+echo "<div class= 'dialog ui-dialog-content' title='".__("Contacts")."' id='contact_search_window'></div>";
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
