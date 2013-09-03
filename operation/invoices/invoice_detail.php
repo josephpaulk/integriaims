@@ -177,7 +177,7 @@ if ($invoices !== false) {
 	$table->head[3] = __('Status');
 	$table->head[4] = __('Creation');
 	$table->head[5] = __('Payment');
-	$table->head[6] = __('Description');
+	$table->head[6] = __('Desc.');
 	$table->head[7] = __('Options');
 	$counter = 0;
 	
@@ -194,8 +194,7 @@ if ($invoices !== false) {
 		
 		if ($invoice["id_company"] != 0){
 			$company_name = get_db_value ("name", "tcompany", "id", $invoice["id_company"]);
-			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail
-				&id=".$invoice["id_company"]."'>".$company_name."</a>";
+			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&view_invoice=1&id=".$invoice["id_company"]."&op=invoices&id_invoice=".$invoice["id"]."'>".$company_name."</a>";
 		} else {
 			$data[0] = __("N/A");
 		}
@@ -209,7 +208,18 @@ if ($invoices !== false) {
 		} else {
 			$data[5] = __("Not paid");
 		}
-		$data[6] = __($invoice["description"]);
+
+		// Description could be huge, so is a bad idea to show up in a listing. We put in a hint,
+		// but to avoid user moving over all tip icons, show icon only if have something inside.
+
+		if ($invoice["description"] != ""){
+			$data[6] = "<a href='#' class='tip'><span>";
+			$data[6] .= $invoice["description"];
+			$data[6] .= "</span></a>";
+		} else {
+			$data[6] = "";
+		}
+
 		$data[7] = '<a href="index.php?sec=users&amp;sec2=operation/invoices/invoice_view
 			&amp;id_invoice='.$invoice["id"].'&amp;clean_output=1&amp;pdf_output=1">
 			<img src="images/page_white_acrobat.png" title="'.__('Export to PDF').'"></a>';

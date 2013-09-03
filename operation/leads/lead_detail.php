@@ -283,7 +283,7 @@ $filter['search_text'] = (string) get_parameter ('search_text');
 $filter['id_company'] = (int) get_parameter ('id_company_search');
 $filter['start_date'] = (string) get_parameter ('start_date_search');
 $filter['end_date'] = (string) get_parameter ('end_date_search');
-$filter['country'] = (string) get_parameter ('country_search');
+$filter['country'] = (string) get_parameter ('country_search', "");
 $filter['id_category'] = (int) get_parameter ('product_search');
 $filter['progress_major_than'] = (int) get_parameter ('progress_major_than_search');
 $filter['progress_minor_than'] = (int) get_parameter ('progress_minor_than_search');
@@ -743,7 +743,7 @@ if ($id || $new) {
 		$id_category = (int) get_parameter ('product_search');
 		$progress_major_than = (int) get_parameter ('progress_major_than_search');
 		$progress_minor_than = (int) get_parameter ('progress_minor_than_search');
-		$owner = (string) get_parameter ("owner_search");
+		$owner = (string) get_parameter ("owner_search", $config["id_user"]);
 		$show_100 = (int) get_parameter ("show_100_search");
 		$id_language = (string) get_parameter ("id_language", "");
 		$est_sale = (int) get_parameter ("est_sale_search", 0);

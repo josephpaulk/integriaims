@@ -149,8 +149,6 @@ if ($id || $new_role) {
 		$table->data = array ();
 		$table->size = array ();
 		$table->style = array ();
-		$table->style[0] = 'font-weight: bold';
-		$table->style[1] = 'font-weight: bold';
 		$table->head[0] = __('ID');
 		$table->head[1] = __('Name');
 		$table->head[2] = __('Description');

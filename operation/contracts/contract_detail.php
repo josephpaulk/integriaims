@@ -409,7 +409,7 @@ if ($id | $new_contract) {
 		$table->colspan = array ();
 		$table->style[3]= "font-size: 8px";
 		$table->style[4]= "font-size: 8px";
-		$table->style[5]= "font-size: 8px";
+		$table->style[1]= "font-size: 9px";
 		$table->head[0] = __('Name');
 		$table->head[1] = __('Contract number');
 		$table->head[2] = __('Company');

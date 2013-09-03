@@ -1,3 +1,11 @@
+2013-09-03  Sancho Lerena <slerena@artica.es>
+
+	* operation/invoices/invoice_detail.php,
+	operation/leads/lead_detail.php,
+	operation/contracts/contract_detail.php,
+	operation/companies/company_role.php: Small fixes
+	and formatting changes. Nothing serious.
+
 2013-09-03  Dario Rodriguez <dario@artica.es>
 
 	* include/ajax/calendar.php,
