@@ -1,5 +1,10 @@
 2013-09-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
+	* operation/workorders/wo.php: Now is possible to filter
+	workorders by project.
+
+2013-09-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
 	* include/ajax/remote_validations.php: Fixed an error on a
 	validation that does not return anything.
 	

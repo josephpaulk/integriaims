@@ -432,10 +432,11 @@ if ($operation == "") {
 
 	$creator = (string) get_parameter ("creator", "");
 	$id_category = get_parameter ("id_category");
+	$id_project = (int) get_parameter ("id_project");
 	$search_priority = get_parameter ("search_priority", -1);
 	$need_validation =get_parameter("need_validation",0);
 
-	$params = "&search_priority=$search_priority&search_tatus=$search_status&search_text=$search_text&id_category=$id_category&owner=$owner&creator=$creator&need_validation=$need_validation";
+	$params = "&search_priority=$search_priority&search_tatus=$search_status&search_text=$search_text&id_category=$id_category&owner=$owner&creator=$creator&id_project=$id_project&need_validation=$need_validation";
 
 	$where_clause = "WHERE 1=1 ";
 
@@ -465,6 +466,10 @@ if ($operation == "") {
 
 	if ($id_category) {
 		$where_clause .= sprintf(' AND id_wo_category = %d ', $id_category);
+	}
+	
+	if ($id_project) {
+		$where_clause .= sprintf(' AND id_task = ANY(SELECT id FROM ttask WHERE id_project = %d) ', $id_project);
 	}
 
 	echo '<form action="index.php?sec=projects&sec2=operation/workorders/wo" method="post">';		
@@ -527,8 +532,12 @@ if ($operation == "") {
 	$table->data[0][0] = print_select_from_sql ('SELECT id, name FROM two_category ORDER BY name',
 	'id_category', $id_category, '', __("Any"), 0, true, false, false,
 	__('Category'));
+	
+	$table->data[0][1] = print_select_from_sql (get_projects_query($config['id_user']),
+	'id_project', $id_project, '', __("Any"), 0, true, false, false,
+	__('Project'));
 
-	$table->data[0][1] =  print_checkbox ("need_validation", 1, $need_validation, true, __("Require validation"));
+	$table->data[0][2] =  print_checkbox ("need_validation", 1, $need_validation, true, __("Require validation"));
 	print_table ($table);
 	
 	echo "</div>";
