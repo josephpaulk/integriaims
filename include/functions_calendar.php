@@ -376,8 +376,8 @@ function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "" 
 	$day_in_seconds = 24*3600;
 
 	//Calculate mysql dates
-	$mysql_start = $mysql_date = date('Y-m-d', $start);
-	$mysql_end = $mysql_date = date('Y-m-d', $end);
+	$mysql_start = date('Y-m-d', $start);
+	$mysql_end = date('Y-m-d', $end);
 
 	//Get project information
 	$agenda_project = calendar_get_project_date_range($mysql_start, $mysql_end);
@@ -1419,4 +1419,88 @@ function get_non_working_days ($year) {
 	
 	return $defined_non_working_days + $weekend_days;
 }
+
+function calendar_get_users_holidays_date_range($start, $end, $id_user) {
+
+	$mysql_start = date('Y-m-d', $start);
+	$mysql_end = date('Y-m-d', $end);
+
+	$user_clause = "";
+	if (is_array($id_user)) {
+
+		$aux_ids = array();
+		foreach ($id_user as $iu) {
+			array_push($aux_ids, "'".$iu."'");
+		}
+		$user_clause = "id_user IN (".join(",",$aux_ids).")";
+	} else {
+		$user_clause = "id_user = '$id_user'";
+	}
+
+	$sql = sprintf("SELECT tworkunit.timestamp AS date, tworkunit.id_user as user FROM tworkunit, tworkunit_task WHERE 
+					$user_clause AND tworkunit_task.id_workunit = tworkunit.id AND tworkunit_task.id_task =-1 AND 
+					timestamp >= '$mysql_start' AND timestamp <= '$mysql_end' ORDER BY date ASC");
+	
+	$res = process_sql($sql);
+
+	if (!$res) {
+		$res = array();
+	}
+
+	$holidays = array();
+	$holidays_counters = array();
+	$holidays_last_day = array();
+
+	foreach ($res as $r) {
+		
+		if (!isset($holidays[$r["user"]])) {
+			$holidays[$r["user"]] = array();
+			$holidays_counters[$r["user"]] = -1;
+			$holidays_last_day[$r["user"]] = 0;
+		}
+
+		//Calculate start and end for the holiday value
+		if (isset($holidays_last_day[$r["user"]])) {
+			
+			//Last day minus current day is 1 we increase dates for stored holidays
+			$last_time = strtotime($holidays_last_day[$r["user"]]);
+			$current_time = strtotime($r["date"]);
+			$day_in_seconds = 24*3600;
+		
+			if ($current_time - $last_time <= $day_in_seconds) {
+				
+				$pos = $holidays_counters[$r["user"]];
+				
+				$holidays[$r["user"]][$pos]["end"] = $r["date"];
+				$holidays_last_day[$r["user"]] = $r["date"];
+			} else {
+				array_push($holidays[$r["user"]], array("start" => $r["date"], "end" => $r["date"]));
+				$holidays_last_day[$r["user"]] = $r["date"];
+				$holidays_counters[$r["user"]]++;
+			}
+		}
+
+		//Update last day
+		$holidays_last_day[$r["user"]] = $r["date"];
+		
+	}
+
+	$full_holidays = array();
+
+	$colors = array("#aa3333", "#33aa33", "#3a3a3a", "#3333aa");
+
+	$i = 0;
+	$colors_size = count($colors);
+	foreach ($holidays as $key => $values) {
+		$i = $i % $colors_size;
+
+		$name = get_db_value("nombre_real", "tusuario", "id_usuario", $key);
+		array_push($full_holidays, array("name" => safe_output($name), "dates" => $values, "bgColor" => $colors[$i]));
+
+		$i++;
+	}
+
+	return $full_holidays;
+}
+
 ?>

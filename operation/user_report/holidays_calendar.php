@@ -13,38 +13,17 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+// Load global vars
+
 global $config;
-require_once ('include/functions_user.php');
-
-$result_msg = "";
-
 check_login ();
 
-$id_grupo = (int) get_parameter ('id_grupo');
+require_once('include/functions_user.php');
 
-if (! give_acl ($config['id_user'], $id_grupo, "AR")) {
- 	// Doesn't have access to this page
-	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access agenda of group ".$id_grupo);
-	include ("general/noaccess.php");
-	exit;
-}
 
-echo '<h1>' . __('Agenda').'</h1>';
-
-echo "<table class='calendar_legend'>";
-echo "<tr>";
-echo "<td class='legend_color_box legend_project'></td>";
-echo "<td>".__("Projects")."</td>";
-echo "<td class='legend_color_box legend_task'></td>";
-echo "<td>".__("Tasks")."</td>";
-echo "<td class='legend_color_box legend_wo'></td>";
-echo "<td>".__("Workorders")."</td>";
-echo "<td class='legend_color_box legend_event'></td>";
-echo "<td class='legend_last_box'>".__("Events")."</td>";
-echo "</tr>";
-echo "</table>";
-
+echo "<h1>".__("Holidays calendar")."</h1>";
 echo "<div id='calendar'></div>";
+
 ?>
 
 <link href='include/js/fullcalendar/fullcalendar.css' rel='stylesheet' />
@@ -66,11 +45,11 @@ echo "<div id='calendar'></div>";
 				center: 'prev,title,next',
 				right: 'month,agendaWeek,agendaDay'
 			},
+			firstDay: 1,
 			buttonText: {
 				prev: '<img src="images/control_rewind_blue.png" title="<?php echo __("Prev");?>" class="calendar_arrow">',
    				next: '<img src="images/control_fastforward_blue.png" title="<?php echo __("Prev");?>" class="calendar_arrow">',
    			},
-            firstDay: 1,
 			editable: false,
 			events: function(start, end, callback) {
 				var date_aux = new Date(start);
@@ -84,31 +63,26 @@ echo "<div id='calendar'></div>";
         		end_time = end_time/1000; //Convert from miliseconds to seconds
 
         		$.ajax({
-            		url: 'ajax.php?page=include/ajax/calendar&get_events=1&ajax=1&start_date='+start_time+'&end_date='+end_time,
+            		url: 'ajax.php?page=include/ajax/calendar&get_holidays=1&ajax=1&start_date='+start_time+'&end_date='+end_time,
             		dataType: 'json',
             		type: "POST",
             		success: function(data) {
+
                 		var events = [];
                 		
                 		$(data).each(function() {
                 			
                 			var obj = $(this);
                 			var title_str = obj[0].name;
-                			var start_str = obj[0].start;
-                			var end_str = obj[0].end;
+                			var days = obj[0].dates;
                 			var bgColor = obj[0].bgColor;
-                			var allDayEvent = obj[0].allDay;
-                			var link = obj[0].url;
 
-                			//Convert dates to JS object date
-                			start_date = new Date(start_str);
-
-                			var end_date = start_date;
-                			if (end_str) {
-                				end_date = new Date(end_str);                			
-                			}
-
-                    		events.push({title: title_str, start: start_date, end: end_date, color: bgColor, allDay: allDayEvent, url: link});
+                			//Print holidays
+                			days.forEach(function (element, index, array) {
+                				start_date = new Date(element.start);
+                				end_date = new Date(element.end);
+                    			events.push({title: title_str, start: start_date, end: end_date, color: bgColor});
+                			});
                 		});
                 		callback(events);
             		}

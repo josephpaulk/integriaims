@@ -1009,6 +1009,11 @@ if (($sec == "users") OR ($sec == "user_audit") && $show_people != MENU_HIDDEN) 
 			echo "<li>";
 		echo "<a href='index.php?sec=users&sec2=operation/user_report/report_annual'>".__('Annual report')."</a></li>";
 		
+		if ($sec2 == "operation/user_report/holidays_calendar")
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=users&sec2=operation/user_report/holidays_calendar'>".__('Holidays calendar')."</a></li>";
 	}
 	
 	if (dame_admin ($config['id_user'])) {

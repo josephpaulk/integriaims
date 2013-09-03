@@ -1,5 +1,16 @@
 2013-09-03  Dario Rodriguez <dario@artica.es>
 
+	* include/ajax/calendar.php,
+	include/functions_calendar.php,
+	operation/side_menu.php,
+	operation/user_report/holidays_calendar.php: New 
+	calendar to show holidays of users.
+
+	* operation/agenda/agenda.php: Deleted some debug
+	traces and improved calendar visualization.
+
+2013-09-03  Dario Rodriguez <dario@artica.es>
+
 	* include/styles/integria.css: Created new style for
 	calendar legend.
 	* include/js/fullcalendar: new library to generate
