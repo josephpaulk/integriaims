@@ -29,60 +29,96 @@ if (! give_acl ($config['id_user'], $id_grupo, "AR")) {
 	exit;
 }
 
-echo '<h1>' . __('Agenda') . '</h1>';
+echo '<h1>' . __('Agenda').'</h1>';
 
-$create_item = (bool) get_parameter ('create_item');
-$delete_event = (bool) get_parameter ('delete_event');
+echo "<table class='calendar_legend'>";
+echo "<tr>";
+echo "<td class='legend_color_box legend_project'></td>";
+echo "<td>".__("Projects")."</td>";
+echo "<td class='legend_color_box legend_task'></td>";
+echo "<td>".__("Tasks")."</td>";
+echo "<td class='legend_color_box legend_wo'></td>";
+echo "<td>".__("Workorders")."</td>";
+echo "<td class='legend_color_box legend_event'></td>";
+echo "<td class='legend_last_box'>".__("Events")."</td>";
+echo "</tr>";
+echo "</table>";
 
-// Delete event
-if ($delete_event) {
-	$id = get_parameter ("delete_event", 0);
-	$event_user = get_db_value ("id_user", "tagenda", "id", $id);
-	
-	if ($event_user == $config['id_user'] || dame_admin($config['id_user'])) { 
-		// Only admins (manage incident) or owners can modify incidents, including their notes
-		$sql = sprintf ('DELETE FROM tagenda WHERE id = %d', $id);
-		process_sql ($sql);
-	}
-	insert_event ("DELETE CALENDAR EVENT", 0, 0, $event_user);
-}
+echo "<div id='calendar'></div>";
 
-// Get parameters for actual Calendar show
-$time = time();
-$month = get_parameter ("month", date ('n'));
-$year = get_parameter ("year", date ('y'));
-
-$today = date ('j');
-$days_f = array();
-$first_of_month = gmmktime(0,0,0,$month,1,$year);
-$days_in_month=gmdate('t',$first_of_month);
-$locale = $config["language_code"];
-
-// Calculate PREV button
-if ($month == 1){
-	$month_p = 12;
-	$year_p = $year -1;
-} else {
-	$month_p = $month -1;
-	$year_p = $year;
-}
-
-// Calculate NEXT button
-if ($month == 12){
-	$month_n = 1;
-	$year_n = $year +1;
-} else {
-	$month_n = $month +1;
-	$year_n = $year;
-}
-
-
-$start_date = $mydate_sql = date("Y-m-d", time());
-
-$pn = array("<img src='images/control_rewind_blue.png' title='" . __('Prev') . "' class='calendar_arrow'>"=>"index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month_p&year=$year_p", "<img src='images/control_fastforward_blue.png' title='" . __('Next') . "' class='calendar_arrow'>"=>"index.php?sec=agenda&sec2=operation/agenda/agenda&month=$month_n&year=$year_n");
-
-echo '<div align="center" style="padding-top: 10px;">';
-echo generate_calendar_agenda ($year, $month, $days_f, 3, NULL, $locale, $pn, $config['id_user']);
-echo '</div>';
+$start_date = 1377986400;
+$end_date = 1381615200;
 
 ?>
+
+<link href='include/js/fullcalendar/fullcalendar.css' rel='stylesheet' />
+<link href='include/js/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+<script src='include/js/fullcalendar/fullcalendar.min.js'></script>
+
+<script>
+
+	$(document).ready(function() {
+	
+		var date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth();
+		var y = date.getFullYear();
+
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'today',
+				center: 'prev,title,next',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			buttonText: {
+				prev: '<img src="images/control_rewind_blue.png" title="<?php echo __("Prev");?>" class="calendar_arrow">',
+   				next: '<img src="images/control_fastforward_blue.png" title="<?php echo __("Prev");?>" class="calendar_arrow">',
+   			},
+			editable: false,
+			events: function(start, end, callback) {
+				var date_aux = new Date(start);
+        		var start_time = date_aux.getTime();
+
+        		start_time = start_time/1000; //Convert from miliseconds to seconds
+        			
+        		date_aux = new Date(end);
+        		var end_time = date_aux.getTime();
+
+        		end_time = end_time/1000; //Convert from miliseconds to seconds
+
+        		$.ajax({
+            		url: 'ajax.php?page=include/ajax/calendar&get_events=1&ajax=1&start_date='+start_time+'&end_date='+end_time,
+            		dataType: 'json',
+            		type: "POST",
+            		success: function(data) {
+                		var events = [];
+                		
+                		$(data).each(function() {
+                			
+                			var obj = $(this);
+                			var title_str = obj[0].name;
+                			var start_str = obj[0].start;
+                			var end_str = obj[0].end;
+                			var bgColor = obj[0].bgColor;
+                			var allDayEvent = obj[0].allDay;
+                			var link = obj[0].url;
+
+                			//Convert dates to JS object date
+                			start_date = new Date(start_str);
+
+                			var end_date = start_date;
+                			if (end_str) {
+                				end_date = new Date(end_str);                			
+                			}
+
+                    		events.push({title: title_str, start: start_date, end: end_date, color: bgColor, allDay: allDayEvent, url: link});
+                		});
+                		callback(events);
+            		}
+        		});
+    		}
+		});
+		
+	});
+
+</script>

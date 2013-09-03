@@ -1,3 +1,14 @@
+2013-09-03  Dario Rodriguez <dario@artica.es>
+
+	* include/styles/integria.css: Created new style for
+	calendar legend.
+	* include/js/fullcalendar: new library to generate
+	agenda calendar.
+	* include/ajax/calendar.php,
+	include/functions_calendar.php,
+	operation/agenda/agenda.php: Developed a new calendar
+	view using the new library.
+
 2013-09-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
 
 	* operation/workorders/wo.php: Now is possible to filter

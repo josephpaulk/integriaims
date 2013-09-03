@@ -2193,3 +2193,40 @@ table.custom-fields-table tr td {
 table.custom-fields-table tr:last-child td {
 	text-align: left;
 }
+table.calendar_legend {
+	float:right;
+}
+
+table.calendar_legend td {
+	font-size:8pt;
+	font-weight:bold; 
+	border-radius: 5px;
+	padding-right: 10px;
+	padding-top: 0px;
+	padding-bottom: 0px;	
+}
+
+td.legend_color_box {
+	width: 10px;
+	border-radius: 5px;
+}
+
+td.legend_project {
+	background-color: #aa3333;
+}
+
+td.legend_task {
+	background-color: #33aa33;
+}
+
+td.legend_wo {
+	background-color: #3a3a3a;
+}
+
+td.legend_event {
+	background-color: #3333aa;
+}
+
+td.legend_last_box{
+	padding-right: 0px !important;
+}

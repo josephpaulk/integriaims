@@ -91,12 +91,34 @@ function get_project_end_date ($now, $days_margin = 0, $id_user = ""){
 
 	// Search for Project end in this date
 	if ($id_user == '_ANY_' || dame_admin($id_user))
-		$sql = "SELECT tproject.name as pname, tproject.end as pend, tproject.id as idp, tproject.id_owner as id_owner FROM tproject WHERE tproject.end >= '$now' AND tproject.end <= '$now3' GROUP BY idp";
+		$sql = "SELECT tproject.name as pname, tproject.end as pend, tproject.id as idp, tproject.id_owner as id_owner, tproject.start as pstart FROM tproject WHERE tproject.end >= '$now' AND tproject.end <= '$now3' GROUP BY idp";
 	else
-		$sql = "SELECT tproject.name as pname, tproject.end as pend, tproject.id as idp, tproject.id_owner as id_owner FROM trole_people_project, tproject WHERE trole_people_project.id_user = '$id_user' AND trole_people_project.id_project = tproject.id AND tproject.end >= '$now' AND tproject.end <= '$now3' GROUP BY idp";
+		$sql = "SELECT tproject.name as pname, tproject.end as pend, tproject.id as idp, tproject.id_owner as id_owner, tproject.start as pstart FROM trole_people_project, tproject WHERE trole_people_project.id_user = '$id_user' AND trole_people_project.id_project = tproject.id AND tproject.end >= '$now' AND tproject.end <= '$now3' GROUP BY idp";
+
 	$res = mysql_query ($sql);
 	while ($row=mysql_fetch_array ($res)){
-		$result[] = $row["pname"] ."|".$row["idp"]."|".$row["pend"]."|".$row["id_owner"];
+		$result[] = $row["pname"] ."|".$row["idp"]."|".$row["pend"]."|".$row["id_owner"]."|".$row["pstart"];
+	}
+	return $result;
+}
+
+function calendar_get_project_date_range($start_date, $end_date, $id_user = "") {
+	global $config;
+	
+	if ($id_user == "")
+		$id_user = $config["id_user"];
+	
+	$result = array();
+
+	// Search for Project end in this date
+	if ($id_user == '_ANY_' || dame_admin($id_user))
+		$sql = "SELECT tproject.name as pname, tproject.end as pend, tproject.id as idp, tproject.id_owner as id_owner, tproject.start as pstart FROM tproject WHERE (tproject.start >= '$start_date' AND tproject.start <= '$end_date') OR (tproject.end >= '$start_date' AND tproject.end <= '$end_date') GROUP BY idp";
+	else
+		$sql = "SELECT tproject.name as pname, tproject.end as pend, tproject.id as idp, tproject.id_owner as id_owner, tproject.start as pstart FROM trole_people_project, tproject WHERE trole_people_project.id_user = '$id_user' AND trole_people_project.id_project = tproject.id AND ((tproject.start >= '$start_date' AND tproject.start <= '$end_date') OR (tproject.end >= '$start_date' AND tproject.end <= '$end_date')) GROUP BY idp";
+
+	$res = mysql_query ($sql);
+	while ($row=mysql_fetch_array ($res)){
+		$result[] = $row["pname"] ."|".$row["idp"]."|".$row["pend"]."|".$row["id_owner"]."|".$row["pstart"];
 	}
 	return $result;
 }
@@ -118,14 +140,36 @@ function get_task_end_date ($now, $days_margin = 0, $id_user = ""){
 
 	// Search for tasks that end in this date
 	if (dame_admin($id_user))
-		$sql = "SELECT tproject.name as pname, tproject.id as idp, ttask.name as tname, ttask.end as tend, ttask.id as idt FROM tproject, ttask WHERE tproject.id = ttask.id_project AND ttask.end >= '$now' AND ttask.end <= '$now3' GROUP BY idt";
+		$sql = "SELECT tproject.name as pname, tproject.id as idp, ttask.name as tname, ttask.end as tend, ttask.id as idt, ttask.start as pstart FROM tproject, ttask WHERE tproject.id = ttask.id_project AND ttask.end >= '$now' AND ttask.end <= '$now3' GROUP BY idt";
 	else
-		$sql = "SELECT tproject.name as pname, tproject.id as idp, ttask.name as tname, ttask.end as tend, ttask.id as idt FROM trole_people_task, tproject, ttask WHERE tproject.id = ttask.id_project AND trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.end >= '$now' AND ttask.end <= '$now3' GROUP BY idt";
+		$sql = "SELECT tproject.name as pname, tproject.id as idp, ttask.name as tname, ttask.end as tend, ttask.id as idt, ttask.start as pstart FROM trole_people_task, tproject, ttask WHERE tproject.id = ttask.id_project AND trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ttask.end >= '$now' AND ttask.end <= '$now3' GROUP BY idt";
 	$res = mysql_query ($sql);
 	while ($row=mysql_fetch_array ($res)){
-		$result[] = $row["tname"] ."|".$row["idt"]."|".$row["tend"]."|".$row["pname"]."|".$row["idp"];
+		$result[] = $row["tname"] ."|".$row["idt"]."|".$row["tend"]."|".$row["pname"]."|".$row["idp"]."|".$row["pstart"];
 	}
 	return $result;
+}
+
+function calendar_get_task_date_range($start, $end, $id_user = "") {
+
+	global $config;
+	
+	if ($id_user == "")
+		$id_user = $config["id_user"];
+
+	$result = array();
+
+	// Search for tasks that end in this date
+	if (dame_admin($id_user))
+		$sql = "SELECT tproject.name as pname, tproject.id as idp, ttask.name as tname, ttask.end as tend, ttask.id as idt, ttask.start as pstart FROM tproject, ttask WHERE tproject.id = ttask.id_project AND ((ttask.end >= '$start' AND ttask.end <= '$end') OR (ttask.start >= '$start' AND ttask.start <= '$end')) GROUP BY idt";
+	else
+		$sql = "SELECT tproject.name as pname, tproject.id as idp, ttask.name as tname, ttask.end as tend, ttask.id as idt, ttask.start as pstart FROM trole_people_task, tproject, ttask WHERE tproject.id = ttask.id_project AND trole_people_task.id_user = '$id_user' AND trole_people_task.id_task = ttask.id AND ((ttask.end >= '$start' AND ttask.end <= '$end') OR (ttask.start >= '$start' AND ttask.start <= '$end')) GROUP BY idt";
+	$res = mysql_query ($sql);
+	while ($row=mysql_fetch_array ($res)){
+		$result[] = $row["tname"] ."|".$row["idt"]."|".$row["tend"]."|".$row["pname"]."|".$row["idp"]."|".$row["pstart"];
+	}
+	return $result;
+
 }
 
 function get_wo_end_date ($now, $days_margin = 0, $id_user = ""){
@@ -139,12 +183,32 @@ function get_wo_end_date ($now, $days_margin = 0, $id_user = ""){
 
 	// Search for tasks that end in this date
 	if (dame_admin($id_user))
-		$sql = "SELECT ttodo.id as idwo, ttodo.name as woname, ttodo.assigned_user woowner, ttodo.created_by_user as wocreator, ttodo.priority as wopriority, ttodo.end_date as woend FROM ttodo WHERE ttodo.progress = 0 AND ttodo.end_date >= '$now' AND ttodo.end_date <= '$now3' GROUP BY idwo ORDER BY ttodo.end_date";
+		$sql = "SELECT ttodo.id as idwo, ttodo.name as woname, ttodo.assigned_user woowner, ttodo.created_by_user as wocreator, ttodo.priority as wopriority, ttodo.end_date as woend, ttodo.start_date as wostart FROM ttodo WHERE ttodo.progress = 0 AND ttodo.end_date >= '$now' AND ttodo.end_date <= '$now3' GROUP BY idwo ORDER BY ttodo.end_date";
 	else
-		$sql = "SELECT ttodo.id as idwo, ttodo.name as woname, ttodo.assigned_user woowner, ttodo.created_by_user as wocreator, ttodo.priority as wopriority, ttodo.end_date as woend FROM ttodo WHERE ttodo.progress = 0 AND (ttodo.assigned_user = '$id_user' OR ttodo.created_by_user = '$id_user') AND ttodo.end_date >= '$now' AND ttodo.end_date <= '$now3' GROUP BY idwo ORDER BY ttodo.end_date";
+		$sql = "SELECT ttodo.id as idwo, ttodo.name as woname, ttodo.assigned_user woowner, ttodo.created_by_user as wocreator, ttodo.priority as wopriority, ttodo.end_date as woend, ttodo.start_date as wostart FROM ttodo WHERE ttodo.progress = 0 AND (ttodo.assigned_user = '$id_user' OR ttodo.created_by_user = '$id_user') AND ttodo.end_date >= '$now' AND ttodo.end_date <= '$now3' GROUP BY idwo ORDER BY ttodo.end_date";
 	$res = mysql_query ($sql);
 	while ($row=mysql_fetch_array ($res)){
-		$result[] = $row["idwo"] ."|".$row["woname"]."|".$row["woowner"]."|".$row["wocreator"]."|".$row["wopriority"]."|".$row["woend"];
+		$result[] = $row["idwo"] ."|".$row["woname"]."|".$row["woowner"]."|".$row["wocreator"]."|".$row["wopriority"]."|".$row["woend"]."|".$row["wostart"];
+	}
+	return $result;
+}
+
+function calendar_get_wo_date_range($start, $end, $id_user = ""){
+	global $config;
+	
+	if ($id_user == "")
+		$id_user = $config["id_user"];
+
+	$result = array();
+
+	// Search for tasks that end in this date
+	if (dame_admin($id_user))
+		$sql = "SELECT ttodo.id as idwo, ttodo.name as woname, ttodo.assigned_user woowner, ttodo.created_by_user as wocreator, ttodo.priority as wopriority, ttodo.end_date as woend, ttodo.start_date as wostart FROM ttodo WHERE ttodo.progress = 0 AND ((ttodo.end_date >= '$start' AND ttodo.end_date <= '$end') OR (ttodo.start_date >= '$start' AND ttodo.start_date <= '$end')) GROUP BY idwo ORDER BY ttodo.end_date";
+	else
+		$sql = "SELECT ttodo.id as idwo, ttodo.name as woname, ttodo.assigned_user woowner, ttodo.created_by_user as wocreator, ttodo.priority as wopriority, ttodo.end_date as woend, ttodo.start_date as wostart FROM ttodo WHERE ttodo.progress = 0 AND (ttodo.assigned_user = '$id_user' OR ttodo.created_by_user = '$id_user') AND ((ttodo.end_date >= '$start' AND ttodo.end_date <= '$end') OR (ttodo.start_date >= '$start' AND ttodo.start_date <= '$end')) GROUP BY idwo ORDER BY ttodo.end_date";
+	$res = mysql_query ($sql);
+	while ($row=mysql_fetch_array ($res)){
+		$result[] = $row["idwo"] ."|".$row["woname"]."|".$row["woowner"]."|".$row["wocreator"]."|".$row["wopriority"]."|".$row["woend"]."|".$row["wostart"];
 	}
 	return $result;
 }
@@ -302,6 +366,82 @@ function generate_calendar_agenda ($year, $month, $days = array(), $day_name_len
 	if($weekday != 7) 
 		$calendar .= '<td colspan="'.(7-$weekday).'">&nbsp;</td>'; #remaining "empty" days
 	return $calendar."</tr>\n</table>\n</td></tr></table>";
+}
+
+function calendar_get_events_agenda ($start, $end, $pn = array(), $id_user = "" ){
+    global $config;
+
+	$cal_events = array();
+
+	$day_in_seconds = 24*3600;
+
+	//Calculate mysql dates
+	$mysql_start = $mysql_date = date('Y-m-d', $start);
+	$mysql_end = $mysql_date = date('Y-m-d', $end);
+
+	//Get project information
+	$agenda_project = calendar_get_project_date_range($mysql_start, $mysql_end);
+	
+	foreach ($agenda_project as $agenda_pitem){
+
+		list ($pname, $idp, $pend, $owner, $pstart) = explode ("|", $agenda_pitem);
+
+		$url = "index.php?sec=projects&sec2=operation/projects/project_detail&id_project=".$idp;
+
+		array_push($cal_events, array("name" =>$pname, "start" => $pstart, "end" => $pend, "bgColor" => "#aa3333", "allDay" => true, "url" => $url));
+	}
+
+	//Get tasks information
+	$agenda_task = calendar_get_task_date_range($mysql_start, $mysql_end);
+	foreach ($agenda_task as $agenda_titem){
+		
+		list ($tname, $idt, $tend, $pname, $idp, $tstart) = explode ("|", $agenda_titem);
+
+		$url = "index.php?sec=projects&sec2=operation/projects/task_detail&id_task=".$idt."&operation=view";
+
+		array_push($cal_events, array("name" =>$tname, "start" => $tstart, "end" => $tend, "bgColor" => "#33aa33", "allDay" => true, "url" => $url));	
+	}
+
+	$agenda_wo = calendar_get_wo_date_range($mysql_start, $mysql_end);
+	foreach ($agenda_wo as $agenda_woitem){
+		list ($idwo, $woname, $woowner, $wocreator, $wopriority, $woend, $wostart) = explode ("|", $agenda_woitem);
+
+		$url = "index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=".$idwo;
+
+		$wopriority_img = print_priority_flag_image ($wopriority, true);
+		array_push($cal_events, array("name" =>$woname, "start" => $wostart, "end" => $woend, "bgColor" => "#3a3a3a", "allDay" => true, "url" => $url));	
+	}	
+
+	for($i=$start;$i<=$end; $i = $i + $day_in_seconds){
+		
+		$mysql_date = date('Y-m-d', $i);
+		
+		// Search for agenda item for this date
+		$sqlquery = "SELECT * FROM tagenda WHERE timestamp LIKE '$mysql_date%' ORDER BY timestamp ASC";
+ 		$res=mysql_query($sqlquery);
+		while ($row=mysql_fetch_array($res)){
+
+			$event_public = $row["public"];
+			$event_user = $row["id_user"];
+            if (($event_user == $config["id_user"]) OR ($event_public == 1) OR dame_admin($config["id_user"])){
+            	$dur_sec = $row["duration"]*3600; //Duration in seconds
+
+            	$start_timestamp = strtotime($row["timestamp"]);
+
+            	$start_timestamp = $start_timestamp + $dur_sec;
+
+            	$end_date = date("Y-m-d H:i:s", $start_timestamp);
+
+            	$url_date = date("Y-m-d", $start_timestamp);
+
+            	$url = "javascript: show_agenda_entry(".$row["id"].", '".$url_date."', '".$url_date."', true)";
+
+				array_push($cal_events, array("name" =>$row["title"], "start" => $row["timestamp"],  "end" => $end_date, "bgColor" => "#3333aa", "allDay" => false, "url" => $url));    
+            }
+		}
+	}
+	
+	return $cal_events;
 }
 
 // Original function
