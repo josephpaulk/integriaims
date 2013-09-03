@@ -93,7 +93,7 @@ if ($search_existing_project) {
 				array('name' => $task_name, 'id_project' => $project_id));
 			if ($query_result) {
 				// Exists. Validation error
-				json_encode(false);
+				echo json_encode(false);
 				return;
 			}
 		}

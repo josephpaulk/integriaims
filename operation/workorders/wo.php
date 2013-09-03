@@ -725,7 +725,6 @@ add_validate_form_element_rules('#text-name', rules, messages);
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
 	
-	var owner;
 	var changeHandler = function ( event, ui ) {
 		owner = $("#text-user").val();
 		$.ajax({

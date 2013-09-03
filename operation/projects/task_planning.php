@@ -184,14 +184,14 @@ if ($create) {
 			if ($data != "") {
 				$sql = sprintf ('INSERT INTO ttask (id_project, name, id_parent_task, start, end) 
 								VALUES (%d, "%s", %d, "%s", "%s")',
-								$id_project, $data, $parent, $start, $end);
+								$id_project, safe_input ($data), $parent, $start, $end);
 
 				$id_task = process_sql ($sql, 'insert_id');
 				
 				if ($id_task) {
 					$sql = sprintf("SELECT id_role FROM trole_people_project
 									WHERE id_project = %d AND id_user = '%s'", $id_project, $owner);
-
+					
 					$id_role = process_sql($sql);
 					$role = $id_role[0]['id_role'];
 
@@ -199,6 +199,12 @@ if ($create) {
 									VALUES ("%s", %d, %d)', $owner, $role, $id_task);
 
 					$result2 = process_sql($sql);
+					
+					if (! $result2) {
+						echo "<h3 class='error'>".__('An error ocurred setting the permissions for the task '.$data)."</h3>";
+					}
+				} else {
+					echo "<h3 class='error'>".__('The task '.$data.' could not be created')."</h3>";
 				}
 
 			}
@@ -306,13 +312,13 @@ echo "</tr>";
 echo "</table>";
 echo "</center>";
 
-//Starting main form for this view
-echo "<form id='form-tasks' method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
 
 //Create button bar
 echo "<div style='width:100%; border-spacing:0px;' class='button'>";
+// Oppen the task creation
 print_button (__('Add tasks'), 'addmass', false, '', 'class="sub create"');
-print_submit_button (__('Update'), 'update', false, 'class="sub upd"');
+// Submit the update form
+print_button (__('Update'), 'update', false, 'document.forms[\'form-tasks\'].submit()','class="sub upd"');
 echo "</div>";
 
 //Get project users
@@ -326,6 +332,8 @@ foreach ($users_db as $u) {
 
 //Hidden div for task creation. Only for PM flag
 echo "<div id='createTaskmass' style='display:none;padding:5px;'>";
+//Form for task creation
+echo "<form id='form-new_tasks' method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
 echo "<table class='search-table-button' style='width: 99%'><tr><td colspan=4>";
 echo "<strong>".__('Put taskname in each line')."</strong><br>";
 print_textarea ('tasklist', 5, 40);
@@ -360,57 +368,13 @@ echo "<tr><td colspan=4 align=right>";
 	print_submit_button (__('Create'), 'create', false, 'class="sub create"');
 
 echo "</table>";
+echo "</form>";
 echo "</div>";
 
-//Hidden div for task creation. Only for PM flag
-//Create new task only if PM && TM flags or PW and project manager.
-//~ if (give_acl ($config["id_user"], 0, "TM") || give_acl ($config["id_user"], 0, "PM") || (give_acl ($config["id_user"], 0, "PW") && $config["id_user"] == $project_manager)) {
-	//~ echo "<div id='createTask' style='display:none;padding:5px;'>";
-	//~ echo "<strong>".__('Create new task')."</strong><br>";
-//~ 
-	//~ echo "<table>";
-	//~ echo "<tr>";
-//~ 
-	//~ //Tex name field
-	//~ echo "<td>"; 
-	//~ $name = '';
-	//~ print_input_text ('name', $name, '', 50, 240, false, __('Name'));
-	//~ echo "</td>";
-//~ 
-	//~ echo "<td>";
-	//~ print_select ($users, "owner", $config['id_user'], '', '', 0, false, 0, false, __("Owner"));
-	//~ echo "</td>";
-//~ 
-	//~ echo "<tr>";
-	//~ //Task parent combo
-	//~ echo "<td style='width:60'>";
-	//~ $sql = sprintf ('SELECT id, name FROM ttask WHERE id_project = %d ORDER BY name', $id_project);
-	//~ print_select_from_sql ($sql, 'parent', 0, "\"style='width:250px;'\"", __('None'), 0, false, false, false, __('Parent'));
-	//~ echo "</td>";
-//~ 
-	//~ //Start date
-	//~ echo "<td>";
-	//~ $start = date ("Y-m-d");
-	//~ print_input_text_extended ("start_date", $start, "start_date", '', 7, 15, 0, '', "", false, false, __('Start date'));
-	//~ echo "</td>";
-//~ 
-//~ 
-	//~ //End date)
-	//~ echo "<td>";
-	//~ $end = date ("Y-m-d");
-	//~ print_input_text_extended ("end_date", $end, "end_date", '', 7, 15, 0, '', "", false, false, __('End date'));
-	//~ echo "</td>";
-//~ 
-	//~ //Create button
-	//~ echo "<td valign=bottom>";
-	//~ print_submit_button (__('Create'), 'create', false, 'class="sub create"');
-	//~ echo "</td>";
-//~ 
-	//~ echo "</tr>";
-	//~ echo "</table>";
-	//~ echo "</div>";
-//~ }
 
+//Starting main form for this view
+echo "<form id='form-tasks' method='post' action='index.php?sec=projects&sec2=operation/projects/task_planning&id_project=".$id_project."'>";
+print_input_hidden('update', 'update');
 //Create table and table header.
 echo "<table class=listing width=100% cellspacing=0 cellpadding=0 border=0px>";
 echo "<thead>";
@@ -435,7 +399,6 @@ echo "<tbody>";
 show_task_tree ($table, $id_project, 0, 0, $users);
 echo "</tbody>";
 echo "</table>";
-
 echo "</form>";
 
 function show_task_row ($table, $id_project, $task, $level, $users) {
@@ -596,25 +559,66 @@ function show_task_tree (&$table, $id_project, $level, $id_parent_task, $users) 
 <script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
 <script type="text/javascript" src="include/js/integria_date.js"></script>
 <script type="text/javascript" src="include/js/jquery.validate.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript">
 
 //Configure calendar dates
 add_task_planning_datepicker();
 
+// Form validation
+validate_form("#form-tasks");
+validate_form("#form-new_tasks");
+var rules, messages;
+// Rules: #textarea-tasklist
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+		type: "POST",
+		data: {
+		  page: "include/ajax/remote_validations",
+		  search_existing_task: 1,
+		  type: "create",
+		  task_name: function() { return $("#textarea-tasklist").val() },
+		  project_id: <?php echo $id_project?>
+		}
+	}
+};
+messages = {
+	required: "<?php echo __('Task required')?>",
+	remote: "<?php echo __('Existing tasks are not permitted')?>"
+};
+add_validate_form_element_rules('#textarea-tasklist', rules, messages);
+
+// Rules: [id*='text-name']
+rules = {
+	required: true,
+	remote: {
+		url: "ajax.php",
+		type: "POST",
+		data: {
+		  page: "include/ajax/remote_validations",
+		  search_existing_task: 1,
+		  type: "view",
+		  task_name: function() { return $(this).val() },
+		  project_id: <?php echo $id_project?>
+		}
+	}
+};
+messages = {
+	required: "<?php echo __('Name required')?>",
+	remote: "<?php echo __('This task already exists')?>"
+};
+add_validate_form_element_rules('[id*=\'text-name\']', rules, messages);
+
 $(document).ready (function () {
 	
-   	//Toggle create task menu
-	$('#button-add').click(function() {
-		$('#createTask').toggle();
-	});
-
 	//Toggle create mass task menu
 	$('#button-addmass').click(function() {
 		$('#createTaskmass').toggle();
 	});
 	
-
 	//Change row color dinamically when status is changed
 	$('select[name^="status"]').change(function() {
 		name = $(this).attr('name');
@@ -635,94 +639,6 @@ $(document).ready (function () {
 		$('#'+id).attr('bgcolor', color);
 	});
 });
-
-
-// Form validation
-$(document).ready(function() {
-    
-	var tasklist_rules = {
-		required: true,
-		remote: {
-			url: "ajax.php",
-			type: "POST",
-			data: {
-			  page: "include/ajax/remote_validations",
-			  search_existing_task: 1,
-			  type: "create",
-			  task_name: function() { return $("#textarea-tasklist").val() },
-			  project_id: <?php echo $id_project?>
-			}
-		},
-		messages: {
-			required: "<?php echo __('Task required')?>",
-			remote: "<?php echo __('Existing tasks are not permitted')?>"
-		}
-	};
-	// Remote validation for update tasks are not finished
-	var task_rules = {
-		required: true,
-		remote: {
-			url: "ajax.php",
-			type: "POST",
-			data: {
-			  page: "include/ajax/remote_validations",
-			  search_existing_task: 1,
-			  type: "view",
-			  task_name: function() { return $(this).val() },
-			  project_id: <?php echo $id_project?>
-			}
-		},
-		messages: {
-			required: "<?php echo __('Name required')?>",
-			remote: "<?php echo __('This task already exists')?>"
-		}
-	};
-    var addRules = function() {
-		if ( $("#textarea-tasklist").length > 0 ) {
-			$("#textarea-tasklist").rules("add", tasklist_rules);
-		}
-		$("[id*='text-name']").each( function() {
-			$(this).rules("add", task_rules);
-		});
-	};
-    
-    $("#form-tasks").validate({
-        invalidHandler: addRules, // When validation fails, add the rules again
-        onkeyup: false,
-        highlight: function(element, errorClass) {
-			$(element).fadeOut(function() {
-				$(element).fadeIn( function() {
-					$(element).fadeOut(function() {
-						$(element).fadeIn(function() {
-							$(element).fadeOut(function() {
-								$(element).fadeIn();
-							});
-						});
-					});
-				});
-			});
-		}
-    });        
-
-    addRules();        
-	
-	// When create is clicked, removes the rules of tasks update
-    $("#submit-create").click(function() {
-        $("[id*='text-name']").each( function() {
-            $(this).rules("remove");
-        });
-    });
-    // When update is clicked, trim all names of tasks and removes
-    // the rules of new task creation
-    $("#submit-update").click(function() {
-        $("#textarea-tasklist").rules("remove");
-        $("[id*='text-name']").each( function() {
-            $(this).val( $.trim($(this).val()) );
-        });
-    });
-
-});
-
 
 </script>
 

@@ -82,6 +82,9 @@ $close = (bool) get_parameter('close');
 $make_owner = (bool) get_parameter ('make_owner');
 $offset = get_parameter('offset', 0);
 
+$id_search = (int) get_parameter ('saved_searches');
+$create_custom_search = (bool) get_parameter ('save_search');
+$delete_custom_search = (bool) get_parameter ('delete_custom_search');
 
 // Create
 if ($create) {
@@ -272,6 +275,75 @@ if ($close) {
 
 	echo "<h3 class='suc'>".__('Successfully closed')."</h3>";
 	$id = 0;
+}
+
+// Filter for custom search
+$filter = array ();
+$filter['search_text'] = (string) get_parameter ('search_text');
+$filter['id_company'] = (int) get_parameter ('id_company_search');
+$filter['start_date'] = (string) get_parameter ('start_date_search');
+$filter['end_date'] = (string) get_parameter ('end_date_search');
+$filter['country'] = (string) get_parameter ('country_search');
+$filter['id_category'] = (int) get_parameter ('product_search');
+$filter['progress_major_than'] = (int) get_parameter ('progress_major_than_search');
+$filter['progress_minor_than'] = (int) get_parameter ('progress_minor_than_search');
+$filter['owner'] = (string) get_parameter ("owner_search");
+$filter['show_100'] = (int) get_parameter ("show_100_search");
+$filter['id_language'] = (string) get_parameter ("id_language", "");
+$filter['est_sale'] = (int) get_parameter ("est_sale_search", 0);
+
+/* Create a custom saved search*/
+if ($create_custom_search && !$id_search) {
+	
+	$search_name = (string) get_parameter ('search_name');
+	
+	$result = create_custom_search ($search_name, 'leads', $filter);
+	
+	if ($result === false) {
+		echo '<h3 class="error">'.__('Could not create custom search').'</h3>';
+	}
+	else {
+		echo '<h3 class="suc">'.__('Custom search saved').'</h3>';
+	}
+}
+
+/* Get a custom search*/
+if ($id_search && !$delete_custom_search) {
+	
+	$search = get_custom_search ($id_search, 'leads');
+	
+	if ($search) { 
+		
+		if ($search["form_values"]) {
+			
+			$filter = unserialize($search["form_values"]);
+			
+			echo '<h3 class="suc">'.sprintf(__('Custom search "%s" loaded'), $search["name"]).'</h3>';
+		}
+		else {
+			echo '<h3 class="error">'.sprintf(__('Could not load "%s" custom search'), $search["name"]).'</h3>';	
+		}
+	}
+	else {
+		echo '<h3 class="error">'.__('Could not load custom search').'</h3>';
+	}
+}
+
+/* Delete a custom saved search */
+if ($id_search && $delete_custom_search) {
+	
+	$sql = sprintf ('DELETE FROM tcustom_search
+		WHERE id_user = "%s"
+		AND id = %d',
+		$config['id_user'], $id_search);
+	$result = process_sql ($sql);
+	if ($result === false) {
+		echo '<h3 class="error">'.__('Could not delete custom search').'</h3>';
+	}
+	else {
+		$id_search = false;
+		echo '<h3 class="suc">'.__('Custom search deleted').'</h3>';
+	}
 }
 
 // FORM (Update / Create)
@@ -585,9 +657,6 @@ if ($id || $new) {
 } else {
 
 	// Listing of contacts
-	
-	//echo "<h2>".__('Lead search')."</h2>";
-	
 	echo "<div id='lead-search-content'>";
 	echo "<h1>".__('Lead search');
 	echo "<div id='button-bar-title'>";
@@ -598,22 +667,87 @@ if ($id || $new) {
 	echo "</ul>";
 	echo "</div>";
 	echo "</h1>";
+	
+	// Custom search button
+	echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px; margin-top: 5px;'>";
+	echo "<ul>";
+	echo "<li style='padding: 3px;'>";
+	echo "<a href='javascript:' onclick='toggleDiv (\"custom_search\")'>".__('Custom search')."</a>";
+	echo "</li>";
+	echo "</ul>";
+	echo "</div>";
+	
+	//FORM AND TABLE TO MANAGE CUSTOM SEARCHES
+	$table = new stdClass;
+	$table->id = 'saved_searches_table';
+	$table->width = '99%';
+	$table->class = 'search-table';
+	$table->size = array ();
+	$table->style = array ();
+	$table->style[0] = 'font-weight: bold';
+	$table->style[1] = 'font-weight: bold';
+	$table->data = array ();
+	$sql = sprintf ('SELECT id, name FROM tcustom_search
+					 WHERE id_user = "%s"
+						 AND section = "leads"
+					 ORDER BY name',
+					 $config['id_user']);
+	$table->data[0][0] = print_select_from_sql ($sql, 'saved_searches', $id_search, '', __('None'), 0, true, false, true, __('Custom searches'));
 
+	//If a custom search was selected display cross
+	if ($id_search) {
+		$table->data[0][0] .= '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&delete_custom_search=1&saved_searches='.$id_search.'">';
+		$table->data[0][0] .= '<img src="images/cross.png" title="' . __('Delete') . '"/></a>';
+	} else {
+		$table->data[0][1] = print_input_text ('search_name', '', '', 10, 20, true, __('Save current search'));
+		$table->data[0][2] = print_submit_button (__('Save'), 'save_search', false, 'class="sub save" style="margin-top: 13px;"', true);
+	}
+
+	echo '<div id="custom_search" style="display: none;">';
+	echo '<form id="form-saved_searches" method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail">';
+	foreach ($filter as $key => $value) {
+		if ($key == "search_text") {
+			print_input_hidden ("search_text", $value);
+		} elseif ($key == "id_language") {
+			print_input_hidden ("id_language", $value);
+		} else {
+			print_input_hidden ($key."_search", $value);
+		}
+	}
+	print_table ($table);
+	echo '</form>';
+	echo '</div>';
+	
 	// TODO: Show only leads of my company or my company's children.
 	// TODO: Implement ACL check !
-
-	$search_text = (string) get_parameter ('search_text');
-	$id_company = (int) get_parameter ('id_company_search');
-	$start_date = (string) get_parameter ('start_date_search');
-	$end_date = (string) get_parameter ('end_date_search');
-	$country = (string) get_parameter ('country_search');
-	$id_category = (int) get_parameter ('product_search');
-	$progress_major_than = (int) get_parameter ('progress_major_than_search');
-	$progress_minor_than = (int) get_parameter ('progress_minor_than_search');
-	$owner = (string) get_parameter ("owner_search");
-	$show_100 = (int) get_parameter ("show_100_search");
-	$id_language = (string) get_parameter ("id_language", "");
-	$est_sale = (int) get_parameter ("est_sale_search", 0);
+	
+	if ($id_search) {
+		$search_text = $filter['search_text'];
+		$id_company = $filter['id_company'];
+		$start_date = $filter['start_date'];
+		$end_date = $filter['end_date'];
+		$country = $filter['country'];
+		$id_category = $filter['id_category'];
+		$progress_major_than = $filter['progress_major_than'];
+		$progress_minor_than = $filter['progress_minor_than'];
+		$owner = $filter['owner'];
+		$show_100 = $filter['show_100'];
+		$id_language = $filter['id_language'];
+		$est_sale = $filter['est_sale'];
+	} else {
+		$search_text = (string) get_parameter ('search_text');
+		$id_company = (int) get_parameter ('id_company_search');
+		$start_date = (string) get_parameter ('start_date_search');
+		$end_date = (string) get_parameter ('end_date_search');
+		$country = (string) get_parameter ('country_search');
+		$id_category = (int) get_parameter ('product_search');
+		$progress_major_than = (int) get_parameter ('progress_major_than_search');
+		$progress_minor_than = (int) get_parameter ('progress_minor_than_search');
+		$owner = (string) get_parameter ("owner_search");
+		$show_100 = (int) get_parameter ("show_100_search");
+		$id_language = (string) get_parameter ("id_language", "");
+		$est_sale = (int) get_parameter ("est_sale_search", 0);
+	}
 
 	$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&id_category_search=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
@@ -865,8 +999,13 @@ if ($id || $new) {
 ?>
 
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+<script type="text/javascript" src="include/languages/date_<?php echo $config['language_code']; ?>.js"></script>
+<script type="text/javascript" src="include/js/integria_date.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 <script type="text/javascript" >
+
+add_ranged_datepicker ("#text-start_date_search", "#text-end_date_search", null);
 
 // Form validation
 trim_element_on_submit('#text-search_text');
@@ -876,73 +1015,93 @@ trim_element_on_submit('#text-from');
 trim_element_on_submit('#text-to');
 trim_element_on_submit('#text-cco');
 trim_element_on_submit('#text-contract_number');
-validate_form("#lead_form");
-var rules, messages;
 
-// Rules: #text-fullname
-rules = {
-	required: true,
-	remote: {
-		url: "ajax.php",
-		type: "POST",
-		data: {
-			page: "include/ajax/remote_validations",
-			search_existing_lead: 1,
-			lead_name: function() { return $('#text-fullname').val() },
-			lead_id: "<?php echo $id?>"
+if (<?php echo $id ?> > 0 || <?php echo json_encode($new) ?> == true) {
+	validate_form("#lead_form");
+	var rules, messages;
+
+	// Rules: #text-fullname
+	rules = {
+		required: true,
+		remote: {
+			url: "ajax.php",
+			type: "POST",
+			data: {
+				page: "include/ajax/remote_validations",
+				search_existing_lead: 1,
+				lead_name: function() { return $('#text-fullname').val() },
+				lead_id: "<?php echo $id?>"
+			}
 		}
-	}
-};
-messages = {
-	required: "<?php echo __('Name required')?>",
-	remote: "<?php echo __('This name already exists')?>"
-};
-add_validate_form_element_rules('#text-fullname', rules, messages);
+	};
+	messages = {
+		required: "<?php echo __('Name required')?>",
+		remote: "<?php echo __('This name already exists')?>"
+	};
+	add_validate_form_element_rules('#text-fullname', rules, messages);
 
-// Rules: #text-email
-rules = {
-	required: true,
-	email: true,
-	remote: {
-		url: "ajax.php",
-		type: "POST",
-		data: {
-			page: "include/ajax/remote_validations",
-			search_existing_lead_email: 1,
-			lead_email: function() { return $('#text-email').val() },
-			lead_id: "<?php echo $id?>"
+	// Rules: #text-email
+	rules = {
+		required: true,
+		email: true,
+		remote: {
+			url: "ajax.php",
+			type: "POST",
+			data: {
+				page: "include/ajax/remote_validations",
+				search_existing_lead_email: 1,
+				lead_email: function() { return $('#text-email').val() },
+				lead_id: "<?php echo $id?>"
+			}
 		}
-	}
-};
-messages = {
-	required: "<?php echo __('Email required')?>",
-	email: "<?php echo __('Invalid email')?>",
-	remote: "<?php echo __('This lead email already exists')?>"
-};
-add_validate_form_element_rules('#text-email', rules, messages);
+	};
+	messages = {
+		required: "<?php echo __('Email required')?>",
+		email: "<?php echo __('Invalid email')?>",
+		remote: "<?php echo __('This lead email already exists')?>"
+	};
+	add_validate_form_element_rules('#text-email', rules, messages);
 
-// Rules: #text-estimated_sale
-rules = { number: true };
-messages = { number: "<?php echo __('Invalid number')?>" };
-add_validate_form_element_rules('#text-estimated_sale', rules, messages);
+	// Rules: #text-estimated_sale
+	rules = { number: true };
+	messages = { number: "<?php echo __('Invalid number')?>" };
+	add_validate_form_element_rules('#text-estimated_sale', rules, messages);
 
-// Rules: #text-user
-rules = { required: true };
-messages = { required: "<?php echo __('Please, select an user')?>" };
-add_validate_form_element_rules('#text-user', rules, messages);
+	// Rules: #text-user
+	rules = { required: true };
+	messages = { required: "<?php echo __('Please, select an user')?>" };
+	add_validate_form_element_rules('#text-user', rules, messages);
 
-// Rules: #id_language
-rules = { required: true };
-messages = { required: "<?php echo __('Please, select a language')?>" };
-add_validate_form_element_rules('#id_language', rules, messages);
+	// Rules: #id_language
+	rules = { required: true };
+	messages = { required: "<?php echo __('Please, select a language')?>" };
+	add_validate_form_element_rules('#id_language', rules, messages);
+}
 
 $(document).ready (function () {
+	
+	$("#saved_searches").change(function() {
+		$("#form-saved_searches").submit();
+	});
 	
 	$("#textarea-description").TextAreaResizer ();
 	
 	var idUser = "<?php echo $config['id_user'] ?>";
-	
-	bindAutocomplete ("#text-user", idUser);
+	var onAutocompleteChange = function(event, ui) {
+		$.ajax({
+			type: "POST",
+			url: "ajax.php",
+			data: {
+				page: "include/ajax/users",
+				get_user_company: 1,
+				id_user: $('#text-user').val()
+			},
+			success: function(data) {
+				$('#id_company').find('option[value='+data+']').attr("selected",true);
+			}
+		});
+	};
+	bindAutocomplete ("#text-user", idUser, false, onAutocompleteChange);
 	
 	$("#checkbox-duplicated_leads").click(function () {
 		changeAllowDuplicatedLeads ();

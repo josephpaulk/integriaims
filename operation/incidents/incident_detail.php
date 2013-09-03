@@ -947,6 +947,7 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Contacts")."' id='cont
 <script type="text/javascript" src="include/js/integria_incident_search.js"></script>
 <script type="text/javascript" src="include/js/integria_inventory.js"></script>
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
 
 <script  type="text/javascript">

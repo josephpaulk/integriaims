@@ -458,7 +458,7 @@ rules = {
         data: {
 			page: "include/ajax/remote_validations",
 			search_existing_task: 1,
-			type: "<?php echo $operation?>",
+			type: "view",
 			task_name: function() { return $('#text-name').val() },
 			task_id: <?php echo $id_task?>,
 			project_id: <?php echo $id_project?>

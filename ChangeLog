@@ -1,3 +1,28 @@
+2013-09-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+
+	* include/ajax/remote_validations.php: Fixed an error on a
+	validation that does not return anything.
+	
+	* include/ajax/users.php: Now this file can return the
+	company id of an user via ajax.
+	
+	* operation/side_menu.php: Now the workorder listing is
+	filtered by default by the actual user as the owner.
+	
+	* operation/incidents/incident_detail.php: Added an script.
+	
+	* operation/leads/lead_detail.php: Now is possible to save and
+	load custom searches in the leads section. Added a datepicker.
+	Fixed some javascript errors related with the form validation.
+	Now the 'Managed By' select changes automatically to the company
+	of the owner when the owner changes.
+	
+	* operation/projects/task_detail.php: Fixed an error related
+	with the validation of the name of a task.
+	
+	* operation/projects/task_planning.php: Rewrited the code of the
+	forms to make it less complex and solve some errors.
+	
 2013-09-02  Dario Rodriguez <dario@artica.es>
 
 	* include/js/integria_incident_search.js,

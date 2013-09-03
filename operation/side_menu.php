@@ -378,8 +378,8 @@ if ((($sec == "projects" ))&& ( $show_projects != MENU_HIDDEN )) {
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";
-	echo "<a href='index.php?sec=projects&sec2=operation/workorders/wo'>".__('Workorders')."</a></li>";
-
+	echo "<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=".$config["id_user"]."'>".__('Workorders')."</a></li>";
+	
 	if (($sec2 == "operation/workorders/wo")) {
 		echo "<li style='margin-left: 15px; font-size: 10px;'>";
 		echo "<a href='index.php?sec=projects&sec2=operation/workorders/wo&operation=create'>".__('New WO')."</a>";
