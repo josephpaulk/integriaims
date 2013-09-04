@@ -262,7 +262,7 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			echo "</a>";
 			echo "<span style='".$background_color." padding: 4px;'>";
 			echo "<span style='vertical-align:middle; display: inline-block;'>".$priority."</span>";
-			echo "<span style='margin-left: 5px; min-width: 200px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='margin-left: 5px; min-width: 250px; vertical-align:middle; display: inline-block;'>".$name."</span>";
 			echo "<span title='" . __('Progress') . "' style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$progress."</span>";
 			echo "<span style='margin-left: 15px; min-width: 70px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
 			echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$people."</span>";

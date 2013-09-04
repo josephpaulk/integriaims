@@ -258,7 +258,7 @@ if (defined ('AJAX')) {
 				echo "</a>";
 				echo "<span style='".$background_color." padding: 4px;'>";
 				echo "<span style='vertical-align:middle; display: inline-block;'>".$priority."</span>";
-				echo "<span style='margin-left: 5px; min-width: 200px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+				echo "<span style='margin-left: 5px; min-width: 250px; vertical-align:middle; display: inline-block;'>".$name."</span>";
 				echo "<span title='" . __('Progress') . "' style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$progress."</span>";
 				echo "<span style='margin-left: 15px; min-width: 70px; vertical-align:middle; display: inline-block;'>".$estimation."</span>";
 				echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'>".$people."</span>";
@@ -378,10 +378,10 @@ if (defined ('AJAX')) {
 			echo "<span style='".$background_color." padding: 4px;'>";
 			echo "<span style='vertical-align:middle; display: inline-block;'>".$wo_icon."</span>";
 			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
-			echo "<span style='margin-left: 15px; min-width: 400px; vertical-align:middle; display: inline-block;'>".$name."</span>";
-			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'><small>"
+			echo "<span style='margin-left: 5px; min-width: 400px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='margin-left: 5px; min-width: 140px; vertical-align:middle; display: inline-block;'><small>"
 				.__('Owner').":</small> <b>".$owner."</b></span>";
-			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'><small>"
+			echo "<span style='margin-left: 5px; min-width: 140px; vertical-align:middle; display: inline-block;'><small>"
 				.__('Creator').":</small> <b>".$submitter."</b></span>";
 			echo "</span>";
 			echo "</li>";
@@ -447,29 +447,32 @@ if (defined ('AJAX')) {
 			// Owner
 			$owner = safe_output($incident['id_usuario']);
 			if (strlen($owner) > 10) {
-				$owner = "<div title='".safe_output($incident['id_usuario'])."'>".substr ($owner, 0, 10)."...</div>";
+				$owner = "<div style='display: inline-block;' title='".safe_output($incident['id_usuario'])."'>".substr ($owner, 0, 10)."...</div>";
 			}
 			
 			// Submitter
 			$submitter = safe_output($incident['id_creator']);
-			if (strlen($submitter) > 10) {
-				$submitter = "<div title='".safe_output($incident['id_creator'])."'>".substr ($submitter, 0, 10)."...</div>";
+			if (strlen($submitter) > 1) {
+				$submitter = "<div style='display: inline-block;' title='".safe_output($incident['id_creator'])."'>".substr ($submitter, 0, 1)."...</div>";
 			}
 			
 			// Status
 			$status = get_db_value("name", "tincident_status", "id", $incident['estado']);
+			if (strlen($status) > 10) {
+				$status = "<div style='display: inline-block;' title='$status'>".substr ($status, 0, 10)."...</div>";
+			}
 			
 			echo $img;
 			echo "<span style='".$background_color." padding: 4px;' class='red'>";
 			echo "<span style='vertical-align:middle; display: inline-block;'>".$incident_icon."</span>";
 			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
-			echo "<span style='margin-left: 15px; min-width: 400px; vertical-align:middle; display: inline-block;'>".$name."</span>";
-			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'><small>"
+			echo "<span style='margin-left: 5px; min-width: 400px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+			echo "<span style='margin-left: 5px; min-width: 140px; vertical-align:middle; display: inline-block;'><small>"
 				.__('Owner').":</small> <b>".$owner."</b></span>";
-			echo "<span style='margin-left: 15px; min-width: 80px; vertical-align:middle; display: inline-block;'><small>"
+			echo "<span style='margin-left: 5px; min-width: 140px; vertical-align:middle; display: inline-block;'><small>"
 				.__('Creator').":</small> <b>".$submitter."</b></span>";
 			if ($status) {
-				echo "<span style='margin-left: 15px; vertical-align:middle; display: inline-block;'><small>"
+				echo "<span style='margin-left: 5px; vertical-align:middle; display: inline-block;'><small>"
 					.__('Status').":</small> <b>".$status."</b></span>";
 			}
 			echo "</span>";

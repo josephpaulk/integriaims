@@ -280,7 +280,7 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 		
 		$name = get_db_value ('name', 'ttodo', 'id', $id);
 		
-		echo '<div class="under_tabs_info">' . sprintf(__('Workorder #%s: %s'), $id, $name) . '</div>';
+		echo '<div class="under_tabs_info">' . sprintf(__('Workorder #%s: %s'), $id, $name) . '</div><br>';
 	}
 
 	// Create WU
@@ -356,7 +356,11 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 		$table->data[2][1] = user_print_autocomplete_input($params);
 
 		$table->data[3][0] = combo_task_user_participant ($config["id_user"], false, $id_task, true, __('Task'));
-		
+		if ($id_task) {
+			$table->data[3][0] .= "&nbsp;&nbsp;<a id='task_link' title='".__('Open this task')."' target='_blank'href=' 
+				index.php?sec=projects&sec2=operation/projects/task_detail&operation=view&id_task=$id_task'>";
+			$table->data[3][0] .= "<img src='images/task.png'></a>";
+		}
 
 		// Remove validated user if current user is not the creator OR this doesnt need to be validated
 		if (($creator != $config["id_user"]) OR ($need_external_validation == 0))
@@ -733,6 +737,16 @@ add_validate_form_element_rules('#text-name', rules, messages);
 
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
+	
+	$("#id_task").change(function() {
+		if ($("#id_task").val() > 0) {
+			$("#task_link").html("<a id='task_link' title='<?php echo __('Open this task') ?>' target='_blank' "
+				+ "href='index.php?sec=projects&sec2=operation/projects/task_detail&operation=view&id_task="
+				+ $("#id_task").val() + "'><img src='images/task.png'></a>");
+		} else {
+			$("#task_link").html("");
+		}
+	});
 	
 	var changeHandler = function ( event, ui ) {
 		owner = $("#text-user").val();

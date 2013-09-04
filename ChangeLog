@@ -1,3 +1,18 @@
+2013-09-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_tasks.php: Updated the function
+	"tasks_print_tree" with visual changes on the name of
+	the task.
+	
+	* operation/projects/task.php: Visual changes on the
+	task tree view to maintain the alingment of the elements.
+	Solved some "line jumps" of some elements.
+	
+	* operation/workorders/wo.php: Added an icon to the right
+	side of the task select that provides a link of the selected
+	task. Solved an error that caused the workorder form appeared
+	near the workorder subtitle in firefox.
+	
 2013-09-04  Dario Rodriguez <dario@artica.es>
 
 	* operation/leads/lead_detail.php,
@@ -10,7 +25,7 @@
 	inizialization of owner value for lead filter of search
 	form. The current user as owner breaks all usability.
 
-2013-09-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+2013-09-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* godmode/grupos/lista_grupos.php: Fixed the alignment of
 	the search table elements. The groups table is now in a
