@@ -736,6 +736,7 @@ if ($id || $new) {
 		$id_language = $filter['id_language'];
 		$est_sale = $filter['est_sale'];
 	} else {
+		$search_text = (string) get_parameter ('search_text');
 		$id_company = (int) get_parameter ('id_company_search');
 		$start_date = (string) get_parameter ('start_date_search');
 		$end_date = (string) get_parameter ('end_date_search');

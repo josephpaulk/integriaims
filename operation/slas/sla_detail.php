@@ -301,13 +301,13 @@ rules = {
 			page: "include/ajax/remote_validations",
 			search_existing_sla: 1,
 			sla_name: function() { return $('#text-name').val() },
-			sla_id: "<?=$id?>"
+			sla_id: "<?php echo $id ?>"
         }
 	}
 };
 messages = {
-	required: "<?=__('Name required')?>",
-	remote: "<?=__('This name already exists')?>"
+	required: "<?php echo __('Name required') ?>",
+	remote: "<?php echo __('This name already exists') ?>"
 };
 add_validate_form_element_rules('#text-name', rules, messages);
 	

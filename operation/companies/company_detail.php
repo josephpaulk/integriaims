@@ -567,8 +567,10 @@ elseif ($op == "activities") {
 	$sql = "SELECT * FROM tcompany_activity WHERE id_company = $id ORDER BY date DESC";
 
 	$activities = get_db_all_rows_sql ($sql);
-
-	$activities = array_merge($activities, $act_contacts);
+	
+	if ($act_contacts !== false) {
+		$activities = array_merge($activities, $act_contacts);
+	}
 	
 	$activities = print_array_pagination ($activities, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=activities");
 
@@ -1139,19 +1141,28 @@ if ((!$id) AND ($new_company == 0)){
 			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".
 				$company["id"]."'>".$company["name"]."</a>";
 			$data[1] = get_db_value ('name', 'tcompany_role', 'id', $company["id_company_role"]);
-			$data[2] = '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&op=contracts&id='.
-				$company['id'].'"><img src="images/invoice.png"></a>';
+			if ($data[1]) {
+				$data[1] = "<small>".$data[1]."</small>";
+			} else {
+				$data[1] = "";
+			}
+			
+			
 			$sum_contratos = get_db_sql ("SELECT COUNT(id) FROM tcontract WHERE id_company = ".$company["id"]);
-			if ($sum_contratos > 0)
-				$data[2] .= " ($sum_contratos)";
-				
-											
-			$data[3] = "<a href=index.php?sec=customers&sec2=operation/leads/lead_detail&id_company=".$company["id"]."><img src='images/icon_lead.png'></a>";
-
+			if ($sum_contratos > 0) {
+				$data[2] = "<a title='($sum_contratos)' href='index.php?sec=customers&sec2=operation/companies/company_detail&op=contracts&id=".
+					$company['id']."'><img src='images/invoice.png'></a>";
+			} else {
+				$data[2] = "";
+			}
+			
 			$sum_leads = get_db_sql ("SELECT COUNT(id) FROM tlead WHERE progress < 100 AND id_company = ".$company["id"]);
 			if ($sum_leads > 0) {
-				$data[3] .= " ($sum_leads) ";
-				$data[3] .= get_db_sql ("SELECT SUM(estimated_sale) FROM tlead WHERE progress < 100 AND id_company = ".$company["id"]);
+				$leads_data = " ($sum_leads) ";
+				$leads_data .= get_db_sql ("SELECT SUM(estimated_sale) FROM tlead WHERE progress < 100 AND id_company = ".$company["id"]);
+				$data[3] = "<a title='$leads_data' href='index.php?sec=customers&sec2=operation/companies/company_detail&op=leads&id=".$company["id"]."'><img src='images/icon_lead.png'></a>";
+			} else {
+				$data[3] = "";
 			}
 
 			$data[4] = $company["manager"];

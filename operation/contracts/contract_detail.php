@@ -380,7 +380,7 @@ if ($id | $new_contract) {
 	
 	echo "<td valign=bottom align='right'>";
 	echo print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	echo print_button(__('Export to CSV'), '', false, 'window.open(\'' . "include/export_csv.php?export_csv_contracts=1&where_clause=$where_clause" . '\')', 'class="sub csv"', true);
+	echo print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_contracts=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
 	echo "</td>";
 	echo "</tr>";
 	

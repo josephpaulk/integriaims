@@ -1,5 +1,24 @@
 2013-09-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/companies/company_detail.php: Fixed an error
+	on the company activity listing. Now the contract and lead
+	icons only appear if the company has at least one of it.
+	The text of the contract and lead column has moved to the
+	contract and lead icon titles. The the font of the company
+	role is now smaller.
+	
+	* operation/contracts/contract_detail.php: Fixed an error
+	in the csv export button that appeared when certain searches
+	has done.
+	
+	* operation/leads/lead_detail.php: Fixed an error that made
+	impossible to filter leads by free text.
+	
+	* operation/slas/sla_detail.php: Fixed an error in the sla
+	name validation.
+	
+2013-09-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* mobile/operation/workorder.php: Fixed an acl rule.
 	
 	* mobile/operation/workorder.php,
