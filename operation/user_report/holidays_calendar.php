@@ -34,11 +34,6 @@ echo "<div id='calendar'></div>";
 
 	$(document).ready(function() {
 	
-		var date = new Date();
-		var d = date.getDate();
-		var m = date.getMonth();
-		var y = date.getFullYear();
-
 		$('#calendar').fullCalendar({
 			header: {
 				left: 'today',
@@ -52,18 +47,23 @@ echo "<div id='calendar'></div>";
    			},
 			editable: false,
 			events: function(start, end, callback) {
-				var date_aux = new Date(start);
-        		var start_time = date_aux.getTime();
+	
+        		var user_filter="<?php echo get_parameter("id_user", "");?>";
 
-        		start_time = start_time/1000; //Convert from miliseconds to seconds
-        			
-        		date_aux = new Date(end);
-        		var end_time = date_aux.getTime();
+                var date_aux = new Date(start);
+                var start_time = date_aux.getTime();
 
-        		end_time = end_time/1000; //Convert from miliseconds to seconds
+                start_time = start_time/1000; //Convert from miliseconds to seconds
+                    
+                date_aux = new Date(end);
+                var end_time = date_aux.getTime();
+
+                end_time = end_time/1000; //Convert from miliseconds to seconds
+
+                start_date_aux = $("#calendar").fullCalendar('getDate');
 
         		$.ajax({
-            		url: 'ajax.php?page=include/ajax/calendar&get_holidays=1&ajax=1&start_date='+start_time+'&end_date='+end_time,
+            		url: 'ajax.php?page=include/ajax/calendar&get_holidays=1&ajax=1&start_date='+start_time+'&end_date='+end_time+'&id_user='+user_filter,
             		dataType: 'json',
             		type: "POST",
             		success: function(data) {
@@ -76,20 +76,48 @@ echo "<div id='calendar'></div>";
                 			var title_str = obj[0].name;
                 			var days = obj[0].dates;
                 			var bgColor = obj[0].bgColor;
+                			var link = obj[0].link;
 
                 			//Print holidays
                 			days.forEach(function (element, index, array) {
                 				start_date = new Date(element.start);
                 				end_date = new Date(element.end);
-                    			events.push({title: title_str, start: start_date, end: end_date, color: bgColor});
+
+                				link += "&start_date="+start_time+"&end_date="+end_time;
+
+                    			events.push({title: title_str, start: start_date, end: end_date, color: bgColor, url:link});
                 			});
                 		});
                 		callback(events);
+
             		}
         		});
-    		}
+    		},
+            eventClick: function(event, element) {
+                //Get current calendar date and redirect to new page updating this date
+                var current_date = $("#calendar").fullCalendar('getDate');
+                
+                redirect_url = event.url+"&calendar_focus="+current_date;
+                
+                window.location.href = redirect_url;
+                return false;
+            }   
 		});
-		
+
+        //start_date_aux = $("#calendar").fullCalendar('getDate');
+        var calendar_focus = "<?php echo safe_output(get_parameter("calendar_focus", ""));?>";
+
+        var date = new Date();
+        if (calendar_focus) {
+            
+            date = new Date(calendar_focus);
+        }
+
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+        $("#calendar").fullCalendar( 'gotoDate', y, m, d);		
 	});
 
 </script>

@@ -1487,7 +1487,14 @@ function calendar_get_users_holidays_date_range($start, $end, $id_user) {
 
 	$full_holidays = array();
 
-	$colors = array("#aa3333", "#33aa33", "#3a3a3a", "#3333aa");
+	$colors = array("#aa3333", "#33aa33", "#3a3a3a", "#3333aa",
+					"#045FB4", "#DF7401", "#01DF3A", "#BE81F7",
+					"#8181F7", "#81BEF7", "#F781F3", "#F7D358",
+					"#F78181", "#FA8258", "#BCF5A9", "#A9A9F5",
+					"#D0A9F5", "#E2A9F3", "#A9F5D0", "#A9F5E1",
+					"#BDBDBD", "#E6E6E6", "#F6CECE", "#6AA4B2",
+					"#6AB277", "#B28E6A", "#B26A97", "#776AB2",
+					"#A58EB4", "#8EB490", "#8E96B4", "#B48E98");
 
 	$i = 0;
 	$colors_size = count($colors);
@@ -1495,7 +1502,9 @@ function calendar_get_users_holidays_date_range($start, $end, $id_user) {
 		$i = $i % $colors_size;
 
 		$name = get_db_value("nombre_real", "tusuario", "id_usuario", $key);
-		array_push($full_holidays, array("name" => safe_output($name), "dates" => $values, "bgColor" => $colors[$i]));
+		$url = "index.php?sec=users&sec2=operation/user_report/holidays_calendar&custom_dates=1&id_user=".$key;
+
+		array_push($full_holidays, array("name" => safe_output($name), "dates" => $values, "bgColor" => $colors[$i], "link" => $url));
 
 		$i++;
 	}

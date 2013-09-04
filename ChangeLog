@@ -1,3 +1,9 @@
+2013-09-04  Dario Rodriguez <dario@artica.es>
+
+	* include/ajax/calendar.php,
+	include/functions_calendar.php: Improved holidays
+	calendar visualization.
+
 2013-09-04  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_tasks.php: Updated the function

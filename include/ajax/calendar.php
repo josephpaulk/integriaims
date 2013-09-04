@@ -43,14 +43,18 @@ if ($get_events) {
 }
 
 if ($get_holidays) {
-	global $config;
 
 	$start_date = get_parameter("start_date");
 	$end_date = get_parameter("end_date");
 
-	$users = get_user_visible_users ($config["id_user"]);
+	$id_user = get_parameter("id_user", "");
 
-	$users_ids = array_keys($users);	
+	if (!$id_user) {
+		$users = get_user_visible_users ($config["id_user"]);
+		$users_ids = array_keys($users);	
+	} else {
+		$users_ids = $id_user;
+	}
 
 	$holidays = calendar_get_users_holidays_date_range($start_date, $end_date, $users_ids);
 
