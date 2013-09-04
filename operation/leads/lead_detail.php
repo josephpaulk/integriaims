@@ -82,6 +82,7 @@ $close = (bool) get_parameter('close');
 $make_owner = (bool) get_parameter ('make_owner');
 $offset = get_parameter('offset', 0);
 
+$search_btn = (string) get_parameter("search_btn");
 $id_search = (int) get_parameter ('saved_searches');
 $create_custom_search = (bool) get_parameter ('save_search');
 $delete_custom_search = (bool) get_parameter ('delete_custom_search');
@@ -735,7 +736,6 @@ if ($id || $new) {
 		$id_language = $filter['id_language'];
 		$est_sale = $filter['est_sale'];
 	} else {
-		$search_text = (string) get_parameter ('search_text');
 		$id_company = (int) get_parameter ('id_company_search');
 		$start_date = (string) get_parameter ('start_date_search');
 		$end_date = (string) get_parameter ('end_date_search');
@@ -743,7 +743,7 @@ if ($id || $new) {
 		$id_category = (int) get_parameter ('product_search');
 		$progress_major_than = (int) get_parameter ('progress_major_than_search');
 		$progress_minor_than = (int) get_parameter ('progress_minor_than_search');
-		$owner = (string) get_parameter ("owner_search", $config["id_user"]);
+		$owner = (string) get_parameter ("owner_search");
 		$show_100 = (int) get_parameter ("show_100_search");
 		$id_language = (string) get_parameter ("id_language", "");
 		$est_sale = (int) get_parameter ("est_sale_search", 0);
