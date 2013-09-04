@@ -58,12 +58,17 @@ class Workorders {
 		} else {
 			// Section access
 			if ($system->checkACL($acl)) {
-				$permission = true;
+				if ($operation == "delete") {
+					if ($id_workorder > 0) {
+						$workorder_creator = get_db_value("created_by_user", "ttodo", "id", $this->id_workorder);
+						if ($id_user == $workorder_creator) {
+							$permission = true;
+						}
+					}
+				} else {
+					$permission = true;
+				}
 			}
-		}
-		// With this operations, the WU should have id
-		if ($operation == "delete" && $id_workorder < 0) {
-			$permission = false;
 		}
 		
 		return $permission;

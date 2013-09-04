@@ -54,13 +54,19 @@ class Workorder {
 			// Section access
 			if ($system->checkACL($acl)) {
 				// With this operations, the WO should have id
-				if ( ($operation == "view" || $operation == "update" || $operation == "delete")
+				if ( ($operation == "" || $operation == "view" || $operation == "update" || $operation == "delete")
 						&& $id_workorder > 0) {
 					$workorder = get_db_row("ttodo", "id", $this->id_workorder);
 					// The user should be the owner or the creator
-					if ($system->getConfig('id_user') == $workorder['created_by_user']
-							|| $system->getConfig('id_user') == $workorder['assigned_user']) {
-						$permission = true;
+					if ($id_user == $workorder['created_by_user']
+							|| $id_user == $workorder['assigned_user']) {
+						if ($operation == "delete") {
+							if ($id_user == $workorder['created_by_user']) {
+								$permission = true;
+							}
+						} else {
+							$permission = true;
+						}
 					}
 				} else {
 					$permission = true;
@@ -289,7 +295,9 @@ class Workorder {
 							.__('Update')."</a>\n";
 		}
 		// Delete
-		if ($this->id_workorder > 0) {
+		$workorder_creator = get_db_value("created_by_user", "ttodo", "id", $this->id_workorder);
+		if ($this->id_workorder > 0
+				&& ( dame_admin($system->getConfig('id_user')) || $system->getConfig('id_user') == $workorder_creator ) ) {
 			$button_delete = "<a href='index.php?page=workorders&operation=delete&id_workorder=".$this->id_workorder."
 									&filter_status=0&filter_owner=".$system->getConfig('id_user')."'
 									data-role='button' data-icon='delete'>".__('Delete')."</a>\n";

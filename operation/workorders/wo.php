@@ -148,9 +148,8 @@ if ($operation == "delete") {
 	$id_todo = get_parameter ("id");
 	$todo = get_db_row ("ttodo", "id", $id_todo);
 
-	if (($todo["assigned_user"] != $config['id_user']) AND ($todo["created_by_user"] != $config['id_user'])){
-		if (!dame_admin($config["id_user"]))
-			no_permission();
+	if (!dame_admin($config["id_user"]) AND $todo["created_by_user"] != $config['id_user']){
+		no_permission();
 	}
 	
 	$sql_delete= "DELETE FROM ttodo WHERE id = $id_todo";
@@ -168,9 +167,9 @@ if ($operation == "delete") {
 	
 	$email_notify = $todo["email_notify"];
 	
-        if ($email_notify) {
-                mail_workorder ($id, 3, false, $todo);
-        }
+		if ($email_notify) {
+			mail_workorder ($id, 3, false, $todo);
+		}
 
 	$operation = "";
 }
@@ -692,10 +691,7 @@ if ($operation == "") {
 			// Evaluate different conditions to allow WO deletion
 			$can_delete = dame_admin($config["id_user"]);
 
-			if (($wo["need_external_validation"] == 0) AND ($wo["assigned_user"] == $config["id_user"]))
-				$can_delete = 1;
-
-			if (($wo["need_external_validation"] == 1) AND ($wo["created_by_user"] == $config["id_user"]))
+			if ($wo["created_by_user"] == $config["id_user"])
 				$can_delete = 1;				
 
 			if ($can_delete){
