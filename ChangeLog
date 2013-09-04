@@ -1,3 +1,12 @@
+2013-09-03  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* godmode/grupos/lista_grupos.php: Fixed the alignment of
+	the search table elements. The groups table is now in a
+	function.
+	
+	* include/functions_groups.php: Added function
+	"print_groups_table", that contains the groups table.
+
 2013-09-03  Sancho Lerena <slerena@artica.es>
 
 	* operation/invoices/invoice_detail.php,

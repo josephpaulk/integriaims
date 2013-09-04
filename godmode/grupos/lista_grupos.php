@@ -152,68 +152,20 @@ $offset = get_parameter ("offset", 0);
 $search_text = get_parameter ("search_text", "");
 
 echo "<table class='search-table' style='width: 99%;'><form name='bskd' method=post action='index.php?sec=users&sec2=godmode/grupos/lista_grupos'>";
-echo "<td style='width: 300px;'>";
-echo "<label>";
-echo __('Search text');
-echo "</label>";
+echo "<td>";
+echo "<b>".__('Search text')."</b>&nbsp;&nbsp;";
 print_input_text ("search_text", $search_text, '', 40, 0, false);
+echo "</td>";
 echo "<td>";
 print_submit_button (__('Search'), '', false, 'class="sub next"', false, false);
-echo "<td>";
+echo "</td>";
 echo "</table></form>";
-
-$table->width = '99%';
-$table->class = 'listing';
-$table->head = array ();
-$table->head[0] = __('Icon');
-$table->head[1] = __('Name');
-$table->head[2] = __('Parent');
-$table->head[3] = __('Delete');
-$table->data = array ();
-$table->align = array ();
-$table->align[3] = 'center';
-$table->style = array ();
-$table->style[1] = 'font-weight: bold';
-$table->size = array ();
-$table->size[3] = '40px';
 
 $groups = get_db_all_rows_sql ("SELECT * FROM tgrupo WHERE nombre LIKE '%$search_text%' ORDER BY nombre");
 
 $groups = print_array_pagination ($groups, "index.php?sec=users&sec2=godmode/grupos/lista_grupos");
 
-if ($groups === false)
-	$groups = array ();
-    foreach ($groups as $group) {
-	$data = array ();
-	
-	$data[0] = '';
-	if ($group['icon'] != '')
-		$data[0] = '<img src="images/groups_small/'.$group['icon'].'" />';
-		
-	if ($group["id_grupo"] != 1) {
-		$data[1] = '<a href="index.php?sec=users&sec2=godmode/grupos/configurar_grupo&id='.
-			$group['id_grupo'].'">'.$group['nombre'].'</a>';
-	} else {
-		$data[1] = $group["nombre"];
-	}
-	$data[2] = dame_nombre_grupo ($group["parent"]);
-	
-	//Group "all" is special not delete and no update
-	if ($group["id_grupo"] != 1) {
-		$data[3] = '<a href="index.php?sec=users&
-				sec2=godmode/grupos/lista_grupos&
-				id_grupo='.$group["id_grupo"].'&
-				delete_group=1&id='.$group["id_grupo"].
-				'" onClick="if (!confirm(\''.__('Are you sure?').'\')) 
-				return false;">
-				<img src="images/cross.png"></a>';
-	} else {
-		$data[3] = "";
-	}
-	array_push ($table->data, $data);
-}
-print_table ($table);
-
+print_groups_table ($groups);
 
 echo '<form method="post" action="index.php?sec=users&sec2=godmode/grupos/configurar_grupo">';
 echo '<div class="button" style="width: '.$table->width.'">';
