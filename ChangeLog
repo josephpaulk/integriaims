@@ -1,5 +1,11 @@
 2013-09-04  Dario Rodriguez <dario@artica.es>
 
+	* operation/leads/lead_detail.php,
+	include/styles/integria.css: Fixed an error
+	highlighting rows in red for old leads.
+
+2013-09-04  Dario Rodriguez <dario@artica.es>
+
 	* operation/leads/lead_detail.php: Fixed a wrong
 	inizialization of owner value for lead filter of search
 	form. The current user as owner breaks all usability.

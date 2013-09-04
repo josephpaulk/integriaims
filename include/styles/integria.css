@@ -2230,3 +2230,7 @@ td.legend_event {
 td.legend_last_box{
 	padding-right: 0px !important;
 }
+
+tr.red_row > td {
+	background-color: #ffefef !important;
+}
