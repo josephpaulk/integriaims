@@ -7,13 +7,15 @@
 -- ---------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `tincident_stats` (
-`id_incident` bigint(20) unsigned NOT NULL auto_increment,
-  `minutes` bigint(10) unsigned NOT NULL default 0,
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `id_incident` bigint(20) unsigned NOT NULL default 0,
+  `seconds` bigint(10) unsigned NOT NULL default 0,
   `metric` enum ('user_time', 'status_time', 'group_time', 'total_time', 'total_w_third') NOT NULL,
   `id_user` varchar(60) NOT NULL default '',
   `status` tinyint NOT NULL default 0,
   `id_group` mediumint(8) NOT NULL default 0,
-PRIMARY KEY (`id_incident`)
+  PRIMARY KEY (`id`),
+  KEY `isx1` (`id_incident`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ---------------------------------------------------

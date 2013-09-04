@@ -1,5 +1,10 @@
 2013-09-04  Dario Rodriguez <dario@artica.es>
 
+	* extras/migrate.sql: Fixed some errors which a 
+	wrong structures for table tincident_stats.
+
+2013-09-04  Dario Rodriguez <dario@artica.es>
+
 	* include/ajax/calendar.php,
 	include/functions_calendar.php,
 	operation/agenda/agenda.php,
