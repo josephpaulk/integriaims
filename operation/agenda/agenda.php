@@ -31,6 +31,39 @@ if (! give_acl ($config['id_user'], $id_grupo, "AR")) {
 
 echo '<h1>' . __('Agenda').'</h1>';
 
+echo '<form method="post" action="index.php?sec=agenda&sec2=operation/agenda/agenda">';
+
+$show_projects = get_parameter("show_projects", 0);
+$show_tasks = get_parameter("show_tasks", 0);
+$show_events = get_parameter("show_events",0);
+$show_wo = get_parameter("show_wo",0);
+$filter_btn = get_parameter("filter_btn",0);
+
+//By default search for events and workorders
+if (!$filter_btn) {
+    $show_events = 1;
+    $show_wo = 1;
+}
+
+$table->width = '99%';
+$table->class = "search-table";
+$table->data = array ();
+$table->colspan = array ();
+
+$table->data[0][0] = print_checkbox ('show_events', 1, $show_events, true, __('Show entries'));
+$table->data[0][1] = print_checkbox ('show_wo', 1, $show_wo, true, __('Show workorders'));
+$table->data[0][2] = print_checkbox ('show_projects', 1, $show_projects, true, __('Show projects'));
+$table->data[0][3] = print_checkbox ('show_tasks', 1, $show_tasks, true, __('Show tasks'));
+
+$button = print_submit_button (__('Filter'), "filter_btn", false, 'class="sub search"', true);
+         
+$table->data[0][4] = $button;
+    
+print_table ($table);
+echo '</form>'; 
+
+echo "<div id='calendar'></div>";
+
 echo "<table class='calendar_legend'>";
 echo "<tr>";
 echo "<td class='legend_color_box legend_project'></td>";
@@ -40,11 +73,9 @@ echo "<td>".__("Tasks")."</td>";
 echo "<td class='legend_color_box legend_wo'></td>";
 echo "<td>".__("Workorders")."</td>";
 echo "<td class='legend_color_box legend_event'></td>";
-echo "<td class='legend_last_box'>".__("Events")."</td>";
+echo "<td class='legend_last_box'>".__("Entries")."</td>";
 echo "</tr>";
 echo "</table>";
-
-echo "<div id='calendar'></div>";
 ?>
 
 <link href='include/js/fullcalendar/fullcalendar.css' rel='stylesheet' />
@@ -55,10 +86,10 @@ echo "<div id='calendar'></div>";
 
 	$(document).ready(function() {
 	
-		var date = new Date();
-		var d = date.getDate();
-		var m = date.getMonth();
-		var y = date.getFullYear();
+        var show_projects = <?php echo $show_projects;?>;
+        var show_tasks = <?php echo $show_tasks;?>;
+        var show_wo = <?php echo $show_wo;?>;
+        var show_events = <?php echo $show_events;?>;
 
 		$('#calendar').fullCalendar({
 			header: {
@@ -83,8 +114,11 @@ echo "<div id='calendar'></div>";
 
         		end_time = end_time/1000; //Convert from miliseconds to seconds
 
+                var url_source = 'ajax.php?page=include/ajax/calendar&get_events=1&ajax=1&start_date='+start_time+'&end_date='+end_time;
+                url_source += '&show_projects='+show_projects+'&show_events='+show_events+'&show_wo='+show_wo+'&show_tasks='+show_tasks;
+
         		$.ajax({
-            		url: 'ajax.php?page=include/ajax/calendar&get_events=1&ajax=1&start_date='+start_time+'&end_date='+end_time,
+            		url: url_source,
             		dataType: 'json',
             		type: "POST",
             		success: function(data) {
@@ -101,13 +135,14 @@ echo "<div id='calendar'></div>";
                 			var link = obj[0].url;
 
                 			//Convert dates to JS object date
-                			start_date = new Date(start_str);
+                			start_date = new Date(start_str*1000);
 
                 			var end_date = start_date;
-                			if (end_str) {
-                				end_date = new Date(end_str);                			
+                            
+                			if (end_str && (end_str != "0000-00-00 00:00:00")) {
+                				end_date = new Date(end_str*1000);                			
                 			}
-
+                            
                     		events.push({title: title_str, start: start_date, end: end_date, color: bgColor, allDay: allDayEvent, url: link});
                 		});
                 		callback(events);

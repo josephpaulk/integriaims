@@ -80,8 +80,8 @@ echo "<div id='calendar'></div>";
 
                 			//Print holidays
                 			days.forEach(function (element, index, array) {
-                				start_date = new Date(element.start);
-                				end_date = new Date(element.end);
+                				start_date = new Date(element.start*1000);
+                				end_date = new Date(element.end*1000);
 
                 				link += "&start_date="+start_time+"&end_date="+end_time;
 
