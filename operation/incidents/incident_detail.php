@@ -953,19 +953,31 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Contacts")."' id='cont
 <script  type="text/javascript">
 
 $(document).ready (function () {
-	
+
 	//Verify incident limit on view display and on group change
 	var id_incident = <?php echo $id?>;
 	var id_user = $("#text-id_user").val();
 	var id_group = $("#grupo_form").val();
+
+	//Configure default values for field "notify by email" based on selected group
+	var group_info = get_group_info(id_group);
+		
+	if (group_info.forced_email != "0") {
+		$("#checkbox-email_notify").prop("checked", true);
+	} else {
+		$("#checkbox-email_notify").prop("checked", false);
+	}	
 	
 	//Only check incident on creation (where there is no id)
-	if (id_incident != 0) {
+	if (id_incident == 0) {
 		
 		incident_limit("#submit-accion", id_user, id_group);
 	}
 	
 	$("#grupo_form").change (function () {
+		id_user = $("#text-id_user").val();
+		id_group = $("#grupo_form").val();
+
 		incident_limit("#submit-accion", id_user, id_group);
 		
 		var group = $("#grupo_form").val();

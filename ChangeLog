@@ -1,5 +1,11 @@
 2013-09-04  Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents/incident_detail.php: Fixed a problem
+	loading incident configuration based on group details on
+	incident creation.
+
+2013-09-04  Dario Rodriguez <dario@artica.es>
+
 	* extras/migrate.sql: Fixed some errors which a 
 	wrong structures for table tincident_stats.
 
