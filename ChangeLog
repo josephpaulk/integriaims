@@ -1,3 +1,14 @@
+2013-09-05  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_form.php,
+	integria_dbdata.sql,
+	integria_db.sql,
+	extras/migrate.sql,
+	godmode/setup/setup_crm.php: Now you can change the name
+	of lead progress status inside lead detail.
+	* operation/leads/lead_detail.php: Added new buttons to go
+	to two new views of lead section.
+	
 2013-09-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* images/arrow_down_orange.png

@@ -1097,3 +1097,9 @@ CREATE TABLE `tcontact_activity` (
   PRIMARY KEY (`id`), 
   KEY `id_contact_idx` (`id_contact`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tlead_progress` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

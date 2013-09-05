@@ -426,3 +426,23 @@ CREATE TABLE `tcontact_activity` (
   PRIMARY KEY (`id`), 
   KEY `id_contact_idx` (`id_contact`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/* 05/09/2013 */
+CREATE TABLE `tlead_progress` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO tlead_progress (id,name) VALUES 
+(0,'New'), 
+(20,'Meeting arranged'), 
+(40,'Needs discovered'), 
+(60,'Proposal delivered'), 
+(80,'Offer accepted'), 
+(100,'Closed, not response or dead'),
+(101,'Closed, lost'), 
+(102,'Closed, invalid or N/A'), 
+(200,'Closed successfully');
+
+UPDATE tlead_progress SET `id`=0 WHERE `id`=1;

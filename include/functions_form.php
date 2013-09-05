@@ -1282,18 +1282,14 @@ function translate_lead_progress ($progress = 0){
 
 function lead_progress_array (){
 
+
+	$lprogress = get_db_all_rows_in_table("tlead_progress");
+
 	$lead_progress = array();
-	$lead_progress[0] = __("First contact");
-	$lead_progress[10] = __("First reply");
-	$lead_progress[20] = __("Leads ask for more info");
-	$lead_progress[30] = __("Gived detailed info to lead");
-	$lead_progress[40] = __("Lead proposal");
-	$lead_progress[50] = __("Send commercial proposal to customer");
-	$lead_progress[60] = __("Accepted proposal. Waiting for PO");
-	$lead_progress[100] = __("Closed. Not response or dead.");
-	$lead_progress[101] = __("Closed. Lost.");
-	$lead_progress[102] = __("Closed. Invalid or N/A.");
-	$lead_progress[200] = __("Closed. Success.");
+
+	foreach ($lprogress as $l) {
+		$lead_progress[$l["id"]] = $l["name"];
+	}
 	
 	return $lead_progress;
 }

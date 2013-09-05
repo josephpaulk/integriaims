@@ -530,7 +530,7 @@ if ($id || $new) {
 
 		$progress_values = lead_progress_array ();
 
-		$table->data[3][1] = print_select ($progress_values, 'progress', $progress, '', __("None"), 0, true, 0, false, __('Lead progress') );
+		$table->data[3][1] = print_select ($progress_values, 'progress', $progress, '', '', 0, true, 0, false, __('Lead progress') );
 
 		$table->data[4][0] = print_input_text ("phone", $phone, "", 15, 60, true, __('Phone number'));
 		$table->data[4][1] = print_input_text ("mobile", $mobile, "", 15, 60, true, __('Mobile number'));
@@ -663,8 +663,14 @@ if ($id || $new) {
 	echo "<div id='button-bar-title'>";
 	echo "<ul>";
 	echo "<li>";
-	echo "<a id='lead_stats_form_submit' href='javascript: changeAction();'>".print_image ("images/chart_bar_dark.png", true, array("title" => __("Search statistics")))."</a>";
+	echo "<a href='index.php?sec=customers&sec2=operation/leads/lead_pipeline'>".print_image ("images/icon_lead.png", true, array("title" => __("Lead pipeline")))."</a>";
 	echo "</li>";
+	echo "<li>";
+	echo "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail'>".print_image ("images/zoom.png", true, array("title" => __("Search leads")))."</a>";
+	echo "</li>";
+	echo "<li>";
+	echo "<a id='lead_stats_form_submit' href='javascript: changeAction();'>".print_image ("images/chart_bar_dark.png", true, array("title" => __("Search statistics")))."</a>";
+	echo "</li>";		
 	echo "</ul>";
 	echo "</div>";
 	echo "</h1>";

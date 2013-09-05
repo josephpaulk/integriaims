@@ -48,6 +48,22 @@ if ($update) {
 	update_config_token ("invoice_header", $config["invoice_header"]);
 	update_config_token ("invoice_footer", $config["invoice_footer"]);
 	update_config_token ("invoice_tax_name", $config["invoice_tax_name"]);
+
+
+	//Update lead progress names
+	$progress["0"] = get_parameter("progress_0");
+	$progress["20"] = get_parameter("progress_20");
+	$progress["40"] = get_parameter("progress_40");
+	$progress["60"] = get_parameter("progress_60");
+	$progress["80"] = get_parameter("progress_80");
+	$progress["100"] = get_parameter("progress_100");
+	$progress["101"] = get_parameter("progress_101");
+	$progress["102"] = get_parameter("progress_102");
+	$progress["200"] = get_parameter("progress_200");
+
+	foreach ($progress as $key => $value) {
+		process_sql_update ('tlead_progress', array ('name' => $value), array ('id' => $key));
+	}
 }
 
 $table->width = '99%';
@@ -94,11 +110,42 @@ $table->data[3][0] = print_textarea ('invoice_footer', 5, 40, $config["invoice_f
 $table->data[4][0] = print_input_text ('invoice_tax_name', $config["invoice_tax_name"], '', 10, 10, true, __('Invoice tax name'));
 $table->data[4][0] .= print_help_tip (__('For example: VAT'), true);
 
+$table->colspan[5][0] = 2;
+$table->data[5][0] = "<h3>".__('Lead progress defintion')."</h3><br>";
+
+$progress_values = lead_progress_array ();
+
+$table->colspan[6][0] = 2;
+$table->colspan[7][0] = 2;
+$table->colspan[8][0] = 2;
+$table->colspan[9][0] = 2;
+$table->colspan[10][0] = 2;
+$table->colspan[11][0] = 2;
+$table->colspan[12][0] = 2;
+$table->colspan[13][0] = 2;
+$table->colspan[14][0] = 2;
+
+$closed_lead_tip = print_help_tip (__('This status means that lead is closed'), true);
+
+$table->data[6][0] = print_input_text ('progress_0', $progress_values["0"], '', 50, 100, true);
+$table->data[7][0] = print_input_text ('progress_20', $progress_values["20"], '', 50, 100, true);
+$table->data[8][0] = print_input_text ('progress_40', $progress_values["40"], '', 50, 100, true);
+$table->data[9][0] = print_input_text ('progress_60', $progress_values["60"], '', 50, 100, true);
+$table->data[10][0] = print_input_text ('progress_80', $progress_values["80"], '', 50, 100, true);
+$table->data[11][0] = print_input_text ('progress_100', $progress_values["100"], '', 50, 100, true).$closed_lead_tip;
+$table->data[12][0] = print_input_text ('progress_101', $progress_values["101"], '', 50, 100, true).$closed_lead_tip;
+$table->data[13][0] = print_input_text ('progress_102', $progress_values["102"], '', 50, 100, true).$closed_lead_tip;
+$table->data[14][0] = print_input_text ('progress_200', $progress_values["200"], '', 50, 100, true).$closed_lead_tip;
+
+
 $button = print_input_hidden ('update', 1, true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
 
 $table->data['button'][0] = $button;
 $table->colspan['button'][0] = 2;
+
+
+
 
 echo '<form name="setup" method="post">';
 print_table ($table);
