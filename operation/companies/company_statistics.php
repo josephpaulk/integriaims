@@ -46,13 +46,15 @@ $search_manager = (string) get_parameter ("search_manager");
 $search_parent = get_parameter ("search_parent");
 $search_date_begin = get_parameter ('search_date_begin');
 $search_date_end = get_parameter ('search_date_end');
+$order_by_activity = (string) get_parameter ("order_by_activity");
+$order_by_company = (string) get_parameter ("order_by_company");
 
 echo "<div id='incident-search-content'>";
 echo "<h1>".__('Search statistics');
 echo "<div id='button-bar-title'>";
 echo "<ul>";
 echo "<li>";
-echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/companies/company_detail&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_manager=$search_manager&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
+echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/companies/company_detail&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_manager=$search_manager&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&order_by_activity=$order_by_activity&order_by_company=$order_by_company'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
 echo "</li>";
 echo "</ul>";
 echo "</div>";
@@ -95,7 +97,13 @@ $table->class = 'blank';
 $table->width = '99%';
 $table->data = array ();
 $table->style = array ();
+$table->colspan = array ();
 $table->valign = array ();
+$table->colspan[0][0] = 2;
+$table->colspan[0][1] = 2;
+$table->colspan[0][2] = 2;
+$table->colspan[1][0] = 3;
+$table->colspan[1][1] = 3;
 $table->valign[0] = "top";
 $table->valign[1] = "top";
 
@@ -136,6 +144,25 @@ if ($companies_user !== false) {
 $companies_user_content = '<br><div class="pie_frame">' . $companies_user_content . '</div>';
 
 $table->data[0][1] = print_container('companies_per_user', __('Users per company'), $companies_user_content, 'no', true, '10px');
+
+// MANAGERS
+if ($read && $enterprise) {
+	$manager_companies = crm_get_total_managers_acl($where_clause);
+} else {
+	$manager_companies = crm_get_total_managers($where_clause);
+}
+
+$manager_companies = crm_get_data_managers_graph($manager_companies);
+
+if ($owner_companies !== false) {
+	$companies_per_manager = pie3d_graph ($config['flash_charts'], $manager_companies, 300, 150, __('others'), "", "", $config['font'], $config['fontsize']-1, $ttl);
+} else {
+	$companies_per_manager = __('No data to show');
+}
+
+$companies_per_manager = '<br><div class="pie_frame">' . $companies_per_manager . '</div>';
+
+$table->data[0][2] = print_container('companies_per_manager', __('Companies per manager'), $companies_per_manager, 'no', true, '10px');
 
 //TOP 10 INVOICING
 $companies_invoincing = crm_get_total_invoiced($where_clause);

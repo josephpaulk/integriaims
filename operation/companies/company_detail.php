@@ -531,6 +531,8 @@ elseif ($op == "activities") {
 		if ($comments != "") {
 			$sql = sprintf ('INSERT INTO tcompany_activity (id_company, written_by, date, description) VALUES (%d, "%s", "%s", "%s")', $id, $config["id_user"], $datetime, $comments);
 			process_sql ($sql, 'insert_id');
+			$sql = sprintf ('UPDATE tcompany SET last_update = "%s" WHERE id = %d', $datetime, $id);
+			process_sql ($sql);
 		} else {
 			echo "<h3 class='error'>".__('Error adding activity. Empty activity')."</h3>";
 		}
@@ -1022,6 +1024,8 @@ if ((!$id) AND ($new_company == 0)){
 	$search_parent = (int) get_parameter ("search_parent");
 	$search_date_begin = (string) get_parameter("search_date_begin");
 	$search_date_end = (string) get_parameter("search_date_end");
+	$order_by_activity = (string) get_parameter ("order_by_activity");
+	$order_by_company = (string) get_parameter ("order_by_company");
 	
 	$date = false;
 	
@@ -1054,8 +1058,36 @@ if ((!$id) AND ($new_company == 0)){
 		$where_clause .= " AND `date` <= $search_date_end";
 		$date = true;
 	}
+	
+	// ORDER
+	$order_by = " ORDER BY ";
+	if ($order_by_activity != "") {
+		if ($order_by_activity == "ASC") {
+			$order_by .= "tcompany.last_update ASC";
+			$activity_order_image = "&nbsp;<a href='javascript:changeActivityOrder(\"DESC\")'><img src='images/arrow_down_orange.png'></a>";
+			$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
+		} else {
+			$order_by .= "tcompany.last_update DESC";
+			$activity_order_image = "&nbsp;<a href='javascript:changeActivityOrder(\"ASC\")'><img src='images/arrow_up_orange.png'></a>";
+			$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
+		}
+	} elseif ($order_by_company != "") {
+		if ($order_by_company == "DESC") {
+			$order_by .= "tcompany.name DESC";
+			$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"ASC\")'><img src='images/arrow_down_orange.png'></a>";
+			$activity_order_image = "&nbsp;<a href='javascript:changeActivityOrder(\"DESC\")'><img src='images/block_orange.png'></a>";
+		} else {
+			$order_by .= "tcompany.name ASC";
+			$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"DESC\")'><img src='images/arrow_up_orange.png'></a>";
+			$activity_order_image = "&nbsp;<a href='javascript:changeActivityOrder(\"DESC\")'><img src='images/block_orange.png'></a>";
+		}
+	} else {
+		$order_by .= "tcompany.last_update DESC";
+		$activity_order_image = "&nbsp;<a href='javascript:changeActivityOrder(\"ASC\")'><img src='images/arrow_up_orange.png'></a>";
+		$company_order_image = "&nbsp;<a href='javascript:changeCompanyOrder(\"ASC\")'><img src='images/block_orange.png'></a>";
+	}
 
-	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end";
+	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end&order_by_activity=$order_by_activity&order_by_company=$order_by_company";
 
 	$table->width = '99%';
 	$table->class = 'search-table-button';
@@ -1080,9 +1112,12 @@ if ((!$id) AND ($new_company == 0)){
 
 	echo '<form method="post" id="company_stats_form" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	print_table ($table);
+	// Input hidden for ORDER
+	print_input_hidden ('order_by_activity', $order_by_activity);
+	print_input_hidden ('order_by_company', $order_by_company);
 	echo '</form>';
 
-	$companies = crm_get_companies_list($where_clause, $date);
+	$companies = crm_get_companies_list($where_clause, $date, $order_by);
 	
 	if ($read && $enterprise) {
 		$companies = crm_get_user_companies($config['id_user'], $companies);
@@ -1097,13 +1132,15 @@ if ((!$id) AND ($new_company == 0)){
 		$table->data = array ();
 		$table->style = array ();
 		$table->colspan = array ();
-		$table->head[0] = __('Company');
+		$table->head[0] = __('Company') . $company_order_image;
+		//$table->head[0] = __('Company');
 		$table->head[1] = __('Role');
 		$table->head[2] = __('Contracts');
 		$table->head[3] = __('Leads');
 		$table->head[4] = __('Manager');
 		$table->head[5] = __('Country');
-		$table->head[6] = __('Last activity');
+		$table->head[6] = __('Last activity') . $activity_order_image;
+		//$table->head[6] = __('Last activity');
 		$table->head[7] = __('Delete');
 		
 		foreach ($companies as $company) {
@@ -1204,12 +1241,11 @@ echo "<div class= 'dialog ui-dialog-content' id='company_search_window'></div>";
 <script type="text/javascript" >
 	
 add_ranged_datepicker ("#text-search_date_begin", "#text-search_date_end", null);
-	
+
 $(document).ready (function () {
 	$("#textarea-description").TextAreaResizer ();
 	
 	var idUser = "<?php echo $config['id_user'] ?>";
-	
 	bindAutocomplete ('#text-user', idUser);
 	
 	// Form validation
@@ -1259,11 +1295,23 @@ $(document).ready (function () {
 	
 });
 
-function changeAction() {
+function changeAction () {
 	
 	var f = document.forms.company_stats_form;
 
 	f.action = "index.php?sec=customers&sec2=operation/companies/company_statistics";
+	$("#company_stats_form").submit();
+}
+
+function changeActivityOrder (order) {
+	$("#hidden-order_by_activity").val(order);
+	$("#hidden-order_by_company").val('');
+	$("#company_stats_form").submit();
+}
+
+function changeCompanyOrder (order) {
+	$("#hidden-order_by_company").val(order);
+	$("#hidden-order_by_activity").val('');
 	$("#company_stats_form").submit();
 }
 

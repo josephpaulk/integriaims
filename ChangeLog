@@ -1,3 +1,25 @@
+2013-09-05  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* images/arrow_down_orange.png
+	  images/arrow_up_orange.png
+	  images/block_orange.png: Added this new icons.
+	
+	* include/functions_crm.php: Modified the function
+	"crm_get_companies_list" to accept an "order by" by parameter.
+	Now every company name that print the functions
+	"crm_print_most_invoicing_companies" and
+	"crm_print_most_activity_companies" links to its company
+	detail. Added the functions "crm_get_total_managers" and
+	"crm_get_data_managers_graph".
+	
+	* operation/companies/company_detail.php: Now the 'last_update'
+	column of the table 'tcompany' is updated when a new activity
+	is added. Now is possible to order the company list by name
+	or last update.
+	
+	* operation/companies/company_statistics.php: Added a pie
+	graph of companies per manager.
+	
 2013-09-05  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_detail.php,

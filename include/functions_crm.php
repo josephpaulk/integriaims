@@ -16,17 +16,19 @@
 
 global $config;
 
-function crm_get_companies_list ($sql_search, $date = false) {
+function crm_get_companies_list ($sql_search, $date = false, $sql_order_by = "") {
 	
 	if ($date) {
 		$sql = "SELECT tcompany.* FROM tcompany, tcompany_activity
 				WHERE tcompany.id = tcompany_activity.id_company $sql_search
 				GROUP BY tcompany.id
+				$sql_order_by
 				";
 	} else {
 		$sql = "SELECT tcompany.* FROM tcompany
 				WHERE 1=1 $sql_search
 				GROUP BY tcompany.id
+				$sql_order_by
 				";
 	}
 		
@@ -212,7 +214,8 @@ function crm_print_most_invoicing_companies($companies) {
 	
 		if ($i < 10) {
 			$data = array();
-			$data[0] = crm_get_company_name ($company['id']);
+			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$company['id']."'>"
+				. crm_get_company_name ($company['id']) . "</a>";
 
 			$data[1] = $company['total_ammount'];
 
@@ -264,7 +267,8 @@ function crm_print_most_activity_companies($companies) {
 	
 		if ($i < 10) {
 			$data = array();
-			$data[0] = crm_get_company_name ($company['id']);
+			$data[0] = "<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=".$company['id']."'>"
+				. crm_get_company_name ($company['id']) . "</a>";
 
 			$data[1] = $company['total_activity'];
 
@@ -624,6 +628,53 @@ function crm_get_contact_files ($id_contact, $order_desc = false) {
         }
 
         return get_db_all_rows_field_filter ('tattachment', 'id_contact', $id_contact, $order);
+}
+
+// Count companies per owner
+function crm_get_total_managers($where_clause = false) {
+	
+	if ($where_clause) {
+		$sql = "SELECT manager, count(id) AS total_companies FROM tcompany
+				WHERE id IN (SELECT id
+								FROM tcompany
+								WHERE 1=1 $where_clause)
+					AND manager<>''
+				GROUP BY manager
+				ORDER BY total_companies DESC
+				";
+	} else {
+		$sql = "SELECT manager, count(id) AS total_companies FROM tcompany
+				WHERE manager<>''
+				GROUP BY manager
+				ORDER BY total_companies DESC
+				";
+	}
+		
+	$total = process_sql ($sql);
+
+	return $total;
+}
+
+function crm_get_data_managers_graph($managers) {
+	
+	global $config;
+	
+	if ($managers === false) {
+		return false;
+	}
+    
+	require_once ("include/functions_graph.php");  
+	
+	$managers_companies = array();
+	$i = 0;
+	foreach ($managers as $key=>$manager) {
+		if ($i < 7) {
+			$managers_companies[$manager['manager']] = $manager['total_companies'];
+		}
+		$i++;
+	}
+
+	return $managers_companies;
 }
 
 ?>
