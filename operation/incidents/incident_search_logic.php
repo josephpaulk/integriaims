@@ -38,8 +38,6 @@ echo "</div>";
 echo "</h1>";
 
 echo "<div class='under_tabs_info'>";
-echo sprintf(__('Max incidents shown: %d'),$config['limit_size']);
-echo print_help_tip (sprintf(__('You can change this value by changing %s parameter in setup'),"<b>".__("Max. Incidents by search")."</b>", true));
 echo "</div>";
 
 echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px; margin-top: 5px;'>";
@@ -164,6 +162,12 @@ echo '</div>';
 
 incidents_search_result($filter);
 
+// Get the total incidents displayed. Hope gets the query from the 
+// SQL cache, if not, we need to change incident_search_result function to return this value
+
+$temp_incidents = filter_incidents ($filter);
+$total_incidents_in_search = count($temp_incidents);
+
 /* Add a form to carry filter between statistics and search views */
 echo '<form id="stats_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search&option=stats" style="clear: both">';
 foreach ($filter as $key => $value) {
@@ -178,8 +182,13 @@ foreach ($filter as $key => $value) {
 }
 echo "</form>";
 
-echo '<br>';
-
+echo "<span style='font-size: 10px'>";
+echo sprintf(__('Results found:  %d'), $total_incidents_in_search);
+echo " - ";
+echo sprintf(__('Max. incidents shown: %d'),$config['limit_size']);
+echo print_help_tip (sprintf(__('You can change this value by changing %s parameter in setup'),"<b>".__("Max. Incidents by search")."</b>", true));
+echo "</span>";
+echo "<br>";
 $table->class = 'search-table-button';
 $table->width = '99%';
 $table->id = 'incident_massive';

@@ -1,3 +1,7 @@
+-- Unknown date
+
+ALTER TABLE tsla ADD `no_holidays` tinyint NULL default 0;
+
 -- ---------------------------------------------------
 -- Feb 2013
 -- ---------------------------------------------------

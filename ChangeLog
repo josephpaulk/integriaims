@@ -1,3 +1,17 @@
+2013-09-06  Sancho Lerena <slerena@artica.es>
+
+	* include/functions.php: Improved combo and "translation" of 
+	priorities. Fixed function which return graph on priority code.
+
+	* operation/incidents/incident_search_logic.php: Added count
+	of incidents displayed at the bottom. Moved to the bottom the
+	max. display result legend.
+
+	* operation/incidents/incident_dashboard.php: Fixed the bad 
+	behaviour on display of incidents grouped by priority.
+
+	* extras/migrate.sql: Some changes on tsla table missing.
+
 2013-09-05  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_form.php,

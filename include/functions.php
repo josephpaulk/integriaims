@@ -719,12 +719,12 @@ function return_value ($var) {
 function get_priorities () {
 	$incidents = array ();
 	
-	$incidents[10] = 0;
-	$incidents[0] = 1;
-	$incidents[1] = 2;
-	$incidents[2] = 3;
-	$incidents[3] = 4;
-	$incidents[4] = 5;
+	$incidents[10] = 0 . " (".__('Maintenance'). ")";
+	$incidents[0] = 1 . " (".__('Informative'). ")";
+	$incidents[1] = 2 . " (".__('Low'). ")";
+	$incidents[2] = 3 . " (".__('Medium'). ")";
+	$incidents[3] = 4 . " (".__('Serious'). ")";
+	$incidents[4] = 5 . " (".__('Very serious'). ")";
 	
 	
 	/**OLD ARRAY!**/
@@ -786,32 +786,40 @@ function clean_flash_string ($string) {
 
 function print_priority_flag_image ($priority, $return = false, $basedir = "", $class = "") {
 	$output = '';
+
+
+	/* NOTE that priority for the user interface is
+            0 - maintance, 1 - Informative... 5 - Very serious
+            Values stored in the datbase are different, so: 
+              Maintance in DB is 10 and visualized as 0
+              Others are stored like X and are visualized as X+1
+        */
 	
 	$output .= '<img class="priority-color '.$class.'" ';
 	switch ($priority) {
 	case 0:
 		// Informative
-		$output .= 'src="'.$basedir.'images/priority_informative.png" title="'.__('Informative').'" ';
+		$output .= 'src="'.$basedir.'images/priority_informative.png" title="'.__('Informative').' (1)" ';
 		break;
 	case 1:
 		// Low
-		$output .= 'src="'.$basedir.'images/priority_low.png" title="'.__('Low').'" ';
+		$output .= 'src="'.$basedir.'images/priority_low.png" title="'.__('Low').' (2)" ';
 		break;
 	case 2:
 		// Medium
-		$output .= 'src="'.$basedir.'images/priority_medium.png" title="'.__('Medium').'" ';
+		$output .= 'src="'.$basedir.'images/priority_medium.png" title="'.__('Medium').' (3)" ';
 		break;
 	case 3:
 		// Serious
-		$output .= 'src="'.$basedir.'images/priority_serious.png" title="'.__('Serious').'" ';
+		$output .= 'src="'.$basedir.'images/priority_serious.png" title="'.__('Serious').' (4)" ';
 		break;
 	case 4:
 		// Very serious
-		$output .= 'src="'.$basedir.'images/priority_critical.png" title="'.__('Very serious').'" ';
+		$output .= 'src="'.$basedir.'images/priority_critical.png" title="'.__('Very serious').' (5)" ';
 		break;
 	case 10:
 		// Maintance
-		$output .= 'src="'.$basedir.'images/priority_maintenance.png" title="'.__('Maintance').'" ';
+		$output .= 'src="'.$basedir.'images/priority_maintenance.png" title="'.__('Maintance').' (0)" ';
 		break;
 	default:
 		// Default
