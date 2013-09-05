@@ -1,4 +1,11 @@
-2013-09-04  Dario Rodriguez <dario@artica.es>
+2013-09-05  Dario Rodriguez <dario@artica.es>
+
+	* operation/incidents/incident_detail.php,
+	operation/incidents/incident_dashboard_detail.php: Changed
+	incident workflow now after creating and incident you will
+	see the dashboard with all the detials.
+
+2013-09-05  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_detail.php: Fixed a problem
 	loading incident configuration based on group details on

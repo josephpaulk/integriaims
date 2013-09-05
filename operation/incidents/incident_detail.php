@@ -440,7 +440,10 @@ if ($action == "insert") {
 		echo $result_msg;
 		return;
 	}
-	$id = 0; /* Do this to create another one */
+
+	include("incident_dashboard_detail.php");
+	return;
+
 }
 
 // Edit / Visualization MODE - Get data from database
@@ -727,8 +730,8 @@ if ($has_im) {
 	$params_assigned['input_id'] = 'text-id_user';
 	$params_assigned['input_name'] = 'id_user';
 	$params_assigned['input_value'] = $assigned_user_for_this_incident;
-	$params_assigned['title'] = 'Owner';
-	$params_assigned['help_message'] = "User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user";
+	$params_assigned['title'] = __('Owner');
+	$params_assigned['help_message'] = __("User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user");
 	$params_assigned['return'] = true;
 	$params_assigned['return_help'] = true;
 	

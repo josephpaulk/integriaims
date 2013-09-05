@@ -17,11 +17,15 @@ global $config;
 
 include_once ("include/functions_graph.php");
 
-$id = get_parameter("id", false);
+
+//id could be passed by another view, if not, we try to get from parameters
+if(!$id) {
+	$id = get_parameter("id", false);
+}
 
 if ($id) {
 	$incident = get_incident ($id);
-	
+
 	if ($incident !== false) {
 		$id_grupo = $incident['id_grupo'];
 	} else {
@@ -43,12 +47,15 @@ if (isset($incident)) {
 		include ("general/noaccess.php");
 		exit;
 	}
-}
-else if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
+} else if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
 	// Doesn't have access to this page
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
 	include ("general/noaccess.php");
 	exit;
+} else {
+	//No incident but ACLs enabled
+	echo "<h3 class='error'>".__("The incident doesn't exist")."</h3>";
+	return;
 }
 
 /* Users affected by the incident */
