@@ -96,7 +96,22 @@ foreach ($progress as $k => $v) {
 	foreach ($leads as $l) {
 		$lead_list .= "<li class='pipeline-list'>";
 		$lead_list .= "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".$l["id"]."'>";
-		$lead_list .= "<div class='pipeline-list-title'>".$l["fullname"]."</div>";
+
+
+		$name = strtolower($l["fullname"]);	
+
+		//Adjust text truncate for very long names
+		$name_size = strlen(safe_output($l["fullname"]));
+
+		$char_truncate = 23;
+	
+		if ($name_size > 23) {
+			$char_truncate = 20;
+		}	
+		
+		$name = ui_print_truncate_text($name, $char_truncate, false, true);
+	
+		$lead_list .= "<div class='pipeline-list-title'>".$name."</div>";
 		$lead_list .= "<div class='pipeline-list-subtitle'>";
 		$lead_list .= $l["estimated_sale"]." ".$config["currency"];
 

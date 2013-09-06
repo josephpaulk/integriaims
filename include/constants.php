@@ -113,4 +113,7 @@ define ('INVENTORY_OBJECT_TYPE', 6);
 define ('INVENTORY_PUBLIC', 7);
 define ('INVENTORY_PRIVATE', 8);
 
+/*Text truncate constant*/
+define('GENERIC_SIZE_TEXT', 25);
+
 ?>

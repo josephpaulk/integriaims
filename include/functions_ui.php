@@ -242,4 +242,98 @@ function ui_toggle($code, $name, $title = '', $hidde_default = true, $return = f
 	}
 }
 
+function ui_print_truncate_text($text, $numChars = GENERIC_SIZE_TEXT, $showTextInAToopTip = true, $return = true, $showTextInTitle = true, $suffix = '&hellip;', $style = false) {
+	global $config;
+	
+	if (is_string($numChars)) {
+		switch ($numChars) {
+			case 'agent_small':
+				$numChars = $config['agent_size_text_small'];
+				break;
+			case 'agent_medium':
+				$numChars = $config['agent_size_text_medium'];
+				break;
+			case 'module_small':
+				$numChars = $config['module_size_text_small'];
+				break;
+			case 'module_medium':
+				$numChars = $config['module_size_text_medium'];
+				break;
+			case 'description':
+				$numChars = $config['description_size_text'];
+				break;
+			case 'item_title':
+				$numChars = $config['item_title_size_text'];
+				break;
+			default:
+				$numChars = (int)$numChars;
+				break;
+		}
+	}
+	
+	
+	if ($numChars == 0) {
+		if ($return == true) {
+			return $text;
+		}
+		else {
+			echo $text;
+		}
+	} 
+	
+	$text = safe_output($text);
+	if (mb_strlen($text, "UTF-8") > ($numChars)) {
+		// '/2' because [...] is in the middle of the word.
+		$half_length = intval(($numChars - 3) / 2);
+		
+		// Depending on the strange behavior of mb_strimwidth() itself,
+		// the 3rd parameter is not to be $numChars but the length of
+		// original text (just means 'large enough').
+		$truncateText2 = mb_strimwidth($text,
+			(mb_strlen($text, "UTF-8") - $half_length),
+			mb_strlen($text, "UTF-8"), "", "UTF-8" );
+		
+		$truncateText = mb_strimwidth($text, 0,
+			($numChars - $half_length), "", "UTF-8") . $suffix;
+		
+		$truncateText = $truncateText . $truncateText2;
+		
+		if ($showTextInTitle) {
+			if ($style === null) {
+				$truncateText = $truncateText;
+			}
+			else if ($style !== false) {
+				$truncateText = '<span style="' . $style . '" title="' . $text . '">' .
+					$truncateText . '</span>';
+			}
+			else {
+				$truncateText = '<span title="' . $text . '">' . $truncateText . '</span>';
+			}
+		}
+		if ($showTextInAToopTip) {
+			$truncateText = $truncateText . print_help_tip($text, true);
+		}
+		else {
+			if ($style !== false) {
+				$truncateText = '<span style="' . $style . '">' . $truncateText . '</span>';
+			}
+		}
+	}
+	else {
+		if ($style !== false) { 
+			$truncateText = '<span style="' . $style . '">' . $text . '</span>';
+		}
+		else { 
+			$truncateText = $text;
+		}
+	}
+	
+	if ($return == true) {
+		return $truncateText;
+	}
+	else {
+		echo $truncateText;
+	}
+}
+
 ?>

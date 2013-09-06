@@ -1,5 +1,15 @@
 2013-09-06  Dario Rodriguez <dario@artica.es>
 
+	*  include/styles/integria.css,
+ 	include/functions_ui.php,
+ 	include/constants.php,
+	operation/leads/lead_pipeline.php: Improved lead pipeline
+	view.
+ 	* extras/migrate.sql: Added queries to convert lead
+	progress from old values to new ones.
+
+2013-09-06  Dario Rodriguez <dario@artica.es>
+
 	* operation/leads/lead_pipeline.php: Added missing file
 	from new lead pipeline view :-)
 

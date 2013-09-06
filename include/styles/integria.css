@@ -2324,6 +2324,7 @@ li.piepline-list a {
 div.pipeline-list-title {
 	font-weight: bold;
 	font-size: 9pt;
+	text-transform: capitalize;
 }
 
 div.pipeline-list-subtitle {
