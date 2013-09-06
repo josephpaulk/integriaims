@@ -128,9 +128,8 @@ if ($create) {
 	} else {
 		echo "<h3 class='suc'>".__('Successfully created')."</h3>";
 		audit_db ($config['id_user'], $REMOTE_ADDR, "Lead created", "Lead named '$fullname' has been added");
+		$new = false;
 	}
-	$id = false;
-	$new = false;
 
 	// Clean up all inputs
 	unset ($_POST);
@@ -170,9 +169,9 @@ if ($make_owner){
 if ($update) { // if modified any parameter
 	
 	if (!$write_permission) {
-	        audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
-	        require ("general/noaccess.php");
-	        exit;
+		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to create a contract");
+		require ("general/noaccess.php");
+		exit;
 	}
 	
 	$id_company = (int) get_parameter ('id_company');
@@ -230,7 +229,6 @@ if ($update) { // if modified any parameter
 	// Clean up all inputs
 	unset ($_POST);
 */
-	$id = 0;
 }
 
 // Delete
@@ -285,7 +283,7 @@ $filter['id_company'] = (int) get_parameter ('id_company_search');
 $filter['start_date'] = (string) get_parameter ('start_date_search');
 $filter['end_date'] = (string) get_parameter ('end_date_search');
 $filter['country'] = (string) get_parameter ('country_search', "");
-$filter['id_category'] = (int) get_parameter ('product_search');
+$filter['id_category'] = (int) get_parameter ('product');
 $filter['progress_major_than'] = (int) get_parameter ('progress_major_than_search');
 $filter['progress_minor_than'] = (int) get_parameter ('progress_minor_than_search');
 $filter['owner'] = (string) get_parameter ("owner_search");
@@ -382,7 +380,8 @@ if ($id || $new) {
 	        require ("general/noaccess.php");
 	        exit;
 		}
-
+		
+		clean_cache_db();
 		$lead = get_db_row ("tlead", "id", $id);
 		$id_company = $lead['id_company'];
 		$fullname = $lead['fullname'];
@@ -717,6 +716,8 @@ if ($id || $new) {
 			print_input_hidden ("search_text", $value);
 		} elseif ($key == "id_language") {
 			print_input_hidden ("id_language", $value);
+		} elseif ($key == "id_category") {
+			print_input_hidden ("product", $value);
 		} else {
 			print_input_hidden ($key."_search", $value);
 		}
@@ -747,16 +748,16 @@ if ($id || $new) {
 		$start_date = (string) get_parameter ('start_date_search');
 		$end_date = (string) get_parameter ('end_date_search');
 		$country = (string) get_parameter ('country_search');
-		$id_category = (int) get_parameter ('product_search');
-		$progress_major_than = (int) get_parameter ('progress_major_than_search');
-		$progress_minor_than = (int) get_parameter ('progress_minor_than_search');
+		$id_category = (int) get_parameter ('product');
+		$progress_major_than = (int) get_parameter ('progress_major_than_search', -1);
+		$progress_minor_than = (int) get_parameter ('progress_minor_than_search', -1);
 		$owner = (string) get_parameter ("owner_search");
 		$show_100 = (int) get_parameter ("show_100_search");
 		$id_language = (string) get_parameter ("id_language", "");
 		$est_sale = (int) get_parameter ("est_sale_search", 0);
 	}
 
-	$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&id_category_search=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
+	$params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&product=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
 	$where_group = "";
 
@@ -777,9 +778,13 @@ if ($id || $new) {
 	if ($owner != ""){
 		$where_clause .= sprintf (' AND owner =  "%s"', $owner);
 	}
-
+	
 	if ($search_text != "") {
-		$where_clause .= sprintf (' AND fullname LIKE "%%%s%%" OR description LIKE "%%%s%%" OR company LIKE "%%%s%%" or email LIKE "%%%s%%"', $search_text, $search_text, $search_text, $search_text);
+		if (is_int((int)$search_text) && (int)$search_text > 0) {
+			$where_clause .= sprintf (' AND id = %d', (int)$search_text);
+		} else {
+			$where_clause .= sprintf (' AND fullname LIKE "%%%s%%" OR description LIKE "%%%s%%" OR company LIKE "%%%s%%" or email LIKE "%%%s%%"', $search_text, $search_text, $search_text, $search_text);
+		}
 	}
 
 	if ($id_company) {
@@ -798,11 +803,11 @@ if ($id || $new) {
 		$where_clause .= sprintf (' AND country LIKE "%%%s%%"', $country);
 	}
 
-	if ($progress_minor_than) {
+	if ($progress_minor_than > 0) {
 		$where_clause .= sprintf (' AND progress <= %d ', $progress_minor_than);
 	}
 
-	if ($progress_major_than) {
+	if ($progress_major_than > 0) {
 		$where_clause .= sprintf (' AND progress >= %d ', $progress_major_than);
 	}
 
@@ -841,6 +846,8 @@ if ($id || $new) {
 	$table->data[1][1] = print_input_text ("est_sale_search", $est_sale, "", 21, 100, true, __('Estimated Sale'));
 	
 	$table->data[1][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
+	// Delete new lines from the string
+	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
 	$table->data[1][2] .= print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_leads=1&where_clause=' . str_replace('"', "\'", $where_clause) . '\')', 'class="sub csv"', true);
 	
 	$table_advanced->class = 'search-table';
@@ -849,11 +856,9 @@ if ($id || $new) {
 	$table_advanced->data = array ();
 	$table_advanced->width = "99%";
 	
-	$table_advanced->data[0][0] = print_select ($progress_values, 'progress_major_than_search', $progress_major_than, '', __("None"), 0, true, 0, false, __('Progress equal or above') );
-
-
-	$table_advanced->data[0][1] = print_select ($progress_values, 'progress_minor_than_search', $progress_minor_than, '', __("None"), 0, true, 0, false, __('Progress equal or below') );
-
+	$progress_values = lead_progress_array ();
+	$table_advanced->data[0][0] = print_select ($progress_values, 'progress_major_than_search', $progress_major_than, '', __("None"), -1, true, 0, false, __('Progress equal or above') );
+	$table_advanced->data[0][1] = print_select ($progress_values, 'progress_minor_than_search', $progress_minor_than, '', __("None"), -1, true, 0, false, __('Progress equal or below') );
 
 	$table_advanced->data[0][2] = combo_kb_products ($id_category, true, 'Product type', true);
 
@@ -901,8 +906,8 @@ if ($id || $new) {
 		$table->head[5] = __('Est. Sale');
 		$table->head[6] = __('L.');
 		$table->head[7] = __('Country');
-		$table->head[8] = __('Create')."<br>".__('Update');
-		$table->head[9] = __('Op');
+		$table->head[8] = __('Created')."<br>".__('Updated');
+		$table->head[9] = __('Op.');
 		$table->size[5] = '80px;';
 		$table->size[4] = '130px;';
 		$table->size[9] = '40px;';

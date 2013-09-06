@@ -91,7 +91,7 @@ class Incident {
 			$id_creator = $system->getConfig('id_user');
 		}
 		if ($email_notify == -1) {
-			$email_notify = get_db_value ("forced_email", "tgrupo", "id_grupo", $this->group_id);
+			$email_notify = get_db_value ("forced_email", "tgrupo", "id_grupo", $group_id);
 		}
 		if ($id_parent == 0) {
 			$idParentValue = 'NULL';
@@ -102,6 +102,9 @@ class Incident {
 		
 		$user_responsible = get_group_default_user ($group_id);
 		$id_user_responsible = $user_responsible['id_usuario'];
+		if ($id_user_responsible === false) {
+			$id_user_responsible = $system->getConfig('id_user');
+		}
 		
 		$id_inventory = get_group_default_inventory($group_id, true);
 		

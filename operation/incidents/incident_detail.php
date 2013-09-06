@@ -1080,6 +1080,9 @@ $(document).ready (function () {
 		if (status == 7) {
 			$("#epilog_wrapper").show();
 			$("#closed_by_wrapper").show();
+			$("#text-closed_by").val("<?php echo $config['id_user'] ?>");
+			pulsate("#epilog_wrapper");
+			pulsate("#closed_by_wrapper");
 		} else {
 			$("#epilog_wrapper").hide();
 			$("#closed_by_wrapper").hide();

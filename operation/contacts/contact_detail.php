@@ -139,15 +139,12 @@ if ($id == 0 && !$new_contact) {
 	$search_text = (string) get_parameter ('search_text');
 	$id_company = (int) get_parameter ('id_company', 0);
 	
-	//$where_clause = "WHERE 1=1 AND id_company " .get_filter_by_company_accessibility($config["id_user"]);
 	$where_clause = "WHERE 1=1";
 	if ($search_text != "") {
-		$where_clause .= " AND (fullname LIKE '%$search_text%' OR email LIKE '%$search_text%'
-					OR phone LIKE '%$search_text%' OR mobile LIKE '%$search_text%') ";
+		$where_clause .= " AND (fullname LIKE '%$search_text%' OR email LIKE '%$search_text%' OR phone LIKE '%$search_text%' OR mobile LIKE '%$search_text%') ";
 	}
 
 	if ($id_company) {
-
 		$where_clause .= sprintf (' AND id_company = %d', $id_company);
 	}
 	$params = "&search_text=$search_text&id_company=$id_company";
@@ -173,7 +170,9 @@ if ($id == 0 && !$new_contact) {
 
 	$table->data[0][1] = print_select ($select_comp, 'id_company', $id_company, '', 'All', 0, true, false, false, __('Company'));
 	$table->data[0][2] = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	$table->data[0][3] = print_button(__('Export to CSV'), '', false, 'window.open(\'' . "include/export_csv.php?export_csv_contacts=1&where_clause=$where_clause" . '\')', 'class="sub csv"', true);
+	// Delete new lines from the string
+	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
+	$table->data[0][3] = print_button(__('Export to CSV'), '', false, 'window.open(\'include/export_csv.php?export_csv_contacts=1&where_clause=' . str_replace("'", "\'", $where_clause) . '\')', 'class="sub csv"', true);
 	echo '<form id="contact_search_form" method="post">';
 	print_table ($table);
 	echo '</form>';

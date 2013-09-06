@@ -1105,7 +1105,9 @@ if ((!$id) AND ($new_company == 0)){
 	$table->data[1][2] = print_input_text ('search_date_end', $search_date_end, '', 15, 20, true, __('Date to'));
 		
 	$buttons = print_submit_button (__('Search'), "search_btn", false, 'class="sub search"', true);
-	$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_companies=1&where_clause=' . str_replace('"', "'", $where_clause) . '&date=' . $date . '\')', 'class="sub csv"', true);
+	// Delete new lines from the string
+	$where_clause = str_replace(array("\r", "\n"), '', $where_clause);
+	$buttons .= print_button(__('Export to CSV'), '', false, 'window.open(\'' . 'include/export_csv.php?export_csv_companies=1&where_clause=' . str_replace('"', "\'", $where_clause) . '&date=' . $date . '\')', 'class="sub csv"', true);
 		
 	$table->data[2][0] = $buttons;
 	$table->colspan[2][0] = 4;

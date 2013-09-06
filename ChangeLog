@@ -1,3 +1,24 @@
+2013-09-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* mobile/operation/incident.php: Small fixes on the function
+	"insertIncident".
+	
+	* operation/companies/company_detail.php,
+	  operation/contacts/contact_detail.php,
+	  operation/contracts/contract_detail.php,
+	  operation/invoices/invoice_detail.php,
+	  operation/leads/lead_detail.php: Fixed the CSV exporting.
+	
+	* operation/incidents/incident_detail.php: Now the actual user's
+	name appears in the "Closed By" input when the user selects the
+	option close and some elements pulsate.
+	
+	* operation/leads/lead_detail.php: Now the lead form is loaded
+	when a lead is created or updated instead of the lead listing.
+	Fixed the filters "progress major than" and "progress minor than".
+	Fixed an error related with searches by product. Now is possible
+	to search a lead by its id from the "search text".
+	
 2013-09-06  Sancho Lerena <slerena@artica.es>
 
 	* include/functions_graph.php: Fixes on how hbar graphs
