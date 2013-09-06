@@ -76,7 +76,9 @@ foreach ($progress as $k => $v) {
 	$table_header = "<table class='pipeline-header'>";
 	$table_header .= "<tr>";
 	$table_header .= "<td class='pipeline-header-title'>";
+	$table_header .= "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&owner_search=".$config["id_user"]."&progress_major_than_search=".$k."&progress_minor_than_search=".$k."'>";
 	$table_header .= $v;
+	$table_header .= "</a>";
 	$table_header .= "</td>";
 	$table_header .= "<td rowspan='2'>";
 	$table_header .= "<div class='pipeline-arrow'></div>";
@@ -93,27 +95,67 @@ foreach ($progress as $k => $v) {
 
 	$lead_list = "<ul class='pipeline-list'>";
 
+	// Stored in $config["lead_warning_time"] in days, need to calc in secs for this
+	$lead_warning_time = $config["lead_warning_time"] * 86400;	
+
 	foreach ($leads as $l) {
+
 		$lead_list .= "<li class='pipeline-list'>";
 		$lead_list .= "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".$l["id"]."'>";
 
-
 		$name = strtolower($l["fullname"]);	
+
+		$name = ucwords($name);
 
 		//Adjust text truncate for very long names
 		$name_size = strlen(safe_output($l["fullname"]));
 
-		$char_truncate = 23;
-	
-		if ($name_size > 23) {
-			$char_truncate = 20;
-		}	
+		$char_truncate = 18;
 		
 		$name = ui_print_truncate_text($name, $char_truncate, false, true);
 	
-		$lead_list .= "<div class='pipeline-list-title'>".$name."</div>";
+		$lead_list .= "<div class='pipeline-list-title'>";
+		$lead_list .= $name;
+
+		$lead_list .= "</div>";
+
+
 		$lead_list .= "<div class='pipeline-list-subtitle'>";
+
+
+		$company = $l["company"];
+
+		if (!$company) {
+			$company = __("N/A");
+		}
+
+		$country = $l["country"];
+
+		if (!$country) {
+			$country = __("N/A");
+		}
+
+		$details = $company."  (".$country.")";
+
+		$details_size = strlen(safe_output($details));
+
+		$char_truncate = 30;
+
+		$details = ui_print_truncate_text($details, $char_truncate, false, true);
+
+		$lead_list .= "<div class='pipeline-list-details'>".$details."</div>";
+
+		// Detect is the lead is pretty old 
+		if (calendar_time_diff ($l["modification"]) > $lead_warning_time ){
+			$human_time_lead = human_time_comparation ($l['modification']);
+
+			$time_title = sprintf (__("Updated %s ago"), $human_time_lead);
+		
+			$lead_list .= "<img class='pipeline-warning-icon' src='images/header_warning.png' title='".$time_title."' alt='".$time_title."'>";
+		}
+
 		$lead_list .= $l["estimated_sale"]." ".$config["currency"];
+
 
 		$product_name = __("None");
 		$product_icon = "misc.png";

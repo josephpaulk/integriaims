@@ -2321,6 +2321,10 @@ li.piepline-list a {
 	width: 100%;
 }
 
+li.pipeline-list:hover span {
+	color: #ff9933 !important;
+}
+
 div.pipeline-list-title {
 	font-weight: bold;
 	font-size: 9pt;
@@ -2328,10 +2332,20 @@ div.pipeline-list-title {
 }
 
 div.pipeline-list-subtitle {
-	font-style: italic;
 	text-align: right;
 }
 
 img.pipeline-product-icon {
 	margin-left: 10px;
+}
+
+div.pipeline-list-details {
+	font-style: italic;
+	font-size: 7pt;
+}
+
+img.pipeline-warning-icon {
+	float: left;
+	margin-right: 10px;
+	width: 18px;
 }
