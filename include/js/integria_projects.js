@@ -8,22 +8,27 @@
  * id_father int use in js and ajax php, its useful when you have a two subtrees with same agent for diferent each one
  */
 function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_search) {
-
-	hiddenDiv = $('#tree_div'+id_father+'_task_'+div_id).attr('hiddenDiv');
-	loadDiv = $('#tree_div'+id_father+'_task_'+div_id).attr('loadDiv');
-	pos = parseInt($('#tree_image'+id_father+'_task_'+div_id).attr('pos_tree'));
 	
-	//If has yet ajax request running
-	if (loadDiv == 2)
+	// Content div
+	var div = $('#tree_div'+id_father+'_task_'+div_id);
+	// Tree image
+	var image = $('#tree_image'+id_father+'_task_'+div_id);
+	// Content div visibility
+	var hiddenDiv = div.attr('hiddenDiv');
+	// Content div load status
+	var loadDiv = div.attr('loadDiv');
+	// Level position
+	var pos = parseInt(image.attr('pos_tree'));
+	
+	//If has no data
+	if (loadDiv == -1)
 		return;
 	
 	if (loadDiv == 0) {
 		
 		//Put an spinner to simulate loading process
-		
-		$('#tree_div'+id_father+'_task_'+div_id).html("<img style='padding-top:10px;padding-bottom:10px;padding-left:20px;' src=images/spinner.gif>");
-		$('#tree_div'+id_father+'_task_'+div_id).slideDown();
-		$('#tree_div'+id_father+'_task_'+div_id).attr('loadDiv', 2);
+		div.html("<img style='padding-top:10px;padding-bottom:10px;padding-left:20px;' src=images/spinner.gif>");
+		div.attr('loadDiv', 2);
 		
 		$.ajax({
 			type: "POST",
@@ -33,54 +38,32 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 			success: function(msg) {
 				if (msg.length != 0) {
 					
-					$('#tree_div'+id_father+'_task_'+div_id).hide();
-					$('#tree_div'+id_father+'_task_'+div_id).html(msg);
-					$('#tree_div'+id_father+'_task_'+div_id).slideDown();
+					div.html(msg);
+					div.attr('hiddendiv',1);
+					div.attr('loadDiv', 1);
 					
-					//change image of tree [+] to [-]
-					
-					var icon_path = 'images/tree';
-					
-					switch (pos) {
-						case 0:
-							$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/first_expanded.png');
-							break;
-						case 1:
-							$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/one_expanded.png');
-							break;
-						case 2:
-							$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/expanded.png');
-							break;
-						case 3:
-							$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/last_expanded.png');
-							break;
-					}
-
-					$('#tree_div'+id_father+'_task_'+div_id).attr('hiddendiv',0);
-					$('#tree_div'+id_father+'_task_'+div_id).attr('loadDiv', 1);
 				} else {
 					
 					var icon_path = 'images/tree';
 					
 					switch (pos) {
 						case 0:
-							$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/first_leaf.png');
+							image.attr('src',icon_path+'/first_leaf.png');
 							break;
 						case 1:
-							$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/no_branch.png');
+							image.attr('src',icon_path+'/no_branch.png');
 							break;
 						case 2:
-							$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/leaf.png');
+							image.attr('src',icon_path+'/leaf.png');
 							break;
 						case 3:
-							$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/last_leaf.png');
+							image.attr('src',icon_path+'/last_leaf.png');
 							break;
 					}
 					
-					$('#tree_div'+id_father+'_task_'+div_id).html("");
-					$('#tree_div'+id_father+'_task_'+div_id).slideUp();
-					$('#tree_div'+id_father+'_task_'+div_id).attr('hiddendiv', 1);
-					$('#tree_div'+id_father+'_task_'+div_id).attr('loadDiv', 2);
+					div.html("");
+					div.attr('hiddendiv', 1);
+					div.attr('loadDiv', -1);
 				}
 				
 			}
@@ -91,23 +74,23 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 		var icon_path = 'images/tree';
 		
 		if (hiddenDiv == 0) {
-
-			$('#tree_div'+id_father+'_task_'+div_id).slideUp()
-			$('#tree_div'+id_father+'_task_'+div_id).attr('hiddenDiv',1);
+			
+			div.slideUp()
+			div.attr('hiddenDiv',1);
 			
 			//change image of tree [-] to [+]
 			switch (pos) {
 				case 0:
-					$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/first_closed.png');
+					image.attr('src',icon_path+'/first_closed.png');
 					break;
 				case 1:
-					$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/one_closed.png');
+					image.attr('src',icon_path+'/one_closed.png');
 					break;
 				case 2:
-					$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/closed.png');
+					image.attr('src',icon_path+'/closed.png');
 					break;
 				case 3:
-					$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/last_closed.png');
+					image.attr('src',icon_path+'/last_closed.png');
 					break;
 			}
 		}
@@ -115,21 +98,21 @@ function loadTasksSubTree(id_project, div_id, branches_json, id_father, sql_sear
 			//change image of tree [+] to [-]
 			switch (pos) {
 				case 0:
-					$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/first_expanded.png');
+					image.attr('src',icon_path+'/first_expanded.png');
 					break;
 				case 1:
-					$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/one_expanded.png');
+					image.attr('src',icon_path+'/one_expanded.png');
 					break;
 				case 2:
-					$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/expanded.png');
+					image.attr('src',icon_path+'/expanded.png');
 					break;
 				case 3:
-					$('#tree_image'+id_father+'_task_'+div_id).attr('src',icon_path+'/last_expanded.png');
+					image.attr('src',icon_path+'/last_expanded.png');
 					break;
 			}
 
-			$('#tree_div'+id_father+'_task_'+div_id).attr('hiddenDiv',0);
-			$('#tree_div'+id_father+'_task_'+div_id).slideDown();
+			div.attr('hiddenDiv',0);
+			div.slideDown();
 		}
 	}
 }

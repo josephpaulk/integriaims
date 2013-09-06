@@ -254,6 +254,9 @@ if (defined ('AJAX')) {
 				$launch_icons = $wo_icon . "&nbsp;" . $incident_icon;
 				
 				echo "<a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$id_item.",\"".$sql_search."\")'>";
+				echo "<script type=\"text/javascript\">
+						  loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$id_item.",\"".$sql_search."\");
+					  </script>";
 				echo $img;
 				echo "</a>";
 				echo "<span style='".$background_color." padding: 4px;'>";
@@ -290,7 +293,7 @@ if (defined ('AJAX')) {
 				
 			}
 			
-			echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view tree_div_".$task['id']."' id='tree_div".$id_item."_task_".$task['id']."'></div>";
+			echo "<div hiddenDiv='1' loadDiv='0' style='display: none; margin: 0px; padding: 0px;' class='tree_view tree_div_".$task['id']."' id='tree_div".$id_item."_task_".$task['id']."'></div>";
 			echo "</li>";
 		}
 		
@@ -452,8 +455,8 @@ if (defined ('AJAX')) {
 			
 			// Submitter
 			$submitter = safe_output($incident['id_creator']);
-			if (strlen($submitter) > 1) {
-				$submitter = "<div style='display: inline-block;' title='".safe_output($incident['id_creator'])."'>".substr ($submitter, 0, 1)."...</div>";
+			if (strlen($submitter) > 10) {
+				$submitter = "<div style='display: inline-block;' title='".safe_output($incident['id_creator'])."'>".substr ($submitter, 0, 10)."...</div>";
 			}
 			
 			// Status
@@ -506,27 +509,6 @@ $project = get_db_row ('tproject', 'id', $id_project);
 
 $id_task = (int) get_parameter ('id');
 $operation = (string) get_parameter ('operation');
-
-// Not used now. Potential delete
-//~ if ($operation == 'delete') {
-	//~ 
-	//~ // ACL
-	//~ $task_access = get_project_access ($config["id_user"], $id_project, $id_task, false, true);
-	//~ if (! $task_access["manage"]) {
-		//~ // Doesn't have access to this page
-		//~ audit_db($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to delete a task without permission");
-		//~ no_permission ();
-	//~ }
-	//~ 
-	//~ if (dame_admin ($config['id_user']) || project_manager_check ($id_project)) {
-		//~ delete_task ($id_task);
-		//~ echo '<h3 class="suc">'.__('Successfully deleted').'</h3>';
-		//~ $operation = '';
-		//~ project_tracking ($id_project, PROJECT_TASK_DELETED);
-	//~ } else {
-		//~ no_permission ();
-	//~ }
-//~ }
 
 if ($operation == 'move') {
 	

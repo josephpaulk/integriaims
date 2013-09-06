@@ -258,6 +258,11 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			$launch_icons = $wo_icon . "&nbsp;" . $incident_icon;
 			
 			echo "<a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
+			echo "<script type=\"text/javascript\">
+					  $(document).ready (function () {
+						  loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\");
+					  });
+				  </script>";
 			echo $img;
 			echo "</a>";
 			echo "<span style='".$background_color." padding: 4px;'>";
@@ -293,7 +298,7 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			echo "</span>";
 		}
 		
-		echo "<div hiddenDiv='1' loadDiv='0' style='margin: 0px; padding: 0px;' class='tree_view tree_div_".$task['id']."' id='tree_div".$task['id']."_task_".$task['id']."'></div>";
+		echo "<div hiddenDiv='1' loadDiv='0' style='display: none; margin: 0px; padding: 0px;' class='tree_view tree_div_".$task['id']."' id='tree_div".$task['id']."_task_".$task['id']."'></div>";
 		echo "</li>";
 	}
 	

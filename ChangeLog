@@ -1,3 +1,13 @@
+2013-09-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_tasks.php,
+	  operation/projects/task.php: Added code to force the
+	  load of the sublevels.
+	
+	* include/js/integria_projects.js: Improved the code
+	of the function "loadTasksSubTree". Adapted to the
+	new load requirements.
+	
 2013-09-06  Dario Rodriguez <dario@artica.es>
 
 	*  include/styles/integria.css,
