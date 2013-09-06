@@ -19,10 +19,13 @@ check_login ();
 $manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
 
 if ($manage !== ENTERPRISE_NOT_HOOK) {
+	$enterprise = true;
 	if (!$manage) {
 		include ("general/noaccess.php");
 		exit;
 	}
+} else {
+	$enterprise = false;
 }
 
 $id_company = get_parameter ("id", -1);
@@ -30,27 +33,33 @@ $company = get_db_row ('tcompany', 'id', $id_company);
 $id_invoice = get_parameter ("id_invoice", -1);
 $operation_invoices = get_parameter ("operation_invoices");
 
+if ($id_company < 1 && $id_invoice < 1) {
+	include ("general/noaccess.php");
+	exit;
+}
+
+if ($id_company < 1) {
+	$id_company = get_db_value('id_company', 'tinvoice', 'id', $id_invoice);
+}
+$permission = enterprise_hook ('crm_check_acl_invoice', array ($config['id_user'], $id_company));
+
+if ($permission !== ENTERPRISE_NOT_HOOK) {
+	if (!$permission) {
+		include ("general/noaccess.php");
+		exit;
+	}
+} else {
+	$permission = true;
+}
 
 if ($id_invoice > 0){
-
-	$permission = enterprise_hook ('crm_check_acl_invoice', array ($config['id_user'], $id_company));
-
-	$enterprise = false;
-	$permission = true;
-
-	if ($permission !== ENTERPRISE_NOT_HOOK) {
-		$enterprise = true;
-		if (!$permission) {
-			include ("general/noaccess.php");
-			exit;
-		}
-	}
 	
 	$invoice = get_db_row ('tinvoice', 'id', $id_invoice);
 
 	
 	if (crm_is_invoice_locked ($invoice["id"])) {
 		require ("operation/invoices/invoice_view.php");
+		exit;
 	}
 	
 

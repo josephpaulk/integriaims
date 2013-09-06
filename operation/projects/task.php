@@ -285,6 +285,9 @@ if (defined ('AJAX')) {
 				$branches_json = json_encode ($branches_aux);
 				
 				echo "<a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$id_item.",\"".$sql_search."\")'>";
+				echo "<script type=\"text/javascript\">
+						  loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$id_item.",\"".$sql_search."\");
+					  </script>";
 				echo $img;
 				echo "</a>";
 				echo "<span style='background: #D8D8D8; padding-top: 5px; padding-bottom: 5px; padding-right: 4px;'>";

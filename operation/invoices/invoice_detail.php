@@ -30,28 +30,34 @@ include_once('include/functions_crm.php');
 $manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
 
 if ($manage !== ENTERPRISE_NOT_HOOK) {
+	$enterprise = true;
 	if (!$manage) {
 		include ("general/noaccess.php");
 		exit;
 	}
+} else {
+	$enterprise = false;
 }
 
 echo "<h1>".__('Invoice listing')."</h1>";
 
-if ($id_invoice) {
-	$id_company = get_db_value('id_company', 'tinvoice', 'id', $id);
+if ($id_invoice || $id) {
+	
+	if ($id_invoice) {
+		$id_company = get_db_value('id_company', 'tinvoice', 'id', $id_invoice);
+	} elseif ($id) {
+		$id_company = get_db_value('id_company', 'tinvoice', 'id_company', $id);
+	}
 
 	$permission = enterprise_hook ('crm_check_acl_invoice', array ($config['id_user'], $id_company));
 
-	$enterprise = false;
-	$permission = true;
-
 	if ($permission !== ENTERPRISE_NOT_HOOK) {
-		$enterprise = true;
 		if (!$permission) {
 			include ("general/noaccess.php");
 			exit;
 		}
+	} else {
+		$permission = true;
 	}
 }
 
@@ -104,7 +110,6 @@ $search_date_begin = get_parameter ('search_date_begin');
 
 $search_params = "search_text=$search_text&search_date_end=$search_date_end&search_date_begin=$search_date_begin";
 
-//$where_clause = " 1 = 1 AND id_company " . get_filter_by_company_accessibility($config["id_user"]);
 $where_clause = " 1 = 1 ";
 
 if ($search_text != "") {
@@ -156,7 +161,7 @@ echo '</form>';
 
 $invoices = crm_get_all_invoices ($where_clause);
 
-if ($permission && $enterprise) {
+if ($enterprise) {
 	$invoices = crm_get_user_invoices($config['id_user'], $invoices);
 }
 

@@ -291,6 +291,11 @@ function tasks_print_tree ($id_project, $sql_search = '') {
 			$branches_json = json_encode ($branches);
 			
 			echo "<a onfocus='JavaScript: this.blur()' href='javascript: loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\")'>";
+			echo "<script type=\"text/javascript\">
+					  $(document).ready (function () {
+						  loadTasksSubTree(".$task['id_project'].",".$task['id'].",\"".$branches_json."\", ".$task['id'].",\"".$sql_search."\");
+					  });
+				  </script>";
 			echo $img;
 			echo "</a>";
 			echo "<span style='background: #D8D8D8; padding-top: 5px; padding-bottom: 5px; padding-right: 4px;'>";

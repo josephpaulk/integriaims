@@ -1,5 +1,13 @@
 2013-09-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/functions_tasks.php,
+	  operation/projects/task.php: Fixed a call to a function.
+	
+	* operation/invoices/invoices.php,
+	  operation/invoices/invoice_detail.php: Fixed the ACL.
+	
+2013-09-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* operation/contacts/contact_manage.php: Fixed a validation
 	error.
 	
