@@ -677,4 +677,40 @@ function crm_get_data_managers_graph($managers) {
 	return $managers_companies;
 }
 
+function get_contract_expire_days () {
+	$expire_days = array();
+	$expire_days[7] = '< 7 ' . __('days');
+	$expire_days[15] = '< 15 ' . __('days');
+	$expire_days[30] = '< 30 ' . __('days');
+	$expire_days[90] = '< 90 ' . __('days');
+	
+	return $expire_days;
+}
+
+function get_contract_status () {
+	$status = array();
+	$status[0] = __('Inactive');
+	$status[1] = __('Active');
+	$status[2] = __('Pending');
+	
+	return $status;
+}
+
+function get_contract_status_name ($status) {
+	switch ($status) {
+		case 0:
+			$status = __('Inactive');
+			break;
+		case 1:
+			$status = __('Active');
+			break;
+		case 2:
+			$status = __('Pending');
+			break;
+		default:
+			$status = __('Active');
+	}
+	return $status;
+}
+
 ?>

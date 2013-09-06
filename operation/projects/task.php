@@ -380,7 +380,7 @@ if (defined ('AJAX')) {
 			echo $img;
 			echo "<span style='".$background_color." padding: 4px;'>";
 			echo "<span style='vertical-align:middle; display: inline-block;'>".$wo_icon."</span>";
-			echo "<span style='margin-left: 3px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
+			echo "<span style='margin-left: 4px; vertical-align:middle; display: inline-block;'>".$priority."</span>";
 			echo "<span style='margin-left: 5px; min-width: 400px; vertical-align:middle; display: inline-block;'>".$name."</span>";
 			echo "<span style='margin-left: 5px; min-width: 140px; vertical-align:middle; display: inline-block;'><small>"
 				.__('Owner').":</small> <b>".$owner."</b></span>";

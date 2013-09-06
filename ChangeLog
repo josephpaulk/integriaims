@@ -1,3 +1,21 @@
+2013-09-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_crm.php: Added the functions
+	"get_contract_expire_days", "get_contract_status" and
+	"get_contract_status_name".
+	
+	* operation/projects/task.php: Little change on the
+	alignment of the elements of the workorder row in the
+	task tree view.
+	
+	* extras/migrate.sql: Added a new column to the table
+	'tcontract'.
+	
+	* operation/contracts/contract_detail.php: Added the
+	parameter status to the form and the listing filter.
+	Added a filter by days that remain to the expire of the
+	contracts.
+	
 2013-09-06  Dario Rodriguez <dario@artica.es>
 
 	* operation/leads/lead_pipeline.php,

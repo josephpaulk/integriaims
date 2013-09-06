@@ -108,13 +108,14 @@ if ($create_contract) {
 	$date_begin = (string) get_parameter ('date_begin');
 	$date_end = (string) get_parameter ('date_end');
 	$private = (int) get_parameter ('private');
+	$status = (int) get_parameter ('status', 1);
 
 	
 	$sql = sprintf ('INSERT INTO tcontract (name, contract_number, description, date_begin,
-		date_end, id_company, private)
-		VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d)',
+		date_end, id_company, private, status)
+		VALUE ("%s", "%s", "%s", "%s", "%s", %d, %d, %d)',
 		$name, $contract_number, $description, $date_begin, $date_end,
-		$id_company, $private);
+		$id_company, $private, $status);
 
 	$id = process_sql ($sql, 'insert_id');
 	if ($id === false)
@@ -142,13 +143,15 @@ if ($update_contract) { // if modified any parameter
 	$date_begin = (string) get_parameter ('date_begin');
 	$date_end = (string) get_parameter ('date_end');
 	$private = (int) get_parameter ('private');
+	$status = (int) get_parameter ('status');
 
 
 	$sql = sprintf ('UPDATE tcontract SET contract_number = "%s",
 		description = "%s", name = "%s", date_begin = "%s",
-		date_end = "%s", id_company = %d, private = %d WHERE id = %d',
+		date_end = "%s", id_company = %d, private = %d, status = %d
+		WHERE id = %d',
 		$contract_number, $description, $name, $date_begin,
-		$date_end, $id_company, $private, $id);
+		$date_end, $id_company, $private, $status, $id);
 	
 	$result = process_sql ($sql);
 	if ($result === false) {
@@ -194,6 +197,7 @@ if ($id | $new_contract) {
 		$id_sla = "";
 		$description = "";
 		$private = 0;
+		$status = 1;
 	} else {
 		if (!$read_permission) {
 			audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to update a contract");
@@ -209,6 +213,7 @@ if ($id | $new_contract) {
 		$description = $contract["description"];
 		$id_sla = $contract["id_sla"];
 		$private = $contract["private"];
+		$status = $contract["status"];
 	}
 	
 	$table->width = '99%';
@@ -233,14 +238,15 @@ if ($id | $new_contract) {
 			$companies = crm_get_user_companies($config['id_user'], $companies);
 		}
 	
-		$table->data[3][0] =  print_select ($companies, 'id_company', $id_company, '', '', $nothing_value = '0', true, 0, false,  __('Company'));
+		$table->data[3][0] =  print_select ($companies, 'id_company', $id_company, '', '', '', true, 0, false,  __('Company'));
 			
 		$table->data[3][0] .= "&nbsp;&nbsp;<a href='index.php?sec=customers&sec2=operation/companies/company_detail&id=$id_company'>";
 		$table->data[3][0] .= "<img src='images/company.png'></a>";
 		
 		// I think we should delete this, not used anymore.		
-
 		// $table->data[3][1] = print_select_from_sql ('SELECT id, name FROM tsla ORDER BY name', 'id_sla', $id_sla, '', '', '', true, false, false, __('SLA'));
+		
+		$table->data[3][1] = print_select (get_contract_status(), 'status', $status, '', '', '', true, 0, false,  __('Status'));
 
 		$table->data[4][0] = print_textarea ("description", 14, 1, $description, '', true, __('Description'));
 	}
@@ -250,7 +256,9 @@ if ($id | $new_contract) {
 		if($contract_number == '') {
 			$contract_number = '<i>-'.__('Empty').'-</i>';
 		}		
-		$table->data[1][0] = "<b>".__('Contract number')."</b><br>$contract_number<br>";	
+		$table->data[1][0] = "<b>".__('Contract number')."</b><br>$contract_number<br>";
+		
+		$table->data[1][1] = "<b>".__('Status')."</b><br>".get_contract_status_name($status)."<br>";
 		
 		$table->data[2][0] = "<b>".__('Begin date')."</b><br>$date_begin<br>";
 		$table->data[2][1] = "<b>".__('End date')."</b><br>$date_end<br>";
@@ -297,10 +305,11 @@ if ($id | $new_contract) {
 	$search_date_begin = get_parameter ('search_date_begin');
 	$search_date_begin_beginning = get_parameter ('search_date_begin_beginning');
 	$search_date_end_beginning = get_parameter ('search_date_end_beginning');
+	$search_status = (int) get_parameter ('search_status', 1);
+	$search_expire_days = (int) get_parameter ('search_expire_days');
 
-	$search_params = "search_text=$search_text&search_company_role=$search_company_role&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_date_begin_beginning=$search_date_begin_beginning&search_date_end_beginning=$search_date_end_beginning";
-
-	//$where_clause = " 1 = 1 AND id_company " . get_filter_by_company_accessibility($config['id_user']);
+	$search_params = "search_text=$search_text&search_company_role=$search_company_role&search_date_end=$search_date_end&search_date_begin=$search_date_begin&search_date_begin_beginning=$search_date_begin_beginning&search_date_end_beginning=$search_date_end_beginning&search_status=$search_status&search_expire_days=$search_expire_days";
+	
 	$where_clause = "WHERE 1=1";
 	
 	if ($search_text != "") {
@@ -327,7 +336,18 @@ if ($id | $new_contract) {
 	
 	if ($search_date_begin_beginning != "") {
 		$where_clause .= sprintf (' AND date_begin >= "%s"', $search_date_begin_beginning);
-	}	
+	}
+	
+	if ($search_status >= 0) {
+		$where_clause .= sprintf (' AND status = %d', $search_status);
+	}
+	
+	if ($search_expire_days > 0) {
+		// Uncomment this to not show contracts that expired
+		//$today_date = date ("Y/m/d");
+		$expire_date = date ("Y/m/d", strtotime ("now") + $search_expire_days * 86400);
+		$where_clause .= sprintf (' AND (date_end < "%s" AND date_end > "%s")', $expire_date, $today_date);
+	}
 	
 	$is_admin = get_admin_user ($config['id_user']);
 	
@@ -349,9 +369,19 @@ if ($id | $new_contract) {
 	echo print_input_text ("search_text", $search_text, "", 38, 100, true, __('Search'));
 	echo "</td>";
 	
-	echo "<td colspan=2>";
-	echo print_select (get_company_roles (), 'search_company_role',
+	echo "<td>";
+	echo print_select (get_company_roles(), 'search_company_role',
 		$search_company_role, '', __('All'), 0, true, false, false, __('Company roles'));	
+	echo "</td>";
+	
+	echo "<td>";
+	echo print_select (get_contract_status(), 'search_status',
+		$search_status, '', __('Any'), -1, true, false, false, __('Status'));	
+	echo "</td>";
+	
+	echo "<td>";
+	echo print_select (get_contract_expire_days(), 'search_expire_days',
+		$search_expire_days, '', __('None'), 0, true, false, false, __('Out of date'));	
 	echo "</td>";
 	
 	echo "</tr>";
@@ -478,10 +508,36 @@ add_ranged_datepicker ("#text-search_date_begin", "#text-search_date_end", null)
 $(document).ready (function () {
 	
 	$("#id_group").change (function() {
-	
 		refresh_company_combo();
 	});
+	
+	if ($("#search_expire_days").val() > 0) {
+		disable_dates();
+	}
+	
+	$("#search_expire_days").change (function() {
+		if ($("#search_expire_days").val() > 0) {
+			disable_dates();
+		} else {
+			enable_dates();
+		}
+	});
+	
 });
+
+function disable_dates () {
+	$("#text-search_date_begin_beginning").prop('disabled', true);
+	$("#text-search_date_end_beginning").prop('disabled', true);
+	$("#text-search_date_begin").prop('disabled', true);
+	$("#text-search_date_end").prop('disabled', true);
+}
+
+function enable_dates () {
+	$("#text-search_date_begin_beginning").prop('disabled', false);
+	$("#text-search_date_end_beginning").prop('disabled', false);
+	$("#text-search_date_begin").prop('disabled', false);
+	$("#text-search_date_end").prop('disabled', false);
+}
 
 function toggle_advanced_fields () {
 	

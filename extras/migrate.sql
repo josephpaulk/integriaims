@@ -457,3 +457,6 @@ UPDATE tlead SET progress=40 WHERE progress=30;
 UPDATE tlead SET progress=60 WHERE progress=50;
 UPDATE tlead SET progress=80 WHERE progress=70;
 UPDATE tlead SET progress=80 WHERE progress=90;
+
+/* 06/09/2013  */
+ALTER TABLE tcontract ADD `status` tinyint(3) NOT NULL DEFAULT 1;
