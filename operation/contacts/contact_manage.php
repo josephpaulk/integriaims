@@ -243,8 +243,8 @@ if ($id || $new_contact) {
 	
         	$select_comp = array();
 
-        	foreach($companies as $id => $name) {
-                	$select_comp[$id] = $name;
+        	foreach($companies as $key => $name) {
+                	$select_comp[$key] = $name;
         	}
 			
         	$table->data[3][1] = print_select ($select_comp, 'id_company', $id_company, '', __("None"), 0, true, false, false, __('Company'));

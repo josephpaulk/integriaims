@@ -1,5 +1,10 @@
 2013-09-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* operation/contacts/contact_manage.php: Fixed a validation
+	error.
+	
+2013-09-06  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_crm.php: Added the functions
 	"get_contract_expire_days", "get_contract_status" and
 	"get_contract_status_name".
