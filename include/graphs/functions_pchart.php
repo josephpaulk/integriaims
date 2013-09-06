@@ -560,10 +560,10 @@ function pch_bar_graph ($graph_type, $index, $data, $width, $height, $font,
 				$margin_bottom = 10 * $max_chars;
 				break;
 		case "hbar":
-				$scaleSettings = array("GridR"=>200,"GridG"=>200,"GridB"=>200,"DrawSubTicks"=>TRUE,
+				$scaleSettings = array("GridR"=>220,"GridG"=>220,"GridB"=>220,"DrawSubTicks"=>TRUE,
 					"CycleBackground"=>TRUE, "Mode"=>SCALE_MODE_START0, "Pos"=>SCALE_POS_TOPBOTTOM, 
 					"LabelValuesRotation" => 60);
-				$margin_left = 5 * $max_chars;
+				$margin_left = 8 * $max_chars;
 				$margin_top = 40;
 				$margin_bottom = 10;
 				break;

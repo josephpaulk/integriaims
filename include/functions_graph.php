@@ -790,7 +790,7 @@ function graph_workunit_user ($width, $height, $id_user, $date_from, $date_to = 
 	$data = NULL;
 	
 	while ($row = mysql_fetch_array($res)) {
-		$data[substr(clean_flash_string ($row[3]),0,25)]['graph'] = $row[0];
+		$data[substr(clean_flash_string ($row[3]),0,40)]['graph'] = $row[0];
 	}
 	
 	if ($data == NULL) {

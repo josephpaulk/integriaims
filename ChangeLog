@@ -1,5 +1,17 @@
 2013-09-06  Sancho Lerena <slerena@artica.es>
 
+	* include/functions_graph.php: Fixes on how hbar graphs
+	are rendered (as used in project reports).
+
+	* include/graphs/functions_pchart.php: Small fixes and layout
+	changes on graphs for hbar (project reports).
+
+	* operation/search.php: Added link to WO report and Incident report
+	on user search, very useful !
+
+	* operation/user_report/report_full.php: LOTS of fixes, simplified
+	operation, added a few tips on usage. 
+
 	* include/functions.php: Improved combo and "translation" of 
 	priorities. Fixed function which return graph on priority code.
 

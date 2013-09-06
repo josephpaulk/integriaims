@@ -157,7 +157,8 @@ if (give_acl($config["id_user"], 0, "UM")){
 		$table->head[0] = __('Full name');
 		$table->head[1] = __('Full report');
 		$table->head[2] = __('Monthly report');
-		
+		$table->head[3] = __('Assigned WO\'s');
+		$table->head[4] = __('Assigned Incidents');	
 		foreach ($users as $user) {
 
 			$data = array ();
@@ -169,7 +170,8 @@ if (give_acl($config["id_user"], 0, "UM")){
 				$data[1] = "<a href='index.php?sec=users&sec2=operation/user_report/report_full&only_projects=1&wu_reporter=".$user["id_usuario"]."'>". "<img title='".__("Full report")."' src='images/page_white_stack.png'>" . "</a>";
 
 				$data[2] = "<a href='index.php?sec=users&sec2=operation/user_report/monthly&id=".$user["id_usuario"]."'><img src='images/clock.png'></a>";
-
+				$data[3] = "<a href='index.php?sec=projects&sec2=operation/workorders/wo&owner=".$user["id_usuario"]."'><img src='images/paste_plain.png'></a>";
+				$data[4] = "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_id_user=".$user["id_usuario"]."'><img src='images/incident.png'></a>";
 				array_push ($table->data, $data);
 			}
 		}
