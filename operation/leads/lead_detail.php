@@ -18,9 +18,6 @@ global $config;
 
 check_login ();
 
-enterprise_include('include/functions_crm.php');
-include_once('include/functions_crm.php');
-
 $read = true;
 $write = true;
 $manage = true;
@@ -412,7 +409,7 @@ if ($id || $new) {
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=files"><span>'.__("Files").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=files"><span>'.__("Files").'</span></a></li>';
 		
 		echo '<li class="ui-tabs">';
 		echo '<a href="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id_company.'"><span>'.__("Company").'</span></a></li>';
@@ -421,7 +418,7 @@ if ($id || $new) {
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=forward"><span>'.__("Forward lead").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=forward"><span>'.__("Forward lead").'</span></a></li>';
 		
 		// Show mail tab only on owned leads
 		$lead_owner = get_db_value ("owner", "tlead", "id", $id);
@@ -431,29 +428,29 @@ if ($id || $new) {
 				echo '<li class="ui-tabs-selected">';
 			else
 				echo '<li class="ui-tabs">';
-			echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=mail"><span>'.__("Mail reply").'</span></a></li>';
+			echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=mail"><span>'.__("Mail reply").'</span></a></li>';
 		}
 		
 		if ($op == "history")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=history"><span>'.__("Tracking").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=history"><span>'.__("Tracking").'</span></a></li>';
 
 		if ($op == "activity")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'&op=activity"><span>'.__("Activity").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'&op=activity"><span>'.__("Activity").'</span></a></li>';
 		
 		if ($op == "")
 			echo '<li class="ui-tabs-selected">';
 		else
 			echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&id='.$id.'"><span>'.__("Lead details").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&id='.$id.'"><span>'.__("Lead details").'</span></a></li>';
 
 		echo '<li class="ui-tabs">';
-		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail"><span>'.__("Search").'</span></a></li>';
+		echo '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search"><span>'.__("Search").'</span></a></li>';
 
 		echo '<li class="ui-tabs-title">';
 		switch ($op) {
@@ -487,23 +484,23 @@ if ($id || $new) {
 	switch ($op) {
 		case "activity":
 			// Load tab activity
-			include "operation/leads/lead_activity.php";
+			include "lead_activity.php";
 			return;
 		case "history":
 			// Load tab history/tracking
-			include "operation/leads/lead_history.php";
+			include "lead_history.php";
 			return;
 		case "mail":
 			// Load tab mail
-			include "operation/leads/lead_mail.php";
+			include "lead_mail.php";
 			return;
 		case "files":
 			// Load tab files
-			include "operation/leads/lead_files.php";
+			include "lead_files.php";
 			return;
 		case "forward":
 			// Load tab forward
-			include "operation/leads/lead_forward.php";
+			include "lead_forward.php";
 			return;
 	}
 
@@ -562,7 +559,7 @@ if ($id || $new) {
 		// Show delete control if its owned by the user
 		if ($id && $config["id_user"] == $owner){
 			$table->data[6][0] .= ' <a href="index.php?sec=customers&
-							sec2=operation/leads/lead_detail&
+							sec2=operation/leads/lead&tab=search&
 							delete=1&id='.$id.'&offset='.$offset.'"
 							onClick="if (!confirm(\''.__('Are you sure?').'\'))
 							return false;">
@@ -571,13 +568,13 @@ if ($id || $new) {
 
 		// Show "close" control if it's owned by the user
 		if ($id && ( ($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"])) ) ) {
-                        $table->data[6][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+                        $table->data[6][0] .= "&nbsp;<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
                         $id."&close=1'><img src='images/lock.png' title='".__("Close this lead")."'></a>";
                 }
 
 		// Show take control is owned by nobody
 		if ($owner == "" && $id)
-				$table->data[6][0] .=  "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+				$table->data[6][0] .=  "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
 				$id."&make_owner=1'><img src='images/award_star_silver_1.png'></a>";
 
 		$table->data[6][1] =  print_select ($companies, 'id_company', $id_company, '', __("None"), 0, true, 0, false,  __('Managed by'));
@@ -655,24 +652,6 @@ if ($id || $new) {
 	echo "</form>";
 
 } else {
-
-	// Listing of contacts
-	echo "<div id='lead-search-content'>";
-	echo "<h1>".__('Lead search');
-	echo "<div id='button-bar-title'>";
-	echo "<ul>";
-	echo "<li>";
-	echo "<a href='index.php?sec=customers&sec2=operation/leads/lead_pipeline'>".print_image ("images/icon_lead.png", true, array("title" => __("Lead pipeline")))."</a>";
-	echo "</li>";
-	echo "<li>";
-	echo "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail'>".print_image ("images/zoom.png", true, array("title" => __("Search leads")))."</a>";
-	echo "</li>";
-	echo "<li>";
-	echo "<a id='lead_stats_form_submit' href='javascript: changeAction();'>".print_image ("images/chart_bar_dark.png", true, array("title" => __("Search statistics")))."</a>";
-	echo "</li>";		
-	echo "</ul>";
-	echo "</div>";
-	echo "</h1>";
 	
 	// Custom search button
 	echo "<div id='button-bar-title' style='margin-right: 12px; padding-bottom: 3px; margin-top: 5px;'>";
@@ -702,7 +681,7 @@ if ($id || $new) {
 
 	//If a custom search was selected display cross
 	if ($id_search) {
-		$table->data[0][0] .= '<a href="index.php?sec=customers&sec2=operation/leads/lead_detail&delete_custom_search=1&saved_searches='.$id_search.'">';
+		$table->data[0][0] .= '<a href="index.php?sec=customers&sec2=operation/leads/lead&tab=search&delete_custom_search=1&saved_searches='.$id_search.'">';
 		$table->data[0][0] .= '<img src="images/cross.png" title="' . __('Delete') . '"/></a>';
 	} else {
 		$table->data[0][1] = print_input_text ('search_name', '', '', 10, 20, true, __('Save current search'));
@@ -710,7 +689,7 @@ if ($id || $new) {
 	}
 
 	echo '<div id="custom_search" style="display: none;">';
-	echo '<form id="form-saved_searches" method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail">';
+	echo '<form id="form-saved_searches" method="post" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search">';
 	foreach ($filter as $key => $value) {
 		if ($key == "search_text") {
 			print_input_hidden ("search_text", $value);
@@ -815,7 +794,7 @@ if ($id || $new) {
 		$where_clause .= sprintf(' AND id_category = %d ', $id_category);
 	}
 
-	echo '<form id="lead_stats_form" action="index.php?sec=customers&sec2=operation/leads/lead_detail" method="post">';		
+	echo '<form id="lead_stats_form" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search" method="post">';		
 
 	$table->class = 'search-table';
 	$table->style = array ();
@@ -885,7 +864,7 @@ if ($id || $new) {
 		$leads = crm_get_user_leads($config['id_user'], $leads);
 	}
 
-	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead_detail$params", $offset);
+	$leads = print_array_pagination ($leads, "index.php?sec=customers&sec2=operation/leads/lead&tab=search$params", $offset);
 
 	if ($leads !== false) {
 		unset ($table);
@@ -925,14 +904,14 @@ if ($id || $new) {
 				$table->rowclass[] = "";
 			}
 
-			$data[0] = "<b><a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+			$data[0] = "<b><a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
 				$lead['id']."'>#".$lead['id']."</a></b>";
 
 
 			$data[1] = print_product_icon ($lead['id_category'], true);
 
 
- 			$data[2] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+ 			$data[2] = "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
 				$lead['id']."'>".$lead['fullname']."</a><br>";
 				$data[2] .= "<span style='font-size: 9px'><i>".$lead["company"]."</i></span>";
 
@@ -955,7 +934,7 @@ if ($id || $new) {
 			$data[8] .= "<br><span style='font-size: 9px'>". human_time_comparation ($lead['modification']). "</span>";
 
 			if ($lead['owner'] == "")
-				$data[9] = "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+				$data[9] = "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
 				$lead['id']."&make_owner=1'><img src='images/award_star_silver_1.png' title='".__("Take ownership of this lead")."'></a>&nbsp;";
 			else
 				$data[9] = "";
@@ -963,7 +942,7 @@ if ($id || $new) {
 
 			// Close that lead
 			if (($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"]))) {
-				$data[9] .= "<a href='index.php?sec=customers&sec2=operation/leads/lead_detail&id=".
+				$data[9] .= "<a href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&id=".
 				$lead['id']."&close=1'><img src='images/lock.png' title='".__("Close this lead")."'></a>";
 		
 			}
@@ -971,7 +950,7 @@ if ($id || $new) {
 			// Show delete control if its owned by the user
 			if (($config["id_user"] == $lead["owner"]) OR (dame_admin($config["id_user"]))) {
 				$data[9] .= '&nbsp;<a href="index.php?sec=customers&
-								sec2=operation/leads/lead_detail&
+								sec2=operation/leads/lead&tab=search&
 								delete=1&id='.$lead["id"].'&offset='.$offset.'"
 								onClick="if (!confirm(\''.__('Are you sure?').'\'))
 								return false;">
@@ -981,7 +960,7 @@ if ($id || $new) {
 					// TODO. Check ACK for CRM Write here
 					if ($manage_permission) {
 						$data[9] .= '&nbsp;<a href="index.php?sec=customers&
-										sec2=operation/leads/lead_detail&
+										sec2=operation/leads/lead&tab=search&
 										delete=1&id='.$lead["id"].'"
 										onClick="if (!confirm(\''.__('Are you sure?').'\'))
 										return false;">
@@ -997,7 +976,7 @@ if ($id || $new) {
 	}
 	
 	if ($manage_permission) {
-		echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail">';
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search">';
 		echo '<div style="width: '.$table->width.'; text-align: right;">';
 		print_submit_button (__('Create'), 'new_btn', false, 'class="sub create"');
 		print_input_hidden ('new', 1);
@@ -1122,7 +1101,7 @@ function changeAction() {
 	
 	var f = document.forms.lead_stats_form;
 
-	f.action = "index.php?sec=customers&sec2=operation/leads/lead_statistics<?php echo $params ?>";
+	f.action = "index.php?sec=customers&sec2=operation/leads/lead&tab=statistics<?php echo $params ?>";
 	$("#lead_stats_form").submit();
 }
 

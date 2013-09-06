@@ -18,9 +18,6 @@ global $config;
 
 check_login ();
 
-include_once ('include/functions_crm.php');
-enterprise_include('include/functions_crm.php');
-
 $read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
 $write = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cw'));
 $manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
@@ -55,11 +52,11 @@ $est_sale = (int) get_parameter ("est_sale_search", 0);
 $params = "&est_sale_search=$est_sale&id_language_search=$id_language&search_text=$search_text&id_company_search=$id_company&start_date_search=$start_date&end_date_search=$end_date&country_search=$country&id_category_search=$id_category&progress_minor_than_search=$progress_minor_than&progress_major_than_search=$progress_major_than&show_100_search=$show_100&owner_search=$owner";
 
 echo "<div id='incident-search-content'>";
-echo "<h1>".__('Search statistics');
+echo "<h1>".__('Lead search statistics');
 echo "<div id='button-bar-title'>";
 echo "<ul>";
 echo "<li>";
-echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/leads/lead_detail&$params'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
+echo "<a id='search_form_submit' href='index.php?sec=customers&sec2=operation/leads/lead&tab=search&$params'>".print_image("images/go-previous.png", true, array("title" => __("Back to search")))."</a>";
 echo "</li>";
 echo "</ul>";
 echo "</div>";
