@@ -156,33 +156,36 @@ function combo_users_project ($id_project){
 function combo_kb_categories ($id_category, $show_any = 0){
 	global $config;
 
-	if ($id_category == 0)
-		$id_category = 1;
-
-	
-
 	echo "<select name='category' style='width: 180px;'>";
-	if ($show_any != 0){
-		$id_category = -1;
-		echo "<option value='-1'>".__("Any");
-	}	
-	$sql = "SELECT * FROM tkb_category WHERE id != $id_category ORDER by parent, name";
+
+	if ($show_any == 1){
+		if($id_category == 0) {
+			$selected = "selected='selected'";
+		}
+		else {
+			$selected = "";
+		}
+		echo "<option value='0' $selected>".__("Any")."</option>";
+	}
+		
+	//$sql = "SELECT * FROM tkb_category WHERE id != $id_category ORDER by parent, name";
+	$sql = "SELECT * FROM tkb_category ORDER by parent, name";
 	$result = mysql_query($sql);
-	
-	$parent = get_db_value ("parent","tkb_category","id",$id_category);
-	$parent_name = get_db_value ("name","tkb_category","id",$parent);
-	$name = get_db_value ("name","tkb_category","id",$id_category);
-	if ($parent != 0)
-		echo "<option value='".$id_category."'>".$parent_name."/".$name;
-	else
-		echo "<option value='".$id_category."'>".$name;
 
 	while ($row=mysql_fetch_array($result)){
+
+		if($row["id"] == $id_category) {
+			$selected = "selected='selected'";
+		}
+		else {
+			$selected = "";
+		}
+
 		$parent = get_db_value ("name","tkb_category","id",$row["parent"]);
-		if ($parent != "")
-			echo "<option value='".$row["id"]."'>".$parent . "/".$row["name"];
+		if ($parent != "") 
+			echo "<option value='".$row["id"]."' $selected>".$parent . "/".$row["name"];
 		else
-			echo "<option value='".$row["id"]."'>".$row["name"];
+			echo "<option value='".$row["id"]."' $selected>".$row["name"];
 	}
 	echo "</select>";
 }
