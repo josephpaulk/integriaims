@@ -32,6 +32,11 @@ body.login {
 	background: url(../../images/greyback.gif);
 }
 
+/* Necessary for firefox */
+form {
+	clear: both;
+}
+
 td, th {
 	font: 0.93em  Verdana, Helvetica, Arial, 'Trebuchet MS', Arial, Sans-serif;
 	color: #505050;
