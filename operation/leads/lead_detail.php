@@ -18,7 +18,7 @@ global $config;
 
 check_login ();
 
-enterprise_include('include/functions_crm.php');
+//enterprise_include('include/functions_crm.php');
 include_once('include/functions_crm.php');
 
 $read = true;
