@@ -502,7 +502,7 @@ function process_massive_updates () {
 	
 }
 
-function show_incident_type_fields() {
+function show_incident_type_fields(numRow) {
 
 	id_incident_type = $("#id_incident_type").val();
 
@@ -526,7 +526,12 @@ function show_incident_type_fields() {
 			
 			var i = 0;
 			var resto = 0;
-			var row = 3;
+			var row;
+			if (numRow === undefined) {
+				row = 3;
+			} else {
+				row = numRow;
+			}
 			var textarea_elements = new Array();
 			var objTr;
 			var pos = 0;

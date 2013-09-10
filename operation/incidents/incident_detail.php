@@ -227,7 +227,7 @@ if ($action == 'update') {
 	
 	if ($sla_disabled == 1)
 		$sla_man = ", sla_disabled = 1 ";
-	else 
+	else
 		$sla_man = ", sla_disabled = 0";
 	
 	if ($id_parent == 0) {
@@ -952,7 +952,6 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Contacts")."' id='cont
 <script type="text/javascript" src="include/js/jquery.ui.autocomplete.js"></script>
 <script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 
-
 <script  type="text/javascript">
 
 $(document).ready (function () {
@@ -1181,8 +1180,6 @@ function removeInventory() {
 		
 	//idInventory = $('#incident_inventories').val();
 	//$("#incident_inventories").find("option[value='" + idInventory + "']").remove();
-	
-	
 	
 }
 

@@ -43,17 +43,18 @@ if($create_incident) {
 	
 	// Read input variables
 	$title = get_parameter('title');
+	$priority = get_parameter ('priority_form', 2);
+	$id_incident_type = get_parameter('id_incident_type', 0);
 	$description = get_parameter('description');
 	$group_id = get_parameter('group_id');
+	
 
 	// Get default variables
 	$id_creator = $config["id_user"];
 	$sla_disabled = 0;
 	$id_task = 0; // N/A
 	$estado = 1; // New
-	$priority = 2; // Medium
 	$resolution = 0; // None
-	$id_incident_type = 0; // None
 	$email_copy = '';
 	$email_notify = get_db_value ("forced_email", "tgrupo", "id_grupo", $group_id);
 	$id_parent = 0;
@@ -107,6 +108,27 @@ if($create_incident) {
 		if ($email_notify) {
 			mail_incident ($id, $usuario, "", 0, 1);
 		}
+		
+		//insert data to incident type fields
+		if ($id_incident_type > 0) {
+			$sql_label = "SELECT `label` FROM `tincident_type_field` WHERE id_incident_type = $id_incident_type";
+			$labels = get_db_all_rows_sql($sql_label);
+		
+			if ($labels === false) {
+				$labels = array();
+			}
+			
+			foreach ($labels as $label) {
+				$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
+				
+				$values_insert['id_incident'] = $id;
+				$values_insert['data'] = get_parameter (base64_encode($label['label']));
+				$values_insert['id_incident_field'] = $id_incident_field;
+				$id_incident_field = get_db_value('id', 'tincident_type_field', 'id_incident_type', $id_incident_type);
+				process_sql_insert('tincident_field_data', $values_insert);
+			}
+		}
+		
 	} else {
 		$result_msg = ui_print_error_message(__('Could not be created'), '', true);
 	}
@@ -114,7 +136,6 @@ if($create_incident) {
 	echo $result_msg;
 
 	// ATTACH A FILE IF IS PROVIDED
-	
 	$upfile = get_parameter('upfile');
 	$file_description = get_parameter('file_description');
 	
@@ -130,6 +151,8 @@ if($create_incident) {
 		
 		$active_tab = 'files';
 	}
+	
+	
 }
 
 echo '<h1>'.__('My incidents').'</h1>';
