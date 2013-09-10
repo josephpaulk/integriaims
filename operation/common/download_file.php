@@ -37,7 +37,7 @@ if (!isset($data)){
     echo __("No valid attach id");
     exit;
 }
-var_dump($id_user);
+
 //Check ACLs restriction based on type parameter
 switch ($type) {
 

@@ -225,7 +225,9 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 	// Copy file to directory and change name
 	$file_target = $config["homedir"]."attachment/".$id_attachment."_".$filename;
 
-	if (! copy ($file_temp, $file_target)) {
+	$copy = copy ($file_temp, $file_target);
+
+	if (! $copy) {
 		$result_msg = ui_print_error_message(__('File cannot be saved. Please contact Integria administrator about this error'), '', true);
 		$sql = sprintf ('DELETE FROM tattachment
 				WHERE id_attachment = %d', $id_attachment);

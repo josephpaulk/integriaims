@@ -19,6 +19,8 @@ global $config;
 
 check_login ();
 
+include_once('include/functions_workunits.php');
+
 if (! give_acl ($config['id_user'], 0, "IR")) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
 	require ("general/noaccess.php");
