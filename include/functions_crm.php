@@ -416,6 +416,27 @@ function crm_get_data_lead_country_graph($leads) {
 	return $lead_country;
 }
 
+function crm_get_total_leads_funnel ($where) {
+
+	if ($where_clause) {
+		$sql = "SELECT COUNT(id) as total_leads, SUM(estimated_sale) as amount, progress, owner FROM tlead
+			WHERE id IN (SELECT id FROM tlead
+					 $where_clause OR progress = 200)
+			GROUP BY progress
+			ORDER BY total_leads DESC
+			";
+	} else {
+		$sql = "SELECT COUNT(id) as total_leads, SUM(estimated_sale) as amount, progress, owner FROM tlead
+			GROUP BY progress
+			ORDER BY total_leads DESC
+			";
+	}
+
+	$total = process_sql ($sql);
+
+	return $total;
+}
+
 // count users per lead
 function crm_get_total_leads_user($where_clause = false) {
 	

@@ -1,3 +1,14 @@
+2013-09-10  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_html.php: Fixed a problem with file
+	uploader.
+	* include/graphs/functions_gd.php
+	include/graphs/fgraph.php: New graph for funnel.
+	* include/functions_crm.php,
+	operation/leads/lead_pipeline.php,
+ 	operation/leads/lead_statistics.php: Added funnel chart
+ 	to lead search report.
+
 2013-09-10  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_incidents.php

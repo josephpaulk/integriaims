@@ -85,6 +85,17 @@ function histogram($chart_data, $width, $height, $font, $max, $title, $mode, $tt
 	return "<img title='".$graph["title"]."' src='include/graphs/functions_gd.php?graph_type=histogram&ttl=".$ttl."&id_graph=".$id_graph."'>";
 }
 
+function funnel($data, $font, $ttl = 1) {
+	$graph = array();
+	
+	$graph['font'] = $font;
+	$graph["data"] = $data;
+
+	$id_graph = serialize_in_temp($graph, null, $ttl);
+		
+	return "<img src='include/graphs/functions_gd.php?graph_type=funnel&ttl=".$ttl."&id_graph=".$id_graph."'>";
+}
+
 function progressbar($progress, $width, $height, $title, $font, $mode = 1, 
 					$out_of_lim_str = false, $out_of_lim_image = false, $ttl = 1) {
 	$graph = array();

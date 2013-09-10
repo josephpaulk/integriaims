@@ -102,11 +102,11 @@ if ($country) {
 	$where_clause .= sprintf (' AND country LIKE "%%%s%%"', $country);
 }
 
-if ($progress_minor_than) {
+if ($progress_minor_than >= 0) {
 	$where_clause .= sprintf (' AND progress <= %d ', $progress_minor_than);
 }
 
-if ($progress_major_than) {
+if ($progress_major_than >= 0) {
 	$where_clause .= sprintf (' AND progress >= %d ', $progress_major_than);
 }
 
@@ -119,8 +119,65 @@ $table->width = '99%';
 $table->data = array ();
 $table->style = array ();
 $table->valign = array ();
+$table->colsapan = array();
 $table->valign[0] = "top";
 $table->valign[1] = "top";
+
+//FUNNEL
+
+$leads_funnel = crm_get_total_leads_funnel($where_clause);
+$total_leads_array = crm_get_all_leads($where_clause);
+if ($read && $enterprise) {
+	$leads_funnel = crm_get_user_leads($config['id_user'], $leads_funnel);
+	$total_leads_array = crm_get_user_leads($config["id_user"], $total_leads_array);
+}
+
+if ($leads_funnel != false) {
+	$data = array();
+
+	$lead_progress = lead_progress_array();
+
+	$total_leads = count($total_leads_array);
+	
+	foreach ($lead_progress as $key => $name) {
+		$data[$key] = array("title" => $name, "completion" => 0);
+	}
+
+	foreach ($leads_funnel as $lf) {
+		$completion = ($lf["total_leads"] / $total_leads) * 100;
+		$data[$lf["progress"]]["completion"] = $completion;
+		$data[$lf["progress"]]["amount"] = $lf["amount"];
+	}
+
+	$leads_funnel_content = funnel($data, $config["font"], $ttl);
+} else {
+	$leads_funnel_content = __('No data to show');
+}
+
+$leads_country_content = '<br><div class="pie_frame">' . $leads_funnel_content . '</div>';
+$table->data[0][0] = print_container('funnel', __('Leads Funnel'), $leads_country_content, 'no', true, '10px');
+
+//CONVERSION RATE
+$leads_conversion_rate = "<table>";
+$leads_conversion_rate .= "<tr>";
+$leads_conversion_rate .= "<td>";
+$leads_conversion_rate .= "10%";
+$leads_conversion_rate .= "</td>";
+$leads_conversion_rate .= "</tr>";
+$leads_conversion_rate .= "<tr>";
+$leads_conversion_rate .= "<td>";
+$leads_conversion_rate .= __("Total amount");
+$leads_conversion_rate .= "</td>";
+$leads_conversion_rate .= "</tr>";
+$leads_conversion_rate .= "<tr>";
+$leads_conversion_rate .= "<td>";
+$leads_conversion_rate .= "10000 €";
+$leads_conversion_rate .= "</td>";
+$leads_conversion_rate .= "</tr>";
+$leads_conversion_rate .= "</table>";
+
+$leads_conversion_rate = '<br><div class="pie_frame">' . $leads_conversion_rate . '</div>';
+$table->data[0][1] = print_container('conversion_rate', __('Conversion rate'), $leads_conversion_rate, 'no', true, '10px');
 
 //COUNTRIES
 $leads_country = crm_get_total_leads_country($where_clause);
@@ -138,7 +195,7 @@ if ($leads_country !== false) {
 
 $leads_country_content = '<br><div class="pie_frame">' . $leads_country_content . '</div>';
 
-$table->data[0][0] = print_container('leads_per_country', __('Leads per country'), $leads_country_content, 'no', true, '10px');
+$table->data[1][0] = print_container('leads_per_country', __('Leads per country'), $leads_country_content, 'no', true, '10px');
 
 //USERS
 $leads_user = crm_get_total_leads_user($where_clause);
@@ -156,7 +213,7 @@ if ($leads_user !== false) {
 
 $leads_user_content = '<br><div class="pie_frame">' . $leads_user_content . '</div>';
 
-$table->data[0][1] = print_container('users_per_lead', __('Users per lead'), $leads_user_content, 'no', true, '10px');
+$table->data[1][1] = print_container('users_per_lead', __('Users per lead'), $leads_user_content, 'no', true, '10px');
 
 //TOP 10 ESTIMATED SALES
 $leads_sales = crm_get_total_sales_lead($where_clause);
@@ -171,7 +228,7 @@ if ($leads_sales !== false) {
 	$companies_activity_content = '<br><div>' . __('No data to show') . '</div>';
 }
 
-$table->data[1][0] = print_container('top_10_sales', __('Top 10 estimated sales'), $leads_sales_content, 'no', true, '10px');
+$table->data[2][0] = print_container('top_10_sales', __('Top 10 estimated sales'), $leads_sales_content, 'no', true, '10px');
 
 //NEW LEADS
 $leads_creation = crm_get_total_leads_creation($where_clause);
@@ -190,7 +247,7 @@ if ($leads_creation !== false) {
 
 $leads_creation_content = '<br><div class="pie_frame"><br>' . $leads_creation_content . '</div>';
 
-$table->data[1][1] = print_container('new_leads', __('New leads'), $leads_creation_content, 'no', true, '10px');
+$table->data[2][1] = print_container('new_leads', __('New leads'), $leads_creation_content, 'no', true, '10px');
 
 echo '<br>';
 print_table($table);

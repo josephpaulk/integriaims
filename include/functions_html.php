@@ -399,6 +399,7 @@ function print_input_file ($name, $size, $disabled = false, $attributes = '', $r
  * @param string macro to place the upload control. I will be placed at first of all with no macro (false)
  */
 function print_input_file_progress($form_action, $into_form = '', $attr = '', $extra_button_class = '', $button = false,  $return = false, $control_macro = false) {
+	global $config;
 	$output = "";
 	
 	$control_layer = "<div class='upfile'></div>";
@@ -420,6 +421,7 @@ function print_input_file_progress($form_action, $into_form = '', $attr = '', $e
 	$output .= "$(document).ready(function(){";	
 		$output .= "$('.upfile').axuploader({";
 			$output .= "url:'include/file_uploader.php',";
+			$output .= "chunkSize:'".(1024*1024*$config["max_file_size"])."',";
 			$output .= "finish:function(x,files){";
 				$output .= "$('#upfile').val(files[0]);";
 				$output .= "$('.upfile_form').submit();";

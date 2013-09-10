@@ -24,7 +24,7 @@ else if(file_exists('../functions.php')) {
 	include_once('functions_utils.php');
 }
 
-$types = array('histogram', 'progressbar');
+$types = array('histogram', 'progressbar', 'funnel');
 	
 $id_graph = get_parameter('id_graph', false);
 $graph_type = get_parameter('graph_type', '');
@@ -68,6 +68,10 @@ if($id_graph && in_array($graph_type, $types)) {
 						$graph['mode'],
 						$graph['fontsize']);	
 					break;
+		case 'funnel':
+				gd_funnel_chart ($graph['data'], 
+					$graph['font']);				
+				break;
 	}
 }
 
@@ -283,6 +287,165 @@ if ($mode == 0) {
 		   		drawRating($progress, $width, $height, $font, $out_of_lim_str, $mode, 6);
    			break;   			
    	}
+}
+
+function gd_funnel_chart ($data, $font, $fontsize=10) {
+
+	$width = 380;
+	$height = 325;
+
+	$image = imagecreate($width,$height);
+		
+	//Colors
+	$back = ImageColorAllocate($image,255,255,255);
+	imagecolortransparent ($image, $back);
+	$border = ImageColorAllocate($image,174,174,174);
+	$text = ImageColorAllocate($image,74,74,74);
+	$orange = ImageColorAllocate($image,255,146,3);
+	$grey = ImageColorAllocate($image,230,230,230);
+	$value = ImageColorAllocate($image,240,240,240);
+	imageantialias ($image , true);
+
+	ImageFilledRectangle($image,0,0,$width-1,$height-1,$back);
+
+
+	//Initial parameters to draw all bars
+	$x = 20;
+	$y = 130;
+	$step_y = 10;
+	$step_x = 5;
+	$bar_width = 50;
+	$bar_height = 175;
+
+	$title_angle = 78;
+	$title_x = 54;
+	$title_y = 127;
+	$title_step_x = 55;
+	$title_step_y = 10;
+
+	$text_x = 32;
+	$text_y = 280;
+	$text_step_x = 55;
+	$text_step_y = 5;
+
+	$units = array("K", "M", "B");
+	$amount_step = 1000;
+
+	for($i=0;$i<120;$i=$i+20) {
+
+		//Calculate secondary variables using bar width and height attributes
+		$x2 = $x + $bar_width;
+		$y2 = $y + $bar_height; 
+	
+		//Draw grey border
+		$points = array($x, $y,
+				$x, $y2,
+				$x2, $y2-$step_y,
+				$x2, $y+$step_y);
+		imagepolygon($image, $points, 4, $border);
+
+
+		//Draw grey background
+		$y_back = $y+1;
+		$y2_back = $y2-1;
+		$points = array($x+1, $y_back,	
+					$x+1, $y2_back,
+					$x2-1, $y2_back-$step_y,
+					$x2-1, $y_back+$step_y);
+		imagefilledpolygon($image, $points, 4, $grey);
+
+		//Success value is 200 not 100
+		if ($i == 100) {
+			$i = 200;
+		}
+
+		//Print bar title
+		imagettftext ($image , 8, 78, $title_x, $title_y, $text, $font, $data[$i]["title"]);		
+
+
+		//Print completion bar
+
+		//1.- calculate completion area
+		$data_completion = $data[$i]["completion"];
+
+		if ($data_completion) {
+
+			$bar_comp_height = $bar_height*(100-$data_completion)/100;	
+			$y_comp = $y_back+$bar_comp_height;
+			
+			$bar_comp_height = ($y2_back-$y_back)*(100-$data_completion)/100;
+			$y2_comp = $y_back+$step_y+$bar_comp_height;
+
+			//Fix small side of orange bar
+			if (($y2_comp) > ($y2_back-$step_y)) {
+
+				$y2_comp = $y2_back-$step_y;
+
+			} 
+		
+			//2.- draw bar
+			$points = array($x+1, $y_comp,	
+						$x+1, $y2_back,
+						$x2-1, $y2_back-$step_y,
+						$x2-1, $y2_comp);
+			imagefilledpolygon($image, $points, 4, $orange);
+		}
+
+		//Print text value
+		$compute = true;
+		$amount = 0;	
+
+		if (isset($data[$i]["amount"])) {
+			$amount = $data[$i]["amount"];
+		}
+		
+		//Format amount
+		for($j=0; $j<3; $j++) {
+			$amount = $amount / $amount_step;
+
+			if (round($amount) < 1) {
+
+				if ($j != 0) {
+					$amount = $amount * $amount_step;
+					$j--;
+				}
+
+				break;
+			}
+		}
+
+		//Fix j index
+		if ($j == 3) {
+			$j = 2;
+		}
+
+		//Fix initial position for first number
+		if ($j == -1 && $i == 0) {
+			$text_x = 40;
+		}
+
+		$text_y = $y2-$step_y-$text_step_y; //text y based on position of bottom right corner of the bar
+
+		$amount = sprintf("%.1f", $amount);
+
+		imagettftext ($image , 8, 0, $text_x, $text_y, $text, $font, $amount." ".$units[$j]);
+
+		//Calculate new root variables using axis steps
+		$x = $x2 + $step_x;
+		$y = $y + $step_y;
+		$bar_height = $bar_height - (2*$step_y); //Delete two steps for y axis
+		
+		$title_x = $title_x + $title_step_x;
+		$title_y = $title_y + $title_step_y;
+
+		$text_x = $text_x + $text_step_x;
+	}
+	
+   	Header("Content-type: image/png");
+
+	imagePNG($image);
+	imagedestroy($image);
+   
 }
 
 ?>

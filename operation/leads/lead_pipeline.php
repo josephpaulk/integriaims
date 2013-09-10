@@ -20,7 +20,7 @@ check_login ();
 
 $read = true;
 
-$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cr'));
+$read = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'CR'));
 $enterprise = false;
 
 if ($read !== ENTERPRISE_NOT_HOOK) {
@@ -56,7 +56,11 @@ foreach ($progress as $k => $v) {
 
 	//Get statistics for $k status
 	$leads = get_db_all_rows_filter ('tlead', array ('progress' => $k, "owner" => $config["id_user"]));
-
+	
+	if ($read && $enterprise) {
+		$leads = crm_get_user_leads($config['id_user'], $leads);
+	}
+	
 	if(!$leads) {
 		$leads = array();
 	}
