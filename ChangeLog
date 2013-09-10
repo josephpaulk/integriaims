@@ -1,3 +1,8 @@
+2013-09-10  Dario Rodriguez <dario@artica.es>
+
+	* include/integria_cron.php
+	godmode/setup/setup.php: Added a variable to 
+	configure number of email retries.
 
 2013-09-10  Sancho Lerena <alerena@artica.es>
 

@@ -66,7 +66,6 @@ if ($update) {
     	$config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
 	$config["lead_company_filter"] = get_parameter ("lead_company_filter", "");    
 	$config["lead_warning_time"] = get_parameter ("lead_warning_time", "7");  
-	$config["months_to_delete_incidents"] = get_parameter ("months_to_delete_incidents", 12);
 
 
     if ($is_enterprise) {
@@ -87,7 +86,6 @@ if ($update) {
     update_config_token ("incident_creation_wu", $config["incident_creation_wu"]);
     update_config_token ("lead_company_filter", $config["lead_company_filter"]);
     update_config_token ("lead_warning_time", $config["lead_warning_time"]);
-    update_config_token ("months_to_delete_incidents", $config["months_to_delete_incidents"]);
 
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
 
@@ -199,10 +197,6 @@ $error_log_options[1] = __('Enabled');
 $table->data[5][0] = print_select ($error_log_options, "error_log", $config["error_log"], '','','',true,0,true, __('Error log'));
 
 $table->data[5][0] .= print_help_tip (__("This errorlog is on /integria.log"), true);
-
-$table->data[5][1] = print_input_text ("months_to_delete_incidents", $config["months_to_delete_incidents"], '',
-	20, 255, true, __('Months to delete incidents'));
-$table->data[5][1] .= print_help_tip (__("Delete incidents that were opened X months ago"), true);
 
 $table->data[6][0] = print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, __('Show incident owner'));
 

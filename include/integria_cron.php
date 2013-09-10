@@ -609,7 +609,7 @@ function run_mail_queue () {
 		} else {
 		
 		// Use swift mailer library to connect to external SMTP
-
+	
 			try {	
 			$transport = Swift_SmtpTransport::newInstance($config["smtp_host"], $config["smtp_port"]);
 			$transport->setUsername($config["smtp_user"]);
@@ -628,7 +628,6 @@ function run_mail_queue () {
 			}
 
 			$to = trim(ascii_output($email['recipient']));
-
 
 			$message->setTo($to);
 			$message->setBody($email['body'], 'text/plain', 'utf-8');
@@ -653,7 +652,7 @@ function run_mail_queue () {
 			// SMTP error management!
 			} catch (Exception $e) {
 				$retries = $email["attempts"] + 1;
- 				if ($retries > 5) {
+ 				if ($retries > $config["smtp_queue_retries"]) {
 					$status = 1;
 					insert_event ('MAIL_FAILURE', 0, 0, $email["recipient"]. " - ". $e);
 				}
