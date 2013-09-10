@@ -36,23 +36,31 @@ print_setup_tabs('mail', $is_enterprise);
 
 $update = (bool) get_parameter ("update");
 
+$pending_ok = (bool) get_parameter ("pending_ok");
+
+if ($pending_ok){
+	echo "<h3 class='suc'>".__('Mail queue refreshed')."</h3>";
+	process_sql ("UPDATE tpending_mail SET attempts = 0, status = 0 WHERE status = 1");
+}
+
+
 if ($update) {
 	$config["notification_period"] = (int) get_parameter ("notification_period", 86400);
 	$config["FOOTER_EMAIL"] = (string) get_parameter ("footer_email", "");
 	$config["HEADER_EMAIL"] = (string) get_parameter ("header_email", "");
 	$config["mail_from"] = (string) get_parameter ("mail_from");
-
-
 	$config["smtp_user"] = (string) get_parameter ("smtp_user");
 	$config["smtp_pass"] = (string) get_parameter ("smtp_pass");
 	$config["smtp_host"] = (string) get_parameter ("smtp_host");
 	$config["smtp_port"] = (string) get_parameter ("smtp_port");
-
 	$config["pop_user"] = (string) get_parameter ("pop_user");
 	$config["pop_pass"] = (string) get_parameter ("pop_pass");
 	$config["pop_host"] = (string) get_parameter ("pop_host");
 	$config["pop_port"] = (string) get_parameter ("pop_port");
-	
+	$config["smtp_queue_retries"] = (int) get_parameter ("smtp_queue_retries", 10);
+	$config["max_pending_mail"] = get_parameter ("max_pending_mail", 15);
+	$config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);	
+		
 	update_config_token ("HEADER_EMAIL", $config["HEADER_EMAIL"]);
 	update_config_token ("FOOTER_EMAIL", $config["FOOTER_EMAIL"]);
 	update_config_token ("notification_period", $config["notification_period"]);
@@ -65,6 +73,9 @@ if ($update) {
 	update_config_token ("pop_user", $config["pop_user"]);
 	update_config_token ("pop_pass", $config["pop_pass"]);
 	update_config_token ("pop_port", $config["pop_port"]);
+	update_config_token ("smtp_queue_retries", $config["smtp_queue_retries"]);
+	update_config_token ("max_pending_mail", $config["max_pending_mail"]);
+	update_config_token ("batch_newsletter", $config["batch_newsletter"]);
 }
 
 $table->width = '99%';
@@ -95,43 +106,98 @@ $table->data[4][1] = print_input_text ("smtp_port", $config["smtp_port"],
 $table->data[5][0] = print_input_text ("smtp_user", $config["smtp_user"],
 	'', 15, 30, true, __('SMTP User'));
 
-$table->data[5][1] = print_input_text_extended ("smtp_pass", $config["smtp_pass"], 
-				'', '', 15, 30, false, false, false, true, true, __('SMTP Password'));
+$table->data[5][1] = print_input_text ("smtp_pass", $config["smtp_pass"],
+	'', 15, 30, true, __('SMTP Password'));
 
-$table->colspan[6][0] = 2;
-$table->data[6][1] = "<h4>".__("IMAP Parameters")."</h4>";
+$table->data[6][0] = print_input_text ("smtp_queue_retries", $config["smtp_queue_retries"],
+        '', 5, 10, true, __('SMTP Queue retries'));
 
-$table->data[7][0] = print_input_text ("pop_host", $config["pop_host"],
+$table->data[6][0] .= print_help_tip (__("This are the number of attempts the mail queue try to send the mail. Should be high (20-30) if your internet connection have frequent downtimes and near zero if its stable"), true);
+
+$table->data[6][1] = print_input_text ("max_pending_mail", $config["max_pending_mail"], '',
+        10, 255, true, __('Max pending mail'));
+$table->data[6][1] .= print_help_tip (__("Maximum number of queued emails. When this number is exceeded, an alert is activated"), true);
+
+$table->data[7][0] = print_input_text ("batch_newsletter", $config["batch_newsletter"], '',
+        4, 255, true, __('Max. emails sent per execution'));
+
+
+$table->data[7][0] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
+
+
+$table->colspan[8][0] = 2;
+$table->data[8][1] = "<h4>".__("IMAP Parameters")."</h4>";
+
+$table->data[9][0] = print_input_text ("pop_host", $config["pop_host"],
 	'', 25, 30, true, __('IMAP Host'));
 
-$table->data[7][0] .= print_help_tip (__("Use ssl://host.domain.com if want to use IMAP with SSL"), true);
+$table->data[9][0] .= print_help_tip (__("Use ssl://host.domain.com if want to use IMAP with SSL"), true);
 
 
-$table->data[7][1] = print_input_text ("pop_port", $config["pop_port"],
+$table->data[9][1] = print_input_text ("pop_port", $config["pop_port"],
 	'', 15, 30, true, __('IMAP Port'));	
 
-$table->data[7][1] .= print_help_tip (__("993 for SSL, 110 for unencrypted standard port"), true);
+$table->data[9][1] .= print_help_tip (__("993 for SSL, 110 for unencrypted standard port"), true);
 
-$table->data[8][0] = print_input_text ("pop_user", $config["pop_user"],
+$table->data[10][0] = print_input_text ("pop_user", $config["pop_user"],
 	'', 15, 30, true, __('IMAP User'));
 
-$table->data[8][1] = print_input_text_extended ("pop_pass", $config["pop_pass"], 
-				'', '', 15, 30, false, false, false, true, true, __('IMAP Password'));
+$table->data[10][1] = print_input_text ("pop_pass", $config["pop_pass"], 
+	'', 15, 30, true, __('IMAP Password'));
 				
-$table->data[9][1] = "<h4>".__("Mail general texts")."</h4>";
+$table->data[11][1] = "<h4>".__("Mail general texts")."</h4>";
 
-$table->colspan[11][0] = 2;
-$table->colspan[10][0] = 2;
-$table->data[10][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
+$table->colspan[13][0] = 2;
+$table->colspan[12][0] = 2;
+$table->data[12][0] = print_textarea ("header_email", 5, 40, $config["HEADER_EMAIL"],
 	'', true, __('Email header'));
-$table->data[11][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
+$table->data[13][0] = print_textarea ("footer_email", 5, 40, $config["FOOTER_EMAIL"],
 	'', true, __('Email footer'));
 
+$table->data[14][1] = "<h4>".__("Mail queue control");
+
+$total_pending = get_db_sql ("SELECT COUNT(*) from tpending_mail");
+
+$table->data[14][1] .= " : ". $total_pending . " " .__("mails in queue") . "</h4>";
+
+$table->colspan[15][0] = 2;
+
+$mail_queue = "<div style='height: 250px; overflow-y: auto;'>";
+$mail_queue .= "<table width=100% class=listing>";
+$mail_queue .= "<tr><th>". __("Date"). "<th>" . __("Recipient") . "<th>" . __("Subject") . "<th>" . __("Attempts")."<th>". __("Status")."</tr>";
+
+$mails = get_db_all_rows_sql ("SELECT * FROM tpending_mail LIMIT 1000");
+
+
+foreach ($mails as $mail) {
+	$mail_queue .=  "<tr>";
+	$mail_queue .=  "<td style='font-size: 9px;'>";
+	$mail_queue .=  $mail["date"];
+	$mail_queue .=  "<td>";
+	$mail_queue .=  $mail["recipient"];
+	$mail_queue .=  "<td style='font-size: 9px;'>";
+	$mail_queue .=  $mail["subject"];
+	$mail_queue .=  "<td>";
+	$mail_queue .=  $mail["attempts"];
+	if ($mail["status"] == 1)
+		$mail_queue .=  "<td>".__("Bad mail");
+	else
+		$mail_queue .=  "<td>".__("Pending");
+	$mail_queue .=  "</tr>";
+}
+
+$mail_queue .= "<tr><td> </td></tr></table></div>";
+
+$table->data[15][0] = $mail_queue;
+
 $button = print_input_hidden ('update', 1, true);
+
+$button .= print_submit_button (__("Reactivate pending mails"), 'pending_ok', false, 'class="sub create"', true);
+$button .= print_submit_button (__("Delete pending mails"), 'pending_delete', false, 'class="sub delete"', true);
 $button .= print_submit_button (__('Update'), 'upd_button', false, 'class="sub upd"', true);
 
-$table->data[12][0] = $button;
-$table->colspan[12][0] = 2;
+$table->data[16][0] = $button;
+$table->colspan[16][0] = 2;
 
 echo "<form name='setup' method='post'>";
 print_table ($table);

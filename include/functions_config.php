@@ -242,6 +242,9 @@ function load_config() {
 	if (!isset ($config["inventory_default_owner"])) {
 		$config["inventory_default_owner"] = "";
 	}
+	if (!isset ($config["smtp_queue_retries"])) {
+		$config["smtp_queue_retries"] = 10;
+	}
 
 }
 

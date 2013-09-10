@@ -58,18 +58,16 @@ if ($update) {
 	$config["auto_incident_close"] = get_parameter ("auto_incident_close", "72");
 	$config["email_on_incident_update"] = get_parameter ("email_on_incident_update", 0);
 	$config["site_logo"] = get_parameter ("site_logo", "integria_logo.png");
-    $config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
+    	$config["header_logo"] = get_parameter ("header_logo", "integria_logo_header.png");
 	$config["error_log"] = get_parameter ("error_log", 0);
 	$config["flash_charts"] = get_parameter ("flash_charts", 1);
-    $config["max_file_size"] = get_parameter ("max_file_size", 1);
-    $config["iw_creator_enabled"] = get_parameter ("iw_creator_enabled", 0);
-    $config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
-    $config["batch_newsletter"] = get_parameter ("batch_newsletter", 0);
+    	$config["max_file_size"] = get_parameter ("max_file_size", 1);
+    	$config["iw_creator_enabled"] = get_parameter ("iw_creator_enabled", 0);
+    	$config["enable_newsletter"] = get_parameter ("enable_newsletter", 0);
 	$config["lead_company_filter"] = get_parameter ("lead_company_filter", "");    
 	$config["lead_warning_time"] = get_parameter ("lead_warning_time", "7");  
 	$config["months_to_delete_incidents"] = get_parameter ("months_to_delete_incidents", 12);
-	$config["max_pending_mail"] = get_parameter ("max_pending_mail", 15);
-	
+
 
     if ($is_enterprise) {
 		$config["enable_pass_policy"] = get_parameter ("enable_pass_policy", 0);
@@ -90,7 +88,6 @@ if ($update) {
     update_config_token ("lead_company_filter", $config["lead_company_filter"]);
     update_config_token ("lead_warning_time", $config["lead_warning_time"]);
     update_config_token ("months_to_delete_incidents", $config["months_to_delete_incidents"]);
-	update_config_token ("max_pending_mail", $config["max_pending_mail"]);
 
     //TODO: Change all "process_sqlxxx" for update_config_token in following code:
 
@@ -128,7 +125,6 @@ if ($update) {
     update_config_token ("error_log", $config["error_log"]);
 	update_config_token ("iw_creator_enabled", $config["iw_creator_enabled"]);
     update_config_token ("enable_newsletter", $config["enable_newsletter"]);
-    update_config_token ("batch_newsletter", $config["batch_newsletter"]);
     
     if ($is_enterprise) {
 		update_config_token ("enable_pass_policy", $config["enable_pass_policy"]);
@@ -241,13 +237,7 @@ $newsletter_options[1] = __('Enabled');
 $table->data[13][0] = print_select ($newsletter_options, "enable_newsletter", $config["enable_newsletter"], '','','',true,0,true, __('Enable newsletter'));
 
 
-$table->data[13][1] = print_input_text ("batch_newsletter", $config["batch_newsletter"], '',
-	4, 255, true, __('Max. emails sent per execution'));
-	
 $table->data[13][0] .= print_help_tip (__("Enable this option to activate the newsletter feature of Integria IMS"), true);
-
-$table->data[13][1] .= print_help_tip (__("This means, in each execution of the batch external process (integria_cron). If you set your cron to execute each hour in each execution of that process will try to send this ammount of emails. If you set the cron to run each 5 min, will try this number of mails."), true);
-
 
 $newsletter_options[0] = __('Disabled');
 $newsletter_options[1] = __('Enabled');
@@ -265,10 +255,6 @@ $table->data[15][0] .= print_help_tip (__("Filter by roles the companies that ca
 
 $table->data[15][1] = print_input_text ("lead_warning_time", $config["lead_warning_time"], '',
 	5, 255, true, __('Days to warn on inactive leads'));
-
-$table->data[16][0] = print_input_text ("max_pending_mail", $config["max_pending_mail"], '',
-	10, 255, true, __('Max pending mail'));
-$table->data[16][0] .= print_help_tip (__("Maximum number of queued emails. When this number is exceeded, an alert is activated"), true);
 
 $table->data[16][1] = __('License information');
 $license_info = get_db_value ('value', 'tupdate_settings', '`key`', 'customer_key');

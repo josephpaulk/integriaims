@@ -197,7 +197,6 @@ tr.green {
 
 ul, ol {
 	padding: 0 15px;
-	list-style: none outside none;
 }
 ul span, ol span {
 	color: #666666;

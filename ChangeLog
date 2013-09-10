@@ -1,3 +1,15 @@
+
+2013-09-10  Sancho Lerena <alerena@artica.es>
+
+	* include/styles/integria.css: Fixed ul in wiki.
+
+	* include/functions_config.php: Added new token (retry mail queue)
+
+	* godmode/setup/setup.php,
+	godmode/setup/setup_mail.php: Moved mail options to mail setup. Mail
+	setup now have a new queue control system to clean and/or retry mail
+	queue, also displaying it.
+
 2013-09-10  Dario Rodriguez <dario@artica.es>
 
 	* include/styles/integria.css,
