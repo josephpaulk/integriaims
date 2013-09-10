@@ -42,11 +42,6 @@ $table->data = array ();
 
 $table_data = array();
 
-if (count ($inventories) == 0) {
-	echo '<h4>'.__('There are no contacts associated to this incident').'</h4>';
-	return;
-}
-
 //Add key incident users (owner, editor, closed by, creator)
 
 $inc_info = get_incidents(array("id_incidencia", $id_incident));
@@ -62,15 +57,15 @@ $key_users_info = array();
 
 //Get user infor and get user role
 foreach ($key_users as $ku) {
-        $role_desc = ""; //Role description within the incident
+	$role_desc = ""; //Role description within the incident
 
-        if ($ku["user"]) {
-                if (isset($key_users_info[$ku["user"]])) {
-                        $key_users_info[$ku["user"]] .= ", ".$ku["role"];
-                } else {
-                        $key_users_info[$ku["user"]] = $ku["role"];
-                }
-        }
+	if ($ku["user"]) {
+		if (isset($key_users_info[$ku["user"]])) {
+				$key_users_info[$ku["user"]] .= ", ".$ku["role"];
+		} else {
+				$key_users_info[$ku["user"]] = $ku["role"];
+		}
+	}
 }
 
 //Get all users with a workunit in the incident
@@ -81,9 +76,8 @@ $sql = sprintf("SELECT W.id_user FROM tworkunit W, tworkunit_incident WI
 $wu_users = process_sql($sql);
 
 foreach ($wu_users as $wu) {
-
 	if (!isset($key_users_info[$wu["id_user"]])) {
-        	$key_users_info[$wu["id_user"]] = __("Participant");
+		$key_users_info[$wu["id_user"]] = __("Participant");
 	}
 }
 
@@ -94,11 +88,11 @@ foreach ($inventories as $inventory) {
 	
 	foreach ($contacts as $contact) {
 		$data = array ();
-		
+
 		$contact["inventory"] = $inventory["name"];
 		$contact["company"] = get_db_value("name", "tcompany", "id", $contact["id_company"]);
-                if ($contact["type"] == "user" && isset($key_users_info[$contact["id"]])) {
-                	$contact["type"] = "user";
+		if ($contact["type"] == "user" && isset($key_users_info[$contact["id"]])) {
+			$contact["type"] = "user";
 			$contact["relationship"] = "key_user";
 			$contact["role"] = $key_users_info[$contact["id"]];
 			unset($key_users_info[$contact["id"]]);
@@ -114,81 +108,81 @@ foreach ($inventories as $inventory) {
 $emails = explode(',', $inc_info["email_copy"]);
 
 foreach ($emails as $email) {
-        //Search for users
-        $email_info = get_db_row ("tusuario", "direccion", $email);
+	//Search for users
+	$email_info = get_db_row ("tusuario", "direccion", $email);
 
-        if ($email_info) {
-                $contact_info = array("id" => $email_info["id_usuario"],
-                        "type" => "user",
-                        "id_company" => $email_info["id_company"],
-			"company" => get_db_value("name", "tcompany", "id", $email_info["id_company"]),
-			"inventory" => __("N/A"),
-                        "fullname" => $email_info["nombre_real"],
-                        "email" => $email_info["direccion"],
-                        "phone" => $email_info["telefono"],
-                        "mobile" => __("N/A"),
-                        "position" => __("N/A"));
-        } else {
-                //Search for contact
+	if ($email_info) {
+		$contact_info = array("id" => $email_info["id_usuario"],
+							"type" => "user",
+							"id_company" => $email_info["id_company"],
+							"company" => get_db_value("name", "tcompany", "id", $email_info["id_company"]),
+							"inventory" => __("N/A"),
+							"fullname" => $email_info["nombre_real"],
+							"email" => $email_info["direccion"],
+							"phone" => $email_info["telefono"],
+							"mobile" => __("N/A"),
+							"position" => __("N/A"));
+	} else {
+		//Search for contact
 		$email_aux = safe_output($email);
 		$email_aux = trim($email_aux);
-                
+		
 		$email_info = get_db_row("tcompany_contact", "email", $email_aux);
-                
+		
 		if ($email_info) {     
-                        $contact_info= $email_info;
-               		$contact_info["type"] = "contact";
+			$contact_info= $email_info;
+			$contact_info["type"] = "contact";
 			$contact_info["inventory"] = __("N/A");
 			$contact_info["company"] = get_db_value("name", "tcompany", "id", $contact_info["id_company"]);
-                } else {
-                        //We only have email address
+		} else {
+			//We only have email address
 			$contact_info = array("id" => $email,
-                                        "fullname" => $email,
-                                        "type" => "email",
-                                        "company" => __("N/A"),
-                                        "email" => $email,
-                                        "phone" => __("N/A"),
-                                        "inventory" => __("N/A"),
-					"mobile" => __("N/A"),
-                                        "position" => __("N/A"));
+							"fullname" => $email,
+							"type" => "email",
+							"company" => __("N/A"),
+							"email" => $email,
+							"phone" => __("N/A"),
+							"inventory" => __("N/A"),
+							"mobile" => __("N/A"),
+							"position" => __("N/A"));
 		}
-        }
+	}
 
 	$contact_info["relationship"] = "email";
 
-        //If was set don't insert in array
-        if(isset($incident_contacts[$email_info["id"]])) {
-                continue;
-        }
-        
-        $incident_contacts[$contact_info["id"]] = $contact_info;
+	//If was set don't insert in array
+	if(isset($incident_contacts[$email_info["id"]])) {
+		continue;
+	}
+	
+	$incident_contacts[$contact_info["id"]] = $contact_info;
 }      
 
 //Add key incident users (owner, editor, closed by, creator) also participant (has workunits) and notify by email addresses
 
 foreach (array_keys($key_users_info) as $key) {
 
-        $fullname = get_db_value  ('nombre_real', 'tusuario', 'id_usuario', $key);
+	$fullname = get_db_value  ('nombre_real', 'tusuario', 'id_usuario', $key);
 
-        $co = get_db_value("id_company", "tusuario", "id_usuario", $key);
+	$co = get_db_value("id_company", "tusuario", "id_usuario", $key);
 
-        if ($co) {
-                $co = get_db_value("name", "tcompany", "id", $co);
-        } else {
-                $co = __("N/A");
-        }
+	if ($co) {
+		$co = get_db_value("name", "tcompany", "id", $co);
+	} else {
+		$co = __("N/A");
+	}
 
 	$contact_data = array("id" => $key,
-                        	"fullname" =>  $fullname,
-                          	"type" => "user",
-                               	"company" => $co,
-                                "email" => get_db_value("direccion", "tusuario", "id_usuario", $key),
-                                "phone" => get_db_value('telefono', 'tusuario', 'id_usuario', $key),
-                                "inventory" => __("N/A"),
-                                "mobile" => __("N/A"),
-                                "position" => __("N/A"),
-				"relationship" => "key_user", 
-				"role" => $key_users_info[$key]);
+						"fullname" =>  $fullname,
+						"type" => "user",
+						"company" => $co,
+						"email" => get_db_value("direccion", "tusuario", "id_usuario", $key),
+						"phone" => get_db_value('telefono', 'tusuario', 'id_usuario', $key),
+						"inventory" => __("N/A"),
+						"mobile" => __("N/A"),
+						"position" => __("N/A"),
+						"relationship" => "key_user", 
+						"role" => $key_users_info[$key]);
 	
 	$incident_contacts[$key] = $contact_data;
 }
@@ -196,7 +190,6 @@ foreach (array_keys($key_users_info) as $key) {
 //Add info to data table
 foreach ($incident_contacts as $ic) {
 	$data = array();
-
 
 	switch($ic["relationship"]) {
 		case "key_user":
@@ -215,32 +208,32 @@ foreach ($incident_contacts as $ic) {
 	$data[2] = $ic["fullname"];	
 
 	$details = '';
-        if ($ic['phone'] == '') {
+	if ($ic['phone'] == '') {
 		$ic["phone"] = __("N/A");
 	}
-       	$details .= '<strong>'.__('Phone number').'</strong>: '.$ic['phone'].'<br />';
+    $details .= '<strong>'.__('Phone number').'</strong>: '.$ic['phone'].'<br />';
         
 	if ($ic['mobile'] == '') {
 		$ic["mobile"] = __("N/A");
 	}
-        $details .= '<strong>'.__('Mobile phone').'</strong>: '.$ic['mobile'].'<br />';
+    $details .= '<strong>'.__('Mobile phone').'</strong>: '.$ic['mobile'].'<br />';
 	
 	if ($ic['email'] == '') {
 		$ic["email"] = __("N/A");		
 	}
-        $details .= '<strong>'.__('Email').'</strong>: '.$ic['email'].'<br />';
+    $details .= '<strong>'.__('Email').'</strong>: '.$ic['email'].'<br />';
         
 	//$data[3] = print_help_tip ($details, true, 'tip_view');
 	$data[3] = '<a href="#incident-operations" onClick="inventory_contact_details(\''.$ic["phone"].'\', \''.$ic["mobile"].'\', \''.$ic["email"].'\')">';
 	$data[3] .= "<img src=images/zoom.png>";	
 	$data[3] .= '</a>';
 	if ($ic["type"] == "user") {
-                $data[4] = '<a href="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user='.$ic['id'].'">'.
-                                '<img src="images/wrench.png" /></a>';
-        } else if($ic["type"] == "contact") {
-        	$data[4] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$ic['id'].'">'.
-                                '<img src="images/wrench.png" /></a>';
-        } else {
+		$data[4] = '<a href="index.php?sec=users&sec2=godmode/usuarios/configurar_usuarios&update_user='.$ic['id'].'">'.
+						'<img src="images/wrench.png" /></a>';
+	} else if($ic["type"] == "contact") {
+		$data[4] = '<a href="index.php?sec=inventory&sec2=operation/contacts/contact_detail&id='.$ic['id'].'">'.
+							'<img src="images/wrench.png" /></a>';
+	} else {
 		$data[4] = "";
 	}
 

@@ -716,26 +716,45 @@ function return_value ($var) {
 	return "";
 }
 
-function get_priorities () {
+function get_priorities ($only_name = false) {
 	$incidents = array ();
 	
-	$incidents[10] = 0 . " (".__('Maintenance'). ")";
-	$incidents[0] = 1 . " (".__('Informative'). ")";
-	$incidents[1] = 2 . " (".__('Low'). ")";
-	$incidents[2] = 3 . " (".__('Medium'). ")";
-	$incidents[3] = 4 . " (".__('Serious'). ")";
-	$incidents[4] = 5 . " (".__('Very serious'). ")";
-	
-	
-	/**OLD ARRAY!**/
-	/*$incidents[0] = __('Informative');
-	$incidents[1] = __('Low');
-	$incidents[2] = __('Medium');
-	$incidents[3] = __('Serious');
-	$incidents[4] = __('Very serious');
-	$incidents[10] = __('Maintenance');*/
+	if (! $only_name) {
+		$incidents[10] = 0 . " (".__('Maintenance'). ")";
+		$incidents[0] = 1 . " (".__('Informative'). ")";
+		$incidents[1] = 2 . " (".__('Low'). ")";
+		$incidents[2] = 3 . " (".__('Medium'). ")";
+		$incidents[3] = 4 . " (".__('Serious'). ")";
+		$incidents[4] = 5 . " (".__('Very serious'). ")";
+	} else {
+		$incidents[10] = __('Maintenance');
+		$incidents[0] = __('Informative');
+		$incidents[1] = __('Low');
+		$incidents[2] = __('Medium');
+		$incidents[3] = __('Serious');
+		$incidents[4] = __('Very serious');
+	}
 	
 	return $incidents;
+}
+
+function get_priority_name ($priority) {
+	switch ($priority) {
+		case 10:
+			return __('Maintenance');
+		case 0:
+			return __('Informative');
+		case 1:
+			return __('Low');
+		case 2:
+			return __('Medium');
+		case 3:
+			return __('Serious');
+		case 4:
+			return __('Very serious');
+		default:
+			return __('Other');
+	}
 }
 
 function get_periodicities () {

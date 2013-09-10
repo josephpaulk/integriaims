@@ -281,6 +281,9 @@ if (defined ('AJAX')) {
 					$name = "<s>$name</s>";
 				}
 				
+				// Priority
+				$priority = print_priority_flag_image ($task['priority'], true);
+				
 				// Branches
 				$branches_json = json_encode ($branches_aux);
 				
@@ -290,8 +293,9 @@ if (defined ('AJAX')) {
 					  </script>";
 				echo $img;
 				echo "</a>";
-				echo "<span style='background: #D8D8D8; padding-top: 5px; padding-bottom: 5px; padding-right: 4px;'>";
-				echo "<span style='margin-left: 5px; vertical-align:middle; display: inline-block;'>".$name."</span>";
+				echo "<span title='".__('You are not assigned to this task')."' style='padding: 4px;'>";
+				echo "<span style='vertical-align:middle; display: inline-block;'>".$priority."</span>";
+				echo "<span style='color: #D8D8D8; margin-left: 5px; display: inline-block;'>".$name."</span>";
 				echo "</span>";
 				
 			}

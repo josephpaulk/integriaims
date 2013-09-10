@@ -1,3 +1,48 @@
+2013-09-10  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions.php: Modified the function "get_priorities"
+	to add the optional parameter 'only_name'. Added function
+	"get_priority_name".
+	
+	* include/functions_db.php: Modified the function "mail_todo"
+	to translate the status and priority numbers to text.
+	
+	* include/functions_incidents.php: Modified the function
+	"mail_incident" to translate the priority number to text.
+	Fixed an error in the function "incidents_add_incident_stat".
+	Fixed the function "incidents_get_incident_priority_text" to
+	translate the priority number to text.
+	
+	* include/functions_workorders.php: Now the macros show
+	the status and the priority in text.
+	
+	* operation/projects/task_emailreport.php: Now the priority is
+	showed in text.
+	
+	* operation/workorders/wo.php: Changed the way of show the
+	wo status.
+	
+	* include/functions_tasks.php,
+	  operation/projects/task.php: Visual changes on the tasks
+	  without access permission.
+	
+	* operation/companies/company_detail.php: Fixed an error on
+	the lead tab.
+	
+	* operation/incidents/incident_dashboard.php: Now the number
+	of incidents is the number of not closed incidents in certain
+	sections.
+	
+	* operation/incidents/incident_inventory_contacts.php: Fixed
+	an error that caused that the contacts does not appear.
+	
+	* operation/incidents/incident_search_logic.php: Fixed an
+	error that caused that the number of incident were 1 instead
+	of 0.
+	
+	* operation/leads/lead_detail.php: Fixed an error on a
+	function call. Now the search also filters by id.
+
 2013-09-10  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_html.php: Fixed a problem with file

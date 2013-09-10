@@ -977,7 +977,7 @@ elseif ($op == "leads") {
 			$data[2] = $invoice["company"];
 			$data[3] = $invoice["modification"];
 			$data[4] = $invoice["country"];
-			$data[5] = $invoice["progress"];		
+			$data[5] = translate_lead_progress ($invoice["progress"]);		
 			$data[6] = format_numeric ($invoice["estimated_sale"]);
 			
 			array_push ($table->data, $data);
@@ -985,7 +985,7 @@ elseif ($op == "leads") {
 		print_table ($table);
 		
 		if ($other_manage_permission) {
-			echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail">';
+			echo '<form method="post" action="index.php?sec=customers&sec2=operation/leads/lead_detail&id_company='.$id.'">';
 			echo '<div style="width: '.$table->width.'; text-align: right;">';
 			print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
 			print_input_hidden ('new', 1);

@@ -18,6 +18,9 @@ global $config;
 
 check_login ();
 
+enterprise_include('include/functions_crm.php');
+include_once('include/functions_crm.php');
+
 $read = true;
 $write = true;
 $manage = true;
@@ -759,11 +762,12 @@ if ($id || $new) {
 	}
 	
 	if ($search_text != "") {
+		$where_clause .= ' AND (';
 		if (is_int((int)$search_text) && (int)$search_text > 0) {
-			$where_clause .= sprintf (' AND id = %d', (int)$search_text);
-		} else {
-			$where_clause .= sprintf (' AND fullname LIKE "%%%s%%" OR description LIKE "%%%s%%" OR company LIKE "%%%s%%" or email LIKE "%%%s%%"', $search_text, $search_text, $search_text, $search_text);
+			$where_clause .= sprintf ('id = %d OR ', (int)$search_text);
 		}
+		$where_clause .= sprintf ('fullname LIKE "%%%s%%" OR description LIKE "%%%s%%" OR company LIKE "%%%s%%" or email LIKE "%%%s%%"', $search_text, $search_text, $search_text, $search_text);
+		$where_clause .= ')';
 	}
 
 	if ($id_company) {
@@ -793,7 +797,7 @@ if ($id || $new) {
 	if ($id_category) {
 		$where_clause .= sprintf(' AND id_category = %d ', $id_category);
 	}
-
+	
 	echo '<form id="lead_stats_form" action="index.php?sec=customers&sec2=operation/leads/lead&tab=search" method="post">';		
 
 	$table->class = 'search-table';

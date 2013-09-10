@@ -1066,10 +1066,10 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
 	$titulo =$row["titulo"];
 	$description = wordwrap(ascii_output($row["descripcion"]), 70, "\n");
-	$prioridad = render_priority($row["prioridad"]);
+	$prioridad = get_priority_name($row["prioridad"]);
 	$nota = wordwrap($nota, 75, "\n");
 
-	$estado = render_status ( $row["estado"]);
+	$estado = render_status ($row["estado"]);
 	$resolution = render_resolution ($row["resolution"]);
 	$create_timestamp = $row["inicio"];
 	$update_timestamp = $row["actualizacion"];
@@ -1483,7 +1483,7 @@ function incidents_add_incident_stat ($id_incident, $metrics_values) {
 				//There isn't previous data for this stat
 							
 				//Create new stat metric
-				$val_new_metric = array("id_incident" => $last_track_trace["id_incident"],
+				$val_new_metric = array("id_incident" => $id_incident,
 										"seconds" => $diff_time,
 										"metric" => $metric);
 
@@ -1580,7 +1580,7 @@ function incidents_get_incident_status_text ($id) {
 function incidents_get_incident_priority_text ($id) {
 	$priority = get_db_value ('prioridad', 'tincidencia', 'id_incidencia', $id);
 	
-	$name = render_priority($priority);
+	$name = get_priority_name($priority);
 	
 	return $name;
 }

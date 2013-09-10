@@ -19,8 +19,8 @@ function mail_workorder ($id_wo, $mode, $id_note = false, $wo_info = false, $not
 	$MACROS["_wo_last_update_"] = $wo['last_update'];
 	$MACROS["_wo_created_by_user_"] = $wo['created_by_user'];
 	$MACROS["_wo_assigned_user_"] = $wo['assigned_user'];
-	$MACROS["_wo_progress_"] = $wo['progress'];
-	$MACROS["_wo_priority_"] = $wo['priority'];
+	$MACROS["_wo_progress_"] = translate_wo_status($wo['progress']);
+	$MACROS["_wo_priority_"] = get_priority_name($wo['priority']);
 	$MACROS["_wo_description_"] = wordwrap($wo["description"], 70, "\n");
 	$MACROS["_wo_url_"] = $config["base_url"]."/index.php?sec=projects&sec2=operation/workorders/wo&operation=view&id=$id_wo";
 	$MACROS["_wo_title_"] = $wo['name'];

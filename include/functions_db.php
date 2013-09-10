@@ -1068,8 +1068,8 @@ function mail_todo ($mode, $id_todo) {
 
 	$tlastupdate = $todo["last_update"];
 	$tdescription = wordwrap($todo["description"], 70, "\n");
-	$tprogress = $todo["progress"];
-	$tpriority = $todo["priority"];
+	$tprogress = translate_wo_status($todo["progress"]);
+	$tpriority = get_priority_name ($todo["priority"]);
 	$tname = $todo["name"];
 	$url = $config["base_url"]."/index.php?sec=todo&sec2=operation/todo/todo&operation=update&id=$id_todo";
 
@@ -1079,30 +1079,30 @@ function mail_todo ($mode, $id_todo) {
 		$subject = "[".$config["sitename"]."] New TO-DO from '$tcreated' : $tname";
 		break;
 	case 1: // Update
-$text = "TO-DO '$tname' has been UPDATED by user $tassigned. This TO-DO was created by user $tcreated. You could track this todo in the following URL (need to use your credentials): $url\n\n";
+		$text = "TO-DO '$tname' has been UPDATED by user $tassigned. This TO-DO was created by user $tcreated. You could track this todo in the following URL (need to use your credentials): $url\n\n";
 		$subject = "[".$config["sitename"]."] Updated TO-DO from '$tcreated' : $tname";
 		break;
 	case 2: // Delete
 		$text = "TO-DO '$tname' has been DELETED by user $tassigned. This TO-DO was created by user $tcreated. You could track this todo in the following URL (need to use your credentials): $url\n\n";
 		$subject = "[".$config["sitename"]."] Deleted TO-DO from '$tcreated' : $tname";
-	}	
-$text .= "
----------------------------------------------------------------------
-TO-DO NAME  : $tname
-DATE / TIME : $tlastupdate
-CREATED BY  : $tcreated
-ASSIGNED TO : $tassigned
-PROGRESS    : $tprogress%
-PRIORITY    : $tpriority
-DESCRIPTION
----------------------------------------------------------------------
-$tdescription\n\n";
+	}
+	$text .= "
+		---------------------------------------------------------------------
+		TO-DO NAME  : $tname
+		DATE / TIME : $tlastupdate
+		CREATED BY  : $tcreated
+		ASSIGNED TO : $tassigned
+		PROGRESS    : $tprogress
+		PRIORITY    : $tpriority
+		DESCRIPTION
+		---------------------------------------------------------------------
+		$tdescription\n\n";
 
-		$text = ascii_output ($text);
-		$subject = ascii_output ($subject);
-		// Send an email to both
-		integria_sendmail (get_user_email ($tcreated), $subject, $text);
-		integria_sendmail (get_user_email ($tassigned), $subject, $text);
+	$text = ascii_output ($text);
+	$subject = ascii_output ($subject);
+	// Send an email to both
+	integria_sendmail (get_user_email ($tcreated), $subject, $text);
+	integria_sendmail (get_user_email ($tassigned), $subject, $text);
 }
 
 

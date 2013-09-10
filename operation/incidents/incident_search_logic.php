@@ -166,7 +166,11 @@ incidents_search_result($filter);
 // SQL cache, if not, we need to change incident_search_result function to return this value
 
 $temp_incidents = filter_incidents ($filter);
-$total_incidents_in_search = count($temp_incidents);
+if ($temp_incidents === false) {
+	$total_incidents_in_search = 0;
+} else {
+	$total_incidents_in_search = count($temp_incidents);
+}
 
 /* Add a form to carry filter between statistics and search views */
 echo '<form id="stats_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search&option=stats" style="clear: both">';

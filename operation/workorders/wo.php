@@ -288,7 +288,6 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 		include "operation/users/user_spare_workunit.php";
 	}
 
-
 	// Files
 	if ($tab == "files"){
 		$id_task = get_parameter("id_task");
@@ -629,14 +628,7 @@ if ($operation == "") {
 
 			$data[3] = print_priority_flag_image ($wo["priority"], true);
 			
-			if ($wo["progress"] == 0)
-				$data[4] = __("Pending");
-			
-			if ($wo["progress"] == 1)
-				$data[4] = __("Finished");
-			
-			if ($wo["progress"] == 2)
-				$data[4] = __("Validated");
+			$data[4] = translate_wo_status($wo["progress"]);
 			
 			if ($wo["assigned_user"] == $config["id_user"]) {
 				$data[5] = '<a href="index.php?sec=projects&sec2=operation/workorders/wo&owner='.$wo["assigned_user"].'">'.__("Me").'</a>';

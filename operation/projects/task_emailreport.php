@@ -79,7 +79,7 @@ Description
 ------------------------------------------------------------------------------------------------------
 %s
 ------------------------------------------------------------------------------------------------------
-", $task["name"], $project_manager, $task["start"], $task["end"], $prio_array[$task["priority"]], $task_days, $task_cost, $task["completion"], $participants, $task["description"]);
+", $task["name"], $project_manager, $task["start"], $task["end"], get_priority_name($task["priority"]), $task_days, $task_cost, $task["completion"], $participants, $task["description"]);
 
 echo "<h1>".__("Task report details")."</h1>";
 

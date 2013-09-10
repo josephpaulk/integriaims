@@ -82,10 +82,10 @@ foreach ($groups as $key => $grp) {
 		$search_by_group .= "<tr>";
 	}
 		
-	$incidents = get_incidents(array("id_grupo" => $key));
+	$incidents = get_incidents("id_grupo = $key AND estado <> 7", true);
 	
 	$search_by_group .= "<td>";
-	$search_by_group .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_status=0&search_first_date=" . $first_start . "&search_id_group=".$key."'>";
+	$search_by_group .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_id_group=".$key."'>";
 	$search_by_group .= $grp." (".count($incidents).")";
 	$search_by_group .= "</a>";
 	$search_by_group .= "</td>";
@@ -123,8 +123,8 @@ if (!$rows) {
 			$search_by_owner .= "<tr>";
 		}
 
-		$incidents = get_incidents(array("id_usuario" => $owners["id_usuario"]));
-	
+		$incidents = get_incidents("id_usuario = '".$owners["id_usuario"]."' AND estado <> 7", true);
+		
 		$search_by_owner .= "<td>";
 		$search_by_owner .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_id_user=".$owners["id_usuario"]."'>";
 		$search_by_owner .= '<div class="bubble_little">' . print_image('images/avatars/' . $owners["avatar"] . '.png', true) . '</div>';
@@ -145,7 +145,7 @@ $search_by_owner .= "</table>";
 
 $left_side .= print_container('incident_search_by_owner', __('Search by owner'), $search_by_owner);
 
-$rows = get_db_all_rows_sql ("SELECT DISTINCT(prioridad) as priority, count(*) as count FROM tincidencia WHERE estado != 7 GROUP BY priority");
+$rows = get_db_all_rows_sql ("SELECT DISTINCT(prioridad) as priority, count(*) as count FROM tincidencia WHERE estado <> 7 GROUP BY priority");
 
 $search_by_priority = "<table class='search_by_priority'>";
 
@@ -187,7 +187,7 @@ $search_by_priority .= "</table>";
 
 $left_side .= print_container('incident_search_by_priority', __('Search by priority'), $search_by_priority);
 
-/**** DASHBOAR RIGHT SIDE ****/
+/**** DASHBOARD RIGHT SIDE ****/
 
 $rows = get_db_all_rows_sql ("SELECT id, name FROM tincident_status");
 
@@ -233,10 +233,10 @@ if (!$rows) {
 			$search_by_type .= "<tr>";
 		}
 				
-		$incidents = get_incidents(array("id_incident_type" => $type["id"]));
+		$incidents = get_incidents("id_incident_type = ".$type["id"]." AND estado <> 7", true);
 	
 		$search_by_type .= "<td>";
-		$search_by_type .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_status=0&search_first_date=" . $first_start . "&search_id_incident_type=".$type["id"]."'>";
+		$search_by_type .= "<a href='index.php?sec=incidents&sec2=operation/incidents/incident_search&search_first_date=" . $first_start . "&search_id_incident_type=".$type["id"]."'>";
 		$search_by_type .= $type["name"]." (".count($incidents).")";
 		$search_by_type .= "</a>";
 		$search_by_type .= "</td>";
