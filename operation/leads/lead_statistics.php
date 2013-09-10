@@ -158,26 +158,34 @@ $leads_country_content = '<br><div class="pie_frame">' . $leads_funnel_content .
 $table->data[0][0] = print_container('funnel', __('Leads Funnel'), $leads_country_content, 'no', true, '10px');
 
 //CONVERSION RATE
-$leads_conversion_rate = "<table>";
+$success_leads_array = crm_get_all_leads("WHERE progress = 200 ");
+
+$total_success = count($success_leads_array);
+
+$conversion_rate = $total_success / $total_leads * 100;
+
+$total_amount_success = 0;
+if (isset($data[200]["amount"])) {
+	$total_amount_success = $data[200]["amount"];
+}
+
+
+$leads_conversion_rate = "<table class='conversion_rate'>";
 $leads_conversion_rate .= "<tr>";
-$leads_conversion_rate .= "<td>";
-$leads_conversion_rate .= "10%";
+$leads_conversion_rate .= "<td class='conversion_value'>";
+$leads_conversion_rate .= sprintf("%.2f %%",$conversion_rate);
 $leads_conversion_rate .= "</td>";
 $leads_conversion_rate .= "</tr>";
 $leads_conversion_rate .= "<tr>";
 $leads_conversion_rate .= "<td>";
-$leads_conversion_rate .= __("Total amount");
-$leads_conversion_rate .= "</td>";
-$leads_conversion_rate .= "</tr>";
-$leads_conversion_rate .= "<tr>";
-$leads_conversion_rate .= "<td>";
-$leads_conversion_rate .= "10000 €";
+$leads_conversion_rate .= __("Total amount")."<br><br>";
+$leads_conversion_rate .= $total_amount_success." ".$config["currency"];
 $leads_conversion_rate .= "</td>";
 $leads_conversion_rate .= "</tr>";
 $leads_conversion_rate .= "</table>";
 
 $leads_conversion_rate = '<br><div class="pie_frame">' . $leads_conversion_rate . '</div>';
-$table->data[0][1] = print_container('conversion_rate', __('Conversion rate'), $leads_conversion_rate, 'no', true, '10px');
+$table->data[0][1] = print_container('conversion_rate', __('Conversion ratio'), $leads_conversion_rate, 'no', true, '10px');
 
 //COUNTRIES
 $leads_country = crm_get_total_leads_country($where_clause);

@@ -1,3 +1,13 @@
+2013-09-10  Dario Rodriguez <dario@artica.es>
+
+	* include/styles/integria.css,
+	operation/leads/lead_statistics.php: New element in
+	lead search statistics to calculate conversion ratio.
+ 
+2013-09-10  Dario Rodriguez <dario@artica.es>
+
+	*  operation/leads/lead_detail.php: Fixed a double include of a file.
+
 2013-09-10  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/js/integria_incident_search.js: Now is possible

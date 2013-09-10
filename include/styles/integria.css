@@ -2354,3 +2354,15 @@ img.pipeline-warning-icon {
 	margin-right: 10px;
 	width: 18px;
 }
+
+table.conversion_rate td{
+	padding-top: 36px;
+	padding-bottom: 37px;
+	font-size: 18pt;
+	font-weight: bold;
+}
+
+td.conversion_value {
+	padding-top: 100px !important;
+	font-size: 45pt !important;
+}
