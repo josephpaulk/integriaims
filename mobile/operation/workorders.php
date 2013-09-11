@@ -318,7 +318,7 @@ class Workorders {
 					$ui->formAddSubmitButton($options);
 				$form_html = $ui->getEndForm();
 			$ui->contentCollapsibleAddItem($form_html);
-			$ui->contentEndCollapsible("collapsible-filter");
+			$ui->contentEndCollapsible("collapsible-filter", "d");
 			// Workorder listing
 			$html = $this->getWorkOrdersList("", false);
 			$ui->contentAddHtml($html);

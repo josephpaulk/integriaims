@@ -141,11 +141,32 @@ class Incident {
 				mail_incident ($id_incident, $usuario, "", 0, 1);
 			}
 			
+			// Insert data of incident type fields
+			if ($id_incident_type > 0) {
+				$sql_label = "SELECT `label` FROM `tincident_type_field` WHERE id_incident_type = $id_incident_type";
+				$labels = get_db_all_rows_sql($sql_label);
+			
+				if ($labels === false) {
+					$labels = array();
+				}
+				
+				foreach ($labels as $label) {
+					$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
+					
+					$values_insert['id_incident'] = $id;
+					$values_insert['data'] = $system->getRequest(base64_encode($label['label']));
+					$values_insert['id_incident_field'] = $id_incident_field;
+					$id_incident_field = get_db_value('id', 'tincident_type_field', 'id_incident_type', $id_incident_type);
+					process_sql_insert('tincident_field_data', $values_insert);
+				}
+			}
+			
 			return $id_incident;
 		}
 	}
 	
 	public function deleteIncident ($id_incident) {
+		$system = System::getInstance();
 		
 		$error = false;
 		
@@ -239,7 +260,10 @@ class Incident {
 		$options = array (
 			'id' => 'form-incident',
 			'action' => $action,
-			'method' => $method
+			'method' => $method,
+			'enctype' => 'multipart/form-data',
+			//'size' => '40',
+			'data-ajax' => 'false'
 			);
 		$ui->beginForm($options);
 		// Title
@@ -250,6 +274,36 @@ class Incident {
 			'placeholder' => __('Title')
 			);
 		$ui->formAddInputText($options);
+		// Priority
+		$options = array(
+			'name' => 'priority',
+			'title' => __('Priority'),
+			'label' => __('Priority'),
+			'items' => get_priorities(),
+			'selected' => $this->priority
+			);
+		$ui->formAddSelectBox($options);
+		// Type
+		$types = array();
+		$types = get_incident_types();
+		array_unshift($types, __('None'));
+		$options = array(
+			'name' => 'id_incident_type',
+			'title' => __('Type'),
+			'label' => __('Type'),
+			'items' => $types,
+			'selected' => $this->id_incident_type
+			);
+		$ui->formAddSelectBox($options);
+		$ui->formAddHtml("<div id='type_fields'></div>");
+		$ui->formAddHtml("<script type='text/javascript' src='include/javascript/functions_incidents.mobile.js'></script>");
+		$ui->formAddHtml("<script type='text/javascript'>
+							  $(document).ready (function () {
+								  $('#select-id_incident_type').on('change', function () {
+									  showIncidentTypeFields('#type_fields');
+								  });
+							  });
+						  </script>");
 		// Description
 		$options = array(
 				'name' => 'description',
@@ -257,6 +311,24 @@ class Incident {
 				'value' => $this->description
 				);
 		$ui->formAddHtml($ui->getTextarea($options));
+		$ui->contentBeginCollapsible(__('Optional file'));
+			// File
+			$options = array(
+				'type' => 'file',
+				'name' => 'file',
+				'label' => __('File')
+				);
+			$file_inputs = $ui->getInput($options);
+			// Description
+			$options = array(
+					'name' => 'description_file',
+					'label' => __('File description'),
+					'value' => $this->description_file
+					);
+			$file_inputs .= $ui->getTextarea($options);
+		$ui->contentCollapsibleAddItem($file_inputs);
+		$collapsible_file = $ui->getEndCollapsible("collapsible-form", "c");
+		$ui->formAddHtml($collapsible_file);
 		// Hidden operation (insert or update+id)
 		if ($this->id_incident <= 0) {
 			$options = array(
@@ -280,7 +352,7 @@ class Incident {
 			$ui->formAddInput($options);
 			$options = array(
 				'type' => 'hidden',
-				'name' => 'id',
+				'name' => 'id_incident',
 				'value' => $this->id_incident
 				);
 			$ui->formAddInput($options);
@@ -387,6 +459,37 @@ class Incident {
 		}
 		
 		return $html;
+	}
+	
+	public function insertIncidentFile ($file) {
+		$system = System::getInstance();
+		
+		if ( include_once ($system->getConfig('homedir')."/include/functions_incidents.php") ) {
+			include_once ($system->getConfig('homedir')."/include/functions_workunits.php");
+			
+			$filename = $_FILES[$file]['name'];
+			$filename = str_replace (" ", "_", $filename);
+			$correct_file_path = sys_get_temp_dir()."/$filename";
+			$file_tmp = $_FILES[$file]['tmp_name'];
+			if (rename($file_tmp, $correct_file_path)) {
+				$file_path = $correct_file_path;
+			} else {
+				$file_path = $file_tmp;
+			}
+			$description_file = (string) $system->getRequest('description_file', '');
+			
+			$result = attach_incident_file ($this->id_incident, $file_path, $description_file);
+			
+			if (preg_match("/".__('File added')."/i", $result)) {
+				$return = true;
+			} else {
+				$return = false;
+			}
+		} else {
+			$return = false;
+		}
+		
+		return $return;
 	}
 	
 	private function getFilesQuery ($columns = "*", $order_by = "timestamp, id_usuario, filename") {
@@ -524,6 +627,45 @@ class Incident {
 			}
 			
 		return $ui->getEndForm();
+	}
+	
+	public function getFileUploadStatus ($file) {
+		return $_FILES[$file]['error'];
+	}
+	
+	public function translateFileUploadStatus ($status) {
+		switch ($status) {
+			case UPLOAD_ERR_OK:
+				$message = true;
+				break;
+			case UPLOAD_ERR_INI_SIZE:
+				$message = "<h2 class='error'>".__('The file exceeds the maximum size')."</h2>";
+				break;
+			case UPLOAD_ERR_FORM_SIZE:
+				$message = "<h2 class='error'>".__('The file exceeds the maximum size')."</h2>";
+				break;
+			case UPLOAD_ERR_PARTIAL:
+				$message = "<h2 class='error'>".__('The uploaded file was only partially uploaded')."</h2>";
+				break;
+			case UPLOAD_ERR_NO_FILE:
+				$message = "<h2 class='error'>".__('No file was uploaded')."</h2>";
+				break;
+			case UPLOAD_ERR_NO_TMP_DIR:
+				$message = "<h2 class='error'>".__('Missing a temporary folder')."</h2>";
+				break;
+			case UPLOAD_ERR_CANT_WRITE:
+				$message = "<h2 class='error'>".__('Failed to write file to disk')."</h2>";
+				break;
+			case UPLOAD_ERR_EXTENSION:
+				$message = "<h2 class='error'>".__('File upload stopped by extension')."</h2>";
+				break;
+			
+			default:
+				$message = "<h2 class='error'>".__('Unknown upload error')."</h2>";
+				break;
+		}
+		
+		return $message;
 	}
 	
 	private function showIncident ($tab = "view", $message = "") {
@@ -704,13 +846,20 @@ class Incident {
 													$this->email_notify, $this->id_parent, $this->epilog);
 					if ($result) {
 						$this->id_incident = $result;
+						
+						// Insert file if exist
+						$status = $this->getFileUploadStatus('file');
+						$message = $this->translateFileUploadStatus($message);
+						if ($message === true) {
+							$this->insertIncidentFile('file');
+						}
+						
 						$message = "<h2 class='suc'>".__('Successfully created')."</h2>";
 					} else {
 						$message = "<h2 class='error'>".__('An error ocurred while creating the incident')."</h2>";
 					}
 					$incidents = new Incidents();
 					$incidents->show($message);
-					//$this->showIncidentSimpleForm($message);
 					break;
 				case 'insert_workunit':
 					if ($this->id_incident > 0) {
@@ -732,58 +881,16 @@ class Incident {
 				case 'insert_file':
 					if ($this->id_incident > 0) {
 						
-						switch ($_FILES['file']['error']) {
-							case UPLOAD_ERR_OK:
-								if ( include_once ($system->getConfig('homedir')."/include/functions_incidents.php") ) {
-									include_once ($system->getConfig('homedir')."/include/functions_workunits.php");
-									
-									$filename = $_FILES['file']['name'];
-									$filename = str_replace (" ", "_", $filename);
-									$correct_file_path = sys_get_temp_dir()."/$filename";
-									$file_tmp = $_FILES['file']['tmp_name'];
-									if (rename($file_tmp, $correct_file_path)) {
-										$file_path = $correct_file_path;
-									} else {
-										$file_path = $file_tmp;
-									}
-									$description_file = (string) $system->getRequest('description_file', '');
-									
-									$result = attach_incident_file ($this->id_incident, $file_path, $description_file);
-									
-									if (preg_match("/".__('File added')."/i", $result)) {
-										$message = "<h2 class='suc'>".__('File added')."</h2>";
-									} else {
-										$message = "<h2 class='error'>".__('An error ocurred while uploading the file')."</h2>";
-									}
-								} else {
-									$message = "<h2 class='error'>".__('Upload error')."</h2>";
-								}
-								break;
-							case UPLOAD_ERR_INI_SIZE:
-								$message = "<h2 class='error'>".__('The file exceeds the maximum size')."</h2>";
-								break;
-							case UPLOAD_ERR_FORM_SIZE:
-								$message = "<h2 class='error'>".__('The file exceeds the maximum size')."</h2>";
-								break;
-							case UPLOAD_ERR_PARTIAL:
-								$message = "<h2 class='error'>".__('The uploaded file was only partially uploaded')."</h2>";
-								break;
-							case UPLOAD_ERR_NO_FILE:
-								$message = "<h2 class='error'>".__('No file was uploaded')."</h2>";
-								break;
-							case UPLOAD_ERR_NO_TMP_DIR:
-								$message = "<h2 class='error'>".__('Missing a temporary folder')."</h2>";
-								break;
-							case UPLOAD_ERR_CANT_WRITE:
-								$message = "<h2 class='error'>".__('Failed to write file to disk')."</h2>";
-								break;
-							case UPLOAD_ERR_EXTENSION:
-								$message = "<h2 class='error'>".__('File upload stopped by extension')."</h2>";
-								break;
-							
-							default:
-								$message = "<h2 class='error'>".__('Unknown upload error')."</h2>";
-								break;
+						$status = $this->getFileUploadStatus('file');
+						$message = $this->translateFileUploadStatus($message);
+						
+						if ($message === true) {
+							$result = $this->insertIncidentFile('file');
+							if ($result) {
+								$message = "<h2 class='suc'>".__('File added')."</h2>";
+							} else {
+								$message = "<h2 class='error'>".__('An error ocurred while uploading the file')."</h2>";
+							}
 						}
 						$this->showIncident($this->tab, $message);
 					}
@@ -852,8 +959,30 @@ class Incident {
 		$home->show($error);
 	}
 	
-	public function ajax ($parameter2 = false) {
-		// Fill me in the future
+	public function ajax ($method = false) {
+		$system = System::getInstance();
+		
+		if (!$this->permission) {
+			return;
+		}
+		else {
+			switch ($method) {
+				case 'getIncidentTypeFields':
+					$id_incident_type = $system->getRequest('id_incident_type');
+					$id_incident = $system->getRequest('id_incident');		
+					$fields = incidents_get_all_type_field ($id_incident_type, $id_incident);
+					
+					$fields_final = array();
+					foreach ($fields as $f) {
+						$f["data"] = safe_output($f["data"]);
+
+						array_push($fields_final, $f);
+					}
+
+					echo json_encode($fields_final);
+					return;
+			}
+		}
 	}
 	
 }

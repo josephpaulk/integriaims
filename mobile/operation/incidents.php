@@ -32,7 +32,7 @@ class Incidents {
 		$this->offset = (int) $system->getRequest('offset', 1);
 		$this->operation = (string) $system->getRequest('operation', '');
 		$this->filter_search = (string) $system->getRequest('filter_search', '');
-		$this->filter_status = (int) $system->getRequest('filter_status', 0);
+		$this->filter_status = (int) $system->getRequest('filter_status', -10);
 		$this->filter_owner = (string) $system->getRequest('filter_owner', '');
 		
 		// ACL
@@ -49,7 +49,11 @@ class Incidents {
 			$filter .= " AND titulo LIKE '%".$this->filter_search."%' ";
 		}
 		if ($this->filter_status != 0) {
-			$filter .= " AND estado = ".$this->filter_status;
+			if ($this->filter_status == -10) {
+				$filter .= " AND estado <> 7";
+			} else {
+				$filter .= " AND estado = ".$this->filter_status;
+			}
 		}
 		if ($this->filter_owner != '') {
 			$filter .= " AND id_usuario = '".$this->filter_owner."' ";
@@ -189,6 +193,7 @@ class Incidents {
 					// Filter status
 					$values = array();
 					$values[0] = __('Any');
+					$values[-10] = __('Not closed');
 					$status_table = process_sql ("select * from tincident_status");
 					foreach ($status_table as $status) {
 						$values[$status['id']] = __($status['name']);
@@ -225,7 +230,7 @@ class Incidents {
 					$ui->formAddSubmitButton($options);
 				$form_html = $ui->getEndForm();
 			$ui->contentCollapsibleAddItem($form_html);
-			$ui->contentEndCollapsible("collapsible-filter");
+			$ui->contentEndCollapsible("collapsible-filter", "d");
 			// Incidents listing
 			$html = $this->getIncidentsList();
 			$ui->contentAddHtml($html);

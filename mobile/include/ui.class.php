@@ -353,13 +353,13 @@ class Ui {
 		$this->collapsible['items'][] = $html;
 	}
 	
-	public function contentEndCollapsible($class = "") {
+	public function contentEndCollapsible($class = "", $data_theme = "a") {
 		$this->endCollapsible = true;
 		
 		$html = "<div class='$class' data-role='collapsible' " .
 			" data-collapsed-icon='arrow-d' " .
 			" data-expanded-icon='arrow-u' data-mini='true' ".
-			" data-theme='a' data-content-theme='c'>\n";
+			" data-theme='$data_theme' data-content-theme='c'>\n";
 		$html .= "<h4>" . $this->collapsible['title'] . "</h4>\n";
 		
 		$html .= "<ul data-role='listview' data-theme='c'>\n";
@@ -373,6 +373,28 @@ class Ui {
 		
 		$this->contentAddHtml($html);
 		$this->collapsible = array();
+	}
+	
+	public function getEndCollapsible($class = "", $data_theme = "a") {
+		$this->endCollapsible = true;
+		
+		$html = "<div class='$class' data-role='collapsible' " .
+			" data-collapsed-icon='arrow-d' " .
+			" data-expanded-icon='arrow-u' data-mini='true' ".
+			" data-theme='$data_theme' data-content-theme='c'>\n";
+		$html .= "<h4>" . $this->collapsible['title'] . "</h4>\n";
+		
+		$html .= "<ul data-role='listview' data-theme='c'>\n";
+		foreach ($this->collapsible['items'] as $item) {
+			$html .= "<li>" . $item . "</li>";
+		}
+		$html .= "</ul>\n";
+		
+		$html .= "</div>\n";
+		
+		$this->collapsible = array();
+		
+		return $html;
 	}
 	
 	public function beginForm($options = null) {

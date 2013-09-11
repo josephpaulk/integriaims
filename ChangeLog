@@ -1,3 +1,28 @@
+2013-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* mobile/include/ui.class.php: Improved the function
+	"contentEndCollapsible" with theme selection. Added
+	the function "getEndCollapsible".
+	
+	* mobile/include/style/main.css: Added a new rule for
+	the collapsibles in a forms.
+	
+	* mobile/operation/workorders.php: Visual changes.
+	
+	* mobile/operation/incidents.php: Visual changes. Now
+	the default status is 'Not closed'.
+	
+	* mobile/include/javascript/functions_incidents.mobile.js:
+	New file. Added the function "showIncidentTypeFields".
+	
+	* mobile/operation/incident.php: Added the functions
+	"insertIncidentFile", "getFileUploadStatus" and
+	"translateFileUploadStatus". Added code to retrieve the
+	incident type fields using ajax to the "ajax" function.
+	Now is possible to set the priority, the incident type
+	and its type fields and upload a file from the new incident
+	simple form.
+	
 2013-09-10  Dario Rodriguez <dario@artica.es>
 
 	* include/integria_cron.php
