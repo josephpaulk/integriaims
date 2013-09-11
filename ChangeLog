@@ -1,5 +1,11 @@
 2013-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/functions_graph.php: Now the colors of the graph
+	that returns the function "graph_incident_sla_compliance"
+	are correct.
+	
+2013-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* extras/migrate.sql: Modified the column 'bill_id'.
 	
 	* include/ajax/remote_validations.php: The bill id

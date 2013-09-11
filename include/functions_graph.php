@@ -890,7 +890,7 @@ function graph_incident_sla_compliance($incident, $width=200, $height=200, $ttl=
 	
 	$num_ok = process_sql($sql_ok);
 	$num_fail = process_sql($sql_fail);
-
+	
 	$num_ok = $num_ok[0][0];
 	$num_fail = $num_fail[0][0];
 	$total = $num_ok + $num_fail;
@@ -907,8 +907,8 @@ function graph_incident_sla_compliance($incident, $width=200, $height=200, $ttl=
 	
 	$data = array();
 	
-	$data["FAIL"] = $percent_fail;
 	$data["OK"] = $percent_ok;
+	$data["FAIL"] = $percent_fail;
 	
 	if (isset($data))
 		return pie3d_graph ($config['flash_charts'], $data, $width, $height, "", "", "", $config['font'], $config['fontsize'], $ttl);
