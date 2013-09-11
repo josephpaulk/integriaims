@@ -426,7 +426,6 @@ if ($search_existing_project) {
 	$bill_id = (int) get_parameter ('bill_id');
 	$invoice_id = get_parameter ('invoice_id', 0);
 	$old_bill_id = -1;
-	$max_bill_id = get_db_value ("MAX(bill_id)", "tinvoice", "1", "1");
 	
 	if ($invoice_id) {
 		$old_bill_id = get_db_value("bill_id", "tinvoice", "id", $invoice_id);
@@ -440,11 +439,6 @@ if ($search_existing_project) {
 			echo json_encode(false);
 			return;
 		}
-	}
-	if ($bill_id != $old_bill_id && $bill_id <= $max_bill_id) {
-		// Is not larger than the largest bill id. Validation error
-		echo json_encode(false);
-		return;
 	}
 	// Does not exist
 	echo json_encode(true);

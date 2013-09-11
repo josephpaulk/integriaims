@@ -348,7 +348,7 @@ if ($id) {
 
 	$company = get_db_row ('tcompany', 'id', $id);
 	
-	echo '<div class="under_tabs_info">' . sprintf(__('Company: %s'), $company['name']) . '</div>';
+	echo '<div class="under_tabs_info">' . sprintf(__('Company: %s'), $company['name']) . '</div><br>';
 }
 
 // EDIT / CREATE FORM

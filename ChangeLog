@@ -1,5 +1,20 @@
 2013-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* extras/migrate.sql: Modified the column 'bill_id'.
+	
+	* include/ajax/remote_validations.php: The bill id
+	validation now does not require that the new ids be
+	larger than the old.
+	
+	* operation/companies/company_detail.php: Added a
+	line jump before the 'under tabs' info.
+	
+	* operation/invoices/invoices.php: Bug fixes. Now
+	the bill id should not be numeric and larger than
+	the old ids.
+	
+2013-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* mobile/include/ui.class.php: Improved the function
 	"contentEndCollapsible" with theme selection. Added
 	the function "getEndCollapsible".

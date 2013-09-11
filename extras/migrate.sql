@@ -460,3 +460,6 @@ UPDATE tlead SET progress=80 WHERE progress=90;
 
 /* 06/09/2013  */
 ALTER TABLE tcontract ADD `status` tinyint(3) NOT NULL DEFAULT 1;
+
+/* 11/09/2013  */
+ALTER TABLE tinvoice MODIFY `bill_id` varchar(30) NOT NULL DEFAULT '';
