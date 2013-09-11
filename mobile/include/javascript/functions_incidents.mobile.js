@@ -47,7 +47,6 @@ function showIncidentTypeFields(elementId) {
 						input.id = value['label']; 
 						input.name = value['label_enco'];
 						input.value = value['label'];
-						input.style.width = "170px";
 						input.class = "type";
 						
 						var new_text = value['combo_value'].split(',');
@@ -68,7 +67,6 @@ function showIncidentTypeFields(elementId) {
 						input.name = value['label_enco'];
 						input.value = value['data'];
 						input.type = 'text';
-						input.size = 40;
 						
 					}
 					
@@ -89,8 +87,6 @@ function showIncidentTypeFields(elementId) {
 					input.name = value['label_enco'];
 					input.value = value['data'];
 					input.type = 'text';
-					input.rows = '7';
-					input.cols = '80';
 					
 					lbl.appendChild(input);
 					element.append(lbl).trigger("create");

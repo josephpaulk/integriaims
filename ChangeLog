@@ -1,5 +1,19 @@
 2013-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/functions_incidents.php: Fixed the url to access
+	to the incident by email in the function "mail_incident".
+	
+	* mobile/include/ui.class.php: Changed some init values.
+	
+	* mobile/include/javascript/functions_incidents.mobile.js:
+	Fixed an error on combo inputs in thje function
+	"showIncidentTypeFields".
+	
+	* mobile/operation/incident.php: Fixed an error on incident
+	types insertion.
+	
+2013-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/functions_graph.php: Now the colors of the graph
 	that returns the function "graph_incident_sla_compliance"
 	are correct.

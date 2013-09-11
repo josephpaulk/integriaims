@@ -153,7 +153,7 @@ class Incident {
 				foreach ($labels as $label) {
 					$id_incident_field = get_db_value_filter('id', 'tincident_type_field', array('id_incident_type' => $id_incident_type, 'label'=> $label['label']), 'AND');
 					
-					$values_insert['id_incident'] = $id;
+					$values_insert['id_incident'] = $id_incident;
 					$values_insert['data'] = $system->getRequest(base64_encode($label['label']));
 					$values_insert['id_incident_field'] = $id_incident_field;
 					$id_incident_field = get_db_value('id', 'tincident_type_field', 'id_incident_type', $id_incident_type);

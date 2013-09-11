@@ -1046,6 +1046,14 @@ class Ui {
 				//~ });
 			//~ });
 			//~ </script>";
+		echo "<script type='text/javascript'>
+				$(document).bind('mobileinit', function () {
+					$.mobile.ajaxEnabled = false;
+					$.mobile.linkBindingEnabled = false;
+					$.mobile.hashListeningEnabled = false;
+					$.mobile.pushStateEnabled = false;
+				});
+			</script>";
 		echo "	</body>\n";
 		echo "</html>";
 		ob_end_flush();

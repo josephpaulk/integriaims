@@ -1111,7 +1111,7 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$MACROS["_resolution_"] = $resolution;
 	$MACROS["_time_used_"] = $timeused;
 	$MACROS["_incident_main_text_"] = $description;
-	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident&id=$id_inc";
+	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id_inc";
 
 	// Resolve code for its name
 	switch ($mode){
