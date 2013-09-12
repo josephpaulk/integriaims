@@ -358,6 +358,8 @@ if ($operation == "create" || $operation == "update" || $operation == "view")  {
 			$table->data[3][0] .= "&nbsp;&nbsp;<a id='task_link' title='".__('Open this task')."' target='_blank'href=' 
 				index.php?sec=projects&sec2=operation/projects/task_detail&operation=view&id_task=$id_task'>";
 			$table->data[3][0] .= "<img src='images/task.png'></a>";
+		} else {
+			$table->data[3][0] .= "&nbsp;&nbsp;<a id='task_link' title='".__('Open this task')."' target='_blank' href='javascript:;'></a>";
 		}
 
 		// Remove validated user if current user is not the creator OR this doesnt need to be validated

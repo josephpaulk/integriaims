@@ -657,12 +657,8 @@ if($id_grupo==0) {
 	$id_grupo_incident = $id_grupo;
 }
 
-if ($has_im) {
-	$table->data[0][1] = combo_groups_visible_for_me ($config['id_user'], "grupo_form", 0, "IW", $id_grupo_incident, true) . "<div id='group_spinner'></div>";
-} else {
-	$table->data[0][1] = print_label (__('Group'), '', '', true, dame_nombre_grupo ($id_grupo_incident));
-	$table->data[0][1] .= "<input type='hidden' id=grupo_form name=grupo_form value=$id_grupo_incident>";
-}
+$groups = get_user_groups ($config['id_user'], "IW");
+$table->data[0][1] = print_select ($groups, "grupo_form", $id_grupo_incident, '', '', 0, true, false, false, __('Group')) . "<div id='group_spinner'></div>";
 
 $types = get_incident_types ();
 $table->data[0][2] = print_label (__('Incident type'), '','',true);
@@ -694,13 +690,6 @@ else {
 	$table->data[1][1] = print_label (__('Resolution'), '','',true, render_resolution($resolution));
 	$table->data[1][1] .= print_input_hidden ('incident_resolution', $resolution, true);
 }
-
-/*
-if (!$has_im){
-	$table->data[1][2] = print_label (__('Status'), '','',true, render_status($estado));
-	$table->data[1][2] .= print_input_hidden ('incident_status', $estado, true);
-}
-*/
 
 $table->data[1][2] = combo_incident_status ($estado, $disabled, 0, true);
 
@@ -734,21 +723,12 @@ if ($has_im) {
 	$params_assigned['help_message'] = __("User assigned here is user that will be responsible to manage incident. If you are opening an incident and want to be resolved by someone different than yourself, please assign to other user");
 	$params_assigned['return'] = true;
 	$params_assigned['return_help'] = true;
-	
 	$table->data[2][1] = user_print_autocomplete_input($params_assigned);
 } else {
-	// Enterprise only
-	if (($create_incident) AND ($config["enteprise"] == 1)){
-		$assigned_user_for_this_incident = get_default_user_for_incident ($usuario);
-		$table->data[2][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Owner'));
-		$table->data[2][1] .= print_label (__('Owner'), '', '', true,
-		dame_nombre_real ($assigned_user_for_this_incident));	
-		
-	} else {
-		$table->data[2][1] = print_input_hidden ('id_user', $usuario, true, __('Owner'));
-		$table->data[2][1] .= print_label (__('Owner'), '', '', true,
-		dame_nombre_real ($usuario));
-	}
+	$assigned_user_for_this_incident = get_db_value("id_user_default", "tgrupo", "id_grupo", $id_grupo_incident);
+	$table->data[2][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Owner'));
+	$table->data[2][1] .= print_label (__('Owner'), 'id_user', '', true,
+	'<div id="plain-id_user">'.dame_nombre_real ($assigned_user_for_this_incident).'</div>');
 }
 
 // closed by
@@ -788,16 +768,19 @@ $table_advanced->colspan[1][1] = 2;
 
 
 // Table for advanced controls
-$table_advanced->data[0][0] = print_label (__('Editor'), '', '', true, $editor);
-
-if (($has_im) && ($create_incident)){
-    $table_advanced->data[0][1] =  print_label (__('Creator group'), '', '', true, ""); 
-	$table_advanced->data[0][1] .= combo_groups_visible_for_me ($config['id_user'], "id_group_creator", false, "IW", true, __("Creator group"), false, false);
+if ($editor) {
+	$table_advanced->data[0][0] = print_label (__('Editor'), '', '', true, $editor);
 } else {
-	//Only show if there is information to show ;)
-	if ($id_group_creator) {
-		$table_advanced->data[0][1] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_group_creator));
-	}
+	$table_advanced->data[0][0] = "&nbsp;";
+}
+
+if ($has_im && $create_incident){
+    $groups = get_user_groups ($config['id_user'], "IW");
+	$table_advanced->data[0][1] = print_select ($groups, "id_group_creator", $id_grupo_incident, '', '', 0, true, false, false, __('Creator group'));
+} elseif ($create_incident) {
+	$table_advanced->data[0][1] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_grupo_incident));
+} elseif ($id_group_creator) {
+	$table_advanced->data[0][1] = print_label (__('Creator group'), '', '', true, dame_nombre_grupo ($id_group_creator));
 }
 
 if ($has_im){
@@ -808,8 +791,8 @@ if ($has_im){
                 false, '', '', true, __('Notify changes by email'));
 
 } else {
-	$table_advanced->data[1][0] = print_input_hidden ('email_notify', 1, true);
 	$table_advanced->data[0][2] = print_input_hidden ('sla_disabled', 0, true);
+	$table_advanced->data[1][0] = print_input_hidden ('email_notify', 1, true);
 }
 
 $parent_name = $id_parent ? (__('Incident').' #'.$id_parent) : __('None');
@@ -825,18 +808,14 @@ if ($id_parent)
 	$table_advanced->data[3][0] .= '&nbsp;<a target="_blank" href="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id='.$id_parent.'"><img src="images/go.png" /></a>';
 
 // Task
-if ($has_im) { 
-        $table_advanced->data[3][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"));
-} else {
-	$table_advanced->data[3][1] = print_label (__("Task"), "label-id", 'text', true);
-	$table_advanced->data[3][1] .= "<i>".get_db_value ('name', 'ttask', 'id', $id_task)."</i>";
-}
-
+$table_advanced->data[3][1] = combo_task_user_participant ($config["id_user"], 0, $id_task, true, __("Task"));
 
 if ($id_task > 0){
-	$id_project = get_db_value ("id_project", "ttask", "id", $id_task);
-	$table_advanced->data[3][1] .= "&nbsp;<a href='index.php?sec=projects&sec2=operation/projects/task_detail&id_project=$id_project&id_task=$id_task&operation=view'>";
-	$table_advanced->data[3][1] .= "<img src='images/bricks.png'></a>";
+	$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a id='task_link' title='".__('Open this task')."' target='_blank'
+							href='index.php?sec=projects&sec2=operation/projects/task_detail&operation=view&id_task=$id_task'>";
+	$table_advanced->data[3][1] .= "<img src='images/task.png'></a>";
+} else {
+	$table_advanced->data[3][1] .= "&nbsp;&nbsp;<a id='task_link' title='".__('Open this task')."' target='_blank' href='javascript:;'></a>";
 }
 
 $table_advanced->data[1][1] = print_input_text ('email_copy', $email_copy,"",70,500, true, __("Additional email addresses"));
@@ -955,7 +934,18 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Contacts")."' id='cont
 <script  type="text/javascript">
 
 $(document).ready (function () {
-
+	
+	// Link to the task
+	$("#id_task").change(function() {
+		if ($("#id_task").val() > 0) {
+			$("#task_link").html("<a id='task_link' title='<?php echo __('Open this task') ?>' target='_blank' "
+				+ "href='index.php?sec=projects&sec2=operation/projects/task_detail&operation=view&id_task="
+				+ $("#id_task").val() + "'><img src='images/task.png'></a>");
+		} else {
+			$("#task_link").html("");
+		}
+	});
+	
 	//Verify incident limit on view display and on group change
 	var id_incident = <?php echo $id?>;
 	var id_user = $("#text-id_user").val();
@@ -993,6 +983,8 @@ $(document).ready (function () {
 		}
 		
 		$("#text-id_user").val(group_info.id_user_default);
+		$("#plain-id_user").html(group_info.id_user_default);
+		$("#hidden-id_user").val(group_info.id_user_default);
 		
 	});
 	

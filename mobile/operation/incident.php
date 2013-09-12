@@ -481,6 +481,7 @@ class Incident {
 			$ui->contentBeginCollapsible(__('Details'));
 				$ui->contentCollapsibleAddItem($detail_grid);
 			$detail = $ui->getEndCollapsible("", "b", "c", false);
+			$detail = "<div style='padding-left: 2px; padding-right: 2px;'>$detail</div>";
 			
 			// DESCRIPTION
 			if ($incident['descripcion'] != "") {
