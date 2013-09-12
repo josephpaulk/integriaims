@@ -576,12 +576,19 @@ function run_mail_queue () {
 		
 		// Use local mailer if host not provided - Attach not supported !!
 
+        //Headers must be comma separated
+        if (isset($email["extra_headers"])) {
+        	$extra_headers = explode(",", $email["extra_headers"]);
+        }		
+
 		if ($config["smtp_host"] == ""){
 
 			// Use internal mail() function
                         $headers   = array();
                         $headers[] = "MIME-Version: 1.0";
                         $headers[] = "Content-type: text/plain; charset=utf-8";
+
+                        $headers = array_merge($headers, $extra_headers);
 
 			if ($email["from"] == "")
                                 $from = $config["mail_from"];
@@ -644,6 +651,13 @@ function run_mail_queue () {
 				return;
 
 			$message->setContentType("text/plain");
+
+			$headers = $message->getHeaders();
+
+			foreach ($extra_headers as $eh) {
+				$aux_header = explode(":", $eh);
+				$headers->addTextHeader($aux_header[0], $aux_header[1]);
+			}
 			
 			//Check if the email was sent at least once
 			if ($mailer->send($message) >= 1)

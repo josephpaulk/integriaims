@@ -46,7 +46,7 @@ if ($send) {
 		
 		$subject_mail = "[Lead#$id] " . $subject;
 
-		integria_sendmail ($to, $subject_mail, $mail, false, "", $from, true, $cc);
+		integria_sendmail ($to, $subject_mail, $mail, false, "", $from, true, $cc, "X-Integria: no_process");
 
 		if ($cco != "")
 			integria_sendmail ($cco, $subject_mail, $mail, false, "", $from, true);

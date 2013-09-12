@@ -1,3 +1,13 @@
+2013-09-12  Dario Rodriguez <dario@artica.es>
+
+	* include/integria_cron.php,
+	include/functions.php,
+	operation/leads/lead_mail.php,
+	integria_db.sql,
+	extras/migrate.sql: Added new custom headers to email to 
+	avoid double processing of emails with CC to collecting 
+	inbox.
+
 2013-09-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* mobile/operation/incident.php: Added the incident title
