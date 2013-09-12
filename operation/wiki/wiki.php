@@ -97,6 +97,18 @@ function show_syntax() {
 		word-wrap: break-word;
 		outline: 0.4em solid #EEEEEE !important;
 	}
+	ul {
+		list-style: disc outside none;
+	}
+	ul ul, ol ul {
+		list-style-type: circle;
+	}
+	ul ul ul, ol ul ul {
+		list-style-type: square;
+	}
+	ol {
+		list-style: decimal outside none;
+	}
 	</style>
 	<h1>Headings</h1>
 	Example:

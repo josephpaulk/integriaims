@@ -21,6 +21,22 @@ h1,h2,h3,h4,h5,h6 {
 	border-bottom: 1px solid #ddd;
 }
 
+ul {
+	list-style: disc outside none;
+}
+
+ul ul, ol ul {
+	list-style-type: circle;
+}
+
+ul ul ul, ol ul ul {
+	list-style-type: square;
+}
+
+ol {
+	list-style: decimal outside none;
+}
+
 /*
 h2 span.par-edit,h3 span.par-edit,h4 span.par-edit,h5 span.par-edit,h6 span.par-edit{display:none}
 */

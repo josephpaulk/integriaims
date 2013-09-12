@@ -1,3 +1,11 @@
+2013-09-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/styles/integria.css: Recovered an old rule.
+	
+	* include/styles/wiki.css,
+	  operation/wiki/wiki.php: Added some default styles
+	  for the ul and ol elements.
+	
 2013-09-12  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_crm.php
