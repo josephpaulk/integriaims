@@ -1,9 +1,35 @@
+2013-09-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* godmode/grupos/configurar_grupo.php,
+	  godmode/setup/setup_pandora.php: Added validation to
+	  avoid nonexistent users.
+	
+	* include/ajax/remote_validations.php: Added code to check
+	if an user exist and if the actual user can see it.
+	
+	* include/js/jquery.validation.functions.js: Added the
+	function "validate_user" to validate if an user exist
+	and if the actual user can see it.
+
 2013-09-12  Dario Rodriguez <dario@artica.es>
 
 	* operation/incidents/incident_workunits.php: Fixed a problem
 	with incident stats with adding a workunit that changes the user
 	assigned.
 
+2013-09-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* godmode/grupos/configurar_grupo.php,
+	  godmode/setup/setup_pandora.php: Added validation to
+	  avoid nonexistent users.
+	
+	* include/ajax/remote_validations.php: Added code to check
+	if an user exist and if the actual user can see it.
+	
+	* include/js/jquery.validation.functions.js: Added the
+	function "validate_user" to validate if an user exist
+	and if the actual user can see it.
+	
 2013-09-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* mobile/operation/incident.php: Visual changes.

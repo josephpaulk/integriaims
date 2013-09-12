@@ -44,6 +44,7 @@ $search_existing_product_type = (bool) get_parameter ('search_existing_product_t
 $search_existing_download = (bool) get_parameter ('search_existing_download');
 $search_existing_file_category = (bool) get_parameter ('search_existing_file_category');
 $search_existing_user_id = (bool) get_parameter ('search_existing_user_id');
+$search_non_existing_user_id = (bool) get_parameter ('search_non_existing_user_id');
 $search_existing_user_name = (bool) get_parameter ('search_existing_user_name');
 $search_existing_user_num = (bool) get_parameter ('search_existing_user_num');
 $search_existing_user_email = (bool) get_parameter ('search_existing_user_email');
@@ -741,6 +742,26 @@ if ($search_existing_project) {
 	}
 	// Does not exist
 	echo json_encode(true);
+	return;
+	
+} elseif ($search_non_existing_user_id) {
+	require_once ('include/functions_db.php');
+	$user_id = get_parameter ('user_id', '');
+	
+	if ($user_id == '') {
+		echo json_encode(true);
+		return;
+	}
+	
+	$users = get_user_visible_users ($config['id_user'], "IR", false);
+	foreach ($users as $user) {
+		if(preg_match('/^'.$user_id.'$/i', $user['id_usuario']) || preg_match('/^'.$user_id.'$/i', $user['nombre_real'])|| preg_match('/^'.$user_id.'$/i', $user['num_employee'])) {
+			echo json_encode(true);
+			return;
+		}
+	}
+	// Does not exist
+	echo json_encode(false);
 	return;
 	
 } elseif ($search_existing_user_name) {

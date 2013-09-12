@@ -116,13 +116,14 @@ echo '</form>';
 ?>
 
 <script type="text/javascript" src="include/js/integria_inventory.js"></script>
+<script type="text/javascript" src="include/js/jquery.validation.functions.js"></script>
 <script type="text/javascript">
 $(document).ready (function () {
 	$("textarea").TextAreaResizer ();
 
-        var idUser = "<?php echo $config['id_user'] ?>";
-
-        bindAutocomplete ("#text-inventory_default_owner", idUser);
-
+	var idUser = "<?php echo $config['id_user'] ?>";
+	bindAutocomplete ("#text-inventory_default_owner", idUser);
 });
+// id_user
+validate_user ("#inventory_status_form", "#text-inventory_default_owner", "<?php echo __('Invalid user')?>");
 </script>

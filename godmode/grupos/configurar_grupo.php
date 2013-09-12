@@ -261,5 +261,6 @@ messages = {
 	remote: "<?php echo __('This group already exists')?>"
 };
 add_validate_form_element_rules('#text-name', rules, messages);
-
+// id_user
+validate_user ("#form-configurar_grupo", "#text-id_user", "<?php echo __('Invalid user')?>");
 </script>

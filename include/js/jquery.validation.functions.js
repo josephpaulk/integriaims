@@ -82,3 +82,23 @@ function remove_validate_form_element_rules(element, rules) {
 	
 }
 
+function validate_user (form, input, message) {
+	var rules;
+	var messages;
+	rules = {
+		remote: {
+			url: "ajax.php",
+			type: "POST",
+			data: {
+				page: "include/ajax/remote_validations",
+				search_non_existing_user_id: 1,
+				user_id: function() { return $(input).val() }
+			}
+		}
+	};
+	messages = {
+		remote: message
+	};
+	validate_form(form);
+	add_validate_form_element_rules(input, rules, messages);
+}
