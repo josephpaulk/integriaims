@@ -623,8 +623,8 @@ class Incident {
 				$ui->contentCollapsibleAddItem($dates_grid);
 			$dates = $ui->getEndCollapsible("", "b", "e");
 			
-			
-			$html = $detail;
+			$html = "<h1 class='title'>".$incident['titulo']."</h1>";
+			$html .= $detail;
 			$ui->contentBeginGrid();
 				$ui->contentGridAddCell($description);
 				$ui->contentGridAddCell($custom_fields);
