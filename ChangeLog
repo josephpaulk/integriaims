@@ -1,5 +1,9 @@
 2013-09-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* mobile/operation/incident.php: Visual changes.
+	
+2013-09-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* include/styles/integria.css: Recovered an old rule.
 	
 	* include/styles/wiki.css,

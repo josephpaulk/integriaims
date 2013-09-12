@@ -544,10 +544,10 @@ class Incident {
 									</div>";
 					$ui->contentGridAddCell($closer_cell);
 				}
-			$people_grid = $ui->getContentEndGrid("e");
+			$people_grid = $ui->getContentEndGrid();
 			$ui->contentBeginCollapsible(__('People'));
 				$ui->contentCollapsibleAddItem($people_grid);
-			$people = $ui->getEndCollapsible("", "b", "e");
+			$people = $ui->getEndCollapsible("", "b", "c");
 			
 			// DATES
 			$ui->contentBeginGrid();
@@ -619,10 +619,10 @@ class Incident {
 					$closed_cell .= "</table>";
 					$ui->contentGridAddCell($closed_cell);
 				}
-			$dates_grid = $ui->getContentEndGrid("e");
+			$dates_grid = $ui->getContentEndGrid();
 			$ui->contentBeginCollapsible(__('Dates'));
 				$ui->contentCollapsibleAddItem($dates_grid);
-			$dates = $ui->getEndCollapsible("", "b", "e");
+			$dates = $ui->getEndCollapsible("", "b", "c");
 			
 			$html = "<h1 class='title'>".$incident['titulo']."</h1>";
 			$html .= $detail;
