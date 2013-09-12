@@ -424,38 +424,216 @@ class Incident {
 		
 		$incident = get_db_row ("tincidencia", "id_incidencia", $this->id_incident);
 		if (! $incident) {
-			$ui->contentAddHtml("<h2 class=\"error\">".__('Incident not found')."</h2>");
+			$html = "<h2 class=\"error\">".__('Incident not found')."</h2>";
 		} else {
-			if ( include_once ($system->getConfig('homedir')."/include/functions_incidents.php") ) {
-				$resolution = incidents_get_incident_resolution_text($incident['id_incidencia']);
-				$priority = incidents_get_incident_priority_text($incident['id_incidencia']);
-				//$priority_image = print_priority_flag_image ($incident['prioridad'], true);
-				$group = incidents_get_incident_group_text($incident['id_incidencia']);
-				$status = incidents_get_incident_status_text($incident['id_incidencia']);
-				$type = incidents_get_incident_type_text($incident['id_incidencia']);
-				$description = $incident['descripcion'];
+			include_once ($system->getConfig('homedir')."/include/functions_incidents.php");
+			
+			// DETAILS
+			$resolution = incidents_get_incident_resolution_text($incident['id_incidencia']);
+			$priority = incidents_get_incident_priority_text($incident['id_incidencia']);
+			$priority_image = print_priority_flag_image ($incident['prioridad'], true, "../");
+			$group = incidents_get_incident_group_text($incident['id_incidencia']);
+			$status = incidents_get_incident_status_text($incident['id_incidencia']);
+			$type = incidents_get_incident_type_text($incident['id_incidencia']);
+			
+			// Get the status icon
+			if ($incident['estado'] < 3) {
+				$status_icon = 'status_new';
+			} else if ($incident['estado'] < 7) {
+				$status_icon = 'status_pending';
 			} else {
-				$resolution = $incident['resolution'];
-				$priority = $incident['prioridad'];
-				$group = $incident['id_grupo'];
-				$status = $incident['estado'];
-				$type = $incident['id_incident_type'];
-				$description = $incident['descripcion'];
+				$status_icon = 'status_closed';
 			}
-			$html = "<h3>".__('Status')."</h3>";
-			$html .= "<p>".$status."</p>";
-			$html .= "<h3>".__('Group')."</h3>";
-			$html .= "<p>".$group."</p>";
-			$html .= "<h3>".__('Priority')."</h3>";
-			$html .= "<p>".$priority."</p>";
-			$html .= "<h3>".__('Resolution')."</h3>";
-			$html .= "<p>".$resolution."</p>";
-			$html .= "<h3>".__('Type')."</h3>";
-			$html .= "<p>".$type."</p>";
-			if ($description != "") { 
-				$html .= "<h3>".__('Description')."</h3>";
-				$html .= "<p>".$description."</p>";
+			
+			$ui->contentBeginGrid();
+				$status_cell = "<div class='detail-element'>
+								".__('Status')."<br>
+								<img src='../images/$status_icon.png'><br>
+								<strong>$status</strong>
+							</div>";
+				$ui->contentGridAddCell($status_cell);
+				$group_cell = "<div class='detail-element'>
+								".__('Group')."<br>
+								<img src='../images/group.png'><br>
+								<strong>$group</strong>
+							</div>";
+				$ui->contentGridAddCell($group_cell);
+				$priority_cell = "<div class='detail-element'>
+								".__('Priority')."<br>
+								$priority_image<br>
+								<strong>$priority</strong>
+							</div>";
+				$ui->contentGridAddCell($priority_cell);
+				$resolution_cell = "<div class='detail-element'>
+								".__('Resolution')."<br>
+								<img src='../images/resolution.png'><br>
+								<strong>$resolution</strong>
+							</div>";
+				$ui->contentGridAddCell($resolution_cell);
+				$type_cell = "<div class='detail-element'>
+								".__('Type')."<br>
+								<img src='../images/incident.png'><br>
+								<strong>$type</strong>
+							</div>";
+				$ui->contentGridAddCell($type_cell);
+			$detail_grid = $ui->getContentEndGrid();
+			
+			$ui->contentBeginCollapsible(__('Details'));
+				$ui->contentCollapsibleAddItem($detail_grid);
+			$detail = $ui->getEndCollapsible("", "b", "c", false);
+			
+			// DESCRIPTION
+			if ($incident['descripcion'] != "") {
+				$ui->contentBeginCollapsible(__('Description'));
+					$ui->contentCollapsibleAddItem($incident['descripcion']);
+				$description = $ui->getEndCollapsible("", "b", "c");
+				
 			}
+			
+			// CUSTOM FIELDS
+			if ($incident['id_incident_type']) {
+				$type_name = get_db_value("name", "tincident_type", "id", $incident['id_incident_type']);
+				$fields = incidents_get_all_type_field ($incident['id_incident_type'], $incident['id_incidencia']);
+				
+				$custom_fields = "";
+				$ui->contentBeginCollapsible($type_name);
+				foreach ($fields as $field) {
+					$custom_fields = $field["label"].":&nbsp;<strong>".$field["data"]."</strong>";
+					$ui->contentCollapsibleAddItem($custom_fields);
+				}
+				$custom_fields = $ui->getEndCollapsible("", "b", "c");
+			}
+			
+			// PEOPLE
+			$ui->contentBeginGrid();
+				$name_creator = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident['id_creator']));
+				$avatar_creator = get_db_value_filter ("avatar", "tusuario", array("id_usuario" => $incident['id_creator']));
+				$creator_cell = "<div style='text-align: center;'>
+										<div class='bubble_little'>
+											<img src='../images/avatars/$avatar_creator.png'>
+										</div>
+									<strong style='color: #FF9933'>".__('Created by').":</strong><br>
+									$name_creator
+								</div>";
+				$ui->contentGridAddCell($creator_cell);
+				$name_owner = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident['id_usuario']));
+				$avatar_owner = get_db_value_filter ("avatar", "tusuario", array("id_usuario" => $incident['id_usuario']));
+				$owner_cell = "<div style='text-align: center;'>
+										<div class='bubble_little'>
+											<img src='../images/avatars/$avatar_owner.png'>
+										</div>
+									<strong style='color: #FF9933'>".__('Owned by').":</strong><br>
+									$name_owner
+								</div>";
+				$ui->contentGridAddCell($owner_cell);
+				if ($incident['estado'] == STATUS_CLOSED) {
+					if (empty($incident["closed_by"])) {
+						$name_closer = __('Unknown');
+						$avatar_closer = '../avatar_unknown';
+					} else {
+						$name_closer = get_db_value_filter ("nombre_real", "tusuario", array("id_usuario" => $incident['closed_by']));
+						$avatar_closer = get_db_value_filter ("avatar", "tusuario", array("id_usuario" => $incident['closed_by']));
+					}
+					$closer_cell = "<div style='text-align: center;'>
+										<div class='bubble_little'>
+											<img src='../images/avatars/$avatar_closer.png'>
+										</div>
+										<strong style='color: #FF9933'>".__('Closed by').":</strong><br>
+										$name_creator
+									</div>";
+					$ui->contentGridAddCell($closer_cell);
+				}
+			$people_grid = $ui->getContentEndGrid("e");
+			$ui->contentBeginCollapsible(__('People'));
+				$ui->contentCollapsibleAddItem($people_grid);
+			$people = $ui->getEndCollapsible("", "b", "e");
+			
+			// DATES
+			$ui->contentBeginGrid();
+				$created_timestamp = strtotime($incident['inicio']);
+				$created_cell .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
+					$created_cell .= "<tr>";
+						$created_cell .= "<td>".__('Created on').":</td>";
+					$created_cell .= "</tr>";
+					$created_cell .= "<tr>";
+						$created_cell .= "<td id='created_on' class='mini_calendar'>";
+							$created_cell .= "<table>";
+								$created_cell .= "<tr>";
+									$created_cell .= "<th>" . strtoupper(date('M\' y', $created_timestamp)) . "</th>";
+								$created_cell .= "</tr>";
+								$created_cell .= "<tr>";
+									$created_cell .= "<td class='day'>" . date('d', $created_timestamp) . "</td>";
+								$created_cell .= "</tr>";
+								$created_cell .= "<tr>";
+									$created_cell .= "<td class='time'><img src='../images/cal_clock_grey.png'>&nbsp;" . date('H:i:s', $created_timestamp) . "</td>";
+								$created_cell .= "</tr>";
+							$created_cell .= "</table>";
+						$created_cell .= "</td>";
+					$created_cell .= "</tr>";
+				$created_cell .= "</table>";
+				$ui->contentGridAddCell($created_cell);
+				$updated_timestamp = strtotime($incident['actualizacion']);
+				$updated_cell .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
+					$updated_cell .= "<tr>";
+						$updated_cell .= "<td>".__('Updated on').":</td>";
+					$updated_cell .= "</tr>";
+					$updated_cell .= "<tr>";
+						$updated_cell .= "<td id='updated_on' class='mini_calendar'>";
+							$updated_cell .= "<table>";
+								$updated_cell .= "<tr>";
+									$updated_cell .= "<th>" . strtoupper(date('M\' y', $updated_timestamp)) . "</th>";
+								$updated_cell .= "</tr>";
+								$updated_cell .= "<tr>";
+									$updated_cell .= "<td class='day'>" . date('d', $updated_timestamp) . "</td>";
+								$updated_cell .= "</tr>";
+								$updated_cell .= "<tr>";
+									$updated_cell .= "<td class='time'><img src='../images/cal_clock_orange.png'>&nbsp;" . date('H:i:s', $updated_timestamp) . "</td>";
+								$updated_cell .= "</tr>";
+							$updated_cell .= "</table>";
+						$updated_cell .= "</td>";
+					$updated_cell .= "</tr>";
+				$updated_cell .= "</table>";
+				$ui->contentGridAddCell($updated_cell);
+				if ($incident["estado"] == STATUS_CLOSED) {
+					$closed_timestamp = strtotime($incident['cierre']);
+					$closed_cell .= "<table width='97%' style='text-align: center;' id='incidents_dates_square'>";
+						$closed_cell .= "<tr>";
+							$closed_cell .= "<td>".__('Closed on').":</td>";
+						$closed_cell .= "</tr>";
+						$closed_cell .= "<tr>";
+							$closed_cell .= "<td id='closed_on' class='mini_calendar'>";
+								$closed_cell .= "<table>";
+									$closed_cell .= "<tr>";
+										$closed_cell .= "<th>" . strtoupper(date('M\' y', $closed_timestamp)) . "</th>";
+									$closed_cell .= "</tr>";
+									$closed_cell .= "<tr>";
+										$closed_cell .= "<td class='day'>" . date('d', $closed_timestamp) . "</td>";
+									$closed_cell .= "</tr>";
+									$closed_cell .= "<tr>";
+										$closed_cell .= "<td class='time'><img src='../images/cal_clock_darkgrey.png'>&nbsp;" . date('H:i:s', $closed_timestamp) . "</td>";
+									$closed_cell .= "</tr>";
+								$closed_cell .= "</table>";
+							$closed_cell .= "</td>";
+						$closed_cell .= "</tr>";
+					$closed_cell .= "</table>";
+					$ui->contentGridAddCell($closed_cell);
+				}
+			$dates_grid = $ui->getContentEndGrid("e");
+			$ui->contentBeginCollapsible(__('Dates'));
+				$ui->contentCollapsibleAddItem($dates_grid);
+			$dates = $ui->getEndCollapsible("", "b", "e");
+			
+			
+			$html = $detail;
+			$ui->contentBeginGrid();
+				$ui->contentGridAddCell($description);
+				$ui->contentGridAddCell($custom_fields);
+			$html .= $ui->getContentEndGrid();
+			$ui->contentBeginGrid();
+				$ui->contentGridAddCell($people);
+				$ui->contentGridAddCell($dates);
+			$html .= $ui->getContentEndGrid();
+			//$html = $detail.$description.$custom_fields.$people.$dates;
 		}
 		
 		return $html;

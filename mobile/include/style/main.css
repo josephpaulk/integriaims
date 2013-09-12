@@ -105,9 +105,104 @@ ul.ui-listview li.ui-btn div.ui-btn-inner div.ui-btn-text {
 	padding-bottom: 10px;
 }
 
+.bubble_little img {
+	width: 48px;
+	margin-top: 11px;
+}
+
+.bubble_little {
+	width: 74px;
+	max-width: 74px;
+	height: 74px;
+	max-height: 74px;
+	background-image: url('../../../images/bubble_little.png');
+	text-align: center;
+	margin: 8px auto 0px;
+}
+
+.detail-element {
+	text-align: center;
+	padding: 5px;
+	border: 1px solid #BDBDBD;
+}
+
+.collapsible-non-list {
+	font-weight: normal !important;
+	text-shadow: none !important;
+}
+
 #loading_rows {
 	padding-top: 40px;
 	padding-bottom: 10px;
+}
+
+/* Incident Dates info calendars */
+
+#incidents_dates_square td {
+	font-weight: bold;
+}
+
+td.mini_calendar table {
+	text-align: center;
+	border-spacing: 0px;
+	margin: 8px auto;
+	width: 95px;
+	height: 85px;
+}
+
+td.mini_calendar table th {
+	color: #fff;
+	font-weight: bold;
+	moz-border-top-right-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+	-moz-border-top-left-radius: 5px;
+	-webkit-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+	font-size: 1.3em;
+	height: 22px;
+}
+
+td#created_on table th {
+	background-color:#999999; /* grey */
+}
+
+td#created_on table td {
+	color:#999999; /* grey */
+}
+
+td#updated_on table th {
+	background-color:#FF9933; /* orange */
+}
+
+td#updated_on table td {
+	color:#FF9933; /* orange */
+}
+
+td#closed_on table th {
+	background-color:#505050; /* darkgrey */
+}
+
+td#closed_on table td {
+	color:#505050; /* darkgrey */
+}
+
+td.mini_calendar table td {
+	background: #fff;
+}
+
+td.mini_calendar table td.day {
+	font-size: 3.2em;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+td.mini_calendar table td.not_yet {
+	font-size: 1.8em;
+}
+
+td.mini_calendar table td.time {
+	font-weight: normal !important;
 }
 
 /*INIT---------Fix the tons of air between the rows in small table----*/

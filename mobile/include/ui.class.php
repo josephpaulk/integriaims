@@ -307,7 +307,7 @@ class Ui {
 		$this->grid['cells'][$k] = $html;
 	}
 	
-	public function contentEndGrid() {
+	public function getContentEndGrid($theme = "d") {
 		$this->endGrid = true;
 		
 		//TODO Make others modes, only responsible mode
@@ -329,7 +329,8 @@ class Ui {
 					break;
 			}
 			next($convert_cells_jquery_grid);
-			$html .= "<div id='" . $key . "' class='ui-body ui-body-d'>\n";
+			$html .= "<div id='" . $key . "' style='padding-left: 2px; padding-right: 2px;'>\n";
+			//$html .= "<div id='" . $key . "' class='ui-body ui-body-$theme'>\n";
 			$html .= $cell;
 			$html .= "</div>\n";
 			
@@ -338,8 +339,13 @@ class Ui {
 		
 		$html .= "</div>\n";
 		
-		$this->contentAddHtml($html);
 		$this->grid = array();
+		
+		return $html;
+	}
+	
+	public function addContentEndGrid() {
+		$this->contentAddHtml($this->getContentEndGrid());
 	}
 	
 	public function contentBeginCollapsible($title = "&nbsp;") {
@@ -353,40 +359,19 @@ class Ui {
 		$this->collapsible['items'][] = $html;
 	}
 	
-	public function contentEndCollapsible($class = "", $data_theme = "a") {
+	public function getEndCollapsible($class = "", $data_theme = "a", $data_content_theme = "c", $collapsed = true) {
 		$this->endCollapsible = true;
 		
 		$html = "<div class='$class' data-role='collapsible' " .
+			" data-collapsed='$collapsed' " .
 			" data-collapsed-icon='arrow-d' " .
 			" data-expanded-icon='arrow-u' data-mini='true' ".
-			" data-theme='$data_theme' data-content-theme='c'>\n";
+			" data-theme='$data_theme' data-content-theme='$data_content_theme'>\n";
 		$html .= "<h4>" . $this->collapsible['title'] . "</h4>\n";
 		
-		$html .= "<ul data-role='listview' data-theme='c'>\n";
+		$html .= "<ul data-role='listview' data-theme='$data_content_theme'>\n";
 		foreach ($this->collapsible['items'] as $item) {
-			$html .= "<li>" . $item . "</li>";
-		}
-		$html .= "</ul>\n";
-		
-		$html .= "</div>\n";
-		
-		
-		$this->contentAddHtml($html);
-		$this->collapsible = array();
-	}
-	
-	public function getEndCollapsible($class = "", $data_theme = "a") {
-		$this->endCollapsible = true;
-		
-		$html = "<div class='$class' data-role='collapsible' " .
-			" data-collapsed-icon='arrow-d' " .
-			" data-expanded-icon='arrow-u' data-mini='true' ".
-			" data-theme='$data_theme' data-content-theme='c'>\n";
-		$html .= "<h4>" . $this->collapsible['title'] . "</h4>\n";
-		
-		$html .= "<ul data-role='listview' data-theme='c'>\n";
-		foreach ($this->collapsible['items'] as $item) {
-			$html .= "<li>" . $item . "</li>";
+			$html .= "<li class='collapsible-non-list'>" . $item . "</li>";
 		}
 		$html .= "</ul>\n";
 		
@@ -395,6 +380,10 @@ class Ui {
 		$this->collapsible = array();
 		
 		return $html;
+	}
+	
+	public function contentEndCollapsible($class = "", $data_theme = "a") {
+		$this->contentAddHtml($this->getEndCollapsible($class, $data_theme));
 	}
 	
 	public function beginForm($options = null) {

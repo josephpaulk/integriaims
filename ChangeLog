@@ -1,3 +1,16 @@
+2013-09-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* mobile/include/ui.class.php: Improved the function
+	"getContentEndGrid" with the posibility of select the
+	theme and changed its return type. Added the function
+	"addContentEndGrid". Improved the function"getEndCollapsible"
+	with theme and collapsible state selection.
+	
+	* mobile/include/style/main.css: Added some styles.
+	
+	* mobile/operation/incident.php: Huge improvement in the
+	in cident detail section.
+	
 2013-09-11  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_incidents.php: Fixed the url to access
