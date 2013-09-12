@@ -16,7 +16,9 @@
 
 global $config;
 
-function crm_get_companies_list ($sql_search, $date = false, $sql_order_by = "") {
+function crm_get_companies_list ($sql_search, $date = false, $sql_order_by = "", $only_name = false) {
+	
+	global $config;
 	
 	if ($date) {
 		$sql = "SELECT tcompany.* FROM tcompany, tcompany_activity
@@ -31,16 +33,22 @@ function crm_get_companies_list ($sql_search, $date = false, $sql_order_by = "")
 				$sql_order_by
 				";
 	}
-		
-	$companies = get_db_all_rows_sql($sql);
 	
+	$companies = get_db_all_rows_sql($sql);
+
 	if ($companies === false) {
 		$companies = array();
 	}
 
-	return $companies;
-}
+	$is_admin = dame_admin($config['id_user']);
+	
+	if ($is_admin) {
+		return $companies;
+	}
 
+return $companies;
+
+}
 function crm_get_company_name ($id_company) {
 	
 	$name = get_db_value('name', 'tcompany', 'id', $id_company);
@@ -734,4 +742,50 @@ function get_contract_status_name ($status) {
 	return $status;
 }
 
+/*
+ * This function get access permissions to CRM 
+*/
+function check_crm_acl ($type, $flag, $user=false, $id=false) {
+	global $config;
+	
+	if (!$user) {
+		$user = $config['id_user'];
+	}
+	
+	switch ($type) {
+		case 'company':
+			if ($id) {
+				$permission = enterprise_hook('crm_check_acl_hierarchy', array($user, $id));	
+				if ($permission === ENTERPRISE_NOT_HOOK) {
+					$permission = true;
+				}
+			} else {
+				$permission = enterprise_hook('crm_check_user_profile', array($user, $flag));
+				if ($permission === ENTERPRISE_NOT_HOOK) {
+					$permission = true;
+				}
+			}
+		break;
+		
+		case 'invoice':
+			if ($id) {
+				$permission = enterprise_hook('crm_check_acl_invoice', array($user, $id));
+				if ($permission === ENTERPRISE_NOT_HOOK) {
+					$permission = true;
+				}
+			}
+		break;
+		
+		case 'other':
+			if ($id) {
+				$permission = enterprise_hook('crm_check_acl_other', array($user, $id));
+				if ($permission === ENTERPRISE_NOT_HOOK) {
+					$permission = true;
+				}
+			}
+		break;
+	}
+	
+	return $permission;
+}
 ?>

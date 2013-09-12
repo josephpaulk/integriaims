@@ -1,3 +1,9 @@
+2013-09-12  Vanessa Gil <vanessa.gil@artica.es>
+
+	* include/functions_crm.php
+	  operation/companies/company_detail.php: Fixed bug listing
+	companies in CRM.
+
 2013-09-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_html.php: Changed a jQuery selector
