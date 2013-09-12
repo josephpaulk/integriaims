@@ -201,7 +201,7 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 	
 	$filesize = filesize($file_temp); // In bytes
 	$filename = basename($file_temp);
-
+	
 	$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
 			filename, description, size)
 			VALUES (%d, "%s", "%s", "%s", %d)',
@@ -226,7 +226,7 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 	$file_target = $config["homedir"]."attachment/".$id_attachment."_".$filename;
 
 	$copy = copy ($file_temp, $file_target);
-
+	
 	if (! $copy) {
 		$result_msg = ui_print_error_message(__('File cannot be saved. Please contact Integria administrator about this error'), '', true);
 		$sql = sprintf ('DELETE FROM tattachment

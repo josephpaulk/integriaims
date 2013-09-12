@@ -430,6 +430,15 @@ if ($action == "insert") {
 					process_sql_insert('tincident_field_data', $values_insert);
 				}
 			}
+			
+			// ATTACH A FILE IF IS PROVIDED
+			$upfile = get_parameter('upfile');
+			if($upfile != '') {
+				$file_description = get_parameter('file_description',__('No description available'));
+				$file_temp = sys_get_temp_dir()."/$upfile";
+				include_once('include/functions_workunits.php');
+				$file_result = attach_incident_file ($id, $file_temp, $file_description);
+			}
 	
 		} else {
 			$result_msg  = '<h3 class="error">'.__('Could not be created').'</h3>';
@@ -873,7 +882,6 @@ $table->data[9][0] = print_textarea ('description', 9, 80, $description, $disabl
 		true, __('Description'));
 
 // This is never shown in create form
-
 if (!$create_incident){
 
 	//Show or hidden epilog depending on incident status
@@ -886,12 +894,22 @@ if (!$create_incident){
 	$table->data[10][0] .= print_textarea ('epilog', 5, 80, $epilog, $disabled_str,	true, __('Resolution epilog'));
 	
 	$table->data[10][0] .= "</div>";
+} else {
+	// Optional file update
+	$table_file->width = '98%';
+	$table_file->class = 'search-table';
+	$table_file->data = array ();
+	$table_file->data[0][0] = '___FILE___';
+	$table_file->data[1][0] = print_textarea ('file_description', 2, 10, '', '', true, __('File description'));
+	$table->colspan[10][0] = 4;
+	$table->data[10][0] = print_container('file_upload_container', __('File upload'), print_table($table_file, true), 'closed', true, false);
 }
 
 if ($create_incident) {
 	$button = print_input_hidden ('action', 'insert', true);
 	if (give_acl ($config["id_user"], 0, "IW")) {
-		$button .= print_submit_button (__('Create'), 'accion', false, 'class="sub create"', true);
+		//$button .= print_submit_button (__('Create'), 'accion', false, 'class="sub create"', true);
+		$button .= print_button (__('Create'), 'accion', false, '', 'class="sub create"', true);
 	}
 } else {
 	$button = print_input_hidden ('id', $id, true);
@@ -905,9 +923,14 @@ $table->colspan['button'][0] = 4;
 $table->data['button'][0] = $button;
 
 if ($has_permission){
-	echo '<form id="incident_status_form" method="post">';
-	print_table ($table);
-	echo "</form>";
+	if ($create_incident) {
+		$action = 'index.php?sec=incidents&sec2=operation/incidents/incident_detail';
+		echo print_input_file_progress($action, print_table ($table, true), 'id="incident_status_form"', 'sub create', 'button-accion', true, '___FILE___');
+	} else {
+		echo '<form id="incident_status_form" method="post">';
+		print_table ($table);
+		echo '</form>';
+	}
 } else {
 	print_table ($table);
 }
@@ -1179,6 +1202,7 @@ function removeInventory() {
 // Form validation
 trim_element_on_submit('#text-titulo');
 trim_element_on_submit('#text-email_copy');
+/*
 validate_form("#incident_status_form");
 var rules, messages;
 // Rules: #text-titulo
@@ -1200,6 +1224,7 @@ messages = {
 	remote: "<?php echo __('This incident already exists')?>"
 };
 add_validate_form_element_rules('#text-titulo', rules, messages);
+*/
 
 </script>
 

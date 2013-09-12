@@ -1,5 +1,13 @@
 2013-09-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
+	* include/functions_html.php: Changed a jQuery selector
+	to avoid errors.
+	
+	* operation/incidents/incident_detail.php: Now is possible
+	to upload a file when creating a new incident.
+	
+2013-09-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
 	* mobile/include/style/main.css: Deleted some styles.
 	
 	* mobile/operation/incident.php: Visual changes.
