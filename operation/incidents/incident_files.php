@@ -93,6 +93,9 @@ if ((give_acl ($config['id_user'], $id_grupo, "IR") ||
 			$id_workunit = process_sql ($sql, "insert_id");
 			$sql = sprintf ('INSERT INTO tworkunit_incident (id_incident, id_workunit) VALUES (%d, %d)', $id, $id_workunit);
 			process_sql ($sql);
+
+			$sql = sprintf ('UPDATE tincidencia SET actualizacion = "%s" WHERE id_incidencia = %d', $timestamp, $id);
+			process_sql ($sql);
 		}
 	}  else {
 		//~ $error = $_FILES['userfile']['error'];

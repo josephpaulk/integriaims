@@ -1,5 +1,10 @@
 2013-09-12  Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents/incident_files.php: Fixed and error
+	that didn't update the incident "actualizacion" field.
+
+2013-09-12  Dario Rodriguez <dario@artica.es>
+
 	* include/integria_cron.php,
 	include/functions.php,
 	operation/leads/lead_mail.php,
