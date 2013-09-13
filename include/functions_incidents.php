@@ -974,12 +974,16 @@ function update_incident_inventories ($id_incident, $inventories) {
 		$inventories = array (0);
 	}
 	
-	$sql = sprintf ('DELETE FROM tincident_inventory
-		WHERE id_incident = %d',
-		$id_incident);
-	
-	process_sql ($sql);
-	
+	$sql = sprintf("SELECT id_inventory FROM tincident_inventory WHERE id_incident=%d", $id_incident);
+
+	$current_objects = process_sql($sql);
+
+	$obj_array = array();
+
+	foreach ($current_objects as $co) {
+		$obj_array[] = $co["id_inventory"];
+	}
+
 	foreach ($inventories as $id_inventory) {
 		
 		//id_inventory should be not equal to zero
@@ -987,16 +991,37 @@ function update_incident_inventories ($id_incident, $inventories) {
 			continue;
 		}
 
-		$sql = sprintf ('INSERT INTO tincident_inventory
-			VALUES (%d, %d)',
-			$id_incident, $id_inventory);
-		$tmp = process_sql ($sql);
+		//If the element is in array delete from aux array becasue
+		//this aux array 
+		$elem_key = array_search($id_inventory, $obj_array);
 		
+		if ($elem_key !== false) {
+			
+			unset($obj_array[$elem_key]);
+		} else {
+
+			$sql = sprintf ('INSERT INTO tincident_inventory
+				VALUES (%d, %d)',
+				$id_incident, $id_inventory);
+			$tmp = process_sql ($sql);
+		
+			if ($tmp !== false)
+				incident_tracking ($id_incident, INCIDENT_INVENTORY_ADDED,
+					$id_inventory);
+		}
+	}
+	
+	foreach ($obj_array as $ob) {
+
+		$sql = sprintf ('DELETE FROM tincident_inventory
+		WHERE id_inventory = %s',
+		$ob);
+	
+		$tmp = process_sql ($sql);
+
 		if ($tmp !== false)
-			incident_tracking ($id_incident, INCIDENT_INVENTORY_ADDED,
-				$id_inventory);
-				
-			inventory_tracking ($id_inventory, INVENTORY_INCIDENT_ADDED, $id_incident);
+			incident_tracking ($id_incident, INCIDENT_INVENTORY_REMOVED, $ob);
+
 	}
 }
 

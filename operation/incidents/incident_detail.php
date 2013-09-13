@@ -435,8 +435,7 @@ if ($action == "insert") {
 			$upfile = get_parameter('upfile');
 			if($upfile != '') {
 				$file_description = get_parameter('file_description',__('No description available'));
-				$filename = safe_output ($upfile);
-				$file_temp = sys_get_temp_dir()."/$filename";
+				$file_temp = sys_get_temp_dir()."/$upfile";
 				include_once('include/functions_workunits.php');
 				$file_result = attach_incident_file ($id, $file_temp, $file_description);
 			}

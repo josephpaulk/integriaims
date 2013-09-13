@@ -1,3 +1,11 @@
+2013-09-13  Dario Rodriguez <dario@artica.es>
+
+	* include/functions_incidents.php,
+	include/constants.php,
+	include/functions_db.php,
+	operation/incidents/incident_detail.php: Added support
+	to detect when an inventory object is removed.
+
 2013-09-13  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* operation/companies/company_detail.php: Fixed some

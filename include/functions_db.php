@@ -917,12 +917,16 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 		$description .= ' -> '.get_db_value ('fullname', 'tcompany_contact', 'id', $aditional_data);
 		break;
 	case INCIDENT_INVENTORY_ADDED:
-		$description = __('Added inventory object: ');
+		$description = __('Added inventory object ');
 		$description .= " -> ".get_db_value ('name', 'tinventory', 'id', $aditional_data);
 		break;
 	case INCIDENT_GROUP_CHANGED:
 		$description = __("Group has changed");
 		$description .= " -> ".get_db_value ("nombre", "tgrupo", "id_grupo", $aditional_data);
+		break;
+	case INCIDENT_INVENTORY_REMOVED:
+		$description = __('Removed inventory object ');
+		$description .= " -> ".get_db_value ('name', 'tinventory', 'id', $aditional_data);
 		break;
 	default:
 		$description = __('Unknown update');

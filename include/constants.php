@@ -38,6 +38,7 @@ define ('INCIDENT_USER_CHANGED', 17);
 define ('INCIDENT_DELETED', 18);
 define ('INCIDENT_CONTACT_ADDED', 19);
 define ('INCIDENT_GROUP_CHANGED', 28);
+define ('INCIDENT_INVENTORY_REMOVED', 20);
 
 /*Task tracking constants*/
 define ('TASK_CREATED', 11);
