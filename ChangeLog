@@ -1,3 +1,12 @@
+2013-09-13  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_incidents.php: Improved the function
+	"attach_incident_file" for deal correctly with filenames
+	with blank spaces.
+	
+	* operation/incidents/incident_detail.php: Fixed the file
+	upload.
+
 2013-09-13  Dario Rodriguez <dario@artica.es>
 
 	* include/js/integria_incident_search.js,

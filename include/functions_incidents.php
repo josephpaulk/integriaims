@@ -201,12 +201,13 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 	
 	$filesize = filesize($file_temp); // In bytes
 	$filename = basename($file_temp);
+	$filename = str_replace (" ", "_", $filename); // Avoid blank spaces
 	
 	$sql = sprintf ('INSERT INTO tattachment (id_incidencia, id_usuario,
 			filename, description, size)
 			VALUES (%d, "%s", "%s", "%s", %d)',
-			$id, $config['id_user'], clean_output($filename), $file_description, $filesize);
-
+			$id, $config['id_user'], $filename, $file_description, $filesize);
+	
 	$id_attachment = process_sql ($sql, 'insert_id');
 	
 	incident_tracking ($id, INCIDENT_FILE_ADDED);
@@ -214,17 +215,17 @@ function attach_incident_file ($id, $file_temp, $file_description) {
 	$result_msg = ui_print_success_message(__('File added'), '', true);
 	
 	// Email notify to all people involved in this incident
-/*
+	/*
 	if ($email_notify == 1) {
 		if ($config["email_on_incident_update"] == 1){
 			mail_incident ($id, $config['id_user'], 0, 0, 2);
 		}
 	}
-*/
+	*/
 	
 	// Copy file to directory and change name
 	$file_target = $config["homedir"]."attachment/".$id_attachment."_".$filename;
-
+	
 	$copy = copy ($file_temp, $file_target);
 	
 	if (! $copy) {
