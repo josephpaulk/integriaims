@@ -784,8 +784,24 @@ function check_crm_acl ($type, $flag, $user=false, $id=false) {
 				}
 			}
 		break;
+		
+		case 'contact':
+				$permission = enterprise_hook('crm_check_user_profile', array($user, $flag));
+				if ($permission === ENTERPRISE_NOT_HOOK) {
+					$permission = true;
+				}
+		break;
 	}
 	
 	return $permission;
+}
+
+function crm_check_if_exists ($id, $companies) {
+	foreach ($companies as $company) {
+		if ($company == $id) {
+			return true;
+		}
+	}
+	return false;
 }
 ?>
