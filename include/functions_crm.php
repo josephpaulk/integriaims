@@ -752,6 +752,8 @@ function check_crm_acl ($type, $flag, $user=false, $id=false) {
 		$user = $config['id_user'];
 	}
 	
+	$permission = false;
+	
 	switch ($type) {
 		case 'company':
 			if ($id) {

@@ -68,7 +68,7 @@ if ($get_company_search) {
 	$table->data['button'][0] = "<input type='button' class='sub search' onClick='javascript: loadParamsCompany(\".$search_text.\");' value='".__("Search")."''>";
 	$table->colspan['button'][0] = 4;
 	
-	echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
+	echo '<form id="form-company_search" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 		print_table ($table);
 	echo '</form>';
 	

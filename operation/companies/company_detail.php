@@ -564,16 +564,13 @@ elseif ($op == "activities") {
 
 elseif ($op == "contracts") {
 	
-	if (check_crm_acl ('other', 'cr', $config['id_user'], $id)) {
+	if (! check_crm_acl ('other', 'cr', $config['id_user'], $id)) {
 		include ("general/noaccess.php");
 		exit;
 	}
 	
 	$contracts = get_contracts(false, "id_company = $id ORDER BY name");
-	
-	if (check_crm_acl ('other', 'cr', $config['id_user'], $id)) {
-		$contracts = crm_get_user_contracts($config['id_user'], $contracts);
-	}
+	$contracts = crm_get_user_contracts($config['id_user'], $contracts);
 	
 	$contracts = print_array_pagination ($contracts, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=contracts");
 
@@ -632,7 +629,7 @@ elseif ($op == "contracts") {
 
 elseif ($op == "contacts") {
 	
-	if (check_crm_acl ('other', 'cr', $config['id_user'], $id)) {
+	if (! check_crm_acl ('other', 'cr', $config['id_user'], $id)) {
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -688,7 +685,7 @@ elseif ($op == "contacts") {
 
 elseif ($op == "invoices") {
 
-	if (check_crm_acl ('invoice', 'cr', $config['id_user'], $id)) {
+	if (! check_crm_acl ('invoice', 'cr', $config['id_user'], $id)) {
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -855,7 +852,7 @@ elseif ($op == "invoices") {
 
 elseif ($op == "leads") {
 	
-	if (check_crm_acl ('other', 'cr', $config['id_user'], $id)) {
+	if (! check_crm_acl ('other', 'cr', $config['id_user'], $id)) {
 		include ("general/noaccess.php");
 		exit;
 	}

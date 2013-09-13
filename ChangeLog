@@ -1,3 +1,15 @@
+2013-09-13  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* operation/companies/company_detail.php: Fixed some
+	acl problems.
+	
+	* godmode/grupos/configurar_grupo.php: Added a script.
+	
+	* include/functions_crm.php: Added a default value for
+	a variable.
+	
+	* include/ajax/crm.php: Added an id to a form.
+	
 2013-09-13  Dario Rodriguez <dario@artica.es>
 
 	*  include/functions_incidents.php: Fixed an
