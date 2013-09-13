@@ -981,6 +981,12 @@ function update_incident_inventories ($id_incident, $inventories) {
 	process_sql ($sql);
 	
 	foreach ($inventories as $id_inventory) {
+		
+		//id_inventory should be not equal to zero
+		if ($id_inventory == 0) {
+			continue;
+		}
+
 		$sql = sprintf ('INSERT INTO tincident_inventory
 			VALUES (%d, %d)',
 			$id_incident, $id_inventory);

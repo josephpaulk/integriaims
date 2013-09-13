@@ -918,7 +918,7 @@ function incident_tracking ($id_incident, $state, $aditional_data = 0) {
 		break;
 	case INCIDENT_INVENTORY_ADDED:
 		$description = __('Added inventory object: ');
-		$description .= get_db_value ('name', 'tinventory', 'id', $aditional_data);
+		$description .= " -> ".get_db_value ('name', 'tinventory', 'id', $aditional_data);
 		break;
 	case INCIDENT_GROUP_CHANGED:
 		$description = __("Group has changed");

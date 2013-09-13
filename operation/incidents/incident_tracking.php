@@ -223,21 +223,23 @@ echo "</table>";
 $trackings = get_db_all_rows_field_filter ('tincident_track', 'id_incident', $id, 'timestamp DESC');
 
 if ($trackings !== false) {
+	unset($table);
 	$table->width = "99%";
 	$table->class = 'listing';
 	$table->data = array ();
 	$table->head = array ();
-	$table->head[1] = __('Description');
-	$table->head[2] = __('User');
-	$table->head[3] = __('Date');
-	
+	$table->head[0] = __('Description');
+	$table->head[1] = __('User');
+	$table->head[2] = __('Date');
+	$table->style[2] = "width: 150px";
+
 	foreach ($trackings as $tracking) {
 		$data = array ();
 		
 		$data[0] = $tracking['description'];
 		$data[1] = dame_nombre_real ($tracking['id_user']);
 		$data[2] = $tracking['timestamp'];
-		
+	
 		array_push ($table->data, $data);
 	}
 	echo "<center>";

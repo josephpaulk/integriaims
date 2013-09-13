@@ -1,3 +1,11 @@
+2013-09-13  Dario Rodriguez <dario@artica.es>
+
+	*  include/functions_incidents.php: Fixed an
+ 	include/functions_db.php: Fixed an error
+ 	tracking inventory updates. 
+ 	* operation/incidents/incident_tracking.php: Fixed a problem
+ 	in layout of tracking table.
+
 2013-09-13  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_crm.php: Fixed bug in company search.
