@@ -583,7 +583,7 @@ if ($id) {
 		echo "</li>";
 		
 	}
-	
+
 	//KB only appears for closed status
 	if (give_acl ($config['id_user'], $id_grupo, "KW") && ($incident["estado"] == 7)) {
 		echo "<li>";
@@ -594,6 +594,10 @@ if ($id) {
 		echo '</form>';
 		echo "</li>";
 	}	
+
+	echo '<li>';
+	echo "<a id='go_search' href='#';>".print_image("images/zoom.png", true, array("title" => __("Back to search")))."</a>";
+	echo '</li>';		
 	
 	echo "</ul>";
 	echo "</div>";	
@@ -945,6 +949,31 @@ echo "<div class= 'dialog ui-dialog-content' title='".__("Inventory objects")."'
 echo "<div class= 'dialog ui-dialog-content' title='".__("Incidents")."' id='parent_search_window'></div>";
 
 echo "<div class= 'dialog ui-dialog-content' title='".__("Contacts")."' id='contact_search_window'></div>";
+
+/* Add a form to carry filter between incident detail and search views */
+$filter = array ();
+$filter['string'] = (string) get_parameter ('search_string');
+$filter['priority'] = (int) get_parameter ('search_priority', -1);
+$filter['id_group'] = (int) get_parameter ('search_id_group', 1);
+$filter['status'] = (int) get_parameter ('search_status', -10);
+$filter['id_product'] = (int) get_parameter ('search_id_product');
+$filter['id_company'] = (int) get_parameter ('search_id_company');
+$filter['id_inventory'] = (int) get_parameter ('id_inventory');
+$filter['serial_number'] = (string) get_parameter ('search_serial_number');
+$filter['sla_fired'] = (bool) get_parameter ('search_sla_fired');
+$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
+$filter['id_user'] = (string) get_parameter ('search_id_user', '');
+$filter['id_incident_type'] = (int) get_parameter ('search_id_incident_type');
+$filter['id_creator'] = (string) get_parameter ('search_creator', '');
+$filter['editor'] = (string) get_parameter ('search_editor', '');
+$filter['closed_by'] = (string) get_parameter ('search_closed_by', '');
+
+echo '<form id="go_search_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_search&option=search" style="clear: both">';
+foreach ($filter as $key => $value) {
+	print_input_hidden ("search_".$key, $value);
+}
+echo "</form>";
+
 ?>
 
 <script type="text/javascript" src="include/js/jquery.metadata.js"></script>
@@ -1162,6 +1191,10 @@ $(document).ready (function () {
 		});
 	});
 		
+	$("#go_search").click(function (event) {
+		event.preventDefault();
+		$("#go_search_form").submit();
+	});
 });
 
 

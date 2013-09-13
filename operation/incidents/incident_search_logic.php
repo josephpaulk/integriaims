@@ -186,6 +186,12 @@ foreach ($filter as $key => $value) {
 }
 echo "</form>";
 
+echo '<form id="detail_form" method="post" action="index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail" style="clear: both">';
+foreach ($filter as $key => $value) {
+	print_input_hidden ("search_".$key, $value);
+}
+echo "</form>";
+
 echo "<span style='font-size: 10px'>";
 echo sprintf(__('Results found:  %d'), $total_incidents_in_search);
 echo " - ";

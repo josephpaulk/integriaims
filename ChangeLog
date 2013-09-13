@@ -1,3 +1,12 @@
+2013-09-13  Dario Rodriguez <dario@artica.es>
+
+	* include/js/integria_incident_search.js,
+	include/functions_incidents.php,
+	operation/incidents/incident_search_logic.php,
+	operation/incidents/incident_detail.php,
+	operation/incidents/incident_dashboard_detail.php: Added new button
+	to recover search on incident_detail and incident_dashboard_detail.
+
 2013-09-12  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* godmode/grupos/configurar_grupo.php,

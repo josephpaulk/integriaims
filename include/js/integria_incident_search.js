@@ -845,3 +845,20 @@ function loadContactEmail(email) {
 
 	$("#contact_search_window").dialog("close");
 }
+
+function incident_details (id) {
+
+	//Add ID 
+	$("#detail_form").append("<input type='hidden' name='id' value='"+id+"'>");
+
+	//Send form
+	$("#detail_form").submit();
+}
+
+function edit_incident(id) {
+	//Add ID 
+	$("#edit_form").append("<input type='hidden' name='id' value='"+id+"'>");
+
+	//Send form
+	$("#edit_form").submit();	
+}
