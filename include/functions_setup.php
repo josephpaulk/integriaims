@@ -52,6 +52,10 @@ function print_setup_tabs($selected_tab, $is_enterprise) {
 			$maintenance_class = 'button-bar-selected';
 			$title = strtoupper(__('Old data maintenance'));
 			break;
+		case 'project':
+			$project_class = 'button-bar-selected';
+			$title = strtoupper(__('Project management'));
+			break;
 	}
 	echo "<h1>".$title;
 	echo "<div id='button-bar-title'>";
@@ -71,6 +75,7 @@ function print_setup_tabs($selected_tab, $is_enterprise) {
 	echo '<li class="' . $auth_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_auth"><span><img src="images/key.png"  title="'.__('Authentication').'"></span></a></li>';
 	echo '<li class="' . $crm_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_crm"><span><img src="images/invoice_dark.png"  title="'.__('CRM setup').'"></span></a></li>';
 	echo '<li class="' . $maintenance_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_maintenance"><span><img src="images/trash.png"  title="'.__('Old data maintenance').'"></span></a></li>';
+	echo '<li class="' . $project_class . '"><a href="index.php?sec=godmode&sec2=godmode/setup/setup_project"><span><img src="images/star_dark.png"  title="'.__('Project management').'"></span></a></li>';
 	echo '</ul>';
 
 	echo '</div>';

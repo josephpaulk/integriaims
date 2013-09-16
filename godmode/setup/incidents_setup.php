@@ -66,10 +66,27 @@ if ($update) {
 	$resolutions = (array) get_parameter ('resolutions');
 	$config["working_weekends"] = (int) get_parameter("working_weekends", 0);
 	$config["mask_emails"] = (int) get_parameter("mask_emails", 0);
+	$config["iwu_defaultime"] = get_parameter ("iwu_defaultime", 0.25);
+	$config["email_on_incident_update"] = get_parameter ("email_on_incident_update", 0);
+	$config["limit_size"] = (int) get_parameter ("limit_size");
+	$config["show_owner_incident"] = (int) get_parameter ("show_owner_incident", 0);
+	$config["show_creator_incident"] = (int) get_parameter ("show_creator_incident", 0);
+	$config["auto_incident_close"] = get_parameter ("auto_incident_close", "72");
+	$config["iw_creator_enabled"] = get_parameter ("iw_creator_enabled", 0);
+	$config["incident_creation_wu"] = get_parameter ("incident_creation_wu", 0);
+	$config["want_chat"] = get_parameter ("want_chat", 0); 
 	
 	update_config_token ("working_weekends", $config["working_weekends"]);	
-	
-	update_config_token ("mask_emails", $config["mask_emails"]);	
+	update_config_token ("mask_emails", $config["mask_emails"]);
+	update_config_token ("iwu_defaultime", $config["iwu_defaultime"]);
+	update_config_token ("email_on_incident_update", $config["email_on_incident_update"]);
+	update_config_token ("limit_size", $config["limit_size"]);
+	update_config_token ("show_owner_incident", $config["show_owner_incident"]);
+	update_config_token ("show_creator_incident", $config["show_creator_incident"]);
+	update_config_token ("auto_incident_close", $config["auto_incident_close"]);
+	update_config_token ("iw_creator_enabled", $config["iw_creator_enabled"]);
+	update_config_token ("incident_creation_wu", $config["incident_creation_wu"]);
+	update_config_token ("want_chat", $config["want_chat"]);
 	
 	foreach ($status as $id => $name) {
 		$sql = sprintf ('UPDATE tincident_status SET name = "%s"
@@ -176,13 +193,48 @@ if ($table_anonym === ENTERPRISE_NOT_HOOK) {
 	$table_anonym = "";
 }
 
+$incident_reporter_options[0] = __('Disabled');
+$incident_reporter_options[1] = __('Enabled');
+
+$newsletter_options[0] = __('Disabled');
+$newsletter_options[1] = __('Enabled');
+
 echo "<table width='99%' class='search-table-button
 '>";
+echo "<tr>";
+echo "<td style='vertical-align: top;'>".print_input_text ("iwu_defaultime", $config["iwu_defaultime"], '',
+	5, 5, true, __('Incident WU Default time'))."</td>";
+
+echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options, "email_on_incident_update", $config["email_on_incident_update"], '','','',true, 0, true, __('Send email on every incident update')).
+	print_help_tip (__("Enabling this, you will get emails on file attachs also. If left disabled, you only get notifications only in major events on incidents"), true)."</td>";
+
+echo "<td style='vertical-align: top;'>".print_input_text ("limit_size", $config["limit_size"], '',5, 5, true, __('Max. Incidents by search')).
+	integria_help ("limit_size", true)."</td>";
+echo "</tr>";
+
+echo "<tr>";
+echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options, "show_owner_incident", $config["show_owner_incident"], '','','',true,0,true, __('Show incident owner'))."</td>";	
+
+echo "<td style='vertical-align: top;'>".print_select ($incident_reporter_options, "show_creator_incident", $config["show_creator_incident"], '','','',true,0,true, __('Show incident creator'))."</td>";
+
+echo "<td style='vertical-align: top;'>".print_input_text ("auto_incident_close", $config["auto_incident_close"], '', 10, 10, true, __('Auto incident close')).
+	integria_help ("auto_incident_close", true)."</td>";
+echo "</tr>";
+
+echo "<tr>";
+echo "<td style='vertical-align: top;'>".print_checkbox ("iw_creator_enabled", 1, $config["iw_creator_enabled"], true, __('Enable IW to change creator'))."</td>";
+
+echo "<td style='vertical-align: top;'>".print_select ($newsletter_options, "incident_creation_wu", $config["incident_creation_wu"], '','','',true, 0, true, __('Editor adds a WU on incident creation'))."</td>";
+
+echo "<td style='vertical-align: top;'>".print_select ($newsletter_options, "want_chat", $config["want_chat"], '','','',true, 0, true, __('Enable incident chat window'))."</td>";
+echo "</tr>";
+
 echo "<tr>";
 echo "<td><h3>".__('Status')."</h3></td>";
 echo "<td><h3>".__('Resolutions')."</h3></td>";
 echo "<td><h3>".__("Non-working days")."</h3></td>";
 echo "</tr>";
+
 echo "<tr>";
 echo "<td style='vertical-align: top; width: 280px'>".$table_status."</td>";
 echo "<td style='vertical-align: top; width: 280px'>".$table_resolutions."</td>";
