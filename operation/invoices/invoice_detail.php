@@ -24,19 +24,14 @@ $id = (int) get_parameter ('id');
 $id_invoice = get_parameter ("id_invoice", "");
 $offset = get_parameter ('offset', 0);
 
-enterprise_include('include/functions_crm.php');
 include_once('include/functions_crm.php');
 
-$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
+$read = check_crm_acl ('company', 'cr');
+$manage = check_crm_acl ('company', 'cm');
 
-if ($manage !== ENTERPRISE_NOT_HOOK) {
-	$enterprise = true;
-	if (!$manage) {
-		include ("general/noaccess.php");
-		exit;
-	}
-} else {
-	$enterprise = false;
+if (!$read) {
+	include ("general/noaccess.php");
+	exit;
 }
 
 echo "<h1>".__('Invoice listing')."</h1>";
@@ -49,15 +44,10 @@ if ($id_invoice || $id) {
 		$id_company = get_db_value('id_company', 'tinvoice', 'id_company', $id);
 	}
 
-	$permission = enterprise_hook ('crm_check_acl_invoice', array ($config['id_user'], $id_company));
-
-	if ($permission !== ENTERPRISE_NOT_HOOK) {
-		if (!$permission) {
-			include ("general/noaccess.php");
-			exit;
-		}
-	} else {
-		$permission = true;
+	$permission = check_crm_acl ('invoice', '', $config['id_user'], $id_company);
+	if (!$permission || !$manage) {
+		include ("general/noaccess.php");
+		exit;
 	}
 }
 
@@ -70,11 +60,6 @@ $lock_invoice = get_parameter ('lock_invoice', "");
 // Delete INVOICE
 // ----------------
 if ($delete_invoice == 1 && $id_invoice){
-	
-	if (!$permission && $enterprise) {
-		include ("general/noaccess.php");
-		exit;
-	}
 	
 	$invoice = get_db_row_sql ("SELECT * FROM tinvoice WHERE id = $id_invoice");
 	
@@ -134,7 +119,7 @@ echo "<table width=99% class='search-table'>";
 echo "<tr>";
 
 echo "<td colspan=2>";
-echo print_input_text ("search_text", $search_text, "", 38, 100, true, __('Search'));
+echo print_input_text ("search_text", $search_text, "", 30, 100, true, __('Search'));
 echo "</td>";
 
 echo "<td>";
@@ -160,10 +145,6 @@ echo "</table>";
 echo '</form>';
 
 $invoices = crm_get_all_invoices ($where_clause);
-
-if ($enterprise) {
-	$invoices = crm_get_user_invoices($config['id_user'], $invoices);
-}
 
 $invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/invoices/invoice_detail&$search_params");
 
@@ -259,6 +240,15 @@ if ($invoices !== false) {
 		array_push ($table->data, $data);
 	}
 	print_table ($table);
+	
+	if ($write || $manage) {
+		echo '<form method="post" action="index.php?sec=customers&sec2=operation/invoices/invoices">';
+		echo '<div class="button" style="width: '.$table->width.'">';
+		print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
+		print_input_hidden ('new_invoice', 1);
+		echo '</div>';
+		echo '</form>';
+	}
 }
 
 ?>

@@ -1,3 +1,27 @@
+2013-09-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions.php: Now is possible to do an
+	include_once instead of an include in the function
+	"enterprise_include".
+	
+	* include/functions_crm.php: Added an enterprise include.
+	Improved the function "crm_get_all_invoices".
+	
+	* operation/side_menu.php: Now the 'company roles' section
+	only appears if the user has the 'CM' profile.
+	
+	* operation/companies/company_detail.php: Some ACL fixes.
+	
+	* operation/invoices/invoice_detail.php: Some ACL fixes.
+	Now is possible to access to the invoice creation from
+	the invoice list.
+	
+	* operation/invoices/invoice_view.php: Bug and ACL fixes.
+	
+	* operation/invoices/invoices.php: ACL improvements. Now
+	is possible to create an invoice from outside the company
+	tabs.
+	
 2013-09-16  Dario Rodriguez <dario@artica.es>
 
 	* include/functions_incidents.php

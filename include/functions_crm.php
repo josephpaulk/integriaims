@@ -16,6 +16,8 @@
 
 global $config;
 
+enterprise_include('include/functions_crm.php', true);
+
 function crm_get_companies_list ($sql_search, $date = false, $sql_order_by = "", $only_name = false) {
 	
 	global $config;
@@ -159,31 +161,38 @@ function crm_get_all_contracts ($where_clause) {
 }
 
 function crm_get_all_invoices ($where_clause) {
+	global $config;
 	
 	$sql = "SELECT * FROM tinvoice WHERE $where_clause ORDER BY invoice_create_date DESC";
-	$invoices_aux =  get_db_all_rows_sql ($sql);
+	$invoices =  get_db_all_rows_sql ($sql);
 	
-	if ($invoices_aux === false) {
-		$invoices_aux = array();
-		$invoices = false;
-	}
-
-	foreach ($invoices_aux as $key=>$invoice) {
-		$invoices[$key]['id'] = $invoice['id'];
-		$invoices[$key]['id_user'] = $invoice['id_user'];
-		$invoices[$key]['id_task'] = $invoice['id_task'];
-		$invoices[$key]['id_company'] = $invoice['id_company'];
-		$invoices[$key]['bill_id'] = $invoice['bill_id'];
-		$invoices[$key]['ammount'] = $invoice['ammount'];
-		$invoices[$key]['tax'] = $invoice['tax'];
-		$invoices[$key]['description'] = $invoice['description'];
-		$invoices[$key]['locked'] = $invoice['locked'];
-		$invoices[$key]['locked_id_user'] = $invoice['locked_id_user'];
-		$invoices[$key]['invoice_create_date'] = $invoice['invoice_create_date'];
-		$invoices[$key]['invoice_payment_date'] = $invoice['invoice_payment_date'];
-		$invoices[$key]['status'] = $invoice['status'];
+	//~ if ($invoices_aux === false) {
+		//~ $invoices_aux = array();
+		//~ $invoices = false;
+	//~ }
+	//~ 
+	//~ foreach ($invoices_aux as $key=>$invoice) {
+		//~ $invoices[$key]['id'] = $invoice['id'];
+		//~ $invoices[$key]['id_user'] = $invoice['id_user'];
+		//~ $invoices[$key]['id_task'] = $invoice['id_task'];
+		//~ $invoices[$key]['id_company'] = $invoice['id_company'];
+		//~ $invoices[$key]['bill_id'] = $invoice['bill_id'];
+		//~ $invoices[$key]['ammount'] = $invoice['ammount'];
+		//~ $invoices[$key]['tax'] = $invoice['tax'];
+		//~ $invoices[$key]['description'] = $invoice['description'];
+		//~ $invoices[$key]['locked'] = $invoice['locked'];
+		//~ $invoices[$key]['locked_id_user'] = $invoice['locked_id_user'];
+		//~ $invoices[$key]['invoice_create_date'] = $invoice['invoice_create_date'];
+		//~ $invoices[$key]['invoice_payment_date'] = $invoice['invoice_payment_date'];
+		//~ $invoices[$key]['status'] = $invoice['status'];
+	//~ 
+	//~ }
 	
+	$user_invoices = enterprise_hook('crm_get_user_invoices', array($config['id_user'], $invoices));
+	if ($user_invoices !== ENTERPRISE_NOT_HOOK) {
+		$invoices = $user_invoices;
 	}
+	
 	return $invoices;
 }
 

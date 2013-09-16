@@ -577,11 +577,13 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 
 
 	// Company roles
-	if (($sec2=="operation/companies/company_role") AND (!isset($_GET["create"])))
-		echo "<li id='sidesel'>";
-	else
-		echo "<li>";
-	echo "<a href='index.php?sec=customers&sec2=operation/companies/company_role'>".__('Company roles')."</a></li>";
+	if (give_acl ($config["id_user"], 0, "CM")) {
+		if (($sec2=="operation/companies/company_role") && (!isset($_GET["create"])))
+			echo "<li id='sidesel'>";
+		else
+			echo "<li>";
+		echo "<a href='index.php?sec=customers&sec2=operation/companies/company_role'>".__('Company roles')."</a></li>";
+	}
 
 	// Invoices
 	if (($sec2=="operation/invoices/invoice_detail"))
@@ -591,7 +593,7 @@ if ($sec == "customers" && give_acl ($config["id_user"], 0, "CR") && $show_custo
 	echo "<a href='index.php?sec=customers&sec2=operation/invoices/invoice_detail'>".__('Invoices')."</a></li>";
 
 	// Contract overview
-	if (($sec2=="operation/contracts/contract_detail") AND (!isset($_GET["create"])))
+	if (($sec2=="operation/contracts/contract_detail") && (!isset($_GET["create"])))
 		echo "<li id='sidesel'>";
 	else
 		echo "<li>";

@@ -16,84 +16,39 @@
 global $config;
 check_login ();
 
-$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
-
-if ($manage !== ENTERPRISE_NOT_HOOK) {
-	$enterprise = true;
-	if (!$manage) {
-		include ("general/noaccess.php");
-		exit;
-	}
-} else {
-	$enterprise = false;
-}
+include_once('include/functions_crm.php');
 
 $id_company = get_parameter ("id", -1);
 $company = get_db_row ('tcompany', 'id', $id_company);
 $id_invoice = get_parameter ("id_invoice", -1);
 $operation_invoices = get_parameter ("operation_invoices");
 
-if ($id_company < 1 && $id_invoice < 1) {
-	include ("general/noaccess.php");
-	exit;
-}
+$read = check_crm_acl ('company', 'cr');
+$write = check_crm_acl ('company', 'cw');
+$manage = check_crm_acl ('company', 'cm');
 
-if ($id_company < 1) {
-	$id_company = get_db_value('id_company', 'tinvoice', 'id', $id_invoice);
-}
-$permission = enterprise_hook ('crm_check_acl_invoice', array ($config['id_user'], $id_company));
-
-if ($permission !== ENTERPRISE_NOT_HOOK) {
-	if (!$permission) {
+if ($id_invoice > 0 || $id_company > 0) {
+	if ($id_company < 1 && $id_invoice > 0) {
+		$id_company = get_db_value ('id_company', 'tinvoice', 'id', $id_invoice);
+	}
+	if ($id_company > 0) {
+		$permission = check_crm_acl ('invoice', '', $config['id_user'], $id_company);
+		if (!$permission && !$manage) {
+			include ("general/noaccess.php");
+			exit;
+		} elseif (!$write && !$manage && $read) {
+			include ("operation/invoices/invoice_view.php");
+			return;
+		}
+	} else {
 		include ("general/noaccess.php");
 		exit;
 	}
-} else {
-	$permission = true;
-}
-
-if ($id_invoice > 0){
-	
-	$invoice = get_db_row ('tinvoice', 'id', $id_invoice);
-
 	
 	if (crm_is_invoice_locked ($invoice["id"])) {
-		require ("operation/invoices/invoice_view.php");
-		exit;
+		include ("operation/invoices/invoice_view.php");
+		return;
 	}
-	
-
-	$bill_id = $invoice["bill_id"];
-	$description = $invoice["description"];
-	$concept[0] = $invoice["concept1"];
-	$concept[1] = $invoice["concept2"];
-	$concept[2] = $invoice["concept3"];
-	$concept[3] = $invoice["concept4"];
-	$concept[4] = $invoice["concept5"];
-	$amount[0] = $invoice["amount1"];
-	$amount[1] = $invoice["amount2"];
-	$amount[2] = $invoice["amount3"];
-	$amount[3] = $invoice["amount4"];
-	$amount[4] = $invoice["amount5"];
-	$id_attachment = $invoice["id_attachment"];
-	$invoice_create_date = $invoice["invoice_create_date"];
-	$invoice_payment_date = $invoice["invoice_payment_date"];
-	$id_company = $invoice["id_company"];
-	$tax = $invoice["tax"];
-	$currency = $invoice["currency"];
-	$invoice_status = $invoice["status"];
-
-} else {
-	$bill_id = "";
-	$description = "";
-	$id_attachment = "";
-	//$invoice_create_date = "2011-01-30";
-	//$invoice_payment_date = "2011-03-30";
-	$invoice_create_date = "";
-	$invoice_payment_date = "";
-	$tax = 0;
-	$currency = "EUR";
-	$invoice_status = "pending";
 }
 
 if ($operation_invoices == "add_invoice"){
@@ -152,15 +107,12 @@ if ($operation_invoices == "add_invoice"){
 	$invoice_status, $concept1, $concept2, $concept3, $concept4, $concept5, $amount1, $amount2,
 	$amount3, $amount4, $amount5);
 	
-	$ret = process_sql ($sql, 'insert_id');
-	if ($ret !== false) {
+	$id_invoice = process_sql ($sql, 'insert_id');
+	if ($id_invoice !== false) {
 		echo '<h3 class="suc">'.__('Successfully created').'</h3>';
 	} else {
 		echo '<h3 class="error">'.__('There was a problem creating the invoice').'</h3>';
 	}
-	
-	//~ $operation_invoices = "";
-	//~ return;
 }
 
 if ($operation_invoices == "update_invoice"){
@@ -251,9 +203,53 @@ if ($operation_invoices == "update_invoice"){
 	} else {
 		echo '<h3 class="error">'.__('There was a problem updating the invoice').'</h3>';
 	}
+}
+
+if ($id_invoice > 0){
 	
-	//~ $operation_invoices = "";
-	//~ return;
+	$invoice = get_db_row ('tinvoice', 'id', $id_invoice);
+	$bill_id = $invoice["bill_id"];
+	$description = $invoice["description"];
+	$concept[0] = $invoice["concept1"];
+	$concept[1] = $invoice["concept2"];
+	$concept[2] = $invoice["concept3"];
+	$concept[3] = $invoice["concept4"];
+	$concept[4] = $invoice["concept5"];
+	$amount[0] = $invoice["amount1"];
+	$amount[1] = $invoice["amount2"];
+	$amount[2] = $invoice["amount3"];
+	$amount[3] = $invoice["amount4"];
+	$amount[4] = $invoice["amount5"];
+	$id_attachment = $invoice["id_attachment"];
+	$invoice_create_date = $invoice["invoice_create_date"];
+	$invoice_payment_date = $invoice["invoice_payment_date"];
+	$id_company = $invoice["id_company"];
+	$tax = $invoice["tax"];
+	$currency = $invoice["currency"];
+	$invoice_status = $invoice["status"];
+
+} else {
+	
+	if ($id_company > 0) {
+		$permission = check_crm_acl ('invoice', '', $config['id_user'], $id_company);
+		if (!$permission) {
+			include ("general/noaccess.php");
+			exit;
+		}
+	}
+	if (!$write && !$manage) {
+		include ("general/noaccess.php");
+		exit;
+	}
+	
+	$bill_id = "";
+	$description = "";
+	$id_attachment = "";
+	$invoice_create_date = "";
+	$invoice_payment_date = "";
+	$tax = 0;
+	$currency = "EUR";
+	$invoice_status = "pending";
 }
 
 echo "<h3>";
@@ -285,11 +281,21 @@ $table->colspan = array ();
 $table->size = array ();
 $table->data = array ();
 
-$company_name = get_db_value ("name", "tcompany", "id", $id_company);
-$table->colspan[0][0] = 2;
-$table->data[0][0] = print_input_text ('company_name', $company_name, '', 100, 100, true, __('Company'), true);
+if ($id_company > 0) {
+	$company_name = get_db_value ("name", "tcompany", "id", $id_company);
+	$table->colspan[0][0] = 2;
+	$table->data[0][0] = print_input_text ('company_name', $company_name, '', 100, 100, true, __('Company'), true);
+	$table->data[0][0] .= print_input_hidden ('id', $id_company);
+} else {
+	$table->colspan[0][0] = 2;
+	if ($manage) {
+		$table->data[0][0] = print_select (get_companies(), 'id', $id_company, '', '', 0, true, 0, true, __('Company'));
+	} else {
+		$sql = "SELECT id, name FROM tcompany WHERE manager='".$config['id_user']."'";
+		$table->data[0][0] = print_select_from_sql ($sql, 'id', $id_company, '', '', 0, true, 0, true, __('Company'));
+	}
+}
 
-//$table->colspan[1][0] = 2;
 $table->data[1][0] = print_input_text ('bill_id', $bill_id, '', 25, 100, true, __('Bill ID'));
 
 $invoice_status_ar = array();
@@ -326,7 +332,7 @@ $table->data[11][0] = print_input_file ('upfile', 20, false, '', true, __('Attac
 
 echo '<form id="form-invoice" method="post" enctype="multipart/form-data"
 action="index.php?sec=customers&sec2=operation/companies/company_detail
-&view_invoice=1&id='.$id_company.'&op=invoices&id_invoice='.$id_invoice.'">';
+&view_invoice=1&op=invoices&id_invoice='.$id_invoice.'">';
 
 print_table ($table);
 echo '<div class="button" style="width:'.$table->width.';">';

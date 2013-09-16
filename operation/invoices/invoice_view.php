@@ -12,14 +12,14 @@ if (!$invoice) {
 }
 
 // ACL
-if (!isset($invoice_permission)) {
+if (!isset($permission)) {
 	enterprise_include('include/functions_crm.php');
-	$invoice_permission = enterprise_hook('crm_check_acl_invoice', array($config['id_user'], $invoice['id_company']));
+	$permission = enterprise_hook('crm_check_acl_invoice', array($config['id_user'], $invoice['id_company']));
 }
-if ($invoice_permission === ENTERPRISE_NOT_HOOK) {
-	$invoice_permission = true;
+if ($permission === ENTERPRISE_NOT_HOOK) {
+	$permission = true;
 }
-if (!$invoice_permission) {
+if (!$permission) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to an invoice view without permission");
 	no_permission();
 } // ACL

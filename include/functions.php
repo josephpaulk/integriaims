@@ -883,7 +883,7 @@ function enterprise_hook ($function_name, $parameters = false) {
 	return ENTERPRISE_NOT_HOOK;
 }
 
-function enterprise_include ($filename) {
+function enterprise_include ($filename, $once = false) {
 	global $config;
 	
 	// Load enterprise extensions
@@ -891,7 +891,11 @@ function enterprise_include ($filename) {
 	if ($filepath === false)
 		return ENTERPRISE_NOT_HOOK;
 	if (file_exists ($filepath)) {
-		include ($filepath);
+		if ($once) {
+			include_once ($filepath);
+		} else {
+			include ($filepath);
+		}
 		return true;
 	}
 	return ENTERPRISE_NOT_HOOK;

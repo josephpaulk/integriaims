@@ -20,7 +20,6 @@ check_login ();
 
 require_once('include/functions_crm.php');
 include_once('include/functions_user.php');
-enterprise_include('include/functions_crm.php');
 
 $id = (int) get_parameter ('id');
 
@@ -72,17 +71,6 @@ if (($create_company) OR ($update_company)) {
 		if (!check_crm_acl ('company', 'cm')) {
 			include ("general/noaccess.php");
 			exit;
-		}
-
-		if ($manage && $enterprise) {
-			$check_acl = crm_check_acl_hierarchy($config['id_user'], $id);
-			
-			if ($check_acl) {
-				$manage_permission = true;
-			} else {
-				include ("general/noaccess.php");
-				exit;
-			}
 		}
 		
 		$sql = "INSERT INTO tcompany (name, address, comments, fiscal_id, id_company_role, website, country, manager, id_parent)
@@ -185,7 +173,6 @@ if ($delete_invoice == 1){
 	// Do another security check, don't rely on information passed from URL
 	
 	if ($invoice["id"] && !crm_is_invoice_locked ($invoice["id"])) {
-	//if (($config["id_user"] = $invoice["id_user"]) OR ($id_task == $invoice["id_task"])){ // TODO: Check this
 		// Todo: Delete file from disk
 		if ($invoice["id_attachment"] != ""){
 			process_sql ("DELETE FROM tattachment WHERE id_attachment = ". $invoice["id_attachment"]);
@@ -677,8 +664,13 @@ elseif ($op == "contacts") {
 // INVOICES LISTING
 
 elseif ($op == "invoices") {
-
-	if (! check_crm_acl ('invoice', 'cr', $config['id_user'], $id)) {
+	
+	$permission = check_crm_acl ('invoice', '', $config['id_user'], $id);
+	$read = check_crm_acl ('company', 'cr');
+	$write = check_crm_acl ('company', 'cw');
+	$manage = check_crm_acl ('company', 'cm');
+	
+	if (!$permission && !$manage) {
 		include ("general/noaccess.php");
 		exit;
 	}
@@ -732,13 +724,9 @@ elseif ($op == "invoices") {
 	// Operation_invoice changes inside the previous include
 
 	if (($operation_invoices == "") AND ($new_invoice == 0) AND ($view_invoice == 0)) {
-	
+		
 		$sql = "SELECT * FROM tinvoice WHERE id_company = $id ORDER BY invoice_create_date";
 		$invoices = get_db_all_rows_sql ($sql);
-		
-		if ($invoice_permission && $enterprise) {
-			$invoices = crm_get_user_invoices($config['id_user'], $invoices);
-		}
 		
 		$invoices = print_array_pagination ($invoices, "index.php?sec=customers&sec2=operation/companies/company_detail&id=$id&op=invoices");
 		
@@ -827,9 +815,7 @@ elseif ($op == "invoices") {
 			}	
 			print_table ($table);
 			
-
-			if ($invoice_permission) {
-		
+			if ($write || $manage) { 
 				echo '<form method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail&id='.$id.'&op=invoices">';
 				echo '<div class="button" style="width: '.$table->width.'">';
 				print_submit_button (__('Create'), 'new_btn', false, 'class="sub next"');
