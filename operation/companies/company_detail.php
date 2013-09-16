@@ -308,9 +308,6 @@ if ($id) {
 // EDIT / CREATE FORM
 
 if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
-
-	$manage = enterprise_hook('crm_check_user_profile', array($config['id_user'], 'cm'));
-	$manage_permission = true;
 	
 	$disabled_write = false;
 	
@@ -320,7 +317,6 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 			exit;
 		}
 	} else { //edit or read
-
 		$permission = check_crm_acl ('company', 'cr', $config['id_user'], $id);
 		if (!$permission) {
 			include ("general/noaccess.php");
@@ -331,8 +327,6 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 			}
 		}
 	}
-	
-	echo '<form id="form-company_detail" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	
 	if($new_company) {
 		echo "<h1>".__('New company')."</h1>";
@@ -385,9 +379,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 
 
 	$table->data[0][1] = print_input_text_extended ('manager', $manager, 'text-user', '', 15, 30, $disabled_write, '',
-	array(), true, '', __('Manager'))
-
-. print_help_tip (__("Type at least two characters to search"), true);
+	array(), true, '', __('Manager')) . print_help_tip (__("Type at least two characters to search"), true);
 
 	// TODO: Replace this for a function to get visible compenies for this user
 	$sql2 = "SELECT id, name FROM tcompany";
@@ -426,6 +418,7 @@ if ((($id > 0) AND ($op=="")) OR ($new_company == 1)) {
 	$table->data[6][0] = $button;
 	$table->colspan[6][0] = 2;
 	
+	echo '<form id="form-company_detail" method="post" action="index.php?sec=customers&sec2=operation/companies/company_detail">';
 	print_table ($table);
 	echo '</form>';	
 }

@@ -1,3 +1,10 @@
+2013-09-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_crm.php: Little changes in the function
+	"check_crm_acl".
+	
+	* operation/companies/company_detail.php: Deleted some code.
+
 2013-09-16  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/languages/ar.mo
@@ -55,6 +62,13 @@
 	  include/languages/zh_TW.po
 	  include/languages/zh_TW.mo: Updated translations.
 
+2013-09-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_crm.php: Little changes in the function
+	"check_crm_acl".
+	
+	* operation/companies/company_detail.php: Deleted some code.
+	
 2013-09-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_crm.php: Improved the function

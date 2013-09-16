@@ -763,42 +763,31 @@ function check_crm_acl ($type, $flag, $user=false, $id=false) {
 	switch ($type) {
 		case 'company':
 			if ($id) {
-				$permission = enterprise_hook('crm_check_acl_hierarchy', array($user, $id));	
-				if ($permission === ENTERPRISE_NOT_HOOK) {
-					$permission = true;
-				}
+				$permission = enterprise_hook('crm_check_acl_hierarchy', array($user, $id));
 			} else {
 				$permission = enterprise_hook('crm_check_user_profile', array($user, $flag));
-				if ($permission === ENTERPRISE_NOT_HOOK) {
-					$permission = true;
-				}
 			}
-		break;
+			break;
 		
 		case 'invoice':
 			if ($id) {
 				$permission = enterprise_hook('crm_check_acl_invoice', array($user, $id));
-				if ($permission === ENTERPRISE_NOT_HOOK) {
-					$permission = true;
-				}
 			}
-		break;
+			break;
 		
 		case 'other':
 			if ($id) {
 				$permission = enterprise_hook('crm_check_acl_other', array($user, $id));
-				if ($permission === ENTERPRISE_NOT_HOOK) {
-					$permission = true;
-				}
 			}
-		break;
+			break;
 		
 		case 'contact':
 				$permission = enterprise_hook('crm_check_user_profile', array($user, $flag));
-				if ($permission === ENTERPRISE_NOT_HOOK) {
-					$permission = true;
-				}
-		break;
+			break;
+	}
+	
+	if ($permission === ENTERPRISE_NOT_HOOK) {
+		$permission = true;
 	}
 	
 	return $permission;
