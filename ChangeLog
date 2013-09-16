@@ -1,5 +1,16 @@
 2013-09-16  Dario Rodriguez <dario@artica.es>
 
+	* include/functions_incidents.php
+	include/mailtemplates/incident_close.tpl
+	include/mailtemplates/incident_update.tpl
+	include/mailtemplates/incident_create.tpl: Fixed small
+	style bugs on templates and added two new macros for
+	closed by and epilog fields.
+	* operation/incidents/incident_detail.php: Fixed a bug
+	which breaks incident limit control.
+
+2013-09-16  Dario Rodriguez <dario@artica.es>
+
 	*  operation/incidents/incident_type_field.php,
  	operation/incidents/type_detail.php,
  	operation/incidents/incident_detail.php,

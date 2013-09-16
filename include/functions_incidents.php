@@ -1093,6 +1093,8 @@ function get_incident_lastworkunit ($id_incident) {
 
 function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public = 1){
 	global $config;
+
+	clean_cache_db();
 	
 	$row = get_db_row ("tincidencia", "id_incidencia", $id_inc);
 	$group_name = get_db_sql ("SELECT nombre FROM tgrupo WHERE id_grupo = ".$row["id_grupo"]);
@@ -1144,6 +1146,8 @@ function mail_incident ($id_inc, $id_usuario, $nota, $timeused, $mode, $public =
 	$MACROS["_time_used_"] = $timeused;
 	$MACROS["_incident_main_text_"] = $description;
 	$MACROS["_access_url_"] = $config["base_url"]."/index.php?sec=incidents&sec2=operation/incidents/incident_dashboard_detail&id=$id_inc";
+	$MACROS["_incident_epilog_"] = $row["epilog"];
+	$MACROS["_incident_closed_by_"] = $row["closed_by"];
 
 	// Resolve code for its name
 	switch ($mode){

@@ -993,14 +993,14 @@ $(document).ready (function () {
 	//Only check incident on creation (where there is no id)
 	if (id_incident == 0) {
 		
-		incident_limit("#submit-accion", id_user, id_group);
+		incident_limit("#button-accion", id_user, id_group);
 	}
 	
 	$("#grupo_form").change (function () {
 		id_user = $("#text-id_user").val();
 		id_group = $("#grupo_form").val();
 
-		incident_limit("#submit-accion", id_user, id_group);
+		incident_limit("#button-accion", id_user, id_group);
 		
 		var group = $("#grupo_form").val();
 		

@@ -16,4 +16,3 @@ You can reply to this mail to add a Workunit to this incident. You also could tr
 _incident_main_text_
 
 ---------------------------------------------------------------------
-
