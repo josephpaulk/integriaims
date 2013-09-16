@@ -20,7 +20,7 @@ global $config;
 include("include/functions_workunits.php");
 
 // SET VARS
-$width = '90%';
+$width = '98%';
 
 // CHECK LOGIN AND ACLs
 check_login ();
@@ -86,20 +86,18 @@ echo "<h1>".__('Incident')." #$incident_id - ".$incident['details']['titulo']." 
 ?>
 
 <ul style="height: 30px;" class="ui-tabs-nav">
-	<li class="ui-tabs-selected" id="li_details">
-		<a href='javascript:' id='tab_details' class='tab'><span><?php echo __('Details') ?></span></a>
-	</li>
+	<li class="ui-tabs" id="li_files">
+		<a href='javascript:' id='tab_files' class='tab'><span><?php echo __('Files') ?></span></a>
+	</li>	
 	<li class="ui-tabs" id="li_workunits">
 		<a href='javascript:' id='tab_workunits' class='tab'><span><?php echo __('Workunits') ?></span></a>
 	</li>
-	<li class="ui-tabs" id="li_files">
-		<a href='javascript:' id='tab_files' class='tab'><span><?php echo __('Files') ?></span></a>
-	</li>
+	<li class="ui-tabs-selected" id="li_details">
+		<a href='javascript:' id='tab_details' class='tab'><span><?php echo __('Details') ?></span></a>
+	</li>	
 </ul>
 
 <?php 
-
-echo "<hr style='width:$width; border:solid 1px #2179B1;'>";
 
 // ACTION BUTTONS
 echo "<div style='width:$width;text-align:right;'>";

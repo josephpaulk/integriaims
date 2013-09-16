@@ -8,6 +8,14 @@
 
 2013-09-16  Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents_simple/incident.php,
+	operation/incidents_simple/incident.files.php,
+	operation/incidents_simple/incident.details.php,
+	operation/incidents_simple/incident.workunits.php: Fixed 
+	several style bugs of simple incident management.
+
+2013-09-16  Dario Rodriguez <dario@artica.es>
+
 	* operation/incidents/incident_tracking.php,
 	operation/incidents/incident_detail.php: Fixed several bugs
 	related to group management with incident's editor and

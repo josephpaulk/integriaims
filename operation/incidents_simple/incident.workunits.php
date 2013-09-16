@@ -18,7 +18,7 @@
 check_login ();
 
 // SET VARS
-$width = '90%';
+$width = '98%';
 
 if (! give_acl ($config['id_user'], 0, "IR")) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
@@ -39,7 +39,7 @@ if($incident['workunits'] === false) {
 }
 	
 // SHOW THE WORKUNITS
-$table->class = 'result_table listing';
+$table->class = 'result_table';
 $table->width = $width;
 $table->id = 'incident_search_result_table';
 $separator_style = 'border-bottom: 1px solid rgb(204, 204, 204);border-top: 1px solid rgb(204, 204, 204);';
@@ -87,7 +87,7 @@ unset($table);
 // Add the description of the incident under the first workunit for usability
 $description = get_db_value('descripcion','tincidencia','id_incidencia',$incident_id);
 echo "<h3>".__("Incident details")."</h3>";
-echo "<div class='incident_details'><p>";
+echo "<div style='width: $width' class='incident_details'><p>";
 echo clean_output_breaks ($description);
 echo "</div>";
 
