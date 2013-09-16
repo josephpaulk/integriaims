@@ -42,8 +42,10 @@ $incident = get_incident ($id_incident);
 $result_msg = '';
 
 //user with IR and incident creator see the information
-if (! give_acl ($config['id_user'], $incident['id_grupo'], 'IR')
-	&& ($incident['id_creator'] != $config['id_user'])) {
+$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
+$external_check = enterprise_hook("manage_external", array($incident));
+
+if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check)) {
 	audit_db ($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to incident #".$id_incident);
 	include ("general/noaccess.php");
 	exit;

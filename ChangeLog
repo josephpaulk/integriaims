@@ -1,3 +1,15 @@
+2013-09-16  Dario Rodriguez <dario@artica.es>
+
+	*  operation/incidents/incident_type_field.php,
+ 	operation/incidents/type_detail.php,
+ 	operation/incidents/incident_detail.php,
+ 	operation/incidents/incident_tracking.php,
+ 	operation/incidents/incident_files.php,
+ 	operation/incidents/incident_workunits.php,
+ 	operation/incidents/incident_dashboard_detail.php: Fixed
+ 	several errors related to incident edition and incident
+ 	type and SLA management.
+
 2013-09-16  Sergio Martin <sergio.martin@artica.es>
 
 	* operation/incidents_simple/incident.php

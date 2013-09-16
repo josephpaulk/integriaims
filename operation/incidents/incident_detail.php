@@ -76,9 +76,9 @@ if ($check_incident) {
 
 if (isset($incident)) {
 	//Incident creators must see their incidents
-	if ((get_external_user($config["id_user"]) && ($incident["id_creator"] != $config["id_user"]))
-		|| ($incident["id_creator"] != $config["id_user"]) && !give_acl ($config['id_user'], $id_grupo, "IR")) {
-	
+	$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident, false, "IW"));
+
+	if ($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) {
 	 	// Doesn't have access to this page
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident  (External user) ".$id);
 		include ("general/noaccess.php");
@@ -87,6 +87,7 @@ if (isset($incident)) {
 }
 else if (! give_acl ($config['id_user'], $id_grupo, "IR")) {
 	// Doesn't have access to this page
+	
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident ".$id);
 	include ("general/noaccess.php");
 	exit;
@@ -144,14 +145,6 @@ if ($action == 'update') {
 	$user = get_parameter('id_user');
 	
 	$grupo = get_parameter ('grupo_form', $old_incident['id_grupo']);
-	
-	// Only admins (manage incident) or owners can modify incidents
-	if ((! give_acl ($config["id_user"], $grupo, "IW")) AND (! give_acl ($config["id_user"], $grupo, "IW"))) {
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"],"ACL Forbidden","User ".$_SESSION["id_usuario"]." try to update incident");
-		echo "<h3 class='error'>".__('There was a problem updating incident')."</h3>";
-		no_permission ();
-		exit ();
-	}
 	
 	$id_author_inc = get_incident_author ($id);
 	$titulo = get_parameter ('titulo', $old_incident['titulo']);
@@ -295,14 +288,6 @@ if ($action == 'update') {
 
 if ($action == "insert") {
 	$grupo = (int) get_parameter ('grupo_form');
-
-	if (! give_acl ($config['id_user'], $grupo, "IW") && $usuario != $config['id_user']) {
-		audit_db ($config['id_user'], $config["REMOTE_ADDR"],
-			"ACL Forbidden",
-			"User ".$config["id_user"]." try to create incident");
-		no_permission ();
-		exit;
-	}
 
 	// Read input variables
 	$titulo = get_parameter ('titulo');
@@ -489,13 +474,6 @@ if ($id) {
 
 	$grupo = dame_nombre_grupo($id_grupo);
         $score = $incident["score"];
-
-	// Aditional ACL check on read incident
-	if ((give_acl ($config["id_user"], $id_grupo, "IR") == 0) 
-		&& ($incident['id_creator'] != $config['id_user'])) { // Only admins and incident creators allowed
-		audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Forbidden","User ".$config["id_user"]." try to access to an unauthorized incident ID #id_inc");
-		no_permission ();
-	}
 
 } else {
 	$titulo = "";

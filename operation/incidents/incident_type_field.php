@@ -18,7 +18,7 @@ global $config;
 
 check_login ();
 
-if (! give_acl ($config["id_user"], 0, "PM")) {
+if (! give_acl ($config["id_user"], 0, "IM")) {
 	audit_db ($config["id_user"], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access company section");
 	require ("general/noaccess.php");
 	exit;

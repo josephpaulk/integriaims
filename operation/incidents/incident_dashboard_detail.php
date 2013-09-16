@@ -39,9 +39,11 @@ if ($id) {
 
 if (isset($incident)) {
 	//Incident creators must see their incidents
-	if ((get_external_user($config["id_user"]) && ($incident["id_creator"] != $config["id_user"]))
-		|| ($incident["id_creator"] != $config["id_user"]) && !give_acl ($config['id_user'], $id_grupo, "IR")) {
-	
+	$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident));
+	$external_check = enterprise_hook("manage_external", array($incident));
+
+	if (($check_acl !== ENTERPRISE_NOT_HOOK && !$check_acl) || ($external_check !== ENTERPRISE_NOT_HOOK && !$external_check)) {
+
 	 	// Doesn't have access to this page
 		audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access to incident  (External user) ".$id);
 		include ("general/noaccess.php");
@@ -425,11 +427,11 @@ echo "<div id='button-bar-title'>";
 echo "<ul>";
 
 //Only incident manager and user with IR flag which are owners and admin can edit incidents
-if (get_admin_user($config['id_user']) || (give_acl ($config['id_user'], $id_grupo, "IW") 
-	&& ($incident["id_usuario"] == $config["id_user"])) || give_acl ($config['id_user'], $id_grupo, "IM")) {
+$check_acl = enterprise_hook("incidents_check_incident_acl", array($incident, false, "IW"));
+
+if ($check_acl !== ENTERPRISE_NOT_HOOK && $check_acl) {
 	echo "<li>";
 	echo '<a href="javascript:edit_incident(\''.$id.'\');">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
-	//echo '<a id="edit_incident" href="index.php?sec=incidents&sec2=operation/incidents/incident_detail&id='.$id.'">'.print_image("images/application_edit.png", true, array("title" => __("Edit"))).'</a>';
 	echo "</li>";
 }
 echo '<li>';
