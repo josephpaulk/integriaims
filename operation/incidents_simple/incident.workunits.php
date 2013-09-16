@@ -18,7 +18,7 @@
 check_login ();
 
 // SET VARS
-$width = '98%';
+$width = '99%';
 
 if (! give_acl ($config['id_user'], 0, "IR")) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");
@@ -63,7 +63,7 @@ foreach($incident['workunits'] as $k => $workunit) {
 	$avatar = get_db_value ("avatar", "tusuario", "id_usuario", $workunit['id_user']);
 	
 	$wu = '';
-	$wu = "<div class='notetitle' style='width:95%'>"; // titulo
+	$wu = "<div class='notetitle' style='width:" . $width . "'>"; // titulo
 	// Show data
 	$wu .= "<img src='images/avatars/".$avatar.".png' class='avatar_small'>&nbsp;";
 	$wu .= " <a href='index.php?sec=users&sec2=operation/users/user_edit&id=".$workunit['id_user']."'>";
@@ -73,7 +73,7 @@ foreach($incident['workunits'] as $k => $workunit) {
 	$wu .= "</div>";
 
 	// Body
-	$wu .= "<div class='notebody' style='width:95%'>";
+	$wu .= "<div class='notebody' style='width:" . $width . "'>";
 	$wu .= clean_output_breaks($workunit['description']);
 	$wu .= "</div>";
 	
@@ -87,7 +87,7 @@ unset($table);
 // Add the description of the incident under the first workunit for usability
 $description = get_db_value('descripcion','tincidencia','id_incidencia',$incident_id);
 echo "<h3>".__("Incident details")."</h3>";
-echo "<div style='width: $width' class='incident_details'><p>";
+echo "<div style='width: 98%' class='incident_details'><p>";
 echo clean_output_breaks ($description);
 echo "</div>";
 

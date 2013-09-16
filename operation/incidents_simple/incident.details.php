@@ -18,7 +18,7 @@
 check_login ();
 
 // SET VARS
-$width = '98%';
+$width = '99%';
 
 if (! give_acl ($config['id_user'], 0, "IR")) {
 	audit_db ($config['id_user'], $config["REMOTE_ADDR"], "ACL Violation", "Trying to access incident viewer");

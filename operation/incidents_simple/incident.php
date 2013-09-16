@@ -20,7 +20,7 @@ global $config;
 include("include/functions_workunits.php");
 
 // SET VARS
-$width = '98%';
+$width = '100%';
 
 // CHECK LOGIN AND ACLs
 check_login ();
@@ -104,8 +104,8 @@ $incident = get_full_incident($incident_id);
 
 // ACTION BUTTONS
 echo "<div style='width:$width;text-align:right;'>";
-print_button (__('Add workunit'), 'add_workunit_show', false, '', 'style="margin-top:8px;" class="action_btn sub next"');
-print_button (__('Add file'), 'add_file_show', false, '', 'style="margin-top:8px;" class="action_btn sub next"');
+print_button (__('Add workunit'), 'add_workunit_show', false, '', 'style="margin-top:8px;" class="action_btn sub create"');
+print_button (__('Add file'), 'add_file_show', false, '', 'style="margin-top:8px;" class="action_btn sub create"');
 echo "</div>";
 
 // ADD WORKUNIT FORM
@@ -115,7 +115,7 @@ print_textarea ('note', 5, 10, '', '', false, __('Workunit'));
 print_input_hidden ('add_workunit', 1);
 print_input_hidden ('id', $incident_id);
 echo "<div style='text-align:right'>";
-print_submit_button (__('Add'), 'add_workunit_button', false, 'style="margin-top:4px;" class="sub next"');
+print_submit_button (__('Add'), 'add_workunit_button', false, 'style="margin-top:4px;" class="sub create"');
 echo "</div>";
 echo "</form>";
 echo "</div>";
@@ -127,7 +127,7 @@ $into_form = print_input_hidden ('id', $incident_id, true);
 $into_form .= print_input_hidden ('upload_file', 1, true);
 $into_form .= print_textarea ('description', 2, 10, '', '', true, __('Description'));
 $into_form .= "<div style='text-align:right;'>";
-$into_form .= print_button (__('Upload'), 'add_file', false, '', 'style="margin-top:4px;" class="action_btn sub next"', true);
+$into_form .= print_button (__('Upload'), 'add_file', false, '', 'style="margin-top:4px;" class="action_btn sub upload"', true);
 $into_form .= "</div>";
 echo '<b>'.__('File').'</b>';
 echo '<br>'.print_input_file_progress($action, $into_form, 'id="form-add-file"', 'sub next', 'button-add_file', true);

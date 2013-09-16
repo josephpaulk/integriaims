@@ -1,3 +1,11 @@
+2013-09-16  Sergio Martin <sergio.martin@artica.es>
+
+	* operation/incidents_simple/incident.php
+	operation/incidents_simple/incident.files.php
+	operation/incidents_simple/incident.details.php
+	operation/incidents_simple/incident.workunits.php: Fix 
+	few aesthetic issues in the simple incidents mode
+
 2013-09-16  Dario Rodriguez <dario@artica.es>
 
 	* include/styles/integria.css,
