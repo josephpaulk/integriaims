@@ -1,3 +1,10 @@
+2013-09-16  Dario Rodriguez <dario@artica.es>
+
+	* include/styles/integria.css,
+	include/styles/flora/flora.tabs.css,
+	operation/incidents_simple/incident.php: Fixed several
+	style bugs on incident and simple incident views.
+
 2013-09-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
 	
 	* include/functions_crm.php: Little changes in the function

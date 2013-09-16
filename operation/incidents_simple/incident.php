@@ -79,9 +79,6 @@ if($add_workunit) {
 // GET INCIDENT FROM DATABASE
 $incident = get_full_incident($incident_id);
 
-// PRINT INCIDENT
-echo "<h1>".__('Incident')." #$incident_id - ".$incident['details']['titulo']." <a href='javascript:load_tab(\"current\");'><img src='images/refresh.png'></a></h1>";
-
 // TABS
 ?>
 
@@ -95,6 +92,12 @@ echo "<h1>".__('Incident')." #$incident_id - ".$incident['details']['titulo']." 
 	<li class="ui-tabs-selected" id="li_details">
 		<a href='javascript:' id='tab_details' class='tab'><span><?php echo __('Details') ?></span></a>
 	</li>	
+	<li class="ui-tabs-title">
+		<?php
+			// PRINT INCIDENT
+			echo "<h1>".__('Incident')." #$incident_id - ".$incident['details']['titulo']." <a href='javascript:load_tab(\"current\");'><img src='images/refresh.png'></a></h1>";
+		?>
+	</li>
 </ul>
 
 <?php 
