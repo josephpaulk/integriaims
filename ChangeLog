@@ -1,5 +1,12 @@
 2013-09-16  Dario Rodriguez <dario@artica.es>
 
+	* operation/incidents/incident_tracking.php,
+	operation/incidents/incident_detail.php: Fixed several bugs
+	related to group management with incident's editor and
+	tracking.
+
+2013-09-16  Dario Rodriguez <dario@artica.es>
+
 	* operation/incidents/incident_workunits.php: Fixed an error
 	that doesn't load workunit and file uploader tabs properly.
 

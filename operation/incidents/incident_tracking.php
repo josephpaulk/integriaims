@@ -215,7 +215,7 @@ echo "<table width='99%'>";
 			}
 			$tracking_user .= "</table>";
 			
-			echo print_container('incident_tracking_user', __('Statistics by user'), $tracking_user, 'no', true, '20px');
+			echo print_container('incident_tracking_user', __('Statistics by owner'), $tracking_user, 'no', true, '20px');
 		echo "</td>";	
 	echo "</tr>";
 echo "</table>";

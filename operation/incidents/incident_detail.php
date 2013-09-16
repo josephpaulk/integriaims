@@ -387,14 +387,14 @@ if ($action == "insert") {
 	
 			incident_tracking ($id, INCIDENT_USER_CHANGED, $usuario);
 			
-			incident_tracking ($id, INCIDENT_GROUP_CHANGED, $id_group_creator);
+			incident_tracking ($id, INCIDENT_GROUP_CHANGED, $grupo);
 						
 			incident_tracking ($id, INCIDENT_CREATED);
 			
 			//Add first incident statistics
 			$metric_values = array (INCIDENT_METRIC_STATUS => $estado,
 									INCIDENT_METRIC_USER => $usuario,
-									INCIDENT_METRIC_GROUP => $id_group_creator);
+									INCIDENT_METRIC_GROUP => $grupo);
 	
 			incidents_add_incident_stat ($id, $metric_values);
 
@@ -721,13 +721,14 @@ if ($has_im || ($has_iw && $config['iw_creator_enabled'])){
 	$table->data[2][0] = "<input type='hidden' name=id_creator value=$id_creator>";
 }
 
+//Check owner for incident
+if ($create_incident) 
+	$assigned_user_for_this_incident = get_db_value("id_user_default", "tgrupo", "id_grupo", $id_grupo_incident);
+else
+	$assigned_user_for_this_incident = $usuario;
+
 if ($has_im) {
 	$src_code = print_image('images/group.png', true, false, true);
-	
-	if ($create_incident) 
-		$assigned_user_for_this_incident = get_db_value("id_user_default", "tgrupo", "id_grupo", $id_grupo_incident);
-	else
-		$assigned_user_for_this_incident = $usuario;
 	
 	$params_assigned['input_id'] = 'text-id_user';
 	$params_assigned['input_name'] = 'id_user';
@@ -738,7 +739,6 @@ if ($has_im) {
 	$params_assigned['return_help'] = true;
 	$table->data[2][1] = user_print_autocomplete_input($params_assigned);
 } else {
-	$assigned_user_for_this_incident = get_db_value("id_user_default", "tgrupo", "id_grupo", $id_grupo_incident);
 	$table->data[2][1] = print_input_hidden ('id_user', $assigned_user_for_this_incident, true, __('Owner'));
 	$table->data[2][1] .= print_label (__('Owner'), 'id_user', '', true,
 	'<div id="plain-id_user">'.dame_nombre_real ($assigned_user_for_this_incident).'</div>');
