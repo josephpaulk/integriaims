@@ -1,3 +1,11 @@
+2013-09-16  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/functions_crm.php: Improved the function
+	"crm_get_companies_list".
+	
+	* operation/companies/company_detail.php: Fixed a call to a
+	function.
+	
 2013-09-16  Vanessa Gil <vanessa.gil@artica.es>
 
 	* godmode/setup/incidents_setup.php

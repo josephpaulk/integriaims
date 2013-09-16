@@ -35,20 +35,26 @@ function crm_get_companies_list ($sql_search, $date = false, $sql_order_by = "",
 	}
 	
 	$companies = get_db_all_rows_sql($sql);
-
 	if ($companies === false) {
 		$companies = array();
 	}
 
-	$is_admin = dame_admin($config['id_user']);
-	
-	if ($is_admin) {
-		return $companies;
+	$user_companies = enterprise_hook('crm_get_user_companies', array($config['id_user'], $companies, $only_name, $sql_search, $sql_order_by, $date));
+	if ($user_companies !== ENTERPRISE_NOT_HOOK) {
+		$companies = $user_companies;
+	} else {
+		if ($only_name) {
+			$companies_name = array();
+			foreach ($companies as $key=>$val)  {
+				$companies_name[$val['id']] = $val['name']; 
+			}
+			$companies = $companies_name;
+		}
 	}
-
-return $companies;
-
+	
+	return $companies;
 }
+
 function crm_get_company_name ($id_company) {
 	
 	$name = get_db_value('name', 'tcompany', 'id', $id_company);

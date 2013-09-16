@@ -950,6 +950,7 @@ if ((!$id) AND ($new_company == 0)){
 	$order_by_activity = (string) get_parameter ("order_by_activity");
 	$order_by_company = (string) get_parameter ("order_by_company");
 	
+	$where_clause = "";
 	$date = false;
 	
 	if ($search_text != "") {
@@ -1042,14 +1043,7 @@ if ((!$id) AND ($new_company == 0)){
 	print_input_hidden ('order_by_company', $order_by_company);
 	echo '</form>';
 
-	$companies = crm_get_companies_list($where_clause, $date, $order_by);	
-
-	$companies = get_db_all_rows_sql($sql);
-
-	if ($read) {
-		//$companies = crm_get_user_companies($config['id_user'], $companies);
-		$companies = crm_get_user_companies_list($where_clause, $date, $order_by);
-	}
+	$companies = crm_get_companies_list($where_clause, $date, $order_by);
 
 	$companies = print_array_pagination ($companies, "index.php?sec=customers&sec2=operation/companies/company_detail$params", $offset);
 
