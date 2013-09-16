@@ -24,8 +24,16 @@ $title = '';
 
 require_once ('include/functions_workunits.php');
 
+//Check if we have id passed by parameter or by script loading
 if (!$id_incident) {
-	return;
+
+	if ($id) {
+		$id_incident = $id;
+	} else { 
+		audit_db ($id_user,$REMOTE_ADDR, "ACL Violation","Trying to access to incident #".$id_incident);
+		include ("general/noaccess.php");
+		return;
+	}
 }
 
 // Obtain group of this incident
