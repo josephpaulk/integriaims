@@ -1,3 +1,7 @@
+2013-09-17  Alejandro Gallardo <alejandro.gallardo@artica.es>
+	
+	* include/ajax/crm.php: Fixed the ajax company search.
+
 2013-09-17  Vanessa Gil <vanessa.gil@artica.es>
 
 	* include/functions_calendar.php: Fixed bad count

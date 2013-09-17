@@ -16,8 +16,6 @@
 global $config;
 
 include_once('include/functions_crm.php');
-enterprise_include('include/functions_crm.php');
-
 
 $get_company_search = get_parameter ('get_company_search', 0);
 $get_company_name = get_parameter ('get_company_name', 0);
@@ -110,12 +108,6 @@ if ($get_company_search) {
 	$params = "&search_manager=$search_manager&search_text=$search_text&search_role=$search_role&search_country=$search_country&search_parent=$search_parent&search_date_begin=$search_date_begin&search_date_end=$search_date_end";
 	
 	$companies = crm_get_companies_list($where_clause, $date);
-	
-	$companies_aux = enterprise_hook ('crm_get_user_companies', array ($config['id_user'], $companies));
-
-	if ($manage_permission !== ENTERPRISE_NOT_HOOK) {	
-		$companies = $companies_aux;	
-	}
 
 	if ($companies !== false) {
 		$table_list->width = "98%";
